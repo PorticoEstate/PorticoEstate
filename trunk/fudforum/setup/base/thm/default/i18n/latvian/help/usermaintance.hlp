@@ -1,0 +1,82 @@
+TOPIC_TITLE: <a name="register">Kâdçï nepiecieðama reìistrâcija?</a>
+TOPIC_HELP:
+Ðajâ sistçmâ ir vairâku forumu pieejas lîmeòi. Publiskie forumi, Intereðu 
+grupu forumi un Slçgtie jeb lietotâju izveidotie - privâtie forumi. 
+Anonîmajiem jeb nereìistrçtajiem lietotâjiem ir atïautas pieejas tiesîbas 
+tikai publiskajiem forumiem. 
+Lai interesents varçtu piedalîties Intereðu forumos obligâti jâveic 
+reìistrâcijas procedûra, pretçjâ gadîjumâ piedalîties ðî foruma diskusijâs 
+nebûs iespçjams. 
+Ik viens reìistrçtais foruma dalîbnieks var izveidot savu privâto diskusiju
+listi, kurâ dalîba ir atïauta tikai paða izveidotâja – îpaðnieka uzaicinâtie
+foruma reìistrçtie lietotâji.
+Reìistrâcija forumâ dod arî vçl citas priekðrocîbas un tâs ir:
+<ul>
+	<li>Iespçja saòemt E-pasta/ICQ paziòojumus par iesûtîtajâm atbildçm uz
+Jûsu ievietoto publikâciju
+	<li>Iespçja izveidot personîgo parakstu, pievienot privâto nozîmîti,
+izmantot personîgos html tegus - kodus.
+	<li>Privâtâs sarakstes iespçja ar foruma reìistrçtajiem lietotâjiem
+	<li>Uzstâdît savas valsts – darbîbas vietas laika joslu
+</ul>
+Bûtîbâ reìistrâcija forumâ ir atvieglota un no interesenta prasa tikai sava
+Nika, Paroles, E-pasta adreses ievadîðanu un vçlâku reìistrâcijas akceptu.
+<p>
+Ja forumâ ir ieslçgta COPPA sistçma, tad lietotâjiem kas ir jaunâki par 13
+gadiem nepiecieðama papildus savu vecâku atïauja reìistrçties un òemt dalîbu
+forumâ. Ðî atïauja ir jânosûta uz norâdîto adresi pa pastu vai faksu.
+
+TOPIC_TITLE: <a name="cookies">Kâ ðis forums izmanto mainîgos cookies?</a>
+TOPIC_HELP:
+Foruma mainîgie cookies sevî ietver minimumu informâcijas par lietotâju, lai
+sekotu vai attiecîgais lietotâjs ir ienâcis vai izgâjis no foruma.
+Ja Jûsu Web pârlûks nepieïauj izmantot cookies, sistçma izveidos sesijas 
+atslçgu, kas nekâdu papildus informâciju uz Jûsu datora neizvieto.
+Ienâkot forumâ lietotâjam tiek piedâvâta iespçja izmantot vai nçizmantot 
+cookies. Droðîbas apsvçrumu pçc aizliegt cookies ieteicams, ja Jûs strâdâjat uz 
+publiskajiem interneta terminâliem, lai cits ðî terminâla lietotâjs nevarçtu 
+izmantot piekïuvi forumam ar Jûsu uzstâdîjumiem. Cookies nodroðina automâtisku 
+atkârtotu ieju forumâ bez atkârtotas Nika un paroles ievadîðanas. 
+
+TOPIC_TITLE: <a name="clrcookie">Kâ var izdzçst foruma izveidotos cookie?</a>
+TOPIC_HELP:
+Lai dzçstu uzstâdîtos cookies vienkârði izejot no foruma noklikðíiniet uz <b>Iziet</b>. Ðî darbîba automâtiski izdzçsîs visus uzstâdîtos cookies.
+
+TOPIC_TITLE: <a name="updprofile">Kâdçï nepiecieðami uzstâdîjumi?</a>
+TOPIC_HELP: 
+Reìistrçtajiem foruma lietotâjiem ir iespçja izveidot savus personîgos uzstâdîjumus. Principâ ðie uzstâdîjumi lietotâjam atvieglo un paâtrina darbîbu forumâ, kâ arî dod iespçjas atslçgt vai ieslçgt attiecîgas informâcijas attçloðanu – uzrâdîðanu foruma sesijâs.
+<p>
+Piemçram, uzstâdîjumos pieejama komanda <b>"Uzrâdît E-pasta adresi:"</b>, kas attiecîgi iezîmçjot <b>Jâ</b> vai <b>Nç</b> atïaus vai neatïaus uzrâdît Jûsu E-pasta adresi citiem lietotâjiem. 
+
+TOPIC_TITLE: <a name="sigs">Kas ir paraksts?</a>
+TOPIC_HELP:
+Paraksts ir teksts, kas tiks automâtiski pievienots Jûsu publikâcijai.
+Paraksta automâtisko ievietoðanu iepçjams atïaut vai neatïaut uzstâdîjumos, pozîcijâ <b>Pielietot pierakstus pçc noklusçjuma</b>.
+<p>
+Bez teksta paraksts var saturçt arî citu informâciju, piemçram Jûsu mâjas lapas URL, saiti uz bildi kuru vçlaties vienmçr pieviet publikâcijai u.t.t. 
+
+TOPIC_TITLE: <a name="rstpasswd">Ko darît ja ir aizmirsta parole?</a>
+TOPIC_HELP:
+Ja esat aizmirsis paroli, tad vienkâði aizejiet uz saiti<a href="{ROOT}?t=reset&amp;%_rsid%" class="GenLink">Saòemt jaunu paroli</a>, 
+Ievadît savu E-pasta adresi un nospiest pogu <b>Izveidot jaunu paroli</b>. 
+Pçc tam uz Jûsu E-pastu tiks nosûtîts paziòojums, kuru apstiprinot tiks nosûtîta vçlviena vçstule ar izveidoto jauno paroli.
+<p>
+<b>Piezîme:</b> Visas foruma lietotâju paroles tiek ðifrçtas ar 128-bitu MD5 HASH algoritmu un tas nozîmç, ka tâs netiek uzglabâtas atklâtâ teksta formâtâ.
+
+TOPIC_TITLE: <a name="cstat">Kâ var izveidot un pielietot nestandarta html tegus – kodus?</a>
+TOPIC_HELP:
+Nestandarta html tegus – kodus ir tiesîgs izveidot tikai sistçmas Administrators.
+
+TOPIC_TITLE: <a name="avatars">Kas ir privâtâ nozîmîte?</a>
+TOPIC_HELP:
+Privâtâ nozîmîte ir Lietotâja izvçlçta bildîte, kura tiek pievienota, kâ lietotâja atpazîstamîbas simbols pie publikâcijas. Privâtâs nozîmîtes var izvçlçties uzstâdîjumu sadaïâ.
+Ja sistçmâ nav iebûvçto nozîmîðu, lietotâjs to var pievienot pats, to no jauna izveidojot vai norâdot saiti uz nozîmîtes atraðanâs vietu internetâ.
+<b>Piezîme</b>. Nozîmîtes netiek attçlotas tûlît pçc ievadîðanas. Tâs lietotâjs var sâkt izmantot tikai pçc tam, kad sistçmas administrators tâs ir apskatîjis un akceptçjis, tâs pielietoðanu forumâ.
+
+TOPIC_TITLE: <a name="blist">Kâdam nolûkam domâts kontaktu saraksts?</a>
+TOPIC_HELP:
+Kontaktu sarakstâ lietotâjs var pievienot izvçlçtos foruma dalîbniekus, lai paâtrinâtu daudzu foruma funkciju izpildi. Kontaktu saraksts ir analogs personîgajai adreðu grâmatai, vienîgi tâ izmantoðana ir ierobeþota izmantoðanai tikai foruma ietvaros. 
+
+TOPIC_TITLE: <a name="ignlist">Kâdam nolûkam kalpo ignorçto saraksts?</a>
+TOPIC_HELP:
+Ignorçto sarakstâ ievadîtiem lietotâjiem nav tiesîbu atbildçt uz jûsu publikâcijâm, kâ arî viòi nevar personîgi sarakstîties ar Jums.
