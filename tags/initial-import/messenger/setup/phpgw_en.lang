@@ -1,0 +1,34 @@
+compose	messenger	en	Compose
+compose global message	admin	en	Compose global message
+compose message	messenger	en	Compose message
+delete a message.	messenger	en	Delete a message.
+delete selected	messenger	en	Delete selected
+forward	messenger	en	Forward
+forward a message	messenger	en	Forward a message
+forward a message to another user.	messenger	en	Forward a message to another user.
+forwarded	messenger	en	Forwarded
+from	messenger	en	From
+global message	messenger	en	Global Message
+i can't find the username %1 on the system	messenger	en	I can't find the username %1 on the system
+inbox	messenger	en	Inbox
+message from	messenger	en	Message from
+messenger	common	en	Messenger
+new	messenger	en	New
+read a list of messages.	messenger	en	Read a list of messages.
+read a single message.	messenger	en	Read a single message.
+read message	messenger	en	Read message
+replied	messenger	en	Replied
+reply	messenger	en	Reply
+reply to a message	messenger	en	Reply to a message
+reply to a received message.	messenger	en	Reply to a received message.
+send	messenger	en	Send
+send a global message.	messenger	en	Send a global message.
+send a message to a single recipient.	messenger	en	Send a message to a single recipient.
+send message to	messenger	en	Send message to
+sorry, %1's account is not currently active	messenger	en	Sorry, %1's account is not currently active
+you didn't enter anything for the message	messenger	en	You didn't enter anything for the message
+you have %1 new message	messenger	en	You have %1 new message
+you have %1 new messages	messenger	en	You have %1 new messages
+you have no messages	messenger	en	You have no messages
+you must enter a subject	messenger	en	You must enter a subject
+you must enter the username this message is for	messenger	en	You must enter the username this message is for

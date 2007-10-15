@@ -1,0 +1,10 @@
+$Id: TODO.txt,v 1.1 2003/03/04 21:21:04 ralfbecker Exp $
+
+WikkiTikkiTavi - Todo
+---------------------
+
+  o Come up with alternate templates for people to play with.
+  o Meta-categories??
+  o Macro for search boxes
+
+See also: http://tavi.sourceforge.net/TaviToDo
