@@ -1,0 +1,5 @@
+#!/bin/bash
+
+# smsd_checker must be in PATH eg: /usr/bin or /usr/local/bin
+
+/usr/local/bin/smsd_checker &
