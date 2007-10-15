@@ -1,0 +1,14 @@
+$Id: HISTORY,v 1.2 2001/07/14 01:32:27 jengo Exp $
+
+21/06/2001 : r0kawa become the maintainer of the forum apps. Now forum has supported
+template and add a few icons
+29/06/2001 : Fixing a few bugs related to the old forum
+4/07/2001  : Update some banners and setup directory for tables upgrade
+now the table is change from f_body, phpgw_forum_body and so are others
+13/07/2001 : Add the ACL support
+
+
+
+r0kawa 
+sameon@time.net.my
+
