@@ -1,0 +1,67 @@
++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+   pro|business template set for phpGroupWare
+
++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+
+The template set probusiness is just another template set for
+the phpgroupware. Some parts of the template set may remind
+you to the graphical user interface of MS Outlook.
+
+   individual appearance
+===================================================
+Following modules will have an individual appearance with the
+template set probusiness:
+
+- phpgwapi
+- preferences
+- admin
+- addressbook
+- notes
+- todo
+- calendar
+- tts
+- email
+
+   cascading style sheets 
+===================================================
+
+The template set probusiness extensively uses cascading style
+sheets. Almost all layout definitions are defined in an external and
+separated CSS file.
+The appearance of the template set probusiness can easily be
+adapted by defining an additional CSS file.
+
+   image types 
+===================================================
+
+All images should be in the PNG format without using the alpha
+channel functionality - this functionality still is not supported by
+Microsoft operating systems.
+
+  javascript
+===================================================
+
+The template set probusiness uses javascript to allow a client side
+and comfortable interaction by the user.
+
+  tab concept
+===================================================
+
+Some input masks of the phpGroupWare were enhanced by using
+a tab technique. So the information of the user input mask are
+grouped and represented on different tabulator sides.
+
+See the 'trouble ticket system' module for an example.
+
+
+Have fun with this template set,
+
+Daniel Briegert  (dbriegert@probusiness.de)
+Philipp Kamps   (pkamps@probusiness.de)
+
+
+
+
+
