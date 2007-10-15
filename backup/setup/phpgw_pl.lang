@@ -1,0 +1,56 @@
+absolute path of the backup directory	backup	pl	Pełna ścieżka do katalogu kopii bezpieczeństwa
+absolute path of the directory to store the backup script	backup	pl	Pełna ścieżka do katalogu ze skryptem
+archive type	backup	pl	Rodzaj archiwum
+backup	common	pl	Kopia bezpieczeństwa
+backup administration	common	pl	Zarządzanie kopiami zapasowymi
+bzip2	admin	pl	bzip2
+configuration backup	backup	pl	Konfiguracja kopii zapasowych
+configuration localhost	backup	pl	Konfiguracja lokalna
+configuration remote host	backup	pl	Konfiguracja zdalnego hosta
+create backups of your data ?	backup	pl	Tworzyć kopie zapasowe?
+daily	backup	pl	Codziennie
+data	backup	pl	Dane
+directory locations	admin	pl	Lokalizacja katalogów
+directory names	admin	pl	Nazwy katalogów
+e-mail	backup	pl	E-mail
+homedirs	admin	pl	Katalogi domowe
+interval	backup	pl	Interwał
+ip or hostname	backup	pl	IP lub nazwa hosta
+ldap	common	pl	LDAP
+ldap database	admin	pl	Baza LDAP
+maildir	admin	pl	Katalog poczty
+monthly	backup	pl	Co miesiąc
+mysql	admin	pl	MySQL
+nfs	backup	pl	NFS
+no backup archives available !	backup	pl	Nie ma dostępnych kopii bezpieczeństwa
+number of stored backup versions	backup	pl	Liczba przechowywanych kopii
+operating system	backup	pl	System operacyjny
+password	backup	pl	Hasło
+pgsql	admin	pl	PostgreSQL
+php cgi	admin	pl	php cgi
+plase enter username and password for remote connection !	backup	pl	Proszę podać login i hasło do zdalnego połączenia
+please enter the path of the backup dir and/or enable showing archives in phpgroupware !	backup	pl	
+please select an application for transport to the remote host !	backup	pl	
+please set the path to a local dir to store the backup script !	backup	pl	Proszę podać ścieżkę do lokalnego katalogu ze skryptem
+please specify the ip of the remote host !	backup	pl	Proszę podać adres IP zdalnego hosta
+please specify the path to the backup directory !	backup	pl	Proszę podać ścieżkę do katalogu z kopiami bezpieczeństwa
+program locations	admin	pl	Lokalizacja programu
+save backup locally ?	backup	pl	Tworzyć lokalne kopie?
+save backup to a remote host ?	backup	pl	Tworzyć kopie na zdalnych hostach?
+select archive type	backup	pl	Wybierz rodzaj archiwum
+select interval	backup	pl	Wybierz przedział czasu
+select transport application	backup	pl	Wybierz protokól
+settings	admin	pl	Ustawienia
+show backup archives in phpgroupware ?	backup	pl	Wyświetlać kopie zapasowe w phpGroupWare?
+smbmount	backup	pl	SMBMOUNT
+sql	backup	pl	SQL
+tar	admin	pl	tar
+tar.bz2	backup	pl	tar.bz2
+tar.gz	backup	pl	tar.gz
+the backup application is not configured for showing the archives in phpgroupware yet !	backup	pl	Aplikacja kopii bezpieczeństwa nie jest jeszcze skonfigurowana do wyświetlania archiwów w phpGroupWare
+the directory to store the backup script must be outside of the webservers *documentroot* !	backup	pl	
+the ftp connection failed ! please check your configuration !	backup	pl	Nieudane połączenie FTP. Proszę sprawdzić konfigurację
+transport application	backup	pl	
+user	backup	pl	Użytkownik
+weekly	backup	pl	Co tydzień
+zip	common	pl	zip
