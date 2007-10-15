@@ -1,0 +1,16 @@
+compose	messenger	fi	Kirjoita
+compose global message	admin	fi	Kirjoita järjestelmäviesti
+compose message	messenger	fi	Kirjoita viesti
+forward	messenger	en	Lähetä eteenpäin
+forward a message	messenger	fi	Lähetä viesti eteenpäin
+forwarded	messenger	fi	Edelleenlähetetty
+global message	messenger	fi	Järjestelmäviesti
+inbox	messenger	fi	Saapuneet
+message from	messenger	fi	Lähettäjä
+messenger	common	fi	Viestit
+read message	messenger	fi	Lue viesti
+reply	messenger	fi	Vastaa
+reply to a message	messenger	fi	Vastaa viestiin
+send	messenger	fi	Lähetä
+send message to	messenger	fi	Kenelle
+you have %1 new messages	messenger	fi	Uusia viestejä %1
