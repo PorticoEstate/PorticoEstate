@@ -1,0 +1,8 @@
+This is a phpGroupWare-ized version of the Yahoo! User Interface Library.  
+
+The original library is available from http://developer.yahoo.net/yui/.  
+
+We have just copied some files to make it all work with the phpGW js class.  The original files from the zip (including docs) are in phpgwapi/js/yahoo/yui
+
+If you are using this libraray outside of phpGroupware, please hassle Y! not 
+us, we would like to take the credit for it, but unfortunately we can't as we didn't write it :)
