@@ -1,0 +1,29 @@
+$Id: NEWS.txt,v 1.1 2003/03/04 21:21:04 ralfbecker Exp $
+
+WikkiTikkiTavi - News
+---------------------
+
+See also ChangeLog.txt.
+
+---------------------
+
+2002-01-16  Scott Moonen  <smoonen@andstuff.org>
+
+  WikkiTikkiTavi version 0.21 is released.  Several bug fixes (including a
+  security fix) and several minor new features, such as HTML anchors;
+  arbitrary link text for free links; RSS syndication; the use of style
+  sheets and XHTML-Strict markup; compatibility with register_globals=off;
+  the option to split words in page titles, headers, and links; and a time
+  zone preference for visitors.
+
+  Users should note that the transclude syntax, %%PageName%%, has been
+  deprecated for this release.  It is superseded by the
+  [[Transclude PageName]] macro.  The double-% syntax will be removed
+  as of version 0.30.
+
+
+2001-11-17  Christopher Cashell <topher@zyp.org>
+
+  WikkiTikkiTavi has had a CVS reorganization, intending to bring it to a
+  more "normal" state (as defined by common CVS usage conventions).
+

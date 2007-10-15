@@ -1,0 +1,60 @@
+$Id: template.txt,v 1.1 2003/03/04 21:21:04 ralfbecker Exp $
+
+Document Template
+Author: Paul Joseph Thompson <thomppj@squirrelmail.org>
+=======================================================
+
+Purpose:  Here is a brief description of the purpose of this document.
+It should be just a few sentences at most. This is our document template.
+
+
+New Section
+===========
+This is a new section. It will contain brilliant ideas. For now, however,
+it does not really contain anything useful. Oh yeah, each new section
+should start like this one and the others below.
+
+                    | | | | | |
+                    +-+-+-+-+-+
+                    |         |
+                   -|   o o   |-
+                   \|    \    |/
+                    |         |
+                    |   ---   |
+                     \_______/
+
+A section can have multiple paragraphs and pictures, if you like. Please
+note that is the first piece of ascii art that I have ever created.
+
+Also note that each section should have two blank lines before it.  This
+makes it easier to glance through the document and pull out the headers as
+they stand out much better.
+
+
+Other Formatting
+================
+Other notes should be made about formatting, to keep everything looking 
+the same in our collection of documents. Here are some more guidelines:
+
+  * No indentation should be used for paragraphs
+  * Unordered lists should be formatted like this one, two space idention
+    with either an asterisk (*), plus sign (+), or minus sign (-) leading
+    each item.
+  * Ordered Lists should use standard numerals (1-10) and formatted in the
+    same manner as unordered lists.
+  * Outlines can be formatted however you want. :)
+
+Remember, these guidelines are provide just as a means of standardizing 
+our efforts.
+
+
+Word Wrapping
+=============
+All documents should be word wrapped at 80 characters.
+
+
+VI Tips:
+========
+To set text wrapping to 80 characters, use the command ":set tw=80". To
+reformat the text wrapping for the current paragraph, move the cursor
+to that paragraph and type "gqap".

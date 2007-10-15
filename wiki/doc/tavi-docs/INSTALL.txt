@@ -1,0 +1,240 @@
+$Id: INSTALL.txt,v 1.1 2003/03/04 21:21:04 ralfbecker Exp $
+
+
+Feedback
+--------
+
+Your feedback is welcome to help make these installation instructions
+more useful, understandable, and complete.  If you have any suggestions,
+criticisms, questions, or other comments, please send them to
+tavi-devel@lists.sourceforge.net.  Thanks!
+
+
+WikkiTikkiTavi - Installation
+-----------------------------
+
+(See below, under "WikkiTikkiTavi - Upgrading", if you are upgrading an
+existing 'Tavi installation.)  See http://tavi.sourceforge.net/ for
+more detailed instructions dealing with virtual hosts, 'Tavi templates,
+URL rewriting, etc.
+
+1.  Choose a location in which to install 'Tavi.  You do not need to
+    install 'Tavi under your webspace; in fact, it is recommended that
+    you do not do so.  While there are no known security exploits in
+    'Tavi 0.21, it is best for security purposes to leave as few
+    scripts exposed to the web as possible.
+
+    Additionally, if you install 'Tavi in a central location, you can
+    use it once for multiple wikis on your web server.  This makes
+    administration of virtual hosts or wiki farms much simpler.  Upgrading
+    to a later version of 'Tavi also is simplified, as you can upgrade
+    multiple wikis in one step.
+
+    For the sake of example, the following assumes that you have chosen
+    to install 'Tavi in the following directory:
+
+      /usr/local/lib/tavi/
+
+    Alternatively, you can install 'Tavi directly in your webspace and
+    use it without complication; there is no reason that 'Tavi *must* be
+    installed in a central location, although it is recommended.
+
+2.  Download the 'Tavi archive into the installation directory.  You can
+    find it at http://prdownloads.sourceforge.net/tavi/
+
+3.  Unpack the archive in the installation directory.  It should create
+    a subdirectory named 'tavi-0.21'.
+
+4.  [Not necessary, but recommended.]
+
+    Create a symbolic link in the installation directory that points to
+    the archive subdirectory.  For example, create a symbolic link in
+    /usr/local/lib/tavi/ called 'tavi-current', that points to
+    '/usr/local/lib/tavi/tavi-0.21'.  This allows your wikis to point
+    to 'tavi-current', allowing you to automatically upgrade them to
+    a newer release by simply pointing 'tavi-current' to the new
+    release's location.
+
+5.  Run install/create-db.pl to create the database tables for your wiki:
+
+    Its first parameter should be the name of the (already created) MySQL
+    database where the tables will be created.  If you have not yet
+    created the database, you should do so before running the script.
+
+    Its second and third parameters are the user name and password to use
+    to access the database.
+
+    Optionally, you can include a fourth parameter to specify a prefix to
+    be prepended to the table names.  If you have access to only one MySQL
+    database, you can use this feature to install multiple wikis in the same
+    database.
+
+    You may also include a fifth parameter to specify the hostname or IP
+    address of the database server, if it is not the local host.
+
+    Examples:
+
+      perl ./create-db.pl wiki joe passwd
+      perl ./create-db.pl project sally pass wiki_ database.example.com
+      perl ./create-db.pl common jim key "" mysql.example.com
+
+6.  In the install/ directory, run the "configure.pl" script to generate a
+    configuration file for your wiki.  It takes one parameter, the location
+    of the configuration file.  For example:
+
+      perl ./configure.pl /home/u/user12/tavi/config.php
+      perl ./configure.pl ../config.php
+
+    You will be prompted for such things as the URL to the wiki script,
+    the name of your wiki, database information, etc.
+
+    As with the 'Tavi source, it is recommended that you keep your
+    configuration file in a location that cannot be accessed from the web.
+
+    You may wish to double-check the 'config.php' file that was created by
+    the configuration script, to make sure that the settings are correct.
+
+7.  If you installed 'Tavi in your webspace, then skip this step, since
+    index.php is already accessible from the web.
+
+    A. Now you have to create an entry point to your wiki.  Choose a directory
+       in your webspace to be the base point for your wiki.  For sake of
+       example, we will use /home/joe/public_html/mywiki/.
+
+    B. Create a subdirectory named 'admin/' in this directory.  E.g.,
+       /home/joe/public_html/mywiki/admin.
+
+    C. In the base directory, create a symbolic link to the index.php in the
+       'Tavi installation.  For example, create
+       /home/joe/public_html/mywiki/index.php that is a link to
+       /usr/local/lib/tavi/tavi-current/index.php.
+
+    D. In the admin/ subdirectory, create a symbolic link to the index.php in
+       the admin subdirectory in the 'Tavi installation.  For example, create:
+       /home/joe/public_html/mywiki/admin/index.php that is a link to
+       /usr/local/lib/tavi/tavi-current/admin/index.php.
+
+8.  Configure your script so that it can access the 'Tavi scripts and so that
+    it can access your configuration file.  If you have installed 'Tavi in
+    your webspace, and you have placed the config.php file in the root of
+    that location, then you can skip this step.  Otherwise, continue:
+
+    A. Locate the directories for your 'Tavi installation and for your
+       config.php file.  For example, they might be:
+
+         /usr/local/lib/tavi/tavi-current
+         /home/joe/tavi/mywiki
+
+    B. If you are running PHP as mod_php under Apache, add the directories
+       to the .htaccess file in the directory where the wiki resides.
+       Separate them with colons:
+
+         php_value include_path "/home/joe/tavi/mywiki:/usr/local/lib/tavi/tavi-current"
+
+    C. If, instead, you are running PHP as a CGI program, then you will have to
+       similarly change the include_path in your php.ini file to point to the
+       given directories.  (To prevent this from affecting your other PHP
+       scripts, see http://tavi.sourceforge.net/CGI+Wrapping.)
+
+9.  [Optional, but recommended.]
+
+    Turn off register_globals for 'Tavi.  While there are no known security
+    exploits in 'Tavi 0.21, this is generally a good idea to make your scripts
+    less liable to undiscovered exploits.
+
+    A. If you are running PHP as mod_php under Apache, add the following line
+       to the .htaccess file in the directory where the wiki resides:
+
+         php_flag register_globals off
+
+    B. If, instead, you are running PHP as a CGI program, then you will have
+       to similarly change the register_globals setting in your php.ini file.
+       (To prevent this from affecting your other PHP scripts, see
+       http://tavi.sourceforge.net/CGI+Wrapping.)
+
+10. Visit your wiki and start creating pages!
+
+    Apart from your wiki's home page, you should also create RecentChanges,
+    containing (at minimum) a wildcard subscription list like so:
+
+      [[! *]]
+
+    You should also create some InterWiki entries.  See
+    http://tavi.sourceforge.net/InterWiki for help.
+
+11. Advertise your wiki.  Feel free to put a link to your wiki on
+    http://tavi.sourceforge.net/TaviSites.
+
+12. Read more about using and administering 'Tavi at
+    http://tavi.sourceforge.net/TaviDocumentation.
+
+
+Advanced
+========
+
+   * Customizing Your Wiki
+
+     See http://tavi.sourceforge.net/CustomizingTavi for help on how you can
+     tweak your wiki's behavior and appearance to your heart's content.
+
+   * Virtual Hosts and Wiki Farms
+
+     If you are running a virtual host server, or a wiki farm, you might
+     wish to install 'Tavi a single time, rather than once for each wiki.
+     If you installed 'Tavi as suggested above, this will be easy to achieve.
+     See http://tavi.sourceforge.net/VirtualHosts for help.
+
+   * Using Templates
+
+     'Tavi allows you to configure templates to customize your wiki's
+     appearance.  To make things easier on yourself if you upgrade 'Tavi
+     in the future, you should *copy* rather than directly edit the default
+     template.  See http://tavi.sourceforge.net/CustomizingTemplates for
+     help.
+
+   * URL Rewriting
+
+     With a few simple tricks you can set up your wiki so the pages appear
+     like http://example.com/wiki/PageName.  See
+     http://tavi.sourceforge.net/URL+Rewriting for help.
+
+   * Sister Wikis
+
+     'Tavi allows you to set up *sister wikis*.  'Tavi will recognize pages
+     on sister wikis that have the same names as pages on your wiki.  It
+     will display links to the sister wiki pages on your wiki's pages.
+     See http://tavi.sourceforge.net/SisterWiki for help.
+
+   * Automated Upgrades
+
+     'Tavi's configuration has been re-organized so that upgrades in the
+     future should be nearly effortless.  See
+     http://tavi.sourceforge.net/AutomatedUpgrades for help.
+
+
+WikkiTikkiTavi - Upgrading
+==========================
+
+'Tavi version 0.21 has rearranged its configuration somewhat, to allow for
+more effortless upgrades in the future.
+
+Unfortunately, this means that upgrading from version 0.20 to version 0.21
+will not quite be effortless.  Fortunately, no database changes need to be
+made; the only changes are in configuration.
+
+config.php is no longer in the distribution.  Instead, you create config.php
+when you install 'Tavi, and it is never overwritten, even if you later upgrade
+to a newer release.
+
+The simplest way to upgrade to 'Tavi 0.21 is to scrap your existing config.php
+and use install/configure.pl to generate a new one for you, as described
+above in "WikkiTikkiTavi - Installation".  It will prompt you for all the
+relevant configuration values.
+
+If you have been using a customized template, we recommend that you place
+it in a directory other than template/.  This will prevent it from being
+overwritten when you upgrade now (or later).  (However, you may wish to
+consider using the new template as a starting point for your custom template,
+as it has been tweaked to be compliant with the XHTML-Strict standard.) 
+
+
