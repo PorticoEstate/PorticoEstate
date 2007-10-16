@@ -110,6 +110,12 @@
 				echo '<br>' . time() . ' crypto->encrypt() unencrypted data: ---->>>>' . $data . "\n";
 			}
 
+			if ( $data === '' )
+			{
+				// no point in encrypting an empty string
+				return $data;
+			}
+
 			if(is_array($data) || is_object($data))
 			{
 				if($this->debug)
@@ -172,6 +178,13 @@
 			{
 				echo '<br>' . time() . ' crypto->decrypt() crypted data: ---->>>>' . $encrypteddata;
 			}
+
+			if ( $encrypteddata === '' )
+			{
+				// an empty string is always a usless empty string
+				return $encrypteddata;
+			}
+
 			/* Disable all encryption if the admin didn't set it up */
 			if ($this->enabled)
 			{
