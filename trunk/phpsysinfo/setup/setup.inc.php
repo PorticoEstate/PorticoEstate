@@ -27,6 +27,6 @@
 	/* Dependacies for this app to work */
 	$setup_info['phpsysinfo']['depends'][] = array(
 		 'appname' => 'phpgwapi',
-		 'versions' => Array('0.9.13', '0.9.14', '0.9.16')
+		 'versions' => Array('0.9.16', '0.9.17', '0.9.18')
 	);
 ?>
