@@ -378,17 +378,17 @@
 
 		function read_single($id,$values='')
 		{
-			$sql = 'SELECT * FROM phpgw_demo_table where id=' . intval($id);
+			$sql = 'SELECT * FROM phpgw_demo_table WHERE id = ' . (int) $id;
 	
 			$this->db->query($sql,__LINE__,__FILE__);
 
 			if ($this->db->next_record())
 			{
 				$values['id']			= $id;
-				$values['name']			= stripslashes($this->db->f('name'));
-				$values['address']		= stripslashes($this->db->f('address'));
-				$values['remark']		= stripslashes($this->db->f('remark'));
-				$values['town']			= stripslashes($this->db->f('town'));
+				$values['name']			= $this->db->f('name', true);
+				$values['address']		= $this->db->f('address', true);
+				$values['remark']		= $this->db->f('remark', true);
+				$values['town']			= $this->db->f('town', true);
 				$values['zip']			= $this->db->f('zip');
 				$values['entry_date']	= $this->db->f('entry_date');
 				$values['user_id']		= $this->db->f('user_id');
@@ -396,7 +396,8 @@
 				$values['access']		= $this->db->f('access');
 				$values['grants'] 		= (int)$this->grants[$this->db->f('user_id')];
 
-				for ($i=0;$i<count($values['attributes']);$i++)
+				$cnt_attr = count($values['attributes']); 
+				for ($i=0; $i < $cnt_attr; ++$i)
 				{
 					$values['attributes'][$i]['value'] 	= $this->db->f($values['attributes'][$i]['column_name']);
 				}

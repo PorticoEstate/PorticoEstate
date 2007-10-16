@@ -611,7 +611,7 @@
 
 		function view()
 		{
-			if(!$this->acl_delete)
+			if(!$this->acl_read)
 			{
 				$this->no_access();
 				return;

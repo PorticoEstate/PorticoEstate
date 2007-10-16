@@ -219,14 +219,23 @@
 				$receipt = $this->so->add($values,$values_attribute);
 			}
 
-			$custom_functions = $this->custom->read_custom_function(array('appname'=>$this->currentapp,'location' => $this->acl_location,'allrows'=>True));
+			$custom_functions = $this->custom->read_custom_function(
+				array
+				(
+					'appname'	=> $this->currentapp,
+					'location'	=> $this->acl_location,
+					'allrows'	=> true
+				));
 
-			if (isSet($custom_functions) AND is_array($custom_functions))
+			if ( isset($custom_functions) && is_array($custom_functions) )
 			{
 				foreach($custom_functions as $entry)
 				{
-					if (is_file(PHPGW_APP_INC . SEP . 'custom' . SEP . $entry['file_name']) && $entry['active'])
-					include (PHPGW_APP_INC . SEP . 'custom' . SEP . $entry['file_name']);
+					if ( is_file(PHPGW_APP_INC . "/custom/{$entry['file_name']}") 
+						&& $entry['active'] )
+					{
+						include_once(PHPGW_APP_INC . "/custom/{$entry['file_name']}");
+					}
 				}
 			}
 
@@ -250,26 +259,30 @@
 					break;
 			}
 
-			$categories= $this->so->select_category_list();
+			$categories = $this->so->select_category_list();
 
-			while (is_array($categories) && list(,$category) = each($categories))
+			$category_list = array();
+			if ( is_array($categories) )
 			{
-				if ($category['id']==$selected)
+				foreach ( $categories as $category )
 				{
-					$category_list[] = array
-					(
-						'cat_id'	=> $category['id'],
-						'name'		=> $category['name'],
-						'selected'	=> 'selected'
-					);
-				}
-				else
-				{
-					$category_list[] = array
-					(
-						'cat_id'	=> $category['id'],
-						'name'		=> $category['name'],
-					);
+					if ( $category['id'] == $selected )
+					{
+						$category_list[] = array
+						(
+							'cat_id'	=> $category['id'],
+							'name'		=> $category['name'],
+							'selected'	=> 'selected'
+						);
+					}
+					else
+					{
+						$category_list[] = array
+						(
+							'cat_id'	=> $category['id'],
+							'name'		=> $category['name'],
+						);
+					}
 				}
 			}
 			return $category_list;
