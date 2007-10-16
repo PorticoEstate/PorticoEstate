@@ -12,7 +12,6 @@ failed to rename %1 to %2	ftp	no	Kunne ikke rename %1 til %2
 failed to upload %1	ftp	no	Kunne ikke uploade %1
 ftp client	ftp	no	Ftp Klient
 ftp server	ftp	no	Ftp Server
-home	ftp	no	Home
 logout/relogin	ftp	no	logout/relogin
 password	ftp	no	Passord
 rename	ftp	no	rename %
