@@ -11,18 +11,6 @@
 
 	/* $Id: hook_home.inc.php,v 1.11 2007/09/22 13:45:42 skwashd Exp $ */
 
-	$d1 = strtolower(substr($GLOBALS['phpgw_info']['server']['app_inc'],0,3));
-	if($d1 == 'htt' || $d1 == 'ftp' )
-	{
-		echo "Failed attempt to break in via an old Security Hole!<br />\n";
-		$GLOBALS['phpgw']->common->phpgw_exit();
-	}
-	unset($d1);
-	
-	
-	// does this array item actually exist before we create the mail_msg, where is it created?
-	//if ($GLOBALS['phpgw_info']['user']['preferences']['email']['mainscreen_showmail'] == True)
-	
 	$debug_hook_home = 0;
 	//$debug_hook_home = 3;
 	
