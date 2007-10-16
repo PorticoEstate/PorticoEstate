@@ -443,7 +443,7 @@
 				$this->bo->resort_custom_function($id,$resort);
 			}
 			$custom_function_list = $this->bo->read_custom_function($appname,$location);
-
+			$content = array();
 			if (isset($custom_function_list) AND is_array($custom_function_list))
 			{
 				foreach($custom_function_list as $entry)

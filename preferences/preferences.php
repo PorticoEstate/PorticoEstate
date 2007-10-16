@@ -623,12 +623,12 @@
 	$notifys = array();
 	if (!$GLOBALS['phpgw']->hooks->single('settings',$_GET['appname']))
 	{
+		$appname = htmlspecialchars($_GET['appname']);
 		$t->set_block('preferences','form','formhandle');	// skip the form
 		$t->set_var('formhandle','');
 		
 		$t->set_var('messages',lang('Error: There was a problem finding the preference file for %1 in %2',
-			$GLOBALS['phpgw_info']['navbar'][$_GET['appname']]['title'],PHPGW_SERVER_ROOT . SEP
-			. $_GET['appname'] . SEP . 'inc' . SEP . 'hook_settings.inc.php'));
+			lang($appname), "/path/to/phpgroupware/{$appname}/inc/hook_settings.inc.php"));
 	}
 
 	if (count($notifys))	// there have been notifys in the hook, we need to save in the session

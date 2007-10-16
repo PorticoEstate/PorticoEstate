@@ -46,6 +46,11 @@
 			'save'				=> true
 		);
 
+		/**
+		* @var int $total_records total number of records found
+		*/
+		var $total_records = 0;
+
 		var $soap_functions = array(
 			'list' => array(
 				'in'  => array('int','int','struct','string','int'),
