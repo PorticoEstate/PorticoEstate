@@ -575,17 +575,20 @@
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('custom'));
 
-			if ($values['save'])
+			if (isset($values['save']) && $values['save'])
 			{
-				if($id)
+				if(isset($id) && $id)
 				{
 					$values['id']=$id;
 					$action='edit';
 				}
+				else
+				{
+					$action='add';
+				}
 
 				$values['appname']=$appname;
 				$values['location']=$location;
-
 
 				if (!$values['appname'])
 				{
@@ -597,10 +600,13 @@
 					$receipt['error'][] = array('msg'=>lang('custom function file not chosen!'));
 				}
 
-
-				if (!$receipt['error'])
+				if(!$values['location'] || !$values['appname'])
 				{
-
+				 	$receipt['error'][] = array('msg' => lang('location or appname is missing'));
+				}
+	
+				if (!isset($receipt['error']) || !$receipt['error'])
+				{
 					$receipt = $this->bo->save_custom_function($values,$action);
 
 					if(!$id)
@@ -618,8 +624,8 @@
 			if ($id)
 			{
 				$values = $this->bo->read_single_custom_function($appname,$location,$id);
-				$type_name=$values['type_name'];
-				$function_msg = lang('edit custom function'). ' ' . lang($type_name);
+				$type_name=$values['custom_function_file'];
+				$function_msg = lang('edit custom function'). ': ' . $type_name;
 				$action='edit';
 			}
 			else
@@ -660,7 +666,7 @@
 
 				'lang_descr'						=> lang('descr'),
 				'lang_descr_custom_functiontext'	=> lang('Enter a descr for the custom function'),
-				'value_descr'						=> $values['descr'],
+				'value_descr'						=> isset($values['descr']) ? $values['descr']:'',
 
 				'lang_done_custom_functiontext'		=> lang('Back to the list'),
 				'lang_save_custom_functiontext'		=> lang('Save the custom function'),
@@ -668,9 +674,9 @@
 				'lang_custom_function'				=> lang('custom function'),
 				'lang_custom_function_statustext'	=> lang('Select a custom function'),
 				'lang_no_custom_function'			=> lang('No custom function'),
-				'custom_function_list'				=> $this->bo->select_custom_function($values['custom_function_file'],$appname),
+				'custom_function_list'				=> $this->bo->select_custom_function(isset($values['custom_function_file'])?$values['custom_function_file']:'',$appname),
 
-				'value_active'						=> $values['active'],
+				'value_active'						=> isset($values['active'])?$values['active']:'',
 				'lang_active'						=> lang('Active'),
 				'lang_active_statustext'			=> lang('check to activate custom function'),
 			);

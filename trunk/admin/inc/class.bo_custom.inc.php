@@ -234,7 +234,7 @@
 
 		function select_custom_function($selected='', $appname)
 		{
-
+			$file_list = array();
 			$dir_handle = @opendir(PHPGW_SERVER_ROOT . SEP . $appname . SEP . 'inc' . SEP . 'custom');
 			$i=0; $myfilearray = '';
 			if ($dir_handle)
@@ -251,28 +251,31 @@
 				sort($myfilearray);
 			}
 
-			for ($i=0;$i<count($myfilearray);$i++)
+			if(isset($myfilearray)&&is_array($myfilearray))
 			{
-				$fname = ereg_replace('_',' ',$myfilearray[$i]);
-				$sel_file = '';
-				if ($myfilearray[$i]==$selected)
+				for ($i=0;$i<count($myfilearray);$i++)
 				{
-					$sel_file = 'selected';
-				}
+					$fname = ereg_replace('_',' ',$myfilearray[$i]);
+					$sel_file = '';
+					if ($myfilearray[$i]==$selected)
+					{
+						$sel_file = 'selected';
+					}
 
-				$file_list[] = array
-				(
-					'id'		=> $myfilearray[$i],
-					'name'		=> $fname,
-					'selected'	=> $sel_file
-				);
+					$file_list[] = array
+					(
+						'id'		=> $myfilearray[$i],
+						'name'		=> $fname,
+						'selected'	=> $sel_file
+					);
+				}
 			}
 
 			for ($i=0;$i<count($file_list);$i++)
 			{
 				if ($file_list[$i]['selected'] != 'selected')
 				{
-					unset($conv_list[$i]['selected']);
+					unset($file_list[$i]['selected']);
 				}
 			}
 
