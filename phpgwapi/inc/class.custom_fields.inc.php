@@ -850,44 +850,6 @@
 			$this->db->transaction_commit();
 		}
 
-		/**
-		 * Save an attribute record
-		 * 
-		 * @param array $attrib the attribute data
-		 * @param string $action the save action to use [edit|save]
-		 * @return int the attribute id (db pk)
-		 */
-		function save_attrib($attrib, $action='edit')
-		{
-			if ($action=='edit')
-			{
-				if ( isset($attrib['id']) && $attrib['id'])
-				{
-
-					return $this->so->edit_attrib($attrib);
-				}
-			}
-			return $this->so->add_attrib($attrib);
-		}
-
-		function save_custom_function($custom_function,$action='')
-		{
-			$receipt = 0;
-			if ($action=='edit')
-			{
-				if ($custom_function['id'] != '')
-				{
-
-					$receipt = $this->so->edit_custom_function($custom_function);
-				}
-			}
-			else
-			{
-				$receipt = $this->so->add_custom_function($custom_function);
-			}
-			return $receipt;
-		}
-
 		function select_custom_function($selected='', $appname)
 		{
 
