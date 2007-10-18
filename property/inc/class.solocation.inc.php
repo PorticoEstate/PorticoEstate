@@ -94,7 +94,7 @@
 			{		
 				$entity[] = array
 				(
-					'entity_link'	=> $GLOBALS['phpgw']->link('/index.php','menuaction='.$this->currentapp.'.uidocument.index&query=' . $location_code),
+					'entity_link'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction' => $this->currentapp.'.uidocument.index','query'=> $location_code)),
 					'name'		=> lang('Documentation') . ' [' . $this->db2->f('hits') . ']',
 					'descr'		=> lang('Documentation')
 				);
@@ -1137,13 +1137,15 @@
 
 			$uicols['name'][]	= 'type';
 			$uicols['descr'][]	= lang('type');
+			$uicols['input_type'][]	= 'text';
 
-
+			$filtermethod = '';
 			$where = 'WHERE';
 			if($district_id>0)
 			{
 				$uicols['name'][]	= 'district_id';
 				$uicols['descr'][]	= lang('district_id');
+				$uicols['input_type'][]	= 'text';
 				$cols.=", fm_part_of_town.district_id as district_id";
 				$groupmethod .= " ,fm_part_of_town.district_id";
 				$filtermethod = " $where fm_part_of_town.district_id=$district_id";
@@ -1154,6 +1156,7 @@
 			{
 				$uicols['name'][]	= 'part_of_town';
 				$uicols['descr'][]	= lang('part of town');
+				$uicols['input_type'][]	= 'text';
 				$groupmethod .= " ,fm_part_of_town.name";
 				$cols.=", fm_part_of_town.name as part_of_town";
 				$filtermethod .= " $where fm_part_of_town.part_of_town_id=$part_of_town_id";
@@ -1175,11 +1178,12 @@
 
 			$uicols['name'][]	= 'number';
 			$uicols['descr'][]	= lang('number');
-
+			$uicols['input_type'][]	= 'text';
+			
 			$joinmethod= "$this->join $entity_table"."_category on $entity_table.category=$entity_table"."_category.id";
 
 			$sql = $this->bocommon->generate_sql(array('entity_table'=>$entity_table,'cols_return'=>$cols_return,'cols'=>$cols,
-								'uicols'=>$uicols,'joinmethod'=>$joinmethod,'paranthesis'=>$paranthesis,'query'=>$query,'no_address'=>True,'location_level'=>$type_id));
+								'uicols'=>$uicols,'joinmethod'=>$joinmethod,'paranthesis'=>$paranthesis,'no_address'=>True,'location_level'=>$type_id));
 
 			$this->db->query($sql . $filtermethod . $groupmethod . " ORDER BY $entity_table.category",__LINE__,__FILE__);
 

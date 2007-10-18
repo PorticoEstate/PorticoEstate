@@ -454,7 +454,7 @@
 
 			for ($i=0;$i<count($uicols['name']);$i++)
 			{
-				if($uicols['exchange'][$i])
+				if(isset($uicols['exchange'][$i]) && $uicols['exchange'][$i])
 				{
 					$function_exchange_values .= 'opener.document.form.' . $uicols['name'][$i] .'.value = thisform.elements[' . $i . '].value;' ."\r\n";
 				}
@@ -617,9 +617,12 @@
 			$values = false;
 			if(isset($_POST['save']))
 			{
-				for ($i=0; $i<count($insert_record['location']); $i++)
+				if(isset($insert_record['location']) && is_array($insert_record['location']))
 				{
-					$values[$insert_record['location'][$i]]= $_POST[$insert_record['location'][$i]];
+					for ($i=0; $i<count($insert_record['location']); $i++)
+					{
+						$values[$insert_record['location'][$i]]= $_POST[$insert_record['location'][$i]];
+					}
 				}
 
 				for ($i=0; $i<count($insert_record['extra']); $i++)
@@ -703,11 +706,11 @@
 
 				if(!isset($receipt['error']))
 				{
-					$receipt = $this->bo->save($values,$values_attribute,$action,$type_id,$location_parent);
+					$receipt = $this->bo->save($values,$values_attribute,$action,$type_id,isset($location_parent)?$location_parent:'');
 				}
 				else
 				{
-					if($location_parent)
+					if(isset($location_parent) && $location_parent)
 					{
 						$location_code_parent=implode("-", $location_parent);
 						$values = $this->bo->read_single($location_code_parent);
@@ -1093,7 +1096,7 @@
 				{
 					foreach($entities as $entity_entry)
 					{
-						if($entity_entry['entity_link'])
+						if(isset($entity_entry['entity_link']) && $entity_entry['entity_link'])
 						{
 							$entities_link[] = array
 							(
@@ -1736,8 +1739,8 @@
 				{
 					for ($i=0;$i<count($uicols['name']);$i++)
 					{
-						$content[$j]['row'][$i]['value'] 			= $summary[$uicols['name'][$i]];
-						$content[$j]['row'][$i]['name'] 			= $summary['name'][$i];
+						$content[$j]['row'][$i]['value'] 			= isset($summary[$uicols['name'][$i]])?$summary[$uicols['name'][$i]]:'';
+						$content[$j]['row'][$i]['name'] 			= isset($summary['name'][$i])?$summary['name'][$i]:'';
 					}
 
 					$j++;
@@ -1747,7 +1750,7 @@
 			$uicols_count	= count($uicols['descr']);
 			for ($i=0;$i<$uicols_count;$i++)
 			{
-				if($uicols['input_type'][$i]!='hidden')
+				if(!isset($uicols['input_type'][$i]) || $uicols['input_type'][$i]!='hidden')
 				{
 					$table_header[$i]['header'] 	= $uicols['descr'][$i];
 					$table_header[$i]['width'] 		= '15%';
@@ -1764,7 +1767,7 @@
 						'district_id'		=>$this->district_id,
 						'part_of_town_id'	=>$this->part_of_town_id,
 						'filter'		=>$this->filter,
-						'type_id'		=>$type_id,
+					//	'type_id'		=>$type_id,
 						'summary'		=>True
 			);
 
@@ -1775,7 +1778,7 @@
 						'district_id'		=>$this->district_id,
 						'part_of_town_id'	=>$this->part_of_town_id,
 						'filter'		=>$this->filter,
-						'type_id'		=>$type_id
+					//	'type_id'		=>$type_id
 			);
 
 

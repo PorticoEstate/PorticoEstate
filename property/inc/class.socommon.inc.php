@@ -97,7 +97,7 @@
 
 		function fm_cache($name='',$value='')
 		{
-			if($value)
+			if($name && $value)
 			{
 				$value = serialize($value);
 				$this->db->query("INSERT INTO fm_cache (name,value)VALUES ('$name','$value')",__LINE__,__FILE__);
@@ -105,9 +105,11 @@
 			else
 			{
 				$this->db->query("SELECT value FROM fm_cache where name='$name'");
-				$this->db->next_record();
-				$value= unserialize($this->db->f('value'));
-				return $value;
+				if($this->db->next_record())
+				{
+					$value= unserialize($this->db->f('value'));
+					return $value;
+				}
 			}
 		}
 
