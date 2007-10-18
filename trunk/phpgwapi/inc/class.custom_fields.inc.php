@@ -472,7 +472,7 @@
 				$value_set=array(
 					'descr'		=> $custom_function['descr'],
 					'file_name'	=> $custom_function['custom_function_file'],
-					'active'	=> $custom_function['active']
+					'active'	=> isset($custom_function['active'])?$custom_function['active']:''
 					);
 
 				$value_set	= $this->db->validate_update($value_set);
@@ -939,7 +939,7 @@
 				'link' => 255
 			);
 
-			return $datatype_precision[$datatype];
+			return isset($datatype_precision[$datatype])?$datatype_precision[$datatype]:'';
 		}
 
 		function _delete_attrib($location,$appname,$attrib_id)
