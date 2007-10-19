@@ -136,6 +136,7 @@
 
 		function columns()
 		{
+			$receipt = array();
 			$GLOBALS['phpgw']->xslttpl->add_file(array('columns'));
 
 			$GLOBALS['phpgw_info']['flags']['noframework'] = True;
@@ -167,7 +168,7 @@
 			$data = array
 			(
 				'msgbox_data'		=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
-				'column_list'		=> $this->bo->column_list($values['columns'],$type_id=$this->type_id,$allrows=True),
+				'column_list'		=> $this->bo->column_list(isset($values['columns']) ? $values['columns']:'',$type_id=$this->type_id,$allrows=True),
 				'function_msg'		=> $function_msg,
 				'form_action'		=> $GLOBALS['phpgw']->link('/index.php',$link_data),
 				'lang_columns'		=> lang('columns'),

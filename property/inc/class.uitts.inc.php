@@ -1008,14 +1008,13 @@
 				}
 			}
 
-
-			if($values['origin'])
+			if(isset($values['origin']) && $values['origin'])
 			{
 				$origin		= $values['origin'];
 				$origin_id	= $values['origin_id'];
 			}
 
-			if($origin)
+			if(isset($origin) && $origin)
 			{
 				unset($values['origin']);
 				unset($values['origin_id']);
@@ -1026,7 +1025,6 @@
 					'type'=> $origin
 					);
 			}
-
 
 			if (isset($values['origin']) AND is_array($values['origin']))
 			{
@@ -1114,7 +1112,7 @@
 				{
 					$receipt = $this->bo->add($values);
 
-					$values['file_name']=str_replace(' ','_',$_FILES['file']['name']);
+					$values['file_name'] = @str_replace(' ','_',$_FILES['file']['name']);
 
 					if($values['file_name'])
 					{
@@ -1902,7 +1900,7 @@
 				'fileupload'				=> (isset($this->bo->config->config_data['fmttsfileupload'])?$this->bo->config->config_data['fmttsfileupload']:''),
 				'link_view_file'				=> $GLOBALS['phpgw']->link('/index.php',$link_file_data),
 				'link_to_files'					=> (isset($this->bo->config->config_data['files_url'])?$this->bo->config->config_data['files_url']:''),
-				'files'							=> $ticket['files'],
+				'files'							=> isset($ticket['files'])?$ticket['files']:'',
 				'lang_files'					=> lang('files'),
 				'lang_filename'					=> lang('Filename'),
 				'lang_delete_file'				=> lang('Delete file'),

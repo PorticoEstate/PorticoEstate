@@ -240,9 +240,8 @@
 
 			$entity = $this->so->read(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
 											'filter' => $this->filter,'cat_id' => $this->cat_id,'district_id' => $this->district_id,
-											'lookup'=>$data['lookup'],'allrows'=>$data['allrows'],'entity_id'=>$this->entity_id,'cat_id'=>$this->cat_id,'status'=>$this->status,
-											'start_date'=>$this->bocommon->date_to_timestamp($data['start_date']),'end_date'=>$this->bocommon->date_to_timestamp($data['end_date']),
-											'allrows'=>$data['allrows']));
+											'lookup'=>isset($data['lookup'])?$data['lookup']:'','allrows'=>isset($data['allrows'])?$data['allrows']:'','entity_id'=>$this->entity_id,'cat_id'=>$this->cat_id,'status'=>$this->status,
+											'start_date'=>$this->bocommon->date_to_timestamp($data['start_date']),'end_date'=>$this->bocommon->date_to_timestamp($data['end_date'])));
 
 			$this->total_records = $this->so->total_records;
 			$this->uicols	= $this->so->uicols;
@@ -252,7 +251,7 @@
 //_debug_array($cols_extra);
 //_debug_array($cols_return_lookup);
 
-			if($data['lookup'])
+			if(isset($data['lookup']) && $data['lookup'])
 			{
 				for ($i=0;$i<count($entity);$i++)
 				{
@@ -283,8 +282,9 @@
 			$vendor->role	= 'vendor';
 
 			$entity	= $this->so->read_single($data);
+
 			$dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
-			$entity['date']  = $GLOBALS['phpgw']->common->show_date($entity['date'],$dateformat);
+		//	$entity['date']  = $GLOBALS['phpgw']->common->show_date($entity['date'],$dateformat);
 
 			if($entity['location_code'])
 			{
@@ -393,15 +393,18 @@
 
 				$entity['attributes'][$i]['datatype_text'] = $this->bocommon->translate_datatype($entity['attributes'][$i]['datatype']);
 				$entity['attributes'][$i]['counter']	= $i;
-				$entity['attributes'][$i]['type_id']	= $data['type_id'];
+//				$entity['attributes'][$i]['type_id']	= $data['type_id'];
 			}
 
-			for ($j=0;$j<count($lookup_functions);$j++)
+			if(isset($lookup_functions) && is_array($lookup_functions))
 			{
-				$entity['lookup_functions'] .= 'function ' . $lookup_functions[$j]['name'] ."\r\n";
-				$entity['lookup_functions'] .= '{'."\r\n";
-				$entity['lookup_functions'] .= $lookup_functions[$j]['action'] ."\r\n";
-				$entity['lookup_functions'] .= '}'."\r\n";
+				for ($j=0;$j<count($lookup_functions);$j++)
+				{
+					$entity['lookup_functions'] .= 'function ' . $lookup_functions[$j]['name'] ."\r\n";
+					$entity['lookup_functions'] .= '{'."\r\n";
+					$entity['lookup_functions'] .= $lookup_functions[$j]['action'] ."\r\n";
+					$entity['lookup_functions'] .= '}'."\r\n";
+				}
 			}
 
 			$this->vfs->override_acl = 1;
@@ -412,13 +415,13 @@
 
 			$this->vfs->override_acl = 0;
 
-			if(!$entity['files'][0]['file_id'])
+			if(!isset($entity['files'][0]['file_id']) || !$entity['files'][0]['file_id'])
 			{
 				unset($entity['files']);
 			}
 
 
-			$GLOBALS['phpgw']->session->appsession('insert_record_entity',$this->currentapp,$insert_record_entity);
+			$GLOBALS['phpgw']->session->appsession('insert_record_entity',$this->currentapp,isset($insert_record_entity)?$insert_record_entity:'');
 
 //_debug_array($insert_record_entity);
 			return $entity;
@@ -522,24 +525,26 @@
 			{
 				for ($i=0;$i<count($values_attribute);$i++)
 				{
-					if($values_attribute[$i]['datatype']=='CH' && $values_attribute[$i]['value'])
+					if(isset($values_attribute[$i]['value']) && $values_attribute[$i]['value'])
 					{
-						$values_attribute[$i]['value'] = serialize($values_attribute[$i]['value']);
-					}
-					if($values_attribute[$i]['datatype']=='R' && $values_attribute[$i]['value'])
-					{
-						$values_attribute[$i]['value'] = $values_attribute[$i]['value'][0];
-					}
-
-					if($values_attribute[$i]['datatype']=='N' && $values_attribute[$i]['value'])
-					{
-						$values_attribute[$i]['value'] = str_replace(",",".",$values_attribute[$i]['value']);
-					}
-
-					if($values_attribute[$i]['datatype']=='D' && $values_attribute[$i]['value'])
-					{
-
-						$values_attribute[$i]['value'] = date($this->bocommon->dateformat,$this->bocommon->date_to_timestamp($values_attribute[$i]['value']));
+						switch($values_attribute[$i]['datatype'])
+						{
+							case 'CH':
+								$values_attribute[$i]['value'] = serialize($values_attribute[$i]['value']);
+								break;
+							case 'R':
+								$values_attribute[$i]['value'] = $values_attribute[$i]['value'][0];
+								break;
+							case 'N':
+								$values_attribute[$i]['value'] = str_replace(",",".",$values_attribute[$i]['value']);
+								break;
+							case 'D':
+								$values_attribute[$i]['value'] = date($this->bocommon->dateformat,$this->bocommon->date_to_timestamp($values_attribute[$i]['value']));
+								break;
+							case 'T':
+								$values_attribute[$i]['value'] = $GLOBALS['phpgw']->db->db_addslashes($values_attribute[$i]['value']);
+								break;
+						}
 					}
 				}
 			}
@@ -548,7 +553,7 @@
 			{
 				$receipt = $this->so->edit($values,$values_attribute,$entity_id,$cat_id);
 
-				if($values['delete_file'])
+				if(isset($values['delete_file']) && is_array($values['delete_file']))
 				{
 					for ($i=0;$i<count($values['delete_file']);$i++)
 					{

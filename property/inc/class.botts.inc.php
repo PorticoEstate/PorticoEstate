@@ -417,7 +417,7 @@
 			}
 
 
-			if(!$ticket['files'][0]['file_id'])
+			if(!isset($ticket['files'][0]['file_id']) || !$ticket['files'][0]['file_id'])
 			{
 				unset($ticket['files']);
 			}
@@ -540,11 +540,10 @@
 
 			$this->config->read_repository();
 
-			if ($this->config->config_data['mailnotification'] && $ticket['send_mail'])
+			if (isset($this->config->config_data['mailnotification']) && $this->config->config_data['mailnotification'] && isset($ticket['send_mail']) && $ticket['send_mail'])
 			{
 				$receipt = $this->mail_ticket($receipt['id'],$fields_updated,$receipt,$ticket['location_code']);
 			}
-
 
 			$soadmin_custom = CreateObject($this->currentapp.'.soadmin_custom');
 			$custom_functions = $soadmin_custom->read(array('acl_location' => $this->acl_location,'allrows'=>True));

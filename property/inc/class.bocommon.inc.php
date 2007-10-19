@@ -251,20 +251,12 @@
 					$j++;
 				}
 			}
-
-			for ($i=0;$i<count($output_list);$i++)
-			{
-				if ($output_list[$i]['selected'] != 'selected')
-				{
-					unset($output_list[$i]['selected']);
-				}
-			}
-
 			return $output_list;
 		}
 
 		function select_list($selected='',$input_list='')
 		{
+			$entry_list = array();
 			if (isset($input_list) AND is_array($input_list))
 			{
 				foreach($input_list as $entry)
@@ -761,14 +753,14 @@
 				}
 			}
 
-			for ($i=0;$i<count($output_list);$i++)
+/*			for ($i=0;$i<count($output_list);$i++)
 			{
 				if ($output_list[$i]['checked'] != 'checked')
 				{
 					unset($output_list[$i]['checked']);
 				}
 			}
-
+*/
 			return $output_list;
 		}
 
@@ -929,9 +921,8 @@
 			}
 		}
 
-		function add_leading_zero($num)
+		function add_leading_zero($num,$id_type='')
 		{
-
 			if ($id_type == "hex")
 			{
 				$num = hexdec($num);

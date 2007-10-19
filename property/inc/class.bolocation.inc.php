@@ -184,7 +184,7 @@
 
 			if(!$selected)
 			{
-				$selected=$GLOBALS['phpgw_info']['user']['preferences'][$this->currentapp]["location_columns_" . $this->type_id];
+				$selected = isset($GLOBALS['phpgw_info']['user']['preferences'][$this->currentapp]["location_columns_" . $this->type_id]) ? $GLOBALS['phpgw_info']['user']['preferences'][$this->currentapp]["location_columns_" . $this->type_id]:'';
 			}
 
 			$columns = $soadmin_location->read_attrib(array('type_id'=>$type_id,'allrows'=>$allrows,'filter_list' =>true));
@@ -394,6 +394,7 @@
 						$location['location'][$i]['extra'][1]['size']		= 6;
 						$location['location'][$i]['extra'][1]['lookup_function_call']	= 'lookup_loc' . $config[$j]['location_type'] . '()';
 						$location['location'][$i]['extra'][1]['value']		= (isset($data['values']['street_number'])?$data['values']['street_number']:'');
+						$i++;
 					}
 					elseif($config[$j]['column_name']=='tenant_id' && $data['tenant']):
 					{
@@ -439,6 +440,7 @@
 						$insert_record['extra']['contact_phone']			= 'contact_phone';
 						$location['location'][$i]['value']					= (isset($data['values']['contact_phone'])?$data['values']['contact_phone']:'');
 						$location['location'][$i]['statustext']				= lang('contact phone');
+						$i++;
 					}
 					elseif($config[$j]['column_name']!='tenant_id' && $config[$j]['column_name']!='street_id'):
 					{
@@ -453,9 +455,9 @@
 						$location['location'][$i]['value']					= $data['values'][$config[$j]['column_name']];
 						$location['location'][$i]['statustext']				= lang('Klick this link to select') . ' ' .$location_types[($fm_location_cols[$j]['location_type']-1)]['name'];
 						$location['location'][$i]['input_type']				= 'text';
+						$i++;
 					}
 					endif;
-					$i++;
 				}
 			}
 
@@ -553,7 +555,7 @@
 				}
 
 				$GLOBALS['phpgw']->session->appsession('lookup_name',$this->currentapp,$lookup_name);
-//_debug_array($location);
+
 				return $location;
 			}
 		}
