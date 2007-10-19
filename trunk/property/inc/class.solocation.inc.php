@@ -451,6 +451,7 @@
 							'datatype'		=> $this->db->f('datatype'),
 							'statustext'	=> $this->db->f('statustext'),
 							'descr'			=> $this->db->f('input_text'),
+							'attrib_id'		=> $column_id
 						);
 
 						$i++;
@@ -576,7 +577,7 @@
 			{
 				$this->db->query($sql . $ordermethod,__LINE__,__FILE__);
 			}
-
+_debug_array($uicols['cols_return_extra']);
 			$j=0;
 			$cols_return_count	= count($cols_return);
 			$location_count 	= $type_id-1;
