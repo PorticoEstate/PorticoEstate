@@ -802,14 +802,7 @@
 		{
 			if(is_array($data))
 			{
-				if ($data['start'])
-				{
-					$start=$data['start'];
-				}
-				else
-				{
-					$start=0;
-				}
+				$start = isset($data['start']) && $data['start'] ? $data['start'] : 0;
 				$query = (isset($data['query'])?$data['query']:'');
 				$sort = (isset($data['sort'])?$data['sort']:'DESC');
 				$order = (isset($data['order'])?$data['order']:'');
@@ -1223,16 +1216,9 @@
 
 		function read_custom_function($data)
 		{
-			if(is_array($data))
+			if(isset($data) && is_array($data))
 			{
-				if ($data['start'])
-				{
-					$start=$data['start'];
-				}
-				else
-				{
-					$start=0;
-				}
+				$start = isset($data['start']) && $data['start'] ? $data['start'] : 0;
 				$query = (isset($data['query'])?$data['query']:'');
 				$sort = (isset($data['sort'])?$data['sort']:'DESC');
 				$order = (isset($data['order'])?$data['order']:'');
@@ -1248,7 +1234,6 @@
 			if ($order)
 			{
 				$ordermethod = " order by $order $sort";
-
 			}
 			else
 			{
@@ -1257,7 +1242,8 @@
 
 			$table = 'fm_custom_function';
 
-			if($query)
+			$querymethod = '';
+			if(isset($query) && $query)
 			{
 				$query = ereg_replace("'",'',$query);
 				$query = ereg_replace('"','',$query);

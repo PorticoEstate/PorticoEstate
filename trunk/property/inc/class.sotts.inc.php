@@ -97,8 +97,8 @@
 
 			if (is_array($this->grants))
 			{
-				$grants = $this->grants;
-				while (list($user) = each($grants))
+				$grants = & $this->grants;
+				foreach($grants as $user => $right)
 				{
 					$public_user_list[] = $user;
 				}
@@ -393,22 +393,27 @@
 
 		function add($ticket)
 		{
-			while (is_array($ticket['location']) && list($input_name,$value) = each($ticket['location']))
+			if(isset($ticket['location']) && is_array($ticket['location']))
 			{
-				if($value)
+				foreach ($ticket['location'] as $input_name => $value)
 				{
-					$cols[] = $input_name;
-					$vals[] = $value;
+					if(isset($value) && $value)
+					{
+						$cols[] = $input_name;
+						$vals[] = $value;
+					}
 				}
 			}
 
-
-			while (is_array($ticket['extra']) && list($input_name,$value) = each($ticket['extra']))
+			if(isset($ticket['extra']) && is_array($ticket['extra']))
 			{
-				if($value)
+				foreach ($ticket['extra'] as $input_name => $value)
 				{
-					$cols[] = $input_name;
-					$vals[] = $value;
+					if(isset($value) && $value)
+					{
+						$cols[] = $input_name;
+						$vals[] = $value;
+					}
 				}
 			}
 
@@ -418,7 +423,7 @@
 				$vals	= ",'" . implode("','", $vals) . "'";
 			}
 
-			if($ticket['street_name'])
+			if(isset($ticket['street_name']) && $ticket['street_name'])
 			{
 				$address[]= $ticket['street_name'];
 				$address[]= $ticket['street_number'];
@@ -453,13 +458,12 @@
 				. "VALUES ($values $vals )",__LINE__,__FILE__);
 
 			$id = $this->db->get_last_insert_id('fm_tts_tickets','id');
-			if($ticket['extra']['contact_phone'] && $ticket['extra']['tenant_id'])
+			if(isset($ticket['extra']['contact_phone']) && $ticket['extra']['contact_phone'] && isset($ticket['extra']['tenant_id']) && $ticket['extra']['tenant_id'])
 			{
 				$this->db->query("update fm_tenant set contact_phone='". $ticket['extra']['contact_phone']. "' where id='". $ticket['extra']['tenant_id']. "'",__LINE__,__FILE__);
 			}
 
-
-			if(is_array($ticket['origin']))
+			if(isset($ticket['origin']) && is_array($ticket['origin']))
 			{
 				if($ticket['origin'][0]['data'][0]['id'])
 				{

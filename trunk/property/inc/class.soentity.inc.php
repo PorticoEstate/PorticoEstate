@@ -71,6 +71,7 @@
 			$this->db->query($sql,__LINE__,__FILE__);
 
 			$i = 0;
+			$status = array();
 			while ($this->db->next_record())
 			{
 				$status[$i]['id']				= $this->db->f('id');
@@ -85,14 +86,7 @@
 		{
 			if(is_array($data))
 			{
-				if ($data['start'])
-				{
-					$start=$data['start'];
-				}
-				else
-				{
-					$start=0;
-				}
+				$start	= (isset($data['start']) && $data['start'] ? $data['start']:0);
 				$filter	= $data['filter']?$data['filter']:'all';
 				$query = (isset($data['query'])?$data['query']:'');
 				$sort = (isset($data['sort'])?$data['sort']:'DESC');
@@ -122,7 +116,6 @@
 				$GLOBALS['phpgw']->session->appsession('grants_entity_'.$entity_id.'_'.$cat_id,$this->currentapp,$grants);
 			}
 
-
 			$sql = $this->bocommon->fm_cache('sql_entity_' . $entity_id . '_' . $cat_id . '_' . $lookup);
 
 			$admin_entity	= CreateObject($this->currentapp.'.soadmin_entity');
@@ -151,7 +144,6 @@
 					$cols_return[] = 'entity_num_' . $entity_id;
 				}
 
-
 				$cols .= ',account_lid';
 				$cols_return[] 				= 'account_lid';
 				$uicols['input_type'][]		= 'text';
@@ -159,8 +151,8 @@
 				$uicols['descr'][]			= lang('User');
 				$uicols['statustext'][]		= lang('User');
 
-				$joinmethod .= " $this->join phpgw_accounts ON ($entity_table.user_id = phpgw_accounts.account_id))";
-				$paranthesis .='(';
+				$joinmethod = " $this->join phpgw_accounts ON ($entity_table.user_id = phpgw_accounts.account_id))";
+				$paranthesis ='(';
 
 				$sql = $this->bocommon->generate_sql(array('entity_table'=>$entity_table,'cols_return'=>$cols_return,'cols'=>$cols,
 								'uicols'=>$uicols,'joinmethod'=>$joinmethod,'paranthesis'=>$paranthesis,'query'=>$query,'lookup'=>$lookup,'location_level'=>$category['location_level']));
@@ -197,7 +189,7 @@
 					}
 				}
 
-				$user_columns=$GLOBALS['phpgw_info']['user']['preferences'][$this->currentapp]['entity_columns_'.$entity_id.'_'.$cat_id];
+				$user_columns = isset($GLOBALS['phpgw_info']['user']['preferences'][$this->currentapp]['entity_columns_'.$entity_id.'_'.$cat_id])?$GLOBALS['phpgw_info']['user']['preferences'][$this->currentapp]['entity_columns_'.$entity_id.'_'.$cat_id]:'';
 
 				if (isset($user_columns) AND is_array($user_columns) AND $user_columns[0])
 				{
@@ -252,12 +244,13 @@
 			}
 
 			$where= 'WHERE';
+			$filtermethod = '';
 
 			if ($filter=='all')
 			{
 				if (is_array($grants))
 				{
-					while (list($user) = each($grants))
+					foreach($grants as $user => $right)
 					{
 						$public_user_list[] = $user;
 					}
@@ -266,14 +259,12 @@
 
 					$where= 'AND';
 				}
-
 			}
 			else
 			{
 				$filtermethod = " $where $entity_table.user_id=$filter ";
 				$where= 'AND';
 			}
-
 
 			if ($status)
 			{
@@ -293,6 +284,7 @@
 				$where= 'AND';
 			}
 
+			$querymethod = '';
 			if($query)
 			{
 				$query = str_replace(",",'.',$query);
@@ -358,6 +350,7 @@
 //_debug_array($cols_return);
 			$contacts			= CreateObject('phpgwapi.contacts');
 
+			$entity_list = array();
 			while ($this->db->next_record())
 			{
 				for ($i=0;$i<$n;$i++)
@@ -372,60 +365,62 @@
 					}
 				}
 
-				for ($i=0;$i<count($cols_return_extra);$i++)
+				if(isset($cols_return_extra) && is_array($cols_return_extra))
 				{
-					$value='';
-					$value=$this->db->f($cols_return_extra[$i]['name']);
+					for ($i=0;$i<count($cols_return_extra);$i++)
+					{
+						$value='';
+						$value=$this->db->f($cols_return_extra[$i]['name']);
 
-					if(($cols_return_extra[$i]['datatype']=='R' || $cols_return_extra[$i]['datatype']=='LB') && $value):
-					{
-						$sql="SELECT value FROM fm_entity_choice where entity_id=$entity_id AND cat_id=$cat_id AND attrib_id=" .$cols_return_extra[$i]['attrib_id']. "  AND id=" . $value;
-						$this->db2->query($sql);
-						$this->db2->next_record();
-						$entity_list[$j][$cols_return_extra[$i]['name']] = $this->db2->f('value');
-					}
-					elseif($cols_return_extra[$i]['datatype']=='AB' && $value):
-					{
-						$contact_data	= $contacts->read_single_entry($value,array('n_given'=>'n_given','n_family'=>'n_family','email'=>'email'));
-						$entity_list[$j][$cols_return_extra[$i]['name']]	= $contact_data[0]['n_family'] . ', ' . $contact_data[0]['n_given'];
-					}
-					elseif($cols_return_extra[$i]['datatype']=='VENDOR' && $value):
-					{
-						$sql="SELECT org_name FROM fm_vendor where id=$value";
-						$this->db2->query($sql);
-						$this->db2->next_record();
-						$entity_list[$j][$cols_return_extra[$i]['name']] = $this->db2->f('org_name');
-					}
-					elseif($cols_return_extra[$i]['datatype']=='CH' && $value):
-					{
-						$ch= unserialize($value);
-
-						if (isset($ch) AND is_array($ch))
+						if(($cols_return_extra[$i]['datatype']=='R' || $cols_return_extra[$i]['datatype']=='LB') && $value):
 						{
-							for ($k=0;$k<count($ch);$k++)
-							{
-								$sql="SELECT value FROM fm_entity_choice where entity_id=$entity_id AND cat_id=$cat_id AND attrib_id=" .$cols_return_extra[$i]['attrib_id']. "  AND id=" . $ch[$k];
-								$this->db2->query($sql);
-								while ($this->db2->next_record())
-								{
-									$ch_value[]=$this->db2->f('value');
-								}
-							}
-							$entity_list[$j][$cols_return_extra[$i]['name']] = @implode(",", $ch_value);
-							unset($ch_value);
+							$sql="SELECT value FROM fm_entity_choice where entity_id=$entity_id AND cat_id=$cat_id AND attrib_id=" .$cols_return_extra[$i]['attrib_id']. "  AND id=" . $value;
+							$this->db2->query($sql);
+							$this->db2->next_record();
+							$entity_list[$j][$cols_return_extra[$i]['name']] = $this->db2->f('value');
 						}
-					}
-					elseif($cols_return_extra[$i]['datatype']=='D' && $value):
-					{
+						elseif($cols_return_extra[$i]['datatype']=='AB' && $value):
+						{
+							$contact_data	= $contacts->read_single_entry($value,array('n_given'=>'n_given','n_family'=>'n_family','email'=>'email'));
+							$entity_list[$j][$cols_return_extra[$i]['name']]	= $contact_data[0]['n_family'] . ', ' . $contact_data[0]['n_given'];
+						}
+						elseif($cols_return_extra[$i]['datatype']=='VENDOR' && $value):
+						{
+							$sql="SELECT org_name FROM fm_vendor where id=$value";
+							$this->db2->query($sql);
+							$this->db2->next_record();
+							$entity_list[$j][$cols_return_extra[$i]['name']] = $this->db2->f('org_name');
+						}
+						elseif($cols_return_extra[$i]['datatype']=='CH' && $value):
+						{
+							$ch= unserialize($value);
+	
+							if (isset($ch) AND is_array($ch))
+							{
+								for ($k=0;$k<count($ch);$k++)
+								{
+									$sql="SELECT value FROM fm_entity_choice where entity_id=$entity_id AND cat_id=$cat_id AND attrib_id=" .$cols_return_extra[$i]['attrib_id']. "  AND id=" . $ch[$k];
+									$this->db2->query($sql);
+									while ($this->db2->next_record())
+									{
+										$ch_value[]=$this->db2->f('value');
+									}
+								}
+								$entity_list[$j][$cols_return_extra[$i]['name']] = @implode(",", $ch_value);
+								unset($ch_value);
+							}
+						}
+						elseif($cols_return_extra[$i]['datatype']=='D' && $value):
+						{
 //_debug_array($value);
-
-						$entity_list[$j][$cols_return_extra[$i]['name']]=date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'],strtotime($value));
+							$entity_list[$j][$cols_return_extra[$i]['name']]=date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'],strtotime($value));
+						}
+						else:
+						{
+							$entity_list[$j][$cols_return_extra[$i]['name']]=$value;
+						}
+						endif;
 					}
-					else:
-					{
-						$entity_list[$j][$cols_return_extra[$i]['name']]=$value;
-					}
-					endif;
 				}
 
 				$location_code=	$this->db->f('location_code');
@@ -497,6 +492,7 @@
 				$sql = "SELECT * FROM fm_origin WHERE destination ='entity_" . $entity_id . '_' . $cat_id . "' AND destination_id = $id ORDER by origin DESC";
 				$this->db->query($sql,__LINE__,__FILE__);
 
+				$last_type = '';
 				$i=-1;
 				while ($this->db->next_record())
 				{
@@ -511,13 +507,14 @@
 						'type'=> $this->db->f('origin')
 						);
 
-					$last_type=$this->db->f('origin');
+					$last_type = $this->db->f('origin');
 				}
 // ------------- end get origin---------------
 // ------------- get destination---------------
 				$sql = "SELECT * FROM fm_origin WHERE origin ='entity_" . $entity_id . '_' . $cat_id . "' AND origin_id = $id ORDER by destination DESC";
 				$this->db->query($sql,__LINE__,__FILE__);
 
+				$last_type = '';
 				$i=-1;
 				while ($this->db->next_record())
 				{
@@ -586,35 +583,39 @@
 
 		function add($values,$values_attribute,$entity_id,$cat_id)
 		{
-			if($values['street_name'])
+			if(isset($values['street_name']) && $values['street_name'])
 			{
 				$address[]= $values['street_name'];
 				$address[]= $values['street_number'];
 				$address = $this->db->db_addslashes(implode(" ", $address));
 			}
 
-			if(!$address)
+			if(!isset($address) || !$address)
 			{
 				$address = $this->db->db_addslashes($values['location_name']);
 			}
 
-			$values['descr'] = $this->db->db_addslashes($values['descr']);
-
-			while (is_array($values['location']) && list($input_name,$value) = each($values['location']))
+			if(isset($values['location']) && is_array($values['location']))
 			{
-				if($value)
+				foreach ($values['location'] as $input_name => $value)
 				{
-					$cols[] = $input_name;
-					$vals[] = $value;
+					if(isset($value) && $value)
+					{
+						$cols[] = $input_name;
+						$vals[] = $value;
+					}
 				}
 			}
-//_debug_array($values);
-			while (is_array($values['extra']) && list($input_name,$value) = each($values['extra']))
+
+			if(isset($values['extra']) && is_array($values['extra']))
 			{
-				if($value)
+				foreach ($values['extra'] as $input_name => $value)
 				{
-					$cols[] = $input_name;
-					$vals[] = $value;
+					if(isset($value) && $value)
+					{
+						$cols[] = $input_name;
+						$vals[] = $value;
+					}
 				}
 			}
 
@@ -677,7 +678,7 @@
 			if (isset($history_set) AND is_array($history_set))
 			{
 				$historylog	= CreateObject($this->currentapp.'.historylog','entity_' . $entity_id .'_' . $cat_id);
-				while (list($attrib_id,$new_value) = each($history_set))
+				foreach ($history_set as $attrib_id => $new_value)
 				{
 					$historylog->add('SO',$values['id'],$new_value,False, $attrib_id);
 				}
@@ -691,33 +692,37 @@
 
 		function edit($values,$values_attribute,$entity_id,$cat_id)
 		{
-			if($values['street_name'])
+			if(isset($values['street_name']) && $values['street_name'])
 			{
 				$address[]= $values['street_name'];
 				$address[]= $values['street_number'];
 				$address	= implode(" ", $address);
 			}
 
-			if(!$address)
+			if(!isset($address) || !$address)
 			{
 				$address = $values['location_name'];
 			}
-
-			$values['descr'] = $this->db->db_addslashes($values['descr']);
 
 			$value_set=array(
 				'location_code'	=> $values['location_code'],
 				'address'	=> $this->db->db_addslashes($address)
 				);
 
-			while (is_array($values['location']) && list($column,$value) = each($values['location']))
+			if(isset($values['location']) && is_array($values['location']))
 			{
-				$value_set[$column]	= $value;
+				foreach ($values['location'] as $column => $value)
+				{
+					$value_set[$column]	= $value;
+				}
 			}
 
-			while (is_array($values['extra']) && list($column,$value) = each($values['extra']))
+			if(isset($values['extra']) && is_array($values['extra']))
 			{
-				$value_set[$column]	= $value;
+				foreach ($values['extra'] as $column => $value)
+				{
+					$value_set[$column]	= $value;
+				}
 			}
 
 //_debug_array($values_attribute);
@@ -750,7 +755,7 @@
 						}
 						else
 						{
-							$value_set[$entry['name']]	= $entry['value'];
+							$value_set[$entry['name']]	= isset($entry['value'])?$entry['value']:'';
 						}
 					}
 
@@ -778,7 +783,7 @@
 			if (isset($history_set) AND is_array($history_set))
 			{
 				$historylog	= CreateObject($this->currentapp.'.historylog','entity_' . $entity_id .'_' . $cat_id);
-				while (list($attrib_id,$history) = each($history_set))
+				foreach ($history_set as $attrib_id => $history)
 				{
 					$historylog->add('SO',$values['id'],$history['value'],False, $attrib_id,$history['date']);
 				}
