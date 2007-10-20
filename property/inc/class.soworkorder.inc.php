@@ -317,7 +317,7 @@
 			{
 				$filtermethod .= " $where fm_wo_hours_category.id=$wo_hour_cat_id ";
 				$where= 'AND';
-				$group_method = " group by fm_project.id,fm_project.location_code,fm_workorder.id,workorder_id,title,fm_workorder.status,fm_workorder.entry_date,user_lid,fm_workorder.vendor_id,project_owner,fm_project.address,fm_vendor.org_name";
+				$group_method = " group by fm_project.id,fm_project.location_code,fm_workorder.id,workorder_id,title,fm_workorder.status,fm_workorder.entry_date,user_lid,fm_workorder.vendor_id,project_owner,fm_project.address,fm_vendor.org_name,fm_workorder.combined_cost,fm_workorder.act_mtrl_cost,fm_workorder.act_vendor_cost";
 			}
 
 			if ($b_group)
