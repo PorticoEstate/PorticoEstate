@@ -130,6 +130,7 @@
 			$GLOBALS['phpgw']->xslttpl->add_file(array('workorder','values','table_header',
 										'menu',
 										'nextmatchs'));
+			$lookup = ''; //Fix this
 
 			$links = $this->menu->links('workorder');
 
@@ -149,7 +150,7 @@
 					{
 						if($uicols['input_type'][$k]!='hidden')
 						{
-							if($workorder_entry['query_location'][$uicols['name'][$k]])
+							if(isset($workorder_entry['query_location'][$uicols['name'][$k]]) && $workorder_entry['query_location'][$uicols['name'][$k]])
 							{
 								$content[$j]['row'][$k]['statustext']			= lang('search');
 								$content[$j]['row'][$k]['text']				= $workorder_entry[$uicols['name'][$k]];
@@ -236,10 +237,10 @@
 											'var'	=>	'fm_location1.loc1',
 											'order'	=>	$this->order,
 											'extra'		=> array('menuaction'	=> $this->currentapp.'.uiworkorder.index',
-																	'type_id'	=>$type_id,
+																//	'type_id'	=>$type_id,
 																	'query'		=>$this->query,
 																	'lookup'	=>$lookup,
-																	'district_id'	=> $this->district_id,
+																//	'district_id'	=> $this->district_id,
 																	'search_vendor'	=>$this->search_vendor,
 																	'cat_id'	=>$this->cat_id,
 																	'start_date'	=>$start_date,
@@ -259,10 +260,10 @@
 											'var'	=>	'project_id',
 											'order'	=>	$this->order,
 											'extra'		=> array('menuaction'	=> $this->currentapp.'.uiworkorder.index',
-																	'type_id'	=>$type_id,
+															//		'type_id'	=>$type_id,
 																	'query'		=>$this->query,
 																	'lookup'	=>$lookup,
-																	'district_id'	=> $this->district_id,
+															//		'district_id'	=> $this->district_id,
 																	'search_vendor'	=>$this->search_vendor,
 																	'cat_id'	=>$this->cat_id,
 																	'start_date'	=>$start_date,
@@ -282,10 +283,10 @@
 											'var'	=>	'workorder_id',
 											'order'	=>	$this->order,
 											'extra'		=> array('menuaction'	=> $this->currentapp.'.uiworkorder.index',
-																	'type_id'	=>$type_id,
+															//		'type_id'	=>$type_id,
 																	'query'		=>$this->query,
 																	'lookup'	=>$lookup,
-																	'district_id'	=> $this->district_id,
+															//		'district_id'	=> $this->district_id,
 																	'search_vendor'	=>$this->search_vendor,
 																	'cat_id'	=>$this->cat_id,
 																	'start_date'	=>$start_date,
@@ -305,10 +306,10 @@
 											'var'	=>	'address',
 											'order'	=>	$this->order,
 											'extra'		=> array('menuaction'	=> $this->currentapp.'.uiworkorder.index',
-																	'type_id'	=>$type_id,
+															//		'type_id'	=>$type_id,
 																	'query'		=>$this->query,
 																	'lookup'	=>$lookup,
-																	'district_id'	=> $this->district_id,
+															//		'district_id'	=> $this->district_id,
 																	'search_vendor'	=>$this->search_vendor,
 																	'cat_id'	=>$this->cat_id,
 																	'start_date'	=>$start_date,
@@ -376,7 +377,7 @@
 						'sort'			=> $this->sort,
 						'order'			=> $this->order,
 						'cat_id'		=> $this->cat_id,
-						'district_id'		=> $this->district_id,
+					//	'district_id'		=> $this->district_id,
 						'status_id'		=> $this->status_id,
 						'filter'		=> $this->filter,
 						'query'			=> $this->query,
@@ -396,7 +397,7 @@
 						'sort'			=> $this->sort,
 						'order'			=> $this->order,
 						'cat_id'		=> $this->cat_id,
-						'district_id'		=> $this->district_id,
+					//	'district_id'		=> $this->district_id,
 						'status_id'		=> $this->status_id,
 						'filter'		=> $this->filter,
 						'query'			=> $this->query,
@@ -410,7 +411,7 @@
 			);
 
 
-			if($GLOBALS['phpgw_info']['user']['preferences'][$this->currentapp]['group_filters'])
+			if(isset($GLOBALS['phpgw_info']['user']['preferences'][$this->currentapp]['group_filters']) && $GLOBALS['phpgw_info']['user']['preferences'][$this->currentapp]['group_filters'])
 			{
 				$group_filters = 'select';
 				$GLOBALS['phpgw']->xslttpl->add_file(array('wo_hour_cat_select'));
@@ -425,7 +426,7 @@
 
 			$data = array
 			(
-				'group_filters'					=> $GLOBALS['phpgw_info']['user']['preferences'][$this->currentapp]['group_filters'],
+				'group_filters'					=> isset($GLOBALS['phpgw_info']['user']['preferences'][$this->currentapp]['group_filters'])?$GLOBALS['phpgw_info']['user']['preferences'][$this->currentapp]['group_filters']:'',
 				'lang_excel'					=> 'excel',
 				'link_excel'					=> $GLOBALS['phpgw']->link('/index.php',$link_excel),
 				'lang_excel_help'				=> lang('Download table to MS Excel'),
