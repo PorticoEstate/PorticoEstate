@@ -123,22 +123,21 @@
 
 		function read_sessiondata()
 		{
-			$data = $GLOBALS['phpgw']->session->appsession('session_data',invoice);
+			$data = $GLOBALS['phpgw']->session->appsession('session_data','invoice');
 
 //	_debug_array($data);
 
-			$this->start		= $data['start'];
-			$this->query		= $data['query'];
-			$this->filter		= $data['filter'];
-			$this->sort			= $data['sort'];
-			$this->order		= $data['order'];
-			$this->cat_id		= $data['cat_id'];
-			$this->user_lid		= $data['user_lid'];
-			$this->sub			= $data['sub'];
-			$this->allrows		= $data['allrows'];
-			$this->b_account_class	= $data['b_account_class'];
-			$this->district_id	= $data['district_id'];		
-
+			$this->start			= isset($data['start'])?$data['start']:'';
+			$this->query			= isset($data['query'])?$data['query']:'';
+			$this->filter			= isset($data['filter'])?$data['filter']:'';
+			$this->sort				= isset($data['sort'])?$data['sort']:'';
+			$this->order			= isset($data['order'])?$data['order']:'';
+			$this->cat_id			= isset($data['cat_id'])?$data['cat_id']:'';
+			$this->user_lid			= isset($data['user_lid'])?$data['user_lid']:'';
+			$this->sub				= isset($data['sub'])?$data['sub']:'';
+			$this->allrows			= isset($data['allrows'])?$data['allrows']:'';
+			$this->b_account_class	= isset($data['b_account_class'])?$data['b_account_class']:'';
+			$this->district_id		= isset($data['district_id'])?$data['district_id']:'';		
 		}
 
 		function read_invoice($paid='',$start_date='',$end_date='',$vendor_id='',$loc1='',$workorder_id='',$voucher_id='')
@@ -151,7 +150,6 @@
 											'district_id' => $this->district_id));
 
 			$this->total_records = $this->so->total_records;
-			$this->end_time	= $this->so->end_time;
 
 			return $invoice;
 		}

@@ -34,6 +34,7 @@
 
 	class property_soinvoice
 	{
+		var $total_records = 0;
 
 		function property_soinvoice()
 		{
@@ -78,7 +79,9 @@
 				$b_account_class	= (isset($data['b_account_class'])?$data['b_account_class']:'');
 				$district_id 		= (isset($data['district_id'])?$data['district_id']:'');			
 			}
-
+			$join_tables	= '';
+			$filtermethod	= '';
+			$querymethod	= '';
 //_debug_array($data);
 
 			if ($order)
@@ -201,7 +204,6 @@
 				$table ='fm_ecobilag';
 			}
 
-
 			if($query)
 			{
 				$query = ereg_replace("'",'',$query);
@@ -237,7 +239,8 @@
 					);
 			}
 
-			if ($temp)
+			$invoice = array();
+			if (isset($temp) && $temp)
 			{
 				$role= $this->check_role();
 				$i = 0;
@@ -257,8 +260,8 @@
 
 					$this->db->next_record();
 
-					$timestamp_voucher_date= mktime(0,0,0,date(m,strtotime($this->db->f('fakturadato'))),date(d,strtotime($this->db->f('fakturadato'))),date(y,strtotime($this->db->f('fakturadato'))));
-					$timestamp_payment_date= mktime(0,0,0,date(m,strtotime($this->db->f('forfallsdato'))),date(d,strtotime($this->db->f('forfallsdato'))),date(y,strtotime($this->db->f('forfallsdato'))));
+					$timestamp_voucher_date= mktime(0,0,0,date('m',strtotime($this->db->f('fakturadato'))),date('d',strtotime($this->db->f('fakturadato'))),date('y',strtotime($this->db->f('fakturadato'))));
+					$timestamp_payment_date= mktime(0,0,0,date('m',strtotime($this->db->f('forfallsdato'))),date('d',strtotime($this->db->f('forfallsdato'))),date('y',strtotime($this->db->f('forfallsdato'))));
 
 					if($this->db->f('oppsynsmannid') && $this->db->f('oppsynsigndato'))
 					{
@@ -346,9 +349,6 @@
 
 				}
 			}
-//			$end_time = explode(' ',microtime());
-//			$this->end_time	= $end_time;
-
 //_debug_array($invoice);
 //_debug_array($invoice_temp);
 
@@ -611,8 +611,8 @@
 				return $update;
 			}
 
-			$timestamp_voucher_date= mktime(0,0,0,date(m,strtotime($this->db->f('fakturadato'))),date(d,strtotime($this->db->f('fakturadato'))),date(y,strtotime($this->db->f('fakturadato'))));
-			$timestamp_payment_date= mktime(0,0,0,date(m,strtotime($this->db->f('forfallsdato'))),date(d,strtotime($this->db->f('forfallsdato'))),date(y,strtotime($this->db->f('forfallsdato'))));
+			$timestamp_voucher_date= mktime(0,0,0,date('m',strtotime($this->db->f('fakturadato'))),date('d',strtotime($this->db->f('fakturadato'))),date('y',strtotime($this->db->f('fakturadato'))));
+			$timestamp_payment_date= mktime(0,0,0,date('m',strtotime($this->db->f('forfallsdato'))),date('d',strtotime($this->db->f('forfallsdato'))),date('y',strtotime($this->db->f('forfallsdato'))));
 
 			if( ((intval(($timestamp_payment_date-$timestamp_voucher_date)/(24*3600)))!=$values['num_days']) )
 			{
@@ -708,12 +708,12 @@
 					$tax_code	= $values['tax_code'][$n];
 					$dimb		= isset($values['dimb'][$n]) && $values['dimb'][$n] ? (int)$values['dimb'][$n] : 'NULL';
 					$workorder_id=$values['workorder_id'][$n];
-					if($values['close_order'][$n] && !$values['close_order_orig'][$n])
+					if(isset($values['close_order'][$n]) && $values['close_order'][$n] && !$values['close_order_orig'][$n])
 					{
 						$update_status[$workorder_id]='X';
 					}
 
-					if(!$values['close_order'][$n] && $values['close_order_orig'][$n])
+					if((!isset($values['close_order'][$n]) || !$values['close_order'][$n]) && (isset($values['close_order_orig'][$n]) && $values['close_order_orig'][$n]))
 					{
 						$update_status[$workorder_id]='R';
 					}
@@ -763,7 +763,7 @@
 
 		function check_role()
 		{
-			if(!$this->role)
+			if(!isset($this->role) || !$this->role)
 			{
 				$this->role=array(
 					'is_janitor' 				=> $this->acl->check('.invoice',32),
@@ -982,6 +982,7 @@
 		{
 
 //_debug_array($values);
+			$receipt = array();
 			foreach($values['counter'] as $n)
 			{
 				$local_error='';
@@ -992,9 +993,9 @@
 
 					$check_value=array('voucher_id'=>$voucher_id,
 							'sign_orig'		=> $values['sign_orig'][$n],
-							'sign'			=> $values['sign'][$n],
-							'transfer'		=> $values['transfer'][$n],
-							'kreditnota'	=> $values['kreditnota'][$n],
+							'sign'			=> isset($values['sign'][$n])?$values['sign'][$n]:'',
+							'transfer'		=> isset($values['transfer'][$n])?$values['transfer'][$n]:'',
+							'kreditnota'	=> isset($values['kreditnota'][$n])?$values['kreditnota'][$n]:'',
 							'num_days'		=> $values['num_days'][$n]);
 
 					if($this->check_for_updates($check_value))
