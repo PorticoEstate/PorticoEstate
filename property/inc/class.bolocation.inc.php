@@ -157,16 +157,16 @@
 		{
 			$data = $GLOBALS['phpgw']->session->appsession('session_data','location');
 
-			$this->start			= $data['start'];
-			$this->query			= $data['query'];
-			$this->filter			= $data['filter'];
-			$this->sort			= $data['sort'];
-			$this->order			= $data['order'];
-			$this->cat_id			= $data['cat_id'];
-			$this->part_of_town_id		= $data['part_of_town_id'];
-			$this->district_id		= $data['district_id'];
-			$this->status			= $data['status'];
-			$this->type_id			= $data['type_id'];			
+			$this->start			= isset($data['start'])?$data['start']:'';
+			$this->query			= isset($data['query'])?$data['query']:'';
+			$this->filter			= isset($data['filter'])?$data['filter']:'';
+			$this->sort				= isset($data['sort'])?$data['sort']:'';
+			$this->order			= isset($data['order'])?$data['order']:'';;
+			$this->cat_id			= isset($data['cat_id'])?$data['cat_id']:'';
+			$this->part_of_town_id	= isset($data['part_of_town_id'])?$data['part_of_town_id']:'';
+			$this->district_id		= isset($data['district_id'])?$data['district_id']:'';
+			$this->status			= isset($data['status'])?$data['status']:'';
+			$this->type_id			= isset($data['type_id'])?$data['type_id']:'';			
 		//	$this->allrows			= $data['allrows'];
 		}
 
@@ -253,14 +253,17 @@
 		function initiate_ui_location($data)
 		{
 
-			switch($data['lookup_type'])
+			if(isset($data['lookup_type']))
 			{
-				case 'form':
-					$GLOBALS['phpgw']->xslttpl->add_file(array('location_form'));
-					break;
-				case 'view':
-					$GLOBALS['phpgw']->xslttpl->add_file(array('location_view'));
-					break;
+				switch($data['lookup_type'])
+				{
+					case 'form':
+						$GLOBALS['phpgw']->xslttpl->add_file(array('location_form'));
+						break;
+					case 'view':
+						$GLOBALS['phpgw']->xslttpl->add_file(array('location_view'));
+						break;
+				}
 			}
 
 			$location_link		= "menuaction:'". $this->currentapp.".uilocation.index',lookup:1";

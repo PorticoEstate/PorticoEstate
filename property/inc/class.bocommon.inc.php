@@ -414,8 +414,9 @@
 				{
 					$users_extra[]=array
 					(
-						'account_lid' => $extra_user,
-						'account_firstname' => lang($extra_user)
+						'account_lid' 		=> $extra_user,
+						'account_firstname'	=> lang($extra_user),
+						'account_lastname'	=> ''
 					);
 				}
 			}
@@ -426,7 +427,7 @@
 				$this->socommon->fm_cache('acl_userlist_'. $right . '_' . $acl_location,$users);
 			}
 
-			if (is_array($users_extra) && is_array($users))
+			if (isset($users_extra) && is_array($users_extra) && is_array($users))
 			{
 				$users = $users_extra + $users;
 			}

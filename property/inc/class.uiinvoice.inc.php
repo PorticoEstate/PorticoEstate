@@ -191,9 +191,6 @@
 
 		function index()
 		{
-//			$start_time = explode(' ',microtime());
-//			$start_time = $start_time[1]+$start_time[0];
-
 			if(!$this->acl_read)
 			{
 				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> $this->currentapp.'.uilocation.stop', 'perm'=>1, 'acl_location'=> $this->acl_location));
@@ -224,15 +221,17 @@
 
 			$links = $this->menu->links('invoice_'.!!$paid);
 
-			$values 	= get_var('values',array('POST','GET'));
-
-			if($values['save'] && $values['counter'])
+			$values  = get_var('values',array('POST','GET'));
+			$receipt = array();
+			
+			if(isset($values['save']) && $values['save'] && isset($values['counter']) && $values['counter'])
 			{
-				$receipt=$this->bo->update_invoice($values);
+				$receipt = $this->bo->update_invoice($values);
 			}
 
 			$content = $this->bo->read_invoice($paid,$start_date,$end_date,$vendor_id,$loc1,$workorder_id,$voucher_id);
 
+			$sum = 0;
 			$i=0;
 			if(is_array($content))
 			{
@@ -487,7 +486,7 @@
 				$data['lang_account_class_statustext']	= lang('Select the account class the selection belongs to');
 				$data['select_account_class_name']		= 'b_account_class';
 
-			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('list_voucher_paid' => $data));
+				$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('list_voucher_paid' => $data));
 			}
 			else
 			{
@@ -500,8 +499,8 @@
 				$data['lang_done_statustext']			= lang('Back to the list');
 				$data['lang_save_statustext']			= lang('Save the voucher');
 				$data['lang_select_all']				= lang('Select All');
-				$data['message']						= $receipt['message'];
-				$data['error']							= $receipt['error'];
+				$data['message']						= isset($receipt['message'])?$receipt['message']:'';
+				$data['error']							= isset($receipt['error'])?$receipt['error']:'';
 				$data['table_header_list_voucher']		= $table_header;
 				$data['values_list_voucher']			= $content;
 				$data['acl_delete']						= $this->acl_delete;
@@ -511,12 +510,10 @@
 			}
 			$this->save_sessiondata();
 
-			$end_time = $this->bo->end_time;
 		}
 
 		function list_sub()
 		{
-
 			$GLOBALS['phpgw']->xslttpl->add_file(array('invoice','menu',
 										'nextmatchs'));
 
@@ -527,7 +524,8 @@
 			$values  = get_var('values',array('POST','GET'));
 			$voucher_id = get_var('voucher_id',array('POST','GET'));
 
-			if($values['save'] && $values['counter'])
+			$receipt = array();
+			if(isset($values['save']) && $values['save'] && isset($values['counter']) && $values['counter'])
 			{
 				$receipt=$this->bo->update_invoice_sub($values);
 			}
@@ -536,12 +534,12 @@
 
 //echo $voucher_id;
 
-
 			if ($voucher_id)
 			{
 				$content = $this->bo->read_invoice_sub($voucher_id,$paid);
 			}
 
+			$sum =0;
 			$i=0;
 			if(is_array($content))
 			{
@@ -732,6 +730,7 @@
 			$period 	= get_var('period',array('POST','GET'));
 			$submit 	= get_var('submit',array('POST','GET'));
 
+			$receipt = array();
 			if($submit)
 			{
 				$receipt	= $this->bo->update_period($voucher_id,$period);
@@ -767,7 +766,7 @@
 		function remark()
 		{
 			$GLOBALS['phpgw']->xslttpl->add_file(array('invoice'));
-			$GLOBALS['phpgw_info']['flags'][nofooter] = True;
+			$GLOBALS['phpgw_info']['flags']['nofooter'] = True;
 			$GLOBALS['phpgw_info']['flags']['noframework'] = True;
 
 			$id 	= get_var('id',array('POST','GET'));
@@ -1018,7 +1017,7 @@
 
 			$receipt = $GLOBALS['phpgw']->session->appsession('session_data','add_receipt');
 
-			if($receipt['voucher_id'])
+			if(isset($receipt['voucher_id']) && $receipt['voucher_id'])
 			{
 				$link_receipt = $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uiinvoice.receipt', 'voucher_id'=> $receipt['voucher_id']));
 			}
@@ -1206,7 +1205,7 @@
 			}
 
 			$location_data=$bolocation->initiate_ui_location(array(
-   						'values'	=> $values['location_data'],
+   						'values'	=> isset($values['location_data'])?$values['location_data']:'',
    						'type_id'	=> -1, // calculated from location_types
    						'no_link'	=> False, // disable lookup links for location type less than type_id
    						'tenant'	=> False,
@@ -1216,8 +1215,8 @@
    						));
 
 			$b_account_data=$this->bocommon->initiate_ui_budget_account_lookup(array(
-						'b_account_id'		=> $values['b_account_id'],
-						'b_account_name'	=> $values['b_account_name']));
+						'b_account_id'		=> isset($values['b_account_id'])?$values['b_account_id']:'',
+						'b_account_name'	=> isset($values['b_account_name'])?$values['b_account_name']:''));
 
 			$link_data = array
 			(
@@ -1242,105 +1241,105 @@
 
 			$data = array
 			(
-				'msgbox_data'					=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
-				'links'						=> $links,
+				'msgbox_data'						=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
+				'links'								=> $links,
 
-				'img_cal'					=> $GLOBALS['phpgw']->common->image('phpgwapi','cal'),
-				'lang_datetitle'				=> lang('Select date'),
+				'img_cal'							=> $GLOBALS['phpgw']->common->image('phpgwapi','cal'),
+				'lang_datetitle'					=> lang('Select date'),
 
-				'form_action'					=> $GLOBALS['phpgw']->link('/index.php',$link_data),
-				'cancel_action'					=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uiinvoice.index')),
-				'lang_cancel'					=> lang('Cancel'),
+				'form_action'						=> $GLOBALS['phpgw']->link('/index.php',$link_data),
+				'cancel_action'						=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uiinvoice.index')),
+				'lang_cancel'						=> lang('Cancel'),
 				'lang_cancel_statustext'			=> lang('cancel'),
-				'action_url'					=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=>  $this->currentapp .'.uiinvoice.add')),
-				'tsvfilename'					=> '',
+				'action_url'						=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=>  $this->currentapp .'.uiinvoice.add')),
+				'tsvfilename'						=> '',
 
-				'lang_add'					=> lang('add'),
+				'lang_add'							=> lang('add'),
 				'lang_add_statustext'				=> lang('Klick this button to add a invoice'),
 
-				'lang_invoice_date'				=> lang('invoice date'),
-				'lang_payment_date'				=> lang('Payment date'),
-				'lang_no_of_days'				=> lang('Days'),
+				'lang_invoice_date'					=> lang('invoice date'),
+				'lang_payment_date'					=> lang('Payment date'),
+				'lang_no_of_days'					=> lang('Days'),
 				'lang_invoice_number'				=> lang('Invoice Number'),
-				'lang_invoice_num_statustext'			=> lang('Enter Invoice Number'),
+				'lang_invoice_num_statustext'		=> lang('Enter Invoice Number'),
 
-				'lang_select'					=> lang('Select per button !'),
-				'lang_kidnr'					=> lang('KID nr'),
+				'lang_select'						=> lang('Select per button !'),
+				'lang_kidnr'						=> lang('KID nr'),
 				'lang_kid_nr_statustext'			=> lang('Enter Kid nr'),
 
-				'lang_vendor'					=> lang('Vendor'),
-				'addressbook_link'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uilookup.vendor')),
+				'lang_vendor'						=> lang('Vendor'),
+				'addressbook_link'					=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uilookup.vendor')),
 
-				'lang_invoice_date_statustext'			=> lang('Enter the invoice date'),
+				'lang_invoice_date_statustext'		=> lang('Enter the invoice date'),
 				'lang_num_days_statustext'			=> lang('Enter the payment date or the payment delay'),
-				'lang_payment_date_statustext'			=> lang('Enter the payment date or the payment delay'),
+				'lang_payment_date_statustext'		=> lang('Enter the payment date or the payment delay'),
 				'lang_vendor_statustext'			=> lang('Select the vendor by klicking the button'),
-				'lang_vendor_name_statustext'			=> lang('Select the vendor by klicking the button'),
-				'lang_select_vendor_statustext'			=> lang('Select the vendor by klicking this button'),
+				'lang_vendor_name_statustext'		=> lang('Select the vendor by klicking the button'),
+				'lang_select_vendor_statustext'		=> lang('Select the vendor by klicking this button'),
 
-				'value_invoice_date'				=> $values['invoice_date'],
-				'value_payment_date'				=> $values['payment_date'],
-				'value_belop'					=> $values['belop'],
-				'value_vendor_id'				=> $values['vendor_id'],
-				'value_vendor_name'				=> $values['vendor_name'],
-				'value_kid_nr'					=> $values['kid_nr'],
-				'value_dim_b'					=> $values['dim_b'],
-				'value_invoice_num'				=> $values['invoice_num'],
-				'value_merknad'					=> $values['merknad'],
-				'value_num_days'				=> $values['num_days'],
-				'value_amount'					=> $values['amount'],
-				'value_order'					=> $values['order'],
+				'value_invoice_date'				=> isset($values['invoice_date'])?$values['invoice_date']:'',
+				'value_payment_date'				=> isset($values['payment_date'])?$values['payment_date']:'',
+				'value_belop'						=> isset($values['belop'])?$values['belop']:'',
+				'value_vendor_id'					=> isset($values['vendor_id'])?$values['vendor_id']:'',
+				'value_vendor_name'					=> isset($values['vendor_name'])?$values['vendor_name']:'',
+				'value_kid_nr'						=> isset($values['kid_nr'])?$values['kid_nr']:'',
+				'value_dim_b'						=> isset($values['dim_b'])?$values['dim_b']:'',
+				'value_invoice_num'					=> isset($values['invoice_num'])?$values['invoice_num']:'',
+				'value_merknad'						=> isset($values['merknad'])?$values['merknad']:'',
+				'value_num_days'					=> isset($values['num_days'])?$values['num_days']:'',
+				'value_amount'						=> isset($values['amount'])?$values['amount']:'',
+				'value_order'						=> isset($values['order'])?$values['order']:'',
 
-				'lang_auto_tax'					=> lang('Auto TAX'),
+				'lang_auto_tax'						=> lang('Auto TAX'),
 				'lang_auto_tax_statustext'			=> lang('Set tax'),
 
-				'lang_amount'					=> lang('Amount'),
+				'lang_amount'						=> lang('Amount'),
 				'lang_amount_statustext'			=> lang('Amount of the invoice'),
 
-				'lang_order'					=> lang('Order ID'),
+				'lang_order'						=> lang('Order ID'),
 				'lang_order_statustext'				=> lang('Order # that initiated the invoice'),
 
-				'lang_art'					=> lang('Art'),
-				'art_list'					=> $this->bo->get_lisfm_ecoart($values['art']),
-				'select_art'					=> 'art',
-				'lang_select_art' 				=> lang('Select Invoice Type'),
+				'lang_art'							=> lang('Art'),
+				'art_list'							=> $this->bo->get_lisfm_ecoart(isset($values['art'])?$values['art']:''),
+				'select_art'						=> 'art',
+				'lang_select_art' 					=> lang('Select Invoice Type'),
 				'lang_art_statustext'				=> lang('You have to select type of invoice'),
 
-				'lang_type'					=> lang('Type invoice II'),
-				'type_list'					=> $this->bo->get_type_list($values['type']),
-				'select_type'					=> 'type',
-				'lang_no_type'					=> lang('No type'),
+				'lang_type'							=> lang('Type invoice II'),
+				'type_list'							=> $this->bo->get_type_list(isset($values['type'])?$values['type']:''),
+				'select_type'						=> 'type',
+				'lang_no_type'						=> lang('No type'),
 				'lang_type_statustext'				=> lang('Select the type  invoice. To do not use type -  select NO TYPE'),
 
-				'lang_dimb'					=> lang('Dim B'),
-				'dimb_list'					=> $this->bo->select_dimb_list($values['dim_b']),
-				'select_dimb'					=> 'dim_b',
-				'lang_no_dimb'					=> lang('No Dim B'),
+				'lang_dimb'							=> lang('Dim B'),
+				'dimb_list'							=> $this->bo->select_dimb_list(isset($values['dim_b'])?$values['dim_b']:''),
+				'select_dimb'						=> 'dim_b',
+				'lang_no_dimb'						=> lang('No Dim B'),
 				'lang_dimb_statustext'				=> lang('Select the Dim B for this invoice. To do not use Dim B -  select NO DIM B'),
 
-				'lang_janitor'					=> lang('Janitor'),
-				'janitor_list'					=> $this->bocommon->get_user_list_right(32,$values['janitor'],'.invoice'),
-				'select_janitor'				=> 'janitor',
-				'lang_no_janitor'				=> lang('No janitor'),
+				'lang_janitor'						=> lang('Janitor'),
+				'janitor_list'						=> $this->bocommon->get_user_list_right(32,isset($values['janitor'])?$values['janitor']:'','.invoice'),
+				'select_janitor'					=> 'janitor',
+				'lang_no_janitor'					=> lang('No janitor'),
 				'lang_janitor_statustext'			=> lang('Select the janitor responsible for this invoice. To do not use janitor -  select NO JANITOR'),
 
-				'lang_supervisor'				=> lang('Supervisor'),
-				'supervisor_list'				=> $this->bocommon->get_user_list_right(64,$values['supervisor'],'.invoice'),
-				'select_supervisor'				=> 'supervisor',
+				'lang_supervisor'					=> lang('Supervisor'),
+				'supervisor_list'					=> $this->bocommon->get_user_list_right(64,isset($values['supervisor'])?$values['supervisor']:'','.invoice'),
+				'select_supervisor'					=> 'supervisor',
 				'lang_no_supervisor'				=> lang('No supervisor'),
-				'lang_supervisor_statustext'			=> lang('Select the supervisor responsible for this invoice. To do not use supervisor -  select NO SUPERVISOR'),
+				'lang_supervisor_statustext'		=> lang('Select the supervisor responsible for this invoice. To do not use supervisor -  select NO SUPERVISOR'),
 
 				'lang_budget_responsible'			=> lang('B - responsible'),
-				'budget_responsible_list'			=> $this->bocommon->get_user_list_right(128,$values['budget_responsible'],'.invoice'),
+				'budget_responsible_list'			=> $this->bocommon->get_user_list_right(128,isset($values['budget_responsible'])?$values['budget_responsible']:'','.invoice'),
 				'select_budget_responsible'			=> 'budget_responsible',
-				'lang_select_budget_responsible'		=> lang('Select B-Responsible'),
-				'lang_budget_responsible_statustext'		=> lang('You have to select a budget responsible for this invoice in order to add the invoice'),
-				'lang_merknad'					=> lang('Descr'),
+				'lang_select_budget_responsible'	=> lang('Select B-Responsible'),
+				'lang_budget_responsible_statustext'=> lang('You have to select a budget responsible for this invoice in order to add the invoice'),
+				'lang_merknad'						=> lang('Descr'),
 				'lang_merknad_statustext'			=> lang('Descr'),
-				'location_data'					=> $location_data,
-				'b_account_data'				=> $b_account_data,
-				'link_receipt'					=> $link_receipt,
-				'lang_receipt'					=> lang('receipt')
+				'location_data'						=> $location_data,
+				'b_account_data'					=> $b_account_data,
+				'link_receipt'						=> isset($link_receipt)?$link_receipt:'',
+				'lang_receipt'						=> lang('receipt')
 				);
 
 //_debug_array($data);
