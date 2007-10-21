@@ -446,6 +446,11 @@
 						$uicols['statustext'][]		= $this->db->f('statustext');
 						$uicols['datatype'][]		= $this->db->f('datatype');
 
+						if($this->db->f('lookup_form') == 1)
+						{
+							$uicols['exchange'][$i]		= True;
+						}
+
 						$uicols['cols_return_extra'][$i]= array(
 							'name'			=> $this->db->f('column_name'),
 							'datatype'		=> $this->db->f('datatype'),
