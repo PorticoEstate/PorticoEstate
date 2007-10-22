@@ -36,6 +36,10 @@
 	{
 		var $entity_id;
 		var $cat_id;
+		var $total_records = 0;
+		var $uicols;
+		var $cols_extra;
+		var $cols_return_lookup;
 
 		function property_soentity($entity_id='',$cat_id='')
 		{
