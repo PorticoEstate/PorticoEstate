@@ -1093,51 +1093,11 @@
 
 			$values_attribute  = get_var('values_attribute',array('POST'));
 
-//			$insert_record = $GLOBALS['phpgw']->session->appsession('insert_record',$this->currentapp);
-//			$insert_record_entity = $GLOBALS['phpgw']->session->appsession('insert_record_entity',$this->currentapp);
-
-			$insert_record_agreement = $GLOBALS['phpgw']->session->appsession('insert_record_agreement',$this->currentapp);
-
-//_debug_array($insert_record_agreement);
-
-			for ($j=0;$j<count($insert_record_entity);$j++)
-			{
-				$insert_record['extra'][$insert_record_entity[$j]]	= $insert_record_entity[$j];
-			}
-
-			for ($j=0;$j<count($insert_record_agreement1);$j++)
-			{
-				$insert_record['extra'][$insert_record_agreement[$j]]	= $insert_record_agreement[$j];
-			}
-
-
 			$GLOBALS['phpgw']->xslttpl->add_file(array('agreement','attributes_form'));
 
 			if (is_array($values))
 			{
 
-/*				for ($i=0; $i<count($insert_record['location']); $i++)
-				{
-					if($_POST[$insert_record['location'][$i]])
-					{
-						$values['location'][$insert_record['location'][$i]]= $_POST[$insert_record['location'][$i]];
-					}
-				}
-
-				while (is_array($insert_record['extra']) && list($key,$column) = each($insert_record['extra']))
-				{
-					if($_POST[$key])
-					{
-						$values['extra'][$column]	= $_POST[$key];
-					}
-				}
-
-				$values['street_name'] 		= $_POST['street_name'];
-				$values['street_number']	= $_POST['street_number'];
-				$values['location_name']	= $_POST['loc' . (count($values['location'])).'_name']; // if not address - get the parent name as address
-
-*/
-//_debug_array($values);
 				if ($values['save'] || $values['apply']):
 				{
 

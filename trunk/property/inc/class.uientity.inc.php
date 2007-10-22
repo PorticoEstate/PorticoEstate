@@ -478,6 +478,9 @@
 				$entity 	= $this->boadmin_entity->read_single($this->entity_id,false);
 				$appname	= $entity['name'];
 			}
+
+			$district_list ='';
+
 			if($this->cat_id)
 			{
 				$category = $this->boadmin_entity->read_single_category($this->entity_id,$this->cat_id);
@@ -486,10 +489,6 @@
 				if (isset($category['location_level']) && $category['location_level']>0)
 				{
 					$district_list	= $this->bocommon->select_district_list($group_filters,$this->district_id);
-				}
-				else
-				{
-					$district_list ='';
 				}
 			}
 
@@ -592,14 +591,6 @@
 			$lookup_tenant 		= get_var('lookup_tenant',array('POST','GET'));
 			$tenant_id 		= get_var('tenant_id',array('POST','GET'));
 
-			$insert_record 		= $GLOBALS['phpgw']->session->appsession('insert_record',$this->currentapp);
-			$insert_record_entity	= $GLOBALS['phpgw']->session->appsession('insert_record_entity',$this->currentapp);
-
-			for ($j=0;$j<count($insert_record_entity);$j++)
-			{
-				$insert_record['extra'][$insert_record_entity[$j]]	= $insert_record_entity[$j];
-			}
-
 			$GLOBALS['phpgw']->xslttpl->add_file(array('entity','attributes_form'));
 
 			$values['vendor_id']		= get_var('vendor_id',array('POST'));
@@ -611,28 +602,15 @@
 
 			if($_POST && !$bypass)
 			{
-				for ($i=0; $i<count($insert_record['location']); $i++)
+				$insert_record 		= $GLOBALS['phpgw']->session->appsession('insert_record',$this->currentapp);
+				$insert_record_entity	= $GLOBALS['phpgw']->session->appsession('insert_record_entity',$this->currentapp);
+
+				for ($j=0;$j<count($insert_record_entity);$j++)
 				{
-					if(isset($_POST[$insert_record['location'][$i]]) && $_POST[$insert_record['location'][$i]])
-					{
-						$values['location'][$insert_record['location'][$i]]= $_POST[$insert_record['location'][$i]];
-					}
+					$insert_record['extra'][$insert_record_entity[$j]]	= $insert_record_entity[$j];
 				}
 
-				while (is_array($insert_record['extra']) && list($key,$column) = each($insert_record['extra']))
-				{
-					if(isset($_POST[$key]) && $_POST[$key])
-					{
-						$values['extra'][$column]	= $_POST[$key];
-					}
-				}
-
-				$values['street_name'] 		= isset($_POST['street_name'])?$_POST['street_name']:'';
-				$values['street_number']	= isset($_POST['street_number'])?$_POST['street_number']:'';
-				if(isset($values['location']) && is_array($values['location']))
-				{
-					$values['location_name']	= $_POST['loc' . (count($values['location'])).'_name']; // if not address - get the parent name as address
-				}
+				$values = $this->bocommon->collect_locationdata($values,$insert_record);
 			}
 			else
 			{

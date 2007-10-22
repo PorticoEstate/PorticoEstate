@@ -921,49 +921,26 @@
 
 			$values_attribute  = get_var('values_attribute',array('POST'));
 
-			$insert_record = $GLOBALS['phpgw']->session->appsession('insert_record',$this->currentapp);
-			$insert_record_entity = $GLOBALS['phpgw']->session->appsession('insert_record_entity',$this->currentapp);
-
-			$insert_record_s_agreement1 = $GLOBALS['phpgw']->session->appsession('insert_record_s_agreement1',$this->currentapp);
-
-//_debug_array($insert_record_s_agreement1);
-
-			for ($j=0;$j<count($insert_record_entity);$j++)
-			{
-				$insert_record['extra'][$insert_record_entity[$j]]	= $insert_record_entity[$j];
-			}
-
-			for ($j=0;$j<count($insert_record_s_agreement1);$j++)
-			{
-				$insert_record['extra'][$insert_record_s_agreement1[$j]]	= $insert_record_s_agreement1[$j];
-			}
-
-
 			$GLOBALS['phpgw']->xslttpl->add_file(array('s_agreement','attributes_form'));
 
 			if (is_array($values))
 			{
+				$insert_record = $GLOBALS['phpgw']->session->appsession('insert_record',$this->currentapp);
+				$insert_record_entity = $GLOBALS['phpgw']->session->appsession('insert_record_entity',$this->currentapp);
+				$insert_record_s_agreement1 = $GLOBALS['phpgw']->session->appsession('insert_record_s_agreement1',$this->currentapp);
+//_debug_array($insert_record_s_agreement1);
 
-				for ($i=0; $i<count($insert_record['location']); $i++)
+				for ($j=0;$j<count($insert_record_entity);$j++)
 				{
-					if($_POST[$insert_record['location'][$i]])
-					{
-						$values['location'][$insert_record['location'][$i]]= $_POST[$insert_record['location'][$i]];
-					}
+					$insert_record['extra'][$insert_record_entity[$j]]	= $insert_record_entity[$j];
 				}
 
-				while (is_array($insert_record['extra']) && list($key,$column) = each($insert_record['extra']))
+				for ($j=0;$j<count($insert_record_s_agreement1);$j++)
 				{
-					if($_POST[$key])
-					{
-						$values['extra'][$column]	= $_POST[$key];
-					}
+					$insert_record['extra'][$insert_record_s_agreement1[$j]]	= $insert_record_s_agreement1[$j];
 				}
 
-				$values['street_name'] 		= $_POST['street_name'];
-				$values['street_number']	= $_POST['street_number'];
-				$values['location_name']	= $_POST['loc' . (count($values['location'])).'_name']; // if not address - get the parent name as address
-
+				$values = $this->bocommon->collect_locationdata($values,$insert_record);
 //_debug_array($values);
 				if ($values['save'] || $values['apply']):
 				{

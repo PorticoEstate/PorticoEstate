@@ -525,25 +525,7 @@
 
 			if($_POST && !$bypass && isset($insert_record) && is_array($insert_record))
 			{
-				for ($i=0; $i<count($insert_record['location']); $i++)
-				{
-					if(isset($_POST[$insert_record['location'][$i]]) && $_POST[$insert_record['location'][$i]])
-					{
-						$values['location'][$insert_record['location'][$i]]= $_POST[$insert_record['location'][$i]];
-					}
-				}
-
-				while (is_array($insert_record['extra']) && list($key,$column) = each($insert_record['extra']))
-				{
-					if(isset($_POST[$key]) && $_POST[$key])
-					{
-						$values['extra'][$column]	= $_POST[$key];
-					}
-				}
-
-				$values['street_name'] 		= (isset($_POST['street_name'])?$_POST['street_name']:'');
-				$values['street_number']	= (isset($_POST['street_number'])?$_POST['street_number']:'');
-				$values['location_name']	= (isset($values['location'])?$_POST['loc' . (count($values['location'])).'_name']:''); // if no address - get the parent name as address
+					$values = $this->bocommon->collect_locationdata($values,$insert_record);
 			}
 			else
 			{
