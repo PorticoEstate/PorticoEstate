@@ -1,6 +1,6 @@
 <?php
 	/**
-	* Project Manager - attached_files 
+	* Project Manager - attached_files
 	*
 	* @author Lars Piepho [lpiepho@probusiness.de]
 	* @copyright Copyright (C) 2000-2006 Free Software Foundation, Inc. http://www.fsf.org/
@@ -9,16 +9,16 @@
 	* @version $Id: class.attached_files.inc.php,v 1.4 2006/12/05 19:40:45 sigurdne Exp $
 	* $Source: /sources/phpgroupware/projects/inc/class.attached_files.inc.php,v $
 	*/
-	
+
 	class attached_files
 	{
 
 		var $public_functions = array
 		(
-			'show_file'		=> True,
-			'save_file' 	=> True,
-			'delete_file'	=> True,
-			'get_file'		=> True
+			'show_file'		=> true,
+			'save_file' 	=> true,
+			'delete_file'	=> true,
+			'get_file'		=> true
 		);
 		var $file;
 		var $vfs;
@@ -26,11 +26,11 @@
 
 		function attached_files()
 		{
-			$this->file			= $_REQUEST['file'];
-			$this->project_id	= $_REQUEST['project_id'];
+			$this->file			= isset( $_REQUEST['file'] ) ? $_REQUEST['file'] : '';
+			$this->project_id	= isset( $_REQUEST['project_id'] ) ? $_REQUEST['project_id'] : '';
 			$this->vfs			= CreateObject('phpgwapi.vfs');
 			$this->session		= $GLOBALS['phpgw']->session;
-			$this->vfs->override_acl = True;
+			$this->vfs->override_acl = true;
 		}
 
 		function show_file()
@@ -40,7 +40,7 @@
 				'string'		=> $this->file,
 				'relatives'		=> array (RELATIVE_ALL),
 				'checksubdirs'	=> False,
-				'nofiles'		=> True
+				'nofiles'		=> true
 			));
 
 			if ($ls_array[0]['mime_type'])
@@ -69,15 +69,15 @@
 			if (!file_exists($basedir))
 			{
 				$this->vfs->override_acl = 1;
-				$this->vfs->mkdir(array
+				$this->vfs->mkdir( array
 				(
 					'string'	=> $basedir,
-					'relatives'	=> array (RELATIVE_ALL)
+					'relatives'	=> array ( RELATIVE_ALL )
 				));
 				$this->vfs->override_acl = 0;
-			}				
+			}
 
-			$attdir = $basedir . '/' . $project_id;			
+			$attdir = $basedir . '/' . $project_id;
 
 			if (!file_exists($attdir))
 			{
@@ -89,30 +89,30 @@
 				));
 				$this->vfs->override_acl = 0;
 			}
-			
+
 			if(!$source || !$destination)
 			{
 				$source = $_FILES['attachment']['tmp_name'];
 				$destination = $_FILES['attachment']['name'];
 			}
-						
+
 			$this->vfs->override_acl = 1;
-			$this->vfs->cp(array 
+			$this->vfs->cp(array
 			(
 				'from'		=> $source,
 				'to'		=> $attdir . '/' . $destination,
 				'relatives'	=> array (RELATIVE_NONE|VFS_REAL, RELATIVE_ALL)
 			));
 			$this->vfs->override_acl = 0;
-			
+
 			if($details)
 			{
-				$GLOBALS['phpgw']->db->query("UPDATE phpgw_vfs SET comment='" . $details['comment'] . "', owner_id=" . $details['owner_id'] . " where name like '" . $destination . "' AND size > 0 AND mime_type NOT like 'journal-deleted'",__LINE__,__FILE__);				
+				$GLOBALS['phpgw']->db->query("UPDATE phpgw_vfs SET comment='" . $details['comment'] . "', owner_id=" . $details['owner_id'] . " where name like '" . $destination . "' AND size > 0 AND mime_type NOT like 'journal-deleted'",__LINE__,__FILE__);
 			}
 		}
 
 		function delete_file($project_id = true)
-		{	
+		{
 			$basedir = '/projects';
 
 			if(!$this->file && file_exists($basedir . '/' . $project_id))
@@ -148,7 +148,7 @@
 		{
 			$GLOBALS['phpgw']->db->query("SELECT name,owner_id,comment from phpgw_vfs where directory like '/projects/" . $project_id . "' AND size > 0 AND mime_type NOT like 'journal-deleted'",__LINE__,__FILE__);
 			$x = 0;
-			
+
 			if($user_id)
 			{
 				$user = $user_id;
@@ -157,7 +157,7 @@
 			{
 				$user = $GLOBALS['phpgw_info']['user']['account_id'];
 			}
-				
+
 			while ($GLOBALS['phpgw']->db->next_record() != '')
 			{
 				$attachment[$x] =  '/projects/' . $project_id . '/' . $GLOBALS['phpgw']->db->f('name');
@@ -178,7 +178,7 @@
 				{
 					$details = '&nbsp;&nbsp;|&nbsp;&nbsp;' . $comment[$x];
 				}
-				*/			
+				*/
 				if($delete)
 				{
 					$delFile = basename($attachment[$x]);
@@ -189,23 +189,23 @@
 																		'file'			=> $delFile
 																	));
 					$del = '<a href="' . $delLink . '"><img src="' . $GLOBALS['phpgw']->common->image('phpgwapi','delete') . '" title="' . lang('delete') . '" border="0"></a>';
-				} 
+				}
 				$attLink = '<a href="' . $file . '" target="_blank">' . basename($attachment[$x]) . '</a><br />';
-				
+
 				if($owner[$x]==$user)
 				{
 					$files[$x] = array(
 										'link' => $attLink,
 										'comment' => $comment[$x],
 										'delLink' => $del);
-				
+
 					++$x;
 				}
 			}
-			
+
 			return ($files);
 		}
-		
+
 		function file_exists($data)
 		{
 			return $this->vfs->file_exists($data);
