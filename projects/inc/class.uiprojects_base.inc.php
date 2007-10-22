@@ -49,20 +49,19 @@
 
 		var $public_functions = array
 		(
-			'proid_help_popup'	=> True
+			'proid_help_popup'	=> true
 		);
 
 		function uiprojects_base()
-		{
-			$action           = get_var('action',array('GET'));
+		{			$action				= get_var('action',array('GET'));
 			$this->boprojects	= CreateObject('projects.boprojects', True,$action);
 
 			$this->menuaction	= get_var('menuaction',array('POST','GET'));
-			$this->action     = get_var('action',array('GET','POST'));
+			$this->action		= get_var('action',array('GET','POST'));
 			$this->project_id	= get_var('project_id',array('POST','GET'));
 			$this->pro_main		= get_var('pro_main',array('POST','GET'));
 			$this->pro_parent	= get_var('pro_parent',array('POST','GET'));
-			$this->status     = get_var('status',array('POST','GET'));
+			$this->status		= get_var('status',array('POST','GET'));
 
 			if($this->project_id > 0)
 			{
@@ -72,7 +71,7 @@
 			{
 				$this->pro_data = False;
 			}
-			
+
 			if($this->pro_data && !$this->pro_main)
 			{
 				$this->pro_main = $this->pro_data['main'];
@@ -218,7 +217,7 @@
 						$this->activeView = WORKTIME_ADD;
 					}
 					else
-					{ // no icon for WORKTIME_EDIT, use 
+					{ // no icon for WORKTIME_EDIT, use
 						$this->activeView = WORKTIME_EDIT;
 					}
 
@@ -269,7 +268,7 @@
 
 			$GLOBALS['phpgw']->common->phpgw_header();
 			echo parse_navbar();
-			
+
 			// stop irritating double entry of navbar_footer in idot
 			unset($GLOBALS['phpgw']->template->file);
 			unset($GLOBALS['phpgw']->template->varkeys);
@@ -294,7 +293,7 @@
 			$icons .= $icon_sep;
 			$icons .= $this->CreateButton(PROJECT_ACTIVITIES);
 			$icons .= $this->CreateButton(PROJECT_EMPLOYEES);
-			
+
 			$GLOBALS['phpgw']->template->set_var('toolbar_name',  lang('Views'));
 			$GLOBALS['phpgw']->template->set_var('toolbar_icons', $icons);
 
@@ -327,12 +326,12 @@
 				$icons .= $icon_sep;
 				$icons .= $this->CreateButton(EXPORT_DIAMANT);
 			}
-			
+
 			$GLOBALS['phpgw']->template->set_var('toolbar_name',  lang('Actions'));
 			$GLOBALS['phpgw']->template->set_var('toolbar_icons', $icons);
 
 			$GLOBALS['phpgw']->template->fp('projects_menu','projects_menu_toolbar',True);
-			
+
 			$selectBox = $this->createSelectBox();
 			$GLOBALS['phpgw']->template->set_var('select_pro_action',  $selectBox['action']);
 			$GLOBALS['phpgw']->template->set_var('select_pro_options', $selectBox['options']);
@@ -358,7 +357,7 @@
 					switch($this->siteconfig['accounting'])
 					{
 						case 'activity':
-							$GLOBALS['phpgw']->template->set_var('link_accounting',$GLOBALS['phpgw']->link('/index.php',array('menuaction'=>'projects.uiconfig.list_activities','action'=>'act')));                                                                                                         
+							$GLOBALS['phpgw']->template->set_var('link_accounting',$GLOBALS['phpgw']->link('/index.php',array('menuaction'=>'projects.uiconfig.list_activities','action'=>'act')));
 							$GLOBALS['phpgw']->template->set_var('lang_accounting',lang('Activities'));
 							break;
 						default:
@@ -447,7 +446,7 @@
 			{
 				$buttonClass = 'menu_icon';
 			}
-		
+
 			if($buttonInActive)
 			{
 				$link = '<div class="'.$buttonClass.'"><a class="'.$buttonClass.'" title="'.$linkToolTip.'"><img src="'.$GLOBALS['phpgw']->common->image('projects', $guiId).'" class="'.$buttonClass.'" alt="'.$linkToolTip.'">'.$linkText.'</a></div>';
@@ -490,7 +489,7 @@
 					'limit'  => False)
 				);
 			}
-			
+
 			return $selectbox;
 		}
 
@@ -500,7 +499,7 @@
 			return $this->createViewUrl($targetView, array('project_id'=>$project_id));
 		}
 
-		
+
 		function createButton($targetView, $showToolTip=True, $showText=False)
 		{
 			if($targetView == $this->activeView)
@@ -511,7 +510,7 @@
 			{
 				$buttonActive = False;
 			}
-			
+
 			switch($targetView)
 			{
 				case PROJECT_ADD:
@@ -638,7 +637,7 @@
 			{
 				$buttonClass = 'menu_button';
 			}
-		
+
 			if(isset($buttonInActive) && $buttonInActive)
 			{
 				$link = '<div class="'.$buttonClass.'"><a class="'.$buttonClass.'" title="'.$linkToolTip.'"><img src="'.$GLOBALS['phpgw']->common->image('projects', $guiId).'" class="'.$buttonClass.'" alt="'.$linkToolTip.'">'.$linkText.'</a></div>';
@@ -666,7 +665,7 @@
 			{
 				$targetView = PROJECT_LIST;
 			}
-			
+
 			switch($targetView)
 			{
 				case PROJECT_LIST:
@@ -785,10 +784,10 @@
 		{
 			return $this->createViewUrl($this->activeView, $linkData);
 		}
-		
+
 		function getTargetView()
 		{
-			// depend on active view set the target view for selectbox and folders		
+			// depend on active view set the target view for selectbox and folders
 			switch($this->activeView)
 			{
 				case PROJECT_ADD:
@@ -815,7 +814,7 @@
 			{
 				$this->pro_data = $this->boprojects->read_single_project($this->project_id);
 			}
-		
+
 			$level = $level_start = intval($this->pro_data['level']);
 
 			$project_id = $this->project_id;
@@ -848,10 +847,10 @@
 				$project_id = $parent;
 				$level--;
 			}
-			
+
 			$id = 'button_'.$this->activeView.'_text';
 			$path .= $this->getText($id);
-			
+
 			return $path;
 		}
 
@@ -1274,7 +1273,7 @@
 					$employees	= $this->boprojects->selected_employees(array('project_id' => $data['project_id']));
 					break;
 			}
-			
+
 			if(is_array($employees))
 			{
 				usort($employees, array('uiprojects_base', 'cmp_employees'));
@@ -1297,14 +1296,14 @@
 			return $s;
 		}
 
-		function cmp_employees ($a, $b) 
+		function cmp_employees ($a, $b)
 		{
 			return strcasecmp($a['account_fullname'], $b['account_fullname']);
 		}
 
 		function proid_help_popup()
 		{
-			
+
 			$GLOBALS['phpgw']->template->set_file(array('proidhelp' => 'proid_help_popup.tpl'));
 			$config = $this->boprojects->get_site_config(array('helpmsg' => True));
 			$GLOBALS['phpgw']->template->set_var('helpmsg',stripslashes($config['proid_help_msg']));
