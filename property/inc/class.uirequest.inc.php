@@ -549,39 +549,20 @@
 			$id 	= get_var('id',array('POST','GET'));
 			$values	= get_var('values',array('POST'));
 
-			$insert_record = $GLOBALS['phpgw']->session->appsession('insert_record',$this->currentapp);
-			$insert_record_entity = $GLOBALS['phpgw']->session->appsession('insert_record_entity',$this->currentapp);
-
-			for ($j=0;$j<count($insert_record_entity);$j++)
-			{
-				$insert_record['extra'][$insert_record_entity[$j]]	= $insert_record_entity[$j];
-			}
-
 			$GLOBALS['phpgw']->xslttpl->add_file(array('request'));
 
 			$bypass 			= get_var('bypass',array('POST','GET'));
 
 			if($_POST && !$bypass)
 			{
-				for ($i=0; $i<count($insert_record['location']); $i++)
-				{
-					if($_POST[$insert_record['location'][$i]])
-					{
-						$values['location'][$insert_record['location'][$i]]= $_POST[$insert_record['location'][$i]];
-					}
-				}
+				$insert_record = $GLOBALS['phpgw']->session->appsession('insert_record',$this->currentapp);
+				$insert_record_entity = $GLOBALS['phpgw']->session->appsession('insert_record_entity',$this->currentapp);
 
-				while (is_array($insert_record['extra']) && list($key,$column) = each($insert_record['extra']))
+				for ($j=0;$j<count($insert_record_entity);$j++)
 				{
-					if($_POST[$key])
-					{
-						$values['extra'][$column]	= $_POST[$key];
-					}
+					$insert_record['extra'][$insert_record_entity[$j]]	= $insert_record_entity[$j];
 				}
-
-				$values['street_name'] 		= $_POST['street_name'];
-				$values['street_number']	= $_POST['street_number'];
-				$values['location_name']	= $_POST['loc' . (count($values['location'])).'_name']; // if not address - get the parent name as address
+				$values = $this->bocommon->collect_locationdata($values,$insert_record);
 			}
 			else
 			{

@@ -968,16 +968,6 @@
 			$bolocation		= CreateObject($this->currentapp.'.bolocation');
 
 			$values		= get_var('values',array('POST'));
-			$insert_record = $GLOBALS['phpgw']->session->appsession('insert_record',$this->currentapp);
-			$insert_record_entity = $GLOBALS['phpgw']->session->appsession('insert_record_entity',$this->currentapp);
-
-			if(isset($insert_record_entity) && is_array($insert_record_entity))
-			{
-				for ($j=0;$j<count($insert_record_entity);$j++)
-				{
-					$insert_record['extra'][$insert_record_entity[$j]]	= $insert_record_entity[$j];
-				}
-			}
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('tts'));
 //------------------- start ticket from other location
@@ -1054,34 +1044,22 @@
 					}
 				}
 			}
-
-
 //------------------------
 //_debug_array($insert_record);
 			if (isset($values['save']))
 			{
-				for ($i=0; $i<count($insert_record['location']); $i++)
+				$insert_record = $GLOBALS['phpgw']->session->appsession('insert_record',$this->currentapp);
+				$insert_record_entity = $GLOBALS['phpgw']->session->appsession('insert_record_entity',$this->currentapp);
+
+				if(isset($insert_record_entity) && is_array($insert_record_entity))
 				{
-					if($_POST[$insert_record['location'][$i]])
+					for ($j=0;$j<count($insert_record_entity);$j++)
 					{
-						$values['location'][$insert_record['location'][$i]]= $_POST[$insert_record['location'][$i]];
+						$insert_record['extra'][$insert_record_entity[$j]]	= $insert_record_entity[$j];
 					}
 				}
 
-				while (is_array($insert_record['extra']) && list($key,$column) = each($insert_record['extra']))
-				{
-					if($_POST[$key])
-					{
-						$values['extra'][$column]	= $_POST[$key];
-					}
-				}
-
-				$values['street_name'] 		= $_POST['street_name'];
-				$values['street_number']	= $_POST['street_number'];
-				if(isset($values['location']) && $values['location'])
-				{
-					$values['location_name']	= $_POST['loc' . (count($values['location'])).'_name']; // if not address - get the parent name as address
-				}
+				$values = $this->bocommon->collect_locationdata($values,$insert_record);
 
 /*				if(!$values['subject'])
 				{
@@ -1309,16 +1287,6 @@
 
 			$values		= get_var('values',array('POST'));
 
-			$insert_record_entity = $GLOBALS['phpgw']->session->appsession('insert_record_entity',$this->currentapp);
-
-			if(isset($insert_record_entity) && is_array($insert_record_entity))
-			{
-				for ($j=0;$j<count($insert_record_entity);$j++)
-				{
-					$insert_record['extra'][$insert_record_entity[$j]]	= $insert_record_entity[$j];
-				}
-			}
-
 			$GLOBALS['phpgw']->xslttpl->add_file(array('tts'));
 
 
@@ -1375,6 +1343,18 @@
 
 			if (isset($values['save']))
 			{
+
+// FIX this : relevant?
+/*				$insert_record_entity = $GLOBALS['phpgw']->session->appsession('insert_record_entity',$this->currentapp);
+
+				if(isset($insert_record_entity) && is_array($insert_record_entity))
+				{
+					for ($j=0;$j<count($insert_record_entity);$j++)
+					{
+						$insert_record['extra'][$insert_record_entity[$j]]	= $insert_record_entity[$j];
+					}
+				}
+
 				while (is_array($insert_record['extra']) && list($key,$column) = each($insert_record['extra']))
 				{
 					if($_POST[$key])
@@ -1382,7 +1362,7 @@
 						$values['extra'][$column]	= $_POST[$key];
 					}
 				}
-
+*/
 				if(!$values['subject'])
 				{
 					$receipt['error'][]=array('msg'=>lang('Please type a subject for this ticket !'));

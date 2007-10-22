@@ -714,7 +714,6 @@
 			$gab_id 		= get_var('gab_id',array('POST','GET'));
 			$location_code 	= get_var('location_code',array('POST','GET'));
 			$values			= get_var('values',array('POST'));
-			$insert_record 		= $GLOBALS['phpgw']->session->appsession('insert_record',$this->currentapp);
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('gab'));
 
@@ -727,26 +726,8 @@
 
 			if ($values['save'])
 			{
-
-				for ($i=0; $i<count($insert_record['location']); $i++)
-				{
-					if($_POST[$insert_record['location'][$i]])
-					{
-						$values['location'][$insert_record['location'][$i]]= $_POST[$insert_record['location'][$i]];
-					}
-				}
-
-				while (is_array($insert_record['extra']) && list($key,) = each($insert_record['extra']))
-				{
-					if($_POST[$key])
-					{
-						$values['extra'][$key]	= $_POST[$key];
-					}
-				}
-
-				$values['street_name'] 		= $_POST['street_name'];
-				$values['street_number']	= $_POST['street_number'];
-				$values['location_name']	= $_POST['loc' . (count($values['location'])).'_name']; // if not address - get the parent name as address
+				$insert_record 		= $GLOBALS['phpgw']->session->appsession('insert_record',$this->currentapp);
+				$values = $this->bocommon->collect_locationdata($values,$insert_record);
 
 				$values['gab_id'] = $gab_id;
 

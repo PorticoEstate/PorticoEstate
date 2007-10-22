@@ -1062,26 +1062,7 @@
 				$values['order']		= get_var('order',array('POST','GET'));
 
 				$insert_record = $GLOBALS['phpgw']->session->appsession('insert_record',$this->currentapp);
-
-				for ($i=0; $i<count($insert_record['location']); $i++)
-				{
-					if($_POST[$insert_record['location'][$i]])
-					{
-						$values['location'][$insert_record['location'][$i]]= $_POST[$insert_record['location'][$i]];
-					}
-				}
-
-				while (is_array($insert_record['extra']) && list($key,$column) = each($insert_record['extra']))
-				{
-					if($_POST[$key])
-					{
-						$values['extra'][$column]	= $_POST[$key];
-					}
-				}
-
-				$values['street_name'] 		= $_POST['street_name'];
-				$values['street_number']	= $_POST['street_number'];
-				$values['location_name']	= $_POST['loc' . (count($values['location'])).'_name']; // if no address - get the parent name as address
+				$values = $this->bocommon->collect_locationdata($values,$insert_record);
 
 				$GLOBALS['phpgw']->session->appsession('session_data','add_values',$values);
 			}
@@ -1102,8 +1083,6 @@
 			{
 				$values['location_data'] = $bolocation->read_single($location_code,array('tenant_id'=>$tenant_id,'p_num'=>$p_num));
 			}
-
-
 
 			if($add_invoice && is_array($values))
 			{
@@ -1127,7 +1106,7 @@
 				{
 					$receipt['error'][] = array('msg'=>lang('Please - select type invoice!'));
 				}
-				if (!$values['vendor_id'] && !$order)
+				if (!$values['vendor_id'] && (!isset($order) || !$order))
 				{
 					$receipt['error'][] = array('msg'=>lang('Please - select Vendor!'));
 				}
@@ -1137,12 +1116,12 @@
 					$receipt['error'][] = array('msg'=>lang('Please - select type order!'));
 				}
 
-				if (!$values['budget_responsible']  && !$order)
+				if (!$values['budget_responsible'] && (!isset($order) || !$order))
 				{
 					$receipt['error'][] = array('msg'=>lang('Please - select budget responsible!'));
 				}
 
-				if(!$order && $values['vendor_id'])
+				if((!isset($order) || !$order) && $values['vendor_id'])
 				{
 					if (!$this->bo->check_vendor($values['vendor_id']))
 					{
@@ -1191,14 +1170,13 @@
 					unset($values);
 					$GLOBALS['phpgw']->session->appsession('session_data','add_receipt',$receipt);
 					$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> $this->currentapp.'.uiinvoice.add'));
-
 				}
 				else
 				{
 					if($values['location'])
 					{
 						$location_code=implode("-", $values['location']);
-						$values['location_data'] = $bolocation->read_single($location_code,$values['extra']);
+						$values['location_data'] = $bolocation->read_single($location_code,isset($values['extra'])?$values['extra']:'');
 					}
 					$GLOBALS['phpgw']->session->appsession('session_data','add_values','');
 				}

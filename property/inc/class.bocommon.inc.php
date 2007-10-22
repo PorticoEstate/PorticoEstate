@@ -1518,5 +1518,45 @@
 				return $text;
 			}
 		}		
+
+		/**
+		* Collects locationdata from location form and appends to values
+		*
+		* @param array $values array with data fom post
+		* @param array $insert_record array containing fields to collect from post
+		* @return updated values
+		*/
+		function collect_locationdata($values = '',$insert_record = '')
+		{	
+			if($insert_record)
+			{
+				for ($i=0; $i<count($insert_record['location']); $i++)
+				{
+					if(isset($_POST[$insert_record['location'][$i]]) && $_POST[$insert_record['location'][$i]])
+					{
+						$values['location'][$insert_record['location'][$i]]= $_POST[$insert_record['location'][$i]];
+					}
+				}
+
+				if(isset($insert_record['extra']) && is_array($insert_record['extra']))
+				{
+					foreach ($insert_record['extra'] as $key => $column)
+					{
+						if(isset($_POST[$key]) && $_POST[$key])
+						{
+							$values['extra'][$column]	= $_POST[$key];
+						}
+					}
+				}
+			}
+
+			$values['street_name'] 		= isset($_POST['street_name'])?$_POST['street_name']:'';
+			$values['street_number']	= isset($_POST['street_number'])?$_POST['street_number']:'';
+			if(isset($values['location']) && is_array($values['location']))
+			{
+				$values['location_name']	= $_POST['loc' . (count($values['location'])).'_name']; // if not address - get the parent name as address
+			}
+			return $values;
+		}		
 	}
 ?>
