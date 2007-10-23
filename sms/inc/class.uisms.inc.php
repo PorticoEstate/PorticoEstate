@@ -92,7 +92,14 @@
 
 			if($this->acl->check($acl_location, PHPGW_ACL_ADD))
 			{
-				$add_right = true;
+				$add_right 				= true;
+				$text_answer			= lang('answer');
+				$lang_answer_sms_text 	= lang('answer this sms');
+			}
+			else
+			{
+				$text_answer 			= '';
+				$lang_answer_sms_text	= '';
 			}
 
 
@@ -104,12 +111,16 @@
 					$text_delete		= lang('delete');
 					$lang_delete_sms_text 	= lang('delete the sms from inbox');
 				}
+				else
+				{
+					$link_delete			= '';
+					$text_delete			= '';
+					$lang_delete_sms_text	= '';
+				}
 
 				if($add_right)
 				{
 					$link_answer		= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uisms.send' ,'p_num'=> $entry['sender']));
-					$text_answer		= lang('answer');
-					$lang_answer_sms_text 	= lang('answer this sms');
 				}
 
 
@@ -119,20 +130,15 @@
 					'sender'				=> $entry['sender'],
 					'user'					=> $entry['user'],
 					'message'				=> $entry['message'],
-					'entry_time'				=> $entry['entry_time'],
-					'link_delete'				=> $link_delete,
-					'text_delete'				=> $text_delete,
-					'lang_delete_sms_text'			=> $lang_delete_sms_text,
-					'link_answer'				=> $link_answer,
-					'text_answer'				=> $text_answer,
-					'lang_answer_sms_text'			=> $lang_answer_sms_text,
+					'entry_time'			=> $entry['entry_time'],
+					'link_delete'			=> $link_delete,
+					'text_delete'			=> $text_delete,
+					'lang_delete_sms_text'	=> $lang_delete_sms_text,
+					'link_answer'			=> $link_answer,
+					'text_answer'			=> $text_answer,
+					'lang_answer_sms_text'	=> $lang_answer_sms_text,
 
 				);
-
-				unset ($link_delete);
-				unset ($text_delete);
-				unset ($lang_delete_sms_text);
-
 			}
 
 //_debug_array($entry['grants']);
