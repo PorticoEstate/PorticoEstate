@@ -790,11 +790,12 @@
 				<td align="left">
 					<xsl:call-template name="filter_district"/>
 				</td>
-
+				<td>
+					<xsl:call-template name="cat_filter"/>
+				</td>
 				<td align="left">
 					<xsl:call-template name="filter_grouping"/>
 				</td>
-
 				<td align="right">
 					<xsl:call-template name="search_field"/>
 				</td>
