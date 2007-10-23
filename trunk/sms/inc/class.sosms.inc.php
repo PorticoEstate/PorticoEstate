@@ -120,7 +120,7 @@
 					'entry_time'	=> $this->db->f('in_datetime'),
 					'message'	=> stripslashes($this->db->f('in_msg')),
 					'user'		=> $GLOBALS['phpgw']->accounts->id2name($this->db->f('in_uid')),
-					'grants'	=> (int)$grants[$this->db->f('in_uid')]
+					'grants'	=> (int)isset($grants[$this->db->f('in_uid')])?$grants[$this->db->f('in_uid')]:0
 				);
 
 			}
