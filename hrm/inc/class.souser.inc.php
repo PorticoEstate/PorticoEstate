@@ -42,20 +42,14 @@
 		{
 			if(is_array($data))
 			{
-				if ($data['start'])
-				{
-					$start=$data['start'];
-				}
-				else
-				{
-					$start=0;
-				}
-				$query		= (isset($data['query'])?$data['query']:'');
-				$sort		= (isset($data['sort'])?$data['sort']:'DESC');
-				$order		= (isset($data['order'])?$data['order']:'');
-				$allrows	= (isset($data['allrows'])?$data['allrows']:'');
+				$start		= isset($data['start']) && $data['start'] ? $data['start']:'0';
+				$query		= isset($data['query']) ? $data['query']:'';
+				$sort		= isset($data['sort']) && $data['sort'] ? $data['sort']:'DESC';
+				$order		= isset($data['order']) ? $data['order']:'';
+				$allrows	= isset($data['allrows']) ? $data['allrows']:'';
 			}
-
+			$filtermethod = '';
+			$querymethod = '';
 /*			$filtermethod = ' AND ( account_id=' . $this->account;
 			if (is_array($this->grants))
 			{
@@ -107,13 +101,12 @@
 
 			while ($this->db->next_record())
 			{
-				$ngrants = $this->grants[$this->db->f('account_id')];
 				$account_info[] = array
 				(
 					'account_id'		=> $this->db->f('account_id'),
 					'account_firstname'	=> stripslashes($this->db->f('account_firstname')),
 					'account_lastname'	=> stripslashes($this->db->f('account_lastname')),
-					'grants'		=> $ngrants
+					'grants'		=> isset($this->grants[$this->db->f('account_id')])?$this->grants[$this->db->f('account_id')]:''
 				);
 			}
 

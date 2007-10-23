@@ -24,6 +24,8 @@
 		var $sort;
 		var $order;
 		var $cat_id;
+		var $allrows;
+		var $use_session;
 
 		var $public_functions = array
 		(

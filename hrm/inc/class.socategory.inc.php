@@ -102,9 +102,8 @@
 		}
 
 
-		function select_table($type,$type_id)
+		function select_table($type)
 		{
-
 			switch($type)
 			{
 				case 'training':
@@ -180,7 +179,7 @@
 
 		function select_category_list($type)
 		{
-			$table = $this->select_table($type,$type_id);
+			$table = $this->select_table($type);
 
 			$this->db->query("SELECT id, descr FROM $table ORDER BY id ");
 
