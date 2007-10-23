@@ -79,7 +79,11 @@
 				$allrows		= (isset($data['allrows'])?$data['allrows']:'');
 				$member_id		= (isset($data['member_id'])?$data['member_id']:0);
 				$agreement_id	= (isset($data['agreement_id'])?$data['agreement_id']:'');
+				$status 		= (isset($data['status'])?$data['status']:'');
 			}
+
+			$filtermethod = '';
+			$querymethod = '';
 
 			$choice_table = 'fm_agreement_choice';
 			$attribute_table = 'fm_agreement_attribute';
@@ -87,8 +91,8 @@
 			$entity_table = 'fm_agreement';
 			$category_table = 'fm_branch';
 			$attribute_filter = " AND attrib_detail = 1";
-			$paranthesis .='(';
-			$joinmethod .= " $this->join $category_table ON ( $entity_table.category =$category_table.id)";
+			$paranthesis ='(';
+			$joinmethod = " $this->join $category_table ON ( $entity_table.category =$category_table.id)";
 			$joinmethod .= " $this->join  fm_vendor ON ( $entity_table.vendor_id =fm_vendor.id ))";
 
 			$cols = $entity_table . ".*,$category_table.descr as category, org_name";
@@ -153,7 +157,7 @@
 			}
 
 
-			$from .= " FROM $paranthesis $entity_table ";
+			$from = " FROM $paranthesis $entity_table ";
 
 			$sql = "SELECT $cols $from $joinmethod";
 
@@ -176,7 +180,7 @@
 				$i++;
 			}
 
-			$user_columns=$GLOBALS['phpgw_info']['user']['preferences'][$this->currentapp]['agreement_columns' . !!$agreement_id];
+			$user_columns = isset($GLOBALS['phpgw_info']['user']['preferences'][$this->currentapp]['agreement_columns' . !!$agreement_id])?$GLOBALS['phpgw_info']['user']['preferences'][$this->currentapp]['agreement_columns' . !!$agreement_id]:'';
 
 //_debug_array($user_columns);
 
@@ -312,67 +316,69 @@
 				for ($i=0;$i<$n;$i++)
 				{
 					$agreement_list[$j][$cols_return[$i]] = $this->db->f($cols_return[$i]);
-					$agreement_list[$j]['grants'] = (int)$grants[$this->db->f('user_id')];
+					$agreement_list[$j]['grants'] = (int)isset($grants[$this->db->f('user_id')])?$grants[$this->db->f('user_id')]:'';
 				}
 
-				for ($i=0;$i<count($cols_return_extra);$i++)
+				if(isset($cols_return_extra) && is_array($cols_return_extra))
 				{
-					$value='';
-					$value=$this->db->f($cols_return_extra[$i]['name']);
+					for ($i=0;$i<count($cols_return_extra);$i++)
+					{
+						$value='';
+						$value=$this->db->f($cols_return_extra[$i]['name']);
 
-					if(($cols_return_extra[$i]['datatype']=='R' || $cols_return_extra[$i]['datatype']=='LB') && $value):
-					{
-						$sql="SELECT value FROM $choice_table where attrib_id=" .$cols_return_extra[$i]['attrib_id']. "  AND id=" . $value . $attribute_filter;
-						$this->db2->query($sql);
-						$this->db2->next_record();
-						$agreement_list[$j][$cols_return_extra[$i]['name']] = $this->db2->f('value');
-					}
-					elseif($cols_return_extra[$i]['datatype']=='AB' && $value):
-					{
-						$contact_data	= $contacts->read_single_entry($value,array('n_given'=>'n_given','n_family'=>'n_family','email'=>'email'));
-						$agreement_list[$j][$cols_return_extra[$i]['name']]	= $contact_data[0]['n_family'] . ', ' . $contact_data[0]['n_given'];
-					}
-					elseif($cols_return_extra[$i]['datatype']=='VENDOR' && $value):
-					{
-						$sql="SELECT org_name FROM fm_vendor where id=$value";
-						$this->db2->query($sql);
-						$this->db2->next_record();
-						$agreement_list[$j][$cols_return_extra[$i]['name']] = $this->db2->f('org_name');
-
-					}
-					elseif($cols_return_extra[$i]['datatype']=='CH' && $value):
-					{
-						$ch= unserialize($value);
-
-						if (isset($ch) AND is_array($ch))
+						if(($cols_return_extra[$i]['datatype']=='R' || $cols_return_extra[$i]['datatype']=='LB') && $value):
 						{
-							for ($k=0;$k<count($ch);$k++)
-							{
-								$sql="SELECT value FROM $choice_table where attrib_id=" .$cols_return_extra[$i]['attrib_id']. "  AND id=" . $ch[$k] . $attribute_filter;
-								$this->db2->query($sql);
-								while ($this->db2->next_record())
-								{
-									$ch_value[]=$this->db2->f('value');
-								}
-							}
-							$agreement_list[$j][$cols_return_extra[$i]['name']] = @implode(",", $ch_value);
-							unset($ch_value);
+							$sql="SELECT value FROM $choice_table where attrib_id=" .$cols_return_extra[$i]['attrib_id']. "  AND id=" . $value . $attribute_filter;
+							$this->db2->query($sql);
+							$this->db2->next_record();
+							$agreement_list[$j][$cols_return_extra[$i]['name']] = $this->db2->f('value');
 						}
-					}
-					elseif($cols_return_extra[$i]['datatype']=='D' && $value):
-					{
+						elseif($cols_return_extra[$i]['datatype']=='AB' && $value):
+						{
+							$contact_data	= $contacts->read_single_entry($value,array('n_given'=>'n_given','n_family'=>'n_family','email'=>'email'));
+							$agreement_list[$j][$cols_return_extra[$i]['name']]	= $contact_data[0]['n_family'] . ', ' . $contact_data[0]['n_given'];
+						}
+						elseif($cols_return_extra[$i]['datatype']=='VENDOR' && $value):
+						{
+							$sql="SELECT org_name FROM fm_vendor where id=$value";
+							$this->db2->query($sql);
+							$this->db2->next_record();
+							$agreement_list[$j][$cols_return_extra[$i]['name']] = $this->db2->f('org_name');
+
+						}
+						elseif($cols_return_extra[$i]['datatype']=='CH' && $value):
+						{
+							$ch= unserialize($value);
+	
+							if (isset($ch) AND is_array($ch))
+							{
+								for ($k=0;$k<count($ch);$k++)
+								{
+									$sql="SELECT value FROM $choice_table where attrib_id=" .$cols_return_extra[$i]['attrib_id']. "  AND id=" . $ch[$k] . $attribute_filter;
+									$this->db2->query($sql);
+									while ($this->db2->next_record())
+									{
+										$ch_value[]=$this->db2->f('value');
+									}
+								}
+								$agreement_list[$j][$cols_return_extra[$i]['name']] = @implode(",", $ch_value);
+								unset($ch_value);
+							}
+						}
+						elseif($cols_return_extra[$i]['datatype']=='D' && $value):
+						{
 //_debug_array($value);
 
-						$agreement_list[$j][$cols_return_extra[$i]['name']]=date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'],strtotime($value));
+							$agreement_list[$j][$cols_return_extra[$i]['name']]=date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'],strtotime($value));
+						}
+						else:
+						{
+							$agreement_list[$j][$cols_return_extra[$i]['name']]=$value;
+						}
+						endif;
 					}
-					else:
-					{
-						$agreement_list[$j][$cols_return_extra[$i]['name']]=$value;
-					}
-					endif;
+
 				}
-
-
 				$j++;
 			}
 //_debug_array($agreement_list);
@@ -581,7 +587,7 @@
 			$uicols['descr'][]			= lang('date');
 			$uicols['statustext'][]		= lang('date');
 
-			$from .= " FROM $entity_table ";
+			$from = " FROM $entity_table ";
 
 			$sql = "SELECT $cols $from $joinmethod";
 
