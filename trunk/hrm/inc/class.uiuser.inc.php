@@ -42,15 +42,15 @@
 			$this->currentapp			= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->nextmatchs			= CreateObject('phpgwapi.nextmatchs');
 			$this->account				= $GLOBALS['phpgw_info']['user']['account_id'];
-			$this->bo				= CreateObject($this->currentapp.'.bouser',False);
+			$this->bo					= CreateObject($this->currentapp.'.bouser',False);
 			$this->bocommon				= CreateObject($this->currentapp.'.bocommon');
 			$this->bocategory			= CreateObject($this->currentapp.'.bocategory');
-			$this->menu				= CreateObject($this->currentapp.'.menu');
+			$this->menu					= CreateObject($this->currentapp.'.menu');
 			$this->menu->sub			='user';
 			$this->grants 				= $this->bo->grants;
 			$this->start				= $this->bo->start;
 			$this->query				= $this->bo->query;
-			$this->sort				= $this->bo->sort;
+			$this->sort					= $this->bo->sort;
 			$this->order				= $this->bo->order;
 			$this->allrows				= $this->bo->allrows;
 		}
@@ -81,28 +81,31 @@
 			{
 				if($entry['grants'])
 				{
-					$link_training		= $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> $this->currentapp.'.uiuser.training', 'user_id'=> $entry['account_id']));
-					$text_training		= lang('training');
-					$lang_training_user_text = lang('Training profile');
+					$link_training				= $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> $this->currentapp.'.uiuser.training', 'user_id'=> $entry['account_id']));
+					$text_training				= lang('training');
+					$lang_training_user_text	= lang('Training profile');
+				}
+				else
+				{
+					$link_training				= '';
+					$text_training				= '';
+					$lang_training_user_text	= '';
 				}
 
 				$content[] = array
 				(
 					'first_name'				=> $entry['account_firstname'],
-					'last_name'				=> $entry['account_lastname'],
-//					'link_edit'				=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> $this->currentapp.'.uiuser.training', 'user_id'=> $entry['account_id'])),
+					'last_name'					=> $entry['account_lastname'],
+//					'link_edit'					=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> $this->currentapp.'.uiuser.training', 'user_id'=> $entry['account_id'])),
 					'link_training'				=> $link_training,
-					'link_view'				=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> $this->currentapp.'.uiuser.view' ,' user_id'=> $entry['account_id'])),
-					'lang_view_user_text'			=> lang('view the user'),
-					'lang_training_user_text'		=> $lang_training_user_text,
-					'lang_edit_user_text'			=> lang('edit the user'),
-					'text_view'				=> lang('view'),
-					'text_edit'				=> lang('edit'),
+					'link_view'					=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> $this->currentapp.'.uiuser.view' ,' user_id'=> $entry['account_id'])),
+					'lang_view_user_text'		=> lang('view the user'),
+					'lang_training_user_text'	=> $lang_training_user_text,
+					'lang_edit_user_text'		=> lang('edit the user'),
+					'text_view'					=> lang('view'),
+					'text_edit'					=> lang('edit'),
 					'text_training'				=> $text_training
 				);
-				unset ($link_training);
-				unset ($text_training);
-				unset ($lang_training_user_text);
 			}
 
 //_debug_array($content);
@@ -116,9 +119,6 @@
 											'order'	=> $this->order,
 											'extra'	=> array('menuaction'		=> $this->currentapp.'.uiuser.index',
 														'query'		=> $this->query,
-														'district_id'	=> $this->district_id,
-														'entity_id'	=> $this->entity_id,
-														'cat_id'	=> $this->cat_id,
 														'allrows' 	=> $this->allrows)
 										)),
 				'lang_last_name'	=> lang('Last name'),
@@ -129,15 +129,12 @@
 											'order'	=> $this->order,
 											'extra'	=> array('menuaction'		=> $this->currentapp.'.uiuser.index',
 														'query'		=> $this->query,
-														'district_id'	=> $this->district_id,
-														'entity_id'	=> $this->entity_id,
-														'cat_id'	=> $this->cat_id,
 														'allrows'	=> $this->allrows)
 										)),
 				'lang_first_name'	=> lang('First name'),
 				'lang_training'		=> lang('training'),
-				'lang_edit'		=> lang('edit'),
-				'lang_view'		=> lang('view'),
+				'lang_edit'			=> lang('edit'),
+				'lang_view'			=> lang('view'),
 			);
 
 			if(!$this->allrows)
@@ -152,33 +149,28 @@
 			$link_data = array
 			(
 				'menuaction'	=> $this->currentapp.'.uiuser.index',
-				'sort'		=> $this->sort,
-				'order'		=> $this->order,
-				'cat_id'	=> $this->cat_id,
-				'filter'	=> $this->filter,
-				'query'		=> $this->query
+				'sort'			=> $this->sort,
+				'order'			=> $this->order,
+				'query'			=> $this->query
 			);
-
-			$msgbox_data = $this->bocommon->msgbox_data($receipt);
 
 			$data = array
 			(
-				'msgbox_data'					=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
-				'links'						=> $links,
-				'allow_allrows'					=> True,
-				'allrows'					=> $this->allrows,
-				'start_record'					=> $this->start,
-				'record_limit'					=> $record_limit,
-				'num_records'					=> count($account_info),
-				'all_records'					=> $this->bo->total_records,
-				'link_url'					=> $GLOBALS['phpgw']->link('/index.php',$link_data),
-				'img_path'					=> $GLOBALS['phpgw']->common->get_image_path('phpgwapi','default'),
-				'lang_searchfield_categorytext'			=> lang('Enter the search string. To show all entries, empty this field and press the SUBMIT button again'),
-				'lang_searchbutton_categorytext'		=> lang('Submit the search string'),
-				'query'						=> $this->query,
-				'lang_search'					=> lang('search'),
-				'table_header'					=> $table_header,
-				'values'					=> $content
+				'links'								=> $links,
+				'allow_allrows'						=> True,
+				'allrows'							=> $this->allrows,
+				'start_record'						=> $this->start,
+				'record_limit'						=> $record_limit,
+				'num_records'						=> count($account_info),
+				'all_records'						=> $this->bo->total_records,
+				'link_url'							=> $GLOBALS['phpgw']->link('/index.php',$link_data),
+				'img_path'							=> $GLOBALS['phpgw']->common->get_image_path('phpgwapi','default'),
+				'lang_searchfield_categorytext'		=> lang('Enter the search string. To show all entries, empty this field and press the SUBMIT button again'),
+				'lang_searchbutton_categorytext'	=> lang('Submit the search string'),
+				'query'								=> $this->query,
+				'lang_search'						=> lang('search'),
+				'table_header'						=> $table_header,
+				'values'							=> $content
 			);
 
 			$appname	= lang('user');
@@ -244,7 +236,7 @@
 
 			if($fields[0]['email'] || $prefs_user['address'])
 			{
-				if($prefs_user['address'])
+				if(isset($prefs_user['address']) && $prefs_user['address'])
 				{
 					$email_work = $prefs_user['address'];
 				}
@@ -279,7 +271,7 @@
 					$user_values[$j]['value'] = $fields[0][$qcols[$i]];
 					$user_values[$j]['name'] = $qcols_extra[$i]['name'];
 					$user_values[$j]['type'] = $qcols_extra[$i]['type'];
-					$user_values[$j]['link_value'] = $qcols_extra[$i]['link_value'];
+					$user_values[$j]['link_value'] = isset($qcols_extra[$i]['link_value']) ? $qcols_extra[$i]['link_value'] : '';
 					$j++;
 				}
 			}
@@ -373,7 +365,7 @@
 											'extra'	=> array('menuaction'	=> $this->currentapp.'.uiuser.training',
 														'user_id'	=> $user_id,
 														'query'		=> $this->query,
-														'cat_id'	=> $this->cat_id,
+												//		'cat_id'	=> $this->cat_id,
 														'allrows' 	=> $this->allrows)
 										)),
 				'sort_start_date'	=> $this->nextmatchs->show_sort_order(array
@@ -384,7 +376,7 @@
 											'extra'	=> array('menuaction'		=> $this->currentapp.'.uiuser.training',
 														'user_id'	=> $user_id,
 														'query'		=> $this->query,
-														'cat_id'	=> $this->cat_id,
+												//		'cat_id'	=> $this->cat_id,
 														'allrows' 	=> $this->allrows)
 										)),
 				'lang_place'		=> lang('place'),
@@ -396,15 +388,15 @@
 											'extra'	=> array('menuaction'	=> $this->currentapp.'.uiuser.training',
 														'user_id'	=> $user_id,
 														'query'		=> $this->query,
-														'cat_id'	=> $this->cat_id,
+												//		'cat_id'	=> $this->cat_id,
 														'allrows' 	=> $this->allrows)
 										)),
 				'lang_category'		=> lang('category'),
 				'lang_title'		=> lang('training'),
 				'lang_start_date'	=> lang('start date'),
 				'lang_end_date'		=> lang('end date'),
-				'lang_view'		=> lang('view'),
-				'lang_edit'		=> lang('edit'),
+				'lang_view'			=> lang('view'),
+				'lang_edit'			=> lang('edit'),
 				'lang_delete'		=> lang('delete'),
 			);
 
@@ -423,12 +415,12 @@
 			
 			$table_add[] = array
 			(
-				'lang_add'			=> $lang_add,
+				'lang_add'					=> $lang_add,
 				'lang_add_training_text'	=> lang('add a training item'),
-				'add_action'			=> $add_action,
-				'lang_done'			=> lang('done'),
+				'add_action'				=> $add_action,
+				'lang_done'					=> lang('done'),
 				'lang_done_training_text'	=> lang('back to user list'),
-				'done_action'			=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> $this->currentapp.'.uiuser.index'))
+				'done_action'				=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> $this->currentapp.'.uiuser.index'))
 			);
 
 			$msgbox_data = $this->bocommon->msgbox_data($receipt);
@@ -444,29 +436,29 @@
 
 			$data = array
 			(
-				'link_cv'				=> $GLOBALS['phpgw']->link('/index.php',$link_cv_data),
-				'lang_cv_statustext'			=> lang('A printout version of the CV'),
-				'text_cv'				=> 'CV',
-				'table_header_training'			=> $table_header,
+				'link_cv'					=> $GLOBALS['phpgw']->link('/index.php',$link_cv_data),
+				'lang_cv_statustext'		=> lang('A printout version of the CV'),
+				'text_cv'					=> 'CV',
+				'table_header_training'		=> $table_header,
 				'values_training'			=> $content,
-				'table_add'				=> $table_add,
+				'table_add'					=> $table_add,
 				'user_values'				=> $user_values,
 				'msgbox_data'				=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
 				'form_action'				=> $GLOBALS['phpgw']->link('/index.php',$link_data),
 				'done_action'				=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> $this->currentapp.'.uiuser.index')),
-				'lang_id'				=> lang('training ID'),
+				'lang_id'					=> lang('training ID'),
 				'lang_descr'				=> lang('Descr'),
-				'lang_save'				=> lang('save'),
+				'lang_save'					=> lang('save'),
 				'lang_cancel'				=> lang('cancel'),
-				'value_id'				=> $user_id,
-				'lang_id_status_text'			=> lang('Enter the training ID'),
-				'lang_descr_status_text'		=> lang('Enter a description the training'),
-				'lang_done_status_text'			=> lang('Back to the list'),
-				'lang_save_status_text'			=> lang('Save the training'),
-				'type_id'				=> $training['type_id'],
-				'value_descr'				=> $training['descr'],
+				'value_id'					=> $user_id,
+				'lang_id_status_text'		=> lang('Enter the training ID'),
+				'lang_descr_status_text'	=> lang('Enter a description the training'),
+				'lang_done_status_text'		=> lang('Back to the list'),
+				'lang_save_status_text'		=> lang('Save the training'),
+				'type_id'					=> isset($training['type_id'])?$training['type_id']:'',
+				'value_descr'				=> isset($training['descr'])?$training['descr']:'',
 				'lang_apply'				=> lang('apply'),
-				'lang_apply_status_text'		=> lang('Apply the values'),
+				'lang_apply_status_text'	=> lang('Apply the values'),
 			);
 
 			$appname					= lang('Training');
@@ -500,14 +492,15 @@
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('user'));
 
+			$receipt = array();
 			if (is_array($values))
 			{
 				$values['place_id']= get_var('place_id',array('POST'));
 				$values['user_id']= $user_id;
 
-				if ($values['save'] || $values['apply'])
+				if ((isset($values['save']) && $values['save']) || (isset($values['apply']) && $values['apply']))
 				{
-					if(!$values['cat_id'])
+					if(!isset($values['cat_id']) || !$values['cat_id'])
 					{
 						$receipt['error'][]=array('msg'=>lang('Please select a category !'));
 					}
@@ -564,7 +557,7 @@
 
 			if ($training_id)
 			{
-				if(!$receipt['error'])
+				if(!isset($receipt['error']) || !$receipt['error'])
 				{
 					$values = $this->bo->read_single_training($training_id);
 				}
@@ -620,43 +613,43 @@
 
 			$data = array
 			(
-				'value_descr'				=> $values['descr'],
-				'value_title'				=> $values['title'],
-				'value_start_date'			=> $values['start_date'],
-				'value_end_date'			=> $values['end_date'],
-				'value_entry_date'			=> $values['entry_date'],
-				'value_reference'			=> $values['reference'],
-				'value_new_place_name'			=> $values['new_place_name'],
-				'value_new_place_address'		=> $values['new_place_address'],
-				'value_new_place_zip'			=> $values['new_place_zip'],
-				'value_new_place_town'			=> $values['new_place_town'],
-				'value_new_place_remark'		=> $values['new_place_remark'],
+				'value_descr'					=> isset($values['descr']) ? $values['descr'] : '',
+				'value_title'					=> isset($values['title']) ? $values['title'] : '',
+				'value_start_date'				=> isset($values['start_date']) ? $values['start_date'] : '',
+				'value_end_date'				=> isset($values['end_date']) ? $values['end_date'] : '',
+				'value_entry_date'				=> isset($values['entry_date']) ? $values['entry_date'] : '',
+				'value_reference'				=> isset($values['reference']) ? $values['reference'] : '',
+				'value_new_place_name'			=> isset($values['new_place_name']) ? $values['new_place_name'] : '',
+				'value_new_place_address'		=> isset($values['new_place_address']) ? $values['new_place_address'] : '',
+				'value_new_place_zip'			=> isset($values['new_place_zip']) ? $values['new_place_zip'] : '',
+				'value_new_place_town'			=> isset($values['new_place_town']) ? $values['new_place_town'] : '',
+				'value_new_place_remark'		=> isset($values['new_place_remark']) ? $values['new_place_remark'] : '',
 
-				'img_cal'				=> $GLOBALS['phpgw']->common->image('phpgwapi','cal'),
+				'img_cal'						=> $GLOBALS['phpgw']->common->image('phpgwapi','cal'),
 				'lang_date_selector'			=> lang('date selector'),
-				'lang_start_date'			=> lang('start date'),
-				'lang_end_date'				=> lang('end date'),
+				'lang_start_date'				=> lang('start date'),
+				'lang_end_date'					=> lang('end date'),
 				'lang_start_date_title'			=> lang('select start date'),
 				'lang_end_date_title'			=> lang('select end date'),
-				'lang_start_date_status_text'		=> lang('Select the start date for your training'),
+				'lang_start_date_status_text'	=> lang('Select the start date for your training'),
 				'lang_end_date_status_text'		=> lang('Select the end date for your training'),
-				'lang_select_date'			=> lang('select date'),
+				'lang_select_date'				=> lang('select date'),
 
-				'lang_reference'			=> lang('reference'),
+				'lang_reference'				=> lang('reference'),
 
-				'lang_entry_date'			=> lang('Entry date'),
-				'lang_title'				=> lang('training'),
+				'lang_entry_date'				=> lang('Entry date'),
+				'lang_title'					=> lang('training'),
 				'lang_title_status_text'		=> lang('Title of the training item'),
-				'lang_skill'				=> lang('Skill'),
+				'lang_skill'					=> lang('Skill'),
 				'lang_skill_status_text'		=> lang('Select your skill'),
-				'skill_list'				=> $this->bocategory->select_category_list('skill_level',$values['skill']),
-				'lang_no_skill'				=> lang('select a skill'),
+				'skill_list'					=> $this->bocategory->select_category_list('skill_level',$values['skill']),
+				'lang_no_skill'					=> lang('select a skill'),
 
-				'place_list'				=> $this->bo->select_place_list($values['place_id']),
-				'lang_place'				=> lang('place'),
-				'lang_new_place'			=> lang('new place'),
+				'place_list'					=> $this->bo->select_place_list($values['place_id']),
+				'lang_place'					=> lang('place'),
+				'lang_new_place'				=> lang('new place'),
 				'lang_place_status_text'		=> lang('Select a place'),
-				'lang_new_place_status_text'		=> lang('Enter a new place'),
+				'lang_new_place_status_text'	=> lang('Enter a new place'),
 				'lang_no_place'					=> lang('select a place'),
 
 				'lang_new_place_name'			=> lang('name'),
@@ -665,26 +658,26 @@
 				'lang_new_place_town'			=> lang('town'),
 				'lang_new_place_remark'			=> lang('remark'),
 
-				'msgbox_data'				=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
-				'form_action'				=> $GLOBALS['phpgw']->link('/index.php',$link_data),
-				'lang_id'				=> lang('training ID'),
-				'lang_descr'				=> lang('Descr'),
-				'lang_save'				=> lang('save'),
-				'lang_cancel'				=> lang('cancel'),
-				'value_id'				=> $training_id,
+				'msgbox_data'					=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
+				'form_action'					=> $GLOBALS['phpgw']->link('/index.php',$link_data),
+				'lang_id'						=> lang('training ID'),
+				'lang_descr'					=> lang('Descr'),
+				'lang_save'						=> lang('save'),
+				'lang_cancel'					=> lang('cancel'),
+				'value_id'						=> $training_id,
 				'lang_id_status_text'			=> lang('Enter the training ID'),
 				'lang_descr_status_text'		=> lang('Enter a description the training'),
 				'lang_done_status_text'			=> lang('Back to the list'),
 				'lang_save_status_text'			=> lang('Save the training'),
-				'lang_apply'				=> lang('apply'),
+				'lang_apply'					=> lang('apply'),
 				'lang_apply_status_text'		=> lang('Apply the values'),
 
-				'lang_category'				=> lang('category'),
-//				'cat_list'				=> $this->bo->select_category_list('select',$values['cat_id']),
-				'cat_list'				=> $this->bocategory->select_category_list('training',$values['cat_id']),
-				'lang_no_cat'				=> lang('no category'),
+				'lang_category'					=> lang('category'),
+//				'cat_list'						=> $this->bo->select_category_list('select',$values['cat_id']),
+				'cat_list'						=> $this->bocategory->select_category_list('training',$values['cat_id']),
+				'lang_no_cat'					=> lang('no category'),
 				'lang_cat_status_text'			=> lang('Select the category the building belongs to. To do not use a category select NO CATEGORY'),
-				'select_name'				=> 'values[cat_id]',
+				'select_name'					=> 'values[cat_id]',
 			);
 
 			$appname					= lang('Training');
