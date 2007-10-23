@@ -425,7 +425,7 @@
 		{
 			if(is_array($data))
 			{
-				$start	= (isset($data['start'])?$data['start']:0);
+				$start	= (isset($data['start']) && $data['start'] ?$data['start']:0);
 				$filter	= (isset($data['filter'])?$data['filter']:'none');
 				$query = (isset($data['query'])?$data['query']:'');
 				$sort = (isset($data['sort'])?$data['sort']:'DESC');
@@ -436,15 +436,23 @@
 				$grouping = (isset($data['grouping'])?$data['grouping']:'');
 				$revision = (isset($data['revision'])?$data['revision']:'');
 				$year = (isset($data['year'])?$data['year']:'');
+				$cat_id = (isset($data['cat_id'])?$data['cat_id']:'');
 			}
 
+			$ordermethod = '';
 			/* 0 => cancelled, 1 => obligation , 2 => paid */
 			$filtermethod = " WHERE fm_workorder.paid = 1 and fm_workorder.vendor_id > 0";
 			$where = 'AND';
 
+			if ($cat_id > 0)
+			{
+				$filtermethod .= " $where fm_project.category = " . (int)$cat_id;
+				$where = 'AND';
+			}
+
 			if ($district_id > 0)
 			{
-				$filtermethod .= " $where district_id='$district_id' ";
+				$filtermethod .= " $where district_id=" . (int)$district_id;
 				$where = 'AND';
 			}
 /*
@@ -460,6 +468,7 @@
 				$where = 'AND';
 			}
 
+			$querymethod = '';
 			if($query)
 			{
 				$query = ereg_replace("'",'',$query);
@@ -477,7 +486,7 @@
 
 			$this->db->query($sql . $ordermethod,__LINE__,__FILE__);
 			$this->total_records = $this->db->num_rows();
-
+//_debug_array($sql);
 			if(!$year)
 			{
 				$year = date("Y");
@@ -497,7 +506,7 @@
 			$revision = (int)$this->db->f('revision');
 
 
-			unset($filtermethod);
+			$filtermethod = '';
 			$where = 'AND';
 			if ($grouping > 0)
 			{
@@ -524,8 +533,15 @@
 
 //_debug_array($budget_cost);
 
-			unset($filtermethod);
+			$filtermethod = '';
 			$where = 'AND';
+
+			if ($cat_id > 0)
+			{
+				$filtermethod .= " $where fm_project.category = " . (int)$cat_id;
+				$where = 'AND';
+			}
+
 			if ($grouping > 0)
 			{
 				$filtermethod = " $where fm_b_account.category='$grouping' ";
@@ -544,8 +560,9 @@
 			$end_date = date($this->bocommon->dateformat,mktime(2,0,0,12,31,$year));
 
 			$sql = "SELECT fm_b_account.category as b_group, district_id, sum(godkjentbelop) as actual_cost FROM fm_ecobilagoverf"
-				. " $this->join fm_b_account ON fm_ecobilagoverf.spbudact_code =fm_b_account.id "
-				. " $this->join fm_location1 ON fm_ecobilagoverf.loc1 = fm_location1.loc1 "
+				. " $this->join fm_project ON fm_ecobilagoverf.project_id =fm_project.id"
+				. " $this->join fm_b_account ON fm_ecobilagoverf.spbudact_code =fm_b_account.id"
+				. " $this->join fm_location1 ON fm_ecobilagoverf.loc1 = fm_location1.loc1"
 				. " $this->join fm_part_of_town ON fm_location1.part_of_town_id = fm_part_of_town.part_of_town_id"
 				. " WHERE (fakturadato > '$start_date1' AND fakturadato < '$end_date' $filtermethod)"
 				. " OR (fakturadato > '$start_date2' AND fakturadato < '$end_date' AND periode < 3 $filtermethod)"
@@ -591,15 +608,17 @@
 				{	
 					foreach($district as $district_id)
 					{
-						if($actual_cost[$b_group][$district_id] || $budget_cost[$b_group][$district_id] || $obligations[$b_group][$district_id])
+						if( (isset($actual_cost[$b_group][$district_id]) && $actual_cost[$b_group][$district_id])
+						 || (isset($budget_cost[$b_group][$district_id]) && $budget_cost[$b_group][$district_id])
+						 || (isset($obligations[$b_group][$district_id]) && $obligations[$b_group][$district_id]))
 						{
 							$result[] = array(
-								'grouping'	=> $b_group,
+								'grouping'		=> $b_group,
 								'district_id'	=> $district_id,
-								'actual_cost'	=> round($actual_cost[$b_group][$district_id]),
-								'budget_cost'	=> round($budget_cost[$b_group][$district_id]),
-								'obligation'	=> round($obligations[$b_group][$district_id]),
-								'hits'		=> $hits[$b_group][$district_id],							
+								'actual_cost'	=> isset($actual_cost[$b_group][$district_id]) && $actual_cost[$b_group][$district_id] ? round($actual_cost[$b_group][$district_id]) : 0,
+								'budget_cost'	=> isset($budget_cost[$b_group][$district_id]) && $budget_cost[$b_group][$district_id] ? round($budget_cost[$b_group][$district_id]) : 0,
+								'obligation'	=> isset($obligations[$b_group][$district_id]) && $obligations[$b_group][$district_id] ? round($obligations[$b_group][$district_id]) : 0,
+								'hits'			=> isset($hits[$b_group][$district_id])?$hits[$b_group][$district_id]:0,
 							);
 						}
 					}		
