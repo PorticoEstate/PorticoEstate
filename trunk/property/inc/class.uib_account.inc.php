@@ -105,9 +105,6 @@
 
 			while (is_array($b_account_list) && list(,$b_account) = each($b_account_list))
 			{
-				$words = split(' ',$b_account['descr']);
-				$first = "$words[0] $words[1] $words[2] $words[3]";
-
 				if($this->acl_edit)
 				{
 					$link_edit	= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uib_account.edit', 'id'=> $b_account['id']));
@@ -121,7 +118,7 @@
 				$content[] = array
 				(
 					'id'				=> $b_account['id'],
-					'first'				=> $first,
+					'first'				=> $b_account['descr'],
 					'link_edit'			=> $link_edit,
 					'link_delete'			=> $link_delete,
 					'lang_view_b_accounttext'	=> lang('view the budget account'),

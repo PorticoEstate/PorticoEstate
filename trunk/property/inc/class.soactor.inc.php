@@ -63,7 +63,7 @@
 				$member_id 	= (isset($data['member_id'])?$data['member_id']:0);
 			}
 
-			$sql = $this->bocommon->fm_cache('sql_actor_' . $this->role . $lookup);
+			$sql = $this->bocommon->fm_cache('sql_actor_' . $this->role);
 
 			$entity_table = 'fm_' . $this->role;
 			$category_table = 'fm_' . $this->role . '_category';
@@ -106,20 +106,15 @@
 
 				$sql = "SELECT $cols $from $joinmethod";
 
-				$this->bocommon->fm_cache('sql_actor_' . $this->role . $lookup,$sql);
-				$this->bocommon->fm_cache('uicols_actor_' . $this->role . $lookup,$uicols);
-				$this->bocommon->fm_cache('cols_return_actor_' . $this->role . $lookup,$cols_return);
+				$this->bocommon->fm_cache('sql_actor_' . $this->role,$sql);
+				$this->bocommon->fm_cache('uicols_actor_' . $this->role,$uicols);
+				$this->bocommon->fm_cache('cols_return_actor_' . $this->role,$cols_return);
 
 			}
 			else
 			{
-				$uicols 						= $this->bocommon->fm_cache('uicols_actor_'. $this->role . $lookup);
-				$cols_return					= $this->bocommon->fm_cache('cols_return_actor_' . $this->role . $lookup);
-				if($lookup)
-				{
-					$admin_entity	= CreateObject($this->currentapp.'_soadmin_entity');
-					$category = $admin_entity->read_single_category($entity_id,$cat_id);
-				}
+				$uicols 						= $this->bocommon->fm_cache('uicols_actor_'. $this->role);
+				$cols_return					= $this->bocommon->fm_cache('cols_return_actor_' . $this->role);
 			}
 
 			$i	= count($uicols['name']);
@@ -141,7 +136,7 @@
 				$i++;
 			}
 
-			$user_columns=$GLOBALS['phpgw_info']['user']['preferences'][$this->currentapp]['actor_columns_' . $this->role];
+			$user_columns=isset($GLOBALS['phpgw_info']['user']['preferences'][$this->currentapp]['actor_columns_' . $this->role])?$GLOBALS['phpgw_info']['user']['preferences'][$this->currentapp]['actor_columns_' . $this->role]:'';
 
 //_debug_array($user_columns);
 
@@ -185,13 +180,14 @@
 			if(!$grants)
 			{
 				$this->acl 		= & $GLOBALS['phpgw']->acl;
-				$this->grants	= $this->acl->get_grants($this->currentapp,'.' . $this->role);
-				$GLOBALS['phpgw']->session->appsession('grants_' . $this->role,$this->currentapp,$this->grants);
+				$grants	= $this->acl->get_grants($this->currentapp,'.' . $this->role);
+				$GLOBALS['phpgw']->session->appsession('grants_' . $this->role,$this->currentapp,$grants);
 			}
 
+			$filtermethod = '';
 			if (is_array($grants))
 			{
-				while (list($user) = each($grants))
+				foreach($grants as $user => $right)
 				{
 					$public_user_list[] = $user;
 				}
@@ -212,20 +208,22 @@
 				$where= 'AND';
 			}
 
-			if ($status)
+/*			if ($status)
 			{
 				$filtermethod .= " $where $entity_table.status='$status' ";
 				$where= 'AND';
 			}
+*/
 
-
+			$querymethod = '';
+			$_querymethod = array();
 			if($query)
 			{
 				$query = ereg_replace("'",'',$query);
 				$query = ereg_replace('"','',$query);
 
-				$filtermethod .= " $where $entity_table.id ='" . (int)$query . "'";
-				$where= 'OR';
+			//	$filtermethod .= " $where $entity_table.id ='" . (int)$query . "'";
+				$where= 'AND';
 
 				$this->db->query("SELECT * FROM $attribute_table where search='1'");
 
@@ -233,26 +231,25 @@
 				{
 					if($this->db->f('datatype')=='V' || $this->db->f('datatype')=='email' || $this->db->f('datatype')=='CH'):
 					{
-						$querymethod[]= "$entity_table." . $this->db->f('column_name') . " $this->like '%$query%'";
+						$_querymethod[]= "$entity_table." . $this->db->f('column_name') . " $this->like '%$query%'";
 					}
 					elseif($this->db->f('datatype')=='I'):
 					{
 						if(ctype_digit($query))
 						{
-							$querymethod[]= "$entity_table." . $this->db->f('column_name') . " = " . intval($query);
+							$_querymethod[]= "$entity_table." . $this->db->f('column_name') . " = " . intval($query);
 						}
 					}
 					else:
 					{
-						$querymethod[]= "$entity_table." . $this->db->f('column_name') . " = '$query'";
+						$_querymethod[]= "$entity_table." . $this->db->f('column_name') . " = '$query'";
 					}
 					endif;
 				}
 
-				if (isset($querymethod) AND is_array($querymethod))
+				if (isset($_querymethod) AND is_array($_querymethod))
 				{
-					$querymethod = " $where (" . implode (' OR ',$querymethod) . ')';
-					$where = 'AND';
+					$querymethod = " $where (" . implode (' OR ',$_querymethod) . ')';
 				}
 			}
 
@@ -500,9 +497,12 @@
 				$actor['member_of']=',' . implode(',',$actor['member_of']) . ',';
 			}
 
-			while (is_array($actor['extra']) && list($column,$value) = each($actor['extra']))
+			if(isset($actor['extra']) && is_array($actor['extra']))
 			{
-				$value_set[$column]	= $value;
+				foreach ($actor['extra'] as $column => $value)
+				{
+					$value_set[$column]	= $value;
+				}
 			}
 
 			if (isset($values_attribute) AND is_array($values_attribute))
