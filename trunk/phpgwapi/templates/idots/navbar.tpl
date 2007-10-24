@@ -51,7 +51,7 @@
 <!-- BEGIN navbar_footer -->	
 					</td>
 					<td class="spacer"><img src="{img_root}/spacer.png" alt="spacer" class="spacer" /></td>
-					<td width = "100%">
+					<td width = "100%" valign = "top">
 						<table class="box">
 							<tr> 
 								<td class="articletitle">{current_app_title}</td>
