@@ -35,6 +35,16 @@
     <td>{lang_sesstypedescr}</td>
   </tr>
   <tr>
+    <td><b>{lang_display_notices}</b><br>
+      <select name="setting[display_notices]">
+        <option value="False"{display_notices_no}>False</option>
+        <option value="True"{display_notices_yes}>True</option>
+      </select></td>
+    <td>
+    	{lang_note_display_notices}
+    </td>
+  </tr>
+  <tr>
     <td colspan=2><b>{lang_enablemcrypt}</b><br>
       <select name="setting[enable_mcrypt]">
         <option value="True"{mcrypt_enabled_yes}>True
