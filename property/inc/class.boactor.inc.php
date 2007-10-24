@@ -284,15 +284,19 @@
 //				$actor['attributes'][$i]['type_id']	= $data['type_id'];
 			}
 
-			for ($j=0;$j<count($lookup_functions);$j++)
+			if(isset($lookup_functions) && is_array($lookup_functions))
 			{
-				$actor['lookup_functions'] .= 'function ' . $lookup_functions[$j]['name'] ."\r\n";
-				$actor['lookup_functions'] .= '{'."\r\n";
-				$actor['lookup_functions'] .= $lookup_functions[$j]['action'] ."\r\n";
-				$actor['lookup_functions'] .= '}'."\r\n";
+				$actor['lookup_functions'] = '';
+				for ($j=0;$j<count($lookup_functions);$j++)
+				{
+					$actor['lookup_functions'] .= 'function ' . $lookup_functions[$j]['name'] ."\r\n";
+					$actor['lookup_functions'] .= '{'."\r\n";
+					$actor['lookup_functions'] .= $lookup_functions[$j]['action'] ."\r\n";
+					$actor['lookup_functions'] .= '}'."\r\n";
+				}
 			}
 
-			$GLOBALS['phpgw']->session->appsession('insert_record_actor',$this->currentapp,$insert_record_actor);
+			$GLOBALS['phpgw']->session->appsession('insert_record_actor',$this->currentapp,isset($insert_record_actor)?$insert_record_actor:'');
 
 //_debug_array($actor);
 			return $actor;

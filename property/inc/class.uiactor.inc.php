@@ -246,7 +246,7 @@
 					$table_header[$i]['header'] 	= $uicols['descr'][$i];
 					$table_header[$i]['width'] 		= '5%';
 					$table_header[$i]['align'] 		= 'center';
-					if($uicols['datatype'][$i]!='T' && $uicols['datatype'][$i]!='CH')
+					if(isset($uicols['datatype'][$i]) && $uicols['datatype'][$i]!='T' && $uicols['datatype'][$i]!='CH')
 					{
 						$table_header[$i]['sort_link']	=true;
 						$table_header[$i]['sort'] 		= $this->nextmatchs->show_sort_order(array
@@ -256,12 +256,9 @@
 								'order'	=> $this->order,
 								'extra'	=> array('menuaction'	=> $this->currentapp.'.uiactor.index',
 													'query'		=> $this->query,
-													'lookup'	=> $lookup,
-													'district_id'	=> $this->district_id,
-													'start_date'	=> $start_date,
 													'role'		=> $this->role,
-													'member_id'	=> $this->member_id,
-													'end_date'	=> $end_date)
+													'member_id'	=> $this->member_id
+												)
 							));
 					}
 				}
@@ -397,25 +394,28 @@
 				$insert_record['extra'][$insert_record_actor[$j]]	= $insert_record_actor[$j];
 			}
 
-
 			$GLOBALS['phpgw']->xslttpl->add_file(array('actor','attributes_form'));
+			$receipt = array();
 
 			if (is_array($values))
 			{
-				while (is_array($insert_record['extra']) && list($key,$column) = each($insert_record['extra']))
+				if(isset($insert_record) && is_array($insert_record))
 				{
-					if($_POST[$key])
+					foreach ($insert_record['extra'] as $key => $column)
 					{
-						$values['extra'][$column]	= $_POST[$key];
+						if($_POST[$key])
+						{
+							$values['extra'][$column]	= $_POST[$key];
+						}
 					}
 				}
 
 //_debug_array($values);
 
-				if ($values['save'] || $values['apply'])
+				if ((isset($values['save']) && $values['save']) || (isset($values['apply']) && $values['apply']))
 				{
 
-					if(!$values['cat_id'])
+					if(!isset($values['cat_id']) || !$values['cat_id'])
 					{
 						$receipt['error'][]=array('msg'=>lang('Please select a category !'));
 					}
@@ -425,14 +425,14 @@
 //						$receipt['error'][]=array('msg'=>lang('Please enter a name !'));
 					}
 
-					if(!$receipt['error'])
+					if(!isset($receipt['error']) || !$receipt['error'])
 					{
 						$values['actor_id']	= $actor_id;
 						$receipt = $this->bo->save($values,$values_attribute);
 						$actor_id = $receipt['actor_id'];
 						$this->cat_id = ($values['cat_id']?$values['cat_id']:$this->cat_id);
 
-						if ($values['save'])
+						if (isset($values['save']) && $values['save'])
 						{
 							$GLOBALS['phpgw']->session->appsession('session_data','actor_receipt_' . $this->role,$receipt);
 							$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> $this->currentapp.'.uiactor.index', 'role'=> $this->role));
@@ -512,7 +512,7 @@
 				'lang_save'						=> lang('save'),
 				'lang_cancel'					=> lang('cancel'),
 				'lang_apply'					=> lang('apply'),
-				'value_cat'						=> $actor['cat'],
+	//			'value_cat'						=> $actor['cat'],
 				'lang_id_statustext'			=> lang('Choose an ID'),
 				'lang_apply_statustext'			=> lang('Apply the values'),
 				'lang_cancel_statustext'		=> lang('Leave the actor untouched and return back to the list'),
@@ -531,9 +531,9 @@
 				'onKeyUp'						=> $onKeyUp,
 				'onBlur'						=> $onBlur,
 				'lang_attributes'				=> lang('Attributes'),
-				'attributes_header'				=> $attributes_header,
+		//		'attributes_header'				=> $attributes_header,
 				'attributes_values'				=> $actor['attributes'],
-				'lookup_functions'				=> $actor['lookup_functions'],
+				'lookup_functions'				=> isset($actor['lookup_functions'])?$actor['lookup_functions']:'',
 				'dateformat'					=> $dateformat,
 				'lang_edit'						=> lang('edit'),
 				'lang_add'						=> lang('add'),
