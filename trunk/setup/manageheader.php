@@ -578,6 +578,8 @@
 			$setup_tpl->set_var('lang_note_domain_from_host', lang('Note: This option will only work if show domain select box is off.'));
 			$setup_tpl->set_var('lang_finaldescr',lang('After retrieving the file, put it into place as the header.inc.php.  Then, click "continue".'));
 			$setup_tpl->set_var('lang_continue',lang('Continue'));
+			$setup_tpl->set_var('lang_display_notices',lang('Display notices'));
+			$setup_tpl->set_var('lang_note_display_notices',lang('If you want to enable notices for debugging, change to True'));
 
 			$setup_tpl->pfp('out','manageheader');
 			// ending the switch default

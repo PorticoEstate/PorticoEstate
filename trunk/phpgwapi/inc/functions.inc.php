@@ -281,7 +281,10 @@
 			case E_USER_NOTICE:
 				$log_args['severity'] = 'N';
 				$log->notice($log_args);
-				echo "\n<br>" . lang('ERROR Notice: %1 in %2 at line %3', $error_msg, $error_file, $error_line) . "<br>\n"; //this will be commented in the final version
+				if(isset($GLOBALS['phpgw_info']['server']['display_notices']) && $GLOBALS['phpgw_info']['server']['display_notices'])
+				{
+					echo "\n<br>" . lang('ERROR Notice: %1 in %2 at line %3', $error_msg, $error_file, $error_line) . "<br>\n"; //this will be commented in the final version
+				}
 			//No default, we just ignore it, for now
 		}
 	}
