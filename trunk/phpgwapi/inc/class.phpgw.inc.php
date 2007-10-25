@@ -144,17 +144,16 @@
 			}
 			if ( $iis )
 			{
-				echo "\n<HTML>\n<HEAD>\n<TITLE>Redirecting to $url</TITLE>";
-				echo "\n<META HTTP-EQUIV=REFRESH CONTENT=\"0; URL=$url\">";
-				echo "\n</HEAD><BODY>";
-				echo "<H3>Please continue to <a href=\"$url\">this page</a></H3>";
-				echo "\n</BODY></HTML>";
+				echo "<html>\n<head>\n<title>Redirecting to $url</title>";
+				echo "\n<meta http-equiv=\"refresh\ content=\"0; URL=$url\">";
+				echo "\n</head>\n<body>";
+				echo "\n<h1>Please continue to <a href=\"$url\">this page</a></h1>";
+				echo "\n</body>\n</html>";
 				exit;
 			}
 			else
 			{
 				Header('Location: ' . $url);
-				//print("\n\n");
 				exit;
 			}
 		}
@@ -177,6 +176,191 @@
 			/*  */
 			return $this->translation->translate($key);
 		}
-	} /* end of class */
 
-?>
+		/**
+		* Get the value of a variable
+		*
+		* @param string $var_name the name of the variable sought
+		* @param string $value_type the expected data type
+		* @param string $var_type the variable type sought
+		* @param mixed $default the default value
+		* @return mixed the sanitised variable requested
+		*/
+		public static function get_var($var_name, $value_type = 'string', $var_type = 'REQUEST', $default = null)
+		{
+				$value = null;
+				switch ( strtoupper($var_type) )
+				{
+					case 'COOKIE':
+						if ( isset($_COOKIE[$var_name]) )
+						{
+							$value = $_COOKIE[$var_name];
+						}
+						break;
+
+					case 'GET':
+						if ( isset($_GET[$var_name]) )
+						{
+							$value = $_GET[$var_name];
+						}
+						break;
+
+					case 'POST':
+
+						if ( isset($_POST[$var_name]) )
+						{
+							$value = $_POST[$var_name];
+						}
+						break;
+
+					case 'SESSION':
+						if ( isset($_SESSION[$var_name]) )
+						{
+							$value = $_SESSION[$var_name];
+						}
+						break;
+
+					case 'REQUEST':
+					default:
+						if ( isset($_REQUEST[$var_name]) )
+						{
+							$value = $_REQUEST[$var_name];
+						}
+				}
+
+				if ( is_null($value) && is_null($default) )
+				{
+						return null;
+				}
+				else if ( is_null($value) && !is_null($default) )
+				{
+						return $default;
+				}
+
+				if ( is_array($value) )
+				{
+					foreach ( $value as &$val )
+					{
+						// we assume all elements are 'string's, as it is the safest option
+						$val = self::clean_value($val, 'string', $default); 
+					}
+				}
+				else
+				{
+					$value = self::clean_value($value, $value_type, $default);
+				}
+				return $value;
+			}
+			
+			/**
+			* Test (and sanitise) the value of a variable
+			*
+			* @param mixed $value the value to test
+			* @param string $value_type the expected type of the variable
+			* @return mixed the sanitised variable
+			*/
+			public static function clean_value($value, $value_type = 'string', $default = null)
+			{
+				// Trim whitespace so it doesn't trip us up
+				$value = trim($value);
+				
+				// This won't be needed in PHP6 as GPC magic quotes are being removed
+				if ( get_magic_quotes_gpc() )
+				{
+						$value = stripslashes($value);
+				}
+
+				switch ( $value_type )
+				{
+					case 'bool':
+						if ( !!$value == $value )
+						{
+								return !!$value;
+						}
+						$value = $default;
+						break;
+
+					case 'float':
+					case 'double':
+					case 'real':
+						if ( (float) $value == $value )
+						{
+								return (float) $value;
+						}
+						$value = $default;
+						break;	
+					
+					case 'int':
+					case 'integer':
+					case 'number':
+						if ( (int) $value == $value )
+						{
+								return (int) $value;
+						}
+						$value = $default;
+						break;
+
+					/* Specific string types */
+					case 'color':
+						$regex = array('options' => array('regexp' => '/^#([a-f0-9]{3}){1,2}$/i'));
+						$filtered =  strtolower(filter_var($value, FILTER_VALIDATE_REGEXP, $regex));
+						if ( $filtered == strtolower($value) )
+						{
+							return $filtered;
+						}
+						$value = $default;
+						break;
+							
+					case 'email':
+						$filtered = filter_var($value, FILTER_VALIDATE_EMAIL);
+						if ( $filtered == $value )
+						{
+								return $filtered;
+						}
+						$value = $default;
+						break;
+
+					case 'filename':
+						if ( $value != '.' || $value != '..' )
+						{
+							$regex = array('options' => array('/^[a-z0-9_]+$/i'));
+							$filtered =  filter_var($value, FILTER_VALIDATE_REGEXP, $regex);
+							if ( $filtered == $value )
+							{
+								return $filtered;
+							}
+						}
+						$value = $default;
+						break;
+
+					case 'ip':
+						$filtered = filter_var($value, FILTER_VALIDATE_IP);
+						if ( $filtered == $value )
+						{
+								return $filtered;
+						}
+						$value = $default;
+						break;
+
+					case 'url':
+						$filtered = filter_var($value, FILTER_VALIDATE_URL);
+						if ( $filtered == $value )
+						{
+								return $filtered;
+						}
+						$value = $default;
+						break;
+
+					/* only use this if you really know what you are doing */
+					case 'raw':
+						$value = filter_var($value, FILTER_UNSAFE_RAW);
+						break;
+					
+					case 'html': // this needs its own handler
+					case 'string':
+					default:
+						$value = htmlspecialchars(filter_var($value, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES));
+				}
+				return $value;
+			}
+		}

@@ -11,6 +11,16 @@
  * @version $Id: common_functions.inc.php,v 1.27 2006/12/27 10:12:17 skwashd Exp $
  */
 
+	/**
+	* Require the phpgw class
+	*/
+	require_once(PHPGW_INCLUDE_ROOT . '/phpgwapi/inc/class.phpgw.inc.php');
+
+	/**
+	* Include object factory base class once		
+	*/
+	include_once(PHPGW_SERVER_ROOT.'/phpgwapi/inc/class.object_factory.inc.php');
+	
 	/*
 	 * Direct functions which are not part of the API classes because they are required to be available at the lowest level.
 	 *
@@ -138,309 +148,6 @@
 	}
 
 	/**
-	 * Validate data.
-	 *
-	 * @author seek3r
-	 * This function is used to validate input data. 
-	 * sanitize('number',$somestring);
-	 */
-
-	/*
-	   $GLOBALS['phpgw_info']['server']['sanitize_types']['number'] = Array('type' => 'preg_match', 'string' => '/^[0-9]+$/i');
-	 */
-
-	function sanitize($string,$type)
-	{
-		switch ($type)
-		{
-			case 'bool':
-				if ($string == 1 || $string == 0)
-				{
-					return True;
-				}
-				break;
-			case 'isprint':
-				$length = strlen($string);
-				$position = 0;
-				while ($length > $position)
-				{
-					$char = substr($string, $position, 1);
-					if ($char < ' ' || $char > '~')
-					{
-						return False;
-					}
-					$position = $position + 1;
-				}
-				return True;
-				break;
-			case 'alpha':
-				if (preg_match("/^[a-z]+$/i", $string))
-				{
-					return True;
-				}
-				break;
-			case 'number':
-				if (preg_match("/^[0-9]+$/i", $string))
-				{
-					return True;
-				}
-				break;
-			case 'alphanumeric':
-				if (preg_match("/^[a-z0-9 -._]+$/i", $string))
-				{
-					return True;
-				}
-				break;
-			case 'string':
-				if (preg_match("/^[a-z]+$/i", $string))
-				{
-					return True;
-				}
-				break;
-			case 'ip':
-				if (eregi("^[0-9]{1,3}(\.[0-9]{1,3}){3}$",$string))
-				{
-					$octets = split('\.',$string);
-					for ($i=0; $i != count($octets); $i++)
-					{
-						if ($octets[$i] < 0 || $octets[$i] > 255)
-						{
-							return False;
-						}
-					}
-					return True;
-				}
-				return False;
-				break;
-			case 'file':
-				if (preg_match("/^[a-z0-9_]+\.+[a-z]+$/i", $string))
-				{
-					return True;
-				}
-				break;
-			case 'email':
-				if (eregi("^([[:alnum:]_%+=.-]+)@([[:alnum:]_.-]+)\.([a-z]{2,3}|[0-9]{1,3})$",$string))
-				{
-					return True;
-				}
-				break;
-			case 'password':
-				$password_length = strlen($string);
-				$password_numbers = Array('0','1','2','3','4','5','6','7','8','9');
-				$password_special_chars = Array(' ','~','`','!','@','#','$','%','^','&','*','(',')','_','+','-','=','{','}','|','[',']',"\\",':','"',';',"'",'<','>','?',',','.','/');
-
-				if(@isset($GLOBALS['phpgw_info']['server']['pass_min_length']) && is_int($GLOBALS['phpgw_info']['server']['pass_min_length']) && $GLOBALS['phpgw_info']['server']['pass_min_length'] > 1)
-				{
-					$min_length = $GLOBALS['phpgw_info']['server']['pass_min_length'];
-				}
-				else
-				{
-					$min_length = 1;
-				}
-
-				if(@isset($GLOBALS['phpgw_info']['server']['pass_require_non_alpha']) && $GLOBALS['phpgw_info']['server']['pass_require_non_alpha'] == True)
-				{
-					$pass_verify_non_alpha = False;
-				}
-				else
-				{
-					$pass_verify_non_alpha = True;
-				}
-
-				if(@isset($GLOBALS['phpgw_info']['server']['pass_require_numbers']) && $GLOBALS['phpgw_info']['server']['pass_require_numbers'] == True)
-				{
-					$pass_verify_num = False;
-				}
-				else
-				{
-					$pass_verify_num = True;
-				}
-
-				if(@isset($GLOBALS['phpgw_info']['server']['pass_require_special_char']) && $GLOBALS['phpgw_info']['server']['pass_require_special_char'] == True)
-				{
-					$pass_verify_special_char = False;
-				}
-				else
-				{
-					$pass_verify_special_char = True;
-				}
-
-				if ($password_length >= $min_length)
-				{
-					for ($i=0; $i != $password_length; $i++)
-					{
-						$cur_test_string = substr($string, $i, 1);
-						if (in_array($cur_test_string, $password_numbers) || in_array($cur_test_string, $password_special_chars))
-						{
-							$pass_verify_non_alpha = True;
-							if (in_array($cur_test_string, $password_numbers))
-							{
-								$pass_verify_num = True;
-							}
-							elseif (in_array($cur_test_string, $password_special_chars))
-							{
-								$pass_verify_special_char = True;
-							}
-						}
-					}
-
-					if ($pass_verify_num == False)
-					{
-						$GLOBALS['phpgw_info']['flags']['msgbox_data']['Password requires at least one non-alpha character']=False;
-					}
-
-					if ($pass_verify_num == False)
-					{
-						$GLOBALS['phpgw_info']['flags']['msgbox_data']['Password requires at least one numeric character']=False;
-					}
-
-					if ($pass_verify_special_char == False)
-					{
-						$GLOBALS['phpgw_info']['flags']['msgbox_data']['Password requires at least one special character (non-letter and non-number)']=False;
-					}
-
-					if ($pass_verify_num == True && $pass_verify_special_char == True)
-					{
-						return True;
-					}
-					return False;
-				}
-				$GLOBALS['phpgw_info']['flags']['msgbox_data']['Password must be at least '.$min_length.' characters']=False;
-				return False;
-				break;
-			case 'any':
-				return True;
-				break;
-			default :
-				if (isset($GLOBALS['phpgw_info']['server']['sanitize_types'][$type]['type']))
-				{
-					if ($GLOBALS['phpgw_info']['server']['sanitize_types'][$type]['type']($GLOBALS['phpgw_info']['server']['sanitize_types'][$type]['string'], $string))
-					{
-						return True;
-					}
-				}
-				return False;
-		}
-	}
-
-	function reg_var($varname, $method = 'any', $valuetype = 'alphanumeric',$default_value='',$register=True)
-	{
-		if($method == 'any')
-		{
-			$method = Array('POST','GET','COOKIE','SERVER','GLOBAL','DEFAULT');
-		}
-		elseif(!is_array($method))
-		{
-			$method = Array($method);
-		}
-		$cnt = count($method);
-		for($i=0;$i<$cnt;$i++)
-		{
-			switch(strtoupper($method[$i]))
-			{
-				case 'DEFAULT':
-					if($default_value)
-					{
-						$value = $default_value;
-						$i = $cnt+1; /* Found what we were looking for, now we end the loop */
-					}
-					break;
-				case 'GLOBAL':
-					if(@isset($GLOBALS[$varname]))
-					{
-						$value = $GLOBALS[$varname];
-						$i = $cnt+1;
-					}
-					break;
-				case 'POST':
-				case 'GET':
-				case 'COOKIE':
-				case 'SERVER':
-					$meth = '_'.strtoupper($method[$i]);
-					if(@isset($GLOBALS[$meth][$varname]))
-					{
-						$value = $GLOBALS[$meth][$varname];
-						$i = $cnt+1;
-					}
-					break;
-				default:
-					if(@isset($GLOBALS[strtoupper($method[$i])][$varname]))
-					{
-						$value = $GLOBALS[strtoupper($method[$i])][$varname];
-						$i = $cnt+1;
-					}
-			}
-		}
-
-		if (!@isset($value))
-		{
-			$value = $default_value;
-		}
-
-		if (!@is_array($value))
-		{
-			if ($value == '')
-			{
-				$result = $value;
-			}
-			else
-			{
-				if (sanitize($value,$valuetype) == 1)
-				{
-					$result = $value;
-				}
-				else
-				{
-					$result = $default_value;
-				}
-			}
-		}
-		else
-		{
-			reset($value);
-			while(list($k, $v) = each($value))
-			{
-				if ($v == '')
-				{
-					$result[$k] = $v;
-				}
-				else
-				{
-					if (is_array($valuetype))
-					{
-						$vt = $valuetype[$k];
-					}
-					else
-					{
-						$vt = $valuetype;
-					}
-
-					if (sanitize($v,$vt) == 1)
-					{
-						$result[$k] = $v;
-					}
-					else
-					{
-						if (is_array($default_value))
-						{
-							$result[$k] = $default_value[$k];
-						}
-						else
-						{
-							$result[$k] = $default_value;
-						}
-					}
-				}
-			}
-		}
-		if($register)
-		{
-			$GLOBALS['phpgw_info'][$GLOBALS['phpgw_info']['flags']['currentapp']][$varname] = $result;
-		}
-		return $result;
-	}
-
-	/**
 	 * retrieve a value from either a POST, GET, COOKIE, SERVER or from a class variable.
 	 *
 	 * @author skeeter
@@ -450,33 +157,51 @@
 	 * @param $method ordered array of methods to search for supplied variable
 	 * @param $default_value (optional)
 	 */
-	function get_var($variable,$method='any',$default_value='')
+	function get_var($variable, $method='any', $default_value='')
 	{
-		return reg_var($variable,$method,'any',$default_value,False);
+		$methods = print_r($method, true);
+		trigger_error("get_var(var = $variable, method = $methods, default = $default_value) has been replaced by phpgw::get_var(var, data_type, method, default), please update your code", E_USER_NOTICE);
+		$var = null;
+		if ( is_array($method) )
+		{
+			foreach ( $method as $req_type )
+			{
+				if ( in_array($req_type, array('GET', 'POST', 'COOKIE', 'SESSION', 'REQUEST')) )
+				{
+					$var = phpgw::get_var($variable, 'string', $req_type, $default_value);
+					if ( $var )
+					{
+						return $var;
+					}
+				}
+			}
+			return null;
+		}
+		if ( $method == 'any' || $method == 'GLOBAL' )
+		{
+			$method == 'REQUEST';
+		}
+		return $var = phpgw::get_var($variable, 'string', $method, $default_value);
 	}
 
 	/**
 	 * This will include an application class once and guarantee that it is loaded only once.  Similar to CreateObject, but does not instantiate the class.
 	 *
-	 * @example include_class('projects.ui_base');
-	 * @param $appName name of application
-	 * @param $className name of class
-	 * @param $classPath path to the application class, default is 'inc/', use this parameter i.e. if the class is located in a subdirectory like 'inc/base_classes/'
+	 * @example include_class('projects', 'ui_base');
+	 * @param $module name of module
+	 * @param $class_name name of class
+	 * @param $include_path path to the module class, default is 'inc/', use this parameter i.e. if the class is located in a subdirectory like 'inc/base_classes/'
 	 * @return boolean true if class is included, else false (false means class could not included)
 	 */
-	function include_class($appName, $className, $classPath='inc/')
+	function include_class($module, $class_name, $includes_path = 'inc/')
 	{
-		if ( is_file(PHPGW_INCLUDE_ROOT . "/{$appName}/{$classPath}class.{$className}.inc.php") )
+		if ( is_file(PHPGW_INCLUDE_ROOT . "/{$module}/{$includes_path}class.{$class_name}.inc.php") )
 		{
-			return include_once(PHPGW_INCLUDE_ROOT . "/{$appName}/{$classPath}class.{$className}.inc.php");
+			return require_once(PHPGW_INCLUDE_ROOT . "/{$module}/{$includes_path}class.{$class_name}.inc.php");
 		}
+		trigger_error(lang('Unable to locate file: %1', "{$module}/{$includes_path}class.{$class_name}.inc.php"), E_USER_ERROR);
 		return false;
 	}
-
-	/**
-	* include object factory base class once		
-	*/
-	include_once(PHPGW_SERVER_ROOT.'/phpgwapi/inc/class.object_factory.inc.php');
 
 	/**
 	 * delegate the object creation into the module.
@@ -651,50 +376,32 @@
 	}
 
 	/**
-	 * sets the file system seperator depending on OS
+	 * gets the file system seperator depending on OS
 	 *
+	 * @internal this isn't really needed as php can do the translation for us
 	 * @return file system separator
 	 */
 	function filesystem_separator()
 	{
-		if (PHP_OS == 'Windows' || PHP_OS == 'OS/2')
-		{
-			return '\\';
-		}
-		else
-		{
-			return '/';
-		}
+		return PATH_SEPARATOR;
 	}
 
-	/* Just a wrapper to my new print_r() function I added to the php3 support file.  Seek3r */
+	/**
+	* Dump the contents of an array
+	*
+	* @param array $array the array to dump
+	* @param bool $print echo out? returned as string if false
+	* @return string the structure of the array
+	*/
 	function _debug_array($array,$print=True)
 	{
-		$four = False;
-		if(@floor(phpversion()) >= 4)
+		$dump = '<pre>' . print_r($array, true) . '</pre>';
+		if(!$print)
 		{
-			$four = True;
+			return $dump;
 		}
-		if($four)
-		{
-			if(!$print)
-			{
-				ob_start();
-			}
-			echo '<pre>';
-			print_r($array);
-			echo '</pre>';
-			if(!$print)
-			{
-				$v = ob_get_contents();
-				ob_end_clean();
-				return $v;
-			}
-		}
-		else
-		{
-			return print_r($array,False,$print);
-		}
+		echo $dump;
+		return '';
 	}
 
 	/*
@@ -883,26 +590,5 @@
 			$tables[$key] = $prefix.$value;
 		}
 		return $tables;
-	}
-
-	/**
-	 * For users with an old php version (<4.3.0)
-	 */
-	if(!function_exists('html_entity_decode'))
-	{
-		/**
-		 * Convert all HTML entities to their applicable characters.
-		 *
-		 * @param   string   $str          string to convert
-		 * @param   string   $quote_style  optional quote_style parameter lets you define what will be done with 'single' and "double" quotes. It takes on one of three constants with the default being ENT_COMPAT
-		 * @param   string   $charset      optional charset string to convert (no supported yet!)
-		 * @return  string                 converted string
-		 */
-		function html_entity_decode($str, $quote_style=ENT_COMPAT, $charset='ISO-8859-1')
-		{
-			$ents = get_html_translation_table(HTML_ENTITIES, $quote_style);
-			$rpl_ents = array_flip($ents);
-			return (strtr($str, $rpl_ents));
-		}
 	}
 ?>
