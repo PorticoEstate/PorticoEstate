@@ -27,6 +27,11 @@
 		var $found_files;
 
 		/**
+		* @var array $output array to be converted by XSLT
+		*/
+		public $output = array();
+
+		/**
 		* This function compares for major versions only
 		*
 		* @param string $str1 Version string 1
