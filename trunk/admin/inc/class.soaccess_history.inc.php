@@ -17,22 +17,23 @@
 
 		function soaccess_history()
 		{
-			$this->db       = $GLOBALS['phpgw']->db;
+			$this->db =& $GLOBALS['phpgw']->db;
 		}
 
 		function test_account_id($account_id)
 		{
 			if ($account_id)
 			{
-				return ' WHERE account_id=' . intval($account_id);
+				return ' WHERE account_id=' . (int) $account_id;
 			}
+			return '';
 		}
 
 		function list_history($account_id,$start,$order,$sort)
 		{
 			$where = $this->test_account_id($account_id);
 
-			$this->db->limit_query("SELECT loginid,ip,li,lo,account_id,sessionid FROM phpgw_access_log $where ORDER BY li desc",$start,__LINE__,__FILE__);
+			$this->db->limit_query("SELECT loginid, ip, li, lo, account_id, sessionid FROM phpgw_access_log $where ORDER BY li desc", $start,__LINE__,__FILE__);
 			while ($this->db->next_record())
 			{
 				$records[] = array(
@@ -61,9 +62,12 @@
 		{
 			if ($account_id)
 			{
-				$where  = 'WHERE account_id=' . intval($account_id) . ' AND lo !=0';
+				$where  = 'WHERE account_id=' . (int) $account_id . ' AND lo !=0';
 			}
-
+			else
+			{
+				$where = 'WHERE lo !=0';
+			}
 			$this->db->query("SELECT COUNT(*) FROM phpgw_access_log $where", __LINE__, __FILE__);
 			$this->db->next_record();
 

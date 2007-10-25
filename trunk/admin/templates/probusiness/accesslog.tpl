@@ -26,8 +26,8 @@
                 <td>{lang_total}</td>
               </tr>
               {rows_access}
-              <tr class="bg_color2"><td colspan="5" class="left">{footer_total}</td></tr>
-              <tr class="bg_color1"><td colspan="5" class="left">{lang_percent}</td></tr>
+              <tr class="th"><td colspan="5" class="left">{footer_total}</td></tr>
+              <tr class="th"><td colspan="5" class="left">{lang_percent}</td></tr>
             </table>
           </div>
         </td>
@@ -36,7 +36,7 @@
 <!-- END list -->
 
 <!-- BEGIN row -->
-              <tr class="bg_view">
+              <tr class="{tr_class}">
                 <td>{row_loginid}</td>
                 <td>{row_ip}</td>
                 <td>{row_li}</td>
