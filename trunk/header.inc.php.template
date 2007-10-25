@@ -82,12 +82,6 @@
 	$GLOBALS['phpgw_info']['server']['sessions_type'] = '{SESSIONS_TYPE}';
 
 	/**
-	* @global boolean $GLOBALS['phpgw_info']['server']['display_notices']
-	* If you want to enable notices for debugging, change to True
-	*/
-	$GLOBALS['phpgw_info']['server']['display_notices'] = {DISPLAY_NOTICES};
-
-	/**
 	* @global string $GLOBALS['phpgw_info']['login_template_set']
 	* Select which login template set you want, most people will use 'simple'
 	*/
@@ -183,7 +177,7 @@
 	* @global string $GLOBALS['phpgw_info']['server']['versions']['header']
 	* Version of this header file
 	*/
-	$GLOBALS['phpgw_info']['server']['versions']['header'] = '1.28';
+	$GLOBALS['phpgw_info']['server']['versions']['header'] = '1.27';
 	
 	
 	// This is a fix for NT
