@@ -197,9 +197,9 @@
 	{
 		if ( is_file(PHPGW_INCLUDE_ROOT . "/{$module}/{$includes_path}class.{$class_name}.inc.php") )
 		{
-			return require_once(PHPGW_INCLUDE_ROOT . "/{$module}/{$includes_path}class.{$class_name}.inc.php");
+			return include_once(PHPGW_INCLUDE_ROOT . "/{$module}/{$includes_path}class.{$class_name}.inc.php");
 		}
-		trigger_error(lang('Unable to locate file: %1', "{$module}/{$includes_path}class.{$class_name}.inc.php"), E_USER_ERROR);
+		//trigger_error(lang('Unable to locate file: %1', "{$module}/{$includes_path}class.{$class_name}.inc.php"), E_USER_ERROR);
 		return false;
 	}
 
@@ -383,7 +383,7 @@
 	 */
 	function filesystem_separator()
 	{
-		return PATH_SEPARATOR;
+		return DIRECTORY_SEPARATOR;
 	}
 
 	/**
