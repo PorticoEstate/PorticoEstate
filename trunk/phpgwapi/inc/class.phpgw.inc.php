@@ -239,7 +239,7 @@
 
 				if ( is_array($value) )
 				{
-					foreach ( $value as &$val )
+					foreach ( $value as $val )
 					{
 						$val = self::clean_value($val, $value_type, $default); 
 					}
