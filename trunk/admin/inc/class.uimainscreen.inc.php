@@ -21,7 +21,8 @@
 
 		function uimainscreen()
 		{
-			$GLOBALS['phpgw_info']['flags']['xslt_app'] = True;
+			$menuaction = phpgw::get_var('menuaction', 'location');
+			$GLOBALS['phpgw_info']['flags']['xslt_app'] = $menuaction == 'admin.uimainscreen.mainscreen';
 			$GLOBALS['phpgw']->nextmatchs = CreateObject('phpgwapi.nextmatchs');
 		}
 
@@ -48,7 +49,7 @@
 			$GLOBALS['phpgw']->template->set_block('message','row','row');
 			$GLOBALS['phpgw']->template->set_block('message','row_2','row_2');
 
-			$GLOBALS['phpgw']->common->phpgw_header();
+			$GLOBALS['phpgw']->common->phpgw_header(true);
 
 			if ( isset($_POST['submit']) && $_POST['submit'] )
 			{
@@ -63,16 +64,17 @@
 				$message = '<center>'.lang('message has been updated').'</center>';
 			}
 
+			$tr_class = '';
 			if (empty($select_lang))
 			{
 				$GLOBALS['phpgw']->template->set_var('header_lang',lang('Main screen message'));
 				$GLOBALS['phpgw']->template->set_var('form_action',$GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.uimainscreen.index')));
-				$GLOBALS['phpgw']->template->set_var('tr_color',$GLOBALS['phpgw_info']['theme']['th_bg']);
+				$GLOBALS['phpgw']->template->set_var('tr_class', 'th');
 				$GLOBALS['phpgw']->template->set_var('value','&nbsp;');
 				$GLOBALS['phpgw']->template->fp('rows','row_2',True);
 
-				$tr_color = $GLOBALS['phpgw']->nextmatchs->alternate_row_color($tr_color);
-				$GLOBALS['phpgw']->template->set_var('tr_color',$tr_color);
+				$tr_class = $GLOBALS['phpgw']->nextmatchs->alternate_row_class($tr_class);
+				$GLOBALS['phpgw']->template->set_var('tr_class',$tr_class);
 
 				$select_lang = '<select name="select_lang">';
 				$GLOBALS['phpgw']->db->query("SELECT lang,phpgw_languages.lang_name,phpgw_languages.lang_id FROM phpgw_lang,phpgw_languages WHERE "
@@ -88,8 +90,8 @@
 				$GLOBALS['phpgw']->template->set_var('value',$select_lang);
 				$GLOBALS['phpgw']->template->fp('rows','row',True);
 
-				$tr_color = $GLOBALS['phpgw']->nextmatchs->alternate_row_color($tr_color);
-				$GLOBALS['phpgw']->template->set_var('tr_color',$tr_color);
+				$tr_class = $GLOBALS['phpgw']->nextmatchs->alternate_row_class($tr_class);
+				$GLOBALS['phpgw']->template->set_var('tr_class',$tr_class);
 				$select_section = '<select name="section"><option value="mainscreen">' . lang('Main screen')
 					. '</option><option value="loginscreen">' . lang("Login screen") . '</option>'
 					. '</select>';
@@ -97,8 +99,8 @@
 				$GLOBALS['phpgw']->template->set_var('value',$select_section);
 				$GLOBALS['phpgw']->template->fp('rows','row',True);
 
-				$tr_color = $GLOBALS['phpgw']->nextmatchs->alternate_row_color($tr_color);
-				$GLOBALS['phpgw']->template->set_var('tr_color',$tr_color);
+				$tr_class = $GLOBALS['phpgw']->nextmatchs->alternate_row_class($tr_class);
+				$GLOBALS['phpgw']->template->set_var('tr_class', $tr_class);
 				$GLOBALS['phpgw']->template->set_var('value','<input type="submit" value="' . lang('Submit')
 					. '"><input type="submit" name="cancel" value="'. lang('cancel') .'">');
 				$GLOBALS['phpgw']->template->fp('rows','row_2',True);
@@ -122,17 +124,17 @@
 				$GLOBALS['phpgw']->template->set_var('form_action',$GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.uimainscreen.index')));
 				$GLOBALS['phpgw']->template->set_var('select_lang',$select_lang);
 				$GLOBALS['phpgw']->template->set_var('section',$section);
-				$GLOBALS['phpgw']->template->set_var('tr_color',$GLOBALS['phpgw_info']['theme']['th_bg']);
+				$GLOBALS['phpgw']->template->set_var('tr_class', 'th');
 				$GLOBALS['phpgw']->template->set_var('value','&nbsp;');
 				$GLOBALS['phpgw']->template->fp('rows','row_2',True);
 
-				$tr_color = $GLOBALS['phpgw']->nextmatchs->alternate_row_color($tr_color);
-				$GLOBALS['phpgw']->template->set_var('tr_color',$tr_color);
+				$tr_class = $GLOBALS['phpgw']->nextmatchs->alternate_row_class($tr_class);
+				$GLOBALS['phpgw']->template->set_var('tr_class',$tr_class);
 				$GLOBALS['phpgw']->template->set_var('value','<textarea name="message" cols="50" rows="10" wrap="virtual">' . stripslashes($current_message) . '</textarea>');
 				$GLOBALS['phpgw']->template->fp('rows','row_2',True);
 
-				$tr_color = $GLOBALS['phpgw']->nextmatchs->alternate_row_color($tr_color);
-				$GLOBALS['phpgw']->template->set_var('tr_color',$tr_color);
+				$tr_class = $GLOBALS['phpgw']->nextmatchs->alternate_row_class($tr_class);
+				$GLOBALS['phpgw']->template->set_var('tr_class', $tr_class);
 				$GLOBALS['phpgw']->template->set_var('value','<input type="submit" name="submit" value="' . lang('Update')
 					. '"><input type="submit" name="cancel" value="'. lang('cancel') .'">'
 				);
