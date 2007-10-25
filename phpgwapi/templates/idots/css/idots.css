@@ -3,102 +3,154 @@
    Originally written by Pim Snel
    Currently Maintained by Dave Hall
 
-   $Id: idots.css,v 1.6 2007/09/21 12:24:44 sigurdne Exp $
+   $Id: idots.css,v 1.20 2007/01/08 14:38:55 skwashd Exp $
 */
-   
-/* Classes */
-.articlecontent 
+
+#articlecontent 
 {
-	background-color: #EFEFEF;
-	color: #006699;
+	background-color: #efefef;
+	color: #069;
 	font-size: 12px;
-	font-family: "Verdana", "Arial", "Helvetica", "sans-serif";
-	line-height: 20px;
-	text-align: left;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	min-height: 600px;
 	padding: 10px; 
 }
 
-.articletitle 
+h1.articletitle 
 {
+	background-image: url(../images/greypanel.png); 
+	background-repeat: repeat-x; 
+	color: #000;
+	height: 21px;
+	font-family: Verdana, Arial, Helvetica, sans-serif; 
 	font-weight: bold; 
 	font-size: 12px; 
-	background-image: url(../images/greypanel.png); 
-	color: #000000;
+	margin: 0px;
+	padding: 0px;
 	text-align: center;
-	text-indent: 5pt; 
-	background-repeat: repeat-x; 
-	font-family: "Verdana", "Arial", "Helvetica", "sans-serif"; 
-	height: 21px;
-	vertical-align: middle;
 }
 
-.box 
+#box 
 {
-	background-color: #ffffff;
+	background-color: #fff;
 	border: 1px solid #98aab1;
-	border-collapse: collapse;
-	height: 90%;
+	min-height: 90%;
 	margin: 0px;
 	padding: 0px;
 	vertical-align: top;
 	width: 100%;
 }
 
-/* not needed afaik - skwashd
-.content 
+#content 
 {
-	color: #000000; 
-	font-family: "Verdana", "Arial", "Helvetica", "sans-serif";
-	font-size: 12px;
-}*/
-
-.copyright 
-{
-	color: #000000;
-	font-size: 9px;
-	text-align: center;
+	background-color: #fff;
+	border: 1px solid #98aab1;
+	color: #000;
+	margin: 0px 10px 20px 200px;
+	padding: 0px;
 }
 
-.logo
+#copyright 
 {
-	background: url("../images/panel.png");
-	background-repeat: repeat-x;
-	margin: 0px;
-	padding: 0px;
+	clear: both;
+	color: #000;
+	font-size: 9px;
+	padding: 10px;
 	text-align: center;
-	vertical-align: top;
 }
 
 .mainnote 
 {
-	background-color: #FFFFFF; /* */
-	color: #006699; 
-	font-family: "Arial", "Helvetica", "sans-serif";
+	background-color: #fff;
+	color: #069; 
+	font-family: Arial, Helvetica, sans-serif;
 	font-size: 12px;
 	height: 20px;
+	margin: 5px;
+	text-align: right;
 	vertical-align: top;
 }
 
-.navpanel
+.mainnote #user_info
 {
-	 background: url("../images/panel.png");
+	float: left;
+	text-align: left;
+	width: 300px;
+}
+
+#navpanel
+{
+	 background-color: #fff;
+	 background-image: url('../images/panel.png');
 	 background-repeat: repeat-x;
-	 background-color: #FFFFFF;
-	 border-collapse:collapse;
-	 height: 60px;
+	 height: 120px;
 	 margin: 0px;
 	 padding: 0px;
-	 text-align: left;
 	 vertical-align: top;
+	 width: 100%;
+}
+
+#navpanel ul
+{
+	height: 115px;
+	list-style: none;
+	margin: 0px;
+	padding: 0px;
+	overflow: hidden;
+	width: 100%;
+}
+
+#navpanel li
+{
+	display: block;
+	float: left;
+	height: 120px;
+	overflow: hidden;
+	margin-left: 3px;
+	text-align: center;
+	width: 72px;
+}
+
+#navpanel li.phpgw_logo
+{
+	margin: 0px 2px;
+	padding: 0px;
+	width: 190px;
+}
+
+#navpanel li.phpgw_logo img
+{
+	padding: 0px;
+}
+
+#navpanel a, #navpanel a:hover
+{
+	text-decoration: none;
+}
+
+#navpanel a img
+{
+	-moz-opacity: 0.65; /* old mozilla/gecko */
+	filter: alpha(opacity=6.5); /* IE 5.5+? */
+	opacity: 0.65; /* CSS3 */
+	padding-top: 18px;
+	padding-bottom: 8px;
+}
+
+#navpanel a:hover img, #navpanel li.phpgw_logo a img
+{
+	-moz-opacity: 1.0;
+	filter: alpha(opacity=10);
+	opacity: 1.0;
 }
 
 .popup
 {
-	background-color: #FFFFFF;
-	border-bottom: 2px solid #000000;
-	border-left: 1px solid #000000;
-	border-right: 2px solid #999999;
-	border-top: 1px solid #999999;
+	background-color: #fff;
+	border-bottom: 2px solid #000;
+	border-left: 1px solid #000;
+	border-right: 2px solid #999;
+	border-top: 1px solid #999;
 	border-collapse: collapse;
 	padding: 0px;
 	width: 300px;
@@ -108,86 +160,98 @@
 {
 	background-image: url(../images/boxbg.png);
 	background-repeat: repeat-x;
-	color: #000000;
-	font-family: "Verdana", "Arial", "Helvetica", "sans-serif";
+	color: #000;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
 	font-weight: bold;
 	font-size: 12px;						
 }
 
-.sidecontent
+#sidecontent
 {
-	 border:0px;
-	 border-collapse: collapse;
-	 padding:0px;
-	 vertical-align: top;
-	 width: 160px;
+	border: 0px;
+	float: left;
+	margin-left: 10px;
+	padding: 0px;
+	width: 160px;
+}
+
+.box > #sidecontent /* Fix IE Hack */
+{
+	margin-left: 20px;
 }
 
 .sideboxcontent 
 {
-	background-color: #EFEFEF;
-	font-family: "Verdana", "Arial", "Helvetica", "sans-serif";
-	font-size: 9pt;
-	/*line-height: 18px;*/
-	/*padding: 2px;*/
-	width: 160px; 
+	background-color: #efefef;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	list-style-position: inside;
+	margin: 0px;
+	padding: 5px;
+	width: 150px; 
 }
 
-.sideboxtitle 
+#sidecontent h2
 {
 	background-image: url(../images/boxbg.png);
 	background-position: center 50%;
-	color: #000000;
-	font-family: "Verdana", "Arial", "Helvetica", "sans-serif";
+	color: #000;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
 	font-size: 12px; 
 	font-weight: bold;
-	height: 26px;
+	height: 24px;
+	margin: 0px;
+	padding: 3px 0px 0px 0px;
 	text-align: center;
 }
 
-spacer
+.sidebox
 {
-	border: 0px;
-	width: 15px;
+	border: 1px solid #98aab1;
+	border-collapse: collapse;
+	margin-bottom: 25px;
+	padding: 0px;
+	width: 160px; 
 }
 
-/* Not used afaik, also a tag name - skwashd
-.title 
+.sidebox li
 {
-	color: #000000;
-	font-size: 12px;
-	font-weight: 12px;
-	padding: 5px;
+	list-style-type: square;
 }
-*/
 
-/* not used afaik - skwashd
-.toppannel 
+.sidebox li.empty_item
 {
-	background-image: url(../images/panel.png); 
-	background-repeat: repeat-x
-}
-*/
-
-@media screen
-{
-	.sidebox
-	{
-		border: 1px solid #98aab1;
-		border-collapse: collapse;
-		padding: 0px;
-		width: 160px; 
-	}
+	font-size: 6px;
+	height: 8px;
+	list-style-type: none;
 }
 
 /* Save some space when printing */
 @media print
 {
-	.sidebox
+	.box
+	{
+		border: 0px;
+		margin: 0px;
+	}
+
+	#content 
+	{
+		border: 0px;
+		margin: 0px;
+	}
+
+	.mainnote
 	{
 		display: none;
 	}
-	#nav
+
+	#navpanel
+	{
+		display: none;
+	}
+
+	#sidecontent
 	{
 		display: none;
 	}
@@ -196,134 +260,57 @@ spacer
 /* Tags */
 a, a:visited, a:link 
 {
-	color: #006699; 
+	color: #069; 
 	text-decoration: none;
 }
 
 a:active, a:hover 
 {
-	color: #FF9933;
+	color: #f93;
 	text-decoration: underline;
 }
 
-body 
+
+body, div, form, input, li, p, select, td, textarea  
+{
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 12px;
+}
+
+body
 {
 	background-color: #e5e5e5;
-	font-family: "Verdana", "Arial", "Helvetica", "sans-serif";
-	font-size: 10pt;
 }
 
-form 
-{
-	font-family: "Verdana", "Arial", "Helvetica", "sans-serif";
-	font-size: 10pt;
-}
-
-img
+img, input[type=image]
 {
 	border: 0px;
 }
 
-/* this should work but doesn't - i will come back to it 
-td.navpanel > a > img
-{
-	-moz-opacity: 0.8;  mozilla/gecko 
-	filter: alpha(opacity=8); IE 5.5+? 
-	opacity: 0.8; CSS3 
-}
-
-td.navpanel > a > img:hover
-{
-	-moz-opacity: 1.0;
-	filter: alpha(opacity=10);
-	opacity: 1.0;
-}
-*/
-
 input, select, textarea 
 {
-	color: #006699; 
-	background-color: #EFEFEF;
-	font-family: "Arial", "Helvetica", "sans-serif";
-	font-size: 9pt;
-}
-
-input, textarea
-{
-//	-moz-border-radius: 5px;
-	border: 1px solid #006699;
-//	border-radius: 5px;
+	color: #069; 
+	border: 1px solid #000;
+	background-color: #f3f3f3;
 }
 
 input:focus, select:hover, textarea:focus
 {
-	background-color: #F3F3F3;
-	color: #1177AA;
+	background-color: #fff;
+	border: 1px solid #069;
+	color: #17a;
 }
 
-input[type=image]
+label
 {
-	border: 0px;
+	margin-right: 10px;
+	text-align: right;
+	width: 150px;
 }
 
-.row_on input, .row_on textarea
+form br
 {
-	background-color: #E8F0F0;
-}
-
-.row_off input, .row_off textarea
-{
-	background-color: #DDDDDD;
-}
-
-span.star
-{
-	color: #FF9933;
-	font-weight: bold;
-}
-
-table 
-{
-	FONT-SIZE: 12px; 
-	FONT-FAMILY: "Verdana", "Arial", "Helvetica", "sans-serif"
-}
-
-/* Used by tabs */
-th.activetab
-{
-//	-moz-border-radius-topleft: 10px;
-//	-moz-border-radius-topright: 10px;
-	background-color: #FFFFFF;
-	/*border-color: #000000;*/
-//	border-radius-topleft: 10px;
-//	border-radius-topright: 10px;
-	/*border-style: solid;
-	border-width: 1px 1px 0px 1px;*/
-	height: 20px;
-	padding: 0px 5px 0px 5px;
-	white-space: nowrap; 
-}
- 
-th.inactivetab
-{
-//	-moz-border-radius-topleft: 10px;
-//	-moz-border-radius-topright: 10px;
-	background-color:#CCCCCC;
-	/*border: 1px solid #000000;*/
-//	border-radius-topleft: 10px;
-//	border-radius-topright: 10px;
-	color:#006699;
-	height: 20px;
-	padding: 0px 5px 0px 5px;
-	white-space: nowrap;
-}
-
-th.tablast
-{
-/*	border-width: 0px 0px 1px 0px;
-	border-style: solid;
-	border-color: #000000;*/
-	width: 100%;
+	clear: left;
 }
 
 /* Used by tabs */
@@ -394,24 +381,61 @@ ul.tabs li
 /* nextmatch values */
 .row_off
 {
-	background-color: #E8F0F0;
-	color: #000000;
+	background-color: #e8f0f0;
+	color: #000;
 }
 
 .row_on
 {
-	background-color: #DDDDDD;
-	color: #000000;
+	background-color: #ddd;
+	color: #000;
 }
 
-.th
+thead, tfoot
 {
-	background-color: #D3DCE3;
-	color: #000000;
+	background-color: #d3dce3;
+	color: #000;
 	font-weight: bold;
 }
 
-.small_text
+.app_header
 {
-	font-size: 8pt;
+	font-weight: bold;
+}
+
+/* Portal Box */
+.home_portal
+{
+	background-color: #fff;
+	border: 1px solid #000;
+	margin: 7px;
+	padding: 0px;
+}
+
+.home_portal_controls
+{
+	float: right;
+	text-align: right;
+	padding: 5px 5px 0px 0px;
+	width: 200px;
+}
+
+.home_portal_title h2
+{
+	font-size: small;
+	margin: 0px;
+	padding: 3px;
+	text-align: center;
+}
+
+.home_portal_title
+{
+	background-image: url(../images/greypanel.png); 
+	background-repeat: repeat-x; 
+	background-color: #ccc;
+	color: #000;
+	height: 21px;
+	list-style: none;
+	margin: 0px;
+	padding: 0px;
 }
