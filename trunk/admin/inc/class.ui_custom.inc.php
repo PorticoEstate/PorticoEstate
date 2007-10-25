@@ -698,7 +698,7 @@
 			{
 				$function='list_attribute';
 			}
-			else if($custom_function_id):
+			else if($custom_function_id)
 			{
 				$function='list_custom_function';
 			}
