@@ -42,10 +42,10 @@
 			$GLOBALS['phpgw']->template->set_block('applications','list','list');
 			$GLOBALS['phpgw']->template->set_block('applications','row','row');
 
-			$start = get_var('start',array('POST'));
-			$sort = get_var('sort',array('GET'));
-			$order = get_var('order',array('GET'));
-			$offset = $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
+			$start	= phpgw::get_var('start', 'int', 'POST');
+			$sort	= phpgw::get_var('sort', 'string', 'GET');
+			$order	= phpgw::get_var('order', 'string', 'GET');
+			$offset	= $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
 
 			$apps = $this->bo->get_list();
 			$total = count($apps);

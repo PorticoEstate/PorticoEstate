@@ -505,16 +505,16 @@
 
 		function edit_user()
 		{
-			$cd                            = get_var('cd',array('GET'));
-			$account_id                    = get_var('account_id',array('GET','POST'));
-			$values                        = get_var('values',array('POST'));
-			$values['old_loginid']         = get_var('old_loginid', array('GET'));
-			$values['account_groups']      = get_var('account_groups',array('POST'));
-			$values['account_permissions'] = get_var('account_permissions',array('POST'));
+			$cd                            = phpgw::get_var('cd', 'int', 'GET');
+			$account_id                    = phpgw::get_var('account_id', 'int');
+			$values                        = phpgw::get_var('values', 'string', 'POST');
+			$values['old_loginid']         = phpgw::get_var('old_loginid', 'string', 'GET');
+			$values['account_groups']      = phpgw::get_var('account_groups', 'int', 'POST');
+			$values['account_permissions'] = phpgw::get_var('account_permissions', 'bool', 'POST');
 			//FIXME Caeies fix waiting for JSCAL
-			$values['account_expires_year']= get_var('account_expires_year', array('POST'));
-			$values['account_expires_month']= get_var('account_expires_month', array('POST'));
-			$values['account_expires_day'] = get_var('account_expires_day', array('POST'));
+			$values['account_expires_year']= phpgw::get_var('account_expires_year', 'int', 'POST');
+			$values['account_expires_month']= phpgw::get_var('account_expires_month', 'string', 'POST'); // we use string here to allow for MMM
+			$values['account_expires_day'] = phpgw::get_var('account_expires_day', 'int', 'POST');
 
 			if ( (isset($values['cancel']) && $values['cancel']) || (!$account_id && $GLOBALS['phpgw']->acl->check('account_access',4,'admin')) || ($account_id && $GLOBALS['phpgw']->acl->check('account_access',16,'admin')))
 			{
@@ -878,7 +878,7 @@
 
 		function delete_group()
 		{
-			$account_id = get_var('account_id',array('POST','GET'));
+			$account_id = phpgw::get_var('account_id', 'int');
 
 			if ($_POST['cancel'] || $GLOBALS['phpgw']->acl->check('group_access',32,'admin'))
 			{

@@ -56,24 +56,24 @@
 			}
 
 			// If they've updated something, save the change.
-			$level_type = get_var('level_type',array('POST','GET'));
+			$level_type = phpgw::get_var('level_type');
 		    if ( $level_type )
 		    {
-		    	$level_key = get_var('level_key',array('POST','GET'));
-		    	$new_level = get_var( $level_type . '_' . $level_key . '_select',array('POST','GET'));
+		    	$level_key = phpgw::get_var('level_key');
+		    	$new_level = phpgw::get_var( $level_type . '_' . $level_key . '_select');
 		    	$this->update_level($level_type, $level_key, $new_level);
 		    }
 			else
 			{
-				$level_key = get_var('module_add_name_select',array('POST','GET'));
+				$level_key = phpgw::get_var('module_add_name_select');
 				if ( $level_key )
 				{
-					$this->update_level('module', $level_key, get_var( 'module_add_level_select',array('POST','GET')));
+					$this->update_level('module', $level_key, phpgw::get_var('module_add_level_select'));
 				}
-				$level_key = get_var('user_add_name_select',array('POST','GET'));
+				$level_key = phpgw::get_var('user_add_name_select',array('POST','GET'));
 				if ( $level_key )
 				{
-					$this->update_level('user', $level_key, get_var( 'user_add_level_select',array('POST','GET')));
+					$this->update_level('user', $level_key, phpgw::get_var('user_add_level_select'));
 				}
 			}
 		    

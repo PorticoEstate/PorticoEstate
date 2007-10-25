@@ -28,10 +28,10 @@
 
 		var $public_functions = array
 		(
-			'delete' 		=> True,
-			'list_attribute'	=> True,
-			'edit_attrib' 		=> True,
-			'list_custom_function'	=>True,
+			'delete' 				=> True,
+			'list_attribute'		=> True,
+			'edit_attrib' 			=> True,
+			'list_custom_function'	=> True,
 			'edit_custom_function'	=> True
 		);
 
@@ -74,8 +74,8 @@
 		{
 			$appname	= $this->appname;
 			$location	= $this->location;
-			$id			= get_var('id',array('POST','GET'));
-			$resort		= get_var('resort',array('POST','GET'));
+			$id			= phpgw::get_var('id', 'int');
+			$resort		= phpgw::get_var('resort');
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array(
 								'custom',
@@ -217,10 +217,10 @@
 
 		function edit_attrib()
 		{
-			$appname	= get_var('appname',array('POST','GET'));
-			$location	= get_var('location',array('POST','GET'));
-			$id			= get_var('id',array('POST','GET'));
-			$values		= get_var('values',array('POST'));
+			$appname	= phpgw::get_var('appname');
+			$location	= phpgw::get_var('location', 'location', 'REQUEST', '.');
+			$id			= phpgw::get_var('id', 'int');
+			$values		= phpgw::get_var('values', 'string', 'POST');
 			if(!$values)
 			{
 				$values=array();
@@ -430,8 +430,8 @@
 		{
 			$appname	= $this->appname;
 			$location	= $this->location;
-			$id		= get_var('id',array('POST','GET'));
-			$resort		= get_var('resort',array('POST','GET'));
+			$id			= phpgw::get_var('id', 'int');
+			$resort		= phpgw::get_var('resort');
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array(
 								'custom',
@@ -568,10 +568,10 @@
 
 		function edit_custom_function()
 		{
-			$appname	= get_var('appname',array('POST','GET'));
-			$location	= get_var('location',array('POST','GET'));
-			$id			= get_var('id',array('POST','GET'));
-			$values		= get_var('values',array('POST'));
+			$appname	= phpgw::get_var('appname');
+			$location	= phpgw::get_var('location', 'location');
+			$id			= phpgw::get_var('id', 'int');
+			$values		= phpgw::get_var('values', 'string', 'POST');
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('custom'));
 
@@ -688,21 +688,20 @@
 
 		function delete()
 		{
-			$appname				= get_var('appname',array('POST','GET'));
-			$location				= get_var('location',array('POST','GET'));
-			$attrib_id				= get_var('attrib_id',array('POST','GET'));
-			$custom_function_id		= get_var('custom_function_id',array('POST','GET'));
-			$confirm				= get_var('confirm',array('POST'));
+			$appname				= phpgw::get_var('appname');
+			$location				= phpgw::get_var('location', 'location');
+			$attrib_id				= phpgw::get_var('attrib_id', 'int');
+			$custom_function_id		= phpgw::get_var('custom_function_id', 'int');
+			$confirm				= phpgw::get_var('confirm', 'bool', 'POST');
 
-			if($attrib_id):
+			if ( $attrib_id )
 			{
 				$function='list_attribute';
 			}
-			elseif($custom_function_id):
+			else if($custom_function_id):
 			{
 				$function='list_custom_function';
 			}
-			endif;
 
 			$link_data = array
 			(
@@ -721,10 +720,10 @@
 				'custom_function_id' 	=> $custom_function_id
 			);
 
-			if (get_var('confirm',array('POST')))
+			if ( $confirm )
 			{
 				$this->bo->delete($location,$appname,$attrib_id,$custom_function_id);
-				$GLOBALS['phpgw']->redirect_link('/index.php',$link_data);
+				$GLOBALS['phpgw']->redirect_link('/index.php', $link_data);
 			}
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('app_delete'));
