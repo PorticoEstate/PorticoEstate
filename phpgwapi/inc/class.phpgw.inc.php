@@ -237,14 +237,14 @@
 						return $default;
 				}
 
+				return self::clean_value($value, $value_type, $default);
+
 				if ( is_array($value) )
 				{
-					/* Needs fix for "deep" array */
-					/*	foreach ( $value as &$val )
+					foreach ( $value as &$val )
 					{
 						$val = self::clean_value($val, $value_type, $default); 
 					}
-					*/
 				}
 				else
 				{
@@ -262,6 +262,15 @@
 			*/
 			public static function clean_value($value, $value_type = 'string', $default = null)
 			{
+				if ( is_array($value) )
+				{
+					foreach ( $value as &$val )
+					{
+						$val = self::clean_value($val, $value_type, $default);
+					}
+					return $value;
+				}
+
 				// Trim whitespace so it doesn't trip us up
 				$value = trim($value);
 				
