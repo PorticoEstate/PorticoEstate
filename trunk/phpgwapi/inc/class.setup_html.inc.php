@@ -28,8 +28,8 @@
 			$GLOBALS['header_template']->set_block('header','domain','domain');
 			$var = Array();
 
-			$deletedomain = get_var('deletedomain',Array('POST'));
-			$domains = get_var('domains',Array('POST'));
+			$deletedomain = phpgw::get_var('deletedomain', 'string', 'POST');
+			$domains = phpgw::get_var('domains', 'string', 'POST');
 			if( !is_array($domains) )
 			{
 				$domains = array();
@@ -40,7 +40,7 @@
 				{
 					continue;
 				}
-				//$dom = get_var('setting_'.$k,Array('POST'));
+				//$dom = phpgw::get_var("setting_{$k}", 'string', 'POST');
 				$dom = $_POST['settings'][$k];
 				$GLOBALS['header_template']->set_var('DB_DOMAIN',$v);
 				foreach($dom as $x => $y)
@@ -52,7 +52,7 @@
 
 			$GLOBALS['header_template']->set_var('domain','');
 
-			$setting = get_var('setting',Array('POST'));
+			$setting = phpgw::get_var('setting', 'string', 'POST');
 			if(!empty($setting) && is_array($setting))
 			{
 				foreach($setting as $k => $v)

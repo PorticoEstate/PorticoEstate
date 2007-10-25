@@ -38,7 +38,7 @@
 			}
 			else
 			{
-				//$filter = get_var('filter',Array('GET','POST'));
+				//$filter = phpgw::get_var('filter');
 				//$filter = $data;
 				//$format	= 'all';
 				return False;

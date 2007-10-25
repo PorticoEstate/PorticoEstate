@@ -55,8 +55,8 @@
 		 */
 		function loaddb()
 		{
-			$form_domain = get_var('FormDomain', array('POST'), '');
-			$ConfigDomain = get_var('ConfigDomain', array('COOKIE','POST'), $form_domain);
+			$form_domain = phpgw::get_var('FormDomain', 'string', 'POST', '');
+			$ConfigDomain = phpgw::get_var('ConfigDomain', 'string', 'REQUEST', $form_domain);
 
 			$GLOBALS['phpgw_info']['server']['db_type'] = $GLOBALS['phpgw_domain'][$ConfigDomain]['db_type'];
 
@@ -79,16 +79,16 @@
 		{
 			$remoteip     = $_SERVER['REMOTE_ADDR'];
 
-			$FormLogout   = get_var('FormLogout',  array('GET','POST'));
-			$ConfigLogin  = get_var('ConfigLogin', array('POST'));
-			$HeaderLogin  = get_var('HeaderLogin', array('POST'));
-			$FormDomain   = get_var('FormDomain',  array('POST'));
-			$FormPW       = get_var('FormPW',      array('POST'));
+			$FormLogout   = phpgw::get_var('FormLogout');
+			$ConfigLogin  = phpgw::get_var('ConfigLogin',	'string', 'POST');
+			$HeaderLogin  = phpgw::get_var('HeaderLogin',	'string', 'POST');
+			$FormDomain   = phpgw::get_var('FormDomain',	'string', 'POST');
+			$FormPW       = phpgw::get_var('FormPW',		'string', 'POST');
 
-			$ConfigDomain = get_var('ConfigDomain',array('POST','COOKIE'));
-			$ConfigPW     = get_var('ConfigPW',    array('POST','COOKIE'));
-			$HeaderPW     = get_var('HeaderPW',    array('POST','COOKIE'));
-			$ConfigLang   = get_var('ConfigLang',  array('POST','COOKIE'));
+			$ConfigDomain = phpgw::get_var('ConfigDomain');
+			$ConfigPW     = phpgw::get_var('ConfigPW');
+			$HeaderPW     = phpgw::get_var('HeaderPW');
+			$ConfigLang   = phpgw::get_var('ConfigLang');
 
 			/*
 			if(!empty($remoteip) && !$this->checkip($remoteip))

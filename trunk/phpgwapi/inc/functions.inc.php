@@ -194,7 +194,7 @@
 					// Drop passwords from backtrace
 					if ( !is_object($arg) 
 						&& ($arg == $GLOBALS['phpgw_info']['server']['header_admin_password']
-						|| $arg == $GLOBALS['phpgw_info']['server']['db_pass']
+						|| (isset($GLOBALS['phpgw_info']['server']['db_pass']) && $arg == $GLOBALS['phpgw_info']['server']['db_pass'])
 						|| (isset($GLOBALS['phpgw_info']['user']['passwd']) && $arg == $GLOBALS['phpgw_info']['user']['passwd'] ) )
 					)
 					{
@@ -344,16 +344,16 @@
 		$GLOBALS['login'] = $_POST['login'];
 		if (strstr($GLOBALS['login'],'@') === False)
 		{
-			$GLOBALS['login'] .= '@' . get_var('logindomain',array('POST'),$GLOBALS['phpgw_info']['server']['default_domain']);
+			$GLOBALS['login'] .= '@' . phpgw::get_var('logindomain', 'string', 'POST', $GLOBALS['phpgw_info']['server']['default_domain']);
 		}
 		list(,$GLOBALS['phpgw_info']['user']['domain']) = explode('@',$GLOBALS['login']);
 	}
 	else	// on "normal" pageview
 	{
-		$GLOBALS['phpgw_info']['user']['domain'] = get_var('domain', array('GET', 'COOKIE'), FALSE);
+		$GLOBALS['phpgw_info']['user']['domain'] = phpgw::get_var('domain', 'string', 'REQUEST', false);
 	}
 
-	if (@isset($GLOBALS['phpgw_domain'][$GLOBALS['phpgw_info']['user']['domain']]))
+	if (isset($GLOBALS['phpgw_domain'][$GLOBALS['phpgw_info']['user']['domain']]))
 	{
 		$GLOBALS['phpgw_info']['server']['db_host'] = $GLOBALS['phpgw_domain'][$GLOBALS['phpgw_info']['user']['domain']]['db_host'];
 		$GLOBALS['phpgw_info']['server']['db_name'] = $GLOBALS['phpgw_domain'][$GLOBALS['phpgw_info']['user']['domain']]['db_name'];
@@ -574,24 +574,26 @@
 			$GLOBALS['phpgw']->translation->translation($reset = True);
 		}
 
-		$redirect = unserialize(stripslashes(get_var('redirect',array('GET','COOKIE'))));
-		if($redirect)
+		$redirect = unserialize(stripslashes(phpgw::get_var('redirect')));
+		if ( is_array($redirect) && count($redirect) )
 		{
-			while(list($key,$value) = each($redirect))
+			foreach($redirect as $key => $value)
 			{
 				$redirect_data[$key] = $value;
 			}
 			
-			if(get_var('sessionid',array('GET')))
+			$sessid = phpgw::get_var('sessionid', 'string', 'GET');
+			if ( $sessid )
 			{
-				$redirect_data['sessionid'] = get_var('sessionid',array('GET'));
-				$redirect_data['kp3'] = get_var('kp3',array('GET'));
+				$redirect_data['sessionid'] = $sessid;
+				$redirect_data['kp3'] = phpgw::get_var('kp3', 'string', 'GET');
 			}
 			
-			$GLOBALS['phpgw']->session->phpgw_setcookie('redirect',false,$cookietime=0);
-			$GLOBALS['phpgw']->redirect_link('/index.php',$redirect_data);
+			$GLOBALS['phpgw']->session->phpgw_setcookie('redirect', false, 0);
+			$GLOBALS['phpgw']->redirect_link('/index.php', $redirect_data);
 			unset($redirect);
 			unset($redirect_data);
+			unset($sessid);
 		}
 
 		$GLOBALS['phpgw']->datetime = createObject('phpgwapi.datetimefunctions');
@@ -609,7 +611,7 @@
 	/************************************************************************\
 	* Load the menuaction                                                    *
 	\************************************************************************/
-		$GLOBALS['phpgw_info']['menuaction'] = get_var('menuaction',Array('GET','POST'));
+		$GLOBALS['phpgw_info']['menuaction'] = phpgw::get_var('menuaction');
 		if(!$GLOBALS['phpgw_info']['menuaction'])
 		{
 			unset($GLOBALS['phpgw_info']['menuaction']);

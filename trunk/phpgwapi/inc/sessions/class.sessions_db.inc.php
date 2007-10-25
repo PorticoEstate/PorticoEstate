@@ -60,7 +60,7 @@
 		// This will update the DateLastActive column, so the login does not expire
 		function update_dla()
 		{
-			$menu_action = get_var('menuaction',Array('GET','POST'));
+			$menu_action = phpgw::get_var('menuaction');
 			$action = $menu_action ? $menu_action : $_SERVER['PHP_SELF'];  
 
 			// This way XML-RPC users aren't always listed as

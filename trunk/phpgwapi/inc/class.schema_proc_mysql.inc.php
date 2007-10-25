@@ -44,7 +44,7 @@
 			}
 			else
 			{
-				$ConfigDomain = get_var('ConfigDomain',array('COOKIE','POST'));
+				$ConfigDomain = phpgw::get_var('ConfigDomain');
 				$phpgw_domain = $GLOBALS['phpgw_domain'];	
 
 				$temp_db->Host     = $phpgw_domain[$ConfigDomain]['db_host'];

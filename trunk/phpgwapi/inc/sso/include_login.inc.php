@@ -114,7 +114,7 @@
 				case 20:
 					return lang('Cannot find the mapping ! (please advice your adminstrator)');
 				case 21:
-					return lang('you had inactive mapping to %1 account', (string)get_var('phpgw_account', 'GET', ''));
+					return lang('you had inactive mapping to %1 account', phpgw::get_var('phpgw_account', 'string', 'GET', ''));
 				case 99:
 					return lang('Blocked, too many attempts');
 				case 10:
