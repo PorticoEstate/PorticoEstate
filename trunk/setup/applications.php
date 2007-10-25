@@ -45,7 +45,7 @@
 	}
 	// Does not return unless user is authorized
 
-	$ConfigDomain = get_var('ConfigDomain',Array('POST','COOKIE'));
+	$ConfigDomain = phpgw::get_var('ConfigDomain');
 
 	$tpl_root = $GLOBALS['phpgw_setup']->html->setup_tpl_dir('setup');
 	$setup_tpl = CreateObject('phpgwapi.Template',$tpl_root);
@@ -124,16 +124,16 @@
 	ksort($setup_info);
 
 
-	if(get_var('submit',Array('POST')))
+	if ( phpgw::get_var('submit', 'string', 'POST') )
 	{
 		$GLOBALS['phpgw_setup']->html->show_header(lang('Application Management'),False,'config',$ConfigDomain . '(' . $phpgw_domain[$ConfigDomain]['db_type'] . ')');
 		$setup_tpl->set_var('description',lang('App install/remove/upgrade') . ':');
 		$setup_tpl->pparse('out','header');
 
-		$appname = get_var('appname', array('POST'));
-		$remove  = get_var('remove', array('POST'));
-		$install = get_var('install', array('POST'));
-		$upgrade = get_var('upgrade', array('POST'));
+		$appname = phpgw::get_var('appname', 'string', 'POST');
+		$remove  = phpgw::get_var('remove', 'string', 'POST');
+		$install = phpgw::get_var('install', 'string', 'POST');
+		$upgrade = phpgw::get_var('upgrade', 'string', 'POST');
 
 		if(!empty($remove) && is_array($remove))
 		{
@@ -243,8 +243,8 @@
 		$GLOBALS['phpgw_setup']->html->show_header(lang('Application Management'),False,'config',$ConfigDomain . '(' . $phpgw_domain[$ConfigDomain]['db_type'] . ')');
 	}
 
-	$detail = get_var('detail',Array('GET')); 
-	$resolve = get_var('resolve',Array('GET')); 
+	$detail = phpgw::get_var('detail', 'string', 'GET'); 
+	$resolve = phpgw::get_var('resolve', 'string', 'GET'); 
 	if($detail)
 	{
 		ksort($setup_info[$detail]);
@@ -301,14 +301,14 @@
 		$setup_tpl->pparse('out','footer');
 		exit;
 	}
-	elseif ($resolve)
+	else if ($resolve)
 	{
-		$version  = get_var('version',Array('GET'));
-		$notables = get_var('notables',Array('GET'));
+		$version  = phpgw::get_var('version', 'string', 'GET');
+		$notables = phpgw::get_var('notables', 'string', 'GET');
 		$setup_tpl->set_var('description',lang('Problem resolution'). ':');
 		$setup_tpl->pparse('out','header');
 
-		if(get_var('post',Array('GET')))
+		if ( phpgw::get_var('post', 'string', 'GET') )
 		{
 			echo '"' . $setup_info[$resolve]['name'] . '" ' . lang('may be broken') . ' ';
 			echo lang('because an application it depends upon was upgraded');
@@ -317,7 +317,7 @@
 			echo '<br />';
 			echo lang('However, the application may still work') . '.';
 		}
-		elseif(get_var('badinstall',Array('GET')))
+		else if ( phpgw::get_var('badinstall', 'string', 'GET') )
 		{
 			echo '"' . $setup_info[$resolve]['name'] . '" ' . lang('is broken') . ' ';
 			echo lang('because of a failed upgrade or install') . '.';
@@ -390,7 +390,7 @@
 		$setup_tpl->pparse('out','footer');
 		exit;
 	}
-	elseif(get_var('globals', array('GET')))
+	else if ( phpgw::get_var('globals', 'string', 'GET') )
 	{
 		$setup_tpl->set_var('description','<a href="applications.php?debug='.$DEBUG.'">' . lang('Go back') . '</a>');
 		$setup_tpl->pparse('out','header');

@@ -95,6 +95,8 @@
  </form>
     </td>
   </tr>
+</table>
+<table width="100%">
   <tr class="banner">
     <td colspan="3">&nbsp;</td>
   </tr>

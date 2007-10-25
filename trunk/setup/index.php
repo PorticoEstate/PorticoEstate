@@ -103,7 +103,7 @@
 	$subtitle = '';
 	$submsg = '';
 	$subaction = '';
-	switch(get_var('action',Array('POST', 'GET')))
+	switch( phpgw::get_var('action') )
 	{
 		case 'Uninstall all applications':
 			$subtitle = lang('Deleting Tables');

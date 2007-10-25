@@ -55,13 +55,13 @@
 	$setup_tpl->set_block('T_setup_main','header','header');
 	$setup_tpl->set_block('T_setup_main','footer','footer');
 
-	if(@get_var('submit',Array('POST')))
+	if ( phpgw::get_var('submit', 'string', 'POST') )
 	{
 		$GLOBALS['phpgw_setup']->html->show_header(lang('Bulk Upgrade Management'),False,'config','');
 		$setup_tpl->set_var('description',lang('App upgrade') . ':');
 
-		$domains = get_var('domains',Array('POST'));
-		$apps = get_var('apps',Array('POST'));
+		$domains = phpgw::get_var('domains', 'string', 'POST');
+		$apps = phpgw::get_var('apps', 'string', 'POST');
 
 		if(!empty($domains) && is_array($domains))
 		{

@@ -29,7 +29,7 @@
 	}
 	// Does not return unless user is authorized
 
-	if (get_var('cancel',Array('POST')))
+	if ( phpgw::get_var('cancel', 'string', 'POST') )
 	{
 		Header('Location: index.php');
 		exit;

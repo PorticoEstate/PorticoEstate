@@ -116,10 +116,10 @@
 
 
 	$setup_info = $GLOBALS['phpgw_setup']->detection->get_db_versions();
-	$newsettings = get_var('newsettings',Array('POST'));
+	$newsettings = phpgw::get_var('newsettings', 'string', 'POST');
 	
 	$files_in_docroot = (isset($newsettings['files_dir']))? in_docroot($newsettings['files_dir']) : false ;
-	if(get_var('submit',Array('POST')) && is_array($newsettings) && !$files_in_docroot)
+	if ( phpgw::get_var('submit', 'string', 'POST') && is_array($newsettings) && !$files_in_docroot)
 	{
 		$datetime = CreateObject('phpgwapi.datetimefunctions');
 		switch (intval($newsettings['daytime_port']))
