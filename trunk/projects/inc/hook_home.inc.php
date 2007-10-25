@@ -22,15 +22,18 @@
 
 	if ( isset( $GLOBALS['phpgw_info']['user']['preferences']['projects']['mainscreen_showevents'] ) && $GLOBALS['phpgw_info']['user']['preferences']['projects']['mainscreen_showevents'] )
 	{
-		$projects = CreateObject( 'projects.uiprojects' );
-		$extra_data = '<td>' . "\n" . $projects->list_projects_home() . '</td>' . "\n";
+		$projects	= CreateObject( 'projects.uiprojects' );
+		$extra_data	= '<td>' . "\n" . $projects->list_projects_home() . '</td>' . "\n";
 
 		$portalbox = CreateObject('phpgwapi.listbox', array
 		(
 				'title'						=> '<font color="#FFFFFF">'.lang('projects').'</font>',
-				'primary'					=> $GLOBALS['phpgw_info']['theme']['navbar_bg'],
-				'secondary'					=> $GLOBALS['phpgw_info']['theme']['navbar_bg'],
-				'tertiary'					=> $GLOBALS['phpgw_info']['theme']['navbar_bg'],
+				//'primary'					=> $GLOBALS['phpgw_info']['theme']['navbar_bg'],
+				//'secondary'					=> $GLOBALS['phpgw_info']['theme']['navbar_bg'],
+				//'tertiary'					=> $GLOBALS['phpgw_info']['theme']['navbar_bg'],
+				'primary'					=> $GLOBALS['phpgw_info']['user']['preferences']['common']['theme']['navbar_bg'],
+				'secondary'					=> $GLOBALS['phpgw_info']['user']['preferences']['common']['theme']['navbar_bg'],
+				'tertiary'					=> $GLOBALS['phpgw_info']['user']['preferences']['common']['theme']['navbar_bg'],
 				'width'						=> '100%',
 				'outerborderwidth'			=> '0',
 				'header_background_image'	=> $GLOBALS['phpgw']->common->image('phpgwapi/templates/default','bg_filler')

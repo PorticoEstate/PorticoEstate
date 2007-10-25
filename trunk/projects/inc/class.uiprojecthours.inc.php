@@ -1431,7 +1431,7 @@
 				'status' => 'active',
 				'selected' => $values['project_id']
 			));
-				
+
 			$GLOBALS['phpgw']->template->set_var('project_options', $project_options);
 
 			if ($hours_id && $this->bohours->edit_perms(array('action' => 'delete','status' => $values['status'],'main_co' => $main['coordinator'], 'booked' => $values['booked'], 'employee' => $values['employee'])))
@@ -1559,7 +1559,7 @@
 				$link_data['menuaction'] = 'projects.uiprojecthours.edit_hours';
 				$GLOBALS['phpgw']->redirect_link('/index.php',$link_data);
 			}
-			
+
 			if ($_POST['yes'])
 			{
 				$link_data['menuaction'] = 'projects.uiprojecthours.list_hours';
@@ -1681,7 +1681,7 @@
 				$end   = $start;
 				$start = $temp;
 			}
-      
+
 			$GLOBALS['phpgw']->template->set_var(array(
               'sdate_select' => $jscal->input('datum[start]', $start),
               'edate_select' => $jscal->input('datum[end]', $end),
@@ -1697,14 +1697,16 @@
 			}
 			if (count($matrix) > 0)
 			{
-        
+
                 /************************* Head/Body *****************/
     			$GLOBALS['phpgw']->template->set_block('controlling','blk_row_title0','blk_row_title0_i');
                 $GLOBALS['phpgw']->template->set_block('controlling','matrix_day','matrix_day_i');
                 $GLOBALS['phpgw']->template->set_block('controlling','body_row','body_row_i');
                 $GLOBALS['phpgw']->template->set_block('body_row','row_title','row_title_j');
                 $GLOBALS['phpgw']->template->set_block('body_row','content_cell','content_cell_j');
-                $GLOBALS['phpgw']->template->set_var('th_bg_theme',$GLOBALS['phpgw_info']['theme']['th_bg']);
+                //$GLOBALS['phpgw']->template->set_var('th_bg_theme',$GLOBALS['phpgw_info']['theme']['th_bg']);
+                $GLOBALS['phpgw']->template->set_var('th_bg_theme',$GLOBALS['phpgw_info']['user']['preferences']['common']['theme']['th_bg']);
+
                 $line = 0;
                 $row  = 0;
 				for ($i = 0; $i < count($rowtitles); ++$i)
@@ -1722,11 +1724,11 @@
 						    break;
 						default:
 							$row_title = '';
-					}          
+					}
 					$GLOBALS['phpgw']->template->set_var(array(
                       'l_rowTitles' => $row_title,
                       'cell_row' => $row++,
-                      
+
                       'pnumber' => '{pnumber' . $i . '}',
                       'title' => '{title' . $i . '}',
                       'enddate' => '{enddate' . $i . '}'
@@ -1754,7 +1756,7 @@
                       'holidaystyle' => $holidaystyle,
                       'date' => date('d.m', $key),
                       'cell_row' => $row++,
-                      
+
                       'matrix_value' => '{matrix_value' . $i . '}',
                       'content_value' => '{content_value' . $i . '}',
                       'content_tooltip' => '{content_tooltip' . $i . '}'
@@ -1844,7 +1846,8 @@
                 }
                 //************************* Foot **********************/
 				$GLOBALS['phpgw']->template->set_var(array(
-                  'theme_th_bg' => $GLOBALS['phpgw_info']['theme']['th_bg'],
+                  //'theme_th_bg' => $GLOBALS['phpgw_info']['theme']['th_bg'],
+                  'theme_th_bg' => $GLOBALS['phpgw_info']['user']['preferences']['common']['theme']['th_bg'],
                   'rowtitles' => count($rowtitles),
                   'l_total' => lang('Total'),
                   'total_cell_line' => 0,
@@ -1879,7 +1882,8 @@
 				}
 				$GLOBALS['phpgw']->template->set_var(array(
                   'booked_total' => $this->bohours->format_minutes($booked_total),
-                  'theme_bg' => $GLOBALS['phpgw_info']['theme']['th_bg'],
+                  //'theme_bg' => $GLOBALS['phpgw_info']['theme']['th_bg'],
+                  'theme_bg' => $GLOBALS['phpgw_info']['user']['preferences']['common']['theme']['th_bg'],
                   'rowtitles' => count($rowtitles),
                   'l_overtime' => lang('Overtime'),
                   'booked_cell_line' => $line_total,

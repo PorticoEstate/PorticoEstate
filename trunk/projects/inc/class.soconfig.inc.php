@@ -28,8 +28,8 @@
 
 		function get_site_config($params = 0)
 		{
-			$default = $params['default']?$params['default']:True;
-			$helpmsg = $params['helpmsg']?$params['helpmsg']:False;
+			$default = isset($params['default']) ? $params['default'] : true;
+			$helpmsg = isset($params['helpmsg']) ? $params['helpmsg'] : false;
 
 			$this->config = CreateObject('phpgwapi.config','projects');
 			$this->config->read_repository();
@@ -261,7 +261,7 @@
 			}
 			else
 			{
-				$additon = " and type='accounting'"; 
+				$additon = " and type='accounting'";
 			}
 
 			$this->db->query("select count(*) from $p_table where $column" . $additon,__LINE__,__FILE__);
@@ -278,7 +278,7 @@
 			}
 		}
 
-		function read_admins($action = 'pad',$type = '')
+		function read_admins( $action = 'pad',$type = '' )
 		{
 			switch($type)
 			{
@@ -312,24 +312,32 @@
 			$sql = 'select account_id,type from phpgw_p_projectmembers WHERE ' . $filter;
 			$this->db->query($sql);
 			$this->total_records = $this->db->num_rows();
-			while ($this->db->next_record())
+
+			// TODO: Finn
+			$admins = array();
+
+			while( $this->db->next_record() )
 			{
-				$admins[] = array('account_id' => $this->db->f('account_id'),
-										'type' => $this->db->f('type'));
+				$admins = array
+				(
+					'account_id' => $this->db->f('account_id'),
+					'type' => $this->db->f('type')
+				);
 			}
+
 			return $admins;
 		}
 
-		function isprojectadmin($action = 'pad')
+		function isprojectadmin( $action = 'pad' )
 		{
 			$admin_groups = $GLOBALS['phpgw']->accounts->membership($this->account);
 			$admins = $this->read_admins($action);
 
 			//_debug_array($admins);
 
-			for ($i=0;$i<count($admins);$i++)
+			for ( $i = 0; $i < count($admins); $i++ )
 			{
-				switch($action)
+				switch( $action )
 				{
 					case 'pmanager':
 						$type_a = 'ma';
@@ -345,18 +353,20 @@
 						break;
 				}
 
-				if ($admins[$i]['type'] == $type_a && $admins[$i]['account_id'] == $this->account)
+				if( $admins[$i]['type'] == $type_a && $admins[$i]['account_id'] == $this->account )
 				{
 					return true;
 				}
-				elseif ($admins[$i]['type'] == $type_g)
+				elseif( $admins[$i]['type'] == $type_g )
 				{
-					if (is_array($admin_groups))
+					if ( is_array($admin_groups) )
 					{
-						for ($j=0;$j<count($admin_groups);$j++)
+						for( $j = 0; $j < count($admin_groups); $j++ )
 						{
-							if ($admin_groups[$j]['account_id'] == $admins[$i]['account_id'])
+							if ( $admin_groups[$j]['account_id'] == $admins[$i]['account_id'] )
+							{
 								return true;
+							}
 						}
 					}
 				}
@@ -367,9 +377,9 @@
 			}
 		}
 
-		function edit_admins($action,$users = '', $groups = '')
+		function edit_admins( $action,$users = '', $groups = '' )
 		{
-			switch($action)
+			switch( $action )
 			{
 				case 'psale':		$filter = "sa' OR type='sg"; break;
 				case 'pmanager':	$filter = "ma' OR type='mg"; break;
@@ -378,83 +388,87 @@
 
 			$this->db->query("DELETE from phpgw_p_projectmembers WHERE type='" . $filter . "'",__LINE__,__FILE__);
 
-			if (is_array($users))
+			if ( is_array($users) )
 			{
-				switch($action)
+				switch( $action )
 				{
 					case 'psale':		$type = 'sa'; break;
 					case 'pmanager':	$type = 'ma'; break;
 					default:			$type = 'aa'; break;
 				}
 
-				while($activ=each($users))
+				while( $activ = each($users) )
 				{
-					$this->db->query('insert into phpgw_p_projectmembers (project_id, account_id,type) values (0,' . $activ[1] . ",'"
-									. $type . "')",__LINE__,__FILE__);
+					$this->db->query('insert into phpgw_p_projectmembers (project_id, account_id,type) values (0,' . $activ[1] . ",'" . $type . "')",__LINE__,__FILE__);
 				}
 			}
 
-			if (is_array($groups))
+			if ( is_array($groups) )
 			{
-				switch($action)
+				switch( $action )
 				{
-					case 'psale':		$type = 'sg'; break;
-					case 'pmanager':	$type = 'mg'; break;
-					default:			$type = 'ag'; break;
+					case 'psale':
+						$type = 'sg';
+						break;
+					case 'pmanager':
+						$type = 'mg';
+						break;
+					default:
+						$type = 'ag';
+						break;
 				}
 
-				while($activ=each($groups))
+				while( $activ = each($groups) )
 				{
-					$this->db->query('insert into phpgw_p_projectmembers (project_id, account_id,type) values (0,' . $activ[1] . ",'"
-									. $type . "')",__LINE__,__FILE__);
+					$this->db->query('insert into phpgw_p_projectmembers (project_id, account_id,type) values (0,' . $activ[1] . ",'" . $type . "')", __LINE__, __FILE__);
 				}
 			}
 		}
 
-		function read_activities($values)
+		function read_activities( $values )
 		{
-			$start	= isset($values['start'])?$values['start']:0;
-			$limit	= isset($values['limit'])?$values['limit']:True;
-			$sort	= isset($values['sort'])?$values['sort']:'ASC';
-			$order	= isset($values['order'])?$values['order']:'a_number';
-			$cat_id	= isset($values['cat_id'])?$values['cat_id']:0;
+			$start	= isset($values['start']) ? $values['start'] : 0;
+			$limit	= isset($values['limit']) ? $values['limit'] : true;
+			$sort	= isset($values['sort']) ? $values['sort'] : 'ASC';
+			$order	= isset($values['order']) ? $values['order'] : 'a_number';
+			$cat_id	= isset($values['cat_id']) ? $values['cat_id'] : 0;
 
 			$query	= $this->db->db_addslashes($values['query']);
 
 			$ordermethod = " order by $order $sort";
 
-			if ($query)
+			if ( $query )
 			{
 				$filtermethod = " where (descr like '%$query%' or a_number like '%$query%' or minperae like '%$query%' or billperae like '%$query%')";
 
-				if ($cat_id > 0)
+				if ( $cat_id > 0 )
 				{
 					$filtermethod .= ' AND category=' . $cat_id;
 				}
 			}
 			else
 			{
-				if ($cat_id > 0)
+				if ( $cat_id > 0 )
 				{
 					$filtermethod = ' WHERE category=' . $cat_id;
 				}
 			}
 
 			$sql = 'select * from phpgw_p_activities' . $filtermethod;
-			$this->db2->query($sql,__LINE__,__FILE__);
+			$this->db2->query($sql, __LINE__, __FILE__);
 			$this->total_records = $this->db2->num_rows();
 
-			if ($limit)
+			if ( $limit )
 			{
-				$this->db->limit_query($sql . $ordermethod,$start,__LINE__,__FILE__);
+				$this->db->limit_query($sql . $ordermethod, $start, __LINE__, __FILE__);
 			}
 			else
 			{
-				$this->db->query($sql . $ordermethod,__LINE__,__FILE__);
+				$this->db->query($sql . $ordermethod, __LINE__, __FILE__);
 			}
 
 			$i = 0;
-			while ($this->db->next_record())
+			while ( $this->db->next_record() )
 			{
 				$act[$i]['activity_id']	= $this->db->f('id');
 				$act[$i]['cat']			= $this->db->f('category');
@@ -463,16 +477,17 @@
 				$act[$i]['remarkreq']	= $this->db->f('remarkreq');
 				$act[$i]['billperae']	= $this->db->f('billperae');
 				$act[$i]['minperae']	= $this->db->f('minperae');
+
 				$i++;
 			}
 			return $act;
 		}
 
-		function read_single_activity($activity_id)
+		function read_single_activity( $activity_id )
 		{
-			$this->db->query('SELECT * from phpgw_p_activities WHERE id=' . intval($activity_id),__LINE__,__FILE__);
-	
-			if ($this->db->next_record())
+			$this->db->query('SELECT * from phpgw_p_activities WHERE id=' . intval($activity_id), __LINE__, __FILE__);
+
+			if ( $this->db->next_record() )
 			{
 				$act['activity_id']	= $this->db->f('id');
 				$act['cat']			= $this->db->f('category');
@@ -481,11 +496,12 @@
 				$act['remarkreq']	= $this->db->f('remarkreq');
 				$act['billperae']	= $this->db->f('billperae');
 				$act['minperae']	= $this->db->f('minperae');
+
 				return $act;
 			}
 		}
 
-		function add_activity($values)
+		function add_activity( $values )
 		{
 			$values['number']		= $this->db->db_addslashes($values['number']);
 			$values['descr'] 		= $this->db->db_addslashes($values['descr']);
@@ -496,7 +512,7 @@
 							. $values['billperae'] . ','  . intval($values['minperae']) . ')',__LINE__,__FILE__);
 		}
 
-		function edit_activity($values)
+		function edit_activity( $values )
 		{
 			$values['number']		= $this->db->db_addslashes($values['number']);
 			$values['descr']		= $this->db->db_addslashes($values['descr']);
@@ -507,22 +523,34 @@
 							. $values['billperae'] . ',minperae=' . intval($values['minperae']) . ' where id=' . intval($values['activity_id']),__LINE__,__FILE__);
 		}
 
-		function delete_pa($action, $pa_id)
+		function delete_pa( $action, $pa_id )
 		{
 			$pa_id = intval($pa_id);
 
-			switch ($action)
+			switch ( $action )
 			{
-				case 'activity':	$p_table = 'phpgw_p_activities'; $p_column = 'id'; break;
-				case 'role':		$p_table = 'phpgw_p_roles'; $p_column = 'role_id'; break;
+				case 'activity':
+					$p_table = 'phpgw_p_activities';
+					$p_column = 'id';
+					break;
+				case 'role':
+					$p_table = 'phpgw_p_roles';
+					$p_column = 'role_id';
+					break;
 				case 'emp_role':
-				case 'accounting':	$p_table = 'phpgw_p_projectmembers'; $p_column = 'id'; break;
-				case 'charge':		$p_table = 'phpgw_p_surcharges'; $p_column = 'charge_id'; break;
+				case 'accounting':
+					$p_table = 'phpgw_p_projectmembers';
+					$p_column = 'id';
+					break;
+				case 'charge':
+					$p_table = 'phpgw_p_surcharges';
+					$p_column = 'charge_id';
+					break;
 			}
 
-			$this->db->query("DELETE from $p_table where $p_column=" . $pa_id,__LINE__,__FILE__);
+			$this->db->query("DELETE from $p_table where $p_column=" . $pa_id, __LINE__, __FILE__);
 
-			if ($action == 'activity')
+			if ( $action == 'activity' )
 			{
 				$this->db->query('DELETE from phpgw_p_projectactivities where activity_id=' . $pa_id,__LINE__,__FILE__);
 			}
@@ -530,68 +558,70 @@
 
 		function db2emps()
 		{
-			while($this->db->next_record())
+			while( $this->db->next_record() )
 			{
 				$emps[] = array
 				(
-					'id'			=> $this->db->f('id'),
-					'account_id'	=> $this->db->f('account_id'),
-					'accounting'	=> $this->db->f('accounting'),
-					'd_accounting'	=> $this->db->f('d_accounting'),
-					'sdate'			=> $this->db->f('sdate'),
-					'edate'			=> $this->db->f('edate'),
+					'id'				=> $this->db->f('id'),
+					'account_id'		=> $this->db->f('account_id'),
+					'accounting'		=> $this->db->f('accounting'),
+					'd_accounting'		=> $this->db->f('d_accounting'),
+					'sdate'				=> $this->db->f('sdate'),
+					'edate'				=> $this->db->f('edate'),
 					'weekly_workhours'	=> $this->db->f('weekly_workhours'),
-					'cost_centre' 	=> $this->db->f('cost_centre'),
-					'location_id' => $this->db->f('location_id')
+					'cost_centre'		=> $this->db->f('cost_centre'),
+					'location_id'		=> $this->db->f('location_id')
 				);
 			}
+
 			return $emps;
 		}
 
-		function read_employees($values)
+		function read_employees( $values )
 		{
 			$start		= intval($values['start']);
-			$limit		= (isset($values['limit'])?$values['limit']:false);
-			$sort		= (isset($values['sort']) && $values['sort'] ? $values['sort']:'ASC');
-			$order		= (isset($values['order']) && $values['order'] ? $values['order']:'sdate');
+			$limit		= isset($values['limit']) ? $values['limit'] : false;
+			$sort		= isset($values['sort']) && $values['sort'] ? $values['sort'] : 'ASC';
+			$order		= isset($values['order']) && $values['order'] ? $values['order'] : 'sdate';
 			$query		= $this->db->db_addslashes($values['query']);
 			$account_id	= intval($values['account_id']);
 			$id			= intval($values['id']);
-			$date     = intval($values['date']);
+			$date		= intval($values['date']);
 
 			$ordermethod = ' order by ' . ($order!='account_id'?'account_id,' . $order:$order) . ' ' . $sort;
 
-			if($account_id > 0)
+			if( $account_id > 0 )
 			{
 				$acc_select = ' and account_id=' . $account_id;
 			}
 
-			if($id > 0)
+			if( $id > 0 )
 			{
 				$id_select = ' and id !=' . $id;
 			}
 
-			if ($date)
+			if ( $date )
 			{
 				$date_select = " and sdate <= ".$date." and edate >= ".$date;
 			}
 
 			$sql = "SELECT * from phpgw_p_projectmembers WHERE type='accounting'" . $id_select . $date_select . $querymethod;
 
-			if($limit)
+			if( $limit )
 			{
 				$this->db2->query($sql,__LINE__,__FILE__);
 				$this->total_records = $this->db2->num_rows();
-				$this->db->limit_query($sql . $ordermethod,$start,__LINE__,__FILE__);
+				$this->db->limit_query($sql . $ordermethod, $start, __LINE__, __FILE__);
 			}
 			else
 			{
-				$this->db->query($sql . $acc_select . $ordermethod,__LINE__,__FILE__);
+				$this->db->query($sql . $acc_select . $ordermethod, __LINE__, __FILE__);
 			}
+
 			return $this->db2emps();
 		}
 
-		function save_accounting_factor($values)
+		function save_accounting_factor( $values )
 		{
 			//$exists = $this->exists(array('action' => 'accounting','pa_id' => $values['account_id']));
 			$values['id']           = intval($values['id']);
@@ -599,10 +629,10 @@
 			$values['d_accounting']	= $values['d_accounting'] + 0.0;
 			$values['location_id']  = intval($values['location_id']);
 
-			if($values['id'] > 0)
+			if( $values['id'] > 0 )
 			{
 				$this->db->query('UPDATE phpgw_p_projectmembers set accounting=' . $values['accounting'] . ', d_accounting=' . $values['d_accounting']. ', sdate='
-								. intval($values['sdate']) . ', edate=' . intval($values['edate']) 
+								. intval($values['sdate']) . ', edate=' . intval($values['edate'])
 								. ', weekly_workhours=' . $values['weekly_workhours'] . ', cost_centre=' . $values['cost_centre'] . ', location_id='.$values['location_id']
 								. ' where account_id=' . intval($values['account_id'])
 								. " and type='accounting' and id=" . $values['id'],__LINE__,__FILE__);
@@ -616,31 +646,31 @@
 			}
 		}
 
-		function read_single_afactor($id = 0)
+		function read_single_afactor( $id = 0 )
 		{
 			$this->db->query('SELECT * from phpgw_p_projectmembers WHERE id=' . intval($id),__LINE__,__FILE__);
 			list($emp) = $this->db2emps();
 			return $emp;
 		}
 
-		function list_roles($values)
+		function list_roles( $values )
 		{
 			$start	= intval($values['start']);
-			$limit	= (isset($values['limit'])?$values['limit']:True);
-			$sort	= (isset($values['sort'])?$values['sort']:'ASC');
-			$order	= (isset($values['order'])?$values['order']:'role_name');
+			$limit	= isset($values['limit']) ? $values['limit'] : true;
+			$sort	= isset($values['sort']) ? $values['sort'] : 'ASC';
+			$order	= isset($values['order']) ? $values['order'] : 'role_name';
 			$query	= $this->db->db_addslashes($values['query']);
 
 			$ordermethod = " order by role_name $sort";
 
-			if ($query)
+			if ( $query )
 			{
 				$querymethod = " WHERE (role_name like '%$query%') ";
 			}
 
 			$sql = 'SELECT * from phpgw_p_roles' . $querymethod;
 
-			if ($limit)
+			if ( $limit )
 			{
 				$this->db2->query($sql,__LINE__,__FILE__);
 				$this->total_records = $this->db2->num_rows();
@@ -651,7 +681,7 @@
 				$this->db->query($sql . $ordermethod,__LINE__,__FILE__);
 			}
 
-			while ($this->db->next_record())
+			while ( $this->db->next_record() )
 			{
 				$roles[] = array
 				(
@@ -659,25 +689,26 @@
 					'role_name'	=> $this->db->f('role_name')
 				);
 			}
+
 			return $roles;
 		}
 
-		function save_role($role_name)
+		function save_role( $role_name )
 		{
 			$role_name = $this->db->db_addslashes($role_name);
 			$this->db->query("INSERT into phpgw_p_roles (role_name) values ('" . $role_name . "')",__LINE__,__FILE__);
 		}
 
-		function list_events($type = '')
+		function list_events( $type = '' )
 		{
-			if($type)
+			if( $type )
 			{
 				$type_select = " where event_type='$type'";
 			}
 
 			$this->db->query('SELECT * from phpgw_p_events ' . $type_select . 'order by event_type asc',__LINE__,__FILE__);
 
-			while($this->db->next_record())
+			while( $this->db->next_record() )
 			{
 				$events[] = array
 				(
@@ -687,27 +718,29 @@
 					'event_extra'	=> $this->db->f('event_extra')
 				);
 			}
+
 			return $events;
 		}
 
-		function save_event($values)
+		function save_event( $values )
 		{
 			$this->db->query('UPDATE phpgw_p_events set event_extra=' . intval($values['limit']) . ' where event_id=' . intval($values['event_id_limit']),__LINE__,__FILE__);
 			$this->db->query('UPDATE phpgw_p_events set event_extra=' . intval($values['percent']) . ' where event_id=' . intval($values['event_id_percent']),__LINE__,__FILE__);
 		}
 
-		function get_event_extra($event_name)
+		function get_event_extra( $event_name )
 		{
-			$this->db->query('SELECT event_extra from phpgw_p_events where event_name=' . "'" . $event_name . "'",__LINE__,__FILE__);			
+			$this->db->query('SELECT event_extra from phpgw_p_events where event_name=' . "'" . $event_name . "'",__LINE__,__FILE__);
 			$this->db->next_record();
+
 			return $this->db->f(0);
 		}
 
-		function list_surcharges($charge_id = 0)
+		function list_surcharges( $charge_id = 0 )
 		{
 			$charge_id = intval($charge_id);
 
-			if($charge_id > 0)
+			if( $charge_id > 0 )
 			{
 				$select = ' where charge_id=' . $charge_id;
 			}
@@ -716,9 +749,9 @@
 				$select = ' order by charge_name asc';
 			}
 
-			$this->db->query('SELECT * from phpgw_p_surcharges' . $select,__LINE__,__FILE__);
+			$this->db->query('SELECT * from phpgw_p_surcharges' . $select, __LINE__, __FILE__);
 
-			while($this->db->next_record())
+			while( $this->db->next_record() )
 			{
 				$charges[] = array
 				(
@@ -727,15 +760,16 @@
 					'charge_percent'	=> $this->db->f('charge_percent')
 				);
 			}
+
 			return $charges;
 		}
 
-		function save_surcharge($values)
+		function save_surcharge( $values )
 		{
 			$values['charge_id']		= intval($values['charge_id']);
 			$values['charge_percent']	= $values['charge_percent'] + 0.0;
 
-			if($values['charge_id'] > 0)
+			if( $values['charge_id'] > 0 )
 			{
 				$this->db->query('UPDATE phpgw_p_surcharges set charge_name=' . "'" . $values['charge_name'] . "', charge_percent=" . $values['charge_percent']
 								. ' where charge_id=' . $values['charge_id'],__LINE__,__FILE__);
@@ -747,10 +781,11 @@
 			}
 		}
 
-		function save_location($values)
+		function save_location( $values )
 		{
 			$values['location_id'] = intval($values['location_id']);
-			if($values['location_id'] > 0)
+
+			if( $values['location_id'] > 0 )
 			{
 				$sql = "UPDATE phpgw_p_locations SET location_name='" . $values['location_name'] . "', location_ident='" . $values['location_ident'] . "', location_custnum='".$values['location_custnum']."' WHERE location_id=".$values['location_id'];
 			}
@@ -758,18 +793,22 @@
 			{
 				$sql = "INSERT INTO phpgw_p_locations (location_name, location_ident, location_custnum) VALUES ('" . $values['location_name'] . "', '" . $values['location_ident'] . "', '" . $values['location_custnum'] . "')";
 			}
+
 			$this->db->query($sql, __LINE__, __FILE__);
 		}
 
 		function get_locations()
 		{
-			$locations = array();
-			$sql = 'SELECT * FROM phpgw_p_locations';
+			$locations	= array();
+			$sql		= 'SELECT * FROM phpgw_p_locations';
+
 			$this->db->query($sql, __LINE__, __FILE__);
-			while($this->db->next_record())
+
+			while( $this->db->next_record() )
 			{
-				$location_id = $this->db->f('location_id');
-				$locations[$location_id] = array(
+				$location_id				= $this->db->f('location_id');
+				$locations[$location_id]	= array
+				(
 					'location_id'      => $location_id,
 					'location_name'    => $this->db->f('location_name'),
 					'location_ident'   => $this->db->f('location_ident'),
@@ -779,16 +818,18 @@
 
 			return $locations;
 		}
-		
-		function get_single_location($location_id)
+
+		function get_single_location( $location_id )
 		{
 			$location = array();
-			if($location_id > 0)
+
+			if( $location_id > 0 )
 			{
 				$this->db->query('SELECT * FROM phpgw_p_locations WHERE location_id = ' . $location_id, __LINE__, __FILE__);
 				if($this->db->next_record())
 				{
-					$location = array(
+					$location = array
+					(
 						'location_id'      => $this->db->f('location_id'),
 						'location_name'    => $this->db->f('location_name'),
 						'location_ident'   => $this->db->f('location_ident'),
@@ -800,16 +841,19 @@
 			return $location;
 		}
 
-		function get_location_for_ident($location_ident)
+		function get_location_for_ident( $location_ident )
 		{
 			$location = array();
-			if($location_ident)
+
+			if( $location_ident )
 			{
 				$sql = "SELECT * FROM phpgw_p_locations WHERE location_ident='".$location_ident."'";
 				$this->db->query($sql, __LINE__, __FILE__);
-				if($this->db->next_record())
+
+				if( $this->db->next_record() )
 				{
-					$location = array(
+					$location = array
+					(
 						'location_id'      => $this->db->f('location_id'),
 						'location_name'    => $this->db->f('location_name'),
 						'location_ident'   => $this->db->f('location_ident'),
@@ -821,10 +865,11 @@
 			return $location;
 		}
 
-		function delete_location($location_id)
+		function delete_location( $location_id )
 		{
 			$location_id = intval($location_id);
-			if($location_id > 0)
+
+			if( $location_id > 0 )
 			{
 				$sql = 'DELETE FROM phpgw_p_locations WHERE location_id='.$location_id;
 				$this->db->query($sql, __LINE__, __FILE__);
