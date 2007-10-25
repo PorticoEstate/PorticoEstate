@@ -25,10 +25,7 @@
 	//$GLOBALS['phpgw_info']['server']['versions']['current_header'] = $setup_info['phpgwapi']['versions']['current_header'];
 	unset($setup_info);
 
-	$adddomain = get_var('adddomain', array('POST'));
-	if(@$adddomain)
-	{
-	}
+	$adddomain = phpgw::get_var('adddomain', 'string', 'POST');
 
 	/**
 	 * Check form values
@@ -36,7 +33,7 @@
 	function check_form_values()
 	{
 		$errors = '';
-		$domains = get_var('domains',Array('POST'));
+		$domains = phpgw::get_var('domains', 'string', 'POST');
 		if ( !is_array($domains) )
 		{
 			$domains = array();
@@ -44,7 +41,7 @@
 		reset($domains);
 		foreach($domains as $k => $v)
 		{
-			$deletedomain = get_var('deletedomain',Array('POST'));
+			$deletedomain = phpgw::get_var('deletedomain', 'string', 'POST');
 			if ( isset($deletedomain[$k]) )
 			{
 				continue;
@@ -56,7 +53,7 @@
 			}
 		}
 
-		$setting = get_var('setting',Array('POST'));
+		$setting = phpgw::get_var('setting', 'string', 'POST');
 		if(!$setting['HEADER_ADMIN_PASSWORD'])
 		{
 			$errors .= '<br />' . lang("You didn't enter a header admin password");
@@ -128,8 +125,11 @@
 			break;
 	}
 
-	$action = get_var('action',Array('POST'));
-	list($action) = @each($action);
+	$action = phpgw::get_var('action', 'string', 'POST');
+	if ( is_array($action) )
+	{
+		$action = array_shift(array_keys($action));
+	}
 	switch($action)
 	{
 		case 'download':
@@ -193,77 +193,80 @@
 
 			$detected = '';
 
-			if ( !isset($ConfigLang) || !$ConfigLang )
-			{
-				$_POST['ConfigLang'] = 'en';
-				$detected .= '<br /><form action="manageheader.php" method="post">Please Select your language ' . lang_select(True) . "</form>\n";
-			}
-
-			if (!function_exists('html_entity_decode'))//html_entity_decode() is only available in PHP4.3+
+			$detected .= $GLOBALS['phpgw_info']['setup']['PageMSG'];
+			if (!function_exists('filter_var')) // ext/filter was added in 5.2.0
 			{
 				$detected .= '<b><p align="center" class="msg">'
-					. lang('You appear to be using PHP %1, phpGroupWare requires 4.3.0 or later', PHP_VERSION). "\n"
+					. lang('You appear to be using PHP %1, phpGroupWare requires 5.2.0 or later', PHP_VERSION). "\n"
 					. '</p></b><td></tr></table></body></html>';
 				die($detected);
 			}
 			
-			$detected .= lang('You appear to be using PHP 4.3+') . '<br />' . "\n";
+			$phpver = lang('<li>You appear to be using PHP 5.2+') . "</li>\n";
 			$supported_sessions_type[] = 'db';
 			$supported_sessions_type[] = 'php';
 
-			$detected .= '<table border="0" width="100%" cellspacing="0" cellpadding="0" style="{ border: 1px solid #000000; }">' . "\n";
+			$detected .= '<table id="manageheader">' . "\n";
 
-			$detected .= '<tr><td colspan="2"><p>' . $GLOBALS['phpgw_info']['setup']['PageMSG'] . '<br />&nbsp;</p></td></tr>';
+			
+			if ( !isset($ConfigLang) || !$ConfigLang )
+			{
+				$_POST['ConfigLang'] = 'en';
+				$detected .= '<tr><td colspan="2"><form action="manageheader.php" method="post">Please Select your language ' . lang_select(True) . "</form></td></tr>\n";
+			}
+
 			$manual = '<a href="../doc/en_US/html/admin/" target="manual">'.lang('phpGroupWare Administration Manual').'</a>';
-			$detected .= '<tr><td colspan="2"><p><b>'.lang('Please consult the %1.',$manual).'</b><br />&nbsp;</td></tr>'. "\n";
+			$detected .= '<tr><td colspan="2"><p><strong>' . lang('Please consult the %1.', $manual) . "</strong></td></tr>\n";
 
-			$detected .= '<tr class="th"><td colspan="2">' . lang('Analysis') . '</td></tr><tr><td colspan="2">'. "\n";
+			$detected .= '<tr class="th"><td colspan="2">' . lang('Analysis') . "</td></tr><tr><td colspan=\"2\">\n<ul id=\"analysis\">\n$phpver";
 
 			$supported_db = array();
 			if (extension_loaded('mysql') || function_exists('mysql_connect'))
 			{
-				$detected .= lang('You appear to have MySQL support enabled') . '<br />' . "\n";
+				$detected .= '<li>' . lang('You appear to have MySQL support enabled') . "</li>\n";
 				$supported_db[] = 'mysql';
 			}
 			else
 			{
-				$detected .= lang('No MySQL support found. Disabling') . '<br />' . "\n";
+				$detected .= '<li class="warn">' . lang('No MySQL support found. Disabling') . "</li>\n";
 			}
 			if (extension_loaded('pgsql') || function_exists('pg_connect'))
 			{
-				$detected .= lang('You appear to have Postgres-DB support enabled') . '<br />' . "\n";
+				$detected .= '<li>' . lang('You appear to have Postgres-DB support enabled') . "</li>\n";
 				$supported_db[]  = 'postgres';
 			}
 			else
 			{
-				$detected .= lang('No Postgres-DB support found. Disabling') . '<br />' . "\n";
+				$detected .= '<li class="warn">' . lang('No Postgres-DB support found. Disabling') . "</li>\n";
 			}
 			if (extension_loaded('mssql') || function_exists('mssql_connect'))
 			{
-				$detected .= lang('You appear to have Microsoft SQL Server support enabled') . '<br />' . "\n";
+				$detected .= '<li>' . lang('You appear to have Microsoft SQL Server support enabled') . "</li>\n";
 				$supported_db[] = 'mssql';
 			}
 			else
 			{
-				$detected .= lang('No Microsoft SQL Server support found. Disabling') . '<br />' . "\n";
+				$detected .= '<li class="warn">' . lang('No Microsoft SQL Server support found. Disabling') . "</li>\n";
 			}
 			if (extension_loaded('oci8'))
 			{
-				$detected .= lang('You appear to have Oracle V8 (OCI) support enabled') . '<br />' . "\n";
+				$detected .= '<li>' . lang('You appear to have Oracle V8 (OCI) support enabled') . "</li>\n";
 				$supported_db[] = 'oracle';
 			}
 			else
 			{
 				if(extension_loaded('oracle'))
 				{
-					$detected .= lang('You appear to have Oracle support enabled') . '<br />' . "\n";
+					$detected .= '<li>' . lang('You appear to have Oracle support enabled') . "</li>\n";
 					$supported_db[] = 'oracle';
 				}
 				else
 				{
-					$detected .= lang('No Oracle-DB support found. Disabling') . '<br />' . "\n";
+					$detected .= '<li class="warn">' . lang('No Oracle-DB support found. Disabling') . "</li>\n";
 				}
 			}
+
+			/* Not currently supported
 			if (extension_loaded('odbc') || function_exists('odbc_connect'))
 			{
 				$detected .= lang('You appear to have ODBC/SAPDB support enabled') . '<br />' . "\n";
@@ -273,14 +276,15 @@
 			{
 				$detected .= lang('No ODBC/SAPDB support found. Disabling') . '<br />' . "\n";
 			}
+			*/
 			if(!count($supported_db))
 			{
-				$detected .= '<b><p align="center" class="msg">'
+				$detected .= '<li class="err"'
 					. lang('Did not find any valid DB support!')
-					. "<br />\n"
+					. "</li>\n</ul>\n"
 					. lang('Try to configure your php to support one of the above mentioned DBMS, or install phpGroupWare by hand.')
-					. '</p></b><td></tr></table></body></html>';
-				echo $detected;
+					. '</b><td></tr></table></body></html>';
+				die($detected);
 				exit;
 			}
 
@@ -298,31 +302,31 @@
 
 			if(extension_loaded('imap') || function_exists('imap_open'))
 			{
-				$detected .= lang('You appear to have IMAP support enabled') . '<br />' . "\n";
+				$detected .= '<li>' . lang('You appear to have IMAP support enabled') . "</li>\n";
 			}
 			else
 			{
-				$detected .= lang('No IMAP support found. Disabling IMAP email access') . '<br />' . "\n";
+				$detected .= '<li class="warn">' . lang('No IMAP support found. Email functions will be disabled') . "</li>\n";
 			}
 
 			$no_guess = False;
 			if(file_exists('../header.inc.php') && is_file('../header.inc.php') && is_readable('../header.inc.php'))
 			{
-				$detected .= lang('Found existing configuration file. Loading settings from the file...') . '<br />' . "\n";
+				$detected .= '<li>' . lang('Found existing configuration file. Loading settings from the file...') . "</li>\n";
 				$GLOBALS['phpgw_info']['flags']['noapi'] = True;
 				$no_guess = true;
 				/* This code makes sure the newer multi-domain supporting header.inc.php is being used */
 				if(!isset($GLOBALS['phpgw_domain']))
 				{
-					$detected .= lang("You're using an old configuration file format...") . '<br />' . "\n";
-					$detected .= lang('Importing old settings into the new format....') . '<br />' . "\n";
+					$detected .= '<li class="warn">' . lang("You're using an old configuration file format...") . "</li>\n";
+					$detected .= '<li>' . lang('Importing old settings into the new format....') . "</li>\n";
 				}
 				else
 				{
 					if(@$GLOBALS['phpgw_info']['server']['header_version'] != @$GLOBALS['phpgw_info']['server']['current_header_version'])
 					{
-						$detected .= lang("You're using an old header.inc.php version...") . '<br />' . "\n";
-						$detected .= lang('Importing old settings into the new format....') . '<br />' . "\n";
+						$detected .= '<li class="warn">' . lang("You're using an old header.inc.php version...") . "</li>\n";
+						$detected .= '<li>' . lang('Importing old settings into the new format....') . "</li>\n";
 					}
 					reset($GLOBALS['phpgw_domain']);
 					$default_domain = each($GLOBALS['phpgw_domain']);
@@ -330,7 +334,7 @@
 					unset($default_domain); // we kill this for security reasons
 					$GLOBALS['phpgw_info']['server']['config_passwd'] = $GLOBALS['phpgw_domain'][$GLOBALS['phpgw_info']['server']['default_domain']]['config_passwd'];
 
-					if(@$_POST['adddomain'])
+					if ( phpgw::get_var('adddomain', 'string', 'POST') )
 					{
 						$GLOBALS['phpgw_domain'][lang('new')] = array();
 					}
@@ -391,7 +395,7 @@
 			}
 			else
 			{
-				$detected .= lang('Sample configuration not found. using built in defaults') . '<br />' . "\n";
+				$detected .= '<li class="warn">' . lang('Sample configuration not found. using built in defaults') . "</li>\n";
 				$GLOBALS['phpgw_info']['server']['server_root'] = realpath('../'); //'/path/to/phpgroupware';
 				$GLOBALS['phpgw_info']['server']['include_root'] = realpath('../');//'/path/to/phpgroupware';
 				/* This is the basic include needed on each page for phpGroupWare application compliance */
@@ -444,13 +448,14 @@
 			// now guessing better settings then the default ones 
 			if(!$no_guess)
 			{
-				$detected .= lang('Now guessing better values for defaults...') . '<br />' . "\n";
+				$detected .= '<li>' . lang('Now guessing better values for defaults...') . "</li>\n";
 				$this_dir = dirname($_SERVER['SCRIPT_FILENAME']);
 				$updir    = realpath('../'); //str_replace('/setup','',$this_dir);
 				$GLOBALS['phpgw_info']['server']['server_root'] = $updir; 
 				$GLOBALS['phpgw_info']['server']['include_root'] = $updir; 
 			}
 
+			$detected .= "</ul>\n";
 			$setup_tpl->set_var('detected',$detected);
 			/* End of detected settings, now display the form with the detected or prior values */
 

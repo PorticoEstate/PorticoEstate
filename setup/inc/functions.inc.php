@@ -314,7 +314,7 @@
 	*/
 	function lang_select($onChange = '')
 	{
-		$ConfigLang = get_var('ConfigLang', Array('POST','COOKIE'));
+		$ConfigLang = phpgw::get_var('ConfigLang');
 
 		$select = '<select name="ConfigLang"' . ($onChange ? ' onChange="this.form.submit();"' : '') . '>' . "\n";
 		$languages = get_langs();

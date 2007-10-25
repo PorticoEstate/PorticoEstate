@@ -6,6 +6,7 @@
 <b>!!!this will delete all existing accounts!!!</b><br>	setup	en	<b>!!!THIS WILL DELETE ALL EXISTING ACCOUNTS!!!</b><br>
 <b>note:</b> you must have cookies enabled to use setup and header admin!	setup	en	<b>NOTE:</b> You must have cookies enabled to use setup and header admin!
 <br><b>this will delete all existing accounts.</b>	setup	en	<br><b>This will delete all existing accounts.</b>
+<p class="msg">Your header.inc.php needs upgrading.<br />WARNING! MAKE BACKUPS!</p>	setup	en	<p class="msg">Your header.inc.php needs upgrading.<br />WARNING! MAKE BACKUPS!</p>
 actions	setup	en	Actions
 add a domain	setup	en	Add a domain
 add auto-created users to this group ('default' will be attempted if this is empty.)	setup	en	Add auto-created users to this group ('Default' will be attempted if this is empty.)

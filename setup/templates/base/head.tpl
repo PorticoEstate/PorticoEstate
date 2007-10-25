@@ -38,6 +38,7 @@
 
 			td, th
 			{
+				text-align: left;
 				vertical-align: top;
 			}
 
@@ -48,6 +49,7 @@
 			thead, tfoot, .th
 			{
 				background: #486591;
+				font-size: 14px;
 				font-weight: bold;
 				color: #fff;
 			}
@@ -67,9 +69,30 @@
 				width: 75%
 			}
 
+			#manageheader
+			{
+				margin: 0 auto; 
+				width: 750px;
+			}
+
 			#apps td
 			{
 				vertical-align: middle;
+			}
+
+			#analysis
+			{
+				list-style: none;
+				margin: 5px 0;
+				padding: 0;
+			}
+
+			#analysis li
+			{
+				background-color: #cdeb8b;
+				border: 1px solid #008c00;
+				margin: 2px;
+				padding: 3px;
 			}
 
 			.banner
@@ -128,7 +151,7 @@
 				background-color: #d99;
 			}
 
-			.row_err_gen_on
+			.row_err_gen_on, #analysis li.err
 			{
 				background-color: #fcc;
 			}
@@ -138,7 +161,7 @@
 				background-color: #fdd;
 			}
 
-			.row_err_gen_on a, .row_err_gen_off a
+			.row_err_gen_on a
 			{
 				color: #666;
 				font-weight: bold;
@@ -172,6 +195,18 @@
 			.row_upgrade_off
 			{
 				background-color: #ddf;
+			}
+
+			#analysis li.err
+			{
+				background-color: #fcc;
+				border: 1px solid #f00;
+			}
+
+			#analysis li.warn
+			{
+				background-color: #ff8;
+				border-color: #fc0;
 			}
 		-->
 		</style>
