@@ -31,10 +31,10 @@
 							<td>{lang_total}</td>
 						</tr>
 						{rows_access}
-						<tr class="bg_color">
+						<tr class="th">
 							<td colspan="5" align="left">{footer_total}</td>
 						</tr>
-						<tr class="bg_color">
+						<tr class="th">
 							<td colspan="5" align="left">{lang_percent}</td>
 						</tr>
 					</table>
@@ -46,7 +46,7 @@
 <!-- END list -->
 
 <!-- BEGIN row -->
-	<tr class="{tr_color}">
+	<tr class="{tr_class}">
 		<td>{row_loginid}</td>
 		<td>{row_ip}</td>
 		<td>{row_li}</td>
@@ -56,7 +56,7 @@
 <!-- END row -->
 
 <!-- BEGIN row_empty -->
-	<tr class="{tr_color}">
+	<tr class="{tr_class}">
 		<td align="center" colspan="5">{row_message}</td>
 	</tr>
 <!-- END row_empty -->

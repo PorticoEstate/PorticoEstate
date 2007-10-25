@@ -51,8 +51,8 @@
 
 			$total_records = $this->bo->total($account_id);
 
-			$var = Array(
-				'th_bg'       => $GLOBALS['phpgw_info']['theme']['th_bg'],
+			$var = array
+			(
 				'nextmatchs_left'  => $this->nextmatchs->left('/index.php',$start,$total_records,'&menuaction=admin.uiaccess_history.list_history&account_id=' . $account_id),
 				'nextmatchs_right' => $this->nextmatchs->right('/index.php',$start,$total_records,'&menuaction=admin.uiaccess_history.list_history&account_id=' . $account_id),
 				'showing'          => $this->nextmatchs->show_hits($total_records,$start),
@@ -80,25 +80,29 @@
 
 			$this->template->set_var($var);
 
-			$records = $this->bo->list_history($account_id,$start,$order,$sort);
-			while (is_array($records) && list(,$record) = each($records))
+			$records = $this->bo->list_history($account_id, $start, $order, $sort);
+			if ( is_array($records) )
 			{
-				$this->nextmatchs->template_alternate_row_color($this->template);
+				foreach ( $records as &$record )
+				{
+					$this->nextmatchs->template_alternate_row_class($this->template);
 
-				$var = array(
-					'row_loginid' => $record['loginid'],
-					'row_ip'      => $record['ip'],
-					'row_li'      => $record['li'],
-					'row_lo'      => $record['account_id'] ? $record['lo'] : '<b>'.lang($record['sessionid']).'</b>',
-					'row_total'   => ($record['lo']?$record['total']:'&nbsp;')
-				);
-				$this->template->set_var($var);
-				$this->template->fp('rows_access','row', true);
+					$var = array
+					(
+						'row_loginid' => $record['loginid'],
+						'row_ip'      => $record['ip'],
+						'row_li'      => $record['li'],
+						'row_lo'      => $record['account_id'] ? $record['lo'] : '<b>' . lang($record['sessionid']) . '</b>',
+						'row_total'   => ($record['lo'] ? $record['total'] : '&nbsp;')
+					);
+					$this->template->set_var($var);
+					$this->template->fp('rows_access','row', true);
+				}
 			}
 
 			if (! $total_records && $account_id)
 			{
-				$this->nextmatchs->template_alternate_row_color($this->template);
+				$this->nextmatchs->template_alternate_row_class($this->template);
 				$this->template->set_var('row_message',lang('No login history exists for this user'));
 				$this->template->fp('rows_access','row_empty', true);
 			}
@@ -114,8 +118,8 @@
 				$percent = '0';
 			}
 
-			$var = Array(
-				'bg_color'     => $GLOBALS['phpgw_info']['themes']['bg_color'],
+			$var = array
+			(
 				'footer_total' => lang('Total records') . ': ' . $total_records
 			);
 			if ($account_id)
