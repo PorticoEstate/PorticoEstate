@@ -241,8 +241,7 @@
 				{
 					foreach ( $value as &$val )
 					{
-						// we assume all elements are 'string's, as it is the safest option
-						$val = self::clean_value($val, 'string', $default); 
+						$val = self::clean_value($val, $value_type, $default); 
 					}
 				}
 				else
@@ -273,11 +272,11 @@
 				switch ( $value_type )
 				{
 					case 'bool':
-						if ( !!$value == $value )
+						if ( preg_match('/^[false|0|no]$/', $value) )
 						{
-								return !!$value;
+							$value = false;
 						}
-						$value = $default;
+						return !!$value;
 						break;
 
 					case 'float':
@@ -323,7 +322,7 @@
 					case 'filename':
 						if ( $value != '.' || $value != '..' )
 						{
-							$regex = array('options' => array('/^[a-z0-9_]+$/i'));
+							$regex = array('options' => array('regexp' => '/^[a-z0-9_]+$/i'));
 							$filtered =  filter_var($value, FILTER_VALIDATE_REGEXP, $regex);
 							if ( $filtered == $value )
 							{
@@ -335,6 +334,16 @@
 
 					case 'ip':
 						$filtered = filter_var($value, FILTER_VALIDATE_IP);
+						if ( $filtered == $value )
+						{
+								return $filtered;
+						}
+						$value = $default;
+						break;
+
+					case 'location':
+						$regex = array('options' => array('regexp' => '/^([a-z0-9_]+\.){2}[a-z0-9_]+$/i'));
+						$filtered =  filter_var($value, FILTER_VALIDATE_REGEXP, $regex);
 						if ( $filtered == $value )
 						{
 								return $filtered;
