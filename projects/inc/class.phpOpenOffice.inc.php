@@ -11,19 +11,22 @@
 // +----------------------------------------------------------------------+
 
 // Where is phpOpenOffice going to store the documents temporarly
-if (!defined('POO_TMP_PATH')) {
+if( !defined('POO_TMP_PATH') )
+{
   define('POO_TMP_PATH', '/tmp');
 }
 
 
 // Where are the OpenOffice templates
-if (!defined('POO_TEMPLATE_PATH')) {
+if( !defined('POO_TEMPLATE_PATH') )
+{
   define('POO_TEMPLATE_PATH', "");
 }
 
 // PhpConcept Library - Zip Module 2.0
 // http://www.phpconcept.net
-if (!defined('PCLZIP_INCLUDE_PATH')) {
+if( !defined('PCLZIP_INCLUDE_PATH') )
+{
   define('PCLZIP_INCLUDE_PATH',"pclzip/");
 }
 define( 'PCLZIP_TEMPORARY_DIR', POO_TMP_PATH );
@@ -33,29 +36,36 @@ require PCLZIP_INCLUDE_PATH . 'pclzip.lib.php';
 // Use zlib from PHPMyAdmin for writing zipped files,
 // because documents created with PclZip cannot be opened with OpenOffice
 // Needs to be fixed in later version.
-if (!defined('ZIPLIB_INCLUDE_PATH')) {
+if( !defined('ZIPLIB_INCLUDE_PATH') )
+{
   define('ZIPLIB_INCLUDE_PATH', "");
 }
 require ZIPLIB_INCLUDE_PATH . 'zip.lib.php';
 
 
 // How are variables defined within the document
-if (!defined('POO_VAR_PREFIX')) {
+if( !defined('POO_VAR_PREFIX') )
+{
   define('POO_VAR_PREFIX', '%');
 }
 
-if (!defined('POO_VAR_SUFFIX')) {
+if ( !defined('POO_VAR_SUFFIX') )
+{
   define('POO_VAR_SUFFIX', '%');
 }
 
 
 // Callback function for pclzip
 $archiveFiles = array();
-function ooPreAdd($p_event, &$p_header)
+function ooPreAdd( $p_event, &$p_header )
 {
 	global $archiveFiles;
-	if($p_header['folder'] == 0)
+
+	if( $p_header['folder'] == 0 )
+	{
 		$archiveFiles[] = $p_header["stored_filename"];
+	}
+
 	return 0;
 }
 
@@ -71,9 +81,9 @@ class phpOpenOffice
 
 
 	// Load document from filesystem
-	function loadDocument($filename)
+	function loadDocument( $filename )
 	{
-		if(!file_exists($filename))
+		if( !file_exists($filename) )
 		{
 			$this->handleError("File not found: ".$filename, E_USER_ERROR);
 		}
@@ -84,11 +94,12 @@ class phpOpenOffice
 
 
 		// Find a random folder name for PCLZIP_OPT_ADD_PATH
-		$this->tmpDirName = $this->getRandomString(16);
-		$this->mimetypeFile = POO_TMP_PATH."/".$this->tmpDirName."/mimetype";
+		$this->tmpDirName	= $this->getRandomString(16);
+		$this->mimetypeFile	= POO_TMP_PATH . "/" . $this->tmpDirName . "/mimetype";
+
 		$this->parserFiles = array();
-		$this->parserFiles["content.xml"] = POO_TMP_PATH."/".$this->tmpDirName."/content.xml";
-		$this->parserFiles["styles.xml"] = POO_TMP_PATH."/".$this->tmpDirName."/styles.xml";
+		$this->parserFiles["content.xml"]	= POO_TMP_PATH . "/" . $this->tmpDirName . "/content.xml";
+		$this->parserFiles["styles.xml"]	= POO_TMP_PATH . "/" . $this->tmpDirName . "/styles.xml";
 
 
 		// Open archive and extract content.xml
@@ -98,24 +109,24 @@ class phpOpenOffice
 
 
 	// Put variables into extracted content file
-	function parse($variables)
+	function parse( $variables )
 	{
 		// Has file been extracted ?
-		if($this->tmpDirName == "")
+		if( $this->tmpDirName == "" )
 		{
 			$this->handleError("No document loaded. Use loadDocument function first.", E_USER_ERROR);
 		}
 
 
 		// Is dir still there
-		if(!is_dir(POO_TMP_PATH."/".$this->tmpDirName))
+		if( !is_dir(POO_TMP_PATH . "/" . $this->tmpDirName) )
 		{
 			$this->handleError("Directory not found: ".$this->tmpDirName, E_USER_ERROR);
 		}
 
 
 		// Is argument valid ?
-		if(!is_array($variables))
+		if( !is_array($variables) )
 		{
 			$this->handleError("First parameter need to been an array.", E_USER_ERROR);
 		}
@@ -129,13 +140,13 @@ class phpOpenOffice
 
 		// Open files and start parsing
 		$parsedDocuments = array();
-		foreach (array_keys($this->parserFiles) as $file)
+		foreach( array_keys($this->parserFiles) as $file )
 		{
 			$fp = fopen($this->parserFiles[$file], "r");
 			$this->parsedDocuments[$file] = fread($fp, filesize($this->parserFiles[$file]));
 			fclose($fp);
 
-			foreach(array_keys($variables) as $key)
+			foreach( array_keys($variables) as $key )
 			{
 				$value = $this->xmlencode( $variables[$key] );
 				$this->parsedDocuments[$file] = str_replace(POO_VAR_PREFIX.$key.POO_VAR_SUFFIX, $value, $this->parsedDocuments[$file]);
@@ -145,10 +156,9 @@ class phpOpenOffice
 
 
 	// encode string xml compatible
-	function xmlencode($param)
+	function xmlencode( $param )
 	{
 		$xml = $param;
-
 		$xml = str_replace("&", "&amp;", $xml);
 		$xml = str_replace(">", "&gt;", $xml);
 		$xml = str_replace("<", "&lt;", $xml);
@@ -160,27 +170,26 @@ class phpOpenOffice
 	}
 
 	// Save parsed document
-	function savefile($filename)
+	function savefile( $filename )
 	{
 		global $archiveFiles;
 
-
 		// Has file been extracted ?
-		if($this->tmpDirName == "")
+		if( $this->tmpDirName == "" )
 		{
 			$this->handleError("No document loaded. Use loadDocument function first.", E_USER_ERROR);
 		}
 
 
 		// Is dir still there
-		if(!is_dir(POO_TMP_PATH."/".$this->tmpDirName))
+		if( !is_dir(POO_TMP_PATH . "/" . $this->tmpDirName) )
 		{
 			$this->handleError("Directory not found: ".$this->tmpDirName, E_USER_ERROR);
 		}
 
 
 		//Overwrite parsed documents
-		foreach (array_keys($this->parserFiles) as $file)
+		foreach( array_keys($this->parserFiles) as $file )
 		{
 			$fp = fopen($this->parserFiles[$file], "w+");
 			fputs($fp, $this->parsedDocuments[$file]);
@@ -197,7 +206,7 @@ class phpOpenOffice
 
 
 		// Add specials files without compression
-		for($i = 0; $i < count($archiveFiles); $i++)
+		for( $i = 0; $i < count($archiveFiles); $i++ )
 		{
 			$file = $archiveFiles[$i];
 
@@ -211,7 +220,6 @@ class phpOpenOffice
 			}
 			*/
 
-
 			// zip.lib dirty hack
 			$fp = fopen(POO_TMP_PATH."/".$this->tmpDirName."/".$file, "r");
 			$content = fread($fp, filesize(POO_TMP_PATH."/".$this->tmpDirName."/".$file));
@@ -219,24 +227,24 @@ class phpOpenOffice
 			$zip->addFile($content, $file);
 		}
 
-
 		// Finally write file to disk => zip.lib dirty hack
 		$fp = fopen($filename, "w+");
 		fputs($fp, $zip->file());
 		fclose($fp);
 	}
 
-
-
-	function download($filename)
+	function download( $filename )
 	{
 		// Build filename and save file temporarly to harddisk
-		if($filename == "") $filename = $this->getRandomString(16);
-		$info = pathinfo($this->zipFile);
-		$fullfile = $filename.".".$info["extension"];
-		$downloadFile = POO_TMP_PATH."/".$fullfile;
-		$this->savefile($downloadFile);
+		if( $filename == "" )
+		{
+			$filename = $this->getRandomString(16);
+		}
 
+		$info = pathinfo($this->zipFile);
+		$fullfile = $filename . "." . $info["extension"];
+		$downloadFile = POO_TMP_PATH . "/" . $fullfile;
+		$this->savefile($downloadFile);
 
 		// Read temp file
 		$fp = fopen($downloadFile, "r");
@@ -245,17 +253,17 @@ class phpOpenOffice
 
 
 		// Build HTTP header and send file
-		header("Expires: ".date("D, d M Y H:i:s", time() - 24 * 60 * 60)." GMT");	// expires in the past
-		header("Last-Modified: ".gmdate("D, d M Y H:i:s")." GMT");			// Last modified, right now
+		header("Expires: " . date("D, d M Y H:i:s", time() - 24 * 60 * 60) . " GMT");	// expires in the past
+		header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT");			// Last modified, right now
 		header("Cache-Control: no-cache, must-revalidate");				// Prevent caching, HTTP/1.1
 		header("Pragma: no-cache");
-		header("Content-Type: ".$this->mimetype);
-		header('Content-Length: '.filesize($downloadFile));
+		header("Content-Type: " . $this->mimetype);
+		header('Content-Length: ' . filesize($downloadFile));
 		header('Content-Transfer-Encoding: binary');
 
 
 		// (Browser specific)
-		$browser = $_SERVER["HTTP_USER_AGENT"];
+		$browser = $_SERVER["HTTP_USER_AGENT"];
 		if( preg_match('/MSIE 5.5/', $browser) || preg_match('/MSIE 6.0/', $browser) )
 		{
 			header('Content-Disposition: filename="'.$fullfile.'"');
@@ -265,69 +273,69 @@ class phpOpenOffice
 			header('Content-Disposition: attachment; filename="'.$fullfile.'"');
 		}
 
-
 		// Data
 		echo $content;
 
-		
 		// Delete temp file
 		unlink($downloadFile);
 	}
-
 
 	// Cleans up filesystem after job is done
 	function clean()
 	{
 		if($this->tmpDirName == "")
+		{
 			return;
-		$tmpPath = POO_TMP_PATH."/".$this->tmpDirName;
+		}
+
+		$tmpPath = POO_TMP_PATH . "/" . $this->tmpDirName;
 		$this->deldir($tmpPath);
 	}
 
-
 	// Returns random string..easy, eh ?
-	function getRandomString($length)
+	function getRandomString( $length )
 	{
 		srand(date("s"));
-		$possible_charactors = "abcdefghijklmnopqrstuvwxyz1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+		$possible_chars = "abcdefghijklmnopqrstuvwxyz1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 		$string = "";
-		while(strlen($string)<$length)
+		while( strlen($string) < $length )
 		{
-			$string .= substr($possible_charactors, rand()%(strlen($possible_charactors)), 1);
+			$string .= substr($possible_chars, rand()%(strlen($possible_chars)), 1);
 		}
 		return($string);
 	}
 
-
 	// Default error handler
-	function handleError($errorMessage, $errorType = E_USER_WARNING)
+	function handleError( $errorMessage, $errorType = E_USER_WARNING )
 	{
 		$prefix = 'phpOpenOffice ' . (($errorType == E_USER_ERROR) ? 'Error' : 'Warning') . ': ';
 		echo $prefix . $errorMessage;
 
-		if($errorType == E_USER_ERROR) die;
-    	}
-
+		if( $errorType == E_USER_ERROR )
+		{
+			die;
+		}
+    }
 
 	// Borrowed from marcelognunez at hotmail dot com
-	function deldir($dir)
+	function deldir( $dir )
 	{
 		$current_dir = opendir($dir);
-		while($entryname = readdir($current_dir))
+
+		while( $entryname = readdir($current_dir) )
 		{
-			if(is_dir("$dir/$entryname") and ($entryname != "." and $entryname!=".."))
+			if( is_dir("$dir/$entryname") and ($entryname != "." and $entryname!="..") )
 			{
 				$this->deldir("${dir}/${entryname}");
 			}
-			elseif($entryname != "." and $entryname!="..")
+			elseif( $entryname != "." and $entryname!=".." )
 			{
 				unlink("${dir}/${entryname}");
+			}
 		}
-		}
+
 		closedir($current_dir);
 		rmdir(${dir});
 	}
-
 }
-
 ?>
