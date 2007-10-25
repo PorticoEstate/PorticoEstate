@@ -13,9 +13,10 @@
 	$GLOBALS['phpgw_info']['flags'] = array
 	(
 		'currentapp' => 'projects',
-		'noheader'   => True,
-		'nonavbar'   => True
+		'noheader'   => true,
+		'nonavbar'   => true
 	);
+
 	include('../header.inc.php');
 
 	$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=>'projects.uiprojects.list_projects','action'=>'mains'));

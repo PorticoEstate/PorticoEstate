@@ -21,24 +21,24 @@
 
 		var $public_functions = array
 		(
-			'edit_activity'					=> True,
-			'list_activities'				=> True,
-			'list_admins'					=> True,
-			'list_roles'					=> True,
-			'config_accounting'	  => True,
-			'edit_admins'					=> True,
-			//'abook'							=> True,
-			'preferences'					=> True,
-			'delete_pa'						=> True,
-			'list_events'					=> True,
-			'edit_employee_factor'			=> True,
-			'list_surcharges'				=> True,
-			'config_worktime_statusmail'  => True,
-			'config_workhours_booking'    => True,
-			'config_worktime_warnmail'    => True,
-			'config_proid_help_msg'       => True,
-			'config_employees'            => True,
-			'config_locations'            => True
+			'edit_activity'					=> true,
+			'list_activities'				=> true,
+			'list_admins'					=> true,
+			'list_roles'					=> true,
+			'config_accounting'				=> true,
+			'edit_admins'					=> true,
+			//'abook'							=> true,
+			'preferences'					=> true,
+			'delete_pa'						=> true,
+			'list_events'					=> true,
+			'edit_employee_factor'			=> true,
+			'list_surcharges'				=> true,
+			'config_worktime_statusmail'  => true,
+			'config_workhours_booking'    => true,
+			'config_worktime_warnmail'    => true,
+			'config_proid_help_msg'       => true,
+			'config_employees'            => true,
+			'config_locations'            => true
 		);
 
 		function uiconfig()
@@ -57,14 +57,15 @@
 
 			$this->siteconfig	= $this->boconfig->boprojects->siteconfig;
 
-			if(!is_object($GLOBALS['phpgw']->js))
+			if( !is_object($GLOBALS['phpgw']->js) )
 			{
 				$GLOBALS['phpgw']->js = createObject('phpgwapi.javascript');
 			}
+
 			$GLOBALS['phpgw']->js->validate_file('common','popup');
 		}
 
-		function save_sessiondata($action)
+		function save_sessiondata( $action )
 		{
 			$data = array
 			(
@@ -80,9 +81,9 @@
 
 		function set_app_langs()
 		{
-			$GLOBALS['phpgw']->template->set_var('th_bg',$GLOBALS['phpgw_info']['theme']['th_bg']);
-			$GLOBALS['phpgw']->template->set_var('row_on',$GLOBALS['phpgw_info']['theme']['row_on']);
-			$GLOBALS['phpgw']->template->set_var('row_off',$GLOBALS['phpgw_info']['theme']['row_off']);
+			$GLOBALS['phpgw']->template->set_var('th_bg', $GLOBALS['phpgw_info']['user']['preferences']['common']['theme']['th_bg']);
+			$GLOBALS['phpgw']->template->set_var('row_on', $GLOBALS['phpgw_info']['user']['preferences']['common']['theme']['row_on']);
+			$GLOBALS['phpgw']->template->set_var('row_off', $GLOBALS['phpgw_info']['user']['preferences']['common']['theme']['row_off']);
 
 			$GLOBALS['phpgw']->template->set_var('lang_category',lang('Category'));
 			$GLOBALS['phpgw']->template->set_var('lang_select',lang('Select'));
@@ -160,11 +161,11 @@
 
 			$GLOBALS['phpgw']->template->set_var('lang_descr',lang('description'));
 			$GLOBALS['phpgw']->template->set_var('lang_surcharge',lang('surcharge'));
-			
+
 			$GLOBALS['phpgw']->template->set_var('opt_off_desc',lang('off'));
 			$GLOBALS['phpgw']->template->set_var('opt_weekly_desc',lang('weekly'));
 			$GLOBALS['phpgw']->template->set_var('opt_monthly_desc',lang('monthly'));
-			
+
 			$GLOBALS['phpgw']->template->set_var('cc_receiver',lang('cc-reciever (separating through commas)'));
 		}
 
@@ -325,16 +326,16 @@
 			$emps = $this->boconfig->read_accounting_factors();
 
 //--------------------------------- nextmatch --------------------------------------------
- 
+
 			$left = $this->nextmatchs->left('/index.php',$this->start,$this->boconfig->total_records,$link_data);
 			$right = $this->nextmatchs->right('/index.php',$this->start,$this->boconfig->total_records,$link_data);
 			//$GLOBALS['phpgw']->template->set_var('left',$left);
 			//$GLOBALS['phpgw']->template->set_var('right',$right);
 
     	//$GLOBALS['phpgw']->template->set_var('lang_showing',$this->nextmatchs->show_hits($this->boconfig->total_records,$this->start));
- 
+
 // ------------------------------ end nextmatch ------------------------------------------
- 
+
 //------------------- list header variable template-declarations -------------------------
 
 			$GLOBALS['phpgw']->template->set_var('sort_name',$this->nextmatchs->show_sort_order($this->sort,'account_id',$this->order,'/index.php',lang('employee'),$link_data));
@@ -351,7 +352,7 @@
 
 // -------------------------- end header declaration --------------------------------------
 			$emp_exists = array();
-			
+
 			if(is_array($emps))
 			{
 				for ($i=0;$i<count($emps);$i++)
@@ -367,7 +368,7 @@
 					{
 						$location_name = '';
 					}
-					
+
 					$GLOBALS['phpgw']->template->set_var(array
 					(
 						'emp_name'				=> $emps[$i]['account_name'],
@@ -466,13 +467,15 @@
 			$jscal = CreateObject('phpgwapi.jscalendar');
 			if ($values['save'])
 			{
-				if(is_array($sdate))
+				if( is_array($sdate) )
 				{
 					$start_array		= $jscal->input2date($sdate['str']);
 					$values['sdate']	= $start_array['raw'];
 				}
+
 				//_debug_array($start_array);
-				if(isset($edate['str']) && ($edate['str'] != ''))
+
+				if( isset($edate['str']) && ($edate['str'] != '') )
 				{
 					$end_array			= $jscal->input2date($edate['str']);
 					$values['edate']	= $end_array['raw'] + 86399; // 23:59:59 for enddate;
@@ -482,9 +485,11 @@
 					$values['edate'] = '';
 				}
 				$values['id'] = $id;
+
 				//_debug_array($values);
+
 				$error = $this->boconfig->check_pa_values($values,'accounting');
-				if(is_array($error))
+				if( is_array($error) )
 				{
 					$GLOBALS['phpgw']->template->set_var('message',$GLOBALS['phpgw']->common->error_list($error));
 				}
@@ -498,32 +503,35 @@
 
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('projects') . ': ' . lang('accounting');
 			$GLOBALS['phpgw']->common->phpgw_header();
+
 			echo parse_navbar();
+
 			$GLOBALS['phpgw']->template->set_root(PHPGW_APP_TPL);
 			$this->set_app_langs();
 
 			$GLOBALS['phpgw']->template->set_file(array('emp_form' => 'form_emp_factor.tpl'));
 			$GLOBALS['phpgw']->template->set_var('action_url',$GLOBALS['phpgw']->link('/index.php',$link_data));
 
-			if($id)
+			if( $id )
 			{
 				$values = $this->boconfig->read_single_afactor($id);
 			}
 
-			$GLOBALS['phpgw']->template->set_var('accounting',$values['accounting']);
-			$GLOBALS['phpgw']->template->set_var('d_accounting',$values['d_accounting']);
-			$GLOBALS['phpgw']->template->set_var('lang_save_factor',lang('save factor'));
-			$GLOBALS['phpgw']->template->set_var('weekly_workhours',lang('weekly workhours'));
-			$GLOBALS['phpgw']->template->set_var('cost_centre',lang('cost centre'));
-			$GLOBALS['phpgw']->template->set_var('weekly_workhours_num',$values['weekly_workhours']);
-			$GLOBALS['phpgw']->template->set_var('cost_centre_num',$values['cost_centre']);
-			$GLOBALS['phpgw']->template->set_var('lang_location',lang('location'));
-			
+			$GLOBALS['phpgw']->template->set_var('accounting', $values['accounting']);
+			$GLOBALS['phpgw']->template->set_var('d_accounting', $values['d_accounting']);
+			$GLOBALS['phpgw']->template->set_var('lang_save_factor', lang('save factor'));
+			$GLOBALS['phpgw']->template->set_var('weekly_workhours', lang('weekly workhours'));
+			$GLOBALS['phpgw']->template->set_var('cost_centre', lang('cost centre'));
+			$GLOBALS['phpgw']->template->set_var('weekly_workhours_num', $values['weekly_workhours']);
+			$GLOBALS['phpgw']->template->set_var('cost_centre_num', $values['cost_centre']);
+			$GLOBALS['phpgw']->template->set_var('lang_location', lang('location'));
+
 			$location_select = '<option value="0"></option>';
 			$locations = $this->boconfig->get_locations();
-			foreach($locations as $location)
+
+			foreach( $locations as $location )
 			{
-				if($values['location_id'] == $location['location_id'])
+				if( $values['location_id'] == $location['location_id'] )
 				{
 					$selected = ' selected="selected"';
 				}
@@ -531,39 +539,46 @@
 				{
 					$selected = '';
 				}
-				$location_select .= '<option value="'.$location['location_id'].'"'.$selected.'>'.$location['location_name'].'</option>';
+				$location_select .= '<option value="' . $location['location_id'] . '"' . $selected . '>' . $location['location_name'] . '</option>';
 			}
-			
-			$GLOBALS['phpgw']->template->set_var('location_select',$location_select);
-			
-			$GLOBALS['phpgw']->accounts->get_account_name($values['account_id'],$lid,$fname,$lname);
-			$fullname = $GLOBALS['phpgw']->common->display_fullname($lid,$fname,$lname);
+
+			$GLOBALS['phpgw']->template->set_var('location_select', $location_select);
+
+			$GLOBALS['phpgw']->accounts->get_account_name($values['account_id'], $lid, $fname, $lname);
+			$fullname = $GLOBALS['phpgw']->common->display_fullname($lid, $fname, $lname);
 			$GLOBALS['phpgw']->template->set_var('employee', $fullname);
 			$GLOBALS['phpgw']->template->set_var('account_id', $values['account_id']);
-
 			$GLOBALS['phpgw']->template->set_var('sdate_select',$jscal->input('sdate[str]',$values['sdate']));
 
-			if($values['edate'] == 0)
+			if( $values['edate'] == 0 )
 			{
 				$values['edate'] = '';
 			}
-			$GLOBALS['phpgw']->template->set_var('edate_select',$jscal->input('edate[str]',$values['edate']));
 
-			$GLOBALS['phpgw']->template->pfp('out','emp_form',True);
+			$GLOBALS['phpgw']->template->set_var('edate_select', $jscal->input('edate[str]', $values['edate']));
+			$GLOBALS['phpgw']->template->pfp('out', 'emp_form', true);
 		}
 
 		function delete_pa()
 		{
-			$action		= get_var('action',array('POST','GET'));
-			$pa_id		= intval(get_var('pa_id',array('POST','GET')));
+			$action	= isset($_REQUEST['action']) ? $_REQUEST['action'] : '';
+			$pa_id	= isset($_REQUEST['pa_id']) ? intval($_REQUEST['pa_id']) : '';
 
-			switch($action)
+			if( $action == 'act' )
 			{
-				case 'act':	$menu = 'projects.uiconfig.list_activities';
-							$deleteheader = lang('are you sure you want to delete this activity');
-							$header = lang('delete activity');
-							break;
+				$menu			= 'projects.uiconfig.list_activities';
+				$deleteheader	= lang('are you sure you want to delete this activity');
+				$header			= lang('delete activity');
 			}
+
+			/*switch( $action )
+			{
+				case 'act':
+					$menu = 'projects.uiconfig.list_activities';
+					$deleteheader = lang('are you sure you want to delete this activity');
+					$header = lang('delete activity');
+					break;
+			}*/
 
 			$link_data = array
 			(
@@ -572,7 +587,8 @@
 				'action'		=> $action
 			);
 
-			if ($_POST['yes'])
+			//if($_POST['yes'])
+			if( isset($_REQUEST['yes']) && $_REQUEST['yes'] )
 			{
 				$del = $pa_id;
 
@@ -652,7 +668,7 @@
 			}
 
 // ----------------- list header variable template-declarations ---------------------------
-  
+
 			$GLOBALS['phpgw']->template->set_var('currency',$GLOBALS['phpgw_info']['user']['preferences']['common']['currency']);
 			$GLOBALS['phpgw']->template->set_var('sort_num',$this->nextmatchs->show_sort_order($this->sort,'num',$this->order,'/index.php',lang('Activity ID')));
 			$GLOBALS['phpgw']->template->set_var('sort_descr',$this->nextmatchs->show_sort_order($this->sort,'descr',$this->order,'/index.php',lang('Description')));
@@ -676,7 +692,7 @@
 				}
 
 // ------------------- template declaration for list records -------------------------
-      
+
 				$GLOBALS['phpgw']->template->set_var(array('num'	=> $GLOBALS['phpgw']->strip_html($act[$i]['number']),
 										'descr' => $descr,
 									'billperae' => $act[$i]['billperae']));
@@ -860,16 +876,16 @@
 			//_debug_array($admins);
 
 //--------------------------------- nextmatch --------------------------------------------
- 
+
 			$left = $this->nextmatchs->left('/index.php',$this->start,$this->boconfig->total_records,$link_data);
 			$right = $this->nextmatchs->right('/index.php',$this->start,$this->boconfig->total_records,$link_data);
 			$GLOBALS['phpgw']->template->set_var('left',$left);
 			$GLOBALS['phpgw']->template->set_var('right',$right);
 
     		$GLOBALS['phpgw']->template->set_var('lang_showing',$this->nextmatchs->show_hits($this->boconfig->total_records,$this->start));
- 
+
 // ------------------------------ end nextmatch ------------------------------------------
- 
+
 //------------------- list header variable template-declarations -------------------------
 
 			$GLOBALS['phpgw']->template->set_var('sort_lid',lang('Username'));
@@ -938,7 +954,7 @@
 			$GLOBALS['phpgw']->common->phpgw_header();
 			echo parse_navbar();
 			$GLOBALS['phpgw']->template->set_root(PHPGW_APP_TPL);
-			
+
 			$this->set_app_langs();
 
 			$GLOBALS['phpgw']->template->set_file(array('admin_add' => 'form_admin.tpl'));
@@ -1007,16 +1023,16 @@
 			$roles = $this->boconfig->list_roles();
 
 //--------------------------------- nextmatch --------------------------------------------
- 
+
 			$left = $this->nextmatchs->left('/index.php',$this->start,$this->boconfig->total_records,$link_data);
 			$right = $this->nextmatchs->right('/index.php',$this->start,$this->boconfig->total_records,$link_data);
 			$GLOBALS['phpgw']->template->set_var('left',$left);
 			$GLOBALS['phpgw']->template->set_var('right',$right);
 
     		$GLOBALS['phpgw']->template->set_var('lang_showing',$this->nextmatchs->show_hits($this->boconfig->total_records,$this->start));
- 
+
 // ------------------------------ end nextmatch ------------------------------------------
- 
+
 //------------------- list header variable template-declarations -------------------------
 
 			$GLOBALS['phpgw']->template->set_var('sort_name',$this->nextmatchs->show_sort_order($this->sort,'role_name',$this->order,'/index.php',lang('name'),$link_data));
@@ -1270,7 +1286,7 @@
 
 			switch ($filter)
 			{
-				case 'none': break;		
+				case 'none': break;
 				case 'private': $qfilter .= ',access=private'; break;
 				case 'yours': $qfilter .= ',owner=' . $this->account; break;
 			}
@@ -1279,7 +1295,7 @@
 			{
 				$qfilter .= ',cat_id=' . $cat_id;
 			}
- 
+
 			$entries = $this->boprojects->read_abook($start, $query, $qfilter, $sort, $order);
 
 // --------------------------------- nextmatch ---------------------------
@@ -1321,7 +1337,7 @@
 				$company = $entries[$i]['org_name'];
 				if (!$company) { $company = '&nbsp;'; }
 
-// ---------------- template declaration for list records -------------------------- 
+// ---------------- template declaration for list records --------------------------
 
 				$GLOBALS['phpgw']->template->set_var(array('company' 	=> $company,
 									'firstname' 	=> $firstname,
@@ -1341,13 +1357,15 @@
 		{
 			//_debug_array($_POST['prefs']);
 			//_debug_array($GLOBALS['phpgw_info']['user']['preferences']);
-			if ($_POST['save'])
+			//if ($_POST['save'])
+			if( isset($_REQUEST['save']) && $_REQUEST['save'] )
 			{
 				$this->boconfig->save_prefs($_POST['prefs']);
 				$GLOBALS['phpgw']->redirect_link('/preferences/index.php');
 			}
 
-			if ($_POST['done'])
+			//if ($_POST['done'])
+			if( isset($_REQUEST['done']) && $_REQUEST['done'] )
 			{
 				$GLOBALS['phpgw']->redirect_link('/preferences/index.php');
 			}
@@ -1454,17 +1472,19 @@
 			                      )
 			                );
 
-			for ($i = 0; $i < count($columns); $i++)
+			$sel = '';
+			for( $i = 0; $i < count($columns); $i++ )
 			{
 				$selected = '';
 				if(is_array($prefs['columns']) && in_array($columns[$i]['id'], $prefs['columns']))
 				{
 					$selected = 'selected="selected"';
 				}
-				$sel .= '<option value="'.$columns[$i]['id'].'" '.$selected.'>'.$columns[$i]['name'].'</option>'."\n";
+				$sel .= '<option value="' . $columns[$i]['id'] . '" ' . $selected . '>' . $columns[$i]['name'] . '</option>' . "\n";
 			}
-			
-			for ($i = 0; $i < count($cscolumns); $i++)
+
+			$cssel = '';
+			for( $i = 0; $i < count($cscolumns); $i++ )
 			{
 				$selected = '';
 				if(is_array($prefs['cscolumns']) && in_array($cscolumns[$i]['id'], $prefs['cscolumns']))
@@ -1482,7 +1502,7 @@
 			$GLOBALS['phpgw']->template->set_var('mainscreen_checked',($prefs['mainscreen_showevents']==True?' checked="checked"':''));
 			$GLOBALS['phpgw']->template->set_var('worktime_statusmail_desc',lang('worktime statusmail'));
 			$GLOBALS['phpgw']->template->set_var('send_status_mail_checked', ($prefs['send_status_mail']==True?' checked="checked"':''));
-			
+
 			$GLOBALS['phpgw']->template->pfp('out','prefs');
 		}
 
@@ -1492,7 +1512,7 @@
 			$message = '&nbsp;';
 
 			$this->set_app_langs();
-			
+
 			if (isset($_POST['save']))
 			{
 				$values = array('action' => 'save', 'mail_type' => $mail_type);
@@ -1508,14 +1528,14 @@
 			}
 
 			$header_info = lang('config worktime statusmail');
-			
+
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('projects') . ': ' . $header_info;
 			$GLOBALS['phpgw']->common->phpgw_header();
 			echo parse_navbar();
 			$GLOBALS['phpgw']->template->set_root(PHPGW_APP_TPL);
-						
+
 			$GLOBALS['phpgw']->template->set_file(array('config' => 'config_worktime_statusmail.tpl'));
-			
+
 			$link_data['menuaction'] = 'projects.uiconfig.config_worktime_statusmail';
 			$GLOBALS['phpgw']->template->set_var('action_url',$GLOBALS['phpgw']->link('/index.php',$link_data));
 			$GLOBALS['phpgw']->template->set_var('worktime_statusmail_desc',lang('worktime statusmail'));
@@ -1530,7 +1550,7 @@
 
 			$values = array('action' => 'get');
 			$mail_type_selected = $this->boconfig->config_worktime_statusmail($values);
-			
+
 			switch($mail_type_selected)
 			{
 				case 'off':     $mail_type_off     = ' selected'; break;
@@ -1542,7 +1562,7 @@
 			$GLOBALS['phpgw']->template->set_var('selected_off',     $mail_type_off);
 			$GLOBALS['phpgw']->template->set_var('selected_weekly',  $mail_type_weekly);
 			$GLOBALS['phpgw']->template->set_var('selected_monthly', $mail_type_monthly);
-			
+
 			$GLOBALS['phpgw']->template->pfp('out','config');
 		}
 
@@ -1552,7 +1572,7 @@
 			$message = '&nbsp;';
 
 			$this->set_app_langs();
-			
+
 			if (isset($_POST['save']))
 			{
 				$values = array('action' => 'save', 'book_type' => $book_type);
@@ -1568,14 +1588,14 @@
 			}
 
 			$header_info = lang('config workhours booking');
-			
+
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('projects') . ': ' . $header_info;
 			$GLOBALS['phpgw']->common->phpgw_header();
 			echo parse_navbar();
 			$GLOBALS['phpgw']->template->set_root(PHPGW_APP_TPL);
-			
+
 			$GLOBALS['phpgw']->template->set_file(array('config' => 'config_workhours_booking.tpl'));
-			
+
 			$link_data['menuaction'] = 'projects.uiconfig.config_workhours_booking';
 			$GLOBALS['phpgw']->template->set_var('action_url',$GLOBALS['phpgw']->link('/index.php',$link_data));
 			$GLOBALS['phpgw']->template->set_var('workhours_booking_desc',lang('booking workhours on the specified work day of a month'));
@@ -1621,15 +1641,15 @@
 		{
 			$warnmail_type = get_var('warnmail_type',array('POST','GET'));
 			$warnmail_email_address = get_var('email_warnmail_address', array('POST','GET'));
-					
+
 			$message = '&nbsp;';
 
 			$this->set_app_langs();
-			
+
 			if (isset($_POST['save']))
 			{
 				$values = array('action' => 'save', 'warnmail_type' => $warnmail_type, 'warnmail_email_address' => $warnmail_email_address);
-							
+
 				if($this->boconfig->config_worktime_warnmail($values) == true)
 					$message = lang('setting has been saved');
 				else
@@ -1642,14 +1662,14 @@
 			}
 
 			$header_info = lang('config worktime warnmail');
-			
+
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('projects') . ': ' . $header_info;
 			$GLOBALS['phpgw']->common->phpgw_header();
 			echo parse_navbar();
 			$GLOBALS['phpgw']->template->set_root(PHPGW_APP_TPL);
-			
+
 			$GLOBALS['phpgw']->template->set_file(array('config' => 'config_worktime_warnmail.tpl'));
-			
+
 			$link_data['menuaction'] = 'projects.uiconfig.config_worktime_warnmail';
 			$GLOBALS['phpgw']->template->set_var('action_url',$GLOBALS['phpgw']->link('/index.php',$link_data));
 			//$GLOBALS['phpgw']->template->set_var('worktime_warnmail_desc',lang('Specify how many work days before monthly allowance you would like to send a warning'));
@@ -1679,22 +1699,22 @@
 			//  1 = one work day before monthly allowance
 			//  2 = two work days before monthly allowance
 			// ...
-			for($i=0; $i<=7; ++$i)			
+			for($i=0; $i<=7; ++$i)
 			{
 				if($warnmail_type_selected == $i)
-					$selected = ' selected';					
+					$selected = ' selected';
 				else
 					$selected = '';
-					
+
 				$option_list .= "<option value=\"".$i."\"".$selected.">".$i."</option>\n";
 			}
 			*/
 			if($warnmail_type_selected == 1)
-				$selected = ' selected';					
+				$selected = ' selected';
 			else
 				$selected = '';
 			$option_list .= "<option value=\"1\"".$selected.">".lang('active')."</option>\n";
-			
+
 			$selectbox = "<select name=\"warnmail_type\">\n".$option_list."</select>";
 			$GLOBALS['phpgw']->template->set_var('warnmail_type_selectbox', $selectbox);
 			$GLOBALS['phpgw']->template->set_var('warnmail_email_address', $warnmail_email_address);
@@ -1745,14 +1765,14 @@
 				{
 					$exist_location_id = 0;
 				}
-				
+
 				if(count($error) > 0)
-				{ // error 
+				{ // error
 					$message = $GLOBALS['phpgw']->common->error_list($error);
 					$submit = true;
 					if($values['location_id'] > 0)
 					{ // edit existing location
-						$location_id = $values['location_id'];						
+						$location_id = $values['location_id'];
 						$save = 0;
 						$edit = 1;
 					}
@@ -1808,7 +1828,7 @@
 				foreach($locations as $location)
 				{
 					$this->nextmatchs->template_alternate_row_class($GLOBALS['phpgw']->template);
-					
+
 					if($location_id == $location['location_id'])
 					{
 						$location['location_name'] = '<i>'.$location['location_name'].'</i>';

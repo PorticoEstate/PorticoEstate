@@ -12,21 +12,21 @@
 
 	{
 // Only Modify the $file and $title variables.....
-		$file = Array
+		$file = array
 		(
-			'Site Configuration'		=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=>'admin.uiconfig.index','appname'=> $appname)),
-			'Worktime statusmail'		=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=>'projects.uiconfig.config_worktime_statusmail')),
-			'Worktime warnmail'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=>'projects.uiconfig.config_worktime_warnmail')),
-			'Workhours booking'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=>'projects.uiconfig.config_workhours_booking')),
-			'managing committee'		=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=>'projects.uiconfig.list_admins','action'=>'pmanager')),
-			'project administrators'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=>'projects.uiconfig.list_admins','action'=>'pad')),
-			'sales department'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=>'projects.uiconfig.list_admins','action'=>'psale')),
-			'Global Categories'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=>'admin.uicategories.index','appname'=> $appname)),
-			'edit project id help msg'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=>'projects.uiconfig.config_proid_help_msg')),
-			'edit locations'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=>'projects.uiconfig.config_locations')),
-			'accounting'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=>'projects.uiconfig.config_accounting'))
+			'Site Configuration'		=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=>'admin.uiconfig.index','appname'=> $appname)),
+			'Worktime statusmail'		=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=>'projects.uiconfig.config_worktime_statusmail')),
+			'Worktime warnmail'			=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=>'projects.uiconfig.config_worktime_warnmail')),
+			'Workhours booking'			=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=>'projects.uiconfig.config_workhours_booking')),
+			'managing committee'		=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=>'projects.uiconfig.list_admins','action'=>'pmanager')),
+			'project administrators'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=>'projects.uiconfig.list_admins','action'=>'pad')),
+			'sales department'			=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=>'projects.uiconfig.list_admins','action'=>'psale')),
+			'Global Categories'			=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=>'admin.uicategories.index','appname'=> $appname)),
+			'edit project id help msg'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=>'projects.uiconfig.config_proid_help_msg')),
+			'edit locations'			=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=>'projects.uiconfig.config_locations')),
+			'accounting'				=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=>'projects.uiconfig.config_accounting'))
 		);
 //Do not modify below this line
-		display_section($appname,$appname,$file);
+		display_section($appname, $appname, $file);
 	}
 ?>

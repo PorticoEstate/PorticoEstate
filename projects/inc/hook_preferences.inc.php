@@ -1,6 +1,6 @@
 <?php
 	/**
-	* Project Manager - Project Prefs 
+	* Project Manager - Project Prefs
 	*
 	* @author Bettina Gille [ceb@phpgroupware.org]
 	* @copyright Copyright (C) 2000-2006 Free Software Foundation, Inc. http://www.fsf.org/
@@ -12,29 +12,34 @@
 
 	{
 		$title = $appname;
-		$file = Array
+		$file = array
 		(
-			'Preferences'     => $GLOBALS['phpgw']->link('/index.php',array('menuaction'=>'projects.uiconfig.preferences')),
-			'Grant Access'    => $GLOBALS['phpgw']->link('/index.php',array('menuaction'=>'preferences.uiaclprefs.index','acl_app'=>$appname)),
-			'Edit categories' => $GLOBALS['phpgw']->link('/index.php',array('menuaction'=>'preferences.uicategories.index','cats_app'=>'projects','cats_level'=>'True','global_cats'=>'True'))
+			'Preferences'     => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'projects.uiconfig.preferences')),
+			'Grant Access'    => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'preferences.uiaclprefs.index','acl_app'=>$appname)),
+			'Edit categories' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'preferences.uicategories.index','cats_app' => 'projects','cats_level' => 'True','global_cats' => 'True'))
 		);
 
 		$pro_soconfig = CreateObject('projects.soconfig');
-		if($pro_soconfig->isprojectadmin('pad') || $pro_soconfig->isprojectadmin('pmanager'))
+
+		if( $pro_soconfig->isprojectadmin('pad') || $pro_soconfig->isprojectadmin('pmanager') )
 		{
-			$afile = Array
+			$afile = array
 			(
-				'roles'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=>'projects.uiconfig.list_roles','action'=>'role')),
-				'events'		=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=>'projects.uiconfig.list_events')),
-				'surcharges'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=>'projects.uiconfig.list_surcharges'))
+				'roles'			=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'projects.uiconfig.list_roles', 'action'=>'role')),
+				'events'		=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'projects.uiconfig.list_events')),
+				'surcharges'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'projects.uiconfig.list_surcharges'))
 			);
+
 			unset($pro_soconfig);
 		}
 
-		if(is_array($afile))
+		if( isset($afile) && is_array($afile) && !empty($afile) )
 		{
 			$file += $afile;
 		}
-		display_section($appname,$title,$file);
+
+		//display_section($appname, $title, $file);
+		display_section($appname, $file);
+
 	}
 ?>

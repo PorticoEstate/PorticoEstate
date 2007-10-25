@@ -9,30 +9,30 @@
 	* $Source: /sources/phpgroupware/projects/inc/class.uiprojects_base.inc.php,v $
 	*/
 
-	define('PROJECT_LIST','pro_list');
-	define('PROJECT_VIEW','pro_view');
-	define('PROJECT_EDIT','pro_edit');
-	define('PROJECT_ADD','pro_add');
-	define('PROJECT_ADD_SUB','pro_add_sub');
+	define( 'PROJECT_LIST','pro_list' );
+	define( 'PROJECT_VIEW','pro_view' );
+	define( 'PROJECT_EDIT','pro_edit' );
+	define( 'PROJECT_ADD','pro_add' );
+	define( 'PROJECT_ADD_SUB','pro_add_sub' );
 
-	define('PROJECT_HOURS','pro_hours');
-	define('PROJECT_BUDGET','pro_budget');
-	define('PROJECT_ACTIVITIES','pro_activities');
-	define('PROJECT_GANTTCHART','pro_ganttchart');
-	define('PROJECT_EMPLOYEES','pro_employees');
+	define( 'PROJECT_HOURS','pro_hours' );
+	define( 'PROJECT_BUDGET','pro_budget' );
+	define( 'PROJECT_ACTIVITIES','pro_activities' );
+	define( 'PROJECT_GANTTCHART','pro_ganttchart' );
+	define( 'PROJECT_EMPLOYEES','pro_employees' );
 
-	define('PROJECT_PARENT','pro_parent');
+	define( 'PROJECT_PARENT','pro_parent' );
 
-	define('WORKTIME_LIST','wt_list');
-	define('WORKTIME_ADD','wt_add');
-	define('WORKTIME_VIEW','wt_view');
-	define('WORKTIME_EDIT','wt_edit');
-	define('WORKTIME_CONTROLLINGSHEET','wt_cs');
-	define('WORKTIME_TIMETRACKER','wt_tt');
-	define('WORKTIME_STATISTIC','wt_stat');
+	define( 'WORKTIME_LIST','wt_list' );
+	define( 'WORKTIME_ADD','wt_add' );
+	define( 'WORKTIME_VIEW','wt_view' );
+	define( 'WORKTIME_EDIT','wt_edit' );
+	define( 'WORKTIME_CONTROLLINGSHEET','wt_cs' );
+	define( 'WORKTIME_TIMETRACKER','wt_tt' );
+	define( 'WORKTIME_STATISTIC','wt_stat' );
 
-	define('ACT_REPORT','act_report');
-	define('EXPORT_DIAMANT','export_diamant');
+	define( 'ACT_REPORT','act_report' );
+	define( 'EXPORT_DIAMANT','export_diamant' );
 
 	class uiprojects_base
 	{
@@ -297,7 +297,7 @@
 			$GLOBALS['phpgw']->template->set_var('toolbar_name',  lang('Views'));
 			$GLOBALS['phpgw']->template->set_var('toolbar_icons', $icons);
 
-			$GLOBALS['phpgw']->template->fp('projects_menu','projects_menu_toolbar',True);
+			$GLOBALS['phpgw']->template->fp('projects_menu','projects_menu_toolbar', true);
 
 			// 3. controlling toolbar
 			$icons  = $this->CreateButton(WORKTIME_LIST);
@@ -314,26 +314,26 @@
 			$GLOBALS['phpgw']->template->set_var('toolbar_name',  lang('Controlling'));
 			$GLOBALS['phpgw']->template->set_var('toolbar_icons', $icons);
 
-			$GLOBALS['phpgw']->template->fp('projects_menu','projects_menu_toolbar',True);
+			$GLOBALS['phpgw']->template->fp('projects_menu','projects_menu_toolbar', true);
 
 			// 1. projectmanagement toolbar
 			$icons  = $this->CreateButton(PROJECT_ADD);
 			$icons .= $this->CreateButton(PROJECT_EDIT);
 			$icons .= $this->CreateButton(PROJECT_ADD_SUB);
 
-			if ($this->boprojects->isprojectadmin('pad') || $this->boprojects->isprojectadmin('pmanager'))
+			if ( $this->boprojects->isprojectadmin('pad') || $this->boprojects->isprojectadmin('pmanager') )
 			{
 				$icons .= $icon_sep;
 				$icons .= $this->CreateButton(EXPORT_DIAMANT);
 			}
 
-			$GLOBALS['phpgw']->template->set_var('toolbar_name',  lang('Actions'));
+			$GLOBALS['phpgw']->template->set_var('toolbar_name', lang('Actions'));
 			$GLOBALS['phpgw']->template->set_var('toolbar_icons', $icons);
 
-			$GLOBALS['phpgw']->template->fp('projects_menu','projects_menu_toolbar',True);
+			$GLOBALS['phpgw']->template->fp('projects_menu','projects_menu_toolbar', true);
 
 			$selectBox = $this->createSelectBox();
-			$GLOBALS['phpgw']->template->set_var('select_pro_action',  $selectBox['action']);
+			$GLOBALS['phpgw']->template->set_var('select_pro_action', $selectBox['action']);
 			$GLOBALS['phpgw']->template->set_var('select_pro_options', $selectBox['options']);
 
 			$GLOBALS['phpgw']->template->set_var('headline', $this->headline);
@@ -352,19 +352,19 @@
 				$GLOBALS['phpgw']->template->set_block('header','projects_header');
 				$GLOBALS['phpgw']->template->set_block('header','projects_admin_header');
 
-				if ($this->boprojects->isprojectadmin('pad') || $this->boprojects->isprojectadmin('pmanager'))
+				if ( $this->boprojects->isprojectadmin('pad') || $this->boprojects->isprojectadmin('pmanager') )
 				{
-					switch($this->siteconfig['accounting'])
+					switch( $this->siteconfig['accounting'] )
 					{
 						case 'activity':
 							$GLOBALS['phpgw']->template->set_var('link_accounting',$GLOBALS['phpgw']->link('/index.php',array('menuaction'=>'projects.uiconfig.list_activities','action'=>'act')));
 							$GLOBALS['phpgw']->template->set_var('lang_accounting',lang('Activities'));
 							break;
 						default:
-						  //open accounting page from admin section
+						  	//open accounting page from admin section
 							//$GLOBALS['phpgw']->template->set_var('link_accounting',$GLOBALS['phpgw']->link('/index.php',array('menuaction'=>'projects.uiconfig.config_accounting','action'=>'accounting')));
 							//$GLOBALS['phpgw']->template->set_var('lang_accounting',lang('Accounting'));
-					}
+					}
 					$GLOBALS['phpgw']->template->fp('admin_header','projects_admin_header');
 				}
 
@@ -381,42 +381,41 @@
 
 		function admin_header_info()
 		{
-			if ($this->boprojects->isprojectadmin('pad'))
+			if ( $this->boprojects->isprojectadmin('pad') )
 			{
-				$pa = True;
+				$pa = true;
 			}
 
-			if ($this->boprojects->isprojectadmin('pmanager'))
+			if ( $this->boprojects->isprojectadmin('pmanager') )
 			{
-				$pm = True;
+				$pm = true;
 			}
 
-			if ($this->boprojects->isprojectadmin('psale'))
+			if ( $this->boprojects->isprojectadmin('psale') )
 			{
-				$ps = True;
-			}
-			return ($pa?'&nbsp;&gt;&nbsp;' . lang('administrator'):'') . ($pm?'&nbsp;&gt;&nbsp;' . lang('manager'):'')
-					. ($ps?'&nbsp;&gt;&nbsp;' . lang('salesman'):'');
+				$ps = true;
+			}
+			return ($pa ? '&nbsp;&gt;&nbsp;' . lang('administrator') : '') . ($pm ? '&nbsp;&gt;&nbsp;' . lang('manager') : '') . ($ps ? '&nbsp;&gt;&nbsp;' . lang('salesman') : '');
 		}
 
 
-		function createIcon($targetView, $showToolTip=true, $showText=false)
+		function createIcon( $targetView, $showToolTip = true, $showText = false )
 		{
-			switch($targetView)
+			switch( $targetView )
 			{
 				case PROJECT_PARENT:
 					if(!$this->pro_main)
 					{
-						$buttonInActive = True;
+						$buttonInActive = true;
 					}
-				break;
+					break;
 				default:
-					return False;
+					return false;
 			}
 
 			$guiId = 'button_'.$targetView;
 
-			if($showToolTip)
+			if( $showToolTip )
 			{
 				$linkToolTip = $this->getText($guiId.'_tooltip');
 			}
@@ -425,20 +424,20 @@
 				$linkToolTip = '';
 			}
 
-			if($showText)
+			if( $showText )
 			{
-				$linkText = $this->getText($guiId.'_text');
+				$linkText = $this->getText($guiId . '_text');
 			}
 			else
 			{
 				$linkText = '';
 			}
 
-			if($buttonInActive)
+			if( $buttonInActive )
 			{
 				$buttonClass = 'menu_icon_inactive';
 			}
-			elseif($buttonActive)
+			elseif( $buttonActive )
 			{
 				$buttonClass = 'menu_icon_active';
 			}
@@ -447,14 +446,14 @@
 				$buttonClass = 'menu_icon';
 			}
 
-			if($buttonInActive)
+			if( $buttonInActive )
 			{
-				$link = '<div class="'.$buttonClass.'"><a class="'.$buttonClass.'" title="'.$linkToolTip.'"><img src="'.$GLOBALS['phpgw']->common->image('projects', $guiId).'" class="'.$buttonClass.'" alt="'.$linkToolTip.'">'.$linkText.'</a></div>';
+				$link = '<div class="' . $buttonClass . '"><a class="' . $buttonClass . '" title="' . $linkToolTip . '"><img src="' . $GLOBALS['phpgw']->common->image('projects', $guiId) . '" class="' . $buttonClass . '" alt="' . $linkToolTip . '">' . $linkText . '</a></div>';
 			}
 			else
 			{
 				$viewUrl = $this->createViewUrl($targetView);
-				$link = '<div class="'.$buttonClass.'"><a class="'.$buttonClass.'" href="'.$viewUrl.'" title="'.$linkToolTip.'"><img src="'.$GLOBALS['phpgw']->common->image('projects', $guiId).'" class="'.$buttonClass.'" alt="'.$linkToolTip.'">'.$linkText.'</a></div>';
+				$link = '<div class="' . $buttonClass . '"><a class="' . $buttonClass . '" href="' . $viewUrl . '" title="' . $linkToolTip . '"><img src="' . $GLOBALS['phpgw']->common->image('projects', $guiId) . '" class="' . $buttonClass . '" alt="' . $linkToolTip . '">' . $linkText . '</a></div>';
 			}
 
 			return $link;
@@ -466,24 +465,24 @@
 			// if a main project is selected show all sub projects and differ the view
 			// else show a list with all main projects
 
-			if($this->pro_main > 0)
+			if( $this->pro_main > 0 )
 			{
 				$targetView = $this->getTargetView();
-				$selectbox['action']   = $this->createViewUrl($targetView, array('status'=>$this->status));
-				$selectbox['options']  = '<option value="">' . lang('Select project') . '</option>' . "\n";
-				$selectbox['options'] .= $this->boprojects->select_project_list(array(
-					'filter' => 'none',
-					'action' => 'all',
-					'limit' => False,
-					'status' => 'active',
-					'selected' => $this->project_id
+				$selectbox['action']	= $this->createViewUrl($targetView, array('status'=>$this->status));
+				$selectbox['options']	= '<option value="">' . lang('Select project') . '</option>' . "\n";
+				$selectbox['options']	.= $this->boprojects->select_project_list( array				(
+					'filter'	=> 'none',
+					'action'	=> 'all',
+					'limit'		=> false,
+					'status'	=> 'active',
+					'selected'	=> $this->project_id
 				));
 			}
 			else
 			{
 				$selectbox['action']   = $this->createViewUrl(PROJECT_LIST, array('status'=>$this->status));
 				$selectbox['options']  = '<option value="">' . lang('Select project') . '</option>' . "\n";
-				$selectbox['options'] .= $this->boprojects->select_project_list(array(
+				$selectbox['options'] .= $this->boprojects->select_project_list( array				(
 					'action' => 'all',
 					'status' => 'active',
 					'limit'  => False)
@@ -493,16 +492,16 @@
 			return $selectbox;
 		}
 
-		function createFoldersViewUrl($project_id)
+		function createFoldersViewUrl( $project_id )
 		{
 			$targetView = $this->getTargetView();
 			return $this->createViewUrl($targetView, array('project_id'=>$project_id));
 		}
 
 
-		function createButton($targetView, $showToolTip=True, $showText=False)
+		function createButton($targetView, $showToolTip=true, $showText=false)
 		{
-			if($targetView == $this->activeView)
+			if( $targetView == $this->activeView )
 			{
 				$buttonActive = True;
 			}
@@ -511,19 +510,19 @@
 				$buttonActive = False;
 			}
 
-			switch($targetView)
+			switch( $targetView )
 			{
 				case PROJECT_ADD:
 				case WORKTIME_CONTROLLINGSHEET:
 				case WORKTIME_TIMETRACKER:
 				case WORKTIME_STATISTIC:
-				break;
+					break;
 				case PROJECT_PARENT:
 					if(!$this->pro_main || ($this->activeView == PROJECT_ADD_SUB))
 					{
 						$buttonInActive = True;
 					}
-				break;
+					break;
 				case PROJECT_EDIT:
 					if(!$this->pro_main)
 					{
@@ -531,62 +530,56 @@
 					}
 					else
 					{
-						$check = array(
-						  'action' => $this->action,
-						  'coordinator' => $this->pro_data['coordinator'],
-						  'main' => $this->pro_main,
-						  'parent' => $this->pro_parent
+						$check = array						(
+							'action' => $this->action,
+							'coordinator' => $this->pro_data['coordinator'],
+							'main' => $this->pro_main,
+							'parent' => $this->pro_parent
 						);
-						if (!$this->boprojects->edit_perms($check))
+						if( !$this->boprojects->edit_perms($check) )
 						{
 							$buttonInActive = True;
 						}
 					}
-				break;
+					break;
 				case PROJECT_ADD_SUB:
 					if(!$this->pro_main)
 					{
-						$buttonInActive = True;
+						$buttonInActive = true;
 					}
 					else
 					{
-						$check = array(
-						  'action' => $this->action,
-						  'coordinator' => $this->pro_data['coordinator'],
-						  'main' => $this->pro_main,
-						  'parent' => $this->pro_parent
+						$check = array						(
+							'action' => $this->action,
+							'coordinator' => $this->pro_data['coordinator'],
+							'main' => $this->pro_main,
+							'parent' => $this->pro_parent
 						);
-						if(!$this->boprojects->add_perms($check))
+						if( !$this->boprojects->add_perms($check) )
 						{
 							$buttonInActive = True;
 						}
 					}
-				break;
+					break;
 				case PROJECT_ACTIVITIES:
-					if(!$this->pro_main)
+					if( !$this->pro_main )
 					{
-						$buttonInActive = True;
+						$buttonInActive = true;
 					}
 					else
 					{
-						$check = array(
-						  'action' => $this->action,
-						  'coordinator' => $this->pro_data['coordinator'],
-						  'main' => $this->pro_main,
-						  'parent' => $this->pro_parent
+						$check = array						(
+							'action' => $this->action,
+							'coordinator' => $this->pro_data['coordinator'],
+							'main' => $this->pro_main,
+							'parent' => $this->pro_parent
 						);
-
-						if( !$this->boprojects->edit_perms($check) &&
-							  !$this->boprojects->isprojectadmin('pad') &&
-							  !$this->boprojects->isprojectadmin('pmanager')
-						  )
+						if( !$this->boprojects->edit_perms($check) && !$this->boprojects->isprojectadmin('pad') && !$this->boprojects->isprojectadmin('pmanager') )
 						{
 							$buttonInActive = True;
 						}
 					}
-
-
-				break;
+					break;
 				case PROJECT_LIST:
 				case PROJECT_VIEW:
 				case PROJECT_HOURS:
@@ -602,34 +595,34 @@
 					{
 						$buttonInActive = True;
 					}
-				break;
+					break;
 			}
 
-			$guiId = 'button_'.$targetView;
+			$guiId = 'button_' . $targetView;
 
-			if(isset($showToolTip) && $showToolTip)
+			if( isset($showToolTip) && $showToolTip )
 			{
-				$linkToolTip = $this->getText($guiId.'_tooltip');
+				$linkToolTip = $this->getText($guiId . '_tooltip');
 			}
 			else
 			{
 				$linkToolTip = '';
 			}
 
-			if(isset($showText) && $showText)
+			if( isset($showText) && $showText )
 			{
-				$linkText = $this->getText($guiId.'_text');
+				$linkText = $this->getText($guiId . '_text');
 			}
 			else
 			{
 				$linkText = '';
 			}
 
-			if(isset($buttonInActive) && $buttonInActive)
+			if( isset($buttonInActive) && $buttonInActive )
 			{
 				$buttonClass = 'menu_button_inactive';
 			}
-			elseif(isset($buttonActive) && $buttonActive)
+			elseif( isset($buttonActive) && $buttonActive )
 			{
 				$buttonClass = 'menu_button_active';
 			}
@@ -638,7 +631,7 @@
 				$buttonClass = 'menu_button';
 			}
 
-			if(isset($buttonInActive) && $buttonInActive)
+			if( isset($buttonInActive) && $buttonInActive )
 			{
 				$link = '<div class="'.$buttonClass.'"><a class="'.$buttonClass.'" title="'.$linkToolTip.'"><img src="'.$GLOBALS['phpgw']->common->image('projects', $guiId).'" class="'.$buttonClass.'" alt="'.$linkToolTip.'">'.$linkText.'</a></div>';
 			}
@@ -647,7 +640,7 @@
 				$linkData['project_id'] = $this->project_id;
 				$linkData['pro_main']   = $this->pro_main;
 				$linkData['pro_parent'] = $this->pro_parent;
-				if($this->status)
+				if( $this->status )
 				{
 					$linkData['status'] = $this->status;
 				}
@@ -659,28 +652,28 @@
 		}
 
 
-		function createViewUrl($targetView = False, $linkData=array())
+		function createViewUrl( $targetView = False, $linkData=array() )
 		{
-			if(!$targetView)
+			if( !$targetView )
 			{
 				$targetView = PROJECT_LIST;
 			}
 
-			switch($targetView)
+			switch( $targetView )
 			{
 				case PROJECT_LIST:
 					$linkData['menuaction'] = 'projects.uiprojects.tree_view_projects';
-				break;
+					break;
 				case PROJECT_ADD:
 					unset($linkData);
 					$linkData['menuaction'] = 'projects.uiprojects.edit_project';
 					$linkData['action']     = 'mains';
-				break;
+					break;
 				case PROJECT_PARENT:
 					unset($linkData);
-					if($this->pro_parent > 0)
+					if( $this->pro_parent > 0 )
 					{
-						switch($this->activeView)
+						switch( $this->activeView )
 						{
 							case PROJECT_EDIT:
 							case PROJECT_ADD_SUB:
@@ -688,7 +681,7 @@
 								$linkData['project_id'] = $this->project_id;
 								$linkData['pro_main']   = $this->pro_main;
 								$linkData['pro_parent'] = $this->pro_parent;
-							break;
+								break;
 							default:
 								$linkData['menuaction'] = $this->menuaction;
 								$linkData['pro_main']   = $this->pro_main;
@@ -700,87 +693,87 @@
 						$linkData['menuaction'] = 'projects.uiprojects.list_projects';
 						$linkData['action']     = 'mains';
 					}
-				break;
+					break;
 				case PROJECT_ADD_SUB:
 					$linkData['menuaction'] = 'projects.uiprojects.edit_project';
 					$linkData['action']     = 'subs';
 					$linkData['pro_parent'] = $this->project_id;
 					$linkData['project_id'] = 0;
-				break;
+					break;
 				case PROJECT_VIEW:
 					$linkData['menuaction'] = 'projects.uiprojects.view_project';
-				break;
+					break;
 				case PROJECT_EDIT:
 					$linkData['menuaction'] = 'projects.uiprojects.edit_project';
-				break;
+					break;
 				case PROJECT_HOURS:
 					$linkData['menuaction'] = 'projects.uiprojecthours.list_projects';
-				break;
+					break;
 				case PROJECT_BUDGET:
 					$linkData['menuaction'] = 'projects.uiprojects.list_budget';
-				break;
+					break;
 				case PROJECT_ACTIVITIES:
 					$linkData['menuaction'] = 'projects.uiprojects.view_employee_activity';
-				break;
+					break;
 				case PROJECT_GANTTCHART:
 					$linkData['menuaction'] = 'projects.uistatistics.project_gantt';
 					$linkData['parent']     = $this->pro_parent;
-				break;
+					break;
 				case PROJECT_EMPLOYEES:
 					$linkData['menuaction'] = 'projects.uistatistics.list_project_employees';
-				break;
+					break;
 				case WORKTIME_LIST:
 					$linkData['menuaction'] = 'projects.uiprojecthours.list_hours';
 					$linkData['action']     = 'hours';
-				break;
+					break;
 				case WORKTIME_ADD:
 					$linkData['menuaction'] = 'projects.uiprojecthours.edit_hours';
 					$linkData['action']     = 'hours';
-				break;
+					break;
 				case WORKTIME_VIEW:
 					$linkData['menuaction'] = 'projects.uiprojecthours.list_hours';
 					$linkData['action']     = 'hours';
-				break;
+					break;
 				case WORKTIME_EDIT:
 					$linkData['menuaction'] = 'projects.uiprojecthours.list_hours';
 					$linkData['action']     = 'hours';
-				break;
+					break;
 				case WORKTIME_CONTROLLINGSHEET:
 					unset($linkData);
 					$linkData['menuaction'] = 'projects.uiprojecthours.controlling_sheet';
-				break;
+					break;
 				case WORKTIME_TIMETRACKER:
 					$linkData['menuaction'] = 'projects.uiprojecthours.ttracker';
 					$linkData['values[project_id]'] = $this->project_id;
-				break;
+					break;
 				case WORKTIME_STATISTIC:
 					$linkData['menuaction'] = 'projects.uistatistics.list_users_worktimes';
-				break;
+					break;
 				case ACT_REPORT:
 					$linkData['menuaction'] = 'projects.uiprojects.view_report_list';
 					$linkData['project_id'] = $this->project_id;
-				break;
+					break;
 				case 'ACT_REPORT_WIZARD':
 					$linkData['menuaction'] = 'projects.uiprojects.report';
 					$linkData['project_id'] = $this->project_id;
-				break;
+					break;
 				case EXPORT_DIAMANT:
 					$linkData['menuaction'] = 'projects.uiprojects.export_cost_accounting';
-				break;
+					break;
 				default:
-					return False;
+					return false;
 			}
 
-			if($this->status)
+			if( $this->status )
 			{
 				$linkData['status'] = $this->status;
 			}
 
-			$link = $GLOBALS['phpgw']->link('/index.php',$linkData);
+			$link = $GLOBALS['phpgw']->link('/index.php',$linkData);
 			return $link;
 		}
 
-		function createActiveViewUrl($linkData=array())
+		function createActiveViewUrl( $linkData=array() )
 		{
 			return $this->createViewUrl($this->activeView, $linkData);
 		}
@@ -788,7 +781,7 @@
 		function getTargetView()
 		{
 			// depend on active view set the target view for selectbox and folders
-			switch($this->activeView)
+			switch( $this->activeView )
 			{
 				case PROJECT_ADD:
 				case PROJECT_EDIT:
@@ -796,7 +789,7 @@
 				case WORKTIME_CONTROLLINGSHEET:
 				case WORKTIME_STATISTIC:
 					$targetView = PROJECT_LIST;
-				break;
+					break;
 				default:
 					$targetView = $this->activeView;
 			}
@@ -810,7 +803,7 @@
 			$space = "&nbsp;&gt;&nbsp;";
 			$view = $this->getTargetView();
 
-			if(!$this->pro_data && $this->project_id)
+			if( !$this->pro_data && $this->project_id )
 			{
 				$this->pro_data = $this->boprojects->read_single_project($this->project_id);
 			}
@@ -818,20 +811,20 @@
 			$level = $level_start = intval($this->pro_data['level']);
 
 			$project_id = $this->project_id;
-			while($project_id > 0)
+			while( $project_id > 0 )
 			{
-				if($level < ($level_start-1) && ($level > 1))
+				if( $level < ($level_start-1) && ($level > 1) )
 				{
 					$title = '&nbsp;...';
 				}
 				else
 				{
 					$title = $this->boprojects->return_value('title', $project_id);
-					if(strlen($title) > 50)
+					if( strlen($title) > 50 )
 					{
 						$title = substr($title, 0, 35);
 						$str_break = strrchr($title, 32); // ASCII 32 = space
-						if($str_break !== false)
+						if( $str_break !== false )
 						{
 							$pos_break = strlen($title) - strlen($str_break);
 							$title = substr($title, 0, $pos_break);
@@ -854,16 +847,16 @@
 			return $path;
 		}
 
-		function getText($id)
+		function getText( $id )
 		{
 			$text = '';
 
-			switch($id)
+			switch( $id )
 			{
 				case 'button_pro_add_tooltip':
 				case 'button_pro_add_text':
 					$text = lang('add project');
-				break;
+					break;
 				case 'button_pro_parent_tooltip':
 				case 'button_pro_parent_text':
 					if($this->pro_parent)
@@ -874,7 +867,7 @@
 					{
 						$text = lang('select main project');
 					}
-				break;
+					break;
 				case 'button_pro_list_tooltip':
 				case 'button_pro_list_text':
 					if($this->pro_main)
@@ -885,75 +878,75 @@
 					{
 						$text = lang('select main project');
 					}
-				break;
+					break;
 				case 'button_pro_view_tooltip':
 				case 'button_pro_view_text':
 					$text = lang('details');
-				break;
+					break;
 				case 'button_pro_edit_tooltip':
 				case 'button_pro_edit_text':
 					$text = lang('edit');
-				break;
+					break;
 				case 'button_pro_add_sub_tooltip':
 				case 'button_pro_add_sub_text':
 					$text = lang('add sub project');
-				break;
+					break;
 				case 'button_pro_activities_tooltip':
 				case 'button_pro_activities_text':
 					$text = lang('activities');
-				break;
+					break;
 				case 'button_pro_hours_tooltip':
 				case 'button_pro_hours_text':
 					$text = lang('work hours');
-				break;
+					break;
 				case 'button_pro_budget_tooltip':
 				case 'button_pro_budget_text':
 					$text = lang('budget');
-				break;
+					break;
 				case 'button_pro_ganttchart_tooltip':
 				case 'button_pro_ganttchart_text':
 					$text = lang('gantt chart');
-				break;
+					break;
 				case 'button_pro_employees_tooltip':
 				case 'button_pro_employees_text':
 					$text = lang('employees');
-				break;
+					break;
 				case 'button_wt_list_tooltip':
 				case 'button_wt_list_text':
 					$text = lang('list activities');
-				break;
+					break;
 				case 'button_wt_add_tooltip':
 				case 'button_wt_add_text':
 					$text = lang('add activity');
-				break;
+					break;
 				case 'button_wt_edit_tooltip':
 				case 'button_wt_edit_text':
 					$text = lang('edit activity');
-				break;
+					break;
 				case 'button_wt_view_tooltip':
 				case 'button_wt_view_text':
 					$text = lang('activity');
-				break;
+					break;
 				case 'button_wt_cs_tooltip':
 				case 'button_wt_cs_text':
 					$text = lang('controlling sheet');
-				break;
+					break;
 				case 'button_wt_stat_tooltip':
 				case 'button_wt_stat_text':
 					$text = lang('work hours statistics');
-				break;
+					break;
 				case 'button_wt_tt_tooltip':
 				case 'button_wt_tt_text':
 					$text = lang('time tracker');
-				break;
+					break;
 				case 'button_act_report_tooltip':
 				case 'button_act_report_text':
 					$text = lang('activity reports');
-				break;
+					break;
 				case 'button_export_diamant_tooltip':
 				case 'button_export_diamant_text':
 					$text = lang('export diamant accounting');
-				break;
+					break;
 			}
 
 			return $text;
@@ -961,9 +954,9 @@
 
 		function set_app_langs()
 		{
-			$GLOBALS['phpgw']->template->set_var('th_bg',$GLOBALS['phpgw_info']['theme']['th_bg']);
-			$GLOBALS['phpgw']->template->set_var('row_on',$GLOBALS['phpgw_info']['theme']['row_on']);
-			$GLOBALS['phpgw']->template->set_var('row_off',$GLOBALS['phpgw_info']['theme']['row_off']);
+			$GLOBALS['phpgw']->template->set_var('th_bg',$GLOBALS['phpgw_info']['user']['preferences']['common']['theme']['th_bg']);
+			$GLOBALS['phpgw']->template->set_var('row_on',$GLOBALS['phpgw_info']['user']['preferences']['common']['theme']['row_on']);
+			$GLOBALS['phpgw']->template->set_var('row_off',$GLOBALS['phpgw_info']['user']['preferences']['common']['theme']['row_off']);
 
 			$GLOBALS['phpgw']->template->set_var('lang_category',lang('Category'));
 			$GLOBALS['phpgw']->template->set_var('lang_select',lang('Select'));
@@ -1218,96 +1211,95 @@
 			$GLOBALS['phpgw']->template->set_var('lang_project_team',lang('project team'));
 		}
 
-		function status_format($status = '', $showarchive = True)
-		{
-			if (!$status)
+		function status_format( $status = '', $showarchive = true )
+		{			$stat_sel = array('', '', '');
+			if ( !$status )
 			{
 				$status = $this->status = 'active';
 			}
 
-			switch ($status)
+			switch ( $status )
 			{
-				case 'active':		$stat_sel[0]=' selected'; break;
-				case 'nonactive':	$stat_sel[1]=' selected'; break;
-				case 'archive':		$stat_sel[2]=' selected'; break;
+				case 'active':					$stat_sel[0]=' selected';					break;
+				case 'nonactive':					$stat_sel[1]=' selected';					break;
+				case 'archive':					$stat_sel[2]=' selected';					break;
 			}
 
 			$status_list = '<option value="active"' . $stat_sel[0] . '>' . lang('Active') . '</option>' . "\n"
 						. '<option value="nonactive"' . $stat_sel[1] . '>' . lang('Nonactive') . '</option>' . "\n";
 
-			if ($showarchive)
+			if ( $showarchive )
 			{
 				$status_list .= '<option value="archive"' . $stat_sel[2] . '>' . lang('Archive') . '</option>' . "\n";
 			}
 			return $status_list;
 		}
 
-		function employee_format($data)
+		function employee_format( $data )
 		{
-			$type	           = (isset($data['type'])? $data['type']: 'selectbox');
-			$selected        = (isset($data['selected'])? $data['selected']:$this->boprojects->get_acl_for_project($data['project_id']));
-			$project_only    = (isset($data['project_only'])?$data['project_only']:False);
-			$admins_included = (isset($data['admins_included'])?$data['admins_included']:False);
+			$type				= isset( $data['type'] ) ? $data['type'] : 'selectbox';
+			$selected			= isset( $data['selected'] ) ? $data['selected'] : $this->boprojects->get_acl_for_project( $data['project_id'] );
+			$project_only		= isset( $data['project_only'] ) ? $data['project_only'] : false;
+			$admins_included	= isset( $data['admins_included'] ) ? $data['admins_included'] : false;
 
-			if($project_only)
+			if( $project_only )
 			{
 				$data['pro_parent']	= $data['project_id'];
 				$data['action']		= 'subs';
 			}
 
-			if (!is_array($selected))
+			if ( !is_array( $selected ) )
 			{
-				$selected = explode(',',$selected);
+				$selected = explode( ',', $selected );
 			}
 
-			switch($type)
+			switch( $type )
 			{
 				case 'selectbox':
-					$employees = $this->boprojects->selected_employees(array('action' => $data['action'],
-					                                                         'pro_parent' => $data['pro_parent'],
-					                                                         'admins_included' => $admins_included,
-					                                                         'project_id' => $data['project_id']
-					                                                        ));
+					$employees = $this->boprojects->selected_employees( array					(						'action' => $data['action'],
+					    'pro_parent' => $data['pro_parent'],
+					    'admins_included' => $admins_included,
+					    'project_id' => $data['project_id']					));
 					break;
 				case 'popup':
-					$employees	= $this->boprojects->selected_employees(array('project_id' => $data['project_id']));
+					$employees	= $this->boprojects->selected_employees( array					(						'project_id' => $data['project_id']					));
 					break;
 			}
 
-			if(is_array($employees))
+			if( is_array( $employees ) )
 			{
-				usort($employees, array('uiprojects_base', 'cmp_employees'));
+				usort( $employees, array( 'uiprojects_base', 'cmp_employees' ) );
 			}
 
-			while (is_array($employees) && (list($null,$account) = each($employees)))
+			while ( is_array( $employees ) && ( list( $null,$account ) = each( $employees ) ) )
 			{
-				if(!$account['account_lid'])
+				if( !$account['account_lid'] )
 				{
 					continue;
-				}
-				$s .= '<option value="' . $account['account_id'] . '"';
-				if (in_array($account['account_id'],$selected))
+				}
+				$s .= '<option value="' . $account['account_id'] . '"';
+				if ( in_array( $account['account_id'], $selected) )
 				{
 					$s .= ' SELECTED';
-				}
+				}
 				$s .= '>';
 				$s .= $account['account_fullname'] . '</option>' . "\n";
 			}
 			return $s;
 		}
 
-		function cmp_employees ($a, $b)
+		function cmp_employees( $a, $b )
 		{
-			return strcasecmp($a['account_fullname'], $b['account_fullname']);
+			return strcasecmp( $a['account_fullname'], $b['account_fullname'] );
 		}
 
 		function proid_help_popup()
 		{
 
-			$GLOBALS['phpgw']->template->set_file(array('proidhelp' => 'proid_help_popup.tpl'));
-			$config = $this->boprojects->get_site_config(array('helpmsg' => True));
-			$GLOBALS['phpgw']->template->set_var('helpmsg',stripslashes($config['proid_help_msg']));
-			$GLOBALS['phpgw']->template->pfp('out','proidhelp',True);
+			$GLOBALS['phpgw']->template->set_file( array( 'proidhelp' => 'proid_help_popup.tpl' ) );
+			$config = $this->boprojects->get_site_config( array('helpmsg' => true ) );
+			$GLOBALS['phpgw']->template->set_var( 'helpmsg', stripslashes( $config['proid_help_msg'] ) );
+			$GLOBALS['phpgw']->template->pfp( 'out','proidhelp',true );
 		}
 	}
 ?>

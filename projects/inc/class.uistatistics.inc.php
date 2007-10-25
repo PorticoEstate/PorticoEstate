@@ -607,326 +607,331 @@
       $this->save_sessiondata($action);
     }
 
-    function user_stat()
+	function user_stat()
     {
-      $submit		= get_var('submit',array('POST'));
-      $values		= get_var('values',array('POST','GET'));
-      $account_id	= get_var('account_id',array('POST','GET'));
+    	$submit		= isset($_REQUEST['submit']) ? $_REQUEST['submit'] : '';
+    	$values		= isset($_REQUEST['values']) ? $_REQUEST['values'] : '';
+    	$account_id	= isset($_REQUEST['values']) ? $_REQUEST['values'] : '';
 
-      $link_data = array
-      (
-        'menuaction'	=> 'projects.uistatistics.user_stat',
-        'action'		=> 'ustat',
-        'account_id'	=> $account_id
-      );
+		$link_data = array
+		(
+			'menuaction'	=> 'projects.uistatistics.user_stat',
+			'action'		=> 'ustat',
+			'account_id'	=> $account_id
+		);
 
-      if (! $account_id)
-      {
-        $phpgw->redirect_link('/index.php',array('menuaction'=>'projects.uistatistics.list_users','action'=>'ustat'));
-      }
+      	if (! $account_id)
+      	{
+      		$phpgw->redirect_link('/index.php',array('menuaction'=>'projects.uistatistics.list_users','action'=>'ustat'));
+      	}
 
-      //$GLOBALS['phpgw_info']['flags']['app_header'] = lang('projects') . ': ' . lang('User statistics')
-      //											. $this->admin_header_info();
-      //$this->display_app_header();
-      $this->ui_base->display_app_header();
+      	// $GLOBALS['phpgw_info']['flags']['app_header'] = lang('projects') . ': ' . lang('User statistics')
+		//											. $this->admin_header_info();
+		//$this->display_app_header();
+		$this->ui_base->display_app_header();
 
-      $GLOBALS['phpgw']->template->set_file(array('user_stat_t' => 'stats_userstat.tpl'));
-      $GLOBALS['phpgw']->template->set_block('user_stat_t','user_stat','stat');
+		$GLOBALS['phpgw']->template->set_file(array('user_stat_t' => 'stats_userstat.tpl'));
+		$GLOBALS['phpgw']->template->set_block('user_stat_t','user_stat','stat');
 
-      $GLOBALS['phpgw']->template->set_var('actionurl',$GLOBALS['phpgw']->link('/index.php',$link_data));
+		$GLOBALS['phpgw']->template->set_var('actionurl',$GLOBALS['phpgw']->link('/index.php',$link_data));
 
-      $cached_data = $this->boprojects->cached_accounts($account_id);
-      $employee = $GLOBALS['phpgw']->strip_html($cached_data[$account_id]['firstname']
-                                        . ' ' . $cached_data[$account_id]['lastname'] . ' ['
-                                        . $cached_data[$account_id]['account_lid'] . ' ]');
+		$cached_data = $this->boprojects->cached_accounts($account_id);
+		$employee = $GLOBALS['phpgw']->strip_html($cached_data[$account_id]['firstname']
+        			                                . ' ' . $cached_data[$account_id]['lastname'] . ' ['
+                    			                    . $cached_data[$account_id]['account_lid'] . ' ]');
 
-      $GLOBALS['phpgw']->template->set_var('employee',$employee);
+		$GLOBALS['phpgw']->template->set_var('employee',$employee);
 
-      $this->nextmatchs->alternate_row_color($GLOBALS['phpgw']->template);
+		//$this->nextmatchs->alternate_row_color($GLOBALS['phpgw']->template);
+		$this->nextmatchs->alternate_row_class($GLOBALS['phpgw']->template);
 
-      if (!$values['sdate'])
-      {
-        $values['smonth']	= 0;
-        $values['sday']		= 0;
-        $values['syear']	= 0;
-      }
-      else
-      {
-        $values['smonth']	= date('m',$values['sdate']);
-        $values['sday']		= date('d',$values['sdate']);
-        $values['syear']	= date('Y',$values['sdate']);
-      }
+		if (!$values['sdate'])
+		{
+			$values['smonth']	= 0;
+			$values['sday']		= 0;
+			$values['syear']	= 0;
+		}
+		else
+		{
+			$values['smonth']	= date('m',$values['sdate']);
+			$values['sday']		= date('d',$values['sdate']);
+			$values['syear']	= date('Y',$values['sdate']);
+		}
 
-      if (!$values['edate'])
-      {
-        $values['emonth']	= 0;
-        $values['eday']		= 0;
-        $values['eyear']	= 0;
-      }
-      else
-      {
-        $values['emonth']	= date('m',$values['edate']);
-        $values['eday']		= date('d',$values['edate']);
-        $values['eyear']	= date('Y',$values['edate']);
-      }
+		if (!$values['edate'])
+		{
+			$values['emonth']	= 0;
+			$values['eday']		= 0;
+			$values['eyear']	= 0;
+		}
+		else
+		{
+			$values['emonth']	= date('m',$values['edate']);
+			$values['eday']		= date('d',$values['edate']);
+			$values['eyear']	= date('Y',$values['edate']);
+		}
 
-      $GLOBALS['phpgw']->template->set_var('start_date_select',$GLOBALS['phpgw']->common->dateformatorder($this->sbox->getYears('values[syear]',$values['syear']),
-                                              $this->sbox->getMonthText('values[smonth]',$values['smonth']),
-                                              $this->sbox->getDays('values[sday]',$values['sday'])));
-      $GLOBALS['phpgw']->template->set_var('end_date_select',$GLOBALS['phpgw']->common->dateformatorder($this->sbox->getYears('values[eyear]',$values['eyear']),
-                                              $this->sbox->getMonthText('values[emonth]',$values['emonth']),
-                                              $this->sbox->getDays('values[eday]',$values['eday'])));
+		$GLOBALS['phpgw']->template->set_var('start_date_select',$GLOBALS['phpgw']->common->dateformatorder($this->sbox->getYears('values[syear]',$values['syear']),
+												$this->sbox->getMonthText('values[smonth]',$values['smonth']),
+												$this->sbox->getDays('values[sday]',$values['sday'])));
+		$GLOBALS['phpgw']->template->set_var('end_date_select',$GLOBALS['phpgw']->common->dateformatorder($this->sbox->getYears('values[eyear]',$values['eyear']),
+												$this->sbox->getMonthText('values[emonth]',$values['emonth']),
+												$this->sbox->getDays('values[eday]',$values['eday'])));
 
 // -------------- calculate statistics --------------------------
 
-      $GLOBALS['phpgw']->template->set_var('billed','<input type="checkbox" name="values[billed]" value="True"'
-                    . ($values['billed'] == 'private'?' checked':'') . '>');
+		$GLOBALS['phpgw']->template->set_var('billed','<input type="checkbox" name="values[billed]" value="True"' . ($values['billed'] == 'private' ? ' checked' : '') . '>');
 
-      $pro = $this->bostatistics->get_userstat_pro($account_id, $values);
+		$pro = $this->bostatistics->get_userstat_pro($account_id, $values);
 
-      if (is_array($pro))
-      {
-        while (list($null,$userpro) = each($pro))
-        {
-          $summin = 0;
-          $this->nextmatchs->template_alternate_row_class($GLOBALS['phpgw']->template);
-          $GLOBALS['phpgw']->template->set_var('e_project',$GLOBALS['phpgw']->strip_html($userpro['title']) . ' ['
-                      . $GLOBALS['phpgw']->strip_html($userpro['num']) . ']');
-          $GLOBALS['phpgw']->template->set_var('e_activity','&nbsp;');
-          $GLOBALS['phpgw']->template->set_var('e_hours','&nbsp;');
-          $GLOBALS['phpgw']->template->fp('stat','user_stat',True);
+		if (is_array($pro))
+		{
+			while (list($null,$userpro) = each($pro))
+			{
+				$summin = 0;
+				$this->nextmatchs->template_alternate_row_class($GLOBALS['phpgw']->template);
+				$GLOBALS['phpgw']->template->set_var('e_project',$GLOBALS['phpgw']->strip_html($userpro['title']) . ' [' . $GLOBALS['phpgw']->strip_html($userpro['num']) . ']');
+				$GLOBALS['phpgw']->template->set_var('e_activity','&nbsp;');
+				$GLOBALS['phpgw']->template->set_var('e_hours','&nbsp;');
+				$GLOBALS['phpgw']->template->fp('stat','user_stat',True);
 
-          $hours = $this->bostatistics->get_stat_hours('both', $account_id, $userpro['project_id'], $values);
-          for ($i=0;$i<=count($hours);$i++)
-          {
-            if ($hours[$i]['num'] != '')
-            {
-              $GLOBALS['phpgw']->template->set_var('e_project','&nbsp;');
-              $GLOBALS['phpgw']->template->set_var('e_activity',$GLOBALS['phpgw']->strip_html($hours[$i]['descr']) . ' ['
-                          . $GLOBALS['phpgw']->strip_html($hours[$i]['num']) . ']');
-              $summin += $hours[$i]['min'];
-              $hrs = intval($hours[$i]['min']/60) . ':' . sprintf ("%02d",(int)($hours[$i]['min']-intval($hours[$i]['min']/60)*60));
-              $GLOBALS['phpgw']->template->set_var('e_hours',$hrs);
-              $GLOBALS['phpgw']->template->fp('stat','user_stat',True);
-            }
-          }
+				$hours = $this->bostatistics->get_stat_hours('both', $account_id, $userpro['project_id'], $values);
+				for ($i=0;$i<=count($hours);$i++)
+				{
+					if ($hours[$i]['num'] != '')
+					{
+						$GLOBALS['phpgw']->template->set_var('e_project','&nbsp;');
+						$GLOBALS['phpgw']->template->set_var('e_activity',$GLOBALS['phpgw']->strip_html($hours[$i]['descr']) . ' [' . $GLOBALS['phpgw']->strip_html($hours[$i]['num']) . ']');
+						$summin += $hours[$i]['min'];
+						$hrs = intval($hours[$i]['min']/60) . ':' . sprintf ("%02d",(int)($hours[$i]['min']-intval($hours[$i]['min']/60)*60));
+						$GLOBALS['phpgw']->template->set_var('e_hours',$hrs);
+						$GLOBALS['phpgw']->template->fp('stat','user_stat',True);
+					}
+				}
 
-          $GLOBALS['phpgw']->template->set_var('e_project','&nbsp;');
-          $GLOBALS['phpgw']->template->set_var('e_activity','&nbsp;');
-          $hrs = intval($summin/60) . ':' . sprintf ("%02d",(int)($summin-intval($summin/60)*60));
-          $GLOBALS['phpgw']->template->set_var('e_hours',$hrs);
-          $GLOBALS['phpgw']->template->fp('stat','user_stat',True);
-        }
-      }
+				$GLOBALS['phpgw']->template->set_var('e_project','&nbsp;');
+				$GLOBALS['phpgw']->template->set_var('e_activity','&nbsp;');
+				$hrs = intval($summin/60) . ':' . sprintf ("%02d",(int)($summin-intval($summin/60)*60));
+				$GLOBALS['phpgw']->template->set_var('e_hours',$hrs);
+				$GLOBALS['phpgw']->template->fp('stat','user_stat',True);
+			}
+		}
 
-      $allhours = $this->bostatistics->get_stat_hours('account', $account_id, $project_id ='', $values);
+		$allhours = $this->bostatistics->get_stat_hours('account', $account_id, $project_id ='', $values);
 
-      $summin=0;
-      $this->nextmatchs->template_alternate_row_class($GLOBALS['phpgw']->template);
-      $GLOBALS['phpgw']->template->set_var('e_project','<b>' . lang('Overall') . '</b>');
-      $GLOBALS['phpgw']->template->set_var('e_activity','&nbsp;');
-      $GLOBALS['phpgw']->template->set_var('e_hours','&nbsp;');
-      $GLOBALS['phpgw']->template->fp('stat','user_stat',True);
+		$summin=0;
+		$this->nextmatchs->template_alternate_row_class($GLOBALS['phpgw']->template);
+		$GLOBALS['phpgw']->template->set_var('e_project','<b>' . lang('Overall') . '</b>');
+		$GLOBALS['phpgw']->template->set_var('e_activity','&nbsp;');
+		$GLOBALS['phpgw']->template->set_var('e_hours','&nbsp;');
+		$GLOBALS['phpgw']->template->fp('stat','user_stat',True);
 
-      if (is_array($allhours))
-      {
-        while (list($null,$userall) = each($allhours))
-        {
-          $GLOBALS['phpgw']->template->set_var('e_project','&nbsp;');
-          $GLOBALS['phpgw']->template->set_var('e_activity',$GLOBALS['phpgw']->strip_html($userall['descr']) . ' ['
-                          . $GLOBALS['phpgw']->strip_html($userall['num']) . ']');
-          $summin += $userall['min'];
-          $hrs = intval($userall['min']/60) . ':' . sprintf ("%02d",(int)($userall['min']-intval($userall['min']/60)*60));
-          $GLOBALS['phpgw']->template->set_var('e_hours',$hrs);
-          $GLOBALS['phpgw']->template->fp('stat','user_stat',True);
-        }
-      }
+		if (is_array($allhours))
+		{
+			while (list($null,$userall) = each($allhours))
+			{
+			$GLOBALS['phpgw']->template->set_var('e_project','&nbsp;');
+			$GLOBALS['phpgw']->template->set_var('e_activity',$GLOBALS['phpgw']->strip_html($userall['descr']) . ' [' . $GLOBALS['phpgw']->strip_html($userall['num']) . ']');
+			$summin += $userall['min'];
+			$hrs = intval($userall['min']/60) . ':' . sprintf ("%02d",(int)($userall['min']-intval($userall['min']/60)*60));
+			$GLOBALS['phpgw']->template->set_var('e_hours',$hrs);
+			$GLOBALS['phpgw']->template->fp('stat','user_stat',True);
+			}
+		}
 
-      $this->nextmatchs->template_alternate_row_class($GLOBALS['phpgw']->template);
-      $GLOBALS['phpgw']->template->set_var('e_project','<b>' . lang('Sum') . '</b>');
-      $GLOBALS['phpgw']->template->set_var('e_activity','&nbsp;');
-      $hrs = intval($summin/60) . ':' . sprintf ("%02d",(int)($summin-intval($summin/60)*60));
-      $GLOBALS['phpgw']->template->set_var('e_hours',$hrs);
-      $GLOBALS['phpgw']->template->fp('stat','user_stat',True);
-      $GLOBALS['phpgw']->template->pfp('out','user_stat_t',True);
+		$this->nextmatchs->template_alternate_row_class($GLOBALS['phpgw']->template);
+		$GLOBALS['phpgw']->template->set_var('e_project','<b>' . lang('Sum') . '</b>');
+		$GLOBALS['phpgw']->template->set_var('e_activity','&nbsp;');
+		$hrs = intval($summin/60) . ':' . sprintf ("%02d",(int)($summin-intval($summin/60)*60));
+		$GLOBALS['phpgw']->template->set_var('e_hours',$hrs);
+		$GLOBALS['phpgw']->template->fp('stat','user_stat',True);
+		$GLOBALS['phpgw']->template->pfp('out','user_stat_t',True);
     }
 
-    function show_stat($project_id)
-    {
-      $this->bostatistics->show_graph($project_id);
-    }
+	function show_stat( $project_id )
+	{
+		$this->bostatistics->show_graph($project_id);
+	}
 
-    function get_screen_size()
-    {
-      $project_id	= get_var('project_id',array('GET','POST'));
-      $start		= get_var('start',array('GET','POST'));
-      $end		= get_var('end',array('GET','POST'));
-      $action		= get_var('action',array('GET','POST'));
-      $sessionid	= get_var('sessionid',array('GET','POST'));
+	function get_screen_size()
+	{
+		$project_id	= get_var('project_id',array('GET','POST'));
+		$start		= get_var('start',array('GET','POST'));
+		$end		= get_var('end',array('GET','POST'));
+		$action		= get_var('action',array('GET','POST'));
+		$sessionid	= get_var('sessionid',array('GET','POST'));
 
-      $link_data = array
-      (
-        'menuaction'	=> 'projects.uistatistics.project_gantt',
-        'action'		=> $action,
-        'project_id'	=> $project_id,
-        'gantt_popup'	=> True,
-        'start'			=> $start,
-        'end'			=> $end
-      );
+		$link_data = array
+		(
+			'menuaction'	=> 'projects.uistatistics.project_gantt',
+			'action'		=> $action,
+			'project_id'	=> $project_id,
+			'gantt_popup'	=> true,
+			'start'			=> $start,
+			'end'			=> $end
+		);
 
-      $GLOBALS['phpgw']->template->set_file(array('screen' => 'stats_gant_popup_intro.tpl'));
+		$GLOBALS['phpgw']->template->set_file(array('screen' => 'stats_gant_popup_intro.tpl'));
 
-      $GLOBALS['phpgw']->template->set_var('sessionid',$sessionid);
-      $GLOBALS['phpgw']->template->set_var('project_id',$project_id);
-      $GLOBALS['phpgw']->template->set_var('action',$action);
-      $GLOBALS['phpgw']->template->set_var('redirect_url',$GLOBALS['phpgw']->link('/index.php',$link_data));
+		$GLOBALS['phpgw']->template->set_var('sessionid',$sessionid);
+		$GLOBALS['phpgw']->template->set_var('project_id',$project_id);
+		$GLOBALS['phpgw']->template->set_var('action',$action);
+		$GLOBALS['phpgw']->template->set_var('redirect_url',$GLOBALS['phpgw']->link('/index.php',$link_data));
 
-      $GLOBALS['phpgw']->template->pfp('out','screen');
-    }
+		$GLOBALS['phpgw']->template->pfp('out','screen');
+	}
 
-    function project_gantt()
-    {
-      $project_id		= get_var('project_id',array('GET','POST'));
-      $sdate			= get_var('sdate',array('GET','POST'));
-      $edate			= get_var('edate',array('GET','POST'));
-      $start			= get_var('start',array('GET','POST'));
-      $end			= get_var('end',array('GET','POST'));
-      $gantt_popup	= get_var('gantt_popup',array('POST','GET'));
-      $action			= get_var('action',array('POST','GET'));
-      $parent			= get_var('parent',array('POST','GET'));
-      $expandtree		= get_var('expandtree',array('POST','GET'));
-      $screen_width	= get_var('screen_width',array('POST','GET'));
-      $screen_height	= get_var('screen_height',array('POST','GET'));
+	function project_gantt()
+	{
+		$project_id		= get_var('project_id',array('GET','POST'));
+		$sdate			= get_var('sdate',array('GET','POST'));
+		$edate			= get_var('edate',array('GET','POST'));
+		$start			= get_var('start',array('GET','POST'));
+		$end			= get_var('end',array('GET','POST'));
+		$gantt_popup	= get_var('gantt_popup',array('POST','GET'));
+		$action			= get_var('action',array('POST','GET'));
+		$parent			= get_var('parent',array('POST','GET'));
+		$expandtree		= get_var('expandtree',array('POST','GET'));
+		$screen_width	= get_var('screen_width',array('POST','GET'));
+		$screen_height	= get_var('screen_height',array('POST','GET'));
 
-      //echo 'WIDTH=' . $screen_width;
-      //echo 'HEIGHT=' . $screen_height;
-      //echo 'parent=' . $parent;
-      //echo 'start=' . $start;
-      //echo 'end=' . $end;
+		//echo 'WIDTH=' . $screen_width;
+		//echo 'HEIGHT=' . $screen_height;
+		//echo 'parent=' . $parent;
+		//echo 'start=' . $start;
+		//echo 'end=' . $end;
 
-      if (! $project_id)
-      {
-        $GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=>'projects.uistatistics.list_projects','action'=>'mains'));
-      }
-      else
-      {
-        $project_array = explode(',',$project_id);
-      }
+		if (! $project_id)
+		{
+			$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=>'projects.uistatistics.list_projects','action'=>'mains'));
+		}
+		else
+		{
+			$project_array = explode(',',$project_id);
+		}
 
-      if($parent > 0)
-      {
-        $this->bostatistics->save_gantt_data($parent,$expandtree);
-      }
+		if($parent > 0)
+		{
+			$this->bostatistics->save_gantt_data($parent,$expandtree);
+		}
 
-      $parent_array = $this->bostatistics->read_gantt_data();
+		$parent_array = $this->bostatistics->read_gantt_data();
 
-      //_debug_array($parent_array);
+		//_debug_array($parent_array);
 
-      // $GLOBALS['phpgw_info']['flags']['app_header'] = lang('projects') . ': ' . lang('gantt chart') . $this->admin_header_info();
+		// $GLOBALS['phpgw_info']['flags']['app_header'] = lang('projects') . ': ' . lang('gantt chart') . $this->admin_header_info();
 
-      $jscal = CreateObject('phpgwapi.jscalendar');	// before phpgw_header() !!!
+		$jscal = CreateObject('phpgwapi.jscalendar');	// before phpgw_header() !!!
 
-      if($gantt_popup)
-      {
-        $GLOBALS['phpgw']->template->set_file(array('project_stat' => 'stats_gant_popup.tpl'));
-        $GLOBALS['phpgw']->template->set_block('project_stat','map','list');
+		if($gantt_popup)
+		{
+			$GLOBALS['phpgw']->template->set_file(array('project_stat' => 'stats_gant_popup.tpl'));
+			$GLOBALS['phpgw']->template->set_block('project_stat','map','list');
 
-        $GLOBALS['phpgw']->template->set_var('lang_show_chart',lang('show gantt chart'));
-        $GLOBALS['phpgw']->template->set_var('lang_start_date',lang('Start Date'));
-        $GLOBALS['phpgw']->template->set_var('lang_end_date',lang('End Date'));
-        $gantt_popup = True;
+			$GLOBALS['phpgw']->template->set_var('lang_show_chart',lang('show gantt chart'));
+			$GLOBALS['phpgw']->template->set_var('lang_start_date',lang('Start Date'));
+			$GLOBALS['phpgw']->template->set_var('lang_end_date',lang('End Date'));
+			$gantt_popup = True;
 
-        $GLOBALS['phpgw']->template->set_var('jscal_setup_src',$GLOBALS['phpgw']->link('/phpgwapi/js/jscalendar/jscalendar-setup.php'));
-        $GLOBALS['phpgw']->template->set_var('server_root',$GLOBALS['phpgw_info']['server']['webserver_url']);
-      }
-      else
-      {
-        $this->ui_base->display_app_header();
-        $GLOBALS['phpgw']->template->set_file(array('project_stat' => 'stats_gant.tpl'));
-        $GLOBALS['phpgw']->template->set_block('project_stat','map','list');
+			$GLOBALS['phpgw']->template->set_var('jscal_setup_src',$GLOBALS['phpgw']->link('/phpgwapi/js/jscalendar/jscalendar-setup.php'));
+			$GLOBALS['phpgw']->template->set_var('server_root',$GLOBALS['phpgw_info']['server']['webserver_url']);
+		}
+		else
+		{
+			$this->ui_base->display_app_header();
+			$GLOBALS['phpgw']->template->set_file(array('project_stat' => 'stats_gant.tpl'));
+			$GLOBALS['phpgw']->template->set_block('project_stat','map','list');
 
-        $gantt_popup = False;
-      }
+			$gantt_popup = False;
+		}
 
-      $link_data = array
-      (
-        'menuaction'	=> 'projects.uistatistics.project_gantt',
-        'action'		=> $action,
-        'project_id'	=> $project_id,
-        'gantt_popup'	=> $gantt_popup,
-        'screen_width'	=> $screen_width,
-        'screen_height'	=> $screen_height
-      );
+		$link_data = array
+		(
+			'menuaction'	=> 'projects.uistatistics.project_gantt',
+			'action'		=> $action,
+			'project_id'	=> $project_id,
+			'gantt_popup'	=> $gantt_popup,
+			'screen_width'	=> $screen_width,
+			'screen_height'	=> $screen_height
+		);
 
-      if(is_array($sdate))
-      {
-        $start_array	= $jscal->input2date($sdate['str']);
-        $start_val		= $start_array['raw'];
-      }
-      elseif($start)
-      {
-        $start_val = $start;
-      }
+		if(is_array($sdate))
+		{
+			$start_array	= $jscal->input2date($sdate['str']);
+			$start_val		= $start_array['raw'];
+		}
+		elseif($start)
+		{
+			$start_val = $start;
+		}
 
-      if(is_array($edate))
-      {
-        $end_array	= $jscal->input2date($edate['str']);
-        $end_val	= $end_array['raw'];
-      }
-      elseif($end)
-      {
-        $end_val = $end;
-      }
+		if(is_array($edate))
+		{
+			$end_array	= $jscal->input2date($edate['str']);
+			$end_val	= $end_array['raw'];
+		}
+		elseif($end)
+		{
+			$end_val = $end;
+		}
 
-      $start	= $start_val?$start_val:mktime(12,0,0,date('m'),date('d'),date('Y'));
-      $end	= $end_val?$end_val:mktime(12,0,0,date('m'),date('d')+30,date('Y'));
+		$start	= $start_val?$start_val:mktime(12,0,0,date('m'),date('d'),date('Y'));
+		$end	= $end_val?$end_val:mktime(12,0,0,date('m'),date('d')+30,date('Y'));
 
-      $GLOBALS['phpgw']->template->set_var('start',$start);
-      $GLOBALS['phpgw']->template->set_var('end',$end);
+		$GLOBALS['phpgw']->template->set_var('start',$start);
+		$GLOBALS['phpgw']->template->set_var('end',$end);
 
-      $GLOBALS['phpgw']->template->set_var('sdate_select',$jscal->input('sdate[str]',$start));
-      $GLOBALS['phpgw']->template->set_var('edate_select',$jscal->input('edate[str]',$end));
+		$GLOBALS['phpgw']->template->set_var('sdate_select',$jscal->input('sdate[str]',$start));
+		$GLOBALS['phpgw']->template->set_var('edate_select',$jscal->input('edate[str]',$end));
 
-      $GLOBALS['phpgw']->template->set_var('css_file',$GLOBALS['phpgw_info']['server']['webserver_url'] . SEP . 'phpgwapi' . SEP . 'templates'
-                              . SEP . 'idots' . SEP . 'css' . SEP . 'idots.css');
-      $GLOBALS['phpgw']->template->set_var('gantt_link',$GLOBALS['phpgw']->link('/index.php',array('menuaction'=>'projects.uistatistics.get_screen_size',
-      																								'action'=> $action,
-																	                              	'project_id'=> $project_id,
-																	                              	'gantt_popup'=>'True',
-																	                              	'start'=>$start,
-																	                              	'end'=> $end)));
+		$GLOBALS['phpgw']->template->set_var('css_file',$GLOBALS['phpgw_info']['server']['webserver_url'] . SEP . 'phpgwapi' . SEP . 'templates'
+		                          . SEP . 'idots' . SEP . 'css' . SEP . 'idots.css');
+		$GLOBALS['phpgw']->template->set_var('gantt_link',$GLOBALS['phpgw']->link('/index.php',array
+																								(
+																									'menuaction'=>'projects.uistatistics.get_screen_size',
+		  																							'action'=> $action,
+																		                            'project_id'=> $project_id,
+																		                            'gantt_popup'=>'True',
+																		                            'start'=>$start,
+																		                            'end'=> $end
+																								)));
 
+		$GLOBALS['phpgw']->template->set_var('project_id',$project_id);
+		$GLOBALS['phpgw']->template->set_var('action_url',$GLOBALS['phpgw']->link('/index.php',$link_data));
 
+		//_debug_array($project_array);
 
+		$gantt_data = $this->bostatistics->show_graph( array
+		(
+			'project_array'	=> $project_array,
+			'sdate'			=> $start,
+			'edate'			=> $end,
+			'width'			=> $screen_width,
+			'height'		=> $screen_height,
+			'gantt_popup'	=> $gantt_popup,
+			'parent_array'	=> $parent_array,
+			'viewtype'		=> 'planned'
+		));
 
-      $GLOBALS['phpgw']->template->set_var('project_id',$project_id);
-      $GLOBALS['phpgw']->template->set_var('action_url',$GLOBALS['phpgw']->link('/index.php',$link_data));
+		$GLOBALS['phpgw']->template->set_var('lang_close_window', lang('close window'));
+		$GLOBALS['phpgw']->template->set_var('lang_show_gantt_in_new_window', lang('show gantt chart in new window'));
+		$GLOBALS['phpgw']->template->set_var('pix_src', $GLOBALS['phpgw_info']['server']['webserver_url'] . SEP . 'phpgwapi' . SEP . 'images' . SEP . $gantt_data['img_file']);
 
-      //_debug_array($project_array);
+		//_debug_array($gantt_data);
 
-      $gantt_data = $this->bostatistics->show_graph(array('project_array' => $project_array,'sdate' => $start, 'edate' => $end,'width' => $screen_width,
-                        'height' => $screen_height,'gantt_popup' => $gantt_popup,'parent_array' => $parent_array, 'viewtype' => 'planned'));
+		for($i=(count($gantt_data['img_map'])-1);$i>=0;--$i)
+		{
+			$GLOBALS['phpgw']->template->set_var('coords',implode(',',$gantt_data['img_map'][$i]['img_map']));
 
-      $GLOBALS['phpgw']->template->set_var('lang_close_window',lang('close window'));
-      $GLOBALS['phpgw']->template->set_var('lang_show_gantt_in_new_window',lang('show gantt chart in new window'));
-      $GLOBALS['phpgw']->template->set_var('pix_src',$GLOBALS['phpgw_info']['server']['webserver_url'] . SEP . 'phpgwapi' . SEP . 'images' . SEP . $gantt_data['img_file']);
-
-
-      //_debug_array($gantt_data);
-
-      for($i=(count($gantt_data['img_map'])-1);$i>=0;--$i)
-      {
-        $GLOBALS['phpgw']->template->set_var('coords',implode(',',$gantt_data['img_map'][$i]['img_map']));
-
-        $link_data['start'] = $start;
-        $link_data['end'] = $end;
-        $link_data['parent'] = $gantt_data['img_map'][$i]['project_id'];
-        $link_data['expandtree'] = (in_array($gantt_data['img_map'][$i]['project_id'],$parent_array)?'del':'add');
-        $GLOBALS['phpgw']->template->set_var('gantt_url',$GLOBALS['phpgw']->link('/index.php',$link_data));
-        $GLOBALS['phpgw']->template->fp('list','map',True);
-      }
-      $GLOBALS['phpgw']->template->pfp('out','project_stat');
-    }
+			$link_data['start'] = $start;
+			$link_data['end'] = $end;
+			$link_data['parent'] = $gantt_data['img_map'][$i]['project_id'];
+			$link_data['expandtree'] = (in_array($gantt_data['img_map'][$i]['project_id'],$parent_array)?'del':'add');
+			$GLOBALS['phpgw']->template->set_var('gantt_url',$GLOBALS['phpgw']->link('/index.php',$link_data));
+			$GLOBALS['phpgw']->template->fp('list','map',True);
+		}
+		$GLOBALS['phpgw']->template->pfp('out','project_stat');
+	}
 
     /*function project_stat()
     {
@@ -1135,126 +1140,125 @@
       $GLOBALS['phpgw']->template->pfp('out','project_stat');
     }*/
 
-		function list_users_worktimes()
+	function list_users_worktimes()
+	{
+		$jscal = CreateObject('phpgwapi.jscalendar');	// before phpgw_header() !!!
+
+		$values = get_var('values',array('POST','GET'));
+		$sdate  = get_var('sdate',array('POST','GET'));
+		$edate  = get_var('edate',array('POST','GET'));
+
+		if($values['sdate'] || $values['edate'])
 		{
-		  $jscal = CreateObject('phpgwapi.jscalendar');	// before phpgw_header() !!!
-		
-		  $values = get_var('values',array('POST','GET'));
-		  $sdate  = get_var('sdate',array('POST','GET'));
-		  $edate  = get_var('edate',array('POST','GET'));
+			$GLOBALS['phpgw']->session->appsession('session_data', 'projectsStartDate', $jscal->input2date($values['sdate']));
+			$GLOBALS['phpgw']->session->appsession('session_data', 'projectsEndDate',  $jscal->input2date($values['edate']));
+		}
 
-			if($values['sdate'] || $values['edate'])
-			{
-			  $GLOBALS['phpgw']->session->appsession('session_data', 'projectsStartDate', $jscal->input2date($values['sdate']));
-			  $GLOBALS['phpgw']->session->appsession('session_data', 'projectsEndDate',  $jscal->input2date($values['edate']));
-			}
+		if(!$sdate && !$edate)
+		{
+			$sdateSession =  $GLOBALS['phpgw']->session->appsession('session_data','projectsStartDate');
+			$sdate = $sdateSession['raw'];
 
-			if(!$sdate && !$edate)
-			{
-				$sdateSession =  $GLOBALS['phpgw']->session->appsession('session_data','projectsStartDate');
-				$sdate = $sdateSession['raw'];
-	
-				$edateSession =  $GLOBALS['phpgw']->session->appsession('session_data','projectsEndDate');
-				$edate = $edateSession['raw'];
-			}
+			$edateSession =  $GLOBALS['phpgw']->session->appsession('session_data','projectsEndDate');
+			$edate = $edateSession['raw'];
+		}
 
+		//$GLOBALS['phpgw_info']['flags']['app_header'] = lang('projects') . ': ' . lang('User statistics')
+		//												. $this->admin_header_info();
+		//$this->display_app_header();
+		$this->ui_base->display_app_header();
 
-      //$GLOBALS['phpgw_info']['flags']['app_header'] = lang('projects') . ': ' . lang('User statistics')
-      //												. $this->admin_header_info();
-      //$this->display_app_header();
-      $this->ui_base->display_app_header();
+		$GLOBALS['phpgw']->template->set_file(array('user_list_worktimes_t' => 'stats_userlist_worktimes.tpl'));
+		$GLOBALS['phpgw']->template->set_block('user_list_worktimes_t','pro_list','pro');
+		$GLOBALS['phpgw']->template->set_block('user_list_worktimes_t','worktime_list','work');
+		$GLOBALS['phpgw']->template->set_block('user_list_worktimes_t','posible_sum','posible');
 
-      $GLOBALS['phpgw']->template->set_file(array('user_list_worktimes_t' => 'stats_userlist_worktimes.tpl'));
-      $GLOBALS['phpgw']->template->set_block('user_list_worktimes_t','pro_list','pro');
-      $GLOBALS['phpgw']->template->set_block('user_list_worktimes_t','worktime_list','work');
-      $GLOBALS['phpgw']->template->set_block('user_list_worktimes_t','posible_sum','posible');
+		$link_data = array
+		(
+			'menuaction' => 'projects.uistatistics.list_users_worktimes',
+			'action'     => 'ustat'
+		);
 
-      $link_data = array
-      (
-        'menuaction' => 'projects.uistatistics.list_users_worktimes',
-        'action'     => 'ustat'
-      );
+		$GLOBALS['phpgw']->template->set_var('action_url',$GLOBALS['phpgw']->link('/index.php',$link_data));
+		$GLOBALS['phpgw']->template->set_var('lang_workhours',lang('work hours'));
+		$GLOBALS['phpgw']->template->set_var('lang_workhours_project', lang('Project'));
+		$GLOBALS['phpgw']->template->set_var('lang_workhours_journey', lang('travel time'));
+		$GLOBALS['phpgw']->template->set_var('lang_workhours_sum', lang('Sum'));
+		$GLOBALS['phpgw']->template->set_var('lang_update', lang('update'));
 
-      $GLOBALS['phpgw']->template->set_var('action_url',$GLOBALS['phpgw']->link('/index.php',$link_data));
-      $GLOBALS['phpgw']->template->set_var('lang_workhours',lang('work hours'));
-      $GLOBALS['phpgw']->template->set_var('lang_workhours_project', lang('Project'));
-      $GLOBALS['phpgw']->template->set_var('lang_workhours_journey', lang('travel time'));
-      $GLOBALS['phpgw']->template->set_var('lang_workhours_sum', lang('Sum'));
-      $GLOBALS['phpgw']->template->set_var('lang_update', lang('update'));
-
-      if(!isset($values['employee']))
-      {
-        $values['employee'] = $GLOBALS['phpgw_info']['user']['account_id'];
-      }
+		if(!isset($values['employee']))
+		{
+			$values['employee'] = $GLOBALS['phpgw_info']['user']['account_id'];
+		}
 
 // ---------- employee selectbox variable template-declarations ---------------------
 
-      if ($this->boprojects->isprojectadmin('pad') || $this->boprojects->isprojectadmin('pmanager'))
-      {
-        $employees = $this->boprojects->read_projects_acl();
-        $employees_list = array();
+		if ($this->boprojects->isprojectadmin('pad') || $this->boprojects->isprojectadmin('pmanager'))
+		{
+			$employees = $this->boprojects->read_projects_acl();
+			$employees_list = array();
 
-        while (is_array($employees) && (list($no_use,$account_id) = each($employees)))
-        {
-          $GLOBALS['phpgw']->accounts->get_account_name($account_id,$lid,$fname,$lname);
-          if(!$fname && !$lname)
-            continue;
-          $employees_list[$account_id] = $GLOBALS['phpgw']->common->display_fullname($lid,$fname,$lname);
-        }
+			while (is_array($employees) && (list($no_use,$account_id) = each($employees)))
+			{
+				$GLOBALS['phpgw']->accounts->get_account_name($account_id,$lid,$fname,$lname);
+				if(!$fname && !$lname)
+				continue;
+				$employees_list[$account_id] = $GLOBALS['phpgw']->common->display_fullname($lid,$fname,$lname);
+			}
 
-        if(count($employees_list))
-        {
-          asort($employees_list);
-          reset($employees_list);
-        }
+			if(count($employees_list))
+			{
+				asort($employees_list);
+				reset($employees_list);
+			}
 
-        $select_employee_list = "<select name=\"values[employee]\" size=\"1\">\n";
-        $select_employee_list .= '<option value="0">'.lang('all')."</option>\n";
-        while (list($account_id,$account_name) = each($employees_list))
-        {
-          $select_employee_list .= '<option value="' . $account_id . '"';
-          if ($values['employee'] == $account_id)
-          {
-            $select_employee_list .= ' selected';
-          }
-          $select_employee_list .= '>'.$account_name."</option>\n";
-        }
-        $select_employee_list .= '</select>';
-      }
-      else
-      {
-        // show only current user
-        $account_id = $GLOBALS['phpgw_info']['user']['account_id'];
-        $GLOBALS['phpgw']->accounts->get_account_name($account_id,$lid,$fname,$lname);
-        $select_employee_list = '<input type="hidden" name="values[employee]" value="'.$account_id.'">'. $GLOBALS['phpgw']->common->display_fullname($lid,$fname,$lname);
-      }
+			$select_employee_list = "<select name=\"values[employee]\" size=\"1\">\n";
+			$select_employee_list .= '<option value="0">'.lang('all')."</option>\n";
+			while (list($account_id,$account_name) = each($employees_list))
+			{
+				$select_employee_list .= '<option value="' . $account_id . '"';
+				if ($values['employee'] == $account_id)
+				{
+					$select_employee_list .= ' selected';
+				}
+				$select_employee_list .= '>'.$account_name."</option>\n";
+			}
+			$select_employee_list .= '</select>';
+		}
+		else
+		{
+			// show only current user
+			$account_id = $GLOBALS['phpgw_info']['user']['account_id'];
+			$GLOBALS['phpgw']->accounts->get_account_name($account_id,$lid,$fname,$lname);
+			$select_employee_list = '<input type="hidden" name="values[employee]" value="'.$account_id.'">'. $GLOBALS['phpgw']->common->display_fullname($lid,$fname,$lname);
+		}
 
-      $GLOBALS['phpgw']->template->set_var('select_employee_list', $select_employee_list);
+		$GLOBALS['phpgw']->template->set_var('select_employee_list', $select_employee_list);
 
 // --------------- end employee selectbox template ---------------------------------
 
 // ------------ action selectbox variable template-declarations ---------------------
 
-      $select_action_list = "<select name=\"values[stat_action]\" size=\"1\">\n";
+		$select_action_list = "<select name=\"values[stat_action]\" size=\"1\">\n";
 
-      $actions = array(
-        'pro_all'      => lang('all'),
-        'pro_direct'   => lang('direct work'),
-        'pro_indirect' => lang('indirect work')
-      );
+		$actions = array(
+			'pro_all'      => lang('all'),
+			'pro_direct'   => lang('direct work'),
+			'pro_indirect' => lang('indirect work')
+		);
 
-      while(list($stat, $lang_stat) = each($actions))
-      {
-        $select_action_list .= '<option value="'.$stat.'"';
-        if($values['stat_action'] == $stat)
-        {
-          $select_action_list .= ' selected';
-        }
-        $select_action_list .= '>'.$lang_stat."</option>\n";
-      }
-      $select_action_list .= '</select>';
+		while(list($stat, $lang_stat) = each($actions))
+		{
+			$select_action_list .= '<option value="'.$stat.'"';
+			if($values['stat_action'] == $stat)
+			{
+				$select_action_list .= ' selected';
+			}
+			$select_action_list .= '>'.$lang_stat."</option>\n";
+		}
+		$select_action_list .= '</select>';
 
-      $GLOBALS['phpgw']->template->set_var('select_action_list', $select_action_list);
+		$GLOBALS['phpgw']->template->set_var('select_action_list', $select_action_list);
 
 // --------------------- end action selectbox template ------------------------------
 
@@ -1390,14 +1394,14 @@
           $GLOBALS['phpgw']->template->set_var('lang_summery_workhours_journey', $this->boprojects->format_minutes($summary_sum_minutes_journey));
           $GLOBALS['phpgw']->template->set_var('lang_summery_workhours_sum', $this->boprojects->format_minutes($summary_sum_minutes_all));
         }
-        
-        
+
+
         $prefs = CreateObject('phpgwapi.preferences', $values['employee']);
 		$prefs->read_repository();
-		
+
 		$sbox = createobject('phpgwapi.sbox');
 		$holidays = CreateObject('phpgwapi.calendar_holidays');
-        
+
         $pref_country = $prefs->data['common']['country'];
 		if(!$pref_country)
 		{ // no user prefs
@@ -1407,7 +1411,7 @@
 		{ // no predefined user prefs
 			$pref_country = 'DE';
 		}
-		
+
 		$pref_f_state = $prefs->data['common']['federalstate'];
 		if(!$pref_f_state)
 		{ // no user prefs
@@ -1427,13 +1431,13 @@
 		{ // no predefined user prefs
 			$pref_religion = 0; // Atheistisch
 		}
-	
+
 //		$country = ucfirst($GLOBALS['phpgw']->translation->retranslate($sbox->country_array[$pref_country]));
 		$country = ucfirst(lang($sbox->country_array[$pref_country]));
 
 		$federal_state = $this->holidays->federal_states[$country][$pref_f_state]; // Achtung: bisher existiert nur germany!
 		$religion = $this->holidays->religions[$pref_religion];
-        
+
         $workdays = $holidays->get_number_of_workdays(date("d",$start),date("m",$start),date("Y",$start),date("d",$end),date("m",$end),date("Y",$end),$country,$federal_state,$religion);
         $GLOBALS['phpgw']->template->set_var('summery_workhours_posible', ($workdays*8));
         $GLOBALS['phpgw']->template->set_var('lang_summery_workhours_posible', lang('Posible workhours'));
