@@ -122,8 +122,8 @@
 		function sessions()
 		{
 			$this->db =& $GLOBALS['phpgw']->db;
-			$this->sessionid = get_var('sessionid',array('GET','COOKIE'));
-			$this->kp3       = get_var('kp3',array('GET','COOKIE'));
+			$this->sessionid = phpgw::get_var('sessionid');
+			$this->kp3       = phpgw::get_var('kp3');
 			
 			/* Create the crypto object */
 			$GLOBALS['phpgw']->crypto = createObject('phpgwapi.crypto');
@@ -244,8 +244,8 @@
 		{
 			if(empty($sessionid) || !$sessionid)
 			{
-				$sessionid = get_var('sessionid',array('GET','COOKIE'));
-				$kp3       = get_var('kp3',array('GET','COOKIE'));
+				$sessionid = phpgw::get_var('sessionid');
+				$kp3       = phpgw::get_var('kp3');
 			}
 			
 			$this->sessionid = $sessionid;

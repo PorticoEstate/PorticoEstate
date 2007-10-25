@@ -36,7 +36,7 @@
 		 */
 		function setup_translation()
 		{
-			$ConfigLang = get_var('ConfigLang',Array('POST','COOKIE'));
+			$ConfigLang = phpgw::get_var('ConfigLang');
 
 			if(!$ConfigLang)
 			{

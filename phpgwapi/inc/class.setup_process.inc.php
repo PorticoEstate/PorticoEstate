@@ -42,7 +42,7 @@
 		 */
 		function init_process()
 		{
-			$ConfigDomain = get_var('ConfigDomain',array('COOKIE','POST'));
+			$ConfigDomain = phpgw::get_var('ConfigDomain');
 			$phpgw_domain = $GLOBALS['phpgw_domain'];
 
 			$GLOBALS['phpgw_setup']->oProc = createObject('phpgwapi.schema_proc',$phpgw_domain[$ConfigDomain]['db_type']);

@@ -180,48 +180,45 @@
 		{
 			//Grab data that MUST be propagated through all frames	
 			//Post Allways has precedence for good reason.
-			$this->get_order=array('POST','GET');
-			$this->hideto = get_var('hideto',$this->get_order);
-			$this->hidecc = get_var('hidecc',$this->get_order);
-			$this->hidebcc  = get_var('hidebcc',$this->get_order);
-			$this->hideto = $this->hideto ;
-			$this->hidecc = $this->hidecc  ;
-			$this->hidebcc  = $this->hidebcc ;
-			$this->viewmore  = get_var('viewmore',$this->get_order);
-			$this->nameselect  = get_var('nameselect',$this->get_order);
-			$this->cat_id= get_var('cat_id',$this->get_order);
-			$this->wait_image_path=$GLOBALS['phpgw']->common->image('phpgwapi','wait');
-			$destboxes=get_var('big_select',$this->get_order);
+			$this->hideto	= phpgw::get_var('hideto');
+			$this->hidecc	= phpgw::get_var('hidecc');
+			$this->hidebcc	= phpgw::get_var('hidebcc');
+			$this->hideto	= $this->hideto ;
+			$this->hidecc	= $this->hidecc  ;
+			$this->hidebcc	= $this->hidebcc ;
+			$this->viewmore	= phpgw::get_var('viewmore');
+			$this->nameselect 	= phpgw::get_var('nameselect');
+			$this->cat_id	= phpgw::get_var('cat_id');
+			$this->wait_image_path	= $GLOBALS['phpgw']->common->image('phpgwapi','wait');
+			$destboxes		= phpgw::get_var('big_select');
 			
 			parse_str($destboxes,$destboxes);
-			if(is_array($destboxes) && (@count($destboxes) > 0))
+			if ( is_array($destboxes) && count($destboxes) )
 			{
-				$this->toselectbox=$destboxes['toselectbox'];
-				$this->ccselectbox=$destboxes['ccselectbox'];
-				$this->bccselectbox=$destboxes['bccselectbox'];
+				$this->toselectbox	= $destboxes['toselectbox'];
+				$this->ccselectbox	= $destboxes['ccselectbox'];
+				$this->bccselectbox	= $destboxes['bccselectbox'];
 			}
 			else
 			{	
-				$this->toselectbox=get_var('toselectbox',$this->get_order);
-				$this->ccselectbox=get_var('ccselectbox',$this->get_order);
-				$this->bccselectbox=get_var('bccselectbox',$this->get_order);
+				$this->toselectbox	= phpgw::get_var('toselectbox');
+				$this->ccselectbox	= phpgw::get_var('ccselectbox');
+				$this->bccselectbox	= phpgw::get_var('bccselectbox');
 			}
-			$this->searchbox=get_var('searchbox',$this->get_order);
-			$this->querycommand=get_var('querycommand',$this->get_order);
-			$this->nameselectbox  = get_var('nameselect',$this->get_order);
-			$this->order  = get_var('order',$this->get_order);
-			$this->searchautocomplete  = get_var('searchautocomplete',$this->get_order);
-			$this->viewmore = get_var('viewmore',$this->get_order);
-			$this->start  = get_var('start',$this->get_order);
-			$this->sort = get_var('sort',$this->get_order);
-			$this->filter  = get_var('filter',$this->get_order);
-			$this->inquery = get_var('in',$this->get_order);
-			//jarg-SOG s
-			$this->sel_all_cat = get_var('sel_all_cat',$this->get_order);
-			//jarg-SOG e
+			$this->searchbox		= phpgw::get_var('searchbox');
+			$this->querycommand		= phpgw::get_var('querycommand');
+			$this->nameselectbox	= phpgw::get_var('nameselect');
+			$this->order			= phpgw::get_var('order');
+			$this->searchautocomplete	= phpgw::get_var('searchautocomplete');
+			$this->viewmore			= phpgw::get_var('viewmore');
+			$this->start			= phpgw::get_var('start');
+			$this->sort				= phpgw::get_var('sort');
+			$this->filter			= phpgw::get_var('filter');
+			$this->inquery			= phpgw::get_var('in');
+			$this->sel_all_cat		= phpgw::get_var('sel_all_cat');
 			if(!$update_opener)
 			{
-				$this->update_opener=get_var('update_opener',$this->get_order);	
+				$this->update_opener = phpgw::get_var('update_opener');	
 			}
 			$this->update_opener=($this->update_opener ? '1' : '0');
 			
@@ -873,8 +870,8 @@
 		function set_destboxes()
 		{
 			
-			$deleted=get_var('deleted',$this->get_order);
-			$forget_after=get_var('forget_after',$this->get_order);
+			$deleted = phpgw::get_var('deleted');
+			$forget_after = phpgw::get_var('forget_after');
 			$this->bo=CreateObject("phpgwapi.bojsaddressbook");
 			$destboxes=array(
 					"toselectbox" => $this->toselectbox,

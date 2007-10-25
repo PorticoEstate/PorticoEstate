@@ -97,11 +97,11 @@
 		{
 			return array
 			(
-				get_var('filter',array('GLOBAL','POST','GET')),
-				get_var('qfield',array('GLOBAL','POST','GET')),
-				get_var('start',array('GLOBAL','POST','GET')),
-				get_var('order',array('GLOBAL','POST','GET')),
-				get_var('sort',array('GLOBAL','POST','GET'))
+				phpgw::get_var('filter'),
+				phpgw::get_var('qfield'),
+				phpgw::get_var('start'),
+				phpgw::get_var('order'),
+				phpgw::get_var('sort')
 			);
 		}
 
@@ -539,7 +539,7 @@
 		 */
 		function searchby($search_obj)
 		{
-			$qfield = get_var('qfield',Array('GET','POST'));
+			$qfield = phpgw::get_var('qfield');
 
 			$str = '';
 			if (is_array($search_obj))
@@ -647,7 +647,7 @@
 			}
 			else
 			{
-				//$filter = get_var('filter',Array('GET','POST'));
+				//$filter = phpgw::get_var('filter');
 				$filter = $data;
 				$format	= 'all';
 			}
