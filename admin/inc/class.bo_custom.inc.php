@@ -29,10 +29,10 @@
 		var $public_functions = array
 		(
 			'read'			=> True,
-			'read_single'		=> True,
+			'read_single'	=> True,
 			'save'			=> True,
 			'delete'		=> True,
-			'check_perms'		=> True
+			'check_perms'	=> True
 		);
 
 		var $soap_functions = array(
@@ -65,14 +65,14 @@
 				$this->use_session = True;
 			}
 
-			$start	= get_var('start',array('POST','GET'));
-			$query	= get_var('query',array('POST','GET'));
-			$sort	= get_var('sort',array('POST','GET'));
-			$order	= get_var('order',array('POST','GET'));
-			$filter	= get_var('filter',array('POST','GET'));
-			$location	= get_var('location',array('POST','GET'));
-			$allrows	= get_var('allrows',array('POST','GET'));
-			$appname	= get_var('appname',array('POST','GET'));
+			$start		= phpgw::get_var('start', 'int');
+			$query		= phpgw::get_var('query');
+			$sort		= phpgw::get_var('sort');
+			$order		= phpgw::get_var('order');
+			$filter		= phpgw::get_var('filter');
+			$location	= phpgw::get_var('location');
+			$allrows	= phpgw::get_var('allrows', 'bool');
+			$appname	= phpgw::get_var('appname');
 
 			if ($start)
 			{
@@ -80,7 +80,7 @@
 			}
 			else
 			{
-				$this->start=0;
+				$this->start = 0;
 			}
 
 			if(isset($query))
