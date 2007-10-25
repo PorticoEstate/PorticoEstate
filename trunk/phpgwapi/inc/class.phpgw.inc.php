@@ -239,10 +239,12 @@
 
 				if ( is_array($value) )
 				{
-					foreach ( $value as $val )
+					/* Needs fix for "deep" array */
+					/*	foreach ( $value as &$val )
 					{
 						$val = self::clean_value($val, $value_type, $default); 
 					}
+					*/
 				}
 				else
 				{
