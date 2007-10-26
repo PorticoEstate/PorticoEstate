@@ -390,13 +390,13 @@
 			$values['kildeid'] 			= 1;
 			$values['kidnr'] 			= $values['kid_nr'];
 			$values['typeid'] 			= $values['type'];
-			if($order_type = $this->soXport->check_order(intval($values['order'])))
+			if($order_type = $this->soXport->check_order(intval($values['order_id'])))
 			{
 				if($order_type=='workorder')
 				{
 					$soworkorder = CreateObject($this->currentapp.'.soworkorder');
 					$soproject = CreateObject($this->currentapp.'.soproject');
-					$workorder	= $soworkorder->read_single($values['order']);
+					$workorder	= $soworkorder->read_single($values['order_id']);
 					$project	= $soproject->read_single($workorder['project_id']);
 
 					$values['spvend_code']	= $workorder['vendor_id'];
@@ -404,7 +404,7 @@
 					$values['location_code']	=$project['location_code'];
 					$values['dima']				=str_replace('-','',$project['location_code']);
 					$values['vendor_name']		= $this->get_vendor_name($workorder['vendor_id']);
-					$values['pmwrkord_code']	= $values['order'];
+					$values['pmwrkord_code']	= $values['order_id'];
 					$values['project_id']			= $workorder['project_id'];
 
 					$values = $this->set_responsible($values,$workorder['user_id'],$workorder['b_account_id']);
@@ -423,16 +423,16 @@
 				if($order_type=='s_agreement')
 				{
 					$sos_agreement = CreateObject($this->currentapp.'.sos_agreement');
-					$s_agreement = $sos_agreement->read_single(array('s_agreement_id'=>$values['order']));
+					$s_agreement = $sos_agreement->read_single(array('s_agreement_id'=>$values['order_id']));
 
 					$values['spvend_code']		= $s_agreement['vendor_id'];
 					$values['spbudact_code']	= $s_agreement['b_account_id'];
 					$values['vendor_name']		= $this->get_vendor_name($s_agreement['vendor_id']);
-					$values['pmwrkord_code']	= intval($values['order']);
+					$values['pmwrkord_code']	= intval($values['order_id']);
 					$values = $this->set_responsible($values,$s_agreement['user_id'],$s_agreement['b_account_id']);
 
 
-					$s_agreement_detail = $sos_agreement->read(array('allrows'=>True,'s_agreement_id'=>$values['order'],'detail'=>True));
+					$s_agreement_detail = $sos_agreement->read(array('allrows'=>True,'s_agreement_id'=>$values['order_id'],'detail'=>True));
 
 					$sum_agreement=0;
 					for ($i=0;$i<count($s_agreement_detail);$i++)

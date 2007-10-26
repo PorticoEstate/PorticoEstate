@@ -1059,7 +1059,7 @@
 				$values['b_account_id']		= get_var('b_account_id',array('POST','GET'));
 				$values['b_account_name']	= get_var('b_account_name',array('POST','GET'));
 				$values['amount']		= get_var('amount',array('POST','GET'));
-				$values['order']		= get_var('order',array('POST','GET'));
+				$values['order_id']		= get_var('order_id',array('POST','GET'));
 
 				$insert_record = $GLOBALS['phpgw']->session->appsession('insert_record',$this->currentapp);
 				$values = $this->bocommon->collect_locationdata($values,$insert_record);
@@ -1087,12 +1087,12 @@
 			if($add_invoice && is_array($values))
 			{
 
-				if($values['order'] && !ctype_digit($values['order'])):
+				if($values['order_id'] && !ctype_digit($values['order_id'])):
 				{
 					$receipt['error'][]=array('msg'=>lang('Please enter an integer for order!'));
-					unset($values['order']);
+					unset($values['order_id']);
 				}
-				elseif($values['order']):
+				elseif($values['order_id']):
 				{
 					$order=True;
 				}
@@ -1266,7 +1266,7 @@
 				'value_merknad'						=> isset($values['merknad'])?$values['merknad']:'',
 				'value_num_days'					=> isset($values['num_days'])?$values['num_days']:'',
 				'value_amount'						=> isset($values['amount'])?$values['amount']:'',
-				'value_order'						=> isset($values['order'])?$values['order']:'',
+				'value_order_id'						=> isset($values['order_id'])?$values['order_id']:'',
 
 				'lang_auto_tax'						=> lang('Auto TAX'),
 				'lang_auto_tax_statustext'			=> lang('Set tax'),
