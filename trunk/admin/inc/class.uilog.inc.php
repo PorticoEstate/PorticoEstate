@@ -165,8 +165,7 @@
 			{
 				$GLOBALS['phpgw']->redirect_link('/index.php');
 			}
-			$this->bo->purge_log(isset($_REQUEST['account_id']) ? $_REQUEST['account_id'] : 0);
+			$this->bo->purge_log( phpgw::get_var('account_id', 'int') );
 			$GLOBALS['phpgw']->redirect_link('index.php', array('menuaction', 'admin.uilog.list_log'));
 		}
-		
 	}

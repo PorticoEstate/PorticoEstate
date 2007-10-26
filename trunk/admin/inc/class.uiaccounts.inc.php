@@ -48,41 +48,27 @@
 
 		function list_groups()
 		{
-			if ((isset($_POST['done']) && $_POST['done']) || $GLOBALS['phpgw']->acl->check('group_access', PHPGW_ACL_READ,'admin'))
+			if ( phpgw::get_var('done', 'bool', 'POST') || $GLOBALS['phpgw']->acl->check('group_access', PHPGW_ACL_READ,'admin'))
 			{
 				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'admin.uimainscreen.mainscreen'));
 			}
 
-			if(isset($_POST['add']) && $_POST['add'])
+			if ( phpgw::get_var('add', 'bool', 'POST') )
 			{
 				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'admin.uiaccounts.edit_group', 'account_id' => 0) );
 			}
 
-			$start = (int) isset($_REQUEST['start']) ? $_REQUEST['start']: 0;
+			$start = phpgw::get_var('start', 'int');
 
-			if(isset($_GET['order']))
-			{
-				$order = $_GET['order'];
-			}
-			else
-			{
-				$order = 'account_lid';
-			}
+			$order = phpgw::get_var('order', 'string', 'GET', 'account_lid');
 			
-			if(isset($_GET['sort']))
-			{
-				$sort = $_GET['sort'];
-			}
-			else
-			{
-				$sort = 'ASC';
-			}
+			$sort = phpgw::get_var('sort', 'string', 'GET', 'ASC');
 			
 			$total = 0;
 
-			$query = isset($_POST['query']) ? $_POST['query'] : '';
+			$query = phpgw::get_var('query', 'string', 'POST');
 
-			$GLOBALS['cd'] = isset($_GET['cd']) ? $_GET['cd'] : 0;
+			$GLOBALS['cd'] = phpgw::get_var('cd', 'int', 'GET');
 
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('administration') . ': ' . lang('list groups');
 
@@ -158,13 +144,13 @@
 
 		function list_users($param_cd = '')
 		{
-			if ( (isset($_POST['done']) && $_POST['done']) 
-				|| $GLOBALS['phpgw']->acl->check('account_access',1,'admin'))
+			if ( phpgw::get_var('done', 'bool', 'POST') 
+				|| $GLOBALS['phpgw']->acl->check('account_access',1,'admin') )
 			{
 				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction' => 'admin.uimainscreen.mainscreen'));
 			}
 
-			if ( isset($_POST['add']) && $_POST['add'] )
+			if ( phpgw::get_var('add', 'bool', 'POST') )
 			{
 				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'admin.uiaccounts.edit_user'));
 			}
@@ -175,27 +161,10 @@
 			}
 
 			//this is a work around hack for the ugly nextmatch code
-			$query = $GLOBALS['query'] = isset($_POST['query']) ? $_POST['query'] : '';
-
-			$start = (int) isset($_REQUEST['start']) ? $_REQUEST['start']: 0;
-			
-			if(isset($_GET['order']))
-			{
-				$order = $_GET['order'];
-			}
-			else
-			{
-				$order = 'account_lid';
-			}
-			
-			if(isset($_GET['sort']))
-			{
-				$sort = $_GET['sort'];
-			}
-			else
-			{
-				$sort = 'ASC';
-			}
+			$query = $GLOBALS['query'] = phpgw::get_var('query', 'string', 'POST');
+			$start = phpgw::get_var('start', 'int');
+			$order = phpgw::get_var('order', 'string', 'GET', 'account_lid');
+			$sort = phpgw::get_var('sort', 'string', 'GET', 'ASC');
 			
 			$total = 0;
 
@@ -203,8 +172,7 @@
 
 			$GLOBALS['phpgw']->xslttpl->add_file('users');
 
-			// FIXME $GLOBALS[query] wtf? skwashd Mar-2005
-			$account_info = $GLOBALS['phpgw']->accounts->get_list('accounts',$start,$sort,$order,$GLOBALS['query'],$total);
+			$account_info = $GLOBALS['phpgw']->accounts->get_list('accounts', $start, $sort, $order, $query, $total);
 			$total = $GLOBALS['phpgw']->accounts->total;
 
 			$link_data = array
@@ -312,9 +280,9 @@
 		function edit_group()
 		{
 			$account_apps	= array();
-			$account_id		= (int) $_REQUEST['account_id'];
+			$account_id		= phpgw::get_var('account_id', 'int');
 			$error_list		= '';
-			$values			= isset($_POST['values']) ? $_POST['values'] : array();
+			$values			= phpgw::get_var('values', 'string', 'POST', array());
 
 			if ( (isset($values['cancel']) && $values['cancel']) || (!$account_id && $GLOBALS['phpgw']->acl->check('group_access',4,'admin')) || ($account_id && $GLOBALS['phpgw']->acl->check('group_access',16,'admin')))
 			{
@@ -324,9 +292,9 @@
 			//echo 'POST variables<pre>' . print_r($values, true) . '</pre>';
 			if ( isset($values['save']) && $values['save'] )
 			{
-				$account_apps	= $_REQUEST['account_apps'];
-				$account_user	= $_REQUEST['account_user'];
-				$group_manager	= (int) $_REQUEST['group_manager'];
+				$account_apps	= phpgw::get_var('account_apps', 'bool', 'POST');
+				$account_user	= phpgw::get_var('account_user', 'int', 'POST');
+				$group_manager	= phpgw::get_var('group_manager', 'int', 'POST');
 				
 				$error = $this->bo->validate_group($values);
 
@@ -788,13 +756,14 @@
 
 		function view_user()
 		{
-			if ($GLOBALS['phpgw']->acl->check('account_access',8,'admin') || ! isset($_GET['account_id']) )
+			$account_id = phpgw::get_var('account_id', 'int', 'GET');
+			if ( $GLOBALS['phpgw']->acl->check('account_access', 8, 'admin') || !$account_id )
 			{
 				$this->list_users();
 				return false;
 			}
 
-			$account = createObject('phpgwapi.accounts', (int) $_GET['account_id'],'u');
+			$account = createObject('phpgwapi.accounts', $account_id,'u');
 			$userData = $account->read_repository();
 			
 			if ($userData['status'])
@@ -824,7 +793,7 @@
 				$userData['input_expires'] = lang('Never');
 			}
 			// Find out which groups they are members of
-			$usergroups = $account->membership(intval($_GET['account_id']));
+			$usergroups = $account->membership($account_id);
 			while (list(,$group) = each($usergroups))
 			{
 				$userData['groups'][] = $group['account_name'];
@@ -832,7 +801,7 @@
 
 			//Permissions
 			$availableApps = $GLOBALS['phpgw_info']['apps'];
-			$apps  = CreateObject('phpgwapi.applications',intval($_GET['account_id']));
+			$apps  = CreateObject('phpgwapi.applications', $account_id);
 			$perms = array_keys($apps->read_account_specific());
 			if(is_array($availableApps) && count($availableApps))
 			{
@@ -880,12 +849,12 @@
 		{
 			$account_id = phpgw::get_var('account_id', 'int');
 
-			if ($_POST['cancel'] || $GLOBALS['phpgw']->acl->check('group_access',32,'admin'))
+			if ( phpgw::get_var('cancel', 'bool', 'POST') || $GLOBALS['phpgw']->acl->check('group_access',32,'admin'))
 			{
 				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'admin.uiaccounts.list_groups'));
 			}
 
-			if ($account_id && $_POST['delete'])
+			if ($account_id && phpgw::get_var('delete', 'bool', 'POST') )
 			{
 				$this->bo->delete_group($account_id);
 				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'admin.uiaccounts.list_groups'));
@@ -932,22 +901,22 @@
 
 		function delete_user()
 		{
-			if ($GLOBALS['phpgw']->acl->check('account_access',32,'admin') || $GLOBALS['phpgw_info']['user']['account_id'] == $_GET['account_id'])
+			if ( $GLOBALS['phpgw']->acl->check('account_access',32,'admin') 
+				|| $GLOBALS['phpgw_info']['user']['account_id'] == phpgw::get_var('account_id', 'int', 'GET') )
 			{
 				$this->list_users();
 				return False;
 			}
 
-			if ( isset($_REQUEST['deleteAccount']) && isset($_REQUEST['account_id']) )
+			if ( phpgw::get_var('deleteAccount', 'bool') )
 			{
-				if(!$this->bo->delete_user($_REQUEST['account_id'], $_REQUEST['account']))
+				if ( !$this->bo->delete_user(phpgw::get_var('account_id', 'int'), phpgw::get_var('account', 'int') ) )
 				{
 					//TODO Make this nicer
 					echo 'Failed to delete user';
 				}
 			}
-			if( (isset($_REQUEST['cancel']) && $_REQUEST['cancel'] )
-				|| ( isset($_REQUEST['deleteAccount']) && $_REQUEST['deleteAccount']) )
+			if( phpgw::get_var('cancel', 'bool') )
 			{
 				$this->list_users();
 			}
@@ -967,9 +936,10 @@
 				$accounts = CreateObject('phpgwapi.accounts');
 				$accounts_list = $accounts->get_list('accounts');
 
+				$account_id = phpgw::get_var('account_id', 'int');
 				foreach ( $accounts_list as $account )
 				{
-					if((int)$account['account_id'] != $_REQUEST['account_id'] )
+					if((int)$account['account_id'] != $account_id )
 					{
 						$alist[] = array
 						(
@@ -982,7 +952,7 @@
 				unset($accounts_list);
 				$data = array
 				(
-					'account_id'		=> $_REQUEST['account_id'],
+					'account_id'		=> $account_id,
 					'accountlist'		=> $alist,
 					'form_action'		=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.uiaccounts.delete_user') ),
 					'lang_new_owner'	=> lang('Who would you like to transfer ALL records owned by the deleted user to?'),
@@ -1001,13 +971,11 @@
 				return False;
 			}
 
-			$cdid = $cd;
-			settype($cd,'integer');
-			$cd = ($_GET['cd']?$_GET['cd']:intval($cdid));
+			$cdid = (int) $cd;
+			$cd = phpgw::get_var('cd', 'int', 'GET', $cdid);
 
-			$accountid = $account_id;
-			settype($account_id,'integer');
-			$account_id = ($_GET['account_id']?$_GET['account_id']:intval($accountid));
+			$accountid = (int) $account_id;
+			$account_id = phpgw::get_var('account_id', 'int', 'GET', $accountid);
 			
 			// todo
 			// not needed if i use the same file for new groups too
@@ -1018,10 +986,10 @@
 			else
 			{
 				$group_info = Array(
-					'account_id'   => intval($_GET['account_id']),
-					'account_name' => $GLOBALS['phpgw']->accounts->id2name($_GET['account_id']),
-					'account_user' => $GLOBALS['phpgw']->accounts->member($_GET['account_id']),
-					'account_managers' => $this->bo->load_group_managers($_GET['account_id'])
+					'account_id'   => $account_id,
+					'account_name' => $GLOBALS['phpgw']->accounts->id2name($account_id),
+					'account_user' => $GLOBALS['phpgw']->accounts->member($account_id),
+					'account_managers' => $this->bo->load_group_managers($account_id)
 				);
 
 				$this->edit_group_managers($group_info);
