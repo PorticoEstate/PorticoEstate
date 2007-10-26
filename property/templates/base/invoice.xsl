@@ -1387,7 +1387,7 @@
 					<xsl:value-of select="lang_order"/>
 				</td>
 				<td>
-					<input type="text" name="order" value="{value_order}" onMouseout="window.status='';return true;">
+					<input type="text" name="order_id" value="{value_order_id}" onMouseout="window.status='';return true;">
 						<xsl:attribute name="onMouseover">
 							<xsl:text>window.status='</xsl:text>
 								<xsl:value-of select="lang_order_statustext"/>
