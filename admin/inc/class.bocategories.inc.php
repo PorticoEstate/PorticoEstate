@@ -28,24 +28,23 @@
 
 		function bocategories()
 		{
-			if (isset($_REQUEST['appname']) && $_REQUEST['appname'])
+			$appname = phpgw::get_var('appname');
+			if ( $appname )
 			{
-				$this->cats = CreateObject('phpgwapi.categories',-1,$_REQUEST['appname']);
+				$this->cats = CreateObject('phpgwapi.categories', -1, $appname);
 			}
 			else
 			{
-				$this->cats = CreateObject('phpgwapi.categories',$GLOBALS['phpgw_info']['user']['account_id'],'phpgw');
+				$this->cats = CreateObject('phpgwapi.categories', $GLOBALS['phpgw_info']['user']['account_id'], 'phpgw');
 			}
 
 			$this->read_sessiondata();
 
-			/* _debug_array($GLOBALS['HTTP_POST_VARS']); */
-
-			$start  = isset($_REQUEST['start'])	? (int) $_REQUEST['start'] : 0;
-			$query  = isset($_REQUEST['query'])	? $_REQUEST['query'] : '';
-			$sort   = isset($_REQUEST['sort'])	? $_REQUEST['sort'] : '';
-			$order  = isset($_REQUEST['order'])	? $_REQUEST['order'] : '';
-			$cat_id = isset($_REQUEST['cat_id'])? (int) $_REQUEST['cat_id'] : 0;
+			$start  = phpgw::get_var('start', 'int');
+			$query  = phpgw::get_var('query');
+			$sort   = phpgw::get_var('sort');
+			$order  = phpgw::get_var('order');
+			$cat_id = phpgw::get_var('cat_id', 'int');
 
 			if(!empty($start) || $start == 0)
 			{
