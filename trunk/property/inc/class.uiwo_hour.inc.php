@@ -66,13 +66,13 @@
 			$this->create_html			= CreateObject('phpgwapi.xslttemplates');
 			$this->account				= $GLOBALS['phpgw_info']['user']['account_id'];
 
-			$this->bo				= CreateObject($this->currentapp.'.bowo_hour',True);
-			$this->boworkorder			= CreateObject($this->currentapp.'.boworkorder');
-			$this->boproject			= CreateObject($this->currentapp.'.boproject');
-			$this->bopricebook			= CreateObject($this->currentapp.'.bopricebook');
+			$this->bo				= CreateObject('property.bowo_hour',True);
+			$this->boworkorder			= CreateObject('property.boworkorder');
+			$this->boproject			= CreateObject('property.boproject');
+			$this->bopricebook			= CreateObject('property.bopricebook');
 
-			$this->bocommon				= CreateObject($this->currentapp.'.bocommon');
-			$this->menu				= CreateObject($this->currentapp.'.menu');
+			$this->bocommon				= CreateObject('property.bocommon');
+			$this->menu				= CreateObject('property.menu');
 			$this->config				= CreateObject('phpgwapi.config');
 
 			$this->config->read_repository();
@@ -114,8 +114,8 @@
 
 		function deviation()
 		{
-			$workorder_id 	= get_var('workorder_id',array('POST','GET'));
-			$hour_id	 	= get_var('hour_id',array('POST','GET'));
+			$workorder_id 	= phpgw::get_var('workorder_id', 'int');
+			$hour_id	 	= phpgw::get_var('hour_id', 'int');
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('wo_hour'));
 			$list = $this->bo->read_deviation(array('workorder_id'=>$workorder_id,'hour_id'=>$hour_id));
@@ -189,10 +189,10 @@
 
 		function edit_deviation()
 		{
-			$workorder_id 	= get_var('workorder_id',array('POST','GET'));
-			$hour_id	= get_var('hour_id',array('POST','GET'));
-			$id	 	= get_var('id',array('POST','GET'));
-			$values	 	= get_var('values',array('POST','GET'));
+			$workorder_id 	= phpgw::get_var('workorder_id', 'int');
+			$hour_id	= phpgw::get_var('hour_id', 'int');
+			$id	 	= phpgw::get_var('id', 'int');
+			$values	 	= phpgw::get_var('values');
 			$dateformat	= $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('wo_hour'));
@@ -458,8 +458,8 @@
 			$GLOBALS['phpgw']->xslttpl->add_file(array('wo_hour',
 										'menu'));
 
-			$values 		= get_var('values',array('POST'));
-			$workorder_id 	= get_var('workorder_id',array('POST','GET'));
+			$values 		= phpgw::get_var('values');
+			$workorder_id 	= phpgw::get_var('workorder_id', 'int');
 
 			if($values['name'])
 			{
@@ -520,9 +520,9 @@
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('wo_hour','menu'));
 
-			$delete = get_var('delete',array('POST','GET'));
-			$hour_id = get_var('hour_id',array('POST','GET'));
-			$workorder_id = get_var('workorder_id',array('POST','GET'));
+			$delete = phpgw::get_var('delete', 'bool');
+			$hour_id = phpgw::get_var('hour_id', 'int');
+			$workorder_id = phpgw::get_var('workorder_id', 'int');
 			$links = $this->menu->links();
 
 			if($delete && $hour_id)
@@ -607,13 +607,13 @@
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('wo_hour','menu'));
 
-			$show_cost		= get_var('show_cost',array('POST','GET'));
-			$show_details		= get_var('show_details',array('POST','GET'));
-			$workorder_id		= get_var('workorder_id',array('POST','GET'));
-			$to_email 		= get_var('to_email',array('POST','GET'));
-			$update_email		= get_var('update_email',array('POST','GET'));
-			$send_order		= get_var('send_order',array('POST','GET'));
-			$no_email		= get_var('no_email',array('POST','GET'));
+			$show_cost		= phpgw::get_var('show_cost', 'bool');
+			$show_details		= phpgw::get_var('show_details', 'bool');
+			$workorder_id		= phpgw::get_var('workorder_id', 'int');
+			$to_email 		= phpgw::get_var('to_email', 'email');
+			$update_email		= phpgw::get_var('update_email', 'bool');
+			$send_order		= phpgw::get_var('send_order', 'bool');
+			$no_email		= phpgw::get_var('no_email', 'bool');
 
 			if($update_email)
 			{
@@ -637,7 +637,7 @@
 			}
 			$project	= $this->boproject->read_single($common_data['workorder']['project_id']);
 
-			$bolocation	= CreateObject($this->currentapp.'.bolocation');
+			$bolocation	= CreateObject('property.bolocation');
 
 			$location_data=$bolocation->initiate_ui_location(array(
 						'values'	=> $project['location_data'],
@@ -855,7 +855,7 @@
 
 				if ($rcpt)
 				{
-					$historylog	= CreateObject($this->currentapp.'.historylog','workorder');
+					$historylog	= CreateObject('property.historylog','workorder');
 					$historylog->add('M',$workorder_id,$to_email);
 					$receipt['message'][]=array('msg'=>lang('Workorder is sent by email!'));
 				}
@@ -925,9 +925,9 @@
 			{
 				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> $this->currentapp.'.uilocation.stop', 'perm'=>1, 'acl_location'=> $this->acl_location));
 			}
-			$show_cost = get_var('show_cost',array('POST','GET'));
-			$mark_draft = get_var('mark_draft',array('POST','GET'));
-			$workorder_id = get_var('workorder_id',array('POST','GET'));
+			$show_cost = phpgw::get_var('show_cost', 'bool');
+			$mark_draft = phpgw::get_var('mark_draft', 'bool');
+			$workorder_id = phpgw::get_var('workorder_id', 'int');
 
 			$common_data		= $this->common_data($workorder_id);
 			$values_hour		= $common_data['content'];
@@ -1054,11 +1054,11 @@
 										'nextmatchs',
 										'search_field'));
 
-			$delete = get_var('delete',array('POST','GET'));
-			$hour_id = get_var('hour_id',array('POST','GET'));
+			$delete = phpgw::get_var('delete', 'bool');
+			$hour_id = phpgw::get_var('hour_id', 'int');
 
-			$workorder_id = get_var('workorder_id',array('POST','GET'));
-			$values = get_var('values',array('POST'));
+			$workorder_id = phpgw::get_var('workorder_id', 'int');
+			$values = phpgw::get_var('values');
 //_debug_array($values);
 
 			if($delete && $hour_id)
@@ -1258,13 +1258,13 @@
 									'nextmatchs',
 									'search_field'));
 
-			$delete = get_var('delete',array('POST','GET'));
-			$hour_id = get_var('hour_id',array('POST','GET'));
+			$delete = phpgw::get_var('delete', 'bool');
+			$hour_id = phpgw::get_var('hour_id', 'int');
 
-			$workorder_id = get_var('workorder_id',array('POST','GET'));
-			$template_id = get_var('template_id',array('POST','GET'));
+			$workorder_id = phpgw::get_var('workorder_id', 'int');
+			$template_id = phpgw::get_var('template_id', 'int');
 
-			$values = get_var('values',array('POST'));
+			$values = phpgw::get_var('values');
 //_debug_array($values);
 
 			if($delete && $hour_id)
@@ -1284,7 +1284,7 @@
 
 			$workorder	= $common_data['workorder'];
 
-			$botemplate		= CreateObject($this->currentapp.'.botemplate');
+			$botemplate		= CreateObject('property.botemplate');
 			$template_list	= $botemplate->read_template_hour($template_id);
 
 			$i=0;
@@ -1490,14 +1490,14 @@
 			{
 				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> $this->currentapp.'.uilocation.stop', 'perm'=>2, 'acl_location'=> $this->acl_location));
 			}
-			$from			= get_var('from',array('POST','GET'));
-			$template_id 		= get_var('template_id',array('POST','GET'));
-			$workorder_id 		= get_var('workorder_id',array('POST','GET'));
-			$activity_id		= get_var('activity_id',array('POST','GET'));
-			$hour_id		= get_var('hour_id',array('POST','GET'));
-			$values			= get_var('values',array('POST','GET'));
-			$values['ns3420_id']	= get_var('ns3420_id',array('POST','GET'));
-			$values['ns3420_descr']	= get_var('ns3420_descr',array('POST','GET'));
+			$from			= phpgw::get_var('from');
+			$template_id 		= phpgw::get_var('template_id', 'int');
+			$workorder_id 		= phpgw::get_var('workorder_id', 'int');
+			$activity_id		= phpgw::get_var('activity_id', 'int');
+			$hour_id		= phpgw::get_var('hour_id', 'int');
+			$values			= phpgw::get_var('values');
+			$values['ns3420_id']	= phpgw::get_var('ns3420_id');
+			$values['ns3420_descr']	= phpgw::get_var('ns3420_descr');
 
 
 //_debug_array($workorder);
@@ -1667,11 +1667,11 @@
 			{
 				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> $this->currentapp.'.uilocation.stop', 'perm'=>2, 'acl_location'=> $this->acl_location));
 			}
-			$id 		= get_var('id',array('POST','GET'));
-			$workorder_id	= get_var('workorder_id',array('POST','GET'));
-			$hour_id	= get_var('hour_id',array('POST','GET'));
-			$deviation_id	= get_var('deviation_id',array('POST','GET'));
-			$confirm	= get_var('confirm',array('POST'));
+			$id 		= phpgw::get_var('id', 'int');
+			$workorder_id	= phpgw::get_var('workorder_id', 'int');
+			$hour_id	= phpgw::get_var('hour_id', 'int');
+			$deviation_id	= phpgw::get_var('deviation_id', 'int');
+			$confirm	= phpgw::get_var('confirm', 'bool', 'POST');
 
 
 			if($deviation_id)
@@ -1706,7 +1706,7 @@
 				$function_msg	= lang('delete hour');
 			}
 
-			if (get_var('confirm',array('POST')))
+			if (phpgw::get_var('confirm', 'bool', 'POST'))
 			{
 				if($deviation_id)
 				{

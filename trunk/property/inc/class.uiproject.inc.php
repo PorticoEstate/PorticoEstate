@@ -63,9 +63,9 @@
 			$this->nextmatchs		= CreateObject('phpgwapi.nextmatchs');
 			$this->account			= $GLOBALS['phpgw_info']['user']['account_id'];
 
-			$this->bo			= CreateObject($this->currentapp.'.boproject',True);
-			$this->bocommon			= CreateObject($this->currentapp.'.bocommon');
-			$this->menu			= CreateObject($this->currentapp.'.menu');
+			$this->bo			= CreateObject('property.boproject',True);
+			$this->bocommon			= CreateObject('property.bocommon');
+			$this->menu			= CreateObject('property.menu');
 
 			$this->acl 			= CreateObject('phpgwapi.acl');
 			$this->acl_location		= '.project';
@@ -105,8 +105,8 @@
 
 		function excel()
 		{
-			$start_date = urldecode(get_var('start_date',array('POST','GET')));
-			$end_date 	= urldecode(get_var('end_date',array('POST','GET')));
+			$start_date = urldecode(phpgw::get_var('start_date'));
+			$end_date 	= urldecode(phpgw::get_var('end_date'));
 			$list 		= $this->bo->read($start_date,$end_date,$allrows=True);
 			$uicols	= $this->bo->uicols;
 			$this->bocommon->excel($list,$uicols['name'],$uicols['descr'],$uicols['input_type']);
@@ -125,10 +125,10 @@
 										'search_field',
 										'wo_hour_cat_filter'));
 
-			$lookup 		= get_var('lookup',array('POST','GET'));
-			$from 			= get_var('from',array('POST','GET'));
-			$start_date 		= urldecode(get_var('start_date',array('POST','GET')));
-			$end_date 		= urldecode(get_var('end_date',array('POST','GET')));
+			$lookup 		= phpgw::get_var('lookup', 'bool');
+			$from 			= phpgw::get_var('from');
+			$start_date 		= urldecode(phpgw::get_var('start_date'));
+			$end_date 		= urldecode(phpgw::get_var('end_date'));
 
 			$links = $this->menu->links('project');
 
@@ -454,8 +454,8 @@
 		//	$GLOBALS['phpgw_info']['flags']['nonavbar'] = True;
 		//	$GLOBALS['phpgw_info']['flags']['noheader'] = True;
 			$GLOBALS['phpgw_info']['flags']['nofooter'] = True;
-			$values['start_date']	= get_var('start_date',array('POST'));
-			$values['end_date']	= get_var('end_date',array('POST'));
+			$values['start_date']	= phpgw::get_var('start_date', 'string', 'POST');
+			$values['end_date']	= phpgw::get_var('end_date', 'string', 'POST');
 
 			$function_msg	= lang('Date search');
 			$appname	= lang('project');
@@ -496,12 +496,12 @@
 			{
 				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> $this->currentapp.'.uilocation.stop', 'perm'=> 2, 'acl_location'=> $this->acl_location));
 			}
-			$id 				= get_var('id',array('POST','GET'));
-			$values				= get_var('values',array('POST'));
-			$add_request			= get_var('add_request',array('POST'));
+			$id 				= phpgw::get_var('id', 'int');
+			$values				= phpgw::get_var('values');
+			$add_request			= phpgw::get_var('add_request');
 
 			$config				= CreateObject('phpgwapi.config');
-			$bolocation			= CreateObject($this->currentapp.'.bolocation');
+			$bolocation			= CreateObject('property.bolocation');
 
 			$insert_record = $GLOBALS['phpgw']->session->appsession('insert_record',$this->currentapp);
 			$insert_record_entity = $GLOBALS['phpgw']->session->appsession('insert_record_entity',$this->currentapp);
@@ -516,7 +516,7 @@
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('project'));
 
-			$bypass = get_var('bypass',array('POST','GET'));
+			$bypass = phpgw::get_var('bypass', 'bool');
 
 			if($add_request)
 			{
@@ -529,24 +529,24 @@
 			}
 			else
 			{
-				$location_code 		= get_var('location_code',array('POST','GET'));
-				$tenant_id 		= get_var('tenant_id',array('POST','GET'));
-				$values['descr']	= get_var('descr',array('POST','GET'));
-				$p_entity_id		= get_var('p_entity_id',array('POST','GET'));
-				$p_cat_id		= get_var('p_cat_id',array('POST','GET'));
+				$location_code 		= phpgw::get_var('location_code');
+				$tenant_id 		= phpgw::get_var('tenant_id', 'int');
+				$values['descr']	= phpgw::get_var('descr');
+				$p_entity_id		= phpgw::get_var('p_entity_id', 'int');
+				$p_cat_id		= phpgw::get_var('p_cat_id', 'int');
 				$values['p'][$p_entity_id]['p_entity_id']	= $p_entity_id;
 				$values['p'][$p_entity_id]['p_cat_id']		= $p_cat_id;
-				$values['p'][$p_entity_id]['p_num']		= get_var('p_num',array('POST','GET'));
+				$values['p'][$p_entity_id]['p_num']		= phpgw::get_var('p_num');
 
-				$origin				= get_var('origin',array('POST','GET'));
-				$origin_id			= get_var('origin_id',array('POST','GET'));
+				$origin				= phpgw::get_var('origin');
+				$origin_id			= phpgw::get_var('origin_id', 'int');
 
 				if($p_entity_id && $p_cat_id)
 				{
 
 					if(!is_object($boadmin_entity))
 					{
-						$boadmin_entity	= CreateObject($this->currentapp.'.boadmin_entity');
+						$boadmin_entity	= CreateObject('property.boadmin_entity');
 					}
 
 					$entity_category = $boadmin_entity->read_single_category($p_entity_id,$p_cat_id);
@@ -899,7 +899,7 @@
 
 						if(!is_object($boadmin_entity))
 						{
-							$boadmin_entity	= CreateObject($this->currentapp.'.boadmin_entity');
+							$boadmin_entity	= CreateObject('property.boadmin_entity');
 						}
 						$entity_category = $boadmin_entity->read_single_category($entity_id,$cat_id);
 						$values['origin'][$i]['descr'] = $entity_category['name'];
@@ -1088,8 +1088,8 @@
 				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> $this->currentapp.'.uilocation.stop', 'perm'=>8, 'acl_location'=>$this->acl_location));
 			}
 
-			$project_id = get_var('project_id',array('POST','GET'));
-			$confirm	= get_var('confirm',array('POST'));
+			$project_id = phpgw::get_var('project_id', 'int');
+			$confirm	= phpgw::get_var('confirm', 'bool', 'POST');
 
 			$link_data = array
 			(
@@ -1097,7 +1097,7 @@
 				'project_id'	=> $project_id
 			);
 
-			if (get_var('confirm',array('POST')))
+			if (phpgw::get_var('confirm', 'bool', 'POST'))
 			{
 				$this->bo->delete($project_id);
 				$GLOBALS['phpgw']->redirect_link('/index.php',$link_data);
@@ -1133,9 +1133,9 @@
 
 			$receipt = $GLOBALS['phpgw']->session->appsession('receipt',$this->currentapp);
 			$GLOBALS['phpgw']->session->appsession('receipt',$this->currentapp,'');
-			$bolocation			= CreateObject($this->currentapp.'.bolocation');
+			$bolocation			= CreateObject('property.bolocation');
 
-			$id	= get_var('id',array('POST','GET'));
+			$id	= phpgw::get_var('id', 'int');
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('project'));
 
@@ -1212,7 +1212,7 @@
 
 						if(!is_object($boadmin_entity))
 						{
-							$boadmin_entity	= CreateObject($this->currentapp.'.boadmin_entity');
+							$boadmin_entity	= CreateObject('property.boadmin_entity');
 						}
 						$entity_category = $boadmin_entity->read_single_category($entity_id,$cat_id);
 						$values['origin'][$i]['descr'] = $entity_category['name'];

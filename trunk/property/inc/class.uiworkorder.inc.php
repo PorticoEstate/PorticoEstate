@@ -62,9 +62,9 @@
 			$this->nextmatchs			= CreateObject('phpgwapi.nextmatchs');
 			$this->account				= $GLOBALS['phpgw_info']['user']['account_id'];
 
-			$this->bo				= CreateObject($this->currentapp.'.boworkorder',True);
-			$this->bocommon				= CreateObject($this->currentapp.'.bocommon');
-			$this->menu				= CreateObject($this->currentapp.'.menu');
+			$this->bo				= CreateObject('property.boworkorder',True);
+			$this->bocommon				= CreateObject('property.bocommon');
+			$this->menu				= CreateObject('property.menu');
 			$this->acl 				= CreateObject('phpgwapi.acl');
 			$this->acl_location			= '.project';
 			$this->acl_read 			= $this->acl->check('.project',1);
@@ -495,19 +495,19 @@
 			{
 				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> $this->currentapp.'.uilocation.stop','perm'=>2, 'acl_location'=> $this->acl_location));
 			}
-			$boproject			= CreateObject($this->currentapp.'.boproject');
-			$bolocation			= CreateObject($this->currentapp.'.bolocation');
+			$boproject			= CreateObject('property.boproject');
+			$bolocation			= CreateObject('property.bolocation');
 			$config				= CreateObject('phpgwapi.config');
-			$id 				= get_var('id',array('POST','GET'));
-			$project_id 			= get_var('project_id',array('POST','GET'));
-			$values				= get_var('values',array('POST'));
+			$id 				= phpgw::get_var('id', 'int');
+			$project_id 			= phpgw::get_var('project_id', 'int');
+			$values				= phpgw::get_var('values');
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('workorder'));
 
-			$values['vendor_id']		= get_var('vendor_id',array('POST'));
-			$values['vendor_name']		= get_var('vendor_name',array('POST'));
-			$values['b_account_id']		= get_var('b_account_id',array('POST'));
-			$values['b_account_name']	= get_var('b_account_name',array('POST'));
+			$values['vendor_id']		= phpgw::get_var('vendor_id', 'int', 'POST');
+			$values['vendor_name']		= phpgw::get_var('vendor_name', 'string', 'POST');
+			$values['b_account_id']		= phpgw::get_var('b_account_id', 'int', 'POST');
+			$values['b_account_name']	= phpgw::get_var('b_account_name', 'string', 'POST');
 
 			$config->read_repository();
 
@@ -1035,15 +1035,15 @@
 			{
 				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> $this->currentapp.'.uilocation.stop','perm'=>8, 'acl_location'=> $this->acl_location));
 			}
-			$id = get_var('id',array('POST','GET'));
-			$confirm	= get_var('confirm',array('POST'));
+			$id = phpgw::get_var('id', 'int');
+			$confirm	= phpgw::get_var('confirm', 'bool', 'POST');
 
 			$link_data = array
 			(
 				'menuaction' => $this->currentapp.'.uiworkorder.index'
 			);
 
-			if (get_var('confirm',array('POST')))
+			if (phpgw::get_var('confirm', 'bool', 'POST'))
 			{
 				$this->bo->delete($id);
 				$GLOBALS['phpgw']->redirect_link('/index.php',$link_data);
@@ -1077,17 +1077,17 @@
 				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> $this->currentapp.'.uilocation.stop','perm'=>1, 'acl_location'=> $this->acl_location));
 			}
 
-			$boproject			= CreateObject($this->currentapp.'.boproject');
-			$bolocation			= CreateObject($this->currentapp.'.bolocation');
+			$boproject			= CreateObject('property.boproject');
+			$bolocation			= CreateObject('property.bolocation');
 
 			$receipt = $GLOBALS['phpgw']->session->appsession('receipt',$this->currentapp);
 			$GLOBALS['phpgw']->session->appsession('receipt',$this->currentapp,'');
 
-			$id	= get_var('id',array('POST','GET'));
+			$id	= phpgw::get_var('id', 'int');
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('workorder','hour_data_view'));
 
-			$uiwo_hour	= CreateObject($this->currentapp.'.uiwo_hour');
+			$uiwo_hour	= CreateObject('property.uiwo_hour');
 			$hour_data	= $uiwo_hour->common_data($id,$view=True);
 			$values		= $this->bo->read_single($id);
 			$project	= $boproject->read_single($values['project_id']);

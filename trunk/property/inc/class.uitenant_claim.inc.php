@@ -59,9 +59,9 @@
 			$this->nextmatchs	= CreateObject('phpgwapi.nextmatchs');
 			$this->account		= $GLOBALS['phpgw_info']['user']['account_id'];
 
-			$this->bo		= CreateObject($this->currentapp.'.botenant_claim',True);
-			$this->bocommon		= CreateObject($this->currentapp.'.bocommon');
-			$this->menu		= CreateObject($this->currentapp.'.menu');
+			$this->bo		= CreateObject('property.botenant_claim',True);
+			$this->bocommon		= CreateObject('property.bocommon');
+			$this->menu		= CreateObject('property.menu');
 
 			$this->acl		= CreateObject('phpgwapi.acl');
 			$this->acl_location	= '.tenant_claim';
@@ -303,7 +303,7 @@
 
 		function check()
 		{
-			$project_id	= get_var('project_id',array('POST','GET'));
+			$project_id	= phpgw::get_var('project_id', 'int');
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('tenant_claim'));
 
@@ -333,22 +333,22 @@
 				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> $this->currentapp.'.uilocation.stop', 'perm'=>2, 'acl_location'=> $this->acl_location));
 			}
 
-			$claim_id = get_var('claim_id',array('POST','GET'));
+			$claim_id = phpgw::get_var('claim_id', 'int');
 
-			$values	 = get_var('values',array('POST'));
-			$values['project_id']		= get_var('project_id',array('POST','GET'));
-			$values['b_account_id']		= get_var('b_account_id',array('POST'));
-			$values['b_account_name']	= get_var('b_account_name',array('POST'));
-			$values['tenant_id']		= get_var('tenant_id',array('POST'));
-			$values['last_name']		= get_var('last_name',array('POST'));
-			$values['first_name']		= get_var('first_name',array('POST'));
+			$values	 = phpgw::get_var('values');
+			$values['project_id']		= phpgw::get_var('project_id', 'int');
+			$values['b_account_id']		= phpgw::get_var('b_account_id', 'int', 'POST');
+			$values['b_account_name']	= phpgw::get_var('b_account_name', 'string', 'POST');
+			$values['tenant_id']		= phpgw::get_var('tenant_id', 'int', 'POST');
+			$values['last_name']		= phpgw::get_var('last_name', 'string', 'POST');
+			$values['first_name']		= phpgw::get_var('first_name', 'string', 'POST');
 
 			if($project_id)
 			{
 				$values['project_id'] = $project_id;
 			}
 
-			$this->boproject= CreateObject($this->currentapp.'.boproject');
+			$this->boproject= CreateObject('property.boproject');
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('tenant_claim'));
 
@@ -411,7 +411,7 @@
 				'lang_select'		=> lang('Select')
 			);
 
-			$bolocation			= CreateObject($this->currentapp.'.bolocation');
+			$bolocation			= CreateObject('property.bolocation');
 
 			$location_data=$bolocation->initiate_ui_location(array(
 						'values'	=> $project_values['location_data'],
@@ -613,16 +613,16 @@
 			}
 
 
-			$claim_id	= get_var('claim_id',array('POST','GET'));
-			$delete		= get_var('delete',array('POST'));
-			$confirm	= get_var('confirm',array('POST'));
+			$claim_id	= phpgw::get_var('claim_id', 'int');
+			$delete		= phpgw::get_var('delete', 'bool', 'POST');
+			$confirm	= phpgw::get_var('confirm', 'bool', 'POST');
 
 			$link_data = array
 			(
 				'menuaction' => $this->currentapp.'.uitenant_claim.index'
 			);
 
-			if (get_var('confirm',array('POST')))
+			if (phpgw::get_var('confirm', 'bool', 'POST'))
 			{
 				$this->bo->delete($claim_id);
 				$GLOBALS['phpgw']->redirect_link('/index.php',$link_data);
@@ -656,9 +656,9 @@
 				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> $this->currentapp.'.uilocation.stop', 'perm'=>1, 'acl_location'=> $this->acl_location));
 			}
 
-			$claim_id	= get_var('claim_id',array('POST','GET'));
+			$claim_id	= phpgw::get_var('claim_id', 'int');
 
-			$this->boproject= CreateObject($this->currentapp.'.boproject');
+			$this->boproject= CreateObject('property.boproject');
 			$GLOBALS['phpgw']->xslttpl->add_file(array('tenant_claim'));
 
 			$values = $this->bo->read_single($claim_id);
@@ -675,7 +675,7 @@
 				'lang_select'		=> lang('Select')
 			);
 
-			$bolocation			= CreateObject($this->currentapp.'.bolocation');
+			$bolocation			= CreateObject('property.bolocation');
 
 			$location_data=$bolocation->initiate_ui_location(array(
 						'values'	=> $project_values['location_data'],

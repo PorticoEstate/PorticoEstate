@@ -65,9 +65,9 @@
 			$this->nextmatchs		= CreateObject('phpgwapi.nextmatchs');
 			$this->account			= $GLOBALS['phpgw_info']['user']['account_id'];
 
-			$this->bo				= CreateObject($this->currentapp.'.boactor',True);
-			$this->bocommon			= CreateObject($this->currentapp.'.bocommon');
-			$this->menu				= CreateObject($this->currentapp.'.menu');
+			$this->bo				= CreateObject('property.boactor',True);
+			$this->bocommon			= CreateObject('property.bocommon');
+			$this->menu				= CreateObject('property.menu');
 
 			$this->role				= $this->bo->role;
 
@@ -127,7 +127,7 @@
 
 			$GLOBALS['phpgw_info']['flags']['noframework'] = True;
 
-			$values                 = get_var('values',array('POST','GET'));
+			$values                 = phpgw::get_var('values');
 
 			if ($values['save'])
 			{
@@ -380,9 +380,9 @@
 				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> $this->currentapp.'.uilocation.stop', 'perm'=>2, 'acl_location'=> $this->acl_location));
 			}
 
-			$actor_id	= get_var('actor_id',array('POST','GET'));
-			$values		= get_var('values',array('POST'));
-			$values_attribute  = get_var('values_attribute',array('POST'));
+			$actor_id	= phpgw::get_var('actor_id', 'int');
+			$values		= phpgw::get_var('values');
+			$values_attribute  = phpgw::get_var('values_attribute');
 
 			$insert_record_actor = $GLOBALS['phpgw']->session->appsession('insert_record_actor',$this->currentapp);
 
@@ -552,11 +552,11 @@
 				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> $this->currentapp.'.uilocation.stop', 'perm'=>8, 'acl_location'=> $this->acl_location));
 			}
 
-			$attrib		= get_var('attrib',array('POST','GET'));
-			$id			= get_var('id',array('POST','GET'));
-			$actor_id	= get_var('actor_id',array('POST','GET'));
-	//		$delete		= get_var('delete',array('POST'));
-			$confirm	= get_var('confirm',array('POST'));
+			$attrib		= phpgw::get_var('attrib');
+			$id			= phpgw::get_var('id', 'int');
+			$actor_id	= phpgw::get_var('actor_id', 'int');
+	//		$delete		= phpgw::get_var('delete', 'bool', 'POST');
+			$confirm	= phpgw::get_var('confirm', 'bool', 'POST');
 
 
 			if($attrib)
@@ -573,7 +573,7 @@
 				'role'		=> $this->role
 			);
 
-			if (get_var('confirm',array('POST')))
+			if (phpgw::get_var('confirm', 'bool', 'POST'))
 			{
 				$this->bo->delete($actor_id,$id,$attrib);
 				$GLOBALS['phpgw']->redirect_link('/index.php',$link_data);
@@ -609,8 +609,8 @@
 				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> $this->currentapp.'.uilocation.stop', 'perm'=>1, 'acl_location'=> $this->acl_location));
 			}
 
-			$actor_id	= get_var('actor_id',array('GET'));
-			$action		= get_var('action',array('GET'));
+			$actor_id	= phpgw::get_var('actor_id', 'int');
+			$action		= phpgw::get_var('action');
 
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('actor') . ': ' . lang('view') . ' ' . lang($this->role);
 
@@ -663,8 +663,8 @@
 				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> $this->currentapp.'.uilocation.stop', 'perm'=>16, 'acl_location'=> $this->acl_location));
 			}
 
-			$id	= get_var('id',array('POST','GET'));
-			$resort	= get_var('resort',array('POST','GET'));
+			$id	= phpgw::get_var('id', 'int');
+			$resort	= phpgw::get_var('resort');
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array(
 								'actor',
@@ -800,8 +800,8 @@
 				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> $this->currentapp.'.uilocation.stop', 'perm'=>16, 'acl_location'=> $this->acl_location));
 			}
 
-			$id		= get_var('id',array('POST','GET'));
-			$values		= get_var('values',array('POST'));
+			$id		= phpgw::get_var('id', 'int');
+			$values		= phpgw::get_var('values');
 	//		$GLOBALS['phpgw']->common->msgbox(lang('Altering ColumnName OR Datatype  - deletes your data in this Column'));
 	//html_print_r($values);
 			$GLOBALS['phpgw']->xslttpl->add_file(array('actor','choice',));

@@ -65,10 +65,10 @@
 			$this->currentapp			= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->nextmatchs			= CreateObject('phpgwapi.nextmatchs');
 
-			$this->bo				= CreateObject($this->currentapp.'.bopricebook',True);
-			$this->bocommon				= CreateObject($this->currentapp.'.bocommon');
-			$this->menu				= CreateObject($this->currentapp.'.menu');
-			$this->contacts				= CreateObject($this->currentapp.'.soactor');
+			$this->bo				= CreateObject('property.bopricebook',True);
+			$this->bocommon				= CreateObject('property.bocommon');
+			$this->menu				= CreateObject('property.menu');
+			$this->contacts				= CreateObject('property.soactor');
 			$this->contacts->role			= 'vendor';
 
 			$this->acl 				= CreateObject('phpgwapi.acl');
@@ -141,7 +141,7 @@
 
 			$links = $this->menu->links('price_vendor');
 
-			$values			= get_var('values',array('POST'));
+			$values			= phpgw::get_var('values');
 
 //_debug_array($values);
 			if($values['submit_update'])
@@ -451,8 +451,8 @@
 				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> $this->currentapp.'.uilocation.stop', 'perm'=>16, 'acl_location'=> $this->acl_location));
 			}
 
-			$agreement_group_id	 	= get_var('agreement_group_id',array('POST','GET'));
-			$values				= get_var('values',array('POST','GET'));
+			$agreement_group_id	 	= phpgw::get_var('agreement_group_id', 'int');
+			$values				= phpgw::get_var('values');
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('pricebook'));
 
@@ -588,10 +588,10 @@
 
 			$links = $this->menu->links();
 
-			$cat_id			= get_var('cat_id',array('GET'));
-			$activity_id		= get_var('activity_id',array('GET'));
-			$vendor_id		= get_var('vendor_id',array('GET'));
-			$values			= get_var('values',array('POST'));
+			$cat_id			= phpgw::get_var('cat_id', 'int', 'GET');
+			$activity_id		= phpgw::get_var('activity_id', 'int');
+			$vendor_id		= phpgw::get_var('vendor_id', 'int', 'GET');
+			$values			= phpgw::get_var('values');
 
 			$referer	= $GLOBALS['phpgw']->session->appsession('referer',$this->currentapp);
 			if(!$referer)
@@ -980,9 +980,9 @@
 
 			$links = $this->menu->links('agreement','activity');
 
-			$activity_id		= get_var('activity_id',array('GET'));
-			$values				= get_var('values',array('POST'));
-			$values['vendor_id']		= get_var('vendor_id',array('POST'));
+			$activity_id		= phpgw::get_var('activity_id', 'int');
+			$values				= phpgw::get_var('values');
+			$values['vendor_id']		= phpgw::get_var('vendor_id', 'int', 'POST');
 
 			if($values['add'])
 			{
@@ -1109,10 +1109,10 @@
 				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> $this->currentapp.'.uilocation.stop', 'perm'=>16, 'acl_location'=> $this->acl_location));
 			}
 
-			$activity_id	 	= get_var('activity_id',array('POST','GET'));
-			$agreement_group 	= get_var('agreement_group',array('GET'));
-			$values			= get_var('values',array('POST','GET'));
-			$values['ns3420_id']	= get_var('ns3420_id',array('POST','GET'));
+			$activity_id	 	= phpgw::get_var('activity_id', 'int');
+			$agreement_group 	= phpgw::get_var('agreement_group', 'int', 'GET');
+			$values			= phpgw::get_var('values');
+			$values['ns3420_id']	= phpgw::get_var('ns3420_id');
 
 			if(!$values['cat_id'])
 			{
@@ -1270,12 +1270,12 @@
 				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> $this->currentapp.'.uilocation.stop', 'perm'=>16, 'acl_location'=> $this->acl_location));
 			}
 
-			$method			= get_var('method',array('GET'));
-			$activity_id	= get_var('activity_id',array('GET'));
-			$vendor_id		= get_var('vendor_id',array('GET'));
-			$index_count	= get_var('index_count',array('GET'));
-			$agreement_group_id	= get_var('agreement_group_id',array('GET'));
-			$confirm		= get_var('confirm',array('POST'));
+			$method			= phpgw::get_var('method');
+			$activity_id	= phpgw::get_var('activity_id', 'int');
+			$vendor_id		= phpgw::get_var('vendor_id', 'int', 'GET');
+			$index_count	= phpgw::get_var('index_count', 'int', 'GET');
+			$agreement_group_id	= phpgw::get_var('agreement_group_id', 'int');
+			$confirm		= phpgw::get_var('confirm', 'bool', 'POST');
 
 			if($method=='activity_vendor')
 			{
@@ -1288,7 +1288,7 @@
 				$function_msg	=lang('delete vendor activity');
 				$delete_action	= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uipricebook.delete', 'method'=> $method, 'activity_id'=> $activity_id, 'vendor_id'=> $vendor_id));
 
-				if (get_var('confirm',array('POST')))
+				if (phpgw::get_var('confirm', 'bool', 'POST'))
 				{
 					$this->bo->delete_activity_vendor($activity_id,$vendor_id);
 					$GLOBALS['phpgw']->redirect_link('/index.php',$link_data);
@@ -1304,7 +1304,7 @@
 				$function_msg	=lang('delete activity');
 				$delete_action	= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uipricebook.delete', 'method'=> $method, 'activity_id'=> $activity_id));
 
-				if (get_var('confirm',array('POST')))
+				if (phpgw::get_var('confirm', 'bool', 'POST'))
 				{
 					$this->bo->delete_activity($activity_id);
 					$GLOBALS['phpgw']->redirect_link('/index.php',$link_data);
@@ -1322,7 +1322,7 @@
 				$function_msg	=lang('delete prize-index');
 				$delete_action	= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uipricebook.delete', 'method'=> $method, 'activity_id'=> $activity_id, 'vendor_id'=> $vendor_id, 'index_count'=> $index_count));
 
-				if (get_var('confirm',array('POST')))
+				if (phpgw::get_var('confirm', 'bool', 'POST'))
 				{
 					$this->bo->delete_prize_index($activity_id,$vendor_id,$index_count);
 					$GLOBALS['phpgw']->redirect_link('/index.php',$link_data);
@@ -1339,7 +1339,7 @@
 				$function_msg	=lang('Delete agreement group and all the activities associated with it!');
 				$delete_action	= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uipricebook.delete', 'method'=> $method, 'agreement_group_id'=> $agreement_group_id, 'start'=> $this->start));
 
-				if (get_var('confirm',array('POST')))
+				if (phpgw::get_var('confirm', 'bool', 'POST'))
 				{
 					$this->bo->delete_agreement_group($agreement_group_id);
 					$GLOBALS['phpgw']->redirect_link('/index.php',$link_data);

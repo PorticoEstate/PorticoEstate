@@ -56,8 +56,8 @@
 			$this->currentapp			= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->nextmatchs			= CreateObject('phpgwapi.nextmatchs');
 			$this->account				= $GLOBALS['phpgw_info']['user']['account_id'];
-			$this->bo				= CreateObject($this->currentapp.'.boasync',True);
-			$this->bocommon				= CreateObject($this->currentapp.'.bocommon');
+			$this->bo				= CreateObject('property.boasync',True);
+			$this->bocommon				= CreateObject('property.bocommon');
 
 			$this->acl 				= CreateObject('phpgwapi.acl');
 			$this->acl_location			= '.admin';
@@ -205,8 +205,8 @@
 
 		function edit()
 		{
-			$id	= get_var('id',array('POST','GET'));
-			$values			= get_var('values',array('POST'));
+			$id	= phpgw::get_var('id', 'int');
+			$values			= phpgw::get_var('values');
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('async'));
 
@@ -306,15 +306,15 @@
 
 		function delete()
 		{
-			$id		= get_var('id',array('POST','GET'));
-			$confirm		= get_var('confirm',array('POST'));
+			$id		= phpgw::get_var('id', 'int');
+			$confirm		= phpgw::get_var('confirm', 'bool', 'POST');
 
 			$link_data = array
 			(
 				'menuaction' => $this->currentapp.'.uiasync.index'
 			);
 
-			if (get_var('confirm',array('POST')))
+			if (phpgw::get_var('confirm', 'bool', 'POST'))
 			{
 				$this->bo->delete($id);
 				$GLOBALS['phpgw']->redirect_link('/index.php',$link_data);

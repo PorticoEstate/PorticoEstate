@@ -40,8 +40,8 @@
 		{
 			$this->db		= $GLOBALS['phpgw']->db;
 			$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
-			$this->so		= CreateObject($this->currentapp.'.soinvoice',True);
-			$this->bocommon		= CreateObject($this->currentapp.'.bocommon');
+			$this->so		= CreateObject('property.soinvoice',True);
+			$this->bocommon		= CreateObject('property.bocommon');
 			$this->account_id	= $GLOBALS['phpgw_info']['user']['account_id'];
 
 			if ($session)
@@ -50,16 +50,16 @@
 				$this->use_session = True;
 			}
 
-			$start			= get_var('start',array('POST','GET'));
-			$query			= get_var('query',array('POST','GET'));
-			$sort			= get_var('sort',array('POST','GET'));
-			$order			= get_var('order',array('POST','GET'));
-			$filter			= get_var('filter',array('POST','GET'));
-			$cat_id			= get_var('cat_id',array('POST','GET'));
-			$user_lid		= get_var('user_lid',array('POST','GET'));
-			$allrows		= get_var('allrows',array('POST','GET'));
-			$b_account_class	= get_var('b_account_class',array('POST','GET'));
-			$district_id		= get_var('district_id',array('POST','GET'));
+			$start			= phpgw::get_var('start', 'int', 'REQUEST', 0);
+			$query			= phpgw::get_var('query');
+			$sort			= phpgw::get_var('sort');
+			$order			= phpgw::get_var('order');
+			$filter			= phpgw::get_var('filter', 'int');
+			$cat_id			= phpgw::get_var('cat_id', 'int');
+			$user_lid		= phpgw::get_var('user_lid');
+			$allrows		= phpgw::get_var('allrows', 'bool');
+			$b_account_class	= phpgw::get_var('b_account_class', 'int');
+			$district_id		= phpgw::get_var('district_id', 'int');
 			
 			
 			if ($start)
@@ -355,7 +355,7 @@
 
 		function add($values,$debug='')
 		{
-			$this->soXport    = CreateObject($this->currentapp.'.soXport');
+			$this->soXport    = CreateObject('property.soXport');
 			if($values['loc1']=$values['location']['loc1'])
 			{
 				$values['dima']=implode('',$values['location']);
@@ -394,8 +394,8 @@
 			{
 				if($order_type=='workorder')
 				{
-					$soworkorder = CreateObject($this->currentapp.'.soworkorder');
-					$soproject = CreateObject($this->currentapp.'.soproject');
+					$soworkorder = CreateObject('property.soworkorder');
+					$soproject = CreateObject('property.soproject');
 					$workorder	= $soworkorder->read_single($values['order_id']);
 					$project	= $soproject->read_single($workorder['project_id']);
 
@@ -422,7 +422,7 @@
 
 				if($order_type=='s_agreement')
 				{
-					$sos_agreement = CreateObject($this->currentapp.'.sos_agreement');
+					$sos_agreement = CreateObject('property.sos_agreement');
 					$s_agreement = $sos_agreement->read_single(array('s_agreement_id'=>$values['order_id']));
 
 					$values['spvend_code']		= $s_agreement['vendor_id'];
@@ -494,7 +494,7 @@
 
 		function get_vendor_name($vendor_id='')
 		{
-			$contacts	= CreateObject($this->currentapp.'.soactor');
+			$contacts	= CreateObject('property.soactor');
 			$contacts->role='vendor';
 
 			$vendor_data	= $contacts->read_single(array('actor_id'=>$vendor_id));

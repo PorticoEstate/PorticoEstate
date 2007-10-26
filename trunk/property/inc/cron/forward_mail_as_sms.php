@@ -24,7 +24,7 @@
 		function forward_mail_as_sms()
 		{
 			$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
-			$this->bocommon		= CreateObject($this->currentapp.'.bocommon');
+			$this->bocommon		= CreateObject('property.bocommon');
 			$this->db     			= & $GLOBALS['phpgw']->db;
 		}
 
@@ -39,8 +39,8 @@
 			}
 			else
 			{
-				$confirm	= get_var('confirm',array('POST'));
-				$execute	= get_var('execute',array('GET'));
+				$confirm	= phpgw::get_var('confirm', 'bool', 'POST');
+				$execute	= phpgw::get_var('execute', 'bool', 'GET');
 				$cron = false;
 			}
 

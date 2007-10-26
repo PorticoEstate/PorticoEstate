@@ -47,7 +47,7 @@
 		function organize_drawing()
 		{
 			$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
-			$this->bocommon		= CreateObject($this->currentapp.'.bocommon');
+			$this->bocommon		= CreateObject('property.bocommon');
 			$this->vfs 		= CreateObject('phpgwapi.vfs');
 			$this->rootdir 		= $this->vfs->basedir;
 			$this->fakebase 	= $this->vfs->fakebase;
@@ -74,15 +74,15 @@
 			}
 			else
 			{
-				$confirm	= get_var('confirm',array('POST'));
-				$execute	= get_var('execute',array('GET'));
+				$confirm	= phpgw::get_var('confirm', 'bool', 'POST');
+				$execute	= phpgw::get_var('execute', 'bool', 'GET');
 				if(get_var('dir',array('GET')))
 				{
 					$this->dir = urldecode (get_var('dir',array('GET')));
 				}
-				if(get_var('suffix',array('GET')))
+				if(phpgw::get_var('suffix', 'string', 'GET'))
 				{
-					$this->suffix = get_var('suffix',array('GET'));
+					$this->suffix = phpgw::get_var('suffix', 'string', 'GET');
 				}
 			}
 

@@ -46,7 +46,7 @@
 		{
 			$this->sub		= $sub;
 			$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
-			$this->query	= get_var('query',array('POST','GET'));
+			$this->query	= phpgw::get_var('query');
 		}
 
 		function links($page='',$page_2='')
@@ -172,7 +172,7 @@
 					$menu['module'][$i]['statustext']	=	lang('Custom queries');
 				}
 	
-				$entity			= CreateObject($this->currentapp.'.soadmin_entity');
+				$entity			= CreateObject('property.soadmin_entity');
 				$entity_list 	= $entity->read(array('allrows'=>True));
 
 				if (isset($entity_list) AND is_array($entity_list))
@@ -202,7 +202,7 @@
 					{
 						$menu['menu_title_2']=lang('Location');
 
-						$soadmin_location	= CreateObject($this->currentapp.'.soadmin_location');
+						$soadmin_location	= CreateObject('property.soadmin_location');
 						$location	= $soadmin_location->select_location_type();
 						$query_temp = explode('-',$this->query);
 						$query_location = '';

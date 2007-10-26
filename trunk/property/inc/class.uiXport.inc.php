@@ -53,11 +53,11 @@
 
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = True;
 			$this->currentapp		= $GLOBALS['phpgw_info']['flags']['currentapp'];
-			$this->bo       		= CreateObject($this->currentapp.'.boXport',True);
-			$this->invoice  		= CreateObject($this->currentapp.'.boinvoice');
-			$this->bocommon  		= CreateObject($this->currentapp.'.bocommon');
-			$this->menu			= CreateObject($this->currentapp.'.menu');
-			$this->contacts			= CreateObject($this->currentapp.'.soactor');
+			$this->bo       		= CreateObject('property.boXport',True);
+			$this->invoice  		= CreateObject('property.boinvoice');
+			$this->bocommon  		= CreateObject('property.bocommon');
+			$this->menu			= CreateObject('property.menu');
+			$this->contacts			= CreateObject('property.soactor');
 			$this->contacts->role		= 'vendor';
 
 			$this->acl 			= CreateObject('phpgwapi.acl');
@@ -88,36 +88,36 @@
 			$receipt = $GLOBALS['phpgw']->session->appsession('session_data','import_receipt');
 			$GLOBALS['phpgw']->session->appsession('session_data','import_receipt','');
 
-			$art				= get_var('art',array('POST','GET'));
-			$type				= get_var('type',array('POST','GET'));
-			$dim_b				= get_var('dim_b',array('POST','GET'));
-			$invoice_num			= get_var('invoice_num',array('POST','GET'));
-			$kid_nr				= get_var('kid_nr',array('POST','GET'));
-			$vendor_id			= get_var('vendor_id',array('POST','GET'));
-			$vendor_name			= get_var('vendor_name',array('POST','GET'));
-			$janitor			= get_var('janitor',array('POST','GET'));
-			$supervisor			= get_var('supervisor',array('POST','GET'));
-			$budget_responsible		= get_var('budget_responsible',array('POST','GET'));
-			$invoice_date 			= urldecode(get_var('invoice_date',array('POST','GET')));
-			$num_days			= get_var('num_days',array('POST','GET'));
-			$payment_date 			= urldecode(get_var('payment_date',array('POST','GET')));
-			$cancel 			= get_var('cancel',array('POST','GET'));
-			$convert 			= get_var('convert',array('POST','GET'));
-			$conv_type 			= get_var('conv_type',array('POST','GET'));
-			$sday 				= get_var('sday',array('POST','GET'));
-			$smonth 			= get_var('smonth',array('POST','GET'));
-			$syear 				= get_var('syear',array('POST','GET'));
-			$eday 				= get_var('eday',array('POST','GET'));
-			$emonth 			= get_var('emonth',array('POST','GET'));
-			$eyear 				= get_var('eyear',array('POST','GET'));
-			$download 			= get_var('download',array('POST','GET'));
-			$auto_tax 			= get_var('auto_tax',array('POST','GET'));
+			$art				= phpgw::get_var('art', 'int');
+			$type				= phpgw::get_var('type');
+			$dim_b				= phpgw::get_var('dim_b', 'int');
+			$invoice_num			= phpgw::get_var('invoice_num');
+			$kid_nr				= phpgw::get_var('kid_nr');
+			$vendor_id			= phpgw::get_var('vendor_id', 'int');
+			$vendor_name			= phpgw::get_var('vendor_name');
+			$janitor			= phpgw::get_var('janitor');
+			$supervisor			= phpgw::get_var('supervisor');
+			$budget_responsible		= phpgw::get_var('budget_responsible');
+			$invoice_date 			= urldecode(phpgw::get_var('invoice_date'));
+			$num_days			= phpgw::get_var('num_days', 'int');
+			$payment_date 			= urldecode(phpgw::get_var('payment_date'));
+			$cancel 			= phpgw::get_var('cancel', 'bool');
+			$convert 			= phpgw::get_var('convert', 'bool');
+			$conv_type 			= phpgw::get_var('conv_type');
+			$sday 				= phpgw::get_var('sday', 'int');
+			$smonth 			= phpgw::get_var('smonth', 'int');
+			$syear 				= phpgw::get_var('syear', 'int');
+			$eday 				= phpgw::get_var('eday', 'int');
+			$emonth 			= phpgw::get_var('emonth', 'int');
+			$eyear 				= phpgw::get_var('eyear', 'int');
+			$download 			= phpgw::get_var('download', 'bool');
+			$auto_tax 			= phpgw::get_var('auto_tax', 'bool');
 
 			$tsvfile = $_FILES['tsvfile']['tmp_name'];
 
 			if(!$tsvfile)
 			{
-				$tsvfile = get_var('tsvfile',array('POST','GET'));
+				$tsvfile = phpgw::get_var('tsvfile');
 			}
 
 			$links = $this->menu->links('import_inv');
@@ -520,8 +520,8 @@
 			$GLOBALS['phpgw']->xslttpl->add_file(array('invoice','menu',
 										'search_field'));
 
-			$values 	= get_var('values',array('POST','GET'));
-			$date 	= get_var('date',array('POST','GET'));
+			$values 	= phpgw::get_var('values');
+			$date 	= phpgw::get_var('date');
 
 			$links = $this->menu->links('export_inv');
 
@@ -613,8 +613,8 @@
 			$GLOBALS['phpgw']->xslttpl->add_file(array('invoice','menu',
 										'search_field'));
 
-			$values 	= get_var('values',array('POST','GET'));
-			$date 	= get_var('date',array('POST','GET'));
+			$values 	= phpgw::get_var('values');
+			$date 	= phpgw::get_var('date');
 //_debug_array($values);
 
 			$links = $this->menu->links('export_inv');

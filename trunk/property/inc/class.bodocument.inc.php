@@ -53,11 +53,11 @@
 		function property_bodocument($session=False)
 		{
 			$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
-			$this->so 			= CreateObject($this->currentapp.'.sodocument');
-			$this->bocommon 	= CreateObject($this->currentapp.'.bocommon');
-			$this->solocation 	= CreateObject($this->currentapp.'.solocation');
-			$this->historylog	= CreateObject($this->currentapp.'.historylog','document');
-			$this->contacts		= CreateObject($this->currentapp.'.soactor');
+			$this->so 			= CreateObject('property.sodocument');
+			$this->bocommon 	= CreateObject('property.bocommon');
+			$this->solocation 	= CreateObject('property.solocation');
+			$this->historylog	= CreateObject('property.historylog','document');
+			$this->contacts		= CreateObject('property.soactor');
 			$this->contacts->role='vendor';
 
 			$this->vfs 			= CreateObject('phpgwapi.vfs');
@@ -70,16 +70,16 @@
 				$this->use_session = True;
 			}
 
-			$start	= get_var('start',array('POST','GET'));
-			$query	= get_var('query',array('POST','GET'));
-			$sort	= get_var('sort',array('POST','GET'));
-			$order	= get_var('order',array('POST','GET'));
-			$filter	= get_var('filter',array('POST','GET'));
-			$cat_id	= get_var('cat_id',array('POST','GET'));
-			$status_id	= get_var('status_id',array('POST','GET'));
-			$entity_id	= get_var('entity_id',array('POST','GET'));
-			$doc_type	= get_var('doc_type',array('POST','GET'));
-			$query_location	= get_var('query_location',array('POST','GET'));
+			$start	= phpgw::get_var('start', 'int', 'REQUEST', 0);
+			$query	= phpgw::get_var('query');
+			$sort	= phpgw::get_var('sort');
+			$order	= phpgw::get_var('order');
+			$filter	= phpgw::get_var('filter', 'int');
+			$cat_id	= phpgw::get_var('cat_id', 'int');
+			$status_id	= phpgw::get_var('status_id');
+			$entity_id	= phpgw::get_var('entity_id', 'int');
+			$doc_type	= phpgw::get_var('doc_type');
+			$query_location	= phpgw::get_var('query_location');
 
 
 			if ($start)
@@ -245,7 +245,7 @@
 
 			if($document['p_num'])
 			{
-				$soadmin_entity	= CreateObject($this->currentapp.'.soadmin_entity');
+				$soadmin_entity	= CreateObject('property.soadmin_entity');
 				$category = $soadmin_entity->read_single_category($document['p_entity_id'],$document['p_cat_id']);
 
 				$document['p'][$document['p_entity_id']]['p_num']=$document['p_num'];
@@ -266,7 +266,7 @@
 
 		function select_category_list($format='',$selected='')
 		{
-			$soadmin_entity 	= CreateObject($this->currentapp.'.soadmin_entity');
+			$soadmin_entity 	= CreateObject('property.soadmin_entity');
 			$categories		= $soadmin_entity->read_category(array('allrows'=>True,'entity_id'=>$this->entity_id));
 
 			$category_list	= $this->bocommon->select_list($selected,$categories);

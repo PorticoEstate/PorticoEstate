@@ -66,9 +66,9 @@
 			$this->currentapp			= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->nextmatchs			= CreateObject('phpgwapi.nextmatchs');
 			$this->account				= $GLOBALS['phpgw_info']['user']['account_id'];
-			$this->bo				= CreateObject($this->currentapp.'.boadmin_entity',True);
-			$this->bocommon				= CreateObject($this->currentapp.'.bocommon');
-			$this->menu				= CreateObject($this->currentapp.'.menu');
+			$this->bo				= CreateObject('property.boadmin_entity',True);
+			$this->bocommon				= CreateObject('property.bocommon');
+			$this->menu				= CreateObject('property.menu');
 
 			$this->acl 				= CreateObject('phpgwapi.acl');
 			$this->acl_location			= '.admin.entity';
@@ -359,7 +359,7 @@
 				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> $this->currentapp.'.uilocation.stop', 'perm'=> 1, 'acl_location'=> $this->acl_location));
 			}
 
-			$entity_id	= get_var('entity_id',array('POST','GET'));
+			$entity_id	= phpgw::get_var('entity_id', 'int');
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array(
 								'admin_entity',
@@ -502,8 +502,8 @@
 				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> $this->currentapp.'.uilocation.stop', 'perm'=> 2, 'acl_location'=> $this->acl_location));
 			}
 
-			$id	= get_var('id',array('POST','GET'));
-			$values			= get_var('values',array('POST'));
+			$id	= phpgw::get_var('id', 'int');
+			$values			= phpgw::get_var('values');
 			$config = CreateObject('phpgwapi.config',$this->currentapp);
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('admin_entity'));
@@ -633,8 +633,8 @@
 				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> $this->currentapp.'.uilocation.stop', 'perm'=> 4, 'acl_location'=> $this->acl_location));
 			}
 
-			$id	= get_var('id',array('POST','GET'));
-			$values			= get_var('values',array('POST'));
+			$id	= phpgw::get_var('id', 'int');
+			$values			= phpgw::get_var('values');
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('admin_entity'));
 
@@ -729,9 +729,9 @@
 				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> $this->currentapp.'.uilocation.stop', 'perm'=> 2, 'acl_location'=> $this->acl_location));
 			}
 
-			$entity_id	= get_var('entity_id',array('POST','GET'));
-			$id		= get_var('id',array('POST','GET'));
-			$values		= get_var('values',array('POST'));
+			$entity_id	= phpgw::get_var('entity_id', 'int');
+			$id		= phpgw::get_var('id', 'int');
+			$values		= phpgw::get_var('values');
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('admin_entity'));
 
@@ -857,13 +857,13 @@
 				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> $this->currentapp.'.uilocation.stop', 'perm'=> 8, 'acl_location'=> $this->acl_location));
 			}
 
-			$entity_id		= get_var('entity_id',array('POST','GET'));
-			$cat_id			= get_var('cat_id',array('POST','GET'));
-			$attrib_id		= get_var('attrib_id',array('POST','GET'));
-			$status_id		= get_var('status_id',array('POST','GET'));
-			$acl_location		= get_var('acl_location',array('POST','GET'));
-			$custom_function_id	= get_var('custom_function_id',array('POST','GET'));
-			$confirm		= get_var('confirm',array('POST'));
+			$entity_id		= phpgw::get_var('entity_id', 'int');
+			$cat_id			= phpgw::get_var('cat_id', 'int');
+			$attrib_id		= phpgw::get_var('attrib_id', 'int');
+			$status_id		= phpgw::get_var('status_id');
+			$acl_location		= phpgw::get_var('acl_location');
+			$custom_function_id	= phpgw::get_var('custom_function_id', 'int');
+			$confirm		= phpgw::get_var('confirm', 'bool', 'POST');
 
 			if($attrib_id):
 			{
@@ -920,7 +920,7 @@
 				'custom_function_id' => $custom_function_id
 			);
 
-			if (get_var('confirm',array('POST')))
+			if (phpgw::get_var('confirm', 'bool', 'POST'))
 			{
 				$this->bo->delete($cat_id,$entity_id,$attrib_id,$status_id,$acl_location,$custom_function_id);
 				$GLOBALS['phpgw']->redirect_link('/index.php',$link_data);
@@ -957,8 +957,8 @@
 
 			$entity_id	= $this->entity_id;
 			$cat_id	= $this->cat_id;
-			$id	= get_var('id',array('POST','GET'));
-			$resort	= get_var('resort',array('POST','GET'));
+			$id	= phpgw::get_var('id', 'int');
+			$resort	= phpgw::get_var('resort');
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array(
 								'admin_entity',
@@ -1106,10 +1106,10 @@
 				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> $this->currentapp.'.uilocation.stop', 'perm'=> 2, 'acl_location'=> $this->acl_location));
 			}
 
-			$entity_id	= get_var('entity_id',array('POST','GET'));
-			$cat_id		= get_var('cat_id',array('POST','GET'));
-			$id		= get_var('id',array('POST','GET'));
-			$values		= get_var('values',array('POST'));
+			$entity_id	= phpgw::get_var('entity_id', 'int');
+			$cat_id		= phpgw::get_var('cat_id', 'int');
+			$id		= phpgw::get_var('id', 'int');
+			$values		= phpgw::get_var('values');
 			if(!$values)
 			{
 				$values=array();
@@ -1322,8 +1322,8 @@
 
 			$entity_id	= $this->entity_id;
 			$cat_id		= $this->cat_id;
-			$id		= get_var('id',array('POST','GET'));
-			$resort		= get_var('resort',array('POST','GET'));
+			$id		= phpgw::get_var('id', 'int');
+			$resort		= phpgw::get_var('resort');
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array(
 								'admin_entity',
@@ -1467,10 +1467,10 @@
 				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> $this->currentapp.'.uilocation.stop', 'perm'=> 2, 'acl_location'=> $this->acl_location));
 			}
 
-			$entity_id	= get_var('entity_id',array('POST','GET'));
-			$cat_id		= get_var('cat_id',array('POST','GET'));
-			$id		= get_var('id',array('POST','GET'));
-			$values		= get_var('values',array('POST'));
+			$entity_id	= phpgw::get_var('entity_id', 'int');
+			$cat_id		= phpgw::get_var('cat_id', 'int');
+			$id		= phpgw::get_var('id', 'int');
+			$values		= phpgw::get_var('values');
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('admin_entity'));
 

@@ -62,9 +62,9 @@
 			$this->currentapp			= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->nextmatchs			= CreateObject('phpgwapi.nextmatchs');
 
-			$this->bo					= CreateObject($this->currentapp.'.botts',True);
-			$this->bocommon				= CreateObject($this->currentapp.'.bocommon');
-			$this->menu					= CreateObject($this->currentapp.'.menu');
+			$this->bo					= CreateObject('property.botts',True);
+			$this->bocommon				= CreateObject('property.bocommon');
+			$this->menu					= CreateObject('property.menu');
 
 		//	$this->acl 					= CreateObject('phpgwapi.acl');
 			$this->acl 					= & $GLOBALS['phpgw']->acl;
@@ -211,16 +211,16 @@
 
 			$GLOBALS['phpgw']->js->set_onload('document.search.query.focus();');
 
-			if(get_var('edit_status',array('POST','GET')))
+			if(phpgw::get_var('edit_status', 'bool', 'GET'))
 			{
 				if(!$this->acl_edit)
 				{
 					$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> $this->currentapp.'.uilocation.stop','perm'=> 4, 'acl_location'=> $this->acl_location));
 				}
 
-				$new_status = get_var('new_status',array('POST','GET'));
-				$id = get_var('id',array('POST','GET'));
-				$so2	= CreateObject($this->currentapp.'.sotts2');
+				$new_status = phpgw::get_var('new_status', 'string', 'GET');
+				$id = phpgw::get_var('id', 'int');
+				$so2	= CreateObject('property.sotts2');
 				$receipt = $so2->update_status(array('status'=>$new_status),$id);
 				$GLOBALS['phpgw']->session->appsession('receipt',$this->currentapp,$receipt);
 			}
@@ -230,7 +230,7 @@
 										'nextmatchs'));
 
 
-			$second_display = get_var('second_display',array('POST','GET'));
+			$second_display = phpgw::get_var('second_display', 'bool');
 
 			$default_category = (isset($GLOBALS['phpgw_info']['user']['preferences'][$this->currentapp]['default_district'])?$GLOBALS['phpgw_info']['user']['preferences'][$this->currentapp]['default_district']:'');
 			$default_status = (isset($GLOBALS['phpgw_info']['user']['preferences'][$this->currentapp]['tts_status'])?$GLOBALS['phpgw_info']['user']['preferences'][$this->currentapp]['tts_status']:'');
@@ -631,7 +631,7 @@
 										'nextmatchs'));
 
 
-			$second_display = get_var('second_display',array('POST','GET'));
+			$second_display = phpgw::get_var('second_display', 'bool');
 
 			$default_category = (isset($GLOBALS['phpgw_info']['user']['preferences'][$this->currentapp]['default_district'])?$GLOBALS['phpgw_info']['user']['preferences'][$this->currentapp]['default_district']:'');
 			$default_status = (isset($GLOBALS['phpgw_info']['user']['preferences'][$this->currentapp]['tts_status'])?$GLOBALS['phpgw_info']['user']['preferences'][$this->currentapp]['tts_status']:'');
@@ -965,26 +965,26 @@
 				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> $this->currentapp.'.uilocation.stop', 'perm'=> 2, 'acl_location'=> $this->acl_location));
 			}
 
-			$bolocation		= CreateObject($this->currentapp.'.bolocation');
+			$bolocation		= CreateObject('property.bolocation');
 
-			$values		= get_var('values',array('POST'));
+			$values		= phpgw::get_var('values');
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('tts'));
 //------------------- start ticket from other location
-			$bypass 		= get_var('bypass',array('POST','GET'));
+			$bypass 		= phpgw::get_var('bypass', 'bool');
 			if(isset($_POST) && $_POST && isset($bypass) && $bypass)
 			{
-				$boadmin_entity		= CreateObject($this->currentapp.'.boadmin_entity');
-				$location_code 		= get_var('location_code',array('POST','GET'));
-				$values['descr']	= get_var('descr',array('POST','GET'));
-				$p_entity_id		= get_var('p_entity_id',array('POST','GET'));
-				$p_cat_id		= get_var('p_cat_id',array('POST','GET'));
+				$boadmin_entity		= CreateObject('property.boadmin_entity');
+				$location_code 		= phpgw::get_var('location_code');
+				$values['descr']	= phpgw::get_var('descr');
+				$p_entity_id		= phpgw::get_var('p_entity_id', 'int');
+				$p_cat_id		= phpgw::get_var('p_cat_id', 'int');
 				$values['p'][$p_entity_id]['p_entity_id']	= $p_entity_id;
 				$values['p'][$p_entity_id]['p_cat_id']		= $p_cat_id;
-				$values['p'][$p_entity_id]['p_num']		= get_var('p_num',array('POST','GET'));
+				$values['p'][$p_entity_id]['p_num']		= phpgw::get_var('p_num');
 
-				$origin		= get_var('origin',array('POST','GET'));
-				$origin_id	= get_var('origin_id',array('POST','GET'));
+				$origin		= phpgw::get_var('origin');
+				$origin_id	= phpgw::get_var('origin_id', 'int');
 
 				if($p_entity_id && $p_cat_id)
 				{
@@ -1029,7 +1029,7 @@
 
 						if(!is_object($boadmin_entity))
 						{
-							$boadmin_entity	= CreateObject($this->currentapp.'.boadmin_entity');
+							$boadmin_entity	= CreateObject('property.boadmin_entity');
 						}
 						$entity_category = $boadmin_entity->read_single_category($entity_id,$cat_id);
 						$values['origin'][$i]['descr'] = $entity_category['name'];
@@ -1283,9 +1283,9 @@
 				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> $this->currentapp.'.uilocation.stop', 'perm'=> 1, 'acl_location'=> '.ticket.external'));
 			}
 
-			$bolocation		= CreateObject($this->currentapp.'.bolocation');
+			$bolocation		= CreateObject('property.bolocation');
 
-			$values		= get_var('values',array('POST'));
+			$values		= phpgw::get_var('values');
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('tts'));
 
@@ -1520,10 +1520,10 @@
 				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> $this->currentapp.'.uilocation.stop', 'perm'=>1, 'acl_location'=> $this->acl_location));
 			}
 
-			$bolocation	= CreateObject($this->currentapp.'.bolocation');
+			$bolocation	= CreateObject('property.bolocation');
 
-			$id = get_var('id',array('GET'));
-			$values = get_var('values',array('POST','GET'));
+			$id = phpgw::get_var('id', 'int', 'GET');
+			$values = phpgw::get_var('values');
 			$receipt = '';
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('tts'));
@@ -1535,7 +1535,7 @@
 					$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> $this->currentapp.'.uilocation.stop', 'perm'=>4, 'acl_location'=> $this->acl_location));
 				}
 
-				$so2	= CreateObject($this->currentapp.'.sotts2');
+				$so2	= CreateObject('property.sotts2');
 				$so2->acl_location	= $this->acl_location;				
 				$receipt = $so2->update_ticket($values,$id);
 				if(isset($values['delete_file']) && is_array($values['delete_file']))
@@ -1728,7 +1728,7 @@
 
 						if(!isset($boadmin_entity) || !is_object($boadmin_entity))
 						{
-							$boadmin_entity	= CreateObject($this->currentapp.'.boadmin_entity');
+							$boadmin_entity	= CreateObject('property.boadmin_entity');
 						}
 						$entity_category = $boadmin_entity->read_single_category($entity_id,$cat_id);
 						$ticket['origin'][$i]['descr'] = $entity_category['name'];
@@ -1755,7 +1755,7 @@
 
 						if(!isset($boadmin_entity) || !is_object($boadmin_entity))
 						{
-							$boadmin_entity	= CreateObject($this->currentapp.'.boadmin_entity');
+							$boadmin_entity	= CreateObject('property.boadmin_entity');
 						}
 						$entity_category = $boadmin_entity->read_single_category($entity_id,$cat_id);
 						$ticket['destination'][$i]['descr'] = $entity_category['name'];
@@ -1906,10 +1906,10 @@
 				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> $this->currentapp.'.uilocation.stop', 'perm'=> 1, 'acl_location'=> '.ticket.external'));
 			}
 
-			$bolocation	= CreateObject($this->currentapp.'.bolocation');
+			$bolocation	= CreateObject('property.bolocation');
 
-			$id = get_var('id',array('GET'));
-			$values = get_var('values',array('POST','GET'));
+			$id = phpgw::get_var('id', 'int', 'GET');
+			$values = phpgw::get_var('values');
 			$receipt = '';
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('tts'));
@@ -1925,7 +1925,7 @@
 				$values['group_id'] = 'ignore';
 				$values['cat_id'] = 'ignore';
 				
-				$so2	= CreateObject($this->currentapp.'.sotts2');
+				$so2	= CreateObject('property.sotts2');
 				$so2->acl_location	= '.ticket.external';				
 				$receipt = $so2->update_ticket($values,$id);
 			}
@@ -2031,7 +2031,7 @@
 
 						if(!is_object($boadmin_entity))
 						{
-							$boadmin_entity	= CreateObject($this->currentapp.'.boadmin_entity');
+							$boadmin_entity	= CreateObject('property.boadmin_entity');
 						}
 						$entity_category = $boadmin_entity->read_single_category($entity_id,$cat_id);
 						$ticket['origin'][$i]['descr'] = $entity_category['name'];
@@ -2144,8 +2144,8 @@
 				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> $this->currentapp.'.uilocation.stop', 'perm'=>1, 'acl_location'=> $this->acl_location));
 			}
 
-			$file_name	= urldecode(get_var('file_name',array('POST','GET')));
-			$id 		= get_var('id',array('POST','GET'));
+			$file_name	= urldecode(phpgw::get_var('file_name'));
+			$id 		= phpgw::get_var('id', 'int');
 
 			$file = $this->fakebase. SEP . 'fmticket' . SEP . $id . SEP . $file_name;
 

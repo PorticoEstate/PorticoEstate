@@ -44,8 +44,8 @@
 
 			$GLOBALS['phpgw_info']['flags']['currentapp']	=	'property';
 			$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
-			$this->bocommon		= CreateObject($this->currentapp.'.bocommon');
-			$this->soinvoice	= CreateObject($this->currentapp.'.soinvoice',True);
+			$this->bocommon		= CreateObject('property.bocommon');
+			$this->soinvoice	= CreateObject('property.soinvoice',True);
 			$this->db           	= $this->bocommon->new_db();
 			$this->db2           	= $this->bocommon->new_db();
 			$this->join		= $this->bocommon->join;

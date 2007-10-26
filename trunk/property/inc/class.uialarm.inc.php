@@ -58,10 +58,10 @@
 			$this->nextmatchs	= CreateObject('phpgwapi.nextmatchs');
 			$this->account		= $GLOBALS['phpgw_info']['user']['account_id'];
 
-			$this->bo		= CreateObject($this->currentapp.'.boalarm',True);
-			$this->boasync		= CreateObject($this->currentapp.'.boasync');
-			$this->bocommon		= CreateObject($this->currentapp.'.bocommon');
-			$this->menu		= CreateObject($this->currentapp.'.menu');
+			$this->bo		= CreateObject('property.boalarm',True);
+			$this->boasync		= CreateObject('property.boasync');
+			$this->bocommon		= CreateObject('property.bocommon');
+			$this->menu		= CreateObject('property.menu');
 
 			$this->start		= $this->bo->start;
 			$this->query		= $this->bo->query;
@@ -99,7 +99,7 @@
 
 			$receipt = $GLOBALS['phpgw']->session->appsession('session_data','alarm_receipt');
 			$GLOBALS['phpgw']->session->appsession('session_data','alarm_receipt','');
-			$values		= get_var('values',array('POST'));
+			$values		= phpgw::get_var('values');
 			if($values['delete_alarm'] && count($values['alarm'])):
 			{
 				$receipt = $this->bo->delete_alarm('fm_async',$values['alarm']);
@@ -307,7 +307,7 @@
 
 			$receipt = $GLOBALS['phpgw']->session->appsession('session_data','alarm_receipt');
 			$GLOBALS['phpgw']->session->appsession('session_data','alarm_receipt','');
-			$values		= get_var('values',array('POST'));
+			$values		= phpgw::get_var('values');
 			if($values['delete_alarm'] && count($values['alarm'])):
 			{
 				$receipt = $this->bo->delete_alarm('fm_async',$values['alarm']);
@@ -510,9 +510,9 @@
 
 		function edit()
 		{
-			$method_id 	= get_var('method_id',array('POST'));
-			$async_id	= urldecode(get_var('async_id',array('POST','GET')));
-			$values		= get_var('values',array('POST'));
+			$method_id 	= phpgw::get_var('method_id', 'int', 'POST');
+			$async_id	= urldecode(phpgw::get_var('async_id'));
+			$values		= phpgw::get_var('values');
 
 			if($async_id)
 			{
@@ -637,15 +637,15 @@
 
 		function delete()
 		{
-			$owner_id	= get_var('owner_id',array('POST','GET'));
-			$confirm	= get_var('confirm',array('POST'));
+			$owner_id	= phpgw::get_var('owner_id', 'int');
+			$confirm	= phpgw::get_var('confirm', 'bool', 'POST');
 
 			$link_data = array
 			(
 				'menuaction' => $this->currentapp.'.uiowner.index'
 			);
 
-			if (get_var('confirm',array('POST')))
+			if (phpgw::get_var('confirm', 'bool', 'POST'))
 			{
 				$this->bo->delete($owner_id);
 				$GLOBALS['phpgw']->redirect_link('/index.php',$link_data);
@@ -676,7 +676,7 @@
 
 		function view()
 		{
-			$owner_id	= get_var('owner_id',array('GET'));
+			$owner_id	= phpgw::get_var('owner_id', 'int', 'GET');
 
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('owner') . ': ' . lang('view owner');
 

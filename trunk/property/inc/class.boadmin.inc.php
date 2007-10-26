@@ -46,9 +46,9 @@
 		function property_boadmin($session='')
 		{
 			$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
-			$this->so 			= CreateObject($this->currentapp.'.soadmin');
+			$this->so 			= CreateObject('property.soadmin');
 			$this->acl 			= CreateObject('phpgwapi.acl');
-			$this->bocommon 	= CreateObject($this->currentapp.'.bocommon');
+			$this->bocommon 	= CreateObject('property.bocommon');
 			$this->right		= array(1,2,4,8,16);
 
 			if ($session)
@@ -57,17 +57,17 @@
 				$this->use_session = True;
 			}
 
-			$start	= get_var('start',array('POST','GET'));
-			$query	= get_var('query',array('POST','GET'));
-			$sort	= get_var('sort',array('POST','GET'));
-			$order	= get_var('order',array('POST','GET'));
-			$filter	= get_var('filter',array('POST','GET'));
-			$cat_id	= get_var('cat_id',array('POST','GET'));
-			$permission	= get_var('permission',array('POST','GET'));
+			$start	= phpgw::get_var('start', 'int', 'REQUEST', 0);
+			$query	= phpgw::get_var('query');
+			$sort	= phpgw::get_var('sort');
+			$order	= phpgw::get_var('order');
+			$filter	= phpgw::get_var('filter', 'int');
+			$cat_id	= phpgw::get_var('cat_id', 'int');
+			$permission	= phpgw::get_var('permission');
 	//		$location	= get_var('location',array('POST','GET')); // don't work for some reason...
-			$module	= get_var('module',array('POST','GET'));
-			$granting_group	= get_var('granting_group',array('POST','GET'));
-			$allrows	= get_var('allrows',array('POST','GET'));
+			$module	= phpgw::get_var('module');
+			$granting_group	= phpgw::get_var('granting_group', 'int');
+			$allrows	= phpgw::get_var('allrows', 'bool');
 			$acl_app	= $this->currentapp; //get_var('acl_app',array('POST','GET'));
 
 			if ($start)

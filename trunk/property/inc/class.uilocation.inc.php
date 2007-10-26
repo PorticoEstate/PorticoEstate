@@ -63,10 +63,10 @@
 			$this->currentapp			= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->nextmatchs			= CreateObject('phpgwapi.nextmatchs');
 			$this->account				= $GLOBALS['phpgw_info']['user']['account_id'];
-			$this->bo					= CreateObject($this->currentapp.'.bolocation',True);
-			$this->bocommon				= CreateObject($this->currentapp.'.bocommon');
-			$this->menu					= CreateObject($this->currentapp.'.menu');
-			$this->soadmin_location		= CreateObject($this->currentapp.'.soadmin_location');
+			$this->bo					= CreateObject('property.bolocation',True);
+			$this->bocommon				= CreateObject('property.bocommon');
+			$this->menu					= CreateObject('property.menu');
+			$this->soadmin_location		= CreateObject('property.soadmin_location');
 
 			$this->acl 					= & $GLOBALS['phpgw']->acl;
 		//	$this->acl 					= CreateObject('phpgwapi.acl');
@@ -115,11 +115,11 @@
 
 		function excel()
 		{
-			$summary	= get_var('summary',array('GET'));
-			$type_id	= get_var('type_id',array('GET'));
-			$lookup 	= get_var('lookup',array('POST','GET'));
-			$lookup_name 	= get_var('lookup_name',array('POST','GET'));
-			$lookup_tenant 	= get_var('lookup_tenant',array('POST','GET'));
+			$summary	= phpgw::get_var('summary', 'bool', 'GET');
+			$type_id	= phpgw::get_var('type_id', 'int', 'GET');
+			$lookup 	= phpgw::get_var('lookup', 'bool');
+			$lookup_name 	= phpgw::get_var('lookup_name');
+			$lookup_tenant 	= phpgw::get_var('lookup_tenant', 'bool');
 
 			if(!$summary)
 			{
@@ -142,7 +142,7 @@
 			$GLOBALS['phpgw_info']['flags']['noframework'] = True;
 			$GLOBALS['phpgw_info']['flags']['nofooter'] = True;
 			
-			$values 		= get_var('values',array('POST','GET'));
+			$values 		= phpgw::get_var('values');
 
 			if (isset($values['save']) && $values['save'] && $this->type_id)
 			{
@@ -200,9 +200,9 @@
 										'search_field'));
 
 			$type_id	= $this->type_id;
-			$lookup 	= get_var('lookup',array('POST','GET'));
-			$lookup_name 	= get_var('lookup_name',array('POST','GET'));
-			$lookup_tenant 	= get_var('lookup_tenant',array('POST','GET'));
+			$lookup 	= phpgw::get_var('lookup', 'bool');
+			$lookup_name 	= phpgw::get_var('lookup_name');
+			$lookup_tenant 	= phpgw::get_var('lookup_tenant', 'bool');
 
 			$GLOBALS['phpgw']->js->validate_file('overlib','overlib',$this->currentapp);
 			$GLOBALS['phpgw']->js->set_onload('document.search.query.focus();');
@@ -605,11 +605,11 @@
 								);
 			}
 
-			$get_history 		= get_var('get_history',array('POST'));
-			$change_type 		= get_var('change_type',array('POST'));
-			$lookup_tenant 		= get_var('lookup_tenant',array('POST','GET'));
-			$location_code		= get_var('location_code',array('POST','GET'));
-			$values_attribute	= get_var('values_attribute',array('POST','GET'));
+			$get_history 		= phpgw::get_var('get_history', 'bool', 'POST');
+			$change_type 		= phpgw::get_var('change_type', 'int', 'POST');
+			$lookup_tenant 		= phpgw::get_var('lookup_tenant', 'bool');
+			$location_code		= phpgw::get_var('location_code');
+			$values_attribute	= phpgw::get_var('values_attribute');
 			$location = split('-',$location_code);
 
 			$insert_record = $GLOBALS['phpgw']->session->appsession('insert_record',$this->currentapp);
@@ -856,7 +856,7 @@
 				'LB' => 'listbox'
 			);
 
-			$vendor = CreateObject($this->currentapp.'.soactor');
+			$vendor = CreateObject('property.soactor');
 			$vendor->role = 'vendor';
 
 			$r=0;
@@ -1215,11 +1215,11 @@
 								);
 			}
 
-			$location_code	 	= get_var('location_code',array('GET'));
+			$location_code	 	= phpgw::get_var('location_code', 'string', 'GET');
 			$type_id	 	= $this->type_id;
 
 
-			$confirm	= get_var('confirm',array('POST'));
+			$confirm	= phpgw::get_var('confirm', 'bool', 'POST');
 
 			$link_data = array
 			(
@@ -1227,7 +1227,7 @@
 				'type_id'	=>$type_id
 			);
 
-			if (get_var('confirm',array('POST')))
+			if (phpgw::get_var('confirm', 'bool', 'POST'))
 			{
 				$this->bo->delete($location_code);
 				$GLOBALS['phpgw']->redirect_link('/index.php',$link_data);
@@ -1266,9 +1266,9 @@
 								);
 			}
 
-			$get_history 		= get_var('get_history',array('POST'));
-			$lookup_tenant		= get_var('lookup_tenant',array('POST','GET'));
-			$location_code 		= get_var('location_code',array('POST','GET'));
+			$get_history 		= phpgw::get_var('get_history', 'bool', 'POST');
+			$lookup_tenant		= phpgw::get_var('lookup_tenant', 'bool');
+			$location_code 		= phpgw::get_var('location_code');
 			$location 		= split('-',$location_code);
 
 			$type_id	 	= $this->type_id;
@@ -1372,7 +1372,7 @@
 				'LB' => 'listbox'
 			);
 
-			$vendor = CreateObject($this->currentapp.'.soactor');
+			$vendor = CreateObject('property.soactor');
 			$vendor->role = 'vendor';
 
 			$r=0;
@@ -1652,14 +1652,14 @@
 
 		function update_cat()
 		{
-			$confirm	= get_var('confirm',array('POST'));
+			$confirm	= phpgw::get_var('confirm', 'bool', 'POST');
 
 			$link_data = array
 			(
 				'menuaction' => $this->currentapp.'.uilocation.index'
 			);
 
-			if (get_var('confirm',array('POST')))
+			if (phpgw::get_var('confirm', 'bool', 'POST'))
 			{
 				$receipt= $this->bo->update_cat();
 				$lang_confirm_msg = lang('Do you really want to update the categories again');
@@ -1697,8 +1697,8 @@
 
 		function stop()
 		{
-			$perm	 		= get_var('perm',array('POST','GET'));
-			$location	 	= get_var('acl_location',array('POST','GET'));
+			$perm	 		= phpgw::get_var('perm', 'int');
+			$location	 	= phpgw::get_var('acl_location');
 
 			$right		= array(1=>'read',2=>'add',4=>'edit',8=>'delete',16=>'manage');
 

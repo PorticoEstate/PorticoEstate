@@ -45,7 +45,7 @@
 		{
 			$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->account		= $GLOBALS['phpgw_info']['user']['account_id'];
-			$this->bocommon		= CreateObject($this->currentapp.'.bocommon');
+			$this->bocommon		= CreateObject('property.bocommon');
 			$this->db           = $this->bocommon->new_db();
 			$this->db2          = $this->bocommon->new_db();
 
@@ -122,7 +122,7 @@
 
 			$sql = $this->bocommon->fm_cache('sql_entity_' . $entity_id . '_' . $cat_id . '_' . $lookup);
 
-			$admin_entity	= CreateObject($this->currentapp.'.soadmin_entity');
+			$admin_entity	= CreateObject('property.soadmin_entity');
 			$category = $admin_entity->read_single_category($entity_id,$cat_id);
 
 			$entity_table = 'fm_entity_' . $entity_id . '_' . $cat_id;
@@ -681,7 +681,7 @@
 
 			if (isset($history_set) AND is_array($history_set))
 			{
-				$historylog	= CreateObject($this->currentapp.'.historylog','entity_' . $entity_id .'_' . $cat_id);
+				$historylog	= CreateObject('property.historylog','entity_' . $entity_id .'_' . $cat_id);
 				foreach ($history_set as $attrib_id => $new_value)
 				{
 					$historylog->add('SO',$values['id'],$new_value,False, $attrib_id);
@@ -786,7 +786,7 @@
 
 			if (isset($history_set) AND is_array($history_set))
 			{
-				$historylog	= CreateObject($this->currentapp.'.historylog','entity_' . $entity_id .'_' . $cat_id);
+				$historylog	= CreateObject('property.historylog','entity_' . $entity_id .'_' . $cat_id);
 				foreach ($history_set as $attrib_id => $history)
 				{
 					$historylog->add('SO',$values['id'],$history['value'],False, $attrib_id,$history['date']);

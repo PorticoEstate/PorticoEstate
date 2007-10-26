@@ -73,9 +73,9 @@
 		function property_boinvestment($session=False)
 		{
 			$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
-			$this->so 		= CreateObject($this->currentapp.'.soinvestment');
-			$this->bocommon = CreateObject($this->currentapp.'.bocommon');
-			$this->socommon = CreateObject($this->currentapp.'.socommon');
+			$this->so 		= CreateObject('property.soinvestment');
+			$this->bocommon = CreateObject('property.bocommon');
+			$this->socommon = CreateObject('property.socommon');
 
 			if ($session)
 			{
@@ -83,14 +83,14 @@
 				$this->use_session = True;
 			}
 
-			$start				= get_var('start',array('POST','GET'));
-			$query				= get_var('query',array('POST','GET'));
-			$sort				= get_var('sort',array('POST','GET'));
-			$order				= get_var('order',array('POST','GET'));
-			$filter				= get_var('filter',array('POST','GET'));
-			$cat_id				= get_var('cat_id',array('POST','GET'));
-			$part_of_town_id	= get_var('part_of_town_id',array('POST','GET'));
-			$allrows			= get_var('allrows',array('POST','GET'));
+			$start				= phpgw::get_var('start', 'int', 'REQUEST', 0);
+			$query				= phpgw::get_var('query');
+			$sort				= phpgw::get_var('sort');
+			$order				= phpgw::get_var('order');
+			$filter				= phpgw::get_var('filter', 'int');
+			$cat_id				= phpgw::get_var('cat_id', 'int');
+			$part_of_town_id	= phpgw::get_var('part_of_town_id', 'int');
+			$allrows			= phpgw::get_var('allrows', 'bool');
 
 			if ($start)
 			{
@@ -256,7 +256,7 @@
 
 			if($values['extra']['p_num'])
 			{
-				$boadmin_entity		= CreateObject($this->currentapp.'.boadmin_entity');
+				$boadmin_entity		= CreateObject('property.boadmin_entity');
 				$category = $boadmin_entity->read_single_category($values['extra']['p_entity_id'],$values['extra']['p_cat_id']);
 				$values['entity_id'] 	= $values['extra']['p_num'];
 				$values['entity_type']	=$category['name'];

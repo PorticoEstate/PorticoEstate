@@ -70,8 +70,8 @@
 		function property_boadmin_location($session=False)
 		{
 			$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
-			$this->so 		= CreateObject($this->currentapp.'.soadmin_location');
-			$this->bocommon = CreateObject($this->currentapp.'.bocommon');
+			$this->so 		= CreateObject('property.soadmin_location');
+			$this->bocommon = CreateObject('property.bocommon');
 
 			if ($session)
 			{
@@ -79,11 +79,11 @@
 				$this->use_session = True;
 			}
 
-			$start	= get_var('start',array('POST','GET'));
-			$query	= get_var('query',array('POST','GET'));
-			$sort	= get_var('sort',array('POST','GET'));
-			$order	= get_var('order',array('POST','GET'));
-			$allrows	= get_var('allrows',array('POST','GET'));
+			$start	= phpgw::get_var('start', 'int', 'REQUEST', 0);
+			$query	= phpgw::get_var('query');
+			$sort	= phpgw::get_var('sort');
+			$order	= phpgw::get_var('order');
+			$allrows	= phpgw::get_var('allrows', 'bool');
 
 			if ($start)
 			{

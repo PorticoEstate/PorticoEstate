@@ -59,8 +59,8 @@
 			$this->cats				= CreateObject('phpgwapi.categories');
 			$this->nextmatchs		= CreateObject('phpgwapi.nextmatchs');
 			$this->account			= $GLOBALS['phpgw_info']['user']['account_id'];
-			$this->bo				= CreateObject($this->currentapp.'.boifc',true);
-			$this->menu				= CreateObject($this->currentapp.'.menu');
+			$this->bo				= CreateObject('property.boifc',true);
+			$this->menu				= CreateObject('property.menu');
 			$this->menu->sub		='ifc';
 			$this->acl 				= & $GLOBALS['phpgw']->acl;
 			$this->acl_location 	= '.ifc';
@@ -93,7 +93,7 @@
 
 		function index()
 		{
-			$output	= get_var('output',array('POST','GET'));
+			$output	= phpgw::get_var('output');
 			
 			if(!$output)
 			{
@@ -286,10 +286,10 @@
 //				return;
 			}
 
-			$bolocation		= CreateObject($this->currentapp.'.bolocation');
+			$bolocation		= CreateObject('property.bolocation');
 			
 			$GLOBALS['phpgw']->xslttpl->add_file(array('ifc'));
-			$values		= get_var('values',array('POST'));
+			$values		= phpgw::get_var('values');
 
 			if (isset($values) && is_array($values))
 			{
@@ -302,7 +302,7 @@
 
 					if(!$ifcfile)
 					{
-						$ifcfile = get_var('tsvfile',array('POST','GET'));
+						$ifcfile = phpgw::get_var('tsvfile');
 					}
 				
 					if(!isset($receipt['error']) || !$receipt['error'])
@@ -381,16 +381,16 @@
 				return;
 			}
 
-			$output	= get_var('output',array('POST','GET'));
+			$output	= phpgw::get_var('output');
 			
 			if(!$output)
 			{
 				$output = 'html';
 			}
 
-			$ifc_id	= get_var('ifc_id',array('POST','GET'));
-			$values		= get_var('values',array('POST'));
-			$values_attribute  = get_var('values_attribute',array('POST'));
+			$ifc_id	= phpgw::get_var('ifc_id', 'int');
+			$values		= phpgw::get_var('values');
+			$values_attribute  = phpgw::get_var('values_attribute');
 
 			$insert_record_values = $GLOBALS['phpgw']->session->appsession('insert_record_values'. $acl_location,'ifc');
 
@@ -562,15 +562,15 @@
 				return;
 			}
 
-			$output	= get_var('output',array('POST','GET'));
+			$output	= phpgw::get_var('output');
 
 			if(!$output)
 			{
 				$output = 'html';
 			}
 
-			$ifc_id	= get_var('ifc_id',array('POST','GET'));
-			$values		= get_var('values',array('POST'));
+			$ifc_id	= phpgw::get_var('ifc_id', 'int');
+			$values		= phpgw::get_var('values');
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('ifc','attributes_view'));
 
@@ -630,22 +630,22 @@
 				return;
 			}
 
-			$output	= get_var('output',array('POST','GET'));
+			$output	= phpgw::get_var('output');
 
 			if(!$output)
 			{
 				$output = 'html';
 			}
 
-			$ifc_id	= get_var('ifc_id',array('POST','GET'));
-			$confirm	= get_var('confirm',array('POST'));
+			$ifc_id	= phpgw::get_var('ifc_id', 'int');
+			$confirm	= phpgw::get_var('confirm', 'bool', 'POST');
 
 			$link_data = array
 			(
 				'menuaction' => $this->currentapp.'.uiifc.index'
 			);
 
-			if (get_var('confirm',array('POST')))
+			if (phpgw::get_var('confirm', 'bool', 'POST'))
 			{
 				$this->bo->delete($ifc_id);
 				$GLOBALS['phpgw']->redirect_link('/index.php',$link_data);

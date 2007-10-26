@@ -61,12 +61,12 @@
 			$this->currentapp			= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->nextmatchs			= CreateObject('phpgwapi.nextmatchs');
 			$this->account				= $GLOBALS['phpgw_info']['user']['account_id'];
-			$this->bo					= CreateObject($this->currentapp.'.bodocument',True);
-			$this->bocommon				= CreateObject($this->currentapp.'.bocommon');
-			$this->menu					= CreateObject($this->currentapp.'.menu');
-			$this->bolocation			= CreateObject($this->currentapp.'.bolocation');
+			$this->bo					= CreateObject('property.bodocument',True);
+			$this->bocommon				= CreateObject('property.bocommon');
+			$this->menu					= CreateObject('property.menu');
+			$this->bolocation			= CreateObject('property.bolocation');
 			$this->config				= CreateObject('phpgwapi.config',$this->currentapp);
-			$this->boadmin_entity		= CreateObject($this->currentapp.'.boadmin_entity');
+			$this->boadmin_entity		= CreateObject('property.boadmin_entity');
 
 			$this->acl 					= CreateObject('phpgwapi.acl');
 			$this->acl_location			= '.document';
@@ -126,10 +126,10 @@
 										)
 			);
 
-			$entity_id = get_var('entity_id',array('POST','GET'));
+			$entity_id = phpgw::get_var('entity_id', 'int');
 			$links = $this->menu->links('document_'.$entity_id);
 
-			$preserve = get_var('preserve',array('POST','GET'));
+			$preserve = phpgw::get_var('preserve', 'bool');
 
 			if($preserve)
 			{
@@ -281,7 +281,7 @@
 
 			if($this->entity_id)
 			{
-				$boentity	= CreateObject($this->currentapp.'.boentity');
+				$boentity	= CreateObject('property.boentity');
 				$boentity->entity_id=$this->entity_id;
 
 				$cat_list	= $this->bo->select_category_list('filter',$this->cat_id);
@@ -354,7 +354,7 @@
 				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> $this->currentapp.'.uilocation.stop', 'perm'=>1, 'acl_location'=> $this->acl_location));
 			}
 
-			$preserve = get_var('preserve',array('POST','GET'));
+			$preserve = phpgw::get_var('preserve', 'bool');
 
 			if($preserve)
 			{
@@ -380,13 +380,13 @@
 			$receipt = $GLOBALS['phpgw']->session->appsession('session_data','document_receipt');
 			$GLOBALS['phpgw']->session->appsession('session_data','document_receipt','');
 
-			$location_code = get_var('location_code',array('POST','GET'));
+			$location_code = phpgw::get_var('location_code');
 			if($this->query_location)
 			{
 				$location_code = $this->query_location;
 			}
 
-			$p_num = get_var('p_num',array('POST','GET'));
+			$p_num = phpgw::get_var('p_num');
 
 			$location=$this->bo->read_location_data($location_code);
 
@@ -617,8 +617,8 @@
 				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> $this->currentapp.'.uilocation.stop', 'perm'=>1, 'acl_location'=> $this->acl_location));
 			}
 
-			$document_id 		= get_var('document_id',array('POST','GET'));
-			$p_num = get_var('p_num',array('POST','GET'));
+			$document_id 		= phpgw::get_var('document_id', 'int');
+			$p_num = phpgw::get_var('p_num');
 
 
 			$values = $this->bo->read_single($document_id);
@@ -671,10 +671,10 @@
 				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> $this->currentapp.'.uilocation.stop', 'perm'=>2, 'acl_location'=> $this->acl_location));
 			}
 
-			$from 			= get_var('from',array('POST','GET'));
-			$document_id 		= get_var('document_id',array('POST','GET'));
-//			$location_code 		= get_var('location_code',array('POST','GET'));
-			$values			= get_var('values',array('POST'));
+			$from 			= phpgw::get_var('from');
+			$document_id 		= phpgw::get_var('document_id', 'int');
+//			$location_code 		= phpgw::get_var('location_code');
+			$values			= phpgw::get_var('values');
 
 			if(!$from)
 			{
@@ -682,7 +682,7 @@
 			}
 			$GLOBALS['phpgw']->xslttpl->add_file(array('document'));
 
-			$bypass = get_var('bypass',array('POST','GET'));
+			$bypass = phpgw::get_var('bypass', 'bool');
 
 			$receipt= $this->bo->create_home_dir();
 
@@ -700,12 +700,12 @@
 			}
 			else
 			{
-				$location_code 		= get_var('location_code',array('POST','GET'));
-				$p_entity_id		= get_var('p_entity_id',array('POST','GET'));
-				$p_cat_id			= get_var('p_cat_id',array('POST','GET'));
+				$location_code 		= phpgw::get_var('location_code');
+				$p_entity_id		= phpgw::get_var('p_entity_id', 'int');
+				$p_cat_id			= phpgw::get_var('p_cat_id', 'int');
 				$values['p'][$p_entity_id]['p_entity_id']	= $p_entity_id;
 				$values['p'][$p_entity_id]['p_cat_id']		= $p_cat_id;
-				$values['p'][$p_entity_id]['p_num']		= get_var('p_num',array('POST','GET'));
+				$values['p'][$p_entity_id]['p_num']		= phpgw::get_var('p_num');
 				$values['p_entity_id']=$p_entity_id;
 				$values['p_cat_id']=$p_cat_id;
 
@@ -739,7 +739,7 @@
 
 			if ($values['save'])
 			{
-				$values['vendor_id']		= get_var('vendor_id',array('POST'));
+				$values['vendor_id']		= phpgw::get_var('vendor_id', 'int', 'POST');
 
 				if(!$values['link'])
 				{
@@ -989,10 +989,10 @@
 				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> $this->currentapp.'.uilocation.stop', 'perm'=>8, 'acl_location'=> $this->acl_location));
 			}
 
-			$location_code = get_var('location_code',array('POST','GET'));
-			$p_num = get_var('p_num',array('POST','GET'));
-			$document_id = get_var('document_id',array('POST','GET'));
-			$confirm	= get_var('confirm',array('POST'));
+			$location_code = phpgw::get_var('location_code');
+			$p_num = phpgw::get_var('p_num');
+			$document_id = phpgw::get_var('document_id', 'int');
+			$confirm	= phpgw::get_var('confirm', 'bool', 'POST');
 
 			$link_data = array
 			(
@@ -1001,7 +1001,7 @@
 				'p_num'		=> $p_num
 			);
 
-			if (get_var('confirm',array('POST')))
+			if (phpgw::get_var('confirm', 'bool', 'POST'))
 			{
 				$this->bo->delete($document_id);
 				$GLOBALS['phpgw']->redirect_link('/index.php',$link_data);
@@ -1036,8 +1036,8 @@
 				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> $this->currentapp.'.uilocation.stop', 'perm'=>1, 'acl_location'=> $this->acl_location));
 			}
 
-			$from 		= get_var('from',array('POST','GET'));
-			$document_id 	= get_var('document_id',array('POST','GET'));
+			$from 		= phpgw::get_var('from');
+			$document_id 	= phpgw::get_var('document_id', 'int');
 
 			if(!$from)
 			{

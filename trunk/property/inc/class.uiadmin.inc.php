@@ -61,9 +61,9 @@
 			$this->nextmatchs			= CreateObject('phpgwapi.nextmatchs');
 			$this->account				= $GLOBALS['phpgw_info']['user']['account_id'];
 
-			$this->bo					= CreateObject($this->currentapp.'.boadmin',true);
+			$this->bo					= CreateObject('property.boadmin',true);
 			$this->bopreferences		= createObject('preferences.boadmin_acl',true);
-			$this->bocommon				= CreateObject($this->currentapp.'.bocommon');
+			$this->bocommon				= CreateObject('property.bocommon');
 
 			$this->acl 					= CreateObject('phpgwapi.acl');
 			$this->acl_location			= '.admin';
@@ -110,10 +110,10 @@
 			$GLOBALS['phpgw']->xslttpl->add_file(array('admin','nextmatchs',
 										'search_field'));
 
-			$values 			= get_var('values',array('POST'));
-			$r_processed		= get_var('processed',array('POST'));
+			$values 			= phpgw::get_var('values');
+			$r_processed		= phpgw::get_var('processed');
 	//		$acl_app			= get_var('acl_app',array('GET'));
-			$set_permission 	= get_var('set_permission',array('POST'));
+			$set_permission 	= phpgw::get_var('set_permission', 'bool');
 
 			if($set_permission)
 			{
@@ -310,11 +310,11 @@
 			$GLOBALS['phpgw']->xslttpl->add_file(array('admin','nextmatchs',
 										'search_field'));
 
-			$values 		= get_var('values',array('POST'));
-			$r_processed	= get_var('processed',array('POST'));
-			$initials		= get_var('initials',array('POST'));
+			$values 		= phpgw::get_var('values');
+			$r_processed	= phpgw::get_var('processed');
+			$initials		= phpgw::get_var('initials');
 
-			$set_permission = get_var('set_permission',array('POST'));
+			$set_permission = phpgw::get_var('set_permission', 'bool');
 
 			if($set_permission)
 			{
@@ -570,7 +570,7 @@
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('admin'));
 
-			$values		= get_var('values',array('POST'));
+			$values		= phpgw::get_var('values');
 
 			if ($values['select'])
 			{
@@ -632,7 +632,7 @@
 		{
 			$GLOBALS['phpgw']->xslttpl->add_file(array('admin'));
 
-			$values		= get_var('values',array('POST'));
+			$values		= phpgw::get_var('values');
 
 			if ($values['save'])
 			{

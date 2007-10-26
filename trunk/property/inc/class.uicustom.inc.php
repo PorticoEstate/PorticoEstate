@@ -58,9 +58,9 @@
 			$this->nextmatchs	= CreateObject('phpgwapi.nextmatchs');
 			$this->account		= $GLOBALS['phpgw_info']['user']['account_id'];
 
-			$this->bo		= CreateObject($this->currentapp.'.bocustom',True);
-			$this->bocommon		= CreateObject($this->currentapp.'.bocommon');
-			$this->menu		= CreateObject($this->currentapp.'.menu');
+			$this->bo		= CreateObject('property.bocustom',True);
+			$this->bocommon		= CreateObject('property.bocommon');
+			$this->menu		= CreateObject('property.menu');
 
 			$this->start		= $this->bo->start;
 			$this->query		= $this->bo->query;
@@ -310,10 +310,10 @@
 				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> $this->currentapp.'.uilocation.stop', 'perm'=>2, 'acl_location'=> $this->acl_location));
 			}
 
-			$custom_id	= get_var('custom_id',array('POST','GET'));
-			$cols_id	= get_var('cols_id',array('POST','GET'));
-			$resort		= get_var('resort',array('POST','GET'));
-			$values		= get_var('values',array('POST'));
+			$custom_id	= phpgw::get_var('custom_id', 'int');
+			$cols_id	= phpgw::get_var('cols_id', 'int');
+			$resort		= phpgw::get_var('resort');
+			$values		= phpgw::get_var('values');
 
 			if($cols_id)
 			{
@@ -427,15 +427,15 @@
 
 		function delete()
 		{
-			$custom_id	= get_var('custom_id',array('POST','GET'));
-			$confirm	= get_var('confirm',array('POST'));
+			$custom_id	= phpgw::get_var('custom_id', 'int');
+			$confirm	= phpgw::get_var('confirm', 'bool', 'POST');
 
 			$link_data = array
 			(
 				'menuaction' => $this->currentapp.'.uicustom.index'
 			);
 
-			if (get_var('confirm',array('POST')))
+			if (phpgw::get_var('confirm', 'bool', 'POST'))
 			{
 				$this->bo->delete($custom_id);
 				$GLOBALS['phpgw']->redirect_link('/index.php',$link_data);
@@ -465,7 +465,7 @@
 
 		function view()
 		{
-			$custom_id	= get_var('custom_id',array('GET'));
+			$custom_id	= phpgw::get_var('custom_id', 'int', 'GET');
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('custom','nextmatchs'));
 
@@ -565,7 +565,7 @@
 
 		function excel()
 		{
-			$custom_id = get_var('custom_id',array('POST','GET'));
+			$custom_id = phpgw::get_var('custom_id', 'int');
 			$list= $this->bo->read_custom($custom_id,$allrows=True);
 			$uicols	= $this->bo->uicols;
 			foreach($uicols as $col)
