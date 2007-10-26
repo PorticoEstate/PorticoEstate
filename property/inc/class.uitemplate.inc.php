@@ -58,10 +58,10 @@
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = True;
 			$this->currentapp			= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->nextmatchs			= CreateObject('phpgwapi.nextmatchs');
-			$this->bo				= CreateObject($this->currentapp.'.botemplate',True);
-			$this->bowo_hour			= CreateObject($this->currentapp.'.bowo_hour');
-			$this->bocommon				= CreateObject($this->currentapp.'.bocommon');
-			$this->menu				= CreateObject($this->currentapp.'.menu');
+			$this->bo				= CreateObject('property.botemplate',True);
+			$this->bowo_hour			= CreateObject('property.bowo_hour');
+			$this->bocommon				= CreateObject('property.bocommon');
+			$this->menu				= CreateObject('property.menu');
 
 			$this->start				= $this->bo->start;
 			$this->query				= $this->bo->query;
@@ -99,8 +99,8 @@
 								'nextmatchs',
 								'search_field'));
 
-			$workorder_id = get_var('workorder_id',array('POST','GET'));
-			$lookup 	= get_var('lookup',array('POST','GET'));
+			$workorder_id = phpgw::get_var('workorder_id', 'int');
+			$lookup 	= phpgw::get_var('lookup', 'bool');
 
 			$links = $this->menu->links('template');
 
@@ -261,10 +261,10 @@
 										'nextmatchs',
 										'search_field'));
 
-			$delete = get_var('delete',array('POST','GET'));
-			$hour_id = get_var('hour_id',array('POST','GET'));
+			$delete = phpgw::get_var('delete', 'bool');
+			$hour_id = phpgw::get_var('hour_id', 'int');
 
-			$template_id = get_var('template_id',array('POST','GET'));
+			$template_id = phpgw::get_var('template_id', 'int');
 
 			if($delete && $hour_id)
 			{
@@ -472,8 +472,8 @@
 
 		function edit_template()
 		{
-			$template_id 	= get_var('template_id',array('POST','GET'));
-			$values		= get_var('values',array('POST','GET'));
+			$template_id 	= phpgw::get_var('template_id', 'int');
+			$values		= phpgw::get_var('values');
 
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('template'));
@@ -557,14 +557,14 @@
 
 		function edit_hour()
 		{
-			$template_id 		= get_var('template_id',array('POST','GET'));
-			$activity_id		= get_var('activity_id',array('POST','GET'));
-			$hour_id		= get_var('hour_id',array('POST','GET'));
-			$values			= get_var('values',array('POST','GET'));
-			$values['ns3420_id']	= get_var('ns3420_id',array('POST','GET'));
-			$values['ns3420_descr']	= get_var('ns3420_descr',array('POST','GET'));
+			$template_id 		= phpgw::get_var('template_id', 'int');
+			$activity_id		= phpgw::get_var('activity_id', 'int');
+			$hour_id		= phpgw::get_var('hour_id', 'int');
+			$values			= phpgw::get_var('values');
+			$values['ns3420_id']	= phpgw::get_var('ns3420_id');
+			$values['ns3420_descr']	= phpgw::get_var('ns3420_descr');
 
-			$bopricebook	= CreateObject($this->currentapp.'.bopricebook');
+			$bopricebook	= CreateObject('property.bopricebook');
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('template'));
 
@@ -711,15 +711,15 @@
 
 		function delete()
 		{
-			$id	= get_var('id',array('POST','GET'));
-			$confirm = get_var('confirm',array('POST'));
+			$id	= phpgw::get_var('id', 'int');
+			$confirm = phpgw::get_var('confirm', 'bool', 'POST');
 
 			$link_data = array
 			(
 				'menuaction' => $this->currentapp.'.uitemplate.index'
 			);
 
-			if (get_var('confirm',array('POST')))
+			if (phpgw::get_var('confirm', 'bool', 'POST'))
 			{
 				$this->bo->delete($id);
 				$GLOBALS['phpgw']->redirect_link('/index.php',$link_data);

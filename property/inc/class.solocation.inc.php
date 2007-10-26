@@ -40,11 +40,11 @@
 			$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
 
 			$this->account			= $GLOBALS['phpgw_info']['user']['account_id'];
-			$this->soadmin_location	= CreateObject($this->currentapp.'.soadmin_location');
-			$this->bocommon			= CreateObject($this->currentapp.'.bocommon');
+			$this->soadmin_location	= CreateObject('property.soadmin_location');
+			$this->bocommon			= CreateObject('property.bocommon');
 			$this->db           	= $this->bocommon->new_db();
 			$this->db2           	= $this->bocommon->new_db();
-			$this->socommon			= CreateObject($this->currentapp.'.socommon');
+			$this->socommon			= CreateObject('property.socommon');
 
 			$this->join			= $this->bocommon->join;
 			$this->left_join	= $this->bocommon->left_join;

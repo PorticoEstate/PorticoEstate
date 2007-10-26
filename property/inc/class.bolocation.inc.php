@@ -73,9 +73,9 @@
 		function property_bolocation($session=False)
 		{
 			$this->currentapp			= $GLOBALS['phpgw_info']['flags']['currentapp'];
-			$this->so 					= CreateObject($this->currentapp.'.solocation');
-			$this->bocommon 			= CreateObject($this->currentapp.'.bocommon');
-			$this->soadmin_location		= CreateObject($this->currentapp.'.soadmin_location');
+			$this->so 					= CreateObject('property.solocation');
+			$this->bocommon 			= CreateObject('property.bocommon');
+			$this->soadmin_location		= CreateObject('property.soadmin_location');
 
 			if ($session)
 			{
@@ -83,18 +83,18 @@
 				$this->use_session = True;
 			}
 
-			$start		= get_var('start',array('POST','GET'));
-			$query		= get_var('query',array('POST','GET'));
-			$sort		= get_var('sort',array('POST','GET'));
-			$order		= get_var('order',array('POST','GET'));
-			$filter		= get_var('filter',array('POST','GET'));
-			$cat_id		= get_var('cat_id',array('POST','GET'));
-			$lookup_tenant	= get_var('lookup_tenant',array('POST','GET'));
-			$district_id	= get_var('district_id',array('POST','GET'));
-			$part_of_town_id = get_var('part_of_town_id',array('POST','GET'));
-			$status		= get_var('status',array('POST','GET'));
-			$type_id	= get_var('type_id',array('POST','GET'));
-			$allrows	= get_var('allrows',array('POST','GET'));
+			$start		= phpgw::get_var('start', 'int', 'REQUEST', 0);
+			$query		= phpgw::get_var('query');
+			$sort		= phpgw::get_var('sort');
+			$order		= phpgw::get_var('order');
+			$filter		= phpgw::get_var('filter', 'int');
+			$cat_id		= phpgw::get_var('cat_id', 'int');
+			$lookup_tenant	= phpgw::get_var('lookup_tenant', 'bool');
+			$district_id	= phpgw::get_var('district_id', 'int');
+			$part_of_town_id = phpgw::get_var('part_of_town_id', 'int');
+			$status		= phpgw::get_var('status');
+			$type_id	= phpgw::get_var('type_id', 'int');
+			$allrows	= phpgw::get_var('allrows', 'bool');
 
 			if ($start)
 			{
@@ -180,7 +180,7 @@
 
 		function column_list($selected='',$type_id='',$allrows='')
 		{
-			$soadmin_location	= CreateObject($this->currentapp.'.soadmin_location');
+			$soadmin_location	= CreateObject('property.soadmin_location');
 
 			if(!$selected)
 			{
@@ -671,7 +671,7 @@
 			}
 
 
-			$soadmin_custom = CreateObject($this->currentapp.'.soadmin_custom');
+			$soadmin_custom = CreateObject('property.soadmin_custom');
 			$custom_functions = $soadmin_custom->read(array('acl_location' => $this->acl_location,'allrows'=>True));
 
 			if (isSet($custom_functions) AND is_array($custom_functions))

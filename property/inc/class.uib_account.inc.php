@@ -56,10 +56,10 @@
 			$this->nextmatchs		= CreateObject('phpgwapi.nextmatchs');
 			$this->account			= $GLOBALS['phpgw_info']['user']['account_id'];
 
-			$this->bo			= CreateObject($this->currentapp.'.bob_account',true);
-			$this->bocommon			= CreateObject($this->currentapp.'.bocommon');
+			$this->bo			= CreateObject('property.bob_account',true);
+			$this->bocommon			= CreateObject('property.bocommon');
 
-			$this->menu			= CreateObject($this->currentapp.'.menu');
+			$this->menu			= CreateObject('property.menu');
 			$this->menu->sub		='invoice';
 
 			$this->acl 			= CreateObject('phpgwapi.acl');
@@ -204,8 +204,8 @@
 				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> $this->currentapp.'.uilocation.stop', 'perm'=>2, 'acl_location'=> $this->acl_location));
 			}
 
-			$id	= get_var('id',array('POST','GET'));
-			$values			= get_var('values',array('POST'));
+			$id	= phpgw::get_var('id', 'int');
+			$values			= phpgw::get_var('values');
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('b_account'));
 
@@ -302,15 +302,15 @@
 				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> $this->currentapp.'.uilocation.stop', 'perm'=>8, 'acl_location'=> $this->acl_location));
 			}
 
-			$id		= get_var('id',array('POST','GET'));
-			$confirm		= get_var('confirm',array('POST'));
+			$id		= phpgw::get_var('id', 'int');
+			$confirm		= phpgw::get_var('confirm', 'bool', 'POST');
 
 			$link_data = array
 			(
 				'menuaction' => $this->currentapp.'.uib_account.index'
 			);
 
-			if (get_var('confirm',array('POST')))
+			if (phpgw::get_var('confirm', 'bool', 'POST'))
 			{
 				$this->bo->delete($id);
 				$GLOBALS['phpgw']->redirect_link('/index.php',$link_data);

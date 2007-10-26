@@ -79,7 +79,7 @@
 				$this->currentapp	= 'property';			
 			}
 
-			$this->socommon			= CreateObject($this->currentapp.'.socommon',$this->currentapp);
+			$this->socommon			= CreateObject('property.socommon',$this->currentapp);
 			$this->account		= $GLOBALS['phpgw_info']['user']['account_id'];
 
 			if (!isset($GLOBALS['phpgw']->asyncservice))
@@ -534,7 +534,7 @@
 		{
 //_debug_array($data);
 
-			$contacts	= CreateObject($this->currentapp.'.soactor');
+			$contacts	= CreateObject('property.soactor');
 			$contacts->role='vendor';
 
 			if( isset($data['type']) && $data['type']=='view')
@@ -605,7 +605,7 @@
 			
 			if($data['tenant_id'] && !$data['tenant_name'])
 			{
-				$tenant_object	= CreateObject($this->currentapp.'.soactor');
+				$tenant_object	= CreateObject('property.soactor');
 				$tenant_object->role = 'tenant';
 				$tenant_data	= $tenant_object->read_single(array('actor_id' => $data['tenant_id']));
 				if(is_array($tenant_data['attributes']))
@@ -648,7 +648,7 @@
 			$b_account['lang_b_account']			= lang('Budget account');
 			if($data['b_account_id'] && !$data['b_account_name'])
 			{
-				$b_account_object	= CreateObject($this->currentapp.'.sob_account');
+				$b_account_object	= CreateObject('property.sob_account');
 				$b_account_data	= $b_account_object->read_single($data['b_account_id']);
 				$b_account['value_b_account_name']	= $b_account_data['descr'];
 			}
@@ -660,7 +660,7 @@
 
 		function initiate_ui_alarm($data)
 		{
-			$boalarm		= CreateObject($this->currentapp.'.boalarm');
+			$boalarm		= CreateObject('property.boalarm');
 
 			if($data['type']=='view')
 			{
@@ -952,7 +952,7 @@
 
 		function read_location_data($location_code)
 		{
-			$soadmin_location	= CreateObject($this->currentapp.'.soadmin_location');
+			$soadmin_location	= CreateObject('property.soadmin_location');
 
 			$location_types	= $soadmin_location->select_location_type();
 			unset($soadmin_location);
@@ -987,7 +987,7 @@
 			$cols_extra 		= array();
 			$cols_return_lookup	= array();
 
-			$soadmin_location	= CreateObject($this->currentapp.'.soadmin_location');
+			$soadmin_location	= CreateObject('property.soadmin_location');
 			$location_types	= $soadmin_location->select_location_type();
 			$config = $soadmin_location->read_config('');
 
@@ -1214,7 +1214,7 @@
 					break;
 			}
 
-			$socategory = CreateObject($this->currentapp.'.socategory');
+			$socategory = CreateObject('property.socategory');
 			
 			$categories= $socategory->select_category_list(array('type'=>$data['type'],
 										'type_id'=>(isset($data['type_id'])?$data['type_id']:''),

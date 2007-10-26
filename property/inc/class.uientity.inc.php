@@ -65,11 +65,11 @@
 			$this->nextmatchs			= CreateObject('phpgwapi.nextmatchs');
 			$this->account				= $GLOBALS['phpgw_info']['user']['account_id'];
 
-			$this->bo				= CreateObject($this->currentapp.'.boentity',True);
-			$this->bocommon				= CreateObject($this->currentapp.'.bocommon');
-			$this->menu				= CreateObject($this->currentapp.'.menu');
+			$this->bo				= CreateObject('property.boentity',True);
+			$this->bocommon				= CreateObject('property.bocommon');
+			$this->menu				= CreateObject('property.menu');
 
-			$this->boadmin_entity			= CreateObject($this->currentapp.'.boadmin_entity',True);
+			$this->boadmin_entity			= CreateObject('property.boadmin_entity',True);
 
 			$this->entity_id			= $this->bo->entity_id;
 			$this->cat_id				= $this->bo->cat_id;
@@ -140,7 +140,7 @@
  			$filename= $GLOBALS['phpgw_info']['user']['account_lid'].'.xls';
 			$count_uicols_name=count($uicols['name']);
 
-			$workbook	= CreateObject($this->currentapp.'.excel',"-");
+			$workbook	= CreateObject('property.excel',"-");
 			$browser = CreateObject('phpgwapi.browser');
 			$browser->content_header($filename,'application/vnd.ms-excel');
 
@@ -184,7 +184,7 @@
 			$GLOBALS['phpgw_info']['flags']['noframework'] = True;
 			$GLOBALS['phpgw_info']['flags']['nofooter'] = True;
 			
-			$values 		= get_var('values',array('POST','GET'));
+			$values 		= phpgw::get_var('values');
 
 			if (isset($values['save']) && $values['save'] && $this->cat_id)
 			{
@@ -239,9 +239,9 @@
 				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> $this->currentapp.'.uilocation.stop', 'perm'=>1, 'acl_location'=> $this->acl_location));
 			}
 
-			$file_name	= urldecode(get_var('file_name',array('POST','GET')));
-			$loc1 		= get_var('loc1',array('POST','GET'));
-			$id 		= get_var('id',array('POST','GET'));
+			$file_name	= urldecode(phpgw::get_var('file_name'));
+			$loc1 		= phpgw::get_var('loc1');
+			$id 		= phpgw::get_var('id', 'int');
 
 			$file = $this->fakebase. SEP . $this->category_name . SEP . $loc1 . SEP . $id . SEP . $file_name;
 
@@ -582,20 +582,20 @@
 			}
 
 		//	$config		= CreateObject('phpgwapi.config',$this->currentapp);
-			$bolocation	= CreateObject($this->currentapp.'.bolocation');
+			$bolocation	= CreateObject('property.bolocation');
 
-			$id 			= get_var('id',array('POST','GET'));
-			$values			= get_var('values',array('POST','GET'));
-			$values_attribute	= get_var('values_attribute',array('POST','GET'));
-			$bypass 		= get_var('bypass',array('POST','GET'));
-			$lookup_tenant 		= get_var('lookup_tenant',array('POST','GET'));
-			$tenant_id 		= get_var('tenant_id',array('POST','GET'));
+			$id 			= phpgw::get_var('id', 'int');
+			$values			= phpgw::get_var('values');
+			$values_attribute	= phpgw::get_var('values_attribute');
+			$bypass 		= phpgw::get_var('bypass', 'bool');
+			$lookup_tenant 		= phpgw::get_var('lookup_tenant', 'bool');
+			$tenant_id 		= phpgw::get_var('tenant_id', 'int');
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('entity','attributes_form'));
 
-			$values['vendor_id']		= get_var('vendor_id',array('POST'));
-			$values['vendor_name']		= get_var('vendor_name',array('POST'));
-			$values['date']			= get_var('date',array('POST'));
+			$values['vendor_id']		= phpgw::get_var('vendor_id', 'int', 'POST');
+			$values['vendor_name']		= phpgw::get_var('vendor_name', 'string', 'POST');
+			$values['date']			= phpgw::get_var('date');
 
 			$receipt = array();
 
@@ -613,17 +613,17 @@
 			}
 			else
 			{
-				$location_code 		= get_var('location_code',array('POST','GET'));
-				$values['descr']	= get_var('descr',array('POST','GET'));
-				$p_entity_id		= get_var('p_entity_id',array('POST','GET'));
-				$p_cat_id		= get_var('p_cat_id',array('POST','GET'));
+				$location_code 		= phpgw::get_var('location_code');
+				$values['descr']	= phpgw::get_var('descr');
+				$p_entity_id		= phpgw::get_var('p_entity_id', 'int');
+				$p_cat_id		= phpgw::get_var('p_cat_id', 'int');
 				$values['p'][$p_entity_id]['p_entity_id']	= $p_entity_id;
 				$values['p'][$p_entity_id]['p_cat_id']		= $p_cat_id;
-				$values['p'][$p_entity_id]['p_num']		= get_var('p_num',array('POST','GET'));
+				$values['p'][$p_entity_id]['p_num']		= phpgw::get_var('p_num');
 
 
-				$origin		= get_var('origin',array('POST','GET'));
-				$origin_id	= get_var('origin_id',array('POST','GET'));
+				$origin		= phpgw::get_var('origin');
+				$origin_id	= phpgw::get_var('origin_id', 'int');
 
 
 				if($p_entity_id && $p_cat_id)
@@ -961,7 +961,7 @@
 
 					if(!is_object($boadmin_entity))
 					{
-						$boadmin_entity	= CreateObject($this->currentapp.'.boadmin_entity');
+						$boadmin_entity	= CreateObject('property.boadmin_entity');
 					}
 					$entity_category = $boadmin_entity->read_single_category($entity_id,$cat_id);
 					$values['origin'][$i]['descr'] = $entity_category['name'];
@@ -985,7 +985,7 @@
 
 						if(!is_object($boadmin_entity))
 						{
-							$boadmin_entity	= CreateObject($this->currentapp.'.boadmin_entity');
+							$boadmin_entity	= CreateObject('property.boadmin_entity');
 						}
 						$entity_category = $boadmin_entity->read_single_category($entity_id,$cat_id);
 						$values['destination'][$i]['descr'] = $entity_category['name'];
@@ -1109,9 +1109,9 @@
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = false;
 			$GLOBALS['phpgw_info']['flags']['nofooter'] = True;
 
-			$entity_id	= get_var('entity_id',array('POST','GET'));
-			$cat_id 	= get_var('cat_id',array('POST','GET'));
-			$attrib_id 	= get_var('attrib_id',array('POST','GET'));
+			$entity_id	= phpgw::get_var('entity_id', 'int');
+			$cat_id 	= phpgw::get_var('cat_id', 'int');
+			$attrib_id 	= phpgw::get_var('attrib_id', 'int');
 
 			$data_lookup= array(
 				'entity_id'	=> $entity_id,
@@ -1119,7 +1119,7 @@
 				'attrib_id' 	=> $attrib_id
 				);
 			
-			$boadmin_entity	= CreateObject($this->currentapp.'.boadmin_entity');
+			$boadmin_entity	= CreateObject('property.boadmin_entity');
 
 			$entity_category = $boadmin_entity->read_single_category($entity_id,$cat_id);
 
@@ -1146,8 +1146,8 @@
 				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> $this->currentapp.'.uilocation.stop', 'perm'=>8, 'acl_location'=> $this->acl_location));
 			}
 
-			$id = get_var('id',array('POST','GET'));
-			$confirm	= get_var('confirm',array('POST'));
+			$id = phpgw::get_var('id', 'int');
+			$confirm	= phpgw::get_var('confirm', 'bool', 'POST');
 
 			$link_data = array
 			(
@@ -1156,7 +1156,7 @@
 				'cat_id'	=> $this->cat_id
 			);
 
-			if (get_var('confirm',array('POST')))
+			if (phpgw::get_var('confirm', 'bool', 'POST'))
 			{
 				$this->bo->delete($id);
 				$GLOBALS['phpgw']->redirect_link('/index.php',$link_data);
@@ -1191,9 +1191,9 @@
 			}
 
 		//	$config		= CreateObject('phpgwapi.config',$this->currentapp);
-			$bolocation			= CreateObject($this->currentapp.'.bolocation');
+			$bolocation			= CreateObject('property.bolocation');
 
-			$id	= get_var('id',array('POST','GET'));
+			$id	= phpgw::get_var('id', 'int');
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('entity','attributes_view'));
 
@@ -1299,7 +1299,7 @@
 
 						if(!is_object($boadmin_entity))
 						{
-							$boadmin_entity	= CreateObject($this->currentapp.'.boadmin_entity');
+							$boadmin_entity	= CreateObject('property.boadmin_entity');
 						}
 						$entity_category = $boadmin_entity->read_single_category($entity_id,$cat_id);
 						$values['origin'][$i]['descr'] = $entity_category['name'];
@@ -1324,7 +1324,7 @@
 
 						if(!is_object($boadmin_entity))
 						{
-							$boadmin_entity	= CreateObject($this->currentapp.'.boadmin_entity');
+							$boadmin_entity	= CreateObject('property.boadmin_entity');
 						}
 						$entity_category = $boadmin_entity->read_single_category($entity_id,$cat_id);
 						$values['destination'][$i]['descr'] = $entity_category['name'];
@@ -1411,10 +1411,10 @@
 		{			$GLOBALS['phpgw']->xslttpl->add_file(array('attrib_history','nextmatchs'));
 			$GLOBALS['phpgw_info']['flags']['noframework'] = True;
 
-			$id		= get_var('id',array('POST','GET'));
-			$entity_id	= get_var('entity_id',array('POST','GET'));
-			$cat_id 	= get_var('cat_id',array('POST','GET'));
-			$attrib_id 	= get_var('attrib_id',array('POST','GET'));
+			$id		= phpgw::get_var('id', 'int');
+			$entity_id	= phpgw::get_var('entity_id', 'int');
+			$cat_id 	= phpgw::get_var('cat_id', 'int');
+			$attrib_id 	= phpgw::get_var('attrib_id', 'int');
 
 			$data_lookup= array(
 				'id'		=> $id,
@@ -1423,12 +1423,12 @@
 				'attrib_id' 	=> $attrib_id
 				);
 
-			$delete = get_var('delete',array('POST','GET'));
-			$edit = get_var('edit',array('POST','GET'));
+			$delete = phpgw::get_var('delete', 'bool');
+			$edit = phpgw::get_var('edit', 'bool');
 
 			if ($delete)
 			{
-				$data_lookup['history_id'] = get_var('history_id',array('POST','GET'));
+				$data_lookup['history_id'] = phpgw::get_var('history_id', 'int');
 				$this->bo->delete_history_item($data_lookup);
 			}
 

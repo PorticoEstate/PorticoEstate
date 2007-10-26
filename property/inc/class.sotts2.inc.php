@@ -39,10 +39,10 @@
 		function property_sotts2()
 		{
 			$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
-			$this->bo 		= CreateObject($this->currentapp.'.botts');
-			$this->historylog	= CreateObject($this->currentapp.'.historylog','tts');
+			$this->bo 		= CreateObject('property.botts');
+			$this->historylog	= CreateObject('property.historylog','tts');
 			$this->config		= CreateObject('phpgwapi.config');
-			$this->bocommon		= CreateObject($this->currentapp.'.bocommon');
+			$this->bocommon		= CreateObject('property.bocommon');
 			$this->db           	= $this->bocommon->new_db();
 			$this->db2           	= $this->bocommon->new_db();
 
@@ -290,7 +290,7 @@
 
 				$receipt['message'][]= array('msg' => lang('Ticket has been updated'));
 
-				$soadmin_custom = CreateObject($this->currentapp.'.soadmin_custom');
+				$soadmin_custom = CreateObject('property.soadmin_custom');
 				$custom_functions = $soadmin_custom->read(array('acl_location' => $this->acl_location,'allrows'=>True));
 
 				if (isSet($custom_functions) AND is_array($custom_functions))

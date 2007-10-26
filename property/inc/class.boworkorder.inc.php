@@ -53,8 +53,8 @@
 		function property_boworkorder($session=False)
 		{
 			$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
-			$this->so 			= CreateObject($this->currentapp.'.soworkorder');
-			$this->bocommon 	= CreateObject($this->currentapp.'.bocommon');
+			$this->so 			= CreateObject('property.soworkorder');
+			$this->bocommon 	= CreateObject('property.bocommon');
 
 			if ($session)
 			{
@@ -62,19 +62,19 @@
 				$this->use_session = True;
 			}
 
-			$start	= get_var('start',array('POST','GET'));
-			$query	= get_var('query',array('POST','GET'));
-			$sort	= get_var('sort',array('POST','GET'));
-			$order	= get_var('order',array('POST','GET'));
-			$filter	= get_var('filter',array('POST','GET'));
-			$cat_id	= get_var('cat_id',array('POST','GET'));
-			$status_id	= get_var('status_id',array('POST','GET'));
-			$search_vendor	= get_var('search_vendor',array('POST','GET'));
-			$wo_hour_cat_id	= get_var('wo_hour_cat_id',array('POST','GET'));
-			$start_date	= get_var('start_date',array('POST','GET'));
-			$end_date	= get_var('end_date',array('POST','GET'));
-			$b_group	= get_var('b_group',array('POST','GET'));
-			$paid	= get_var('paid',array('POST','GET'));
+			$start	= phpgw::get_var('start', 'int', 'REQUEST', 0);
+			$query	= phpgw::get_var('query');
+			$sort	= phpgw::get_var('sort');
+			$order	= phpgw::get_var('order');
+			$filter	= phpgw::get_var('filter', 'int');
+			$cat_id	= phpgw::get_var('cat_id', 'int');
+			$status_id	= phpgw::get_var('status_id');
+			$search_vendor	= phpgw::get_var('search_vendor');
+			$wo_hour_cat_id	= phpgw::get_var('wo_hour_cat_id', 'int');
+			$start_date	= phpgw::get_var('start_date');
+			$end_date	= phpgw::get_var('end_date');
+			$b_group	= phpgw::get_var('b_group');
+			$paid	= phpgw::get_var('paid', 'bool');
 			
 			if ($start)
 			{
@@ -246,7 +246,7 @@
 
 		function read_single($workorder_id)
 		{
-			$contacts		= CreateObject($this->currentapp.'.soactor');
+			$contacts		= CreateObject('property.soactor');
 			$contacts->role='vendor';
 			$workorder						= $this->so->read_single($workorder_id);
 			$dateformat						= $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
@@ -281,7 +281,7 @@
 
 		function read_record_history($id)
 		{
-			$historylog	= CreateObject($this->currentapp.'.historylog','workorder');
+			$historylog	= CreateObject('property.historylog','workorder');
 			$history_array = $historylog->return_array(array('O'),array(),'','',$id);
 			$i=0;
 			while (is_array($history_array) && list(,$value) = each($history_array))

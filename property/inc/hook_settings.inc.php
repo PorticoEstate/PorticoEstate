@@ -94,7 +94,7 @@
 	}
 	create_select_box('Default Priority TTS','prioritydefault',$priority,'The default priority for tickets in the Helpdesk-submodule');
 
-	$socategory = CreateObject($this->currentapp.'.socategory');
+	$socategory = CreateObject('property.socategory');
 
 	$category_tts= $socategory->select_category_list(array('type'=>'ticket'));
 
@@ -135,8 +135,8 @@
 		);
 	create_select_box('Default start page','default_start_page',$default_start_page,'Select your start-submodule');
 
-	$soworkorder= CreateObject($this->currentapp.'.soworkorder');
-	$socommon= CreateObject($this->currentapp.'.socommon');
+	$soworkorder= CreateObject('property.soworkorder');
+	$socommon= CreateObject('property.socommon');
 
 	$status_list= $soworkorder->select_status_list();
 	$category_list= $socategory->select_category_list(array('type'=>'wo'));

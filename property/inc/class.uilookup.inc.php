@@ -66,7 +66,7 @@
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = True;
 			$this->currentapp			= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->nextmatchs			= CreateObject('phpgwapi.nextmatchs');
-			$this->bo					= CreateObject($this->currentapp.'.bolookup',True);
+			$this->bo					= CreateObject('property.bolookup',True);
 
 			$this->start				= $this->bo->start;
 			$this->query				= $this->bo->query;
@@ -106,8 +106,8 @@
 										'search_field',
 										'cat_filter'));
 
-			$second_display = get_var('second_display',array('POST','GET'));
-			$column = get_var('column',array('POST','GET'));
+			$second_display = phpgw::get_var('second_display', 'bool');
+			$column = phpgw::get_var('column');
 
 
 			$default_category = $GLOBALS['phpgw_info']['user']['preferences']['addressbook']['default_category'];
@@ -233,8 +233,8 @@
 										'search_field',
 										'cat_filter'));
 
-			$second_display = get_var('second_display',array('POST','GET'));
-			$column = get_var('column',array('POST','GET'));
+			$second_display = phpgw::get_var('second_display', 'bool');
+			$column = phpgw::get_var('column');
 
 
 			$default_category = $GLOBALS['phpgw_info']['user']['preferences'][$this->currentapp]['default_vendor_category'];
@@ -729,9 +729,9 @@
 
 		function entity()
 		{
-			$bocommon					= CreateObject($this->currentapp.'.bocommon');
-			$boentity					= CreateObject($this->currentapp.'.boentity');
-			$boadmin_entity				= CreateObject($this->currentapp.'.boadmin_entity');
+			$bocommon					= CreateObject('property.bocommon');
+			$boentity					= CreateObject('property.boentity');
+			$boadmin_entity				= CreateObject('property.boadmin_entity');
 			$this->start				= $boentity->start;
 			$this->query				= $boentity->query;
 			$this->sort					= $boentity->sort;
@@ -924,7 +924,7 @@
 
 			$phpgw_user_list = $this->bo->read_phpgw_user();
 
-			$column = get_var('column',array('POST','GET'));
+			$column = phpgw::get_var('column');
 			
 			while (is_array($phpgw_user_list) && list(,$phpgw_user_entry) = each($phpgw_user_list))
 			{

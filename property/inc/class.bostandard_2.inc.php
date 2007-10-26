@@ -72,8 +72,8 @@
 		function property_bostandard_2($session=False)
 		{
 			$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
-			$this->so 		= CreateObject($this->currentapp.'.sostandard_2');
-			$this->socommon = CreateObject($this->currentapp.'.socommon');
+			$this->so 		= CreateObject('property.sostandard_2');
+			$this->socommon = CreateObject('property.socommon');
 
 			if ($session)
 			{
@@ -81,13 +81,13 @@
 				$this->use_session = True;
 			}
 
-			$start	= get_var('start',array('POST','GET'));
-			$query	= get_var('query',array('POST','GET'));
-			$sort	= get_var('sort',array('POST','GET'));
-			$order	= get_var('order',array('POST','GET'));
-			$filter	= get_var('filter',array('POST','GET'));
-			$cat_id	= get_var('cat_id',array('POST','GET'));
-			$allrows= get_var('allrows',array('POST','GET'));
+			$start	= phpgw::get_var('start', 'int', 'REQUEST', 0);
+			$query	= phpgw::get_var('query');
+			$sort	= phpgw::get_var('sort');
+			$order	= phpgw::get_var('order');
+			$filter	= phpgw::get_var('filter', 'int');
+			$cat_id	= phpgw::get_var('cat_id', 'int');
+			$allrows= phpgw::get_var('allrows', 'bool');
 
 			if ($start)
 			{

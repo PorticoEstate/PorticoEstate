@@ -39,7 +39,7 @@
 		function lag_lang_filer()
 		{
 			$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
-			$this->bocommon		= CreateObject($this->currentapp.'.bocommon');
+			$this->bocommon		= CreateObject('property.bocommon');
 			$this->db 		= $this->bocommon->new_db();
 		}
 		
@@ -52,8 +52,8 @@
 			}
 			else
 			{
-				$confirm	= get_var('confirm',array('POST'));
-				$execute	= get_var('execute',array('GET'));
+				$confirm	= phpgw::get_var('confirm', 'bool', 'POST');
+				$execute	= phpgw::get_var('execute', 'bool', 'GET');
 			}
 			if ($confirm)
 			{

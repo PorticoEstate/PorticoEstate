@@ -61,10 +61,10 @@
 			$this->currentapp			= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->nextmatchs			= CreateObject('phpgwapi.nextmatchs');
 			$this->account				= $GLOBALS['phpgw_info']['user']['account_id'];
-			$this->bo					= CreateObject($this->currentapp.'.bogab',True);
-			$this->bocommon				= CreateObject($this->currentapp.'.bocommon');
-			$this->menu					= CreateObject($this->currentapp.'.menu');
-			$this->bolocation				= CreateObject($this->currentapp.'.bolocation');
+			$this->bo					= CreateObject('property.bogab',True);
+			$this->bocommon				= CreateObject('property.bocommon');
+			$this->menu					= CreateObject('property.menu');
+			$this->bolocation				= CreateObject('property.bolocation');
 
 			$this->config				= CreateObject('phpgwapi.config');
 			$this->acl 				= CreateObject('phpgwapi.acl');
@@ -103,13 +103,13 @@
 
 		function excel()
 		{
-			$address 		= get_var('address',array('POST','GET'));
-			$check_payments 	= get_var('check_payments',array('POST','GET'));
-			$location_code 		= get_var('location_code',array('POST','GET'));
-			$gaards_nr 		= get_var('gaards_nr',array('POST','GET'));
-			$bruksnr 		= get_var('bruksnr',array('POST','GET'));
-			$feste_nr 		= get_var('feste_nr',array('POST','GET'));
-			$seksjons_nr 		= get_var('seksjons_nr',array('POST','GET'));
+			$address 		= phpgw::get_var('address');
+			$check_payments 	= phpgw::get_var('check_payments', 'bool');
+			$location_code 		= phpgw::get_var('location_code');
+			$gaards_nr 		= phpgw::get_var('gaards_nr', 'int');
+			$bruksnr 		= phpgw::get_var('bruksnr', 'int');
+			$feste_nr 		= phpgw::get_var('feste_nr', 'int');
+			$seksjons_nr 		= phpgw::get_var('seksjons_nr', 'int');
 
 
 			if(!$this->acl_read)
@@ -184,14 +184,14 @@
 										'menu',
 										'nextmatchs'));
 
-			$address 		= get_var('address',array('POST','GET'));
-			$check_payments 	= get_var('check_payments',array('POST','GET'));
-			$location_code 		= get_var('location_code',array('POST','GET'));
-			$gaards_nr 		= get_var('gaards_nr',array('POST','GET'));
-			$bruksnr 		= get_var('bruksnr',array('POST','GET'));
-			$feste_nr 		= get_var('feste_nr',array('POST','GET'));
-			$seksjons_nr 		= get_var('seksjons_nr',array('POST','GET'));
-			$reset_query 		= get_var('reset_query',array('POST','GET'));
+			$address 		= phpgw::get_var('address');
+			$check_payments 	= phpgw::get_var('check_payments', 'bool');
+			$location_code 		= phpgw::get_var('location_code');
+			$gaards_nr 		= phpgw::get_var('gaards_nr', 'int');
+			$bruksnr 		= phpgw::get_var('bruksnr', 'int');
+			$feste_nr 		= phpgw::get_var('feste_nr', 'int');
+			$seksjons_nr 		= phpgw::get_var('seksjons_nr', 'int');
+			$reset_query 		= phpgw::get_var('reset_query', 'bool');
 
 			if($reset_query)
 			{
@@ -485,7 +485,7 @@
 										'menu',
 										'nextmatchs'));
 
-			$gab_id 		= get_var('gab_id',array('POST','GET'));
+			$gab_id 		= phpgw::get_var('gab_id');
 
 			$links = $this->menu->links('gab');
 
@@ -709,11 +709,11 @@
 				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> $this->currentapp.'.uilocation.stop','perm'=>2, 'acl_location'=> $this->acl_location));
 			}
 
-			$from 			= get_var('from',array('POST','GET'));
-			$new 			= get_var('new',array('POST','GET'));
-			$gab_id 		= get_var('gab_id',array('POST','GET'));
-			$location_code 	= get_var('location_code',array('POST','GET'));
-			$values			= get_var('values',array('POST'));
+			$from 			= phpgw::get_var('from');
+			$new 			= phpgw::get_var('new', 'bool');
+			$gab_id 		= phpgw::get_var('gab_id');
+			$location_code 	= phpgw::get_var('location_code');
+			$values			= phpgw::get_var('values');
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('gab'));
 
@@ -867,9 +867,9 @@
 				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> $this->currentapp.'.uilocation.stop', 'perm'=> 8, 'acl_location'=> $this->acl_location));
 			}
 
-			$gab_id = get_var('gab_id',array('POST','GET'));
-			$location_code = get_var('location_code',array('POST','GET'));
-			$confirm	= get_var('confirm',array('POST'));
+			$gab_id = phpgw::get_var('gab_id');
+			$location_code = phpgw::get_var('location_code');
+			$confirm	= phpgw::get_var('confirm', 'bool', 'POST');
 
 			$link_data = array
 			(
@@ -877,7 +877,7 @@
 					'gab_id' => $gab_id
 			);
 
-			if (get_var('confirm',array('POST')))
+			if (phpgw::get_var('confirm', 'bool', 'POST'))
 			{
 				$this->bo->delete($gab_id,$location_code);
 				$GLOBALS['phpgw']->redirect_link('/index.php',$link_data);
@@ -911,8 +911,8 @@
 				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> $this->currentapp.'.uilocation.stop', 'perm'=>1, 'acl_location'=> $this->acl_location));
 			}
 
-			$gab_id 		= get_var('gab_id',array('POST','GET'));
-			$location_code 	= get_var('location_code',array('POST','GET'));
+			$gab_id 		= phpgw::get_var('gab_id');
+			$location_code 	= phpgw::get_var('location_code');
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('gab'));
 

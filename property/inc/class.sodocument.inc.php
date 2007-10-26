@@ -39,14 +39,14 @@
 		{
 			$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->account		= $GLOBALS['phpgw_info']['user']['account_id'];
-			$this->bocommon		= CreateObject($this->currentapp.'.bocommon');
+			$this->bocommon		= CreateObject('property.bocommon');
 			$this->db           = $this->bocommon->new_db();
 			$this->db2          = $this->bocommon->new_db();
-			$this->historylog	= CreateObject($this->currentapp.'.historylog','document');
+			$this->historylog	= CreateObject('property.historylog','document');
 			$this->vfs 			= CreateObject('phpgwapi.vfs');
 			$this->rootdir 		= $this->vfs->basedir;
 			$this->fakebase 	= $this->vfs->fakebase;
-			$this->socommon		= CreateObject($this->currentapp.'.socommon');
+			$this->socommon		= CreateObject('property.socommon');
 
 			$this->join			= $this->socommon->join;
 			$this->like			= $this->socommon->like;
@@ -629,7 +629,7 @@
 			$loc1	= $location[0];
 			if($p_cat_id)
 			{
-				$boadmin_entity		= CreateObject($this->currentapp.'.boadmin_entity');
+				$boadmin_entity		= CreateObject('property.boadmin_entity');
 				$entity = $boadmin_entity->read_single($p_entity_id,false);
 				$category = $boadmin_entity->read_single_category($p_entity_id,$p_cat_id);
 			}

@@ -38,9 +38,9 @@
 		{
 			$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->account		= $GLOBALS['phpgw_info']['user']['account_id'];
-			$this->soproject	= CreateObject($this->currentapp.'.soproject');
-			$this->historylog	= CreateObject($this->currentapp.'.historylog','request');
-			$this->bocommon		= CreateObject($this->currentapp.'.bocommon');
+			$this->soproject	= CreateObject('property.soproject');
+			$this->historylog	= CreateObject('property.historylog','request');
+			$this->bocommon		= CreateObject('property.bocommon');
 			$this->db           	= $this->bocommon->new_db();
 			$this->db2           	= $this->bocommon->new_db();
 			$this->join			= $this->bocommon->join;

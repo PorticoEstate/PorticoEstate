@@ -68,9 +68,9 @@
 			$this->nextmatchs		= CreateObject('phpgwapi.nextmatchs');
 			$this->account			= $GLOBALS['phpgw_info']['user']['account_id'];
 
-			$this->bo			= CreateObject($this->currentapp.'.boinvoice',True);
-			$this->bocommon			= CreateObject($this->currentapp.'.bocommon');
-			$this->menu			= CreateObject($this->currentapp.'.menu');
+			$this->bo			= CreateObject('property.boinvoice',True);
+			$this->bocommon			= CreateObject('property.bocommon');
+			$this->menu			= CreateObject('property.menu');
 
 			$this->start			= $this->bo->start;
 			$this->query			= $this->bo->query;
@@ -113,14 +113,14 @@
 
 		function excel()
 		{
-			$paid 			= get_var('paid',array('POST','GET'));
-			$start_date 	= get_var('start_date',array('POST','GET'));
-			$end_date 		= get_var('end_date',array('POST','GET'));
-			$submit_search 	= get_var('submit_search',array('POST','GET'));
-			$vendor_id 		= get_var('vendor_id',array('POST','GET'));
-			$workorder_id 	= get_var('workorder_id',array('POST','GET'));
-			$loc1 			= get_var('loc1',array('POST','GET'));
-			$voucher_id 	= get_var('voucher_id',array('POST','GET'));
+			$paid 			= phpgw::get_var('paid', 'bool');
+			$start_date 	= phpgw::get_var('start_date');
+			$end_date 		= phpgw::get_var('end_date');
+			$submit_search 	= phpgw::get_var('submit_search', 'bool');
+			$vendor_id 		= phpgw::get_var('vendor_id', 'int');
+			$workorder_id 	= phpgw::get_var('workorder_id', 'int');
+			$loc1 			= phpgw::get_var('loc1');
+			$voucher_id 	= phpgw::get_var('voucher_id', 'int');
 
 			$start_date=urldecode($start_date);
 			$end_date=urldecode($end_date);
@@ -146,8 +146,8 @@
 
 		function excel_sub()
 		{
-			$voucher_id 	= get_var('voucher_id',array('POST','GET'));
-			$paid 		= get_var('paid',array('POST','GET'));
+			$voucher_id 	= phpgw::get_var('voucher_id', 'int');
+			$paid 		= phpgw::get_var('paid', 'bool');
 			
 			if ($voucher_id)
 			{
@@ -200,15 +200,15 @@
 										'nextmatchs',
 										'search_field'));
 
-			$paid 			= get_var('paid',array('POST','GET'));
-			$start_date 	= get_var('start_date',array('POST','GET'));
-			$end_date 		= get_var('end_date',array('POST','GET'));
-			$submit_search 	= get_var('submit_search',array('POST','GET'));
-			$vendor_id 		= get_var('vendor_id',array('POST','GET'));
-			$workorder_id 	= get_var('workorder_id',array('POST','GET'));
-			$loc1 			= get_var('loc1',array('POST','GET'));
-			$voucher_id 	= get_var('voucher_id',array('POST','GET'));
-			$b_account_class= get_var('b_account_class',array('POST','GET'));
+			$paid 			= phpgw::get_var('paid', 'bool');
+			$start_date 	= phpgw::get_var('start_date');
+			$end_date 		= phpgw::get_var('end_date');
+			$submit_search 	= phpgw::get_var('submit_search', 'bool');
+			$vendor_id 		= phpgw::get_var('vendor_id', 'int');
+			$workorder_id 	= phpgw::get_var('workorder_id', 'int');
+			$loc1 			= phpgw::get_var('loc1');
+			$voucher_id 	= phpgw::get_var('voucher_id', 'int');
+			$b_account_class= phpgw::get_var('b_account_class', 'int');
 			
 			$start_date=urldecode($start_date);
 			$end_date=urldecode($end_date);
@@ -221,7 +221,7 @@
 
 			$links = $this->menu->links('invoice_'.!!$paid);
 
-			$values  = get_var('values',array('POST','GET'));
+			$values  = phpgw::get_var('values');
 			$receipt = array();
 			
 			if(isset($values['save']) && $values['save'] && isset($values['counter']) && $values['counter'])
@@ -447,7 +447,7 @@
 				$jscal->add_listener('start_date');
 				$jscal->add_listener('end_date');
 
-				$bolocation								= CreateObject($this->currentapp.'.bolocation');
+				$bolocation								= CreateObject('property.bolocation');
 				$data['user_list']						= $this->bo->get_invoice_user_list('select',$this->user_lid,array('all'),$default='all');
 				$location_data							= $bolocation->initiate_ui_location(array('type_id'=> 1));
 
@@ -517,12 +517,12 @@
 			$GLOBALS['phpgw']->xslttpl->add_file(array('invoice','menu',
 										'nextmatchs'));
 
-			$paid = get_var('paid',array('POST','GET'));
+			$paid = phpgw::get_var('paid', 'bool');
 
 			$links = $this->menu->links('invoice_');
 
-			$values  = get_var('values',array('POST','GET'));
-			$voucher_id = get_var('voucher_id',array('POST','GET'));
+			$values  = phpgw::get_var('values');
+			$voucher_id = phpgw::get_var('voucher_id', 'int');
 
 			$receipt = array();
 			if(isset($values['save']) && $values['save'] && isset($values['counter']) && $values['counter'])
@@ -726,9 +726,9 @@
 
 			$GLOBALS['phpgw_info']['flags']['noframework'] = True;
 
-			$voucher_id 	= get_var('voucher_id',array('POST','GET'));
-			$period 	= get_var('period',array('POST','GET'));
-			$submit 	= get_var('submit',array('POST','GET'));
+			$voucher_id 	= phpgw::get_var('voucher_id', 'int');
+			$period 	= phpgw::get_var('period', 'int');
+			$submit 	= phpgw::get_var('submit', 'bool');
 
 			$receipt = array();
 			if($submit)
@@ -769,8 +769,8 @@
 			$GLOBALS['phpgw_info']['flags']['nofooter'] = True;
 			$GLOBALS['phpgw_info']['flags']['noframework'] = True;
 
-			$id 	= get_var('id',array('POST','GET'));
-			$paid 	= get_var('paid',array('POST','GET'));
+			$id 	= phpgw::get_var('id', 'int');
+			$paid 	= phpgw::get_var('paid', 'bool');
 
 			$data = array
 			(
@@ -793,19 +793,19 @@
 										'nextmatchs',
 										'search_field'));
 
-			$start_date 		= get_var('start_date',array('POST','GET'));
-			$end_date 		= get_var('end_date',array('POST','GET'));
-			$submit_search 		= get_var('submit_search',array('POST','GET'));
-			$vendor_id 		= get_var('vendor_id',array('POST','GET'));
+			$start_date 		= phpgw::get_var('start_date');
+			$end_date 		= phpgw::get_var('end_date');
+			$submit_search 		= phpgw::get_var('submit_search', 'bool');
+			$vendor_id 		= phpgw::get_var('vendor_id', 'int');
 
-			$workorder_id 		= get_var('workorder_id',array('POST','GET'));
-			$loc1 			= get_var('loc1',array('POST','GET'));
-			$district_id 		= get_var('district_id',array('POST','GET'));
-			$b_account_class 	= get_var('b_account_class',array('POST','GET'));
+			$workorder_id 		= phpgw::get_var('workorder_id', 'int');
+			$loc1 			= phpgw::get_var('loc1');
+			$district_id 		= phpgw::get_var('district_id', 'int');
+			$b_account_class 	= phpgw::get_var('b_account_class', 'int');
 
 			if($vendor_id)
 			{
-				$contacts		= CreateObject($this->currentapp.'.soactor');
+				$contacts		= CreateObject('property.soactor');
 				$contacts->role		= 'vendor';
 				$vendor			= $contacts->read_single(array('actor_id'=>(int)$vendor_id));
 				if(is_array($vendor))
@@ -940,7 +940,7 @@
 			$data['lang_select_vendor_statustext']		= lang('Select the vendor by klicking this link');
 			$data['lang_vendor']				= lang('Vendor');
 
-			$bolocation					= CreateObject($this->currentapp.'.bolocation');
+			$bolocation					= CreateObject('property.bolocation');
 			$location_data					= $bolocation->initiate_ui_location(array('type_id'=> 1));
 
 			$data['property_link']				= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uilocation.index', 'lookup'=> 1, 'type_id'=> 1, 'lookup_name'=> 0));
@@ -973,15 +973,15 @@
 				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> $this->currentapp.'.uilocation.stop', 'perm'=>8, 'acl_location'=> $this->acl_location));
 			}
 
-			$voucher_id = get_var('voucher_id',array('POST','GET'));
-			$confirm	= get_var('confirm',array('POST'));
+			$voucher_id = phpgw::get_var('voucher_id', 'int');
+			$confirm	= phpgw::get_var('confirm', 'bool', 'POST');
 
 			$link_data = array
 			(
 				'menuaction' => $this->currentapp.'.uiinvoice.index'
 			);
 
-			if (get_var('confirm',array('POST')))
+			if (phpgw::get_var('confirm', 'bool', 'POST'))
 			{
 				$this->bo->delete($voucher_id);
 				$GLOBALS['phpgw']->redirect_link('/index.php',$link_data);
@@ -1024,42 +1024,42 @@
 
 			$GLOBALS['phpgw']->session->appsession('session_data','add_receipt','');
 
-			$bolocation	= CreateObject($this->currentapp.'.bolocation');
+			$bolocation	= CreateObject('property.bolocation');
 
 			$referer = parse_url($_SERVER['HTTP_REFERER']);
 			parse_str($referer['query']); // produce $menuaction
-			if(get_var('cancel',array('POST','GET')) || $menuaction != $this->currentapp.'.uiinvoice.add')
+			if(phpgw::get_var('cancel', 'bool') || $menuaction != $this->currentapp.'.uiinvoice.add')
 			{
 				$GLOBALS['phpgw']->session->appsession('session_data','add_values','');
 			}
 			
-			if(!$GLOBALS['phpgw']->session->appsession('session_data','add_values') && get_var('add_invoice',array('POST','GET')))
+			if(!$GLOBALS['phpgw']->session->appsession('session_data','add_values') && phpgw::get_var('add_invoice', 'bool'))
 			{
-				$values['art']			= get_var('art',array('POST','GET'));
-				$values['type']			= get_var('type',array('POST','GET'));
-				$values['dim_b']		= get_var('dim_b',array('POST','GET'));
-				$values['invoice_num']		= get_var('invoice_num',array('POST','GET'));
-				$values['kid_nr']		= get_var('kid_nr',array('POST','GET'));
-				$values['vendor_id']		= get_var('vendor_id',array('POST','GET'));
-				$values['vendor_name']		= get_var('vendor_name',array('POST','GET'));
-				$values['janitor']		= get_var('janitor',array('POST','GET'));
-				$values['supervisor']		= get_var('supervisor',array('POST','GET'));
-				$values['budget_responsible']	= get_var('budget_responsible',array('POST','GET'));
-				$values['invoice_date'] 	= urldecode(get_var('invoice_date',array('POST','GET')));
-				$values['num_days']		= get_var('num_days',array('POST','GET'));
-				$values['payment_date'] 	= urldecode(get_var('payment_date',array('POST','GET')));
-				$values['sday'] 		= get_var('sday',array('POST','GET'));
-				$values['smonth'] 		= get_var('smonth',array('POST','GET'));
-				$values['syear']		= get_var('syear',array('POST','GET'));
-				$values['eday'] 		= get_var('eday',array('POST','GET'));
-				$values['emonth'] 		= get_var('emonth',array('POST','GET'));
-				$values['eyear']		= get_var('eyear',array('POST','GET'));
-				$values['auto_tax'] 		= get_var('auto_tax',array('POST','GET'));
-				$values['merknad']		= get_var('merknad',array('POST','GET'));
-				$values['b_account_id']		= get_var('b_account_id',array('POST','GET'));
-				$values['b_account_name']	= get_var('b_account_name',array('POST','GET'));
-				$values['amount']		= get_var('amount',array('POST','GET'));
-				$values['order_id']		= get_var('order_id',array('POST','GET'));
+				$values['art']			= phpgw::get_var('art', 'int');
+				$values['type']			= phpgw::get_var('type');
+				$values['dim_b']		= phpgw::get_var('dim_b', 'int');
+				$values['invoice_num']		= phpgw::get_var('invoice_num');
+				$values['kid_nr']		= phpgw::get_var('kid_nr');
+				$values['vendor_id']		= phpgw::get_var('vendor_id', 'int');
+				$values['vendor_name']		= phpgw::get_var('vendor_name');
+				$values['janitor']		= phpgw::get_var('janitor');
+				$values['supervisor']		= phpgw::get_var('supervisor');
+				$values['budget_responsible']	= phpgw::get_var('budget_responsible');
+				$values['invoice_date'] 	= urldecode(phpgw::get_var('invoice_date'));
+				$values['num_days']		= phpgw::get_var('num_days', 'int');
+				$values['payment_date'] 	= urldecode(phpgw::get_var('payment_date'));
+				$values['sday'] 		= phpgw::get_var('sday', 'int');
+				$values['smonth'] 		= phpgw::get_var('smonth', 'int');
+				$values['syear']		= phpgw::get_var('syear', 'int');
+				$values['eday'] 		= phpgw::get_var('eday', 'int');
+				$values['emonth'] 		= phpgw::get_var('emonth', 'int');
+				$values['eyear']		= phpgw::get_var('eyear', 'int');
+				$values['auto_tax'] 		= phpgw::get_var('auto_tax', 'bool');
+				$values['merknad']		= phpgw::get_var('merknad');
+				$values['b_account_id']		= phpgw::get_var('b_account_id', 'int');
+				$values['b_account_name']	= phpgw::get_var('b_account_name');
+				$values['amount']		= phpgw::get_var('amount', 'float');
+				$values['order_id']		= phpgw::get_var('order_id', 'int');
 
 				$insert_record = $GLOBALS['phpgw']->session->appsession('insert_record',$this->currentapp);
 				$values = $this->bocommon->collect_locationdata($values,$insert_record);
@@ -1072,9 +1072,9 @@
 				$GLOBALS['phpgw']->session->appsession('session_data','add_values','');
 			}
 
-			$location_code 			= get_var('location_code',array('POST','GET'));
-			$debug 				= get_var('debug',array('POST','GET'));
-			$add_invoice 			= get_var('add_invoice',array('POST','GET'));
+			$location_code 			= phpgw::get_var('location_code');
+			$debug 				= phpgw::get_var('debug', 'bool');
+			$add_invoice 			= phpgw::get_var('add_invoice', 'bool');
 
 
 			$links = $this->menu->links('add_inv');
@@ -1344,7 +1344,7 @@
 			$GLOBALS['phpgw_info']['flags'][nofooter] = True;
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = False;
 
-			$voucher_id = get_var('voucher_id',array('POST','GET'));
+			$voucher_id = phpgw::get_var('voucher_id', 'int');
 
 			if($voucher_id)
 			{
@@ -1356,7 +1356,7 @@
 			if (isSet($values) AND is_array($values))
 			{
 
-				$contacts	= CreateObject($this->currentapp.'.soactor');
+				$contacts	= CreateObject('property.soactor');
 				$contacts->role='vendor';
 				if($values[0]['vendor_id'])
 				{
@@ -1669,8 +1669,8 @@
 
 		function view_order()
 		{
-			$order_id	= get_var('order_id',array('POST','GET'));
-			$soXport    = CreateObject($this->currentapp.'.soXport');
+			$order_id	= phpgw::get_var('order_id', 'int');
+			$soXport    = CreateObject('property.soXport');
 
 			$order_type = $soXport->check_order(intval($order_id));
 			switch($order_type)

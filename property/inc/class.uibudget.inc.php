@@ -62,9 +62,9 @@
 			$this->nextmatchs	= CreateObject('phpgwapi.nextmatchs');
 			$this->account		= $GLOBALS['phpgw_info']['user']['account_id'];
 
-			$this->bo		= CreateObject($this->currentapp.'.bobudget',True);
-			$this->bocommon		= CreateObject($this->currentapp.'.bocommon');
-			$this->menu		= CreateObject($this->currentapp.'.menu');
+			$this->bo		= CreateObject('property.bobudget',True);
+			$this->bocommon		= CreateObject('property.bocommon');
+			$this->menu		= CreateObject('property.menu');
 
 			$this->start		= $this->bo->start;
 			$this->query		= $this->bo->query;
@@ -686,16 +686,16 @@
 				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> $this->currentapp.'.uilocation.stop', 'perm'=>2, 'acl_location'=> $acl_location));
 			}
 
-			$budget_id	= get_var('budget_id',array('POST','GET'));
+			$budget_id	= phpgw::get_var('budget_id', 'int');
 
-			$values		= get_var('values',array('POST'));
+			$values		= phpgw::get_var('values');
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('budget'));
 
 			if ($values['save'] || $values['apply'])
 			{
-				$values['b_account_id']		= get_var('b_account_id',array('POST'));
-				$values['b_account_name']	= get_var('b_account_name',array('POST'));
+				$values['b_account_id']		= phpgw::get_var('b_account_id', 'int', 'POST');
+				$values['b_account_name']	= phpgw::get_var('b_account_name', 'string', 'POST');
 
 				if(!$values['b_account_id'] && !$budget_id)
 				{
@@ -833,9 +833,9 @@
 				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> $this->currentapp.'.uilocation.stop', 'perm'=>2, 'acl_location'=> $acl_location));
 			}
 
-			$budget_id	= get_var('budget_id',array('POST','GET'));
+			$budget_id	= phpgw::get_var('budget_id', 'int');
 
-			$values		= get_var('values',array('POST'));
+			$values		= phpgw::get_var('values');
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('budget'));
 
@@ -965,15 +965,15 @@
 
 		function delete()
 		{
-			$budget_id	= get_var('budget_id',array('POST','GET'));
-			$confirm	= get_var('confirm',array('POST'));
+			$budget_id	= phpgw::get_var('budget_id', 'int');
+			$confirm	= phpgw::get_var('confirm', 'bool', 'POST');
 
 			$link_data = array
 			(
 				'menuaction' => $this->currentapp.'.uibudget.index'
 			);
 
-			if (get_var('confirm',array('POST')))
+			if (phpgw::get_var('confirm', 'bool', 'POST'))
 			{
 				$this->bo->delete($budget_id);
 				$GLOBALS['phpgw']->redirect_link('/index.php',$link_data);
@@ -1002,15 +1002,15 @@
 
 		function delete_basis()
 		{
-			$budget_id	= get_var('budget_id',array('POST','GET'));
-			$confirm	= get_var('confirm',array('POST'));
+			$budget_id	= phpgw::get_var('budget_id', 'int');
+			$confirm	= phpgw::get_var('confirm', 'bool', 'POST');
 
 			$link_data = array
 			(
 				'menuaction' => $this->currentapp.'.uibudget.basis'
 			);
 
-			if (get_var('confirm',array('POST')))
+			if (phpgw::get_var('confirm', 'bool', 'POST'))
 			{
 				$this->bo->delete_basis($budget_id);
 				$GLOBALS['phpgw']->redirect_link('/index.php',$link_data);
@@ -1040,7 +1040,7 @@
 
 		function view()
 		{
-			$budget_id	= get_var('budget_id',array('GET'));
+			$budget_id	= phpgw::get_var('budget_id', 'int', 'GET');
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('budget','nextmatchs'));
 
@@ -1142,7 +1142,7 @@
 
 		function excel()
 		{
-			$budget_id = get_var('budget_id',array('POST','GET'));
+			$budget_id = phpgw::get_var('budget_id', 'int');
 			$list= $this->bo->read_budget($budget_id,$allrows=True);
 			$uicols	= $this->bo->uicols;
 			foreach($uicols as $col)

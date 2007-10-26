@@ -40,7 +40,7 @@
 		{
 			$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->account	= $GLOBALS['phpgw_info']['user']['account_id'];
-			$this->bocommon		= CreateObject($this->currentapp.'.bocommon');
+			$this->bocommon		= CreateObject('property.bocommon');
 			$this->db           	= $this->bocommon->new_db();
 			$this->db2           	= $this->bocommon->new_db();
 
@@ -813,7 +813,7 @@
 
 			if (isset($history_set) AND is_array($history_set))
 			{
-				$historylog	= CreateObject($this->currentapp.'.historylog','s_agreement');
+				$historylog	= CreateObject('property.historylog','s_agreement');
 				while (list($attrib_id,$new_value) = each($history_set))
 				{
 					$historylog->add('SO',$values['s_agreement_id'],$new_value,False, $attrib_id,false,$id);
@@ -940,7 +940,7 @@
 
 			if (isset($history_set) AND is_array($history_set))
 			{
-				$historylog	= CreateObject($this->currentapp.'.historylog','s_agreement');
+				$historylog	= CreateObject('property.historylog','s_agreement');
 				while (list($attrib_id,$history) = each($history_set))
 				{
 					$historylog->add('SO',$values['s_agreement_id'],$history['value'],False, $attrib_id,$history['date'],$values['id']);

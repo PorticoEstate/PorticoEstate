@@ -39,7 +39,7 @@
 		function property_soinvoice()
 		{
 			$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
-			$this->bocommon		= CreateObject($this->currentapp.'.bocommon');
+			$this->bocommon		= CreateObject('property.bocommon');
 			$this->db           	= $this->bocommon->new_db();
 			$this->db2           	= $this->bocommon->new_db();
 			$this->account_id 	= $GLOBALS['phpgw_info']['user']['account_id'];
@@ -729,7 +729,7 @@
 			{
 				$status_code=array('X'=>'closed','R'=>'re_opened');
 
-				$historylog_workorder	= CreateObject($this->currentapp.'.historylog','workorder');
+				$historylog_workorder	= CreateObject('property.historylog','workorder');
 
 				while (list($id,$entry) = each($update_status))
 				{

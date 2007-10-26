@@ -55,8 +55,8 @@
 		function property_bor_agreement($session=False)
 		{
 			$this->currentapp		= $GLOBALS['phpgw_info']['flags']['currentapp'];
-			$this->so = CreateObject($this->currentapp.'.sor_agreement');
-			$this->bocommon = CreateObject($this->currentapp.'.bocommon');
+			$this->so = CreateObject('property.sor_agreement');
+			$this->bocommon = CreateObject('property.bocommon');
 			$this->vfs 			= CreateObject('phpgwapi.vfs');
 			$this->rootdir 		= $this->vfs->basedir;
 			$this->fakebase 	= $this->vfs->fakebase;
@@ -67,11 +67,11 @@
 				$this->use_session = True;
 			}
 
-			$reset_query 		= get_var('reset_query',array('POST','GET'));
-			$sort	= get_var('sort',array('POST','GET'));
-			$order	= get_var('order',array('POST','GET'));
-			$allrows	= get_var('allrows',array('POST','GET'));
-			$role	= get_var('role',array('POST','GET'));
+			$reset_query 		= phpgw::get_var('reset_query', 'bool');
+			$sort	= phpgw::get_var('sort');
+			$order	= phpgw::get_var('order');
+			$allrows	= phpgw::get_var('allrows', 'bool');
+			$role	= phpgw::get_var('role');
 
 			if($reset_query)
 			{
@@ -85,13 +85,13 @@
 			}
 			else
 			{
-				$start	= get_var('start',array('POST','GET'));
-				$query	= get_var('query',array('POST','GET'));
-				$filter	= get_var('filter',array('POST','GET'));
-				$cat_id	= get_var('cat_id',array('POST','GET'));
-				$customer_id	= get_var('tenant_id',array('POST','GET'));
-				$member_id	= get_var('member_id',array('POST','GET'));
-				$loc1	= get_var('loc1',array('POST','GET'));	
+				$start	= phpgw::get_var('start', 'int', 'REQUEST', 0);
+				$query	= phpgw::get_var('query');
+				$filter	= phpgw::get_var('filter', 'int');
+				$cat_id	= phpgw::get_var('cat_id', 'int');
+				$customer_id	= phpgw::get_var('tenant_id', 'int');
+				$member_id	= phpgw::get_var('member_id', 'int');
+				$loc1	= phpgw::get_var('loc1');	
 			}
 
 
@@ -262,7 +262,7 @@
 
 		function read_event($data)
 		{
-			$boalarm		= CreateObject($this->currentapp.'.boalarm');
+			$boalarm		= CreateObject('property.boalarm');
 			$event	= $this->so->read_single($data);
 			$event['alarm_date']=$event['termination_date'];
 			$event['alarm']	= $boalarm->read_alarms($type='r_agreement',$data['r_agreement_id']);
@@ -307,13 +307,13 @@
 
 			if($item['location_code'])
 			{
-				$solocation	= CreateObject($this->currentapp.'.solocation');
+				$solocation	= CreateObject('property.solocation');
 				$item['location_data'] =$solocation->read_single($item['location_code']);
 			}
 
 			if($item['p_num'])
 			{
-				$soadmin_entity	= CreateObject($this->currentapp.'.soadmin_entity');
+				$soadmin_entity	= CreateObject('property.soadmin_entity');
 				$category = $soadmin_entity->read_single_category($item['p_entity_id'],$item['p_cat_id']);
 
 				$item['p'][$item['p_entity_id']]['p_num']=$item['p_num'];
@@ -333,7 +333,7 @@
 			}
 			$contacts			= CreateObject('phpgwapi.contacts');
 
-			$vendor = CreateObject($this->currentapp.'.soactor');
+			$vendor = CreateObject('property.soactor');
 			$vendor->role = 'vendor';
 
 			$dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];

@@ -57,9 +57,9 @@
 			$this->nextmatchs	= CreateObject('phpgwapi.nextmatchs');
 			$this->account		= $GLOBALS['phpgw_info']['user']['account_id'];
 
-			$this->bo		= CreateObject($this->currentapp.'.bop_of_town',True);
-			$this->bocommon		= CreateObject($this->currentapp.'.bocommon');
-			$this->menu		= CreateObject($this->currentapp.'.menu');
+			$this->bo		= CreateObject('property.bop_of_town',True);
+			$this->bocommon		= CreateObject('property.bocommon');
+			$this->menu		= CreateObject('property.menu');
 
 			$this->acl 		= CreateObject('phpgwapi.acl');
 			$this->acl_location	= '.admin';
@@ -245,8 +245,8 @@
 				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> $this->currentapp.'.uilocation.stop', 'perm'=> 2, 'acl_location'=> $this->acl_location));
 			}
 
-			$part_of_town_id	= get_var('part_of_town_id',array('POST','GET'));
-			$values			= get_var('values',array('POST'));
+			$part_of_town_id	= phpgw::get_var('part_of_town_id', 'int');
+			$values			= phpgw::get_var('values');
 
 			if($GLOBALS['phpgw']->is_repost())
 			{
@@ -336,16 +336,16 @@
 				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> $this->currentapp.'.uilocation.stop', 'perm'=> 8, 'acl_location'=> $this->acl_location));
 			}
 
-			$part_of_town_id	= get_var('part_of_town_id',array('POST','GET'));
+			$part_of_town_id	= phpgw::get_var('part_of_town_id', 'int');
 
-			$confirm	= get_var('confirm',array('POST'));
+			$confirm	= phpgw::get_var('confirm', 'bool', 'POST');
 
 			$link_data = array
 			(
 				'menuaction' => $this->currentapp.'.uip_of_town.index'
 			);
 
-			if (get_var('confirm',array('POST')))
+			if (phpgw::get_var('confirm', 'bool', 'POST'))
 			{
 				$this->bo->delete($part_of_town_id);
 				$GLOBALS['phpgw']->redirect_link('/index.php',$link_data);
@@ -379,7 +379,7 @@
 				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> $this->currentapp.'.uilocation.stop', 'perm'=>1, 'acl_location'=> $this->acl_location));
 			}
 
-			$part_of_town_id	= get_var('part_of_town_id',array('GET'));
+			$part_of_town_id	= phpgw::get_var('part_of_town_id', 'int', 'GET');
 
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('part of town') . ': ' . lang('view part of town');
 

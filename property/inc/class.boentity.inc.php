@@ -74,8 +74,8 @@
 		function property_boentity($session=False)
 		{
 			$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
-			$this->solocation 	= CreateObject($this->currentapp.'.solocation');
-			$this->bocommon 	= CreateObject($this->currentapp.'.bocommon');
+			$this->solocation 	= CreateObject('property.solocation');
+			$this->bocommon 	= CreateObject('property.bocommon');
 			$this->vfs 			= CreateObject('phpgwapi.vfs');
 			$this->rootdir 		= $this->vfs->basedir;
 			$this->fakebase 	= $this->vfs->fakebase;
@@ -86,22 +86,22 @@
 				$this->use_session = True;
 			}
 
-			$start		= get_var('start',array('POST','GET'));
-			$query		= get_var('query',array('POST','GET'));
-			$sort		= get_var('sort',array('POST','GET'));
-			$order		= get_var('order',array('POST','GET'));
-			$filter		= get_var('filter',array('POST','GET'));
-			$cat_id		= get_var('cat_id',array('POST','GET'));
-			$district_id	= get_var('district_id',array('POST','GET'));
-			$entity_id	= get_var('entity_id',array('POST','GET'));
-			$status		= get_var('status',array('POST','GET'));
-			$start_date	= get_var('start_date',array('POST','GET'));
-			$end_date	= get_var('end_date',array('POST','GET'));
-			$allrows	= get_var('allrows',array('POST','GET'));
+			$start		= phpgw::get_var('start', 'int', 'REQUEST', 0);
+			$query		= phpgw::get_var('query');
+			$sort		= phpgw::get_var('sort');
+			$order		= phpgw::get_var('order');
+			$filter		= phpgw::get_var('filter', 'int');
+			$cat_id		= phpgw::get_var('cat_id', 'int');
+			$district_id	= phpgw::get_var('district_id', 'int');
+			$entity_id	= phpgw::get_var('entity_id', 'int');
+			$status		= phpgw::get_var('status');
+			$start_date	= phpgw::get_var('start_date');
+			$end_date	= phpgw::get_var('end_date');
+			$allrows	= phpgw::get_var('allrows', 'bool');
 		
 
-			$this->soadmin_entity 	= CreateObject($this->currentapp.'.soadmin_entity',$entity_id,$cat_id);
-			$this->so 		= CreateObject($this->currentapp.'.soentity',$entity_id,$cat_id);
+			$this->soadmin_entity 	= CreateObject('property.soadmin_entity',$entity_id,$cat_id);
+			$this->so 		= CreateObject('property.soentity',$entity_id,$cat_id);
 			$this->category_name	= isset($this->soadmin_entity->category_name) ? $this->soadmin_entity->category_name : '';
 
 			if ($start)
@@ -184,7 +184,7 @@
 
 		function column_list($selected='',$entity_id='',$cat_id,$allrows='')
 		{
-			$soadmin_entity	= CreateObject($this->currentapp.'.soadmin_entity');
+			$soadmin_entity	= CreateObject('property.soadmin_entity');
 
 			if(!$selected)
 			{
@@ -276,9 +276,9 @@
 
 		function read_single($data)
 		{
-			$soadmin_entity	= CreateObject($this->currentapp.'.soadmin_entity');
+			$soadmin_entity	= CreateObject('property.soadmin_entity');
 			$contacts		= CreateObject('phpgwapi.contacts');
-			$vendor 		= CreateObject($this->currentapp.'.soactor');
+			$vendor 		= CreateObject('property.soactor');
 			$vendor->role	= 'vendor';
 
 			$entity	= $this->so->read_single($data);
@@ -620,7 +620,7 @@
 		function read_attrib_history($data)
 		{
 		//	_debug_array($data);
-			$historylog = CreateObject($this->currentapp.'.historylog','entity_' . $data['entity_id'] .'_' . $data['cat_id']);
+			$historylog = CreateObject('property.historylog','entity_' . $data['entity_id'] .'_' . $data['cat_id']);
 			$history_values = $historylog->return_array(array(),array('SO'),'history_timestamp','ASC',$data['id'],$data['attrib_id']);
 			$this->total_records = count($history_values);
 		//	_debug_array($history_values);
@@ -629,7 +629,7 @@
 
 		function delete_history_item($data)
 		{
-			$historylog = CreateObject($this->currentapp.'.historylog','entity_' . $data['entity_id'] .'_' . $data['cat_id']);
+			$historylog = CreateObject('property.historylog','entity_' . $data['entity_id'] .'_' . $data['cat_id']);
 			$historylog->delete_single_record($data['history_id']);
 		}
 

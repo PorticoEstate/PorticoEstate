@@ -56,8 +56,8 @@
 			$this->currentapp			= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->nextmatchs			= CreateObject('phpgwapi.nextmatchs');
 			$this->account				= $GLOBALS['phpgw_info']['user']['account_id'];
-			$this->bo					= CreateObject($this->currentapp.'.bostandard_2',True);
-			$this->bocommon				= CreateObject($this->currentapp.'.bocommon');
+			$this->bo					= CreateObject('property.bostandard_2',True);
+			$this->bocommon				= CreateObject('property.bocommon');
 
 			$this->acl 				= CreateObject('phpgwapi.acl');
 			$this->acl_location			= '.admin';
@@ -94,7 +94,7 @@
 				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> $this->currentapp.'.uilocation.stop', 'perm'=>1, 'acl_location'=> $this->acl_location));
 			}
 
-			$type	= get_var('type',array('POST','GET'));
+			$type	= phpgw::get_var('type');
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('standard_2','nextmatchs',
 										'search_field'));
@@ -195,9 +195,9 @@
 				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> $this->currentapp.'.uilocation.stop', 'perm'=> 2, 'acl_location'=> $this->acl_location));
 			}
 
-			$type		= get_var('type',array('POST','GET'));
-			$id		= get_var('id',array('POST','GET'));
-			$values		= get_var('values',array('POST'));
+			$type		= phpgw::get_var('type');
+			$id		= phpgw::get_var('id', 'int');
+			$values		= phpgw::get_var('values');
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('standard_2'));
 
@@ -275,9 +275,9 @@
 				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> $this->currentapp.'.uilocation.stop', 'perm'=> 8, 'acl_location'=> $this->acl_location));
 			}
 
-			$type	= get_var('type',array('POST','GET'));
-			$id		= get_var('id',array('POST','GET'));
-			$confirm		= get_var('confirm',array('POST'));
+			$type	= phpgw::get_var('type');
+			$id		= phpgw::get_var('id', 'int');
+			$confirm		= phpgw::get_var('confirm', 'bool', 'POST');
 
 			$link_data = array
 			(
@@ -285,7 +285,7 @@
 				'type' => $type
 			);
 
-			if (get_var('confirm',array('POST')))
+			if (phpgw::get_var('confirm', 'bool', 'POST'))
 			{
 				$this->bo->delete($id,$type);
 				$GLOBALS['phpgw']->redirect_link('/index.php',$link_data);

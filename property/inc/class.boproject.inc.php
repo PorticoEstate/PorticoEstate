@@ -53,9 +53,9 @@
 		function property_boproject($session=False)
 		{
 			$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
-			$this->so 			= CreateObject($this->currentapp.'.soproject');
-			$this->bocommon 	= CreateObject($this->currentapp.'.bocommon');
-			$this->solocation = CreateObject($this->currentapp.'.solocation');
+			$this->so 			= CreateObject('property.soproject');
+			$this->bocommon 	= CreateObject('property.bocommon');
+			$this->solocation = CreateObject('property.solocation');
 
 			if ($session)
 			{
@@ -63,14 +63,14 @@
 				$this->use_session = True;
 			}
 
-			$start	= get_var('start',array('POST','GET'));
-			$query	= get_var('query',array('POST','GET'));
-			$sort	= get_var('sort',array('POST','GET'));
-			$order	= get_var('order',array('POST','GET'));
-			$filter	= get_var('filter',array('POST','GET'));
-			$cat_id	= get_var('cat_id',array('POST','GET'));
-			$status_id	= get_var('status_id',array('POST','GET'));
-			$wo_hour_cat_id	= get_var('wo_hour_cat_id',array('POST','GET'));
+			$start	= phpgw::get_var('start', 'int', 'REQUEST', 0);
+			$query	= phpgw::get_var('query');
+			$sort	= phpgw::get_var('sort');
+			$order	= phpgw::get_var('order');
+			$filter	= phpgw::get_var('filter', 'int');
+			$cat_id	= phpgw::get_var('cat_id', 'int');
+			$status_id	= phpgw::get_var('status_id');
+			$wo_hour_cat_id	= phpgw::get_var('wo_hour_cat_id', 'int');
 
 			if ($start)
 			{
@@ -240,7 +240,7 @@
 
 		function read_single($project_id)
 		{
-			$contacts		= CreateObject($this->currentapp.'.soactor');
+			$contacts		= CreateObject('property.soactor');
 			$contacts->role='vendor';
 
 			$config				= CreateObject('phpgwapi.config');
@@ -314,7 +314,7 @@
 
 			if($project['p_num'])
 			{
-				$soadmin_entity	= CreateObject($this->currentapp.'.soadmin_entity');
+				$soadmin_entity	= CreateObject('property.soadmin_entity');
 				$category = $soadmin_entity->read_single_category($project['p_entity_id'],$project['p_cat_id']);
 
 				$project['p'][$project['p_entity_id']]['p_num']=$project['p_num'];
@@ -363,7 +363,7 @@
 
 		function read_record_history($id)
 		{
-			$historylog	= CreateObject($this->currentapp.'.historylog','project');
+			$historylog	= CreateObject('property.historylog','project');
 			$history_array = $historylog->return_array(array('O'),array(),'','',$id);
 			$i=0;
 			while (is_array($history_array) && list(,$value) = each($history_array))

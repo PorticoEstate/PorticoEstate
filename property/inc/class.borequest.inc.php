@@ -53,10 +53,10 @@
 		function property_borequest($session=False)
 		{
 			$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
-			$this->so 			= CreateObject($this->currentapp.'.sorequest');
-			$this->bocommon 	= CreateObject($this->currentapp.'.bocommon');
-			$this->solocation 	= CreateObject($this->currentapp.'.solocation');
-			$this->historylog	= CreateObject($this->currentapp.'.historylog','request');
+			$this->so 			= CreateObject('property.sorequest');
+			$this->bocommon 	= CreateObject('property.bocommon');
+			$this->solocation 	= CreateObject('property.solocation');
+			$this->historylog	= CreateObject('property.historylog','request');
 			$this->vfs 			= CreateObject('phpgwapi.vfs');
 			$this->rootdir 		= $this->vfs->basedir;
 			$this->fakebase 	= $this->vfs->fakebase;
@@ -67,14 +67,14 @@
 				$this->use_session = True;
 			}
 
-			$start	= get_var('start',array('POST','GET'));
-			$query	= get_var('query',array('POST','GET'));
-			$sort	= get_var('sort',array('POST','GET'));
-			$order	= get_var('order',array('POST','GET'));
-			$filter	= get_var('filter',array('POST','GET'));
-			$cat_id	= get_var('cat_id',array('POST','GET'));
-			$status_id	= get_var('status_id',array('POST','GET'));
-			$allrows	= get_var('allrows',array('POST','GET'));
+			$start	= phpgw::get_var('start', 'int', 'REQUEST', 0);
+			$query	= phpgw::get_var('query');
+			$sort	= phpgw::get_var('sort');
+			$order	= phpgw::get_var('order');
+			$filter	= phpgw::get_var('filter', 'int');
+			$cat_id	= phpgw::get_var('cat_id', 'int');
+			$status_id	= phpgw::get_var('status_id');
+			$allrows	= phpgw::get_var('allrows', 'bool');
 
 			if ($start)
 			{
@@ -401,7 +401,7 @@
 
 			if($request['p_num'])
 			{
-				$soadmin_entity	= CreateObject($this->currentapp.'.soadmin_entity');
+				$soadmin_entity	= CreateObject('property.soadmin_entity');
 				$category = $soadmin_entity->read_single_category($request['p_entity_id'],$request['p_cat_id']);
 
 				$request['p'][$request['p_entity_id']]['p_num']=$request['p_num'];

@@ -39,7 +39,7 @@
 		{
 			$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->account		= $GLOBALS['phpgw_info']['user']['account_id'];
-			$this->bocommon		= CreateObject($this->currentapp.'.bocommon');
+			$this->bocommon		= CreateObject('property.bocommon');
 			$this->db           	= $this->bocommon->new_db();
 			$this->db2           	= $this->bocommon->new_db();
 
@@ -497,7 +497,7 @@
 
 		function add($project)
 		{
-			$historylog	= CreateObject($this->currentapp.'.historylog','project');
+			$historylog	= CreateObject('property.historylog','project');
 
 			while (is_array($project['location']) && list($input_name,$value) = each($project['location']))
 			{
@@ -689,7 +689,7 @@
 
 		function edit($project)
 		{
-			$historylog	= CreateObject($this->currentapp.'.historylog','project');
+			$historylog	= CreateObject('property.historylog','project');
 
 			while (is_array($project['location']) && list($input_name,$value) = each($project['location']))
 			{
@@ -793,7 +793,7 @@
 
 				if (isset($workorder) AND is_array($workorder))
 				{
-					$historylog_workorder	= CreateObject($this->currentapp.'.historylog','workorder');
+					$historylog_workorder	= CreateObject('property.historylog','workorder');
 				}
 
 				if($old_status != $project['status'])
@@ -865,7 +865,7 @@
 
 		function update_request_status($project_id='',$status='',$category=0,$coordinator=0)
 		{
-			$historylog_r	= CreateObject($this->currentapp.'.historylog','request');
+			$historylog_r	= CreateObject('property.historylog','request');
 
 			$sql = "SELECT origin_id FROM fm_origin WHERE destination ='project' AND destination_id='$project_id' and origin ='request'";
 //			$sql = "SELECT origin_id FROM fm_project_origin WHERE project_id='$project_id' and origin ='request'";

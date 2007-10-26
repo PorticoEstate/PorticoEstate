@@ -58,10 +58,10 @@
 			$this->currentapp		= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->account			= $GLOBALS['phpgw_info']['user']['account_id'];
 
-			$this->bo			= CreateObject($this->currentapp.'.boinvestment',True);
-			$this->bocommon			= CreateObject($this->currentapp.'.bocommon');
-			$this->menu			= CreateObject($this->currentapp.'.menu');
-			$this->bolocation		= CreateObject($this->currentapp.'.bolocation');
+			$this->bo			= CreateObject('property.boinvestment',True);
+			$this->bocommon			= CreateObject('property.bocommon');
+			$this->menu			= CreateObject('property.menu');
+			$this->bolocation		= CreateObject('property.bolocation');
 			$this->acl 			= CreateObject('phpgwapi.acl');
 			$this->acl_location		= '.invoice';
 			$this->acl_read 		= $this->acl->check('.invoice',1);
@@ -109,8 +109,8 @@
 										'nextmatchs'));
 
 			$links = $this->menu->links('investment');
-			$preserve	= get_var('preserve',array('POST','GET'));
-			$values		= get_var('values',array('POST'));
+			$preserve	= phpgw::get_var('preserve', 'bool');
+			$values		= phpgw::get_var('values');
 
 
 			if($preserve)
@@ -326,10 +326,10 @@
 										'nextmatchs'));
 
 			$links = $this->menu->links();
-			$values		= get_var('values',array('POST'));
-			$entity_type	= get_var('entity_type',array('POST','GET'));
-			$entity_id	= get_var('entity_id',array('POST','GET'));
-			$investment_id	= get_var('investment_id',array('POST','GET'));
+			$values		= phpgw::get_var('values');
+			$entity_type	= phpgw::get_var('entity_type');
+			$entity_id	= phpgw::get_var('entity_id', 'int');
+			$investment_id	= phpgw::get_var('investment_id', 'int');
 
 //_debug_array($values);
 
@@ -478,7 +478,7 @@
 			{
 				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> $this->currentapp.'.uilocation.stop', 'perm'=>2, 'acl_location'=> $this->acl_location));
 			}
-			$values					= get_var('values',array('POST'));
+			$values					= phpgw::get_var('values');
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('investment'));
 
@@ -619,12 +619,12 @@
 
 		function delete()
 		{
-			$entity_id = get_var('entity_id',array('POST','GET'));
-			$investment_id = get_var('investment_id',array('POST','GET'));
-			$index_count = get_var('index_count',array('POST','GET'));
-			$entity_type = get_var('entity_type',array('POST','GET'));
+			$entity_id = phpgw::get_var('entity_id', 'int');
+			$investment_id = phpgw::get_var('investment_id', 'int');
+			$index_count = phpgw::get_var('index_count', 'int');
+			$entity_type = phpgw::get_var('entity_type');
 
-			$confirm	= get_var('confirm',array('POST'));
+			$confirm	= phpgw::get_var('confirm', 'bool', 'POST');
 
 			$link_data = array
 			(
@@ -635,7 +635,7 @@
 				'entity_type'	=> $entity_type
 			);
 
-			if (get_var('confirm',array('POST')))
+			if (phpgw::get_var('confirm', 'bool', 'POST'))
 			{
 
 				$this->bo->delete($entity_id,$investment_id,$index_count);

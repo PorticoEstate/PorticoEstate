@@ -73,9 +73,9 @@
 		function property_botts($session=False)
 		{
 			$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
-			$this->so 			= CreateObject($this->currentapp.'.sotts');
-			$this->bocommon 	= CreateObject($this->currentapp.'.bocommon');
-			$this->historylog	= CreateObject($this->currentapp.'.historylog','tts');
+			$this->so 			= CreateObject('property.sotts');
+			$this->bocommon 	= CreateObject('property.bocommon');
+			$this->historylog	= CreateObject('property.historylog','tts');
 			$this->config		= CreateObject('phpgwapi.config');
 			$this->config->read_repository();
 			$this->dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
@@ -90,17 +90,17 @@
 				$this->use_session = True;
 			}
 
-			$start	= get_var('start',array('POST','GET'));
-			$query	= get_var('query',array('POST','GET'));
-			$sort	= get_var('sort',array('POST','GET'));
-			$order	= get_var('order',array('POST','GET'));
-			$filter	= get_var('filter',array('POST','GET'));
-			$user_filter	= get_var('user_filter',array('POST','GET'));
-			$cat_id	= get_var('cat_id',array('POST','GET'));
-			$district_id	= get_var('district_id',array('POST','GET'));
-			$allrows	= get_var('allrows',array('POST','GET'));
-			$start_date	= get_var('start_date',array('POST','GET'));
-			$end_date	= get_var('end_date',array('POST','GET'));
+			$start	= phpgw::get_var('start', 'int', 'REQUEST', 0);
+			$query	= phpgw::get_var('query');
+			$sort	= phpgw::get_var('sort');
+			$order	= phpgw::get_var('order');
+			$filter	= phpgw::get_var('filter', 'int');
+			$user_filter	= phpgw::get_var('user_filter');
+			$cat_id	= phpgw::get_var('cat_id', 'int');
+			$district_id	= phpgw::get_var('district_id', 'int');
+			$allrows	= phpgw::get_var('allrows', 'bool');
+			$start_date	= phpgw::get_var('start_date');
+			$end_date	= phpgw::get_var('end_date');
 
 			if ($start)
 			{
@@ -334,13 +334,13 @@
 
 			if($ticket['location_code'])
 			{
-				$solocation 	= CreateObject($this->currentapp.'.solocation');
+				$solocation 	= CreateObject('property.solocation');
 				$ticket['location_data'] = $solocation->read_single($ticket['location_code']);
 			}
 //_debug_array($ticket['location_data']);
 			if($ticket['p_num'])
 			{
-				$soadmin_entity	= CreateObject($this->currentapp.'.soadmin_entity');
+				$soadmin_entity	= CreateObject('property.soadmin_entity');
 				$category = $soadmin_entity->read_single_category($ticket['p_entity_id'],$ticket['p_cat_id']);
 
 				$ticket['p'][$ticket['p_entity_id']]['p_num']=$ticket['p_num'];
@@ -545,7 +545,7 @@
 				$receipt = $this->mail_ticket($receipt['id'],$fields_updated,$receipt,$ticket['location_code']);
 			}
 
-			$soadmin_custom = CreateObject($this->currentapp.'.soadmin_custom');
+			$soadmin_custom = CreateObject('property.soadmin_custom');
 			$custom_functions = $soadmin_custom->read(array('acl_location' => $this->acl_location,'allrows'=>True));
 
 			if (isSet($custom_functions) AND is_array($custom_functions))
@@ -572,8 +572,8 @@
 			if($ticket['location_code'])
 			{
 
-				$solocation 		= CreateObject($this->currentapp.'.solocation');
-				$soadmin_location 	= CreateObject($this->currentapp.'.soadmin_location');
+				$solocation 		= CreateObject('property.solocation');
+				$soadmin_location 	= CreateObject('property.soadmin_location');
 				$location_data 		= $solocation->read_single($ticket['location_code']);
 
 				$type_id=count(explode('-',$ticket['location_code']));

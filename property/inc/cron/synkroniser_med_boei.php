@@ -39,7 +39,7 @@
 		function synkroniser_med_boei()
 		{
 			$this->currentapp		= $GLOBALS['phpgw_info']['flags']['currentapp'];
-			$this->bocommon			= CreateObject($this->currentapp.'.bocommon');
+			$this->bocommon			= CreateObject('property.bocommon');
 			$this->db     			= & $GLOBALS['phpgw']->db;
 			$this->join				= $this->db->join;
 			$this->like				= $this->db->like;
@@ -58,7 +58,7 @@
 			}
 			else
 			{
-				$this->db_boei           	= CreateObject($this->currentapp.'.db_mssql');
+				$this->db_boei           	= CreateObject('property.db_mssql');
 				$this->db_boei->Host     	= $GLOBALS['external_db']['boei']['db_host'];
 				$this->db_boei->Type     	= $GLOBALS['external_db']['boei']['db_type'];
 				$this->db_boei->Database 	= $GLOBALS['external_db']['boei']['db_name'];
@@ -79,8 +79,8 @@
 			}
 			else
 			{
-				$confirm	= get_var('confirm',array('POST'));
-				$execute	= get_var('execute',array('GET'));
+				$confirm	= phpgw::get_var('confirm', 'bool', 'POST');
+				$execute	= phpgw::get_var('execute', 'bool', 'GET');
 			}
 
 			if ($confirm)

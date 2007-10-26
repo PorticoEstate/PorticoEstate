@@ -68,10 +68,10 @@
 			}
 			else
 			{
-				$data = unserialize(urldecode(get_var('data',array('POST','GET'))));
+				$data = unserialize(urldecode(phpgw::get_var('data')));
 				if(!isset($data['function']))
 				{
-					$data['function'] = get_var('function',array('POST','GET'));
+					$data['function'] = phpgw::get_var('function');
 				}
 			}
 

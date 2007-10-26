@@ -65,9 +65,9 @@
 			$this->nextmatchs	= CreateObject('phpgwapi.nextmatchs');
 			$this->account		= $GLOBALS['phpgw_info']['user']['account_id'];
 
-			$this->bo		= CreateObject($this->currentapp.'.bos_agreement',True);
-			$this->bocommon		= CreateObject($this->currentapp.'.bocommon');
-			$this->menu		= CreateObject($this->currentapp.'.menu');
+			$this->bo		= CreateObject('property.bos_agreement',True);
+			$this->bocommon		= CreateObject('property.bocommon');
+			$this->menu		= CreateObject('property.menu');
 
 			$this->role		= $this->bo->role;
 
@@ -120,7 +120,7 @@
 
 			$GLOBALS['phpgw_info']['flags']['noframework'] = True;
 
-			$values                 = get_var('values',array('POST','GET'));
+			$values                 = phpgw::get_var('values');
 
 			if ($values['save'])
 			{
@@ -171,8 +171,8 @@
 			$GLOBALS['phpgw_info']['flags'][nofooter] = True;
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = False;
 
-			$file_name	= urldecode(get_var('file_name',array('POST','GET')));
-			$id 		= get_var('id',array('POST','GET'));
+			$file_name	= urldecode(phpgw::get_var('file_name'));
+			$id 		= phpgw::get_var('id', 'int');
 
 			$file = $this->fakebase. SEP . 'service_agreement' . SEP . $id . SEP . $file_name;
 
@@ -503,20 +503,20 @@
 
 		function edit()
 		{
-			$id	= get_var('id',array('POST','GET'));
-			$values		= get_var('values',array('POST'));
-			$delete_item	= get_var('delete_item',array('GET'));
-			$item_id	= get_var('item_id',array('GET'));
+			$id	= phpgw::get_var('id', 'int');
+			$values		= phpgw::get_var('values');
+			$delete_item	= phpgw::get_var('delete_item', 'bool');
+			$item_id	= phpgw::get_var('item_id', 'int', 'GET');
 
 			$config		= CreateObject('phpgwapi.config',$this->currentapp);
-			$boalarm		= CreateObject($this->currentapp.'.boalarm');
+			$boalarm		= CreateObject('property.boalarm');
 
 			if($delete_item && $id && $item_id)
 			{
 				$this->bo->delete_item($id,$item_id);
 			}
 
-			$values_attribute  = get_var('values_attribute',array('POST'));
+			$values_attribute  = phpgw::get_var('values_attribute');
 
 			$insert_record_s_agreement = $GLOBALS['phpgw']->session->appsession('insert_record_s_agreement',$this->currentapp);
 
@@ -543,10 +543,10 @@
 
 				if ($values['save'] || $values['apply']):
 				{
-					$values['vendor_id']		= get_var('vendor_id',array('POST'));
-					$values['vendor_name']		= get_var('vendor_name',array('POST'));
-					$values['b_account_id']		= get_var('b_account_id',array('POST'));
-					$values['b_account_name']	= get_var('b_account_name',array('POST'));
+					$values['vendor_id']		= phpgw::get_var('vendor_id', 'int', 'POST');
+					$values['vendor_name']		= phpgw::get_var('vendor_name', 'string', 'POST');
+					$values['b_account_id']		= phpgw::get_var('b_account_id', 'int', 'POST');
+					$values['b_account_name']	= phpgw::get_var('b_account_name', 'string', 'POST');
 
 					if(!$values['cat_id'])
 					{
@@ -900,7 +900,7 @@
 
 		function excel()
 		{
-			$id	= get_var('id',array('POST','GET'));
+			$id	= phpgw::get_var('id', 'int');
 			$list = $this->bo->read_details($id);
 			$uicols		= $this->bo->uicols;
 			$this->bocommon->excel($list,$uicols['name'],$uicols['descr'],$uicols['input_type']);
@@ -908,18 +908,18 @@
 
 		function edit_item()
 		{
-			$s_agreement_id	= get_var('s_agreement_id',array('POST','GET'));
-			$id	= get_var('id',array('POST','GET'));
-			$values		= get_var('values',array('POST'));
-			$delete_last	= get_var('delete_last',array('GET'));
+			$s_agreement_id	= phpgw::get_var('s_agreement_id', 'int');
+			$id	= phpgw::get_var('id', 'int');
+			$values		= phpgw::get_var('values');
+			$delete_last	= phpgw::get_var('delete_last', 'bool', 'GET');
 			if($delete_last)
 			{
 				$this->bo->delete_last_index($s_agreement_id,$id);
 			}
 
-			$bolocation			= CreateObject($this->currentapp.'.bolocation');
+			$bolocation			= CreateObject('property.bolocation');
 
-			$values_attribute  = get_var('values_attribute',array('POST'));
+			$values_attribute  = phpgw::get_var('values_attribute');
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('s_agreement','attributes_form'));
 
@@ -1181,12 +1181,12 @@
 
 		function view_item()
 		{
-			$from = get_var('from',array('POST','GET'));
+			$from = phpgw::get_var('from');
 			$from = $from == 'edit'?'edit':'view';
-			$s_agreement_id	= get_var('s_agreement_id',array('POST','GET'));
-			$id	= get_var('id',array('POST','GET'));
+			$s_agreement_id	= phpgw::get_var('s_agreement_id', 'int');
+			$id	= phpgw::get_var('id', 'int');
 
-			$bolocation			= CreateObject($this->currentapp.'.bolocation');
+			$bolocation			= CreateObject('property.bolocation');
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('s_agreement','attributes_view'));
 
@@ -1291,10 +1291,10 @@
 
 		function delete()
 		{
-			$attrib		= get_var('attrib',array('POST','GET'));
-			$id		= get_var('id',array('POST','GET'));
-			$s_agreement_id	= get_var('s_agreement_id',array('POST','GET'));
-			$confirm	= get_var('confirm',array('POST'));
+			$attrib		= phpgw::get_var('attrib');
+			$id		= phpgw::get_var('id', 'int');
+			$s_agreement_id	= phpgw::get_var('s_agreement_id', 'int');
+			$confirm	= phpgw::get_var('confirm', 'bool', 'POST');
 
 			if($attrib)
 			{
@@ -1310,7 +1310,7 @@
 				'role'		=> $this->role
 			);
 
-			if (get_var('confirm',array('POST')))
+			if (phpgw::get_var('confirm', 'bool', 'POST'))
 			{
 				$this->bo->delete($s_agreement_id,$id,$attrib);
 				$GLOBALS['phpgw']->redirect_link('/index.php',$link_data);
@@ -1341,7 +1341,7 @@
 
 		function view()
 		{
-			$s_agreement_id	= get_var('id',array('POST','GET'));
+			$s_agreement_id	= phpgw::get_var('id', 'int');
 			$config		= CreateObject('phpgwapi.config',$this->currentapp);
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('s_agreement','attributes_view'));
@@ -1482,8 +1482,8 @@
 
 		function list_attribute()
 		{
-			$id	= get_var('id',array('POST','GET'));
-			$resort	= get_var('resort',array('POST','GET'));
+			$id	= phpgw::get_var('id', 'int');
+			$resort	= phpgw::get_var('resort');
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array(
 								's_agreement',
@@ -1614,8 +1614,8 @@
 
 		function edit_attrib()
 		{
-			$id		= get_var('id',array('POST','GET'));
-			$values		= get_var('values',array('POST'));
+			$id		= phpgw::get_var('id', 'int');
+			$values		= phpgw::get_var('values');
 	//		$GLOBALS['phpgw']->common->msgbox(lang('Altering ColumnName OR Datatype  - deletes your data in this Column'));
 	//html_print_r($values);
 			$GLOBALS['phpgw']->xslttpl->add_file(array('s_agreement','choice',));
@@ -1803,9 +1803,9 @@
 		{			$GLOBALS['phpgw']->xslttpl->add_file(array('attrib_history','nextmatchs'));
 			$GLOBALS['phpgw_info']['flags']['noframework'] = True;
 
-			$s_agreement_id		= get_var('s_agreement_id',array('POST','GET'));
-			$item_id	= get_var('item_id',array('POST','GET'));
-			$attrib_id 	= get_var('attrib_id',array('POST','GET'));
+			$s_agreement_id		= phpgw::get_var('s_agreement_id', 'int');
+			$item_id	= phpgw::get_var('item_id', 'int');
+			$attrib_id 	= phpgw::get_var('attrib_id', 'int');
 
 			$data_lookup= array(
 				'id'		=> $s_agreement_id,
@@ -1813,12 +1813,12 @@
 				'attrib_id' 	=> $attrib_id
 				);
 
-			$delete = get_var('delete',array('POST','GET'));
-			$edit = get_var('edit',array('POST','GET'));
+			$delete = phpgw::get_var('delete', 'bool');
+			$edit = phpgw::get_var('edit', 'bool');
 
 			if ($delete)
 			{
-				$data_lookup['history_id'] = get_var('history_id',array('POST','GET'));
+				$data_lookup['history_id'] = phpgw::get_var('history_id', 'int');
 				$this->bo->delete_history_item($data_lookup);
 			}
 

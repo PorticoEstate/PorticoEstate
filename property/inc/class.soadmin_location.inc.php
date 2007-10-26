@@ -49,7 +49,7 @@
 			}
 
 			$this->account		= $GLOBALS['phpgw_info']['user']['account_id'];
-			$this->bocommon		= CreateObject($this->currentapp.'.bocommon',$this->currentapp);
+			$this->bocommon		= CreateObject('property.bocommon',$this->currentapp);
 			$this->db           	= $this->bocommon->new_db();
 			$this->db2           	= $this->bocommon->new_db();
 
