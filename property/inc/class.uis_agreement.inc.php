@@ -1294,9 +1294,7 @@
 			$attrib		= get_var('attrib',array('POST','GET'));
 			$id		= get_var('id',array('POST','GET'));
 			$s_agreement_id	= get_var('s_agreement_id',array('POST','GET'));
-			$delete		= get_var('delete',array('POST'));
 			$confirm	= get_var('confirm',array('POST'));
-
 
 			if($attrib)
 			{

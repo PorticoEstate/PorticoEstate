@@ -966,7 +966,6 @@
 		function delete()
 		{
 			$budget_id	= get_var('budget_id',array('POST','GET'));
-			$delete		= get_var('delete',array('POST'));
 			$confirm	= get_var('confirm',array('POST'));
 
 			$link_data = array
@@ -1004,7 +1003,6 @@
 		function delete_basis()
 		{
 			$budget_id	= get_var('budget_id',array('POST','GET'));
-			$delete		= get_var('delete',array('POST'));
 			$confirm	= get_var('confirm',array('POST'));
 
 			$link_data = array
@@ -1043,7 +1041,6 @@
 		function view()
 		{
 			$budget_id	= get_var('budget_id',array('GET'));
-			$action		= get_var('action',array('GET'));
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('budget','nextmatchs'));
 

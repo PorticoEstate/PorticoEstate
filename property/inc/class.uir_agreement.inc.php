@@ -1070,8 +1070,6 @@
 //_debug_array($values);
 				if ($values['save'] || $values['apply']):
 				{
-					$values['tenant_id']		= get_var('tenant_id',array('POST'));
-
 					if(!$receipt['error'])
 					{
 						$values['r_agreement_id']	= $r_agreement_id;
