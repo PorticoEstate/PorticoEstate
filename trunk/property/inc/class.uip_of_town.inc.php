@@ -337,7 +337,7 @@
 			}
 
 			$part_of_town_id	= get_var('part_of_town_id',array('POST','GET'));
-			$delete		= get_var('delete',array('POST'));
+
 			$confirm	= get_var('confirm',array('POST'));
 
 			$link_data = array
@@ -380,7 +380,6 @@
 			}
 
 			$part_of_town_id	= get_var('part_of_town_id',array('GET'));
-			$action			= get_var('action',array('GET'));
 
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('part of town') . ': ' . lang('view part of town');
 

@@ -638,7 +638,6 @@
 		function delete()
 		{
 			$owner_id	= get_var('owner_id',array('POST','GET'));
-			$delete		= get_var('delete',array('POST'));
 			$confirm	= get_var('confirm',array('POST'));
 
 			$link_data = array
@@ -678,7 +677,6 @@
 		function view()
 		{
 			$owner_id	= get_var('owner_id',array('GET'));
-			$action		= get_var('action',array('GET'));
 
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('owner') . ': ' . lang('view owner');
 

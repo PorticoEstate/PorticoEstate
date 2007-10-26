@@ -555,7 +555,7 @@
 			$attrib		= get_var('attrib',array('POST','GET'));
 			$id			= get_var('id',array('POST','GET'));
 			$actor_id	= get_var('actor_id',array('POST','GET'));
-			$delete		= get_var('delete',array('POST'));
+	//		$delete		= get_var('delete',array('POST'));
 			$confirm	= get_var('confirm',array('POST'));
 
 

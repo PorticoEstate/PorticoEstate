@@ -596,8 +596,7 @@
 			$values['vendor_id']		= get_var('vendor_id',array('POST'));
 			$values['vendor_name']		= get_var('vendor_name',array('POST'));
 			$values['date']			= get_var('date',array('POST'));
-			$ticket_id			= get_var('ticket_id',array('POST','GET'));
-			$request_id 			= get_var('request_id',array('POST','GET'));
+
 			$receipt = array();
 
 			if($_POST && !$bypass)

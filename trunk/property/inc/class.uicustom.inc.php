@@ -428,7 +428,6 @@
 		function delete()
 		{
 			$custom_id	= get_var('custom_id',array('POST','GET'));
-			$delete		= get_var('delete',array('POST'));
 			$confirm	= get_var('confirm',array('POST'));
 
 			$link_data = array
@@ -467,7 +466,6 @@
 		function view()
 		{
 			$custom_id	= get_var('custom_id',array('GET'));
-			$action		= get_var('action',array('GET'));
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('custom','nextmatchs'));
 
