@@ -41,9 +41,9 @@
 			$this->currentapp		= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->nextmatchs		= CreateObject('phpgwapi.nextmatchs');
 			$this->account			= $GLOBALS['phpgw_info']['user']['account_id'];
-			$this->bo			= CreateObject($this->currentapp.'.boplace',true);
-			$this->bocommon			= CreateObject($this->currentapp.'.bocommon');
-			$this->menu			= CreateObject($this->currentapp.'.menu');
+			$this->bo			= CreateObject('hrm.boplace',true);
+			$this->bocommon			= CreateObject('hrm.bocommon');
+			$this->menu			= CreateObject('hrm.menu');
 			$this->menu->sub		='place';
 
 			$this->start			= $this->bo->start;
@@ -172,8 +172,8 @@
 
 		function edit()
 		{
-			$place_id	= get_var('place_id',array('POST','GET'));
-			$values		= get_var('values',array('POST'));
+			$place_id	= phpgw::get_var('place_id', 'int');
+			$values		= phpgw::get_var('values');
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('place'));
 
@@ -285,8 +285,8 @@
 
 		function view()
 		{
-			$place_id	= get_var('place_id',array('POST','GET'));
-			$values		= get_var('values',array('POST'));
+			$place_id	= phpgw::get_var('place_id', 'int');
+			$values		= phpgw::get_var('values');
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('place'));
 
@@ -331,15 +331,15 @@
 
 		function delete()
 		{
-			$place_id	= get_var('place_id',array('POST','GET'));
-			$confirm	= get_var('confirm',array('POST'));
+			$place_id	= phpgw::get_var('place_id', 'int');
+			$confirm	= phpgw::get_var('confirm', 'bool', 'POST');
 
 			$link_data = array
 			(
 				'menuaction' => $this->currentapp.'.uiplace.index'
 			);
 
-			if (get_var('confirm',array('POST')))
+			if (phpgw::get_var('confirm', 'bool', 'POST'))
 			{
 				$this->bo->delete($place_id);
 				$GLOBALS['phpgw']->redirect_link('/index.php',$link_data);

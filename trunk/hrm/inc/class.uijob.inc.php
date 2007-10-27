@@ -53,11 +53,11 @@
 			$this->currentapp			= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->nextmatchs			= CreateObject('phpgwapi.nextmatchs');
 			$this->account				= $GLOBALS['phpgw_info']['user']['account_id'];
-			$this->bo				= CreateObject($this->currentapp.'.bojob',true);
-			$this->bocommon				= CreateObject($this->currentapp.'.bocommon');
-			$this->bocategory			= CreateObject($this->currentapp.'.bocategory');
+			$this->bo				= CreateObject('hrm.bojob',true);
+			$this->bocommon				= CreateObject('hrm.bocommon');
+			$this->bocategory			= CreateObject('hrm.bocategory');
 			$this->acl				= CreateObject('phpgwapi.acl');
-			$this->menu				= CreateObject($this->currentapp.'.menu');
+			$this->menu				= CreateObject('hrm.menu');
 			$this->menu->sub			='job';
 
 			$this->start				= $this->bo->start;
@@ -245,7 +245,7 @@
 			$dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
 			$date = $GLOBALS['phpgw']->common->show_date('',$dateformat);
 			
-			$values	= get_var('values',array('POST','GET'));
+			$values	= phpgw::get_var('values');
 			
 			// don't want any warnings turning up in the pdf code if the server is set to 'anal' mode.
 			//error_reporting(7);
@@ -338,9 +338,9 @@
 				return;
 			}
 
-			$job_id	= get_var('job_id',array('POST','GET'));
-			$id	= get_var('id',array('POST','GET'));
-			$resort	= get_var('resort',array('POST','GET'));
+			$job_id	= phpgw::get_var('job_id', 'int');
+			$id	= phpgw::get_var('id', 'int');
+			$resort	= phpgw::get_var('resort');
 
 			if($resort)
 			{
@@ -489,9 +489,9 @@
 				return;
 			}
 
-			$job_id	= get_var('job_id',array('POST','GET'));
-			$id	= get_var('id',array('POST','GET'));
-			$resort	= get_var('resort',array('POST','GET'));
+			$job_id	= phpgw::get_var('job_id', 'int');
+			$id	= phpgw::get_var('id', 'int');
+			$resort	= phpgw::get_var('resort');
 
 			if($resort)
 			{
@@ -627,10 +627,10 @@
 
 		function edit_task()
 		{
-			$id		= get_var('id',array('POST','GET'));
-			$job_id	= get_var('job_id',array('POST','GET'));
-			$parent_id	= get_var('parent_id',array('POST','GET'));
-			$values		= get_var('values',array('POST'));
+			$id		= phpgw::get_var('id', 'int');
+			$job_id	= phpgw::get_var('job_id', 'int');
+			$parent_id	= phpgw::get_var('parent_id', 'int');
+			$values		= phpgw::get_var('values');
 
 			if(!$id)
 			{
@@ -752,9 +752,9 @@
 
 		function view_task()
 		{
-			$id		= get_var('id',array('POST','GET'));
-			$job_id		= get_var('job_id',array('POST','GET'));
-			$parent_id	= get_var('parent_id',array('POST','GET'));
+			$id		= phpgw::get_var('id', 'int');
+			$job_id		= phpgw::get_var('job_id', 'int');
+			$parent_id	= phpgw::get_var('parent_id', 'int');
 
 			if(!$this->acl->check('.job', PHPGW_ACL_READ))
 			{
@@ -993,8 +993,8 @@
 			$GLOBALS['phpgw_info']['flags']['noframework'] = True;
 			$GLOBALS['phpgw_info']['flags']['headonly']=true;
 
-			$quali_type_id	= get_var('quali_type_id',array('POST','GET'));
-			$values		= get_var('values',array('POST'));
+			$quali_type_id	= phpgw::get_var('quali_type_id', 'int');
+			$values		= phpgw::get_var('values');
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('job'));
 
@@ -1088,9 +1088,9 @@
 
 		function edit_job()
 		{
-			$id		= get_var('id',array('POST','GET'));
-			$parent_id	= get_var('parent_id',array('POST','GET'));
-			$values		= get_var('values',array('POST'));
+			$id		= phpgw::get_var('id', 'int');
+			$parent_id	= phpgw::get_var('parent_id', 'int');
+			$values		= phpgw::get_var('values');
 
 			if(!$id)
 			{
@@ -1211,8 +1211,8 @@
 
 		function view_job()
 		{
-			$id		= get_var('id',array('POST','GET'));
-			$parent_id	= get_var('parent_id',array('POST','GET'));
+			$id		= phpgw::get_var('id', 'int');
+			$parent_id	= phpgw::get_var('parent_id', 'int');
 
 			if(!$this->acl->check('.job', PHPGW_ACL_READ))
 			{
@@ -1281,8 +1281,8 @@
 
 		function edit_qualification()
 		{
-			$quali_id	= get_var('quali_id',array('POST','GET'));
-			$job_id	= get_var('job_id',array('POST','GET'));
+			$quali_id	= phpgw::get_var('quali_id', 'int');
+			$job_id	= phpgw::get_var('job_id', 'int');
 
 			if(!$quali_id)
 			{
@@ -1301,7 +1301,7 @@
 				}
 			}
 
-			$values		= get_var('values',array('POST'));
+			$values		= phpgw::get_var('values');
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('job'));
 
@@ -1309,7 +1309,7 @@
 			{
 				$values['job_id']= $job_id;
 
-				$values['alternative_qualification']	= get_var('alternative_qualification',array('POST'));
+				$values['alternative_qualification']	= phpgw::get_var('alternative_qualification');
 
 				if ($values['save'] || $values['apply'])
 				{
@@ -1445,8 +1445,8 @@
 
 		function view_qualification()
 		{
-			$quali_id	= get_var('quali_id',array('POST','GET'));
-			$job_id	= get_var('job_id',array('POST','GET'));
+			$quali_id	= phpgw::get_var('quali_id', 'int');
+			$job_id	= phpgw::get_var('job_id', 'int');
 
 			if(!$this->acl->check('.job', PHPGW_ACL_READ))
 			{
@@ -1523,15 +1523,15 @@
 				return;
 			}
 
-			$job_id	= get_var('job_id',array('POST','GET'));
-			$confirm		= get_var('confirm',array('POST'));
+			$job_id	= phpgw::get_var('job_id', 'int');
+			$confirm		= phpgw::get_var('confirm', 'bool', 'POST');
 			$link_data = array
 			(
 				'menuaction'	=> $this->currentapp.'.uijob.index',
 				'job_id' 	=> $job_id
 			);
 
-			if (get_var('confirm',array('POST')))
+			if (phpgw::get_var('confirm', 'bool', 'POST'))
 			{
 				$this->bo->delete_job($job_id);
 				$GLOBALS['phpgw']->redirect_link('/index.php',$link_data);
@@ -1564,9 +1564,9 @@
 				return;
 			}
 
-			$id		= get_var('id',array('POST','GET'));
-			$job_id	= get_var('job_id',array('POST','GET'));
-			$confirm		= get_var('confirm',array('POST'));
+			$id		= phpgw::get_var('id', 'int');
+			$job_id	= phpgw::get_var('job_id', 'int');
+			$confirm		= phpgw::get_var('confirm', 'bool', 'POST');
 
 			$link_data = array
 			(
@@ -1574,7 +1574,7 @@
 				'job_id'	=> $job_id
 			);
 
-			if (get_var('confirm',array('POST')))
+			if (phpgw::get_var('confirm', 'bool', 'POST'))
 			{
 				$this->bo->delete_task($id);
 				$GLOBALS['phpgw']->redirect_link('/index.php',$link_data);
@@ -1608,9 +1608,9 @@
 				return;
 			}
 
-			$quali_id	= get_var('quali_id',array('POST','GET'));
-			$job_id		= get_var('job_id',array('POST','GET'));
-			$confirm	= get_var('confirm',array('POST'));
+			$quali_id	= phpgw::get_var('quali_id', 'int');
+			$job_id		= phpgw::get_var('job_id', 'int');
+			$confirm	= phpgw::get_var('confirm', 'bool', 'POST');
 
 			$link_data = array
 			(
@@ -1618,7 +1618,7 @@
 				'job_id'	=> $job_id
 			);
 
-			if (get_var('confirm',array('POST')))
+			if (phpgw::get_var('confirm', 'bool', 'POST'))
 			{
 				$this->bo->delete_qualification($job_id,$quali_id);
 				$GLOBALS['phpgw']->redirect_link('/index.php',$link_data);
@@ -1652,13 +1652,13 @@
 				return;
 			}
 
-			$confirm		= get_var('confirm',array('POST'));
+			$confirm		= phpgw::get_var('confirm', 'bool', 'POST');
 			$link_data = array
 			(
 				'menuaction' => $this->currentapp.'.uijob.index'
 			);
 
-			if (get_var('confirm',array('POST')))
+			if (phpgw::get_var('confirm', 'bool', 'POST'))
 			{
 				$this->bo->reset_job_type_hierarchy();
 				$GLOBALS['phpgw']->redirect_link('/index.php',$link_data);

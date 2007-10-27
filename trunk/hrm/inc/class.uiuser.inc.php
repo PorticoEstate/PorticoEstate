@@ -42,10 +42,10 @@
 			$this->currentapp			= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->nextmatchs			= CreateObject('phpgwapi.nextmatchs');
 			$this->account				= $GLOBALS['phpgw_info']['user']['account_id'];
-			$this->bo					= CreateObject($this->currentapp.'.bouser',False);
-			$this->bocommon				= CreateObject($this->currentapp.'.bocommon');
-			$this->bocategory			= CreateObject($this->currentapp.'.bocategory');
-			$this->menu					= CreateObject($this->currentapp.'.menu');
+			$this->bo					= CreateObject('hrm.bouser',False);
+			$this->bocommon				= CreateObject('hrm.bocommon');
+			$this->bocategory			= CreateObject('hrm.bocategory');
+			$this->menu					= CreateObject('hrm.menu');
 			$this->menu->sub			='user';
 			$this->grants 				= $this->bo->grants;
 			$this->start				= $this->bo->start;
@@ -281,7 +281,7 @@
 
 		function training()
 		{
-			$user_id	= get_var('user_id',array('POST','GET'));
+			$user_id	= phpgw::get_var('user_id', 'int');
   
 			if (!$this->grants[$user_id])
 			{
@@ -469,9 +469,9 @@
 
 		function edit()
 		{
-			$training_id	= get_var('training_id',array('POST','GET'));
-			$user_id	= get_var('user_id',array('POST','GET'));
-			$values		= get_var('values',array('POST'));
+			$training_id	= phpgw::get_var('training_id', 'int');
+			$user_id	= phpgw::get_var('user_id', 'int');
+			$values		= phpgw::get_var('values');
 
 			if(!$training_id)
 			{
@@ -495,7 +495,7 @@
 			$receipt = array();
 			if (is_array($values))
 			{
-				$values['place_id']= get_var('place_id',array('POST'));
+				$values['place_id']= phpgw::get_var('place_id', 'int', 'POST');
 				$values['user_id']= $user_id;
 
 				if ((isset($values['save']) && $values['save']) || (isset($values['apply']) && $values['apply']))
@@ -688,8 +688,8 @@
 
 		function view()
 		{
-			$training_id		= get_var('training_id',array('POST','GET'));
-			$user_id	= get_var('user_id',array('POST','GET'));
+			$training_id		= phpgw::get_var('training_id', 'int');
+			$user_id	= phpgw::get_var('user_id', 'int');
 
 			if(!$this->bocommon->check_perms($this->grants[$user_id], PHPGW_ACL_READ))
 			{				
@@ -773,15 +773,15 @@
 
 		function delete()
 		{
-			$training_id		= get_var('training_id',array('POST','GET'));
-			$user_id	= get_var('user_id',array('POST','GET'));
+			$training_id		= phpgw::get_var('training_id', 'int');
+			$user_id	= phpgw::get_var('user_id', 'int');
 
 			if(!$this->bocommon->check_perms($this->grants[$user_id], PHPGW_ACL_DELETE))
 			{
 				$this->bocommon->no_access($links);
 				return;
 			}
-			$confirm = get_var('confirm',array('POST'));
+			$confirm = phpgw::get_var('confirm', 'bool', 'POST');
 
 			$link_data = array
 			(
@@ -789,7 +789,7 @@
 				'user_id' => $user_id
 			);
 
-			if (get_var('confirm',array('POST')))
+			if (phpgw::get_var('confirm', 'bool', 'POST'))
 			{
 				$this->bo->delete_training($user_id,$training_id);
 				$GLOBALS['phpgw']->redirect_link('/index.php',$link_data);
@@ -817,7 +817,7 @@
 
 		function view_cv()
 		{
-			$user_id	= get_var('user_id',array('POST','GET'));
+			$user_id	= phpgw::get_var('user_id', 'int');
 
 			if(!$this->bocommon->check_perms($this->grants[$user_id], PHPGW_ACL_READ))
 			{

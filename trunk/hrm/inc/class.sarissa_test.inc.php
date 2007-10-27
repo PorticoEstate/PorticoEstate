@@ -34,7 +34,7 @@
 		{
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = True;
 			$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
-			$this->menu				= CreateObject($this->currentapp.'.menu');
+			$this->menu				= CreateObject('hrm.menu');
 			$this->menu->sub	= 'ajax';
 		}
 
@@ -76,15 +76,15 @@
 
 		function HelloWorldParams() 
 		{
-			$firstname = get_var('firstname',array('GET'));
-			$lastname = get_var('lastname',array('GET'));
+			$firstname = phpgw::get_var('firstname', 'string', 'GET');
+			$lastname = phpgw::get_var('lastname', 'string', 'GET');
 			
 			return "Hello, " . $firstname . " " . $lastname;
 		}
 
 		function HelloWorldArray() 
 		{
-			$name = get_var('name',array('GET'));
+			$name = phpgw::get_var('name', 'string', 'GET');
 			$name = execMethod('phpgwapi.Services_JSON.decode', stripslashes(urldecode($name)));
 			$value = array("Hello", $name[0], $name[1]);
 			return $value;
