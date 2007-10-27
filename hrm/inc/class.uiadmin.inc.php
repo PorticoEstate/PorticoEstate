@@ -45,8 +45,8 @@
 			$this->nextmatchs			= CreateObject('phpgwapi.nextmatchs');
 			$this->account				= $GLOBALS['phpgw_info']['user']['account_id'];
 
-			$this->bo					= CreateObject($this->currentapp.'.boadmin',true);
-			$this->bocommon				= CreateObject($this->currentapp.'.bocommon');
+			$this->bo					= CreateObject('hrm.boadmin',true);
+			$this->bocommon				= CreateObject('hrm.bocommon');
 
 			$this->acl_app				= $this->bo->acl_app;
 			$this->start				= $this->bo->start;
@@ -83,9 +83,9 @@
 			$GLOBALS['phpgw']->xslttpl->add_file(array('admin','nextmatchs',
 										'search_field'));
 
-			$values 	= get_var('values',array('POST'));
-			$r_processed	= get_var('processed',array('POST'));
-			$set_permission = get_var('set_permission',array('POST'));
+			$values 	= phpgw::get_var('values');
+			$r_processed	= phpgw::get_var('processed');
+			$set_permission = phpgw::get_var('set_permission', 'bool');
 
 			if($set_permission)
 			{
@@ -267,10 +267,10 @@
 			$GLOBALS['phpgw']->xslttpl->add_file(array('admin','nextmatchs',
 										'search_field'));
 
-			$values 		= get_var('values',array('POST'));
-			$r_processed	= get_var('processed',array('POST'));
+			$values 		= phpgw::get_var('values');
+			$r_processed	= phpgw::get_var('processed');
 
-			$set_permission = get_var('set_permission',array('POST'));
+			$set_permission = phpgw::get_var('set_permission', 'bool');
 
 			if($set_permission)
 			{
@@ -502,7 +502,7 @@
 		{
 			$GLOBALS['phpgw']->xslttpl->add_file(array('admin'));
 
-			$values		= get_var('values',array('POST'));
+			$values		= phpgw::get_var('values');
 
 			if ($values['save'])
 			{

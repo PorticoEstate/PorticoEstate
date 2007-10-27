@@ -56,7 +56,7 @@
 		{
 //			$GLOBALS['phpgw_info']['flags']['currentapp']	=	'hrm';
 			$this->currentapp		= $GLOBALS['phpgw_info']['flags']['currentapp'];
-			$this->socommon			= CreateObject($this->currentapp.'.socommon');
+			$this->socommon			= CreateObject('hrm.socommon');
 			$this->account		= $GLOBALS['phpgw_info']['user']['account_id'];
 
 		/*	if (!is_object($GLOBALS['phpgw']->asyncservice))
@@ -370,7 +370,7 @@
 
 		function initiate_ui_alarm($data)
 		{
-			$boalarm		= CreateObject($this->currentapp.'.boalarm');
+			$boalarm		= CreateObject('hrm.boalarm');
 
 			if($data['type']=='view')
 			{
@@ -612,7 +612,7 @@
 
  			$filename= $GLOBALS['phpgw_info']['user']['account_lid'].'.xls';
 
-			$workbook	= CreateObject($this->currentapp.'.excel',"-");
+			$workbook	= CreateObject('hrm.excel',"-");
 			$browser = CreateObject('phpgwapi.browser');
 			$browser->content_header($filename,'application/vnd.ms-excel');
 

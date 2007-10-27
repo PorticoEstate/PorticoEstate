@@ -40,8 +40,8 @@
 			$this->currentapp			= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->nextmatchs			= CreateObject('phpgwapi.nextmatchs');
 			$this->account				= $GLOBALS['phpgw_info']['user']['account_id'];
-			$this->bo				= CreateObject($this->currentapp.'.bocategory',true);
-			$this->bocommon				= CreateObject($this->currentapp.'.bocommon');
+			$this->bo				= CreateObject('hrm.bocategory',true);
+			$this->bocommon				= CreateObject('hrm.bocommon');
 
 			$this->start				= $this->bo->start;
 			$this->query				= $this->bo->query;
@@ -65,8 +65,8 @@
 
 		function index()
 		{
-			$type	= get_var('type',array('POST','GET'));
-			$type_id	= get_var('type_id',array('POST','GET'));
+			$type	= phpgw::get_var('type');
+			$type_id	= phpgw::get_var('type_id', 'int');
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('category','nextmatchs',
 										'search_field'));
@@ -163,10 +163,10 @@
 
 		function edit()
 		{
-			$type		= get_var('type',array('POST','GET'));
-			$type_id	= get_var('type_id',array('POST','GET'));
-			$id		= get_var('id',array('POST','GET'));
-			$values		= get_var('values',array('POST'));
+			$type		= phpgw::get_var('type');
+			$type_id	= phpgw::get_var('type_id', 'int');
+			$id		= phpgw::get_var('id', 'int');
+			$values		= phpgw::get_var('values');
 
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('category'));
@@ -246,10 +246,10 @@
 
 		function delete()
 		{
-			$type		= get_var('type',array('POST','GET'));
-			$type_id	= get_var('type_id',array('POST','GET'));
-			$id		= get_var('id',array('POST','GET'));
-			$confirm	= get_var('confirm',array('POST'));
+			$type		= phpgw::get_var('type');
+			$type_id	= phpgw::get_var('type_id', 'int');
+			$id		= phpgw::get_var('id', 'int');
+			$confirm	= phpgw::get_var('confirm', 'bool', 'POST');
 
 			$link_data = array
 			(
@@ -258,7 +258,7 @@
 				'type_id'	=> $type_id
 			);
 
-			if (get_var('confirm',array('POST')))
+			if (phpgw::get_var('confirm', 'bool', 'POST'))
 			{
 				$this->bo->delete($id,$type,$type_id);
 				$GLOBALS['phpgw']->redirect_link('/index.php',$link_data);
