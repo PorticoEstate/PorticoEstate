@@ -36,10 +36,10 @@
 			$this->currentapp			= $GLOBALS['phpgw_info']['flags']['currentapp'];
 		//	$this->nextmatchs			= CreateObject('phpgwapi.nextmatchs');
 			$this->account				= $GLOBALS['phpgw_info']['user']['account_id'];
-		//	$this->bo				= CreateObject($this->currentapp.'.boconfig',true);
-			$this->bocommon				= CreateObject($this->currentapp.'.bocommon');
-			$this->menu				= CreateObject($this->currentapp.'.menu');
-			$this->sms				= CreateObject($this->currentapp.'.sms');
+		//	$this->bo				= CreateObject('sms.boconfig',true);
+			$this->bocommon				= CreateObject('sms.bocommon');
+			$this->menu				= CreateObject('sms.menu');
+			$this->sms				= CreateObject('sms.sms');
 			$this->acl				= CreateObject('phpgwapi.acl');
 			$this->acl_location 			= '.board';
 			$this->menu->sub			=$this->acl_location;
@@ -70,7 +70,7 @@
 
 			echo parse_navbar();
 
-			$err	= urldecode(get_var('err',array('POST','GET')));
+			$err	= urldecode(phpgw::get_var('err'));
 	
 			if ($err)
 			{
@@ -141,7 +141,7 @@
 
 			echo parse_navbar();
 
-			$board_id	= urldecode(get_var('board_id',array('POST','GET')));
+			$board_id	= urldecode(phpgw::get_var('board_id'));
 
 			$sql = "SELECT board_code FROM phpgw_sms_featboard WHERE board_id='$board_id'";
 			$this->db->query($sql,__LINE__,__FILE__);
@@ -202,10 +202,10 @@
 
 			echo parse_navbar();
 
-			$err		= urldecode(get_var('err',array('POST','GET')));
-			$board_code	= get_var('board_code',array('POST','GET'));
-			$email		= get_var('email',array('POST','GET'));
-			$template	= get_var('template',array('POST','GET'));
+			$err		= urldecode(phpgw::get_var('err'));
+			$board_code	= phpgw::get_var('board_code');
+			$email		= phpgw::get_var('email', 'email');
+			$template	= phpgw::get_var('template');
 
 			if ($err)
 			{
@@ -254,9 +254,9 @@
 				return;
 			}
 
-			$board_code	= strtoupper(get_var('board_code',array('POST','GET')));
-			$email		= get_var('email',array('POST','GET'));
-			$template	= get_var('template',array('POST','GET'));
+			$board_code	= strtoupper(phpgw::get_var('board_code'));
+			$email		= phpgw::get_var('email', 'email');
+			$template	= phpgw::get_var('template');
 
 			$uid = $this->account;
 			$target = 'add';
@@ -328,8 +328,8 @@
 
 			echo parse_navbar();
 
-			$err	= urldecode(get_var('err',array('POST','GET')));
-			$board_id	= get_var('board_id',array('POST','GET'));
+			$err	= urldecode(phpgw::get_var('err'));
+			$board_id	= phpgw::get_var('board_id');
 
 			if ($err)
 			{
@@ -386,10 +386,10 @@
 				return;
 			}
 
-			$board_id	= get_var('board_id',array('POST','GET'));
-			$board_code	= get_var('board_code',array('POST','GET'));
-			$email		= get_var('email',array('POST','GET'));
-			$template	= get_var('template',array('POST','GET'));
+			$board_id	= phpgw::get_var('board_id');
+			$board_code	= phpgw::get_var('board_code');
+			$email		= phpgw::get_var('email', 'email');
+			$template	= phpgw::get_var('template');
 
 
 			$uid = $this->account;
@@ -446,15 +446,15 @@
 				return;
 			}
 
-			$board_id	= get_var('board_id',array('POST','GET'));
-			$confirm	= get_var('confirm',array('POST'));
+			$board_id	= phpgw::get_var('board_id');
+			$confirm	= phpgw::get_var('confirm', 'bool', 'POST');
 
 			$link_data = array
 			(
 				'menuaction' => $this->currentapp.'.uiboard.index'
 			);
 
-			if (get_var('confirm',array('POST')))
+			if (phpgw::get_var('confirm', 'bool', 'POST'))
 			{
 			//	$this->bo->delete_type($autoreply_id);
 

@@ -28,7 +28,7 @@
 		{
 			$this->currentapp	= 'sms';
 			$this->account		= $GLOBALS['phpgw_info']['user']['account_id'];
-			$this->bocommon		= CreateObject($this->currentapp.'.bocommon');
+			$this->bocommon		= CreateObject('sms.bocommon');
 			$this->db 		= clone($GLOBALS['phpgw']->db);
 			$this->db2 		= clone($this->db);
 

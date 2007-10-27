@@ -33,10 +33,10 @@
 			$this->currentapp			= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->nextmatchs			= CreateObject('phpgwapi.nextmatchs');
 			$this->account				= $GLOBALS['phpgw_info']['user']['account_id'];
-			$this->bo				= CreateObject($this->currentapp.'.bocommand');
-			$this->bocommon				= CreateObject($this->currentapp.'.bocommon');
-			$this->menu				= CreateObject($this->currentapp.'.menu');
-			$this->sms				= CreateObject($this->currentapp.'.sms');
+			$this->bo				= CreateObject('sms.bocommand');
+			$this->bocommon				= CreateObject('sms.bocommon');
+			$this->menu				= CreateObject('sms.menu');
+			$this->sms				= CreateObject('sms.sms');
 			$this->acl				= CreateObject('phpgwapi.acl');
 			$this->acl_location 			= '.command';
 			$this->menu->sub			=$this->acl_location;
@@ -202,7 +202,7 @@
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = True;
 
 			$links = $this->menu->links();
-			$command_id	= get_var('command_id',array('POST','GET'));
+			$command_id	= phpgw::get_var('command_id', 'int');
 			if($command_id)
 			{
 				if(!$this->acl->check($this->acl_location, PHPGW_ACL_EDIT))
@@ -220,7 +220,7 @@
 				}
 			}
 
-			$values		= get_var('values',array('POST'));
+			$values		= phpgw::get_var('values');
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('command'));
 
@@ -498,15 +498,15 @@
 				return;
 			}
 
-			$command_id	= get_var('command_id',array('POST','GET'));
-			$confirm	= get_var('confirm',array('POST'));
+			$command_id	= phpgw::get_var('command_id', 'int');
+			$confirm	= phpgw::get_var('confirm', 'bool', 'POST');
 
 			$link_data = array
 			(
 				'menuaction' => $this->currentapp.'.uicommand.index'
 			);
 
-			if (get_var('confirm',array('POST')))
+			if (phpgw::get_var('confirm', 'bool', 'POST'))
 			{
 			//	$this->bo->delete_type($command_id);
 

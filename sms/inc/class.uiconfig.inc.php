@@ -47,9 +47,9 @@
 			$this->currentapp			= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->nextmatchs			= CreateObject('phpgwapi.nextmatchs');
 			$this->account				= $GLOBALS['phpgw_info']['user']['account_id'];
-			$this->bo				= CreateObject($this->currentapp.'.boconfig',true);
-			$this->bocommon				= CreateObject($this->currentapp.'.bocommon');
-			$this->menu				= CreateObject($this->currentapp.'.menu');
+			$this->bo				= CreateObject('sms.boconfig',true);
+			$this->bocommon				= CreateObject('sms.bocommon');
+			$this->menu				= CreateObject('sms.menu');
 			$this->acl				= CreateObject('phpgwapi.acl');
 			$this->acl_location 			= '.config';
 			$this->menu->sub			=$this->acl_location;
@@ -199,8 +199,8 @@
 				return;
 			}
 
-			$type_id	= get_var('type_id',array('POST','GET'));
-			$values		= get_var('values',array('POST'));
+			$type_id	= phpgw::get_var('type_id', 'int');
+			$values		= phpgw::get_var('values');
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('config'));
 
@@ -298,8 +298,8 @@
 				return;
 			}
 
-			$type_id	= get_var('type_id',array('POST','GET'));
-			$values		= get_var('values',array('POST'));
+			$type_id	= phpgw::get_var('type_id', 'int');
+			$values		= phpgw::get_var('values');
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('config'));
 
@@ -343,7 +343,7 @@
 				return;
 			}
 
-			$type_id	= get_var('type_id',array('POST','GET'));
+			$type_id	= phpgw::get_var('type_id', 'int');
 			
 			if(!$type_id)
 			{
@@ -471,9 +471,9 @@
 				return;
 			}
 
-			$type_id	= get_var('type_id',array('POST','GET'));
-			$attrib_id	= get_var('attrib_id',array('POST','GET'));
-			$values		= get_var('values',array('POST'));
+			$type_id	= phpgw::get_var('type_id', 'int');
+			$attrib_id	= phpgw::get_var('attrib_id', 'int');
+			$values		= phpgw::get_var('values');
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('config'));
 
@@ -600,8 +600,8 @@
 				return;
 			}
 
-			$type_id	= get_var('type_id',array('POST','GET'));
-			$attrib_id	= get_var('attrib_id',array('POST','GET'));
+			$type_id	= phpgw::get_var('type_id', 'int');
+			$attrib_id	= phpgw::get_var('attrib_id', 'int');
 						
 			if(!$type_id && !$attrib_id)
 			{
@@ -742,10 +742,10 @@
 				return;
 			}
 
-			$type_id	= get_var('type_id',array('POST','GET'));
-			$attrib_id	= get_var('attrib_id',array('POST','GET'));
-			$id		= get_var('id',array('POST','GET'));
-			$values		= get_var('values',array('POST'));
+			$type_id	= phpgw::get_var('type_id', 'int');
+			$attrib_id	= phpgw::get_var('attrib_id', 'int');
+			$id		= phpgw::get_var('id', 'int');
+			$values		= phpgw::get_var('values');
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('config'));
 
@@ -866,8 +866,8 @@
 				return;
 			}
 
-			$type_id	= get_var('type_id',array('POST','GET'));
-			$confirm	= get_var('confirm',array('POST'));
+			$type_id	= phpgw::get_var('type_id', 'int');
+			$confirm	= phpgw::get_var('confirm', 'bool', 'POST');
 
 			$link_data = array
 			(
@@ -875,7 +875,7 @@
 				'type_id'	=> $type_id
 			);
 
-			if (get_var('confirm',array('POST')))
+			if (phpgw::get_var('confirm', 'bool', 'POST'))
 			{
 				$this->bo->delete_type($type_id);
 				$GLOBALS['phpgw']->redirect_link($GLOBALS['phpgw']->link('/index.php',$link_data));
@@ -910,9 +910,9 @@
 				return;
 			}
 
-			$type_id	= get_var('type_id',array('POST','GET'));
-			$attrib_id	= get_var('attrib_id',array('POST','GET'));
-			$confirm	= get_var('confirm',array('POST'));
+			$type_id	= phpgw::get_var('type_id', 'int');
+			$attrib_id	= phpgw::get_var('attrib_id', 'int');
+			$confirm	= phpgw::get_var('confirm', 'bool', 'POST');
 
 			$link_data = array
 			(
@@ -921,7 +921,7 @@
 				'attrib_id'	=> $attrib_id
 			);
 
-			if (get_var('confirm',array('POST')))
+			if (phpgw::get_var('confirm', 'bool', 'POST'))
 			{
 				$this->bo->delete_attrib($type_id,$attrib_id);
 				$GLOBALS['phpgw']->redirect_link($GLOBALS['phpgw']->link('/index.php',$link_data));
@@ -957,10 +957,10 @@
 				return;
 			}
 
-			$type_id	= get_var('type_id',array('POST','GET'));
-			$attrib_id	= get_var('attrib_id',array('POST','GET'));
-			$id		= get_var('id',array('POST','GET'));
-			$confirm	= get_var('confirm',array('POST'));
+			$type_id	= phpgw::get_var('type_id', 'int');
+			$attrib_id	= phpgw::get_var('attrib_id', 'int');
+			$id		= phpgw::get_var('id', 'int');
+			$confirm	= phpgw::get_var('confirm', 'bool', 'POST');
 
 			$link_data = array
 			(
@@ -970,7 +970,7 @@
 				'id'		=> $id
 			);
 
-			if (get_var('confirm',array('POST')))
+			if (phpgw::get_var('confirm', 'bool', 'POST'))
 			{
 				$this->bo->delete_value($type_id,$attrib_id,$id);
 				$GLOBALS['phpgw']->redirect_link($GLOBALS['phpgw']->link('/index.php',$link_data));

@@ -35,10 +35,10 @@
 			$this->currentapp			= $GLOBALS['phpgw_info']['flags']['currentapp'];
 		//	$this->nextmatchs			= CreateObject('phpgwapi.nextmatchs');
 			$this->account				= $GLOBALS['phpgw_info']['user']['account_id'];
-		//	$this->bo				= CreateObject($this->currentapp.'.boconfig',true);
-			$this->bocommon				= CreateObject($this->currentapp.'.bocommon');
-			$this->menu				= CreateObject($this->currentapp.'.menu');
-			$this->sms				= CreateObject($this->currentapp.'.sms');
+		//	$this->bo				= CreateObject('sms.boconfig',true);
+			$this->bocommon				= CreateObject('sms.bocommon');
+			$this->menu				= CreateObject('sms.menu');
+			$this->sms				= CreateObject('sms.sms');
 			$this->acl				= CreateObject('phpgwapi.acl');
 			$this->acl_location 			= '.custom';
 			$this->menu->sub			=$this->acl_location;
@@ -69,7 +69,7 @@
 
 			echo parse_navbar();
 
-			$err	= urldecode(get_var('err',array('POST','GET')));
+			$err	= urldecode(phpgw::get_var('err'));
 	
 			if ($err)
 			{
@@ -136,9 +136,9 @@
 
 			echo parse_navbar();
 
-			$err	= urldecode(get_var('err',array('POST','GET')));
-			$custom_code	= get_var('custom_code',array('POST','GET'));
-			$custom_url	= get_var('custom_url',array('POST','GET'));
+			$err	= urldecode(phpgw::get_var('err'));
+			$custom_code	= phpgw::get_var('custom_code');
+			$custom_url	= phpgw::get_var('custom_url', 'url');
 
 			if ($err)
 			{
@@ -188,8 +188,8 @@
 				return;
 			}
 
-			$custom_code	= strtoupper(get_var('custom_code',array('POST','GET')));
-			$custom_url	= get_var('custom_url',array('POST','GET'));
+			$custom_code	= strtoupper(phpgw::get_var('custom_code'));
+			$custom_url	= phpgw::get_var('custom_url', 'url');
 
 			$uid = $this->account;
 			$target = 'add';
@@ -252,10 +252,10 @@
 
 			echo parse_navbar();
 
-			$err	= urldecode(get_var('err',array('POST','GET')));
-			$custom_id	= get_var('custom_id',array('POST','GET'));
-			$custom_code	= get_var('custom_code',array('POST','GET'));
-			$custom_url	= get_var('custom_url',array('POST','GET'));
+			$err	= urldecode(phpgw::get_var('err'));
+			$custom_id	= phpgw::get_var('custom_id', 'int');
+			$custom_code	= phpgw::get_var('custom_code');
+			$custom_url	= phpgw::get_var('custom_url', 'url');
 
 			if ($err)
 			{
@@ -317,9 +317,9 @@
 				return;
 			}
 
-			$custom_id	= get_var('custom_id',array('POST','GET'));
-			$custom_code	= get_var('custom_code',array('POST','GET'));
-			$custom_url	= get_var('custom_url',array('POST','GET'));
+			$custom_id	= phpgw::get_var('custom_id', 'int');
+			$custom_code	= phpgw::get_var('custom_code');
+			$custom_url	= phpgw::get_var('custom_url', 'url');
 
 			$uid = $this->account;
 			$target = 'edit';
@@ -367,15 +367,15 @@
 				return;
 			}
 
-			$custom_id	= get_var('custom_id',array('POST','GET'));
-			$confirm	= get_var('confirm',array('POST'));
+			$custom_id	= phpgw::get_var('custom_id', 'int');
+			$confirm	= phpgw::get_var('confirm', 'bool', 'POST');
 
 			$link_data = array
 			(
 				'menuaction' => $this->currentapp.'.uicustom.index'
 			);
 
-			if (get_var('confirm',array('POST')))
+			if (phpgw::get_var('confirm', 'bool', 'POST'))
 			{
 			//	$this->bo->delete_type($autoreply_id);
 
