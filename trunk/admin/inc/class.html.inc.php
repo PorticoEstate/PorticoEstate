@@ -16,7 +16,7 @@
 	{
 		function hash_table($rows,$head='',$obj, $frtn)
 		{
-			$start = $GLOBALS['HTTP_POST_VARS']['start'] ? $GLOBALS['HTTP_POST_VARS']['start'] : $GLOBALS['HTTP_GET_VARS']['start'];
+			$start = phpgw::get_var('start', 'int');
 
 			$html = '';
 			$edittable =$head['_edittable'];
@@ -241,11 +241,11 @@
 
 		function edit_table($rows,$head='',$obj, $frtn)
 		{
-			$nocols = $GLOBALS['HTTP_POST_VARS']['nocols'];
-			$noflds = $GLOBALS['HTTP_POST_VARS']['noflds'];
-			$norows = $GLOBALS['HTTP_POST_VARS']['norows'];
-			$layout = $GLOBALS['HTTP_POST_VARS']['layout'];
-			$_cols  = $GLOBALS['HTTP_POST_VARS']['_cols'];
+			$nocols = phpgw::get_var('nocols');
+			$noflds = phpgw::get_var('noflds');
+			$norows = phpgw::get_var('norows');
+			$layout = phpgw::get_var('layout');
+			$_cols  = phpgw::get_var('_cols');
 
 			$html = '';
 			$html .= '<form method="post" action="'

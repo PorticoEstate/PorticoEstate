@@ -12,7 +12,8 @@
 
 	/* $Id: hook_deleteaccount.inc.php,v 1.9 2006/10/03 14:04:58 Caeies Exp $ */
 
-	if ( isset($_POST['account_id']) && (int) $_POST['account_id'] )
+	$account_id = phpgw::get_var('account_id', 'int');
+	if ( $account_id )
 	{
 		// delete all mapping to account
 		// Using Single Sign-On
@@ -24,16 +25,16 @@
 			{
 				$GLOBALS['phpgw']->mapping = CreateObject('phpgwapi.mapping', array('auth_type'=> $phpgw_map_authtype, 'location' => $phpgw_map_location));
 			}
-			$account = CreateObject('phpgwapi.accounts',$_POST['account_id'],'u');
+			$account = CreateObject('phpgwapi.accounts', $account_id, 'u');
 			$data = $account->read();
 			$account_lid = $data['account_lid'];
 			$GLOBALS['phpgw']->mapping->delete_mapping(array('account_lid' => $account_lid));
 		}											
 		
-		$GLOBALS['phpgw']->accounts->delete($_POST['account_id']);
+		$GLOBALS['phpgw']->accounts->delete($account_id);
 		$GLOBALS['phpgw']->db->lock(Array('phpgw_acl'));
-		$GLOBALS['phpgw']->db->query("DELETE FROM phpgw_acl WHERE acl_location='" . (int) $_POST['account_id'] . "'"
-			. ' OR acl_account=' . (int) $_POST['account_id'], __LINE__, __FILE__);
+		$GLOBALS['phpgw']->db->query("DELETE FROM phpgw_acl WHERE acl_location='$account_id'"
+			. " OR acl_account = {$account_id}", __LINE__, __FILE__);
 		$GLOBALS['phpgw']->db->unlock();
 	}
 ?>

@@ -164,14 +164,14 @@
 			$GLOBALS['phpgw']->template->set_block('application','form','form');
 			$GLOBALS['phpgw']->template->set_block('application','row','row');
 
-			if ( isset($_POST['submit']) && $_POST['submit'] )
+			if ( phpgw::get_var('submit', 'bool', 'POST') )
 			{
 				$totalerrors = 0;
 
-				$app_order    = isset($_POST['app_order']) ? (int) $_POST['app_order'] : 0;
-				$n_app_name   = chop($_POST['n_app_name']);
-				$n_app_title  = chop($_POST['n_app_title']);
-				$n_app_status = $_POST['n_app_status'];
+				$app_order    = phpgw::get_var('app_order', 'int', 'POST');
+				$n_app_name   = phpgw::get_var('n_app_name', 'string', 'POST');
+				$n_app_title  = phpgw::get_var('n_app_title', 'string', 'POST');
+				$n_app_status = phpgw::get_var('n_app_status', 'bool', 'POST');
 
 				if ($this->bo->exists($n_app_name))
 				{
@@ -242,20 +242,21 @@
 
 		function edit()
 		{
-			$app_name = $_GET['app_name'];
+			$app_name = phpgw::get_var('app_name', 'string', 'GET');
 
 			$GLOBALS['phpgw']->template->set_file(array('application' => 'application_form.tpl'));
 			$GLOBALS['phpgw']->template->set_block('application','form','form');
 			$GLOBALS['phpgw']->template->set_block('application','row','row');
 
-			if ( isset($_POST['submit']) && $_POST['submit'] )
+			if ( phpgw::get_var('submit', 'bool', 'POST') )
 			{
 				$totalerrors = 0;
 
-				$old_app_name = $_POST['old_app_name'];
-				$app_order    = isset($_POST['app_order']) ? (int) $_POST['app_order'] : 0;
-				$n_app_name   = chop($_POST['n_app_name']);
-				$n_app_status = $_POST['n_app_status'];
+				$old_app_name = phpgw::get_var('old_app_name', 'string', 'POST');
+				$app_order    = phpgw::get_var('app_order', 'int', 'POST');
+				$n_app_name   = phpgw::get_var('n_app_name', 'string', 'POST');
+				$n_app_title  = phpgw::get_var('n_app_title', 'string', 'POST');
+				$n_app_status = phpgw::get_var('n_app_status', 'bool', 'POST');
 
 				if (! $n_app_name)
 				{
@@ -321,7 +322,7 @@
 
 		function delete()
 		{
-			$app_name = $_GET['app_name'];
+			$app_name = phpgw::get_var('app_name', 'string', 'GET');
 
 			if (!$app_name)
 			{
@@ -330,7 +331,7 @@
 
 			$GLOBALS['phpgw']->template->set_file(array('body' => 'delete_common.tpl'));
 
-			if ( isset($_GET['confirm']) && $_GET['confirm'] )
+			if ( phpgw::get_var('confirm', 'bool') )
 			{
 				$this->bo->delete($app_name);
 				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'admin.uiapplications.get_list') );

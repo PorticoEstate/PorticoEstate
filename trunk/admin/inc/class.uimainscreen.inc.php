@@ -39,7 +39,7 @@
 
 		function index()
 		{
-			if ( isset($_POST['cancel']) && $_POST['cancel'] )
+			if ( phpgw::get_var('cancel', 'bool', 'POST') )
 			{
 				$GLOBALS['phpgw']->redirect_link('/admin/index.php');
 			}
@@ -51,11 +51,11 @@
 
 			$GLOBALS['phpgw']->common->phpgw_header(true);
 
-			if ( isset($_POST['submit']) && $_POST['submit'] )
+			if ( phpgw::get_var('submit', 'bool', 'POST') )
 			{
-				$section     = $_POST['section'];
-				$select_lang = $_POST['select_lang'];
-				$message     = $_POST['message'];
+				$section     = phpgw::get_var('section', 'string', 'POST');
+				$select_lang = phpgw::get_var('select_lang', 'string', 'POST');
+				$message     = phpgw::get_var('message', 'string', 'POST');
 
 				$GLOBALS['phpgw']->db->query("DELETE FROM phpgw_lang WHERE message_id='$section" . "_message' AND app_name='"
 					. "$section' AND lang='$select_lang'",__LINE__,__FILE__);

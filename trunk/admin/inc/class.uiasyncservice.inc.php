@@ -45,11 +45,12 @@
 			$GLOBALS['phpgw']->common->phpgw_header();
 			echo parse_navbar();
 
-			$async = $GLOBALS['phpgw']->asyncservice;	// use an own instance, as we might set debug=True
+			$async = clone($GLOBALS['phpgw']->asyncservice);	// use an own instance, as we might set debug=True
 
 			$async->debug = !!$_POST['debug'];
 
-			$units = array(
+			$units = array
+			(
 				'year'  => lang('Year'),
 				'month' => lang('Month'),
 				'day'   => lang('Day'),
@@ -58,18 +59,28 @@
 				'min'   => lang('Minute')
 			);
 
-			if ($_POST['send'] || $_POST['test'] || $_POST['cancel'] || $_POST['install'] || $_POST['update'] || isset($_POST['asyncservice']))
+			$debug = phpgw::get_var('debug', 'bool', 'POST');
+
+			$send		= phpgw::get_var('send', 'bool', 'POST');
+			$test		= phpgw::get_var('test', 'bool', 'POST');
+			$cancel		= phpgw::get_var('cancel', 'bool', 'POST');
+			$install	= phpgw::get_var('install', 'bool', 'POST');
+			$update		= phpgw::get_var('update', 'bool', 'POST');
+			$asyncservice = phpgw::get_var('asyncservice', 'string', 'POST');
+
+			if ( $send || $test || $cancel || $install || $update || $asyncservice )
 			{
 				$times = array();
-				foreach($units as $u => $ulabel)
+				foreach ( array_keys($units) as $u )
 				{
-					if ($_POST[$u] !== '')
+					$times[$u] = phpgw::get_var($u, 'string', 'POST');
+					if ( $times[$u] === '' )
 					{
-						$times[$u] = $_POST[$u];
+						unset($times[$u]);
 					}
 				}
 
-				if ($_POST['test'])
+				if ( $test )
 				{
 					$prefs = $GLOBALS['phpgw']->preferences->create_email_preferences();
 					if (!$async->set_timer($times,'test','admin.uiasyncservice.test',$prefs['email']['address']))
@@ -78,14 +89,14 @@
 					}
 					unset($prefs);
 				}
-				if ($_POST['cancel'])
+				if ( $cancel )
 				{
 					if (!$async->cancel_timer('test'))
 					{
 						echo '<p><b>'.lang("Error canceling timer, maybe there's none set !!!")."</b></p>\n";
 					}
 				}
-				if ($_POST['install'])
+				if ( $install )
 				{
 					if (!($install = $async->install($times)))
 					{
@@ -104,13 +115,14 @@
 			$lr_date = $last_run['end'] ? $GLOBALS['phpgw']->common->show_date($last_run['end']) : lang('never');
 			echo '<p><b>'.lang('Async services last executed').'</b>: '.$lr_date.' ('.$last_run['run_by'].")</p>\n<hr>\n";
 
-			if (isset($_POST['asyncservice']) && $_POST['asyncservice'] != $GLOBALS['phpgw_info']['server']['asyncservice'])
+			if ( $asyncservice != $GLOBALS['phpgw_info']['server']['asyncservice'] )
 			{
 				$config = CreateObject('phpgwapi.config','phpgwapi');
 				$config->read_repository();
-				$config->value('asyncservice',$GLOBALS['phpgw_info']['server']['asyncservice']=$_POST['asyncservice']);
+				$config->value('asyncservice', $asyncservice);
 				$config->save_repository();
 				unset($config);
+				$GLOBALS['phpgw_info']['server']['asyncservice'] = $asyncservice;
 			}
 			if (!$async->only_fallback)
 			{
@@ -162,10 +174,10 @@
 			}
 			echo "</tr><tr>\n <td colspan=4>\n";
 			echo ' <input type="submit" name="send" value="'.lang('Calculate next run').'"></td>'."\n";
-			echo ' <td colspan="8"><input type="checkbox" name="debug" value="1"'.($_POST['debug'] ? ' checked' : '')."> \n".
+			echo ' <td colspan="8"><input type="checkbox" name="debug" value="1"' . ($debug ? ' checked' : '')."> \n".
 				lang('Enable debug-messages')."</td>\n</tr></table>\n";
 
-			if ($_POST['send'])
+			if ( $send ])
 			{
 				$next = $async->next_run($times,True);
 
