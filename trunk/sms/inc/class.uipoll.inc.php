@@ -38,10 +38,10 @@
 			$this->currentapp			= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->nextmatchs			= CreateObject('phpgwapi.nextmatchs');
 			$this->account				= $GLOBALS['phpgw_info']['user']['account_id'];
-			$this->bo				= CreateObject($this->currentapp.'.bopoll',true);
-			$this->bocommon				= CreateObject($this->currentapp.'.bocommon');
-			$this->menu				= CreateObject($this->currentapp.'.menu');
-			$this->sms				= CreateObject($this->currentapp.'.sms');
+			$this->bo				= CreateObject('sms.bopoll',true);
+			$this->bocommon				= CreateObject('sms.bocommon');
+			$this->menu				= CreateObject('sms.menu');
+			$this->sms				= CreateObject('sms.sms');
 			$this->acl				= CreateObject('phpgwapi.acl');
 			$this->acl_location 			= '.poll';
 			$this->menu->sub			= $this->acl_location;
@@ -230,7 +230,7 @@
 
 			echo parse_navbar();
 
-			$err	= urldecode(get_var('err',array('POST','GET')));
+			$err	= urldecode(phpgw::get_var('err'));
 
 			if ($err)
 			{
@@ -279,8 +279,8 @@
 				return;
 			}
 
-			$poll_code	= strtoupper(get_var('poll_code',array('POST','GET')));
-			$poll_title	= get_var('poll_title',array('POST','GET'));
+			$poll_code	= strtoupper(phpgw::get_var('poll_code'));
+			$poll_title	= phpgw::get_var('poll_title');
 
 			$uid = $this->account;
 			$target = 'add';
@@ -338,9 +338,9 @@
 				return;
 			}
 
-			$poll_id	= get_var('poll_id',array('POST','GET'));
-			$choice_title	= get_var('choice_title',array('POST','GET'));
-			$choice_code	= strtoupper(get_var('choice_code',array('POST','GET')));
+			$poll_id	= phpgw::get_var('poll_id', 'int');
+			$choice_title	= phpgw::get_var('choice_title');
+			$choice_code	= strtoupper(phpgw::get_var('choice_code'));
 			$uid = $this->account;
 			$target = 'edit';
 
@@ -399,8 +399,8 @@
 				return;
 			}
 
-			$poll_id	= get_var('poll_id',array('POST','GET'));
-			$ps	= get_var('ps',array('POST','GET'));
+			$poll_id	= phpgw::get_var('poll_id', 'int');
+			$ps	= phpgw::get_var('ps', 'int');
 			$uid = $this->account;
 
 			$sql = "UPDATE phpgw_sms_featpoll SET poll_enable='$ps' WHERE poll_id='$poll_id'";
@@ -442,9 +442,9 @@
 
 			echo parse_navbar();
 
-			$err	= urldecode(get_var('err',array('POST','GET')));
+			$err	= urldecode(phpgw::get_var('err'));
 
-			$poll_id	= get_var('poll_id',array('POST','GET'));
+			$poll_id	= phpgw::get_var('poll_id', 'int');
 
 			if ($err)
 			{
@@ -570,9 +570,9 @@
 				return;
 			}
 
-			$poll_id	= get_var('poll_id',array('POST','GET'));
-			$poll_code	= get_var('poll_code',array('POST','GET'));
-			$poll_title	= get_var('poll_title',array('POST','GET'));
+			$poll_id	= phpgw::get_var('poll_id', 'int');
+			$poll_code	= phpgw::get_var('poll_code');
+			$poll_title	= phpgw::get_var('poll_title');
 
 			$uid = $this->account;
 			$target = 'edit';
@@ -617,7 +617,7 @@
 			}
 			
 
-			$poll_id	= get_var('poll_id',array('POST','GET'));
+			$poll_id	= phpgw::get_var('poll_id', 'int');
 
 			$sql = "SELECT poll_title FROM phpgw_sms_featpoll WHERE poll_id='$poll_id'";
 			$this->db->query($sql,__LINE__,__FILE__);
@@ -721,8 +721,8 @@
 				return;
 			}
 
-			$poll_id	= get_var('poll_id',array('POST','GET'));
-			$confirm	= get_var('confirm',array('POST'));
+			$poll_id	= phpgw::get_var('poll_id', 'int');
+			$confirm	= phpgw::get_var('confirm', 'bool', 'POST');
 
 			$link_data = array
 			(
@@ -730,7 +730,7 @@
 				'poll_id' => $poll_id
 			);
 
-			if (get_var('confirm',array('POST')))
+			if (phpgw::get_var('confirm', 'bool', 'POST'))
 			{
 			//	$this->bo->delete_type($autoreply_id);
 
@@ -794,9 +794,9 @@
 				return;
 			}
 
-			$poll_id	= get_var('poll_id',array('POST','GET'));
-			$choice_id	= get_var('choice_id',array('POST','GET'));
-			$confirm	= get_var('confirm',array('POST'));
+			$poll_id	= phpgw::get_var('poll_id', 'int');
+			$choice_id	= phpgw::get_var('choice_id', 'int');
+			$confirm	= phpgw::get_var('confirm', 'bool', 'POST');
 
 			$link_data = array
 			(
@@ -804,7 +804,7 @@
 				'poll_id' => $poll_id
 			);
 
-			if (get_var('confirm',array('POST')))
+			if (phpgw::get_var('confirm', 'bool', 'POST'))
 			{
 			//	$this->bo->delete_type($autoreply_id);
 

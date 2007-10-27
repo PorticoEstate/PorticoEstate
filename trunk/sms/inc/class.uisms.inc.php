@@ -42,14 +42,14 @@
 			$this->currentapp			= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->nextmatchs			= CreateObject('phpgwapi.nextmatchs');
 			$this->account				= $GLOBALS['phpgw_info']['user']['account_id'];
-			$this->bocommon				= CreateObject($this->currentapp.'.bocommon');
-//			$this->bocategory			= CreateObject($this->currentapp.'.bocategory');
+			$this->bocommon				= CreateObject('sms.bocommon');
+//			$this->bocategory			= CreateObject('sms.bocategory');
 			$this->config				= CreateObject('sms.soconfig');
 			$this->config->read_repository();
 			$this->gateway_number			= $this->config->config_data['common']['gateway_number'];
-			$this->bo				= CreateObject($this->currentapp.'.bosms',False);
+			$this->bo				= CreateObject('sms.bosms',False);
 			$this->acl				= CreateObject('phpgwapi.acl');
-			$this->menu				= CreateObject($this->currentapp.'.menu');
+			$this->menu				= CreateObject('sms.menu');
 			$this->grants 				= $this->bo->grants;
 			$this->start				= $this->bo->start;
 			$this->query				= $this->bo->query;
@@ -394,9 +394,9 @@
 				return;
 			}
 
-			$p_num		= get_var('p_num',array('POST','GET'));
-			$values		= get_var('values',array('POST'));
-			$from		= get_var('from',array('POST','GET'));
+			$p_num		= phpgw::get_var('p_num');
+			$values		= phpgw::get_var('values');
+			$from		= phpgw::get_var('from');
 			$from 		= $from?$from:'index';
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('sms'));
@@ -406,9 +406,9 @@
 			if (is_array($values))
 			{
 				$values['p_num_text']		= get_var('p_num_text',array('POST'));
-				$values['message']		= get_var('message',array('POST'));
-				$values['msg_flash']		= get_var('msg_flash',array('POST'));
-				$values['msg_unicode']		= get_var('msg_unicode',array('POST'));
+				$values['message']		= phpgw::get_var('message');
+				$values['msg_flash']		= phpgw::get_var('msg_flash', 'bool', 'POST');
+				$values['msg_unicode']		= phpgw::get_var('msg_unicode', 'bool', 'POST');
 
 				$p_num 		= $values['p_num_text']?$values['p_num_text']:$p_num;
 				
@@ -551,15 +551,15 @@
 				return;
 			}
 
-			$id		= get_var('id',array('POST','GET'));
-			$confirm	= get_var('confirm',array('POST'));
+			$id		= phpgw::get_var('id', 'int');
+			$confirm	= phpgw::get_var('confirm', 'bool', 'POST');
 
 			$link_data = array
 			(
 				'menuaction' => $this->currentapp.'.uisms.index'
 			);
 
-			if (get_var('confirm',array('POST')))
+			if (phpgw::get_var('confirm', 'bool', 'POST'))
 			{
 				$this->bo->delete_in($id);
 				$GLOBALS['phpgw']->redirect_link('/index.php',$link_data);
@@ -595,15 +595,15 @@
 				return;
 			}
 
-			$id		= get_var('id',array('POST','GET'));
-			$confirm	= get_var('confirm',array('POST'));
+			$id		= phpgw::get_var('id', 'int');
+			$confirm	= phpgw::get_var('confirm', 'bool', 'POST');
 
 			$link_data = array
 			(
 				'menuaction' => $this->currentapp.'.uisms.outbox'
 			);
 
-			if (get_var('confirm',array('POST')))
+			if (phpgw::get_var('confirm', 'bool', 'POST'))
 			{
 				$this->bo->delete_out($id);
 				$GLOBALS['phpgw']->redirect_link('/index.php',$link_data);

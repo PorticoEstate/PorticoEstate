@@ -55,7 +55,7 @@
 		function sms_bocommon()
 		{
 			$this->currentapp		= 'sms';
-			$this->socommon			= CreateObject($this->currentapp.'.socommon');
+			$this->socommon			= CreateObject('sms.socommon');
 			$this->account			= $GLOBALS['phpgw_info']['user']['account_id'];
 
 			$this->join			= $this->socommon->join;

@@ -36,10 +36,10 @@
 			$this->currentapp			= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->nextmatchs			= CreateObject('phpgwapi.nextmatchs');
 			$this->account				= $GLOBALS['phpgw_info']['user']['account_id'];
-			$this->bo				= CreateObject($this->currentapp.'.boautoreply',true);
-			$this->bocommon				= CreateObject($this->currentapp.'.bocommon');
-			$this->menu				= CreateObject($this->currentapp.'.menu');
-			$this->sms				= CreateObject($this->currentapp.'.sms');
+			$this->bo				= CreateObject('sms.boautoreply',true);
+			$this->bocommon				= CreateObject('sms.bocommon');
+			$this->menu				= CreateObject('sms.menu');
+			$this->sms				= CreateObject('sms.sms');
 			$this->acl				= CreateObject('phpgwapi.acl');
 			$this->acl_location 			= '.autoreply';
 			$this->menu->sub			= '.autoreply';
@@ -213,8 +213,8 @@
 
 			echo parse_navbar();
 
-			$err	= urldecode(get_var('err',array('POST','GET')));
-			$add_autoreply_code	= get_var('add_autoreply_code',array('POST','GET'));
+			$err	= urldecode(phpgw::get_var('err'));
+			$add_autoreply_code	= phpgw::get_var('add_autoreply_code');
 
 			if ($err)
 			{
@@ -263,7 +263,7 @@
 				return;
 			}
 
-			$add_autoreply_code	= strtoupper(get_var('add_autoreply_code',array('POST','GET')));
+			$add_autoreply_code	= strtoupper(phpgw::get_var('add_autoreply_code'));
 
 			$uid = $this->account;
 			$target = 'add';
@@ -328,9 +328,9 @@
 
 			echo parse_navbar();
 
-			$err	= urldecode(get_var('err',array('POST','GET')));
-			$autoreply_id	= get_var('autoreply_id',array('POST','GET'));
-			$add_autoreply_scenario_result	= get_var('add_autoreply_scenario_result',array('POST','GET'));
+			$err	= urldecode(phpgw::get_var('err'));
+			$autoreply_id	= phpgw::get_var('autoreply_id');
+			$add_autoreply_scenario_result	= phpgw::get_var('add_autoreply_scenario_result');
 
 
 			$sql = "SELECT * FROM phpgw_sms_featautoreply WHERE autoreply_id='$autoreply_id'";
@@ -397,8 +397,8 @@
 				return;
 			}
 
-			$autoreply_id	= get_var('autoreply_id',array('POST','GET'));
-			$add_autoreply_scenario_result	= get_var('add_autoreply_scenario_result',array('POST','GET'));
+			$autoreply_id	= phpgw::get_var('autoreply_id');
+			$add_autoreply_scenario_result	= phpgw::get_var('add_autoreply_scenario_result');
 
 			$ok = 0;
 			
@@ -454,7 +454,7 @@
 
 			for ($i=1;$i<=7;$i++)
 			{
-			    $add_data["add_autoreply_scenario_param".$i] = strtoupper(get_var("add_autoreply_scenario_param$i",array('POST')));
+			    $add_data["add_autoreply_scenario_param".$i] = strtoupper(phpgw::get_var("add_autoreply_scenario_param$i", 'string', 'POST'));
 			}
 
 			$GLOBALS['phpgw']->redirect_link('/index.php',$add_data);
@@ -478,10 +478,10 @@
 
 			echo parse_navbar();
 
-			$err	= urldecode(get_var('err',array('POST','GET')));
-			$autoreply_id	= get_var('autoreply_id',array('POST','GET'));
-			$autoreply_scenario_id	= get_var('autoreply_scenario_id',array('POST','GET'));
-			$add_autoreply_scenario_result	= get_var('add_autoreply_scenario_result',array('POST','GET'));
+			$err	= urldecode(phpgw::get_var('err'));
+			$autoreply_id	= phpgw::get_var('autoreply_id');
+			$autoreply_scenario_id	= phpgw::get_var('autoreply_scenario_id');
+			$add_autoreply_scenario_result	= phpgw::get_var('add_autoreply_scenario_result');
 
 			$sql = "SELECT * FROM phpgw_sms_featautoreply WHERE autoreply_id='$autoreply_id'";
 
@@ -555,8 +555,8 @@
 				return;
 			}
 
-			$autoreply_scenario_id	= get_var('autoreply_scenario_id',array('POST','GET'));
-			$autoreply_id	= get_var('autoreply_id',array('POST','GET'));
+			$autoreply_scenario_id	= phpgw::get_var('autoreply_scenario_id');
+			$autoreply_id	= phpgw::get_var('autoreply_id');
 			$edit_autoreply_scenario_result	= get_var('edit_autoreply_scenario_result',array('POST','GET'));
 			
 			for ($i=1;$i<=7;$i++)
@@ -635,8 +635,8 @@
 			echo parse_navbar();
 
 
-			$autoreply_id	= get_var('autoreply_id',array('POST','GET'));
-			$err	= urldecode(get_var('err',array('POST','GET')));
+			$autoreply_id	= phpgw::get_var('autoreply_id');
+			$err	= urldecode(phpgw::get_var('err'));
 	
 /*			if (!$this->acl->check('run', PHPGW_ACL_READ,'admin'))
 			{
@@ -719,8 +719,8 @@
 				return;
 			}
 
-			$autoreply_id	= get_var('autoreply_id',array('POST','GET'));
-			$confirm	= get_var('confirm',array('POST'));
+			$autoreply_id	= phpgw::get_var('autoreply_id');
+			$confirm	= phpgw::get_var('confirm', 'bool', 'POST');
 
 			$link_data = array
 			(
@@ -728,7 +728,7 @@
 				'autoreply_id' => $autoreply_id
 			);
 
-			if (get_var('confirm',array('POST')))
+			if (phpgw::get_var('confirm', 'bool', 'POST'))
 			{
 			//	$this->bo->delete_type($autoreply_id);
 
@@ -793,10 +793,10 @@
 				return;
 			}
 
-			$autoreply_scenario_id	= get_var('autoreply_scenario_id',array('POST','GET'));
-			$autoreply_id	= get_var('autoreply_id',array('POST','GET'));
+			$autoreply_scenario_id	= phpgw::get_var('autoreply_scenario_id');
+			$autoreply_id	= phpgw::get_var('autoreply_id');
 
-			$confirm	= get_var('confirm',array('POST'));
+			$confirm	= phpgw::get_var('confirm', 'bool', 'POST');
 
 			$link_data = array
 			(
@@ -804,7 +804,7 @@
 				'autoreply_id' => $autoreply_id
 			);
 
-			if (get_var('confirm',array('POST')))
+			if (phpgw::get_var('confirm', 'bool', 'POST'))
 			{
 				$sql = "SELECT autoreply_scenario_result FROM phpgw_sms_featautoreply_scenario WHERE autoreply_scenario_id='$autoreply_scenario_id'";
 				$this->db->query($sql,__LINE__,__FILE__);
