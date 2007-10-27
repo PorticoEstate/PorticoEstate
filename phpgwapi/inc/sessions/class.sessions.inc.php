@@ -1174,11 +1174,14 @@
 					$b = split('=', $v);
 					$new_extravars[$b[0]] = $b[1];
 				}
+				
 				unset($extravars);
+				
 				$extravars = $new_extravars;
 				unset($new_extravars);
 			}
-
+			
+			
 			/* if using frames we make sure there is a framepart */
 			if(defined('PHPGW_USE_FRAMES') && PHPGW_USE_FRAMES)
 			{
@@ -1192,7 +1195,7 @@
 			if ( !isset($GLOBALS['phpgw_info']['server']['usecookies']) 
 				|| !$GLOBALS['phpgw_info']['server']['usecookies'])
 			{
-				$extravars = array_merge($extravars, $this->_get_session_vars());
+				$extravars = is_array( $extravars ) ? array_merge($extravars, $this->_get_session_vars()) :  $this->_get_session_vars();				
 			}
 			
 			//used for repost prevention

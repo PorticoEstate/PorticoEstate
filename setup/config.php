@@ -121,6 +121,7 @@
 	$files_in_docroot = (isset($newsettings['files_dir']))? in_docroot($newsettings['files_dir']) : false ;
 	if ( phpgw::get_var('submit', 'string', 'POST') && is_array($newsettings) && !$files_in_docroot)
 	{
+		
 		$datetime = CreateObject('phpgwapi.datetimefunctions');
 		switch (intval($newsettings['daytime_port']))
 		{
@@ -142,10 +143,11 @@
 		// This is only temp:
 		$GLOBALS['phpgw_setup']->db->query("DELETE FROM phpgw_config WHERE config_name='useframes'");
 		$GLOBALS['phpgw_setup']->db->query("INSERT INTO phpgw_config (config_app,config_name, config_value) values ('phpgwapi','useframes','never')");
-
-		while(list($setting,$value) = @each($newsettings))
+		
+		foreach( $newsettings as $setting => $value ) 
 		{
-			/* echo '<br />Updating: ' . $setting . '=' . $value; */
+		//	echo '<br />Updating: ' . $setting . '=' . $value;
+			
 			/* Don't erase passwords, since we also do not print them below */
 			if($value || (!ereg('passwd',$setting) && !ereg('password',$setting) && !ereg('root_pw',$setting)))
 			{
@@ -157,8 +159,8 @@
 					. "','" . $GLOBALS['phpgw_setup']->db->db_addslashes($value) . "')");
 			}
 		}
-		$GLOBALS['phpgw_setup']->db->transaction_commit();
-
+		$GLOBALS['phpgw_setup']->db->transaction_commit();		
+		
 		// Add cleaning of app_sessions per skeeter, but with a check for the table being there, just in case
 		$tablenames = $GLOBALS['phpgw_setup']->db->table_names();
 		while(list($key,$val) = @each($tablenames))
@@ -172,7 +174,7 @@
 			@$GLOBALS['phpgw_setup']->db->query("DELETE FROM phpgw_app_sessions WHERE app = 'phpgwapi' and location = 'phpgw_info_cache'",__LINE__,__FILE__);
 			$GLOBALS['phpgw_setup']->db->unlock();
 		}
-
+		
 		if($newsettings['auth_type'] == 'ldap')
 		{
 			Header('Location: '.$newsettings['webserver_url'].'/setup/ldap.php');
@@ -183,6 +185,8 @@
 			Header('Location: index.php');
 			exit;
 		}
+		
+		//exit;
 	}
 
 	if(!isset($newsettings['auth_type']) || $newsettings['auth_type'] != 'ldap')

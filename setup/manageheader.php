@@ -308,7 +308,16 @@
 			{
 				$detected .= '<li class="warn">' . lang('No IMAP support found. Email functions will be disabled') . "</li>\n";
 			}
-
+			if( (floor(phpversion()) == 4 && extension_loaded('xslt') )
+				|| (floor(phpversion()) >= 5 && extension_loaded('xsl') ) )
+			{
+				$detected .= '<li>' . lang('You appear to have XML/XSLT support enabled') . "</li>\n";
+			}
+			else
+			{
+				$detected .= '<li class="warn">' . lang('No XML/XSLT support found. We should realy die here...') . "</li>\n";
+			}
+			
 			$no_guess = False;
 			if(file_exists('../header.inc.php') && is_file('../header.inc.php') && is_readable('../header.inc.php'))
 			{
@@ -441,8 +450,8 @@
 				$GLOBALS['phpgw_info']['server']['mcrypt_iv'] = '';
 				for($i=0; $i < 30; ++$i)
 				{
-					$GLOBALS['phpgw_info']['server']['mcrypt_iv'] .= $random_char[rand(1,count($random_char))];
-				}
+					$GLOBALS['phpgw_info']['server']['mcrypt_iv'] .= $random_char[rand(0,count($random_char)-1)];
+				}				
 			}
 
 			// now guessing better settings then the default ones 
