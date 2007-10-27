@@ -275,7 +275,6 @@
 							$value = false;
 						}
 						return !!$value;
-						break;
 
 					case 'float':
 					case 'double':
@@ -284,8 +283,7 @@
 						{
 								return (float) $value;
 						}
-						$value = $default;
-						break;	
+						return (float) $default;
 					
 					case 'int':
 					case 'integer':
@@ -294,8 +292,7 @@
 						{
 								return (int) $value;
 						}
-						$value = $default;
-						break;
+						return (int) $default;
 
 					/* Specific string types */
 					case 'color':
@@ -305,8 +302,7 @@
 						{
 							return $filtered;
 						}
-						$value = $default;
-						break;
+						return (string) $default;
 							
 					case 'email':
 						$filtered = filter_var($value, FILTER_VALIDATE_EMAIL);
@@ -314,8 +310,7 @@
 						{
 								return $filtered;
 						}
-						$value = $default;
-						break;
+						return (string) $default;
 
 					case 'filename':
 						if ( $value != '.' || $value != '..' )
@@ -327,8 +322,7 @@
 								return $filtered;
 							}
 						}
-						$value = $default;
-						break;
+						return (string) $default;
 
 					case 'ip':
 						$filtered = filter_var($value, FILTER_VALIDATE_IP);
@@ -336,8 +330,7 @@
 						{
 								return $filtered;
 						}
-						$value = $default;
-						break;
+						return (string) $default;
 
 					case 'location':
 						$regex = array('options' => array('regexp' => '/^([a-z0-9_]+\.){2}[a-z0-9_]+$/i'));
@@ -346,8 +339,7 @@
 						{
 								return $filtered;
 						}
-						$value = $default;
-						break;
+						return (string) $default;
 
 					case 'url':
 						$filtered = filter_var($value, FILTER_VALIDATE_URL);
@@ -355,8 +347,7 @@
 						{
 								return $filtered;
 						}
-						$value = $default;
-						break;
+						return (string) $default;
 
 					/* only use this if you really know what you are doing */
 					case 'raw':
