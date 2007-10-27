@@ -17,19 +17,20 @@
 	{
 		var $template;
 		var $nextmatchs;
-		var $public_functions = array(
-			'list_apps'				=> True,
-			'access_form'			=> True,
-			'account_list'			=> True,
-			'list_addressmasters'	=> True,
-			'edit_addressmasters'	=> True,
-			'accounts_popup'		=> True,
-			'java_script'			=> True
+		var $public_functions = array
+		(
+			'list_apps'				=> true,
+			'access_form'			=> true,
+			'account_list'			=> true,
+			'list_addressmasters'	=> true,
+			'edit_addressmasters'	=> true,
+			'accounts_popup'		=> true,
+			'java_script'			=> true
 		);
 
 		function uiaclmanager()
 		{
-			$this->account_id	= isset($_GET['account_id']) ? (int) $_GET['account_id'] : $GLOBALS['phpgw_info']['user']['account_id'];
+			$this->account_id	= phpgw::get_var('account_id', 'int', 'GET', $GLOBALS['phpgw_info']['user']['account_id']);
 
 			if (!$this->account_id || $GLOBALS['phpgw']->acl->check('account_access',64,'admin'))
 			{
@@ -174,12 +175,12 @@
 				'account_id'	=> $GLOBALS['phpgw_info']['user']['account_id']
 			);
 
-			if ( isset($_POST['edit']) && $_POST['edit'] )
+			if ( phpgw::get_var('edit', 'bool', 'POST') )
 			{
 				$GLOBALS['phpgw']->redirect_link('/index.php',$link_data);
 			}
 
-			if ( isset($_POST['done']) && $_POST['done'] )
+			if ( phpgw::get_var('done', 'bool', 'POST') )
 			{
 				$GLOBALS['phpgw']->redirect_link('/admin/index.php');
 			}
@@ -262,10 +263,10 @@
 				'account_id'	=> $GLOBALS['phpgw_info']['user']['account_id']
 			);
 
-			if ( isset($_POST['save']) && $_POST['save'] ) 
+			if ( phpgw::get_var('save', 'bool', 'POST') ) 
 			{
-				$account_addressmaster = isset($_POST['account_addressmaster']) ? $_POST['account_addressmaster'] : array();
-				$group_addressmaster = isset($_POST['group_addressmaster']) ? $_POST['group_addressmaster'] : array();
+				$account_addressmaster = phpgw::get_var('account_addressmaster', 'int', 'POST', array());
+				$group_addressmaster = phpgw::get_var('group_addressmaster', 'int', 'POST', array());
 
 				$error = $this->boacl->check_values($account_addressmaster, $group_addressmaster);
 				if(is_array($error))
@@ -279,7 +280,7 @@
 				}
 			}
 
-			if ( isset($_POST['cancel']) && $_POST['cancel'] )
+			if ( phpgw::get_var('cancel', 'bool', 'POST') )
 			{
 				$GLOBALS['phpgw']->redirect_link('/index.php',$link_data);
 			}

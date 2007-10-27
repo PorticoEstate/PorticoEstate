@@ -70,7 +70,7 @@
 				{
 					$this->update_level('module', $level_key, phpgw::get_var('module_add_level_select'));
 				}
-				$level_key = phpgw::get_var('user_add_name_select',array('POST','GET'));
+				$level_key = phpgw::get_var('user_add_name_select');
 				if ( $level_key )
 				{
 					$this->update_level('user', $level_key, phpgw::get_var('user_add_level_select'));

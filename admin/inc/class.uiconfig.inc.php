@@ -19,11 +19,7 @@
 		function index()
 		{
 			$errors = '';
-			$referer = '';
-			if ( isset($_GET['referer']) )
-			{
-				$referer = urldecode( $_GET['referer'] );
-			}
+			$referer = phpgw::get_var('referer', 'url', 'GET');
 
 			if($referer)
 			{
@@ -40,7 +36,7 @@
 				$_redir  = $referer ? $referer : $GLOBALS['phpgw']->link('/admin/index.php');
 			}
 						
-			$appname = $_GET['appname'];
+			$appname = phpgw::get_var('appname', 'string', 'GET');
 
 			$GLOBALS['phpgw_info']['apps']['manual']['app'] = $appname; // override the appname fetched from the referer for the manual.
 

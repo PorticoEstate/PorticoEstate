@@ -258,7 +258,7 @@
 					'passwd'				=> $values['account_passwd'], //TODO see if this still needed
 					'account_passwd'		=> $values['account_passwd'],
 					'status'				=> $values['account_status'] ? 'A' : '',
-					'old_loginid'			=> $values['old_loginid'] ? rawurldecode($_GET['old_loginid']) : '',
+					'old_loginid'			=> $values['old_loginid'] ? rawurldecode(phpgw::get_var('old_loginid', 'string', 'GET')) : '',
 					'account_id'			=> $values['account_id'],
 					'account_passwd_2'		=> $values['account_passwd_2'],
 					'groups'				=> $values['account_groups'],
@@ -312,13 +312,13 @@
 
 		function set_group_managers()
 		{
-			if($GLOBALS['phpgw']->acl->check('group_access',16,'admin') || $_POST['cancel'])
+			if($GLOBALS['phpgw']->acl->check('group_access',16,'admin') || phpgw::get_var('cancel', 'bool', 'POST') )
 			{
 				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'admin.uiaccounts.list_groups'));
 				$GLOBALS['phpgw_info']['flags']['nodisplay'] = True;
 				exit;
 			}
-			elseif($_POST['submit'])
+			else if( phpgw::get_var('submit', 'bool', 'POST') )
 			{
 				$acl = CreateObject('phpgwapi.acl',intval($_POST['account_id']));
 				
@@ -326,13 +326,13 @@
 				@reset($users);
 				while($managers && list($key,$user) = each($users))
 				{
-					$acl->add_repository('phpgw_group',intval($_POST['account_id']),$user['account_id'],1);
+					$acl->add_repository('phpgw_group', phpgw::get_var('account_id', 'int', 'POST'), $user['account_id'],1);
 				}
-				$managers = $_POST['managers'];
+				$managers = phpgw::get_var('managers', 'int', 'POST');
 				@reset($managers);
 				while($managers && list($key,$manager) = each($managers))
 				{
-					$acl->add_repository('phpgw_group',intval($_POST['account_id']),$manager,(1 + PHPGW_ACL_GROUP_MANAGERS));
+					$acl->add_repository('phpgw_group', phpgw::get_var('account_id', 'int', 'POST'), $manager,(1 + PHPGW_ACL_GROUP_MANAGERS));
 				}
 			}
 			$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'admin.uiaccounts.list_groups'));
