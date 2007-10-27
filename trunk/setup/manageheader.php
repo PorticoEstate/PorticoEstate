@@ -308,14 +308,13 @@
 			{
 				$detected .= '<li class="warn">' . lang('No IMAP support found. Email functions will be disabled') . "</li>\n";
 			}
-			if( (floor(phpversion()) == 4 && extension_loaded('xslt') )
-				|| (floor(phpversion()) >= 5 && extension_loaded('xsl') ) )
+			if( extension_loaded('xsl') && class_exists('XSLTProcessor') )
 			{
 				$detected .= '<li>' . lang('You appear to have XML/XSLT support enabled') . "</li>\n";
 			}
 			else
 			{
-				$detected .= '<li class="warn">' . lang('No XML/XSLT support found. We should realy die here...') . "</li>\n";
+				$detected .= '<li class="err">' . lang('No XSLT support found.') . "</li>\n";
 			}
 			
 			$no_guess = False;
