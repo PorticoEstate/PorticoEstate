@@ -13,20 +13,20 @@
 
 	$setup_info['ged']['name']='ged';
 	$setup_info['ged']['title']='Document Management System';
-	$setup_info['ged']['version']='0.9.18.006';
+	$setup_info['ged']['version']='0.9.18.007';
 	$setup_info['ged']['app_order']=17;
 	$setup_info['ged']['enable']=1;
 	$setup_info['calendar']['app_group']    = 'office';
 
-  $setup_info['calendar']['author'] = 'Pascal Vilarem';
-  $setup_info['calendar']['license']  = 'GPL';
-  $setup_info['calendar']['description'] =
+	$setup_info['calendar']['author'] = 'Pascal Vilarem';
+	$setup_info['calendar']['license']  = 'GPL';
+	$setup_info['calendar']['description'] =
 	  'Powerful document management system with life cycle functions and ACL security.';
-  $setup_info['calendar']['note'] =
- 	 'Inspired from MyDMS. More to come here.';
-  $setup_info['calendar']['maintainer'] = array(
+	$setup_info['calendar']['note'] =
+ 	  'Inspired from MyDMS. More to come here.';
+	$setup_info['calendar']['maintainer'] = array(
 	  'name'  => 'Pascal Vilarem',
-    'email' => 'maat@phpgroupware.org'
+    	  'email' => 'maat@phpgroupware.org'
   );
 	
 
@@ -51,7 +51,14 @@
 		'ged_acl',
 		'ged_doc_types',
 		'ged_types_places',
-		'ged_periods'
+		'ged_periods',
+		'phpgw_flows',
+		'phpgw_flows_roles',
+		'phpgw_flows_statuses',
+		'phpgw_flows_transitions',
+		'phpgw_flows_transitions_custom_values',
+		'phpgw_flows_triggers',
+		'phpgw_flows_conditions'
 	);
 
 //	* Dependacies for this app to work
