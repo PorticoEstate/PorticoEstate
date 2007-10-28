@@ -1,4 +1,4 @@
-<div id="ged_top_menu">{top_link} {up_link} {update_folder} {add_folder} {delete_folder} {add_file} {edit_file} {update_file} {lock_file} {refuse_file} {accept_file} {submit_file} {deliver_file} {reject_file} {approve_file} {delete_file} {change_acl} {search} {stats} {chrono}</div>
+<div id="ged_top_menu">{top_link} {up_link} {update_folder} {add_folder} {delete_folder} {add_file} {edit_file} {update_file} {lock_file} <!-- BEGIN flow_actions_list --><a href="{flow_do_link}">{flow_do}</a>&nbsp;<!-- END flow_actions_list --> {delete_file} {change_acl} {search} {stats} {chrono}</div>
 <br/>
 <div id="ged_info">
 {main_content}

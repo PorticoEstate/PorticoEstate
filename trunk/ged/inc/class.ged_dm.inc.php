@@ -36,7 +36,7 @@ class ged_dm
 		// MEMO appartenance � des groupes
 		// MEMO $GLOBALS['phpgw']->accounts->memberships[$i][account_id]
 		
-		if ( ! $this->admin )
+		if ( $this->admin == false )
 		{
 			$or="";
 			$sqlaclbase="( ";
@@ -184,7 +184,7 @@ class ged_dm
 			$major=(int)$new_file['major'];
 			$minor=(int)$new_file['minor'];
 
-			$sql1=sprintf($sql_model1, $this->tables['versions'], $new_file['file_size'], $new_file['file_name'], $candidate_name, $extension, $GLOBALS['phpgw_info']['user']['account_id'], time(), 'working', $new_element_id, lang("First version"), $major, $minor);
+			$sql1=sprintf($sql_model1, $this->tables['versions'], $new_file['file_size'], addslashes($new_file['file_name']), addslashes($candidate_name), $extension, $GLOBALS['phpgw_info']['user']['account_id'], time(), 'working', $new_element_id, lang("First version"), $major, $minor);
 
 			//print ("<br/>".$sql1);
 
@@ -224,7 +224,7 @@ class ged_dm
 			$sep=", ";
 		}
 
-		if ( array_key_exists('doc_type', $new_file) && $new_file['doc_type'] != '' && $this->admin )
+		if ( array_key_exists('doc_type', $new_file) && $new_file['doc_type'] != '' && $this->admin == true )
 		{
 			$sql.=$sep."doc_type='".$this->cleanstr($new_file['doc_type'])."'";
 			$sep=", ";
@@ -233,12 +233,12 @@ class ged_dm
 			$sql.=$sep."reference='".$this->cleanstr($new_file['reference'])."'";
 		}
 
-		if ((int)$myelement['project_root'] != 0 && $this->is_chrono_type($new_file['doc_type']) && $myelement['doc_type'] != $new_file['doc_type'] && $this->admin )
+		if ((int)$myelement['project_root'] != 0 && $this->is_chrono_type($new_file['doc_type']) && $myelement['doc_type'] != $new_file['doc_type'] && $this->admin == true )
 			$next_ref=$this->get_next_available_reference($new_file['doc_type'], $myelement['project_root'] );
 		else
 			$next_ref=$this->cleanstr($new_file['reference']);
 
-		if ( $next_ref != "" && $this->admin )
+		if ( $next_ref != "" && $this->admin == true )
 		{
 			$sql.=$sep."reference='".$next_ref."'";
 			$sep=", ";
@@ -475,7 +475,7 @@ class ged_dm
 				$sql_model1="INSERT INTO %s ( size, file_name, stored_name, file_extension, creator_id, creation_date, status, element_id, description, major, minor ) VALUES ";
 				$sql_model1.=" (  %d, '%s', '%s', '%s', %d, %d, '%s', %d, '%s', %d, %d ) ";
 	
-				$sql1=sprintf($sql_model1, $this->tables['versions'], $new_version['file_size'], $new_version['file_name'], $candidate_name, $extension, $GLOBALS['phpgw_info']['user']['account_id'], time(), 'working', $new_version['element_id'], $this->cleanstr($new_version['description']), $major, $minor);
+				$sql1=sprintf($sql_model1, $this->tables['versions'], $new_version['file_size'], addslashes($new_version['file_name']), addslashes($candidate_name), $extension, $GLOBALS['phpgw_info']['user']['account_id'], time(), 'working', $new_version['element_id'], $this->cleanstr($new_version['description']), $major, $minor);
 	
 				//print ("<br/>".$sql1);
 	
@@ -603,7 +603,7 @@ class ged_dm
 			$this->db->query($sql1, __LINE__, __FILE__);
 			$this->db->unlock();
 			
-			$this->store_history ('updated', $amended_version['description'], $amended_version['version_id']);
+			//$this->store_history ('updated', $amended_version['description'], $amended_version['version_id']);
 			
 			// Gestion des relations
 			if ( is_array($amended_version['relations']))
@@ -895,6 +895,90 @@ class ged_dm
 		$db2->free();		
 		unset($db2);
 		return $version;
+	}
+
+	function get_previous_versions_matching_status($version_id,$status)
+	{
+		$version_info=$this->get_version_info($version_id);
+		$element_id=$version_info['element_id'];	
+		$versions=Array();
+
+
+		$sql="SELECT element_id, version_id ";
+		$sql.="FROM ".$this->tables['versions']." ";
+		$sql.="WHERE element_id=".$element_id." ";
+		$sql.="AND version_id < ".$version_id." ";
+		$sql.="AND status='".$status."'";
+
+		$this->db->query($sql, __LINE__, __FILE__);
+
+		$ii=0;
+		while ($this->db->next_record())
+		{
+			$versions[$ii]['version_id']=$this->db->f('version_id');
+			$ii++;
+		}
+		
+		$this->db->unlock();
+		return $versions;		
+	}
+	
+	function get_versions_linking_and_matching_criteria($version_id,$status, $link_type)
+	{
+		$version_info=$this->get_version_info($version_id);
+		$element_id=$version_info['element_id'];	
+		$versions=Array();
+
+
+		$sql="SELECT ".$this->tables['relations'].".linking_version_id AS version_id, ";
+		$sql.=$this->tables['versions'].".element_id AS element_id ";
+		$sql.="FROM ".$this->tables['versions']." JOIN ".$this->tables['relations']." ";
+		$sql.="ON ".$this->tables['versions'].".version_id = ".$this->tables['relations'].".linking_version_id ";
+		$sql.="AND ".$this->tables['relations'].".relation_type='".$link_type."' ";
+		$sql.="WHERE ".$this->tables['relations'].".linked_version_id=".$version_id." ";
+		$sql.="AND ".$this->tables['versions'].".status='".$status."'";
+
+		$this->db->query($sql, __LINE__, __FILE__);
+
+		$ii=0;
+		while ($this->db->next_record())
+		{
+			$versions[$ii]['version_id']=$this->db->f('version_id');
+			$versions[$ii]['element_id']=$this->db->f('element_id');
+			$ii++;
+		}
+		
+		$this->db->unlock();
+		return $versions;		
+	}
+
+	function get_versions_linked_and_matching_criteria($version_id,$status, $link_type)
+	{
+		$version_info=$this->get_version_info($version_id);
+		$element_id=$version_info['element_id'];	
+		$versions=Array();
+
+
+		$sql="SELECT ".$this->tables['relations'].".linked_version_id AS version_id, ";
+		$sql.=$this->tables['versions'].".element_id AS element_id ";     
+		$sql.="FROM ".$this->tables['versions']." JOIN ".$this->tables['relations']." ";
+		$sql.="ON ".$this->tables['versions'].".version_id = ".$this->tables['relations'].".linked_version_id ";
+		$sql.="AND ".$this->tables['relations'].".relation_type='".$link_type."' ";
+		$sql.="WHERE ".$this->tables['relations'].".linking_version_id=".$version_id." ";
+		$sql.="AND ".$this->tables['versions'].".status='".$status."'";
+
+		$this->db->query($sql, __LINE__, __FILE__);
+
+		$ii=0;
+		while ($this->db->next_record())
+		{
+			$versions[$ii]['version_id']=$this->db->f('version_id');
+			$versions[$ii]['element_id']=$this->db->f('element_id');
+			$ii++;
+		}
+		
+		$this->db->unlock();
+		return $versions;		
 	}
 	
 	function get_current_or_alert_version($element_id)
@@ -1340,7 +1424,7 @@ class ged_dm
 		// db2 neededbecause can_read can be called during a $this->db loop;		
 		$db2 = clone($this->db);
 		
-		if ( $this->admin )
+		if ( $this->admin == true )
 		{
 			$result=true;
 		}
@@ -1369,7 +1453,7 @@ class ged_dm
 		// db2 neededbecause can_read can be called during a $this->db loop;		
 		$db2 = clone($this->db);
 
-		if ( $this->admin )
+		if ( $this->admin == true )
 		{
 			$result=true;
 		}
@@ -1402,7 +1486,7 @@ class ged_dm
 		{
 			$out=true;
 		}
-		elseif ( $element['lock_status'] == 1 && ( $this->admin || ($element['lock_user_id'] == $GLOBALS['phpgw_info']['user']['account_id'] && $this->can_write($element_id))) )
+		elseif ( $element['lock_status'] == 1 && ( $this->admin == true || ($element['lock_user_id'] == $GLOBALS['phpgw_info']['user']['account_id'] && $this->can_write($element_id))) )
 		{
 			$out=true;
 		}
@@ -1415,7 +1499,7 @@ class ged_dm
 		// db2 neededbecause can_read can be called during a $this->db loop;		
 		$db2 = clone($this->db);
 
-		if ( $this->admin )
+		if ( $this->admin == true )
 		{
 			$result=true;
 		}
@@ -1441,7 +1525,7 @@ class ged_dm
 	
 	function can_delete($element_id)
 	{
-		if ( $this->admin )
+		if ( $this->admin == true )
 		{
 			$result=true;
 		}
@@ -1458,7 +1542,7 @@ class ged_dm
 	function list_elements($parent_id=0, $type='', $order='name')
 	{
 
-		if ( $this->admin )
+		if ( $this->admin == true )
 		{
 			$sql="SELECT * FROM ".$this->tables['elements']." ";
 			$sql.="WHERE parent_id=".$parent_id." ";
@@ -1497,7 +1581,7 @@ class ged_dm
 			
 			if ( $the_element_type == "file" )
 			{
-				if ( $this->admin || $this->can_write($the_element_id) )
+				if ( $this->admin == true || $this->can_write($the_element_id) )
 				{
 					$go=true;
 				}
@@ -1561,7 +1645,7 @@ class ged_dm
 		if ( $this->debug('list_version') )
 			echo "list_versions: entering with element_id=".$element_id."<br/>\n";
 
-		if ( $this->admin || $this->can_write($element_id))
+		if ( $this->admin == true || $this->can_write($element_id))
 		{
 			if ( $this->debug('list_version') )
 				echo "list_versions: can write<br/>\n";
@@ -2051,347 +2135,15 @@ class ged_dm
 		return $periods;
 	}
 	
-	// Say file is OK
-	// User must have acceptation rights on this document
-
-	function accept_file ( $element_id, $comment='accepted', $comment_file=null )
+	// Used by workflow
+	
+	function set_version_status($version_id, $next_status)
 	{
-		$current_or_alert_version=$this->get_current_or_alert_version($element_id);
-		$working_or_pending_version=$this->get_working_or_pending_version($element_id);
-		$element=$this->get_element_info($element_id);
-		
-		$result=false;
-		
-		// Need to check if there is a working version
-		if (is_array($working_or_pending_version) )
-		{
-			if ($working_or_pending_version['version_id'] )
-			{
-				// If there is a previous "current" make it obsolete
-				if (is_array($current_or_alert_version) )
-				{
-					if ($current_or_alert_version['version_id'] )
-					{
-						$sql="UPDATE ged_versions set status='obsolete' WHERE version_id=".$current_or_alert_version['version_id']." ";
-						$sql.="AND status != 'refused'";		
-						$this->db->query($sql, __LINE__, __FILE__);
-						$this->db->unlock();
-						
-						// TODO : Set status of depending documents to alert
-						$versions_referring_to=$this->list_versions_referring_to($current_or_alert_version['version_id']);
-						
-						if ( is_array($versions_referring_to))
-						{
-							foreach ( $versions_referring_to as $version_referring_to)
-							{
-								$this->alert_version ($version_referring_to['version_id']);
-							}
-						}
-					}
-				}
-				
-				$sql="UPDATE ged_versions set status='current', validation_date=".time()." WHERE version_id=".$working_or_pending_version['version_id'];			
-				$this->db->query($sql, __LINE__, __FILE__);
-				$this->db->unlock();
-
-				if (isset($comment_file) && $comment_file['file_name'] != "")
-				{
-					$new_file=$comment_file;
-					$new_file['doc_type']=$this->external_review_file_type;
-					$new_file['name']=$this->get_type_desc($new_file['doc_type'])." / ".$element['name'];
-					$new_file['description']=$comment;
-					$new_file['reference']=$this->get_next_available_reference($new_file['doc_type'], $element['project_root'] );
-					$new_file['major']=1;
-					$new_file['minor']=0;
-					$new_file['validity_period']=0;
-					
-					$new_place=null;
-					$new_place=$this->get_type_place($new_file['doc_type'],$element['project_root']);
-					if ( !isset($new_place))
-					{
-						$new_place=$element['parent_id'];
-					}
-					$new_file['parent_id']=$new_place;
-					
-					$new_id=$this->add_file($new_file);
-
-					$new_version=$this->get_last_version($new_id);
-					$new_relations[0]['linked_version_id']=$working_or_pending_version['version_id'];
-					$new_relations[0]['relation_type']='comment';
-					
-					$this->set_relations($new_version['version_id'],$new_relations);
-					
-				}
-				
-				$this->store_history ('accepted', $comment, $working_or_pending_version['version_id']);
-				$result=true;
-			}
-		}
-		else
-		{
-			$result=false;
-		}
-		// TODO : check if all is ok
-		return ( $result );
-	}
-
-	function alert_version ( $version_id )
-	{
-		$sql="UPDATE ged_versions set status='alert' WHERE version_id=".$version_id." AND status='current'";		
+		$sql="UPDATE ged_versions set status='".$next_status."' WHERE version_id=".$version_id;			
 		$this->db->query($sql, __LINE__, __FILE__);
-		
-		// TODO : recursivite
-						
-		$this->db->unlock();
-		
-		$this->store_history ('alerted', 'alerted', $version_id['version_id']);
-	}
-
-	// Say file is not valid
-
-	function reject_file ( $element_id, $comment='rejected', $comment_file=null )
-	{
-		$pending_version=$this->get_pending_for_internal_review($element_id);
-		$element=$this->get_element_info($element_id);
-		
-		$result=false;
-		
-		// Need to check if there is a working version
-		if (is_array($pending_version) )
-		{
-			if ($pending_version['version_id'] )
-			{
-				$next_status='working';
-				
-				$sql="UPDATE ged_versions set status='".$next_status."' WHERE version_id=".$pending_version['version_id'];			
-				$this->db->query($sql, __LINE__, __FILE__);
-				$this->db->unlock();
-				
-				if (isset($comment_file) && $comment_file['file_name'] != "")
-				{
-					$new_file=$comment_file;
-					
-					$new_file=$comment_file;
-					$new_file['doc_type']=$this->internal_review_file_type;
-					$new_file['name']=$this->get_type_desc($new_file['doc_type'])." / ".$element['name'];
-					$new_file['description']=$comment;
-					$new_file['reference']=$this->get_next_available_reference($new_file['doc_type'], $element['project_root'] );
-					$new_file['major']=1;
-					$new_file['minor']=0;
-					$new_file['validity_period']=0;
-					
-					$new_place=null;
-					$new_place=$this->get_type_place($new_file['doc_type'],$element['project_root']);
-					if ( !isset($new_place))
-					{
-						$new_place=$element['parent_id'];
-					}
-					$new_file['parent_id']=$new_place;
-					
-					$new_id=$this->add_file($new_file);
-					
-					$new_version=$this->get_last_version($new_id);
-					$new_relations[0]['linked_version_id']=$pending_version['version_id'];
-					$new_relations[0]['relation_type']='comment';
-					
-					$this->set_relations($new_version['version_id'],$new_relations);
-					
-				}
-				
-				$this->store_history ('rejected', $comment, $pending_version['version_id']);
-								
-				$result=true;
-			}
-		}
-		else
-		{
-			$result=false;
-		}
-		// TODO : check if all is ok
-		return ( $result );
+		$this->db->unlock();		
 	}
 	
-	// Say file is not valid
-	// A new version must be worked on and delivered
-	// User must have acceptation rights on this document
-
-	function refuse_file ( $element_id, $comment='rejected', $comment_file=null )
-	{
-		$pending_version=$this->get_pending_for_acceptation($element_id);
-		$element=$this->get_element_info($element_id);
-		
-		$result=false;
-		
-		// Need to check if there is a working version
-		if (is_array($pending_version) )
-		{
-			if ($pending_version['version_id'] )
-			{
-				// Set "pending_for_internal_review" status
-				// TODO : Add submission date
-				$sql="UPDATE ged_versions set status='refused' WHERE version_id=".$pending_version['version_id'];			
-				$this->db->query($sql, __LINE__, __FILE__);
-				$this->db->unlock();
-				
-				if (isset($comment_file) && $comment_file['file_name'] != "")
-				{
-					
-					$new_file=$comment_file;
-					$new_file['doc_type']=$this->external_review_file_type;
-					$new_file['name']=$this->get_type_desc($new_file['doc_type'])." / ".$element['name'];
-					$new_file['description']=$comment;
-					$new_file['reference']=$this->get_next_available_reference($new_file['doc_type'], $element['project_root'] );
-					$new_file['major']=1;
-					$new_file['minor']=0;
-					$new_file['validity_period']=0;
-					
-					$new_place=null;
-					$new_place=$this->get_type_place($new_file['doc_type'],$element['project_root']);
-					if ( !isset($new_place))
-					{
-						$new_place=$element['parent_id'];
-					}
-					$new_file['parent_id']=$new_place;
-					
-					$new_id=$this->add_file($new_file);
-
-					$new_version=$this->get_last_version($new_id);
-					$new_relations[0]['linked_version_id']=$pending_version['version_id'];
-					$new_relations[0]['relation_type']='comment';
-					
-					$this->set_relations($new_version['version_id'],$new_relations);
-					
-				}
-				
-				$this->store_history ('refused', $comment, $pending_version['version_id']);
-								
-				$result=true;
-			}
-		}
-		else
-		{
-			$result=false;
-		}
-		// TODO : check if all is ok
-		return ( $result );
-	}
-	
-	// Submit file to customer for acceptation
-
-	// After a contractual timeout the file is
-	// considered accepted
-	function deliver_file ( $element_id )
-	{
-		$pending_version=$this->get_ready_for_delivery($element_id);
-		
-		// Need to check if there is a working version
-		if (is_array($pending_version) )
-		{
-			if ($pending_version['version_id'] )
-			{
-				// Set "pending_for_internal_review" status
-				// TODO : Add submission date
-				$sql="UPDATE ged_versions set status='pending_for_acceptation' WHERE version_id=".$pending_version['version_id'];			
-				$this->db->query($sql, __LINE__, __FILE__);
-				$this->db->unlock();
-				
-				$this->store_history ('delivered', 'delivered', $pending_version['version_id']);
-			}
-		}
-	}
-
-	// submit file for internal acceptation then delivery
-	// the file must be working
-	// and the performer of this action must have editor role
-	function submit_file ( $element_id )
-	{
-		$working_version=$this->get_working_version($element_id);
-		
-		// Need to check if there is a working version
-		if (is_array($working_version) )
-		{
-			if ($working_version['version_id'] )
-			{
-				// Set "pending_for_internal_review" status
-				// TODO : Add submission date
-				$sql="UPDATE ged_versions set status='pending_for_technical_review' WHERE version_id=".$working_version['version_id'];			
-				$this->db->query($sql, __LINE__, __FILE__);
-				$this->db->unlock();
-				
-				$this->store_history ('submitted', 'submitted', $working_version['version_id']);
-			}
-		}		
-	}
-
-	function approve_file ( $element_id, $comment='approved', $comment_file=null )
-	{
-		//_debug_array($comment_file);
-		
-		$pending_version=$this->get_pending_for_internal_review($element_id);
-		$element=$this->get_element_info($element_id);
-		
-		$result=false;
-		
-		// Need to check if there is a working version
-		if (is_array($pending_version) )
-		{
-			if ($pending_version['version_id'] )
-			{
-				// Set "pending_for_internal_review" status
-				// TODO : Add submission date
-				if ( $pending_version['status']=='pending_for_technical_review' )
-					$next_status='pending_for_quality_review';
-				elseif ($pending_version['status']=='pending_for_quality_review' )
-					$next_status='ready_for_delivery';
-				else
-					$next_status=$pending_version['status'];
-				
-				$sql="UPDATE ged_versions set status='".$next_status."' WHERE version_id=".$pending_version['version_id'];			
-				$this->db->query($sql, __LINE__, __FILE__);
-				$this->db->unlock();
-				
-				if (isset($comment_file) && $comment_file['file_name'] != "")
-				{
-					$new_file=$comment_file;
-					$new_file['doc_type']=$this->internal_review_file_type;
-					$new_file['name']=$this->get_type_desc($new_file['doc_type'])." / ".$element['name'];
-					$new_file['description']=$comment;
-					$new_file['reference']=$this->get_next_available_reference($new_file['doc_type'], $element['project_root'] );
-					$new_file['major']=1;
-					$new_file['minor']=0;
-					$new_file['validity_period']=0;
-					
-					$new_place=null;
-					$new_place=$this->get_type_place($new_file['doc_type'],$element['project_root']);
-					if ( !isset($new_place))
-					{
-						$new_place=$element['parent_id'];
-					}
-					$new_file['parent_id']=$new_place;
-					
-					$new_id=$this->add_file($new_file);
-
-					$new_version=$this->get_last_version($new_id);
-					$new_relations[0]['linked_version_id']=$pending_version['version_id'];
-					$new_relations[0]['relation_type']='comment';
-					
-					$this->set_relations($new_version['version_id'],$new_relations);
-					
-				}
-
-				$this->store_history ('approved', $comment, $pending_version['version_id']);
-								
-				$result=true;
-			}
-		}
-		else
-		{
-			$result=false;
-		}
-		// TODO : check if all is ok
-		return ( $result );
-	}
-
 	// relations management
 	
 	function list_version_relations_out ( $version_id )
@@ -2511,7 +2263,7 @@ class ged_dm
 	function list_available_projects()
 	{
 
-		if ( $this->admin )
+		if ( $this->admin == true )
 		{
 			$sql="SELECT * FROM ".$this->tables['elements']." ";
 			$sql.="WHERE project_root=element_id ";
@@ -2549,7 +2301,7 @@ class ged_dm
 
 	function list_wanted_projects()
 	{
-		if ( $this->admin )
+		if ( $this->admin == true )
 		{
 			$sql="SELECT * FROM ".$this->tables['elements']." ";
 			$sql.="WHERE ".$this->tables['elements'].".project_root=".$this->tables['elements'].".element_id ";
@@ -2934,7 +2686,7 @@ class ged_dm
 	// History
 	function get_history ( $element_id)
 	{
-		if ( $this->admin || $this->can_write($element_id))
+		if ( $this->admin == true || $this->can_write($element_id))
 		{	
 			$sql="SELECT ".$this->tables['history'].".*, ".$this->tables['versions'].".major, ".$this->tables['versions'].".minor FROM ".$this->tables['history']." INNER JOIN ".$this->tables['versions']." ";
 			$sql.="ON ".$this->tables['history'].".version_id = ".$this->tables['versions'].".version_id ";
@@ -3309,7 +3061,7 @@ class ged_dm
 		$sql="SELECT reference FROM ged_elements WHERE reference like '".$type_base_ref."%' order by element_id desc limit 1";
 		$db2->query($sql, __LINE__, __FILE__);
 		
-		if($db2->next_record())
+		if($db2->next_record() && $type_base_ref != '')
 		{
 			$last=$db2->f('reference');
 			preg_match("@^(".$type_base_ref."[-\/]*)?([0-9]+)@i", $last, $splittage);

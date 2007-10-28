@@ -14,7 +14,7 @@
   * edited by hand.                                                          *
   \**************************************************************************/
 
-  /* $Id: tables_current.inc.php,v 1.10 2007/09/27 22:08:49 maat Exp $ */
+  /* $Id: tables_current.inc.php,v 1.12 2007/10/27 09:09:17 maat Exp $ */
 
   /* table array for ged */
 	$phpgw_baseline = array(
@@ -163,6 +163,94 @@
 				'description' => array('type' => 'varchar', 'precision' => 100,'nullable' => False)
 			),
 			'pk' => array('period'),
+			'fk' => array(),
+			'ix' => array(),
+			'uc' => array()
+		),
+				'phpgw_flows' => array(
+			'fd' => array(
+				'flow' => array('type' => 'auto','nullable' => False),
+				'app' => array('type' => 'varchar', 'precision' => 20,'nullable' => False),
+				'flow_name' => array('type' => 'varchar', 'precision' => 252,'nullable' => False)
+			),
+			'pk' => array('flow'),
+			'fk' => array(),
+			'ix' => array(),
+			'uc' => array()
+		),
+		'phpgw_flows_roles' => array(
+			'fd' => array(
+				'role' => array('type' => 'auto','nullable' => False),
+				'transition' => array('type' => 'int', 'precision' => 4,'nullable' => False),
+				'account_id' => array('type' => 'int', 'precision' => 4,'nullable' => False),
+				'context' => array('type' => 'varchar', 'precision' => 255,'nullable' => True)
+			),
+			'pk' => array('role'),
+			'fk' => array(),
+			'ix' => array(),
+			'uc' => array()
+		),
+		'phpgw_flows_statuses' => array(
+			'fd' => array(
+				'status_id' => array('type' => 'varchar', 'precision' => 100,'nullable' => False),
+				'app' => array('type' => 'varchar', 'precision' => 20,'nullable' => False),
+				'status_name' => array('type' => 'varchar', 'precision' => 255,'nullable' => False)
+			),
+			'pk' => array('status_id'),
+			'fk' => array(),
+			'ix' => array(),
+			'uc' => array()
+		),
+		'phpgw_flows_transitions' => array(
+			'fd' => array(
+				'transition' => array('type' => 'auto','nullable' => False),
+				'flow' => array('type' => 'int', 'precision' => 4,'nullable' => False),
+				'from_status' => array('type' => 'varchar', 'precision' => 100,'nullable' => False),
+				'to_status' => array('type' => 'varchar', 'precision' => 100,'nullable' => False),
+				'action' => array('type' => 'varchar', 'precision' => 255,'nullable' => False),
+				'method' => array('type' => 'varchar', 'precision' => 255,'nullable' => False,'default' => 'set_status')
+			),
+			'pk' => array('transition'),
+			'fk' => array(),
+			'ix' => array(),
+			'uc' => array()
+		),
+		'phpgw_flows_transitions_custom_values' => array(
+			'fd' => array(
+				'custom_value_id' => array('type' => 'auto','nullable' => False),
+				'transition' => array('type' => 'int', 'precision' => 4,'nullable' => False),
+				'field_name' => array('type' => 'varchar', 'precision' => 255,'nullable' => False),
+				'value' => array('type' => 'varchar', 'precision' => 255,'nullable' => False)
+			),
+			'pk' => array('custom_value_id'),
+			'fk' => array(),
+			'ix' => array(),
+			'uc' => array()
+		),
+		'phpgw_flows_triggers' => array(
+			'fd' => array(
+				'trigger_id' => array('type' => 'auto','nullable' => False),
+				'transition' => array('type' => 'int', 'precision' => 4,'nullable' => False,'default' => '11'),
+				'app' => array('type' => 'varchar', 'precision' => 255,'nullable' => False),
+				'class' => array('type' => 'varchar', 'precision' => 255,'nullable' => False,'default' => 'flow_client'),
+				'method' => array('type' => 'varchar', 'precision' => 255,'nullable' => False),
+				'context' => array('type' => 'varchar', 'precision' => 255,'nullable' => False)
+			),
+			'pk' => array('trigger_id'),
+			'fk' => array(),
+			'ix' => array(),
+			'uc' => array()
+		),
+		'phpgw_flows_conditions' => array(
+			'fd' => array(
+				'condition_id' => array('type' => 'auto','nullable' => False),
+				'transition' => array('type' => 'int', 'precision' => 4,'nullable' => False,'default' => '11'),
+				'app' => array('type' => 'varchar', 'precision' => 255,'nullable' => False),
+				'class' => array('type' => 'varchar', 'precision' => 255,'nullable' => False,'default' => 'flow_client'),
+				'method' => array('type' => 'varchar', 'precision' => 255,'nullable' => False),
+				'context' => array('type' => 'varchar', 'precision' => 255,'nullable' => False)
+			),
+			'pk' => array('condition_id'),
 			'fk' => array(),
 			'ix' => array(),
 			'uc' => array()

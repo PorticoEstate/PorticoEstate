@@ -41,15 +41,10 @@ class ged_ui
 		'unlock_file' => true,  
 		'delete_file'=>true, 
 		'change_acl'=>true, 
-		'accept_file'=>true, 
-		'submit_file'=> true, 
-		'approve_file'=> true, 
-		'reject_file'=> true, 
-		'deliver_file'=> true, 
-		'refuse_file'=> true, 
 		'search' => true, 
 		'stats'=> true, 
-		'chrono' => true
+		'chrono' => true,
+		'flow_do' => true
 	);
 
 	var $icons;
@@ -75,6 +70,8 @@ class ged_ui
 		$this->ged_dm=CreateObject('ged.ged_dm', True);
 		$this->categories=CreateObject('phpgwapi.categories');
 		$this->browser=CreateObject('phpgwapi.browser');
+
+		$this->flows=CreateObject('ged.flows');
 		
 		if(!@is_object($GLOBALS['phpgw']->css))
 		{
@@ -116,6 +113,8 @@ class ged_ui
 		$this->icons["wmv"]="wmv_movie";
 		$this->icons["default"]="default";
 
+		//_debug_array($GLOBALS);
+		//die();
 	}
 
 	function debug ($thefunction)
@@ -558,7 +557,7 @@ class ged_ui
 
 	}
 
-	function draw_file_panel($element_id)
+	function draw_file_panel($element_id, $version_id)
 	{
 		if ( $this->debug('draw_file_panel') )
 			print ( "draw_file_panel: entering with element_id=".$element_id."<br/>\n");
@@ -573,6 +572,7 @@ class ged_ui
 			$this->t->set_var( 'lock_alert_message', lang( 'This file is locked by')." ".$GLOBALS['phpgw']->common->grab_owner_name($element_info['lock_user_id']));
 		}
 		
+		/*
 		if ( $this->ged_dm->can_write($element_id))
 		{
 			$version_id=get_var('version_id',array('GET','POST'));
@@ -594,6 +594,9 @@ class ged_ui
 		{
 			$current_version=$this->ged_dm->get_current_or_pending_for_acceptation_version($element_id);
 		}
+		*/
+		
+		$current_version=$this->ged_dm->get_version_info($version_id);
 		
 		$this->t->set_var('current_version_status_image', $GLOBALS['phpgw']->common->image('ged', $current_version['status']."-48"));
 
@@ -765,7 +768,7 @@ class ged_ui
 		else
 			$extension='default';
 
-		if ( $element_info['validity_period'] > 0)
+		if ( $element_info['validity_period'] > 0 and isset($current_version['validation_date']))
 		{
 			$expiration_date=$current_version['validation_date']+$element_info['validity_period'];
 			
@@ -941,7 +944,8 @@ class ged_ui
 		if ( $this->debug('browse') )
 			print ( "browse: entering<br>\n");
 
-		$focused_id=get_var('focused_id',array('GET','POST'));
+		$focused_id=(int)get_var('focused_id',array('GET','POST'));
+		$focused_version_id=(int)get_var('version_id',array('GET','POST'));
 
 		if ($focused_id=="" || ! $this->ged_dm->can_read($focused_id))
 			$focused_id=0;
@@ -957,8 +961,11 @@ class ged_ui
 		// MEMO Link to go up
 		$link_data=null;
 		$link_data['menuaction']='ged.ged_ui.browse';
+		
 		if ( $focused_id != 0)
-		$link_data['focused_id']=$focused_element['parent_id'];
+		{
+			$link_data['focused_id']=$focused_element['parent_id'];
+		}
 		
 		$up_url=$GLOBALS['phpgw']->link('/index.php', $link_data);
 		$this->t->set_var('up_link', "<a href=\"".$up_url."\">".lang('Up')."</a>" );
@@ -981,7 +988,20 @@ class ged_ui
 				
 				$last_version=$this->ged_dm->get_last_version($focused_id);
 				$current_version=$this->ged_dm->get_current_or_pending_for_acceptation_version($focused_id);
-
+				
+				if ($focused_version_id != 0)
+				{
+					$focused_version=$this->ged_dm->get_version_info($focused_version_id);
+				}
+				elseif(isset($current_version))
+				{
+					$focused_version=$current_version;
+				}
+				else
+				{
+					$focused_version=$last_version;
+				}
+				
 				// No current version and no write acl : cheater !
 				if ( ! is_array($current_version) && ! $this->ged_dm->can_write($focused_id))
 				{
@@ -992,23 +1012,38 @@ class ged_ui
 					$GLOBALS['phpgw']->redirect_link('/index.php', $link_data);
 				}
 								
-				$this->t->set_var('main_content', $this->draw_file_panel($focused_id));
+				$this->t->set_var('main_content', $this->draw_file_panel($focused_id, $focused_version['version_id']));
 				$this->t->set_var('history_content', $this->draw_history_panel($focused_id));
 				$this->t->set_var('add_folder', '');
 				$this->t->set_var('lang_add_folder', '');
 				$this->t->set_var('add_file', '');
 				$this->t->set_var('lang_add_file', '');
 				
-				// DONE if acl write 
-				if ( (!$this->ged_dm->is_locked($focused_id)) && $this->ged_dm->can_write($focused_id) && ( $last_version['status'] == 'working' || $last_version['status'] == 'current' || $last_version['status'] == 'refused' || $last_version['status'] == 'alert' ) )
-				{
-					$link_data=null;
-					$link_data['menuaction']='ged.ged_ui.update_file';
-					$link_data['element_id']=$focused_id;
-					$update_file_url=$GLOBALS['phpgw']->link('/index.php', $link_data);
-					$this->t->set_var('update_file', "<a href=\"".$update_file_url."\">".lang('Update file')."</a>");
-				}
+				$flow_object=array(
+					'app' => 'ged',
+					'project_root' => $focused_element['project_root'], 
+					'doc_type' => $focused_element['doc_type'], 
+					'element_id' => $focused_id, 
+					'version_id' => $focused_version['version_id']
+				);
+				$flow_actions=$this->flows->get_available_transitions($flow_object);
 				
+				$this->t->set_block('browse_file_tpl', 'flow_actions_list', 'flow_actions_list_handle');
+				
+				foreach ($flow_actions as $flow_action)
+				{
+					$this->t->set_var('flow_do', $flow_action['action']);
+					
+					$link_data=null;
+					$link_data['menuaction']='ged.ged_ui.flow_do';
+					$link_data['element_id']=$focused_id;
+					$link_data['version_id']=$focused_version['version_id'];
+					$link_data['transition']=$flow_action['transition'];
+					$this->t->set_var('flow_do_link', $GLOBALS['phpgw']->link('/index.php', $link_data));
+										
+					$this->t->fp('flow_actions_list_handle', 'flow_actions_list', True);
+				}	
+								 				
 				if ( $this->ged_dm->can_change_acl($focused_id) )
 				{
 					$link_data=null;
@@ -1018,63 +1053,7 @@ class ged_ui
 					$this->t->set_var('change_acl', "<a href=\"".$update_file_url."\">".lang('Change ACL')."</a>");
 				}
 				
-				// DONE : Add actions depending on document status and user roles
-				// DONE : if can_write and exist working version
-				// DONE : add a "submit" document link
-				if ( (!$this->ged_dm->is_locked($focused_id)) && $this->ged_dm->can_write($focused_id) && $last_version['status'] == 'working' )
-				{
-					$link_data=null;
-					$link_data['menuaction']='ged.ged_ui.submit_file';
-					$link_data['element_id']=$focused_id;
-					$accept_file_url=$GLOBALS['phpgw']->link('/index.php', $link_data);
-					$this->t->set_var('submit_file', "<a href=\"".$accept_file_url."\">".lang('Submit file')."</a>");
-					
-				}
-				
-				
-				// TODO : droit specifique d'approbation ?
-				if ( $this->ged_dm->admin && ($last_version['status'] == 'working' || $last_version['status'] == 'pending_for_technical_review' || $last_version['status'] == 'pending_for_quality_review' || $last_version['status'] == 'pending_for_acceptation' )  )
-				{
-					$link_data=null;
-					$link_data['menuaction']='ged.ged_ui.accept_file';
-					$link_data['element_id']=$focused_id;
-					$accept_file_url=$GLOBALS['phpgw']->link('/index.php', $link_data);
-					$this->t->set_var('accept_file', "<a href=\"".$accept_file_url."\">".lang('accept file')."</a>");
-				}
-				
-				if ( $this->ged_dm->admin && ( $last_version['status'] == 'pending_for_technical_review' || $last_version['status'] == 'pending_for_quality_review' ) )
-				{
-					$link_data=null;
-					$link_data['menuaction']='ged.ged_ui.approve_file';
-					$link_data['element_id']=$focused_id;
-					$approve_file_url=$GLOBALS['phpgw']->link('/index.php', $link_data);
-					$this->t->set_var('approve_file', "<a href=\"".$approve_file_url."\">".lang('approve file')."</a>");
-
-					$link_data=null;
-					$link_data['menuaction']='ged.ged_ui.reject_file';
-					$link_data['element_id']=$focused_id;
-					$reject_file_url=$GLOBALS['phpgw']->link('/index.php', $link_data);
-					$this->t->set_var('reject_file', "<a href=\"".$reject_file_url."\">".lang('reject file')."</a>");
-				}
-
-				if ( $this->ged_dm->admin && $last_version['status'] == 'ready_for_delivery' )
-				{
-					$link_data=null;
-					$link_data['menuaction']='ged.ged_ui.deliver_file';
-					$link_data['element_id']=$focused_id;
-					$approve_file_url=$GLOBALS['phpgw']->link('/index.php', $link_data);
-					$this->t->set_var('deliver_file', "<a href=\"".$approve_file_url."\">".lang('Deliver file')."</a>");
-				}
-				
-				if ( $this->ged_dm->admin && $last_version['status'] == 'pending_for_acceptation' )
-				{
-					$link_data=null;
-					$link_data['menuaction']='ged.ged_ui.refuse_file';
-					$link_data['element_id']=$focused_id;
-					$approve_file_url=$GLOBALS['phpgw']->link('/index.php', $link_data);
-					$this->t->set_var('refuse_file', "<a href=\"".$approve_file_url."\">".lang('refuse file')."</a>");
-				}
-				
+				// TODO : Allow lock only if workflow status allows it
 				if ($last_version['status'] == 'working' && $this->ged_dm->can_change_file_lock($focused_id) )
 				{
 					$this->t->set_var('lock_file', '');
@@ -1145,7 +1124,7 @@ class ged_ui
 					$link_data['menuaction']='ged.ged_ui.change_acl';
 					$link_data['element_id']=$focused_id;
 					$update_file_url=$GLOBALS['phpgw']->link('/index.php', $link_data);
-					$this->t->set_var('accept_file', "<a href=\"".$update_file_url."\">".lang('Change ACL')."</a>");
+					$this->t->set_var('change_acl', "<a href=\"".$update_file_url."\">".lang('Change ACL')."</a>");
 				}
 				
 				// TODO : droit specifique de delete ?
@@ -1681,6 +1660,7 @@ class ged_ui
 		$this->t->set_var('file_name_value', $file_name);
 		
 		$this->t->set_block('update_file_tpl', 'power_block', 'power_block_handle');
+
 		// Begin power_block zone
 		if ( $this->ged_dm->admin )
 		{
@@ -1820,27 +1800,6 @@ class ged_ui
 		}
 		else
 			$this->t->set_block('update_file_tpl', 'search_list_block', 'search_list_block_handle');
-    
-		// New status management system
-		// Based on aproval in progress
-    
-    //$this->t->set_block('update_file_tpl', 'version_status_block', 'version_status_block_handle');
-    //$temp_statuses=Array('working', 'current');
-    //foreach ( $temp_statuses as $temp_status  )
-    //{
-    //  $this->t->set_var('version_status_label', lang($temp_status));
-    //  $this->t->set_var('version_status_value',$temp_status);
-    //  
-    //  if ( $version_status==$temp_status )
-    //    $this->t->set_var('version_status_checked', 'checked');
-    //  else
-    //    $this->t->set_var('version_status_checked', '');
-    //  
-    //  
-    //  $this->t->fp('version_status_block_handle', 'version_status_block', True);
-    //       
-    //}
-        
 
 		$this->display_app_header();
 
@@ -2331,237 +2290,41 @@ class ged_ui
 	
 	}
 	
-	function accept_file()
+	// Just one workflow method remains
+	// (removed all the previous hardcoded flow functions)
+	function flow_do()
 	{
-		// element data
-		$element_id=get_var('element_id', array('GET', 'POST'));
-		$pending_version=$this->ged_dm->get_pending_for_internal_review($element_id);
+		$transition=get_var('transition', array('POST', 'GET'));
+		$element_id=get_var('element_id', array('POST', 'GET'));
+		$version_id=get_var('version_id', array('POST', 'GET'));
+		
 		$element=$this->ged_dm->get_element_info($element_id);
+		$version=$this->ged_dm->get_version_info($version_id);
 		
-		// Comment file data
-		$accept_file=get_var('accept_file',array('POST'));
-		$comment=addslashes(get_var('comment', array( 'POST')));
-
-		if ($accept_file==lang('Accept file'))
+		$flow_object=array(
+			'app' => 'ged',
+			'project_root' => $element['project_root'], 
+			'doc_type' => $element['doc_type'], 
+			'element_id' => $element_id, 
+			'version_id' => $version_id
+		);
+		$do_transition_result=$this->flows->do_transition($transition, $flow_object);
+		
+		if ( $do_transition_result['status'] == 'ok')
 		{
-			$comment_file['file_name']=$_FILES['file']['name'];
-			$comment_file['file_size']=$_FILES['file']['size'];
-			$comment_file['file_tmp_name']=$_FILES['file']['tmp_name'];
-			$comment_file['file_mime_type']=$_FILES['file']['type'];
-
-			if ( $this->ged_dm->accept_file ( $element_id, $comment, $comment_file ))
-			{
-				$link_data=null;
-				$link_data['menuaction']='ged.ged_ui.browse';
-				$link_data['focused_id']=$element_id;
-				$link_data['version_id']=$pending_version['version_id'];
-			
-				$GLOBALS['phpgw']->redirect_link('/index.php', $link_data);
-			}
-			// TODO : else get error message and display it
+			$link_data=null;
+			$link_data['menuaction']='ged.ged_ui.browse';
+			$link_data['focused_id']=$element_id;
+			$link_data['version_id']=$version_id;
+		
+			$GLOBALS['phpgw']->redirect_link('/index.php', $link_data);
 		}
-		
-		$this->set_template_defaults();
-
-		$this->t->set_file(array('accept_file_tpl'=>'accept_file.tpl'));
-	
-		$this->t->set_var('probable_reference_label', lang('Probable reference'));
-		$this->t->set_var('probable_reference_value', $this->ged_dm->get_next_available_reference($this->ged_dm->external_review_file_type, $element['project_root']));
-		
-		$this->t->set_var('element_id_value', $element_id);
-		$this->t->set_var('comment_field', 'comment');
-		$this->t->set_var('comment_label', lang('comment'));
-		$this->t->set_var('comment_value', $comment);
-		$this->t->set_var('lang_accept_file', lang('Accept file'));
-
-		$accept_link_data['menuaction']='ged.ged_ui.accept_file';
-		$this->t->set_var('action_accept', $GLOBALS['phpgw']->link('/index.php', $accept_link_data));
-		
-		$this->display_app_header();
-
-		$this->t->pfp('out', 'accept_file_tpl');
-	}
-
-	function submit_file()
-	{
-		$element_id=get_var('element_id', array('GET', 'POST'));
-		
-		$this->ged_dm->submit_file ( $element_id );
-
-		$link_data=null;
-		$link_data['menuaction']='ged.ged_ui.browse';
-		$link_data['focused_id']=$element_id;
-	
-		$GLOBALS['phpgw']->redirect_link('/index.php', $link_data);
-	}
-
-	function reject_file()
-	{
-		// element data
-		$element_id=get_var('element_id', array('GET', 'POST'));
-		$pending_version=$this->ged_dm->get_pending_for_internal_review($element_id);
-		$element=$this->ged_dm->get_element_info($element_id);
-		
-		// Comment file data
-		$reject_file=get_var('reject_file',array('POST'));
-		$comment=addslashes(get_var('comment', array( 'POST')));
-
-		if ($reject_file==lang('Reject file'))
+		elseif ( isset($do_transition_result['error_message']) )
 		{
-			$comment_file['file_name']=$_FILES['file']['name'];
-			$comment_file['file_size']=$_FILES['file']['size'];
-			$comment_file['file_tmp_name']=$_FILES['file']['tmp_name'];
-			$comment_file['file_mime_type']=$_FILES['file']['type'];
-
-			if ( $this->ged_dm->reject_file ( $element_id, $comment, $comment_file ))
-			{
-				$link_data=null;
-				$link_data['menuaction']='ged.ged_ui.browse';
-				$link_data['focused_id']=$element_id;
-				$link_data['version_id']=$pending_version['version_id'];
-			
-				$GLOBALS['phpgw']->redirect_link('/index.php', $link_data);
-			}
-			// TODO : else get error message and display it
+			print ( $do_transition_result['error_message'] );
 		}
+	}	
 		
-		$this->set_template_defaults();
-
-		$this->t->set_file(array('reject_file_tpl'=>'reject_file.tpl'));
-		
-		$this->t->set_var('probable_reference_label', lang('Probable reference'));
-		$this->t->set_var('probable_reference_value', $this->ged_dm->get_next_available_reference($this->ged_dm->internal_review_file_type, $element['project_root']));		
-		
-		$this->t->set_var('element_id_value', $element_id);
-		$this->t->set_var('comment_field', 'comment');
-		$this->t->set_var('comment_label', lang('comment'));
-		$this->t->set_var('comment_value', $comment);
-		$this->t->set_var('lang_reject_file', lang('Reject file'));
-
-		$reject_link_data['menuaction']='ged.ged_ui.reject_file';
-		$this->t->set_var('action_reject', $GLOBALS['phpgw']->link('/index.php', $reject_link_data));
-		
-		$this->display_app_header();
-
-		$this->t->pfp('out', 'reject_file_tpl');
-	}
-
-	function approve_file()
-	{
-		// element data
-		$element_id=get_var('element_id', array('GET', 'POST'));
-		$pending_version=$this->ged_dm->get_pending_for_internal_review($element_id);
-		$element=$this->ged_dm->get_element_info($element_id);
-		
-		// Comment file data
-		$approve_file=get_var('approve_file',array('POST'));
-		$comment=addslashes(get_var('comment', array( 'POST')));
-
-		if ($approve_file==lang('Approve file'))
-		{
-			$comment_file['file_name']=$_FILES['file']['name'];
-			$comment_file['file_size']=$_FILES['file']['size'];
-			$comment_file['file_tmp_name']=$_FILES['file']['tmp_name'];
-			$comment_file['file_mime_type']=$_FILES['file']['type'];
-
-			if ( $this->ged_dm->approve_file ( $element_id, $comment, $comment_file ))
-			{
-				$link_data=null;
-				$link_data['menuaction']='ged.ged_ui.browse';
-				$link_data['focused_id']=$element_id;
-				$link_data['version_id']=$pending_version['version_id'];
-			
-				$GLOBALS['phpgw']->redirect_link('/index.php', $link_data);
-			}
-			// TODO : else get error message and display it
-		}
-		
-		$this->set_template_defaults();
-
-		$this->t->set_file(array('approve_file_tpl'=>'approve_file.tpl'));
-		
-		$this->t->set_var('probable_reference_label', lang('Probable reference'));
-		$this->t->set_var('probable_reference_value', $this->ged_dm->get_next_available_reference($this->ged_dm->internal_review_file_type, $element['project_root']));
-		
-		$this->t->set_var('element_id_value', $element_id);
-		$this->t->set_var('comment_field', 'comment');
-		$this->t->set_var('comment_label', lang('comment'));
-		$this->t->set_var('comment_value', $comment);
-		$this->t->set_var('lang_approve_file', lang('Approve file'));
-
-		$approve_link_data['menuaction']='ged.ged_ui.approve_file';
-		$this->t->set_var('action_approve', $GLOBALS['phpgw']->link('/index.php', $approve_link_data));
-		
-		$this->display_app_header();
-
-		$this->t->pfp('out', 'approve_file_tpl');
-	}
-
-	function deliver_file()
-	{
-		$element_id=get_var('element_id', array('GET', 'POST'));
-		
-		$this->ged_dm->deliver_file ( $element_id );
-
-		$link_data=null;
-		$link_data['menuaction']='ged.ged_ui.browse';
-		$link_data['focused_id']=$element_id;
-	
-		$GLOBALS['phpgw']->redirect_link('/index.php', $link_data);
-	}
-
-	function refuse_file()
-	{
-		// element data
-		$element_id=get_var('element_id', array('GET', 'POST'));
-		$pending_version=$this->ged_dm->get_pending_for_internal_review($element_id);
-		$element=$this->ged_dm->get_element_info($element_id);
-		
-		// Comment file data
-		$refuse_file=get_var('refuse_file',array('POST'));
-		$comment=addslashes(get_var('comment', array( 'POST')));
-
-		if ($refuse_file==lang('Refuse file'))
-		{
-			$comment_file['file_name']=$_FILES['file']['name'];
-			$comment_file['file_size']=$_FILES['file']['size'];
-			$comment_file['file_tmp_name']=$_FILES['file']['tmp_name'];
-			$comment_file['file_mime_type']=$_FILES['file']['type'];
-
-			if ( $this->ged_dm->refuse_file ( $element_id, $comment, $comment_file ))
-			{
-				$link_data=null;
-				$link_data['menuaction']='ged.ged_ui.browse';
-				$link_data['focused_id']=$element_id;
-				$link_data['version_id']=$pending_version['version_id'];
-			
-				$GLOBALS['phpgw']->redirect_link('/index.php', $link_data);
-			}
-			// TODO : else get error message and display it
-		}
-		
-		$this->set_template_defaults();
-
-		$this->t->set_file(array('refuse_file_tpl'=>'refuse_file.tpl'));
-
-		$this->t->set_var('probable_reference_label', lang('Probable reference'));
-		$this->t->set_var('probable_reference_value', $this->ged_dm->get_next_available_reference($this->ged_dm->external_review_file_type, $element['project_root']));
-		
-		$this->t->set_var('element_id_value', $element_id);
-		$this->t->set_var('comment_field', 'comment');
-		$this->t->set_var('comment_label', lang('comment'));
-		$this->t->set_var('comment_value', $comment);
-		$this->t->set_var('lang_refuse_file', lang('Refuse file'));
-
-		$refuse_link_data['menuaction']='ged.ged_ui.refuse_file';
-		$this->t->set_var('action_refuse', $GLOBALS['phpgw']->link('/index.php', $refuse_link_data));
-		
-		$this->display_app_header();
-
-		$this->t->pfp('out', 'refuse_file_tpl');
-
-	}
-	
 	// Search
 	function search()
 	{
