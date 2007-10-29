@@ -84,9 +84,9 @@
 			{
 				$confirm	= phpgw::get_var('confirm', 'bool', 'POST');
 				$execute	= true;//phpgw::get_var('execute', 'bool', 'GET');
-				if(get_var('dir',array('GET')))
+				if(phpgw::get_var('dir', 'string' ,'GET'))
 				{
-					$this->dir = urldecode (get_var('dir',array('GET')));
+					$this->dir = urldecode (phpgw::get_var('dir', 'string' ,'GET'));
 				}
 				if(phpgw::get_var('suffix', 'string', 'GET'))
 				{
