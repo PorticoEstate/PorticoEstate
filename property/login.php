@@ -281,7 +281,7 @@
 			exit;
 		}
 
-		$forward = phpgw::get_var('phpgw_forward', 'bool');
+		$forward = phpgw::get_var('phpgw_forward', 'int');
 		if($forward)
 		{
 			$extra_vars['phpgw_forward'] =  $forward;
