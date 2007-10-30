@@ -40,20 +40,15 @@
 			$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->account		= $GLOBALS['phpgw_info']['user']['account_id'];
 			$this->bocommon		= CreateObject('property.bocommon');
-			$this->db           	= $this->bocommon->new_db();
-			$this->db2           	= $this->bocommon->new_db();
+			$this->db =& $GLOBALS['phpgw']->db;
+			$this->db2 = clone($this->db);
 
-			$this->join			= $this->bocommon->join;
-			$this->left_join	= $this->bocommon->left_join;
-			$this->like			= $this->bocommon->like;
+			$this->like =& $this->db->like;
+			$this->join =& $this->db->join;
+			$this->left_join = " LEFT JOIN ";
 
-		//	$this->grants 	= $GLOBALS['phpgw']->session->appsession('grants_project',$this->currentapp);
-		//	if(!$this->grants)
-			{
-				$this->acl 		= CreateObject('phpgwapi.acl');
-				$this->grants		= $this->acl->get_grants($this->currentapp,'.project');
-		//		$GLOBALS['phpgw']->session->appsession('grants_project',$this->currentapp,$this->grants);
-			}
+			$this->acl 		= CreateObject('phpgwapi.acl');
+			$this->grants	= $this->acl->get_grants($this->currentapp,'.project');
 		}
 
 
@@ -356,12 +351,15 @@
 			return $project_list;
 		}
 
-		function read_single($project_id)
+		function get_meter_table()
 		{
 			$config = CreateObject('phpgwapi.config','property');
 			$config->read_repository();
-			$meter_table = $config->config_data['meter_table'];
+			return isset($config->config_data['meter_table'])?$config->config_data['meter_table']:'';
+		}
 
+		function read_single($project_id)
+		{
 			$sql = "SELECT * from fm_project where id='$project_id'";
 
 			$this->db->query($sql,__LINE__,__FILE__);
@@ -393,11 +391,7 @@
 				$project['p_cat_id']			= $this->db->f('p_cat_id');
 				$project['contact_phone']		= $this->db->f('contact_phone');
 
-
-				if($meter_table)
-				{
-					$project['power_meter']	= $this->get_power_meter($this->db->f('location_code'),$meter_table);
-				}
+				$project['power_meter']	= $this->get_power_meter($this->db->f('location_code'));
 			}
 
 			$sql = "SELECT * FROM fm_origin WHERE destination = 'project' AND destination_id='$project_id' ORDER by origin DESC  ";
@@ -434,13 +428,11 @@
 			return $this->db->f('origin_id');
 		}
 
-		function get_power_meter($location_code = '',$meter_table='')
+		function get_power_meter($location_code = '')
 		{
-			if(!$meter_table)
+			if(!$meter_table = $this->get_meter_table())
 			{
-				$config = CreateObject('phpgwapi.config','property');
-				$config->read_repository();
-				$meter_table = $config->config_data['meter_table'];
+				return false;
 			}
 
 			$this->db2->query("SELECT ext_meter_id as power_meter FROM $meter_table where location_code='$location_code' and category='1'",__LINE__,__FILE__);
@@ -623,12 +615,7 @@
 
 		function update_power_meter($power_meter,$location_code,$address)
 		{
-			$config = CreateObject('phpgwapi.config','property');
-			$config->read_repository();
-			
-			$meter_table = isset($config->config_data['meter_table']) ? $config->config_data['meter_table']:'';
-
-			if(!isset($meter_table) || !$meter_table)
+			if(!$meter_table = $this->get_meter_table())
 			{
 				return;
 			}
