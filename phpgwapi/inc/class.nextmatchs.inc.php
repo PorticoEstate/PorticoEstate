@@ -204,7 +204,8 @@
 			$extravars = Array();
 			$extravars = $this->split_extras($extravars,$extra);
 			
-			$var = array(
+			$var = array
+			(
 				'form_action'   => $this->action ? $this->page($extra) : $GLOBALS['phpgw']->link($sn, $extra),
 				'lang_category' => lang('Category'),
 				'lang_all'      => lang('All'),
@@ -216,7 +217,7 @@
 				'start_value'   => $start,
 				'order_value'   => $order,
 				'sort_value'    => $sort,
-				'query_value'   => urlencode(stripslashes($GLOBALS['query'])),
+				'query_value'   => urlencode($query), //FIXME this was the global
 				'table_width'   => $twidth,
 				'left'          => $this->left($sn,$start,$total,$extra),
 				'search'        => ($showsearch?$this->search($search_obj):''),
@@ -423,13 +424,13 @@
 
 			$start = $localstart;
 			$var = array(
-				'form_action'  => ($this->action?$this->page($extra):$GLOBALS['phpgw']->link($sn, $extra)),
+				'form_action'  => ($this->action ? $this->page($extra) : $GLOBALS['phpgw']->link($sn, $extra)),
 				'filter_value' => $filter,
 				'qfield'       => $qfield,
 				'start_value'  => $start,
 				'order_value'  => $order,
 				'sort_value'   => $sort,
-				'query_value'  => urlencode(stripslashes($GLOBALS['query'])),
+				'query_value'  => urlencode($query)), //FIXME was global
 				'th_bg'        => $GLOBALS['phpgw_info']['theme']['th_bg'],
 				'search'       => $this->search($search_obj),
 				'filter'       => ($filter_obj?$this->filter($filter_obj,$yours):'')
@@ -461,7 +462,7 @@
 				'start_value'   => $start,
 				'order_value'   => $order,
 				'sort_value'    => $sort,
-				'query_value'   => urlencode(stripslashes($GLOBALS['query'])),
+				'query_value'   => urlencode($query), //FIXME was gloval
 				'th_bg'         => $GLOBALS['phpgw_info']['theme']['th_bg'],
 				'search'        => $this->search($search_obj),
 				'filter'        => ($filter_obj?$this->filter($filter_obj,$yours):'')
@@ -475,7 +476,7 @@
 		*
 		 * @param $search_obj default 0
 		 */
-		function search($search_obj=0)
+		function search($search_obj = null, $_query = null)
 		{
 			if(is_array($search_obj))
 			{
@@ -483,20 +484,10 @@
 				$_query	= stripslashes($params['query']);
 				$search_obj = (isset($params['search_obj'])?$params['search_obj']:'');
 			}
-			else
-			{
-				$_query = (isset($GLOBALS['query'])?stripslashes($GLOBALS['query']):'');
-			}
 
-			// If the place a '"' in there search, it will mess everything up
-			// Our only option is to remove it
-			if (ereg('"',$_query))
-			{
-				$_query = ereg_replace('"','',$_query);
-			}
 			$var = array
 			(
-				'query_value' => stripslashes($_query),
+				'query_value' => $_query,
 				'lang_search' => lang('Search')
 			);
 
@@ -516,7 +507,7 @@
 		 * @param $indxfieldname ?
 		 * @param $strfieldname ?
 		 */
-		function filterobj($filtertable, $idxfieldname, $strfieldname)
+		public static function filterobj($filtertable, $idxfieldname, $strfieldname)
 		{
 			$filter_obj = array(array('none','show all'));
 			$index = 0;
@@ -702,13 +693,23 @@
 		 * @param string $currentcolor the current row class
 		 * @return string the new row class
 		 */
-		function alternate_row_class($classname = '')
+		public static function alternate_row_class($classname = null)
 		{
-			if ( ! $classname || $classname == 'row_on')
+			static $value;
+			if ( $classname != null )
 			{
-				return 'row_off';
+				$value = $classname;
 			}
-			return 'row_on';
+
+			if ( $value == 'row_off' )
+			{
+				$value = 'row_on';
+			}
+			else
+			{
+				$value = 'row_off';
+			}
+			return $value;
 		}
 
 		/**
@@ -717,23 +718,11 @@
 		 * @deprecated
 		 * @param $currentcolor default ''
 		 */
-		function alternate_row_color($currentcolor = '')
+		public static function alternate_row_color($currentcolor = null)
 		{
 			trigger_error( lang('Call to deleted method nextmatchs::alternate_row_color() use nextmatchs::alternate_row_class() instead'), E_USER_WARNING);
-			if (! $currentcolor)
-			{
-				$currentcolor = $GLOBALS['tr_color'];
-			}
 
-			if ($currentcolor == 'row_on')
-			{
-				$GLOBALS['tr_color'] = 'row_off';
-			}
-			else
-			{
-				$GLOBALS['tr_color'] = 'row_on';
-			}
-			return $GLOBALS['tr_color'];
+			return self::alternate_row_class($currentcolor);
 		}
 
 		// If you are using the common bgcolor="{tr_color}"
@@ -743,9 +732,9 @@
 		*
 		 * @param $tpl ?
 		 */
-		function template_alternate_row_color(&$tpl)
+		public static function template_alternate_row_color(&$tpl)
 		{
-			$tpl->set_var('tr_color', $this->alternate_row_color() );
+			$tpl->set_var('tr_color', self::alternate_row_color() );
 		}
 
 		/**
@@ -753,9 +742,9 @@
 		* 
 		* @param object $tpl reference to template class
 		*/
-		function template_alternate_row_class(&$tpl)
+		public static function template_alternate_row_class(&$tpl, $classname = null)
 		{
-			$tpl->set_var('tr_class', $this->row_class = $this->alternate_row_class($this->row_class) );
+			$tpl->set_var('tr_class', self::alternate_row_class($classname) );
 		}
 
 		/**

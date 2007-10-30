@@ -31,75 +31,75 @@
 	*/
 	$GLOBALS['phpgw_info']['server']['global_denied_users'] = array
 	(
-		'adm'			=> True,
-		'alias'			=> True,
-		'amanda'		=> True,
-		'apache'		=> True,
-		'avahi'			=> True,
-		'backup'		=> True,
-		'backup'		=> True,
-		'beagleindex'	=> True,
-		'bin'			=> True,
-		'cupsys'		=> True,
-		'cvs'			=> True,
-		'cyrus'			=> True,
-		'daemon'		=> True,
-		'dhcp'			=> True,
-		'dnsmasq'		=> True,
-		'fetchmail'		=> True,
-		'ftp'			=> True,
-		'games'			=> True,
-		'gdm'			=> True,
-		'gnats'			=> True,
-		'gopher'		=> True,
-		'haldaemon'		=> True,
-		'hal'			=> True,
-		'halt'			=> True,
-		'hplip'			=> True,
-		'ident'			=> True,
-		'irc'			=> True,
-		'klog'			=> True,
-		'ldap'			=> True,
-		'list'			=> True,
-		'lp'			=> True,
-		'mailnull'		=> True,
-		'mail'			=> True,
-		'messagebus'	=> True,
-		'mysql'			=> True,
-		'named'			=> True,
-		'news'			=> True,
-		'nobody'		=> True,
-		'nscd'			=> True,
-		'operator'		=> True,
-		'oracle'		=> True,
-		'pgsql'			=> True,
-		'postfix'		=> True,
-		'postgres'		=> True,
-		'proxy'			=> True,
-		'pvm'			=> True,
-		'qmaild'		=> True,
-		'qmaillog'		=> True,
-		'qmaill'		=> True,
-		'qmailp'		=> True,
-		'qmailq'		=> True,
-		'qmailr'		=> True,
-		'qmails'		=> True,
-		'root'			=> True,
-		'rpc'			=> True,
-		'rpcuser'		=> True,
-		'sabayon-admin'	=> True,
-		'saned'			=> True,
-		'shutdown'		=> True,
-		'squid'			=> True,
-		'sshd'			=> True,
-		'sweep'			=> True,
-		'sync'			=> True,
-		'syslog'		=> True,
-		'sys'			=> True,
-		'uucp'			=> True,
-		'web'			=> True,
-		'www-data'		=> True,
-		'xfs'			=> True
+		'adm'			=> true,
+		'alias'			=> true,
+		'amanda'		=> true,
+		'apache'		=> true,
+		'avahi'			=> true,
+		'backup'		=> true,
+		'backup'		=> true,
+		'beagleindex'	=> true,
+		'bin'			=> true,
+		'cupsys'		=> true,
+		'cvs'			=> true,
+		'cyrus'			=> true,
+		'daemon'		=> true,
+		'dhcp'			=> true,
+		'dnsmasq'		=> true,
+		'fetchmail'		=> true,
+		'ftp'			=> true,
+		'games'			=> true,
+		'gdm'			=> true,
+		'gnats'			=> true,
+		'gopher'		=> true,
+		'haldaemon'		=> true,
+		'hal'			=> true,
+		'halt'			=> true,
+		'hplip'			=> true,
+		'ident'			=> true,
+		'irc'			=> true,
+		'klog'			=> true,
+		'ldap'			=> true,
+		'list'			=> true,
+		'lp'			=> true,
+		'mailnull'		=> true,
+		'mail'			=> true,
+		'messagebus'	=> true,
+		'mysql'			=> true,
+		'named'			=> true,
+		'news'			=> true,
+		'nobody'		=> true,
+		'nscd'			=> true,
+		'operator'		=> true,
+		'oracle'		=> true,
+		'pgsql'			=> true,
+		'postfix'		=> true,
+		'postgres'		=> true,
+		'proxy'			=> true,
+		'pvm'			=> true,
+		'qmaild'		=> true,
+		'qmaillog'		=> true,
+		'qmaill'		=> true,
+		'qmailp'		=> true,
+		'qmailq'		=> true,
+		'qmailr'		=> true,
+		'qmails'		=> true,
+		'root'			=> true,
+		'rpc'			=> true,
+		'rpcuser'		=> true,
+		'sabayon-admin'	=> true,
+		'saned'			=> true,
+		'shutdown'		=> true,
+		'squid'			=> true,
+		'sshd'			=> true,
+		'sweep'			=> true,
+		'sync'			=> true,
+		'syslog'		=> true,
+		'sys'			=> true,
+		'uucp'			=> true,
+		'web'			=> true,
+		'www-data'		=> true,
+		'xfs'			=> true
 	);
 
 	/**
@@ -108,87 +108,87 @@
 	*/
 	$GLOBALS['phpgw_info']['server']['global_denied_groups'] = array
 	(
-		'admin'			=> True,
-		'adm'			=> True,
-		'audio'			=> True,
-		'avahi'			=> True,
-		'backup'		=> True,
-		'bin'			=> True,
-		'cdrom'			=> True,
-		'console'		=> True,
-		'crontab'		=> True,
-		'cvs'			=> True,
-		'daemon'		=> True,
-		'dba'			=> True,
-		'dhcp'			=> True,
-		'dialout'		=> True,
-		'dip'			=> True,
-		'dirmngr'		=> True,
-		'disk'			=> True,
-		'dnstools'		=> True,
-		'fax'			=> True,
-		'floppy'		=> True,
-		'ftp'			=> True,
-		'games'			=> True,
-		'gdm'			=> True,
-		'gnats'			=> True,
-		'haldaemon'		=> True,
-		'hal'			=> True,
-		'irc'			=> True,
-		'klog'			=> True,
-		'kmem'			=> True,
-		'ldap'			=> True,
-		'list'			=> True,
-		'lpadmin'		=> True,
-		'lp'			=> True,
-		'lp'			=> True,
-		'mail'			=> True,
-		'man'			=> True,
-		'messagebus'	=> True,
-		'mysql'			=> True,
-		'named'			=> True,
-		'news'			=> True,
-		'nobody'		=> True,
-		'nofiles'		=> True,
-		'nogroup'		=> True,
-		'oinstall'		=> True,
-		'operator'		=> True,
-		'oracle'		=> True,
-		'plugdev'		=> True,
-		'popusers'		=> True,
-		'postdrop'		=> True,
-		'postfix'		=> True,
-		'postgres'		=> True,
-		'pppusers'		=> True,
-		'proxy'			=> True,
-		'qmail'			=> True,
-		'root'			=> True,
-		'sabayon-admin'	=> True,
-		'saned'			=> True,
-		'sasl'			=> True,
-		'scanner'		=> True,
-		'shadow'		=> True,
-		'slipusers'		=> True,
-		'slocate'		=> True,
-		'src'			=> True,
-		'ssh'			=> True,
-		'ssl-cert'		=> True,
-		'staff'			=> True,
-		'sudo'			=> True,
-		'sweep'			=> True,
-		'syslog'		=> True,
-		'sys'			=> True,
-		'tape'			=> True,
-		'tty'			=> True,
-		'users'			=> True,
-		'utmp'			=> True,
-		'uucp'			=> True,
-		'video'			=> True,
-		'voice'			=> True,
-		'web'			=> True,
-		'wheel'			=> True,
-		'www-data'		=> True,
-		'xfs'			=> True,
+		'admin'			=> true,
+		'adm'			=> true,
+		'audio'			=> true,
+		'avahi'			=> true,
+		'backup'		=> true,
+		'bin'			=> true,
+		'cdrom'			=> true,
+		'console'		=> true,
+		'crontab'		=> true,
+		'cvs'			=> true,
+		'daemon'		=> true,
+		'dba'			=> true,
+		'dhcp'			=> true,
+		'dialout'		=> true,
+		'dip'			=> true,
+		'dirmngr'		=> true,
+		'disk'			=> true,
+		'dnstools'		=> true,
+		'fax'			=> true,
+		'floppy'		=> true,
+		'ftp'			=> true,
+		'games'			=> true,
+		'gdm'			=> true,
+		'gnats'			=> true,
+		'haldaemon'		=> true,
+		'hal'			=> true,
+		'irc'			=> true,
+		'klog'			=> true,
+		'kmem'			=> true,
+		'ldap'			=> true,
+		'list'			=> true,
+		'lpadmin'		=> true,
+		'lp'			=> true,
+		'lp'			=> true,
+		'mail'			=> true,
+		'man'			=> true,
+		'messagebus'	=> true,
+		'mysql'			=> true,
+		'named'			=> true,
+		'news'			=> true,
+		'nobody'		=> true,
+		'nofiles'		=> true,
+		'nogroup'		=> true,
+		'oinstall'		=> true,
+		'operator'		=> true,
+		'oracle'		=> true,
+		'plugdev'		=> true,
+		'popusers'		=> true,
+		'postdrop'		=> true,
+		'postfix'		=> true,
+		'postgres'		=> true,
+		'pppusers'		=> true,
+		'proxy'			=> true,
+		'qmail'			=> true,
+		'root'			=> true,
+		'sabayon-admin'	=> true,
+		'saned'			=> true,
+		'sasl'			=> true,
+		'scanner'		=> true,
+		'shadow'		=> true,
+		'slipusers'		=> true,
+		'slocate'		=> true,
+		'src'			=> true,
+		'ssh'			=> true,
+		'ssl-cert'		=> true,
+		'staff'			=> true,
+		'sudo'			=> true,
+		'sweep'			=> true,
+		'syslog'		=> true,
+		'sys'			=> true,
+		'tape'			=> true,
+		'tty'			=> true,
+		'users'			=> true,
+		'utmp'			=> true,
+		'uucp'			=> true,
+		'video'			=> true,
+		'voice'			=> true,
+		'web'			=> true,
+		'wheel'			=> true,
+		'www-data'		=> true,
+		'xfs'			=> true,
 	);
 
 	/**
@@ -342,7 +342,7 @@
 		{
 			if ($this->data['expires'] != -1 && $this->data['expires'] < time())
 			{
-				return True;
+				return true;
 			}
 			else
 			{
@@ -476,7 +476,7 @@
 					}
 					else
 					{
-						$free = True;
+						$free = true;
 					}
 				}
 			}
@@ -540,36 +540,12 @@
 
 		function accounts_popup($app)
 		{
-			$group_id = 0;
-			if(isset($_REQUEST['group_id']))
-			{
-				$group_id = $_REQUEST['group_id'];
-			}
+			$group_id = phpgw::get_var('group_id', 'int');
 
-			//I don't know why we insist on using this global in nextmatch - skwashd Jan07
-			$GLOBALS['query'] = '';
-			if(isset($_POST['query']))
-			{
-				$GLOBALS['query'] = $_POST['query'];
-			}
-			
-			$start = 0;
-			if(isset($_POST['start']))
-			{
-				$start = intval($_POST['start']);
-			}
-
-			$order = 'account_lid';
-			if(isset($_GET['order']))
-			{
-				$order = $_GET['order'];
-			}
-			
-			$sort = 'ASC';
-			if(isset($_GET['sort']))
-			{
-				$sort = $_GET['sort'];
-			}
+			$query = phpgw::get_var('query', 'string', 'POST');
+			$start = phpgw::get_var('start', 'int', 'POST');
+			$order = phpgw::get_var('order', 'string', 'POST', 'account_lid');
+			$sort = phpgw::get_var('sort', 'string', 'POST', 'ASC');
 
 			$this->nextmatchs = createObject('phpgwapi.nextmatchs');
 
@@ -607,30 +583,30 @@
 					$GLOBALS['phpgw']->template->set_var('select_name',"account_user[]']");
 					$GLOBALS['phpgw']->template->set_var('js_function','ExchangeAccountSelect');
 					$GLOBALS['phpgw']->template->set_var('lang_perm',lang('group name'));
-					$GLOBALS['phpgw']->template->fp('withperm','withperm_intro',True);
+					$GLOBALS['phpgw']->template->fp('withperm','withperm_intro',true);
 					break;
 				case 'admin_acl':
 					$action = 'admin.uiaclmanager.accounts_popup';
 					$app = 'addressbook';
 					$GLOBALS['phpgw']->template->set_var('select_name',"account_addressmaster[]']");
 					$GLOBALS['phpgw']->template->set_var('js_function','ExchangeAccountSelect');
-					$GLOBALS['phpgw']->template->fp('withperm','withperm_intro',True);
-					$GLOBALS['phpgw']->template->fp('withoutperm','withoutperm_intro',True);
+					$GLOBALS['phpgw']->template->fp('withperm','withperm_intro',true);
+					$GLOBALS['phpgw']->template->fp('withoutperm','withoutperm_intro',true);
 					break;
 				case 'projects':
 					$action = 'projects.uiprojects.accounts_popup';
 					$GLOBALS['phpgw']->template->set_var('select_name',"values[coordinator]']");
 					$GLOBALS['phpgw']->template->set_var('js_function','ExchangeAccountText');
-					$GLOBALS['phpgw']->template->fp('withperm','withperm_intro',True);
-					$GLOBALS['phpgw']->template->fp('withoutperm','withoutperm_intro',True);
+					$GLOBALS['phpgw']->template->fp('withperm','withperm_intro',true);
+					$GLOBALS['phpgw']->template->fp('withoutperm','withoutperm_intro',true);
 					break;
 				case 'e_projects':
 					$action = 'projects.uiprojects.e_accounts_popup';
 					$app = 'projects';
 					$GLOBALS['phpgw']->template->set_var('select_name',"employees[]']");
 					$GLOBALS['phpgw']->template->set_var('js_function','ExchangeAccountSelect');
-					$GLOBALS['phpgw']->template->fp('withperm','withperm_intro',True);
-					$GLOBALS['phpgw']->template->fp('withoutperm','withoutperm_intro',True);
+					$GLOBALS['phpgw']->template->fp('withperm','withperm_intro',true);
+					$GLOBALS['phpgw']->template->fp('withoutperm','withoutperm_intro',true);
 					break;
 			}
 
@@ -701,7 +677,7 @@
 					{
 						case 'addressbook':
 						default:
-							$GLOBALS['phpgw']->template->fp('other','group_other',True);
+							$GLOBALS['phpgw']->template->fp('other','group_other',true);
 					}
 				}
 				else
@@ -716,7 +692,7 @@
 				}
 			}
 
-			if (!$GLOBALS['query'])
+			if ( !$query )
 			{
 				$val_users = array();
 				if (isset($group_id) && !empty($group_id))
@@ -779,7 +755,7 @@
 					case 'calendar':	$select = 'both'; break;
 					default:			$select = 'accounts'; break;
 				}
-				$entries	= $this->get_list($select,$start,$sort,$order,$GLOBALS['query']);
+				$entries	= $this->get_list($select, $start, $sort, $order, $query);
 				$total		= $this->total;
 				for ($i=0;$i<count($entries);$i++)
 				{
@@ -807,7 +783,7 @@
 // -------------------------- end nextmatch ------------------------------------
 
 			$GLOBALS['phpgw']->template->set_var('search_action',$GLOBALS['phpgw']->link('/index.php',$link_data));
-			$GLOBALS['phpgw']->template->set_var('search_list',$this->nextmatchs->search(array('query' => $GLOBALS['query'], 'search_obj' => 1)));
+			$GLOBALS['phpgw']->template->set_var('search_list',$this->nextmatchs->search(array('query' => $query, 'search_obj' => 1)));
 
 // ---------------- list header variable template-declarations --------------------------
 
@@ -844,17 +820,17 @@
 					'account_display'	=> $GLOBALS['phpgw']->common->grab_owner_name($val_users[$i]['account_id'])
 				));
 
-				$GLOBALS['phpgw']->template->fp('list','accounts_list',True);
+				$GLOBALS['phpgw']->template->fp('list','accounts_list',true);
 			}
 
-			$GLOBALS['phpgw']->template->set_var('start',$start);
-			$GLOBALS['phpgw']->template->set_var('sort',$sort);
-			$GLOBALS['phpgw']->template->set_var('order',$order);
-			$GLOBALS['phpgw']->template->set_var('query',$GLOBALS['query']);
-			$GLOBALS['phpgw']->template->set_var('group_id',$group_id);
+			$GLOBALS['phpgw']->template->set_var('start', $start);
+			$GLOBALS['phpgw']->template->set_var('sort', $sort);
+			$GLOBALS['phpgw']->template->set_var('order', $order);
+			$GLOBALS['phpgw']->template->set_var('query', $query);
+			$GLOBALS['phpgw']->template->set_var('group_id', $group_id);
 
 			$GLOBALS['phpgw']->template->set_var('lang_done',lang('done'));
-			$GLOBALS['phpgw']->template->pfp('out','accounts_list_t',True);
+			$GLOBALS['phpgw']->template->pfp('out','accounts_list_t',true);
 			$GLOBALS['phpgw']->common->phpgw_exit();
 		}
 		
@@ -863,7 +839,7 @@
 		*
 		* @param integer $accountID Account id
 		* @param integer $groupID Group id
-		* @return boolean True on success otherwise false
+		* @return boolean true on success otherwise false
 		* @internal Required for LDAP support
 		*/
 		function add_account2Group($groupID)
@@ -876,7 +852,7 @@
 		*
 		* @param integer $accountID Account id
 		* @param integer $groupID Group id
-		* @return boolean True on success otherwise false
+		* @return boolean true on success otherwise false
 		* @internal Required for LDAP support
 		*/
 		function delete_account4Group($groupID)

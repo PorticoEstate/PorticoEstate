@@ -12,72 +12,11 @@
 	*/
 	
 	
-	// PHP5 compat fix
-	if (version_compare(phpversion(), '5.0') < 0)
+	if (!function_exists('filter_var')) // ext/filter was added in 5.2.0
 	{
-		eval('
-			function clone($obj)
-			{
-				if ( method_exists($obj, "__clone") )
-				{
-					$new_obj = $obj;
-					$new_obj->__clone();
-					return $new_obj;
-				}
-				return $obj;
-			}
-		');
-	}
-
-	/*
-	* This makes our life a lot easier
-	*/
-	if (!function_exists('http_build_query'))
-	{
-		/**
-		* PHP4 implementation of PHP5's http_build_query
-		*
-		* @author Nikulin Alexander  http://the-notebook.org
-		* @author Dave Hall skwashd at phpgroupware.org
-		* @link taken from http://the-notebook.org/wp-content/uploads/2006/04/openid-comments-0.9.1.zip
-		* @see http://php.net/http-build-query
-		*
-		* @param array $formdata elements of the query string
-		* @param string $numeric_prefix the prefix to apply to all numbers
-		* @param string $separator the string used between variable, the default (&amp;) is W3C compliant
-		* @param string $key the parent element used for recursive arrays
-		* @return string the formatted query string
-		*/
-		function http_build_query( $formdata, $numeric_prefix = null, $separator = '&amp;', $key = null )
-		{
-			$res = array();
-			foreach( (array)$formdata as $k => $v )
-			{
-				$tmp_key = urlencode( is_int($k) ? $numeric_prefix.$k : $k );
-				if( $key ) 
-				{
-					$tmp_key = $key.'['.$tmp_key.']';
-				}
-
-				if ( is_array( $v ) || is_object( $v ) )
-				{
-					$res[] = http_build_query( $v, null, $separator, $tmp_key );
-				}
-				else
-				{
-					$res[] = $tmp_key."=".urlencode( $v );
-				}
-			}
-
-			return implode( $separator, $res );
-		}
-	}
-
-	
-	if (!function_exists('html_entity_decode'))//html_entity_decode() is only available in PHP4.3+
-	{
-		die('<h1>You appear to be using PHP ' . PHP_VERSION . " phpGroupWare requires 4.3.0 or later <br>\n"
-			. 'Please contact your System Administrator</h1>');
+		die('<p class="msg">'
+			. lang('You appear to be using PHP %1, phpGroupWare requires 5.2.0 or later', PHP_VERSION). "\n"
+			. '</p></body></html>');
 	}
 
 	include_once(PHPGW_API_INC.'/common_functions.inc.php');
@@ -111,7 +50,13 @@
 		}
 		if ( !isset($GLOBALS['phpgw']->translation) || !is_object($GLOBALS['phpgw']->translation) )
 		{
-			return sprintf( preg_replace('/(%\d)+/', '%s', $key),  $m1, $m2, $m3, $m4, $m5, $m6, $m7, $m8, $m9, $m10) . ' *#*';
+			$str = $key;
+			for ( $i = 10; $i > 0; --$i )
+			{	
+				$var = "m{$i}";
+				$str = preg_replace("/(%$i)+/", $$var, $str);
+			}
+			return "$str*#*";
 		}
 		return $GLOBALS['phpgw']->translation->translate("$key", $vars);
 	}
