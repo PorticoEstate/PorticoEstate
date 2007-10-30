@@ -183,6 +183,7 @@
 				return;
 			}
 
+			// FIXME this is ugly - skwashd oct07
 			if (is_array($_POST))
 			{
 				while( list($key, $val) = each($_POST))

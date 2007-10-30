@@ -14,7 +14,7 @@
 	* This class will handle all data. 
 	* This means that the state of the abstraction we call the cool addressbook chooser 
 	* is here.... THE STATE! Nothing webish about this file. This file will no receive ever variables 
-	* from HTTP_POST or GET. That is for the UI class to handle. This class has methods that receive 
+	* from $_POST or $_GET. That is for the UI class to handle. This class has methods that receive 
 	* parameters so you  can use it from anyware.
 	* @package phpgwapi
 	* @subpackage gui

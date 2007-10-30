@@ -66,15 +66,14 @@
 		$lastname = $_SERVER["HTTP_SHIB_SURNAME"];
 	}
 												
-	//if(isset($_POST) && isset($submit) && $submit)
-	if($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST) && isset($_POST['submitit']))
+	if ( $_SERVER['REQUEST_METHOD'] == 'POST' && phpgw::get_var('submitit', 'bool', 'POST') )
 	{
-		$submit = $_POST['submitit'];
-  		$loginn = $_POST['login'];
-		$firstname = $_POST['firstname'];
-		$lastname = $_POST['lastname'];
-		$password1 = $_POST['passwd'];
-		$password2 = $_POST['passwd_confirm'];
+		$submit		= phpgw::get_var('submitit', 'bool', 'POST');
+  		$loginn		= phpgw::get_var('login', 'string', 'POST');
+		$firstname	= phpgw::get_var('firstname', 'string', 'POST');
+		$lastname	= phpgw::get_var('lastname', 'string', 'POST');
+		$password1	= phpgw::get_var('passwd', 'string', 'POST');
+		$password2	= phpgw::get_var('passwd_confirm', 'string', 'POST');
 	}
 
 	$error = array();

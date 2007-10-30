@@ -104,7 +104,7 @@
 		* @returns string safe redirect url
 		* @author Dave Hall
 		*/
-		function safe_redirect($url)
+		public static function safe_redirect($url)
 		{
 			return $GLOBALS['phpgw_info']['server']['webserver_url']
 				. '/redirect.php?go=' . urlencode($url);
@@ -136,7 +136,7 @@
 		 */
 		function redirect($url = '')
 		{
-			$iis = @strpos($_SERVER['SERVER_SOFTWARE'], 'IIS', 0);
+			$iis = strpos($_SERVER['SERVER_SOFTWARE'], 'IIS', 0) !== false;
 			
 			if ( !$url )
 			{
@@ -159,22 +159,43 @@
 		}
 
 		/**
-		 * Shortcut to translation class
-		 *
-		 * This function is a basic wrapper to translation->translate()
-		 *
-		 * @access public
-		 * @param string The key for the phrase
-		 * @param string The first additional param
-		 * @param string The second additional param
-		 * @param string The thrid additional param
-		 * @param string The fourth additional param
-		 * @see	translation->translate()
-		 */
-		function lang($key, $m1 = '', $m2 = '', $m3 = '', $m4 = '') 
+		* Translate a string to a user's prefer language - convience method
+		*
+		* @param string $key phrase to translate (note: %n are replaces with $mn)
+		* @param string $m1 substitution string
+		* @param string $m1 substitution string
+		* @param string $m2 substitution string
+		* @param string $m3 substitution string
+		* @param string $m4 substitution string
+		* @param string $m5 substitution string
+		* @param string $m6 substitution string
+		* @param string $m7 substitution string
+		* @param string $m8 substitution string
+		* @param string $m9 substitution string
+		* @param string $m10 substitution string
+		* @returns string translated phrase
+		*/
+		function lang($key,$m1='',$m2='',$m3='',$m4='',$m5='',$m6='',$m7='',$m8='',$m9='',$m10='')
 		{
-			/*  */
-			return $this->translation->translate($key);
+			if(is_array($m1))
+			{
+				$vars = $m1;
+			}
+			else
+			{
+				$vars = array($m1, $m2, $m3, $m4, $m5, $m6, $m7, $m8, $m9, $m10);
+			}
+			if ( !isset($GLOBALS['phpgw']->translation) || !is_object($GLOBALS['phpgw']->translation) )
+			{
+				$str = $key;
+				for ( $i = 10; $i > 0; --$i )
+				{	
+					$var = "m{$i}";
+					$str = preg_replace("/(%$i)+/", $$var, $str);
+				}
+				return "$str*#*";
+			}
+			return $this->translation->translate("$key", $vars);
 		}
 
 		/**
