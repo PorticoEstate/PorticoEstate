@@ -1,4 +1,24 @@
 <!-- BEGIN navbar_header -->
+<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript">
+	var page;
+
+	function openwindow(url)
+	{
+		if (page)
+		{
+			if (page.closed)
+			{
+				page.stop;
+				page.close;
+			}
+		}
+		page = window.open(url, "pageWindow","width=700,height=600,location=no,menubar=no,directories=no,toolbar=no,scrollbars=yes,resizable=yes,status=no");
+		if (page.opener == null)
+		{
+			page.opener = window;
+		}
+	}
+</SCRIPT>
 <div id="box">
 	<div id="navpanel">
 		<ul id="nav">
