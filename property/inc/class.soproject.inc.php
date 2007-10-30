@@ -572,13 +572,9 @@
 				$this->db->query("update fm_tenant set contact_phone='". $project['extra']['contact_phone']. "' where id='". $project['extra']['tenant_id']. "'",__LINE__,__FILE__);
 			}
 
-			$config = CreateObject('phpgwapi.config','property');
-			$config->read_repository();
-			$meter_table = $config->config_data['meter_table'];
-
-			if ($project['power_meter'] && $meter_table)
+			if (isset($project['power_meter']) && $project['power_meter'])
 			{
-				$this->update_power_meter($project['power_meter'],$project['location_code'],$address,$meter_table);
+				$this->update_power_meter($project['power_meter'],$project['location_code'],$address);
 			}
 
 			if (count($project['branch']) != 0)
@@ -624,8 +620,17 @@
 			return $receipt;
 		}
 
-		function update_power_meter($power_meter,$location_code,$address,$meter_table)
+		function update_power_meter($power_meter,$location_code,$address)
 		{
+			$config = CreateObject('phpgwapi.config','property');
+			$config->read_repository();
+			
+			$meter_table = isset($config->config_data['meter_table']) ? $config->config_data['meter_table']:'';
+
+			if(!isset($meter_table) || !$meter_table)
+			{
+				return;
+			}
 
 			$location=explode('-',$location_code);
 
@@ -756,13 +761,9 @@
 				$this->db->query("update fm_tenant set contact_phone='". $project['extra']['contact_phone']. "' where id='". $project['extra']['tenant_id']. "'",__LINE__,__FILE__);
 			}
 
-			$config = CreateObject('phpgwapi.config','property');
-			$config->read_repository();
-			$meter_table = $config->config_data['meter_table'];
-
-			if ($project['power_meter'] && $meter_table)
+			if (isset($project['power_meter']) && $project['power_meter'])
 			{
-				$this->update_power_meter($project['power_meter'],$project['location_code'],$address,$meter_table);
+				$this->update_power_meter($project['power_meter'],$project['location_code'],$address);
 			}
 	// -----------------which branch is represented
 			$this->db->query("delete from fm_projectbranch where project_id='" . $project['project_id'] ."'",__LINE__,__FILE__);

@@ -50,7 +50,7 @@
 							{
 								$address = $this->db->db_addslashes($values['location_name']);
 							}				
-							$this->soproject->update_power_meter($entry['value'],$values['location_code'],$address,'fm_entity_1_11');
+							$this->soproject->update_power_meter($entry['value'],$values['location_code'],$address);
 							
 							$maaler_nr = $entry['value'];						
 						}
