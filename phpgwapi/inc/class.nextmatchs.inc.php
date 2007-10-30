@@ -430,7 +430,7 @@
 				'start_value'  => $start,
 				'order_value'  => $order,
 				'sort_value'   => $sort,
-				'query_value'  => urlencode($query)), //FIXME was global
+				'query_value'  => urlencode($query), //FIXME was global
 				'th_bg'        => $GLOBALS['phpgw_info']['theme']['th_bg'],
 				'search'       => $this->search($search_obj),
 				'filter'       => ($filter_obj?$this->filter($filter_obj,$yours):'')
