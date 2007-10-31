@@ -217,7 +217,7 @@
 			
 			$this->bocommon			= CreateObject('property.bocommon');
 			$this->db           	= $this->bocommon->new_db();
-			$this->db->query("SELECT fm_location3.location_code,fm_location3.loc1,fm_location3.loc2,fm_location3.loc3,fm_location1.loc1_name,fm_location2.loc2_name,fm_location3.loc3_name FROM (((( fm_location3 JOIN fm_location2 ON (fm_location3.loc2 = fm_location2.loc2) AND (fm_location3.loc1 = fm_location2.loc1)) JOIN fm_location1 ON (fm_location2.loc1 = fm_location1.loc1)) JOIN fm_owner ON ( fm_location1.owner_id=fm_owner.id)) JOIN fm_part_of_town ON ( fm_location1.part_of_town_id=fm_part_of_town.part_of_town_id)) WHERE (fm_location3.category !=99 OR fm_location3.category IS NULL)");
+			$this->db->query("SELECT fm_location2.location_code,fm_location2.loc1,fm_location2.loc2,fm_location1.loc1_name,fm_location2.loc2_name ,fm_location2.status,fm_location2.remark,fm_location2.rental_area FROM ((( fm_location2 JOIN fm_location1 ON (fm_location2.loc1 = fm_location1.loc1)) JOIN fm_owner ON ( fm_location1.owner_id=fm_owner.id)) JOIN fm_part_of_town ON ( fm_location1.part_of_town_id=fm_part_of_town.part_of_town_id)) WHERE (fm_location2.category !=99 OR fm_location2.category IS NULL)");
 			
 			$datatable = array();
 			$i=0;
@@ -232,6 +232,7 @@
 								'formater' => 'text',
 								'sortable' => true						
 							);
+							echo $value . " - ";
 						}
 						$datatable['grid']['rows'][$i]['data'][] = $value;
 					} 

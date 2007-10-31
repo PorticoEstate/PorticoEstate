@@ -11,12 +11,14 @@ YAHOO.util.Event.addListener(window, "load", function() {
 		this.myDataSource.responseType = YAHOO.util.DataSource.TYPE_HTMLTABLE;
 		
 		
-		this.myDataSource.responseSchema = {
-		    fields: [{ key:"location_code" },
-		            { key:"loc1" },
-		            {key:"loc1_name" }
+		this.myDataSource.responseSchema = myResponseSchema;
+		/*{
+		    fields: [
+		    	{ key:"location_code" },
+		        { key:"loc1_name" },
+		        { key:"status" }
 		    ]
-		};
+		};*/
 		
 		this.myDataTable = new YAHOO.widget.DataTable("markup", myColumnDefs, this.myDataSource,
 		        {
