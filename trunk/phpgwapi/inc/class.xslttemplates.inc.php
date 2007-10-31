@@ -259,9 +259,11 @@
 				$xmldata[$key] = $value;
 			}
 			$this->xmldata = var2xml('PHPGW',$xmldata);
+			/*
 			echo "<textarea cols='200' rows='20'>";
 			echo $this->xmldata;
 			echo "</textarea><br>";
+			*/
 			return $this->xmldata;
 		}
 
