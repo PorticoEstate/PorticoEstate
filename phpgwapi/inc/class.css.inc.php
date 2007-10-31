@@ -34,7 +34,15 @@
 		* @var array list of validated files to be included in the head section of a page
 		*/
 		var $files;
-
+		
+		/**
+		 *
+		 * @var array list of "external files to be included in the head section of a page
+		 * Some times while using libs and such its not fesable to move css files to /tempaltes/[template]/css 
+		 * because the css files are using relative paths
+		 */
+		var $external_files;
+		
 		/**
 		* Constructor
 		*
@@ -55,9 +63,11 @@
 		function get_css_links()
 		{
 			$links = '';
+						
 			if(!empty($this->files) && is_array($this->files))
 			{
 				$links = "<!--CSS Imports from phpGW css class -->\n";
+				
 				foreach($this->files as $app => $tplset)
 				{
 					if(!empty($tplset) && is_array($tplset))
@@ -71,13 +81,24 @@
 
 									$links .= '<link rel="stylesheet" type="text/css" href="'
 								 	. $GLOBALS['phpgw_info']['server']['webserver_url']
-								 	. '/' . $app . '/templates/' . $tpl . '/css/' . $file . '.css" />' . "\n";
+								 	. '/' . $app . '/templates/' . $tpl . '/css/' . $file . '.css" />' . "\n";									
 								}
 							}
 						}
 					}
+				}				
+			}
+			
+			if(!empty($this->external_files) && is_array($this->external_files)) 
+			{
+				$links = "<!--CSS Imports from phpGW css class -->\n";
+				
+				foreach($this->external_files as $file)
+				{					
+					$links .=  '<link href="' . $file . '" type="text/css"  rel="stylesheet">' . "\n";
 				}
 			}
+			
 			return $links;
 		}
 
@@ -101,6 +122,16 @@
 				return True;
 			}
 			return False;
+		}
+		
+		/**
+		 * Adds css file to external files. Does no validating
+		 * @parma string $path Full path to css file to be included 
+		 * @returns true
+		 */
+		
+		function add_external_file($path) {
+			$this->external_files[] = $path;
 		}
 	}
 ?>
