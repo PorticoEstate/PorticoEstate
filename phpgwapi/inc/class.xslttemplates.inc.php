@@ -211,8 +211,12 @@
 				$this->xsldata .= '<!ENTITY nl "&#10;">'."\n";
 				$this->xsldata .= '<!ENTITY nbsp "&#160;">'."\n";
 				$this->xsldata .= ']>'."\n";
-				$this->xsldata .= '<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0">'."\n";
-
+				$this->xsldata .= '<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0" 				
+				xmlns:phpgw="http://phpgroupware.org/functions"
+				xmlns:func="http://exslt.org/functions"
+				extension-element-prefixes="func" 
+				>'."\n";
+				
 				if(!$wml_out)
 				{
  					$this->xsldata .= '<xsl:output method="html" version="1.0" encoding="utf-8" indent="yes" omit-xml-declaration="yes" standalone="yes" media-type="application/xml+xhtml"/>'."\n";
@@ -255,6 +259,9 @@
 				$xmldata[$key] = $value;
 			}
 			$this->xmldata = var2xml('PHPGW',$xmldata);
+			echo "<textarea cols='200' rows='20'>";
+			echo $this->xmldata;
+			echo "</textarea><br>";
 			return $this->xmldata;
 		}
 
