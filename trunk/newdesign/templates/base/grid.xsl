@@ -43,7 +43,7 @@
 <xsl:template name="javascript_def">
 	Javascript def:<br/>
 	<pre>
-	 <script type="text/javascript">
+	<script type="text/javascript"> 
 		var myColumnDefs = [	
 		<xsl:for-each select="column_defs/column">	 
 		 	{
@@ -54,7 +54,13 @@
 		 	}
 		 	<xsl:if test="position() &lt; last()">,</xsl:if>
 		</xsl:for-each>			
-		]
+		];
+		var myResponseSchema = { fields: [
+		<xsl:for-each select="column_defs/column">
+			{key: "<xsl:value-of select="key"/>"}
+			<xsl:if test="position() &lt; last()">,</xsl:if>
+		</xsl:for-each>
+		]};
 	</script> 
 	</pre>
 	end<br /> 
