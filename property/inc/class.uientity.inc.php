@@ -96,7 +96,8 @@
 			$this->district_id			= $this->bo->district_id;
 			$this->status				= $this->bo->status;
 			$this->fakebase 			= $this->bo->fakebase;
-			$this->category_name			= $this->bo->category_name;
+			$this->category_name		= $this->bo->category_name;
+			$this->category_dir			= $this->bo->category_dir;
 			$this->menu->sub			='entity_'.$this->entity_id;
 			$GLOBALS['phpgw']->session->appsession('entity_id',$this->currentapp,$this->entity_id);
 			$this->start_date			= $this->bo->start_date;
@@ -243,7 +244,7 @@
 			$loc1 		= phpgw::get_var('loc1');
 			$id 		= phpgw::get_var('id', 'int');
 
-			$file = $this->fakebase. SEP . $this->category_name . SEP . $loc1 . SEP . $id . SEP . $file_name;
+			$file = $this->fakebase. SEP . $this->category_dir . SEP . $loc1 . SEP . $id . SEP . $file_name;
 
 //echo 'file: ' . $file . '<br>';
 			if($this->bo->vfs->file_exists(array(
@@ -713,7 +714,7 @@
 				}
 
 				$values['file_name']=str_replace (' ','_',$_FILES['file']['name']);
-				$to_file = $this->fakebase. SEP . $this->category_name . SEP . $values['location']['loc1'] . SEP . $values['id'] . SEP . $values['file_name'];
+				$to_file = $this->fakebase. SEP . $this->category_dir . SEP . $values['location']['loc1'] . SEP . $values['id'] . SEP . $values['file_name'];
 
 				if((!isset($values['document_name_orig']) || !$values['document_name_orig']) && $this->bo->vfs->file_exists(array(
 						'string' => $to_file,
