@@ -219,7 +219,7 @@
 				
 				if(!$wml_out)
 				{
- 					$this->xsldata .= '<xsl:output method="html" version="1.0" encoding="utf-8" indent="yes" omit-xml-declaration="yes" standalone="yes" media-type="application/xml+xhtml"/>'."\n";
+ 					$this->xsldata .= '<xsl:output method="html" version="1.0" encoding="utf-8" indent="yes" omit-xml-declaration="yes" standalone="yes" media-type="text/html"/>'."\n";
 	 				//FIXME Remove the line above and uncomment the one below once the main templates are converted or else it fscks validation
  					//$this->xsldata .= '<xsl:output method="html" version="1.0" encoding="utf-8" indent="yes" omit-xml-declaration="yes" doctype-public="-//W3C/DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd" standalone="yes" media-type="application/xml+xhtml"/>'."\n";
 				}
@@ -313,41 +313,25 @@
 				$this->xml_parse();
 			}
 
-			$minor = explode(".",phpversion());
+			$xml = new DOMDocument;
+			$xml->loadXML($this->xmldata);
 
-			if ($minor[0] == 4)
-			{
-				$xsltproc = xslt_create();
-				$arguments = array('/_xml' => $this->xmldata, '/_xsl' => $this->xsldata);
-				$html = xslt_process($xsltproc,'arg:/_xml','arg:/_xsl',NULL,$arguments);
-				xslt_free($xsltproc);
-			}
-			else
-			{
-				$xml = new DOMDocument;
-				$xml->loadXML($this->xmldata);
+			$xsl = new DOMDocument;
+			$xsl->loadXML($this->xsldata);
 
-				$xsl = new DOMDocument;
-				$xsl->loadXML($this->xsldata);
+			// Configure the transformer
+			$proc = new XSLTProcessor;
+			$proc->importStyleSheet($xsl); // attach the xsl rules
 
-				// Configure the transformer
-				$proc = new XSLTProcessor;
-				$proc->importStyleSheet($xsl); // attach the xsl rules
-
-				$html =  $proc->transformToXML($xml);
-			}
+			$html =  $proc->transformToXML($xml);
 
 			if (!$html)
 			{
 				echo "<h2>xml-data</h2>";  $this->list_lineno($this->xmldata);
 				echo "<h2>xsl-data</h2>"; $this->list_lineno($this->xsldata);
-				if ($minor[0] == 4)
-				{
-					die(/*$this->xsldata.*/"\n\n XSLT processing error: ".xslt_error($xsltproc));
-				}
+				return '';
 			}
-
-			return $html;
+			return preg_replace('/<!DOCTYPE([^>])+>/', '', $html);
 		}
 
 		function pparse()
