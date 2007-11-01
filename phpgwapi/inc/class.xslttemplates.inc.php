@@ -11,8 +11,7 @@
 	* @version $Id: class.xslttemplates.inc.php,v 1.35 2006/11/10 20:48:06 sigurdne Exp $
 	*/
 
-	if( (floor(phpversion()) == 4 && !extension_loaded('xslt') )
-		|| (floor(phpversion()) >= 5 && !extension_loaded('xsl') ) )
+	if( !extension_loaded('xsl') )
 	{
 		die('PHP CONFIGURATION. xslt-extension is not loaded. Please contact the system administrator.');
 	}
