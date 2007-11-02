@@ -102,8 +102,7 @@
 
 			$this->soadmin_entity 	= CreateObject('property.soadmin_entity',$entity_id,$cat_id);
 			$this->so 		= CreateObject('property.soentity',$entity_id,$cat_id);
-			$this->category_name	= isset($this->soadmin_entity->category_name) ? $this->soadmin_entity->category_name : '';
-			$this->category_dir = str_replace(array(' ','-'),'_',$this->category_name);
+			$this->category_dir = 'entity_' . $entity_id . '_' . $cat_id;
 
 			if ($start)
 			{
@@ -409,7 +408,6 @@
 			}
 
 			$this->vfs->override_acl = 1;
-
 			$entity['files'] = $this->vfs->ls (array(
 			     'string' => $this->fakebase. '/' . $this->category_dir . '/' . $entity['location_data']['loc1'] .  '/' . $data['id'],
 			     'relatives' => array(RELATIVE_NONE)));
