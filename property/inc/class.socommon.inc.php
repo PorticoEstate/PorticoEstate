@@ -56,24 +56,36 @@
 				$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];			
 			}
 
-			$this->db = CreateObject('phpgwapi.db');
-
-			if($GLOBALS['phpgw_info']['server']['db_name'])
+			if(is_object($GLOBALS['phpgw']->db))
 			{
-				$this->db->Host = $GLOBALS['phpgw_info']['server']['db_host'];
-				$this->db->Type = $GLOBALS['phpgw_info']['server']['db_type'];
-				$this->db->Database = $GLOBALS['phpgw_info']['server']['db_name'];
-				$this->db->User = $GLOBALS['phpgw_info']['server']['db_user'];
-				$this->db->Password = $GLOBALS['phpgw_info']['server']['db_pass'];
+				$this->db =& $GLOBALS['phpgw']->db;
 			}
 			else
 			{
-				$ConfigDomain = get_var('ConfigDomain',array('COOKIE','POST'));
-				$phpgw_domain = $GLOBALS['phpgw_domain'];
-				$this->db->Host     = $phpgw_domain[$ConfigDomain]['db_host'];
-				$this->db->Database = $phpgw_domain[$ConfigDomain]['db_name'];
-				$this->db->User     = $phpgw_domain[$ConfigDomain]['db_user'];
-				$this->db->Password = $phpgw_domain[$ConfigDomain]['db_pass'];
+				$this->db = CreateObject('phpgwapi.db');
+
+				if(isset($GLOBALS['phpgw_info']['server']['db_name']) && $GLOBALS['phpgw_info']['server']['db_name'])
+				{
+					$this->db->Host = $GLOBALS['phpgw_info']['server']['db_host'];
+					$this->db->Type = $GLOBALS['phpgw_info']['server']['db_type'];
+					$this->db->Database = $GLOBALS['phpgw_info']['server']['db_name'];
+					$this->db->User = $GLOBALS['phpgw_info']['server']['db_user'];
+					$this->db->Password = $GLOBALS['phpgw_info']['server']['db_pass'];
+				}
+				else
+				{
+					$ConfigDomain = phpgw::get_var('ConfigDomain', 'string' , 'COOKIE');
+					if(!$ConfigDomain)
+					{
+						$ConfigDomain = phpgw::get_var('ConfigDomain', 'string' , 'POST');
+					}
+					$GLOBALS['phpgw_info']['user']['domain'] = $ConfigDomain;
+					$phpgw_domain = $GLOBALS['phpgw_domain'];
+					$this->db->Host     = $phpgw_domain[$ConfigDomain]['db_host'];
+					$this->db->Database = $phpgw_domain[$ConfigDomain]['db_name'];
+					$this->db->User     = $phpgw_domain[$ConfigDomain]['db_user'];
+					$this->db->Password = $phpgw_domain[$ConfigDomain]['db_pass'];
+				}
 			}
 
 			$this->account	= $GLOBALS['phpgw_info']['user']['account_id'];
@@ -384,7 +396,7 @@
 			else
 			{
 				$db = CreateObject('phpgwapi.db');
-				if($GLOBALS['phpgw_info']['server']['db_name'])
+				if(isset($GLOBALS['phpgw_info']['server']['db_name']) && $GLOBALS['phpgw_info']['server']['db_name'])
 				{
 					$db->Host = $GLOBALS['phpgw_info']['server']['db_host'];
 					$db->Type = $GLOBALS['phpgw_info']['server']['db_type'];
@@ -394,8 +406,13 @@
 				}
 				else
 				{
-					$ConfigDomain = get_var('ConfigDomain',array('COOKIE','POST'));
+					$ConfigDomain = phpgw::get_var('ConfigDomain', 'string' , 'COOKIE');
+					if(!$ConfigDomain)
+					{
+						$ConfigDomain = phpgw::get_var('ConfigDomain', 'string' , 'POST');
+					}
 					$phpgw_domain = $GLOBALS['phpgw_domain'];
+					$GLOBALS['phpgw_info']['user']['domain'] = $ConfigDomain;
 					$db->Host     = $phpgw_domain[$ConfigDomain]['db_host'];
 					$db->Database = $phpgw_domain[$ConfigDomain]['db_name'];
 					$db->User     = $phpgw_domain[$ConfigDomain]['db_user'];
