@@ -96,7 +96,6 @@
 			$this->district_id			= $this->bo->district_id;
 			$this->status				= $this->bo->status;
 			$this->fakebase 			= $this->bo->fakebase;
-			$this->category_name		= $this->bo->category_name;
 			$this->category_dir			= $this->bo->category_dir;
 			$this->menu->sub			='entity_'.$this->entity_id;
 			$GLOBALS['phpgw']->session->appsession('entity_id',$this->currentapp,$this->entity_id);
