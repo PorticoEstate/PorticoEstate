@@ -196,7 +196,7 @@
 			<xsl:choose>
 				<xsl:when test="value_project_id!=''">
 					<tr>
-						<td>
+						<td title="{lang_copy_project_statustext}" style="cursor:help">
 							<xsl:value-of select="lang_copy_project"/>
 						</td>
 						<td>
@@ -223,7 +223,7 @@
 						<xsl:when test="selected_request =''">
 							<tr>
 								<td valign="top">
-									<a href="{link_select_request}" onMouseover="window.status='{lang_select_request_statustext}';return true;" onMouseout="window.status='';return true;"><xsl:value-of select="lang_select_request"/></a>
+									<a href="{link_select_request}" title="{lang_select_request_statustext}" onMouseover="window.status='{lang_select_request_statustext}';return true;" onMouseout="window.status='';return true;"><xsl:value-of select="lang_select_request"/></a>
 								</td>
 							</tr>
 						</xsl:when>

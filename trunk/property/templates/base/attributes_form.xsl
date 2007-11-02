@@ -5,7 +5,7 @@
 	</xsl:template>
 
 	<xsl:template match="attributes_values">
-		<xsl:variable name="lang_attribute_statustext"><xsl:value-of select="lang_attribute_statustext"/></xsl:variable>
+		<xsl:variable name="statustext"><xsl:value-of select="statustext"/></xsl:variable>
 			<tr>
 				<xsl:attribute name="class">
 					<xsl:choose>
@@ -21,7 +21,7 @@
 					</xsl:choose>
 				</xsl:attribute>
 
-				<td class="{class}" align="left" valign="top">
+				<td class="{class}" align="left" valign="top" title="{$statustext}" style="cursor:help">
 					<xsl:value-of select="input_text"/>
 					<xsl:choose>
 						<xsl:when test="helpmsg=1">
