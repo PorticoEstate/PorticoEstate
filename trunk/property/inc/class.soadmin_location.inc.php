@@ -64,7 +64,7 @@
 
 		function read($data)
 		{
-			if(is_array($data))
+			if(isset($data) && is_array($data))
 			{
 				if (isset($data['start']))
 				{
