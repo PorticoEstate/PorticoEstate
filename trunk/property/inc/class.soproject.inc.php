@@ -310,11 +310,23 @@
 				$querymethod = '';
 			}
 
-			$sql .= " $filtermethod $querymethod $group_method";
+			$sql .= " $filtermethod $querymethod";
 //echo substr($sql,strripos($sql,'from'));
+			if($GLOBALS['phpgw_info']['server']['db_type']=='postgres')
+			{
+				$sql2 = 'SELECT count(*) FROM (SELECT fm_project.id ' . substr($sql,strripos($sql,'from'))  . ' GROUP BY fm_project.id) as cnt';
+				$this->db->query($sql2,__LINE__,__FILE__);
+				$this->db->next_record();
+				$this->total_records = $this->db->f(0);
+			}
+			else
+			{
+				$sql2 = 'SELECT fm_project.id ' . substr($sql,strripos($sql,'from'))  . ' GROUP BY fm_project.id';
+				$this->db->query($sql2,__LINE__,__FILE__);
+				$this->total_records = $this->db->num_rows();
+			}
 
-			$this->db2->query('SELECT fm_project.id ' . substr($sql,strripos($sql,'from')),__LINE__,__FILE__);
-			$this->total_records = $this->db2->num_rows();
+			$sql .= " $group_method";
 			if(!$allrows)
 			{
 				$this->db->limit_query($sql . $ordermethod,$start,__LINE__,__FILE__);
