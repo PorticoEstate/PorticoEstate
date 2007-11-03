@@ -229,6 +229,15 @@
 						$i++;
 					}
 				}
+
+				$uicols['name'][]			= 'entry_date';
+				$uicols['descr'][]			= lang('entry date');
+				$uicols['statustext'][]		= lang('entry date' );
+				$uicols['datatype'][$i]		= 'timestamp';
+				$cols_return_extra[]= array(
+					'name'	=> 'entry_date',
+					'datatype'	=> 'timestamp',
+				);
 			}
 			else
 			{
@@ -337,9 +346,10 @@
 			$sql .= " $filtermethod $querymethod";
 
 //echo $sql;
+			$this->db2->query('SELECT count(*)' . substr($sql,strripos($sql,'from')),__LINE__,__FILE__);
+			$this->db2->next_record();
+			$this->total_records = $this->db2->f(0);
 
-			$this->db2->query($sql,__LINE__,__FILE__);
-			$this->total_records = $this->db2->num_rows();
 			if(!$allrows)
 			{
 				$this->db->limit_query($sql . $ordermethod,$start,__LINE__,__FILE__);
@@ -373,29 +383,28 @@
 				{
 					for ($i=0;$i<count($cols_return_extra);$i++)
 					{
-						$value='';
-						$value=$this->db->f($cols_return_extra[$i]['name']);
+						$value = $this->db->f($cols_return_extra[$i]['name']);
 
-						if(($cols_return_extra[$i]['datatype']=='R' || $cols_return_extra[$i]['datatype']=='LB') && $value):
+						if(($cols_return_extra[$i]['datatype']=='R' || $cols_return_extra[$i]['datatype']=='LB') && $value)
 						{
 							$sql="SELECT value FROM fm_entity_choice where entity_id=$entity_id AND cat_id=$cat_id AND attrib_id=" .$cols_return_extra[$i]['attrib_id']. "  AND id=" . $value;
 							$this->db2->query($sql);
 							$this->db2->next_record();
 							$entity_list[$j][$cols_return_extra[$i]['name']] = $this->db2->f('value');
 						}
-						elseif($cols_return_extra[$i]['datatype']=='AB' && $value):
+						else if($cols_return_extra[$i]['datatype']=='AB' && $value)
 						{
 							$contact_data	= $contacts->read_single_entry($value,array('n_given'=>'n_given','n_family'=>'n_family','email'=>'email'));
 							$entity_list[$j][$cols_return_extra[$i]['name']]	= $contact_data[0]['n_family'] . ', ' . $contact_data[0]['n_given'];
 						}
-						elseif($cols_return_extra[$i]['datatype']=='VENDOR' && $value):
+						else if($cols_return_extra[$i]['datatype']=='VENDOR' && $value)
 						{
 							$sql="SELECT org_name FROM fm_vendor where id=$value";
 							$this->db2->query($sql);
 							$this->db2->next_record();
 							$entity_list[$j][$cols_return_extra[$i]['name']] = $this->db2->f('org_name');
 						}
-						elseif($cols_return_extra[$i]['datatype']=='CH' && $value):
+						else if($cols_return_extra[$i]['datatype']=='CH' && $value)
 						{
 							$ch= unserialize($value);
 	
@@ -414,16 +423,18 @@
 								unset($ch_value);
 							}
 						}
-						elseif($cols_return_extra[$i]['datatype']=='D' && $value):
+						else if($cols_return_extra[$i]['datatype']=='D' && $value)
 						{
-//_debug_array($value);
 							$entity_list[$j][$cols_return_extra[$i]['name']]=date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'],strtotime($value));
 						}
-						else:
+						else if($cols_return_extra[$i]['datatype']=='timestamp' && $value)
+						{
+							$entity_list[$j][$cols_return_extra[$i]['name']]=date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'],$value);
+						}
+						else
 						{
 							$entity_list[$j][$cols_return_extra[$i]['name']]=$value;
 						}
-						endif;
 					}
 				}
 
@@ -712,6 +723,15 @@
 				'location_code'	=> $values['location_code'],
 				'address'	=> $this->db->db_addslashes($address)
 				);
+
+			$admin_location	= CreateObject('property.soadmin_location');
+			$admin_location->read(false);
+
+			// Delete old values for location - in case of moving up in the hierarchy
+			for ($i = 1;$i < $admin_location->total_records + 1; $i++)
+			{
+				$value_set["loc{$i}"]	= false;
+			}
 
 			if(isset($values['location']) && is_array($values['location']))
 			{

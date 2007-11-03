@@ -569,10 +569,9 @@
 			$sql .= "$filtermethod $querymethod";
 
 //echo $sql;
-
-			$this->db2->query($sql,__LINE__,__FILE__);
-
-			$this->total_records = $this->db2->num_rows();
+			$this->db2->query('SELECT count(*)' . substr($sql,strripos($sql,'from')),__LINE__,__FILE__);
+			$this->db2->next_record();
+			$this->total_records = $this->db2->f(0);
 
 			if(!$allrows)
 			{
