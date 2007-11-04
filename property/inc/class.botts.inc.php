@@ -94,7 +94,7 @@
 			$query	= phpgw::get_var('query');
 			$sort	= phpgw::get_var('sort');
 			$order	= phpgw::get_var('order');
-			$filter	= phpgw::get_var('filter', 'int');
+			$filter	= phpgw::get_var('filter');
 			$user_filter	= phpgw::get_var('user_filter');
 			$cat_id	= phpgw::get_var('cat_id', 'int');
 			$district_id	= phpgw::get_var('district_id', 'int');
