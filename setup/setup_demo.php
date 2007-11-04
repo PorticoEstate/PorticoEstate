@@ -25,7 +25,7 @@
 
 	// Authorize the user to use setup app and load the database
 	// Does not return unless user is authorized
-	if(!$GLOBALS['phpgw_setup']->auth('Config') || get_var('cancel',Array('POST')))
+	if(!$GLOBALS['phpgw_setup']->auth('Config') || phpgw::get_var('cancel', 'bool', 'POST'))
 	{
 		Header('Location: index.php');
 		exit;
