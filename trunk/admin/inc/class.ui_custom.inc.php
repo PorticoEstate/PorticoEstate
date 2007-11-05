@@ -217,8 +217,8 @@
 
 		function edit_attrib()
 		{
-			$appname	= phpgw::get_var('appname');
-			$location	= phpgw::get_var('location', 'location', 'REQUEST', '.');
+			$appname	= $this->appname;
+			$location	= $this->location;
 			$id			= phpgw::get_var('id', 'int');
 			$values		= phpgw::get_var('values', 'string', 'POST');
 			if(!$values)
@@ -568,8 +568,8 @@
 
 		function edit_custom_function()
 		{
-			$appname	= phpgw::get_var('appname');
-			$location	= phpgw::get_var('location', 'location');
+			$appname	= $this->appname;
+			$location	= $this->location;
 			$id			= phpgw::get_var('id', 'int');
 			$values		= phpgw::get_var('values', 'string', 'POST');
 
