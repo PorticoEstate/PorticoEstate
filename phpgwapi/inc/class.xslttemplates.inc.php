@@ -200,34 +200,44 @@
 		*
 		* @param boolean $wml_out set to true for wml-enabled browsers
 		*/
-
-		function xsl_parse($wml_out = false)
+		function xsl_parse($output = 'html')
 		{
+			// FIXME: this is a transitional hack, all WML calls should be changed to use xsl_parse('wml')
+			if ( $output === true )
+			{
+				$output = 'wml';
+			}
+
 			if( is_array($this->xslfiles) && count($this->xslfiles) > 0)
 			{
-				$this->xsldata = '<?xml version="1.0" encoding="UTF-8"?>'."\n";
-				$this->xsldata .= '<!DOCTYPE xsl:stylesheet ['."\n";
-				$this->xsldata .= '<!ENTITY nl "&#10;">'."\n";
-				$this->xsldata .= '<!ENTITY nbsp "&#160;">'."\n";
-				$this->xsldata .= ']>'."\n";
-				$this->xsldata .= '<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0" 				
-				xmlns:phpgw="http://phpgroupware.org/functions"
-				xmlns:func="http://exslt.org/functions"
-				extension-element-prefixes="func"
-				exclude-result-prefixes="phpgw"
-				>'."\n";
-				
-				if(!$wml_out)
-				{
- 					$this->xsldata .= '<xsl:output method="html" version="1.0" encoding="utf-8" indent="yes" omit-xml-declaration="yes" standalone="yes" media-type="text/html"/>'."\n";
-	 				//FIXME Remove the line above and uncomment the one below once the main templates are converted or else it fscks validation
- 					//$this->xsldata .= '<xsl:output method="html" version="1.0" encoding="utf-8" indent="yes" omit-xml-declaration="yes" doctype-public="-//W3C/DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd" standalone="yes" media-type="application/xml+xhtml"/>'."\n";
-				}
-				else
-				{
-					$this->xsldata .= '<xsl:output method = "xml" encoding="utf-8"  doctype-public="-//WAPFORUM//DTD WML 1.3//EN" doctype-system="http://www.wapforum.org/DTD/wml13.dtd" />'."\n";				
+				$this->xsldata = <<<XSLT
+<?xml version="1.0" encoding="UTF-8"?>
+	<!DOCTYPE xsl:stylesheet [
+		<!ENTITY nl "&#10;">
+		<!ENTITY nbsp "&#160;">
+		]>
+	<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0"
+		xmlns:phpgw="http://phpgroupware.org/functions"
+		xmlns:func="http://exslt.org/functions"
+		extension-element-prefixes="func" 
+		exclude-result-prefixes="phpgw"
+		>
 
+XSLT;
+				switch (strtolower($output))
+				{
+					case 'wml':
+						$this->xsldata .= '<xsl:output method = "xml" encoding="utf-8"  doctype-public="-//WAPFORUM//DTD WML 1.3//EN" doctype-system="http://www.wapforum.org/DTD/wml13.dtd" />'."\n";				
+						break;
+
+					case 'html':
+					case 'xhtml':
+ 						$this->xsldata .= '<xsl:output method="html" version="1.0" encoding="utf-8" indent="yes" omit-xml-declaration="yes" standalone="yes" doctype-system="http://www.w3.org/TR/html4/strict.dtd" doctype-public="-//W3C//DTD HTML 4.01//EN" media-type="text/html"/>' . "\n";
+	 					//FIXME Remove the line above and uncomment the one below once the main templates are converted or else it fscks validation
+ 						//$this->xsldata .= '<xsl:output method="html" version="1.0" encoding="utf-8" indent="yes" omit-xml-declaration="yes" doctype-public="-//W3C/DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd" standalone="yes" media-type="application/xml+xhtml"/>'."\n";
+						break;
 				}
+				
 				$this->xsldata .= '<xsl:template match="/">'."\n";
 				$this->xsldata .= "\t".'<xsl:apply-templates select="PHPGW"/>'."\n";
 				$this->xsldata .= '</xsl:template>'."\n";
