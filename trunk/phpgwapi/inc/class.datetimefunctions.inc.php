@@ -11,19 +11,6 @@
 	* @version $Id: class.datetimefunctions.inc.php,v 1.1 2006/11/10 13:33:49 sigurdne Exp $
 	*/
 
-	$d1 = strtolower(@substr(PHPGW_API_INC,0,3));
-	$d2 = strtolower(@substr(PHPGW_SERVER_ROOT,0,3));
-	$d3 = strtolower(@substr(PHPGW_APP_INC,0,3));
-	if($d1 == 'htt' || $d1 == 'ftp' || $d2 == 'htt' || $d2 == 'ftp' || $d3 == 'htt' || $d3 == 'ftp')
-	{
-		echo 'Failed attempt to break in via an old Security Hole!<br>'."\n";
-		exit;
-	}
-	unset($d1);
-	unset($d2);
-	unset($d3);
-		
-
 	/**
 	* Datetime class that contains common date/time functions
 	*
@@ -38,7 +25,7 @@
 		var $users_localtime;
 		var $cv_gmtdate;
 
-		function datetimefunctions()
+		function __construct()
 		{
 			$this->tz_offset = 3600 * intval(@$GLOBALS['phpgw_info']['user']['preferences']['common']['tz_offset']);
 			print_debug('datetime::datetime::gmtnow',$this->gmtnow,'api');
@@ -64,13 +51,19 @@
 		function getntpoffset()
 		{
 			$error_occured = False;
-			if(!@is_object($GLOBALS['phpgw']->network))
+			if ( !isset($GLOBALS['phpgw']->network) || !is_object($GLOBALS['phpgw']->network) )
 			{
 				$GLOBALS['phpgw']->network = createObject('phpgwapi.network');
 			}
 			$server_time = time();
 
-			if($GLOBALS['phpgw']->network->open_port('129.6.15.28',13,5))
+			$ip = gethostbyname('pool.ntp.org');
+			if ( !$ip )
+			{
+				$ip = '129.6.15.28';
+			}
+
+			if ( $GLOBALS['phpgw']->network->open_port($ip, 13, 5) )
 			{
 				$line = $GLOBALS['phpgw']->network->bs_read_port(64);
 				$GLOBALS['phpgw']->network->close_port();
@@ -117,7 +110,13 @@
 			}
 			$server_time = time();
 
-			$filename = 'http://132.163.4.213/timezone.cgi?GMT';
+			$ip = gethostbyname('nist.time.gov');
+			if ( !$ip )
+			{
+				$ip = '132.163.4.213';
+			}
+
+			$filename = "http://{$ip}/timezone.cgi?GMT";
 			$file = $GLOBALS['phpgw']->network->gethttpsocketfile($filename);
 			if(!$file)
 			{
@@ -553,6 +552,51 @@
 				}
 			}
 			return date($formatTarget, mktime(0,0,0,$map_date['m'], $map_date['d'], $map_date['y']));
+		}
+
+		//TODO move me to phpgwapi_datetime
+		public static function date_array($datestr)
+		{
+			$dateformat =& $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
+
+			$fields = preg_split('/[./-]/',$datestr);
+			foreach ( preg_split('/[./-]/', $dateformat) as $n => $field )
+			{
+				$date[$field] = (int) $fields[$n];
+
+				if ( $field == 'M' )
+				{
+					for($i=1; $i <=12; $i++)
+					{
+						if ( date('M', mktime(0, 0, 0, $i, 1, 2000)) == $fields[$n] )
+						{
+							$date['m'] = $i;
+							break;
+						}
+					}
+				}
+			}
+
+			$ret = array(
+				'year'  => $date['Y'],
+				'month' => $date['m'],
+				'day'   => $date['d']
+			);
+			return $ret;
+		}
+
+		//TODO move me to phpgwapi_datetime
+		public static function date_to_timestamp($date = array())
+		{
+			if ( !count($date) )
+			{
+				return 0;
+			}
+
+			$date_array	= $this->date_array($date);
+			$date	= mktime (8, 0, 0, $date_array['month'], $date_array['day'], $date_array['year']);
+
+			return $date;
 		}
 
 	}
