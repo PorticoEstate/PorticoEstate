@@ -271,7 +271,7 @@
 			
 			if($output == 'wml')
 			{
-				$GLOBALS['phpgw']->xslttpl->wml_out = true;
+				$GLOBALS['phpgw']->xslttpl->set_output('wml');
 			}
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array("list2_{$output}" => $data));
 			$this->save_sessiondata();
@@ -549,7 +549,7 @@
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($this->currentapp) . ' - ' . $appname . ': ' . $function_msg;
 			if($output == 'wml')
 			{
-				$GLOBALS['phpgw']->xslttpl->wml_out = true;
+				$GLOBALS['phpgw']->xslttpl->set_output('wml');
 			}
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('edit' => $data));
 		}
@@ -616,7 +616,7 @@
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($this->currentapp) . ' - ' . $appname . ': ' . $function_msg;
 			if($output == 'wml')
 			{
-				$GLOBALS['phpgw']->xslttpl->wml_out = true;
+				$GLOBALS['phpgw']->xslttpl->set_output('wml');
 			}
 
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('view' => $data));
@@ -671,7 +671,7 @@
 
 			if($output == 'wml')
 			{
-				$GLOBALS['phpgw']->xslttpl->wml_out = true;
+				$GLOBALS['phpgw']->xslttpl->set_output('wml');
 			}
 
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('delete' => $data));
