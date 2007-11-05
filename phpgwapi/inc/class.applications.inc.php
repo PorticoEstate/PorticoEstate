@@ -282,25 +282,17 @@
 		*/
 		function read_installed_apps()
 		{
-			$apps = $this->db->adodb->GetAssoc('select * from phpgw_applications where app_enabled != 0 order by app_order asc');
+			$apps = (array) $this->db->adodb->GetAssoc('select * from phpgw_applications where app_enabled != 0 order by app_order asc');
 			foreach($apps as $key => $value)
 			{
-				/* re-enable the code if it is really needed
-				if (@is_array($GLOBALS['phpgw_info']['user']['preferences']) && 
-					($t = lang($app_name)) != $app_name.'*')
-				{
-					$title = $t;
-				}
-				*/
-
 				$GLOBALS['phpgw_info']['apps'][$value['app_name']] = array
 				(
 					'title'   => $value['app_name'],
 					'name'    => $value['app_name'],
 					'enabled' => true,
 					'status'  => $value['app_enabled'],
-					'id'      => intval($value['app_id']),
-					'order'   => intval($value['app_order']),
+					'id'      => (int) $value['app_id'],
+					'order'   => (int) $value['app_order'],
 					'version' => $value['app_version']
 				);
 			}
