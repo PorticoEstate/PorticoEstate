@@ -121,7 +121,7 @@
 		*/
 		function __destruct()
 		{
-			$this->disconnect();
+	//		$this->disconnect(); // Sigurd: this one introduce an error - at least for postgres
 		}
 
 		/**
