@@ -1,4 +1,4 @@
--- $CVSHeader: phpgwapi/inc/adodb/session/adodb-sessions.oracle.clob.sql,v 1.10 2007/08/06 13:10:09 sigurdne Exp $
+-- $CVSHeader$
 
 DROP TABLE adodb_sessions;
 

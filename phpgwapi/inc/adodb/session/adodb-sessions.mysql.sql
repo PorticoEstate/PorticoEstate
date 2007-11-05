@@ -1,4 +1,4 @@
--- $CVSHeader: phpgwapi/inc/adodb/session/adodb-sessions.mysql.sql,v 1.10 2007/08/06 13:10:09 sigurdne Exp $
+-- $CVSHeader$
 
 CREATE DATABASE /*! IF NOT EXISTS */ adodb_sessions;
 
