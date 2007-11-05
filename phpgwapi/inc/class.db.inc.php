@@ -28,7 +28,7 @@
 	* @subpackage database
 	* @abstract
 	*/
-	class db
+	class phpgwapi_db
 	{
 
 		/**
@@ -90,7 +90,7 @@
 		* Constructor
 		* @param string $query query to be executed (optional)
 		*/
-		function db($query = '',$db_type = '')
+		function __construct($query = '',$db_type = '')
 		{
 			if(!$db_type)
 			{
@@ -114,6 +114,14 @@
 			{
 				$this->query($query);
 			}
+		}
+
+		/**
+		* Destructor
+		*/
+		function __destruct()
+		{
+			$this->disconnect();
 		}
 
 		/**
@@ -160,10 +168,6 @@
 		*/
 		function disconnect()
 		{
-			if($this->debug)
-			{
-				// $GLOBALS['phpgw']->log
-			}
 			$this->adodb->close();
 		}
 
@@ -175,11 +179,6 @@
 		*/
 		function db_addslashes($str)
 		{
-			if ( $this->debug )
-			{
-				// $GLOBALS['phpgw']->log
-				//echo 'to_timestanp: db_addsl';
-			}
 			if ( !is_object($this->adodb) )  //workaround
 			{
 				return addslashes($str);
@@ -195,10 +194,6 @@
 		*/
 		function to_timestamp($epoch)
 		{
-			if($this->debug)
-			{
-			 	// $GLOBALS['phpgw']->log
-			}
 			return substr($this->adodb->DBTimeStamp($epoch), 1, -1);
 		}
 
@@ -210,10 +205,6 @@
 		*/
 		function from_timestamp($timestamp)
 		{
-			if($this->debug)
-			{
-				//$GLOBALS['phpgw']->log
-			}
 			return $this->adodb->UnixTimeStamp($timestamp);
 		}
 
@@ -225,10 +216,6 @@
 		*/
 		function limit($start)
 		{
-			if($this->debug)
-			{
-			 	//$GLOBALS['phpgw']->log
-			}
 			die('where is the sql string?');
 		}
 
@@ -389,7 +376,8 @@
 		*/
 		function get_last_insert_id($table, $field)
 		{
-			if($GLOBALS['phpgw_info']['server']['db_type']=='postgres')
+			// This looks like a pretty ugly hack to me, is it really needed? skwashd nov07
+			if($GLOBALS['phpgw_info']['server']['db_type'] == 'postgres')
 			{
 				$params = explode('.',$this->adodb->pgVersion);
 
@@ -422,10 +410,7 @@
 				}
 				return $Record[0];
 			}
-			else
-			{
-				return $this->adodb->Insert_ID($table, $field);
-			}
+			return $this->adodb->Insert_ID($table, $field);
 		}
 
 		/**
@@ -758,7 +743,57 @@
 			$this->adodb->Disconnect();
 			return True;
 		}
-	 
+		/**
+		* Get the correct date format for DATE field for a particular RDBMS
+		*
+		* @internal the string is compatiable with PHP's date()
+		* @return string the date format string
+		*/
+		public static function date_format()
+		{
+			static $date_format = null;
+			if ( is_null($date_format) )
+			{
+				switch($GLOBALS['phpgw_info']['server']['db_type'])
+				{
+					case 'mssql':
+						$date_format 		= 'M d Y';
+						break;
+					case 'mysql':
+					case 'pgsql':
+					case 'postgres':
+					default:
+						$date_format 		= 'Y-m-d';
+				}
+			}
+			return $date_format;
+	 	}
+	
+		/**
+		* Get the correct datetime format for DATETIME field for a particular RDBMS
+		*
+		* @internal the string is compatiable with PHP's date()
+		* @return string the date format string
+		*/
+		public static function datetime_format()
+		{
+			static $datetime_format = null;
+			if ( is_null($dateformat) )
+			{
+				switch($GLOBALS['phpgw_info']['server']['db_type'])
+				{
+					case 'mssql':
+						$datetime_format 		= 'M d Y g:iA';
+						break;
+					case 'mysql':
+					case 'pgsql':
+					case 'postgres':
+					default:
+						$datetime_format 		= 'Y-m-d G:i:s';
+				}
+			}
+			return $datetime_format;
+	 	}
 				
 	 	/**
 		* Prepare SQL statement
@@ -789,9 +824,9 @@
 		{
 			if ((!$this->connect()) || (!$result_id))
 			{
-				return(FALSE);
+				return false;
 			}
-			return(FALSE);
+			return false;
 		}  
 
 	}
