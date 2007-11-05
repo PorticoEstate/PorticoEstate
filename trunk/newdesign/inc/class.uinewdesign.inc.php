@@ -38,7 +38,6 @@
 
 		function newdesign_uinewdesign()
 		{
-			
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
 			$this->currentapp		= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->account			= $GLOBALS['phpgw_info']['user']['account_id'];
@@ -46,7 +45,6 @@
 			$this->menu->sub		='newdesign';
 			$this->acl 				= & $GLOBALS['phpgw']->acl;
 			$this->acl_location 	= '.demo_location';
-			
 			/*
 			$this->cats				= CreateObject('phpgwapi.categories');
 			$this->nextmatchs		= CreateObject('phpgwapi.nextmatchs');

@@ -1,8 +1,8 @@
 <xsl:template match="phpgw">
-	<xsl:apply-templates /> 
+	<xsl:apply-templates />
 </xsl:template>
 
-<xsl:template name="grid" match="grid">	
+<xsl:template name="grid" match="grid">
 	<div id="markup" class=" yui-skin-sam">
 		<table border="1" id="grid">
 			<thead>
@@ -10,10 +10,10 @@
 			</thead>
 			<tbody>
 				<xsl:apply-templates select="rows" />
-			</tbody>		
+			</tbody>
 		</table>
 	</div>
-	<xsl:call-template name="javascript_def" />	
+	<xsl:call-template name="javascript_def" />
 </xsl:template>
 
 <xsl:template name="column_defs" match="column_defs">
@@ -43,9 +43,9 @@
 <xsl:template name="javascript_def">
 	Javascript def:<br/>
 	<pre>
-	<script type="text/javascript"> 
-		var myColumnDefs = [	
-		<xsl:for-each select="column_defs/column">	 
+	<script type="text/javascript">
+		var myColumnDefs = [
+		<xsl:for-each select="column_defs/column">
 		 	{
 		 		key: "<xsl:value-of select="key"/>",
 		 		label: "<xsl:value-of select="phpgw:or(label,key)"/>",
@@ -53,7 +53,7 @@
 		 		sortable: <xsl:value-of select="phpgw:or(sortable, 'true')"/>
 		 	}
 		 	<xsl:if test="position() &lt; last()">,</xsl:if>
-		</xsl:for-each>			
+		</xsl:for-each>
 		];
 		var myResponseSchema = { fields: [
 		<xsl:for-each select="column_defs/column">
@@ -61,7 +61,7 @@
 			<xsl:if test="position() &lt; last()">,</xsl:if>
 		</xsl:for-each>
 		]};
-	</script> 
+	</script>
 	</pre>
-	end<br /> 
+	end<br />
 </xsl:template>

@@ -27,7 +27,7 @@
 	$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_demo_table (name,address,zip,town, remark,entry_date,user_id) VALUES ('demo name', 'demo address', '12345','Demo Town', 'Remark', " . time() . ", '$account_id')");
 	*/
 	$GLOBALS['phpgw_setup']->oProc->query("DELETE FROM phpgw_acl WHERE acl_appname = 'newdesign'");
-	
+
 	$GLOBALS['phpgw_setup']->oProc->query("SELECT account_id from phpgw_accounts WHERE account_lid = 'Default' AND account_type = 'g'");
 	$GLOBALS['phpgw_setup']->oProc->next_record();
 	$account_id = $GLOBALS['phpgw_setup']->oProc->f('account_id');

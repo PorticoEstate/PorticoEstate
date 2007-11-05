@@ -7,6 +7,6 @@
 		</xsl:when>
 		<xsl:otherwise>
 			<func:result select="$default"/>
-		</xsl:otherwise>		
+		</xsl:otherwise>
 	</xsl:choose>
 </func:function>

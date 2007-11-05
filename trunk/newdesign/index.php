@@ -16,7 +16,7 @@
 	 * This script will check if there is defined a startpage in the users
 	 * preferences - and then forward the user to this page
 	 */
-	
+
 	$currentapp='newdesign';
 
 
@@ -38,6 +38,6 @@
 	{
 		$start_page = array('menuaction'=> $currentapp.'.uinewdesign.index');
 	}
-	
-	$GLOBALS['phpgw']->redirect_link('/index.php',$start_page);	
+
+	$GLOBALS['phpgw']->redirect_link('/index.php',$start_page);
 ?>
