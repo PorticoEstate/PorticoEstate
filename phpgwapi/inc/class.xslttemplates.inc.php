@@ -232,10 +232,10 @@ XSLT;
 
 					case 'html':
 					case 'xhtml':
+					default:
  						$this->xsldata .= '<xsl:output method="html" version="1.0" encoding="utf-8" indent="yes" omit-xml-declaration="yes" standalone="yes" doctype-system="http://www.w3.org/TR/html4/strict.dtd" doctype-public="-//W3C//DTD HTML 4.01//EN" media-type="text/html"/>' . "\n";
 	 					//FIXME Remove the line above and uncomment the one below once the main templates are converted or else it fscks validation
  						//$this->xsldata .= '<xsl:output method="html" version="1.0" encoding="utf-8" indent="yes" omit-xml-declaration="yes" doctype-public="-//W3C/DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd" standalone="yes" media-type="application/xml+xhtml"/>'."\n";
-						break;
 				}
 				
 				$this->xsldata .= '<xsl:template match="/">'."\n";
