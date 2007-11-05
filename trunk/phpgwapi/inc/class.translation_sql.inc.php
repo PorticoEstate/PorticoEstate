@@ -87,12 +87,8 @@
 			}
 		}
 		
-		function translate($key, $vars=false ) 
+		function translate($key, $vars = array() ) 
 		{
-			if (!$vars)
-			{
-				$vars = array();
-			}
 			$ret = $key;
 			// check also if $GLOBALS['lang'] is a array
 			// php-nuke and postnuke are using $GLOBALS['lang'] too
@@ -119,14 +115,14 @@
 				{
 					$sql .= ' order by app_name desc';
 				}
-		
-	 			$GLOBALS['phpgw']->db->query($sql,__LINE__,__FILE__);
-					while ($GLOBALS['phpgw']->db->next_record())
-					{
+
+				$GLOBALS['phpgw']->db->query($sql,__LINE__,__FILE__);
+				while ($GLOBALS['phpgw']->db->next_record())
+				{
 					$GLOBALS['lang'][strtolower($GLOBALS['phpgw']->db->resultSet->fields('message_id'))] = $GLOBALS['phpgw']->db->resultSet->fields('content');
 				}
 			}
-			$ret = $key.'*';	// save key if we dont find a translation
+			$ret = "{$key}*";	// save key if we dont find a translation
 			$key = strtolower(trim(substr($key,0,MAX_MESSAGE_ID_LENGTH)));
 
 			if (isset($GLOBALS['lang'][$key]))
@@ -134,7 +130,7 @@
 				$ret = $GLOBALS['lang'][$key];
 			}
 			$ndx = 1;
-			while( list($key,$val) = each( $vars ) )
+			foreach ( $vars as $key => $val )
 			{
 				$ret = preg_replace( "/%$ndx/", $val, $ret );
 				++$ndx;
