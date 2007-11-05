@@ -382,4 +382,25 @@
 				}
 				return $value;
 			}
+
+			/**
+			* Import a class, should be used in the top of each class, doesn't instantiate like createObject does
+			*
+			* @internal when calling static methods, phpgw::import_class() should be called to ensure it is available
+			* @param string $clasname the class to import module.class
+			*/
+			public static function import_class($classname)
+			{
+				$parts = explode('.', $classname);
+
+				if ( count($parts) != 2 )
+				{
+					trigger_error(lang('Invalid class: %1', $classname), E_USER_ERROR);
+				}
+
+				if ( !include_class($parts[0], $parts[1]) )
+				{
+					trigger_error(lang('Unable to load class: %1', $classname), E_USER_ERROR);
+				}
+			}
 		}
