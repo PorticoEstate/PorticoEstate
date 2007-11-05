@@ -62,7 +62,7 @@
 			$sort	= phpgw::get_var('sort');
 			$order	= phpgw::get_var('order');
 			$filter	= phpgw::get_var('filter', 'int');
-			$cat_id	= phpgw::get_var('cat_id', 'int');
+			$cat_id	= phpgw::get_var('cat_id', 'string');
 			$permission	= phpgw::get_var('permission');
 	//		$location	= get_var('location',array('POST','GET')); // don't work for some reason...
 			$module	= phpgw::get_var('module');
