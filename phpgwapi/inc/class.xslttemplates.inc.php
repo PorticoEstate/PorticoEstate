@@ -31,7 +31,11 @@
 	{
 		var $rootdir = '';
 		var $prev_rootdir = '';
-		var $wml_out = '';
+
+		/**
+		* @var string $output the format of the output
+		*/ 
+		private $output = 'html';
 
 		/**
 		* The xslfiles will be loaded up and merged into $xsldata
@@ -46,18 +50,22 @@
 		* need for a more robust schema.
 		* @var array Variables to convert into xml-data
 		*/
-		var $vars = Array();
-		var $xmlvars = Array();
+		var $vars = array();
+		var $xmlvars = array();
 		var $xmldata = '';
 
 		function xslttemplates($root = '.')
 		{
 			//FIXME Print view/mode should be handled by CSS not different markup
-			if(@isset($GLOBALS['phpgw_info']['flags']['printview']) && $GLOBALS['phpgw_info']['flags']['printview'] == True)
+			if ( isset($GLOBALS['phpgw_info']['flags']['printview']) && $GLOBALS['phpgw_info']['flags']['printview'] )
 			{
-				$this->print = True;
+				$this->print = true;
 			}
 			$this->set_root($root);
+			if ( execMethod('phpgwapi.browser.is_mobile') )
+			{
+				$this->set_output('wml');
+			}
 		}
 
 		function halt($msg)
@@ -65,16 +73,36 @@
 			die($msg);
 		}
 
+		 /**
+		 * Set the output format
+		 *
+		 * @internal currently supports html and wml
+		 * @param string $output the desired output format
+		 */
+		 public function set_output($output)
+		{
+			$output = strtolower($output);
+			switch ( $output )
+			{
+				case 'wml':
+				case 'html':
+					$this->output = $output;
+					break;
+				default:
+					$this->output = 'html';
+			}
+		}
+
 		function set_root($rootdir)
 		{
 			if (!is_dir($rootdir))
 			{
 				$this->halt('set_root: '.$rootdir.' is not a directory.');
-				return False;
+				return false;
 			}
 			$this->prev_rootdir = $this->rootdir;
 			$this->rootdir = $rootdir;
-			return True;
+			return true;
 		}
 
 		function reset_root()
@@ -142,7 +170,7 @@
 			}
 		}
 
-		function set_var($name, $value, $append = False)
+		function set_var($name, $value, $append = false)
 		{
 			if($append)
 			{
@@ -168,7 +196,7 @@
 			}
 		}
 
-		function set_xml($xml, $append = False)
+		function set_xml($xml, $append = false)
 		{
 			if(!$append)
 			{
@@ -198,16 +226,10 @@
 		/**
 		* Parse the xsl-stylesheets
 		*
-		* @param boolean $wml_out set to true for wml-enabled browsers
+		* @param string $ignored this value is now ignored and is only kept as a transitional hack
 		*/
-		function xsl_parse($output = 'html')
+		function xsl_parse()
 		{
-			// FIXME: this is a transitional hack, all WML calls should be changed to use xsl_parse('wml')
-			if ( $output === true )
-			{
-				$output = 'wml';
-			}
-
 			if( is_array($this->xslfiles) && count($this->xslfiles) > 0)
 			{
 				$this->xsldata = <<<XSLT
@@ -224,26 +246,27 @@
 		>
 
 XSLT;
-				switch (strtolower($output))
+				switch ( $this->output )
 				{
 					case 'wml':
 						$this->xsldata .= '<xsl:output method = "xml" encoding="utf-8"  doctype-public="-//WAPFORUM//DTD WML 1.3//EN" doctype-system="http://www.wapforum.org/DTD/wml13.dtd" />'."\n";				
 						break;
 
 					case 'html':
-					case 'xhtml':
 					default:
  						$this->xsldata .= '<xsl:output method="html" version="1.0" encoding="utf-8" indent="yes" omit-xml-declaration="yes" standalone="yes" doctype-system="http://www.w3.org/TR/html4/strict.dtd" doctype-public="-//W3C//DTD HTML 4.01//EN" media-type="text/html"/>' . "\n";
-	 					//FIXME Remove the line above and uncomment the one below once the main templates are converted or else it fscks validation
- 						//$this->xsldata .= '<xsl:output method="html" version="1.0" encoding="utf-8" indent="yes" omit-xml-declaration="yes" doctype-public="-//W3C/DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd" standalone="yes" media-type="application/xml+xhtml"/>'."\n";
 				}
 				
-				$this->xsldata .= '<xsl:template match="/">'."\n";
-				$this->xsldata .= "\t".'<xsl:apply-templates select="PHPGW"/>'."\n";
-				$this->xsldata .= '</xsl:template>'."\n";
-				foreach ( $this->xslfiles as $xslfile)
+				$this->xsldata .= <<<XSLT
+		<xsl:template match="/">
+			<xsl:apply-templates select="PHPGW" />
+		</xsl:template>
+
+XSLT;
+
+				foreach ( $this->xslfiles as $xslfile )
 				{
-					$this->xsldata .= "\n\n<!-- XSL File: {$xslfile} -->\n";
+					$this->xsldata .= "\n<!-- XSL File: {$xslfile} -->\n";
 					$this->xsldata .= file_get_contents($xslfile);
 				}
 				$this->xsldata .= '</xsl:stylesheet>'."\n";
@@ -263,12 +286,11 @@ XSLT;
 			$xmldata = $this->vars;
 
 			/* auto generate xml based on vars */
-
-			while(list($key,$value) = each($xmlvars))
+			foreach ( $this->xmlvars as $key => $value )
 			{
 				$xmldata[$key] = $value;
 			}
-			$this->xmldata = var2xml('PHPGW',$xmldata);
+			$this->xmldata = var2xml('PHPGW', $xmldata);
 
 			/*
 				echo "<textarea cols='200' rows='20'>";
@@ -295,31 +317,20 @@ XSLT;
 			echo "</ol>\n";
 		}
 
-		function parse($parsexsl = True, $parsexml = True)
+		function parse($parsexsl = true, $parsexml = true)
 		{
 			$output_header = !(isset($GLOBALS['phpgw_info']['flags']['noframework']) && $GLOBALS['phpgw_info']['flags']['noframework']);
 			
-			
-			if($this->wml_out)
-			{
-				// Force the output to wml
-				$wml_out = $this->wml_out;
-			}
-			else
-			{
-				// Determine whether the browser is wml-capable or not
-				$wml_out = execMethod('phpgwapi.browser.is_mobile');
-			}
-			
-			if ( !$wml_out )
+			if ( $this->output != 'wml' )
 			{
 				$GLOBALS['phpgw']->common->phpgw_header($output_header);
 			}
 
 			if($parsexsl)
 			{
-				$this->xsl_parse($wml_out);
+				$this->xsl_parse();
 			}
+
 			if($parsexml)
 			{
 				$this->xml_parse();
@@ -349,7 +360,7 @@ XSLT;
 		function pparse()
 		{
 			print $this->parse();
-			return False;
+			return false;
 		}
 		function pp()
 		{
