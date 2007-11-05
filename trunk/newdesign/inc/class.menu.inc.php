@@ -56,9 +56,9 @@
 			{
 				$menu['module'][$i]['this']=True;
 			}
-			$menu['module'][$i]['url'] 		= $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> $currentapp.'.uidemo.index2','output'=>'html'));
-			$menu['module'][$i]['text']			= 'Alternative';
-			$menu['module'][$i]['statustext']	= 'Alternative list';
+			$menu['module'][$i]['url'] 		= $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> $currentapp.'.uinewdesign.project','output'=>'html'));
+			$menu['module'][$i]['text']			= 'Project';
+			$menu['module'][$i]['statustext']	= 'Project';
 			$i++;
 
 			$GLOBALS['phpgw']->session->appsession('menu_demo','sidebox',$menu);

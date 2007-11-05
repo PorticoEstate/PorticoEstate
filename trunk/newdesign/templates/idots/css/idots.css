@@ -1,3 +1,4 @@
+
 body {
 	background: #666;
 }
@@ -12,14 +13,43 @@ body {
 #test-form h2 {
 	margin: 0.2em 0em;
 }
+#test-form fieldset {
+	margin: 1em 0em;	
+	padding: 0.5em;
+}
+#test-form fieldset legend {
+	font-size: 1.2em;
+	font-weight: bold;
+	margin-bottom: 0.2em;
+}
 
 #test-form label {
 	padding: 0.4em 0em;
-	width: 8em;
+	margin-left: 20px;
+	width: 10em;
 	text-align: left;
 	display: block;
 	float: left;
 	color: #444;
+	clear: left;
+	
+}
+#test-form label.required { 
+	margin-left: 0px;
+	padding-left: 20px;
+	background: url('../icons/required.gif') center left no-repeat;
+}
+
+#test-form label.error { 
+	margin-left: 0px;
+	padding-left: 20px;
+	background: url('../icons/error.gif') center left no-repeat;
+}
+
+#test-form label.ok { 
+	margin-left: 0px;
+	padding-left: 20px;
+	background: url('../icons/ok.gif') center left no-repeat;
 }
 
 #test-form input, #test-form textarea {
@@ -29,19 +59,22 @@ body {
 	float: left;	
 	margin-right: 1em;
 	background: #fff;
-	border: 1px solid #444;
+	border: 1px solid#444;
 	color: #222;
 }
 
 #test-form div.error {
 	display: block;
 	float: left;
-	margin: 0.4em 0em;
+	margin: 0.5em 0em;
 	font-weight: bold;
+	color: #ff000;	
+	/*
 	background: url('http://bofly.org/images/warning.gif') center left no-repeat;
 	padding-left: 20px;
-	
+	*/	
 }
+
 #test-form input.error {
 	border: 2px solid red;	
 }
@@ -50,4 +83,16 @@ body {
 	background: #eee;
 	color: #888;
 	display: block;	
+}
+
+#test-form input.date {
+	
+}
+
+#calendar { 
+		display:none; 
+		position:absolute; 
+		left:5px; 
+		top:10px; 
+		z-index:2
 }
