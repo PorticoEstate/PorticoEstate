@@ -213,7 +213,8 @@
 				$this->xsldata .= '<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0" 				
 				xmlns:phpgw="http://phpgroupware.org/functions"
 				xmlns:func="http://exslt.org/functions"
-				extension-element-prefixes="func" 
+				extension-element-prefixes="func"
+				exclude-result-prefixes="phpgw"
 				>'."\n";
 				
 				if(!$wml_out)
@@ -258,11 +259,13 @@
 				$xmldata[$key] = $value;
 			}
 			$this->xmldata = var2xml('PHPGW',$xmldata);
+
 			/*
-			echo "<textarea cols='200' rows='20'>";
-			echo $this->xmldata;
-			echo "</textarea><br>";
+				echo "<textarea cols='200' rows='20'>";
+				echo $this->xmldata;
+				echo "</textarea><br>";
 			*/
+			
 			return $this->xmldata;
 		}
 
