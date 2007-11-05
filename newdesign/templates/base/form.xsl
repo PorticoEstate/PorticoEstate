@@ -6,22 +6,22 @@
 					<xsl:attribute name="title">
 						<xsl:value-of select="tooltip"/>
 					</xsl:attribute>
-					
+
 					<xsl:attribute name="style">
-						<xsl:text>cursor:help</xsl:text>						
+						<xsl:text>cursor:help</xsl:text>
 					</xsl:attribute>
-				</xsl:if>			
-				
+				</xsl:if>
+
 				<xsl:attribute name="class">
-					<xsl:if test="required">				
-							<xsl:text>required </xsl:text>											
+					<xsl:if test="required">
+							<xsl:text>required </xsl:text>
 					</xsl:if>
-					<xsl:if test="error">				
-							<xsl:text>error </xsl:text>											
-					</xsl:if>					
+					<xsl:if test="error">
+							<xsl:text>error </xsl:text>
+					</xsl:if>
 				</xsl:attribute>
 
-				
+
 				<xsl:choose>
 					<xsl:when test="accesskey and contains(title, accesskey)">
 						<xsl:value-of select="substring-before (title, accesskey)"/>
@@ -32,15 +32,15 @@
 					</xsl:when>
 					<xsl:otherwise>
 						<xsl:value-of select="title"/>
-					</xsl:otherwise>		
-				</xsl:choose>		
+					</xsl:otherwise>
+				</xsl:choose>
 			</label>
-		</xsl:if>		
+		</xsl:if>
 	</func:result>
 </func:function>
 
 <xsl:template match="phpgw">
-	<xsl:apply-templates /> 
+	<xsl:apply-templates />
 </xsl:template>
 
 
@@ -49,55 +49,55 @@
 		<xsl:attribute name="class">
 			<xsl:if test="tabbed">
 				<xsl:text>tabbed </xsl:text>
-			</xsl:if>	
+			</xsl:if>
 			<xsl:text>yui-skin-sam</xsl:text>
-		</xsl:attribute>		
-		
-		<h2><xsl:value-of select="title"/></h2>	
-		
+		</xsl:attribute>
+
+		<h2><xsl:value-of select="title"/></h2>
+
 		<p>
 			* Detonates required field
-		</p>	
-		
+		</p>
+
 		<div id="form-content">
 			<xsl:apply-templates select="fieldset" />
 			<xsl:apply-templates select="field | textarea" />
 			<xsl:apply-templates select="bottom_toolbar" />
 		</div>
-		
+
 		<p>
 			<input type="submit" value="Save" />
 			<input type="submit" value="Apply" />
 			<input type="submit" value="Cancel" />
 		</p>
-		
+
 		<div id="calendar"></div>
-	</form>  
+	</form>
 </xsl:template>
 
 <xsl:template match="fieldset">
 	<fieldset>
 		<legend>
 			<xsl:value-of select="title"/>
-		</legend>	
+		</legend>
 		<xsl:apply-templates select="field | textarea" />
-	</fieldset> 
+	</fieldset>
 </xsl:template>
 
 <xsl:attribute-set name="core-attributes">
 	<!--  class, id, style, title -->
 	<xsl:attribute name="id">
-		<xsl:value-of select="phpgw:or(id,generate-id())"/>  
+		<xsl:value-of select="phpgw:or(id,generate-id())"/>
 	</xsl:attribute>
-	
+
 	<xsl:attribute name="class">
-		<xsl:if test="error">error </xsl:if>		
-		<xsl:if test="readonly">readonly </xsl:if>		
-		<xsl:if test="disabled">disabled </xsl:if>		
+		<xsl:if test="error">error </xsl:if>
+		<xsl:if test="readonly">readonly </xsl:if>
+		<xsl:if test="disabled">disabled </xsl:if>
 		<xsl:if test="type='date'">date </xsl:if>
 		<xsl:value-of select="class"/>
 	</xsl:attribute>
-	
+
 	<xsl:attribute name="style">
 		<xsl:value-of select="style"/>
 	</xsl:attribute>
@@ -109,10 +109,10 @@
 	</xsl:attribute>
 </xsl:attribute-set>
 
-<xsl:template name="field" match="field">   	
+<xsl:template name="field" match="field">
 	<xsl:copy-of select="phpgw:label()"/>
-	
-	<xsl:choose>	
+
+	<xsl:choose>
 		<xsl:when test="type='textarea'">
 			<xsl:call-template name="textarea"/>
 		</xsl:when>
@@ -123,49 +123,49 @@
 			<xsl:call-template name="textfield"/>
 		</xsl:otherwise>
 	</xsl:choose>
-	
+
 	<xsl:if test="error">
 		<div class="error">
 			<xsl:value-of select="error"/>
 		</div>
 	</xsl:if>
-	<br />	
+	<br />
 </xsl:template>
 
 <xsl:template name="textfield">
-	<input xsl:use-attribute-sets="input-attributes core-attributes" value="{value}" type="{phpgw:or(type,'text')}">		
+	<input xsl:use-attribute-sets="input-attributes core-attributes" value="{value}" type="{phpgw:or(type,'text')}">
 		<xsl:if test="accesskey">
 			<xsl:attribute name="accesskey">
 				<xsl:value-of select="accesskey"/>
 			</xsl:attribute>
-		</xsl:if>				
-		
+		</xsl:if>
+
 		<xsl:if test="maxlength">
 			<xsl:attribute name="maxlength">
 				<xsl:value-of select="maxlength"/>
 			</xsl:attribute>
-		</xsl:if>	
-		
+		</xsl:if>
+
 		<xsl:if test="disabled">
 			<xsl:attribute name="disabled">disabled</xsl:attribute>
 		</xsl:if>
-		
+
 		<xsl:if test="readonly">
 			<xsl:attribute name="readonly">readonly</xsl:attribute>
-		</xsl:if>		
+		</xsl:if>
 	</input>
 </xsl:template>
 
-<xsl:template name="textarea">			
+<xsl:template name="textarea">
 	<textarea xsl:use-attribute-sets="input-attributes core-attributes" cols="{phpgw:or(cols,20)}" rows="{phpgw:or(rows,3)}">
 		<xsl:if test="accesskey">
 			<xsl:attribute name="accesskey">
 				<xsl:value-of select="accesskey"/>
 			</xsl:attribute>
-		</xsl:if>	
+		</xsl:if>
 		<xsl:value-of select="value"/>
 	</textarea>
-</xsl:template>  
+</xsl:template>
 
 <xsl:template name="date">
 	<input xsl:use-attribute-sets="input-attributes core-attributes" value="{value}" type="text">
@@ -173,6 +173,6 @@
 			<xsl:attribute name="accesskey">
 				<xsl:value-of select="accesskey"/>
 			</xsl:attribute>
-		</xsl:if>	
+		</xsl:if>
 	</input>
 </xsl:template>

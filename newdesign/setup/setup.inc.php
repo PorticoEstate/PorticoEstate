@@ -21,20 +21,20 @@
 
 	$setup_info['newdesign']['author'][] = array
 	(
-		'name'	=> 'Jan Åge Johnsen',
+		'name'	=> 'Jan Ã…ge Johnsen',
 		'email'	=> 'janaage@hikt.no'
 	);
 
 	$setup_info['newdesign']['maintainer'] = array
 	(
-		'name'	=> 'Jan Åge Johnsen',
+		'name'	=> 'Jan ï¿½ge Johnsen',
 		'email'	=> 'janaage@hikt.no'
 	);
 
 	$setup_info['newdesign']['license']  = 'GPL';
 	$setup_info['newdesign']['description'] =
 	'<div align="left">
-		<b>New design</b> playground:		
+		<b>New design</b> playground:
 	</div>';
 
 	$setup_info['newdesign']['note'] =
