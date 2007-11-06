@@ -52,6 +52,7 @@ YAHOO.newdesign.FormHelper = function(form)
 				calendar.render();
 			}
 			var field = dom.get(dateFields[i]);
+			//event.addListener(field, "keypress", this.keypress_date_field, calendar );
 
 			var img = document.createElement('img');
 			img.src = "/phpgwapi/templates/idots/images/cal.png";
@@ -59,6 +60,8 @@ YAHOO.newdesign.FormHelper = function(form)
 			dom.insertAfter( img, field );
 			img.input_field = field;
 			event.addListener(img, "click", this.show_calender, calendar );
+
+
 		}
 
 		var requiredFields = dom.getElementsByClassName( 'required', 'label', form );
@@ -96,6 +99,30 @@ YAHOO.newdesign.FormHelper.prototype.show_calender = function(event, calendar)
 	}
 	calendar.show();
 	dom.setXY( "calendar", dom.getXY( this ), true );
+};
+
+YAHOO.newdesign.FormHelper.prototype.keypress_date_field = function(event, calendar)
+{
+
+	var keyCode = event.keyCode;
+	var date = new Date();
+	/*
+	if(this.value != '' && keyCode==38)
+	{
+		calendar.select(this.value);
+		date = calendar.getSelectedDates();
+		//YAHOO.widget.DateMath.add( date, 'D', 1 );
+	}
+	else if(this.value != '' && keyCode==40)
+	{
+		this.value="down";
+	}
+	*/
+	if( date )
+	{
+		this.value = (date.getMonth()+1) + "/" + date.getDate() + "/" + date.getFullYear();
+	}
+
 };
 
 YAHOO.newdesign.FormHelper.prototype.hide_calender = function(event, calendar)

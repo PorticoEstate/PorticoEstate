@@ -45,34 +45,36 @@
 
 
 <xsl:template name="form" match="form">
-	<form id="test-form" action="{action}">
-		<xsl:attribute name="class">
-			<xsl:if test="tabbed">
-				<xsl:text>tabbed </xsl:text>
-			</xsl:if>
-			<xsl:text>yui-skin-sam</xsl:text>
-		</xsl:attribute>
+	<div class="yui-skin-sam">
+		<form id="test-form" action="{action}">
+			<xsl:attribute name="class">
+				<xsl:if test="tabbed">
+					<xsl:text>tabbed </xsl:text>
+				</xsl:if>
+			</xsl:attribute>
 
-		<h2><xsl:value-of select="title"/></h2>
+			<h2><xsl:value-of select="title"/></h2>
 
-		<p>
-			* Detonates required field
-		</p>
+			<p>
+				* Detonates required field
+			</p>
 
-		<div id="form-content">
-			<xsl:apply-templates select="fieldset" />
-			<xsl:apply-templates select="field | textarea" />
-			<xsl:apply-templates select="bottom_toolbar" />
-		</div>
+			<div id="form-content">
+				<xsl:apply-templates select="fieldset" />
+				<xsl:apply-templates select="field | textarea" />
+				<xsl:apply-templates select="bottom_toolbar" />
+			</div>
 
-		<p>
-			<input type="submit" value="Save" />
-			<input type="submit" value="Apply" />
-			<input type="submit" value="Cancel" />
-		</p>
+			<p>
+				<input type="submit" value="Save" />
+				<input type="submit" value="Apply" />
+				<input type="submit" value="Cancel" />
+			</p>
 
-		<div id="calendar"></div>
-	</form>
+			<div id="calendar"></div>
+		</form>
+	</div>
+	<br style="clear: both"/>
 </xsl:template>
 
 <xsl:template match="fieldset">
