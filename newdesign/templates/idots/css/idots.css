@@ -6,8 +6,6 @@ body {
 #test-form {
 	background: #fff;
 	padding: 1em;
-	margin: 1em;
-	border: 1px solid #666;
 }
 
 #test-form h2 {
@@ -95,4 +93,10 @@ body {
 		left:5px;
 		top:10px;
 		z-index:2
+}
+div.yui-skin-sam {
+	float: left;
+	width: 100%;
+	background: #fff;
+	border: 1px solid #666;
 }
