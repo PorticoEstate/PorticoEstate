@@ -187,7 +187,8 @@
 			return $this->log_if_level('F',  $this->make_parms($arg_array));
 		}
 
-		function write_error_to_db($err) {
+		function write_error_to_db($err)
+		{
 			$db =& $GLOBALS['phpgw']->db;
 			$db->lock('phpgw_log');
 			$db->query("insert into phpgw_log (log_date, log_app, log_account_id, log_account_lid, log_severity, log_file, log_line, log_msg) values "
