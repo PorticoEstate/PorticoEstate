@@ -89,16 +89,24 @@
 		/**
 		* Constructor
 		* @param string $query query to be executed (optional)
+		* @param string $db_type the database engine being used
 		*/
-		function __construct($query = '',$db_type = '')
+		public function __construct($query = null, $db_type = null)
 		{
-			if(!$db_type)
+			if ( is_null($db_type) )
 			{
 				$db_type = $this->Type ? $this->Type : $GLOBALS['phpgw_info']['server']['db_type'];
 			}
 
+			$this->Type = $db_type;
+
+			$this->Database = $GLOBALS['phpgw_info']['server']['db_name']; 
+			$this->Host = $GLOBALS['phpgw_info']['server']['db_host']; 
+			$this->User = $GLOBALS['phpgw_info']['server']['db_user']; 
+			$this->Password = $GLOBALS['phpgw_info']['server']['db_pass']; 
+
 			// We do it this way to allow it to be easily extended in the future
-			switch ( $db_type )
+			switch ( $this->Type )
 			{
 				case 'postgres':
 					$this->join = " JOIN ";
@@ -108,20 +116,39 @@
 					//do nothing for now
 			}
 			
-			$this->adodb = newADOConnection($db_type);
-			$this->adodb->SetFetchMode(3);
-			if($query != '')
+			$this->new_adodb();
+
+			if ( !is_null($query) )
 			{
 				$this->query($query);
 			}
 		}
 
 		/**
+		* Called when object is cloned
+		*/
+		public function __clone()
+		{
+			$this->new_adodb();
+		}
+
+		/**
+		* Create a new adodb object
+		*/
+		private function new_adodb()
+		{
+			$this->adodb = newADOConnection($this->Type);
+			$this->connect();
+			 // would be good if one day we just use ADODB_FETCH_ASSOC
+			$this->adodb->SetFetchMode(ADODB_FETCH_BOTH);
+		}
+
+		/**
 		* Destructor
 		*/
-		function __destruct()
+		public function __destruct()
 		{
-	//		$this->disconnect(); // Sigurd: this one introduce an error - at least for postgres
+			$this->disconnect();
 		}
 
 		/**
@@ -141,7 +168,7 @@
 		* Get current query id
 		* @return int id of current query
 		*/
-		function query_id()
+		public function query_id()
 		{
 			return $this->Query_ID;
 		}
@@ -154,19 +181,35 @@
 		* @param string $User name of database user (optional)
 		* @param string $Password password for database user (optional)
 		*/
-		function connect($Database = '', $Host = '', $User = '', $Password = '')
+		public function connect($Database = null, $Host = null, $User = null, $Password = null)
 		{
-			$this->Database = $Database != '' ? $Database : $this->Database;
-			$this->Host = $Host != '' ? $Host : $this->Host;
-			$this->User = $User != '' ? $User : $this->User;
-			$this->Password = $Password != '' ? $Password : $this->Password;
+			if ( !is_null($Database) )
+			{
+				$this->Database = $Database;
+			}
+
+			if ( !is_null($Host) )
+			{
+				$this->Host = $Host;
+			}
+
+			if ( !is_null($User) )
+			{
+				$this->User = $User;
+			}
+
+			if ( !is_null($Password) )
+			{
+				$this->Password = $Password;
+			}
+
 			return $this->adodb->connect($this->Host, $this->User, $this->Password, $this->Database);
 		}
 
 		/**
 		* Close a connection to a database - only needed for persistent connections
 		*/
-		function disconnect()
+		public function disconnect()
 		{
 			$this->adodb->close();
 		}
@@ -177,7 +220,7 @@
 		* @param string $str the string to be escaped
 		* @return string escaped sting
 		*/
-		function db_addslashes($str)
+		public function db_addslashes($str)
 		{
 			if ( !is_object($this->adodb) )  //workaround
 			{
@@ -192,7 +235,7 @@
 		* @param int unix timestamp
 		* @return string rdms specific timestamp
 		*/
-		function to_timestamp($epoch)
+		public function to_timestamp($epoch)
 		{
 			return substr($this->adodb->DBTimeStamp($epoch), 1, -1);
 		}
@@ -203,7 +246,7 @@
 		* @param string rdms specific timestamp
 		* @return int unix timestamp
 		*/
-		function from_timestamp($timestamp)
+		public function from_timestamp($timestamp)
 		{
 			return $this->adodb->UnixTimeStamp($timestamp);
 		}
@@ -214,7 +257,7 @@
 		* @deprecated
 		* @see limit_query()
 		*/
-		function limit($start)
+		public function limit($start)
 		{
 			die('where is the sql string?');
 		}
@@ -222,7 +265,7 @@
 		/**
 		* Discard the current query result
 		*/
-		function free()
+		public function free()
 		{
 			unset($this->resultSet);
 			return true;
@@ -231,34 +274,33 @@
 		/**
 		* Execute a query
 		*
-		* @param string $Query_String the query to be executed
+		* @param string $sql the query to be executed
 		* @param mixed $line the line method was called from - use __LINE__
 		* @param string $file the file method was called from - use __FILE__
 		* @return integer current query id if sucesful and null if fails
 		*/
-		function query($Query_String, $line = '', $file = '')
+		public function query($sql, $line = '', $file = '')
 		{
-			if(!$this->adodb->isConnected())
+			if ( !$this->adodb->isConnected() )
 			{
 				$this->connect();
 			}
-			$this->resultSet = $this->adodb->Execute($Query_String);
-			if(!$this->resultSet && $this->Halt_On_Error == 'yes')
+
+			$this->resultSet = $this->adodb->Execute($sql);
+
+			if ( !$this->resultSet && $this->Halt_On_Error == 'yes' )
 			{
 				if($file)
 				{
-					trigger_error("$Query_String\n in File: " . $file . "\n on Line: " . $line ."\n". $this->adodb->ErrorMsg(), E_USER_ERROR);
+					trigger_error("$sql\n in File: $file\n on Line: $line\n". $this->adodb->ErrorMsg(), E_USER_ERROR);
 				}
 				else
 				{
-					trigger_error("$Query_String\n". $this->adodb->ErrorMsg(), E_USER_ERROR);
+					trigger_error("$sql\n". $this->adodb->ErrorMsg(), E_USER_ERROR);
 				}
 			}
-			else
-			{
-				$this->delayPointer = true;
-				return true;
-			}
+			$this->delayPointer = true;
+			return true;
 		}
 
 		/**
@@ -271,14 +313,14 @@
 		* @param integer $num_rows number of rows to return (optional), if unset will use $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs']
 		* @return integer current query id if sucesful and null if fails
 		*/
-		function limit_query($Query_String, $offset = -1, $line = '', $file = '', $num_rows = -1)
+		public function limit_query($Query_String, $offset = -1, $line = '', $file = '', $num_rows = -1)
 		{
 			if ( (int) $num_rows <= 0 )
 			{
 				$num_rows = $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
 			}
 			
-			if(!$this->adodb->isConnected())
+			if ( !$this->adodb->isConnected() )
 			{
 				$this->connect();
 			}
@@ -300,7 +342,7 @@
 		*
 		* @return bool was another row found?
 		*/
-		function next_record()
+		public function next_record()
 		{
 			if($this->resultSet && $this->resultSet->RecordCount())
 			{
@@ -327,7 +369,7 @@
 		* @param int $pos required row (optional), default first row
 		* @return int 1 if sucessful or 0 if not found
 		*/
-		function seek($pos = 0)
+		public function seek($pos = 0)
 		{
 			if($this->resultSet)
 			{
@@ -341,7 +383,7 @@
 		*
 		* @return integer|boolean current transaction id
 		*/
-		function transaction_begin()
+		public function transaction_begin()
 		{
 			return $this->adodb->StartTrans();
 		}
@@ -351,7 +393,7 @@
 		*
 		* @return boolean True if sucessful, False if fails
 		*/ 
-		function transaction_commit()
+		public function transaction_commit()
 		{
 			return $this->adodb->CompleteTrans();
 		}
@@ -361,7 +403,7 @@
 		*
 		* @return boolean True if sucessful, False if fails
 		*/
-		function transaction_abort()
+		public function transaction_abort()
 		{
 			$this->adodb->FailTrans();
 			return $this->adodb->HasFailedTrans();
@@ -374,7 +416,7 @@
 		* @param string $field the autoincrement primary key of the table
 		* @return integer the id, -1 if fails
 		*/
-		function get_last_insert_id($table, $field)
+		public function get_last_insert_id($table, $field)
 		{
 			// This looks like a pretty ugly hack to me, is it really needed? skwashd nov07
 			if($GLOBALS['phpgw_info']['server']['db_type'] == 'postgres')
@@ -420,7 +462,7 @@
 		* @param string $mode type of lock required (optional), default write
 		* @return boolean True if sucessful, False if fails
 		*/
-		function lock($table, $mode='write')
+		public function lock($table, $mode='write')
 		{
 			//$this->adodb->BeginTrans();
 		}
@@ -431,7 +473,7 @@
 		*
 		* @return boolean True if sucessful, False if fails
 		*/
-		function unlock()
+		public function unlock()
 		{
 			//$this->adodb->CommitTrans();
 		}
@@ -442,7 +484,7 @@
 		 * @param array $value_set array of values to insert into the database
 		 * @return string the prepared sql, empty string for invalid input
 		 */
-		function validate_insert($values)
+		public function validate_insert($values)
 		{
 			if ( !is_array($values) || !count($values) )
 			{
@@ -477,7 +519,7 @@
 		 * @param array $value_set associative array of values to update the database with
 		 * @return string the prepared sql, empty string for invalid input
 		 */
-		function validate_update($value_set)
+		public function validate_update($value_set)
 		{
 			if ( !is_array($value_set) || !count($value_set) )
 			{
@@ -511,7 +553,7 @@
 		*
 		* @return integer number of rows
 		*/
-		function affected_rows()
+		public function affected_rows()
 		{
 			return $this->adodb->Affected_Rows();
 		}
@@ -521,7 +563,7 @@
 		*
 		* @return integer number of rows
 		*/
-		function num_rows()
+		public function num_rows()
 		{
 			if($this->resultSet)
 			{
@@ -535,7 +577,7 @@
 		*
 		* @return integer number of fields
 		*/
-		function num_fields()
+		public function num_fields()
 		{
 			if($this->resultSet)
 			{
@@ -549,7 +591,7 @@
 		* @return integer Number of rows
 		* @see num_rows()
 		*/
-		function nf()
+		public function nf()
 		{
 			return $this->num_rows();
 		}
@@ -557,7 +599,7 @@
 		/**
 		* Short hand for print @see num_rows
 		*/
-		function np()
+		public function np()
 		{
 			print $this->num_rows();
 		}
@@ -569,7 +611,7 @@
 		* @param boolean $strip_slashes string escape chars from field(optional), default false
 		* @return string the field value
 		*/
-		function f($name, $strip_slashes = False)
+		public function f($name, $strip_slashes = False)
 		{
 			if($this->resultSet && get_class($this->resultSet) != 'adorecordset_empty')
 			{
@@ -591,13 +633,13 @@
 		/**
 		* Print the value of a field
 		* 
-		* @param string $Name name of field to print
+		* @param string $field name of field to print
 		* @param bool $strip_slashes string escape chars from field(optional), default false
 		*/
-		function p($Name, $strip_slashes = True)
+		public function p($field, $strip_slashes = True)
 		{
 			//echo "depi: p";
-			print $this->f($Name, $strip_slashes);
+			print $this->f($field, $strip_slashes);
 		}
 
 		/**
@@ -606,7 +648,7 @@
 		* @param string $seq_name name of the sequence
 		* @return integer sequence id
 		*/
-		function nextid($seq_name)
+		public function nextid($seq_name)
 		{
 			//echo "depi: nextid";
 		}
@@ -618,7 +660,7 @@
 		* @param boolean $full optional, default False summary information, True full information
 		* @return array Table meta data
 		*/  
-		function metadata($table = '',$full = false)
+		public function metadata($table = '',$full = false)
 		{
 			if($this->debug)
 			{
@@ -669,7 +711,7 @@
 		* @param int $line line of calling method/function (optional)
 		* @param string $file file of calling method/function (optional)
 		*/
-		function halt($msg, $line = '', $file = '')
+		public function halt($msg, $line = '', $file = '')
 		{
 			$this->adodb->RollbackTrans();
 		}
@@ -679,7 +721,7 @@
 		*
 		* @return array list of the tables
 		*/
-		function table_names()
+		public function table_names()
 		{
 			if(!$this->adodb->IsConnected())
 			{
@@ -697,7 +739,7 @@
 		*
 		* @return array List of indexes
 		*/
-		function index_names()
+		public function index_names()
 		{
 			//echo "depi: index_names";
 			return array();
@@ -710,7 +752,7 @@
 		* @param string $adminpasswd Password for the database administrator user (optional)
 		* @returns bool was the new db created?
 		*/
-		function create_database($adminname = '', $adminpasswd = '')
+		public function create_database($adminname = '', $adminpasswd = '')
 		{
 			//THIS IS CALLED BY SETUP DON'T KILL IT!
 			if ( $this->adodb->IsConnected() )
@@ -778,7 +820,7 @@
 		public static function datetime_format()
 		{
 			static $datetime_format = null;
-			if ( is_null($dateformat) )
+			if ( is_null($datetime_format) )
 			{
 				switch($GLOBALS['phpgw_info']['server']['db_type'])
 				{
@@ -802,7 +844,7 @@
 		* @return integer|boolean Result identifier for query_prepared_statement() or FALSE
 		* @see query_prepared_statement()
 		*/
-		function prepare_sql_statement($query)
+		public function prepare_sql_statement($query)
 		{
 			//echo "depi";
 			if (($query == '') || (!$this->connect()))
@@ -820,7 +862,7 @@
 		 * @return boolean TRUE on success or FALSE on failure
 		 * @see prepare_sql_statement()
 		 */
-		function query_prepared_statement($result_id, $parameters_array)
+		public function query_prepared_statement($result_id, $parameters_array)
 		{
 			if ((!$this->connect()) || (!$result_id))
 			{
