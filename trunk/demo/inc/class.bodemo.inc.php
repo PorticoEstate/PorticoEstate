@@ -1,9 +1,10 @@
 <?php
 	/**
-	* phpGroupWare - DEMO: a demo aplication.
+	* phpGroupWare - DEMO: A best practice demonstration module.
 	*
 	* @author Sigurd Nes <sigurdne@online.no>
-	* @copyright Copyright (C) 2003-2005 Free Software Foundation, Inc. http://www.fsf.org/
+	* @author Dave Hall <skwashd@phpgroupware.org>
+	* @copyright Copyright (C) 2003-2007 Free Software Foundation, Inc. http://www.fsf.org/
 	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/bbb_/ekstern/
 	* @package demo
@@ -11,108 +12,69 @@
  	* @version $Id: class.bodemo.inc.php,v 1.8 2007/01/24 12:53:01 sigurdne Exp $
 	*/
 
+	/*
+	   This program is free software: you can redistribute it and/or modify
+	   it under the terms of the GNU General Public License as published by
+	   the Free Software Foundation, either version 3 of the License, or
+	   (at your option) any later version.
+
+	   This program is distributed in the hope that it will be useful,
+	   but WITHOUT ANY WARRANTY; without even the implied warranty of
+	   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	   GNU General Public License for more details.
+
+	   You should have received a copy of the GNU General Public License
+	   along with this program.  If not, see <http://www.gnu.org/licenses/>.
+	 */
+
 	/**
-	 * Description
+	 * application logic
 	 * @package demo
 	 */
 
 	class demo_bodemo
 	{
-		var $start;
-		var $query;
-		var $filter;
-		var $sort;
-		var $order;
-		var $cat_id;
-		var $allrows;
+		public $start;
+		public $query;
+		public $filter;
+		public $sort;
+		public $order;
+		public $cat_id;
+		public $allrows;
+		private $acl_location;
+		private $currentapp;
+		private $so;
+		private $custom;
+		private $use_session;
+		private $dateformat;
+		private $datetimeformat;
 
-		var $public_functions = array
-		(
-			'read'			=> True,
-			'read_single'	=> True,
-			'save'			=> True,
-			'delete'		=> True,
-			'check_perms'	=> True
-		);
-
-		function demo_bodemo($session=False)
+		public function __construct($session = false)
 		{
-			$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
-			$this->so 			= CreateObject($this->currentapp.'.sodemo');
-			$this->custom 		= createObject('phpgwapi.custom_fields');
 			$this->acl_location 	= '.demo_location';
+			$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
+			$this->so 			= CreateObject('demo.sodemo', $this->acl_location);
+			$this->custom 		= createObject('phpgwapi.custom_fields');
 
 			if ($session)
 			{
 				$this->read_sessiondata();
-				$this->use_session = True;
+				$this->use_session = true;
 			}
 
-			$start	= get_var('start',array('POST','GET'));
-			$query	= get_var('query',array('POST','GET'));
-			$sort	= get_var('sort',array('POST','GET'));
-			$order	= get_var('order',array('POST','GET'));
-			$filter	= get_var('filter',array('POST','GET'));
-			$cat_id	= get_var('cat_id',array('POST','GET'));
-			$allrows= get_var('allrows',array('POST','GET'));
+			$this->start	= phpgw::get_var('start');
+			$this->query	= phpgw::get_var('query');
+			$this->sort		= phpgw::get_var('sort');
+			$this->order	= phpgw::get_var('order');
+			$this->filter	= phpgw::get_var('filter');
+			$this->cat_id	= phpgw::get_var('cat_id', 'int');
+			$this->allrows	= phpgw::get_var('allrows', 'bool');
 
-			if ($start)
-			{
-				$this->start=$start;
-			}
-			else
-			{
-				$this->start=0;
-			}
-
-			if(array_key_exists('query',$_POST) || array_key_exists('query',$_GET))
-			{
-				$this->query = $query;
-			}
-			if(array_key_exists('filter',$_POST) || array_key_exists('filter',$_GET))
-			{
-				$this->filter = $filter;
-			}
-			if(array_key_exists('sort',$_POST) || array_key_exists('sort',$_GET))
-			{
-				$this->sort = $sort;
-			}
-			if(array_key_exists('order',$_POST) || array_key_exists('order',$_GET))
-			{
-				$this->order = $order;
-			}
-			if(array_key_exists('cat_id',$_POST) || array_key_exists('cat_id',$_GET))
-			{
-				$this->cat_id = $cat_id;
-			}
-			if ($allrows)
-			{
-				$this->allrows = $allrows;
-			}
-
-			switch($GLOBALS['phpgw_info']['server']['db_type'])
-			{
-				case 'mssql':
-					$this->dateformat 		= "M d Y";
-					$this->datetimeformat 	= "M d Y g:iA";
-					break;
-				case 'mysql':
-					$this->dateformat 		= "Y-m-d";
-					$this->datetimeformat 	= "Y-m-d G:i:s";
-					break;
-				case 'pgsql':
-					$this->dateformat 		= "Y-m-d";
-					$this->datetimeformat 	= "Y-m-d G:i:s";
-					break;
-				case 'postgres':
-					$this->dateformat 		= "Y-m-d";
-					$this->datetimeformat 	= "Y-m-d G:i:s";
-					break;
-			}
+			$this->dateformat 		= phpgwapi_db::date_format();
+			$this->datetimeformat 	= phpgwapi_db::datetime_format();
 		}
 
-
-		function save_sessiondata($data)
+		public function save_sessiondata($data)
 		{
 			if ($this->use_session)
 			{
@@ -120,29 +82,38 @@
 			}
 		}
 
-		function read_sessiondata()
+		private function read_sessiondata()
 		{
 			$data = $GLOBALS['phpgw']->session->appsession('session_data','demo_app');
 
-			$this->start	= (isset($data['start'])?$data['start']:'');
-			$this->query	= (isset($data['query'])?$data['query']:'');
-			$this->filter	= (isset($data['filter'])?$data['filter']:'');
-			$this->sort		= (isset($data['sort'])?$data['sort']:'');
-			$this->order	= (isset($data['order'])?$data['order']:'');
-			$this->cat_id	= (isset($data['cat_id'])?$data['cat_id']:'');
+			$this->start	= isset($data['start']) ? $data['start'] : '';
+			$this->query	= isset($data['query']) ? $data['query'] : '';
+			$this->filter	= isset($data['filter']) ? $data['filter'] : '';
+			$this->sort		= isset($data['sort']) ? $data['sort'] : '';
+			$this->order	= isset($data['order']) ? $data['order'] : '';
+			$this->cat_id	= isset($data['cat_id']) ? $data['cat_id'] : '';
 		}
 
-		function check_perms($rights, $required)
+		public static function check_perms($rights, $required)
 		{
 			return ($rights & $required);
 		}
 
-		function read()
+		public function read()
 		{
-			$demo_info = $this->so->read(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
-											'cat_id'=>$this->cat_id,'allrows'=>$this->allrows,'filter'=>$this->filter));
+			$lookup = array
+			(
+				'start'		=> $this->start,
+				'query'		=> $this->query,
+				'sort'		=> $this->sort,
+				'order'		=> $this->order,
+				'cat_id'	=> $this->cat_id,
+				'allrows'	=> $this->allrows,
+				'filter'	=> $this->filter,
+			);
+
 			$this->total_records = $this->so->total_records;
-			return $demo_info;
+			return $this->so->read($lookup);
 		}
 
 		/**
@@ -150,28 +121,37 @@
 		*
 		* @return array Array with records.
 		*/
-		function read2()
+		public function read2()
 		{
 			$custom_attributes = $this->custom->get_attribs($this->currentapp, $this->acl_location, 0, '', 'ASC', 'attrib_sort', true, true);
+			$lookup = array
+			(
+				'start'		=> $this->start,
+				'query'		=> $this->query,
+				'sort'		=> $this->sort,
+				'order'		=> $this->order,
+				'cat_id'	=> $this->cat_id,
+				'allrows'	=> $this->allrows,
+				'filter'	=> $this->filter,
+				'custom_attributes' => $custom_attributes
+			);
 			
-			$demo_info = $this->so->read2(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
-											'cat_id'=>$this->cat_id,'allrows'=>$this->allrows,'filter'=>$this->filter,
-											'custom_attributes'=>$custom_attributes));
+			$demo_info = $this->so->read2($lookup);
 			$this->total_records = $this->so->total_records;
 			$this->uicols	= $this->so->uicols;
 			return $demo_info;
 		}
 
-		function read_single($id='')
+		public function read_single($id = 0)
 		{
 			$values['attributes'] = $this->custom->get_attribs($this->currentapp, $this->acl_location, 0, '', 'ASC', 'attrib_sort', true, true);
 			
 			if($id)
 			{
-				$values = $this->so->read_single($id,$values);
+				$values = $this->so->read_single($id, $values);
 			}
 			
-			$values = $this->custom->prepare_attributes($values,$appname=$this->currentapp, $location=$this->acl_location);
+			$values = $this->custom->prepare_attributes($values, 'demo', $this->acl_location);
 			
 			$dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
 			if(isset($values['entry_date']) && $values['entry_date'])
@@ -182,29 +162,29 @@
 			return $values;
 		}
 
-		function save($values,$values_attribute='')
+		public function save($values, $values_attribute = array())
 		{
 			if(is_array($values_attribute))
 			{
-				for ($i=0;$i<count($values_attribute);$i++)
+				foreach ( $values_attribute as &$attrib )
 				{
-					if($values_attribute[$i]['datatype']=='CH' && $values_attribute[$i]['value'])
+					if ( $attrib['datatype'] == 'CH' && $attrib['value'] )
 					{
-						$values_attribute[$i]['value'] = serialize($values_attribute[$i]['value']);
+						$attrib['value'] = serialize($attrib[$i]['value'] );
 					}
-					if($values_attribute[$i]['datatype']=='R' && $values_attribute[$i]['value'])
+					if ( $attrib['datatype'] == 'R' && $attrib['value'] )
 					{
-						$values_attribute[$i]['value'] = $values_attribute[$i]['value'][0];
+						$attrib['value'] = $attrib['value'][0];
 					}
 
-					if($values_attribute[$i]['datatype']=='N' && $values_attribute[$i]['value'])
+					if ( $attrib['datatype'] == 'N' && $attrib['value'] )
 					{
-						$values_attribute[$i]['value'] = str_replace(",",".",$values_attribute[$i]['value']);
+						$attrib['value'] = str_replace(',', '.', $attrib['value']);
 					}
 	
-					if($values_attribute[$i]['datatype']=='D' && $values_attribute[$i]['value'])
+					if ( $attrib['datatype'] == 'D' && $attrib['value'] )
 					{
-						$values_attribute[$i]['value'] = date($this->dateformat,$this->date_to_timestamp($values_attribute[$i]['value']));
+						$values_attribute[$i]['value'] = date($this->dateformat, $this->date_to_timestamp($attrib['value']));
 					}
 				}
 			}
@@ -242,12 +222,12 @@
 			return $receipt;
 		}
 
-		function delete($id)
+		public function delete($id)
 		{
 			$this->so->delete($id);
 		}
 
-		function select_category_list($format='',$selected='')
+		private function select_category_list($format='',$selected='')
 		{
 			switch($format)
 			{
@@ -295,51 +275,16 @@
 		* @param array $values value set with 
 		* @return array Array with attribute definition and values
 		*/
-		function preserve_attribute_values($values='',$values_attribute='')
+		private function preserve_attribute_values($values='',$values_attribute='')
 		{
 			return $this->custom->preserve_attribute_values($values,$values_attribute);
 		}
 
-		function date_array($datestr)
+		public function get_acl_location()
 		{
-			$dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
-
-			$fields = split('[./-]',$datestr);
-			foreach(split('[./-]',$dateformat) as $n => $field)
-			{
-				$date[$field] = intval($fields[$n]);
-
-				if($field == 'M')
-				{
-					for($i=1; $i <=12; $i++)
-					{
-						if(date('M',mktime(0,0,0,$i,1,2000)) == $fields[$n])
-						{
-							$date['m'] = $i;
-						}
-					}
-				}
-			}
-
-			$ret = array(
-				'year'  => $date['Y'],
-				'month' => $date['m'],
-				'day'   => $date['d']
-			);
-			return $ret;
+			return $this->acl_location;
 		}
 
-		function date_to_timestamp($date='')
-		{
-			if (!$date)
-			{
-				return False;
-			}
 
-			$date_array	= $this->date_array($date);
-			$date	= mktime (8,0,0,$date_array['month'],$date_array['day'],$date_array['year']);
-
-			return $date;
-		}
 
 	}

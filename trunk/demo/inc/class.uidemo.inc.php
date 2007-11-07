@@ -11,6 +11,21 @@
  	* @version $Id: class.uidemo.inc.php,v 1.7 2006/12/27 11:04:41 sigurdne Exp $
 	*/
 
+	/*
+	   This program is free software: you can redistribute it and/or modify
+	   it under the terms of the GNU General Public License as published by
+	   the Free Software Foundation, either version 3 of the License, or
+	   (at your option) any later version.
+
+	   This program is distributed in the hope that it will be useful,
+	   but WITHOUT ANY WARRANTY; without even the implied warranty of
+	   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	   GNU General Public License for more details.
+
+	   You should have received a copy of the GNU General Public License
+	   along with this program.  If not, see <http://www.gnu.org/licenses/>.
+	 */
+
 	/**
 	 * Description
 	 * @package demo
@@ -18,40 +33,124 @@
 
 	class demo_uidemo
 	{
-		var $grants;
-		var $start;
-		var $query;
-		var $sort;
-		var $order;
-		var $sub;
-		var $currentapp;
+		/**
+		* @var ??? $grants ???
+		*/
+		private $grants;
+		
+		/**
+		* @var ??? $start ???
+		*/
+		private $start;
+		
+		/**
+		* @var ??? $query ???
+		*/
+		private $query;
+		
+		/**
+		* @var ??? $sort ???
+		*/
+		private $sort;
+		
+		/**
+		* @var ??? $order ???
+		*/
+		private $order;
+		
+		/**
+		* @var object $cats categories object
+		*/
+		private $cats;
+		
+		/**
+		* @var object $nextmatches paging handler
+		*/
+		private $nextmatches;
+		
+		/**
+		* @var int $account reference to the current user id
+		*/
+		private $account;
+		
+		/**
+		* @var object $bo business logic
+		*/
+		private $bo;
+		
+		/**
+		* @var object $menu application menu handler
+		*/
+		private $menu;
+		
+		/**
+		* @var object $acl reference to global access control list manager
+		*/
+		private $acl;
+		
+		/**
+		* @var string $acl_location the access control location
+		*/
+		private $acl_location;
+		
+		/**
+		* @var bool $acl_read does the current user have read access to the current location
+		*/
+		private $acl_read;
+		
+		/**
+		* @var bool $acl_add does the current user have add access to the current location
+		*/
+		private $acl_add;
+		
+		/**
+		* @var bool $acl_edit does the current user have edit access to the current location
+		*/
+		private $acl_edit;
+		
+		/**
+		* @var bool $allrows display all rows of result set?
+		*/
+		private $allrows;
+		
+		/**
+		* @var int $cat_id the currently selected category
+		*/
+		private $cat_id;
+		
+		/**
+		* @var bool $filter the current filter
+		*/
+		private $filter;
 
-		var $public_functions = array
+		/**
+		* @var array $public_functions publicly available methods of the class
+		*/
+		public $public_functions = array
 		(
-			'index'  => True,
-			'index2'  => True,
-			'view'   => True,
-			'edit'   => True,
-			'delete' => True,
-			'no_access'=> true
+			'index' 	=> true,
+			'index2'	=> true,
+			'view'		=> true,
+			'edit'		=> true,
+			'delete'	=> true,
+			'no_access'	=> true
 		);
 
-		function demo_uidemo()
+		public function __construct()
 		{
-			$GLOBALS['phpgw_info']['flags']['xslt_app'] = True;
-			$this->currentapp		= $GLOBALS['phpgw_info']['flags']['currentapp'];
+			$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
 			$this->cats				= CreateObject('phpgwapi.categories');
-			$this->nextmatchs		= CreateObject('phpgwapi.nextmatchs');
-			$this->account			= $GLOBALS['phpgw_info']['user']['account_id'];
-			$this->bo				= CreateObject($this->currentapp.'.bodemo',true);
-			$this->menu				= CreateObject($this->currentapp.'.menu');
-			$this->menu->sub		='demo';
-			$this->acl 				= & $GLOBALS['phpgw']->acl;
-			$this->acl_location 	= '.demo_location';
-			$this->acl_read 			= $this->acl->check($this->acl_location,PHPGW_ACL_READ);
-			$this->acl_add 				= $this->acl->check($this->acl_location,PHPGW_ACL_ADD);
-			$this->acl_edit 			= $this->acl->check($this->acl_location,PHPGW_ACL_EDIT);
-			$this->acl_delete 			= $this->acl->check($this->acl_location,PHPGW_ACL_DELETE);
+			$this->nextmatches		= CreateObject('phpgwapi.nextmatchs');
+			$this->account			=& $GLOBALS['phpgw_info']['user']['account_id'];
+			$this->bo				= CreateObject('demo.bodemo',true);
+			$this->menu				= CreateObject('demo.menu');
+			$this->menu->set_sub('demo');
+			$this->acl 				=& $GLOBALS['phpgw']->acl;
+			$this->acl_location 	= $this->bo->get_acl_location();
+			$this->acl_read 		= $this->acl->check($this->acl_location, PHPGW_ACL_READ);
+			$this->acl_add 			= $this->acl->check($this->acl_location, PHPGW_ACL_ADD);
+			$this->acl_edit 		= $this->acl->check($this->acl_location, PHPGW_ACL_EDIT);
+			$this->acl_delete 		= $this->acl->check($this->acl_location, PHPGW_ACL_DELETE);
 
 			$this->start			= $this->bo->start;
 			$this->query			= $this->bo->query;
@@ -62,7 +161,7 @@
 			$this->filter			= $this->bo->filter;
 		}
 
-		function save_sessiondata()
+		private function save_sessiondata()
 		{
 			$data = array
 			(
@@ -74,16 +173,11 @@
 			$this->bo->save_sessiondata($data);
 		}
 
-		function index()
+		public function index()
 		{
-			$output	= get_var('output',array('POST','GET'));
-			
-			if(!$output)
-			{
-				$output = 'html';
-			}
-			
-			$this->menu->sub = $output;
+			$output	= self::get_output();
+		
+			$this->menu->set_sub($output);
 			$links = $this->menu->links();
 
 			if(!$this->acl_read)
@@ -97,47 +191,38 @@
 
 			$demo_info = $this->bo->read();
 
-			while (is_array($demo_info) && list(,$entry) = each($demo_info))
+			foreach ( $demo_info as $entry )
 			{
 
-				if($this->bo->check_perms($entry['grants'], PHPGW_ACL_READ))
+				$link_view					= '';
+				$lang_view_demo_text		= '';
+				$text_view					= '';
+				if ( demo_bodemo::check_perms($entry['grants'], PHPGW_ACL_READ))
 				{
-					$link_view					= $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> $this->currentapp.'.uidemo.view', 'demo_id'=> $entry['id'],'output'=>$output));
+					$link_view					= $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'demo.uidemo.view', 'demo_id'=> $entry['id'],'output'=>$output));
 					$lang_view_demo_text		= lang('view the demo');
 					$text_view					= lang('view');
 				}
-				else
-				{
-					$link_view					= '';
-					$lang_view_demo_text		= '';
-					$text_view					= '';
-				}				
 
-				if($this->bo->check_perms($entry['grants'], PHPGW_ACL_EDIT))
+				$link_edit					= '';
+				$lang_edit_demo_text		= '';
+				$text_edit					= '';
+				if ( demo_bodemo::check_perms($entry['grants'], PHPGW_ACL_EDIT))
 				{
-					$link_edit					= $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> $this->currentapp.'.uidemo.edit', 'demo_id'=> $entry['id'],'output'=>$output));
+					$link_edit					= $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'demo.uidemo.edit', 'demo_id'=> $entry['id'],'output'=>$output));
 					$lang_edit_demo_text		= lang('edit the demo');
 					$text_edit					= lang('edit');
 				}
-				else
-				{
-					$link_edit					= '';
-					$lang_edit_demo_text		= '';
-					$text_edit					= '';
-				}				
 
-				if($this->bo->check_perms($entry['grants'], PHPGW_ACL_DELETE))
+				$link_delete				= '';
+				$text_delete				= '';
+				$lang_delete_demo_text		= '';
+				if ( demo_bodemo::check_perms($entry['grants'], PHPGW_ACL_DELETE))
 				{
-					$link_delete				= $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> $this->currentapp.'.uidemo.delete', 'demo_id'=> $entry['id'],'output'=>$output));
+					$link_delete				= $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'demo.uidemo.delete', 'demo_id'=> $entry['id'],'output'=>$output));
 					$text_delete				= lang('delete');
 					$lang_delete_demo_text		= lang('delete the demo');
 				}
-				else
-				{
-					$link_delete				= '';
-					$text_delete				= '';
-					$lang_delete_demo_text		= '';
-				}				
 
 				$content[] = array
 				(
@@ -158,18 +243,21 @@
 
 			$table_header[] = array
 			(
-				'sort_name'	=> $this->nextmatchs->show_sort_order(array
-										(
-											'sort'	=> $this->sort,
-											'var'	=> 'name',
-											'order'	=> $this->order,
-											'extra'	=> array('menuaction'	=> $this->currentapp.'.uidemo.index',
-														'query'		=> $this->query,
-														'cat_id'	=> $this->cat_id,
-														'filter'	=> $this->filter,
-														'output'	=>$output,
-														'allrows'	=> $this->allrows)
-										)),
+				'sort_name'	=> $this->nextmatches->show_sort_order(array
+				(
+					'sort'	=> $this->sort,
+					'var'	=> 'name',
+					'order'	=> $this->order,
+					'extra'	=> array
+					(
+						'menuaction'	=> 'demo.uidemo.index',
+						'query'		=> $this->query,
+						'cat_id'	=> $this->cat_id,
+						'filter'	=> $this->filter,
+						'output'	=> $output,
+						'allrows'	=> $this->allrows
+					)
+				)),
 				'lang_name'		=> lang('name'),
 				'lang_view'		=> lang('view'),
 				'lang_edit'		=> (isset($this->acl_edit)?lang('edit'):''),
@@ -187,20 +275,20 @@
 
 			$link_data = array
 			(
-				'menuaction'	=> $this->currentapp.'.uidemo.index',
+				'menuaction'	=> 'demo.uidemo.index',
 				'sort'			=> $this->sort,
 				'order'			=> $this->order,
 				'cat_id'		=> $this->cat_id,
 				'filter'		=> $this->filter,
 				'query'			=> $this->query,
-				'output'		=>$output
+				'output'		=> $output
 			);
 
 			$table_add[] = array
 			(
 				'lang_add'				=> lang('add'),
 				'lang_add_statustext'	=> lang('add a demo'),
-				'add_action'			=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> $this->currentapp.'.uidemo.edit','output'=>$output)),
+				'add_action'			=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'demo.uidemo.edit','output'=>$output)),
 			);
 
 			$msgbox_data = (isset($receipt)?$GLOBALS['phpgw']->common->msgbox_data($receipt):'');
@@ -209,9 +297,9 @@
 			(
 				'msgbox_data'							=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
 				'links'									=> $links,
-				'cat_filter'							=> $this->cats->formatted_xslt_list(array('select_name' => 'cat_id','selected' => $this->cat_id,'globals' => True,'link_data' => $link_data)),
-				'filter_data'							=> $this->nextmatchs->xslt_filter(array('filter' => $this->filter,'link_data' => $link_data)),
-				'allow_allrows'							=> True,
+				'cat_filter'							=> $this->cats->formatted_xslt_list(array('select_name' => 'cat_id','selected' => $this->cat_id,'globals' => true,'link_data' => $link_data)),
+				'filter_data'							=> $this->nextmatches->xslt_filter(array('filter' => $this->filter,'link_data' => $link_data)),
+				'allow_allrows'							=> true,
 				'allrows'								=> $this->allrows,
 				'start_record'							=> $this->start,
 				'record_limit'							=> $record_limit,
@@ -230,26 +318,17 @@
 
 			$function_msg= lang('list demo values');
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($this->currentapp). ': ' . $function_msg;
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('demo') . ": {$function_msg}";
 			
-			if($output == 'wml')
-			{
-				$GLOBALS['phpgw']->xslttpl->wml_out = true;
-			}
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array("list_{$output}" => $data));
 			$this->save_sessiondata();
 		}
 
-		function index2()
+		public function index2()
 		{
-			$output	= get_var('output',array('POST','GET'));
+			$output	= self::get_output();
 			
-			if(!$output)
-			{
-				$output = 'html';
-			}
-			
-			$this->menu->sub = 'alternative';
+			$this->menu->set_sub('alternative');
 			$links = $this->menu->links();
 			if(!$this->acl_read)
 			{
@@ -266,7 +345,7 @@
 //_debug_array($uicols);
 			$j=0;
 
-			if (isset($demo_info) AND is_array($demo_info))
+			if (isset($demo_info) && is_array($demo_info))
 			{
 				foreach($demo_info as $entry)
 				{
@@ -289,19 +368,19 @@
 					{
 						$content[$j]['row'][$i]['statustext']			= lang('view the record');
 						$content[$j]['row'][$i]['text']					= lang('view');
-						$content[$j]['row'][$i++]['link']				= $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> $this->currentapp.'.uidemo.view','demo_id'=> $entry['id']));
+						$content[$j]['row'][$i++]['link']				= $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'demo.uidemo.view','demo_id'=> $entry['id']));
 					}
 					if($this->acl_edit)
 					{
 						$content[$j]['row'][$i]['statustext']			= lang('edit the record');
 						$content[$j]['row'][$i]['text']					= lang('edit');
-						$content[$j]['row'][$i++]['link']				= $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> $this->currentapp.'.uidemo.edit', 'demo_id'=> $entry['id']));
+						$content[$j]['row'][$i++]['link']				= $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'demo.uidemo.edit', 'demo_id'=> $entry['id']));
 					}
 					if($this->acl_delete)
 					{
 						$content[$j]['row'][$i]['statustext']			= lang('delete the record');
 						$content[$j]['row'][$i]['text']					= lang('delete');
-						$content[$j]['row'][$i++]['link']				= $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> $this->currentapp.'.uidemo.delete', 'demo_id'=> $entry['id']));
+						$content[$j]['row'][$i++]['link']				= $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'demo.uidemo.delete', 'demo_id'=> $entry['id']));
 					}
 
 					$j++;
@@ -312,25 +391,27 @@
 			{
 				if($uicols['input_type'][$i]!='hidden')
 				{
-					$table_header[$i]['header'] 		= $uicols['descr'][$i];
+					$table_header[$i]['header'] 	= $uicols['descr'][$i];
 					$table_header[$i]['width'] 		= '5%';
 					$table_header[$i]['align'] 		= 'center';
 					if($uicols['datatype'][$i]!='T' && $uicols['datatype'][$i]!='CH')
 					{
 						$table_header[$i]['sort_link']	=true;
-						$table_header[$i]['sort'] 		= $this->nextmatchs->show_sort_order(array
+						$table_header[$i]['sort'] 		= $this->nextmatches->show_sort_order(array
+						(
+							'sort'	=> $this->sort,
+							'var'	=> $uicols['name'][$i],
+							'order'	=> $this->order,
+							'extra'	=> array
 							(
-								'sort'	=> $this->sort,
-								'var'	=> $uicols['name'][$i],
-								'order'	=> $this->order,
-								'extra'	=> array('menuaction'	=> $this->currentapp.'.uidemo.index2',
-												'query'			=> $this->query,
-												'cat_id'		=> $this->cat_id,
-												'filter'		=> $this->filter,
-												'output'		=>$output,
-												'allrows'		=> $this->allrows
-												)
-							));
+								 'menuaction'	=> 'demo.uidemo.index2',
+								 'query'			=> $this->query,
+								 'cat_id'		=> $this->cat_id,
+								 'filter'		=> $this->filter,
+								 'output'		=> $output,
+								 'allrows'		=> $this->allrows
+							)
+						));
 					}
 				}
 			}
@@ -364,7 +445,7 @@
 				(
 					'lang_add'				=> lang('add'),
 					'lang_add_statustext'	=> lang('add a demo'),
-					'add_action'			=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> $this->currentapp.'.uidemo.edit','output'=>$output)),
+					'add_action'			=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'demo.uidemo.edit','output'=>$output)),
 				);
 			}
 
@@ -379,7 +460,7 @@
 
 			$link_data = array
 			(
-				'menuaction'	=> $this->currentapp.'.uidemo.index2',
+				'menuaction'	=> 'demo.uidemo.index2',
 				'sort'			=> $this->sort,
 				'order'			=> $this->order,
 				'cat_id'		=> $this->cat_id,
@@ -394,9 +475,9 @@
 			(
 				'msgbox_data'							=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
 				'links'									=> $links,
-				'cat_filter'							=> $this->cats->formatted_xslt_list(array('select_name' => 'cat_id','selected' => $this->cat_id,'globals' => True,'link_data' => $link_data)),
-				'filter_data'							=> $this->nextmatchs->xslt_filter(array('filter' => $this->filter,'link_data' => $link_data)),
-				'allow_allrows'							=> True,
+				'cat_filter'							=> $this->cats->formatted_xslt_list(array('select_name' => 'cat_id','selected' => $this->cat_id,'globals' => true,'link_data' => $link_data)),
+				'filter_data'							=> $this->nextmatches->xslt_filter(array('filter' => $this->filter,'link_data' => $link_data)),
+				'allow_allrows'							=> true,
 				'allrows'								=> $this->allrows,
 				'start_record'							=> $this->start,
 				'record_limit'							=> $record_limit,
@@ -416,18 +497,14 @@
 //_debug_array($data);
 			$function_msg= lang('list demo values');
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($this->currentapp). ': ' . $function_msg;
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('demo'). ": {$function_msg}";
 			
-			if($output == 'wml')
-			{
-				$GLOBALS['phpgw']->xslttpl->wml_out = true;
-			}
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array("list2_{$output}" => $data));
 			$this->save_sessiondata();
 		}
 
 
-		function edit()
+		public function edit()
 		{
 			$acl_location = '.demo_location';
 			if(!$this->acl_add)
@@ -436,16 +513,11 @@
 				return;
 			}
 
-			$output	= get_var('output',array('POST','GET'));
-			
-			if(!$output)
-			{
-				$output = 'html';
-			}
+			$output	= self::get_output();
 
-			$demo_id	= get_var('demo_id',array('POST','GET'));
-			$values		= get_var('values',array('POST'));
-			$values_attribute  = get_var('values_attribute',array('POST'));
+			$demo_id	= phpgw::get_var('demo_id', 'int');
+			$values		= phpgw::get_var('values', 'string', 'POST');
+			$values_attribute  = phpgw::get_var('values_attribute', 'string', 'POST');
 
 			$insert_record_values = $GLOBALS['phpgw']->session->appsession('insert_record_values'. $acl_location,'demo');
 
@@ -505,7 +577,7 @@
 					{
 						foreach ($values_attribute as $attribute )
 						{
-							if($attribute['allow_null'] != 'True' && !$attribute['value'])
+							if($attribute['allow_null'] != 'true' && !$attribute['value'])
 							{
 								$receipt['error'][]=array('msg'=>lang('Please enter value for attribute %1', $attribute['input_text']));
 							}
@@ -525,13 +597,13 @@
 						if (isset($values['save']) && $values['save'])
 						{
 							$GLOBALS['phpgw']->session->appsession('session_data','demo_receipt',$receipt);
-							$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction'=> $this->currentapp.'.uidemo.index', 'output'=> $output));
+							$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction'=> 'demo.uidemo.index', 'output'=> $output));
 						}
 					}
 				}
 				else
 				{
-					$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction'=> $this->currentapp.'.uidemo.index', 'output'=> $output));
+					$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction'=> 'demo.uidemo.index', 'output'=> $output));
 				}
 			}
 
@@ -554,7 +626,7 @@
 
 			$link_data = array
 			(
-				'menuaction'	=> $this->currentapp.'.uidemo.edit',
+				'menuaction'	=> 'demo.uidemo.edit',
 				'demo_id'		=> $demo_id,
 				'output'		=> $output
 			);
@@ -601,15 +673,11 @@
 
 			$appname		= lang('demo');
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($this->currentapp) . ' - ' . $appname . ': ' . $function_msg;
-			if($output == 'wml')
-			{
-				$GLOBALS['phpgw']->xslttpl->wml_out = true;
-			}
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('demo') . " - {$appname}: {$function_msg}";
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('edit' => $data));
 		}
 
-		function view()
+		public function view()
 		{
 			if(!$this->acl_read)
 			{
@@ -617,15 +685,10 @@
 				return;
 			}
 
-			$output	= get_var('output',array('POST','GET'));
+			$output	= self::get_output();
 
-			if(!$output)
-			{
-				$output = 'html';
-			}
-
-			$demo_id	= get_var('demo_id',array('POST','GET'));
-			$values		= get_var('values',array('POST'));
+			$demo_id	= phpgw::get_var('demo_id', 'int');
+			$values		= phpgw::get_var('values', 'string', 'POST');
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('demo','attributes_view'));
 
@@ -656,7 +719,7 @@
 				'lang_town'					=> lang('town'),
 				'lang_remark'				=> lang('remark'),
 
-				'form_action'				=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> $this->currentapp.'.uidemo.index','output'=>$output)),
+				'form_action'				=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'demo.uidemo.index','output'=>$output)),
 				'lang_cancel'				=> lang('cancel'),
 				'value_id'					=> $demo_id,
 				'lang_category'				=> lang('category'),
@@ -668,16 +731,11 @@
 
 			$appname	= lang('demo');
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($this->currentapp) . ' - ' . $appname . ': ' . $function_msg;
-			if($output == 'wml')
-			{
-				$GLOBALS['phpgw']->xslttpl->wml_out = true;
-			}
-
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('demo') . " - {$appname}: {$function_msg}";
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('view' => $data));
 		}
 
-		function delete()
+		public function delete()
 		{
 			if(!$this->acl_delete)
 			{
@@ -685,22 +743,17 @@
 				return;
 			}
 
-			$output	= get_var('output',array('POST','GET'));
-
-			if(!$output)
-			{
-				$output = 'html';
-			}
+			$output	= self::get_output();
 
 			$demo_id	= get_var('demo_id',array('POST','GET'));
 			$confirm	= get_var('confirm',array('POST'));
 
 			$link_data = array
 			(
-				'menuaction' => $this->currentapp.'.uidemo.index'
+				'menuaction' => 'demo.uidemo.index'
 			);
 
-			if (get_var('confirm',array('POST')))
+			if ( phpgw::get_var('confirm', 'bool', 'POST') )
 			{
 				$this->bo->delete($demo_id);
 				$GLOBALS['phpgw']->redirect_link('/index.php',$link_data);
@@ -711,7 +764,7 @@
 			$data = array
 			(
 				'done_action'			=> $GLOBALS['phpgw']->link('/index.php',$link_data),
-				'delete_action'			=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> $this->currentapp.'.uidemo.delete', 'demo_id'=> $demo_id)),
+				'delete_action'			=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'demo.uidemo.delete', 'demo_id'=> $demo_id)),
 				'lang_confirm_msg'		=> lang('do you really want to delete this entry'),
 				'lang_yes'				=> lang('yes'),
 				'lang_yes_statustext'	=> lang('Delete the entry'),
@@ -722,17 +775,12 @@
 			$appname		= lang('demo');
 			$function_msg	= lang('delete');
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($this->currentapp) . ' - ' . $appname . ': ' . $function_msg;
-
-			if($output == 'wml')
-			{
-				$GLOBALS['phpgw']->xslttpl->wml_out = true;
-			}
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('demo') . " - {$appname}: {$function_msg}";
 
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('delete' => $data));
 		}
 
-		function no_access($links = '')
+		public function no_access($links = '')
 		{
 			$GLOBALS['phpgw']->xslttpl->add_file(array('no_access','menu'));
 
@@ -748,7 +796,19 @@
 
 			$appname	= lang('No access');
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($this->currentapp) . ' - ' . $appname;
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('demo') . " - {$appname}";
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('no_access' => $data));
+		}
+
+		/**
+		* Get the output format
+		*
+		* @return string the output format - html, wml etc
+		*/
+		private static function get_output()
+		{
+			$output = phpgw::get_var('output', 'string', 'REQUEST', 'html');
+			$GLOBALS['phpgw']->xslttpl->set_output($output);
+			return $output;
 		}
 	}

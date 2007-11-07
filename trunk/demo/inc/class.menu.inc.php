@@ -3,7 +3,7 @@
 	* phpGroupWare - DEMO: a demo aplication.
 	*
 	* @author Sigurd Nes <sigurdne@online.no>
-	* @copyright Copyright (C) 2003-2005 Free Software Foundation, Inc. http://www.fsf.org/
+	* @copyright Copyright (C) 2003-2007 Free Software Foundation, Inc. http://www.fsf.org/
 	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/bbb_/ekstern/
 	* @package demo
@@ -11,60 +11,85 @@
  	* @version $Id: class.menu.inc.php,v 1.3 2006/12/27 11:04:41 sigurdne Exp $
 	*/
 
-	/**
+	/*
+	   This program is free software: you can redistribute it and/or modify
+	   it under the terms of the GNU General Public License as published by
+	   the Free Software Foundation, either version 3 of the License, or
+	   (at your option) any later version.
+
+	   This program is distributed in the hope that it will be useful,
+	   but WITHOUT ANY WARRANTY; without even the implied warranty of
+	   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	   GNU General Public License for more details.
+
+	   You should have received a copy of the GNU General Public License
+	   along with this program.  If not, see <http://www.gnu.org/licenses/>.
+	 */
+	 
+	 /**
 	 * Description
 	 * @package demo
 	 */
 
 	class demo_menu
 	{
-		var $sub;
+		/**
+		* @var string $sub the currently selected menu option??
+		*/
+		private $sub;
 
-		var $public_functions = array
-		(
-			'links'	=> True,
-		);
-
-		function demo_menu($sub='')
+		/**
+		* Constructor
+		*/
+		public function __construct($sub = null)
 		{
-			$this->sub		= $sub;
-			$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
+			$this->sub	= $sub;
 		}
 
-		function links($page='',$page_2='')
+		/**
+		* Generate a menu
+		*
+		* @param ??? $page ???
+		* @param ??? $page2 ???
+		*/
+		public function links($page = '', $page_2 = '')
 		{
-			$currentapp=$this->currentapp;
-			$sub = $this->sub;
+			$menu['module'][] = array
+			(
+				'url'			=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'demo.uidemo.index', 'output' => 'html')),
+				'text' 			=> 'HTML',
+				'statustext' 	=> 'HTML',
+				'this'			=> $this->sub == 'html'
+			);
 
-			$i=0;
-			if($sub=='html')
-			{
-				$menu['module'][$i]['this']=True;
-			}
-			$menu['module'][$i]['url'] 		= $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> $currentapp.'.uidemo.index','output'=>'html'));
-			$menu['module'][$i]['text'] 		= 'HTML';
-			$menu['module'][$i]['statustext'] 	= 'HTML';
-			$i++;
+			$menu['module'][] = array
+			(
+				'url'			=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'demo.uidemo.index', 'output' => 'wml')),
+				'text' 			=> 'WML',
+				'statustext' 	=> 'WML',
+				'this'			=> $this->sub == 'wml'
+			);
 
-			if($sub=='wml')
-			{
-				$menu['module'][$i]['this']=True;
-			}
-			$menu['module'][$i]['url'] 		= $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> $currentapp.'.uidemo.index','output'=>'wml'));
-			$menu['module'][$i]['text']			= 'WML';
-			$menu['module'][$i]['statustext']	= 'WML';
-			$i++;
+			$menu['module'][] = array
+			(
+				'url'			=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'demo.uidemo.index2', 'output' => 'html')),
+				'text' 			=> 'Alternative',
+				'statustext' 	=> 'Alternative list',
+				'this'			=> $this->sub == 'alternative'
+			);
 
-			if($sub=='alternative')
-			{
-				$menu['module'][$i]['this']=True;
-			}
-			$menu['module'][$i]['url'] 		= $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> $currentapp.'.uidemo.index2','output'=>'html'));
-			$menu['module'][$i]['text']			= 'Alternative';
-			$menu['module'][$i]['statustext']	= 'Alternative list';
-			$i++;
-
-			$GLOBALS['phpgw']->session->appsession('menu_demo','sidebox',$menu);
+			$GLOBALS['phpgw']->session->appsession('menu_demo', 'sidebox', $menu);
 			return $menu;
+		}
+
+		
+		/**
+		* Set the submenu value
+		*
+		* @param string $sub the current sub menu selection
+		*/
+		public function set_sub($sub)
+		{
+			$this->sub = phpgw::clean_value($sub, 'string');
 		}
 	}
