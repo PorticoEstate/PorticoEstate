@@ -50,7 +50,7 @@
 		function demo_sodemo($acl_location)
 		{
 			$this->account			=& $GLOBALS['phpgw_info']['user']['account_id'];
-			$this->db 				=& $GLOBALS['phpgw']->db;
+			$this->db 				= clone($GLOBALS['phpgw']->db);
 
 			$this->like 			=& $this->db->like;
 			$this->join 			=& $this->db->join;
