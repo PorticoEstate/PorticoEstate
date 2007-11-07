@@ -46,17 +46,17 @@
 				$this->use_session = True;
 			}
 
-			$acl_app	= get_var('acl_app',array('POST','GET'));
-			$start	= get_var('start',array('POST','GET'));
-			$query	= get_var('query',array('POST','GET'));
-			$sort	= get_var('sort',array('POST','GET'));
-			$order	= get_var('order',array('POST','GET'));
-			$filter	= get_var('filter',array('POST','GET'));
-			$cat_id	= get_var('cat_id',array('POST','GET'));
-			$permission	= get_var('permission',array('POST','GET'));
-			$module	= get_var('module',array('POST','GET'));
-			$granting_group	= get_var('granting_group',array('POST','GET'));
-			$allrows	= get_var('allrows',array('POST','GET'));
+			$acl_app	= phpgw::get_var('acl_app');
+			$start		= phpgw::get_var('start');
+			$query		= phpgw::get_var('query');
+			$sort		= phpgw::get_var('sort');
+			$order		= phpgw::get_var('order');
+			$filter		= phpgw::get_var('filter');
+			$cat_id		= phpgw::get_var('cat_id');
+			$permission	= phpgw::get_var('permission');
+			$module		= phpgw::get_var('module');
+			$granting_group	= phpgw::get_var('granting_group');
+			$allrows	= phpgw::get_var('allrows');
 
 			if ($start)
 			{
