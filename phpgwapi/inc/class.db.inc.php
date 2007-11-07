@@ -222,6 +222,11 @@
 		*/
 		public function db_addslashes($str)
 		{
+			if ( is_null($str) )
+			{
+				return '';
+			}
+
 			if ( !is_object($this->adodb) )  //workaround
 			{
 				return addslashes($str);
