@@ -37,13 +37,7 @@
 
 		function ui_custom()
 		{
-			$GLOBALS['phpgw_info']['flags']['xslt_app'] = True;
-			$this->currentapp			= $GLOBALS['phpgw_info']['flags']['currentapp'];
-			$this->nextmatchs			= CreateObject('phpgwapi.nextmatchs');
-			$this->account				= $GLOBALS['phpgw_info']['user']['account_id'];
 			$this->bo					= CreateObject('admin.bo_custom',True);
-			$this->bolocation			= CreateObject('preferences.boadmin_acl');
-			$this->bolocation->acl_app 	= $this->bo->appname;
 
 			$this->start				= $this->bo->start;
 			$this->query				= $this->bo->query;
@@ -52,6 +46,13 @@
 			$this->appname				= $this->bo->appname;
 			$this->location				= $this->bo->location;
 			$this->allrows				= $this->bo->allrows;
+
+			$GLOBALS['phpgw_info']['flags']['xslt_app'] = True;
+			$this->currentapp			= $GLOBALS['phpgw_info']['flags']['currentapp'];
+			$this->nextmatchs			= CreateObject('phpgwapi.nextmatchs');
+			$this->account				= $GLOBALS['phpgw_info']['user']['account_id'];
+			$this->bolocation			= CreateObject('preferences.boadmin_acl');
+			$this->bolocation->acl_app 	= $this->appname;
 		}
 
 		function save_sessiondata()
@@ -84,11 +85,11 @@
 
 			if($resort)
 			{
-				$this->bo->resort_attrib($id,$resort);
+				$this->bo->resort_attrib($id, $resort);
 			}
-			$attrib_list = $this->bo->get_attribs($appname,$location);
+			$attrib_list = $this->bo->get_attribs($appname, $location);
 
-			if (isset($attrib_list) AND is_array($attrib_list))
+			if ( is_array($attrib_list))
 			{
 				foreach($attrib_list as $entry)
 				{
@@ -220,17 +221,20 @@
 			$appname	= $this->appname;
 			$location	= $this->location;
 			$id			= phpgw::get_var('id', 'int');
-			$values		= phpgw::get_var('values', 'string', 'POST');
-			if(!$values)
-			{
-				$values=array();
-			}
+			$values		= phpgw::get_var('values', 'string', 'POST', array());
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('custom'));
 
-			if ($location)
+			if ( !isset($values['location']) )
 			{
-				$values['location'] = $location;
+				if ( $location )
+				{
+					$values['location'] = $location;
+				}
+				else
+				{
+					$values['location'] = '';
+				}
 			}
 			
 			if (isset($values['save']) && $values['save'])
@@ -297,6 +301,8 @@
 					{
 						$id=$receipt['id'];
 					}
+					$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'admin.ui_custom.edit_attrib', 'appname' => $values['appname'], 'location' => $values['location'], 'id' => $id));
+
 				}
 				else
 				{
@@ -689,7 +695,7 @@
 		function delete()
 		{
 			$appname				= phpgw::get_var('appname');
-			$location				= phpgw::get_var('location', 'location');
+			$location				= phpgw::get_var('location');
 			$attrib_id				= phpgw::get_var('attrib_id', 'int');
 			$custom_function_id		= phpgw::get_var('custom_function_id', 'int');
 			$confirm				= phpgw::get_var('confirm', 'bool', 'POST');
