@@ -3,6 +3,7 @@
 	* phpGroupWare - DEMO: a demo aplication.
 	*
 	* @author Sigurd Nes <sigurdne@online.no>
+	* @author Dave Hall <skwashd@phpgroupware.org>
 	* @copyright Copyright (C) 2003-2005 Free Software Foundation, Inc. http://www.fsf.org/
 	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/bbb_/ekstern/
@@ -11,31 +12,52 @@
  	* @version $Id: class.sodemo.inc.php,v 1.7 2007/04/20 09:11:05 sigurdne Exp $
 	*/
 
+	/*
+	   This program is free software: you can redistribute it and/or modify
+	   it under the terms of the GNU General Public License as published by
+	   the Free Software Foundation, either version 3 of the License, or
+	   (at your option) any later version.
+
+	   This program is distributed in the hope that it will be useful,
+	   but WITHOUT ANY WARRANTY; without even the implied warranty of
+	   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	   GNU General Public License for more details.
+
+	   You should have received a copy of the GNU General Public License
+	   along with this program.  If not, see <http://www.gnu.org/licenses/>.
+	 */
+
+	/**
+	* import db class
+	*/
+	phpgw::import_class('phpgwapi.db');
+
 	/**
 	 * Description
 	 * @package demo
 	 */
-
 	class demo_sodemo
 	{
 		var $grants;
 		var $db;
-		var $db2;
 		var $account;
 
-		function demo_sodemo()
+		/**
+		* @var the total number of records for a search
+		*/
+		public $total_records = 0;
+
+		function demo_sodemo($acl_location)
 		{
-			$this->currentapp		= $GLOBALS['phpgw_info']['flags']['currentapp'];
-			$this->account			= $GLOBALS['phpgw_info']['user']['account_id'];
-			$this->db 				= clone($GLOBALS['phpgw']->db);
-			$this->db2 				= clone($this->db);
+			$this->account			=& $GLOBALS['phpgw_info']['user']['account_id'];
+			$this->db 				=& $GLOBALS['phpgw']->db;
 
 			$this->like 			=& $this->db->like;
 			$this->join 			=& $this->db->join;
 			$this->left_join		=& $this->db->left_join;
-			$this->acl_location 	= '.demo_location';
+			$this->acl_location 	= $acl_location;
 			
-			$this->grants			= $GLOBALS['phpgw']->acl->get_grants($this->currentapp,$this->acl_location);
+			$this->grants			= $GLOBALS['phpgw']->acl->get_grants('demo', $this->acl_location);
 		}
 
 		function read($data)
@@ -74,11 +96,11 @@
 					$filtermethod .= " $where ( $table.user_id IN(" . implode(',',$public_user_list) . "))";
 				}
 			}
-			elseif ($filter == 'yours')
+			else if ($filter == 'yours')
 			{
 				$filtermethod = "$where user_id='" . $this->account . "'";
 			}
-			elseif ($filter == 'private')
+			else if ($filter == 'private')
 			{
 				$filtermethod = "$where user_id='" . $this->account . "' AND access='private'";
 			}
@@ -103,24 +125,24 @@
 			$querymethod = '';
 			if($query)
 			{
-				$query = ereg_replace("'",'',$query);
-				$query = ereg_replace('"','',$query);
-
+				$query = $this->db->db_addslashes($query);
 				$querymethod = " $where name $this->like '%$query%'";
 			}
 
-			$sql = "SELECT * FROM $table $filtermethod $querymethod";
+			$sql = "SELECT COUNT(phpgw_demo_table.id) FROM $table $filtermethod $querymethod";
 
-			$this->db2->query($sql,__LINE__,__FILE__);
-			$this->total_records = $this->db2->num_rows();
+			$this->db->query($sql,__LINE__,__FILE__);
+			$this->total_records = $this->db->num_rows();
 
-			if(!$allrows)
+			$sql = "SELECT * FROM $table $filtermethod $querymethod $ordermethod";
+
+			if ( $allrows )
 			{
-				$this->db->limit_query($sql . $ordermethod,$start,__LINE__,__FILE__);
+				$this->db->query($sql, __LINE__, __FILE__);
 			}
 			else
 			{
-				$this->db->query($sql . $ordermethod,__LINE__,__FILE__);
+				$this->db->limit_query($sql, $start, __LINE__, __FILE__);
 			}
 
 			$demo_info = '';
@@ -129,7 +151,7 @@
 				$demo_info[] = array
 				(
 					'id'			=> $this->db->f('id'),
-					'name'			=> stripslashes($this->db->f('name')),
+					'name'			=> $this->db->f('name', true),
 					'entry_date'	=> $this->db->f('entry_date'),
 					'grants' 		=> (int)$this->grants[$this->db->f('user_id')]
 				);
@@ -140,11 +162,13 @@
 
 		function read2($data)
 		{
+			$db2 = clone($this->db);
+
 			if(is_array($data))
 			{
 				if ($data['start'])
 				{
-					$start=$data['start'];
+					$start = $data['start'];
 				}
 				else
 				{
@@ -177,11 +201,11 @@
 					$filtermethod .= " $where ( $table.user_id IN(" . implode(',',$public_user_list) . "))";
 				}
 			}
-			elseif ($filter == 'yours')
+			else if ($filter == 'yours')
 			{
 				$filtermethod = "$where user_id='" . $this->account . "'";
 			}
-			elseif ($filter == 'private')
+			else if ($filter == 'private')
 			{
 				$filtermethod = "$where user_id='" . $this->account . "' AND access='private'";
 			}
@@ -194,13 +218,10 @@
 				$where= 'AND';
 			}
 
+			$ordermethod = ' ORDER BY name ASC';
 			if ($order)
 			{
-				$ordermethod = " order by $order $sort";
-			}
-			else
-			{
-				$ordermethod = ' order by name asc';
+				$ordermethod = " ORDER BY $order $sort";
 			}
 
 			$querymethod = '';
@@ -279,19 +300,18 @@
 
 			$this->uicols	= $uicols;
 
+			$sql = "SELECT COUNT(phpgw_demo_table.id) FROM $table $filtermethod $querymethod";
+			$this->db->query($sql,__LINE__,__FILE__);
+			$this->total_records = $this->db->num_rows();
 
-			$sql = "SELECT * FROM $table $filtermethod $querymethod";
-
-			$this->db2->query($sql,__LINE__,__FILE__);
-			$this->total_records = $this->db2->num_rows();
-
-			if(!$allrows)
+			$sql = "SELECT * FROM $table $filtermethod $querymethod $ordermethod";
+			if ( $allrows )
 			{
-				$this->db->limit_query($sql . $ordermethod,$start,__LINE__,__FILE__);
+				$this->db->query($sql, __LINE__, __FILE__);
 			}
 			else
 			{
-				$this->db->query($sql . $ordermethod,__LINE__,__FILE__);
+				$this->db->limit_query($sql, $start, __LINE__, __FILE__);
 			}
 
 			$demo_info = '';
@@ -312,26 +332,26 @@
 					$value='';
 					$value=$this->db->f($cols_return_extra[$i]['name']);
 
-					if(($cols_return_extra[$i]['datatype']=='R' || $cols_return_extra[$i]['datatype']=='LB') && $value):
+					if(($cols_return_extra[$i]['datatype']=='R' || $cols_return_extra[$i]['datatype']=='LB') && $value)
 					{
-						$sql="SELECT value FROM phpgw_cust_choice WHERE appname= '{$this->currentapp}' AND location= '{$this->acl_location}' AND attrib_id=" .$cols_return_extra[$i]['attrib_id']. "  AND id=" . $value;
-						$this->db2->query($sql);
-						$this->db2->next_record();
-						$demo_info[$j][$cols_return_extra[$i]['name']] = $this->db2->f('value');
+						$sql="SELECT value FROM phpgw_cust_choice WHERE appname= 'demo' AND location= '{$this->acl_location}' AND attrib_id=" .$cols_return_extra[$i]['attrib_id']. "  AND id=" . $value;
+						$db2->query($sql);
+						$db2->next_record();
+						$demo_info[$j][$cols_return_extra[$i]['name']] = $db2->f('value');
 					}
-					elseif($cols_return_extra[$i]['datatype']=='AB' && $value):
+					else if($cols_return_extra[$i]['datatype']=='AB' && $value)
 					{
 						$contact_data	= $contacts->read_single_entry($value,array('n_given'=>'n_given','n_family'=>'n_family','email'=>'email'));
 						$demo_info[$j][$cols_return_extra[$i]['name']]	= $contact_data[0]['n_family'] . ', ' . $contact_data[0]['n_given'];
 					}
-					elseif($cols_return_extra[$i]['datatype']=='VENDOR' && $value):
+					else if($cols_return_extra[$i]['datatype']=='VENDOR' && $value)
 					{
 						$sql="SELECT org_name FROM fm_vendor where id=$value";
-						$this->db2->query($sql);
-						$this->db2->next_record();
-						$demo_info[$j][$cols_return_extra[$i]['name']] = $this->db2->f('org_name');
+						$db2->query($sql);
+						$db2->next_record();
+						$demo_info[$j][$cols_return_extra[$i]['name']] = $db2->f('org_name', true);
 					}
-					elseif($cols_return_extra[$i]['datatype']=='CH' && $value):
+					else if($cols_return_extra[$i]['datatype']=='CH' && $value)
 					{
 						$ch= unserialize($value);
 
@@ -339,34 +359,33 @@
 						{
 							for ($k=0;$k<count($ch);$k++)
 							{
-								$sql="SELECT value FROM phpgw_cust_choice WHERE appname= '{$this->currentapp}' AND location= '{$this->acl_location}' AND attrib_id=" .$cols_return_extra[$i]['attrib_id']. "  AND id=" . $ch[$k];
-								$this->db2->query($sql);
-								while ($this->db2->next_record())
+								$sql="SELECT value FROM phpgw_cust_choice WHERE appname= '{'demo'}' AND location= '{$this->acl_location}' AND attrib_id=" .$cols_return_extra[$i]['attrib_id']. "  AND id=" . $ch[$k];
+								$db2->query($sql);
+								while ($db2->next_record())
 								{
-									$ch_value[]=$this->db2->f('value');
+									$ch_value[] = $db2->f('value');
 								}
 							}
 							$demo_info[$j][$cols_return_extra[$i]['name']] = @implode(",", $ch_value);
 							unset($ch_value);
 						}
 					}
-					elseif($cols_return_extra[$i]['datatype']=='D' && $value):
+					else if($cols_return_extra[$i]['datatype']=='D' && $value)
 					{
 						$demo_info[$j][$cols_return_extra[$i]['name']]=date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'],strtotime($value));
 					}
-					elseif($cols_return_extra[$i]['datatype']=='timestamp' && $value):
+					else if($cols_return_extra[$i]['datatype']=='timestamp' && $value)
 					{
 						$demo_info[$j][$cols_return_extra[$i]['name']]=date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'],$value);
 					}
-					elseif($cols_return_extra[$i]['datatype']=='user_id' && $value):
+					else if($cols_return_extra[$i]['datatype']=='user_id' && $value)
 					{
 						$demo_info[$j][$cols_return_extra[$i]['name']]= $GLOBALS['phpgw']->accounts->id2name($value);
 					}
-					else:
+					else
 					{
 						$demo_info[$j][$cols_return_extra[$i]['name']]=$value;
 					}
-					endif;
 				}
 
 				$j++;
@@ -375,12 +394,14 @@
 			return $demo_info;
 		}
 
-
-		function read_single($id,$values='')
+		/**
+		* Read a single record
+		*/
+		function read_single($id, $values = array() )
 		{
 			$sql = 'SELECT * FROM phpgw_demo_table WHERE id = ' . (int) $id;
 	
-			$this->db->query($sql,__LINE__,__FILE__);
+			$this->db->query($sql, __LINE__, __FILE__);
 
 			if ($this->db->next_record())
 			{
@@ -389,20 +410,21 @@
 				$values['address']		= $this->db->f('address', true);
 				$values['remark']		= $this->db->f('remark', true);
 				$values['town']			= $this->db->f('town', true);
-				$values['zip']			= $this->db->f('zip');
+				$values['zip']			= $this->db->f('zip', true);
 				$values['entry_date']	= $this->db->f('entry_date');
 				$values['user_id']		= $this->db->f('user_id');
 				$values['cat_id']		= $this->db->f('category');
 				$values['access']		= $this->db->f('access');
 				$values['grants'] 		= (int)$this->grants[$this->db->f('user_id')];
 
-				$cnt_attr = count($values['attributes']); 
-				for ($i=0; $i < $cnt_attr; ++$i)
+				if ( isset($values['attributes']) && is_array($values['attributes']) )
 				{
-					$values['attributes'][$i]['value'] 	= $this->db->f($values['attributes'][$i]['column_name']);
+					foreach ( $values['attributes'] as &$attr )
+					{
+						$attr['value'] 	= $this->db->f($attr['column_name']);
+					}
 				}
 			}
-
 			return $values;
 		}
 
@@ -492,11 +514,11 @@
 				$vals = '';
 			}
 			
-			$this->db->query("INSERT INTO phpgw_demo_table (name,address,zip,town, remark,category,access,user_id,entry_date $cols) "
+			$this->db->query("INSERT INTO phpgw_demo_table (name, address, zip, town, remark, category, access, user_id, entry_date $cols) "
 				. "VALUES ($insert_values $vals)",__LINE__,__FILE__);
 
 			$receipt['message'][]=array('msg'=>lang('demo item has been saved'));
-			$receipt['demo_id']= $this->db->get_last_insert_id('phpgw_demo_table','id');
+			$receipt['demo_id']= $this->db->get_last_insert_id('phpgw_demo_table', 'id');
 
 			$this->db->transaction_commit();
 
@@ -569,6 +591,6 @@
 
 		function delete($id)
 		{
-			$this->db->query('DELETE FROM phpgw_demo_table WHERE id='  . intval($id),__LINE__,__FILE__);
+			$this->db->query('DELETE FROM phpgw_demo_table WHERE id='  . (int) $id, __LINE__, __FILE__);
 		}
 	}
