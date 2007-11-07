@@ -68,7 +68,7 @@
 			$start		= phpgw::get_var('start', 'int');
 			$query		= phpgw::get_var('query');
 			$sort		= phpgw::get_var('sort');
-			$order		= phpgw::get_var('order');
+			$order		= phpgw::get_var('order', 'string', 'REQUEST', 'attrib_sort');
 			$filter		= phpgw::get_var('filter');
 			$location	= phpgw::get_var('location');
 			$allrows	= phpgw::get_var('allrows', 'bool');
@@ -83,34 +83,13 @@
 				$this->start = 0;
 			}
 
-			if(isset($query))
-			{
-				$this->query = $query;
-			}
-			if(!empty($filter))
-			{
-				$this->filter = $filter;
-			}
-			if(isset($sort))
-			{
-				$this->sort = $sort;
-			}
-			if(isset($order))
-			{
-				$this->order = $order;
-			}
-			if(isset($location))
-			{
-				$this->location = $location;
-			}
-			if(isset($appname))
-			{
-				$this->appname = $appname;
-			}
-			if(isset($allrows))
-			{
-				$this->allrows = $allrows;
-			}
+			$this->query = $query;
+			$this->filter = $filter;
+			$this->sort = $sort;
+			$this->order = $order;
+			$this->location = $location;
+			$this->appname = $appname;
+			$this->allrows = $allrows;
 		}
 
 		function save_sessiondata($data)
@@ -148,27 +127,23 @@
 			endif;
 		}
 
-		function get_attribs($appname='',$location='',$allrows='')
+		function get_attribs($appname = '',$location = '', $allrows = null)
 		{
-			if($allrows)
+			if ( !is_null($allrows) )
 			{
 				$this->allrows = $allrows;
 			}
+			$inc_choices = false;
+		 	$attribs = $this->so->get_attribs($appname, $location, $this->start, $this->query, $this->sort, $this->order, $this->allrows, $inc_choices);
 
-			//$attrib = $this->so->get_attribs(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
-			//								'location' => $location,'appname' => $appname,'allrows'=>$this->allrows));
-
-
-		 	$attrib = $this->so->get_attribs($appname, $location, $this->start, $this->query, $this->sort, $this->order, $this->allrows, $inc_choices = false);
-
-			for ($i=0; $i<count($attrib); $i++)
+			foreach( $attribs as &$attrib )
 			{
-				$attrib[$i]['datatype'] = $this->so->translate_datatype($attrib[$i]['datatype']);
+				$attrib['datatype'] = $this->so->translate_datatype($attrib['datatype']);
 			}
 
 			$this->total_records = $this->so->total_records;
 
-			return $attrib;
+			return $attribs;
 		}
 
 		function get_attrib_single($appname,$location,$id)

@@ -89,8 +89,7 @@
 			$this->location = $location;
 		
 			$this->account		= $GLOBALS['phpgw_info']['user']['account_id'];
-			$this->db           = clone($GLOBALS['phpgw']->db); // clone to awoid conflict the db in lang-function
-			$this->db2			= clone($this->db);
+			$this->db           =& $GLOBALS['phpgw']->db; // clone to avoid conflict the db in lang-function
 			$this->join			= $this->db->join;
 			$this->like			= $this->db->like;
 
@@ -518,19 +517,27 @@
 			}
 
 			$querymethod = '';
-			if($query)
+			if ( $query )
 			{
 				$querymethod = " AND (phpgw_cust_attribute.column_name $this->like '%$query%' or phpgw_cust_attribute.input_text $this->like '%$query%')";
 			}
 
-			$sql = "FROM phpgw_cust_attribute WHERE appname='$appname' AND location = '$location' ";
+			$sql = "FROM phpgw_cust_attribute WHERE appname='$appname' AND location = '$location' $querymethod";
+
+			$this->total_records = 0;
+			$this->db->query("SELECT COUNT(id) AS cnt_rec $sql",__LINE__,__FILE__);
+			if ( $this->db->next_record() )
+			{
+				$this->total_records = $this->db->f('cnt_rec');;
+			}
+
 			if ( $allrows )
 			{
-				$this->db->query("SELECT * $sql" . $querymethod . $ordermethod, __LINE__, __FILE__);
+				$this->db->query("SELECT * $sql" . $ordermethod, __LINE__, __FILE__);
 			}
 			else
 			{
-				$this->db->limit_query("SELECT * $sql" . $querymethod . $ordermethod,$start, __LINE__, __FILE__);
+				$this->db->limit_query("SELECT * $sql" . $ordermethod,$start, __LINE__, __FILE__);
 			}
 
 			$attribs = array();
@@ -557,22 +564,15 @@
 				);
 			}
 
-			$this->total_records = count($attribs);
-			$this->db->query("SELECT COUNT(id) AS cnt_rec $sql",__LINE__,__FILE__);
-			if ( $this->db->next_record() )
-			{
-				$this->total_records = $this->db->f('cnt_rec');;
-			}
-
 			if ( count($attribs) && $inc_choices )
 			{
-				foreach ( $attribs as $aid => $attrib )
+				foreach ( $attribs as &$attrib )
 				{
 					if ( $attrib['datatype'] == 'R'
 						|| $attrib['datatype'] == 'CH'
 						|| $attrib['datatype'] =='LB')
 					{
-						$attribs[$aid]['choice'] = $this->read_attrib_choice($appname, $location, $attrib['id']);
+						$attrib['choice'] = $this->read_attrib_choice($appname, $location, $attrib['id']);
 					}
 				}
 			}
@@ -1031,9 +1031,9 @@
 				$where='WHERE ' . implode("' AND ", $condition) . "'";
 			}
 
-			$this->db2->query("SELECT max(id) as maximum FROM $table $where",__LINE__,__FILE__);
-			$this->db2->next_record();
-			$next_id = $this->db2->f('maximum')+1;
+			$this->db->query("SELECT max(id) as maximum FROM $table $where",__LINE__,__FILE__);
+			$this->db->next_record();
+			$next_id = $this->db->f('maximum')+1;
 			return $next_id;
 		}
 
