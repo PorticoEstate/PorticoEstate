@@ -25,8 +25,8 @@
 	*/
 	include_once('header.inc.php');
 
-	$GLOBALS['sessionid'] = get_var('sessionid',array('GET','COOKIE'));
-	$GLOBALS['kp3']       = get_var('kp3',array('GET','COOKIE'));
+	$GLOBALS['sessionid'] = phpgw::get_var('sessionid', 'string', 'any');
+	$GLOBALS['kp3']       = phpgw::get_var('kp3', 'string', 'any');
 
 	$verified = $GLOBALS['phpgw']->session->verify();
 	if ($verified)
