@@ -140,7 +140,7 @@
 			//_debug_array($data);
 
 			$this->start	= $data['start'];
-			$this->query	= $data['query'];
+		//	$this->query	= $data['query'];
 			$this->filter	= $data['filter'];
 			$this->sort		= $data['sort'];
 			$this->order	= $data['order'];
