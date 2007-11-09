@@ -317,12 +317,12 @@
 				$where= 'AND';
 			}
 
-			if ($member_id>0)
+			if ($member_id > 0  && !$detail)
 			{
 				$filtermethod .= " $where $entity_table.member_of $this->like '%,$member_id,%' ";
 				$where= 'AND';
 			}
-
+	
 			if ($status)
 			{
 				$filtermethod .= " $where $entity_table.status='$status' ";
