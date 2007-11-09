@@ -161,6 +161,8 @@
 	{
 		$methods = print_r($method, true);
 		trigger_error("get_var(var = $variable, method = $methods, default = $default_value) has been replaced by phpgw::get_var(var, data_type, method, default), please update your code", E_USER_NOTICE);
+		//echo '<pre>' . print_r(debug_backtrace(), true) . '</pre>'; // uncomment me to assist with debugging :)
+
 		$var = null;
 		if ( is_array($method) )
 		{
