@@ -90,6 +90,7 @@
 			$this->status				= $this->bo->status;
 			$this->type_id				= $this->bo->type_id;
 			$this->allrows				= $this->bo->allrows;
+			$this->lookup				= $this->bo->lookup;
 
 			$this->menu->sub			='location';
 		}
@@ -200,7 +201,7 @@
 										'search_field'));
 
 			$type_id	= $this->type_id;
-			$lookup 	= phpgw::get_var('lookup', 'bool');
+			$lookup 	= $this->lookup;
 			$lookup_name 	= phpgw::get_var('lookup_name');
 			$lookup_tenant 	= phpgw::get_var('lookup_tenant', 'bool');
 

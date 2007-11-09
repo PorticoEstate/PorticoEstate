@@ -41,6 +41,8 @@
 		var $order;
 		var $cat_id;
 		var $type_id;
+		var $lookup;
+		var $use_session;
 
 		var $public_functions = array
 		(
@@ -77,80 +79,38 @@
 			$this->bocommon 			= CreateObject('property.bocommon');
 			$this->soadmin_location		= CreateObject('property.soadmin_location');
 
-			if ($session)
+			$this->lookup	= phpgw::get_var('lookup', 'bool');
+			if ($session && !$this->lookup)
 			{
 				$this->read_sessiondata();
 				$this->use_session = True;
 			}
 
-			$start		= phpgw::get_var('start', 'int', 'REQUEST', 0);
-			$query		= phpgw::get_var('query');
-			$sort		= phpgw::get_var('sort');
-			$order		= phpgw::get_var('order');
-			$filter		= phpgw::get_var('filter', 'int');
-			$cat_id		= phpgw::get_var('cat_id', 'int');
-			$lookup_tenant	= phpgw::get_var('lookup_tenant', 'bool');
-			$district_id	= phpgw::get_var('district_id', 'int');
-			$part_of_town_id = phpgw::get_var('part_of_town_id', 'int');
-			$status		= phpgw::get_var('status');
-			$type_id	= phpgw::get_var('type_id', 'int');
-			$allrows	= phpgw::get_var('allrows', 'bool');
-
-			if ($start)
-			{
-				$this->start=$start;
-			}
-			else
-			{
-				$this->start=0;
-			}
-
-			if(isset($query))
-			{
-				$this->query = $query;
-			}
-			if(isset($filter))
-			{
-				$this->filter = $filter;
-			}
-			if(isset($sort))
-			{
-				$this->sort = $sort;
-			}
-			if(isset($order))
-			{
-				$this->order = $order;
-			}
-			if(isset($cat_id))
-			{
-				$this->cat_id = $cat_id;
-			}
-			if(isset($part_of_town_id))
-			{
-				$this->part_of_town_id = $part_of_town_id;
-			}
-			if(isset($district_id))
-			{
-				$this->district_id = $district_id;
-			}
-			if(isset($status))
-			{
-				$this->status = $status;
-			}
-			if(isset($type_id))
-			{
-				$this->type_id = $type_id;
-			}
-			if(isset($allrows))
-			{
-				$this->allrows = $allrows;
-			}
-
-			if(!$this->type_id)
-			{
-				$this->type_id = 1;
-			}
-			$this->acl_location			= '.location.' . $this->type_id;
+			$start					= phpgw::get_var('start', 'int', 'REQUEST', 0);
+			$query					= phpgw::get_var('query');
+			$sort					= phpgw::get_var('sort');
+			$order					= phpgw::get_var('order');
+			$filter					= phpgw::get_var('filter', 'int');
+			$cat_id					= phpgw::get_var('cat_id', 'int');
+			$lookup_tenant			= phpgw::get_var('lookup_tenant', 'bool');
+			$district_id			= phpgw::get_var('district_id', 'int');
+			$part_of_town_id		= phpgw::get_var('part_of_town_id', 'int');
+			$status					= phpgw::get_var('status');
+			$type_id				= phpgw::get_var('type_id', 'int');
+			$allrows				= phpgw::get_var('allrows', 'bool');
+			
+			$this->start			= $start ? $start : 0;
+			$this->query			= isset($query) && $query ? $query : '';
+			$this->filter			= isset($filter) && $filter ? $filter : '';
+			$this->sort				= isset($sort) && $sort ? $sort : '';
+			$this->order			= isset($order) && $order ? $order : '';
+			$this->cat_id			= isset($cat_id) && $cat_id ? $cat_id : '';
+			$this->part_of_town_id	= isset($part_of_town_id) && $part_of_town_id ? $part_of_town_id : '';
+			$this->district_id		= isset($district_id) && $district_id ? $district_id : '';
+			$this->status			= isset($status) && $status ? $status : '';
+			$this->type_id			= isset($type_id) && $type_id ? $type_id : 1;
+			$this->allrows			= isset($allrows) && $allrows ? $allrows : '';
+			$this->acl_location		= '.location.' . $this->type_id;
 		}
 
 		function read_sessiondata()
