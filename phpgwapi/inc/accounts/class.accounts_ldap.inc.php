@@ -258,7 +258,7 @@
 					return $sortedlist;
 				}
 			}
-			return false;
+			return array();
 		}
 		
 		/**
