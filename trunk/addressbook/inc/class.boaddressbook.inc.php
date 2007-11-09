@@ -102,15 +102,15 @@
 		{
 			/* _debug_array($GLOBALS['HTTP_POST_VARS']); */
 			/* Might change this to '' at the end---> */
-			$_start		= get_var('start', array('GET','POST'));
-			$_query		= get_var('query', array('GET','POST'));
-			$_qfield	= get_var('qfield', array('GET','POST'));
-			$_limit		= get_var('limit', array('GET', 'POST'));
-			$_sort		= get_var('sort', array('GET','POST'));
-			$_order		= get_var('order', array('GET','POST'));
-			$_filter	= get_var('filter', array('GET','POST'));
-			$_cat_id	= get_var('cat_id', array('GET','POST'));
-			$_fcat_id	= get_var('fcat_id', array('GET','POST'));
+			$_start		= phpgw::get_var('start');
+			$_query		= phpgw::get_var('query');
+			$_qfield	= phpgw::get_var('qfield');
+			$_limit		= phpgw::get_var('limit');
+			$_sort		= phpgw::get_var('sort');
+			$_order		= phpgw::get_var('order');
+			$_filter	= phpgw::get_var('filter');
+			$_cat_id	= phpgw::get_var('cat_id');
+			$_fcat_id	= phpgw::get_var('fcat_id');
 
 			if(!empty($_start) || ($_start == '0') || ($_start == 0))
 			{
