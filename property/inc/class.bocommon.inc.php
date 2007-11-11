@@ -697,21 +697,21 @@
 
 				for ($i=1; $i<=31; $i++)
 				{
-					$alarm['add_alarm']['day_list'][($i-1)][id] = $i;
+					$alarm['add_alarm']['day_list'][($i-1)]['id'] = $i;
 				}
 				$alarm['add_alarm']['lang_day']					= lang('Day');
 				$alarm['add_alarm']['lang_day_statustext']		= lang('Day');
 
 				for ($i=1; $i<=24; $i++)
 				{
-					$alarm['add_alarm']['hour_list'][($i-1)][id] = $i;
+					$alarm['add_alarm']['hour_list'][($i-1)]['id'] = $i;
 				}
 				$alarm['add_alarm']['lang_hour']					= lang('Hour');
 				$alarm['add_alarm']['lang_hour_statustext']			= lang('Hour');
 
 				for ($i=1; $i<=60; $i++)
 				{
-					$alarm['add_alarm']['minute_list'][($i-1)][id] = $i;
+					$alarm['add_alarm']['minute_list'][($i-1)]['id'] = $i;
 				}
 				$alarm['add_alarm']['lang_minute']					= lang('Minutes before the event');
 				$alarm['add_alarm']['lang_minute_statustext']		= lang('Minutes before the event');

@@ -102,43 +102,49 @@
 			$uicols['name'][]			= 'id';
 			$uicols['descr'][]			= lang('ID');
 			$uicols['statustext'][]		= lang('ID');
-
+			$uicols['datatype'][]		= 'I';
 
 			$cols_return[] 				= 'name';
 			$uicols['input_type'][]		= 'text';
 			$uicols['name'][]			= 'name';
 			$uicols['descr'][]			= lang('name');
 			$uicols['statustext'][]		= lang('name');
+			$uicols['datatype'][]		= 'V';
 
 			$cols_return[] 				= 'org_name';
 			$uicols['input_type'][]		= 'text';
 			$uicols['name'][]			= 'org_name';
 			$uicols['descr'][]			= lang('Vendor');
 			$uicols['statustext'][]		= lang('Vendor');
+			$uicols['datatype'][]		= 'V';
 
 			$cols_return[] 				= 'category';
 			$uicols['input_type'][]		= 'text';
 			$uicols['name'][]			= 'category';
 			$uicols['descr'][]			= lang('category');
 			$uicols['statustext'][]		= lang('category');
+			$uicols['datatype'][]		= 'V';
 
 			$cols_return[] 				= 'start_date';
 			$uicols['input_type'][]		= 'text';
 			$uicols['name'][]			= 'start_date';
 			$uicols['descr'][]			= lang('start');
 			$uicols['statustext'][]		= lang('start date');
+			$uicols['datatype'][]		= 'D';
 
 			$cols_return[] 				= 'end_date';
 			$uicols['input_type'][]		= 'text';
 			$uicols['name'][]			= 'end_date';
 			$uicols['descr'][]			= lang('end');
 			$uicols['statustext'][]		= lang('end date');
+			$uicols['datatype'][]		= 'D';
 
 			$cols_return[] 				= 'status';
 			$uicols['input_type'][]		= 'text';
 			$uicols['name'][]			= 'status';
 			$uicols['descr'][]			= lang('status');
 			$uicols['statustext'][]		= lang('status');
+			$uicols['datatype'][]		= 'V';
 
 			if ($order)
 			{
@@ -309,7 +315,8 @@
 			$n=count($cols_return);
 //_debug_array($cols_return);
 
-			$contacts			= CreateObject('phpgwapi.contacts');
+			$contacts		= CreateObject('phpgwapi.contacts');
+			$agreement_list = array();
 
 			while ($this->db->next_record())
 			{
@@ -401,8 +408,8 @@
 
 			$entity_table = 'fm_activity_price_index';
 
-			$paranthesis .='(';
-			$joinmethod .= " $this->join fm_activities ON ( fm_activities.id = $entity_table.activity_id))";
+			$paranthesis ='(';
+			$joinmethod = " $this->join fm_activities ON ( fm_activities.id = $entity_table.activity_id))";
 
 			$cols = "fm_activities.*, $entity_table.m_cost,$entity_table.w_cost,"
 				. " $entity_table.total_cost,$entity_table.index_count,"
@@ -412,33 +419,43 @@
 
 			$uicols['name'][]			= 'activity_id';
 			$uicols['descr'][]			= lang('ID');
-
+			$uicols['input_type'][]		= 'I';
+			
 			$uicols['name'][]			= 'num';
 			$uicols['descr'][]			= lang('Code');
+			$uicols['input_type'][]		= 'V';
 
 			$uicols['name'][]			= 'descr';
 			$uicols['descr'][]			= lang('descr');
+			$uicols['input_type'][]		= 'V';
 
 			$uicols['name'][]			= 'unit';
 			$uicols['descr'][]			= lang('unit');
+			$uicols['input_type'][]		= 'V';
 
 			$uicols['name'][]			= 'm_cost';
 			$uicols['descr'][]			= lang('Material cost');
+			$uicols['input_type'][]		= 'N';
 
 			$uicols['name'][]			= 'w_cost';
 			$uicols['descr'][]			= lang('Labour cost');
+			$uicols['input_type'][]		= 'N';
 
 			$uicols['name'][]			= 'total_cost';
 			$uicols['descr'][]			= lang('Total cost');
+			$uicols['input_type'][]		= 'N';
 
 			$uicols['name'][]			= 'this_index';
 			$uicols['descr'][]			= lang('index');
+			$uicols['input_type'][]		= 'N';
 
 			$uicols['name'][]			= 'index_count';
 			$uicols['descr'][]			= lang('index_count');
+			$uicols['input_type'][]		= 'I';
 
 			$uicols['name'][]			= 'index_date';
 			$uicols['descr'][]			= lang('Date');
+			$uicols['input_type'][]		= 'D';
 
 			if ($order)
 			{
@@ -450,13 +467,14 @@
 			}
 
 
-			$from .= " FROM $paranthesis $entity_table ";
+			$from = " FROM $paranthesis $entity_table ";
 
 			$sql = "SELECT $cols $from $joinmethod";
 
 			$this->uicols	= $uicols;
 
 			$where= 'WHERE';
+			$filtermethod = '';
 
 			if ($agreement_id)
 			{
@@ -471,7 +489,7 @@
 				$where= 'AND';
 			}
 
-			if ($vendor_id)
+/*			if ($vendor_id)
 			{
 				$filtermethod .= " $where $entity_table.vendor_id='$vendor_id' ";
 				$where= 'AND';
@@ -488,7 +506,7 @@
 				$filtermethod .= " $where $entity_table.status='$status' ";
 				$where= 'AND';
 			}
-
+*/
 
 			$sql .= " $filtermethod";
 //echo $sql;
@@ -999,14 +1017,7 @@
 //html_print_r($data);
 			if(is_array($data))
 			{
-				if ($data['start'])
-				{
-					$start=$data['start'];
-				}
-				else
-				{
-					$start=0;
-				}
+				$query = (isset($data['start']) && $data['start'] ? $data['start']:0);
 				$query = (isset($data['query'])?$data['query']:'');
 				$sort = (isset($data['sort'])?$data['sort']:'DESC');
 				$order = (isset($data['order'])?$data['order']:'');
@@ -1041,6 +1052,7 @@
 				$ordermethod = ' order by attrib_sort asc';
 			}
 
+			$querymethod = '';
 			if($query)
 			{
 				$query = ereg_replace("'",'',$query);

@@ -1265,6 +1265,7 @@
 				$this->db->query($sql . $ordermethod,__LINE__,__FILE__);
 			}
 
+			$custom_function = array();
 			while ($this->db->next_record())
 			{
 				$custom_function[] = array

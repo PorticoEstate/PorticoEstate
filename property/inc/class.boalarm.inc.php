@@ -40,7 +40,7 @@
 			'send_alarm' => True
 		);
 
-		function property_boalarm()
+		function property_boalarm($session = '')
 		{
 
 			$GLOBALS['phpgw_info']['flags']['currentapp']	=	'property';
@@ -262,7 +262,7 @@
 			}
 //			echo "<p>save_alarm(event_id=$event_id, alarm="; print_r($alarm); echo ")</p>\n";
 
-			if (!$alarm['id'])
+			if (!isset($alarm['id']) || !$alarm['id'])
 			{
 				$alarms = $this->read_alarms($alarm_type,$event_id);	// find a free alarm#
 				$n = count($alarms);

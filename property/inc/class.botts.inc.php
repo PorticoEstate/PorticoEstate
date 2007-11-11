@@ -166,17 +166,17 @@
 		{
 			$data = $GLOBALS['phpgw']->session->appsession('session_data','fm_tts');
 
-			$this->start		= $data['start'];
-			$this->query		= $data['query'];
-			$this->filter		= $data['filter'];
-			$this->user_filter	= $data['user_filter'];
-			$this->sort		= $data['sort'];
-			$this->order		= $data['order'];
-			$this->cat_id		= $data['cat_id'];
-			$this->district_id	= $data['district_id'];
-			$this->allrows		= $data['allrows'];
-			$this->start_date	= $data['start_date'];
-			$this->end_date		= $data['end_date'];
+			$this->start		= isset($data['start'])?$data['start']:'';
+			$this->query		= isset($data['query'])?$data['query']:'';
+			$this->filter		= isset($data['filter'])?$data['filter']:'';
+			$this->user_filter	= isset($data['user_filter'])?$data['user_filter']:'';
+			$this->sort			= isset($data['sort'])?$data['sort']:'';
+			$this->order		= isset($data['order'])?$data['order']:'';
+			$this->cat_id		= isset($data['cat_id'])?$data['cat_id']:'';
+			$this->district_id	= isset($data['district_id'])?$data['district_id']:'';
+			$this->allrows		= isset($data['allrows'])?$data['allrows']:'';
+			$this->start_date	= isset($data['start_date'])?$data['start_date']:'';
+			$this->end_date		= isset($data['end_date'])?$data['end_date']:'';
 		}
 
 		function filter($data=0)
