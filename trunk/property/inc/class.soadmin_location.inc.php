@@ -64,20 +64,10 @@
 
 		function read($data)
 		{
-			if(isset($data) && is_array($data))
-			{
-				if (isset($data['start']))
-				{
-					$start=$data['start'];
-				}
-				else
-				{
-					$start=0;
-				}
-				$query = (isset($data['query'])?$data['query']:'');
-				$sort = (isset($data['sort'])?$data['sort']:'DESC');
-				$order = (isset($data['order'])?$data['order']:'');
-			}
+			$start	= isset($data['start']) && $data['start'] ? $data['start'] : 0;
+			$query	= (isset($data['query'])?$data['query']:'');
+			$sort	= (isset($data['sort'])?$data['sort']:'DESC');
+			$order	= (isset($data['order'])?$data['order']:'');
 
 			if ($order)
 			{

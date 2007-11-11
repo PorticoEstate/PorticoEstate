@@ -230,6 +230,7 @@
 					}
 				}
 
+				$uicols['input_type'][]		= 'text';
 				$uicols['name'][]			= 'entry_date';
 				$uicols['descr'][]			= lang('entry date');
 				$uicols['statustext'][]		= lang('entry date' );

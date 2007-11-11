@@ -185,6 +185,7 @@
 			$GLOBALS['phpgw_info']['flags']['nofooter'] = True;
 			
 			$values 		= phpgw::get_var('values');
+			$receipt = array();
 
 			if (isset($values['save']) && $values['save'] && $this->cat_id)
 			{
@@ -604,9 +605,12 @@
 				$insert_record 		= $GLOBALS['phpgw']->session->appsession('insert_record',$this->currentapp);
 				$insert_record_entity	= $GLOBALS['phpgw']->session->appsession('insert_record_entity',$this->currentapp);
 
-				for ($j=0;$j<count($insert_record_entity);$j++)
+				if(is_array($insert_record_entity))
 				{
-					$insert_record['extra'][$insert_record_entity[$j]]	= $insert_record_entity[$j];
+					for ($j=0;$j<count($insert_record_entity);$j++)
+					{
+						$insert_record['extra'][$insert_record_entity[$j]]	= $insert_record_entity[$j];
+					}
 				}
 
 				$values = $this->bocommon->collect_locationdata($values,$insert_record);
@@ -712,15 +716,18 @@
 					$values['id']=$this->bo->generate_id(array('entity_id'=>$this->entity_id,'cat_id'=>$this->cat_id));
 				}
 
-				$values['file_name']=str_replace (' ','_',$_FILES['file']['name']);
-				$to_file = $this->fakebase. SEP . $this->category_dir . SEP . $values['location']['loc1'] . SEP . $values['id'] . SEP . $values['file_name'];
-
-				if((!isset($values['document_name_orig']) || !$values['document_name_orig']) && $this->bo->vfs->file_exists(array(
-						'string' => $to_file,
-						'relatives' => Array(RELATIVE_NONE)
-					)))
+				if(isset($_FILES['file']['name']) && $_FILES['file']['name'])
 				{
-					$receipt['error'][]=array('msg'=>lang('This file already exists !'));
+					$values['file_name']=str_replace (' ','_',$_FILES['file']['name']);
+					$to_file = $this->fakebase. SEP . $this->category_dir . SEP . $values['location']['loc1'] . SEP . $values['id'] . SEP . $values['file_name'];
+
+					if((!isset($values['document_name_orig']) || !$values['document_name_orig']) && $this->bo->vfs->file_exists(array(
+							'string' => $to_file,
+							'relatives' => Array(RELATIVE_NONE)
+						)))
+					{
+						$receipt['error'][]=array('msg'=>lang('This file already exists !'));
+					}
 				}
 
 				if(!isset($receipt['error']))
@@ -731,7 +738,7 @@
 					$id = $values['id'];
 					$function_msg = lang('edit entity');
 
-					if($values['file_name'])
+					if(isset($values['file_name']) && $values['file_name'])
 					{
 						$this->bo->create_document_dir($values['location']['loc1'], $values['id']);
 						$this->bo->vfs->override_acl = 1;
@@ -950,25 +957,28 @@
 
 
 //_debug_array($values['origin']);
-			for ($i=0;$i<count($values['origin']);$i++)
+			if(isset($values['origin']) && is_array($values['origin']))
 			{
-				$values['origin'][$i]['link']=$GLOBALS['phpgw']->link('/index.php',$values['origin'][$i]['link']);
-				if(substr($values['origin'][$i]['type'],0,6)=='entity')
+				for ($i=0;$i<count($values['origin']);$i++)
 				{
-					$type		= explode("_",$values['origin'][$i]['type']);
-					$entity_id	= $type[1];
-					$cat_id		= $type[2];
-
-					if(!is_object($boadmin_entity))
+					$values['origin'][$i]['link']=$GLOBALS['phpgw']->link('/index.php',$values['origin'][$i]['link']);
+					if(substr($values['origin'][$i]['type'],0,6)=='entity')
 					{
-						$boadmin_entity	= CreateObject('property.boadmin_entity');
+						$type		= explode("_",$values['origin'][$i]['type']);
+						$entity_id	= $type[1];
+						$cat_id		= $type[2];
+
+						if(!is_object($boadmin_entity))
+						{
+							$boadmin_entity	= CreateObject('property.boadmin_entity');
+						}
+						$entity_category = $boadmin_entity->read_single_category($entity_id,$cat_id);
+						$values['origin'][$i]['descr'] = $entity_category['name'];
 					}
-					$entity_category = $boadmin_entity->read_single_category($entity_id,$cat_id);
-					$values['origin'][$i]['descr'] = $entity_category['name'];
-				}
-				else
-				{
-					$values['origin'][$i]['descr']= lang($values['origin'][$i]['type']);
+					else
+					{
+						$values['origin'][$i]['descr']= lang($values['origin'][$i]['type']);
+					}
 				}
 			}
 
@@ -1045,7 +1055,7 @@
 				'lang_upload_file'				=> lang('Upload file'),
 				'lang_file_statustext'			=> lang('Select file to upload'),
 
-				'value_origin'					=> $values['origin'],
+				'value_origin'					=> isset($values['origin'])?$values['origin']:'',
 				'value_origin_type'				=> isset($origin)?$origin:'',
 				'value_origin_id'				=> isset($origin_id)?$origin_id:'',
 
@@ -1286,7 +1296,7 @@
 				}
 			}
 
-			if(is_array($values['origin']))
+			if(isset($values['origin']) && is_array($values['origin']))
 			{
 				for ($i=0;$i<count($values['origin']);$i++)
 				{
@@ -1364,7 +1374,7 @@
 				'lang_filename'					=> lang('Filename'),
 				'lang_view_file_statustext'			=> lang('Klick to view file'),
 
-				'value_origin'					=> $values['origin'],
+				'value_origin'					=> isset($values['origin'])?$values['origin']:'',
 				'value_origin_type'				=> isset($origin)?$origin:'',
 				'value_origin_id'				=> isset($origin_id)?$origin_id:'',
 				'lang_destination'				=> lang('destination'),

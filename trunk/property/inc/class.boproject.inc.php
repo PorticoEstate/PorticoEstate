@@ -123,14 +123,14 @@
 		{
 			$data = $GLOBALS['phpgw']->session->appsession('session_data','project');
 
-			$this->start	= $data['start'];
-			$this->query	= $data['query'];
-			$this->filter	= $data['filter'];
-			$this->sort		= $data['sort'];
-			$this->order	= $data['order'];
-			$this->cat_id	= $data['cat_id'];
-			$this->status_id	= $data['status_id'];
-			$this->wo_hour_cat_id	= $data['wo_hour_cat_id'];
+			$this->start			= isset($data['start'])?$data['start']:'';
+			$this->query			= isset($data['query'])?$data['query']:'';
+			$this->filter			= isset($data['filter'])?$data['filter']:'';
+			$this->sort				= isset($data['sort'])?$data['sort']:'';
+			$this->order			= isset($data['order'])?$data['order']:'';
+			$this->cat_id			= isset($data['cat_id'])?$data['cat_id']:'';
+			$this->status_id		= isset($data['status_id'])?$data['status_id']:'';
+			$this->wo_hour_cat_id	= isset($data['wo_hour_cat_id'])?$data['wo_hour_cat_id']:'';
 		}
 
 		function select_status_list($format='',$selected='')

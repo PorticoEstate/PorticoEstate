@@ -119,8 +119,9 @@
 
 			$GLOBALS['phpgw_info']['flags']['noframework'] = True;
 
-			$values                 = phpgw::get_var('values');
-
+			$values		= phpgw::get_var('values');
+			$receipt	= array();
+			 
 			if ($values['save'])
 			{
 
@@ -227,9 +228,8 @@
 			$list = $this->bo->read();
 
 			$uicols		= $this->bo->uicols;
-
+			$content = array();
 			$j=0;
-
 			if (isset($list) AND is_array($list))
 			{
 				foreach($list as $entry)
@@ -284,13 +284,9 @@
 								'order'	=> $this->order,
 								'extra'	=> array('menuaction'	=> $this->currentapp.'.uiagreement.index',
 													'query'		=> $this->query,
-													'lookup'	=> $lookup,
-													'district_id'	=> $this->district_id,
-													'start_date'	=> $start_date,
 													'role'		=> $this->role,
 													'member_id'	=> $this->member_id,
-													'allrows'	=> $this->allrows,
-													'end_date'	=> $end_date
+													'allrows'	=> $this->allrows
 													)
 							));
 					}
@@ -359,49 +355,49 @@
 				'role'		=> $this->role
 			);
 
-			$member_of_data	= $this->cats->formatted_xslt_list(array('selected' => $this->member_id,'globals' => True,link_data =>$link_data));
+			$member_of_data	= $this->cats->formatted_xslt_list(array('selected' => $this->member_id,'globals' => True,'link_data' =>$link_data));
 
 			$GLOBALS['phpgw']->js->validate_file('overlib','overlib',$this->currentapp);
 
 			$data = array
 			(
-				'lang_columns'				=> lang('columns'),
-				'link_columns'				=> $GLOBALS['phpgw']->link('/index.php',$link_columns),
-				'lang_columns_help'			=> lang('Choose columns'),
-				'msgbox_data'				=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
-				'links'					=> $links,
- 				'allow_allrows'				=> True,
-				'allrows'				=> $this->allrows,
-				'start_record'				=> $this->start,
-				'record_limit'				=> $record_limit,
-				'num_records'				=> count($list),
- 				'all_records'				=> $this->bo->total_records,
-				'link_url'				=> $GLOBALS['phpgw']->link('/index.php',$link_data),
-				'img_path'				=> $GLOBALS['phpgw']->common->get_image_path('phpgwapi','default'),
-				'lang_no_cat'				=> lang('no category'),
+				'lang_columns'					=> lang('columns'),
+				'link_columns'					=> $GLOBALS['phpgw']->link('/index.php',$link_columns),
+				'lang_columns_help'				=> lang('Choose columns'),
+				'msgbox_data'					=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
+				'links'							=> $links,
+ 				'allow_allrows'					=> True,
+				'allrows'						=> $this->allrows,
+				'start_record'					=> $this->start,
+				'record_limit'					=> $record_limit,
+				'num_records'					=> count($list),
+ 				'all_records'					=> $this->bo->total_records,
+				'link_url'						=> $GLOBALS['phpgw']->link('/index.php',$link_data),
+				'img_path'						=> $GLOBALS['phpgw']->common->get_image_path('phpgwapi','default'),
+				'lang_no_cat'					=> lang('no category'),
 				'lang_cat_statustext'			=> lang('Select the category the agreement belongs to. To do not use a category select NO CATEGORY'),
-				'select_name'				=> 'cat_id',
-				'cat_list'				=> $this->bocommon->select_category_list(array('format'=>'filter','selected' => $this->cat_id,'type' =>'branch','order'=>'descr')),
+				'select_name'					=> 'cat_id',
+				'cat_list'						=> $this->bocommon->select_category_list(array('format'=>'filter','selected' => $this->cat_id,'type' =>'branch','order'=>'descr')),
 
-				'select_action'				=> $GLOBALS['phpgw']->link('/index.php',$link_data),
+				'select_action'					=> $GLOBALS['phpgw']->link('/index.php',$link_data),
 
-				'lang_no_vendor'			=> lang('no vendor'),
+				'lang_no_vendor'				=> lang('no vendor'),
 				'lang_vendor_statustext'		=> lang('Select the vendor the agreement belongs to.'),
-				'vendor_list'				=> $this->bo->select_vendor_list('filter',$this->vendor_id),
+				'vendor_list'					=> $this->bo->select_vendor_list('filter',$this->vendor_id),
 
-				'lang_no_member'			=> lang('no member'),
-				'member_of_name'			=> 'member_id',
-				'member_of_list'			=> $member_of_data['cat_list'],
+				'lang_no_member'				=> lang('no member'),
+				'member_of_name'				=> 'member_id',
+				'member_of_list'				=> $member_of_data['cat_list'],
 
-				'filter_list'				=> $this->nextmatchs->xslt_filter(array('filter' => $this->filter)),
+				'filter_list'					=> $this->nextmatchs->xslt_filter(array('filter' => $this->filter)),
 				'lang_filter_statustext'		=> lang('Select the filter. To show all entries select SHOW ALL'),
-				'lang_searchfield_statustext'		=> lang('Enter the search string. To show all entries, empty this field and press the SUBMIT button again'),
-				'lang_searchbutton_statustext'		=> lang('Submit the search string'),
-				'query'					=> $this->query,
-				'lang_search'				=> lang('search'),
-				'table_header'				=> $table_header,
-				'values'				=> $content,
-				'table_add'				=> $table_add
+				'lang_searchfield_statustext'	=> lang('Enter the search string. To show all entries, empty this field and press the SUBMIT button again'),
+				'lang_searchbutton_statustext'	=> lang('Submit the search string'),
+				'query'							=> $this->query,
+				'lang_search'					=> lang('search'),
+				'table_header'					=> $table_header,
+				'values'						=> $content,
+				'table_add'						=> $table_add
 			);
 			$this->save_sessiondata();
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('agreement') . ': ' . lang('list ' . $this->role);
@@ -584,7 +580,8 @@
 			$activity_id	= phpgw::get_var('activity_id', 'int');
 
 			$config		= CreateObject('phpgwapi.config',$this->currentapp);
-			$boalarm		= CreateObject('property.boalarm');
+			$boalarm	= CreateObject('property.boalarm');
+			$receipt 	= array();
 
 			if($delete_item && $id && $activity_id)
 			{
@@ -596,27 +593,34 @@
 			$insert_record_agreement = $GLOBALS['phpgw']->session->appsession('insert_record_agreement',$this->currentapp);
 
 //_debug_array($insert_record_agreement);
-			for ($j=0;$j<count($insert_record_agreement);$j++)
+			if(isset($insert_record_agreement) && is_array($insert_record_agreement))
 			{
-				$insert_record['extra'][$insert_record_agreement[$j]]	= $insert_record_agreement[$j];
+				for ($j=0;$j<count($insert_record_agreement);$j++)
+				{
+					$insert_record['extra'][$insert_record_agreement[$j]]	= $insert_record_agreement[$j];
+				}
 			}
 
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('agreement','nextmatchs','attributes_form'));
-
+			$receipt = array();
 			if (is_array($values))
 			{
-				while (is_array($insert_record['extra']) && list($key,$column) = each($insert_record['extra']))
+				if(isset($insert_record['extra']) && is_array($insert_record['extra']))
 				{
-					if($_POST[$key])
+					foreach($insert_record['extra'] as $key => $column)
+				//	while (is_array($insert_record['extra']) && list($key,$column) = each($insert_record['extra']))
 					{
-						$values['extra'][$column]	= $_POST[$key];
+						if($_POST[$key])
+						{
+							$values['extra'][$column]	= $_POST[$key];
+						}
 					}
 				}
 
 //_debug_array($values);
 
-				if ($values['save'] || $values['apply']):
+				if (isset($values['save']) && ($values['save'] || $values['apply']))
 				{
 					$values['vendor_id']		= phpgw::get_var('vendor_id', 'int', 'POST');
 					$values['vendor_name']		= phpgw::get_var('vendor_name', 'string', 'POST');
@@ -685,7 +689,7 @@
 						}
 					}
 				}
-				elseif($values['update']):
+				else if(isset($values['update']) && $values['update'])
 				{
 					if(!$values['date'])
 					{
@@ -702,25 +706,25 @@
 					}
 
 				}
-				elseif($values['delete_alarm'] && count($values['alarm'])):
+				else if(isset($values['delete_alarm']) && $values['delete_alarm'] && count($values['alarm']))
 				{
 
-					if(!$receipt['error'])
+					if(!isset($receipt['error']) || !$receipt['error'])
 					{
 						$receipt = $boalarm->delete_alarm('agreement',$values['alarm']);
 					}
 
 				}
-				elseif(($values['enable_alarm'] || $values['disable_alarm']) && count($values['alarm'])):
+				else if(((isset($values['enable_alarm']) && $values['enable_alarm']) || (isset($values['disable_alarm']) && $values['disable_alarm'])) && count($values['alarm']))
 				{
 
-					if(!$receipt['error'])
+					if(!isset($receipt['error']) || !$receipt['error'])
 					{
-						$receipt = $boalarm->enable_alarm('agreement',$values['alarm'],$values['enable_alarm']);
+						$receipt = $boalarm->enable_alarm('agreement',$values['alarm'],isset($values['enable_alarm'])?$values['enable_alarm']:'');
 					}
 
 				}
-				elseif($values['add_alarm']):
+				else if(isset($values['add_alarm']) && $values['add_alarm'])
 				{
 					$time = intval($values['time']['days'])*24*3600 +
 						intval($values['time']['hours'])*3600 +
@@ -731,11 +735,10 @@
 						$receipt = $boalarm->add_alarm('agreement',$this->bo->read_event(array('agreement_id'=>$id)),$time,$values['user_id']);
 					}
 				}
-				elseif (!$values['save'] && !$values['apply'] && !$values['update']):
+				else if ((!isset($values['save']) || !$values['save']) && (!isset($values['apply']) || !$values['apply']) && (!isset($values['update']) || !$values['update']))
 				{
 					$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> $this->currentapp.'.uiagreement.index', 'role'=> $this->role));
 				}
-				endif;
 			}
 
 
@@ -765,19 +768,19 @@
 					$k=count($list);
 					for ($j=0;$j<$k;$j++)
 					{
-						if($this->acl_read && !$edit_item && !$view_only)
+						if($this->acl_read && (!isset($edit_item) || !$edit_item) && (!isset($view_only) || !$view_only))
 						{
 							$content[$j]['lang_view_statustext']	= lang('view the entity');
 							$content[$j]['text_view']		= lang('view');
 							$content[$j]['link_view']		= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uiagreement.view_item', 'agreement_id'=> $id, 'id'=> $content[$j]['activity_id']));
 						}
-						if($this->acl_edit && !$edit_item && !$view_only)
+						if($this->acl_edit && (!isset($edit_item) || !$edit_item) && (!isset($view_only) || !$view_only))
 						{
 							$content[$j]['lang_edit_statustext']	= lang('edit the agreement');
 							$content[$j]['text_edit']		= lang('edit');
 							$content[$j]['link_edit']		= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uiagreement.edit_item', 'agreement_id'=> $id, 'id'=> $content[$j]['activity_id']));
 						}
-						if($this->acl_delete && !$edit_item && !$view_only)
+						if($this->acl_delete && (!isset($edit_item) || !$edit_item) && (!isset($view_only) || !$view_only))
 						{
 							$content[$j]['lang_delete_statustext']	= lang('delete this item');
 							$content[$j]['text_delete']		= lang('delete');
@@ -804,7 +807,7 @@
 					}
 				}
 
-				if($this->acl_read && !$edit_item && !$view_only)
+				if($this->acl_read && (!isset($edit_item) || !$edit_item) && (!isset($view_only) || !$view_only))
 				{
 					$table_header[$i]['width'] 			= '5%';
 					$table_header[$i]['align'] 			= 'center';
@@ -812,7 +815,7 @@
 					$i++;
 					$set_column[]=True;
 				}
-				if($this->acl_edit && !$edit_item && !$view_only)
+				if($this->acl_edit && (!isset($edit_item) || !$edit_item) && (!isset($view_only) || !$view_only))
 				{
 					$table_header[$i]['width'] 			= '5%';
 					$table_header[$i]['align'] 			= 'center';
@@ -820,7 +823,7 @@
 					$i++;
 					$set_column[]=True;
 				}
-				if($this->acl_delete && !$edit_item && !$view_only)
+				if($this->acl_delete && (!isset($edit_item) || !$edit_item) && (!isset($view_only) || !$view_only))
 				{
 					$table_header[$i]['width'] 			= '5%';
 					$table_header[$i]['align'] 			= 'center';
@@ -828,7 +831,7 @@
 					$i++;
 					$set_column[]=True;
 				}
-				if($this->acl_manage && !$edit_item && !$view_only)
+				if($this->acl_manage && (!isset($edit_item) || !$edit_item) && (!isset($view_only) || !$view_only))
 				{
 					$table_header[$i]['width'] 			= '5%';
 					$table_header[$i]['align'] 			= 'center';
@@ -871,11 +874,11 @@
 
 			$vendor_data=$this->bocommon->initiate_ui_vendorlookup(array(
 						'vendor_id'		=> $agreement['vendor_id'],
-						'vendor_name'	=> $agreement['vendor_name']));
+						'vendor_name'	=> isset($agreement['vendor_name'])?$agreement['vendor_name']:''));
 
 			if($agreement['vendor_id'])
 			{
-				$member_of_data	= $this->cats->formatted_xslt_list(array('selected' => $this->member_id,'globals' => True, link_data => array()));
+				$member_of_data	= $this->cats->formatted_xslt_list(array('selected' => $this->member_id,'globals' => True, 'link_data' => array()));
 			}
 
 			$alarm_data=$this->bocommon->initiate_ui_alarm(array(
@@ -883,11 +886,11 @@
 						'alarm_type'=> 'agreement',
 						'type'		=> 'form',
 						'text'		=> 'Email notification',
-						'times'		=> $times,
+						'times'		=> isset($times)?$times:'',
 						'id'		=> $id,
-						'method'	=> $method,
-						'data'		=> $data,
-						'account_id'=> $account_id
+						'method'	=> isset($method)?$method:'',
+						'data'		=> isset($data)?$data:'',
+						'account_id'=> isset($account_id)?$account_id:''
 						));
 
 			$dateformat = strtolower($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']);
@@ -934,13 +937,13 @@
 				'id'		=>$id
 			);
 
-			$config->read_repository();
-			$link_to_files = $config->config_data['files_url'];
-
-			$j	= count($agreement['files']);
-			for ($i=0;$i<$j;$i++)
+			if(isset($agreement['files']) && is_array($agreement['files']))
 			{
-				$agreement['files'][$i]['file_name']=urlencode($agreement['files'][$i]['name']);
+				$j	= count($agreement['files']);
+				for ($i=0;$i<$j;$i++)
+				{
+					$agreement['files'][$i]['file_name']=urlencode($agreement['files'][$i]['name']);
+				}
 			}
 
 			$link_excel = array
@@ -966,103 +969,102 @@
 
 			$data = array
 			(
- 				'allow_allrows'				=> True,
-				'allrows'				=> $this->allrows,
-				'start_record'				=> $this->start,
-				'record_limit'				=> $record_limit,
-				'num_records'				=> count($list),
- 				'all_records'				=> $this->bo->total_records,
-				'link_url'				=> $GLOBALS['phpgw']->link('/index.php',$link_data),
-				'img_path'				=> $GLOBALS['phpgw']->common->get_image_path('phpgwapi','default'),
+ 				'allow_allrows'							=> True,
+				'allrows'								=> $this->allrows,
+				'start_record'							=> $this->start,
+				'record_limit'							=> $record_limit,
+				'num_records'							=> count($list),
+ 				'all_records'							=> $this->bo->total_records,
+				'link_url'								=> $GLOBALS['phpgw']->link('/index.php',$link_data),
+				'img_path'								=> $GLOBALS['phpgw']->common->get_image_path('phpgwapi','default'),
 
-				'alarm_data'				=> $alarm_data,
-				'lang_alarm'				=> lang('Alarm'),
-				'lang_excel'				=> 'excel',
-				'link_excel'				=> $GLOBALS['phpgw']->link('/index.php',$link_excel),
-				'lang_excel_help'			=> lang('Download table to MS Excel'),
+				'alarm_data'							=> $alarm_data,
+				'lang_alarm'							=> lang('Alarm'),
+				'lang_excel'							=> 'excel',
+				'link_excel'							=> $GLOBALS['phpgw']->link('/index.php',$link_excel),
+				'lang_excel_help'						=> lang('Download table to MS Excel'),
 
-				'fileupload'				=> True,
-				'link_view_file'			=> $GLOBALS['phpgw']->link('/index.php',$link_file_data),
-				'link_to_files'				=> $link_to_files,
-				'files'					=> $agreement['files'],
-				'lang_files'				=> lang('files'),
-				'lang_filename'				=> lang('Filename'),
-				'lang_delete_file'			=> lang('Delete file'),
-				'lang_view_file_statustext'		=> lang('Klick to view file'),
-				'lang_delete_file_statustext'		=> lang('Check to delete file'),
-				'lang_upload_file'			=> lang('Upload file'),
-				'lang_file_statustext'			=> lang('Select file to upload'),
+				'fileupload'							=> True,
+				'link_view_file'						=> $GLOBALS['phpgw']->link('/index.php',$link_file_data),
 
-				'msgbox_data'				=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
-				'edit_url'				=> $GLOBALS['phpgw']->link('/index.php',$link_data),
-				'lang_id'				=> lang('ID'),
-				'value_agreement_id'			=> $id,
-				'lang_category'				=> lang('category'),
-				'lang_save'				=> lang('save'),
-				'lang_cancel'				=> lang('cancel'),
-				'lang_apply'				=> lang('apply'),
-				'value_cat'				=> $agreement['cat'],
-				'lang_apply_statustext'			=> lang('Apply the values'),
-				'lang_cancel_statustext'		=> lang('Leave the agreement untouched and return back to the list'),
-				'lang_save_statustext'			=> lang('Save the agreement and return back to the list'),
-				'lang_no_cat'				=> lang('no category'),
-				'lang_cat_statustext'			=> lang('Select the category the agreement belongs to. To do not use a category select NO CATEGORY'),
-				'select_name'				=> 'values[cat_id]',
-				'cat_list'				=> $this->bocommon->select_category_list(array('format'=>'select','selected' => $this->cat_id,'type' =>'branch','order'=>'descr')),
+				'files'									=> isset($agreement['files'])?$agreement['files']:'',
+				'lang_files'							=> lang('files'),
+				'lang_filename'							=> lang('Filename'),
+				'lang_delete_file'						=> lang('Delete file'),
+				'lang_view_file_statustext'				=> lang('Klick to view file'),
+				'lang_delete_file_statustext'			=> lang('Check to delete file'),
+				'lang_upload_file'						=> lang('Upload file'),
+				'lang_file_statustext'					=> lang('Select file to upload'),
 
-				'lang_member_of'			=> lang('member of'),
-				'member_of_name'			=> 'member_id',
-				'member_of_list'			=> $member_of_data['cat_list'],
+				'msgbox_data'							=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
+				'edit_url'								=> $GLOBALS['phpgw']->link('/index.php',$link_data),
+				'lang_id'								=> lang('ID'),
+				'value_agreement_id'					=> $id,
+				'lang_category'							=> lang('category'),
+				'lang_save'								=> lang('save'),
+				'lang_cancel'							=> lang('cancel'),
+				'lang_apply'							=> lang('apply'),
+				'value_cat'								=> isset($agreement['cat'])?$agreement['cat']:'',
+				'lang_apply_statustext'					=> lang('Apply the values'),
+				'lang_cancel_statustext'				=> lang('Leave the agreement untouched and return back to the list'),
+				'lang_save_statustext'					=> lang('Save the agreement and return back to the list'),
+				'lang_no_cat'							=> lang('no category'),
+				'lang_cat_statustext'					=> lang('Select the category the agreement belongs to. To do not use a category select NO CATEGORY'),
+				'select_name'							=> 'values[cat_id]',
+				'cat_list'								=> $this->bocommon->select_category_list(array('format'=>'select','selected' => $this->cat_id,'type' =>'branch','order'=>'descr')),
 
-				'lang_dateformat' 			=> lang(strtolower($dateformat)),
-				'dateformat_validate'			=> $dateformat_validate,
-				'onKeyUp'				=> $onKeyUp,
-				'onBlur'				=> $onBlur,
-				'lang_attributes'			=> lang('Attributes'),
-				'attributes_header'			=> $attributes_header,
-				'attributes_values'			=> $agreement['attributes'],
-				'lookup_functions'			=> $agreement['lookup_functions'],
-				'dateformat'				=> $dateformat,
+				'lang_member_of'						=> lang('member of'),
+				'member_of_name'						=> 'member_id',
+				'member_of_list'						=> $member_of_data['cat_list'],
 
-				'img_cal'					=> $GLOBALS['phpgw']->common->image('phpgwapi','cal'),
-				'lang_datetitle'			=> lang('Select date'),
+				'lang_dateformat' 						=> lang(strtolower($dateformat)),
+				'dateformat_validate'					=> $dateformat_validate,
+				'onKeyUp'								=> $onKeyUp,
+				'onBlur'								=> $onBlur,
+				'lang_attributes'						=> lang('Attributes'),
+				'attributes_values'						=> $agreement['attributes'],
+				'lookup_functions'						=> isset($agreement['lookup_functions'])?$agreement['lookup_functions']:'',
+				'dateformat'							=> $dateformat,
 
-				'lang_start_date_statustext'		=> lang('Select the estimated end date for the agreement'),
-				'lang_start_date'			=> lang('start date'),
-				'value_start_date'			=> $agreement['start_date'],
+				'img_cal'								=> $GLOBALS['phpgw']->common->image('phpgwapi','cal'),
+				'lang_datetitle'						=> lang('Select date'),
 
-				'lang_end_date_statustext'		=> lang('Select the estimated end date for the agreement'),
-				'lang_end_date'				=> lang('end date'),
-				'value_end_date'			=> $agreement['end_date'],
+				'lang_start_date_statustext'			=> lang('Select the estimated end date for the agreement'),
+				'lang_start_date'						=> lang('start date'),
+				'value_start_date'						=> $agreement['start_date'],
 
-				'lang_termination_date_statustext'	=> lang('Select the estimated termination date'),
-				'lang_termination_date'			=> lang('termination date'),
-				'value_termination_date'		=> $agreement['termination_date'],
+				'lang_end_date_statustext'				=> lang('Select the estimated end date for the agreement'),
+				'lang_end_date'							=> lang('end date'),
+				'value_end_date'						=> $agreement['end_date'],
 
-				'vendor_data'				=> $vendor_data,
-				'lang_name'				=> lang('name'),
-				'lang_name_statustext'			=> lang('name'),
-				'value_name'				=> $agreement['name'],
-				'lang_descr'				=> lang('descr'),
-				'lang_descr_statustext'			=> lang('descr'),
-				'value_descr'				=> $agreement['descr'],
-				'table_add'				=> $table_add,
-				'values'				=> $content,
-				'table_header'				=> $table_header,
-				'table_update'				=> $table_update,
-				'update_action'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uiagreement.edit', 'id'=> $id)),
-				'lang_select_all'			=> lang('Select All'),
-				'img_check'				=> $GLOBALS['phpgw']->common->get_image_path($this->currentapp).'/check.png',
-				'set_column'				=> $set_column,
+				'lang_termination_date_statustext'		=> lang('Select the estimated termination date'),
+				'lang_termination_date'					=> lang('termination date'),
+				'value_termination_date'				=> $agreement['termination_date'],
 
-				'lang_agreement_group'			=> lang('Agreement group'),
-				'lang_no_agreement_group'		=> lang('Select agreement group'),
-				'agreement_group_list'			=> $this->bo->get_agreement_group_list($agreement['group_id']),
+				'vendor_data'							=> $vendor_data,
+				'lang_name'								=> lang('name'),
+				'lang_name_statustext'					=> lang('name'),
+				'value_name'							=> $agreement['name'],
+				'lang_descr'							=> lang('descr'),
+				'lang_descr_statustext'					=> lang('descr'),
+				'value_descr'							=> $agreement['descr'],
+				'table_add'								=> $table_add,
+				'values'								=> $content,
+				'table_header'							=> $table_header,
+				'table_update'							=> $table_update,
+				'update_action'							=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uiagreement.edit', 'id'=> $id)),
+				'lang_select_all'						=> lang('Select All'),
+				'img_check'								=> $GLOBALS['phpgw']->common->get_image_path($this->currentapp).'/check.png',
+				'set_column'							=> $set_column,
 
-				'lang_status'				=> lang('Status'),
-				'status_list'				=> $this->bo->select_status_list('select',$agreement['status']),
-				'status_name'				=> 'values[status]',
-				'lang_no_status'			=> lang('Select status'),
+				'lang_agreement_group'					=> lang('Agreement group'),
+				'lang_no_agreement_group'				=> lang('Select agreement group'),
+				'agreement_group_list'					=> $this->bo->get_agreement_group_list($agreement['group_id']),
+
+				'lang_status'							=> lang('Status'),
+				'status_list'							=> $this->bo->select_status_list('select',$agreement['status']),
+				'status_name'							=> 'values[status]',
+				'lang_no_status'						=> lang('Select status'),
 
 			);
 
@@ -1083,8 +1085,8 @@
 		function edit_item()
 		{
 			$agreement_id	= phpgw::get_var('agreement_id', 'int');
-			$id	= phpgw::get_var('id', 'int');
-			$values		= phpgw::get_var('values');
+			$id				= phpgw::get_var('id', 'int');
+			$values			= phpgw::get_var('values');
 			$delete_last	= phpgw::get_var('delete_last', 'bool', 'GET');
 			if($delete_last)
 			{
@@ -1098,7 +1100,7 @@
 			if (is_array($values))
 			{
 
-				if ($values['save'] || $values['apply']):
+				if ((isset($values['save']) && $values['save']) || (isset($values['apply']) &&$values['apply'])):
 				{
 
 					if(!$receipt['error'])
@@ -1248,7 +1250,6 @@
 				'onKeyUp'				=> $onKeyUp,
 				'onBlur'				=> $onBlur,
 				'lang_attributes'			=> lang('Attributes'),
-				'attributes_header'			=> $attributes_header,
 				'attributes_values'			=> $values['attributes'],
 				'lookup_functions'			=> $values['lookup_functions'],
 				'dateformat'				=> $dateformat,
@@ -1487,13 +1488,13 @@
 			);
 
 
-			$config->read_repository();
-			$link_to_files = $config->config_data['files_url'];
-
-			$j	= count($agreement['files']);
-			for ($i=0;$i<$j;$i++)
+			if(isset($agreement['files']) && is_array($agreement['files']))
 			{
-				$agreement['files'][$i]['file_name']=urlencode($agreement['files'][$i]['name']);
+				$j	= count($agreement['files']);
+				for ($i=0;$i<$j;$i++)
+				{
+					$agreement['files'][$i]['file_name']=urlencode($agreement['files'][$i]['name']);
+				}
 			}
 
 
@@ -1526,8 +1527,8 @@
 				'alarm_data'					=> $alarm_data,
 				'lang_alarm'					=> lang('Alarm'),
 				'link_view_file'				=> $GLOBALS['phpgw']->link('/index.php',$link_file_data),
-				'link_to_files'					=> $link_to_files,
-				'files'						=> $agreement['files'],
+
+				'files'						=> isset($agreement['files'])?$agreement['files']:'',
 				'lang_files'					=> lang('files'),
 				'lang_filename'					=> lang('Filename'),
 				'lang_view_file_statustext'			=> lang('Klick to view file'),

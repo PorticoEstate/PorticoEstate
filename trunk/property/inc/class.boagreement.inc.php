@@ -107,14 +107,11 @@
 			{
 				$this->order = $order;
 			}
-			if(isset($cat_id) && !empty($cat_id))
+			if(isset($cat_id))
 			{
 				$this->cat_id = $cat_id;
 			}
-			else
-			{
-				unset($this->cat_id);
-			}
+
 			if(isset($allrows))
 			{
 				$this->allrows = $allrows;
@@ -260,7 +257,7 @@
 
 			$this->vfs->override_acl = 0;
 
-			if(!$agreement['files'][0]['file_id'])
+			if(!isset($agreement['files'][0]['file_id']) || !$agreement['files'][0]['file_id'])
 			{
 				unset($agreement['files']);
 			}
@@ -381,19 +378,21 @@
 				$list['attributes'][$i]['type_id']	= $data['type_id'];
 			}
 
-			for ($j=0;$j<count($lookup_functions);$j++)
+			if(isset($lookup_functions) && is_array($lookup_functions))
 			{
-				$list['lookup_functions'] .= 'function ' . $lookup_functions[$j]['name'] ."\r\n";
-				$list['lookup_functions'] .= '{'."\r\n";
-				$list['lookup_functions'] .= $lookup_functions[$j]['action'] ."\r\n";
-				$list['lookup_functions'] .= '}'."\r\n";
+				for ($j=0;$j<count($lookup_functions);$j++)
+				{
+					$list['lookup_functions'] .= 'function ' . $lookup_functions[$j]['name'] ."\r\n";
+					$list['lookup_functions'] .= '{'."\r\n";
+					$list['lookup_functions'] .= $lookup_functions[$j]['action'] ."\r\n";
+					$list['lookup_functions'] .= '}'."\r\n";
+				}
 			}
 
-			$GLOBALS['phpgw']->session->appsession('insert_record_agreement' . !!$detail,$this->currentapp,$insert_record_list);
+			$GLOBALS['phpgw']->session->appsession('insert_record_agreement' . !!$detail,$this->currentapp,isset($insert_record_list)?$insert_record_list:'');
 
 //html_print_r($list);
 			return $list;
-
 		}
 
 		function convert_attribute_save($values_attribute='')
@@ -577,7 +576,7 @@
 		{
 			if(!$selected)
 			{
-				$selected=$GLOBALS['phpgw_info']['user']['preferences'][$this->currentapp]["agreement_columns"];
+				$selected = isset($GLOBALS['phpgw_info']['user']['preferences'][$this->currentapp]["agreement_columns"])?$GLOBALS['phpgw_info']['user']['preferences'][$this->currentapp]["agreement_columns"]:'';
 			}
 
 			$columns = $this->so->read_attrib(array('allrows'=>$allrows,'column_list'=>True));

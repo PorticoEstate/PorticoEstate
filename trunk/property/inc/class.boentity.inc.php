@@ -170,15 +170,15 @@
 		{
 			$data = $GLOBALS['phpgw']->session->appsession('session_data','entity');
 			//_debug_array($data);
-			$this->start		= $data['start'];
-			$this->query		= $data['query'];
-			$this->filter		= $data['filter'];
-			$this->sort			= $data['sort'];
-			$this->order		= $data['order'];
-			$this->district_id	= $data['district_id'];
-			$this->status		= $data['status'];
-			$this->start_date	= $data['start_date'];
-			$this->end_date		= $data['end_date'];
+			$this->start		= isset($data['start'])?$data['start']:'';
+			$this->query		= isset($data['query'])?$data['query']:'';
+			$this->filter		= isset($data['filter'])?$data['filter']:'';
+			$this->sort			= isset($data['sort'])?$data['sort']:'';
+			$this->order		= isset($data['order'])?$data['order']:'';
+			$this->district_id	= isset($data['district_id'])?$data['district_id']:'';
+			$this->status		= isset($data['status'])?$data['status']:'';
+			$this->start_date	= isset($data['start_date'])?$data['start_date']:'';
+			$this->end_date		= isset($data['end_date'])?$data['end_date']:'';
 			//$this->allrows		= $data['allrows'];
 		}
 
