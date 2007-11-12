@@ -832,10 +832,10 @@
 			$data = array
 			(
 				'lang_project_info'				=> lang('Project info'),
-				'lang_general' 					=> lang('general'),
-				'lang_coordination' 			=> lang('coordination'),
-				'lang_time_and_budget' 			=> lang('time and budget'),
-				'lang_extra' 					=> lang('extra'),
+				'lang_general' 					=> lang('General'),
+				'lang_coordination' 			=> lang('Coordination'),
+				'lang_time_and_budget' 			=> lang('Time and budget'),
+				'lang_extra' 					=> lang('Extra'),
 
 				'msgbox_data'				=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
 				'calculate_action'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uiwo_hour.index')),
