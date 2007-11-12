@@ -60,7 +60,7 @@
 //_debug_array($page);
 			if(!isset($menu) || !$menu)
 			{
-				$menu = '';  // set to '' as appsession dos'nt return empty array correctly 
+				$menu = array();  // set to '' as appsession dos'nt return empty array correctly 
 				$this->acl 			= CreateObject('phpgwapi.acl');
 
 				$i=0;
@@ -131,8 +131,8 @@
 						$menu['module'][$i]['this']=True;
 					}
 					$menu['module'][$i]['url']			=	$GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $currentapp.'.uibudget.index'));
-					$menu['module'][$i]['text']			=	lang('budget');
-					$menu['module'][$i]['statustext']	=	lang('budget');
+					$menu['module'][$i]['text']			=	lang('Budget');
+					$menu['module'][$i]['statustext']	=	lang('Budget');
 					$i++;
 				}
 //--------------------
@@ -292,8 +292,8 @@
 						$menu['sub_menu'][$i]['this']=True;
 					}
 					$menu['sub_menu'][$i]['url']			=	$GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $currentapp.'.uib_account.index'));
-					$menu['sub_menu'][$i]['text']			=	lang('budget account');
-					$menu['sub_menu'][$i]['statustext']		=	lang('budget account');
+					$menu['sub_menu'][$i]['text']			=	lang('Budget account');
+					$menu['sub_menu'][$i]['statustext']		=	lang('Budget account');
 					$i++;
 
 					if($page=='vendor')
