@@ -185,7 +185,7 @@
 					<xsl:choose>
 						<xsl:when test="link">
 							<td class="small_text" align="center">
-								<a href="{link}" onMouseover="window.status='{statustext}';return true;" onMouseout="window.status='';return true;"><xsl:value-of select="text"/></a>
+								<a href="{link}" onMouseover="window.status='{statustext}';return true;" onMouseout="window.status='';return true;" target="{target}"><xsl:value-of select="text"/></a>
 							</td>
 						</xsl:when>
 						<xsl:otherwise>
