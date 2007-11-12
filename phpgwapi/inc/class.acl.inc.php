@@ -214,6 +214,10 @@
 			{
 				$appname = $GLOBALS['phpgw_info']['flags']['currentapp'];
 			}
+			if(!is_array($this->data[$this->account_id]))
+			{
+				$this->data[$this->account_id] = array();
+			}
 			$this->data[$this->account_id][] = array('appname' => $appname, 'location' => $location, 'account' => $this->account_id, 'rights' => $rights, 'grantor' => $grantor, 'type' => $type);
 			reset($this->data[$this->account_id]);
 			return $this->data;
@@ -499,19 +503,19 @@
 					if((is_array($this->data[$this->account_id]) && count($this->data[$this->account_id])==0) || $this->data[$this->account_id] == 'empty')
 					{
 							$this->data[$this->account_id] = array();
-							$this->read_repository($account_type);
-							if(is_array($this->data[$this->account_id]) && count($this->data[$this->account_id])>0)
-							{
-								$GLOBALS['phpgw']->shm->store_value($GLOBALS['phpgw_info']['user']['domain'] . 'acl_data_' . $account_type . '_' . $this->account_id,$this->data[$this->account_id]);						
-							}
-							else if ($this->data[$this->account_id] != 'empty')
-							{
-								$GLOBALS['phpgw']->shm->store_value($GLOBALS['phpgw_info']['user']['domain'] . 'acl_data_' . $account_type . '_' . $this->account_id,'empty');						
-							}
 					}
-					else if (!is_array($this->data[$this->account_id]) || count($this->data[$this->account_id]) == 0)
+					else
 					{
-						$GLOBALS['phpgw']->shm->store_value($GLOBALS['phpgw_info']['user']['domain'] . 'acl_data_' . $account_type . '_' . $this->account_id,'empty');
+						$this->read_repository($account_type);
+
+						if(is_array($this->data[$this->account_id]) && count($this->data[$this->account_id])>0)
+						{
+							$GLOBALS['phpgw']->shm->store_value($GLOBALS['phpgw_info']['user']['domain'] . 'acl_data_' . $account_type . '_' . $this->account_id,$this->data[$this->account_id]);
+						}
+						else
+						{
+							$GLOBALS['phpgw']->shm->store_value($GLOBALS['phpgw_info']['user']['domain'] . 'acl_data_' . $account_type . '_' . $this->account_id,'empty');
+						}
 					}
 				}
 				else
