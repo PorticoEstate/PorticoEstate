@@ -937,7 +937,7 @@
 				{
 					if($entry['value'])
 					{
-						if($entry['datatype'] == 'C' || $entry['datatype'] == 'T' || $entry['datatype'] == 'V')
+						if($entry['datatype'] == 'C' || $entry['datatype'] == 'T' || $entry['datatype'] == 'V' || $entry['datatype'] == 'link')
 						{
 							$entry['value'] = $this->db->db_addslashes($entry['value']);
 						}
@@ -951,12 +951,12 @@
 			$cols	=implode(",", $cols) . ",entry_date,user_id";
 			$vals	="'" . implode("','", $vals) . "'," . "'" . time() . "','" . $this->account . "'";
 
-
+			$this->db->transaction_begin();
 			$sql	= "INSERT INTO fm_location$type_id ($cols) VALUES ($vals)";
 
 //echo $sql;
 			$this->db->query($sql,__LINE__,__FILE__);
-
+			$this->db->transaction_commit();
 			$receipt['message'][] = array('msg'=>lang('Location %1 has been saved',$location['location_code']));
 			return $receipt;
 		}
@@ -980,7 +980,7 @@
 			{
 				foreach($values_attribute as $entry)
 				{
-					if($entry['datatype'] == 'C' || $entry['datatype'] == 'T' || $entry['datatype'] == 'V')
+					if($entry['datatype'] == 'C' || $entry['datatype'] == 'T' || $entry['datatype'] == 'V' || $entry['datatype'] == 'link')
 					{
 						$entry['value'] = $this->db->db_addslashes($entry['value']);
 					}
@@ -1021,13 +1021,14 @@
 			$cols	=implode(",", $cols);
 			$vals = $this->bocommon->validate_db_insert($vals);
 
+			$this->db->transaction_begin();
 			$sql = "INSERT INTO fm_location" . $type_id ."_history ($cols) VALUES ($vals)";
 			$this->db->query($sql,__LINE__,__FILE__);
 
 			$sql = "UPDATE fm_location$type_id SET $value_set WHERE location_code='" . $location['location_code'] . "'";
 
 			$this->db->query($sql,__LINE__,__FILE__);
-
+			$this->db->transaction_commit();
 			$receipt['message'][] = array('msg'=>lang('Location %1 has been edited',$location['location_code']));
 			return $receipt;
 		}

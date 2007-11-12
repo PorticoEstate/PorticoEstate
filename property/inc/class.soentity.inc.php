@@ -641,7 +641,7 @@
 				{
 					if($entry['value'])
 					{
-						if($entry['datatype'] == 'C' || $entry['datatype'] == 'T' || $entry['datatype'] == 'V')
+						if($entry['datatype'] == 'C' || $entry['datatype'] == 'T' || $entry['datatype'] == 'V' || $entry['datatype'] == 'link')
 						{
 							$entry['value'] = $this->db->db_addslashes($entry['value']);
 						}
@@ -759,7 +759,7 @@
 				{
 					if($entry['datatype']!='AB' && $entry['datatype']!='VENDOR')
 					{
-						if($entry['datatype'] == 'C' || $entry['datatype'] == 'T' || $entry['datatype'] == 'V')
+						if($entry['datatype'] == 'C' || $entry['datatype'] == 'T' || $entry['datatype'] == 'V' || $entry['datatype'] == 'link')
 						{
 							$entry['value'] = $this->db->db_addslashes($entry['value']);
 						}

@@ -256,6 +256,12 @@
 								$content[$j]['row'][$i]['name'] 			= $uicols['name'][$i];
 								$content[$j]['row'][$i]['lookup'] 			= $lookup;
 								$content[$j]['row'][$i]['align'] 			= (isset($uicols['align'][$i])?$uicols['align'][$i]:'center');
+								if($uicols['input_type'][$i]=='link' && $location[$uicols['name'][$i]])
+								{
+									$content[$j]['row'][$i]['text']		= lang('link');
+									$content[$j]['row'][$i]['link']		= $location[$uicols['name'][$i]];
+									$content[$j]['row'][$i]['target']	= '_blank';
+								}
 							}
 						}
 
