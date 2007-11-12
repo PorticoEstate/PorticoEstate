@@ -102,7 +102,7 @@
 	/**
 	* The path to store the lock files
 	*/
-	define('PHPGW_SHM_LOCK', $GLOBALS['phpgw_info']['server']['temp_dir']);
+	define('PHPGW_SHM_LOCK', PHPGW_SERVER_ROOT);
 
 	/**
 	* Shared memory handler class

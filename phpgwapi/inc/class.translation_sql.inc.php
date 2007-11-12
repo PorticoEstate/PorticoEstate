@@ -121,6 +121,10 @@
 				{
 					$GLOBALS['lang'][strtolower($GLOBALS['phpgw']->db->resultSet->fields('message_id'))] = $GLOBALS['phpgw']->db->resultSet->fields('content');
 				}
+				if($this->loaded_from_shm == true)
+				{
+					$GLOBALS['phpgw']->shm->store_value('lang_' . $userlang, $GLOBALS['lang']);
+				}
 			}
 			$ret = "{$key}*";	// save key if we dont find a translation
 			$key = strtolower(trim(substr($key,0,MAX_MESSAGE_ID_LENGTH)));

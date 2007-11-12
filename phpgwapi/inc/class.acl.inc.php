@@ -499,19 +499,19 @@
 					if((is_array($this->data[$this->account_id]) && count($this->data[$this->account_id])==0) || $this->data[$this->account_id] == 'empty')
 					{
 							$this->data[$this->account_id] = array();
+							$this->read_repository($account_type);
+							if(is_array($this->data[$this->account_id]) && count($this->data[$this->account_id])>0)
+							{
+								$GLOBALS['phpgw']->shm->store_value($GLOBALS['phpgw_info']['user']['domain'] . 'acl_data_' . $account_type . '_' . $this->account_id,$this->data[$this->account_id]);						
+							}
+							else if ($this->data[$this->account_id] != 'empty')
+							{
+								$GLOBALS['phpgw']->shm->store_value($GLOBALS['phpgw_info']['user']['domain'] . 'acl_data_' . $account_type . '_' . $this->account_id,'empty');						
+							}
 					}
-					else
+					else if (!is_array($this->data[$this->account_id]) || count($this->data[$this->account_id]) == 0)
 					{
-						$this->read_repository($account_type);
-
-						if(is_array($this->data[$this->account_id]) && count($this->data[$this->account_id])>0)
-						{
-							$GLOBALS['phpgw']->shm->store_value($GLOBALS['phpgw_info']['user']['domain'] . 'acl_data_' . $account_type . '_' . $this->account_id,$this->data[$this->account_id]);						
-						}
-						else
-						{
-							$GLOBALS['phpgw']->shm->store_value($GLOBALS['phpgw_info']['user']['domain'] . 'acl_data_' . $account_type . '_' . $this->account_id,'empty');						
-						}
+						$GLOBALS['phpgw']->shm->store_value($GLOBALS['phpgw_info']['user']['domain'] . 'acl_data_' . $account_type . '_' . $this->account_id,'empty');
 					}
 				}
 				else
