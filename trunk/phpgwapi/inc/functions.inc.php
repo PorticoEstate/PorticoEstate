@@ -519,7 +519,7 @@
 			$GLOBALS['phpgw']->translation->translation($reset = True);
 		}
 
-		$redirect = unserialize(stripslashes(phpgw::get_var('redirect')));
+		$redirect = unserialize(htmlspecialchars_decode(stripslashes(phpgw::get_var('redirect','string', 'COOKIE'))));
 		if ( is_array($redirect) && count($redirect) )
 		{
 			foreach($redirect as $key => $value)
