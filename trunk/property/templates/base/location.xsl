@@ -191,25 +191,23 @@
 						<xsl:otherwise>
 							<td class="small_text" align="{align}">
 								<xsl:value-of select="value"/>					
-								<xsl:choose>
-									<xsl:when test="lookup=1">
-										<xsl:if test="position() = last()">
-											<td class="small_text" align="center">
-												<input type="button" name="select" value="{//lang_select}" onClick="{//exchange_values}" onMouseout="window.status='';return true;">
-													<xsl:attribute name="onMouseover">
-														<xsl:text>window.status='</xsl:text>
-															<xsl:value-of select="lang_select_statustext"/>
-														<xsl:text>'; return true;</xsl:text>
-													</xsl:attribute>
-												</input>
-											</td>
-										
-										</xsl:if>
-
-									</xsl:when>
-								</xsl:choose>
 							</td>
 						</xsl:otherwise>
+					</xsl:choose>
+					<xsl:choose>
+						<xsl:when test="lookup=1">
+							<xsl:if test="position() = last()">
+								<td class="small_text" align="center">
+									<input type="button" name="select" value="{//lang_select}" onClick="{//exchange_values}" onMouseout="window.status='';return true;">
+										<xsl:attribute name="onMouseover">
+											<xsl:text>window.status='</xsl:text>
+												<xsl:value-of select="lang_select_statustext"/>
+											<xsl:text>'; return true;</xsl:text>
+										</xsl:attribute>
+									</input>
+								</td>
+							</xsl:if>
+						</xsl:when>
 					</xsl:choose>
 				</xsl:for-each>
 				</form>
