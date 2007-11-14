@@ -483,31 +483,6 @@
 				$where= 'AND';
 			}
 
-			if ($cat_id)
-			{
-				$filtermethod .= " $where $entity_table.category='$cat_id' ";
-				$where= 'AND';
-			}
-
-/*			if ($vendor_id)
-			{
-				$filtermethod .= " $where $entity_table.vendor_id='$vendor_id' ";
-				$where= 'AND';
-			}
-
-			if ($member_id>0)
-			{
-				$filtermethod .= " $where fm_vendor.member_of $this->like '%,$member_id,%' ";
-				$where= 'AND';
-			}
-
-			if ($status)
-			{
-				$filtermethod .= " $where $entity_table.status='$status' ";
-				$where= 'AND';
-			}
-*/
-
 			$sql .= " $filtermethod";
 //echo $sql;
 
