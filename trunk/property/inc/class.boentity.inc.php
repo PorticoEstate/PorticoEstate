@@ -323,6 +323,7 @@
 			$dateformat= (implode($sep,$dlarr));
 			$m=0;
 
+			//FIXME: This code is duplicated - and should be moved
 			for ($i=0;$i<count($entity['attributes']);$i++)
 			{
 				if($entity['attributes'][$i]['datatype']=='D' && $entity['attributes'][$i]['value'])
@@ -330,8 +331,7 @@
 					$timestamp_date= mktime(0,0,0,date(m,strtotime($entity['attributes'][$i]['value'])),date(d,strtotime($entity['attributes'][$i]['value'])),date(y,strtotime($entity['attributes'][$i]['value'])));
 					$entity['attributes'][$i]['value']	= $GLOBALS['phpgw']->common->show_date($timestamp_date,$dateformat);
 				}
-
-				if($entity['attributes'][$i]['datatype']=='AB')
+				else if($entity['attributes'][$i]['datatype']=='AB')
 				{
 					if($entity['attributes'][$i]['value'])
 					{
@@ -345,8 +345,7 @@
 					$lookup_functions[$m]['action'] = 'Window1=window.open('."'" . $lookup_link ."'" .',"Search","width=800,height=700,toolbar=no,scrollbars=yes,resizable=yes");';
 					$m++;
 				}
-
-				if($entity['attributes'][$i]['datatype']=='VENDOR')
+				else if($entity['attributes'][$i]['datatype']=='VENDOR')
 				{
 					if($entity['attributes'][$i]['value'])
 					{
@@ -367,8 +366,7 @@
 					$lookup_functions[$m]['action'] = 'Window1=window.open('."'" . $lookup_link ."'" .',"Search","width=800,height=700,toolbar=no,scrollbars=yes,resizable=yes");';
 					$m++;
 				}
-
-				if($entity['attributes'][$i]['datatype']=='R' || $entity['attributes'][$i]['datatype']=='CH' || $entity['attributes'][$i]['datatype']=='LB')
+				else if($entity['attributes'][$i]['datatype']=='R' || $entity['attributes'][$i]['datatype']=='CH' || $entity['attributes'][$i]['datatype']=='LB')
 				{
 					$entity['attributes'][$i]['choice']	= $soadmin_entity->read_attrib_choice($data['entity_id'],$data['cat_id'],$entity['attributes'][$i]['attrib_id']);
 					$input_type=$input_type_array[$entity['attributes'][$i]['datatype']];
@@ -389,6 +387,10 @@
 							}
 						}
 					}
+				}
+				else if ($entity['attributes'][$i]['datatype']!='I' && $entity['attributes'][$i]['value'])
+				{
+					$entity['attributes'][$i]['value'] = stripslashes($entity['attributes'][$i]['value']);
 				}
 
 				$entity['attributes'][$i]['datatype_text'] = $this->bocommon->translate_datatype($entity['attributes'][$i]['datatype']);
