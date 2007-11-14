@@ -598,15 +598,18 @@
 						$values['r_agreement_id']=$this->bo->request_next_id();
 					}
 
-					$values['file_name']=str_replace (' ','_',$_FILES['file']['name']);
-					$to_file = $this->fakebase. SEP . 'rental_agreement' . SEP . $values['r_agreement_id'] . SEP . $values['file_name'];
-
-					if(!$values['document_name_orig'] && $this->bo->vfs->file_exists(array(
-							'string' => $to_file,
-							'relatives' => Array(RELATIVE_NONE)
-						)))
+					if(isset($_FILES['file']['name']) && $_FILES['file']['name'])
 					{
-						$receipt['error'][]=array('msg'=>lang('This file already exists !'));
+						$values['file_name']=str_replace (' ','_',$_FILES['file']['name']);
+						$to_file = $this->fakebase. SEP . 'rental_agreement' . SEP . $values['r_agreement_id'] . SEP . $values['file_name'];
+
+						if(!$values['document_name_orig'] && $this->bo->vfs->file_exists(array(
+								'string' => $to_file,
+								'relatives' => Array(RELATIVE_NONE)
+							)))
+						{
+							$receipt['error'][]=array('msg'=>lang('This file already exists !'));
+						}
 					}
 
 
@@ -1027,7 +1030,7 @@
 
 		function edit_item()
 		{
-			$r_agreement_id	= phpgw::get_var('r_agreement_id', 'int')
+			$r_agreement_id	= phpgw::get_var('r_agreement_id', 'int');
 			$id	= phpgw::get_var('id', 'int');
 			$values		= phpgw::get_var('values');
 			$delete_last	= phpgw::get_var('delete_last', 'bool', 'GET');
@@ -1319,7 +1322,7 @@
 
 		function view_item()
 		{
-			$r_agreement_id	= phpgw::get_var('r_agreement_id', 'int')
+			$r_agreement_id	= phpgw::get_var('r_agreement_id', 'int');
 			$id	= phpgw::get_var('id', 'int');
 
 			$bolocation			= CreateObject('property.bolocation');
@@ -1417,7 +1420,7 @@
 		{
 			$attrib		= phpgw::get_var('attrib');
 			$id		= phpgw::get_var('id', 'int');
-			$r_agreement_id	= phpgw::get_var('r_agreement_id', 'int')
+			$r_agreement_id	= phpgw::get_var('r_agreement_id', 'int');
 			$delete		= phpgw::get_var('delete', 'bool', 'POST');
 			$confirm	= phpgw::get_var('confirm', 'bool', 'POST');
 
@@ -1929,7 +1932,7 @@
 		
 		function edit_common()
 		{
-			$r_agreement_id	= phpgw::get_var('r_agreement_id', 'int')
+			$r_agreement_id	= phpgw::get_var('r_agreement_id', 'int');
 			$c_id	= phpgw::get_var('c_id', 'int');
 			$values		= phpgw::get_var('values');
 /*			$delete_last	= phpgw::get_var('delete_last', 'bool', 'GET');
@@ -2174,7 +2177,7 @@
 
 		function delete_common_h()
 		{
-			$r_agreement_id	= phpgw::get_var('r_agreement_id', 'int')
+			$r_agreement_id	= phpgw::get_var('r_agreement_id', 'int');
 			$c_id		= phpgw::get_var('c_id', 'int');
 			$id		= phpgw::get_var('id', 'int');
 

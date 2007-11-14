@@ -328,7 +328,8 @@
 			$where = '';
 			if(is_array($key))
 			{
-				while (is_array($key) && list($column,$value) = each($key))
+			//	while (is_array($key) && list($column,$value) = each($key))
+				foreach ($key as $column => $value)
 				{
 					if($value)
 					{

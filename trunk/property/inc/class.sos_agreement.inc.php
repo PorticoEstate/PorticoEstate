@@ -748,7 +748,7 @@
 				{
 					if($entry['value'])
 					{
-						if($entry['datatype'] == 'C' || $entry['datatype'] == 'T' || $entry['datatype'] == 'V')
+						if($entry['datatype'] == 'C' || $entry['datatype'] == 'T' || $entry['datatype'] == 'V' || $entry['datatype'] == 'link')
 						{
 							$entry['value'] = $this->db->db_addslashes($entry['value']);
 						}
@@ -788,6 +788,7 @@
 			}
 
 			$this->db->transaction_begin();
+
 			$id = $this->bocommon->next_id($table,array('agreement_id'=>$values['s_agreement_id']));
 
 			$this->db->query("INSERT INTO $table (id,agreement_id,entry_date,user_id $cols) "
