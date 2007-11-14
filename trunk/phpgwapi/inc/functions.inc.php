@@ -519,12 +519,12 @@
 			$GLOBALS['phpgw']->translation->translation($reset = True);
 		}
 
-		$redirect = unserialize(htmlspecialchars_decode(stripslashes(phpgw::get_var('redirect','string', 'COOKIE'))));
+		$redirect = unserialize(phpgw::get_var('redirect','raw', 'COOKIE'));
 		if ( is_array($redirect) && count($redirect) )
 		{
 			foreach($redirect as $key => $value)
 			{
-				$redirect_data[$key] = $value;
+				$redirect_data[$key] = phpgw::clean_value($value);
 			}
 			
 			$sessid = phpgw::get_var('sessionid', 'string', 'GET');
