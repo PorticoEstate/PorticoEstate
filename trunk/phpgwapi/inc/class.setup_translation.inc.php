@@ -190,8 +190,6 @@
 				_debug_array($langs);
 			}
 
-			$GLOBALS['phpgw_setup']->db->transaction_begin();
-
 			while (list($null,$lang) = each($langs))
 			{
 				if($DEBUG)
@@ -241,7 +239,6 @@
 					}
 				}
 			}
-			$GLOBALS['phpgw_setup']->db->transaction_commit();
 		}
 	}
 ?>
