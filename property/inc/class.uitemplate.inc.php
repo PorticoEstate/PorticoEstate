@@ -576,6 +576,11 @@
 				}
 
 				$values['hour_id'] = $hour_id;
+				if(!isset($values['ns3420_descr']) || !$values['ns3420_descr'])
+				{
+					$receipt['error'][]=array('msg'=>lang('Please enter a description!'));
+					$error_id=true;
+				}
 
 				if(!$receipt['error'])
 				{
