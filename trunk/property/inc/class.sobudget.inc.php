@@ -405,7 +405,10 @@
 			$value_set=array(
 				'remark'	=> $budget['remark'],
 				'entry_date'	=> time(),
-				'budget_cost'	=> $budget['budget_cost']
+				'budget_cost'	=> $budget['budget_cost'],
+				'year'			=> $budget['year'],
+				'revision'		=> $budget['revision'],
+				'district_id'	=> $budget['district_id'],
 				);
 
 			$value_set	= $this->bocommon->validate_db_update($value_set);
@@ -657,27 +660,21 @@
 			$sql = "SELECT revision FROM $table where year =" . (int)$year . " GROUP BY revision";
 			$this->db->query($sql,__LINE__,__FILE__);
 
+			
+			$i = 1;
 			while ($this->db->next_record())
 			{
-				$revision_list[] = array
+				$revision_list[$i] = array
 				(
 					'id'	=> $this->db->f('revision'),
 					'name'	=> $this->db->f('revision')
 				);
-
+				$i++;
 			}
 
-			$i = count($revision_list);
-
 			$revision_list[] = array
 			(
-				'id'	=> $i++,
-				'name'	=> $i
-			);
-
-			$revision_list[] = array
-			(
-				'id'	=> $i++,
+				'id'	=> $i,
 				'name'	=> $i
 			);
 
@@ -687,7 +684,7 @@
 		function get_year_filter_list($basis = '')
 		{
 			$table = $basis?'fm_budget_basis':'fm_budget';
-			$sql = "SELECT year FROM $table group by year";
+			$sql = "SELECT year FROM $table group by year ORDER BY year ASC";
 			$this->db->query($sql,__LINE__,__FILE__);
 
 			while ($this->db->next_record())
@@ -709,7 +706,6 @@
 			$this->db->next_record();
 			return $this->db->f('revision');
 		}
-
 
 		function get_revision_filter_list($year ='',$basis = '')
 		{
