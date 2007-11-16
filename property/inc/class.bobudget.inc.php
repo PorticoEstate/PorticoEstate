@@ -40,6 +40,11 @@
 		var $sort;
 		var $order;
 		var $cat_id;
+		var $district_id;		
+		var $year;
+		var $grouping;
+		var $revision;
+		var $allrows;
 
 		var $public_functions = array
 		(
@@ -73,6 +78,7 @@
 			$year		= phpgw::get_var('year', 'int');
 			$grouping	= phpgw::get_var('grouping', 'int');
 			$revision	= phpgw::get_var('revision', 'int');
+			$this->allrows = phpgw::get_var('allrows', 'bool');
 
 			if ($start)
 			{
@@ -105,11 +111,7 @@
 			}
 			else
 			{
-				unset($this->cat_id);
-			}
-			if(isset($allrows))
-			{
-				$this->allrows = $allrows;
+				$this->cat_id = '';
 			}
 
 			if(isset($district_id))
@@ -129,10 +131,10 @@
 				$this->revision = $revision;
 			}
 
-			if(!$this->year == $year && !$GLOBALS['phpgw_info']['menuaction']=='property.uibudget.obligations')
+			if(isset($year) && !$this->year == $year && !$GLOBALS['phpgw_info']['menuaction']=='property.uibudget.obligations')
 			{
-				unset ($this->grouping);
-				unset ($this->revision);
+				$this->grouping = '';
+				$this->revision = '';
 			}
 		}
 
@@ -320,6 +322,23 @@
 			}
 			$year_list = $this->so->get_year_filter_list($basis);
 			return $this->bocommon->select_list($selected,$year_list);
+		}
+
+		function get_year_list()
+		{
+			$year_list = $this->so->get_year_filter_list();
+
+			$j = count($year_list);
+			for ($i=0; $i < 4; $i++)
+			{
+				// FIXME
+				if($year_list[$j-1]['id'] < date('Y') + 3)
+				{
+					$year_list[$j+$i]['id'] = $year_list[$j+$i-1]['id'] + 1;
+					$year_list[$j+$i]['name'] = $year_list[$j+$i-1]['id'] + 1;
+				}
+			}
+			return $year_list;
 		}
 
 		function get_revision_filter_list($selected ='',$basis = '')

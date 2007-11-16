@@ -657,8 +657,9 @@
 			</tr>
 	-->
 				<xsl:choose>
-					<xsl:when test="value_b_account !=''">
+					<xsl:when test="value_b_account > 0">
 						<xsl:call-template name="b_account_view"/>
+						<input type="hidden" name="b_account_id" value="{value_b_account}"></input>
 					</xsl:when>
 					<xsl:otherwise>
 						<xsl:call-template name="b_account_form"/>

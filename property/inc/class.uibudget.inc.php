@@ -692,18 +692,19 @@
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('budget'));
 
-			if ($values['save'] || $values['apply'])
+			$receipt = array();
+			if ((isset($values['save']) && $values['save']) || (isset($values['apply']) && $values['apply']))
 			{
 				$values['b_account_id']		= phpgw::get_var('b_account_id', 'int', 'POST');
 				$values['b_account_name']	= phpgw::get_var('b_account_name', 'string', 'POST');
 
-				if(!$values['b_account_id'] && !$budget_id)
+				if(!$values['b_account_id'] > 0)
 				{
+					$values['b_account_id']='';
 					$receipt['error'][]=array('msg'=>lang('Please select a budget account !'));
 				}
-
 				
-				if(!$values['district_id'] && !$budget_id)
+				if(!$values['district_id'] && !$budget_id > 0)
 				{
 					$receipt['error'][]=array('msg'=>lang('Please select a district !'));
 				}
@@ -713,14 +714,13 @@
 					$receipt['error'][]=array('msg'=>lang('Please enter a budget cost !'));
 				}
 
-				if(!$receipt['error'])
+				if(!isset($receipt['error']) || !$receipt['error'])
 				{
 					$values['budget_id']	= $budget_id;
 					$receipt = $this->bo->save($values);
 					$budget_id = $receipt['budget_id'];
-				//	$this->cat_id = ($values['cat_id']?$values['cat_id']:$this->cat_id);
 
-					if ($values['save'])
+					if (isset($values['save']) && $values['save'])
 					{
 						$GLOBALS['phpgw']->session->appsession('session_data','budget_receipt',$receipt);
 						$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> $this->currentapp.'.uibudget.index'));
@@ -732,13 +732,13 @@
 					$district_id = $values['district_id'];
 					$revision = $values['revision'];
 					
-					unset ($values['year']);
-					unset ($values['district_id']);
-					unset ($values['revision']);
+					$values['year'] ='';
+					$values['district_id'] = '';
+					$values['revision'] = '';
 				}
 			}
 
-			if ($values['cancel'])
+			if (isset($values['cancel']) && $values['cancel'])
 			{
 				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> $this->currentapp.'.uibudget.index'));
 			}
@@ -747,9 +747,7 @@
 			if ($budget_id)
 			{
 				$values = $this->bo->read_single($budget_id);
-				$this->cat_id = ($budget['cat_id']?$budget['cat_id']:$this->cat_id);
 			}
-
 
 			$link_data = array
 			(
@@ -758,16 +756,11 @@
 			);
 
 			$msgbox_data = $this->bocommon->msgbox_data($receipt);
-
-			$year[0]['id'] = date(Y);
-			$year[1]['id'] = date(Y) +1;
-			$year[2]['id'] = date(Y) +2;
-			$year[3]['id'] = date(Y) +3;
-
+		
 			$b_account_data=$this->bocommon->initiate_ui_budget_account_lookup(array(
 						'b_account_id'		=> $values['b_account_id'],
-						'b_account_name'	=> $values['b_account_name'],
-						'type'			=> $values['b_account_id']?'view':'form'));
+						'b_account_name'	=> isset($values['b_account_name'])?$values['b_account_name']:'',
+						'type'			=> isset($values['b_account_id']) && $values['b_account_id'] > 0 ?'view':'form'));
 
 			$data = array
 			(
@@ -775,27 +768,18 @@
 				'value_b_account'			=> $values['b_account_id'],
 				'lang_revision'				=> lang('revision'),
 				'lang_revision_statustext'		=> lang('Select revision'),
-				'revision_list'				=> $this->bo->get_revision_list($revision),
-/*
-				'lang_b_group'				=> lang('budget group'),
-				'lang_b_group_statustext'		=> lang('Select budget group'),
-				'b_group_list'				=> $this->bo->get_b_group_list($values['b_group']),
-*/		
+				'revision_list'				=> $this->bo->get_revision_list($values['revision']),
+
 				'lang_year'				=> lang('year'),
 				'lang_year_statustext'			=> lang('Budget year'),
-				'year'					=> $this->bocommon->select_list($year_selected,$year),
+				'year'					=> $this->bocommon->select_list($values['year'],$this->bo->get_year_list()),
 
 				'lang_district'				=> lang('District'),
 				'lang_no_district'			=> lang('no district'),
 				'lang_district_statustext'		=> lang('Select the district'),
 				'select_district_name'			=> 'values[district_id]',
-				'district_list'				=> $this->bocommon->select_district_list('select',$district_id),
-				
-				'value_year'				=> $values['year'],
-				'value_district_id'			=> $values['district_id'],
-				'value_b_group'				=> $values['b_group'],
-				'value_revision'			=> $values['revision'],
-
+				'district_list'				=> $this->bocommon->select_district_list('select',$values['district_id']),
+			
 				'msgbox_data'				=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
 				'edit_url'				=> $GLOBALS['phpgw']->link('/index.php',$link_data),
 				'lang_budget_id'			=> lang('ID'),
@@ -839,7 +823,7 @@
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('budget'));
 
-			if ($values['save'] || $values['apply'])
+			if ((isset($values['save']) && $values['save'])|| (isset($values['apply']) && $values['apply']))
 			{
 				if(!$values['b_group'] && !$budget_id)
 				{
