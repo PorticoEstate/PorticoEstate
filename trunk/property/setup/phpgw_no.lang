@@ -997,6 +997,7 @@ Please choose a file	property	no	Velg en fil
 Please either select GENERATE ID or type a Equipment ID !	property	no	enten valg GENERER ID eller angi et utstyrs ID
 Please enter a Apartment ID !	property	no	angi leilighet ID
 Please enter a Building ID !	property	no	angi bygg ID
+Please enter a description!	property	no	angi en beskrivelse!
 Please enter a Entrance ID !	property	no	angi inngang ID
 Please enter a index !	property	no	Angi en indeks
 Please enter an activity code !	property	no	angi en aktivitets kode
