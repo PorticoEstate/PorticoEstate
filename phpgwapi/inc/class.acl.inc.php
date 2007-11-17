@@ -171,20 +171,33 @@
 			{
 				$this->acl();
 			}
-			if ( !$this->load_from_shm()
-				|| !($this->data[$this->account_id] = $GLOBALS['phpgw']->shm->get_value($GLOBALS['phpgw_info']['user']['domain'] . 'acl_data_' . $account_type . '_' . $this->account_id)))
+			if ($this->load_from_shm())
 			{
-				if ( $GLOBALS['phpgw_info']['server']['account_repository'] == 'ldap' )
+				if(!($this->data[$this->account_id] = $GLOBALS['phpgw']->shm->get_value($GLOBALS['phpgw_info']['user']['domain'] . 'acl_data_' . $account_type . '_' . $this->account_id)))
 				{
-					return $this->_read_repository_ldap($account_type);
-				}
-				else
-				{
-					return $this->_read_repository_sql($account_type);
+					$this->_read_repository($account_type);
 				}
 			}
+			else
+			{
+				if(!($this->data[$this->account_id] = $GLOBALS['phpgw']->session->phpgw_cache($GLOBALS['phpgw_info']['user']['domain'] . 'acl_data_' . $account_type . '_' . $this->account_id, 'acl_data'))) // get value
+				{
+					$this->_read_repository($account_type);
+				}
+			}			
 		}
 
+		function _read_repository($account_type = 'both')
+		{
+			if ( $GLOBALS['phpgw_info']['server']['account_repository'] == 'ldap' )
+			{
+				return $this->_read_repository_ldap($account_type);
+			}
+			else
+			{
+				return $this->_read_repository_sql($account_type);
+			}
+		}
 		/**
 		* Get acl records
 		*
@@ -375,7 +388,8 @@
 
 				if($location)
 				{
-					while(list($idx,$value) = each($this->data[$this->account_id]))
+		//			while(list($idx,$value) = each($this->data[$this->account_id]))
+					foreach($this->data[$this->account_id] as $idx => $value)
 					{
 						if ( is_array($this->data[$this->account_id][$idx]) && count($this->data[$this->account_id][$idx]) && strpos($this->data[$this->account_id][$idx]['location'],$location)===0)
 						{
@@ -406,7 +420,8 @@
 			
 				array_unique($this->data[$this->account_id]);
 
-				while(list($idx,$value) = each($this->data[$this->account_id]))
+			//	while(list($idx,$value) = each($this->data[$this->account_id]))
+				foreach ($this->data[$this->account_id] as $idx => $value)
 				{
 					if ( isset($this->data[$this->account_id][$idx]['account'])
 						&& $this->data[$this->account_id][$idx]['account'] == $this->account_id
@@ -448,7 +463,8 @@
 				$sql = "DELETE FROM phpgw_acl where acl_account = '" . intval($this->account_id) . "' AND acl_appname = '$appname'" . $location_filter;
 				$this->db->query($sql ,__LINE__,__FILE__);
 
-				while(list($idx,$value) = each($unique_data))
+		//		while(list($idx,$value) = each($unique_data))
+				foreach($unique_data as $idx => $value)
 				{
 					$sql = 'insert into phpgw_acl (acl_appname, acl_location, acl_account, acl_rights,acl_grantor,acl_type)';
 					$sql .= " values('".$unique_data[$idx]['appname']."', '"
@@ -465,7 +481,7 @@
 
 			$this->db->transaction_commit();
 
-			$this->clean_shm($this->account_id);
+			$this->delete_cache($this->account_id);
 
 //			return $unique_data;
 		}
@@ -502,16 +518,21 @@
 					if(!$this->data[$this->account_id] = $GLOBALS['phpgw']->shm->get_value($GLOBALS['phpgw_info']['user']['domain'] . 'acl_data_' . $account_type . '_' . $this->account_id))
 					{
 						$this->data[$this->account_id] = array();
-						$this->read_repository($account_type);
+						$this->_read_repository($account_type);
 						if(count($this->data[$this->account_id])>0)
 						{
 							$GLOBALS['phpgw']->shm->store_value($GLOBALS['phpgw_info']['user']['domain'] . 'acl_data_' . $account_type . '_' . $this->account_id,$this->data[$this->account_id]);
 						}
 					}
 				}
-				else
+				else if(!$this->data[$this->account_id] = $GLOBALS['phpgw']->session->phpgw_cache($GLOBALS['phpgw_info']['user']['domain'] . 'acl_data_' . $account_type . '_' . $this->account_id, 'acl_data')) // get value
 				{
-					$this->read_repository($account_type);
+					$this->data[$this->account_id] = array();
+					$this->_read_repository($account_type);
+					if(count($this->data[$this->account_id])>0)
+					{
+						$GLOBALS['phpgw']->session->phpgw_cache($GLOBALS['phpgw_info']['user']['domain'] . 'acl_data_' . $account_type . '_' . $this->account_id,'acl_data', $this->data[$this->account_id]); //store value
+					}
 				}
 			}
 			if(isset($this->data[$this->account_id]) && is_array($this->data[$this->account_id]))
@@ -537,7 +558,8 @@
 */
 			if(isset($this->data[$this->account_id]) && is_array($this->data[$this->account_id]))
 			{
-				while(list($idx,$value) = each($this->data[$this->account_id]))
+//				while(list($idx,$value) = each($this->data[$this->account_id]))
+				foreach($this->data[$this->account_id] as $idx => $value)
 				{
 					if ($this->data[$this->account_id][$idx]['appname'] == $appname)
 					{
@@ -763,7 +785,7 @@
 				$this->db->query($sql ,__LINE__,__FILE__);
 			}
 
-			$this->clean_shm($account_id);
+			$this->delete_cache($account_id);
 
 			return true;
 		}
@@ -800,7 +822,7 @@
 			$sql = "DELETE FROM phpgw_acl WHERE acl_appname LIKE '{$app}' AND acl_location LIKE '{$location}' $account_sel";
 			$this->db->query($sql ,__LINE__,__FILE__);
 
-			$this->clean_shm($account_id);
+			$this->delete_cache($account_id);
 			
 			return $this->db->num_rows();
 		}
@@ -1310,30 +1332,70 @@
 		}
 
 		/**
+		* Delete ACL information from cache
+		*
+		* @param integer $account_id
+		*/
+		function delete_cache($account_id)
+		{
+			if($this->load_from_shm())
+			{
+				$this->clear_shm($account_id);
+			}
+			else
+			{
+				$this->clear_cache($account_id);
+			}	
+		}
+
+		/**
 		* Delete ACL information from shared memory
 		*
 		* @param integer $account_id
 		*/
-		function clean_shm($account_id)
+		function clear_shm($account_id)
 		{
-			if($this->load_from_shm())
+			$GLOBALS['phpgw']->shm->delete_key($GLOBALS['phpgw_info']['user']['domain'] . 'acl_data_groups_' . $account_id);
+			$GLOBALS['phpgw']->shm->delete_key($GLOBALS['phpgw_info']['user']['domain'] . 'acl_data_accounts_' . $account_id);
+			$GLOBALS['phpgw']->shm->delete_key($GLOBALS['phpgw_info']['user']['domain'] . 'acl_data_both_' . $account_id);
+
+			$members = $this->get_ids_for_location($account_id, 1, 'phpgw_group');
+
+			if (is_array($members) && count($members) > 0)
 			{
-				$GLOBALS['phpgw']->shm->delete_key($GLOBALS['phpgw_info']['user']['domain'] . 'acl_data_groups_' . $account_id);
-				$GLOBALS['phpgw']->shm->delete_key($GLOBALS['phpgw_info']['user']['domain'] . 'acl_data_accounts_' . $account_id);
-				$GLOBALS['phpgw']->shm->delete_key($GLOBALS['phpgw_info']['user']['domain'] . 'acl_data_both_' . $account_id);
-
-				$members = $this->get_ids_for_location($account_id, 1, 'phpgw_group');
-
-				if (is_array($members) && count($members) > 0)
+				foreach ( $members as $account_id )
 				{
-					foreach ( $members as $account_id )
-					{
-						$GLOBALS['phpgw']->shm->delete_key($GLOBALS['phpgw_info']['user']['domain'] . 'acl_data_groups_' . $account_id);
-						$GLOBALS['phpgw']->shm->delete_key($GLOBALS['phpgw_info']['user']['domain'] . 'acl_data_accounts_' . $account_id);
-						$GLOBALS['phpgw']->shm->delete_key($GLOBALS['phpgw_info']['user']['domain'] . 'acl_data_both_' . $account_id);
-					}
+					$GLOBALS['phpgw']->shm->delete_key($GLOBALS['phpgw_info']['user']['domain'] . 'acl_data_groups_' . $account_id);
+					$GLOBALS['phpgw']->shm->delete_key($GLOBALS['phpgw_info']['user']['domain'] . 'acl_data_accounts_' . $account_id);
+					$GLOBALS['phpgw']->shm->delete_key($GLOBALS['phpgw_info']['user']['domain'] . 'acl_data_both_' . $account_id);
+				}
+			}
+		}
+
+		/**
+		* Delete ACL information from phpgw_cache
+		*
+		* @param integer $account_id
+		*/
+		function clear_cache($account_id)
+		{
+
+			$GLOBALS['phpgw']->session->phpgw_cache($GLOBALS['phpgw_info']['user']['domain'] . 'acl_data_groups_' . $account_id, 'acl_data', '##DELETE##');
+			$GLOBALS['phpgw']->session->phpgw_cache($GLOBALS['phpgw_info']['user']['domain'] . 'acl_data_accounts_' . $account_id, 'acl_data', '##DELETE##');
+			$GLOBALS['phpgw']->session->phpgw_cache($GLOBALS['phpgw_info']['user']['domain'] . 'acl_data_both_' . $account_id, 'acl_data', '##DELETE##');
+
+			$members = $this->get_ids_for_location($account_id, 1, 'phpgw_group');
+
+			if (is_array($members) && count($members) > 0)
+			{
+				foreach ( $members as $account_id )
+				{
+					$GLOBALS['phpgw']->session->phpgw_cache($GLOBALS['phpgw_info']['user']['domain'] . 'acl_data_groups_' . $account_id, 'acl_data', '##DELETE##');
+					$GLOBALS['phpgw']->session->phpgw_cache($GLOBALS['phpgw_info']['user']['domain'] . 'acl_data_accounts_' . $account_id, 'acl_data', '##DELETE##');
+					$GLOBALS['phpgw']->session->phpgw_cache($GLOBALS['phpgw_info']['user']['domain'] . 'acl_data_both_' . $account_id, 'acl_data', '##DELETE##');
 				}
 			}
 
+//			$this->db->query("DELETE FROM phpgw_app_sessions WHERE loginid = '-1' AND app='acl_data'",__LINE__,__FILE__);
 		}
 	}
