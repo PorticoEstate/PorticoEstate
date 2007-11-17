@@ -1324,4 +1324,88 @@
 		{
 			return array();
 		}
+
+		/**
+		* Stores or retrieves information from persistant cache
+		* 
+		* @param string $location identifier for data
+		* @param string $appname name of app which is responsbile for the data
+		* @param mixed $data data to be stored, if left blank data is retreived (optional), if set to ##DELETE## the record is deleted
+		* @return mixed data from cache, only returned if $data arg is not used 
+		*/
+		function phpgw_cache($location = 'default', $appname = '', $data = '##NOTHING##')
+		{
+			if (! $appname)
+			{
+				$appname = $GLOBALS['phpgw_info']['flags']['currentapp'];
+			}
+			
+			/* This allows the user to put '' as the value. */
+			if ($data == '##NOTHING##')
+			{
+				$query = "SELECT content FROM phpgw_app_sessions"
+					. " WHERE sessionid = 'persistent_cache'"
+					. " AND loginid='-1'"
+					. " AND app = '".$appname."'"
+					. " AND location='".$location."'";
+	
+				$GLOBALS['phpgw']->db->query($query,__LINE__,__FILE__);
+				$GLOBALS['phpgw']->db->next_record();
+
+				$data = $GLOBALS['phpgw']->db->f('content');
+				if($data)
+				{
+					if(function_exists('gzcompress'))
+					{
+						$data =  gzuncompress(base64_decode($data));
+					}
+					else
+					{
+						$data = stripslashes($data);
+					}
+
+					return unserialize($data);
+				}
+			}
+			else if($data == '##DELETE##')
+			{
+				$GLOBALS['phpgw']->db->query("DELETE FROM phpgw_app_sessions"
+					. " WHERE sessionid = 'persistent_cache'"
+					. " AND loginid = '-1'"
+					. " AND app = '".$appname."'"
+					. " AND location = '".$location."'",__LINE__,__FILE__);			
+			}
+			else
+			{
+				$GLOBALS['phpgw']->db->query("SELECT content FROM phpgw_app_sessions"
+					. " WHERE sessionid = 'persistent_cache'"
+					. " AND loginid = '-1'"
+					. " AND app = '".$appname."'"
+					. " AND location = '".$location."'",__LINE__,__FILE__);
+
+				if(function_exists('gzcompress'))
+				{
+					$data =  base64_encode(gzcompress(serialize($data), 9));
+				}
+				else
+				{
+					$data = $GLOBALS['phpgw']->db->db_addslashes(serialize($data));
+				}
+				if ($GLOBALS['phpgw']->db->num_rows()==0)
+				{
+					$GLOBALS['phpgw']->db->query("INSERT INTO phpgw_app_sessions (sessionid,loginid,app,location,content,session_dla) "
+						. "VALUES ('persistent_cache','-1','".$appname
+						. "','".$location."','".$data."','" . time() . "')",__LINE__,__FILE__);
+				}
+				else
+				{
+					$GLOBALS['phpgw']->db->query("UPDATE phpgw_app_sessions SET content='".$data."'"
+						. " WHERE sessionid = 'persistent_cache'"
+						. " AND loginid = '-1'"
+						. " AND app = '".$appname."'"
+						. " AND location = '".$location."'",__LINE__,__FILE__);
+				}
+				return $data;
+			}
+		}
 	}
