@@ -104,8 +104,8 @@
 				|| (!array_key_exists(strtolower(trim(substr($key,0,MAX_MESSAGE_ID_LENGTH))),$GLOBALS['lang']) && !$this->loaded_from_shm) ) //Using array_key_exists permits empty string ... Ugly but ... (Caeies)
 			{
  				$sql = "SELECT message_id,content FROM phpgw_lang WHERE lang = '".$userlang."' ".
-					"AND message_id = '".$GLOBALS['phpgw']->db->db_addslashes($key)."' OR message_id = 'charset' AND (app_name = '".$GLOBALS['phpgw_info']['flags']['currentapp']."' OR app_name = 'common' or app_name = 'all')";
-			//		"and (app_name = '".$GLOBALS['phpgw_info']['flags']['currentapp']."' or app_name = 'common' or app_name = 'all')";
+					"AND message_id = '".$GLOBALS['phpgw']->db->db_addslashes($key)."' AND (app_name = '".$GLOBALS['phpgw_info']['flags']['currentapp']."' OR app_name = 'common' or app_name = 'all')";
+			//		"AND message_id = '".$GLOBALS['phpgw']->db->db_addslashes($key)."' OR message_id = 'charset' AND (app_name = '".$GLOBALS['phpgw_info']['flags']['currentapp']."' OR app_name = 'common' or app_name = 'all')";
 
 				if (strcasecmp ($GLOBALS['phpgw_info']['flags']['currentapp'], 'common')>0)
 				{
@@ -120,10 +120,6 @@
 				while ($GLOBALS['phpgw']->db->next_record())
 				{
 					$GLOBALS['lang'][strtolower($GLOBALS['phpgw']->db->resultSet->fields('message_id'))] = $GLOBALS['phpgw']->db->resultSet->fields('content');
-				}
-				if($this->loaded_from_shm == true)
-				{
-					$GLOBALS['phpgw']->shm->store_value('lang_' . $userlang, $GLOBALS['lang']);
 				}
 			}
 			$ret = "{$key}*";	// save key if we dont find a translation

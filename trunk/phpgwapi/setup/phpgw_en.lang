@@ -119,7 +119,7 @@ display sunday first	common	en	Display Sunday first
 djibouti	common	en	DJIBOUTI
 do you also want to delete all subcategories ?	common	en	Do you also want to delete all subcategories ?
 domain	common	en	Domain
-domain name for mail-address, eg. "%1"	common	en	domain name for mail-address, eg. "%1"
+domain name for mail-address, eg. %1	common	en	domain name for mail-address, eg. %1
 domestic	common	en	Domestic
 dominica	common	en	DOMINICA
 dominican republic	common	en	DOMINICAN REPUBLIC
@@ -135,7 +135,7 @@ edit category	common	en	Edit category
 egypt	common	en	EGYPT
 el salvador	common	en	EL SALVADOR
 email	common	en	E-Mail
-email-address of the user, eg. "%1"	common	en	email-address of the user, eg. "%1"
+email-address of the user, eg. %1	common	en	email-address of the user, eg. %1
 enabled	common	en	Enabled
 end date	common	en	End date
 end time	common	en	End time
@@ -159,7 +159,7 @@ files	common	en	Files
 filter	common	en	Filter
 finland	common	en	FINLAND
 first name	common	en	First name
-first name of the user, eg. "%1"	common	en	first name of the user, eg. "%1"
+first name of the user, eg. %1	common	en	first name of the user, eg. %1
 first page	common	en	First page
 firstname	common	en	Firstname
 fixme!	common	en	FIXME!
@@ -241,7 +241,7 @@ kyrgyzstan	common	en	KYRGYZSTAN
 language	common	en	Language
 lao peoples democratic republic	common	en	LAO PEOPLES DEMOCRATIC REPUBLIC
 last name	common	en	Last name
-last name of the user, eg. "%1"	common	en	last name of the user, eg. "%1"
+last name of the user, eg. %1	common	en	last name of the user, eg. %1
 last page	common	en	Last page
 lastname	common	en	Lastname
 latvia	common	en	LATVIA
@@ -263,7 +263,7 @@ luxembourg	common	en	LUXEMBOURG
 macau	common	en	MACAU
 macedonia, the former yugoslav republic of	common	en	MACEDONIA, THE FORMER YUGOSLAV REPUBLIC OF
 madagascar	common	en	MADAGASCAR
-mail domain, eg. "%1"	common	en	mail domain, eg. "%1"
+mail domain, eg. %1	common	en	mail domain, eg. %1
 main category	common	en	Main category
 main screen	common	en	Main screen
 maintainer	about	en	Maintainer
@@ -294,7 +294,7 @@ morocco	common	en	MOROCCO
 mozambique	common	en	MOZAMBIQUE
 myanmar	common	en	MYANMAR
 name	common	en	Name
-name of the user, eg. "%1"	common	en	name of the user, eg. "%1"
+name of the user, eg. %1	common	en	name of the user, eg. %1
 namibia	common	en	NAMIBIA
 nauru	common	en	NAURU
 nepal	common	en	NEPAL
@@ -474,9 +474,9 @@ time zone	common	en	Timezone
 time zone offset	common	en	Time zone offset
 title	common	en	Title
 to correct this error for the future you will need to properly set the	common	en	To correct this error for the future you will need to properly set the
-to go back to the msg list, click <a href= %1 >here</a>	common	en	To go back to the msg list, click <a href="%1">here</a>
+to go back to the msg list, click <a href= %1 >here</a>	common	en	To go back to the msg list, click <a href=%1>here</a>
 today	common	en	Today
-todays date, eg. "%1"	common	en	todays date, eg. "%1"
+todays date, eg. %1	common	en	todays date, eg. %1
 toggle first day of week	common	en	Toggle first day of week
 togo	common	en	TOGO
 tokelau	common	en	TOKELAU
