@@ -143,6 +143,7 @@
 					|| !is_array($GLOBALS['phpgw_info']['user']['preferences']) )
 			{
 				$GLOBALS['phpgw_info']['user']['preferences'] = $this->data;	// else no lang()
+				$GLOBALS['phpgw']->translation->userlang = $GLOBALS['phpgw_info']['user']['preferences']['common']['lang'];
 			}
 			// we cant use phpgw_info/user/fullname, as it's not set when we run
 			$GLOBALS['phpgw']->accounts->get_account_name($this->account_id,$lid,$fname,$lname);
@@ -160,12 +161,12 @@
 			$this->values['email'] = $this->parse_notify($this->values['email']);
 
 			$this->vars = array(	// langs have to be in common !!!
-					'fullname'  => lang('name of the user, eg. "%1"',$this->values['fullname']),
-					'firstname' => lang('first name of the user, eg. "%1"',$this->values['firstname']),
-					'lastname'  => lang('last name of the user, eg. "%1"',$this->values['lastname']),
-					'domain'    => lang('domain name for mail-address, eg. "%1"',$this->values['domain']),
-					'email'     => lang('email-address of the user, eg. "%1"',$this->values['email']),
-					'date'      => lang('todays date, eg. "%1"',$this->values['date'])
+					'fullname'  => lang('name of the user, eg. %1',$this->values['fullname']),
+					'firstname' => lang('first name of the user, eg. %1',$this->values['firstname']),
+					'lastname'  => lang('last name of the user, eg. %1',$this->values['lastname']),
+					'domain'    => lang('domain name for mail-address, eg. %1',$this->values['domain']),
+					'email'     => lang('email-address of the user, eg. %1',$this->values['email']),
+					'date'      => lang('todays date, eg. %1',$this->values['date'])
 					);
 			// do the substituetion in the effective prefs (data)
 			//
