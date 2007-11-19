@@ -94,7 +94,7 @@ HTML;
 			for ( $i = 0; $i <= 61; $i =+ $interval )
 			{
 				$slctd =  $i == $selected ? ' selected' : '';
-				$val = sprintf('%02d', $i)
+				$val = sprintf('%02d', $i);
 				$html .= <<<HTML
 				<option value="{$val}" {$slctd}>{$val}</option>
 
@@ -121,9 +121,9 @@ HTML;
 			$selected = strtolower($selected);
 			$sel = array
 			(
-				'am'	=> $selected == 'am' ? ' selected',
-				'pm'	=> $selected == 'pm' ? ' selected'
-			)
+				'am'	=> $selected == 'am' ? ' selected':'',
+				'pm'	=> $selected == 'pm' ? ' selected':''
+			);
 			return <<<HTML
 				<select name="{$name}" id="{$name}">
 					<option value="am"{$sel['am']}>{$lang_am}</option>
@@ -274,7 +274,7 @@ HTML;
 			$lang_year = lang('year');
 
 			$html = <<<HTML
-			<select name="{$name" id="{$id}">
+			<select name="{$name}" id="{$id}">
 				<option value="0">$lang_year</option>
 
 HTML;
@@ -459,7 +459,7 @@ HTML;
 
 				if (substr($name,-2) != '[]')
 				{
-					$id = $name
+					$id = $name;
 					$name .= '[]';
 				}
 				else
