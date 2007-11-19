@@ -12,6 +12,11 @@
 	*/
 
 	/**
+	* Import required classes
+	*/
+	phpgw::import_class('phpgwapi.datetime');
+
+	/**
 	* Commononly used functions
 	*
 	* @package phpgwapi
@@ -1373,18 +1378,13 @@
 		*/
 		function show_date($t = '', $format = '')
 		{
-			if(!is_object($GLOBALS['phpgw']->datetime))
-			{
-				$GLOBALS['phpgw']->datetime = createObject('phpgwapi.datetimefunctions');
-			}
-			
 			if (!$t || (substr(php_uname(), 0, 7) == "Windows" && intval($t) <= 0))
 			{
-				$t = $GLOBALS['phpgw']->datetime->gmtnow;
+				$t = phpgwapi_datetime::gmtnow();
 			}
 
 			//  + (date('I') == 1?3600:0)
-			$t += $GLOBALS['phpgw']->datetime->tz_offset;
+			$t += phpgwapi_datetime::user_timezone();
 			
 			if (! $format)
 			{
@@ -1438,43 +1438,9 @@
 		* @param integer $sec Second
 		* @return string Time formatted as hhmmss with am/pm
 		*/
-		function formattime($hour,$min,$sec='')
+		function formattime($hour, $min = 0, $sec = null)
 		{
-			$h12 = $hour;
-			$ampm = '';
-			if ($GLOBALS['phpgw_info']['user']['preferences']['common']['timeformat'] == '12')
-			{
-				if ($hour >= 12) 
-				{
-					$ampm = ' pm';
-				}
-				else
-				{
-					$ampm = ' am';
-				}
-
-				$h12 %= 12;
-
-				if ($h12 == 0 && $hour)
-				{
-					$h12 = 12;
-				}
-				if ($h12 == 0 && !$hour)
-				{
-					$h12 = 0;
-				}
-			}
-			else 
-			{
-				$h12 = $hour;
-			}
-
-			if ($sec)
-			{
-				$sec = ":$sec";
-			}
-
-			return "$h12:$min$sec$ampm";
+			die('use phpgwapi_datetime::format_time()');
 		}
 
 		/**
