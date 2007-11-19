@@ -24,7 +24,7 @@
 	}
 
 	$calc_include = PHPGW_INCLUDE_ROOT.'/calendar/inc/class.holidaycalc_'.$rule.'.inc.php';
-	if(@file_exists($calc_include))
+	if ( file_exists($calc_include) )
 	{
 		include_once($calc_include);
 	}

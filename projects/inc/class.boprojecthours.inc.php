@@ -10,6 +10,11 @@
 	* $Source: /sources/phpgroupware/projects/inc/class.boprojecthours.inc.php,v $
 	*/
 
+	/*
+	* Import required classes class
+	*/
+	import_class('phpgwapi.datetime');
+
 	class boprojecthours
 	{
 		var $start;
@@ -149,7 +154,7 @@
 				$min			= date('i',$hdate);
 				$hdate			= $hdate + (60*60) * $GLOBALS['phpgw_info']['user']['preferences']['common']['tz_offset'];
 				$htime['date']	= $GLOBALS['phpgw']->common->show_date($hdate,$GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']);
-				$htime['time']	= $GLOBALS['phpgw']->common->formattime($hour,$min);
+				$htime['time']	= phpgwapi_datetime::formattime($hour,$min);
 			}
 			else
 			{

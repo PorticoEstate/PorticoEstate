@@ -146,11 +146,11 @@
 	$setup_tpl->set_var('subaction', $subaction);
 
 	// Old PHP
-	if ( version_compare('4.3.0', phpversion()) === 1 )
+	if ( version_compare('5.2.0', phpversion()) === 1 )
 	{
 		$GLOBALS['phpgw_setup']->html->show_header($GLOBALS['phpgw_info']['setup']['header_msg'],True);
 		$GLOBALS['phpgw_setup']->html->show_alert_msg('Error',
-			 lang('You appear to be using PHP %1. phpGroupWare now requires PHP 4.3.0 or later', phpversion()) );
+			 lang('You appear to be using PHP %1. phpGroupWare now requires PHP 5.2.0 or later', phpversion()) );
 		$GLOBALS['phpgw_setup']->html->show_footer();
 		exit;
 	}

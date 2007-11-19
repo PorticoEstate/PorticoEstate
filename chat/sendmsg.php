@@ -12,7 +12,8 @@
 
 	/* $Id: sendmsg.php,v 1.10 2006/11/10 13:34:36 sigurdne Exp $ */
 
-	$GLOBALS['phpgw_info']['flags'] = array(
+	$GLOBALS['phpgw_info']['flags'] = array
+	(
 		'currentapp' => 'chat',
 		'noheader'   => True,
 		'nonavbar'   => True
@@ -20,42 +21,50 @@
 	include('../header.inc.php');
 
 	$loginid = $GLOBALS['phpgw_info']['user']['userid'];
-	$channel = get_var('channel',Array('POST','GET'));
-	$action = get_var('action',Array('POST','GET'));
-	$location = get_var('location',Array('POST','Array'));
+	$channel = phpgw::get_var('channel');
+	$send = phpgw::get_var('send', 'bool', 'POST');
+	$location = phpgw::get_var('location');
 
-//	$date=date("YmdHis");
-
-	if ($action=='post')
+	if ( $send )
 	{
-		$datetime = createobject('phpgwapi.datetimefunctions');
+		$message = $GLOBALS['phpgw']->db->db_addslashes(phpgw::get_var('message'));
+		$channel = $GLOBALS['pphgw']->db->db_addslashes($channel);
+
+		phpgw::import_class('phpgwapi.datetime');
+		$gmtnow = phpgwapi_datetime::gmtnow();
 		if ($location=='public')
 		{
-			$GLOBALS['phpgw']->db->query("INSERT INTO phpgw_chat_messages (channel,"
-				."loginid, message, messagetype,"
-				."timesent) values ('$channel',"
-				."'$loginid','" . addslashes($message)."','1','"
-			. $datetime->gmtnow . "')");
+			$GLOBALS['phpgw']->db->query('INSERT INTO phpgw_chat_messages '
+				. '(channel, loginid, message, messagetype, timesent)'
+				. " VALUES ('$channel', '$loginid','$message', 1, $gmtnow)");
 		}
 		else
 		{
-			$GLOBALS['phpgw']->db->query("INSERT INTO phpgw_chat_privatechat "
-				. "(user1,user2,sentby,"
-				. "message, messagetype,"
-				. "timesent) values ('$loginid',"
-				. "'$channel','$loginid','" . addslashes($message)."','1','"
-				. $datetime->gmtnow . "')");
-			$GLOBALS['phpgw']->db->query("INSERT INTO phpgw_chat_privatechat (user1, user2, sentby, message, messagetype, timesent) VALUES ('$loginid','$channel','$loginid','$message','1','" . $datetime->gmtnow . "')");			
+			$GLOBALS['phpgw']->db->query('INSERT INTO phpgw_chat_privatechat '
+				. '(user1,user2,sentby, message, messagetype, timesent)'
+				. " VALUES ('$loginid', '$channel', '$loginid', '$message', 1, $gmtnow)");
 		}
 	}
 
-	echo "<html><body><center>";
-	echo '<form  name="sendmsg" method="post" action="' . $GLOBALS['phpgw']->link('/chat/sendmsg.php') . '">';
-	echo '<input type="hidden" name="channel" value="' . $channel . '">';
-	echo '<input type="hidden" name="message" value="' . $message . '">';
-	echo '<input type="hidden" name="action" value="post">';
-	echo '<input type="hidden" name="location" value="' . $location . '">';
-	echo '<input type="text"   size="50" name="message"><br>';
-	echo '<input type="submit" value="' . lang('Send Message') . '"></center></form>';
-	echo '<script> form.sendmsg.message.focus(); </script></body></html>';
-?>
+	$sendmsg = $GLOBALS['phpgw']->link('/chat/sendmsg.php');
+	$lang_title = lang('please enter your message');
+	$lang_send = lang('send message');
+
+	echo <<<HTML
+<html>
+	<head>
+		<title>$lang_title</title>
+	</head>
+	<body>
+		<form  name="sendmsg" method="post" action="$sendmsg">
+			<input type="hidden" name="channel" value="{$channel}">
+			<input type="hidden" name="message" value="{$message}">
+			<input type="hidden" name="location" value="{$location}">
+			<input type="text"   size="50" name="message"><br>
+			<input type="submit" name="send" value="{$lang_send}">
+		</form>
+		<script type="text/javascript">form.sendmsg.message.focus();</script>
+	</body>
+</html>
+
+HTML;

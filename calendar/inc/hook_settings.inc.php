@@ -106,7 +106,7 @@
 	
 	for ($i=0; $i < 24; ++$i)
 	{
-		$options[$i] = $GLOBALS['phpgw']->common->formattime($i,'00');
+		$options[$i] = phpgwapi_datetime::formattime($i,'00');
 	}
 	create_select_box('work day starts on','workdaystarts',$options,
 		'This defines the start of your dayview. Events before this time, are shown above the dayview.<br />This time is also used as a default starttime for new events.');

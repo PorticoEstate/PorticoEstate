@@ -14,6 +14,11 @@
 
 	/* $Id: class.uicalendar.inc.php,v 1.148 2006/12/28 04:28:01 skwashd Exp $ */
 
+	/*
+	* Import required classes class
+	*/
+	import_class('phpgwapi.datetime');	
+	
 	class uicalendar
 	{
 		var $template;
@@ -3426,7 +3431,7 @@
 					$time = $day_start + ($slot-1) * 60 * $this->bo->prefs['calendar']['interval'];
 					$hour = date('H',$time);
 					$min  = date('i',$time);
-					$time = $GLOBALS['phpgw']->common->formattime($hour,$min);
+					$time = phpgwapi_datetime::formattime($hour,$min);
 
 ## by tb
 					$open_link = ($this->week_type != 'new') ? ' - ' : '';
