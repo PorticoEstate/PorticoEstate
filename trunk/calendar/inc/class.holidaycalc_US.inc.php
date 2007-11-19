@@ -13,7 +13,10 @@
 
   /* $Id: class.holidaycalc_US.inc.php,v 1.10 2005/05/15 06:57:37 skwashd Exp $ */
 
-class holidaycalc {
+phpgw::import_class('phpgwapi.datetime');
+
+class holidaycalc
+{
 
 	function calculate_date($holiday, &$holidays, $year, &$i)
 	{
@@ -22,7 +25,7 @@ class holidaycalc {
 		{
 			if($holiday['occurence'] != 99)
 			{
-				$dow = $GLOBALS['phpgw']->datetime->day_of_week($year,$holiday['month'],1);
+				$dow = phpgw_datetime::day_of_week($year,$holiday['month'],1);
 				$day = (((7 * $holiday['occurence']) - 6) + ((($holiday['dow'] + 7) - $dow) % 7));
 				$day += ($day < 1 ? 7 : 0);
 				// What is the point of this?  
@@ -31,7 +34,7 @@ class holidaycalc {
 
 				// Sometimes the 5th occurance of a weekday (ie the 5th monday)
 				// can spill over to the next month.  This prevents that.  
-				$ld = $GLOBALS['phpgw']->datetime->days_in_month($holiday['month'],$year);
+				$ld = phpgw_datetime::days_in_month($holiday['month'],$year);
 				if ($day > $ld)
 				{
 					return;
@@ -39,8 +42,8 @@ class holidaycalc {
 			}
 			else
 			{
-				$ld = $GLOBALS['phpgw']->datetime->days_in_month($holiday['month'],$year);
-				$dow = $GLOBALS['phpgw']->datetime->day_of_week($year,$holiday['month'],$ld);
+				$ld = phpgw_datetime::days_in_month($holiday['month'],$year);
+				$dow = phpgw_datetime::day_of_week($year,$holiday['month'],$ld);
 				$day = $ld - (($dow + 7) - $holiday['dow']) % 7 ;
 			}
 		}
@@ -49,11 +52,11 @@ class holidaycalc {
 			$day = $holiday['day'];
 			if($holiday['observance_rule'] == True)
 			{
-				$dow = $GLOBALS['phpgw']->datetime->day_of_week($year,$holiday['month'],$day);
+				$dow = phpgw_datetime::day_of_week($year,$holiday['month'],$day);
 				// This now calulates Observed holidays and creates a new entry for them.
-				if($dow == 0)
+				if ( $dow == 0 )
 				{
-					$i++;
+					++$i;
 					$holidays[$i]['locale'] = $holiday['locale'];
 					$holidays[$i]['name'] = $holiday['name'].' (Observed)';
 					$holidays[$i]['day'] = $holiday['day'] + 1;
@@ -63,9 +66,9 @@ class holidaycalc {
 					$holidays[$i]['date'] = mktime(0,0,0,$holiday['month'],$day+1,$year);
 					$holidays[$i]['obervance_rule'] = 0;
 				}
-				elseif($dow == 6)
+				else if ( $dow == 6 )
 				{
-					$i++;
+					++$i;
 					$holidays[$i]['locale'] = $holiday['locale'];
 					$holidays[$i]['name'] = $holiday['name'].' (Observed)';
 					$holidays[$i]['day'] = $holiday['day'] - 1;
@@ -77,7 +80,7 @@ class holidaycalc {
 				}
 			}
 		}
-		$date = mktime(0,0,0,$holiday['month'],$day,$year);
+		$date = mktime(0, 0, 0, $holiday['month'], $day, $year);
 
 		return $date;
 	}

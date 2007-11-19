@@ -11,19 +11,20 @@
 
 	/* $Id: preferences.php,v 1.44 2005/05/15 06:57:37 skwashd Exp $ */
 
-	$phpgw_flags = Array(
-		'currentapp'			=>	'calendar',
-		'enable_nextmatchs_class'	=>	True,
-		'noheader'			=>	True,
-		'nonavbar'			=>	True,
-		'noappheader'			=>	True,
-		'noappfooter'			=>	True
+	$phpgw_info['flags'] = array
+	(
+		'currentapp'				=>	'calendar',
+		'enable_nextmatchs_class'	=>	true,
+		'noheader'					=>	true,
+		'nonavbar'					=>	true,
+		'noappheader'				=>	true,
+		'noappfooter'				=>	true
 	);
-
-	$phpgw_info['flags'] = $phpgw_flags;
 	include('../header.inc.php');
 
-	if ($submit)
+	phpgw::import_class('phpgwapi.sbox');
+
+	if ( phpgw::get_var('submit', 'bool', 'POST') )
 	{
 		$phpgw->preferences->read_repository();
 		$phpgw->preferences->add('calendar','weekdaystarts');
@@ -144,24 +145,10 @@
 		. '</select>';
 	display_item(lang('weekday starts on'),$str);
 
-	$t_workdaystarts[$phpgw_info['user']['preferences']['calendar']['workdaystarts']] = ' selected';
-	$str = '<select name="workdaystarts">';
-	for ($i=0; $i<24; $i++)
-	{
-		$str .= '<option value="'.$i.'"'.$t_workdaystarts[$i].'>'
-			. $phpgw->common->formattime($i,'00') . '</option>';
-	}
-	$str .= '</select>';
+	$str = phpgwapi_sbox::hour_text('workdaystarts', $phpgw_info['user']['preferences']['calendar']['workdaystarts']);
 	display_item(lang('work day starts on'),$str);
   
-	$t_workdayends[$phpgw_info['user']['preferences']['calendar']['workdayends']] = ' selected';
-	$str = '<select name="workdayends">';
-	for ($i=0; $i<24; $i++)
-	{
-		$str .= '<option value="'.$i.'"'.$t_workdayends[$i].'>'
-			. $phpgw->common->formattime($i,'00') . '</option>';
-	}
-	$str .= '</select>';
+	$str = phpgwapi_sbox::hour_text('workdayends', $phpgw_info['user']['preferences']['calendar']['workdayends']);
 	display_item(lang('work day ends on'),$str);
 
 	$selected[$phpgw_info['user']['preferences']['calendar']['defaultcalendar']] = ' selected';

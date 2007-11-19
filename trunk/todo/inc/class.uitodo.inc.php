@@ -10,6 +10,10 @@
 	* @version $Id: class.uitodo.inc.php,v 1.26 2006/12/28 10:39:45 skwashd Exp $
 	*/
 
+	/*
+	* Import required classes
+	*/
+	phpgw::import_class('phpgwapi.sbox');
 
 	/**
 	* Todo user interface
@@ -59,7 +63,6 @@
 
 			$this->cats       = CreateObject('phpgwapi.categories');
 			$GLOBALS['phpgw']->categories = $this->cats;
-			$this->sbox       = CreateObject('phpgwapi.sbox');
 			$this->matrix     = CreateObject('phpgwapi.matrixview');
 			$this->account    = $GLOBALS['phpgw_info']['user']['account_id'];
 			$this->t          = CreateObject('phpgwapi.Template',$GLOBALS['phpgw']->common->get_tpl_dir('todo'));
@@ -517,8 +520,8 @@
 			(
 				'cat_list'			=> $this->cats->formatted_list('select','all',$cat_id,'True'),
 				'todo_list'			=> $this->formatted_todo($parent),
-				'pri_list'			=> $this->sbox->getPriority('values[pri]'),
-				'stat_list'			=> $this->sbox->getPercentage('values[status]',0),
+				'pri_list'			=> phpgwapi_sbox::getPriority('values[pri]'),
+				'stat_list'			=> phpgwapi_sbox::getPercentage('values[status]',0),
 				'user_list'			=> $this->formatted_user($assigned,'accounts'),
 				'group_list'		=> $this->formatted_user($assigned_group,'groups'),
 				'lang_selfortoday'	=> lang('or: select for today:'),
@@ -527,6 +530,7 @@
 				'lang_reset'		=> lang('Clear form'),
 				'edithandle'		=> '',
 				'addhandle'			=> '',
+				//FIXME move this to sbox2 a control
 				'start_select_date'	=> $GLOBALS['phpgw']->common->dateformatorder($this->sbox->getYears('values[syear]',$values['syear']),
 										$this->sbox->getMonthText('values[smonth]',$values['smonth']),$this->sbox->getDays('values[sday]',$values['sday'])),
 				'end_select_date'	=> $GLOBALS['phpgw']->common->dateformatorder($this->sbox->getYears('values[eyear]',$values['eyear']),
@@ -693,8 +697,8 @@
 			$this->t->set_var('descr',$GLOBALS['phpgw']->strip_html($values['descr']));
 			$this->t->set_var('title',$GLOBALS['phpgw']->strip_html($values['title']));
 
-			$this->t->set_var('pri_list',$this->sbox->getPriority('values[pri]',$values['pri']));
-			$this->t->set_var('stat_list',$this->sbox->getPercentage('values[status]',$values['status']));
+			$this->t->set_var('pri_list', phpgwapi_sbox::getPriority('values[pri]',$values['pri']));
+			$this->t->set_var('stat_list', phpgwapi_sbox::getPercentage('values[status]',$values['status']));
 			$this->t->set_var('user_list',$this->formatted_user($this->botodo->format_assigned($values['assigned']),'accounts'));
 			$this->t->set_var('group_list',$this->formatted_user($this->botodo->format_assigned($values['assigned_group']),'groups'));
 
@@ -711,6 +715,7 @@
 				$values['syear'] = date('Y',$values['sdate']);
 			}
 
+			// FIXME move to sbox as a control
 			$this->t->set_var('start_select_date',$GLOBALS['phpgw']->common->dateformatorder($this->sbox->getYears('values[syear]',$values['syear']),
 										$this->sbox->getMonthText('values[smonth]',$values['smonth']),$this->sbox->getDays('values[sday]',$values['sday'])));
 
@@ -727,6 +732,7 @@
 				$values['eyear'] = date('Y',$values['edate']);
 			}
 
+			// FIXME move to sbox as a control
 			$this->t->set_var('end_select_date',$GLOBALS['phpgw']->common->dateformatorder($this->sbox->getYears('values[eyear]',$values['eyear']),
 										$this->sbox->getMonthText('values[emonth]',$values['emonth']),$this->sbox->getDays('values[eday]',$values['eday'])));
 

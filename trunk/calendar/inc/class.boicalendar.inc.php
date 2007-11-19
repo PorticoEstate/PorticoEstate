@@ -12,6 +12,8 @@
 
 /* $Id: class.boicalendar.inc.php,v 1.36 2006/12/08 11:37:54 sigurdne Exp $ */
 
+phpgw::import_class('phpgwapi.datetime');
+
 define('FOLD_LENGTH',75);
 
 define('VEVENT',1);
@@ -1592,11 +1594,6 @@ class boicalendar
 									)
 							)
 					);
-
-		if(!is_object($GLOBALS['phpgw']->datetime))
-		{
-			$GLOBALS['phpgw']->datetime = createobject('phpgwapi.datetimefunctions');
-		}
 	}
 
 	function set_var(&$event, $type, $value)
@@ -3388,7 +3385,7 @@ class boicalendar
 		// time limit should be controlled elsewhere
 		@set_time_limit(0);
 
-		$gmt_offset = date('O',$GLOBALS['phpgw']->datetime->users_localtime);  // offset to GMT
+		$gmt_offset = date('O', phpgw_datetime::user_localtime() );  // offset to GMT
 		$offset_mins = intval(substr($gmt_offset, 1, 2)) * 60 + intval(substr($gmt_offset, 3, 2));
 
 		$users_email = ExecMethod('phpgwapi.contacts.get_email', $GLOBALS['phpgw_info']['user']['person_id']);
@@ -3495,7 +3492,7 @@ class boicalendar
 			{
 				if(isset($ical['event'][$i][$i_datevar]))
 				{
-					$temp_time = $so_event->maketime($ical['event'][$i][$i_datevar]) + $GLOBALS['phpgw']->datetime->tz_offset;
+					$temp_time = $so_event->maketime($ical['event'][$i][$i_datevar]) + phpgwapi_datetime::user_timezone();
 					@reset($date_array);
 					while(list($key,$var) = each($date_array))
 					{
@@ -4226,7 +4223,7 @@ class boicalendar
 					&& (isset($event['recur_enddate']['mday']) && $event['recur_enddate']['mday'] != 0)
 					&& (isset($event['recur_enddate']['year']) && $event['recur_enddate']['year'] != 0))
 				{
-					$recur_mktime = $so_event->maketime($event['recur_enddate']) - $GLOBALS['phpgw']->datetime->tz_offset;
+					$recur_mktime = $so_event->maketime($event['recur_enddate']) - phpgwapi_datetime::user_timezone();
 					$str .= ';UNTIL='.date('Ymd\THis\Z',$recur_mktime);
 				}
 				$this->parse_value($ical_event,'rrule',$str,'vevent');

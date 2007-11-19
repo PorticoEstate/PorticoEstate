@@ -14,26 +14,23 @@
 
 	/* $Id: index.php,v 1.51 2006/11/10 13:34:30 sigurdne Exp $ */
 
-	$GLOBALS['phpgw_info']['flags'] = Array
-		(
-			'currentapp'	=> 'calendar',
-			'noheader'	=> True,
-			'nonavbar'	=> True,
-			'noappheader'	=> True,
-			'noappfooter'	=> True,
-			'nofooter'	=> True
-		);
+	$GLOBALS['phpgw_info']['flags'] = array
+	(
+		'currentapp'	=> 'calendar',
+		'noheader'	=> True,
+		'nonavbar'	=> True,
+		'noappheader'	=> True,
+		'noappfooter'	=> True,
+		'nofooter'	=> True
+	);
 	include('../header.inc.php');
 
-	if ( !isset($GLOBALS['phpgw']->datetime) || !is_object($GLOBALS['phpgw']->datetime) )
-	{
-		$GLOBALS['phpgw']->datetime = CreateObject('phpgwapi.datetimefunctions');
-	}
+	phpgw::import_class('phpgwapi.datetimefunctions');
 	
 	$cal = createObject('calendar.uicalendar');
 	$cal->index(array
-		(
+	(
 			'menuaction'	=> 'calendar.uicalendar.index',
-			'date'		=> date('Ymd',$GLOBALS['phpgw']->datetime->users_localtime)
-		));
+			'date'		=> date('Ymd', phpgwapi_datetime::user_localtime() )
+	));
 ?>

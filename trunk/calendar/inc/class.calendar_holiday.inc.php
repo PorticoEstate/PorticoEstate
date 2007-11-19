@@ -20,13 +20,11 @@ class calendar_holiday
 	var $holidays = Array();
 	var $index = Array();
 	var $users = Array();
-	var $datetime;
 
 	function calendar_holiday($owner='')
 	{
 		global $phpgw, $phpgw_info;
 
-		$this->datetime = CreateObject('phpgwapi.datetimefunctions');
 		$this->db = $phpgw->db;
 		if(@$phpgw_info['user']['preferences']['common']['country'])
 		{
@@ -201,7 +199,7 @@ class calendar_holiday
 			$c = $i;
 			$phpgw_info['user']['preferences']['common']['country'] = $this->holidays[$i]['locale'];
 			$holidaycalc = CreateObject('calendar.holidaycalc');
-			$this->holidays[$i]['date'] = $holidaycalc->calculate_date($this->holidays[$i], $this->holidays, $this->year, $this->datetime, $c);
+			$this->holidays[$i]['date'] = $holidaycalc->calculate_date($this->holidays[$i], $this->holidays, $this->year, $c);
 			unset($holidaycalc);
 			if($c != $i)
 			{

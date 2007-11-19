@@ -15,7 +15,8 @@
 	}
 
 	$GLOBALS['phpgw_info'] = array();
-	$GLOBALS['phpgw_info']['flags'] = array(
+	$GLOBALS['phpgw_info']['flags'] = array
+	(
 		'noheader' => True,
 		'nonavbar' => True,
 		'currentapp' => 'home',
@@ -121,21 +122,19 @@
 	$files_in_docroot = (isset($newsettings['files_dir']))? in_docroot($newsettings['files_dir']) : false ;
 	if ( phpgw::get_var('submit', 'string', 'POST') && is_array($newsettings) && !$files_in_docroot)
 	{
-		
-		$datetime = CreateObject('phpgwapi.datetimefunctions');
+		phpgw::import_class('phpgwapi.datetime');
 		switch (intval($newsettings['daytime_port']))
 		{
 			case 13:
-				$newsettings['tz_offset'] = $datetime->getntpoffset();
+				$newsettings['tz_offset'] = phpgwapi_datetime::getntpoffset();
 				break;
 			case 80:
-				$newsettings['tz_offset'] = $datetime->gethttpoffset();
+				$newsettings['tz_offset'] = phpgwapi_datetime::gethttpoffset();
 				break;
 			default:
-				$newsettings['tz_offset'] = $datetime->getbestguess();
+				$newsettings['tz_offset'] = phpgwapi_datetime::getbestguess();
 				break;
 		}
-		unset($datetime);
 
 		print_debug('TZ_OFFSET', $newsettings['tz_offset']);
 
