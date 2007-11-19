@@ -18,18 +18,27 @@
 	* @package phpgwapi
 	* @subpackage contacts
 	*/
-	class country
+	class phpgwapi_country
 	{
 
 		/**
 		* @var array $continent_array a list of continents
 		*/
-		var $continent_array = array();
+		public static $continent_array = array();
+		(
+			'africa'		=> 'Africa',
+			'antarctica'	=> 'Antarctica',
+			'asia'			=> 'Asia',
+			'australia'		=> 'Australia',
+			'europe'		=> 'Europe',
+			'northamerica'	=> 'North America',
+			'southamerica'	=> 'South America'
+		);
 
 		/**
 		* @var array $country_array list of ISO 3166 country codes
 		*/
-		var $country_array = array
+		public static $country_array = array
 		(
 			'  '	=> 'Select One',
 			'AF'	=> 'AFGHANISTAN',
@@ -279,43 +288,28 @@
 		);
 
 		/**
-		* @constructor
-		*/
-		function country()
-		{
-			$this->continent_array = array
-			(
-				'africa'		=> lang('africa'),
-				'antarctica'	=> lang('antarctica'),
-				'asia'			=> lang('asia'),
-				'australia'		=> lang('australia'),
-				'europe'		=> lang('europe'),
-				'northamerica'	=> lang('northamerica'),
-				'southamerica'	=> lang('southamerica')
-			);
-		}
-
-		/**
-		* Create a select box filled with countries
+		* Translate the list of countries
 		*
-		* @param string $selected the currently selected country
-		* @param string $name the name of the select box element in the form, used for both the id and name attributes
-		* @return string the html for a select box form element
+		* @return array list of translated country names iso_code => (translated) official name
 		*/
-		function form_select($selected,$name='')
+		public static function get_translated_list()
 		{
-			if($name=='')
+			static $translated_list = null;
+			if ( is_null($traslated_list) )
 			{
-				$name = 'country';
+				 $translated_list = array();
+				 foreach ( phpgwapi_country::$countries as $code => $name )
+				 {
+				 	$translated = lang($name);
+					if ( $translated == "{$name}*" )
+					{
+						$translated = $name;
+					}
+					$translated_list[$code] = $translated;
+				 }
+				 asort($translated_list;
 			}
-			$str = "<select name=\"$name\" id=\"$name\">\n";
-			reset($this->country_array);
-			while(list($key,$value) = each($this->country_array))
-			{
-				$str .= ' <option value="'.$key.'"'.($selected == $key?' selected="selected"':'').'>'.$value.'</option>'."\n";
-			}
-			$str .= '</select>'."\n";
-			return $str;
+			return $translated_list;
 		}
 
 		/**
@@ -326,9 +320,9 @@
 		*/
 		function get_full_name($selected)
 		{
-			if ( isset($this->country_array[$selected]) )
+			if ( isset(self::$country_array[$selected]) )
 			{
-				return($this->country_array[$selected]);
+				return(self::$country_array[$selected]);
 			}
 			return '';
 		}
@@ -344,12 +338,12 @@
 		{
 			$GLOBALS['phpgw']->xslttpl->add_file('countries');
 
-			foreach($this->continent_array as $cname => $ctitle)
+			foreach(self::continent_array as $cname => $ctitle)
 			{
 				$carray[] = array
 				(
 					'continent_name' 	=> $cname,
-					'continent_title'	=> $ctitle,
+					'continent_title'	=> lang($ctitle),
 					'selected'			=> $cname == $selected ? 'selected' : ''
 				);
 			}
@@ -373,7 +367,7 @@
 		{
 			$GLOBALS['phpgw']->xslttpl->add_file('countries');
 
-			foreach($this->country_array as $ccode => $cname)
+			foreach(self::$country_array as $ccode => $cname)
 			{
 				$carray[] = array
 				(
