@@ -35,10 +35,12 @@
 
 //_debug_array($GLOBALS['phpgw_info']['navbar']);
 
+		$sidecontent = isset($GLOBALS['phpgw_info']['user']['preferences']['common']['sidecontent']) && $GLOBALS['phpgw_info']['user']['preferences']['common']['sidecontent'] ? $GLOBALS['phpgw_info']['user']['preferences']['common']['sidecontent'] : 'sidebox';
 
 		foreach($GLOBALS['phpgw_info']['navbar'] as $app => $app_data)
 		{
-			if ($app != 'home' && $app != 'preferences' && $app != 'about' && $app != 'logout')
+			if (($app != 'home' && $app != 'preferences' && $app != 'about' && $app != 'logout')
+				|| ($sidecontent != 'sidebox' && $sidecontent != 'javamenu'))
 			{
 				$item = array
 					(
@@ -109,22 +111,25 @@
 		$GLOBALS['phpgw']->template->set_var($var);
 		$GLOBALS['phpgw']->template->pfp('out','navbar_header');
 
-		$menu_title = lang('General Menu');
-
-		$file[] = array('text' => 'Home',
-				'url' => $GLOBALS['phpgw_info']['navbar']['home']['url']);
-		if ( isset($GLOBALS['phpgw_info']['navbar']['preferences']))
+		if($sidecontent == 'sidebox' || $sidecontent == 'javamenu')
 		{
-			$file[] = array ('text' => 'Preferences',
+			$menu_title = lang('General Menu');
+
+			$file[] = array('text' => 'Home',
+					'url' => $GLOBALS['phpgw_info']['navbar']['home']['url']);
+			if ( isset($GLOBALS['phpgw_info']['navbar']['preferences']))
+			{
+				$file[] = array ('text' => 'Preferences',
 					'url' => $GLOBALS['phpgw_info']['navbar']['preferences']['url'] 
 							. '#' . $GLOBALS['phpgw_info']['flags']['currentapp']);
-		}
-		$file[] = array ('text' => 'About %1', 'url' => $GLOBALS['phpgw_info']['navbar']['about']['url']);
-		$file[] = array ('text' => 'Logout', 'url' => $GLOBALS['phpgw_info']['navbar']['logout']['url']);
+			}
+			$file[] = array ('text' => 'About %1', 'url' => $GLOBALS['phpgw_info']['navbar']['about']['url']);
+			$file[] = array ('text' => 'Logout', 'url' => $GLOBALS['phpgw_info']['navbar']['logout']['url']);
 
-		display_sidebox('',$menu_title,$file);
+			display_sidebox('',$menu_title,$file);
 		
-		$GLOBALS['phpgw']->hooks->single('sidebox_menu',$GLOBALS['phpgw_info']['flags']['currentapp']);
+			$GLOBALS['phpgw']->hooks->single('sidebox_menu',$GLOBALS['phpgw_info']['flags']['currentapp']);
+		}
 
 		$GLOBALS['phpgw']->template->pparse('out','navbar_footer');
 
