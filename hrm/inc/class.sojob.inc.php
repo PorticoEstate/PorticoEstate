@@ -18,7 +18,13 @@
 
 	class hrm_sojob
 	{
-		function hrm_sojob()
+		/**
+		* @var array $move_child the children to be moved
+		* @internal I don't think this is really needed - skwashd nov07
+		*/
+		private $move_child = array();
+
+		public function __construct()
 		{
 			$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->account	= $GLOBALS['phpgw_info']['user']['account_id'];
@@ -35,39 +41,29 @@
 		{
 			if(is_array($data))
 			{
-				if ($data['start'])
-				{
-					$start=$data['start'];
-				}
-				else
-				{
-					$start=0;
-				}
-				$query		= (isset($data['query'])?$data['query']:'');
-				$sort		= (isset($data['sort'])?$data['sort']:'DESC');
-				$order		= (isset($data['order'])?$data['order']:'');
-				$allrows	= (isset($data['allrows'])?$data['allrows']:'');
+				$start		= isset($data['start']) && $data['start'] ? $data['start'] : 0;
+				$query		= isset($data['query']) ? $data['query'] : '';
+				$sort		= isset($data['sort']) && $data['sort'] == 'ASC' ? $data['sort'] : 'DESC';
+				$order		= isset($data['order']) ? $data['order'] : '';
+				$allrows	= isset($data['allrows']) ? $data['allrows'] : '';
 			}
 
+			$ordermethod = ' order by name asc';
 			if ($order)
 			{
 				$ordermethod = " order by $order $sort";
 
-			}
-			else
-			{
-				$ordermethod = ' order by name asc';
 			}
 
 			$table = 'phpgw_hrm_job';
 
 			$parent_select = ' WHERE job_level =0';
 
+			$where = '';
+			$querymethod = '';
 			if($query)
 			{
-				$query = ereg_replace("'",'',$query);
-				$query = ereg_replace('"','',$query);
-
+				$query = $this->db->db_addslashes($query);
 				$where = ' AND';
 				$querymethod = " name $this->like '%$query%'";
 			}
@@ -77,6 +73,7 @@
 			$this->db->query($sql . $parent_select . $where . $querymethod . $ordermethod,__LINE__,__FILE__);
 			$this->total_records = $this->db->num_rows();
 
+			$jobs = array();
 			while ($this->db->next_record())
 			{
 				$jobs[] = array
@@ -97,29 +94,30 @@
 			}
 			else
 			{
-				unset($where);
+				$where = '';
 				$and = ' WHERE';
 			}
 			$num_jobs = count($jobs);
-			for ($i=0;$i < $num_jobs;$i++)
+			for ( $i = 0 ; $i < $num_jobs; ++$i )
 			{
-				$sub_select = $and . ' job_parent=' . $jobs[$i]['id'] . " AND job_level=" . ($jobs[$i]['level']+1);
+				$sub_select = $and . ' job_parent=' . (int) $jobs[$i]['id'] . " AND job_level=" . ++$jobs[$i]['level'];
 
 				$this->db->query($sql . $where . $querymethod . $sub_select . $ordermethod,__LINE__,__FILE__);
 
 				$this->total_records += $this->db->num_rows();
 
 				$subjobs = array();
-				$j = 0;
 				while ($this->db->next_record())
 				{
-					$subjobs[$j]['id']          = (int)$this->db->f('id');
-					$subjobs[$j]['owner']       = (int)$this->db->f('owner');
-					$subjobs[$j]['level']       = (int)$this->db->f('job_level');
-					$subjobs[$j]['parent']      = (int)$this->db->f('job_parent');
-					$subjobs[$j]['name']        = $this->db->f('name');
-					$subjobs[$j]['descr'] = $this->db->f('descr');
-					$j++;
+					$subjobs[] = array
+					(
+						'id'		=> (int)$this->db->f('id'),
+						'owner'		=> (int)$this->db->f('owner'),
+						'level'		=> (int)$this->db->f('job_level'),
+						'parent'	=> (int)$this->db->f('job_parent'),
+						'name'		=> $this->db->f('name'),
+						'descr'		=> $this->db->f('descr')
+					);
 				}
 
 				$num_subjobs = count($subjobs);
@@ -149,16 +147,15 @@
 				$max = $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
 				$max = $max + $start;
 
-				$k=0;
-				for($i=$start;$i<$max;++$i)
+				$sjobs = array();
+				foreach ( $jobs as $job )
 				{
-					if(isset($jobs[$i]) && is_array($jobs[$i]))
+					if ( isset($job) && is_array($job) )
 					{
-						$sjobs[$k] = $jobs[$i];
-						++$k;
+						$sjobs[] = $job;
 					}
 				}
-				if(is_array($sjobs))
+				if ( count($sjobs) )
 				{
 					$jobs = $sjobs;
 				}
@@ -166,6 +163,7 @@
 
 			$sql = "SELECT count(*) as quali_count,job_id FROM phpgw_hrm_quali GROUP BY job_id";
 			$this->db->query($sql,__LINE__,__FILE__);
+			$quali = array();
 			while ($this->db->next_record())
 			{
 				$quali[$this->db->f('job_id')]  = $this->db->f('quali_count');
@@ -173,6 +171,7 @@
 
 			$sql = "SELECT count(*) as task_count,job_id FROM phpgw_hrm_task GROUP BY job_id";
 			$this->db->query($sql,__LINE__,__FILE__);
+			$task = array();
 			while ($this->db->next_record())
 			{
 				$task[$this->db->f('job_id')]  = $this->db->f('task_count');
@@ -180,10 +179,10 @@
 
 			if (is_array($jobs))
 			{
-				for ($i=0;$i<count($jobs);$i++)
+				foreach ( $jobs as &$job )
 				{
-					$jobs[$i]['quali_count'] = (int)$quali[$jobs[$i]['id']];
-					$jobs[$i]['task_count']  = (int)$task[$jobs[$i]['id']];
+					$job['quali_count'] = (int) isset($quali[$job['id']]) ? $quali[$job['id']] : null;
+					$job['task_count']  = (int) isset($task[$job['id']]) ? $task[$job['id']] : null;
 				}
 
 			}
@@ -306,7 +305,7 @@
 			$num_qualifications = count($qualifications);
 			for ($i=0;$i < $num_qualifications;$i++)
 			{
-				$sub_select = ' AND quali_parent=' . $qualifications[$i]['quali_id'] . " AND is_parent = 0";
+				$sub_select = ' AND quali_parent=' . (int) $qualifications[$i]['quali_id'] . " AND is_parent = 0";
 
 				$this->db->query($sql . $querymethod . $sub_select . $ordermethod,__LINE__,__FILE__);
 
@@ -655,10 +654,9 @@
 				while ($this->job_parent)
 				{
 					$this->check_move_child();
-
 				}
 
-				if (is_array($this->move_child))
+				if ( count($this->move_child) )
 				{
 					foreach ($this->move_child as $child)
 					{
@@ -686,8 +684,20 @@
 			return $receipt;
 		}
 
-		function check_move_child()
+		/**
+		* ???
+		*
+		* @param bool $recursive is the function being called recursively
+		* @return a list of children to be moved
+		*/
+		private function check_move_child($recursive = false)
 		{
+			// New run so lets reset the data
+			if ( !$recursive )
+			{
+				$this->move_child = array();
+			}
+
 			$continue = false;
 			$move_child = array();
 			$this->db->query("SELECT id FROM phpgw_hrm_job  where job_parent=" . intval($this->job_parent),__LINE__,__FILE__);
@@ -708,7 +718,7 @@
 				foreach ($move_child as $parent_id)
 				{
 					$this->job_parent = $parent_id;
-					$this->check_move_child();
+					$this->check_move_child(true);
 				}
 
 			}
@@ -794,8 +804,8 @@
 
 		function select_job_list()
 		{
-			$job = $this->read(array('allrows'=>true));
-			return $job;
+			$params = array('allrows' => true);
+			return $this->read($params);
 		}
 
 		function reset_job_type_hierarchy()

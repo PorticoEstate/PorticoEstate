@@ -64,19 +64,6 @@
 			$menu['module'][$i]['statustext']		=	lang('Place');
 			$i++;
 
-			if ($GLOBALS['phpgw']->acl->check('run', PHPGW_ACL_READ, 'admin'))
-			{
-				if($sub=='ajax' )
-				{
-					$menu['module'][$i]['this']=True;
-				}
-			
-				$menu['module'][$i]['link']			=	$GLOBALS['phpgw']->link('/index.php', array('menuaction'=> $currentapp.'.sarissa_test.index'));
-				$menu['module'][$i]['name']			=	lang('Ajax');
-				$menu['module'][$i]['statustext']		=	lang('Ajax');
-				$i++;
-			}
-
 			$j=0;
 			if ($sub == 'job')
 			{

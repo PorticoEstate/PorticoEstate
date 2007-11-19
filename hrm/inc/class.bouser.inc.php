@@ -68,47 +68,13 @@
 				$this->use_session = True;
 			}
 
-			$start	= phpgw::get_var('start', 'int', 'REQUEST', 0);
-			$query	= phpgw::get_var('query');
-			$sort	= phpgw::get_var('sort');
-			$order	= phpgw::get_var('order');
-			$filter	= phpgw::get_var('filter', 'int');
-			$cat_id	= phpgw::get_var('cat_id', 'int');
-			$allrows= phpgw::get_var('allrows', 'bool');
-
-			if ($start)
-			{
-				$this->start=$start;
-			}
-			else
-			{
-				$this->start=0;
-			}
-
-			if(array_key_exists('query',$_POST) || array_key_exists('query',$_GET))
-			{
-				$this->query = $query;
-			}
-			if(array_key_exists('filter',$_POST) || array_key_exists('filter',$_GET))
-			{
-				$this->filter = $filter;
-			}
-			if(array_key_exists('sort',$_POST) || array_key_exists('sort',$_GET))
-			{
-				$this->sort = $sort;
-			}
-			if(array_key_exists('order',$_POST) || array_key_exists('order',$_GET))
-			{
-				$this->order = $order;
-			}
-			if(array_key_exists('cat_id',$_POST) || array_key_exists('cat_id',$_GET))
-			{
-				$this->cat_id = $cat_id;
-			}
-			if ($allrows)
-			{
-				$this->allrows = $allrows;
-			}
+			$this->start	= phpgw::get_var('start', 'int', 'REQUEST', 0);
+			$this->query	= phpgw::get_var('query');
+			$this->sort		= phpgw::get_var('sort');
+			$this->order	= phpgw::get_var('order');
+			$this->filter	= phpgw::get_var('filter', 'int');
+			$this->cat_id	= phpgw::get_var('cat_id', 'int');
+			$this->allrows	= phpgw::get_var('allrows', 'bool');
 		}
 
 
@@ -135,8 +101,16 @@
 
 		function read()
 		{
-			$account_info = $this->so->read(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
-											'allrows'=>$this->allrows));
+			$params = array
+			(
+				'start'		=> $this->start,
+				'query'		=> $this->query,
+				'sort'		=> $this->sort,
+				'order'		=> $this->order,
+				'allrows'	=>$this->allrows
+			);
+
+			$account_info = $this->so->read($params);
 			$this->total_records = $this->so->total_records;
 			return $account_info;
 		}

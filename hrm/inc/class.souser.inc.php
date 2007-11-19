@@ -19,8 +19,7 @@
 	class hrm_souser
 	{
 		var $grants;
-		var $db;
-		var $db2;
+		private $db;
 		var $account;
 
 		function hrm_souser()
@@ -29,7 +28,6 @@
 			$this->account		= $GLOBALS['phpgw_info']['user']['account_id'];
 			$this->bocommon	= CreateObject('hrm.bocommon');
 			$this->db           	= $this->bocommon->new_db();
-			$this->db2           	= $this->bocommon->new_db();
 
 			$this->acl		= CreateObject('phpgwapi.acl');
 			$this->grants		= $this->acl->get_grants('hrm','.user');
@@ -42,72 +40,25 @@
 		{
 			if(is_array($data))
 			{
-				$start		= isset($data['start']) && $data['start'] ? $data['start']:'0';
-				$query		= isset($data['query']) ? $data['query']:'';
-				$sort		= isset($data['sort']) && $data['sort'] ? $data['sort']:'DESC';
-				$order		= isset($data['order']) ? $data['order']:'';
-				$allrows	= isset($data['allrows']) ? $data['allrows']:'';
+				$start		= isset($data['start']) && $data['start'] ? $data['start'] : 0;
+				$query		= isset($data['query']) ? $data['query'] : '';
+				$sort		= isset($data['sort']) && $data['sort'] == 'ASC' ? $data['sort']:'DESC';
+				$order		= isset($data['order']) ? $data['order'] : '';
+				$allrows	= isset($data['allrows']) && $data['allrows'] ? $data['allrows'] : false;
 			}
-			$filtermethod = '';
-			$querymethod = '';
-/*			$filtermethod = ' AND ( account_id=' . $this->account;
-			if (is_array($this->grants))
+
+			if ( !isset($GLOBALS['phpgw']->accounts) || !is_object($GLOBALS['phpgw']->accounts) )
 			{
-				$grants = $this->grants;
-				while (list($user) = each($grants))				{
-					$public_user_list[] = $user;				}
-				reset($public_user_list);
-				$filtermethod .= " OR ( account_id IN(" . implode(',',$public_user_list) . ")))";
+				$GLOBALS['phpgw']->accounts = createObject('phpgwapi.accounts');
 			}
-			else
-			{
-				$filtermethod .= ' )';
-			}
+			$accounts =& $GLOBALS['phpgw']->accounts;
 			
-*/
-			if ($order)
+			$account_info = $accounts->get_list('accounts', $start, $sort, $order, $query);
+			$this->total_records = $accounts->total;
+
+			foreach ( $account_info as &$account )
 			{
-				$ordermethod = " order by $order $sort";
-
-			}
-			else
-			{
-				$ordermethod = ' order by account_lastname asc';
-			}
-
-			$table = 'phpgw_accounts';
-
-			if($query)
-			{
-				$query = ereg_replace("'",'',$query);
-				$query = ereg_replace('"','',$query);
-
-				$querymethod = " AND account_firstname $this->like '%$query%' or account_lastname $this->like '%$query%'";
-			}
-
-			$sql = "SELECT * FROM $table WHERE account_type = 'u' AND account_status = 'A' $filtermethod $querymethod";
-
-			$this->db2->query($sql,__LINE__,__FILE__);
-			$this->total_records = $this->db2->num_rows();
-
-			if(!$allrows)
-			{
-				$this->db->limit_query($sql . $ordermethod,$start,__LINE__,__FILE__);
-			}
-			else
-			{
-				$this->db->query($sql . $ordermethod,__LINE__,__FILE__);
-			}
-
-			while ($this->db->next_record())
-			{
-				$account_info[] = array
-				(
-					'account_id'		=> $this->db->f('account_id'),
-					'account_firstname'	=> stripslashes($this->db->f('account_firstname')),
-					'account_lastname'	=> stripslashes($this->db->f('account_lastname')),
-					'grants'		=> isset($this->grants[$this->db->f('account_id')])?$this->grants[$this->db->f('account_id')]:''
-				);
+				$account['grants'] = isset($this->grants[$account['account_id']]) ? $this->grants[$account['account_id']] : 0;
 			}
 
 			return $account_info;
@@ -117,24 +68,27 @@
 		function read_single_training($id)
 		{
 
-			$sql = 'SELECT * FROM phpgw_hrm_training where id=' . intval($id);
+			$sql = 'SELECT * FROM phpgw_hrm_training where id=' . (int) $id;
 
 			$this->db->query($sql,__LINE__,__FILE__);
 
 			if ($this->db->next_record())
 			{
-				$values['id']		= $id;
-				$values['descr']	= stripslashes($this->db->f('descr'));
-				$values['user_id']	= $this->db->f('user_id');
-				$values['cat_id']	= $this->db->f('category');
-				$values['title']	= stripslashes($this->db->f('title'));
-				$values['start_date']	= $this->db->f('start_date');
-				$values['end_date']	= $this->db->f('end_date');
-				$values['reference']	= stripslashes($this->db->f('reference'));
-				$values['skill']	= $this->db->f('skill');
-				$values['place_id']	= $this->db->f('place_id');
-				$values['entry_date']	= $this->db->f('entry_date');
-				$values['owner']	= $this->db->f('owner');
+				$values = array
+				(
+					'id'			=> $id,
+					'descr'			=> $this->db->f('descr', true),
+					'user_id'		=> $this->db->f('user_id'),
+					'cat_id'		=> $this->db->f('category'),
+					'title'			=> $this->db->f('title', true),
+					'start_date'	=> $this->db->f('start_date'),
+					'end_date'		=> $this->db->f('end_date'),
+					'reference'		=> $this->db->f('reference', true),
+					'skill'			=> $this->db->f('skill'),
+					'place_id'		=> $this->db->f('place_id'),
+					'entry_date'	=> $this->db->f('entry_date'),
+					'owner'			=> $this->db->f('owner')
+				);
 			}
 			return $values;
 		}
@@ -166,7 +120,7 @@
 			}
 			else
 			{
-				$ordermethod = 'ORDER BY start_date asc';
+				$ordermethod = ' ORDER BY start_date asc';
 			}
 
 			$sql = "SELECT phpgw_hrm_training.id as training_id,phpgw_hrm_training.title as title, phpgw_hrm_training.start_date,"
@@ -178,15 +132,17 @@
 
 			$this->db->query($sql . $ordermethod ,__LINE__,__FILE__);
 
+			$training = array();
 			while ($this->db->next_record())
-			{				$training[] = array
+			{
+				$training[] = array
 				(
 					'training_id'	=> $this->db->f('training_id'),
 					'start_date'	=> $this->db->f('start_date'),
-					'end_date'	=> $this->db->f('end_date'),
-					'title'	=> stripslashes($this->db->f('title')),
-					'place'	=> stripslashes($this->db->f('place')),
-					'category'=> stripslashes($this->db->f('category'))
+					'end_date'		=> $this->db->f('end_date'),
+					'title'			=> $this->db->f('title', true),
+					'place'			=> $this->db->f('place', true),
+					'category'		=> $this->db->f('category', true)
 				);
 
 			}
@@ -293,8 +249,10 @@
 
 		function delete_training($user_id,$id)
 		{
+			$user_id = (int) $user_id;
+			$id = (int) $id;
 
-			$this->db->query('DELETE FROM phpgw_hrm_training WHERE id='  . intval($id) . ' AND user_id='  . intval($user_id),__LINE__,__FILE__);
+			$this->db->query("DELETE FROM phpgw_hrm_training WHERE id={$id} AND user_id={$user_id}", __LINE__, __FILE__);
 		}
 
 		function select_category_list()
