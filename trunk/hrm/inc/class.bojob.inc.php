@@ -25,6 +25,11 @@
 		var $order;
 		var $cat_id;
 
+		/**
+		* @var bool return all rows for a search - not a limited subset
+		*/
+		public $allrows;
+
 		var $public_functions = array
 		(
 			'read'			=> True,
@@ -53,7 +58,7 @@
 			)
 		);
 
-		function hrm_bojob($session=False)
+		public function __construct($session=False)
 		{
 			$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->so 		= CreateObject('hrm.sojob');
@@ -65,47 +70,13 @@
 				$this->use_session = True;
 			}
 
-			$start	= phpgw::get_var('start', 'int', 'REQUEST', 0);
-			$query	= phpgw::get_var('query');
-			$sort	= phpgw::get_var('sort');
-			$order	= phpgw::get_var('order');
-			$filter	= phpgw::get_var('filter', 'int');
-			$cat_id	= phpgw::get_var('cat_id', 'int');
-			$allrows= phpgw::get_var('allrows', 'bool');
-
-			if ($start)
-			{
-				$this->start=$start;
-			}
-			else
-			{
-				$this->start=0;
-			}
-
-			if(array_key_exists('query',$_POST) || array_key_exists('query',$_GET))
-			{
-				$this->query = $query;
-			}
-			if(array_key_exists('filter',$_POST) || array_key_exists('filter',$_GET))
-			{
-				$this->filter = $filter;
-			}
-			if(array_key_exists('sort',$_POST) || array_key_exists('sort',$_GET))
-			{
-				$this->sort = $sort;
-			}
-			if(array_key_exists('order',$_POST) || array_key_exists('order',$_GET))
-			{
-				$this->order = $order;
-			}
-			if(array_key_exists('cat_id',$_POST) || array_key_exists('cat_id',$_GET))
-			{
-				$this->cat_id = $cat_id;
-			}
-			if ($allrows)
-			{
-				$this->allrows = $allrows;
-			}
+			$this->start	= phpgw::get_var('start', 'int');
+			$this->query	= phpgw::get_var('query');
+			$this->sort		= phpgw::get_var('sort');
+			$this->order	= phpgw::get_var('order');
+			$this->filter	= phpgw::get_var('filter', 'int');
+			$this->cat_id	= phpgw::get_var('cat_id', 'int');
+			$this->allrows	= phpgw::get_var('allrows', 'bool');
 		}
 
 
@@ -124,7 +95,7 @@
 			$this->start	= $data['start'];
 			$this->query	= $data['query'];
 			$this->filter	= $data['filter'];
-			$this->sort	= $data['sort'];
+			$this->sort		= $data['sort'];
 			$this->order	= $data['order'];
 			$this->cat_id	= $data['cat_id'];
 		}
@@ -132,8 +103,15 @@
 
 		function read()
 		{
-			$account_info = $this->so->read(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
-											'allrows'=>$this->allrows));
+			$params = array
+			(
+				'start'		=> $this->start,
+				'query' 	=> $this->query,
+				'sort'		=> $this->sort,
+				'order' 	=> $this->order,
+				'allrows'	=> $this->allrows
+			);
+			$account_info = $this->so->read($params);
 			$this->total_records = $this->so->total_records;
 			return $account_info;
 		}
@@ -333,8 +311,9 @@
 
 		function select_job_list($selected='')
 		{
-			$jobs= $this->so->select_job_list();
-			while (is_array($jobs) && list(,$job) = each($jobs))
+			$jobs = $this->so->select_job_list();
+			$job_list = array();
+			foreach ( $jobs as $job )
 			{
 				if ($job['level'] > 0)
 				{

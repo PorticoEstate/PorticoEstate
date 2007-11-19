@@ -26,6 +26,16 @@
 		var $sub;
 		var $currentapp;
 
+		/**
+		* ???
+		*/
+		private $cat_id;
+
+		/**
+		* ???
+		*/
+		private $filter;
+
 		var $public_functions = array
 		(
 			'index'  			=> True,
@@ -47,10 +57,10 @@
 			'print_pdf'			=> True
 		);
 
-		function hrm_uijob()
+		public function __construct()
 		{
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = True;
-			$this->currentapp			= $GLOBALS['phpgw_info']['flags']['currentapp'];
+			$this->currentapp			= 'hrm';
 			$this->nextmatchs			= CreateObject('phpgwapi.nextmatchs');
 			$this->account				= $GLOBALS['phpgw_info']['user']['account_id'];
 			$this->bo				= CreateObject('hrm.bojob',true);
@@ -74,7 +84,9 @@
 				'start'		=> $this->start,
 				'query'		=> $this->query,
 				'sort'		=> $this->sort,
-				'order'		=> $this->order
+				'order'		=> $this->order,
+				'cat_id'	=> $this->cat_id,
+				'filter'	=> $this->filter
 			);
 			$this->bo->save_sessiondata($data);
 		}
@@ -89,6 +101,12 @@
 				return;
 			}
 
+			if ( !isset($GLOBALS['phpgw']->js) || !is_object($GLOBALS['phpgw']->js) )
+			{
+				$GLOBALS['phpgw']->js = createObject('phpgwapi.javascript');
+			}
+			$GLOBALS['phpgw']->js->validate_file('base', 'check', 'hrm');
+
 			$GLOBALS['phpgw']->xslttpl->add_file(array('job','nextmatchs','menu',
 										'search_field'));
 
@@ -98,7 +116,8 @@
 
 			$job_info = $this->bo->read();
 
-			while (is_array($job_info) && list(,$entry) = each($job_info))
+			$content = array();
+			foreach ( $job_info as $entry )
 			{
 
 				if ($entry['level'] > 0)
@@ -186,12 +205,12 @@
 
 			$link_data = array
 			(
-				'menuaction'	=> $this->currentapp.'.uijob.index',
-				'sort'		=> $this->sort,
-				'order'		=> $this->order,
-				'cat_id'	=> $this->cat_id,
-				'filter'	=> $this->filter,
-				'query'		=> $this->query
+				'menuaction'	=> 'hrm.uijob.index',
+				'sort'			=> $this->sort,
+				'order'			=> $this->order,
+				'cat_id'		=> $this->cat_id,
+				'filter'		=> $this->filter,
+				'query'			=> $this->query
 			);
 
 			$msgbox_data = $this->bocommon->msgbox_data($receipt);
@@ -199,25 +218,24 @@
 			$data = array
 			(
 				'msgbox_data'					=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
-				'links'						=> $links,
+				'links'							=> $links,
 				'allow_allrows'					=> True,
-				'allrows'					=> $this->allrows,
+				'allrows'						=> $this->allrows,
 				'start_record'					=> $this->start,
 				'record_limit'					=> $record_limit,
 				'num_records'					=> count($job_info),
 				'all_records'					=> $this->bo->total_records,
-				'link_url'					=> $GLOBALS['phpgw']->link('/index.php',$link_data),
-				'img_path'					=> $GLOBALS['phpgw']->common->get_image_path('phpgwapi','default'),
-				'lang_searchfield_statustext'			=> lang('Enter the search string. To show all entries, empty this field and press the SUBMIT button again'),
-				'lang_searchbutton_statustext'			=> lang('Submit the search string'),
-				'query'						=> $this->query,
+				'link_url'						=> $GLOBALS['phpgw']->link('/index.php',$link_data),
+				'img_path'						=> $GLOBALS['phpgw']->common->get_image_path('phpgwapi','default'),
+				'lang_searchfield_statustext'	=> lang('Enter the search string. To show all entries, empty this field and press the SUBMIT button again'),
+				'lang_searchbutton_statustext'	=> lang('Submit the search string'),
+				'query'							=> $this->query,
 				'lang_search'					=> lang('search'),
 				'table_header'					=> $table_header,
-				'values'					=> $content,
+				'values'						=> $content,
 				'table_add_job'					=> $table_add,
 				'lang_select_all'				=> lang('Select All'),
-				'img_check'					=> $GLOBALS['phpgw']->common->get_image_path($this->currentapp).'/check.png',
-				'check_source'					=> './'.$this->currentapp.'/inc/check.js',
+				'img_check'						=> $GLOBALS['phpgw']->common->get_image_path($this->currentapp).'/check.png',
 				'lang_print'					=> lang('print'),
 				'print_action'					=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> $this->currentapp.'.uijob.print_pdf')),
 			);
@@ -1088,9 +1106,11 @@
 
 		function edit_job()
 		{
-			$id		= phpgw::get_var('id', 'int');
+			$id			= phpgw::get_var('id', 'int');
 			$parent_id	= phpgw::get_var('parent_id', 'int');
 			$values		= phpgw::get_var('values');
+			$type		= ''; //FIXME this only supresses a notice
+			$type_id	= ''; //FIXME this only supresses a notice
 
 			if(!$id)
 			{
@@ -1112,6 +1132,10 @@
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('job'));
 
+			// Initialise some variables to prevent notices
+			$receipt = array();
+			$action = null;
+
 			if (is_array($values))
 			{
 				if ($values['save'] || $values['apply'])
@@ -1128,9 +1152,9 @@
 						$action='edit';
 					}
 
-					if(!$receipt['error'])
+					if( !isset($receipt['error']) || !$receipt['error'] )
 					{
-						$receipt = $this->bo->save_job($values,$action);
+						$receipt = $this->bo->save_job($values, $action);
 						$id = $receipt['id'];
 
 						if ($values['save'])
@@ -1685,6 +1709,9 @@
 		
 		function hierarchy()
 		{
-			return;
+			$GLOBALS['phpgw_info']['flags']['xslt_app'] = false;
+			$GLOBALS['phpgw']->common->phpgw_header(true);
+			echo '<div class="msg">FIXME: Implement something here!</div>';
+			$GLOBALS['phpgw']->common->phpgw_footer();
 		}
 	}

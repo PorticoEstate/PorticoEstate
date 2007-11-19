@@ -39,8 +39,6 @@
 	</xsl:template>
 	
 	<xsl:template match="list">		
-			<xsl:variable name="check_source"><xsl:value-of select="check_source"/></xsl:variable>
-			<SCRIPT LANGUAGE="JavaScript" SRC="{$check_source}"></SCRIPT>
 		<xsl:call-template name="menu"/> 
 		<table width="100%" cellpadding="2" cellspacing="2" align="center">
 			<xsl:choose>

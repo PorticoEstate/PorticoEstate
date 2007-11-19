@@ -21,14 +21,13 @@
 
 		function hrm_socategory()
 		{
-			$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
-			$this->account	= $GLOBALS['phpgw_info']['user']['account_id'];
+			$this->currentapp	= 'hrm';
+			$this->account		= $GLOBALS['phpgw_info']['user']['account_id'];
 			$this->bocommon		= CreateObject('hrm.bocommon');
-			$this->db           	= $this->bocommon->new_db();
-			$this->db2           	= $this->bocommon->new_db();
+			$this->db			= $this->bocommon->new_db();
 
-			$this->join			= $this->bocommon->join;
-			$this->like			= $this->bocommon->like;
+			$this->join			=& $this->bocommon->join;
+			$this->like			=& $this->bocommon->like;
 
 		}
 
@@ -78,8 +77,12 @@
 
 			$sql = "SELECT * FROM $table $querymethod";
 
-			$this->db2->query($sql,__LINE__,__FILE__);
-			$this->total_records = $this->db2->num_rows();
+			$this->db->query("SELECT COUNT(id) AS cnt FROM $table $querymethod", __LINE__, __FILE__);
+			$this->total_records = 0;
+			if ( $this->db->next_record() )
+			{
+				$this->total_records = $this->db->f('cnt');
+			}
 
 			if(!$allrows)
 			{
@@ -172,7 +175,7 @@
 
 		function delete($id,$type,$type_id)
 		{
-			$table = $this->select_table($type,$type_id);
+			$table = $this->select_table($type, $type_id);
 
 			$this->db->query("DELETE FROM $table WHERE id='" . $id . "'",__LINE__,__FILE__);
 		}
@@ -183,12 +186,13 @@
 
 			$this->db->query("SELECT id, descr FROM $table ORDER BY id ");
 
-			$i = 0;
-			while ($this->db->next_record())
+			while ( $this->db->next_record() )
 			{
-				$categories[$i]['id']				= $this->db->f('id');
-				$categories[$i]['name']				= stripslashes($this->db->f('descr'));
-				$i++;
+				$categories = array
+				(
+					'id'	=> $this->db->f('id'),
+					'name'	=> $this->db->f('descr', true)
+				);
 			}
 			return $categories;
 		}		

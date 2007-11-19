@@ -24,22 +24,21 @@
 		var $sort;
 		var $order;
 		var $sub;
-		var $currentapp;
+		var $currentapp = 'hrm';
 
 		var $public_functions = array
 		(
-			'index'  => True,
-			'view'   => True,
-			'training'=> True,
-			'edit'   => True,
-			'delete' => True,
-			'view_cv' => True
+			'index'		=> true,
+			'view'		=> true,
+			'training'	=> true,
+			'edit'		=> true,
+			'delete'	=> true,
+			'view_cv'	=> true
 		);
 
 		function hrm_uiuser()
 		{
-			$GLOBALS['phpgw_info']['flags']['xslt_app'] = True;
-			$this->currentapp			= $GLOBALS['phpgw_info']['flags']['currentapp'];
+			$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
 			$this->nextmatchs			= CreateObject('phpgwapi.nextmatchs');
 			$this->account				= $GLOBALS['phpgw_info']['user']['account_id'];
 			$this->bo					= CreateObject('hrm.bouser',False);
@@ -77,7 +76,8 @@
 
 			$account_info = $this->bo->read();
 
-			while (is_array($account_info) && list(,$entry) = each($account_info))
+			$content = array();
+			foreach ( $account_info as $entry )
 			{
 				if($entry['grants'])
 				{
@@ -181,6 +181,7 @@
 			$this->save_sessiondata();
 		}
 
+		// FIXME this really belongs in the bo layer
 		function get_user_data($user_id)
 		{
 			$account = CreateObject('phpgwapi.accounts',$user_id,'u');
@@ -188,7 +189,8 @@
 			$membership = $account->membership($user_id);
 			$contacts = CreateObject('phpgwapi.contacts');
 
-			$qcols = array(
+			$qcols = array
+			(
 				'n_given'    => 'n_given',
 				'n_family'   => 'n_family',
 				'tel_work'   => 'tel_work',
@@ -204,7 +206,7 @@
 			$this->boaddressbook  = CreateObject('addressbook.boaddressbook');
 			$comms = $this->boaddressbook->get_comm_contact_data($fields[0]['contact_id']);
 
-			if(is_array($comms))
+			if(is_array($comms) && isset($comms[$fields[0]['contact_id']]) )
 			{
 				$fields[0]['tel_work'] = $comms[$fields[0]['contact_id']]['work phone'];			
 				$fields[0]['tel_home'] = $comms[$fields[0]['contact_id']]['home phone'];
@@ -215,11 +217,13 @@
 			if(!$account_info['person_id'])
 			{
 				$sfields = rawurlencode(serialize($fields[0]));
-				$contact_link   = $GLOBALS['phpgw']->link('/index.php',array(
-											'menuaction'	=> 'addressbook.uiaddressbook.add_person',
-											'entry'		=> $sfields,
-											)
-									);
+				$contact_link   = $GLOBALS['phpgw']->link('/index.php', 
+					array
+					(
+						'menuaction'	=> 'addressbook.uiaddressbook.add_person',
+						'entry'			=> $sfields,
+					)
+				);
 			}
 			else
 			{
@@ -234,6 +238,7 @@
 
 			$prefs_user = $this->bocommon->create_preferences('email',$user_id);
 
+			$email_work = '';
 			if($fields[0]['email'] || $prefs_user['address'])
 			{
 				if(isset($prefs_user['address']) && $prefs_user['address'])
@@ -246,20 +251,22 @@
 				}
 			}
 
+			$email_home = '';
 			if($fields[0]['email_home'])
 			{
 				$email_home = $fields[0]['email_home'];
 			}
 
-			$qcols_extra = array(
+			$qcols_extra = array
+			(
 				array('name' =>lang('first name'), 'type' => 'link', 'link_value' =>$contact_link),
 				array('name' =>lang('last name'), 'type' => 'text'),
 				array('name' =>lang('work phone'), 'type' => 'text'),
 				array('name' =>lang('home phone'), 'type' => 'text'),
 				array('name' =>lang('cellular phone'), 'type' => 'text'),
 				array('name' =>lang('title'), 'type' => 'text'),
-				array('name' =>lang('work email'), 'type' => 'mail', 'link_value' =>$email_work),
-				array('name' =>lang('home email'), 'type' => 'mail', 'link_value' =>$email_home),
+				array('name' =>lang('work email'), 'type' => 'mail', 'link_value' => $email_work),
+				array('name' =>lang('home email'), 'type' => 'mail', 'link_value' => $email_home),
 			);
 
 			if(is_array($fields))
@@ -305,7 +312,8 @@
 
 			$dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
 
-			while (is_array($training) && list(,$entry) = each($training))
+			$content = array();
+			foreach ( $training as $entry )
 			{
 				if($entry['start_date'])
 				{
@@ -825,9 +833,9 @@
 				return;
 			}
 
-			$GLOBALS['phpgw_info']['flags'][noheader] = True;
-			$GLOBALS['phpgw_info']['flags'][nofooter] = True;
-			$GLOBALS['phpgw_info']['flags']['xslt_app'] = False;
+			$GLOBALS['phpgw_info']['flags']['noheader'] = true;
+			$GLOBALS['phpgw_info']['flags']['nofooter'] = true;
+			$GLOBALS['phpgw_info']['flags']['xslt_app'] = false;
 
 			if($user_id)
 			{
