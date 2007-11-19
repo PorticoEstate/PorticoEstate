@@ -104,9 +104,9 @@ class uiaddressbook
 		'java_script'	=> true,
 	);
 
-	function uiaddressbook()
+	function __construct()
 	{
-		$GLOBALS['phpgw']->country	= CreateObject('phpgwapi.country');
+		//$GLOBALS['phpgw']->country	= CreateObject('phpgwapi.country'); // commented out as it is never used - skwashd nov07
 		$GLOBALS['phpgw']->browser	= CreateObject('phpgwapi.browser');
 		$this->nextmatchs			= CreateObject('phpgwapi.nextmatchs');
 		$this->custom_fields		= CreateObject('addressbook.uifields');
