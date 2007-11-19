@@ -144,3 +144,12 @@
 
 	create_check_box('Show helpmessages by default','show_help',
 		'Should this help messages shown up always, when you enter the preferences or only on request.');
+
+	$menu_formats = array(
+		'sidebox' => lang('Sidebox'),
+		'javamenu' => lang('Javamenu'),
+		'no_sidecontent' => lang('No SideContent')
+	);
+	create_select_box('SideContent','sidecontent',$menu_formats,
+		'Do you want your menues as sidecontent');
+
