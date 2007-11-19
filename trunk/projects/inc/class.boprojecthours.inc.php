@@ -13,7 +13,7 @@
 	/*
 	* Import required classes class
 	*/
-	import_class('phpgwapi.datetime');
+	phpgw::import_class('phpgwapi.datetime');
 
 	class boprojecthours
 	{
