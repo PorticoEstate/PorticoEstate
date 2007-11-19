@@ -478,7 +478,7 @@
 	{
 		if ($GLOBALS['phpgw_info']['flags']['currentapp'] == 'login')
 		{
-			if (@$_POST['login'] != '')
+			if ( isset($_POST['login']) && $_POST['login'] != '')
 			{
 				list($login) = explode("@",$_POST['login']);
 				print_debug('LID',$login,'app');
@@ -486,7 +486,6 @@
 				print_debug('User ID',$login_id,'app');
 				$GLOBALS['phpgw']->accounts->accounts($login_id);
 				$GLOBALS['phpgw']->preferences->preferences($login_id);
-				$GLOBALS['phpgw']->datetime = createObject('phpgwapi.datetimefunctions');
 			}
 		}
 	/**************************************************************************\
@@ -540,8 +539,6 @@
 			unset($redirect_data);
 			unset($sessid);
 		}
-
-		$GLOBALS['phpgw']->datetime = createObject('phpgwapi.datetimefunctions');
 
 		/* A few hacker resistant constants that will be used throught the program */
 		define('PHPGW_TEMPLATE_DIR', ExecMethod('phpgwapi.phpgw.common.get_tpl_dir', 'phpgwapi'));
@@ -617,10 +614,6 @@
 			}
 		}
 
-		if(!is_object($GLOBALS['phpgw']->datetime))
-		{
-			$GLOBALS['phpgw']->datetime = createObject('phpgwapi.datetimefunctions');
-		}
 		$GLOBALS['phpgw']->applications->read_installed_apps();	// to get translated app-titles
 		
 		/*************************************************************************\
