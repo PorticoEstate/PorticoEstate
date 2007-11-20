@@ -25,10 +25,8 @@
 	$parms = Array(
 		       'menuaction'=> 'addressbook.uiaddressbook.index',
 		       'section' => 'Persons',
-		       'cat_id' => get_var('cat_id')
+		       'cat_id' => phpgw::get_var('cat_id')
 		       );
 
 	$GLOBALS['phpgw']->redirect_link('/index.php',$parms);
-//	Header('Location: '.$GLOBALS['phpgw']->link('/index.php',$parms));
-//	$GLOBALS['phpgw']->common->phpgw_footer();
 ?>
