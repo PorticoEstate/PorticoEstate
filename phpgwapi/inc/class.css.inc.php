@@ -1,7 +1,7 @@
 <?php
 	/**
 	* CSS support class
-	* @copyright Copyright (C) 2005 Free Software Foundation, Inc http://www.fsf.org/
+	* @copyright Copyright (C) 2005 - 2007 Free Software Foundation, Inc http://www.fsf.org/
 	* @license http://www.fsf.org/licenses/gpl.html GNU General Public License
 	* @package phpgwapi
 	* @subpackage gui
@@ -13,7 +13,7 @@
 	*
 	* Only instanstiate this class using:
 	* <code>
-	*  if(!@is_object($GLOBALS['phpgw']->css))
+	*  if ( !isset($GLOBALS['phpgw']->css) || !is_object($GLOBALS['phpgw']->css) )
 	*  {
 	*    $GLOBALS['phpgw']->css = createObject('phpgwapi.css');
 	*  }
@@ -28,7 +28,7 @@
 	* @subpackage gui
 	* @uses template
 	*/
-	class css
+	class phpgwapi_css
 	{
 		/**
 		* @var array list of validated files to be included in the head section of a page
@@ -48,7 +48,7 @@
 		*
 		* Initialize the instance variables
 		*/
-		function css()
+		function __construct()
 		{
 		}
 		
@@ -64,10 +64,10 @@
 		{
 			$links = '';
 						
+			$links .= "<!--CSS Imports from phpGW css class -->\n";
+
 			if(!empty($this->files) && is_array($this->files))
 			{
-				$links = "<!--CSS Imports from phpGW css class -->\n";
-				
 				foreach($this->files as $app => $tplset)
 				{
 					if(!empty($tplset) && is_array($tplset))
@@ -81,7 +81,7 @@
 
 									$links .= '<link rel="stylesheet" type="text/css" href="'
 								 	. $GLOBALS['phpgw_info']['server']['webserver_url']
-								 	. '/' . $app . '/templates/' . $tpl . '/css/' . $file . '.css" />' . "\n";									
+								 	. "/{$app}/templates/{$tpl}/css/{$file}.css\" />\n";									
 								}
 							}
 						}
@@ -89,13 +89,11 @@
 				}				
 			}
 			
-			if(!empty($this->external_files) && is_array($this->external_files)) 
+			if ( !empty($this->external_files) && is_array($this->external_files) )
 			{
-				$links = "<!--CSS Imports from phpGW css class -->\n";
-				
 				foreach($this->external_files as $file)
 				{					
-					$links .=  '<link href="' . $file . '" type="text/css"  rel="stylesheet">' . "\n";
+					$links .=  "<link href=\"{$GLOBALS['phpgw_info']['server']['webserver_url']}/{$file}\" type=\"text/css\"  rel=\"stylesheet\">\n";
 				}
 			}
 			
@@ -116,7 +114,7 @@
 				$this->files[$app][$GLOBALS['phpgw_info']['user']['preferences']['common']['template_set']][$file] = True;
 				return True;
 			}
-			elseif(is_readable(PHPGW_INCLUDE_ROOT . "/$app/templates/base/css/$file.css"))
+			else if ( is_readable(PHPGW_INCLUDE_ROOT . "/$app/templates/base/css/$file.css") )
 			{
 				$this->files[$app]['base'][$file] = True;
 				return True;
@@ -125,13 +123,15 @@
 		}
 		
 		/**
-		 * Adds css file to external files. Does no validating
-		 * @parma string $path Full path to css file to be included 
-		 * @returns true
+		 * Adds css file to external files.
+		 *
+		 * @param string $file Full path to css file relative to root of phpgw install 
 		 */
-		
-		function add_external_file($path) {
-			$this->external_files[] = $path;
+		function add_external_file($file)
+		{
+			if ( is_file(PHPGW_SERVER_ROOT . $file) )
+			{
+				$this->external_files[] = $file;
+			}
 		}
 	}
-?>
