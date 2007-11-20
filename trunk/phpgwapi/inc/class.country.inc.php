@@ -24,7 +24,7 @@
 		/**
 		* @var array $continent_array a list of continents
 		*/
-		public static $continent_array = array();
+		public static $continent_array = array
 		(
 			'africa'		=> 'Africa',
 			'antarctica'	=> 'Antarctica',
@@ -40,7 +40,6 @@
 		*/
 		public static $country_array = array
 		(
-			'  '	=> 'Select One',
 			'AF'	=> 'AFGHANISTAN',
 			'AL'	=> 'ALBANIA',
 			'DZ'	=> 'ALGERIA',
@@ -295,10 +294,10 @@
 		public static function get_translated_list()
 		{
 			static $translated_list = null;
-			if ( is_null($traslated_list) )
+			if ( is_null($translated_list) )
 			{
 				 $translated_list = array();
-				 foreach ( phpgwapi_country::$countries as $code => $name )
+				 foreach ( phpgwapi_country::$country_array as $code => $name )
 				 {
 				 	$translated = lang($name);
 					if ( $translated == "{$name}*" )
@@ -307,7 +306,7 @@
 					}
 					$translated_list[$code] = $translated;
 				 }
-				 asort($translated_list;
+				 asort($translated_list);
 			}
 			return $translated_list;
 		}
