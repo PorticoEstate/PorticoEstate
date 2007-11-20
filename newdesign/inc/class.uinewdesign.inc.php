@@ -71,16 +71,16 @@
 		function index() {
 			$output = "html";
 
-			if(!is_object($GLOBALS['phpgw']->css))
+			if ( !isset($GLOBALS['phpgw']->css) || !is_object($GLOBALS['phpgw']->css) )
 			{
 				$GLOBALS['phpgw']->css = createObject('phpgwapi.css');
 			}
 
-			$GLOBALS['phpgw']->css->add_external_file($GLOBALS['phpgw_info']['server']['webserver_url'] . '/newdesign/js/yahoo/yui/build/assets/skins/sam/calendar.css');
-			$GLOBALS['phpgw']->css->add_external_file($GLOBALS['phpgw_info']['server']['webserver_url'] . '/newdesign/js/yahoo/yui/build/assets/skins/sam/tabview.css');
+			$GLOBALS['phpgw']->css->add_external_file('newdesign/js/yahoo/yui/build/assets/skins/sam/calendar.css');
+			$GLOBALS['phpgw']->css->add_external_file('newdesign/js/yahoo/yui/build/assets/skins/sam/tabview.css');
 
 			//function validate_file($package, $file, $app='phpgwapi')
-			if(!isset($GLOBALS['phpgw']->js) || !is_object($GLOBALS['phpgw']->js))
+			if ( !isset($GLOBALS['phpgw']->js) || !is_object($GLOBALS['phpgw']->js) )
 			{
 				$GLOBALS['phpgw']->js = CreateObject('phpgwapi.javascript');
 			}
