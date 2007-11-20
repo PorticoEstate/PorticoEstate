@@ -40,7 +40,7 @@
 		 */
 		include(PHPGW_API_INC.'/class.common.inc.php');
 
-		$common = new common;
+		$common = new phpgwapi_common;
 		// this is not used
 		//$sep = $common->filesystem_separator();
 	}

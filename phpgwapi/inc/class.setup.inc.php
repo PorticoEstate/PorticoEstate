@@ -59,13 +59,11 @@
 			$ConfigDomain = phpgw::get_var('ConfigDomain', 'string', 'REQUEST', $form_domain);
 
 			$GLOBALS['phpgw_info']['server']['db_type'] = $GLOBALS['phpgw_domain'][$ConfigDomain]['db_type'];
-
+			$GLOBALS['phpgw_info']['server']['db_host']	= $GLOBALS['phpgw_domain'][$ConfigDomain]['db_host'];
+			$GLOBALS['phpgw_info']['server']['db_name'] = $GLOBALS['phpgw_domain'][$ConfigDomain]['db_name'];
+			$GLOBALS['phpgw_info']['server']['db_user'] = $GLOBALS['phpgw_domain'][$ConfigDomain]['db_user'];
+			$GLOBALS['phpgw_info']['server']['db_pass'] = $GLOBALS['phpgw_domain'][$ConfigDomain]['db_pass'];
 			$this->db	  = createObject('phpgwapi.db');
-			$this->db->Host     = $GLOBALS['phpgw_domain'][$ConfigDomain]['db_host'];
-			$this->db->Type     = $GLOBALS['phpgw_domain'][$ConfigDomain]['db_type'];
-			$this->db->Database = $GLOBALS['phpgw_domain'][$ConfigDomain]['db_name'];
-			$this->db->User     = $GLOBALS['phpgw_domain'][$ConfigDomain]['db_user'];
-			$this->db->Password = $GLOBALS['phpgw_domain'][$ConfigDomain]['db_pass'];
 
 			$GLOBALS['ConfigDomain'] = $ConfigDomain;
 		}
