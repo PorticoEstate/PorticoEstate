@@ -204,7 +204,7 @@
 		{
 			$pos = strpos($this->selected_option_list_name, '[]');
 			$var_option_name = $pos?substr($this->selected_option_list_name,0,$pos):$this->selected_option_list_name;
-			return $this->diff_arrays(array_keys($this->old_option_list), get_var($var_option_name));
+			return $this->diff_arrays(array_keys($this->old_option_list), phpgw::get_var($var_option_name));
 		}
 		
 		/**

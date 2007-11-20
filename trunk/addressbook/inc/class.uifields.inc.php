@@ -227,14 +227,14 @@
 				$GLOBALS['phpgw']->common->phpgw_exit();
 			}
 
-			$field      = stripslashes($_POST['field'] ? $_POST['field'] : $_GET['field']);
-			$field_name = stripslashes(get_var('field_name'));
-			$apply_for  = stripslashes(get_var('apply_for'));
+			$field      = phpgw::get_var('field');
+			$field_name = phpgw::get_var('field_name');
+			$apply_for  = phpgw::get_var('apply_for');
 
-			$start      = $_POST['start'] ? $_POST['start'] : $_GET['start'];
-			$query      = $_POST['query'] ? $_POST['query'] : $_GET['query'];
-			$sort       = $_POST['sort']  ? $_POST['sort']  : $_GET['sort'];
-			$submit     = $_POST['submit'];
+			$start      = phpgw::get_var('start');
+			$query      = phpgw::get_var('query');
+			$sort       = phpgw::get_var('sort');
+			$submit     = phpgw::get_var('submit', 'bool', 'POST');
 
 			if (!$field)
 			{
@@ -343,9 +343,9 @@
 				$GLOBALS['phpgw']->common->phpgw_exit();
 			}
 
-			$field = stripslashes(get_var('field'));
-			$field_name = stripslashes(get_var('field_name'));
-			$apply_for  = stripslashes(get_var('apply_for'));
+			$field = phpgw::get_var('field');
+			$field_name = phpgw::get_var('field_name');
+			$apply_for  = phpgw::get_var('apply_for');
 
 			$start	= (int) isset($_REQUEST['start']) ? $_REQUEST['start'] : 0;
 			$start	= (int) isset($_REQUEST['start']) ? $_REQUEST['start'] : 0;

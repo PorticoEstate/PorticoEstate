@@ -15,6 +15,8 @@
 /* $Id: class.uiaddressbook.inc.php,v 1.80 2007/09/21 17:40:38 sigurdne Exp $ */
 
 
+phpgw::import_class('phpgwapi.datetime');
+
 class uiaddressbook
 {
 	var $contacts;
@@ -136,10 +138,6 @@ class uiaddressbook
 		$this->tab_extra			= lang('More data');
 
 		$this->_set_sessiondata();
-		if(!isset($GLOBALS['phpgw']->datetime) || !is_object($GLOBALS['phpgw']->datetime))
-		{
-			$GLOBALS['phpgw']->datetime = CreateObject('phpgwapi.datetime');
-		}
 	}
 
 	function _set_sessiondata()
@@ -1251,8 +1249,7 @@ class uiaddressbook
 		$userformat =& $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
 		if($userformat != $this->bo->bday_internformat)
 		{
-			$datetime =& $GLOBALS['phpgw']->datetime;
-			$fields['per_birthday'] = $datetime->convertDate($fields['per_birthday'], $this->bo->bday_internformat, $userformat);
+			$fields['per_birthday'] = phpgwapi_datetime::convertDate($fields['per_birthday'], $this->bo->bday_internformat, $userformat);
 		}
 		$bday = $this->jscal->input('entry[per_birthday]',$fields['per_birthday']);
 
@@ -1935,7 +1932,7 @@ class uiaddressbook
 		$this->entry = phpgw::get_var('entry');
 
 		$this->contact_id = phpgw::get_var('ab_id');
-		$this->owner = (int) isset($_REQUEST['owner']) ? $_REQUEST['owner'] : $this->owner;
+		$this->owner = phpgw::get_var('owner', 'int', 'REQUEST', $this->owner);
 		$this->referer = phpgw::get_var('referer');
 		$this->record_name = htmlentities(phpgw::get_var('record_name'), ENT_QUOTES, 'UTF-8');
 	}
@@ -2155,8 +2152,7 @@ class uiaddressbook
 				$userformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
 				if($userformat != $this->bo->bday_internformat)
 				{
-					$datetime =& $GLOBALS['phpgw']->datetime;
-					$entry['per_birthday'] = $datetime->convertDate($entry['per_birthday'], $userformat, $this->bo->bday_internformat);
+					$entry['per_birthday'] = phpgwapi_datetime::convertDate($entry['per_birthday'], $userformat, $this->bo->bday_internformat);
 				}
 
 				$this->record_name = htmlentities(stripslashes($entry['per_first_name'].
@@ -2803,8 +2799,6 @@ class uiaddressbook
 			$userformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
 			if($userformat != $this->bo->bday_internformat)
 			{
-				$datetime =& $GLOBALS['phpgw']->datetime;
-
 				$contacts['org_name'] = '<a href="' . $contacts['org_link'] . '">' 
 					. htmlentities($contacts['org_name'], ENT_QUOTES, 'UTF-8') . '</a>';
 				unset($contacts['org_link']);
@@ -2817,7 +2811,7 @@ class uiaddressbook
 						)
 						);
 
-				$contacts['per_birthday'] = $datetime->convertDate($contacts['per_birthday'], $this->bo->bday_internformat, $userformat);
+				$contacts['per_birthday'] = phpgwapi_datetime::convertDate($contacts['per_birthday'], $this->bo->bday_internformat, $userformat);
 			}
 		}
 		else if($contact_type == $this->tab_main_organizations)

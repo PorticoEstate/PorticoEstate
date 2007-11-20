@@ -291,26 +291,26 @@
 
 		function get_vars()
 		{
-			$this->entry = get_var('entry',array('get','post'));
+			$this->entry = phpgw::get_var('entry');
 
-			if(get_var($this->catalog_name.'_add_row',array('get','post')))
+			if ( phpgw::get_var($this->catalog_name.'_add_row') )
 			{
 				$this->action = 'insert';
 			}
-			elseif(get_var($this->catalog_name.'_update_row',array('get','post')))
+			else if ( phpgw::get_var($this->catalog_name.'_update_row') )
 			{
 				$this->action = 'update';
-				$this->key = (get_var($this->key_edit_name, array('get','post')));
+				$this->key = phpgw::get_var($this->key_edit_name);
 			}
-			elseif(get_var($this->catalog_name.'_del_row',array('get','post')))
+			else if ( phpgw::get_var($this->catalog_name.'_del_row') )
 			{
 				$this->action = 'delete';
-				$this->key = (get_var($this->catalog_name.'_del_row',array('get','post')));
+				$this->key = phpgw::get_var($this->catalog_name.'_del_row');
 			}
-			elseif(get_var($this->catalog_name.'_edit_row',array('get','post')))
+			else if ( phpgw::get_var($this->catalog_name.'_edit_row') )
 			{
 				$this->action = 'edit';
-				$this->key = (get_var($this->catalog_name.'_edit_row',array('get','post')));
+				$this->key = phpgw::get_var($this->catalog_name.'_edit_row');
 			}
 		}
 
