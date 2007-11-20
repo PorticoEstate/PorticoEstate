@@ -202,7 +202,7 @@
 					<xsl:value-of select="index_count"/>
 				</td>
 				<xsl:choose>
-					<xsl:when test="is_admin=16">
+					<xsl:when test="is_admin=1">
 						<td align="center">
 							<xsl:variable name="link_history"><xsl:value-of select="link_history"/></xsl:variable>
 							<a href="{$link_history}" onMouseover="window.status='{$lang_history_statustext}';return true;" onMouseout="window.status='';return true;"><xsl:value-of select="lang_history"/></a>

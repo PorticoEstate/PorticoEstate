@@ -87,8 +87,8 @@
 			$query				= phpgw::get_var('query');
 			$sort				= phpgw::get_var('sort');
 			$order				= phpgw::get_var('order');
-			$filter				= phpgw::get_var('filter', 'int');
-			$cat_id				= phpgw::get_var('cat_id', 'int');
+			$filter				= phpgw::get_var('filter');
+			$cat_id				= phpgw::get_var('cat_id');
 			$part_of_town_id	= phpgw::get_var('part_of_town_id', 'int');
 			$allrows			= phpgw::get_var('allrows', 'bool');
 
