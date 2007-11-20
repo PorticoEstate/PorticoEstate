@@ -76,3 +76,8 @@ thead
 	font-weight: bold;
 	text-align: center;
 }
+
+#content 
+{
+	margin: 0px 6px 20px 200px;
+}
