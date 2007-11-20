@@ -22,6 +22,22 @@
 	 */
 	include_once('../header.inc.php');
 
+
+
+	/**
+	 * Get application name
+	 * 
+	 * @return string Application name
+	 */
+	function check_app()
+	{
+		$app = phpgw::get_var('appname', 'string', 'GET', '');
+		if ( !$app || $app == 'preferences' )
+		{
+			return 'common';
+		}
+		return $app;
+	}
 	$appname = phpgw::get_var('appname', 'string', 'GET', 'preferences');
 
 	if ( phpgw::get_var('cancel', 'bool', 'POST') )
@@ -50,16 +66,6 @@
 	/* Make things a little easier to follow */
 	/* Some places we will need to change this if there in common */
 
-
-	/**
-	 * Get application name
-	 * 
-	 * @return string Application name
-	 */
-	function check_app()
-	{
-		return phpgw::get_var('appname', 'string', 'GET', 'common');
-	}
 
 	/**
 	 * Is the current value forced
