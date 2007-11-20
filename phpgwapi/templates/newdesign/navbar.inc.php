@@ -28,7 +28,7 @@
 		$GLOBALS['phpgw']->template->set_block('navbar','extra_blocks_footer','extra_blocks_footer');
 		$GLOBALS['phpgw']->template->set_block('navbar','navbar_footer','navbar_footer');
 
-		$var['img_root'] = $GLOBALS['phpgw_info']['server']['webserver_url'] . '/phpgwapi/templates/idots/images';
+		$var['img_root'] = $GLOBALS['phpgw_info']['server']['webserver_url'] . '/phpgwapi/templates/newdesign/images';
 
 		$applications = '';
 		$items = 0;
@@ -129,8 +129,7 @@
 		echo "<ul>";
 		foreach($GLOBALS['phpgw_info']['navbar'] as $app => $app_data)
 		{
-
-			$GLOBALS['phpgw']->hooks->single('sidebox_menu', $app_data['name']);
+			$GLOBALS['phpgw']->hooks->single('sidebox_menu', $app);
 		}
 		echo "</ul>";
 		echo "</div>";
@@ -246,7 +245,7 @@
 		$GLOBALS['phpgw']->template->set_file('footer', 'footer.tpl');
 		$var = array
 		(
-			'img_root'		=> $GLOBALS['phpgw_info']['server']['webserver_url'] . '/phpgwapi/templates/idots/images',
+			'img_root'		=> $GLOBALS['phpgw_info']['server']['webserver_url'] . '/phpgwapi/templates/newdesign/images',
 			'powered_by'	=> lang('Powered by phpGroupWare version %1', $GLOBALS['phpgw_info']['server']['versions']['phpgwapi']),
 			'version'		=> $GLOBALS['phpgw_info']['server']['versions']['phpgwapi']
 		);

@@ -47,14 +47,9 @@
 
 			}
 		</style>
-		<!-- Dependency source files -->
-	 	<script src = "/newdesign/js/yahoo/yahoo-dom-event.js" ></script>
-
-	 	<!-- TreeView source file -->
-	 	<!--  <script src = "/newdesign/js/yahoo/treeview-min.js" ></script>-->
-	 	 <script src="http://www.ragtek.org/forum/clientscript/yui/treeview.js"></script>
+		{javascript}
 		<script type="text/javascript">
-
+			//TODO Move me to an external JS file
 			var ultree;
 			(function() {
 			    function treeInit() {
@@ -75,7 +70,6 @@
 			})();
 
 		</script>
-		{javascript}
 	</head>
 	<body>
 <!-- END Head -->
