@@ -175,8 +175,8 @@
 
 		function get_vars()
 		{
-			$save = get_var('save', array('post', 'get'));
-			$cancel = get_var('cancel', array('post', 'get'));
+			$save = phpgw::get_var('save');
+			$cancel = phpgw::get_var('cancel');
 
 			if($save)
 			{
@@ -186,7 +186,7 @@
 			{
 				$this->action = 'cancel';
 			}
-			$this->selected_cat = get_var('all_cats', array('post', 'get'));
+			$this->selected_cat = phpgw::get_var('all_cats');
 		}
 	}
 ?>
