@@ -17,7 +17,12 @@
 		$_templates[$key] = $value['title'];
 	}
 
-	$_themes = phpgwapi_common::list_themes();
+	$_themes = array();
+	foreach ( phpgwapi_common::list_themes() as $theme )
+	{
+		$_themes[$theme] = $theme;
+	}
+
 
 	create_input_box('Max matches per page','maxmatchs',
 		'Any listing in phpGW will show you this number of entries or lines per page.<br>To many slow down the page display, to less will cost you the overview.','',3);
