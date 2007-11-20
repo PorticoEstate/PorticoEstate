@@ -134,9 +134,13 @@
 				$GLOBALS['phpgw']->template->set_var('edit','<a href="' . $GLOBALS['phpgw']->link('/index.php',array('menuaction'=>'admin.uiapplications.edit','app_name'=>urlencode($app['name']))) . '"> ' . lang('Edit') . ' </a>');
 				$GLOBALS['phpgw']->template->set_var('delete','<a href="' . $GLOBALS['phpgw']->link('/index.php',array('menuaction'=>'admin.uiapplications.delete','app_name'=>urlencode($app['name']))) . '"> ' . lang('Delete') . ' </a>');
 
-				if ($app['status'])
+				if ($app['status']==1)
 				{
 					$status = lang('Yes');
+				}
+				else if ($app['status']==2)
+				{
+					$status = lang('Hidden');
 				}
 				else
 				{
