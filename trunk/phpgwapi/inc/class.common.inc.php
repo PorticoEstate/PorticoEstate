@@ -22,7 +22,7 @@
 	* @package phpgwapi
 	* @subpackage utilities
 	*/
-	class common
+	class phpgwapi_common
 	{
 		/**
 		* An array with debugging info from the API
@@ -668,22 +668,30 @@
 		* Themes can either be css files like in HEAD (if the template has a css-directory) or ordinary .14 themes-files
 		* @return array List with available themes
 		*/
-		function list_themes()
+		public static function list_themes()
 		{
-			$tpl_dir = $this->get_tpl_dir('phpgwapi');
+			$tpl_dir = self::get_tpl_dir('phpgwapi');
+
+			$css_dir = "$tpl_dir/css";
+
 			$list = array();
-			if ($dh = @opendir($tpl_dir . SEP . 'css'))
+			if ( !is_dir($css_dir) )
+			{
+				return $list;
+			}
+
+			if ( $dh = opendir($css_dir) )
 			{
 				while ($file = readdir($dh))
 				{
-					if (eregi("\.css$",$file) && $file != 'base.css' && $file != 'login.css')
+					if (preg_match('/^[a-z0-9\-_]+\.css$/', $file) && $file != 'base.css' && $file != 'login.css')
 					{
-						$list[] = substr($file,0,strpos($file,'.'));
+						$list[] = substr($file, 0, strpos($file, '.') );
 					}
 				}
 				closedir($dh);
 			}
-			reset ($list);
+			sort($list);
 			return $list;
 		}
 
@@ -692,22 +700,24 @@
 		*
 		* @return array Alphabetically sorted list of available templates
 		*/
-		function list_templates()
+		public static function list_templates()
 		{
+			$ignore_list = array('.', '..', 'CVS', '.svn', 'default', 'phpgw_website', 'base');
+
+			$list = array();
+
 			$d = dir(PHPGW_SERVER_ROOT . '/phpgwapi/templates');
 			while ($entry=$d->read())
 			{
-				if ($entry != 'CVS' && $entry != '.' && $entry != '..' 
-					&& $entry != 'phpgw_website' && $entry != 'default'
-					&& $entry != 'base'
-					&& is_dir(PHPGW_SERVER_ROOT . '/phpgwapi/templates/' . $entry))
+				if ( !in_array($entry, $ignore_list)
+					&& is_dir(PHPGW_SERVER_ROOT . "/phpgwapi/templates/{$entry}"))
 				{
 					$list[$entry]['name'] = $entry;
-					$f = PHPGW_SERVER_ROOT . '/phpgwapi/templates/' . $entry . '/details.inc.php';
+					$f = PHPGW_SERVER_ROOT . "/phpgwapi/templates/{$entry}/details.inc.php";
 					if (file_exists ($f))
 					{
 						include($f);
-						$list[$entry]['title'] = 'Use '.$GLOBALS['phpgw_info']['template'][$entry]['title'].'interface';
+						$list[$entry]['title'] = "Use {$GLOBALS['phpgw_info']['template'][$entry]['title']}interface";
 					}
 					else
 					{
