@@ -8,17 +8,16 @@
 	* @version $Id: hook_settings.inc.php,v 1.15 2006/07/25 01:13:38 skwashd Exp $
 	*/
 
-	$templates = $GLOBALS['phpgw']->common->list_templates();
-	while (list($var,$value) = each($templates))
+	phpgw::import_class('phpgwapi.country');
+	phpgw::import_class('phpgwapi.common');
+
+	$_templates = array();
+	foreach ( phpgwapi_common::list_templates() as $key => $value)
 	{
-		$_templates[$var] = $templates[$var]['title'];
+		$_templates[$key] = $value['title'];
 	}
 
-	$themes = $GLOBALS['phpgw']->common->list_themes();
-	while (list(,$value) = each($themes))
-	{
-		$_themes[$value] = $value;
-	}
+	$_themes = phpgwapi_common::list_themes();
 
 	create_input_box('Max matches per page','maxmatchs',
 		'Any listing in phpGW will show you this number of entries or lines per page.<br>To many slow down the page display, to less will cost you the overview.','',3);
@@ -53,7 +52,8 @@
 	create_select_box('Time zone offset','tz_offset',$tz_offset,
 		'How many hours are you in front or after the timezone of the server.<br>If you are in the same time zone as the server select 0 hours, else select your locale date and time.');
 
-	$date_formats = array(
+	$date_formats = array
+	(
 		'm/d/Y' => 'm/d/Y',
 		'm-d-Y' => 'm-d-Y',
 		'm.d.Y' => 'm.d.Y',
@@ -78,8 +78,7 @@
 	create_select_box('Time format','timeformat',$time_formats,
 		'Do you prefer a 24 hour time format, or a 12 hour one with am/pm attached.');
 
-	$sbox = createobject('phpgwapi.sbox');
-	create_select_box('Country','country',$sbox->country_array,
+	create_select_box('Country','country', phpgwapi_country::get_translated_list(),
 		'In which country are you. This is used to set certain defaults for you.');
 	
 	$langs = $GLOBALS['phpgw']->translation->get_installed_langs();

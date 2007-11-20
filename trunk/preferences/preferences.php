@@ -13,7 +13,7 @@
 		'noheader'				=> true,
 		'noappheader'			=> true,
 		'nonavbar'				=> true,
-		'currentapp'			=> isset($_GET['appname']) ? $_GET['appname'] : '',
+		'currentapp'			=> isset($_GET['appname']) ? htmlspecialchars($_GET['appname']) : 'preferences',
 		'enable_nextmatchs'		=> true
 	);
 	
@@ -21,16 +21,18 @@
 	 * Include phpgroupware header
 	 */
 	include_once('../header.inc.php');
-	
-	if ( isset($_POST['cancel']) && $_POST['cancel'] )
+
+	$appname = phpgw::get_var('appname', 'string', 'GET', 'preferences');
+
+	if ( phpgw::get_var('cancel', 'bool', 'POST') )
 	{
-		Header('Location: ' . $GLOBALS['phpgw']->link('/preferences/index.php') . '#' . $_GET['appname']);
+		Header('Location: ' . $GLOBALS['phpgw']->link('/preferences/index.php') . "#$appname");
 		exit;
 	}
 	
-	$user    = get_var('user',Array('POST'));
-	$forced  = get_var('forced',Array('POST'));
-	$default = get_var('default',Array('POST'));
+	$user    = phpgw::get_var('user', 'string', 'POST');
+	$forced  = phpgw::get_var('forced', 'string', 'POST');
+	$default = phpgw::get_var('default', 'string', 'POST');
 
 	$t =& $GLOBALS['phpgw']->template;
 	$t->set_root( $GLOBALS['phpgw']->common->get_tpl_dir('preferences') );
@@ -40,7 +42,7 @@
 	$t->set_block('preferences','help_row','help_rowhandle');
 	$t->set_var(array('rowhandle' => '','help_rowhandle' => '','messages' => ''));
 	
-	if ($_GET['appname'] != 'preferences')
+	if ( $appname != 'preferences' )
 	{
 		$GLOBALS['phpgw']->translation->add_app('preferences');	// we need the prefs translations too
 	}
@@ -56,14 +58,7 @@
 	 */
 	function check_app()
 	{
-		if ($_GET['appname'] == 'preferences')
-		{
-			return 'common';
-		}
-		else
-		{
-			return $_GET['appname'];
-		}
+		return phpgw::get_var('appname', 'string', 'GET', 'common');
 	}
 
 	/**
@@ -505,14 +500,18 @@
 
 	$session_data = $GLOBALS['phpgw']->session->appsession('session_data','preferences');
 
-	$prefix = get_var('prefix',array('GET'),(isset($session_data['appname']) && $session_data['appname'] == $_GET['appname']) ? $session_data['prefix'] : '');
+	$prefix = phpgw::get_var('prefix', 'string', 'GET');
+	if ( !$prefix && (isset($session_data['appname']) && $session_data['appname'] == $_GET['appname']) )
+	{
+		$prefix = $session_data['prefix'];
+	}
 	
 	if (is_admin())
 	{
 		/* This is where we will keep track of our postion. */
 		/* Developers won't have to pass around a variable then */
 
-		$GLOBALS['type'] = get_var('type',Array('GET','POST'),$session_data['type']);
+		$GLOBALS['type'] = phpgw::get_var('type', 'string', 'REQUEST', $session_data['type']);
 
 		if (empty($GLOBALS['type']))
 		{
@@ -527,7 +526,7 @@
 	$show_help = true;
 	if ( isset($session_data['show_help']) 
 		&& $session_data['show_help'] != '' 
-		&& $session_data['appname'] == $_GET['appname'] )
+		&& $session_data['appname'] == $appname )
 	{
 		$show_help = $session_data['show_help'];
 	}
@@ -536,14 +535,15 @@
 		$show_help = !!$GLOBALS['phpgw_info']['user']['preferences']['common']['show_help'];
 	}
 
-	if ($toggle_help = get_var('toggle_help','POST'))
+	$toggle_help = phpgw::get_var('toggle_help', 'bool', 'POST');
+	if ( $toggle_help )
 	{
 		$show_help = !$show_help;
 	}
 	$has_help = 0;
 
 	$error = '';
-	if ( isset($_POST['submit']) && $_POST['submit'] )
+	if ( phpgw::get_var('submit', 'bool', 'POST') )
 	{
 		if ( !isset($session_data['notifys']) )
 		{
@@ -571,32 +571,33 @@
 			$GLOBALS['phpgw']->redirect_link('/preferences/index.php');
 		}
 		
-		if ($GLOBALS['type'] == 'user' && $_GET['appname'] == 'preferences' && (isset($user['show_help']) && $user['show_help'] != ''))
+		if ($GLOBALS['type'] == 'user' && $appname == 'preferences' && (isset($user['show_help']) && $user['show_help'] != ''))
 		{
 			$show_help = $user['show_help'];	// use it, if admin changes his help-prefs
 		}
 	}
-	$GLOBALS['phpgw']->session->appsession('session_data','preferences',array(
+	$GLOBALS['phpgw']->session->appsession('session_data','preferences',array
+	(
 		'type'      => $GLOBALS['type'],	// save our state in the app-session
 		'show_help' => $show_help,
 		'prefix'    => $prefix,
-		'appname'   => $_GET['appname']		// we use this to reset prefix on appname-change
+		'appname'   => $appname		// we use this to reset prefix on appname-change
 	));
 	// changes for the admin itself, should have immediate feedback ==> redirect
 	if ( !$error 
-		&& ( isset($_POST['submit']) && $_POST['submit'] )
+		&& ( phpgw::get_var('submit', 'bool', 'POST') )
 		&& $GLOBALS['type'] == 'user' 
-		&& $_GET['appname'] == 'preferences')
+		&& $appname == 'preferences')
 	{
-		$GLOBALS['phpgw']->redirect_link('/preferences/preferences.php', array('appname' => $_GET['appname']) );
+		$GLOBALS['phpgw']->redirect_link('/preferences/preferences.php', array('appname' => $appname) );
 	}
 
-	$GLOBALS['phpgw_info']['flags']['app_header'] = $_GET['appname'] == 'preferences' ?
-		lang('Preferences') : lang('%1 - Preferences',$GLOBALS['phpgw_info']['apps'][$_GET['appname']]['title']);
+	$GLOBALS['phpgw_info']['flags']['app_header'] = $appname == 'preferences' ?
+		lang('Preferences') : lang('%1 - Preferences', lang($appname) );
 	$GLOBALS['phpgw']->common->phpgw_header(true);
 
 	$t->set_var('messages',$error);
-	$t->set_var('action_url',$GLOBALS['phpgw']->link('/preferences/preferences.php', array('appname'=> $_GET['appname'])));
+	$t->set_var('action_url',$GLOBALS['phpgw']->link('/preferences/preferences.php', array('appname'=> $appname)));
 
 	switch ($GLOBALS['type'])	// set up some globals to be used by the hooks
 	{
@@ -621,9 +622,8 @@
 	//echo "prefs=<pre>"; print_r($prefs); echo "</pre>\n";
 	
 	$notifys = array();
-	if (!$GLOBALS['phpgw']->hooks->single('settings',$_GET['appname']))
+	if (!$GLOBALS['phpgw']->hooks->single('settings', $appname))
 	{
-		$appname = htmlspecialchars($_GET['appname']);
 		$t->set_block('preferences','form','formhandle');	// skip the form
 		$t->set_var('formhandle','');
 		
@@ -637,7 +637,7 @@
 			'type'      => $GLOBALS['type'],	// save our state in the app-session
 			'show_help' => $show_help,
 			'prefix'    => $prefix,
-			'appname'   => $_GET['appname'],	// we use this to reset prefix on appname-change
+			'appname'   => $appname,	// we use this to reset prefix on appname-change
 			'notifys'   => $notifys
 		));
 		//echo "notifys:<pre>"; print_r($notifys); echo "</pre>\n";
@@ -646,15 +646,15 @@
 	{
 		$tabs[] = array(
 			'label' => lang('Your preferences'),
-			'link'  => $GLOBALS['phpgw']->link('/preferences/preferences.php',array('appname'=> $_GET['appname'], 'type'=> 'user'))
+			'link'  => $GLOBALS['phpgw']->link('/preferences/preferences.php',array('appname'=> $appname, 'type'=> 'user'))
 		);
 		$tabs[] = array(
 			'label' => lang('Default preferences'),
-			'link'  => $GLOBALS['phpgw']->link('/preferences/preferences.php',array('appname'=> $_GET['appname'], 'type'=> 'default'))
+			'link'  => $GLOBALS['phpgw']->link('/preferences/preferences.php',array('appname'=> $appname, 'type'=> 'default'))
 		);
 		$tabs[] = array(
 			'label' => lang('Forced preferences'),
-			'link'  => $GLOBALS['phpgw']->link('/preferences/preferences.php',array('appname'=> $_GET['appname'], 'type'=> 'forced'))
+			'link'  => $GLOBALS['phpgw']->link('/preferences/preferences.php',array('appname'=> $appname, 'type'=> 'forced'))
 		);
 
 		switch($GLOBALS['type'])
