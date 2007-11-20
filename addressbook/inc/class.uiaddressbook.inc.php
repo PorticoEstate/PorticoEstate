@@ -136,6 +136,10 @@ class uiaddressbook
 		$this->tab_extra			= lang('More data');
 
 		$this->_set_sessiondata();
+		if(!isset($GLOBALS['phpgw']->datetime) || !is_object($GLOBALS['phpgw']->datetime))
+		{
+			$GLOBALS['phpgw']->datetime = CreateObject('phpgwapi.datetime');
+		}
 	}
 
 	function _set_sessiondata()
@@ -188,9 +192,9 @@ class uiaddressbook
 
 	function index()
 	{
-		if(get_var('section'))
+		if(phpgw::get_var('section'))
 		{
-			$this->section = get_var('section');
+			$this->section = phpgw::get_var('section');
 		}
 		else
 		{
@@ -409,7 +413,7 @@ class uiaddressbook
 
 		if($this->query)
 		{
-			$lang_showing = lang('%1 was found %2 times in %3',htmlentities('"'.$this->query.'"'), $total_all_persons, lang($this->section));
+			$lang_showing = lang('%1 was found %2 times in %3',htmlentities('"'.$this->query.'"', ENT_QUOTES, 'UTF-8'), $total_all_persons, lang($this->section));
 		}
 		else
 		{
@@ -520,7 +524,7 @@ class uiaddressbook
 				else if ( in_array($column, $fields_comms) )
 				{
 					$data = $this->get_comm_value($myid, $column[key]);
-					$data = htmlentities($data);
+					$data = htmlentities($data, ENT_QUOTES, 'UTF-8');
 					if(strpos($column[key], 'email'))
 					{
 						if ($GLOBALS['phpgw_info']['user']['apps']['email'])
@@ -542,7 +546,7 @@ class uiaddressbook
 				}
 				else
 				{
-					$ref = ''; $data = htmlentities($coldata);
+					$ref = ''; $data = htmlentities($coldata, ENT_QUOTES, 'UTF-8');
 				}
 				$this->template->set_var('col_data',$ref.$data);
 				$this->template->parse('columns','column',True);
@@ -587,7 +591,7 @@ class uiaddressbook
 
 	function copy()
 	{
-		$contact_id = get_var('ab_id');
+		$contact_id = phpgw::get_var('ab_id');
 		$new_contact_id = $this->bo->copy_contact($contact_id);
 		$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'addressbook.uiaddressbook.edit_person', 'ab_id' => $new_contact_id));
 	}
@@ -778,7 +782,7 @@ class uiaddressbook
 	{
 		if ( $person_id == 0 )
 		{
-			$person_id = get_var('ab_id');
+			$person_id = phpgw::get_var('ab_id');
 		}
 		$this->delete_contact($person_id, $this->tab_main_persons);
 	}
@@ -791,8 +795,8 @@ class uiaddressbook
 	 */
 	function view_person()
 	{
-		$person_id = get_var('ab_id');
-		$referer = get_var('referer');
+		$person_id = phpgw::get_var('ab_id');
+		$referer = phpgw::get_var('referer');
 		$this->view_contact($person_id, $this->tab_main_persons, $referer);
 	}
 
@@ -804,7 +808,7 @@ class uiaddressbook
 	 */
 	function copy_person()
 	{
-		$contact_id = get_var('ab_id');
+		$contact_id = phpgw::get_var('ab_id');
 		$new_contact_id = $this->bo->copy_contact($contact_id);
 		$GLOBALS['phpgw']->redirect_link('/index.php', array
 				(
@@ -993,7 +997,7 @@ class uiaddressbook
 	{
 		if($org_id=='')
 		{
-			$org_id = get_var('ab_id');
+			$org_id = phpgw::get_var('ab_id');
 		}
 		$this->delete_contact($org_id, $this->tab_main_organizations);
 	}
@@ -1006,8 +1010,8 @@ class uiaddressbook
 	 */
 	function view_org()
 	{
-		$org_id = get_var('ab_id');
-		$referer = get_var('referer');
+		$org_id = phpgw::get_var('ab_id');
+		$referer = phpgw::get_var('referer');
 		$this->view_contact($org_id, $this->tab_main_organizations, $referer);
 	}
 
@@ -1019,7 +1023,7 @@ class uiaddressbook
 	 */
 	function copy_org()
 	{
-		$contact_id = get_var('ab_id');
+		$contact_id = phpgw::get_var('ab_id');
 		$new_contact_id = $this->bo->copy_contact($contact_id);
 		$GLOBALS['phpgw']->redirect_link('/index.php', array
 				(
@@ -1828,17 +1832,17 @@ class uiaddressbook
 	 */
 	function get_vars()
 	{
-		if(get_var('principal_persons',array('get','post')))
+		if(phpgw::get_var('principal_persons'))
 		{
 			$this->submit = 'clear';
 		}
 
-		if(get_var('principal_organizations',array('get','post')))
+		if(phpgw::get_var('principal_organizations'))
 		{
 			$this->submit = 'clear';
 		}
 
-		if(!get_var('principal_organizations',array('get','post')) && !get_var('bname', array('post', 'get')))
+		if(!phpgw::get_var('principal_organizations') && !phpgw::get_var('bname'))
 		{
 			$this->firsttime = true;
 		}
@@ -1847,7 +1851,7 @@ class uiaddressbook
 			$this->firsttime = false;
 		}
 
-		if(!get_var('principal_persons',array('get','post')) && !get_var('bname', array('post', 'get')))
+		if(!phpgw::get_var('principal_persons') && !phpgw::get_var('bname'))
 		{
 			$this->firsttime = true;
 		}
@@ -1857,83 +1861,83 @@ class uiaddressbook
 		}
 
 		//set submit action
-		if(get_var('submit',array('get','post')))
+		if(phpgw::get_var('submit'))
 		{
 			$this->submit = 'save';
 			$this->firsttime = false;
 		}
-		elseif(get_var('cancel',array('get','post')))
+		elseif(phpgw::get_var('cancel'))
 		{
 			$this->submit = 'cancel';
 			$this->firsttime = false;
 		}
-		elseif(get_var('delete',array('get','post')))
+		elseif(phpgw::get_var('delete'))
 		{
 			$this->submit = 'delete';
 			$this->firsttime = false;
 		}
 
 		//set add/edit/delete action
-		if(get_var('address_add_row', array('get','post')))
+		if(phpgw::get_var('address_add_row'))
 		{
 			$this->action = 'add_addr';
 			$this->submit = 'none';
 			$this->firsttime = false;
 		}
-		elseif(get_var('other_add_row', array('get','post')))
+		elseif(phpgw::get_var('other_add_row'))
 		{
 			$this->action = 'add_other';
 			$this->submit = 'none';
 			$this->firsttime = false;
 		}
-		elseif(get_var('comm_edit_row', array('get','post')) >= '0')
+		elseif(phpgw::get_var('comm_edit_row') >= '0')
 		{
 			$this->action = 'edit_comm';
 			$this->submit = 'none';
 			$this->firsttime = false;
 		}
-		elseif(get_var('comm_del_row', array('get','post')) >= '0')
+		elseif(phpgw::get_var('comm_del_row') >= '0')
 		{
 			$this->action = 'delete_comm';
 			$this->submit = 'none';
 			$this->firsttime = false;
 		}
-		elseif(get_var('addr_edit_row', array('get','post')) >= '0')
+		elseif(phpgw::get_var('addr_edit_row') >= '0')
 		{
 			$this->action = 'edit_addr';
-			$this->addr_edit_row = get_var('addr_edit_row', array('get','post'));
+			$this->addr_edit_row = phpgw::get_var('addr_edit_row');
 			$this->submit = 'none';
 			$this->firsttime = false;
 		}
-		elseif(get_var('addr_del_row', array('get','post')) >= '0')
+		elseif(phpgw::get_var('addr_del_row') >= '0')
 		{
 			$this->action = 'delete_addr';
-			$this->addr_del_row = get_var('addr_del_row', array('get','post'));
+			$this->addr_del_row = phpgw::get_var('addr_del_row');
 			$this->submit = 'none';
 			$this->firsttime = false;
 		}
-		elseif(get_var('other_edit_row', array('get','post')) >= '0')
+		elseif(phpgw::get_var('other_edit_row') >= '0')
 		{
 			$this->action = 'edit_other';
 			$this->submit = 'none';
 			$this->firsttime = false;
 		}
-		elseif(get_var('other_del_row', array('get','post')) >= '0')
+		elseif(phpgw::get_var('other_del_row') >= '0')
 		{
 			$this->action = 'delete_other';
-			$this->other_del_row = get_var('other_del_row', array('get','post'));
+			$this->other_del_row = phpgw::get_var('other_del_row');
 			$this->submit = 'none';
 			$this->firsttime = false;
 		}
 
-		$_tab = get_var('bname', array('post', 'get'));
+		$_tab = phpgw::get_var('bname');
 		$this->tab = stripslashes($_tab);
-		$this->entry = get_var('entry', array('post','get'));
+		$this->entry = phpgw::get_var('entry');
 
-		$this->contact_id = get_var('ab_id', array('post','get'));
+		$this->contact_id = phpgw::get_var('ab_id');
 		$this->owner = (int) isset($_REQUEST['owner']) ? $_REQUEST['owner'] : $this->owner;
-		$this->referer = get_var('referer', array('post','get'));
-		$this->record_name = htmlentities(get_var('record_name', array('post','get')));
+		$this->referer = phpgw::get_var('referer');
+		$this->record_name = htmlentities(phpgw::get_var('record_name'), ENT_QUOTES, 'UTF-8');
 	}
 
 	/**
@@ -2157,7 +2161,7 @@ class uiaddressbook
 
 				$this->record_name = htmlentities(stripslashes($entry['per_first_name'].
 							($entry['per_middle_name']?' '.$entry['per_middle_name']:'').
-							($entry['per_last_name']?' '.$entry['per_last_name']:'')));
+							($entry['per_last_name']?' '.$entry['per_last_name']:'')), ENT_QUOTES, 'UTF-8');
 				//$entry_data = $this->save_simple_array($entry);
 				$entry_data = $entry;
 				break;
@@ -2221,7 +2225,7 @@ class uiaddressbook
 					$entry['access'] = 'public';
 				}
 				//$entry_data = $this->save_simple_array($entry);
-				$this->record_name = htmlentities($entry['org_name']);
+				$this->record_name = htmlentities($entry['org_name'], ENT_QUOTES, 'UTF-8');
 				$entry_data = $entry;
 				break;
 			case $this->tab_persons:
@@ -2686,7 +2690,7 @@ class uiaddressbook
 
 	function delete_contact($contact_id='', $contact_type='')
 	{
-		$confirm = get_var('confirm');
+		$confirm = phpgw::get_var('confirm');
 		$contact_type = $contact_type?$contact_type:$this->bo->search_contact_type_id(
 				$this->bo->get_type_contact($contact_id));
 
@@ -2786,10 +2790,10 @@ class uiaddressbook
 
 	function view_contact($contact_id='', $contact_type='', $referer='')
 	{
-		$contact_id = (empty($contact_id))? get_var('ab_id') : $contact_id;
+		$contact_id = (empty($contact_id))? phpgw::get_var('ab_id') : $contact_id;
 		$contact_type = $contact_type?$contact_type:$this->bo->search_contact_type_id(
 				$this->bo->get_type_contact($contact_id));
-		$referer = ($referer=='')?get_var('referer'):$referer;
+		$referer = ($referer=='')?phpgw::get_var('referer'):$referer;
 		$referer = urldecode($referer);
 
 		if($contact_type == $this->tab_main_persons)
@@ -2802,7 +2806,7 @@ class uiaddressbook
 				$datetime =& $GLOBALS['phpgw']->datetime;
 
 				$contacts['org_name'] = '<a href="' . $contacts['org_link'] . '">' 
-					. htmlentities($contacts['org_name']) . '</a>';
+					. htmlentities($contacts['org_name'], ENT_QUOTES, 'UTF-8') . '</a>';
 				unset($contacts['org_link']);
 
 				$cat_link_url = $GLOBALS['phpgw']->link('/index.php', 
@@ -2927,7 +2931,7 @@ class uiaddressbook
 		{
 			if ( $field != 'org_name' )
 			{
-				$data = htmlentities($data);
+				$data = htmlentities($data, ENT_QUOTES, 'UTF-8');
 			}
 
 			$ref='';
@@ -3108,7 +3112,7 @@ class uiaddressbook
 		switch($properties['type'])
 		{
 			case 'data':
-				$column_data = htmlentities($this->array_value[$properties['field']]);
+				$column_data = htmlentities($this->array_value[$properties['field']], ENT_QUOTES, 'UTF-8');
 				break;
 			case 'text':
 				$column_data = '<input type="text" '
@@ -3118,7 +3122,7 @@ class uiaddressbook
 			case 'radio':
 				$checked = $this->array_value[$properties['field']] == 'Y' ? 'checked' : '';
 				$column_data = '<input type="radio" name="' . $properties['name'] 
-					.'" value="' . htmlentities($this->array_value[$properties['value']]) . '"'. $checked . '>';
+					.'" value="' . htmlentities($this->array_value[$properties['value']], ENT_QUOTES, 'UTF-8') . '"'. $checked . '>';
 				break;
 			case 'link':
 				$link = $GLOBALS['phpgw']->link('/index.php', $this->form_action + array($properties['action'] => $this->array_value[$properties['key']]) + $properties['extra']);
@@ -3459,9 +3463,9 @@ class uiaddressbook
 
 	function add_email()
 	{
-		$name      = get_var('name');
-		$referer   = get_var('referer');
-		$email = get_var('add_email');
+		$name      = phpgw::get_var('name');
+		$referer   = phpgw::get_var('referer');
+		$email = phpgw::get_var('add_email');
 
 		$name = urldecode($name);
 		$email = urldecode($email);

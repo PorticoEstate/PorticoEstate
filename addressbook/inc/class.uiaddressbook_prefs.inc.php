@@ -95,7 +95,7 @@ class uiaddressbook_prefs
 			$this->bo=CreateObject('addressbook.boaddressbook_prefs');
 			if($this->is_current_admin())
 			{
-				$temp=get_var('adm_pref_type',array('get','post'));
+				$temp=phpgw::get_var('adm_pref_type');
 				//print "<br /><B>Admin user var is".$temp."</B><br />";
 				//Changed preference type tav
 				if(isset($temp))
@@ -209,7 +209,7 @@ class uiaddressbook_prefs
 		}
 		function get_vars()
 		{
-			$temp=get_var('org_or_person',array('get','post'));
+			$temp=phpgw::get_var('org_or_person');
 			if($temp=='Organizations' || $temp == 'Persons')
 			{
 				$this->org_or_person=$temp;
@@ -226,7 +226,7 @@ class uiaddressbook_prefs
 			$this->map_tpl_to_real['select_columns_selectbox_name']='selected_fields['.$this->org_or_person.'][]';
 			$this->map_tpl_to_real['select_columns_comtypes_name']='selected_fields['.$this->org_or_person.'][comm_types][]';
 			
-			$this->selected_fields=get_var('selected_fields',array('post','GET'));
+			$this->selected_fields=phpgw::get_var('selected_fields');
 			/*
 			print "<p><b>Selected fields</b></p>";
 			print_r($this->selected_fields);*/
@@ -237,22 +237,22 @@ class uiaddressbook_prefs
 			}
 			//three kinds of submit
 			//They have hit the button to add selected fields
-			if(get_var('select_fields',array('post','get')))
+			if(phpgw::get_var('select_fields'))
 			{
 				/* print '<br /><B>selectfields</B><br />'; */
 				$temp='select_fields';
 			}
-			elseif(get_var('save',array('post','get')))
+			elseif(phpgw::get_var('save'))
 			{
 				$temp='save';
 			}
-			elseif(get_var('cancel',array('post','get')))
+			elseif(phpgw::get_var('cancel'))
 			{
 				$temp='cancel';
 			}
 			else
 			{
-				$temp=get_var('remove_me',array('get','post'));
+				$temp=phpgw::get_var('remove_me');
 				/*print '<br /><B>remove type'.$temp.'</B><br />';*/
 				
 				if(isset($this->selected_fields[$this->org_or_person][$temp]) && $this->selected_fields[$this->org_or_person][$temp])
@@ -272,13 +272,13 @@ class uiaddressbook_prefs
 			print_r($this->selected_fields);
 			print '<br /><B>Submited</B>';
 			print $this->submit; */
-			$temp=get_var('org_or_person',array('get','post'));
+			$temp=phpgw::get_var('org_or_person');
 			if($temp=='Organizations' || $temp == 'Persons')
 			{
 				$this->org_or_person=$temp;
 			}
 
-			$temp=get_var('cat_id',array('get','post'));
+			$temp=phpgw::get_var('cat_id');
 	//		print $temp;
 			if($temp)
 			{

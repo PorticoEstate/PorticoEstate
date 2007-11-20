@@ -161,13 +161,13 @@
 		function export()
 		{
 			//global $tsvfilename,$both_types,$sub_cats;
-			$convert = get_var('convert', array('GET','POST'));
-			$tsvfilename = get_var('tsvfilename', array('GET','POST'));
-			$fcat_id = get_var('fcat_id', array('GET','POST'));
-			$download = get_var('download', array('GET','POST'));
-			$conv_type = get_var('conv_type', array('GET','POST'));
-			$both_types = get_var('both_types', array('GET','POST'));
-			$sub_cats = get_var('sub_cats', array('GET','POST'));
+			$convert = phpgw::get_var('convert');
+			$tsvfilename = phpgw::get_var('tsvfilename');
+			$fcat_id = phpgw::get_var('fcat_id');
+			$download = phpgw::get_var('download');
+			$conv_type = phpgw::get_var('conv_type');
+			$both_types = phpgw::get_var('both_types');
+			$sub_cats = phpgw::get_var('sub_cats');
 			
 			// get the data to create the sql query used by the addressbook display 
 			$export_vars = $GLOBALS['phpgw']->session->appsession('export_vars','addressbook');
