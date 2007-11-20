@@ -171,7 +171,7 @@
 				$app_order    = phpgw::get_var('app_order', 'int', 'POST');
 				$n_app_name   = phpgw::get_var('n_app_name', 'string', 'POST');
 				$n_app_title  = phpgw::get_var('n_app_title', 'string', 'POST');
-				$n_app_status = phpgw::get_var('n_app_status', 'bool', 'POST');
+				$n_app_status = phpgw::get_var('n_app_status', 'int', 'POST');
 
 				if ($this->bo->exists($n_app_name))
 				{
@@ -256,7 +256,7 @@
 				$app_order    = phpgw::get_var('app_order', 'int', 'POST');
 				$n_app_name   = phpgw::get_var('n_app_name', 'string', 'POST');
 				$n_app_title  = phpgw::get_var('n_app_title', 'string', 'POST');
-				$n_app_status = phpgw::get_var('n_app_status', 'bool', 'POST');
+				$n_app_status = phpgw::get_var('n_app_status', 'int', 'POST');
 
 				if (! $n_app_name)
 				{
