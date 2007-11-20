@@ -78,7 +78,7 @@
 		
 			$xml = new DOMDocument;
 			$xml->loadXML($x);
-			return html_entity_decode(utf8_decode($xslt->transformToXML($xml)),ENT_COMPAT,'utf-8');
+			return $xslt->transformToXML($xml);
 		}
 
 		public function makeImage($img)
