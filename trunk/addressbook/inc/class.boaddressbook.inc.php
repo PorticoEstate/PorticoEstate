@@ -731,7 +731,7 @@
 		{
 			if(!is_array($_FILES['uploadedfile']) || ($_FILES['uploadedfile']['error'] != UPLOAD_ERR_OK))
 			{
-				Header('Location: ' . $GLOBALS['phpgw']->link('/index.php','menuaction=addressbook.uivcard.in&action=GetFile'));
+				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction' => 'addressbook.uivcard.in', 'action' => 'GetFile'));
 			}
 			else
 			{
@@ -762,7 +762,7 @@
 				/* Delete the temp file. */
 				unlink($filename);
 				unlink($filename . '.info');
-				Header('Location: ' . $GLOBALS['phpgw']->link('/index.php','menuaction=addressbook.uiaddressbook.view_person&ab_id=' . $ab_id));
+				Header('Location: ' . $GLOBALS['phpgw']->link('/index.php',array('menuaction' => 'addressbook.uiaddressbook.view_person', 'ab_id' => $ab_id)));
 				exit();
 			}
 		}
