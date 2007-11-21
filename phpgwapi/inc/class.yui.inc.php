@@ -53,9 +53,9 @@
 		* @param bool use the minimised versions of the files
 		* @return string yahoo namespace for widget - empty string on failure
 		*/
-		public static function load_widget($widget, $use_min = true)
+		public static function load_widget($widget)
 		{
-			$min = $use_min ? '-min' : '';
+			$min = ''; // '-min'; //disabled for now
 
 			$load = array();
 			switch ( $widget )
@@ -69,11 +69,11 @@
 					break;
 
 				case 'button':
-					$load = array('button', 'element');
+					$load = array('button', 'element-beta');
 					break;
 
 				case 'calendar':
-					$load = array('calendar');
+					$load = array('calendar-beta');
 					break;
 
 				case 'colorpicker':
@@ -85,12 +85,16 @@
 					$load = array('container', 'dragdrop');
 					break;
 
+				case 'connection':
+					$load = array('connection');
+					break;
+
 				case 'datasource':
-					$load = array('datasource', 'connection');
+					$load = array('datasource-beta', 'connection');
 					break;
 
 				case 'datatable':
-					$load = array('datatable', 'datasource');
+					$load = array('datatable-beta', 'datasource-beta');
 					break;
 
 				case 'dom':
@@ -102,11 +106,11 @@
 					break;
 
 				case 'editor':
-					$load = array('editor', 'menu', 'element', 'button', 'animation', 'dragdrop');
+					$load = array('editor', 'menu', 'element-beta', 'button', 'animation', 'dragdrop');
 					break;
 
 				case 'element':
-					$load = array('element');
+					$load = array('element-beta');
 					break;
 
 				case 'event':
@@ -132,7 +136,7 @@
 					break;
 
 				case 'tabview':
-					$load = array('element', 'tabview');
+					$load = array('element-beta', 'tabview');
 					break;
 
 				case 'treeview':
@@ -140,7 +144,7 @@
 					break;
 
 				default:
-					trigger_error(lang("Unsupport YUI widget '%1' supplied to phpgwapi_yui::load_widget()", $widget), E_USER_WARNING);
+					trigger_error(lang("Unsupported YUI widget '%1' supplied to phpgwapi_yui::load_widget()", $widget), E_USER_WARNING);
 					return '';
 			}
 
