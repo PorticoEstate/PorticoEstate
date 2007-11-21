@@ -186,6 +186,7 @@
 
 			$this->db->query("SELECT id, descr FROM $table ORDER BY id ");
 
+			$categories = array();
 			while ( $this->db->next_record() )
 			{
 				$categories[] = array
