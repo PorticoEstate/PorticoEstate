@@ -188,7 +188,7 @@
 
 			while ( $this->db->next_record() )
 			{
-				$categories = array
+				$categories[] = array
 				(
 					'id'	=> $this->db->f('id'),
 					'name'	=> $this->db->f('descr', true)
