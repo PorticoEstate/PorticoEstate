@@ -52,7 +52,7 @@
 				break;
 			case 'cancel':
 				Header('Location: '
-				       . $GLOBALS['phpgw']->link('/index.php','menuaction=addressbook.uiaddressbook.index&section=Persons'));
+				       . $GLOBALS['phpgw']->link('/index.php',array('menuaction' => 'addressbook.uiaddressbook.index', 'section' => 'Persons')));
 				$GLOBALS['phpgw']->common->phpgw_exit();
 				break;
 			}
@@ -69,7 +69,7 @@
 			echo parse_navbar();
 			$this->template->set_var('action', 
 						 $GLOBALS['phpgw']->link('/index.php',
-									 'menuaction=addressbook.uicategorize_contacts.index'));
+									 array('menuaction' => 'addressbook.uicategorize_contacts.index')));
 			$this->template->set_var('form_name', 'categorize_contacts_form');
 			$this->template->set_var('onsubjs', $onsubjs);
 			$this->template->set_var('widget_lists', $list_widget);
