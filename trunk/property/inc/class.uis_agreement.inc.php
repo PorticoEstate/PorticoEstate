@@ -55,7 +55,8 @@
 			'view_item'		=> True,
 			'view_file'		=> True,
 			'excel'			=> True,
-			'attrib_history'=> True,			
+			'attrib_history'=> True,
+			'import'		=> True			
 		);
 
 		function property_uis_agreement()
@@ -501,14 +502,70 @@
 		}
 
 
+		function import()
+		{
+			$id				= phpgw::get_var('id', 'int');
+			$detail_import	= phpgw::get_var('detail_import', 'bool');
+			if(isset($_FILES['import_detail']['tmp_name']) && $_FILES['import_detail']['tmp_name'])
+			{
+				$list = $this->bo->read_details(0);
+				$uicols		= $this->bo->uicols;
+				$fields = array();
+				for ($i=0; $i<count($uicols['input_type']); $i++ )
+				{
+					if($uicols['input_type'][$i] !='hidden')
+					{
+						$fields[] = $uicols['name'][$i];
+					}
+				
+				}
+//_debug_array($fields);
+				$data = CreateObject('phpgwapi.excelreader');
+			
+				$data->setOutputEncoding('CP1251');
+				$data->read($_FILES['import_detail']['tmp_name']);
+				
+				$valueset = array();
+				$num = count($fields)+1;
+				$rows = $data->sheets[0]['numRows']+1;
+
+				for ($i=2; $i<$rows; $i++ ) //First data entry on row 2
+				{
+					if ($data->sheets[0]['cells'][$i][2] != '')
+					{
+						for ($c=1; $c<$num; $c++ )
+						{
+							$valueset[$i-2][$fields[$c-1]] = $data->sheets[0]['cells'][$i][$c];
+						}
+					}
+					else
+					{
+						break;
+					}
+				}
+_debug_array($valueset);
+				foreach($valueset as $values)
+				{
+					//FIXME - do some visual checking - and confirm the input before saving to db
+					//$this->bo->save_item($values,$values_attribute);
+				}
+
+				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uis_agreement.edit', 'id'=> $id));				
+			}
+			else
+			{
+				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uis_agreement.edit', 'id'=> $id));
+			}
+		}
+
 		function edit()
 		{
-			$id	= phpgw::get_var('id', 'int');
-			$values		= phpgw::get_var('values');
+			$id				= phpgw::get_var('id', 'int');
+			$values			= phpgw::get_var('values');
 			$delete_item	= phpgw::get_var('delete_item', 'bool');
-			$item_id	= phpgw::get_var('item_id', 'int', 'GET');
+			$item_id		= phpgw::get_var('item_id', 'int', 'GET');
 
-			$config		= CreateObject('phpgwapi.config',$this->currentapp);
+			$config		= CreateObject('phpgwapi.config','property');
 			$boalarm		= CreateObject('property.boalarm');
 
 			if($delete_item && $id && $item_id)
@@ -719,7 +776,6 @@
 				'role'		=> $this->role
 			);
 
-
 			$vendor_data=$this->bocommon->initiate_ui_vendorlookup(array(
 						'vendor_id'	=> $s_agreement['vendor_id'],
 						'vendor_name'	=> $s_agreement['vendor_name']));
@@ -808,7 +864,7 @@
 
 			$data = array
 			(
-
+				'link_import'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction' => 'property.uis_agreement.import')),				
 				'alarm_data'				=> $alarm_data,
 				'lang_alarm'				=> lang('Alarm'),
 				'lang_excel'				=> 'excel',
@@ -891,7 +947,8 @@
 				'img_check'				=> $GLOBALS['phpgw']->common->get_image_path($this->currentapp).'/check.png',
 				'set_column'				=> $set_column,
 				'lang_import_detail'		=> lang('import detail'),
-				'lang_detail_import_statustext'=> lang('import details to this agreement from spreadsheet')
+				'lang_detail_import_statustext'=> lang('import details to this agreement from spreadsheet'),
+				'lang_import'				=> lang('lang_import')
 			);
 
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('service agreement') . ': ' . ($id?lang('edit') . ' ' . lang($this->role):lang('add') . ' ' . lang($this->role));

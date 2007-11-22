@@ -60,9 +60,9 @@
 		{
 	//		$this->db 		= $GLOBALS['phpgw']->db;
 			$this->currentapp		= $GLOBALS['phpgw_info']['flags']['currentapp'];
-			$this->soXport 			= CreateObject($this->currentapp.'.soXport');	
-			$this->invoice 			= CreateObject($this->currentapp.'.boinvoice');
-			$this->bocommon			= CreateObject($this->currentapp.'.bocommon');
+			$this->soXport 			= CreateObject('property.soXport');	
+			$this->invoice 			= CreateObject('property.boinvoice');
+			$this->bocommon			= CreateObject('property.bocommon');
 			$this->db           	= $this->bocommon->new_db();
 			$this->dateformat		= $this->bocommon->dateformat;
 			$this->datetimeformat	= $this->bocommon->datetimeformat;
