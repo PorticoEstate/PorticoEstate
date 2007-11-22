@@ -24,7 +24,7 @@
 
 <!-- BEGIN navbar_footer -->
 	</div>
-	<div id="content">
+	<div id="{content_class}">
 		<h1 class="articletitle">{current_app_title}</h1>
 		<div id="articlecontent">
 <!-- END navbar_footer -->
