@@ -137,43 +137,7 @@
 			$list = $this->bo->read(array('entity_id'=>$this->entity_id,'cat_id'=>$this->cat_id,'allrows'=>true,'start_date'=>$start_date,'end_date'=>$end_date));
 			$uicols	= $this->bo->uicols;
 
- 			$filename= $GLOBALS['phpgw_info']['user']['account_lid'].'.xls';
-			$count_uicols_name=count($uicols['name']);
-
-			$workbook	= CreateObject('property.excel',"-");
-			$browser = CreateObject('phpgwapi.browser');
-			$browser->content_header($filename,'application/vnd.ms-excel');
-
-			$worksheet1 =& $workbook->add_worksheet('First One');
-
-			$j=0;
-			if (isset($list) AND is_array($list))
-			{
-				foreach($list as $entry)
-				{
-					$m=0;
-					for ($k=0;$k<$count_uicols_name;$k++)
-					{
-						if($uicols['input_type'][$k]!='hidden')
-						{
-							$content[$j][$m]	= $entry[$uicols['name'][$k]];
-							$worksheet1->write_string(0, $m, $uicols['descr'][$k]);
-							$m++;
-						}
-					}
-					$j++;
-				}
-
-				foreach($content as $row)
-				{
-					$line++;
-					for ($i=0; $i<count($row); $i++)
-					{
-						$worksheet1->write($line,$i,$row[$i]);
-					}
-				}
-			}
-			$workbook->close();
+			$this->bocommon->excel($list,$uicols['name'],$uicols['descr'],$uicols['input_type']);
 		}
 
 

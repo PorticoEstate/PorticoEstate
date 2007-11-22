@@ -434,7 +434,7 @@
 						}
 						else
 						{
-							$entity_list[$j][$cols_return_extra[$i]['name']]=$value;
+							$entity_list[$j][$cols_return_extra[$i]['name']]=stripslashes($value);
 						}
 					}
 				}
