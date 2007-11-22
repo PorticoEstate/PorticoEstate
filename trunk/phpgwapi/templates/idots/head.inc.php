@@ -46,12 +46,6 @@
 		$theme_styles[] = "{$GLOBALS['phpgw_info']['server']['webserver_url']}/{$app}/templates/idots/css/{$GLOBALS['phpgw_info']['user']['preferences']['common']['theme']}.css";
 	}
 
-	$sidecontent = isset($GLOBALS['phpgw_info']['user']['preferences']['common']['sidecontent']) && $GLOBALS['phpgw_info']['user']['preferences']['common']['sidecontent'] ? $GLOBALS['phpgw_info']['user']['preferences']['common']['sidecontent'] : 'sidebox';
-
-	if($sidecontent == 'sidebox' || $sidecontent == 'javamenu')
-	{
-		$theme_styles[] = "{$GLOBALS['phpgw_info']['server']['webserver_url']}/phpgwapi/templates/idots/css/sidebox.css";
-	}
 	foreach ( $theme_styles as $style )
 	{
 		$GLOBALS['phpgw']->template->set_var('theme_style', $style);

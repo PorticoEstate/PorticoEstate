@@ -108,6 +108,8 @@
 			$var['messages'] = $api_messages . '<br>' . checkcode($cd);
 		}
 
+		$var['content_class'] = $sidecontent == 'sidebox' || $sidecontent == 'javamenu' ? 'content' : 'content_nosidebox';
+
 		$GLOBALS['phpgw']->template->set_var($var);
 		$GLOBALS['phpgw']->template->pfp('out','navbar_header');
 
