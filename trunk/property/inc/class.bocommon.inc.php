@@ -1484,7 +1484,7 @@
 		*/
 		function utf2ascii($text = '')
 		{	
-			if($GLOBALS['phpgw_info']['server']['charset']=='utf-8')
+			if(!isset($GLOBALS['phpgw_info']['server']['charset']) || $GLOBALS['phpgw_info']['server']['charset']=='utf-8')
 			{
 				if ($text == utf8_decode($text))
 				{
@@ -1509,7 +1509,7 @@
 		*/
 		function ascii2utf($text = '')
 		{	
-			if ($GLOBALS['phpgw_info']['server']['charset']=='utf-8')
+			if(!isset($GLOBALS['phpgw_info']['server']['charset']) || $GLOBALS['phpgw_info']['server']['charset']=='utf-8')
 			{
 				return utf8_encode($text);
 			}
