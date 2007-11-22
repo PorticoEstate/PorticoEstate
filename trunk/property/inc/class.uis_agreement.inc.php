@@ -890,6 +890,8 @@
 				'lang_select_all'			=> lang('Select All'),
 				'img_check'				=> $GLOBALS['phpgw']->common->get_image_path($this->currentapp).'/check.png',
 				'set_column'				=> $set_column,
+				'lang_import_detail'		=> lang('import detail'),
+				'lang_detail_import_statustext'=> lang('import details to this agreement from spreadsheet')
 			);
 
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('service agreement') . ': ' . ($id?lang('edit') . ' ' . lang($this->role):lang('add') . ' ' . lang($this->role));

@@ -487,8 +487,31 @@
 		</form>
 		</td>
 		</tr>
-		</table>
+		<tr>
+		<td>
+		<form ENCTYPE="multipart/form-data" method="post" name="form" action="{$edit_url}">
+		<table cellpadding="2" cellspacing="2" width="90%" align="left">
+			<tr>
+				<td valign="top" title="{lang_detail_import_statustext}" style="cursor: help;">
+					<xsl:value-of select="lang_import_detail"/>
+				</td>
+				<td>
+					<input type="file" name="import_detail" size="40" onMouseout="window.status='';return true;">
+						<xsl:attribute name="onMouseover">
+							<xsl:text>window.status='</xsl:text>
+								<xsl:value-of select="lang_detail_import_statustext"/>
+							<xsl:text>'; return true;</xsl:text>
+						</xsl:attribute>
+					</input>
+				</td>
+			</tr>
 
+		</table>
+		</form>
+
+		</td>
+		</tr>
+		</table>
 		<xsl:choose>
 			<xsl:when test="table_update!=''">
 			<xsl:variable name="update_action"><xsl:value-of select="update_action"/></xsl:variable>
