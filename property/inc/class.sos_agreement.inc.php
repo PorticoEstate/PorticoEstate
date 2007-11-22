@@ -177,6 +177,18 @@
 				$uicols['descr'][]			= lang('address');
 				$uicols['statustext'][]		= lang('address');
 
+				$cols_return[] 				= 'p_entity_id';
+				$uicols['input_type'][]		= 'text';
+				$uicols['name'][]			= 'p_entity_id';
+				$uicols['descr'][]			= 'entity_id';
+				$uicols['statustext'][]		= False;
+
+				$cols_return[] 				= 'p_cat_id';
+				$uicols['input_type'][]		= 'text';
+				$uicols['name'][]			= 'p_cat_id';
+				$uicols['descr'][]			= 'cat_id';
+				$uicols['statustext'][]		= False;
+
 				$cols_return[] 				= 'p_num';
 				$uicols['input_type'][]		= 'text';
 				$uicols['name'][]			= 'p_num';
