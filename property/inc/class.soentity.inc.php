@@ -384,7 +384,7 @@
 				{
 					for ($i=0;$i<count($cols_return_extra);$i++)
 					{
-						$value = $this->db->f($cols_return_extra[$i]['name']);
+						$value = $this->db->f($cols_return_extra[$i]['name'], true);
 
 						if(($cols_return_extra[$i]['datatype']=='R' || $cols_return_extra[$i]['datatype']=='LB') && $value)
 						{
@@ -434,7 +434,7 @@
 						}
 						else
 						{
-							$entity_list[$j][$cols_return_extra[$i]['name']]=stripslashes($value);
+							$entity_list[$j][$cols_return_extra[$i]['name']] = $value;
 						}
 					}
 				}
