@@ -68,17 +68,17 @@
 		{
 			if(is_array($data))
 			{
-				$start			= (isset($data['start'])?$data['start']:0);
-				$filter			= (isset($data['filter'])?$data['filter']:'none');
-				$query 			= (isset($data['query'])?$data['query']:'');
-				$sort 			= (isset($data['sort'])?$data['sort']:'DESC');
-				$order			= (isset($data['order'])?$data['order']:'');
-				$cat_id			= (isset($data['cat_id'])?$data['cat_id']:'');
-				$vendor_id		= (isset($data['vendor_id'])?$data['vendor_id']:'');
-				$allrows		= (isset($data['allrows'])?$data['allrows']:'');
-				$member_id		= (isset($data['member_id'])?$data['member_id']:0);
-				$s_agreement_id	= (isset($data['s_agreement_id'])?$data['s_agreement_id']:'');
-				$detail			= (isset($data['detail'])?$data['detail']:'');
+				$start			= isset($data['start']) && $data['start'] ? $data['start'] : 0;
+				$filter			= isset($data['filter'])?$data['filter']:'none';
+				$query 			= isset($data['query'])?$data['query']:'';
+				$sort 			= isset($data['sort']) && $data['sort'] ? $data['sort'] : 'DESC';
+				$order			= isset($data['order'])?$data['order']:'';
+				$cat_id			= isset($data['cat_id'])?$data['cat_id']:'';
+				$vendor_id		= isset($data['vendor_id'])?$data['vendor_id']:'';
+				$allrows		= isset($data['allrows'])?$data['allrows']:'';
+				$member_id		= isset($data['member_id']) && $data['member_id'] ? $data['member_id'] : 0;
+				$s_agreement_id	= isset($data['s_agreement_id'])?$data['s_agreement_id']:'';
+				$detail			= isset($data['detail'])?$data['detail']:'';
 			}
 
 			$choice_table = 'fm_s_agreement_choice';
@@ -152,72 +152,84 @@
 				$uicols['name'][]			= 'agreement_id';
 				$uicols['descr'][]			= lang('agreement_id');
 				$uicols['statustext'][]		= lang('agreement_id');
+				$uicols['import'][]			= false;
 
 				$cols_return[] 				= 'item_id';
 				$uicols['input_type'][]		= 'text';
 				$uicols['name'][]			= 'item_id';
 				$uicols['descr'][]			= lang('ID');
 				$uicols['statustext'][]		= lang('ID');
+				$uicols['import'][]			= false;
 
 				$cols_return[] 				= 'id';
 				$uicols['input_type'][]		= 'hidden';
 				$uicols['name'][]			= 'id';
 				$uicols['descr'][]			= False;
 				$uicols['statustext'][]		= False;
+				$uicols['import'][]			= false;
 
 				$cols_return[] 				= 'location_code';
 				$uicols['input_type'][]		= 'text';
 				$uicols['name'][]			= 'location_code';
 				$uicols['descr'][]			= lang('location');
 				$uicols['statustext'][]		= lang('location');
+				$uicols['import'][]			= true;
 
 				$cols_return[] 				= 'address';
 				$uicols['input_type'][]		= 'text';
 				$uicols['name'][]			= 'address';
 				$uicols['descr'][]			= lang('address');
 				$uicols['statustext'][]		= lang('address');
+				$uicols['import'][]			= true;
 
 				$cols_return[] 				= 'p_entity_id';
 				$uicols['input_type'][]		= 'text';
 				$uicols['name'][]			= 'p_entity_id';
 				$uicols['descr'][]			= 'entity_id';
 				$uicols['statustext'][]		= False;
+				$uicols['import'][]			= true;
 
 				$cols_return[] 				= 'p_cat_id';
 				$uicols['input_type'][]		= 'text';
 				$uicols['name'][]			= 'p_cat_id';
 				$uicols['descr'][]			= 'cat_id';
 				$uicols['statustext'][]		= False;
+				$uicols['import'][]			= true;
 
 				$cols_return[] 				= 'p_num';
 				$uicols['input_type'][]		= 'text';
 				$uicols['name'][]			= 'p_num';
 				$uicols['descr'][]			= lang('entity num');
 				$uicols['statustext'][]		= lang('entity num');
+				$uicols['import'][]			= true;
 
 				$cols_return[] 				= 'cost';
 				$uicols['input_type'][]		= 'text';
 				$uicols['name'][]			= 'cost';
 				$uicols['descr'][]			= lang('cost');
 				$uicols['statustext'][]		= lang('cost');
+				$uicols['import'][]			= true;
 
 				$cols_return[] 				= 'this_index';
 				$uicols['input_type'][]		= 'text';
 				$uicols['name'][]			= 'this_index';
 				$uicols['descr'][]			= lang('index');
 				$uicols['statustext'][]		= lang('index');
+				$uicols['import'][]			= false;
 
 				$cols_return[] 				= 'index_count';
 				$uicols['input_type'][]		= 'text';
 				$uicols['name'][]			= 'index_count';
 				$uicols['descr'][]			= lang('index_count');
 				$uicols['statustext'][]		= lang('index_count');
+				$uicols['import'][]			= false;
 
 				$cols_return[] 				= 'index_date';
 				$uicols['input_type'][]		= 'text';
 				$uicols['name'][]			= 'index_date';
 				$uicols['descr'][]			= lang('date');
 				$uicols['statustext'][]		= lang('date');
+				$uicols['import'][]			= false;
 			}
 
 			$from .= " FROM $paranthesis $entity_table ";
@@ -269,6 +281,11 @@
 			}
 
 			$this->uicols	= $uicols;
+			
+			if(!$s_agreement_id > 0)
+			{
+				return;
+			}
 
 //_debug_array($cols_return_extra);
 			if ($order)

@@ -138,7 +138,7 @@
 
 			$link_data = array
 			(
-				'menuaction'	=> $this->currentapp.'.uis_agreement.columns',
+				'menuaction'	=> 'property.uis_agreement.columns',
 				'role'		=> $this->role
 			);
 
@@ -165,7 +165,7 @@
 		{
 			if(!$this->acl_read)
 			{
-				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> $this->currentapp.'.uilocation.stop', 'perm'=>1, 'acl_location'=> $this->acl_location));
+				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=>1, 'acl_location'=> $this->acl_location));
 			}
 
 			$GLOBALS['phpgw_info']['flags'][noheader] = True;
@@ -211,7 +211,7 @@
 
 			if(!$this->acl_read)
 			{
-				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> $this->currentapp.'.uilocation.stop', 'perm'=>1, 'acl_location'=> $this->acl_location));
+				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=>1, 'acl_location'=> $this->acl_location));
 			}
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('s_agreement',
@@ -249,19 +249,19 @@
 					{
 						$content[$j]['row'][$i]['statustext']			= lang('view the entity');
 						$content[$j]['row'][$i]['text']				= lang('view');
-						$content[$j]['row'][$i++]['link']			= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uis_agreement.view','id'=> $entry['id'], 'role'=> $this->role));
+						$content[$j]['row'][$i++]['link']			= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uis_agreement.view','id'=> $entry['id'], 'role'=> $this->role));
 					}
 					if($this->acl_edit)
 					{
 						$content[$j]['row'][$i]['statustext']			= lang('edit the s_agreement');
 						$content[$j]['row'][$i]['text']				= lang('edit');
-						$content[$j]['row'][$i++]['link']			= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uis_agreement.edit','id'=> $entry['id'], 'role'=> $this->role));
+						$content[$j]['row'][$i++]['link']			= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uis_agreement.edit','id'=> $entry['id'], 'role'=> $this->role));
 					}
 					if($this->acl_delete)
 					{
 						$content[$j]['row'][$i]['statustext']			= lang('delete the s_agreement');
 						$content[$j]['row'][$i]['text']				= lang('delete');
-						$content[$j]['row'][$i++]['link']			= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uis_agreement.delete', 's_agreement_id'=> $entry['id'], 'role'=> $this->role));
+						$content[$j]['row'][$i++]['link']			= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uis_agreement.delete', 's_agreement_id'=> $entry['id'], 'role'=> $this->role));
 					}
 
 					$j++;
@@ -284,7 +284,7 @@
 								'sort'	=> $this->sort,
 								'var'	=> $uicols['name'][$i],
 								'order'	=> $this->order,
-								'extra'	=> array('menuaction'	=> $this->currentapp.'.uis_agreement.index',
+								'extra'	=> array('menuaction'	=> 'property.uis_agreement.index',
 													'query'		=> $this->query,
 													'lookup'	=> $lookup,
 													'district_id'	=> $this->district_id,
@@ -328,13 +328,13 @@
 				(
 					'lang_add'		=> lang('add'),
 					'lang_add_statustext'	=> lang('add a service agreement'),
-					'add_action'		=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uis_agreement.edit', 'role'=> $this->role))
+					'add_action'		=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uis_agreement.edit', 'role'=> $this->role))
 				);
 			}
 
 			$link_data = array
 			(
-				'menuaction'	=> $this->currentapp.'.uis_agreement.index',
+				'menuaction'	=> 'property.uis_agreement.index',
 				'sort'		=>$this->sort,
 				'order'		=>$this->order,
 				'cat_id'	=>$this->cat_id,
@@ -358,7 +358,7 @@
 
 			$link_columns = array
 			(
-				'menuaction'	=> $this->currentapp.'.uis_agreement.columns',
+				'menuaction'	=> 'property.uis_agreement.columns',
 				'role'		=> $this->role
 			);
 
@@ -435,23 +435,23 @@
 						}
 					}
 
-					if($this->acl_read)
+					if($this->acl_read && $view_only != 'no_link')
 					{
 						$content[$j]['row'][$i]['statustext']			= lang('view the entity');
 						$content[$j]['row'][$i]['text']					= lang('view');
-						$content[$j]['row'][$i++]['link']				= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uis_agreement.view_item', 's_agreement_id'=> $entry['agreement_id'], 'id'=> $entry['id'], 'from'=> $view_only?'view':'edit'));
+						$content[$j]['row'][$i++]['link']				= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uis_agreement.view_item', 's_agreement_id'=> $entry['agreement_id'], 'id'=> $entry['id'], 'from'=> $view_only?'view':'edit'));
 					}
 					if($this->acl_edit && !$edit_item && !$view_only)
 					{
 						$content[$j]['row'][$i]['statustext']			= lang('edit the s_agreement');
 						$content[$j]['row'][$i]['text']					= lang('edit');
-						$content[$j]['row'][$i++]['link']				= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uis_agreement.edit_item', 's_agreement_id'=> $entry['agreement_id'], 'id'=> $entry['id']));
+						$content[$j]['row'][$i++]['link']				= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uis_agreement.edit_item', 's_agreement_id'=> $entry['agreement_id'], 'id'=> $entry['id']));
 					}
 					if($this->acl_delete && !$edit_item && !$view_only)
 					{
 						$content[$j]['row'][$i]['statustext']			= lang('delete this item');
 						$content[$j]['row'][$i]['text']					= lang('delete');
-						$content[$j]['row'][$i++]['link']				= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uis_agreement.edit', 'delete_item'=>1, 'id'=> $entry['agreement_id'], 'item_id'=> $entry['id']));
+						$content[$j]['row'][$i++]['link']				= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uis_agreement.edit', 'delete_item'=>1, 'id'=> $entry['agreement_id'], 'item_id'=> $entry['id']));
 					}
 
 					$j++;
@@ -469,7 +469,7 @@
 				}
 			}
 
-			if($this->acl_read)
+			if($this->acl_read && $view_only != 'no_link')
 			{
 				$table_header[$i]['width'] 			= '5%';
 				$table_header[$i]['align'] 			= 'center';
@@ -510,32 +510,45 @@
 			{
 				$list = $this->bo->read_details(0);
 				$uicols		= $this->bo->uicols;
+
 				$fields = array();
 				for ($i=0; $i<count($uicols['input_type']); $i++ )
 				{
-					if($uicols['input_type'][$i] !='hidden')
+					if($uicols['import'][$i])
 					{
-						$fields[] = $uicols['name'][$i];
+						$fields[] = array
+									(
+										'name' => $uicols['name'][$i],
+										'descr' =>$uicols['descr'][$i]
+									);
+						$uicols2['input_type'][] = 'text';
+						$uicols2['name'][] = $uicols['name'][$i];
+						$uicols2['descr'][] = $uicols['descr'][$i];
 					}
-				
 				}
-//_debug_array($fields);
+
 				$data = CreateObject('phpgwapi.excelreader');
 			
 				$data->setOutputEncoding('CP1251');
 				$data->read($_FILES['import_detail']['tmp_name']);
-				
+
+				foreach($fields as &$entry)
+				{
+					$entry['id'] = array_search($entry['descr'], $data->sheets[0]['cells'][1]);
+				}
+
 				$valueset = array();
-				$num = count($fields)+1;
+
 				$rows = $data->sheets[0]['numRows']+1;
 
 				for ($i=2; $i<$rows; $i++ ) //First data entry on row 2
 				{
 					if ($data->sheets[0]['cells'][$i][2] != '')
 					{
-						for ($c=1; $c<$num; $c++ )
+
+						foreach ($fields as &$entry)
 						{
-							$valueset[$i-2][$fields[$c-1]] = $data->sheets[0]['cells'][$i][$c];
+							$valueset[$i-2][$entry['name']] = $this->bocommon->ascii2utf($data->sheets[0]['cells'][$i][$entry['id']]);
 						}
 					}
 					else
@@ -543,14 +556,45 @@
 						break;
 					}
 				}
-_debug_array($valueset);
+				$list		= $this->list_content($valueset,$uicols2,true,$view_only='no_link');
+				$content	= $list['content'];
+				$table_header=$list['table_header'];
+
+				$table_import[] = array
+				(
+					'lang_import'			=> lang('import'),
+					'lang_update_statustext'	=> lang('import details to this agreement from spreadsheet')
+				);
+
+				$GLOBALS['phpgw']->xslttpl->add_file(array('s_agreement','attributes_form'));
+				$data = array
+				(
+				'values'				=> $content,
+				'table_header'				=> $table_header,
+
+				'table_import'				=> $table_import,
+				'import_action'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uis_agreement.edit', 'id'=> $id)),
+				'lang_select_all'			=> lang('Select All'),
+				'img_check'				=> $GLOBALS['phpgw']->common->get_image_path($this->currentapp).'/check.png',
+				'set_column'				=> $set_column,
+				'lang_import_detail'		=> lang('import detail'),
+				'lang_detail_import_statustext'=> lang('import details to this agreement from spreadsheet'),
+				'lang_import'				=> lang('import')
+			);
+
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('service agreement') . ': ' . lang('import');
+
+			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('import' => $data));
+
+
+
 				foreach($valueset as $values)
 				{
 					//FIXME - do some visual checking - and confirm the input before saving to db
 					//$this->bo->save_item($values,$values_attribute);
 				}
 
-				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uis_agreement.edit', 'id'=> $id));				
+	//			$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uis_agreement.edit', 'id'=> $id));				
 			}
 			else
 			{
@@ -665,7 +709,7 @@ _debug_array($valueset);
 						if ($values['save'])
 						{
 							$GLOBALS['phpgw']->session->appsession('session_data','s_agreement_receipt',$receipt);
-							$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> $this->currentapp.'.uis_agreement.index', 'role'=> $this->role));
+							$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uis_agreement.index', 'role'=> $this->role));
 						}
 					}
 				}
@@ -717,7 +761,7 @@ _debug_array($valueset);
 				}
 				elseif (!$values['save'] && !$values['apply'] && !$values['update']):
 				{
-					$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> $this->currentapp.'.uis_agreement.index', 'role'=> $this->role));
+					$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uis_agreement.index', 'role'=> $this->role));
 				}
 				endif;
 			}
@@ -771,7 +815,7 @@ _debug_array($valueset);
 
 			$link_data = array
 			(
-				'menuaction'	=> $this->currentapp.'.uis_agreement.edit',
+				'menuaction'	=> 'property.uis_agreement.edit',
 				'id'		=> $id,
 				'role'		=> $this->role
 			);
@@ -833,13 +877,13 @@ _debug_array($valueset);
 			(
 				'lang_add'				=> lang('add detail'),
 				'lang_add_standardtext'	=> lang('add an item to the details'),
-				'add_action'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uis_agreement.edit_item', 's_agreement_id'=> $id))
+				'add_action'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uis_agreement.edit_item', 's_agreement_id'=> $id))
 			);
 
 
 			$link_file_data = array
 			(
-				'menuaction'	=> $this->currentapp.'.uis_agreement.view_file',
+				'menuaction'	=> 'property.uis_agreement.view_file',
 				'id'		=>$id
 			);
 
@@ -854,7 +898,7 @@ _debug_array($valueset);
 
 			$link_excel = array
 			(
-				'menuaction'	=> $this->currentapp.'.uis_agreement.excel',
+				'menuaction'	=> 'property.uis_agreement.excel',
 				'id'		=> $id
 			);
 
@@ -942,13 +986,13 @@ _debug_array($valueset);
 				'table_header'				=> $table_header,
 				'acl_manage'				=> $this->acl_manage,
 				'table_update'				=> $table_update,
-				'update_action'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uis_agreement.edit', 'id'=> $id)),
+				'update_action'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uis_agreement.edit', 'id'=> $id)),
 				'lang_select_all'			=> lang('Select All'),
 				'img_check'				=> $GLOBALS['phpgw']->common->get_image_path($this->currentapp).'/check.png',
 				'set_column'				=> $set_column,
 				'lang_import_detail'		=> lang('import detail'),
 				'lang_detail_import_statustext'=> lang('import details to this agreement from spreadsheet'),
-				'lang_import'				=> lang('lang_import')
+				'lang_import'				=> lang('import')
 			);
 
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('service agreement') . ': ' . ($id?lang('edit') . ' ' . lang($this->role):lang('add') . ' ' . lang($this->role));
@@ -1016,7 +1060,7 @@ _debug_array($valueset);
 						if ($values['save'])
 						{
 							$GLOBALS['phpgw']->session->appsession('session_data','s_agreement_receipt',$receipt);
-							$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> $this->currentapp.'.uis_agreement.edit', 'id'=> $s_agreement_id));
+							$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uis_agreement.edit', 'id'=> $s_agreement_id));
 						}
 					}
 					else
@@ -1054,7 +1098,7 @@ _debug_array($valueset);
 				}
 				elseif (!$values['save'] && !$values['apply'] && !$values['update']):
 				{
-					$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> $this->currentapp.'.uis_agreement.edit', 'id'=> $s_agreement_id));
+					$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uis_agreement.edit', 'id'=> $s_agreement_id));
 				}
 				endif;
 			}
@@ -1064,7 +1108,7 @@ _debug_array($valueset);
 
 			$link_data = array
 			(
-				'menuaction'		=> $this->currentapp.'.uis_agreement.edit_item',
+				'menuaction'		=> 'property.uis_agreement.edit_item',
 				's_agreement_id'	=> $s_agreement_id,
 				'id'			=> $id,
 				'role'			=> $this->role
@@ -1107,7 +1151,7 @@ _debug_array($valueset);
 			(
 				'lang_add'				=> lang('add detail'),
 				'lang_add_standardtext'	=> lang('add an item to the details'),
-				'add_action'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uis_agreement.edit_item', 's_agreement_id'=> $s_agreement_id))
+				'add_action'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uis_agreement.edit_item', 's_agreement_id'=> $s_agreement_id))
 			);
 
 
@@ -1161,7 +1205,7 @@ _debug_array($valueset);
 				{
 					$link_history_data = array
 					(
-						'menuaction'	=> $this->currentapp.'.uis_agreement.attrib_history',
+						'menuaction'	=> 'property.uis_agreement.attrib_history',
 						's_agreement_id'	=> $s_agreement_id,
 						'attrib_id'	=> $values['attributes'][$i]['attrib_id'],
 						'item_id'	=> $id,
@@ -1213,7 +1257,7 @@ _debug_array($valueset);
 				'table_header'					=> $table_header,
 				'acl_manage'					=> $this->acl_manage,
 				'table_update'					=> $table_update,
-				'update_action'					=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uis_agreement.edit_item', 's_agreement_id'=> $s_agreement_id, 'id'=> $id)),
+				'update_action'					=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uis_agreement.edit_item', 's_agreement_id'=> $s_agreement_id, 'id'=> $id)),
 				'lang_select_all'				=> lang('Select All'),
 				'img_check'					=> $GLOBALS['phpgw']->common->get_image_path($this->currentapp).'/check.png',
 				'location_data'					=> $location_data,
@@ -1224,7 +1268,7 @@ _debug_array($valueset);
 				'set_column'					=> $set_column,
 				'lang_delete_last'				=> lang('delete last index'),
 				'lang_delete_last_statustext'			=> lang('delete the last index'),
-				'delete_action'					=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uis_agreement.edit_item', 'delete_last'=>1, 's_agreement_id'=> $s_agreement_id, 'id'=> $id)),
+				'delete_action'					=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uis_agreement.edit_item', 'delete_last'=>1, 's_agreement_id'=> $s_agreement_id, 'id'=> $id)),
 
 				'lang_history'					=> lang('history'),
 				'lang_history_help'				=> lang('history of this attribute'),
@@ -1254,7 +1298,7 @@ _debug_array($valueset);
 
 			$link_data = array
 			(
-				'menuaction'	=> $this->currentapp.'.uis_agreement.' . $from,
+				'menuaction'	=> 'property.uis_agreement.' . $from,
 				'id'		=> $s_agreement_id
 			);
 
@@ -1296,7 +1340,7 @@ _debug_array($valueset);
 				{
 					$link_history_data = array
 					(
-						'menuaction'	=> $this->currentapp.'.uis_agreement.attrib_history',
+						'menuaction'	=> 'property.uis_agreement.attrib_history',
 						's_agreement_id'	=> $s_agreement_id,
 						'attrib_id'	=> $values['attributes'][$i]['attrib_id'],
 						'item_id'	=> $id,
@@ -1365,7 +1409,7 @@ _debug_array($valueset);
 			}
 			$link_data = array
 			(
-				'menuaction'	=> $this->currentapp.'.uis_agreement.'.$function,
+				'menuaction'	=> 'property.uis_agreement.'.$function,
 				'role'		=> $this->role
 			);
 
@@ -1380,7 +1424,7 @@ _debug_array($valueset);
 			$data = array
 			(
 				'done_action'		=> $GLOBALS['phpgw']->link('/index.php',$link_data),
-				'delete_action'		=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uis_agreement.delete', 's_agreement_id'=> $s_agreement_id, 'id'=> $id, 'attrib'=> $attrib, 'role'=> $this->role)),
+				'delete_action'		=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uis_agreement.delete', 's_agreement_id'=> $s_agreement_id, 'id'=> $id, 'attrib'=> $attrib, 'role'=> $this->role)),
 				'lang_confirm_msg'	=> lang('do you really want to delete this entry'),
 				'lang_yes'		=> lang('yes'),
 				'lang_yes_statustext'	=> lang('Delete the entry'),
@@ -1424,7 +1468,7 @@ _debug_array($valueset);
 
 			$link_data = array
 			(
-				'menuaction'		=> $this->currentapp.'.uis_agreement.index',
+				'menuaction'		=> 'property.uis_agreement.index',
 				's_agreement_id'	=> $s_agreement_id,
 			);
 
@@ -1465,7 +1509,7 @@ _debug_array($valueset);
 
 			$link_file_data = array
 			(
-				'menuaction'	=> $this->currentapp.'.uis_agreement.view_file',
+				'menuaction'	=> 'property.uis_agreement.view_file',
 				'id'		=>$s_agreement_id
 			);
 
@@ -1567,10 +1611,10 @@ _debug_array($valueset);
 					'input_text'				=> $attrib['input_text'],
 					'sorting'				=> $attrib['attrib_sort'],
 					'search'				=> $attrib['search'],
-					'link_up'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uis_agreement.list_attribute', 'resort'=>'up', 'id'=> $attrib['id'], 'allrows'=> $this->allrows, 'role'=> $this->role)),
-					'link_down'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uis_agreement.list_attribute', 'resort'=>'down', 'id'=> $attrib['id'], 'allrows'=> $this->allrows, 'role'=> $this->role)),
-					'link_edit'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uis_agreement.edit_attrib', 'id'=> $attrib['id'], 'role'=> $this->role)),
-					'link_delete'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uis_agreement.delete', 'id'=> $attrib['id'], 'attrib'=>true, 'role'=> $this->role)),
+					'link_up'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uis_agreement.list_attribute', 'resort'=>'up', 'id'=> $attrib['id'], 'allrows'=> $this->allrows, 'role'=> $this->role)),
+					'link_down'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uis_agreement.list_attribute', 'resort'=>'down', 'id'=> $attrib['id'], 'allrows'=> $this->allrows, 'role'=> $this->role)),
+					'link_edit'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uis_agreement.edit_attrib', 'id'=> $attrib['id'], 'role'=> $this->role)),
+					'link_delete'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uis_agreement.delete', 'id'=> $attrib['id'], 'attrib'=>true, 'role'=> $this->role)),
 					'lang_view_attribtext'			=> lang('view the attrib'),
 					'lang_attribute_attribtext'		=> lang('attributes for the attrib'). ' ' . lang('location'),
 					'lang_edit_attribtext'			=> lang('edit the attrib'),
@@ -1598,7 +1642,7 @@ _debug_array($valueset);
 											'sort'	=> $this->sort,
 											'var'	=> 'attrib_sort',
 											'order'	=> $this->order,
-											'extra'	=> array('menuaction'	=> $this->currentapp.'.uis_agreement.list_attribute',
+											'extra'	=> array('menuaction'	=> 'property.uis_agreement.list_attribute',
 													'allrows'=>$this->allrows,
 													'role'	=> $this->role)
 										)),
@@ -1608,7 +1652,7 @@ _debug_array($valueset);
 											'sort'	=> $this->sort,
 											'var'	=> 'column_name',
 											'order'	=> $this->order,
-											'extra'	=> array('menuaction'	=> $this->currentapp.'.uis_agreement.list_attribute',
+											'extra'	=> array('menuaction'	=> 'property.uis_agreement.list_attribute',
 														'allrows'=>$this->allrows,
 														'role'	=> $this->role)
 										)),
@@ -1619,7 +1663,7 @@ _debug_array($valueset);
 			(
 				'lang_add'				=> lang('add'),
 				'lang_add_attribtext'	=> lang('add an attrib'),
-				'add_action'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uis_agreement.edit_attrib', 'role'=> $this->role)),
+				'add_action'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uis_agreement.edit_attrib', 'role'=> $this->role)),
 				'lang_done'				=> lang('done'),
 				'lang_done_attribtext'	=> lang('back to admin'),
 				'done_action'			=> $GLOBALS['phpgw']->link('/admin/index.php'),
@@ -1636,7 +1680,7 @@ _debug_array($valueset);
 
 			$link_data = array
 			(
-				'menuaction'	=> $this->currentapp.'.uis_agreement.list_attribute',
+				'menuaction'	=> 'property.uis_agreement.list_attribute',
 				'sort'		=>$this->sort,
 				'order'		=>$this->order,
 				'query'		=>$this->query,
@@ -1755,7 +1799,7 @@ _debug_array($valueset);
 
 			$link_data = array
 			(
-				'menuaction'	=> $this->currentapp.'.uis_agreement.edit_attrib',
+				'menuaction'	=> 'property.uis_agreement.edit_attrib',
 				'id'		=> $id,
 				'role'		=> $this->role
 
@@ -1791,7 +1835,7 @@ _debug_array($valueset);
 				'lang_delete_choice_statustext'		=> lang('Delete this value from the list of multiple choice'),
 				'msgbox_data'				=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
 				'form_action'				=> $GLOBALS['phpgw']->link('/index.php',$link_data),
-				'done_action'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uis_agreement.list_attribute', 'type_id'=> $type_id, 'role'=> $this->role)),
+				'done_action'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uis_agreement.list_attribute', 'type_id'=> $type_id, 'role'=> $this->role)),
 				'lang_id'				=> lang('Attribute ID'),
 				'lang_save'				=> lang('save'),
 				'lang_done'				=> lang('done'),
@@ -1888,7 +1932,7 @@ _debug_array($valueset);
 			{
 				$link_delete_history_data = array
 					(
-						'menuaction'	=> $this->currentapp.'.uis_agreement.attrib_history',
+						'menuaction'	=> 'property.uis_agreement.attrib_history',
 						's_agreement_id'	=> $s_agreement_id,
 						'item_id'		=> $item_id,
 						'attrib_id'	=> $attrib_id,
@@ -1926,7 +1970,7 @@ _debug_array($valueset);
 
 			$link_data = array
 			(
-				'menuaction'	=> $this->currentapp.'.uis_agreement.attrib_history',
+				'menuaction'	=> 'property.uis_agreement.attrib_history',
 				's_agreement_id'=> $s_agreement_id,
 				'item_id'		=> $item_id,
 				'attrib_id'	=> $attrib_id,
