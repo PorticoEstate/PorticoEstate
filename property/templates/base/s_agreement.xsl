@@ -19,10 +19,20 @@
 			<xsl:when test="edit_attrib">
 				<xsl:apply-templates select="edit_attrib"/>
 			</xsl:when>
+			<xsl:when test="import">
+				<xsl:apply-templates select="import"/>
+			</xsl:when>
 			<xsl:otherwise>
 				<xsl:apply-templates select="list"/>
 			</xsl:otherwise>
 		</xsl:choose>
+	</xsl:template>
+
+	<xsl:template match="import">
+		<table width="100%" cellpadding="2" cellspacing="2" align="center">
+						<xsl:call-template name="table_header"/>
+						<xsl:call-template name="values"/>
+		</table>
 	</xsl:template>
 
 	<xsl:template match="list">
