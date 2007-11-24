@@ -14,19 +14,20 @@
 
 	/* $Id: class.uiicalendar.inc.php,v 1.13 2006/12/11 10:07:35 sigurdne Exp $ */
 
-	class uiicalendar
+	class calendar_uiicalendar
 	{
 		var $bo;
 		var $template;
 
-		var $public_functions = array(
+		var $public_functions = array
+		(
 			'test'		=> True,
 			'import'	=> True
 		);
 
 
 
-		function uiicalendar()
+		function calendar_uiicalendar()
 		{
 			$this->bo = CreateObject('calendar.boicalendar');
 			$this->template = $GLOBALS['phpgw']->template;
@@ -180,8 +181,7 @@
 
 			echo '<body bgcolor="' . (isset($GLOBALS['phpgw_info']['theme']['bg_color'])?$GLOBALS['phpgw_info']['theme']['bg_color']:'') . '">';
 
-			$action = strtoupper(get_var('action', Array('GET')));
-			if ($action == 'GETFILE')
+			if ( strtoupper( phpgw::get_var('action', 'string', 'GET') ) == 'GETFILE')
 			{
 				echo '<b><center>' . lang('You must select a [iv]Cal. (*.[iv]cs)') . '</b></center><br /><br />';
 			}

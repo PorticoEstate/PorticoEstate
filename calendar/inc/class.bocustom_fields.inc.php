@@ -12,10 +12,12 @@
 
 	/* $Id: class.bocustom_fields.inc.php,v 1.4 2006/12/07 19:00:46 sigurdne Exp $ */
 
-	class bocustom_fields
+	class calendar_bocustom_fields
 	{
-		var $stock_fields = array(
-			'title' => array(
+		var $stock_fields = array
+		(
+			'title' => array
+			(
 				'label' => 'Title',
 				'title' => True
 			),
@@ -33,7 +35,7 @@
 			'recure_type' => 'Repetition'
 		);
 
-		function bocustom_fields()
+		public function __construct()
 		{
 			$this->config = CreateObject('phpgwapi.config','calendar');
 			$this->config->read_repository();

@@ -14,7 +14,7 @@
 
 	/* $Id: class.uiholiday.inc.php,v 1.13 2006/12/12 17:51:14 sigurdne Exp $ */
 
-	class uiholiday
+	class calendar_uiholiday
 	{
 		var $debug = False;
 		var $base_url;
@@ -34,7 +34,7 @@
 			'submit'	=> True
 		);
 
-		function uiholiday()
+		public function __construct()
 		{
 			$GLOBALS['phpgw']->nextmatchs = CreateObject('phpgwapi.nextmatchs');
 
@@ -456,7 +456,7 @@
 			$this->bo->year = 0;	// for a complete list with all years
 			$holidays = $this->bo->get_holiday_list();
 
-			if (isset($_GET['download']))
+			if ( phpgw::get_var('download', 'bool', 'POST') )
 			{
 				$locale = $this->bo->locales[0];
 				$browser = CreateObject('phpgwapi.browser');

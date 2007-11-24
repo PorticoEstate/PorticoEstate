@@ -15,7 +15,8 @@
 
 phpgw::import_class('phpgwapi.datetime');
 
-class holidaycalc {
+class calendar_holidaycalc
+{
 
 	function calculate_date($holiday, &$holidays, $year, &$i)
 	{

@@ -12,20 +12,20 @@
 
 	/* $Id: class.soholiday.inc.php,v 1.7 2006/12/12 17:51:14 sigurdne Exp $ */
 
-	class soholiday
+	class calendar_soholiday
 	{
 		var $debug = False;
 		var $db;
 
-		function soholiday()
+		function __construct()
 		{
-			$this->db = $GLOBALS['phpgw']->db;
+			$this->db =& $GLOBALS['phpgw']->db;
 		}
 
 		/* Begin Holiday functions */
 		function save_holiday($holiday)
 		{
-			if(@$holiday['hol_id'])
+			if ( !isset($holiday['hol_id']) || !$holiday['hol_id'] )
 			{
 				if($this->debug)
 				{

@@ -17,7 +17,7 @@
 	/*
 	* Import required classes class
 	*/
-	import_class('phpgwapi.datetime');	
+	phpgw::import_class('phpgwapi.datetime');	
 	
 	class uicalendar
 	{
@@ -191,13 +191,13 @@
 
 			$this->bo->read_holidays($params['year']);
 
-			$date = $GLOBALS['phpgw']->datetime->makegmttime(0,0,0,$params['month'],$params['day'],$params['year']);
+			$date = phpgwapi_datetime::makegmttime(0,0,0,$params['month'],$params['day'],$params['year']);
 			$month_ago = intval(date('Ymd',mktime(0,0,0,$params['month'] - 1,$params['day'],$params['year'])));
 			$month_ahead = intval(date('Ymd',mktime(0,0,0,$params['month'] + 1,$params['day'],$params['year'])));
 			$monthstart = intval(date('Ymd',mktime(0,0,0,$params['month'],1,$params['year'])));
 			$monthend = intval(date('Ymd',mktime(0,0,0,$params['month'] + 1,0,$params['year'])));
 
-			$weekstarttime = $GLOBALS['phpgw']->datetime->get_weekday_start($params['year'],$params['month'],1);
+			$weekstarttime = phpgwapi_datetime::get_weekday_start($params['year'],$params['month'],1);
 
 			print_debug('mini_calendar:monthstart',$monthstart);
 			print_debug('mini_calendar:weekstarttime',date('Ymd H:i:s',$weekstarttime));
@@ -263,19 +263,20 @@
 				for($i=0;$i<7;$i++)
 				{
 					$var = array(
-						'dayname'	=> '<b>' . substr(lang($GLOBALS['phpgw']->datetime->days[$i]),0,2) . '</b>',
+						'dayname'	=> '<b>' . lang(phpgwapi_datetime::$dow_shortnames[$i]) . '</b>',
 						'day_image'	=> ''
 					);
 					$this->output_template_array($mini_cal_tpl,'daynames','mini_day',$var);
 				}
 			}
-			$today = date('Ymd',$GLOBALS['phpgw']->datetime->users_localtime);
+			$today = date('Ymd', phpgwapi_datetime::user_localtime());
+			$user_timezone = phpgwapi_datetime::user_timezone();
 			unset($date);
-			for($i=$weekstarttime + $GLOBALS['phpgw']->datetime->tz_offset;date('Ymd',$i)<=$monthend;$i += (24 * 3600 * 7))
+			for($i=$weekstarttime + $user_timezone;date('Ymd',$i)<=$monthend;$i += (24 * 3600 * 7))
 			{
 				unset($var);
-//				$daily = $this->set_week_array($i - $GLOBALS['phpgw']->datetime->tz_offset,$cellcolor,$weekly); // $cellcolor and $weekly not set
-				$daily = $this->set_week_array($i - $GLOBALS['phpgw']->datetime->tz_offset,false,false);
+//				$daily = $this->set_week_array($i - $user_timezone,$cellcolor,$weekly); // $cellcolor and $weekly not set
+				$daily = $this->set_week_array($i - $user_timezone,false,false);
 				foreach($daily as $date => $day_params)
 				{
 					print_debug('Mini-Cal Date',$date);
@@ -401,8 +402,8 @@
 			
 			$this->bo->read_holidays();
 
-			$next = $GLOBALS['phpgw']->datetime->makegmttime(0,0,0,$this->bo->month,$this->bo->day + 7,$this->bo->year);
-			$prev = $GLOBALS['phpgw']->datetime->makegmttime(0,0,0,$this->bo->month,$this->bo->day - 7,$this->bo->year);
+			$next = phpgwapi_datetime::makegmttime(0,0,0,$this->bo->month,$this->bo->day + 7,$this->bo->year);
+			$prev = phpgwapi_datetime::makegmttime(0,0,0,$this->bo->month,$this->bo->day - 7,$this->bo->year);
 
 			$minical_this = $this->mini_calendar(array
 			(
@@ -533,28 +534,34 @@
 			return $p->fp('out','year_t');
 		}
 		
-		function view($vcal_id=0,$cal_date=0)
+		function view($vcal_id=0, $cal_date = 0)
 		{
 			unset($GLOBALS['phpgw_info']['flags']['noheader']);
 			unset($GLOBALS['phpgw_info']['flags']['nonavbar']);
 			$GLOBALS['phpgw_info']['flags']['app_header'] = $GLOBALS['phpgw_info']['apps']['calendar']['title'].' - '.lang('View');
 			$this->header(false);
 
-			$cal_id = get_var('cal_id',array('GET','POST'),$vcal_id);
+			$cal_id = phpgw::get_var('cal_id', 'int', 'REQUEST', $vcal_id);
 
-			$date = $cal_date ? $cal_date : 0;
-			$date = $date ? $date : (int)$_GET['date'];
+			if ( $cal_date )
+			{
+				$date = $cal_date;
+			}
+			else
+			{
+				$date = phpgw::get_var('date', 'int', 'GET');
+			}
 
 			// First, make sure they have permission to this entry
 			if ($cal_id < 1)
 			{
-				echo '<center>'.lang('Invalid entry id.').'</center>'."\n";
+				echo '<div class="err">'.lang('Invalid entry id.') . "</div>\n";
 				$GLOBALS['phpgw']->common->phpgw_exit(True);
 			}
 
 			if(!$this->bo->check_perms(PHPGW_ACL_READ,$cal_id))
 			{
-				echo '<center>'.lang('You do not have permission to read this record!').'</center>'."\n";
+				echo '<div class="err">'.lang('You do not have permission to read this record!') . "</div>\n";
 				$GLOBALS['phpgw']->common->phpgw_exit(True);
 			}
 
@@ -562,14 +569,14 @@
 
 			if(!isset($event['id']))
 			{
-				echo '<center>'.lang('Sorry, this event does not exist').'.'.'</center>'."\n";
+				echo '<div class="err">'.lang('Sorry, this event does not exist') . ".</div>\n";
 				$GLOBALS['phpgw']->common->phpgw_exit(True);
 			}
 
 			$this->bo->repeating_events = array();
 			$this->bo->cached_events = array();
 			$this->bo->repeating_events[0] = $event;
-			$datetime = mktime(0,0,0,$this->bo->month,$this->bo->day,$this->bo->year) - $GLOBALS['phpgw']->datetime->tz_offset;
+			$datetime = mktime(0,0,0,$this->bo->month,$this->bo->day,$this->bo->year) - phpgwapi_datetime::user_timezone();
 			$this->bo->check_repeating_events($datetime);
 			$check_date = $GLOBALS['phpgw']->common->show_date($datetime,'Ymd');
 			if(isset($this->bo->cached_events[$check_date][0])
@@ -589,7 +596,7 @@
 
 			if(!$this->view_event($event,True))
 			{
-				echo '<center>'.lang('You do not have permission to read this record!').'</center>';
+				echo '<div class="err">'.lang('You do not have permission to read this record!') . "<div>\n";
 				$GLOBALS['phpgw']->common->phpgw_exit(True);
 			}
 
@@ -757,9 +764,11 @@
 				echo '<!-- params[cd] = '.$params['cd'].' -->'."\n";
 			}
 
-			if(isset($_GET['readsess']))
+			$readsess = phpgw::get_var('readsess', 'bool', 'GET');
+
+			if ( $readsess )
 			{
-				$params['readsess'] = $_GET['readsess'];
+				$params['readsess'] = $readsess;
 				$params['cd'] = 0;
 			}
 
@@ -769,19 +778,17 @@
 				echo '<!-- params[cd] = '.$params['cd'].' -->'."\n";
 			}
 
-			if($params != '' && @is_array($params) && @isset($params['readsess']))
+			if ( $params && is_array($params) && $readsess )
 			{
 				$can_edit = True;
-				$this->edit_form(
-					array(
-						'event' => $this->bo->restore_from_appsession(),
-						'cd' => $params['cd']
-					)
-				);
+				$this->edit_form(array
+				(
+					'event' => $this->bo->restore_from_appsession(),
+					'cd' => $params['cd']
+				));
 			}
-			elseif(isset($_GET['cal_id']))
+			else if ( $cal_id = phpgw::get_var('cal_id', 'int', 'GET') )
 			{
-				$cal_id = intval($_GET['cal_id']);
 				$event = $this->bo->read_entry($cal_id);
 
 				if(!$this->bo->check_perms(PHPGW_ACL_EDIT,$event))
@@ -789,10 +796,12 @@
 					Header('Location: '.$this->page('view', array('cal_id' => $cal_id), true) );
 					$GLOBALS['phpgw']->common->phpgw_exit();
 				}
-				if(@isset($_POST['edit_type']) && $_POST['edit_type'] == 'single')
+
+				$edit_type = phpgw::get_var('edit_type', 'string', 'POST');
+				if ( $edit_type == 'single' )
 				{
 					$event['id'] = 0;
-					$this->bo->set_recur_date($event,$_POST['date']);
+					$this->bo->set_recur_date($event, phpgw::get_var('date', 'int', 'POST') );
 					$event['recur_type'] = MCAL_RECUR_NONE;
 					$event['recur_interval'] = 0;
 					$event['recur_data'] = 0;
@@ -812,7 +821,8 @@
 
 		function export($vcal_id=0)
 		{
-			if(!isset($_POST['cal_id']) || !$_POST['cal_id'])
+			$cal_id = phpgw::get_var('cal_id', 'int', 'POST');
+			if( !$cal_id )
 			{
 				Header('Location: ' . $this->index());
 				$GLOBALS['phpgw']->common->phpgw_exit();
@@ -821,12 +831,12 @@
 			$GLOBALS['phpgw_info']['flags']['noappfooter'] = True;
 			
 			$browser = createObject('phpgwapi.browser');
-			$browser->content_header("phpgw-cal-{$_POST['cal_id']}.ics", 'text/calendar');
+			$browser->content_header("phpgw-cal-{$cal_id}.ics", 'text/calendar');
 			$content = ExecMethod('calendar.boicalendar.export', array
-									(
-										'l_event_id'	=> $_POST['cal_id'],
-										'chunk_split'	=> False,
-									));
+			(
+				'l_event_id'	=> $cal_id,
+				'chunk_split'	=> False,
+			));
 			echo $content;
 			exit;
 		}
@@ -848,11 +858,11 @@
 			//$GLOBALS['phpgw']->common->phpgw_header();
 			$this->header();
 
-			$cal_id = get_var('cal_id',array('GET'),$params['cal_id']);
+			$cal_id = phpgw::get_var('cal_id', 'int', 'GET', $params['cal_id']);
 
 			if ($cal_id < 1)
 			{
-				echo '<center>'.lang('Invalid entry id.').'</center>'."\n";
+				echo '<div class="err">'.lang('Invalid entry id.') . "</div>\n";
 				$GLOBALS['phpgw']->common->phpgw_exit(True);
 			}
 
@@ -931,11 +941,26 @@
 			{
 				$this->index();
 			}
-			$cal_id = (isset($params['cal_id'])?intval($params['cal_id']):'');
-			$cal_id = ($cal_id==''?intval($_GET['cal_id']):$cal_id);
 
-			$reinstate_index = (isset($params['reinstate_index'])?intval($params['reinstate_index']):'');
-			$reinstate_index = ($reinstate_index==''?intval($_POST['reinstate_index']):$reinstate_index);
+			if ( isset($params['cal_id']) && $params['cal_id'] )
+			{
+				$cal_id = (int) $params['cal_id'];
+			}
+			else
+			{
+				$cal_id = phpgw::get_var('cal_id', 'int', 'GET');
+			}
+
+			$reinstate_index = 0;
+			if ( isset($params['reinstate_index']) && $params['reinstate_index'] )
+			{
+				$reinstate_index = (int) $params['reinstate_index'];
+			}
+			else if ( $ri = phpgw::get_var('reinstate_index', 'int', 'POST') )
+			{
+				$reinstate_index = $ri;
+				unset($ri);
+			}
 			if($this->debug)
 			{
 				echo '<!-- Calling bo->reinstate -->'."\n";
@@ -984,8 +1009,8 @@
 
 				$can_edit = True;
 
-				$starthour = intval(get_var('hour',array('GET'),$this->bo->prefs['calendar']['workdaystarts']));
-				$startmin  = intval(get_var('minute',array('GET'),0));
+				$starthour = phpgw::get_var('hour', 'int', 'GET', $this->bo->prefs['calendar']['workdaystarts']);
+				$startmin  = phpgw::get_var('minute', 'int', 'GET');
 				$endmin    = $startmin + intval($this->bo->prefs['calendar']['defaultlength']);
 	//			$endhour   = $starthour + $this->bo->normalizeminutes($endmin);
 				$end_time = $this->bo->normalizeminutes($endmin);
@@ -1020,27 +1045,29 @@
 
 		function delete()
 		{
-			if(!isset($_GET['cal_id']))
+			if ( phpgw::get_var('cal_id', 'int', 'GET') )
 			{
 				Header('Location: '.$this->page('', array('date' => sprintf('%04d%02d%02d', $this->bo->year, $this->bo->month, $this->bo->day) ), true) );
 				$GLOBALS['phpgw']->common->phpgw_exit();
 			}
 			$date = sprintf('%04d%02d%02d', $this->bo->year, $this->bo->month, $this->bo->day);
-			if($this->bo->check_perms(PHPGW_ACL_DELETE,$cal_id=intval($_GET['cal_id'])))
+			$cal_id = phpgw::get_var('cal_id', 'int', 'GET');
+			if ( $this->bo->check_perms(PHPGW_ACL_DELETE, $cal_id) )
 			{
-				if(isset($_POST['delete_type']) && $_POST['delete_type'] == 'single')
+				$delete_type = phpgw::get_var('delete_type', 'string', 'POST');
+				if ( $delete_type == 'single' )
 				{
-					$date = $_POST['date'];
-					$cd = $this->bo->delete_single(
-						array(
-							'id'	=> $cal_id,
-							'year'	=> substr($date,0,4),
-							'month'	=> substr($date,4,2),
-							'day'	=> substr($date,6,2)
-						)
-					);
+					$date = phpgw::get_var('date', 'int', 'POST');
+					$cd = $this->bo->delete_single(array
+					(
+						'id'	=> $cal_id,
+						'year'	=> substr($date,0,4),
+						'month'	=> substr($date,4,2),
+						'day'	=> substr($date,6,2)
+					));
 				}
-				elseif((isset($_POST['delete_type']) && $_POST['delete_type'] == 'series') || !isset($_POST['delete_type']))
+
+				else if ( !$delete_type || $delete_type = 'series' )
 				{
 					$cd = $this->bo->delete_entry($cal_id);
 					$this->bo->expunge();
@@ -1073,8 +1100,8 @@
 				'link'	=> 'day'
 			));
 			
-			$now	= $GLOBALS['phpgw']->datetime->makegmttime(0, 0, 0, $this->bo->month, $this->bo->day, $this->bo->year);
-			$now['raw'] += $GLOBALS['phpgw']->datetime->tz_offset;
+			$now	= phpgwapi_datetime::makegmttime(0, 0, 0, $this->bo->month, $this->bo->day, $this->bo->year);
+			$now['raw'] += phpgwapi_datetime::user_timezone();
 
 			$p = $GLOBALS['phpgw']->template;
 			$p->set_file('day_t', 'day.tpl');
@@ -1128,7 +1155,8 @@
 			//$GLOBALS['phpgw']->common->phpgw_header();
 			$this->header(false);
 			
-			$event = $this->bo->read_entry($_GET['cal_id']);
+			$cal_id = phpgw::get_var('cal_id', 'int', 'GET');
+			$event = $this->bo->read_entry($cal_id);
 
 			reset($event['participants']);
 
@@ -1144,7 +1172,7 @@
 			   return;
 			}
 
-			$freetime = $GLOBALS['phpgw']->datetime->localdates(mktime(0,0,0,$event['start']['month'],$event['start']['mday'],$event['start']['year']) - $GLOBALS['phpgw']->datetime->tz_offset);
+			$freetime = phpgwapi_datetime::localdates(mktime(0,0,0,$event['start']['month'],$event['start']['mday'],$event['start']['year']) - phpgwapi_datetime::user_timezone());
 			echo $this->timematrix(
 				array(
 					'date'		=> $freetime,
@@ -1154,7 +1182,7 @@
 				)
 			).'<br />';
 
-			$event = $this->bo->read_entry($_GET['cal_id']);
+			$event = $this->bo->read_entry($cal_id);
 			$this->view_event($event);
 			$GLOBALS['phpgw']->template->pfp('phpgw_body','view_event');
 
@@ -1168,8 +1196,9 @@
 				$this->no_edit();
 				return;
 			}
-
-			$this->bo->set_status(intval($_GET['cal_id']),intval($_GET['action']));
+			$cal_id = phpgw::get_var('cal_id', 'int', 'GET');
+			$action = phpgw::get_var('action', 'int', 'GET');
+			$this->bo->set_status($cal_id, $action);
 
 			if ($this->bo->return_to)
 			{
@@ -1185,10 +1214,6 @@
 
 		function planner()
 		{
-			if(floor(phpversion()) < 4)
-			{
-				return;
-			}
 			$home = strstr($_SERVER['PHP_SELF'],'home') !== False;
 			// generate header and set global/member variables
 			//
@@ -1302,7 +1327,7 @@
 					$m = 1; $y++; // "wrap-around" into new year
 					$this->bo->read_holidays($y);
 				}
-				$days = $GLOBALS['phpgw']->datetime->days_in_month($m,$y);
+				$days = phpgwapi_datetime::days_in_month($m,$y);
 
 				$d     = mktime(0,0,0,$m,1,$y);
 				$month = lang(date('F', $d)).strftime(' %Y', $d);
@@ -1337,7 +1362,7 @@
 
 					// highlight today, saturday, sunday and holidays
 					//
-					$dow = $GLOBALS['phpgw']->datetime->day_of_week($y,$m,$d);
+					$dow = phpgwapi_datetime::day_of_week($y,$m,$d);
 					$date = sprintf("%04d%02d%02d",$y,$m,$d);
 					if ($date == date('Ymd'))
 					{
@@ -1370,7 +1395,7 @@
 			//
 			$this->planner_end_month = $m - 1;
 			$this->planner_end_year  = $y;
-			$this->planner_days_in_end_month = $GLOBALS['phpgw']->datetime->days_in_month($this->planner_end_month,$this->planner_end_year);
+			$this->planner_days_in_end_month = phpgwapi_datetime::days_in_month($this->planner_end_month,$this->planner_end_year);
 			$this->planner_firstday = intval(date('Ymd',mktime(0,0,0,$this->bo->month,1,$this->bo->year)));
 			$this->planner_lastday  = intval(date('Ymd',mktime(0,0,0,$this->planner_end_month,$this->planner_days_in_end_month,$this->planner_end_year)));
 
@@ -1535,8 +1560,9 @@
 				$opt .= ' title="'.lang('You do not have permission to read this record!');
 			}
 
-			$start = $GLOBALS['phpgw']->common->show_date($this->bo->maketime($event['start']) - $GLOBALS['phpgw']->datetime->tz_offset);
-			$end = $GLOBALS['phpgw']->common->show_date($this->bo->maketime($event['end']) - $GLOBALS['phpgw']->datetime->tz_offset);
+			$user_timezone = phpgwapi_datetime::user_timezone();
+			$start = $GLOBALS['phpgw']->common->show_date($this->bo->maketime($event['start']) - $user_timezone);
+			$end = $GLOBALS['phpgw']->common->show_date($this->bo->maketime($event['end']) - $user_timezone);
 			$opt .= "\n".lang('Start Date/Time').": ".$start."\n".lang('End Date/Time').": ".$end;
 
 			if ($event['location'] && !$is_private)
@@ -1601,7 +1627,7 @@
 			//
 			if ($event_start >= $this->planner_firstday)
 			{
-				$days_between = $GLOBALS['phpgw']->datetime->days_between($this->bo->month,1,$this->bo->year,$event['start']['month'],$event['start']['mday'],$event['start']['year']);
+				$days_between = phpgwapi_datetime::days_between($this->bo->month,1,$this->bo->year,$event['start']['month'],$event['start']['mday'],$event['start']['year']);
 
 				$start_cell = $intervals_per_day * $days_between + $interval[$event['start']['hour']];
 			}
@@ -1614,7 +1640,7 @@
 			//
 			if ($event_end <= $this->planner_lastday)
 			{
-				$days_between = $GLOBALS['phpgw']->datetime->days_between($this->bo->month,1,$this->bo->year,$event['end']['month'],$event['end']['mday'],$event['end']['year']);
+				$days_between = phpgwapi_datetime::days_between($this->bo->month,1,$this->bo->year,$event['end']['month'],$event['end']['mday'],$event['end']['year']);
 				$end_cell = $intervals_per_day * $days_between + $interval[$event['end']['hour']];
 				if ($end_cell == $start_cell && $end_cell < $last_cell)
 				{
@@ -1780,7 +1806,7 @@
 
 		function matrixselect()
 		{
-			$datetime = mktime(0,0,0,$this->bo->month,$this->bo->day,$this->bo->year) - $GLOBALS['phpgw']->datetime->tz_offset;
+			$datetime = mktime(0,0,0,$this->bo->month,$this->bo->day,$this->bo->year) - phpgwapi_datetime::user_timezone();
 
 			$sb = CreateObject('phpgwapi.sbox');
 			$jscal = CreateObject('phpgwapi.jscalendar');
@@ -1921,11 +1947,11 @@
 
 		function viewmatrix()
 		{
-			if (isset($_POST['cancel']) && $_POST['cancel'])
+			if ( phpgw::get_var('cancel', 'bool', 'POST') )
 			{
 				$this->index();
 			}
-			$participants = $_POST['participants'];
+			$participants = phpgw::get_var('participants', 'string', 'POST');
 
 			$parts = array();
 			$acct = CreateObject('phpgwapi.accounts',$this->bo->owner);
@@ -1937,7 +1963,7 @@
 					switch (substr($participant, 0, 2))
 					{
 						case 'g_':
-							if ($members = $acct->member(intval(substr($participant, 2))))
+							if ($members = $acct->member((int) substr($participant, 2)) )
 							{
 								foreach($members as $member)
 								{
@@ -1963,10 +1989,11 @@
 
 			$participants = array_keys($parts);	// get id's as values and a numeric index
 
-			if(isset($_POST['date_select']) && $_POST['date_select'])
+			$date_select = phpgw::get_var('date_select', 'string', 'POST');
+			if ( $date_select )
 			{
 				$jscal = CreateObject('phpgwapi.jscalendar', false);
-				$date_selected = $jscal->input2date($_POST['date_select']);
+				$date_selected = $jscal->input2date($date_select);
 				$this->bo->year = $date_selected['year'];
 				$this->bo->month = $date_selected['month'];
 				$this->bo->day = $date_selected['day'];
@@ -1982,14 +2009,15 @@
 			$this->header();
 
 //_debug_array($_POST);
-			switch($_POST['matrixtype'])
+			$matrixtype = phpgw::get_var('matrixtype', 'string', 'POST');
+			switch( $matrixtype )
 			{
 				case 'free/busy':
 					echo '<br />'.$this->timematrix(
 						array
 						(
-					//		'date'		=> $GLOBALS['phpgw']->datetime->gmtdate($date_selected['raw']),
-							'date'		=> $GLOBALS['phpgw']->datetime->gmtdate(mktime(0,0,0,$this->bo->month,$this->bo->day,$this->bo->year)),
+					//		'date'		=> phpgwapi_datetime::gmtdate($date_selected['raw']),
+							'date'		=> phpgwapi_datetime::gmtdate(mktime(0,0,0,$this->bo->month,$this->bo->day,$this->bo->year)),
 							'starttime'	=> $this->bo->splittime('000000',False),
 							'endtime'	=> 0,
 							'participants'	=> $parts
@@ -2012,91 +2040,101 @@
 					break;
 			}
 //_debug_array($date_selected);
- 			$next_day = $GLOBALS['phpgw']->datetime->makegmttime(0,0,0,$this->bo->month,$this->bo->day + $prev_next_shift,$this->bo->year);
- 			$prev_day = $GLOBALS['phpgw']->datetime->makegmttime(0,0,0,$this->bo->month,$this->bo->day - $prev_next_shift,$this->bo->year);
+ 			$next_day = phpgwapi_datetime::makegmttime(0,0,0,$this->bo->month,$this->bo->day + $prev_next_shift,$this->bo->year);
+ 			$prev_day = phpgwapi_datetime::makegmttime(0,0,0,$this->bo->month,$this->bo->day - $prev_next_shift,$this->bo->year);
 
  			#echo '<br>prev: '.var_dump($prev_day);
  			#echo '<br>next: '.var_dump($next_day);
  
- 			echo ' <table cellpadding="5" width="100%"><tr><td>'."\n";
 			
-			// Prev
- 			echo "\n<br />\n".'<form action="'.$this->page('viewmatrix').'" method="post" name="matrixform">'."\n";
- 	//		echo '  <input type="hidden" name="date_select" value="'.date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'],$prev_day['raw']).'">'."\n";
- 			echo '  <input type="hidden" name="year" value="'.$prev_day['year'].'">'."\n";
- 			echo '  <input type="hidden" name="month" value="'.$prev_day['month'].'">'."\n";
- 			echo '  <input type="hidden" name="day" value="'.$prev_day['day'].'">'."\n";
- 			echo '  <input type="hidden" name="matrixtype" value="'.$_POST['matrixtype'].'">'."\n";
- 			foreach($_POST['participants'] as $part)
- 			{
- 				echo '  <input type="hidden" name="participants[]" value="'.$part.'">'."\n";
- 			}
- 			echo '  <input type="submit" name="prev" value="&lt;&lt;">'."\n";
- 			echo ' </td>'."\n";
- 			echo '</form>'."\n";
 
+			$form_action = $this->page('viewmatrix');
 			$part_inputs = '';
- 			foreach ( $_POST['participants'] as $part )
+ 			foreach ( phpgw::get_var('participants', 'int', 'POST') as $part)
  			{
- 				$part_inputs = "\t<input type=\"hidden\" name=\"participants[]\" value=\"{$part}\" />\n";
+ 				$part_inputs .= <<<HTML
+				<input type="hidden" name="participants[]" value="{$part}">
+
+HTML;
  			}
+			$other_type = $matrixtype == 'weekly' ? 'free/busy' : 'weekly';
+			$lang_othertype = lang($other_type);
+			$lang_change_to = lang('change view to');
+			$lang_cancel = lang('cancel');
+			$lang_refresh = lang('refresh');
 
-			// Next
- 			echo ' <td align="right">'."\n";
- 			echo "\n<br />\n".'<form action="'.$this->page('viewmatrix').'" method="post" name="matrixform">'."\n";
- 		//	echo '  <input type="hidden" name="date_select" value="'.date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'],$next_day['raw']).'">'."\n";
- 			echo '  <input type="hidden" name="year" value="'.$next_day['year'].'">'."\n";
- 			echo '  <input type="hidden" name="month" value="'.$next_day['month'].'">'."\n";
- 			echo '  <input type="hidden" name="day" value="'.$next_day['day'].'">'."\n";
- 			echo '  <input type="hidden" name="matrixtype" value="'.$_POST['matrixtype'].'">'."\n";
- 			echo $part_inputs;
-			echo '  <input type="submit" name="prev" value="&gt;&gt;">'."\n";
- 			echo ' </td>'."\n";
- 			echo '</form>'."\n";
+			// Prev
+			echo <<<HTML
+<table cellpadding="5" width="100%">
+	<tr>
+		<td>
+ 			<br>
+			<form action="{$form_action}" method="post" name="matrixform">
+ 				<input type="hidden" name="year" value="{$prev_day['year']}">
+ 				<input type="hidden" name="month" value="{$prev_day['month']}">
+ 				<input type="hidden" name="day" value="{$prev_day['day']}">
+ 				<input type="hidden" name="matrixtype" value="{$matrixtype}">
+				$part_inputs
+				<input type="submit" name="prev" value="&lt;&lt;">
+ 			</form>
+		</td>
+		<td align="right">
+			<br>
+			<form action="$form_action" method="post" name="matrixform">
+				<input type="hidden" name="year" value="{$next_day['year']}">
+				<input type="hidden" name="month" value="{$next_day['month']}">
+				<input type="hidden" name="day" value="{$next_day['day']}">
+				<input type="hidden" name="matrixtype" value="{$matrixtype}">
+				$part_inputs
+				<input type="submit" name="prev" value="&gt;&gt;">
+			</form>'
+		</td>
+	</tr>
+</table>
+<table cellpadding="5">
+	<tr>
+		<td valign="bottom">
+			<form action="{$form_action}" method="post" name="matrixform">
+				<input type="hidden" name="year" value="{$this->bo->year}">
+				<input type="hidden" name="month" value="{$this->bo->month}">'."\n";
+				<input type="hidden" name="day" value="{$this->bo->day}">
+				<input type="hidden" name="matrixtype" value="{$_POST['matrixtype']}">
+				$part_inputs;
+				<input type="submit" name="refresh" value="{$lang_refresh}">
+				<input type="submit" name="cancel" value="{$lang_cancel}">
+			</form>
+		</td>
+		<td> &nbsp; </td>
+		<td align="right" valign="bottom">
+			<br>
+			<form action="{$form_action}" method="post" name="matrixform">
+				<input type="hidden" name="year" value="{$this->bo->year}">
+				<input type="hidden" name="month" value="{$this->bo->month}">
+				<input type="hidden" name="day" value="{$this->bo->day}">
+				<input type="hidden" name="matrixtype" value="{$other_type}">
+ 				$part_inputs
+				$lang_change_to:  <input type="submit" name="change_view" value="{$lang_other_type}">
+			</form>
+		</td>
+	</tr>
+</table>
 
- 			echo ' </td></tr></table>'."\n";
- 			echo ' <table cellpadding="5"><tr><td valign="bottom">'."\n";
-			echo "\n<br />\n".'<form action="'.$this->page('viewmatrix').'" method="post" name="matrixform">'."\n";
-		//	echo '  <input type="hidden" name="date_select" value="'.date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'],$date_selected['raw']).'">'."\n";
-			echo '  <input type="hidden" name="year" value="'.$this->bo->year.'">'."\n";
-			echo '  <input type="hidden" name="month" value="'.$this->bo->month.'">'."\n";
-			echo '  <input type="hidden" name="day" value="'.$this->bo->day.'">'."\n";
-			echo '  <input type="hidden" name="matrixtype" value="'.$_POST['matrixtype'].'">'."\n";
- 			echo $part_inputs;
-			echo '  <input type="submit" name="refresh" value="'.lang('Refresh').'">'."\n";
-			echo ' </td><td valign="bottom">'."\n";
-			echo '  <input type="submit" name="cancel" value="'.lang('Cancel').'">'."\n";
-			echo '</form>'."\n";
-			echo ' </td>'."\n";
-
-			$other_type = ($_POST['matrixtype'] == 'weekly') ? 'free/busy' : 'weekly';
-
-			echo ' <td> &nbsp; </td>'."\n";
-			echo ' <td align="right" valign="bottom">'."\n";
-			echo "\n<br />\n".'<form action="'.$this->page('viewmatrix').'" method="post" name="matrixform">'."\n";
-		//	echo '  <input type="hidden" name="date_select" value="'.date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'],$date_selected['raw']).'">'."\n";
-			echo '  <input type="hidden" name="year" value="'.$this->bo->year.'">'."\n";
-			echo '  <input type="hidden" name="month" value="'.$this->bo->month.'">'."\n";
-			echo '  <input type="hidden" name="day" value="'.$this->bo->day.'">'."\n";
-			echo '  <input type="hidden" name="matrixtype" value="'.$other_type.'">'."\n";
- 			echo $part_inputs;
-			echo lang('change view to').':  <input type="submit" name="change_view" value="'.lang($other_type).'">'."\n";
-			echo '</form>'."\n";
-			echo ' </td>'."\n";
-
-			echo ' </td></tr></table>'."\n";
+HTML;
 		}
 
 		function search()
 		{
-			if (empty($_POST['keywords']))
+			$keywords = phpgw::get_var('keywords', 'string', 'POST');
+			if ( !$keywords )
 			{
 				// If we reach this, it is because they didn't search for anything,
 				// attempt to send them back to where they where.
 				$GLOBALS['phpgw']->redirect_link('/index.php',array
 				(
-					'menuaction' => $_POST['from'],
-					'date' => $_POST['year'].$_POST['month'].$_POST['day']
+					'menuaction' => phpgw::get_var('from', 'string', 'POST'),
+					'date' => phpgw::get_var('year', 'int', 'POST') 
+							. phpgw::get_var('monnth', 'int', 'POST') 
+							. phpgw::get_var('day', 'int', 'POST')
 				));
 				$GLOBALS['phpgw']->common->phpgw_exit();
 			}
@@ -2117,7 +2155,7 @@
 
 			// This has been solved by the little icon indicator for recurring events.
 
-			$event_ids = $this->bo->search_keywords($_POST['keywords']);
+			$event_ids = $this->bo->search_keywords($keywords);
 			foreach($event_ids as $key => $id)
 			{
 				$event = $this->bo->read_entry($id);
@@ -2127,7 +2165,7 @@
 					continue;
 				}
 
-				$datetime = $this->bo->maketime($event['start']) - $GLOBALS['phpgw']->datetime->tz_offset;
+				$datetime = $this->bo->maketime($event['start']) - phpgwapi_datetime::user_timezone();
 
 				$info[strval($event['id'])] = array(
 					'tr_color'	=> $GLOBALS['phpgw']->nextmatchs->alternate_row_class(),
@@ -2349,9 +2387,10 @@
 
 			if($menuaction == 'calendar.uicalendar.week')
 			{
+				$user_timezone = phpgwapi_datetime::user_timezone();
 				unset($thisdate);
-				$thisdate = mktime(0,0,0,$this->bo->month,$this->bo->day,$this->bo->year) - $GLOBALS['phpgw']->datetime->tz_offset;
-				$sun = $GLOBALS['phpgw']->datetime->get_weekday_start($this->bo->year,$this->bo->month,$this->bo->day) - $GLOBALS['phpgw']->datetime->tz_offset;
+				$thisdate = mktime(0,0,0,$this->bo->month,$this->bo->day,$this->bo->year) - $user_timezone;
+				$sun = phpgwapi_datetime::get_weekday_start($this->bo->year,$this->bo->month,$this->bo->day) - $user_timezone;
 
 				$str = '';
 				for ($i = -7; $i <= 7; $i++)
@@ -2399,9 +2438,10 @@
 				$str = '';
 				$date_str = '';
 
-				if(isset($_GET['date']) && $_GET['date'])
+				$date = phpgw::get_var('date', 'int', 'GET');
+				if ( $date ) 
 				{
-					$date_str .= '    <input type="hidden" name="date" value="'.$_GET['date'].'">'."\n";
+					$date_str .= '    <input type="hidden" name="date" value="'.$date . "\">\n";
 				}
 				$date_str .= '    <input type="hidden" name="month" value="'.$this->bo->month.'">'."\n";
 				$date_str .= '    <input type="hidden" name="day" value="'.$this->bo->day.'">'."\n";
@@ -2458,6 +2498,7 @@
 
 		function link_to_entry($event,$month,$day,$year)
 		{
+			$user_timezone = phpgwapi_datetime::user_timezone();
 			$str = '';
 			$is_private = '';
 			if(!$event['public']==1 || !$this->bo->check_perms(PHPGW_ACL_READ,$event))
@@ -2467,11 +2508,11 @@
 		//	$is_private = !$event['public'] || !$this->bo->check_perms(PHPGW_ACL_READ,$event);
 			$editable = $this->bo->check_perms(PHPGW_ACL_READ,$event);
 
-			$starttime = $this->bo->maketime($event['start']) - $GLOBALS['phpgw']->datetime->tz_offset;
-			$endtime = $this->bo->maketime($event['end']) - $GLOBALS['phpgw']->datetime->tz_offset;
+			$starttime = $this->bo->maketime($event['start']) - $user_timezone;
+			$endtime = $this->bo->maketime($event['end']) - $user_timezone;
 			$rawdate = mktime(0,0,0,$month,$day,$year);
-			$rawdate_offset = $rawdate - $GLOBALS['phpgw']->datetime->tz_offset;
-			$nextday = mktime(0,0,0,$month,$day + 1,$year) - $GLOBALS['phpgw']->datetime->tz_offset;
+			$rawdate_offset = $rawdate - $user_timezone;
+			$nextday = mktime(0,0,0,$month,$day + 1,$year) - $user_timezone;
 			if (intval($GLOBALS['phpgw']->common->show_date($starttime,'Hi')) && $starttime == $endtime)
 			{
 				$time = $GLOBALS['phpgw']->common->show_date($starttime,$this->bo->users_timeformat);
@@ -2491,9 +2532,9 @@
 					$start_time = $GLOBALS['phpgw']->common->show_date($starttime,$this->bo->users_timeformat);
 				}
 
-				if($endtime >= ($rawdate_offset + 86400))
+				if($endtime >= ($rawdate_offset + phpgwapi_datetime::SECONDS_IN_DAY))
 				{
-					$end_time = $GLOBALS['phpgw']->common->show_date(mktime(23,59,59,$month,$day,$year) - $GLOBALS['phpgw']->datetime->tz_offset,$this->bo->users_timeformat);
+					$end_time = $GLOBALS['phpgw']->common->show_date(mktime(23,59,59,$month,$day,$year) - $user_timezone,$this->bo->users_timeformat);
 				}
 				else
 				{
@@ -2752,8 +2793,9 @@
 			$mday = $event['start']['mday'];
 			$year = $event['start']['year'];
 
-			$start = mktime($event['start']['hour'],$event['start']['min'],$event['start']['sec'],$month,$mday,$year) - $GLOBALS['phpgw']->datetime->tz_offset;
-			$end = $this->bo->maketime($event['end']) - $GLOBALS['phpgw']->datetime->tz_offset;
+			$user_timezone = phpgwapi_datetime::user_timezone();
+			$start = mktime($event['start']['hour'],$event['start']['min'],$event['start']['sec'],$month,$mday,$year) - $user_timezone;
+			$end = $this->bo->maketime($event['end']) - $user_timezone;
 
 			$overlap = '';
 			for($i=0;$i<count($overlapping_events);$i++)
@@ -2880,7 +2922,7 @@
 
 		function week_header($month, $year, $display_name = False)
 		{
-			$this->weekstarttime = $GLOBALS['phpgw']->datetime->get_weekday_start($year,$month,1);
+			$this->weekstarttime = phpgwapi_datetime::get_weekday_start($year,$month,1);
 
 			$p = CreateObject('phpgwapi.Template',$this->template_dir);
 			$p->set_unknowns('remove');
@@ -2899,7 +2941,7 @@
 
 			for($i=0;$i<7;$i++)
 			{
-				$p->set_var('col_title',lang($GLOBALS['phpgw']->datetime->days[$i]));
+				$p->set_var('col_title',lang(phpgwapi_datetime::$dow_fullnames[$i]));
 				$p->parse('column_header','column_title',True);
 			}
 			return $p->fp('out','monthly_header');
@@ -2949,8 +2991,8 @@
 				$p->parse('column_header','month_column',True);
 			}
 
-			$today = date('Ymd',$GLOBALS['phpgw']->datetime->users_localtime);
-			$daily = $this->set_week_array($startdate - $GLOBALS['phpgw']->datetime->tz_offset,$cellclass,$weekly);
+			$today = date('Ymd',phpgwapi_datetime::user_localtime());
+			$daily = $this->set_week_array($startdate - phpgwapi_datetime::user_timezone(),$cellclass,$weekly);
 			foreach($daily as $date => $day_params)
 			{
 				$year = intval(substr($date,0,4));
@@ -3046,11 +3088,6 @@
 		
 		function display_month($month,$year,$showyear,$owner=0)
 		{
-			if($this->debug)
-			{
-				echo '<!-- datetime:gmtdate = '.$GLOBALS['phpgw']->datetime->cv_gmtdate.' -->'."\n";
-			}
-
 			$this->bo->store_to_cache(
 				array(
 					'syear'	=> $year,
@@ -3062,7 +3099,7 @@
 			$monthstart = intval(date('Ymd',mktime(0,0,0,$month    ,1,$year)));
 			$monthend   = intval(date('Ymd',mktime(0,0,0,$month + 1,0,$year)));
 
-			$start = $GLOBALS['phpgw']->datetime->get_weekday_start($year, $month, 1);
+			$start = phpgwapi_datetime::get_weekday_start($year, $month, 1);
 
 			if($this->debug)
 			{
@@ -3089,7 +3126,8 @@
 			$this->output_template_array($p,'row','event',$var);
 
 			$cnt = 0;
-			for ($i=intval($start + $GLOBALS['phpgw']->datetime->tz_offset);intval(date('Ymd',$i)) <= $monthend;$i += 604800)
+			$start = (int) $start;
+			for ($i = ($start + phpgwapi_datetime::user_timezone()); date('Ymd',$i) <= $monthend; $i += 604800)
 			{
 				$cellclass = $cnt % 2 ? 'row_on' : 'row_off';
 				$var = array
@@ -3104,6 +3142,7 @@
 
 		function display_weekly($params)
 		{
+			$user_timezone = phpgwapi_datetime::user_timezone();
 			if(!is_array($params))
 			{
 				$this->index();
@@ -3127,7 +3166,7 @@
 			$p->set_block('week','m_w_table','m_w_table');
 			$p->set_block('week','event','event');
 		
-			$start = $GLOBALS['phpgw']->datetime->get_weekday_start($year, $month, $day) + $GLOBALS['phpgw']->datetime->tz_offset;
+			$start = phpgwapi_datetime::get_weekday_start($year, $month, $day) + $user_timezone;
 
 			$cellcolor = $this->theme['row_off'];
 
@@ -3153,7 +3192,7 @@
 
 			$this->output_template_array($p,'row','event',$var);
 
-			$tstart = $start - $GLOBALS['phpgw']->datetime->tz_offset;
+			$tstart = $start - $user_timezone;
 			$tstop = $tstart + 604800;
 			$original_owner = $this->bo->so->owner;
 			for($i=0;$i<$counter;$i++)
@@ -3305,7 +3344,7 @@
 			$day_start = mktime(intval($this->bo->prefs['calendar']['workdaystarts']),0,0,0,0,0);
 			$day_end = mktime(intval($this->bo->prefs['calendar']['workdayends']),0,1,0,0,0);
 
-			$daily = $this->set_week_array($GLOBALS['phpgw']->datetime->get_weekday_start($params['year'],$params['month'],$params['day']),$this->theme['row_on'],True);
+			$daily = $this->set_week_array(phpgwapi_datetime::get_weekday_start($params['year'],$params['month'],$params['day']),$this->theme['row_on'],True);
 			print_debug('Date to Eval',$date_to_eval);
 			$rows = array();
 			$last_slot = $this->slot_num($day_end,$day_start,$day_end);
@@ -3367,7 +3406,8 @@
 					
 					$last_slot = $slot;
 					$last_slot_end = $slot_end;
-					print_debug('Time',$GLOBALS['phpgw']->common->show_date($this->bo->maketime($event['start']) - $GLOBALS['phpgw']->datetime->tz_offset).' - '.$GLOBALS['phpgw']->common->show_date($this->bo->maketime($event['end']) - $GLOBALS['phpgw']->datetime->tz_offset));
+					$user_timezone = phpgwapi_datetime::user_timezone;
+					print_debug('Time',$GLOBALS['phpgw']->common->show_date($this->bo->maketime($event['start']) - $user_timezone).' - '.$GLOBALS['phpgw']->common->show_date($this->bo->maketime($event['end']) - $user_timezone));
 					print_debug('Slot',$slot);
 				}
 				//echo "rows=<pre>"; print_r($rows); echo "<br />row_span="; print_r($row_span); echo "</pre>\n";
@@ -3636,37 +3676,43 @@
 			$t =& $GLOBALS['phpgw']->template;
 			$t->set_unknowns('remove');
 
-			if ( isset($_GET['lookup']) && ( strlen($_GET['lookup']) > 2 || $_GET['lookup'] == '*' ) )
-			{
-				if ( $_GET['lookup'] == '*' )
-				{
-					$_GET['lookup'] = '%';
-				}
+			$lookup = trim(phpgw::get_var('lookup', 'string', 'GET'));
 
-				$cat_id = isset($_GET['cat_id']) ? intval($_GET['cat_id']) : 0;
+			if ( strlen($lookup) > 2 || $lookup == '*' )
+			{
+				$lookup = preg_replace('/\*/', '/%/', $lookup);
+
+				$cat_id = phpgw::get_var('cat_id', 'int', 'GET');
 
 				if ( $cat_id == -1 ) //groups
 				{
-					$contacts = $this->bo->get_groups($_GET['lookup']);
+					$contacts = $this->bo->get_groups($lookup);
 					foreach ( $contacts as $contact )
 					{
-						echo "<option value=\"{$contact['contact_id']}\">{$contact['per_first_name']} {$contact['per_last_name']} (g)</option>\n";
+						echo <<<HTML
+							<option value="{$contact['contact_id']}">{$contact['per_first_name']} {$contact['per_last_name']} (g)</option>
+
+HTML;
 					}
 				}
 				else
 				{
-					switch( $_GET['con_type'] )
+					//FIXME define constants somewhere and use them skwashd Nov07
+					switch( phpgw::get_var('con_type', 'int', 'GET') )
 					{
 						
 						case 2: //orgs
-							$contacts = $this->bo->get_org_contacts($_GET['lookup'], $cat_id);
+							$contacts = $this->bo->get_org_contacts($lookup, $cat_id);
 							foreach ( $contacts as $contact )
 							{
-								echo "<option value=\"{$contact['contact_id']}\">{$contact['org_name']} (o)</option>\n";
+								echo <<<HTML
+								<option value="{$contact['contact_id']}">{$contact['org_name']} (o)</option>
+
+HTML;
 							}
 							break;
 						default: //assume person
-							$contacts = $this->bo->get_per_contacts($_GET['lookup'], $cat_id);
+							$contacts = $this->bo->get_per_contacts($lookup, $cat_id);
 							if ( !is_array($contacts) || !count($contacts) )
 							{
 								return '';
@@ -3674,7 +3720,10 @@
 							
 							foreach ( $contacts as $contact )
 							{
-								echo "<option value=\"{$contact['contact_id']}\">{$contact['per_first_name']} {$contact['per_last_name']}</option>\n";
+								echo <<<HTML
+								<option value="{$contact['contact_id']}">{$contact['per_first_name']} {$contact['per_last_name']}</option>
+
+HTML;
 							}
 					}
 				}
@@ -3714,27 +3763,26 @@
 				));
 			$t->parse('cat_options', 'cat_option', true);
 			
-			$t->set_var(
-				array
-				(
-					'webserver_url'	=> $GLOBALS['phpgw_info']['server']['webserver_url'],
-					'base_url'		=> $GLOBALS['phpgw']->link('/'),
-					'lang_all'		=> lang('all'),
-					'lang_add'		=> lang('add'),
-					'lang_category'		=> lang('category'),
-					'lang_close'		=> lang('close'),
-					'lang_contacts'		=> lang('contacts'),
-					'lang_org'		=> lang('organization'),
-					'lang_person'		=> lang('person'),
-					'lang_remove'		=> lang('remove'),
-					'lang_show_contacts'	=> lang('show contacts'),
-					'lang_search'		=> lang('search'),
-					'lang_title'		=> lang('calendar event participants selector'),
-					'lang_type'		=> lang('type'),
-					'img_add'		=> $GLOBALS['phpgw']->common->image('calendar', 'right-24x24'),
-					'img_remove'		=> $GLOBALS['phpgw']->common->image('calendar', 'left-24x24'),
-					'img_close'		=> $GLOBALS['phpgw']->common->image('calendar', 'close-24x24')
-				));
+			$t->set_var(array
+			(
+				'webserver_url'		=> $GLOBALS['phpgw_info']['server']['webserver_url'],
+				'base_url'			=> $GLOBALS['phpgw']->link('/'),
+				'lang_all'			=> lang('all'),
+				'lang_add'			=> lang('add'),
+				'lang_category'		=> lang('category'),
+				'lang_close'		=> lang('close'),
+				'lang_contacts'		=> lang('contacts'),
+				'lang_org'			=> lang('organization'),
+				'lang_person'		=> lang('person'),
+				'lang_remove'		=> lang('remove'),
+				'lang_show_contacts'=> lang('show contacts'),
+				'lang_search'		=> lang('search'),
+				'lang_title'		=> lang('calendar event participants selector'),
+				'lang_type'			=> lang('type'),
+				'img_add'			=> $GLOBALS['phpgw']->common->image('calendar', 'right-24x24'),
+				'img_remove'		=> $GLOBALS['phpgw']->common->image('calendar', 'left-24x24'),
+				'img_close'			=> $GLOBALS['phpgw']->common->image('calendar', 'close-24x24')
+			));
 			$t->pparse('out', 'popup');
 			$GLOBALS['phpgw']->common->phpgw_exit();
 		}
@@ -3766,12 +3814,10 @@
 			$this->header(false);
 
 			$p = &$GLOBALS['phpgw']->template;
-			$p->set_file(
-				array(
-					'edit'		=> 'edit.tpl',
-					'form_button'	=> 'form_button_script.tpl'
-				)
-			);
+			$p->set_file(array(
+				'edit'		=> 'edit.tpl',
+				'form_button'	=> 'form_button_script.tpl'
+			));
 			$p->set_block('edit','edit_entry','edit_entry');
 			$p->set_block('edit','list','list');
 			$p->set_block('edit','hr','hr');
@@ -3783,20 +3829,44 @@
 				$recur_exception = implode (",", $event['recur_exception']);
 			}
 	
+			$cal_id = phpgw::get_var('cal_id', 'int', 'GET');
 			//FIXME this is ugly and should use templates better
-			$vars = array(
-				'font'			=> $this->theme['font'],
-				'bg_color'		=> $this->theme['bg_text'],
-				'action_url'		=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=>'calendar.bocalendar.update')),
+
+			$common_hidden = <<<HTML
+				<input type="hidden" name="cal[id]" value="{$event['id']}" />
+				<input type="hidden" name="cal[owner]" value="{$event['owner']}" />
+				<input type="hidden" name="recur_exception" value="{$recur_exception}" />
+HTML;
+
+			if (  $cal_id && $event['id'] == 0 )
+			{
+				$common_hidden .= <<<HTML
+				<input type="hidden" name="cal[reference]" value="{$cal_id}">
+
+HTML;
+			}
+			else if ( isset($event['reference']) )
+			{
+				$common_hidden .= <<<HTML
+				<input type="hidden" name="cal[reference]" value="{$event['reference']}">
+
+HTML;
+			}
+
+			if ( isset($GLOBALS['phpgw_info']['server']['deny_user_grants_access']) && $GLOBALS['phpgw_info']['server']['deny_user_grants_access'] )
+			{
+				$common_hidden .= <<<HTML
+				<input type="hidden" name="participants[]" value="{$this->bo->owner}">
+
+HTML;
+			}
+
+			$vars = array
+			(
+				'action_url'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=>'calendar.bocalendar.update')),
 				'popup_url'		=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'calendar.uicalendar.participants_popup'), true),
-				'common_hidden'	=> '<input type="hidden" name="cal[id]" value="'.$event['id'].'" />'."\n"
-										. '<input type="hidden" name="cal[owner]" value="'.$event['owner'].'" />'."\n"
-										. '<input type="hidden" name="recur_exception" value="'.$recur_exception.'" />'."\n"
-										. (isset($_GET['cal_id']) && $_GET['cal_id'] && $event['id'] == 0?'<input type="hidden" name="cal[reference]" value="'.$_GET['cal_id'].'" />'."\n":
-										  (@isset($event['reference'])?'<input type="hidden" name="cal[reference]" value="'.$event['reference'].'" />'."\n":''))
-										. (@isset($GLOBALS['phpgw_info']['server']['deny_user_grants_access']) && $GLOBALS['phpgw_info']['server']['deny_user_grants_access']?
-										  '<input type="hidden" name="participants[]" value="'.$this->bo->owner.'" />'."\n":''),
-				'errormsg'		=> ($param['cd']?$GLOBALS['phpgw']->common->check_code($param['cd']):'')
+				'common_hidden'	=> $common_hidden,
+				'errormsg'		=> $param['cd'] ? $GLOBALS['phpgw']->common->check_code($param['cd']) : ''
 			);
 			$p->set_var($vars);
 
@@ -3816,16 +3886,15 @@
 // Display Categories
 			if(isset($event['category']) && strpos($event['category'],','))
 			{
-				$temp_cats = explode(',',$event['category']);
-				@reset($temp_cats);
-				while(list($key,$value) = each($temp_cats))
+				$temp_cats = explode(',', $event['category']);
+				foreach ( $temp_cats as $value )
 				{
-					$check_cats[] = intval($value);
+					$check_cats[] = (int) $value;
 				}
 			}
 			elseif(isset($event['category']) && $event['category'])
 			{
-				$check_cats[] = intval($event['category']);
+				$check_cats[] = (int) $event['category'];
 			}
 			else
 			{
@@ -3843,8 +3912,9 @@
 			);
 
 // Date
+			$user_timezone = phpgwapi_datetime::user_timezone();
 
-			$start = $this->bo->maketime($event['start']) - $GLOBALS['phpgw']->datetime->tz_offset;
+			$start = $this->bo->maketime($event['start']) - $user_timezone;
 			$var['startdate'] = array(
 				'field'	=> lang('Start Date'),
 /*
@@ -3869,7 +3939,7 @@
 			);
 
 // End Date
-			$end = $this->bo->maketime($event['end']) - $GLOBALS['phpgw']->datetime->tz_offset;
+			$end = $this->bo->maketime($event['end']) - $user_timezone;
 			$var['enddate'] = array(
 				'field'	=> lang('End Date'),
 /*
@@ -4016,12 +4086,12 @@
 				&& (isset($event['recur_enddate']['mday']) && $event['recur_enddate']['mday'] != 0))
 			{
 				$checked = ' checked';
-				$recur_end = $this->bo->maketime($event['recur_enddate']) - $GLOBALS['phpgw']->datetime->tz_offset;
+				$recur_end = $this->bo->maketime($event['recur_enddate']) - $user_timezone;
 			}
 			else
 			{
 				$checked = '';
-				$recur_end = $this->bo->maketime($event['start']) + 86400 - $GLOBALS['phpgw']->datetime->tz_offset;
+				$recur_end = $this->bo->maketime($event['start']) + phpgwapi_datetime::SECONDS_IN_DAY - $user_timezone;
 			}
 	
 			$var['recure_enddate'] = array(
@@ -4212,24 +4282,28 @@
 
 			$p->set_var('text_add_name',$add_ext);
 
-			if(isset($_GET['part']) && $_GET['part'])
+			$part = phpgw::get_var('part', 'string', 'GET');
+			if ( $part )
 			{
-				$control_data['part'] = split(",", $_GET['part']);
+				$control_data['part'] = explode(',', $part);
 			}
 			else
 			{
-				$control_data['part'] = $_POST['participant'];
-				$control_data['action'] = $_POST['action'];
-				$control_data['delete'] = $_POST['delete'];
+				$control_data['part'] = phpgw::get_var('participant', 'int', 'POST');
+				$control_data['action'] = phpgw::get_var('action', 'string', 'POST');
+				$control_data['delete'] = phpgw::get_var('delete', 'bool', 'POST');
 			}
 
-			for ($i=0; $i<count($control_data['part']); $i++)
+			
+			foreach ( $control_data['part'] as $cd_part )
 			{
-			  $id = $control_data['part'][$i];
-			  list($contact) = $this->read_contact($id);
+				$id = $cd_part[$i];
+				list($contact) = $this->read_contact($id);
 
-			  $participant[$id] = array();
-			  $participant[$id]['name'] = $contact['n_given'].' '.$contact['n_family'];
+				$participant[$id] = array
+				(
+					'name' => "{$contact['n_given']} {$contact['n_family']}"
+				);
 			}
 
 			if ($control_data['action'] == lang('Delete selected contacts'))
@@ -4243,8 +4317,8 @@
 			
 			if ($control_data['action'] == lang('Add Contact'))
 			{
-				$id = $_POST['id_addr'];
-				if (isset($id) && intval($id) != 0)
+				$id = phpgw::get_var('id_addr', 'int', 'POST');
+				if ( $id )
 				{
 					list($contact) = $this->read_contact($id);
 					$participant[$id] = array();
@@ -4366,7 +4440,7 @@
 
 		function set_week_array($startdate,$cellcolor,$weekly)
 		{
-			for ($j=0,$datetime=$startdate;$j<7;$j++,$datetime += 86400)
+			for ($j=0,$datetime=$startdate;$j<7;$j++,$datetime += phpgwapi_datetime::SECONDS_IN_DAY)
 			{
 				$cellclass = $j % 2 ? 'row_on' : 'row_off';
 				
@@ -4442,7 +4516,8 @@
 				{
 					$week = lang('week').' '.(int)((date('z',($startdate+(24*3600*4)))+7)/7);
 				}
-				$daily[$date] = array(
+				$daily[$date] = array
+				(
 					'extra'		=> $extra,
 					'new_event'	=> $new_event,
 					'holidays'	=> $holiday_name,
@@ -4500,13 +4575,12 @@
 	//Moved this here for performance reasons and cos it didn't belong in the middle of a method - skwashd
 	if (!function_exists('strcmp_name'))
 	{
-		function strcmp_name($arr1,$arr2)
+		function strcmp_name($arr1, $arr2)
 		{
-			if ($diff = strcmp($arr1['type'],$arr2['type']))
+			if ($diff = strcmp($arr1['type'], $arr2['type']))
 			{
 				return $diff;	// groups before users
 			}
-			return strnatcasecmp($arr1['name'],$arr2['name']);
+			return strnatcasecmp($arr1['name'], $arr2['name']);
 		}
 	}
-?>

@@ -14,9 +14,12 @@
 
 	/* $Id: class.bocalendar.inc.php,v 1.123 2006/12/28 09:53:13 skwashd Exp $ */
 
-	class bocalendar
+	phpgw::import_class('phpgwapi.datetime');
+
+	class calendar_bocalendar
 	{
-		var $public_functions = array(
+		var $public_functions = array
+		(
 			'read_entry'      => True,
 			'delete_entry'    => True,
 			'delete_calendar' => True,
@@ -135,7 +138,7 @@
 
 		var $save_owner;
 
-		function bocalendar($session = 0)
+		public function __construct($session = false)
 		{
 			$this->cat = CreateObject('phpgwapi.categories');
 			$this->contacts = createObject('phpgwapi.contacts');
@@ -161,7 +164,7 @@
 			if($session)
 			{
 				$this->read_sessiondata();
-				$this->use_session = True;
+				$this->use_session = true;
 			}
 			print_debug('BO Filter', $this->filter);
 			print_debug('Owner', $this->owner);
@@ -169,12 +172,8 @@
 			$this->prefs['calendar']    = $GLOBALS['phpgw_info']['user']['preferences']['calendar'];
 			$this->check_set_default_prefs();
 
-			if ( isset($_REQUEST['owner']) )
-			{
-		//		$owner = (int) $_REQUEST['owner'];
-				$owner = get_var('owner',array('GET','POST'));
-			}
-			else
+			$owner = phpgw::get_var('owner', 'int');
+			if ( !$owner )
 			{	
 				$owner = $this->contacts->is_contact($GLOBALS['phpgw_info']['user']['account_id']);
 			}
@@ -202,7 +201,7 @@
 			{
 				// leaving planner with an unchanged user/owner ==> setting owner back to save_owner
 				//
-				$owner = intval(isset($_GET['owner']) ? $_GET['owner'] : $this->save_owner);
+				$owner = phpgw::get_var('owner', 'int', 'GET', $this->save_owner);
 				unset($this->save_owner);
 			}
 			elseif (!empty($owner) && $owner != $this->owner && $from == 'calendar.uicalendar.planner')
@@ -236,37 +235,27 @@
 				$this->users_timeformat = 'H:i';
 			}
 
-			$friendly = (isset($_GET['friendly'])?$_GET['friendly']:'');
-			$friendly = ($friendly=='' && isset($_POST['friendly'])?$_POST['friendly']:$friendly);
+			$friendly = phpgw::get_var('friendly', 'bool', 'REQUEST'); 
 
-			if(isset($_POST['filter'])) { $this->filter = $_POST['filter']; }
-			if(isset($_POST['sortby'])) { $this->sortby = $_POST['sortby']; }
-			if(isset($_POST['cat_id'])) { $this->cat_id = $_POST['cat_id']; }
-
-			if(!isset($this->filter))
-			{
-				$this->filter = ' '.$this->prefs['calendar']['defaultfilter'].' ';
-			}
-
-			if(!isset($this->sortby) || !$this->sortby)
-			{
-			   $this->sortby = $this->prefs['calendar']['defaultcalendar'] == 'planner_user' ? 'user' : 'category';
-			}
+			$this->filter = phpgw::get_var('filter', 'string', 'POST', " {$this->prefs['calendar']['defaultfilter']} ");
+			$this->sortby = phpgw::get_var('sortby', 'string', 'POST', $this->prefs['calendar']['defaultcalendar'] == 'planner_user' ? 'user' : 'category');
+			$this->cat_id = phpgw::get_var('cat_id', 'int', 'POST');
 
 			if(isset($this->g_owner) && $this->g_owner)
 			{
 				$this->filter = ' all ';
 			}
 
-			$this->so = CreateObject('calendar.socalendar',
-				array(
-					'owner'		=> $this->owner,
-					'filter'	=> $this->filter,
-					'category'	=> $this->cat_id,
-					'g_owner'	=> $this->g_owner
-				)
-			);
-			$this->rpt_day = array(	// need to be after creation of socalendar
+			$this->so = CreateObject('calendar.socalendar', array
+			(
+				'owner'		=> $this->owner,
+				'filter'	=> $this->filter,
+				'category'	=> $this->cat_id,
+				'g_owner'	=> $this->g_owner
+			));
+
+			$this->rpt_day = array
+			(	// need to be after creation of socalendar
 				MCAL_M_SUNDAY    => 'Sunday',
 				MCAL_M_MONDAY    => 'Monday',
 				MCAL_M_TUESDAY   => 'Tuesday',
@@ -296,53 +285,53 @@
 				MCAL_RECUR_YEARLY	=> 'Yearly'
 			);
 			
-			$localtime = $GLOBALS['phpgw']->datetime->users_localtime;
+			$localtime = phpgwapi_datetime::user_localtime();
 
-			$date = intval(get_var('date', array('GET', 'POST'), 0));
+			$date = phpgw::get_var('date', 'int');
 
-			$year = intval(get_var('year', array('GET', 'POST'), 0));
+			$year = phpgw::get_var('year', 'int');
 
-			$month = intval(get_var('month', array('GET', 'POST'), 0));
+			$month = phpgw::get_var('month', 'int');
 
-			$day = intval(get_var('day', array('GET', 'POST'), 0));
+			$day = phpgw::get_var('day', 'int');
 
-			$num_months = intval(get_var('num_months', array('GET', 'POST'), 0));
+			$num_months = phpgw::get_var('num_months', 'int');
 
-			if($date !== 0)
+			if ( $date )
 			{
-				$this->year = intval(substr($date,0,4));
-				$this->month = intval(substr($date,4,2));
-				$this->day = intval(substr($date,6,2));
+				$this->year = substr($date, 0, 4);
+				$this->month = substr($date, 4, 2);
+				$this->day = substr($date, 6, 2);
 			}
 			else
 			{
-				if($year !== 0)
+				if ( $year )
 				{
 					$this->year = $year;
 				}
 				else
 				{
-					$this->year = date('Y',$localtime);
+					$this->year = date('Y', $localtime);
 				}
-				if($month !== 0)
+				if ( $month )
 				{
 					$this->month = $month;
 				}
 				else
 				{
-					$this->month = date('m',$localtime);
+					$this->month = date('m', $localtime);
 				}
-				if($day !== 0)
+				if ( $day )
 				{
 					$this->day = $day;
 				}
 				else
 				{
-					$this->day = date('d',$localtime);
+					$this->day = date('d', $localtime);
 				}
 			}
 
-			if($num_months !== 0)
+			if ( $num_months )
 			{
 				$this->num_months = $num_months;
 			}
@@ -351,7 +340,7 @@
 				$this->num_months = 1;
 			}
 
-			$this->today = date('Ymd',$GLOBALS['phpgw']->datetime->users_localtime);
+			$this->today = date('Ymd', $localtime );
 
 			if(DEBUG_APP)
 			{
@@ -530,9 +519,10 @@
 
 		function read_entry($id = 0)
 		{
-			if ( !(int)$id && isset($_GET['id']) )
+			$id = (int) $id;
+			if ( !$id )
 			{
-				$id = (int) $_GET['id'];
+				$id = phpgw::get_var('id', 'int', 'GET');
 			}
 
 			if($this->check_perms(PHPGW_ACL_READ,$id))
@@ -557,7 +547,7 @@
 				$event = $this->read_entry(intval($param['id']));
 //				if($this->owner == $event['owner'])
 //				{
-				$exception_time = mktime($event['start']['hour'],$event['start']['min'],0,$param['month'],$param['day'],$param['year']) - $GLOBALS['phpgw']->datetime->tz_offset;
+				$exception_time = mktime($event['start']['hour'],$event['start']['min'],0,$param['month'],$param['day'],$param['year']) - phpgwapi_datetime::user_timezone();
 				$event['recur_exception'][] = intval($exception_time);
 				$this->so->cal->event = $event;
 //				print_debug('exception time',$event['recur_exception'][count($event['recur_exception']) -1]);
@@ -692,29 +682,29 @@
 			return $this->so->list_events_keyword($keywords,$members);
 		}
 
-		function update($params='')
+		function update($params = '')
 		{
-			$l_cal = isset($params['cal']) && $params['cal'] ? $params['cal'] : $_POST['cal'];
-			$l_participants = isset($params['participants']) ? $params['participants'] : $_POST['participants'];
-			$l_categories = $params['categories'] ? $params['categories'] : $_POST['categories'];
-			$l_start = isset($params['start']) && $params['start'] ? $params['start'] : $_POST['start'];
-			$l_end = isset($params['end']) && $params['end'] ? $params['end'] : $_POST['end'];
-			$l_recur_enddate = isset($params['recur_enddate']) && $params['recur_enddate'] ? $params['recur_enddate'] : $_POST['recur_enddate'];
+			$l_cal = isset($params['cal']) && $params['cal'] ? $params['cal'] : phpgw::get_var('cal', 'string', 'POST');
+			$l_participants = isset($params['participants']) ? $params['participants'] : phpgw::get_var('participants', 'string', 'POST');
+			$l_categories = $params['categories'] ? $params['categories'] : phpgw::get_var('categories', 'strint', 'POST');
+			$l_start = isset($params['start']) && $params['start'] ? $params['start'] : phpgw::get_var('start', 'int', 'POST');
+			$l_end = isset($params['end']) && $params['end'] ? $params['end'] : phpgw::get_var('end', 'int', 'POST');
+			$l_recur_enddate = isset($params['recur_enddate']) && $params['recur_enddate'] ? $params['recur_enddate'] : phpgw::get_var('recur_enddate', 'string', 'POST'); // probbaly can be bool
 			$l_recur_exception = explode (',', $_POST['recur_exception']);
 
-			$send_to_ui = True;
+			$send_to_ui = true;
 			if($this->debug)
 			{
-				$send_to_ui = True;
+				$send_to_ui = true;
 			}
 			if($p_cal || $p_participants || $p_start || $p_end || $p_recur_enddata)
 			{
-				$send_to_ui = False;
+				$send_to_ui = false;
 			}
 			
 			print_debug('ID',$l_cal['id']);
 
-			if(isset($_GET['readsess']))
+			if( phpgw::get_var('readsess', 'bool', 'GET') )
 			{
 				$event = $this->restore_from_appsession();
 				$event['title'] = stripslashes($event['title']);
@@ -872,17 +862,19 @@
 						$this->so->add_attribute($name,stripslashes($value));
 					}
 				}
-				if (isset($_POST['preserved']) && is_array($preserved = unserialize(stripslashes($_POST['preserved']))))
+				
+				$preserved = unserialize(phpgw::get_var('preserved', 'raw', 'POST'));
+				if ( is_array($preserved) )
 				{
 					foreach($preserved as $name => $value)
 					{
 						switch($name)
 						{
 							case 'owner':
-								$this->so->add_attribute('participants',$value,$l_cal['owner']);
+								$this->so->add_attribute('participants', (int) $value, $l_cal['owner']);
 								break;
 							default:
-								$this->so->add_attribute($name,str_replace(array('&amp;','&quot;','&lt;','&gt;'),array('&','"','<','>'),$value));
+								$this->so->add_attribute($name, phpgw::clean_value($value, 'string') );
 						}
 					}
 				}
@@ -1141,19 +1133,20 @@
 				return 40;
 			}
 			
-			if (($GLOBALS['phpgw']->datetime->time_valid($event['start']['hour'],$event['start']['min'],0) == False) || ($GLOBALS['phpgw']->datetime->time_valid($event['end']['hour'],$event['end']['min'],0) == False))
+			if ( !phpgwapi_datetime::time_valid($event['start']['hour'], $event['start']['min'], 0) || !phpgwapi_datetime::time_valid($event['end']['hour'], $event['end']['min'], 0) )
 			{
 				return 41;
 			}
 			
-			if (($GLOBALS['phpgw']->datetime->date_valid($event['start']['year'],$event['start']['month'],$event['start']['mday']) == False) || ($GLOBALS['phpgw']->datetime->date_valid($event['end']['year'],$event['end']['month'],$event['end']['mday']) == False) || ($GLOBALS['phpgw']->datetime->date_compare($event['start']['year'],$event['start']['month'],$event['start']['mday'],$event['end']['year'],$event['end']['month'],$event['end']['mday']) == 1))
+			if ( !phpgwapi_datetime::date_valid($event['start']['year'],$event['start']['month'],$event['start']['mday']) || !phpgwapi_datetime::date_valid($event['end']['year'],$event['end']['month'],$event['end']['mday'])
+				|| phpgwapi_datetime::date_compare($event['start']['year'],$event['start']['month'],$event['start']['mday'],$event['end']['year'],$event['end']['month'],$event['end']['mday']) == 1 )
 			{
 				return 42;
 			}
 			
-			if ($GLOBALS['phpgw']->datetime->date_compare($event['start']['year'],$event['start']['month'],$event['start']['mday'],$event['end']['year'],$event['end']['month'],$event['end']['mday']) == 0)
+			if (phpgwapi_datetime::date_compare($event['start']['year'],$event['start']['month'],$event['start']['mday'],$event['end']['year'],$event['end']['month'],$event['end']['mday']) == 0)
 			{
-				if ($GLOBALS['phpgw']->datetime->time_compare($event['start']['hour'],$event['start']['min'],0,$event['end']['hour'],$event['end']['min'],0) == 1)
+				if (phpgwapi_datetime::time_compare($event['start']['hour'],$event['start']['min'],0,$event['end']['hour'],$event['end']['min'],0) == 1)
 				{
 					return 42;
 				}
@@ -1644,8 +1637,8 @@
 
 		function get_week_label()
 		{
-			$first = $GLOBALS['phpgw']->datetime->gmtdate($GLOBALS['phpgw']->datetime->get_weekday_start($this->year, $this->month, $this->day));
-			$last = $GLOBALS['phpgw']->datetime->gmtdate($first['raw'] + 518400);
+			$first = phpgwapi_datetime::gmtdate(phpgwapi_datetime::get_weekday_start($this->year, $this->month, $this->day));
+			$last = phpgwapi_datetime::gmtdate($first['raw'] + 518400);
 		 
 			return ($this->long_date($first,$last));
 		}
@@ -1741,7 +1734,7 @@
 			$inserted = False;
 			if(isset($event['recur_exception']))
 			{
-				$event_time = mktime($event['start']['hour'],$event['start']['min'],0,intval(substr($date,4,2)),intval(substr($date,6,2)),intval(substr($date,0,4))) - $GLOBALS['phpgw']->datetime->tz_offset;
+				$event_time = mktime($event['start']['hour'],$event['start']['min'],0,intval(substr($date,4,2)),intval(substr($date,6,2)),intval(substr($date,0,4))) - phpgwapi_datetime::user_timezone();
 				while($inserted == False && list($key,$exception_time) = each($event['recur_exception']))
 				{
 					if($this->debug)
@@ -1932,7 +1925,7 @@
 									continue;
 								}
 	  
-								if (($GLOBALS['phpgw']->datetime->day_of_week($rep_events['start']['year'],$rep_events['start']['month'],$rep_events['start']['mday']) == $GLOBALS['phpgw']->datetime->day_of_week($search_date_year,$search_date_month,$search_date_day)) &&
+								if ((phpgwapi_datetime::day_of_week($rep_events['start']['year'],$rep_events['start']['month'],$rep_events['start']['mday']) == phpgwapi_datetime::day_of_week($search_date_year,$search_date_month,$search_date_day)) &&
 									(ceil($rep_events['start']['mday']/7) == ceil($search_date_day/7)))
 								{
 									$this->sort_event($rep_events,$search_date_full);
@@ -2100,9 +2093,9 @@
 						echo '<!-- Cached Events ID: '.$cached_event_ids_repeating[$i].' ('.sprintf("%04d%02d%02d",$this->repeating_events[$i]['start']['year'],$this->repeating_events[$i]['start']['month'],$this->repeating_events[$i]['start']['mday']).') -->'."\n";
 					}
 				}
-//				$edate -= $GLOBALS['phpgw']->datetime->tz_offset;
-//				for($date=mktime(0,0,0,$smonth,$sday,$syear) - $GLOBALS['phpgw']->datetime->tz_offset;$date<=$edate;$date += 86400)
-				for($date=mktime(0,0,0,$smonth,$sday,$syear);$date<=$edate;$date += 86400)
+//				$edate -= phpgwapi_datetime::user_timezone();
+//				for($date=mktime(0,0,0,$smonth,$sday,$syear) - phpgwapi_datetime::tz_offset;$date<=$edate;$date += 86400)
+				for($date=mktime(0,0,0,$smonth,$sday,$syear);$date<=$edate;$date += phpgwapi_datetime::SECONDS_IN_DAY)
 				{
 					if($this->debug)
 					{
@@ -2247,8 +2240,8 @@
 				{
 					continue;	// dont show rejected invitations, as they are free time
 				}
-				$eventstart = $GLOBALS['phpgw']->datetime->localdates($this->maketime($event['start']) - $GLOBALS['phpgw']->datetime->tz_offset);
-				$eventend = $GLOBALS['phpgw']->datetime->localdates($this->maketime($event['end']) - $GLOBALS['phpgw']->datetime->tz_offset);
+				$eventstart = phpgwapi_datetime::localdates($this->maketime($event['start']) - phpgwapi_datetime::user_timezone());
+				$eventend = phpgwapi_datetime::localdates($this->maketime($event['end']) - phpgwapi_datetime::user_timezone());
 				$start = ($eventstart['hour'] * 10000) + ($eventstart['minute'] * 100);
 				$starttemp = $this->splittime("$start",False);
 				$subminute = 0;
@@ -2431,13 +2424,15 @@
 			}
 			$GLOBALS['phpgw_info']['user']['preferences'] = $GLOBALS['phpgw']->preferences->create_email_preferences($user);
 
+			$user_timezone = phpgwapi_datetime::user_timezone();
+
 			$event = $msg_type == MSG_ADDED || $msg_type == MSG_MODIFIED ? $new_event : $old_event;
 			if($old_event != False)
 			{
-				$old_starttime = $t_old_start_time - $GLOBALS['phpgw']->datetime->tz_offset;
+				$old_starttime = $t_old_start_time - $user_timezone;
 			}
-			$starttime = $this->maketime($event['start']) - $GLOBALS['phpgw']->datetime->tz_offset;
-			$endtime   = $this->maketime($event['end']) - $GLOBALS['phpgw']->datetime->tz_offset;
+			$starttime = $this->maketime($event['start']) - $user_timezone;
+			$endtime   = $this->maketime($event['end']) - $user_timezone;
 
 			switch($msg_type)
 			{
@@ -2543,7 +2538,8 @@
 					$GLOBALS['phpgw_info']['user']['preferences']['common']['timeformat'] = $part_prefs['common']['timeformat'];
 					$GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'] = $part_prefs['common']['dateformat'];
 
-					$GLOBALS['phpgw']->datetime->tz_offset = ((60 * 60) * intval($GLOBALS['phpgw_info']['user']['preferences']['common']['tz_offset']));
+					//FIXME i think this is dodgy
+					$tz_offset = ((60 * 60) * intval($GLOBALS['phpgw_info']['user']['preferences']['common']['tz_offset']));
 
 					if($old_starttime)
 					{
@@ -2606,7 +2602,6 @@
 			}
 
 			$GLOBALS['phpgw_info']['user']['preferences']['common']['tz_offset'] = $temp_tz_offset;
-			$GLBOALS['phpgw']->datetime->tz_offset = ((60 * 60) * $temp_tz_offset);
 			$GLOBALS['phpgw_info']['user']['preferences']['common']['timeformat'] = $temp_timeformat;
 			$GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'] = $temp_dateformat;
 			
@@ -2653,7 +2648,7 @@
 			$t_appt['hour'] = $GLOBALS['phpgw']->common->show_date($starttime,'H');
 			$t_appt['min']  = $GLOBALS['phpgw']->common->show_date($starttime,'i');
 			$t_appt['sec']  = 0;
-			$t_time = $this->maketime($t_appt) - $GLOBALS['phpgw']->datetime->tz_offset;
+			$t_time = $this->maketime($t_appt) - phpgwapi_datetime::user_timezone();
 			$y_time = $t_time - 86400;
 			$tt_time = $t_time + 86399;
 			print_debug('T_TIME',$t_time.' : '.$GLOBALS['phpgw']->common->show_date($t_time));
@@ -2878,6 +2873,8 @@
 		 */
 		function event2array($event)
 		{
+			$user_timezone = phpgw_datetime::user_timezone();
+
 			if ( !is_object($GLOBALS['phpgw']->contacts) )
 			{
 				$GLOBALS['phpgw']->contacts = createObject('phpgwapi.contacts');
@@ -2922,12 +2919,12 @@
 
 			$var['startdate'] = array(
 				'field'	=> lang('Start Date/Time'),
-				'data'	=> $GLOBALS['phpgw']->common->show_date($this->maketime($event['start']) - $GLOBALS['phpgw']->datetime->tz_offset),
+				'data'	=> $GLOBALS['phpgw']->common->show_date($this->maketime($event['start']) - $user_timezone),
 			);
 
 			$var['enddate'] = array(
 				'field'	=> lang('End Date/Time'),
-				'data'	=> $GLOBALS['phpgw']->common->show_date($this->maketime($event['end']) - $GLOBALS['phpgw']->datetime->tz_offset)
+				'data'	=> $GLOBALS['phpgw']->common->show_date($this->maketime($event['end']) - $user_timezone)
 			);
 
 			$pri = array(
@@ -2947,7 +2944,7 @@
 
 			$var['updated'] = array(
 				'field'	=> lang('Updated'),
-				'data'	=> $GLOBALS['phpgw']->common->show_date($this->maketime($event['modtime']) - $GLOBALS['phpgw']->datetime->tz_offset)
+				'data'	=> $GLOBALS['phpgw']->common->show_date($this->maketime($event['modtime']) - $user_timezone)
 			);
 
 			$var['access'] = array(
@@ -2997,7 +2994,7 @@
 					$recur_end = $this->maketime($event['recur_enddate']);
 					if($recur_end != 0)
 					{
-						$recur_end -= $GLOBALS['phpgw']->datetime->tz_offset;
+						$recur_end -= phpgwapi_datetime::user_timezone();
 						$str_extra .= lang('ends').': '.lang($GLOBALS['phpgw']->common->show_date($recur_end,'l')).', '.$this->long_date($recur_end).' ';
 					}
 				}
@@ -3151,7 +3148,7 @@
 
 			if ( $cat_id )
 			{
-				$criteria[] = sql_criteria::_equal('cat_id', $_GET['cat_id']);
+				$criteria[] = sql_criteria::_equal('cat_id', phpgw::get_var('cat_id', 'int', 'bool') );
 			}
 
 			$criteria_token = sql_criteria::_append_and($criteria);
@@ -3179,7 +3176,7 @@
 
 			if ( $cat_id )
 			{
-				$criteria[] = sql_criteria::_equal('cat_id', $_GET['cat_id']);
+				$criteria[] = sql_criteria::_equal('cat_id', phpgw::get_var('cat_id', 'int', 'bool') );
 			}
 
 			$criteria_token = sql_criteria::_append_and($criteria);

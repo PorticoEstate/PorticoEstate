@@ -14,9 +14,7 @@
 
 	/* $Id: class.socalendar__.inc.php,v 1.17 2006/09/09 14:43:07 skwashd Exp $ */
 
-/*	include(PHPGW_SERVER_ROOT.'/calendar/setup/setup.inc.php');	*/
-
-if(extension_loaded('mcal') == False)
+if ( !extension_loaded('mcal') )
 {
 	define('MCAL_RECUR_NONE',0);
 	define('MCAL_RECUR_DAILY',1);
@@ -51,7 +49,7 @@ define('NO_RESPONSE',1);
 define('TENTATIVE',2);
 define('ACCEPTED',3);
 
-class socalendar__
+class calendar_socalendar__
 {
 	var $event;
 	var $stream;
@@ -60,7 +58,7 @@ class socalendar__
 	var $debug = False;
 //	var $debug = True;
 
-	function socalendar__()
+	function __construct()
 	{
 	}
 

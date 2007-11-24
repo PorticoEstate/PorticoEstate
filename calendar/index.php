@@ -17,15 +17,15 @@
 	$GLOBALS['phpgw_info']['flags'] = array
 	(
 		'currentapp'	=> 'calendar',
-		'noheader'	=> True,
-		'nonavbar'	=> True,
-		'noappheader'	=> True,
-		'noappfooter'	=> True,
-		'nofooter'	=> True
+		'noheader'		=> true,
+		'nonavbar'		=> true,
+		'noappheader'	=> true,
+		'noappfooter'	=> true,
+		'nofooter'		=> true
 	);
 	include('../header.inc.php');
 
-	phpgw::import_class('phpgwapi.datetimefunctions');
+	phpgw::import_class('phpgwapi.datetime');
 	
 	$cal = createObject('calendar.uicalendar');
 	$cal->index(array

@@ -14,11 +14,13 @@
 
 	/* $Id: class.boalarm.inc.php,v 1.8 2006/12/08 11:37:54 sigurdne Exp $ */
 
+	phpgw::import_class('phpgwapi.datetime');
+
 	define('PHPGW_ACL_DELETEALARM',PHPGW_ACL_DELETE);	// for now
 	define('PHPGW_ACL_SETALARM',PHPGW_ACL_ADD);
 	define('PHPGW_ACL_READALARM',PHPGW_ACL_READ);
 
-	class boalarm
+	class calendar_boalarm
 	{
 		var $so;
 		var $cal;
@@ -29,21 +31,22 @@
 		var $debug = False;
 //		var $debug = True;
 
-		var $public_functions = array(
+		var $public_functions = array
+		(
 			'add'       => True,
 			'delete'    => True
 		);
 
-		function boalarm()
+		public function __construct()
 		{
-			$cal_id = (isset($_POST['cal_id'])?intval($_POST['cal_id']):'');
+			$cal_id = phpgw::get_var('cal_id', 'int', 'POST');
 			if($cal_id)
 			{
 				$this->cal_id = $cal_id;
 			}
 			$this->bo = CreateObject('calendar.bocalendar',1);
 			$this->so = CreateObject('calendar.socalendar',1);
-			$this->tz_offset = $GLOBALS['phpgw']->datetime->tz_offset;
+			$this->tz_offset = phpgwapi_datetime::user_timezone();
 
 			if($this->debug)
 			{
