@@ -149,7 +149,7 @@
 					? (int) $GLOBALS['phpgw_info']['user']['preferences']['common']['tz_offset'] * self::SECONDS_IN_HOUR : 0;
 		}
 
-		public static function user_locatime()
+		public static function user_localtime()
 		{
 			return time() + self::user_timezone();
 		}
@@ -655,7 +655,7 @@
 
 		public static function gmtdate($localtime)
 		{
-			return self::localdates($localtime - $this->tz_offset);
+			return self::localdates($localtime - self::user_timezone());
 		}
 
 		/**
