@@ -12,7 +12,7 @@
 
 	/* $Id: class.boholiday.inc.php,v 1.16 2006/12/12 17:51:14 sigurdne Exp $ */
 
-	class boholiday
+	class calendar_boholiday
 	{
 		var $public_functions = Array(
 			'add'		=> True,
@@ -40,21 +40,21 @@
 		var $query;
 		var $sort;
 		
-		var $locales = Array();
+		var $locales = array();
 		var $holidays;
 		var $cached_holidays;
 		var $locale;
 		
-		function boholiday()
+		public function __construct()
 		{
 			$this->so     = CreateObject('calendar.soholiday');
-			$this->start  = get_var('start',Array('POST','GET','DEFAULT'),0);
-			$this->query  = get_var('query',Array('POST','GET'));
-			$this->sort   = get_var('sort',Array('POST','GET'));
-			$this->order  = get_var('order',Array('POST','GET'));
-			$this->id     = get_var('id',array('POST','GET'));
-			$this->year   = get_var('year',array('POST','GET','DEFAULT'),date('Y'));
-			$this->locales= array(get_var('locale',array('POST','GET'), ''));
+			$this->start  = phpgw::get_var('start', 'int');
+			$this->query  = phpgw::get_var('query');
+			$this->sort   = phpgw::get_var('sort');
+			$this->order  = phpgw::get_var('order');
+			$this->id     = phpgw::get_var('id', 'int');
+			$this->year   = phpgw::get_var('year', 'int', 'REQUEST', date('Y'));
+			$this->locales= array( phpgw::get_var('locale') );
 			
 			if($this->debug)
 			{
@@ -129,23 +129,27 @@
 
 		function accept_holiday()
 		{
-			$send_back_to = str_replace('submitlocale','holiday_admin',$_SERVER['HTTP_REFERER']);
-			if(!@$this->locales[0])
+			$send_back_to = str_replace('submitlocale','holiday_admin', phpgw::get_var('HTTP_REFERER', 'string', 'SERVER') );
+			if ( isset($this->locales[0]) && strlen($this->locales[0]) == 2 )
 			{
-				Header('Location: '.$send_back_to);
-			}
-
-			$send_back_to = str_replace('&locale='.$this->locales[0],'',$send_back_to);
-			$file = './holidays.'.$this->locales[0];
-			if(!file_exists($file) && count($_POST['name']))
-			{
-				$c_holidays = count($_POST['name']);
-				$fp = fopen($file,'w');
-				for($i=0;$i<$c_holidays;$i++)
+				$send_back_to = str_replace("&locale={$this->locales[0]}", '', $send_back_to);
+				$file = "./holidays.{$this->locales[0]}";
+				$names = phpgw::get_var('name', 'string', 'POST');
+				if ( !file_exists($file) && count($_POST['name']) )
 				{
-					fwrite($fp,$this->locales[0]."\t".$_POST['name'][$i]."\t".$_POST['day'][$i]."\t".$_POST['month'][$i]."\t".$_POST['occurence'][$i]."\t".$_POST['dow'][$i]."\t".$_POST['observance'][$i]."\n");
+					$c_holidays = count($names);
+					$days = phpgw::get_var('day', 'int', 'POST');
+					$months = phpgw::get_var('month', 'int', 'POST');
+					$occurances = phpgw::get_var('occurance', 'int', 'POST');
+					$dows = phpgw::get_var('dow', 'int', 'POST');
+					$observances = phpgw::get_var('observance', 'int', 'POST');
+					$fp = fopen($file, 'w');
+					for($i=0;$i<$c_holidays;$i++)
+					{
+						fwrite($fp, "{$this->locales[0]}\t{$names[$i]}\t{$days[$i]}\t{$months[$i]}\t{$occurences[$i]}\t{$dow[$i]}\t{$observances[$i]}\n");
+					}
+					fclose($fp);
 				}
-				fclose($fp);
 			}
 			Header('Location: '.$send_back_to);
 		}
@@ -170,7 +174,7 @@
 
 		function prepare_read_holidays($year=0,$owner=0)
 		{
-			$this->year = (isset($year) && $year > 0?$year:$GLOBALS['phpgw']->common->show_date(time() - $GLOBALS['phpgw']->datetime->tz_offset,'Y'));
+			$this->year = (isset($year) && $year > 0?$year:$GLOBALS['phpgw']->common->show_date(time() - phpgwapi_datetime::user_timezone(), 'Y'));
 			$this->owner = ($owner?$owner:$GLOBALS['phpgw_info']['user']['account_id']);
 
 			if($this->debug)
@@ -286,9 +290,9 @@
 
 		function add()
 		{
-			if(@$GLOBALS['HTTP_POST_VARS']['submit'])
+			if ( phpgw::get_var('submit', 'bool') )
 			{
-				$holiday = get_var('holiday',Array('POST'));
+				$holiday = get_var('holiday');
 
 				if(empty($holiday['mday']))
 				{

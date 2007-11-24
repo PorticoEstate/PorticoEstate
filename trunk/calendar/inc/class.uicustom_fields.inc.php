@@ -12,21 +12,21 @@
 
 	/* $Id: class.uicustom_fields.inc.php,v 1.5 2006/12/12 19:27:47 sigurdne Exp $ */
 
-	require_once(PHPGW_INCLUDE_ROOT.'/calendar/inc/class.bocustom_fields.inc.php');
-	$GLOBALS['phpgw_info']['flags']['included_classes']['bocustom_fields'] = True; // for 0.9.14
+	phpgw::import_class('calendar.bocustom_fields');
 
-	class uicustom_fields extends bocustom_fields
+	class calendar_uicustom_fields extends calendar_bocustom_fields
 	{
-		var $public_functions = array(
+		var $public_functions = array
+		(
 			'index' => True,
 			'submited'  => True
 		);
 		
 		var $classname;
 		
-		function uicustom_fields()
+		public function __construct()
 		{
-			$this->bocustom_fields();	// call constructor of extended class
+			parent::__construct();
 
 			$this->tpl = $GLOBALS['phpgw']->template;
 			if (!is_object($GLOBALS['phpgw']->nextmatchs))
@@ -110,15 +110,23 @@
 
 		function submited()
 		{
-			if (isset($_POST['cancel']) && $_POST['cancel'])
+			if ( phpgw::get_var('cancel', 'bool', 'POST') )
 			{
 				$GLOBALS['phpgw']->redirect_link('/admin/');
 			}
 			//echo "<pre>"; print_r($_POST); echo "</pre>";
 
-			foreach ($_POST['order'] as $field => $order)
+			$delete = phpgw::get_var('delete', 'bool', 'POST');
+			$names = phpgw::get_var('name', 'string', 'POST');
+			$length = phpgw::get_var('length', 'int', 'POST');
+			$shown = phpgw::get_var('shown', 'bool', 'POST');
+			$title = phpgw::get_var('title', 'bool', 'POST');
+			$disabled = phpgw::get_var('disabled', 'bool', 'POST');
+			$orders = phpgw::get_var('order', 'int', 'POST');
+
+			foreach ( $orders as $field => $order)
 			{
-				if (isset($_POST['delete'][$field]) || $field == '***new***')
+				if ( isset($delete[$field]) || $field == '***new***')
 				{
 					continue;
 				}
@@ -126,13 +134,14 @@
 				{
 					++$order;
 				}
-				$ordered[$order] = array(
+				$ordered[$order] = array
+				(
 					'field'     => $field,
-					'name'      => stripslashes(isset($_POST['name'][$field])?$_POST['name'][$field]:''),
-					'length'    => isset($_POST['length'][$field])?intval($_POST['length'][$field]):0,
-					'shown'     => isset($_POST['shown'][$field])?intval($_POST['shown'][$field]):0,
-					'title'     => !!$_POST['title'][$field],
-					'disabled'  => !!isset($_POST['disabled'][$field])
+					'name'      => isset($names[$field]) ? $names[$field] : '',
+					'length'    => isset($length[$field]) ?  $length[$field] : 0,
+					'shown'     => isset($shown[$field]) ? $shown[$field] : 0,
+					'title'     => $title[$field],
+					'disabled'  => $disabled[$field]
 				);
 				if (isset($this->stock_fields[$field]))
 				{
@@ -140,28 +149,28 @@
 					$ordered[$order]['label'] = $this->fields[$field]['label'];
 				}
 			}
-			if (isset($_POST['add']) || strlen($_POST['name']['***new***']))
+			if ( phpgw::get_var('add', 'bool', 'POST') || strlen($names['***new***']))
 			{
-				$name = stripslashes($_POST['name']['***new***']);
+				$name = $names['***new***'];
 
-				if (!strlen($name) || array_search($name,$_POST['name']) != '***new***')
+				if (!strlen($name) || array_search($name, $names) != '***new***')
 				{
 					$error .= lang('New name must not exist and not be empty!!!');
 				}
 				else
 				{
-					$order = $_POST['order']['***new***'];
-					while(isset($_POST['order'][$order]))
+					$order = $orders['***new***'];
+					while ( isset($orders[$order]) )
 					{
 						++$order;
 					}
 					$ordered[$order] = array(
 						'field'     => '#'.$name,
 						'name'      => $name,
-						'length'    => intval($_POST['length']['***new***']),
-						'shown'     => intval($_POST['shown']['***new***']),
-						'title'     => !!$_POST['title']['***new***'],
-						'disabled'  => !!$_POST['disabled']['***new***']
+						'length'    => $length['***new***'],
+						'shown'     => $shown['***new***'],
+						'title'     => $title['***new***'],
+						'disabled'  => $disabled['***new***']
 					);
 				}
 			}
@@ -179,7 +188,7 @@
 				{
 					unset($data['length']);
 				}
-				if ($data['shown'] >= (isset($_POST['disabled'][$field])?$_POST['disabled'][$field]:0) || $data['shown'] <= 0)
+				if ($data['shown'] >= (isset($disabled[$field]) ? $disabled[$field] : false) || $data['shown'] <= 0)
 				{
 					unset($data['shown']);
 				}
@@ -195,7 +204,8 @@
 				unset($data['field']);
 				$this->fields[$field] = $data;
 			}
-			if ((!isset($error) || !$error) && isset($_POST['save']))
+			if ( (!isset($error) || !$error) 
+				&& phpgw::get_var('save', 'bool', 'POST') )
 			{
 				$this->save();
 				$GLOBALS['phpgw']->redirect_link('/admin/');
@@ -203,4 +213,3 @@
 			$this->index($error);
 		}
 	}
-?>

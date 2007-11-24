@@ -80,13 +80,13 @@ define('_BASE64',1);
 
 define('OTHER',99);
 
-class boicalendar
+class calendar_boicalendar
 {
 
 	var $public_functions = array
 		(
-		 'import'		=> True,
-		 'export'		=> True
+		 'import'		=> true,
+		 'export'		=> true
 		);
 
 
@@ -99,915 +99,915 @@ class boicalendar
 	var $timezone = array();
 	var $property = array();
 	var $parameter = array();
-	var $debug_str = False;
-	var $api = True;
-	var $chunk_split = True;
+	var $debug_str = false;
+	var $api = true;
+	var $chunk_split = true;
 
 	/*
 	 * Base Functions
 	 */
 
-	function boicalendar()
+	public function __construct()
 	{
 		$this->property = array
 				(
 					'action'	=> array
 							(
 								'type'		=> 'text',
-								'to_text'	=> True,
+								'to_text'	=> true,
 								'valarm'	=> array
 										(
 											'state'		=> 'required',
-											'multiples'	=> False
+											'multiples'	=> false
 										)
 							),
 
 					'attach'	=> array
 							(
 								'type'		=> 'uri',
-								'to_text'	=> True,
+								'to_text'	=> true,
 								'vevent'	=> array
 										(
 											'state'		=> 'optional',
-											'multiples'	=> True
+											'multiples'	=> true
 										),
 								'vtodo'		=> array
 										(
 											'state'		=> 'optional',
-											'multiples'	=> True
+											'multiples'	=> true
 										),
 								'vjournal'	=> array
 										(
 											'state'		=> 'optional',
-											'multiples'	=> True
+											'multiples'	=> true
 										),
 								'valarm'	=> array
 										(
 											'state'		=> 'optional',
-											'multiples'	=> True
+											'multiples'	=> true
 										)
 							),
 
 					'attendee'	=> array
 							(
 								'type'		=> 'cal-address',
-								'to_text'	=> False,
+								'to_text'	=> false,
 								'vevent'	=> array
 										(
 											'state'		=> 'optional',
-											'multiples'	=> True
+											'multiples'	=> true
 										),
 								'vtodo'		=> array
 										(
 											'state'		=> 'optional',
-											'multiples'	=> True
+											'multiples'	=> true
 										),
 								'vjournal'	=> array
 										(
 											'state'		=> 'optional',
-											'multiples'	=> True
+											'multiples'	=> true
 										),
 								'valarm'	=> array
 										(
 											'state'		=> 'optional',
-											'multiples'	=> True
+											'multiples'	=> true
 										),
 								'vfreebusy'	=> array
 										(
 											'state'		=> 'optional',
-											'multiples'	=> True
+											'multiples'	=> true
 										)
 							),
 
 					'categories'	=> array
 							(
 								'type'		=> 'text',
-								'to_text'	=> True,
+								'to_text'	=> true,
 								'vevent'	=> array
 										(
 											'state'		=> 'optional',
-											'multiples'	=> True
+											'multiples'	=> true
 										),
 								'vtodo'		=> array
 										(
 											'state'		=> 'optional',
-											'multiples'	=> False
+											'multiples'	=> false
 										),
 								'vjournal'	=> array
 										(
 											'state'		=> 'optional',
-											'multiples'	=> True
+											'multiples'	=> true
 										)
 							),
 
 					'class'		=> array
 							(
 								'type'		=> 'text',
-								'to_text'	=> True,
+								'to_text'	=> true,
 								'vevent'	=> array
 										(
 											'state'		=> 'optional',
-											'multiples'	=> False
+											'multiples'	=> false
 										),
 								'vtodo'		=> array
 										(
 											'state'		=> 'optional',
-											'multiples'	=> False
+											'multiples'	=> false
 										),
 								'vjournal'	=> array
 										(
 											'state'		=> 'optional',
-											'multiples'	=> False
+											'multiples'	=> false
 										)
 							),
 
 					'comment'	=> array
 							(
 								'type'		=> 'text',
-								'to_text'	=> True,
+								'to_text'	=> true,
 								'daylight'	=> array
 										(
 											'state'		=> 'optional',
-											'multiples'	=> True
+											'multiples'	=> true
 										),
 								'standard'	=> array
 										(
 											'state'		=> 'optional',
-											'multiples'	=> True
+											'multiples'	=> true
 										),
 								'valarm'	=> array
 										(
 											'state'		=> 'optional',
-											'multiples'	=> True
+											'multiples'	=> true
 										),
 								'vevent'	=> array
 										(
 											'state'		=> 'optional',
-											'multiples'	=> True
+											'multiples'	=> true
 										),
 								'vfreebusy'	=> array
 										(
 											'state'		=> 'optional',
-											'multiples'	=> True
+											'multiples'	=> true
 										),
 								'vjournal'	=> array
 										(
 											'state'		=> 'optional',
-											'multiples'	=> True
+											'multiples'	=> true
 										),
 								'vtodo'		=> array
 										(
 											'state'		=> 'optional',
-											'multiples'	=> True
+											'multiples'	=> true
 										)
 							),
 
 					'completed'	=> array
 							(
 								'type'		=> 'date-time',
-								'to_text'	=> False,
+								'to_text'	=> false,
 								'vtodo'		=> array
 										(
 											'state'		=> 'optional',
-											'multiples'	=> False
+											'multiples'	=> false
 										)
 							),
 
 					'contact'	=> array
 							(
 								'type'		=> 'text',
-								'to_text'	=> True,
+								'to_text'	=> true,
 								'vevent'	=> array
 										(
 											'state'		=> 'optional',
-											'multiples'	=> True
+											'multiples'	=> true
 										),
 								'vfreebusy'	=> array
 										(
 											'state'		=> 'optional',
-												'multiples'	=> False
+												'multiples'	=> false
 										),
 								'vjournal'	=> array
 										(
 											'state'		=> 'optional',
-											'multiples'	=> True
+											'multiples'	=> true
 										)
 							),
 
 					'created'	=> array
 							(
 								'type'		=> 'date-time',
-								'to_text'	=> False,
+								'to_text'	=> false,
 								'vevent'	=> array
 										(
 											'state'		=> 'optional',
-											'multiples'	=> False
+											'multiples'	=> false
 										),
 								'vtodo'		=> array
 										(
 											'state'		=> 'optional',
-											'multiples'	=> False
+											'multiples'	=> false
 										),
 								'vjournal'	=> array
 										(
 											'state'		=> 'optional',
-											'multiples'	=> False
+											'multiples'	=> false
 										)
 							),
 
 					'description'	=> array
 							(
 								'type'		=> 'text',
-								'to_text'	=> True,
+								'to_text'	=> true,
 								'vevent'	=> array
 										(
 											'state'		=> 'optional',
-											'multiples'	=> False
+											'multiples'	=> false
 										),
 								'vtodo'		=> array
 										(
 											'state'		=> 'optional',
-											'multiples'	=> False
+											'multiples'	=> false
 										),
 								'vjournal'	=> array
 										(
 											'state'		=> 'optional',
-											'multiples'	=> True
+											'multiples'	=> true
 										),
 								'valarm'	=> array
 										(
 											'state'		=> 'optional',
-											'multiples'	=> False
+											'multiples'	=> false
 										)
 							),
 
 					'dtend'		=> array
 							(
 								'type'		=> 'date-time',
-								'to_text'	=> False,
+								'to_text'	=> false,
 								'vevent'	=> array
 										(
 											'state'		=> 'optional',
-											'multiples'	=> False
+											'multiples'	=> false
 										),
 								'vfreebusy'	=> array
 										(
 											'state'		=> 'optional',
-											'multiples'	=> False
+											'multiples'	=> false
 										)
 							),
 
 					'dtstamp'	=> array
 							(
 								'type'		=> 'date-time',
-								'to_text'	=> False,
+								'to_text'	=> false,
 								'vevent'	=> array
 										(
 											'state'		=> 'optional',
-											'multiples'	=> False
+											'multiples'	=> false
 										),
 								'vtodo'		=> array
 										(
 											'state'		=> 'optional',
-											'multiples'	=> False
+											'multiples'	=> false
 										),
 								'vjournal'	=> array
 										(
 											'state'		=> 'optional',
-											'multiples'	=> True
+											'multiples'	=> true
 										),
 								'vfreebusy'	=> array
 										(
 											'state'		=> 'optional',
-											'multiples'	=> False
+											'multiples'	=> false
 										)
 							),			
 
 					'dtstart'	=> array
 							(
 								'type'		=> 'date-time',
-								'to_text'	=> False,
+								'to_text'	=> false,
 								'daylight'	=> array
 										(
 											'state'		=> 'required',
-											'multiples'	=> False
+											'multiples'	=> false
 										),
 								'standard'	=> array
 										(
 											'state'		=> 'required',
-											'multiples'	=> False
+											'multiples'	=> false
 										),
 								'vevent'	=> array
 										(
 											'state'		=> 'optional',
-											'multiples'	=> False
+											'multiples'	=> false
 										),
 								'vfreebusy'	=> array
 										(
 											'state'		=> 'optional',
-											'multiples'	=> False
+											'multiples'	=> false
 										),
 								'vjournal'	=> array
 										(
 											'state'		=> 'optional',
-											'multiples'	=> False
+											'multiples'	=> false
 										),
 								'vtodo'		=> array
 										(
 											'state'		=> 'optional',
-											'multiples'	=> False
+											'multiples'	=> false
 										)
 							),
 
 					'due'		=> array
 							(
 								'type'		=> 'date-time',
-								'to_text'	=> False,
+								'to_text'	=> false,
 								'vtodo'		=> array
 										(
 											'state'		=> 'optional',
-											'multiples'	=> False
+											'multiples'	=> false
 										)
 							),
 
 					'duration'	=> array
 							(
 								'type'		=> 'duration',
-								'to_text'	=> False,
+								'to_text'	=> false,
 								'valarm'	=> array
 										(
 											'state'		=> 'optional',
-											'multiples'	=> False
+											'multiples'	=> false
 										),
 								'vevent'	=> array
 										(
 											'state'		=> 'optional',
-											'multiples'	=> False
+											'multiples'	=> false
 										),
 								'vfreebusy'	=> array
 										(
 											'state'		=> 'optional',
-											'multiples'	=> False
+											'multiples'	=> false
 										),
 								'vtodo'		=> array
 										(
 											'state'		=> 'optional',
-											'multiples'	=> False
+											'multiples'	=> false
 										)
 							),
 
 					'exdate'	=> array
 							(
 								'type'		=> 'date-time',
-								'to_text'	=> False,
+								'to_text'	=> false,
 								'vevent'	=> array
 										(
 											'state'		=> 'optional',
-											'multiples'	=> True
+											'multiples'	=> true
 										),
 								'vjournal'	=> array
 										(
 											'state'		=> 'optional',
-											'multiples'	=> True
+											'multiples'	=> true
 										),
 								'vtodo'		=> array
 										(
 											'state'		=> 'optional',
-											'multiples'	=> True
+											'multiples'	=> true
 										)
 							),
 
 					'exrule'	=> array
 							(
 								'type'		=> 'recur',
-								'to_text'	=> False,
+								'to_text'	=> false,
 								'vevent'	=> array
 										(
 											'state'		=> 'optional',
-											'multiples'	=> True
+											'multiples'	=> true
 										),
 								'vjournal'	=> array
 										(
 											'state'		=> 'optional',
-											'multiples'	=> True
+											'multiples'	=> true
 										),
 								'vtodo'		=> array
 										(
 											'state'		=> 'optional',
-											'multiples'	=> True
+											'multiples'	=> true
 										)
 							),
 
 					'freebusy'	=> array
 							(
 								'type'		=> 'freebusy',
-								'to_text'	=> False,
+								'to_text'	=> false,
 								'vfreebusy'	=> array
 										(
 											'state'		=> 'optional',
-											'multiples'	=> True
+											'multiples'	=> true
 										)
 							),
 
 					'geo'		=> array
 							(
 								'type'		=> 'float',
-								'to_text'	=> True,
+								'to_text'	=> true,
 								'vevent'	=> array
 										(
 											'state'		=> 'optional',
-											'multiples'	=> False
+											'multiples'	=> false
 										),
 								'vtodo'		=> array
 										(
 											'state'		=> 'optional',
-											'multiples'	=> False
+											'multiples'	=> false
 										)
 							),
 
 					'last_modified'	=> array
 							(
 								'type'		=> 'date-time',
-								'to_text'	=> False,
+								'to_text'	=> false,
 								'vevent'	=> array
 										(
 											'state'		=> 'optional',
-											'multiples'	=> False
+											'multiples'	=> false
 										),
 								'vtodo'		=> array
 										(
 											'state'		=> 'optional',
-											'multiples'	=> False
+											'multiples'	=> false
 										),
 								'vjournal'	=> array
 										(
 											'state'		=> 'optional',
-											'multiples'	=> False
+											'multiples'	=> false
 										),
 								'vtimezone'	=> array
 										(
 											'state'		=> 'optional',
-											'multiples'	=> False
+											'multiples'	=> false
 										)
 							),
 
 					'location'	=> array
 							(
 								'type'		=> 'text',
-								'to_text'	=> True,
+								'to_text'	=> true,
 								'vevent'	=> array
 										(
 											'state'		=> 'optional',
-											'multiples'	=> False
+											'multiples'	=> false
 										),
 								'vtodo'		=> array
 										(
 											'state'		=> 'optional',
-											'multiples'	=> False
+											'multiples'	=> false
 										)
 							),
 
 					'method'	=> array
 							(
 								'type'		=> 'text',
-								'to_text'	=> True,
+								'to_text'	=> true,
 								'ical'	=> array
 									(
 										'state'		=> 'required',
-										'multiples'	=> False
+										'multiples'	=> false
 									)
 							),
 
 					'organizer'	=> array
 							(
 								'type'		=> 'cal-address',
-								'to_text'	=> False,
+								'to_text'	=> false,
 								'vevent'	=> array
 										(
 											'state'		=> 'optional',
-											'multiples'	=> False
+											'multiples'	=> false
 										),
 								'vtodo'		=> array
 										(
 											'state'		=> 'optional',
-											'multiples'	=> False
+											'multiples'	=> false
 										),
 								'vjournal'	=> array
 										(
 											'state'		=> 'optional',
-											'multiples'	=> False
+											'multiples'	=> false
 										),
 								'vfreebusy'	=> array
 										(
 											'state'		=> 'optional',
-											'multiples'	=> False
+											'multiples'	=> false
 										)
 							),
 
 					'percent_complete' => array
 							(
 								'type'		=> 'integer',
-								'to_text'	=> False,
+								'to_text'	=> false,
 								'vtodo'		=> array
 										(
 											'state'		=> 'optional',
-											'multiples'	=> False
+											'multiples'	=> false
 										)
 							),
 
 					'priority'	=> array
 							(
 								'type'		=> 'integer',
-								'to_text'	=> True,
+								'to_text'	=> true,
 								'vevent'	=> array
 										(
 											'state'		=> 'optional',
-											'multiples'	=> False
+											'multiples'	=> false
 										),
 								'vtodo'		=> array
 										(
 											'state'		=> 'optional',
-											'multiples'	=> False
+											'multiples'	=> false
 										)
 							),
 
 					'prodid'	=> array
 							(
 								'type'		=> 'text',
-								'to_text'	=> True,
+								'to_text'	=> true,
 								'ical'		=> array
 										(
 											'state'		=> 'required',
-											'multiples'	=> False
+											'multiples'	=> false
 										)
 							),
 
 					'rdate'		=> array
 							(
 								'type'		=> 'date-time',
-								'to_text'	=> False,
+								'to_text'	=> false,
 								'daylight'	=> array
 										(
 											'state'		=> 'optional',
-											'multiples'	=> True
+											'multiples'	=> true
 										),
 								'standard'	=> array
 										(
 											'state'		=> 'optional',
-											'multiples'	=> True
+											'multiples'	=> true
 										),
 								'vevent'	=> array
 										(
 											'state'		=> 'optional',
-											'multiples'	=> True
+											'multiples'	=> true
 										),
 								'vtodo'		=> array
 										(
 											'state'		=> 'optional',
-											'multiples'	=> True
+											'multiples'	=> true
 										),
 								'vjournal'	=> array
 										(
 											'state'		=> 'optional',
-											'multiples'	=> True
+											'multiples'	=> true
 										)
 							),
 
 					'recurrence_id'	=> array
 							(
 								'type'		=> 'date-time',
-								'to_text'	=> False,
+								'to_text'	=> false,
 								'vevent'	=> array
 										(
 											'state'		=> 'optional',
-											'multiples'	=> False
+											'multiples'	=> false
 										),
 								'vjournal'	=> array
 										(
 											'state'		=> 'optional',
-											'multiples'	=> False
+											'multiples'	=> false
 										),
 								'vtodo'		=> array
 										(
 											'state'		=> 'optional',
-											'multiples'	=> False
+											'multiples'	=> false
 										)
 							),
 
 					'related_to'	=> array
 							(
 								'type'		=> 'text',
-								'to_text'	=> False,
+								'to_text'	=> false,
 								'vevent'	=> array
 										(
 											'state'		=> 'optional',
-											'multiples'	=> False
+											'multiples'	=> false
 										),
 								'vjournal'	=> array
 										(
 											'state'		=> 'optional',
-											'multiples'	=> True
+											'multiples'	=> true
 										),
 								'vtodo'		=> array
 										(
 											'state'		=> 'optional',
-											'multiples'	=> True
+											'multiples'	=> true
 										)
 							),
 
 					'request_status'=> array
 							(
 								'type'		=> 'text',
-								'to_text'	=> True,
+								'to_text'	=> true,
 								'vevent'	=> array
 										(
 											'state'		=> 'optional',
-											'multiples'	=> False
+											'multiples'	=> false
 										),
 								'vtodo'		=> array
 										(
 											'state'		=> 'optional',
-											'multiples'	=> False
+											'multiples'	=> false
 										),
 								'vjournal'	=> array
 										(
 											'state'		=> 'optional',
-											'multiples'	=> True
+											'multiples'	=> true
 										),
 								'vfreebusy'	=> array
 										(
 											'state'		=> 'optional',
-											'multiples'	=> True
+											'multiples'	=> true
 										)
 							),
 
 					'resources'	=> array
 							(
 								'type'		=> 'text',
-								'to_text'	=> False,
+								'to_text'	=> false,
 								'vevent'	=> array
 										(
 												'state'		=> 'optional',
-												'multiples'	=> False
+												'multiples'	=> false
 										),
 								'vtodo'		=> array
 										(
 											'state'		=> 'optional',
-											'multiples'	=> False
+											'multiples'	=> false
 										)
 							),
 
 					'rrule'		=> array
 							(
 								'type'		=> 'recur',
-								'to_text'	=> False,
+								'to_text'	=> false,
 								'daylight'	=> array
 										(
 											'state'		=> 'optional',
-											'multiples'	=> True
+											'multiples'	=> true
 										),
 								'standard'	=> array
 										(
 											'state'		=> 'optional',
-											'multiples'	=> True
+											'multiples'	=> true
 										),
 								'vevent'	=> array
 										(
 											'state'		=> 'optional',
-											'multiples'	=> True
+											'multiples'	=> true
 										),
 								'vtodo'		=> array
 										(
 											'state'		=> 'optional',
-											'multiples'	=> True
+											'multiples'	=> true
 										),
 								'vjournal'	=> array
 										(
 											'state'		=> 'optional',
-											'multiples'	=> True
+											'multiples'	=> true
 										)
 							),
 
 					'sequence'	=> array
 							(
 								'type'		=> 'integer',
-								'to_text'	=> True,
+								'to_text'	=> true,
 								'vevent'	=> array
 										(
 											'state'		=> 'optional',
-											'multiples'	=> False
+											'multiples'	=> false
 										),
 								'vjournal'	=> array
 										(
 											'state'		=> 'optional',
-											'multiples'	=> False
+											'multiples'	=> false
 										),
 								'vtodo'		=> array
 										(
 											'state'		=> 'optional',
-											'multiples'	=> False
+											'multiples'	=> false
 										)
 							),
 
 					'status'	=> array
 							(
 								'type'		=> 'text',
-								'to_text'	=> True,
+								'to_text'	=> true,
 								'vevent'	=> array
 										(
 											'state'		=> 'optional',
-											'multiples'	=> False
+											'multiples'	=> false
 										),
 								'vjournal'	=> array
 										(
 											'state'		=> 'optional',
-											'multiples'	=> False
+											'multiples'	=> false
 										),
 								'vtodo'		=> array
 										(
 											'state'		=> 'optional',
-											'multiples'	=> False
+											'multiples'	=> false
 										)
 							),
 
 					'summary'	=> array
 							(
 								'type'		=> 'text',
-								'to_text'	=> True,
+								'to_text'	=> true,
 								'vevent'	=> array
 										(
 											'state'		=> 'optional',
-											'multiples'	=> False
+											'multiples'	=> false
 										),
 								'vtodo'		=> array
 										(
 											'state'		=> 'optional',
-											'multiples'	=> False
+											'multiples'	=> false
 										),
 								'vjournal'	=> array
 										(
 											'state'		=> 'optional',
-											'multiples'	=> False
+											'multiples'	=> false
 										),
 								'valarm'	=> array
 										(
 											'state'		=> 'optional',
-											'multiples'	=> False
+											'multiples'	=> false
 										)
 							),
 					
 					'transp'	=> array
 							(
 								'type'		=> 'text',
-								'to_text'	=> True,
+								'to_text'	=> true,
 								'vevent'	=> array
 										(
 											'state'		=> 'optional',
-											'multiples'	=> False
+											'multiples'	=> false
 										)
 							),
 					
 					'trigger'	=> array
 							(
 								'type'		=> 'text',
-								'to_text'	=> True,
+								'to_text'	=> true,
 								'valarm'	=> array
 										(
 											'state'		=> 'optional',
-											'multiples'	=> False
+											'multiples'	=> false
 										)
 							),
 							
 					'tzid'		=> array
 							(
 								'type'		=> 'text',
-								'to_text'	=> True,
+								'to_text'	=> true,
 								'vtimezone'	=> array
 										(
 											'state'		=> 'required',
-											'multiples'	=> False
+											'multiples'	=> false
 										)
 							),
 							
 					'tzname'	=> array
 							(
 								'type'		=> 'text',
-								'to_text'	=> True,
+								'to_text'	=> true,
 								'daylight'	=> array
 										(
 											'state'		=> 'optional',
-											'multiples'	=> True
+											'multiples'	=> true
 										),
 								'standard'	=> array
 										(
 											'state'		=> 'optional',
-											'multiples'	=> True
+											'multiples'	=> true
 										)
 							),
 
 					'tzoffsetfrom'	=> array
 							(
 								'type'		=> 'utc-offset',
-								'to_text'	=> True,
+								'to_text'	=> true,
 								'daylight'	=> array
 										(
 											'state'		=> 'required',
-											'multiples'	=> False
+											'multiples'	=> false
 										),
 								'standard'	=> array
 										(
 											'state'		=> 'required',
-											'multiples'	=> False
+											'multiples'	=> false
 										)
 							),
 							
 					'tzoffsetto'	=> array
 							(
 								'type'		=> 'utc-offset',
-								'to_text'	=> True,
+								'to_text'	=> true,
 								'daylight'	=> array
 										(
 											'state'		=> 'required',
-											'multiples'	=> False
+											'multiples'	=> false
 										),
 								'standard'	=> array
 										(
 											'state'		=> 'required',
-											'multiples'	=> False
+											'multiples'	=> false
 										)
 							),
 					
 					'tzurl'		=> array
 							(
 								'type'		=> 'uri',
-								'to_text'	=> True,
+								'to_text'	=> true,
 								'vtimezone'	=> array
 										(
 											'state'		=> 'optional',
-											'multiples'	=> False
+											'multiples'	=> false
 										
 							),
 							
 					'uid'		=> array
 							(
 								'type'		=> 'text',
-								'to_text'	=> True,
+								'to_text'	=> true,
 								'vevent'	=> array
 										(
 											'state'		=> 'required',
-											'multiples'	=> False
+											'multiples'	=> false
 										),
 								'vfreebusy'	=> array
 										(
 											'state'		=> 'required',
-											'multiples'	=> False
+											'multiples'	=> false
 										),
 								'vjournal'	=> array
 										(
 											'state'		=> 'required',
-											'multiples'	=> False
+											'multiples'	=> false
 										),
 								'vtodo'		=> array
 										(
 											'state'		=> 'required',
-											'multiples'	=> False
+											'multiples'	=> false
 										)
 							),
 							
 					'url'		=> array
 							(
 								'type'		=> 'text',
-								'to_text'	=> True,
+								'to_text'	=> true,
 								'vevent'	=> array
 										(
 											'state'		=> 'required',
-											'multiples'	=> False
+											'multiples'	=> false
 										),
 								'vfreebusy'	=> array
 										(
 											'state'		=> 'required',
-											'multiples'	=> False
+											'multiples'	=> false
 										),
 								'vjournal'	=> array
 										(
 											'state'		=> 'optional',
-											'multiples'	=> False
+											'multiples'	=> false
 										),
 								'vtodo'		=> array
 										(
 											'state'		=> 'required',
-											'multiples'	=> False
+											'multiples'	=> false
 										)
 							),
 							
 					'version'	=> array
 							(
 								'type'		=> 'text',
-								'to_text'	=> True,
+								'to_text'	=> true,
 								'ical'		=> array
 										(
 											'state'		=> 'required',
-											'multiples'	=> False
+											'multiples'	=> false
 										)
 							)
 			));
@@ -1017,17 +1017,17 @@ class boicalendar
 					'altrep'	=> array
 							(
 								'type'		=> 'uri',
-								'quoted'	=> True,
-								'to_text'	=> True,
+								'quoted'	=> true,
+								'to_text'	=> true,
 								'properties'	=> array
 										(
-											'comment'	=> True,
-											'description'	=> True,
-											'location'	=> True,
-											'prodid'	=> True,
-											'resources'	=> True,
-											'summary'	=> True,
-											'contact'	=> True					
+											'comment'	=> true,
+											'description'	=> true,
+											'location'	=> true,
+											'prodid'	=> true,
+											'resources'	=> true,
+											'summary'	=> true,
+											'contact'	=> true					
 										)
 							),
 
@@ -1035,110 +1035,110 @@ class boicalendar
 							(
 								'type'		=> 'function',
 								'function'	=> 'switch_freq',
-								'quoted'	=> False,
-								'to_text'	=> False,
+								'quoted'	=> false,
+								'to_text'	=> false,
 								'properties'	=> array
 										(
-											'rrule'	=> True
+											'rrule'	=> true
 										)
 							),
 
 					'byday'		=> array
 							(
 								'type'		=> 'text',
-								'quoted'	=> False,
-								'to_text'	=> False,
+								'quoted'	=> false,
+								'to_text'	=> false,
 								'properties'	=> array
 										(
-											'rrule'	=> True
+											'rrule'	=> true
 										)
 							),
 
 					'byhour'	=> array
 							(
 								'type'		=> 'text',
-								'quoted'	=> False,
-								'to_text'	=> False,
+								'quoted'	=> false,
+								'to_text'	=> false,
 								'properties'	=> array
 										(
-											'rrule'	=> True
+											'rrule'	=> true
 										)
 							),
 
 					'byminute'	=> array
 							(
 								'type'		=> 'text',
-								'quoted'	=> False,
-								'to_text'	=> False,
+								'quoted'	=> false,
+								'to_text'	=> false,
 								'properties'	=> array
 										(
-											'rrule'	=> True
+											'rrule'	=> true
 										)
 							),
 
 					'bymonth'	=> array
 							(
 								'type'		=> 'text',
-								'quoted'	=> False,
-								'to_text'	=> False,
+								'quoted'	=> false,
+								'to_text'	=> false,
 								'properties'	=> array
 										(
-											'rrule'	=> True
+											'rrule'	=> true
 										)
 							),
 
 					'bymonthday'	=> array
 							(
 								'type'		=> 'text',
-								'quoted'	=> False,
-								'to_text'	=> False,
+								'quoted'	=> false,
+								'to_text'	=> false,
 								'properties'	=> array
 										(
-											'rrule'	=> True
+											'rrule'	=> true
 										)
 							),
 
 					'bysecond'	=> array
 							(
 								'type'		=> 'text',
-								'quoted'	=> False,
-								'to_text'	=> False,
+								'quoted'	=> false,
+								'to_text'	=> false,
 								'properties'	=> array
 										(
-											'rrule'	=> True
+											'rrule'	=> true
 										)
 							),
 
 					'bysetpos'	=> array
 							(
 								'type'		=> 'text',
-								'quoted'	=> False,
-								'to_text'	=> False,
+								'quoted'	=> false,
+								'to_text'	=> false,
 								'properties'	=> array
 										(
-											'rrule'	=> True
+											'rrule'	=> true
 										)
 							),
 
 					'byweekno'	=> array
 							(
 								'type'		=> 'text',
-								'quoted'	=> False,
-								'to_text'	=> False,
+								'quoted'	=> false,
+								'to_text'	=> false,
 								'properties'	=> array
 										(
-											'rrule'	=> True
+											'rrule'	=> true
 										)
 							),
 
 					'byyearday'	=> array
 							(
 								'type'		=> 'text',
-								'quoted'	=> False,
-								'to_text'	=> False,
+								'quoted'	=> false,
+								'to_text'	=> false,
 								'properties'	=> array
 										(
-											'rrule'	=> True
+											'rrule'	=> true
 										)
 							),
 
@@ -1146,34 +1146,34 @@ class boicalendar
 							(
 								'type'		=> 'function',
 								'function'	=> 'switch_class',
-								'quoted'	=> False,
-								'to_text'	=> False,
+								'quoted'	=> false,
+								'to_text'	=> false,
 								'properties'	=> array
 										(
-											'class'	=> True
+											'class'	=> true
 										)
 							),
 					
 					'cn'		=> array
 							(
 								'type'		=> 'text',
-								'quoted'	=> True,
-								'to_text'	=> False,
+								'quoted'	=> true,
+								'to_text'	=> false,
 								'properties'	=> array
 										(
-											'attendee'	=> True,
-											'organizer'	=> True					
+											'attendee'	=> true,
+											'organizer'	=> true					
 										)
 							),
 
 					'count'		=> array
 							(
 								'type'		=> 'integer',
-								'quoted'	=> False,
-								'to_text'	=> False,
+								'quoted'	=> false,
+								'to_text'	=> false,
 								'properties'	=> array
 										(
-											'rrule'	=> True
+											'rrule'	=> true
 										)
 							),
 
@@ -1181,11 +1181,11 @@ class boicalendar
 							(
 								'type'		=> 'function',
 								'function'	=> 'switch_cu',
-								'quoted'	=> False,
-								'to_text'	=> False,
+								'quoted'	=> false,
+								'to_text'	=> false,
 								'properties'	=> array
 										(
-											'attendee'	=> True
+											'attendee'	=> true
 										)
 							),
 
@@ -1193,11 +1193,11 @@ class boicalendar
 							(
 								'type'		=> 'function',
 								'function'	=> 'switch_mailto',
-								'quoted'	=> True,
-								'to_text'	=> False,
+								'quoted'	=> true,
+								'to_text'	=> false,
 								'properties'	=> array
 										(
-											'attendee'	=> True
+											'attendee'	=> true
 										)
 							),
 
@@ -1205,23 +1205,23 @@ class boicalendar
 							(
 								'type'		=> 'function',
 								'function'	=> 'switch_mailto',
-								'quoted'	=> True,
-								'to_text'	=> False,
+								'quoted'	=> true,
+								'to_text'	=> false,
 								'properties'	=> array
 										(
-											'attendee'	=> True
+											'attendee'	=> true
 										)
 							),
 
 					'dir'		=> array
 							(
 								'type'		=> 'dir',
-								'quoted'	=> True,
-								'to_text'	=> True,
+								'quoted'	=> true,
+								'to_text'	=> true,
 								'properties'	=> array
 										(
-											'attendee'	=> True,
-											'organizer'	=> True
+											'attendee'	=> true,
+											'organizer'	=> true
 										)
 							),
 
@@ -1229,11 +1229,11 @@ class boicalendar
 							(
 								'type'		=> 'function',
 								'function'	=> 'switch_date',
-								'quoted'	=> False,
-								'to_text'	=> False,
+								'quoted'	=> false,
+								'to_text'	=> false,
 								'properties'	=> array
 										(
-											'dtend'		=> True
+											'dtend'		=> true
 										)
 							),
 
@@ -1241,11 +1241,11 @@ class boicalendar
 							(
 								'type'		=> 'function',
 								'function'	=> 'switch_date',
-								'quoted'	=> False,
-								'to_text'	=> False,
+								'quoted'	=> false,
+								'to_text'	=> false,
 								'properties'	=> array
 										(
-											'dtstamp'	=> True
+											'dtstamp'	=> true
 										)
 						),
 						
@@ -1253,11 +1253,11 @@ class boicalendar
 							(	
 								'type'		=> 'function',
 								'function'	=> 'switch_date',
-								'quoted'	=> False,
-								'to_text'	=> False,
+								'quoted'	=> false,
+								'to_text'	=> false,
 								'properties'	=> array
 										(
-											'dtstart'	=> True
+											'dtstart'	=> true
 										)
 							),
 
@@ -1265,22 +1265,22 @@ class boicalendar
 							( // "future bug" fix
 								'type'		=> 'function',
 								'function'	=> 'switch_encoding',
-								'quoted'	=> False,
-								'to_text'	=> False,
+								'quoted'	=> false,
+								'to_text'	=> false,
 								'properties'	=> array
 										(
-											'attach'	=> True
+											'attach'	=> true
 										)
 							),
 
 					'fmttype'	=> array
 							(
 								'type'		=> 'text',
-								'quoted'	=> False,
-								'to_text'	=> False,
+								'quoted'	=> false,
+								'to_text'	=> false,
 								'properties'	=> array
 										(
-											'attach'	=> True
+											'attach'	=> true
 										)
 							),
 
@@ -1289,43 +1289,43 @@ class boicalendar
 							(
 								'type'		=> 'function',
 								'function'	=> 'switch_fbtype',
-								'quoted'	=> False,
-								'to_text'	=> False,
+								'quoted'	=> false,
+								'to_text'	=> false,
 								'properties'	=> array
 										(
-											'attach'			=> True
+											'attach'			=> true
 										)
 							),
 
 					'interval'	=> array
 							(
 								'type'		=> 'integer',
-								'quoted'	=> False,
-								'to_text'	=> False,
+								'quoted'	=> false,
+								'to_text'	=> false,
 								'properties'	=> array
 										(
-											'rrule'		=> True
+											'rrule'		=> true
 										)
 							),
 
 					'language'	=> array
 							(
 								'type'		=> 'text',
-								'quoted'		=> False,
-								'to_text'	=> False,
+								'quoted'		=> false,
+								'to_text'	=> false,
 								'properties'	=> array
 										(
-											'categories'	=> True,
-											'comment'	=> True,
-											'description'	=> True,
-											'location'	=> True,
-											'resources'	=> True,
-											'summary'	=> True,
-											'tzname'	=> True,
-											'attendee'	=> True,
-											'contact'	=> True,
-											'organizer'	=> True,
-											'x-type'	=> True
+											'categories'	=> true,
+											'comment'	=> true,
+											'description'	=> true,
+											'location'	=> true,
+											'resources'	=> true,
+											'summary'	=> true,
+											'tzname'	=> true,
+											'attendee'	=> true,
+											'contact'	=> true,
+											'organizer'	=> true,
+											'x-type'	=> true
 										)
 							),
 
@@ -1333,11 +1333,11 @@ class boicalendar
 							(
 								'type'		=> 'function',
 								'function'	=> 'switch_date',
-								'quoted'	=> False,
-								'to_text'	=> False,
+								'quoted'	=> false,
+								'to_text'	=> false,
 								'properties'	=> array
 										(
-											'last_modified'	=> True
+											'last_modified'	=> true
 										)
 							),
 
@@ -1345,12 +1345,12 @@ class boicalendar
 							(
 								'type'		=> 'function',
 								'function'	=> 'switch_mailto',
-								'quoted'	=> False,
-								'to_text'	=> False,
+								'quoted'	=> false,
+								'to_text'	=> false,
 								'properties'	=> array
 										(
-											'attendee'	=> True,
-											'organizer'	=> True
+											'attendee'	=> true,
+											'organizer'	=> true
 										)
 							),
 
@@ -1358,11 +1358,11 @@ class boicalendar
 							(
 								'type'		=> 'function',
 								'function'	=> 'switch_mailto',
-								'quoted'	=> True,
-								'to_text'	=> False,
+								'quoted'	=> true,
+								'to_text'	=> false,
 								'properties'	=> array
 										(
-											'attendee'	=> True
+											'attendee'	=> true
 										)
 							),
 
@@ -1370,12 +1370,12 @@ class boicalendar
 							(
 								'type'		=> 'function',
 								'function'	=> 'switch_partstat',
-								'quoted'	=> False,
-								'to_text'	=> False,
+								'quoted'	=> false,
+								'to_text'	=> false,
 								'properties'	=> array
 										(
-											'attendee'	=> True,
-											'organizer'	=> True
+											'attendee'	=> true,
+											'organizer'	=> true
 										)
 							),
 
@@ -1383,11 +1383,11 @@ class boicalendar
 							(
 								'type'		=> 'function',
 								'function'	=> 'switch_range',
-								'quoted'	=> False,
-								'to_text'	=> False,
+								'quoted'	=> false,
+								'to_text'	=> false,
 								'properties'	=> array
 										(
-											'recurrence_id'	=> True
+											'recurrence_id'	=> true
 										)
 							),
 
@@ -1395,11 +1395,11 @@ class boicalendar
 							(
 								'type'		=> 'function',
 								'function'	=> 'switch_related',
-								'quoted'	=> False,
-								'to_text'	=> False,
+								'quoted'	=> false,
+								'to_text'	=> false,
 								'properties'	=> array
 										(
-											'related_to'	=> True
+											'related_to'	=> true
 										)
 							),
 
@@ -1407,12 +1407,12 @@ class boicalendar
 							(
 								'type'		=> 'function',
 								'function'	=> 'switch_role',
-								'quoted'	=> False,
-								'to_text'	=> False,
+								'quoted'	=> false,
+								'to_text'	=> false,
 								'properties'	=> array
 										(
-											'attendee'	=> True,
-											'organizer'	=> True
+											'attendee'	=> true,
+											'organizer'	=> true
 										)
 							),
 
@@ -1420,11 +1420,11 @@ class boicalendar
 							(
 								'type'		=> 'function',
 								'function'	=> 'switch_rsvp',
-								'quoted'	=> False,
-								'to_text'	=> False,
+								'quoted'	=> false,
+								'to_text'	=> false,
 								'properties'	=> array
 										(
-											'attendee'	=> True
+											'attendee'	=> true
 										)
 							),
 		
@@ -1432,28 +1432,28 @@ class boicalendar
 							(
 								'type'		=> 'function',
 								'function'	=> 'parse_user_host',
-								'quoted'	=> True,
-								'to_text'	=> False,
+								'quoted'	=> true,
+								'to_text'	=> false,
 								'properties'	=> array
 										(
-											'attendee'	=> True,
-											'organizer'	=> True
+											'attendee'	=> true,
+											'organizer'	=> true
 										)
 							),
 
 					'tzid'		=> array
 							(
 								'type'		=> 'text',
-								'quoted'	=> False,
-								'to_text'	=> False,
+								'quoted'	=> false,
+								'to_text'	=> false,
 								'properties'	=> array
 										(
-											'dtend'		=> True,
-											'due'		=> True,
-											'dtstart'	=> True,
-											'exdate'	=> True,
-											'rdate'		=> True,
-											'recurrence_id'	=> True
+											'dtend'		=> true,
+											'due'		=> true,
+											'dtstart'	=> true,
+											'exdate'	=> true,
+											'rdate'		=> true,
+											'recurrence_id'	=> true
 										)
 							),
 
@@ -1461,136 +1461,136 @@ class boicalendar
 							(
 								'type'		=> 'function',
 								'function'	=> 'switch_date',
-								'quoted'	=> False,
-								'to_text'	=> False,
+								'quoted'	=> false,
+								'to_text'	=> false,
 								'properties'	=> array
 										(
-											'rrule'		=> True
+											'rrule'		=> true
 										)
 							),
 
 					'value'		=> array
 							(
 								'type'		=> 'value',
-								'quoted'	=> False,
-								'to_text'	=> False,
+								'quoted'	=> false,
+								'to_text'	=> false,
 								'properties'	=> array
 										(
-											'calscale'	=> True,
-											'prodid'	=> True,
-											'method'	=> True,
-											'version'	=> True,
-											'attach'	=> True,
-											'categories'	=> True,
-											'class'		=> True,
-											'comment'	=> True,
-											'description'	=> True,
-											'geo'		=> True,
-											'location'	=> True,
-											'percent'	=> True,
-											'priority'	=> True,
-											'resources'	=> True,
-											'status'	=> True,
-											'summary'	=> True,
-											'completed'	=> True,
-											'dtend'		=> True,
-											'due'		=> True,
-											'dtstart'	=> True,
-											'duration'	=> True,
-											'freebusy'	=> True,
-											'transp'	=> True,
-											'tzid'		=> True,
-											'tzname'	=> True,
-											'tzoffsetfrom'	=> True,
-											'tzoffsetto'	=> True,
-											'tzurl'		=> True,
-											'attendee'	=> True,
-											'contact'	=> True,
-											'organizer'	=> True,
-											'recurrence_id'	=> True,
-											'url'		=> True,
-											'uid'		=> True,
-											'exdate'	=> True,
-											'exrule'	=> True,
-											'rdate'		=> True,
-											'rrule'		=> True,
-											'action'	=> True,
-											'repeat'	=> True,
-											'trigger'	=> True,
-											'created'	=> True,
-											'dtstamp'	=> True,
-											'last_modified'	=> True,
-											'sequence'	=> True,
-											'x_type'	=> True,
-											'request_status'=> True
+											'calscale'	=> true,
+											'prodid'	=> true,
+											'method'	=> true,
+											'version'	=> true,
+											'attach'	=> true,
+											'categories'	=> true,
+											'class'		=> true,
+											'comment'	=> true,
+											'description'	=> true,
+											'geo'		=> true,
+											'location'	=> true,
+											'percent'	=> true,
+											'priority'	=> true,
+											'resources'	=> true,
+											'status'	=> true,
+											'summary'	=> true,
+											'completed'	=> true,
+											'dtend'		=> true,
+											'due'		=> true,
+											'dtstart'	=> true,
+											'duration'	=> true,
+											'freebusy'	=> true,
+											'transp'	=> true,
+											'tzid'		=> true,
+											'tzname'	=> true,
+											'tzoffsetfrom'	=> true,
+											'tzoffsetto'	=> true,
+											'tzurl'		=> true,
+											'attendee'	=> true,
+											'contact'	=> true,
+											'organizer'	=> true,
+											'recurrence_id'	=> true,
+											'url'		=> true,
+											'uid'		=> true,
+											'exdate'	=> true,
+											'exrule'	=> true,
+											'rdate'		=> true,
+											'rrule'		=> true,
+											'action'	=> true,
+											'repeat'	=> true,
+											'trigger'	=> true,
+											'created'	=> true,
+											'dtstamp'	=> true,
+											'last_modified'	=> true,
+											'sequence'	=> true,
+											'x_type'	=> true,
+											'request_status'=> true
 										)
 								),
 
 					'wkst'		=> array
 							(
 								'type'		=> 'string',
-								'quoted'	=> False,
-								'to_text'	=> False,
+								'quoted'	=> false,
+								'to_text'	=> false,
 								'properties'	=> array
 										(
-											'rrule'		=> True
+											'rrule'		=> true
 										)
 							),
 
 					'x_type'	=> array
 							(
 								'type'		=> 'x_type',
-								'quoted'	=> False,
-								'to_text'	=> False,
+								'quoted'	=> false,
+								'to_text'	=> false,
 								'properties'	=> array
 										(
-											'calscale'	=> True,
-											'method'	=> True,
-											'prodid'	=> True,
-											'version'	=> True,
-											'attach'	=> True,
-											'categories'	=> True,
-											'class'		=> True,
-											'comment'	=> True,
-											'description'	=> True,
-											'geo'		=> True,
-											'location'	=> True,
-											'percent'	=> True,
-											'priority'	=> True,
-											'resources'	=> True,
-											'status'	=> True,
-											'summary'	=> True,
-											'completed'	=> True,
-											'dtend'		=> True,
-											'due'		=> True,
-											'dtstart'	=> True,
-											'duration'	=> True,
-											'freebusy'	=> True,
-											'transp'	=> True,
-											'tzid'		=> True,
-											'tzname'	=> True,
-											'tzoffsetfrom'	=> True,
-											'tzoffsetto'	=> True,
-											'tzurl'		=> True,
-											'attendee'	=> True,
-											'contact'	=> True,
-											'organizer'	=> True,
-											'recurrence_id'	=> True,
-											'url'		=> True,
-											'uid'		=> True,
-											'exdate'	=> True,
-											'exrule'	=> True,
-											'rdate'		=> True,
-											'rrule'		=> True,
-											'action'	=> True,
-											'repeat'	=> True,
-											'trigger'	=> True,
-											'created'	=> True,
-											'dtstamp'	=> True,
-											'last_modified'	=> True,
-											'sequence'	=> True,
-											'x_type'	=> True,
-											'request_status'=> True
+											'calscale'	=> true,
+											'method'	=> true,
+											'prodid'	=> true,
+											'version'	=> true,
+											'attach'	=> true,
+											'categories'	=> true,
+											'class'		=> true,
+											'comment'	=> true,
+											'description'	=> true,
+											'geo'		=> true,
+											'location'	=> true,
+											'percent'	=> true,
+											'priority'	=> true,
+											'resources'	=> true,
+											'status'	=> true,
+											'summary'	=> true,
+											'completed'	=> true,
+											'dtend'		=> true,
+											'due'		=> true,
+											'dtstart'	=> true,
+											'duration'	=> true,
+											'freebusy'	=> true,
+											'transp'	=> true,
+											'tzid'		=> true,
+											'tzname'	=> true,
+											'tzoffsetfrom'	=> true,
+											'tzoffsetto'	=> true,
+											'tzurl'		=> true,
+											'attendee'	=> true,
+											'contact'	=> true,
+											'organizer'	=> true,
+											'recurrence_id'	=> true,
+											'url'		=> true,
+											'uid'		=> true,
+											'exdate'	=> true,
+											'exrule'	=> true,
+											'rdate'		=> true,
+											'rrule'		=> true,
+											'action'	=> true,
+											'repeat'	=> true,
+											'trigger'	=> true,
+											'created'	=> true,
+											'dtstamp'	=> true,
+											'last_modified'	=> true,
+											'sequence'	=> true,
+											'x_type'	=> true,
+											'request_status'=> true
 									)
 							)
 					);
@@ -1606,7 +1606,7 @@ class boicalendar
 		}
 		else
 		{
-			$this->debug("Setting $type = "._debug_array($value,False), __LINE__, __FILE__);
+			$this->debug("Setting $type = "._debug_array($value,false), __LINE__, __FILE__);
 		}
 		//$this->debug('event: ' . _debug_array($event, false), __LINE__, __FILE__);
 	}
@@ -1627,7 +1627,7 @@ class boicalendar
 		}
 		else
 		{
-			return False;
+			return false;
 		}
 	}
 
@@ -1727,7 +1727,7 @@ class boicalendar
 	 */
 	function parse_geo(&$event,$value)
 	{
-		//$return_value = $this->explode_param($value,True);
+		//$return_value = $this->explode_param($value,true);
 		if(count($return_value) == 2)
 		{
 			$event['lat'] = $return_value[0];
@@ -1754,7 +1754,7 @@ class boicalendar
 		}
 		elseif(ereg('(.*(\:\\\\)?.*):(.*)',$value,$temp))
 		{
-			$this->debug('Value : '._debug_array($temp,False));
+			$this->debug('Value : '._debug_array($temp,false));
 			$this->debug('Param '.$majortype.' Value : '.$temp[3]);
 			if($temp[3])
 			{
@@ -1766,7 +1766,7 @@ class boicalendar
 			}
 			while(ereg('(([A-Z\-]*)[=]([[:alnum:] \_\)\(\/\$\.\,\:\\\|\*\&\^\%\#\!\~\"\?\&\@\<\>\-]*))([\;]?)(.*)',$value,$temp))
 			{
-				$this->debug('Value : '._debug_array($temp,False));
+				$this->debug('Value : '._debug_array($temp,false));
 				$this->debug('Param '.$temp[2].' Value : '.$temp[3]);
 				$return_value[] = array(
 						'param'	=> $temp[2],
@@ -1780,7 +1780,7 @@ class boicalendar
 		{
 			while(ereg('(([A-Z\-]*)[=]([[:alnum:] \_\)\(\/\$\.\,\:\\\|\*\&\^\%\#\!\~\"\?\&\@\<\>\-]*))([\;]?)(.*)',$value,$temp))
 			{
-				$this->debug('Value : '._debug_array($temp,False));
+				$this->debug('Value : '._debug_array($temp,false));
 				$this->debug('Param '.$temp[2].' Value : '.$temp[3]);
 				$return_value[] = array(
 						'param'	=> $temp[2],
@@ -1869,7 +1869,7 @@ class boicalendar
 						{
 							$this->set_var($event[$majortype],$param,$value);
 						}
-						$this->debug('Event : '._debug_array($event,False));
+						$this->debug('Event : '._debug_array($event,false));
 						break;
 				}
 			}
@@ -1883,7 +1883,7 @@ class boicalendar
 		$this->parse_parameters($var,$majortype,$value);
 		if ( isset($this->property[$majortype][$mode]['multiples']) && isset($this->property[$majortype][$mode]['multipass']) && $this->property[$majortype][$mode]['multipass'] )
 		{
-			$this->debug(_debug_array($var,False));
+			$this->debug(_debug_array($var,false));
 			$event[$majortype][] = $var;
 		}
 		else
@@ -1899,7 +1899,7 @@ class boicalendar
 				{
 					$var[$key] = $val;
 				}
-				$this->debug("$majortype : "._debug_array($var,False));
+				$this->debug("$majortype : "._debug_array($var,false));
 			}
 			$this->set_var($event, $majortype, $var);
 		}
@@ -1931,8 +1931,8 @@ class boicalendar
 	function build_parameters($event, $property)
 	{
 		$str = '';
-		$include_mailto = False;
-		$include_datetime = False;
+		$include_mailto = false;
+		$include_datetime = false;
 		$param = $this->find_parameters($property);
 
 		if($property == 'exdate')
@@ -1962,14 +1962,14 @@ class boicalendar
 					}
 					if($key == 'mailto')
 					{
-						$include_mailto = True;
+						$include_mailto = true;
 						continue;
 					}
 					$param_array = @$this->parameter[$key];
 					$type = @$this->parameter[$key]['type'];
 					if($type == 'date-time')
 					{
-						$include_datetime = True;
+						$include_datetime = true;
 						continue;
 					}
 					$quote = (@$this->parameter[$key]['quoted']?'"':'');
@@ -2034,7 +2034,7 @@ class boicalendar
 					$str .= "\r\n";
 				}
 
-				if($include_mailto == True)
+				if($include_mailto == true)
 				{
 					$key = 'mailto';
 					$function = $this->parameter[$key]['function'];
@@ -2043,7 +2043,7 @@ class boicalendar
 					$str .= "\r\n";
 				}
 
-				if($include_datetime == True || @$this->property[$property]['type'] == 'date-time')
+				if($include_datetime == true || @$this->property[$property]['type'] == 'date-time')
 				{
 					$str .= ':'.date('Ymd\THis',mktime($event['hour'],$event['min'],$event['sec'],$event['month'],$event['mday'],$event['year'])).(!@isset($event['tzid'])?'Z':'');
 					$str .= "\r\n";
@@ -2062,7 +2062,7 @@ class boicalendar
 			{
 				$type = @$this->parameter[$key]['type'];
 				$quote = @$this->parameter[$key]['quote'];
-				if(@$this->parameter[$key]['to_text'] == True)
+				if(@$this->parameter[$key]['to_text'] == true)
 				{
 					$value = $this->to_text($event[$key]);
 				}
@@ -2457,7 +2457,7 @@ class boicalendar
 					}
 				}
 			}
-			$this->debug('DATETIME : '._debug_array($dtime,False));
+			$this->debug('DATETIME : '._debug_array($dtime,false));
 			return $dtime;
 		}
 		elseif(is_array($var))
@@ -2642,7 +2642,7 @@ class boicalendar
 			}
 			else
 			{
-				return False;
+				return false;
 			}
 		}
 		elseif(is_array($var))
@@ -2654,9 +2654,9 @@ class boicalendar
 
 	function switch_partstat($var)
 	{
-		//		$this->debug_str = True;
+		//		$this->debug_str = true;
 		$this->debug('PARTSTAT = '.$var);
-		//		$this->debug_str = False;
+		//		$this->debug_str = false;
 		if(is_string($var))
 		{
 			switch($var)
@@ -2888,7 +2888,7 @@ class boicalendar
 				return 0;
 			}
 		}
-		elseif(is_int($var) || $var == False)
+		elseif(is_int($var) || $var == false)
 		{
 			if($var == 1)
 			{
@@ -2979,8 +2979,8 @@ class boicalendar
 				{
 					$state = 'optional';
 					$type = 'xtype';
-					$multiples = True;
-					$do_to_test = True;
+					$multiples = true;
+					$do_to_test = true;
 				}
 				else
 				{
@@ -3240,11 +3240,11 @@ class boicalendar
 	{
 		if( strtolower("{$part_record['user']}@{$part_record['host']}") == strtolower(ExecMethod('phpgwapi.contacts.get_email', $GLOBALS['phpgw_info']['user']['person_id'])) )
 		{
-			return True;
+			return true;
 		}
 		else
 		{
-			return False;
+			return false;
 		}
 	}
 
@@ -3915,7 +3915,7 @@ class boicalendar
 	
 	function export($params)
 	{
-		$event_id = get_var('cal_id',array('GET','DEFAULT'),$params['l_event_id']);
+		$event_id = phpgw::get_var('cal_id', 'int', 'GET', $params['l_event_id']);
 		
 		if(isset($params['alarms_only']))
 		{

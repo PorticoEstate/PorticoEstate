@@ -12,15 +12,9 @@
 
   /* $Id: class.calendar_icap.inc.php,v 1.18 2005/05/15 06:57:37 skwashd Exp $ */
 
-if (isset($phpgw_info['flags']['included_classes']['calendar_']) && 
-    $phpgw_info['flags']['included_classes']['calendar_'] == True)
-{
-	return;
-}
+phpgw::import_class('calendar.calendar__');
 
-$phpgw_info['flags']['included_classes']['calendar_'] = True;
-
-class calendar_ extends calendar__
+class calendar_calendar_ extends calendar_calendar__
 {
 	function open($calendar='',$user='',$passwd='',$options='')
 	{

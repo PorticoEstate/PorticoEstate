@@ -21,12 +21,13 @@ class calendar_holiday
 	var $index = Array();
 	var $users = Array();
 
-	function calendar_holiday($owner='')
+	public function __construct($owner='')
 	{
 		global $phpgw, $phpgw_info;
 
 		$this->db = $phpgw->db;
-		if(@$phpgw_info['user']['preferences']['common']['country'])
+		if ( isset($phpgw_info['user']['preferences']['common']['country'])
+			&& $phpgw_info['user']['preferences']['common']['country'] )
 		{
 			$this->users['user'] = $phpgw_info['user']['preferences']['common']['country'];
 		}

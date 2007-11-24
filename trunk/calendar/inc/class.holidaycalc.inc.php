@@ -23,7 +23,7 @@
 		$rule = $GLOBALS['phpgw_info']['user']['preferences']['common']['country'];
 	}
 
-	$calc_include = PHPGW_INCLUDE_ROOT.'/calendar/inc/class.holidaycalc_'.$rule.'.inc.php';
+	$calc_include = PHPGW_INCLUDE_ROOT . "/calendar/inc/class.holidaycalc_{$rule}.inc.php";
 	if ( file_exists($calc_include) )
 	{
 		include_once($calc_include);
@@ -32,4 +32,3 @@
 	{
 		include_once(PHPGW_INCLUDE_ROOT.'/calendar/inc/class.holidaycalc_US.inc.php');
 	}
-?>

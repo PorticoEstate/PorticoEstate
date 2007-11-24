@@ -14,7 +14,7 @@
 
   /* $Id: class.socalendar_.inc.php,v 1.9 2006/12/08 15:09:09 sigurdne Exp $ */
 
-	
+	/* I think this can go - skwashd Nov 2007
 	if( isset($GLOBALS['phpgw_info']['server']['calendar_type'])
 		&& $GLOBALS['phpgw_info']['server']['calendar_type'] == 'mcal'
 		&& !extension_loaded('mcal') )
@@ -25,7 +25,9 @@
 	{
 		$GLOBALS['phpgw_info']['server']['calendar_type'] = 'sql';
 	}
-	
-	include(PHPGW_INCLUDE_ROOT.'/calendar/inc/class.socalendar__.inc.php');
-	include(PHPGW_INCLUDE_ROOT.'/calendar/inc/class.socalendar_sql.inc.php');
-?>
+	*/
+
+	$GLOBALS['phpgw_info']['server']['calendar_type'] = 'sql';
+
+	phpgw::import_class('calendar.socalendar__');
+	phpgw::import_class('calendar.socalendar_sql');

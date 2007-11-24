@@ -14,7 +14,9 @@
 
 	/* $Id: class.uialarm.inc.php,v 1.13 2006/12/08 11:37:54 sigurdne Exp $ */
 
-	class uialarm
+	phpgw::import_class('phpgwapi.datetime');
+
+	class calendar_uialarm
 	{
 		var $template;
 		var $template_dir;
@@ -32,7 +34,7 @@
 			'manager' => True
 		);
 
-		function uialarm()
+		function __construct()
 		{
 			$GLOBALS['phpgw']->nextmatchs = CreateObject('phpgwapi.nextmatchs');
 			$GLOBALS['phpgw']->browser    = CreateObject('phpgwapi.browser');
@@ -98,35 +100,40 @@
 
 		function manager()
 		{
-			if ( isset($_POST['delete']) && $_POST['delete'] 
-				&& isset($_POST['alarm']) && is_array($_POST['alarm']) && count($_POST['alarm']) )
+			$alarm = phpgw::get_var('alarm', 'int', 'POST');
+
+			if ( phpgw::get_var('delete', 'bool', 'POST')  
+				&& is_array($alarm) && count($alarm) )
 			{
-				if ($this->bo->delete($_POST['alarm']) < 0)
+				if ($this->bo->delete($alarm) < 0)
 				{
-					echo '<center>'.lang('You do not have permission to delete this alarm !!!').'</center>';
+					echo '<div class="err">' . lang('You do not have permission to delete this alarm !!!') . '</div>';
 					$GLOBALS['phpgw']->common->phpgw_exit(True);
 				}
 			}
-			if ( ( (isset($_POST['enable']) && $_POST['enable']) || (isset($_POST['disable']) && $_POST['disable']) ) 
-				&& count($_POST['alarm'] ) )
+
+			$enable = phpgw::get_var('enable', 'bool', 'POST');
+			$disable = phpgw::get_var('disable', 'bool', 'POST');
+			if ( ($enable || $disable) && count($alarm) ) 
 			{
-				if ($this->bo->enable($_POST['alarm'],(isset($_POST['enable'])?$_POST['enable']:'')) < 0)
+				if ($this->bo->enable($alarm, $enable) < 0)
 				{
-					echo '<center>'.lang('You do not have permission to enable/disable this alarm !!!').'</center>';
+					echo '<div class="err">'.lang('You do not have permission to enable/disable this alarm !!!').'</div>';
 					$GLOBALS['phpgw']->common->phpgw_exit(True);
 				}
 			}
 			$this->prep_page();
 
-			if ( isset($_POST['add']) && $_POST['add'] != '')
+			if ( phpgw::get_var('add', 'bool', 'POST') )
 			{
-				$time = intval($_POST['time']['days'])*24*3600 +
-					intval($_POST['time']['hours'])*3600 +
-					intval($_POST['time']['mins'])*60;
+				$post_time = phpgw::get_var('time', 'int', 'POST');
+				$time = ($post_time['days'] * phpgwapi_datetime::SECONDS_IN_DAY)
+					+ ($post_time['hours'] * phpgwapi_datetime::SECONDS_IN_HOUR)
+					+ ($post_time['minutes'] * 60 );
 
-				if ($time > 0 && !$this->bo->add($this->event,$time,$_POST['owner']))
+				if ($time > 0 && !$this->bo->add($this->event, $time, phpgw::get_var('owner', 'int', 'POST') ) )
 				{
-					echo '<center>'.lang('You do not have permission to add alarms to this event !!!').'</center>';
+					echo '<div class="err">'.lang('You do not have permission to add alarms to this event !!!').'</div';
 					$GLOBALS['phpgw']->common->phpgw_exit(True);
 				}
 			}
@@ -189,12 +196,13 @@
 			}
 			if (isset($this->event['participants'][intval($GLOBALS['phpgw_info']['user']['person_id'])]))
 			{
+				$time = phpgw::get_var('time', 'int', 'POST');
 				$this->template->set_var(Array(
 					'hidden_vars'   => $this->html->input_hidden('cal_id',$this->bo->cal_id),
 					'input_text'    => lang('Email reminder'),
-					'input_days'    => $this->html->select('time[days]',(isset($_POST['time']['days'])?$_POST['time']['days']:''),range(0,31),True).' '.lang('days'),
-					'input_hours'   => $this->html->select('time[hours]',(isset($_POST['time']['hours'])?$_POST['time']['hours']:''),range(0,24),True).' '.lang('hours'),
-					'input_minutes' => $this->html->select('time[mins]',(isset($_POST['time']['mins'])?$_POST['time']['mins']:''),range(0,60),True).' '.lang('minutes').' '.lang('before the event'),
+					'input_days'    => $this->html->select('time[days]', isset($time['days']) ? $time['days'] : 0), range(0,31), True).' '.lang('days'),
+					'input_hours'   => $this->html->select('time[hours]', isset($time['hours']) ? $time['hours'] : 0),range(0,24),True).' '.lang('hours'),
+					'input_minutes' => $this->html->select('time[mins]', isset($time['mins']) ? $time['mins'] : 0), range(0,60),True).' '.lang('minutes').' '.lang('before the event'),
 					'input_owner'   => $this->html->select('owner',$GLOBALS['phpgw_info']['user']['account_id'],$this->bo->participants($this->event,True),True),
 					'input_add'     => $this->html->submit_button('add','Add Alarm')
 				));
@@ -203,4 +211,3 @@
 			$this->template->pfp('out','alarm_management');
 		}
 	}
-?>

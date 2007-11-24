@@ -12,7 +12,7 @@
 
 	/* $Id: class.html.inc.php,v 1.9 2006/12/09 16:03:50 sigurdne Exp $ */
 
-class html
+class calendar_html
 {
 	var $user_agent;
 	var $ua_version;
@@ -20,12 +20,12 @@ class html
 	/**
 	* @constructor
 	*/
-	function html()
+	function __construct()
 	{
 		//This should really be handled in API browser class - not the html class
-		if (!eregi('compatible; ([a-z_]+)[/ ]+([0-9.]+)', $_SERVER['HTTP_USER_AGENT'],$parts))
+		if ( preg_match('/compatible; ([a-z_]+)[/ ]+([0-9.]+)/i', phpgw::get_var('HTTP_USER_AGENT', 'string', 'SERVER'), $parts))
 		{
-			eregi('^([a-z_]+)/([0-9.]+)', $_SERVER['HTTP_USER_AGENT'],$parts);
+			preg_match('/^([a-z_]+)/([0-9.]+)/i', phpgw::get_var('HTTP_USER_AGENT', 'string', 'SERVER'), $parts);
 		}
 		list(,$this->user_agent,$this->ua_version) = $parts;
 		$this->user_agent = strtolower($this->user_agent);
@@ -212,13 +212,6 @@ class html
 		{
 			$vars = explode('&',$vars);
 		}
-/*
-		list($url,$v) = explode('?',$url);	// url may contain additional vars
-		if ($v)
-		{
-			$vars += explode('&',$v);
-		}
-*/
 		return $GLOBALS['phpgw']->link($uri, $vars);
 	}
 

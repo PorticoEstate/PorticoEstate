@@ -14,7 +14,9 @@
 
   /* $Id: class.socalendar.inc.php,v 1.36 2006/12/28 04:28:00 skwashd Exp $ */
 
-	class socalendar
+phpgw::import_class('phpgwapi.datetime');
+
+	class calendar_socalendar
 	{
 //		var $debug = True;
 		var $debug = False;
@@ -26,9 +28,9 @@
 		var $filter;
 		var $cat_id;
 
-		function socalendar($param)
+		function __construct($param)
 		{
-			$this->db = $GLOBALS['phpgw']->db;
+			$this->db =& $GLOBALS['phpgw']->db;
 		//	$this->owner = (!isset($param['owner']) || $param['owner'] == 0?$GLOBALS['phpgw_info']['user']['account_id']:$param['owner']);
 			$this->owner = (!isset($param['owner']) || $param['owner'] == 0?$GLOBALS['phpgw']->accounts->search_person($GLOBALS['phpgw_info']['user']['account_id']):$param['owner']);
 			
@@ -65,16 +67,17 @@
 
 		function list_events($startYear,$startMonth,$startDay,$endYear=0,$endMonth=0,$endDay=0,$owner_id=0)
 		{
-			$extra = '';
-			$extra .= (strpos($this->filter,'private')?'AND phpgw_cal.is_public=0 ':'');
+			$user_timezone = phpgwapi_datetime::user_timezone();
+
+			$extra = (strpos($this->filter,'private')?'AND phpgw_cal.is_public=0 ':'');
 			$extra .= ($this->cat_id?"AND phpgw_cal.category like '%".$this->cat_id."%' ":'');
 			if($owner_id)
 			{
-				return $this->cal->list_events($startYear,$startMonth,$startDay,$endYear,$endMonth,$endDay,$extra,phpgw_datetime::user_timezone(),$owner_id);
+				return $this->cal->list_events($startYear,$startMonth,$startDay,$endYear,$endMonth,$endDay,$extra, $user_timezone, $owner_id);
 			}
 			else
 			{
-				return $this->cal->list_events($startYear,$startMonth,$startDay,$endYear,$endMonth,$endDay,$extra,phpgw_datetime::user_timezone());
+				return $this->cal->list_events($startYear,$startMonth,$startDay,$endYear,$endMonth,$endDay,$extra, $user_timezone);
 			}
 		}
 
@@ -86,8 +89,10 @@
 				return array();
 			}
 
-			$starttime = mktime(0,0,0,$smonth,$sday,$syear) - phpgw_datetime::user_timezone();
-			$endtime = mktime(23,59,59,$emonth,$eday,$eyear) - phpgw_datetime::user_timezone();
+			$user_timezone = phpgwapi_datetime::user_timezone();
+
+			$starttime = mktime(0,0,0,$smonth,$sday,$syear) - $user_timezone;
+			$endtime = mktime(23,59,59,$emonth,$eday,$eyear) - $user_timezone;
 //			$starttime = mktime(0,0,0,$smonth,$sday,$syear);
 //			$endtime = mktime(23,59,59,$emonth,$eday,$eyear);
 			$sql = "AND (phpgw_cal.cal_type='M') "
@@ -434,4 +439,3 @@
 		
 		/* End mcal equiv functions */
 	}
-?>
