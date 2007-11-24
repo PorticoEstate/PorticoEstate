@@ -11,6 +11,8 @@
  	* @version $Id: class.uidemo.inc.php,v 1.7 2006/12/27 11:04:41 sigurdne Exp $
 	*/
 
+	phpgw::import_class('phpgwapi.yui');
+
 	/**
 	 * Description
 	 * @package demo
@@ -28,12 +30,12 @@
 
 		var $public_functions = array
 		(
-			'index'  => True,
-			'grid'  => True,
-			'project'   => True,
-			'edit'   => True,
-			'delete' => True,
-			'no_access'=> true
+			'index'		=> true,
+			'grid'		=> true,
+			'project'	=> true,
+			'edit'		=> true,
+			'delete'	=> true,
+			'no_access'	=> true
 		);
 
 		function newdesign_uinewdesign()
@@ -68,7 +70,12 @@
 			$this->filter			= $this->bo->filter;
 			*/
 		}
-		function index() {
+
+		/**
+		* TODO document me
+		*/
+		function index()
+		{
 			$output = "html";
 
 			if ( !isset($GLOBALS['phpgw']->css) || !is_object($GLOBALS['phpgw']->css) )
@@ -79,15 +86,8 @@
 			$GLOBALS['phpgw']->css->add_external_file('newdesign/js/yahoo/yui/build/assets/skins/sam/calendar.css');
 			$GLOBALS['phpgw']->css->add_external_file('newdesign/js/yahoo/yui/build/assets/skins/sam/tabview.css');
 
-			//function validate_file($package, $file, $app='phpgwapi')
-			if ( !isset($GLOBALS['phpgw']->js) || !is_object($GLOBALS['phpgw']->js) )
-			{
-				$GLOBALS['phpgw']->js = CreateObject('phpgwapi.javascript');
-			}
-			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'yahoo-dom-event', $this->currentapp );
-			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'calendar-min', $this->currentapp );
-			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'utilities', $this->currentapp );
-			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'tabview-min', $this->currentapp );
+			phpgwapi_yui::load_widget('calendar');
+			phpgwapi_yui::load_widget('tabview');
 
 			$GLOBALS['phpgw']->js->validate_file( 'newdesign', 'form', $this->currentapp );
 
@@ -209,7 +209,7 @@
 
 		function grid()
 		{
-			if(!is_object($GLOBALS['phpgw']->css))
+			if ( !isset($GLOBALS['phpgw']->css) || !is_object($GLOBALS['phpgw']->css) )
 			{
 				$GLOBALS['phpgw']->css = createObject('phpgwapi.css');
 			}
@@ -217,18 +217,12 @@
 			$GLOBALS['phpgw']->css->add_external_file('/newdesign/js/yahoo/yui/build/datatable/assets/datatable-core.css');
 			$GLOBALS['phpgw']->css->add_external_file('/newdesign/js/yahoo/yui/build/assets/skins/sam/datatable.css');
 
-			//function validate_file($package, $file, $app='phpgwapi')
-			if(!isset($GLOBALS['phpgw']->js) || !is_object($GLOBALS['phpgw']->js))
-			{
-				$GLOBALS['phpgw']->js = CreateObject('phpgwapi.javascript');
-			}
-			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'yahoo-dom-event', $this->currentapp );
-			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'element-beta-min', $this->currentapp );
-			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'datasource-beta-min', $this->currentapp );
-			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'connection-min', $this->currentapp );
-			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'dragdrop-min', $this->currentapp );
-			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'calendar-min', $this->currentapp );
-			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'datatable-beta-min', $this->currentapp );
+			phpgwapi_yui::load_widget('element');
+			phpgwapi_yui::load_widget('connection');
+			phpgwapi_yui::load_widget('dragdrop');
+			phpgwapi_yui::load_widget('calendar');
+			phpgwapi_yui::load_widget('datatable');
+
 			$GLOBALS['phpgw']->js->validate_file( 'newdesign', 'grid', $this->currentapp );
 			//$GLOBALS['phpgw']->js->set_onload( 'init_grid();' );
 
@@ -265,7 +259,7 @@
 		function project() {
 			$output = "html";
 
-			if(!is_object($GLOBALS['phpgw']->css))
+			if ( !isset($GLOBALS['phpgw']->css) || !is_object($GLOBALS['phpgw']->css) )
 			{
 				$GLOBALS['phpgw']->css = createObject('phpgwapi.css');
 			}
@@ -273,16 +267,8 @@
 			$GLOBALS['phpgw']->css->add_external_file('/newdesign/js/yahoo/yui/build/assets/skins/sam/calendar.css');
 			$GLOBALS['phpgw']->css->add_external_file('/newdesign/js/yahoo/yui/build/assets/skins/sam/tabview.css');
 
-			//function validate_file($package, $file, $app='phpgwapi')
-			if(!isset($GLOBALS['phpgw']->js) || !is_object($GLOBALS['phpgw']->js))
-			{
-				$GLOBALS['phpgw']->js = CreateObject('phpgwapi.javascript');
-			}
-			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'yahoo-dom-event', $this->currentapp );
-			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'calendar-min', $this->currentapp );
-			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'utilities', $this->currentapp );
-			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'tabview-min', $this->currentapp );
-
+			phpgwapi_yui::load_widget('calendar');
+			phpgwapi_yui::load_widget('tabview');
 			$GLOBALS['phpgw']->js->validate_file( 'newdesign', 'form', $this->currentapp );
 
 			$data = array
