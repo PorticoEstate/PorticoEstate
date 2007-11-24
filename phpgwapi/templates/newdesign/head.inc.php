@@ -57,7 +57,7 @@
 		$GLOBALS['phpgw']->template->parse('theme_stylesheets', 'theme_stylesheet', true);
 	}
 
-	phpgwapi_yui::load_widget('treeview', false);
+	phpgwapi_yui::load_widget('treeview');
 
 	$app = $app ? ' ['.(isset($GLOBALS['phpgw_info']['apps'][$app]) ? $GLOBALS['phpgw_info']['apps'][$app]['title'] : lang($app)).']':'';
 
