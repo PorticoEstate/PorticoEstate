@@ -1,0 +1,78 @@
+body, div, input, p, select, textarea
+{
+	color: #069;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 11px;
+}
+
+a
+{
+	color: #f93;
+	text-decoration: none;
+}
+
+a:hover, a:active
+{
+	text-decoration: underline;
+}
+
+img
+{
+	border: 0px;
+}
+
+label, input[type=text], input[type=password], select, textarea
+{
+	/*
+	display: block;
+	float: left;
+	margin-bottom: 8px;
+	width: 400px;
+	*/
+}
+
+input.button
+{
+	margin: 10px;
+	width: auto;
+}
+
+input.error, select.error, textarea.error
+{
+	border: 1px solid #f00;
+	background-color: #f99;
+	color: #f00;
+}
+
+label
+{
+	font-weight: bold;
+	padding-right: 10px;
+	text-align: right;
+	vertical-align: top;
+	width: 150px;
+}
+
+form br
+{
+	clear: left;
+}
+
+thead
+{
+	background-color: #d3dce3;
+	font-weight: bold;
+	text-align: center;
+}
+
+.button_group
+{
+	text-align: right;
+}
+
+.msg
+{
+	color: #f00;
+	font-weight: bold;
+	text-align: center;
+}

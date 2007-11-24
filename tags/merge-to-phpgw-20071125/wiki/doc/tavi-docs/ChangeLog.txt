@@ -1,0 +1,208 @@
+$Id: ChangeLog.txt,v 1.1 2003/03/04 21:21:04 ralfbecker Exp $
+
+WikkiTikkiTavi - ChangeLog
+--------------------------
+
+2002-02-19  Scott Moonen  <smoonen@andstuff.org.
+
+   * Added code to HTML template to add the page's name, with WikiWords
+     split apart, to the list of meta keywords for a page.  This should
+     aid in search engine categorization of pages.
+   * Optimized some of the SQL to use JOINs instead of manual simulation
+     of nested selects.
+   * Changed header regular expression to allow whitespace before first
+     equals sign and after last equals sign.
+
+2002-02-18  Scott Moonen  <smoonen@andstuff.org>
+
+   * Fix bug causing RSS parameters (min=mmm, days=nnn) to be ignored.
+
+2002-02-15  Scott Moonen  <smoonen@andstuff.org>
+
+   * Modified code so as to avoid generating warnings when PHP config
+     variable error_reporting is cranked up to 15.  All of the immediately
+     evident at-fault code has been fixed.
+   * Allow URLs to end in an underscore (_).
+   * Relaxed rules for characters permitted in free-link page names.
+   * Relaxed rules for characters allowed in page anchors.
+   * Fixed problems in configure.pl related to quotes in strings and files
+     in DOS format.
+   * Modified templates so that a Content-Length header is emitted.  This
+     should allow browsers to implement persistent connections, thereby
+     speeding up page loading.
+
+2002-02-14  Scott Moonen  <smoonen@andstuff.org>
+
+   * Work around regex bug in PHP 4.03 that causes freelinks to render
+     improperly.
+   * Fixed numerous bugs wherein pages with a single quote in their names
+     would generate bad SQL, thereby aborting the engine.
+   * Fixed a bug in the code that maintains the link database that caused
+     it to double-count some links.
+   * Fixed bug that caused Mozilla to show a blank page when saving
+     preferences.
+
+2002-01-14  Scott Moonen  <smoonen@andstuff.org>
+
+   * Introduce '!' as a no-link escape.  E.g., !SandBox renders
+     as SandBox, without linking to the given page.
+
+2002-01-10  Scott Moonen  <smoonen@andstuff.org>
+
+   * Added $SeparateLinkWords configurable to insert spaces in
+     links to wiki pages.  Default is off.
+
+2002-01-08  Scott Moonen  <smoonen@andstuff.org>
+
+   * Worked on streamlining installation, providing instructions for
+     added security and ease of upgrade.
+   * Introduced [[Transclude PageName]] macro, which will succeed
+     the %%PageName%% syntax.  The double-% syntax is now deprecated
+     and will be removed in 0.30.
+   * Added action=style URL action to retrieve stylesheet.
+   * Applied patch from David Baker to allow case-insensitive image
+     suffixes, and also support .jpeg suffix.
+
+2002-01-03  Scott Moonen  <smoonen@andstuff.org>
+
+   * Changed transclusion behavior so that recursive transclusions beyond
+     one level are allowed, but circular transclusions are disallowed.
+   * Streamline installation, configuration, and maintenance process
+     by refactoring the configuration scheme.
+
+2002-01-02  Scott Moonen  <smoonen@andstuff.org>
+
+   * Introduced new option to $SeparateTitleWords in page titles.
+   * Refactored common code in default template.
+   * Fixed security hole in template system.
+   * Tweak macro behavior wrt newlines to better facilitate in-line
+     macros.
+   * Applied patch from Kimmo Suominen to accomodate
+     register_globals=off.
+   * Implemented HTML anchor macro, [[Anchor name]].
+   * Implemented anchor reference syntax: PageName#anchor and
+     ((free links#anchor)).
+
+2002-01-01  Scott Moonen  <smoonen@andstuff.org>
+
+   * Change raw HTML processing to allow <html> tags to be uppercase.
+   * Rework templates so parameters are passed as an associative array,
+     rather than a hard-coded set of parameters.  This will allow for
+     much more flexible extensibility.
+
+2001-12-31  Scott Moonen  <smoonen@andstuff.org>
+
+   * Fix rendering of {{ .. }} so that it slurps up braces within
+     the outer braces.  I.e., {{{abc}}} now renders as <tt>{abc}</tt>.
+
+2001-12-28  Scott Moonen  <smoonen@andstuff.org>
+
+   * Removed formatting markup to bring 'Tavi from XHTML-Transitional
+     to XHTML-Strict.
+   * Moved formatting information to 'template/wiki.css'.
+   * 'Tavi now validates as XTHML-Strict and CSS compliant (except for
+     wrap="virtual" attribute on text areas, which I don't think can
+     be accomplished using CSS).
+
+2001-12-19  Scott Moonen  <smoonen@andstuff.org>
+
+   * Thoroughly rework list (indent, bullet, numbered) parsing.
+     Engine output is now entirely XHTML-Transitional-compliant.
+   * Add definition lists (syntax is ";term:definition").
+   * Change $Unicode configuration option to $Charset configuration
+     option, to allow engine to always emit a character set.
+
+2001-12-18  Scott Moonen  <smoonen@andstuff.org>
+
+   * Fix minor formatting glitches in the parse engine.
+     Code now uses chr(255) to flag elements, rather than '\{n}'.
+   * Include 'alt=' property on img tags, since this is a required
+     XHTML attribute.  The property's value is set to the basename of
+     the image's URL.
+
+2001-12-14  Scott Moonen  <smoonen@andstuff.org>
+
+   * Implement table syntax in the rendering engine.
+   * Implement RSS output for syndication.
+   * Implement time-zone option in user preferences.
+
+2001-12-03  Scott Moonen  <smoonen@andstuff.org>
+
+   * Implement a slight variation of Mark Kimes's tweak to display
+     arbitrary link text for free links.  Syntax is:
+     ((page name|appears as this))
+   * Fix parse_diff_message, which sometimes generated false matches
+     for the diff pattern.
+   * Fix html_time so that it returns 'never' for a timestamp that
+     is empty (i.e., for an unedited page).
+   * Remove 'document last modified' message from template/history.php,
+     as the time was never passed to the history template.
+
+2001-11-30  Scott Moonen  <smoonen@andstuff.org>
+
+   * Fix bug in validate_page wherein it would fail to recognize some
+     valid free link page names.
+
+2001-11-29  Christopher Cashell  <topher@zyp.org>
+
+   * Replace '<?' with '<?php' in all files.
+
+2001-11-29  Scott Moonen  <smoonen@andstuff.org>
+
+   * Fix lack of hash ('#') in colors for diff table cells.
+
+2001-09-10  Scott Moonen  <smoonen@andstuff.org> 
+
+   * Officially released 0.20, a complete rewrite. A full description of
+     its new functionality is forthcoming, as time permits.
+
+2001-02-20  Scott Moonen  <smoonen@andstuff.org> 
+
+   * Squashed a few bugs in preparation for the 0.10 release.
+      - mailto: links now display with a "mailto:" prefix.
+      - Race condition when saving pages eliminated.
+      - Multiple lines of whitespace are folded into one.
+      - Small glitch in generation of link table fixed.
+   * Version 0.10 released. See TaviDownload.
+
+2001-02-06  Scott Moonen  <smoonen@andstuff.org> 
+
+   * Added to version 0.10 code:
+      - A META tag forbidding search engines to index history,
+      - old-version, diff, and edit pages.
+
+2001-01-6  Scott Moonen  <smoonen@andstuff.org> 
+
+   * Completed changes adding sisterwiki, interwiki, and remote_pages
+     tables to the database schema. The first two define relationships
+     with external wikis, which are now community-accessible through
+     SisterWiki and InterWiki statement. The latter table is the list
+     of known external pages.
+   * Tweaked URL regex to handle a few extra terminating characters.
+   * This constitutes at least part of version 0.1. Will release soon.
+
+2001-01-15  Scott Moonen  <smoonen@andstuff.org> 
+
+    * Version 0.05.
+    * Added configuration variable $Persistence, which specifies
+      whether to  create a persistent MySQL connection. Default is not
+      to do so.
+
+2001-01-07  Scott Moonen  <smoonen@andstuff.org> 
+
+    * Version 0.04.
+    * Fixed a bug introduced in version 0.03 where a PageWithA/SubPage?
+      was  rendered improperly (whenever the sub-page was itself a valid
+      page name).
+
+2001-01-04  Scott Moonen  <smoonen@andstuff.org> 
+
+    * Version 0.03.
+    * Fixed bug whereby some_text_preceding_a_non_alpha.FollowedByALink?
+      was rendered improperly.
+
+2000-12-27  Scott Moonen  <smoonen@andstuff.org> 
+
+    * Version 0.02 released.
+
+

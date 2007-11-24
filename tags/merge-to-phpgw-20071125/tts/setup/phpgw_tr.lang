@@ -1,0 +1,73 @@
+action	tts	tr	Ýþlemi yap
+add new ticket	tts	tr	Yeni bir bilet ekle
+add ticket	tts	tr	Bilet ekle
+additional notes	tts	tr	Ek olan notlar
+admin options	admin	tr	Yönetici seçenekleri
+assign to	tts	tr	Birine ata
+assigned from	tts	tr	Birinden atanmýþ
+assigned to	tts	tr	Birine atanmýþ
+attachment	tts	tr	Ek
+attachment changed	tts	tr	Ek deðiþti
+billable hours	tts	tr	Hesaplanabilir saatler
+billable hours changed	tts	tr	Hesaplanabilir saatler deðiþti
+billable hours rate	tts	tr	Hesaplanabilir saat oraný
+billable rate	tts	tr	Hesaplanabilir oran
+billable rate changed	tts	tr	Hesaplanabilir oran deðiþti
+category changed	tts	tr	Kategori deðiþti
+clear form	tts	tr	Belirtilen yerden sil
+closed	tts	tr	Kapalý
+create new ticket	tts	tr	Yeni bilet oluþtur
+creates a new ticket, returns ticket_id	tts	tr	Yeni bilet oluþturur, ticket_id döndürür
+creates a struct of tickets	tts	tr	Bilet yapýsý oluþturur
+date opened	tts	tr	Açýk olan tarih
+deadline	tts	tr	Son teslim tarihi
+deadline changed	tts	tr	Son teslim tarihi deðiþti
+detail	tts	tr	Detay
+effort	tts	tr	Efor
+effort changed	tts	tr	Efor deðiþti
+force	tts	tr	Güç
+group ownership changed	tts	tr	Grup sahibi deðiþti
+in progress	tts	tr	Ýþlem yapýlýyor
+latest note added	tts	tr	Enson not eklendi
+new ticket	tts	tr	Yeni bilet
+new value	tts	tr	Yede deðer
+no additional notes	tts	tr	Ek not yok
+no notes for this ticket	tts	tr	Bu bilet için not yok
+no tickets found	tts	tr	Bilet bulunamadý.
+not assigned	tts	tr	Atanmamýþ
+old value	tts	tr	Eski deðer
+open	tts	tr	Açýk
+open date	tts	tr	açýk olan tarih
+opened	tts	tr	Açýldý
+opened by	tts	tr	tarafýndan açýldý
+original ticket details	tts	tr	Orjinal bilet detayý
+platform	tts	tr	Platform
+platform changed	tts	tr	Platform deðiþti
+prio	tts	tr	Prio
+priority	tts	tr	Öncelik
+priority changed	tts	tr	Öncelik deðiþti
+re-assigned	tts	tr	Tekrar atandý
+re-opened	tts	tr	Tekrar açýldý
+returns a struct of a tickets history	tts	tr	Biletin geçmiþinin yapýsýný döndürür
+returns a struct of values of a single ticket	tts	tr	Bir biletin deðerinin yapýsýný döndürür
+returns the additional notes attached to a ticket	tts	tr	Bilete sonradan eklenen notlarý döndürür
+status/date closed	tts	tr	Durum/Tarih kapalý
+subject changed	tts	tr	Baþlýk deðiþti
+test	tts	tr	TEST
+ticket	tts	tr	Bilet
+ticket has been updated	tts	tr	Bilet güncellendi
+tickets found %1	tts	tr	%1 bilet bulundu
+tickets open %1	tts	tr	Açýk olan biletler %1
+tickets total %1	tts	tr	%1 tane toplam bilet
+to go back to the tts index, click <a href= %1 >here</a>	tts	tr	tts index'e geri dönmek için, <a href="%1">buraya</a> týklayýn
+total billable	tts	tr	Toplam hesaplanabilir
+trouble ticket system	common	tr	Bilet Sorun Sistemi
+tts	common	tr	Bilet Sorun Sistemi
+tts preferences	tts	tr	Bilet Sorun Sistemi - tercihler
+type	tts	tr	Tip
+type changed	tts	tr	Tip deðiþti
+updates ticket	tts	tr	Bileti günceller
+use email notification	tts	tr	E-posta uyarýsýný kullan
+view all tickets	tts	tr	Tüm biletleri gör
+view job detail	tts	tr	Ýþin detayýný gör
+view only open tickets	tts	tr	Sadece açýk biletleri gör

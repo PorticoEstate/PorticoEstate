@@ -1,0 +1,49 @@
+a, a:visited
+{
+	text-decoration:none;
+	color: blue;
+}
+
+
+a:active, a:hover
+{
+	text-decoration:none;
+	color: red;
+}
+
+body
+{
+	margin-top: 0px;
+	margin-right: 0px;
+	margin-left: 0px;
+	font-family: Arial, Helvetica, san-serif;
+}
+
+.row_on
+{
+	color: #000;
+	background-color: #ddd;
+}
+
+.row_off
+{
+	color: #000;
+	background-color: #eee;
+}
+
+th
+{
+	color: #000;
+	background-color: #d3dce3;
+}
+
+.tablink
+{
+	color: #000000;
+}
+
+img, input[type=image]
+{
+	border: 0px;
+}
+

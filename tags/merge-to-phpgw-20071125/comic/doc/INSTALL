@@ -1,0 +1,8 @@
+01) create your tables 
+    mysql -p phpgroupware < sql/create_tables.mysql
+02) populate comic data
+    mysql -p phpgroupware < sql/comic_data.sql
+03) chmod 700 images
+04) chown wwwrun.nogroup images (for SuSE otherise whomever
+    your webserver runs as)
+05) add comic as an application in the admin portion of phpgw
