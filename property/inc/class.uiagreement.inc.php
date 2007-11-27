@@ -24,7 +24,7 @@
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/bbb_/ekstern/
 	* @package property
 	* @subpackage agreement
- 	* @version $Id: class.uiagreement.inc.php 18358 2007-11-27 04:43:37Z skwashd $
+ 	* @version $Id: class.uiagreement.inc.php,v 1.37 2007/08/14 10:45:09 sigurdne Exp $
 	*/
 
 	/**
@@ -620,7 +620,7 @@
 
 //_debug_array($values);
 
-				if (isset($values['save']) && ($values['save'] || $values['apply']))
+				if ((isset($values['save']) && $values['save']) || (isset($values['apply']) && $values['apply']))
 				{
 					$values['vendor_id']		= phpgw::get_var('vendor_id', 'int', 'POST');
 					$values['vendor_name']		= phpgw::get_var('vendor_name', 'string', 'POST');

@@ -24,7 +24,7 @@
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/bbb_/ekstern/
 	* @package property
 	* @subpackage agreement
- 	* @version $Id: class.bopricebook.inc.php 18358 2007-11-27 04:43:37Z skwashd $
+ 	* @version $Id: class.bopricebook.inc.php,v 1.11 2007/01/26 14:53:46 sigurdne Exp $
 	*/
 
 	/**
@@ -180,10 +180,10 @@
 			return $agreement_group;
 		}
 
-		function read_activity_prize($activity_id,$vendor_id)
+		function read_activity_prize($activity_id,$agreement_id)
 		{
 			$pricebook = $this->so->read_activity_prize(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
-											'filter' => $this->filter,'cat_id' => $this->cat_id,'allrows'=>$this->allrows,'activity_id'=>$activity_id,'vendor_id'=>$vendor_id));
+											'filter' => $this->filter,'cat_id' => $this->cat_id,'allrows'=>$this->allrows,'activity_id'=>$activity_id,'agreement_id'=>$agreement_id));
 			$this->total_records = $this->so->total_records;
 			return $pricebook;
 		}
@@ -273,7 +273,7 @@
 					'new_w_cost' 		=> $new_w_cost,
 					'new_total_cost' 	=> $new_total_cost,
 					'activity_id'		=> $values['activity_id'][$n],
-					'vendor_id'			=> $values['vendor_id'][$n],
+					'agreement_id'			=> $values['agreement_id'][$n],
 					'new_index'			=> $new_index,
 					'new_date'			=> $date,
 				);
@@ -306,9 +306,9 @@
 			$w_cost			= str_replace(",",".",$values['w_cost']);
 			$total_cost		= $m_cost + $w_cost;
 			$activity_id	= $values['activity_id'][0];
-			$vendor_id		= $values['vendor_id'][0];
+			$agreement_id		= $values['agreement_id'][0];
 
-			$receipt = $this->so->add_activity_first_prize($m_cost,$w_cost,$total_cost,$activity_id,$vendor_id,$date);
+			$receipt = $this->so->add_activity_first_prize($m_cost,$w_cost,$total_cost,$activity_id,$agreement_id,$date);
 
 			return $receipt;
 		}
@@ -412,9 +412,9 @@
 			return $receipt;
 		}
 
-		function delete_activity_vendor($activity_id,$vendor_id)
+		function delete_activity_vendor($activity_id,$agreement_id)
 		{
-			$this->so->delete_activity_vendor($activity_id,$vendor_id);
+			$this->so->delete_activity_vendor($activity_id,$agreement_id);
 		}
 
 		function delete_activity($activity_id)
@@ -422,9 +422,9 @@
 			$this->so->delete_activity($activity_id);
 		}
 
-		function delete_prize_index($activity_id,$vendor_id,$index_count)
+		function delete_prize_index($activity_id,$agreement_id,$index_count)
 		{
-			$this->so->delete_prize_index($activity_id,$vendor_id,$index_count);
+			$this->so->delete_prize_index($activity_id,$agreement_id,$index_count);
 		}
 
 		function delete_agreement_group($agreement_group_id)

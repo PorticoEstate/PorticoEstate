@@ -24,7 +24,7 @@
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/bbb_/ekstern/
 	* @package property
 	* @subpackage agreement
- 	* @version $Id: class.uipricebook.inc.php 18358 2007-11-27 04:43:37Z skwashd $
+ 	* @version $Id: class.uipricebook.inc.php,v 1.25 2007/01/26 14:53:47 sigurdne Exp $
 	*/
 
 	/**
@@ -159,7 +159,7 @@
 					if($this->acl_manage)
 					{
 						$link_edit			= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uipricebook.edit_activity', 'activity_id'=> $pricebook['activity_id']));
-						$link_prizing			= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uipricebook.prizing', 'activity_id'=> $pricebook['activity_id'], 'vendor_id'=> $pricebook['vendor_id'], 'cat_id'=> $this->cat_id));
+						$link_prizing			= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uipricebook.prizing', 'activity_id'=> $pricebook['activity_id'], 'agreement_id'=> $pricebook['agreement_id'], 'cat_id'=> $this->cat_id));
 						$lang_edit_statustext		= lang('edit the pricebook');
 						$lang_prizing_statustext	= lang('view or edit prizing history of this element');
 						$text_edit			= lang('edit');
@@ -173,6 +173,7 @@
 						'num'				=> $pricebook['num'],
 						'branch'			=> $pricebook['branch'],
 						'vendor_id'			=> $pricebook['vendor_id'],
+						'agreement_id'			=> $pricebook['agreement_id'],
 						'm_cost'			=> $pricebook['m_cost'],
 						'w_cost'			=> $pricebook['w_cost'],
 						'total_cost'			=> $pricebook['total_cost'],
@@ -589,8 +590,9 @@
 			$links = $this->menu->links();
 
 			$cat_id			= phpgw::get_var('cat_id', 'int', 'GET');
-			$activity_id		= phpgw::get_var('activity_id', 'int');
-			$vendor_id		= phpgw::get_var('vendor_id', 'int', 'GET');
+			$activity_id	= phpgw::get_var('activity_id', 'int');
+			$vendor_id	= phpgw::get_var('vendor_id', 'int', 'GET');
+			$agreement_id	= phpgw::get_var('agreement_id', 'int', 'GET');
 			$values			= phpgw::get_var('values');
 
 			$referer	= $GLOBALS['phpgw']->session->appsession('referer',$this->currentapp);
@@ -638,7 +640,7 @@
 			}
 
 
-			$pricebook_list = $this->bo->read_activity_prize($activity_id,$vendor_id);
+			$pricebook_list = $this->bo->read_activity_prize($activity_id,$agreement_id);
 
 			$dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
 
@@ -649,7 +651,7 @@
 
 					if($pricebook['current_index'])
 					{
-						$link_delete		= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uipricebook.delete', 'method'=>'prize', 'activity_id'=> $activity_id, 'vendor_id'=> $vendor_id, 'index_count'=> $pricebook['index_count']));
+						$link_delete		= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uipricebook.delete', 'method'=>'prize', 'activity_id'=> $activity_id, 'agreement_id'=> $agreement_id, 'index_count'=> $pricebook['index_count']));
 						$value_m_cost		= $pricebook['m_cost'];
 						$value_w_cost		= $pricebook['w_cost'];
 						$value_total_cost	= $pricebook['total_cost'];
@@ -716,7 +718,7 @@
 			(
 				'menuaction'	=> $this->currentapp.'.uipricebook.prizing',
 				'activity_id'	=> $activity_id,
-				'vendor_id'	=> $vendor_id
+				'agreement_id'	=> $agreement_id
 			);
 
 			if(!$this->allrows)
@@ -998,7 +1000,7 @@
 
 			$pricebook_list = $this->bo->read_vendor_pr_activity($activity_id);
 
-			while (is_array($pricebook_list) && list(,$pricebook) = each($pricebook_list))
+			foreach ($pricebook_list as $pricebook)
 			{
 				$content[] = array
 				(
@@ -1006,8 +1008,8 @@
 					'num'					=> $pricebook['num'],
 					'branch'				=> $pricebook['branch'],
 					'vendor_name'				=> $pricebook['vendor_name'],
-					'link_prizing'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uipricebook.prizing', 'activity_id'=> $pricebook['activity_id'], 'vendor_id'=> $pricebook['vendor_id'])),
-					'link_delete'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uipricebook.delete', 'method'=>'activity_vendor','activity_id'=> $pricebook['activity_id'], '&vendor_id'=> $pricebook['vendor_id'])),
+					'link_prizing'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uipricebook.prizing', 'activity_id'=> $pricebook['activity_id'], 'agreement_id'=> $pricebook['agreement_id'])),
+					'link_delete'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uipricebook.delete', 'method'=>'activity_vendor','activity_id'=> $pricebook['activity_id'], 'agreement_id'=> $pricebook['agreement_id'])),
 					'lang_prizing_statustext'		=> lang('view edit the prize for this activity'),
 					'lang_delete_statustext'		=> lang('delete this vendor from this activity'),
 					'text_prizing'				=> lang('Prizing'),
@@ -1272,7 +1274,7 @@
 
 			$method			= phpgw::get_var('method');
 			$activity_id	= phpgw::get_var('activity_id', 'int');
-			$vendor_id		= phpgw::get_var('vendor_id', 'int', 'GET');
+			$agreement_id		= phpgw::get_var('agreement_id', 'int', 'GET');
 			$index_count	= phpgw::get_var('index_count', 'int', 'GET');
 			$agreement_group_id	= phpgw::get_var('agreement_group_id', 'int');
 			$confirm		= phpgw::get_var('confirm', 'bool', 'POST');
@@ -1286,11 +1288,11 @@
 				);
 
 				$function_msg	=lang('delete vendor activity');
-				$delete_action	= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uipricebook.delete', 'method'=> $method, 'activity_id'=> $activity_id, 'vendor_id'=> $vendor_id));
+				$delete_action	= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uipricebook.delete', 'method'=> $method, 'activity_id'=> $activity_id, 'agreement_id'=> $agreement_id));
 
 				if (phpgw::get_var('confirm', 'bool', 'POST'))
 				{
-					$this->bo->delete_activity_vendor($activity_id,$vendor_id);
+					$this->bo->delete_activity_vendor($activity_id,$agreement_id);
 					$GLOBALS['phpgw']->redirect_link('/index.php',$link_data);
 				}
 			}
@@ -1316,15 +1318,15 @@
 				(
 					'menuaction'	=> $this->currentapp.'.uipricebook.prizing',
 					'activity_id'	=> $activity_id,
-					'vendor_id'	=> $vendor_id
+					'agreement_id'	=> $agreement_id
 				);
 
 				$function_msg	=lang('delete prize-index');
-				$delete_action	= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uipricebook.delete', 'method'=> $method, 'activity_id'=> $activity_id, 'vendor_id'=> $vendor_id, 'index_count'=> $index_count));
+				$delete_action	= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uipricebook.delete', 'method'=> $method, 'activity_id'=> $activity_id, 'agreement_id'=> $agreement_id, 'index_count'=> $index_count));
 
 				if (phpgw::get_var('confirm', 'bool', 'POST'))
 				{
-					$this->bo->delete_prize_index($activity_id,$vendor_id,$index_count);
+					$this->bo->delete_prize_index($activity_id,$agreement_id,$index_count);
 					$GLOBALS['phpgw']->redirect_link('/index.php',$link_data);
 				}
 			}
