@@ -35,6 +35,8 @@
 				$confirm	= True;
 				$cron		= True;
 				$data['account_id'] = $GLOBALS['phpgw']->accounts->name2id($data['user']);
+				$GLOBALS['phpgw_info']['user']['account_id'] = $data['account_id'];
+				$GLOBALS['phpgw']->session->account_id = $data['account_id'];
 				$GLOBALS['phpgw']->session->appsession('session_data','mail2sms',$data);
 			}
 			else
