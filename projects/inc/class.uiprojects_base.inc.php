@@ -364,7 +364,7 @@
 						  	//open accounting page from admin section
 							//$GLOBALS['phpgw']->template->set_var('link_accounting',$GLOBALS['phpgw']->link('/index.php',array('menuaction'=>'projects.uiconfig.config_accounting','action'=>'accounting')));
 							//$GLOBALS['phpgw']->template->set_var('lang_accounting',lang('Accounting'));
-					}
+					}
 					$GLOBALS['phpgw']->template->fp('admin_header','projects_admin_header');
 				}
 
@@ -394,7 +394,7 @@
 			if ( $this->boprojects->isprojectadmin('psale') )
 			{
 				$ps = true;
-			}
+			}
 			return ($pa ? '&nbsp;&gt;&nbsp;' . lang('administrator') : '') . ($pm ? '&nbsp;&gt;&nbsp;' . lang('manager') : '') . ($ps ? '&nbsp;&gt;&nbsp;' . lang('salesman') : '');
 		}
 
@@ -769,7 +769,7 @@
 				$linkData['status'] = $this->status;
 			}
 
-			$link = $GLOBALS['phpgw']->link('/index.php',$linkData);
+			$link = $GLOBALS['phpgw']->link('/index.php',$linkData);
 			return $link;
 		}
 
@@ -1212,7 +1212,7 @@
 		}
 
 		function status_format( $status = '', $showarchive = true )
-		{			$stat_sel = array('', '', '');
+		{			$stat_sel = array('', '', '');
 			if ( !$status )
 			{
 				$status = $this->status = 'active';
@@ -1276,12 +1276,12 @@
 				if( !$account['account_lid'] )
 				{
 					continue;
-				}
-				$s .= '<option value="' . $account['account_id'] . '"';
+				}
+				$s .= '<option value="' . $account['account_id'] . '"';
 				if ( in_array( $account['account_id'], $selected) )
 				{
 					$s .= ' SELECTED';
-				}
+				}
 				$s .= '>';
 				$s .= $account['account_fullname'] . '</option>' . "\n";
 			}
