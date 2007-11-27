@@ -69,7 +69,7 @@
 			{
 				$this->confirm($execute=False);
 			}
-		}
+		}
 		function confirm($execute='')
 		{
 			$link_data = array
