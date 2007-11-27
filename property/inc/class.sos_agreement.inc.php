@@ -24,7 +24,7 @@
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/bbb_/ekstern/
 	* @package property
 	* @subpackage agreement
- 	* @version $Id: class.sos_agreement.inc.php 18358 2007-11-27 04:43:37Z skwashd $
+ 	* @version $Id: class.sos_agreement.inc.php,v 1.29 2007/08/12 09:30:50 sigurdne Exp $
 	*/
 
 	/**
@@ -246,6 +246,7 @@
 				$uicols['descr'][]			= $this->db->f('input_text');
 				$uicols['statustext'][]		= $this->db->f('statustext');
 				$uicols['datatype'][$i]		= $this->db->f('datatype');
+				$uicols['import'][]			= true;
 				$cols_return_extra[]= array(
 					'name'	=> $this->db->f('column_name'),
 					'datatype'	=> $this->db->f('datatype'),
@@ -282,7 +283,7 @@
 
 			$this->uicols	= $uicols;
 			
-			if(!$s_agreement_id > 0)
+			if(!$s_agreement_id > 0 && $detail)
 			{
 				return;
 			}
@@ -747,7 +748,6 @@
 
 		function add_item($values,$values_attribute='')
 		{
-//_debug_array($values);
 			$table = 'fm_s_agreement_detail';
 
 			$cols[] = 'location_code';
@@ -1056,6 +1056,14 @@
 			$this->db->transaction_commit();
 		}
 
+		function attrib_choise2id($id,$value = '')
+		{
+			$sql = "SELECT id FROM fm_s_agreement_choice WHERE value = '$value' AND attrib_id = $id";
+			$this->db->query($sql,__LINE__,__FILE__);
+			$this->db->next_record();
+			return $this->db->f('id');					
+		}
+		
 		function read_attrib($data)
 		{
 			$attribute_table = 'fm_s_agreement_attribute';
