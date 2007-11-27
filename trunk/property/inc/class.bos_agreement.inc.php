@@ -24,7 +24,7 @@
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/bbb_/ekstern/
 	* @package property
 	* @subpackage agreement
- 	* @version $Id: class.bos_agreement.inc.php 18358 2007-11-27 04:43:37Z skwashd $
+ 	* @version $Id: class.bos_agreement.inc.php,v 1.16 2007/08/12 21:25:10 sigurdne Exp $
 	*/
 
 	/**
@@ -533,6 +533,34 @@
 			return $receipt;
 		}
 
+
+		function import($import_data,$id)
+		{
+			$this->so->role = 'detail';
+			$custom_attributes = $this->so->read_attrib(array('allrows'=>true));
+
+			foreach($custom_attributes as $attrib)
+			{
+				if(array_key_exists($attrib['column_name'],$import_data)
+					&& ($attrib['datatype'] == 'LB' || $attrib['datatype'] == 'R' || $attrib['datatype'] == 'CH')
+				)
+				{
+					$import_data[$attrib['column_name']] = $this->so->attrib_choise2id($attrib['id'],$import_data[$attrib['column_name']]);
+				}
+			}
+
+			$values = array(
+			'extra' 			=> $import_data,
+			's_agreement_id' 	=> $id,
+			'location_code'		=> $import_data['location_code'],
+			'location_name'		=> $import_data['address'],
+			'cost'				=> $import_data['cost']			
+			);
+			unset($values['extra']['location_code']);
+			unset($values['extra']['address']);
+			unset($values['extra']['cost']);
+			return $this->so->add_item($values);
+		}
 
 		function update($values)
 		{

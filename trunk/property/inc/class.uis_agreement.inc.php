@@ -24,7 +24,7 @@
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/bbb_/ekstern/
 	* @package property
 	* @subpackage agreement
- 	* @version $Id: class.uis_agreement.inc.php 18358 2007-11-27 04:43:37Z skwashd $
+ 	* @version $Id: class.uis_agreement.inc.php,v 1.47 2007/08/14 10:45:09 sigurdne Exp $
 	*/
 
 	/**
@@ -501,100 +501,40 @@
 			return array('content'=>$content,'table_header'=>$table_header);
 		}
 
-
 		function import()
 		{
-			$id				= phpgw::get_var('id', 'int');
-			$detail_import	= phpgw::get_var('detail_import', 'bool');
-			if(isset($_FILES['import_detail']['tmp_name']) && $_FILES['import_detail']['tmp_name'])
+			if(!$this->acl_add)
+			{
+				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=>2, 'acl_location'=> $this->acl_location));
+			}
+
+			$import = CreateObject('property.import');
+			
+			$importfile = $import->importfile();
+			$id		= phpgw::get_var('id', 'int');
+			if(isset($importfile) && is_file($importfile) && !phpgw::get_var('cancel'))
 			{
 				$list = $this->bo->read_details(0);
 				$uicols		= $this->bo->uicols;
+				$valueset = $import->prepare_data($importfile, $list, $uicols);
 
-				$fields = array();
-				for ($i=0; $i<count($uicols['input_type']); $i++ )
+				if(phpgw::get_var('confirm', 'bool'))
 				{
-					if($uicols['import'][$i])
+					if(is_file($importfile))
 					{
-						$fields[] = array
-									(
-										'name' => $uicols['name'][$i],
-										'descr' =>$uicols['descr'][$i]
-									);
-						$uicols2['input_type'][] = 'text';
-						$uicols2['name'][] = $uicols['name'][$i];
-						$uicols2['descr'][] = $uicols['descr'][$i];
+						unlink ($importfile);
 					}
-				}
-
-				$data = CreateObject('phpgwapi.excelreader');
-			
-				$data->setOutputEncoding('CP1251');
-				$data->read($_FILES['import_detail']['tmp_name']);
-
-				foreach($fields as &$entry)
-				{
-					$entry['id'] = array_search($entry['descr'], $data->sheets[0]['cells'][1]);
-				}
-
-				$valueset = array();
-
-				$rows = $data->sheets[0]['numRows']+1;
-
-				for ($i=2; $i<$rows; $i++ ) //First data entry on row 2
-				{
-					if ($data->sheets[0]['cells'][$i][2] != '')
+					foreach($valueset as $values)
 					{
-
-						foreach ($fields as &$entry)
-						{
-							$valueset[$i-2][$entry['name']] = $this->bocommon->ascii2utf($data->sheets[0]['cells'][$i][$entry['id']]);
-						}
+						$this->bo->import($values,$id);
 					}
-					else
-					{
-						break;
-					}
+					$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uis_agreement.edit', 'id'=> $id));	
 				}
-				$list		= $this->list_content($valueset,$uicols2,true,$view_only='no_link');
-				$content	= $list['content'];
-				$table_header=$list['table_header'];
-
-				$table_import[] = array
-				(
-					'lang_import'			=> lang('import'),
-					'lang_update_statustext'	=> lang('import details to this agreement from spreadsheet')
-				);
-
-				$GLOBALS['phpgw']->xslttpl->add_file(array('s_agreement','attributes_form'));
-				$data = array
-				(
-				'values'				=> $content,
-				'table_header'				=> $table_header,
-
-				'table_import'				=> $table_import,
-				'import_action'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uis_agreement.edit', 'id'=> $id)),
-				'lang_select_all'			=> lang('Select All'),
-				'img_check'				=> $GLOBALS['phpgw']->common->get_image_path($this->currentapp).'/check.png',
-				'set_column'				=> $set_column,
-				'lang_import_detail'		=> lang('import detail'),
-				'lang_detail_import_statustext'=> lang('import details to this agreement from spreadsheet'),
-				'lang_import'				=> lang('import')
-			);
-
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('service agreement') . ': ' . lang('import');
-
-			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('import' => $data));
-
-
-
-				foreach($valueset as $values)
+				else
 				{
-					//FIXME - do some visual checking - and confirm the input before saving to db
-					//$this->bo->save_item($values,$values_attribute);
-				}
-
-	//			$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uis_agreement.edit', 'id'=> $id));				
+					$import_action	= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uis_agreement.import', 'id'=> $id));
+					$import->pre_import($importfile, $valueset, $import_action, $header_info = lang('service agreement'));
+				}			
 			}
 			else
 			{
@@ -1903,8 +1843,7 @@
 		}
 
 		function attrib_history()
-		{
-			$GLOBALS['phpgw']->xslttpl->add_file(array('attrib_history','nextmatchs'));
+		{			$GLOBALS['phpgw']->xslttpl->add_file(array('attrib_history','nextmatchs'));
 			$GLOBALS['phpgw_info']['flags']['noframework'] = True;
 
 			$s_agreement_id		= phpgw::get_var('s_agreement_id', 'int');
