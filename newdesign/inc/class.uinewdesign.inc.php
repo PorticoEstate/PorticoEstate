@@ -83,8 +83,8 @@
 				$GLOBALS['phpgw']->css = createObject('phpgwapi.css');
 			}
 
-			$GLOBALS['phpgw']->css->add_external_file('newdesign/js/yahoo/yui/build/assets/skins/sam/calendar.css');
-			$GLOBALS['phpgw']->css->add_external_file('newdesign/js/yahoo/yui/build/assets/skins/sam/tabview.css');
+			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/build/assets/skins/sam/calendar.css');
+			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/build/assets/skins/sam/tabview.css');
 
 			phpgwapi_yui::load_widget('calendar');
 			phpgwapi_yui::load_widget('tabview');
@@ -214,8 +214,8 @@
 				$GLOBALS['phpgw']->css = createObject('phpgwapi.css');
 			}
 
-			$GLOBALS['phpgw']->css->add_external_file('/newdesign/js/yahoo/yui/build/datatable/assets/datatable-core.css');
-			$GLOBALS['phpgw']->css->add_external_file('/newdesign/js/yahoo/yui/build/assets/skins/sam/datatable.css');
+			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/build/datatable/assets/datatable-core.css');
+			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/build/assets/skins/sam/datatable.css');
 
 			phpgwapi_yui::load_widget('element');
 			phpgwapi_yui::load_widget('connection');
@@ -264,8 +264,8 @@
 				$GLOBALS['phpgw']->css = createObject('phpgwapi.css');
 			}
 
-			$GLOBALS['phpgw']->css->add_external_file('/newdesign/js/yahoo/yui/build/assets/skins/sam/calendar.css');
-			$GLOBALS['phpgw']->css->add_external_file('/newdesign/js/yahoo/yui/build/assets/skins/sam/tabview.css');
+			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/build/assets/skins/sam/calendar.css');
+			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/build/assets/skins/sam/tabview.css');
 
 			phpgwapi_yui::load_widget('calendar');
 			phpgwapi_yui::load_widget('tabview');
