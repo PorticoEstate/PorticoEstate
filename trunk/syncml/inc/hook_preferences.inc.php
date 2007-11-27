@@ -7,7 +7,7 @@
 	 * @copyright Copyright (c) 2007 Free Software Foundation, Inc.
 	 * @license   GNU General Public License 3 or later
 	 * @package   syncml
-	 * @version   $Id: hook_preferences.inc.php,v 1.1.1.1 2007/07/30 13:04:39 johang Exp $
+	 * @version   $Id: hook_preferences.inc.php 18171 2007-07-30 13:04:38Z johang $
 	 */
 	
 	$title = 'SyncML interface';

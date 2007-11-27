@@ -10,7 +10,7 @@
 	*  option) any later version.                                              *
 	\**************************************************************************/
 
-	/* $Id: editheadline.php,v 1.16 2003/05/30 20:45:44 gugux Exp $ */
+	/* $Id: editheadline.php 12913 2003-05-30 20:45:44Z gugux $ */
 
 	$GLOBALS['phpgw_info']['flags'] = array(
 		'admin_only' => True,

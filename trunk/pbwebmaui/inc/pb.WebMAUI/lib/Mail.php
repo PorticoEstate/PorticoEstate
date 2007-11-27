@@ -4,7 +4,7 @@
  * mailers under the PEAR hierarchy, and provides supporting functions
  * useful in multiple mailer backends.
  *
- * @version $Revision: 1.2 $
+ * @version $Revision: 14804 $
  * @package Mail
  */
 //
@@ -24,7 +24,7 @@
 // | Author: Chuck Hagenbuch <chuck@horde.org>                            |
 // +----------------------------------------------------------------------+
 //
-// $Id: Mail.php,v 1.2 2004/04/22 07:19:46 powerstat Exp $
+// $Id: Mail.php 14804 2004-04-22 07:19:46Z powerstat $
 
 /**
  * Include PEAR base class

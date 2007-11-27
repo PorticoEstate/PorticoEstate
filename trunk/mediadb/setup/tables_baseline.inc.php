@@ -13,7 +13,7 @@
   * This file should be generated for you. It should never be edited by hand *
   \**************************************************************************/
 
-  /* $Id: tables_baseline.inc.php,v 1.2 2001/06/19 16:36:32 bettina Exp $ */
+  /* $Id: tables_baseline.inc.php 6081 2001-06-19 16:36:32Z bettina $ */
 
   // table array for mediadb
 	$phpgw_baseline = array(

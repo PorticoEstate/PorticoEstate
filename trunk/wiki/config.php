@@ -1,5 +1,5 @@
 <?php
-// $Id: config.php,v 1.8 2003/03/20 00:46:15 ralfbecker Exp $
+// $Id: config.php 12067 2003-03-20 00:46:15Z ralfbecker $
 
 // Certain other settings may be configured; look in lib/defaults.php
 // to see them.  Rather than changing them in lib/defaults.php, you

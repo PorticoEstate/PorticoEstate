@@ -7,8 +7,8 @@
 	* @copyright Copyright (C) 2005-2006 Free Software Foundation, Inc. http://www.fsf.org/
 	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
 	* @package filemanager
-	* @version $Id: class.attached_files.inc.php,v 1.4 2006/11/27 21:36:59 sigurdne Exp $
-	* @internal $Source: /sources/phpgroupware/filemanager/inc/class.attached_files.inc.php,v $
+	* @version $Id: class.attached_files.inc.php 17609 2006-11-27 21:37:14Z sigurdne $
+	* @internal $Source$
 	*/
 
 	/**

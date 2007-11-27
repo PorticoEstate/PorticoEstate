@@ -8,7 +8,7 @@
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/bbb_/ekstern/
 	* @package hrm
 	* @subpackage user
- 	* @version $Id: class.uiuser.inc.php,v 1.29 2006/12/28 04:55:30 skwashd Exp $
+ 	* @version $Id: class.uiuser.inc.php 18358 2007-11-27 04:43:37Z skwashd $
 	*/
 
 	/**

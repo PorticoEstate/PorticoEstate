@@ -8,7 +8,7 @@
 	* @license http://www.fsf.org/licenses/lgpl.html GNU Lesser General Public License
 	* @package phpgwapi
 	* @subpackage vfs
-	* @version $Id: class.vfs_shared.inc.php,v 1.9 2006/12/22 23:58:42 Caeies Exp $
+	* @version $Id: class.vfs_shared.inc.php 17757 2006-12-22 23:58:42Z Caeies $
 	*/
 
 	/**

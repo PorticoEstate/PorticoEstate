@@ -13,7 +13,7 @@
   * This file should be generated for you. It should never be edited by hand *
   \**************************************************************************/
 
-  /* $Id: tables_current.inc.php,v 1.3 2001/08/18 00:32:55 skeeter Exp $ */
+  /* $Id: tables_current.inc.php 7355 2001-08-18 00:32:56Z skeeter $ */
 
   // table array for chora
 	$phpgw_baseline = array(

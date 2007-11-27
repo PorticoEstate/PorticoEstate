@@ -8,7 +8,7 @@
 	* Free Software Foundation; either version 2 of the License, or (at your   *
 	* option) any later version.                                               *
 	\**************************************************************************/
-	/* $Id: hook_preferences.inc.php,v 1.16 2002/11/04 00:50:17 ceb Exp $ */
+	/* $Id: hook_preferences.inc.php 11421 2002-11-04 00:50:18Z ceb $ */
 
 	{
 		$link_data = array

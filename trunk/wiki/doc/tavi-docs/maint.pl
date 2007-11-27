@@ -1,6 +1,6 @@
 #!/usr/bin/perl
 
-# $Id: maint.pl,v 1.1 2003/03/04 21:21:04 ralfbecker Exp $
+# $Id: maint.pl 11896 2003-03-04 21:21:05Z ralfbecker $
 #
 # This script is used by WikkiTikkiTavi versions 0.1 and greater to maintain
 # the list of known remote pages.  This is used by the TwinPages feature.

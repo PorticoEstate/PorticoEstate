@@ -1,6 +1,6 @@
 <?php
 /*
-$Id: phpweather.inc.php,v 1.5 2001/12/03 18:01:50 milosch Exp $ 
+$Id: phpweather.inc.php 8454 2001-12-03 18:01:51Z milosch $ 
 Copyright (c) 2000, Martin Geisler <gimpster@gimpster.com>.
 Licensed under the GPL, see the file COPYING.
 Also see http://www.gimpster.com for updates and further instructions

@@ -8,7 +8,7 @@
 	* Free Software Foundation; either version 2 of the License, or (at your   *
 	* option) any later version.                                               *
 	\**************************************************************************/
-	/* $Id: tables_current.inc.php,v 1.2 2002/01/23 00:42:47 ceb Exp $ */
+	/* $Id: tables_current.inc.php 9282 2002-01-23 00:42:47Z ceb $ */
 
 	$phpgw_baseline = array(
 		'phpgw_stocks' => array(

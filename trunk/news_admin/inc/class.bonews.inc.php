@@ -9,7 +9,7 @@
 	*  option) any later version.                                              *
 	\**************************************************************************/
 
-	/* $Id: class.bonews.inc.php,v 1.11 2007/02/24 20:42:12 sigurdne Exp $ */
+	/* $Id: class.bonews.inc.php 17992 2007-02-24 20:42:12Z sigurdne $ */
 
 	/**
 	* phpGroupWare News Management Logic layer

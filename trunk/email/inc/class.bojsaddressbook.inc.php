@@ -8,7 +8,7 @@
 	* @copyright Copyright (C) 2003-2005 Free Software Foundation, Inc. http://www.fsf.org/
 	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
 	* @package email
-	* @version $Id: class.bojsaddressbook.inc.php,v 1.4 2005/05/11 18:06:58 powerstat Exp $
+	* @version $Id: class.bojsaddressbook.inc.php 15943 2005-05-11 18:06:59Z powerstat $
 	* @internal 
 	*/
 

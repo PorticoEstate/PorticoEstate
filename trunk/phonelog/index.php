@@ -10,7 +10,7 @@
 	*  option) any later version.                                              *
 	\**************************************************************************/
 
-	/* $Id: index.php,v 1.11 2002/04/30 01:06:34 skeeter Exp $ */
+	/* $Id: index.php 10108 2002-04-30 01:09:13Z skeeter $ */
 
 	$GLOBALS['phpgw_info']["flags"]["currentapp"] = "phonelog";
 	include("../header.inc.php");

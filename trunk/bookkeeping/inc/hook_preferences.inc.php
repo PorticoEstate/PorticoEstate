@@ -8,7 +8,7 @@
 	* Free Software Foundation; either version 2 of the License, or (at your   *
 	* option) any later version.                                               *
 	\**************************************************************************/
-	/* $Id: hook_preferences.inc.php,v 1.3 2003/12/01 16:31:34 ceb Exp $ */
+	/* $Id: hook_preferences.inc.php 14131 2003-12-01 16:31:35Z ceb $ */
 
 	{
 		$title = $appname;

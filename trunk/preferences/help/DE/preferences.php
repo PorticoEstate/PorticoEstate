@@ -6,7 +6,7 @@
 	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
 	* @package preferences
 	* @subpackage manual
-	* @version $Id: preferences.php,v 1.3 2005/04/17 15:14:31 powerstat Exp $
+	* @version $Id: preferences.php 15840 2005-04-17 15:14:31Z powerstat $
 	*/
 	
 	$phpgw_flags = Array(

@@ -10,7 +10,7 @@
   *  option) any later version.                                              *
   \**************************************************************************/
 
-  /* $Id: viewgroup.php,v 1.23 2001/12/21 03:59:13 milosch Exp $ */
+  /* $Id: viewgroup.php 8699 2001-12-21 03:59:13Z milosch $ */
 
 	$phpgw_flags = Array(
 		'currentapp'              => 'nntp',

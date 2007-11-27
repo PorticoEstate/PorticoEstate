@@ -10,7 +10,7 @@
   *  option) any later version.                                              *
   \**************************************************************************/
 
-  /* $Id: newcustomer.php,v 1.8 2002/03/18 03:18:04 rschader Exp $ */
+  /* $Id: newcustomer.php 9782 2002-03-18 03:18:05Z rschader $ */
   // Update complete for phpgroupware 0.9.10 - 4/17/2001 (api calls for accounts and contacts)
   // Note: This file required no updates regarding accounts and contacts classes
 

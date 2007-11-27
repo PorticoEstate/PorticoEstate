@@ -19,7 +19,7 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-// $Id: common_functions.php,v 1.4 2007/08/14 11:44:08 skwashd Exp $
+// $Id: common_functions.php 18212 2007-08-14 11:44:16Z skwashd $
 
 // usefull during development
 if( isset($showerrors) && $showerrors ) {

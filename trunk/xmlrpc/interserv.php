@@ -10,7 +10,7 @@
 	*  option) any later version.                                              *
 	\**************************************************************************/
 
-	/* $Id: interserv.php,v 1.22 2002/03/01 10:34:11 milosch Exp $ */
+	/* $Id: interserv.php 9618 2002-03-01 10:34:12Z milosch $ */
 
 	$GLOBALS['phpgw_info'] = array();
 	$GLOBALS['phpgw_info']['flags'] = array(

@@ -9,7 +9,7 @@
   *  option) any later version.                                              *
   \**************************************************************************/
 
-  /* $Id: tables_baseline.inc.php,v 1.3 2006/12/18 20:03:32 sigurdne Exp $ */
+  /* $Id: tables_baseline.inc.php 17722 2006-12-18 20:03:33Z sigurdne $ */
 
 	$phpgw_baseline = array(
 		'phpgw_felamimail_cache' => array(

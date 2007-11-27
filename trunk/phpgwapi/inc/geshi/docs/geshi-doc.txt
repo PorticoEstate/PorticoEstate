@@ -964,9 +964,9 @@ Let's begin by looking at an example language file - the language file for the f
  * Author: Nigel McNie (nigel@geshi.org)
  * Copyright: (c) 2004 Nigel McNie (http://qbnz.com/highlighter/)
  * Release Version: 1.0.2
- * CVS Revision Version: $Revision: 1.1 $
+ * CVS Revision Version: $Revision: 17224 $
  * Date Started: 2004/06/20
- * Last Modified: $Date: 2006/09/25 08:46:28 $
+ * Last Modified: $Date: 2006-09-25 18:46:28 +1000 (Mon, 25 Sep 2006) $
  *
  * PHP language file for GeSHi.
  *
@@ -1326,9 +1326,9 @@ The header of a language file is the first lines with the big comment and the st
  * Author: <name> (<e-mail address>)
  * Copyright: (c) 2004 <name> (<website URL>)
  * Release Version: 1.0.0
- * CVS Revision Version: $Revision: 1.1 $
+ * CVS Revision Version: $Revision: 17224 $
  * Date Started: <date started>
- * Last Modified: $Date: 2006/09/25 08:46:28 $
+ * Last Modified: $Date: 2006-09-25 18:46:28 +1000 (Mon, 25 Sep 2006) $
  *
  * <name-of-language> language file for GeSHi.
  *
@@ -1378,7 +1378,7 @@ Here are the parts you should change:
     * <any-comments> - Any comments you have to make about this language file, perhaps on where you got the keywords for, what dialect of the language this language file is for etc etc. If you don't have any comments, remove the space for them.
     * <date-of-release - The date you released the language file to the public. If you simply send it to me for inclusion in a new GeSHi and don't release it, leave this blank, and I'll replace it with the date of the GeSHi release that it is first added to.
 
-Everything should remain the same, including $Revision: 1.1 $ and $Date: 2006/09/25 08:46:28 $ (I know these may look funny but they have their purpose for those of you who don't know about CVS).
+Everything should remain the same, including $Revision: 17224 $ and $Date: 2006-09-25 18:46:28 +1000 (Mon, 25 Sep 2006) $ (I know these may look funny but they have their purpose for those of you who don't know about CVS).
 
 Also: I'm not sure about the copyright on a new language file. I'm not a lawyer, could someone contact me about whether the copyright for a new language file should be exclusivly the authors, or joint with me (if included in a GeSHi release)?
 4.3.2: The First Indices

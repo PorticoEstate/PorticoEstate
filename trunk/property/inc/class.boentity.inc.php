@@ -24,7 +24,7 @@
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/bbb_/ekstern/
 	* @package property
 	* @subpackage entity
- 	* @version $Id: class.boentity.inc.php,v 1.30 2007/09/21 19:36:38 sigurdne Exp $
+ 	* @version $Id: class.boentity.inc.php 18358 2007-11-27 04:43:37Z skwashd $
 	*/
 
 	/**

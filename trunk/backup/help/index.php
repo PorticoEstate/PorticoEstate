@@ -8,7 +8,7 @@
     *  Free Software Foundation; either version 2 of the License, or (at your  *
     *  option) any later version.                                              *
     \**************************************************************************/
-    /* $Id: index.php,v 1.1.1.1 2001/12/04 01:41:59 bettina Exp $ */
+    /* $Id: index.php 8466 2001-12-04 01:41:58Z bettina $ */
 
 	$phpgw_flags = Array('currentapp' => 'manual');
 	

@@ -1,4 +1,4 @@
-<!-- $Id: preferences.tpl,v 1.1 2005/01/17 15:58:54 ceb Exp $ -->
+<!-- $Id: preferences.tpl 15658 2005-01-17 16:02:16Z ceb $ -->
 <center>
 <table width="50%" border="0" cellspacing="2" cellpadding="2">
 	<form method="POST" action="{action_url}">

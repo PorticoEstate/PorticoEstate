@@ -1,4 +1,4 @@
-<!-- $Id: liststockprd.tpl,v 1.4 2001/06/06 03:08:49 bettina Exp $ -->
+<!-- $Id: liststockprd.tpl 5534 2001-06-06 03:08:49Z bettina $ -->
 
 <p><b>&nbsp;&nbsp;&nbsp;{lang_action}</b><br>
 <hr noshade width="98%" align="center" size="1">

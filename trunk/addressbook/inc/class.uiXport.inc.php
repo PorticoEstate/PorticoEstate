@@ -10,7 +10,7 @@
   *  option) any later version.                                              *
   \**************************************************************************/
 
-  /* $Id: class.uiXport.inc.php,v 1.23 2006/11/29 14:39:38 sigurdne Exp $ */
+  /* $Id: class.uiXport.inc.php 18358 2007-11-27 04:43:37Z skwashd $ */
 
 	class uiXport
 	{

@@ -9,7 +9,7 @@
   *  option) any later version.                                              *
   \**************************************************************************/
 
-  /* $Id: head.inc.php,v 1.10 2007/10/10 08:53:53 skwashd Exp $ */
+  /* $Id: head.inc.php 18311 2007-10-10 08:53:53Z skwashd $ */
 
 	if ( !isset($GLOBALS['phpgw_info']['server']['site_title']) )
 	{

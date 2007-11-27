@@ -8,7 +8,7 @@
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/bbb_/ekstern/
 	* @package hrm
 	* @subpackage core
- 	* @version $Id: class.socommon.inc.php,v 1.7 2006/12/27 10:38:35 sigurdne Exp $
+ 	* @version $Id: class.socommon.inc.php 17785 2006-12-27 10:39:15Z sigurdne $
 	*/
 
 	/**
@@ -93,7 +93,8 @@
 		}
 
 		function new_db()
-		{			$db = CreateObject('phpgwapi.db');
+		{
+			$db = CreateObject('phpgwapi.db');
 			$db->Host = $GLOBALS['phpgw_info']['server']['db_host'];
 			$db->Type = $GLOBALS['phpgw_info']['server']['db_type'];
 			$db->Database = $GLOBALS['phpgw_info']['server']['db_name'];

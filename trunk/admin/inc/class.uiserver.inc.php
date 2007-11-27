@@ -9,7 +9,7 @@
   *  option) any later version.                                              *
   \**************************************************************************/
 
-  /* $Id: class.uiserver.inc.php,v 1.13 2007/01/24 17:33:38 Caeies Exp $ */
+  /* $Id: class.uiserver.inc.php 17910 2007-01-24 17:33:38Z Caeies $ */
 
 	class uiserver
 	{

@@ -10,7 +10,7 @@
   *  option) any later version.                                              *
   \**************************************************************************/
 
-  /* $Id: request.php,v 1.2 2000/11/14 20:00:51 neotexan Exp $ */
+  /* $Id: request.php 921 2000-11-14 20:02:07Z neotexan $ */
 
    $phpgw_info["flags"]["currentapp"] = "mediadb";
    include("../header.inc.php");

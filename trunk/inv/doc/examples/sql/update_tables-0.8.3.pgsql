@@ -1,4 +1,4 @@
--- $Id: update_tables-0.8.3.pgsql,v 1.1 2002/06/10 13:01:46 ldw Exp $ 
+-- $Id: update_tables-0.8.3.pgsql 10395 2002-06-10 13:01:47Z ldw $ 
 
 	drop sequence phpgw_inv_categorys_con_seq;
 	drop table phpgw_inv_categorys;

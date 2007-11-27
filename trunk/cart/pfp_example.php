@@ -10,7 +10,7 @@
   *  option) any later version.                                              *
   \**************************************************************************/
 
-  /* $Id: pfp_example.php,v 1.2 2002/03/20 13:03:59 milosch Exp $ */
+  /* $Id: pfp_example.php 9801 2002-03-20 13:03:59Z milosch $ */
 
 	$GLOBALS['phpgw_info']['flags'] = array('currentapp' => 'cart');
 

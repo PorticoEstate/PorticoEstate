@@ -30,15 +30,11 @@ class ged_ui
 		'browse'=>true, 
 		'add_file'=>true, 
 		'add_folder'=>true, 
-		'update_file'=>true, 
 		'update_folder'=>true, 
 		'delete_folder'=>true, 
 		'download'=>true, 
 		'package_download' => true, 
 		'view'=>true, 
-		'update_file'=>true,
-		'lock_file' => true, 
-		'unlock_file' => true,  
 		'delete_file'=>true, 
 		'change_acl'=>true, 
 		'search' => true, 
@@ -566,36 +562,6 @@ class ged_ui
 
 		$element_info=$this->ged_dm->get_element_info($element_id);
 		
-		$this->t->set_var( 'lock_alert_message', '');
-		if ( $this->ged_dm->is_locked($element_id) )
-		{
-			$this->t->set_var( 'lock_alert_message', lang( 'This file is locked by')." ".$GLOBALS['phpgw']->common->grab_owner_name($element_info['lock_user_id']));
-		}
-		
-		/*
-		if ( $this->ged_dm->can_write($element_id))
-		{
-			$version_id=get_var('version_id',array('GET','POST'));
-			if ( $version_id != '' )
-			{
-				$current_version=$this->ged_dm->get_version_info($version_id);
-			
-				if ( $current_version['element_id']!=$element_id)
-					$current_version=$this->ged_dm->get_current_or_alert_or_refused_version($element_id);
-			
-			}
-			else
-				$current_version=$this->ged_dm->get_current_or_alert_or_refused_version($element_id);
-		
-			if ( $current_version['element_id']!=$element_id)
-				$current_version=$this->ged_dm->get_last_version($element_id);	
-		}
-		elseif ($this->ged_dm->can_read($element_id))
-		{
-			$current_version=$this->ged_dm->get_current_or_pending_for_acceptation_version($element_id);
-		}
-		*/
-		
 		$current_version=$this->ged_dm->get_version_info($version_id);
 		
 		$this->t->set_var('current_version_status_image', $GLOBALS['phpgw']->common->image('ged', $current_version['status']."-48"));
@@ -806,7 +772,9 @@ class ged_ui
 			$element_info['creation_date']=0;
 		}
 		else
+		{
 			$element_info=$this->ged_dm->get_element_info($element_id);
+		}
 
 		$this->t->set_var('owner', $GLOBALS['phpgw']->common->grab_owner_name($element_info['owner_id']));
 		$this->t->set_var('description', $this->truncate($element_info['description'],30));
@@ -863,14 +831,8 @@ class ged_ui
 					$tr_class='row_off';
 				
 				$file_version=null;
-				if ( $this->ged_dm->admin || $this->ged_dm->can_write($file['element_id']))
-				{
+
 					$file_version=$this->ged_dm->get_last_version($file['element_id']);
-				}
-				else
-				{
-					$file_version=$this->ged_dm->get_current_or_pending_for_acceptation_version($file['element_id']);
-				}
 				
 				$this->t->set_var('tr_class', $tr_class);
 
@@ -987,29 +949,33 @@ class ged_ui
 					print ( "browse: case file<br/>\n");
 				
 				$last_version=$this->ged_dm->get_last_version($focused_id);
-				$current_version=$this->ged_dm->get_current_or_pending_for_acceptation_version($focused_id);
+				
+				if ( empty($last_version['element_id']) )
+				{
+					$link_data=null;
+					$link_data['menuaction']='ged.ged_ui.browse';
+					$link_data['focused_id']=$focused_element['parent_id'];
+						
+					$GLOBALS['phpgw']->redirect_link('/index.php', $link_data);
+				}
 				
 				if ($focused_version_id != 0)
 				{
 					$focused_version=$this->ged_dm->get_version_info($focused_version_id);
-				}
-				elseif(isset($current_version))
+					
+					if ( isset($this->ged_dm->acl[$focused_element['element_id']]['statuses']) && is_array($this->ged_dm->acl[$focused_element['element_id']]['statuses']))
 				{
-					$focused_version=$current_version;
+						if ( ! in_array($focused_version['status'], $this->ged_dm->acl[$focused_element['element_id']]['statuses']));
+				{
+					$focused_version=$last_version;
+							$focused_version_id=$focused_version['version_id'];
+						}
+				}
+				
 				}
 				else
 				{
 					$focused_version=$last_version;
-				}
-				
-				// No current version and no write acl : cheater !
-				if ( ! is_array($current_version) && ! $this->ged_dm->can_write($focused_id))
-				{
-					$link_data=null;
-					$link_data['menuaction']='ged.ged_ui.browse';
-					$link_data['focused_id']=0;
-
-					$GLOBALS['phpgw']->redirect_link('/index.php', $link_data);
 				}
 								
 				$this->t->set_var('main_content', $this->draw_file_panel($focused_id, $focused_version['version_id']));
@@ -1021,10 +987,10 @@ class ged_ui
 				
 				$flow_object=array(
 					'app' => 'ged',
-					'project_root' => $focused_element['project_root'], 
+					'project_root' => (int)$focused_element['project_root'], 
 					'doc_type' => $focused_element['doc_type'], 
-					'element_id' => $focused_id, 
-					'version_id' => $focused_version['version_id']
+					'element_id' => (int)$focused_id, 
+					'version_id' => (int)$focused_version['version_id']
 				);
 				$flow_actions=$this->flows->get_available_transitions($flow_object);
 				
@@ -1053,32 +1019,8 @@ class ged_ui
 					$this->t->set_var('change_acl', "<a href=\"".$update_file_url."\">".lang('Change ACL')."</a>");
 				}
 				
-				// TODO : Allow lock only if workflow status allows it
-				if ($last_version['status'] == 'working' && $this->ged_dm->can_change_file_lock($focused_id) )
-				{
-					$this->t->set_var('lock_file', '');
-					
-					if ( $focused_element['lock_status'] == 0 )
-					{
-						$link_data=null;
-						$link_data['menuaction']='ged.ged_ui.lock_file';
-						$link_data['element_id']=$focused_id;
-						$lock_file_url=$GLOBALS['phpgw']->link('/index.php', $link_data);
-						$this->t->set_var('lock_file', "<a href=\"".$lock_file_url."\">".lang('Lock file')."</a>");
-					}
-					elseif( $focused_element['lock_status'] == 1 )
-					{
-						$link_data=null;
-						$link_data['menuaction']='ged.ged_ui.unlock_file';
-						$link_data['element_id']=$focused_id;
-						$lock_file_url=$GLOBALS['phpgw']->link('/index.php', $link_data);
-						$this->t->set_var('lock_file', "<a href=\"".$lock_file_url."\"><b>".lang('Unlock file')."</b></a>");						
-					}
-					
-				}
-				
 				// TODO : droit specifique de delete ?
-				if ( $this->ged_dm->admin )
+				if ( $this->ged_dm->can_delete($focused_id) )
 				{
 					$link_data=null;
 					$link_data['menuaction']='ged.ged_ui.delete_file';
@@ -1128,7 +1070,7 @@ class ged_ui
 				}
 				
 				// TODO : droit specifique de delete ?
-				if ( $this->ged_dm->admin && $focused_id !=0 )
+				if ( $this->ged_dm->can_delete($focused_id) )
 				{
 					$link_data=null;
 					$link_data['menuaction']='ged.ged_ui.delete_folder';
@@ -1144,7 +1086,7 @@ class ged_ui
 				break;
 		}
 		
-		if ( isset ($focused_element['project_root']) && $focused_element['project_root'] != 0)
+		if ( isset ($focused_element['project_root']) && $focused_element['project_root'] != 0 && $this->ged_dm->can_change_acl($focused_element['project_root']))
 		{
 			$link_data=null;
 			$link_data['menuaction']='ged.ged_ui.chrono';
@@ -1289,556 +1231,6 @@ class ged_ui
 
 	}
 
-	// New status management : at first status=working
-	// for new versions
-	// is a version is already working then it is overrriden
-	// we can change version type : major / minor and the description
-	// perhaps consider an "edit" method for all
-	
-	// DONE acl here 
-	function update_file()
-	{
-				
-		if ( $this->debug('update_file') )
-			print ( "ui_update_file: entering.<br>\n");
-
-		$element_id=get_var('element_id', array('GET', 'POST'));
-		
-		$link_data=null;
-		$link_data['menuaction']='ged.ged_ui.browse';
-		$link_data['focused_id']=$element_id;
-
-		if ( ! $this->ged_dm->can_write($element_id) )
-		{
-				$GLOBALS['phpgw']->redirect_link('/index.php', $link_data);
-		}
-				
-		if ( $this->debug('update_file') )
-			print ( "ui_update_file: ok can write.<br>\n");
-		
-		$update_file=get_var('update_file', array('POST', 'GET'));
-		$file_name=get_var('file_name', array('POST', 'GET'));
-		$file_description=get_var('file_description', array('POST', 'GET'));
-		$referenceq=addslashes(get_var('referenceq',array('GET','POST')));
-		$doc_type=addslashes(get_var('document_type', array('GET', 'POST')));
-
-
-		$update_version=get_var('update_version', array('POST', 'GET'));
-		$version_description=get_var('version_description', array('POST', 'GET'));
-		$version_type=get_var('version_type', array('POST', 'GET'));
-		
-		$go_back=get_var('go_back', array('POST', 'GET'));
-		
-		$search=get_var('search', array('POST', 'GET'));
-		$query=get_var('query', array('POST', 'GET'));
-		$do_add_relation=get_var('do_add_relation', array('POST', 'GET'));
-		$do_remove_relation=get_var('do_remove_relation', array('POST', 'GET'));
-		$relations=get_var('relations', array('POST', 'GET'));
-		
-		// New status management system
-		// Based on aproval in progress
-		// Status is the consequency of actions
-		// no direct management
-		// i'll perhaps add an admin option to change manually status
-		// for special cases 
-		// $version_status=get_var('version_status', array('POST', 'GET'));
-		
-		$relations=get_var('relations', array('POST', 'GET'));
-    
-    $version_id=get_var('version_id', array('POST', 'GET'));
-		$validity_period=get_var('validity_period', array('POST', 'GET'));
-
-		$this->set_template_defaults();
-		
-		$link_data=null;
-		$link_data['menuaction']='ged.ged_ui.update_file';
-    	$this->t->set_var('action_update', $GLOBALS['phpgw']->link('/index.php', $link_data));
-
-		$this->t->set_var('reset_file_field', 'reset_file');
-		$this->t->set_var('reset_file_action', lang('Undo'));
-		$this->t->set_var('update_file_field', 'update_file');
-		$this->t->set_var('update_file_action', lang('Update'));
-		$this->t->set_var('update_version_field', 'update_version');
-		
-		$this->t->set_var('reset_version_field', 'reset_version');
-		$this->t->set_var('reset_version_action', lang('Undo'));
-
-		$this->t->set_var('go_back_field', 'go_back');
-		$this->t->set_var('go_back_action', lang('Go back'));
-
-		$this->t->set_var('element_id_field', 'element_id');
-		$this->t->set_var('file_name_field', 'file_name');
-				
-		$this->t->set_var('file_description_field', 'file_description');
-		$this->t->set_var('version_description_field', 'version_description');
-		$this->t->set_var('version_file_field', 'version_file');
-		$this->t->set_var('version_type_field', 'version_type');
-		
-		$this->t->set_var('add-image', $GLOBALS['phpgw']->common->image('ged', "add-16"));
-		$this->t->set_var('remove-image', $GLOBALS['phpgw']->common->image('ged', "remove-16"));
-		
-		// New status management system
-		// Based on aproval in progress		
-		//$this->t->set_var('version_status_field', 'version_status');
-
-		if ($update_file==lang('Update'))
-		{
-
-			$new_file['element_id']=$element_id;
-
-			$new_file['name']=$file_name;
-			$new_file['reference']=$referenceq;
-			$new_file['doc_type']=$doc_type;
-			$new_file['description']=$file_description;
-			$new_file['validity_period']=$validity_period;
-
-
-			$this->ged_dm->update_file($new_file);
-			$file_updated='done';
-
-			if ($file_updated=='done')
-			{
-				$link_data=null;
-				$link_data['menuaction']='ged.ged_ui.browse';
-				$link_data['focused_id']=$element_id;
-
-				$GLOBALS['phpgw']->redirect_link('/index.php', $link_data);
-			}
-
-		}
-    elseif ( $update_version==lang('New') )
-    {
-            
-      $new_version['element_id']=$element_id;
-      $new_version['file_name']=$_FILES['version_file']['name'];
-      $new_version['file_size']=$_FILES['version_file']['size'];
-      $new_version['file_tmp_name']=$_FILES['version_file']['tmp_name'];
-      $new_version['file_mime_type']=$_FILES['version_file']['type'];
-      $new_version['type']=$version_type;
-      $new_version['relations']=$relations;
-      
-  		// New status management system
-			// Based on aproval in progress  
-      //$new_version['status']=$version_status;
-
-      $new_version['description']=$version_description;
-      		
-      $version_added=$this->ged_dm->add_version($new_version);
-      
-      if ($version_added=='OK')
-      {
-        $link_data=null;
-        $link_data['menuaction']='ged.ged_ui.browse';
-        $link_data['focused_id']=$element_id;
-
-        $GLOBALS['phpgw']->redirect_link('/index.php', $link_data);
-      }
-      else
-      {
-        print ( $version_added);
-        $this->t->set_var('update_version_action', lang('New'));
-      }
-      
-    }
-		elseif ($update_version==lang('Update') )
-		{
-
-      $amended_version['element_id']=$element_id;
-      $amended_version['file_name']=$_FILES['version_file']['name'];
-      $amended_version['file_size']=$_FILES['version_file']['size'];
-      $amended_version['file_tmp_name']=$_FILES['version_file']['tmp_name'];
-      $amended_version['file_mime_type']=$_FILES['version_file']['type'];
-      $amended_version['type']=$version_type;
-      
-			// New status management system
-			// Based on aproval in progress  
-      //$amended_version['status']=$version_status;
-      
-      if ( is_array($relations))
-      {
-      	$amended_version['relations']=$relations;
-      }
-      else
-      	$amended_version['relations']=null;
-      
-      $amended_version['description']=$version_description;
-      $amended_version['version_id']=$version_id;
-      
-      $version_updated=$this->ged_dm->update_version($amended_version);
-
-			if ($version_updated=='OK')
-			{
-				$link_data=null;
-				$link_data['menuaction']='ged.ged_ui.browse';
-				$link_data['focused_id']=$element_id;
-
-				$GLOBALS['phpgw']->redirect_link('/index.php', $link_data);
-			}
-      else
-        print ( $version_updated);
-      
-
-		}
-		elseif ( $go_back == lang('Go back'))
-		{
-				$link_data=null;
-				$link_data['menuaction']='ged.ged_ui.browse';
-				$link_data['focused_id']=$element_id;
-
-				$GLOBALS['phpgw']->redirect_link('/index.php', $link_data);			
-		}
-		else
-		{
-			$focused_element=$this->ged_dm->get_element_info($element_id);
-			$file_name=$focused_element['name'];
-			$file_description=$focused_element['description'];
-			$validity_period=$focused_element['validity_period'];
-			$referenceq=$focused_element['reference'];
-			$doc_type=$focused_element['doc_type'];
-
-      $last_version=$this->ged_dm->get_last_version($element_id);
-      
-      $version_status=$last_version['status'];
-
-			// New status management system
-			// Based on aproval in progress
-      // TODO : A revoir complètement la gestion des status
-      
-      if ( $version_status=='working' )
-      {
-        $version_status=$last_version['status'];
-        $version_description=$last_version['description'];
-        $version_id=$last_version['version_id'];
-        
-        $current_version=$this->ged_dm->get_current_version($element_id);
-
-        $version_major=$current_version['major']-$last_version['major']; 
-        $version_minor=$current_version['minor']-$last_version['minor'];
-        
-        
-        if ( $version_major !=0 )
-          $version_type='major';
-        elseif ( $version_minor !=0 )
-          $version_type='minor';
-          
-       // Relations management on existing working version
-        
-        $this->t->set_var('update_version_action', lang('Update'));
-      }
-      else
-      {
-      	// Cetait la [HOP1]
-      	
-        $this->t->set_var('update_version_action', lang('New'));
-        $version_type='minor';
-        $version_status='working';
-      
-      }
-
-
-
-
-    	// Now c'est la [HOP1]
-      	
-      if ( ( $search=="search" || $do_add_relation != '' || $do_remove_relation != '' ) && $query != ''  )
-			{
-				$search_results=$this->ged_dm->search($query);
-			}
-			
-			if ( is_array($relations) || $search=="search" || $do_add_relation != '' || $do_remove_relation != '' )
-			{
-				// TODO : Enrichir un peu pour afficher plus d'infos'					
-				$i=0;
-				foreach ( $relations as $relation )
-				{
-					if ( $relation['linked_version_id'] != $do_remove_relation || $do_remove_relation == '')
-					{
-						// TODO : Ajouter le nom
-						$version_relations[$i]=$this->ged_dm->get_version_info($relation['linked_version_id']);
-						$version_relations[$i]['linked_version_id']=$relation['linked_version_id'];
-						$version_relations[$i]['relation_type']=$relation['relation_type'];
-						
-						$i++;							
-					}
-				}
-				
-			}
-			else
-			{
-				$version_relations=$this->ged_dm->list_version_relations_out ( $last_version['version_id'] );
-				//_debug_array($version_relations);
-			}
-			
-			if ( $do_add_relation != '')
-			{
-				$version_relations_next_index=sizeof($version_relations)+1;
-				
-				$new_version_to_add=$this->ged_dm->get_version_info($do_add_relation);
-				
-				$version_relations[$version_relations_next_index]['version_id']=$do_add_relation;
-				$version_relations[$version_relations_next_index]['linked_version_id']=$do_add_relation;
-				$version_relations[$version_relations_next_index]['relation_type']='dependancy';
-				$version_relations[$version_relations_next_index]['element_id']=$new_version_to_add['element_id'];
-				$version_relations[$version_relations_next_index]['name']=$new_version_to_add['name'];
-				$version_relations[$version_relations_next_index]['major']=$new_version_to_add['major'];
-				$version_relations[$version_relations_next_index]['minor']=$new_version_to_add['minor'];
-				$version_relations[$version_relations_next_index]['status']=$new_version_to_add['status'];
-				$version_relations[$version_relations_next_index]['reference']=$new_version_to_add['reference'];
-			}
-
-    	
-    	$new_relations=null;
-    	$nri=0;
-    	if ( is_array($version_relations))
-    	{
-    		foreach ( $version_relations as $version_relation )
-    		{
-    			//print ($version_relation['status'] );
-    			
-    			// NIARF
-    			if ( array_key_exists('status', $version_relation) )
-    			{
-    				if ( $version_relation['status']=='obsolete' || $version_relation['status']=='refused' )
-    				{
-      				// print ( 'new version : '.$version_relation['version_id']."<br/>\n");
-      				
-      				// TODO : prepare data for future relation creation
-      				$the_new_relations=$this->ged_dm->get_current_version($version_relation['element_id']);
-      				
-      				$new_relations[$nri]['linked_version_id']=$the_new_relations['version_id'];
-      				$new_relations[$nri]['reference']=$version_relation['reference'];
-      				$new_relations[$nri]['name']=$version_relation['name'];
-        			$new_relations[$nri]['major']=$the_new_relations['major'];
-      				$new_relations[$nri]['minor']=$the_new_relations['minor'];
-      				$new_relations[$nri]['status']=$the_new_relations['status'];
-      				
-      				
-      				$new_relations[$nri]['relation_type']='dependancy';
-      				
-      				$nri++;      					
-    				}
-    				else
-    				{
-      				// print ( 'report : '.$version_relation['version_id']."<br/>\n");
-      				
-      				// TODO : prepare data for future relation creation
-      				$new_relations[$nri]['linked_version_id']=$version_relation['version_id'];
-      				$new_relations[$nri]['major']=$version_relation['major'];
-      				$new_relations[$nri]['minor']=$version_relation['minor'];
-      				$new_relations[$nri]['status']=$version_relation['status'];
-      				$new_relations[$nri]['reference']=$version_relation['reference'];
-      				$new_relations[$nri]['name']=$version_relation['name'];
-      				$new_relations[$nri]['relation_type']='dependancy';
-      				
-      				$nri++;     					
-    				}     				
-    			}
-    			else
-    			{
-    				// TODO : prepare data for future relation creation
-    				$new_relations[$nri]['linked_version_id']=$version_relation['version_id'];
-    				$new_relations[$nri]['major']=$version_relation['major'];
-    				$new_relations[$nri]['minor']=$version_relation['minor'];
-    				$new_relations[$nri]['status']=$version_relation['status'];
-    				$new_relations[$nri]['reference']=$version_relation['reference'];
-    				$new_relations[$nri]['name']=$version_relation['name'];
-    				$new_relations[$nri]['relation_type']='dependancy';
-    				
-    				$nri++;     					      				
-    			}      			
-    		}      		
-    	} 
-		}
-				
-		$this->t->set_file(array('update_file_tpl'=>'update_file.tpl'));
-
-		$this->t->set_var('element_id_value', $element_id);
-		$this->t->set_var('search_query', $query);
-    
-    /* file */
-		$this->t->set_var('file_description_value', $file_description);		
-		$this->t->set_var('file_name_value', $file_name);
-		
-		$this->t->set_block('update_file_tpl', 'power_block', 'power_block_handle');
-
-		// Begin power_block zone
-		if ( $this->ged_dm->admin )
-		{
-
-		$this->t->set_var('new_reference', $referenceq);
-
-		$select_types=$this->ged_dm->list_doc_types ();
-
-		$select_types_html="<select name=\"document_type\">\n";
-		foreach ($select_types as $select_type)
-		{
-			$selected="";
-			if ($select_type['type_id'] == $doc_type )
-			{
-				$selected=" selected ";
-			}
-
-			$chrono_flag=$style="";
-			if ( $select_type['type_chrono']==1)
-			{
-				$chrono_flag=" [C]";
-				$style="style=\"font-weight: bold;\"";
-			}
-			$select_types_html.="<option ".$style." value=\"".$select_type['type_id']."\"".$selected.">".lang($select_type['type_desc']).$chrono_flag."</option>\n";
-		}
-		$select_types_html.="</select>\n";
-
-		$this->t->set_var('select_type', $select_types_html);
-		$this->t->fp('power_block_handle', 'power_block', True);
-		// End power_block zone
-		}
-		else
-		{
-			$this->t->set_var( 'power_block_handle', "");
-		}
-		
-		$select_periods=$this->ged_dm->select_periods ();
-
-		$select_period_html='<select name="validity_period">\n';
-		foreach ($select_periods as $select_period)
-		{
-			if ($select_period['period']==$validity_period )
-			{
-				$select_period_html.="<option value=\"".$select_period['period']."\" selected>".lang($select_period['description'])."</option>\n";
-			}
-			else
-			{
-				$select_period_html.="<option value=\"".$select_period['period']."\">".lang($select_period['description'])."</option>\n";
-			}
-		}
-		$select_period_html.="</select>\n";
-
-		$this->t->set_var('select_period', $select_period_html);
-
-
-		/*version*/
-    $this->t->set_var('version_id_field', 'version_id');
-		$this->t->set_var('version_id_value', $version_id);
-    $this->t->set_var('version_description_value', $version_description);
-    
-    /* type et status */
-    $this->t->set_block('update_file_tpl', 'version_type_block', 'version_type_block_handle');
-    $temp_types=Array('major', 'minor');
-    foreach (  $temp_types as $temp_type )
-    {
-      $this->t->set_var('version_type_label', lang($temp_type));
-      $this->t->set_var('version_type_value',$temp_type);
-      
-      if ( $version_type==$temp_type )
-        $this->t->set_var('version_type_checked', 'checked');
-      else
-        $this->t->set_var('version_type_checked', '');
-      
-      $this->t->fp('version_type_block_handle', 'version_type_block', True);    
-    }
-    
-    $this->t->set_block('update_file_tpl', 'relations_list_block', 'relations_list_block_handle');
-    
-    if ( isset($new_relations))
-    {
-	    if ( is_array($new_relations))
-	    {  	
-	    	$nri=0;
-	    	foreach ($new_relations as $new_relation)
-	    	{
-	    		$this->t->set_var('relations_element_reference', $new_relation['reference']);
-	    		$this->t->set_var('relations_element_major', $new_relation['major']);
-	    		$this->t->set_var('relations_element_minor', $new_relation['minor']);
-	    		$this->t->set_var('relations_element_status_image', $GLOBALS['phpgw']->common->image('ged', $new_relation['status']."-16"));
-	    		$this->t->set_var('relations_element_name', $new_relation['name']);
-	    		
-	    		$this->t->set_var('relations_id_field', 'relations['.$nri.'][linked_version_id]');
-	    		$this->t->set_var('relations_id_value', $new_relation['linked_version_id']);
-	    		
-	    		$this->t->set_var('relations_type_field', 'relations['.$nri.'][relation_type]');
-	    		$this->t->set_var('relations_type_value', $new_relation['relation_type']);
-	
-	    		$nri++;
-	    		$this->t->fp('relations_list_block_handle', 'relations_list_block', True);   
-	    	}
-	    	
-	    }
-    }
-    
-
-		if ( isset($search_results))
-		{
-			if ( is_array($search_results))
-			{
-				$this->t->set_block('update_file_tpl', 'search_list_block', 'search_list_block_handle');
-					
-	    	//$nri=0;
-	    	foreach ($search_results as $search_result)
-	    	{
-	    		$this->t->set_var('element_id', $search_result['element_id']);
-	    		$this->t->set_var('version_id', $search_result['version_id']);
-	    		$this->t->set_var('name', $search_result['name']);
-	    		$this->t->set_var('reference', $search_result['reference']);
-	    		$this->t->set_var('version', "v".$search_result['major'].".".$search_result['minor']);
-	    		$this->t->set_var('status', $search_result['status']);
-	    		
-	    		
-					$this->t->set_var('status_image', $GLOBALS['phpgw']->common->image('ged', $search_result['status']."-16"));
-			
-					$link_data=null;
-					$link_data['menuaction']='ged.ged_ui.browse';
-					$link_data['focused_id']=$search_result['element_id'];
-					$this->t->set_var('search_link', $GLOBALS['phpgw']->link('/index.php', $link_data));
-	    		
-	    			
-	    		//$nri++;
-	    		$this->t->fp('search_list_block_handle', 'search_list_block', True);   
-	    	}				
-			}
-			else
-				$this->t->set_block('update_file_tpl', 'search_list_block', 'search_list_block_handle');
-		}
-		else
-			$this->t->set_block('update_file_tpl', 'search_list_block', 'search_list_block_handle');
-
-		$this->display_app_header();
-
-		$this->t->pfp('out', 'update_file_tpl');
-		
-		if ( $this->debug('update_file') )
-			print ( "ui_update_file: end.<br>\n");
-		
-
-	}
-	
-	function lock_file()
-	{
-		$element_id=get_var('element_id', array('GET', 'POST'));
-		
-		$this->ged_dm->set_file_lock($element_id, true);
-
-    $link_data=null;
-    $link_data['menuaction']='ged.ged_ui.browse';
-    $link_data['focused_id']=$element_id;
-
-    $GLOBALS['phpgw']->redirect_link('/index.php', $link_data);
-				
-	}
-
-	function unlock_file()
-	{
-		$element_id=get_var('element_id', array('GET', 'POST'));
-		
-		$this->ged_dm->set_file_lock($element_id, false);
-
-    $link_data=null;
-    $link_data['menuaction']='ged.ged_ui.browse';
-    $link_data['focused_id']=$element_id;
-
-    $GLOBALS['phpgw']->redirect_link('/index.php', $link_data);
-				
-	}
-	
 	function delete_file()
 	{
 		
@@ -2122,7 +1514,10 @@ class ged_ui
 	{
 		$element_id=get_var('element_id', array('GET', 'POST'));
 		$update_acl=get_var('update_acl', array('POST'));
+		$statuses=$this->flows->get_app_statuses('ged');
 		
+		//DEBUG
+		//_debug_array($statuses);
 		
 		$this->set_template_defaults();
 
@@ -2133,38 +1528,59 @@ class ged_ui
 		//Update if necessary toussa
 		if ( $update_acl==lang ( "Update AC" ))
 		{
+			//DEBUG
 			//_debug_array( $_POST );
 			$newacl=null;
 			$newacl=get_var('newacl', array('POST'));
 			
-			if ( $newacl['account_id'] !="" && ( $newacl['read']=='on' || $newacl['write']=='on' || $newacl['changeacl']=='on') )
+			if ( $newacl['account_id'] !="" && ( $newacl['read']=='on' || $newacl['write']=='on' || $newacl['delete']=='on' || $newacl['changeacl']=='on') )
 			{
 				$read=null;
 				$write=null;
+				$delete=null;
 				$changeacl=null;
 				$recursive=false;
+				$the_status_array=array();
 				
-				if ( $newacl['read']=='on' )
+				if ( isset($newacl['read']) && $newacl['read']=='on' )
 					$read=1;
 
-				if ( $newacl['write']=='on' )
+				if ( isset($newacl['statuses']) && is_array($newacl['statuses']) )
+				{				
+					foreach ( $newacl['statuses'] as $granted_status_label => $granted_status_value )
+					{
+						if ( $granted_status_value == "on")
+						{
+							$the_status_array[]=$granted_status_label;
+						}
+					}
+				}
+				
+				//DEBUG
+				//_debug_array($the_status_array);
+				
+				if ( isset($newacl['write']) && $newacl['write']=='on' )
 					$write=1;
 				
-				if ( $newacl['changeacl']=='on' )
+				if ( isset($newacl['delete']) && $newacl['delete']=='on' )
+					$delete=1;
+
+				if ( isset($newacl['changeacl']) && $newacl['changeacl']=='on' )
 					$changeacl=1;
 				
-				if ( $newacl['recursive']=='on' )
+				if ( isset($newacl['recursive']) && $newacl['recursive']=='on' )
 							$recursive=true;
 					
-				$this->ged_dm->new_acl($element_id, $newacl['account_id'], $read, $write, $changeacl, $recursive);
+				$this->ged_dm->new_acl($element_id, $newacl['account_id'], $read, $the_status_array, $write, $delete, $changeacl, $recursive);
 			
 			}
-			
-			
 			
 			$acl=null;
 			$acl=get_var('acl', array('POST'));
 			
+			//DEBUG
+			//_debug_array($acl);
+		
 			if ( ! empty ( $acl ) )
 				foreach ( $acl as $acl_id=>$ac )
 				{
@@ -2176,19 +1592,40 @@ class ged_ui
 					if ( ! array_key_exists('write', $ac))
 						$ac['write']='';
 
+					if ( ! array_key_exists('delete', $ac))
+						$ac['delete']='';
+
 					if ( ! array_key_exists('changeacl', $ac))
 						$ac['changeacl']='';
 					
-					if ( $ac['read']=='on' || $ac['write']=='on' || $ac['changeacl']=='on' )
+					if ( $ac['read']=='on' || $ac['write']=='on' || $ac['delete']=='on' || $ac['changeacl']=='on' )
 					{
 						$read=null;
 						$write=null;
+						$delete=null;
 						$changeacl=null;
-						
+						$the_status_array=array();
 						
 						if ( $ac['read']=='on' )
 							$read=1;
 		
+						if ( isset($ac['statuses']) && is_array($ac['statuses']))
+						{
+							foreach ( $ac['statuses'] as $granted_status_label => $granted_status_value )
+							{
+								if ( $granted_status_value == "on")
+								{
+									$the_status_array[]=$granted_status_label;
+								}
+							}
+						}
+						
+						//DEBUG
+						//_debug_array($the_status_array);
+						
+						if ( $ac['delete']=='on' )
+							$delete=1;
+
 						if ( $ac['write']=='on' )
 							$write=1;
 						
@@ -2199,14 +1636,14 @@ class ged_ui
 							if ( $ac['recursive']=='on' )
 								$recursive=true;
 
-						$this->ged_dm->set_acl($acl_id, $read, $write, $changeacl,$recursive);
+						$this->ged_dm->set_acl($acl_id, $read, $the_status_array, $write, $delete, $changeacl,$recursive);
 					}
 					else
 					{
-						if ( $ac['recursive']=='on' )
+						if ( isset($ac['recursive']) && $ac['recursive']=='on' )
 							$recursive=true;
 
-						$this->ged_dm->set_acl($acl_id, 'null', 'null', 'null', $recursive);
+						$this->ged_dm->set_acl($acl_id, 'null', '', 'null', 'null', 'null', $recursive);
 					}
 				
 				}
@@ -2216,7 +1653,21 @@ class ged_ui
 			
 		$acl=$this->ged_dm->get_element_acl ( $element_id );
 		
+		//DEBUG
+		//_debug_array($acl);
+				
+		$this->t->set_block('change_acl_tpl', 'statuses_list', 'statuses_list_handle');
+		
+		if ( ! empty ($statuses))
+			foreach ( $statuses as $status )
+			{
+				$this->t->set_var ( 'status_label', $status);
+				$this->t->fp('statuses_list_handle', 'statuses_list', True);
+			}		
+		
 		$this->t->set_block('change_acl_tpl', 'acl_list', 'acl_list_handle');
+		
+		$this->t->set_block('acl_list', 'acl_list_statuses_list', 'acl_list_statuses_list_handle');
 		
 		$element_info=$this->ged_dm->get_element_info($element_id);
 		
@@ -2230,6 +1681,8 @@ class ged_ui
 		if ( ! empty ($acl))
 			foreach ( $acl as $ac )
 			{
+				$this->t->set_var('acl_list_statuses_list_handle', '');
+
 				$this->t->set_var ( 'account_id', $ac['account_id']);
 				$this->t->set_var ( 'acl_id', $ac['acl_id']);
 				$this->t->set_var ( 'account', $GLOBALS['phpgw']->common->grab_owner_name($ac['account_id']));
@@ -2248,6 +1701,13 @@ class ged_ui
 
 			$this->t->set_var ( 'writeflag', $writeflag);
 
+			if ( $ac['delete']==1)
+					$deleteflag="checked";
+				else
+					$deleteflag="";
+
+			$this->t->set_var ( 'deleteflag', $deleteflag);
+
 				if ( $ac['changeacl']==1)
 					$changeaclflag="checked";
 				else
@@ -2255,6 +1715,24 @@ class ged_ui
 					
 				$this->t->set_var ( 'changeaclflag', $changeaclflag);
 			
+				if ( ! empty ($statuses))
+					foreach ( $statuses as $status )
+					{
+						//DEBUG
+						//_debug_array($ac['statuses']);
+						
+						if ( in_array($status, $ac['statuses']) )
+						{
+							$statusflag='checked';
+						}
+						else
+						{
+							$statusflag='';
+						}
+						$this->t->set_var ( 'status', $status);
+						$this->t->set_var ( 'statusflag', $statusflag);
+						$this->t->fp('acl_list_statuses_list_handle', 'acl_list_statuses_list', True);
+					}		
 			
 				$this->t->fp('acl_list_handle', 'acl_list', True);
 			}
@@ -2277,6 +1755,15 @@ class ged_ui
 				$this->t->fp('accounts_list_handle', 'accounts_list', True);
 			}
 		}
+
+		$this->t->set_block('change_acl_tpl', 'new_statuses_list', 'new_statuses_list_handle');
+
+		if ( ! empty ($statuses))
+			foreach ( $statuses as $status )
+			{
+				$this->t->set_var ( 'status', $status);
+				$this->t->fp('new_statuses_list_handle', 'new_statuses_list', True);
+			}		
 
 		$link_data=null;
 		$link_data['menuaction']='ged.ged_ui.browse';
@@ -2303,10 +1790,10 @@ class ged_ui
 		
 		$flow_object=array(
 			'app' => 'ged',
-			'project_root' => $element['project_root'], 
+			'project_root' => (int)$element['project_root'], 
 			'doc_type' => $element['doc_type'], 
-			'element_id' => $element_id, 
-			'version_id' => $version_id
+			'element_id' => (int)$element_id, 
+			'version_id' => (int)$version_id
 		);
 		$do_transition_result=$this->flows->do_transition($transition, $flow_object);
 		

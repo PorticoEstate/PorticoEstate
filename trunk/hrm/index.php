@@ -7,7 +7,7 @@
 	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/bbb_/ekstern/
 	* @package hrm
- 	* @version $Id: index.php,v 1.3 2006/11/15 14:14:35 sigurdne Exp $
+ 	* @version $Id: index.php 17552 2006-11-15 14:14:35Z sigurdne $
 	*/
 
 	/**

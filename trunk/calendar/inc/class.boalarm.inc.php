@@ -12,7 +12,7 @@
   *  option) any later version.                                              *
   \**************************************************************************/
 
-	/* $Id: class.boalarm.inc.php,v 1.8 2006/12/08 11:37:54 sigurdne Exp $ */
+	/* $Id: class.boalarm.inc.php 18358 2007-11-27 04:43:37Z skwashd $ */
 
 	phpgw::import_class('phpgwapi.datetime');
 

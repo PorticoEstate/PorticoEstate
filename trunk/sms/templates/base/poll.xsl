@@ -1,4 +1,4 @@
-<!-- $Id: poll.xsl,v 1.1 2006/06/08 08:50:58 sigurdne Exp $ -->
+<!-- $Id: poll.xsl 16792 2006-06-08 08:50:58Z sigurdne $ -->
 	<xsl:template name="app_data">
 		<xsl:choose>
 			<xsl:when test="edit">

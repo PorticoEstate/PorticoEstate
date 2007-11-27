@@ -23,8 +23,8 @@
 	* along with this program; if not, write to the Free Software       *
 	* Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.         *
 	\*******************************************************************/
-	/* $Id: class.uibilling.inc.php,v 1.4 2005/05/05 14:31:31 powerstat Exp $ */
-	// $Source: /sources/phpgroupware/bookkeeping/inc/class.uibilling.inc.php,v $
+	/* $Id: class.uibilling.inc.php 15912 2005-05-05 14:32:50Z powerstat $ */
+	// $Source$
 
 	class uibilling
 	{

@@ -65,4 +65,4 @@ o Generate per-directory and per-repository visual branch views,
 o Assign Commit IDs, and view all the changes in a given commit,
   instead of a given file.
 
-$Id: GOALS,v 1.1 2002/06/10 13:01:45 ldw Exp $
+$Id: GOALS 10395 2002-06-10 13:01:47Z ldw $

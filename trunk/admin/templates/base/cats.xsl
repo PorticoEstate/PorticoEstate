@@ -1,4 +1,4 @@
-<!-- $Id: cats.xsl,v 1.2 2006/09/05 10:04:02 skwashd Exp $ -->
+<!-- $Id: cats.xsl 17077 2006-09-05 10:04:02Z skwashd $ -->
 
 	<xsl:template name="cats">
 		<xsl:choose>

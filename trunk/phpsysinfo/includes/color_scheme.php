@@ -17,7 +17,7 @@
 // along with this program; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 //
-// $Id: color_scheme.php,v 1.1.1.1 2001/06/17 17:56:54 lkneschke Exp $
+// $Id: color_scheme.php 6018 2001-06-17 17:56:44Z lkneschke $
 
 // Global Page Colors
 $bgcolor = "#fefefe";

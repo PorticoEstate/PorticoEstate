@@ -7,7 +7,7 @@
 	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
 	* @package tts
 	* @subpackage hooks
-	* @version $Id: hook_manual.inc.php,v 1.5 2005/05/10 16:12:38 powerstat Exp $
+	* @version $Id: hook_manual.inc.php 15932 2005-05-10 16:12:38Z powerstat $
 	*/
 
 // Only Modify the $file variable.....

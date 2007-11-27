@@ -1,4 +1,4 @@
-<!-- $Id: category_form.tpl,v 1.1.1.1 2001/04/02 10:21:19 jengo Exp $ -->
+<!-- $Id: category_form.tpl 3759 2001-04-02 10:21:17Z jengo $ -->
 <!-- BEGIN form -->
 <center>
 <table border="0" width="80%" cellspacing="2" cellpadding="2">

@@ -9,7 +9,7 @@
 	*  option) any later version.                                              *
 	\**************************************************************************/
 
-	/* $Id: hook_acl_manager.inc.php,v 1.7 2006/02/14 08:48:21 skwashd Exp $ */
+	/* $Id: hook_acl_manager.inc.php 16400 2006-02-14 08:48:21Z skwashd $ */
 
 	$GLOBALS['acl_manager']['admin']['site_config_access'] = array(
 		'name' => 'Deny access to site configuration',

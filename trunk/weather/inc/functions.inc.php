@@ -11,7 +11,7 @@
   *  option) any later version.                                              *
   \**************************************************************************/
 
-  /* $Id: functions.inc.php,v 1.27 2003/06/19 21:25:40 gugux Exp $ */
+  /* $Id: functions.inc.php 13074 2003-06-19 21:25:41Z gugux $ */
 
 	define("WEATHER_STATIC",    0);
 	define("WEATHER_SNARFED",   1);

@@ -10,7 +10,7 @@
   *  option) any later version.                                              *
   \**************************************************************************/
 
-    /* $Id: admin_regions.php,v 1.5 2001/12/03 18:01:50 milosch Exp $ */
+    /* $Id: admin_regions.php 8454 2001-12-03 18:01:51Z milosch $ */
 
 	$GLOBALS['phpgw_info']['flags'] = array(
 		'currentapp' => 'weather',

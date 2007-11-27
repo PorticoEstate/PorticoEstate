@@ -1,5 +1,5 @@
 <?php
-// $Id: save.php,v 1.3 2003/03/03 14:16:25 ralfbecker Exp $
+// $Id: save.php 11866 2003-03-03 14:16:25Z ralfbecker $
 
 // The save template is passed an associative array with the following
 // elements:

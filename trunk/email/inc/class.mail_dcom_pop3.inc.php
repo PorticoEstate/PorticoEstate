@@ -5,7 +5,7 @@
 	* @copyright Copyright (C) 2003-2005 Free Software Foundation, Inc. http://www.fsf.org/
 	* @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License
 	* @package email
-	* @version $Id: class.mail_dcom_pop3.inc.php,v 1.15 2005/05/11 19:15:34 powerstat Exp $
+	* @version $Id: class.mail_dcom_pop3.inc.php 15946 2005-05-11 19:15:34Z powerstat $
 	*/
 
 

@@ -10,7 +10,7 @@
   *  option) any later version.                                              *
   \**************************************************************************/
 
-  /* $Id: class.calendar_icap.inc.php,v 1.18 2005/05/15 06:57:37 skwashd Exp $ */
+  /* $Id: class.calendar_icap.inc.php 18358 2007-11-27 04:43:37Z skwashd $ */
 
 phpgw::import_class('calendar.calendar__');
 

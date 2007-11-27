@@ -6,7 +6,7 @@
 	* @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License
 	* @package phpgwapi
 	* @subpackage auth
-	* @version $Id: class.auth_remoteuser.inc.php,v 1.1 2006/10/03 14:05:02 Caeies Exp $
+	* @version $Id: class.auth_remoteuser.inc.php 17321 2006-10-03 14:05:03Z Caeies $
 	*/
 	
 	/**

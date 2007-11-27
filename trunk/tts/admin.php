@@ -5,7 +5,7 @@
 	* @copyright Copyright (C) 2000-2005 Free Software Foundation, Inc. http://www.fsf.org/
 	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
 	* @package tts
-	* @version $Id: admin.php,v 1.5 2006/10/14 05:39:41 skwashd Exp $
+	* @version $Id: admin.php 17413 2006-10-14 05:39:42Z skwashd $
 	*/
 
 

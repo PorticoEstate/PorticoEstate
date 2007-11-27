@@ -7,7 +7,7 @@
 	* @package phpgwapi
 	* @subpackage communication
 	* Please see original header after this one and class.nusoap_base.inc.php
-	* @version $Id: class.nusoap_base.inc.php,v 1.2 2006/12/28 18:03:40 Caeies Exp $
+	* @version $Id: class.nusoap_base.inc.php 17829 2006-12-28 18:03:40Z Caeies $
 	*/
 
 /*
@@ -99,7 +99,7 @@ class phpgwapi_nusoap_base {
 	 * @var string
 	 * @access private
 	 */
-	var $revision = '$Revision: 1.2 $';
+	var $revision = '$Revision: 17829 $';
     /**
      * Current error string (manipulated by getError/setError)
 	 *

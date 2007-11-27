@@ -9,7 +9,7 @@
 	*  option) any later version.                                              *
 	\**************************************************************************/
 
-	/* $Id: tables_baseline.inc.php,v 1.4 2005/05/15 02:16:27 skwashd Exp $ */
+	/* $Id: tables_baseline.inc.php 15965 2005-05-15 02:16:27Z skwashd $ */
 
 	$phpgw_baseline = array(
 		'phpgw_sitemgr_pages' => array(

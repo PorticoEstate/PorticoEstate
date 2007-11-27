@@ -1,4 +1,4 @@
-<!-- $Id: search_field.xsl,v 1.1 2006/03/26 20:00:56 sigurdne Exp $ -->
+<!-- $Id: search_field.xsl 16579 2006-03-26 20:00:56Z sigurdne $ -->
 
 	<xsl:template name="search_field">
 		<xsl:variable name="select_url"><xsl:value-of select="select_action"/></xsl:variable>

@@ -17,7 +17,7 @@
   *  option) any later version.                                              *
   \**************************************************************************/
 
-/* $Id: class.soaddressbook.inc.php,v 1.23 2006/10/31 10:40:42 sigurdne Exp $ */
+/* $Id: class.soaddressbook.inc.php 17521 2006-10-31 10:40:42Z sigurdne $ */
 
 	class soaddressbook
 	{

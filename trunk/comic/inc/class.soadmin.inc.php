@@ -12,7 +12,7 @@
 * option) any later version.                                              *
 \*************************************************************************/
 
-/* $Id: class.soadmin.inc.php,v 1.1 2001/08/02 15:09:32 darw1n Exp $ */
+/* $Id: class.soadmin.inc.php 7026 2001-08-02 15:09:33Z darw1n $ */
 
 class soadmin
 {

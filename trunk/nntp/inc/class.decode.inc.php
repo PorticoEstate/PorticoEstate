@@ -10,7 +10,7 @@
   *  option) any later version.                                              *
   \**************************************************************************/
 
-  /* $Id: class.decode.inc.php,v 1.9 2002/01/27 00:34:37 skeeter Exp $ */
+  /* $Id: class.decode.inc.php 9329 2002-01-27 00:34:59Z skeeter $ */
 
 	class decode
 	{

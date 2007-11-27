@@ -12,7 +12,7 @@
 	*  option) any later version.                                              *
 	\**************************************************************************/
 
-	/* $Id: hook_logout.inc.php,v 1.3 2001/12/10 00:46:01 milosch Exp $ */
+	/* $Id: hook_logout.inc.php 8532 2001-12-10 00:46:01Z milosch $ */
 
 	$GLOBALS['phpgw']->db->query("delete from phpgw_reg_accounts where reg_dla <= '"
 		. (time() - 7200) . "'",__LINE__,__FILE__);

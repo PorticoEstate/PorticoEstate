@@ -9,7 +9,7 @@
 	* option) any later version.                                              *
 	\*************************************************************************/
 
-	/* $Id: setup.inc.php,v 1.12 2006/03/11 23:20:47 skwashd Exp $ */
+	/* $Id: setup.inc.php 16493 2006-03-11 23:24:02Z skwashd $ */
 
 	$setup_info['cart']['name']		= 'cart';
 	$setup_info['cart']['version']		= '0.8.1';

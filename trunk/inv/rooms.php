@@ -9,7 +9,7 @@
 	* Free Software Foundation; either version 2 of the License, or (at your   *
 	* option) any later version.                                               *
 	\**************************************************************************/
-	/* $Id: rooms.php,v 1.7 2001/07/03 14:44:51 bettina Exp $ */
+	/* $Id: rooms.php 6496 2001-07-03 14:44:51Z bettina $ */
 
 	$phpgw_info['flags'] = array('currentapp' => 'inv',
 					'enable_nextmatchs_class' => True);

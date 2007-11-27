@@ -10,7 +10,7 @@
 	* @internal a modified version of fud_emsg in FUDForum's scripts/maillist.php - http://cvs.prohost.org/c/index.cgi/FUDforum/getfile/install/forum_data/scripts/maillist.php?v=1.72
 	* @package phpgwapi
 	* @subpackage mail
-	* @version $Id: class.mail2array.inc.php,v 1.3 2006/12/27 12:25:09 skwashd Exp $
+	* @version $Id: class.mail2array.inc.php 17790 2006-12-27 12:25:09Z skwashd $
 	*/
 
 	class phpgwapi_mail2array

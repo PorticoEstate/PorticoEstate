@@ -74,7 +74,7 @@
 	 * CVSLib base class.
 	 *
 	 * @author  Anil Madhavapeddy <anil@recoil.org>
-	 * @version $Revision: 1.8 $
+	 * @version $Revision: 10077 $
 	 * @since   Chora 0.1
 	 * @package chora
 	 */

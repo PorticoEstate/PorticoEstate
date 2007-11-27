@@ -12,7 +12,7 @@
 	*  option) any later version.                                              *
 	\**************************************************************************/
 
-	/* $Id: tables_baseline.inc.php,v 1.1.1.1 2001/06/14 23:48:33 jengo Exp $ */
+	/* $Id: tables_baseline.inc.php 5907 2001-06-14 23:48:32Z jengo $ */
 
 	$phpgw_baseline = array(
 		'phpgw_messenger_messages' => array(

@@ -25,7 +25,7 @@
 	* along with this program; if not, write to the Free Software       *
 	* Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.         *
 	\*******************************************************************/
-	/* $Id: class.uistock.inc.php,v 1.4 2007/01/24 16:13:29 Caeies Exp $ */
+	/* $Id: class.uistock.inc.php 17904 2007-01-24 16:13:29Z Caeies $ */
 
 	class uistock
 	{

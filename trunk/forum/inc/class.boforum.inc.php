@@ -11,7 +11,7 @@
 	*  option) any later version.                                                 *
 	\*****************************************************************************/
 
-	/* $Id: class.boforum.inc.php,v 1.13 2007/09/27 12:07:49 skwashd Exp $ */
+	/* $Id: class.boforum.inc.php 18290 2007-09-27 12:07:49Z skwashd $ */
 
 	class boforum
 	{

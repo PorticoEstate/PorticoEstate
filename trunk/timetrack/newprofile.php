@@ -10,7 +10,7 @@
   *  option) any later version.                                              *
   \**************************************************************************/
 
-  /* $Id: newprofile.php,v 1.7 2002/03/18 03:18:04 rschader Exp $ */
+  /* $Id: newprofile.php 9782 2002-03-18 03:18:05Z rschader $ */
 
   // Update complete for phpgroupware 0.9.10 - 4/17/2001 (api calls for accounts and contacts)
   // Note: The ideal way to handle all this would be to use a hook into the create account pages

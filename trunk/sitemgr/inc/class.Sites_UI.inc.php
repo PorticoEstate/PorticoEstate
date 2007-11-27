@@ -9,7 +9,7 @@
   *  option) any later version.                                              *
   \**************************************************************************/
 
-  /* $Id: class.Sites_UI.inc.php,v 1.8 2005/05/15 02:16:27 skwashd Exp $ */
+  /* $Id: class.Sites_UI.inc.php 15965 2005-05-15 02:16:27Z skwashd $ */
 
 	//copied from class admin.uiservers
 	class Sites_UI

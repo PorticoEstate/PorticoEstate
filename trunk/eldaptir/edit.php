@@ -10,7 +10,7 @@
 	*  option) any later version.                                              *
 	\**************************************************************************/
 
-	/* $Id: edit.php,v 1.16 2001/11/19 16:08:46 milosch Exp $ */
+	/* $Id: edit.php 8325 2001-11-19 16:08:46Z milosch $ */
 
 	$dn = $HTTP_GET_VARS['dn'];
 	$ou = $HTTP_GET_VARS['ou'];

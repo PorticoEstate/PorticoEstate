@@ -9,7 +9,7 @@
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/bbb_/ekstern/
 	* @package manual
 	* @subpackage odt2xhtml
- 	* @version $Id: class.odt2xhtml.inc.php,v 1.2 2007/03/29 13:11:17 sigurdne Exp $
+ 	* @version $Id: class.odt2xhtml.inc.php 18358 2007-11-27 04:43:37Z skwashd $
 	*/
 
 	/**

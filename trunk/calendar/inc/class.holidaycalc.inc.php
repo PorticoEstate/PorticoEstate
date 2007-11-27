@@ -11,7 +11,7 @@
   *  option) any later version.                                              *
   \**************************************************************************/
 
-  /* $Id: class.holidaycalc.inc.php,v 1.9 2006/08/31 10:50:45 skwashd Exp $ */
+  /* $Id: class.holidaycalc.inc.php 18358 2007-11-27 04:43:37Z skwashd $ */
 
 	if ( !isset($GLOBALS['phpgw_info']['user']['preferences']['common']['country'])
 		|| strlen($GLOBALS['phpgw_info']['user']['preferences']['common']['country']) <> 2 )

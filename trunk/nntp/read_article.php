@@ -10,7 +10,7 @@
   *  option) any later version.                                              *
   \**************************************************************************/
 
-  /* $Id: read_article.php,v 1.26 2001/12/21 03:59:13 milosch Exp $ */
+  /* $Id: read_article.php 8699 2001-12-21 03:59:13Z milosch $ */
 
 	$phpgw_flags = Array(
 		'currentapp'       => 'nntp',

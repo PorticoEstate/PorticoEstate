@@ -6,7 +6,7 @@
 	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
 	* @package tts
 	* @subpackage manual
-	* @version $Id: view.php,v 1.2 2005/05/10 16:12:38 powerstat Exp $
+	* @version $Id: view.php 15932 2005-05-10 16:12:38Z powerstat $
 	*/
 
 	$phpgw_flags = Array(

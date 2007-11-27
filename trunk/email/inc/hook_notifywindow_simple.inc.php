@@ -6,7 +6,7 @@
 	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
 	* @package email
 	* @subpackage hooks
-	* @version $Id: hook_notifywindow_simple.inc.php,v 1.12 2005/05/11 14:08:27 powerstat Exp $
+	* @version $Id: hook_notifywindow_simple.inc.php 15941 2005-05-11 14:08:27Z powerstat $
 	*/
 
 	$d1 = strtolower(substr(APP_INC,0,3));

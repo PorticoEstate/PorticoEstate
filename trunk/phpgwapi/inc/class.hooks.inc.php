@@ -6,7 +6,7 @@
 	* @license http://www.fsf.org/licenses/lgpl.html GNU Lesser General Public License
 	* @package phpgwapi
 	* @subpackage application
-	* @version $Id: class.hooks.inc.php,v 1.25 2007/03/06 14:30:39 sigurdne Exp $
+	* @version $Id: class.hooks.inc.php 18013 2007-03-06 14:30:39Z sigurdne $
 	*/
 
 	/**

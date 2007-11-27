@@ -24,7 +24,7 @@
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/bbb_/ekstern/
 	* @package property
 	* @subpackage core
- 	* @version $Id: class.custom_functions.inc.php,v 1.10 2007/02/27 10:11:29 sigurdne Exp $
+ 	* @version $Id: class.custom_functions.inc.php 18358 2007-11-27 04:43:37Z skwashd $
 	*/
 
 	/**

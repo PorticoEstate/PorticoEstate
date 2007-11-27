@@ -5,7 +5,7 @@
 	* @license http://www.fsf.org/licenses/lgpl.html GNU Lesser General Public License
 	* @package phpgwapi
 	* @subpackage vfs
-	* @version $Id: class.vfs.inc.php,v 1.15 2006/08/16 14:18:45 skwashd Exp $
+	* @version $Id: class.vfs.inc.php 16964 2006-08-16 14:18:45Z skwashd $
 	*/
 
 	if ( !isset($GLOBALS['phpgw_info']['server']['file_repository']) 

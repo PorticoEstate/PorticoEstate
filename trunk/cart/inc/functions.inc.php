@@ -9,7 +9,7 @@
 	* Free Software Foundation; either version 2 of the License, or (at your   *
 	* option) any later version.                                               *
 	\**************************************************************************/
-	/* $Id: functions.inc.php,v 1.3 2002/03/11 11:04:57 milosch Exp $ */
+	/* $Id: functions.inc.php 9701 2002-03-11 11:04:57Z milosch $ */
 
 	// selects the tax from products category
 	function select_tax($cat_id)

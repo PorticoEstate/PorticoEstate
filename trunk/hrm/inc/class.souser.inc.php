@@ -8,7 +8,7 @@
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/bbb_/ekstern/
 	* @package hrm
 	* @subpackage user
- 	* @version $Id: class.souser.inc.php,v 1.18 2007/01/02 09:35:14 sigurdne Exp $
+ 	* @version $Id: class.souser.inc.php 18358 2007-11-27 04:43:37Z skwashd $
 	*/
 
 	/**
@@ -22,7 +22,7 @@
 		private $db;
 		var $account;
 
-		function hrm_souser()
+		public function __construct()
 		{
 			$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->account		= $GLOBALS['phpgw_info']['user']['account_id'];
@@ -31,9 +31,9 @@
 
 			$this->acl		= CreateObject('phpgwapi.acl');
 			$this->grants		= $this->acl->get_grants('hrm','.user');
-			$this->left_join	= $this->bocommon->left_join;
-			$this->join		= $this->bocommon->join;
-			$this->like		= $this->bocommon->like;
+			$this->left_join	=& $this->bocommon->left_join;
+			$this->join			=& $this->bocommon->join;
+			$this->like			=& $this->bocommon->like;
 		}
 
 		function read($data)

@@ -14,7 +14,7 @@
 *  option) any later version.                                              *
  \**************************************************************************/
 
-/* $Id: index.php,v 1.1.1.1 2002/11/26 17:57:47 ceb Exp $ */
+/* $Id: index.php 11580 2002-11-26 17:57:08Z ceb $ */
 
 	$GLOBALS['phpgw_info']['flags'] = array
 	(

@@ -10,7 +10,7 @@
 	* Free Software Foundation; either version 2 of the License, or (at your   *
 	* option) any later version.                                               *
 	\**************************************************************************/
-	/* $Id: archiv.php,v 1.13 2002/10/13 22:05:31 ceb Exp $ */
+	/* $Id: archiv.php 11225 2002-10-13 22:05:53Z ceb $ */
 
 	$phpgw_info['flags'] = array('currentapp' => 'inv',
 					'enable_nextmatchs_class' => True);

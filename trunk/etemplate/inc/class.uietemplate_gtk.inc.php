@@ -5,7 +5,7 @@
 * @author Ralf Becker <ralf.becker@outdoortraining.de>
 * @license http://www.gnu.org/licenses/gpl.html GNU General Public License
 * @package etemplate
-* @version $Id: class.uietemplate_gtk.inc.php,v 1.16 2007/02/13 12:59:32 sigurdne Exp $
+* @version $Id: class.uietemplate_gtk.inc.php 17947 2007-02-13 12:59:32Z sigurdne $
 */
 	include_once(PHPGW_INCLUDE_ROOT . '/etemplate/inc/class.boetemplate.inc.php');
 

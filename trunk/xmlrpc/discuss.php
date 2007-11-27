@@ -9,7 +9,7 @@
 *  option) any later version.                                              *
 \**************************************************************************/
 
-/* $Id: discuss.php,v 1.3 2001/12/05 16:27:28 milosch Exp $ */
+/* $Id: discuss.php 8495 2001-12-05 16:27:28Z milosch $ */
 
 	exit;
 	$GLOBALS['phpgw_info'] = array();

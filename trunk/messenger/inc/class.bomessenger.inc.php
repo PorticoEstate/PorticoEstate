@@ -12,7 +12,7 @@
 	*  option) any later version.                                              *
 	\**************************************************************************/
 
-	/* $Id: class.bomessenger.inc.php,v 1.8 2007/01/24 16:51:08 Caeies Exp $ */
+	/* $Id: class.bomessenger.inc.php 17907 2007-01-24 16:51:08Z Caeies $ */
 
 	class bomessenger
 	{

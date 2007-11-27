@@ -1,4 +1,4 @@
-$Id: README,v 1.4 2001/05/28 19:38:40 darw1n Exp $
+$Id: README 5181 2001-05-28 19:38:40Z darw1n $
 
 
 Bookkeeping started on the 5th of march 2001 as a bookkeeping application for phpgroupware. After two months it became clear to me that a major rewrite was needed. On the 6th of may 2001 I started the rewrite.

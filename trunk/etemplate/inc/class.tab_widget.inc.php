@@ -5,7 +5,7 @@
 * @author Ralf Becker <ralf.becker@outdoortraining.de>
 * @license http://www.gnu.org/licenses/gpl.html GNU General Public License
 * @package etemplate
-* @version $Id: class.tab_widget.inc.php,v 1.16 2007/02/13 12:59:32 sigurdne Exp $
+* @version $Id: class.tab_widget.inc.php 17947 2007-02-13 12:59:32Z sigurdne $
 */
 	/**
 	 * widget that shows one row of tabs and an other row with the eTemplate of the selected tab

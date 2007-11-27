@@ -9,7 +9,7 @@
 	* @copyright Copyright (C) 2003-2005 Free Software Foundation, Inc. http://www.fsf.org/
 	* @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License
 	* @package email
-	* @version $Id: class.mail_msg_base.inc.php,v 1.91 2007/02/20 09:55:53 sigurdne Exp $
+	* @version $Id: class.mail_msg_base.inc.php 17964 2007-02-20 09:55:53Z sigurdne $
 	* @internal Based on AngleMail http://www.anglemail.org/
 	* @internal Originally Based on Aeromail http://the.cushman.net/
 	*/

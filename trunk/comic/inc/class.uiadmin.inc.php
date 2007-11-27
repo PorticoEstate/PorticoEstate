@@ -12,7 +12,7 @@
 * option) any later version.                                              *
 \*************************************************************************/
 
-/* $Id: class.uiadmin.inc.php,v 1.4 2007/01/24 17:24:46 Caeies Exp $ */
+/* $Id: class.uiadmin.inc.php 17909 2007-01-24 17:26:17Z Caeies $ */
 
 class uiadmin
 {

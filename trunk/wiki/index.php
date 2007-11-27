@@ -1,5 +1,5 @@
 <?php
-// $Id: index.php,v 1.7 2005/05/15 12:55:31 skwashd Exp $
+// $Id: index.php 15975 2005-05-15 12:55:31Z skwashd $
 
 $GLOBALS['phpgw_info']['flags'] = array(
 	'currentapp' => 'wiki',

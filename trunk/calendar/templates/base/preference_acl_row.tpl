@@ -1,4 +1,4 @@
-<!-- $Id: preference_acl_row.tpl,v 1.1 2006/07/28 03:30:43 skwashd Exp $ -->
+<!-- $Id: preference_acl_row.tpl 16925 2006-07-28 03:30:44Z skwashd $ -->
    <tr bgcolor="{row_color}">
     <td>{user}</td>
     <td align="center"><input type="checkbox" name="{read}" value="Y"{read_selected}></td>

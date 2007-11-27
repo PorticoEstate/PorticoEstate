@@ -10,7 +10,7 @@
   *  option) any later version.                                              *
   \**************************************************************************/
 
-  /* $Id: class.payment_shared.inc.php,v 1.1 2002/03/20 12:49:41 milosch Exp $ */
+  /* $Id: class.payment_shared.inc.php 9800 2002-03-20 12:49:41Z milosch $ */
 
 	class payment_ extends payment
 	{

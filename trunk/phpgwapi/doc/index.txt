@@ -852,6 +852,6 @@ such a success.
 The most recent version of this document can be found at docs.phpgroupware.org
 Copyright © 2000-2004 Free_Software_Foundation_Inc, distributed under the terms
 of the GNU_Free_Documentation_License
-Source: $Source: /sources/phpgwapi/phpgwapi/doc/index.txt,v $
-Version: $Revision: 1.4 $
-Last Modified: $Date: 2004/12/30 06:47:27 $ by $Author: skwashd $
+Source: $Source$
+Version: $Revision: 15562 $
+Last Modified: $Date: 2004-12-30 17:47:35 +1100 (Thu, 30 Dec 2004) $ by $Author: skwashd $

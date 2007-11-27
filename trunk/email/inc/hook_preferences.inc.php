@@ -7,7 +7,7 @@
 	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
 	* @package email
 	* @subpackage hooks
-	* @version $Id: hook_preferences.inc.php,v 1.18 2006/09/14 17:49:49 sigurdne Exp $
+	* @version $Id: hook_preferences.inc.php 17152 2006-09-14 17:50:00Z sigurdne $
 	*/
 
 {

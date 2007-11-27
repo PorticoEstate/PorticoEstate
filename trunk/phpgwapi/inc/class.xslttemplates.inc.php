@@ -8,7 +8,7 @@
 	* @license http://www.gnu.org/licenses/lpl.html GNU General Public License
 	* @package phpgwapi
 	* @subpackage gui
-	* @version $Id: class.xslttemplates.inc.php,v 1.35 2006/11/10 20:48:06 sigurdne Exp $
+	* @version $Id: class.xslttemplates.inc.php 18358 2007-11-27 04:43:37Z skwashd $
 	*/
 
 	if( !extension_loaded('xsl') )

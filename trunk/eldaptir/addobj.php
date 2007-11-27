@@ -10,7 +10,7 @@
   *  option) any later version.                                              *
   \**************************************************************************/
 
-	/* $Id: addobj.php,v 1.2 2001/11/19 15:50:05 milosch Exp $ */
+	/* $Id: addobj.php 8324 2001-11-19 15:50:05Z milosch $ */
 
 	$GLOBALS['phpgw_info']['flags']['currentapp'] = 'eldaptir';
 	include('../header.inc.php');

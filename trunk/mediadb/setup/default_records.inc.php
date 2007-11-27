@@ -8,7 +8,7 @@
   *  Free Software Foundation; either version 2 of the License, or (at your  *
   *  option) any later version.                                              *
   \**************************************************************************/
-  /* $Id: default_records.inc.php,v 1.2 2002/03/04 07:18:45 milosch Exp $ */
+  /* $Id: default_records.inc.php 9642 2002-03-04 07:18:46Z milosch $ */
 
 	$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_mediadb_cat VALUES (1,'default',2,
 		'media_data.data_title,media_artist.artist_name,media_format.format_desc,media_data.data_date,media.media_idate,media_genre.genre_desc,media_rating.rating_desc,media_data.data_score,media.media_owner,media_data.data_comments,imdb,edit,avail',

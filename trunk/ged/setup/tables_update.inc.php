@@ -19,6 +19,7 @@
 	$test[]='0.9.18.004';
 	$test[]='0.9.18.005';
 	$test[]='0.9.18.006';
+	$test[]='0.9.18.007';	
 					
 	function ged_upgrade0_9_16_000()
 	{
@@ -331,13 +332,13 @@
 		
 		$GLOBALS['phpgw_setup']->oProc->query ("INSERT INTO `phpgw_flows_statuses` VALUES ('working','ged','working')" );
 		$GLOBALS['phpgw_setup']->oProc->query ("INSERT INTO `phpgw_flows_statuses` VALUES ('pending_for_technical_review','ged','pending for technical review')" );
-		$GLOBALS['phpgw_setup']->oProc->query ("INSERT INTO `phpgw_flows_statuses` VALUES ('pending_for_quality_review','ged','pending for quality review')," );
-		$GLOBALS['phpgw_setup']->oProc->query ("INSERT INTO `phpgw_flows_statuses` VALUES ('ready_for_delivery','ged','ready for delivery')," );
-		$GLOBALS['phpgw_setup']->oProc->query ("INSERT INTO `phpgw_flows_statuses` VALUES ('pending_for_acceptation','ged','pending for final acceptation')," );
-		$GLOBALS['phpgw_setup']->oProc->query ("INSERT INTO `phpgw_flows_statuses` VALUES ('current','ged','current')," );
-		$GLOBALS['phpgw_setup']->oProc->query ("INSERT INTO `phpgw_flows_statuses` VALUES ('refused','ged','refused')," );
-		$GLOBALS['phpgw_setup']->oProc->query ("INSERT INTO `phpgw_flows_statuses` VALUES ('obsolete','ged','obsolete')," );
-		$GLOBALS['phpgw_setup']->oProc->query ("INSERT INTO `phpgw_flows_statuses` VALUES ('alert','ged','alert');" );
+		$GLOBALS['phpgw_setup']->oProc->query ("INSERT INTO `phpgw_flows_statuses` VALUES ('pending_for_quality_review','ged','pending for quality review')" );
+		$GLOBALS['phpgw_setup']->oProc->query ("INSERT INTO `phpgw_flows_statuses` VALUES ('ready_for_delivery','ged','ready for delivery')" );
+		$GLOBALS['phpgw_setup']->oProc->query ("INSERT INTO `phpgw_flows_statuses` VALUES ('pending_for_acceptation','ged','pending for final acceptation')" );
+		$GLOBALS['phpgw_setup']->oProc->query ("INSERT INTO `phpgw_flows_statuses` VALUES ('current','ged','current')" );
+		$GLOBALS['phpgw_setup']->oProc->query ("INSERT INTO `phpgw_flows_statuses` VALUES ('refused','ged','refused')" );
+		$GLOBALS['phpgw_setup']->oProc->query ("INSERT INTO `phpgw_flows_statuses` VALUES ('obsolete','ged','obsolete')" );
+		$GLOBALS['phpgw_setup']->oProc->query ("INSERT INTO `phpgw_flows_statuses` VALUES ('alert','ged','alert')" );
 		
 		// ged default flow : transitions
 		
@@ -359,10 +360,9 @@
 		$GLOBALS['phpgw_setup']->oProc->query ("INSERT INTO `phpgw_flows_transitions` VALUES (16, 1, 'working', 'working', 'update', 'update')" );
 		$GLOBALS['phpgw_setup']->oProc->query ("INSERT INTO `phpgw_flows_transitions` VALUES (17, 1, 'current', 'current', 'update', 'update')" );
 		$GLOBALS['phpgw_setup']->oProc->query ("INSERT INTO `phpgw_flows_transitions` VALUES (18, 1, 'refused', 'refused', 'update', 'update')" );
-		$GLOBALS['phpgw_setup']->oProc->query ("INSERT INTO `phpgw_flows_transitions` VALUES (19, 1, 'working', 'locked', 'lock', 'set_status')" );
-		$GLOBALS['phpgw_setup']->oProc->query ("INSERT INTO `phpgw_flows_transitions` VALUES (20, 1, 'locked', 'working', 'unlock', 'set_status')" );
-		$GLOBALS['phpgw_setup']->oProc->query ("INSERT INTO `phpgw_flows_transitions` VALUES (21, 1, 'locked', 'locked', 'update', 'update')" );
-
+		$GLOBALS['phpgw_setup']->oProc->query ("INSERT INTO `phpgw_flows_transitions` VALUES (19, 1, 'working', 'working_locked', 'lock', 'set_status')" );
+		$GLOBALS['phpgw_setup']->oProc->query ("INSERT INTO `phpgw_flows_transitions` VALUES (20, 1, 'working_locked', 'working', 'unlock', 'set_status')" );
+		$GLOBALS['phpgw_setup']->oProc->query ("INSERT INTO `phpgw_flows_transitions` VALUES (21, 1, 'working_locked', 'working_locked', 'update', 'update')" );
 		
 		// ged default flow : transitions custom values
 		
@@ -372,6 +372,10 @@
 		$GLOBALS['phpgw_setup']->oProc->query ("INSERT INTO `phpgw_flows_transitions_custom_values` VALUES (4,6,'review_file_type','fiche-relecture-externe')" );
 		$GLOBALS['phpgw_setup']->oProc->query ("INSERT INTO `phpgw_flows_transitions_custom_values` VALUES (5,7,'review_file_type','fiche-relecture-interne')" );
 		$GLOBALS['phpgw_setup']->oProc->query ("INSERT INTO `phpgw_flows_transitions_custom_values` VALUES (6,8,'review_file_type','fiche-relecture-interne')" );
+		$GLOBALS['phpgw_setup']->oProc->query ("INSERT INTO `phpgw_flows_transitions_custom_values` VALUES (7, 16, 'update_mode', 'update')" );
+		$GLOBALS['phpgw_setup']->oProc->query ("INSERT INTO `phpgw_flows_transitions_custom_values` VALUES (8, 17, 'update_mode', 'new')" );
+		$GLOBALS['phpgw_setup']->oProc->query ("INSERT INTO `phpgw_flows_transitions_custom_values` VALUES (9, 18, 'update_mode', 'new')" );
+		$GLOBALS['phpgw_setup']->oProc->query ("INSERT INTO `phpgw_flows_transitions_custom_values` VALUES (10, 21, 'update_mode', 'update')" );	
 		
 		// ged default flow : triggers
 		
@@ -379,6 +383,10 @@
 		$GLOBALS['phpgw_setup']->oProc->query ("INSERT INTO `phpgw_flows_triggers` VALUES (2,11,'ged','flow_client','apply_transition_to_linking_versions_with_link_type','a:2:{s:10:\"transition\";i:13;s:9:\"link_type\";s:10:\"dependancy\";}')" );
 		$GLOBALS['phpgw_setup']->oProc->query ("INSERT INTO `phpgw_flows_triggers` VALUES (3,4,'ged','flow_client','apply_transition_to_linked_versions_with_link_type','a:2:{s:10:\"transition\";i:4;s:9:\"link_type\";s:8:\"delivery\";}')" );
 		$GLOBALS['phpgw_setup']->oProc->query ("INSERT INTO `phpgw_flows_triggers` VALUES (4,5,'ged','flow_client','apply_transition_to_previous_versions_matching_status','a:1:{s:10:\"transition\";i:15;}')" );
+		$GLOBALS['phpgw_setup']->oProc->query ("INSERT INTO `phpgw_flows_triggers` VALUES (5,19, 'ged', 'flows', 'grant_role', 'a:1:{s:10:\"transition\";i:20;}')" );
+		$GLOBALS['phpgw_setup']->oProc->query ("INSERT INTO `phpgw_flows_triggers` VALUES (6,20, 'ged', 'flows', 'remove_role', 'a:1:{s:10:\"transition\";i:20;}')" );
+		$GLOBALS['phpgw_setup']->oProc->query ("INSERT INTO `phpgw_flows_triggers` VALUES (7,19, 'ged', 'flows', 'grant_role', 'a:1:{s:10:\"transition\";i:21;}')" );
+		$GLOBALS['phpgw_setup']->oProc->query ("INSERT INTO `phpgw_flows_triggers` VALUES (8,20, 'ged', 'flows', 'remove_role', 'a:1:{s:10:\"transition\";i:21;}')" );
 		
 		// ged default flow : conditions
 
@@ -402,14 +410,51 @@
 		$GLOBALS['phpgw_setup']->oProc->query ("INSERT INTO `phpgw_flows_roles` VALUES (13,13,6,NULL)" );
 		$GLOBALS['phpgw_setup']->oProc->query ("INSERT INTO `phpgw_flows_roles` VALUES (14,14,6,NULL)" );
 		$GLOBALS['phpgw_setup']->oProc->query ("INSERT INTO `phpgw_flows_roles` VALUES (15,15,6,NULL)" );
-		$GLOBALS['phpgw_setup']->oProc->query ("INSERT INTO `phpgw_flows_roles` VALUES (16,16,16,NULL)" );
-		$GLOBALS['phpgw_setup']->oProc->query ("INSERT INTO `phpgw_flows_roles` VALUES (17,17,6, NULL)" );
-		$GLOBALS['phpgw_setup']->oProc->query ("INSERT INTO `phpgw_flows_roles` VALUES (18,18,6, NULL)" );
-		$GLOBALS['phpgw_setup']->oProc->query ("INSERT INTO `phpgw_flows_roles` VALUES (19,19,6, NULL)" );
-		$GLOBALS['phpgw_setup']->oProc->query ("INSERT INTO `phpgw_flows_roles` VALUES (20,20,6, NULL)" );
-		$GLOBALS['phpgw_setup']->oProc->query ("INSERT INTO `phpgw_flows_roles` VALUES (21,21,6, NULL)" );
+		$GLOBALS['phpgw_setup']->oProc->query ("INSERT INTO `phpgw_flows_roles` VALUES (16,16,6,NULL)" );
+		$GLOBALS['phpgw_setup']->oProc->query ("INSERT INTO `phpgw_flows_roles` VALUES (17,17,6,NULL)" );
+		$GLOBALS['phpgw_setup']->oProc->query ("INSERT INTO `phpgw_flows_roles` VALUES (18,18,6,NULL)" );
+		$GLOBALS['phpgw_setup']->oProc->query ("INSERT INTO `phpgw_flows_roles` VALUES (19,19,6,NULL)" );
+		$GLOBALS['phpgw_setup']->oProc->query ("INSERT INTO `phpgw_flows_roles` VALUES (20,20,6,NULL)" );
+		$GLOBALS['phpgw_setup']->oProc->query ("INSERT INTO `phpgw_flows_roles` VALUES (21,21,6,NULL)" );
+
+		$GLOBALS['phpgw_setup']->oProc->query ("INSERT INTO `phpgw_flows_roles` VALUES (22,1,2,NULL)" );
+		$GLOBALS['phpgw_setup']->oProc->query ("INSERT INTO `phpgw_flows_roles` VALUES (23,2,2,NULL)" );
+		$GLOBALS['phpgw_setup']->oProc->query ("INSERT INTO `phpgw_flows_roles` VALUES (24,3,2,NULL)" );
+		$GLOBALS['phpgw_setup']->oProc->query ("INSERT INTO `phpgw_flows_roles` VALUES (25,4,2,NULL)" );
+		$GLOBALS['phpgw_setup']->oProc->query ("INSERT INTO `phpgw_flows_roles` VALUES (26,5,2,NULL)" );
+		$GLOBALS['phpgw_setup']->oProc->query ("INSERT INTO `phpgw_flows_roles` VALUES (27,6,2,NULL)" );
+		$GLOBALS['phpgw_setup']->oProc->query ("INSERT INTO `phpgw_flows_roles` VALUES (28,7,2,NULL)" );
+		$GLOBALS['phpgw_setup']->oProc->query ("INSERT INTO `phpgw_flows_roles` VALUES (29,8,2,NULL)" );
+		$GLOBALS['phpgw_setup']->oProc->query ("INSERT INTO `phpgw_flows_roles` VALUES (30,9,2,NULL)" );
+		$GLOBALS['phpgw_setup']->oProc->query ("INSERT INTO `phpgw_flows_roles` VALUES (31,10,2,NULL)" );
+		$GLOBALS['phpgw_setup']->oProc->query ("INSERT INTO `phpgw_flows_roles` VALUES (32,11,2,NULL)" );
+		$GLOBALS['phpgw_setup']->oProc->query ("INSERT INTO `phpgw_flows_roles` VALUES (33,12,2,NULL)" );
+		$GLOBALS['phpgw_setup']->oProc->query ("INSERT INTO `phpgw_flows_roles` VALUES (34,13,2,NULL)" );
+		$GLOBALS['phpgw_setup']->oProc->query ("INSERT INTO `phpgw_flows_roles` VALUES (35,14,2,NULL)" );
+		$GLOBALS['phpgw_setup']->oProc->query ("INSERT INTO `phpgw_flows_roles` VALUES (36,15,2,NULL)" );
+		$GLOBALS['phpgw_setup']->oProc->query ("INSERT INTO `phpgw_flows_roles` VALUES (37,16,2,NULL)" );
+		$GLOBALS['phpgw_setup']->oProc->query ("INSERT INTO `phpgw_flows_roles` VALUES (38,17,2,NULL)" );
+		$GLOBALS['phpgw_setup']->oProc->query ("INSERT INTO `phpgw_flows_roles` VALUES (39,18,2,NULL)" );
+		$GLOBALS['phpgw_setup']->oProc->query ("INSERT INTO `phpgw_flows_roles` VALUES (40,19,2,NULL)" );
+		$GLOBALS['phpgw_setup']->oProc->query ("INSERT INTO `phpgw_flows_roles` VALUES (41,20,2,NULL)" );
+		$GLOBALS['phpgw_setup']->oProc->query ("INSERT INTO `phpgw_flows_roles` VALUES (42,21,2,NULL)" );
 		
 		$GLOBALS['setup_info']['ged']['currentver']='0.9.18.007';
+		return $GLOBALS['setup_info']['ged']['currentver'];			
+		
+	}	
+	
+	function ged_upgrade0_9_18_007()
+	{
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('ged_acl','aclstatuses',
+		array('type' => 'text','nullable' => True));
+		
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('ged_acl','acldelete',
+		array('type' => 'int', 'precision' => 2,'nullable' => True,'default' => '0'));
+		
+
+		$GLOBALS['setup_info']['ged']['currentver']='0.9.18.008';
 		return $GLOBALS['setup_info']['ged']['currentver'];			
 		
 	}	

@@ -19,7 +19,7 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-// $Id: system_footer.php,v 1.4 2007/08/14 11:44:09 skwashd Exp $
+// $Id: system_footer.php 18212 2007-08-14 11:44:16Z skwashd $
 
 if( ! defined( 'IN_PHPSYSINFO' ) ) {
 	die( "No Hacking" );

@@ -10,7 +10,7 @@
   *  option) any later version.                                              *
   \**************************************************************************/
 
-    /* $Id: genre.php,v 1.5 2001/06/17 20:49:28 milosch Exp $ */
+    /* $Id: genre.php 6023 2001-06-17 20:49:29Z milosch $ */
 {
     
     $phpgw_info["flags"] = array("currentapp" => "admin",

@@ -14,7 +14,7 @@
 	* @copyright Copyright (C) 2003-2005 Free Software Foundation, Inc. http://www.fsf.org/
 	* @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License
 	* @package email
-	* @version $Id: class.spell_struct.inc.php,v 1.5 2005/05/11 18:06:59 powerstat Exp $
+	* @version $Id: class.spell_struct.inc.php 15943 2005-05-11 18:06:59Z powerstat $
 	* @internal Based on AngleMail http://www.anglemail.org/
 	*/
 

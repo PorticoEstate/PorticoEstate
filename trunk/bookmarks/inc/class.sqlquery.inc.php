@@ -7,7 +7,7 @@
 	* @copyright Portions Copyright (C) 2005 Free Software Foundation, Inc. http://www.fsf.org/
 	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
 	* @package bookmarks
-	* @version $Id: class.sqlquery.inc.php,v 1.7 2005/06/21 15:25:16 ceb Exp $
+	* @version $Id: class.sqlquery.inc.php 16027 2005-06-21 15:25:16Z ceb $
 	* @todo Class must be renamed to avoid conflicts
 	*/
 

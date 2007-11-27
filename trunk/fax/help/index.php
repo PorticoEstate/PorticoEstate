@@ -14,7 +14,7 @@
 *  option) any later version.                                              *
 \**************************************************************************/
 
-  /* $Id: index.php,v 1.2 2002/11/27 15:50:40 stagno Exp $ */
+  /* $Id: index.php 11590 2002-11-27 15:50:40Z stagno $ */
 
 	$phpgw_flags = array('currentapp' => 'manual');
 	

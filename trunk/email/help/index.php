@@ -6,7 +6,7 @@
 	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
 	* @package email
 	* @subpackage manual
-	* @version $Id: index.php,v 1.11 2005/05/11 14:08:27 powerstat Exp $
+	* @version $Id: index.php 15941 2005-05-11 14:08:27Z powerstat $
 	*/
 
 	$phpgw_flags = Array(

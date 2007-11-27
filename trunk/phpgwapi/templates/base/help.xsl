@@ -1,4 +1,4 @@
-<!-- $Id: help.xsl,v 1.1 2007/02/20 13:35:11 sigurdne Exp $ -->
+<!-- $Id: help.xsl 17967 2007-02-20 13:35:11Z sigurdne $ -->
 
 	<xsl:template name="help">
 		<xsl:apply-templates select="help_values"/>

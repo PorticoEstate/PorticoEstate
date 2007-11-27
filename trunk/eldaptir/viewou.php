@@ -10,7 +10,7 @@
   *  option) any later version.                                              *
   \**************************************************************************/
 
-  /* $Id: viewou.php,v 1.23 2005/05/04 13:37:14 powerstat Exp $ */
+  /* $Id: viewou.php 15899 2005-05-04 13:39:58Z powerstat $ */
 
 	$GLOBALS['phpgw_info'] = array();
 	$GLOBALS['phpgw_info']['flags'] = array(

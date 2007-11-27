@@ -1,6 +1,6 @@
 <?php
   /*******************************************************************
-  * $Id: class.rss.inc.php,v 1.1 2002/03/31 12:20:55 milosch Exp $
+  * $Id: class.rss.inc.php 9832 2002-03-31 12:20:55Z milosch $
   *
   * class.RSS.php3
   * Version: 0.91 (natch!)

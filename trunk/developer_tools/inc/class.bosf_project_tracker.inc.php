@@ -9,7 +9,7 @@
 	*  option) any later version.                                              *
 	\**************************************************************************/
 
-	/* $Id: class.bosf_project_tracker.inc.php,v 1.5 2002/04/30 18:39:53 skeeter Exp $ */
+	/* $Id: class.bosf_project_tracker.inc.php 10126 2002-04-30 18:39:53Z skeeter $ */
 
 	class bosf_project_tracker
 	{

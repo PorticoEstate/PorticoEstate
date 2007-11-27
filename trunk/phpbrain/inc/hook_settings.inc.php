@@ -6,7 +6,7 @@
 	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
 	* @package phpbrain
 	* @subpackage hooks
-	* @version $Id: hook_settings.inc.php,v 1.1 2006/05/09 05:49:38 skwashd Exp $
+	* @version $Id: hook_settings.inc.php 16714 2006-05-09 05:49:38Z skwashd $
 	*/
 
 	$show_tree = array(

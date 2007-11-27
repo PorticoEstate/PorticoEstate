@@ -13,7 +13,7 @@
 	* the Free Software Foundation; either version 2 of the License, or    *
 	* at your option) any later version.                                   *
 	\**********************************************************************/
-	/* $Id: class.solink.inc.php,v 1.17 2007/02/13 15:30:58 sigurdne Exp $ */
+	/* $Id: class.solink.inc.php 17950 2007-02-13 15:30:58Z sigurdne $ */
 
 	/*!
 	@class solink

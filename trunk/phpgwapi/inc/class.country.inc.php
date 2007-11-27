@@ -9,7 +9,7 @@
 	* @interal do not edit, edit and run phpgwapi/doc/generate-class-country.php to regenerate this class
 	* @package phpgwapi
 	* @subpackage contacts
-	* @version $Id: class.country.inc.php,v 1.8 2006/09/27 02:47:54 skwashd Exp $
+	* @version $Id: class.country.inc.php 18358 2007-11-27 04:43:37Z skwashd $
 	*/
 
 	/**

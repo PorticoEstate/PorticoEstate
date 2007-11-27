@@ -6,7 +6,7 @@
 	* @copyright Copyright (C) 2000-2005 Free Software Foundation, Inc. http://www.fsf.org/
 	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
 	* @package preferences
-	* @version $Id: index.php,v 1.38 2006/11/27 08:39:53 sigurdne Exp $
+	* @version $Id: index.php 17602 2006-11-27 08:39:53Z sigurdne $
 	*/
 
 	$phpgw_info = array();

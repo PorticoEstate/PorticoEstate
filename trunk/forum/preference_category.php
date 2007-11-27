@@ -10,7 +10,7 @@
 	*  option) any later version.                                                 *
 	\*****************************************************************************/
 
-	/* $Id: preference_category.php,v 1.4 2001/07/14 01:44:06 jengo Exp $ */
+	/* $Id: preference_category.php 6777 2001-07-14 01:44:06Z jengo $ */
 
   $phpgw_info["flags"]["currentapp"] = "forum";
   if($action) {

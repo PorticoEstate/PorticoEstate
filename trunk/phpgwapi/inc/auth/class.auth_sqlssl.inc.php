@@ -7,7 +7,7 @@
 	* @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License
 	* @package phpgwapi
 	* @subpackage accounts
-	* @version $Id: class.auth_sqlssl.inc.php,v 1.2 2006/09/03 06:15:27 skwashd Exp $
+	* @version $Id: class.auth_sqlssl.inc.php 17062 2006-09-03 06:15:27Z skwashd $
 	*/
 
 	/**

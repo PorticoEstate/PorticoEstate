@@ -7,7 +7,7 @@
 	* @license http://www.fsf.org/licenses/lgpl.html GNU Lesser General Public License
 	* @package phpgwapi
 	* @subpackage application
-	* @version $Id: class.setup_translation.inc.php,v 1.9 2006/11/02 09:56:05 sigurdne Exp $
+	* @version $Id: class.setup_translation.inc.php 18358 2007-11-27 04:43:37Z skwashd $
 	*/
 
 	if (!defined('MAX_MESSAGE_ID_LENGTH'))

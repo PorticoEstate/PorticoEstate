@@ -15,7 +15,7 @@
  * the Free Software Foundation; either version 2 of the License, or 	*
  * at your option) any later version.					*
  \**********************************************************************/
- /* $Id: phpGtk_test.php,v 1.5 2007/02/10 16:03:45 sigurdne Exp $ */
+ /* $Id: phpGtk_test.php 17936 2007-02-10 16:03:46Z sigurdne $ */
 
 //echo "Hello World!!!\n";
 

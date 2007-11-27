@@ -10,7 +10,7 @@
   *  option) any later version.                                              *
   \**************************************************************************/
 
-  /* $Id: class.payment.inc.php,v 1.2 2006/09/09 14:39:14 skwashd Exp $ */
+  /* $Id: class.payment.inc.php 17119 2006-09-09 14:39:14Z skwashd $ */
 
 	$payment = '';
 	if ( !isset($GLOBALS['phpgw_info']['server']['cart_payment_type'])

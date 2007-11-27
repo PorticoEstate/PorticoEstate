@@ -10,7 +10,7 @@
 	*  option) any later version.                                              *
 	\**************************************************************************/
 
-	/* $Id: editentry.php,v 1.9 2001/11/13 03:53:16 milosch Exp $ */
+	/* $Id: editentry.php 8257 2001-11-13 03:53:16Z milosch $ */
 
 	if(empty($querytype) || !$querytype)
 	{

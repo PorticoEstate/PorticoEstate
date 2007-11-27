@@ -9,7 +9,7 @@
 	*  option) any later version.                                              *
 	\**************************************************************************/
 
-	/* $Id: header.inc.php,v 1.11 2007/01/24 17:24:05 Caeies Exp $ */
+	/* $Id: header.inc.php 17909 2007-01-24 17:26:17Z Caeies $ */
 
 	$GLOBALS['phpgw']->template->set_root(PHPGW_APP_TPL);
 	$GLOBALS['phpgw']->template->set_file(array('header' => 'header.tpl'));

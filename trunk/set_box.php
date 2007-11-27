@@ -7,7 +7,7 @@
 	* @copyright Copyright (C) 2000-2005 Free Software Foundation, Inc. http://www.fsf.org/
 	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
 	* @package phpgroupware
-	* @version $Id: set_box.php,v 1.7 2006/12/26 11:35:34 skwashd Exp $
+	* @version $Id: set_box.php 17762 2006-12-26 11:35:34Z skwashd $
 	*/
 
 	$GLOBALS['phpgw_info']['flags'] = array

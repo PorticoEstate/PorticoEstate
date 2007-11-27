@@ -1,4 +1,4 @@
-<!-- $Id: form_elements.xsl,v 1.2 2006/12/17 23:47:50 skwashd Exp $ -->
+<!-- $Id: form_elements.xsl 17714 2006-12-17 23:47:50Z skwashd $ -->
 
 <xsl:template name="form_elements">
 	<xsl:choose>

@@ -9,7 +9,7 @@
   *  option) any later version.                                              *
   \**************************************************************************/
 
-  /* $Id: tables_update.inc.php,v 1.4 2007/02/10 16:03:46 sigurdne Exp $ */
+  /* $Id: tables_update.inc.php 17936 2007-02-10 16:03:46Z sigurdne $ */
 
 	$test[] = '0.9.13.001';
 	function etemplate_upgrade0_9_13_001()

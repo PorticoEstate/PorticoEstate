@@ -6,7 +6,7 @@
 	* @copyright Copyright (C) 2000-2005 Free Software Foundation, Inc. http://www.fsf.org/
 	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
 	* @package preferences
-	* @version $Id: hook_deleteaccount.inc.php,v 1.7 2006/09/05 10:53:09 skwashd Exp $
+	* @version $Id: hook_deleteaccount.inc.php 17078 2006-09-05 10:53:09Z skwashd $
 	*/
 
 	// Delete all records for a user

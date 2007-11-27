@@ -11,7 +11,7 @@
 	* Free Software Foundation; either version 2 of the License, or (at your    *
 	* option) any later version.                                                *
 	\***************************************************************************/
-	/* $Id: class.uicompose.inc.php,v 1.14 2007/10/11 13:36:19 skwashd Exp $ */
+	/* $Id: class.uicompose.inc.php 18315 2007-10-11 13:36:19Z skwashd $ */
 
 	class uicompose
 	{

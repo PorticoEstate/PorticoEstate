@@ -1,5 +1,5 @@
 <?php
-// $Id: find.php,v 1.6 2003/07/02 22:00:40 ralfbecker Exp $
+// $Id: find.php 13158 2003-07-02 22:00:40Z ralfbecker $
 
 require_once(TemplateDir . '/common.php');
 

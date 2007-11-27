@@ -1,4 +1,4 @@
-<!-- $Id: bill_list.tpl,v 1.1 2006/03/12 10:48:44 skwashd Exp $ -->
+<!-- $Id: bill_list.tpl 16496 2006-03-12 10:48:44Z skwashd $ -->
 
 {app_header}
 

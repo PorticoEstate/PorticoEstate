@@ -7,8 +7,8 @@
 	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
 	* @package todo
 	* @subpackage hooks
-	* @version $Id: hook_admin.inc.php,v 1.9 2006/09/09 09:04:51 skwashd Exp $
-	* @internal $Source: /sources/phpgroupware/todo/inc/hook_admin.inc.php,v $
+	* @version $Id: hook_admin.inc.php 17106 2006-09-09 09:04:58Z skwashd $
+	* @internal $Source$
 	*/
 
 	$file = array

@@ -1,6 +1,6 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" 
 	"http://www.w3.org/TR/REC-html40/loose.dtd">
-<!-- $Id: accounts_popup.tpl,v 1.6 2007/02/06 14:19:54 sigurdne Exp $ -->
+<!-- $Id: accounts_popup.tpl 17919 2007-02-06 14:23:06Z sigurdne $ -->
 <html lang="en">
 	<head>
 		<title>{title}</title>

@@ -1,4 +1,4 @@
-<!-- $Id: listsites.tpl,v 1.3 2001/04/03 16:01:33 bettina Exp $ -->
+<!-- $Id: listsites.tpl 3817 2001-04-03 16:01:33Z bettina $ -->
 <center>
 <table border="0" cellspacing="2" cellpadding="2">
  <tr>

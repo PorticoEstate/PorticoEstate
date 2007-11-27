@@ -1,5 +1,5 @@
 <?php
-	/* $Id: hook_deleteaccount.inc.php,v 1.1 2006/05/09 05:49:38 skwashd Exp $ */
+	/* $Id: hook_deleteaccount.inc.php 16714 2006-05-09 05:49:38Z skwashd $ */
 
 	if((int)$GLOBALS['hook_values']['account_id'] > 0)
 	{

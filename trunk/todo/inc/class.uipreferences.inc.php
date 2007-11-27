@@ -8,7 +8,7 @@
 	* @copyright Copyright (C) 2002,2005 Free Software Foundation, Inc. http://www.fsf.org/
 	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
 	* @package todo
-	* @version $Id: class.uipreferences.inc.php,v 1.3 2005/05/10 15:48:57 powerstat Exp $
+	* @version $Id: class.uipreferences.inc.php 15931 2005-05-10 15:48:58Z powerstat $
 	* @internal Based on Webcalendar by Craig Knudsen http://www.radix.net/~cknudsen
 	*/
 

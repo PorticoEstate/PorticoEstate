@@ -21,7 +21,7 @@
   * Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA            *
   \**************************************************************************/
 
-  /* $Id: class.vmailmgr.inc.php,v 1.2 2002/05/02 01:29:52 seek3r Exp $ */
+  /* $Id: class.vmailmgr.inc.php 10150 2002-05-02 01:29:52Z seek3r $ */
 
 	class vmailmgr
 	{

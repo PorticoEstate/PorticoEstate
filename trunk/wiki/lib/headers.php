@@ -1,5 +1,5 @@
 <?php
-// $Id: headers.php,v 1.3 2003/03/03 14:16:24 ralfbecker Exp $
+// $Id: headers.php 11866 2003-03-03 14:16:25Z ralfbecker $
 
 // Generate headers saying not to assume this page won't change.
 // The page's last-edited time stamp is currently not used.  This caused

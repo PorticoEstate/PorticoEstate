@@ -1,4 +1,4 @@
-<!-- $Id: groups.xsl,v 1.2 2006/03/25 12:39:55 skwashd Exp $ -->
+<!-- $Id: groups.xsl 16569 2006-03-25 12:39:55Z skwashd $ -->
 
 <xsl:template name="groups">
 	<xsl:choose>

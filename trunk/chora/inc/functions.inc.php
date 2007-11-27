@@ -10,7 +10,7 @@
   *  option) any later version.                                              *
   \**************************************************************************/
 
-  /* $Id: functions.inc.php,v 1.11 2002/04/28 20:11:33 milosch Exp $ */
+  /* $Id: functions.inc.php 10087 2002-04-28 20:11:33Z milosch $ */
 
 	$conf['paths']['co']          = '/usr/bin/co';
 	$conf['paths']['rcs']         = '/usr/bin/rcs';

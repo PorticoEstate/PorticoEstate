@@ -1,4 +1,4 @@
-<!-- $Id: preference_acl.tpl,v 1.4 2001/06/01 01:11:40 bettina Exp $ -->
+<!-- $Id: preference_acl.tpl 5341 2001-06-01 01:11:40Z bettina $ -->
 {errors}
 {title}
 <table border="0" align="center" width="70%">

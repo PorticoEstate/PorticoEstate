@@ -10,7 +10,7 @@
   *  option) any later version.                                              *
   \**************************************************************************/
 
-	/* $Id: class.calendar_holiday.inc.php,v 1.27 2006/11/10 13:34:30 sigurdne Exp $ */
+	/* $Id: class.calendar_holiday.inc.php 18358 2007-11-27 04:43:37Z skwashd $ */
 
 class calendar_holiday
 {

@@ -9,7 +9,7 @@
 # *  Free Software Foundation; either version 2 of the License, or (at your  *
 # *  option) any later version.                                              *
 # \**************************************************************************/
-# $Id: stalesessions.pl,v 1.4 2004/12/30 06:47:26 skwashd Exp $
+# $Id: stalesessions.pl 15562 2004-12-30 06:47:35Z skwashd $
 
 use DBI;
 

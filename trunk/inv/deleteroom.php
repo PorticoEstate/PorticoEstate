@@ -9,7 +9,7 @@
 	* Free Software Foundation; either version 2 of the License, or (at your   *
 	* option) any later version.                                               *
 	\**************************************************************************/
-	/* $Id: deleteroom.php,v 1.4 2001/06/07 02:17:59 bettina Exp $ */
+	/* $Id: deleteroom.php 5564 2001-06-07 02:17:59Z bettina $ */
 
 	if ($confirm)
 	{

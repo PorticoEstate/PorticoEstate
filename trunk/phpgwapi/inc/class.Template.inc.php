@@ -8,7 +8,7 @@
  * @license http://www.fsf.org/licenses/lgpl.html GNU Lesser General Public License
  * @package phpgwapi
  * @subpackage gui
- * @version $Id: class.Template.inc.php,v 1.43 2006/09/25 06:28:32 skwashd Exp $
+ * @version $Id: class.Template.inc.php 17222 2006-09-25 06:28:32Z skwashd $
  * @internal Based on phplib
  *
  */

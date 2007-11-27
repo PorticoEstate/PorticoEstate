@@ -1,4 +1,4 @@
--- $Id: drop_tables.pgsql,v 1.1 2002/06/10 13:01:46 ldw Exp $
+-- $Id: drop_tables.pgsql 10395 2002-06-10 13:01:47Z ldw $
 
 drop table phpgw_inv_products;
 drop sequence phpgw_inv_products_con_seq;

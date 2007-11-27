@@ -1,4 +1,4 @@
-<!-- $Id: month_day.tpl,v 1.1 2006/07/28 03:30:43 skwashd Exp $    month_day -->
+<!-- $Id: month_day.tpl 16925 2006-07-28 03:30:44Z skwashd $    month_day -->
 <!-- BEGIN m_w_table -->
 <table width="100%" border="0" bordercolor="#FFFFFF" cellspacing="2" cellpadding="2" cols="{cols}">
  {row}

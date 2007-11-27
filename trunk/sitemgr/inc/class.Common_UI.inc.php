@@ -7,7 +7,7 @@
 	* Free Software Foundation; either version 2 of the License, or (at your    *
 	* option) any later version.                                                *
 	\***************************************************************************/
-	/* $Id: class.Common_UI.inc.php,v 1.19 2005/05/15 02:16:27 skwashd Exp $ */
+	/* $Id: class.Common_UI.inc.php 15965 2005-05-15 02:16:27Z skwashd $ */
 	
 	class Common_UI
 	{

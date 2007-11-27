@@ -9,7 +9,7 @@
 	* @copyright Copyright (C) 2003-2006 Free Software Foundation, Inc. http://www.fsf.org/
 	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
 	* @package email
-	* @version $Id: class.uipreferences.inc.php,v 1.25 2006/12/20 14:37:53 sigurdne Exp $
+	* @version $Id: class.uipreferences.inc.php 17742 2006-12-20 14:37:53Z sigurdne $
 	* @internal Based on AngleMail http://www.anglemail.org/
 	* @internal Based on Aeromail http://the.cushman.net/
 	*/

@@ -10,7 +10,7 @@
   #  option) any later version.                                              *
   #**************************************************************************/
 
-  # $Id: gateway.pl,v 1.1 2002/08/31 02:31:16 milosch Exp $ #
+  # $Id: gateway.pl 10759 2002-08-31 02:31:16Z milosch $ #
 
 	# This daemon listens on the selected port.  It then allows for simple
 	#  login to a phpGroupWare server in user or server mode.  With some

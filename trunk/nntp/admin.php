@@ -10,7 +10,7 @@
   *  option) any later version.                                              *
   \**************************************************************************/
 
-	/* $Id: admin.php,v 1.26 2002/09/15 23:23:02 skeeter Exp $ */
+	/* $Id: admin.php 10901 2002-09-15 23:23:02Z skeeter $ */
 
 	if ((isset($submit) && $submit) && (isset($nntplist) && $nntplist))
 	{

@@ -9,7 +9,7 @@
 	*  option) any later version.                                              *
 	\**************************************************************************/
 
-	/* $Id: class.solog.inc.php,v 1.11 2006/09/19 15:16:32 skwashd Exp $ */
+	/* $Id: class.solog.inc.php 17183 2006-09-19 15:16:42Z skwashd $ */
 
 	class solog
 	{

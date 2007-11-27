@@ -1,5 +1,5 @@
 <?php
-// $Id: diff.php,v 1.3 2003/03/03 14:16:24 ralfbecker Exp $
+// $Id: diff.php 11866 2003-03-03 14:16:25Z ralfbecker $
 
 // Compute the difference between two sets of text.
 function diff_compute($text1, $text2)

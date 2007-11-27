@@ -1,4 +1,4 @@
-<!-- $Id: no_access.xsl,v 1.2 2006/05/23 13:02:12 sigurdne Exp $ -->
+<!-- $Id: no_access.xsl 16753 2006-05-23 13:02:42Z sigurdne $ -->
 
 	<xsl:template match="no_access">
 		

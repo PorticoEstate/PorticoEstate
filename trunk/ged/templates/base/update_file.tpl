@@ -11,7 +11,7 @@
 </td>
 </tr>			
 <tr>
-<td style="vertical-align: top; width: 50px;">{lang_name}<br>
+<td style="vertical-align: top; width: 50px;">{lang_name} :<br>
 </td>
 <td style="vertical-align: top;"><input type="text" default_class="{input_default_class}"  focused_class="{input_active_class}" name="{file_name_field}" value="{file_name_value}" size="40" />
 </td>
@@ -24,9 +24,7 @@
 <td style="vertical-align: top;">{select_type} (CARE : if you change this field with a chrono type, reference will be overriden)
 </td>
 </tr>
-<td>
-  {lang_reference} : 
-</td>
+<td>{lang_reference} :</td>
 <td>  
   <input type="text" default_class="{input_default_class}"  focused_class="{input_active_class}" name="{referenceq_field}" value="{new_reference}" size="40" maxlength="40"/>
 </td>
@@ -74,18 +72,17 @@
 </td>
 </tr>
 <tr>
-<td style="vertical-align: top; width: 50px;">Description<br>
+<td>
+  {lang_version} :
 </td>
-<td style="vertical-align: top;"><textarea name="{version_description_field}" name="description" rows="10" cols="50" wrap="off" >{version_description_value}</textarea>
+<td>  
+  <input type="text" default_class="{input_default_class}"  focused_class="{input_active_class}" name="{major_field}" value="{major_value}" size="2" maxlength="2"/> . <input type="text" default_class="{input_default_class}"  focused_class="{input_active_class}" name="{minor_field}" value="{minor_value}" size="2" maxlength="2"/>
 </td>
 </tr>
 <tr>
-<td style="vertical-align: top; width: 50px;">type<br>
+<td style="vertical-align: top; width: 50px;">Description<br>
 </td>
-<td style="vertical-align: top;">
-<!-- BEGIN version_type_block -->
-{version_type_label} <input type="radio" name="{version_type_field}" value="{version_type_value}" {version_type_checked} /> 
-<!-- END version_type_block -->  
+<td style="vertical-align: top;"><textarea name="{version_description_field}" name="description" rows="10" cols="50" wrap="off" >{version_description_value}</textarea>
 </td>
 </tr>
 </table>

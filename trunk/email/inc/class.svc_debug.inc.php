@@ -7,7 +7,7 @@
 	* @copyright Copyright (C) 2003-2005 Free Software Foundation, Inc. http://www.fsf.org/
 	* @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License
 	* @package email
-	* @version $Id: class.svc_debug.inc.php,v 1.5 2006/08/30 16:25:28 skwashd Exp $
+	* @version $Id: class.svc_debug.inc.php 17039 2006-08-30 16:27:50Z skwashd $
 	* @internal Based on AngleMail http://www.anglemail.org/
 	*/
 

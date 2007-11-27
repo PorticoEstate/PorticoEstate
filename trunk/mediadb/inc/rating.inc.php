@@ -10,7 +10,7 @@
   *  option) any later version.                                              *
   \**************************************************************************/
 
-  /* $Id: rating.inc.php,v 1.4 2001/06/17 20:49:29 milosch Exp $ */
+  /* $Id: rating.inc.php 6023 2001-06-17 20:49:29Z milosch $ */
 
 function add_rating_entry($order, $sort, $filter, $start, $query, $qfield)
 {

@@ -7,7 +7,7 @@
 	* @copyright Copyright (C) 2000-2005 Free Software Foundation, Inc. http://www.fsf.org/
 	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
 	* @package phpgroupware
-	* @version $Id: logout.php,v 1.30 2006/09/09 11:35:16 skwashd Exp $
+	* @version $Id: logout.php 18358 2007-11-27 04:43:37Z skwashd $
 	*/
 
 	$GLOBALS['phpgw_info']        = array();

@@ -19,7 +19,7 @@
 
 // This class was created by Z. Frombach ( zoltan at frombach dot com )
 
-// $Id: class.mbmon.inc.php,v 1.1 2005/11/19 05:29:55 skwashd Exp $
+// $Id: class.mbmon.inc.php 16207 2005-11-19 05:29:54Z skwashd $
 
 class mbinfo {
 	var $lines;

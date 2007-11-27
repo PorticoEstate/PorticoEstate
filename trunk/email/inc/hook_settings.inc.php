@@ -6,7 +6,7 @@
 	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
 	* @package email
 	* @subpackage hooks
-	* @version $Id: hook_settings.inc.php,v 1.7 2006/09/25 13:07:06 skwashd Exp $
+	* @version $Id: hook_settings.inc.php 17231 2006-09-25 13:07:06Z skwashd $
 	*/
 	
 	list(,$acctnum) = explode('/',$_GET['prefix']);

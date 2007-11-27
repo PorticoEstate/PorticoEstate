@@ -13,7 +13,7 @@
   * This file should be generated for you. It should never be edited by hand *
   \**************************************************************************/
 
-  /* $Id: tables_current.inc.php,v 1.4 2001/09/24 22:11:09 jengo Exp $ */
+  /* $Id: tables_current.inc.php 7928 2001-09-24 22:11:09Z jengo $ */
 
   // table array for registration
 	$phpgw_baseline = array(

@@ -10,7 +10,7 @@
 	*  option) any later version.                                              *
 	\**************************************************************************/
 
-	/* $Id: header.inc.php,v 1.4 2001/11/13 03:56:36 milosch Exp $ */
+	/* $Id: header.inc.php 8258 2001-11-13 03:56:36Z milosch $ */
 
 	// header for phonelog application
 	// start with status list

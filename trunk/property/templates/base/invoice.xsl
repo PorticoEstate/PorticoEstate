@@ -1,4 +1,4 @@
-<!-- $Id: invoice.xsl,v 1.23 2007/01/05 14:33:36 sigurdne Exp $ -->
+<!-- $Id: invoice.xsl 18358 2007-11-27 04:43:37Z skwashd $ -->
 
 	<xsl:template name="app_data">
 		<xsl:choose>

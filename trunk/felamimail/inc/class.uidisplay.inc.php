@@ -11,7 +11,7 @@
 	* Free Software Foundation; either version 2 of the License, or (at your    *
 	* option) any later version.                                                *
 	\***************************************************************************/
-	/* $Id: class.uidisplay.inc.php,v 1.13 2007/02/23 14:45:08 sigurdne Exp $ */
+	/* $Id: class.uidisplay.inc.php 17988 2007-02-23 14:45:08Z sigurdne $ */
 
 	class uidisplay
 	{

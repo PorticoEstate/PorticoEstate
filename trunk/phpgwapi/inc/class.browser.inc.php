@@ -7,7 +7,7 @@
 	* @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License
 	* @package phpgwapi
 	* @subpackage network
-	* @version $Id: class.browser.inc.php,v 1.22 2006/08/29 14:57:16 skwashd Exp $
+	* @version $Id: class.browser.inc.php 17026 2006-08-29 14:57:16Z skwashd $
 	* @internal Majority of code borrowed from Sourceforge 2.5
 	*/
 

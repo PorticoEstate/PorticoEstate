@@ -11,7 +11,7 @@
 	* @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License
 	* @package phpgwapi
 	* @subpackage accounts
-	* @version $Id: class.accounts_ldap.inc.php,v 1.14 2006/10/24 09:20:17 Caeies Exp $
+	* @version $Id: class.accounts_ldap.inc.php 18358 2007-11-27 04:43:37Z skwashd $
 	*/
 
 	/**

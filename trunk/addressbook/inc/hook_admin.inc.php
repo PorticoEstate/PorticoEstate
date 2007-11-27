@@ -10,8 +10,8 @@
 	*  option) any later version.                                              *
 	\**************************************************************************/
 
-	// $Id: hook_admin.inc.php,v 1.19 2006/09/09 09:04:48 skwashd Exp $
-	// $Source: /sources/phpgroupware/addressbook/inc/hook_admin.inc.php,v $
+	// $Id: hook_admin.inc.php 17106 2006-09-09 09:04:58Z skwashd $
+	// $Source$
 
 	// Only Modify the $file and $title variables.....
 	$title = $appname;

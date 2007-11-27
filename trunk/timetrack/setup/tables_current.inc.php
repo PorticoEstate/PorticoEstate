@@ -13,7 +13,7 @@
   * This file should be generated for you. It should never be edited by hand *
   \**************************************************************************/
 
-  /* $Id: tables_current.inc.php,v 1.9 2002/04/26 02:55:29 rschader Exp $ */
+  /* $Id: tables_current.inc.php 10051 2002-04-26 02:55:29Z rschader $ */
 
   // table array for timetrack
 	$phpgw_baseline = array(

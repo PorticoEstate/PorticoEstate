@@ -8,7 +8,7 @@
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/bbb_/ekstern/
 	* @package sms
 	* @subpackage core
- 	* @version $Id: class.bocommon.inc.php,v 1.5 2007/03/10 15:21:59 sigurdne Exp $
+ 	* @version $Id: class.bocommon.inc.php 18358 2007-11-27 04:43:37Z skwashd $
 	*/
 
 	/**
@@ -55,7 +55,7 @@
 		function sms_bocommon()
 		{
 			$this->currentapp		= 'sms';
-			$this->socommon			= CreateObject('sms.socommon');
+			$this->socommon			= createObject('sms.socommon');
 			$this->account			= $GLOBALS['phpgw_info']['user']['account_id'];
 
 			$this->join			= $this->socommon->join;
@@ -475,6 +475,7 @@
 		}
 
 		function new_db()
-		{			return clone($GLOBALS['phpgw']->db);
+		{
+			return clone($GLOBALS['phpgw']->db);
 		}
 	}

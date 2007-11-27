@@ -7,7 +7,7 @@
 	 * @copyright Copyright (c) 2007 Free Software Foundation, Inc.
 	 * @license   GNU General Public License 3 or later
 	 * @package   syncml
-	 * @version   $Id: syncml.php,v 1.6 2007/09/03 15:23:06 johang Exp $
+	 * @version   $Id: syncml.php 18259 2007-09-03 15:23:06Z johang $
 	 */
 
 	ob_start();

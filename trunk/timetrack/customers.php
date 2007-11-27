@@ -10,7 +10,7 @@
   *  option) any later version.                                              *
   \**************************************************************************/
 
-  /* $Id: customers.php,v 1.8 2002/03/18 03:18:04 rschader Exp $ */
+  /* $Id: customers.php 9782 2002-03-18 03:18:05Z rschader $ */
 
   $GLOBALS['phpgw_info']["flags"]["enable_nextmatchs_class"] = "True";
   $GLOBALS['phpgw_info']["flags"]["currentapp"] = "timetrack";

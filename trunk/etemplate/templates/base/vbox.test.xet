@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<!-- $Id: vbox.test.xet,v 1.2 2007/02/10 16:03:46 sigurdne Exp $ -->
+<!-- $Id: vbox.test.xet 17936 2007-02-10 16:03:46Z sigurdne $ -->
 <overlay>
 	<grid id="etemplate.vbox.test" template="" lang="" group="" version="" border="1">
 		<columns>

@@ -12,7 +12,7 @@
  *  option) any later version.                                              *
  \**************************************************************************/
 
-/* $Id: class.uiaddressbook.inc.php,v 1.80 2007/09/21 17:40:38 sigurdne Exp $ */
+/* $Id: class.uiaddressbook.inc.php 18358 2007-11-27 04:43:37Z skwashd $ */
 
 
 phpgw::import_class('phpgwapi.datetime');

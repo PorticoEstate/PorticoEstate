@@ -23,7 +23,7 @@
 	* along with this program; if not, write to the Free Software       *
 	* Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.         *
 	\*******************************************************************/
-	/* $Id: script_form.tpl,v 1.27 2002/02/04 01:39:55 ceb Exp $ */
+	/* $Id: script_form.tpl 9406 2002-02-04 01:40:12Z ceb $ */
 
 	function get_archives($dir)
 	{

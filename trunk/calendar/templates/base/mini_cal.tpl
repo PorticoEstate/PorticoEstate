@@ -1,4 +1,4 @@
-<!-- $Id: mini_cal.tpl,v 1.1 2006/07/28 03:30:43 skwashd Exp $ -->
+<!-- $Id: mini_cal.tpl 16925 2006-07-28 03:30:44Z skwashd $ -->
 <!-- BEGIN mini_cal -->
 <table border="0" cellspacing="0" cellpadding="0" valign="top" width="80" cols="7">
  <tr valign="middle">

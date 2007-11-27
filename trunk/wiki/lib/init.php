@@ -1,5 +1,5 @@
 <?php
-// $Id: init.php,v 1.10 2006/07/25 00:02:21 skwashd Exp $
+// $Id: init.php 16913 2006-07-25 00:02:21Z skwashd $
 
 // General initialization code.
 

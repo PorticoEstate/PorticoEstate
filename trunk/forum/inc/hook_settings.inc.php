@@ -9,7 +9,7 @@
 	*  option) any later version.                                              *
 	\**************************************************************************/
 
-	/* $Id: hook_settings.inc.php,v 1.1 2001/10/03 00:03:18 jengo Exp $ */
+	/* $Id: hook_settings.inc.php 8051 2001-10-03 00:03:18Z jengo $ */
 
 	$default_view = array(
 		'threads'   => lang('Threaded'),

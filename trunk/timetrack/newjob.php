@@ -10,7 +10,7 @@
   *  option) any later version.                                              *
   \**************************************************************************/
 
-  /* $Id: newjob.php,v 1.16 2002/03/18 03:18:04 rschader Exp $ */
+  /* $Id: newjob.php 9782 2002-03-18 03:18:05Z rschader $ */
   // Update complete for phpgroupware 0.9.10 - 4/17/2001 (api calls for accounts and contacts)
 
  if ($submit_job) {

@@ -10,7 +10,7 @@
   *  option) any later version.                                              *
   \**************************************************************************/
 
-  /* $Id: hook_add_def_pref.inc.php,v 1.4 2005/05/15 06:57:37 skwashd Exp $ */
+  /* $Id: hook_add_def_pref.inc.php 15968 2005-05-15 06:57:38Z skwashd $ */
   
   global $pref;
   $pref->change("calendar","weekstarts","Monday");

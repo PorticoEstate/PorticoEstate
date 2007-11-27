@@ -8,7 +8,7 @@
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/bbb_/ekstern/
 	* @package property
 	* @subpackage custom
- 	* @version $Id: update_phpgw.php,v 1.2 2007/10/11 19:40:29 sigurdne Exp $
+ 	* @version $Id: update_phpgw.php 18358 2007-11-27 04:43:37Z skwashd $
 	*/
 
 	/**

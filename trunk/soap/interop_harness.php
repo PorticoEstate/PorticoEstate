@@ -10,7 +10,7 @@
 *  option) any later version.                                              *
 \**************************************************************************/
 
-/* $Id: interop_harness.php,v 1.4 2007/05/23 13:14:12 Caeies Exp $ */
+/* $Id: interop_harness.php 18147 2007-05-23 13:14:20Z Caeies $ */
 
 	$GLOBALS['phpgw_info']['flags'] = array(
 		'disable_Template_class' => True,

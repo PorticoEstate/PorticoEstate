@@ -1,4 +1,4 @@
-$Id: INSTALL,v 1.4 2001/07/24 16:26:06 darw1n Exp $
+$Id: INSTALL 6943 2001-07-24 16:28:06Z darw1n $
 
 
 STEP 1 - Import the bookkeeping tables into your phpgroupware database from your shell. The files can be found in the setup directory (bookkeeping/setup).

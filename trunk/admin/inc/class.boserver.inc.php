@@ -10,7 +10,7 @@
   *  option) any later version.                                              *
   \**************************************************************************/
 
-  /* $Id: class.boserver.inc.php,v 1.3 2006/02/14 08:48:21 skwashd Exp $ */
+  /* $Id: class.boserver.inc.php 16400 2006-02-14 08:48:21Z skwashd $ */
 
 	class boserver
 	{

@@ -10,7 +10,7 @@
   *  option) any later version.                                              *
   \**************************************************************************/
 
-  /* $Id: class.uiconfig.inc.php,v 1.29 2007/04/08 17:33:25 sigurdne Exp $ */
+  /* $Id: class.uiconfig.inc.php 18358 2007-11-27 04:43:37Z skwashd $ */
 
 	class uiconfig
 	{

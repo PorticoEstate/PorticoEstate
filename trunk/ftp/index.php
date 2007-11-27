@@ -10,7 +10,7 @@
 *  option) any later version.                                              *
 \**************************************************************************/
 
-	/* $Id: index.php,v 1.20 2006/12/28 14:05:28 skwashd Exp $ */
+	/* $Id: index.php 17823 2006-12-28 14:05:28Z skwashd $ */
 
 	$GLOBALS['phpgw_info']['flags'] = array(
 		'currentapp'              => 'ftp',

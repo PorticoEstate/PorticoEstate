@@ -10,7 +10,7 @@
   *  option) any later version.                                              *
   \**************************************************************************/
 
-  /* $Id: deletedetail.php,v 1.8 2005/04/18 09:03:28 powerstat Exp $ */
+  /* $Id: deletedetail.php 15851 2005-04-18 09:03:28Z powerstat $ */
 
   // Update complete for phpgroupware 0.9.10 - 4/14/2001 (api calls for accounts and contacts)
 

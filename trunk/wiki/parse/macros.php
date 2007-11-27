@@ -1,5 +1,5 @@
 <?php
-// $Id: macros.php,v 1.3 2003/03/03 14:16:24 ralfbecker Exp $
+// $Id: macros.php 11866 2003-03-03 14:16:25Z ralfbecker $
 
 // Prepare a category list.
 function view_macro_category($args)

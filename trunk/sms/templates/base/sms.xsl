@@ -1,4 +1,4 @@
-<!-- $Id: sms.xsl,v 1.6 2006/05/23 13:02:12 sigurdne Exp $ -->
+<!-- $Id: sms.xsl 16753 2006-05-23 13:02:42Z sigurdne $ -->
 
 	<xsl:template name="app_data">
 		<xsl:choose>

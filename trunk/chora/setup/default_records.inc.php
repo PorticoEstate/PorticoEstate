@@ -8,7 +8,7 @@
   *  Free Software Foundation; either version 2 of the License, or (at your  *
   *  option) any later version.                                              *
   \**************************************************************************/
-  /* $Id: default_records.inc.php,v 1.4 2002/03/04 07:18:45 milosch Exp $ */
+  /* $Id: default_records.inc.php 9642 2002-03-04 07:18:46Z milosch $ */
 
 	$GLOBALS['phpgw_setup']->oProc->query("DELETE FROM phpgw_config WHERE config_app='chora'");
 	$GLOBALS['phpgw_setup']->oProc->query("DELETE FROM phpgw_config WHERE config_name='co' OR config_name='rcs' OR config_name='rcsdiff' OR config_name='rlog' OR config_name='cvs' OR config_name='adminname' OR config_name='adminemail' OR config_name='shortloglength'");

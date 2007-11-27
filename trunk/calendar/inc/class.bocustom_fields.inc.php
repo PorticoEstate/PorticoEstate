@@ -10,7 +10,7 @@
   *  option) any later version.                                              *
   \**************************************************************************/
 
-	/* $Id: class.bocustom_fields.inc.php,v 1.4 2006/12/07 19:00:46 sigurdne Exp $ */
+	/* $Id: class.bocustom_fields.inc.php 18358 2007-11-27 04:43:37Z skwashd $ */
 
 	class calendar_bocustom_fields
 	{

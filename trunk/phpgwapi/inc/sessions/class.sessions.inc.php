@@ -10,7 +10,7 @@
 	* @license http://www.fsf.org/licenses/lgpl.html GNU Lesser General Public License
 	* @package phpgwapi
 	* @subpackage accounts
-	* @version $Id: class.sessions.inc.php,v 1.8 2007/01/24 16:06:53 Caeies Exp $
+	* @version $Id: class.sessions.inc.php 18358 2007-11-27 04:43:37Z skwashd $
 	* @link http://www.sanisoft.com/phplib/manual/session.php
 	*/
 

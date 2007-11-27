@@ -12,7 +12,7 @@
  * the Free Software Foundation; either version 2 of the License, or 	*
  * at your option) any later version.					*
  \**********************************************************************/
- /* $Id: etemplate.js,v 1.2 2007/02/10 16:03:46 sigurdne Exp $ */
+ /* $Id: etemplate.js 17936 2007-02-10 16:03:46Z sigurdne $ */
 
 function set_element(form,name,value)
 {

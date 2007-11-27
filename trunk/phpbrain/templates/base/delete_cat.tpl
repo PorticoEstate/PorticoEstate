@@ -1,4 +1,4 @@
-<!-- $Id: delete_cat.tpl,v 1.1 2006/05/09 05:49:38 skwashd Exp $ -->
+<!-- $Id: delete_cat.tpl 16714 2006-05-09 05:49:38Z skwashd $ -->
 
 <!-- BEGIN form -->
 <br>

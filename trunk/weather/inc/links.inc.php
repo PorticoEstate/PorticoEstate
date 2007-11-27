@@ -10,7 +10,7 @@
   *  option) any later version.                                              *
   \**************************************************************************/
 
-  /* $Id: links.inc.php,v 1.4 2005/05/04 14:01:25 powerstat Exp $ */
+  /* $Id: links.inc.php 15902 2005-05-04 14:06:21Z powerstat $ */
 
 	function weather_resolove_comment(&$comment, $city, $state, $country, $gstation)
 	{

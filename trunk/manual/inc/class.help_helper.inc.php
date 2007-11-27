@@ -22,7 +22,7 @@
 	* along with this program; if not, write to the Free Software       *
 	* Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.         *
 	\*******************************************************************/
-	/* $Id: class.help_helper.inc.php,v 1.2 2007/03/07 10:44:39 sigurdne Exp $ */
+	/* $Id: class.help_helper.inc.php 18020 2007-03-07 10:44:39Z sigurdne $ */
 
 	CreateObject('manual.help');
 

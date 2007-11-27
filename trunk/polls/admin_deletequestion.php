@@ -9,7 +9,7 @@
   *  option) any later version.                                              *
   \**************************************************************************/
 
-  /* $Id: admin_deletequestion.php,v 1.6 2007/01/24 16:40:59 Caeies Exp $ */
+  /* $Id: admin_deletequestion.php 17907 2007-01-24 16:51:08Z Caeies $ */
 
 	$GLOBALS['phpgw_info'] = array();
 	$GLOBALS['phpgw_info']['flags'] = array(

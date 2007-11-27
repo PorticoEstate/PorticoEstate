@@ -14,7 +14,7 @@
 	*  option) any later version.                                              *
 	\**************************************************************************/
 
-	/* $Id: class.uireg.inc.php,v 1.10 2007/01/24 16:36:09 Caeies Exp $ */
+	/* $Id: class.uireg.inc.php 17907 2007-01-24 16:51:08Z Caeies $ */
 
 	class uireg
 	{

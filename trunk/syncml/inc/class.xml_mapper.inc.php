@@ -7,7 +7,7 @@
 	 * @copyright Copyright (c) 2007 Free Software Foundation, Inc.
 	 * @license   GNU General Public License 3 or later
 	 * @package   syncml
-	 * @version   $Id: class.xml_mapper.inc.php,v 1.2 2007/07/30 21:07:50 johang Exp $
+	 * @version   $Id: class.xml_mapper.inc.php 18178 2007-07-30 21:07:50Z johang $
 	 */
 
 	require_once 'inc/constants.inc.php';

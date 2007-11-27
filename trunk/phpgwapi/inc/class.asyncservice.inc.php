@@ -6,7 +6,7 @@
 	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
 	* @package phpgwapi
 	* @subpackage application
-	* @version $Id: class.asyncservice.inc.php,v 1.10 2006/09/05 13:40:08 sigurdne Exp $
+	* @version $Id: class.asyncservice.inc.php 17087 2006-09-05 13:40:08Z sigurdne $
 	*/
 
 	/**

@@ -1,11 +1,12 @@
-<?php	/**
+<?php
+	/**
 	* Project Manager
 	*
 	* @author Dirk Schaller [dschaller@probusiness.de]
 	* @copyright Copyright (C) 2000-2006 Free Software Foundation, Inc. http://www.fsf.org/
 	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
 	* @package projects
-	* @version $Id: class.uiprojects_base.inc.php,v 1.19 2006/12/05 19:40:45 sigurdne Exp $
+	* @version $Id: class.uiprojects_base.inc.php 18358 2007-11-27 04:43:37Z skwashd $
 	* $Source: /sources/phpgroupware/projects/inc/class.uiprojects_base.inc.php,v $
 	*/
 
@@ -53,7 +54,8 @@
 		);
 
 		function uiprojects_base()
-		{			$action				= get_var('action',array('GET'));
+		{
+			$action				= get_var('action',array('GET'));
 			$this->boprojects	= CreateObject('projects.boprojects', True,$action);
 
 			$this->menuaction	= get_var('menuaction',array('POST','GET'));
@@ -470,7 +472,8 @@
 				$targetView = $this->getTargetView();
 				$selectbox['action']	= $this->createViewUrl($targetView, array('status'=>$this->status));
 				$selectbox['options']	= '<option value="">' . lang('Select project') . '</option>' . "\n";
-				$selectbox['options']	.= $this->boprojects->select_project_list( array				(
+				$selectbox['options']	.= $this->boprojects->select_project_list( array
+				(
 					'filter'	=> 'none',
 					'action'	=> 'all',
 					'limit'		=> false,
@@ -482,7 +485,8 @@
 			{
 				$selectbox['action']   = $this->createViewUrl(PROJECT_LIST, array('status'=>$this->status));
 				$selectbox['options']  = '<option value="">' . lang('Select project') . '</option>' . "\n";
-				$selectbox['options'] .= $this->boprojects->select_project_list( array				(
+				$selectbox['options'] .= $this->boprojects->select_project_list( array
+				(
 					'action' => 'all',
 					'status' => 'active',
 					'limit'  => False)
@@ -530,7 +534,8 @@
 					}
 					else
 					{
-						$check = array						(
+						$check = array
+						(
 							'action' => $this->action,
 							'coordinator' => $this->pro_data['coordinator'],
 							'main' => $this->pro_main,
@@ -549,7 +554,8 @@
 					}
 					else
 					{
-						$check = array						(
+						$check = array
+						(
 							'action' => $this->action,
 							'coordinator' => $this->pro_data['coordinator'],
 							'main' => $this->pro_main,
@@ -568,7 +574,8 @@
 					}
 					else
 					{
-						$check = array						(
+						$check = array
+						(
 							'action' => $this->action,
 							'coordinator' => $this->pro_data['coordinator'],
 							'main' => $this->pro_main,
@@ -1212,7 +1219,8 @@
 		}
 
 		function status_format( $status = '', $showarchive = true )
-		{			$stat_sel = array('', '', '');
+		{
+			$stat_sel = array('', '', '');
 			if ( !$status )
 			{
 				$status = $this->status = 'active';
@@ -1256,13 +1264,19 @@
 			switch( $type )
 			{
 				case 'selectbox':
-					$employees = $this->boprojects->selected_employees( array					(						'action' => $data['action'],
+					$employees = $this->boprojects->selected_employees( array
+					(
+						'action' => $data['action'],
 					    'pro_parent' => $data['pro_parent'],
 					    'admins_included' => $admins_included,
-					    'project_id' => $data['project_id']					));
+					    'project_id' => $data['project_id']
+					));
 					break;
 				case 'popup':
-					$employees	= $this->boprojects->selected_employees( array					(						'project_id' => $data['project_id']					));
+					$employees	= $this->boprojects->selected_employees( array
+					(
+						'project_id' => $data['project_id']
+					));
 					break;
 			}
 

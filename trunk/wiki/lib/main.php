@@ -1,5 +1,5 @@
 <?php
-// $Id: main.php,v 1.9 2005/05/15 12:55:31 skwashd Exp $
+// $Id: main.php 15975 2005-05-15 12:55:31Z skwashd $
 
 // Harvest script parameters and other variables.  We do this even if
 // register_globals=on; this way, we force the variables to be defined.

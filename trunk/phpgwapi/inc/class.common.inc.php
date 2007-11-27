@@ -8,7 +8,7 @@
 	* @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License
 	* @package phpgwapi
 	* @subpackage utilities
-	* @version $Id: class.common.inc.php,v 1.256 2007/04/08 17:41:53 sigurdne Exp $
+	* @version $Id: class.common.inc.php 18358 2007-11-27 04:43:37Z skwashd $
 	*/
 
 	/**

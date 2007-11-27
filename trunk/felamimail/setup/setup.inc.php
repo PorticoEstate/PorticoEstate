@@ -9,7 +9,7 @@
 	*  option) any later version.                                              *
 	\**************************************************************************/
 
-	/* $Id: setup.inc.php,v 1.14 2007/03/06 14:32:11 sigurdne Exp $ */
+	/* $Id: setup.inc.php 18014 2007-03-06 14:32:11Z sigurdne $ */
 
 	$setup_info['felamimail']['name']      = 'felamimail';
 	$setup_info['felamimail']['title']     		= 'FeLaMiMail';

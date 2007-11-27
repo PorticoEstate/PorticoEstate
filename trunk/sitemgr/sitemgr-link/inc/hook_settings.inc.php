@@ -13,7 +13,7 @@
  * the Free Software Foundation; either version 2 of the License, or 	*
  * at your option) any later version.					*
  \**********************************************************************/
- /* $Id: hook_settings.inc.php,v 1.2 2005/08/29 04:26:02 skwashd Exp $ */
+ /* $Id: hook_settings.inc.php 16075 2005-08-29 04:26:02Z skwashd $ */
 
 	
 	$bo = createObject('sitemgr.Sites_BO');

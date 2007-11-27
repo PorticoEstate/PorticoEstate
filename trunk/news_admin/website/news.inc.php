@@ -11,7 +11,7 @@
 	* This program was sponsered by Golden Glair productions                   *
 	* http://www.goldenglair.com                                               *
 	\**************************************************************************/
-	/* $Id: news.inc.php,v 1.9 2005/08/04 03:54:33 skwashd Exp $ */
+	/* $Id: news.inc.php 16046 2005-08-04 03:54:33Z skwashd $ */
 
 	include('setup.inc.php');
 

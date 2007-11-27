@@ -12,7 +12,7 @@
 	***************************************************************************/
 
 $GLOBALS['debug']["ged.ged_dm"] = false;
-$GLOBALS['debug']["ged.ged_dm.list_versions"] = true;
+$GLOBALS['debug']["ged.ged_dm.get_previous_version"] = true;
 
 class ged_dm
 {
@@ -24,11 +24,14 @@ class ged_dm
 	var $sqlaclwrite;
 	var $sqlaclchange_acl;
 	var $datadir;
+	var $acl;
 
 	var $tables=Array('comments'=>'ged_comments', 'elements'=>'ged_elements', 'history'=>'ged_history', 'mimetypes'=>'ged_mimes', 'acl'=>'ged_acl', 'versions'=>'ged_versions', 'relations' => 'ged_relations');
 
 	function ged_dm()
 	{
+		@session_register('ged_session');
+
 		// MEMO Le caract�re "administrateur est plut�t li� � l'activation du module Admin
 		// MEMO=>existence de $GLOBALS['phpgw_info']['user']['apps']['admin']
 		$this->admin=isset($GLOBALS['phpgw_info']['user']['apps']['admin']);
@@ -46,10 +49,10 @@ class ged_dm
 				$or="OR ";
 			}
 			$sqlaclbase.=$or.$this->tables['acl'].".account_id=".$GLOBALS['phpgw_info']['user']['account_id']." ";
+			
 			$this->sqlaclread=$sqlaclbase.") AND ( ".$this->tables['acl'].".aclread=1 )";
 			$this->sqlaclwrite=$sqlaclbase.") AND ( ".$this->tables['acl'].".aclwrite=1 )";
 			$this->sqlaclchangeacl=$sqlaclbase.") AND ( ".$this->tables['acl'].".aclchangeacl=1 )";
-			
 		}
 		
 		//$this->ged_config=$GLOBALS['ged_config'];
@@ -59,13 +62,8 @@ class ged_dm
 		//_debug_array($this->ged_config);
 		unset($config);
 		
-		// TODO a g�rer via le (futur) hook d'admin
+		// TODO define this using the (future) admin boards (hooks ?)
 		$this->datadir=$GLOBALS['phpgw_info']['server']['files_dir']."/ged-data";
-		
-		// TODO : find a better way to know what doc type
-		// TODO : should be used for comments ( cf reject and refuse actions )
-		$this->internal_review_file_type='fiche-relecture-interne';
-		$this->external_review_file_type='fiche-relecture-externe';
 		
 		if ( ! is_dir ( $this->datadir ))
 			mkdir ( $this->datadir);
@@ -73,6 +71,61 @@ class ged_dm
 		$this->db=$GLOBALS['phpgw']->db;
 		$this->owner=intval($GLOBALS['phpgw_info']['user']['account_id']);
 
+		if ( $this->admin == false )
+		{
+			//$acl_to_get = $GLOBALS['phpgw']->session->appsession('ged_acl','ged');
+			
+			if ( isset($_SESSION['ged_acl']) && false)
+			{
+				//$this->acl=unserialize($_SESSION['ged_acl']);
+				$this->acl=unserialize($_SESSION['ged_acl']);
+
+				//DEBUG
+				//_debug_array($this->acl);
+			}
+			else
+			{							
+				$get_acl_sql="SELECT * from ".$this->tables['acl']." ";
+				$get_acl_sql.="WHERE ".$sqlaclbase.")";
+				
+				//DEBUG
+				//print ($get_acl_sql);
+				
+				$this->db->query($get_acl_sql, __LINE__, __FILE__);
+				
+				while ($this->db->next_record())
+				{					
+					// TODO : projectadmin rights
+					// TODO : statuses restrictions
+					// (willneed a find_versions(element_id, $statuses))
+
+					$the_id=$this->db->f('element_id');		
+					$this->acl[$the_id]['read']=$this->db->f('aclread');
+					$this->acl[$the_id]['write']=$this->db->f('aclwrite');
+					$this->acl[$the_id]['delete']=$this->db->f('acldelete');
+					$this->acl[$the_id]['changeacl']=$this->db->f('aclchangeacl');
+										
+					$the_statuses=$this->db->f('aclstatuses');
+					if ( ! empty ( $the_statuses ) )
+					{
+						$this->acl[$the_id]['statuses']=unserialize($the_statuses);
+					}
+					else
+					{
+						$this->acl[$the_id]['statuses']=array();
+					}					
+				}
+				$this->db->unlock();
+				
+				$acl_to_store=$this->acl;
+
+				$_SESSION['ged_acl']=serialize($this->acl);								
+				$GLOBALS['phpgw']->session->appsession('ged_acl','ged','active');
+
+				//DEBUG
+				//_debug_array($this->acl);
+			}
+		}
 	}
 
 	function debug ($thefunction)
@@ -274,52 +327,6 @@ class ged_dm
 
 	}
 
-	function set_file_lock($element_id, $lock)
-	{
-		
-		if ( $this->can_change_file_lock($element_id) )
-		{
-			if ( $lock==true )
-			{
-				$lock_value=1;
-			}	
-			else
-			{
-				$lock_value=0;
-			}
-			
-			$sql="UPDATE ged_elements set lock_status=".$lock_value.", lock_user_id=".$GLOBALS['phpgw_info']['user']['account_id']." WHERE element_id=".$element_id;
-
-			$this->db->query($sql, __LINE__, __FILE__);
-			$this->db->unlock();
-			
-			$version=$this->get_last_version($element_id);
-			
-			if ( $lock==true )
-			{
-				$this->store_history ('locked', 'locked', $version['version_id']);
-			}
-			else
-			{
-				$this->store_history ('unlocked', 'unlocked', $version['version_id']);				
-			}
-
-		}
-	}
-	
-	function is_locked($element_id)
-	{
-		$out=false;
-		$element=$this->get_element_info($element_id);
-		
-		if ( $element['lock_status'] == 1 && $element['lock_user_id'] != $GLOBALS['phpgw_info']['user']['account_id'])
-		{
-			$out=true;
-		}
-		
-		return ( $out );
-	}
-	
 	function set_project ($element_id, $project_name, $the_root_element_id=null)
 	{		
 		if ( $the_root_element_id == null )
@@ -423,25 +430,19 @@ class ged_dm
 		if ( $this->debug('add_version') )
 			print ( "add_version: entering.<br>\n");
 
-		// MEMO gestion des numeros de versions
-
-		$current_or_alert_or_refused_version=$this->get_current_or_alert_or_refused_version($new_version['element_id']);
-		$major=$current_or_alert_or_refused_version['major'];
-		$minor=$current_or_alert_or_refused_version['minor'];
 		$last_version=$this->get_last_version($new_version['element_id']);
 		
-		if ($last_version['status'] == 'current' || $last_version['status'] == 'refused' || $last_version['status'] == 'alert' )
-		{
-			if ($new_version['type']=='major')
+		// MEMO gestion des numeros de versions
+		$major=$new_version['major'];
+		$minor=$new_version['minor'];
+		
+		if ( $major < $last_version['major'] || $major == $last_version['major'] && $minor < $last_version['minor'] )
 			{
-				$major++;
-				$minor=0;
+			$major=$last_version['major'];
+			$minor=$last_version['minor']+1;
 			}
-			elseif ($new_version['type']=='minor') $minor ++;
-			else
-				return "PB Version";
 	
-			// MEMO gestion du stored_name pour �viter les �crasements.
+		// MEMO gestion du stored_name pour eviter les ecrasements.
 	
 			$basename=basename($new_version['file_name']);
 			$candidate_name=$basename;
@@ -504,46 +505,36 @@ class ged_dm
 				print ( "add_version: end.<br>\n");
 	
 			return "OK";
-		}
 
 	}
 
 	function update_version($amended_version)
 	{
 
-		// MEMO gestion des numeros de versions
-		
-		$cur_version=$this->get_current_or_alert_or_refused_version($amended_version['element_id']);
 		$me_version=$this->get_version_info($amended_version['version_id']);
+		$first_version=$this->get_first_version($amended_version['element_id']);
 		
-		if (  $me_version['status']=='working' )
-		{
-			if ( isset($cur_version))
-			{
-				$major=$cur_version['major'];
-				$minor=$cur_version['minor'];
+		// MEMO gestion des numeros de versions
+		$major=$amended_version['major'];
+		$minor=$amended_version['minor'];
 	
-				if ($amended_version['type']=='major')
+		if ( $me_version['version_id'] != $first_version['version_id'] )
 				{
-					$major++;
-					$minor=0;
-				}
-				elseif ($amended_version['type']=='minor') 
+			
+			$previous_version=$this->get_previous_version($amended_version['version_id']);
+			
+			//DEBUG
+			//_debug_array($previous_version);
+			//die();
+						
+			if ( $major < $previous_version['major'] || ($major == $previous_version['major'] && $minor <= $previous_version['minor']))
 				{
-					$minor ++;
+				$major=$previous_version['major'];
+				$minor=$previous_version['minor']+1;
 				}
-				else
-				{
-					return "PB Version";
-				}
-			}
-			else
-			{
-				$major=$me_version['major'];
-				$minor=$me_version['minor'];
 			}
 
-			// MEMO gestion du stored_name pour �viter les �crasements.
+		// MEMO gestion du stored_name pour eviter les ecrasements.
 	
 			if ($amended_version['file_name'] !="")
 			{
@@ -589,7 +580,7 @@ class ged_dm
 				$sql_model1.="status='%s', description='%s', major=%d, minor=%d ";
 				$sql_model1.="WHERE version_id=%d";
 	
-				$sql1=sprintf($sql_model1, $this->tables['versions'], $amended_version['file_size'], $amended_version['file_name'], $this->cleanstr($candidate_name), $extension, 'working', $this->cleanstr($amended_version['description']), $major, $minor, $amended_version['version_id']);
+			$sql1=sprintf($sql_model1, $this->tables['versions'], $amended_version['file_size'], $amended_version['file_name'], $this->cleanstr($candidate_name), $extension, $me_version['status'], $this->cleanstr($amended_version['description']), $major, $minor, $amended_version['version_id']);
 			}
 			else
 			{
@@ -597,7 +588,7 @@ class ged_dm
 				$sql_model1.="status='%s', description='%s', major=%d, minor=%d ";
 				$sql_model1.="WHERE version_id=%d";
 	
-				$sql1=sprintf($sql_model1, $this->tables['versions'], 'working', $this->cleanstr($amended_version['description']), $major, $minor, $amended_version['version_id']);
+			$sql1=sprintf($sql_model1, $this->tables['versions'], $me_version['status'], $this->cleanstr($amended_version['description']), $major, $minor, $amended_version['version_id']);
 			}
 	
 			$this->db->query($sql1, __LINE__, __FILE__);
@@ -614,7 +605,6 @@ class ged_dm
 			{
 				$this->erase_relations($amended_version['version_id']); 
 			}
-		}
 
 		return "OK";
 
@@ -745,8 +735,6 @@ class ged_dm
 			$out['creator_id']=$this->db->f('creator_id');
 			$out['owner_id']=$this->db->f('owner_id');
 			$out['creation_date']=$this->db->f('creation_date');
-			$out['lock_status']=$this->db->f('lock_status');
-			$out['lock_user_id']=$this->db->f('lock_user_id');
 			$out['description']=$this->db->f('description');
 			$out['validity_period']=$this->db->f('validity_period');
 			$out['project_name']=$this->db->f('project_name');
@@ -756,6 +744,12 @@ class ged_dm
 		else
 			$out="";
 
+		if ($element_id == 0)
+		{
+			$out['element_id']=$element_id;
+			$out['type']='folder';
+			$out['name']='root folder';
+		}
 		$this->db->unlock();
 
 		return $out;
@@ -800,14 +794,33 @@ class ged_dm
 
 	}
 
-	function get_last_version($element_id)
+	function get_first_version($element_id)
 	{
-		if ( $this->debug('get_last_version') )
+		if ( $this->debug('get_first_version') )
 			print ( "get_last_version: entering with element_id=".$element_id."<br>\n");
+		
+		if ( ! $this->can_read($element_id))
+			die("argh 1");
+			
+		if ( isset($this->acl[$element_id]['statuses']) && ! empty( $this->acl[$element_id]['statuses'] ) && is_array($this->acl[$element_id]['statuses']))
+		{
+			$or='';
+			$sqlstatuses="AND (";
+			foreach ( $this->acl[$element_id]['statuses'] as $granted_status)
+			{
+				$sqlstatuses.=$or."status='".$granted_status."' ";
+				$or="OR ";
+			}
+			$sqlstatuses.=") ";
+		}
+		else
+		{
+			$sqlstatuses='';
+		}
 
 		$sql="SELECT * FROM ".$this->tables['versions']." ";
-		$sql.="WHERE element_id=".$element_id." ";
-		$sql.="ORDER BY version_id DESC LIMIT 1";
+		$sql.="WHERE element_id=".$element_id." ".$sqlstatuses;
+		$sql.="ORDER BY version_id ASC LIMIT 1";
 
 		if ( $this->debug('get_element_acl') )
 			print ( "get_last_version: ".$sql."<br>\n");
@@ -816,7 +829,6 @@ class ged_dm
 
 		if ($this->db->next_record());
 		{
-
 			$version['url']=$this->db->f('url');
 			$version['size']=$this->db->f('size');
 			$version['status']=$this->db->f('status');
@@ -835,6 +847,114 @@ class ged_dm
 		}
 
 		$this->db->unlock();
+		
+		$version['mime_type']=$this->get_mime_type($version['file_extension']);
+
+		return $version;
+
+	}
+
+	function get_last_version($element_id)
+	{
+		if ( $this->debug('get_last_version') )
+			print ( "get_last_version: entering with element_id=".$element_id."<br>\n");
+
+		if ( ! $this->can_read($element_id))
+			die("argh 2 : cannot read ".$element_id);
+			
+		if ( isset($this->acl[$element_id]['statuses']) && ! empty( $this->acl[$element_id]['statuses'] ) && is_array($this->acl[$element_id]['statuses']))
+		{
+			$or='';
+			$sqlstatuses="AND (";
+			foreach ( $this->acl[$element_id]['statuses'] as $granted_status)
+			{
+				$sqlstatuses.=$or."status='".$granted_status."' ";
+				$or="OR ";
+			}
+			$sqlstatuses.=") ";
+		}
+		else
+		{
+			$sqlstatuses='';
+		}
+
+		$sql="SELECT * FROM ".$this->tables['versions']." ";
+		$sql.="WHERE element_id=".$element_id." ".$sqlstatuses;
+		$sql.="ORDER BY version_id DESC LIMIT 1";
+
+		if ( $this->debug('get_element_acl') )
+			print ( "get_last_version: ".$sql."<br>\n");
+
+		$this->db->query($sql, __LINE__, __FILE__);
+
+		if ($this->db->next_record());
+		{
+			$version['url']=$this->db->f('url');
+			$version['size']=$this->db->f('size');
+			$version['status']=$this->db->f('status');
+			$version['creator_id']=$this->db->f('creator_id');
+			$version['creation_date']=$this->db->f('creation_date');
+			$version['minor']=$this->db->f('minor');
+			$version['version_id']=$this->db->f('version_id');
+			$version['element_id']=$this->db->f('element_id');
+			$version['description']=$this->db->f('description');
+			$version['file_extension']=$this->db->f('file_extension');
+			$version['file_name']=$this->db->f('file_name');
+			$version['stored_name']=$this->db->f('stored_name');
+			$version['major']=$this->db->f('major');
+			$version['file_full_path']=$this->datadir.'/'.$version['stored_name'];
+			$version['validation_date']=$this->db->f('validation_date');
+		}
+
+		$this->db->unlock();
+		
+		$version['mime_type']=$this->get_mime_type($version['file_extension']);
+
+		return $version;
+	}
+	
+	function get_previous_version($version_id)
+	{
+		if ( $this->debug('get_previous_version') )
+			print ( "get_previous_version: entering with version_id=".$version_id."<br>\n");
+					
+		$sql="SELECT version2.* FROM ".$this->tables['versions']." version2 ";
+		$sql.="INNER JOIN ".$this->tables['versions']." version1 ";
+		$sql.="ON version1.element_id=version2.element_id ";
+		$sql.="WHERE version1.version_id=".$version_id." ";
+		$sql.="AND version2.version_id < ". $version_id." " ;
+		$sql.="ORDER BY version2.version_id DESC LIMIT 1";
+
+		if ( $this->debug('get_previous_version') )
+			print ( "get_previous_version: ".$sql."<br>\n");
+
+		$this->db->query($sql, __LINE__, __FILE__);
+
+		if ($this->db->next_record());
+		{
+			$element_id=$this->db->f('element_id');
+			
+			$version['url']=$this->db->f('url');
+			$version['size']=$this->db->f('size');
+			$version['status']=$this->db->f('status');
+			$version['creator_id']=$this->db->f('creator_id');
+			$version['creation_date']=$this->db->f('creation_date');
+			$version['minor']=$this->db->f('minor');
+			$version['version_id']=$this->db->f('version_id');
+			$version['element_id']=$element_id;
+			$version['description']=$this->db->f('description');
+			$version['file_extension']=$this->db->f('file_extension');
+			$version['file_name']=$this->db->f('file_name');
+			$version['stored_name']=$this->db->f('stored_name');
+			$version['major']=$this->db->f('major');
+			$version['file_full_path']=$this->datadir.'/'.$version['stored_name'];
+			$version['validation_date']=$this->db->f('validation_date');
+		}
+
+		$this->db->unlock();
+
+		if ( ! $this->can_read($element_id))
+			die("argh 3");
 		
 		$version['mime_type']=$this->get_mime_type($version['file_extension']);
 
@@ -897,6 +1017,25 @@ class ged_dm
 		return $version;
 	}
 
+	function get_versions_statuses($element_id)
+	{
+		$db2 = clone($this->db);
+		
+		$sql="SELECT status FROM ".$this->tables['versions']." ";
+		$sql.="WHERE element_id=".$element_id." ";		
+
+		$db2->query($sql, __LINE__, __FILE__);
+
+		$statuses=array();		
+		while ($db2->next_record())
+		{
+			$statuses[]=$db2->f('status');
+		}
+		
+		$db2->unlock();
+		return $statuses;		
+	}
+	
 	function get_previous_versions_matching_status($version_id,$status)
 	{
 		$version_info=$this->get_version_info($version_id);
@@ -1421,129 +1560,59 @@ class ged_dm
 
 	function can_read($element_id)
 	{
-		// db2 neededbecause can_read can be called during a $this->db loop;		
-		$db2 = clone($this->db);
+		$result=false;
 		
-		if ( $this->admin == true )
+		if ( (isset($this->acl[$element_id]) && $this->acl[$element_id]['read'] == 1) || $this->admin == true )
 		{
 			$result=true;
 		}
-		else
-		{
-			$sql0="SELECT ".$this->tables['elements'].".* ";
-			$sql0.="FROM ".$this->tables['elements'].", ".$this->tables['acl']." ";
-			$sql0.="WHERE ".$this->tables['elements'].".element_id=".$this->tables['acl'].".element_id ";
-			$sql0.="AND ".$this->tables['elements'].".element_id=".$element_id." ";
-			$sql0.="AND (".$this->sqlaclread.") ";
 			
-			$db2->query($sql0, __LINE__, __FILE__);
-			
-			$result=($db2->next_record() ||  $element_id==0);
-			
-			$db2->unlock();
-		}
-		
-		$db2->free(); 
-		unset($db2);
 		return ($result );	
 	}
 
 	function can_write($element_id)
 	{
-		// db2 neededbecause can_read can be called during a $this->db loop;		
-		$db2 = clone($this->db);
+		$result=false;
 
-		if ( $this->admin == true )
+		if ( (isset($this->acl[$element_id]) && $this->acl[$element_id]['write'] == 1) || $this->admin == true )
 		{
 			$result=true;
 		}
-		else
-		{
-			$sql0="SELECT ".$this->tables['elements'].".* ";
-			$sql0.="FROM ".$this->tables['elements'].", ".$this->tables['acl']." ";
-			$sql0.="WHERE ".$this->tables['elements'].".element_id=".$this->tables['acl'].".element_id ";
-			$sql0.="AND ".$this->tables['elements'].".element_id=".$element_id." ";
-			$sql0.="AND (".$this->sqlaclwrite.") ";
 			
-			$db2->query($sql0, __LINE__, __FILE__);
-			
-			$result=($db2->next_record());
-			
-			$db2->unlock();
-		}
-				
-		$db2->free(); 
-		unset($db2);		
 		return ($result );	
-	}
-	
-	function can_change_file_lock($element_id)
-	{
-		$out=false;
-		$element=$this->get_element_info($element_id);
-		
-		if ( $element['lock_status'] == 0 && $this->can_write($element_id) )
-		{
-			$out=true;
-		}
-		elseif ( $element['lock_status'] == 1 && ( $this->admin == true || ($element['lock_user_id'] == $GLOBALS['phpgw_info']['user']['account_id'] && $this->can_write($element_id))) )
-		{
-			$out=true;
-		}
-		
-		return( $out );
 	}
 	
 	function can_change_acl($element_id)
 	{
-		// db2 neededbecause can_read can be called during a $this->db loop;		
-		$db2 = clone($this->db);
+		$result=false;
 
-		if ( $this->admin == true )
+		if ( (isset($this->acl[$element_id]) && $this->acl[$element_id]['changeacl'] == 1) || $this->admin == true )
 		{
 			$result=true;
 		}
-		else
-		{
-			$sql0="SELECT ".$this->tables['elements'].".* ";
-			$sql0.="FROM ".$this->tables['elements'].", ".$this->tables['acl']." ";
-			$sql0.="WHERE ".$this->tables['elements'].".element_id=".$this->tables['acl'].".element_id ";
-			$sql0.="AND ".$this->tables['elements'].".element_id=".$element_id." ";
-			$sql0.="AND (".$this->sqlaclchangeacl.") ";
 			
-			$db2->query($sql0, __LINE__, __FILE__);
-			
-			$result=($db2->next_record());
-			
-			$db2->unlock();
-		}
-
-		$db2->free(); 
-		unset($db2);		
 		return ($result );	
 	}
 	
 	function can_delete($element_id)
 	{
-		if ( $this->admin == true )
+		$result=false;
+		
+		if ( (isset($this->acl[$element_id]) && $this->acl[$element_id]['delete'] == 1) || $this->admin == true )
 		{
 			$result=true;
 		}
-		else
-		{
-			$result=false;
-		}
 		
-		return ( $result );
+		return ($result );	
 	}
 	
-
 	// DONE acl management 
 	function list_elements($parent_id=0, $type='', $order='name')
 	{
 
-		if ( $this->admin == true )
-		{
+		if ( ! $this->can_read($parent_id))
+			die("argh 4");
+
 			$sql="SELECT * FROM ".$this->tables['elements']." ";
 			$sql.="WHERE parent_id=".$parent_id." ";
 			$sql.="AND element_id !=parent_id ";
@@ -1553,22 +1622,6 @@ class ged_dm
 			
 			$this->db->query($sql, __LINE__, __FILE__);
 			
-		}
-		elseif ( $this->can_read($parent_id) )
-		{
-			$sql="SELECT DISTINCT ".$this->tables['elements'].".* ";
-			$sql.="FROM ".$this->tables['elements'].", ".$this->tables['acl']." ";
-			$sql.="WHERE ".$this->tables['elements'].".parent_id=".$parent_id." ";
-			$sql.="AND ".$this->tables['elements'].".element_id !=".$this->tables['elements'].".parent_id ";
-			if ($type !="" )
-				$sql.="AND ".$this->tables['elements'].".type='".$type."' ";
-			$sql.="AND ".$this->tables['elements'].".element_id=".$this->tables['acl'].".element_id ";
-			$sql.="AND (".$this->sqlaclread.") ";
-			
-			$sql.="ORDER by type desc, name asc";
-			
-			$this->db->query($sql, __LINE__, __FILE__);
-		}
 		//print ( $sql );
 
 		$elements=Array();
@@ -1578,33 +1631,44 @@ class ged_dm
 		{
 			$the_element_id=$this->db->f('element_id');
 			$the_element_type=$this->db->f('type');
+			$go=false;
 			
-			if ( $the_element_type == "file" )
+			if ( ! $this->can_read($the_element_id) )
 			{
-				if ( $this->admin == true || $this->can_write($the_element_id) )
+				$go=false;
+			}
+			elseif ( $the_element_type == "folder" )
 				{
 					$go=true;
 				}
-				else
+			elseif ( $the_element_type == "file" )
 				{
-					$the_current_version=null;
-					$the_current_version=$this->get_current_or_pending_for_acceptation_version($the_element_id);
-					
-					if ( is_array($the_current_version))
+				if ( $this->can_write($the_element_id) )
 					{
-						//if ( $the_element_id == 496 )
-						//_debug_array($the_current_version);
 						$go=true;
 					}
 					else
 					{
-						$go=false;
+					$the_version_statuses=$this->get_versions_statuses($the_element_id);
+					
+					//DEBUG
+					//_debug_array($the_version_statuses);
+					
+					if ( isset($this->acl[$the_element_id]['statuses']) && ! empty( $this->acl[$the_element_id]['statuses'] ) && is_array($this->acl[$the_element_id]['statuses']))
+					{
+						foreach ( $this->acl[$the_element_id]['statuses'] as $granted_status)
+						{
+							if ( in_array($granted_status,$the_version_statuses))
+							{
+								$go=true;
 					}
 				}
 			}
-			elseif ( $the_element_type == "folder" )
+					else
 			{
 				$go=true;
+			}
+				}
 			}
 				
 			if ( $go == true )
@@ -1617,8 +1681,6 @@ class ged_dm
 				$elements[$i]['creator_id']=$this->db->f('creator_id');
 				$elements[$i]['owner_id']=$this->db->f('owner_id');
 				$elements[$i]['creation_date']=$this->db->f('creation_date');
-				$elements[$i]['lock_status']=$this->db->f('lock_status');
-				$elements[$i]['lock_user_id']=$this->db->f('lock_user_id');
 				$elements[$i]['description']=$this->db->f('description');
 				$elements[$i]['validity_period']=$this->db->f('validity_period');
 				$elements[$i]['project_root']=$this->db->f('project_root');
@@ -1642,14 +1704,12 @@ class ged_dm
 	{
 		$versions=null;
 
-		if ( $this->debug('list_version') )
+		if ( ! $this->can_read($element_id))
+			die("argh 5");
+	
+			if ( $this->debug('list_version') )
 			echo "list_versions: entering with element_id=".$element_id."<br/>\n";
 
-		if ( $this->admin == true || $this->can_write($element_id))
-		{
-			if ( $this->debug('list_version') )
-				echo "list_versions: can write<br/>\n";
-
 			$sql1="SELECT ALL ";
 			$sql1.="version_id, element_id, description, creation_date, ";
 			$sql1.="status, major, minor, size, ";
@@ -1658,24 +1718,7 @@ class ged_dm
 	
 			$sql1.="FROM ".$this->tables['versions']." ";
 			$sql1.="WHERE element_id=".$element_id." ";
-			$sql1.="ORDER BY version_id ";
-		}
-		else
-		{
-			if ( $this->debug('list_version') )
-				echo "list_versions: can read<br/>\n";
-
-			$sql1="SELECT ALL ";
-			$sql1.="version_id, element_id, description, creation_date, ";
-			$sql1.="status, major, minor, size, ";
-			$sql1.="creator_id, validation_date, file_extension, ";
-			$sql1.="file_name, stored_name ";
-	
-			$sql1.="FROM ".$this->tables['versions']." ";
-			$sql1.="WHERE element_id=".$element_id." ";
-			$sql1.="AND ( status='current' OR status='pending_for_acceptation') ";
 			$sql1.="ORDER BY version_id ";		
-		}
 
 		if ( $this->debug('list_version') )
 			print ("list_versions: SQL ".$sql1."<br/>\n");
@@ -1686,32 +1729,40 @@ class ged_dm
 		if ( $this->debug('list_version') )
 			print ("list_versions: SQL done ( ".$nn." lines )<br/>\n");
 
-		$ii=0;
 		while ($this->db->next_record())
 		{
+			$the_version_id=$this->db->f('version_id');
+			$the_status=$this->db->f('status');
+
 			if ( $this->debug('list_version') )
-				print ("list_versions: parsing iteration ii= ".$ii."<br/>\n");
+				print ("list_versions: parsing version ".$the_version_id."<br/>\n");
 
-			$versions[$ii]['version_id']=$this->db->f('version_id');
-			$versions[$ii]['element_id']=$this->db->f('element_id');
-			$versions[$ii]['description']=$this->db->f('description');
-			$versions[$ii]['status']=$this->db->f('status');
-			$versions[$ii]['major']=$this->db->f('major');
-			$versions[$ii]['minor']=$this->db->f('minor');
-			$versions[$ii]['creator_id']=$this->db->f('creator_id');
-			$versions[$ii]['creation_date']=$this->db->f('creation_date');
-			$versions[$ii]['size']=$this->db->f('size');
-			$versions[$ii]['file_extension']=$this->db->f('file_extension');
-			$versions[$ii]['file_name']=$this->db->f('file_name');
-			$versions[$ii]['stored_name']=$this->db->f('stored_name');
-			$versions[$ii]['file_full_path']=$this->datadir.'/'.$versions[$ii]['stored_name'];
-			$versions[$ii]['validation_date']=$this->db->f('validation_date');
-
-			$ii++;
+			//DEBUG				
+			//print ( $the_status);
+			//_debug_array($this->acl[$element_id]);
+			
+			if ( $this->admin == true || empty($this->acl[$element_id]['statuses']) || in_array($the_status, $this->acl[$element_id]['statuses']))
+			if ( true )
+			{
+				$versions[$the_version_id]['version_id']=$the_version_id;
+				$versions[$the_version_id]['element_id']=$this->db->f('element_id');
+				$versions[$the_version_id]['description']=$this->db->f('description');
+				$versions[$the_version_id]['status']=$the_status;
+				$versions[$the_version_id]['major']=$this->db->f('major');
+				$versions[$the_version_id]['minor']=$this->db->f('minor');
+				$versions[$the_version_id]['creator_id']=$this->db->f('creator_id');
+				$versions[$the_version_id]['creation_date']=$this->db->f('creation_date');
+				$versions[$the_version_id]['size']=$this->db->f('size');
+				$versions[$the_version_id]['file_extension']=$this->db->f('file_extension');
+				$versions[$the_version_id]['file_name']=$this->db->f('file_name');
+				$versions[$the_version_id]['stored_name']=$this->db->f('stored_name');
+				$versions[$the_version_id]['file_full_path']=$this->datadir.'/'.$versions[$the_version_id]['stored_name'];
+				$versions[$the_version_id]['validation_date']=$this->db->f('validation_date');
+			}
 		}
 		
-		for ( $jj=0;$jj< $ii; $jj++)
-			$versions[$jj]['mime_type']=$this->get_mime_type($versions[$jj]['file_extension']);
+		foreach ( $versions as $version_id => $version)
+			$versions[$version_id]['mime_type']=$this->get_mime_type($versions[$version_id]['file_extension']);
 
 		$this->db->unlock();
 
@@ -1803,6 +1854,7 @@ class ged_dm
 	
 	}
 	
+
 	/**
 	* Generic functions for ACL management
 	*/
@@ -1836,6 +1888,16 @@ class ged_dm
 			$acl[$account_id]['account_id']=$account_id;
 			$acl[$account_id]['read']=$this->db->f('aclread');
 			$acl[$account_id]['write']=$this->db->f('aclwrite');
+			$acl[$account_id]['delete']=$this->db->f('acldelete');
+			$statuses=$this->db->f('aclstatuses');
+			if ( ! empty($statuses) )
+			{
+				$acl[$account_id]['statuses']=unserialize($statuses);
+			}
+			else
+			{
+				$acl[$account_id]['statuses']=array();
+			}
 			$acl[$account_id]['changeacl']=$this->db->f('aclchangeacl');
 
 		}
@@ -1861,6 +1923,17 @@ class ged_dm
 			$acl_info['account_id']=$this->db->f('account_id');
 			$acl_info['read']=$this->db->f('aclread');
 			$acl_info['write']=$this->db->f('aclwrite');
+			$acl_info['delete']=$this->db->f('acldelete');
+			$statuses=$this->db->f('aclstatuses');
+			if ( ! empty($statuses) )
+			{
+				$acl_info['statuses']=unserialize($statuses);
+			}
+			else
+			{
+				$acl_info['statuses']=array();
+			}
+			
 			$acl_info['changeacl']=$this->db->f('aclchangeacl');
 		}
 
@@ -1897,27 +1970,37 @@ class ged_dm
 			//print ( "<br/>");
 
 			$element_acl=$this->get_element_acl ( $element_id );
-			$element_acl_for_account=$element_acl[$account_id];
 			
-			if ( is_array($element_acl_for_account) )
+			if ( isset($element_acl[$account_id]) && is_array($element_acl[$account_id]) )
 			{
 				//print ( "<pre>");
 				//print_r($element_acl_for_account);
 				//print ( "</pre>");
+				$element_acl_for_account=$element_acl[$account_id];
 				
 				$aclread=1;
+				if ( $element_acl_for_account['statuses'] == "")
+				{
+					$aclstatuses=array();
+				}
+				else
+				{
+					$aclstatuses=$element_acl_for_account['statuses'];
+				}
+				
 				$aclwrite=$element_acl_for_account['write'];
+				$acldelete=$element_acl_for_account['delete'];
 				$aclchangeacl=$element_acl_for_account['changeacl'];
 				
 				//print ( "set_acl(".$element_acl_for_account['acl_id'].", $aclread, $aclwrite, $aclchangeacl, false, false)" );
 				//print ( "<br/>");
-				$this->set_acl($element_acl_for_account['acl_id'], $aclread, $aclwrite, $aclchangeacl, false, false);
+				$this->set_acl($element_acl_for_account['acl_id'], $aclread, $aclstatuses, $aclwrite, $acldelete, $aclchangeacl, false, false);
 			}
 			else
 			{
 				//print ( "new_acl($element_id, $account_id, 1, 'null', 'null', false, false)" );
 				//print ( "<br/>");
-				$this->new_acl($element_id, $account_id, 1, 'null', 'null', false, false);
+				$this->new_acl($element_id, $account_id, 1, '', 'null', 'null', 'null', false, false);
 			}
 		
 		if ( $element_id !="0" )
@@ -1928,7 +2011,7 @@ class ged_dm
 		
 	}
 	
-	function new_acl($element_id, $account_id, $aclread, $aclwrite, $aclchangeacl, $recursive=false, $check_read_on_path=true)
+	function new_acl($element_id, $account_id, $aclread, $aclstatuses, $aclwrite, $acldelete, $aclchangeacl, $recursive=false, $check_read_on_path=true)
 	{
 		//print ( "new_acl $element_id, $account_id, $aclread, $aclwrite, $aclchangeacl" );
 		//print ( "<br/>");
@@ -1938,10 +2021,27 @@ class ged_dm
 		else
 			$aclread=1;
 			
+		if (empty($aclstatuses) || $aclstatuses=="null" )
+			$sql_aclstatuses="NULL";
+		elseif(is_array($aclstatuses))
+			$sql_aclstatuses="'".serialize($aclstatuses)."'";
+		else
+			$sql_aclstatuses="'".$aclstatuses."'";
+		
+			
 		if ($aclwrite=="" || $aclwrite=="null")
 			$aclwrite="null";
 		else
 		{
+			$aclread=1;
+			$aclwrite=1;
+		}
+		
+		if ($acldelete=="" || $acldelete=="null")
+			$acldelete="null";
+		else
+		{
+			$acldelete=1;
 			$aclread=1;
 			$aclwrite=1;
 		}
@@ -1967,18 +2067,18 @@ class ged_dm
 					
 					if ( is_array($child_element_acl_for_account) )
 					{
-						$this->set_acl($child_element_acl_for_account['acl_id'], $aclread, $aclwrite, $aclchangeacl, true, false);
+						$this->set_acl($child_element_acl_for_account['acl_id'], $aclread, $aclstatuses, $aclwrite, $acldelete, $aclchangeacl, true, false);
 											}
 					else
 					{
-						$this->new_acl($child_element['element_id'], $account_id, $aclread, $aclwrite, $aclchangeacl, true, false);
+						$this->new_acl($child_element['element_id'], $account_id, $aclread, $aclstatuses, $aclwrite, $acldelete, $aclchangeacl, true, false);
 					}
 			}
 		}
 		
 		if ( $aclread !='null' )
 		{
-			$sql="INSERT INTO ged_acl ( element_id, account_id, aclread, aclwrite, aclchangeacl ) VALUES ( ".$element_id.", ".$account_id.", ".$aclread.", ".$aclwrite.", ".$aclchangeacl.")";
+			$sql="INSERT INTO ged_acl ( element_id, account_id, aclread, aclstatuses, aclwrite, acldelete, aclchangeacl ) VALUES ( ".$element_id.", ".$account_id.", ".$aclread.", ".$sql_aclstatuses.", ".$aclwrite.", ".$acldelete.", ".$aclchangeacl.")";
 			
 			//print ( $sql );
 			//print ( "<br/>");
@@ -2005,27 +2105,18 @@ class ged_dm
 	// Heritage des droits du parent
 	function set_default_acl($element_id)
 	{
-		$owner_id=$GLOBALS['phpgw_info']['user']['account_id'];
-		$this->new_acl($element_id, $owner_id, 1, 1, 1);
-		$admin_id=$GLOBALS['phpgw']->accounts->name2id('Admins');
-		$this->new_acl($element_id, $admin_id, 1, 1, 1);
-		
-		//h�ritage des droits du parent
+		//ihnerit acl from parent
 		$parent_id=$this->get_parent_id($element_id);
 		
 		$parent_acl=$this->get_element_acl ( $parent_id );
 		if ( is_array($parent_acl)) 
 		foreach ( $parent_acl as $ac )
 		{
-			if ( $ac['account_id'] !=$owner_id && $ac['account_id'] !=$admin_id )
-				$this->new_acl($element_id, $ac['account_id'], $ac['read'],$ac['write'], $ac['change_acl']);
-		
+				$this->new_acl($element_id, $ac['account_id'], $ac['read'], $ac['statuses'], $ac['write'], $ac['delete'], $ac['changeacl']);
 		}
-		
-		
 	}
 	
-	function set_acl($acl_id, $aclread, $aclwrite, $aclchangeacl, $recursive=false, $check_read_on_path=true)
+	function set_acl($acl_id, $aclread, $aclstatuses, $aclwrite, $acldelete, $aclchangeacl, $recursive=false, $check_read_on_path=true)
 	{
 		//print ( "set_acl $acl_id, $aclread, $aclwrite, $aclchangeacl $recursive");
 		//print ( "<br/>");
@@ -2041,6 +2132,13 @@ class ged_dm
 		else
 			$aclread=1;
 			
+		if (empty($aclstatuses) || $aclstatuses=="null" )
+			$sql_aclstatuses="NULL";
+		elseif(is_array($aclstatuses))
+			$sql_aclstatuses="'".serialize($aclstatuses)."'";
+		else
+			$sql_aclstatuses="'".$aclstatuses."'";
+
 		if ($aclwrite=="" || $aclwrite=="null")
 			$aclwrite="null";
 		else
@@ -2049,17 +2147,27 @@ class ged_dm
 			$aclwrite=1;
 		}
 		
+		if ($acldelete=="" || $acldelete=="null")
+			$acldelete="null";
+		else
+		{
+			$acldelete=1;
+			$aclread=1;
+			$aclwrite=1;
+		}
+
 		if ($aclchangeacl=="" || $aclchangeacl=="null")
 			$aclchangeacl="null";
 		else
 		{
-			$aclchangeacl=1;
 			$aclread=1;
 			$aclwrite=1;
+			$acldelete=1;
+			$aclchangeacl=1;
 		}
 		
 				
-		if ( $recursive )
+		if ( $recursive == true )
 		{
 			$children_elements=$this->list_elements($element_id);
 			
@@ -2074,11 +2182,11 @@ class ged_dm
 					
 					if ( ! empty($child_element_acl_for_account) )
 					{
-						$this->set_acl($child_element_acl_for_account['acl_id'], $aclread, $aclwrite, $aclchangeacl, true, false);
+						$this->set_acl($child_element_acl_for_account['acl_id'], $aclread, $aclstatuses, $aclwrite, $acldelete, $aclchangeacl, true, false);
 					}
 					else
 					{
-						$this->new_acl($child_element['element_id'], $account_id, $aclread, $aclwrite, $aclchangeacl, true, false);
+						$this->new_acl($child_element['element_id'], $account_id, $aclread, $aclstatuses, $aclwrite, $acldelete, $aclchangeacl, true, false);
 					}
 			}
 		}
@@ -2087,7 +2195,7 @@ class ged_dm
 			$this->rm_acl($acl_id);
 		else
 		{
-			$sql="UPDATE ged_acl set aclread=".$aclread.", aclwrite=".$aclwrite.", aclchangeacl=".$aclchangeacl." WHERE acl_id=".$acl_id;
+			$sql="UPDATE ged_acl set aclread=".$aclread.", aclstatuses=".$sql_aclstatuses.", aclwrite=".$aclwrite.", acldelete=".$acldelete.", aclchangeacl=".$aclchangeacl." WHERE acl_id=".$acl_id;
 			
 			$this->db->query($sql, __LINE__, __FILE__);
 			$this->db->unlock();
@@ -2493,7 +2601,26 @@ class ged_dm
 			$version_id=$this->db->f('version_id');
 			$version_status=$this->db->f('status');
 			
-			if ( $this->can_write($element_id) || $version_status == "pending_for_acceptation" && $this->can_read($element_id) )
+			if ( $this->can_read($element_id) )
+			{
+				if (  ! isset($this->acl[$element_id]['statuses']) )
+				{
+					$go="ok";
+				}
+				elseif( empty($this->acl[$element_id]['statuses']) )
+				{
+					$go="ok";
+				}
+				elseif(in_array( $version_status,$this->acl[$element_id]['statuses']))
+				{
+					$go="ok";
+				}
+				else
+				{
+					$go=false;
+				}
+
+				if ( $go==true )
 			{
 				$docs[$i]['element_id']=$element_id;
 				$docs[$i]['name']=$this->db->f('name');
@@ -2504,6 +2631,7 @@ class ged_dm
 				$docs[$i]['description']=$this->db->f('description');
 				$i ++;
 			}
+		}
 		}
 			
 		$this->db->unlock();
@@ -2522,7 +2650,7 @@ class ged_dm
 		$sql.="FROM ( ged_elements ";
 		$sql.="INNER JOIN ged_versions as ged_current_version ";
 		$sql.="ON ged_elements.element_id=ged_current_version.element_id ";
-		$sql.="AND ( ged_current_version.status='working' )) ";
+		$sql.="AND ( ged_current_version.status='working' OR ged_current_version.status='working_locked' )) ";
 
 		$sql.="WHERE ( ";
 		$vor="";
@@ -2686,30 +2814,26 @@ class ged_dm
 	// History
 	function get_history ( $element_id)
 	{
-		if ( $this->admin == true || $this->can_write($element_id))
-		{	
-			$sql="SELECT ".$this->tables['history'].".*, ".$this->tables['versions'].".major, ".$this->tables['versions'].".minor FROM ".$this->tables['history']." INNER JOIN ".$this->tables['versions']." ";
-			$sql.="ON ".$this->tables['history'].".version_id = ".$this->tables['versions'].".version_id ";
-			$sql.="WHERE ".$this->tables['history'].".element_id=".$element_id." ";
-			$sql.="ORDER BY ".$this->tables['history'].".logdate ASC";			
-		}
-		else
+		if ( $this->can_read($element_id))
 		{
-			$sql="SELECT ".$this->tables['history'].".*, ".$this->tables['versions'].".major, ".$this->tables['versions'].".minor FROM ".$this->tables['history']." INNER JOIN ".$this->tables['versions']." ";
+			$sql="SELECT ".$this->tables['history'].".*, ".$this->tables['versions'].".status finalstatus, ".$this->tables['versions'].".major, ".$this->tables['versions'].".minor FROM ".$this->tables['history']." INNER JOIN ".$this->tables['versions']." ";
 			$sql.="ON ".$this->tables['history'].".version_id = ".$this->tables['versions'].".version_id ";
 			$sql.="WHERE ".$this->tables['history'].".element_id=".$element_id." ";
-			$sql.="AND (".$this->tables['history'].".status='current' OR ".$this->tables['history'].".status='pending_for_acceptation') ";
 			$sql.="ORDER BY ".$this->tables['history'].".logdate ASC";
-		}
 		
 		$this->db->query($sql);
 
 		$i=0;
 		while ($this->db->next_record())
 		{
+				$finalstatus=$this->db->f('finalstatus');
+				$status=$this->db->f('status');
+				
+				if ( empty($this->acl[$element_id]['statuses']) || (in_array($finalstatus,$this->acl[$element_id]['statuses']) && in_array($status,$this->acl[$element_id]['statuses'])))
+				{
 			$history[$i]['element_id']=$element_id;
 			$history[$i]['version_id']=$this->db->f('version_id');
-			$history[$i]['status']=$this->db->f('status');
+					$history[$i]['status']=$status;
 			$history[$i]['logdate']=$this->db->f('logdate');
 			$history[$i]['action']=$this->db->f('action');
 			$history[$i]['account_id']=$this->db->f('account_id');
@@ -2720,11 +2844,11 @@ class ged_dm
 			$history[$i]['minor']=$this->db->f('minor');
 			
 			$i++;
-
+				}	
 		}
 				
 		$this->db->unlock();
-		
+		}
 		if ( isset($history))
 			return ($history);
 		else
@@ -2736,7 +2860,7 @@ class ged_dm
 		$version_info=$this->get_version_info($version_id);
 		
 		$sql="INSERT INTO ".$this->tables['history']. "(element_id, version_id, status, logdate, action, account_id, comment, ip, agent) ";
-		$sql.="VALUES (".$version_info['element_id'].", ".$version_info['version_id'].", '".$version_info['status']."', '".time()."', '".$action."', ".intval($GLOBALS['phpgw_info']['user']['account_id']).", '".$comment."', 'ip', 'agent')";
+		$sql.="VALUES (".$version_info['element_id'].", ".$version_info['version_id'].", '".$version_info['status']."', ".time().", '".$action."', ".intval($GLOBALS['phpgw_info']['user']['account_id']).", '".addslashes($comment)."', 'ip', 'agent')";
 		
 		$this->db->query($sql);
 		$this->db->unlock();

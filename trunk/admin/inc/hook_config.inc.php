@@ -7,7 +7,7 @@
 	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
 	* @package admin
 	* @subpackage hooks
-	* @version $Id: hook_config.inc.php,v 1.10 2005/05/11 06:59:37 powerstat Exp $
+	* @version $Id: hook_config.inc.php 15933 2005-05-11 06:59:37Z powerstat $
 	*/
 
 	/**

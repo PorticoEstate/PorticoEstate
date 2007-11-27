@@ -1,6 +1,5 @@
 <div style="float: right"><img src="{current_version_status_image}"/></div>
 <div class="ged_title">{name} [{reference}] v{current_version}</div>
-<div class="alert_message">{lock_alert_message}</div>
 <div class="ged_file_description">{description}<br/>
 {current_version_description}</div>
 <div class="ged_file_metadata">Owned by : {owner} - Creation : {creation_date} - Version : {current_version_date} by {current_version_creator} -

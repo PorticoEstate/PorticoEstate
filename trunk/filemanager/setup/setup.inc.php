@@ -6,7 +6,7 @@
 	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
 	* @package filemanager
 	* @subpackage setup
-	* @version $Id: setup.inc.php,v 1.25 2006/03/11 23:20:48 skwashd Exp $
+	* @version $Id: setup.inc.php 16493 2006-03-11 23:24:02Z skwashd $
 	*/
 
 	$setup_info['filemanager'] = array

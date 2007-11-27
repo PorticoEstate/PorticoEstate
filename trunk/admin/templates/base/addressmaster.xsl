@@ -1,4 +1,4 @@
-<!-- $Id: addressmaster.xsl,v 1.2 2006/12/28 01:35:22 skwashd Exp $ -->
+<!-- $Id: addressmaster.xsl 17795 2006-12-28 01:35:35Z skwashd $ -->
 
 	<xsl:template name="addressmaster">
 		<xsl:choose>

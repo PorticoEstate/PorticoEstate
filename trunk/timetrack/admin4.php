@@ -10,7 +10,7 @@
   *  option) any later version.                                              *
   \**************************************************************************/
 
-  /* $Id: admin4.php,v 1.4 2002/03/18 03:18:04 rschader Exp $ */
+  /* $Id: admin4.php 9782 2002-03-18 03:18:05Z rschader $ */
   /* This one will most likely be eliminated or changed in order
    * to use acl's instead, which might just be assignable on a user's
    * main account editing page.

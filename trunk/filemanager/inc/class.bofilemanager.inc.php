@@ -8,7 +8,7 @@
 	 * @copyright Portions Copyright (C) 2000-2005 Free Software Foundation, Inc http://www.fsf.org/
 	 * @license http://www.gnu.org/licenses/gpl.html GNU General Public License
 	 * @package filemanager
-	 * @version $Id: class.bofilemanager.inc.php,v 1.32 2007/01/24 17:15:53 Caeies Exp $
+	 * @version $Id: class.bofilemanager.inc.php 17909 2007-01-24 17:26:17Z Caeies $
 	 * @internal Based on phpWebhosting
 	 */
 

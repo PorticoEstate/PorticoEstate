@@ -1,4 +1,4 @@
-<!-- $Id: search.results.tpl,v 1.1 2006/07/23 06:31:16 skwashd Exp $ -->
+<!-- $Id: search.results.tpl 16894 2006-07-23 06:32:28Z skwashd $ -->
 <hr>
 <small>{LANG_QUERY_CONDITION} = {QUERY_CONDITION}
 &nbsp;&nbsp;&nbsp;

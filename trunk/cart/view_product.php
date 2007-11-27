@@ -10,7 +10,7 @@
 	* option) any later version.                                               *
 	\**************************************************************************/
 
-	/* $Id: view_product.php,v 1.4 2002/03/11 11:04:57 milosch Exp $ */
+	/* $Id: view_product.php 9701 2002-03-11 11:04:57Z milosch $ */
 
 	if(!$Add)
 	{

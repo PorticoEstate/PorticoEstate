@@ -10,7 +10,7 @@
 	*  option) any later version.                                              *
 	\**************************************************************************/
 
-	/* $Id: hook_admin.inc.php,v 1.12 2006/09/09 09:04:49 skwashd Exp $ */
+	/* $Id: hook_admin.inc.php 17106 2006-09-09 09:04:58Z skwashd $ */
 {
 // Only Modify the $file and $title variables.....
 	$file = array

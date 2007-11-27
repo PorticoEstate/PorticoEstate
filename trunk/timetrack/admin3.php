@@ -10,7 +10,7 @@
   *  option) any later version.                                              *
   \**************************************************************************/
 
-  /* $Id: admin3.php,v 1.11 2003/03/20 22:04:59 gugux Exp $ */
+  /* $Id: admin3.php 12082 2003-03-20 22:04:59Z gugux $ */
 
   // Update complete for phpgroupware 0.9.10 - 4/13/2001 (api calls for accounts and contacts)
 

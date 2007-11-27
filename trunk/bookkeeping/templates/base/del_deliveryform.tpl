@@ -1,4 +1,4 @@
-<!-- $Id: del_deliveryform.tpl,v 1.1 2006/03/12 10:48:44 skwashd Exp $ -->
+<!-- $Id: del_deliveryform.tpl 16496 2006-03-12 10:48:44Z skwashd $ -->
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">
 <HTML LANG="en">
 <head>

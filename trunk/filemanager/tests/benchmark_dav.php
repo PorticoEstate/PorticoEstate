@@ -6,7 +6,7 @@
 	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
 	* @package filemanager
 	* @subpackage test
-	* @version $Id: benchmark_dav.php,v 1.3 2005/04/28 20:45:53 powerstat Exp $
+	* @version $Id: benchmark_dav.php 15879 2005-04-28 20:45:53Z powerstat $
 	*/
 
 

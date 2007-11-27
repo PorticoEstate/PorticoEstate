@@ -5,8 +5,8 @@
 	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
 	* @package phpgwapi
 	* @subpackage setup
-	* @version $Id: tables_update.inc.php,v 1.105 2007/02/27 12:16:05 sigurdne Exp $
-	* @internal $Source: /sources/phpgwapi/phpgwapi/setup/tables_update.inc.php,v $
+	* @version $Id: tables_update.inc.php 18004 2007-02-27 12:16:05Z sigurdne $
+	* @internal $Source$
 	*/
 
 	// Must be running 0.9.14.007 or later in order to upgrade to 0.9.18

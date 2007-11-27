@@ -12,7 +12,7 @@
   *  option) any later version.                                              *
   \**************************************************************************/
 
-	/* $Id: hook_email.inc.php,v 1.8 2005/05/15 06:57:37 skwashd Exp $ */
+	/* $Id: hook_email.inc.php 15968 2005-05-15 06:57:38Z skwashd $ */
 
 	global $calendar_id;
 

@@ -6,7 +6,7 @@
 	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
 	* @package tts
 	* @subpackage setup
-	* @version $Id: setup.inc.php,v 1.16 2006/12/27 02:57:18 skwashd Exp $
+	* @version $Id: setup.inc.php 17773 2006-12-27 02:57:18Z skwashd $
 	*/
 
 	/* Basic information about this app */

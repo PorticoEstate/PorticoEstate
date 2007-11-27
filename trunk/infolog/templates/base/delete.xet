@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<!-- $Id: delete.xet,v 1.1 2007/02/10 16:11:36 sigurdne Exp $ -->
+<!-- $Id: delete.xet 17937 2007-02-10 16:11:37Z sigurdne $ -->
 <overlay>
 	<grid id="infolog.index.rows" template="" lang="" group="0" version="0.9.15.002">
 		<columns>

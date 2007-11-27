@@ -14,7 +14,7 @@
 *  option) any later version.                                              *
 \**************************************************************************/
 
-/* $Id: class.main_manager.inc.php,v 1.1.1.1 2002/11/26 17:57:47 ceb Exp $ */
+/* $Id: class.main_manager.inc.php 11580 2002-11-26 17:57:08Z ceb $ */
 
 	class main_manager
 	{

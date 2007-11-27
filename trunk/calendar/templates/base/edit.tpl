@@ -1,4 +1,4 @@
-<!-- $Id: edit.tpl,v 1.2 2007/09/21 18:08:35 sigurdne Exp $ -->
+<!-- $Id: edit.tpl 18274 2007-09-21 18:08:35Z sigurdne $ -->
 <!-- BEGIN edit_entry -->
 <script language="JavaScript">
 	self.name="phpgw_calendar_edit";

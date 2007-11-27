@@ -10,7 +10,7 @@
 	*  option) any later version.                                              *
 	\**************************************************************************/
 
-	/* $Id: users.php,v 1.11 2002/04/21 18:29:59 skeeter Exp $ */
+	/* $Id: users.php 9999 2002-04-21 18:29:59Z skeeter $ */
 
 	$GLOBALS['phpgw_info']['flags'] = array(
 		'currentapp' => 'chat',

@@ -7,7 +7,7 @@
 	* @copyright Copyright (C) 2003-2005 Free Software Foundation, Inc. http://www.fsf.org/
 	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
 	* @package email
-	* @version $Id: view_image.php,v 1.19 2005/05/11 14:08:27 powerstat Exp $
+	* @version $Id: view_image.php 15941 2005-05-11 14:08:27Z powerstat $
 	* @internal Based on Aeromail http://the.cushman.net/
 	*/
 

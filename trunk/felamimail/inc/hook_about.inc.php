@@ -8,7 +8,7 @@
     * Free Software Foundation; either version 2 of the License, or (at your    *
     * option) any later version.                                                *
     \***************************************************************************/
-	/* $Id: hook_about.inc.php,v 1.7 2006/12/18 20:28:00 sigurdne Exp $ */
+	/* $Id: hook_about.inc.php 17724 2006-12-18 20:28:00Z sigurdne $ */
 
 	function about_app($tpl,$handle)
 	{

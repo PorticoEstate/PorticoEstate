@@ -8,7 +8,7 @@
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/bbb_/ekstern/
 	* @package hrm
 	* @subpackage setup
- 	* @version $Id: setup.inc.php,v 1.12 2006/10/05 13:14:13 sigurdne Exp $
+ 	* @version $Id: setup.inc.php 17353 2006-10-05 13:14:13Z sigurdne $
 	*/
 
 	$setup_info['hrm']['name']      = 'hrm';

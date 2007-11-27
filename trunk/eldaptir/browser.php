@@ -10,7 +10,7 @@
   *  option) any later version.                                              *
   \**************************************************************************/
 
-  /* $Id: browser.php,v 1.6 2001/11/19 16:08:46 milosch Exp $ */
+  /* $Id: browser.php 8325 2001-11-19 16:08:46Z milosch $ */
 
 	$GLOBALS['phpgw_info']['flags'] = array(
 		'currentapp' => 'eldaptir',

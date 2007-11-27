@@ -9,7 +9,7 @@
 	*  option) any later version.                                              *
 	\**************************************************************************/
 
-	/* $Id: class.sochangelogs.inc.php,v 1.3 2001/11/18 08:01:50 milosch Exp $ */
+	/* $Id: class.sochangelogs.inc.php 8308 2001-11-18 08:01:50Z milosch $ */
 
 	class sochangelogs
 	{

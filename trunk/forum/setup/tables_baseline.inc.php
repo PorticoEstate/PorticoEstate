@@ -13,7 +13,7 @@
   * This file should be generated for you. It should never be edited by hand *
   \**************************************************************************/
 
-  /* $Id: tables_baseline.inc.php,v 1.8 2001/09/29 13:48:20 milosch Exp $ */
+  /* $Id: tables_baseline.inc.php 8019 2001-09-29 13:48:20Z milosch $ */
 
 	$phpgw_baseline = array(
 		'f_body' => array(

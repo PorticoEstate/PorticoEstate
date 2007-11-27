@@ -7,7 +7,7 @@
 	* @copyright Copyright (C) 2003-2005 Free Software Foundation, Inc. http://www.fsf.org/
 	* @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License
 	* @package email
-	* @version $Id: class.mail_msg.inc.php,v 1.7 2005/05/11 18:52:06 powerstat Exp $
+	* @version $Id: class.mail_msg.inc.php 15944 2005-05-11 18:52:07Z powerstat $
 	* @internal Based on AngleMail http://www.anglemail.org/
 	*/
 

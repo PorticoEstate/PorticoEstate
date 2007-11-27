@@ -24,7 +24,7 @@
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/bbb_/ekstern/
 	* @package property
 	* @subpackage helpdesk
- 	* @version $Id: class.botts.inc.php,v 1.38 2007/10/14 12:18:52 sigurdne Exp $
+ 	* @version $Id: class.botts.inc.php 18358 2007-11-27 04:43:37Z skwashd $
 	*/
 
 	/**

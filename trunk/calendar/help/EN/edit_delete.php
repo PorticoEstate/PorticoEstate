@@ -9,7 +9,7 @@
   *  option) any later version.                                              *
   \**************************************************************************/
 
-	/* $Id: edit_delete.php,v 1.5 2005/05/15 06:57:37 skwashd Exp $ */
+	/* $Id: edit_delete.php 15968 2005-05-15 06:57:38Z skwashd $ */
 
 	$phpgw_flags = Array(
 		'currentapp'	=> 'manual'

@@ -1,4 +1,4 @@
-<!-- $Id: field_form.tpl,v 1.3 2005/05/15 13:34:30 skwashd Exp $ -->
+<!-- $Id: field_form.tpl 15977 2005-05-15 13:34:30Z skwashd $ -->
 <!-- BEGIN form -->
 <center>
 <table border="0" width="80%" cellspacing="2" cellpadding="2">

@@ -1,4 +1,4 @@
-<!-- $Id: log.tpl,v 1.4 2006/09/19 15:16:32 skwashd Exp $ -->
+<!-- $Id: log.tpl 17183 2006-09-19 15:16:42Z skwashd $ -->
 
 {app_header}
 <center>

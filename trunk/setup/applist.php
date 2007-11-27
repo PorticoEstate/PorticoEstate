@@ -5,7 +5,7 @@
 	* @copyright Copyright (C) 2000-2005 Free Software Foundation, Inc. http://www.fsf.org/
 	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
 	* @package setup
-	* @version $Id: applist.php,v 1.11 2005/04/17 13:18:24 powerstat Exp $
+	* @version $Id: applist.php 15836 2005-04-17 13:18:24Z powerstat $
 	*/
 
 	$phpgw_info = array();

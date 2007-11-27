@@ -1,4 +1,4 @@
-<!-- $Id: globcats_form.tpl,v 1.1 2006/05/09 05:49:38 skwashd Exp $ -->
+<!-- $Id: globcats_form.tpl 16714 2006-05-09 05:49:38Z skwashd $ -->
 
 <!-- BEGIN form -->
 

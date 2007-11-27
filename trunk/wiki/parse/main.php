@@ -1,5 +1,5 @@
 <?php
-// $Id: main.php,v 1.3 2003/03/03 14:16:24 ralfbecker Exp $
+// $Id: main.php 11866 2003-03-03 14:16:25Z ralfbecker $
 
 // Master parser for 'Tavi.
 function parseText($text, $parsers, $object_name)

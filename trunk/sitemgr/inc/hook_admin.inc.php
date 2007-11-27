@@ -8,7 +8,7 @@
 	* Free Software Foundation; either version 2 of the License, or (at your  *
 	* option) any later version.											  *
 	\*************************************************************************/
-	/* $Id: hook_admin.inc.php,v 1.6 2005/05/15 02:16:27 skwashd Exp $ */
+	/* $Id: hook_admin.inc.php 15965 2005-05-15 02:16:27Z skwashd $ */
 
 	{
 // Only Modify the $file variable.....

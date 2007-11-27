@@ -10,7 +10,7 @@
   *  option) any later version.                                              *
   \**************************************************************************/
 
-  /* $Id: profiles.php,v 1.7 2002/03/18 03:18:04 rschader Exp $ */
+  /* $Id: profiles.php 9782 2002-03-18 03:18:05Z rschader $ */
 
   // Update complete for phpgroupware 0.9.10 - 4/18/2001 (api calls for accounts and contacts)
 

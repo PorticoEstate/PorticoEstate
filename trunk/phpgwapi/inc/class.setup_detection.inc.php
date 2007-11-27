@@ -7,7 +7,7 @@
 	* @license http://www.fsf.org/licenses/gpl.html GNU General Public License
 	* @package phpgwapi
 	* @subpackage application
-	* @version $Id: class.setup_detection.inc.php,v 1.18 2007/02/10 13:18:43 skwashd Exp $
+	* @version $Id: class.setup_detection.inc.php 17933 2007-02-10 13:18:43Z skwashd $
 	*/
 
 	/**

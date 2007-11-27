@@ -10,7 +10,7 @@
   *  Free Software Foundation; either version 2 of the License, or (at your  *
   *  option) any later version.                                              *
   \**************************************************************************/
-  /* $Id: invoice_pdf.php,v 1.13 2001/12/23 22:55:32 bettina Exp $ */
+  /* $Id: invoice_pdf.php 8746 2001-12-23 22:55:32Z bettina $ */
 
     $phpgw_info["flags"] = array("currentapp" => "inv",
                                "noheader" => True, 

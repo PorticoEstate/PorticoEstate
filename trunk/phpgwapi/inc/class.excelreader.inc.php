@@ -8,13 +8,14 @@
 	*
 	* PHP versions 4 and 5
 	*
-	* @author Vadim Tkachenko <vt@apachephp.com>	* @author Sigurd Nes <sigurdne@online.no>
+	* @author Vadim Tkachenko <vt@apachephp.com>
+	* @author Sigurd Nes <sigurdne@online.no>
 	* @copyright Copyright (C) 2003-2005 Free Software Foundation, Inc. http://www.fsf.org/
 	* @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/bbb_/ekstern/
 	* @package phpgwapi
 	* @subpackage utilities
- 	* @version $Id: class.excelreader.inc.php,v 1.1 2007/08/31 22:53:02 sigurdne Exp $
+ 	* @version $Id: class.excelreader.inc.php 18253 2007-08-31 22:53:03Z sigurdne $
 	*
 	*/
 

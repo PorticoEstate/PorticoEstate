@@ -9,7 +9,7 @@
 *  option) any later version.                                              *
 \**************************************************************************/
 
-/* $Id: client.php,v 1.4 2001/12/06 16:04:31 milosch Exp $ */
+/* $Id: client.php 8506 2001-12-06 16:04:31Z milosch $ */
 
 	$GLOBALS['phpgw_info'] = array();
 	$GLOBALS['phpgw_info']['flags'] = array(

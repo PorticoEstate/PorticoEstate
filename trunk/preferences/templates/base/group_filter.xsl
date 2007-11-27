@@ -1,4 +1,4 @@
-<!-- $Id: group_filter.xsl,v 1.1 2006/03/14 10:30:10 sigurdne Exp $ -->
+<!-- $Id: group_filter.xsl 16518 2006-03-14 10:30:54Z sigurdne $ -->
 
 	<xsl:template name="group_filter">
 		<xsl:variable name="select_action"><xsl:value-of select="select_action"/></xsl:variable>

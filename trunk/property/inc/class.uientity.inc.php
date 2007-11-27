@@ -24,7 +24,7 @@
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/bbb_/ekstern/
 	* @package property
 	* @subpackage entity
- 	* @version $Id: class.uientity.inc.php,v 1.52 2007/10/13 20:29:15 sigurdne Exp $
+ 	* @version $Id: class.uientity.inc.php 18358 2007-11-27 04:43:37Z skwashd $
 	*/
 
 	/**
@@ -1382,7 +1382,8 @@
 		}
 
 		function attrib_history()
-		{			$GLOBALS['phpgw']->xslttpl->add_file(array('attrib_history','nextmatchs'));
+		{
+			$GLOBALS['phpgw']->xslttpl->add_file(array('attrib_history','nextmatchs'));
 			$GLOBALS['phpgw_info']['flags']['noframework'] = True;
 
 			$id		= phpgw::get_var('id', 'int');
@@ -1476,7 +1477,8 @@
 			$appname	= $attrib_data['input_text'];
 			$function_msg	= lang('history');
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($this->currentapp) . ' - ' . $appname . ': ' . $function_msg;//_debug_array($GLOBALS['phpgw_info']['flags']['app_header']);
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($this->currentapp) . ' - ' . $appname . ': ' . $function_msg;
+			//_debug_array($GLOBALS['phpgw_info']['flags']['app_header']);
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('attrib_history' => $data));
 		}
 	}

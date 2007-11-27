@@ -1,5 +1,5 @@
 <?php
-// $Id: messages.php,v 1.3 2003/03/03 14:16:24 ralfbecker Exp $
+// $Id: messages.php 11866 2003-03-03 14:16:25Z ralfbecker $
 
 // Error messages.
 $ErrorSuffix          = '<br /><br />Please contact the ' .

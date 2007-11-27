@@ -10,7 +10,7 @@
 	 * CVSLib annotate class.
 	 *
 	 * @author  Anil Madhavapeddy <anil@recoil.org>
-	 * @version $Revision: 1.2 $
+	 * @version $Revision: 10073 $
 	 * @since   Chora 0.2
 	 * @package chora
 	 */

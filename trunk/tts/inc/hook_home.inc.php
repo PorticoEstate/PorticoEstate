@@ -7,7 +7,7 @@
 	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
 	* @package tts
 	* @subpackage hooks
-	* @version $Id: hook_home.inc.php,v 1.15 2006/11/25 08:03:13 sigurdne Exp $
+	* @version $Id: hook_home.inc.php 17583 2006-11-25 08:03:13Z sigurdne $
 	*/
 
 	$d1 = (isset($GLOBALS['phpgw_info']['server']['app_inc'])?strtolower(substr($GLOBALS['phpgw_info']['server']['app_inc'],0,3)):'');

@@ -6,7 +6,7 @@
 	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
 	* @package email
 	* @subpackage hooks
-	* @version $Id: hook_home.inc.php,v 1.64 2007/01/24 17:18:59 Caeies Exp $
+	* @version $Id: hook_home.inc.php 17909 2007-01-24 17:26:17Z Caeies $
 	*/
 
 

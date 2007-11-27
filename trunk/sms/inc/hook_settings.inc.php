@@ -8,7 +8,7 @@
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/bbb_/ekstern/
 	* @package property
 	* @subpackage core
- 	* @version $Id: hook_settings.inc.php,v 1.2 2006/06/17 12:20:12 sigurdne Exp $
+ 	* @version $Id: hook_settings.inc.php 16804 2006-06-17 12:20:12Z sigurdne $
 	*/
 
 	create_input_box('Your Cellphone','cellphone','help text','',15);

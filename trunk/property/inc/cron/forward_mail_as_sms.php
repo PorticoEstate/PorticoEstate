@@ -8,7 +8,7 @@
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/bbb_/ekstern/
 	* @package property
 	* @subpackage custom
- 	* @version $Id: forward_mail_as_sms.php,v 1.4 2007/03/18 16:26:56 sigurdne Exp $
+ 	* @version $Id: forward_mail_as_sms.php 18358 2007-11-27 04:43:37Z skwashd $
 	*/
 
 	/**

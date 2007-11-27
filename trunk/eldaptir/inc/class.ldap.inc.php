@@ -11,7 +11,7 @@
   *  option) any later version.                                              *
   \**************************************************************************/
   
-  /* $Id: class.ldap.inc.php,v 1.33 2001/11/19 16:08:46 milosch Exp $ */
+  /* $Id: class.ldap.inc.php 8325 2001-11-19 16:08:46Z milosch $ */
 
 	class ldap
 	{

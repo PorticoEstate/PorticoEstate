@@ -12,7 +12,7 @@
 	*  option) any later version.                                              *
 	\**************************************************************************/
 
-	/* $Id: setup.inc.php,v 1.9 2007/08/14 11:44:14 skwashd Exp $ */
+	/* $Id: setup.inc.php 18358 2007-11-27 04:43:37Z skwashd $ */
 
 	$setup_info['phpsysinfo']['name']      = 'phpsysinfo';
 	$setup_info['phpsysinfo']['title']     = 'phpsysinfo';

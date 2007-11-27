@@ -10,7 +10,7 @@
 	*  option) any later version.                                              *
 	\**************************************************************************/
 
-	/* $Id: class.uicurrentsessions.inc.php,v 1.14 2007/03/16 08:59:37 sigurdne Exp $ */
+	/* $Id: class.uicurrentsessions.inc.php 18039 2007-03-16 08:59:37Z sigurdne $ */
 
 	class uicurrentsessions
 	{

@@ -10,7 +10,7 @@
   *  option) any later version.                                              *
   \**************************************************************************/
 
-	/* $Id: hook_changepassword.inc.php,v 1.1.1.1 2002/05/01 23:53:07 seek3r Exp $ */
+	/* $Id: hook_changepassword.inc.php 10144 2002-05-01 23:53:06Z seek3r $ */
 	
 	//Update vmailmgr users password
 	

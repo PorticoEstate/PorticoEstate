@@ -8,7 +8,7 @@
 	* @license http://www.fsf.org/licenses/lgpl.html GNU Lesser General Public License
 	* @package phpgwapi
 	* @subpackage utilities
-	* @version $Id: functions.inc.php,v 1.216 2007/02/14 04:24:56 skwashd Exp $
+	* @version $Id: functions.inc.php 18358 2007-11-27 04:43:37Z skwashd $
 	*/
 	
 	

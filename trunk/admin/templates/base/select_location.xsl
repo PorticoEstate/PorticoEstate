@@ -1,4 +1,4 @@
-<!-- $Id: select_location.xsl,v 1.1 2006/10/09 11:50:34 sigurdne Exp $ -->
+<!-- $Id: select_location.xsl 17379 2006-10-09 11:51:50Z sigurdne $ -->
 	<xsl:template name="select_location">
 		<xsl:variable name="select_name_location"><xsl:value-of select="select_name_location"/></xsl:variable>
 			<select name="{$select_name_location}" onMouseout="window.status='';return true;">

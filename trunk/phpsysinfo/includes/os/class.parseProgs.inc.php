@@ -19,7 +19,7 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-// $Id: class.parseProgs.inc.php,v 1.2 2007/08/14 11:44:13 skwashd Exp $
+// $Id: class.parseProgs.inc.php 18212 2007-08-14 11:44:16Z skwashd $
 
 class Parser {
 	var $debug	= false;

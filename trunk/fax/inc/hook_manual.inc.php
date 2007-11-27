@@ -14,7 +14,7 @@
 *  option) any later version.                                              *
 \**************************************************************************/
 
-/* $Id: hook_manual.inc.php,v 1.2 2002/11/27 15:50:40 stagno Exp $ */
+/* $Id: hook_manual.inc.php 11590 2002-11-27 15:50:40Z stagno $ */
 
 	// Only Modify the $file variable.....
 $file = array

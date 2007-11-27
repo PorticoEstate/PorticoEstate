@@ -1,4 +1,4 @@
-<!-- $Id: admin_header.tpl,v 1.1 2006/07/25 00:11:35 skwashd Exp $ -->
+<!-- $Id: admin_header.tpl 16915 2006-07-25 00:11:35Z skwashd $ -->
 
  <table border="0" width="100%">
   <tr bgcolor="{th_bg}">

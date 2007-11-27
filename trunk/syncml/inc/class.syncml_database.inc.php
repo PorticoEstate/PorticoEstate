@@ -7,7 +7,7 @@
 	 * @copyright Copyright (c) 2007 Free Software Foundation, Inc.
 	 * @license   GNU General Public License 3 or later
 	 * @package   syncml
-	 * @version   $Id: class.syncml_database.inc.php,v 1.4 2007/08/19 18:35:38 johang Exp $
+	 * @version   $Id: class.syncml_database.inc.php 18227 2007-08-19 18:35:38Z johang $
 	 */
 
 	require_once 'inc/class.somappings.inc.php';

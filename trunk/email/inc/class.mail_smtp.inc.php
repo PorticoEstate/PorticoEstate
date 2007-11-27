@@ -6,7 +6,7 @@
 	* @copyright Copyright (C) 2005 Free Software Foundation, Inc. http://www.fsf.org/
 	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
 	* @package email
-	* @version $Id: class.mail_smtp.inc.php,v 1.3 2006/12/18 11:02:13 sigurdne Exp $
+	* @version $Id: class.mail_smtp.inc.php 17716 2006-12-18 11:02:13Z sigurdne $
 	*/
 
 	/**

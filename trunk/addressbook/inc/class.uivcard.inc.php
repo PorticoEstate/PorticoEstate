@@ -11,7 +11,7 @@
   *  option) any later version.                                              *
   \**************************************************************************/
 
-  /* $Id: class.uivcard.inc.php,v 1.15 2007/01/24 15:59:38 Caeies Exp $ */
+  /* $Id: class.uivcard.inc.php 17901 2007-01-24 15:59:38Z Caeies $ */
 
 	class uivcard
 	{

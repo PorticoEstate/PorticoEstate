@@ -24,7 +24,7 @@
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/bbb_/ekstern/
 	* @package property
 	* @subpackage import
- 	* @version $Id: import_fra_Service_xls,v 1.2 2007/09/03 18:22:46 sigurdne Exp $
+ 	* @version $Id: import_fra_Service_xls 18358 2007-11-27 04:43:37Z skwashd $
 	*/
 
 	/**

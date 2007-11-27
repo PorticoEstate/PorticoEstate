@@ -7,7 +7,7 @@
 	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
 	* @package email
 	* @subpackage hooks
-	* @version $Id: hook_admin.inc.php,v 1.11 2006/09/09 05:29:11 skwashd Exp $
+	* @version $Id: hook_admin.inc.php 17105 2006-09-09 05:37:38Z skwashd $
 	*/
 {
 // Only Modify the $file and $title variables.....

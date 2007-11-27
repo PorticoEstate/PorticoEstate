@@ -1,4 +1,4 @@
-<!-- $Id: msg.tpl,v 1.1 2006/07/23 10:42:06 skwashd Exp $ -->
+<!-- $Id: msg.tpl 16907 2006-07-23 10:42:06Z skwashd $ -->
 <!-- BEGIN msg -->
 <table cellpadding="1" cellspacing="1" width="95%" align="center"><form>
   <tr>

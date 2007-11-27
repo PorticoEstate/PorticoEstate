@@ -15,7 +15,7 @@
 *  option) any later version.                                              *
 \**************************************************************************/
 
-	/* $Id: hook_admin.inc.php,v 1.12 2006/09/09 09:04:50 skwashd Exp $ */
+	/* $Id: hook_admin.inc.php 17106 2006-09-09 09:04:58Z skwashd $ */
 
 	{
 		$file = array

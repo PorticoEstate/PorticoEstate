@@ -6,7 +6,7 @@
 	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
 	* @package bookmarks
 	* @subpackage setup
-	* @version $Id: default_records.inc.php,v 1.6 2005/04/28 18:59:46 powerstat Exp $
+	* @version $Id: default_records.inc.php 15878 2005-04-28 18:59:46Z powerstat $
 	*/
 
 	$oProc->query("select count(*) from phpgw_config where config_app='bookmarks'",__LINE__,__FILE__);

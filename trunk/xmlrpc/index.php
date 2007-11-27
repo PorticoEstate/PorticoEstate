@@ -9,7 +9,7 @@
 *  option) any later version.                                              *
 \**************************************************************************/
 
-/* $Id: index.php,v 1.8 2002/01/04 01:46:35 milosch Exp $ */
+/* $Id: index.php 8960 2002-01-04 01:46:35Z milosch $ */
 
 	$GLOBALS['phpgw_info'] = array();
 	$GLOBALS['phpgw_info']['flags'] = array(

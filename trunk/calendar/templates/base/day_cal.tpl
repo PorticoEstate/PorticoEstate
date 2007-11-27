@@ -1,4 +1,4 @@
-<!-- $Id: day_cal.tpl,v 1.1 2006/07/28 03:30:43 skwashd Exp $ -->
+<!-- $Id: day_cal.tpl 16925 2006-07-28 03:30:44Z skwashd $ -->
 <!-- BEGIN day -->
 <table width="100%" border="0" cellspacing="0" cellpadding="0">
 {row}

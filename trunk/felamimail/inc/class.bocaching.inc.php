@@ -11,7 +11,7 @@
 	* Free Software Foundation; either version 2 of the License, or (at your    *
 	* option) any later version.                                                *
 	\***************************************************************************/
-	/* $Id: class.bocaching.inc.php,v 1.6 2007/09/22 14:19:45 sigurdne Exp $ */
+	/* $Id: class.bocaching.inc.php 18280 2007-09-22 14:19:46Z sigurdne $ */
 
 	class bocaching
 	{

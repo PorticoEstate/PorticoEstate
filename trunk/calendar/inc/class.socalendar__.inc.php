@@ -12,7 +12,7 @@
   *  option) any later version.                                              *
   \**************************************************************************/
 
-	/* $Id: class.socalendar__.inc.php,v 1.17 2006/09/09 14:43:07 skwashd Exp $ */
+	/* $Id: class.socalendar__.inc.php 18358 2007-11-27 04:43:37Z skwashd $ */
 
 if ( !extension_loaded('mcal') )
 {

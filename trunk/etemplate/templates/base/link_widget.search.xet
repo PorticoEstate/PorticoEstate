@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
-<!-- $Id: link_widget.search.xet,v 1.2 2007/02/10 16:03:46 sigurdne Exp $ -->
+<!-- $Id: link_widget.search.xet 17936 2007-02-10 16:03:46Z sigurdne $ -->
 <overlay>
 	<grid id="etemplate.link_widget.search" template="" lang="" group="" version="0.9.15.002">
 		<columns>

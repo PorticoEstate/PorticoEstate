@@ -12,7 +12,7 @@
 	*  option) any later version.                                              *
 	\**************************************************************************/
 
-	/* $Id: main.php,v 1.9 2002/09/15 23:53:41 skeeter Exp $ */
+	/* $Id: main.php 10903 2002-09-15 23:53:41Z skeeter $ */
 
 	/*
 	** This program is non-standard, we will create and manage our sessions manually.

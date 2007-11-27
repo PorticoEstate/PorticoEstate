@@ -7,7 +7,7 @@
 	* @copyright Copyright (C) 2003-2005 Free Software Foundation, Inc. http://www.fsf.org/
 	* @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License
 	* @package email
-	* @version $Id: class.mail_msg_wrappers.inc.php,v 1.51 2006/12/20 14:54:21 sigurdne Exp $
+	* @version $Id: class.mail_msg_wrappers.inc.php 17743 2006-12-20 14:54:21Z sigurdne $
 	* @internal Based on AngleMail http://www.anglemail.org/
 	*/
 

@@ -12,7 +12,7 @@
 	*  option) any later version.                                              *
 	\**************************************************************************/
 
-	/* $Id: hook_after_navbar.inc.php,v 1.6 2007/01/07 01:23:15 skwashd Exp $ */
+	/* $Id: hook_after_navbar.inc.php 17856 2007-01-07 01:23:15Z skwashd $ */
 
 	if ($GLOBALS['phpgw_info']['flags']['currentapp'] != 'messenger' &&
 		$GLOBALS['phpgw_info']['flags']['currentapp'] != 'welcome')

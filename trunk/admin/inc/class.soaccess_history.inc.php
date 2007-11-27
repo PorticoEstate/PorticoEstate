@@ -9,7 +9,7 @@
 	*  option) any later version.                                              *
 	\**************************************************************************/
 
-	/* $Id: class.soaccess_history.inc.php,v 1.8 2006/02/14 08:48:21 skwashd Exp $ */
+	/* $Id: class.soaccess_history.inc.php 18358 2007-11-27 04:43:37Z skwashd $ */
 
 	class soaccess_history
 	{

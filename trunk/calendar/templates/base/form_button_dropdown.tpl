@@ -1,4 +1,4 @@
-<!-- $Id: form_button_dropdown.tpl,v 1.1 2006/07/28 03:30:43 skwashd Exp $ -->
+<!-- $Id: form_button_dropdown.tpl 16925 2006-07-28 03:30:44Z skwashd $ -->
   <td width="{form_width}%" align="center" valign="bottom">
    <form action="{form_link}" method="post" name="{form_name}form">
     <b>{title}:</b>

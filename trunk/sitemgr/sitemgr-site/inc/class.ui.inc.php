@@ -9,7 +9,7 @@
 	* option) any later version.                                               *
 	\**************************************************************************/
 
-	/* $Id: class.ui.inc.php,v 1.15 2005/05/15 02:16:27 skwashd Exp $ */
+	/* $Id: class.ui.inc.php 15965 2005-05-15 02:16:27Z skwashd $ */
 
 	class ui
 	{

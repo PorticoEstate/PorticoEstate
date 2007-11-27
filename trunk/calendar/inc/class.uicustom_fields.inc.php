@@ -10,7 +10,7 @@
   *  option) any later version.                                              *
   \**************************************************************************/
 
-	/* $Id: class.uicustom_fields.inc.php,v 1.5 2006/12/12 19:27:47 sigurdne Exp $ */
+	/* $Id: class.uicustom_fields.inc.php 18358 2007-11-27 04:43:37Z skwashd $ */
 
 	phpgw::import_class('calendar.bocustom_fields');
 

@@ -9,7 +9,7 @@
 	*  option) any later version.                                              *
 	\**************************************************************************/
 
-	/* $Id: setup.inc.php,v 1.10 2006/03/11 23:20:48 skwashd Exp $ */
+	/* $Id: setup.inc.php 16493 2006-03-11 23:24:02Z skwashd $ */
 
 	$setup_info['timetrack']['name']    = 'timetrack';
 	$setup_info['timetrack']['version'] = '0.9.13.001';

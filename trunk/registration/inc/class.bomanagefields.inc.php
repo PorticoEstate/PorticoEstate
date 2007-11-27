@@ -11,7 +11,7 @@
 	*  option) any later version.                                              *
 	\**************************************************************************/
 
-	/* $Id: class.bomanagefields.inc.php,v 1.3 2002/01/26 03:22:16 ceb Exp $ */
+	/* $Id: class.bomanagefields.inc.php 9323 2002-01-26 03:22:16Z ceb $ */
 
 	class bomanagefields
 	{

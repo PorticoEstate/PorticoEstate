@@ -10,7 +10,7 @@
     *  option) any later version.                                              *
     \**************************************************************************/
 
-    /* $Id: index.php,v 1.9 2005/05/05 16:33:09 powerstat Exp $ */
+    /* $Id: index.php 15915 2005-05-05 16:33:09Z powerstat $ */
 
 	$GLOBALS['phpgw_info']['flags'] = array(
 						'currentapp'		=> 'comic',

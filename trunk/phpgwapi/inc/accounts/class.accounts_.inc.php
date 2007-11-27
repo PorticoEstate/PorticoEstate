@@ -8,7 +8,7 @@
 	* @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License
 	* @package phpgwapi
 	* @subpackage accounts
-	* @version $Id: class.accounts_.inc.php,v 1.15 2007/08/22 07:40:55 sigurdne Exp $
+	* @version $Id: class.accounts_.inc.php 18358 2007-11-27 04:43:37Z skwashd $
 	*/
 	if (empty($GLOBALS['phpgw_info']['server']['account_repository']))
 	{

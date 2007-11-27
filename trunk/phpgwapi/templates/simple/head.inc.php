@@ -5,7 +5,7 @@
 	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
 	* @package phpgwapi
 	* @subpackage gui
-	* @version $Id: head.inc.php,v 1.8 2007/01/02 12:04:29 sigurdne Exp $
+	* @version $Id: head.inc.php 17835 2007-01-02 12:04:29Z sigurdne $
 	*/
 
 	if ( !isset($GLOBALS['phpgw_info']['server']['site_title']) )

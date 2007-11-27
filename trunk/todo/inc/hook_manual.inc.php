@@ -7,7 +7,7 @@
 	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
 	* @package todo
 	* @subpackage hooks
-	* @version $Id: hook_manual.inc.php,v 1.5 2005/05/10 15:48:57 powerstat Exp $
+	* @version $Id: hook_manual.inc.php 15931 2005-05-10 15:48:58Z powerstat $
 	*/
 
 // Only Modify the $file variable.....

@@ -24,7 +24,7 @@
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/bbb_/ekstern/
 	* @package property
 	* @subpackage custom
- 	* @version $Id: oppdater_utgaatt_objekt.php,v 1.2 2007/03/16 08:57:05 sigurdne Exp $
+ 	* @version $Id: oppdater_utgaatt_objekt.php 18358 2007-11-27 04:43:37Z skwashd $
 	*/
 
 	/**

@@ -8,7 +8,7 @@
 	* @license http://www.fsf.org/licenses/gpl.html GNU General Public License
 	* @package phpgwapi
 	* @subpackage database
-	* @version $Id: class.sql_pgsql.inc.php,v 1.2 2007/03/01 07:52:26 sigurdne Exp $
+	* @version $Id: class.sql_pgsql.inc.php 18006 2007-03-01 07:52:26Z sigurdne $
 	* @internal Development of this application was funded by http://www.sogrp.com
 	* @link http://www.sogrp.com/
 	*/

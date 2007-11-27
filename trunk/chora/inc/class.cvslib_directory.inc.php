@@ -10,7 +10,7 @@
 	* CVSLib directory class.
 	*
 	* @author  Anil Madhavapeddy <anil@recoil.org>
-	* @version $Revision: 1.3 $
+	* @version $Revision: 11846 $
 	* @since   Chora 0.1
 	* @package chora
 	*/

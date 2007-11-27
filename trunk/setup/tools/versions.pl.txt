@@ -9,7 +9,7 @@
   #  option) any later version.                                              #
   #**************************************************************************#
 
-  # $Id: versions.pl.txt,v 1.2 2005/05/11 21:10:37 powerstat Exp $ #
+  # $Id: versions.pl.txt 15951 2005-05-11 21:10:37Z powerstat $ #
  
 	# versions.pl (c) 2001 Miles Lott
 	# Extract and print all app versions, and create a versions.txt file.

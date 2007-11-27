@@ -17,7 +17,7 @@
 // along with this program; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 //
-// $Id: pt-br.php,v 1.2 2007/08/14 11:44:11 skwashd Exp $
+// $Id: pt-br.php 18212 2007-08-14 11:44:16Z skwashd $
 //
 // Tradutor: Marcílio Cunha Marinho Maia, 29/03/2003 às 04:34 (Goiânia-GO,Brasil)
 // E-mail: marcilio@nextsolution.com.br Web: http://www.nextsolution.com.br

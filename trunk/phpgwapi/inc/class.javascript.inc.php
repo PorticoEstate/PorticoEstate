@@ -6,7 +6,7 @@
 	* @license http://www.fsf.org/licenses/gpl.html GNU General Public License
 	* @package phpgwapi
 	* @subpackage gui
-	* @version $Id: class.javascript.inc.php,v 1.9 2006/09/03 06:15:27 skwashd Exp $
+	* @version $Id: class.javascript.inc.php 17062 2006-09-03 06:15:27Z skwashd $
 	* @link http://docs.phpgroupware.org/wiki/classJavaScript
 	*/
 

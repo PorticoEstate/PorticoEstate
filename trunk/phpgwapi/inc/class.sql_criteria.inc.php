@@ -8,7 +8,7 @@
 	* @license http://www.fsf.org/licenses/gpl.html GNU General Public License
 	* @package phpgwapi
 	* @subpackage database
-	* @version $Id: class.sql_criteria.inc.php,v 1.2 2004/12/30 06:47:31 skwashd Exp $
+	* @version $Id: class.sql_criteria.inc.php 15562 2004-12-30 06:47:35Z skwashd $
 	* @internal Development of this application was funded by http://www.sogrp.com
 	* @link http://www.sogrp.com/
 	*/

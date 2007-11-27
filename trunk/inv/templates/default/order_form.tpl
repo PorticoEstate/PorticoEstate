@@ -1,4 +1,4 @@
-<!-- $Id: order_form.tpl,v 1.18 2001/06/10 03:19:15 bettina Exp $ -->
+<!-- $Id: order_form.tpl 5679 2001-06-10 03:19:15Z bettina $ -->
 <script language="JavaScript">
 	self.name="first_Window";
 	function abook()

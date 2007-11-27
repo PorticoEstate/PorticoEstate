@@ -1,4 +1,4 @@
-<!-- $Id: invoice_print.tpl,v 1.12 2001/06/22 02:33:10 bettina Exp $ -->
+<!-- $Id: invoice_print.tpl 6128 2001-06-22 02:33:10Z bettina $ -->
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">                                                                              
 <HTML LANG="en"> 
 <head>

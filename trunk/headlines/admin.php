@@ -10,7 +10,7 @@
 	*  option) any later version.                                              *
 	\**************************************************************************/
 
-	/* $Id: admin.php,v 1.16 2007/01/24 17:06:49 Caeies Exp $ */
+	/* $Id: admin.php 17909 2007-01-24 17:26:17Z Caeies $ */
 
 	$GLOBALS['phpgw_info']['flags'] = array(
 		'admin_only'              => True,

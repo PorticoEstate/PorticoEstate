@@ -9,7 +9,7 @@
   *  option) any later version.                                              *
   \**************************************************************************/
 
-	/* $Id: hook_home.inc.php,v 1.11 2007/09/22 13:45:42 skwashd Exp $ */
+	/* $Id: hook_home.inc.php 18358 2007-11-27 04:43:37Z skwashd $ */
 
 	$debug_hook_home = 0;
 	//$debug_hook_home = 3;

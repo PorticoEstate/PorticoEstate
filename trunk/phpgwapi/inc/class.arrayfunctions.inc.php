@@ -7,7 +7,7 @@
 	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
 	* @package phpgwapi
 	* @subpackage utilities
-	* @version $Id: class.arrayfunctions.inc.php,v 1.5 2004/12/30 06:47:30 skwashd Exp $
+	* @version $Id: class.arrayfunctions.inc.php 15562 2004-12-30 06:47:35Z skwashd $
 	*/
 
 	/**

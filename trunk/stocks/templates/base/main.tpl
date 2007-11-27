@@ -1,4 +1,4 @@
-<!-- $Id: main.tpl,v 1.1 2005/01/17 15:58:54 ceb Exp $ -->
+<!-- $Id: main.tpl 15658 2005-01-17 16:02:16Z ceb $ -->
 
 {app_header}
 

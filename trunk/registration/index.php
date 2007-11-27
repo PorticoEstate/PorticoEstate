@@ -12,6 +12,6 @@
 	*  option) any later version.                                              *
 	\**************************************************************************/
 
-	/* $Id: index.php,v 1.1.1.1 2001/06/20 20:04:21 jengo Exp $ */
+	/* $Id: index.php 6101 2001-06-20 20:04:21Z jengo $ */
 
 	Header('Location: main.php');

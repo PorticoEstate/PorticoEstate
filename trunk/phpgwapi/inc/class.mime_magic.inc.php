@@ -10,7 +10,7 @@
 	* @license http://www.fsf.org/licenses/gpl.html GNU General Public License
 	* @package phpgwapi
 	* @subpackage network
-	* @version $Id: class.mime_magic.inc.php,v 1.2 2004/12/30 06:47:30 skwashd Exp $
+	* @version $Id: class.mime_magic.inc.php 15562 2004-12-30 06:47:35Z skwashd $
 	* @internal Originally taken from the Horde Framework 
 	* @link http://horde.org
 	* @internal Ported to phpGroupWare by Dave Hall - dave.hall@mbox.com.au

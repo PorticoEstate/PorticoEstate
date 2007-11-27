@@ -6,7 +6,7 @@
 	* @copyright Copyright (C) 2000-2005 Free Software Foundation, Inc. http://www.fsf.org/
 	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
 	* @package preferences
-	* @version $Id: hook_preferences.inc.php,v 1.19 2006/11/24 19:50:49 sigurdne Exp $
+	* @version $Id: hook_preferences.inc.php 17581 2006-11-24 19:50:50Z sigurdne $
 	*/
 
 	if ($GLOBALS['phpgw']->acl->check('changepassword',1))

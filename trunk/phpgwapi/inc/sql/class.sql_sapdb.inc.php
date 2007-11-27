@@ -6,7 +6,7 @@
 	* @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License
 	* @package phpgwapi
 	* @subpackage database
-	* @version $Id: class.sql_sapdb.inc.php,v 1.1 2006/12/26 11:37:44 skwashd Exp $
+	* @version $Id: class.sql_sapdb.inc.php 17763 2006-12-26 11:37:44Z skwashd $
 	*/
 
 	/**

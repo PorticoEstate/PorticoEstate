@@ -13,15 +13,14 @@
    height="48"
    id="svg2"
    sodipodi:version="0.32"
-   inkscape:version="0.45"
+   inkscape:version="0.45.1"
    version="1.0"
    sodipodi:docname="status_icons.svg"
    sodipodi:docbase="/home/pascal/public_html/phpgroupwarehead/ged/templates/base/images/work"
    inkscape:output_extension="org.inkscape.output.svg.inkscape"
-   inkscape:export-filename="/home/pascal/public_html/phpgroupwarehead/ged/templates/base/images/working-48.png"
-   inkscape:export-xdpi="90"
-   inkscape:export-ydpi="90"
-   sodipodi:modified="true">
+   inkscape:export-filename="/home/pascal/public_html/phpgroupwarehead/ged/templates/base/images/working_locked-16.png"
+   inkscape:export-xdpi="30"
+   inkscape:export-ydpi="30">
   <defs
      id="defs4">
     <linearGradient
@@ -468,6 +467,72 @@
        y1="30.118963"
        x2="8.1621113"
        y2="-1.1174588" />
+    <radialGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient8072"
+       id="radialGradient4238"
+       cx="24.375"
+       cy="31.875"
+       fx="24.375"
+       fy="31.875"
+       r="12"
+       gradientTransform="matrix(2.0208334,-4.6272794e-7,9.8747092e-7,4.3124999,-24.882846,-105.58592)"
+       gradientUnits="userSpaceOnUse" />
+    <radialGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient3171"
+       id="radialGradient4246"
+       cx="24.375"
+       cy="20.744308"
+       fx="24.375"
+       fy="20.744308"
+       r="9.874999"
+       gradientTransform="matrix(1.4683546,-3.4858394e-8,3.4482765e-8,1.4525317,-11.416143,-9.725514)"
+       gradientUnits="userSpaceOnUse" />
+    <radialGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient3171"
+       id="radialGradient4252"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(1.4683546,-3.4858394e-8,3.4482765e-8,1.4525317,-11.416143,-9.725514)"
+       cx="24.375"
+       cy="20.744308"
+       fx="24.375"
+       fy="20.744308"
+       r="9.874999" />
+    <radialGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient8072"
+       id="radialGradient4254"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(2.0208334,-4.6272794e-7,9.8747092e-7,4.3124999,-24.882846,-105.58592)"
+       cx="24.375"
+       cy="31.875"
+       fx="24.375"
+       fy="31.875"
+       r="12" />
+    <radialGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient4134"
+       id="radialGradient4257"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(1.4436668,-3.3056905e-7,7.0544113e-7,3.0808146,-4.2049801,-74.287886)"
+       cx="24.375"
+       cy="31.875"
+       fx="24.375"
+       fy="31.875"
+       r="12" />
+    <radialGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient4134"
+       id="radialGradient4260"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(1.0489805,-2.4902551e-8,2.4634205e-8,1.0376767,5.4155221,-5.8059983)"
+       cx="24.375"
+       cy="20.744308"
+       fx="24.375"
+       fy="20.744308"
+       r="9.874999" />
   </defs>
   <sodipodi:namedview
      id="base"
@@ -476,17 +541,36 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="8.0000002"
-     inkscape:cx="27.855179"
-     inkscape:cy="20.377514"
+     inkscape:zoom="1"
+     inkscape:cx="14.711417"
+     inkscape:cy="15.767167"
      inkscape:document-units="px"
-     inkscape:current-layer="layer13"
+     inkscape:current-layer="layer14"
      width="48px"
      height="48px"
      inkscape:window-width="1009"
      inkscape:window-height="710"
      inkscape:window-x="1492"
-     inkscape:window-y="46" />
+     inkscape:window-y="46"
+     showguides="true"
+     inkscape:guide-bbox="true">
+    <sodipodi:guide
+       orientation="vertical"
+       position="14.625"
+       id="guide2285" />
+    <sodipodi:guide
+       orientation="vertical"
+       position="18.625"
+       id="guide2287" />
+    <sodipodi:guide
+       orientation="vertical"
+       position="33.999999"
+       id="guide2289" />
+    <sodipodi:guide
+       orientation="vertical"
+       position="30.124999"
+       id="guide2291" />
+  </sodipodi:namedview>
   <metadata
      id="metadata7">
     <rdf:RDF>
@@ -523,7 +607,7 @@
      inkscape:groupmode="layer"
      id="layer3"
      inkscape:label="Working"
-     style="display:none"
+     style="display:inline"
      sodipodi:insensitive="true">
     <path
        sodipodi:type="arc"
@@ -599,7 +683,7 @@
      inkscape:groupmode="layer"
      id="layer13"
      inkscape:label="pending_for_quality_review"
-     style="display:inline">
+     style="display:none">
     <path
        sodipodi:type="arc"
        style="opacity:1;fill:url(#radialGradient2288);fill-opacity:1;fill-rule:nonzero;stroke:url(#linearGradient2290);stroke-width:1;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;display:inline"
@@ -650,6 +734,25 @@
          d="M 24.21875,38.4375 C 24.27511,38.774972 24.208333,41.09375 24.25,41.21875"
          style="fill:none;fill-opacity:0.75;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
     </g>
+  </g>
+  <g
+     inkscape:groupmode="layer"
+     id="layer14"
+     inkscape:label="working_locked">
+    <path
+       style="opacity:0.87019228;fill:url(#radialGradient4260);fill-opacity:1.0;fill-rule:evenodd;stroke:#000000;stroke-width:0.35719591;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="M 24.1084,18.823027 C 24.1084,4.7137893 37.771143,4.7137893 37.860441,18.823027 L 35.002874,18.733728 C 35.092173,8.2857479 26.876668,8.3750469 26.965967,18.912326 L 24.1084,18.823027 z "
+       id="path2283"
+       sodipodi:nodetypes="ccccc" />
+    <rect
+       style="opacity:0.87019228;fill:url(#radialGradient4257);fill-opacity:1.0;fill-rule:evenodd;stroke:#000000;stroke-width:0.28575674;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="rect2280"
+       width="17.145403"
+       height="10.715877"
+       x="22.41172"
+       y="18.55513"
+       rx="0"
+       ry="4.1524024" />
   </g>
   <g
      inkscape:groupmode="layer"

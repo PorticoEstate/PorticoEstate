@@ -10,7 +10,7 @@
   *  option) any later version.                                              *
   \**************************************************************************/
 
-  /* $Id: hook_config_validate.inc.php,v 1.4 2005/05/15 13:34:30 skwashd Exp $ */
+  /* $Id: hook_config_validate.inc.php 15977 2005-05-15 13:34:30Z skwashd $ */
 
 	/*
 	  Set a global flag to indicate this file was found by admin/config.php.

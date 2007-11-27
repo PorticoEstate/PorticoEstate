@@ -1,4 +1,4 @@
-<!-- $Id: nextmatchs.xsl,v 1.4 2006/11/13 12:43:36 ceb Exp $ -->
+<!-- $Id: nextmatchs.xsl 17546 2006-11-13 12:44:49Z ceb $ -->
 
 <xsl:template name="nextmatchs">
 	<xsl:choose>

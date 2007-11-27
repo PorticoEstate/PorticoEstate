@@ -9,7 +9,7 @@
 *  option) any later version.                                              *
 \**************************************************************************/
 
-/* $Id: comment.php,v 1.3 2001/12/05 16:27:28 milosch Exp $ */
+/* $Id: comment.php 8495 2001-12-05 16:27:28Z milosch $ */
 
 	$GLOBALS['phpgw_info'] = array();
 	$GLOBALS['phpgw_info']['flags'] = array(
@@ -231,7 +231,7 @@
 	src="http://meerkat.oreillynet.com/icons/meerkat-powered.jpg"
 	height="31" width="88" alt="Meerkat powered, yeah!"
 	border="0" hspace="8" /></a>
-<em>$Id: comment.php,v 1.3 2001/12/05 16:27:28 milosch Exp $</em></p>
+<em>$Id: comment.php 8495 2001-12-05 16:27:28Z milosch $</em></p>
 
 <?php
 	$GLOBALS['phpgw']->common->phpgw_footer();

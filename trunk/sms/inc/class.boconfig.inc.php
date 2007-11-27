@@ -8,7 +8,7 @@
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/bbb_/ekstern/
 	* @package sms
 	* @subpackage config
- 	* @version $Id: class.boconfig.inc.php,v 1.4 2006/12/27 10:39:15 sigurdne Exp $
+ 	* @version $Id: class.boconfig.inc.php 18358 2007-11-27 04:43:37Z skwashd $
 	*/
 
 	/**

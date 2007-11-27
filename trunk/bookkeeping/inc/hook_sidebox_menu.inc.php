@@ -9,7 +9,7 @@
 	*  Free Software Foundation; either version 2 of the License, or (at your  *
 	*  option) any later version.                                              *
 	\**************************************************************************/
-	/* $Id: hook_sidebox_menu.inc.php,v 1.2 2006/09/09 10:38:51 skwashd Exp $ */
+	/* $Id: hook_sidebox_menu.inc.php 17107 2006-09-09 10:38:51Z skwashd $ */
 	{
 
  /*
