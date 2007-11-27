@@ -69,16 +69,16 @@
 					break;
 
 				case 'button':
-					$load = array('button', 'element-beta');
+					$load = array('button-beta', 'element-beta');
 					break;
 
 				case 'calendar':
-					$load = array('calendar-beta');
+					$load = array('calendar');
 					break;
 
 				case 'colorpicker':
 				case 'colourpicker': // be nice to the speakers of H.M. English :)
-					$load = array('colorpicker');
+					$load = array('colorpicker-beta');
 					break;
 
 				case 'container':
@@ -106,7 +106,7 @@
 					break;
 
 				case 'editor':
-					$load = array('editor', 'menu', 'element-beta', 'button', 'animation', 'dragdrop');
+					$load = array('editor-beta', 'menu', 'element-beta', 'button', 'animation', 'dragdrop');
 					break;
 
 				case 'element':
@@ -120,7 +120,7 @@
 				// not including history - as it isn't needed - need to handle the not included/used types somewhere
 
 				case 'imageloader':
-					$load = array('imageloader');
+					$load = array('imageloader-experimental');
 					break;
 
 				case 'logger':
@@ -128,7 +128,7 @@
 					break;
 
 				case 'menu':
-					$load = array('containercore', 'menu');
+					$load = array('container_core', 'menu'); // and containter??
 					break;
 
 				case 'slider':
@@ -153,7 +153,7 @@
 			foreach ( $load as $script )
 			{
 				$test = $GLOBALS['phpgw']->js->validate_file('yahoo', "{$script}{$min}");
-				if ( !$test & !$ok )
+				if ( !$test || !$ok )
 				{
 					trigger_error(lang("Unable to load YUI script '%1' when attempting to load widget: '%2'", "{$script}{$min}", $widget), E_USER_WARNING);
 					return '';
