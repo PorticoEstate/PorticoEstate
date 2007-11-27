@@ -7,7 +7,7 @@
 	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
 	* @package tts
 	* @subpackage hooks
-	* @version $Id: hook_admin.inc.php,v 1.8 2006/10/14 05:39:41 skwashd Exp $
+	* @version $Id: hook_admin.inc.php 17413 2006-10-14 05:39:42Z skwashd $
 	*/
 
 	$values = array

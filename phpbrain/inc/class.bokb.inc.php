@@ -17,7 +17,7 @@
 *  option) any later version.                                              *
 \**************************************************************************/
 
-	/* $Id: class.bokb.inc.php,v 1.19 2006/05/09 05:14:07 skwashd Exp $ */
+	/* $Id: class.bokb.inc.php 16713 2006-05-09 05:14:07Z skwashd $ */
 
 	/**
 	* Business logic layer of the Knowledge Base
@@ -25,7 +25,7 @@
 	* Last Editor:	$Author: skwashd $
 	* @author		Dave Hall & Alejandro Pedraza
 	* @package		phpbrain
-	* @version		$Revision: 1.19 $
+	* @version		$Revision: 16713 $
 	* @license		GPL
 	**/
 	class bokb

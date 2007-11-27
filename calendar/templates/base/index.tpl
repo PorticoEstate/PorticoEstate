@@ -1,4 +1,4 @@
-<!-- $Id: index.tpl,v 1.2 2006/12/28 04:28:01 skwashd Exp $ -->
+<!-- $Id: index.tpl 17799 2006-12-28 04:28:01Z skwashd $ -->
 <table border="0" width="100%">
  <tr>
   <td align="left" valign="top">

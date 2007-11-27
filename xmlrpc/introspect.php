@@ -10,7 +10,7 @@
   *  option) any later version.                                              *
   \**************************************************************************/
 
-  /* $Id: introspect.php,v 1.2 2001/12/14 14:11:50 milosch Exp $ */
+  /* $Id: introspect.php 8594 2001-12-14 14:11:50Z milosch $ */
 
 	$GLOBALS['phpgw_info'] = array();
 	$GLOBALS['phpgw_info']['flags'] = array(

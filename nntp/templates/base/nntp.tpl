@@ -1,4 +1,4 @@
-<!-- $Id: nntp.tpl,v 1.1 2006/07/23 10:42:06 skwashd Exp $ -->
+<!-- $Id: nntp.tpl 16907 2006-07-23 10:42:06Z skwashd $ -->
 <!-- BEGIN nntp -->
 <script>
 function check_all()

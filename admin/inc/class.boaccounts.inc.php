@@ -9,7 +9,7 @@
 	*  Free Software Foundation; either version 2 of the License, or (at your  *
 	*  option) any later version.                                              *
 	\**************************************************************************/
-	/* $Id: class.boaccounts.inc.php,v 1.58 2007/01/24 17:33:38 Caeies Exp $ */
+	/* $Id: class.boaccounts.inc.php 18358 2007-11-27 04:43:37Z skwashd $ */
 
 	//FIXME define constants for rights so we can fuck all these magic numbers
 	

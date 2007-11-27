@@ -9,7 +9,7 @@
   *  option) any later version.                                              *
   \**************************************************************************/
 
-	/* $Id: preferences.php,v 1.44 2005/05/15 06:57:37 skwashd Exp $ */
+	/* $Id: preferences.php 18358 2007-11-27 04:43:37Z skwashd $ */
 
 	$phpgw_info['flags'] = array
 	(

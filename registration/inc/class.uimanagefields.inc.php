@@ -11,7 +11,7 @@
 	*  option) any later version.                                              *
 	\**************************************************************************/
 
-	/* $Id: class.uimanagefields.inc.php,v 1.3 2002/04/29 19:59:34 skeeter Exp $ */
+	/* $Id: class.uimanagefields.inc.php 10103 2002-04-29 19:59:34Z skeeter $ */
 
 	class uimanagefields
 	{

@@ -9,7 +9,7 @@
   *  Free Software Foundation; either version 2 of the License, or (at your  *
   *  option) any later version.                                              *
   \**************************************************************************/
-	/* $Id: accept_holiday.php,v 1.5 2005/05/15 06:57:37 skwashd Exp $ */
+	/* $Id: accept_holiday.php 15968 2005-05-15 06:57:38Z skwashd $ */
 
 	$send_back_to = str_replace('submitlocale','holiday_admin',$HTTP_SERVER_VARS['HTTP_REFERER']);
 	$send_back_to = str_replace('submit','admin',$HTTP_SERVER_VARS['HTTP_REFERER']);	// 0.9.14.xxx

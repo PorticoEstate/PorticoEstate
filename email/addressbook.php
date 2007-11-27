@@ -6,7 +6,7 @@
 	* @copyright Copyright (C) 2003-2005 Free Software Foundation, Inc. http://www.fsf.org/
 	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
 	* @package email
-	* @version $Id: addressbook.php,v 1.45 2006/12/20 08:23:28 sigurdne Exp $
+	* @version $Id: addressbook.php 17732 2006-12-20 08:23:28Z sigurdne $
 	*/
 
 	$GLOBALS['phpgw_info']['flags'] = array(

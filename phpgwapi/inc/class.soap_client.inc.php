@@ -7,7 +7,7 @@
 	* @package phpgwapi
 	* @subpackage communication
 	* Please see original header after this one and class.nusoap_base.inc.php
-	* @version $Id: class.soap_client.inc.php,v 1.11 2006/12/28 18:03:40 Caeies Exp $
+	* @version $Id: class.soap_client.inc.php 17829 2006-12-28 18:03:40Z Caeies $
 	*/
 
 /* Please see class.base_nusoap.inc.php for more information */

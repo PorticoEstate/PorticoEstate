@@ -7,7 +7,7 @@
 	* @copyright Copyright (C) 2000-2002,2005 Free Software Foundation, Inc. http://www.fsf.org/
 	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
 	* @package setup
-	* @version $Id: hook_config.inc.php,v 1.4 2006/09/25 02:15:13 skwashd Exp $
+	* @version $Id: hook_config.inc.php 17220 2006-09-25 02:15:13Z skwashd $
 	*/
 
 	/**

@@ -5,7 +5,7 @@
 	* @license http://www.fsf.org/licenses/lgpl.html GNU Lesser General Public License
 	* @package phpgwapi
 	* @subpackage application
-	* @version $Id: class.translation.inc.php,v 1.8 2004/12/30 06:47:31 skwashd Exp $
+	* @version $Id: class.translation.inc.php 15562 2004-12-30 06:47:35Z skwashd $
 	*/
 
 	if (empty($GLOBALS['phpgw_info']['server']['translation_system']))

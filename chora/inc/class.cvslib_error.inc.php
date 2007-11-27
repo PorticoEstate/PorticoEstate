@@ -10,7 +10,7 @@
 	 * CVSLib error class.
 	 *
 	 * @author  Anil Madhavapeddy <anil@recoil.org>
-	 * @version $Revision: 1.1 $
+	 * @version $Revision: 10069 $
 	 * @since   Chora 0.1
 	 * @package chora
 	 */

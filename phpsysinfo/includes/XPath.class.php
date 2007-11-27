@@ -158,7 +158,7 @@
  * @author  S.Blum / N.Swinson / D.Allen / (P.Mehl)
  * @link    http://sourceforge.net/projects/phpxpath/
  * @version 3.5
- * @CVS $Id: XPath.class.php,v 1.4 2007/08/14 11:44:08 skwashd Exp $
+ * @CVS $Id: XPath.class.php 18212 2007-08-14 11:44:16Z skwashd $
  */
 
 // Include guard, protects file being included twice

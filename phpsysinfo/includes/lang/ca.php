@@ -17,7 +17,7 @@
 // along with this program; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 //
-// $Id: ca.php,v 1.4 2007/08/14 11:44:10 skwashd Exp $
+// $Id: ca.php 18212 2007-08-14 11:44:16Z skwashd $
 //
 // Traductor: Miquel Guillamet Montalat
 // E-mail: mikelet15@netscape.com Web: http://gitx.dhs.org

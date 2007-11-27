@@ -5,8 +5,8 @@
 	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
 	* @package admin
 	* @subpackage setup
-	* @version $Id: tables_update.inc.php,v 1.4 2007/03/09 12:16:52 sigurdne Exp $
-	* @internal $Source: /sources/phpgroupware/admin/setup/tables_update.inc.php,v $
+	* @version $Id: tables_update.inc.php 18030 2007-03-09 12:17:39Z sigurdne $
+	* @internal $Source$
 	*/
 
 	$test[] = '0.9.16.000';

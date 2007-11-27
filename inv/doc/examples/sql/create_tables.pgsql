@@ -1,4 +1,4 @@
--- $Id: create_tables.pgsql,v 1.1 2002/06/10 13:01:46 ldw Exp $
+-- $Id: create_tables.pgsql 10395 2002-06-10 13:01:47Z ldw $
 
 	CREATE TABLE phpgw_inv_products (
 		con				serial,

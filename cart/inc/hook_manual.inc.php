@@ -9,7 +9,7 @@
 	* Free Software Foundation; either version 2 of the License, or (at your   *
 	* option) any later version.                                               *
 	\**************************************************************************/
-	/* $Id: hook_manual.inc.php,v 1.4 2001/06/02 00:59:12 bettina Exp $ */
+	/* $Id: hook_manual.inc.php 5371 2001-06-02 00:59:12Z bettina $ */
 
 // Only Modify the $file variable.....
 	$file = Array();

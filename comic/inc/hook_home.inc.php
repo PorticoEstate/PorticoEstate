@@ -9,7 +9,7 @@
   *  option) any later version.                                              *
   \**************************************************************************/
 
-	/* $Id: hook_home.inc.php,v 1.11 2006/12/28 04:29:52 skwashd Exp $ */
+	/* $Id: hook_home.inc.php 17800 2006-12-28 04:29:52Z skwashd $ */
 {
 
 	$tmp_app_inc = $GLOBALS['phpgw']->common->get_inc_dir('comic');

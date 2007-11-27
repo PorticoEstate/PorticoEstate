@@ -14,7 +14,7 @@
   * edited by hand.                                                          *
   \**************************************************************************/
 
-  /* $Id: tables_current.inc.php,v 1.12 2007/10/27 09:09:17 maat Exp $ */
+  /* $Id: tables_current.inc.php 18336 2007-11-06 14:20:57Z maat $ */
 
   /* table array for ged */
 	$phpgw_baseline = array(
@@ -126,7 +126,9 @@
 				'date_expire' => array('type' => 'int', 'precision' => 4,'nullable' => True,'default' => '0'),
 				'inherited' => array('type' => 'int', 'precision' => 2,'nullable' => True,'default' => '0'),
 				'aclread' => array('type' => 'int', 'precision' => 2,'nullable' => True),
+				'aclstatuses' => array('type' => 'text','nullable' => True),
 				'aclwrite' => array('type' => 'int', 'precision' => 2,'nullable' => True),
+				'acldelete' => array('type' => 'int', 'precision' => 2,'nullable' => True,'default' => '0'),
 				'aclchangeacl' => array('type' => 'int', 'precision' => 2,'nullable' => True,'default' => '0')
 			),
 			'pk' => array('acl_id'),

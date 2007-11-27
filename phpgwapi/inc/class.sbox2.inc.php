@@ -6,7 +6,7 @@
 	* @license http://www.fsf.org/licenses/lgpl.html GNU Lesser General Public License
 	* @package phpgwapi
 	* @subpackage gui
-	* @version $Id: class.sbox2.inc.php,v 1.18 2006/09/09 14:43:16 skwashd Exp $
+	* @version $Id: class.sbox2.inc.php 18358 2007-11-27 04:43:37Z skwashd $
 	*/
 
 	/**

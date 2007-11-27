@@ -7,7 +7,7 @@
 	* @license http://www.fsf.org/licenses/lgpl.html GNU Lesser General Public License
 	* @package phpgwapi
 	* @subpackage gui
-	* @version $Id: class.listbox.inc.php,v 1.22 2006/12/27 12:24:48 skwashd Exp $
+	* @version $Id: class.listbox.inc.php 17788 2006-12-27 12:24:48Z skwashd $
 	*/
 
 	CreateObject('phpgwapi.portalbox');

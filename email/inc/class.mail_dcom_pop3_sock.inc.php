@@ -10,7 +10,7 @@
 	* @copyright Copyright (C) 2003-2005 Free Software Foundation, Inc. http://www.fsf.org/
 	* @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License
 	* @package email
-	* @version $Id: class.mail_dcom_pop3_sock.inc.php,v 1.25 2006/12/20 19:39:03 sigurdne Exp $
+	* @version $Id: class.mail_dcom_pop3_sock.inc.php 17745 2006-12-20 19:39:03Z sigurdne $
 	* @internal Based on AngleMail http://www.anglemail.org/
 	*/
 

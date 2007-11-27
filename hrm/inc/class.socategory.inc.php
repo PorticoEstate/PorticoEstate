@@ -8,7 +8,7 @@
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/bbb_/ekstern/
 	* @package hrm
 	* @subpackage admin
- 	* @version $Id: class.socategory.inc.php,v 1.9 2006/12/27 10:38:35 sigurdne Exp $
+ 	* @version $Id: class.socategory.inc.php 18358 2007-11-27 04:43:37Z skwashd $
 	*/
 
 	/**
@@ -18,8 +18,7 @@
 
 	class hrm_socategory
 	{
-
-		function hrm_socategory()
+		public function __construct()
 		{
 			$this->currentapp	= 'hrm';
 			$this->account		= $GLOBALS['phpgw_info']['user']['account_id'];
@@ -28,7 +27,6 @@
 
 			$this->join			=& $this->bocommon->join;
 			$this->like			=& $this->bocommon->like;
-
 		}
 
 		function read($data)

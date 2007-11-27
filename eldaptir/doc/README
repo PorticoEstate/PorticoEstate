@@ -9,7 +9,7 @@
   *  option) any later version.                                              *
   \**************************************************************************/
 
-	/* $Id: README,v 1.1 2001/06/30 06:07:04 milosch Exp $ */
+	/* $Id: README 6387 2001-06-30 06:07:04Z milosch $ */
 
 	eLDAPtir - Edit LDAP Trees in Realtime
 

@@ -12,7 +12,7 @@
   *  option) any later version.                                              *
   \**************************************************************************/
 
-	/* $Id: class.uiholiday.inc.php,v 1.13 2006/12/12 17:51:14 sigurdne Exp $ */
+	/* $Id: class.uiholiday.inc.php 18358 2007-11-27 04:43:37Z skwashd $ */
 
 	class calendar_uiholiday
 	{

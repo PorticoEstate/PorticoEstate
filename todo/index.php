@@ -6,7 +6,7 @@
 	* @copyright Copyright (C) 2000-2005 Free Software Foundation, Inc. http://www.fsf.org/
 	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
 	* @package todo
-	* @version $Id: index.php,v 1.77 2006/07/23 10:24:38 skwashd Exp $
+	* @version $Id: index.php 16904 2006-07-23 10:24:38Z skwashd $
 	*/
 
 	$GLOBALS['phpgw_info']['flags'] = array

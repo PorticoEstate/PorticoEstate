@@ -10,7 +10,7 @@
 	*  option) any later version.                                              *
 	\**************************************************************************/
 
-	/* $Id: functions.inc.php,v 1.4 2001/11/13 03:56:36 milosch Exp $ */
+	/* $Id: functions.inc.php 8258 2001-11-13 03:56:36Z milosch $ */
 
 	function printSelectList($inSelected, $inValues)
 	{

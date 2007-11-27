@@ -10,7 +10,7 @@
   *  option) any later version.                                              *
   \**************************************************************************/
 
-	/* $Id: deleteserver.php,v 1.6 2003/05/25 21:34:36 gugux Exp $ */
+	/* $Id: deleteserver.php 12863 2003-05-25 21:34:36Z gugux $ */
 
 	if ($confirm)
 	{

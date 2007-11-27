@@ -10,7 +10,7 @@
   *  option) any later version.                                              *
   \**************************************************************************/
 
-  /* $Id: metar_regions.inc.php,v 1.10 2003/04/22 20:34:50 gugux Exp $ */
+  /* $Id: metar_regions.inc.php 12483 2003-04-22 20:34:50Z gugux $ */
 
 	function region_table($order, $sort, $filter, $start, $query, &$table_c)
 	{

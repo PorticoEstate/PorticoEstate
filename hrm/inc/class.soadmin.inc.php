@@ -8,7 +8,7 @@
 	 * @internal Development of this application was funded by http://www.bergen.kommune.no/bbb_/ekstern/
 	 * @package hrm
 	 * @subpackage admin
-	 * @version $Id: class.soadmin.inc.php,v 1.8 2006/12/27 10:38:35 sigurdne Exp $
+ 	* @version $Id: class.soadmin.inc.php 18358 2007-11-27 04:43:37Z skwashd $
 	 */
 
 	/**
@@ -30,18 +30,20 @@
 
 		public function select_location($grant='', $appname = 'hrm')
 		{
+  			$appname = $GLOBALS['phpgw']->db->db_addslashes($appname);
 			$filter = " WHERE appname='$appname'";
 
 			if($grant)
 			{
 				$filter .= ' AND allow_grant=1';
 			}
+
 			$this->db->query("SELECT * FROM phpgw_hrm_acl_location $filter ORDER BY id ");
 
-			$i = 0;
+			$location = array();
 			while ($this->db->next_record())
 			{
-				$location = array
+				$location[] = array
 				(
 					'id'	=> $this->db->f('id'),
 					'descr'	=> $this->db->f('descr', true)

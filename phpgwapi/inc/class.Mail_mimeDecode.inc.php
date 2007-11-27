@@ -62,7 +62,7 @@
 *    perhaps even message/partial.
 *
 * @author  Richard Heyes <richard@phpguru.org>
-* @version $Revision: 1.2 $
+* @version $Revision: 17061 $
 * @package phpgwapi
 * @subpackage communication
 */

@@ -8,7 +8,7 @@
 	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/bbb_/ekstern/
 	* @package phpgwapi
-	* @version $Id: class.custom_fields.inc.php,v 1.20 2007/02/10 13:30:28 skwashd Exp $
+	* @version $Id: class.custom_fields.inc.php 18358 2007-11-27 04:43:37Z skwashd $
 	*/
 
 	/**

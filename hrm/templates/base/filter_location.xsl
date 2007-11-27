@@ -1,4 +1,4 @@
-<!-- $Id: filter_location.xsl,v 1.2 2005/11/30 17:07:22 sigurdne Exp $ -->
+<!-- $Id: filter_location.xsl 16273 2005-11-30 17:07:22Z sigurdne $ -->
 
 	<xsl:template name="filter_location">
 		<xsl:variable name="select_action"><xsl:value-of select="select_action"/></xsl:variable>

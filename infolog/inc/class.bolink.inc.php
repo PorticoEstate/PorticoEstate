@@ -14,7 +14,7 @@
  * the Free Software Foundation; either version 2 of the License, or 	*
  * at your option) any later version.					*
  \**********************************************************************/
- /* $Id: class.bolink.inc.php,v 1.28 2007/02/13 15:02:07 sigurdne Exp $ */
+ /* $Id: class.bolink.inc.php 17949 2007-02-13 15:02:07Z sigurdne $ */
 
 	include_once(PHPGW_INCLUDE_ROOT . '/infolog/inc/class.solink.inc.php');
 	

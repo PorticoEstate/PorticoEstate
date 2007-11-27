@@ -24,7 +24,7 @@
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/bbb_/ekstern/
 	* @package property
 	* @subpackage project
- 	* @version $Id: class.sorequest.inc.php,v 1.22 2007/09/10 14:49:42 sigurdne Exp $
+ 	* @version $Id: class.sorequest.inc.php 18358 2007-11-27 04:43:37Z skwashd $
 	*/
 
 	/**

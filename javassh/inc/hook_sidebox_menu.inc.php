@@ -10,7 +10,7 @@
   *  option) any later version.                                              *
   \**************************************************************************/
 
-  /* $Id: hook_sidebox_menu.inc.php,v 1.4 2006/12/28 14:29:54 skwashd Exp $ */
+  /* $Id: hook_sidebox_menu.inc.php 17826 2006-12-28 14:29:54Z skwashd $ */
 {
 
  /*

@@ -8,7 +8,7 @@
 	* @license http://www.fsf.org/licenses/gpl.html GNU General Public License
 	* @package phpgwapi
 	* @subpackage database
-	* @version $Id: class.schema_proc_array.inc.php,v 1.7 2004/12/30 06:47:31 skwashd Exp $
+	* @version $Id: class.schema_proc_array.inc.php 15562 2004-12-30 06:47:35Z skwashd $
 	*/
 
 	/**

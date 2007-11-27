@@ -7,7 +7,7 @@
 	* @license LGPL
 	* @package phpgwapi
 	* @subpackage network
-	* @version $Id: class.http_svn_client.inc.php,v 1.1 2006/09/21 08:50:07 Caeies Exp $
+	* @version $Id: class.http_svn_client.inc.php 17196 2006-09-21 08:50:07Z Caeies $
 	* @internal At the moment much of this is simply a wrapper around the NET_HTTP_Client class, with some other methods for parsing the returned XML etc Ideally this will eventually use groupware's inbuilt HTTP class
 	*/
 

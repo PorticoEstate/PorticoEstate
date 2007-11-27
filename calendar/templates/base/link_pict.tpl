@@ -1,4 +1,4 @@
-<!-- $Id: link_pict.tpl,v 1.1 2006/07/28 03:30:43 skwashd Exp $    link_pict -->
+<!-- $Id: link_pict.tpl 16925 2006-07-28 03:30:44Z skwashd $    link_pict -->
 <!-- BEGIN link_pict -->
 {picture}
 <!-- END link_pict -->

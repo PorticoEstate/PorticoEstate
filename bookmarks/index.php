@@ -6,7 +6,7 @@
 	* @copyright Copyright (C) 2005 Free Software Foundation, Inc. http://www.fsf.org/
 	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
 	* @package bookmarks
-	* @version $Id: index.php,v 1.19 2005/04/28 18:59:46 powerstat Exp $
+	* @version $Id: index.php 15878 2005-04-28 18:59:46Z powerstat $
 	* @internal http://www.renaghan.com/bookmarker
 	*/
 

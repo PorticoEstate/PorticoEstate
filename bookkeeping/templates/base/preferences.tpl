@@ -1,4 +1,4 @@
-<!-- $Id: preferences.tpl,v 1.1 2006/03/12 10:48:44 skwashd Exp $ -->
+<!-- $Id: preferences.tpl 16496 2006-03-12 10:48:44Z skwashd $ -->
 <script language="JavaScript">
 	self.name="first_Window";
 	function abook()

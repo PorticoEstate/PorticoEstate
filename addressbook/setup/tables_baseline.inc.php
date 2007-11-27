@@ -6,7 +6,7 @@
 	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
 	* @package addressbook
 	* @subpackage setup
-	* @version $Id: tables_baseline.inc.php,v 1.6 2005/05/10 13:02:43 powerstat Exp $
+	* @version $Id: tables_baseline.inc.php 15924 2005-05-10 13:02:43Z powerstat $
 	*/
 
 	$phpgw_baseline = array();

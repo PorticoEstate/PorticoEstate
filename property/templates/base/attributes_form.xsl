@@ -1,4 +1,4 @@
-<!-- $Id: attributes_form.xsl,v 1.9 2006/10/31 14:14:05 sigurdne Exp $ -->
+<!-- $Id: attributes_form.xsl 18358 2007-11-27 04:43:37Z skwashd $ -->
 
 	<xsl:template name="attributes_form">
 		<xsl:apply-templates select="attributes_values"/>

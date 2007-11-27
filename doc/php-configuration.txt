@@ -59,4 +59,4 @@ register_globals = On
 We are currently testing phpGroupWare 0.9.16 so it will work with this set to Off.  If
 you find this caused problems, please log them at http://savannah.gnu.org/bugs/?group=phpgroupware
 All future releases will support the Off setting.
-$Id: php-configuration.txt,v 1.2 2004/12/30 11:15:08 skwashd Exp $
+$Id: php-configuration.txt 15578 2004-12-30 11:15:08Z skwashd $

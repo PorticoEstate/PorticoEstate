@@ -12,7 +12,7 @@
 	*  option) any later version.                                              *
 	\**************************************************************************/
 
-	/* $Id: index.php,v 1.124 2006/03/21 13:42:51 sigurdne Exp $ */
+	/* $Id: index.php 18358 2007-11-27 04:43:37Z skwashd $ */
 	$GLOBALS['phpgw_info'] = array();
 
 	$GLOBALS['phpgw_info']['flags'] = array(

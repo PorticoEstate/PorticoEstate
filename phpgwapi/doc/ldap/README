@@ -1,4 +1,4 @@
-/* $Id: README,v 1.16 2004/12/30 06:47:29 skwashd Exp $ */
+/* $Id: README 15562 2004-12-30 06:47:35Z skwashd $ */
 
 NOTE: Due to a conflict with the LDAP schema of QMail the
 	phpgroupware.schema file changed. The UPDATE text file

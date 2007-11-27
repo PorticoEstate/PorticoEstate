@@ -9,7 +9,7 @@
   *  Free Software Foundation; either version 2 of the License, or (at your  *
   *  option) any later version.                                              *
   \**************************************************************************/
-  /* $Id: sites.php,v 1.11 2003/04/22 20:24:17 gugux Exp $ */
+  /* $Id: sites.php 12481 2003-04-22 20:24:17Z gugux $ */
 
 	$phpgw_info = array();
 	$GLOBALS['phpgw_info']['flags'] = array(

@@ -7,7 +7,7 @@
  * @license http://www.fsf.org/licenses/gpl.html GNU General Public License
  * @package phpgwapi
  * @subpackage gui
- * @version $Id: navbar.inc.php,v 1.5 2007/01/24 16:04:52 Caeies Exp $
+ * @version $Id: navbar.inc.php 17902 2007-01-24 16:04:52Z Caeies $
  */
 
 

@@ -1,4 +1,4 @@
-<!-- $Id: room_form.tpl,v 1.1 2001/06/04 21:46:14 bettina Exp $ -->
+<!-- $Id: room_form.tpl 5493 2001-06-04 21:46:14Z bettina $ -->
 <p><b>&nbsp;&nbsp;&nbsp;{lang_action}</b><br>
 <hr noshade width="98%" align="center" size="1">
 <center>

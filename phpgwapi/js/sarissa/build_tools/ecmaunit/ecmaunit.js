@@ -8,7 +8,7 @@
  *
  *****************************************************************************/
 
-// $Id: ecmaunit.js,v 1.1 2006/03/12 13:27:43 skwashd Exp $
+// $Id: ecmaunit.js 16502 2006-03-12 13:29:24Z skwashd $
 
 /*
    Object-oriented prototype-based unit test suite

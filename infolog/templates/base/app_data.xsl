@@ -1,4 +1,4 @@
-<!-- $Id: app_data.xsl,v 1.1 2007/02/04 14:05:35 sigurdne Exp $ -->
+<!-- $Id: app_data.xsl 17916 2007-02-04 14:05:35Z sigurdne $ -->
 
 	<xsl:template match="phpgw">
 	<xsl:variable name="webserver_url"><xsl:value-of select="webserver_url"/></xsl:variable>

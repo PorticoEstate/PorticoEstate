@@ -18,7 +18,7 @@ $header = "\t/**\n".
 	"\t* @package phpgwapi\n".
 	"\t* @subpackage communication\n".
 	"\t* Please see original header after this one and class.nusoap_base.inc.php\n".
-	"\t* @version \$Id: nusoap2phpgwapi,v 1.4 2006/12/28 18:02:30 Caeies Exp $\n".
+	"\t* @version \$Id: nusoap2phpgwapi 17828 2006-12-28 18:02:30Z Caeies $\n".
 	"\t*/\n\n";
 
 print "Processing ".$argv[1]."\n";
@@ -298,7 +298,7 @@ class soap_client extends phpgwapi_soap_transport_http
 	* @copyright Portions Copyright (C) 2003,2004 Free Software Foundation, Inc. http://www.fsf.org/
 	* @package phpgwapi
 	* @subpackage communication
-	* @version $Id: nusoap2phpgwapi,v 1.4 2006/12/28 18:02:30 Caeies Exp $
+	* @version $Id: nusoap2phpgwapi 17828 2006-12-28 18:02:30Z Caeies $
 	* @internal This project began based on code from the 2 projects below,
 	* @internal and still contains some original code. The licenses of both must be respected.
 	* @internal XML-RPC for PHP; SOAP for PHP

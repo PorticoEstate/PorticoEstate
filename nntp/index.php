@@ -10,7 +10,7 @@
   *  option) any later version.                                              *
   \**************************************************************************/
 
-	/* $Id: index.php,v 1.39 2003/06/01 21:12:33 gugux Exp $ */
+	/* $Id: index.php 12956 2003-06-01 21:12:33Z gugux $ */
 
 	$phpgw_flags = Array(
 		'currentapp' => 'nntp',

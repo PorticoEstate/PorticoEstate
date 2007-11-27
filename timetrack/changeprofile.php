@@ -10,7 +10,7 @@
   *  option) any later version.                                              *
   \**************************************************************************/
 
-  /* $Id: changeprofile.php,v 1.10 2002/09/22 19:58:22 skeeter Exp $ */
+  /* $Id: changeprofile.php 10986 2002-09-22 19:58:23Z skeeter $ */
 
   // Update complete for phpgroupware 0.9.10 - 4/13/2001 (api calls for accounts and contacts)
 

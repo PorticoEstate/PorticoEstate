@@ -14,7 +14,7 @@
 *  option) any later version.                                              *
 \**************************************************************************/
 
-/* $Id: tables_current.inc.php,v 1.3 2003/04/08 09:23:49 stagno Exp $ */
+/* $Id: tables_current.inc.php 12312 2003-04-08 09:23:49Z stagno $ */
 
 # ToDo: check dim
 $prefs = array

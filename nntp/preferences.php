@@ -10,7 +10,7 @@
   *  option) any later version.                                              *
   \**************************************************************************/
 
-	/* $Id: preferences.php,v 1.36 2001/12/21 03:59:13 milosch Exp $ */
+	/* $Id: preferences.php 8699 2001-12-21 03:59:13Z milosch $ */
 
 	$phpgw_flags = Array(
 		'currentapp' => 'nntp',

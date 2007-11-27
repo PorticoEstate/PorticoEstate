@@ -9,7 +9,7 @@
 	*  option) any later version.                                              *
 	\**************************************************************************/
 
-	/* $Id: setup.inc.php,v 1.30 2007/02/11 21:58:33 sigurdne Exp $ */
+	/* $Id: setup.inc.php 17942 2007-02-11 21:58:33Z sigurdne $ */
 
 	$setup_info['infolog']['name']      = 'infolog';
 	$setup_info['infolog']['version']   = '0.9.15.006';

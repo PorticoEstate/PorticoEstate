@@ -1,4 +1,4 @@
-/* $Id: perl.txt,v 1.4 2004/12/30 06:47:30 skwashd Exp $ */
+/* $Id: perl.txt 15562 2004-12-30 06:47:35Z skwashd $ */
 
 Perl interfacing to phpgroupware:
 

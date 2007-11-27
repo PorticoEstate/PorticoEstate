@@ -7,7 +7,7 @@
 	* @copyright Copyright (C) 2003-2005 Free Software Foundation, Inc. http://www.fsf.org/
 	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
 	* @package email
-	* @version $Id: class.uiindex.inc.php,v 1.31 2006/12/18 14:44:38 sigurdne Exp $
+	* @version $Id: class.uiindex.inc.php 17720 2006-12-18 14:44:38Z sigurdne $
 	* @internal Based on AngleMail http://www.anglemail.org/
 	*/
 

@@ -5,7 +5,7 @@
 	* @copyright Copyright (C) 2000-2005 Free Software Foundation, Inc http://www.fsf.org/
 	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
 	* @package filemanager
-	* @version $Id: hook_preferences.inc.php,v 1.19 2007/01/24 17:15:53 Caeies Exp $
+	* @version $Id: hook_preferences.inc.php 17909 2007-01-24 17:26:17Z Caeies $
 	*/
 
 	{

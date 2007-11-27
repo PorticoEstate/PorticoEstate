@@ -12,7 +12,7 @@
   *  option) any later version.                                              *
   \**************************************************************************/
 
-  /* $Id: hook_home.inc.php,v 1.46 2006/12/28 04:28:01 skwashd Exp $ */
+  /* $Id: hook_home.inc.php 18358 2007-11-27 04:43:37Z skwashd $ */
 
 
 	if ( !isset($GLOBALS['phpgw_info']['user']['preferences']['calendar']['mainscreen_showevents'])

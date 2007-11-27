@@ -7,7 +7,7 @@
 	* @license http://www.fsf.org/licenses/gpl.html GNU General Public License
 	* @package phpgwapi
 	* @subpackage gui
-	* @version $Id: class.menutree.inc.php,v 1.22 2006/09/03 06:15:27 skwashd Exp $
+	* @version $Id: class.menutree.inc.php 17062 2006-09-03 06:15:27Z skwashd $
 	*/
 
 	/**

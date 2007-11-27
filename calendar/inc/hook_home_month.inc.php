@@ -12,7 +12,7 @@
   *  option) any later version.                                              *
   \**************************************************************************/
 
-  /* $Id: hook_home_month.inc.php,v 1.6 2005/05/15 06:57:37 skwashd Exp $ */
+  /* $Id: hook_home_month.inc.php 15968 2005-05-15 06:57:38Z skwashd $ */
 
 	$d1 = strtolower(substr(PHPGW_APP_INC,0,3));
 	if($d1 == 'htt' || $d1 == 'ftp' )

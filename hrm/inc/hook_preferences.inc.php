@@ -8,7 +8,7 @@
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/bbb_/ekstern/
 	* @package hrm
 	* @subpackage core
- 	* @version $Id: hook_preferences.inc.php,v 1.6 2006/09/18 09:31:02 sigurdne Exp $
+ 	* @version $Id: hook_preferences.inc.php 17173 2006-09-18 09:34:00Z sigurdne $
 	*/
 
 	$title = $appname;

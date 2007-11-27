@@ -10,7 +10,7 @@
   *  option) any later version.                                              *
   \**************************************************************************/
  
-  /* $Id: detail_report1.php,v 1.10 2002/03/18 03:18:04 rschader Exp $ */
+  /* $Id: detail_report1.php 9782 2002-03-18 03:18:05Z rschader $ */
 
   // Update complete for phpgroupware 0.9.10 - 4/14/2001 (api calls for accounts and contacts)
   if ($friendly) {

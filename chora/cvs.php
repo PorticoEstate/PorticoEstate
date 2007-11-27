@@ -10,7 +10,7 @@
   *  option) any later version.                                              *
   \**************************************************************************/
 
-  /* $Id: cvs.php,v 1.15 2002/04/28 20:06:03 milosch Exp $ */
+  /* $Id: cvs.php 10085 2002-04-28 20:06:03Z milosch $ */
 
   /*
    * Portions of this code:

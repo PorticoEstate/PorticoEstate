@@ -9,7 +9,7 @@
 	*  Free Software Foundation; either version 2 of the License, or (at your  *
 	*  option) any later version.                                              *
 	\**************************************************************************/
-	/* $Id: setup.inc.php,v 1.5 2007/02/10 16:03:46 sigurdne Exp $ */
+	/* $Id: setup.inc.php 17936 2007-02-10 16:03:46Z sigurdne $ */
 
 	$setup_info['et_notes']['name']      = 'et_notes'; 
 	$setup_info['et_notes']['version']   = '0.9.15.001';

@@ -10,7 +10,7 @@
 	* Free Software Foundation; either version 2 of the License, or (at your   *
 	* option) any later version.                                               *
 	\**************************************************************************/
-	/* $Id: class.inventory.inc.php,v 1.14 2001/07/03 12:10:00 bettina Exp $ */
+	/* $Id: class.inventory.inc.php 6491 2001-07-03 12:11:40Z bettina $ */
 
 	class inventory
 	{

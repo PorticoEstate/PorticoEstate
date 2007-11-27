@@ -29,7 +29,7 @@
  * @author    Nigel McNie <nigel@geshi.org>
  * @copyright Copyright &copy; 2004, 2005, Nigel McNie
  * @license   http://gnu.org/copyleft/gpl.html GNU GPL
- * @version   $Id: geshi.php,v 1.1 2006/09/25 08:46:28 skwashd Exp $
+ * @version   $Id: geshi.php 17224 2006-09-25 08:46:28Z skwashd $
  *
  */
 

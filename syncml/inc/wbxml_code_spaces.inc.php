@@ -7,7 +7,7 @@
 	 * @copyright Copyright (c) 2007 Free Software Foundation, Inc.
 	 * @license   GNU General Public License 3 or later
 	 * @package   syncml
-	 * @version   $Id: wbxml_code_spaces.inc.php,v 1.1 2007/08/16 23:58:01 johang Exp $
+	 * @version   $Id: wbxml_code_spaces.inc.php 18223 2007-08-16 23:58:02Z johang $
 	 */
 
 	$GLOBALS['wbxml_code_to_tag'] = array

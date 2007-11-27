@@ -7,7 +7,7 @@
 	* @copyright Copyright (C) 2005 Free Software Foundation, Inc. http://www.fsf.org/
 	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
 	* @package bookmarks
-	* @version $Id: class.ui.inc.php,v 1.14 2007/01/24 17:26:17 Caeies Exp $
+	* @version $Id: class.ui.inc.php 17909 2007-01-24 17:26:17Z Caeies $
 	* @internal Based on Bookmarker, Copyright (C) 1998 Padraic Renaghan, http://www.renaghan.com/bookmarker
 	* @internal Ported to phpGroupWare by Joseph Engo
 	* @internal Ported to three-layered design by Michael Totschnig

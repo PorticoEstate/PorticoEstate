@@ -15,7 +15,7 @@
   *  option) any later version.                                              *
   \**************************************************************************/
 
-  /* $Id: functions.inc.php,v 1.56 2006/10/01 10:58:13 skwashd Exp $ */
+  /* $Id: functions.inc.php 18358 2007-11-27 04:43:37Z skwashd $ */
 
 	// PHP5 compat fix
 	if (version_compare(phpversion(), '5.0') < 0)

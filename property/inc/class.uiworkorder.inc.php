@@ -24,7 +24,7 @@
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/bbb_/ekstern/
 	* @package property
 	* @subpackage project
- 	* @version $Id: class.uiworkorder.inc.php,v 1.44 2007/10/14 12:18:53 sigurdne Exp $
+ 	* @version $Id: class.uiworkorder.inc.php 18358 2007-11-27 04:43:37Z skwashd $
 	*/
 
 	/**

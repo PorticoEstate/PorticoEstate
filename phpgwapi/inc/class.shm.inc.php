@@ -63,7 +63,7 @@
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/bbb_/ekstern/
 	* @package phpgwapi
 	* @subpackage application
- 	* @version $Id: class.shm.inc.php,v 1.11 2006/10/01 14:00:18 skwashd Exp $
+ 	* @version $Id: class.shm.inc.php 18358 2007-11-27 04:43:37Z skwashd $
 	*/
 
 	//This makes sure there is something set for temp

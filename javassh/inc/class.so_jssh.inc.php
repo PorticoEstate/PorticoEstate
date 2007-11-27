@@ -15,7 +15,7 @@
  * the Free Software Foundation; either version 2 of the License, or 	*
  * at your option) any later version.					*
  \**********************************************************************/
- /* $Id: class.so_jssh.inc.php,v 1.3 2006/12/28 14:29:54 skwashd Exp $ */
+ /* $Id: class.so_jssh.inc.php 17826 2006-12-28 14:29:54Z skwashd $ */
 
 	class so_jssh
 	{

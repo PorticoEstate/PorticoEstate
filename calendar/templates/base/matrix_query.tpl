@@ -1,4 +1,4 @@
-<!-- $Id: matrix_query.tpl,v 1.2 2006/12/08 21:05:21 sigurdne Exp $ -->
+<!-- $Id: matrix_query.tpl 17656 2006-12-08 21:05:21Z sigurdne $ -->
 <!-- BEGIN matrix_query -->
 <center>
 <form action="{action_url}" method="post" name="matrixform">

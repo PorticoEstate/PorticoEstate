@@ -24,7 +24,7 @@
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/bbb_/ekstern/
 	* @package property
 	* @subpackage location
- 	* @version $Id: class.solocation.inc.php,v 1.51 2007/10/04 13:58:50 sigurdne Exp $
+ 	* @version $Id: class.solocation.inc.php 18358 2007-11-27 04:43:37Z skwashd $
 	*/
 
 	/**

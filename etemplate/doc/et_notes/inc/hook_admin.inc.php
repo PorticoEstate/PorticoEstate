@@ -9,8 +9,8 @@
 	*  Free Software Foundation; either version 2 of the License, or (at your  *
 	*  option) any later version.                                              *
 	\**************************************************************************/
-	// $Id: hook_admin.inc.php,v 1.4 2007/02/10 16:03:46 sigurdne Exp $
-	// $Source: /sources/phpgroupware/etemplate/doc/et_notes/inc/hook_admin.inc.php,v $
+	// $Id: hook_admin.inc.php 17936 2007-02-10 16:03:46Z sigurdne $
+	// $Source$
 
 	{
 		$values = array

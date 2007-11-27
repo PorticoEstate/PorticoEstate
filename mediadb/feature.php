@@ -10,7 +10,7 @@
   *  option) any later version.                                              *
   \**************************************************************************/
 
-  /* $Id: feature.php,v 1.3 2000/11/17 21:26:00 neotexan Exp $ */
+  /* $Id: feature.php 1008 2000-11-17 21:26:00Z neotexan $ */
 
     $phpgw_info["flags"] = array("currentapp" => "admin",
                                  "enable_nextmatchs_class" => True);

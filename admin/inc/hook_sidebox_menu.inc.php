@@ -7,7 +7,7 @@
 	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
 	* @package admin
 	* @subpackage hooks
-	* @version $Id: hook_sidebox_menu.inc.php,v 1.7 2007/02/21 10:18:06 sigurdne Exp $
+	* @version $Id: hook_sidebox_menu.inc.php 17972 2007-02-21 10:18:06Z sigurdne $
 	*/
 
 	{

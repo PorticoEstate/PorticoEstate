@@ -22,7 +22,7 @@
 <?php track_vars ?>
 	<?php
 	}
-	/* $Id: monitor.php,v 1.12 2001/12/21 03:59:13 milosch Exp $ */
+	/* $Id: monitor.php 8699 2001-12-21 03:59:13Z milosch $ */
 
 	$GLOBALS['phpgw_info']['flags']['currentapp'] = 'nntp';
 	$GLOBALS['phpgw_info']['flags']['noheader'] = True;

@@ -8,7 +8,7 @@
 	* @license http://www.fsf.org/licenses/gpl.html GNU eneral Public License
 	* @package phpgwapi
 	* @subpackage utilities
-	* @version $Id: class.validator.inc.php,v 1.6 2006/07/19 01:40:11 skwashd Exp $
+	* @version $Id: class.validator.inc.php 16884 2006-07-19 01:40:11Z skwashd $
 	*/
 
 	/**

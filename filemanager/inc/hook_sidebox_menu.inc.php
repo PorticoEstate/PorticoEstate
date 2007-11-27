@@ -11,8 +11,8 @@
 	* @copyright Copyright (C) 2003-2005 Free Software Foundation, Inc. http://www.fsf.org/
 	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
 	* @package filemanager
-	* @version $Id: hook_sidebox_menu.inc.php,v 1.4 2006/09/09 10:38:51 skwashd Exp $
-	* @internal $Source: /sources/phpgroupware/filemanager/inc/hook_sidebox_menu.inc.php,v $
+	* @version $Id: hook_sidebox_menu.inc.php 17107 2006-09-09 10:38:51Z skwashd $
+	* @internal $Source$
 	*/
 
 

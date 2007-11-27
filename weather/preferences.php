@@ -10,7 +10,7 @@
     *  option) any later version.                                              *
     \**************************************************************************/
 
-    /* $Id: preferences.php,v 1.11 2001/12/03 18:01:50 milosch Exp $ */
+    /* $Id: preferences.php 8454 2001-12-03 18:01:51Z milosch $ */
 
 	$GLOBALS['phpgw_info']['flags']['currentapp'] = 'weather';
 	include('../header.inc.php');

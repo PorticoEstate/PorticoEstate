@@ -8,7 +8,7 @@
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/bbb_/ekstern/
 	* @package sms
 	* @subpackage sms
- 	* @version $Id: config_VASK,v 1.4 2007/10/03 13:34:09 sigurdne Exp $
+ 	* @version $Id: config_VASK 18297 2007-10-03 13:34:09Z sigurdne $
 	*/
 
 	/**

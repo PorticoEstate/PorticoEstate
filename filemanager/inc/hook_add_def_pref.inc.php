@@ -4,7 +4,7 @@
 	* @copyright Copyright (C) 2000-2005 Free Software Foundation, Inc http://www.fsf.org/
 	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
 	* @package filemanager
-	* @version $Id: hook_add_def_pref.inc.php,v 1.11 2005/04/28 20:45:53 powerstat Exp $
+	* @version $Id: hook_add_def_pref.inc.php 15879 2005-04-28 20:45:53Z powerstat $
 	*/
 
 	$GLOBALS['pref']->change ('filemanager','name','name');

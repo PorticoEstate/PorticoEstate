@@ -9,7 +9,7 @@
 	* Free Software Foundation; either version 2 of the License, or (at your   *
 	* option) any later version.                                               *
 	\**************************************************************************/
-	/* $Id: list_products.php,v 1.5 2002/03/11 11:04:57 milosch Exp $ */
+	/* $Id: list_products.php 9701 2002-03-11 11:04:57Z milosch $ */
 
 	$GLOBALS['phpgw_info']['flags'] = array(
 		'currentapp' => 'cart',

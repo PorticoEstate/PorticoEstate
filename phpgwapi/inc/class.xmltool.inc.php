@@ -8,7 +8,7 @@
 	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
 	* @package phpgwapi
 	* @subpackage xml
-	* @version $Id: class.xmltool.inc.php,v 1.16 2006/08/30 12:21:17 skwashd Exp $
+	* @version $Id: class.xmltool.inc.php 17035 2006-08-30 12:21:17Z skwashd $
 	*/
 
 	/**

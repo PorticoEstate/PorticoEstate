@@ -5,7 +5,7 @@
 	* @copyright Copyright (C) 1999-2001 Edd Dumbill
 	* @package phpgwapi
 	* @subpackage xml
-	* @version $Id: class.xmlrpc_client.inc.php,v 1.14 2006/10/24 00:31:33 skwashd Exp $
+	* @version $Id: class.xmlrpc_client.inc.php 17476 2006-10-24 00:31:33Z skwashd $
 	*/
 
 // Redistribution and use in source and binary forms, with or without

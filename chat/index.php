@@ -10,7 +10,7 @@
 	*  option) any later version.                                              *
 	\**************************************************************************/
 
-	/* $Id: index.php,v 1.20 2003/03/21 23:07:24 skwashd Exp $ */
+	/* $Id: index.php 12098 2003-03-21 23:07:24Z skwashd $ */
 
 	/* Is this really needed, eh? */
 	$GLOBALS['phpgw_info']['flags'] = array(

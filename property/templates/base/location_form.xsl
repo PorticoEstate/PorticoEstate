@@ -1,4 +1,4 @@
-<!-- $Id: location_form.xsl,v 1.2 2006/04/11 15:09:01 sigurdne Exp $ -->
+<!-- $Id: location_form.xsl 18358 2007-11-27 04:43:37Z skwashd $ -->
 
 	<xsl:template name="location_form">
 		<xsl:apply-templates select="location_data"/>

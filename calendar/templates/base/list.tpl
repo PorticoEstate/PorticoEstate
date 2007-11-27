@@ -1,4 +1,4 @@
-<!-- $Id: list.tpl,v 1.1 2006/07/28 03:30:43 skwashd Exp $ -->
+<!-- $Id: list.tpl 16925 2006-07-28 03:30:44Z skwashd $ -->
 <!-- BEGIN list -->
  <tr>
   <td valign="top" width="35%"><b>{field}:</b></td>

@@ -9,7 +9,7 @@
 	*  option) any later version.                                              *
 	\**************************************************************************/
 
-	/* $Id: setup.inc.php,v 1.9 2006/03/11 23:20:48 skwashd Exp $ */
+	/* $Id: setup.inc.php 16493 2006-03-11 23:24:02Z skwashd $ */
 
 	$setup_info['sitemgr-link']['name']	= 'sitemgr-link';
 	$setup_info['sitemgr-link']['title']	= 'SiteMgr Public Web Site';

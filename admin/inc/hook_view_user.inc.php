@@ -9,7 +9,7 @@
 	*  option) any later version.                                              *
 	\**************************************************************************/
 
-	/* $Id: hook_view_user.inc.php,v 1.5 2007/01/24 17:33:38 Caeies Exp $ */
+	/* $Id: hook_view_user.inc.php 17910 2007-01-24 17:33:38Z Caeies $ */
 
 	$GLOBALS['menuData'][] = array(
 		'description' => 'Login History',

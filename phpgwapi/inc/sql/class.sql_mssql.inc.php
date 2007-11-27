@@ -8,7 +8,7 @@
 	* @license http://www.fsf.org/licenses/gpl.html GNU General Public License
 	* @package phpgwapi
 	* @subpackage database
-	* @version $Id: class.sql_mssql.inc.php,v 1.1 2006/12/26 11:37:44 skwashd Exp $
+	* @version $Id: class.sql_mssql.inc.php 17763 2006-12-26 11:37:44Z skwashd $
 	* @internal Development of this application was funded by http://www.sogrp.com
 	* @link http://www.sogrp.com/
 	*/

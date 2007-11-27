@@ -8,7 +8,7 @@
  *
  *****************************************************************************/
 
-// $Id: testecmaunit.js,v 1.1 2006/03/12 13:27:43 skwashd Exp $
+// $Id: testecmaunit.js 16502 2006-03-12 13:29:24Z skwashd $
 
 function TestTestCase() {
     this.name = 'TestTestCase';

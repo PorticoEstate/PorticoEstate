@@ -9,7 +9,7 @@
   *  option) any later version.                                              *
   \**************************************************************************/
 
-  /* $Id: admin.php,v 1.3 2005/05/15 13:34:29 skwashd Exp $ */
+  /* $Id: admin.php 15977 2005-05-15 13:34:30Z skwashd $ */
 
 	$phpgw_info['flags'] = array(
 		'currentapp'  => 'addressbook', 

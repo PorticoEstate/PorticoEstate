@@ -9,7 +9,7 @@
   *  Free Software Foundation; either version 2 of the License, or (at your  *
   *  option) any later version.                                              *
   \**************************************************************************/
-  /* $Id: hook_preferences.inc.php,v 1.10 2002/03/31 13:28:53 milosch Exp $ */
+  /* $Id: hook_preferences.inc.php 9834 2002-03-31 13:28:53Z milosch $ */
 {
 // Only Modify the $file and $title variables.....
 	$title = $appname;

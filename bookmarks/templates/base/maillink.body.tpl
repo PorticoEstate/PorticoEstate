@@ -1,4 +1,4 @@
-<!-- $Id: maillink.body.tpl,v 1.1 2006/07/23 06:31:16 skwashd Exp $ -->
+<!-- $Id: maillink.body.tpl 16894 2006-07-23 06:32:28Z skwashd $ -->
 <!-- BEGIN form -->
 <form method="post" action="{form_action}">
  <table border="0" bgcolor="#EEEEEE" align="center">

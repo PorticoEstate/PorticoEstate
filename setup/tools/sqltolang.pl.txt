@@ -9,7 +9,7 @@
   #  option) any later version.                                              #
   #**************************************************************************#
 
-  # $Id: sqltolang.pl.txt,v 1.1 2001/07/30 15:59:25 seek3r Exp $ #
+  # $Id: sqltolang.pl.txt 6999 2001-07-30 15:59:25Z seek3r $ #
  
 	# sqltolang.pl (c) 2001 Miles Lott
 	# Take a file of sql commands for lang, create lang files from it

@@ -1,4 +1,4 @@
-// $Id: popup.js,v 1.2 2005/02/07 15:32:06 ceb Exp $
+// $Id: popup.js 15710 2005-02-07 15:32:06Z ceb $
 
 function open_popup (url,ext_x,ext_y)
 {

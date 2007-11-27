@@ -1,5 +1,5 @@
 <?php
-// $Id: history.php,v 1.4 2005/05/15 12:55:31 skwashd Exp $
+// $Id: history.php 15975 2005-05-15 12:55:31Z skwashd $
 
 require_once(TemplateDir . '/common.php');
 

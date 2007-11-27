@@ -9,7 +9,7 @@
   *  option) any later version.                                              *
   \**************************************************************************/
 
-	/* $Id: hook_home.inc.php,v 1.26 2007/01/24 15:59:38 Caeies Exp $ */
+	/* $Id: hook_home.inc.php 17901 2007-01-24 15:59:38Z Caeies $ */
 	
 /* TODO Update for new contacts back end
 	$d1 = strtolower(substr(PHPGW_APP_INC,0,3));

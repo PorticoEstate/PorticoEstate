@@ -5,7 +5,7 @@
 	* @copyright Copyright (C) 2000-2005 Free Software Foundation, Inc. http://www.fsf.org/
 	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
 	* @package setup
-	* @version $Id: ldapimport.php,v 1.15 2006/10/18 12:28:18 skwashd Exp $
+	* @version $Id: ldapimport.php 17448 2006-10-18 12:28:18Z skwashd $
 	*/
 
 	$GLOBALS['phpgw_info'] = array();

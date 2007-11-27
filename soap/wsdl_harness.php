@@ -10,7 +10,7 @@
 *  option) any later version.                                              *
 \**************************************************************************/
 
-/* $Id: wsdl_harness.php,v 1.2 2007/05/23 13:14:12 Caeies Exp $ */
+/* $Id: wsdl_harness.php 18147 2007-05-23 13:14:20Z Caeies $ */
 
 	$phpgw_info['flags'] = array(
 		'currentapp' => 'soap',

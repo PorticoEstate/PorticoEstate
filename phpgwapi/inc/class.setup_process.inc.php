@@ -6,7 +6,7 @@
 	* @license http://www.fsf.org/licenses/gpl.html GNU General Public License
 	* @package phpgwapi
 	* @subpackage application
-	* @version $Id: class.setup_process.inc.php,v 1.21 2006/10/03 17:18:54 sigurdne Exp $
+	* @version $Id: class.setup_process.inc.php 18358 2007-11-27 04:43:37Z skwashd $
 	*/
 
 	/**

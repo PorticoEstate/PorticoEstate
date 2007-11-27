@@ -25,7 +25,7 @@
 	* along with this program; if not, write to the Free Software       *
 	* Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.         *
 	\*******************************************************************/
-	/* $Id: class.bostock.inc.php,v 1.1 2003/08/27 00:05:29 ceb Exp $ */
+	/* $Id: class.bostock.inc.php 13388 2003-08-27 00:07:22Z ceb $ */
 
 	class bostock
 	{

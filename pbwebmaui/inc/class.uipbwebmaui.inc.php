@@ -6,7 +6,7 @@
  * @copyright Copyright (C) 2003,2005 Free Software Foundation http://www.fsf.org/
  * @license http://www.fsf.org/licenses/gpl.html GNU General Public License
  * @package pbwebmaui
- * @version $Id: class.uipbwebmaui.inc.php,v 1.5 2005/05/10 12:38:50 powerstat Exp $
+ * @version $Id: class.uipbwebmaui.inc.php 15922 2005-05-10 12:42:25Z powerstat $
  */
 
 

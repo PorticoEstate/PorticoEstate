@@ -12,6 +12,7 @@
 </form>
 <!-- BEGIN ged_projects -->
 <h2>Project : {project_name}</h3>
+<img src="{test_graph_link}" />
 <h3>Documents delivered during period : {count_delivered}</h2>
 <table cellspacing="0" cellpadding="0" width="70%">
 <!-- BEGIN delivered_block -->

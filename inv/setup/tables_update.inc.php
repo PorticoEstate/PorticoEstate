@@ -8,7 +8,7 @@
 	* Free Software Foundation; either version 2 of the License, or (at your   *
 	* option) any later version.                                               *
 	\**************************************************************************/
-	/* $Id: tables_update.inc.php,v 1.20 2003/05/16 22:50:03 ceb Exp $ */
+	/* $Id: tables_update.inc.php 12744 2003-05-16 22:51:06Z ceb $ */
 
 	// Note; The first two functions are used in the third function, which is the
 	// Version 0.0.0 upgrade test.  The test is not complete. -- Milosch

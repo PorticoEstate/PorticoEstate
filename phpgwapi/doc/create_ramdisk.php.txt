@@ -10,7 +10,7 @@
 	*  option) any later version.                                              *
 	\**************************************************************************/
 
-	/* $Id: create_ramdisk.php.txt,v 1.3 2004/12/30 06:47:26 skwashd Exp $ */
+	/* $Id: create_ramdisk.php.txt 15562 2004-12-30 06:47:35Z skwashd $ */
 
 	/* !!! WARNING !!!
 	** This is highley experimental!  Do NOT run it unless you know what you are doing!

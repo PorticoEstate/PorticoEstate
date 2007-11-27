@@ -1,4 +1,4 @@
-<!-- $Id: full_format_de.tpl,v 1.3 2005/05/15 13:34:30 skwashd Exp $ -->
+<!-- $Id: full_format_de.tpl 15977 2005-05-15 13:34:30Z skwashd $ -->
 
 <table border="0" cellpadding="1" cellspacing="1">
 	<tr>

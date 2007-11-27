@@ -7,7 +7,7 @@
 	 * @copyright Copyright (c) 2007 Free Software Foundation, Inc.
 	 * @license   GNU General Public License 3 or later
 	 * @package   syncml
-	 * @version   $Id: class.syncml_database_devinf.inc.php,v 1.3 2007/09/03 12:42:18 johang Exp $
+	 * @version   $Id: class.syncml_database_devinf.inc.php 18257 2007-09-03 12:42:18Z johang $
 	 */
 
 	require_once 'inc/functions.inc.php';

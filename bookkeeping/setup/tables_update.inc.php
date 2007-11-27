@@ -8,7 +8,7 @@
 	* Free Software Foundation; either version 2 of the License, or (at your   *
 	* option) any later version.                                               *
 	\**************************************************************************/
-	/* $Id: tables_update.inc.php,v 1.2 2003/12/23 16:34:45 uid65887 Exp $ */
+	/* $Id: tables_update.inc.php 14157 2003-12-23 16:34:45Z uid65887 $ */
 
 	$test[] = '0.4';
 	function bookkeeping_upgrade0_4()

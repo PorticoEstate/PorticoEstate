@@ -8,7 +8,7 @@
 	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
 	* @package email
 	* @subpackage setup
-	* @version $Id: setup.inc.php,v 1.27 2006/03/11 23:20:48 skwashd Exp $
+	* @version $Id: setup.inc.php 16493 2006-03-11 23:24:02Z skwashd $
 	* @internal Based on AeroMail by Mark Cushman <mark@cushman.net>
 	*/
 

@@ -1,4 +1,4 @@
-<!-- $Id: del_listproducts.tpl,v 1.15 2001/06/15 21:47:31 bettina Exp $ -->
+<!-- $Id: del_listproducts.tpl 5941 2001-06-15 21:47:31Z bettina $ -->
 <p><b>&nbsp;&nbsp;&nbsp;{lang_action}</b><br>                                                                                                                                                     
 <hr noshade width="98%" align="center" size="1">                                                                                                                                                  
 <center>

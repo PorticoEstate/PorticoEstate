@@ -6,7 +6,7 @@
 	* @copyright Copyright (C) 2000-2006 Free Software Foundation, Inc. http://www.fsf.org/
 	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
 	* @package projects
-	* @version $Id: class.soprojecthours.inc.php,v 1.46 2007/09/05 12:48:18 sigurdne Exp $
+	* @version $Id: class.soprojecthours.inc.php 18358 2007-11-27 04:43:37Z skwashd $
 	* $Source: /sources/phpgroupware/projects/inc/class.soprojecthours.inc.php,v $
 	*/
 

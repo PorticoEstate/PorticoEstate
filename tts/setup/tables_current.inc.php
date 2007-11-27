@@ -6,7 +6,7 @@
 	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
 	* @package tts
 	* @subpackage setup
-	* @version $Id: tables_current.inc.php,v 1.12 2006/12/26 12:54:44 skwashd Exp $
+	* @version $Id: tables_current.inc.php 17766 2006-12-26 12:54:44Z skwashd $
 	*/
 
 	$phpgw_baseline = array(

@@ -7,7 +7,7 @@
 	* @license http://www.fsf.org/licenses/gpl.html GNU General Public License
 	* @package phpgwapi
 	* @subpackage application
-	* @version $Id: log_functions.inc.php,v 1.2 2004/12/30 06:47:31 skwashd Exp $
+	* @version $Id: log_functions.inc.php 15562 2004-12-30 06:47:35Z skwashd $
 	*
 	* This is just an alternative API to the logging methods in
 	* class.errorlog2.inc.php.  They allow you to call the logging methods

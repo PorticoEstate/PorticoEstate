@@ -10,7 +10,7 @@
 	* Free Software Foundation; either version 2 of the License, or (at your   *
 	* option) any later version.                                               *
 	\**************************************************************************/
-	/* $Id: header.inc.php,v 1.30 2001/06/05 00:06:21 bettina Exp $ */
+	/* $Id: header.inc.php 5495 2001-06-05 00:06:21Z bettina $ */
   
 	$t = CreateObject('phpgwapi.Template',PHPGW_APP_TPL);
 	$t->set_file(array('inv_header' => 'header.tpl'));

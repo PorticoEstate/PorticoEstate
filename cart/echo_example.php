@@ -10,7 +10,7 @@
   *  option) any later version.                                              *
   \**************************************************************************/
 
-  /* $Id: echo_example.php,v 1.2 2002/03/20 13:03:59 milosch Exp $ */
+  /* $Id: echo_example.php 9801 2002-03-20 13:03:59Z milosch $ */
 
 	$GLOBALS['phpgw_info']['flags'] = array(
 		'noheader'    => True,

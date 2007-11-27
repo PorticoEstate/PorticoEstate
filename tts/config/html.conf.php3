@@ -5,7 +5,7 @@
 	* @copyright Copyright (C) 2000-2005 Free Software Foundation, Inc. http://www.fsf.org/
 	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
 	* @package tts
-	* @version $Id: html.conf.php3,v 1.2 2005/05/10 16:12:38 powerstat Exp $
+	* @version $Id: html.conf.php3 15932 2005-05-10 16:12:38Z powerstat $
 	* @todo This will be replaced with phpGroupWares themes support.
 	*/
 

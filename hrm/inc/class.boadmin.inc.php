@@ -8,7 +8,7 @@
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/bbb_/ekstern/
 	* @package hrm
 	* @subpackage admin
- 	* @version $Id: class.boadmin.inc.php,v 1.10 2006/12/27 10:38:35 sigurdne Exp $
+ 	* @version $Id: class.boadmin.inc.php 18358 2007-11-27 04:43:37Z skwashd $
 	*/
 
 	/**

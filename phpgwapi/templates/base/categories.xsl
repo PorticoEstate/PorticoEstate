@@ -1,4 +1,4 @@
-<!-- $Id: categories.xsl,v 1.3 2005/01/18 23:51:15 ceb Exp $ -->
+<!-- $Id: categories.xsl 15664 2005-01-18 23:51:15Z ceb $ -->
 
 	<xsl:template name="categories">
 		<xsl:choose>

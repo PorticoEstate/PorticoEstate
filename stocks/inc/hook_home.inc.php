@@ -8,7 +8,7 @@
 	* Free Software Foundation; either version 2 of the License, or (at your   *
 	* option) any later version.                                               *
 	\**************************************************************************/
-	/* $Id: hook_home.inc.php,v 1.23 2006/08/30 17:02:38 skwashd Exp $ */
+	/* $Id: hook_home.inc.php 17040 2006-08-30 17:02:38Z skwashd $ */
 
 	if ( isset($GLOBALS['phpgw_info']['user']['apps']['stocks'])
 		&& $GLOBALS['phpgw_info']['user']['apps']['stocks'] 

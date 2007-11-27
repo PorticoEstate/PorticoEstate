@@ -11,7 +11,7 @@
 *  option) any later version.                                              *
 \**************************************************************************/
 
-/* $Id: index.php,v 1.10 2002/09/22 19:58:22 skeeter Exp $ */
+/* $Id: index.php 10986 2002-09-22 19:58:23Z skeeter $ */
 
 $GLOBALS['phpgw_info'] = array();
 $GLOBALS['phpgw_info']["flags"]["enable_nextmatchs_class"] = "True";

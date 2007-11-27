@@ -5,7 +5,7 @@
 // Created by Patrick Walsh (pjw@users.sourceforge.net) 6/00
 // Copyright (c) ... aw, hell, copy all the code you want
 //
-// $Id: navbar-sel.php,v 1.5 2006/02/14 08:48:21 skwashd Exp $
+// $Id: navbar-sel.php 16400 2006-02-14 08:48:21Z skwashd $
 
 /*
 	This code was adapted from Rasmus Lerdorf's article on PHPBuilder

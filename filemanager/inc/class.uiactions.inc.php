@@ -6,8 +6,8 @@
 	* @copyright Copyright (C) 2005 Free Software Foundation, Inc. http://www.fsf.org/
 	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
 	* @package filemanager
-	* @version $Id: class.uiactions.inc.php,v 1.5 2006/04/13 22:43:37 ceb Exp $
-	* @internal $Source: /sources/phpgroupware/filemanager/inc/class.uiactions.inc.php,v $
+	* @version $Id: class.uiactions.inc.php 16653 2006-04-13 22:43:37Z ceb $
+	* @internal $Source$
 	*/
 
 	/**

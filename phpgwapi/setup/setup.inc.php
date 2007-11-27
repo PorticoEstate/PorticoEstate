@@ -5,8 +5,8 @@
 	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
 	* @package phpgwapi
 	* @subpackage setup
-	* @version $Id: setup.inc.php,v 1.85 2007/06/09 12:07:40 skwashd Exp $
-	* @internal $Source: /sources/phpgwapi/phpgwapi/setup/setup.inc.php,v $
+	* @version $Id: setup.inc.php 18150 2007-06-09 12:07:40Z skwashd $
+	* @internal $Source$
 	*/
 
 	// Basic information about this app

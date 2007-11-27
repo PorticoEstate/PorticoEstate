@@ -7,7 +7,7 @@
 	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
 	* @package projects
 	* @subpackage help
-	* @version $Id: index.php,v 1.5 2006/12/05 20:00:08 sigurdne Exp $
+	* @version $Id: index.php 18358 2007-11-27 04:43:37Z skwashd $
 	* $Source: /sources/phpgroupware/projects/help/index.php,v $
 	*/
 

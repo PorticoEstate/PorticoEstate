@@ -10,7 +10,7 @@
 	*  option) any later version.                                              *
 	\**************************************************************************/
 
-	/* $Id: setup.inc.php,v 1.18 2007/02/11 21:58:04 sigurdne Exp $ */
+	/* $Id: setup.inc.php 17941 2007-02-11 21:58:04Z sigurdne $ */
 
 	$setup_info['etemplate']['name']      = 'etemplate';
 	$setup_info['etemplate']['version']   = '0.9.15.002';

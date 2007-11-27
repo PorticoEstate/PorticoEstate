@@ -10,7 +10,7 @@
   *  option) any later version.                                              *
   \**************************************************************************/
 
-  /* $Id: index.php,v 1.7 2002/01/27 13:52:52 skeeter Exp $ */
+  /* $Id: index.php 9331 2002-01-27 13:53:15Z skeeter $ */
   
   $phpgw_info['flags'] = array('currentapp' => 'mediadb',
                                'enable_nextmatchs_class' => True);

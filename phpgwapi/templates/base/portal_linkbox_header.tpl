@@ -1,4 +1,4 @@
-<!-- $Id: portal_linkbox_header.tpl,v 1.2 2004/12/30 06:47:34 skwashd Exp $ -->
+<!-- $Id: portal_linkbox_header.tpl 15562 2004-12-30 06:47:35Z skwashd $ -->
 <!-- BEGIN portal_listbox_header -->
      <td>
       <ul>

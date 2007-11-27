@@ -7,7 +7,7 @@
 	* @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License
 	* @package phpgwapi
 	* @subpackage utilities
-	* @version $Id: class.categories.inc.php,v 1.136 2007/02/09 03:50:40 skwashd Exp $
+	* @version $Id: class.categories.inc.php 17926 2007-02-09 03:50:40Z skwashd $
 	*/
 
 	/**

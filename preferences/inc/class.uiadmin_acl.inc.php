@@ -8,7 +8,7 @@
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/bbb_/ekstern/
 	* @package preferences
 	* @subpackage acl
- 	* @version $Id: class.uiadmin_acl.inc.php,v 1.13 2006/10/23 08:41:37 sigurdne Exp $
+ 	* @version $Id: class.uiadmin_acl.inc.php 17471 2006-10-23 08:41:37Z sigurdne $
 	*/
 
 	/**

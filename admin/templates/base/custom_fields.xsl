@@ -1,7 +1,7 @@
 <!--
 	Custom fields management template
 	Written by Dave Hall skwashd at phpgroupware.org 
-	$Id: custom_fields.xsl,v 1.1 2006/03/12 11:19:49 skwashd Exp $ 
+	$Id: custom_fields.xsl 16497 2006-03-12 11:20:08Z skwashd $ 
 -->
 	<xsl:template match="custom_fields">
 		<form method="get" action="#">

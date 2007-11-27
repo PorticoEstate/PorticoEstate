@@ -14,7 +14,7 @@
  * the Free Software Foundation; either version 2 of the License, or 	*
  * at your option) any later version.					*
  \**********************************************************************/
- /* $Id: hook_home.inc.php,v 1.12 2007/02/13 15:02:07 sigurdne Exp $ */
+ /* $Id: hook_home.inc.php 17949 2007-02-13 15:02:07Z sigurdne $ */
 
 	if ( isset($GLOBALS['phpgw_info']['user']['preferences']['infolog']['homeShowEvents'])
 		&& $GLOBALS['phpgw_info']['user']['preferences']['infolog']['homeShowEvents'] )

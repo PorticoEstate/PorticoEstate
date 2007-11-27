@@ -8,7 +8,7 @@
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/bbb_/ekstern/
 	* @package sms
 	* @subpackage sms
- 	* @version $Id: set_workorder_status.php,v 1.4 2007/03/29 11:27:10 sigurdne Exp $
+ 	* @version $Id: set_workorder_status.php 18089 2007-03-29 11:27:10Z sigurdne $
 	*/
 
 	/**

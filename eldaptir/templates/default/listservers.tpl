@@ -1,4 +1,4 @@
-<!-- $Id: listservers.tpl,v 1.4 2001/06/30 06:07:04 milosch Exp $ -->
+<!-- $Id: listservers.tpl 6387 2001-06-30 06:07:04Z milosch $ -->
 <center>
 <table border="0" cellspacing="2" cellpadding="2">
  <tr>

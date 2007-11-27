@@ -6,7 +6,7 @@
 	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
 	* @package bookmarks
 	* @subpackage setup
-	* @version $Id: tables_baseline.inc.php,v 1.4 2005/04/28 18:59:46 powerstat Exp $
+	* @version $Id: tables_baseline.inc.php 15878 2005-04-28 18:59:46Z powerstat $
 	*/
 
 	// This file should be generated for you. It should never be edited by hand

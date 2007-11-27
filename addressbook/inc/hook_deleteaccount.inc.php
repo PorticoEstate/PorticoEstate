@@ -10,7 +10,7 @@
   *  option) any later version.                                              *
   \**************************************************************************/
 
-	/* $Id: hook_deleteaccount.inc.php,v 1.9 2006/09/05 10:53:08 skwashd Exp $ */
+	/* $Id: hook_deleteaccount.inc.php 17078 2006-09-05 10:53:09Z skwashd $ */
 
 	$contacts = CreateObject('phpgwapi.contacts');
 

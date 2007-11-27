@@ -13,7 +13,7 @@
  * published by the Free Software Foundation; either version 2.1 of the *
  *License, or at your option) any later version.			*
  \**********************************************************************/
- /* $Id: class.vfs.inc.php,v 1.13 2007/02/13 15:02:07 sigurdne Exp $ */
+ /* $Id: class.vfs.inc.php 17949 2007-02-13 15:02:07Z sigurdne $ */
 
 	/*!
 	@class vfs

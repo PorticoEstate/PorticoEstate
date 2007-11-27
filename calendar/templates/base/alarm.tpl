@@ -1,4 +1,4 @@
-<!-- $Id: alarm.tpl,v 1.2 2006/12/08 11:37:54 sigurdne Exp $ -->
+<!-- $Id: alarm.tpl 17650 2006-12-08 11:37:54Z sigurdne $ -->
 <!-- BEGIN alarm_management -->
 <form action="{action_url}" method="post" name="alarmform">
 {hidden_vars}

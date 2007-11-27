@@ -9,8 +9,8 @@
 	*  Free Software Foundation; either version 2 of the License, or (at your  *
 	*  option) any later version.                                              *
 	\**************************************************************************/
-	/* $Id: class.uicategories.inc.php,v 1.47 2006/11/27 21:37:14 sigurdne Exp $ */
-	/* $Source: /sources/phpgroupware/admin/inc/class.uicategories.inc.php,v $ */
+	/* $Id: class.uicategories.inc.php 18358 2007-11-27 04:43:37Z skwashd $ */
+	/* $Source$ */
 
 	class uicategories
 	{

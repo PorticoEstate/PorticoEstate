@@ -24,7 +24,7 @@
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/bbb_/ekstern/
 	* @package property
 	* @subpackage custom
- 	* @version $Id: oppdater_namssakstatus_pr_leietaker.php,v 1.4 2007/03/18 20:13:55 sigurdne Exp $
+ 	* @version $Id: oppdater_namssakstatus_pr_leietaker.php 18358 2007-11-27 04:43:37Z skwashd $
 	*/
 
 	/**

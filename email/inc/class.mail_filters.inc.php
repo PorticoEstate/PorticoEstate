@@ -7,7 +7,7 @@
 	* @copyright Copyright (C) 2003-2005 Free Software Foundation, Inc. http://www.fsf.org/
 	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
 	* @package email
-	* @version $Id: class.mail_filters.inc.php,v 1.11 2007/01/24 17:18:59 Caeies Exp $
+	* @version $Id: class.mail_filters.inc.php 17909 2007-01-24 17:26:17Z Caeies $
 	* @internal Based on AngleMail http://www.anglemail.org/
 	*/
 

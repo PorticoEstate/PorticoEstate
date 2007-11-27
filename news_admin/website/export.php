@@ -12,7 +12,7 @@
   * http://www.goldenglair.com                                               *
   \**************************************************************************/
 
-  /* $Id: export.php,v 1.5 2005/08/04 03:54:33 skwashd Exp $ */
+  /* $Id: export.php 16046 2005-08-04 03:54:33Z skwashd $ */
 
 	include('setup.inc.php');
 

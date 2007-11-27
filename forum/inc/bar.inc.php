@@ -10,7 +10,7 @@
 	*  option) any later version.                                                 *
 	\*****************************************************************************/
 
-	/* $Id: bar.inc.php,v 1.11 2002/05/27 01:49:04 milosch Exp $ */
+	/* $Id: bar.inc.php 10299 2002-05-27 01:49:04Z milosch $ */
 
 	// Forums bar is created here
 	echo '<font size=-1>';

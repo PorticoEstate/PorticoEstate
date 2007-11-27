@@ -11,7 +11,7 @@
   *  option) any later version.                                              *
   \**************************************************************************/
 
-  /* $Id: class.holidaycalc_JP.inc.php,v 1.6 2005/05/15 06:57:37 skwashd Exp $ */
+  /* $Id: class.holidaycalc_JP.inc.php 18358 2007-11-27 04:43:37Z skwashd $ */
 
 phpgw::import_class('phpgwapi.datetime');
 

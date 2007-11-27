@@ -6,7 +6,7 @@
 	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
 	* @package phpgwapi
 	* @subpackage gui
-	* @version $Id: class.gdbutton.inc.php,v 1.6 2006/09/03 06:15:27 skwashd Exp $
+	* @version $Id: class.gdbutton.inc.php 18358 2007-11-27 04:43:37Z skwashd $
 	* @internal Some methods based on former class.graphics 2001 Lars Kneschke
 	*/
 

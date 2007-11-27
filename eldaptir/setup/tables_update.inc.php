@@ -9,7 +9,7 @@
 	*  option) any later version.                                              *
 	\**************************************************************************/
 
-	/* $Id: tables_update.inc.php,v 1.3 2001/06/30 06:07:04 milosch Exp $ */
+	/* $Id: tables_update.inc.php 6387 2001-06-30 06:07:04Z milosch $ */
 
 	$test[] = '0.0.4';
 	function eldaptir_upgrade0_0_4()

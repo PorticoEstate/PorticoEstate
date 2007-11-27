@@ -6,7 +6,7 @@
 	* @license http://www.fsf.org/licenses/gpl.html GNU General Public License
 	* @package phpgwapi
 	* @subpackage communication
-	* @version $Id: xmlrpc.interop.php,v 1.7 2006/09/03 06:15:27 skwashd Exp $
+	* @version $Id: xmlrpc.interop.php 17062 2006-09-03 06:15:27Z skwashd $
 	*/
 
 	// a PHP version

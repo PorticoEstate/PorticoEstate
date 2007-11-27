@@ -13,7 +13,7 @@
 	*  Free Software Foundation; either version 2 of the License, or (at your  *
 	*  option) any later version.                                              *
 	\**************************************************************************/
-	/* $Id: hook_admin.inc.php,v 1.3 2006/09/09 09:04:48 skwashd Exp $ */
+	/* $Id: hook_admin.inc.php 17106 2006-09-09 09:04:58Z skwashd $ */
 
 	{
 		$file = array

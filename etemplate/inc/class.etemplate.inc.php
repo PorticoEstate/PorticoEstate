@@ -5,7 +5,7 @@
 * @author Ralf Becker <ralf.becker@outdoortraining.de>
 * @license http://www.gnu.org/licenses/gpl.html GNU General Public License
 * @package etemplate
-* @version $Id: class.etemplate.inc.php,v 1.10 2007/02/13 12:59:32 sigurdne Exp $
+* @version $Id: class.etemplate.inc.php 17947 2007-02-13 12:59:32Z sigurdne $
 */
 
 	if (!function_exists('get_var'))

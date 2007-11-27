@@ -1,4 +1,4 @@
-<!-- $Id: admin_acl.xsl,v 1.2 2006/04/11 20:41:06 sigurdne Exp $ -->
+<!-- $Id: admin_acl.xsl 16642 2006-04-11 20:41:06Z sigurdne $ -->
 
 	<xsl:template name="app_data">
 		<xsl:choose>

@@ -1,4 +1,4 @@
-<!-- $Id: listrooms.tpl,v 1.3 2001/06/05 01:09:33 bettina Exp $ -->
+<!-- $Id: listrooms.tpl 5496 2001-06-05 01:09:33Z bettina $ -->
 <p><b>&nbsp;&nbsp;&nbsp;{title_action}</b><br>
 <hr noshade width="98%" align="center" size="1">
 <center>

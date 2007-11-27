@@ -9,7 +9,7 @@
 	* Free Software Foundation; either version 2 of the License, or (at your   *
 	* option) any later version.                                               *
 	\**************************************************************************/
-	/* $Id: delivery_print.php,v 1.30 2002/01/06 01:09:32 bettina Exp $ */
+	/* $Id: delivery_print.php 9019 2002-01-06 01:09:32Z bettina $ */
 
 	$phpgw_info['flags'] = array('currentapp' => 'inv',
 									'noheader' => True,

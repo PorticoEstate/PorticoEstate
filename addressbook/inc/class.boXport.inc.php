@@ -10,7 +10,7 @@
   *  option) any later version.                                              *
   \**************************************************************************/
 
-  /* $Id: class.boXport.inc.php,v 1.12 2005/05/15 13:34:29 skwashd Exp $ */
+  /* $Id: class.boXport.inc.php 15977 2005-05-15 13:34:30Z skwashd $ */
 
 	class boXport
 	{

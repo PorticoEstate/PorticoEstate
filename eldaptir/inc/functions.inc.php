@@ -11,7 +11,7 @@
   *  option) any later version.                                              *
   \**************************************************************************/
   
-  /* $Id: functions.inc.php,v 1.24 2001/11/19 15:50:05 milosch Exp $ */
+  /* $Id: functions.inc.php 8324 2001-11-19 15:50:05Z milosch $ */
 
 	function servers()
 	{

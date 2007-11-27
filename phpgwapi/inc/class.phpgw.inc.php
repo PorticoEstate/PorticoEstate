@@ -7,7 +7,7 @@
 	* @license http://www.fsf.org/licenses/lgpl.html GNU Lesser General Public License
 	* @package phpgwapi
 	* @subpackage application
-	* @version $Id: class.phpgw.inc.php,v 1.56 2006/10/14 12:30:11 sigurdne Exp $
+	* @version $Id: class.phpgw.inc.php 18358 2007-11-27 04:43:37Z skwashd $
 	*/
 
 	/**

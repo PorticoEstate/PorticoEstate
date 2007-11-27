@@ -10,7 +10,7 @@
   *  option) any later version.                                              *
   \**************************************************************************/
 
-  /* $Id: hook_preferences.inc.php,v 1.28 2006/10/31 10:41:45 sigurdne Exp $ */
+  /* $Id: hook_preferences.inc.php 17522 2006-10-31 10:41:45Z sigurdne $ */
 {
 // Only Modify the $file and $title variables.....
 	$title = $appname;

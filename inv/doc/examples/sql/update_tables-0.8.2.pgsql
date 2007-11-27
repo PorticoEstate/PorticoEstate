@@ -1,4 +1,4 @@
--- $Id: update_tables-0.8.2.pgsql,v 1.1 2002/06/10 13:01:46 ldw Exp $
+-- $Id: update_tables-0.8.2.pgsql 10395 2002-06-10 13:01:47Z ldw $
 
 alter table inv_products rename as phpgw_inv_products;
 alter table inv_dist rename as phpgw_inv_dist;

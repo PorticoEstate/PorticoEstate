@@ -6,7 +6,7 @@
 	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
 	* @package todo
 	* @subpackage hooks
-	* @version $Id: hook_home.inc.php,v 1.9 2006/08/30 16:27:50 skwashd Exp $
+	* @version $Id: hook_home.inc.php 17039 2006-08-30 16:27:50Z skwashd $
 	*/
 
 	if ( isset($GLOBALS['phpgw_info']['user']['preferences']['todo']['mainscreen_showevents'])

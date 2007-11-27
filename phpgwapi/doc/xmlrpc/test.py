@@ -1,6 +1,6 @@
 #!/usr/bin/python
 
-# $Id: test.py,v 1.4 2004/12/30 06:47:30 skwashd Exp $
+# $Id: test.py 15562 2004-12-30 06:47:35Z skwashd $
 
 from xmlrpclib import *
 import sys

@@ -13,7 +13,7 @@
  * the Free Software Foundation; either version 2 of the License, or 	*
  * at your option) any later version.					*
  \**********************************************************************/
- /* $Id: csv_import.php,v 1.15 2007/02/10 16:11:36 sigurdne Exp $ */
+ /* $Id: csv_import.php 17937 2007-02-10 16:11:37Z sigurdne $ */
  
 	$GLOBALS['phpgw_info']['flags'] = array(
 		'currentapp' => 'infolog',

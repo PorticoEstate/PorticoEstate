@@ -7,7 +7,7 @@
 	* @license http://www.fsf.org/licenses/lgpl.html GNU Lesser General Public License
 	* @package phpgwapi
 	* @subpackage application
-	* @version $Id: class.translation_sql.inc.php,v 1.31 2007/01/04 05:18:37 skwashd Exp $
+	* @version $Id: class.translation_sql.inc.php 18358 2007-11-27 04:43:37Z skwashd $
 	*/
 
 	/**

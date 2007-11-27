@@ -1,6 +1,6 @@
 # .htaccess for the phpGroupWare Wiki from ralfbecker@outdoor-training.de
 #
-# $Id: htaccess,v 1.1 2003/03/31 11:27:40 ralfbecker Exp $
+# $Id: htaccess 12200 2003-03-31 11:27:40Z ralfbecker $
 #
 # If you want your URLs to look like this:
 #   http://mymachine.com/wiki/page1

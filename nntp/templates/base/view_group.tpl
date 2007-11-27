@@ -1,4 +1,4 @@
-<!-- $Id: view_group.tpl,v 1.1 2006/07/23 10:42:06 skwashd Exp $ -->
+<!-- $Id: view_group.tpl 16907 2006-07-23 10:42:06Z skwashd $ -->
 <!-- BEGIN vg -->
 <font face="{th_font}">
   <table border="0" cellpadding="1" cellspacing="1" width="100%" align="center">

@@ -9,7 +9,7 @@
 	*  option) any later version.                                              *
 	\**************************************************************************/
 
-	/* $Id: tables_current.inc.php,v 1.3 2005/05/15 02:16:27 skwashd Exp $ */
+	/* $Id: tables_current.inc.php 15965 2005-05-15 02:16:27Z skwashd $ */
 
 	$phpgw_baseline = array(
 		'phpgw_sitemgr_module_guestbook_books' => array(

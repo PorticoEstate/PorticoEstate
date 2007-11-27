@@ -9,7 +9,7 @@
   *  Free Software Foundation; either version 2 of the License, or (at your  *
   *  option) any later version.                                              *
   \**************************************************************************/
-  /* $Id: editsite.php,v 1.7 2003/02/28 15:28:26 ralfbecker Exp $ */
+  /* $Id: editsite.php 11830 2003-02-28 15:30:44Z ralfbecker $ */
 
 	$phpgw_info = array();
 	$GLOBALS['phpgw_info']['flags']['currentapp'] = 'chora';

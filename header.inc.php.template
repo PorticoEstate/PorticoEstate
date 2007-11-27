@@ -9,7 +9,7 @@
 	* @copyright Copyright (C) 2000-2006 Free Software Foundation, Inc. http://www.fsf.org/
 	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
 	* @package phpgroupware
-	* @version $Id: header.inc.php.template,v 1.53 2007/04/13 07:49:12 sigurdne Exp $
+	* @version $Id: header.inc.php.template 18119 2007-04-13 07:49:12Z sigurdne $
 	*/
 
 	// **************************************************************************

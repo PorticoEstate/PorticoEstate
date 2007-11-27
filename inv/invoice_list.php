@@ -9,7 +9,7 @@
 	* Free Software Foundation; either version 2 of the License, or (at your   *
 	* option) any later version.                                               *
 	\**************************************************************************/
-	/* $Id: invoice_list.php,v 1.11 2001/07/03 12:10:00 bettina Exp $ */
+	/* $Id: invoice_list.php 6491 2001-07-03 12:11:40Z bettina $ */
 
 	$phpgw_info['flags'] = array('currentapp' => 'inv',
 					'enable_nextmatchs_class' => True);

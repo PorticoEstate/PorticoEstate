@@ -1,4 +1,4 @@
-<!-- $Id: delete.tpl,v 1.1 2005/05/12 17:44:12 fipsfuchs Exp $ -->
+<!-- $Id: delete.tpl 15955 2005-05-12 17:44:12Z fipsfuchs $ -->
 <center>
 <table border="0" with="65%">
 <form method="POST" action="{actionurl}">

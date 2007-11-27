@@ -9,7 +9,7 @@
   *  option) any later version.                                              *
   \**************************************************************************/
 
-	/* $Id: account.php,v 1.5 2006/02/14 08:48:21 skwashd Exp $ */
+	/* $Id: account.php 16400 2006-02-14 08:48:21Z skwashd $ */
 	
 	$phpgw_flags = Array(
 		'currentapp'	=> 'manual',

@@ -14,7 +14,7 @@
  * the Free Software Foundation; either version 2 of the License, or 	*
  * at your option) any later version.					*
  \**********************************************************************/
- /* $Id: index.php,v 1.18 2007/02/10 16:11:36 sigurdne Exp $ */
+ /* $Id: index.php 17937 2007-02-10 16:11:37Z sigurdne $ */
 	$GLOBALS['phpgw_info']['flags'] = array(
 		'currentapp'	=> 'infolog', 
 		'noheader'		=> True,

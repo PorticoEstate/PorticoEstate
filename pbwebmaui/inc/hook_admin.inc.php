@@ -6,7 +6,7 @@
  * @copyright Copyright (C) 2003,2005 Free Software Foundation http://www.fsf.org/
  * @license http://www.fsf.org/licenses/gpl.html GNU General Public License
  * @package pbwebmaui
- * @version $Id: hook_admin.inc.php,v 1.4 2006/09/09 09:04:50 skwashd Exp $
+ * @version $Id: hook_admin.inc.php 17106 2006-09-09 09:04:58Z skwashd $
  */
 
 	{

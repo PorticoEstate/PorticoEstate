@@ -24,7 +24,7 @@
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/bbb_/ekstern/
 	* @package property
 	* @subpackage agreement
- 	* @version $Id: class.uis_agreement.inc.php,v 1.47 2007/08/14 10:45:09 sigurdne Exp $
+ 	* @version $Id: class.uis_agreement.inc.php 18358 2007-11-27 04:43:37Z skwashd $
 	*/
 
 	/**
@@ -1903,7 +1903,8 @@
 		}
 
 		function attrib_history()
-		{			$GLOBALS['phpgw']->xslttpl->add_file(array('attrib_history','nextmatchs'));
+		{
+			$GLOBALS['phpgw']->xslttpl->add_file(array('attrib_history','nextmatchs'));
 			$GLOBALS['phpgw_info']['flags']['noframework'] = True;
 
 			$s_agreement_id		= phpgw::get_var('s_agreement_id', 'int');

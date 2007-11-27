@@ -6,7 +6,7 @@
  * @license http://www.fsf.org/licenses/gpl.html GNU General Public License
  * @package folders
  * @subpackage services
- * @version $Id: class.folders_service.inc.php,v 1.2 2005/05/10 12:21:25 powerstat Exp $
+ * @version $Id: class.folders_service.inc.php 15921 2005-05-10 12:21:25Z powerstat $
  */
  
 

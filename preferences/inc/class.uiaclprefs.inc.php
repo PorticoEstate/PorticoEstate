@@ -5,7 +5,7 @@
 	* @copyright Copyright (C) 2000-2005 Free Software Foundation, Inc. http://www.fsf.org/
 	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
 	* @package preferences
-	* @version $Id: class.uiaclprefs.inc.php,v 1.15 2005/04/17 15:14:31 powerstat Exp $
+	* @version $Id: class.uiaclprefs.inc.php 15840 2005-04-17 15:14:31Z powerstat $
 	*/
 
 

@@ -7,7 +7,7 @@
 	* @license http://www.fsf.org/licenses/lgpl.html GNU Lesser General Public License
 	* @package phpgwapi
 	* @subpackage communication
-	* @version $Id: class.rssparser.inc.php,v 1.5 2004/12/30 06:47:31 skwashd Exp $
+	* @version $Id: class.rssparser.inc.php 15562 2004-12-30 06:47:35Z skwashd $
 	* @link http://nwow.org
 	* @internal Version 0.4
 	* @internal Width and height tags in image not supported, some other tags not supported

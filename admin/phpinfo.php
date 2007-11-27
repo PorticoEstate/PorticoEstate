@@ -8,7 +8,7 @@
 	*  Free Software Foundation; either version 2 of the License, or (at your  *
 	*  option) any later version.                                              *
 	\**************************************************************************/
-	/* $Id: phpinfo.php,v 1.9 2006/08/29 15:33:54 skwashd Exp $ */
+	/* $Id: phpinfo.php 17029 2006-08-29 15:33:54Z skwashd $ */
 
 	$GLOBALS['phpgw_info']['flags'] = array
 	(

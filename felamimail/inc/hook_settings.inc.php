@@ -9,7 +9,7 @@
 	*  option) any later version.                                              *
 	\**************************************************************************/
 
-	/* $Id: hook_settings.inc.php,v 1.4 2007/09/22 14:19:46 sigurdne Exp $ */
+	/* $Id: hook_settings.inc.php 18280 2007-09-22 14:19:46Z sigurdne $ */
 
 	$this->bofelamimail = CreateObject('felamimail.bofelamimail');
 	$this->bofelamimail->openConnection('',OP_HALFOPEN);

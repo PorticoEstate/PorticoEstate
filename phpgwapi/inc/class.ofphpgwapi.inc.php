@@ -7,7 +7,7 @@
 	* @license http://www.fsf.org/licenses/gpl.html GNU General Public License
 	* @package phpgwapi
 	* @subpackage application
-	* @version $Id: class.ofphpgwapi.inc.php,v 1.8 2006/12/27 12:24:55 skwashd Exp $
+	* @version $Id: class.ofphpgwapi.inc.php 17789 2006-12-27 12:24:55Z skwashd $
 	*/
 
 	/**

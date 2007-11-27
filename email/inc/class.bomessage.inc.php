@@ -7,7 +7,7 @@
 	* @copyright Copyright (C) 2003-2005 Free Software Foundation, Inc. http://www.fsf.org/
 	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
 	* @package email
-	* @version $Id: class.bomessage.inc.php,v 1.24 2006/12/21 12:34:15 sigurdne Exp $
+	* @version $Id: class.bomessage.inc.php 17747 2006-12-21 12:34:15Z sigurdne $
 	* @internal Based on AngleMail http://www.anglemail.org/
 	*/
 

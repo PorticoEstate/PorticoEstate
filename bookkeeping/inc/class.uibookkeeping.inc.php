@@ -23,8 +23,8 @@
 	* along with this program; if not, write to the Free Software       *
 	* Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.         *
 	\*******************************************************************/
-	/* $Id: class.uibookkeeping.inc.php,v 1.4 2004/01/05 13:35:20 ceb Exp $ */
-	// $Source: /sources/phpgroupware/bookkeeping/inc/class.uibookkeeping.inc.php,v $
+	/* $Id: class.uibookkeeping.inc.php 14169 2004-01-05 13:35:20Z ceb $ */
+	// $Source$
 
 	class uibookkeeping
 	{

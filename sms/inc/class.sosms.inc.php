@@ -8,7 +8,7 @@
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/bbb_/ekstern/
 	* @package hrm
 	* @subpackage place
- 	* @version $Id: class.sosms.inc.php,v 1.8 2007/02/26 22:21:07 sigurdne Exp $
+ 	* @version $Id: class.sosms.inc.php 18358 2007-11-27 04:43:37Z skwashd $
 	*/
 
 	/**

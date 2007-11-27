@@ -9,6 +9,6 @@
 	*  option) any later version.                                              *
 	\**************************************************************************/
 
-	/* $Id: tables_update.inc.php,v 1.1.1.1 2002/08/29 03:03:17 pjw Exp $ */
+	/* $Id: tables_update.inc.php 10731 2002-08-29 03:03:17Z pjw $ */
 
 ?>

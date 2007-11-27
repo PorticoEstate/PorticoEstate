@@ -7,7 +7,7 @@
 	* @license http://www.fsf.org/licenses/gpl.html GNU General Public License
 	* @package phpgwapi
 	* @subpackage application
-	* @version $Id: class.errorlog.inc.php,v 1.14 2006/09/03 06:15:27 skwashd Exp $
+	* @version $Id: class.errorlog.inc.php 17062 2006-09-03 06:15:27Z skwashd $
 	*/
 
 	/**

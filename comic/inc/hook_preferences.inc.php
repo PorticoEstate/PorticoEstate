@@ -9,7 +9,7 @@
 	*  option) any later version.                                              *
 	\**************************************************************************/
 
-	/* $Id: hook_preferences.inc.php,v 1.6 2001/11/23 20:04:21 milosch Exp $ */
+	/* $Id: hook_preferences.inc.php 8379 2001-11-23 20:05:08Z milosch $ */
    
 {
 // Only Modify the $file and $title variables.....

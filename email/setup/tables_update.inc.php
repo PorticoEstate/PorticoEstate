@@ -8,7 +8,7 @@
 	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
 	* @package email
 	* @subpackage setup
-	* @version $Id: tables_update.inc.php,v 1.4 2005/05/15 14:27:53 skwashd Exp $
+	* @version $Id: tables_update.inc.php 15978 2005-05-15 14:27:53Z skwashd $
 	* @internal Based on AeroMail by Mark Cushman <mark@cushman.net>
 	*/
 

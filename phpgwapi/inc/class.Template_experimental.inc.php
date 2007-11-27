@@ -7,7 +7,7 @@
 	* @license http://www.fsf.org/licenses/lgpl.html GNU Lesser General Public License
 	* @package phpgwapi
 	* @subpackage gui
-	* @version $Id: class.Template_experimental.inc.php,v 1.5 2005/04/26 10:55:25 powerstat Exp $
+	* @version $Id: class.Template_experimental.inc.php 15872 2005-04-26 10:55:25Z powerstat $
 	*/
 
 	/**

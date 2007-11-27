@@ -9,7 +9,7 @@
 	* @copyright Copyright (C) 2003-2005 Free Software Foundation, Inc. http://www.fsf.org/
 	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
 	* @package email
-	* @version $Id: class.uijsaddressbook.inc.php,v 1.10 2006/12/17 11:21:02 sigurdne Exp $
+	* @version $Id: class.uijsaddressbook.inc.php 17706 2006-12-17 11:21:02Z sigurdne $
 	*/
 
 

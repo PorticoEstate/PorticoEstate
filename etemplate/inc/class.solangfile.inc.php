@@ -4,7 +4,7 @@
 * @copyright Copyright (C) 2002-2006 Free Software Foundation, Inc. http://www.fsf.org/
 * @license http://www.gnu.org/licenses/gpl.html GNU General Public License
 * @package etemplate
-* @version $Id: class.solangfile.inc.php,v 1.5 2007/02/13 12:59:32 sigurdne Exp $
+* @version $Id: class.solangfile.inc.php 17947 2007-02-13 12:59:32Z sigurdne $
 */
 	class solangfile
 	{

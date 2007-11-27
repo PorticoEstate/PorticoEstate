@@ -8,7 +8,7 @@
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/bbb_/ekstern/
 	* @package demo
 	* @subpackage demo
- 	* @version $Id: class.uidemo.inc.php,v 1.7 2006/12/27 11:04:41 sigurdne Exp $
+ 	* @version $Id: class.uidemo.inc.php 18358 2007-11-27 04:43:37Z skwashd $
 	*/
 
 	/*

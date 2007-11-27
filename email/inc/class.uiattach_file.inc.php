@@ -7,7 +7,7 @@
 	* @copyright Copyright (C) 2003-2005 Free Software Foundation, Inc. http://www.fsf.org/
 	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
 	* @package email
-	* @version $Id: class.uiattach_file.inc.php,v 1.5 2005/05/11 19:09:36 powerstat Exp $
+	* @version $Id: class.uiattach_file.inc.php 15945 2005-05-11 19:09:36Z powerstat $
 	* @internal Based on AngleMail http://www.anglemail.org/
 	*/
 

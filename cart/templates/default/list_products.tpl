@@ -1,4 +1,4 @@
-<!-- $Id: list_products.tpl,v 1.3 2002/03/11 11:04:57 milosch Exp $ -->
+<!-- $Id: list_products.tpl 9701 2002-03-11 11:04:57Z milosch $ -->
 
 <center>
 <table border="0" width="100%">

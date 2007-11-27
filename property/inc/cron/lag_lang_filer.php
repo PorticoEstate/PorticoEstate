@@ -24,7 +24,7 @@
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/bbb_/ekstern/
 	* @package property
 	* @subpackage custom
- 	* @version $Id: lag_lang_filer.php,v 1.2 2007/03/16 08:57:05 sigurdne Exp $
+ 	* @version $Id: lag_lang_filer.php 18358 2007-11-27 04:43:37Z skwashd $
 	*/
 
 	/**
@@ -60,8 +60,84 @@
 				$this->execute($cron);
 			}
 			else
-			{				$this->confirm($execute=False);			}		}		function confirm($execute='')		{			$link_data = array			(				'menuaction' => $this->currentapp.'.custom_functions.index',				'function'	=>$this->function_name,				'execute'	=> $execute,			);			if(!$execute)			{				$lang_confirm_msg 	= lang('do you want to perform this action');			}
+			{
+				$this->confirm($execute=False);
+			}
+		}
+
+
+		function confirm($execute='')
+		{
+			$link_data = array
+			(
+				'menuaction' => $this->currentapp.'.custom_functions.index',
+				'function'	=>$this->function_name,
+				'execute'	=> $execute,
+			);
+
+			if(!$execute)
+			{
+				$lang_confirm_msg 	= lang('do you want to perform this action');
+			}
 			$lang_yes			= lang('yes');
 			$GLOBALS['phpgw']->xslttpl->add_file(array('confirm_custom'));
 			$msgbox_data = $this->bocommon->msgbox_data($this->receipt);
-			$data = array			(				'msgbox_data'			=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),				'done_action'			=> $GLOBALS['phpgw']->link('/admin/index.php'),				'run_action'			=> $GLOBALS['phpgw']->link('/index.php',$link_data),				'message'				=> $this->receipt['message'],				'lang_confirm_msg'		=> $lang_confirm_msg,				'lang_yes'				=> $lang_yes,				'lang_yes_statustext'	=> 'lag_lang_filer fra database',				'lang_no_statustext'	=> 'tilbake',				'lang_no'				=> lang('no'),				'lang_done'				=> 'Avbryt',				'lang_done_statustext'	=> 'tilbake'			);			$appname		= lang('location');			$function_msg	= 'lag_lang_filer';			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($this->currentapp) . ' - ' . $appname . ': ' . $function_msg;			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('confirm' => $data));			$GLOBALS['phpgw']->xslttpl->pp();		}		function execute($cron='')		{			$sql = "SELECT * from phpgw_lang WHERE app_name = 'property' AND lang='no' ORDER BY message_id ASC";			$this->db->query($sql,__LINE__,__FILE__);			$i=0;			while ($this->db->next_record())			{					$str.=$this->db->f('message_id') ."\t";					$str.=$this->db->f('app_name') ."\t";					$str.=$this->db->f('lang') ."\t";					$str.=$this->db->f('content') ."\n";					$i++;			}_debug_array($str);/*			   $filename= 'phpgw_no_lang';				$size=strlen($str);				$browser = CreateObject('phpgwapi.browser');				$browser->content_header($filename,'application/txt',$size);				echo $str;*/			$this->receipt['message'][]=array('msg'=> $i . ' tekster lagt til');			if(!$cron)			{				$this->confirm($execute=False);			}		}	}?>
+			$data = array
+			(
+				'msgbox_data'			=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
+				'done_action'			=> $GLOBALS['phpgw']->link('/admin/index.php'),
+				'run_action'			=> $GLOBALS['phpgw']->link('/index.php',$link_data),
+				'message'				=> $this->receipt['message'],
+				'lang_confirm_msg'		=> $lang_confirm_msg,
+				'lang_yes'				=> $lang_yes,
+				'lang_yes_statustext'	=> 'lag_lang_filer fra database',
+				'lang_no_statustext'	=> 'tilbake',
+				'lang_no'				=> lang('no'),
+				'lang_done'				=> 'Avbryt',
+				'lang_done_statustext'	=> 'tilbake'
+			);
+
+			$appname		= lang('location');
+			$function_msg	= 'lag_lang_filer';
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($this->currentapp) . ' - ' . $appname . ': ' . $function_msg;
+			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('confirm' => $data));
+			$GLOBALS['phpgw']->xslttpl->pp();
+		}
+
+		function execute($cron='')
+		{
+
+			$sql = "SELECT * from phpgw_lang WHERE app_name = 'property' AND lang='no' ORDER BY message_id ASC";
+
+			$this->db->query($sql,__LINE__,__FILE__);
+
+			$i=0;
+			while ($this->db->next_record())
+			{
+					$str.=$this->db->f('message_id') ."\t";
+					$str.=$this->db->f('app_name') ."\t";
+					$str.=$this->db->f('lang') ."\t";
+					$str.=$this->db->f('content') ."\n";
+					$i++;
+			}
+
+_debug_array($str);
+/*			   $filename= 'phpgw_no_lang';
+
+				$size=strlen($str);
+
+				$browser = CreateObject('phpgwapi.browser');
+				$browser->content_header($filename,'application/txt',$size);
+
+				echo $str;
+*/
+
+			$this->receipt['message'][]=array('msg'=> $i . ' tekster lagt til');
+
+			if(!$cron)
+			{
+				$this->confirm($execute=False);
+			}
+		}
+	}
+?>

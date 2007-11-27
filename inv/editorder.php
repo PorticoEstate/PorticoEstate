@@ -9,7 +9,7 @@
 	* Free Software Foundation; either version 2 of the License, or (at your   *
 	* option) any later version.                                               *
 	\**************************************************************************/
-	/* $Id: editorder.php,v 1.29 2003/05/30 22:25:43 gugux Exp $ */
+	/* $Id: editorder.php 12919 2003-05-30 22:25:43Z gugux $ */
 
 	if (!$id)
 	{

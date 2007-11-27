@@ -7,7 +7,7 @@
 	* @copyright Copyright (C) 2003-2005 Free Software Foundation, Inc. http://www.fsf.org/
 	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
 	* @package email
-	* @version $Id: class.uifilters.inc.php,v 1.22 2006/12/20 14:04:59 sigurdne Exp $
+	* @version $Id: class.uifilters.inc.php 17739 2006-12-20 14:04:59Z sigurdne $
 	* @internal Based on AngleMail http://www.anglemail.org/
 	*/
 

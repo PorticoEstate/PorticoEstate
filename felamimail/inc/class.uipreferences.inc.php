@@ -11,7 +11,7 @@
 	* Free Software Foundation; either version 2 of the License, or (at your    *
 	* option) any later version.                                                *
 	\***************************************************************************/
-	/* $Id: class.uipreferences.inc.php,v 1.5 2007/09/22 14:19:46 sigurdne Exp $ */
+	/* $Id: class.uipreferences.inc.php 18280 2007-09-22 14:19:46Z sigurdne $ */
 
 	class uipreferences
 	{

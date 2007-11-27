@@ -7,7 +7,7 @@
 	* Free Software Foundation; either version 2 of the License, or (at your  *
 	* option) any later version.                                              *
 	\*************************************************************************/
-	/* $Id: class.Outline_UI.inc.php,v 1.6 2007/01/24 16:25:33 Caeies Exp $ */
+	/* $Id: class.Outline_UI.inc.php 17906 2007-01-24 16:25:33Z Caeies $ */
 	
 	class Outline_UI
 	{

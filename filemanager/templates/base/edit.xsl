@@ -1,4 +1,4 @@
-<!-- $Id: edit.xsl,v 1.6 2005/02/11 00:29:41 ceb Exp $ -->
+<!-- $Id: edit.xsl 15719 2005-02-11 00:29:41Z ceb $ -->
 
 	<xsl:template match="edit">
 		<form method="post">

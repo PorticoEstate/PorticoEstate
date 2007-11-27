@@ -5,8 +5,8 @@
 	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
 	* @package phpgwapi
 	* @subpackage setup
-	* @version $Id: tables_current.inc.php,v 1.72 2006/12/26 07:20:49 skwashd Exp $
-	* @internal $Source: /sources/phpgwapi/phpgwapi/setup/tables_current.inc.php,v $
+	* @version $Id: tables_current.inc.php 17761 2006-12-26 07:20:49Z skwashd $
+	* @internal $Source$
 	*/
 
 	$phpgw_baseline = array(

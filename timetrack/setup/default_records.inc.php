@@ -9,7 +9,7 @@
   *  option) any later version.                                              *
   \**************************************************************************/
 
-  /* $Id: default_records.inc.php,v 1.3 2002/04/08 13:43:20 milosch Exp $ */
+  /* $Id: default_records.inc.php 9903 2002-04-08 13:43:20Z milosch $ */
 
 	//echo "<center>Adding default records for Job Status table...<br>";
 

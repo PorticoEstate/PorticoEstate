@@ -7,7 +7,7 @@
 	 * @copyright Copyright (c) 2007 Free Software Foundation, Inc.
 	 * @license   GNU General Public License 3 or later
 	 * @package   syncml
-	 * @version   $Id: class.syncml_wbxml_response.inc.php,v 1.1 2007/08/16 23:58:00 johang Exp $
+	 * @version   $Id: class.syncml_wbxml_response.inc.php 18223 2007-08-16 23:58:02Z johang $
 	 */
 
 	require_once 'class.syncml_response.inc.php';

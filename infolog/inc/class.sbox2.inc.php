@@ -14,7 +14,7 @@
  * the Free Software Foundation; either version 2 of the License, or 	*
  * at your option) any later version.					*
  \**********************************************************************/
- /* $Id: class.sbox2.inc.php,v 1.9 2007/02/13 15:02:07 sigurdne Exp $ */
+ /* $Id: class.sbox2.inc.php 17949 2007-02-13 15:02:07Z sigurdne $ */
  
 	/**
 	* Include parent class

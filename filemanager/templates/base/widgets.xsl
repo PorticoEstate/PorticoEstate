@@ -1,4 +1,4 @@
-<!-- $Id: widgets.xsl,v 1.14 2006/11/29 15:32:21 Caeies Exp $ -->
+<!-- $Id: widgets.xsl 17626 2006-11-29 15:32:21Z Caeies $ -->
 
 <!--A widget is something like an input box, image etc, or a composite/virtual
 widget like a "seperator" or a "label".  These are used throughout the filemanager

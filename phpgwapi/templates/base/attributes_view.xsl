@@ -1,4 +1,4 @@
-<!-- $Id: attributes_view.xsl,v 1.1 2006/10/09 09:20:26 sigurdne Exp $ -->
+<!-- $Id: attributes_view.xsl 17376 2006-10-09 09:20:26Z sigurdne $ -->
 
 	<xsl:template match="attributes_view">
 		<xsl:variable name="lang_attribute_statustext"><xsl:value-of select="lang_attribute_statustext"/></xsl:variable>

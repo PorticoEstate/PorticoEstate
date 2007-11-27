@@ -10,7 +10,7 @@
   *  option) any later version.                                              *
   \**************************************************************************/
 
-	/* $Id: hook_addaccount.inc.php,v 1.2 2002/05/02 01:29:52 seek3r Exp $ */
+	/* $Id: hook_addaccount.inc.php 10150 2002-05-02 01:29:52Z seek3r $ */
 	
 	// Add matching vmailmgr user account
 	if ($GLOBALS['hook_values']['account_id'] == 0)

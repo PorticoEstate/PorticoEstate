@@ -13,7 +13,7 @@
 
 	$setup_info['ged']['name']='ged';
 	$setup_info['ged']['title']='Document Management System';
-	$setup_info['ged']['version']='0.9.18.007';
+	$setup_info['ged']['version']='0.9.18.008';
 	$setup_info['ged']['app_order']=17;
 	$setup_info['ged']['enable']=1;
 	$setup_info['calendar']['app_group']    = 'office';

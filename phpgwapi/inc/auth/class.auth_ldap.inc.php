@@ -8,7 +8,7 @@
 	* @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License
 	* @package phpgwapi
 	* @subpackage accounts
-	* @version $Id: class.auth_ldap.inc.php,v 1.3 2006/09/09 11:45:42 skwashd Exp $
+	* @version $Id: class.auth_ldap.inc.php 17115 2006-09-09 11:45:42Z skwashd $
 	*/
 
 	/**

@@ -12,7 +12,7 @@
   *  option) any later version.                                              *
   \**************************************************************************/
 
-  /* $Id: class.socalendar_sql.inc.php,v 1.47 2006/12/08 11:37:54 sigurdne Exp $ */
+  /* $Id: class.socalendar_sql.inc.php 18358 2007-11-27 04:43:37Z skwashd $ */
 
 phpgw::import_class('phpgwapi.datetime');
 

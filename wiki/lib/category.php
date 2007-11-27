@@ -1,5 +1,5 @@
 <?php
-// $Id: category.php,v 1.3 2003/03/03 14:16:24 ralfbecker Exp $
+// $Id: category.php 11866 2003-03-03 14:16:25Z ralfbecker $
 
 require('parse/main.php');
 

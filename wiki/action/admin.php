@@ -1,5 +1,5 @@
 <?php
-// $Id: admin.php,v 1.7 2005/05/15 12:55:31 skwashd Exp $
+// $Id: admin.php 15975 2005-05-15 12:55:31Z skwashd $
 
 // Don't freak out lib/init.php.
 $document = $categories = $comment = $page = '';

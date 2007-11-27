@@ -1,4 +1,4 @@
-<!-- $Id: msgbox.xsl,v 1.4 2006/02/22 10:10:26 skwashd Exp $ -->
+<!-- $Id: msgbox.xsl 16444 2006-02-22 10:10:26Z skwashd $ -->
 
 	<xsl:template name="msgbox">
 		<xsl:apply-templates select="msgbox_data"/>

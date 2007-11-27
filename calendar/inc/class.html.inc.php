@@ -10,7 +10,7 @@
 	*  option) any later version.                                              *
 	\**************************************************************************/
 
-	/* $Id: class.html.inc.php,v 1.9 2006/12/09 16:03:50 sigurdne Exp $ */
+	/* $Id: class.html.inc.php 18358 2007-11-27 04:43:37Z skwashd $ */
 
 class calendar_html
 {

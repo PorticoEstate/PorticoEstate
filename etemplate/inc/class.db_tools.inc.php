@@ -5,7 +5,7 @@
 * @author Ralf Becker <ralf.becker@outdoortraining.de>
 * @license http://www.gnu.org/licenses/gpl.html GNU General Public License
 * @package etemplate
-* @version $Id: class.db_tools.inc.php,v 1.24 2007/02/13 12:59:32 sigurdne Exp $
+* @version $Id: class.db_tools.inc.php 17947 2007-02-13 12:59:32Z sigurdne $
 */
 	class db_tools
 	{
@@ -65,7 +65,7 @@
 * @author Your Name <first.last@domain.com>
 * @license http://www.gnu.org/licenses/gpl.html GNU Lesser General Public License
 * @package etemplate
-* @version $Id: class.db_tools.inc.php,v 1.24 2007/02/13 12:59:32 sigurdne Exp $
+* @version $Id: class.db_tools.inc.php 17947 2007-02-13 12:59:32Z sigurdne $
 */
 ';
 

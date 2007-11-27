@@ -11,7 +11,7 @@
   *  option) any later version.                                              *
   \**************************************************************************/
 
-  /* $Id: class.headlines.inc.php,v 1.4 2002/03/31 15:56:28 milosch Exp $ */
+  /* $Id: class.headlines.inc.php 9836 2002-03-31 15:56:28Z milosch $ */
 
 	class headlines
 	{

@@ -24,7 +24,7 @@
 	*
 	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
 	* @package phpgroupware
-	* @version $Id: login.php,v 1.4 2007/01/26 14:53:20 sigurdne Exp $
+	* @version $Id: login.php 18358 2007-11-27 04:43:37Z skwashd $
 	*/
 
 	$phpgw_info = array();

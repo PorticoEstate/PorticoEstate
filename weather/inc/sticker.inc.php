@@ -10,7 +10,7 @@
   *  option) any later version.                                              *
   \**************************************************************************/
 
-  /* $Id: sticker.inc.php,v 1.7 2001/12/03 18:01:50 milosch Exp $ */
+  /* $Id: sticker.inc.php 8454 2001-12-03 18:01:51Z milosch $ */
 
 /******************************************************************************
  * this function tries to figure out the users global station from wunderground

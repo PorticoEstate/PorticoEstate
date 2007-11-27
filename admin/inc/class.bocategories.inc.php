@@ -9,8 +9,8 @@
 	*  Free Software Foundation; either version 2 of the License, or (at your  *
 	*  option) any later version.                                              *
 	\**************************************************************************/
-	/* $Id: class.bocategories.inc.php,v 1.24 2006/12/19 14:00:33 skwashd Exp $ */
-	/* $Source: /sources/phpgroupware/admin/inc/class.bocategories.inc.php,v $ */
+	/* $Id: class.bocategories.inc.php 18358 2007-11-27 04:43:37Z skwashd $ */
+	/* $Source$ */
 
 	class bocategories
 	{

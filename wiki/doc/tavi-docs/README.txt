@@ -1,4 +1,4 @@
-$Id: README.txt,v 1.1 2003/03/04 21:21:04 ralfbecker Exp $
+$Id: README.txt 11896 2003-03-04 21:21:05Z ralfbecker $
 
 WikkiTikkiTavi - README
 -----------------------

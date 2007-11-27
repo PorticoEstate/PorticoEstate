@@ -9,7 +9,7 @@
 	*  option) any later version.                                              *
 	\**************************************************************************/
 
-	/* $Id: class.uilog.inc.php,v 1.14 2006/09/19 15:16:32 skwashd Exp $ */
+	/* $Id: class.uilog.inc.php 18358 2007-11-27 04:43:37Z skwashd $ */
 
 	class uilog
 	{

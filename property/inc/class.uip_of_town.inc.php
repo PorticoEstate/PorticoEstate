@@ -24,7 +24,7 @@
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/bbb_/ekstern/
 	* @package property
 	* @subpackage admin
- 	* @version $Id: class.uip_of_town.inc.php,v 1.15 2007/01/26 14:53:47 sigurdne Exp $
+ 	* @version $Id: class.uip_of_town.inc.php 18358 2007-11-27 04:43:37Z skwashd $
 	*/
 
 	/**

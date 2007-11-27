@@ -9,7 +9,7 @@
   *  option) any later version.                                              *
   \**************************************************************************/
 
-  /* $Id: class.uilangfile.inc.php,v 1.14 2007/01/24 17:24:05 Caeies Exp $ */
+  /* $Id: class.uilangfile.inc.php 17909 2007-01-24 17:26:17Z Caeies $ */
 
 	class uilangfile
 	{

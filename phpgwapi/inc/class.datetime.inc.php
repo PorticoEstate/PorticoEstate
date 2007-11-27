@@ -8,7 +8,7 @@
 	* @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License
 	* @package phpgwapi
 	* @subpackage utilities
-	* @version $Id: class.datetimefunctions.inc.php,v 1.1 2006/11/10 13:33:49 sigurdne Exp $
+	* @version $Id: class.datetime.inc.php 18358 2007-11-27 04:43:37Z skwashd $
 	*/
 
 	/**

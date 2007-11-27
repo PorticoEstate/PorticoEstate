@@ -7,7 +7,7 @@
 	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
 	* @package todo
 	* @subpackage hooks
-	* @version $Id: hook_deleteaccount.inc.php,v 1.5 2006/09/05 10:53:09 skwashd Exp $
+	* @version $Id: hook_deleteaccount.inc.php 17078 2006-09-05 10:53:09Z skwashd $
 	*/
 	
 	// Delete all records for a user

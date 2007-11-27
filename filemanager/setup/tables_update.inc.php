@@ -6,7 +6,7 @@
 	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
 	* @package filemanager
 	* @subpackage setup
-	* @version $Id: tables_update.inc.php,v 1.8 2005/04/28 20:45:53 powerstat Exp $
+	* @version $Id: tables_update.inc.php 15879 2005-04-28 20:45:53Z powerstat $
 	*/
 
 	// OLD FILEMANAGER CHANGES MOVED TO API - long time ago

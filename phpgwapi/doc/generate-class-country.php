@@ -26,7 +26,7 @@
 	* @interal do not edit, edit and run phpgwapi/doc/generate-class-country.php to regenerate this class
 	* @package phpgwapi
 	* @subpackage contacts
-	* @version $Id: generate-class-country.php,v 1.2 2006/09/27 02:45:28 skwashd Exp $
+	* @version $Id: generate-class-country.php 17256 2006-09-27 02:45:28Z skwashd $
 	*/
 
 	/**

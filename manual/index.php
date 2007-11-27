@@ -5,7 +5,7 @@
 	* @copyright Copyright (C) 2000-2002,2005 Free Software Foundation, Inc. http://www.fsf.org/
 	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
 	* @package manual
-	* @version $Id: index.php,v 1.14 2007/02/20 13:34:37 sigurdne Exp $
+	* @version $Id: index.php 17966 2007-02-20 13:34:37Z sigurdne $
 	*/
 
 	$GLOBALS['phpgw_info']['flags'] = array

@@ -12,7 +12,7 @@
   *  option) any later version.                                              *
   \**************************************************************************/
 
-	/* $Id: class.uiicalendar.inc.php,v 1.13 2006/12/11 10:07:35 sigurdne Exp $ */
+	/* $Id: class.uiicalendar.inc.php 18358 2007-11-27 04:43:37Z skwashd $ */
 
 	class calendar_uiicalendar
 	{

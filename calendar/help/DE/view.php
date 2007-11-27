@@ -9,7 +9,7 @@
   *  option) any later version.                                              *
   \**************************************************************************/
 
-	/* $Id: view.php,v 1.2 2005/05/15 06:57:37 skwashd Exp $ */
+	/* $Id: view.php 15968 2005-05-15 06:57:38Z skwashd $ */
 
 	$phpgw_flags = Array(
 		'currentapp'	=> 'manual'

@@ -6,7 +6,7 @@
 	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
 	* @package email
 	* @subpackage hooks
-	* @version $Id: hook_email_add_def_pref.inc.php,v 1.8 2005/05/11 14:08:27 powerstat Exp $
+	* @version $Id: hook_email_add_def_pref.inc.php 15941 2005-05-11 14:08:27Z powerstat $
 	*/
 
   global $pref;

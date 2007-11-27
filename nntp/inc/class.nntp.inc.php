@@ -10,7 +10,7 @@
   *  option) any later version.                                              *
   \**************************************************************************/
 
-	/* $Id: class.nntp.inc.php,v 1.9 2005/05/05 14:32:50 powerstat Exp $ */
+	/* $Id: class.nntp.inc.php 15912 2005-05-05 14:32:50Z powerstat $ */
 
 	include(PHPGW_APP_INC.'/message.inc.php');
 	include(PHPGW_APP_INC.'/class.mail.inc.php');

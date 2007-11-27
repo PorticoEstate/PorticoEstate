@@ -9,7 +9,7 @@
   *  option) any later version.                                              *
   \**************************************************************************/
 
-  /* $Id: class.boapplications.inc.php,v 1.11 2006/02/14 08:48:21 skwashd Exp $ */
+  /* $Id: class.boapplications.inc.php 16400 2006-02-14 08:48:21Z skwashd $ */
 
 	class boapplications
 	{

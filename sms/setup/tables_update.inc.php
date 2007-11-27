@@ -8,7 +8,7 @@
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/bbb_/ekstern/
 	* @package sms
 	* @subpackage setup
- 	* @version $Id: tables_update.inc.php,v 1.9 2006/09/16 14:05:03 sigurdne Exp $
+ 	* @version $Id: tables_update.inc.php 17160 2006-09-16 14:05:03Z sigurdne $
 	*/
 
 	/**

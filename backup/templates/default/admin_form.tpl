@@ -1,4 +1,4 @@
-<!-- $Id: admin_form.tpl,v 1.10 2003/04/27 00:47:53 ceb Exp $ -->
+<!-- $Id: admin_form.tpl 12527 2003-04-27 00:48:10Z ceb $ -->
 
 <center>
 <form method="POST" action="{action_url}">

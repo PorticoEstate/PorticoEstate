@@ -9,7 +9,7 @@
   *  option) any later version.                                              *
   \**************************************************************************/
 
-  /* $Id: navbar.inc.php,v 1.10 2007/10/10 08:53:53 skwashd Exp $ */
+  /* $Id: navbar.inc.php 18311 2007-10-10 08:53:53Z skwashd $ */
 
   function parse_navbar($force = False)
   {

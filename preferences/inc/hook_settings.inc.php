@@ -5,7 +5,7 @@
 	* @copyright Copyright (C) 2000-2005 Free Software Foundation, Inc. http://www.fsf.org/
 	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
 	* @package preferences
-	* @version $Id: hook_settings.inc.php,v 1.15 2006/07/25 01:13:38 skwashd Exp $
+	* @version $Id: hook_settings.inc.php 18358 2007-11-27 04:43:37Z skwashd $
 	*/
 
 	phpgw::import_class('phpgwapi.country');

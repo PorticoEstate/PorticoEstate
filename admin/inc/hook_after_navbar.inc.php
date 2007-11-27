@@ -10,7 +10,7 @@
 	*  option) any later version.                                              *
 	\**************************************************************************/
 
-	/* $Id: hook_after_navbar.inc.php,v 1.9 2006/02/14 08:48:21 skwashd Exp $ */
+	/* $Id: hook_after_navbar.inc.php 16400 2006-02-14 08:48:21Z skwashd $ */
 
 	/* Check currentapp and API upgrade status */
 

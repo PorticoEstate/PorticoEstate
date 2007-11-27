@@ -7,7 +7,7 @@
 	* @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License
 	* @package phpgwapi
 	* @subpackage cron
-	* @version $Id: asyncservices.php,v 1.6 2005/04/28 08:11:59 powerstat Exp $
+	* @version $Id: asyncservices.php 15874 2005-04-28 08:11:59Z powerstat $
 	*/
 
 	$path_to_phpgroupware = dirname(__FILE__) . '/../..';	// need to be adapted if this script is moved somewhere else

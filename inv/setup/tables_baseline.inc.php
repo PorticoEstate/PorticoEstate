@@ -8,7 +8,7 @@
 	* Free Software Foundation; either version 2 of the License, or (at your   *
 	* option) any later version.                                               *
 	\**************************************************************************/
-	/* $Id: tables_baseline.inc.php,v 1.2 2001/06/10 10:52:09 milosch Exp $ */
+	/* $Id: tables_baseline.inc.php 5696 2001-06-10 10:52:09Z milosch $ */
 
 	$phpgw_baseline = array(
 		'inv_products' => array(

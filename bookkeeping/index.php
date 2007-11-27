@@ -23,7 +23,7 @@
 	* along with this program; if not, write to the Free Software       *
 	* Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.         *
 	\*******************************************************************/
-	/* $Id: index.php,v 1.18 2003/12/23 16:34:45 uid65887 Exp $ */
+	/* $Id: index.php 14157 2003-12-23 16:34:45Z uid65887 $ */
 
 	$GLOBALS['phpgw_info']['flags'] = array
 	(

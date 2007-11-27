@@ -10,7 +10,7 @@
   *  option) any later version.                                              *
   \**************************************************************************/
 
-  /* $Id: publisher.inc.php,v 1.7 2003/04/22 20:30:22 gugux Exp $ */
+  /* $Id: publisher.inc.php 12482 2003-04-22 20:30:22Z gugux $ */
 
 
 function list_publisher($order, $sort, $filter, $start, $query)

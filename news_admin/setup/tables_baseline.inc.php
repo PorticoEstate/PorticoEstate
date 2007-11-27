@@ -12,7 +12,7 @@
 	* http://www.goldenglair.com                                               *
 	\**************************************************************************/
 
-	/* $Id: tables_baseline.inc.php,v 1.1 2001/07/01 18:40:55 jengo Exp $ */
+	/* $Id: tables_baseline.inc.php 6426 2001-07-01 18:40:55Z jengo $ */
 
    // table array for news_admin
 	$phpgw_baseline = array(

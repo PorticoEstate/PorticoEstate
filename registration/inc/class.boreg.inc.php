@@ -14,7 +14,7 @@
 	*  option) any later version.                                              *
 	\**************************************************************************/
 
-	/* $Id: class.boreg.inc.php,v 1.11 2007/01/24 16:36:09 Caeies Exp $ */
+	/* $Id: class.boreg.inc.php 17907 2007-01-24 16:51:08Z Caeies $ */
 
 	class boreg
 	{

@@ -5,7 +5,7 @@
 	* @copyright Copyright (C) 2000-2006 Free Software Foundation, Inc. http://www.fsf.org/
 	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
 	* @package tts
-	* @version $Id: class.uitts.inc.php,v 1.12 2007/01/14 11:10:30 skwashd Exp $
+	* @version $Id: class.uitts.inc.php 17883 2007-01-14 11:10:30Z skwashd $
 	*/
 	
 	class tts_uitts

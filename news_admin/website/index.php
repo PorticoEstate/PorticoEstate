@@ -13,7 +13,7 @@
   * http://www.goldenglair.com                                               *
   \**************************************************************************/
 
-  /* $Id: index.php,v 1.2 2000/12/19 22:18:55 jengo Exp $ */
+  /* $Id: index.php 1542 2000-12-19 22:18:55Z jengo $ */
   
   include("news.inc.php");
 ?>

@@ -1,4 +1,4 @@
-<!-- $Id: listorders.tpl,v 1.13 2001/06/03 22:59:46 bettina Exp $ -->
+<!-- $Id: listorders.tpl 5430 2001-06-03 22:59:46Z bettina $ -->
 <p><b>&nbsp;&nbsp;&nbsp;{title_action}</b><br>
 <hr noshade width="98%" align="center" size="1">
 <center>

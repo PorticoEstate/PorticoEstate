@@ -10,7 +10,7 @@
   *  option) any later version.                                              *
   \**************************************************************************/
 
-  /* $Id: tables_baseline.inc.php,v 1.3 2007/02/10 16:03:46 sigurdne Exp $ */
+  /* $Id: tables_baseline.inc.php 17936 2007-02-10 16:03:46Z sigurdne $ */
 
 	$phpgw_baseline = array(
 		'phpgw_etemplate' => array(

@@ -9,7 +9,7 @@
   *  option) any later version.                                              *
   \**************************************************************************/
 
-	/* $Id: felamimail.php,v 1.3 2006/12/18 20:03:32 sigurdne Exp $ */
+	/* $Id: felamimail.php 17722 2006-12-18 20:03:33Z sigurdne $ */
 
 	$phpgw_flags = Array(
 		'currentapp'	=> 'manual'

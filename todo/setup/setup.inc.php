@@ -7,7 +7,7 @@
 	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
 	* @package todo
 	* @subpackage setup
-	* @version $Id: setup.inc.php,v 1.28 2006/03/11 23:20:47 skwashd Exp $
+	* @version $Id: setup.inc.php 16493 2006-03-11 23:24:02Z skwashd $
 	*/
 
 	$setup_info['todo']['name']		= 'todo';

@@ -14,7 +14,7 @@
  * the Free Software Foundation; either version 2 of the License, or 	*
  * at your option) any later version.					*
  \**********************************************************************/
- /* $Id: class.uiinfolog.inc.php,v 1.82 2007/02/13 19:51:38 sigurdne Exp $ */
+ /* $Id: class.uiinfolog.inc.php 17951 2007-02-13 19:52:04Z sigurdne $ */
 
 	class uiinfolog 	// UI - User Interface - HTML 
 	{

@@ -127,7 +127,6 @@ class ADODB_mssql_n extends ADODB_mssql {
             }
         }
 
-
     /// Analyse literals to prepend the N char to them if their contents aren't numeric
         if (!empty($literals)) {
             foreach ($literals as $key=>$value) {

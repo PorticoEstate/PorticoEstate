@@ -8,7 +8,7 @@
  * @internal Development Sponsored by Advantage Business Systems - http://abcsinc.com
  * @package javassh
  * @subpackage admin
- * @version $Id: hook_admin.inc.php,v 1.4 2006/09/09 09:04:49 skwashd Exp $
+ * @version $Id: hook_admin.inc.php 17106 2006-09-09 09:04:58Z skwashd $
  */
 
  	{

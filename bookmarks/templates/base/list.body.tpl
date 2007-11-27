@@ -1,4 +1,4 @@
-<!-- $Id: list.body.tpl,v 1.2 2006/12/28 13:35:12 skwashd Exp $ -->
+<!-- $Id: list.body.tpl 17821 2006-12-28 13:35:12Z skwashd $ -->
 <table width="100%" border="0" cellspacing="0" cellpadding="0">
 	<tr>
 		<td align="center">

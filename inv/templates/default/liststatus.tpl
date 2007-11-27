@@ -1,4 +1,4 @@
-<!-- $Id: liststatus.tpl,v 1.4 2002/04/05 23:35:03 ceb Exp $ -->
+<!-- $Id: liststatus.tpl 9883 2002-04-05 23:35:03Z ceb $ -->
 
 {app_header}
 

@@ -11,7 +11,7 @@
  *  option) any later version.                                              *
  \**************************************************************************/
 
-/* $Id: class.uifields.inc.php,v 1.19 2006/09/11 11:31:06 skwashd Exp $ */
+/* $Id: class.uifields.inc.php 18358 2007-11-27 04:43:37Z skwashd $ */
 
 	class uifields
 	{

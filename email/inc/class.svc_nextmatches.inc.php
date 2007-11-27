@@ -8,7 +8,7 @@
 	* @copyright Copyright (C) 2000-2005 Free Software Foundation, Inc. http://www.fsf.org/
 	* @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License
 	* @package email
-	* @version $Id: class.svc_nextmatches.inc.php,v 1.9 2006/12/17 11:21:02 sigurdne Exp $
+	* @version $Id: class.svc_nextmatches.inc.php 17706 2006-12-17 11:21:02Z sigurdne $
 	* @internal Based on AngleMail http://www.anglemail.org/
 	*/
 

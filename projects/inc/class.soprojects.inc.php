@@ -6,7 +6,7 @@
 	* @copyright Copyright (C) 2000-2006 Free Software Foundation, Inc. http://www.fsf.org/
 	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
 	* @package projects
-	* @version $Id: class.soprojects.inc.php,v 1.120 2007/09/05 11:45:29 sigurdne Exp $
+	* @version $Id: class.soprojects.inc.php 18358 2007-11-27 04:43:37Z skwashd $
 	* $Source: /sources/phpgroupware/projects/inc/class.soprojects.inc.php,v $
 	*/
 
@@ -117,7 +117,8 @@
 
 		function read_projects( $values )
 		{
-			$start		= isset( $values['start'] ) ? intval($values['start']) : 0;			$limit		= isset( $values['limit'] ) ? $values['limit'] : true;
+			$start		= isset( $values['start'] ) ? intval($values['start']) : 0;
+			$limit		= isset( $values['limit'] ) ? $values['limit'] : true;
 			$filter		= isset( $values['filter'] ) && $values['filter'] ? $values['filter'] : 'none';
 			$sort		= isset( $values['sort'] ) && $values['sort'] ? $values['sort'] : 'ASC';
 			$order		= isset( $values['order'] ) && $values['order'] ? $values['order'] : 'p_number,title,start_date';

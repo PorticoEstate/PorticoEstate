@@ -5,7 +5,7 @@
 	* @copyright Copyright (C) 2000-2005 Free Software Foundation, Inc http://www.fsf.org/
 	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
 	* @package filemanager
-	* @version $Id: hook_deleteaccount.inc.php,v 1.6 2005/04/28 20:45:53 powerstat Exp $
+	* @version $Id: hook_deleteaccount.inc.php 15879 2005-04-28 20:45:53Z powerstat $
 	*/
 
 	// NOTE: This is untested

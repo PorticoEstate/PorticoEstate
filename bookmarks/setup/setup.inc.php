@@ -6,7 +6,7 @@
 	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
 	* @package bookmarks
 	* @subpackage setup
-	* @version $Id: setup.inc.php,v 1.16 2006/03/11 23:20:49 skwashd Exp $
+	* @version $Id: setup.inc.php 16493 2006-03-11 23:24:02Z skwashd $
 	*/
 
 	// Basic information about this app

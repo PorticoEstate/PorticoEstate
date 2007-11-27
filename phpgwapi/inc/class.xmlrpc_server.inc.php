@@ -5,7 +5,7 @@
 	* @copyright Copyright (C) 1999-2001 Edd Dumbill
 	* @package phpgwapi
 	* @subpackage xml
-	* @version $Id: class.xmlrpc_server.inc.php,v 1.29 2006/09/17 11:18:31 skwashd Exp $
+	* @version $Id: class.xmlrpc_server.inc.php 17165 2006-09-17 11:18:31Z skwashd $
 	*/
 
 

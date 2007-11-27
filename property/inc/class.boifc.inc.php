@@ -24,7 +24,7 @@
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/bbb_/ekstern/
 	* @package property
 	* @subpackage ifc
- 	* @version $Id: class.boifc.inc.php,v 1.5 2007/01/26 14:53:46 sigurdne Exp $
+ 	* @version $Id: class.boifc.inc.php 18358 2007-11-27 04:43:37Z skwashd $
 	*/
 
 	/**

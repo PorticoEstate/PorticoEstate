@@ -9,7 +9,7 @@
 	*  option) any later version.                                              *
 	\**************************************************************************/
 
-	/* $Id: header.inc.php,v 1.9 2007/01/24 16:40:59 Caeies Exp $ */
+	/* $Id: header.inc.php 17907 2007-01-24 16:51:08Z Caeies $ */
 
 	if ($GLOBALS['phpgw_info']['flags']['admin_header'])
 	{

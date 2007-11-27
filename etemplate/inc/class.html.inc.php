@@ -5,7 +5,7 @@
 * @author Ralf Becker <ralf.becker@outdoortraining.de>
 * @license http://www.gnu.org/licenses/gpl.html GNU General Public License
 * @package etemplate
-* @version $Id: class.html.inc.php,v 1.29 2007/02/12 14:45:37 sigurdne Exp $
+* @version $Id: class.html.inc.php 17943 2007-02-12 14:45:37Z sigurdne $
 */
 
 class html

@@ -5,7 +5,7 @@
 	* @copyright Copyright (C) 2000-2005 Free Software Foundation, Inc. http://www.fsf.org/
 	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
 	* @package tts
-	* @version $Id: functions.inc.php,v 1.41 2005/05/10 16:12:38 powerstat Exp $
+	* @version $Id: functions.inc.php 15932 2005-05-10 16:12:38Z powerstat $
 	*/
 
 

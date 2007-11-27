@@ -6,7 +6,7 @@
 	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
 	* @package email
 	* @subpackage hooks
-	* @version $Id: hook_notifywindow.inc.php,v 1.17 2006/12/17 11:21:02 sigurdne Exp $
+	* @version $Id: hook_notifywindow.inc.php 17706 2006-12-17 11:21:02Z sigurdne $
 	*/
 
 	$d1 = strtolower(substr(APP_INC,0,3));

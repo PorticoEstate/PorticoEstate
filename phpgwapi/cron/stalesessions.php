@@ -5,7 +5,7 @@
 	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
 	* @package phpgwapi
 	* @subpackage cron
-	* @version $Id: stalesessions.php,v 1.6 2005/05/03 15:22:34 powerstat Exp $
+	* @version $Id: stalesessions.php 15886 2005-05-03 15:22:34Z powerstat $
 	* @internal stalesession.php - to use instead of stalesession.pl
 	* @internal may be invoked via cron with "php stalesession.php"
 	*/

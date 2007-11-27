@@ -5,7 +5,7 @@
 * @author Ralf Becker <ralf.becker@outdoor-training.de>
 * @license http://www.gnu.org/licenses/gpl.html GNU General Public License
 * @package etemplate
-* @version $Id: class.xul_io.inc.php,v 1.29 2007/02/13 15:30:45 sigurdne Exp $
+* @version $Id: class.xul_io.inc.php 17950 2007-02-13 15:30:58Z sigurdne $
 */
 
 	if (!function_exists('var2xml'))

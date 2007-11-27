@@ -6,7 +6,7 @@
 	* @copyright Copyright (C) 2000-2006 Free Software Foundation, Inc. http://www.fsf.org/
 	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
 	* @package projects
-	* @version $Id: hook_preferences.inc.php,v 1.31 2006/12/05 19:40:45 sigurdne Exp $
+	* @version $Id: hook_preferences.inc.php 18358 2007-11-27 04:43:37Z skwashd $
 	* $Source: /sources/phpgroupware/projects/inc/hook_preferences.inc.php,v $
 	*/
 

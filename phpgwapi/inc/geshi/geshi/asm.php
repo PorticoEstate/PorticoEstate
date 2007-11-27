@@ -5,9 +5,9 @@
  * Author: Tux (tux@inmail.cz)
  * Copyright: (c) 2004 Tux (http://tux.a4.cz/), Nigel McNie (http://qbnz.com/highlighter)
  * Release Version: 1.0.7.14
- * CVS Revision Version: $Revision: 1.1 $
+ * CVS Revision Version: $Revision: 17224 $
  * Date Started: 2004/07/27
- * Last Modified: $Date: 2006/09/25 08:46:28 $
+ * Last Modified: $Date: 2006-09-25 18:46:28 +1000 (Mon, 25 Sep 2006) $
  *
  * x86 Assembler language file for GeSHi.
  * Words are from SciTe configuration file (based on NASM syntax)

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 
 <!--
-    $Id: xbel.xsl,v 1.7 2005/05/15 02:16:27 skwashd Exp $
+    $Id: xbel.xsl 15965 2005-05-15 02:16:27Z skwashd $
 -->
 
 <xsl:stylesheet version="1.0"

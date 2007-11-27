@@ -10,7 +10,7 @@
   *  option) any later version.                                              *
   \**************************************************************************/
 
-  /* $Id: functions.inc.php,v 1.21 2006/12/28 04:29:52 skwashd Exp $ */
+  /* $Id: functions.inc.php 17800 2006-12-28 04:29:52Z skwashd $ */
 
 define('COMIC_STATIC',  0);
 define('COMIC_SNARFED', 1);

@@ -24,7 +24,7 @@
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/bbb_/ekstern/
 	* @package property
 	* @subpackage admin
- 	* @version $Id: class.uicategory.inc.php,v 1.16 2007/04/08 17:30:01 sigurdne Exp $
+ 	* @version $Id: class.uicategory.inc.php 18358 2007-11-27 04:43:37Z skwashd $
 	*/
 
 	/**

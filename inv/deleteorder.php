@@ -9,7 +9,7 @@
 	* Free Software Foundation; either version 2 of the License, or (at your   *
 	* option) any later version.                                               *
 	\**************************************************************************/
-	/* $Id: deleteorder.php,v 1.12 2001/05/22 01:55:01 bettina Exp $ */
+	/* $Id: deleteorder.php 4985 2001-05-22 01:55:01Z bettina $ */
 
 	if ($confirm)
 	{

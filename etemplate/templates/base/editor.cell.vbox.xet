@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<!-- $Id: editor.cell.vbox.xet,v 1.2 2007/02/10 16:03:46 sigurdne Exp $ -->
+<!-- $Id: editor.cell.vbox.xet 17936 2007-02-10 16:03:46Z sigurdne $ -->
 <overlay>
 	<grid id="etemplate.editor.cell" template="" lang="" group="0" version="0.9.15.002" height="100%">
 		<columns>

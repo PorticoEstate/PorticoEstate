@@ -9,7 +9,7 @@
 	* Free Software Foundation; either version 2 of the License, or (at your   *
 	* option) any later version.                                               *
 	\**************************************************************************/
-	/* $Id: delivery.php,v 1.44 2003/05/30 22:25:43 gugux Exp $ */
+	/* $Id: delivery.php 12919 2003-05-30 22:25:43Z gugux $ */
 
 	$phpgw_info["flags"] = array('currentapp' => 'inv',
 					'enable_nextmatchs_class' => True);

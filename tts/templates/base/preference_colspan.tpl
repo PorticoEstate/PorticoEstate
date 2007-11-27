@@ -1,4 +1,4 @@
-<!-- $Id: preference_colspan.tpl,v 1.1 2005/01/11 15:00:19 fipsfuchs Exp $ -->
+<!-- $Id: preference_colspan.tpl 15621 2005-01-11 15:00:19Z fipsfuchs $ -->
 <tr bgcolor="{bg_color}">
 	<td>{string}</td>
 	<td align="center">{lang_read_tickets_within_group_only}</td>
