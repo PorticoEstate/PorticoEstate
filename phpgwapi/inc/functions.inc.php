@@ -614,7 +614,8 @@
 			}
 		}
 
-		$GLOBALS['phpgw']->applications->read_installed_apps();	// to get translated app-titles
+	//  Already called from sessions::verify
+	//	$GLOBALS['phpgw']->applications->read_installed_apps();	// to get translated app-titles
 		
 		/*************************************************************************\
 		* Load the header unless the developer turns it off                       *
