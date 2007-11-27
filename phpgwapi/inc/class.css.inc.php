@@ -129,7 +129,7 @@
 		 */
 		function add_external_file($file)
 		{
-			if ( is_file(PHPGW_SERVER_ROOT . $file) )
+			if ( is_file(PHPGW_SERVER_ROOT . SEP . $file) )
 			{
 				$this->external_files[] = $file;
 			}
