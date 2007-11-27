@@ -498,6 +498,12 @@
 
 		function add_activity()
 		{
+			if(!$this->acl_add)
+			{
+				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> $this->currentapp.'.uilocation.stop', 'perm'=>2, 'acl_location'=> $this->acl_location));
+			}
+
+
 			$agreement_id	= phpgw::get_var('agreement_id', 'int');
 			$group_id	= phpgw::get_var('group_id', 'int');
 			$values	= phpgw::get_var('values');
@@ -574,6 +580,12 @@
 
 		function edit()
 		{
+			if(!$this->acl_add)
+			{
+				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> $this->currentapp.'.uilocation.stop', 'perm'=>2, 'acl_location'=> $this->acl_location));
+			}
+
+
 			$id	= phpgw::get_var('id', 'int');
 			$values		= phpgw::get_var('values');
 			$delete_item	= phpgw::get_var('delete_item', 'bool');
@@ -1084,6 +1096,12 @@
 
 		function edit_item()
 		{
+			if(!$this->acl_add)
+			{
+				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> $this->currentapp.'.uilocation.stop', 'perm'=>2, 'acl_location'=> $this->acl_location));
+			}
+
+
 			$agreement_id	= phpgw::get_var('agreement_id', 'int');
 			$id				= phpgw::get_var('id', 'int');
 			$values			= phpgw::get_var('values');
@@ -1293,6 +1311,11 @@
 
 		function view_item()
 		{
+			if(!$this->acl_read)
+			{
+				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> $this->currentapp.'.uilocation.stop', 'perm'=>1, 'acl_location'=> $this->acl_location));
+			}
+
 			$agreement_id	= phpgw::get_var('agreement_id', 'int');
 			$id	= phpgw::get_var('id', 'int');
 
@@ -1373,6 +1396,11 @@
 
 		function delete()
 		{
+			if(!$this->acl_delete)
+			{
+				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> $this->currentapp.'.uilocation.stop', 'perm'=>8, 'acl_location'=> $this->acl_location));
+			}
+
 			$attrib		= phpgw::get_var('attrib');
 			$id		= phpgw::get_var('id', 'int');
 			$agreement_id	= phpgw::get_var('agreement_id', 'int');
@@ -1421,10 +1449,13 @@
 		//	$GLOBALS['phpgw']->xslttpl->pp();
 		}
 
-
-
 		function view()
 		{
+			if(!$this->acl_read)
+			{
+				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> $this->currentapp.'.uilocation.stop', 'perm'=>1, 'acl_location'=> $this->acl_location));
+			}
+
 			$agreement_id	= phpgw::get_var('id', 'int');
 			$config		= CreateObject('phpgwapi.config',$this->currentapp);
 
@@ -1585,6 +1616,11 @@
 
 		function list_attribute()
 		{
+			if(!$this->acl_manage)
+			{
+				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> $this->currentapp.'.uilocation.stop', 'perm'=>16, 'acl_location'=> $this->acl_location));
+			}
+
 			$id	= phpgw::get_var('id', 'int');
 			$resort	= phpgw::get_var('resort');
 
@@ -1717,6 +1753,11 @@
 
 		function edit_attrib()
 		{
+			if(!$this->acl_manage)
+			{
+				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> $this->currentapp.'.uilocation.stop', 'perm'=>16, 'acl_location'=> $this->acl_location));
+			}
+
 			$id			= phpgw::get_var('id', 'int');
 			$values		= phpgw::get_var('values');
 	//		$GLOBALS['phpgw']->common->msgbox(lang('Altering ColumnName OR Datatype  - deletes your data in this Column'));
