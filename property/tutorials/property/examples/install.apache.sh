@@ -49,8 +49,8 @@ APACHE="httpd-2.2.6"
 #  * 
 #  * @var               string PHP, PHPTAR
 #  */
-PHPTAR="php-5.2.4.tar.bz2"
-PHP="php-5.2.4"
+PHPTAR="php-5.2.5.tar.bz2"
+PHP="php-5.2.5"
 
 #/**
 #  * Name of the EACCELERATOR tarball e.g eaccelerator-0.9.5.tar.bz2
@@ -59,6 +59,16 @@ PHP="php-5.2.4"
 #  */
 EACCELERATORTAR="eaccelerator-0.9.5.2.tar.bz2"
 EACCELERATOR="eaccelerator-0.9.5.2"
+
+# clean up from previous
+
+rm $FREETDS -rf &&\
+rm $LIBXML -rf &&\
+rm $LIBXSL -rf &&\
+rm $IMAP -rf &&\
+rm $PHP -rf &&\
+rm $EACCELERATOR -rf &&\
+rm $APACHE -rf &&\
 
 # perform the install
 
