@@ -1,0 +1,63 @@
+Absolute path of the backup directory	backup	fr	Chemin absolu vers le répertoire de sauvegarde
+Absolute path of the directory to store the backup script	backup	fr	Chemin absolu du répertoire où stocker le script de sauvegarde
+Archive type	backup	fr	Type d'archive
+Backup	common	fr	Sauvegarde
+Backup administration	common	fr	Administration de sauvegarde
+bzip2	admin	fr	bzip2
+Configuration backup	backup	fr	Configuration de sauvegarde
+Configuration localhost	backup	fr	Configuration de la machine locale
+Configuration remote host	backup	fr	Configuration de la machine distante
+Create backups of your data ?	backup	fr	Créer des sauvegardes de vos données ?
+daily	backup	fr	Journalier
+Data	backup	fr	Données
+directory locations	admin	fr	Emplacements des répertoires
+directory names	admin	fr	Noms des répertoires
+E-MAIL	backup	fr	E-MAIL
+interval	backup	fr	Intervalle
+ip or hostname	backup	fr	IP ou nom de machine
+LDAP	common	fr	LDAP
+ldap database	admin	fr	Base de données LDAP
+maildir	admin	fr	Répertoire Mail
+monthly	backup	fr	Mensuellement
+mysql	admin	fr	MySQL
+nfs	backup	fr	NFS
+No backup archives available !	backup	fr	Pas d'archives de sauvegarde disponibles !
+Number of stored backup versions	backup	fr	Nombre de versions de sauvegardes stockées
+Operating system	backup	fr	Système d'exploitation
+Password	backup	fr	Mot de passe
+pgsql	admin	fr	PostgreSQL
+php cgi	admin	fr	php cgi
+please enter the path of the needed applications in *site configuration* !	backup	fr	SVP entrez le chemin des applications nécessaires dans *Configuration du site* !
+please enter the path to the backup dir and/or enable showing archives in phpgroupware !	backup	fr	SVP entrez le chemin vers le rép. de sauvegarde et/ou activez l'affichage des archives dans phpGroupWare !
+please enter username and password for remote connection !	backup	fr	SVP entrez le nom d'utilisateur et le mot de passe pour la connexion à distance !
+please select an application for transport to the remote host !	backup	fr	SVP choisissez une application comme transport vers la machine distante !
+please set the path to a local dir to store the backup script !	backup	fr	SVP configurez le chemin vers un répertoire local où stocker le script de sauvegarde !
+please set the path to the ldap database dir in *site configuration* !	backup	fr	SVP réglez le chemin vers le rép. de la base de données LDAP dans *Configuration du site* !
+please set the path to the mysql database dir in *site configuration* !	backup	fr	SVP réglez le chemin vers le rép. de la base de données MySQL dans *Configuration du site* !
+please set the path to the postgresql database dir in *site configuration* !	backup	fr	SVP réglez le chemin vers le rép. de la base de données PostgreSQL dans *Configuration du site* !
+please set the values in *site configuration* !	backup	fr	SVP réglez les valeurs dans *Configuration du site* !
+please specify the ip of the remote host !	backup	fr	SVP précisez l'adresse IP de la machine distante !
+please specify the name of the maildir in *site configuration* !	backup	fr	SVP précisez le nom du rép. Mail dans *Configuration du site* !
+please specify the path to the backup directory !	backup	fr	SVP précisez le chemin vers le répertoire de sauvegarde !
+program locations	admin	fr	Emplacements des programmes
+Save backup locally ?	backup	fr	Stocker les sauvegardes localement ?
+Save backup to a remote host ?	backup	fr	Stocker les sauvegardes sur une machine distante ?
+Select archive type	backup	fr	Choisissez le type d'archive
+Select interval	backup	fr	Choisissez l'intervalle
+Select transport application	backup	fr	Choisissez l'application de transport
+settings	admin	fr	Réglages
+Show backup archives in phpGroupWare ?	backup	fr	Montrer les archives de sauvegarde dans phpGroupWare ?
+smbmount	backup	fr	SMBMOUNT
+SQL	backup	fr	SQL
+tar	admin	fr	tar
+tar.bz2	backup	fr	tar.bz2
+tar.gz	backup	fr	tar.gz
+The backup application is not configured for showing the archives in phpGroupWare yet !	backup	fr	L'application de sauvegarde n'est pas encore configurée pour montrer les archives de sauvegarde dans phpGroupWare !
+The directory to store the backup script must be outside of the webservers *DocumentRoot* !	backup	fr	Le répertoire où stocker le script de sauvegarde doit être en dehors du répertoire *DocumentRoot* des serveurs Web !
+The ftp connection failed ! Please check your configuration !	backup	fr	La connexion ftp a échoué ! SVP vérifiez votre configuration !
+Transport application	backup	fr	Application de transport
+User	backup	fr	Utilisateur
+versions can only be a number !	backup	fr	La valeur Versions ne peut être qu'un nombre !
+weekly	backup	fr	Hebdomadairement
+your sql database isnt supported by this application !	backup	fr	Votre base de données SQL n'est pas supportée par cette application !
+zip	common	fr	zip

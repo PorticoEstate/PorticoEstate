@@ -1,0 +1,76 @@
+body, div, input, p, select, textarea
+{
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 11px;
+}
+
+a
+{
+	text-decoration: none;
+	color: #369;
+}
+
+a:hover
+{
+	color: #c00;
+}
+a:active
+{
+	color: #f00;
+}
+
+body
+{
+	background-color: #ccc;
+	margin: 0px;
+}
+
+
+img
+{
+	border: 0px;
+}
+
+label, input[type=text], input[type=password], input[type=checkbox], input[type=radio], select, textarea
+{
+	display: block;
+	float: left;
+	margin-bottom: 8px;
+}
+
+input[type=text], input[type=password], select
+{
+	width: 250px;
+}
+
+label
+{
+	text-align: right;
+	width: 150px;
+	padding-right: 10px;
+	font-weight: bold;
+}
+
+br
+{
+	clear: left;
+}
+
+thead
+{
+	background-color: #d3dce3;
+	font-weight: bold;
+	text-align: center;
+}
+
+.button_group
+{
+	text-align: center;
+}
+
+.msg
+{
+	color: #f00;
+	font-weight: bold;
+	text-align: center;
+}

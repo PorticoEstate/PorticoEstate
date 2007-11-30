@@ -1,0 +1,381 @@
+%1 status - %2	setup	ja	%1 状態 - %2
+(account deletion in SQL only)	setup	ja	(SQL のみのアカウント削除)
+00 (disable)	setup	ja	00 (未使用 / 推奨)
+13 (ntp)	setup	ja	13 (ntp)
+80 (http)	setup	ja	80 (http)
+actions	setup	ja	動作
+add a domain	setup	ja	ドメイン追加
+add auto-created users to this group ('default' will be attempted if this is empty.)	setup	ja	自動作成時のグループ &nbsp; (指定なしの場合 'default')
+additional settings	setup	ja	追加のセッティング
+admin first name	setup	ja	姓
+admin last name	setup	ja	名
+admin password	setup	ja	パスワード
+admin password to header manager	setup	ja	ヘッダマネージャ用管理パスワード
+admin username	setup	ja	ユーザID
+admins	setup	ja	管理者
+after retrieving the file, put it into place as the header.inc.php.  then, click "continue".	setup	ja	"継続"で、保存せずにセットアップ画面に戻ります。（header.inc.php 未作成時はこの画面が表示されます）.
+all core tables and the admin and preferences applications	setup	ja	基本テーブルおよび基本アプリケーションをインストールします。
+all users	setup	ja	全てのユーザ
+analysis	setup	ja	サーバ環境分析結果
+app details	setup	ja	アプリケーションの詳細
+app install/remove/upgrade	setup	ja	アプリケーションの追加/更新/削除
+app process	setup	ja	App process
+application	setup	ja	application
+application data	setup	ja	アプリケーション情報
+application list	setup	ja	Application List
+application management	setup	ja	アプリケーション設定
+application name and status	setup	ja	Application Name and Status
+application name and status information	setup	ja	<center>アプリケーション名<BR>状態</center>
+application title	setup	ja	タイトル名
+are you sure you want to delete your existing tables and data?	setup	ja	Are you sure you want to delete your existing tables and data?
+are you sure?	setup	ja	よろしいですか？
+at your request, this script is going to attempt to create the database and assign the db user rights to it	setup	ja	データベースの作成、およびユーザをアサインしました。
+at your request, this script is going to attempt to install the core tables and the admin and preferences applications for you	setup	ja	基本テーブル、および基本アプリケーションをインストールしました。
+at your request, this script is going to attempt to upgrade your old applications to the current versions	setup	ja	古いアプリケーションを現在のバージョンにアップグレードしました。
+at your request, this script is going to attempt to upgrade your old tables to the new format	setup	ja	古いテーブルを現在のフォーマットにアップグレードしました。
+at your request, this script is going to take the evil action of deleting your existing tables and re-creating them in the new format	setup	ja	At your request, this script is going to take the evil action of deleting your existing tables and re-creating them in the new format
+at your request, this script is going to take the evil action of uninstalling all your apps, which deletes your existing tables and data	setup	ja	アプリケーションアンインストールで、テーブルとデータを削除しました
+attempt to use correct mimetype for ftp instead of default 'application/octet-stream'	setup	ja	FTP のMIMEタイプで &nbsp; 'application/octet-stream' &nbsp; の代わりに<br>正しいタイプを使う
+authentication / accounts	setup	ja	認証/アカウント情報
+auto create account records for authenticated users	setup	ja	認証したユーザ情報を自動的に作成する
+auto-created user accounts expire	setup	ja	自動作成したユーザの有効期限
+automatically detect domain from hostname	setup	ja	ホスト名を自動表示する
+available version	setup	ja	最新の<BR>バージョン
+backupwarn	setup	ja	<br>しかし、この処理が、あなたのデータを破壊してしまった場合に備えて、<u>データバックアップをお勧めします。<br></u><em>先に進む前に、データのバックアップを行って下さい。</em>
+because an application it depends upon was upgraded	setup	ja	because an application it depends upon was upgraded
+because it depends upon	setup	ja	理由は次のとおりです
+because it is not a user application, or access is controlled via acl	setup	ja	ユーザのアプリケーションでないか、ACL によってアクセス制限しています。
+because it requires manual table installation, <br>or the table definition was incorrect	setup	ja	手動でテーブルをインストールする必要があるか、<br>テーブル定義が正しくありません。
+because it was manually disabled	setup	ja	because it was manually disabled
+because of a failed upgrade or install	setup	ja	追加もしくは更新に失敗しました。
+because of a failed upgrade, or the database is newer than the installed version of this app	setup	ja	データベースのバージョンがこのアプリケーションの動作可能バージョンよりも新しいため、更新に失敗しました。
+because the enable flag for this app is set to 0, or is undefined	setup	ja	このアプリケーションが利用可能となっていません。
+bottom	setup	ja	下部
+cancel	setup	ja	キャンセル
+cannot create the header.inc.php due to file permission restrictions.<br> instead you can %1 the file.	setup	ja	header.inc.php が作成できません。パーミッションを確認して下さい。<br> %1 が可能です。
+charset	setup	ja	EUC-JP
+check ip address of all sessions	setup	ja	全てのセッションで IP アドレスのチェックを行う
+click <a href="index.php">here</a> to return to setup.	setup	ja	Click <a href="index.php">here</a> to return to setup.
+click here	setup	ja	ここをクリック
+completed	setup	ja	完了
+configuration	setup	ja	環境設定
+configuration completed	setup	ja	環境設定は完了しました。
+configuration password	setup	ja	環境設定用パスワード
+configure now	setup	ja	環境設定
+continue	setup	ja	継続
+could not open header.inc.php for writing!	setup	ja	Could not open header.inc.php for writing!
+country selection	setup	ja	国の選択
+create	setup	ja	Create
+create database	setup	ja	データベース作成
+create demo accounts	setup	ja	デモ用アカウント作成
+create one now	setup	ja	作成
+create your header.inc.php	setup	ja	header.inc.php 作成
+created	setup	ja	作成
+creating tables	setup	ja	テーブルを作成しました。
+current version	setup	ja	現在の<BR>バージョン
+currently installed languages: %1 <br>	setup	ja	現在の言語: %1 <br>
+datetime port.<br>if using port 13, please set firewall rules appropriately before submitting this page.<br>(port: 13 / host: 129.6.15.28)	setup	ja	datetime用ポート<br>ポート13を利用する場合、ファイアウォール等の設定を確認してください。
+db host	setup	ja	DB ホスト名
+db name	setup	ja	DB 名
+db password	setup	ja	DB パスワード
+db root password	setup	ja	DB root password
+db root username	setup	ja	DB root username
+db type	setup	ja	DB タイプ
+db user	setup	ja	DB ユーザ名
+default file system space per user/group ?	setup	ja	Default file system space per user/group ?
+delete	setup	ja	削除
+delete all my tables and data	setup	ja	すべてのテーブルとデータを削除します
+delete all old languages and install new ones	setup	ja	現在の言語をすべて削除して、選択した言語をインストールする
+deleting tables	setup	ja	テーブルを削除しました
+demo server setup	setup	ja	デモサーバセットアップ
+deny access	setup	ja	アクセス不可
+deny all users access to grant other users access to their entries ?	setup	ja	他のユーザ情報へのアクセスを全てのユーザに許可しない
+dependency failure	setup	ja	Dependency Failure
+deregistered	setup	ja	登録解除しました
+details for admin account	setup	ja	管理者アカウントの詳細情報
+developers' table schema toy	setup	ja	Developers' Table Schema Toy
+did not find any valid db support!	setup	ja	データベースが未サポートです。
+do you want persistent connections (higher performance, but consumes more resources)	setup	ja	持続コネクションの利用 (ハイパフォーマンスですが、多くのリソースが必要です)
+do you want to manage homedirectory and loginshell attributes?	setup	ja	ホームディレクトリとログインシェル属性の管理を行う
+domain	setup	ja	ドメイン
+domain select box on login	setup	ja	ログイン時のドメイン選択
+dont touch my data	setup	ja	Dont touch my data
+download	setup	ja	ダウンロード
+edit current configuration	setup	ja	環境設定
+edit your existing header.inc.php	setup	ja	header.inc.php を訂正します。
+edit your header.inc.php	setup	ja	Edit your header.inc.php
+enable debug messages	setup	ja	デバッグメッセージ表示
+enable mcrypt	setup	ja	MCrypt 利用
+enter some random text for app session encryption	setup	ja	アプリケーションセッション暗号化のための任意テキスト入力
+enter some random text for app session <br>encryption (requires mcrypt)	setup	ja	アプリケーションセッション暗号化のための<br>任意テキスト入力(mcrypt 時必要)
+enter the full path for temporary files.<br>examples: /tmp, c:\temp	setup	ja	テンポラリファイル（フルパス）<br>例：/tmp や C:\TEMP など
+enter the full path for users and group files.<br>examples: /files, e:\files	setup	ja	ファイルマネージャのファイル保存先（フルパス）<br>例：/files や E:\FILES など
+enter the hostname of the machine on which this server is running	setup	ja	phpGroupWare が動作するホスト名
+enter the location of phpgroupware's url.<br>example: http://www.domain.com/phpgroupware &nbsp; or &nbsp; /phpgroupware<br><b>no trailing slash</b>	setup	ja	phpGroupWare の URL<BR>例：http://www.itheart.com/phpgroupware &nbsp; や &nbsp; /phpgroupware など<BR><b>最後はスラッシュを指定しないこと</b>
+enter the site password for peer servers	setup	ja	同等サーバのパスワード
+enter the site username for peer servers	setup	ja	同等サーバのユーザ名
+enter the title for your site	setup	ja	タイトル名
+enter your default ftp server	setup	ja	既定の FTP サーバ
+enter your http proxy server	setup	ja	HTTP &nbsp; プロキシサーバ
+enter your http proxy server port	setup	ja	HTTP &nbsp; プロキシサーバポート
+export has been completed!  you will need to set the user passwords manually.	setup	ja	Export has been completed!  You will need to set the user passwords manually.
+export phpgroupware accounts from sql to ldap	setup	ja	SQLデータベース上の phpGroupWare アカウントを LDAP へエクスポート
+export sql users to ldap	setup	ja	LDAP へ SQLのユーザをエクスポートします
+file	setup	ja	FILE
+file type, size, version, etc.	setup	ja	タイプ、サイズ、バージョン等
+for a new install, select import.  to convert existing sql accounts to ldap, select export	setup	ja	新規インストールの場合は、インポートを選択して下さい。既存の SQL アカウントを LDAP に変換する場合は、エクスポートを選択して下さい。
+force selectbox	setup	ja	セレクトボックス
+found existing configuration file. loading settings from the file...	setup	ja	設定ファイルが見つかりました。各設定情報を表示します。
+go back	setup	ja	戻る
+go to	setup	ja	Go to
+grant access	setup	ja	アクセス許可
+has a version mismatch	setup	ja	バージョンが異なります
+hooks deregistered	setup	ja	フックを登録解除しました。
+hooks registered	setup	ja	フックを登録しました。
+host information	setup	ja	ホスト情報
+hostname/ip of database server	setup	ja	データベースが利用可能なホスト名またはIPアドレスを入力して下さい。
+however, the application is otherwise installed	setup	ja	このアプリケーションの他の部分はインストールしました。
+however, the application may still work	setup	ja	However, the application may still work
+if no acl records for user or any group the user is a member of	setup	ja	ACLにユーザやグループの情報がない場合の処理
+if the application has no defined tables, selecting upgrade should remedy the problem	setup	ja	アプリケーションテーブルが存在しない場合、更新を選択して問題を解決してください。
+if using ldap	setup	ja	LDAP利用時
+if using ldap, do you want to manage homedirectory and loginshell attributes?	setup	ja	LDAP 利用時のホームディレクトリとログインシェルの情報
+if you did not receive any errors, your applications have been	setup	ja	エラーは見つかりませんでした。
+if you did not receive any errors, your tables have been	setup	ja	エラーは見つかりませんでした。
+if you running this the first time, don't forget to manualy %1 !!!	setup	ja	If you running this the first time, don't forget to manualy %1 !!!
+image type selection order	setup	ja	使用するイメージの選択順序
+import accounts from ldap to the phpgroupware accounts table (for a new install using sql accounts)	setup	ja	Import accounts from LDAP to the phpGroupWare accounts table (for a new install using SQL accounts)
+import has been completed!	setup	ja	Import has been completed!
+import ldap users/groups	setup	ja	LDAP ユーザ/グループ インポート
+importing old settings into the new format....	setup	ja	Importing old settings into the new format....
+include root (this should be the same as server root unless you know what you are doing)	setup	ja	インクルードルート (通常はサーバールートと同様です)
+insanity	setup	ja	アンインストール
+install	setup	ja	インストール
+install all	setup	ja	Install All
+install applications	setup	ja	アプリケーション追加
+install language	setup	ja	言語追加
+installed	setup	ja	インストール
+invalid ip address	setup	ja	Invalid IP address
+invalid password	setup	ja	Invalid password
+is broken	setup	ja	壊れています
+is disabled	setup	ja	使用できません
+ldap account import/export	setup	ja	LDAP アカウント インポート/エクスポート
+ldap accounts configuration	setup	ja	LDAP アカウント設定
+ldap accounts context	setup	ja	LDAP アカウントコンテキスト
+ldap config	setup	ja	LDAP Config
+ldap default homedirectory prefix (e.g. /home for /home/username)	setup	ja	既定のホームディレクトリプレフィックス<br> &nbsp; &nbsp; (例：/home ならば /home/uername となります)
+ldap default shell (e.g. /bin/bash)	setup	ja	既定のシェル &nbsp; (例：/bin/bashなど)
+ldap encryption type	setup	ja	LDAP 暗号化タイプ
+ldap export users	setup	ja	LDAP エクスポートユーザ
+ldap groups context	setup	ja	LDAP グループコンテキスト
+ldap host	setup	ja	LDAP ホスト名
+ldap import users	setup	ja	LDAP インポートユーザ
+ldap modify	setup	ja	LDAP Modify
+ldap rootdn	setup	ja	LDAP rootdn
+ldap root password	setup	ja	LDAP ルートパスワード
+limit access to setup to the following addresses or networks (e.g. 10.1.1,127.0.0.1)	setup	ja	Limit access to setup to the following addresses or networks (e.g. 10.1.1,127.0.0.1)
+logout	setup	ja	ログアウト
+makesure	setup	ja	データベースの作成とアカウントに権限を与えます
+manage applications	setup	ja	アプリケーション設定
+manage languages	setup	ja	言語環境設定
+maximum account id (e.g. 65535 or 1000000)	setup	ja	最大ユーザID &nbsp; (例：65536 や 1000000 など)
+maximum group id (e.g. 499 or 999) - should not overlap with account ids	setup	ja	最大グループID &nbsp; (例：499 や 999 など)
+may be broken	setup	ja	may be broken
+mcrypt algorithm (default tripledes)	setup	ja	Mcryptアルゴリズム(デフォルト:TRIPLEDES)
+mcrypt initialization vector	setup	ja	MCrypt 初期化ベクトル
+mcrypt mode (default cbc)	setup	ja	Mcryptモード(デフォルト:CBC)
+mcrypt settings (requires mcrypt php extension)	setup	ja	Mcrypt 設定情報(McryptはPHPの拡張が必要)
+mcrypt version	setup	ja	MCrypt バージョン
+minimum account id (e.g. 500 or 1000, etc.)	setup	ja	最小ユーザID &nbsp; (例： 500 や 1000 など)
+minimum group id (e.g. 100 or 500, etc.) - should not overlap with account ids	setup	ja	最小グループID &nbsp; (例: 100 や 500 など)
+modifications have been completed!	setup	ja	Modifications have been completed!
+modify	setup	ja	Modify
+modify an existing ldap account store for use with phpgroupware (for a new install using ldap accounts)	setup	ja	Modify an existing LDAP account store for use with phpGroupWare (for a new install using LDAP accounts)
+multi-language support setup	setup	ja	言語環境設定
+mysqlinstr	setup	ja	 MySQLでデータベースを作成するには:<br>mysql にログイン -<br><i>[user@server user]# mysql -u root -p</i><br>空のデータベースを作成し、アカウントに権限を付与する -<br><i>mysql> create database phpgroupware;</i><br><i>mysql> grant all on phpgroupware.* to phpgroupware@localhost identified by 'password';</i>
+name of database	setup	ja	データベースの名前を入力して下さい。
+name of db user phpgroupware uses to connect	setup	ja	phpGroupWare から接続可能なデータベースユーザの名前を入力して下さい。
+never	setup	ja	無期限
+new	setup	ja	New
+no	setup	ja	いいえ
+no algorithms available	setup	ja	no algorithms available
+no microsoft sql server support found. disabling	setup	ja	Microsoft SQL Server は利用できません。
+no modes available	setup	ja	no modes available
+no mysql support found. disabling	setup	ja	MySQL は利用できません。
+no odbc/sapdb support found. Disabling	setup	ja	ODBC/SAPDB は利用できません。
+no oracle-db support found. disabling	setup	ja	Oracle は利用できません。
+no postgres-db support found. disabling	setup	ja	Postgres-DB は利用できません。
+no xml support found. disabling	setup	ja	XML は利用できません。
+not complete	setup	ja	未完
+not completed	setup	ja	未完
+not ready for this stage yet	setup	ja	実行できません。
+note: this option will only work if show domain select box is off.	setup	ja	備考: このオプション利用時は、ログイン時のドメイン選択を行わないようにして下さい。
+note: you will be able to customize this later	setup	ja	備考: 後でカスタマイズすることが可能です
+now guessing better values for defaults...	setup	ja	初期設定値を表示します。
+ok	setup	ja	OK
+once the database is setup correctly	setup	ja	Once the database is setup correctly
+one month	setup	ja	１ヶ月
+one week	setup	ja	１週間
+only add languages that are not in the database already	setup	ja	新しい言語すべてを追加（初めて追加する場合）
+only add new phrases	setup	ja	新しいフレーズの追加
+or	setup	ja	または
+or http://webdav.domain.com (webdav)	setup	ja	または、http://webdav.domain.com など WebDAVサーバのURLを指定して下さい。
+or we can attempt to create the database for you:	setup	ja	または、この処理でデータベースを作成することが可能です
+password needed for configuration	setup	ja	環境設定用パスワードを入力して下さい。
+password of db user	setup	ja	データベース接続パスワードを入力して下さい。
+passwords did not match, please re-enter	setup	ja	パスワードに誤りがあります。再度入力して下さい
+path information	setup	ja	パス情報
+path to user and group files has to be outside of the webservers document-root!!!	setup	ja	Path to user and group files HAS TO BE OUTSIDE of the webservers document-root!!!
+persistent connections	setup	ja	持続コネクション
+pgsqlinstr	setup	ja	PostgreSQLでデータベースを作成するには:<br>postmaster の起動<br><i>[user@server user]# postmaster -i -D /home/[username]/[dataDir]</i><br>空のデータベース作成 -<br><i>[user@server user]# createdb phpgroupware</i>
+phpgroupware administration manual	setup	ja	phpGroupWare 環境設定マニュアル
+please check for sql scripts within the application's directory	setup	ja	Please check for sql scripts within the application's directory
+please check read/write permissions on directories, or back up and use another option.	setup	ja	Please check read/write permissions on directories, or back up and use another option.
+please configure phpGroupWare for your environment	setup	ja	phpGroupWareの環境設定を行ってください。
+please consult the %1.	setup	ja	%1 を参照してください
+please install	setup	ja	Please install
+please login	setup	ja	ログイン
+please login to phpgroupware and run the admin application for additional site configuration	setup	ja	phpGroupWare にログインして、admin アプリケーション内の各アプリケーションサイト環境設定を実行して下さい
+please wait...	setup	ja	Please Wait...
+possible reasons	setup	ja	Possible Reasons
+possible solutions	setup	ja	解決策
+post-install dependency failure	setup	ja	Post-install Dependency Failure
+potential problem	setup	ja	Potential Problem
+preferences	setup	ja	ユーザ設定情報
+problem resolution	setup	ja	解決方法
+process	setup	ja	Process
+re-check my database	setup	ja	データベース確認
+re-check my installation	setup	ja	インストール確認
+re-enter password	setup	ja	パスワード再入力
+read translations from	setup	ja	Read translations from
+really uninstall all applications	setup	ja	全アプリケーションのアンインストール
+recommended: filesystem	setup	ja	推奨: Filesystem
+registered	setup	ja	登録しました。
+remove	setup	ja	削除
+remove all	setup	ja	Remove All
+requires reinstall or manual repair	setup	ja	Requires reinstall or manual repair
+requires upgrade	setup	ja	Requires upgrade
+resolve	setup	ja	確認
+sample configuration not found. using built in defaults	setup	ja	サンプル環境設定がありません。デフォルトで設定します。
+save	setup	ja	保存
+save this text as contents of your header.inc.php	setup	ja	Save this text as contents of your header.inc.php
+select an app, enter a target version, then submit to process to that version.<br>if you do not enter a version, only the baseline tables will be installed for the app.<br><blink>this will drop all of the apps' tables first!</blink>	setup	ja	Select an app, enter a target version, then submit to process to that version.<br>If you do not enter a version, only the baseline tables will be installed for the app.<br><blink>THIS WILL DROP ALL OF THE APPS' TABLES FIRST!</blink>
+select the default applications to which your users will have access	setup	ja	Select the default applications to which your users will have access
+select the desired action(s) from the available choices	setup	ja	アプリケーションの設定動作を選択してください。
+select to download file	setup	ja	Select to download file
+select where you want to store/retrieve file contents	setup	ja	ファイルコンテンツ情報の格納/検索場所
+select where you want to store/retrieve filesystem information	setup	ja	ファイルシステム情報の格納/検索場所
+select where you want to store/retrieve user accounts	setup	ja	ユーザアカウントの格納/検索場所
+select which group(s) will be exported (group membership will be maintained)	setup	ja	Select which group(s) will be exported (group membership will be maintained)
+select which group(s) will be imported (group membership will be maintained)	setup	ja	Select which group(s) will be imported (group membership will be maintained)
+select which group(s) will be modified (group membership will be maintained)	setup	ja	Select which group(s) will be modified (group membership will be maintained)
+select which languages you would like to use	setup	ja	言語を選択してください。
+select which method of upgrade you would like to do	setup	ja	言語環境設定の方法を選択してください。
+select which type of authentication you are using	setup	ja	認証タイプ
+select which user(s) will also have admin privileges	setup	ja	Select which user(s) will also have admin privileges
+select which user(s) will be exported	setup	ja	Select which user(s) will be exported
+select which user(s) will be imported	setup	ja	Select which user(s) will be imported
+select which user(s) will be modified	setup	ja	Select which user(s) will be modified
+select which user(s) will have admin privileges	setup	ja	Select which user(s) will have admin privileges
+select your old version	setup	ja	Select your old version
+selectbox	setup	ja	セレクトボックス
+server root	setup	ja	サーバールート
+sessions type	setup	ja	セッションタイプ
+set this to "old" for versions &lt; 2.4, otherwise the exact mcrypt version you use.	setup	ja	MCrypt のバージョンを入力して下さい。2.4 より古いバージョンの場合は、"old"と入力して下さい。
+settings	setup	ja	設定情報
+setup	setup	ja	セットアップ
+setup demo accounts in ldap	setup	ja	Setup demo accounts in LDAP
+setup the database	setup	ja	Setup the database
+show 'powered by' logo on	setup	ja	powered by ロゴ表示位置
+some or all of its tables are missing	setup	ja	必要なテーブルが存在しません。
+status	setup	ja	状態表示
+step 1 - simple application management	setup	ja	Step 1 - テーブル作成
+step 2 - configuration	setup	ja	Step 2 - 環境設定
+step 3 - language management	setup	ja	Step 3 - 言語環境設定
+step 4 - advanced application management	setup	ja	Step 4 - アプリケーション設定
+table change messages	setup	ja	テーブル変更メッセージ
+tables dropped	setup	ja	テーブルを削除しました
+tables installed, unless there are errors printed above	setup	ja	をインストールしました。エラー表示がなければ完了です。
+tables upgraded	setup	ja	テーブルを更新しました
+target version	setup	ja	Target Version
+text entry	setup	ja	テキスト入力
+the db_type in defaults (%1) is not supported on this server. using first supported type.	setup	ja	The db_type in defaults (%1) is not supported on this server. using first supported type.
+the file	setup	ja	を選択して下さい。
+the table definition was correct, and the tables were installed	setup	ja	The table definition was correct, and the tables were installed
+the tables	setup	ja	the tables
+there was a problem trying to connect to your ldap server. <br>please check your LDAP server configuration	setup	ja	There was a problem tring to connect to your LDAP server. <br>please check your LDAP server configuration
+this has to be outside the webservers document-root!!!	setup	ja	Web サーバの DocumentRoot以外を指定して下さい。
+this program will help you upgrade or install different languages for phpGroupWare	setup	ja	phpGroupWare での、言語環境を設定します。
+this section will help you export users and groups from phpgroupWare's account tables into your ldap tree	setup	ja	This section will help you export users and groups from phpGroupWare's account tables into your LDAP tree
+this section will help you import users and groups from your ldap tree into phpGroupWare's account tables	setup	ja	This section will help you import users and groups from your LDAP tree into phpGroupWare's account tables
+this section will help you setup your ldap accounts for use with phpgroupware	setup	ja	This section will help you setup your LDAP accounts for use with phpGroupWare
+this should be around 30 bytes in length.<br>note: the default has been randomly generated.	setup	ja	30バイト入力して下さい。<br>注: 初期表示はランダムに生成しています。
+this stage is completed<br>	setup	ja	この段階は完了しました。<br>
+this will create 1 admin account and 3 demo accounts<br>the username/passwords are: demo/guest, demo2/guest and demo3/guest.<br><b>!!!THIS WILL DELETE ALL EXISTING ACCOUNTS!!!</b><br>	setup	ja	１つの管理者アカウントと３つのデモアカウントをセットアップします。<br>デモアカウントのユーザ名とパスワードは demo/guest, demo2/guest, demo3/guest です。<br><b>現在のアカウントをすべて削除しますので注意してください。</b><br>
+this will create an admin account and 3 demo accounts<br>the username/passwords are: demo/guest, demo2/guest and demo3/guest.<br><b>!!!THIS WILL DELETE ALL EXISTING ACCOUNTS!!!</b><br>	setup	ja	１つの管理者アカウントと３つのデモアカウントをセットアップします。<br>デモアカウントのユーザ名とパスワードは demo/guest, demo2/guest, demo3/guest です。<br><b>現在のアカウントをすべて削除しますので注意してください。</b><br>
+this will create an admin account and (optionally) 3 demo accounts.<br>The username/passwords are: demo/guest, demo2/guest and demo3/guest.<br>	setup	ja	１つの管理者アカウントと３つのデモアカウント(オプション)をセットアップします。<br>デモアカウントのユーザ名とパスワードは demo/guest, demo2/guest, demo3/guest です。
+<br><b>This will delete all existing accounts.</b>	setup	ja	<br><b>現在のアカウントをすべて削除しますので注意してください。</b>
+to a version it does not know about	setup	ja	to a version it does not know about
+to setup an admin account and (optionally) 3 demo accounts.	setup	ja	<br>１つの管理者アカウントと３つのデモ用アカウント（オプション）をセットアップします。
+to setup 1 admin account and 3 demo accounts.<br><b>this will delete all existing accounts</b>	setup	ja	と、１つの管理者アカウントと３つのデモアカウントをセットアップします。<br><b>現在のアカウントをすべて削除しますので注意してください。</b>
+top	setup	ja	上部
+translations added	setup	ja	言語環境を追加しました。
+translations removed	setup	ja	言語環境を削除しました。
+translations upgraded	setup	ja	言語環境を更新しました。
+try to configure your php to support one of the above mentioned dbms, or install phpgroupware by hand.	setup	ja	Try to configure your php to support one of the above mentioned DBMS, or install phpGroupWare by hand.
+two weeks	setup	ja	２週間
+uninstall	setup	ja	uninstall
+uninstall all applications	setup	ja	アプリケーションのアンインストール
+uninstalled	setup	ja	アンインストール
+upgrade	setup	ja	更新
+upgrade all	setup	ja	Upgrade All
+upgraded	setup	ja	アップグレード
+upgrading tables	setup	ja	Upgrading Tables
+use cookies to pass sessionid	setup	ja	cookieのセッションidを使用
+use pure html compliant code (not fully working yet)	setup	ja	純粋なHTMLを利用（完全に動作しません）
+users choice	setup	ja	ユーザ選択
+version mismatch	setup	ja	Version Mismatch
+view	setup	ja	表示
+warning!	setup	ja	Warning!
+we can proceed	setup	ja	We can proceed
+we will automatically update your tables/records to %1	setup	ja	セットアップは、%1 用のテーブルやデータに自動アップグレードします。
+what type of sessions management do you want to use (php4 session management may perform better)?	setup	ja	セッションマネジメントの選択 (PHP4のセッション管理がよりよい動作をします)
+which database type do you want to use with phpgroupware?	setup	ja	phpGroupWare で利用するデータベースのタイプを選択して下さい。
+would you like phpgroupware to cache the phpgw info array ?	setup	ja	phpGroupWare のキャッシュにphpgw info 配列を利用する
+would you like phpgroupware to check for a new version<br>when admins login ?	setup	ja	管理者でログイン時、phpGroupWareのバージョンチェックを行う
+would you like to show each application's upgrade status ?	setup	ja	アプリケーションのアップグレード状況表示
+write config	setup	ja	書き込み
+yes	setup	ja	はい
+you appear to be running a pre-beta version of phpgroupware.<br>these versions are no longer supported, and there is no upgrade path for them in setup.<br> you may wish to first upgrade to 0.9.10 (the last version to support pre-beta upgrades) <br>and then upgrade from there with the current version.	setup	ja	You appear to be running a pre-beta version of phpGroupWare.<br>These versions are no longer supported, and there is no upgrade path for them in setup.<br> You may wish to first upgrade to 0.9.10 (the last version to support pre-beta upgrades) <br>and then upgrade from there with the current version.
+you appear to be running version %1 of phpgroupware	setup	ja	現在、phpGroupWare Ver. %1 が動作していると思われます。
+you appear to be using php earlier than 4.1.0. phpgroupware now requires 4.1.0 or later	setup	ja	phpGroupWare は PHP 4.1.0 以降で動作します。
+you appear to be using php3. disabling php4 sessions support	setup	ja	PHP3 が利用可能です。(PHP4 セッション利用不可)
+you appear to be using php4. enabling php4 sessions support	setup	ja	PHP4 が利用可能です。(PHP4セッション利用可能)
+you appear to have imap support enabled	setup	ja	IMAP が利用可能です。
+you appear to have microsoft sql server support enabled	setup	ja	Microsoft SQL Server が利用可能です。
+you appear to have mysql support enabled	setup	ja	MySQL が利用可能です。
+you appear to have odbc/sapdb support enabled	setup	ja	ODBC/SUPDB が利用可能です。
+you appear to have oracle support enabled	setup	ja	Oracle が利用可能です。
+you appear to have oracle v8 (oci) support enabled	setup	ja	Oracle V8 (OCI) が利用可能です。
+you appear to have postgres-db support enabled	setup	ja	Postgres-DB が利用可能です。
+you appear to have xml support enabled	setup	ja	XML が利用可能です。
+you are ready for this stage, but this stage is not yet written.<br>	setup	ja	You are ready for this stage, but this stage is not yet written.<br>
+you didn't enter a config password for domain %1	setup	ja	%1 ドメイン用環境設定パスワードが未入力です。
+you didn't enter a header admin password	setup	ja	ヘッダマネージャ用管理パスワードが未入力です。
+you do not have any languages installed. please install one now <br>	setup	ja	どの言語環境もありません。最低１つの言語環境をインストールして下さい。<br>
+you have not created your header.inc.php yet!<br> you can create it now.	setup	ja	header.inc.php が未作成です。<br>header.inc.php を作成します。
+you have successfully logged out	setup	ja	You have successfully logged out
+you must enter a username for the admin	setup	ja	ユーザIDを入力して下さい。
+you should either uninstall and then reinstall it, or attempt manual repairs	setup	ja	You should either uninstall and then reinstall it, or attempt manual repairs
+you're using an old configuration file format...	setup	ja	You're using an old configuration file format...
+you're using an old header.inc.php version...	setup	ja	You're using an old header.inc.php version...
+your applications are current	setup	ja	アプリケーションのインストールは完了しました。
+your database does not exist	setup	ja	データベースが存在しません。
+your database is not working!	setup	ja	データベースが存在しません。
+your database is working, but you dont have any applications installed	setup	ja	データベースは存在していますが、各アプリケーションテーブルが未作成です。
+your header admin password is not set. please set it now!	setup	ja	Your header admin password is NOT set. Please set it now!
+your header.inc.php needs upgrading.	setup	ja	Your header.inc.php needs upgrading.
+your header.inc.php needs upgrading.<br><blink><b class="msg">warning!</b></blink><br><b>make backups!</b>	setup	ja	Your header.inc.php needs upgrading.<br><blink><b class="msg">WARNING!</b></blink><br><b>MAKE BACKUPS!</b>
+your tables are current	setup	ja	Your tables are current
+your tables may be altered and you may lose data	setup	ja	テーブルを変更します。データが失われるかもしれません
+your tables will be dropped and you will lose data	setup	ja	テーブルを削除します。データは復旧できません

@@ -1,0 +1,271 @@
+$stat_name %1	phpbrain	fr	$stat_name %1
+%1 contains %2 items	phpbrain	fr	%1 contient %2 objets
+%1 faqs_activated	phpbrain	fr	%1 FAQs Activées
+%1 faqs_deleted	phpbrain	fr	%1 FAQs Effacées
+%1 matches found	phpbrain	fr	%1 Occurrences Trouvées
+%1 questions_activated	phpbrain	fr	%1 Questions Activées
+%1 questions_deleted	phpbrain	fr	%1 Questions Effacées
+/kb directory does not exist and could not be created, please ask the administrator to check the global configuration	phpbrain	fr	Le repertoire /kb  n'existe pas et ne peut être créé. Demandez à votre administrateur de vérifier la configuration globale.
+/kb directory does not exist and could not be created, please ask the adminstrator to check the global configuration	phpbrain	fr	le répertoire /kb n'existe pas et n'a pas pu être créé, veuillez demander à votre administrateur qu'il vérifie la configuration globale
+action	phpbrain	fr	Action
+actions	phpbrain	fr	Actions
+active_when_checked	phpbrain	fr	Actif quand vérifié
+add articles	phpbrain	fr	Ajouter un article
+add link	phpbrain	fr	Ajouter un lien
+add question	phpbrain	fr	Ajouter une question
+add_answer	phpbrain	fr	Ajouter Une Réponse
+add_comments	phpbrain	fr	Ajouter Des Commentaires
+add_question	phpbrain	fr	Ajouter Une Question
+add_question (%1 open)	phpbrain	fr	Ajouter Une Question (%1 Ouvert(s))
+added file %1	phpbrain	fr	Fichier ajouté %1
+added link %1	phpbrain	fr	Lien ajouté %1
+added related articles %1	phpbrain	fr	Article lié ajouté
+advanced search	phpbrain	fr	Recherche avancée
+all articles	phpbrain	fr	Tous les articles
+allow html	admin	fr	Autoriser les tags HTML dans les messages
+already_rated	phpbrain	fr	Vous avez déjà mis une note à ce sujet. Merci.
+anon user	admin	fr	Utilisateur anonyme
+answer	phpbrain	fr	Réponse
+anytime	phpbrain	fr	N'importe quand
+anywhere in the article	phpbrain	fr	N'importe où dans l'article
+article	phpbrain	fr	Article
+article added to database, you can now attach files or links, or relate to other articles	phpbrain	fr	Article ajouté en base de données, vous pouvez maintenant attaché des fichiers ou des liens, ou pointer vers d'autres articles.
+article created	phpbrain	fr	Article créé
+article deleted	phpbrain	fr	Article supprimé
+article deleted successfully	phpbrain	fr	Article supprimé avec succès
+article edited	phpbrain	fr	Article modifié
+article has been published	phpbrain	fr	L'article a été publié
+article id	phpbrain	fr	Identifiant d'article
+articles added	phpbrain	fr	Articles supprimés
+articles deleted successfully	phpbrain	fr	Articles supprimés avec succès
+articles have been published	phpbrain	fr	Les articles ont été publiés
+articles in %1	phpbrain	fr	Articles dans %1
+articles in %1 and all its subcategories	phpbrain	fr	Articles dans %1 et toutes ses sous-catégories
+articles not classified under any category	phpbrain	fr	Articles non classés dans une catégorie
+ascendent	phpbrain	fr	Ascendant
+attach file	phpbrain	fr	Attacher un fichier
+attached files	phpbrain	fr	Fichiers attachés
+average rating	phpbrain	fr	Note moyenne
+base directory does not exist, please ask the adminstrator to check the global configuratio	phpbrain	fr	Le répertoire de base n'existe pas, demandez svp à votre administrateur de vérifier la configuration globale
+before submiting a question, please search in the knowledge base first	phpbrain	fr	Avant de soumettre la question, merci de consulter la base de connaissances.
+browse	common	fr	Naviguer
+by answering this question you will help to get the answer quicker the next time	phpbrain	fr	En répondant à cette question, vous contribuez à rendre l'accès à la réponse plus rapidement la prochaine fois.
+cant_post_must_register	phpbrain	fr	Vous devez être un utilisateur enregistré pour pouvoir ajouter des informations dans la base de connaissances
+check spelling	phpbrain	fr	Vérifier l'orthographe
+check_before_submit	phpbrain	fr	SVP vérifiez que cette information n'est pas déjà dans la base de connaissances avant de la soumettre.
+close window	phpbrain	fr	Fermer la fenêtre
+comment	phpbrain	fr	Commentaire
+comment and rating have been published	phpbrain	fr	Les commentaire et note ont été publiés
+comment could not be inserted in the database	phpbrain	fr	Le commentaire ne peut être inséré dans la base.
+comment has been deleted	phpbrain	fr	Le commentaire a été supprimé
+comment has been published	phpbrain	fr	Le commentaire a été publié
+comment has been submited for revision	phpbrain	fr	Le commentaire a été soumis à relecture
+comment has been submited for revision and rating will be published	phpbrain	fr	Le commentaire a été soumis à la relecture et la note sera publiée.
+comments	phpbrain	fr	Commentaires
+configuration	phpbrain	fr	Configuration
+confirm	phpbrain	fr	Confirmer
+correct the errors and press confirm	phpbrain	fr	Corrigez les erreurs et pressez Confirmer
+create a new article to answer the question asked by %1 in %2	phpbrain	fr	Créez un nouvel article pour répondre à la question posée par %1 dans %2
+created by %1 on %2	phpbrain	fr	Créé par %1 le %2
+creation	phpbrain	fr	création
+creation date	phpbrain	fr	Date de création
+cur_open_qs	phpbrain	fr	Questions actuellement ouvertes
+current_questions	phpbrain	fr	Questions actuelles
+date	phpbrain	fr	Date
+delete article	phpbrain	fr	Supprimer l'article
+delete selected	phpbrain	fr	Supprimer la sélection
+deleted relation to  article %1	phpbrain	fr	Relation avec article %1 supprimée
+deleted relation to article %1	phpbrain	fr	Relation avec article %1 supprimée
+descendent	phpbrain	fr	Descendant
+details	phpbrain	fr	Détails
+e-mail has been sent	phpbrain	fr	l'e-mail a été envoyé
+edit article	phpbrain	fr	Editer l'article
+edit_answer	phpbrain	fr	Modifier la réponse
+edit_faq	phpbrain	fr	Modifier la FAQ
+enable	common	fr	Activer
+enter one or two words describing the issue, or type the article number if you know it	phpbrain	fr	Entrez un ou deux mots décrivant le problème, ou tapez le numéro d'article si vous le connaissez
+error deleting article from database	phpbrain	fr	Erreur lors de la suppression de l'article en base
+error deleting link	phpbrain	fr	Erreur lors de la suppression du lien
+error downloading file	phpbrain	fr	Erreur lors du téléchargement du fichier
+error locating files directory	phpbrain	fr	Erreur lors de la tentative d'accès au répertoire
+error moving file to directory	phpbrain	fr	Erreur lors du déplacement du fichier vers le répertoire
+error publishing comment	phpbrain	fr	Erreur lors de la publication du commentaire
+error retrieving article	phpbrain	fr	Erreur lors de la récuperation de l'article
+error trying to delete comment	phpbrain	fr	Erreur en essayant de supprimer le commentaire
+error trying to delete question	phpbrain	fr	Erreur en essayant de supprimer la question
+error trying to edit article	phpbrain	fr	Erreur en essayant d'éditer l'article
+error trying to publish article	phpbrain	fr	Erreur en essayant de publier l'article
+error: file doesn't exist in the database	phpbrain	fr	Erreur: le fichier n'existe pas dans la base de données
+example	phpbrain	fr	Exemple
+excellent	phpbrain	fr	Excellent
+explain_faq_admin	phpbrain	fr	Les réponses aux FAQs doivent être activées pour que les utilisateurs puissent les voir.  Choisissez les FAQs que vous voulez activer.  Sinon, vous pouvez choisir les réponses inappropriées que vous voudriez effacer.
+explain_maintain_answers	phpbrain	fr	Les questions soumises par les utilisateurs doivent être activées par un utilisateur avec les droits d'administrateur.  Choisissez les réponses que vous voulez activer ou éventuellement effacer.
+explain_questions_admin	phpbrain	fr	Les réponses soumises pares utilisateurs doivent être activées par un utilisateur avec les droits d'administrateur.  Choisissez les questions que vous voulez activer ou éventuellement effacer.
+failure trying to delete the file	phpbrain	fr	Echec lors de la tentative de suppression du fichier
+faq	phpbrain	fr	FAQ
+faq_saved	phpbrain	fr	FAQ Enregistrée
+faqs	phpbrain	fr	FAQs
+faqs_and_tutes	phpbrain	fr	FAQs et Tutoriels
+file coud be deleted from server but not from database	phpbrain	fr	Le fichier peut-être supprimé du serveur mais pas de la base de données
+file could be deleted from server but not from database	phpbrain	fr	Le fichier a pu être effacé du serveur mais pas de la base de données
+file has been successfully uploaded	phpbrain	fr	Le fichier a été enregistré sur le serveur avec succès
+file was already missing from server, and was deleted from the database	phpbrain	fr	Le fichier n'était plus sur le serveur et a été supprimé de la base de données
+file was deleted successfully	phpbrain	fr	Le fichier a été supprimé avec succès
+file wasn't in server and it couldn't be deleted from the database	phpbrain	fr	Le fichier n'était pas sur le serveur et n'a pu être supprimé de la base.
+find results	phpbrain	fr	Chercher les résultats
+global categories	phpbrain	fr	Catégories globales
+have to be approved first	common	fr	Doivent être approuvés d'abord
+history	phpbrain	fr	Historique
+if you can't find answers to your problem in the knowledge base, describe it below	phpbrain	fr	Si vous ne pouvez pas trouvez de réponses à vos problème dans la base de connaissances, décrivez le ci-dessous
+if you wish, you can comment this article here	phpbrain	fr	Si vous le souhaitez vous pouvez commenter cet article ici
+improve_by_rate	phpbrain	fr	Aidez-nous à améliorer en mettant des notes aux posts
+in %1	phpbrain	fr	dans %1
+in the text	phpbrain	fr	dans le texte
+in the title	phpbrain	fr	dans le titre
+in the topic	phpbrain	fr	dans le sujet
+include subcategories	phpbrain	fr	Inclure les sous-catégories
+inspire_by_suggestions	phpbrain	fr	Si vous avez besoin d'inspiration, allez jetter un oeil aux questions ouvertes.
+invalid faq request - or something is nqr	phpbrain	fr	ERREUR: requête FAQ invalide
+kb_contains	phpbrain	fr	La base de connaissances contient
+keywords	phpbrain	fr	Mots-clés
+know_contrib	phpbrain	fr	Connaissez-vous la réponse? Si oui, répondez.
+knowledge base article #%1	phpbrain	fr	Base de connaissance article n°%1
+knowledge base configuration	common	fr	Configuration de la Base de connaissance
+last modification by %1 on %2	phpbrain	fr	Dernière modification par %1 le %2
+last_mod %1	phpbrain	fr	Dernière modification: %1
+latest	phpbrain	fr	Les derniers en date
+latest comments	phpbrain	fr	Derniers commentaires
+leave empty to automatically generate an id	phpbrain	fr	Laisser vide pour générer automatiquement un ID
+link could not be added	phpbrain	fr	Le lien ne peut être ajouté
+link deleted successfully	phpbrain	fr	Lien supprimé avec succès
+link has been added	phpbrain	fr	Le lien a été ajouté
+links	phpbrain	fr	Liens
+links & files	phpbrain	fr	Liens & Fichiers
+mail article	phpbrain	fr	Envoyer l'article par email
+main view	phpbrain	fr	Vue principale
+maintain articles	phpbrain	fr	Maintenir les articles
+maintain questions	phpbrain	fr	Maintenir les réponses
+maintain_answers	phpbrain	fr	Maintenir les réponses
+maximum number of comments to show:	phpbrain	fr	Nombre maximum de commentaires à montrer
+maximum number of most popular articles, latest articles and unanswered questions to show in the main view:	phpbrain	fr	Nombre maximum d'articles les plus populaires, les plus récents et de questions sans réponses dans la vue principale:
+modification date	phpbrain	fr	Date de modification
+most viewed	phpbrain	fr	Les plus consultés
+new article	phpbrain	fr	Nouvel article
+no comments	phpbrain	fr	Pas de commentaires
+nobody has rated this article so far	phpbrain	fr	Personne n'a noté cet article à ce jour
+none	phpbrain	fr	Aucun
+none found - revise or browse	phpbrain	fr	Aucune occurrence trouvée - SVP vérifiez votre recherche ou naviguez
+none_pending	phpbrain	fr	Aucune en attente
+none_unanswered	phpbrain	fr	Aucune FAQ non répondue
+not_submit_qs_warn	phpbrain	fr	SVP notez que ceci n'est pas l'endroit pour poser des questions.  Ceci devrait être posté dans la page des questions.  Si vous entrez une question sans une réponse dans cette page elle sera effacée.
+nothing was uploaded!	phpbrain	fr	Rien n'a été enregistré sur le serveur!
+num_faqs %1	phpbrain	fr	FAQs(%1)
+num_open %1	phpbrain	fr	Ouverte(s)(%1)
+num_pages %1	phpbrain	fr	Pages(%1)
+num_tutes %1	phpbrain	fr	Tutoriels(%1)
+number of results	phpbrain	fr	Nombre de résultats
+number of results per page	phpbrain	fr	Nombre de résultats
+ocurrences	phpbrain	fr	Occurences
+or browse the categories	phpbrain	fr	Où consulter les catégories
+order results by	phpbrain	fr	Trier les résultats par
+outstanding published questions	phpbrain	fr	Questions éditées en suspens
+past %1 months	phpbrain	fr	des derniers %1 mois
+past year	phpbrain	fr	de l'année dernière
+people have rated this article	phpbrain	fr	personnes ont noté cet article
+phpbrain	common	fr	Base de connaissances
+phpbrain config	admin	fr	Configuration de la base de connaissances
+phpbrain_config	phpbrain	fr	Configuration de base de la base de connaissances
+please rate the pertinence and quality of this article	phpbrain	fr	Merci de noter la pertinence et la qualité de cet article
+please try again	phpbrain	fr	Merci d'essayer à nouveau
+poor	phpbrain	fr	Pauvre
+preview	phpbrain	fr	prévisualisation
+printer view	phpbrain	fr	Affichage optimisé pour l'impression
+problem relating articles	phpbrain	fr	Problèmes liés à l'article
+publication date	phpbrain	fr	Date de publication
+publish	phpbrain	fr	Publier
+publish articles automatically?	common	fr	Publier les articles automatiquement ?
+publish comments automatically?	common	fr	Publier les commentaires automatiquement ?
+publish questions automatically	common	fr	Publier les questions automatiquement
+publish questions automatically?	common	fr	Publier les questions automatiquement
+publish selected	phpbrain	fr	Publier
+published	phpbrain	fr	Publié
+question	phpbrain	fr	Question
+question deleted successfully	phpbrain	fr	Question supprimée avec succès
+questions deleted successfully	phpbrain	fr	Questions supprimées avec succès
+rating	phpbrain	fr	Notation
+rating %1	phpbrain	fr	Notation %1
+rating has been submited	phpbrain	fr	La note a été enregistrée
+rating invalid	phpbrain	fr	La note est invalide
+recipient	phpbrain	fr	Destinataire
+register	common	fr	Enregistrer
+related articles in the knowledge base	phpbrain	fr	Articles liés dans la base de connaissances
+related_url	phpbrain	fr	URL liée
+relation with article was removed successfully	phpbrain	fr	La relation avec l'article a été supprimée avec succès
+relation with article was removes successfully	phpbrain	fr	La relation avec l'article a été supprimé avec succès
+removed file %1	phpbrain	fr	Fichier supprimé %1
+removed link %1	phpbrain	fr	Lien supprimé %1
+reply-to	phpbrain	fr	Répondre à
+reset	phpbrain	fr	Réinitialiser
+return_to_admin	phpbrain	fr	Retourner à l'administration
+return_to_cats %1	phpbrain	fr	Retourner à la catégorie: %1
+return_to_index	phpbrain	fr	Retourner à l'index
+return_to_search %1	phpbrain	fr	Retourner à la recherche: %1
+score %1	phpbrain	fr	score %1
+search in all the knowledge base	phpbrain	fr	Rechercher dans toute la base de connaissances
+search results	phpbrain	fr	Résultats de la recherche
+section_maint_faqs	phpbrain	fr	Maintenir les FAQs en attente
+section_maintain_questions	phpbrain	fr	Maintenir les questions
+see more questions	phpbrain	fr	Voir d'autres questions
+see more questions...	phpbrain	fr	Voir plus de questions...
+select articles	phpbrain	fr	Sélectionner les articles
+show	phpbrain	fr	Montrer
+show all comments	phpbrain	fr	Afficher l'ensemble des commentaires
+show articles belonging to:	phpbrain	fr	Afficher les articles appartenant à:
+show messages in category	phpbrain	fr	Afficher les articles dans la catégorie
+submit comment	phpbrain	fr	Soumettre un commentaire
+submit comment and rating	phpbrain	fr	Soumettre un commentaire et une note
+submitted_by	phpbrain	fr	Soumis par
+suggested category	phpbrain	fr	Catégorie suggérée
+summary	phpbarin	fr	Sommaire
+text	common	fr	Texte
+thanks_4_rating	phpbrain	fr	Merci d'avoir mis une note à cet objet.
+that file already exists	phpbrain	fr	Ce fichier existe déjà
+the article doesn't have spell errors	phpbrain	fr	Cet article n'a aucune faute d'orthographe
+the article id must be a number	phpbrain	fr	L'ID d'article doit être un nombre
+the article is empty	phpbrain	fr	Cet article est vide
+the file was already missing in the server	phpbrain	fr	Le fichier était déjà absent du serveur
+the following errors occurred	phpbrain	fr	Les erreurs suivantes ont été commises
+the present category and all subcategories under it	phpbrain	fr	La catégorie actuelle et l'ensemble de ses sous-catégories
+the present category only	phpbrain	fr	La catégorie actuelle uniquement
+there are no articles	phpbrain	fr	Il n'y a pas d'articles
+there are no articles available	phpbrain	fr	Aucun article disponible
+this article hasn't yet been published in the knowledge base	phpbrain	fr	Cet article n'a pas encore été publie dans la base des connaissances
+title	phpbrain	fr	Titre
+to create categories, press 'edit categories' in the preferences menu	phpbrain	fr	Pour crééer des catégories, presser "Editer les catégories" dans le menu des préférences
+topic	phpbrain	fr	Sujet
+tutorial	phpbrain	fr	Tutoriel
+tutorials	phpbrain	fr	Tutoriels
+unable to add rating to database	phpbrain	fr	Impossible d'ajouter la note dans la base
+unanswered questions	phpbrain	fr	Questions sans réponses
+unpublished	phpbrain	fr	non publié
+up	phpbrain	fr	Haut
+upload	phpbrain	fr	télécharger un fichier sur le serveur
+user	phpbrain	fr	Utilisateur
+user preferences	phpbrain	fr	Préférences utilisateurs
+views	phpbrain	fr	Vues
+views %1	phpbrain	fr	Vues %1
+votes %1	phpbrain	fr	Votes %1
+was it easy to find this article using the above search string?	phpbrain	fr	Etait-ce facile de trouver cet article en utilisant la chaîne de recherche ci-dessus ?
+when navigating through categories, choose whether the list of articles shown corresponds only to the present category, or the present category and all categories under it.	phpbrain	fr	En naviguant à travers les catégories, choisissez si la liste d'articles doit uniquement correspondre à la catégorie actuelle, ou a la catégorie actuelle et à l'ensemble de ses sous-catégories.
+with all the words	phpbrain	fr	Avec tous ces mots
+with at least one of the words	phpbrain	fr	Avec au moins un de ces mots
+with the exact phrase	phpbrain	fr	Avec la phrase exacte
+without the words	phpbrain	fr	Sans ces mots
+you are in %1	phpbrain	fr	Vous êtes dans %1
+you have already qualified this article	phpbrain	fr	Vous avez déjà noté cet article
+you have not the proper permissions to do that	phpbrain	fr	Vous n'avez pas les droits suffisants pour cela
+you must enter a title	phpbrain	fr	Vous devez entrer un titre
+you must enter a topic	phpbrain	fr	Vous devez entrer un sujet
+your question will be posted, but only will be published after approval by a user with publishing rights	phpbrain	fr	Votre question sera postée, mais sera publiée seulement après approbation par un compte possédant les droits de publication
+your question will be posted, but only will be published after aproval of a system administrator	phpbrain	fr	Votre question a été enregistrée, mais ne sera publiée qu'après approbation de l'administrateur système
+your question will be published immediately	phpbrain	fr	Votre question sera publiée immédiatement

@@ -1,0 +1,209 @@
+FONT {
+	FONT-FAMILY: Verdana,Arial,Helvetica,Geneva; 
+	FONT-SIZE: 11px
+}
+H1 {
+	FONT-FAMILY: Verdana,Arial,Helvetica,Geneva; 
+	FONT-SIZE: 22px;
+	COLOR: #ffffff
+}
+TD {
+	COLOR: #ffffff;
+	FONT-FAMILY: Verdana,Helvetica,Geneva,Arial; 
+	FONT-SIZE: 12px
+}
+BODY {
+	FONT-FAMILY: Verdana,Helvetica,Geneva,Arial; 
+	COLOR: #ffffff; 
+	FONT-SIZE: 12px
+}
+P {
+	FONT-FAMILY: Verdana,Arial,Helvetica,Geneva; 
+	COLOR: #ffffff;
+	FONT-SIZE: 12px
+}
+DIV {
+	FONT-FAMILY: Verdana,Helvetica,Geneva,Arial; 
+	COLOR: #ffffff;
+	FONT-SIZE: 12px
+}
+INPUT {
+	BORDER-TOP-COLOR: #000000; 
+	BORDER-LEFT-COLOR: #000000; 
+	BORDER-RIGHT-COLOR: #000000; 
+	BORDER-BOTTOM-COLOR: #000000; 
+	BORDER-TOP-WIDTH: 1px; 
+	BORDER-LEFT-WIDTH: 1px; 
+	FONT-SIZE: 10px; 
+	BORDER-BOTTOM-WIDTH: 1px; 
+	FONT-FAMILY: Verdana,Helvetica,Geneva,Arial; 
+	BORDER-RIGHT-WIDTH: 1px
+}
+TEXTAREA {
+	BORDER-TOP-COLOR: #000000; 
+	BORDER-LEFT-COLOR: #000000; 
+	BORDER-RIGHT-COLOR: #000000; 
+	BORDER-BOTTOM-COLOR: #000000; 
+	BORDER-TOP-WIDTH: 1px; 
+	BORDER-LEFT-WIDTH: 1px; 
+	FONT-SIZE: 10px; 
+	BORDER-BOTTOM-WIDTH: 1px; 
+	FONT-FAMILY: Verdana,Helvetica,Geneva,Arial; 
+	BORDER-RIGHT-WIDTH: 1px
+}
+SELECT {
+	BORDER-TOP-COLOR: #000000; 
+	BORDER-LEFT-COLOR: #000000; 
+	BORDER-RIGHT-COLOR: #000000; 
+	BORDER-BOTTOM-COLOR: #000000; 
+	BORDER-TOP-WIDTH: 1px; 
+	BORDER-LEFT-WIDTH: 1px; 
+	FONT-SIZE: 10px; 
+	BORDER-BOTTOM-WIDTH: 1px; 
+	FONT-FAMILY: Verdana,Helvetica,Geneva,Arial; 
+	BORDER-RIGHT-WIDTH: 1px
+}
+FORM {
+	COLOR: #ffffff;
+	FONT-FAMILY: Verdana,Helvetica,Geneva,Arial; 
+	FONT-SIZE: 10px
+}
+A:link {
+	BACKGROUND: none; 
+	COLOR: #eeeeee; 
+	FONT-SIZE: 12px; 
+	FONT-FAMILY: Verdana,Helvetica,Geneva,Arial; 
+	TEXT-DECORATION: underline
+}
+A:active        {
+	BACKGROUND: none; 
+	COLOR: #eeeeee; 
+	FONT-SIZE: 12px; 
+	FONT-FAMILY: Verdana, Helvetica,Geneva,Arial; 
+	TEXT-DECORATION: underline
+}
+A:visited       {
+	BACKGROUND: none; 
+	COLOR: #eeeeee; 
+	FONT-SIZE: 12px; 
+	FONT-FAMILY: Verdana, Helvetica,Geneva,Arial; 
+	TEXT-DECORATION: underline
+}
+A:hover         {
+	BACKGROUND: none; 
+	COLOR: #363636; 
+	FONT-FAMILY: Verdana, Helvetica,Geneva,Arial; 
+	FONT-SIZE: 12px; 
+	TEXT-DECORATION: underline
+}
+.release-num {
+	COLOR: #000000;
+	FONT-SIZE: 9px;
+	TEXT-DECORATION: underline;
+	FONT-FAMILY: Verdana, Arial,Helvetica,Geneva
+}
+
+.release {
+	COLOR: #000000;
+	FONT-SIZE: 10px;
+	FONT-FAMILY: Verdana, Arial,Helvetica,Geneva; 
+	FONT-WEIGHT: bold;
+}
+
+.minicalendar:visited {
+	FONT-SIZE: 8px;
+	FONT-FAMILY: Verdana,Helvetica,Geneva,Arial; 
+	TEXT-DECORATION: none;
+	FONT-WEIGHT: none;
+}
+.minicalendar:link {
+	FONT-SIZE: 8px;
+	FONT-FAMILY: Verdana,Helvetica,Geneva,Arial; 
+	TEXT-DECORATION: none;
+	FONT-WEIGHT: none;
+}
+.minicalendar:hover {
+	FONT-SIZE: 8px;
+	FONT-FAMILY: Verdana,Helvetica,Geneva,Arial; 
+	TEXT-DECORATION: none;
+	FONT-WEIGHT: none;
+}
+.minicalendar {
+	FONT-SIZE: 8px;
+	FONT-FAMILY: Verdana,Helvetica,Geneva,Arial; 
+	TEXT-DECORATION: none;
+	FONT-WEIGHT: none;
+}
+.minicalendarheader {
+	FONT-SIZE: 10px;
+	FONT-FAMILY: Verdana,Helvetica,Geneva,Arial; 
+	TEXT-DECORATION: underline;
+	FONT-WEIGHT: bold
+}
+.title 		{
+	BACKGROUND: none; 
+	COLOR: #000000; 
+	FONT-SIZE: 16px; 
+	FONT-WEIGHT: bold; 
+	FONT-FAMILY: Verdana, Helvetica,Geneva,Arial; 
+	TEXT-DECORATION: none
+}
+.content 	{
+	BACKGROUND: none; 
+	COLOR: #ffffff; 
+	FONT-SIZE: 10px; 
+	FONT-FAMILY: Verdana, Helvetica,Geneva,Arial
+}
+.block-title	{
+	BACKGROUND: none; 
+	COLOR: #537991; 
+	FONT-SIZE: 12px; 
+	FONT-WEIGHT: bold;
+	FONT-FAMILY: Verdana, Arial, Helvetica, sans-serif
+}
+.storytitle 	{
+	BACKGROUND: none; 
+	COLOR: #363636; 
+	FONT-SIZE: 12px; 
+	FONT-WEIGHT: bold; 
+	FONT-FAMILY: Verdana, Helvetica; 
+	TEXT-DECORATION: none
+}
+.storycat	{
+	BACKGROUND: none; 
+	COLOR: #363636; 
+	FONT-SIZE: 10px; 
+	FONT-WEIGHT: bold; 
+	FONT-FAMILY: Verdana, Helvetica; 
+	TEXT-DECORATION: underline
+}
+.boxtitle 	{
+	BACKGROUND: none; 
+	COLOR: #363636; 
+	FONT-SIZE: 10px; 
+	FONT-WEIGHT: bold; 
+	FONT-FAMILY: Verdana, Helvetica; 
+	TEXT-DECORATION: none
+}
+.boxcontent 	{
+	BACKGROUND: none; 
+	COLOR: #000000; 
+	FONT-SIZE: 10px; 
+	FONT-FAMILY: Verdana, Helvetica
+}
+.option 	{
+	BACKGROUND: none; 
+	COLOR: #000000; 
+	FONT-SIZE: 10px; 
+	FONT-WEIGHT: bold; 
+	FONT-FAMILY: Verdana, Helvetica; 
+	TEXT-DECORATION: none
+}
+.tiny		{
+	BACKGROUND: none; 
+	COLOR: #000000; 
+	FONT-SIZE: 10px; 
+	FONT-WEIGHT: normal; 
+	FONT-FAMILY: Verdana, Helvetica; 
+	TEXT-DECORATION: none
+}

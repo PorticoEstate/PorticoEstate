@@ -1,0 +1,29 @@
++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+   IDOTS TEMPLATE SET FOR PHPGROUPWARE
+
++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+The template set idots, formaly known as MYiDOTS is 
+havely based on the Crystal SVG icon KDE theme from 
+Everaldo. 
+
+The source Gimp files for the phpGW created compoents
+of the template can be found in 
+phpgwapi/templates/idots/source/ The logo source 
+file can also be found in the same directory.
+
+   APPLICATION HOOKS
+===================================================
+In the hook_file, hook_sidebox_menu.inc.php, 
+developers can define the sidebox menu's for their 
+applications template hook files can be found in 
+phpgwapi/templates/idots/hook_templates/
+
+In 0.9.18+ all template sets should support the
+"sidebox" menu.
+
+Hope you enjoy this template set,
+
+Template Originally designed by Pim Snel
+Now maintained by Dave Hall

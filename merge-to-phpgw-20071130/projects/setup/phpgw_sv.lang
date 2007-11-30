@@ -1,0 +1,227 @@
+account	projects	sv	Konto
+accountancy	common	sv	Bokföring
+active	projects	sv	Aktiv
+activities	projects	sv	Aktiviteter
+activity	projects	sv	Aktivitet
+activity %1 has been added !	projects	sv	Aktivitet %1 har lagts till
+activity %1 has been updated !	projects	sv	Aktivitet %1 har uppdaterats
+activity id	projects	sv	Aktivitet ID
+add activity	projects	sv	Lägg till aktivitet
+add job	projects	sv	Lägg till jobb
+add milestone	projects	sv	Lägg till milstolpe
+add project	projects	sv	Lägg till projekt
+add project hours	projects	sv	Lägg till projekttimmar
+add work hours	projects	sv	Lägg till arbetstimmar
+administrator	projects	sv	Administratör
+all	projects	sv	Alla
+all delivery notes	projects	sv	ALLA leveransnoteringar
+all invoices	projects	sv	Alla fakturor
+anonymous public	projects	sv	Anonym publikt
+archive	projects	sv	Arkiv
+are you sure you want to delete this activity	projects	sv	Är du säker på att du vill radera denna aktivitet ?
+are you sure you want to delete this project	projects	sv	Är du säker på att du vill radera detta projekt ?
+arial	projects	sv	Arial
+bill per hour	projects	sv	Fakturera per timme
+bill per hour/workunit	projects	sv	Fakturera per timme/arbetsenhet
+bill per workunit	projects	sv	Fakturera per arbetsenhet
+billable activities	projects	sv	Fakturerbara aktiviteter
+billed	projects	sv	Fakturerad
+billed only	projects	sv	Endast fakturerad
+billing	projects	sv	Fakturering
+bookable activities	projects	sv	Bokningsbara aktiviteter
+bookkeeper	projects	sv	Bokförare
+bookkeeping	common	sv	bokföring
+budget	projects	sv	Budget
+budget main project	projects	sv	Budget huvudprojekt
+budget sum of all sub projects is bigger than the budget of the main project	projects	sv	Budgetsummering av alla underprojekt är större än budgeten för huvudprojektet !
+calculate	projects	sv	Kalkylera
+closed	projects	sv	Stängd
+coordinator	common	sv	Koordinator
+courier new	projects	sv	Courier New
+create delivery	projects	sv	Skapa leverans
+create invoice	projects	sv	Skapa faktura
+creator	projects	sv	Skapad av
+customer	projects	sv	Kund
+date created	projects	sv	Skapad datum
+delete hours	projects	sv	Radera timmar
+deliveries	projects	sv	Leveranser
+delivery	projects	sv	Leverans
+delivery %1 has been created !	projects	sv	Leverans %1 har skapats.
+delivery %1 has been updated !	projects	sv	Leverans %1 har uppdaterats.
+delivery date	projects	sv	Leveransdatum
+delivery id	projects	sv	Leverans ID
+delivery list	projects	sv	Leveranslista
+delivery note	projects	sv	Leveransnotering
+delivery note for project	projects	sv	Leveransnotering för projekt
+delivery notes	projects	sv	Leveransnoteringar
+description can not exceed 255 characters in length !	projects	sv	Beskrivning kan inte överstiga 255 tecken !
+description can not exceed 8000 characters in length !	projects	sv	Beskrivning kan inte överstiga 8 000 tecken !
+do you also want to delete all sub projects ?	projects	sv	Vill du även radera alla underprojekt ?
+edit activity	projects	sv	Ändra aktivitet
+edit administrator list	projects	sv	Ändra projektadministratörslista
+edit bookkeeper list	projects	sv	Ändra projektbokförarlista
+edit job	projects	sv	Ändra jobb
+edit project	projects	sv	Ändra projekt
+edit project hours	projects	sv	Ändra projekttimmar
+edit work hours	projects	sv	Ändra arbetstimmar
+employee	projects	sv	Anställd
+employees	projects	sv	Anställda
+ending date can not be after main projects ending date	projects	sv	Slutdatum kan inte vara efter huvudprojekts slutdatum !
+ending date can not be before start date	projects	sv	Slutdatum kan inte vara före startdatum !
+error in calculation sum does not match !	projects	sv	Fel i uträknad summa stämmer inte.
+exactly accounting	projects	sv	Exakt bokföring
+generate activity id ?	projects	sv	Skapa Aktivitets ID ?
+generate delivery id ?	projects	sv	Skapa Leverans ID ?
+generate invoice id ?	projects	sv	Skapa Faktura ID ?
+generate job id ?	projects	sv	Skapa Jobb ID ?
+generate project id ?	projects	sv	Skapa Projekt ID ?
+georgia	projects	sv	Georgia
+helvetica	projects	sv	Helvetica
+hours	projects	sv	Timmar
+id can not exceed 19 characters in length	projects	sv	ID kan inte överstiga 19 tecken !
+id can not exceed 25 characters in length	projects	sv	ID kan inte överstiga 25 tecken !
+if you are an administrator, please set the preferences for this application	projects	sv	Om du är en administratör, ställ in inställningarna för denna modul !
+if you are not an administrator, please inform the administrator to set the preferences for this application	projects	sv	Om du inte är administratör, informera administratören om att ställa in inställningarna för denna modul !
+investment nr	projects	sv	Inköpsnummer
+invoice	projects	sv	Faktura
+invoice %1 has been created !	projects	sv	Faktura %1 har skapats.
+invoice %1 has been updated !	projects	sv	Faktura %1 har uppdaterats.
+invoice date	projects	sv	Fakturadatum
+invoice for project	projects	sv	Faktura för projekt
+invoice id	projects	sv	Faktura ID
+invoice layout	projects	sv	Faktura utseende
+invoice list	projects	sv	Fakturalista
+invoices	projects	sv	Fakturor
+invoicing of work time	projects	sv	Fakturering av arbetstid
+job	projects	sv	Jobb
+job archive	projects	sv	Jobb arkiv
+job date	projects	sv	Jobb datum
+job description	projects	sv	Jobb beskrivning
+job has been added !	projects	sv	Jobb har lagts till.
+job has been updated !	projects	sv	Jobb har uppdaterats.
+job id	projects	sv	Jobb ID
+job list	projects	sv	Jobblista
+jobs	common	sv	Jobb
+large	projects	sv	Stor
+last update	projects	sv	Senaste uppdatering
+list activities	projects	sv	Lista aktiviteter
+list budget	projects	sv	Lista budget
+list jobs	projects	sv	Lista jobb
+list pcosts	projects	sv	Lista planerade kostnader
+list projects	projects	sv	Lista projekt
+list work hours	projects	sv	Lista arbetstimmar
+main project	projects	sv	Huvudprojekt
+main project:	projects	sv	Huvudprojekt:
+milestones	common	sv	milstenar
+minutes per workunit	projects	sv	Minuter per arbetsenhet
+month	projects	sv	Månad
+net	projects	sv	netto
+new project	projects	sv	Nytt projekt
+nonactive	common	sv	Inaktiv
+notifications	projects	sv	noteringar
+number	projects	sv	Nummer
+open	projects	sv	Öppna
+open popup window	projects	sv	öppna popup-fönster
+overall	projects	sv	Helhet
+parent project	projects	sv	Överliggande projekt
+parent project:	projects	sv	Överliggande projekt:
+pcosts can not be higher than the budget	projects	sv	Planerad kostnad kan inte vara högre än budget !
+per hour	projects	sv	per timme
+per hour/workunit	projects	sv	per timme/arbetsenhet
+per workunit	projects	sv	per arbetsenhet
+planned costs	projects	sv	Planerade kostnader
+planned time	projects	sv	Planerad tid
+planned time sum of all sub projects is bigger than the planned time of the main project	projects	sv	Summa planerad tid från alla underprojekt är större än den planerade tiden i huvudprojektet !
+please choose a project coordinator	projects	sv	Välj en projektkoordinator
+please choose activities for the project	projects	sv	Välj aktivitet för projektet !
+please enter a remark !	projects	sv	Ange en anmärkning !
+please enter an id !	projects	sv	Ange ett ID !
+please enter the bill	projects	sv	Ange fakturan !
+please enter the minutes per workunit	projects	sv	Ange minuter per arbetsenhet !
+please set the minutes per workunit for each activity now !	projects	sv	Ange antal minuter per arbetsenhet för varje aktivitet nu !
+please set your preferences for this application !	projects	sv	Ange dina inställningar för denna modul !
+please specify country and currency in the global preferences section	projects	sv	Ange land och valuta i de globala inställningarna !
+please specify the budget	projects	sv	Ange budget !
+position	projects	sv	Position
+preferences for accountancy	projects	sv	Inställningar för bokföringen
+previous project	projects	sv	Föregående projekt
+print delivery	projects	sv	Skriv ut leverans
+print invoice	projects	sv	Skriv ut faktura
+processor	projects	sv	Central
+project	projects	sv	Project
+project %1 has been saved	projects	sv	projekt %1 har sparats
+project archive	projects	sv	Projektarkiv
+project billing	projects	sv	Projektfakturering
+project delivery	projects	sv	Projektleverans
+project id	common	sv	Projekt ID
+project list	projects	sv	Projektlista
+project name	projects	sv	Projektnamn
+project preferences	projects	sv	Projekt inställningar
+project statistic	projects	sv	Projektstatistik
+project statistics	projects	sv	Projektstatistik
+projects	common	sv	Projekten
+projects preferences	preferences	sv	Projektens inställningar
+remark	projects	sv	Anmärkning
+remark can not exceed 8000 characters in length !	projects	sv	Anmärkning kan inte överstiga 8 000 tecken !
+remark required	projects	sv	Anmärkning måste finnas
+select font	projects	sv	Välj teckensnitt
+select font size for customer address	projects	sv	Välj teckensnittsstorlek för kund adress
+select font size for own address	projects	sv	Välj teckensnittsstorlek för egen adress
+select groups	projects	sv	Välj grupper
+select main project	projects	sv	Välj huvudprojekt
+select own address	projects	sv	Välj egen adress
+select project	projects	sv	Välj projekt
+select tax for work time	projects	sv	Välj skatt för arbetstid
+select users	projects	sv	Välj användare
+short description	projects	sv	Kort beskrivning
+small	projects	sv	Liten
+sorry, no preferences to set for you	projects	sv	Tyvärr, dina inställningarna är inte gjorda :)
+start date can not be before main projects start date	projects	sv	Startdatum kan inte vara före huvudprojektets startdatum !
+statistic	projects	sv	Statistik
+statistics	projects	sv	Statistik
+sum	projects	sv	Summa
+sum budget	projects	sv	Summa budget
+sum hours	projects	sv	Summa timmar
+sum net	projects	sv	Summa netto
+sum pcosts	projects	sv	Summa planerade kostnader
+sum workunits	projects	sv	Summa arbetsenheter
+tahoma	projects	sv	Tahoma
+tax	projects	sv	skatt
+that id has been used already !	projects	sv	Detta ID har använts redan !
+the choosen previous project does not have an end date specified	projects	sv	Det valda föregående projektet har inget slutdatum angivet !
+the delivery note contains no items !	projects	sv	Leveransnoteringen innehåller inget !
+the invoice contains no items !	projects	sv	Fakturan innehåller inget !
+time planned	projects	sv	Tid planerad
+time planned main project	projects	sv	Tid planerad huvudprojekt
+time used	projects	sv	Tid använd
+times new roman	projects	sv	Times New Roman
+title can not exceed 255 characters in length	projects	sv	Rubriken kan inte överstiga 255 tecken !
+update delivery	projects	sv	Uppdatera leverans
+update invoice	projects	sv	Uppdatera faktura
+user statistic	projects	sv	Användarstatistik
+user statistics	projects	sv	Användarstatistik
+username / group	projects	sv	Användarnamn/grupp
+verdana	projects	sv	Verdana
+very large	projects	sv	Mycket stor
+very small	projects	sv	Mycket liten
+view job	projects	sv	Visa jobb
+view project	projects	sv	Visa projekt
+view work hours	projects	sv	Visa arbetstimmar
+work date	projects	sv	Arbetsdatum
+work hours	projects	sv	Arbetstimmar
+work hours archive	projects	sv	Arbetstimmar arkiv
+work hours list	projects	sv	Arbetstimmar lista
+work time	projects	sv	Arbetstid
+workunit	projects	sv	Arbetsenhet
+workunits	projects	sv	Arbetsenheter
+would you like to get notified via email about changes of milestones date due	projects	sv	vill du bli påmind via epost om ändringar i milstenar
+would you like to get notified via email about changes of tasks	projects	sv	vill du bli påmind via epost om ändringar i uppgifter
+would you like to get notified via email about dates due	projects	sv	Vill du bli påmind via epost om slutdatum ?
+would you like to get notified via email if you get assigned to a project	projects	sv	vill du bli påmind via epost om du blir engagerad i ett projekt
+written by:	projects	sv	Skrivet av:
+you have entered an invalid date !	projects	sv	Du har angett ett felaktigt datum !
+you have entered an invalid end date !	projects	sv	Du har angett ett felaktigt slutdatum !
+you have entered an invalid start date !	projects	sv	Du har angett ett felaktigt startdatum !
+you have no customer selected !	projects	sv	Du har inte valt någon kund !
+you have selected an invalid activity !	projects	sv	Du har angett en felaktig aktivitet !
+you have to create a delivery or invoice first !	projects	sv	Du måste SKAPA en leverans eller faktura först !
