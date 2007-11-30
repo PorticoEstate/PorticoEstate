@@ -31,8 +31,8 @@ LIBXML="libxml2-2.6.30"
 LIBXSLTAR="libxslt-1.1.22.tar.gz"
 LIBXSL="libxslt-1.1.22"
 
-IMAPTAR="imap-2006k.DEV.SNAP-0709051605.tar.Z"
-IMAP="imap-2006k.DEV.SNAP-0709051605"
+IMAPTAR="imap-2006k.tar.Z"
+IMAP="imap-2006k"
 
 PHP_PREFIX="/usr/local"
 
