@@ -1401,7 +1401,7 @@
 				$total_records = count($list);
 
 				$uicols		= $this->bo->uicols;
-				$list		= $this->list_content($list,$uicols,$edit_item=False,$view_only=True);
+				$list		= $this->list_content($list,$uicols,$edit_item=False,$view_only='view');
 				$content	= $list['content'];
 				$table_header=$list['table_header'];
 			}
