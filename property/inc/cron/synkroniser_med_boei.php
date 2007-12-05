@@ -24,7 +24,7 @@
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/bbb_/ekstern/
 	* @package property
 	* @subpackage custom
- 	* @version $Id: synkroniser_med_boei.php 18358 2007-11-27 04:43:37Z skwashd $
+ 	* @version $Id: synkroniser_med_boei.php,v 1.7 2007/09/24 11:20:27 sigurdne Exp $
 	*/
 
 	/**
@@ -661,13 +661,15 @@
 
 		function oppdater_leieobjekt()
 		{			
-			$sql = " SELECT TOP 100 PERCENT objekt_id,leie_id,leietaker_id, boareal, formaal_id, gateadresse_id, gatenr, etasje,driftsstatus_id, flyttenr"
-				. " FROM  v_Leieobjekt"; // WHERE v_Leieobjekt.formaal_id NOT IN (99)";
+			$sql = " SELECT TOP 100 PERCENT v_Leieobjekt.objekt_id,v_Leieobjekt.leie_id,v_Leieobjekt.leietaker_id, boareal, formaal_id, gateadresse_id, gatenr, etasje,driftsstatus_id, v_Leieobjekt.flyttenr, innflyttetdato"
+				. " FROM  v_Leieobjekt JOIN v_reskontro ON v_Leieobjekt.objekt_id=v_reskontro.objekt_id AND v_Leieobjekt.leie_id=v_reskontro.leie_id"
+				. " AND v_Leieobjekt.flyttenr=v_reskontro.flyttenr AND v_Leieobjekt.leietaker_id=v_reskontro.leietaker_id";
 
 			$this->db_boei->query($sql,__LINE__,__FILE__);
 
 		//	$this->db->transaction_begin();
 		//	$this->db_boei2->transaction_begin();
+
 
 			$i=0;
 			while ($this->db_boei->next_record())
@@ -680,7 +682,8 @@
 				. " street_number = '" . $this->bocommon->ascii2utf($this->db_boei->f('gatenr')) . "',"
 				. " driftsstatus_id = '" . $this->db_boei->f('driftsstatus_id') . "',"
 				. " boareal = '" . $this->db_boei->f('boareal') . "',"
-				. " flyttenr = '" . $this->db_boei->f('flyttenr') . "'"
+				. " flyttenr = '" . $this->db_boei->f('flyttenr') . "',"
+				. " innflyttetdato = '" . date($this->bocommon->dateformat,strtotime($this->db_boei->f('innflyttetdato'))) . "'"
 				. " WHERE  loc1 = '" . $this->db_boei->f('objekt_id') . "'  AND  loc4= '" . $this->db_boei->f('leie_id') . "'";
 				$sql2_latin = " UPDATE  fm_location4 SET "
 				. " tenant_id = '" . $this->db_boei->f('leietaker_id') . "',"
@@ -690,7 +693,8 @@
 				. " street_number = '" . $this->db_boei->f('gatenr') . "',"
 				. " driftsstatus_id = '" . $this->db_boei->f('driftsstatus_id') . "',"
 				. " boareal = '" . $this->db_boei->f('boareal') . "',"
-				. " flyttenr = '" . $this->db_boei->f('flyttenr') . "'"
+				. " flyttenr = '" . $this->db_boei->f('flyttenr') . "',"
+				. " innflyttetdato = '" . date($this->bocommon->dateformat,strtotime($this->db_boei->f('innflyttetdato'))) . "'"
 				. " WHERE  loc1 = '" . $this->db_boei->f('objekt_id') . "'  AND  loc4= '" . $this->db_boei->f('leie_id') . "'";
 
 				$this->db->query($sql2_latin,__LINE__,__FILE__);
