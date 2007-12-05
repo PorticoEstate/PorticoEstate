@@ -204,7 +204,7 @@
 									</input>
 								</xsl:when>
 								<xsl:when test="datatype='T'">
-									<textarea cols="40" rows="6" name="values_attribute[{counter}][value]" wrap="virtual" onMouseout="window.status='';return true;">
+									<textarea cols="{//textareacols}" rows="{//textarearows}" name="values_attribute[{counter}][value]" wrap="virtual" onMouseout="window.status='';return true;">
 										<xsl:choose>
 											<xsl:when test="disabled!=''">
 												<xsl:attribute name="disabled">

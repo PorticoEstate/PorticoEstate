@@ -1065,7 +1065,9 @@
 				'lang_date'						=> lang('date'),
 				'help_url'						=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> $this->currentapp.'.uientity.attrib_help', 'entity_id'=> $this->entity_id, 'cat_id'=> $this->cat_id)),
 				'lang_help'						=> lang('help'),
-				'table_apply' 					=> $table_apply,				
+				'table_apply' 					=> $table_apply,	
+				'textareacols'					=> isset($GLOBALS['phpgw_info']['user']['preferences']['property']['textareacols']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['textareacols'] ? $GLOBALS['phpgw_info']['user']['preferences']['property']['textareacols'] : 40,
+				'textarearows'					=> isset($GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows'] ? $GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows'] : 6
 			);
 
 			$appname	= $entity['name'];
@@ -1372,7 +1374,8 @@
 				'lang_history'					=> lang('history'),
 				'lang_history_help'				=> lang('history of this attribute'),
 				'lang_history_date_statustext'	=> lang('Enter the date for this reading'),
-
+				'textareacols'					=> isset($GLOBALS['phpgw_info']['user']['preferences']['property']['textareacols']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['textareacols'] ? $GLOBALS['phpgw_info']['user']['preferences']['property']['textareacols'] : 40,
+				'textarearows'					=> isset($GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows'] ? $GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows'] : 6
 				);
 
 

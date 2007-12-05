@@ -541,7 +541,9 @@
 				'lang_access'					=> lang('private'),
 				'value_access'					=> (isset($values['access'])?$values['access']:''),
 				'lang_access_off_statustext'	=> lang('The note is public. If the note should be private, check this box'),
-				'lang_access_on_statustext'		=> lang('The note is private. If the note should be public, uncheck this box')
+				'lang_access_on_statustext'		=> lang('The note is private. If the note should be public, uncheck this box'),
+				'textareacols'					=> isset($GLOBALS['phpgw_info']['user']['preferences']['property']['textareacols']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['textareacols'] ? $GLOBALS['phpgw_info']['user']['preferences']['property']['textareacols'] : 40,
+				'textarearows'					=> isset($GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows'] ? $GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows'] : 6
 			);
 
 			$appname		= lang('ifc');
@@ -608,7 +610,9 @@
 				'value_cat'					=> $this->cats->id2name($values['cat_id']),
 				'attributes_values'			=> $values['attributes'],
 				'lang_access'				=> lang('private'),
-				'value_access'				=> (isset($values['access'])?lang($values['access']):'')
+				'value_access'				=> (isset($values['access'])?lang($values['access']):''),
+				'textareacols'				=> isset($GLOBALS['phpgw_info']['user']['preferences']['property']['textareacols']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['textareacols'] ? $GLOBALS['phpgw_info']['user']['preferences']['property']['textareacols'] : 40,
+				'textarearows'				=> isset($GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows'] ? $GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows'] : 6
 			);
 
 			$appname	= lang('ifc');
