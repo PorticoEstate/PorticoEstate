@@ -537,6 +537,8 @@
 				'dateformat'					=> $dateformat,
 				'lang_edit'						=> lang('edit'),
 				'lang_add'						=> lang('add'),
+				'textareacols'				=> isset($GLOBALS['phpgw_info']['user']['preferences']['property']['textareacols']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['textareacols'] ? $GLOBALS['phpgw_info']['user']['preferences']['property']['textareacols'] : 40,
+				'textarearows'				=> isset($GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows'] ? $GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows'] : 6
 			);
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('actor') . ': ' . ($actor_id?lang('edit') . ' ' . lang($this->role):lang('add') . ' ' . lang($this->role));
 
@@ -648,7 +650,9 @@
 				'lang_dateformat' 			=> lang(strtolower($dateformat)),
 				'lang_attributes'			=> lang('Attributes'),
 				'attributes_view'			=> $attributes_values,
-				'dateformat'				=> $dateformat
+				'dateformat'				=> $dateformat,
+				'textareacols'				=> isset($GLOBALS['phpgw_info']['user']['preferences']['property']['textareacols']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['textareacols'] ? $GLOBALS['phpgw_info']['user']['preferences']['property']['textareacols'] : 40,
+				'textarearows'				=> isset($GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows'] ? $GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows'] : 6
 			);
 
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('view' => $data));

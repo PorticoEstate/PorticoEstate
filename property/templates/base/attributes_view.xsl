@@ -95,7 +95,7 @@
 									</input>
 								</xsl:when>
 								<xsl:when test="datatype='T'">
-									<textarea cols="40" rows="6" name="values_attribute[{counter}][value]" wrap="virtual" readonly="readonly" onMouseout="window.status='';return true;">
+									<textarea cols="{//textareacols}" rows="{//textarearows}" name="values_attribute[{counter}][value]" wrap="virtual" readonly="readonly" onMouseout="window.status='';return true;">
 										<xsl:attribute name="onMouseover">
 											<xsl:text>window.status='</xsl:text>
 												<xsl:value-of select="statustext"/>

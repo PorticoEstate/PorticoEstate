@@ -1011,7 +1011,8 @@
 				'lang_common_costs'			=> lang('common costs'),
 				'values_common'				=> $content_common,
 				'table_header_common'			=> $table_header_common,
-				
+				'textareacols'				=> isset($GLOBALS['phpgw_info']['user']['preferences']['property']['textareacols']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['textareacols'] ? $GLOBALS['phpgw_info']['user']['preferences']['property']['textareacols'] : 40,
+				'textarearows'				=> isset($GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows'] ? $GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows'] : 6
 			);
 
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('rental agreement') . ': ' . ($id?lang('edit') . ' ' . lang($this->role):lang('add') . ' ' . lang($this->role));
@@ -1311,7 +1312,8 @@
 //				'value_end_date'				=> $r_agreement['start_date'],
 				'main_form_name'				=> $main_form_name,
 				'update_form_name'				=> $update_form_name,
-
+				'textareacols'				=> isset($GLOBALS['phpgw_info']['user']['preferences']['property']['textareacols']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['textareacols'] ? $GLOBALS['phpgw_info']['user']['preferences']['property']['textareacols'] : 40,
+				'textarearows'				=> isset($GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows'] ? $GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows'] : 6
 			);
 
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('rental agreement') . ': ' . ($values['id']?lang('edit item') . ' ' . $r_agreement['name']:lang('add item') . ' ' . $r_agreement['name']);
@@ -1407,7 +1409,10 @@
 				'set_column'					=> $set_column,
 				'tenant_data'					=> $tenant_data,
 				'rental_type_list'				=> $this->bo->get_rental_type_list($values['rental_type_id']),
-				'lang_rental_type'				=> lang('Rental type'),			);
+				'lang_rental_type'				=> lang('Rental type'),
+				'textareacols'					=> isset($GLOBALS['phpgw_info']['user']['preferences']['property']['textareacols']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['textareacols'] ? $GLOBALS['phpgw_info']['user']['preferences']['property']['textareacols'] : 40,
+				'textarearows'					=> isset($GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows'] ? $GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows'] : 6
+			);
 
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('rental agreement') . ': ' . lang('view item') . ' ' . $r_agreement['name'];
 
@@ -1607,6 +1612,8 @@
 				'table_add'					=> $table_add,
 				'values'					=> $content,
 				'table_header'					=> $table_header,
+				'textareacols'				=> isset($GLOBALS['phpgw_info']['user']['preferences']['property']['textareacols']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['textareacols'] ? $GLOBALS['phpgw_info']['user']['preferences']['property']['textareacols'] : 40,
+				'textarearows'				=> isset($GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows'] ? $GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows'] : 6
 			);
 
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('rental agreement') . ': ' . lang('view');
