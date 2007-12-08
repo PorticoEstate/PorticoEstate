@@ -72,7 +72,7 @@
 
 		function property_boadmin_entity($session=False)
 		{
-			$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
+		//	$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->so 		= CreateObject('property.soadmin_entity');
 			$this->bocommon = CreateObject('property.bocommon');
 

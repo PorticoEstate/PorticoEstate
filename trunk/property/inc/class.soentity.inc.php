@@ -43,7 +43,7 @@
 
 		function property_soentity($entity_id='',$cat_id='')
 		{
-			$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
+		//	$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->account		= $GLOBALS['phpgw_info']['user']['account_id'];
 			$this->bocommon		= CreateObject('property.bocommon');
 			$this->db           = $this->bocommon->new_db();
@@ -111,13 +111,13 @@
 				return;
 			}
 
-			$grants 	= $GLOBALS['phpgw']->session->appsession('grants_entity_'.$entity_id.'_'.$cat_id,$this->currentapp);
+			$grants 	= $GLOBALS['phpgw']->session->appsession('grants_entity_'.$entity_id.'_'.$cat_id,'property');
 
 			if(!$grants)
 			{
 				$this->acl 	= CreateObject('phpgwapi.acl');
-				$grants		= $this->acl->get_grants($this->currentapp,'.entity.' . $entity_id . '.' . $cat_id);
-				$GLOBALS['phpgw']->session->appsession('grants_entity_'.$entity_id.'_'.$cat_id,$this->currentapp,$grants);
+				$grants		= $this->acl->get_grants('property','.entity.' . $entity_id . '.' . $cat_id);
+				$GLOBALS['phpgw']->session->appsession('grants_entity_'.$entity_id.'_'.$cat_id,'property',$grants);
 			}
 
 			$sql = $this->bocommon->fm_cache('sql_entity_' . $entity_id . '_' . $cat_id . '_' . $lookup);
@@ -193,7 +193,7 @@
 					}
 				}
 
-				$user_columns = isset($GLOBALS['phpgw_info']['user']['preferences'][$this->currentapp]['entity_columns_'.$entity_id.'_'.$cat_id])?$GLOBALS['phpgw_info']['user']['preferences'][$this->currentapp]['entity_columns_'.$entity_id.'_'.$cat_id]:'';
+				$user_columns = isset($GLOBALS['phpgw_info']['user']['preferences']['property']['entity_columns_'.$entity_id.'_'.$cat_id])?$GLOBALS['phpgw_info']['user']['preferences']['property']['entity_columns_'.$entity_id.'_'.$cat_id]:'';
 
 				if (isset($user_columns) AND is_array($user_columns) AND $user_columns[0])
 				{

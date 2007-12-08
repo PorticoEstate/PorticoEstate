@@ -61,7 +61,7 @@
 		function property_uiactor()
 		{
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = True;
-			$this->currentapp		= $GLOBALS['phpgw_info']['flags']['currentapp'];
+		//	$this->currentapp		= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->nextmatchs		= CreateObject('phpgwapi.nextmatchs');
 			$this->account			= $GLOBALS['phpgw_info']['user']['account_id'];
 
@@ -99,7 +99,7 @@
 				);
 			if(!$valid_role[$this->role])
 			{
-				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> $this->currentapp.'.uilocation.index'));
+				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.index'));
 			}
 		}
 
@@ -134,7 +134,7 @@
 
 				$GLOBALS['phpgw']->preferences->account_id=$this->account;
 				$GLOBALS['phpgw']->preferences->read_repository();
-				$GLOBALS['phpgw']->preferences->add($this->currentapp,'actor_columns_' .$this->role,$values['columns'],'user');
+				$GLOBALS['phpgw']->preferences->add('property','actor_columns_' .$this->role,$values['columns'],'user');
 				$GLOBALS['phpgw']->preferences->save_repository();
 
 				$receipt['message'][] = array('msg' => lang('columns is updated'));
@@ -144,7 +144,7 @@
 
 			$link_data = array
 			(
-				'menuaction'	=> $this->currentapp.'.uiactor.columns',
+				'menuaction'	=> 'property.uiactor.columns',
 				'role'		=> $this->role
 			);
 
@@ -181,7 +181,7 @@
 
 			if(!$this->acl_read)
 			{
-				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> $this->currentapp.'.uilocation.stop', 'perm'=>1, 'acl_location'=> $this->acl_location));
+				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=>1, 'acl_location'=> $this->acl_location));
 			}
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('actor',
@@ -219,19 +219,19 @@
 					{
 						$content[$j]['row'][$i]['statustext']	= lang('view the entity');
 						$content[$j]['row'][$i]['text']		= lang('view');
-						$content[$j]['row'][$i++]['link']	= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uiactor.view', 'actor_id'=> $entry['id'], 'role'=> $this->role));
+						$content[$j]['row'][$i++]['link']	= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiactor.view', 'actor_id'=> $entry['id'], 'role'=> $this->role));
 					}
 					if($this->acl_edit)
 					{
 						$content[$j]['row'][$i]['statustext']	= lang('edit the actor');
 						$content[$j]['row'][$i]['text']		= lang('edit');
-						$content[$j]['row'][$i++]['link']	= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uiactor.edit', 'actor_id'=> $entry['id'], 'role'=> $this->role));
+						$content[$j]['row'][$i++]['link']	= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiactor.edit', 'actor_id'=> $entry['id'], 'role'=> $this->role));
 					}
 					if($this->acl_delete)
 					{
 						$content[$j]['row'][$i]['statustext']	= lang('delete the actor');
 						$content[$j]['row'][$i]['text']		= lang('delete');
-						$content[$j]['row'][$i++]['link']	= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uiactor.delete', 'actor_id'=> $entry['id'], 'role'=> $this->role));
+						$content[$j]['row'][$i++]['link']	= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiactor.delete', 'actor_id'=> $entry['id'], 'role'=> $this->role));
 					}
 
 					$j++;
@@ -254,7 +254,7 @@
 								'sort'	=> $this->sort,
 								'var'	=> $uicols['name'][$i],
 								'order'	=> $this->order,
-								'extra'	=> array('menuaction'	=> $this->currentapp.'.uiactor.index',
+								'extra'	=> array('menuaction'	=> 'property.uiactor.index',
 													'query'		=> $this->query,
 													'role'		=> $this->role,
 													'member_id'	=> $this->member_id
@@ -292,13 +292,13 @@
 				(
 					'lang_add'		=> lang('add'),
 					'lang_add_statustext'	=> lang('add an actor'),
-					'add_action'		=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uiactor.edit', 'role'=> $this->role))
+					'add_action'		=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiactor.edit', 'role'=> $this->role))
 				);
 			}
 
 			$link_data = array
 			(
-				'menuaction'	=> $this->currentapp.'.uiactor.index',
+				'menuaction'	=> 'property.uiactor.index',
 				'sort'		=>$this->sort,
 				'order'		=>$this->order,
 				'cat_id'	=>$this->cat_id,
@@ -321,13 +321,13 @@
 
 			$link_columns = array
 			(
-				'menuaction' 	=> $this->currentapp.'.uiactor.columns',
+				'menuaction' 	=> 'property.uiactor.columns',
 				'role'		=> $this->role
 			);
 
 			$member_of_data	= $this->cats->formatted_xslt_list(array('selected' => $this->member_id,'globals' => True, 'link_data' =>$link_data));
 
-			$GLOBALS['phpgw']->js->validate_file('overlib','overlib',$this->currentapp);
+			$GLOBALS['phpgw']->js->validate_file('overlib','overlib','property');
 
 			$data = array
 			(
@@ -377,14 +377,14 @@
 
 			if(!$this->acl_edit)
 			{
-				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> $this->currentapp.'.uilocation.stop', 'perm'=>2, 'acl_location'=> $this->acl_location));
+				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=>2, 'acl_location'=> $this->acl_location));
 			}
 
 			$actor_id	= phpgw::get_var('actor_id', 'int');
 			$values		= phpgw::get_var('values');
 			$values_attribute  = phpgw::get_var('values_attribute');
 
-			$insert_record_actor = $GLOBALS['phpgw']->session->appsession('insert_record_actor',$this->currentapp);
+			$insert_record_actor = $GLOBALS['phpgw']->session->appsession('insert_record_actor','property');
 
 
 //_debug_array($insert_record_actor);
@@ -435,13 +435,13 @@
 						if (isset($values['save']) && $values['save'])
 						{
 							$GLOBALS['phpgw']->session->appsession('session_data','actor_receipt_' . $this->role,$receipt);
-							$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> $this->currentapp.'.uiactor.index', 'role'=> $this->role));
+							$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uiactor.index', 'role'=> $this->role));
 						}
 					}
 				}
 				else
 				{
-					$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> $this->currentapp.'.uiactor.index', 'role'=> $this->role));
+					$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uiactor.index', 'role'=> $this->role));
 				}
 			}
 
@@ -462,7 +462,7 @@
 
 			$link_data = array
 			(
-				'menuaction'	=> $this->currentapp.'.uiactor.edit',
+				'menuaction'	=> 'property.uiactor.edit',
 				'actor_id'	=> $actor_id,
 				'role'		=> $this->role
 			);
@@ -499,7 +499,7 @@
 
 			$member_of_data	= $this->cats->formatted_xslt_list(array('selected' => $this->member_id,'globals' => True, 'link_data' =>array()));
 
-			$GLOBALS['phpgw']->js->validate_file('dateformat','dateformat',$this->currentapp);
+			$GLOBALS['phpgw']->js->validate_file('dateformat','dateformat','property');
 
 //_debug_array($member_of_data);
 			$data = array
@@ -551,7 +551,7 @@
 		{
 			if(!$this->acl_delete)
 			{
-				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> $this->currentapp.'.uilocation.stop', 'perm'=>8, 'acl_location'=> $this->acl_location));
+				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=>8, 'acl_location'=> $this->acl_location));
 			}
 
 			$attrib		= phpgw::get_var('attrib');
@@ -571,7 +571,7 @@
 			}
 			$link_data = array
 			(
-				'menuaction'	=> $this->currentapp.'.uiactor.'.$function,
+				'menuaction'	=> 'property.uiactor.'.$function,
 				'role'		=> $this->role
 			);
 
@@ -586,7 +586,7 @@
 			$data = array
 			(
 				'done_action'		=> $GLOBALS['phpgw']->link('/index.php',$link_data),
-				'delete_action'		=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uiactor.delete', 'actor_id'=> $actor_id, 'id'=> $id, 'attrib'=> $attrib, 'role'=> $this->role)),
+				'delete_action'		=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiactor.delete', 'actor_id'=> $actor_id, 'id'=> $id, 'attrib'=> $attrib, 'role'=> $this->role)),
 				'lang_confirm_msg'	=> lang('do you really want to delete this entry'),
 				'lang_yes'		=> lang('yes'),
 				'lang_yes_statustext'	=> lang('Delete the entry'),
@@ -597,7 +597,7 @@
 			$appname	= lang('actor');
 			$function_msg	= lang('delete') . ' ' . lang($this->role);
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($this->currentapp) . ' - ' . $appname . ': ' . $function_msg;
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('delete' => $data));
 		//	$GLOBALS['phpgw']->xslttpl->pp();
 		}
@@ -608,7 +608,7 @@
 		{
 			if(!$this->acl_read)
 			{
-				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> $this->currentapp.'.uilocation.stop', 'perm'=>1, 'acl_location'=> $this->acl_location));
+				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=>1, 'acl_location'=> $this->acl_location));
 			}
 
 			$actor_id	= phpgw::get_var('actor_id', 'int');
@@ -637,7 +637,7 @@
 			(
 				'lang_actor_id'				=> lang($this->role) . ' ID',
 				'value_actor_id'			=> $actor_id,
-				'done_action'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uiactor.index', 'role'=> $this->role)),
+				'done_action'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiactor.index', 'role'=> $this->role)),
 				'lang_category'				=> lang('category'),
 				'lang_time_created'			=> lang('time created'),
 				'lang_done'				=> lang('done'),
@@ -664,7 +664,7 @@
 
 			if(!$this->acl_manage)
 			{
-				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> $this->currentapp.'.uilocation.stop', 'perm'=>16, 'acl_location'=> $this->acl_location));
+				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=>16, 'acl_location'=> $this->acl_location));
 			}
 
 			$id	= phpgw::get_var('id', 'int');
@@ -693,10 +693,10 @@
 					'input_text'				=> $attrib['input_text'],
 					'sorting'					=> $attrib['attrib_sort'],
 					'search'					=> $attrib['search'],
-					'link_up'					=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uiactor.list_attribute', 'resort'=> 'up', 'id'=> $attrib['id'], 'allrows'=> $this->allrows, 'role'=> $this->role)),
-					'link_down'					=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uiactor.list_attribute', 'resort'=> 'down', 'id'=> $attrib['id'], 'allrows'=> $this->allrows, 'role'=> $this->role)),
-					'link_edit'					=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uiactor.edit_attrib', 'id'=> $attrib['id'], 'role'=> $this->role)),
-					'link_delete'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uiactor.delete', 'id'=> $attrib['id'], 'attrib'=> true, 'role'=> $this->role)),
+					'link_up'					=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiactor.list_attribute', 'resort'=> 'up', 'id'=> $attrib['id'], 'allrows'=> $this->allrows, 'role'=> $this->role)),
+					'link_down'					=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiactor.list_attribute', 'resort'=> 'down', 'id'=> $attrib['id'], 'allrows'=> $this->allrows, 'role'=> $this->role)),
+					'link_edit'					=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiactor.edit_attrib', 'id'=> $attrib['id'], 'role'=> $this->role)),
+					'link_delete'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiactor.delete', 'id'=> $attrib['id'], 'attrib'=> true, 'role'=> $this->role)),
 					'lang_view_attribtext'		=> lang('view the attrib'),
 					'lang_attribute_attribtext'	=> lang('attributes for the attrib'). ' ' . lang('location'),
 					'lang_edit_attribtext'		=> lang('edit the attrib'),
@@ -724,7 +724,7 @@
 											'sort'	=> $this->sort,
 											'var'	=> 'attrib_sort',
 											'order'	=> $this->order,
-											'extra'	=> array('menuaction'	=> $this->currentapp.'.uiactor.list_attribute',
+											'extra'	=> array('menuaction'	=> 'property.uiactor.list_attribute',
 														'allrows'=> $this->allrows,
 														'role'	=> $this->role)
 										)),
@@ -734,7 +734,7 @@
 											'sort'	=> $this->sort,
 											'var'	=> 'column_name',
 											'order'	=> $this->order,
-											'extra'	=> array('menuaction'	=> $this->currentapp.'.uiactor.list_attribute',
+											'extra'	=> array('menuaction'	=> 'property.uiactor.list_attribute',
 														'allrows'=> $this->allrows,
 														'role'	=> $this->role)
 										)),
@@ -745,7 +745,7 @@
 			(
 				'lang_add'		=> lang('add'),
 				'lang_add_attribtext'	=> lang('add an attrib'),
-				'add_action'		=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uiactor.edit_attrib', 'role'=> $this->role)),
+				'add_action'		=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiactor.edit_attrib', 'role'=> $this->role)),
 				'lang_done'		=> lang('done'),
 				'lang_done_attribtext'	=> lang('back to admin'),
 				'done_action'		=> $GLOBALS['phpgw']->link('/admin/index.php'),
@@ -762,7 +762,7 @@
 
 			$link_data = array
 			(
-				'menuaction'	=> $this->currentapp.'.uiactor.list_attribute',
+				'menuaction'	=> 'property.uiactor.list_attribute',
 				'sort'		=>$this->sort,
 				'order'		=>$this->order,
 				'query'		=>$this->query,
@@ -791,7 +791,7 @@
 
 			$appname	= lang('actor');
 			$function_msg	= lang('list attribute') . ': ' . lang($this->role);
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($this->currentapp) . ' - ' . $appname . ': ' . $function_msg;
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
 			//$this->save_sessiondata();
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('list_attribute' => $data));
 		//	$GLOBALS['phpgw']->xslttpl->pp();
@@ -801,7 +801,7 @@
 		{
 			if(!$this->acl_manage)
 			{
-				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> $this->currentapp.'.uilocation.stop', 'perm'=>16, 'acl_location'=> $this->acl_location));
+				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=>16, 'acl_location'=> $this->acl_location));
 			}
 
 			$id		= phpgw::get_var('id', 'int');
@@ -883,7 +883,7 @@
 
 			$link_data = array
 			(
-				'menuaction'	=> $this->currentapp.'.uiactor.edit_attrib',
+				'menuaction'	=> 'property.uiactor.edit_attrib',
 				'id'		=> $id,
 				'role'		=> $this->role
 
@@ -916,7 +916,7 @@
 				'lang_delete_choice_statustext'	=> lang('Delete this value from the list of multiple choice'),
 				'msgbox_data'					=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
 				'form_action'					=> $GLOBALS['phpgw']->link('/index.php',$link_data),
-				'done_action'					=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uiactor.list_attribute', 'role'=> $this->role)),
+				'done_action'					=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiactor.list_attribute', 'role'=> $this->role)),
 				'lang_id'						=> lang('Attribute ID'),
 				'lang_save'						=> lang('save'),
 				'lang_done'						=> lang('done'),
@@ -974,7 +974,7 @@
 
 			$appname = lang('actor');
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($this->currentapp) . ' - ' . $appname . ': ' . $function_msg;
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('edit_attrib' => $data));
 		//	$GLOBALS['phpgw']->xslttpl->pp();
 		}

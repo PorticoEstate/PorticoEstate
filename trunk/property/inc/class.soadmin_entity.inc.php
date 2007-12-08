@@ -38,7 +38,7 @@
 
 		function property_soadmin_entity($entity_id='',$cat_id='')
 		{
-			$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
+		//	$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->account		= $GLOBALS['phpgw_info']['user']['account_id'];
 			$this->bocommon		= CreateObject('property.bocommon');
 			$this->db           	= $this->bocommon->new_db();
@@ -352,7 +352,7 @@
 
 
 			$values_acl_location= array(
-				$this->currentapp,
+			//	$this->currentapp,
 				'.entity.' . $entity['id'],
 				$entity['name'],
 				1
@@ -451,7 +451,7 @@
 				. "VALUES ($values_insert)",__LINE__,__FILE__);
 
 			$values_acl_location= array(
-				$this->currentapp,
+			//	$this->currentapp,
 				'.entity.' . $values['entity_id'] . '.' . $values['id'],
 				$values['name'],
 				1
@@ -576,7 +576,7 @@
 
 				$value_set_acl	= $this->bocommon->validate_db_update($value_set_acl);
 
-				$this->db->query("UPDATE phpgw_acl_location set $value_set_acl WHERE appname = '" . $this->currentapp . "' AND id='.entity." . $entity['id']. "'",__LINE__,__FILE__);
+				$this->db->query("UPDATE phpgw_acl_location set $value_set_acl WHERE appname = '" . 'property' . "' AND id='.entity." . $entity['id']. "'",__LINE__,__FILE__);
 
 				$this->db->query("DELETE FROM fm_entity_lookup WHERE type='lookup' AND entity_id=" . $entity['id'],__LINE__,__FILE__);
 				if (isset($entity['include_entity_for']) AND is_array($entity['include_entity_for']))
@@ -649,7 +649,7 @@
 
 				$value_set_acl	= $this->bocommon->validate_db_update($value_set_acl);
 
-				$this->db->query("UPDATE phpgw_acl_location set $value_set_acl WHERE appname = '" . $this->currentapp . "' AND id='.entity." . $entity['entity_id']. "." . $entity['id']. "'",__LINE__,__FILE__);
+				$this->db->query("UPDATE phpgw_acl_location set $value_set_acl WHERE appname = '" . 'property' . "' AND id='.entity." . $entity['entity_id']. "." . $entity['id']. "'",__LINE__,__FILE__);
 
 
 				$receipt['message'][] = array('msg'=> lang('entity has been edited'));
@@ -668,8 +668,8 @@
 			$this->db->query("DELETE FROM fm_entity WHERE id=$id",__LINE__,__FILE__);
 			$this->db->query("DELETE FROM fm_entity_category WHERE entity_id=$id",__LINE__,__FILE__);
 			$this->db->query("DELETE FROM fm_entity_attribute WHERE entity_id=$id",__LINE__,__FILE__);
-			$this->db->query("DELETE FROM phpgw_acl_location WHERE appname = '" . $this->currentapp . "' AND id " . $this->like ."'.entity." . $id ."%'",__LINE__,__FILE__);
-			$this->db->query("DELETE FROM phpgw_acl WHERE acl_appname = '" . $this->currentapp . "' AND  acl_location $this->like '.entity." . $id ."%'",__LINE__,__FILE__);
+			$this->db->query("DELETE FROM phpgw_acl_location WHERE appname = '" . 'property' . "' AND id " . $this->like ."'.entity." . $id ."%'",__LINE__,__FILE__);
+			$this->db->query("DELETE FROM phpgw_acl WHERE acl_appname = '" . 'property' . "' AND  acl_location $this->like '.entity." . $id ."%'",__LINE__,__FILE__);
 			if (isset($category_list) AND is_array($category_list))
 			{
 				$this->init_process();
@@ -689,8 +689,8 @@
 //			$this->oProc->DropTable('fm_entity_' . $entity_id . '_' . $id . '_' . 'status');
 			$this->db->query("DELETE FROM fm_entity_category WHERE entity_id= $entity_id AND id= $id",__LINE__,__FILE__);
 			$this->db->query("DELETE FROM fm_entity_attribute WHERE entity_id= $entity_id AND cat_id= $id",__LINE__,__FILE__);
-			$this->db->query("DELETE FROM phpgw_acl_location WHERE appname = '" . $this->currentapp . "' AND id='.entity." . $entity_id . "." . $id ."'",__LINE__,__FILE__);
-			$this->db->query("DELETE FROM phpgw_acl WHERE acl_appname = '" . $this->currentapp . "' AND  acl_location='.entity." . $entity_id . "." . $id ."'",__LINE__,__FILE__);
+			$this->db->query("DELETE FROM phpgw_acl_location WHERE appname = '" . 'property' . "' AND id='.entity." . $entity_id . "." . $id ."'",__LINE__,__FILE__);
+			$this->db->query("DELETE FROM phpgw_acl WHERE acl_appname = '" . 'property' . "' AND  acl_location='.entity." . $entity_id . "." . $id ."'",__LINE__,__FILE__);
 			$this->db->query("DELETE FROM fm_entity_history WHERE history_appname = 'entity_" . $entity_id  . '_' . $id . "'",__LINE__,__FILE__);
 		}
 

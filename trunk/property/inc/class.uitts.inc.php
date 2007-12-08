@@ -59,7 +59,7 @@
 
 			$this->account				= $GLOBALS['phpgw_info']['user']['account_id'];
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = True;
-			$this->currentapp			= $GLOBALS['phpgw_info']['flags']['currentapp'];
+		//	$this->currentapp			= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->nextmatchs			= CreateObject('phpgwapi.nextmatchs');
 
 			$this->bo					= CreateObject('property.botts',True);
@@ -115,7 +115,7 @@
 		{
 			if(!$this->acl->check('.ticket.external',1))
 			{
-				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> $this->currentapp.'.uilocation.stop', 'perm'=> 1, 'acl_location'=> '.ticket.external'));
+				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=> 1, 'acl_location'=> '.ticket.external'));
 			}
 			
 			$this->excel($external = true);
@@ -201,12 +201,12 @@
 		{
 			if($this->tenant_id)
 			{
-				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> $this->currentapp.'.uitts.index2'));
+				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uitts.index2'));
 			}
 			
 			if(!$this->acl_read)
 			{
-				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> $this->currentapp.'.uilocation.stop', 'perm'=> 1, 'acl_location'=> $this->acl_location));
+				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=> 1, 'acl_location'=> $this->acl_location));
 			}
 
 			$GLOBALS['phpgw']->js->set_onload('document.search.query.focus();');
@@ -215,14 +215,14 @@
 			{
 				if(!$this->acl_edit)
 				{
-					$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> $this->currentapp.'.uilocation.stop','perm'=> 4, 'acl_location'=> $this->acl_location));
+					$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop','perm'=> 4, 'acl_location'=> $this->acl_location));
 				}
 
 				$new_status = phpgw::get_var('new_status', 'string', 'GET');
 				$id = phpgw::get_var('id', 'int');
 				$so2	= CreateObject('property.sotts2');
 				$receipt = $so2->update_status(array('status'=>$new_status),$id);
-				$GLOBALS['phpgw']->session->appsession('receipt',$this->currentapp,$receipt);
+				$GLOBALS['phpgw']->session->appsession('receipt','property',$receipt);
 			}
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('tts',
@@ -232,8 +232,8 @@
 
 			$second_display = phpgw::get_var('second_display', 'bool');
 
-			$default_category = (isset($GLOBALS['phpgw_info']['user']['preferences'][$this->currentapp]['default_district'])?$GLOBALS['phpgw_info']['user']['preferences'][$this->currentapp]['default_district']:'');
-			$default_status = (isset($GLOBALS['phpgw_info']['user']['preferences'][$this->currentapp]['tts_status'])?$GLOBALS['phpgw_info']['user']['preferences'][$this->currentapp]['tts_status']:'');
+			$default_category = (isset($GLOBALS['phpgw_info']['user']['preferences']['property']['default_district'])?$GLOBALS['phpgw_info']['user']['preferences']['property']['default_district']:'');
+			$default_status = (isset($GLOBALS['phpgw_info']['user']['preferences']['property']['tts_status'])?$GLOBALS['phpgw_info']['user']['preferences']['property']['tts_status']:'');
 			$start_date 	= urldecode($this->start_date);
 			$end_date 	= urldecode($this->end_date);
 
@@ -304,7 +304,7 @@
 
 				$link_status_data = array
 				(
-					'menuaction'			=> $this->currentapp.'.uitts.index',
+					'menuaction'			=> 'property.uitts.index',
 							'id'			=> $ticket['id'],
 							'edit_status'	=> true,
 							'new_status'	=> $new_status,
@@ -334,7 +334,7 @@
 					'user'					=> $ticket['user'],
 					'assignedto'			=> $ticket['assignedto'],
 					'child_date'			=> $ticket['child_date'],
-					'link_view'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uitts.view', 'id'=> $ticket['id'])),
+					'link_view'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uitts.view', 'id'=> $ticket['id'])),
 					'lang_view_statustext'	=> lang('view the ticket'),
 					'text_view'				=> lang('view'),
 					'status'				=> $status,
@@ -351,7 +351,7 @@
 											'sort'	=> $this->sort,
 											'var'	=> 'priority',
 											'order'	=> $this->order,
-											'extra'	=> array('menuaction' => $this->currentapp.'.uitts.index',
+											'extra'	=> array('menuaction' => 'property.uitts.index',
 																	'cat_id'	=>$this->cat_id,
 																	'filter'	=>$this->filter,
 																	'user_filter'	=>$this->user_filter,
@@ -372,7 +372,7 @@
 											'sort'	=> $this->sort,
 											'var'	=> 'fm_tts_tickets.id',
 											'order'	=> $this->order,
-											'extra'	=> array('menuaction' => $this->currentapp.'.uitts.index',
+											'extra'	=> array('menuaction' => 'property.uitts.index',
 																	'cat_id'	=>$this->cat_id,
 																	'filter'	=>$this->filter,
 																	'user_filter'	=>$this->user_filter,
@@ -399,7 +399,7 @@
 											'sort'	=> $this->sort,
 											'var'	=> 'assignedto',
 											'order'	=> $this->order,
-											'extra'	=> array('menuaction' => $this->currentapp.'.uitts.index',
+											'extra'	=> array('menuaction' => 'property.uitts.index',
 																	'cat_id'	=>$this->cat_id,
 																	'filter'	=>$this->filter,
 																	'user_filter'	=>$this->user_filter,
@@ -417,7 +417,7 @@
 											'sort'	=> $this->sort,
 											'var'	=> 'user_lid',
 											'order'	=> $this->order,
-											'extra'	=> array('menuaction'	=> $this->currentapp.'.uitts.index',
+											'extra'	=> array('menuaction'	=> 'property.uitts.index',
 																	'cat_id'	=>$this->cat_id,
 																	'filter'	=>$this->filter,
 																	'user_filter'	=>$this->user_filter,
@@ -434,7 +434,7 @@
 											'sort'	=> $this->sort,
 											'var'	=> 'fm_tts_tickets.entry_date',
 											'order'	=> $this->order,
-											'extra' => array('menuaction'	=> $this->currentapp.'.uitts.index',
+											'extra' => array('menuaction'	=> 'property.uitts.index',
 																	'cat_id'	=>$this->cat_id,
 																	'filter'	=>$this->filter,
 																	'user_filter'	=>$this->user_filter,
@@ -451,7 +451,7 @@
 											'sort'	=> $this->sort,
 											'var'	=> 'finnish_date',
 											'order'	=> $this->order,
-											'extra'	=> array('menuaction'	=> $this->currentapp.'.uitts.index',
+											'extra'	=> array('menuaction'	=> 'property.uitts.index',
 																	'cat_id'	=> $this->cat_id,
 																	'filter'	=> $this->filter,
 																	'user_filter'	=> $this->user_filter,
@@ -479,12 +479,12 @@
 			(
 				'lang_add'		=> lang('add'),
 				'lang_add_statustext'	=> lang('add a ticket'),
-				'add_action'		=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uitts.add'))
+				'add_action'		=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uitts.add'))
 			);
 
 			$link_data = array
 			(
-				'menuaction'	=> $this->currentapp.'.uitts.index',
+				'menuaction'	=> 'property.uitts.index',
 				'second_display'=> true,
 				'sort'		=> $this->sort,
 				'order'		=> $this->order,
@@ -498,14 +498,14 @@
 				'allrows'	=> $this->allrows
 			);
 
-			$receipt = $GLOBALS['phpgw']->session->appsession('receipt',$this->currentapp);
-			$GLOBALS['phpgw']->session->appsession('receipt',$this->currentapp,'');
+			$receipt = $GLOBALS['phpgw']->session->appsession('receipt','property');
+			$GLOBALS['phpgw']->session->appsession('receipt','property','');
 
 			$GLOBALS['phpgw']->preferences->read_repository();
 			$autorefresh ='';
-			if (isset($GLOBALS['phpgw_info']['user']['preferences'][$this->currentapp]['refreshinterval']))
+			if (isset($GLOBALS['phpgw_info']['user']['preferences']['property']['refreshinterval']))
 			{
-				$autorefresh = $GLOBALS['phpgw_info']['user']['preferences'][$this->currentapp]['refreshinterval'].'; URL='.$GLOBALS['phpgw']->link('/index.php',$link_data);
+				$autorefresh = $GLOBALS['phpgw_info']['user']['preferences']['property']['refreshinterval'].'; URL='.$GLOBALS['phpgw']->link('/index.php',$link_data);
 			}
 
 
@@ -521,11 +521,11 @@
 
 			$msgbox_data = $this->bocommon->msgbox_data($receipt);
 
-			$link_date_search	= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uiproject.date_search'));
+			$link_date_search	= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiproject.date_search'));
 
 			$link_excel = array
 			(
-				'menuaction' 	=> $this->currentapp.'.uitts.excel',
+				'menuaction' 	=> 'property.uitts.excel',
 				'second_display'=> true,
 				'sort'		=> $this->sort,
 				'order'		=> $this->order,
@@ -541,7 +541,7 @@
 			);
 
 			$pref_group_filters = '';
-			if(isset($GLOBALS['phpgw_info']['user']['preferences'][$this->currentapp]['group_filters']))
+			if(isset($GLOBALS['phpgw_info']['user']['preferences']['property']['group_filters']))
 			{
 				$pref_group_filters = true;
 				$group_filters = 'select';
@@ -553,7 +553,7 @@
 				$GLOBALS['phpgw']->xslttpl->add_file(array('search_field'));
 			}
 
-			$GLOBALS['phpgw']->js->validate_file('overlib','overlib',$this->currentapp);
+			$GLOBALS['phpgw']->js->validate_file('overlib','overlib','property');
 
 			$data = array
 			(
@@ -607,13 +607,13 @@
 				'select_user_name'				=> 'user_filter',
 				'lang_no_user'					=> lang('No user'),
 				'user_list'						=> $this->bocommon->get_user_list_right2($group_filters,4,$this->user_filter,$this->acl_location,'',$default=''),
-				'allow_edit_status'				=> isset($GLOBALS['phpgw_info']['user']['preferences'][$this->currentapp]['tts_status_link']) && $GLOBALS['phpgw_info']['user']['preferences'][$this->currentapp]['tts_status_link'] ? $GLOBALS['phpgw_info']['user']['preferences'][$this->currentapp]['tts_status_link']:''
+				'allow_edit_status'				=> isset($GLOBALS['phpgw_info']['user']['preferences']['property']['tts_status_link']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['tts_status_link'] ? $GLOBALS['phpgw_info']['user']['preferences']['property']['tts_status_link']:''
 			);
 
 			$appname					= lang('helpdesk');
 			$function_msg					= lang('list ticket');
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($this->currentapp) . ' - ' . $appname . ': ' . $function_msg;
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('list' => $data));
 		//	$GLOBALS['phpgw']->xslttpl->pp();
 			$this->save_sessiondata();
@@ -623,7 +623,7 @@
 		{	
 			if(!$this->acl->check('.ticket.external',1))
 			{
-				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> $this->currentapp.'.uilocation.stop', 'perm'=> 1, 'acl_location'=> '.ticket.external'));
+				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=> 1, 'acl_location'=> '.ticket.external'));
 			}
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('tts',
@@ -633,8 +633,8 @@
 
 			$second_display = phpgw::get_var('second_display', 'bool');
 
-			$default_category = (isset($GLOBALS['phpgw_info']['user']['preferences'][$this->currentapp]['default_district'])?$GLOBALS['phpgw_info']['user']['preferences'][$this->currentapp]['default_district']:'');
-			$default_status = (isset($GLOBALS['phpgw_info']['user']['preferences'][$this->currentapp]['tts_status'])?$GLOBALS['phpgw_info']['user']['preferences'][$this->currentapp]['tts_status']:'');
+			$default_category = (isset($GLOBALS['phpgw_info']['user']['preferences']['property']['default_district'])?$GLOBALS['phpgw_info']['user']['preferences']['property']['default_district']:'');
+			$default_status = (isset($GLOBALS['phpgw_info']['user']['preferences']['property']['tts_status'])?$GLOBALS['phpgw_info']['user']['preferences']['property']['tts_status']:'');
 			$start_date 	= urldecode($this->start_date);
 			$end_date 	= urldecode($this->end_date);
 
@@ -705,7 +705,7 @@
 					'user'					=> $ticket['user'],
 					'assignedto'			=> $ticket['assignedto'],
 					'child_date'			=> $ticket['child_date'],
-					'link_view'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uitts.view2', 'id'=> $ticket['id'])),
+					'link_view'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uitts.view2', 'id'=> $ticket['id'])),
 					'lang_view_statustext'	=> lang('view the ticket'),
 					'text_view'				=> lang('view'),
 					'status'				=> $status,
@@ -719,7 +719,7 @@
 											'sort'	=> $this->sort,
 											'var'	=> 'priority',
 											'order'	=> $this->order,
-											'extra'	=> array('menuaction' => $this->currentapp.'.uitts.index',
+											'extra'	=> array('menuaction' => 'property.uitts.index',
 																	'cat_id'	=>$this->cat_id,
 																	'filter'	=>$this->filter,
 																	'user_filter'	=>$this->user_filter,
@@ -740,7 +740,7 @@
 											'sort'	=> $this->sort,
 											'var'	=> 'fm_tts_tickets.id',
 											'order'	=> $this->order,
-											'extra'	=> array('menuaction' => $this->currentapp.'.uitts.index',
+											'extra'	=> array('menuaction' => 'property.uitts.index',
 																	'cat_id'	=>$this->cat_id,
 																	'filter'	=>$this->filter,
 																	'user_filter'	=>$this->user_filter,
@@ -767,7 +767,7 @@
 											'sort'	=> $this->sort,
 											'var'	=> 'assignedto',
 											'order'	=> $this->order,
-											'extra'	=> array('menuaction' => $this->currentapp.'.uitts.index',
+											'extra'	=> array('menuaction' => 'property.uitts.index',
 																	'cat_id'	=>$this->cat_id,
 																	'filter'	=>$this->filter,
 																	'user_filter'	=>$this->user_filter,
@@ -785,7 +785,7 @@
 											'sort'	=> $this->sort,
 											'var'	=> 'user_lid',
 											'order'	=> $this->order,
-											'extra'	=> array('menuaction'	=> $this->currentapp.'.uitts.index',
+											'extra'	=> array('menuaction'	=> 'property.uitts.index',
 																	'cat_id'	=>$this->cat_id,
 																	'filter'	=>$this->filter,
 																	'user_filter'	=>$this->user_filter,
@@ -802,7 +802,7 @@
 											'sort'	=> $this->sort,
 											'var'	=> 'fm_tts_tickets.entry_date',
 											'order'	=> $this->order,
-											'extra' => array('menuaction'	=> $this->currentapp.'.uitts.index',
+											'extra' => array('menuaction'	=> 'property.uitts.index',
 																	'cat_id'	=>$this->cat_id,
 																	'filter'	=>$this->filter,
 																	'user_filter'	=>$this->user_filter,
@@ -819,7 +819,7 @@
 											'sort'	=> $this->sort,
 											'var'	=> 'finnish_date',
 											'order'	=> $this->order,
-											'extra'	=> array('menuaction'	=> $this->currentapp.'.uitts.index',
+											'extra'	=> array('menuaction'	=> 'property.uitts.index',
 																	'cat_id'	=> $this->cat_id,
 																	'filter'	=> $this->filter,
 																	'user_filter'	=> $this->user_filter,
@@ -847,12 +847,12 @@
 			(
 				'lang_add'				=> lang('add'),
 				'lang_add_statustext'	=> lang('add a ticket'),
-				'add_action'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uitts.add2'))
+				'add_action'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uitts.add2'))
 			);
 
 			$link_data = array
 			(
-				'menuaction'		=> $this->currentapp.'.uitts.index2',
+				'menuaction'		=> 'property.uitts.index2',
 				'second_display'	=> true,
 				'sort'				=> $this->sort,
 				'order'				=> $this->order,
@@ -866,14 +866,14 @@
 				'allrows'			=> $this->allrows
 			);
 
-			$receipt = $GLOBALS['phpgw']->session->appsession('receipt',$this->currentapp);
-			$GLOBALS['phpgw']->session->appsession('receipt',$this->currentapp,'');
+			$receipt = $GLOBALS['phpgw']->session->appsession('receipt','property');
+			$GLOBALS['phpgw']->session->appsession('receipt','property','');
 
 			$GLOBALS['phpgw']->preferences->read_repository();
 			$autorefresh ='';
-			if (isset($GLOBALS['phpgw_info']['user']['preferences'][$this->currentapp]['refreshinterval']))
+			if (isset($GLOBALS['phpgw_info']['user']['preferences']['property']['refreshinterval']))
 			{
-				$autorefresh = $GLOBALS['phpgw_info']['user']['preferences'][$this->currentapp]['refreshinterval'].'; URL='.$GLOBALS['phpgw']->link('/index.php',$link_data);
+				$autorefresh = $GLOBALS['phpgw_info']['user']['preferences']['property']['refreshinterval'].'; URL='.$GLOBALS['phpgw']->link('/index.php',$link_data);
 			}
 
 			if(!$this->allrows)
@@ -887,11 +887,11 @@
 
 			$msgbox_data = $this->bocommon->msgbox_data($receipt);
 
-			$link_date_search	= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uiproject.date_search'));
+			$link_date_search	= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiproject.date_search'));
 
 			$link_excel = array
 			(
-				'menuaction' 		=> $this->currentapp.'.uitts.excel2',
+				'menuaction' 		=> 'property.uitts.excel2',
 				'second_display'	=> true,
 				'sort'				=> $this->sort,
 				'order'				=> $this->order,
@@ -908,7 +908,7 @@
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('search_field'));
 
-			$GLOBALS['phpgw']->js->validate_file('overlib','overlib',$this->currentapp);
+			$GLOBALS['phpgw']->js->validate_file('overlib','overlib','property');
 
 			$data = array
 			(
@@ -952,7 +952,7 @@
 			$appname					= lang('helpdesk');
 			$function_msg					= lang('list ticket');
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($this->currentapp) . ' - ' . $appname . ': ' . $function_msg;
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('list2' => $data));
 		//	$GLOBALS['phpgw']->xslttpl->pp();
 			$this->save_sessiondata();
@@ -962,7 +962,7 @@
 		{
 			if(!$this->acl_add)
 			{
-				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> $this->currentapp.'.uilocation.stop', 'perm'=> 2, 'acl_location'=> $this->acl_location));
+				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=> 2, 'acl_location'=> $this->acl_location));
 			}
 
 			$bolocation		= CreateObject('property.bolocation');
@@ -1048,8 +1048,8 @@
 //_debug_array($insert_record);
 			if (isset($values['save']))
 			{
-				$insert_record = $GLOBALS['phpgw']->session->appsession('insert_record',$this->currentapp);
-				$insert_record_entity = $GLOBALS['phpgw']->session->appsession('insert_record_entity',$this->currentapp);
+				$insert_record = $GLOBALS['phpgw']->session->appsession('insert_record','property');
+				$insert_record_entity = $GLOBALS['phpgw']->session->appsession('insert_record_entity','property');
 
 				if(isset($insert_record_entity) && is_array($insert_record_entity))
 				{
@@ -1119,9 +1119,9 @@
 						}
 					}
 
-					$GLOBALS['phpgw']->session->appsession('receipt',$this->currentapp,$receipt);
+					$GLOBALS['phpgw']->session->appsession('receipt','property',$receipt);
 					$GLOBALS['phpgw']->session->appsession('session_data','fm_tts','');
-					$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> $this->currentapp.'.uitts.index'));
+					$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uitts.index'));
 				}
 				else
 				{
@@ -1153,21 +1153,21 @@
 
 			$link_data = array
 			(
-				'menuaction'	=> $this->currentapp.'.uitts.add'
+				'menuaction'	=> 'property.uitts.add'
 			);
 
 			if(!isset($values['assignedto']))
 			{
-				$values['assignedto']= (isset($GLOBALS['phpgw_info']['user']['preferences'][$this->currentapp]['assigntodefault'])?$GLOBALS['phpgw_info']['user']['preferences'][$this->currentapp]['assigntodefault']:'');
+				$values['assignedto']= (isset($GLOBALS['phpgw_info']['user']['preferences']['property']['assigntodefault'])?$GLOBALS['phpgw_info']['user']['preferences']['property']['assigntodefault']:'');
 			}
 			if(!isset($values['group_id']))
 			{
-				$values['group_id']= (isset($GLOBALS['phpgw_info']['user']['preferences'][$this->currentapp]['groupdefault'])?$GLOBALS['phpgw_info']['user']['preferences'][$this->currentapp]['groupdefault']:'');
+				$values['group_id']= (isset($GLOBALS['phpgw_info']['user']['preferences']['property']['groupdefault'])?$GLOBALS['phpgw_info']['user']['preferences']['property']['groupdefault']:'');
 			}
 
 			if(!isset($values['cat_id']))
 			{
-				$this->cat_id = (isset($GLOBALS['phpgw_info']['user']['preferences'][$this->currentapp]['tts_category'])?$GLOBALS['phpgw_info']['user']['preferences'][$this->currentapp]['tts_category']:'');
+				$this->cat_id = (isset($GLOBALS['phpgw_info']['user']['preferences']['property']['tts_category'])?$GLOBALS['phpgw_info']['user']['preferences']['property']['tts_category']:'');
 			}
 			else
 			{
@@ -1204,7 +1204,7 @@
 
 			$msgbox_data = (isset($receipt)?$this->bocommon->msgbox_data($receipt):'');
 
-			$GLOBALS['phpgw']->js->validate_file('dateformat','dateformat',$this->currentapp);
+			$GLOBALS['phpgw']->js->validate_file('dateformat','dateformat','property');
 
 			$data = array
 			(
@@ -1235,7 +1235,7 @@
 				'priority_list'				=> $this->bo->get_priority_list((isset($values['priority'])?$values['priority']:'')),
 
 				'form_action'				=> $GLOBALS['phpgw']->link('/index.php',$link_data),
-				'done_action'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uitts.index')),
+				'done_action'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uitts.index')),
 				'lang_subject'				=> lang('Subject'),
 				'lang_subject_statustext'		=> lang('Enter the subject of this ticket'),
 
@@ -1263,7 +1263,7 @@
 				'mailnotification'			=> (isset($this->bo->config->config_data['mailnotification'])?$this->bo->config->config_data['mailnotification']:''),
 				'lang_mailnotification'			=> lang('Send e-mail'),
 				'lang_mailnotification_statustext'	=> lang('Choose to send mailnotification'),
-				'pref_send_mail'			=> (isset($GLOBALS['phpgw_info']['user']['preferences'][$this->currentapp]['tts_user_mailnotification'])?$GLOBALS['phpgw_info']['user']['preferences'][$this->currentapp]['tts_user_mailnotification']:''),
+				'pref_send_mail'			=> (isset($GLOBALS['phpgw_info']['user']['preferences']['property']['tts_user_mailnotification'])?$GLOBALS['phpgw_info']['user']['preferences']['property']['tts_user_mailnotification']:''),
 				'fileupload'				=> (isset($this->bo->config->config_data['fmttsfileupload'])?$this->bo->config->config_data['fmttsfileupload']:''),
 			);
 
@@ -1271,7 +1271,7 @@
 			$appname					= lang('helpdesk');
 			$function_msg					= lang('add ticket');
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($this->currentapp) . ' - ' . $appname . ': ' . $function_msg;
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('add' => $data));
 		//	$GLOBALS['phpgw']->xslttpl->pp();
 		}
@@ -1280,7 +1280,7 @@
 		{
 			if(!$this->acl->check('.ticket.external',2))
 			{
-				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> $this->currentapp.'.uilocation.stop', 'perm'=> 1, 'acl_location'=> '.ticket.external'));
+				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=> 1, 'acl_location'=> '.ticket.external'));
 			}
 
 			$bolocation		= CreateObject('property.bolocation');
@@ -1326,15 +1326,15 @@
 			$values['street_number'] = $values['location_data']['street_number'];
 
 			
-			$values['assignedto']= (isset($GLOBALS['phpgw_info']['user']['preferences'][$this->currentapp]['assigntodefault'])?$GLOBALS['phpgw_info']['user']['preferences'][$this->currentapp]['assigntodefault']:'');
+			$values['assignedto']= (isset($GLOBALS['phpgw_info']['user']['preferences']['property']['assigntodefault'])?$GLOBALS['phpgw_info']['user']['preferences']['property']['assigntodefault']:'');
 			if(!$values['assignedto'])
 			{
 				$receipt['error'][]=array('msg'=>lang('Please set default assign to in preferences for user %1!', $GLOBALS['phpgw']->accounts->id2name($this->account)));
 			}
 
-			$values['group_id']= (isset($GLOBALS['phpgw_info']['user']['preferences'][$this->currentapp]['groupdefault'])?$GLOBALS['phpgw_info']['user']['preferences'][$this->currentapp]['groupdefault']:'');			
+			$values['group_id']= (isset($GLOBALS['phpgw_info']['user']['preferences']['property']['groupdefault'])?$GLOBALS['phpgw_info']['user']['preferences']['property']['groupdefault']:'');			
 			
-			$values['cat_id'] = (isset($GLOBALS['phpgw_info']['user']['preferences'][$this->currentapp]['tts_category'])?$GLOBALS['phpgw_info']['user']['preferences'][$this->currentapp]['tts_category']:'');
+			$values['cat_id'] = (isset($GLOBALS['phpgw_info']['user']['preferences']['property']['tts_category'])?$GLOBALS['phpgw_info']['user']['preferences']['property']['tts_category']:'');
 			
 			if(!$values['cat_id'])
 			{
@@ -1345,7 +1345,7 @@
 			{
 
 // FIX this : relevant?
-/*				$insert_record_entity = $GLOBALS['phpgw']->session->appsession('insert_record_entity',$this->currentapp);
+/*				$insert_record_entity = $GLOBALS['phpgw']->session->appsession('insert_record_entity','property');
 
 				if(isset($insert_record_entity) && is_array($insert_record_entity))
 				{
@@ -1376,9 +1376,9 @@
 				if(!isset($receipt['error']))
 				{
 					$receipt = $this->bo->add($values);
-					$GLOBALS['phpgw']->session->appsession('receipt',$this->currentapp,$receipt);
+					$GLOBALS['phpgw']->session->appsession('receipt','property',$receipt);
 					$GLOBALS['phpgw']->session->appsession('session_data','fm_tts','');
-					$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> $this->currentapp.'.uitts.index2'));
+					$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uitts.index2'));
 				}
 				else
 				{
@@ -1404,7 +1404,7 @@
 
 			$link_data = array
 			(
-				'menuaction'	=> $this->currentapp.'.uitts.add2'
+				'menuaction'	=> 'property.uitts.add2'
 			);
 
 			$dateformat = strtolower($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']);
@@ -1438,7 +1438,7 @@
 
 			$msgbox_data = (isset($receipt)?$this->bocommon->msgbox_data($receipt):'');
 
-			$GLOBALS['phpgw']->js->validate_file('dateformat','dateformat',$this->currentapp);
+			$GLOBALS['phpgw']->js->validate_file('dateformat','dateformat','property');
 
 			$data = array
 			(
@@ -1465,7 +1465,7 @@
 				'priority_list'						=> $this->bo->get_priority_list((isset($values['priority'])?$values['priority']:'')),
 
 				'form_action'						=> $GLOBALS['phpgw']->link('/index.php',$link_data),
-				'done_action'						=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uitts.index2')),
+				'done_action'						=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uitts.index2')),
 				'lang_subject'						=> lang('Subject'),
 				'lang_subject_statustext'			=> lang('Enter the subject of this ticket'),
 
@@ -1493,7 +1493,7 @@
 				'mailnotification'					=> (isset($this->bo->config->config_data['mailnotification'])?$this->bo->config->config_data['mailnotification']:''),
 				'lang_mailnotification'				=> lang('Send e-mail'),
 				'lang_mailnotification_statustext'	=> lang('Choose to send mailnotification'),
-				'pref_send_mail'					=> (isset($GLOBALS['phpgw_info']['user']['preferences'][$this->currentapp]['tts_user_mailnotification'])?$GLOBALS['phpgw_info']['user']['preferences'][$this->currentapp]['tts_user_mailnotification']:''),
+				'pref_send_mail'					=> (isset($GLOBALS['phpgw_info']['user']['preferences']['property']['tts_user_mailnotification'])?$GLOBALS['phpgw_info']['user']['preferences']['property']['tts_user_mailnotification']:''),
 				'lang_contact_phone'				=> lang('contact phone'),
 				'lang_contact_phone_statustext'		=> lang('contact phone'),
 				'value_contact_phone'				=> (isset($values['contact_phone'])?$values['contact_phone']:''),
@@ -1507,7 +1507,7 @@
 			$appname					= lang('helpdesk');
 			$function_msg					= lang('add ticket');
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($this->currentapp) . ' - ' . $appname . ': ' . $function_msg;
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('add2' => $data));
 		//	$GLOBALS['phpgw']->xslttpl->pp();
 		}
@@ -1517,7 +1517,7 @@
 		{
 			if(!$this->acl_read)
 			{
-				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> $this->currentapp.'.uilocation.stop', 'perm'=>1, 'acl_location'=> $this->acl_location));
+				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=>1, 'acl_location'=> $this->acl_location));
 			}
 
 			$bolocation	= CreateObject('property.bolocation');
@@ -1532,7 +1532,7 @@
 			{
 				if(!$this->acl_edit)
 				{
-					$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> $this->currentapp.'.uilocation.stop', 'perm'=>4, 'acl_location'=> $this->acl_location));
+					$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=>4, 'acl_location'=> $this->acl_location));
 				}
 
 				$so2	= CreateObject('property.sotts2');
@@ -1580,7 +1580,7 @@
 
 			$request_link_data = array
 			(
-				'menuaction'		=> $this->currentapp.'.uirequest.edit',
+				'menuaction'		=> 'property.uirequest.edit',
 				'bypass'		=> true,
 				'location_code'		=> $ticket['location_code'],
 				'p_num'			=> $ticket['p_num'],
@@ -1594,7 +1594,7 @@
 
 			$order_link_data = array
 			(
-				'menuaction'		=> $this->currentapp.'.uiproject.edit',
+				'menuaction'		=> 'property.uiproject.edit',
 				'bypass'		=> true,
 				'location_code'		=> $ticket['location_code'],
 				'p_num'			=> $ticket['p_num'],
@@ -1607,7 +1607,7 @@
 
 			$form_link = array
 			(
-				'menuaction'	=> $this->currentapp.'.uitts.view',
+				'menuaction'	=> 'property.uitts.view',
 				'id'		=> $id
 			);
 
@@ -1667,7 +1667,7 @@
 				{
 					$link_entity[$i]['link'] = $GLOBALS['phpgw']->link('/index.php',array
 					(
-						'menuaction'		=> $this->currentapp.'.uientity.edit',
+						'menuaction'		=> 'property.uientity.edit',
 						'bypass'		=> true,
 						'location_code'		=> $ticket['location_code'],
 						'entity_id'		=> $entry['id'],
@@ -1767,11 +1767,11 @@
 				}
 			}
 
-			$GLOBALS['phpgw']->js->validate_file('dateformat','dateformat',$this->currentapp);
+			$GLOBALS['phpgw']->js->validate_file('dateformat','dateformat','property');
 
 			$link_file_data = array
 			(
-				'menuaction'	=> $this->currentapp.'.uitts.view_file',
+				'menuaction'	=> 'property.uitts.view_file',
 				'id'		=> $id
 			);
 
@@ -1835,7 +1835,7 @@
 				'value_category_name'			=> $ticket['category_name'],
 
 				'form_action'				=> $GLOBALS['phpgw']->link('/index.php',$form_link),
-				'done_action'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=>$this->currentapp.'.uitts.index')),
+				'done_action'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=>'property.uitts.index')),
 				'value_subject'				=> $ticket['subject'],
 				'lang_subject_statustext'		=> lang('update subject'),
 				'value_id'				=> '[ #'. $id . ' ] - ',
@@ -1876,7 +1876,7 @@
 				'mailnotification'			=> (isset($this->bo->config->config_data['mailnotification'])?true:''),
 				'lang_mailnotification'			=> lang('Send e-mail'),
 				'lang_mailnotification_statustext'	=> lang('Choose to send mailnotification'),
-				'pref_send_mail'			=> (isset($GLOBALS['phpgw_info']['user']['preferences'][$this->currentapp]['tts_user_mailnotification'])?$GLOBALS['phpgw_info']['user']['preferences'][$this->currentapp]['tts_user_mailnotification']:''),
+				'pref_send_mail'			=> (isset($GLOBALS['phpgw_info']['user']['preferences']['property']['tts_user_mailnotification'])?$GLOBALS['phpgw_info']['user']['preferences']['property']['tts_user_mailnotification']:''),
 				'fileupload'				=> (isset($this->bo->config->config_data['fmttsfileupload'])?$this->bo->config->config_data['fmttsfileupload']:''),
 				'link_view_file'				=> $GLOBALS['phpgw']->link('/index.php',$link_file_data),
 				'link_to_files'					=> (isset($this->bo->config->config_data['files_url'])?$this->bo->config->config_data['files_url']:''),
@@ -1894,7 +1894,7 @@
 			$appname					= lang('helpdesk');
 			$function_msg					= lang('view ticket detail');
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($this->currentapp) . ' - ' . $appname . ': ' . $function_msg;
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('view' => $data));
 		//	$GLOBALS['phpgw']->xslttpl->pp();
 		}
@@ -1903,7 +1903,7 @@
 		{
 			if(!$this->acl->check('.ticket.external',1))
 			{
-				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> $this->currentapp.'.uilocation.stop', 'perm'=> 1, 'acl_location'=> '.ticket.external'));
+				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=> 1, 'acl_location'=> '.ticket.external'));
 			}
 
 			$bolocation	= CreateObject('property.bolocation');
@@ -1918,7 +1918,7 @@
 			{
 				if(!$this->acl->check('.ticket.external',2))
 				{
-					$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> $this->currentapp.'.uilocation.stop', 'perm'=>4, 'acl_location'=> '.ticket.external'));
+					$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=>4, 'acl_location'=> '.ticket.external'));
 				}
 
 				$values['assignedto'] = 'ignore';
@@ -1937,7 +1937,7 @@
 
 			$form_link = array
 			(
-				'menuaction'	=> $this->currentapp.'.uitts.view2',
+				'menuaction'	=> 'property.uitts.view2',
 				'id'		=> $id
 			);
 
@@ -2043,7 +2043,7 @@
 				}
 			}
 
-			$GLOBALS['phpgw']->js->validate_file('dateformat','dateformat',$this->currentapp);
+			$GLOBALS['phpgw']->js->validate_file('dateformat','dateformat','property');
 
 			$data = array
 			(
@@ -2093,7 +2093,7 @@
 				'value_category_name'			=> $ticket['category_name'],
 
 				'form_action'					=> $GLOBALS['phpgw']->link('/index.php',$form_link),
-				'done_action'					=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=>$this->currentapp.'.uitts.index2')),
+				'done_action'					=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=>'property.uitts.index2')),
 				'value_subject'					=> $ticket['subject'],
 				'lang_subject_statustext'		=> lang('update subject'),
 				'value_id'						=> '[ #'. $id . ' ] - ',
@@ -2129,7 +2129,7 @@
 			$appname		= lang('helpdesk');
 			$function_msg	= lang('view ticket detail');
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($this->currentapp) . ' - ' . $appname . ': ' . $function_msg;
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('view2' => $data));
 		}
 
@@ -2141,7 +2141,7 @@
 
 			if(!$this->acl_read)
 			{
-				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> $this->currentapp.'.uilocation.stop', 'perm'=>1, 'acl_location'=> $this->acl_location));
+				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=>1, 'acl_location'=> $this->acl_location));
 			}
 
 			$file_name	= urldecode(phpgw::get_var('file_name'));

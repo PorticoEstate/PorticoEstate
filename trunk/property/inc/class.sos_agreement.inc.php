@@ -38,7 +38,7 @@
 
 		function property_sos_agreement()
 		{
-			$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
+		//	$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->account	= $GLOBALS['phpgw_info']['user']['account_id'];
 			$this->bocommon		= CreateObject('property.bocommon');
 			$this->db           	= $this->bocommon->new_db();
@@ -256,7 +256,7 @@
 				$i++;
 			}
 
-			$user_columns=$GLOBALS['phpgw_info']['user']['preferences'][$this->currentapp]['s_agreement_columns' . !!$s_agreement_id];
+			$user_columns=$GLOBALS['phpgw_info']['user']['preferences']['property']['s_agreement_columns' . !!$s_agreement_id];
 
 //_debug_array($user_columns);
 

@@ -57,7 +57,7 @@
 
 		function property_bobudget($session=False)
 		{
-			$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
+		//	$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->so 		= CreateObject('property.sobudget');
 			$this->bocommon 	= CreateObject('property.bocommon');
 

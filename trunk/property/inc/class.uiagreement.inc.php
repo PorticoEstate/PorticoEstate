@@ -61,7 +61,7 @@
 		function property_uiagreement()
 		{
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = True;
-			$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
+		//	$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->nextmatchs	= CreateObject('phpgwapi.nextmatchs');
 			$this->account		= $GLOBALS['phpgw_info']['user']['account_id'];
 
@@ -127,7 +127,7 @@
 
 				$GLOBALS['phpgw']->preferences->account_id=$this->account;
 				$GLOBALS['phpgw']->preferences->read_repository();
-				$GLOBALS['phpgw']->preferences->add($this->currentapp,'agreement_columns',$values['columns'],'user');
+				$GLOBALS['phpgw']->preferences->add('property','agreement_columns',$values['columns'],'user');
 				$GLOBALS['phpgw']->preferences->save_repository();
 
 				$receipt['message'][] = array('msg' => lang('columns is updated'));
@@ -137,7 +137,7 @@
 
 			$link_data = array
 			(
-				'menuaction'	=> $this->currentapp.'.uiagreement.columns',
+				'menuaction'	=> 'property.uiagreement.columns',
 				'role'		=> $this->role
 			);
 
@@ -168,7 +168,7 @@
 
 			if(!$this->acl_read)
 			{
-				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> $this->currentapp.'.uilocation.stop', 'perm'=>1, 'acl_location'=> $this->acl_location));
+				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=>1, 'acl_location'=> $this->acl_location));
 			}
 
 			$file_name	= urldecode(phpgw::get_var('file_name'));
@@ -210,7 +210,7 @@
 
 			if(!$this->acl_read)
 			{
-				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> $this->currentapp.'.uilocation.stop', 'perm'=>1, 'acl_location'=> $this->acl_location));
+				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=>1, 'acl_location'=> $this->acl_location));
 			}
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('agreement',
@@ -247,19 +247,19 @@
 					{
 						$content[$j]['row'][$i]['statustext']		= lang('view the entity');
 						$content[$j]['row'][$i]['text']			= lang('view');
-						$content[$j]['row'][$i++]['link']		= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uiagreement.view','id'=> $entry['id'], 'role'=> $this->role));
+						$content[$j]['row'][$i++]['link']		= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiagreement.view','id'=> $entry['id'], 'role'=> $this->role));
 					}
 					if($this->acl_edit)
 					{
 						$content[$j]['row'][$i]['statustext']		= lang('edit the agreement');
 						$content[$j]['row'][$i]['text']			= lang('edit');
-						$content[$j]['row'][$i++]['link']		= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uiagreement.edit','id'=> $entry['id'], 'role'=> $this->role));
+						$content[$j]['row'][$i++]['link']		= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiagreement.edit','id'=> $entry['id'], 'role'=> $this->role));
 					}
 					if($this->acl_delete)
 					{
 						$content[$j]['row'][$i]['statustext']		= lang('delete the agreement');
 						$content[$j]['row'][$i]['text']			= lang('delete');
-						$content[$j]['row'][$i++]['link']		= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uiagreement.delete', 'agreement_id'=> $entry['id'], 'role'=> $this->role));
+						$content[$j]['row'][$i++]['link']		= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiagreement.delete', 'agreement_id'=> $entry['id'], 'role'=> $this->role));
 					}
 
 					$j++;
@@ -282,7 +282,7 @@
 								'sort'	=> $this->sort,
 								'var'	=> $uicols['name'][$i],
 								'order'	=> $this->order,
-								'extra'	=> array('menuaction'	=> $this->currentapp.'.uiagreement.index',
+								'extra'	=> array('menuaction'	=> 'property.uiagreement.index',
 													'query'		=> $this->query,
 													'role'		=> $this->role,
 													'member_id'	=> $this->member_id,
@@ -322,13 +322,13 @@
 				(
 					'lang_add'		=> lang('add'),
 					'lang_add_statustext'	=> lang('add an agreement'),
-					'add_action'		=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uiagreement.edit', 'role'=> $this->role))
+					'add_action'		=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiagreement.edit', 'role'=> $this->role))
 				);
 			}
 
 			$link_data = array
 			(
-				'menuaction'	=> $this->currentapp.'.uiagreement.index',
+				'menuaction'	=> 'property.uiagreement.index',
 				'sort'		=>$this->sort,
 				'order'		=>$this->order,
 				'cat_id'	=>$this->cat_id,
@@ -351,13 +351,13 @@
 
 			$link_columns = array
 			(
-				'menuaction' 	=> $this->currentapp.'.uiagreement.columns',
+				'menuaction' 	=> 'property.uiagreement.columns',
 				'role'		=> $this->role
 			);
 
 			$member_of_data	= $this->cats->formatted_xslt_list(array('selected' => $this->member_id,'globals' => True,'link_data' =>$link_data));
 
-			$GLOBALS['phpgw']->js->validate_file('overlib','overlib',$this->currentapp);
+			$GLOBALS['phpgw']->js->validate_file('overlib','overlib','property');
 
 			$data = array
 			(
@@ -434,19 +434,19 @@
 					{
 						$content[$j]['row'][$i]['statustext']		= lang('view the entity');
 						$content[$j]['row'][$i]['text']			= lang('view');
-						$content[$j]['row'][$i++]['link']		= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uiagreement.view_item', 'agreement_id'=> $entry['agreement_id'], 'id'=> $entry['id']));
+						$content[$j]['row'][$i++]['link']		= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiagreement.view_item', 'agreement_id'=> $entry['agreement_id'], 'id'=> $entry['id']));
 					}
 					if($this->acl_edit && !$edit_item && !$view_only)
 					{
 						$content[$j]['row'][$i]['statustext']		= lang('edit the agreement');
 						$content[$j]['row'][$i]['text']			= lang('edit');
-						$content[$j]['row'][$i++]['link']		= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uiagreement.edit_item', 'agreement_id'=> $entry['agreement_id'], 'id'=> $entry['id']));
+						$content[$j]['row'][$i++]['link']		= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiagreement.edit_item', 'agreement_id'=> $entry['agreement_id'], 'id'=> $entry['id']));
 					}
 					if($this->acl_delete && !$edit_item && !$view_only)
 					{
 						$content[$j]['row'][$i]['statustext']		= lang('delete this item');
 						$content[$j]['row'][$i]['text']			= lang('delete');
-						$content[$j]['row'][$i++]['link']		= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uiagreement.edit','delete_item'=>1, 'agreement_id'=> $entry['agreement_id'], 'activity_id'=> $entry['id']));
+						$content[$j]['row'][$i++]['link']		= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiagreement.edit','delete_item'=>1, 'agreement_id'=> $entry['agreement_id'], 'activity_id'=> $entry['id']));
 					}
 
 					$j++;
@@ -500,7 +500,7 @@
 		{
 			if(!$this->acl_add)
 			{
-				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> $this->currentapp.'.uilocation.stop', 'perm'=>2, 'acl_location'=> $this->acl_location));
+				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=>2, 'acl_location'=> $this->acl_location));
 			}
 
 
@@ -521,12 +521,12 @@
 					if ($values['save'])
 					{
 						$GLOBALS['phpgw']->session->appsession('session_data','agreement_receipt',$receipt);
-						$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> $this->currentapp.'.uiagreement.edit', 'id'=> $agreement_id));
+						$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uiagreement.edit', 'id'=> $agreement_id));
 					}
 				}
 				else
 				{
-					$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> $this->currentapp.'.uiagreement.edit', 'id'=> $agreement_id));
+					$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uiagreement.edit', 'id'=> $agreement_id));
 
 				}
 			}
@@ -547,7 +547,7 @@
 				}
 			}
 
-			$GLOBALS['phpgw']->js->validate_file('core','check',$this->currentapp);
+			$GLOBALS['phpgw']->js->validate_file('core','check','property');
 
 			$data = array
 			(
@@ -558,8 +558,8 @@
 				'lang_descr'				=> lang('descr'),
 				'value_descr'				=> $agreement['descr'],
 				'lang_select_all'			=> lang('Select All'),
-				'img_check'				=> $GLOBALS['phpgw']->common->get_image_path($this->currentapp).'/check.png',
-				'add_action'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uiagreement.add_activity', 'group_id'=> $group_id, 'agreement_id'=> $agreement_id)),
+				'img_check'				=> $GLOBALS['phpgw']->common->get_image_path('property').'/check.png',
+				'add_action'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiagreement.add_activity', 'group_id'=> $group_id, 'agreement_id'=> $agreement_id)),
 				'agreement_id'				=> $agreement_id,
 				'table_header'				=> $table_header,
 				'values'				=> $content,
@@ -582,7 +582,7 @@
 		{
 			if(!$this->acl_add)
 			{
-				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> $this->currentapp.'.uilocation.stop', 'perm'=>2, 'acl_location'=> $this->acl_location));
+				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=>2, 'acl_location'=> $this->acl_location));
 			}
 
 
@@ -591,7 +591,7 @@
 			$delete_item	= phpgw::get_var('delete_item', 'bool');
 			$activity_id	= phpgw::get_var('activity_id', 'int');
 
-			$config		= CreateObject('phpgwapi.config',$this->currentapp);
+			$config		= CreateObject('phpgwapi.config','property');
 			$boalarm	= CreateObject('property.boalarm');
 			$receipt 	= array();
 
@@ -602,7 +602,7 @@
 
 			$values_attribute  = phpgw::get_var('values_attribute');
 
-			$insert_record_agreement = $GLOBALS['phpgw']->session->appsession('insert_record_agreement',$this->currentapp);
+			$insert_record_agreement = $GLOBALS['phpgw']->session->appsession('insert_record_agreement','property');
 
 //_debug_array($insert_record_agreement);
 			if(isset($insert_record_agreement) && is_array($insert_record_agreement))
@@ -697,7 +697,7 @@
 						if ($values['save'])
 						{
 							$GLOBALS['phpgw']->session->appsession('session_data','agreement_receipt',$receipt);
-							$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> $this->currentapp.'.uiagreement.index', 'role'=> $this->role));
+							$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uiagreement.index', 'role'=> $this->role));
 						}
 					}
 				}
@@ -749,7 +749,7 @@
 				}
 				else if ((!isset($values['save']) || !$values['save']) && (!isset($values['apply']) || !$values['apply']) && (!isset($values['update']) || !$values['update']))
 				{
-					$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> $this->currentapp.'.uiagreement.index', 'role'=> $this->role));
+					$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uiagreement.index', 'role'=> $this->role));
 				}
 			}
 
@@ -784,19 +784,19 @@
 						{
 							$content[$j]['lang_view_statustext']	= lang('view the entity');
 							$content[$j]['text_view']		= lang('view');
-							$content[$j]['link_view']		= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uiagreement.view_item', 'agreement_id'=> $id, 'id'=> $content[$j]['activity_id']));
+							$content[$j]['link_view']		= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiagreement.view_item', 'agreement_id'=> $id, 'id'=> $content[$j]['activity_id']));
 						}
 						if($this->acl_edit && (!isset($edit_item) || !$edit_item) && (!isset($view_only) || !$view_only))
 						{
 							$content[$j]['lang_edit_statustext']	= lang('edit the agreement');
 							$content[$j]['text_edit']		= lang('edit');
-							$content[$j]['link_edit']		= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uiagreement.edit_item', 'agreement_id'=> $id, 'id'=> $content[$j]['activity_id']));
+							$content[$j]['link_edit']		= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiagreement.edit_item', 'agreement_id'=> $id, 'id'=> $content[$j]['activity_id']));
 						}
 						if($this->acl_delete && (!isset($edit_item) || !$edit_item) && (!isset($view_only) || !$view_only))
 						{
 							$content[$j]['lang_delete_statustext']	= lang('delete this item');
 							$content[$j]['text_delete']		= lang('delete');
-							$content[$j]['link_delete']		= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uiagreement.edit', 'delete_item'=>1, 'id'=> $id, 'activity_id'=> $content[$j]['activity_id']));
+							$content[$j]['link_delete']		= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiagreement.edit', 'delete_item'=>1, 'id'=> $id, 'activity_id'=> $content[$j]['activity_id']));
 						}
 
 						$content[$j]['acl_manage']			= $this->acl_manage;
@@ -877,7 +877,7 @@
 
 			$link_data = array
 			(
-				'menuaction'	=> $this->currentapp.'.uiagreement.edit',
+				'menuaction'	=> 'property.uiagreement.edit',
 				'sort'		=>$this->sort,
 				'order'		=>$this->order,
 				'id'		=> $id,
@@ -939,13 +939,13 @@
 			(
 				'lang_add'				=> lang('add detail'),
 				'lang_add_standardtext'	=> lang('add an item to the details'),
-				'add_action'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uiagreement.add_activity', 'agreement_id'=> $id, 'group_id'=> $agreement['group_id']))
+				'add_action'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiagreement.add_activity', 'agreement_id'=> $id, 'group_id'=> $agreement['group_id']))
 			);
 
 
 			$link_file_data = array
 			(
-				'menuaction'	=> $this->currentapp.'.uiagreement.view_file',
+				'menuaction'	=> 'property.uiagreement.view_file',
 				'id'		=>$id
 			);
 
@@ -960,7 +960,7 @@
 
 			$link_excel = array
 			(
-				'menuaction'	=> $this->currentapp.'.uiagreement.excel',
+				'menuaction'	=> 'property.uiagreement.excel',
 				'id'		=>$id,
 				'allrows'	=>$this->allrows
 			);
@@ -975,9 +975,9 @@
 				$record_limit	= $this->bo->total_records;
 			}
 
-			$GLOBALS['phpgw']->js->validate_file('overlib','overlib',$this->currentapp);
-			$GLOBALS['phpgw']->js->validate_file('core','check',$this->currentapp);
-			$GLOBALS['phpgw']->js->validate_file('dateformat','dateformat',$this->currentapp);
+			$GLOBALS['phpgw']->js->validate_file('overlib','overlib','property');
+			$GLOBALS['phpgw']->js->validate_file('core','check','property');
+			$GLOBALS['phpgw']->js->validate_file('dateformat','dateformat','property');
 
 			$data = array
 			(
@@ -1064,9 +1064,9 @@
 				'values'								=> $content,
 				'table_header'							=> $table_header,
 				'table_update'							=> $table_update,
-				'update_action'							=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uiagreement.edit', 'id'=> $id)),
+				'update_action'							=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiagreement.edit', 'id'=> $id)),
 				'lang_select_all'						=> lang('Select All'),
-				'img_check'								=> $GLOBALS['phpgw']->common->get_image_path($this->currentapp).'/check.png',
+				'img_check'								=> $GLOBALS['phpgw']->common->get_image_path('property').'/check.png',
 				'set_column'							=> $set_column,
 
 				'lang_agreement_group'					=> lang('Agreement group'),
@@ -1099,7 +1099,7 @@
 		{
 			if(!$this->acl_add)
 			{
-				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> $this->currentapp.'.uilocation.stop', 'perm'=>2, 'acl_location'=> $this->acl_location));
+				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=>2, 'acl_location'=> $this->acl_location));
 			}
 
 
@@ -1134,7 +1134,7 @@
 						if ($values['save'])
 						{
 							$GLOBALS['phpgw']->session->appsession('session_data','agreement_receipt',$receipt);
-							$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> $this->currentapp.'.uiagreement.edit', 'id'=> $agreement_id));
+							$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uiagreement.edit', 'id'=> $agreement_id));
 						}
 					}
 				}
@@ -1157,7 +1157,7 @@
 				}
 				elseif (!$values['save'] && !$values['apply'] && !$values['update']):
 				{
-					$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> $this->currentapp.'.uiagreement.edit', 'id'=> $agreement_id));
+					$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uiagreement.edit', 'id'=> $agreement_id));
 				}
 				endif;
 			}
@@ -1167,7 +1167,7 @@
 
 			$link_data = array
 			(
-				'menuaction'	=> $this->currentapp.'.uiagreement.edit_item',
+				'menuaction'	=> 'property.uiagreement.edit_item',
 				'agreement_id'	=> $agreement_id,
 				'id'		=> $id,
 				'role'		=> $this->role
@@ -1213,7 +1213,7 @@
 			(
 				'lang_add'				=> lang('add detail'),
 				'lang_add_standardtext'	=> lang('add an item to the details'),
-				'add_action'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uiagreement.edit_item', 'agreement_id'=> $agreement_id))
+				'add_action'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiagreement.edit_item', 'agreement_id'=> $agreement_id))
 			);
 
 			if($id)
@@ -1243,8 +1243,8 @@
 				'lang_update_statustext'	=> lang('update selected investments')
 			);
 
-			$GLOBALS['phpgw']->js->validate_file('core','check',$this->currentapp);
-			$GLOBALS['phpgw']->js->validate_file('dateformat','dateformat',$this->currentapp);
+			$GLOBALS['phpgw']->js->validate_file('core','check','property');
+			$GLOBALS['phpgw']->js->validate_file('dateformat','dateformat','property');
 
 			$data = array
 			(
@@ -1282,9 +1282,9 @@
 				'table_header'				=> $table_header,
 				'acl_manage'				=> $this->acl_manage,
 				'table_update'				=> $table_update,
-				'update_action'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uiagreement.edit_item', 'agreement_id'=> $agreement_id, 'id'=> $id)),
+				'update_action'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiagreement.edit_item', 'agreement_id'=> $agreement_id, 'id'=> $id)),
 				'lang_select_all'			=> lang('Select All'),
-				'img_check'				=> $GLOBALS['phpgw']->common->get_image_path($this->currentapp).'/check.png',
+				'img_check'				=> $GLOBALS['phpgw']->common->get_image_path('property').'/check.png',
 
 				'lang_m_cost'				=> lang('Material cost'),
 				'lang_m_cost_statustext'		=> lang('Material cost'),
@@ -1300,7 +1300,7 @@
 				'set_column'				=> $set_column,
 				'lang_delete_last'			=> lang('delete last index'),
 				'lang_delete_last_statustext'		=> lang('delete the last index'),
-				'delete_action'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uiagreement.edit_item', 'delete_last'=>1, 'agreement_id'=> $agreement_id, 'id'=> $id)),
+				'delete_action'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiagreement.edit_item', 'delete_last'=>1, 'agreement_id'=> $agreement_id, 'id'=> $id)),
 				'textareacols'				=> isset($GLOBALS['phpgw_info']['user']['preferences']['property']['textareacols']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['textareacols'] ? $GLOBALS['phpgw_info']['user']['preferences']['property']['textareacols'] : 40,
 				'textarearows'				=> isset($GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows'] ? $GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows'] : 6
 			);
@@ -1315,7 +1315,7 @@
 		{
 			if(!$this->acl_read)
 			{
-				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> $this->currentapp.'.uilocation.stop', 'perm'=>1, 'acl_location'=> $this->acl_location));
+				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=>1, 'acl_location'=> $this->acl_location));
 			}
 
 			$agreement_id	= phpgw::get_var('agreement_id', 'int');
@@ -1328,7 +1328,7 @@
 
 			$link_data = array
 			(
-				'menuaction'	=> $this->currentapp.'.uiagreement.edit',
+				'menuaction'	=> 'property.uiagreement.edit',
 				'id'		=> $agreement_id
 			);
 
@@ -1352,7 +1352,7 @@
 			$content	= $list['content'];
 			$table_header=$list['table_header'];
 
-			$GLOBALS['phpgw']->js->validate_file('core','check',$this->currentapp);
+			$GLOBALS['phpgw']->js->validate_file('core','check','property');
 
 			$data = array
 			(
@@ -1402,7 +1402,7 @@
 		{
 			if(!$this->acl_delete)
 			{
-				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> $this->currentapp.'.uilocation.stop', 'perm'=>8, 'acl_location'=> $this->acl_location));
+				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=>8, 'acl_location'=> $this->acl_location));
 			}
 
 			$attrib		= phpgw::get_var('attrib');
@@ -1422,7 +1422,7 @@
 			}
 			$link_data = array
 			(
-				'menuaction'	=> $this->currentapp.'.uiagreement.'.$function,
+				'menuaction'	=> 'property.uiagreement.'.$function,
 				'role'		=> $this->role
 			);
 
@@ -1437,7 +1437,7 @@
 			$data = array
 			(
 				'done_action'			=> $GLOBALS['phpgw']->link('/index.php',$link_data),
-				'delete_action'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uiagreement.delete', 'agreement_id'=> $agreement_id, 'id'=> $id, 'attrib'=> $attrib, 'role'=> $this->role)),
+				'delete_action'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiagreement.delete', 'agreement_id'=> $agreement_id, 'id'=> $id, 'attrib'=> $attrib, 'role'=> $this->role)),
 				'lang_confirm_msg'		=> lang('do you really want to delete this entry'),
 				'lang_yes'			=> lang('yes'),
 				'lang_yes_statustext'		=> lang('Delete the entry'),
@@ -1448,7 +1448,7 @@
 			$appname		= lang('agreement');
 			$function_msg		= lang('delete') . ' ' . lang($this->role);
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($this->currentapp) . ' - ' . $appname . ': ' . $function_msg;
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('delete' => $data));
 		//	$GLOBALS['phpgw']->xslttpl->pp();
 		}
@@ -1457,11 +1457,11 @@
 		{
 			if(!$this->acl_read)
 			{
-				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> $this->currentapp.'.uilocation.stop', 'perm'=>1, 'acl_location'=> $this->acl_location));
+				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=>1, 'acl_location'=> $this->acl_location));
 			}
 
 			$agreement_id	= phpgw::get_var('id', 'int');
-			$config		= CreateObject('phpgwapi.config',$this->currentapp);
+			$config		= CreateObject('phpgwapi.config','property');
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('agreement','nextmatchs','attributes_view'));
 
@@ -1483,7 +1483,7 @@
 
 			$link_data = array
 			(
-				'menuaction'	=> $this->currentapp.'.uiagreement.index',
+				'menuaction'	=> 'property.uiagreement.index',
 				'agreement_id'	=> $agreement_id,
 			);
 
@@ -1518,7 +1518,7 @@
 
 			$link_file_data = array
 			(
-				'menuaction'	=> $this->currentapp.'.uiagreement.view_file',
+				'menuaction'	=> 'property.uiagreement.view_file',
 				'id'		=>$agreement_id
 			);
 
@@ -1544,7 +1544,7 @@
 
 			$link_data2 = array
 			(
-				'menuaction'	=> $this->currentapp.'.uiagreement.view',
+				'menuaction'	=> 'property.uiagreement.view',
 				'id'		=> $agreement_id,
 			);
 
@@ -1624,7 +1624,7 @@
 		{
 			if(!$this->acl_manage)
 			{
-				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> $this->currentapp.'.uilocation.stop', 'perm'=>16, 'acl_location'=> $this->acl_location));
+				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=>16, 'acl_location'=> $this->acl_location));
 			}
 
 			$id	= phpgw::get_var('id', 'int');
@@ -1653,10 +1653,10 @@
 					'input_text'				=> $attrib['input_text'],
 					'sorting'				=> $attrib['attrib_sort'],
 					'search'				=> $attrib['search'],
-					'link_up'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uiagreement.list_attribute', 'resort'=>'up', 'id'=> $attrib['id'], 'allrows'=> $this->allrows, 'role'=> $this->role)),
-					'link_down'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uiagreement.list_attribute', 'resort'=> 'down', 'id'=> $attrib['id'], 'allrows'=> $this->allrows, 'role'=> $this->role)),
-					'link_edit'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uiagreement.edit_attrib', 'id'=> $attrib['id'], 'role'=>$this->role)),
-					'link_delete'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uiagreement.delete', 'id'=> $attrib['id'], 'attrib'=> true, 'role'=> $this->role)),
+					'link_up'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiagreement.list_attribute', 'resort'=>'up', 'id'=> $attrib['id'], 'allrows'=> $this->allrows, 'role'=> $this->role)),
+					'link_down'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiagreement.list_attribute', 'resort'=> 'down', 'id'=> $attrib['id'], 'allrows'=> $this->allrows, 'role'=> $this->role)),
+					'link_edit'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiagreement.edit_attrib', 'id'=> $attrib['id'], 'role'=>$this->role)),
+					'link_delete'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiagreement.delete', 'id'=> $attrib['id'], 'attrib'=> true, 'role'=> $this->role)),
 					'lang_view_attribtext'			=> lang('view the attrib'),
 					'lang_attribute_attribtext'		=> lang('attributes for the attrib'). ' ' . lang('location'),
 					'lang_edit_attribtext'			=> lang('edit the attrib'),
@@ -1684,7 +1684,7 @@
 											'sort'	=> $this->sort,
 											'var'	=> 'attrib_sort',
 											'order'	=> $this->order,
-											'extra'	=> array('menuaction'	=> $this->currentapp.'.uiagreement.list_attribute',
+											'extra'	=> array('menuaction'	=> 'property.uiagreement.list_attribute',
 																'allrows'=> $this->allrows,
 																'role'	=> $this->role)
 										)),
@@ -1694,7 +1694,7 @@
 											'sort'	=> $this->sort,
 											'var'	=> 'column_name',
 											'order'	=> $this->order,
-											'extra'	=> array('menuaction'	=> $this->currentapp.'.uiagreement.list_attribute',
+											'extra'	=> array('menuaction'	=> 'property.uiagreement.list_attribute',
 																'allrows'=> $this->allrows,
 																'role'	=> $this->role)
 										)),
@@ -1705,7 +1705,7 @@
 			(
 				'lang_add'				=> lang('add'),
 				'lang_add_attribtext'	=> lang('add an attrib'),
-				'add_action'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uiagreement.edit_attrib', 'role'=> $this->role)),
+				'add_action'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiagreement.edit_attrib', 'role'=> $this->role)),
 				'lang_done'				=> lang('done'),
 				'lang_done_attribtext'	=> lang('back to admin'),
 				'done_action'			=> $GLOBALS['phpgw']->link('/admin/index.php'),
@@ -1722,7 +1722,7 @@
 
 			$link_data = array
 			(
-				'menuaction'	=> $this->currentapp.'.uiagreement.list_attribute',
+				'menuaction'	=> 'property.uiagreement.list_attribute',
 				'sort'		=>$this->sort,
 				'order'		=>$this->order,
 				'query'		=>$this->query,
@@ -1751,7 +1751,7 @@
 
 			$appname	= lang('agreement');
 			$function_msg	= lang('list attribute') . ': ' . lang($this->role);
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($this->currentapp) . ' - ' . $appname . ': ' . $function_msg;
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
 			//$this->save_sessiondata();
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('list_attribute' => $data));
 		//	$GLOBALS['phpgw']->xslttpl->pp();
@@ -1761,7 +1761,7 @@
 		{
 			if(!$this->acl_manage)
 			{
-				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> $this->currentapp.'.uilocation.stop', 'perm'=>16, 'acl_location'=> $this->acl_location));
+				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=>16, 'acl_location'=> $this->acl_location));
 			}
 
 			$id			= phpgw::get_var('id', 'int');
@@ -1846,7 +1846,7 @@
 
 			$link_data = array
 			(
-				'menuaction'	=> $this->currentapp.'.uiagreement.edit_attrib',
+				'menuaction'	=> 'property.uiagreement.edit_attrib',
 				'id'		=> $id,
 				'role'		=> $this->role
 
@@ -1881,7 +1881,7 @@
 				'lang_delete_choice_statustext'		=> lang('Delete this value from the list of multiple choice'),
 				'msgbox_data'				=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
 				'form_action'				=> $GLOBALS['phpgw']->link('/index.php',$link_data),
-				'done_action'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uiagreement.list_attribute', 'type_id'=> $type_id, 'role'=> $this->role)),
+				'done_action'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiagreement.list_attribute', 'type_id'=> $type_id, 'role'=> $this->role)),
 				'lang_id'				=> lang('Attribute ID'),
 				'lang_save'				=> lang('save'),
 				'lang_done'				=> lang('done'),
@@ -1941,7 +1941,7 @@
 
 			$appname	= lang('agreement');
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($this->currentapp) . ' - ' . $appname . ': ' . $function_msg;
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('edit_attrib' => $data));
 		//	$GLOBALS['phpgw']->xslttpl->pp();
 		}

@@ -72,7 +72,7 @@
 
 		function property_boinvestment($session=False)
 		{
-			$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
+		//	$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->so 		= CreateObject('property.soinvestment');
 			$this->bocommon = CreateObject('property.bocommon');
 			$this->socommon = CreateObject('property.socommon');

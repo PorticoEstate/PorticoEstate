@@ -38,7 +38,7 @@
 
 		function property_soactor()
 		{
-			$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
+		//	$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->account		= $GLOBALS['phpgw_info']['user']['account_id'];
 			$this->bocommon		= CreateObject('property.bocommon');
 			$this->db			= $this->bocommon->new_db();
@@ -136,7 +136,7 @@
 				$i++;
 			}
 
-			$user_columns=isset($GLOBALS['phpgw_info']['user']['preferences'][$this->currentapp]['actor_columns_' . $this->role])?$GLOBALS['phpgw_info']['user']['preferences'][$this->currentapp]['actor_columns_' . $this->role]:'';
+			$user_columns=isset($GLOBALS['phpgw_info']['user']['preferences']['property']['actor_columns_' . $this->role])?$GLOBALS['phpgw_info']['user']['preferences']['property']['actor_columns_' . $this->role]:'';
 
 //_debug_array($user_columns);
 
@@ -175,13 +175,13 @@
 
 			$where= 'WHERE';
 
-			$grants 	= $GLOBALS['phpgw']->session->appsession('grants_' . $this->role ,$this->currentapp);
+			$grants 	= $GLOBALS['phpgw']->session->appsession('grants_' . $this->role ,'property');
 
 			if(!$grants)
 			{
 				$this->acl 		= & $GLOBALS['phpgw']->acl;
-				$grants	= $this->acl->get_grants($this->currentapp,'.' . $this->role);
-				$GLOBALS['phpgw']->session->appsession('grants_' . $this->role,$this->currentapp,$grants);
+				$grants	= $this->acl->get_grants('property','.' . $this->role);
+				$GLOBALS['phpgw']->session->appsession('grants_' . $this->role,'property',$grants);
 			}
 
 			$filtermethod = '';

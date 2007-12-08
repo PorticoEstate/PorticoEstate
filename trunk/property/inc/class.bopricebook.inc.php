@@ -71,7 +71,7 @@
 
 		function property_bopricebook($session=False)
 		{
-			$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
+		//	$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->so 		= CreateObject('property.sopricebook');
 			$this->socommon = CreateObject('property.socommon');
 			$this->bocommon = CreateObject('property.bocommon');

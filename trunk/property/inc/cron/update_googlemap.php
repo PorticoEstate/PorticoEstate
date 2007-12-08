@@ -38,7 +38,7 @@
 
 		function update_googlemap()
 		{
-			$this->currentapp		= $GLOBALS['phpgw_info']['flags']['currentapp'];
+		//	$this->currentapp		= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->bocommon			= CreateObject('property.bocommon');
 			$this->db     			= & $GLOBALS['phpgw']->db;
 			$this->db2				= clone($this->db);
@@ -74,7 +74,7 @@
 		{
 			$link_data = array
 			(
-				'menuaction' => $this->currentapp.'.custom_functions.index',
+				'menuaction' => 'property.custom_functions.index',
 				'function'	=>$this->function_name,
 				'execute'	=> $execute,
 			);
@@ -107,7 +107,7 @@
 
 			$appname		= lang('location');
 			$function_msg	= lang('Export info as files');
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($this->currentapp) . ' - ' . $appname . ': ' . $function_msg;
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('confirm' => $data));
 			$GLOBALS['phpgw']->xslttpl->pp();
 		}

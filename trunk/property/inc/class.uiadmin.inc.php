@@ -57,7 +57,7 @@
 		function property_uiadmin()
 		{
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = True;
-			$this->currentapp			= $GLOBALS['phpgw_info']['flags']['currentapp'];
+		//	$this->currentapp			= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->nextmatchs			= CreateObject('phpgwapi.nextmatchs');
 			$this->account				= $GLOBALS['phpgw_info']['user']['account_id'];
 
@@ -217,7 +217,7 @@
 
 			$link_data = array
 			(
-				'menuaction'		=> $this->currentapp.'.uiadmin.aclprefs',
+				'menuaction'		=> 'property.uiadmin.aclprefs',
 				'sort'				=> $this->sort,
 				'order'				=> $this->order,
 				'cat_id'			=> $this->cat_id,
@@ -260,7 +260,7 @@
 				'record_limit'					=> $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'],
 				'num_records'					=> $num_records,
 				'all_records'					=> (isset($this->bo->total_records)?$this->bo->total_records:''),
-				'link_url'						=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uiadmin.aclprefs')),
+				'link_url'						=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiadmin.aclprefs')),
 				'img_path'						=> $GLOBALS['phpgw']->common->get_image_path('phpgwapi','default'),
 
 				'lang_groups'					=> lang('groups'),
@@ -297,7 +297,7 @@
 			$function_msg	= lang('set grants');
 			$owner_name = $GLOBALS['phpgw']->accounts->id2name($GLOBALS['phpgw']->accounts->account_id);		// get owner name for title
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($this->currentapp) . ' - ' . $appname . ': ' . $function_msg . ': ' . $owner_name;
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg . ': ' . $owner_name;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('list_permission' => $data));
 		//	$GLOBALS['phpgw']->xslttpl->pp();
 			$this->save_sessiondata();
@@ -440,7 +440,7 @@
 											'sort'	=> $this->sort,
 											'var'	=> 'account_lid',
 											'order'	=> $this->order,
-											'extra'	=> array('menuaction'	=> $this->currentapp.'.uiadmin.list_acl',
+											'extra'	=> array('menuaction'	=> 'property.uiadmin.list_acl',
 														'cat_id'		=> $this->cat_id,
 														'query'			=> $this->query,
 														'module'		=> $this->location,
@@ -451,7 +451,7 @@
 											'sort'	=> $this->sort,
 											'var'	=> 'account_lastname',
 											'order'	=> $this->order,
-											'extra'	=> array('menuaction'	=> $this->currentapp.'.uiadmin.list_acl',
+											'extra'	=> array('menuaction'	=> 'property.uiadmin.list_acl',
 														'cat_id'		=> $this->cat_id,
 														'query'			=> $this->query,
 														'module'		=> $this->location,
@@ -462,7 +462,7 @@
 											'sort'	=> $this->sort,
 											'var'	=> 'account_firstname',
 											'order'	=> $this->order,
-											'extra'	=> array('menuaction'	=> $this->currentapp.'.uiadmin.list_acl',
+											'extra'	=> array('menuaction'	=> 'property.uiadmin.list_acl',
 														'cat_id'		=> $this->cat_id,
 														'query'			=> $this->query,
 														'module'		=> $this->location,
@@ -484,7 +484,7 @@
 
 			$link_data = array
 			(
-				'menuaction'=> $this->currentapp.'.uiadmin.list_acl',
+				'menuaction'=> 'property.uiadmin.list_acl',
 				'sort'		=> $this->sort,
 				'order'		=> $this->order,
 				'cat_id'	=> $this->cat_id,
@@ -559,7 +559,7 @@
 			$appname	= lang('permission');
 			$function_msg	= lang('set permission');
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($this->currentapp) . ' - ' . $appname . ': ' . $function_msg;
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('list_permission' => $data));
 		//	$GLOBALS['phpgw']->xslttpl->pp();
 			$this->save_sessiondata();
@@ -604,7 +604,7 @@
 			$data = array
 			(
 				'msgbox_data'			=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
-				'form_action'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uiadmin.edit_id')),
+				'form_action'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiadmin.edit_id')),
 				'done_action'			=> $GLOBALS['phpgw']->link('/admin/index.php'),
 				'lang_submit'			=> lang('submit'),
 				'lang_save'				=> lang('Edit'),
@@ -622,7 +622,7 @@
 			$appname	= lang('ID');
 			$function_msg	= lang('edit ID');
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($this->currentapp) . ' - ' . $appname . ': ' . $function_msg;
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('edit_id' => $data));
 		//	$GLOBALS['phpgw']->xslttpl->pp();
 			$this->save_sessiondata();
@@ -641,22 +641,22 @@
 
 				if ($values['old_email'] != $values['email'])
 				{
-					$GLOBALS['phpgw']->preferences->add($this->currentapp,"email",$values['email'],'user');
+					$GLOBALS['phpgw']->preferences->add('property',"email",$values['email'],'user');
 					$receipt['message'][] = array('msg' => lang('Users email is updated'));
 				}
 				if ($values['old_phone'] != $values['phone'])
 				{
-					$GLOBALS['phpgw']->preferences->add($this->currentapp,"cellphone",$values['phone'],'user');
+					$GLOBALS['phpgw']->preferences->add('property',"cellphone",$values['phone'],'user');
 					$receipt['message'][] = array('msg' => lang('Users phone is updated'));
 				}
 				if ($values['old_approval_from'] != $values['approval_from'])
 				{
-					$GLOBALS['phpgw']->preferences->add($this->currentapp,"approval_from",$values['approval_from'],'user');
+					$GLOBALS['phpgw']->preferences->add('property',"approval_from",$values['approval_from'],'user');
 					$receipt['message'][] = array('msg' => lang('Approval from is updated'));
 				}
 				if ($values['old_default_vendor_category'] != $values['default_vendor_category'])
 				{
-					$GLOBALS['phpgw']->preferences->add($this->currentapp,"default_vendor_category",$values['default_vendor_category'],'user');
+					$GLOBALS['phpgw']->preferences->add('property',"default_vendor_category",$values['default_vendor_category'],'user');
 					$receipt['message'][] = array('msg' => lang('default vendor category is updated'));
 				}
 				$GLOBALS['phpgw']->preferences->save_repository();
@@ -664,7 +664,7 @@
 
 			if($this->filter)
 			{
-				$prefs = $this->bocommon->create_preferences($this->currentapp,$this->filter);
+				$prefs = $this->bocommon->create_preferences('property',$this->filter);
 			}
 
 			$cats		= CreateObject('phpgwapi.categories');
@@ -677,7 +677,7 @@
 			$data = array
 			(
 				'msgbox_data'					=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
-				'form_action'					=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uiadmin.contact_info')),
+				'form_action'					=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiadmin.contact_info')),
 				'done_action'					=> $GLOBALS['phpgw']->link('/admin/index.php'),
 				'lang_submit'					=> lang('submit'),
 				'lang_save'						=> lang('Edit'),
@@ -721,7 +721,7 @@
 			$appname	= lang('User contact info');
 			$function_msg	= lang('edit info');
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($this->currentapp) . ' - ' . $appname . ': ' . $function_msg;
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('contact_info' => $data));
 		//	$GLOBALS['phpgw']->xslttpl->pp();
 			$this->save_sessiondata();

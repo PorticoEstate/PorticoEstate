@@ -55,7 +55,7 @@
 		function property_uitenant_claim()
 		{
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = True;
-			$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
+		//	$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->nextmatchs	= CreateObject('phpgwapi.nextmatchs');
 			$this->account		= $GLOBALS['phpgw_info']['user']['account_id'];
 
@@ -108,7 +108,7 @@
 
 			if(!$this->acl_read)
 			{
-				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> $this->currentapp.'.uilocation.stop', 'perm'=>1, 'acl_location'=> $this->acl_location));
+				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=>1, 'acl_location'=> $this->acl_location));
 			}
 
 
@@ -136,9 +136,9 @@
 					'name'					=> $name,
 					'entry_date'				=> $claim['entry_date'],
 					'category'				=> $claim['category'],
-					'link_view'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uitenant_claim.view', 'claim_id'=> $claim['claim_id'])),
-					'link_edit'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uitenant_claim.edit', 'claim_id'=> $claim['claim_id'])),
-					'link_delete'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uitenant_claim.delete', 'claim_id'=> $claim['claim_id'])),
+					'link_view'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uitenant_claim.view', 'claim_id'=> $claim['claim_id'])),
+					'link_edit'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uitenant_claim.edit', 'claim_id'=> $claim['claim_id'])),
+					'link_delete'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uitenant_claim.delete', 'claim_id'=> $claim['claim_id'])),
 					'lang_view_statustext'			=> lang('view the claim'),
 					'lang_edit_statustext'			=> lang('edit the claim'),
 					'lang_delete_statustext'		=> lang('delete the claim'),
@@ -165,7 +165,7 @@
 											'sort'	=> $this->sort,
 											'var'	=> 'project_id',
 											'order'	=> $this->order,
-											'extra'	=> array('menuaction' => $this->currentapp.'.uitenant_claim.index',
+											'extra'	=> array('menuaction' => 'property.uitenant_claim.index',
 																	'cat_id'	=> $this->cat_id,
 																	'query'		=>$this->query,
 																	'status'	=>$this->status,
@@ -176,7 +176,7 @@
 											'sort'	=> $this->sort,
 											'var'	=> 'org_name',
 											'order'	=> $this->order,
-											'extra'	=> array('menuaction' => $this->currentapp.'.uitenant_claim.index',
+											'extra'	=> array('menuaction' => 'property.uitenant_claim.index',
 																	'cat_id'	=> $this->cat_id,
 																	'query'		=>$this->query,
 																	'status'	=>$this->status,
@@ -187,7 +187,7 @@
 											'sort'	=> $this->sort,
 											'var'	=> 'claim_id',
 											'order'	=> $this->order,
-											'extra'	=> array('menuaction' => $this->currentapp.'.uitenant_claim.index',
+											'extra'	=> array('menuaction' => 'property.uitenant_claim.index',
 																	'cat_id'	=> $this->cat_id,
 																	'query'		=>$this->query,
 																	'status'	=>$this->status,
@@ -198,7 +198,7 @@
 											'sort'	=> $this->sort,
 											'var'	=> 'entry_date',
 											'order'	=> $this->order,
-											'extra'	=> array('menuaction' => $this->currentapp.'.uitenant_claim.index',
+											'extra'	=> array('menuaction' => 'property.uitenant_claim.index',
 																	'cat_id'	=>$this->cat_id,
 																	'query'		=>$this->query,
 																	'status'	=>$this->status,
@@ -209,7 +209,7 @@
 											'sort'	=> $this->sort,
 											'var'	=> 'descr',
 											'order'	=> $this->order,
-											'extra'	=> array('menuaction' => $this->currentapp.'.uitenant_claim.index',
+											'extra'	=> array('menuaction' => 'property.uitenant_claim.index',
 																	'cat_id'	=>$this->cat_id,
 																	'query'		=>$this->query,
 																	'status'	=>$this->status,
@@ -221,12 +221,12 @@
 			if ($project_id)
 			{
 				$lang_add = lang('add another');
-				$add_action	= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uitenant_claim.edit', 'project_id'=> $project_id));
+				$add_action	= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uitenant_claim.edit', 'project_id'=> $project_id));
 			}
 			else
 			{
 				$lang_add = lang('add');
-				$add_action	= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uiproject.index', 'lookup'=>true, 'from'=>'tenant_claim'));
+				$add_action	= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiproject.index', 'lookup'=>true, 'from'=>'tenant_claim'));
 
 			}
 
@@ -239,7 +239,7 @@
 
 			$link_data = array
 			(
-				'menuaction'	=> $this->currentapp.'.uitenant_claim.index',
+				'menuaction'	=> 'property.uitenant_claim.index',
 				'sort'		=> $this->sort,
 				'order'		=> $this->order,
 				'cat_id'	=> $this->cat_id,
@@ -330,7 +330,7 @@
 		{
 			if(!$this->acl_add && !$this->acl_edit)
 			{
-				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> $this->currentapp.'.uilocation.stop', 'perm'=>2, 'acl_location'=> $this->acl_location));
+				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=>2, 'acl_location'=> $this->acl_location));
 			}
 
 			$claim_id = phpgw::get_var('claim_id', 'int');
@@ -379,14 +379,14 @@
 					if ($values['save'])
 					{
 						$GLOBALS['phpgw']->session->appsession('session_data','tenant_claim_receipt',$receipt);
-						$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> $this->currentapp.'.uitenant_claim.index'));
+						$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uitenant_claim.index'));
 					}
 				}
 			}
 
 			if ($values['cancel'])
 			{
-				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> $this->currentapp.'.uitenant_claim.index'));
+				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uitenant_claim.index'));
 			}
 
 
@@ -484,7 +484,7 @@
 
 			$link_data = array
 			(
-				'menuaction'	=> $this->currentapp.'.uitenant_claim.edit',
+				'menuaction'	=> 'property.uitenant_claim.edit',
 				'claim_id'		=> $claim_id,
 				'project_id' 	=> $values['project_id']
 			);
@@ -495,7 +495,7 @@
 			(
 				'table_header_workorder'		=> $table_header_workorder,
 				'lang_no_workorders'			=> lang('No workorder budget'),
-				'workorder_link'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uiworkorder.view')),
+				'workorder_link'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiworkorder.view')),
 				'lang_start_date'			=> lang('Project start date'),
 				'value_start_date'			=> $project_values['start_date'],
 
@@ -568,7 +568,7 @@
 				'lang_amount_statustext'		=> lang('The total amount to claim'),
 				'value_amount'				=> $values['amount'],
 
-				'tenant_link'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uilookup.tenant')),
+				'tenant_link'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uilookup.tenant')),
 				'lang_tenant'				=> lang('tenant'),
 				'value_tenant_id'			=> $values['tenant_id'],
 				'value_last_name'			=> $values['last_name'],
@@ -609,7 +609,7 @@
 
 			if(!$this->acl_delete)
 			{
-				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> $this->currentapp.'.uilocation.stop', 'perm'=>8, 'acl_location'=> $this->acl_location));
+				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=>8, 'acl_location'=> $this->acl_location));
 			}
 
 
@@ -619,7 +619,7 @@
 
 			$link_data = array
 			(
-				'menuaction' => $this->currentapp.'.uitenant_claim.index'
+				'menuaction' => 'property.uitenant_claim.index'
 			);
 
 			if (phpgw::get_var('confirm', 'bool', 'POST'))
@@ -633,7 +633,7 @@
 			$data = array
 			(
 				'done_action'		=> $GLOBALS['phpgw']->link('/index.php',$link_data),
-				'delete_action'		=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uitenant_claim.delete', 'claim_id'=> $claim_id)),
+				'delete_action'		=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uitenant_claim.delete', 'claim_id'=> $claim_id)),
 				'lang_confirm_msg'	=> lang('do you really want to delete this entry'),
 				'lang_yes'		=> lang('yes'),
 				'lang_yes_statustext'	=> lang('Delete the entry'),
@@ -644,7 +644,7 @@
 			$appname	= lang('Tenant claim');
 			$function_msg	= lang('delete claim');
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($this->currentapp) . ' - ' . $appname . ': ' . $function_msg;
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('delete' => $data));
 		//	$GLOBALS['phpgw']->xslttpl->pp();
 		}
@@ -653,7 +653,7 @@
 		{
 			if(!$this->acl_read)
 			{
-				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> $this->currentapp.'.uilocation.stop', 'perm'=>1, 'acl_location'=> $this->acl_location));
+				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=>1, 'acl_location'=> $this->acl_location));
 			}
 
 			$claim_id	= phpgw::get_var('claim_id', 'int');
@@ -753,7 +753,7 @@
 			(
 				'table_header_workorder'		=> $table_header_workorder,
 				'lang_no_workorders'			=> lang('No workorder budget'),
-				'workorder_link'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uiworkorder.view')),
+				'workorder_link'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiworkorder.view')),
 				'lang_start_date'			=> lang('Project start date'),
 				'value_start_date'			=> $project_values['start_date'],
 
@@ -837,7 +837,7 @@
 				'value_cat'				=> $values['cat'],
 				'cat_list'				=> $this->bocommon->select_category_list(array('format'=>'select','selected' => $values['cat_id'],'type' =>'tenant_claim','order'=>'descr')),
 
-				'done_action'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uitenant_claim.index')),
+				'done_action'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uitenant_claim.index')),
 				'lang_done'				=> lang('done'),
 				'value_date'				=> $GLOBALS['phpgw']->common->show_date($tenant_claim['entry_date'])
 

@@ -52,7 +52,7 @@
 
 		function import_from_scanner()
 		{
-			$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
+		//	$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->bocommon		= CreateObject('property.bocommon');
 			$this->vfs 			= CreateObject('phpgwapi.vfs');
 			$this->rootdir 		= $this->vfs->basedir;
@@ -113,7 +113,7 @@
 		{
 			$link_data = array
 			(
-				'menuaction' => $this->currentapp.'.custom_functions.index',
+				'menuaction' => 'property.custom_functions.index',
 				'function'	=> $this->function_name,
 				'execute'	=> $execute,
 				'dir'		=> $this->dir,
@@ -154,7 +154,7 @@
 
 			$appname		= 'import from scanner';
 			$function_msg	= 'import files from scanner-drop-catalog';
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($this->currentapp) . ' - ' . $appname . ': ' . $function_msg;
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('confirm' => $data));
 			$GLOBALS['phpgw']->xslttpl->pp();
 		}
@@ -186,7 +186,7 @@
 							{
 								$this->bolocation->initiate_ui_location(array('type_id'	=> -1,'tenant'	=> True));
 
-								$insert_record = $GLOBALS['phpgw']->session->appsession('insert_record',$this->currentapp);
+								$insert_record = $GLOBALS['phpgw']->session->appsession('insert_record','property');
 
 								$values = $this->bolocation->read_single($values['location_code'],array('tenant_id'=>'lookup'));
 								for ($i=0; $i<count($insert_record['location']); $i++)
@@ -224,7 +224,7 @@
 								{
 									$this->bolocation->initiate_ui_location(array('type_id'	=> -1,'tenant'	=> True));
 
-									$insert_record = $GLOBALS['phpgw']->session->appsession('insert_record',$this->currentapp);
+									$insert_record = $GLOBALS['phpgw']->session->appsession('insert_record','property');
 
 									$values = $this->bolocation->read_single($values['location_code'],array('tenant_id'=>'lookup'));
 									for ($i=0; $i<count($insert_record['location']); $i++)
@@ -237,10 +237,10 @@
 
 									$values['details']		= $file_entry['descr'];
 									$values['subject']		= $file_entry['descr'];
-									$values['assignedto']	= (isset($GLOBALS['phpgw_info']['user']['preferences'][$this->currentapp]['assigntodefault'])?$GLOBALS['phpgw_info']['user']['preferences'][$this->currentapp]['assigntodefault']:'');								
-									$values['group_id']		= (isset($GLOBALS['phpgw_info']['user']['preferences'][$this->currentapp]['groupdefault'])?$GLOBALS['phpgw_info']['user']['preferences'][$this->currentapp]['groupdefault']:'');
-									$values['cat_id']		= (isset($GLOBALS['phpgw_info']['user']['preferences'][$this->currentapp]['tts_category'])?$GLOBALS['phpgw_info']['user']['preferences'][$this->currentapp]['tts_category']:'');
-									$values['priority']		= (isset($GLOBALS['phpgw_info']['user']['preferences'][$this->currentapp]['prioritydefault'])?$GLOBALS['phpgw_info']['user']['preferences'][$this->currentapp]['prioritydefault']:'');								
+									$values['assignedto']	= (isset($GLOBALS['phpgw_info']['user']['preferences']['property']['assigntodefault'])?$GLOBALS['phpgw_info']['user']['preferences']['property']['assigntodefault']:'');								
+									$values['group_id']		= (isset($GLOBALS['phpgw_info']['user']['preferences']['property']['groupdefault'])?$GLOBALS['phpgw_info']['user']['preferences']['property']['groupdefault']:'');
+									$values['cat_id']		= (isset($GLOBALS['phpgw_info']['user']['preferences']['property']['tts_category'])?$GLOBALS['phpgw_info']['user']['preferences']['property']['tts_category']:'');
+									$values['priority']		= (isset($GLOBALS['phpgw_info']['user']['preferences']['property']['prioritydefault'])?$GLOBALS['phpgw_info']['user']['preferences']['property']['prioritydefault']:'');								
 
 									$receipt = $this->botts->add($values);
 									$this->add_file_to_ticket($receipt['id'],$file_entry['file_name']);
@@ -254,7 +254,7 @@
 					
 						if($this->mail_receipt)
 						{			
-							$prefs = $this->bocommon->create_preferences($this->currentapp,$file_entry['user_id']);
+							$prefs = $this->bocommon->create_preferences('property',$file_entry['user_id']);
 							if (strlen($prefs['email'])> (strlen($members[$i]['account_name'])+1))
 							{
 								$subject = 'Resultat fra scanner';

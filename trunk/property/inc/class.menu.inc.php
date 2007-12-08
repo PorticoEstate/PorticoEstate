@@ -45,13 +45,13 @@
 		function property_menu($sub='')
 		{
 			$this->sub		= $sub;
-			$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
+		//	$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->query	= phpgw::get_var('query');
 		}
 
 		function links($page='',$page_2='')
 		{
-			$currentapp=$this->currentapp;
+			$currentapp='property';
 			$sub = $this->sub;
 			if(!$this->query)
 			{

@@ -73,7 +73,7 @@
 
 		function property_boentity($session=False)
 		{
-			$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
+		//	$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->solocation 	= CreateObject('property.solocation');
 			$this->bocommon 	= CreateObject('property.bocommon');
 			$this->vfs 			= CreateObject('phpgwapi.vfs');
@@ -188,7 +188,7 @@
 
 			if(!$selected)
 			{
-				$selected=$GLOBALS['phpgw_info']['user']['preferences'][$this->currentapp]["entity_columns_" . $this->entity_id . '_' . $this->cat_id];
+				$selected=$GLOBALS['phpgw_info']['user']['preferences']['property']["entity_columns_" . $this->entity_id . '_' . $this->cat_id];
 			}
 
 			$columns = $soadmin_entity->read_attrib(array('entity_id'=>$entity_id,'cat_id'=>$cat_id,'allrows'=>$allrows,'filter_list' =>true));
@@ -340,7 +340,7 @@
 					}
 
 					$insert_record_entity[]	= $entity['attributes'][$i]['name'];
-					$lookup_link		= $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> $this->currentapp.'.uilookup.addressbook', 'column'=> $entity['attributes'][$i]['name']));
+					$lookup_link		= $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'property.uilookup.addressbook', 'column'=> $entity['attributes'][$i]['name']));
 					$lookup_functions[$m]['name'] = 'lookup_'. $entity['attributes'][$i]['name'] .'()';
 					$lookup_functions[$m]['action'] = 'Window1=window.open('."'" . $lookup_link ."'" .',"Search","width=800,height=700,toolbar=no,scrollbars=yes,resizable=yes");';
 					$m++;
@@ -361,7 +361,7 @@
 					}
 
 					$insert_record_entity[]	= $entity['attributes'][$i]['name'];
-					$lookup_link		= $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> $this->currentapp.'.uilookup.vendor', 'column'=> $entity['attributes'][$i]['name']));
+					$lookup_link		= $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'property.uilookup.vendor', 'column'=> $entity['attributes'][$i]['name']));
 					$lookup_functions[$m]['name'] = 'lookup_'. $entity['attributes'][$i]['name'] .'()';
 					$lookup_functions[$m]['action'] = 'Window1=window.open('."'" . $lookup_link ."'" .',"Search","width=800,height=700,toolbar=no,scrollbars=yes,resizable=yes");';
 					$m++;
@@ -422,7 +422,7 @@
 			}
 
 
-			$GLOBALS['phpgw']->session->appsession('insert_record_entity',$this->currentapp,isset($insert_record_entity)?$insert_record_entity:'');
+			$GLOBALS['phpgw']->session->appsession('insert_record_entity','property',isset($insert_record_entity)?$insert_record_entity:'');
 
 //_debug_array($insert_record_entity);
 			return $entity;

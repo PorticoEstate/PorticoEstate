@@ -72,14 +72,14 @@
 		{
 			if($currentapp)
 			{
-				$this->currentapp	= $currentapp;
+			//	$this->currentapp	= $currentapp;
 			}
 			else
 			{
-				$this->currentapp	= 'property';			
+			//	$this->currentapp	= 'property';			
 			}
 
-			$this->socommon			= CreateObject('property.socommon',$this->currentapp);
+			$this->socommon			= CreateObject('property.socommon','property');
 			$this->account		= $GLOBALS['phpgw_info']['user']['account_id'];
 
 			if (!isset($GLOBALS['phpgw']->asyncservice))
@@ -565,7 +565,7 @@
 				}
 			}
 
-			$vendor['vendor_link']			= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uilookup.vendor'));
+			$vendor['vendor_link']			= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uilookup.vendor'));
 			$vendor['lang_vendor']			= lang('Vendor');
 			$vendor['lang_select_vendor_help']	= lang('Klick this link to select vendor');
 			$vendor['lang_vendor_name']		= lang('Vendor Name');
@@ -589,7 +589,7 @@
 			$tenant['value_tenant_id']			= $data['tenant_id'];
 			$tenant['value_first_name']			= $data['first_name'];
 			$tenant['value_last_name']			= $data['last_name'];
-			$tenant['tenant_link']				= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uilookup.tenant'));
+			$tenant['tenant_link']				= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uilookup.tenant'));
 			if($data['role']=='customer')
 			{
 				$tenant['lang_select_tenant_help']		= lang('Klick this link to select customer');
@@ -643,7 +643,7 @@
 
 			$b_account['value_b_account_id']		= $data['b_account_id'];
 			$b_account['value_b_account_name']		= $data['b_account_name'];
-			$b_account['b_account_link']			= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uilookup.b_account'));
+			$b_account['b_account_link']			= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uilookup.b_account'));
 			$b_account['lang_select_b_account_help']	= lang('Klick this link to select budget account');
 			$b_account['lang_b_account']			= lang('Budget account');
 			if($data['b_account_id'] && !$data['b_account_name'])
@@ -1400,15 +1400,15 @@
 		{
 			if($type=='tts'):
 			{
-				$link = array('menuaction' => $this->currentapp.'.uitts.view');
+				$link = array('menuaction' => 'property.uitts.view');
 			}
 			elseif($type=='request'):
 			{
-				$link = array('menuaction' => $this->currentapp.'.uirequest.view');
+				$link = array('menuaction' => 'property.uirequest.view');
 			}
 			elseif($type=='project'):
 			{
-				$link = array('menuaction' => $this->currentapp.'.uiproject.view');
+				$link = array('menuaction' => 'property.uiproject.view');
 			}
 			elseif(substr($type,0,6)=='entity'):
 			{
@@ -1417,7 +1417,7 @@
 				$cat_id		= $type[2];
 				$link =	array
 				(
-					'menuaction'	=> $this->currentapp.'.uientity.view',
+					'menuaction'	=> 'property.uientity.view',
 					'entity_id'	=> $entity_id,
 					'cat_id'	=> $cat_id
 				);

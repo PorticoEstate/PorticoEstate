@@ -59,7 +59,7 @@
 		function property_uirequest()
 		{
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = True;
-			$this->currentapp			= $GLOBALS['phpgw_info']['flags']['currentapp'];
+		//	$this->currentapp			= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->nextmatchs			= CreateObject('phpgwapi.nextmatchs');
 			$this->account				= $GLOBALS['phpgw_info']['user']['account_id'];
 			$this->bo				= CreateObject('property.borequest',True);
@@ -114,7 +114,7 @@
 
 			if(!$this->acl_read)
 			{
-				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> $this->currentapp.'.uilocation.stop', 'perm'=>1, 'acl_location'=> $this->acl_location));
+				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=>1, 'acl_location'=> $this->acl_location));
 			}
 
 			$file_name	= urldecode(phpgw::get_var('file_name'));
@@ -164,7 +164,7 @@
 		{
 			if(!$this->acl_read)
 			{
-				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> $this->currentapp.'.uilocation.stop', 'perm'=>1, 'acl_location'=> $this->acl_location));
+				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=>1, 'acl_location'=> $this->acl_location));
 			}
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('request','table_header',
@@ -199,7 +199,7 @@
 						{
 							$content[$j]['row'][$k]['statustext']		= lang('search');
 							$content[$j]['row'][$k]['text']			= $request_entry[$uicols['name'][$k]];
-							$content[$j]['row'][$k]['link']			= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uirequest.index', 'query'=> $request_entry['query_location'][$uicols['name'][$k]], 'project_id'=> $project_id));
+							$content[$j]['row'][$k]['link']			= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uirequest.index', 'query'=> $request_entry['query_location'][$uicols['name'][$k]], 'project_id'=> $project_id));
 						}
 						else
 						{
@@ -217,7 +217,7 @@
 					{
 						$content[$j]['row'][$k]['statustext']			= lang('view the request');
 						$content[$j]['row'][$k]['text']				= lang('view');
-						$content[$j]['row'][$k]['link']				= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uirequest.view', 'id'=> $request_entry['request_id']));
+						$content[$j]['row'][$k]['link']				= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uirequest.view', 'id'=> $request_entry['request_id']));
 						$k++;
 					}
 
@@ -225,7 +225,7 @@
 					{
 						$content[$j]['row'][$k]['statustext']			= lang('edit the request');
 						$content[$j]['row'][$k]['text']				= lang('edit');
-						$content[$j]['row'][$k]['link']				= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uirequest.edit', 'id'=> $request_entry['request_id']));
+						$content[$j]['row'][$k]['link']				= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uirequest.edit', 'id'=> $request_entry['request_id']));
 						$k++;
 					}
 
@@ -233,7 +233,7 @@
 					{
 						$content[$j]['row'][$k]['statustext']			= lang('delete the request');
 						$content[$j]['row'][$k]['text']				= lang('delete');
-						$content[$j]['row'][$k]['link']				= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uirequest.delete', 'id'=> $request_entry['request_id']));
+						$content[$j]['row'][$k]['link']				= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uirequest.delete', 'id'=> $request_entry['request_id']));
 						$k++;
 					}
 
@@ -245,7 +245,7 @@
 						$content[$j]['row'][$k]['statustext']			= lang('view the request');
 						$content[$j]['row'][$k]['text']				= lang('view');
 						$content[$j]['row'][$k]['target']			= '_blank';
-						$content[$j]['row'][$k]['link']				= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uirequest.view', 'id'=> $request_entry['request_id']));
+						$content[$j]['row'][$k]['link']				= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uirequest.view', 'id'=> $request_entry['request_id']));
 						$content[$j]['row'][$k]['request_id'] 			= $request_entry['request_id'];
 						$k++;
 					}
@@ -270,7 +270,7 @@
 											'sort'	=> $this->sort,
 											'var'	=> 'location_code',
 											'order'	=> $this->order,
-											'extra'	=> array('menuaction' => $this->currentapp.'.uirequest.index',
+											'extra'	=> array('menuaction' => 'property.uirequest.index',
 																	'type_id'	=>$type_id,
 																	'query'		=>$this->query,
 																	'project_id'	=>$project_id,
@@ -286,7 +286,7 @@
 											'sort'	=> $this->sort,
 											'var'	=> 'request_id',
 											'order'	=> $this->order,
-											'extra'	=> array('menuaction' => $this->currentapp.'.uirequest.index',
+											'extra'	=> array('menuaction' => 'property.uirequest.index',
 																	'type_id'	=>$type_id,
 																	'query'		=>$this->query,
 																	'project_id'	=>$project_id,
@@ -302,7 +302,7 @@
 											'sort'	=> $this->sort,
 											'var'	=> 'score',
 											'order'	=> $this->order,
-											'extra'	=> array('menuaction' => $this->currentapp.'.uirequest.index',
+											'extra'	=> array('menuaction' => 'property.uirequest.index',
 																	'type_id'	=>$type_id,
 																	'query'		=>$this->query,
 																	'project_id'	=>$project_id,
@@ -318,7 +318,7 @@
 											'sort'	=> $this->sort,
 											'var'	=> 'budget',
 											'order'	=> $this->order,
-											'extra'	=> array('menuaction' => $this->currentapp.'.uirequest.index',
+											'extra'	=> array('menuaction' => 'property.uirequest.index',
 																	'type_id'	=>$type_id,
 																	'query'		=>$this->query,
 																	'project_id'	=>$project_id,
@@ -334,7 +334,7 @@
 											'sort'	=> $this->sort,
 											'var'	=> 'address',
 											'order'	=> $this->order,
-											'extra'	=> array('menuaction' => $this->currentapp.'.uirequest.index',
+											'extra'	=> array('menuaction' => 'property.uirequest.index',
 																	'type_id'	=>$type_id,
 																	'query'		=>$this->query,
 																	'project_id'	=>$project_id,
@@ -384,13 +384,13 @@
 				(
 					'lang_add'		=> lang('add'),
 					'lang_add_statustext'	=> lang('add a request'),
-					'add_action'		=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uirequest.edit'))
+					'add_action'		=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uirequest.edit'))
 				);
 			}
 
 			$link_data = array
 			(
-				'menuaction'	=> $this->currentapp.'.uirequest.index',
+				'menuaction'	=> 'property.uirequest.index',
 						'sort'		=> $this->sort,
 						'order'		=> $this->order,
 						'cat_id'	=> $this->cat_id,
@@ -404,7 +404,7 @@
 
 			$link_excel = array
 			(
-				'menuaction'	=> $this->currentapp.'.uirequest.excel',
+				'menuaction'	=> 'property.uirequest.excel',
 						'sort'		=> $this->sort,
 						'order'		=> $this->order,
 						'cat_id'	=> $this->cat_id,
@@ -417,7 +417,7 @@
 
 			if($this->acl_manage)
 			{
-				$link_priority_key = $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uirequest.priority_key'));
+				$link_priority_key = $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uirequest.priority_key'));
 			}
 
 			if(!$this->allrows)
@@ -429,7 +429,7 @@
 				$record_limit	= $this->bo->total_records;
 			}
 
-			$GLOBALS['phpgw']->js->validate_file('overlib','overlib',$this->currentapp);
+			$GLOBALS['phpgw']->js->validate_file('overlib','overlib','property');
 
 			$data = array
 			(
@@ -444,7 +444,7 @@
 
 				'lang_update_project'			=> lang('Update project'),
 				'lang_add_to_project_statustext'	=> lang('add selected request to project'),
-				'add_to_project_action'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uiproject.edit', 'id'=> $project_id)),
+				'add_to_project_action'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiproject.edit', 'id'=> $project_id)),
 				'project_id'				=> $project_id,
 
 				'lookup'				=> $lookup,
@@ -492,7 +492,7 @@
 			$appname					= lang('request');
 			$function_msg					= lang('list request');
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($this->currentapp) . ' - ' . $appname . ': ' . $function_msg;
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('list' => $data));
 		//	$GLOBALS['phpgw']->xslttpl->pp();
 			$this->save_sessiondata();
@@ -503,7 +503,7 @@
 		{
 			if(!$this->acl_manage)
 			{
-				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> $this->currentapp.'.uilocation.stop', 'perm'=>16, 'acl_location'=> $this->acl_location));
+				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=>16, 'acl_location'=> $this->acl_location));
 			}
 			$GLOBALS['phpgw']->xslttpl->add_file(array('request'));
 			$GLOBALS['phpgw_info']['flags'][noheader] = True;
@@ -519,7 +519,7 @@
 			$function_msg	= lang('Edit priority key');
 			$link_data = array
 			(
-				'menuaction' => $this->currentapp.'.uirequest.priority_key');
+				'menuaction' => 'property.uirequest.priority_key');
 
 			$priority_key = $this->bo->read_priority_key();
 
@@ -544,7 +544,7 @@
 		{
 			if(!$this->acl_add && !$this->acl_edit)
 			{
-				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> $this->currentapp.'.uilocation.stop', 'perm'=>2, 'acl_location'=> $this->acl_location));
+				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=>2, 'acl_location'=> $this->acl_location));
 			}
 			$id 	= phpgw::get_var('id', 'int');
 			$values	= phpgw::get_var('values');
@@ -555,8 +555,8 @@
 
 			if($_POST && !$bypass)
 			{
-				$insert_record = $GLOBALS['phpgw']->session->appsession('insert_record',$this->currentapp);
-				$insert_record_entity = $GLOBALS['phpgw']->session->appsession('insert_record_entity',$this->currentapp);
+				$insert_record = $GLOBALS['phpgw']->session->appsession('insert_record','property');
+				$insert_record_entity = $GLOBALS['phpgw']->session->appsession('insert_record_entity','property');
 
 				for ($j=0;$j<count($insert_record_entity);$j++)
 				{
@@ -694,7 +694,7 @@
 					if ($values['notify'])
 					{
 						$coordinator_name=$GLOBALS['phpgw_info']['user']['fullname'];
-						$coordinator_email=$GLOBALS['phpgw_info']['user']['preferences'][$this->currentapp]['email'];
+						$coordinator_email=$GLOBALS['phpgw_info']['user']['preferences']['property']['email'];
 						$headers = "Return-Path: <". $coordinator_email .">\r\n";
 						$headers .= "From: " . $coordinator_name . "<" . $coordinator_email .">\r\n";
 						$headers .= "Bcc: " . $coordinator_name . "<" . $coordinator_email .">\r\n";
@@ -795,7 +795,7 @@
 
 			$link_data = array
 			(
-				'menuaction'	=> $this->currentapp.'.uirequest.edit',
+				'menuaction'	=> 'property.uirequest.edit',
 				'id'			=> $id
 			);
 
@@ -804,13 +804,13 @@
 				$values['coordinator']=$this->account;
 			}
 
-			$supervisor_id=$GLOBALS['phpgw_info']['user']['preferences'][$this->currentapp]['approval_from'];
+			$supervisor_id=$GLOBALS['phpgw_info']['user']['preferences']['property']['approval_from'];
 
 			$notify = $this->config->config_data['workorder_approval'];
 
 			if ($supervisor_id && ($notify=='yes'))
 			{
-				$prefs = $this->bocommon->create_preferences($this->currentapp,$supervisor_id);
+				$prefs = $this->bocommon->create_preferences('property',$supervisor_id);
 				$supervisor_email = $prefs['email'];
 			}
 
@@ -829,7 +829,7 @@
 			{
 				$project_lookup_data = array
 				(
-					'menuaction'	=> $this->currentapp.'.uiproject.view'
+					'menuaction'	=> 'property.uiproject.view'
 				);
 			}
 
@@ -841,7 +841,7 @@
 
 			$link_file_data = array
 			(
-				'menuaction'	=> $this->currentapp.'.uirequest.view_file',
+				'menuaction'	=> 'property.uirequest.view_file',
 						'location_code'	=>$values['location_data']['location_code'],
 						'id'		=>$id
 						);
@@ -900,7 +900,7 @@
 				'value_origin_id'			=> $origin_id,
 				'lang_origin_statustext'		=> lang('Link to the origin for this request'),
 
-				'generate_project_action'		=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uiproject.edit')),
+				'generate_project_action'		=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiproject.edit')),
 				'lang_generate_project'			=> lang('Generate project'),
 				'lang_generate_project_statustext'	=> lang('Generate a project from this request'),
 				'location_code'				=> $values['location_code'],
@@ -914,7 +914,7 @@
 				'importance_weight'			=> $importance_weight,
 
 				'lang_no_workorders'			=> lang('No workorder budget'),
-				'workorder_link'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uiworkorder.edit')),
+				'workorder_link'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiworkorder.edit')),
 				'record_history'			=> $record_history,
 				'table_header_history'			=> $table_header_history,
 				'lang_history'				=> lang('History'),
@@ -945,7 +945,7 @@
 				'location_data'				=> $location_data,
 				'location_type'				=> 'form',
 				'form_action'				=> $GLOBALS['phpgw']->link('/index.php',$link_data),
-				'done_action'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uirequest.index')),
+				'done_action'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uirequest.index')),
 				'lang_category'				=> lang('category'),
 				'lang_save'				=> lang('save'),
 				'lang_done'				=> lang('done'),
@@ -1004,7 +1004,7 @@
 
 			$appname	= lang('request');
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($this->currentapp) . ' - ' . $appname . ': ' . $function_msg;
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('edit' => $data));
 		//	$GLOBALS['phpgw']->xslttpl->pp();
 		}
@@ -1013,7 +1013,7 @@
 		{
 			if(!$this->acl_delete)
 			{
-				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> $this->currentapp.'.uilocation.stop', 'perm'=>8, 'acl_location'=> $this->acl_location));
+				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=>8, 'acl_location'=> $this->acl_location));
 			}
 
 			$id = phpgw::get_var('id', 'int');
@@ -1021,7 +1021,7 @@
 
 			$link_data = array
 			(
-				'menuaction' => $this->currentapp.'.uirequest.index'
+				'menuaction' => 'property.uirequest.index'
 			);
 
 			if (phpgw::get_var('confirm', 'bool', 'POST'))
@@ -1035,7 +1035,7 @@
 			$data = array
 			(
 				'done_action'		=> $GLOBALS['phpgw']->link('/index.php',$link_data),
-				'delete_action'		=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uirequest.delete', 'id'=> $id)),
+				'delete_action'		=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uirequest.delete', 'id'=> $id)),
 				'lang_confirm_msg'	=> lang('do you really want to delete this entry'),
 				'lang_yes'		=> lang('yes'),
 				'lang_yes_statustext'	=> lang('Delete the entry'),
@@ -1046,7 +1046,7 @@
 			$appname	= lang('request');
 			$function_msg	= lang('delete request');
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($this->currentapp) . ' - ' . $appname . ': ' . $function_msg;
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('delete' => $data));
 		//	$GLOBALS['phpgw']->xslttpl->pp();
 		}
@@ -1055,7 +1055,7 @@
 		{
 			if(!$this->acl_read)
 			{
-				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> $this->currentapp.'.uilocation.stop', 'perm'=>1, 'acl_location'=> $this->acl_location));
+				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=>1, 'acl_location'=> $this->acl_location));
 			}
 
 			$id 	= phpgw::get_var('id', 'int');
@@ -1105,7 +1105,7 @@
 
 			$link_data = array
 			(
-				'menuaction'	=> $this->currentapp.'.uirequest.edit',
+				'menuaction'	=> 'property.uirequest.edit',
 				'id'			=> $id
 			);
 
@@ -1133,7 +1133,7 @@
 			{
 				$origin_data = array
 				(
-					'menuaction'	=> $this->currentapp.'.uitts.view',
+					'menuaction'	=> 'property.uitts.view',
 					'id'		=> $values['origin_id']
 				);
 			}
@@ -1142,13 +1142,13 @@
 			{
 				$project_lookup_data = array
 				(
-					'menuaction'	=> $this->currentapp.'.uiproject.view'
+					'menuaction'	=> 'property.uiproject.view'
 				);
 			}
 
 			$link_file_data = array
 			(
-				'menuaction'	=> $this->currentapp.'.uirequest.view_file',
+				'menuaction'	=> 'property.uirequest.view_file',
 				'location_code'	=>$values['location_data']['location_code'],
 				'id'		=>$id
 			);
@@ -1209,7 +1209,7 @@
 				'table_header_importance'			=> $table_header_importance,
 				'importance_weight_view'			=> $importance_weight,
 
-				'workorder_link'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uiworkorder.edit')),
+				'workorder_link'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiworkorder.edit')),
 				'record_history'				=> $record_history,
 				'table_header_history'				=> $table_header_history,
 				'lang_history'					=> lang('History'),
@@ -1229,7 +1229,7 @@
 
 				'location_data'					=> $location_data,
 				'location_type'					=> 'view',
-				'done_action'					=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uirequest.index')),
+				'done_action'					=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uirequest.index')),
 				'lang_category'					=> lang('category'),
 				'lang_save'					=> lang('save'),
 				'lang_done'					=> lang('done'),
@@ -1258,7 +1258,7 @@
 				'branch_list'					=> $this->boproject->select_branch_list($values['branch_id']),
 				'lang_branch'					=> lang('branch'),
 
-				'edit_action'					=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uirequest.edit', 'id'=> $id)),
+				'edit_action'					=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uirequest.edit', 'id'=> $id)),
 				'lang_edit_statustext'				=> lang('Edit this entry request'),
 				'lang_edit'					=> lang('Edit'),
 				'currency'					=> $GLOBALS['phpgw_info']['user']['preferences']['common']['currency'],
@@ -1273,7 +1273,7 @@
 
 			$appname	= lang('request');
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($this->currentapp) . ' - ' . $appname . ': ' . $function_msg;
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('view' => $data));
 		//	$GLOBALS['phpgw']->xslttpl->pp();
 		}

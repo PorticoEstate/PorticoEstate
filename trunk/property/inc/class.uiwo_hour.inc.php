@@ -61,7 +61,7 @@
 		function property_uiwo_hour()
 		{
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = True;
-			$this->currentapp			= $GLOBALS['phpgw_info']['flags']['currentapp'];
+		//	$this->currentapp			= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->nextmatchs			= CreateObject('phpgwapi.nextmatchs');
 			$this->create_html			= CreateObject('phpgwapi.xslttemplates');
 			$this->account				= $GLOBALS['phpgw_info']['user']['account_id'];
@@ -137,10 +137,10 @@
 						'amount'			=> $entry['amount'],
 						'descr'				=> $entry['descr'],
 						'entry_date'			=> $entry_date,
-						'link_edit'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uiwo_hour.edit_deviation', 'workorder_id'=> $workorder_id, 'hour_id'=> $hour_id, 'id'=> $entry['id'])),
+						'link_edit'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiwo_hour.edit_deviation', 'workorder_id'=> $workorder_id, 'hour_id'=> $hour_id, 'id'=> $entry['id'])),
 						'lang_edit_statustext'		=> lang('edit the deviation'),
 						'text_edit'			=> lang('edit'),
-						'link_delete'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uiwo_hour.delete', 'workorder_id'=> $workorder_id, 'hour_id'=> $hour_id, 'deviation_id'=> $entry['id'])),
+						'link_delete'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiwo_hour.delete', 'workorder_id'=> $workorder_id, 'hour_id'=> $hour_id, 'deviation_id'=> $entry['id'])),
 						'lang_delete_statustext'	=> lang('delete the deviation'),
 						'text_delete'			=> lang('delete'),
 					);
@@ -161,7 +161,7 @@
 
 			$link_data = array
 			(
-				'menuaction'	=> $this->currentapp.'.uiwo_hour.edit_deviation',
+				'menuaction'	=> 'property.uiwo_hour.edit_deviation',
 						'workorder_id'	=> $workorder_id,
 						'hour_id'	=> $hour_id
 			);
@@ -176,13 +176,13 @@
 				'lang_add_statustext'			=> lang('add a deviation'),
 				'add_action'				=> $GLOBALS['phpgw']->link('/index.php',$link_data),
 				'lang_done'				=> lang('done'),
-				'done_action'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uiwo_hour.index', 'workorder_id'=> $workorder_id))
+				'done_action'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiwo_hour.index', 'workorder_id'=> $workorder_id))
 			);
 
 			$appname			= lang('Workorder');
 			$function_msg			= lang('list deviation');
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($this->currentapp) . ' - ' . $appname . ': ' . $function_msg;
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('list_deviation' => $data));
 		//	$GLOBALS['phpgw']->xslttpl->pp();
 		}
@@ -241,7 +241,7 @@
 
 			$link_data = array
 			(
-				'menuaction'	=> $this->currentapp.'.uiwo_hour.edit_deviation',
+				'menuaction'	=> 'property.uiwo_hour.edit_deviation',
 				'entity_id'	=> $this->entity_id,
 				'cat_id'	=> $this->cat_id,
 				'id'		=> $id
@@ -262,7 +262,7 @@
 				'lang_hour_id'					=> lang('Post'),
 				'msgbox_data'					=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
 				'form_action'					=> $GLOBALS['phpgw']->link('/index.php',$link_data),
-				'done_action'					=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uiwo_hour.deviation', 'workorder_id'=> $workorder_id, 'hour_id'=> $hour_id)),
+				'done_action'					=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiwo_hour.deviation', 'workorder_id'=> $workorder_id, 'hour_id'=> $hour_id)),
 				'lang_id'					=> lang('deviation ID'),
 				'lang_descr'					=> lang('Descr'),
 				'lang_save'					=> lang('save'),
@@ -283,7 +283,7 @@
 
 			$appname						= lang('workorder');
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($this->currentapp) . ' - ' . $appname . ': ' . $function_msg;
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('edit_deviation' => $data));
 		//	$GLOBALS['phpgw']->xslttpl->pp();
 		}
@@ -295,8 +295,8 @@
 /*			if (!$this->bocommon->check_perms($workorder['grants'],PHPGW_ACL_EDIT))
 			{
 				$receipt['error'][]=array('msg'=>lang('You have no edit right for this project'));
-				$GLOBALS['phpgw']->session->appsession('receipt',$this->currentapp,$receipt);
-				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> $this->currentapp.'.uiworkorder.view','id'=> $workorder_id));
+				$GLOBALS['phpgw']->session->appsession('receipt','property',$receipt);
+				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uiworkorder.view','id'=> $workorder_id));
 			}
 */
 			$hour_list = $this->bo->read($workorder_id);
@@ -362,8 +362,8 @@
 						'result'				=> ($hour['deviation']+$hour['cost']),
 						'wo_hour_category'			=> $hour['wo_hour_category'],
 						'cat_per_cent'				=> $hour['cat_per_cent'],
-						'link_deviation'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uiwo_hour.deviation', 'workorder_id'=> $workorder_id, 'hour_id'=> $hour['hour_id'])),
-						'link_edit'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uiwo_hour.edit','workorder_id'=> $workorder_id, 'hour_id'=> $hour['hour_id'])),
+						'link_deviation'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiwo_hour.deviation', 'workorder_id'=> $workorder_id, 'hour_id'=> $hour['hour_id'])),
+						'link_edit'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiwo_hour.edit','workorder_id'=> $workorder_id, 'hour_id'=> $hour['hour_id'])),
 						'lang_edit_statustext'			=> lang('edit/customise this hour'),
 						'lang_delete_statustext'		=> lang('delete this hour'),
 						'text_edit'				=> lang('edit'),
@@ -422,7 +422,7 @@
 			);
 
 			$workorder_data = array(
-				'link_workorder'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uiworkorder.edit', 'id'=> $workorder_id)),
+				'link_workorder'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiworkorder.edit', 'id'=> $workorder_id)),
 				'lang_vendor_name'			=> lang('Vendor'),
 				'vendor_name'				=> $workorder['vendor_name'],
 				'vendor_email'				=> $workorder['vendor_email'],
@@ -431,7 +431,7 @@
 				'lang_workorder_id'			=> lang('Workorder ID'),
 				'workorder_id'				=> $workorder['workorder_id'],
 				'lang_project_id'			=> lang('Project ID'),
-				'link_project'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=>$this->currentapp.'.uiproject.edit', 'id'=> $workorder['project_id'])),
+				'link_project'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=>'property.uiproject.edit', 'id'=> $workorder['project_id'])),
 				'project_id'				=> $workorder['project_id'],
 
 				'lang_workorder_title'			=> lang('Workorder title'),
@@ -470,7 +470,7 @@
 
 			$link_data = array
 			(
-				'menuaction' 	=> $this->currentapp.'.uiwo_hour.index',
+				'menuaction' 	=> 'property.uiwo_hour.index',
 				'workorder_id'	=> $workorder_id
 			);
 
@@ -480,7 +480,7 @@
 			(
 				'msgbox_data'				=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
 				'done_action'				=> $GLOBALS['phpgw']->link('/index.php',$link_data),
-				'add_action'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uiwo_hour.save_template', 'workorder_id'=> $workorder_id)),
+				'add_action'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiwo_hour.save_template', 'workorder_id'=> $workorder_id)),
 
 				'lang_done_statustext'			=> lang('Back to the workorder list'),
 				'lang_add_statustext'			=> lang('Adds this workorders calculation as a template for later use'),
@@ -506,7 +506,7 @@
 			$appname	= lang('Workorder');
 			$function_msg	= lang('Add template');
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($this->currentapp) . ' - ' . $appname . ': ' . $function_msg;
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('add_template' => $data));
 		//	$GLOBALS['phpgw']->xslttpl->pp();
 		}
@@ -515,7 +515,7 @@
 		{
 			if(!$this->acl_read)
 			{
-				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> $this->currentapp.'.uilocation.stop', 'perm'=>1, 'acl_location'=> $this->acl_location));
+				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=>1, 'acl_location'=> $this->acl_location));
 			}
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('wo_hour','menu'));
@@ -536,27 +536,27 @@
 			(
 				'lang_add_prizebook'			=> lang('Add from prizebook'),
 				'lang_add_prizebook_statustext'		=> lang('add items from this vendors prizebook'),
-				'add_prizebook_action'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uiwo_hour.prizebook', 'workorder_id'=> $workorder_id)),
+				'add_prizebook_action'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiwo_hour.prizebook', 'workorder_id'=> $workorder_id)),
 
 				'lang_add_template'			=> lang('Add from template'),
 				'lang_add_template_statustext'		=> lang('add items from a predefined template'),
-				'add_template_action'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uitemplate.index','lookup'=> true, 'workorder_id'=> $workorder_id)),
+				'add_template_action'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uitemplate.index','lookup'=> true, 'workorder_id'=> $workorder_id)),
 
 				'lang_add_custom'			=> lang('Add custom'),
 				'lang_add_custom_statustext'		=> lang('Add single custom line'),
-				'add_custom_action'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uiwo_hour.edit', 'from'=> 'index', 'workorder_id'=> $workorder_id)),
+				'add_custom_action'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiwo_hour.edit', 'from'=> 'index', 'workorder_id'=> $workorder_id)),
 
 				'lang_save_template'			=> lang('Save as template'),
 				'lang_save_template_statustext'		=> lang('Save this workorder as a template for later use'),
-				'save_template_action'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uiwo_hour.save_template', 'from'=> 'index', 'workorder_id'=> $workorder_id)),
+				'save_template_action'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiwo_hour.save_template', 'from'=> 'index', 'workorder_id'=> $workorder_id)),
 
 				'lang_print_view'			=> lang('Print view'),
 				'lang_print_view_statustext'		=> lang('View the complete workorder'),
-				'print_view_action'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uiwo_hour.view', 'from'=> 'index', 'workorder_id'=> $workorder_id)),
+				'print_view_action'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiwo_hour.view', 'from'=> 'index', 'workorder_id'=> $workorder_id)),
 
 				'lang_view_tender'			=> lang('View tender'),
 				'lang_view_tender_statustext'		=> lang('View the complete workorder as a tender for bidding'),
-				'view_tender_action'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uiwo_hour.tender', 'from'=>'index', 'workorder_id'=> $workorder_id)),
+				'view_tender_action'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiwo_hour.tender', 'from'=>'index', 'workorder_id'=> $workorder_id)),
 
 				'lang_show_cost'			=> lang('Show calculated cost'),
 				'lang_show_cost_statustext'		=> lang('Show calculated cost on the printview'),
@@ -574,7 +574,7 @@
 			$data = array
 			(
 				'msgbox_data'				=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
-				'link_delete'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uiwo_hour.index', 'delete'=>true, 'workorder_id'=> $workorder_id)),
+				'link_delete'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiwo_hour.index', 'delete'=>true, 'workorder_id'=> $workorder_id)),
 				'function'				=> 'index',
 				'links'					=> $links,
 				'num_records'				=> count($hours_list),
@@ -592,7 +592,7 @@
 			$appname	= lang('Workorder');
 			$function_msg	= lang('list hours');
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($this->currentapp) . ' - ' . $appname . ': ' . $function_msg;
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('list_hour' => $data));
 		//	$GLOBALS['phpgw']->xslttpl->pp();
 			$this->save_sessiondata();
@@ -602,7 +602,7 @@
 		{
 			if(!$this->acl_read)
 			{
-				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> $this->currentapp.'.uilocation.stop', 'perm'=>1, 'acl_location'=> $this->acl_location));
+				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=>1, 'acl_location'=> $this->acl_location));
 			}
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('wo_hour','menu'));
@@ -691,14 +691,14 @@
 			(
 				'lang_done'			=> lang('Done'),
 				'lang_done_statustext'		=> lang('Back to calculation'),
-				'done_action'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uiwo_hour.index', 'workorder_id'=> $workorder_id))
+				'done_action'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiwo_hour.index', 'workorder_id'=> $workorder_id))
 			);
 
 			$dateformat				= $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
 			$date					= $GLOBALS['phpgw']->common->show_date(time(),$dateformat);
 
 			$from_name =	$GLOBALS['phpgw_info']['user']['fullname'];
-			$from_email =	$GLOBALS['phpgw_info']['user']['preferences'][$this->currentapp]['email'];
+			$from_email =	$GLOBALS['phpgw_info']['user']['preferences']['property']['email'];
 
 			if($this->config->config_data['wo_status_sms'])
 			{		
@@ -738,7 +738,7 @@
 				'lang_from'					=> lang('From'),
 				'from_name'					=> $from_name,
 				'from_email'					=> $from_email,
-				'from_phone'					=> $GLOBALS['phpgw_info']['user']['preferences'][$this->currentapp]['cellphone'],
+				'from_phone'					=> $GLOBALS['phpgw_info']['user']['preferences']['property']['cellphone'],
 				'lang_district'					=> lang('District'),
 				'district'					=> $project['location_data']['district_id'],
 
@@ -794,8 +794,8 @@
 
 			if($to_email)
 			{
-				$this->create_html->add_file(array(PHPGW_SERVER_ROOT . SEP . $this->currentapp . SEP . 'templates' . SEP . 'base' . SEP . 'wo_hour'));
-				$this->create_html->add_file(array(PHPGW_SERVER_ROOT . SEP . $this->currentapp . SEP . 'templates' . SEP . 'base' . SEP . 'location_view'));
+				$this->create_html->add_file(array(PHPGW_SERVER_ROOT . SEP . 'property' . SEP . 'templates' . SEP . 'base' . SEP . 'wo_hour'));
+				$this->create_html->add_file(array(PHPGW_SERVER_ROOT . SEP . 'property' . SEP . 'templates' . SEP . 'base' . SEP . 'location_view'));
 
 				$this->create_html->set_var('phpgw',array('email_data' => $email_data));
 
@@ -830,7 +830,7 @@
 
 				$headers = "Return-Path: <". $from_email .">\r\n";
 				$headers .= "From: " . $from_name . "<" . $from_email .">\r\n";
-				if($GLOBALS['phpgw_info']['user']['preferences'][$this->currentapp]['order_email_rcpt']==1)
+				if($GLOBALS['phpgw_info']['user']['preferences']['property']['order_email_rcpt']==1)
 				{
 					$headers .= "Bcc: " . $from_name . "<" . $from_email .">\r\n";
 					$bcc = $from_email;
@@ -888,7 +888,7 @@
 				'to_email'					=> $to_email,
 				'email_list'					=> $email_list,
 				'lang_select_email'				=> lang('Select email'),
-				'send_order_action'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uiwo_hour.view', 'send'=>true, 'workorder_id'=> $workorder_id, 'show_details'=> $show_details)),
+				'send_order_action'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiwo_hour.view', 'send'=>true, 'workorder_id'=> $workorder_id, 'show_details'=> $show_details)),
 
 				'lang_no_history'				=> lang('No history'),
 				'lang_history'					=> lang('History'),
@@ -905,7 +905,7 @@
 			$appname		= lang('Workorder');
 			$function_msg		= lang('Send order');
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($this->currentapp) . ' - ' . $appname . ': ' . $function_msg;
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
 
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('view' => $data));
 		//	$GLOBALS['phpgw']->xslttpl->pp();
@@ -923,7 +923,7 @@
 			$pdf					= CreateObject('phpgwapi.pdf');
 			if(!$this->acl_read)
 			{
-				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> $this->currentapp.'.uilocation.stop', 'perm'=>1, 'acl_location'=> $this->acl_location));
+				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=>1, 'acl_location'=> $this->acl_location));
 			}
 			$show_cost = phpgw::get_var('show_cost', 'bool');
 			$mark_draft = phpgw::get_var('mark_draft', 'bool');
@@ -1046,7 +1046,7 @@
 		{
 			if(!$this->acl_read)
 			{
-				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> $this->currentapp.'.uilocation.stop', 'perm'=>1, 'acl_location'=> $this->acl_location));
+				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=>1, 'acl_location'=> $this->acl_location));
 			}
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('wo_hour',
@@ -1116,7 +1116,7 @@
 											'sort'	=> $this->sort,
 											'var'	=> 'num',
 											'order'	=> $this->order,
-											'extra'	=> array('menuaction' => $this->currentapp.'.uiwo_hour.prizebook',
+											'extra'	=> array('menuaction' => 'property.uiwo_hour.prizebook',
 																	'workorder_id'	=>$workorder_id,
 																	'allrows'	=>$this->allrows)
 										)),
@@ -1139,7 +1139,7 @@
 											'sort'	=> $this->sort,
 											'var'	=>	'total_cost',
 											'order'	=>	$this->order,
-											'extra'		=> array('menuaction'	=> $this->currentapp.'.uiwo_hour.prizebook',
+											'extra'		=> array('menuaction'	=> 'property.uiwo_hour.prizebook',
 																	'workorder_id'	=>$workorder_id,
 																	'allrows'	=>$this->allrows)
 										)),
@@ -1152,12 +1152,12 @@
 			(
 				'lang_done'				=> lang('Done'),
 				'lang_done_statustext'	=> lang('Back to list'),
-				'done_action'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uiwo_hour.index', 'workorder_id'=> $workorder_id))
+				'done_action'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiwo_hour.index', 'workorder_id'=> $workorder_id))
 			);
 
 			$link_data = array
 			(
-				'menuaction'	=> $this->currentapp.'.uiwo_hour.prizebook',
+				'menuaction'	=> 'property.uiwo_hour.prizebook',
 						'sort'		=>$this->sort,
 						'order'		=>$this->order,
 						'workorder_id'	=>$workorder_id,
@@ -1167,7 +1167,7 @@
 
 			$link_data_nextmatch = array
 			(
-				'menuaction'	=> $this->currentapp.'.uiwo_hour.prizebook',
+				'menuaction'	=> 'property.uiwo_hour.prizebook',
 						'sort'		=>$this->sort,
 						'order'		=>$this->order,
 						'workorder_id'	=>$workorder_id,
@@ -1176,7 +1176,7 @@
 
 			$link_data_delete = array
 			(
-				'menuaction'	=> $this->currentapp.'.uiwo_hour.prizebook',
+				'menuaction'	=> 'property.uiwo_hour.prizebook',
 						'sort'		=>$this->sort,
 						'order'		=>$this->order,
 						'workorder_id'	=>$workorder_id,
@@ -1239,7 +1239,7 @@
 			$appname	= lang('pricebook');
 			$function_msg	= lang('list pricebook');
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($this->currentapp) . ' - ' . $appname . ': ' . $function_msg;
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('prizebook' => $data));
 		//	$GLOBALS['phpgw']->xslttpl->pp();
 			$this->save_sessiondata();
@@ -1250,7 +1250,7 @@
 		{
 			if(!$this->acl_read)
 			{
-				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> $this->currentapp.'.uilocation.stop', 'perm'=>1, 'acl_location'=> $this->acl_location));
+				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=>1, 'acl_location'=> $this->acl_location));
 			}
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('wo_hour',
@@ -1352,7 +1352,7 @@
 											'sort'	=> $this->sort,
 											'var'	=> 'billperae',
 											'order'	=> $this->order,
-											'extra'	=> array('menuaction' => $this->currentapp.'.uiwo_hour.template',
+											'extra'	=> array('menuaction' => 'property.uiwo_hour.template',
 																	'workorder_id'	=>$workorder_id,
 																	'template_id'	=>$template_id,
 																	'query'			=>$this->query,
@@ -1364,7 +1364,7 @@
 											'sort'	=> $this->sort,
 											'var'	=> 'building_part',
 											'order'	=> $this->order,
-											'extra'	=> array('menuaction' => $this->currentapp.'.uiwo_hour.template',
+											'extra'	=> array('menuaction' => 'property.uiwo_hour.template',
 																	'workorder_id'	=>$workorder_id,
 																	'template_id'	=>$template_id,
 																	'query'			=>$this->query,
@@ -1378,12 +1378,12 @@
 			(
 				'lang_done'		=> lang('Done'),
 				'lang_done_statustext'	=> lang('Back to list'),
-				'done_action'		=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uiwo_hour.index', 'workorder_id'=> $workorder_id))
+				'done_action'		=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiwo_hour.index', 'workorder_id'=> $workorder_id))
 			);
 
 			$link_data = array
 			(
-				'menuaction'	=> $this->currentapp.'.uiwo_hour.template',
+				'menuaction'	=> 'property.uiwo_hour.template',
 				'sort'		=> $this->sort,
 				'order'		=> $this->order,
 				'workorder_id'	=> $workorder_id,
@@ -1394,7 +1394,7 @@
 
 			$link_data_nextmatch = array
 			(
-				'menuaction'	=> $this->currentapp.'.uiwo_hour.template',
+				'menuaction'	=> 'property.uiwo_hour.template',
 				'sort'		=> $this->sort,
 				'order'		=> $this->order,
 				'workorder_id'	=> $workorder_id,
@@ -1404,7 +1404,7 @@
 
 			$link_data_delete = array
 			(
-				'menuaction'	=> $this->currentapp.'.uiwo_hour.template',
+				'menuaction'	=> 'property.uiwo_hour.template',
 				'sort'		=> $this->sort,
 				'order'		=> $this->order,
 				'workorder_id'	=> $workorder_id,
@@ -1426,13 +1426,13 @@
 
 			$msgbox_data = $this->bocommon->msgbox_data($receipt);
 
-			$GLOBALS['phpgw']->js->validate_file('core','check',$this->currentapp);
+			$GLOBALS['phpgw']->js->validate_file('core','check','property');
 
 			$data = array
 			(
 				'msgbox_data'				=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
 				'lang_select_all'			=> lang('Select All'),
-				'img_check'				=> $GLOBALS['phpgw']->common->get_image_path($this->currentapp).'/check.png',
+				'img_check'				=> $GLOBALS['phpgw']->common->get_image_path('property').'/check.png',
 
 				'template_id'				=> $template_id,
 				'form_action'				=> $GLOBALS['phpgw']->link('/index.php',$link_data),
@@ -1478,7 +1478,7 @@
 			$appname		= lang('Template');
 			$function_msg		= lang('list template');
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($this->currentapp) . ' - ' . $appname . ': ' . $function_msg;
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('list_template_hour' => $data));
 		//	$GLOBALS['phpgw']->xslttpl->pp();
 			$this->save_sessiondata();
@@ -1488,7 +1488,7 @@
 		{
 			if(!$this->acl_edit)
 			{
-				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> $this->currentapp.'.uilocation.stop', 'perm'=>2, 'acl_location'=> $this->acl_location));
+				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=>2, 'acl_location'=> $this->acl_location));
 			}
 			$from			= phpgw::get_var('from');
 			$template_id 		= phpgw::get_var('template_id', 'int');
@@ -1543,7 +1543,7 @@
 
 			$link_data = array
 			(
-				'menuaction'	=> $this->currentapp.'.uiwo_hour.edit',
+				'menuaction'	=> 'property.uiwo_hour.edit',
 				'activity_id'	=> $activity_id,
 				'workorder_id'	=> $workorder_id,
 				'template_id'	=> $template_id,
@@ -1557,7 +1557,7 @@
 			(
 				'msgbox_data'				=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
 				'form_action'				=> $GLOBALS['phpgw']->link('/index.php',$link_data),
-				'done_action'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uiwo_hour.' . $from, 'workorder_id'=> $workorder_id, 'template_id'=> $template_id)),
+				'done_action'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiwo_hour.' . $from, 'workorder_id'=> $workorder_id, 'template_id'=> $template_id)),
 				'lang_workorder'			=> lang('Workorder'),
 				'value_workorder_id'			=> $workorder['workorder_id'],
 				'value_workorder_title'			=> $workorder['title'],
@@ -1641,7 +1641,7 @@
 				'lang_building_part_statustext'		=> lang('Select the building part for this activity.'),
 
 
-				'ns3420_link'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uilookup.ns3420')),
+				'ns3420_link'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uilookup.ns3420')),
 				'lang_ns3420'				=> lang('NS3420'),
 				'value_ns3420_id'			=> $values['ns3420_id'],
 				'lang_ns3420_statustext'		=> lang('Select a standard-code from the norwegian standard'),
@@ -1656,7 +1656,7 @@
 
 			$appname = lang('Workorder');
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($this->currentapp) . ' - ' . $appname . ': ' . $function_msg;
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('edit_hour' => $data));
 		//	$GLOBALS['phpgw']->xslttpl->pp();
 		}
@@ -1665,7 +1665,7 @@
 		{
 			if(!$this->acl_edit)
 			{
-				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> $this->currentapp.'.uilocation.stop', 'perm'=>2, 'acl_location'=> $this->acl_location));
+				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=>2, 'acl_location'=> $this->acl_location));
 			}
 			$id 		= phpgw::get_var('id', 'int');
 			$workorder_id	= phpgw::get_var('workorder_id', 'int');
@@ -1678,13 +1678,13 @@
 			{
 				$link_data = array
 				(
-					'menuaction' => $this->currentapp.'.uiwo_hour.deviation',
+					'menuaction' => 'property.uiwo_hour.deviation',
 					'workorder_id'=>$workorder_id,
 					'hour_id'=>$hour_id
 				);
 				$delete_link_data = array
 				(
-					'menuaction' => $this->currentapp.'.uiwo_hour.delete',
+					'menuaction' => 'property.uiwo_hour.delete',
 					'workorder_id'=>$workorder_id,
 					'hour_id'=>$hour_id,
 					'deviation_id'=>$deviation_id
@@ -1696,11 +1696,11 @@
 			{
 				$link_data = array
 				(
-					'menuaction' => $this->currentapp.'.uiwo_hour.index'
+					'menuaction' => 'property.uiwo_hour.index'
 				);
 				$delete_link_data = array
 				(
-					'menuaction' => $this->currentapp.'.uiwo_hour.delete',
+					'menuaction' => 'property.uiwo_hour.delete',
 					'id'=>$id
 				);
 				$function_msg	= lang('delete hour');
@@ -1734,7 +1734,7 @@
 
 			$appname = lang('workorder');
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($this->currentapp) . ' - ' . $appname . ': ' . $function_msg;
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('delete' => $data));
 		//	$GLOBALS['phpgw']->xslttpl->pp();
 		}

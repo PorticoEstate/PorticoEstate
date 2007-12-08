@@ -71,7 +71,7 @@
 
 		function property_bob_account($session=False)
 		{
-			$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
+		//	$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->so 		= CreateObject('property.sob_account');
 			$this->socommon = CreateObject('property.socommon');
 
