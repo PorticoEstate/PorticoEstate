@@ -27,7 +27,6 @@
  	* @version $Id: hook_settings.inc.php 18358 2007-11-27 04:43:37Z skwashd $
 	*/
 
-	'property'	= & $GLOBALS['phpgw_info']['flags']['currentapp'];
 
 	$select_property_filter = array(
 		''	=> lang('Owner type'),
