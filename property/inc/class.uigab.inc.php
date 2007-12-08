@@ -58,7 +58,7 @@
 		function property_uigab()
 		{
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = True;
-			$this->currentapp			= $GLOBALS['phpgw_info']['flags']['currentapp'];
+		//	$this->currentapp			= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->nextmatchs			= CreateObject('phpgwapi.nextmatchs');
 			$this->account				= $GLOBALS['phpgw_info']['user']['account_id'];
 			$this->bo					= CreateObject('property.bogab',True);
@@ -114,7 +114,7 @@
 
 			if(!$this->acl_read)
 			{
-				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> $this->currentapp.'.uilocation.stop','perm'=>1, 'acl_location'=> $this->acl_location));
+				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop','perm'=>1, 'acl_location'=> $this->acl_location));
 			}
 
 			$gab_list = $this->bo->read($location_code,$gaards_nr,$bruksnr,$feste_nr,$seksjons_nr,$address,$check_payments,$allrows=True);
@@ -177,7 +177,7 @@
 		{
 			if(!$this->acl_read)
 			{
-				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> $this->currentapp.'.uilocation.stop', 'perm'=>1, 'acl_location'=> $this->acl_location));
+				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=>1, 'acl_location'=> $this->acl_location));
 			}
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('gab',
@@ -214,7 +214,7 @@
 				$lang_view_statustext	= lang('view gab detail');
 			}
 
-			$config		= CreateObject('phpgwapi.config',$this->currentapp);
+			$config		= CreateObject('phpgwapi.config','property');
 
 			$config->read_repository();
 			
@@ -258,7 +258,7 @@
 					'feste_nr'			=> $value_feste_nr,
 					'seksjons_nr'			=> $value_seksjons_nr,
 					'location_code'			=> $gab['location_code'],
-					'link_view'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=>$this->currentapp.'.uigab.list_detail','gab_id'=>$gab['gab_id'])),
+					'link_view'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=>'property.uigab.list_detail','gab_id'=>$gab['gab_id'])),
 					'lang_view_statustext'		=> $lang_view_statustext,
 					'text_view'			=> $text_view,
 					'link_map'			=> $link_to_map . '?maptype=Eiendomskart&gnr=' . (int)$value_gaards_nr . '&bnr=' . (int)$value_bruks_nr . '&fnr=' . (int)$value_feste_nr,
@@ -283,7 +283,7 @@
 											'sort'	=> $this->sort,
 											'var'	=>	'gab_id',
 											'order'	=>	$this->order,
-											'extra'	=> array('menuaction'=> $this->currentapp.'.uigab.index',
+											'extra'	=> array('menuaction'=> 'property.uigab.index',
 														'cat_id'	=>$this->cat_id,
 													//	'district_id'	=> $this->district_id,
 														'filter'	=>$this->filter,
@@ -303,7 +303,7 @@
 											'sort'	=> $this->sort,
 											'var'	=>	'hits',
 											'order'	=>	$this->order,
-											'extra'	=> array('menuaction'=> $this->currentapp.'.uigab.index',
+											'extra'	=> array('menuaction'=> 'property.uigab.index',
 														'cat_id'	=>$this->cat_id,
 													//	'district_id'	=> $this->district_id,
 														'filter'	=>$this->filter,
@@ -322,7 +322,7 @@
 											'sort'	=> $this->sort,
 											'var'	=>	'location_code',
 											'order'	=>	$this->order,
-											'extra'	=> array('menuaction'=> $this->currentapp.'.uigab.index',
+											'extra'	=> array('menuaction'=> 'property.uigab.index',
 														'cat_id'	=>$this->cat_id,
 													//	'district_id'	=> $this->district_id,
 														'filter'	=>$this->filter,
@@ -376,13 +376,13 @@
 				(
 					'lang_add'		=> lang('add'),
 					'lang_add_statustext'	=> lang('add a gab'),
-					'add_action'		=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=>$this->currentapp.'.uigab.edit', 'from'=>'index'))
+					'add_action'		=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=>'property.uigab.edit', 'from'=>'index'))
 				);
 			}
 
 			$link_data = array
 			(
-				'menuaction'	=> $this->currentapp.'.uigab.index',
+				'menuaction'	=> 'property.uigab.index',
 					'sort'		=>$this->sort,
 					'order'		=>$this->order,
 					'cat_id'	=>$this->cat_id,
@@ -399,7 +399,7 @@
 
 			$link_excel = array
 			(
-				'menuaction'	=> $this->currentapp.'.uigab.excel',
+				'menuaction'	=> 'property.uigab.excel',
 					'sort'		=>$this->sort,
 					'order'		=>$this->order,
 					'cat_id'	=>$this->cat_id,
@@ -423,7 +423,7 @@
 				$record_limit	= $this->bo->total_records;
 			}
 
-			$GLOBALS['phpgw']->js->validate_file('overlib','overlib',$this->currentapp);
+			$GLOBALS['phpgw']->js->validate_file('overlib','overlib','property');
 
 			$data = array
 			(
@@ -468,7 +468,7 @@
 			$appname		= lang('gab');
 			$function_msg	= lang('list gab');
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($this->currentapp) . ' - ' . $appname . ': ' . $function_msg;
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('list_gab' => $data));
 		//	$GLOBALS['phpgw']->xslttpl->pp();
 			$this->save_sessiondata();
@@ -478,7 +478,7 @@
 		{
 			if(!$this->acl_read)
 			{
-				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> $this->currentapp.'.uilocation.stop', 'perm'=>1, 'acl_location'=> $this->acl_location));
+				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=>1, 'acl_location'=> $this->acl_location));
 			}
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('gab','values','table_header',
@@ -511,7 +511,7 @@
 					{
 						$content[$j]['row'][$k]['statustext']			= lang('view the gab');
 						$content[$j]['row'][$k]['text']					= lang('view');
-						$content[$j]['row'][$k]['link']					= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uigab.view', 'gab_id' => $gab_entry['gab_id'], 'location_code'=>$gab_entry['location_code']));
+						$content[$j]['row'][$k]['link']					= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uigab.view', 'gab_id' => $gab_entry['gab_id'], 'location_code'=>$gab_entry['location_code']));
 						$k++;
 					}
 
@@ -519,7 +519,7 @@
 					{
 						$content[$j]['row'][$k]['statustext']			= lang('edit the gab');
 						$content[$j]['row'][$k]['text']					= lang('edit');
-						$content[$j]['row'][$k]['link']					= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uigab.edit', 'gab_id'=> $gab_entry['gab_id'], 'location_code'=>$gab_entry['location_code'], 'from'=>'list_detail'));
+						$content[$j]['row'][$k]['link']					= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uigab.edit', 'gab_id'=> $gab_entry['gab_id'], 'location_code'=>$gab_entry['location_code'], 'from'=>'list_detail'));
 						$k++;
 					}
 
@@ -527,7 +527,7 @@
 					{
 						$content[$j]['row'][$k]['statustext']			= lang('delete the gab');
 						$content[$j]['row'][$k]['text']					= lang('delete');
-						$content[$j]['row'][$k]['link']					= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uigab.delete', 'gab_id'=> $gab_entry['gab_id'], 'location_code'=> $gab_entry['location_code']));
+						$content[$j]['row'][$k]['link']					= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uigab.delete', 'gab_id'=> $gab_entry['gab_id'], 'location_code'=> $gab_entry['location_code']));
 						$k++;
 					}
 				}
@@ -550,7 +550,7 @@
 											'sort'	=> $this->sort,
 											'var'	=>	'location_code',
 											'order'	=>	$this->order,
-											'extra'		=> array('menuaction'	=> $this->currentapp.'.uigab.index',
+											'extra'		=> array('menuaction'	=> 'property.uigab.index',
 																	'type_id'	=>$type_id,
 																	'query'		=>$this->query,
 																	'lookup'	=>$lookup,
@@ -566,7 +566,7 @@
 											'sort'	=> $this->sort,
 											'var'	=>	'gab_id',
 											'order'	=>	$this->order,
-											'extra'		=> array('menuaction'	=> $this->currentapp.'.uigab.index',
+											'extra'		=> array('menuaction'	=> 'property.uigab.index',
 																	'type_id'	=>$type_id,
 																	'query'		=>$this->query,
 																	'lookup'	=>$lookup,
@@ -582,7 +582,7 @@
 											'sort'	=> $this->sort,
 											'var'	=>	'address',
 											'order'	=>	$this->order,
-											'extra'		=> array('menuaction'	=> $this->currentapp.'.uigab.index',
+											'extra'		=> array('menuaction'	=> 'property.uigab.index',
 																	'type_id'	=>$type_id,
 																	'query'		=>$this->query,
 																	'lookup'	=>$lookup,
@@ -631,7 +631,7 @@
 				(
 					'lang_add'		=> lang('add'),
 					'lang_add_statustext'	=> lang('add a gab'),
-					'add_action'		=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uigab.edit', 'from' => 'list_detail', 'gab_id'=> $gab_id, 'new'=>true))
+					'add_action'		=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uigab.edit', 'from' => 'list_detail', 'gab_id'=> $gab_id, 'new'=>true))
 
 				);
 			}
@@ -641,12 +641,12 @@
 			(
 				'lang_done'		=> lang('done'),
 				'lang_done_statustext'	=> lang('back to list'),
-				'done_action'		=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uigab.index'))
+				'done_action'		=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uigab.index'))
 			);
 
 			$link_data = array
 			(
-				'menuaction'	=> $this->currentapp.'.uigab.list_detail',
+				'menuaction'	=> 'property.uigab.list_detail',
 						'sort'			=>$this->sort,
 						'order'			=>$this->order,
 						'cat_id'		=>$this->cat_id,
@@ -695,7 +695,7 @@
 			$appname		= lang('gab');
 			$function_msg	= lang('list gab detail');
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($this->currentapp) . ' - ' . $appname . ': ' . $function_msg;
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('list_gab_detail' => $data));
 		//	$GLOBALS['phpgw']->xslttpl->pp();
 			$this->save_sessiondata();
@@ -706,7 +706,7 @@
 		{
 			if(!$this->acl_add && !$this->acl_edit)
 			{
-				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> $this->currentapp.'.uilocation.stop','perm'=>2, 'acl_location'=> $this->acl_location));
+				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop','perm'=>2, 'acl_location'=> $this->acl_location));
 			}
 
 			$from 			= phpgw::get_var('from');
@@ -726,7 +726,7 @@
 
 			if ($values['save'])
 			{
-				$insert_record 		= $GLOBALS['phpgw']->session->appsession('insert_record',$this->currentapp);
+				$insert_record 		= $GLOBALS['phpgw']->session->appsession('insert_record','property');
 				$values = $this->bocommon->collect_locationdata($values,$insert_record);
 
 				$values['gab_id'] = $gab_id;
@@ -795,7 +795,7 @@
 
 			$link_data = array
 			(
-				'menuaction'	=> $this->currentapp.'.uigab.edit',
+				'menuaction'	=> 'property.uigab.edit',
 				'gab_id'			=> $gab_id,
 				'location_code'		=> $location_code,
 				'from'				=> $from
@@ -803,7 +803,7 @@
 
 
 			
-			$done_data = array('menuaction'=> $this->currentapp.'.uigab.'.$from);
+			$done_data = array('menuaction'=> 'property.uigab.'.$from);
 			if($from=='list_detail')
 			{
 				$done_data['gab_id'] = $gab_id;
@@ -855,7 +855,7 @@
 
 			$appname		= lang('gab');
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($this->currentapp) . ' - ' . $appname . ': ' . $function_msg;
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('edit' => $data));
 		//	$GLOBALS['phpgw']->xslttpl->pp();
 		}
@@ -864,7 +864,7 @@
 		{
 			if(!$this->acl_delete)
 			{
-				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> $this->currentapp.'.uilocation.stop', 'perm'=> 8, 'acl_location'=> $this->acl_location));
+				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=> 8, 'acl_location'=> $this->acl_location));
 			}
 
 			$gab_id = phpgw::get_var('gab_id');
@@ -873,7 +873,7 @@
 
 			$link_data = array
 			(
-				'menuaction' => $this->currentapp.'.uigab.list_detail',
+				'menuaction' => 'property.uigab.list_detail',
 					'gab_id' => $gab_id
 			);
 
@@ -888,7 +888,7 @@
 			$data = array
 			(
 				'done_action'		=> $GLOBALS['phpgw']->link('/index.php',$link_data),
-				'delete_action'		=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uigab.delete', 'gab_id'=> $gab_id, 'location_code'=>$location_code)),
+				'delete_action'		=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uigab.delete', 'gab_id'=> $gab_id, 'location_code'=>$location_code)),
 				'lang_confirm_msg'	=> lang('do you really want to delete this entry'),
 				'lang_yes'		=> lang('yes'),
 				'lang_yes_statustext'	=> lang('Delete the entry'),
@@ -899,7 +899,7 @@
 			$appname			= lang('gab');
 			$function_msg			= lang('delete gab at:') . ' ' . $location_code;
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($this->currentapp) . ' - ' . $appname . ': ' . $function_msg;
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('delete' => $data));
 		//	$GLOBALS['phpgw']->xslttpl->pp();
 		}
@@ -908,7 +908,7 @@
 		{
 			if(!$this->acl_read)
 			{
-				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> $this->currentapp.'.uilocation.stop', 'perm'=>1, 'acl_location'=> $this->acl_location));
+				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=>1, 'acl_location'=> $this->acl_location));
 			}
 
 			$gab_id 		= phpgw::get_var('gab_id');
@@ -956,7 +956,7 @@
 
 				'location_type'					=> $location_type,
 				'location_data'					=> $location_data,
-				'done_action'					=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uigab.list_detail','gab_id' => $gab_id)),
+				'done_action'					=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uigab.list_detail','gab_id' => $gab_id)),
 				'lang_save'					=> lang('save'),
 				'lang_done'					=> lang('done'),
 
@@ -964,14 +964,14 @@
 				'value_remark'					=> $values['remark'],
 				'lang_done_statustext'				=> lang('Back to the list'),
 
-				'edit_action'					=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uigab.edit', 'from'=>'list_detail', 'gab_id'=> $gab_id, 'location_code'=> $location_code)),
+				'edit_action'					=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uigab.edit', 'from'=>'list_detail', 'gab_id'=> $gab_id, 'location_code'=> $location_code)),
 				'lang_edit_statustext'				=> lang('Edit this entry'),
 				'lang_edit'					=> lang('Edit')
 			);
 
 			$appname		= lang('gab');
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($this->currentapp) . ' - ' . $appname . ': ' . $function_msg;
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('view' => $data));
 		//	$GLOBALS['phpgw']->xslttpl->pp();
 		}

@@ -53,7 +53,7 @@
 
 		function boifc($session=False)
 		{
-			$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
+		//	$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
 	//		$this->so 			= CreateObject('property.soifc');
 			$this->custom 		= createObject('phpgwapi.custom_fields');
 			$this->acl_location 	= '.ifc';
@@ -193,7 +193,7 @@ _debug_array('hei');
 		*/
 		function read2()
 		{
-			$custom_attributes = $this->custom->get_attribs($this->currentapp, $this->acl_location, 0, '', 'ASC', 'attrib_sort', true, true);
+			$custom_attributes = $this->custom->get_attribs('property', $this->acl_location, 0, '', 'ASC', 'attrib_sort', true, true);
 			
 			$ifc_info = $this->so->read2(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
 											'cat_id'=>$this->cat_id,'allrows'=>$this->allrows,'filter'=>$this->filter,
@@ -205,14 +205,14 @@ _debug_array('hei');
 
 		function read_single($id='')
 		{
-			$values['attributes'] = $this->custom->get_attribs($this->currentapp, $this->acl_location, 0, '', 'ASC', 'attrib_sort', true, true);
+			$values['attributes'] = $this->custom->get_attribs('property', $this->acl_location, 0, '', 'ASC', 'attrib_sort', true, true);
 			
 			if($id)
 			{
 				$values = $this->so->read_single($id,$values);
 			}
 			
-			$values = $this->custom->prepare_attributes($values,$appname=$this->currentapp, $location=$this->acl_location);
+			$values = $this->custom->prepare_attributes($values,$appname='property', $location=$this->acl_location);
 			
 			$dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
 			if(isset($values['entry_date']) && $values['entry_date'])
@@ -260,7 +260,7 @@ _debug_array('hei');
 				$receipt = $this->so->add($values,$values_attribute);
 			}
 
-			$custom_functions = $this->custom->read_custom_function(array('appname'=>$this->currentapp,'location' => $this->acl_location,'allrows'=>True));
+			$custom_functions = $this->custom->read_custom_function(array('appname'=>'property','location' => $this->acl_location,'allrows'=>True));
 
 			if (isSet($custom_functions) AND is_array($custom_functions))
 			{

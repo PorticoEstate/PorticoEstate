@@ -54,7 +54,7 @@
 
 		function property_bor_agreement($session=False)
 		{
-			$this->currentapp		= $GLOBALS['phpgw_info']['flags']['currentapp'];
+		//	$this->currentapp		= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->so = CreateObject('property.sor_agreement');
 			$this->bocommon = CreateObject('property.bocommon');
 			$this->vfs 			= CreateObject('phpgwapi.vfs');
@@ -370,7 +370,7 @@
 					}
 
 					$insert_record_list[]	= $list['attributes'][$i]['name'];
-					$lookup_link		= $GLOBALS['phpgw']->link('/index.php','menuaction='.$this->currentapp.'.uilookup.addressbook&column=' . $list['attributes'][$i]['name']);
+					$lookup_link		= $GLOBALS['phpgw']->link('/index.php','menuaction='.'property.uilookup.addressbook&column=' . $list['attributes'][$i]['name']);
 
 					$lookup_functions[$m]['name'] = 'lookup_'. $list['attributes'][$i]['name'] .'()';
 					$lookup_functions[$m]['action'] = 'Window1=window.open('."'" . $lookup_link ."'" .',"Search","width=800,height=700,toolbar=no,scrollbars=yes,resizable=yes");';
@@ -393,7 +393,7 @@
 					}
 
 					$insert_record_list[]	= $list['attributes'][$i]['name'];
-					$lookup_link		= $GLOBALS['phpgw']->link('/index.php','menuaction='.$this->currentapp.'.uilookup.vendor&column=' . $list['attributes'][$i]['name']);
+					$lookup_link		= $GLOBALS['phpgw']->link('/index.php','menuaction='.'property.uilookup.vendor&column=' . $list['attributes'][$i]['name']);
 
 					$lookup_functions[$m]['name'] = 'lookup_'. $list['attributes'][$i]['name'] .'()';
 					$lookup_functions[$m]['action'] = 'Window1=window.open('."'" . $lookup_link ."'" .',"Search","width=800,height=700,toolbar=no,scrollbars=yes,resizable=yes");';
@@ -436,7 +436,7 @@
 				$list['lookup_functions'] .= '}'."\r\n";
 			}
 
-			$GLOBALS['phpgw']->session->appsession('insert_record_r_agreement' . !!$detail,$this->currentapp,$insert_record_list);
+			$GLOBALS['phpgw']->session->appsession('insert_record_r_agreement' . !!$detail,'property',$insert_record_list);
 
 //html_print_r($list);
 			return $list;
@@ -654,7 +654,7 @@
 		{
 			if(!$selected)
 			{
-				$selected=$GLOBALS['phpgw_info']['user']['preferences'][$this->currentapp]["r_agreement_columns"];
+				$selected=$GLOBALS['phpgw_info']['user']['preferences']['property']["r_agreement_columns"];
 			}
 
 			$columns = $this->so->read_attrib(array('allrows'=>$allrows,'column_list'=>True));

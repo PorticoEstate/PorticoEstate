@@ -54,7 +54,7 @@
 		function property_uiadmin_custom()
 		{
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = True;
-			$this->currentapp		= $GLOBALS['phpgw_info']['flags']['currentapp'];
+		//	$this->currentapp		= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->nextmatchs		= CreateObject('phpgwapi.nextmatchs');
 			$this->account			= $GLOBALS['phpgw_info']['user']['account_id'];
 			$this->bo				= CreateObject('property.boadmin_custom',True);
@@ -100,7 +100,7 @@
 		{
 			if(!$this->acl_read)
 			{
-				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> $this->currentapp.'.uilocation.stop', 'perm'=>1, 'acl_location'=> $this->acl_location));
+				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=>1, 'acl_location'=> $this->acl_location));
 			}
 
 			$id	= phpgw::get_var('id', 'int');
@@ -128,10 +128,10 @@
 						'descr'					=> $entry['descr'],
 						'sorting'				=> $entry['sorting'],
 						'active'				=> $entry['active']?'X':'',
-						'link_up'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uiadmin_custom.index', 'resort'=>'up', 'cat_id'=> $entry['acl_location'], 'id'=> $entry['id'], 'allrows'=> $this->allrows)),
-						'link_down'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uiadmin_custom.index', 'resort'=>'down', 'cat_id'=> $entry['acl_location'], 'id'=> $entry['id'], 'allrows'=> $this->allrows)),
-						'link_edit'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uiadmin_custom.edit', 'cat_id'=> $entry['acl_location'], 'id'=> $entry['id'])),
-						'link_delete'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uiadmin_custom.delete', 'cat_id'=> $entry['acl_location'], 'id'=> $entry['id'])),
+						'link_up'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiadmin_custom.index', 'resort'=>'up', 'cat_id'=> $entry['acl_location'], 'id'=> $entry['id'], 'allrows'=> $this->allrows)),
+						'link_down'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiadmin_custom.index', 'resort'=>'down', 'cat_id'=> $entry['acl_location'], 'id'=> $entry['id'], 'allrows'=> $this->allrows)),
+						'link_edit'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiadmin_custom.edit', 'cat_id'=> $entry['acl_location'], 'id'=> $entry['id'])),
+						'link_delete'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiadmin_custom.delete', 'cat_id'=> $entry['acl_location'], 'id'=> $entry['id'])),
 						'lang_up_text'				=> lang('shift up'),
 						'lang_down_text'			=> lang('shift down'),
 						'lang_edit_text'			=> lang('edit the custom_function'),
@@ -159,7 +159,7 @@
 											'sort'	=> $this->sort,
 											'var'	=> 'acl_location',
 											'order'	=> $this->order,
-											'extra'	=> array('menuaction'	=> $this->currentapp.'.uiadmin_custom.index',
+											'extra'	=> array('menuaction'	=> 'property.uiadmin_custom.index',
 														'cat_id'	=> $this->cat_id,
 														'allrows'	=> $this->allrows)
 										)),
@@ -169,7 +169,7 @@
 											'sort'	=> $this->sort,
 											'var'	=> 'column_name',
 											'order'	=> $this->order,
-											'extra'	=> array('menuaction'	=> $this->currentapp.'.uiadmin_custom.index',
+											'extra'	=> array('menuaction'	=> 'property.uiadmin_custom.index',
 														'cat_id'	=> $this->cat_id,
 														'allrows'	=> $this->allrows)
 										)),
@@ -178,7 +178,7 @@
 											'sort'	=> $this->sort,
 											'var'	=> 'custom_function_sort',
 											'order'	=> $this->order,
-											'extra'	=> array('menuaction'	=> $this->currentapp.'.uiadmin_custom.index',
+											'extra'	=> array('menuaction'	=> 'property.uiadmin_custom.index',
 														'cat_id'	=> $this->cat_id,
 														'allrows'	=> $this->allrows)
 										)),
@@ -189,7 +189,7 @@
 			(
 				'lang_add'			=> lang('add'),
 				'lang_add_custom_functiontext'	=> lang('add a custom_function'),
-				'add_action'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uiadmin_custom.edit', 'cat_id'=> $this->cat_id)),
+				'add_action'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiadmin_custom.edit', 'cat_id'=> $this->cat_id)),
 				'lang_done'			=> lang('done'),
 				'lang_done_custom_functiontext'	=> lang('back to admin'),
 				'done_action'			=> $GLOBALS['phpgw']->link('/admin/index.php'),
@@ -206,7 +206,7 @@
 
 			$link_data = array
 			(
-				'menuaction'	=> $this->currentapp.'.uiadmin_custom.index',
+				'menuaction'	=> 'property.uiadmin_custom.index',
 				'sort'		=> $this->sort,
 				'order'		=> $this->order,
 				'query'		=> $this->query,
@@ -245,7 +245,7 @@
 			$appname	= lang('custom function');
 			$function_msg	= lang('list custom function');
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($this->currentapp) . ' - ' . $appname . ': ' . $function_msg;
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('list' => $data));
 			$this->save_sessiondata();
 		}
@@ -254,7 +254,7 @@
 		{
 			if(!$this->acl_add)
 			{
-				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> $this->currentapp.'.uilocation.stop', 'perm'=> 2, 'acl_location'=> $this->acl_location));
+				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=> 2, 'acl_location'=> $this->acl_location));
 			}
 
 			$id		= phpgw::get_var('id', 'int');
@@ -315,7 +315,7 @@
 
 			$link_data = array
 			(
-				'menuaction'	=> $this->currentapp.'.uiadmin_custom.edit',
+				'menuaction'	=> 'property.uiadmin_custom.edit',
 				'cat_id'	=> $this->cat_id,
 				'id'		=> $id
 			);
@@ -330,7 +330,7 @@
 				'lang_custom'						=> lang('custom'),
 				'msgbox_data'						=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
 				'form_action'						=> $GLOBALS['phpgw']->link('/index.php',$link_data),
-				'done_action'						=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uiadmin_custom.index', 'cat_id'=> $this->cat_id)),
+				'done_action'						=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiadmin_custom.index', 'cat_id'=> $this->cat_id)),
 				'lang_id'							=> lang('Custom function ID'),
 				'lang_custom_type'					=> lang('Entity type'),
 				'lang_no_custom_type'				=> lang('No entity type'),
@@ -363,7 +363,7 @@
 
 			$appname	= lang('entity');
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($this->currentapp) . ' - ' . $appname . ': ' . $function_msg;
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('edit' => $data));
 		}
 
@@ -371,7 +371,7 @@
 		{
 			if(!$this->acl_delete)
 			{
-				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> $this->currentapp.'.uilocation.stop', 'perm'=> 8, 'acl_location'=> $this->acl_location));
+				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=> 8, 'acl_location'=> $this->acl_location));
 			}
 
 			$id	= phpgw::get_var('id', 'int');
@@ -379,14 +379,14 @@
 
 			$link_data = array
 			(
-				'menuaction'	=> $this->currentapp.'.uiadmin_custom.index',
+				'menuaction'	=> 'property.uiadmin_custom.index',
 				'id' 		=> $id,
 				'cat_id'	=> $this->cat_id
 			);
 
 			$delete_data = array
 			(
-				'menuaction'	=> $this->currentapp.'.uiadmin_custom.delete',
+				'menuaction'	=> 'property.uiadmin_custom.delete',
 				'cat_id'	=> $this->cat_id,
 				'id'		=> $id
 			);
@@ -413,7 +413,7 @@
 			$appname	= lang('entity');
 			$function_msg	= lang('delete entity type');
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($this->currentapp) . ' - ' . $appname . ': ' . $function_msg;
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('delete' => $data));
 		}
 	}

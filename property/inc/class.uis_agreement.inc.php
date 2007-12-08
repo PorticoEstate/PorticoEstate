@@ -62,7 +62,7 @@
 		function property_uis_agreement()
 		{
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = True;
-			$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
+		//	$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->nextmatchs	= CreateObject('phpgwapi.nextmatchs');
 			$this->account		= $GLOBALS['phpgw_info']['user']['account_id'];
 
@@ -128,7 +128,7 @@
 
 				$GLOBALS['phpgw']->preferences->account_id=$this->account;
 				$GLOBALS['phpgw']->preferences->read_repository();
-				$GLOBALS['phpgw']->preferences->add($this->currentapp,'s_agreement_columns',$values['columns'],'user');
+				$GLOBALS['phpgw']->preferences->add('property','s_agreement_columns',$values['columns'],'user');
 				$GLOBALS['phpgw']->preferences->save_repository();
 
 				$receipt['message'][] = array('msg' => lang('columns is updated'));
@@ -364,7 +364,7 @@
 
 			$member_of_data	= $this->cats->formatted_xslt_list(array('selected' => $this->member_id,'globals' => True,link_data => $link_data));
 
-			$GLOBALS['phpgw']->js->validate_file('overlib','overlib',$this->currentapp);
+			$GLOBALS['phpgw']->js->validate_file('overlib','overlib','property');
 
 //_debug_array($member_of_data);
 			$data = array
@@ -559,7 +559,7 @@
 
 			$values_attribute  = phpgw::get_var('values_attribute');
 
-			$insert_record_s_agreement = $GLOBALS['phpgw']->session->appsession('insert_record_s_agreement',$this->currentapp);
+			$insert_record_s_agreement = $GLOBALS['phpgw']->session->appsession('insert_record_s_agreement','property');
 
 //_debug_array($insert_record_s_agreement);
 			for ($j=0;$j<count($insert_record_s_agreement);$j++)
@@ -842,9 +842,9 @@
 				'id'		=> $id
 			);
 
-			$GLOBALS['phpgw']->js->validate_file('overlib','overlib',$this->currentapp);
-			$GLOBALS['phpgw']->js->validate_file('core','check',$this->currentapp);
-			$GLOBALS['phpgw']->js->validate_file('dateformat','dateformat',$this->currentapp);
+			$GLOBALS['phpgw']->js->validate_file('overlib','overlib','property');
+			$GLOBALS['phpgw']->js->validate_file('core','check','property');
+			$GLOBALS['phpgw']->js->validate_file('dateformat','dateformat','property');
 
 			$data = array
 			(
@@ -928,7 +928,7 @@
 				'table_update'				=> $table_update,
 				'update_action'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uis_agreement.edit', 'id'=> $id)),
 				'lang_select_all'			=> lang('Select All'),
-				'img_check'				=> $GLOBALS['phpgw']->common->get_image_path($this->currentapp).'/check.png',
+				'img_check'				=> $GLOBALS['phpgw']->common->get_image_path('property').'/check.png',
 				'set_column'				=> $set_column,
 				'lang_import_detail'		=> lang('import detail'),
 				'lang_detail_import_statustext'=> lang('import details to this agreement from spreadsheet'),
@@ -970,9 +970,9 @@
 
 			if (is_array($values))
 			{
-				$insert_record = $GLOBALS['phpgw']->session->appsession('insert_record',$this->currentapp);
-				$insert_record_entity = $GLOBALS['phpgw']->session->appsession('insert_record_entity',$this->currentapp);
-				$insert_record_s_agreement1 = $GLOBALS['phpgw']->session->appsession('insert_record_s_agreement1',$this->currentapp);
+				$insert_record = $GLOBALS['phpgw']->session->appsession('insert_record','property');
+				$insert_record_entity = $GLOBALS['phpgw']->session->appsession('insert_record_entity','property');
+				$insert_record_s_agreement1 = $GLOBALS['phpgw']->session->appsession('insert_record_s_agreement1','property');
 //_debug_array($insert_record_s_agreement1);
 
 				for ($j=0;$j<count($insert_record_entity);$j++)
@@ -1159,9 +1159,9 @@
 				}
 			}
 
-			$GLOBALS['phpgw']->js->validate_file('overlib','overlib',$this->currentapp);
-			$GLOBALS['phpgw']->js->validate_file('core','check',$this->currentapp);
-			$GLOBALS['phpgw']->js->validate_file('dateformat','dateformat',$this->currentapp);
+			$GLOBALS['phpgw']->js->validate_file('overlib','overlib','property');
+			$GLOBALS['phpgw']->js->validate_file('core','check','property');
+			$GLOBALS['phpgw']->js->validate_file('dateformat','dateformat','property');
 
 			$data = array
 			(
@@ -1201,7 +1201,7 @@
 				'table_update'					=> $table_update,
 				'update_action'					=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uis_agreement.edit_item', 's_agreement_id'=> $s_agreement_id, 'id'=> $id)),
 				'lang_select_all'				=> lang('Select All'),
-				'img_check'					=> $GLOBALS['phpgw']->common->get_image_path($this->currentapp).'/check.png',
+				'img_check'					=> $GLOBALS['phpgw']->common->get_image_path('property').'/check.png',
 				'location_data'					=> $location_data,
 
 				'lang_cost'					=> lang('cost'),
@@ -1295,8 +1295,8 @@
 				}
 			}
 
-			$GLOBALS['phpgw']->js->validate_file('overlib','overlib',$this->currentapp);
-			$GLOBALS['phpgw']->js->validate_file('core','check',$this->currentapp);
+			$GLOBALS['phpgw']->js->validate_file('overlib','overlib','property');
+			$GLOBALS['phpgw']->js->validate_file('core','check','property');
 
 			$data = array
 			(
@@ -1380,7 +1380,7 @@
 			$appname		= lang('service agreement');
 			$function_msg		= lang('delete') . ' ' . lang($this->role);
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($this->currentapp) . ' - ' . $appname . ': ' . $function_msg;
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('delete' => $data));
 		//	$GLOBALS['phpgw']->xslttpl->pp();
 		}
@@ -1390,7 +1390,7 @@
 		function view()
 		{
 			$s_agreement_id	= phpgw::get_var('id', 'int');
-			$config		= CreateObject('phpgwapi.config',$this->currentapp);
+			$config		= CreateObject('phpgwapi.config','property');
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('s_agreement','attributes_view'));
 
@@ -1656,7 +1656,7 @@
 
 			$appname	= lang('service agreement');
 			$function_msg	= lang('list attribute') . ': ' . lang($this->role);
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($this->currentapp) . ' - ' . $appname . ': ' . $function_msg;
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
 			//$this->save_sessiondata();
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('list_attribute' => $data));
 		//	$GLOBALS['phpgw']->xslttpl->pp();
@@ -1844,7 +1844,7 @@
 
 			$appname	= lang('service agreement');
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($this->currentapp) . ' - ' . $appname . ': ' . $function_msg;
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('edit_attrib' => $data));
 		//	$GLOBALS['phpgw']->xslttpl->pp();
 		}
@@ -1942,7 +1942,7 @@
 			$appname	= $attrib_data['input_text'];
 			$function_msg	= lang('history');
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($this->currentapp) . ' - ' . $appname . ': ' . $function_msg;	
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;	
 
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('attrib_history' => $data));
 		}

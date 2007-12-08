@@ -69,7 +69,7 @@
 
 		function property_boadmin_location($session=False)
 		{
-			$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
+		//	$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->so 		= CreateObject('property.soadmin_location');
 			$this->bocommon = CreateObject('property.bocommon');
 

@@ -52,7 +52,7 @@
 
 		function property_bogab($session=False)
 		{
-			$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
+		//	$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->bocommon 	= CreateObject('property.bocommon');
 			$this->solocation 	= CreateObject('property.solocation');
 			$this->config		= CreateObject('phpgwapi.config');

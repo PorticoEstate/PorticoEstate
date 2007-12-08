@@ -74,7 +74,7 @@
 
 		function property_bolocation($session=False)
 		{
-			$this->currentapp			= $GLOBALS['phpgw_info']['flags']['currentapp'];
+		//	$this->currentapp			= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->so 					= CreateObject('property.solocation');
 			$this->bocommon 			= CreateObject('property.bocommon');
 			$this->soadmin_location		= CreateObject('property.soadmin_location');
@@ -144,7 +144,7 @@
 
 			if(!$selected)
 			{
-				$selected = isset($GLOBALS['phpgw_info']['user']['preferences'][$this->currentapp]["location_columns_" . $this->type_id]) ? $GLOBALS['phpgw_info']['user']['preferences'][$this->currentapp]["location_columns_" . $this->type_id]:'';
+				$selected = isset($GLOBALS['phpgw_info']['user']['preferences']['property']["location_columns_" . $this->type_id]) ? $GLOBALS['phpgw_info']['user']['preferences']['property']["location_columns_" . $this->type_id]:'';
 			}
 
 			$columns = $soadmin_location->read_attrib(array('type_id'=>$type_id,'allrows'=>$allrows,'filter_list' =>true));
@@ -226,7 +226,7 @@
 				}
 			}
 
-			$location_link		= "menuaction:'". $this->currentapp.".uilocation.index',lookup:1";
+			$location_link		= "menuaction:'". 'property'.".uilocation.index',lookup:1";
 
 			$config = $this->soadmin_location->read_config('');
 
@@ -431,7 +431,7 @@
 					$m++;
 
 					$lookup_functions[$m]['name'] = 'lookup_entity_' . $entity['id'] .'()';
-					$lookup_functions[$m]['link'] = "menuaction:'". $this->currentapp.".uilookup.entity',location_type:".$data['type_id'] . ',entity_id:'. $entity['id'];
+					$lookup_functions[$m]['link'] = "menuaction:'". 'property'.".uilookup.entity',location_type:".$data['type_id'] . ',entity_id:'. $entity['id'];
 					$lookup_functions[$m]['action'] = 'Window1=window.open(strURL,"Search","width=800,height=700,toolbar=no,scrollbars=yes,resizable=yes");';
 
 					$location['location'][$i]['input_type']						= 'text';
@@ -487,13 +487,13 @@
 //_debug_array($location['location']);
 			if(isset($input_name))
 			{
-				$GLOBALS['phpgw']->session->appsession('lookup_fields',$this->currentapp,$input_name);
+				$GLOBALS['phpgw']->session->appsession('lookup_fields','property',$input_name);
 			}
 			if(isset($insert_record))
 			{
-				$GLOBALS['phpgw']->session->appsession('insert_record',$this->currentapp,$insert_record);
+				$GLOBALS['phpgw']->session->appsession('insert_record','property',$insert_record);
 			}
-//			$GLOBALS['phpgw']->session->appsession('input_name',$this->currentapp,$input_name);
+//			$GLOBALS['phpgw']->session->appsession('input_name','property',$input_name);
 
 
 			if(isset($lookup_functions) && is_array($lookup_functions))
@@ -517,7 +517,7 @@
 					$lookup_name[] = $location['location'][$i]['name'];
 				}
 
-				$GLOBALS['phpgw']->session->appsession('lookup_name',$this->currentapp,$lookup_name);
+				$GLOBALS['phpgw']->session->appsession('lookup_name','property',$lookup_name);
 
 				return $location;
 			}

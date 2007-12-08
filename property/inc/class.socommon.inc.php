@@ -49,11 +49,11 @@
 		{
 			if($currentapp)
 			{
-				$this->currentapp	= $currentapp;
+			//	$this->currentapp	= $currentapp;
 			}
 			else
 			{
-				$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];			
+			//	$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];			
 			}
 
 			if(is_object($GLOBALS['phpgw']->db))

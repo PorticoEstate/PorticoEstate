@@ -38,7 +38,7 @@
 		
 		function property_sotts2()
 		{
-			$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
+		//	$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->bo 		= CreateObject('property.botts');
 			$this->historylog	= CreateObject('property.historylog','tts');
 			$this->config		= CreateObject('phpgwapi.config');

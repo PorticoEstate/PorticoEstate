@@ -37,7 +37,7 @@
 
 		function property_soworkorder()
 		{
-			$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
+		//	$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->account		= $GLOBALS['phpgw_info']['user']['account_id'];
 			$this->bocommon		= CreateObject('property.bocommon');
 			$this->db           	= $this->bocommon->new_db();
@@ -48,12 +48,12 @@
 
 			$this->like			= $this->bocommon->like;
 
-		//	$this->grants 		= $GLOBALS['phpgw']->session->appsession('grants_project',$this->currentapp);
+		//	$this->grants 		= $GLOBALS['phpgw']->session->appsession('grants_project','property');
 		//	if(!$this->grants)
 			{
 				$this->acl 		= CreateObject('phpgwapi.acl');
-				$this->grants		= $this->acl->get_grants($this->currentapp,'.project');
-		//		$GLOBALS['phpgw']->session->appsession('grants_project',$this->currentapp,$this->grants);
+				$this->grants		= $this->acl->get_grants('property','.project');
+		//		$GLOBALS['phpgw']->session->appsession('grants_project','property',$this->grants);
 			}
 		}
 

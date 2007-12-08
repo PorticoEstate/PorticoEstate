@@ -54,7 +54,7 @@
 
 		function property_boactor($session=False)
 		{
-			$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
+		//	$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->so 		= CreateObject('property.soactor');
 			$this->bocommon 	= CreateObject('property.bocommon');
 
@@ -210,7 +210,7 @@
 					}
 
 					$insert_record_actor[]	= $actor['attributes'][$i]['name'];
-					$lookup_link		= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uilookup.addressbook', 'column'=> $actor['attributes'][$i]['name']));
+					$lookup_link		= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uilookup.addressbook', 'column'=> $actor['attributes'][$i]['name']));
 
 					$lookup_functions[$m]['name'] = 'lookup_'. $actor['attributes'][$i]['name'] .'()';
 					$lookup_functions[$m]['action'] = 'Window1=window.open('."'" . $lookup_link ."'" .',"Search","width=800,height=700,toolbar=no,scrollbars=yes,resizable=yes");';
@@ -233,7 +233,7 @@
 					}
 
 					$insert_record_actor[]	= $actor['attributes'][$i]['name'];
-					$lookup_link		= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uilookup.vendor', 'column'=> $actor['attributes'][$i]['name']));
+					$lookup_link		= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uilookup.vendor', 'column'=> $actor['attributes'][$i]['name']));
 
 					$lookup_functions[$m]['name'] = 'lookup_'. $actor['attributes'][$i]['name'] .'()';
 					$lookup_functions[$m]['action'] = 'Window1=window.open('."'" . $lookup_link ."'" .',"Search","width=800,height=700,toolbar=no,scrollbars=yes,resizable=yes");';
@@ -248,7 +248,7 @@
 					}
 
 					$insert_record_actor[]	= $actor['attributes'][$i]['name'];
-					$lookup_link		= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uilookup.phpgw_user', 'column'=> $actor['attributes'][$i]['name']));
+					$lookup_link		= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uilookup.phpgw_user', 'column'=> $actor['attributes'][$i]['name']));
 
 					$lookup_functions[$m]['name'] = 'lookup_'. $actor['attributes'][$i]['name'] .'()';
 					$lookup_functions[$m]['action'] = 'Window1=window.open('."'" . $lookup_link ."'" .',"Search","width=800,height=700,toolbar=no,scrollbars=yes,resizable=yes");';
@@ -296,7 +296,7 @@
 				}
 			}
 
-			$GLOBALS['phpgw']->session->appsession('insert_record_actor',$this->currentapp,isset($insert_record_actor)?$insert_record_actor:'');
+			$GLOBALS['phpgw']->session->appsession('insert_record_actor','property',isset($insert_record_actor)?$insert_record_actor:'');
 
 //_debug_array($actor);
 			return $actor;
@@ -399,7 +399,7 @@
 		{
 			if(!$selected)
 			{
-				$selected=$GLOBALS['phpgw_info']['user']['preferences'][$this->currentapp]["actor_columns_" . $this->role];
+				$selected=$GLOBALS['phpgw_info']['user']['preferences']['property']["actor_columns_" . $this->role];
 			}
 
 			$columns = $this->so->read_attrib(array('allrows'=>$allrows,'column_list'=>True));

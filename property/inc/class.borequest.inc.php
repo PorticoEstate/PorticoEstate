@@ -52,7 +52,7 @@
 
 		function property_borequest($session=False)
 		{
-			$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
+		//	$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->so 			= CreateObject('property.sorequest');
 			$this->bocommon 	= CreateObject('property.bocommon');
 			$this->solocation 	= CreateObject('property.solocation');
@@ -226,7 +226,7 @@
 			}
 			else
 			{
-				$selected=$GLOBALS['phpgw_info']['user']['preferences'][$this->currentapp][$degreedefault_type];
+				$selected=$GLOBALS['phpgw_info']['user']['preferences']['property'][$degreedefault_type];
 			}
 
 			$degree_comment[0]=' - '.lang('None');
@@ -295,7 +295,7 @@
 			}
 			else
 			{
-				$selected=$GLOBALS['phpgw_info']['user']['preferences'][$this->currentapp][$consequencedefault_type];
+				$selected=$GLOBALS['phpgw_info']['user']['preferences']['property'][$consequencedefault_type];
 			}
 
 			$consequence_comment[0]=' - '.lang('None Consequences');

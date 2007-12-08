@@ -41,15 +41,15 @@
 		{
 			if($currentapp)
 			{
-				$this->currentapp	= $currentapp;
+			//	$this->currentapp	= $currentapp;
 			}
 			else
 			{
-				$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];			
+			//	$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];			
 			}
 
 			$this->account		= $GLOBALS['phpgw_info']['user']['account_id'];
-			$this->bocommon		= CreateObject('property.bocommon',$this->currentapp);
+			$this->bocommon		= CreateObject('property.bocommon','property');
 			$this->db           	= $this->bocommon->new_db();
 			$this->db2           	= $this->bocommon->new_db();
 
@@ -424,9 +424,9 @@
 					. "VALUES (99,'Not active')",__LINE__,__FILE__);
 
 				$this->db->query("INSERT INTO phpgw_acl_location (appname, id, descr)"
-		 			. " VALUES ('" . $this->currentapp ."','" . '.location.' . $standard['id'] ."', '" . $standard['name'] . "')");
+		 			. " VALUES ('" . 'property' ."','" . '.location.' . $standard['id'] ."', '" . $standard['name'] . "')");
 		 			
-	//			$GLOBALS['phpgw']->acl->add_location('.location.' . $standard['id'], $standard['name'], $this->currentapp, $allow_grant = false, $custom_tbl = '');
+	//			$GLOBALS['phpgw']->acl->add_location('.location.' . $standard['id'], $standard['name'], 'property', $allow_grant = false, $custom_tbl = '');
 
 				$receipt['message'][] = array('msg' => lang('table %1 has been saved','fm_location'. $receipt['id']));
 				$this->db->transaction_commit();
@@ -500,7 +500,7 @@
 					$this->db->transaction_abort();
 					$this->oProc->m_odb->transaction_abort();
 					$receipt['error'][] = array('msg' => lang('please delete from the bottom'));
-					$GLOBALS['phpgw']->session->appsession('receipt',$this->currentapp,$receipt);
+					$GLOBALS['phpgw']->session->appsession('receipt','property',$receipt);
 					
 					return;
 				}

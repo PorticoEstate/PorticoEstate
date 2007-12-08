@@ -8,7 +8,7 @@
 		
 		$this->db = $this->bocommon->new_db();
 		
-		//$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
+		//'property'	= $GLOBALS['phpgw_info']['flags']['currentapp'];
 		
 		$sql = "SELECT ext_meter_id as maaler_nr FROM fm_entity_1_11 WHERE location_code='" . $values['location_code'] . "'";
 		$this->db->query($sql,__LINE__,__FILE__);
@@ -41,7 +41,7 @@
 					case 'maaler_nr':
 						if($entry['value'] && ($entry['value'] != $maaler_nr))
 						{
-							$this->soproject = CreateObject($this->currentapp.'.soproject');
+							$this->soproject = CreateObject('property.soproject');
 							if ($values['street_name'])
 							{
 								$address = $this->db->db_addslashes($values['street_name'] . ' ' .$values['street_number']);
@@ -70,7 +70,7 @@
 								$attrib_id = 8;
 								if($new_value != $old_value)
 								{
-									$historylog	= CreateObject($this->currentapp.'.historylog','entity_1_11');
+									$historylog	= CreateObject('property.historylog','entity_1_11');
 									$historylog->add('SO',$id,$new_value,False, $attrib_id,$besiktet_dato);
 									$this->db->query("UPDATE fm_entity_1_11 set maaler_stand = '$new_value' WHERE ext_meter_id = '$maaler_nr' AND location_code ='" . $values['location_code']. "'",__LINE__,__FILE__);								
 								}

@@ -30,7 +30,7 @@
 	{
 		function print_pdf($document = '',$document_name = 'document')
 		{
-			$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
+		//	$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			
 			$browser = CreateObject('phpgwapi.browser');
 
@@ -62,7 +62,7 @@
  					die('Directory for temporary pdf-files is not writeable to the webserver - pleace notify the Administrator');
  				}
 
-  				$fname = $this->currentapp . '/pdf_files/'. basename($fname);
+  				$fname = 'property' . '/pdf_files/'. basename($fname);
  				echo '<html>
  				<head>
  				<SCRIPT LANGUAGE="JavaScript"><!-- 

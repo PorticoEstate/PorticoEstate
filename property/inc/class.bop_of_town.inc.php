@@ -71,7 +71,7 @@
 
 		function property_bop_of_town($session=False)
 		{
-			$this->currentapp		= $GLOBALS['phpgw_info']['flags']['currentapp'];
+		//	$this->currentapp		= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->so = CreateObject('property.sop_of_town');
 
 			if ($session)

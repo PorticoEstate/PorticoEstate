@@ -52,7 +52,7 @@
 
 		function property_boproject($session=False)
 		{
-			$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
+		//	$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->so 			= CreateObject('property.soproject');
 			$this->bocommon 	= CreateObject('property.bocommon');
 			$this->solocation = CreateObject('property.solocation');

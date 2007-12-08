@@ -71,7 +71,7 @@
 
 		function property_bostandard_2($session=False)
 		{
-			$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
+		//	$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->so 		= CreateObject('property.sostandard_2');
 			$this->socommon = CreateObject('property.socommon');
 

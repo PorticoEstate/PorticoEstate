@@ -62,7 +62,7 @@
 		function property_uipricebook()
 		{
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = True;
-			$this->currentapp			= $GLOBALS['phpgw_info']['flags']['currentapp'];
+		//	$this->currentapp			= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->nextmatchs			= CreateObject('phpgwapi.nextmatchs');
 
 			$this->bo				= CreateObject('property.bopricebook',True);
@@ -132,7 +132,7 @@
 				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=>1, 'acl_location'=> $this->acl_location));
 			}
 
-			$GLOBALS['phpgw']->session->appsession('referer',$this->currentapp,'');
+			$GLOBALS['phpgw']->session->appsession('referer','property','');
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('pricebook',
 										'menu',
@@ -280,7 +280,7 @@
 				'start'		=> $this->start
 			);
 
-			$GLOBALS['phpgw']->js->validate_file('core','check',$this->currentapp);
+			$GLOBALS['phpgw']->js->validate_file('core','check','property');
 
 			$data = array
 			(
@@ -297,7 +297,7 @@
 				'num_records'					=> count($pricebook_list),
 				'all_records'					=> $this->bo->total_records,
 				'lang_select_all'				=> lang('Select All'),
-				'img_check'					=> $GLOBALS['phpgw']->common->get_image_path($this->currentapp).'/check.png',
+				'img_check'					=> $GLOBALS['phpgw']->common->get_image_path('property').'/check.png',
 				'link_url'					=> $GLOBALS['phpgw']->link('/index.php',$link_data),
 				'img_path'					=> $GLOBALS['phpgw']->common->get_image_path('phpgwapi','default'),
 				'lang_no_cat'					=> lang('no category'),
@@ -319,7 +319,7 @@
 			$appname	= lang('pricebook');
 			$function_msg	= lang('list pricebook per vendor');
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($this->currentapp) . ' - ' . $appname . ': ' . $function_msg;
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('list' => $data));
 		//	$GLOBALS['phpgw']->xslttpl->pp();
 			$this->save_sessiondata();
@@ -332,7 +332,7 @@
 				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=>16, 'acl_location'=> $this->acl_location));
 			}
 
-			$GLOBALS['phpgw']->session->appsession('referer',$this->currentapp,'');
+			$GLOBALS['phpgw']->session->appsession('referer','property','');
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('pricebook',
 										'menu',
@@ -404,7 +404,7 @@
 				$record_limit	= $this->bo->total_records;
 			}
 
-			$GLOBALS['phpgw']->js->validate_file('core','check',$this->currentapp);
+			$GLOBALS['phpgw']->js->validate_file('core','check','property');
 
 			$data = array
 			(
@@ -416,7 +416,7 @@
 				'num_records'					=> count($agreement_list),
 				'all_records'					=> $this->bo->total_records,
 				'lang_select_all'				=> lang('Select All'),
-				'img_check'					=> $GLOBALS['phpgw']->common->get_image_path($this->currentapp).'/check.png',
+				'img_check'					=> $GLOBALS['phpgw']->common->get_image_path('property').'/check.png',
 				'link_url'					=> $GLOBALS['phpgw']->link('/index.php',$link_data),
 				'img_path'					=> $GLOBALS['phpgw']->common->get_image_path('phpgwapi','default'),
 				'lang_status_statustext'			=> lang('Select the status the agreement group belongs to. To do not use a category select NO STATUS'),
@@ -439,7 +439,7 @@
 			$appname	= lang('pricebook');
 			$function_msg	= lang('list agreement group');
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($this->currentapp) . ' - ' . $appname . ': ' . $function_msg;
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('agreement_group' => $data));
 		//	$GLOBALS['phpgw']->xslttpl->pp();
 			$this->save_sessiondata();
@@ -569,7 +569,7 @@
 
 			$appname	= lang('pricebook');
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($this->currentapp) . ' - ' . $appname . ': ' . $function_msg;
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('edit_agreement_group' => $data));
 		//	$GLOBALS['phpgw']->xslttpl->pp();
 		}
@@ -595,12 +595,12 @@
 			$agreement_id	= phpgw::get_var('agreement_id', 'int', 'GET');
 			$values			= phpgw::get_var('values');
 
-			$referer	= $GLOBALS['phpgw']->session->appsession('referer',$this->currentapp);
+			$referer	= $GLOBALS['phpgw']->session->appsession('referer','property');
 			if(!$referer)
 			{
 				$referer = $GLOBALS['HTTP_SERVER_VARS']['HTTP_REFERER'] ? $GLOBALS['HTTP_SERVER_VARS']['HTTP_REFERER'] : $GLOBALS['HTTP_REFERER'];
 				$referer = $referer . '&cat_id=' . $cat_id;
-				$GLOBALS['phpgw']->session->appsession('referer',$this->currentapp,$referer);
+				$GLOBALS['phpgw']->session->appsession('referer','property',$referer);
 			}
 
 			if($values['submit_update'])
@@ -786,7 +786,7 @@
 			$appname	= lang('pricebook');
 			$function_msg	= lang('edit pricing');
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($this->currentapp) . ' - ' . $appname . ': ' . $function_msg;
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('prizing' => $data));
 		//	$GLOBALS['phpgw']->xslttpl->pp();
 			$this->save_sessiondata();
@@ -960,7 +960,7 @@
 			$appname	= lang('pricebook');
 			$function_msg	= lang('list activities per agreement_group');
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($this->currentapp) . ' - ' . $appname . ': ' . $function_msg;
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('list_activities' => $data));
 		//	$GLOBALS['phpgw']->xslttpl->pp();
 			$this->save_sessiondata();
@@ -973,7 +973,7 @@
 				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=>16, 'acl_location'=> $this->acl_location));
 			}
 
-			$GLOBALS['phpgw']->session->appsession('referer',$this->currentapp,'');
+			$GLOBALS['phpgw']->session->appsession('referer','property','');
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('pricebook',
 										'menu',
@@ -1098,7 +1098,7 @@
 			$appname	= lang('pricebook');
 			$function_msg	= lang('list vendors per activity');
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($this->currentapp) . ' - ' . $appname . ': ' . $function_msg;
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('list_activity_vendor' => $data));
 		//	$GLOBALS['phpgw']->xslttpl->pp();
 			$this->save_sessiondata();
@@ -1260,7 +1260,7 @@
 
 			$appname = lang('pricebook');
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($this->currentapp) . ' - ' . $appname . ': ' . $function_msg;
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('edit_activity' => $data));
 		//	$GLOBALS['phpgw']->xslttpl->pp();
 		}
@@ -1363,7 +1363,7 @@
 
 			$appname						= lang('pricebook');
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($this->currentapp) . ' - ' . $appname . ': ' . $function_msg;
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('delete' => $data));
 		//	$GLOBALS['phpgw']->xslttpl->pp();
 		}

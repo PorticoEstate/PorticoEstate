@@ -53,7 +53,7 @@
 		function property_uip_of_town()
 		{
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = True;
-			$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
+		//	$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->nextmatchs	= CreateObject('phpgwapi.nextmatchs');
 			$this->account		= $GLOBALS['phpgw_info']['user']['account_id'];
 
@@ -97,7 +97,7 @@
 		{
 			if(!$this->acl_read)
 			{
-				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> $this->currentapp.'.uilocation.stop', 'perm'=>1, 'acl_location'=> $this->acl_location));
+				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=>1, 'acl_location'=> $this->acl_location));
 			}
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('p_of_town',
@@ -122,9 +122,9 @@
 						'part_of_town_id'		=> $p_of_town['part_of_town_id'],
 						'name'				=> $p_of_town['name'],
 						'category'			=> $p_of_town['category'],
-						'link_view'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uip_of_town.view', 'part_of_town_id'=> $p_of_town['part_of_town_id'])),
-						'link_edit'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uip_of_town.edit', 'part_of_town_id'=> $p_of_town['part_of_town_id'])),
-						'link_delete'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uip_of_town.delete', 'part_of_town_id'=> $p_of_town['part_of_town_id'])),
+						'link_view'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uip_of_town.view', 'part_of_town_id'=> $p_of_town['part_of_town_id'])),
+						'link_edit'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uip_of_town.edit', 'part_of_town_id'=> $p_of_town['part_of_town_id'])),
+						'link_delete'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uip_of_town.delete', 'part_of_town_id'=> $p_of_town['part_of_town_id'])),
 						'lang_view_statustext'		=> lang('view the part of town'),
 						'lang_edit_statustext'		=> lang('edit the part of town'),
 						'lang_delete_statustext'	=> lang('delete the part of town'),
@@ -148,7 +148,7 @@
 											'sort'	=> $this->sort,
 											'var'	=> 'name',
 											'order'	=> $this->order,
-											'extra'	=> array('menuaction'	=> $this->currentapp.'.uip_of_town.index',
+											'extra'	=> array('menuaction'	=> 'property.uip_of_town.index',
 																	'district_id'	=> $this->district_id,
 																	'query'		=> $this->query,
 																	'allrows'	=> $this->allrows)
@@ -158,7 +158,7 @@
 											'sort'	=> $this->sort,
 											'var'	=> 'part_of_town_id',
 											'order'	=> $this->order,
-											'extra'	=> array('menuaction'	=> $this->currentapp.'.uip_of_town.index',
+											'extra'	=> array('menuaction'	=> 'property.uip_of_town.index',
 																	'district_id'	=> $this->district_id,
 																	'query'		=> $this->query,
 																	'allrows'	=> $this->allrows)
@@ -168,7 +168,7 @@
 											'sort'	=> $this->sort,
 											'var'	=> 'descr',
 											'order'	=> $this->order,
-											'extra'	=> array('menuaction'	=> $this->currentapp.'.uip_of_town.index',
+											'extra'	=> array('menuaction'	=> 'property.uip_of_town.index',
 																	'district_id'	=> $this->district_id,
 																	'query'		=> $this->query,
 																	'allrows'	=> $this->allrows)
@@ -180,12 +180,12 @@
 			(
 				'lang_add'		=> lang('add'),
 				'lang_add_statustext'	=> lang('add a part of town'),
-				'add_action'		=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uip_of_town.edit'))
+				'add_action'		=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uip_of_town.edit'))
 			);
 
 			$link_data = array
 			(
-				'menuaction'	=> $this->currentapp.'.uip_of_town.index',
+				'menuaction'	=> 'property.uip_of_town.index',
 				'sort'		=> $this->sort,
 				'order'		=> $this->order,
 				'district_id'	=> $this->district_id,
@@ -242,7 +242,7 @@
 		{
 			if(!$this->acl_add)
 			{
-				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> $this->currentapp.'.uilocation.stop', 'perm'=> 2, 'acl_location'=> $this->acl_location));
+				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=> 2, 'acl_location'=> $this->acl_location));
 			}
 
 			$part_of_town_id	= phpgw::get_var('part_of_town_id', 'int');
@@ -277,14 +277,14 @@
 					if ($values['save'])
 					{
 						$GLOBALS['phpgw']->session->appsession('session_data','p_of_town_receipt',$receipt);
-						$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> $this->currentapp.'.uip_of_town.index'));
+						$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uip_of_town.index'));
 					}
 				}
 			}
 
 			if ($values['cancel'])
 			{
-				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> $this->currentapp.'.uip_of_town.index'));
+				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uip_of_town.index'));
 			}
 
 
@@ -296,7 +296,7 @@
 
 			$link_data = array
 			(
-				'menuaction'		=> $this->currentapp.'.uip_of_town.edit',
+				'menuaction'		=> 'property.uip_of_town.edit',
 				'part_of_town_id'	=> $part_of_town_id
 			);
 
@@ -333,7 +333,7 @@
 		{
 			if(!$this->acl_delete)
 			{
-				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> $this->currentapp.'.uilocation.stop', 'perm'=> 8, 'acl_location'=> $this->acl_location));
+				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=> 8, 'acl_location'=> $this->acl_location));
 			}
 
 			$part_of_town_id	= phpgw::get_var('part_of_town_id', 'int');
@@ -342,7 +342,7 @@
 
 			$link_data = array
 			(
-				'menuaction' => $this->currentapp.'.uip_of_town.index'
+				'menuaction' => 'property.uip_of_town.index'
 			);
 
 			if (phpgw::get_var('confirm', 'bool', 'POST'))
@@ -356,7 +356,7 @@
 			$data = array
 			(
 				'done_action'		=> $GLOBALS['phpgw']->link('/index.php',$link_data),
-				'delete_action'		=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uip_of_town.delete', 'part_of_town_id'=> $part_of_town_id)),
+				'delete_action'		=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uip_of_town.delete', 'part_of_town_id'=> $part_of_town_id)),
 				'lang_confirm_msg'	=> lang('do you really want to delete this entry'),
 				'lang_yes'		=> lang('yes'),
 				'lang_yes_statustext'	=> lang('Delete the entry'),
@@ -367,7 +367,7 @@
 			$appname	= lang('part of town');
 			$function_msg	= lang('delete part of town');
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($this->currentapp) . ' - ' . $appname . ': ' . $function_msg;
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('delete' => $data));
 		//	$GLOBALS['phpgw']->xslttpl->pp();
 		}
@@ -376,7 +376,7 @@
 		{
 			if(!$this->acl_read)
 			{
-				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> $this->currentapp.'.uilocation.stop', 'perm'=>1, 'acl_location'=> $this->acl_location));
+				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=>1, 'acl_location'=> $this->acl_location));
 			}
 
 			$part_of_town_id	= phpgw::get_var('part_of_town_id', 'int', 'GET');
@@ -388,7 +388,7 @@
 			$p_of_town = $this->bo->read_single($part_of_town_id);
 			$data = array
 			(
-				'done_action'		=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uip_of_town.index')),
+				'done_action'		=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uip_of_town.index')),
 				'lang_id'		=> lang('ID'),
 				'lang_name'		=> lang('name'),
 				'lang_district'		=> lang('District'),

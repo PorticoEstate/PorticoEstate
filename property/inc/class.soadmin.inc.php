@@ -36,7 +36,7 @@
 	{
 		function property_soadmin()
 		{
-			$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
+		//	$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->account		= $GLOBALS['phpgw_info']['user']['account_id'];
 			$this->bocommon		= CreateObject('property.bocommon');
 			$this->db           	= $this->bocommon->new_db();
@@ -76,7 +76,7 @@
 			{
 				$filter = ' AND allow_grant=1';
 			}
-			$this->db->query("SELECT * FROM phpgw_acl_location WHERE appname = '{$this->currentapp}' $filter ORDER BY id ");
+			$this->db->query("SELECT * FROM phpgw_acl_location WHERE appname = '{'property'}' $filter ORDER BY id ");
 
 				$i = 0;
 				while ($this->db->next_record())

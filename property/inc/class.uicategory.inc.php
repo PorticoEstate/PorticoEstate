@@ -53,7 +53,7 @@
 		function property_uicategory()
 		{
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = True;
-			$this->currentapp			= $GLOBALS['phpgw_info']['flags']['currentapp'];
+		//	$this->currentapp			= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->nextmatchs			= CreateObject('phpgwapi.nextmatchs');
 			$this->account				= $GLOBALS['phpgw_info']['user']['account_id'];
 			$this->bo				= CreateObject('property.bocategory',true);
@@ -92,7 +92,7 @@
 		{
 			if(!$this->acl_read)
 			{
-				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> $this->currentapp.'.uilocation.stop', 'perm'=>1, 'acl_location'=> $this->acl_location));
+				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=>1, 'acl_location'=> $this->acl_location));
 			}
 
 			$type		= phpgw::get_var('type');
@@ -114,8 +114,8 @@
 				(
 					'id'				=> $category['id'],
 					'first'				=> $first,
-					'link_edit'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uicategory.edit', 'id'=> $category['id'], 'type'=> $type, 'type_id'=> $type_id)),
-					'link_delete'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uicategory.delete', 'id'=> $category['id'], 'type'=> $type, 'type_id'=> $type_id)),
+					'link_edit'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uicategory.edit', 'id'=> $category['id'], 'type'=> $type, 'type_id'=> $type_id)),
+					'link_delete'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uicategory.delete', 'id'=> $category['id'], 'type'=> $type, 'type_id'=> $type_id)),
 					'lang_view_categorytext'	=> lang('view the category'),
 					'lang_edit_categorytext'	=> lang('edit the category'),
 					'lang_delete_categorytext'	=> lang('delete the category'),
@@ -138,7 +138,7 @@
 											'sort'	=> $this->sort,
 											'var'	=> 'id',
 											'order'	=> $this->order,
-											'extra'	=> array('menuaction'	=> $this->currentapp.'.uicategory.index',
+											'extra'	=> array('menuaction'	=> 'property.uicategory.index',
 																	'type'	=> $type,
 																	'type_id' => $type_id)
 										)),
@@ -149,7 +149,7 @@
 			(
 				'lang_add'		=> lang('add'),
 				'lang_add_categorytext'	=> lang('add a category'),
-				'add_action'		=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uicategory.edit', 'type'=> $type,  'type_id'=> $type_id)),
+				'add_action'		=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uicategory.edit', 'type'=> $type,  'type_id'=> $type_id)),
 				'lang_done'		=> lang('done'),
 				'lang_done_categorytext'=> lang('back to admin'),
 				'done_action'		=> $GLOBALS['phpgw']->link('/admin/index.php')
@@ -173,7 +173,7 @@
 				'record_limit'					=> $record_limit,
 				'num_records'					=> count($category_list),
 				'all_records'					=> $this->bo->total_records,
-				'link_url'					=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uicategory.index', 'type'=> $type, 'type_id'=> $type_id)),
+				'link_url'					=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uicategory.index', 'type'=> $type, 'type_id'=> $type_id)),
 				'img_path'					=> $GLOBALS['phpgw']->common->get_image_path('phpgwapi','default'),
 				'lang_searchfield_categorytext'			=> lang('Enter the search string. To show all entries, empty this field and press the SUBMIT button again'),
 				'lang_searchbutton_categorytext'		=> lang('Submit the search string'),
@@ -188,7 +188,7 @@
 ;
 			$function_msg	= lang('list %1 category',$type);
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($this->currentapp) . ' - ' . $appname . ': ' . $function_msg;
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('list' => $data));
 			$this->save_sessiondata();
 		}
@@ -197,7 +197,7 @@
 		{
 			if(!$this->acl_add)
 			{
-				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> $this->currentapp.'.uilocation.stop', 'perm'=> 2, 'acl_location'=> $this->acl_location));
+				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=> 2, 'acl_location'=> $this->acl_location));
 			}
 
 			$type	= phpgw::get_var('type');
@@ -248,7 +248,7 @@
 
 			$link_data = array
 			(
-				'menuaction'	=> $this->currentapp.'.uicategory.edit',
+				'menuaction'	=> 'property.uicategory.edit',
 				'id'		=> $id,
 				'type'		=> $type,
 				'type_id'	=> $type_id
@@ -261,7 +261,7 @@
 			(
 				'msgbox_data'					=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
 				'form_action'					=> $GLOBALS['phpgw']->link('/index.php',$link_data),
-				'done_action'					=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uicategory.index', 'type'=> $type, 'type_id'=> $type_id)),
+				'done_action'					=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uicategory.index', 'type'=> $type, 'type_id'=> $type_id)),
 				'lang_id'					=> lang('category ID'),
 				'lang_descr'					=> lang('Descr'),
 				'lang_save'					=> lang('save'),
@@ -277,7 +277,7 @@
 
 			$appname	= lang($type). ' ' . $type_id;
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($this->currentapp) . ' - ' . $appname . ': ' . $function_msg;
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('edit' => $data));
 		}
 
@@ -285,7 +285,7 @@
 		{
 			if(!$this->acl_delete)
 			{
-				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> $this->currentapp.'.uilocation.stop', 'perm'=> 8, 'acl_location'=> $this->acl_location));
+				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=> 8, 'acl_location'=> $this->acl_location));
 			}
 
 			$type		= phpgw::get_var('type');
@@ -295,7 +295,7 @@
 
 			$link_data = array
 			(
-				'menuaction'	=> $this->currentapp.'.uicategory.index',
+				'menuaction'	=> 'property.uicategory.index',
 				'type'		=> $type,
 				'type_id'	=> $type_id
 			);
@@ -311,7 +311,7 @@
 			$data = array
 			(
 				'done_action'			=> $GLOBALS['phpgw']->link('/index.php',$link_data),
-				'delete_action'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uicategory.delete', 'id'=> $id, 'type'=> $type, 'type_id'=> $type_id)),
+				'delete_action'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uicategory.delete', 'id'=> $id, 'type'=> $type, 'type_id'=> $type_id)),
 				'lang_confirm_msg'		=> lang('do you really want to delete this entry'),
 				'lang_yes'			=> lang('yes'),
 				'lang_yes_categorytext'		=> lang('Delete the entry'),
@@ -322,7 +322,7 @@
 			$appname	= lang($type). ' ' . $type_id;
 			$function_msg	= lang('delete '.$type.' category');
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($this->currentapp) . ' - ' . $appname . ': ' . $function_msg;
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('delete' => $data));
 		}
 	}

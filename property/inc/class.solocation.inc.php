@@ -37,7 +37,7 @@
 
 		function property_solocation()
 		{
-			$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
+		//	$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
 
 			$this->account			= $GLOBALS['phpgw_info']['user']['account_id'];
 			$this->soadmin_location	= CreateObject('property.soadmin_location');
@@ -81,7 +81,7 @@
 			{		
 				$entity[] = array
 				(
-					'entity_link'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uitts.index', 'query'=> $location_code)),
+					'entity_link'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uitts.index', 'query'=> $location_code)),
 					'name'		=> lang('Helpdesk') . ' [' . $this->db2->f('hits') . ']',
 					'descr'		=> lang('Helpdesk')
 				);
@@ -94,7 +94,7 @@
 			{		
 				$entity[] = array
 				(
-					'entity_link'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction' => $this->currentapp.'.uidocument.index','query'=> $location_code)),
+					'entity_link'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction' => 'property.uidocument.index','query'=> $location_code)),
 					'name'		=> lang('Documentation') . ' [' . $this->db2->f('hits') . ']',
 					'descr'		=> lang('Documentation')
 				);
@@ -414,7 +414,7 @@
 					}
 				}
 
-				$user_columns = isset($GLOBALS['phpgw_info']['user']['preferences'][$this->currentapp]['location_columns_'.$type_id]) ? $GLOBALS['phpgw_info']['user']['preferences'][$this->currentapp]['location_columns_'.$type_id] : '';
+				$user_columns = isset($GLOBALS['phpgw_info']['user']['preferences']['property']['location_columns_'.$type_id]) ? $GLOBALS['phpgw_info']['user']['preferences']['property']['location_columns_'.$type_id] : '';
 
 				if (isset($user_columns) AND is_array($user_columns) AND $user_columns[0])
 				{
@@ -499,7 +499,7 @@
 
 			if ($filter > 0)
 			{
-				if($GLOBALS['phpgw_info']['user']['preferences'][$this->currentapp]['property_filter'] == 'owner')
+				if($GLOBALS['phpgw_info']['user']['preferences']['property']['property_filter'] == 'owner')
 				{
 					$filtermethod .= " $where fm_owner.id='$filter' ";
 				}
@@ -1171,7 +1171,7 @@
 
 			if($filter>0)
 			{
-				if($GLOBALS['phpgw_info']['user']['preferences'][$this->currentapp]['property_filter'] == 'owner')
+				if($GLOBALS['phpgw_info']['user']['preferences']['property']['property_filter'] == 'owner')
 				{
 					$filtermethod .= " $where fm_owner.id='$filter' ";
 				}

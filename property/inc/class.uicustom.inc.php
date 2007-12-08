@@ -54,7 +54,7 @@
 		function property_uicustom()
 		{
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = True;
-			$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
+		//	$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->nextmatchs	= CreateObject('phpgwapi.nextmatchs');
 			$this->account		= $GLOBALS['phpgw_info']['user']['account_id'];
 
@@ -137,19 +137,19 @@
 					{
 						$content[$j]['row'][$i]['statustext']			= lang('view the entity');
 						$content[$j]['row'][$i]['text']				= lang('view');
-						$content[$j]['row'][$i++]['link']			= $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> $this->currentapp.'.uicustom.view', 'custom_id'=> $entry['custom_id']));
+						$content[$j]['row'][$i++]['link']			= $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'property.uicustom.view', 'custom_id'=> $entry['custom_id']));
 					}
 					if($this->acl_edit)
 					{
 						$content[$j]['row'][$i]['statustext']			= lang('edit the actor');
 						$content[$j]['row'][$i]['text']				= lang('edit');
-						$content[$j]['row'][$i++]['link']			= $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> $this->currentapp.'.uicustom.edit', 'custom_id'=> $entry['custom_id']));
+						$content[$j]['row'][$i++]['link']			= $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'property.uicustom.edit', 'custom_id'=> $entry['custom_id']));
 					}
 					if($this->acl_delete)
 					{
 						$content[$j]['row'][$i]['statustext']			= lang('delete the actor');
 						$content[$j]['row'][$i]['text']				= lang('delete');
-						$content[$j]['row'][$i++]['link']			= $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> $this->currentapp.'.uicustom.delete', 'custom_id'=> $entry['custom_id']));
+						$content[$j]['row'][$i++]['link']			= $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'property.uicustom.delete', 'custom_id'=> $entry['custom_id']));
 					}
 
 					$j++;
@@ -167,7 +167,7 @@
 					'sort'	=> $this->sort,
 					'var'	=> 'id',
 					'order'	=> $this->order,
-					'extra'	=> array('menuaction'	=> $this->currentapp.'.uicustom.index',
+					'extra'	=> array('menuaction'	=> 'property.uicustom.index',
 										'query'	=>$this->query,
 										'start_date'	=> $start_date,
 										'end_date'=>$end_date)
@@ -182,7 +182,7 @@
 					'sort'	=> $this->sort,
 					'var'	=> 'name',
 					'order'	=> $this->order,
-					'extra'	=> array('menuaction'	=> $this->currentapp.'.uicustom.index',
+					'extra'	=> array('menuaction'	=> 'property.uicustom.index',
 										'query'		=> $this->query,
 										'start_date'	=> $start_date,
 										'end_date'	=> $end_date)
@@ -198,7 +198,7 @@
 					'sort'	=> $this->sort,
 					'var'	=> 'name',
 					'order'	=> $this->order,
-					'extra'	=> array('menuaction'	=> $this->currentapp.'.uicustom.index',
+					'extra'	=> array('menuaction'	=> 'property.uicustom.index',
 										'query'		=> $this->query,
 										'start_date'	=> $start_date,
 										'end_date'	=> $end_date)
@@ -213,7 +213,7 @@
 					'sort'	=> $this->sort,
 					'var'	=> 'user_id',
 					'order'	=> $this->order,
-					'extra'	=> array('menuaction'	=> $this->currentapp.'.uicustom.index',
+					'extra'	=> array('menuaction'	=> 'property.uicustom.index',
 										'query'		=> $this->query,
 										'start_date'	=> $start_date,
 										'end_date'	=> $end_date)
@@ -250,13 +250,13 @@
 				(
 					'lang_add'		=> lang('add'),
 					'lang_add_statustext'	=> lang('add a custom query'),
-					'add_action'		=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> $this->currentapp.'.uicustom.edit'))
+					'add_action'		=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'property.uicustom.edit'))
 				);
 			}
 
 			$link_data = array
 			(
-				'menuaction'	=> $this->currentapp.'.uicustom.index',
+				'menuaction'	=> 'property.uicustom.index',
 				'sort'		=> $this->sort,
 				'order'		=> $this->order,
 				'cat_id'	=> $this->cat_id,
@@ -307,7 +307,7 @@
 		{
 			if(!$this->acl_add && !$this->acl_edit)
 			{
-				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> $this->currentapp.'.uilocation.stop', 'perm'=>2, 'acl_location'=> $this->acl_location));
+				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=>2, 'acl_location'=> $this->acl_location));
 			}
 
 			$custom_id	= phpgw::get_var('custom_id', 'int');
@@ -344,14 +344,14 @@
 					if ($values['save'])
 					{
 						$GLOBALS['phpgw']->session->appsession('session_data','custom_receipt',$receipt);
-						$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction'=> $this->currentapp.'.uicustom.index'));
+						$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction'=> 'property.uicustom.index'));
 					}
 				}
 			}
 
 			if ($values['cancel'])
 			{
-				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction'=> $this->currentapp.'.uicustom.index'));
+				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction'=> 'property.uicustom.index'));
 			}
 
 
@@ -364,7 +364,7 @@
 
 			$link_data = array
 			(
-				'menuaction'	=> $this->currentapp.'.uicustom.edit',
+				'menuaction'	=> 'property.uicustom.edit',
 				'custom_id'	=> $custom_id
 			);
 
@@ -379,8 +379,8 @@
 					'sorting'	=> $entry['sorting'],
 					'text_up'	=> lang('Up'),
 					'text_down'	=> lang('Down'),
-					'link_up'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> $this->currentapp.'.uicustom.edit', 'resort'=> 'up', 'cols_id'=> $entry['id'], 'custom_id'=> $custom_id)),
-					'link_down'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> $this->currentapp.'.uicustom.edit', 'resort'=> 'down', 'cols_id'=> $entry['id'], 'custom_id'=> $custom_id)),
+					'link_up'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'property.uicustom.edit', 'resort'=> 'up', 'cols_id'=> $entry['id'], 'custom_id'=> $custom_id)),
+					'link_down'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'property.uicustom.edit', 'resort'=> 'down', 'cols_id'=> $entry['id'], 'custom_id'=> $custom_id)),
 					);
 			}
 
@@ -432,7 +432,7 @@
 
 			$link_data = array
 			(
-				'menuaction' => $this->currentapp.'.uicustom.index'
+				'menuaction' => 'property.uicustom.index'
 			);
 
 			if (phpgw::get_var('confirm', 'bool', 'POST'))
@@ -446,7 +446,7 @@
 			$data = array
 			(
 				'done_action'		=> $GLOBALS['phpgw']->link('/index.php',$link_data),
-				'delete_action'		=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> $this->currentapp.'.uicustom.delete', 'custom_id'=> $custom_id)),
+				'delete_action'		=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'property.uicustom.delete', 'custom_id'=> $custom_id)),
 				'lang_confirm_msg'	=> lang('do you really want to delete this entry'),
 				'lang_yes'		=> lang('yes'),
 				'lang_yes_statustext'	=> lang('Delete the entry'),
@@ -457,7 +457,7 @@
 			$appname	= lang('custom');
 			$function_msg	= lang('delete custom');
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($this->currentapp) . ' - ' . $appname . ': ' . $function_msg;
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('delete' => $data));
 		//	$GLOBALS['phpgw']->xslttpl->pp();
 		}
@@ -502,7 +502,7 @@
 
 			$link_data = array
 			(
-				'menuaction'	=> $this->currentapp.'.uicustom.view',
+				'menuaction'	=> 'property.uicustom.view',
 				'sort'		=> $this->sort,
 				'order'		=> $this->order,
 				'custom_id'	=> $custom_id,
@@ -522,7 +522,7 @@
 
 			$link_excel = array
 			(
-				'menuaction'	=> $this->currentapp.'.uicustom.excel',
+				'menuaction'	=> 'property.uicustom.excel',
 				'sort'		=> $this->sort,
 				'order'		=> $this->order,
 				'filter'	=> $this->filter,
@@ -531,7 +531,7 @@
 				'allrows'	=> $this->allrows
 			);
 
-			$GLOBALS['phpgw']->js->validate_file('overlib','overlib',$this->currentapp);
+			$GLOBALS['phpgw']->js->validate_file('overlib','overlib','property');
 
 			$data = array
 			(
@@ -555,7 +555,7 @@
 				'table_header'				=> $table_header,
 				'values'				=> $content,
 
-				'done_action'				=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> $this->currentapp.'.uicustom.index')),
+				'done_action'				=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'property.uicustom.index')),
 				'lang_done'				=> lang('done'),
 			);
 
