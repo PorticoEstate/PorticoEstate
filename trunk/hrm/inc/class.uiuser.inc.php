@@ -81,7 +81,7 @@
 			{
 				if($entry['grants'])
 				{
-					$link_training				= $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> $this->currentapp.'.uiuser.training', 'user_id'=> $entry['account_id']));
+					$link_training				= $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'hrm.uiuser.training', 'user_id'=> $entry['account_id']));
 					$text_training				= lang('training');
 					$lang_training_user_text	= lang('Training profile');
 				}
@@ -96,9 +96,9 @@
 				(
 					'first_name'				=> $entry['account_firstname'],
 					'last_name'					=> $entry['account_lastname'],
-//					'link_edit'					=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> $this->currentapp.'.uiuser.training', 'user_id'=> $entry['account_id'])),
+//					'link_edit'					=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'hrm.uiuser.training', 'user_id'=> $entry['account_id'])),
 					'link_training'				=> $link_training,
-					'link_view'					=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> $this->currentapp.'.uiuser.view' ,' user_id'=> $entry['account_id'])),
+					'link_view'					=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'hrm.uiuser.view' ,' user_id'=> $entry['account_id'])),
 					'lang_view_user_text'		=> lang('view the user'),
 					'lang_training_user_text'	=> $lang_training_user_text,
 					'lang_edit_user_text'		=> lang('edit the user'),
@@ -117,7 +117,7 @@
 											'sort'	=> $this->sort,
 											'var'	=> 'account_lastname',
 											'order'	=> $this->order,
-											'extra'	=> array('menuaction'		=> $this->currentapp.'.uiuser.index',
+											'extra'	=> array('menuaction'		=> 'hrm.uiuser.index',
 														'query'		=> $this->query,
 														'allrows' 	=> $this->allrows)
 										)),
@@ -127,7 +127,7 @@
 											'sort'	=> $this->sort,
 											'var'	=> 'account_firstname',
 											'order'	=> $this->order,
-											'extra'	=> array('menuaction'		=> $this->currentapp.'.uiuser.index',
+											'extra'	=> array('menuaction'		=> 'hrm.uiuser.index',
 														'query'		=> $this->query,
 														'allrows'	=> $this->allrows)
 										)),
@@ -148,7 +148,7 @@
 
 			$link_data = array
 			(
-				'menuaction'	=> $this->currentapp.'.uiuser.index',
+				'menuaction'	=> 'hrm.uiuser.index',
 				'sort'			=> $this->sort,
 				'order'			=> $this->order,
 				'query'			=> $this->query
@@ -176,7 +176,7 @@
 			$appname	= lang('user');
 			$function_msg	= lang('list user');
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($this->currentapp) . ' - ' . $appname . ': ' . $function_msg;
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('hrm') . ' - ' . $appname . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('list' => $data));
 			$this->save_sessiondata();
 		}
@@ -326,13 +326,13 @@
 
 				if($this->bocommon->check_perms($this->grants[$user_id], PHPGW_ACL_EDIT))
 				{
-					$link_edit	= $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> $this->currentapp.'.uiuser.edit', 'user_id'=> $user_id, 'training_id'=> $entry['training_id']));
+					$link_edit	= $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'hrm.uiuser.edit', 'user_id'=> $user_id, 'training_id'=> $entry['training_id']));
 					$text_edit	= lang('edit');
 					$lang_edit_text	= lang('edit training item');
 				}
 				if($this->bocommon->check_perms($this->grants[$user_id], PHPGW_ACL_DELETE))
 				{
-					$link_delete		= $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> $this->currentapp.'.uiuser.delete', 'user_id'=> $user_id, 'training_id'=> $entry['training_id']));
+					$link_delete		= $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'hrm.uiuser.delete', 'user_id'=> $user_id, 'training_id'=> $entry['training_id']));
 					$text_delete		= lang('delete');
 					$lang_delete_text	= lang('delete training item');
 				}
@@ -345,7 +345,7 @@
 					'end_date'		=> $entry['end_date'],
 					'category'		=> $entry['category'],
 					'link_edit'		=> $link_edit,
-					'link_view'		=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> $this->currentapp.'.uiuser.view', 'user_id'=> $user_id, 'training_id'=> $entry['training_id'])),
+					'link_view'		=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'hrm.uiuser.view', 'user_id'=> $user_id, 'training_id'=> $entry['training_id'])),
 					'link_delete'		=> $link_delete,
 					'lang_view_text'	=> lang('view training item'),
 					'lang_edit_text'	=> $lang_edit_text,
@@ -370,7 +370,7 @@
 											'sort'	=> $this->sort,
 											'var'	=> 'phpgw_hrm_training_place.name',
 											'order'	=> $this->order,
-											'extra'	=> array('menuaction'	=> $this->currentapp.'.uiuser.training',
+											'extra'	=> array('menuaction'	=> 'hrm.uiuser.training',
 														'user_id'	=> $user_id,
 														'query'		=> $this->query,
 												//		'cat_id'	=> $this->cat_id,
@@ -381,7 +381,7 @@
 											'sort'	=> $this->sort,
 											'var'	=> 'start_date',
 											'order'	=> $this->order,
-											'extra'	=> array('menuaction'		=> $this->currentapp.'.uiuser.training',
+											'extra'	=> array('menuaction'		=> 'hrm.uiuser.training',
 														'user_id'	=> $user_id,
 														'query'		=> $this->query,
 												//		'cat_id'	=> $this->cat_id,
@@ -393,7 +393,7 @@
 											'sort'	=> $this->sort,
 											'var'	=> 'phpgw_hrm_training.title',
 											'order'	=> $this->order,
-											'extra'	=> array('menuaction'	=> $this->currentapp.'.uiuser.training',
+											'extra'	=> array('menuaction'	=> 'hrm.uiuser.training',
 														'user_id'	=> $user_id,
 														'query'		=> $this->query,
 												//		'cat_id'	=> $this->cat_id,
@@ -411,13 +411,13 @@
 			$function_msg = lang('list training');
 			$link_data = array
 			(
-				'menuaction'	=> $this->currentapp.'.uiuser.edit',
+				'menuaction'	=> 'hrm.uiuser.edit',
 				'user_id'	=> $user_id
 			);
 
 			if($this->bocommon->check_perms($this->grants[$user_id], PHPGW_ACL_ADD))
 			{
-				$add_action	= $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> $this->currentapp.'.uiuser.edit', 'user_id'=> $user_id));
+				$add_action	= $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'hrm.uiuser.edit', 'user_id'=> $user_id));
 				$lang_add	= lang('add');
 			}
 			
@@ -428,14 +428,14 @@
 				'add_action'				=> $add_action,
 				'lang_done'					=> lang('done'),
 				'lang_done_training_text'	=> lang('back to user list'),
-				'done_action'				=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> $this->currentapp.'.uiuser.index'))
+				'done_action'				=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'hrm.uiuser.index'))
 			);
 
 			$msgbox_data = $this->bocommon->msgbox_data($receipt);
 
 			$link_cv_data = array
 			(
-				'menuaction'	=> $this->currentapp.'.uiuser.view_cv',
+				'menuaction'	=> 'hrm.uiuser.view_cv',
 				'user_id'	=> $user_id,
 				'order'		=> $this->order,
 				'sort'		=> $this->sort
@@ -453,7 +453,7 @@
 				'user_values'				=> $user_values,
 				'msgbox_data'				=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
 				'form_action'				=> $GLOBALS['phpgw']->link('/index.php',$link_data),
-				'done_action'				=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> $this->currentapp.'.uiuser.index')),
+				'done_action'				=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'hrm.uiuser.index')),
 				'lang_id'					=> lang('training ID'),
 				'lang_descr'				=> lang('Descr'),
 				'lang_save'					=> lang('save'),
@@ -471,7 +471,7 @@
 
 			$appname					= lang('Training');
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($this->currentapp) . ' - ' . $appname . ': ' . $function_msg;
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('hrm') . ' - ' . $appname . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('training' => $data));
 		}
 
@@ -552,13 +552,13 @@
 						if ($values['save'])
 						{
 							$GLOBALS['phpgw']->session->appsession('session_data','hrm_training_receipt',$receipt);
-							$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction'=> $this->currentapp.'.uiuser.training', 'user_id'=> $user_id));
+							$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction'=> 'hrm.uiuser.training', 'user_id'=> $user_id));
 						}
 					}
 				}
 				else
 				{
-					$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction'=> $this->currentapp.'.uiuser.training', 'user_id'=> $user_id));
+					$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction'=> 'hrm.uiuser.training', 'user_id'=> $user_id));
 				}
 			}
 
@@ -581,7 +581,7 @@
 
 			$link_data = array
 			(
-				'menuaction'	=> $this->currentapp.'.uiuser.edit',
+				'menuaction'	=> 'hrm.uiuser.edit',
 				'training_id'	=> $training_id,
 				'user_id' 	=> $user_id
 			);
@@ -690,7 +690,7 @@
 
 			$appname					= lang('Training');
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($this->currentapp) . ' - ' . $appname . ': ' . $function_msg;
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('hrm') . ' - ' . $appname . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('edit' => $data));
 		}
 
@@ -751,7 +751,7 @@
 				'lang_new_place_status_text'		=> lang('Enter a new place'),
 				'lang_no_place'				=> lang('select a place'),
 
-				'form_action'				=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> $this->currentapp.'.uiuser.training', 'user_id'=> $user_id)),
+				'form_action'				=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'hrm.uiuser.training', 'user_id'=> $user_id)),
 				'lang_id'				=> lang('training ID'),
 				'lang_descr'				=> lang('Descr'),
 				'lang_save'				=> lang('save'),
@@ -775,7 +775,7 @@
 
 			$appname	= lang('Training');
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($this->currentapp) . ' - ' . $appname . ': ' . $function_msg;
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('hrm') . ' - ' . $appname . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('view' => $data));
 		}
 
@@ -793,7 +793,7 @@
 
 			$link_data = array
 			(
-				'menuaction' => $this->currentapp.'.uiuser.training',
+				'menuaction' => 'hrm.uiuser.training',
 				'user_id' => $user_id
 			);
 
@@ -808,7 +808,7 @@
 			$data = array
 			(
 				'done_action'			=> $GLOBALS['phpgw']->link('/index.php',$link_data),
-				'delete_action'			=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> $this->currentapp.'.uiuser.delete', 'user_id'=> $user_id, 'training_id'=> $training_id)),
+				'delete_action'			=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'hrm.uiuser.delete', 'user_id'=> $user_id, 'training_id'=> $training_id)),
 				'lang_confirm_msg'		=> lang('do you really want to delete this entry'),
 				'lang_yes'			=> lang('yes'),
 				'lang_yes_categorytext'		=> lang('Delete the entry'),
@@ -819,7 +819,7 @@
 			$appname	= lang('Training');
 			$function_msg	= lang('delete');
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($this->currentapp) . ' - ' . $appname . ': ' . $function_msg;
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('hrm') . ' - ' . $appname . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('delete' => $data));
 		}
 

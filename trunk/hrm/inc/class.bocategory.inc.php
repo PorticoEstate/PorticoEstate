@@ -55,7 +55,7 @@
 
 		function hrm_bocategory($session=False)
 		{
-			$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
+		//	$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->so 		= CreateObject('hrm.socategory');
 			$this->bocommon = CreateObject('hrm.bocommon');
 

@@ -21,7 +21,7 @@
 		function hrm_socommon()
 		{
 			//$GLOBALS['phpgw_info']['flags']['currentapp']	=	'hrm';
-			$this->currentapp		= $GLOBALS['phpgw_info']['flags']['currentapp'];
+		//	$this->currentapp		= $GLOBALS['phpgw_info']['flags']['currentapp'];
 		//	$this->db		= $GLOBALS['phpgw']->db;
 			$this->db = CreateObject('phpgwapi.db');
 			$this->db->Host = $GLOBALS['phpgw_info']['server']['db_host'];

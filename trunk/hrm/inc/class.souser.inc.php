@@ -24,7 +24,7 @@
 
 		public function __construct()
 		{
-			$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
+		//	$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->account		= $GLOBALS['phpgw_info']['user']['account_id'];
 			$this->bocommon	= CreateObject('hrm.bocommon');
 			$this->db           	= $this->bocommon->new_db();

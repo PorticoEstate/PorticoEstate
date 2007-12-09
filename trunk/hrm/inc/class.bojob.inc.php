@@ -60,7 +60,7 @@
 
 		public function __construct($session=False)
 		{
-			$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
+		//	$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->so 		= CreateObject('hrm.sojob');
 			$this->socommon = CreateObject('hrm.socommon');
 
