@@ -44,7 +44,7 @@
 		function sms_uiconfig()
 		{
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = True;
-			$this->currentapp			= $GLOBALS['phpgw_info']['flags']['currentapp'];
+		//	$this->currentapp			= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->nextmatchs			= CreateObject('phpgwapi.nextmatchs');
 			$this->account				= $GLOBALS['phpgw_info']['user']['account_id'];
 			$this->bo				= CreateObject('sms.boconfig',true);
@@ -95,10 +95,10 @@
 				$content[] = array
 				(
 					'name'					=> $entry['name'],
-					'link_attribute'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uiconfig.list_attrib', 'type_id'=> $entry['id'])),
-					'link_edit'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uiconfig.edit_type', 'type_id'=> $entry['id'])),
-					'link_delete'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uiconfig.delete_type', 'type_id'=> $entry['id'])),
-					'link_view'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uiconfig.view_type', 'type_id'=> $entry['id'])),
+					'link_attribute'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'sms.uiconfig.list_attrib', 'type_id'=> $entry['id'])),
+					'link_edit'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'sms.uiconfig.edit_type', 'type_id'=> $entry['id'])),
+					'link_delete'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'sms.uiconfig.delete_type', 'type_id'=> $entry['id'])),
+					'link_view'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'sms.uiconfig.view_type', 'type_id'=> $entry['id'])),
 					'lang_view_config_text'			=> lang('view the config'),
 					'lang_edit_config_text'			=> lang('edit the config'),
 					'text_view'				=> lang('view'),
@@ -120,7 +120,7 @@
 											'sort'	=> $this->sort,
 											'var'	=> 'name',
 											'order'	=> $this->order,
-											'extra'	=> array('menuaction'	=> $this->currentapp.'.uiconfig.index',
+											'extra'	=> array('menuaction'	=> 'sms.uiconfig.index',
 														'query'		=> $this->query,
 														'cat_id'	=> $this->cat_id,
 														'allrows'	=> $this->allrows)
@@ -143,7 +143,7 @@
 
 			$link_data = array
 			(
-				'menuaction'	=> $this->currentapp.'.uiconfig.index',
+				'menuaction'	=> 'sms.uiconfig.index',
 				'sort'		=> $this->sort,
 				'order'		=> $this->order,
 				'cat_id'	=> $this->cat_id,
@@ -155,7 +155,7 @@
 			(
 				'lang_add'		=> lang('add'),
 				'lang_add_statustext'	=> lang('add a type'),
-				'add_action'		=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uiconfig.edit_type')),
+				'add_action'		=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'sms.uiconfig.edit_type')),
 			);
 
 			$msgbox_data = $this->bocommon->msgbox_data($receipt);
@@ -184,7 +184,7 @@
 			$appname	= lang('config');
 			$function_msg	= lang('list type');
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($this->currentapp) . ' - ' . $appname . ': ' . $function_msg;
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('sms') . ' - ' . $appname . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('list_type' => $data));
 			$this->save_sessiondata();
 		}
@@ -228,13 +228,13 @@
 						if ($values['save'])
 						{
 							$GLOBALS['phpgw']->session->appsession('session_data','sms_c_type_receipt',$receipt);
-							$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> $this->currentapp.'.uiconfig.index', 'type_id'=> $type_id));
+							$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'sms.uiconfig.index', 'type_id'=> $type_id));
 						}
 					}
 				}
 				else
 				{
-					$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> $this->currentapp.'.uiconfig.index', 'type_id'=> $type_id));
+					$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'sms.uiconfig.index', 'type_id'=> $type_id));
 				}
 			}
 
@@ -256,7 +256,7 @@
 
 			$link_data = array
 			(
-				'menuaction'	=> $this->currentapp.'.uiconfig.edit_type',
+				'menuaction'	=> 'sms.uiconfig.edit_type',
 				'type_id'	=> $type_id
 			);
 
@@ -285,7 +285,7 @@
 
 			$appname					= lang('config');
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($this->currentapp) . ' - ' . $appname . ': ' . $function_msg;
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('sms') . ' - ' . $appname . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('edit_type' => $data));
 		}
 
@@ -321,14 +321,14 @@
 				'lang_id'			=> lang('Type ID'),
 				'lang_name'			=> lang('name'),
 				'lang_descr'			=> lang('descr'),
-				'form_action'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uiconfig.index')),
+				'form_action'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'sms.uiconfig.index')),
 				'lang_cancel'			=> lang('cancel'),
 				'value_id'			=> $type_id,
 			);
 
 			$appname					= lang('config');
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($this->currentapp) . ' - ' . $appname . ': ' . $function_msg;
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('sms') . ' - ' . $appname . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('view_type' => $data));
 		}
 
@@ -347,7 +347,7 @@
 			
 			if(!$type_id)
 			{
-				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> $this->currentapp.'.uiconfig.index'));
+				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'sms.uiconfig.index'));
 			}
 			
 			$GLOBALS['phpgw']->xslttpl->add_file(array('config','nextmatchs','menu',
@@ -366,9 +366,9 @@
 				$content[] = array
 				(
 					'name'					=> $entry['name'],
-					'link_value'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uiconfig.edit_value', 'type_id'=> $type_id, 'attrib_id'=> $entry['id'], 'id'=> $entry['value_id'])),
-					'link_edit'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uiconfig.edit_attrib', 'type_id'=> $entry['type_id'], 'attrib_id'=> $entry['id'])),
-					'link_delete'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uiconfig.delete_attrib', 'type_id'=> $entry['type_id'], 'attrib_id'=> $entry['id'])),
+					'link_value'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'sms.uiconfig.edit_value', 'type_id'=> $type_id, 'attrib_id'=> $entry['id'], 'id'=> $entry['value_id'])),
+					'link_edit'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'sms.uiconfig.edit_attrib', 'type_id'=> $entry['type_id'], 'attrib_id'=> $entry['id'])),
+					'link_delete'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'sms.uiconfig.delete_attrib', 'type_id'=> $entry['type_id'], 'attrib_id'=> $entry['id'])),
 					'lang_edit_config_text'			=> lang('edit the config'),
 					'text_edit'				=> lang('edit'),
 					'text_delete'				=> lang('delete'),
@@ -388,7 +388,7 @@
 											'sort'	=> $this->sort,
 											'var'	=> 'name',
 											'order'	=> $this->order,
-											'extra'	=> array('menuaction'	=> $this->currentapp.'.uiconfig.index',
+											'extra'	=> array('menuaction'	=> 'sms.uiconfig.index',
 														'query'		=> $this->query,
 														'cat_id'	=> $this->cat_id,
 														'allrows' 	=> $this->allrows)
@@ -412,7 +412,7 @@
 			
 			$link_data = array
 			(
-				'menuaction'	=> $this->currentapp.'.uiconfig.list_attrib',
+				'menuaction'	=> 'sms.uiconfig.list_attrib',
 				'sort'		=> $this->sort,
 				'order'		=> $this->order,
 				'cat_id'	=> $this->cat_id,
@@ -425,7 +425,7 @@
 			(
 				'lang_add'		=> lang('add'),
 				'lang_add_statustext'	=> lang('add a value'),
-				'add_action'		=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uiconfig.edit_attrib', 'type_id'=> $type_id)),
+				'add_action'		=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'sms.uiconfig.edit_attrib', 'type_id'=> $type_id)),
 			);
 
 			$msgbox_data = $this->bocommon->msgbox_data($receipt);
@@ -456,7 +456,7 @@
 			$appname	= lang('config');
 			$function_msg	= lang('list attribute');
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($this->currentapp) . ' - ' . $appname . ': ' . $function_msg;
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('sms') . ' - ' . $appname . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('list_attrib' => $data));
 			$this->save_sessiondata();
 		}
@@ -503,13 +503,13 @@
 						if ($values['save'])
 						{
 							$GLOBALS['phpgw']->session->appsession('session_data','sms_c_attrib_receipt',$receipt);
-							$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> $this->currentapp.'.uiconfig.list_attrib', 'type_id'=> $type_id));
+							$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'sms.uiconfig.list_attrib', 'type_id'=> $type_id));
 						}
 					}
 				}
 				else
 				{
-					$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> $this->currentapp.'.uiconfig.list_attrib', 'type_id'=> $type_id));
+					$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'sms.uiconfig.list_attrib', 'type_id'=> $type_id));
 				}
 			}
 
@@ -531,7 +531,7 @@
 
 			$link_data = array
 			(
-				'menuaction'	=> $this->currentapp.'.uiconfig.edit_attrib',
+				'menuaction'	=> 'sms.uiconfig.edit_attrib',
 				'type_id'	=> $type_id,
 				'attrib_id'	=> $attrib_id
 			);
@@ -585,7 +585,7 @@
 
 			$appname	= lang('config');
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($this->currentapp) . ' - ' . $appname . ': ' . $function_msg;
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('sms') . ' - ' . $appname . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('edit_attrib' => $data));
 		}
 
@@ -605,7 +605,7 @@
 						
 			if(!$type_id && !$attrib_id)
 			{
-				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> $this->currentapp.'.uiconfig.index'));
+				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'sms.uiconfig.index'));
 			}
 			
 			$GLOBALS['phpgw']->xslttpl->add_file(array('config','nextmatchs','menu',
@@ -624,9 +624,9 @@
 				$content[] = array
 				(
 					'value'					=> $entry['value'],
-					'link_edit'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uiconfig.edit_value', 'type_id'=> $entry['type_id'], 'attrib_id'=> $entry['attrib_id'], 'id'=> $entry['id'])),
-					'link_delete'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uiconfig.delete_value', 'type_id'=> $entry['type_id'], 'attrib_id'=> $entry['attrib_id'], 'id'=> $entry['id'])),
-					'link_view'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uiconfig.view_value', 'type_id'=> $entry['type_id'], 'attrib_id'=> $entry['attrib_id'], 'id'=> $entry['id'])),
+					'link_edit'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'sms.uiconfig.edit_value', 'type_id'=> $entry['type_id'], 'attrib_id'=> $entry['attrib_id'], 'id'=> $entry['id'])),
+					'link_delete'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'sms.uiconfig.delete_value', 'type_id'=> $entry['type_id'], 'attrib_id'=> $entry['attrib_id'], 'id'=> $entry['id'])),
+					'link_view'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'sms.uiconfig.view_value', 'type_id'=> $entry['type_id'], 'attrib_id'=> $entry['attrib_id'], 'id'=> $entry['id'])),
 					'lang_view_config_text'			=> lang('view the config'),
 					'lang_edit_config_text'			=> lang('edit the config'),
 					'text_view'				=> lang('view'),
@@ -648,7 +648,7 @@
 											'sort'	=> $this->sort,
 											'var'	=> 'value',
 											'order'	=> $this->order,
-											'extra'	=> array('menuaction'	=> $this->currentapp.'.uiconfig.index',
+											'extra'	=> array('menuaction'	=> 'sms.uiconfig.index',
 														'query'		=> $this->query,
 														'cat_id'	=> $this->cat_id,
 														'allrows'	=> $this->allrows)
@@ -674,7 +674,7 @@
 						
 			$link_data = array
 			(
-				'menuaction'	=> $this->currentapp.'.uiconfig.list_value',
+				'menuaction'	=> 'sms.uiconfig.list_value',
 				'sort'		=> $this->sort,
 				'order'		=> $this->order,
 				'cat_id'	=> $this->cat_id,
@@ -690,7 +690,7 @@
 				(
 					'lang_add'		=> lang('add'),
 					'lang_add_statustext'	=> lang('add a value'),
-					'add_action'		=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uiconfig.edit_value', 'type_id'=> $type_id, 'attrib_id'=> $attrib_id)),
+					'add_action'		=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'sms.uiconfig.edit_value', 'type_id'=> $type_id, 'attrib_id'=> $attrib_id)),
 				);
 			}
 
@@ -698,7 +698,7 @@
 
 			$data = array
 			(
-				'link_type' 					=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uiconfig.list_attrib', 'type_id'=> $type_id)),
+				'link_type' 					=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'sms.uiconfig.list_attrib', 'type_id'=> $type_id)),
 				'lang_type'					=> lang('type'),
 				'value_type_name'				=> $type['name'],
 				'lang_attrib'					=> lang('attribute'),
@@ -727,7 +727,7 @@
 ;
 			$function_msg	= lang('list values');
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($this->currentapp) . ' - ' . $appname . ': ' . $function_msg;
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('sms') . ' - ' . $appname . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('list_value' => $data));
 			$this->save_sessiondata();
 		}
@@ -776,13 +776,13 @@
 						if ($values['save'])
 						{
 							$GLOBALS['phpgw']->session->appsession('session_data','sms_c_attrib_receipt',$receipt);
-							$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> $this->currentapp.'.uiconfig.list_attrib', 'type_id'=> $type_id, 'attrib_id'=> $attrib_id));
+							$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'sms.uiconfig.list_attrib', 'type_id'=> $type_id, 'attrib_id'=> $attrib_id));
 						}
 					}
 				}
 				else
 				{
-					$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> $this->currentapp.'.uiconfig.list_attrib', 'type_id'=> $type_id, 'attrib_id'=> $attrib_id));
+					$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'sms.uiconfig.list_attrib', 'type_id'=> $type_id, 'attrib_id'=> $attrib_id));
 				}
 			}
 
@@ -804,7 +804,7 @@
 
 			$link_data = array
 			(
-				'menuaction'	=> $this->currentapp.'.uiconfig.edit_value',
+				'menuaction'	=> 'sms.uiconfig.edit_value',
 				'type_id'	=> $type_id,
 				'attrib_id'	=> $attrib_id,
 				'id'		=> $id
@@ -853,7 +853,7 @@
 
 			$appname	= lang('config');
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($this->currentapp) . ' - ' . $appname . ': ' . $function_msg;
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('sms') . ' - ' . $appname . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('edit_value' => $data));
 		}
 
@@ -871,7 +871,7 @@
 
 			$link_data = array
 			(
-				'menuaction'	=> $this->currentapp.'.uiconfig.index',
+				'menuaction'	=> 'sms.uiconfig.index',
 				'type_id'	=> $type_id
 			);
 
@@ -886,7 +886,7 @@
 			$data = array
 			(
 				'done_action'			=> $GLOBALS['phpgw']->link('/index.php',$link_data),
-				'delete_action'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uiconfig.delete_type', 'type_id'=> $type_id)),
+				'delete_action'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'sms.uiconfig.delete_type', 'type_id'=> $type_id)),
 				'lang_confirm_msg'		=> lang('do you really want to delete this entry'),
 				'lang_yes'			=> lang('yes'),
 				'lang_yes_statustext'		=> lang('Delete the entry'),
@@ -897,7 +897,7 @@
 			$appname	= lang('config');
 			$function_msg	= lang('delete type');
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($this->currentapp) . ' - ' . $appname . ': ' . $function_msg;
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('sms') . ' - ' . $appname . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('delete' => $data));
 		}
 
@@ -916,7 +916,7 @@
 
 			$link_data = array
 			(
-				'menuaction'	=> $this->currentapp.'.uiconfig.index',
+				'menuaction'	=> 'sms.uiconfig.index',
 				'type_id'	=> $type_id,
 				'attrib_id'	=> $attrib_id
 			);
@@ -932,7 +932,7 @@
 			$data = array
 			(
 				'done_action'			=> $GLOBALS['phpgw']->link('/index.php',$link_data),
-				'delete_action'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uiconfig.delete_type','type_id'=> $type_id, 'attrib_id'=> $attrib_id)),
+				'delete_action'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'sms.uiconfig.delete_type','type_id'=> $type_id, 'attrib_id'=> $attrib_id)),
 				'lang_confirm_msg'		=> lang('do you really want to delete this entry'),
 				'lang_yes'			=> lang('yes'),
 				'lang_yes_statustext'		=> lang('Delete the entry'),
@@ -943,7 +943,7 @@
 			$appname	= lang('config');
 			$function_msg	= lang('delete attribute');
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($this->currentapp) . ' - ' . $appname . ': ' . $function_msg;
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('sms') . ' - ' . $appname . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('delete' => $data));
 		}
 
@@ -964,7 +964,7 @@
 
 			$link_data = array
 			(
-				'menuaction'	=> $this->currentapp.'.uiconfig.index',
+				'menuaction'	=> 'sms.uiconfig.index',
 				'type_id'	=> $type_id,
 				'attrib_id'	=> $attrib_id,
 				'id'		=> $id
@@ -981,7 +981,7 @@
 			$data = array
 			(
 				'done_action'			=> $GLOBALS['phpgw']->link('/index.php',$link_data),
-				'delete_action'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uiconfig.delete_type', 'type_id'=> $type_id, 'attrib_id'=> $attrib_id, 'id'=> $id)),
+				'delete_action'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'sms.uiconfig.delete_type', 'type_id'=> $type_id, 'attrib_id'=> $attrib_id, 'id'=> $id)),
 				'lang_confirm_msg'		=> lang('do you really want to delete this entry'),
 				'lang_yes'			=> lang('yes'),
 				'lang_yes_statustext'		=> lang('Delete the entry'),
@@ -992,7 +992,7 @@
 			$appname	= lang('config');
 			$function_msg	= lang('delete value');
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($this->currentapp) . ' - ' . $appname . ': ' . $function_msg;
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('sms') . ' - ' . $appname . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('delete' => $data));
 		}
 
@@ -1024,7 +1024,7 @@
 			$appname	= lang('config');
 			$function_msg	= lang('Daemon manual refresh');
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($this->currentapp) . ' - ' . $appname . ': ' . $function_msg;
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('sms') . ' - ' . $appname . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('daemon_manual' => $data));
 		}
 	}

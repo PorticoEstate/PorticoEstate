@@ -33,7 +33,7 @@
 		function sms_uiboard()
 		{
 
-			$this->currentapp			= $GLOBALS['phpgw_info']['flags']['currentapp'];
+		//	$this->currentapp			= $GLOBALS['phpgw_info']['flags']['currentapp'];
 		//	$this->nextmatchs			= CreateObject('phpgwapi.nextmatchs');
 			$this->account				= $GLOBALS['phpgw_info']['user']['account_id'];
 		//	$this->bo				= CreateObject('sms.boconfig',true);
@@ -78,7 +78,7 @@
 			}
 
 
-			$add_data = array('menuaction'	=> $this->currentapp.'.uiboard.add');
+			$add_data = array('menuaction'	=> 'sms.uiboard.add');
 			$add_url = $GLOBALS['phpgw']->link('/index.php',$add_data);
 
 			$content .= "
@@ -109,7 +109,7 @@
 			";
 
 				$done_data = array(
-				'menuaction'	=> $this->currentapp.'.uisms.index');
+				'menuaction'	=> 'sms.uisms.index');
 				
 				$done_url = $GLOBALS['phpgw']->link('/index.php',$done_data);
 
@@ -173,7 +173,7 @@
 			    }
 			}
 
-			$done_data = array('menuaction'	=> $this->currentapp.'.uiboard.index');
+			$done_data = array('menuaction'	=> 'sms.uiboard.index');
 			$done_url = $GLOBALS['phpgw']->link('/index.php',$done_data);
 
 			$content = "
@@ -213,7 +213,7 @@
 			}
 
 			$add_data = array(
-				'menuaction'	=> $this->currentapp.'.uiboard.add_yes',
+				'menuaction'	=> 'sms.uiboard.add_yes',
 				'autoreply_id' => $autoreply_id
 				);
 				
@@ -231,7 +231,7 @@
 			    </form>
 			";
 
-			$done_data = array('menuaction'	=> $this->currentapp.'.uiboard.index');
+			$done_data = array('menuaction'	=> 'sms.uiboard.index');
 			$done_url = $GLOBALS['phpgw']->link('/index.php',$done_data);
 
 			$content .= "
@@ -304,7 +304,7 @@
 			}
 
 			$add_data = array(
-				'menuaction'	=> $this->currentapp.'.uiboard.' . $target,
+				'menuaction'	=> 'sms.uiboard.' . $target,
 				'err' => urlencode($error_string)
 				);
 
@@ -345,7 +345,7 @@
 			$template = $this->db->f('board_pref_template');
 
 			$add_data = array(
-				'menuaction'	=> $this->currentapp.'.uiboard.edit_yes',
+				'menuaction'	=> 'sms.uiboard.edit_yes',
 				'board_id'	=> $board_id,
 				'board_code'	=> $board_code,
 				);
@@ -364,7 +364,7 @@
 				<p><input type=submit class=button value=Save>
 				</form>";
 
-			$done_data = array('menuaction'	=> $this->currentapp.'.uiboard.index');
+			$done_data = array('menuaction'	=> 'sms.uiboard.index');
 			$done_url = $GLOBALS['phpgw']->link('/index.php',$done_data);
 
 			$content .= "
@@ -427,7 +427,7 @@
 			}
 
 			$add_data = array(
-				'menuaction'	=> $this->currentapp.'.uiboard.' . $target,
+				'menuaction'	=> 'sms.uiboard.' . $target,
 				'board_id'	=> $board_id,
 				'err'		=> urlencode($error_string)
 				);
@@ -451,7 +451,7 @@
 
 			$link_data = array
 			(
-				'menuaction' => $this->currentapp.'.uiboard.index'
+				'menuaction' => 'sms.uiboard.index'
 			);
 
 			if (phpgw::get_var('confirm', 'bool', 'POST'))
@@ -501,7 +501,7 @@
 			$data = array
 			(
 				'done_action'			=> $GLOBALS['phpgw']->link('/index.php',$link_data),
-				'delete_action'			=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> $this->currentapp.'.uiboard.delete', 'board_id'=> $board_id)),
+				'delete_action'			=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'sms.uiboard.delete', 'board_id'=> $board_id)),
 				'lang_confirm_msg'		=> lang('do you really want to delete this entry'),
 				'lang_yes'			=> lang('yes'),
 				'lang_yes_statustext'		=> lang('Delete the entry'),
@@ -511,7 +511,7 @@
 
 			$function_msg	= lang('delete SMS board code');
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($this->currentapp) . ': ' . $function_msg;
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('sms') . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('delete' => $data));
 		}
 	}

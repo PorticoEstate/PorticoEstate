@@ -32,7 +32,7 @@
 		function sms_uicustom()
 		{
 
-			$this->currentapp			= $GLOBALS['phpgw_info']['flags']['currentapp'];
+		//	$this->currentapp			= $GLOBALS['phpgw_info']['flags']['currentapp'];
 		//	$this->nextmatchs			= CreateObject('phpgwapi.nextmatchs');
 			$this->account				= $GLOBALS['phpgw_info']['user']['account_id'];
 		//	$this->bo				= CreateObject('sms.boconfig',true);
@@ -77,7 +77,7 @@
 			}
 
 
-			$add_data = array('menuaction'	=> $this->currentapp.'.uicustom.add');
+			$add_data = array('menuaction'	=> 'sms.uicustom.add');
 			$add_url = $GLOBALS['phpgw']->link('/index.php',$add_data);
 
 			$content .= "
@@ -107,7 +107,7 @@
 			";
 
 				$done_data = array(
-				'menuaction'	=> $this->currentapp.'.uisms.index');
+				'menuaction'	=> 'sms.uisms.index');
 				
 				$done_url = $GLOBALS['phpgw']->link('/index.php',$done_data);
 
@@ -146,7 +146,7 @@
 			}
 
 			$add_data = array(
-				'menuaction'	=> $this->currentapp.'.uicustom.add_yes',
+				'menuaction'	=> 'sms.uicustom.add_yes',
 				'autoreply_id' => $autoreply_id
 				);
 				
@@ -166,7 +166,7 @@
 			    </form>
 			";
 
-			$done_data = array('menuaction'	=> $this->currentapp.'.uicustom.index');
+			$done_data = array('menuaction'	=> 'sms.uicustom.index');
 			$done_url = $GLOBALS['phpgw']->link('/index.php',$done_data);
 
 			$content .= "
@@ -229,7 +229,7 @@
 			}
 
 			$add_data = array(
-				'menuaction'	=> $this->currentapp.'.uicustom.' . $target,
+				'menuaction'	=> 'sms.uicustom.' . $target,
 				'err' => urlencode($error_string)
 				);
 
@@ -269,7 +269,7 @@
 			$custom_code = $this->db->f('custom_code');
 
 			$add_data = array(
-				'menuaction'	=> $this->currentapp.'.uicustom.edit_yes',
+				'menuaction'	=> 'sms.uicustom.edit_yes',
 				'custom_id' => $custom_id,
 				'custom_code' => $custom_code,
 				);
@@ -295,7 +295,7 @@
 			    </form>
 			";
 
-			$done_data = array('menuaction'	=> $this->currentapp.'.uicustom.index');
+			$done_data = array('menuaction'	=> 'sms.uicustom.index');
 			$done_url = $GLOBALS['phpgw']->link('/index.php',$done_data);
 
 			$content .= "
@@ -348,7 +348,7 @@
 			}
 
 			$add_data = array(
-				'menuaction'	=> $this->currentapp.'.uicustom.' . $target,
+				'menuaction'	=> 'sms.uicustom.' . $target,
 				'custom_id' => $custom_id,
 				'err' => urlencode($error_string)
 				);
@@ -372,7 +372,7 @@
 
 			$link_data = array
 			(
-				'menuaction' => $this->currentapp.'.uicustom.index'
+				'menuaction' => 'sms.uicustom.index'
 			);
 
 			if (phpgw::get_var('confirm', 'bool', 'POST'))
@@ -413,7 +413,7 @@
 			$data = array
 			(
 				'done_action'			=> $GLOBALS['phpgw']->link('/index.php',$link_data),
-				'delete_action'			=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> $this->currentapp.'.uicustom.delete', 'custom_id'=> $custom_id)),
+				'delete_action'			=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'sms.uicustom.delete', 'custom_id'=> $custom_id)),
 				'lang_confirm_msg'		=> lang('do you really want to delete this entry'),
 				'lang_yes'			=> lang('yes'),
 				'lang_yes_statustext'		=> lang('Delete the entry'),
@@ -423,7 +423,7 @@
 
 			$function_msg	= lang('delete SMS custom code');
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($this->currentapp) . ': ' . $function_msg;
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('sms') . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('delete' => $data));
 		}
 	}
