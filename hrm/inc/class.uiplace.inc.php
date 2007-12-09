@@ -38,7 +38,7 @@
 		function hrm_uiplace()
 		{
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = True;
-			$this->currentapp		= $GLOBALS['phpgw_info']['flags']['currentapp'];
+		//	$this->currentapp		= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->nextmatchs		= CreateObject('phpgwapi.nextmatchs');
 			$this->account			= $GLOBALS['phpgw_info']['user']['account_id'];
 			$this->bo			= CreateObject('hrm.boplace',true);
@@ -80,9 +80,9 @@
 				$content[] = array
 				(
 					'name'					=> $entry['name'],
-					'link_edit'				=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> $this->currentapp.'.uiplace.edit', 'place_id'=> $entry['id'])),
-					'link_delete'				=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> $this->currentapp.'.uiplace.delete', 'place_id'=> $entry['id'])),
-					'link_view'				=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> $this->currentapp.'.uiplace.view', 'place_id'=> $entry['id'])),
+					'link_edit'				=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'hrm.uiplace.edit', 'place_id'=> $entry['id'])),
+					'link_delete'				=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'hrm.uiplace.delete', 'place_id'=> $entry['id'])),
+					'link_view'				=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'hrm.uiplace.view', 'place_id'=> $entry['id'])),
 					'lang_view_place_text'			=> lang('view the place'),
 					'lang_edit_place_text'			=> lang('edit the place'),
 					'text_view'				=> lang('view'),
@@ -102,7 +102,7 @@
 											'sort'	=> $this->sort,
 											'var'	=> 'name',
 											'order'	=> $this->order,
-											'extra'	=> array('menuaction'	=> $this->currentapp.'.uiplace.index',
+											'extra'	=> array('menuaction'	=> 'hrm.uiplace.index',
 														'query'		=> $this->query,
 														'cat_id'	=> $this->cat_id,
 														'allrows'	=> $this->allrows)
@@ -123,7 +123,7 @@
 
 			$link_data = array
 			(
-				'menuaction'	=> $this->currentapp.'.uiplace.index',
+				'menuaction'	=> 'hrm.uiplace.index',
 				'sort'		=> $this->sort,
 				'order'		=> $this->order,
 				'cat_id'	=> $this->cat_id,
@@ -135,7 +135,7 @@
 			(
 				'lang_add'		=> lang('add'),
 				'lang_add_statustext'	=> lang('add a place'),
-				'add_action'		=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> $this->currentapp.'.uiplace.edit')),
+				'add_action'		=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'hrm.uiplace.edit')),
 			);
 
 			$msgbox_data = $this->bocommon->msgbox_data($receipt);
@@ -164,7 +164,7 @@
 			$appname	= lang('place');
 			$function_msg= lang('list place');
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($this->currentapp) . ' - ' . $appname . ': ' . $function_msg;
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('hrm') . ' - ' . $appname . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('list' => $data));
 			$this->save_sessiondata();
 		}
@@ -213,13 +213,13 @@
 						if ($values['save'])
 						{
 							$GLOBALS['phpgw']->session->appsession('session_data','hrm_training_receipt',$receipt);
-							$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction'=> $this->currentapp.'.uiplace.index', 'place_id'=> $place_id));
+							$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction'=> 'hrm.uiplace.index', 'place_id'=> $place_id));
 						}
 					}
 				}
 				else
 				{
-					$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction'=> $this->currentapp.'.uiplace.index', 'place_id'=> $place_id));
+					$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction'=> 'hrm.uiplace.index', 'place_id'=> $place_id));
 				}
 			}
 
@@ -241,7 +241,7 @@
 
 			$link_data = array
 			(
-				'menuaction'	=> $this->currentapp.'.uiplace.edit',
+				'menuaction'	=> 'hrm.uiplace.edit',
 				'place_id'	=> $place_id
 			);
 
@@ -279,7 +279,7 @@
 
 			$appname					= lang('Place');
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($this->currentapp) . ' - ' . $appname . ': ' . $function_msg;
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('hrm') . ' - ' . $appname . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('edit' => $data));
 		}
 
@@ -318,14 +318,14 @@
 				'lang_town'			=> lang('town'),
 				'lang_remark'			=> lang('remark'),
 
-				'form_action'			=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> $this->currentapp.'.uiplace.index')),
+				'form_action'			=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'hrm.uiplace.index')),
 				'lang_cancel'			=> lang('cancel'),
 				'value_id'			=> $place_id,
 			);
 
 			$appname	= lang('Place');
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($this->currentapp) . ' - ' . $appname . ': ' . $function_msg;
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('hrm') . ' - ' . $appname . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('view' => $data));
 		}
 
@@ -336,7 +336,7 @@
 
 			$link_data = array
 			(
-				'menuaction' => $this->currentapp.'.uiplace.index'
+				'menuaction' => 'hrm.uiplace.index'
 			);
 
 			if (phpgw::get_var('confirm', 'bool', 'POST'))
@@ -350,7 +350,7 @@
 			$data = array
 			(
 				'done_action'			=> $GLOBALS['phpgw']->link('/index.php',$link_data),
-				'delete_action'			=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> $this->currentapp.'.uiplace.delete', 'place_id'=> $place_id)),
+				'delete_action'			=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'hrm.uiplace.delete', 'place_id'=> $place_id)),
 				'lang_confirm_msg'		=> lang('do you really want to delete this entry'),
 				'lang_yes'			=> lang('yes'),
 				'lang_yes_statustext'		=> lang('Delete the entry'),
@@ -361,7 +361,7 @@
 			$appname	= lang('Place');
 			$function_msg	= lang('delete');
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($this->currentapp) . ' - ' . $appname . ': ' . $function_msg;
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('hrm') . ' - ' . $appname . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('delete' => $data));
 		}
 

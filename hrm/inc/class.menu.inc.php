@@ -28,12 +28,12 @@
 		function hrm_menu($sub='')
 		{
 			$this->sub		= $sub;
-			$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
+		//	$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
 		}
 
 		function links($page='',$page_2='')
 		{
-			$currentapp=$this->currentapp;
+			$currentapp='hrm';
 			$sub = $this->sub;
 
 			$i=0;

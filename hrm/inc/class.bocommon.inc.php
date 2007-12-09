@@ -55,7 +55,7 @@
 		function hrm_bocommon()
 		{
 //			$GLOBALS['phpgw_info']['flags']['currentapp']	=	'hrm';
-			$this->currentapp		= $GLOBALS['phpgw_info']['flags']['currentapp'];
+		//	$this->currentapp		= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->socommon			= CreateObject('hrm.socommon');
 			$this->account		= $GLOBALS['phpgw_info']['user']['account_id'];
 
@@ -666,7 +666,7 @@
 
 			$appname	= lang('No access');
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($this->currentapp) . ' - ' . $appname;
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('hrm') . ' - ' . $appname;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('no_access' => $data));
 		}
 

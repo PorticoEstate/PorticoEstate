@@ -60,7 +60,7 @@
 		public function __construct()
 		{
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = True;
-			$this->currentapp			= 'hrm';
+		//	$this->currentapp			= 'hrm';
 			$this->nextmatchs			= CreateObject('phpgwapi.nextmatchs');
 			$this->account				= $GLOBALS['phpgw_info']['user']['account_id'];
 			$this->bo				= CreateObject('hrm.bojob',true);
@@ -134,12 +134,12 @@
 					'descr'					=> $entry['descr'],
 					'task_count'				=> $entry['task_count'],
 					'quali_count'				=> $entry['quali_count'],
-					'link_add_sub'				=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> $this->currentapp.'.uijob.edit_job','parent_id'=> $entry['id'])),
-					'link_edit'				=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> $this->currentapp.'.uijob.edit_job', 'id'=> $entry['id'])),
-					'link_delete'				=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> $this->currentapp.'.uijob.delete_job', 'job_id'=> $entry['id'])),
-					'link_view'				=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> $this->currentapp.'.uijob.view_job', 'id'=> $entry['id'])),
-					'link_qualification'			=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> $this->currentapp.'.uijob.qualification', 'job_id'=> $entry['id'])),
-					'link_task'				=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> $this->currentapp.'.uijob.task', 'job_id'=> $entry['id'])),
+					'link_add_sub'				=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'hrm.uijob.edit_job','parent_id'=> $entry['id'])),
+					'link_edit'				=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'hrm.uijob.edit_job', 'id'=> $entry['id'])),
+					'link_delete'				=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'hrm.uijob.delete_job', 'job_id'=> $entry['id'])),
+					'link_view'				=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'hrm.uijob.view_job', 'id'=> $entry['id'])),
+					'link_qualification'			=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'hrm.uijob.qualification', 'job_id'=> $entry['id'])),
+					'link_task'				=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'hrm.uijob.task', 'job_id'=> $entry['id'])),
 					'lang_qualification_job_text'		=> lang('qualifications for this job'),
 					'lang_task_job_text'			=> lang('tasks for this job'),
 					'lang_view_job_text'			=> lang('view the job'),
@@ -164,7 +164,7 @@
 											'sort'	=> $this->sort,
 											'var'	=> 'name',
 											'order'	=> $this->order,
-											'extra'	=> array('menuaction'	=> $this->currentapp.'.uijob.index',
+											'extra'	=> array('menuaction'	=> 'hrm.uijob.index',
 														'query'		=> $this->query,
 														'cat_id'	=> $this->cat_id,
 														'allrows'	=> $this->allrows)
@@ -184,10 +184,10 @@
 			(
 				'lang_add'		=> lang('add'),
 				'lang_add_statustext'	=> lang('add a category'),
-				'add_action'		=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> $this->currentapp.'.uijob.edit_job')),
+				'add_action'		=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'hrm.uijob.edit_job')),
 				'lang_reset'		=> lang('reset hierarchy'),
 				'lang_reset_statustext'	=> lang('Reset the hierarchy'),
-				'reset_action'		=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> $this->currentapp.'.uijob.reset_job_type_hierarchy'))
+				'reset_action'		=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'hrm.uijob.reset_job_type_hierarchy'))
 			);
 
 			$table_reset_job_type[] = array
@@ -235,15 +235,15 @@
 				'values'						=> $content,
 				'table_add_job'					=> $table_add,
 				'lang_select_all'				=> lang('Select All'),
-				'img_check'						=> $GLOBALS['phpgw']->common->get_image_path($this->currentapp).'/check.png',
+				'img_check'						=> $GLOBALS['phpgw']->common->get_image_path('hrm').'/check.png',
 				'lang_print'					=> lang('print'),
-				'print_action'					=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> $this->currentapp.'.uijob.print_pdf')),
+				'print_action'					=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'hrm.uijob.print_pdf')),
 			);
 
 			$appname	= lang('job');
 			$function_msg	= lang('list job');
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($this->currentapp) . ' - ' . $appname . ': ' . $function_msg;
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('hrm') . ' - ' . $appname . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('list' => $data));
 			$this->save_sessiondata();
 		}
@@ -384,8 +384,8 @@
 				$content[] = array
 				(
 					'sorting'		=> $entry['value_sort'],
-					'link_up'		=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> $this->currentapp.'.uijob.qualification', 'resort'=> 'up', 'id'=> $entry['quali_id'], 'job_id'=> $job_id, 'allrows'=> $this->allrows)),
-					'link_down'		=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> $this->currentapp.'.uijob.qualification', 'resort'=> 'down', 'id'=> $entry['quali_id'], 'job_id'=> $job_id, 'allrows'=> $this->allrows)),
+					'link_up'		=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'hrm.uijob.qualification', 'resort'=> 'up', 'id'=> $entry['quali_id'], 'job_id'=> $job_id, 'allrows'=> $this->allrows)),
+					'link_down'		=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'hrm.uijob.qualification', 'resort'=> 'down', 'id'=> $entry['quali_id'], 'job_id'=> $job_id, 'allrows'=> $this->allrows)),
 					'text_up'		=> lang('up'),
 					'text_down'		=> lang('down'),
 
@@ -394,9 +394,9 @@
 					'descr'			=> $entry['descr'],
 					'remark'		=> $entry['remark'],
 					'category'		=> $entry['category'],
-					'link_edit'		=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> $this->currentapp.'.uijob.edit_qualification', 'job_id'=> $job_id, 'quali_id'=> $entry['quali_id'])),
-					'link_view'		=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> $this->currentapp.'.uijob.view_qualification', 'job_id'=> $job_id, 'quali_id'=> $entry['quali_id'])),
-					'link_delete'		=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> $this->currentapp.'.uijob.delete_qualification', 'job_id'=> $job_id, 'quali_id'=> $entry['quali_id'])),
+					'link_edit'		=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'hrm.uijob.edit_qualification', 'job_id'=> $job_id, 'quali_id'=> $entry['quali_id'])),
+					'link_view'		=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'hrm.uijob.view_qualification', 'job_id'=> $job_id, 'quali_id'=> $entry['quali_id'])),
+					'link_delete'		=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'hrm.uijob.delete_qualification', 'job_id'=> $job_id, 'quali_id'=> $entry['quali_id'])),
 					'lang_view_text'	=> lang('view qualification item'),
 					'lang_edit_text'	=> lang('edit qualification item'),
 					'lang_delete_text'	=> lang('delete qualification item'),
@@ -415,7 +415,7 @@
 											'sort'	=> $this->sort,
 											'var'	=> 'name',
 											'order'	=> $this->order,
-											'extra'	=> array('menuaction'	=> $this->currentapp.'.uijob.qualification',
+											'extra'	=> array('menuaction'	=> 'hrm.uijob.qualification',
 														'job_id'	=> $job_id,
 														'query'		=> $this->query,
 														'cat_id'	=> $this->cat_id,
@@ -426,7 +426,7 @@
 											'sort'	=> $this->sort,
 											'var'	=> 'value_sort',
 											'order'	=> $this->order,
-											'extra'	=> array('menuaction'	=> $this->currentapp.'.uijob.qualification',
+											'extra'	=> array('menuaction'	=> 'hrm.uijob.qualification',
 														'job_id'	=> $job_id,
 														'query'		=> $this->query,
 														'cat_id'	=> $this->cat_id,
@@ -451,7 +451,7 @@
 
 			$link_data = array
 			(
-				'menuaction'	=> $this->currentapp.'.uijob.edit_qualification',
+				'menuaction'	=> 'hrm.uijob.edit_qualification',
 				'job_id'	=> $job_id
 			);
 
@@ -459,10 +459,10 @@
 			(
 				'lang_add'			=> lang('add'),
 				'lang_add_qualification_text'	=> lang('add a qualification item'),
-				'add_action'			=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> $this->currentapp.'.uijob.edit_qualification', 'job_id'=> $job_id)),
+				'add_action'			=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'hrm.uijob.edit_qualification', 'job_id'=> $job_id)),
 				'lang_done'			=> lang('done'),
 				'lang_done_qualification_text'	=> lang('back to user list'),
-				'done_action'			=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> $this->currentapp.'.uijob.index'))
+				'done_action'			=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'hrm.uijob.index'))
 			);
 
 			$msgbox_data = $this->bocommon->msgbox_data($receipt);
@@ -477,7 +477,7 @@
 				'user_values'				=> $user_values,
 				'msgbox_data'				=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
 				'form_action'				=> $GLOBALS['phpgw']->link('/index.php',$link_data),
-				'done_action'				=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> $this->currentapp.'.uijob.index')),
+				'done_action'				=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'hrm.uijob.index')),
 				'lang_id'				=> lang('qualification ID'),
 				'lang_descr'				=> lang('Descr'),
 				'lang_save'				=> lang('save'),
@@ -495,7 +495,7 @@
 
 			$appname = lang('qualification');
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($this->currentapp) . ' - ' . $appname . ': ' . $function_msg;
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('hrm') . ' - ' . $appname . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('qualification' => $data));
 		}
 
@@ -535,17 +535,17 @@
 				$content[] = array
 				(
 					'sorting'		=> $entry['value_sort'],
-					'link_up'		=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> $this->currentapp.'.uijob.task', 'resort'=> 'up', 'id'=> $entry['id'], 'job_id'=> $job_id, 'allrows'=> $this->allrows)),
-					'link_down'		=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> $this->currentapp.'.uijob.task', 'resort'=> 'down', 'id'=> $entry['id'], 'job_id'=> $job_id, 'allrows'=> $this->allrows)),
+					'link_up'		=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'hrm.uijob.task', 'resort'=> 'up', 'id'=> $entry['id'], 'job_id'=> $job_id, 'allrows'=> $this->allrows)),
+					'link_down'		=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'hrm.uijob.task', 'resort'=> 'down', 'id'=> $entry['id'], 'job_id'=> $job_id, 'allrows'=> $this->allrows)),
 					'text_up'		=> lang('up'),
 					'text_down'		=> lang('down'),
 
 					'id'			=> $entry['id'],
 					'name'			=> $entry['name'],
 					'descr'			=> $entry['descr'],
-					'link_edit'		=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> $this->currentapp.'.uijob.edit_task', 'job_id'=> $job_id, 'id'=> $entry['id'])),
-					'link_view'		=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> $this->currentapp.'.uijob.view_task', 'job_id'=> $job_id, 'id'=> $entry['id'])),
-					'link_delete'		=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> $this->currentapp.'.uijob.delete_task', 'job_id'=> $job_id, 'id'=> $entry['id'])),
+					'link_edit'		=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'hrm.uijob.edit_task', 'job_id'=> $job_id, 'id'=> $entry['id'])),
+					'link_view'		=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'hrm.uijob.view_task', 'job_id'=> $job_id, 'id'=> $entry['id'])),
+					'link_delete'		=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'hrm.uijob.delete_task', 'job_id'=> $job_id, 'id'=> $entry['id'])),
 					'lang_view_text'	=> lang('view task item'),
 					'lang_edit_text'	=> lang('edit task item'),
 					'lang_delete_text'	=> lang('delete task item'),
@@ -564,7 +564,7 @@
 											'sort'	=> $this->sort,
 											'var'	=> 'phpgw_hrm_task.name',
 											'order'	=> $this->order,
-											'extra'	=> array('menuaction'	=> $this->currentapp.'.uijob.task',
+											'extra'	=> array('menuaction'	=> 'hrm.uijob.task',
 														'job_id'	=> $job_id,
 														'query'		=> $this->query,
 														'cat_id'	=> $this->cat_id,
@@ -575,7 +575,7 @@
 											'sort'	=> $this->sort,
 											'var'	=> 'value_sort',
 											'order'	=> $this->order,
-											'extra'	=> array('menuaction'	=> $this->currentapp.'.uijob.task',
+											'extra'	=> array('menuaction'	=> 'hrm.uijob.task',
 														'job_id'	=> $job_id,
 														'query'		=> $this->query,
 														'cat_id'	=> $this->cat_id,
@@ -595,7 +595,7 @@
 
 			$link_data = array
 			(
-				'menuaction'	=> $this->currentapp.'.uijob.edit_task',
+				'menuaction'	=> 'hrm.uijob.edit_task',
 				'job_id'	=> $job_id
 			);
 
@@ -603,10 +603,10 @@
 			(
 				'lang_add'			=> lang('add'),
 				'lang_add_task_text'		=> lang('add a task item'),
-				'add_action'			=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> $this->currentapp.'.uijob.edit_task', 'job_id'=> $job_id)),
+				'add_action'			=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'hrm.uijob.edit_task', 'job_id'=> $job_id)),
 				'lang_done'			=> lang('done'),
 				'lang_done_task_text'		=> lang('back to user list'),
-				'done_action'			=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> $this->currentapp.'.uijob.index'))
+				'done_action'			=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'hrm.uijob.index'))
 			);
 
 			$msgbox_data = $this->bocommon->msgbox_data($receipt);
@@ -621,7 +621,7 @@
 				'user_values'				=> $user_values,
 				'msgbox_data'				=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
 				'form_action'				=> $GLOBALS['phpgw']->link('/index.php',$link_data),
-				'done_action'				=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> $this->currentapp.'.uijob.index')),
+				'done_action'				=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'hrm.uijob.index')),
 				'lang_id'				=> lang('task ID'),
 				'lang_descr'				=> lang('Descr'),
 				'lang_save'				=> lang('save'),
@@ -639,7 +639,7 @@
 
 			$appname = lang('task');
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($this->currentapp) . ' - ' . $appname . ': ' . $function_msg;
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('hrm') . ' - ' . $appname . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('task' => $data));
 		}
 
@@ -695,13 +695,13 @@
 						if ($values['save'])
 						{
 							$GLOBALS['phpgw']->session->appsession('session_data','hrm_task_receipt',$receipt);
-							$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction'=> $this->currentapp.'.uijob.task', 'job_id'=> $job_id));
+							$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction'=> 'hrm.uijob.task', 'job_id'=> $job_id));
 						}
 					}
 				}
 				else
 				{
-					$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction'=> $this->currentapp.'.uijob.task', 'job_id'=> $job_id));
+					$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction'=> 'hrm.uijob.task', 'job_id'=> $job_id));
 				}
 			}
 
@@ -725,7 +725,7 @@
 
 			$link_data = array
 			(
-				'menuaction'	=> $this->currentapp.'.uijob.edit_task',
+				'menuaction'	=> 'hrm.uijob.edit_task',
 				'id'		=> $id,
 				'job_id'	=> $job_id				
 			);
@@ -764,7 +764,7 @@
 
 			$appname	= lang('task');
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($this->currentapp) . ' - ' . $appname . ': ' . $function_msg;
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('hrm') . ' - ' . $appname . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('edit_task' => $data));
 		}
 
@@ -795,7 +795,7 @@
 
 			$link_data = array
 			(
-				'menuaction'	=> $this->currentapp.'.uijob.task',
+				'menuaction'	=> 'hrm.uijob.task',
 				'id'		=> $id,
 				'job_id'	=> $job_id
 			);
@@ -827,7 +827,7 @@
 
 			$appname	= lang('task');
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($this->currentapp) . ' - ' . $appname . ': ' . $function_msg;
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('hrm') . ' - ' . $appname . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('view_task' => $data));
 		}
 
@@ -865,7 +865,7 @@
 
 				if ($allowed_edit)
 				{
-					$link_edit		= $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> $this->currentapp.'.uijob.edit_qualification_type', 'quali_type_id'=> $entry['id']));
+					$link_edit		= $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'hrm.uijob.edit_qualification_type', 'quali_type_id'=> $entry['id']));
 					$text_edit		= lang('edit');
 				}
 
@@ -875,8 +875,8 @@
 					'name'			=> $entry['name'],
 					'descr'			=> $entry['descr'],
 					'link_edit'		=> $link_edit,
-//					'link_view'		=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> $this->currentapp.'.uijob.edit_qualification_type', 'quali_type_id'=> $entry['id']));
-//					'link_delete'		=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> $this->currentapp.'.uijob.edit_qualification_type', 'quali_type_id'=> $entry['id']));
+//					'link_view'		=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'hrm.uijob.edit_qualification_type', 'quali_type_id'=> $entry['id']));
+//					'link_delete'		=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'hrm.uijob.edit_qualification_type', 'quali_type_id'=> $entry['id']));
 					'lang_select'		=> lang('select'),
 					'text_delete'		=> lang('delete'),
 					'text_edit'		=> $text_edit,
@@ -894,7 +894,7 @@
 											'sort'	=> $this->sort,
 											'var'	=> 'name',
 											'order'	=> $this->order,
-											'extra'	=> array('menuaction'	=> $this->currentapp.'.uijob.lookup_qualification',
+											'extra'	=> array('menuaction'	=> 'hrm.uijob.lookup_qualification',
 														'query'		=> $this->query,
 														'cat_id'	=> $this->cat_id,
 														'allrows'	=> $this->allrows)
@@ -923,7 +923,7 @@
 
 			$link_data = array
 			(
-				'menuaction'	=> $this->currentapp.'.uijob.lookup_qualification',
+				'menuaction'	=> 'hrm.uijob.lookup_qualification',
 				'sort'		=> $this->sort,
 				'order'		=> $this->order,
 				'cat_id'	=> $this->cat_id,
@@ -935,10 +935,10 @@
 			(
 				'lang_add'			=> lang('add'),
 				'lang_add_qualification_text'	=> lang('add a qualification item'),
-				'add_action'			=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> $this->currentapp.'.uijob.edit_qualification_type', 'job_id'=> $job_id)),
+				'add_action'			=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'hrm.uijob.edit_qualification_type', 'job_id'=> $job_id)),
 				'lang_done'			=> lang('done'),
 				'lang_done_qualification_text'	=> lang('back to user list'),
-				'done_action'			=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> $this->currentapp.'.uijob.lookup_qualification'))
+				'done_action'			=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'hrm.uijob.lookup_qualification'))
 			);
 
 
@@ -978,12 +978,12 @@
 
 				'lang_add'					=> lang('add'),
 				'lang_add_qualification_text'			=> lang('add a qualification item'),
-				'add_action'					=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> $this->currentapp.'.uijob.edit_qualification_type')),
+				'add_action'					=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'hrm.uijob.edit_qualification_type')),
 
 				'user_values'					=> $user_values,
 				'msgbox_data'					=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
 				'form_action'					=> $GLOBALS['phpgw']->link('/index.php',$link_data),
-				'done_action'					=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> $this->currentapp.'.uijob.index')),
+				'done_action'					=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'hrm.uijob.index')),
 				'lang_id'					=> lang('qualification ID'),
 				'lang_descr'					=> lang('Descr'),
 				'lang_save'					=> lang('save'),
@@ -1001,7 +1001,7 @@
 
 			$appname	= lang('qualification');
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($this->currentapp) . ' - ' . $appname . ': ' . $function_msg;
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('hrm') . ' - ' . $appname . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('lookup_qualification' => $data));
 		}
 
@@ -1040,13 +1040,13 @@
 						if ($values['save'])
 						{
 							$GLOBALS['phpgw']->session->appsession('session_data','hrm_quali_tp_receipt',$receipt);
-							$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction'=> $this->currentapp.'.uijob.lookup_qualification', 'query'=> $values['name']));
+							$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction'=> 'hrm.uijob.lookup_qualification', 'query'=> $values['name']));
 						}
 					}
 				}
 				else
 				{
-					$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction'=> $this->currentapp.'.uijob.lookup_qualification'));
+					$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction'=> 'hrm.uijob.lookup_qualification'));
 				}
 			}
 
@@ -1068,7 +1068,7 @@
 
 			$link_data = array
 			(
-				'menuaction'	=> $this->currentapp.'.uijob.edit_qualification_type',
+				'menuaction'	=> 'hrm.uijob.edit_qualification_type',
 				'quali_type_id'	=> $quali_type_id
 			);
 
@@ -1100,7 +1100,7 @@
 
 			$appname	= lang('Place');
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($this->currentapp) . ' - ' . $appname . ': ' . $function_msg;
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('hrm') . ' - ' . $appname . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('edit_qualification_type' => $data));
 		}
 
@@ -1160,13 +1160,13 @@
 						if ($values['save'])
 						{
 							$GLOBALS['phpgw']->session->appsession('session_data','hrm_job_receipt',$receipt);
-							$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction'=> $this->currentapp.'.uijob.index'));
+							$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction'=> 'hrm.uijob.index'));
 						}
 					}
 				}
 				else
 				{
-					$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction'=> $this->currentapp.'.uijob.index'));
+					$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction'=> 'hrm.uijob.index'));
 				}
 			}
 
@@ -1189,7 +1189,7 @@
 
 			$link_data = array
 			(
-				'menuaction'	=> $this->currentapp.'.uijob.edit_job',
+				'menuaction'	=> 'hrm.uijob.edit_job',
 				'id'		=> $id
 			);
 
@@ -1199,7 +1199,7 @@
 			(
 				'msgbox_data'				=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
 				'form_action'				=> $GLOBALS['phpgw']->link('/index.php',$link_data),
-				'done_action'				=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> $this->currentapp.'.uijob.index' ,'type'=> $type, 'type_id'=> $type_id)),
+				'done_action'				=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'hrm.uijob.index' ,'type'=> $type, 'type_id'=> $type_id)),
 				'lang_id'				=> lang('category ID'),
 				'lang_descr'				=> lang('Descr'),
 				'lang_save'				=> lang('save'),
@@ -1229,7 +1229,7 @@
 
 			$appname = lang('job');
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($this->currentapp) . ' - ' . $appname . ': ' . $function_msg;
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('hrm') . ' - ' . $appname . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('edit_job' => $data));
 		}
 
@@ -1261,7 +1261,7 @@
 
 			$link_data = array
 			(
-				'menuaction'	=> $this->currentapp.'.uijob.edit_job',
+				'menuaction'	=> 'hrm.uijob.edit_job',
 				'id'		=> $id
 			);
 
@@ -1270,7 +1270,7 @@
 			$data = array
 			(
 				'msgbox_data'				=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
-				'done_action'				=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> $this->currentapp.'.uijob.index', 'type'=> $type, 'type_id'=> $type_id)),
+				'done_action'				=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'hrm.uijob.index', 'type'=> $type, 'type_id'=> $type_id)),
 				'lang_id'				=> lang('category ID'),
 				'lang_descr'				=> lang('Descr'),
 				'lang_save'				=> lang('save'),
@@ -1299,7 +1299,7 @@
 
 			$appname	= lang('job');
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($this->currentapp) . ' - ' . $appname . ': ' . $function_msg;
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('hrm') . ' - ' . $appname . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('view_job' => $data));
 		}
 
@@ -1360,13 +1360,13 @@
 						if ($values['save'])
 						{
 							$GLOBALS['phpgw']->session->appsession('session_data','hrm_quali_receipt',$receipt);
-							$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction'=> $this->currentapp.'.uijob.qualification', 'job_id'=> $job_id));
+							$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction'=> 'hrm.uijob.qualification', 'job_id'=> $job_id));
 						}
 					}
 				}
 				else
 				{
-					$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction'=> $this->currentapp.'.uijob.qualification' ,'job_id'=> $job_id));
+					$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction'=> 'hrm.uijob.qualification' ,'job_id'=> $job_id));
 				}
 			}
 
@@ -1389,7 +1389,7 @@
 
 			$link_data = array
 			(
-				'menuaction'	=> $this->currentapp.'.uijob.edit_qualification',
+				'menuaction'	=> 'hrm.uijob.edit_qualification',
 				'quali_id'	=> $quali_id,
 				'job_id' 	=> $job_id
 			);
@@ -1397,7 +1397,7 @@
 
 			$link_data_lookup = array
 			(
-				'menuaction'	=> $this->currentapp.'.uijob.lookup_qualification',
+				'menuaction'	=> 'hrm.uijob.lookup_qualification',
 				'quali_id'	=> $quali_id,
 				'job_id' 	=> $job_id
 			);
@@ -1463,7 +1463,7 @@
 
 			$appname					= lang('qualification') .' ' . $job_info['name'];
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($this->currentapp) . ' - ' . $appname . ': ' . $function_msg;
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('hrm') . ' - ' . $appname . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('edit_qualification' => $data));
 		}
 
@@ -1485,7 +1485,7 @@
 
 			$link_data = array
 			(
-				'menuaction'	=> $this->currentapp.'.uijob.qualification',
+				'menuaction'	=> 'hrm.uijob.qualification',
 				'job_id' 	=> $job_id
 			);
 
@@ -1535,7 +1535,7 @@
 
 			$job_info = $this->bo->read_single_job($job_id);
 			$appname					= lang('qualification') .' ' . $job_info['name'];
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($this->currentapp) . ' - ' . $appname . ': ' . $function_msg;
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('hrm') . ' - ' . $appname . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('view_qualification' => $data));
 		}
 
@@ -1551,7 +1551,7 @@
 			$confirm		= phpgw::get_var('confirm', 'bool', 'POST');
 			$link_data = array
 			(
-				'menuaction'	=> $this->currentapp.'.uijob.index',
+				'menuaction'	=> 'hrm.uijob.index',
 				'job_id' 	=> $job_id
 			);
 
@@ -1565,7 +1565,7 @@
 			$data = array
 			(
 				'done_action'			=> $GLOBALS['phpgw']->link('/index.php',$link_data),
-				'delete_action'			=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> $this->currentapp.'.uijob.delete_job', 'job_id'=> $job_id)),
+				'delete_action'			=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'hrm.uijob.delete_job', 'job_id'=> $job_id)),
 				'lang_confirm_msg'		=> lang('do you really want to delete this entry'),
 				'lang_yes'			=> lang('yes'),
 				'lang_yes_statustext'		=> lang('Delete the entry'),
@@ -1576,7 +1576,7 @@
 			$appname	= lang('job');
 			$function_msg	= lang('delete');
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($this->currentapp) . ' - ' . $appname . ': ' . $function_msg;
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('hrm') . ' - ' . $appname . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('delete' => $data));
 		}
 
@@ -1594,7 +1594,7 @@
 
 			$link_data = array
 			(
-				'menuaction'	=> $this->currentapp.'.uijob.task',
+				'menuaction'	=> 'hrm.uijob.task',
 				'job_id'	=> $job_id
 			);
 
@@ -1609,7 +1609,7 @@
 			$data = array
 			(
 				'done_action'			=> $GLOBALS['phpgw']->link('/index.php',$link_data),
-				'delete_action'			=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> $this->currentapp.'.uijob.delete_task', 'job_id'=> $job_id, 'id'=> $id)),
+				'delete_action'			=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'hrm.uijob.delete_task', 'job_id'=> $job_id, 'id'=> $id)),
 				'lang_confirm_msg'		=> lang('do you really want to delete this entry'),
 				'lang_yes'			=> lang('yes'),
 				'lang_yes_categorytext'		=> lang('Delete the entry'),
@@ -1620,7 +1620,7 @@
 			$appname	= lang('task');
 			$function_msg	= lang('delete');
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($this->currentapp) . ' - ' . $appname . ': ' . $function_msg;
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('hrm') . ' - ' . $appname . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('delete' => $data));
 		}
 
@@ -1638,7 +1638,7 @@
 
 			$link_data = array
 			(
-				'menuaction'	=> $this->currentapp.'.uijob.qualification',
+				'menuaction'	=> 'hrm.uijob.qualification',
 				'job_id'	=> $job_id
 			);
 
@@ -1653,7 +1653,7 @@
 			$data = array
 			(
 				'done_action'			=> $GLOBALS['phpgw']->link('/index.php',$link_data),
-				'delete_action'			=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> $this->currentapp.'.uijob.delete_qualification', 'job_id'=> $job_id, 'quali_id'=> $quali_id)),
+				'delete_action'			=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'hrm.uijob.delete_qualification', 'job_id'=> $job_id, 'quali_id'=> $quali_id)),
 				'lang_confirm_msg'		=> lang('do you really want to delete this entry'),
 				'lang_yes'			=> lang('yes'),
 				'lang_yes_categorytext'		=> lang('Delete the entry'),
@@ -1664,7 +1664,7 @@
 			$appname	= lang('qualification');
 			$function_msg	= lang('delete');
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($this->currentapp) . ' - ' . $appname . ': ' . $function_msg;
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('hrm') . ' - ' . $appname . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('delete' => $data));
 		}
 
@@ -1679,7 +1679,7 @@
 			$confirm		= phpgw::get_var('confirm', 'bool', 'POST');
 			$link_data = array
 			(
-				'menuaction' => $this->currentapp.'.uijob.index'
+				'menuaction' => 'hrm.uijob.index'
 			);
 
 			if (phpgw::get_var('confirm', 'bool', 'POST'))
@@ -1693,7 +1693,7 @@
 			$data = array
 			(
 				'done_action'			=> $GLOBALS['phpgw']->link('/index.php',$link_data),
-				'delete_action'			=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> $this->currentapp.'.uijob.reset_job_type_hierarchy')),
+				'delete_action'			=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'hrm.uijob.reset_job_type_hierarchy')),
 				'lang_confirm_msg'		=> lang('do you really want to reset the hierarchy'),
 				'lang_yes'			=> lang('yes'),
 				'lang_yes_statustext'		=> lang('Reset the hierarchy'),
@@ -1703,7 +1703,7 @@
 
 			$appname	= lang('job');
 			$function_msg	= lang('delete');
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($this->currentapp) . ' - ' . $appname . ': ' . $function_msg;
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('hrm') . ' - ' . $appname . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('delete' => $data));
 		}
 		
