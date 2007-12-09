@@ -21,7 +21,7 @@
 		function sms_socommon()
 		{
 
-			$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
+		//	$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->db		= clone($GLOBALS['phpgw']->db);
 			$this->account		= $GLOBALS['phpgw_info']['user']['account_id'];
 

@@ -26,7 +26,7 @@
 
 		function sms_soconfig()
 		{
-			$this->currentapp	= 'sms';
+		//	$this->currentapp	= 'sms';
 			$this->account		= $GLOBALS['phpgw_info']['user']['account_id'];
 			$this->bocommon		= CreateObject('sms.bocommon');
 			$this->db 		= clone($GLOBALS['phpgw']->db);

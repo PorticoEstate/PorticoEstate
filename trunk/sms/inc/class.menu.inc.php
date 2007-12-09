@@ -31,12 +31,12 @@
 			{
 				$this->sub		= $sub;
 			}
-			$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
+		//	$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
 		}
 
 		function links($page='',$page_2='')
 		{
-			$currentapp=$this->currentapp;
+			$currentapp='sms';
 			$sub = $this->sub;
 
 			$i=0;

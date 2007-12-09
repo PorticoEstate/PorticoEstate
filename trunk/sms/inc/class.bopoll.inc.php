@@ -36,7 +36,7 @@
 
 		function sms_bopoll($session=False)
 		{
-			$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
+		//	$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->so 		= CreateObject('sms.sopoll');
 			$this->bocommon 	= CreateObject('sms.bocommon');
 
