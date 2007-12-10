@@ -40,7 +40,7 @@
 		foreach($GLOBALS['phpgw_info']['navbar'] as $app => $app_data)
 		{
 			if (($app != 'home' && $app != 'preferences' && $app != 'about' && $app != 'logout')
-				|| ($sidecontent != 'sidebox' && $sidecontent != 'javamenu'))
+				|| ($sidecontent != 'sidebox' && $sidecontent != 'jsmenu'))
 			{
 				$item = array
 					(
@@ -108,12 +108,12 @@
 			$var['messages'] = $api_messages . '<br>' . checkcode($cd);
 		}
 
-		$var['content_class'] = $sidecontent == 'sidebox' || $sidecontent == 'javamenu' ? 'content' : 'content_nosidebox';
+		$var['content_class'] = $sidecontent == 'sidebox' || $sidecontent == 'jsmenu' ? 'content' : 'content_nosidebox';
 
 		$GLOBALS['phpgw']->template->set_var($var);
 		$GLOBALS['phpgw']->template->pfp('out','navbar_header');
 
-		if($sidecontent == 'sidebox' || $sidecontent == 'javamenu')
+		if($sidecontent == 'sidebox' || $sidecontent == 'jsmenu')
 		{
 			$menu_title = lang('General Menu');
 
