@@ -167,6 +167,8 @@
 			$this->cron_log($receipt,$cron);
 			$receipt = $this->slett_feil_telefon();
 			$this->cron_log($receipt,$cron);
+			$receipt = $this->update_tenant_name();
+			$this->cron_log($receipt,$cron);
 
 			if(!$cron)
 			{
@@ -609,8 +611,8 @@
 			{
 				$leietaker_utf[]= array (
 				 'id' 				=> $this->db_boei->f('leietaker_id'),
-				 'first_name'		=> $this->bocommon->ascii2utf($this->db_boei->f('fornavn')),
-				 'last_name' 		=> $this->bocommon->ascii2utf($this->db_boei->f('etternavn')),
+				 'first_name'		=> $this->db->db_addslashes($this->bocommon->ascii2utf($this->db_boei->f('fornavn'))),
+				 'last_name' 		=> $this->db->db_addslashes($this->bocommon->ascii2utf($this->db_boei->f('etternavn'))),
 				 'category'			=> $this->db_boei->f('kjonn_juridisk') + 1,
 				 'status_eco'		=> $this->db_boei->f('namssakstatusokonomi_id'),
 				 'status_drift' 	=> $this->db_boei->f('namssakstatusdrift_id'),
@@ -619,8 +621,8 @@
 				 );
 				$leietaker_latin[]= array (
 				 'id' 				=> $this->db_boei->f('leietaker_id'),
-				 'first_name'		=> $this->db_boei->f('fornavn'),
-				 'last_name' 		=> $this->db_boei->f('etternavn'),
+				 'first_name'		=> $this->db->db_addslashes($this->db_boei->f('fornavn')),
+				 'last_name' 		=> $this->db->db_addslashes($this->db_boei->f('etternavn')),
 				 'category'			=> $this->db_boei->f('kjonn_juridisk') + 1,
 				 'status_eco'		=> $this->db_boei->f('namssakstatusokonomi_id'),
 				 'status_drift' 	=> $this->db_boei->f('namssakstatusdrift_id'),
@@ -658,6 +660,35 @@
 			return $msg;
 
 		}
+
+		function update_tenant_name()
+		{
+			$sql = " SELECT leietaker_id, fornavn, etternavn FROM v_Leietaker";
+			$this->db_boei->query($sql,__LINE__,__FILE__);
+
+			$i=0;
+			while ($this->db_boei->next_record())
+			{
+				$sql2_utf = " UPDATE  fm_tenant SET "
+				. " first_name		= '" . $this->db->db_addslashes($this->bocommon->ascii2utf($this->db_boei->f('fornavn'))) . "',"
+				. " last_name 		= '" . $this->db->db_addslashes($this->bocommon->ascii2utf($this->db_boei->f('etternavn'))) ."'"
+				. " WHERE  id = " . (int)$this->db_boei->f('leietaker_id');
+
+				$sql2_latin = " UPDATE  fm_tenant SET "
+				. " first_name		= '" . $this->db->db_addslashes($this->db_boei->f('fornavn')) . "',"
+				. " last_name 		= '" . $this->db->db_addslashes($this->db_boei->f('etternavn')) ."'"
+				. " WHERE  id = " . (int)$this->db_boei->f('leietaker_id');
+
+				$this->db->query($sql2_latin,__LINE__,__FILE__);
+				$this->db_boei2->query($sql2_latin,__LINE__,__FILE__);
+				$i++;
+			}
+
+			$msg = $i . ' Leietakere er oppdatert';
+			$this->receipt['message'][]=array('msg'=> $msg);
+			return $msg;
+		}
+
 
 		function oppdater_leieobjekt()
 		{			
