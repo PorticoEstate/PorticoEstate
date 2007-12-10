@@ -1,0 +1,110 @@
+@CHARSET "ISO-8859-1";
+
+html {
+/*
+		height: 100%;
+	max-height:100%;
+	*/
+	overflow:hidden;
+}
+
+body
+{
+		/*
+	max-height:100%;
+	height: 100%;
+	*/
+	font-size: 0.8em;
+}
+
+div.ofm-theme
+{
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	height: 100%;
+	width: 100%;
+	text-align: left;
+}
+
+div.ofm-layout-split
+{
+	height: 100%;
+}
+
+div.ofm-layout-split div.ofm-layout-west
+{
+	float: left;
+	width: 400px;
+	height: 100%;
+}
+
+div.ofm-layout-split div.ofm-layout-east
+{
+	margin-left: 410px;
+	height: 100%;
+}
+
+div.ofm-layout-split div.ofm-split-bar
+{
+	float: left;
+	background: #ddd url(../images/ofm-splitbar-bg.png) center top repeat-y;
+	width: 10px;
+	height: 100%;
+}
+
+div.ofm-layout-split div.ofm-split-bar div.ofm-split-bar-dragger
+{
+	display: block;
+	height: 100%;
+	background: url(../images/ofm-splitbar.png) center center no-repeat;
+	cursor: e-resize;
+}
+
+div.ofm-panel
+{
+	position: relative;
+	height: 100%;
+	background: #eee;
+}
+
+div.ofm-panel div.ofm-head
+{
+	width: 100%;
+}
+
+div.ofm-panel div.ofm-head h2
+{
+	font-weight: bold;
+	color: #777;
+	padding: 0.3em 0.3em 0.2em 0.6em;
+	background: url(../images/ofm-gard-top.png) top left repeat-x;
+}
+div.ofm-panel div.ofm-head div.ofm-buttons
+{
+	float: right;
+	padding: 0.3em 0.3em 0.2em 0.6em;
+}
+
+div.ofm-panel div.ofm-body {
+	border-top: 1px solid #ddd;
+	position: absolute;
+	overflow: auto;
+	left: 0em;
+	right: 0em;
+	top: 1.80em;
+	bottom: 0px;
+	padding: 0.6em;
+	background: #fff;
+}
+
+div.ofm-panel div.ofm-body div.ofm-content {
+
+
+}
+
+ul ul {
+	margin-left: 2em;
+}
+/* Fixes */
+
