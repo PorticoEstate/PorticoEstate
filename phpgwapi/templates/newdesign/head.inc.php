@@ -1,4 +1,6 @@
 <?php
+	phpgw::import_class('phpgwapi.yui');
+
 	if ( !isset($GLOBALS['phpgw_info']['server']['site_title']) )
 	{
 		$GLOBALS['phpgw_info']['server']['site_title'] = lang('please set a site name in admin &gt; siteconfig');
@@ -22,11 +24,17 @@
 		$GLOBALS['phpgw']->template->parse('stylesheets', 'stylesheet', true);
 	}
 
+	phpgwapi_yui::load_widget( 'dragdrop' );
+	//
+	//$GLOBALS['phpgw']->js->validate_file( 'newdesign', 'base', '' );
+
 	$GLOBALS['phpgw']->template->set_var(array
 	(
 		'javascript'	=> $GLOBALS['phpgw']->common->get_javascript(),
-		'site_title'	=> "{$GLOBALS['phpgw_info']['server']['site_title']} | " . lang($GLOBALS['phpgw_info']['flags']['currentapp'])
+		'site_title'	=> "{$GLOBALS['phpgw_info']['server']['site_title']}",
+		'url_root'		=> $GLOBALS['phpgw']->link('/', array(), true)
 	));
+
 	$GLOBALS['phpgw']->template->pfp('out','head');
 ?>
 

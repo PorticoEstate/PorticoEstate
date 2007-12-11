@@ -33,29 +33,41 @@ div.ofm-header
 	height: 2em;
 	background: #000;
 	text-align: left;
-	background: #000 url(../images/ofm-icon-logo.png) center left no-repeat;
-	line-height: 2em;
 
+	line-height: 2em;
+	background: #000 url(../images/ofm-toolbar-bg.png) center right no-repeat;
 }
 div.ofm-header div.ofm-toolbar
 {
 	position: absolute;
-	top: 0em;
-	right: 0em;
-	padding-right: 0.6em;
-	width: 20em;
-	height: 2em;
-	background: url(../images/ofm-toolbar-bg.png) center left;
-	color: #dbdbdb;
-	z-index: 1;
-	text-align:right;
+	right: 0.6em;
+	z-index: 3;
 }
+div.ofm-header div.ofm-toolbar a
+{
+	color: #dbdbdb;
+	font-weight: bold;
+	text-decoration: none;
+}
+
+div.ofm-header div.ofm-toolbar a:hover {
+	color: #fff;
+	text-decoration: underline;
+}
+
 div.ofm-header h1 {
 	position: absolute;
 	z-index: 2;
+	width: 100%;
+	background: url(../images/ofm-icon-logo.png) center left no-repeat;
+}
+
+div.ofm-header h1 a
+{
 	color: #dbdbdb;
 	font-weight: bold;
-	width: 100%;
+	text-decoration: none;
+	display: block;
 	padding-left: 30px;
 	background: url(../images/ofm-gard-top.png) top left repeat-x;
 }
@@ -69,7 +81,8 @@ div.ofm-layout-split
 
 div.ofm-layout-split div.ofm-layout-west
 {
-	float: left;
+	position: absolute;
+	left: 0px;
 	width: 400px;
 	height: 100%;
 }
@@ -82,10 +95,12 @@ div.ofm-layout-split div.ofm-layout-east
 
 div.ofm-layout-split div.ofm-split-bar
 {
-	float: left;
+	position: absolute;
+	left: 400px;
 	background: #ddd url(../images/ofm-splitbar-bg.png) center top repeat-y;
 	width: 10px;
 	height: 100%;
+	z-index: 1;
 }
 
 div.ofm-layout-split div.ofm-split-bar div.ofm-split-bar-dragger
@@ -134,7 +149,6 @@ div.ofm-panel div.ofm-body {
 }
 
 div.ofm-panel div.ofm-body div.ofm-content {
-
 
 }
 
