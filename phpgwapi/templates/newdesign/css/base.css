@@ -1,4 +1,4 @@
-@CHARSET "ISO-8859-1";
+@charset "UTF-8";
 
 html {
 /*
@@ -20,15 +20,50 @@ body
 div.ofm-theme
 {
 	position: absolute;
-	top: 0px;
+	top: 2em;
 	left: 0px;
-	height: 100%;
+	bottom: 0px;
 	width: 100%;
 	text-align: left;
 }
 
+div.ofm-header
+{
+	color: #fff;
+	height: 2em;
+	background: #000;
+	text-align: left;
+	background: #000 url(../images/ofm-icon-logo.png) center left no-repeat;
+	line-height: 2em;
+
+}
+div.ofm-header div.ofm-toolbar
+{
+	position: absolute;
+	top: 0em;
+	right: 0em;
+	padding-right: 0.6em;
+	width: 20em;
+	height: 2em;
+	background: url(../images/ofm-toolbar-bg.png) center left;
+	color: #dbdbdb;
+	z-index: 1;
+	text-align:right;
+}
+div.ofm-header h1 {
+	position: absolute;
+	z-index: 2;
+	color: #dbdbdb;
+	font-weight: bold;
+	width: 100%;
+	padding-left: 30px;
+	background: url(../images/ofm-gard-top.png) top left repeat-x;
+}
+
 div.ofm-layout-split
 {
+	position: absolute;
+	top: 0px;
 	height: 100%;
 }
 
@@ -106,5 +141,17 @@ div.ofm-panel div.ofm-body div.ofm-content {
 ul ul {
 	margin-left: 2em;
 }
+
+ul a {
+	text-decoration: none;
+	display: block;
+	/*background: url(http://fotball.adressa.no/template/ver1-0/gfx/debate/folder16x16.gif) left center no-repeat;*/
+	padding: 0.2em 0.2em 0.1em 20px;
+}
+
+ul a:hover {
+	/*background: #eee url(http://fotball.adressa.no/template/ver1-0/gfx/debate/folder16x16.gif) left center no-repeat;*/
+}
+
 /* Fixes */
 

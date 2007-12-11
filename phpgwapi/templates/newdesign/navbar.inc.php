@@ -49,13 +49,13 @@
 	function render_sub_menu($level)
 	{
 		global $menu_tmp;
-		if($menu_tmp[$level])
+		if ( isset($menu_tmp[$level]) && $menu_tmp[$level] )
 		{
-			echo "<ul>";
+			echo "<ul>\n";
 			foreach($menu_tmp[$level] as $item)
 			{
 				echo "<li>";
-				if( $item['this'])
+				if( isset($item['this']) && $item['this'] )
 				{
 					echo "<a href=\"{$item['url']}\">* {$item['text']}</a>";
 					render_sub_menu(++$level);
@@ -65,9 +65,9 @@
 					echo "<a href=\"{$item['url']}\">{$item['text']}</a>";
 				}
 
-				echo "</li>";
+				echo "</li>\n";
 			}
-			echo "</ul>";
+			echo "</ul>\n";
 		}
 	}
 
@@ -75,7 +75,6 @@
 	{
 		$GLOBALS['phpgw']->template->set_root(PHPGW_TEMPLATE_DIR);
 		$GLOBALS['phpgw']->template->set_file('footer', 'footer.tpl');
-		$GLOBALS['phpgw']->template->set_var($var);
 		$GLOBALS['phpgw']->template->pfp('out','footer');
 	}
 
