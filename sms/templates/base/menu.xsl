@@ -12,10 +12,10 @@
 						<xsl:text>  </xsl:text>
 						<xsl:choose>
 							<xsl:when test="this=1">
-								<a href="{link}" onMouseover="window.status='{statustext}';return true;" onMouseout="window.status='';return true;"><b><xsl:text>[</xsl:text><xsl:value-of select="name"/><xsl:text>]</xsl:text></b></a>					
+								<a href="{url}" onMouseover="window.status='{statustext}';return true;" onMouseout="window.status='';return true;"><b><xsl:text>[</xsl:text><xsl:value-of select="text"/><xsl:text>]</xsl:text></b></a>					
 							</xsl:when>
 							<xsl:otherwise>
-								<a href="{link}" onMouseover="window.status='{statustext}';return true;" onMouseout="window.status='';return true;"><xsl:value-of select="name"/></a>					
+								<a href="{url}" onMouseover="window.status='{statustext}';return true;" onMouseout="window.status='';return true;"><xsl:value-of select="text"/></a>					
 							</xsl:otherwise>
 						</xsl:choose>
 
@@ -31,10 +31,10 @@
 						<xsl:text>  </xsl:text>
 						<xsl:choose>
 							<xsl:when test="this=1">
-								<a href="{link}" onMouseover="window.status='{statustext}';return true;" onMouseout="window.status='';return true;"><b><xsl:text>[</xsl:text><xsl:value-of select="name"/><xsl:text>]</xsl:text></b></a>					
+								<a href="{url}" onMouseover="window.status='{statustext}';return true;" onMouseout="window.status='';return true;"><b><xsl:text>[</xsl:text><xsl:value-of select="text"/><xsl:text>]</xsl:text></b></a>					
 							</xsl:when>
 							<xsl:otherwise>
-								<a href="{link}" onMouseover="window.status='{statustext}';return true;" onMouseout="window.status='';return true;"><xsl:value-of select="name"/></a>					
+								<a href="{url}" onMouseover="window.status='{statustext}';return true;" onMouseout="window.status='';return true;"><xsl:value-of select="text"/></a>					
 							</xsl:otherwise>
 						</xsl:choose>
 					</xsl:for-each>
@@ -52,10 +52,10 @@
 								<xsl:text>  </xsl:text>
 								<xsl:choose>
 									<xsl:when test="this=1">
-										<a href="{link}" onMouseover="window.status='{statustext}';return true;" onMouseout="window.status='';return true;"><b><xsl:text>[</xsl:text><xsl:value-of select="name"/><xsl:text>]</xsl:text></b></a>					
+										<a href="{url}" onMouseover="window.status='{statustext}';return true;" onMouseout="window.status='';return true;"><b><xsl:text>[</xsl:text><xsl:value-of select="text"/><xsl:text>]</xsl:text></b></a>					
 									</xsl:when>
 									<xsl:otherwise>
-										<a href="{link}" onMouseover="window.status='{statustext}';return true;" onMouseout="window.status='';return true;"><xsl:value-of select="name"/></a>					
+										<a href="{url}" onMouseover="window.status='{statustext}';return true;" onMouseout="window.status='';return true;"><xsl:value-of select="text"/></a>					
 									</xsl:otherwise>
 								</xsl:choose>
 							</xsl:for-each>
