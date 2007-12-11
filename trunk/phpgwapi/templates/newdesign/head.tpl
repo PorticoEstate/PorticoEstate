@@ -18,6 +18,12 @@
 	</head>
 	<body>
 <!-- END Head -->
+	<div class="ofm-header">
+		<h1>{site_title}</h1>
+		<div class="ofm-toolbar">
+			<a href="#"></a>
+		</div>
+	</div>
 	<div class="ofm-theme-blue ofm-theme">
 		<div class="ofm-layout-split">
 			<div class="ofm-layout-west">
