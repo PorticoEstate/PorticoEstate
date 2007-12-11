@@ -75,7 +75,8 @@
 		'settings',
 		'preferences',
 		'admin',
-		'help'
+		'help',
+		'sidebox_menu'
 	);
 
 	/* Dependencies for this app to work */
