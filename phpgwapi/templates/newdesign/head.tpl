@@ -18,28 +18,20 @@
 	</head>
 	<body>
 <!-- END Head -->
-		<div class="ofm-header">
 
-			<h1><a href="{url_root}">{site_title}</a></h1>
-			<div class="ofm-toolbar">
-				Jan Åge Johnsen |
-				<a href="#">Preferences</a> |
-				<a href="#">Logout</a>
-			</div>
-		</div>
-
-		<div class="ofm-theme-blue ofm-theme">
-			<div class="ofm-layout-split">
-				<div class="ofm-layout-west" id="layout-west">
-					<div class="ofm-panel ofm-resizable">
-
-						<div class="ofm-head">
-
-							<div class="ofm-buttons">
-								<!-- <a href="#" class="ofm-btn-close">X</a>  -->
-							</div>
-							<h2>Panel</h2>
+		<div id="theme-gray">
+			<div class="border-layout">
+				<div class="layout-north">
+					<div class="panel">
+						<div class="header">
+							<h2 class="icon">
+								{site_title}
+							</h2>
 						</div>
-						<div class="ofm-body ofm-overflow">
-							<div class="ofm-content">
+					</div>
+				</div>
 
+				<div class="layout-west">
+					<div class="panel">
+						<div class="header">
+							<h2>{user_fullname}</h2>

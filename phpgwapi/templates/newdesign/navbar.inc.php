@@ -4,7 +4,6 @@
 	function parse_navbar($force = False)
 	{
 		global $menu_tmp;
-		//$var = array();
 		$GLOBALS['phpgw']->template->set_root(PHPGW_TEMPLATE_DIR);
 		$GLOBALS['phpgw']->template->set_file('navbar', 'navbar.tpl');
 
@@ -19,56 +18,69 @@
 
 		//$GLOBALS['phpgw']->hooks->single('sidebox_menu',$GLOBALS['phpgw_info']['flags']['currentapp']);
 
+		$treemenu = "";
+
 		foreach($GLOBALS['phpgw_info']['navbar'] as $app => $app_data)
 		{
-			echo "<ul><li>";
+			switch( $app )
+			{
 
-			if( $app == $GLOBALS['phpgw_info']['flags']['currentapp'] )
-			{
-				echo "<a href=\"{$app_data['url']}\">* {$app_data['title']}</a>";
-				$GLOBALS['phpgw']->hooks->single('sidebox_menu',$app);
-				render_sub_menu(0);
+				case in_array($app, array('logout', 'about', 'preferences')):
+					$var["{$app}_name"] = lang($app_data['title']);
+					$var["{$app}_url"] = $app_data['url'];
+					//$var["{$app}_icon_class"] = $app;
+					break;
+				case $app == $GLOBALS['phpgw_info']['flags']['currentapp']:
+					$treemenu .= '<ul><li>';
+					$treemenu .= "<a class=\"current\" href=\"{$app_data['url']}\">" . lang($app) . "</a>";
+
+					$GLOBALS['phpgw']->hooks->single('sidebox_menu',$app);
+					$treemenu .= render_sub_menu(0);
+
+					$treemenu .= '</li></ul>';
+					break;
+				default:
+					$treemenu .= '<ul><li>';
+					$treemenu .= "<a href=\"{$app_data['url']}\">" . lang($app) . "</a>";
+					$treemenu .= '</li></ul>';
 			}
-			else
-			{
-				echo "<a href=\"{$app_data['url']}\">{$app_data['title']}</a>";
-			}
-			//$menu_tmp=array();
-			echo "</li></ul>";
 		}
 
-
+		$var['treemenu'] = $treemenu;
 
 		$GLOBALS['phpgw']->template->set_var($var);
 		$GLOBALS['phpgw']->template->pfp('out','navbar');
-		//echo "<pre>";
-
-		//var_dump($GLOBALS['phpgw']->session->appsession('menu_newdesign','sidebox'));
-
 	}
+
 	function render_sub_menu($level)
 	{
 		global $menu_tmp;
+		$output = "";
+
 		if ( isset($menu_tmp[$level]) && $menu_tmp[$level] )
 		{
-			echo "<ul>\n";
+			$output .= "<ul>\n";
 			foreach($menu_tmp[$level] as $item)
 			{
-				echo "<li>";
-				if( isset($item['this']) && $item['this'] )
+				if($item['text'] != '_NewLine_')
 				{
-					echo "<a href=\"{$item['url']}\">* {$item['text']}</a>";
-					render_sub_menu(++$level);
-				}
-				else
-				{
-					echo "<a href=\"{$item['url']}\">{$item['text']}</a>";
-				}
+					$output .= "<li>";
+					if( isset($item['this']) && $item['this'] )
+					{
+						$output .= "<a class=\"current\" href=\"{$item['url']}\">{$item['text']}</a>";
+						$output .= render_sub_menu(++$level);
+					}
+					else
+					{
+						$output .= "<a href=\"{$item['url']}\">{$item['text']}</a>";
+					}
 
-				echo "</li>\n";
+					$output .=  "</li>\n";
+				}
 			}
-			echo "</ul>\n";
+			$output .=  "</ul>\n";
 		}
+		return $output;
 	}
 
 	function parse_navbar_end()
