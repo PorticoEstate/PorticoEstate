@@ -9,8 +9,24 @@
 	$stylesheets = array
 	(
 		"{$GLOBALS['phpgw_info']['server']['webserver_url']}/phpgwapi/js/yahoo/reset-fonts-grids/reset-fonts-grids.css",
-		"{$GLOBALS['phpgw_info']['server']['webserver_url']}/phpgwapi/templates/newdesign/css/base.css"
+		"{$GLOBALS['phpgw_info']['server']['webserver_url']}/phpgwapi/templates/newdesign/css/base.css",
+		"{$GLOBALS['phpgw_info']['server']['webserver_url']}/phpgwapi/templates/newdesign/css/icons.css"
 	);
+
+	$app = $GLOBALS['phpgw_info']['flags']['currentapp'];
+
+	if(file_exists(PHPGW_SERVER_ROOT . '/phpgwapi/templates/newdesign/css/' . $GLOBALS['phpgw_info']['user']['preferences']['common']['theme'] . '.css'))
+		$theme_styles[] = "{$GLOBALS['phpgw_info']['server']['webserver_url']}/phpgwapi/templates/newdesign/css/{$GLOBALS['phpgw_info']['user']['preferences']['common']['theme']}.css";
+
+	if(file_exists(PHPGW_SERVER_ROOT . "/{$app}/templates/base/css/base.css"))
+		$stylesheets[] = "{$GLOBALS['phpgw_info']['server']['webserver_url']}/{$app}/templates/base/css/base.css";
+
+	if(file_exists(PHPGW_SERVER_ROOT . "/{$app}/templates/newdesign/css/base.css"))
+		$stylesheets[] = "{$GLOBALS['phpgw_info']['server']['webserver_url']}/{$app}/templates/newdesign/css/base.css";
+
+	if(file_exists(PHPGW_SERVER_ROOT . "/{$app}/templates/newdesign/css/{$GLOBALS['phpgw_info']['user']['preferences']['common']['theme']}.css"))
+		$stylesheets[] = "{$GLOBALS['phpgw_info']['server']['webserver_url']}/{$app}/templates/idots/css/{$GLOBALS['phpgw_info']['user']['preferences']['common']['theme']}.css";
+
 
 	$GLOBALS['phpgw']->template->set_root(PHPGW_TEMPLATE_DIR);
 	$GLOBALS['phpgw']->template->set_unknowns('remove');
@@ -32,7 +48,8 @@
 	(
 		'javascript'	=> $GLOBALS['phpgw']->common->get_javascript(),
 		'site_title'	=> "{$GLOBALS['phpgw_info']['server']['site_title']}",
-		'url_root'		=> $GLOBALS['phpgw']->link('/', array(), true)
+		'url_root'		=> $GLOBALS['phpgw']->link('/', array(), true),
+		'user_fullname' => $GLOBALS['phpgw']->common->display_fullname()
 	));
 
 	$GLOBALS['phpgw']->template->pfp('out','head');
