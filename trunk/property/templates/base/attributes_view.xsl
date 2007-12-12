@@ -28,8 +28,6 @@
 				<td align="left">
 					<xsl:choose>
 						<xsl:when test="name!=''">
-							<input type="hidden" name="values_attribute[{counter}][name]" value="{name}"></input>
-							<input type="hidden" name="values_attribute[{counter}][datatype]" value="{datatype}"></input>
 							<xsl:choose>
 								<xsl:when test="datatype='R'">
 									<xsl:call-template name="choice_view"/>
@@ -85,33 +83,8 @@
 										</xsl:attribute>
 									</input>
 								</xsl:when>
-								<xsl:when test="datatype='D'">
-									<input type="text" name="values_attribute[{counter}][value]" value="{value}" readonly="readonly" size="12" maxlength="10"  onMouseout="window.status='';return true;" >
-										<xsl:attribute name="onMouseover">
-											<xsl:text>window.status='</xsl:text>
-												<xsl:value-of select="statustext"/>
-											<xsl:text>';return true;</xsl:text>
-										</xsl:attribute>
-									</input>
-								</xsl:when>
-								<xsl:when test="datatype='T'">
-									<textarea cols="{//textareacols}" rows="{//textarearows}" name="values_attribute[{counter}][value]" wrap="virtual" readonly="readonly" onMouseout="window.status='';return true;">
-										<xsl:attribute name="onMouseover">
-											<xsl:text>window.status='</xsl:text>
-												<xsl:value-of select="statustext"/>
-											<xsl:text>';return true;</xsl:text>
-										</xsl:attribute>
-										<xsl:value-of select="value"/>		
-									</textarea>
-								</xsl:when>
 								<xsl:otherwise>
-									<input type="text" name="values_attribute[{counter}][value]" value="{value}" readonly="readonly" size="30" onMouseout="window.status='';return true;" >
-										<xsl:attribute name="onMouseover">
-											<xsl:text>window.status='</xsl:text>
-												<xsl:value-of select="statustext"/>
-											<xsl:text>';return true;</xsl:text>
-										</xsl:attribute>
-									</input>
+									<xsl:value-of select="value"/>
 								</xsl:otherwise>
 							</xsl:choose>
 							<xsl:choose>
