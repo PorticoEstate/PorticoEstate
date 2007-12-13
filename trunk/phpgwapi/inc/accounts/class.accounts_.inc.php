@@ -227,21 +227,12 @@
 		* @param string $account_type Account type 'u': account; 'g' : group; defaults to current account type
 		* @internal I might move this to the accounts_shared if it stays around
 		*/
-		function accounts($account_id = null, $account_type = null)
+		function __construct($account_id = null, $account_type = null)
 		{
 			$this->db =& $GLOBALS['phpgw']->db;
 			$this->like = $this->db->like;
-
-			if($account_id != '')
-			{
-				$this->account_id = get_account_id($account_id);
-			}
-
-			if($account_type != '')
-			{
-				$this->account_type = $account_type;
-			}
-
+			
+			// FIXME move me to a proper instance variable
 			$this->xmlrpc_methods[] = array(
 				'name'        => 'get_list',
 				'description' => 'Returns a list of accounts and/or groups'
@@ -254,6 +245,21 @@
 				'name'        => 'id2name',
 				'description' => 'Cross reference account_id with account_lid'
 			);
+
+			$this->set_account($account_id, $account_type);
+		}
+
+		public function set_account($account_id = null, $account_type = null)
+		{
+			if ( !is_null($account_id) )
+			{
+				$this->account_id = get_account_id($account_id);
+			}
+
+			if( !is_null($account_type))
+			{
+				$this->account_type = $account_type;
+			}
 		}
 
 		function sync_accounts_contacts()
