@@ -139,12 +139,28 @@ div.panel div.body {
 	border-top: 1px solid #000;
 }
 
+div.panel div.body div.toolbar {
+	background: silver;
+	border-top: 1px solid #eee;
+	border-bottom: 1px solid gray;
+	padding: 0.2em 0.4em;
+}
+
+div.panel div.body div.toolbar a {
+	font-size: 85%;
+	font-weight: bold;
+	color: #666;
+	padding: 0 0.6em;
+}
+
 div.treeview ul ul{
 	margin-left: 1em;
 }
+
 div.treeview li a {
 	text-decoration: none;
 }
+
 div.treeview li a.current {
 	font-weight: bold;
 }

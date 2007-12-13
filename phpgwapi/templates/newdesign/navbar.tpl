@@ -1,7 +1,3 @@
-							<div class="button-bar">
-								<a href="#">Preferences</a>
-								<a href="#">Logout</a>
-							</div>
 						</div>
 						<div class="body">
 							<div class="treeview">
