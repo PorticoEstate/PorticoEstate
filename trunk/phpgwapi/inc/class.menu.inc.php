@@ -50,7 +50,7 @@
 		public function get($mtype = null)
 		{
 			$menu = $GLOBALS['phpgw']->session->appsession('phpgwapi', 'menu');
-			if ( !$cached )
+			if ( !$menu )
 			{
 				$menu = self::load();
 				$GLOBALS['phpgw']->session->appsession('phpgwapi', 'menu', $menu);
@@ -71,6 +71,7 @@
 		{
 			$menus = array();
 			$raw_menus = $GLOBALS['phpgw']->hooks->process('menu');
+			echo '<pre>' . print_r($raw_menus, true) . '</pre>';
 			foreach ( $raw_menus as $app => $raw_menu )
 			{
 				foreach ( $raw_menu as $mtype => $menu )
