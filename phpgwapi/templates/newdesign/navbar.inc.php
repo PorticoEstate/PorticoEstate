@@ -85,8 +85,8 @@
 
 	function parse_navbar_end()
 	{
-		$GLOBALS['phpgw']->template->set_file('footer', 'footer.tpl');
 		$GLOBALS['phpgw']->template->set_root(PHPGW_TEMPLATE_DIR);
+		$GLOBALS['phpgw']->template->set_file('footer', 'footer.tpl');
 
 		$var = array
 		(
