@@ -28,7 +28,7 @@ class email_service
 	 * 
 	 * @return array available menus for the current user
 	 */
-	public function menu()
+	public function get_menu()
 	{
 		$menu = array();
 		if ( isset($GLOBALS['phpgw_info']['user']['apps']['admin']) )
@@ -41,20 +41,20 @@ class email_service
 			);
 		}
 
-		$menu['toolbar'] = array(
+		$menu['toolbar'] = array
 		(
 			array
 			(
-				'url'	=> 'javascript:window.open("' . $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'email.uicompose.compose') . '");',
+				'url'	=> 'javascript:window.open("' . $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'email.uicompose.compose')) . '");',
 				'text'	=> lang('New'),
 				'image'	=> array('email', 'new')
 			),
 			array
 			(
-				'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'email.uisearch.form'),
-				'text'	=> lang('Search')
+				'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'email.uisearch.form')),
+				'text'	=> lang('Search'),
 				'image'	=> array('email', 'search')
-			)
+			),
 			array
 			(
 				'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'email.uifilters.filters_list') ),
@@ -97,6 +97,8 @@ class email_service
 			);
 		}
 
+		$menu['navigation'] = $menu['toolbar'];
+
 		$msg_bootstrap = CreateObject('email.msg_bootstrap');
 		$msg_bootstrap->ensure_mail_msg_exists('email.bofolder.folder', false);
 
@@ -127,7 +129,7 @@ class email_service
 				$menu['folders'][] = array
 				(
 					'text'		=> trim($acct['prefs']['account_name']) ? $acct['prefs']['account_name'] : $acct['prefs']['address'],
-					'image'		=> array('email', 'account')
+					'image'		=> array('email', 'account'),
 					'children'	=> $folders
 				);
 			}
