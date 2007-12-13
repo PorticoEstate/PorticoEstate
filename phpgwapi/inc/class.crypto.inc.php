@@ -110,7 +110,7 @@
 				echo '<br>' . time() . ' crypto->encrypt() unencrypted data: ---->>>>' . $data . "\n";
 			}
 
-			if ( $data === '' )
+			if ( $data === '' || is_null($data) )
 			{
 				// no point in encrypting an empty string
 				return $data;
@@ -179,7 +179,7 @@
 				echo '<br>' . time() . ' crypto->decrypt() crypted data: ---->>>>' . $encrypteddata;
 			}
 
-			if ( $encrypteddata === '' )
+			if ( $encrypteddata === '' || is_null($encrypteddata) )
 			{
 				// an empty string is always a usless empty string
 				return $encrypteddata;
