@@ -38,7 +38,14 @@
 		function __construct($db = null)
 		{
 			$this->db = !is_null($db) ? $db : $GLOBALS['phpgw']->db;	// this is to allow setup to set the db
+			$this->read();
+		}
 
+		/**
+		* Read all the hooks
+		*/
+		public function read()
+		{
 			$this->db->query("SELECT hook_appname, hook_location, hook_filename FROM phpgw_hooks",__LINE__,__FILE__);
 			while( $this->db->next_record() )
 			{
@@ -47,6 +54,7 @@
 			//echo '<pre>';
 			//print_r($this->found_hooks);
 			//echo '</pre>';
+			return $this->found_hooks;
 		}
 		
 		/**
@@ -187,19 +195,6 @@
 			return $count;
 		}
 		
-		/**
-		 * currently not being used
-		*
-		 */
-		function read()
-		{
-			//if (!is_array($this->found_hooks))
-			//{
-				$this->hooks();
-			//}
-			return $this->found_hooks;
-		}
-
 		/**
 		 * Register and/or de-register an application's hooks
 		*
