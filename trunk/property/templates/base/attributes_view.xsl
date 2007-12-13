@@ -36,20 +36,10 @@
 									<xsl:call-template name="choice_view"/>
 								</xsl:when>
 								<xsl:when test="datatype='LB'">
-									<select disabled="disabled" class="forms" onMouseover="window.status='{statustext}'; return true;" onMouseout="window.status='';return true;">
-										<option value=""><xsl:value-of select="//lang_none"/></option>
-										<xsl:for-each select="choice">	
-											<xsl:variable name="id"><xsl:value-of select="id"/></xsl:variable>
-											<xsl:choose>
-												<xsl:when test="checked='checked'">
-													<option value="{$id}" selected="selected"><xsl:value-of disable-output-escaping="yes" select="value"/></option>
-												</xsl:when>
-												<xsl:otherwise>
-													<option value="{$id}"><xsl:value-of disable-output-escaping="yes" select="value"/></option>
-												</xsl:otherwise>
-											</xsl:choose>				
-										</xsl:for-each>
-									</select>
+									<xsl:for-each select="choice[checked='checked']" >
+										<xsl:value-of select="value"/>
+										<xsl:if test="position() != last()">, </xsl:if>
+									</xsl:for-each>
 								</xsl:when>
 								<xsl:when test="datatype='AB'">
 									<input type="text" value="{value}" readonly="readonly" size="5" onMouseout="window.status='';return true;" >
