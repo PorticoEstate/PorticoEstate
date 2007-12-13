@@ -2,7 +2,7 @@
 		<xsl:apply-templates select="links"/>
 	</xsl:template>
 	<xsl:template match="links">
-		<table width="100%" align="center">		
+		<table width="100%" align="center" id="legacy-menu">
 			<tr >
 				<xsl:attribute name="class">
 					<xsl:text>row_on</xsl:text>
@@ -12,10 +12,10 @@
 						<xsl:text>  </xsl:text>
 						<xsl:choose>
 							<xsl:when test="this=1">
-								<a href="{url}" onMouseover="window.status='{statustext}';return true;" onMouseout="window.status='';return true;"><b><xsl:text>[</xsl:text><xsl:value-of select="text"/><xsl:text>]</xsl:text></b></a>					
+								<a href="{url}" onMouseover="window.status='{statustext}';return true;" onMouseout="window.status='';return true;"><b><xsl:text>[</xsl:text><xsl:value-of select="text"/><xsl:text>]</xsl:text></b></a>
 							</xsl:when>
 							<xsl:otherwise>
-								<a href="{url}" onMouseover="window.status='{statustext}';return true;" onMouseout="window.status='';return true;"><xsl:value-of select="text"/></a>					
+								<a href="{url}" onMouseover="window.status='{statustext}';return true;" onMouseout="window.status='';return true;"><xsl:value-of select="text"/></a>
 							</xsl:otherwise>
 						</xsl:choose>
 
@@ -31,10 +31,10 @@
 						<xsl:text>  </xsl:text>
 						<xsl:choose>
 							<xsl:when test="this=1">
-								<a href="{url}" onMouseover="window.status='{statustext}';return true;" onMouseout="window.status='';return true;"><b><xsl:text>[</xsl:text><xsl:value-of select="text"/><xsl:text>]</xsl:text></b></a>					
+								<a href="{url}" onMouseover="window.status='{statustext}';return true;" onMouseout="window.status='';return true;"><b><xsl:text>[</xsl:text><xsl:value-of select="text"/><xsl:text>]</xsl:text></b></a>
 							</xsl:when>
 							<xsl:otherwise>
-								<a href="{url}" onMouseover="window.status='{statustext}';return true;" onMouseout="window.status='';return true;"><xsl:value-of select="text"/></a>					
+								<a href="{url}" onMouseover="window.status='{statustext}';return true;" onMouseout="window.status='';return true;"><xsl:value-of select="text"/></a>
 							</xsl:otherwise>
 						</xsl:choose>
 					</xsl:for-each>
@@ -52,10 +52,10 @@
 								<xsl:text>  </xsl:text>
 								<xsl:choose>
 									<xsl:when test="this=1">
-										<a href="{url}" onMouseover="window.status='{statustext}';return true;" onMouseout="window.status='';return true;"><b><xsl:text>[</xsl:text><xsl:value-of select="text"/><xsl:text>]</xsl:text></b></a>					
+										<a href="{url}" onMouseover="window.status='{statustext}';return true;" onMouseout="window.status='';return true;"><b><xsl:text>[</xsl:text><xsl:value-of select="text"/><xsl:text>]</xsl:text></b></a>
 									</xsl:when>
 									<xsl:otherwise>
-										<a href="{url}" onMouseover="window.status='{statustext}';return true;" onMouseout="window.status='';return true;"><xsl:value-of select="text"/></a>					
+										<a href="{url}" onMouseover="window.status='{statustext}';return true;" onMouseout="window.status='';return true;"><xsl:value-of select="text"/></a>
 									</xsl:otherwise>
 								</xsl:choose>
 							</xsl:for-each>
