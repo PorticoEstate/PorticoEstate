@@ -66,9 +66,19 @@
 		 * Constructor
 		 * @param int $account_id the user id for which preferences are sought - 0 == current user
 		 */
-		function preferences($account_id = 0)
+		public function __construct($account_id = 0)
 		{
 			$this->db         =& $GLOBALS['phpgw']->db;
+			$this->set_account_id($account_id);
+		}
+
+		/**
+		* Set the current user id
+		*
+		* @param int $account_id the account id - 0 = current user's id
+		*/
+		public function set_account_id($account_id = 0)
+		{
 			$this->account_id = get_account_id($account_id);
 		}
 
@@ -547,6 +557,9 @@
 		 */
 		function save_repository($update_session_info = False,$type='user')
 		{
+			// Don't get the old values back from the cache on next load
+			$GLOBALS['phpgw']->session->clear_phpgw_info_cache();
+
 			switch($type)
 			{
 				case 'forced':
@@ -807,19 +820,18 @@
 		 */
 		function sub_default_userid($account_id='')
 		{
-			if (isset($GLOBALS['phpgw_info']['server']['mail_login_type']) && $GLOBALS['phpgw_info']['server']['mail_login_type'] == 'vmailmgr')
+			$prefs_email_userid = $GLOBALS['phpgw']->accounts->id2lid($account_id, true);
+
+			if (isset($GLOBALS['phpgw_info']['server']['mail_login_type']) )
 			{
-				$prefs_email_userid = $GLOBALS['phpgw']->accounts->id2name($account_id)
-					. '@' . $GLOBALS['phpgw_info']['server']['mail_suffix'];
-			}
-			else if (isset($GLOBALS['phpgw_info']['server']['mail_login_type']) && $GLOBALS['phpgw_info']['server']['mail_login_type'] == 'ispman')
-			{
-				$prefs_email_userid = $GLOBALS['phpgw']->accounts->id2name($account_id)
-					. '_' . str_replace('.', '_', $GLOBALS['phpgw_info']['server']['mail_suffix']);
-			}
-			else
-			{
-				$prefs_email_userid = $GLOBALS['phpgw']->accounts->id2name($account_id);
+				if ( $GLOBALS['phpgw_info']['server']['mail_login_type'] == 'vmailmgr' )
+				{
+					$prefs_email_userid .= "@{$GLOBALS['phpgw_info']['server']['mail_suffix']}";
+				}
+				else if ( $GLOBALS['phpgw_info']['server']['mail_login_type'] == 'ispman' )
+				{
+					$prefs_email_userid .= '_' . str_replace('.', '_', $GLOBALS['phpgw_info']['server']['mail_suffix']);
+				}
 			}
 			return $prefs_email_userid;
 		}
@@ -840,10 +852,12 @@
 			{
 				return $this->data['email']['address'];
 			}
-			$prefs_email_address = $GLOBALS['phpgw']->accounts->id2name($account_id);
-			if (strstr($prefs_email_address,'@') === False)
+
+			$prefs_email_address = $GLOBALS['phpgw']->accounts->id2lid($account_id);
+
+			if ( !preg_match('/@/', $prefs_email_address) )
 			{
-				$prefs_email_address .= '@' . $GLOBALS['phpgw_info']['server']['mail_suffix'];
+				$prefs_email_address .= "@{$GLOBALS['phpgw_info']['server']['mail_suffix']}";
 			}
 			return $prefs_email_address;
 		}
