@@ -19,9 +19,9 @@
 	*/
 	class accounts_sql extends accounts_
 	{
-		function accounts_sql($account_id = null, $account_type = null)
+		function __construct($account_id = null, $account_type = null)
 		{
-			parent::accounts($account_id, $account_type);
+			parent::__construct($account_id, $account_type);
 		}
 
 		function list_methods($_type='xmlrpc')
@@ -244,14 +244,14 @@
 		{
 			static $lid_list;
 
-			(int)$account_id;
+			$account_id = (int)$account_id;
 
 			if (! $account_id)
 			{
 				return '';
 			}
 
-			if( isset($lid_list[$account_id]) && $id_list[$account_id] ) 
+			if( isset($lid_list[$account_id]) ) 
 			{
 				return $lid_list[$account_id];
 			}
@@ -269,29 +269,37 @@
 			return $lid_list[$account_id];
 		}
 
+		/**
+		* Convert an id into its corresponding account or group name
+		*
+		* @param integer $id Account or group id
+		* @param bool $only_lid only return the account_lid for the user, should not be used when output is displayed to other users
+		* @return string Name of the account or the group when found othwerwise empty string
+		*/
 		function id2name($account_id)
 		{
 			static $id_list;
 
+			$account_id = (int) $account_id;
+
 			if (! $account_id)
 			{
-				return False;
+				return '';
 			}
 
-			if( isset($id_list[$account_id]) && $id_list[$account_id] ) 
+			if( isset($id_list[$account_id]) ) 
 			{
 				return $id_list[$account_id];
 			}
 
-			$this->db->query('SELECT account_lid, account_firstname, account_lastname FROM phpgw_accounts WHERE account_id=' . intval($account_id),__LINE__,__FILE__);
-			if($this->db->num_rows())
+			$this->db->query("SELECT account_lid, account_firstname, account_lastname FROM phpgw_accounts WHERE account_id={$account_id}", __LINE__, __FILE__);
+			if($this->db->next_record())
 			{
-				$this->db->next_record();
 				$id_list[$account_id] = $GLOBALS['phpgw']->common->display_fullname($this->db->f('account_lid'), $this->db->f('account_firstname'), $this->db->f('account_lastname') );
 			}
 			else
 			{
-				$id_list[$account_id] = False;
+				$id_list[$account_id] = '';
 			}
 			return $id_list[$account_id];
 		}
