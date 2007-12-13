@@ -484,8 +484,8 @@
 				print_debug('LID',$login,'app');
 				$login_id = $GLOBALS['phpgw']->accounts->name2id($login);
 				print_debug('User ID',$login_id,'app');
-				$GLOBALS['phpgw']->accounts->accounts($login_id);
-				$GLOBALS['phpgw']->preferences->preferences($login_id);
+				$GLOBALS['phpgw']->accounts->set_account($login_id);
+				$GLOBALS['phpgw']->preferences->set_account_id($login_id);
 			}
 		}
 	/**************************************************************************\
