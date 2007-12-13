@@ -16,8 +16,6 @@
 			$var['current_app_title'] = lang($GLOBALS['phpgw_info']['flags']['currentapp']);
 		}
 
-		//$GLOBALS['phpgw']->hooks->single('sidebox_menu',$GLOBALS['phpgw_info']['flags']['currentapp']);
-
 		$treemenu = "";
 
 		foreach($GLOBALS['phpgw_info']['navbar'] as $app => $app_data)
@@ -50,6 +48,8 @@
 
 		$GLOBALS['phpgw']->template->set_var($var);
 		$GLOBALS['phpgw']->template->pfp('out','navbar');
+
+		register_shutdown_function('parse_footer_end');
 	}
 
 	function render_sub_menu($level)
@@ -83,18 +83,21 @@
 		return $output;
 	}
 
-	function parse_navbar_end()
+	function parse_footer_end()
 	{
 		$GLOBALS['phpgw']->template->set_root(PHPGW_TEMPLATE_DIR);
 		$GLOBALS['phpgw']->template->set_file('footer', 'footer.tpl');
 
 		$var = array
 		(
-			'powered_by'		=> lang('Powered by phpGroupWare version %1', $GLOBALS['phpgw_info']['server']['versions']['phpgwapi']),
+			'powered_by_name'	=> lang('Powered by phpGroupWare version %1', $GLOBALS['phpgw_info']['server']['versions']['phpgwapi']),
+			'powered_by_url'	=> "http://www.phpgroupware.org/"
 		);
+
 		$GLOBALS['phpgw']->template->set_var($var);
-		
+
 		$GLOBALS['phpgw']->template->pfp('out','footer');
+
 	}
 
 	function display_sidebox($appname, $menu_title, $file, $use_lang = true)
