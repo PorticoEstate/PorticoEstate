@@ -1,28 +1,43 @@
 <?php
 	/**
-	* Allows applications to "hook" into each other
-	* @author Dan Kuykendall <seek3r@phpgroupware.org>
-	* @copyright Copyright (C) 2000-2004 Free Software Foundation, Inc. http://www.fsf.org/
-	* @license http://www.fsf.org/licenses/lgpl.html GNU Lesser General Public License
-	* @package phpgwapi
-	* @subpackage application
-	* @version $Id: class.hooks.inc.php 18013 2007-03-06 14:30:39Z sigurdne $
-	*/
+	 * Allows applications to "hook" into each other
+	 * @author Dan Kuykendall <seek3r@phpgroupware.org>
+	 * @copyright Copyright (C) 2000-2004 Free Software Foundation, Inc. http://www.fsf.org/
+	 * @license http://www.fsf.org/licenses/lgpl.html GNU Lesser General Public License
+	 * @package phpgwapi
+	 * @subpackage application
+	 * @version $Id: class.hooks.inc.php 18013 2007-03-06 14:30:39Z sigurdne $
+	 */
+
+	/*
+	   This program is free software: you can redistribute it and/or modify
+	   it under the terms of the GNU Lesser General Public License as published by
+	   the Free Software Foundation, either version 3 of the License, or
+	   (at your option) any later version.
+
+	   This program is distributed in the hope that it will be useful,
+	   but WITHOUT ANY WARRANTY; without even the implied warranty of
+	   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	   GNU General Public License for more details.
+
+	   You should have received a copy of the GNU General Public License
+	   along with this program.  If not, see <http://www.gnu.org/licenses/>.
+	 */
 
 	/**
-	* Ability for applications to set and use hooks to communicate with each other
-	* 
-	* @package phpgwapi
-	* @subpackage application
-	*/
-	class hooks
+	 * Ability for applications to set and use hooks to communicate with each other
+	 * 
+	 * @package phpgwapi
+	 * @subpackage application
+	 */
+	class phpgwapi_hooks
 	{
 		var $found_hooks = Array();
-		var $db = '';
+		var $db = null;
 
-		function hooks($db='')
+		function __construct($db = null)
 		{
-			$this->db = $db ? $db : $GLOBALS['phpgw']->db;	// this is to allow setup to set the db
+			$this->db = !is_null($db) ? $db : $GLOBALS['phpgw']->db;	// this is to allow setup to set the db
 
 			$this->db->query("SELECT hook_appname, hook_location, hook_filename FROM phpgw_hooks",__LINE__,__FILE__);
 			while( $this->db->next_record() )
@@ -61,7 +76,7 @@
 			{
 				$results[$appname] = $this->single($args,$appname,$no_permission_check);
 
-				if (!isset($results[$appname]))	// happens if the methode hook has no return-value
+				if (!isset($results[$appname]))	// happens if th methode hook has no return-value
 				{
 					$results[$appname] = False;
 				}
@@ -158,7 +173,6 @@
 
 		/**
 		 * loop through the applications and count the hooks
-		*
 		 */
 		function count($location)
 		{
@@ -231,17 +245,15 @@
 		 */
 		function register_all_hooks()
 		{
-			$SEP = filesystem_separator();
-			
 			foreach($GLOBALS['phpgw_info']['apps'] as $appname => $app)
 			{			
-				$f = PHPGW_SERVER_ROOT . $SEP . $appname . $SEP . 'setup' . $SEP . 'setup.inc.php';
-				if(@file_exists($f))
+				$f = PHPGW_SERVER_ROOT . "/$appname/setup/setup.inc.php";
+				if ( file_exists($f) )
 				{
-					include($f);
-					if(isset($setup_info[$appname]['hooks']))
+					include_once($f);
+					if ( isset($setup_info[$appname]['hooks']) )
 					{
-						$this->register_hooks($appname,$setup_info[$appname]['hooks']);
+						$this->register_hooks($appname, $setup_info[$appname]['hooks']);
 					}
 				}
 			}
