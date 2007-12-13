@@ -296,7 +296,8 @@
 			$this->iv  = $GLOBALS['phpgw_info']['server']['mcrypt_iv'];
 			$GLOBALS['phpgw']->crypto->init(array($this->key,$this->iv));
 
-			$this->read_repositories(@$GLOBALS['phpgw_info']['server']['cache_phpgw_info']);
+			$use_cache = isset($GLOBALS['phpgw_info']['server']['cache_phpgw_info']) ? !!$GLOBALS['phpgw_info']['server']['cache_phpgw_info'] : false;
+			$this->read_repositories($use_cache);
 			
 			if ($this->user['expires'] != -1 && $this->user['expires'] < time())
 			{
@@ -347,7 +348,8 @@
 				return False;
 			}
 
-			if (@$GLOBALS['phpgw_info']['server']['sessions_checkip'])
+			$check_ip = isset($GLOBALS['phpgw_info']['server']['sessions_checkip']) ? !!$GLOBALS['phpgw_info']['server']['sessions_checkip'] : false;
+			if ($check_ip)
 			{
 				if (PHP_OS != 'Windows' && (! $GLOBALS['phpgw_info']['user']['session_ip'] || $GLOBALS['phpgw_info']['user']['session_ip'] != $this->getuser_ip()))
 				{
@@ -374,8 +376,8 @@
 			}
 
 			$GLOBALS['phpgw']->acl->acl($this->account_id);
-			$GLOBALS['phpgw']->accounts->accounts($this->account_id);
-			$GLOBALS['phpgw']->preferences->preferences($this->account_id);
+			$GLOBALS['phpgw']->accounts->set_account($this->account_id);
+			$GLOBALS['phpgw']->preferences->set_account_id($this->account_id);
 			$GLOBALS['phpgw']->applications->applications($this->account_id);
 
 			if (! $this->account_lid)
@@ -532,7 +534,7 @@
 				$this->account_id = $GLOBALS['phpgw']->accounts->name2id($this->account_lid);
 			}
 			$GLOBALS['phpgw_info']['user']['account_id'] = $this->account_id;
-			$GLOBALS['phpgw']->accounts->accounts($this->account_id);
+			$GLOBALS['phpgw']->accounts->set_account($this->account_id);
 			$this->sessionid = md5($GLOBALS['phpgw']->common->randomstring(15));
 			$this->kp3       = md5($GLOBALS['phpgw']->common->randomstring(15));
 
@@ -725,7 +727,8 @@
 
 			$GLOBALS['phpgw_info']['user']['account_id'] = $this->account_id;
 			
-			$this->read_repositories(@$GLOBALS['phpgw_info']['server']['cache_phpgw_info']);
+			$use_cache = isset($GLOBALS['phpgw_info']['server']['cache_phpgw_info']) ? !!$GLOBALS['phpgw_info']['server']['cache_phpgw_info'] : false;
+			$this->read_repositories($use_cache);
 
 			/* init the crypto object before appsession call below */
 			$this->key = md5($this->kp3 . $this->sessionid . $GLOBALS['phpgw_info']['server']['encryptkey']);
@@ -760,7 +763,8 @@
 				return False;
 			}
 
-			if (@$GLOBALS['phpgw_info']['server']['sessions_checkip'])
+			$verify_ip = isset($GLOBALS['phpgw_info']['server']['sessions_checkip']) ? !!$GLOBALS['phpgw_info']['server']['sessions_checkip'] : false;
+			if ( $verify_ip )
 			{
 				if (PHP_OS != 'Windows' && (! $GLOBALS['phpgw_info']['user']['session_ip'] || $GLOBALS['phpgw_info']['user']['session_ip'] != $this->getuser_ip()))
 				{
@@ -787,8 +791,8 @@
 			}
 
 			$GLOBALS['phpgw']->acl->acl($this->account_id);
-			$GLOBALS['phpgw']->accounts->accounts($this->account_id);
-			$GLOBALS['phpgw']->preferences->preferences($this->account_id);
+			$GLOBALS['phpgw']->accounts->set_account($this->account_id);
+			$GLOBALS['phpgw']->preferences->set_account_id($this->account_id);
 			$GLOBALS['phpgw']->applications->applications($this->account_id);
 
 			if (! $this->account_lid)
@@ -898,11 +902,11 @@
 		/**
 		* Someone needs to document me
 		*/
-		function read_repositories($cached = false, $write_cache = true)
+		function read_repositories($cached = true, $write_cache = true)
 		{
 			$GLOBALS['phpgw']->acl->acl($this->account_id);
-			$GLOBALS['phpgw']->accounts->accounts($this->account_id);
-			$GLOBALS['phpgw']->preferences->preferences($this->account_id);
+			$GLOBALS['phpgw']->accounts->set_account($this->account_id);
+			$GLOBALS['phpgw']->preferences->set_account_id($this->account_id);
 			$GLOBALS['phpgw']->applications->applications($this->account_id);
 			
 			if($cached)
@@ -929,6 +933,14 @@
 		}
 
 		/**
+		* Clears the appsession cache, should be called before saving preferences or other information which will invalidate the cache
+		*/
+		public function clear_phpgw_info_cache()
+		{
+			$this->appsession('phpgw_info_cache', 'phpgwapi', null);
+		}
+
+		/**
 		* Someone needs to document me
 		*/
 		function setup_cache($write_cache=True)
@@ -948,7 +960,9 @@
 			$this->user['account_lid'] = $this->account_lid;
 			$this->user['userid']      = $this->account_lid;
 			$this->user['passwd']      = $this->passwd;
-			if(@$GLOBALS['phpgw_info']['server']['cache_phpgw_info'] && $write_cache)
+			
+			$use_cache = isset($GLOBALS['phpgw_info']['server']['cache_phpgw_info']) ? !!$GLOBALS['phpgw_info']['server']['cache_phpgw_info'] : false;
+			if($use_cache && $write_cache)
 			{
 				$this->delete_cache();
 				$this->appsession('phpgw_info_cache','phpgwapi',$this->user);
