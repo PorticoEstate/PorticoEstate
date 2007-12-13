@@ -85,8 +85,15 @@
 
 	function parse_navbar_end()
 	{
-		$GLOBALS['phpgw']->template->set_root(PHPGW_TEMPLATE_DIR);
 		$GLOBALS['phpgw']->template->set_file('footer', 'footer.tpl');
+		$GLOBALS['phpgw']->template->set_root(PHPGW_TEMPLATE_DIR);
+
+		$var = array
+		(
+			'powered_by'		=> lang('Powered by phpGroupWare version %1', $GLOBALS['phpgw_info']['server']['versions']['phpgwapi']),
+		);
+		$GLOBALS['phpgw']->template->set_var($var);
+		
 		$GLOBALS['phpgw']->template->pfp('out','footer');
 	}
 

@@ -19,9 +19,7 @@
 				<div class="layout-south">
 					<div class="panel">
 						<div class="header">
-							<div class="button-bar">
-								<a href="#">Powered by phpgroupware</a>
-							</div>
+							<div class="button-bar">{powered_by}</div>
 						</div>
 					</div>
 				</div>
