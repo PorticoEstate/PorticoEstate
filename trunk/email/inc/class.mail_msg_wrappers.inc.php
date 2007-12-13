@@ -5247,23 +5247,18 @@ Array
 		*/
 		function get_isset_pref($pref_name='',$acctnum='')
 		{
-			if ((!isset($acctnum))
-			|| ((string)$acctnum == ''))
+			if ( !$acctnum )
 			{
 				$acctnum = $this->get_acctnum();
 			}
 			// error check
-			if ((isset($pref_name))
-			&& ((string)$pref_name != '')
-			&& (isset($this->a[$acctnum]['prefs'][$pref_name])))
+			if ( isset($pref_name) && $pref_name
+				&& isset($this->a[$acctnum]['prefs'][$pref_name]) )
 			{
-				return True;
+				return true;
 			}
-			else
-			{
-				// arg not set, or invalid input $arg_name
-				return False;
-			}
+			// arg not set, or invalid input $arg_name
+			return false;
 		}
 		
 		/*!

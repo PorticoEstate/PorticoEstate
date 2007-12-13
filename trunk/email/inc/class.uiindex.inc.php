@@ -38,13 +38,13 @@
 			}
 			$GLOBALS['phpgw']->js->validate_file('core','base','phpgwapi');
 			
-			$folder = get_var('folder',array('POST','GET'));
+			$folder = phpgw::get_var('folder');
 			if($folder)
 			{
 				$_GET['fldball[folder]']=$folder;
 			}
 			
-			$acctnum = get_var('acctnum',array('POST','GET'));
+			$acctnum = phpgw::get_var('acctnum');
 			if($acctnum)
 			{
 				$_GET['fldball[acctnum]']=$folder;
