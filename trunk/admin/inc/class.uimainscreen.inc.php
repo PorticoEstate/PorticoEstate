@@ -50,11 +50,11 @@
 			$GLOBALS['phpgw']->template->set_block('message','row_2','row_2');
 
 			$GLOBALS['phpgw']->common->phpgw_header(true);
+			$select_lang = phpgw::get_var('select_lang', 'string', 'POST');
+			$section     = phpgw::get_var('section', 'string', 'POST');
 
-			if ( phpgw::get_var('submit', 'bool', 'POST') )
+			if ( phpgw::get_var('update', 'bool', 'POST') )
 			{
-				$section     = phpgw::get_var('section', 'string', 'POST');
-				$select_lang = phpgw::get_var('select_lang', 'string', 'POST');
 				$message     = phpgw::get_var('message', 'string', 'POST');
 
 				$GLOBALS['phpgw']->db->query("DELETE FROM phpgw_lang WHERE message_id='$section" . "_message' AND app_name='"
@@ -101,7 +101,7 @@
 
 				$tr_class = $GLOBALS['phpgw']->nextmatchs->alternate_row_class($tr_class);
 				$GLOBALS['phpgw']->template->set_var('tr_class', $tr_class);
-				$GLOBALS['phpgw']->template->set_var('value','<input type="submit" value="' . lang('Submit')
+				$GLOBALS['phpgw']->template->set_var('value','<input type="submit" name="submit" value="' . lang('Submit')
 					. '"><input type="submit" name="cancel" value="'. lang('cancel') .'">');
 				$GLOBALS['phpgw']->template->fp('rows','row_2',True);
 			}
@@ -135,7 +135,7 @@
 
 				$tr_class = $GLOBALS['phpgw']->nextmatchs->alternate_row_class($tr_class);
 				$GLOBALS['phpgw']->template->set_var('tr_class', $tr_class);
-				$GLOBALS['phpgw']->template->set_var('value','<input type="submit" name="submit" value="' . lang('Update')
+				$GLOBALS['phpgw']->template->set_var('value','<input type="submit" name="update" value="' . lang('Update')
 					. '"><input type="submit" name="cancel" value="'. lang('cancel') .'">'
 				);
 				$GLOBALS['phpgw']->template->fp('rows','row_2',True);
