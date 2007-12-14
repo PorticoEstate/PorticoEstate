@@ -19,11 +19,6 @@
 */
 class folders_service
 {
-	function folders_service ()
-	{
-		
-	}
-	
 	function getFolderContent()
 	{
 		/*  Not working - retrun_sorted_array only returns cats
