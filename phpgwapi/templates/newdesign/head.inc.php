@@ -11,6 +11,7 @@
 	$stylesheets = array
 	(
 		"/phpgwapi/js/yahoo/reset-fonts-grids/reset-fonts-grids.css",
+		"/phpgwapi/js/yahoo/build/menu/assets/skins/sam/menu.css",
 		"/phpgwapi/js/yahoo/build/button/assets/skins/sam/button.css",
 		"/phpgwapi/templates/newdesign/css/base.css",
 		"/phpgwapi/templates/newdesign/css/icons.css",
@@ -27,6 +28,8 @@
 
 	phpgwapi_yui::load_widget( 'dragdrop' );
 	phpgwapi_yui::load_widget( 'element' );
+	phpgwapi_yui::load_widget( 'container' );
+	phpgwapi_yui::load_widget( 'menu' );
 	phpgwapi_yui::load_widget( 'button' );
 
 	foreach ( $stylesheets as $stylesheet )
