@@ -31,6 +31,20 @@ class email_service
 	public function get_menu()
 	{
 		$menu = array();
+
+		$menu['navbar'] = array
+		(
+			array
+			(
+				'text'	=> lang('Email'),
+				'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'email.uiindex.index') ),
+				'image'	=> array('email', 'navbar'),
+				'order'	=> 2,
+				'group'	=> 'office'
+			)
+		);
+
+
 		if ( isset($GLOBALS['phpgw_info']['user']['apps']['admin']) )
 		{
 			$menu['admin'] = array();
