@@ -40,7 +40,7 @@ edit	filemanager	de	Bearbeiten
 edit comments	filemanager	de	Kommentare bearbeiten
 edit quota	filemanager	de	Quota bearbeiten
 Enter comma separated Quota value in MB	filemanager	de	Komma separierte Quota Werte eingeben in MB
-erroneous input! check quota value!	filemanager	en	Fehlerhafte Eingabe! Prüfen Sie die Quota Werte!
+erroneous input! check quota value!	filemanager	de	Fehlerhafte Eingabe! Prüfen Sie die Quota Werte!
 error running command	filemanager	de	Fehler beim Ausführen des Kommandos
 execute	filemanager	de	Ausführen
 failed to create directory	filemanager	de	Verzeichnis konnte nicht erstellt werden
