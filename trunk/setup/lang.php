@@ -9,6 +9,7 @@
 	*/
 
 	$phpgw_info = array();
+	$error = '';
 	if ( !isset($included) || !$included )
 	{
 		$GLOBALS['phpgw_info']['flags'] = array
@@ -92,6 +93,13 @@
 			}
 			foreach($lang_selected as $lang)
 			{
+				if ( strlen($lang) != 2 )
+				{
+					echo 'Invalid lang code: ' . htmlspecialchars($lang) . ' - skipping<br>\n';
+					continue;
+				}
+
+				$lang = strtolower($lang);
 				//echo '<br />Working on: ' . $lang;
 				if(function_exists('sem_get') && function_exists('shmop_open'))
 				{
@@ -117,31 +125,31 @@
 					$setup_info = $GLOBALS['phpgw_setup']->detection->get_db_versions($setup_info);
 					$raw = array();
 					// Visit each app/setup dir, look for a phpgw_lang file
-					while (list($key,$app) = each($setup_info))
+					foreach ( $setup_info as $app )
 					{
 						if(!array_key_exists('name', $app))
 						{
 							continue;
 						}
 
-						$appfile = PHPGW_SERVER_ROOT . SEP . $app['name'] . SEP . 'setup' . SEP . 'phpgw_' . strtolower($lang) . '.lang';
+						$appfile = PHPGW_SERVER_ROOT . "/{$app['name']}/setup/phpgw_{$lang}.lang";
 						//echo '<br />Checking in: ' . $app['name'];
 						if($GLOBALS['phpgw_setup']->app_registered($app['name']) && file_exists($appfile))
 						{
 							//echo '<br />Including: ' . $appfile;
 							$lines = file($appfile);
-							foreach($lines as $line)
+							foreach($lines as $cnt => $line)
 							{
-								list($message_id,$app_name,$ignore,$content) = explode("\t",$line);
-								/* XXX Caeies Get invalid lang files ...
-								if(empty($content))
+								$entry = explode("\t", $line);
+								//Make sure the lang files only have valid entries
+								if ( count($entry) != 4  || $entry[2] != $lang )
 								{
-									_debug_array('Invalid lang line : '.$line);
-									_debug_array('content 1 : -'.$message_id.'-');
-									_debug_array('content 2 : -'.$app_name.'-');
-									_debug_array('content 3 : -'.$content.'-');
+									$err_line = $cnt + 1;
+									$error .= "Invalid entry in {$app['name']}/setup/phpgw_{$lang}.lang @ line {$err_line}: <code>" . htmlspecialchars(preg_replace('/\t/', '\\t', $line)) . "</code> - skipping<br>\n";
+									continue;
 								}
-								*/
+
+								list($message_id,$app_name,$ignore,$content) = $entry;
 								$message_id = $GLOBALS['phpgw_setup']->db->db_addslashes(substr(chop($message_id),0,MAX_MESSAGE_ID_LENGTH));
 								$app_name = $GLOBALS['phpgw_setup']->db->db_addslashes(chop($app_name));
 								$content = $GLOBALS['phpgw_setup']->db->db_addslashes(chop($content));
@@ -178,7 +186,7 @@
 									$result = $GLOBALS['phpgw_setup']->db->query("INSERT INTO phpgw_lang (message_id,app_name,lang,content) VALUES('$message_id','$app_name','$lang','$content')",__LINE__,__FILE__);
 									if (intval($result) <= 0)
 									{
-										echo "<br />Error inserting record: phpgw_lang values ('$message_id','$app_name','$lang','$content')";
+										$error .= "Error inserting record: phpgw_lang values ('$message_id','$app_name','$lang','$content')<br>";
 									}
 								}
 							}
@@ -190,8 +198,49 @@
 			
 			$GLOBALS['phpgw_setup']->db->query("DELETE from phpgw_config WHERE config_app='phpgwapi' AND config_name='lang_ctimes'",__LINE__,__FILE__);
 			$GLOBALS['phpgw_setup']->db->query("INSERT INTO phpgw_config(config_app,config_name,config_value) VALUES ('phpgwapi','lang_ctimes','".
-				addslashes(serialize($GLOBALS['phpgw_info']['server']['lang_ctimes']))."')",__LINE__,__FILE__);
+				$GLOBALS['phpgw_setup']->db->db_addslashes(serialize($GLOBALS['phpgw_info']['server']['lang_ctimes']))."')",__LINE__,__FILE__);
 		}
+
+		if ( $error )
+		{
+			$error = <<<HTML
+				<div class="err">
+					<h2>ERROR</h2>
+					$error
+				</div>
+
+HTML;
+			if( !$included )
+			{
+				$tpl_root = $GLOBALS['phpgw_setup']->html->setup_tpl_dir('setup');
+				$setup_tpl = CreateObject('phpgwapi.Template',$tpl_root);
+				$setup_tpl->set_file(array
+				(
+					'T_head'		=> 'head.tpl',
+					'T_footer'		=> 'footer.tpl',
+				));
+
+				$stage_title = lang('Multi-Language support setup');
+				$stage_desc  = lang('ERROR');
+
+				$GLOBALS['phpgw_setup']->html->show_header("$stage_title: $stage_desc", false, 'config', $ConfigDomain . '(' . $phpgw_domain[$ConfigDomain]['db_type'] . ')');
+				echo $error;
+				$return = lang('Return to Multi-Language support setup');
+				echo <<<HTML
+				<div>
+					<a href="./lang.php">$return</a>
+				</div>
+
+HTML;
+				$GLOBALS['phpgw_setup']->html->show_footer();
+				exit;
+			}
+			else 
+			{
+				echo $error;
+			}
+		}
+
 		if ( !$included )
 		{
 			Header('Location: index.php');
