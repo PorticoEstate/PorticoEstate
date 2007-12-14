@@ -19,7 +19,9 @@
 				<div class="layout-south">
 					<div class="panel">
 						<div class="header">
-							<div class="button-bar">{powered_by}</div>
+							<div class="button-bar">
+								<a href="{powered_by_url}" target="_blank">{powered_by_name}</a>
+							</div>
 						</div>
 					</div>
 				</div>
@@ -56,16 +58,15 @@
 */
 		var toolbars = YAHOO.util.Dom.getElementsByClassName( "toolbar" , "div" );
 
-		for(var toolbar in toolbars)
+		for(var toolbar=0;toolbar<toolbars.length;toolbar++)
 		{
+
 			var buttons = toolbars[toolbar].getElementsByTagName("a");
 
-			for(var button in buttons)
+			for(var button=0;button<buttons.length;button++)
 			{
-				new YAHOO.widget.Button(buttons[button]);
+					new YAHOO.widget.Button(buttons[button]);
 			}
-			//alert(buttons.length);
-			//
 		}
 	</script>
 	</body>
