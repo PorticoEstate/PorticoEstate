@@ -1413,7 +1413,7 @@ Sum deviation	property	no	Sum avvik
 Summary	property	no	Sammendrag
 Sum of calculation	property	no	Sum kalkulasjon
 Sum tax	property	no	sum mva
-Sum	workorder	property	no	Sum Arbeidsordre
+Sum workorder	property	no	Sum Arbeidsordre
 Supervisor	property	no	Saksbehandler
 table could not be added	property	no	Tabell kunne ikke legges til i databasen
 Table has NOT been saved	property	no	Tabell er ikke lagret
