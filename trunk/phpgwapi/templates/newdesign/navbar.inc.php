@@ -16,7 +16,7 @@
 			$var['current_app_title'] = lang($GLOBALS['phpgw_info']['flags']['currentapp']);
 		}
 
-		$treemenu = "";
+		$treemenu = '';
 
 		foreach($GLOBALS['phpgw_info']['navbar'] as $app => $app_data)
 		{
@@ -90,8 +90,7 @@
 
 		$var = array
 		(
-			'powered_by_name'	=> lang('Powered by phpGroupWare version %1', $GLOBALS['phpgw_info']['server']['versions']['phpgwapi']),
-			'powered_by_url'	=> "http://www.phpgroupware.org/"
+			'powered_by'	=> lang('Powered by phpGroupWare version %1', $GLOBALS['phpgw_info']['server']['versions']['phpgwapi']),
 		);
 
 		$GLOBALS['phpgw']->template->set_var($var);

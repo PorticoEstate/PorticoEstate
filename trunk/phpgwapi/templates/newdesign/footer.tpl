@@ -19,9 +19,7 @@
 				<div class="layout-south">
 					<div class="panel">
 						<div class="header">
-							<div class="button-bar">
-								<a href="{powered_by_url}" target="_blank">{powered_by_name}</a>
-							</div>
+							<div class="button-bar">{powered_by}</div>
 						</div>
 					</div>
 				</div>
