@@ -49,7 +49,8 @@
 		*/
 		public function get($mtype = null)
 		{
-			$menu = $GLOBALS['phpgw']->session->appsession('phpgwapi', 'menu');
+			//$menu = $GLOBALS['phpgw']->session->appsession('phpgwapi', 'menu');
+			$menu = null;
 			if ( !$menu )
 			{
 				$menu = self::load();
@@ -61,6 +62,19 @@
 			}
 			return $menu;
 		}
+
+		/**
+		* Get categories available for the current user
+		*
+		* @param string $module the module the categories are sought for
+		* @return array menu class compatiable array of categories
+		*/
+		public static function get_categories($module)
+		{
+			$catobj = createObject('phpgwapi.categories', $GLOBALS['phpgw_info']['user']['account_id'], $module);
+			$cats = $catobj->return_sorted_array(0, false, '', 'ASC', 'cat_main, cat_level, cat_name', true);
+			//echo "module: $module <pre>" . print_r($cats, true) . '</pre>';
+		}
 		
 		/**
 		* Load the menu structure from all available applications
@@ -71,11 +85,20 @@
 		{
 			$menus = array();
 			$raw_menus = $GLOBALS['phpgw']->hooks->process('menu');
-			echo '<pre>' . print_r($raw_menus, true) . '</pre>';
 			foreach ( $raw_menus as $app => $raw_menu )
 			{
+				// Ignore invalid entries
+				if ( !is_array($raw_menu) )
+				{
+					continue;
+				}
 				foreach ( $raw_menu as $mtype => $menu )
 				{
+					 //no point in adding empty items
+					if ( !count($menu) )
+					{
+						continue;
+					}
 					$menus[$mtype][$app] = $menu;
 				}
 			}
