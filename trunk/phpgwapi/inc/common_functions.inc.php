@@ -259,26 +259,27 @@
 		if ($partscount == 2)
 		{
 			list($appname,$classname,$functionname) = explode(".", $method);
-			if ( !isset($GLOBALS[$classname]) || !is_object($GLOBALS[$classname]) )
+			$unique_class = "{$appname}-{$classname}";
+			if ( !isset($GLOBALS[$unique_class]) || !is_object($GLOBALS[$unique_class]) )
 			{
 				if ($classparams != '_UNDEF_' && ($classparams || $classparams != 'True'))
 				{
-					$GLOBALS[$classname] = createObject($appname.'.'.$classname, $classparams);
+					$GLOBALS[$unique_class] = createObject($appname.'.'.$classname, $classparams);
 				}
 				else
 				{
-					$GLOBALS[$classname] = createObject($appname.'.'.$classname);
+					$GLOBALS[$unique_class] = createObject($appname.'.'.$classname);
 				}
 			}
 
 			if ( (is_array($functionparams) || is_object($functionparams) || $functionparams != '_UNDEF_') 
 				&& ($functionparams || $functionparams != 'True'))
 			{
-				return $GLOBALS[$classname]->$functionname($functionparams);
+				return $GLOBALS[$unique_class]->$functionname($functionparams);
 			}
 			else
 			{
-				return $GLOBALS[$classname]->$functionname();
+				return $GLOBALS[$unique_class]->$functionname();
 			}
 		}
 		/* if the $method includes a parent class (multi-dimensional) then we have to work from it */
