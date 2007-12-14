@@ -284,7 +284,9 @@
 			$error_list		= '';
 			$values			= phpgw::get_var('values', 'string', 'POST', array());
 
-			if ( (isset($values['cancel']) && $values['cancel']) || (!$account_id && $GLOBALS['phpgw']->acl->check('group_access',4,'admin')) || ($account_id && $GLOBALS['phpgw']->acl->check('group_access',16,'admin')))
+			if ( (isset($values['cancel']) && $values['cancel'])
+				|| !$account_id && $GLOBALS['phpgw']->acl->check('group_access', PHPGW_ACL_EDIT, 'admin')
+				|| $account_id && $GLOBALS['phpgw']->acl->check('group_access', PHPGW_ACL_PRIVATE, 'admin') )
 			{
 				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'admin.uiaccounts.list_groups'));
 			}
@@ -484,7 +486,9 @@
 			$values['account_expires_month']= phpgw::get_var('account_expires_month', 'string', 'POST'); // we use string here to allow for MMM
 			$values['account_expires_day'] = phpgw::get_var('account_expires_day', 'int', 'POST');
 
-			if ( (isset($values['cancel']) && $values['cancel']) || (!$account_id && $GLOBALS['phpgw']->acl->check('account_access',4,'admin')) || ($account_id && $GLOBALS['phpgw']->acl->check('account_access',16,'admin')))
+			if ( (isset($values['cancel']) && $values['cancel']) 
+				|| !$account_id && $GLOBALS['phpgw']->acl->check('account_access', PHPGW_ACL_EDIT, 'admin') 
+				|| $account_id && $GLOBALS['phpgw']->acl->check('account_access', PHPGW_ACL_PRIVATE, 'admin') )
 			{
 				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'admin.uiaccounts.list_users'));
 			}
