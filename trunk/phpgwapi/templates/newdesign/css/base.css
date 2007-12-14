@@ -144,13 +144,28 @@ div.panel div.body div.toolbar {
 	border-top: 1px solid #eee;
 	border-bottom: 1px solid gray;
 	padding: 0.2em 0.4em;
+	position: relative;
+}
+
+div.panel div.body table td {
+	border: 1px solid silver;
 }
 
 div.panel div.body div.toolbar a {
 	font-size: 85%;
 	font-weight: bold;
 	color: #666;
-	padding: 0 0.6em;
+}
+
+div.panel div.body div.toolbar button {
+	font-size: 85%;
+	font-weight: bold;
+	color: #666;
+}
+
+
+div.panel div.body div.toolbar input {
+	vertical-align: middle;
 }
 
 div.treeview ul ul{

@@ -51,6 +51,7 @@
 			<xsl:call-template name="cat_filter"/>
 			<xsl:call-template name="filter_district"/>
 			<xsl:call-template name="filter_part_of_town"/>
+
 			<xsl:choose>
 				<xsl:when test="status_eco_list='' and lookup!=1">
 					<xsl:call-template name="status_filter"/>
