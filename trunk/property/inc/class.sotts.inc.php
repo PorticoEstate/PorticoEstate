@@ -165,8 +165,8 @@
 				}
 				else
 				{
-					$query = preg_replace("'",'',$query);
-					$query = preg_replace('"','',$query);
+					$query = preg_replace("/'/",'',$query);
+					$query = preg_replace('/"/','',$query);
 					$querymethod = " $where (subject $this->like '%$query%' or address $this->like '%$query%' or fm_tts_tickets.location_code $this->like '%$query%')";
 				}
 			}

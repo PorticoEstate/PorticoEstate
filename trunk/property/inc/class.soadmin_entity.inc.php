@@ -85,8 +85,8 @@
 			$querymethod = '';
 			if($query)
 			{
-				$query = preg_replace("'",'',$query);
-				$query = preg_replace('"','',$query);
+				$query = preg_replace("/'/",'',$query);
+				$query = preg_replace('/"/','',$query);
 
 				$querymethod = " where name $this->like '%$query%' or descr $this->like '%$query%'";
 			}
@@ -145,8 +145,8 @@
 			$querymethod = '';
 			if($query)
 			{
-				$query = preg_replace("'",'',$query);
-				$query = preg_replace('"','',$query);
+				$query = preg_replace("/'/",'',$query);
+				$query = preg_replace('/"/','',$query);
 
 				$querymethod = " AND name $this->like '%$query%' or descr $this->like '%$query%'";
 			}
@@ -212,8 +212,8 @@
 
 			if($query)
 			{
-				$query = preg_replace("'",'',$query);
-				$query = preg_replace('"','',$query);
+				$query = preg_replace("/'/",'',$query);
+				$query = preg_replace('/"/','',$query);
 
 				$querymethod = " AND name $this->like '%$query%' or descr $this->like '%$query%'";
 			}
@@ -829,8 +829,8 @@
 			$querymethod = '';
 			if($query)
 			{
-				$query = preg_replace("'",'',$query);
-				$query = preg_replace('"','',$query);
+				$query = preg_replace("/'/",'',$query);
+				$query = preg_replace('/"/','',$query);
 
 				$querymethod = " AND (fm_entity_attribute.name $this->like '%$query%' or fm_entity_attribute.descr $this->like '%$query%')";
 			}
@@ -1245,8 +1245,8 @@
 			$querymethod = '';
 			if(isset($query) && $query)
 			{
-				$query = preg_replace("'",'',$query);
-				$query = preg_replace('"','',$query);
+				$query = preg_replace("/'/",'',$query);
+				$query = preg_replace('/"/','',$query);
 
 				$querymethod = " AND name $this->like '%$query%' or descr $this->like '%$query%'";
 			}

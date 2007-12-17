@@ -548,8 +548,8 @@
 				}
 				else
 				{
-					$query = preg_replace("'",'',$query);
-					$query = preg_replace('"','',$query);
+					$query = preg_replace("/'/",'',$query);
+					$query = preg_replace('/"/','',$query);
 
 					if($sub_query_tenant)
 					{

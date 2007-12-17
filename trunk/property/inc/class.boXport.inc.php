@@ -125,7 +125,7 @@
 
 			for ($i=0;$i<count($myfilearray);$i++)
 			{
-				$fname = preg_replace('_',' ',$myfilearray[$i]);
+				$fname = preg_replace('/_/',' ',$myfilearray[$i]);
 				$sel_file = '';
 				if ($myfilearray[$i]==$selected)
 				{
@@ -169,7 +169,7 @@
 
 			for ($i=0;$i<count($myfilearray);$i++)
 			{
-				$fname = preg_replace('_',' ',$myfilearray[$i]);
+				$fname = preg_replace('/_/',' ',$myfilearray[$i]);
 				$sel_file = '';
 				if ($myfilearray[$i]==$selected)
 				{
@@ -216,7 +216,7 @@
 
 			for ($i=0;$i<count($myfilearray);$i++)
 			{
-				$fname = preg_replace('_',' ',$myfilearray[$i]);
+				$fname = preg_replace('/_/',' ',$myfilearray[$i]);
 				$sel_file = '';
 				if ($myfilearray[$i]==$selected)
 				{

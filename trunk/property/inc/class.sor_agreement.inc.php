@@ -368,8 +368,8 @@
 
 			if($query)
 			{
-				$query = preg_replace("'",'',$query);
-				$query = preg_replace('"','',$query);
+				$query = preg_replace("/'/",'',$query);
+				$query = preg_replace('/"/','',$query);
 
 				$this->db->query("SELECT * FROM $attribute_table where search='1'");
 
@@ -1048,10 +1048,10 @@
 
 		function floatval($strValue)
 		{
-			$floatValue = preg_replace("(^[0-9]*)(\\.|,)([0-9]*)(.*)", "\\1.\\3", $strValue);
+			$floatValue = preg_replace("/(^[0-9]*)(\\.|,)([0-9]*)(.*)/", "\\1.\\3", $strValue);
 			if(!is_numeric($floatValue))
 			{
-				$floatValue = preg_replace("(^[0-9]*)(.*)", "\\1", $strValue);
+				$floatValue = preg_replace("/(^[0-9]*)(.*)/", "\\1", $strValue);
 			}
 			if(!is_numeric($floatValue))
 			{
@@ -1145,8 +1145,8 @@
 
 			if($query)
 			{
-				$query = preg_replace("'",'',$query);
-				$query = preg_replace('"','',$query);
+				$query = preg_replace("/'/",'',$query);
+				$query = preg_replace('/"/','',$query);
 
 				$querymethod = " $where ($attribute_table.input_text $this->like '%$query%' or $attribute_table.column_name $this->like '%$query%')";
 			}
