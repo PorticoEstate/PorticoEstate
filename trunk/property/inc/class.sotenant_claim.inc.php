@@ -98,8 +98,8 @@
 
 			if($query)
 			{
-				$query = ereg_replace("'",'',$query);
-				$query = ereg_replace('"','',$query);
+				$query = preg_replace("'",'',$query);
+				$query = preg_replace('"','',$query);
 
 				$querymethod = " $where ( abid = '$query' or org_name LIKE '%$query%')";
 			}

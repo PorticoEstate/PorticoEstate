@@ -103,8 +103,8 @@
 
 			if($query)
 			{
-				$query = ereg_replace("'",'',$query);
-				$query = ereg_replace('"','',$query);
+				$query = preg_replace("'",'',$query);
+				$query = preg_replace('"','',$query);
 
 				$querymethod = " $where ( descr $this->like '%$query%')";
 			}
@@ -198,8 +198,8 @@
 
 			if($query)
 			{
-				$query = ereg_replace("'",'',$query);
-				$query = ereg_replace('"','',$query);
+				$query = preg_replace("'",'',$query);
+				$query = preg_replace('"','',$query);
 
 			//	$querymethod = " $where ( descr $this->like '%$query%')";
 			}
@@ -474,8 +474,8 @@
 			$querymethod = '';
 			if($query)
 			{
-				$query = ereg_replace("'",'',$query);
-				$query = ereg_replace('"','',$query);
+				$query = preg_replace("'",'',$query);
+				$query = preg_replace('"','',$query);
 
 			//	$querymethod = " $where ( descr $this->like '%$query%')";
 			}

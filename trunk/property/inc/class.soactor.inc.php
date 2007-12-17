@@ -219,8 +219,8 @@
 			$_querymethod = array();
 			if($query)
 			{
-				$query = ereg_replace("'",'',$query);
-				$query = ereg_replace('"','',$query);
+				$query = preg_replace("'",'',$query);
+				$query = preg_replace('"','',$query);
 
 			//	$filtermethod .= " $where $entity_table.id ='" . (int)$query . "'";
 				$where= 'AND';
@@ -603,8 +603,8 @@
 
 			if($query)
 			{
-				$query = ereg_replace("'",'',$query);
-				$query = ereg_replace('"','',$query);
+				$query = preg_replace("'",'',$query);
+				$query = preg_replace('"','',$query);
 
 				$querymethod = " $where ($attribute_table.input_text $this->like '%$query%' or $attribute_table.column_name $this->like '%$query%')";
 			}

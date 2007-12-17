@@ -294,8 +294,8 @@
 
 			if($query)
 			{
-				$query = ereg_replace("'",'',$query);
-				$query = ereg_replace('"','',$query);
+				$query = preg_replace("'",'',$query);
+				$query = preg_replace('"','',$query);
 
 				$querymethod = " $where (fm_request.title $this->like '%$query%' or fm_request.address $this->like '%$query%' or fm_request.location_code $this->like '%$query%')";
 			}
