@@ -138,7 +138,7 @@ function gw_set_incoming_action()
     $handle = @opendir("$gnokii_param[path]/cache/smsd");
     while ($sms_in_file = @readdir($handle))
     {
-	if (eregi("^ERR.in",$sms_in_file) && !eregi("^[.]",$sms_in_file))
+	if (preg_match("/^ERR.in/i",$sms_in_file) && !preg_match("^[.]",$sms_in_file))
 	{
 	    $fn = "$gnokii_param[path]/cache/smsd/$sms_in_file";
 	    $tobe_deleted = $fn;
