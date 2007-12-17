@@ -69,8 +69,8 @@
 
 			if($query)
 			{
-				$query = ereg_replace("'",'',$query);
-				$query = ereg_replace('"','',$query);
+				$query = preg_replace("/'/",'',$query);
+				$query = preg_replace('/"/','',$query);
 
 				$querymethod = " WHERE name $this->like '%$query%'";
 			}
