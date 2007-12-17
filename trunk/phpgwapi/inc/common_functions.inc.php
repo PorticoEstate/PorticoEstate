@@ -423,8 +423,8 @@
 			echo'<br>Input values: '
 				. 'A="'.$a.'", B="'.$b.'"';
 		}
-		$newa = ereg_replace('pre','.',$a);
-		$newb = ereg_replace('pre','.',$b);
+		$newa = preg_replace('/pre/','.',$a);
+		$newb = preg_replace('/pre/','.',$b);
 		$testa = explode('.',$newa);
 		if(@$testa[1] == '')
 		{
@@ -512,8 +512,8 @@
 			echo'<br>Input values: '
 				. 'A="'.$a.'", B="'.$b.'"';
 		}
-		$newa = ereg_replace('pre','.',$a);
-		$newb = ereg_replace('pre','.',$b);
+		$newa = preg_replace('/pre/','.',$a);
+		$newb = preg_replace('/pre/','.',$b);
 		$testa = explode('.',$newa);
 		if($testa[3] == '')
 		{
