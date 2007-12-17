@@ -197,14 +197,10 @@ $GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_acl_location (appname, 
 $GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_acl_location (appname, id, descr) VALUES ('property', '.location.2', 'Building')");
 $GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_acl_location (appname, id, descr) VALUES ('property', '.location.3', 'Entrance')");
 $GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_acl_location (appname, id, descr) VALUES ('property', '.location.4', 'Apartment')");
-$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_acl_location (appname, id, descr) VALUES ('property', '.tenant', 'Tenant')");
-$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_acl_location (appname, id, descr) VALUES ('property', '.owner', 'Owner')");
-$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_acl_location (appname, id, descr) VALUES ('property', '.vendor', 'Vendor')");
 $GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_acl_location (appname, id, descr) VALUES ('property', '.custom', 'custom queries')");
 $GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_acl_location (appname, id, descr, allow_grant) VALUES ('property', '.project', 'Demand -> Workorder', 1)");
 $GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_acl_location (appname, id, descr, allow_grant) VALUES ('property', '.ticket', 'Helpdesk', 1)");
 $GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_acl_location (appname, id, descr) VALUES ('property', '.ticket.external', 'Helpdesk External user')");
-$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_acl_location (appname, id, descr) VALUES ('property', '.agreement', 'Agreement')");
 $GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_acl_location (appname, id, descr) VALUES ('property', '.invoice', 'Invoice')");
 $GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_acl_location (appname, id, descr) VALUES ('property', '.document', 'Documents')");
 $GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_acl_location (appname, id, descr) VALUES ('property', '.drawing', 'Drawing')");
@@ -215,13 +211,20 @@ $GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_acl_location (appname, 
 $GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_acl_location (appname, id, descr, allow_grant) VALUES ('property', '.entity.2', 'Report', 1)");
 $GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_acl_location (appname, id, descr, allow_grant) VALUES ('property', '.entity.2.1', 'Report type 1', 1)");
 $GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_acl_location (appname, id, descr, allow_grant) VALUES ('property', '.entity.2.2', 'Report type 2', 1)");
-$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_acl_location (appname, id, descr) VALUES ('property', '.s_agreement', 'Service agreement')");
 $GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_acl_location (appname, id, descr) VALUES ('property', '.b_account', 'Budget account')");
 $GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_acl_location (appname, id, descr) VALUES ('property', '.tenant_claim', 'Tenant claim')");
-$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_acl_location (appname, id, descr) VALUES ('property', '.r_agreement', 'Rental agreement')");
 $GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_acl_location (appname, id, descr) VALUES ('property', '.budget', 'Budet')");
 $GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_acl_location (appname, id, descr) VALUES ('property', '.budget.obligations', 'Obligations')");
 $GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_acl_location (appname, id, descr) VALUES ('property', '.ifc', 'ifc integration')");
+
+$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_acl_location (appname,id, descr, allow_c_attrib,c_attrib_table) VALUES ('property', '.agreement', 'Agreement',1,'fm_agreement')");
+$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_acl_location (appname,id, descr, allow_c_attrib,c_attrib_table) VALUES ('property', '.s_agreement', 'Service agreement',1,'fm_s_agreement')");
+$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_acl_location (appname,id, descr, allow_c_attrib,c_attrib_table) VALUES ('property', '.s_agreement.detail', 'Service agreement detail',1,'fm_s_agreement_detail')");
+$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_acl_location (appname,id, descr, allow_c_attrib,c_attrib_table) VALUES ('property', '.r_agreement', 'Rental agreement',1,'fm_r_agreement')");
+$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_acl_location (appname,id, descr, allow_c_attrib,c_attrib_table) VALUES ('property', '.r_agreement.detail', 'Rental agreement detail',1,'fm_r_agreement_detail')");
+$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_acl_location (appname,id, descr, allow_c_attrib,c_attrib_table) VALUES ('property', '.tenant', 'Tenant',1,'fm_tenant')");
+$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_acl_location (appname,id, descr, allow_c_attrib,c_attrib_table) VALUES ('property', '.owner', 'Owner',1,'fm_owner')");
+$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_acl_location (appname,id, descr, allow_c_attrib,c_attrib_table) VALUES ('property', '.vendor', 'Vendor',1,'fm_vendor')");
 
 
 #
