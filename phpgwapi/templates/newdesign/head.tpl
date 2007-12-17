@@ -9,16 +9,22 @@
 		<meta name="keywords" content="phpGroupWare">
 		<meta name="robots" content="none">
 		<title>{site_title}</title>
-
+		<link rel="icon" href="{img_icon}" type="image/x-ico">
+		<link rel="shortcut icon" href="{img_icon}">
 		<!-- BEGIN stylesheet -->
         	<link href="{stylesheet_uri}" type="text/css" rel="StyleSheet">
         <!-- END stylesheet -->
+		{css}
 
+		<script type="text/javascript">
+		<!--
+			var strBaseURL = '{str_base_url}';
+			{win_on_events}
+		-->
+		</script>
 		{javascript}
 	</head>
 	<body class="yui-skin-sam">
-<!-- END Head -->
-
 		<div id="theme-gray">
 			<div class="border-layout">
 				<div class="layout-north">
@@ -35,3 +41,4 @@
 					<div class="panel">
 						<div class="header">
 							<h2>{user_fullname}</h2>
+<!-- END head -->
