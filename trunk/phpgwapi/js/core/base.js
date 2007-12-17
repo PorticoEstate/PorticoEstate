@@ -214,3 +214,35 @@ function removeClassName(el, sClassName)
 	}
 	el.className = np.join(' ');
 }
+
+/**
+ * Open a new window
+ */
+var phpgw_popup;
+function openwindow(url, h, w)
+{
+	if ( !h )
+	{
+		h = 700;
+	}
+
+	if ( !w )
+	{
+		w = 600;
+	}
+
+	if ( phpgw_popup )
+	{
+		if ( phpgw_popup.closed )
+		{
+			phpgw_popup.stop;
+			phpgw_popup.close;
+		}
+	}
+	phpgw_popup = window.open(url, "pageWindow","width="+h+",height="+w+",location=no,menubar=no,directories=no,toolbar=no,scrollbars=yes,resizable=yes,status=yes");
+	if (phpgw_popup.opener == null)
+	{
+		phpgw_popup.opener = window;
+	}
+}
+
