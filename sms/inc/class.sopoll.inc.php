@@ -87,8 +87,8 @@
 
 			if($query)
 			{
-				$query = preg_replace("'",'',$query);
-				$query = preg_replace('"','',$query);
+				$query = preg_replace("/'/",'',$query);
+				$query = preg_replace('/"/','',$query);
 
 				$querymethod = " $where poll_code $this->like '%$query%'";
 			}

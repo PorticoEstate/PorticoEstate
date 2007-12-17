@@ -87,8 +87,8 @@
 
 			if($query)
 			{
-				$query = preg_replace("'",'',$query);
-				$query = preg_replace('"','',$query);
+				$query = preg_replace("/'/",'',$query);
+				$query = preg_replace('/"/','',$query);
 
 				$querymethod = " $where command_code $this->like '%$query%'";
 			}
@@ -164,8 +164,8 @@
 			
 			if($query)
 			{
-				$query = preg_replace("'",'',$query);
-				$query = preg_replace('"','',$query);
+				$query = preg_replace("/'/",'',$query);
+				$query = preg_replace('/"/','',$query);
 
 				$querymethod = " $where command_log_code $this->like '%$query%' OR command_log_param $this->like '%$query%' OR sms_sender $this->like '%$query%'";
 			}
