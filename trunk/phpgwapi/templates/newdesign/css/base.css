@@ -202,6 +202,7 @@ div.treeview li a.current {
 
 #theme-gray div.layout-north div.panel div.header, #theme-gray div.layout-south div.panel div.header {
 	background-color: #000;
+	background-image: url(../images/xmas.jpg);
 }
 #theme-gray div.layout-north div.panel div.header h2 {
 	color: #ccc;
