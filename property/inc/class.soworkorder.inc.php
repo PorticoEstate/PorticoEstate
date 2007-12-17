@@ -370,8 +370,8 @@
 				}
 				else
 				{
-					$query = ereg_replace("'",'',$query);
-					$query = ereg_replace('"','',$query);
+					$query = preg_replace("'",'',$query);
+					$query = preg_replace('"','',$query);
 
 					$querymethod = " $where (fm_workorder.title $this->like '%$query%' or fm_workorder.descr $this->like '%$query%' or fm_project.address $this->like '%$query%' or fm_project.location_code $this->like '%$query%' or fm_workorder.id $this->like '%$query%')";
 				}

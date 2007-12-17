@@ -227,8 +227,8 @@
 			$querymethod = '';
 			if($query)
 			{
-				$query = ereg_replace("'",'',$query);
-				$query = ereg_replace('"','',$query);
+				$query = preg_replace("'",'',$query);
+				$query = preg_replace('"','',$query);
 
 				$querymethod = " $where (fm_document.address $this->like '%$query%' or fm_document.location_code $this->like '$query%')";
 			}
@@ -316,8 +316,8 @@
 
 			if($query)
 			{
-				$query = ereg_replace("'",'',$query);
-				$query = ereg_replace('"','',$query);
+				$query = preg_replace("'",'',$query);
+				$query = preg_replace('"','',$query);
 
 				$querymethod = " AND fm_document.title $this->like '%$query%' or fm_document.document_name $this->like '%$query%'";
 			}

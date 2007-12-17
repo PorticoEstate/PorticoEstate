@@ -84,8 +84,8 @@
 			$querymethod = '';
 			if($query)
 			{
-				$query = ereg_replace("'",'',$query);
-				$query = ereg_replace('"','',$query);
+				$query = preg_replace("'",'',$query);
+				$query = preg_replace('"','',$query);
 
 				$querymethod = " where name $this->like '%$query%' or descr $this->like '%$query%'";
 			}
@@ -139,8 +139,8 @@
 			$querymethod = '';
 			if(isset($query))
 			{
-				$query = ereg_replace("'",'',$query);
-				$query = ereg_replace('"','',$query);
+				$query = preg_replace("'",'',$query);
+				$query = preg_replace('"','',$query);
 
 				$querymethod = " where name $this->like '%$query%' or column_name $this->like '%$query%'";
 			}
@@ -564,8 +564,8 @@
 			$querymethod = '';
 			if($query)
 			{
-				$query = ereg_replace("'",'',$query);
-				$query = ereg_replace('"','',$query);
+				$query = preg_replace("'",'',$query);
+				$query = preg_replace('"','',$query);
 
 				$querymethod = " and ($table.name $this->like '%$query%' or $table.descr $this->like '%$query%')";
 			}

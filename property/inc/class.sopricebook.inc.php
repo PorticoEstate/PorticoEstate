@@ -229,8 +229,8 @@
 
 			if($query)
 			{
-				$query = ereg_replace("'",'',$query);
-				$query = ereg_replace('"','',$query);
+				$query = preg_replace("'",'',$query);
+				$query = preg_replace('"','',$query);
 
 				$querymethod = " AND (fm_activities.descr $this->like '%$query%' or fm_activities.num $this->like '%$query%')";
 			}
@@ -327,8 +327,8 @@
 
 			if($query)
 			{
-				$query = ereg_replace("'",'',$query);
-				$query = ereg_replace('"','',$query);
+				$query = preg_replace("'",'',$query);
+				$query = preg_replace('"','',$query);
 
 				$querymethod = " $where (descr $this->like '%$query%' or num $this->like '%$query%')";
 			}
@@ -407,8 +407,8 @@
 
 			if($query)
 			{
-				$query = ereg_replace("'",'',$query);
-				$query = ereg_replace('"','',$query);
+				$query = preg_replace("'",'',$query);
+				$query = preg_replace('"','',$query);
 
 				$querymethod = " AND (fm_activities.descr $this->like '%$query%' or fm_activities.num $this->like '%$query%')";
 			}
@@ -485,8 +485,8 @@
 			}
 			if($query)
 			{
-				$query = ereg_replace("'",'',$query);
-				$query = ereg_replace('"','',$query);
+				$query = preg_replace("'",'',$query);
+				$query = preg_replace('"','',$query);
 
 //				$querymethod = " AND (fm_activities.descr $this->like '%$query%' or fm_activities.num $this->like '%$query%')";
 				$querymethod = " and (fm_activities.descr $this->like '%$query%' or fm_activities.base_descr $this->like '%$query%' or fm_activities.num $this->like '%$query%') ";
@@ -560,8 +560,8 @@
 			}
 			if($query)
 			{
-				$query = ereg_replace("'",'',$query);
-				$query = ereg_replace('"','',$query);
+				$query = preg_replace("'",'',$query);
+				$query = preg_replace('"','',$query);
 
 				$querymethod = " AND (fm_vendor.org_name $this->like '%$query%' or vendor_id $this->like '%$query%')";
 			}
