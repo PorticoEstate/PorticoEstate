@@ -14,7 +14,6 @@
 		"/phpgwapi/js/yahoo/build/menu/assets/skins/sam/menu.css",
 		"/phpgwapi/js/yahoo/build/button/assets/skins/sam/button.css",
 		"/phpgwapi/templates/newdesign/css/base.css",
-		"/phpgwapi/templates/newdesign/css/icons.css",
 		"/phpgwapi/templates/newdesign/css/{$GLOBALS['phpgw_info']['user']['preferences']['common']['theme']}.css",
 		"/{$app}/templates/base/css/base.css",
 		"/{$app}/templates/newdesign/css/base.css",
@@ -41,12 +40,16 @@
 		}
 	}
 
+	$app = lang($app);
 	$GLOBALS['phpgw']->template->set_var(array
 	(
+		'css'			=> $GLOBALS['phpgw']->common->get_css(),
 		'javascript'	=> $GLOBALS['phpgw']->common->get_javascript(),
-		'site_title'	=> "{$GLOBALS['phpgw_info']['server']['site_title']}",
-		'url_root'		=> $GLOBALS['phpgw']->link('/', array(), true),
-		'user_fullname' => $GLOBALS['phpgw']->common->display_fullname()
+		'img_icon'      => PHPGW_IMAGES_DIR . '/favicon.ico',
+		'site_title'	=> "{$GLOBALS['phpgw_info']['server']['site_title']} | {$app}",
+		'user_fullname' => $GLOBALS['phpgw']->common->display_fullname(),
+		'str_base_url'	=> $GLOBALS['phpgw']->link('/', array(), true),
+		'win_on_events'	=> $GLOBALS['phpgw']->common->get_on_events(),
 	));
 
 	$GLOBALS['phpgw']->template->pfp('out','head');
