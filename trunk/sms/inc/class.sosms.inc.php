@@ -89,8 +89,8 @@
 */
 			if($query)
 			{
-				$query = preg_replace("'",'',$query);
-				$query = preg_replace('"','',$query);
+				$query = preg_replace("/'/",'',$query);
+				$query = preg_replace('/"/','',$query);
 
 				$querymethod = " $where in_sender $this->like '%$query%' OR in_msg $this->like '%$query%'";
 				
@@ -182,8 +182,8 @@
 			$querymethod = '';
 			if($query)
 			{
-				$query = preg_replace("'",'',$query);
-				$query = preg_replace('"','',$query);
+				$query = preg_replace("/'/",'',$query);
+				$query = preg_replace('/"/','',$query);
 
 				$querymethod = " AND p_dst $this->like '%$query%' OR p_msg $this->like '%$query%'";
 			}

@@ -726,7 +726,7 @@ class MBOXCreator extends FeedCreator {
 			$feed.= "Subject: ".MBOXCreator::qp_enc(FeedCreator::iTrunc($this->items[$i]->title,100))."\n";
 			$feed.= "\n";
 			$body = chunk_split(MBOXCreator::qp_enc($this->items[$i]->description));
-			$feed.= preg_replace("~\nFrom ([^\n]*)(\n?)~","\n>From $1$2\n",$body);
+			$feed.= preg_replace("/~\nFrom ([^\n]*)(\n?)~/","\n>From $1$2\n",$body);
 			$feed.= "\n";
 			$feed.= "\n";
 		}
