@@ -125,8 +125,8 @@
 
 			if($query)
 			{
-				$query = preg_replace("'",'',$query);
-				$query = preg_replace('"','',$query);
+				$query = preg_replace("/'/",'',$query);
+				$query = preg_replace('/"/','',$query);
 
 				$querymethod = " AND (account_lid $this->like '%$query%' OR method $this->like '%$query%' OR id $this->like '%$query%')";
 			}

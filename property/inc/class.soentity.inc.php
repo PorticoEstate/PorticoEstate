@@ -309,8 +309,8 @@
 				}
 				else
 				{
-					$query = preg_replace("'",'',$query);
-					$query = preg_replace('"','',$query);
+					$query = preg_replace("/'/",'',$query);
+					$query = preg_replace('/"/','',$query);
 					$filtermethod .= " $where ( $entity_table.location_code $this->like '%$query%' OR $entity_table.num $this->like '%$query%' OR address $this->like '%$query%')";
 					$where= 'OR';
 

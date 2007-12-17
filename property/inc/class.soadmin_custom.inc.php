@@ -76,8 +76,8 @@
 			$querymethod = '';
 			if($query)
 			{
-				$query = preg_replace("'",'',$query);
-				$query = preg_replace('"','',$query);
+				$query = preg_replace("/'/",'',$query);
+				$query = preg_replace('/"/','',$query);
 
 				$querymethod = " $where file_name $this->like '%$query%' or descr $this->like '%$query%'";
 			}

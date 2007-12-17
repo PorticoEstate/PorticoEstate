@@ -206,8 +206,8 @@
 
 			if($query)
 			{
-				$query = preg_replace("'",'',$query);
-				$query = preg_replace('"','',$query);
+				$query = preg_replace("/'/",'',$query);
+				$query = preg_replace('/"/','',$query);
 
 				$querymethod = " $where ( spvend_code $this->like '%$query%' OR bilagsnr $this->like '%$query%' )";
 			}
