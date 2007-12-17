@@ -46,8 +46,8 @@
 		*/
 		function cmp_version($str1,$str2,$debug=False)
 		{
-			ereg("([0-9]+)\.([0-9]+)\.([0-9]+)[a-zA-Z]*([0-9]*)",$str1,$regs);
-			ereg("([0-9]+)\.([0-9]+)\.([0-9]+)[a-zA-Z]*([0-9]*)",$str2,$regs2);
+			preg_match("/([0-9]+)\.([0-9]+)\.([0-9]+)[a-z]*([0-9]*)/i", $str1, $regs);
+			preg_match("/([0-9]+)\.([0-9]+)\.([0-9]+)[a-z]*([0-9]*)/i", $str2, $regs2);
 			if($debug) { echo "<br />$regs[0] - $regs2[0]"; }
 
 			for($i=1;$i<5;++$i)
@@ -78,8 +78,8 @@
 		*/
 		function cmp_version_long($str1,$str2,$debug=False)
 		{
-			ereg("([0-9]+)\.([0-9]+)\.([0-9]+)[a-zA-Z]*([0-9]*)\.([0-9]*)",$str1,$regs);
-			ereg("([0-9]+)\.([0-9]+)\.([0-9]+)[a-zA-Z]*([0-9]*)\.([0-9]*)",$str2,$regs2);
+			preg_match("/([0-9]+)\.([0-9]+)\.([0-9]+)[a-z]*([0-9]*)\.([0-9]*)/i", $str1, $regs);
+			preg_match("/([0-9]+)\.([0-9]+)\.([0-9]+)[a-z]*([0-9]*)\.([0-9]*)/i", $str2, $regs2);
 			if($debug) { echo "<br />$regs[0] - $regs2[0]"; }
 
 			for($i=1;$i<6;++$i)
@@ -356,7 +356,7 @@
 		{
 			echo 'check_owner() is a depreciated function - use ACL class instead <br>';
 			$s = '<a href="' . $GLOBALS['phpgw']->link($link,$extravars) . '"> ' . lang($label) . ' </a>';
-			if (ereg('^[0-9]+$',$record))
+			if ( preg_match('/^[0-9]+$/',$record))
 			{
 				if ($record != $GLOBALS['phpgw_info']['user']['account_id'])
 				{
