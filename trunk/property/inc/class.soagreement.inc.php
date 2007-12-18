@@ -85,12 +85,12 @@
 			$filtermethod = '';
 			$querymethod = '';
 
-			$choice_table = 'fm_agreement_choice';
-			$attribute_table = 'fm_agreement_attribute';
+			$choice_table = 'phpgw_cust_choice';
+			$attribute_table = 'phpgw_cust_attribute';
 
 			$entity_table = 'fm_agreement';
 			$category_table = 'fm_branch';
-			$attribute_filter = " AND attrib_detail = 1";
+			$attribute_filter = " appname = 'property' AND location = '.agreement'";
 			$paranthesis ='(';
 			$joinmethod = " $this->join $category_table ON ( $entity_table.category =$category_table.id)";
 			$joinmethod .= " $this->join  fm_vendor ON ( $entity_table.vendor_id =fm_vendor.id ))";
@@ -169,7 +169,15 @@
 
 			$i	= count($uicols['name']);
 
-			$this->db->query("SELECT * FROM $attribute_table WHERE list=1 $attribute_filter ");
+			$user_columns = isset($GLOBALS['phpgw_info']['user']['preferences']['property']['agreement_columns' . !!$agreement_id])?$GLOBALS['phpgw_info']['user']['preferences']['property']['agreement_columns' . !!$agreement_id]:'';
+			$user_column_filter = '';
+			if (isset($user_columns) AND is_array($user_columns) AND $user_columns[0])
+			{
+				$user_column_filter = " OR ($attribute_filter AND id IN (" . implode(',',$user_columns) .'))';
+			}
+
+			$this->db->query("SELECT * FROM $attribute_table WHERE list=1 AND $attribute_filter $user_column_filter ");
+
 			while ($this->db->next_record())
 			{
 				$uicols['input_type'][]		= 'text';
@@ -186,34 +194,7 @@
 				$i++;
 			}
 
-			$user_columns = isset($GLOBALS['phpgw_info']['user']['preferences']['property']['agreement_columns' . !!$agreement_id])?$GLOBALS['phpgw_info']['user']['preferences']['property']['agreement_columns' . !!$agreement_id]:'';
-
-//_debug_array($user_columns);
-
-			if (isset($user_columns) AND is_array($user_columns) AND $user_columns[0])
-			{
-				foreach($user_columns as $column_id)
-				{
-					$this->db->query("SELECT * FROM $attribute_table WHERE id= $column_id");
-
-					$this->db->next_record();
-					$uicols['input_type'][]		= 'text';
-					$uicols['name'][]			= $this->db->f('column_name');
-					$uicols['descr'][]			= $this->db->f('input_text');
-					$uicols['statustext'][]		= $this->db->f('statustext');
-					$uicols['datatype'][$i]		= $this->db->f('datatype');
-					$cols_return_extra[]= array(
-						'name'	=> $this->db->f('column_name'),
-						'datatype'	=> $this->db->f('datatype'),
-						'attrib_id'	=> $this->db->f('id')
-					);
-					$i++;
-				}
-			}
-
 			$this->uicols	= $uicols;
-
-//_debug_array($cols_return_extra);
 
 			$where= 'WHERE';
 
@@ -333,19 +314,19 @@
 						$value='';
 						$value=$this->db->f($cols_return_extra[$i]['name']);
 
-						if(($cols_return_extra[$i]['datatype']=='R' || $cols_return_extra[$i]['datatype']=='LB') && $value):
+						if(($cols_return_extra[$i]['datatype']=='R' || $cols_return_extra[$i]['datatype']=='LB') && $value)
 						{
-							$sql="SELECT value FROM $choice_table where attrib_id=" .$cols_return_extra[$i]['attrib_id']. "  AND id=" . $value . $attribute_filter;
+							$sql="SELECT value FROM $choice_table where attrib_id=" .$cols_return_extra[$i]['attrib_id']. "  AND id=" . $value . "AND $attribute_filter";
 							$this->db2->query($sql);
 							$this->db2->next_record();
 							$agreement_list[$j][$cols_return_extra[$i]['name']] = $this->db2->f('value');
 						}
-						elseif($cols_return_extra[$i]['datatype']=='AB' && $value):
+						else if($cols_return_extra[$i]['datatype']=='AB' && $value)
 						{
 							$contact_data	= $contacts->read_single_entry($value,array('n_given'=>'n_given','n_family'=>'n_family','email'=>'email'));
 							$agreement_list[$j][$cols_return_extra[$i]['name']]	= $contact_data[0]['n_family'] . ', ' . $contact_data[0]['n_given'];
 						}
-						elseif($cols_return_extra[$i]['datatype']=='VENDOR' && $value):
+						else if($cols_return_extra[$i]['datatype']=='VENDOR' && $value)
 						{
 							$sql="SELECT org_name FROM fm_vendor where id=$value";
 							$this->db2->query($sql);
@@ -353,7 +334,7 @@
 							$agreement_list[$j][$cols_return_extra[$i]['name']] = $this->db2->f('org_name');
 
 						}
-						elseif($cols_return_extra[$i]['datatype']=='CH' && $value):
+						else if($cols_return_extra[$i]['datatype']=='CH' && $value)
 						{
 							$ch= unserialize($value);
 	
@@ -361,7 +342,7 @@
 							{
 								for ($k=0;$k<count($ch);$k++)
 								{
-									$sql="SELECT value FROM $choice_table where attrib_id=" .$cols_return_extra[$i]['attrib_id']. "  AND id=" . $ch[$k] . $attribute_filter;
+									$sql="SELECT value FROM $choice_table where attrib_id=" .$cols_return_extra[$i]['attrib_id']. "  AND id=" . $ch[$k] . " AND $attribute_filter";
 									$this->db2->query($sql);
 									while ($this->db2->next_record())
 									{
@@ -372,19 +353,17 @@
 								unset($ch_value);
 							}
 						}
-						elseif($cols_return_extra[$i]['datatype']=='D' && $value):
+						else if($cols_return_extra[$i]['datatype']=='D' && $value)
 						{
 //_debug_array($value);
 
 							$agreement_list[$j][$cols_return_extra[$i]['name']]=date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'],strtotime($value));
 						}
-						else:
+						else
 						{
 							$agreement_list[$j][$cols_return_extra[$i]['name']]=$value;
 						}
-						endif;
 					}
-
 				}
 				$j++;
 			}
@@ -630,105 +609,68 @@
 		}
 
 
-		function read_single($data)
+		function read_single($agreement_id, $values = array())
 		{
-			$attribute_table = 'fm_agreement_attribute';
 			$table = 'fm_agreement';
 
-			$agreement_id =$data['agreement_id'];
+			$this->db->query("SELECT $table.*,fm_vendor.member_of FROM $table $this->join fm_vendor ON $table.vendor_id = fm_vendor.id where $table.id='$agreement_id'");
 
-			$this->db->query("SELECT * FROM $attribute_table WHERE attrib_detail = 1 ORDER BY attrib_sort");
-
-			while ($this->db->next_record())
+			if($this->db->next_record())
 			{
-				$agreement['attributes'][] = array
-				(
-					'attrib_id'		=> $this->db->f('id'),
-					'name'			=> $this->db->f('column_name'),
-					'input_text'	=> stripslashes($this->db->f('input_text')),
-					'statustext'	=> stripslashes($this->db->f('statustext')),
-					'datatype'		=> $this->db->f('datatype')
-				);
-			}
+				$values['id']				= (int)$this->db->f('id');
+				$values['entry_date']		= $this->db->f('entry_date');
+				$values['cat_id']			= $this->db->f('category');
+				$values['start_date']		= $this->db->f('start_date');
+				$values['end_date']			= $this->db->f('end_date');
+				$values['termination_date']	= $this->db->f('termination_date');
+				$values['vendor_id']		= $this->db->f('vendor_id');
+				$values['b_account_id']		= $this->db->f('account_id');
+				$values['name']				= stripslashes($this->db->f('name'));
+				$values['descr']			= stripslashes($this->db->f('descr'));
+				$values['user_id']			= $this->db->f('user_id');
+				$values['group_id']			= $this->db->f('group_id');
+				$values['status']			= $this->db->f('status');
+				$values['member_of']		= explode(',',$this->db->f('member_of'));
 
-			if($agreement_id)
-			{
-				$this->db->query("SELECT $table.*,fm_vendor.member_of FROM $table $this->join fm_vendor ON $table.vendor_id = fm_vendor.id where $table.id='$agreement_id'");
-
-				if($this->db->next_record())
+				if ( isset($values['attributes']) && is_array($values['attributes']) )
 				{
-					$agreement['id']			= (int)$this->db->f('id');
-					$agreement['entry_date']	= $this->db->f('entry_date');
-					$agreement['cat_id']		= $this->db->f('category');
-					$agreement['start_date']	= $this->db->f('start_date');
-					$agreement['end_date']		= $this->db->f('end_date');
-					$agreement['termination_date']= $this->db->f('termination_date');
-					$agreement['vendor_id']		= $this->db->f('vendor_id');
-					$agreement['b_account_id']	= $this->db->f('account_id');
-					$agreement['name']			= stripslashes($this->db->f('name'));
-					$agreement['descr']			= stripslashes($this->db->f('descr'));
-					$agreement['user_id']		= $this->db->f('user_id');
-					$agreement['group_id']		= $this->db->f('group_id');
-					$agreement['status']		= $this->db->f('status');
-					$agreement['member_of']		= explode(',',$this->db->f('member_of'));
-
-					for ($i=0;$i<count($agreement['attributes']);$i++)
+					foreach ( $values['attributes'] as &$attr )
 					{
-						$agreement['attributes'][$i]['value'] 	= $this->db->f($agreement['attributes'][$i]['name']);
-						$agreement['attributes'][$i]['datatype_text'] 	= $this->bocommon->translate_datatype($agreement['attributes'][$i]['datatype']);
+						$attr['value'] 	= $this->db->f($attr['column_name']);
 					}
-
 				}
 			}
-//_debug_array($agreement);
-			return $agreement;
+			return $values;
 		}
 
-		function read_single_item($data)
+		function read_single_item($data, $values = array())
 		{
-			$attribute_table = 'fm_agreement_attribute';
 			$table = 'fm_activities';
 
 			$agreement_id =$data['agreement_id'];
 			$id =$data['id'];
 
-			$this->db->query("SELECT * FROM $attribute_table WHERE attrib_detail = 2 ORDER BY attrib_sort");
+			$this->db->query("SELECT * from $table $this->join fm_activity_price_index on $table.id = fm_activity_price_index.activity_id where $table.id=$id AND agreement_id=$agreement_id and index_count = 1");
 
-			while ($this->db->next_record())
+			if($this->db->next_record())
 			{
-				$item['attributes'][] = array
-				(
-					'attrib_id'		=> $this->db->f('id'),
-					'name'			=> $this->db->f('column_name'),
-					'input_text'	=> stripslashes($this->db->f('input_text')),
-					'statustext'	=> stripslashes($this->db->f('statustext')),
-					'datatype'		=> $this->db->f('datatype')
-				);
-			}
+				$values['agreement_id']		= (int)$this->db->f('agreement_id');
+				$values['id']				= (int)$this->db->f('id');
+				$values['num']				= $this->db->f('num');
+				$values['entry_date']		= $this->db->f('entry_date');
+				$values['m_cost']			= $this->db->f('m_cost');
+				$values['w_cost']			= $this->db->f('w_cost');
+				$values['total_cost']		= $this->db->f('total_cost');
 
-			if($id && $agreement_id)
-			{
-				$this->db->query("SELECT * from $table $this->join fm_activity_price_index on $table.id = fm_activity_price_index.activity_id where $table.id=$id AND agreement_id=$agreement_id and index_count = 1");
-
-				if($this->db->next_record())
+				if ( isset($values['attributes']) && is_array($values['attributes']) )
 				{
-					$item['agreement_id']	= (int)$this->db->f('agreement_id');
-					$item['id']				= (int)$this->db->f('id');
-					$item['num']			= $this->db->f('num');
-					$item['entry_date']		= $this->db->f('entry_date');
-					$item['m_cost']			= $this->db->f('m_cost');
-					$item['w_cost']			= $this->db->f('w_cost');
-					$item['total_cost']		= $this->db->f('total_cost');
-
-					for ($i=0;$i<count($item['attributes']);$i++)
+					foreach ( $values['attributes'] as &$attr )
 					{
-						$item['attributes'][$i]['value'] 	= $this->db->f($item['attributes'][$i]['name']);
-						$item['attributes'][$i]['datatype_text'] 	= $this->bocommon->translate_datatype($item['attributes'][$i]['datatype']);
+						$attr['value'] 	= $this->db->f($attr['column_name']);
 					}
-
 				}
 			}
-			return $item;
+			return $values;
 		}
 
 		function add($agreement,$values_attribute='')
@@ -986,271 +928,6 @@
 			$this->db->transaction_commit();
 		}
 
-		function read_attrib($data)
-		{
-			$attribute_table = 'fm_agreement_attribute';
-//html_print_r($data);
-			if(is_array($data))
-			{
-				$query = (isset($data['start']) && $data['start'] ? $data['start']:0);
-				$query = (isset($data['query'])?$data['query']:'');
-				$sort = (isset($data['sort'])?$data['sort']:'DESC');
-				$order = (isset($data['order'])?$data['order']:'');
-				$allrows = (isset($data['allrows'])?$data['allrows']:'');
-				$column_list = (isset($data['column_list'])?$data['column_list']:'');
-			}
-
-			$where = 'WHERE';
-			if ($column_list)
-			{
-				$filtermethod = " $where list !=1 or list is null";
-				$where = 'AND';
-			}
-			if ($this->role=='detail')
-			{
-				$filtermethod .= " $where attrib_detail=2 ";
-			}
-			else
-			{
-				$filtermethod .= " $where attrib_detail=1 ";
-			}
-
-			$where = 'AND';
-
-			if ($order)
-			{
-				$ordermethod = " order by $order $sort";
-
-			}
-			else
-			{
-				$ordermethod = ' order by attrib_sort asc';
-			}
-
-			$querymethod = '';
-			if($query)
-			{
-				$query = preg_replace("/'/",'',$query);
-				$query = preg_replace('/"/','',$query);
-
-				$querymethod = " $where ($attribute_table.input_text $this->like '%$query%' or $attribute_table.column_name $this->like '%$query%')";
-			}
-
-			$sql = "SELECT * FROM $attribute_table $filtermethod $querymethod";
-
-//echo $sql;
-			$this->db2->query($sql,__LINE__,__FILE__);
-			$this->total_records = $this->db2->num_rows();
-			if(!$allrows)
-			{
-				$this->db->limit_query($sql . $ordermethod,$start,__LINE__,__FILE__);
-			}
-			else
-			{
-				$this->db->query($sql . $ordermethod,__LINE__,__FILE__);
-			}
-
-			while ($this->db->next_record())
-			{
-				$attrib[] = array
-				(
-					'id'			=> $this->db->f('id'),
-					'attrib_sort'	=> $this->db->f('attrib_sort'),
-					'list'			=> $this->db->f('list'),
-					'lookup_form'	=> $this->db->f('lookup_form'),
-					'column_name'	=> $this->db->f('column_name'),
-					'name'			=> $this->db->f('input_text'),
-					'size'			=> $this->db->f('size'),
-					'statustext'	=> $this->db->f('statustext'),
-					'input_text'	=> $this->db->f('input_text'),
-					'type_name'		=> $this->db->f('type'),
-					'datatype'		=> $this->db->f('datatype'),
-					'search'		=> $this->db->f('search')
-				);
-			}
-			return $attrib;
-		}
-
-		function read_single_attrib($id)
-		{
-			$attribute_table = 'fm_agreement_attribute';
-
-			if ($this->role=='detail')
-			{
-				$filtermethod = " AND attrib_detail=2 ";
-			}
-			else
-			{
-				$filtermethod = " AND attrib_detail=1 ";
-			}
-
-			$sql = "SELECT * FROM $attribute_table where id=$id $filtermethod";
-
-			$this->db->query($sql);
-
-			if($this->db->next_record())
-			{
-				$attrib['id']						= $this->db->f('id');
-				$attrib['column_name']				= $this->db->f('column_name');
-				$attrib['input_text']				= $this->db->f('input_text');
-				$attrib['statustext']				= $this->db->f('statustext');
-				$attrib['column_info']['precision']	= $this->db->f('precision_');
-				$attrib['column_info']['scale']		= $this->db->f('scale');
-				$attrib['column_info']['default']	= $this->db->f('default_value');
-				$attrib['column_info']['nullable']	= $this->db->f('nullable');
-				$attrib['column_info']['type']		= $this->db->f('datatype');
-				$attrib['type_name']				= $this->db->f('type_name');
-				$attrib['lookup_form']				= $this->db->f('lookup_form');
-				$attrib['list']						= $this->db->f('list');
-				$attrib['search']					= $this->db->f('search');
-				if($this->db->f('datatype')=='R' || $this->db->f('datatype')=='CH' || $this->db->f('datatype')=='LB')
-				{
-					$attrib['choice'] = $this->read_attrib_choice($id);
-				}
-
-				return $attrib;
-			}
-		}
-
-		function read_attrib_choice($attrib_id)
-		{
-			$choice_table = 'fm_agreement_choice';
-
-			if ($this->role=='detail')
-			{
-				$filtermethod = " AND attrib_detail=2 ";
-			}
-			else
-			{
-				$filtermethod = " AND attrib_detail=1 ";
-			}
-
-			$sql = "SELECT * FROM $choice_table WHERE attrib_id=$attrib_id $filtermethod";
-			$this->db->query($sql);
-
-			while ($this->db->next_record())
-			{
-				$choice[] = array
-				(
-					'id'	=> $this->db->f('id'),
-					'value'	=> $this->db->f('value')
-				);
-
-			}
-			return $choice;
-		}
-
-		function add_attrib($attrib)
-		{
-			$attribute_table = 'fm_agreement_attribute';
-			$attrib['column_name'] = strtolower($this->db->db_addslashes($attrib['column_name']));
-			$attrib['input_text'] = $this->db->db_addslashes($attrib['input_text']);
-			$attrib['statustext'] = $this->db->db_addslashes($attrib['statustext']);
-			$attrib['default'] = $this->db->db_addslashes($attrib['default']);
-			$attrib['id'] = $this->bocommon->next_id($attribute_table, array('attrib_detail'=>!!$this->role +1));
-
-			if($this->role=='detail')
-			{
-				$filtermethod= 'WHERE attrib_detail=2';
-				$table = 'fm_agreement_detail';
-			}
-			else
-			{
-				$filtermethod= 'WHERE attrib_detail=1';
-				$table = 'fm_agreement';
-			}
-
-			$sql = "SELECT * FROM $attribute_table $filtermethod AND column_name = '{$attrib['column_name']}'";
-			$this->db->query($sql,__LINE__,__FILE__);
-			if ( $this->db->next_record() )
-			{
-				$receipt['id'] = '';
-				$receipt['error'] = array();
-				$receipt['error'][] = array('msg' => lang('field already exists, please choose another name'));
-				$receipt['error'][] = array('msg'	=> lang('Attribute has NOT been saved'));
-				return $receipt; //no point continuing
-			}
-
-			$sql = "SELECT max(attrib_sort) as max_sort FROM $attribute_table $filtermethod";
-			$this->db->query($sql);
-			$this->db->next_record();
-			$attrib_sort	= $this->db->f('max_sort')+1;
-
-			$values= array(
-				!!$this->role +1,
-				$attrib['id'],
-				$attrib['column_name'],
-				$attrib['input_text'],
-				$attrib['statustext'],
-				$attrib['lookup_form'],
-				$attrib['search'],
-				$attrib['list'],
-				$attrib_sort,
-				$attrib['column_info']['type'],
-				$attrib['column_info']['precision'],
-				$attrib['column_info']['scale'],
-				$attrib['column_info']['default'],
-				$attrib['column_info']['nullable']
-				);
-
-			$values	= $this->bocommon->validate_db_insert($values);
-
-			$this->db->transaction_begin();
-
-			$this->db->query("INSERT INTO $attribute_table (attrib_detail,id,column_name, input_text, statustext,lookup_form,search,list,attrib_sort,datatype,precision_,scale,default_value,nullable) "
-				. "VALUES ($values)");
-
-			$receipt['id']= $attrib['id'];
-
-			if($attrib['column_info']['type']=='email' && !$attrib['column_info']['precision'])
-			{
-				$attrib['column_info']['precision']=64;
-			}
-
-			$attrib['column_info']['type']  = $this->bocommon->translate_datatype_insert($attrib['column_info']['type']);
-
-			if($attrib['column_info']['type']=='int' && !$attrib['column_info']['precision'])
-			{
-				$attrib['column_info']['precision']=4;
-			}
-
-			if(!$attrib['column_info']['default'])
-			{
-				unset($attrib['column_info']['default']);
-			}
-
-			$this->init_process();
-
-			if($this->oProc->AddColumn($table,$attrib['column_name'], $attrib['column_info']))
-			{
-				$receipt['message'][] = array('msg'	=> lang('Attribute has been saved')	);
-				$this->db->transaction_commit();
-
-			}
-			else
-			{
-				$receipt['error'][] = array('msg'	=> lang('column could not be added')	);
-				if($this->db->Transaction)
-				{
-					$GLOBALS['phpgw']->db->rollbacktrans();
-				}
-				else
-				{
-					$GLOBALS['phpgw']->db->Execute("DELETE FROM $attribute_table WHERE id='" . $receipt['id'] . "'");
-					unset($receipt['id']);
-
-				}
-			}
-
-			return $receipt;
-		}
-
-		function init_process()
-		{
-			$this->oProc 						= CreateObject('phpgwapi.schema_proc',$GLOBALS['phpgw_info']['server']['db_type']);
-			$this->oProc->m_odb					= $this->db;
-			$this->oProc->m_odb->Halt_On_Error	= 'report';
-		}
 
 		function get_default_column_def($table)
 		{
@@ -1348,235 +1025,6 @@
 			$table_def[$table]['uc'] = array();			
 
 			return $table_def;
-		}
-
-
-		function edit_attrib($attrib)
-		{
-			$attribute_table = 'fm_agreement_attribute';
-			$table = 'fm_agreement';
-
-			$attrib['column_name'] = strtolower($this->db->db_addslashes($attrib['column_name']));
-			$attrib['input_text'] = $this->db->db_addslashes($attrib['input_text']);
-			$attrib['statustext'] = $this->db->db_addslashes($attrib['statustext']);
-			$attrib['default'] = $this->db->db_addslashes($attrib['default']);
-
-			$choice_table = 'fm_agreement_choice';
-
-			if($this->role=='detail')
-			{
-				$filtermethod= ' AND attrib_detail=2';
-				$table = 'fm_agreement_detail';
-			}
-			else
-			{
-				$filtermethod= ' AND attrib_detail=1';
-				$table = 'fm_agreement';
-			}
-
-			$this->db->query("SELECT column_name, datatype, precision_ FROM $attribute_table WHERE id='" . $attrib['id']. "' $filtermethod");
-			$this->db->next_record();
-			$OldColumnName		= $this->db->f('column_name');
-			$OldDataType		= $this->db->f('datatype');
-			$OldPrecision		= $this->db->f('precision_');
-
-			$table_def = $this->get_table_def($table);	
-
-			$this->db->transaction_begin();
-
-			$value_set=array(
-				'input_text'	=> $attrib['input_text'],
-				'statustext'	=> $attrib['statustext'],
-				'search'	=> $attrib['search'],
-				'list'		=> $attrib['list'],
-				);
-
-			$value_set	= $this->bocommon->validate_db_update($value_set);
-
-			$this->db->query("UPDATE $attribute_table set $value_set WHERE id=" . $attrib['id'] . $filtermethod);
-
-			$attrib_type=$attrib['column_info']['type'];
-
-			$this->init_process();
-			
-			$this->oProc->m_odb->transaction_begin();
-
-			$this->oProc->m_aTables = $table_def;
-
-
-			if($OldColumnName !=$attrib['column_name'])
-			{
-				$value_set=array('column_name'	=> $attrib['column_name']);
-
-				$value_set	= $this->bocommon->validate_db_update($value_set);
-
-				$this->db->query("UPDATE $attribute_table set $value_set WHERE id=" . $attrib['id'] . $filtermethod);
-
-				$this->oProc->RenameColumn($table, $OldColumnName, $attrib['column_name']);
-			}
-
-
-			if (($OldDataType != $attrib['column_info']['type']) || ($OldPrecision != $attrib['column_info']['precision']) )
-			{
-				if($attrib['column_info']['type']!='R' && $attrib['column_info']['type']!='CH' && $attrib['column_info']['type']!='LB')
-				{
-					$this->db->query("DELETE FROM $choice_table WHERE  attrib_id=" . $attrib['id'] . $filtermethod);
-				}
-
-				if(!$attrib['column_info']['precision'])
-				{
-					if($precision = $this->bocommon->translate_datatype_precision($attrib['column_info']['type']))
-					{
-						$attrib['column_info']['precision']=$precision;
-					}
-				}
-
-				if(!$attrib['column_info']['default'])
-				{
-					unset($attrib['column_info']['default']);
-				}
-
-				$value_set=array(
-					'column_name'	=> $attrib['column_name'],
-					'datatype'	=> $attrib['column_info']['type'],
-					'precision_'	=> $attrib['column_info']['precision'],
-					'scale'		=> $attrib['column_info']['scale'],
-					'default_value'	=> $attrib['column_info']['default'],
-					'nullable'	=> $attrib['column_info']['nullable']
-					);
-
-				$value_set	= $this->bocommon->validate_db_update($value_set);
-
-				$this->db->query("UPDATE $attribute_table set $value_set WHERE id=" . $attrib['id'] . $filtermethod);
-
-				$attrib['column_info']['type']  = $this->bocommon->translate_datatype_insert($attrib['column_info']['type']);
-				$this->oProc->AlterColumn($table,$attrib['column_name'],$attrib['column_info']);
-			}
-
-			if($attrib['new_choice'])
-			{
-				$this->db->query("SELECT max(id) as id FROM $choice_table WHERE attrib_id='" . $attrib['id']. "' $filtermethod");
-				$this->db->next_record();
-				$choice_id		= $this->db->f('id')+1;
-
-	//			$choice_id = $this->bocommon->next_id($choice_table ,array('attrib_detail'=>2,'attrib_id'=>$attrib['id']));
-
-				$values= array(
-					$attrib['id'],
-					$choice_id,
-					!!$this->role +1,
-					$attrib['new_choice']
-					);
-
-				$values	= $this->bocommon->validate_db_insert($values);
-
-				$this->db->query("INSERT INTO $choice_table (attrib_id,id,attrib_detail,value) "
-				. "VALUES ($values)");
-			}
-
-			if($attrib['delete_choice'])
-			{
-				for ($i=0;$i<count($attrib['delete_choice']);$i++)
-				{
-					$this->db->query("DELETE FROM $choice_table WHERE  attrib_id=" . $attrib['id']  ." AND id=" . $attrib['delete_choice'][$i] . $filtermethod);
-				}
-			}
-
-			$this->db->transaction_commit();
-			$this->oProc->m_odb->transaction_commit();
-
-			$receipt['message'][] = array('msg'	=> lang('Attribute has been edited'));
-
-			return $receipt;
-		}
-
-		function resort_attrib($data)
-		{
-//html_print_r($data);
-			$attribute_table = 'fm_agreement_attribute';
-			if(is_array($data))
-			{
-				$resort = (isset($data['resort'])?$data['resort']:'up');
-				$id = (isset($data['id'])?$data['id']:'');
-			}
-
-			$sql = "SELECT attrib_sort FROM $attribute_table where id=$id";
-			$this->db->query($sql);
-			$this->db->next_record();
-			$attrib_sort	= $this->db->f('attrib_sort');
-			$sql = "SELECT max(attrib_sort) as max_sort FROM $attribute_table";
-			$this->db->query($sql);
-			$this->db->next_record();
-			$max_sort	= $this->db->f('max_sort');
-			switch($resort)
-			{
-				case 'up':
-					if($attrib_sort>1)
-					{
-						$sql = "UPDATE $attribute_table set attrib_sort=$attrib_sort WHERE attrib_sort =" . ($attrib_sort-1);
-						$this->db->query($sql);
-						$sql = "UPDATE $attribute_table set attrib_sort=" . ($attrib_sort-1) ." WHERE id=$id";
-						$this->db->query($sql);
-					}
-					break;
-				case 'down':
-					if($max_sort > $attrib_sort)
-					{
-						$sql = "UPDATE $attribute_table set attrib_sort=$attrib_sort WHERE attrib_sort =" . ($attrib_sort+1);
-						$this->db->query($sql);
-						$sql = "UPDATE $attribute_table set attrib_sort=" . ($attrib_sort+1) ." WHERE id=$id";
-						$this->db->query($sql);
-					}
-					break;
-				default:
-					return;
-					break;
-			}
-		}
-
-		function delete_attrib($attrib_id)
-		{
-			$table = 'fm_agreement';
-			$attribute_table = 'fm_agreement_attribute';
-			$table_def = $this->get_table_def($table);	
-
-			$this->init_process();
-			$this->oProc->m_odb->transaction_begin();
-			$this->db->transaction_begin();
-
-			$sql = "SELECT * FROM $attribute_table WHERE id=$attrib_id";
-
-			$this->db->query($sql);
-			$this->db->next_record();
-			$ColumnName		= $this->db->f('column_name');
-
-			if($this->oProc->DropColumn($table,$table_def[$table], $ColumnName))
-			{
-				$sql = "SELECT attrib_sort FROM $attribute_table where id=$attrib_id";
-				$this->db->query($sql);
-				$this->db->next_record();
-				$attrib_sort	= $this->db->f('attrib_sort');
-				$sql2 = "SELECT max(attrib_sort) as max_sort FROM $attribute_table";
-				$this->db->query($sql2);
-				$this->db->next_record();
-				$max_sort	= $this->db->f('max_sort');
-				if($max_sort>$attrib_sort)
-				{
-					$sql = "UPDATE $attribute_table set attrib_sort=attrib_sort-1 WHERE attrib_sort > $attrib_sort";
-					$this->db->query($sql);
-				}
-
-				$this->db->query("DELETE FROM $attribute_table WHERE id=$attrib_id");
-			}
-			else
-			{
-				$receipt['error'][] = array('msg'	=> lang('Attribute has NOT been deleted'));
-			}
-
-			$this->db->transaction_commit();
-			$this->oProc->m_odb->transaction_commit();
-
-			return $receipt;
 		}
 
 		function request_next_id()
