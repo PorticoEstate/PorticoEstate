@@ -32,11 +32,6 @@
 						</xsl:when>
 					</xsl:choose>
 					<xsl:choose>
-						<xsl:when test="datatype='D'">
-							<xsl:text>[</xsl:text><xsl:value-of select="//lang_dateformat"/><xsl:text>]</xsl:text>			
-						</xsl:when>
-					</xsl:choose>
-					<xsl:choose>
 						<xsl:when test="datatype='pwd'">
 							<br/>
 							<xsl:text>[ </xsl:text>
@@ -187,7 +182,7 @@
 										</xsl:attribute>
 									</input>
 								</xsl:when>
-								<xsl:when test="datatype='D'">
+					<!--			<xsl:when test="datatype='D'">
 									<input type="text" name="values_attribute[{counter}][value]" value="{value}" onFocus="{//dateformat_validate}" onKeyUp="{//onKeyUp}" onBlur="{//onBlur}" size="12" maxlength="10"  onMouseout="window.status='';return true;" >
 										<xsl:choose>
 											<xsl:when test="disabled!=''">
@@ -203,6 +198,29 @@
 										</xsl:attribute>
 									</input>
 								</xsl:when>
+					-->
+								<xsl:when test="datatype='D'">
+									<input type="text" id="values_attribute_{counter}" name="values_attribute[{counter}][value]" value="{value}"  size="12" maxlength="12"  onMouseout="window.status='';return true;" >
+										<xsl:attribute name="readonly">
+											<xsl:text> readonly</xsl:text>
+										</xsl:attribute>
+										<xsl:attribute name="onMouseover">
+											<xsl:text>window.status='</xsl:text>
+												<xsl:value-of select="statustext"/>
+											<xsl:text>';return true;</xsl:text>
+										</xsl:attribute>
+										<xsl:choose>
+											<xsl:when test="disabled!=''">
+												<xsl:attribute name="disabled">
+													<xsl:text> disabled</xsl:text>
+												</xsl:attribute>
+											</xsl:when>
+										</xsl:choose>
+									</input>
+									<img id="values_attribute_{counter}-trigger" src="{img_cal}" alt="{lang_datetitle}" title="{lang_datetitle}" style="cursor:pointer; cursor:hand;" />
+								</xsl:when>
+
+
 								<xsl:when test="datatype='T'">
 									<textarea cols="{//textareacols}" rows="{//textarearows}" name="values_attribute[{counter}][value]" wrap="virtual" onMouseout="window.status='';return true;">
 										<xsl:choose>
