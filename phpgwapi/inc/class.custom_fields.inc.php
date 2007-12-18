@@ -357,7 +357,7 @@
 				'search'		=> isset($attrib['search']) ? $attrib['search'] : '',
 				'list'			=> isset($attrib['list']) ? $attrib['list'] : '',
 				'history'		=> isset($attrib['history']) ? $attrib['history'] : '',
-				'nullable'		=> $attrib['column_info']['nullable'] == False ? 'False' : 'True'
+				'nullable'		=> $attrib['column_info']['nullable'] == 'False' ? 'False' : 'True'
 			);
 
 			$value_set	= $this->db->validate_update($value_set);
@@ -368,6 +368,7 @@
 			
 			$this->oProc->m_odb->transaction_begin();
 
+			// FIXME : think this is needed - check
 //			$this->oProc->m_aTables = $table_def;
 
 			if($OldColumnName !=$attrib['column_name'])
@@ -549,6 +550,7 @@
 				$attribs[] = array
 				(
 					'id'				=> $this->db->f('id'),
+					'attrib_id'			=> $this->db->f('id'), // FIXME: for now...
 					'entity_type'		=> $this->db->f('type_id'),
 					'attrib_sort'		=> (int) $this->db->f('attrib_sort'),
 					'list'				=> $this->db->f('list'),
@@ -563,7 +565,9 @@
 					'datatype'			=> $this->db->f('datatype'),
 					'search'			=> $this->db->f('search'),
 					'trans_datatype'	=> $this->translate_datatype($this->db->f('datatype')),
-					'nullable'			=> ($this->db->f('nullable') == 'True')
+					'nullable'			=> ($this->db->f('nullable') == 'True'),
+					'allow_null'		=> ($this->db->f('nullable') == 'True'), // FIXME: for now...
+					'history'			=> $this->db->f('history')
 				);
 			}
 
@@ -601,6 +605,7 @@
 			if ($this->db->next_record())
 			{
 				$attrib['id']						= $this->db->f('id');
+				$attrib['attrib_id']				= $this->db->f('id'); // for now...
 				$attrib['column_name']				= $this->db->f('column_name');
 				$attrib['input_text']				= $this->db->f('input_text', true);
 				$attrib['statustext']				= $this->db->f('statustext', true);
@@ -616,6 +621,8 @@
 				$attrib['search']					= $this->db->f('search');
 				$attrib['history']					= $this->db->f('history');
 				$attrib['location']					= $this->db->f('location');
+				$attrib['nullable']					= ($this->db->f('nullable') == 'True');
+				$attrib['allow_null']				= ($this->db->f('nullable') == 'True'); // FIXME: for now...
 				
 				if ( $inc_choices 
 					&& ( $this->db->f('datatype') == 'R' 
@@ -1047,7 +1054,7 @@
 		 * @return array values and definitions of custom attributes prepared for ui
 		 */
 
-		function prepare_attributes($values='',$appname, $location)
+		function prepare_attributes($values='',$appname, $location,$view_only='')
 		{
 			$contacts		= CreateObject('phpgwapi.contacts');
 			$vendor 		= CreateObject('property.soactor');
@@ -1061,21 +1068,23 @@
 				'LB' => 'listbox'
 			);
 
-//_debug_array($values['attributes']);
 			$m=0;
 			for ($i=0;$i<count($values['attributes']);$i++)
 			{
 				$values['attributes'][$i]['datatype_text'] 	= $this->translate_datatype($values['attributes'][$i]['datatype']);
 				if($values['attributes'][$i]['datatype']=='D')
 				{
-					if ( !isset($GLOBALS['phpgw']->jscal) || !is_object($GLOBALS['phpgw']->jscal) )
+					if(!$view_only)
 					{
-						$GLOBALS['phpgw']->jscal = createObject('phpgwapi.jscalendar');
-					}
+						if ( !isset($GLOBALS['phpgw']->jscal) || !is_object($GLOBALS['phpgw']->jscal) )
+						{
+							$GLOBALS['phpgw']->jscal = createObject('phpgwapi.jscalendar');
+						}
 
-					$GLOBALS['phpgw']->jscal->add_listener('values_attribute_' . $i);
-					$values['attributes'][$i]['img_cal']= $GLOBALS['phpgw']->common->image('phpgwapi','cal');
-					$values['attributes'][$i]['lang_datetitle']= lang('Select date');
+						$GLOBALS['phpgw']->jscal->add_listener('values_attribute_' . $i);
+						$values['attributes'][$i]['img_cal']= $GLOBALS['phpgw']->common->image('phpgwapi','cal');
+						$values['attributes'][$i]['lang_datetitle']= lang('Select date');
+					}
 
 					if(isset($values['attributes'][$i]['value']) && $values['attributes'][$i]['value'])
 					{
