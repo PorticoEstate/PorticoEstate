@@ -600,7 +600,7 @@
 
 			$values_attribute  = phpgw::get_var('values_attribute');
 
-			$insert_record_agreement = $GLOBALS['phpgw']->session->appsession('insert_record_agreement','property');
+			$insert_record_agreement = $GLOBALS['phpgw']->session->appsession('insert_record_values.agreement','property');
 
 //_debug_array($insert_record_agreement);
 			if(isset($insert_record_agreement) && is_array($insert_record_agreement))

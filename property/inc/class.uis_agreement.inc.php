@@ -60,7 +60,6 @@
 		function property_uis_agreement()
 		{
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = True;
-		//	$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->nextmatchs	= CreateObject('phpgwapi.nextmatchs');
 			$this->account		= $GLOBALS['phpgw_info']['user']['account_id'];
 
@@ -557,7 +556,7 @@
 
 			$values_attribute  = phpgw::get_var('values_attribute');
 
-			$insert_record_s_agreement = $GLOBALS['phpgw']->session->appsession('insert_record_s_agreement','property');
+			$insert_record_s_agreement = $GLOBALS['phpgw']->session->appsession('insert_record_values.s_agreement','property');
 
 //_debug_array($insert_record_s_agreement);
 			for ($j=0;$j<count($insert_record_s_agreement);$j++)
@@ -970,7 +969,8 @@
 			{
 				$insert_record = $GLOBALS['phpgw']->session->appsession('insert_record','property');
 				$insert_record_entity = $GLOBALS['phpgw']->session->appsession('insert_record_entity','property');
-				$insert_record_s_agreement1 = $GLOBALS['phpgw']->session->appsession('insert_record_s_agreement1','property');
+
+				$insert_record_s_agreement1 = $GLOBALS['phpgw']->session->appsession('insert_record_values.s_agreement.detail','property');
 //_debug_array($insert_record_s_agreement1);
 
 				for ($j=0;$j<count($insert_record_entity);$j++)
@@ -1043,7 +1043,7 @@
 				endif;
 			}
 
-			$s_agreement = $this->bo->read_single(array('s_agreement_id'=>$s_agreement_id));
+			$s_agreement = $this->bo->read_single(array('s_agreement_id'=>$s_agreement_id, 'view' => true));
 			$values = $this->bo->read_single_item(array('s_agreement_id'=>$s_agreement_id,'id'=>$id));
 
 			$link_data = array
@@ -1147,7 +1147,7 @@
 					(
 						'menuaction'	=> 'property.uis_agreement.attrib_history',
 						's_agreement_id'	=> $s_agreement_id,
-						'attrib_id'	=> $values['attributes'][$i]['attrib_id'],
+						'attrib_id'	=> $values['attributes'][$i]['id'],
 						'item_id'	=> $id,
 						'edit'		=> True,
 						'role'		=>'detail'
@@ -1234,7 +1234,7 @@
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('s_agreement','attributes_view'));
 
-			$s_agreement = $this->bo->read_single(array('s_agreement_id'=>$s_agreement_id));
+			$s_agreement = $this->bo->read_single(array('s_agreement_id'=>$s_agreement_id, 'view' => true));
 			$values = $this->bo->read_single_item(array('s_agreement_id'=>$s_agreement_id,'id'=>$id));
 
 			$link_data = array
@@ -1283,7 +1283,7 @@
 					(
 						'menuaction'	=> 'property.uis_agreement.attrib_history',
 						's_agreement_id'	=> $s_agreement_id,
-						'attrib_id'	=> $values['attributes'][$i]['attrib_id'],
+						'attrib_id'	=> $values['attributes'][$i]['id'],
 						'item_id'	=> $id,
 						'edit'		=> False,
 						'role'		=>'detail'
@@ -1299,26 +1299,26 @@
 			$data = array
 			(
 				'msgbox_data'					=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
-				'edit_url'					=> $GLOBALS['phpgw']->link('/index.php',$link_data),
-				'lang_id'					=> lang('ID'),
-				'value_id'					=> $values['id'],
-				'value_s_agreement_id'				=> $s_agreement_id,
+				'edit_url'						=> $GLOBALS['phpgw']->link('/index.php',$link_data),
+				'lang_id'						=> lang('ID'),
+				'value_id'						=> $values['id'],
+				'value_s_agreement_id'			=> $s_agreement_id,
 				'lang_category'					=> lang('category'),
 				'lang_cancel'					=> lang('cancel'),
-				'lang_cancel_statustext'			=> lang('Leave the service agreement untouched and return back to the list'),
+				'lang_cancel_statustext'		=> lang('Leave the service agreement untouched and return back to the list'),
 
 				'lang_dateformat' 				=> lang(strtolower($dateformat)),
 				'attributes_view'				=> $values['attributes'],
 
 				'lang_agreement'				=> lang('Agreement'),
 				'agreement_name'				=> $s_agreement['name'],
-				'table_add'					=> $table_add,
-				'values'					=> $content,
+				'table_add'						=> $table_add,
+				'values'						=> $content,
 				'table_header'					=> $table_header,
 				'location_data'					=> $location_data,
 
-				'lang_cost'					=> lang('cost'),
-				'lang_cost_statustext'				=> lang('cost'),
+				'lang_cost'						=> lang('cost'),
+				'lang_cost_statustext'			=> lang('cost'),
 				'value_cost'					=> $values['cost'],
 				'set_column'					=> $set_column,
 
@@ -1548,15 +1548,16 @@
 			{
 				$link_delete_history_data = array
 					(
-						'menuaction'	=> 'property.uis_agreement.attrib_history',
+						'menuaction'		=> 'property.uis_agreement.attrib_history',
 						's_agreement_id'	=> $s_agreement_id,
-						'item_id'		=> $item_id,
-						'attrib_id'	=> $attrib_id,
-						'history_id'	=> $entry['id'],
-						'delete'	=> true,
-						'edit'		=> true,
-						'role'		=> $this->bo->role
+						'item_id'			=> $item_id,
+						'attrib_id'			=> $attrib_id,
+						'history_id'		=> $entry['id'],
+						'delete'			=> true,
+						'edit'				=> true,
+						'role'				=> $this->bo->role
 					);
+
 				if($edit)
 				{
 					$text_delete	= lang('delete');
@@ -1565,13 +1566,13 @@
 
 				$content[] = array
 				(
-					'id'				=> $entry['id'],
-					'value'				=> $entry['new_value'],
-					'user'				=> $entry['owner'],
-					'time_created'			=> $GLOBALS['phpgw']->common->show_date($entry['datetime'],$dateformat),
-					'link_delete'			=> $link_delete,
+					'id'						=> $entry['id'],
+					'value'						=> $entry['new_value'],
+					'user'						=> $entry['owner'],
+					'time_created'				=> $GLOBALS['phpgw']->common->show_date($entry['datetime'],$dateformat),
+					'link_delete'				=> $link_delete,
 					'lang_delete_statustext'	=> lang('delete the item'),
-					'text_delete'			=> $text_delete,
+					'text_delete'				=> $text_delete,
 				);
 			}
 
@@ -1579,7 +1580,7 @@
 			$table_header = array
 			(
 				'lang_value'		=> lang('value'),
-				'lang_user'		=> lang('user'),
+				'lang_user'			=> lang('user'),
 				'lang_time_created'	=> lang('time created'),
 				'lang_delete'		=> lang('delete')
 			);
@@ -1589,7 +1590,7 @@
 				'menuaction'	=> 'property.uis_agreement.attrib_history',
 				's_agreement_id'=> $s_agreement_id,
 				'item_id'		=> $item_id,
-				'attrib_id'	=> $attrib_id,
+				'attrib_id'		=> $attrib_id,
 				'edit'			=> $edit
 			);
 
@@ -1600,15 +1601,15 @@
 				'record_limit'		=> $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'],
 				'num_records'		=> count($values),
 				'all_records'		=> $this->bo->total_records,
-				'link_url'		=> $GLOBALS['phpgw']->link('/index.php',$link_data),
-				'img_path'		=> $GLOBALS['phpgw']->common->get_image_path('phpgwapi','default'),
-				'values' 		=> $content,
+				'link_url'			=> $GLOBALS['phpgw']->link('/index.php',$link_data),
+				'img_path'			=> $GLOBALS['phpgw']->common->get_image_path('phpgwapi','default'),
+				'values' 			=> $content,
 				'table_header'		=> $table_header,
 			);
 //_debug_array($data);
-			$this->bo->role='detail';
-			$attrib_data 	= $this->bo->read_single_attrib($attrib_id);
+			$attrib_data 	= $this->bo->custom->get_attrib_single('property', '.s_agreement.detail', $attrib_id);
 			$appname	= $attrib_data['input_text'];
+
 			$function_msg	= lang('history');
 
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;	
