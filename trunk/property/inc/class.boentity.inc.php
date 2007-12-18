@@ -326,10 +326,22 @@
 			//FIXME: This code is duplicated - and should be moved
 			for ($i=0;$i<count($entity['attributes']);$i++)
 			{
-				if($entity['attributes'][$i]['datatype']=='D' && $entity['attributes'][$i]['value'])
+				if($entity['attributes'][$i]['datatype']=='D')
 				{
-					$timestamp_date= mktime(0,0,0,date(m,strtotime($entity['attributes'][$i]['value'])),date(d,strtotime($entity['attributes'][$i]['value'])),date(y,strtotime($entity['attributes'][$i]['value'])));
-					$entity['attributes'][$i]['value']	= $GLOBALS['phpgw']->common->show_date($timestamp_date,$dateformat);
+					if ( !isset($GLOBALS['phpgw']->jscal) || !is_object($GLOBALS['phpgw']->jscal) )
+					{
+						$GLOBALS['phpgw']->jscal = createObject('phpgwapi.jscalendar');
+					}
+
+					$GLOBALS['phpgw']->jscal->add_listener('values_attribute_' . $i);
+					$entity['attributes'][$i]['img_cal']= $GLOBALS['phpgw']->common->image('phpgwapi','cal');
+					$entity['attributes'][$i]['lang_datetitle']= lang('Select date');
+
+					if($entity['attributes'][$i]['value'])
+					{
+						$timestamp_date= mktime(0,0,0,date(m,strtotime($entity['attributes'][$i]['value'])),date(d,strtotime($entity['attributes'][$i]['value'])),date(y,strtotime($entity['attributes'][$i]['value'])));
+						$entity['attributes'][$i]['value']	= $GLOBALS['phpgw']->common->show_date($timestamp_date,$dateformat);
+					}
 				}
 				else if($entity['attributes'][$i]['datatype']=='AB')
 				{
