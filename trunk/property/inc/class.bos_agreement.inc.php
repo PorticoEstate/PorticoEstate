@@ -250,7 +250,7 @@
 				$values = $this->so->read_single($data['s_agreement_id'], $values);
 			}
 
-			$values = $this->custom->prepare_attributes($values, 'property', '.s_agreement');
+			$values = $this->custom->prepare_attributes($values, 'property', '.s_agreement', $data['view']);
 
 			$dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
 			$values['start_date']		= $GLOBALS['phpgw']->common->show_date($values['start_date'],$dateformat);
@@ -274,179 +274,38 @@
 			}
 
 			return $values;
-
 		}
 
 		function read_single_item($data)
 		{
-			$item	= $this->so->read_single_item($data);
-//_debug_array($item);
-			$item	= $this->convert_attribute($item,True);
+			$values['attributes'] = $this->custom->get_attribs('property', '.s_agreement.detail', 0, '', 'ASC', 'attrib_sort', true, true);
+			
+			if(isset($data['s_agreement_id']) && $data['s_agreement_id'] && isset($data['id']) && $data['id'])
+			{
+				$values = $this->so->read_single_item($data, $values);
+			}
+			$values = $this->custom->prepare_attributes($values, 'property', '.s_agreement.detail');
 
-			if($item['location_code'])
+//_debug_array($item);
+
+			if($values['location_code'])
 			{
 				$solocation	= CreateObject('property.solocation');
-				$item['location_data'] =$solocation->read_single($item['location_code']);
+				$values['location_data'] =$solocation->read_single($values['location_code']);
 			}
 
-			if($item['p_num'])
+			if($values['p_num'])
 			{
 				$soadmin_entity	= CreateObject('property.soadmin_entity');
-				$category = $soadmin_entity->read_single_category($item['p_entity_id'],$item['p_cat_id']);
+				$category = $soadmin_entity->read_single_category($values['p_entity_id'],$values['p_cat_id']);
 
-				$item['p'][$item['p_entity_id']]['p_num']=$item['p_num'];
-				$item['p'][$item['p_entity_id']]['p_entity_id']=$item['p_entity_id'];
-				$item['p'][$item['p_entity_id']]['p_cat_id']=$item['p_cat_id'];
-				$item['p'][$item['p_entity_id']]['p_cat_name'] = $category['name'];
+				$values['p'][$values['p_entity_id']]['p_num']=$values['p_num'];
+				$values['p'][$values['p_entity_id']]['p_entity_id']=$values['p_entity_id'];
+				$values['p'][$values['p_entity_id']]['p_cat_id']=$values['p_cat_id'];
+				$values['p'][$values['p_entity_id']]['p_cat_name'] = $category['name'];
 			}
 
-			return $item;
-		}
-
-		function convert_attribute($list,$detail='')
-		{
-			if($detail)
-			{
-				$this->so->role	= 'detail';
-			}
-			$contacts			= CreateObject('phpgwapi.contacts');
-
-			$vendor = CreateObject('property.soactor');
-			$vendor->role = 'vendor';
-
-			$dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
-
-			$input_type_array = array(
-				'R' => 'radio',
-				'CH' => 'checkbox',
-				'LB' => 'listbox'
-			);
-
-			$sep = '/';
-			$dlarr[strpos($dateformat,'Y')] = 'Y';
-			$dlarr[strpos($dateformat,'m')] = 'm';
-			$dlarr[strpos($dateformat,'d')] = 'd';
-			ksort($dlarr);
-
-			$dateformat= (implode($sep,$dlarr));
-
-//html_print_r($list);
-			$m=0;
-			for ($i=0;$i<count($list['attributes']);$i++)
-			{
-				if($list['attributes'][$i]['datatype']=='D' && $list['attributes'][$i]['value'])
-				{
-					$timestamp_date= mktime(0,0,0,date(m,strtotime($list['attributes'][$i]['value'])),date(d,strtotime($list['attributes'][$i]['value'])),date(y,strtotime($list['attributes'][$i]['value'])));
-					$list['attributes'][$i]['value']	= $GLOBALS['phpgw']->common->show_date($timestamp_date,$dateformat);
-				}
-				if($list['attributes'][$i]['datatype']=='AB')
-				{
-					if($list['attributes'][$i]['value'])
-					{
-						$contact_data	= $contacts->read_single_entry($list['attributes'][$i]['value'],array('n_given'=>'n_given','n_family'=>'n_family','email'=>'email'));
-						$list['attributes'][$i]['contact_name']	= $contact_data[0]['n_family'] . ', ' . $contact_data[0]['n_given'];
-					}
-
-					$insert_record_list[]	= $list['attributes'][$i]['name'];
-					$lookup_link		= $GLOBALS['phpgw']->link('/index.php','menuaction='.'property.uilookup.addressbook&column=' . $list['attributes'][$i]['name']);
-
-					$lookup_functions[$m]['name'] = 'lookup_'. $list['attributes'][$i]['name'] .'()';
-					$lookup_functions[$m]['action'] = 'Window1=window.open('."'" . $lookup_link ."'" .',"Search","width=800,height=700,toolbar=no,scrollbars=yes,resizable=yes");';
-					$m++;
-				}
-				if($list['attributes'][$i]['datatype']=='VENDOR')
-				{
-					if($list['attributes'][$i]['value'])
-					{
-						$vendor_data	= $vendor->read_single(array('actor_id'=>$list['attributes'][$i]['value']));
-
-						for ($n=0;$n<count($vendor_data['attributes']);$n++)
-						{
-							if($vendor_data['attributes'][$n]['name'] == 'org_name')
-							{
-								$list['attributes'][$i]['vendor_name']= $vendor_data['attributes'][$n]['value'];
-								$n =count($vendor_data['attributes']);
-							}
-						}
-					}
-
-					$insert_record_list[]	= $list['attributes'][$i]['name'];
-					$lookup_link		= $GLOBALS['phpgw']->link('/index.php','menuaction='.'property.uilookup.vendor&column=' . $list['attributes'][$i]['name']);
-
-					$lookup_functions[$m]['name'] = 'lookup_'. $list['attributes'][$i]['name'] .'()';
-					$lookup_functions[$m]['action'] = 'Window1=window.open('."'" . $lookup_link ."'" .',"Search","width=800,height=700,toolbar=no,scrollbars=yes,resizable=yes");';
-					$m++;
-				}
-				if($list['attributes'][$i]['datatype']=='R' || $list['attributes'][$i]['datatype']=='CH' || $list['attributes'][$i]['datatype']=='LB')
-				{
-					$list['attributes'][$i]['choice']	= $this->so->read_attrib_choice($list['attributes'][$i]['attrib_id']);
-					$input_type=$input_type_array[$list['attributes'][$i]['datatype']];
-
-					if($list['attributes'][$i]['datatype']=='CH')
-					{
-						$list['attributes'][$i]['value']=unserialize($list['attributes'][$i]['value']);
-						$list['attributes'][$i]['choice'] = $this->bocommon->select_multi_list_2($list['attributes'][$i]['value'],$list['attributes'][$i]['choice'],$input_type);
-
-					}
-					else
-					{
-						for ($j=0;$j<count($list['attributes'][$i]['choice']);$j++)
-						{
-							$list['attributes'][$i]['choice'][$j]['input_type']=$input_type;
-							if($list['attributes'][$i]['choice'][$j]['id']==$list['attributes'][$i]['value'])
-							{
-								$list['attributes'][$i]['choice'][$j]['checked']='checked';
-							}
-						}
-					}
-				}
-
-				$list['attributes'][$i]['datatype_text'] = $this->bocommon->translate_datatype($list['attributes'][$i]['datatype']);
-				$list['attributes'][$i]['counter']	= $i;
-				$list['attributes'][$i]['type_id']	= $data['type_id'];
-			}
-
-			for ($j=0;$j<count($lookup_functions);$j++)
-			{
-				$list['lookup_functions'] .= 'function ' . $lookup_functions[$j]['name'] ."\r\n";
-				$list['lookup_functions'] .= '{'."\r\n";
-				$list['lookup_functions'] .= $lookup_functions[$j]['action'] ."\r\n";
-				$list['lookup_functions'] .= '}'."\r\n";
-			}
-
-			$GLOBALS['phpgw']->session->appsession('insert_record_s_agreement' . !!$detail,'property',$insert_record_list);
-
-//html_print_r($list);
-			return $list;
-
-		}
-
-		function convert_attribute_save($values_attribute='')
-		{
-
-			for ($i=0;$i<count($values_attribute);$i++)
-			{
-				if($values_attribute[$i]['datatype']=='CH' && $values_attribute[$i]['value'])
-				{
-					$values_attribute[$i]['value'] = serialize($values_attribute[$i]['value']);
-				}
-				if($values_attribute[$i]['datatype']=='R' && $values_attribute[$i]['value'])
-				{
-					$values_attribute[$i]['value'] = $values_attribute[$i]['value'][0];
-				}
-
-				if($values_attribute[$i]['datatype']=='N' && $values_attribute[$i]['value'])
-				{
-					$values_attribute[$i]['value'] = str_replace(",",".",$values_attribute[$i]['value']);
-				}
-
-				if($values_attribute[$i]['datatype']=='D' && $values_attribute[$i]['value'])
-				{
-					$values_attribute[$i]['value'] = date($this->bocommon->dateformat,$this->bocommon->date_to_timestamp($values_attribute[$i]['value']));
-				}
-			}
-
-			return $values_attribute;
+			return $values;
 		}
 
 		function save($values,$values_attribute='',$action='')
@@ -456,9 +315,9 @@
 			$values['end_date']	= $this->bocommon->date_to_timestamp($values['end_date']);
 			$values['termination_date']	= $this->bocommon->date_to_timestamp($values['termination_date']);
 
-			if (is_array($values_attribute))
+			if(is_array($values_attribute))
 			{
-				$values_attribute = $this->convert_attribute_save($values_attribute);
+				$values_attribute = $this->custom->convert_attribute_save($values_attribute);
 			}
 
 			if ($action=='edit')
@@ -522,7 +381,7 @@
 
 			if (is_array($values_attribute))
 			{
-				$values_attribute = $this->convert_attribute_save($values_attribute);
+				$values_attribute = $this->custom->convert_attribute_save($values_attribute);
 			}
 
 			if ($values['id'])
@@ -580,7 +439,6 @@
 			$this->so->delete_last_index($s_agreement_id,$id);
 		}
 
-
 		function delete_item($s_agreement_id,$item_id)
 		{
 			$this->so->delete_item($s_agreement_id,$item_id);
@@ -591,15 +449,14 @@
 			$this->so->delete($s_agreement_id);
 		}
 
-
 		function column_list($selected='',$allrows='')
 		{
 			if(!$selected)
 			{
-				$selected=$GLOBALS['phpgw_info']['user']['preferences']['property']["s_agreement_columns"];
+				$selected=$GLOBALS['phpgw_info']['user']['preferences']['property']['s_agreement_columns'];
 			}
 
-			$columns = $this->so->read_attrib(array('allrows'=>$allrows,'column_list'=>True));
+			$columns = $this->custom->get_attribs('property','.s_agreement', 0, '','','',true);
 
 			$column_list=$this->bocommon->select_multi_list($selected,$columns);
 
@@ -641,7 +498,6 @@
 
 		function create_document_dir($id='')
 		{
-
 			if(!$this->vfs->file_exists(array(
 					'string' => $this->fakebase. SEP . 'service_agreement' .  SEP . $id,
 					'relatives' => Array(RELATIVE_NONE)
@@ -683,7 +539,5 @@
 			$historylog = CreateObject('property.historylog','s_agreement');
 			$historylog->delete_single_record($data['history_id']);
 		}
-
-
 	}
 ?>

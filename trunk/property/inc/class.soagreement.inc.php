@@ -257,7 +257,7 @@
 				$query = preg_replace("/'/",'',$query);
 				$query = preg_replace('/"/','',$query);
 
-				$this->db->query("SELECT * FROM $attribute_table where search='1'");
+				$this->db->query("SELECT * FROM $attribute_table WHERE search='1' AND $attribute_filter ");
 
 				while ($this->db->next_record())
 				{
@@ -316,7 +316,7 @@
 
 						if(($cols_return_extra[$i]['datatype']=='R' || $cols_return_extra[$i]['datatype']=='LB') && $value)
 						{
-							$sql="SELECT value FROM $choice_table where attrib_id=" .$cols_return_extra[$i]['attrib_id']. "  AND id=" . $value . "AND $attribute_filter";
+							$sql="SELECT value FROM $choice_table WHERE $attribute_filter AND attrib_id=" .$cols_return_extra[$i]['attrib_id']. "  AND id=" . $value;
 							$this->db2->query($sql);
 							$this->db2->next_record();
 							$agreement_list[$j][$cols_return_extra[$i]['name']] = $this->db2->f('value');
@@ -342,7 +342,7 @@
 							{
 								for ($k=0;$k<count($ch);$k++)
 								{
-									$sql="SELECT value FROM $choice_table where attrib_id=" .$cols_return_extra[$i]['attrib_id']. "  AND id=" . $ch[$k] . " AND $attribute_filter";
+									$sql="SELECT value FROM $choice_table WHERE $attribute_filter AND attrib_id=" .$cols_return_extra[$i]['attrib_id']. "  AND id=" . $ch[$k];
 									$this->db2->query($sql);
 									while ($this->db2->next_record())
 									{
@@ -698,13 +698,15 @@
 			$vals[] = $agreement['vendor_id'];
 			$vals[] = $this->account;
 
-
-			while (is_array($agreement['extra']) && list($input_name,$value) = each($agreement['extra']))
+			if(isset($agreement['extra']) && is_array($agreement['extra']))
 			{
-				if($value)
+				foreach ($agreement['extra'] as $input_name => $value)
 				{
-					$cols[] = $input_name;
-					$vals[] = $value;
+					if(isset($value) && $value)
+					{
+						$cols[] = $input_name;
+						$vals[] = $value;
+					}
 				}
 			}
 
@@ -789,9 +791,12 @@
 				$values['member_of']=',' . implode(',',$values['member_of']) . ',';
 			}
 
-			while (is_array($values['extra']) && list($column,$value) = each($values['extra']))
+			if(isset($values['extra']) && is_array($values['extra']))
 			{
-				$value_set[$column]	= $value;
+				foreach ($values['extra'] as $column => $value)
+				{
+					$value_set[$column]	= $value;
+				}
 			}
 
 			if (isset($values_attribute) AND is_array($values_attribute))
@@ -800,7 +805,14 @@
 				{
 					if($entry['datatype']!='AB' && $entry['datatype']!='VENDOR')
 					{
-						$value_set[$entry['name']]	= $entry['value'];
+						if($entry['datatype'] == 'C' || $entry['datatype'] == 'T' || $entry['datatype'] == 'V' || $entry['datatype'] == 'link')
+						{
+							$value_set[$entry['name']] = $this->db->db_addslashes($entry['value']);
+						}
+						else
+						{
+							$value_set[$entry['name']]	= $entry['value'];
+						}
 					}
 				}
 			}
