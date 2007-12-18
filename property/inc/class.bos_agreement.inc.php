@@ -54,9 +54,9 @@
 
 		function property_bos_agreement($session=False)
 		{
-		//	$this->currentapp		= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->so = CreateObject('property.sos_agreement');
 			$this->bocommon = CreateObject('property.bocommon');
+			$this->custom 		= createObject('phpgwapi.custom_fields');
 			$this->vfs 			= CreateObject('phpgwapi.vfs');
 			$this->rootdir 		= $this->vfs->basedir;
 			$this->fakebase 	= $this->vfs->fakebase;
@@ -243,31 +243,37 @@
 
 		function read_single($data)
 		{
-			$s_agreement	= $this->so->read_single($data);
-			$dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
-			$s_agreement['start_date']		= $GLOBALS['phpgw']->common->show_date($s_agreement['start_date'],$dateformat);
-			$s_agreement['end_date']		= $GLOBALS['phpgw']->common->show_date($s_agreement['end_date'],$dateformat);
-			if($s_agreement['termination_date'])
+			$values['attributes'] = $this->custom->get_attribs('property', '.s_agreement', 0, '', 'ASC', 'attrib_sort', true, true);
+			
+			if(isset($data['s_agreement_id']) && $data['s_agreement_id'])
 			{
-				$s_agreement['termination_date']= $GLOBALS['phpgw']->common->show_date($s_agreement['termination_date'],$dateformat);
+				$values = $this->so->read_single($data['s_agreement_id'], $values);
 			}
 
-			$s_agreement = $this->convert_attribute($s_agreement);
+			$values = $this->custom->prepare_attributes($values, 'property', '.s_agreement');
+
+			$dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
+			$values['start_date']		= $GLOBALS['phpgw']->common->show_date($values['start_date'],$dateformat);
+			$values['end_date']		= $GLOBALS['phpgw']->common->show_date($values['end_date'],$dateformat);
+			if($values['termination_date'])
+			{
+				$values['termination_date']= $GLOBALS['phpgw']->common->show_date($values['termination_date'],$dateformat);
+			}
 
 			$this->vfs->override_acl = 1;
 
-			$s_agreement['files'] = $this->vfs->ls (array(
+			$values['files'] = $this->vfs->ls (array(
 			     'string' => $this->fakebase. '/' . 'service_agreement' .  '/' . $data['s_agreement_id'],
 			     'relatives' => array(RELATIVE_NONE)));
 
 			$this->vfs->override_acl = 0;
 
-			if(!$s_agreement['files'][0]['file_id'])
+			if(!$values['files'][0]['file_id'])
 			{
-				unset($s_agreement['files']);
+				unset($values['files']);
 			}
 
-			return $s_agreement;
+			return $values;
 
 		}
 
@@ -580,59 +586,11 @@
 			$this->so->delete_item($s_agreement_id,$item_id);
 		}
 
-		function delete($s_agreement_id='',$id='',$attrib='')
+		function delete($s_agreement_id)
 		{
-			if ($attrib)
-			{
-				$this->so->delete_attrib($id);
-			}
-			else
-			{
-				$this->so->delete($s_agreement_id);
-			}
+			$this->so->delete($s_agreement_id);
 		}
 
-		function read_attrib($type_id='')
-		{
-			$attrib = $this->so->read_attrib(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
-											'allrows'=>$this->allrows));
-
-			for ($i=0; $i<count($attrib); $i++)
-			{
-				$attrib[$i]['datatype'] = $this->bocommon->translate_datatype($attrib[$i]['datatype']);
-			}
-
-			$this->total_records = $this->so->total_records;
-
-			return $attrib;
-		}
-
-		function read_single_attrib($id)
-		{
-			return $this->so->read_single_attrib($id);
-		}
-
-		function resort_attrib($data)
-		{
-			$this->so->resort_attrib($data);
-		}
-
-		function save_attrib($attrib,$action='')
-		{
-			if ($action=='edit')
-			{
-				if ($attrib['id'] != '')
-				{
-
-					$receipt = $this->so->edit_attrib($attrib);
-				}
-			}
-			else
-			{
-				$receipt = $this->so->add_attrib($attrib);
-			}
-			return $receipt;
-		}
 
 		function column_list($selected='',$allrows='')
 		{

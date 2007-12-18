@@ -54,7 +54,6 @@
 
 		function property_boagreement($session=False)
 		{
-		//	$this->currentapp		= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->so = CreateObject('property.soagreement');
 			$this->bocommon = CreateObject('property.bocommon');
 			$this->custom 		= createObject('phpgwapi.custom_fields');
