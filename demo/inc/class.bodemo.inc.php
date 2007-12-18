@@ -166,29 +166,8 @@
 		{
 			if(is_array($values_attribute))
 			{
-				foreach ( $values_attribute as &$attrib )
-				{
-					if ( $attrib['datatype'] == 'CH' && $attrib['value'] )
-					{
-						$attrib['value'] = serialize($attrib[$i]['value'] );
-					}
-					if ( $attrib['datatype'] == 'R' && $attrib['value'] )
-					{
-						$attrib['value'] = $attrib['value'][0];
-					}
-
-					if ( $attrib['datatype'] == 'N' && $attrib['value'] )
-					{
-						$attrib['value'] = str_replace(',', '.', $attrib['value']);
-					}
-	
-					if ( $attrib['datatype'] == 'D' && $attrib['value'] )
-					{
-						$values_attribute[$i]['value'] = date($this->dateformat, $this->date_to_timestamp($attrib['value']));
-					}
-				}
+				$values_attribute = $this->custom->convert_attribute_save($values_attribute);
 			}
-
 
 			if (isset($values['demo_id']) && $values['demo_id'])
 			{
@@ -275,7 +254,7 @@
 		* @param array $values value set with 
 		* @return array Array with attribute definition and values
 		*/
-		private function preserve_attribute_values($values='',$values_attribute='')
+		function preserve_attribute_values($values='',$values_attribute='')
 		{
 			return $this->custom->preserve_attribute_values($values,$values_attribute);
 		}
