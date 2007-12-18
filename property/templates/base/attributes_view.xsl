@@ -73,6 +73,10 @@
 										</xsl:attribute>
 									</input>
 								</xsl:when>
+								<xsl:when test="datatype='D'">
+									<xsl:value-of select="value"/>
+									<img id="values_attribute_{counter}-trigger"/>
+								</xsl:when>
 								<xsl:otherwise>
 									<xsl:value-of select="value"/>
 								</xsl:otherwise>
