@@ -15,6 +15,7 @@
 	 * Custom Fields
 	 * @package phpgwapi
 	 */
+	phpgw::import_class('phpgwapi.datetime');
 	class custom_fields
 	{
 		/**
@@ -88,10 +89,12 @@
 			
 			$this->location = $location;
 		
-			$this->account		= $GLOBALS['phpgw_info']['user']['account_id'];
-			$this->db           =& $GLOBALS['phpgw']->db; // clone to avoid conflict the db in lang-function
-			$this->join			= $this->db->join;
-			$this->like			= $this->db->like;
+			$this->account			= $GLOBALS['phpgw_info']['user']['account_id'];
+			$this->db           	=& $GLOBALS['phpgw']->db; // clone to avoid conflict the db in lang-function
+			$this->join				= $this->db->join;
+			$this->like				= $this->db->like;
+			$this->dateformat 		= phpgwapi_db::date_format();
+			$this->datetimeformat 	= phpgwapi_db::datetime_format();
 
 			if($this->appname && $this->location)
 			{
@@ -1046,6 +1049,10 @@
 
 		function prepare_attributes($values='',$appname, $location)
 		{
+			$contacts		= CreateObject('phpgwapi.contacts');
+			$vendor 		= CreateObject('property.soactor');
+			$vendor->role	= 'vendor';
+
 			$dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
 
 			$input_type_array = array(
@@ -1076,7 +1083,7 @@
 						$values['attributes'][$i]['value']	= $GLOBALS['phpgw']->common->show_date($timestamp_date,$dateformat);
 					}
 				}
-				if($values['attributes'][$i]['datatype']=='AB')
+				else if($values['attributes'][$i]['datatype']=='AB')
 				{
 					if($values['attributes'][$i]['value'])
 					{
@@ -1085,13 +1092,13 @@
 					}
 
 					$insert_record_values[]	= $values['attributes'][$i]['name'];
-					$lookup_link		= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uilookup.addressbook', 'column'=> $values['attributes'][$i]['name']));
+					$lookup_link		= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uilookup.addressbook', 'column'=> $values['attributes'][$i]['name']));
 
 					$lookup_functions[$m]['name'] = 'lookup_'. $values['attributes'][$i]['name'] .'()';
 					$lookup_functions[$m]['action'] = 'Window1=window.open('."'" . $lookup_link ."'" .',"Search","width=800,height=700,toolbar=no,scrollbars=yes,resizable=yes");';
 					$m++;
 				}
-/*				if($values['attributes'][$i]['datatype']=='VENDOR')
+				else if($values['attributes'][$i]['datatype']=='VENDOR')
 				{
 					if($values['attributes'][$i]['value'])
 					{
@@ -1108,14 +1115,13 @@
 					}
 
 					$insert_record_values[]	= $values['attributes'][$i]['name'];
-					$lookup_link		= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uilookup.vendor', 'column'=> $values['attributes'][$i]['name']));
+					$lookup_link		= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uilookup.vendor', 'column'=> $values['attributes'][$i]['name']));
 
 					$lookup_functions[$m]['name'] = 'lookup_'. $values['attributes'][$i]['name'] .'()';
 					$lookup_functions[$m]['action'] = 'Window1=window.open('."'" . $lookup_link ."'" .',"Search","width=800,height=700,toolbar=no,scrollbars=yes,resizable=yes");';
 					$m++;
 				}
-*/
-				if($values['attributes'][$i]['datatype']=='user')
+				else if($values['attributes'][$i]['datatype']=='user')
 				{
 					if($values['attributes'][$i]['value'])
 					{
@@ -1123,14 +1129,13 @@
 					}
 
 					$insert_record_values[]	= $values['attributes'][$i]['name'];
-					$lookup_link		= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uilookup.phpgw_user', 'column'=> $values['attributes'][$i]['name']));
+					$lookup_link		= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->appname.'.uilookup.phpgw_user', 'column'=> $values['attributes'][$i]['name']));
 
 					$lookup_functions[$m]['name'] = 'lookup_'. $values['attributes'][$i]['name'] .'()';
 					$lookup_functions[$m]['action'] = 'Window1=window.open('."'" . $lookup_link ."'" .',"Search","width=800,height=700,toolbar=no,scrollbars=yes,resizable=yes");';
 					$m++;
 				}
-
-				if($values['attributes'][$i]['datatype']=='R' || $values['attributes'][$i]['datatype']=='CH' || $values['attributes'][$i]['datatype']=='LB')
+				else if($values['attributes'][$i]['datatype']=='R' || $values['attributes'][$i]['datatype']=='CH' || $values['attributes'][$i]['datatype']=='LB')
 				{
 					$values['attributes'][$i]['choice']	= $this->read_attrib_choice($appname, $location,$values['attributes'][$i]['id']);
 					$input_type=$input_type_array[$values['attributes'][$i]['datatype']];
@@ -1152,6 +1157,10 @@
 							}
 						}
 					}
+				}
+				else if ($entity['attributes'][$i]['datatype']!='I' && $entity['attributes'][$i]['value'])
+				{
+					$entity['attributes'][$i]['value'] = stripslashes($entity['attributes'][$i]['value']);
 				}
 
 				$values['attributes'][$i]['datatype_text'] = $this->translate_datatype($values['attributes'][$i]['datatype']);
@@ -1210,6 +1219,35 @@
 			}
 			
 			return $values;
+		}
+
+		function convert_attribute_save($values_attribute='')
+		{
+			if(is_array($values_attribute))
+			{
+				foreach ( $values_attribute as &$attrib )
+				{
+					if ( $attrib['datatype'] == 'CH' && $attrib['value'] )
+					{
+						$attrib['value'] = serialize($attrib[$i]['value'] );
+					}
+					if ( $attrib['datatype'] == 'R' && $attrib['value'] )
+					{
+						$attrib['value'] = $attrib['value'][0];
+					}
+
+					if ( $attrib['datatype'] == 'N' && $attrib['value'] )
+					{
+						$attrib['value'] = str_replace(',', '.', $attrib['value']);
+					}
+	
+					if ( $attrib['datatype'] == 'D' && $attrib['value'] )
+					{
+						$attrib['value'] = date($this->dateformat, phpgwapi_datetime::date_to_timestamp($attrib['value']));
+					}
+				}
+			}
+			return $values_attribute;
 		}
 	}
 ?>
