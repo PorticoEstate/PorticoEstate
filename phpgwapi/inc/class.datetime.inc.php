@@ -708,8 +708,12 @@
 		{
 			$dateformat =& $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
 
-			$fields = preg_split('/[./-]/',$datestr);
-			foreach ( preg_split('/[./-]/', $dateformat) as $n => $field )
+	
+	// 		FIXME : something wrong with the pattern for preg_split
+	//		$fields = preg_split('/[./-]/',$datestr);
+	//		foreach ( preg_split('/[./-]/', $dateformat) as $n => $field )
+			$fields = split('[./-]',$datestr);
+			foreach(split('[./-]',$dateformat) as $n => $field)
 			{
 				$date[$field] = (int) $fields[$n];
 
