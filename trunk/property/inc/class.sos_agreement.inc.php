@@ -830,7 +830,14 @@
 				{
 					if($entry['datatype']!='AB' && $entry['datatype']!='VENDOR')
 					{
-						$value_set[$entry['name']]	= $entry['value'];
+						if($entry['datatype'] == 'C' || $entry['datatype'] == 'T' || $entry['datatype'] == 'V' || $entry['datatype'] == 'link')
+						{
+							$value_set[$entry['name']] = $this->db->db_addslashes($entry['value']);
+						}
+						else
+						{
+							$value_set[$entry['name']]	= $entry['value'];
+						}
 					}
 				}
 			}
