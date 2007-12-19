@@ -44,15 +44,15 @@
 				'Tenant Claim Categories'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uicategory.index', 'type' => 'tenant_claim') ),
 				'Tenant Categories'			=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uicategory.index', 'type' => 'tenant') ),
 				'Tenant Global Categories'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.uicategories.index', 'appname' => 'fm_tenant', 'global_cats' => 'True') ),
-				'Tenant Attributes'			=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiactor.list_attribute', 'role' => 'tenant') ),
+				'Tenant Attributes'			=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.ui_custom.list_attribute', 'appname' => $appname, 'location' =>'.tenant')),
 				'Tenant'					=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiactor.index', 'role' => 'tenant') ),
 				'Owner'						=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiactor.index', 'role' => 'owner') ),
 				'Owner Categories'			=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uicategory.index', 'type' => 'owner') ),
-				'Owner Attributes'			=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiactor.list_attribute', 'role' => 'owner') ),
+				'Owner Attributes'			=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.ui_custom.list_attribute', 'appname' => $appname, 'location' =>'.owner')),
 				'Vendor'					=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiactor.index', 'role' => 'vendor') ),
 				'Vendor Categories'			=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uicategory.index', 'type' => 'vendor') ),
 				'Vendor Global Categories'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.uicategories.index', 'appname' => 'fm_vendor', 'global_cats' => 'True') ),
-				'Vendor Attributes'			=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiactor.list_attribute', 'role' => 'vendor') ),
+				'Vendor Attributes'			=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.ui_custom.list_attribute', 'appname' => $appname, 'location' =>'.vendor')),
 				'Document Categories'		=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uicategory.index', 'type' => 'document') ),
 				'Building Part'				=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uistandard_2.index', 'type' => 'building_part') ),
 				'Tender chapter'			=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uicategory.index', 'type' => 'tender_chapter') ),
@@ -65,14 +65,10 @@
 				'Agreement status'			=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uistandard_2.index', 'type' => 'agreement_status') ),
 				'Agreement Attributes'		=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.ui_custom.list_attribute', 'appname' => $appname, 'location' =>'.agreement')),
 				'service agreement categories'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uicategory.index', 'type' => 's_agreement') ),
-		//		'service agreement Attributes'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uis_agreement.list_attribute') ),
 				'service agreement Attributes'		=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.ui_custom.list_attribute', 'appname' => $appname, 'location' =>'.s_agreement')),
-		//		'service agreement item Attributes'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uis_agreement.list_attribute', 'role' => 'detail') ),
 				'service agreement item Attributes'		=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.ui_custom.list_attribute', 'appname' => $appname, 'location' =>'.s_agreement.detail')),
 				'rental agreement categories'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uicategory.index', 'type' => 'r_agreement') ),
-		//		'rental agreement Attributes'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uir_agreement.list_attribute') ),
 				'rental agreement Attributes'		=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.ui_custom.list_attribute', 'appname' => $appname, 'location' =>'.r_agreement')),
-		//		'rental agreement item Attributes'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uir_agreement.list_attribute', 'role' => 'detail') ),
 				'rental agreement item Attributes'		=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.ui_custom.list_attribute', 'appname' => $appname, 'location' =>'.r_agreement.detail')),
 				'Document Status'			=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uistandard_2.index', 'type' => 'document_status') ),
 				'Unit'						=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uistandard_2.index', 'type' => 'unit') ),
@@ -91,8 +87,7 @@
 				'Admin Async servises'		=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uialarm.index') ),
 				'Async servises'			=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiasync.index') ),
 				'Admin custom functions'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiadmin_custom.index') ),
-	);
-	$GLOBALS['phpgw']->common->display_mainscreen($appname,$file);
-
-		}
+			);
+		$GLOBALS['phpgw']->common->display_mainscreen($appname,$file);
+	}
 ?>
