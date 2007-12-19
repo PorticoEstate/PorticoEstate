@@ -1877,6 +1877,240 @@
 		$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_acl_location (appname,id, descr, allow_c_attrib,c_attrib_table) VALUES ('property', '.owner', 'Owner',1,'fm_owner')");
 		$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_acl_location (appname,id, descr, allow_c_attrib,c_attrib_table) VALUES ('property', '.vendor', 'Vendor',1,'fm_vendor')");
 
+		$GLOBALS['phpgw_setup']->oProc->query("SELECT * FROM fm_agreement_attribute");
+		while ($GLOBALS['phpgw_setup']->oProc->next_record())
+		{
+			$attrib[]=array(
+					'appname'		=> 'property',
+					'location'		=> $GLOBALS['phpgw_setup']->oProc->f('attrib_detail') == 1 ? '.agreement':'.agreement.detail',
+					'id'			=> $GLOBALS['phpgw_setup']->oProc->f('id'),
+					'column_name'	=> $GLOBALS['phpgw_setup']->oProc->f('column_name'),
+					'input_text'	=> $GLOBALS['phpgw_setup']->oProc->f('input_text'),
+					'statustext'	=> $GLOBALS['phpgw_setup']->oProc->f('statustext'),
+					'datatype'		=> $GLOBALS['phpgw_setup']->oProc->f('datatype'),
+					'search'		=> $GLOBALS['phpgw_setup']->oProc->f('search'),
+					'history'		=> $GLOBALS['phpgw_setup']->oProc->f('history'),
+					'list'			=> $GLOBALS['phpgw_setup']->oProc->f('list'),
+					'attrib_sort'	=> $GLOBALS['phpgw_setup']->oProc->f('attrib_sort'),
+					'size'			=> $GLOBALS['phpgw_setup']->oProc->f('size'),
+					'precision_'	=> $GLOBALS['phpgw_setup']->oProc->f('precision_'),
+					'scale'			=> $GLOBALS['phpgw_setup']->oProc->f('scale'),
+					'default_value'	=> $GLOBALS['phpgw_setup']->oProc->f('default_value'),
+					'nullable'		=> $GLOBALS['phpgw_setup']->oProc->f('nullable')
+ 			);
+		}
+
+		$GLOBALS['phpgw_setup']->oProc->query("SELECT * FROM fm_r_agreement_attribute");
+		while ($GLOBALS['phpgw_setup']->oProc->next_record())
+		{
+			$attrib[]=array(
+					'appname'		=> 'property',
+					'location'		=> $GLOBALS['phpgw_setup']->oProc->f('attrib_detail') == 1 ? '.r_agreement':'.r_agreement.detail',
+					'id'			=> $GLOBALS['phpgw_setup']->oProc->f('id'),
+					'column_name'	=> $GLOBALS['phpgw_setup']->oProc->f('column_name'),
+					'input_text'	=> $GLOBALS['phpgw_setup']->oProc->f('input_text'),
+					'statustext'	=> $GLOBALS['phpgw_setup']->oProc->f('statustext'),
+					'datatype'		=> $GLOBALS['phpgw_setup']->oProc->f('datatype'),
+					'search'		=> $GLOBALS['phpgw_setup']->oProc->f('search'),
+					'history'		=> $GLOBALS['phpgw_setup']->oProc->f('history'),
+					'list'			=> $GLOBALS['phpgw_setup']->oProc->f('list'),
+					'attrib_sort'	=> $GLOBALS['phpgw_setup']->oProc->f('attrib_sort'),
+					'size'			=> $GLOBALS['phpgw_setup']->oProc->f('size'),
+					'precision_'	=> $GLOBALS['phpgw_setup']->oProc->f('precision_'),
+					'scale'			=> $GLOBALS['phpgw_setup']->oProc->f('scale'),
+					'default_value'	=> $GLOBALS['phpgw_setup']->oProc->f('default_value'),
+					'nullable'		=> $GLOBALS['phpgw_setup']->oProc->f('nullable')
+ 			);
+		}
+
+		$GLOBALS['phpgw_setup']->oProc->query("SELECT * FROM fm_s_agreement_attribute");
+		while ($GLOBALS['phpgw_setup']->oProc->next_record())
+		{
+			$attrib[]=array(
+					'appname'		=> 'property',
+					'location'		=> $GLOBALS['phpgw_setup']->oProc->f('attrib_detail') == 1 ? '.s_agreement':'.s_agreement.detail',
+					'id'			=> $GLOBALS['phpgw_setup']->oProc->f('id'),
+					'column_name'	=> $GLOBALS['phpgw_setup']->oProc->f('column_name'),
+					'input_text'	=> $GLOBALS['phpgw_setup']->oProc->f('input_text'),
+					'statustext'	=> $GLOBALS['phpgw_setup']->oProc->f('statustext'),
+					'datatype'		=> $GLOBALS['phpgw_setup']->oProc->f('datatype'),
+					'search'		=> $GLOBALS['phpgw_setup']->oProc->f('search'),
+					'history'		=> $GLOBALS['phpgw_setup']->oProc->f('history'),
+					'list'			=> $GLOBALS['phpgw_setup']->oProc->f('list'),
+					'attrib_sort'	=> $GLOBALS['phpgw_setup']->oProc->f('attrib_sort'),
+					'size'			=> $GLOBALS['phpgw_setup']->oProc->f('size'),
+					'precision_'	=> $GLOBALS['phpgw_setup']->oProc->f('precision_'),
+					'scale'			=> $GLOBALS['phpgw_setup']->oProc->f('scale'),
+					'default_value'	=> $GLOBALS['phpgw_setup']->oProc->f('default_value'),
+					'nullable'		=> $GLOBALS['phpgw_setup']->oProc->f('nullable')
+ 			);
+		}
+
+		$GLOBALS['phpgw_setup']->oProc->query("SELECT * FROM fm_owner_attribute");
+		while ($GLOBALS['phpgw_setup']->oProc->next_record())
+		{
+			$attrib[]=array(
+					'appname'		=> 'property',
+					'location'		=> '.owner',
+					'id'			=> $GLOBALS['phpgw_setup']->oProc->f('id'),
+					'column_name'	=> $GLOBALS['phpgw_setup']->oProc->f('column_name'),
+					'input_text'	=> $GLOBALS['phpgw_setup']->oProc->f('input_text'),
+					'statustext'	=> $GLOBALS['phpgw_setup']->oProc->f('statustext'),
+					'datatype'		=> $GLOBALS['phpgw_setup']->oProc->f('datatype'),
+					'search'		=> $GLOBALS['phpgw_setup']->oProc->f('search'),
+					'history'		=> $GLOBALS['phpgw_setup']->oProc->f('history'),
+					'list'			=> $GLOBALS['phpgw_setup']->oProc->f('list'),
+					'attrib_sort'	=> $GLOBALS['phpgw_setup']->oProc->f('attrib_sort'),
+					'size'			=> $GLOBALS['phpgw_setup']->oProc->f('size'),
+					'precision_'	=> $GLOBALS['phpgw_setup']->oProc->f('precision_'),
+					'scale'			=> $GLOBALS['phpgw_setup']->oProc->f('scale'),
+					'default_value'	=> $GLOBALS['phpgw_setup']->oProc->f('default_value'),
+					'nullable'		=> $GLOBALS['phpgw_setup']->oProc->f('nullable')
+ 			);
+		}
+
+		$GLOBALS['phpgw_setup']->oProc->query("SELECT * FROM fm_tenant_attribute");
+		while ($GLOBALS['phpgw_setup']->oProc->next_record())
+		{
+			$attrib[]=array(
+					'appname'		=> 'property',
+					'location'		=> '.tenant',
+					'id'			=> $GLOBALS['phpgw_setup']->oProc->f('id'),
+					'column_name'	=> $GLOBALS['phpgw_setup']->oProc->f('column_name'),
+					'input_text'	=> $GLOBALS['phpgw_setup']->oProc->f('input_text'),
+					'statustext'	=> $GLOBALS['phpgw_setup']->oProc->f('statustext'),
+					'datatype'		=> $GLOBALS['phpgw_setup']->oProc->f('datatype'),
+					'search'		=> $GLOBALS['phpgw_setup']->oProc->f('search'),
+					'history'		=> $GLOBALS['phpgw_setup']->oProc->f('history'),
+					'list'			=> $GLOBALS['phpgw_setup']->oProc->f('list'),
+					'attrib_sort'	=> $GLOBALS['phpgw_setup']->oProc->f('attrib_sort'),
+					'size'			=> $GLOBALS['phpgw_setup']->oProc->f('size'),
+					'precision_'	=> $GLOBALS['phpgw_setup']->oProc->f('precision_'),
+					'scale'			=> $GLOBALS['phpgw_setup']->oProc->f('scale'),
+					'default_value'	=> $GLOBALS['phpgw_setup']->oProc->f('default_value'),
+					'nullable'		=> $GLOBALS['phpgw_setup']->oProc->f('nullable')
+ 			);
+		}
+
+		$GLOBALS['phpgw_setup']->oProc->query("SELECT * FROM fm_vendor_attribute");
+		while ($GLOBALS['phpgw_setup']->oProc->next_record())
+		{
+			$attrib[]=array(
+					'appname'		=> 'property',
+					'location'		=> '.vendor',
+					'id'			=> $GLOBALS['phpgw_setup']->oProc->f('id'),
+					'column_name'	=> $GLOBALS['phpgw_setup']->oProc->f('column_name'),
+					'input_text'	=> $GLOBALS['phpgw_setup']->oProc->f('input_text'),
+					'statustext'	=> $GLOBALS['phpgw_setup']->oProc->f('statustext'),
+					'datatype'		=> $GLOBALS['phpgw_setup']->oProc->f('datatype'),
+					'search'		=> $GLOBALS['phpgw_setup']->oProc->f('search'),
+					'history'		=> $GLOBALS['phpgw_setup']->oProc->f('history'),
+					'list'			=> $GLOBALS['phpgw_setup']->oProc->f('list'),
+					'attrib_sort'	=> $GLOBALS['phpgw_setup']->oProc->f('attrib_sort'),
+					'size'			=> $GLOBALS['phpgw_setup']->oProc->f('size'),
+					'precision_'	=> $GLOBALS['phpgw_setup']->oProc->f('precision_'),
+					'scale'			=> $GLOBALS['phpgw_setup']->oProc->f('scale'),
+					'default_value'	=> $GLOBALS['phpgw_setup']->oProc->f('default_value'),
+					'nullable'		=> $GLOBALS['phpgw_setup']->oProc->f('nullable')
+ 			);
+		}
+
+		foreach ($attrib as $entry)
+		{
+			$GLOBALS['phpgw_setup']->oProc->query('INSERT INTO phpgw_cust_attribute (' . implode(',',array_keys($entry)) . ') VALUES (' . $GLOBALS['phpgw_setup']->oProc->validate_insert(array_values($entry)) . ')');
+		}
+		
+		$GLOBALS['phpgw_setup']->oProc->query("SELECT * FROM fm_agreement_choice"); 
+		while ($GLOBALS['phpgw_setup']->oProc->next_record())
+		{
+			$choice[]=array(
+					'appname'		=> 'property',
+					'location'		=> $GLOBALS['phpgw_setup']->oProc->f('attrib_detail') == 1 ? '.agreement':'.agreement.detail',
+					'attrib_id'		=> $GLOBALS['phpgw_setup']->oProc->f('attrib_id'),
+					'id'			=> $GLOBALS['phpgw_setup']->oProc->f('id'),
+					'value'			=> $GLOBALS['phpgw_setup']->oProc->f('value')
+			);
+		}
+			
+		$GLOBALS['phpgw_setup']->oProc->query("SELECT * FROM fm_r_agreement_choice"); 
+		while ($GLOBALS['phpgw_setup']->oProc->next_record())
+		{
+			$choice[]=array(
+					'appname'		=> 'property',
+					'location'		=> $GLOBALS['phpgw_setup']->oProc->f('attrib_detail') == 1 ? '.r_agreement':'.r_agreement.detail',
+					'attrib_id'		=> $GLOBALS['phpgw_setup']->oProc->f('attrib_id'),
+					'id'			=> $GLOBALS['phpgw_setup']->oProc->f('id'),
+					'value'			=> $GLOBALS['phpgw_setup']->oProc->f('value')
+			);
+		}
+
+		$GLOBALS['phpgw_setup']->oProc->query("SELECT * FROM fm_s_agreement_choice"); 
+		while ($GLOBALS['phpgw_setup']->oProc->next_record())
+		{
+			$choice[]=array(
+					'appname'		=> 'property',
+					'location'		=> $GLOBALS['phpgw_setup']->oProc->f('attrib_detail') == 1 ? '.s_agreement':'.s_agreement.detail',
+					'attrib_id'		=> $GLOBALS['phpgw_setup']->oProc->f('attrib_id'),
+					'id'			=> $GLOBALS['phpgw_setup']->oProc->f('id'),
+					'value'			=> $GLOBALS['phpgw_setup']->oProc->f('value')
+			);
+		}
+
+		$GLOBALS['phpgw_setup']->oProc->query("SELECT * FROM fm_owner_choice"); 
+		while ($GLOBALS['phpgw_setup']->oProc->next_record())
+		{
+			$choice[]=array(
+					'appname'		=> 'property',
+					'location'		=> '.owner',
+					'attrib_id'		=> $GLOBALS['phpgw_setup']->oProc->f('attrib_id'),
+					'id'			=> $GLOBALS['phpgw_setup']->oProc->f('id'),
+					'value'			=> $GLOBALS['phpgw_setup']->oProc->f('value')
+			);
+		}
+
+		$GLOBALS['phpgw_setup']->oProc->query("SELECT * FROM fm_tenant_choice"); 
+		while ($GLOBALS['phpgw_setup']->oProc->next_record())
+		{
+			$choice[]=array(
+					'appname'		=> 'property',
+					'location'		=> '.tenant',
+					'attrib_id'		=> $GLOBALS['phpgw_setup']->oProc->f('attrib_id'),
+					'id'			=> $GLOBALS['phpgw_setup']->oProc->f('id'),
+					'value'			=> $GLOBALS['phpgw_setup']->oProc->f('value')
+			);
+		}
+
+		$GLOBALS['phpgw_setup']->oProc->query("SELECT * FROM fm_vendor_choice"); 
+		while ($GLOBALS['phpgw_setup']->oProc->next_record())
+		{
+			$choice[]=array(
+					'appname'		=> 'property',
+					'location'		=> '.vendor',
+					'attrib_id'		=> $GLOBALS['phpgw_setup']->oProc->f('attrib_id'),
+					'id'			=> $GLOBALS['phpgw_setup']->oProc->f('id'),
+					'value'			=> $GLOBALS['phpgw_setup']->oProc->f('value')
+			);
+		}
+
+		foreach ($choice as $entry)
+		{
+			$GLOBALS['phpgw_setup']->oProc->query('INSERT INTO phpgw_cust_choice (' . implode(',',array_keys($entry)) . ') VALUES (' . $GLOBALS['phpgw_setup']->oProc->validate_insert(array_values($entry)) . ')');
+		}
+
+		$GLOBALS['phpgw_setup']->oProc->DropTable('fm_agreement_attribute');
+		$GLOBALS['phpgw_setup']->oProc->DropTable('fm_r_agreement_attribute');
+		$GLOBALS['phpgw_setup']->oProc->DropTable('fm_s_agreement_attribute');
+		$GLOBALS['phpgw_setup']->oProc->DropTable('fm_owner_attribute');
+		$GLOBALS['phpgw_setup']->oProc->DropTable('fm_tenant_attribute');
+		$GLOBALS['phpgw_setup']->oProc->DropTable('fm_vendor_attribute');
+		$GLOBALS['phpgw_setup']->oProc->DropTable('fm_agreement_choice');
+		$GLOBALS['phpgw_setup']->oProc->DropTable('fm_r_agreement_choice');
+		$GLOBALS['phpgw_setup']->oProc->DropTable('fm_s_agreement_choice');
+		$GLOBALS['phpgw_setup']->oProc->DropTable('fm_owner_choice');
+		$GLOBALS['phpgw_setup']->oProc->DropTable('fm_tenant_choice');
+		$GLOBALS['phpgw_setup']->oProc->DropTable('fm_vendor_choice');
+		
+		
 		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
 		{
 			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.541';
