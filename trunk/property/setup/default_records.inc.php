@@ -16,6 +16,10 @@
 	 * Description
 	 * @package property
 	 */
+
+$GLOBALS['phpgw_setup']->oProc->query("DELETE FROM phpgw_cust_attribute WHERE appname='property'");
+$GLOBALS['phpgw_setup']->oProc->query("DELETE FROM phpgw_cust_choice WHERE appname='property'");
+
 #
 #fm_workorder_category
 #
@@ -63,9 +67,9 @@ $GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_owner (id, abid, org_name,
 #fm_owner_attribute
 #
 
-$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_owner_attribute (id, list, column_name, input_text, statustext, size, datatype, attrib_sort, precision_, scale, default_value, nullable, search) VALUES (1, 1, 'abid', 'Contact', 'Contakt person', NULL, 'AB', 1, 4, NULL, NULL, 'True', NULL)");
-$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_owner_attribute (id, list, column_name, input_text, statustext, size, datatype, attrib_sort, precision_, scale, default_value, nullable, search) VALUES (2, 1, 'org_name', 'Name', 'The name of the owner', NULL, 'V', 2, 50, NULL, NULL, 'True', 1)");
-$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_owner_attribute (id, list, column_name, input_text, statustext, size, datatype, attrib_sort, precision_, scale, default_value, nullable, search) VALUES (3, 1, 'remark', 'remark', 'remark', NULL, 'T', 3, NULL, NULL, NULL, 'True', NULL)");
+$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_attribute (appname, location, id, list, column_name, input_text, statustext, size, datatype, attrib_sort, precision_, scale, default_value, nullable, search) VALUES ('property', '.owner', 1, 1, 'abid', 'Contact', 'Contakt person', NULL, 'AB', 1, 4, NULL, NULL, 'True', NULL)");
+$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_attribute (appname, location, id, list, column_name, input_text, statustext, size, datatype, attrib_sort, precision_, scale, default_value, nullable, search) VALUES ('property', '.owner', 2, 1, 'org_name', 'Name', 'The name of the owner', NULL, 'V', 2, 50, NULL, NULL, 'True', 1)");
+$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_attribute (appname, location, id, list, column_name, input_text, statustext, size, datatype, attrib_sort, precision_, scale, default_value, nullable, search) VALUES ('property', '.owner', 3, 1, 'remark', 'remark', 'remark', NULL, 'T', 3, NULL, NULL, NULL, 'True', NULL)");
 
 
 #
@@ -262,23 +266,23 @@ $GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_tenant_category (id, descr
 $GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_tenant_category (id, descr) VALUES (3, 'organization')");
 
 #
-# Dumping data for table fm_tenant_attribute
+# Dumping data for table phpgw_cust_attribute
 #
 
-$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_tenant_attribute (id, list, search, lookup_form, column_name, input_text, statustext, size, datatype, attrib_sort, precision_, scale, default_value, nullable) VALUES (1, 1, 1, NULL, 'first_name', 'First name', 'First name', NULL, 'V', 1, 50, NULL, NULL, 'True')");
-$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_tenant_attribute (id, list, search, lookup_form, column_name, input_text, statustext, size, datatype, attrib_sort, precision_, scale, default_value, nullable) VALUES (2, 1, 1, NULL, 'last_name', 'Last name', 'Last name', NULL, 'V', 2, 50, NULL, NULL, 'True')");
-$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_tenant_attribute (id, list, search, lookup_form, column_name, input_text, statustext, size, datatype, attrib_sort, precision_, scale, default_value, nullable) VALUES (3, 1, 1, NULL, 'contact_phone', 'contact phone', 'contact phone', NULL, 'V', 3, 20, NULL, NULL, 'True')");
-$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_tenant_attribute (id, list, search, lookup_form, column_name, input_text, statustext, size, datatype, attrib_sort, precision_, scale, default_value, nullable) VALUES (4, NULL, NULL, NULL, 'phpgw_account_id', 'Mapped User', 'Mapped User', NULL, 'user', 4, 4, NULL, NULL, 'True')");
-$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_tenant_attribute (id, list, search, lookup_form, column_name, input_text, statustext, size, datatype, attrib_sort, precision_, scale, default_value, nullable) VALUES (5, NULL, NULL, NULL, 'account_lid', 'User Name', 'User name for login', NULL, 'V', 5, 25, NULL, NULL, 'True')");
-$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_tenant_attribute (id, list, search, lookup_form, column_name, input_text, statustext, size, datatype, attrib_sort, precision_, scale, default_value, nullable) VALUES (6, NULL, NULL, NULL, 'account_pwd', 'Password', 'Users Password', NULL, 'pwd', 6, 32, NULL, NULL, 'True')");
-$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_tenant_attribute (id, list, search, lookup_form, column_name, input_text, statustext, size, datatype, attrib_sort, precision_, scale, default_value, nullable) VALUES (7, NULL, NULL, NULL, 'account_status', 'account status', 'account status', NULL, 'LB', 7, NULL, NULL, NULL, 'True')");
+$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_attribute (appname, location, id, list, search, column_name, input_text, statustext, size, datatype, attrib_sort, precision_, scale, default_value, nullable) VALUES ('property', '.tenant', 1, 1, 1, 'first_name', 'First name', 'First name', NULL, 'V', 1, 50, NULL, NULL, 'True')");
+$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_attribute (appname, location, id, list, search, column_name, input_text, statustext, size, datatype, attrib_sort, precision_, scale, default_value, nullable) VALUES ('property', '.tenant', 2, 1, 1, 'last_name', 'Last name', 'Last name', NULL, 'V', 2, 50, NULL, NULL, 'True')");
+$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_attribute (appname, location, id, list, search, column_name, input_text, statustext, size, datatype, attrib_sort, precision_, scale, default_value, nullable) VALUES ('property', '.tenant', 3, 1, 1, 'contact_phone', 'contact phone', 'contact phone', NULL, 'V', 3, 20, NULL, NULL, 'True')");
+$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_attribute (appname, location, id, list, search, column_name, input_text, statustext, size, datatype, attrib_sort, precision_, scale, default_value, nullable) VALUES ('property', '.tenant', 4, NULL, NULL, 'phpgw_account_id', 'Mapped User', 'Mapped User', NULL, 'user', 4, 4, NULL, NULL, 'True')");
+$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_attribute (appname, location, id, list, search, column_name, input_text, statustext, size, datatype, attrib_sort, precision_, scale, default_value, nullable) VALUES ('property', '.tenant', 5, NULL, NULL, 'account_lid', 'User Name', 'User name for login', NULL, 'V', 5, 25, NULL, NULL, 'True')");
+$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_attribute (appname, location, id, list, search, column_name, input_text, statustext, size, datatype, attrib_sort, precision_, scale, default_value, nullable) VALUES ('property', '.tenant', 6, NULL, NULL, 'account_pwd', 'Password', 'Users Password', NULL, 'pwd', 6, 32, NULL, NULL, 'True')");
+$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_attribute (appname, location, id, list, search, column_name, input_text, statustext, size, datatype, attrib_sort, precision_, scale, default_value, nullable) VALUES ('property', '.tenant', 7, NULL, NULL, 'account_status', 'account status', 'account status', NULL, 'LB', 7, NULL, NULL, NULL, 'True')");
 
 #
 # Dumping data for table fm_tenant_choice
 #
 
-$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_tenant_choice (attrib_id, id, value) VALUES (7, 1, 'Active')");
-$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_tenant_choice (attrib_id, id, value) VALUES (7, 2, 'Banned')");
+$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_choice (appname, location, attrib_id, id, value) VALUES ('property', '.tenant', 7, 1, 'Active')");
+$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_choice (appname, location, attrib_id, id, value) VALUES ('property', '.tenant', 7, 2, 'Banned')");
 
 #
 # Dumping data for table fm_tenant
@@ -461,9 +465,9 @@ $GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_custom_cols (custom_id, id
 # Dumping data for table fm_vendor_attribute
 #
 
-$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_vendor_attribute (id, list, column_name, input_text, statustext, size, datatype, attrib_sort, precision_, scale, default_value, nullable, search) VALUES (1, 1, 'org_name', 'Name', 'The Name of the vendor', NULL, 'V', 1, 50, NULL, NULL, 'True', 1)");
-$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_vendor_attribute (id, list, column_name, input_text, statustext, size, datatype, attrib_sort, precision_, scale, default_value, nullable, search) VALUES (2, 1, 'contact_phone', 'Contact phone', 'Contact phone', NULL, 'V', 2, 20, NULL, NULL, 'True', 1)");
-$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_vendor_attribute (id, list, column_name, input_text, statustext, size, datatype, attrib_sort, precision_, scale, default_value, nullable, search) VALUES (3, 1, 'email', 'email', 'email', NULL, 'email', 3, 64, NULL, NULL, 'True', 1)");
+$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_attribute (appname, location, id, list, column_name, input_text, statustext, size, datatype, attrib_sort, precision_, scale, default_value, nullable, search) VALUES ('property', '.vendor', 1, 1, 'org_name', 'Name', 'The Name of the vendor', NULL, 'V', 1, 50, NULL, NULL, 'True', 1)");
+$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_attribute (appname, location, id, list, column_name, input_text, statustext, size, datatype, attrib_sort, precision_, scale, default_value, nullable, search) VALUES ('property', '.vendor', 2, 1, 'contact_phone', 'Contact phone', 'Contact phone', NULL, 'V', 2, 20, NULL, NULL, 'True', 1)");
+$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_attribute (appname, location, id, list, column_name, input_text, statustext, size, datatype, attrib_sort, precision_, scale, default_value, nullable, search) VALUES ('property', '.vendor', 3, 1, 'email', 'email', 'email', NULL, 'email', 3, 64, NULL, NULL, 'True', 1)");
 
 
 $GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_vendor_category (id, descr) VALUES (1, 'kateogory 1')");
