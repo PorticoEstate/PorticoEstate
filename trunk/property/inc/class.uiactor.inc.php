@@ -53,15 +53,12 @@
 			'view'   	=> True,
 			'edit'   	=> True,
 			'delete' 	=> True,
-			'list_attribute'=> True,
-			'edit_attrib'	=> True,
 			'columns'	=> True
 		);
 
 		function property_uiactor()
 		{
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = True;
-		//	$this->currentapp		= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->nextmatchs		= CreateObject('phpgwapi.nextmatchs');
 			$this->account			= $GLOBALS['phpgw_info']['user']['account_id'];
 
@@ -121,17 +118,12 @@
 
 		function columns()
 		{
-
 			$GLOBALS['phpgw']->xslttpl->add_file(array('columns'));
-
-
 			$GLOBALS['phpgw_info']['flags']['noframework'] = True;
-
-			$values                 = phpgw::get_var('values');
+			$values	= phpgw::get_var('values');
 
 			if ($values['save'])
 			{
-
 				$GLOBALS['phpgw']->preferences->account_id=$this->account;
 				$GLOBALS['phpgw']->preferences->read_repository();
 				$GLOBALS['phpgw']->preferences->add('property','actor_columns_' .$this->role,$values['columns'],'user');
@@ -157,8 +149,8 @@
 				'function_msg'	=> $function_msg,
 				'form_action'	=> $GLOBALS['phpgw']->link('/index.php',$link_data),
 				'lang_columns'	=> lang('columns'),
-				'lang_none'	=> lang('None'),
-				'lang_save'	=> lang('save'),
+				'lang_none'		=> lang('None'),
+				'lang_save'		=> lang('save'),
 				'select_name'	=> 'period'
 			);
 
@@ -384,8 +376,7 @@
 			$values		= phpgw::get_var('values');
 			$values_attribute  = phpgw::get_var('values_attribute');
 
-			$insert_record_actor = $GLOBALS['phpgw']->session->appsession('insert_record_actor','property');
-
+			$insert_record_actor = $GLOBALS['phpgw']->session->appsession('insert_record_values.' . $this->role,'property');
 
 //_debug_array($insert_record_actor);
 //_debug_array($values_attribute);
@@ -554,30 +545,18 @@
 				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=>8, 'acl_location'=> $this->acl_location));
 			}
 
-			$attrib		= phpgw::get_var('attrib');
-			$id			= phpgw::get_var('id', 'int');
 			$actor_id	= phpgw::get_var('actor_id', 'int');
-	//		$delete		= phpgw::get_var('delete', 'bool', 'POST');
 			$confirm	= phpgw::get_var('confirm', 'bool', 'POST');
 
-
-			if($attrib)
-			{
-				$function='list_attribute';
-			}
-			else
-			{
-				$function='index';
-			}
 			$link_data = array
 			(
-				'menuaction'	=> 'property.uiactor.'.$function,
+				'menuaction'	=> 'property.uiactor.index',
 				'role'		=> $this->role
 			);
 
 			if (phpgw::get_var('confirm', 'bool', 'POST'))
 			{
-				$this->bo->delete($actor_id,$id,$attrib);
+				$this->bo->delete($actor_id);
 				$GLOBALS['phpgw']->redirect_link('/index.php',$link_data);
 			}
 
@@ -586,7 +565,7 @@
 			$data = array
 			(
 				'done_action'		=> $GLOBALS['phpgw']->link('/index.php',$link_data),
-				'delete_action'		=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiactor.delete', 'actor_id'=> $actor_id, 'id'=> $id, 'attrib'=> $attrib, 'role'=> $this->role)),
+				'delete_action'		=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiactor.delete', 'actor_id'=> $actor_id, 'role'=> $this->role)),
 				'lang_confirm_msg'	=> lang('do you really want to delete this entry'),
 				'lang_yes'		=> lang('yes'),
 				'lang_yes_statustext'	=> lang('Delete the entry'),
@@ -601,8 +580,6 @@
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('delete' => $data));
 		//	$GLOBALS['phpgw']->xslttpl->pp();
 		}
-
-
 
 		function view()
 		{
@@ -656,326 +633,6 @@
 			);
 
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('view' => $data));
-		//	$GLOBALS['phpgw']->xslttpl->pp();
-		}
-
-		function list_attribute()
-		{
-
-			if(!$this->acl_manage)
-			{
-				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=>16, 'acl_location'=> $this->acl_location));
-			}
-
-			$id	= phpgw::get_var('id', 'int');
-			$resort	= phpgw::get_var('resort');
-
-			$GLOBALS['phpgw']->xslttpl->add_file(array(
-								'actor',
-								'nextmatchs',
-								'search_field'));
-
-			if($resort)
-			{
-				$this->bo->resort_attrib(array('resort'=>$resort,'id'=>$id));
-			}
-
-			$attrib_list = $this->bo->read_attrib();
-
-			while (is_array($attrib_list) && list(,$attrib) = each($attrib_list))
-			{
-				$content[] = array
-				(
-					'name'						=> $attrib['name'],
-					'type_name'					=> $attrib['type_name'],
-					'datatype'					=> $attrib['datatype'],
-					'column_name'				=> $attrib['column_name'],
-					'input_text'				=> $attrib['input_text'],
-					'sorting'					=> $attrib['attrib_sort'],
-					'search'					=> $attrib['search'],
-					'link_up'					=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiactor.list_attribute', 'resort'=> 'up', 'id'=> $attrib['id'], 'allrows'=> $this->allrows, 'role'=> $this->role)),
-					'link_down'					=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiactor.list_attribute', 'resort'=> 'down', 'id'=> $attrib['id'], 'allrows'=> $this->allrows, 'role'=> $this->role)),
-					'link_edit'					=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiactor.edit_attrib', 'id'=> $attrib['id'], 'role'=> $this->role)),
-					'link_delete'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiactor.delete', 'id'=> $attrib['id'], 'attrib'=> true, 'role'=> $this->role)),
-					'lang_view_attribtext'		=> lang('view the attrib'),
-					'lang_attribute_attribtext'	=> lang('attributes for the attrib'). ' ' . lang('location'),
-					'lang_edit_attribtext'		=> lang('edit the attrib'),
-					'lang_delete_attribtext'	=> lang('delete the attrib'),
-					'text_attribute'			=> lang('Attributes'),
-					'text_up'					=> lang('up'),
-					'text_down'					=> lang('down'),
-					'text_edit'					=> lang('edit'),
-					'text_delete'				=> lang('delete')
-				);
-			}
-
-	//html_print_r($content);
-
-			$table_header[] = array
-			(
-				'lang_descr'		=> lang('Descr'),
-				'lang_datatype'		=> lang('Datatype'),
-				'lang_sorting'		=> lang('sorting'),
-				'lang_search'		=> lang('search'),
-				'lang_edit'			=> lang('edit'),
-				'lang_delete'		=> lang('delete'),
-				'sort_sorting'	=> $this->nextmatchs->show_sort_order(array
-										(
-											'sort'	=> $this->sort,
-											'var'	=> 'attrib_sort',
-											'order'	=> $this->order,
-											'extra'	=> array('menuaction'	=> 'property.uiactor.list_attribute',
-														'allrows'=> $this->allrows,
-														'role'	=> $this->role)
-										)),
-
-				'sort_name'	=> $this->nextmatchs->show_sort_order(array
-										(
-											'sort'	=> $this->sort,
-											'var'	=> 'column_name',
-											'order'	=> $this->order,
-											'extra'	=> array('menuaction'	=> 'property.uiactor.list_attribute',
-														'allrows'=> $this->allrows,
-														'role'	=> $this->role)
-										)),
-				'lang_name'	=> lang('Name'),
-			);
-
-			$table_add[] = array
-			(
-				'lang_add'		=> lang('add'),
-				'lang_add_attribtext'	=> lang('add an attrib'),
-				'add_action'		=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiactor.edit_attrib', 'role'=> $this->role)),
-				'lang_done'		=> lang('done'),
-				'lang_done_attribtext'	=> lang('back to admin'),
-				'done_action'		=> $GLOBALS['phpgw']->link('/admin/index.php'),
-			);
-
-			if(!$this->allrows)
-			{
-				$record_limit	= $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
-			}
-			else
-			{
-				$record_limit	= $this->bo->total_records;
-			}
-
-			$link_data = array
-			(
-				'menuaction'	=> 'property.uiactor.list_attribute',
-				'sort'		=>$this->sort,
-				'order'		=>$this->order,
-				'query'		=>$this->query,
-				'role'		=> $this->role
-
-			);
-
-			$data = array
-			(
-				'allow_allrows'					=> True,
-				'allrows'						=> $this->allrows,
-				'start_record'					=> $this->start,
-				'record_limit'					=> $record_limit,
-				'num_records'					=> count($attrib_list),
-				'all_records'					=> $this->bo->total_records,
-				'link_url'						=> $GLOBALS['phpgw']->link('/index.php',$link_data),
-				'img_path'						=> $GLOBALS['phpgw']->common->get_image_path('phpgwapi','default'),
-				'lang_searchfield_attribtext'	=> lang('Enter the search string. To show all entries, empty this field and press the SUBMIT button again'),
-				'lang_searchbutton_attribtext'	=> lang('Submit the search string'),
-				'query'							=> $this->query,
-				'lang_search'					=> lang('search'),
-				'table_header_attrib'			=> $table_header,
-				'values_attrib'					=> $content,
-				'table_add2'					=> $table_add
-			);
-
-			$appname	= lang('actor');
-			$function_msg	= lang('list attribute') . ': ' . lang($this->role);
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
-			//$this->save_sessiondata();
-			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('list_attribute' => $data));
-		//	$GLOBALS['phpgw']->xslttpl->pp();
-		}
-
-		function edit_attrib()
-		{
-			if(!$this->acl_manage)
-			{
-				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=>16, 'acl_location'=> $this->acl_location));
-			}
-
-			$id		= phpgw::get_var('id', 'int');
-			$values		= phpgw::get_var('values');
-	//		$GLOBALS['phpgw']->common->msgbox(lang('Altering ColumnName OR Datatype  - deletes your data in this Column'));
-	//html_print_r($values);
-			$GLOBALS['phpgw']->xslttpl->add_file(array('actor','choice',));
-
-			if (isset($values['save']) && $values['save'])
-			{
-				if($id)
-				{
-					$values['id']=$id;
-				}
-
-				if (!$values['column_name'])
-				{
-					$receipt['error'][] = array('msg'=>lang('Column name not entered!'));
-				}
-
-				if (!$values['input_text'])
-				{
-					$receipt['error'][] = array('msg'=>lang('Input text not entered!'));
-				}
-				if (!$values['statustext'])
-				{
-					$receipt['error'][] = array('msg'=>lang('Statustext not entered!'));
-				}
-
-				if (!$values['column_info']['type'])
-				{
-					$receipt['error'][] = array('msg'=>lang('Datatype type not chosen!'));
-				}
-
-				if(!ctype_digit($values['column_info']['precision']) && $values['column_info']['precision'])
-				{
-					$receipt['error'][]=array('msg'=>lang('Please enter precision as integer !'));
-					unset($values['column_info']['precision']);
-				}
-
-				if($values['column_info']['scale'] && !ctype_digit($values['column_info']['scale']))
-				{
-					$receipt['error'][]=array('msg'=>lang('Please enter scale as integer !'));
-					unset($values['column_info']['scale']);
-				}
-
-				if (!$values['column_info']['nullable'])
-				{
-					$receipt['error'][] = array('msg'=>lang('Nullable not chosen!'));
-				}
-
-				if (!isset($receipt['error']) || !$receipt['error'])
-				{
-					$receipt = $this->bo->save_attrib($values);
-
-					if(!$id)
-					{
-						$id=$receipt['id'];
-					}
-				}
-				else
-				{
-					$receipt['error'][] = array('msg'	=> lang('Attribute has NOT been saved'));
-				}
-
-			}
-
-			if ($id)
-			{
-				$values = $this->bo->read_single_attrib($id);
-				$function_msg = lang('edit attribute') . ': ' . lang($this->role);
-				$action='edit';
-			}
-			else
-			{
-				$function_msg = lang('add attribute') . ': ' . lang($this->role);
-				$action='add';
-			}
-
-			$link_data = array
-			(
-				'menuaction'	=> 'property.uiactor.edit_attrib',
-				'id'		=> $id,
-				'role'		=> $this->role
-
-			);
-//	_debug_array($values);
-
-			if(isset($values['column_info']) && is_array($values['column_info']))
-			{
-				if($values['column_info']['type']=='R' || $values['column_info']['type']=='CH' || $values['column_info']['type']=='LB')
-				{
-					$multiple_choice= True;
-				}
-				$column_type = $values['column_info']['type'];
-				$column_precision = $values['column_info']['precision'];
-				$column_scale  = $values['column_info']['scale'];
-				$column_default  = $values['column_info']['default'];
-				$column_nullable  = $values['column_info']['nullable'];
-			}
-
-			$msgbox_data = (isset($receipt)?$this->bocommon->msgbox_data($receipt):'');
-			$data = array
-			(
-				'lang_choice'					=> lang('Choice'),
-				'lang_new_value'				=> lang('New value'),
-				'lang_new_value_statustext'		=> lang('New value for multiple choice'),
-				'multiple_choice'				=> (isset($multiple_choice)?$multiple_choice:''),
-				'value_choice'					=> (isset($values['choice'])?$values['choice']:''),
-				'lang_delete_value'				=> lang('Delete value'),
-				'lang_value'					=> lang('value'),
-				'lang_delete_choice_statustext'	=> lang('Delete this value from the list of multiple choice'),
-				'msgbox_data'					=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
-				'form_action'					=> $GLOBALS['phpgw']->link('/index.php',$link_data),
-				'done_action'					=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiactor.list_attribute', 'role'=> $this->role)),
-				'lang_id'						=> lang('Attribute ID'),
-				'lang_save'						=> lang('save'),
-				'lang_done'						=> lang('done'),
-				'value_id'						=> $id,
-
-				'lang_column_name'				=> lang('Column name'),
-				'value_column_name'				=> (isset($values['column_name'])?$values['column_name']:''),
-				'lang_column_name_statustext'	=> lang('enter the name for the column'),
-
-				'lang_input_text'				=> lang('input text'),
-				'value_input_text'				=> (isset($values['input_text'])?$values['input_text']:''),
-				'lang_input_name_statustext'	=> lang('enter the input text for records'),
-
-				'lang_id_attribtext'			=> lang('Enter the attribute ID'),
-				'lang_entity_statustext'		=> lang('Select a actor type'),
-
-				'lang_statustext'				=> lang('Statustext'),
-				'lang_statustext_attribtext'	=> lang('Enter a statustext for the inputfield in forms'),
-				'value_statustext'				=> (isset($values['statustext'])?$values['statustext']:''),
-
-				'lang_done_attribtext'			=> lang('Back to the list'),
-				'lang_save_attribtext'			=> lang('Save the attribute'),
-
-				'lang_datatype'					=> lang('Datatype'),
-				'lang_datatype_statustext'		=> lang('Select a datatype'),
-				'lang_no_datatype'				=> lang('No datatype'),
-				'datatype_list'					=> $this->bocommon->select_datatype((isset($column_type)?$column_type:''),'actor'),
-
-				'lang_precision'				=> lang('Precision'),
-				'lang_precision_statustext'		=> lang('enter the record length'),
-				'value_precision'				=> (isset($column_precision)?$column_precision:''),
-
-				'lang_scale'					=> lang('scale'),
-				'lang_scale_statustext'			=> lang('enter the scale if type is decimal'),
-				'value_scale'					=> (isset($column_scale)?$column_scale:''),
-
-				'lang_default'					=> lang('default'),
-				'lang_default_statustext'		=> lang('enter the default value'),
-				'value_default'					=> (isset($column_default)?$column_default:''),
-
-				'lang_nullable'					=> lang('Nullable'),
-				'lang_nullable_statustext'		=> lang('Chose if this column is nullable'),
-				'lang_select_nullable'			=> lang('Select nullable'),
-				'nullable_list'					=> $this->bocommon->select_nullable((isset($column_nullable)?$column_nullable:'')),
-
-				'value_list'					=> (isset($values['list'])?$values['list']:''),
-				'lang_list'						=> lang('show in list'),
-				'lang_list_statustext'			=> lang('check to show this attribute in location list'),
-
-				'value_search'					=> (isset($values['search'])?$values['search']:''),
-				'lang_include_search'			=> lang('Include in search'),
-				'lang_include_search_statustext'=> lang('check to show this attribute in location list'),
-			);
-	//html_print_r($data);
-
-			$appname = lang('actor');
-
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
-			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('edit_attrib' => $data));
 		//	$GLOBALS['phpgw']->xslttpl->pp();
 		}
 	}
