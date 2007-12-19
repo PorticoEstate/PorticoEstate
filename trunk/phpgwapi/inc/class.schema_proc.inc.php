@@ -665,5 +665,16 @@
 				}
 			}			
 		}
+
+		/**
+		 * Prepare the VALUES component of an INSERT sql statement
+		 * 
+		 * @param array $value_set array of values to insert into the database
+		 * @return string the prepared sql, empty string for invalid input
+		 */
+		function validate_insert($values)
+		{
+			return $this->m_odb->validate_insert($values);
+		}
 	}
 ?>
