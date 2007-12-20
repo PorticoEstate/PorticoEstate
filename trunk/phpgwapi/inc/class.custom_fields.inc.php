@@ -137,6 +137,7 @@
 			$attrib['input_text'] = $this->db->db_addslashes($attrib['input_text']);
 			$attrib['statustext'] = $this->db->db_addslashes($attrib['statustext']);
 			$attrib['default'] =  isset($arrib['default']) ? $this->db->db_addslashes($attrib['default']) : '';
+			$attrib['helpmsg'] = $this->db->db_addslashes($attrib['helpmsg']);
 
 			$sql = "SELECT * FROM phpgw_cust_attribute where appname='{$attrib['appname']}' AND location='{$attrib['location']}' AND column_name = '{$attrib['column_name']}'";
 			$this->db->query($sql,__LINE__,__FILE__);
@@ -179,6 +180,8 @@
 				$attrib['search'],
 				$attrib['list'],
 				$attrib['history'],
+				$attrib['disabled'],
+				$attrib['helpmsg'],
 				$attrib_sort,
 				$attrib['column_info']['type'],
 				$attrib['column_info']['precision'],
@@ -189,7 +192,7 @@
 
 			$values	= $this->db->validate_insert($values);
 
-			$this->db->query("INSERT INTO phpgw_cust_attribute (appname,location,id,column_name, input_text, statustext,search,list,history,attrib_sort, datatype,precision_,scale,default_value,nullable) "
+			$this->db->query("INSERT INTO phpgw_cust_attribute (appname,location,id,column_name, input_text, statustext,search,list,history,disabled,helpmsg,attrib_sort, datatype,precision_,scale,default_value,nullable) "
 				. "VALUES ($values)",__LINE__,__FILE__);
 
 			$receipt['id']= $attrib['id'];
@@ -328,6 +331,7 @@
 			$attrib['column_name'] = $this->db->db_addslashes($attrib['column_name']);
 			$attrib['input_text'] = $this->db->db_addslashes($attrib['input_text']);
 			$attrib['statustext'] = $this->db->db_addslashes($attrib['statustext']);
+			$attrib['helpmsg'] = $this->db->db_addslashes($attrib['helpmsg']);
 			$attrib['column_info']['default'] = $this->db->db_addslashes($attrib['column_info']['default']);
 
 			if($attrib['column_info']['type']=='R' || $attrib['column_info']['type']== 'CH' || $attrib['column_info']['type'] =='LB' || $attrib['column_info']['type'] =='AB' || $attrib['column_info']['type'] =='VENDOR')
@@ -357,7 +361,9 @@
 				'search'		=> isset($attrib['search']) ? $attrib['search'] : '',
 				'list'			=> isset($attrib['list']) ? $attrib['list'] : '',
 				'history'		=> isset($attrib['history']) ? $attrib['history'] : '',
-				'nullable'		=> $attrib['column_info']['nullable'] == 'False' ? 'False' : 'True'
+				'nullable'		=> $attrib['column_info']['nullable'] == 'False' ? 'False' : 'True',
+				'disabled'		=> isset($attrib['disabled']) ? $attrib['disabled'] : '',
+				'helpmsg'		=> $attrib['helpmsg'],
 			);
 
 			$value_set	= $this->db->validate_update($value_set);
@@ -567,7 +573,10 @@
 					'trans_datatype'	=> $this->translate_datatype($this->db->f('datatype')),
 					'nullable'			=> ($this->db->f('nullable') == 'True'),
 					'allow_null'		=> ($this->db->f('nullable') == 'True'), // FIXME: for now...
-					'history'			=> $this->db->f('history')
+					'history'			=> $this->db->f('history'),
+					'disabled'			=> $this->db->f('disabled'),
+					'helpmsg'			=> !!$this->db->f('helpmsg')
+
 				);
 			}
 
@@ -623,7 +632,9 @@
 				$attrib['location']					= $this->db->f('location');
 				$attrib['nullable']					= ($this->db->f('nullable') == 'True');
 				$attrib['allow_null']				= ($this->db->f('nullable') == 'True'); // FIXME: for now...
-				
+				$attrib['disabled']					= $this->db->f('disabled');
+				$attrib['helpmsg']					= stripslashes($this->db->f('helpmsg'));
+
 				if ( $inc_choices 
 					&& ( $this->db->f('datatype') == 'R' 
 						|| $this->db->f('datatype') == 'CH' 
@@ -1072,6 +1083,7 @@
 			for ($i=0;$i<count($values['attributes']);$i++)
 			{
 				$values['attributes'][$i]['datatype_text'] 	= $this->translate_datatype($values['attributes'][$i]['datatype']);
+				$values['attributes'][$i]['help_url']		= $values['attributes'][$i]['helpmsg'] ? $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'manual.uimanual.attrib_help', 'appname'=> $appname, 'location'=> $location, 'id' => $values['attributes'][$i]['id'])): '';
 				if($values['attributes'][$i]['datatype']=='D')
 				{
 					if(!$view_only)
@@ -1152,7 +1164,7 @@
 					if($values['attributes'][$i]['datatype']=='CH')
 					{
 						$values['attributes'][$i]['value']=unserialize($values['attributes'][$i]['value']);
-						$values['attributes'][$i]['choice'] = $this->bocommon->select_multi_list_2($values['attributes'][$i]['value'],$values['attributes'][$i]['choice'],$input_type);
+					//	$values['attributes'][$i]['choice'] = $this->bocommon->select_multi_list_2($values['attributes'][$i]['value'],$values['attributes'][$i]['choice'],$input_type);
 
 					}
 					else

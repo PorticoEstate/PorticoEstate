@@ -1592,4 +1592,26 @@
 		$GLOBALS['setup_info']['phpgwapi']['currentver'] = '0.9.17.512';
 		return $GLOBALS['setup_info']['phpgwapi']['currentver'];
 	}
+	
+	$test[] = '0.9.17.512';
+	function phpgwapi_upgrade0_9_17_512()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('phpgw_cust_attribute','disabled',array(
+			'type' => 'int',
+			'precision' => '2',
+			'nullable' => True
+		));
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('phpgw_cust_attribute','helpmsg',array(
+			'type' => 'text',
+			'nullable' => True
+		));
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['phpgwapi']['currentver'] = '0.9.17.513';
+			return $GLOBALS['setup_info']['phpgwapi']['currentver'];
+		}
+	}
 ?>
