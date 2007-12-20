@@ -194,7 +194,6 @@
 								);
 			}
 
-			$GLOBALS['phpgw_info']['apps']['manual']['section'] = 'location';
 			$GLOBALS['phpgw']->xslttpl->add_file(array('location',
 										'menu',
 										'nextmatchs',
