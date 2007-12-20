@@ -11,8 +11,8 @@
 	*/
 
 	/**
-	 * Description
-	 * @package property
+	 * Manual Renderer
+	 * @package manual
 	 */
 
 	class manual_uimanual
@@ -27,11 +27,11 @@
 
 		var $public_functions = array
 		(
-			'index'  => True,
-			'help'  => True
+			'index'	=> true,
+			'help'	=> true
 		);
 
-		function manual_uimanual()
+		public function __construct()
 		{
 			$GLOBALS['phpgw']->help = CreateObject('manual.help_helper');
 		}
@@ -39,7 +39,7 @@
 		function index()
 		{
 //			$GLOBALS['phpgw_info']['flags']['xslt_app'] = True;
-			$this->currentapp		= get_var('app',array('POST','GET'));
+			$this->currentapp		= phpgw::get_var('app');
 
 			if (!$this->currentapp || $this->currentapp == 'manual')
 			{
@@ -68,40 +68,33 @@
 		function help()
 		{
 			$odt2xhtml	= CreateObject('manual.odt2xhtml');
-			$app = get_var('app',array('GET'));
-			$section = get_var('section',array('GET'));
+			$app = phpgw::get_var('app', 'string', 'GET');
+			$section = phpgw::get_var('section', 'string', 'GET');
 
 			if(!$section)
 			{
-				$referer = parse_url($_SERVER['HTTP_REFERER']);
+				$referer = parse_url(phpgw::get_var('HTTP_REFERER', 'string', 'SERVER') );
 				parse_str($referer['query']);
 
 				if(isset($menuaction) && $menuaction)
 				{
-					list($app_from_referer,$class,$method) = explode('.',$menuaction);
-					if(strpos($class,'ui')== 0 )
+					list($app_from_referer, $class, $method) = explode('.',$menuaction);
+					if ( strpos($class, 'ui') === 0 )
 					{
-						$class = ltrim($class,'ui');
+						$class = ltrim($class, 'ui');
 					}
-					$section = $class . '.' . $method;
+					$section = "{$class}.{$method}";
 				}
 			}	
 
 			if(!$app)
 			{
-				if(isset($app_from_referer) && $app_from_referer)
-				{
-					$app = $app_from_referer;
-				}
-				else
-				{
-					$app = 'manual';
-				}
+				$app = isset($app_from_referer) && $app_from_referer ? $app_from_referer : 'manual';
 			}
 
-			$section 	= $section?$section:'overview';
-			$lang 		= isset($GLOBALS['phpgw_info']['user']['preferences']['common']['lang']) && $GLOBALS['phpgw_info']['user']['preferences']['common']['lang'] ? $GLOBALS['phpgw_info']['user']['preferences']['common']['lang']: 'en';
-			$navbar = get_var('navbar',array('GET'));
+			$section 	= $section ? $section : 'overview';
+			$lang 		= strtoupper(isset($GLOBALS['phpgw_info']['user']['preferences']['common']['lang']) && $GLOBALS['phpgw_info']['user']['preferences']['common']['lang'] ? $GLOBALS['phpgw_info']['user']['preferences']['common']['lang']: 'en');
+			$navbar 	= phpgw::get_var('navbar', 'string', 'GET');
 
 			$GLOBALS['phpgw_info']['flags']['app_header'] = $app . '::' . lang($section);
 			$GLOBALS['phpgw']->common->phpgw_header();
@@ -113,7 +106,7 @@
 				parse_navbar();
 			}
 				
-			$odtfile = PHPGW_SERVER_ROOT . SEP . $app . SEP . 'help' . SEP . strtoupper($lang) . SEP . $section . '.odt';
+			$odtfile = PHPGW_SERVER_ROOT . "/{$app}/help/{$lang}/{$section}.odt";
 
 			if(is_file($odtfile))
 			{
@@ -121,11 +114,14 @@
 			}
 			else
 			{
-				echo '<h2 align = "center">Missing manual entry</h2>'; // fix this to a proper message
+				$error = lang('Invalid or missing manual entry requested, please contact your system administrator');
+				echo <<<HTML
+					<div class="err">$error</div>
+
+HTML;
 			}
 			
 			$GLOBALS['phpgw']->common->phpgw_footer();
 
 		}
 	}
-?>
