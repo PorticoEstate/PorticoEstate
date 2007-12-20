@@ -27,8 +27,9 @@
 
 		var $public_functions = array
 		(
-			'index'	=> true,
-			'help'	=> true
+			'index'			=> true,
+			'help'			=> true,
+			'attrib_help'	=> true
 		);
 
 		public function __construct()
@@ -123,5 +124,32 @@ HTML;
 			
 			$GLOBALS['phpgw']->common->phpgw_footer();
 
+		}
+
+		function attrib_help()
+		{
+			$t =& $GLOBALS['phpgw']->template;
+			$t->set_root(PHPGW_APP_TPL);
+
+			$GLOBALS['phpgw_info']['flags']['xslt_app'] = false;
+			$GLOBALS['phpgw_info']['flags']['nofooter'] = True;
+
+			$appname	= phpgw::get_var('appname');
+			$location 	= phpgw::get_var('location');
+			$id			= phpgw::get_var('id', 'int');
+
+			$custom 	= createObject('phpgwapi.custom_fields');
+			
+			$attrib_data 	= $custom->get_attrib_single($appname, $location, $id);
+
+			$function_msg	= lang('Help');
+
+			$t->set_file('help','help.tpl');
+			$t->set_var('title',lang('Help') . ' - "' . $attrib_data['input_text'] . '"');
+			$t->set_var('help_msg',$attrib_data['helpmsg'] );
+			$t->set_var('lang_close',lang('close') );
+											
+			$GLOBALS['phpgw']->common->phpgw_header();
+			$t->pfp('out','help');
 		}
 	}
