@@ -1397,7 +1397,7 @@
 				'scale' => array('type' => 'int','precision' => '4','nullable' => True),
 				'default_value' => array('type' => 'varchar','precision' => '20','nullable' => True),
 				'nullable' => array('type' => 'varchar','precision' => '5','nullable' => True),
-				'disabled' => array('type' => 'int','precision' => '4','nullable' => True),
+				'disabled' => array('type' => 'int','precision' => '2','nullable' => True),
 				'helpmsg' => array('type' => 'text','nullable' => True)
 			),
 			'pk' => array('entity_id','cat_id','id'),
