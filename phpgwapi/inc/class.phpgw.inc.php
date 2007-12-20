@@ -240,6 +240,12 @@
 							$value = $_SESSION[$var_name];
 						}
 						break;
+					case 'SERVER':
+						if ( isset($_SERVER[$var_name]) )
+						{
+							$value = $_SERVER[$var_name];
+						}
+						break;
 
 					case 'REQUEST':
 					default:
