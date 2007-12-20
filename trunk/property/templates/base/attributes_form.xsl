@@ -24,8 +24,7 @@
 				<td class="{class}" align="left" valign="top" title="{$statustext}" style="cursor:help">
 					<xsl:choose>
 						<xsl:when test="helpmsg=1">
-							<xsl:variable name="help_url"><xsl:value-of select="help_url"/>&amp;attrib_id=<xsl:value-of select="attrib_id"/></xsl:variable>
-							<xsl:variable name="lang_help"><xsl:value-of select="//lang_help"/></xsl:variable>
+							<xsl:variable name="help_url"><xsl:value-of select="help_url"/></xsl:variable>
 							<a href="javascript:var w=window.open('{$help_url}','','width=550,height=400,scrollbars')">
 								<xsl:text>[</xsl:text><xsl:value-of select="input_text"/><xsl:text>]</xsl:text>
 							</a>

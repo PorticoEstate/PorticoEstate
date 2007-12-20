@@ -326,6 +326,7 @@
 			//FIXME: This code is duplicated - and should be moved
 			for ($i=0;$i<count($entity['attributes']);$i++)
 			{
+				$entity['attributes'][$i]['help_url']		= $entity['attributes'][$i]['helpmsg'] ? $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'property.uientity.attrib_help', 'entity_id'=> $this->entity_id, 'cat_id'=> $this->cat_id, 'attrib_id' => $entity['attributes'][$i]['attrib_id'])): '';
 				if($entity['attributes'][$i]['datatype']=='D')
 				{
 					if ( !isset($GLOBALS['phpgw']->jscal) || !is_object($GLOBALS['phpgw']->jscal) )
