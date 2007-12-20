@@ -5,7 +5,7 @@
 	</xsl:template>
 
 	<xsl:template match="attributes_values">
-		<xsl:variable name="lang_attribute_statustext"><xsl:value-of select="lang_attribute_statustext"/></xsl:variable>
+		<xsl:variable name="statustext"><xsl:value-of select="statustext"/></xsl:variable>
 			<tr>
 				<xsl:attribute name="class">
 					<xsl:choose>
@@ -21,15 +21,17 @@
 					</xsl:choose>
 				</xsl:attribute>
 
-				<td class="{class}" align="left" valign="top">
-					<xsl:value-of select="input_text"/>
+				<td class="{class}" align="left" valign="top" title="{$statustext}" style="cursor:help">
 					<xsl:choose>
 						<xsl:when test="helpmsg=1">
-							<xsl:variable name="help_url"><xsl:value-of select="//help_url"/>&amp;attrib_id=<xsl:value-of select="id"/></xsl:variable>
-							<xsl:variable name="lang_help"><xsl:value-of select="//lang_help"/></xsl:variable>
+							<xsl:variable name="help_url"><xsl:value-of select="help_url"/>&amp;attrib_id=<xsl:value-of select="attrib_id"/></xsl:variable>
 							<a href="javascript:var w=window.open('{$help_url}','','width=550,height=400,scrollbars')">
-							<xsl:text> [</xsl:text><xsl:value-of select="$lang_help"/><xsl:text>]</xsl:text></a>
+								<xsl:text>[</xsl:text><xsl:value-of select="input_text"/><xsl:text>]</xsl:text>
+							</a>
 						</xsl:when>
+						<xsl:otherwise>
+							<xsl:value-of select="input_text"/>
+						</xsl:otherwise>
 					</xsl:choose>
 					<xsl:choose>
 						<xsl:when test="datatype='pwd'">
