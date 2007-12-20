@@ -557,7 +557,7 @@
 					'lookup_form'		=> $this->db->f('lookup_form'),
 					'entity_form'		=> $this->db->f('entity_form'),
 					'column_name'		=> $this->db->f('column_name'),
-					'name'				=> $this->db->f('input_text', true),
+					'name'				=> $this->db->f('column_name'),
 					'size'				=> $this->db->f('size'),
 					'statustext'		=> $this->db->f('statustext', true),
 					'input_text'		=> $this->db->f('input_text', true),
