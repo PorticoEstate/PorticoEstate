@@ -212,8 +212,8 @@
 			
 		function _GetColumns($oProc, $sTableName, &$sColumns, $sDropColumn = '', $sAlteredColumn = '', $sAlteredColumnType = '')
 		{
-			$sdb = $oProc->m_odb;
-			$sdc = $oProc->m_odb;
+			$sdb = clone($oProc->m_odb);
+			$sdc = clone($oProc->m_odb);
 
 			$sColumns = '';
 			$this->pk = array();
@@ -229,7 +229,7 @@
 			}
 			$query .= ' ORDER BY a.attnum';
 
-			$oProc->m_odb->query($query);
+			$sdb->query($query);
 			while ($oProc->m_odb->next_record())
 			{
 				if ($sColumns != '')
@@ -271,7 +271,7 @@
 				$colnum  = $sdb->f(0);
 				$colname = $sdb->f(1);
 
-				if ($sdb->f(5) == 'Yes')
+				if ($sdb->f(5) == 'f')
 				{
 					$null = "'nullable' => True";
 				}

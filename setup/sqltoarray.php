@@ -32,10 +32,10 @@
 	$tpl_root = $GLOBALS['phpgw_setup']->html->setup_tpl_dir('setup');
 	$setup_tpl = CreateObject('phpgwapi.Template',$tpl_root);
 
-	$download = get_var('download',Array('GET','POST'));
-	$submit   = get_var('submit',Array('GET','POST'));
-	$showall  = get_var('showall',Array('GET','POST'));
-	$appname  = get_var('appname',Array('GET','POST'));
+	$download = phpgw::get_var('download','bool');
+	$submit   = phpgw::get_var('submit','bool');
+	$showall  = phpgw::get_var('showall','bool');
+	$appname  = phpgw::get_var('appname','string');
 	if ($download)
 	{
 		$setup_tpl->set_file(array(
@@ -148,6 +148,7 @@
 	function printout($template)
 	{
 		global $download,$appname,$table,$showall;
+		$string = '';
 
 		if ($download)
 		{
@@ -197,7 +198,7 @@
 			$table = $appname = '';
 		}
 
-		if(!$table && !$appname)
+		if((!isset($table) || !$table) && !$appname)
 		{
 			$term = ',';
 			$dlstring .= printout('sqlheader');
@@ -218,7 +219,7 @@
 			$dlstring .= printout('sqlheader');
 			$term = ',';
 
-			if(!$setup_info[$appname]['tables'])
+			if(!isset($setup_info[$appname]['tables']) || !$setup_info[$appname]['tables'])
 			{
 				$f = PHPGW_SERVER_ROOT . '/' . $appname . '/setup/setup.inc.php';
 				if (file_exists ($f)) 

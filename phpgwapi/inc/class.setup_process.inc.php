@@ -820,12 +820,18 @@
 				$this->init_process();
 			}
 
-			$GLOBALS['phpgw_setup']->oProc->m_oTranslator->_GetColumns($GLOBALS['phpgw_setup']->oProc, $tablename, $sColumns, $sColumnName);
+			$GLOBALS['phpgw_setup']->oProc->m_oTranslator->sCol = array();
+			$GLOBALS['phpgw_setup']->oProc->m_oTranslator->_GetColumns($GLOBALS['phpgw_setup']->oProc, $tablename, $sColumns);
 
-			while(list($key,$tbldata) = each($GLOBALS['phpgw_setup']->oProc->m_oTranslator->sCol))
+			if(is_array($GLOBALS['phpgw_setup']->oProc->m_oTranslator->sCol))
 			{
-				$arr .= $tbldata;
+				reset($GLOBALS['phpgw_setup']->oProc->m_oTranslator->sCol);
+				foreach($GLOBALS['phpgw_setup']->oProc->m_oTranslator->sCol as $tbldata)
+				{
+					$arr .= $tbldata;
+				}
 			}
+			
 			$pk = $GLOBALS['phpgw_setup']->oProc->m_oTranslator->pk;
 			$fk = $GLOBALS['phpgw_setup']->oProc->m_oTranslator->fk;
 			$ix = $GLOBALS['phpgw_setup']->oProc->m_oTranslator->ix;
