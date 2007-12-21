@@ -823,6 +823,7 @@
 			$GLOBALS['phpgw_setup']->oProc->m_oTranslator->sCol = array();
 			$GLOBALS['phpgw_setup']->oProc->m_oTranslator->_GetColumns($GLOBALS['phpgw_setup']->oProc, $tablename, $sColumns);
 
+			$arr = '';
 			if(is_array($GLOBALS['phpgw_setup']->oProc->m_oTranslator->sCol))
 			{
 				reset($GLOBALS['phpgw_setup']->oProc->m_oTranslator->sCol);
