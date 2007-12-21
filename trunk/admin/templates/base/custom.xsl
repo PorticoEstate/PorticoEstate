@@ -414,6 +414,49 @@
 					</xsl:choose>
 				</td>
 			</tr>
+			<tr>
+				<td>
+					<xsl:value-of select="lang_disabled"/>
+				</td>
+				<td>
+					<xsl:choose>
+							<xsl:when test="value_disabled = 1">
+								<input type="checkbox" name="values[disabled]" value="1" checked="checked" onMouseout="window.status='';return true;">
+									<xsl:attribute name="onMouseover">
+										<xsl:text>window.status='</xsl:text>
+											<xsl:value-of select="lang_disabled_statustext"/>
+										<xsl:text>'; return true;</xsl:text>
+									</xsl:attribute>
+								</input>
+							</xsl:when>
+							<xsl:otherwise>
+								<input type="checkbox" name="values[disabled]" value="1" onMouseout="window.status='';return true;">
+									<xsl:attribute name="onMouseover">
+										<xsl:text>window.status='</xsl:text>
+											<xsl:value-of select="lang_disabled_statustext"/>
+										<xsl:text>'; return true;</xsl:text>
+									</xsl:attribute>
+								</input>
+							</xsl:otherwise>
+					</xsl:choose>
+				</td>
+			</tr>
+	
+			<tr>
+				<td valign="top">
+					<xsl:value-of select="lang_helpmsg"/>
+				</td>
+				<td>
+					<textarea cols="60" rows="10" name="values[helpmsg]" wrap="virtual" onMouseout="window.status='';return true;">
+						<xsl:attribute name="onMouseover">
+							<xsl:text>window.status='</xsl:text>
+								<xsl:value-of select="lang_helpmsg_statustext"/>
+							<xsl:text>'; return true;</xsl:text>
+						</xsl:attribute>
+						<xsl:value-of select="value_helpmsg"/>		
+					</textarea>
+				</td>
+			</tr>
 	
 			<xsl:choose>
 				<xsl:when test="multiple_choice != ''">
