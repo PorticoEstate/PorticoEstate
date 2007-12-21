@@ -86,6 +86,8 @@
 		*/
 		var $auto_stripslashes = false;
 		
+		var $resultSet;
+		
 		/**
 		* Constructor
 		* @param string $query query to be executed (optional)

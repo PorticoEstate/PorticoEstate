@@ -271,8 +271,8 @@
 					$tblcnt = count($setup_info[$detail][$key]);
 					if(is_array($val))
 					{
-						$key = '<a href="sqltoarray.php?appname=' . $detail . '&amp;submit=True">' . $key . '(' . $tblcnt . ')</a>' . "\n";
-						$val = implode(',' . "\n",$val);
+						$key = '<br/><a href="sqltoarray.php?appname=' . $detail . '&amp;submit=True">' . $key . '(' . $tblcnt . ')</a>:<br/>';
+						$val = implode(',<br/>',$val) .'<br/>';
 					}
 				}
 				
