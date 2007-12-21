@@ -1164,8 +1164,24 @@
 					if($values['attributes'][$i]['datatype']=='CH')
 					{
 						$values['attributes'][$i]['value']=unserialize($values['attributes'][$i]['value']);
-					//	$values['attributes'][$i]['choice'] = $this->bocommon->select_multi_list_2($values['attributes'][$i]['value'],$values['attributes'][$i]['choice'],$input_type);
 
+						if (isset($values['attributes'][$i]['choice']) AND is_array($values['attributes'][$i]['choice']))
+						{
+							foreach($values['attributes'][$i]['choice'] as &$choice)
+							{
+								$choice['input_type'] = $input_type;
+								if(isset($values['attributes'][$i]['value']) && is_array($values['attributes'][$i]['value']))
+								{
+									foreach ($values['attributes'][$i]['value'] as &$selected)
+									{
+										if($selected == $choice['id'])
+										{
+											$choice['checked'] = 'checked';
+										}
+									}
+								}
+							}
+						}
 					}
 					else
 					{
@@ -1217,28 +1233,48 @@
 		*/
 		function preserve_attribute_values($values,$values_attribute)
 		{
+//_debug_array($values);
+//_debug_array($values_attribute);
 			foreach ( $values_attribute as $key => $attribute )
 			{	
 				for ($i=0;$i<count($values['attributes']);$i++)
 				{
 					if($values['attributes'][$i]['id'] == $attribute['attrib_id'])
 					{
-						$values['attributes'][$i]['value'] = $attribute['value'];
-
-						if(isset($values['attributes'][$i]['choice']) && is_array($values['attributes'][$i]['choice']))
+						if(isset($attribute['value']))
 						{
-							for ($j=0;$j<count($values['attributes'][$i]['choice']);$j++)
+							if(is_array($attribute['value']))
 							{
-								if($values['attributes'][$i]['choice'][$j]['id'] == $attribute['value'])
+								foreach($values['attributes'][$i]['choice'] as &$choice)
 								{
-									$values['attributes'][$i]['choice'][$j]['checked'] = 'checked';	
+									foreach ($attribute['value'] as &$selected)
+									{
+										if($selected == $choice['id'])
+										{
+											$choice['checked'] = 'checked';
+										}
+									}
 								}
+							}
+							else if(isset($values['attributes'][$i]['choice']) && is_array($values['attributes'][$i]['choice']))
+							{
+
+								foreach ($values['attributes'][$i]['choice'] as &$choice)
+								{
+									if($choice['id'] == $attribute['value'])
+									{
+										$choice['checked'] = 'checked';	
+									}
+								}
+							}
+							else
+							{
+								$values['attributes'][$i]['value'] = $attribute['value'];
 							}
 						}
 					}
 				}
 			}
-			
 			return $values;
 		}
 
@@ -1250,7 +1286,7 @@
 				{
 					if ( $attrib['datatype'] == 'CH' && $attrib['value'] )
 					{
-						$attrib['value'] = serialize($attrib[$i]['value'] );
+						$attrib['value'] = serialize($attrib['value'] );
 					}
 					if ( $attrib['datatype'] == 'R' && $attrib['value'] )
 					{
