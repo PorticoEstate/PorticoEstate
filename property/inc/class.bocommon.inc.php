@@ -732,37 +732,26 @@
 		}
 
 
-		function select_multi_list_2($selected='',$input_list,$input_type='')
+		function select_multi_list_2($selected='',$list,$input_type='')
 		{
-			$j=0;
-			if (isset($input_list) AND is_array($input_list))
+			if (isset($list) AND is_array($list))
 			{
-				foreach($input_list as $entry)
+				foreach($list as &$choice)
 				{
-					$output_list[$j]['id'] = $entry['id'];
-					$output_list[$j]['value'] = $entry['value'];
-					$output_list[$j]['input_type'] = $input_type;
-
-					for ($i=0;$i<count($selected);$i++)
+					$choice['input_type'] = $input_type;
+					if(isset($selected) && is_array($selected))
 					{
-						if($selected[$i] == $entry['id'])
+						foreach ($selected as &$sel)
 						{
-							$output_list[$j]['checked'] = 'checked';
+							if($sel == $choice['id'])
+							{
+								$choice['checked'] = 'checked';
+							}
 						}
 					}
-					$j++;
 				}
 			}
-
-/*			for ($i=0;$i<count($output_list);$i++)
-			{
-				if ($output_list[$i]['checked'] != 'checked')
-				{
-					unset($output_list[$i]['checked']);
-				}
-			}
-*/
-			return $output_list;
+			return $list;
 		}
 
 		function translate_datatype($datatype)
@@ -1455,24 +1444,42 @@
 			{	
 				for ($i=0;$i<count($values['attributes']);$i++)
 				{
-					if($values['attributes'][$i]['attrib_id'] == $attribute['attrib_id'])
+					if($values['attributes'][$i]['id'] == $attribute['attrib_id'])
 					{
-						$values['attributes'][$i]['value'] = $attribute['value'];
-
-						if(isset($values['attributes'][$i]['choice']) && is_array($values['attributes'][$i]['choice']))
+						if(isset($attribute['value']))
 						{
-							for ($j=0;$j<count($values['attributes'][$i]['choice']);$j++)
+							if(is_array($attribute['value']))
 							{
-								if($values['attributes'][$i]['choice'][$j]['id'] == $attribute['value'])
+								foreach($values['attributes'][$i]['choice'] as &$choice)
 								{
-									$values['attributes'][$i]['choice'][$j]['checked'] = 'checked';	
+									foreach ($attribute['value'] as &$selected)
+									{
+										if($selected == $choice['id'])
+										{
+											$choice['checked'] = 'checked';
+										}
+									}
 								}
+							}
+							else if(isset($values['attributes'][$i]['choice']) && is_array($values['attributes'][$i]['choice']))
+							{
+
+								foreach ($values['attributes'][$i]['choice'] as &$choice)
+								{
+									if($choice['id'] == $attribute['value'])
+									{
+										$choice['checked'] = 'checked';	
+									}
+								}
+							}
+							else
+							{
+								$values['attributes'][$i]['value'] = $attribute['value'];
 							}
 						}
 					}
 				}
 			}
-			
 			return $values;
 		}
 		

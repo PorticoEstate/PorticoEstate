@@ -442,7 +442,7 @@
 			/* Preserve attribute values from post */
 			if(isset($receipt['error']) && (isset( $values_attribute) && is_array( $values_attribute)))
 			{
-				$actor = $this->bocommon->preserve_attribute_values($actor,$values_attribute);
+				$actor = $this->bo->preserve_attribute_values($actor,$values_attribute);
 			}
 
 			if ($actor_id)
