@@ -422,7 +422,15 @@
 				'lang_location_statustext'			=> lang('Select submodule'),
 				'select_name_location'				=> 'values[location]',
 
-				'location_list'						=> $this->bolocation->select_location('select',(isset($values['location'])?$values['location']:''),False,True)
+				'location_list'						=> $this->bolocation->select_location('select',(isset($values['location'])?$values['location']:''),False,True),
+
+				'value_disabled'					=> isset($values['disabled']) ? $values['disabled'] : '',
+				'lang_disabled'						=> lang('disabled'),
+				'lang_disabled_statustext'			=> lang('This attribute turn up as disabled in the form'),
+
+				'value_helpmsg'						=> isset($values['helpmsg']) ? $values['helpmsg'] : '',
+				'lang_helpmsg'						=> lang('help message'),
+				'lang_helpmsg_statustext'			=> lang('Enables help message for this attribute')
 			);
 //_debug_array($values);
 
