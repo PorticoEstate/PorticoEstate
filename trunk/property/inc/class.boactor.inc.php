@@ -217,5 +217,17 @@
 
 			return $column_list;
 		}
+
+		/**
+		* Preserve attribute values from post in case of an error
+		*
+		* @param array $values_attribute attribute definition and values from posting
+		* @param array $values value set with 
+		* @return array Array with attribute definition and values
+		*/
+		function preserve_attribute_values($values,$values_attribute)
+		{
+			return $this->custom->preserve_attribute_values($values,$values_attribute);
+		}
 	}
 ?>
