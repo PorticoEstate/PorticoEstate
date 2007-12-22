@@ -714,6 +714,27 @@
 		}
 
 		/**
+		* Returns an associate array of foreign keys, or false if not supported.
+		*
+		* @param string $table name of table to describe
+		* @param boolean $owner optional, default False. The optional schema or owner can be defined in $owner.
+		* @param boolean $upper optional, default False. If $upper is true, then the table names (array keys) are upper-cased.
+		* @return array Table meta data
+		*/  
+		public function MetaForeignKeys($table = '', $owner=false, $upper=false)
+		{
+			if(!$this->adodb->IsConnected())
+			{
+				$this->connect();
+			}
+			if(!($return =& $this->adodb->MetaForeignKeys($table, $owner, $upper)))
+			{
+				$return = array();
+			}
+			return $return;
+		}
+
+		/**
 		* Error handler
 		*
 		* @param string $msg error message
