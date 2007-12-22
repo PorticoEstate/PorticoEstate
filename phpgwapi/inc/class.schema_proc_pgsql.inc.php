@@ -371,12 +371,22 @@
 					$this->uc[] = $sdc->f(2);
 				}
 			}
+
+			$ForeignKeys = $sdc->MetaForeignKeys($sTableName);
+
+			foreach($ForeignKeys as $table => $keys)
+			{
+				foreach ($keys as $keypair)
+				{
+					$keypair = explode('=',$keypair);
+					$this->fk[] = $keypair[0] . ' => ' . $table . '.' . $keypair[1];
+				}
+			}
 			/* ugly as heck, but is here to chop the trailing comma on the last element (for php3) */
 			$this->sCol[count($this->sCol) - 1] = substr($this->sCol[count($this->sCol) - 1],0,-2) . "\n";
 
 			return false;
 		}
-
 
 		function GetSequenceForTable($oProc,$table,&$sSequenceName)
 		{
