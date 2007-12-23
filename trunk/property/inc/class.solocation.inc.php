@@ -414,7 +414,7 @@
 					}
 				}
 
-				$user_columns = isset($GLOBALS['phpgw_info']['user']['preferences']['property']['location_columns_'.$type_id]) ? $GLOBALS['phpgw_info']['user']['preferences']['property']['location_columns_'.$type_id] : '';
+				$user_columns = isset($GLOBALS['phpgw_info']['user']['preferences']['property']['location_columns_'.$type_id . !!$lookup]) ? $GLOBALS['phpgw_info']['user']['preferences']['property']['location_columns_'.$type_id . !!$lookup] : '';
 
 				if (isset($user_columns) AND is_array($user_columns) AND $user_columns[0])
 				{
