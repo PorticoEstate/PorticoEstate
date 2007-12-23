@@ -650,7 +650,7 @@
 					$oProc->m_odb->query($sSequenceSQL);
 				}
 
-				$query = "CREATE TABLE $sTableName ($sTableSQL) WITH OIDS";
+				$query = "CREATE TABLE $sTableName ($sTableSQL)";
 				//echo 'sql' .$query . "\n";
 
 				$result = !!($oProc->m_odb->query($query));
