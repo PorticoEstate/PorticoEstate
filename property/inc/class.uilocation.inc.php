@@ -149,7 +149,7 @@
 			{
 				$GLOBALS['phpgw']->preferences->account_id=$this->account;
 				$GLOBALS['phpgw']->preferences->read_repository();
-				$GLOBALS['phpgw']->preferences->add('property',"location_columns_" . $this->type_id,$values['columns'],'user');
+				$GLOBALS['phpgw']->preferences->add('property',location_columns_ . $this->type_id . !!$this->lookup,$values['columns'],'user');
 				$GLOBALS['phpgw']->preferences->save_repository();
 
 				$receipt['message'][] = array('msg' => lang('columns is updated'));
@@ -160,7 +160,8 @@
 			$link_data = array
 			(
 				'menuaction'	=> 'property.uilocation.columns',
-				'type_id'	=> $this->type_id
+				'type_id'		=> $this->type_id,
+				'lookup'		=> $this->lookup
 			);
 
 
@@ -491,7 +492,8 @@
 			$link_columns = array
 			(
 				'menuaction'	=> 'property.uilocation.columns',
-				'type_id'		=> $type_id
+				'type_id'		=> $type_id,
+				'lookup'		=> $this->lookup
 			);
 
 			if(!$this->allrows)

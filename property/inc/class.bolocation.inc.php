@@ -79,7 +79,8 @@
 			$this->bocommon 			= CreateObject('property.bocommon');
 			$this->soadmin_location		= CreateObject('property.soadmin_location');
 
-			$this->lookup	= phpgw::get_var('lookup', 'bool');
+			$this->lookup    = phpgw::get_var('lookup', 'bool');
+
 			if ($session && !$this->lookup)
 			{
 				$this->read_sessiondata();
@@ -144,7 +145,7 @@
 
 			if(!$selected)
 			{
-				$selected = isset($GLOBALS['phpgw_info']['user']['preferences']['property']["location_columns_" . $this->type_id]) ? $GLOBALS['phpgw_info']['user']['preferences']['property']["location_columns_" . $this->type_id]:'';
+				$selected = isset($GLOBALS['phpgw_info']['user']['preferences']['property']['location_columns_' . $this->type_id . !!$this->lookup]) ? $GLOBALS['phpgw_info']['user']['preferences']['property']["location_columns_" . $this->type_id . !!$this->lookup]:'';
 			}
 
 			$columns = $soadmin_location->read_attrib(array('type_id'=>$type_id,'allrows'=>$allrows,'filter_list' =>true));
