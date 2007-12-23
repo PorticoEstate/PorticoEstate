@@ -71,6 +71,31 @@ $GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_attribute (appname
 $GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_attribute (appname, location, id, list, column_name, input_text, statustext, size, datatype, attrib_sort, precision_, scale, default_value, nullable, search) VALUES ('property', '.owner', 2, 1, 'org_name', 'Name', 'The name of the owner', NULL, 'V', 2, 50, NULL, NULL, 'True', 1)");
 $GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_attribute (appname, location, id, list, column_name, input_text, statustext, size, datatype, attrib_sort, precision_, scale, default_value, nullable, search) VALUES ('property', '.owner', 3, 1, 'remark', 'remark', 'remark', NULL, 'T', 3, NULL, NULL, NULL, 'True', NULL)");
 
+#
+# Dumping data for table fm_location1_category
+#
+
+$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_location1_category (id, descr) VALUES (1, 'SOMETHING')");
+$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_location1_category (id, descr) VALUES (99, 'not active')");
+#
+# Dumping data for table fm_location2_category
+#
+
+$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_location2_category (id, descr) VALUES (1, 'SOMETHING')");
+$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_location2_category (id, descr) VALUES (99, 'not active')");
+#
+# Dumping data for table fm_location3_category
+#
+
+$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_location3_category (id, descr) VALUES (1, 'SOMETHING')");
+$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_location3_category (id, descr) VALUES (99, 'not active')");
+#
+# Dumping data for table fm_location4_category
+#
+
+$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_location4_category (id, descr) VALUES (1, 'SOMETHING')");
+$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_location4_category (id, descr) VALUES (99, 'not active')");
+
 
 #
 #fm_location1
@@ -323,31 +348,6 @@ $GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_ecomva (id, descr) VALUES 
 $GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_ecomva (id, descr) VALUES (3, 'Mva 3')");
 $GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_ecomva (id, descr) VALUES (4, 'Mva 4')");
 $GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_ecomva (id, descr) VALUES (5, 'Mva 5')");
-
-#
-# Dumping data for table fm_location1_category
-#
-
-$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_location1_category (id, descr) VALUES (1, 'SOMETHING')");
-$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_location1_category (id, descr) VALUES (99, 'not active')");
-#
-# Dumping data for table fm_location2_category
-#
-
-$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_location2_category (id, descr) VALUES (1, 'SOMETHING')");
-$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_location2_category (id, descr) VALUES (99, 'not active')");
-#
-# Dumping data for table fm_location3_category
-#
-
-$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_location3_category (id, descr) VALUES (1, 'SOMETHING')");
-$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_location3_category (id, descr) VALUES (99, 'not active')");
-#
-# Dumping data for table fm_location4_category
-#
-
-$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_location4_category (id, descr) VALUES (1, 'SOMETHING')");
-$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_location4_category (id, descr) VALUES (99, 'not active')");
 
 #
 # Dumping data for table fm_entity
