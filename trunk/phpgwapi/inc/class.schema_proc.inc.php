@@ -335,7 +335,7 @@
 			$sUCSQL = '';
 			$sPKSQL = '';
 			$sIXSQL = '';
-					   $sFKSQL = '';
+			$sFKSQL = '';
 
 			if(isset($aTableDef['pk']) && is_array($aTableDef['pk']) && count($aTableDef['pk']) > 0)
 			{
@@ -589,6 +589,7 @@
 		function _GetFK($aFields, &$sFKSQL)
 		{
 			$sFKSQL = '';
+			$sFKSQLarr = array();
 			if(count($aFields) < 1)
 			{
 				return True;
@@ -596,17 +597,12 @@
 
 			$sFields = '';
 			reset($aFields);
-			foreach($aFields as $key => $sField)
+			foreach($aFields as $reftable => $sField)
 			{
-				if(@is_array($sField))
-				{
-					$sFKSQL .= $this->m_oTranslator->GetFKSQL(implode(',', $sField));
-				}
-				else
-				{
-					$sFKSQL .= $this->m_oTranslator->GetFKSQL($sField);
-				}
+				$sFKSQLarr[] = $this->m_oTranslator->GetFKSQL($reftable, $sField);
 			}
+			$sFKSQL = implode(",\n",$sFKSQLarr);
+			
 			return True;
 		}
 		
