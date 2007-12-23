@@ -18,7 +18,7 @@
 	$setup_info['property']['enable']	= 1;
 	$setup_info['property']['app_group']	= 'office';
 
-	$setup_info['property']['author'][] = array
+	$setup_info['property']['author'] = array
 	(
 		'name'	=> 'Sigurd Nes',
 		'email'	=> 'sigurdne@online.no'
