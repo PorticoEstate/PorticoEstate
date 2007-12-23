@@ -199,16 +199,19 @@
 		}
 
 			
-			   function GetFKSQL($sFields)
-			   {
-				 if (ereg("\((.*)\)", $sFields, $regs))
-				 {
-				   $ret = "FOREIGN KEY (".$regs[1].")\n" .
-					 "  REFERENCES ".$sFields;
-				   return $ret;
-				 } else
-				   return ""; // incorrect FK declaration found
-			   }
+		function GetFKSQL($reftable, $sFields)
+		{
+			if(is_array($sFields))
+			{
+				$ret = "FOREIGN KEY (".implode(',',array_keys($sFields)).")\n" .
+					"  REFERENCES $reftable(".implode(',',array_values($sFields)).")";
+				return $ret;
+			}
+			else
+			{
+				return ""; // incorrect FK declaration found
+			}
+		}
 			
 		function _GetColumns($oProc, $sTableName, &$sColumns, $sDropColumn = '', $sAlteredColumn = '', $sAlteredColumnType = '')
 		{
@@ -376,11 +379,13 @@
 
 			foreach($ForeignKeys as $table => $keys)
 			{
+				$keystr = array();
 				foreach ($keys as $keypair)
 				{
 					$keypair = explode('=',$keypair);
-					$this->fk[] = $keypair[0] . ' => ' . $table . '.' . $keypair[1];
+					$keystr[] = "'" . $keypair[0] . "' => '" . $keypair[1] . "'";
 				}
+				$this->fk[] = $table . "' => array(" . implode(', ',$keystr)  . ')';
 			}
 			/* ugly as heck, but is here to chop the trailing comma on the last element (for php3) */
 			$this->sCol[count($this->sCol) - 1] = substr($this->sCol[count($this->sCol) - 1],0,-2) . "\n";

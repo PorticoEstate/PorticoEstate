@@ -555,7 +555,7 @@
 		 */
 		function deregister_hooks($appname)
 		{
-			if($this->alessthanb($setup_info['phpgwapi']['currentver'],'0.9.8pre5'))
+			if(isset($setup_info['phpgwapi']['currentver']) && $this->alessthanb($setup_info['phpgwapi']['currentver'],'0.9.8pre5'))
 			{
 				/* No phpgw_hooks table yet. */
 				return False;

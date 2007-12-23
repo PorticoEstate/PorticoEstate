@@ -837,7 +837,6 @@
 			$fk = $GLOBALS['phpgw_setup']->oProc->m_oTranslator->fk;
 			$ix = $GLOBALS['phpgw_setup']->oProc->m_oTranslator->ix;
 			$uc = $GLOBALS['phpgw_setup']->oProc->m_oTranslator->uc;
-
 			return array($arr,$pk,$fk,$ix,$uc);
 		}
 	}
