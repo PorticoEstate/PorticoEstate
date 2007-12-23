@@ -155,6 +155,16 @@
 			'uc' => array()
 		),
 
+		'fm_location1_category' => array(
+			'fd' => array(
+				'id' => array('type' => 'int','precision' => '4','nullable' => False),
+				'descr' => array('type' => 'varchar','precision' => '255','nullable' => False)
+			),
+			'pk' => array('id'),
+			'fk' => array(),
+			'ix' => array(),
+			'uc' => array()
+		),
 		'fm_location1' => array(
 			'fd' => array(
 				'location_code' => array('type' => 'varchar','precision' => '16','nullable' => False),
@@ -173,7 +183,7 @@
 				'rental_area' => array('type' => 'decimal','precision' => '20','scale' => '2','nullable' => True,'default' => '0.00')
 			),
 			'pk' => array('loc1'),
-			'fk' => array(),
+			'fk' => array('fm_location1_category' => array('category' => 'id')),
 			'ix' => array('location_code'),
 			'uc' => array()
 		),
@@ -200,7 +210,7 @@
 			'ix' => array(),
 			'uc' => array()
 		),
-		'fm_location1_category' => array(
+		'fm_location2_category' => array(
 			'fd' => array(
 				'id' => array('type' => 'int','precision' => '4','nullable' => False),
 				'descr' => array('type' => 'varchar','precision' => '255','nullable' => False)
@@ -225,7 +235,10 @@
 				'rental_area' => array('type' => 'decimal','precision' => '20','scale' => '2','nullable' => True,'default' => '0.00')
 			),
 			'pk' => array('loc1','loc2'),
-			'fk' => array('loc1' => 'fm_location1.loc1'),
+			'fk' => array(
+				'fm_location1' => array('loc1' =>'loc1'),
+				'fm_location2_category' => array('category' => 'id')
+			),
 			'ix' => array('location_code'),
 			'uc' => array()
 		),
@@ -249,7 +262,7 @@
 			'ix' => array(),
 			'uc' => array()
 		),
-		'fm_location2_category' => array(
+		'fm_location3_category' => array(
 			'fd' => array(
 				'id' => array('type' => 'int','precision' => '4','nullable' => False),
 				'descr' => array('type' => 'varchar','precision' => '255','nullable' => False)
@@ -275,7 +288,10 @@
 				'rental_area' => array('type' => 'decimal','precision' => '20','scale' => '2','nullable' => True,'default' => '0.00')
 			),
 			'pk' => array('loc1','loc2','loc3'),
-			'fk' => array('loc1' => 'fm_location2.loc1','loc2' => 'fm_location2.loc2'),
+			'fk' => array(
+				'fm_location2' => array('loc1' => 'loc1', 'loc2' => 'loc2'),
+				'fm_location3_category' => array('category' => 'id')
+			),
 			'ix' => array('location_code'),
 			'uc' => array()
 		),
@@ -300,7 +316,7 @@
 			'ix' => array(),
 			'uc' => array()
 		),
-		'fm_location3_category' => array(
+		'fm_location4_category' => array(
 			'fd' => array(
 				'id' => array('type' => 'int','precision' => '4','nullable' => False),
 				'descr' => array('type' => 'varchar','precision' => '255','nullable' => False)
@@ -331,7 +347,10 @@
 				'rental_area' => array('type' => 'decimal','precision' => '20','scale' => '2','nullable' => True,'default' => '0.00')
 			),
 			'pk' => array('loc1','loc2','loc3','loc4'),
-			'fk' => array('loc1' => 'fm_location3.loc1','loc2' => 'fm_location3.loc2','loc3' => 'fm_location3.loc3'),
+			'fk' => array(
+				'fm_location3' => array('loc1' => 'loc1', 'loc2' => 'loc2', 'loc3' => 'loc3'),
+				'fm_location4_category' => array('category' => 'id')
+			),
 			'ix' => array('location_code'),
 			'uc' => array()
 		),
@@ -356,16 +375,6 @@
 				'exp_date' => array('type' => 'timestamp','nullable' => True,'default' => 'current_timestamp')
 			),
 			'pk' => array(),
-			'fk' => array(),
-			'ix' => array(),
-			'uc' => array()
-		),
-		'fm_location4_category' => array(
-			'fd' => array(
-				'id' => array('type' => 'int','precision' => '4','nullable' => False),
-				'descr' => array('type' => 'varchar','precision' => '255','nullable' => False)
-			),
-			'pk' => array('id'),
 			'fk' => array(),
 			'ix' => array(),
 			'uc' => array()
