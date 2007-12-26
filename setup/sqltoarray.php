@@ -114,11 +114,11 @@
 
 		if (count($ix) > 1)
 		{
-			$GLOBALS['setup_tpl']->set_var('ixs', "'" . implode("','",$ix) . "'");
+			$GLOBALS['setup_tpl']->set_var('ixs', implode(",",$ix));
 		}
 		elseif($ix && !empty($ix))
 		{
-			$GLOBALS['setup_tpl']->set_var('ixs', "'" . $ix[0] . "'");
+			$GLOBALS['setup_tpl']->set_var('ixs', $ix[0]);
 		}
 		else
 		{

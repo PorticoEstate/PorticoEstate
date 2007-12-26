@@ -145,9 +145,12 @@
 					}
 					break;
 				case 'numeric':
-					/* Borrowed from phpPgAdmin */
-					$iPrecision = ($iScale >> 16) & 0xffff;
-					$iScale     = ($iScale - 4) & 0xffff;
+					if($iPrecision == -1)
+					{
+						/* Borrowed from phpPgAdmin */
+						$iPrecision = ($iScale >> 16) & 0xffff;
+						$iScale     = ($iScale - 4) & 0xffff;
+					}
 					$sTranslated = "'type' => 'decimal', 'precision' => $iPrecision, 'scale' => $iScale";
 					break;
 				case 'float':
@@ -194,7 +197,7 @@
 
 		function GetIXSQL($sFields)
 		{
-			$this->indexes_sql[$sFields] = "CREATE INDEX __index_name__ ON __table_name__ USING btree ($sFields)";
+			$this->indexes_sql[str_replace(',','_',$sFields)] = "CREATE INDEX __index_name__ ON __table_name__ USING btree ($sFields)";
 			return '';
 		}
 
@@ -322,10 +325,16 @@
 					{
 						$default = '';
 						$nullcomma = '';
+						$type = "'type' => 'auto'";
 					}
 					else
 					{
-						$default = "'default' => '".$sdc->f(0)."'";
+						$default = "'default' => '" . str_replace(array('::bpchar','::character varying','now()'),array('','','current_timestamp'),$sdc->f(0));
+						// For db-functions - add an apos
+						if(substr($default,-1)!= "'")
+						{
+							$default .= "'"; 
+						}
 						$nullcomma = ',';
 					}
 				}
@@ -387,6 +396,21 @@
 				}
 				$this->fk[] = $table . "' => array(" . implode(', ',$keystr)  . ')';
 			}
+
+			$MetaIndexes = $sdc->adodb->MetaIndexes($sTableName);
+
+			foreach($MetaIndexes as $key => $index)
+			{
+				if(count($index['columns']) > 1)
+				{
+					$this->ix[] = "array('" . implode("', '",$index['columns']) . "')";
+				}
+				else
+				{
+					$this->ix[] = "'" . $index['columns'][0] . "'";	
+				}
+			}
+
 			/* ugly as heck, but is here to chop the trailing comma on the last element (for php3) */
 			$this->sCol[count($this->sCol) - 1] = substr($this->sCol[count($this->sCol) - 1],0,-2) . "\n";
 
