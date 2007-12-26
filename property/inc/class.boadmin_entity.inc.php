@@ -220,16 +220,6 @@
 			return $category;
 		}
 
-		function read_status()
-		{
-			$status = $this->so->read_status(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,
-				'order' => $this->order,'allrows'=>$this->allrows,'entity_id'=>$this->entity_id,'cat_id'=>$this->cat_id));
-
-			$this->total_records = $this->so->total_records;
-
-			return $status;
-		}
-
 		function read_config()
 		{
 			$standard = $this->so->read_config(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order));
@@ -253,11 +243,6 @@
 		function read_single_category($entity_id,$cat_id)
 		{
 			return $this->so->read_single_category($entity_id,$cat_id);
-		}
-
-		function read_single_status($id)
-		{
-			return $this->so->read_single_status($this->entity_id,$this->cat_id,$id);
 		}
 
 		function save($values,$action='')
@@ -292,47 +277,24 @@
 			return $receipt;
 		}
 
-		function save_status($values,$action='')
+		function delete($cat_id='',$entity_id='',$attrib_id='',$acl_location='',$custom_function_id='')
 		{
-			if ($action=='edit')
-			{
-				if ($values['id'] != '')
-				{
-					$receipt = $this->so->edit_status($values,$this->entity_id,$this->cat_id);
-				}
-			}
-			else
-			{
-				$receipt = $this->so->add_status($values,$this->entity_id,$this->cat_id);
-			}
-			return $receipt;
-		}
-
-		function delete($cat_id='',$entity_id='',$attrib_id='',$status_id='',$acl_location='',$custom_function_id='')
-		{
-			if(!$status_id && !$attrib_id && !$cat_id && $entity_id && !$custom_function_id):
+			if(!$attrib_id && !$cat_id && $entity_id && !$custom_function_id)
 			{
 				$this->so->delete_entity($entity_id);
 			}
-			elseif(!$status_id && !$attrib_id && $cat_id && $entity_id && !$custom_function_id):
+			else if(!$attrib_id && $cat_id && $entity_id && !$custom_function_id)
 			{
 				$this->so->delete_category($cat_id,$entity_id);
 			}
-			elseif(!$status_id && $attrib_id && $cat_id && $entity_id && !$custom_function_id):
+			else if($attrib_id && $cat_id && $entity_id && !$custom_function_id)
 			{
 				$this->so->delete_attrib($cat_id,$entity_id,$attrib_id);
 			}
-			elseif($status_id && !$attrib_id && $cat_id && $entity_id && !$custom_function_id):
-			{
-				$this->so->delete_status($cat_id,$entity_id,$status_id);
-			}
-			elseif(!$status_id && $custom_function_id && $acl_location):
+			else if($custom_function_id && $acl_location)
 			{
 				$this->so->delete_custom_function($acl_location,$custom_function_id);
 			}
-			endif;
-
-
 		}
 
 		function read_attrib($entity_id='',$cat_id='',$allrows='')
