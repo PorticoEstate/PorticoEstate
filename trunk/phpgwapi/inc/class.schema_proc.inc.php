@@ -655,7 +655,7 @@
 			{
 				foreach($this->m_oTranslator->indexes_sql as $key => $sIndexSQL)
 				{
-					$ix_name = str_replace(',','_',$key).'_'.$sTableName.'_idx';
+					$ix_name = $key.'_'.$sTableName.'_idx';
 					$IndexSQL = str_replace(array('__index_name__','__table_name__'), array($ix_name,$sTableName), $sIndexSQL);
 					$this->query($IndexSQL);
 				}
