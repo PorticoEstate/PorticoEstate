@@ -34,7 +34,7 @@ class email_service
 
 		$menu['navbar'] = array
 		(
-			array
+			'email'	=> array
 			(
 				'text'	=> lang('Email'),
 				'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'email.uiindex.index') ),
@@ -59,7 +59,7 @@ class email_service
 		(
 			array
 			(
-				'url'	=> 'javascript:window.open("' . $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'email.uicompose.compose')) . '");',
+				'url'	=> 'javascript:window.open(\'' . $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'email.uicompose.compose')) . '\');',
 				'text'	=> lang('New'),
 				'image'	=> array('email', 'new')
 			),

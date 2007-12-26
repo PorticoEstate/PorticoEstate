@@ -19,7 +19,6 @@
 	
 	<xsl:template match="add">
 		
-		<xsl:call-template name="menu"/> 
 		<table width="50%"  cellpadding="2" cellspacing="2" align="center">
 
 			<tr height="50">
@@ -65,7 +64,6 @@
 	</xsl:template>
 
 	<xsl:template match="list_workorder">		
-		<xsl:call-template name="menu"/> 
 		<table width="100%"  cellpadding="2" cellspacing="2" align="center">
 			<tr>
 			<xsl:choose>

@@ -205,7 +205,7 @@ div.panel div.body div.toolbar
 	position: relative;
 }
 
-div.panel div.body table td
+.layout-center div.panel div.body table td
 {
 	border: 1px solid silver;
 }
@@ -230,17 +230,65 @@ div.panel div.body div.toolbar input
 	vertical-align: middle;
 }
 
-div.treeview ul ul{
-	margin-left: 1em;
+.layout-west .panel .body
+{
+	padding: 0;
 }
 
-div.treeview li a
+div.treeview
 {
+	margin: 0.2em;
+	padding: 0.2em;
+}
+
+#navbar ul
+{
+	display: none;
+}
+
+#navbar ul.expanded
+{
+	display: block;
+}
+
+#navbar li
+{
+	background-color: transparent;
+	background-position: middle left;
+	background-repeat: no-repeat;
+	margin: 0;
+	padding: 0.2em 0 0.2em 16px;
+}
+
+#navbar li.expanded
+{
+	background-image: url(../images/expanded.png);
+}
+
+#navbar li.collapsed
+{
+	background-image: url(../images/collapsed.png);
+}
+
+#navbar a
+{
+	background-color: transparent;
+	background-position: top left;
+	background-repeat: no-repeat;
+	color: #000;
+	padding-left: 18px;
 	text-decoration: none;
 }
 
-div.treeview li a.current
+#navbar li a
 {
+	display: block;
+}
+
+
+#navbar li.current > a
+{
+	display: block;
 	font-weight: bold;
 }
 

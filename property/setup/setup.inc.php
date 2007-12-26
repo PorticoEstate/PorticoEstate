@@ -193,31 +193,29 @@
 	/* The hooks this app includes, needed for hooks registration */
 	$setup_info['property']['hooks'] = array
 	(
-//		'home',
 		'add_def_pref',
 		'deleteaccount',
 		'manual',
 		'settings',
-		'preferences',
-		'admin',
 		'help',
-		'sidebox_menu'
+		'menu'	=> 'property.menu.get_menu'
 	);
 
 	/* Dependencies for this app to work */
 	$setup_info['property']['depends'][] = array
 	(
 		'appname'  => 'phpgwapi',
-		'versions' => Array('0.9.15', '0.9.16', '0.9.17', '0.9.18')
+		'versions' => Array('0.9.17', '0.9.18')
 	);
 
-	$setup_info['property']['depends'][] = array(
+	$setup_info['property']['depends'][] = array
+	(
 		'appname'  => 'admin',
-		'versions' => Array('0.9.13', '0.9.14', '0.9.15', '0.9.16', '0.9.17', '0.9.18')
+		'versions' => Array('0.9.17', '0.9.18')
 	);
 
-	$setup_info['property']['depends'][] = array(
+	$setup_info['property']['depends'][] = array
+	(
 		'appname'  => 'preferences',
-		'versions' => Array('0.9.13', '0.9.14', '0.9.15', '0.9.16', '0.9.17', '0.9.18')
+		'versions' => Array('0.9.17', '0.9.18')
 	);
-?>

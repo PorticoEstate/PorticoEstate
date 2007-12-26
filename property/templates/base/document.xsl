@@ -20,7 +20,6 @@
 
 
 	<xsl:template match="list">
-		<xsl:call-template name="menu"/> 
 		<table width="100%"  cellpadding="2" cellspacing="2" align="center">
 			<tr>
 				<td align="left">
@@ -130,7 +129,6 @@
 
 
 	<xsl:template match="list_document">
-		<xsl:call-template name="menu"/>
 		<div align="left">
 		<table width="100%"  cellpadding="2" cellspacing="2" align="center">
 			<xsl:choose>

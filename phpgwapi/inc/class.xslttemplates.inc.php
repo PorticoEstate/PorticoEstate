@@ -346,12 +346,15 @@ XSLT;
 			$proc = new XSLTProcessor;
 			$proc->importStyleSheet($xsl); // attach the xsl rules
 
-			$html =  $proc->transformToXML($xml);
+			$html =  trim($proc->transformToXML($xml));
 
-			if (!$html)
+			if (!$html || $html == '<?xml version="1.0"?>')
 			{
-				echo "<h2>xml-data</h2>";  $this->list_lineno($this->xmldata);
-				echo "<h2>xsl-data</h2>"; $this->list_lineno($this->xsldata);
+				echo "<h2>xml-data</h2>";
+				$this->list_lineno($this->xmldata);
+
+				echo "<h2>xsl-data</h2>";
+				$this->list_lineno($this->xsldata);
 				return '';
 			}
 			return preg_replace('/<!DOCTYPE([^>])+>/', '', $html);

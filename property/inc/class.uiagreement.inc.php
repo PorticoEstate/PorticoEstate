@@ -65,7 +65,6 @@
 
 			$this->bo		= CreateObject('property.boagreement',True);
 			$this->bocommon		= CreateObject('property.bocommon');
-			$this->menu		= CreateObject('property.menu');
 
 			$this->role		= $this->bo->role;
 
@@ -204,21 +203,16 @@
 
 		function index()
 		{
-			$this->menu->sub	= 'agreement';
-
 			if(!$this->acl_read)
 			{
 				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=>1, 'acl_location'=> $this->acl_location));
 			}
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('agreement',
-										'menu',
 										'receipt',
 										'search_field',
 										'nextmatchs',
 										'filter_member_of'));
-
-			$links = $this->menu->links('agreement','agreement');
 
 			$receipt = $GLOBALS['phpgw']->session->appsession('session_data','agreement_receipt');
 			$GLOBALS['phpgw']->session->appsession('session_data','agreement_receipt','');
@@ -363,7 +357,6 @@
 				'link_columns'					=> $GLOBALS['phpgw']->link('/index.php',$link_columns),
 				'lang_columns_help'				=> lang('Choose columns'),
 				'msgbox_data'					=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
-				'links'							=> $links,
  				'allow_allrows'					=> True,
 				'allrows'						=> $this->allrows,
 				'start_record'					=> $this->start,

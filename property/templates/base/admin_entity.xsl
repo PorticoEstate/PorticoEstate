@@ -40,7 +40,6 @@
 	
 
 	<xsl:template match="list">		
-		<xsl:call-template name="menu"/> 
 		<table width="100%" cellpadding="2" cellspacing="2" align="center">
 			<tr>
 				<td align="right">
@@ -129,7 +128,6 @@
 	</xsl:template>
 	
 	<xsl:template match="list_status">		
-		<xsl:call-template name="menu"/> 
 		<table width="100%" cellpadding="2" cellspacing="2" align="center">
 			<tr>
 				<td align="right">
@@ -218,7 +216,6 @@
 	</xsl:template>
 	
 	<xsl:template match="list_category">		
-		<xsl:call-template name="menu"/> 
 		<table width="100%" cellpadding="2" cellspacing="2" align="center">
 			<tr>
 				<td align="right">
@@ -329,7 +326,6 @@
 	
 	
 		<xsl:template match="list_config">		
-			<xsl:call-template name="menu"/> 
 			<table width="100%" cellpadding="2" cellspacing="2" align="center">
 				<tr>
 					<td align="right">

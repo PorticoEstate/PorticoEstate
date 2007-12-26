@@ -62,7 +62,6 @@
 			$this->account				= $GLOBALS['phpgw_info']['user']['account_id'];
 			$this->bo					= CreateObject('property.boadmin_location',True);
 			$this->bocommon				= CreateObject('property.bocommon');
-			$this->menu					= CreateObject('property.menu');
 
 			$this->acl 					= CreateObject('phpgwapi.acl');
 			$this->acl_location			= '.admin.location';
@@ -78,7 +77,6 @@
 			$this->order				= $this->bo->order;
 			$this->allrows				= $this->bo->allrows;
 
-			$this->menu->sub			='adm_loc';
 		}
 
 		function save_sessiondata()
@@ -104,9 +102,7 @@
 			$GLOBALS['phpgw']->xslttpl->add_file(array(
 								'admin_location',
 								'nextmatchs',
-								'menu',
 								'search_field'));
-			$links = $this->menu->links('loc_type');
 
 			$standard_list = $this->bo->read();
 
@@ -178,7 +174,6 @@
 			$data = array
 			(
 				'msgbox_data'						=> $msgbox_data,
-				'links'								=> $links,
 				'allow_allrows'						=> False,
 				'start_record'						=> $this->start,
 				'record_limit'						=> $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'],
@@ -692,9 +687,7 @@
 			$GLOBALS['phpgw']->xslttpl->add_file(array(
 								'admin_location',
 								'nextmatchs',
-								'menu',
 								'search_field'));
-			$links = $this->menu->links('loc_config');
 
 			$standard_list = $this->bo->read_config();
 
@@ -749,7 +742,6 @@
 
 			$data = array
 			(
-				'links'								=> $links,
 				'allow_allrows'						=> False,
 				'start_record'						=> $this->start,
 				'record_limit'						=> $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'],

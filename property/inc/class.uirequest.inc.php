@@ -65,7 +65,6 @@
 			$this->bo				= CreateObject('property.borequest',True);
 			$this->boproject			= CreateObject('property.boproject');
 			$this->bocommon				= CreateObject('property.bocommon');
-			$this->menu				= CreateObject('property.menu');
 			$this->bolocation			= CreateObject('property.bolocation');
 			$this->config				= CreateObject('phpgwapi.config');
 
@@ -85,7 +84,6 @@
 			$this->cat_id				= $this->bo->cat_id;
 			$this->status_id			= $this->bo->status_id;
 
-			$this->menu->sub			='project';
 			$this->fakebase 			= $this->bo->fakebase;
 			$this->allrows				= $this->bo->allrows;
 		}
@@ -168,7 +166,6 @@
 			}
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('request','table_header',
-										'menu',
 										'nextmatchs',
 										'search_field'));
 
@@ -178,7 +175,6 @@
 			{
 				$lookup	= True;
 			}
-			$links = $this->menu->links('request');
 
 			$request_list = $this->bo->read(array('project_id' => 1,'allrows'=>$this->allrows));
 
@@ -448,7 +444,6 @@
 				'project_id'				=> $project_id,
 
 				'lookup'				=> $lookup,
-				'links'					=> $links,
 				'allow_allrows'				=> true,
 				'allrows'				=> $this->allrows,
 

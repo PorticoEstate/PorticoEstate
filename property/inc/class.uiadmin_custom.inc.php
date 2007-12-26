@@ -60,7 +60,6 @@
 			$this->bo				= CreateObject('property.boadmin_custom',True);
 			$this->boadmin			= CreateObject('property.boadmin',True);
 			$this->bocommon			= CreateObject('property.bocommon');
-			$this->menu				= CreateObject('property.menu');
 
 			$this->acl 				= CreateObject('phpgwapi.acl');
 			$this->acl_location		= '.admin';
@@ -77,7 +76,6 @@
 			$this->cat_id			= $this->bo->cat_id;
 			$this->allrows			= $this->bo->allrows;
 
-			$this->menu->sub		='admin_custom';
 		}
 
 		function save_sessiondata()

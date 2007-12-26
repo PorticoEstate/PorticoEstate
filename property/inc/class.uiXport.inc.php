@@ -56,7 +56,6 @@
 			$this->bo       		= CreateObject('property.boXport',True);
 			$this->invoice  		= CreateObject('property.boinvoice');
 			$this->bocommon  		= CreateObject('property.bocommon');
-			$this->menu			= CreateObject('property.menu');
 			$this->contacts			= CreateObject('property.soactor');
 			$this->contacts->role		= 'vendor';
 
@@ -75,7 +74,6 @@
 			$this->order    		= $this->bo->order;
 			$this->filter   		= $this->bo->filter;
 			$this->cat_id   		= $this->bo->cat_id;
-			$this->menu->sub		='invoice';
 		}
 
 		function import()
@@ -119,8 +117,6 @@
 			{
 				$tsvfile = phpgw::get_var('tsvfile');
 			}
-
-			$links = $this->menu->links('import_inv');
 
 			if ($cancel && $tsvfile)
 			{
@@ -288,7 +284,6 @@
 			$data = array
 			(
 				'msgbox_data'					=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
-				'links'						=> $links,
 
 				'img_cal'						=> $GLOBALS['phpgw']->common->image('phpgwapi','cal'),
 				'lang_datetitle'				=> lang('Select date'),
@@ -388,7 +383,7 @@
 				'lang_budget_responsible_statustext'		=> lang('You have to select a budget responsible for this invoice in order to make the import')
 			);
 
-			$GLOBALS['phpgw']->xslttpl->add_file(array('invoice','menu'));
+			$GLOBALS['phpgw']->xslttpl->add_file(array('invoice'));
 
 			$appname	= lang('Invoice');
 			$function_msg	= lang('Import from CSV');
@@ -517,13 +512,11 @@
 				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=>16, 'acl_location'=> $this->acl_location));
 			}
 
-			$GLOBALS['phpgw']->xslttpl->add_file(array('invoice','menu',
+			$GLOBALS['phpgw']->xslttpl->add_file(array('invoice',
 										'search_field'));
 
 			$values 	= phpgw::get_var('values');
 			$date 	= phpgw::get_var('date');
-
-			$links = $this->menu->links('export_inv');
 
 			if($values['submit'])
 			{
@@ -572,7 +565,6 @@
 				'lang_force_period_year'		=> lang('Force year for period'),
 				'lang_force_period_year_statustext'	=> lang('Force year for period'),
 				'lang_select_year'			=> lang('select year'),
-				'links'					=> $links,
 				'lang_select_conv'			=> lang('Select conversion'),
 				'conv_list'				=> $this->bo->select_export_conv($values['conv_type']),
 				'select_conv'				=> 'values[conv_type]',
@@ -610,14 +602,12 @@
 				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=>16, 'acl_location'=> $this->acl_location));
 			}
 
-			$GLOBALS['phpgw']->xslttpl->add_file(array('invoice','menu',
+			$GLOBALS['phpgw']->xslttpl->add_file(array('invoice',
 										'search_field'));
 
 			$values 	= phpgw::get_var('values');
 			$date 	= phpgw::get_var('date');
 //_debug_array($values);
-
-			$links = $this->menu->links('export_inv');
 
 			if($values['submit'])
 			{
@@ -661,7 +651,6 @@
 			$data = array
 			(
 				'msgbox_data'				=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
-				'links'					=> $links,
 
 				'img_cal'					=> $GLOBALS['phpgw']->common->image('phpgwapi','cal'),
 				'lang_datetitle'			=> lang('Select date'),

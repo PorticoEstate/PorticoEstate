@@ -39,7 +39,6 @@
 
 	/* The hooks this app includes, needed for hooks registration */
 	$setup_info['calendar']['hooks'][] = 'add_def_prefs';
-	$setup_info['calendar']['hooks'][] = 'admin';
 	$setup_info['calendar']['hooks'][] = 'deleteaccount';
 	$setup_info['calendar']['hooks'][] = 'email';
 	$setup_info['calendar']['hooks'][] = 'home';
@@ -49,10 +48,9 @@
 	$setup_info['calendar']['hooks'][] = 'home_weeknew';
 	$setup_info['calendar']['hooks'][] = 'home_year';
 	$setup_info['calendar']['hooks'][] = 'manual';
-	$setup_info['calendar']['hooks'][] = 'preferences';
 	$setup_info['calendar']['hooks'][] = 'settings';
-	$setup_info['calendar']['hooks'][] = 'sidebox_menu';
 	$setup_info['calendar']['hooks'][] = 'help';
+	$setup_info['calendar']['hooks']['menu'] = 'calendar.menu.get_menu';
 
 	/* Dependencies for this app to work */
 	$setup_info['calendar']['depends'][] = array(

@@ -64,7 +64,6 @@
 
 			$this->bo				= CreateObject('property.boworkorder',True);
 			$this->bocommon				= CreateObject('property.bocommon');
-			$this->menu				= CreateObject('property.menu');
 			$this->acl 				= CreateObject('phpgwapi.acl');
 			$this->acl_location			= '.project';
 			$this->acl_read 			= $this->acl->check('.project',1);
@@ -85,8 +84,6 @@
 			$this->end_date				= $this->bo->end_date;
 			$this->b_group				= $this->bo->b_group;
 			$this->paid				= $this->bo->paid;			
-
-			$this->menu->sub			='project';
 		}
 
 		function save_sessiondata()
@@ -128,11 +125,8 @@
 			}
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('workorder','values','table_header',
-										'menu',
 										'nextmatchs'));
 			$lookup = ''; //Fix this
-
-			$links = $this->menu->links('workorder');
 
 			$start_date 	= urldecode($this->start_date);
 			$end_date 	= urldecode($this->end_date);
@@ -440,7 +434,6 @@
 
 				'link_history'					=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiworkorder.index')),
 				'lang_history_statustext'		=> lang('search for history at this location'),
-				'links'							=> $links,
 				'allow_allrows'					=> false,
 				'start_record'					=> $this->start,
 				'record_limit'					=> $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'],
@@ -1003,7 +996,6 @@
 			);
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('workorder',
-										'menu',
 										'search_field'));
 
 			$data = array

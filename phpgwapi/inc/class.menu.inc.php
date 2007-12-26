@@ -99,7 +99,20 @@
 					{
 						continue;
 					}
-					$menus[$mtype][$app] = $menu;
+
+					if ( !isset($menus[$mtype]) )
+					{
+						$menus[$mtype] = array();
+					}
+
+					switch ( $mtype )
+					{
+						case 'navbar':
+							$menus[$mtype] = array_merge($menus[$mtype], $menu);
+							break;
+						default:
+							$menus[$mtype][$app] = $menu;
+					}
 				}
 			}
 			return $menus;

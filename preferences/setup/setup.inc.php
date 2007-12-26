@@ -21,8 +21,8 @@
 	$setup_info['preferences']['hooks'][] = 'deleteaccount';
 	$setup_info['preferences']['hooks'][] = 'config';
 	$setup_info['preferences']['hooks'][] = 'manual';
-	$setup_info['preferences']['hooks'][] = 'preferences';
 	$setup_info['preferences']['hooks'][] = 'settings';
+	$setup_info['preferences']['hooks']['menu'] = 'preferences.menu.get_menu';
 
 	// Dependacies for this app to work
 	$setup_info['preferences']['depends'][] = array(
