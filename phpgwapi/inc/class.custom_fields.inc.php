@@ -350,7 +350,7 @@
 			$OldDataType		= $this->db->f('datatype');
 			$OldPrecision		= $this->db->f('precision_');			
 			
-//			$table_def = $this->get_table_def($attrib['appname'],$attrib['location']);	
+			$table_def = $this->get_table_def($attrib_table);	
 
 			$this->db->transaction_begin();
 
@@ -370,12 +370,12 @@
 
 			$this->db->query("UPDATE phpgw_cust_attribute set $value_set WHERE appname='" . $attrib['appname']. "' AND location='" . $attrib['location']. "' AND id=" . $attrib['id'],__LINE__,__FILE__);
 
-			$this->_init_process();
+//			$this->_init_process();
 			
 			$this->oProc->m_odb->transaction_begin();
 
 			// FIXME : think this is needed - check
-//			$this->oProc->m_aTables = $table_def;
+			$this->oProc->m_aTables = $table_def;
 
 			if($OldColumnName !=$attrib['column_name'])
 			{
@@ -999,6 +999,30 @@
 	//		$this->db->query("DELETE FROM history...
 			$this->db->transaction_commit();
 			$this->oProc->m_odb->transaction_commit();
+		}
+
+		function get_table_def($table = '', $table_def = array())
+		{
+			if(!isset($this->oProc) || !is_object($this->oProc))
+			{
+				$this->_init_process();
+				$GLOBALS['phpgw_setup']->oProc = $this->oProc;
+			}
+
+			$setup = createobject('phpgwapi.setup_process');
+			$tableinfo = $setup->sql_to_array($table);
+
+			$fd = '$fd = array(' . str_replace("\t",'',$tableinfo[0]) .');';
+
+			eval($fd);
+			$table_def[$table]['fd'] = isset($table_def[$table]['fd']) && $table_def[$table]['fd'] ? $table_def[$table]['fd'] + $fd : $fd;
+			$table_def[$table]['pk'] = isset($table_def[$table]['pk']) && $table_def[$table]['pk'] ? $table_def[$table]['pk'] : $tableinfo[1];
+			$table_def[$table]['fk'] = isset($table_def[$table]['fk']) && $table_def[$table]['fk'] ? $table_def[$table]['fk'] : $tableinfo[2];		
+			$table_def[$table]['ix'] = isset($table_def[$table]['ix']) && $table_def[$table]['ix'] ? $table_def[$table]['ix'] : $tableinfo[3];
+			$table_def[$table]['uc'] = isset($table_def[$table]['uc']) && $table_def[$table]['uc'] ? $table_def[$table]['uc'] : $tableinfo[4];
+			
+//	_debug_array($table_def);
+			return $table_def;
 		}
 		
 		function _delete_custom_function($appname,$location,$custom_function_id)
