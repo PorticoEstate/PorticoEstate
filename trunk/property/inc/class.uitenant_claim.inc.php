@@ -61,8 +61,6 @@
 
 			$this->bo		= CreateObject('property.botenant_claim',True);
 			$this->bocommon		= CreateObject('property.bocommon');
-			$this->menu		= CreateObject('property.menu');
-
 			$this->acl		= CreateObject('phpgwapi.acl');
 			$this->acl_location	= '.tenant_claim';
 
@@ -101,7 +99,6 @@
 		function index($project_id='')
 		{
 			$GLOBALS['phpgw']->xslttpl->add_file(array('tenant_claim',
-										'menu',
 										'receipt',
 										'search_field',
 										'nextmatchs'));
@@ -111,9 +108,6 @@
 				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=>1, 'acl_location'=> $this->acl_location));
 			}
 
-
-			$this->menu->sub	= 'project';
-			$links = $this->menu->links('tenant_claim');
 
 			$receipt = $GLOBALS['phpgw']->session->appsession('session_data','tenant_claim_receipt');
 			$GLOBALS['phpgw']->session->appsession('session_data','tenant_claim_receipt','');
@@ -262,7 +256,6 @@
 			$data = array
 			(
 				'msgbox_data'				=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
-				'links'					=> $links,
  				'allow_allrows'				=> true,
 				'allrows'				=> $this->allrows,
 				'start_record'				=> $this->start,

@@ -31,7 +31,6 @@
 	$setup_info['addressbook']['maintainer_email'] = 'phpgroupware-developers@gnu.org';
 
 	/* The hooks this app includes, needed for hooks registration */
-	$setup_info['addressbook']['hooks'][] = 'admin';
 	$setup_info['addressbook']['hooks'][] = 'add_def_pref';
 	$setup_info['addressbook']['hooks'][] = 'config_validate';
 	$setup_info['addressbook']['hooks'][] = 'home';
@@ -40,12 +39,12 @@
 	$setup_info['addressbook']['hooks'][] = 'editaccount';
 	$setup_info['addressbook']['hooks'][] = 'deleteaccount';
 	$setup_info['addressbook']['hooks'][] = 'notifywindow';
-	$setup_info['addressbook']['hooks'][] = 'preferences';
-	$setup_info['addressbook']['hooks'][] = 'sidebox_menu';
+	$setup_info['addressbook']['hooks']['menu'] = 'addressbook.menu.get_menu';
 
 	/* Dependencies for this app to work */
-	$setup_info['addressbook']['depends'][] = array(
+	$setup_info['addressbook']['depends'][] = array
+	(
 		 'appname' => 'phpgwapi',
-		 'versions' => Array('0.9.16', '0.9.17', '0.9.18')
+		 'versions' => Array('0.9.17', '0.9.18')
 	);
 ?>

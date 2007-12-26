@@ -35,11 +35,6 @@
 			</xsl:when>
 		</xsl:choose>
 
-		<xsl:choose>
-			<xsl:when test="lookup=''">
-				<xsl:call-template name="menu"/>
-			</xsl:when>
-		</xsl:choose>
 		<div class="toolbar">
 
 			<xsl:for-each select="table_add" >
@@ -818,7 +813,6 @@
 <!-- stop -->
 
 	<xsl:template match="stop">
-			<xsl:call-template name="menu"/>
 			<table cellpadding="2" cellspacing="2" align="center">
 			<xsl:choose>
 				<xsl:when test="msgbox_data != ''">
@@ -845,7 +839,6 @@
 
 
 	<xsl:template match="summary">
-		<xsl:call-template name="menu"/>
 		<table width="100%" cellpadding="2" cellspacing="2" align="center">
 			<tr>
 				<td>

@@ -47,26 +47,6 @@
 <!-- BEGIN mainscreen -->
 
 	<xsl:template match="list">
-		<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript">
-			var phpinfo;
-
-			function openwindow(url)
-			{
-				if (phpinfo)
-				{
-					if (phpinfo.closed)
-					{
-						phpinfo.stop;
-						phpinfo.close;
-					}
-				}
-				phpinfo = window.open(url, "phpinfoWindow","width=700,height=600,location=no,menubar=no,directories=no,toolbar=no,scrollbars=yes,resizable=yes,status=no");
-				if (phpinfo.opener == null)
-				{
-					phpinfo.opener = window;
-				}
-			}
-		</SCRIPT>
 		<div id="mainscreen">
 			<xsl:choose>
 				<xsl:when test="app_row_icon">
@@ -97,9 +77,6 @@
 		<li>
 			<xsl:attribute name="class">
 				<xsl:choose>
-					<xsl:when test="@class">
-						<xsl:value-of select="@class"/>
-					</xsl:when>
 					<xsl:when test="position() mod 2 = 0">
 						<xsl:text>row_off</xsl:text>
 					</xsl:when>
@@ -108,7 +85,7 @@
 					</xsl:otherwise>
 				</xsl:choose>
 			</xsl:attribute>
-			<a href="{$pref_link}"><xsl:value-of select="pref_text"/></a>
+			<a href="{$url}"><xsl:value-of select="text"/></a>
 		</li>
 	</xsl:template>
 

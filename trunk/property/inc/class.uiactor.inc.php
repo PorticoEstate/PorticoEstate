@@ -64,7 +64,6 @@
 
 			$this->bo				= CreateObject('property.boactor',True);
 			$this->bocommon			= CreateObject('property.bocommon');
-			$this->menu				= CreateObject('property.menu');
 
 			$this->role				= $this->bo->role;
 
@@ -169,21 +168,16 @@
 				'vendor'=>'invoice'
 				);
 
-			$this->menu->sub	= $menu_sub[$this->role];
-
 			if(!$this->acl_read)
 			{
 				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=>1, 'acl_location'=> $this->acl_location));
 			}
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('actor',
-										'menu',
 										'receipt',
 										'search_field',
 										'nextmatchs',
 										'filter_member_of'));
-
-			$links = $this->menu->links($this->role);
 
 			$receipt = $GLOBALS['phpgw']->session->appsession('session_data','actor_receipt_' . $this->role);
 			$GLOBALS['phpgw']->session->appsession('session_data','actor_receipt_' . $this->role,'');

@@ -60,8 +60,6 @@
 
 			$this->bo		= CreateObject('property.bocustom',True);
 			$this->bocommon		= CreateObject('property.bocommon');
-			$this->menu		= CreateObject('property.menu');
-
 			$this->start		= $this->bo->start;
 			$this->query		= $this->bo->query;
 			$this->sort		= $this->bo->sort;
@@ -69,7 +67,6 @@
 			$this->filter		= $this->bo->filter;
 			$this->cat_id		= $this->bo->cat_id;
 			$this->allrows		= $this->bo->allrows;
-			$this->menu->sub	='custom';
 
 			$this->acl 		= CreateObject('phpgwapi.acl');
 			$this->acl_location	= '.custom';
@@ -98,12 +95,9 @@
 		function index()
 		{
 			$GLOBALS['phpgw']->xslttpl->add_file(array('custom',
-										'menu',
 										'receipt',
 										'search_field',
 										'nextmatchs'));
-
-			$links = $this->menu->links();
 
 			$receipt = $GLOBALS['phpgw']->session->appsession('session_data','custom_receipt');
 			$GLOBALS['phpgw']->session->appsession('session_data','custom_receipt','');
@@ -278,7 +272,6 @@
 			$data = array
 			(
 				'msgbox_data'					=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
-				'links'						=> $links,
  				'allow_allrows'					=> true,
 				'allrows'					=> $this->allrows,
 				'start_record'					=> $this->start,

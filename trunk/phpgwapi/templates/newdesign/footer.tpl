@@ -28,7 +28,9 @@
 			</div>
 		</div>
 
-	<script>
+	<script type="text/javascript">
+		//FIXME: move to external js file
+
 		//FIXME: should create own class for this
 		//YAHOO.namespace("OFM");
 /*

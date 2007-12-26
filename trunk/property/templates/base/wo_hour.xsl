@@ -145,7 +145,6 @@
 	<xsl:template match="add_template">
 		<div align="left">
 		
-		<xsl:call-template name="menu"/> 
 		<table cellpadding="2" cellspacing="2" width="80%" align="center">
 			<xsl:choose>
 				<xsl:when test="msgbox_data != ''">
@@ -245,7 +244,6 @@
 
 	<xsl:template match="list_hour">
 		
-		<xsl:call-template name="menu"/> 
 		<table width="100%" cellpadding="2" cellspacing="2" align="center">
 			<xsl:choose>
 				<xsl:when test="msgbox_data != ''">
@@ -740,7 +738,6 @@
 
 	<xsl:template match="list_template">
 		
-		<xsl:call-template name="menu"/> 
 		<xsl:apply-templates select="workorder_data"/>
 			<table width="100%" cellpadding="2" cellspacing="2" align="center">
 				<tr>
@@ -854,7 +851,6 @@
 
 
 	<xsl:template match="list_template_hour">		
-		<xsl:call-template name="menu"/> 
 		<table width="100%" cellpadding="2" cellspacing="2" align="center">
 			<xsl:choose>
 				<xsl:when test="msgbox_data != ''">
@@ -1064,7 +1060,6 @@
 
 
 	<xsl:template match="prizebook">	
-		<xsl:call-template name="menu"/> 
 		<table width="100%" cellpadding="2" cellspacing="2" align="center">
 			<xsl:choose>
 				<xsl:when test="msgbox_data != ''">

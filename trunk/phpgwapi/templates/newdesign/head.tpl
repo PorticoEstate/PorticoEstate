@@ -1,5 +1,5 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
-	"http://www.w3.org/TR/html4/strict.dtd">
+	"http://www.w3.org/TR/html4/loose.dtd">
 <!-- BEGIN head -->
 <html>
 	<head>
@@ -30,9 +30,18 @@
 				<div class="layout-north">
 					<div class="panel">
 						<div class="header">
-							<h2 class="icon">
-								{site_title}
-							</h2>
+							<h2 class="icon">{site_title}</h2>
+							<div class="button-bar">
+								<a href="{about_url}" class="icon icon-about">
+									{about_text}
+								</a>
+								<a href="{preferences_url}" class="icon icon-preferences">
+									{preferences_text}
+								</a>
+								<a href="{logout_url}" class="icon icon-logout">
+									{logout_text}
+								</a>
+							</div>
 						</div>
 					</div>
 				</div>

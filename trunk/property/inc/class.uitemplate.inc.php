@@ -61,7 +61,6 @@
 			$this->bo				= CreateObject('property.botemplate',True);
 			$this->bowo_hour			= CreateObject('property.bowo_hour');
 			$this->bocommon				= CreateObject('property.bocommon');
-			$this->menu				= CreateObject('property.menu');
 
 			$this->start				= $this->bo->start;
 			$this->query				= $this->bo->query;
@@ -71,8 +70,6 @@
 			$this->cat_id				= $this->bo->cat_id;
 			$this->chapter_id			= $this->bo->chapter_id;
 			$this->allrows				= $this->bo->allrows;
-
-			$this->menu->sub			='project';
 		}
 
 		function save_sessiondata()
@@ -95,14 +92,11 @@
 		{
 			$GLOBALS['phpgw']->xslttpl->add_file(array(
 								'template',
-								'menu',
 								'nextmatchs',
 								'search_field'));
 
 			$workorder_id = phpgw::get_var('workorder_id', 'int');
 			$lookup 	= phpgw::get_var('lookup', 'bool');
-
-			$links = $this->menu->links('template');
 
 			$template_list	= $this->bo->read();
 
@@ -219,7 +213,6 @@
 
 				'lookup'			=> $lookup,
 				'function'			=> 'template',
-				'links'				=> $links,
 				'allrows'			=> $this->allrows,
 				'allow_allrows'			=> true,
 				'start_record'			=> $this->start,
@@ -257,7 +250,6 @@
 		function hour()
 		{
 			$GLOBALS['phpgw']->xslttpl->add_file(array('template',
-										'menu',
 										'nextmatchs',
 										'search_field'));
 
@@ -271,7 +263,6 @@
 				$receipt = $this->bo->delete_hour($hour_id,$template_id);
 			}
 
-			$links = $this->menu->links();
 
 			$template_list	= $this->bo->read_template_hour($template_id);
 
@@ -439,7 +430,6 @@
 				'link_delete'				=> $GLOBALS['phpgw']->link('/index.php',$link_data_delete),
 
 				'function'				=> 'template',
-				'links'					=> $links,
 				'allrows'				=> $this->allrows,
 				'allow_allrows'				=> true,
 				'start_record'				=> $this->start,

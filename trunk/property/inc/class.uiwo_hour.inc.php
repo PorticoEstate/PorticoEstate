@@ -72,7 +72,6 @@
 			$this->bopricebook			= CreateObject('property.bopricebook');
 
 			$this->bocommon				= CreateObject('property.bocommon');
-			$this->menu				= CreateObject('property.menu');
 			$this->config				= CreateObject('phpgwapi.config');
 
 			$this->config->read_repository();
@@ -92,8 +91,6 @@
 			$this->cat_id				= $this->bo->cat_id;
 			$this->chapter_id			= $this->bo->chapter_id;
 			$this->allrows				= $this->bo->allrows;
-
-			$this->menu->sub			='project';
 		}
 
 		function save_sessiondata()
@@ -455,8 +452,7 @@
 		function save_template()
 		{
 
-			$GLOBALS['phpgw']->xslttpl->add_file(array('wo_hour',
-										'menu'));
+			$GLOBALS['phpgw']->xslttpl->add_file(array('wo_hour'));
 
 			$values 		= phpgw::get_var('values');
 			$workorder_id 	= phpgw::get_var('workorder_id', 'int');
@@ -518,12 +514,11 @@
 				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=>1, 'acl_location'=> $this->acl_location));
 			}
 
-			$GLOBALS['phpgw']->xslttpl->add_file(array('wo_hour','menu'));
+			$GLOBALS['phpgw']->xslttpl->add_file(array('wo_hour'));
 
 			$delete = phpgw::get_var('delete', 'bool');
 			$hour_id = phpgw::get_var('hour_id', 'int');
 			$workorder_id = phpgw::get_var('workorder_id', 'int');
-			$links = $this->menu->links();
 
 			if($delete && $hour_id)
 			{
@@ -576,7 +571,6 @@
 				'msgbox_data'				=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
 				'link_delete'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiwo_hour.index', 'delete'=>true, 'workorder_id'=> $workorder_id)),
 				'function'				=> 'index',
-				'links'					=> $links,
 				'num_records'				=> count($hours_list),
 				'total_hours_records'			=> $common_data['total_hours_records'],
 				'lang_total_records'			=> lang('Total records'),
@@ -605,7 +599,7 @@
 				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=>1, 'acl_location'=> $this->acl_location));
 			}
 
-			$GLOBALS['phpgw']->xslttpl->add_file(array('wo_hour','menu'));
+			$GLOBALS['phpgw']->xslttpl->add_file(array('wo_hour'));
 
 			$show_cost		= phpgw::get_var('show_cost', 'bool');
 			$show_details		= phpgw::get_var('show_details', 'bool');
@@ -1050,7 +1044,6 @@
 			}
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('wo_hour',
-										'menu',
 										'nextmatchs',
 										'search_field'));
 
@@ -1071,8 +1064,6 @@
 			{
 				$receipt=$this->bo->add_hour($values,$workorder_id);
 			}
-
-			$links = $this->menu->links();
 
 			$common_data=$this->common_data($workorder_id);
 
@@ -1206,7 +1197,6 @@
 				'lang_add'				=> lang('Add'),
 				'link_delete'				=> $GLOBALS['phpgw']->link('/index.php',$link_data_delete),
 				'function'				=> 'prizebook',
-				'links'					=> $links,
 				'allrows'				=> $this->allrows,
 				'allow_allrows'				=> true,
 				'start_record'				=> $this->start,
@@ -1254,7 +1244,6 @@
 			}
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('wo_hour',
-									'menu',
 									'nextmatchs',
 									'search_field'));
 
@@ -1277,8 +1266,6 @@
 			{
 				$receipt=$this->bo->add_hour_from_template($values,$workorder_id);
 			}
-
-			$links = $this->menu->links();
 
 			$common_data=$this->common_data($workorder_id);
 
@@ -1441,7 +1428,6 @@
 				'link_delete'				=> $GLOBALS['phpgw']->link('/index.php',$link_data_delete),
 
 				'function'				=> 'template',
-				'links'					=> $links,
 				'allrows'				=> $this->allrows,
 				'allow_allrows'				=> true,
 				'start_record'				=> $this->start,

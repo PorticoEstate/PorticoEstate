@@ -100,6 +100,10 @@
 			{
 				$apps = $GLOBALS['phpgw_info']['user']['apps'];
 			}
+
+			// Run any API hooks first
+			$results['phpgwapi'] = $this->single($args, 'phpgwapi', false);
+
 			if(is_array($apps))
 			{
 				foreach($apps as $app)
@@ -217,7 +221,7 @@
 			//echo "<p>ADDING hooks for: $appname</p>";
 			foreach($hooks as $key => $hook)
 			{
-				if (!is_numeric($key))	// new methode-hook
+				if (!is_numeric($key))	// new method based hook
 				{
 					$location = $key;
 					$filename = $hook;
@@ -240,12 +244,16 @@
 		 */
 		function register_all_hooks()
 		{
-			foreach($GLOBALS['phpgw_info']['apps'] as $appname => $app)
-			{			
+			$app_list = array_keys($GLOBALS['phpgw_info']['apps']);
+			$app_list[] = 'phpgwapi';
+
+			foreach ( $app_list as $appname )
+			{
 				$f = PHPGW_SERVER_ROOT . "/$appname/setup/setup.inc.php";
 				if ( file_exists($f) )
 				{
-					include_once($f);
+					//DO NOT USE include_once here it breaks API hooks - skwashd dec07
+					include($f);
 					if ( isset($setup_info[$appname]['hooks']) )
 					{
 						$this->register_hooks($appname, $setup_info[$appname]['hooks']);

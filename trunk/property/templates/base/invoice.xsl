@@ -125,7 +125,6 @@
 <!-- list_voucher -->
 
 	<xsl:template match="list_voucher">
-		<xsl:call-template name="menu"/> 
 		<table width="100%" cellpadding="2" cellspacing="2" align="center">
 			<xsl:choose>
 				<xsl:when test="msgbox_data != ''">
@@ -574,7 +573,6 @@
 			}		
 		</script>
 
-		<xsl:call-template name="menu"/> 
 		<xsl:variable name="form_action"><xsl:value-of select="link_url"/></xsl:variable>
 		<div align="left">
 		<form method="post" name="form" action="{$form_action}">
@@ -863,7 +861,6 @@
 			}		
 		</script>
 
-		<xsl:call-template name="menu"/> 
 		<xsl:variable name="form_action"><xsl:value-of select="form_action"/></xsl:variable>
 		<div align="left">
 		<form method="post" name="form" action="{$form_action}">
@@ -1265,7 +1262,6 @@
 			}		
 		</script>
 
-		<xsl:call-template name="menu"/>
 	        <div align="left">
 		<table cellpadding="2" cellspacing="2" width="80%" align="center">
 			<tr>
@@ -1590,7 +1586,6 @@
 			}		
 		</script>
 
-		<xsl:call-template name="menu"/>
 	        <div align="left">
 		<table cellpadding="2" cellspacing="2" width="80%" align="center">
 			<tr>
@@ -2023,7 +2018,6 @@
 <!-- export -->
 
 	<xsl:template match="export">
-		<xsl:call-template name="menu"/> 
 	        <div align="left">
 		<table cellpadding="2" cellspacing="2" width="80%" align="center">
 			<xsl:choose>
@@ -2123,7 +2117,6 @@
 <!-- rollback -->
 
 	<xsl:template match="rollback">
-		<xsl:call-template name="menu"/> 
 		<div align="left">
 		<table cellpadding="2" cellspacing="2" width="80%" align="center">
 			<xsl:choose>
@@ -2219,7 +2212,6 @@
 <!--list_invoice_sub-->
 
 	<xsl:template match="list_invoice_sub">
-		<xsl:call-template name="menu"/> 
 		<table width="80%" cellpadding="2" cellspacing="2" align="center">
 			<xsl:choose>
 				<xsl:when test="msgbox_data != ''">

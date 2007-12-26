@@ -60,8 +60,6 @@
 			$this->nextmatchs		= CreateObject('phpgwapi.nextmatchs');
 			$this->account			= $GLOBALS['phpgw_info']['user']['account_id'];
 			$this->bo				= CreateObject('property.boifc',true);
-			$this->menu				= CreateObject('property.menu');
-			$this->menu->sub		='ifc';
 			$this->acl 				= & $GLOBALS['phpgw']->acl;
 			$this->acl_location 	= '.ifc';
 			$this->acl_read 			= $this->acl->check($this->acl_location,PHPGW_ACL_READ);
@@ -100,16 +98,13 @@
 				$output = 'html';
 			}
 			
-			$this->menu->sub = 'alternative';
-			$links = $this->menu->links();
 			if(!$this->acl_read)
 			{
-				$this->no_access($links);
+				$this->no_access();
 				return;
 			}
 
-			$GLOBALS['phpgw']->xslttpl->add_file(array('ifc','nextmatchs','menu',
-										'search_field'));
+			$GLOBALS['phpgw']->xslttpl->add_file(array('ifc','nextmatchs','search_field'));
 
 			$ifc_info = $this->bo->read();
 
@@ -244,7 +239,6 @@
 			$data = array
 			(
 				'msgbox_data'							=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
-				'links'									=> $links,
 				'cat_filter'							=> $this->cats->formatted_xslt_list(array('select_name' => 'cat_id','selected' => $this->cat_id,'globals' => True,'link_data' => $link_data)),
 				'filter_data'							=> $this->nextmatchs->xslt_filter(array('filter' => $this->filter,'link_data' => $link_data)),
 				'allow_allrows'							=> True,
@@ -408,7 +402,7 @@
 			{
 				if(!$this->acl_edit)
 				{
-					$this->no_access($links);
+					$this->no_access();
 					return;
 				}
 
@@ -681,9 +675,9 @@
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('delete' => $data));
 		}
 
-		function no_access($links = '')
+		function no_access()
 		{
-			$GLOBALS['phpgw']->xslttpl->add_file(array('no_access','menu'));
+			$GLOBALS['phpgw']->xslttpl->add_file(array('no_access'));
 
 			$receipt['error'][]=array('msg'=>lang('NO ACCESS'));
 
@@ -692,7 +686,6 @@
 			$data = array
 			(
 				'msgbox_data'	=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
-				'links'			=> $links,
 			);
 
 			$appname	= lang('No access');

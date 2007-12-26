@@ -60,7 +60,6 @@
 
 			$this->bo			= CreateObject('property.boinvestment',True);
 			$this->bocommon			= CreateObject('property.bocommon');
-			$this->menu			= CreateObject('property.menu');
 			$this->bolocation		= CreateObject('property.bolocation');
 			$this->acl 			= CreateObject('phpgwapi.acl');
 			$this->acl_location		= '.invoice';
@@ -78,7 +77,6 @@
 			$this->part_of_town_id		= $this->bo->part_of_town_id;
 			$this->allrows			= $this->bo->allrows;
 			$this->admin_invoice		= $this->acl->check('.invoice',16);
-			$this->menu->sub		='invoice';
 		}
 
 		function save_sessiondata()
@@ -105,10 +103,8 @@
 			}
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('investment',
-										'menu',
 										'nextmatchs'));
 
-			$links = $this->menu->links('investment');
 			$preserve	= phpgw::get_var('preserve', 'bool');
 			$values		= phpgw::get_var('values');
 
@@ -244,7 +240,6 @@
 			$data = array
 			(
 				'msgbox_data'					=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
-				'links'						=> $links,
 				'lang_search'					=> lang('Search'),
 				'lang_search_statustext'			=> lang('Search for investment entries'),
 //				'form_action'					=> $GLOBALS['phpgw']->link('/index.php',$link_data),
@@ -322,10 +317,8 @@
 		function history()
 		{
 			$GLOBALS['phpgw']->xslttpl->add_file(array('investment',
-										'menu',
 										'nextmatchs'));
 
-			$links = $this->menu->links();
 			$values		= phpgw::get_var('values');
 			$entity_type	= phpgw::get_var('entity_type');
 			$entity_id	= phpgw::get_var('entity_id', 'int');
@@ -443,7 +436,6 @@
 				'lang_investment_id'				=> lang('Investment Id'),
 				'entity_type'					=> lang($entity_type),
 				'lang_entity_type'				=> lang('Entity Type'),
-				'links'						=> $links,
 				'form_action'					=> $GLOBALS['phpgw']->link('/index.php',$link_data),
 				'allow_allrows'					=> true,
 				'allrows'					=> $this->allrows,
