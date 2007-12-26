@@ -178,72 +178,6 @@
 			return $standard;
 		}
 
-		function read_status($data)
-		{
-			if(is_array($data))
-			{
-				if ($data['start'])
-				{
-					$start=$data['start'];
-				}
-				else
-				{
-					$start=0;
-				}
-				$query = (isset($data['query'])?$data['query']:'');
-				$sort = (isset($data['sort'])?$data['sort']:'DESC');
-				$order = (isset($data['order'])?$data['order']:'');
-				$allrows = (isset($data['allrows'])?$data['allrows']:'');
-				$entity_id = (isset($data['entity_id'])?$data['entity_id']:'');
-				$cat_id = (isset($data['cat_id'])?$data['cat_id']:'');
-			}
-
-			if ($order)
-			{
-				$ordermethod = " order by $order $sort";
-
-			}
-			else
-			{
-				$ordermethod = ' order by id asc';
-			}
-
-			$table	= 'fm_entity_'. $entity_id .'_'.$cat_id . '_status';
-
-			if($query)
-			{
-				$query = preg_replace("/'/",'',$query);
-				$query = preg_replace('/"/','',$query);
-
-				$querymethod = " AND name $this->like '%$query%' or descr $this->like '%$query%'";
-			}
-
-			$sql = "SELECT * FROM $table $querymethod";
-
-			$this->db2->query($sql,__LINE__,__FILE__);
-			$this->total_records = $this->db2->num_rows();
-
-			if(!$allrows)
-			{
-				$this->db->limit_query($sql . $ordermethod,$start,__LINE__,__FILE__);
-			}
-			else
-			{
-				$this->db->query($sql . $ordermethod,__LINE__,__FILE__);
-			}
-
-			while ($this->db->next_record())
-			{
-				$status[] = array
-				(
-					'id'	=> $this->db->f('id'),
-					'descr'	=> $this->db->f('descr')
-				);
-			}
-			return $status;
-		}
-
-
 		function read_single($id)
 		{
 
@@ -313,23 +247,6 @@
 			return $this->db->f('name');
 		}
 
-		function read_single_status($entity_id,$cat_id,$id)
-		{
-
-			$table	= 'fm_entity_'. $entity_id .'_'.$cat_id . '_status';
-			$sql = "SELECT * FROM $table  where id='$id'";
-
-			$this->db->query($sql,__LINE__,__FILE__);
-
-			if ($this->db->next_record())
-			{
-				$status['id']				= $this->db->f('id');
-				$status['descr']			= $this->db->f('descr');
-
-				return $status;
-			}
-		}
-
 		function add_entity($entity)
 		{
 			$entity['name'] = $this->db->db_addslashes($entity['name']);
@@ -368,30 +285,6 @@
 			$receipt['message'][] = array('msg'=> lang('entity has been added'));
 			return $receipt;
 		}
-
-
-		function add_status($values,$entity_id,$cat_id)
-		{
-			$values['id'] = $this->db->db_addslashes($values['id']);
-			$values['descr'] = $this->db->db_addslashes($values['descr']);
-
-			$values_insert= array(
-				$values['id'],
-				$values['descr'],
-				);
-
-			$values_insert	= $this->bocommon->validate_db_insert($values_insert);
-
-			$table	= 'fm_entity_'. $entity_id .'_'.$cat_id . '_status';
-
-			$this->db->query("INSERT INTO $table (id,descr) VALUES ($values_insert)",__LINE__,__FILE__);
-
-			$receipt['id']= $values['id'];
-
-			$receipt['message'][] = array('msg'=> lang('status has been added'));
-			return $receipt;
-		}
-
 
 		function get_default_column_def()
 		{
@@ -470,15 +363,8 @@
 
 			$pk[]= 'id';
 			$table			= 'fm_entity_'. $values['entity_id'] .'_'.$values['id'];
-/*
-			$fd_status['id'] = array('type' => 'varchar', 'precision' => 20, 'nullable' => False);
-			$fd_status['descr'] = array('type' => 'varchar', 'precision' => 255, 'nullable' => False);
-			$pk_status[]= 'id';
 
-			$statustable	= $table . '_' .'status';
-*/
 			if(($this->oProc->CreateTable($table,array('fd' => $fd,'pk' => $pk,'fk' => $fk,'ix' => array('location_code'),'uc' => array()))))
-//				&& ($this->oProc->CreateTable($statustable,array('fd' => $fd_status,'pk' => $pk_status,'fk' => $fk_status,'ix' => False,'uc' => array()))))
 			{
 
 				$values_insert= array(
@@ -514,25 +400,6 @@
 					unset($receipt['id']);
 				}
 			}
-
-			return $receipt;
-		}
-
-		function edit_status($values,$entity_id,$cat_id)
-		{
-			$table	= 'fm_entity_'. $entity_id .'_'.$cat_id . '_status';
-
-			$values['descr'] = $this->db->db_addslashes($values['descr']);
-
-			$value_set=array(
-				'descr'			=> $values['descr'],
-				);
-
-			$value_set	= $this->bocommon->validate_db_update($value_set);
-
-			$this->db->query("UPDATE $table set $value_set WHERE id='" . $values['id'] . "'",__LINE__,__FILE__);
-
-			$receipt['message'][] = array('msg'=> lang('Status has been edited'));
 
 			return $receipt;
 		}
@@ -755,8 +622,7 @@
 		function delete_attrib($cat_id,$entity_id,$attrib_id)
 		{
 			$this->init_process();
-			$this->oProc->m_odb->transaction_begin();
-			$this->db->transaction_begin();
+		//	$this->db->transaction_begin();
 
 			$sql = "SELECT * FROM fm_entity_attribute WHERE entity_id=$entity_id AND cat_id=$cat_id AND id=$attrib_id";
 
@@ -765,10 +631,6 @@
 
 			$ColumnName		= $this->db->f('column_name');
 			$table	= 'fm_entity_'. $entity_id .'_'.$cat_id;
-			$table_def = $this->get_table_def($entity_id,$cat_id);	
-			$this->oProc->m_aTables = $table_def;
-
-			$this->oProc->DropColumn($table,$table_def[$table], $ColumnName);
 
 			$sql = "SELECT attrib_sort FROM fm_entity_attribute where entity_id=$entity_id AND cat_id=$cat_id AND id=$attrib_id";
 			$this->db->query($sql,__LINE__,__FILE__);
@@ -786,16 +648,12 @@
 
 			$this->db->query("DELETE FROM fm_entity_attribute WHERE entity_id=$entity_id AND cat_id=$cat_id AND id=$attrib_id",__LINE__,__FILE__);
 			$this->db->query("DELETE FROM fm_entity_history WHERE history_appname = 'entity_" . $entity_id  . '_' . $cat_id . "' AND history_entity_attrib_id = $attrib_id",__LINE__,__FILE__);
-			$this->db->transaction_commit();
-			$this->oProc->m_odb->transaction_commit();
-
-		}
-
-		function delete_status($cat_id,$entity_id,$status_id)
-		{
-			$table	= 'fm_entity_'. $entity_id .'_'.$cat_id . '_status';
-
-			$this->db->query("DELETE FROM $table WHERE id='$status_id'",__LINE__,__FILE__);
+		//	if($this->db->transaction_commit())
+			{
+				$table_def = $this->get_table_def($entity_id,$cat_id);	
+				$this->oProc->m_aTables = $table_def;
+				$this->oProc->DropColumn($table,$table_def[$table], $ColumnName);
+			}
 		}
 
 		function read_attrib($data)

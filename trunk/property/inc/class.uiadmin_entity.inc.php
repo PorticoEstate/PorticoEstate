@@ -47,10 +47,8 @@
 		var $public_functions = array
 		(
 			'index'  		=> True,
-			'list_status' 		=> True,
 			'category' 		=> True,
 			'edit'   		=> True,
-			'edit_status'		=> True,
 			'edit_category'		=> True,
 			'view'   		=> True,
 			'delete' 		=> True,
@@ -224,125 +222,6 @@
 			$this->save_sessiondata();
 		}
 
-		function list_status()
-		{
-			if(!$this->acl_read)
-			{
-				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=> 1, 'acl_location'=> $this->acl_location));
-			}
-
-			$this->bo->reset_fm_cache();
-			$GLOBALS['phpgw']->xslttpl->add_file(array(
-								'admin_entity',
-								'nextmatchs',
-								'search_field'));
-
-			$list = $this->bo->read_status();
-
-			if (isSet($list) AND is_array($list))
-			{
-				foreach($list as $entry)
-				{
-					$content[] = array
-					(
-						'id'				=> $entry['id'],
-						'descr'				=> $entry['descr'],
-						'link_edit'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiadmin_entity.edit_status', 'entity_id'=> $this->entity_id, 'cat_id'=> $this->cat_id, 'id'=> $entry['id'])),
-						'link_delete'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiadmin_entity.delete', 'entity_id'=> $this->entity_id, 'cat_id'=> $this->cat_id, 'status_id'=> $entry['id'])),
-						'lang_edit_standardtext'	=> lang('edit the entity'),
-						'lang_delete_standardtext'	=> lang('delete the entity'),
-						'text_edit'			=> lang('edit'),
-						'text_delete'			=> lang('delete')
-					);
-				}
-			}
-
-//_debug_array($content);
-
-			$table_header[] = array
-			(
-
-				'lang_descr'		=> lang('Descr'),
-				'lang_edit'		=> lang('edit'),
-				'lang_delete'		=> lang('delete'),
-				'sort_id'		=> $this->nextmatchs->show_sort_order(array
-										(
-											'sort'	=> $this->sort,
-											'var'	=> 'id',
-											'order'	=> $this->order,
-											'extra'	=> array('menuaction'	=> 'property.uiadmin_entity.list_status',
-																	'entity_id'	=> $this->entity_id,
-																	'cat_id'	=> $this->cat_id
-																	)
-										)),
-				'lang_id'		=> lang('status'),
-			);
-
-			$table_add[] = array
-			(
-				'lang_add'		=> lang('add'),
-				'lang_add_text'		=> lang('add a standard'),
-				'add_action'		=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiadmin_entity.edit_status', 'entity_id'=> $this->entity_id, 'cat_id'=> $this->cat_id)),
-				'lang_done'		=> lang('done'),
-				'lang_done_text'	=> lang('back to admin'),
-				'done_action'		=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiadmin_entity.category', 'entity_id'=> $this->entity_id, 'cat_id'=> $this->cat_id)),
-			);
-
-			if(!$this->allrows)
-			{
-				$record_limit	= $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
-			}
-			else
-			{
-				$record_limit	= $this->bo->total_records;
-			}
-
-			$link_data = array
-			(
-				'menuaction'	=> 'property.uiadmin_entity.list_status',
-				'sort'		=> $this->sort,
-				'order'		=> $this->order,
-				'query'		=> $this->query,
-				'entity_id'	=> $this->entity_id,
-				'cat_id'	=> $this->cat_id
-			);
-
-			$entity = $this->bo->read_single($this->entity_id,false);
-			$category = $this->bo->read_single_category($this->entity_id,$this->cat_id);
-
-			$msgbox_data = $this->bocommon->msgbox_data($receipt);
-
-			$data = array
-			(
-				'lang_entity'					=> lang('entity'),
-				'entity_name'					=> $entity['name'],
-				'lang_category'					=> lang('category'),
-				'category_name'					=> $category['name'],
-				'allow_allrows'					=> True,
-				'allrows'					=> $this->allrows,
-				'start_record'					=> $this->start,
-				'record_limit'					=> $record_limit,
-				'num_records'					=> count($entity_list),
-				'all_records'					=> $this->bo->total_records,
-				'link_url'					=> $GLOBALS['phpgw']->link('/index.php',$link_data),
-				'img_path'					=> $GLOBALS['phpgw']->common->get_image_path('phpgwapi','default'),
-				'lang_searchfield_standardtext'			=> lang('Enter the search string. To show all entries, empty this field and press the SUBMIT button again'),
-				'lang_searchbutton_standardtext'		=> lang('Submit the search string'),
-				'query'						=> $this->query,
-				'lang_search'					=> lang('search'),
-				'table_header_status'				=> $table_header,
-				'values_status'					=> $content,
-				'table_add'					=> $table_add
-			);
-
-			$appname	= lang('entity');
-			$function_msg	= lang('list status');
-
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
-			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('list_status' => $data));
-		//	$GLOBALS['phpgw']->xslttpl->pp();
-			$this->save_sessiondata();
-		}
 
 		function category()
 		{
@@ -615,102 +494,6 @@
 		//	$GLOBALS['phpgw']->xslttpl->pp();
 		}
 
-		function edit_status()
-		{
-			if(!$this->acl_edit)
-			{
-				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=> 4, 'acl_location'=> $this->acl_location));
-			}
-
-			$id	= phpgw::get_var('id', 'int');
-			$values			= phpgw::get_var('values');
-
-			$GLOBALS['phpgw']->xslttpl->add_file(array('admin_entity'));
-
-			if ($values['save'])
-			{
-				if (!$values['id'])
-				{
-					$receipt['error'][] = array('msg'=>lang('ID not entered!'));
-				}
-
-				if($id)
-				{
-					$values['id']=$id;
-					$action='edit';
-				}
-
-				if (!$receipt['error'])
-				{
-					$receipt = $this->bo->save_status($values,$action);
-					if(!$id)
-					{
-						$id=$receipt['id'];
-					}
-				}
-				else
-				{
-					$receipt['error'][] = array('msg'=> lang('Status has NOT been saved'));
-				}
-
-			}
-
-			if ($id)
-			{
-				$values = $this->bo->read_single_status($id);
-				$function_msg = lang('edit status');
-				$action='edit';
-			}
-			else
-			{
-				$function_msg = lang('add status');
-				$action='add';
-			}
-
-
-			$link_data = array
-			(
-				'menuaction'	=> 'property.uiadmin_entity.edit_status',
-				'entity_id'	=> $this->entity_id,
-				'cat_id'	=> $this->cat_id,
-				'id'		=> $id
-			);
-//_debug_array($link_data);
-
-			$entity = $this->bo->read_single($this->entity_id,false);
-			$category = $this->bo->read_single_category($this->entity_id,$this->cat_id);
-
-			$msgbox_data = $this->bocommon->msgbox_data($receipt);
-
-			$data = array
-			(
-				'lang_entity'					=> lang('entity'),
-				'entity_name'					=> $entity['name'],
-				'lang_category'					=> lang('category'),
-				'category_name'					=> $category['name'],
-				'msgbox_data'					=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
-				'lang_name_standardtext'			=> lang('Enter a name of the standard'),
-				'form_action'					=> $GLOBALS['phpgw']->link('/index.php',$link_data),
-				'done_action'					=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiadmin_entity.list_status', 'entity_id'=> $this->entity_id, 'cat_id'=> $this->cat_id)),
-				'lang_id'					=> lang('status ID'),
-				'lang_descr'					=> lang('Descr'),
-				'lang_save'					=> lang('save'),
-				'lang_done'					=> lang('done'),
-				'value_id'					=> $id,
-				'lang_id_standardtext'				=> lang('Enter the status ID'),
-				'lang_descr_standardtext'			=> lang('Enter a description of the status'),
-				'lang_done_standardtext'			=> lang('Back to the list'),
-				'lang_save_standardtext'			=> lang('Save the status'),
-				'value_descr'					=> $values['descr']
-			);
-
-			$appname	= lang('entity');
-
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
-			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('edit_status' => $data));
-		//	$GLOBALS['phpgw']->xslttpl->pp();
-		}
-
 		function edit_category()
 		{
 			if(!$this->acl_add)
@@ -849,7 +632,6 @@
 			$entity_id		= phpgw::get_var('entity_id', 'int');
 			$cat_id			= phpgw::get_var('cat_id', 'int');
 			$attrib_id		= phpgw::get_var('attrib_id', 'int');
-			$status_id		= phpgw::get_var('status_id');
 			$acl_location		= phpgw::get_var('acl_location');
 			$custom_function_id	= phpgw::get_var('custom_function_id', 'int');
 			$confirm		= phpgw::get_var('confirm', 'bool', 'POST');
@@ -873,14 +655,7 @@
 			{
 				if($cat_id)
 				{
-					if($status_id)
-					{
-						$function='list_status';
-					}
-					else
-					{
-						$function='category';
-					}
+					$function='category';
 				}
 				else
 				{
@@ -894,8 +669,7 @@
 				'menuaction'	=> 'property.uiadmin_entity.'.$function,
 				'cat_id' 	=> $cat_id,
 				'entity_id'	=> $entity_id,
-				'attrib_id'	=> $attrib_id,
-				'status_id'	=> $status_id
+				'attrib_id'	=> $attrib_id
 			);
 
 			$delete_data = array
@@ -904,14 +678,13 @@
 				'cat_id'	=> $cat_id,
 				'entity_id'	=> $entity_id,
 				'attrib_id'	=> $attrib_id,
-				'status_id'	=> $status_id,
 				'acl_location'	=> $acl_location,
 				'custom_function_id' => $custom_function_id
 			);
 
 			if (phpgw::get_var('confirm', 'bool', 'POST'))
 			{
-				$this->bo->delete($cat_id,$entity_id,$attrib_id,$status_id,$acl_location,$custom_function_id);
+				$this->bo->delete($cat_id,$entity_id,$attrib_id,$acl_location,$custom_function_id);
 				$GLOBALS['phpgw']->redirect_link('/index.php',$link_data);
 			}
 
