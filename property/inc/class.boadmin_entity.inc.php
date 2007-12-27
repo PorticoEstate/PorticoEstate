@@ -72,9 +72,9 @@
 
 		function property_boadmin_entity($session=False)
 		{
-		//	$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->so 		= CreateObject('property.soadmin_entity');
 			$this->bocommon = CreateObject('property.bocommon');
+			$this->custom 	= createObject('phpgwapi.custom_fields');
 
 			if ($session)
 			{
@@ -285,11 +285,12 @@
 			}
 			else if(!$attrib_id && $cat_id && $entity_id && !$custom_function_id)
 			{
-				$this->so->delete_category($cat_id,$entity_id);
+				$this->so->delete_category($entity_id, $cat_id);
 			}
 			else if($attrib_id && $cat_id && $entity_id && !$custom_function_id)
 			{
-				$this->so->delete_attrib($cat_id,$entity_id,$attrib_id);
+				$this->custom->_delete_attrib('.entity.' . $entity_id . '.' . $cat_id,'property',$attrib_id);
+				$this->so->delete_history($entity_id, $cat_id,$attrib_id);
 			}
 			else if($custom_function_id && $acl_location)
 			{
@@ -304,13 +305,7 @@
 				$this->allrows = $allrows;
 			}
 
-			$attrib = $this->so->read_attrib(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
-											'cat_id' => $cat_id,'entity_id' => $entity_id,'allrows'=>$this->allrows));
-
-			for ($i=0; $i<count($attrib); $i++)
-			{
-				$attrib[$i]['datatype'] = $this->bocommon->translate_datatype($attrib[$i]['datatype']);
-			}
+			$attrib = $this->custom->get_attribs('property', '.entity.' . $entity_id . '.' . $cat_id, $this->start, $this->query, $this->sort, $this->order, $this->allrows);
 
 			$this->total_records = $this->so->total_records;
 
@@ -319,30 +314,34 @@
 
 		function read_single_attrib($entity_id,$cat_id,$id)
 		{
-			return $this->so->read_single_attrib($entity_id,$cat_id,$id);
+			return $this->custom->get_attrib_single('property', '.entity.' . $entity_id . '.' . $cat_id, $id, true);
 		}
 
 		function resort_attrib($id,$resort)
 		{
-			$this->so->resort_attrib(array('resort'=>$resort,'entity_id' => $this->entity_id,'cat_id' => $this->cat_id,'id'=>$id));
+			$this->custom->resort_attrib($id, $resort, 'property', '.entity.' . $this->entity_id . '.' . $this->cat_id);
 		}
 
 		function save_attrib($attrib,$action='')
 		{
+			$attrib['appname'] = 'property';
+ 			$attrib['location'] = '.entity.' . $attrib['entity_id'] . '.' . $attrib['cat_id'];
+
 			if ($action=='edit')
 			{
 				if ($attrib['id'] != '')
 				{
 
-					$receipt = $this->so->edit_attrib($attrib);
+					$receipt = $this->custom->edit_attrib($attrib);
 				}
 			}
 			else
 			{
-				$receipt = $this->so->add_attrib($attrib);
+				$receipt = $this->custom->add_attrib($attrib);
 			}
 			return $receipt;
 		}
+
 
 		function save_config($values='',$column_name='')
 		{

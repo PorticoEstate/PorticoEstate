@@ -2109,7 +2109,76 @@
 		$GLOBALS['phpgw_setup']->oProc->DropTable('fm_owner_choice');
 		$GLOBALS['phpgw_setup']->oProc->DropTable('fm_tenant_choice');
 		$GLOBALS['phpgw_setup']->oProc->DropTable('fm_vendor_choice');
-		
+
+//---------------entity
+		$attrib = array();
+		$GLOBALS['phpgw_setup']->oProc->query("SELECT * FROM fm_entity_attribute");
+		while ($GLOBALS['phpgw_setup']->oProc->next_record())
+		{
+			$attrib[]=array(
+					'appname'		=> 'property',
+					'location'		=> '.entity.' . $GLOBALS['phpgw_setup']->oProc->f('entity_id') . '.' . $GLOBALS['phpgw_setup']->oProc->f('cat_id'),
+					'id'			=> $GLOBALS['phpgw_setup']->oProc->f('id'),
+					'column_name'	=> $GLOBALS['phpgw_setup']->oProc->f('column_name'),
+					'input_text'	=> $GLOBALS['phpgw_setup']->oProc->f('input_text'),
+					'statustext'	=> $GLOBALS['phpgw_setup']->oProc->f('statustext'),
+					'datatype'		=> $GLOBALS['phpgw_setup']->oProc->f('datatype'),
+					'search'		=> $GLOBALS['phpgw_setup']->oProc->f('search'),
+					'history'		=> $GLOBALS['phpgw_setup']->oProc->f('history'),
+					'list'			=> $GLOBALS['phpgw_setup']->oProc->f('list'),
+					'attrib_sort'	=> $GLOBALS['phpgw_setup']->oProc->f('attrib_sort'),
+					'size'			=> $GLOBALS['phpgw_setup']->oProc->f('size'),
+					'precision_'	=> $GLOBALS['phpgw_setup']->oProc->f('precision_'),
+					'scale'			=> $GLOBALS['phpgw_setup']->oProc->f('scale'),
+					'default_value'	=> $GLOBALS['phpgw_setup']->oProc->f('default_value'),
+					'nullable'		=> $GLOBALS['phpgw_setup']->oProc->f('nullable'),
+					'helpmsg'		=> $GLOBALS['phpgw_setup']->oProc->f('helpmsg')
+ 			);
+		}
+
+		foreach ($attrib as $entry)
+		{
+			$GLOBALS['phpgw_setup']->oProc->query('INSERT INTO phpgw_cust_attribute (' . implode(',',array_keys($entry)) . ') VALUES (' . $GLOBALS['phpgw_setup']->oProc->validate_insert(array_values($entry)) . ')');
+		}
+
+		$choice = array();
+		$GLOBALS['phpgw_setup']->oProc->query("SELECT * FROM fm_entity_choice"); 
+		while ($GLOBALS['phpgw_setup']->oProc->next_record())
+		{
+			$choice[]=array(
+					'appname'		=> 'property',
+					'location'		=> '.entity.' . $GLOBALS['phpgw_setup']->oProc->f('entity_id') . '.' . $GLOBALS['phpgw_setup']->oProc->f('cat_id'),
+					'attrib_id'		=> $GLOBALS['phpgw_setup']->oProc->f('attrib_id'),
+					'id'			=> $GLOBALS['phpgw_setup']->oProc->f('id'),
+					'value'			=> $GLOBALS['phpgw_setup']->oProc->f('value')
+			);
+		}
+
+		foreach ($choice as $entry)
+		{
+			$GLOBALS['phpgw_setup']->oProc->query('INSERT INTO phpgw_cust_choice (' . implode(',',array_keys($entry)) . ') VALUES (' . $GLOBALS['phpgw_setup']->oProc->validate_insert(array_values($entry)) . ')');
+		}
+
+		$GLOBALS['phpgw_setup']->oProc->DropTable('fm_entity_attribute');
+		$GLOBALS['phpgw_setup']->oProc->DropTable('fm_entity_choice');
+
+		$location = array();
+		$GLOBALS['phpgw_setup']->oProc->query("SELECT * FROM phpgw_acl_location WHERE appname = 'property' AND id LIKE '.entity.%'");
+
+		while ($GLOBALS['phpgw_setup']->oProc->next_record())
+		{
+			$location[]= $GLOBALS['phpgw_setup']->oProc->f('id');
+		}
+
+		foreach ($location as $entry)
+		{
+			if (strlen($entry)>10)
+			{
+				$GLOBALS['phpgw_setup']->oProc->query("UPDATE phpgw_acl_location SET allow_c_attrib=1 ,c_attrib_table ='fm" . str_replace('.','_', $entry) ."' WHERE id = '$entry'");
+			}
+		}
+
+//---------------
 		
 		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
 		{

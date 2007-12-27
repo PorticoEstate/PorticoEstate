@@ -73,9 +73,9 @@
 
 		function property_boentity($session=False)
 		{
-		//	$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->solocation 	= CreateObject('property.solocation');
 			$this->bocommon 	= CreateObject('property.bocommon');
+			$this->custom 		= createObject('phpgwapi.custom_fields');
 			$this->vfs 			= CreateObject('phpgwapi.vfs');
 			$this->rootdir 		= $this->vfs->basedir;
 			$this->fakebase 	= $this->vfs->fakebase;
@@ -184,14 +184,11 @@
 
 		function column_list($selected='',$entity_id='',$cat_id,$allrows='')
 		{
-			$soadmin_entity	= CreateObject('property.soadmin_entity');
-
 			if(!$selected)
 			{
 				$selected=$GLOBALS['phpgw_info']['user']['preferences']['property']["entity_columns_" . $this->entity_id . '_' . $this->cat_id];
 			}
-
-			$columns = $soadmin_entity->read_attrib(array('entity_id'=>$entity_id,'cat_id'=>$cat_id,'allrows'=>$allrows,'filter_list' =>true));
+			$columns = $this->custom->get_attribs('property','.entity.' . $entity_id . '.' . $cat_id, 0, '','','',true);
 			$column_list=$this->bocommon->select_multi_list($selected,$columns);
 			return $column_list;
 		}
@@ -276,171 +273,51 @@
 
 		function read_single($data)
 		{
+			$values['attributes'] = $this->custom->get_attribs('property','.entity.' . $data['entity_id'] .'.' . $data['cat_id'], 0, '', 'ASC', 'attrib_sort', true, true);
+			if(isset($data['id']) && $data['id'])
+			{
+				$values = $this->so->read_single($data, $values);
+			}
+			$values = $this->custom->prepare_attributes($values, 'property','.entity.' . $data['entity_id'] .'.' . $data['cat_id'], $data['view']);
+
 			$soadmin_entity	= CreateObject('property.soadmin_entity');
-			$contacts		= CreateObject('phpgwapi.contacts');
-			$vendor 		= CreateObject('property.soactor');
-			$vendor->role	= 'vendor';
 
-			$entity	= $this->so->read_single($data);
-
-			$dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
-		//	$entity['date']  = $GLOBALS['phpgw']->common->show_date($entity['date'],$dateformat);
-
-			if($entity['location_code'])
+			if($values['location_code'])
 			{
-				$entity['location_data']=$this->solocation->read_single($entity['location_code']);
-				if($entity['tenant_id'])
+				$values['location_data']=$this->solocation->read_single($values['location_code']);
+				if($values['tenant_id'])
 				{
-					$tenant_data=$this->bocommon->read_single_tenant($entity['tenant_id']);
-					$entity['location_data']['tenant_id']	= $entity['tenant_id'];
-					$entity['location_data']['contact_phone']= $entity['contact_phone'];
-					$entity['location_data']['last_name']	= $tenant_data['last_name'];
-					$entity['location_data']['first_name']	= $tenant_data['first_name'];
+					$tenant_data=$this->bocommon->read_single_tenant($values['tenant_id']);
+					$values['location_data']['tenant_id']	= $values['tenant_id'];
+					$values['location_data']['contact_phone']= $values['contact_phone'];
+					$values['location_data']['last_name']	= $tenant_data['last_name'];
+					$values['location_data']['first_name']	= $tenant_data['first_name'];
 				}
 			}
 
-			if($entity['p_num'])
+			if($values['p_num'])
 			{
-				$category = $soadmin_entity->read_single_category($entity['p_entity_id'],$entity['p_cat_id']);
-				$entity['p'][$entity['p_entity_id']]['p_num']=$entity['p_num'];
-				$entity['p'][$entity['p_entity_id']]['p_entity_id']=$entity['p_entity_id'];
-				$entity['p'][$entity['p_entity_id']]['p_cat_id']=$entity['p_cat_id'];
-				$entity['p'][$entity['p_entity_id']]['p_cat_name'] = $category['name'];
-			}
-
-			$input_type_array = array(
-				'R' => 'radio',
-				'CH' => 'checkbox',
-				'LB' => 'listbox'
-			);
-
-			$sep = '/';
-
-			$dlarr[strpos($dateformat,'Y')] = 'Y';
-			$dlarr[strpos($dateformat,'m')] = 'm';
-			$dlarr[strpos($dateformat,'d')] = 'd';
-			ksort($dlarr);
-			$dateformat= (implode($sep,$dlarr));
-			$m=0;
-
-			//FIXME: This code is duplicated - and should be moved
-			for ($i=0;$i<count($entity['attributes']);$i++)
-			{
-				$entity['attributes'][$i]['help_url']		= $entity['attributes'][$i]['helpmsg'] ? $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'property.uientity.attrib_help', 'entity_id'=> $this->entity_id, 'cat_id'=> $this->cat_id, 'attrib_id' => $entity['attributes'][$i]['attrib_id'])): '';
-				if($entity['attributes'][$i]['datatype']=='D')
-				{
-					if ( !isset($GLOBALS['phpgw']->jscal) || !is_object($GLOBALS['phpgw']->jscal) )
-					{
-						$GLOBALS['phpgw']->jscal = createObject('phpgwapi.jscalendar');
-					}
-
-					$GLOBALS['phpgw']->jscal->add_listener('values_attribute_' . $i);
-					$entity['attributes'][$i]['img_cal']= $GLOBALS['phpgw']->common->image('phpgwapi','cal');
-					$entity['attributes'][$i]['lang_datetitle']= lang('Select date');
-
-					if($entity['attributes'][$i]['value'])
-					{
-						$timestamp_date= mktime(0,0,0,date(m,strtotime($entity['attributes'][$i]['value'])),date(d,strtotime($entity['attributes'][$i]['value'])),date(y,strtotime($entity['attributes'][$i]['value'])));
-						$entity['attributes'][$i]['value']	= $GLOBALS['phpgw']->common->show_date($timestamp_date,$dateformat);
-					}
-				}
-				else if($entity['attributes'][$i]['datatype']=='AB')
-				{
-					if($entity['attributes'][$i]['value'])
-					{
-						$contact_data				= $contacts->read_single_entry($entity['attributes'][$i]['value'],array('n_given'=>'n_given','n_family'=>'n_family','email'=>'email'));
-						$entity['attributes'][$i]['contact_name']	= $contact_data[0]['n_family'] . ', ' . $contact_data[0]['n_given'];
-					}
-
-					$insert_record_entity[]	= $entity['attributes'][$i]['name'];
-					$lookup_link		= $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'property.uilookup.addressbook', 'column'=> $entity['attributes'][$i]['name']));
-					$lookup_functions[$m]['name'] = 'lookup_'. $entity['attributes'][$i]['name'] .'()';
-					$lookup_functions[$m]['action'] = 'Window1=window.open('."'" . $lookup_link ."'" .',"Search","width=800,height=700,toolbar=no,scrollbars=yes,resizable=yes");';
-					$m++;
-				}
-				else if($entity['attributes'][$i]['datatype']=='VENDOR')
-				{
-					if($entity['attributes'][$i]['value'])
-					{
-						$vendor_data	= $vendor->read_single(array('actor_id'=>$entity['attributes'][$i]['value']));
-						for ($n=0;$n<count($vendor_data['attributes']);$n++)
-						{
-							if($vendor_data['attributes'][$n]['name'] == 'org_name')
-							{
-								$entity['attributes'][$i]['vendor_name']= $vendor_data['attributes'][$n]['value'];
-								$n =count($vendor_data['attributes']);
-							}
-						}
-					}
-
-					$insert_record_entity[]	= $entity['attributes'][$i]['name'];
-					$lookup_link		= $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'property.uilookup.vendor', 'column'=> $entity['attributes'][$i]['name']));
-					$lookup_functions[$m]['name'] = 'lookup_'. $entity['attributes'][$i]['name'] .'()';
-					$lookup_functions[$m]['action'] = 'Window1=window.open('."'" . $lookup_link ."'" .',"Search","width=800,height=700,toolbar=no,scrollbars=yes,resizable=yes");';
-					$m++;
-				}
-				else if($entity['attributes'][$i]['datatype']=='R' || $entity['attributes'][$i]['datatype']=='CH' || $entity['attributes'][$i]['datatype']=='LB')
-				{
-					$entity['attributes'][$i]['choice']	= $soadmin_entity->read_attrib_choice($data['entity_id'],$data['cat_id'],$entity['attributes'][$i]['attrib_id']);
-					$input_type=$input_type_array[$entity['attributes'][$i]['datatype']];
-
-					if($entity['attributes'][$i]['datatype']=='CH')
-					{
-						$entity['attributes'][$i]['value']=unserialize($entity['attributes'][$i]['value']);
-						$entity['attributes'][$i]['choice'] = $this->bocommon->select_multi_list_2($entity['attributes'][$i]['value'],$entity['attributes'][$i]['choice'],$input_type);
-					}
-					else
-					{
-						for ($j=0;$j<count($entity['attributes'][$i]['choice']);$j++)
-						{
-							$entity['attributes'][$i]['choice'][$j]['input_type']=$input_type;
-							if($entity['attributes'][$i]['choice'][$j]['id']==$entity['attributes'][$i]['value'])
-							{
-								$entity['attributes'][$i]['choice'][$j]['checked']='checked';
-							}
-						}
-					}
-				}
-				else if ($entity['attributes'][$i]['datatype']!='I' && $entity['attributes'][$i]['value'])
-				{
-					$entity['attributes'][$i]['value'] = stripslashes($entity['attributes'][$i]['value']);
-				}
-
-				$entity['attributes'][$i]['datatype_text'] = $this->bocommon->translate_datatype($entity['attributes'][$i]['datatype']);
-				$entity['attributes'][$i]['counter']	= $i;
-//				$entity['attributes'][$i]['type_id']	= $data['type_id'];
-			}
-
-			if(isset($lookup_functions) && is_array($lookup_functions))
-			{
-				for ($j=0;$j<count($lookup_functions);$j++)
-				{
-					$entity['lookup_functions'] .= 'function ' . $lookup_functions[$j]['name'] ."\r\n";
-					$entity['lookup_functions'] .= '{'."\r\n";
-					$entity['lookup_functions'] .= $lookup_functions[$j]['action'] ."\r\n";
-					$entity['lookup_functions'] .= '}'."\r\n";
-				}
+				$category = $soadmin_entity->read_single_category($values['p_entity_id'],$values['p_cat_id']);
+				$values['p'][$values['p_entity_id']]['p_num']=$values['p_num'];
+				$values['p'][$values['p_entity_id']]['p_entity_id']=$values['p_entity_id'];
+				$values['p'][$values['p_entity_id']]['p_cat_id']=$values['p_cat_id'];
+				$values['p'][$values['p_entity_id']]['p_cat_name'] = $category['name'];
 			}
 
 			$this->vfs->override_acl = 1;
-			$entity['files'] = $this->vfs->ls (array(
-			     'string' => $this->fakebase. '/' . $this->category_dir . '/' . $entity['location_data']['loc1'] .  '/' . $data['id'],
+			$values['files'] = $this->vfs->ls (array(
+			     'string' => $this->fakebase. '/' . $this->category_dir . '/' . $values['location_data']['loc1'] .  '/' . $data['id'],
 			     'relatives' => array(RELATIVE_NONE)));
 
 			$this->vfs->override_acl = 0;
 
-			if(!isset($entity['files'][0]['file_id']) || !$entity['files'][0]['file_id'])
+			if(!isset($values['files'][0]['file_id']) || !$values['files'][0]['file_id'])
 			{
-				unset($entity['files']);
+				unset($values['files']);
 			}
 
-
-			$GLOBALS['phpgw']->session->appsession('insert_record_entity','property',isset($insert_record_entity)?$insert_record_entity:'');
-
-//_debug_array($insert_record_entity);
-			return $entity;
+			return $values;
 		}
-
 
 		function create_home_dir($receipt='')
 		{
@@ -535,32 +412,9 @@
 
 			$values['date']	= $this->bocommon->date_to_timestamp($values['date']);
 
-			if (is_array($values_attribute))
+			if(is_array($values_attribute))
 			{
-				for ($i=0;$i<count($values_attribute);$i++)
-				{
-					if(isset($values_attribute[$i]['value']) && $values_attribute[$i]['value'])
-					{
-						switch($values_attribute[$i]['datatype'])
-						{
-							case 'CH':
-								$values_attribute[$i]['value'] = serialize($values_attribute[$i]['value']);
-								break;
-							case 'R':
-								$values_attribute[$i]['value'] = $values_attribute[$i]['value'][0];
-								break;
-							case 'N':
-								$values_attribute[$i]['value'] = str_replace(",",".",$values_attribute[$i]['value']);
-								break;
-							case 'D':
-								$values_attribute[$i]['value'] = date($this->bocommon->dateformat,$this->bocommon->date_to_timestamp($values_attribute[$i]['value']));
-								break;
-							case 'T':
-								$values_attribute[$i]['value'] = $GLOBALS['phpgw']->db->db_addslashes($values_attribute[$i]['value']);
-								break;
-						}
-					}
-				}
+				$values_attribute = $this->custom->convert_attribute_save($values_attribute);
 			}
 
 			if ($action=='edit')

@@ -56,7 +56,7 @@
 							<input type="hidden" name="values_attribute[{counter}][datatype]" value="{datatype}"></input>
 							<input type="hidden" name="values_attribute[{counter}][history]" value="{history}"></input>
 							<input type="hidden" name="values_attribute[{counter}][attrib_id]" value="{attrib_id}"></input>
-							<input type="hidden" name="values_attribute[{counter}][allow_null]" value="{allow_null}"></input>
+							<input type="hidden" name="values_attribute[{counter}][nullable]" value="{nullable}"></input>
 							<input type="hidden" name="values_attribute[{counter}][input_text]" value="{input_text}"></input>
 							<xsl:choose>
 								<xsl:when test="datatype='R'">
@@ -270,7 +270,7 @@
 															<xsl:attribute name="disabled">
 																<xsl:text> disabled</xsl:text>
 															</xsl:attribute>
-															</xsl:when>
+														</xsl:when>
 													</xsl:choose>
 													<xsl:attribute name="onMouseover">
 														<xsl:text>window.status='</xsl:text>

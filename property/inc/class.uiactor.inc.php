@@ -410,6 +410,17 @@
 //						$receipt['error'][]=array('msg'=>lang('Please enter a name !'));
 					}
 
+					if(isset($values_attribute) && is_array($values_attribute))
+					{
+						foreach ($values_attribute as $attribute )
+						{
+							if($attribute['nullable'] != 1 && !$attribute['value'])
+							{
+								$receipt['error'][]=array('msg'=>lang('Please enter value for attribute %1', $attribute['input_text']));
+							}
+						}
+					}
+
 					if(!isset($receipt['error']) || !$receipt['error'])
 					{
 						$values['actor_id']	= $actor_id;
@@ -589,7 +600,7 @@
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('actor','attributes_view'));
 
-			$actor = $this->bo->read_single(array('actor_id'=>$actor_id));
+			$actor = $this->bo->read_single(array('actor_id'=>$actor_id, 'view'=>true));
 
 			$attributes_values=$actor['attributes'];
 
