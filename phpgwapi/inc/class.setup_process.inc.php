@@ -51,7 +51,7 @@
 			$GLOBALS['phpgw_setup']->oProc->m_odb->Database = $phpgw_domain[$ConfigDomain]['db_name'];
 			$GLOBALS['phpgw_setup']->oProc->m_odb->User     = $phpgw_domain[$ConfigDomain]['db_user'];
 			$GLOBALS['phpgw_setup']->oProc->m_odb->Password = $phpgw_domain[$ConfigDomain]['db_pass'];
-			$GLOBALS['phpgw_setup']->oProc->m_odb->Halt_On_Error = 'report';
+			$GLOBALS['phpgw_setup']->oProc->m_odb->Halt_On_Error = 'yes';
 			$GLOBALS['phpgw_setup']->oProc->m_odb->connect();
 		}
 
