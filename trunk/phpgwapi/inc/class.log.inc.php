@@ -189,10 +189,21 @@
 
 		function write_error_to_db($err)
 		{
-			$db =& $GLOBALS['phpgw']->db;
-			$db->lock('phpgw_log');
+			if(is_object($GLOBALS['phpgw']->db))
+			{
+				$db =& $GLOBALS['phpgw']->db;
+			}
+			else // during setup
+			{
+				$db =& $GLOBALS['phpgw_setup']->oProc->m_odb;
+				if(!$db->metadata('phpgw_log'))
+				{
+					echo 'Failed to log error to database. DB errno ' . $db->Errno . ': message ' . $db->Error;
+					return;
+				}
+			}
 			$db->query("insert into phpgw_log (log_date, log_app, log_account_id, log_account_lid, log_severity, log_file, log_line, log_msg) values "
-				. "('" . $GLOBALS['phpgw']->db->to_timestamp(time()) . "'"
+				. "('" . $db->to_timestamp(time()) . "'"
 				. ",'" . $db->db_addslashes($GLOBALS['phpgw_info']['flags']['currentapp']) . "'"
 				. ","  . ( $GLOBALS['phpgw']->session->account_id ? $GLOBALS['phpgw']->session->account_id : -1)
 				. ",'" . $db->db_addslashes($GLOBALS['phpgw']->session->account_lid) . "'"
@@ -207,7 +218,6 @@
 			{
 				trigger_error("Failed to log error to database. DB errno " . $db->Errno . ": message " . $db->Error,  E_USER_NOTICE);
 			}
-			$db->unlock();
 		}
 
 		// I pulled this from the old code, where it's used to display a fatal error and determinate processing..

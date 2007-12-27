@@ -133,7 +133,7 @@
 			$attrib['list'] = isset($attrib['list']) ? !!$attrib['list'] : false;
 			$attrib['history'] = isset($attrib['history']) ? !!$attrib['history'] : false;
 
-			$attrib['column_name'] = $this->db->db_addslashes($attrib['column_name']);
+			$attrib['column_name'] = $this->db->db_addslashes(strtolower($attrib['column_name']));
 			$attrib['input_text'] = $this->db->db_addslashes($attrib['input_text']);
 			$attrib['statustext'] = $this->db->db_addslashes($attrib['statustext']);
 			$attrib['default'] =  isset($arrib['default']) ? $this->db->db_addslashes($attrib['default']) : '';
@@ -324,7 +324,7 @@
 			$attrib['search'] = isset($attrib['search']) ? !!$attrib['search'] : false;
 			$attrib['list'] = isset($attrib['list']) ? !!$attrib['list'] : false;
 			$attrib['history'] = isset($attrib['history']) ? !!$attrib['history'] : false;
-			
+
 			$attrib_table = $this->get_attrib_table($attrib['appname'],$attrib['location']);
 			$choice_table = 'phpgw_cust_choice';
 
@@ -370,11 +370,8 @@
 
 			$this->db->query("UPDATE phpgw_cust_attribute set $value_set WHERE appname='" . $attrib['appname']. "' AND location='" . $attrib['location']. "' AND id=" . $attrib['id'],__LINE__,__FILE__);
 
-//			$this->_init_process();
-			
 			$this->oProc->m_odb->transaction_begin();
 
-			// FIXME : think this is needed - check
 			$this->oProc->m_aTables = $table_def;
 
 			if($OldColumnName !=$attrib['column_name'])
@@ -1048,8 +1045,8 @@
 		function _init_process()
 		{
 			$this->oProc 				= createObject('phpgwapi.schema_proc',$GLOBALS['phpgw_info']['server']['db_type']);
-			$this->oProc->m_odb			=& $this->db;
-			$this->oProc->m_odb->Halt_On_Error	= 'report';
+			$this->oProc->m_odb			= clone($this->db); // nested transactions
+			$this->oProc->m_odb->Halt_On_Error	= 'yes';
 		}
 		
 		/**
