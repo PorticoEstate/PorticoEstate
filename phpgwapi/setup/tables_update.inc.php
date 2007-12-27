@@ -1185,9 +1185,20 @@
 	$test[] = '0.9.16.010';
 	function phpgwapi_upgrade0_9_16_010()
 	{
-		return $GLOBALS['setup_info']['phpgwapi']['currentver']= '0.9.17.500';
+		return $GLOBALS['setup_info']['phpgwapi']['currentver']= '0.9.16.011';
 	}
 
+	$test[] = '0.9.16.011';
+	function phpgwapi_upgrade0_9_16_011()
+	{
+		return $GLOBALS['setup_info']['phpgwapi']['currentver']= '0.9.16.012';
+	}
+
+	$test[] = '0.9.16.012';
+	function phpgwapi_upgrade0_9_16_012()
+	{
+		return $GLOBALS['setup_info']['phpgwapi']['currentver']= '0.9.17.500';
+	}
 
 	$test[] = '0.9.17.500';
 	function phpgwapi_upgrade0_9_17_500()
