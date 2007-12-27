@@ -1,3 +1,28 @@
+		<div id="theme-gray">
+			<div class="border-layout">
+				<div class="layout-north">
+					<div class="panel">
+						<div class="header">
+							<h2 class="icon">{site_title}</h2>
+							<div class="button-bar">
+								<a href="{about_url}" class="icon icon-about">
+									{about_text}
+								</a>
+								<a href="{preferences_url}" class="icon icon-preferences">
+									{preferences_text}
+								</a>
+								<a href="{logout_url}" class="icon icon-logout">
+									{logout_text}
+								</a>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="layout-west">
+					<div class="panel">
+						<div class="header">
+							<h2>{user_fullname}</h2>
 						</div>
 						<div class="body">
 							<div class="treeview">

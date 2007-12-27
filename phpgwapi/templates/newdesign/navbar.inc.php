@@ -1,9 +1,22 @@
 <?php
-	global $menu_tmp;
-
 	function parse_navbar($force = False)
 	{
-		global $menu_tmp;
+		$navbar = execMethod('phpgwapi.menu.get', 'navbar');
+		$var = array
+		(
+			'about_url'		=> $GLOBALS['phpgw']->link('/about.php', array('appname' => $GLOBALS['phpgw_info']['flags']['currentapp']) ),
+			'about_text'	=> lang('about'),
+			'logout_url'	=> $navbar['logout']['url'],
+			'logout_text'	=> $navbar['logout']['text'],
+			'user_fullname' => $GLOBALS['phpgw']->common->display_fullname()
+		);
+
+		if ( isset($navbar['preferences']) )
+		{
+			$var['preferences_url'] = $navbar['preferences']['url'];
+			$var['preferences_text'] = $navbar['preferences']['text'];
+		}
+
 		$GLOBALS['phpgw']->template->set_root(PHPGW_TEMPLATE_DIR);
 		$GLOBALS['phpgw']->template->set_file('navbar', 'navbar.tpl');
 
@@ -21,7 +34,6 @@
 
 HTML;
 
-		$navbar = execMethod('phpgwapi.menu.get', 'navbar');
 		prepare_navbar($navbar);
 		$navigation = execMethod('phpgwapi.menu.get', 'navigation');
 
@@ -33,7 +45,19 @@ HTML;
 					continue;
 					break;
 				default:
-					$class = $app == $GLOBALS['phpgw_info']['flags']['currentapp'] ? ' class="current expanded"' : ' class="expanded"';
+					$class = '';
+					if ( isset($navigation[$app]) && count($navigation[$app]) )
+					{
+						if ( $app == $GLOBALS['phpgw_info']['flags']['currentapp'] )
+						{
+							$class = 'current expanded ';
+						}
+						else
+						{
+							$class .= 'collapsed';
+						}
+					}
+					$class = $class ? " class=\"{$class}\"" : '';
 					$img = ' style="background-image: url(' . $GLOBALS['phpgw']->common->image($app_data['image'][0], $app_data['image'][1]) . ');"';
 					$treemenu .= <<<HTML
 			<li{$class}>
@@ -42,7 +66,7 @@ HTML;
 HTML;
 					if ( isset($navigation[$app]) )
 					{
-						$treemenu .= render_submenu($navigation[$app], true);
+						$treemenu .= render_submenu($navigation[$app], $app == $GLOBALS['phpgw_info']['flags']['currentapp']);
 					}
 
 					$treemenu .= <<<HTML
@@ -68,14 +92,18 @@ HTML;
 
 	function render_submenu($menu, $expanded)
 	{
-		$class = $expanded ? ' class="expanded"' : '';
+		$class = $expanded ? ' class="expanded"' : ' class="collapsed"';
 		$submenu = <<<HTML
 				<ul{$class}>
 
 HTML;
 		foreach ( $menu as $item )
 		{
-			$class = isset($item['children']) && count($item['children']) ? ' class="expanded"' : '';
+			$class = '';
+			if ( isset($item['children']) && count($item['children']) )
+			{
+				$class = $expanded ? ' class="expanded"' : ' class="collapsed"';
+			}
 			$style = isset($item['image']) ? ' style="background-image: url(' . $GLOBALS['phpgw']->common->image($item['image'][0], $item['image'][1]) . ');"' : '';
 			$submenu .= <<<HTML
 					<li{$class}>
@@ -84,7 +112,7 @@ HTML;
 HTML;
 			if ( isset($item['children']) && count($item['children']) )
 			{
-				$submenu .= render_submenu($item['children'], true); //isset($menu['children']) && count($menu['children']) );
+				$submenu .= render_submenu($item['children'], $expanded);
 			}
 			$submenu .= <<<HTML
 					</li>
@@ -117,28 +145,9 @@ HTML;
 
 		$GLOBALS['phpgw']->template->set_var($var);
 
-		$GLOBALS['phpgw']->template->pfp('out','footer');
+		$GLOBALS['phpgw']->template->pfp('out', 'footer');
+
 		$footer_included = true;
-	}
-
-	function display_sidebox($appname, $menu_title, $file, $use_lang = true)
-	{
-		global $menu_tmp;
-		$i = count($menu_tmp);
-		$menu_tmp[$i] = $file;
-
-		//echo "<ul>";
-		//echo "<li>{$appname} - {$menu_title}</li>";
-		//foreach ( $file as $item )
-		//{
-		//	if( $item['this'])
-		//		echo "<li><a href=\"{$item['url']}\">* {$item['text']}</a></li>";
-		//	else
-		//		echo "<li><a href=\"{$item['url']}\">{$item['text']}</a></li>";
-			//echo "<pre>";
-			//var_dump($item);
-		//}
-		//echo "</ul>";
 	}
 
 	/**
@@ -170,4 +179,3 @@ HTML;
 	{
 		uasort($navbar, 'sort_navbar');
 	}
-

@@ -4,7 +4,7 @@
 <html>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-		<meta name="AUTHOR" content="phpGroupWare http://www.phpgroupware.org">
+		<meta name="author" content="phpGroupWare http://www.phpgroupware.org">
 		<meta name="description" content="phpGroupWare">
 		<meta name="keywords" content="phpGroupWare">
 		<meta name="robots" content="none">
@@ -20,34 +20,61 @@
 		<!--
 			var strBaseURL = '{str_base_url}';
 			{win_on_events}
-		-->
+		//-->
 		</script>
 		{javascript}
+		<script type="text/javascript">
+		<!--
+			function expandCollapse(e)
+			{
+				if (!e)
+				{
+					var e = window.event;
+				};
+
+				var elm = e.target ? e.target : e.srcElement;
+				if (elm.nodeType == 3)
+				{
+					elm = elm.parentNode;
+				}
+
+				var child;
+				if ( elm.className.match(/expanded/) )
+				{
+					elm.className = elm.className.replace(/expanded/, 'collapsed');
+					child = elm.getElementsByTagName('ul').item(0);
+					child.className = child.className.replace(/expanded/, 'collapsed');
+				}
+				else if ( elm.className.match(/collapsed/) )
+				{
+					elm.className = elm.className.replace(/collapsed/, 'expanded');
+					child = elm.getElementsByTagName('ul').item(0);
+					child.className = child.className.replace(/collapsed/, 'expanded');
+				}
+
+				e.cancelBubble = true;
+				if (e.stopPropagation)
+				{
+					e.stopPropagation();
+				};
+			};
+
+			function addNewdesignListeners()
+			{
+				var elms = document.getElementById('navbar').getElementsByTagName('li');
+				var cntElms = elms.length;
+				for ( var i = 0; i < cntElms; ++i )
+				{
+					if ( elms[i].className.match(/expanded|collapsed/) )
+					{
+						YAHOO.util.Event.addListener(elms[i], 'dblclick', expandCollapse); 
+					}
+				}
+			};
+
+			YAHOO.util.Event.addListener(window, 'load', addNewdesignListeners);
+		//-->
+		</script>
 	</head>
 	<body class="yui-skin-sam">
-		<div id="theme-gray">
-			<div class="border-layout">
-				<div class="layout-north">
-					<div class="panel">
-						<div class="header">
-							<h2 class="icon">{site_title}</h2>
-							<div class="button-bar">
-								<a href="{about_url}" class="icon icon-about">
-									{about_text}
-								</a>
-								<a href="{preferences_url}" class="icon icon-preferences">
-									{preferences_text}
-								</a>
-								<a href="{logout_url}" class="icon icon-logout">
-									{logout_text}
-								</a>
-							</div>
-						</div>
-					</div>
-				</div>
-
-				<div class="layout-west">
-					<div class="panel">
-						<div class="header">
-							<h2>{user_fullname}</h2>
 <!-- END head -->

@@ -241,14 +241,14 @@ div.treeview
 	padding: 0.2em;
 }
 
-#navbar ul
-{
-	display: none;
-}
-
 #navbar ul.expanded
 {
 	display: block;
+}
+
+#navbar ul.collapsed
+{
+	display: none;
 }
 
 #navbar li
