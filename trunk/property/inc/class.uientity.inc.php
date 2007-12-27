@@ -278,7 +278,7 @@
 							{
 								$content[$j]['row'][$i]['value'] 		= $entity_entry[$uicols['name'][$i]];
 								$content[$j]['row'][$i]['name'] 		= $uicols['name'][$i];
-								if($uicols['input_type'][$i]=='link' && $entity_entry[$uicols['name'][$i]])
+								if($uicols['datatype'][$i]=='link' && $entity_entry[$uicols['name'][$i]])
 								{
 									$content[$j]['row'][$i]['text']		= lang('link');
 									$content[$j]['row'][$i]['link']		= $entity_entry[$uicols['name'][$i]];
@@ -543,25 +543,25 @@
 		//	$config		= CreateObject('phpgwapi.config','property');
 			$bolocation	= CreateObject('property.bolocation');
 
-			$id 			= phpgw::get_var('id', 'int');
-			$values			= phpgw::get_var('values');
+			$id 				= phpgw::get_var('id', 'int');
+			$values				= phpgw::get_var('values');
 			$values_attribute	= phpgw::get_var('values_attribute');
-			$bypass 		= phpgw::get_var('bypass', 'bool');
+			$bypass 			= phpgw::get_var('bypass', 'bool');
 			$lookup_tenant 		= phpgw::get_var('lookup_tenant', 'bool');
-			$tenant_id 		= phpgw::get_var('tenant_id', 'int');
+			$tenant_id 			= phpgw::get_var('tenant_id', 'int');
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('entity','attributes_form'));
 
 			$values['vendor_id']		= phpgw::get_var('vendor_id', 'int', 'POST');
 			$values['vendor_name']		= phpgw::get_var('vendor_name', 'string', 'POST');
-			$values['date']			= phpgw::get_var('date');
+			$values['date']				= phpgw::get_var('date');
 
 			$receipt = array();
 
 			if($_POST && !$bypass)
 			{
 				$insert_record 		= $GLOBALS['phpgw']->session->appsession('insert_record','property');
-				$insert_record_entity	= $GLOBALS['phpgw']->session->appsession('insert_record_entity','property');
+				$insert_record_entity	= $GLOBALS['phpgw']->session->appsession('insert_record_values' . $this->acl_location,'property');
 
 				if(is_array($insert_record_entity))
 				{
@@ -578,10 +578,10 @@
 				$location_code 		= phpgw::get_var('location_code');
 				$values['descr']	= phpgw::get_var('descr');
 				$p_entity_id		= phpgw::get_var('p_entity_id', 'int');
-				$p_cat_id		= phpgw::get_var('p_cat_id', 'int');
+				$p_cat_id			= phpgw::get_var('p_cat_id', 'int');
 				$values['p'][$p_entity_id]['p_entity_id']	= $p_entity_id;
 				$values['p'][$p_entity_id]['p_cat_id']		= $p_cat_id;
-				$values['p'][$p_entity_id]['p_num']		= phpgw::get_var('p_num');
+				$values['p'][$p_entity_id]['p_num']			= phpgw::get_var('p_num');
 
 
 				$origin		= phpgw::get_var('origin');
@@ -652,12 +652,12 @@
 					$receipt['error'][]=array('msg'=>lang('Please select entity type !'));
 					$error_id=true;
 				}
-
+_debug_array($values_attribute);
 				if(isset($values_attribute) && is_array($values_attribute))
 				{
 					foreach ($values_attribute as $attribute )
 					{
-						if($attribute['allow_null'] != 'True' && !$attribute['value'])
+						if($attribute['nullable'] != 1 && !$attribute['value'])
 						{
 							$receipt['error'][]=array('msg'=>lang('Please enter value for attribute %1', $attribute['input_text']));
 						}
@@ -1168,7 +1168,7 @@
 
 			if ($id)
 			{
-				$values	= $this->bo->read_single(array('entity_id'=>$this->entity_id,'cat_id'=>$this->cat_id,'id'=>$id));
+				$values	= $this->bo->read_single(array('entity_id'=>$this->entity_id,'cat_id'=>$this->cat_id,'id'=>$id, 'view' => true));
 			}
 
 			$lookup_type='view';

@@ -741,7 +741,7 @@
 					$content[] = array
 					(
 						'name'				=> $entry['name'],
-						'datatype'			=> $entry['datatype'],
+						'datatype'			=> $entry['trans_datatype'],
 						'column_name'			=> $entry['column_name'],
 						'input_text'			=> $entry['input_text'],
 						'sorting'			=> $entry['attrib_sort'],

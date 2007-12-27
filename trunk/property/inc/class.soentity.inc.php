@@ -63,13 +63,13 @@
 				return;
 			}
 
-			$sql= "SELECT fm_entity_choice.id, fm_entity_choice.value FROM fm_entity_attribute $this->join fm_entity_choice ON "
-			. " fm_entity_attribute.entity_id= fm_entity_choice.entity_id AND "
-			. " fm_entity_attribute.cat_id= fm_entity_choice.cat_id AND "
-			. " fm_entity_attribute.id= fm_entity_choice.attrib_id "
-			. " WHERE fm_entity_attribute.column_name='status' "
-			. " AND fm_entity_choice.entity_id=$entity_id "
-			. " AND fm_entity_choice.cat_id=$cat_id ORDER BY fm_entity_choice.id";
+			$sql= "SELECT phpgw_cust_choice.id, phpgw_cust_choice.value FROM phpgw_cust_attribute $this->join phpgw_cust_choice ON "
+			. " phpgw_cust_attribute.appname= phpgw_cust_choice.appname AND "
+			. " phpgw_cust_attribute.location= phpgw_cust_choice.location AND "
+			. " phpgw_cust_attribute.id= phpgw_cust_choice.attrib_id "
+			. " WHERE phpgw_cust_attribute.column_name='status' "
+			. " AND phpgw_cust_choice.appname='property' "
+			. " AND phpgw_cust_choice.location='.entity.$entity_id.$cat_id' ORDER BY phpgw_cust_choice.id";
 
 
 			$this->db->query($sql,__LINE__,__FILE__);
@@ -126,6 +126,10 @@
 			$category = $admin_entity->read_single_category($entity_id,$cat_id);
 
 			$entity_table = 'fm_entity_' . $entity_id . '_' . $cat_id;
+			$choice_table = 'phpgw_cust_choice';
+			$attribute_table = 'phpgw_cust_attribute';
+			$attribute_filter = " appname = 'property' AND location = '.entity." . $entity_id . '.' . $cat_id . "'";
+
 			if(!$sql)
 			{
 				$cols = $entity_table . '.*';
@@ -182,52 +186,32 @@
 
 			if ($cat_id > 0)
 			{
-				$fm_entity_cols = $admin_entity->read_attrib(array('entity_id'=>$entity_id,'cat_id'=>$cat_id,'allrows'=>true));
-
-				$result_columns = array();
-				foreach ($fm_entity_cols as $col_entry)
-				{
-					if ($col_entry['list'])
-					{
-						$result_columns[] = $col_entry['id'];
-					}
-				}
+//-------------------
 
 				$user_columns = isset($GLOBALS['phpgw_info']['user']['preferences']['property']['entity_columns_'.$entity_id.'_'.$cat_id])?$GLOBALS['phpgw_info']['user']['preferences']['property']['entity_columns_'.$entity_id.'_'.$cat_id]:'';
-
+				$user_column_filter = '';
 				if (isset($user_columns) AND is_array($user_columns) AND $user_columns[0])
 				{
-					$result_columns = array_merge($result_columns, $user_columns);
-					$result_columns = array_unique($result_columns);
+					$user_column_filter = " OR ($attribute_filter AND id IN (" . implode(',',$user_columns) .'))';
 				}
-					
+
+				$this->db->query("SELECT * FROM $attribute_table WHERE list=1 AND $attribute_filter $user_column_filter ORDER BY attrib_sort ASC");
+
 				$i	= count($uicols['name']);
-				if(isset($result_columns) && is_array($result_columns))
+				while ($this->db->next_record())
 				{
-					foreach($result_columns as $column_id)
-					{
-						$this->db->query("SELECT * FROM fm_entity_attribute WHERE entity_id= $entity_id AND cat_id= $cat_id AND id= $column_id");
-						$this->db->next_record();
-						
-						if($this->db->f('datatype') == 'link')
-						{
-							$uicols['input_type'][]		= 'link';
-						}
-						else
-						{
-							$uicols['input_type'][]		= 'text';
-						}
-						$uicols['name'][]			= $this->db->f('column_name');
-						$uicols['descr'][]			= $this->db->f('input_text');
-						$uicols['statustext'][]		= $this->db->f('statustext');
-						$uicols['datatype'][$i]		= $this->db->f('datatype');
-						$cols_return_extra[]= array(
-							'name'	=> $this->db->f('column_name'),
-							'datatype'	=> $this->db->f('datatype'),
-							'attrib_id'	=> $this->db->f('id')
-						);
-						$i++;
-					}
+					$uicols['input_type'][]		= 'text';
+					$uicols['name'][]			= $this->db->f('column_name');
+					$uicols['descr'][]			= $this->db->f('input_text');
+					$uicols['statustext'][]		= $this->db->f('statustext');
+					$uicols['datatype'][$i]		= $this->db->f('datatype');
+					$cols_return_extra[]= array(
+						'name'	=> $this->db->f('column_name'),
+						'datatype'	=> $this->db->f('datatype'),
+						'attrib_id'	=> $this->db->f('id')
+					);
+	
+					$i++;
 				}
 
 				$uicols['input_type'][]		= 'text';
@@ -314,7 +298,7 @@
 					$filtermethod .= " $where ( $entity_table.location_code $this->like '%$query%' OR $entity_table.num $this->like '%$query%' OR address $this->like '%$query%')";
 					$where= 'OR';
 
-					$this->db->query("SELECT * FROM fm_entity_attribute where search='1' AND entity_id= $entity_id AND cat_id = $cat_id");
+					$this->db->query("SELECT * FROM $attribute_table WHERE $attribute_filter AND search='1'");
 
 					while ($this->db->next_record())
 					{
@@ -388,7 +372,7 @@
 
 						if(($cols_return_extra[$i]['datatype']=='R' || $cols_return_extra[$i]['datatype']=='LB') && $value)
 						{
-							$sql="SELECT value FROM fm_entity_choice where entity_id=$entity_id AND cat_id=$cat_id AND attrib_id=" .$cols_return_extra[$i]['attrib_id']. "  AND id=" . $value;
+							$sql="SELECT value FROM $choice_table WHERE $attribute_filter AND attrib_id=" .$cols_return_extra[$i]['attrib_id']. "  AND id=" . $value;
 							$this->db2->query($sql);
 							$this->db2->next_record();
 							$entity_list[$j][$cols_return_extra[$i]['name']] = $this->db2->f('value');
@@ -413,7 +397,7 @@
 							{
 								for ($k=0;$k<count($ch);$k++)
 								{
-									$sql="SELECT value FROM fm_entity_choice where entity_id=$entity_id AND cat_id=$cat_id AND attrib_id=" .$cols_return_extra[$i]['attrib_id']. "  AND id=" . $ch[$k];
+									$sql="SELECT value FROM $choice_table WHERE $attribute_filter AND attrib_id=" .$cols_return_extra[$i]['attrib_id']. "  AND id=" . $ch[$k];
 									$this->db2->query($sql);
 									while ($this->db2->next_record())
 									{
@@ -453,55 +437,34 @@
 			return $entity_list;
 		}
 
-		function read_single($data)
+		function read_single($data,$values = array())
 		{
 			$entity_id =$data['entity_id'];
 			$cat_id =$data['cat_id'];
 			$id =$data['id'];
-
-			$this->db->query("SELECT * FROM fm_entity_attribute WHERE entity_id =$entity_id AND cat_id =$cat_id ORDER BY attrib_sort");
-
-			while ($this->db->next_record())
-			{
-				$entity['attributes'][] = array
-				(
-					'attrib_id'		=> $this->db->f('id'),
-					'name'			=> $this->db->f('column_name'),
-					'input_text'	=> stripslashes($this->db->f('input_text')),
-					'statustext'	=> stripslashes($this->db->f('statustext')),
-//					'statustext'	=> str_replace("\n"," ",stripslashes($this->db->f('statustext'))),
-					'datatype'		=> $this->db->f('datatype'),
-					'history'		=> $this->db->f('history'),
-					'allow_null'	=> $this->db->f('nullable'),
-					'disabled'		=> $this->db->f('disabled'),
-					'helpmsg'		=> !!$this->db->f('helpmsg')
-				);
-			}
-//_debug_array($entity);
-
-			if($id)
-			{
-				$table='fm_entity_' . $entity_id .'_' . $cat_id;
+			$table='fm_entity_' . $entity_id .'_' . $cat_id;
 
 				$this->db->query("SELECT * FROM $table WHERE id =$id");
 
 				if($this->db->next_record())
 				{
-					$entity['id']				= $id;
-					$entity['num']				= $this->db->f('num');
-					$entity['p_num']			= $this->db->f('p_num');
-					$entity['p_entity_id']		= $this->db->f('p_entity_id');
-					$entity['p_cat_id']			= $this->db->f('p_cat_id');
-					$entity['location_code']	= $this->db->f('location_code');
-					$entity['tenant_id']		= $this->db->f('tenant_id');
-					$entity['contact_phone']	= $this->db->f('contact_phone');
-					$entity['status']			= $this->db->f('status');
+					$values['id']				= $id;
+					$values['num']				= $this->db->f('num');
+					$values['p_num']			= $this->db->f('p_num');
+					$values['p_entity_id']		= $this->db->f('p_entity_id');
+					$values['p_cat_id']			= $this->db->f('p_cat_id');
+					$values['location_code']	= $this->db->f('location_code');
+					$values['tenant_id']		= $this->db->f('tenant_id');
+					$values['contact_phone']	= $this->db->f('contact_phone');
+					$values['status']			= $this->db->f('status');
 
-					for ($i=0;$i<count($entity['attributes']);$i++)
+				if ( isset($values['attributes']) && is_array($values['attributes']) )
+				{
+					foreach ( $values['attributes'] as &$attr )
 					{
-						$entity['attributes'][$i]['value'] 	= $this->db->f($entity['attributes'][$i]['name']);
-						$entity['attributes'][$i]['datatype_text'] 	= $this->bocommon->translate_datatype($entity['attributes'][$i]['datatype']);
+						$attr['value'] 	= $this->db->f($attr['column_name']);
 					}
+				}
 				}
 
 // ------------- get origin---------------
@@ -516,9 +479,9 @@
 					{
 						$i++;
 					}
-					$entity['origin'][$i]['type'] = $this->db->f('origin');
-					$entity['origin'][$i]['link'] = $this->bocommon->get_origin_link($this->db->f('origin'));
-					$entity['origin'][$i]['data'][]= array(
+					$values['origin'][$i]['type'] = $this->db->f('origin');
+					$values['origin'][$i]['link'] = $this->bocommon->get_origin_link($this->db->f('origin'));
+					$values['origin'][$i]['data'][]= array(
 						'id'=> $this->db->f('origin_id'),
 						'type'=> $this->db->f('origin')
 						);
@@ -538,18 +501,18 @@
 					{
 						$i++;
 					}
-					$entity['destination'][$i]['type'] = $this->db->f('destination');
-					$entity['destination'][$i]['link'] = $this->bocommon->get_origin_link($this->db->f('destination'));
-					$entity['destination'][$i]['data'][]= array(
+					$values['destination'][$i]['type'] = $this->db->f('destination');
+					$values['destination'][$i]['link'] = $this->bocommon->get_origin_link($this->db->f('destination'));
+					$values['destination'][$i]['data'][]= array(
 						'id'=> $this->db->f('destination_id'),
 						'type'=> $this->db->f('destination')
 						);
 
 					$last_type=$this->db->f('destination');
 				}
-			}
+
 // ------------- end get destination---------------
-			return	$entity;
+			return	$values;
 		}
 
 
@@ -834,8 +797,13 @@
 			$entity_id = (isset($data['entity_id'])?$data['entity_id']:'');
 			$cat_id = (isset($data['cat_id'])?$data['cat_id']:'');
 			$attrib_id = (isset($data['attrib_id'])?$data['attrib_id']:'');
-			
-			$this->db->query("SELECT helpmsg FROM fm_entity_attribute WHERE entity_id ='$entity_id' AND cat_id ='$cat_id' AND id = '$attrib_id'");
+
+			if(!$entity_id || !$cat_id || !$attrib_id)
+			{
+				return;
+			}
+
+			$this->db->query("SELECT helpmsg FROM fphpgw_cust_attribute WHERE appname = 'property' AND location = '.entity." . $entity_id . '.' . $cat_id . ' AND id =' . (int)$attrib_id );
 
 			$this->db->next_record();
 //			$helpmsg = str_replace("\n","<br>",stripslashes($this->db->f('helpmsg')));
