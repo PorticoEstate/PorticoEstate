@@ -1388,32 +1388,6 @@
 			'ix' => array(),
 			'uc' => array()
 		),
-		'fm_entity_attribute' => array(
-			'fd' => array(
-				'entity_id' => array('type' => 'int','precision' => '4','nullable' => False),
-				'cat_id' => array('type' => 'int','precision' => '4','nullable' => False),
-				'id' => array('type' => 'int','precision' => '4','nullable' => False),
-				'column_name' => array('type' => 'varchar','precision' => '20','nullable' => False),
-				'input_text' => array('type' => 'varchar','precision' => '50','nullable' => False),
-				'statustext' => array('type' => 'varchar','precision' => '150','nullable' => False),
-				'datatype' => array('type' => 'varchar','precision' => '10','nullable' => False),
-				'search' => array('type' => 'int','precision' => '2','nullable' => True),
-				'history' => array('type' => 'int','precision' => '2','nullable' => True),
-				'list' => array('type' => 'int','precision' => '4','nullable' => True),
-				'attrib_sort' => array('type' => 'int','precision' => '4','nullable' => True),
-				'size' => array('type' => 'int','precision' => '4','nullable' => True),
-				'precision_' => array('type' => 'int','precision' => '4','nullable' => True),
-				'scale' => array('type' => 'int','precision' => '4','nullable' => True),
-				'default_value' => array('type' => 'varchar','precision' => '20','nullable' => True),
-				'nullable' => array('type' => 'varchar','precision' => '5','nullable' => True),
-				'disabled' => array('type' => 'int','precision' => '2','nullable' => True),
-				'helpmsg' => array('type' => 'text','nullable' => True)
-			),
-			'pk' => array('entity_id','cat_id','id'),
-			'fk' => array(),
-			'ix' => array(),
-			'uc' => array()
-		),
 		'fm_entity_category' => array(
 			'fd' => array(
 				'entity_id' => array('type' => 'int','precision' => '4','nullable' => False),
@@ -1430,19 +1404,6 @@
 				'start_ticket' => array('type' => 'int','precision' => '2','nullable' => True)
 			),
 			'pk' => array('entity_id','id'),
-			'fk' => array(),
-			'ix' => array(),
-			'uc' => array()
-		),
-		'fm_entity_choice' => array(
-			'fd' => array(
-				'entity_id' => array('type' => 'int','precision' => '4','nullable' => False),
-				'cat_id' => array('type' => 'int','precision' => '4','nullable' => False),
-				'attrib_id' => array('type' => 'int','precision' => '4','nullable' => False),
-				'id' => array('type' => 'int','precision' => '4','nullable' => False),
-				'value' => array('type' => 'text','nullable' => False)
-			),
-			'pk' => array('entity_id','cat_id','attrib_id','id'),
 			'fk' => array(),
 			'ix' => array(),
 			'uc' => array()

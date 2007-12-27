@@ -2178,6 +2178,9 @@
 			}
 		}
 
+		$GLOBALS['phpgw_setup']->oProc->DropTable('fm_entity_attribute');
+		$GLOBALS['phpgw_setup']->oProc->DropTable('fm_entity_choice');
+
 //---------------
 		
 		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
