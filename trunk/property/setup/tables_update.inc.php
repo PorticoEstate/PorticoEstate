@@ -2159,9 +2159,6 @@
 			$GLOBALS['phpgw_setup']->oProc->query('INSERT INTO phpgw_cust_choice (' . implode(',',array_keys($entry)) . ') VALUES (' . $GLOBALS['phpgw_setup']->oProc->validate_insert(array_values($entry)) . ')');
 		}
 
-		$GLOBALS['phpgw_setup']->oProc->DropTable('fm_entity_attribute');
-		$GLOBALS['phpgw_setup']->oProc->DropTable('fm_entity_choice');
-
 		$location = array();
 		$GLOBALS['phpgw_setup']->oProc->query("SELECT * FROM phpgw_acl_location WHERE appname = 'property' AND id LIKE '.entity.%'");
 
