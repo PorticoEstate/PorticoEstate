@@ -43,30 +43,16 @@
 
 
 	$app = lang($app);
-	$navbar = execMethod('phpgwapi.menu.get', 'navbar');
 	$tpl_vars = array
 	(
 		'css'			=> $GLOBALS['phpgw']->common->get_css(),
 		'javascript'	=> $GLOBALS['phpgw']->common->get_javascript(),
 		'img_icon'      => PHPGW_IMAGES_DIR . '/favicon.ico',
 		'site_title'	=> "{$GLOBALS['phpgw_info']['server']['site_title']} | {$app}",
-		'user_fullname' => $GLOBALS['phpgw']->common->display_fullname(),
 		'str_base_url'	=> $GLOBALS['phpgw']->link('/', array(), true),
 		'win_on_events'	=> $GLOBALS['phpgw']->common->get_on_events(),
-		'about_url'		=> '#',
-		'about_text'	=> lang('about'),
-		'logout_url'	=> $navbar['logout']['url'],
-		'logout_text'	=> $navbar['logout']['text']
 	);
-	if ( isset($navbar['preferences']) )
-	{
-		$tpl_vars['preferences_url'] = $navbar['preferences']['url'];
-		$tpl_vars['preferences_text'] = $navbar['preferences']['text'];
-	}
 	$GLOBALS['phpgw']->template->set_var($tpl_vars);
 	
-	$GLOBALS['phpgw']->template->pfp('out','head');
-
+	$GLOBALS['phpgw']->template->pfp('out', 'head');
 	unset($tpl_vars);
-?>
-
