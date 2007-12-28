@@ -150,7 +150,7 @@
 				return $receipt; //no point continuing
 			}
 
-			$this->db->transaction_begin();
+
 
 			$sql = 'SELECT MAX(attrib_sort) AS max_sort, MAX(id) AS current_id FROM phpgw_cust_attribute'
 					. " WHERE appname='{$attrib['appname']}' AND location='{$attrib['location']}'";
@@ -192,6 +192,10 @@
 
 			$values	= $this->db->validate_insert($values);
 
+			$this->_init_process();
+
+			$this->db->transaction_begin();
+
 			$this->db->query("INSERT INTO phpgw_cust_attribute (appname,location,id,column_name, input_text, statustext,search,list,history,disabled,helpmsg,attrib_sort, datatype,precision_,scale,default_value,nullable) "
 				. "VALUES ($values)",__LINE__,__FILE__);
 
@@ -214,13 +218,14 @@
 
 			$attrib_table = $this->get_attrib_table($attrib['appname'],$attrib['location']);
 
-			$this->_init_process();
-			
-			if($this->oProc->AddColumn($attrib_table,$attrib['column_name'], $attrib['column_info']))
+			$this->oProc->m_odb->transaction_begin();
+
+			$this->oProc->AddColumn($attrib_table,$attrib['column_name'], $attrib['column_info']);
+
+			if($this->oProc->m_odb->transaction_commit())
 			{
 				$receipt['message'][] = array('msg'	=> lang('Attribute has been saved')	);
 				$this->db->transaction_commit();
-
 			}
 			else
 			{
@@ -236,6 +241,7 @@
 
 				}
 			}
+
 			return $receipt;
 		}
 
