@@ -147,21 +147,21 @@
 					&& $setup_info[$appname]['tables'] )
 				{
 					$GLOBALS['phpgw_setup']->process->droptables($terror,$DEBUG);
-					echo "<li>{$setup_info[$appname]['title']} " . lang('tables dropped') . ".</li>\n";
+					echo "<li>{$setup_info[$appname]['name']} " . lang('tables dropped') . ".</li>\n";
 				}
 
 				$GLOBALS['phpgw_setup']->deregister_app($setup_info[$appname]['name']);
-				echo "<li>{$setup_info[$appname]['title']} " . lang('deregistered') . ".</li>\n";
+				echo "<li>{$setup_info[$appname]['name']} " . lang('deregistered') . ".</li>\n";
 
 				if (isset($setup_info[$appname]['hooks'])
 					&& $setup_info[$appname]['hooks'] )
 				{
 					$GLOBALS['phpgw_setup']->deregister_hooks($setup_info[$appname]['name']);
-					echo "<li>{$setup_info[$appname]['title']} " . lang('hooks deregistered') . ".</li>\n";
+					echo "<li>{$setup_info[$appname]['name']} " . lang('hooks deregistered') . ".</li>\n";
 				}
 
 				$terror = $GLOBALS['phpgw_setup']->process->drop_langs($terror,$DEBUG);
-				echo "<li>{$setup_info[$appname]['title']} " . lang('Translations removed') . ".</li>\n</ul>\n";
+				echo "<li>{$setup_info[$appname]['name']} " . lang('Translations removed') . ".</li>\n</ul>\n";
 			}
 		}
 
