@@ -12,7 +12,6 @@
 	*/
 
 	$setup_info['property']['name']		= 'property';
-	$setup_info['property']['title']	= 'Property';
 	$setup_info['property']['version']	= '0.9.17.541';
 	$setup_info['property']['app_order']	= 8;
 	$setup_info['property']['enable']	= 1;

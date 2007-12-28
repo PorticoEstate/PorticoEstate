@@ -12,14 +12,13 @@
 	*/
 
 	$setup_info['hrm']['name']      = 'hrm';
-	$setup_info['hrm']['title']     = 'Human resource management';
 	$setup_info['hrm']['version']   = '0.9.17.005';
 	$setup_info['hrm']['app_order'] = 20;
 	$setup_info['hrm']['enable']    = 1;
 	$setup_info['hrm']['globals_checked']    = True;
 	$setup_info['hrm']['app_group']	= 'office';
 
-	$setup_info['hrm']['author'][] = array
+	$setup_info['hrm']['author'] = array
 	(
 		'name'	=> 'Sigurd Nes',
 		'email'	=> 'sigurdne@online.no'
