@@ -191,14 +191,14 @@
 		$GLOBALS['setup_info']['phpgwapi']['currentver'] = '0.9.14.508';
 		return $GLOBALS['setup_info']['phpgwapi']['currentver'];
 	}
-
+/*
 	$test[] = '0.9.17.001';
 	function phpgwapi_upgrade0_9_17_001()
 	{
 		$GLOBALS['setup_info']['phpgwapi']['currentver'] = '0.9.14.508';
 		return $GLOBALS['setup_info']['phpgwapi']['currentver'];
 	}
-
+*/
 
 	$test[] = '0.9.14.508';
 	function phpgwapi_upgrade0_9_14_508()
@@ -1195,14 +1195,55 @@
 	}
 
 	$test[] = '0.9.16.012';
+	/**
+	* Update phpgwapi from stable
+	*/
+
 	function phpgwapi_upgrade0_9_16_012()
 	{
 		return $GLOBALS['setup_info']['phpgwapi']['currentver']= '0.9.17.500';
 	}
 
+
+	/**
+	* Update phpgwapi from intermediate
+	*/
+	$test[] = '0.9.17.000';
+	function phpgwapi_upgrade0_9_17_000()
+	{
+		$GLOBALS['setup_info']['phpgwapi']['currentver'] = '0.9.17.001';
+		return $GLOBALS['setup_info']['phpgwapi']['currentver'];
+	}
+	$test[] = '0.9.17.001';
+	function phpgwapi_upgrade0_9_17_001()
+	{
+		$GLOBALS['setup_info']['phpgwapi']['currentver'] = '0.9.17.002';
+		return $GLOBALS['setup_info']['phpgwapi']['currentver'];
+	}
+	$test[] = '0.9.17.002';
+	function phpgwapi_upgrade0_9_17_002()
+	{
+		$GLOBALS['setup_info']['phpgwapi']['currentver'] = '0.9.17.003';
+		return $GLOBALS['setup_info']['phpgwapi']['currentver'];
+	}
+	$test[] = '0.9.17.003';
+	function phpgwapi_upgrade0_9_17_003()
+	{
+		$GLOBALS['setup_info']['phpgwapi']['currentver'] = '0.9.17.512';
+		return $GLOBALS['setup_info']['phpgwapi']['currentver'];
+	}
+	$test[] = '0.9.17.004';
+	function phpgwapi_upgrade0_9_17_004()
+	{
+		$GLOBALS['setup_info']['phpgwapi']['currentver'] = '0.9.17.513';
+		return $GLOBALS['setup_info']['phpgwapi']['currentver'];
+	}
+
 	$test[] = '0.9.17.500';
 	function phpgwapi_upgrade0_9_17_500()
 	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
 		$GLOBALS['phpgw_setup']->oProc->CreateTable('phpgw_cust_fields',array(
 			'fd' => array(
 				'cust_field_id' => array('type' => 'auto','nullable' => False),
@@ -1252,8 +1293,11 @@
 		$GLOBALS['phpgw_setup']->oProc->query('INSERT INTO phpgw_cust_field_types(cust_field_type_descr) VALUES(\'list\')');
 		$GLOBALS['phpgw_setup']->oProc->query('INSERT INTO phpgw_cust_field_types(cust_field_type_descr) VALUES(\'db lookup\')');
 
-		$GLOBALS['setup_info']['phpgwapi']['currentver'] = '0.9.17.501';
-		return $GLOBALS['setup_info']['phpgwapi']['currentver'];
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['phpgwapi']['currentver'] = '0.9.17.501';
+			return $GLOBALS['setup_info']['phpgwapi']['currentver'];
+		}
 	}
 
 	$test[] = '0.9.17.501';
@@ -1292,9 +1336,11 @@
 		$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_acl_location (appname,id, descr, allow_grant) VALUES ('hrm', '.user', 'User',1)");
 		$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_acl_location (appname,id, descr) VALUES ('hrm', '.job', 'Job description')");
 		
-		$GLOBALS['setup_info']['phpgwapi']['currentver'] = '0.9.17.502';
-		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit();
-		return $GLOBALS['setup_info']['phpgwapi']['currentver'];
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['phpgwapi']['currentver'] = '0.9.17.502';
+			return $GLOBALS['setup_info']['phpgwapi']['currentver'];
+		}
 	}
 
 
@@ -1362,9 +1408,11 @@
 		$GLOBALS['phpgw_setup']->oProc->query("DELETE FROM phpgw_acl_location WHERE appname = 'tts' AND id = '.'");
 		$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_acl_location (appname,id, descr,allow_grant,allow_c_attrib,c_attrib_table) VALUES ('tts', '.', 'Top',1,1,'phpgw_tts_tickets')");
 		
-		$GLOBALS['setup_info']['phpgwapi']['currentver'] = '0.9.17.503';
-		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit();
-		return $GLOBALS['setup_info']['phpgwapi']['currentver'];
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['phpgwapi']['currentver'] = '0.9.17.503';
+			return $GLOBALS['setup_info']['phpgwapi']['currentver'];
+		}
 	}
 
 	$test[] = '0.9.17.503';
@@ -1390,9 +1438,11 @@
 			)
 		);
 	
-		$GLOBALS['setup_info']['phpgwapi']['currentver'] = '0.9.17.504';
-		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit();
-		return $GLOBALS['setup_info']['phpgwapi']['currentver'];
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['phpgwapi']['currentver'] = '0.9.17.504';
+			return $GLOBALS['setup_info']['phpgwapi']['currentver'];
+		}
 	}
 	
 	$test[] = '0.9.17.504';
@@ -1407,9 +1457,11 @@
 			'nullable' => False
 		));
 	
-		$GLOBALS['setup_info']['phpgwapi']['currentver'] = '0.9.17.505';
-		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit();
-		return $GLOBALS['setup_info']['phpgwapi']['currentver'];
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['phpgwapi']['currentver'] = '0.9.17.505';
+			return $GLOBALS['setup_info']['phpgwapi']['currentver'];
+		}
 	}
 
 	$test[] = '0.9.17.505';
@@ -1423,9 +1475,11 @@
 			'default' => '::1'
 		));
 
-		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit();
-		$GLOBALS['setup_info']['phpgwapi']['currentver'] = '0.9.17.506';
-		return $GLOBALS['setup_info']['phpgwapi']['currentver'];
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['phpgwapi']['currentver'] = '0.9.17.506';
+			return $GLOBALS['setup_info']['phpgwapi']['currentver'];
+		}
 	}
 
 	$test[] = '0.9.17.506';
@@ -1449,9 +1503,12 @@
 				'uc' => array()
 				)
 		);
-		$GLOBALS['setup_info']['phpgwapi']['currentver'] = '0.9.17.507';
-		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit();
-		return $GLOBALS['setup_info']['phpgwapi']['currentver'];
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['phpgwapi']['currentver'] = '0.9.17.507';
+			return $GLOBALS['setup_info']['phpgwapi']['currentver'];
+		}
 	}
 
 	$test[] = '0.9.17.507';
@@ -1502,9 +1559,12 @@
 				'uc' => array()
 				)
 		);
-		$GLOBALS['setup_info']['phpgwapi']['currentver'] = '0.9.17.508';
-		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit();
-		return $GLOBALS['setup_info']['phpgwapi']['currentver'];
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['phpgwapi']['currentver'] = '0.9.17.508';
+			return $GLOBALS['setup_info']['phpgwapi']['currentver'];
+		}
 	}
 
 	$test[] = '0.9.17.508';
@@ -1542,9 +1602,11 @@
 				)
 		);
 
-		$GLOBALS['setup_info']['phpgwapi']['currentver'] = '0.9.17.509';
-		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit();
-		return $GLOBALS['setup_info']['phpgwapi']['currentver'];
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['phpgwapi']['currentver'] = '0.9.17.509';
+			return $GLOBALS['setup_info']['phpgwapi']['currentver'];
+		}
 	}
 	
 	$test[] = '0.9.17.509';
@@ -1560,9 +1622,11 @@
 			'default' => '0'
 		));
 
-		$GLOBALS['setup_info']['phpgwapi']['currentver'] = '0.9.17.510';
-		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit();
-		return $GLOBALS['setup_info']['phpgwapi']['currentver'];
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['phpgwapi']['currentver'] = '0.9.17.510';
+			return $GLOBALS['setup_info']['phpgwapi']['currentver'];
+		}
 	}
 
 	$test[] = '0.9.17.510';
@@ -1576,14 +1640,19 @@
 
 		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit();
 
-		$GLOBALS['setup_info']['phpgwapi']['currentver'] = '0.9.17.511';
-		return $GLOBALS['setup_info']['phpgwapi']['currentver'];
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['phpgwapi']['currentver'] = '0.9.17.511';
+			return $GLOBALS['setup_info']['phpgwapi']['currentver'];
+		}
 	}	
 
 
 	$test[] = '0.9.17.511';
 	function phpgwapi_upgrade0_9_17_511()
 	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
 		$GLOBALS['phpgw_setup']->oProc->CreateTable('phpgw_mail_handler',array(
 			'fd' => array(
 				'handler_id' => array('type' => 'auto','nullable' => False),
@@ -1599,9 +1668,11 @@
 			'uc' => array()
 		));
 
-
-		$GLOBALS['setup_info']['phpgwapi']['currentver'] = '0.9.17.512';
-		return $GLOBALS['setup_info']['phpgwapi']['currentver'];
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['phpgwapi']['currentver'] = '0.9.17.512';
+			return $GLOBALS['setup_info']['phpgwapi']['currentver'];
+		}
 	}
 	
 	$test[] = '0.9.17.512';
