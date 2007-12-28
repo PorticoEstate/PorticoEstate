@@ -208,7 +208,15 @@
 					<xsl:value-of select="lang_location"/>
 				</td>
 				<td align="left">
-					<xsl:call-template name="select_location"/>
+					<xsl:choose>
+						<xsl:when test="value_location != ''">
+							<xsl:value-of select="value_location"/>
+							<input type="hidden" name="values[location]" value="{value_location}" />
+						</xsl:when>
+						<xsl:otherwise>
+							<xsl:call-template name="select_location"/>
+						</xsl:otherwise>
+					</xsl:choose>
 				</td>
 			</tr>
 			<xsl:choose>

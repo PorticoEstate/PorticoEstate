@@ -430,7 +430,8 @@
 
 				'value_helpmsg'						=> isset($values['helpmsg']) ? $values['helpmsg'] : '',
 				'lang_helpmsg'						=> lang('help message'),
-				'lang_helpmsg_statustext'			=> lang('Enables help message for this attribute')
+				'lang_helpmsg_statustext'			=> lang('Enables help message for this attribute'),
+				'value_location'					=> isset($values['location']) ? $values['location'] : ''
 			);
 //_debug_array($values);
 
