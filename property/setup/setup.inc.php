@@ -161,7 +161,6 @@
 		'fm_entity_1_3',
 		'fm_entity_2_1',
 		'fm_entity_2_2',
-		'fm_custom_function',
 		'fm_custom',
 		'fm_custom_cols',
 		'fm_orders',

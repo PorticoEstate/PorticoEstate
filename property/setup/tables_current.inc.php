@@ -1777,21 +1777,6 @@
 			'ix' => array(),
 			'uc' => array()
 		),
-		'fm_custom_function' => array(
-			'fd' => array(
-				'acl_location' => array('type' => 'varchar','precision' => '50','nullable' => False),
-				'id' => array('type' => 'int','precision' => '4','nullable' => False),
-				'descr' => array('type' => 'text','nullable' => True),
-				'file_name ' => array('type' => 'varchar','precision' => '50','nullable' => False),
-				'active' => array('type' => 'int','precision' => '2','nullable' => True),
-				'custom_sort' => array('type' => 'int','precision' => '4','nullable' => True)
-			),
-			'pk' => array('acl_location','id'),
-			'fk' => array(),
-			'ix' => array(),
-			'uc' => array()
-		),
-
 		'fm_r_agreement' => array(
 			'fd' => array(
 				'id' => array('type' => 'int', 'precision' => 4,'nullable' => False,'default' => '0'),

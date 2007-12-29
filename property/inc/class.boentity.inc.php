@@ -458,7 +458,7 @@
 			}
 
 			$acl_location = '.entity.' . $entity_id . '.' . $cat_id;
-			$custom_functions = $this->soadmin_entity->read_custom_function(array('acl_location' => $acl_location,'allrows'=>True));
+			$custom_functions = $this->custom->read_custom_function(array('appname'=>'property','location' => $acl_location,'allrows'=>True));
 
 			if (isSet($custom_functions) AND is_array($custom_functions))
 			{
