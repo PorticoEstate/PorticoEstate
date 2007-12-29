@@ -647,7 +647,7 @@
 			
 			if($this->dbms == 'mysql' && $sIXSQL)
 			{
-				$this->query($sIXSQL);
+				$this->query($sIXSQL, __LINE__, __FILE__);
 			}
 			
 			// postgres
@@ -657,7 +657,7 @@
 				{
 					$ix_name = $key.'_'.$sTableName.'_idx';
 					$IndexSQL = str_replace(array('__index_name__','__table_name__'), array($ix_name,$sTableName), $sIndexSQL);
-					$this->query($IndexSQL);
+					$this->query($IndexSQL, __LINE__, __FILE__);
 				}
 			}			
 		}
