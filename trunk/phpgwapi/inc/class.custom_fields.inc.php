@@ -829,8 +829,8 @@
 		function resort_custom_function($id, $resort, $appname, $location)
 		{
 			$resort = $resort == 'down' ? 'down' : 'up';
-			$appname = $this->db->db_addslashes($this->appname);
-			$location = $this->db->db_addslashes($this->location);
+			$appname = $this->db->db_addslashes($appname);
+			$location = $this->db->db_addslashes($location);
 			$id = (int)$id;
 
 			if(!$location || !$appname)
