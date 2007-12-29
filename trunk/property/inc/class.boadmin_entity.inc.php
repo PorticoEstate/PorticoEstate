@@ -220,21 +220,6 @@
 			return $category;
 		}
 
-		function read_config()
-		{
-			$standard = $this->so->read_config(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order));
-
-			$this->total_records = $this->so->total_records;
-
-
-			return $standard;
-		}
-
-		function read_config_single($column_name)
-		{
-			return $this->so->read_config_single($column_name);
-		}
-
 		function read_single($id)
 		{
 			return $this->so->read_single($id);
@@ -294,7 +279,7 @@
 			}
 			else if($custom_function_id && $acl_location)
 			{
-				$this->so->delete_custom_function($acl_location,$custom_function_id);
+				$this->custom->_delete_custom_function('property', $acl_location,$custom_function_id);
 			}
 		}
 
@@ -307,7 +292,7 @@
 
 			$attrib = $this->custom->get_attribs('property', '.entity.' . $entity_id . '.' . $cat_id, $this->start, $this->query, $this->sort, $this->order, $this->allrows);
 
-			$this->total_records = $this->so->total_records;
+			$this->total_records = $this->custom->total_records;
 
 			return $attrib;
 		}
@@ -342,12 +327,6 @@
 			return $receipt;
 		}
 
-
-		function save_config($values='',$column_name='')
-		{
-				return $this->so->save_config($values,$column_name);
-		}
-
 		function read_custom_function($entity_id='',$cat_id='',$allrows='', $acl_location='')
 		{
 			if($allrows)
@@ -360,86 +339,55 @@
 				$acl_location = '.entity.' . $entity_id . '.' . $cat_id;
 			}
 
-			$custom_function = $this->so->read_custom_function(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
-											'acl_location' => $acl_location,'allrows'=>$this->allrows));
+			$custom_function =$this->custom->read_custom_function(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
+											'appname'=>'property','location' => $acl_location,'allrows'=>$this->allrows));
 
-			$this->total_records = $this->so->total_records;
+			$this->total_records = $this->custom->total_records;
 
 			return $custom_function;
 		}
 
 		function resort_custom_function($id,$resort)
 		{
-			$this->so->resort_custom_function(array('resort'=>$resort,'entity_id' => $this->entity_id,'cat_id' => $this->cat_id,'id'=>$id));
+			$location = '.entity.' . $this->entity_id . '.' . $this->cat_id;
+			return $this->custom->resort_custom_function($id, $resort, 'property', $location);
 		}
 
 		function save_custom_function($custom_function,$action='')
 		{
+			$custom_function['appname']='property';
+			if(!$custom_function['location'] && $custom_function['entity_id'] && $custom_function['cat_id'])
+			{
+				$custom_function['location'] = '.entity.' . $custom_function['entity_id'] . '.' . $custom_function['cat_id'];
+			}
+
 			if ($action=='edit')
 			{
 				if ($custom_function['id'] != '')
 				{
 
-					$receipt = $this->so->edit_custom_function($custom_function);
+					$receipt = $this->custom->edit_custom_function($custom_function);
 				}
 			}
 			else
 			{
-				$receipt = $this->so->add_custom_function($custom_function);
+				$receipt = $this->custom->add_custom_function($custom_function);
 			}
 			return $receipt;
 		}
 
 		function select_custom_function($selected='')
 		{
-
-			$dir_handle = @opendir(PHPGW_APP_INC . SEP . 'custom');
-			$i=0; $myfilearray = '';
-			while ($file = readdir($dir_handle))
-			{
-				if ((substr($file, 0, 1) != '.') && is_file(PHPGW_APP_INC . SEP . 'custom' . SEP . $file) )
-				{
-					$myfilearray[$i] = $file;
-					$i++;
-				}
-			}
-			closedir($dir_handle);
-			sort($myfilearray);
-
-			for ($i=0;$i<count($myfilearray);$i++)
-			{
-				$fname = preg_replace('/_/',' ',$myfilearray[$i]);
-				$sel_file = '';
-				if ($myfilearray[$i]==$selected)
-				{
-					$sel_file = 'selected';
-				}
-
-				$file_list[] = array
-				(
-					'id'		=> $myfilearray[$i],
-					'name'		=> $fname,
-					'selected'	=> $sel_file
-				);
-			}
-
-			for ($i=0;$i<count($file_list);$i++)
-			{
-				if ($file_list[$i]['selected'] != 'selected')
-				{
-					unset($conv_list[$i]['selected']);
-				}
-			}
-
-			return $file_list;
+			return $this->custom->select_custom_function($selected, 'property');
 		}
-		function read_single_custom_function($entity_id='',$cat_id='',$id,$acl_location='')
+
+		function read_single_custom_function($entity_id='',$cat_id='',$id,$location='')
 		{
-			if (!$acl_location && $entity_id && $cat_id)
+			if (!$location && $entity_id && $cat_id)
 			{
-				$acl_location = '.entity.' . $entity_id . '.' . $cat_id;
+				$location = '.entity.' . $entity_id . '.' . $cat_id;
 			}
-			return $this->so->read_single_custom_function($acl_location,$id);
+			return $this->custom->read_single_custom_function('property',$location,$id);
 		}
 	}
 ?>

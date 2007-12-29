@@ -2179,6 +2179,28 @@
 		$GLOBALS['phpgw_setup']->oProc->DropTable('fm_entity_choice');
 
 //---------------
+//--------------- custom functions
+		$custom = array();
+		$GLOBALS['phpgw_setup']->oProc->query("SELECT * FROM fm_custom_function"); 
+		while ($GLOBALS['phpgw_setup']->oProc->next_record())
+		{
+			$custom[]=array(
+					'appname'		=> 'property',
+					'location'		=> $GLOBALS['phpgw_setup']->oProc->f('acl_location'),
+					'id'			=> $GLOBALS['phpgw_setup']->oProc->f('id'),
+					'descr'			=> $GLOBALS['phpgw_setup']->oProc->f('descr'),
+					'file_name'		=> $GLOBALS['phpgw_setup']->oProc->f('file_name'),
+					'active'		=> $GLOBALS['phpgw_setup']->oProc->f('active'),
+					'custom_sort'	=> $GLOBALS['phpgw_setup']->oProc->f('custom_sort')
+			);
+		}
+		foreach ($custom as $entry)
+		{
+			$GLOBALS['phpgw_setup']->oProc->query('INSERT INTO phpgw_cust_function (' . implode(',',array_keys($entry)) . ') VALUES (' . $GLOBALS['phpgw_setup']->oProc->validate_insert(array_values($entry)) . ')');
+		}
+
+		$GLOBALS['phpgw_setup']->oProc->DropTable('fm_custom_function');
+//----------------
 		
 		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
 		{
