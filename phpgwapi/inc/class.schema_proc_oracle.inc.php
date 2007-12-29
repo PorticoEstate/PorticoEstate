@@ -208,7 +208,7 @@
 			$this->uc = array();
 
 			/* Field, Type, Null, Key, Default, Extra */
-			$oProc->m_odb->query("describe $sTableName");
+			$oProc->m_odb->query("DESCRIBE $sTableName", __LINE__, __FILE__);
 			while ($oProc->m_odb->next_record())
 			{
 				$type = $default = $null = $nullcomma = $prec = $scale = $ret = $colinfo = $scales = '';
@@ -315,17 +315,17 @@
 		{
 			$this->DropSequenceForTable($oProc,$sTableName);
 
-			return !!($oProc->m_odb->query("DROP TABLE " . $sTableName));
+			return !!($oProc->m_odb->query("DROP TABLE " . $sTableName, __LINE__, __FILE__));
 		}
 
 		function DropColumn($oProc, &$aTables, $sTableName, $aNewTableDef, $sColumnName, $bCopyData = true)
 		{
-			return !!($oProc->m_odb->query("ALTER TABLE $sTableName DROP COLUMN $sColumnName"));
+			return !!($oProc->m_odb->query("ALTER TABLE $sTableName DROP COLUMN $sColumnName", __LINE__, __FILE__));
 		}
 
 		function RenameTable($oProc, &$aTables, $sOldTableName, $sNewTableName)
 		{
-			return !!($oProc->m_odb->query("ALTER TABLE $sOldTableName RENAME $sNewTableName"));
+			return !!($oProc->m_odb->query("ALTER TABLE $sOldTableName RENAME $sNewTableName", __LINE__, __FILE__));
 		}
 
 		function RenameColumn($oProc, &$aTables, $sTableName, $sOldColumnName, $sNewColumnName, $bCopyData = true)
@@ -336,7 +336,7 @@
 			*/
 			if ($oProc->_GetFieldSQL($aTables[$sTableName]["fd"][$sNewColumnName], $sNewColumnSQL))
 			{
-				return !!($oProc->m_odb->query("ALTER TABLE $sTableName CHANGE $sOldColumnName $sNewColumnName " . $sNewColumnSQL));
+				return !!($oProc->m_odb->query("ALTER TABLE $sTableName CHANGE $sOldColumnName $sNewColumnName " . $sNewColumnSQL, __LINE__, __FILE__));
 			}
 			return false;
 		}
@@ -345,7 +345,7 @@
 		{
 			if ($oProc->_GetFieldSQL($aTables[$sTableName]["fd"][$sColumnName], $sNewColumnSQL))
 			{
-				return !!($oProc->m_odb->query("ALTER TABLE $sTableName MODIFY $sColumnName " . $sNewColumnSQL));
+				return !!($oProc->m_odb->query("ALTER TABLE $sTableName MODIFY $sColumnName " . $sNewColumnSQL, __LINE__, __FILE__));
 				/* return !!($oProc->m_odb->query("ALTER TABLE $sTableName CHANGE $sColumnName $sColumnName " . $sNewColumnSQL)); */
 			}
 
@@ -357,7 +357,7 @@
 			$oProc->_GetFieldSQL($aColumnDef, $sFieldSQL);
 			$query = "ALTER TABLE $sTableName ADD COLUMN $sColumnName $sFieldSQL";
 
-			return !!($oProc->m_odb->query($query));
+			return !!($oProc->m_odb->query($query, __LINE__, __FILE__));
 		}
 
 		function GetSequenceSQL($sTableName, &$sSequenceSQL)
@@ -410,12 +410,12 @@
 				if ($bCreateSequence && $sSequenceSQL != '')
 				{
 					if ($DEBUG) { echo '<br>Making sequence using: ' . $sSequenceSQL; }
-					$oProc->m_odb->query($sSequenceSQL);
+					$oProc->m_odb->query($sSequenceSQL, __LINE__, __FILE__);
 				}
 
 				$query = "CREATE TABLE $sTableName ($sTableSQL)";
 
-				$result = !!($oProc->m_odb->query($query));
+				$result = !!($oProc->m_odb->query($query, __LINE__, __FILE__));
 				if($result==True)
 				{
 					if ($DEBUG)
@@ -431,7 +431,7 @@
 						{
 							$ix_name = strtoupper($this->m_sIndexPrefix) . "_" . $sTableName . '_' . $key;
 							$IndexSQL = str_replace(array('__index_name__','__table_name__'), array($ix_name,$sTableName), $sIndexSQL);
-							$oProc->m_odb->query($IndexSQL);
+							$oProc->m_odb->query($IndexSQL, __LINE__, __FILE__);
 						}
 					}			
 
@@ -443,7 +443,7 @@
 							print_r($sTriggerSQL);
 							echo '</pre>';
 						}			
-						$oProc->m_odb->query($sTriggerSQL);
+						$oProc->m_odb->query($sTriggerSQL, __LINE__, __FILE__);
 					}
 				}
 				return $result;

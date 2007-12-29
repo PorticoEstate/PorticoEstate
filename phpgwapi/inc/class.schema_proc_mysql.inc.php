@@ -74,7 +74,7 @@
 			switch($sType)
 			{
 				case 'auto':
-					$sTranslated = 'int(11) auto_increment not null';
+					$sTranslated = 'int(11) auto_increment';
 					break;
 				case 'blob':
 					$sTranslated = 'blob';
@@ -276,7 +276,7 @@
 			$this->uc = array();
 
 			/* Field, Type, Null, Key, Default, Extra */
-			$oProc->m_odb->query("describe $sTableName");
+			$oProc->m_odb->query("DESCRIBE $sTableName", __LINE__, __FILE__);
 			while ($oProc->m_odb->next_record())
 			{
 				$type = $default = $null = $nullcomma = $prec = $scale = $ret = $colinfo = $scales = '';
@@ -355,17 +355,17 @@
 
 		function DropTable($oProc, &$aTables, $sTableName)
 		{
-			return !!($oProc->m_odb->query("DROP TABLE " . $sTableName));
+			return !!($oProc->m_odb->query("DROP TABLE " . $sTableName, __LINE__, __FILE__));
 		}
 
 		function DropColumn($oProc, &$aTables, $sTableName, $aNewTableDef, $sColumnName, $bCopyData = true)
 		{
-			return !!($oProc->m_odb->query("ALTER TABLE $sTableName DROP COLUMN $sColumnName"));
+			return !!($oProc->m_odb->query("ALTER TABLE $sTableName DROP COLUMN $sColumnName", __LINE__, __FILE__));
 		}
 
 		function RenameTable($oProc, &$aTables, $sOldTableName, $sNewTableName)
 		{
-			return !!($oProc->m_odb->query("ALTER TABLE $sOldTableName RENAME $sNewTableName"));
+			return !!($oProc->m_odb->query("ALTER TABLE $sOldTableName RENAME $sNewTableName", __LINE__, __FILE__));
 		}
 
 		function RenameColumn($oProc, &$aTables, $sTableName, $sOldColumnName, $sNewColumnName, $bCopyData = true)
@@ -378,7 +378,7 @@
 			if ($DEBUG) { echo '<br>RenameColumn: calling _GetFieldSQL for ' . $sNewColumnName; }
 			if (isset($aTables[$sTableName]["fd"][$sNewColumnName]) && $oProc->_GetFieldSQL($aTables[$sTableName]["fd"][$sNewColumnName], $sNewColumnSQL))
 			{
-				return !!($oProc->m_odb->query("ALTER TABLE $sTableName CHANGE $sOldColumnName $sNewColumnName " . $sNewColumnSQL));
+				return !!($oProc->m_odb->query("ALTER TABLE $sTableName CHANGE $sOldColumnName $sNewColumnName " . $sNewColumnSQL, __LINE__, __FILE__));
 			}
 			return false;
 		}
@@ -389,7 +389,7 @@
 			if ($DEBUG) { echo '<br>AlterColumn: calling _GetFieldSQL for ' . $sNewColumnName; }
 			if (isset($aTables[$sTableName]["fd"][$sColumnName]) && $oProc->_GetFieldSQL($aTables[$sTableName]["fd"][$sColumnName], $sNewColumnSQL))
 			{
-				return !!($oProc->m_odb->query("ALTER TABLE $sTableName MODIFY $sColumnName " . $sNewColumnSQL));
+				return !!($oProc->m_odb->query("ALTER TABLE $sTableName MODIFY $sColumnName " . $sNewColumnSQL, __LINE__, __FILE__));
 				/* return !!($oProc->m_odb->query("ALTER TABLE $sTableName CHANGE $sColumnName $sColumnName " . $sNewColumnSQL)); */
 			}
 
@@ -401,7 +401,7 @@
 			$oProc->_GetFieldSQL($aColumnDef, $sFieldSQL);
 			$query = "ALTER TABLE $sTableName ADD COLUMN $sColumnName $sFieldSQL";
 
-			return !!($oProc->m_odb->query($query));
+			return !!($oProc->m_odb->query($query, __LINE__, __FILE__));
 		}
 
 		function GetSequenceSQL($sTableName, &$sSequenceSQL)
@@ -423,11 +423,11 @@
 				/* create sequence first since it will be needed for default */
 				if ($sSequenceSQL != '')
 				{
-					$oProc->m_odb->query($sSequenceSQL);
+					$oProc->m_odb->query($sSequenceSQL, __LINE__, __FILE__);
 				}
 
 				$query = "CREATE TABLE $sTableName ($sTableSQL)";
-				return !!($oProc->m_odb->query($query));
+				return !!($oProc->m_odb->query($query, __LINE__, __FILE__));
 			}
 
 			return false;
