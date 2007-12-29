@@ -1332,10 +1332,6 @@
 			)
 		);
 
-		$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_acl_location (appname,id, descr) VALUES ('hrm', '.', 'Top')");
-		$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_acl_location (appname,id, descr, allow_grant) VALUES ('hrm', '.user', 'User',1)");
-		$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_acl_location (appname,id, descr) VALUES ('hrm', '.job', 'Job description')");
-		
 		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
 		{
 			$GLOBALS['setup_info']['phpgwapi']['currentver'] = '0.9.17.502';
