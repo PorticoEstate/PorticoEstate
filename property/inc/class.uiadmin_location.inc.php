@@ -367,15 +367,15 @@
 				$this->bo->resort_attrib(array('resort'=>$resort,'type_id' => $type_id,'id'=>$id));
 			}
 
+			$type = $this->bo->read_single($type_id);
+			
 			$attrib_list = $this->bo->read_attrib($type_id);
 
 			while (is_array($attrib_list) && list(,$attrib) = each($attrib_list))
 			{
 				$content[] = array
 				(
-		//			'name'						=> $attrib['name'],
-					'type_name'					=> $attrib['type_name'],
-					'datatype'					=> $attrib['datatype'],
+					'datatype'					=> $attrib['trans_datatype'],
 					'column_name'				=> $attrib['column_name'],
 					'input_text'				=> $attrib['input_text'],
 					'sorting'					=> $attrib['attrib_sort'],
@@ -399,7 +399,6 @@
 
 			$table_header[] = array
 			(
-				'lang_type_name'	=> lang('Type'),
 				'lang_descr'		=> lang('Descr'),
 				'lang_datatype'		=> lang('Datatype'),
 				'lang_sorting'		=> lang('sorting'),
@@ -457,6 +456,8 @@
 
 			$data = array
 			(
+				'value_type_name'				=> $type['name'],
+				'lang_type'						=> lang('Location type'),
 				'allow_allrows'					=> True,
 				'allrows'						=> $this->allrows,
 				'start_record'					=> $this->start,

@@ -2201,6 +2201,61 @@
 
 		$GLOBALS['phpgw_setup']->oProc->DropTable('fm_custom_function');
 //----------------
+
+//--------------- locations
+
+		$attrib = array();
+		$GLOBALS['phpgw_setup']->oProc->query("SELECT * FROM fm_location_attrib");
+		while ($GLOBALS['phpgw_setup']->oProc->next_record())
+		{
+			$attrib[]=array(
+					'appname'		=> 'property',
+					'location'		=> '.location.' . $GLOBALS['phpgw_setup']->oProc->f('type_id'),
+					'id'			=> $GLOBALS['phpgw_setup']->oProc->f('id'),
+					'column_name'	=> $GLOBALS['phpgw_setup']->oProc->f('column_name'),
+					'input_text'	=> $GLOBALS['phpgw_setup']->oProc->f('input_text'),
+					'statustext'	=> $GLOBALS['phpgw_setup']->oProc->f('statustext'),
+					'datatype'		=> $GLOBALS['phpgw_setup']->oProc->f('datatype'),
+					'search'		=> $GLOBALS['phpgw_setup']->oProc->f('search'),
+					'history'		=> $GLOBALS['phpgw_setup']->oProc->f('history'),
+					'list'			=> $GLOBALS['phpgw_setup']->oProc->f('list'),
+					'attrib_sort'	=> $GLOBALS['phpgw_setup']->oProc->f('attrib_sort'),
+					'size'			=> $GLOBALS['phpgw_setup']->oProc->f('size'),
+					'precision_'	=> $GLOBALS['phpgw_setup']->oProc->f('precision_'),
+					'scale'			=> $GLOBALS['phpgw_setup']->oProc->f('scale'),
+					'default_value'	=> $GLOBALS['phpgw_setup']->oProc->f('default_value'),
+					'nullable'		=> $GLOBALS['phpgw_setup']->oProc->f('nullable'),
+					'helpmsg'		=> $GLOBALS['phpgw_setup']->oProc->f('helpmsg'),
+					'lookup_form'	=> $GLOBALS['phpgw_setup']->oProc->f('lookup_form'),
+					'custom'		=> $GLOBALS['phpgw_setup']->oProc->f('custom'),
+ 			);
+		}
+
+		foreach ($attrib as $entry)
+		{
+			$GLOBALS['phpgw_setup']->oProc->query('INSERT INTO phpgw_cust_attribute (' . implode(',',array_keys($entry)) . ') VALUES (' . $GLOBALS['phpgw_setup']->oProc->validate_insert(array_values($entry)) . ')');
+		}
+
+		$choice = array();
+		$GLOBALS['phpgw_setup']->oProc->query("SELECT * FROM fm_location_choice"); 
+		while ($GLOBALS['phpgw_setup']->oProc->next_record())
+		{
+			$choice[]=array(
+					'appname'		=> 'property',
+					'location'		=> '.location.' . $GLOBALS['phpgw_setup']->oProc->f('type_id'),
+					'attrib_id'		=> $GLOBALS['phpgw_setup']->oProc->f('attrib_id'),
+					'id'			=> $GLOBALS['phpgw_setup']->oProc->f('id'),
+					'value'			=> $GLOBALS['phpgw_setup']->oProc->f('value')
+			);
+		}
+
+		foreach ($choice as $entry)
+		{
+			$GLOBALS['phpgw_setup']->oProc->query('INSERT INTO phpgw_cust_choice (' . implode(',',array_keys($entry)) . ') VALUES (' . $GLOBALS['phpgw_setup']->oProc->validate_insert(array_values($entry)) . ')');
+		}
+
+		$GLOBALS['phpgw_setup']->oProc->DropTable('fm_location_attrib');
+		$GLOBALS['phpgw_setup']->oProc->DropTable('fm_location_choice');
 		
 		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
 		{

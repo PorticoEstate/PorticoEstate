@@ -78,6 +78,7 @@
 			$this->so 					= CreateObject('property.solocation');
 			$this->bocommon 			= CreateObject('property.bocommon');
 			$this->soadmin_location		= CreateObject('property.soadmin_location');
+			$this->custom 	= createObject('phpgwapi.custom_fields');
 
 			$this->lookup    = phpgw::get_var('lookup', 'bool');
 
@@ -242,7 +243,11 @@
 			}
 //_debug_array($data);
 //_debug_array($location_types);
-			$fm_location_cols = $this->soadmin_location->read_attrib(array('type_id'=>$data['type_id'],'lookup_type'=>$data['type_id']));
+//			$filtermethod = " OR (type_id < $lookup_type AND lookup_form=1)";
+			$filtermethod = " OR (lookup_form=1)";
+			$fm_location_cols = $this->custom->get_attribs('property', '.location.' . $data['type_id'], 0, '', '', '', true,$filtermethod);
+
+
 //_debug_array($fm_location_cols);
 
 			for ($i=0;$i<$data['type_id'];$i++)
