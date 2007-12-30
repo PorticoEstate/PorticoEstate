@@ -1685,6 +1685,19 @@
 			'type' => 'text',
 			'nullable' => True
 		));
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('phpgw_cust_attribute','lookup_form',array(
+			'type' => 'int',
+			'precision' => '2',
+			'nullable' => True
+		));
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('phpgw_cust_attribute','custom',array(
+			'type' => 'int',
+			'precision' => '2',
+			'default' => 1,
+			'nullable' => True
+		));
+
+		$GLOBALS['phpgw_setup']->oProc->query("UPDATE phpgw_cust_attribute SET custom = 1");
 
 		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
 		{

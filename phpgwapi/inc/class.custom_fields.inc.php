@@ -122,10 +122,11 @@
 		/**
 		 * Add a custom field/attribute
 		 * 
-		 * @param array $attirb the field data
+		 * @param array $attrib the field data
+		 * @param string $attrib_table where to append the attrib
 		 * @return int the the new custom field db pk
 		 */
-		function add_attrib($attrib)
+		function add_attrib($attrib, $attrib_table = '')
 		{
 			$receipt = array();
 			// Checkboxes are only present if ticked, so we declare them here to stop errors
@@ -216,7 +217,10 @@
 				unset($attrib['column_info']['default']);
 			}
 
-			$attrib_table = $this->get_attrib_table($attrib['appname'],$attrib['location']);
+			if(!$attrib_table)
+			{
+				$attrib_table = $this->get_attrib_table($attrib['appname'],$attrib['location']);
+			}
 
 			$this->oProc->m_odb->transaction_begin();
 
@@ -317,21 +321,25 @@
 			}
 			endif;
 		}
-		
+
 		/**
 		 * Edit a custom field
 		 * 
 		 * @param array $attrib the field data
+		 * @param string $attrib_table where to edit the attrib
 		 * @return int the field db pk
 		 */
-		function edit_attrib($attrib)
+		function edit_attrib($attrib, $attrib_table = '')
 		{
 			// Checkboxes are only present if ticked, so we declare them here to stop errors
 			$attrib['search'] = isset($attrib['search']) ? !!$attrib['search'] : false;
 			$attrib['list'] = isset($attrib['list']) ? !!$attrib['list'] : false;
 			$attrib['history'] = isset($attrib['history']) ? !!$attrib['history'] : false;
 
-			$attrib_table = $this->get_attrib_table($attrib['appname'],$attrib['location']);
+			if(!$attrib_table)
+			{
+				$attrib_table = $this->get_attrib_table($attrib['appname'],$attrib['location']);
+			}
 			$choice_table = 'phpgw_cust_choice';
 
 			$attrib['column_name'] = $this->db->db_addslashes($attrib['column_name']);
@@ -504,7 +512,7 @@
 		 * @param string $appname the name of the application
 		 * @param string $location the name of the location
 		 */
-		function get_attribs($appname, $location, $start = 0, $query = '', $sort = 'ASC', $order = 'attrib_sort', $allrows = false, $inc_choices = false)
+		function get_attribs($appname, $location, $start = 0, $query = '', $sort = 'ASC', $order = 'attrib_sort', $allrows = false, $inc_choices = false,$filtermethod='')
 		{
 			$start		= (int) $start;
 			$query		= $this->db->db_addslashes($query);
@@ -535,7 +543,7 @@
 				$querymethod = " AND (phpgw_cust_attribute.column_name $this->like '%$query%' or phpgw_cust_attribute.input_text $this->like '%$query%')";
 			}
 
-			$sql = "FROM phpgw_cust_attribute WHERE appname='$appname' AND location = '$location' $querymethod";
+			$sql = "FROM phpgw_cust_attribute WHERE appname='$appname' AND location = '$location' AND custom = 1 $querymethod $filtermethod";
 
 			$this->total_records = 0;
 			$this->db->query("SELECT COUNT(id) AS cnt_rec $sql",__LINE__,__FILE__);
@@ -966,7 +974,7 @@
 			return isset($datatype_precision[$datatype])?$datatype_precision[$datatype]:'';
 		}
 
-		function _delete_attrib($location,$appname,$attrib_id)
+		function _delete_attrib($location,$appname,$attrib_id,$table = '')
 		{
 			$this->_init_process();
 			$this->oProc->m_odb->transaction_begin();
@@ -978,7 +986,10 @@
 			$this->db->next_record();
 
 			$ColumnName		= $this->db->f('column_name');
-			$table = $this->get_attrib_table($appname,$location);
+			if(!$table)
+			{
+				$table = $this->get_attrib_table($appname,$location);
+			}
 
 			$this->oProc->DropColumn($table,false, $ColumnName);
 
