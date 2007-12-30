@@ -113,11 +113,13 @@
 				return;
 			}
 
-			$sql= "SELECT fm_location_choice.id, fm_location_choice.value FROM fm_location_attrib $this->join fm_location_choice ON "
-			. " fm_location_attrib.type_id= fm_location_choice.type_id AND "
-			. " fm_location_attrib.id= fm_location_choice.attrib_id "
-			. " WHERE fm_location_attrib.column_name='status' "
-			. " AND fm_location_choice.type_id=$type_id ORDER BY fm_location_choice.id";
+			$sql= "SELECT phpgw_cust_choice.id, phpgw_cust_choice.value FROM phpgw_cust_attribute $this->join phpgw_cust_choice ON "
+			. " phpgw_cust_attribute.appname= phpgw_cust_choice.appname AND "
+			. " phpgw_cust_attribute.location= phpgw_cust_choice.location AND "
+			. " phpgw_cust_attribute.id= phpgw_cust_choice.attrib_id "
+			. " WHERE phpgw_cust_attribute.column_name='status' "
+			. " AND phpgw_cust_choice.appname='property' "
+			. " AND phpgw_cust_choice.location='.location.$type_id' ORDER BY phpgw_cust_choice.id";
 
 
 			$this->db->query($sql,__LINE__,__FILE__);
@@ -206,6 +208,9 @@
 			}
 
 			$sql = $this->socommon->fm_cache('sql_'. $type_id . '_' . $lookup_tenant . '_' . $lookup);
+			$choice_table = 'phpgw_cust_choice';
+			$attribute_table = 'phpgw_cust_attribute';
+			$attribute_filter = " appname = 'property' AND location = '.location." . $type_id . "'";
 
 			if(!$sql)
 			{
@@ -403,6 +408,35 @@
 			}
 
 //---------------------start custom user cols
+
+				$user_columns = isset($GLOBALS['phpgw_info']['user']['preferences']['property']['location_columns_'.$type_id . !!$lookup]) ? $GLOBALS['phpgw_info']['user']['preferences']['property']['location_columns_'.$type_id . !!$lookup] : '';
+				$user_column_filter = '';
+				if (isset($user_columns) AND is_array($user_columns) AND $user_columns[0])
+				{
+					$user_column_filter = " OR ($attribute_filter AND id IN (" . implode(',',$user_columns) .'))';
+				}
+
+				$this->db->query("SELECT * FROM $attribute_table WHERE list=1 AND $attribute_filter $user_column_filter ORDER BY attrib_sort ASC");
+
+				$i	= count($uicols['name']);
+				while ($this->db->next_record())
+				{
+					$uicols['input_type'][]		= 'text';
+					$uicols['name'][]			= $this->db->f('column_name');
+					$uicols['descr'][]			= $this->db->f('input_text');
+					$uicols['statustext'][]		= $this->db->f('statustext');
+					$uicols['datatype'][$i]		= $this->db->f('datatype');
+					$cols_return_extra[]= array(
+						'name'	=> $this->db->f('column_name'),
+						'datatype'	=> $this->db->f('datatype'),
+						'attrib_id'	=> $this->db->f('id')
+					);
+	
+					$i++;
+				}
+
+
+/*
 				$fm_location_cols = $this->soadmin_location->read_attrib(array('type_id'=>$type_id,'lookup_type'=>$type_id, 'allrows'=>true));
 
 				$result_columns = array();
@@ -463,6 +497,8 @@
 					}
 					$sql = str_replace('FROM' , $cols_extra . ' FROM', $sql);
 				}
+*/
+
 //---------------------end custom user cols
 
 			$this->uicols = $uicols;
@@ -600,7 +636,8 @@
 					{
 						if(($uicols['cols_return_extra'][$i]['datatype']=='R' || $uicols['cols_return_extra'][$i]['datatype']=='LB') && $value):
 						{
-							$sql="SELECT value FROM fm_location_choice where type_id=$type_id AND attrib_id=" .$uicols['cols_return_extra'][$i]['attrib_id']. "  AND id=" . $value;
+					//		$sql="SELECT value FROM fm_location_choice where type_id=$type_id AND attrib_id=" .$uicols['cols_return_extra'][$i]['attrib_id']. "  AND id=" . $value;
+							$sql="SELECT value FROM $choice_table WHERE $attribute_filter AND attrib_id=" .$cols_return_extra[$i]['attrib_id']. "  AND id=" . $value;
 							$this->db2->query($sql);
 							$this->db2->next_record();
 							$location_list[$j][$cols_return[$i]] = $this->db2->f('value');
@@ -625,7 +662,8 @@
 							{
 								for ($k=0;$k<count($ch);$k++)
 								{
-									$sql="SELECT value FROM fm_location_choice where type_id=$type_id AND attrib_id=" .$uicols['cols_return_extra'][$i]['attrib_id']. "  AND id=" . $ch[$k];
+			//						$sql="SELECT value FROM fm_location_choice where type_id=$type_id AND attrib_id=" .$uicols['cols_return_extra'][$i]['attrib_id']. "  AND id=" . $ch[$k];
+									$sql="SELECT value FROM $choice_table WHERE $attribute_filter AND attrib_id=" .$cols_return_extra[$i]['attrib_id']. "  AND id=" . $ch[$k];
 									$this->db2->query($sql);
 									while ($this->db2->next_record())
 									{
@@ -801,7 +839,9 @@
 				}
 			}
 
-			$fm_location_cols = $this->soadmin_location->read_attrib(array('type_id'=>$type_id,'lookup_type'=>$type_id,'allrows'=>True));
+			$custom 	= createObject('phpgwapi.custom_fields');
+
+			$fm_location_cols = $custom->get_attribs('property', '.location.' . $type_id, 0, '', '', '', true);
 //_debug_array($fm_location_cols);
 
 			$location_cols_count	= count($fm_location_cols);
@@ -850,7 +890,7 @@
 			return $sql;
 		}
 
-		function read_single($location_code='')
+		function read_single($location_code='',$values = array())
 		{
 			$location_array = split('-',$location_code);
 			$type_id= count($location_array);

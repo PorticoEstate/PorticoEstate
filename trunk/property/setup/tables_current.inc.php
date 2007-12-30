@@ -403,44 +403,6 @@
 			'uc' => array()
 		),
 
-		'fm_location_attrib' => array(
-			'fd' => array(
-				'type_id' => array('type' => 'int','precision' => '4','nullable' => False),
-				'id' => array('type' => 'int','precision' => '4','nullable' => False),
-				'custom' => array('type' => 'int','precision' => '4','nullable' => True),
-				'column_name' => array('type' => 'varchar','precision' => '20','nullable' => False),
-				'input_text' => array('type' => 'varchar','precision' => '50','nullable' => False),
-				'list' => array('type' => 'int','precision' => '2','nullable' => True),
-				'location_form' => array('type' => 'int','precision' => '2','nullable' => True),
-				'lookup_form' => array('type' => 'int','precision' => '2','nullable' => True),
-				'statustext' => array('type' => 'varchar','precision' => '100','nullable' => False),
-				'size' => array('type' => 'int','precision' => '4','nullable' => True),
-				'datatype' => array('type' => 'varchar','precision' => '10','nullable' => True),
-				'attrib_sort' => array('type' => 'int','precision' => '4','nullable' => True),
-				'precision_' => array('type' => 'int','precision' => '4','nullable' => True),
-				'scale' => array('type' => 'int','precision' => '4','nullable' => True),
-				'default_value' => array('type' => 'varchar','precision' => '20','nullable' => True),
-				'nullable' => array('type' => 'varchar','precision' => '5','nullable' => False,'default' => 'True')
-			),
-			'pk' => array('type_id','id'),
-			'fk' => array(),
-			'ix' => array(),
-			'uc' => array()
-		),
-
-		'fm_location_choice' => array(
-			'fd' => array(
-				'type_id' => array('type' => 'int','precision' => '4','nullable' => False),
-				'attrib_id' => array('type' => 'int','precision' => '4','nullable' => False),
-				'id' => array('type' => 'int','precision' => '4','nullable' => False),
-				'value' => array('type' => 'text','nullable' => False)
-			),
-			'pk' => array('type_id','attrib_id','id'),
-			'fk' => array(),
-			'ix' => array(),
-			'uc' => array()
-		),
-
 		'fm_building_part' => array(
 			'fd' => array(
 				'id' => array('type' => 'varchar','precision' => '4','nullable' => False),

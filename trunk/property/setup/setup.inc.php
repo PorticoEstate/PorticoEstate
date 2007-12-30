@@ -92,8 +92,6 @@
 		'fm_location4_category',
 		'fm_location4_history',
 		'fm_location_type',
-		'fm_location_attrib',
-		'fm_location_choice',
 		'fm_location_config',
 		'fm_building_part',
 		'fm_b_account',

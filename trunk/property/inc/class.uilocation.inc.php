@@ -811,7 +811,10 @@
 
 			$function_msg .= ' ' .$location_types[($type_id-1)]['name'];
 
+			//FIXME
 			$custom_fields	= $this->soadmin_location->read_attrib(array('type_id'=>$type_id,'allrows'=>True));
+		//	$custom 	= createObject('phpgwapi.custom_fields');
+		//	$custom_fields	= $custom->get_attribs('property', '.location.' . $type_id, 0, '', '', '', true);
 			$insert_record = $GLOBALS['phpgw']->session->appsession('insert_record','property');
 
 			if(!is_array($insert_record))
