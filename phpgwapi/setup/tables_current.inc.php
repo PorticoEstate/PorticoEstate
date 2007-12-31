@@ -580,6 +580,8 @@
 				'default_value' => array('type' => 'varchar','precision' => '20','nullable' => True),
 				'nullable' => array('type' => 'varchar','precision' => '5','nullable' => True),
 				'disabled' => array('type' => 'int','precision' => '2','nullable' => True),
+				'lookup_form' => array('type' => 'int','precision' => '2','nullable' => True),
+				'custom' => array('type' => 'int','precision' => '2','nullable' => True),
 				'helpmsg' => array('type' => 'text','nullable' => True)
 			),
 			'pk' => array('appname','location','id'),
