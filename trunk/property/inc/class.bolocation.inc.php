@@ -78,7 +78,7 @@
 			$this->so 					= CreateObject('property.solocation');
 			$this->bocommon 			= CreateObject('property.bocommon');
 			$this->soadmin_location		= CreateObject('property.soadmin_location');
-			$this->custom 	= createObject('phpgwapi.custom_fields');
+			$this->custom 				= createObject('phpgwapi.custom_fields');
 
 			$this->lookup    = phpgw::get_var('lookup', 'bool');
 
@@ -142,14 +142,11 @@
 
 		function column_list($selected='',$type_id='',$allrows='')
 		{
-			$soadmin_location	= CreateObject('property.soadmin_location');
-
 			if(!$selected)
 			{
 				$selected = isset($GLOBALS['phpgw_info']['user']['preferences']['property']['location_columns_' . $this->type_id . !!$this->lookup]) ? $GLOBALS['phpgw_info']['user']['preferences']['property']["location_columns_" . $this->type_id . !!$this->lookup]:'';
 			}
-
-			$columns = $soadmin_location->read_attrib(array('type_id'=>$type_id,'allrows'=>$allrows,'filter_list' =>true));
+			$columns = $this->custom->get_attribs('property','.location.' . $type_id, 0, '','','',true);
 			$column_list=$this->bocommon->select_multi_list($selected,$columns);
 			return $column_list;
 		}
@@ -542,7 +539,47 @@
 			return $location;
 		}
 
-		function read_single($location_code='',$extra='')
+		function read_single($location_code='',$extra=array())
+		{
+			$location_array = split('-',$location_code);
+			$type_id= count($location_array);
+
+			if (!$type_id)
+			{
+				return;
+			}
+
+			$values['attributes'] = $this->custom->get_attribs('property','.location.' . $type_id, 0, '', 'ASC', 'attrib_sort', true, true);
+			$values = $this->so->read_single($location_code, $values);
+			$values = $this->custom->prepare_attributes($values, 'property','.location.' . $type_id, $extra['view']);
+
+			if( isset($extra['tenant_id']) && $extra['tenant_id']!='lookup')
+			{
+				if($extra['tenant_id']>0)
+				{
+					$tenant_data=$this->bocommon->read_single_tenant($extra['tenant_id']);
+					$values['tenant_id']		= $extra['tenant_id'];
+					$values['contact_phone']	= $extra['contact_phone']?$extra['contact_phone']:$tenant_data['contact_phone'];
+					$values['last_name']		= $tenant_data['last_name'];
+					$values['first_name']	= $tenant_data['first_name'];
+				}
+				else
+				{
+					unset($values['tenant_id']);
+					unset($values['contact_phone']);
+					unset($values['last_name']);
+					unset($values['first_name']);
+				}
+			}
+
+			if(is_array($extra))
+			{
+				$values = $values + $extra;
+			}
+			return $values;
+		}
+
+		function read_single_old($location_code='',$extra='')
 		{
 			$location_data = $this->so->read_single($location_code);
 
@@ -580,32 +617,9 @@
 
 		function save($location,$values_attribute,$action='',$type_id='',$location_code_parent='')
 		{
-			$m=count($values_attribute);
-			for ($i=0;$i<$m;$i++)
+			if(is_array($values_attribute))
 			{
-				if($values_attribute[$i]['datatype']=='AB' || $values_attribute[$i]['datatype']=='VENDOR')
-				{
-					$values_attribute[$i]['value'] = $_POST[$values_attribute[$i]['name']];
-				}
-				if($values_attribute[$i]['datatype']=='CH' && $values_attribute[$i]['value'])
-				{
-					$values_attribute[$i]['value'] = serialize($values_attribute[$i]['value']);
-				}
-				if($values_attribute[$i]['datatype']=='R' && $values_attribute[$i]['value'])
-				{
-					$values_attribute[$i]['value'] = $values_attribute[$i]['value'][0];
-				}
-
-				if($values_attribute[$i]['datatype']=='N' && $values_attribute[$i]['value'])
-				{
-					$values_attribute[$i]['value'] = str_replace(",",".",$values_attribute[$i]['value']);
-				}
-
-				if($values_attribute[$i]['datatype']=='D' && $values_attribute[$i]['value'])
-				{
-
-					$values_attribute[$i]['value'] = date($this->bocommon->dateformat,$this->bocommon->date_to_timestamp($values_attribute[$i]['value']));
-				}
+				$values_attribute = $this->custom->convert_attribute_save($values_attribute);
 			}
 
 			if ($action=='edit')
@@ -621,24 +635,14 @@
 			}
 			else
 			{
-
-/*				if($type_id>1)
-				{
-					if(!$this->so->check_location($location_code_parent,($type_id-1)))
-					{
-						$receipt['error'][]=array('msg'=>lang('This location parent ID does not exist!'));
-					}
-				}
-*/
 				if(!$receipt['error'])
 				{
 					$receipt = $this->so->add($location,$values_attribute,$type_id);
 				}
 			}
 
-
-			$soadmin_custom = CreateObject('property.soadmin_custom');
-			$custom_functions = $soadmin_custom->read(array('acl_location' => $this->acl_location,'allrows'=>True));
+			$acl_location = '.location.' . $type_id;
+			$custom_functions = $this->custom->read_custom_function(array('appname'=>'property','location' => $acl_location,'allrows'=>True));
 
 			if (isSet($custom_functions) AND is_array($custom_functions))
 			{
