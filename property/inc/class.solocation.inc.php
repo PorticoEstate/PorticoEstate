@@ -854,6 +854,7 @@
 				$cols.= ',fm_location' . $i .'.loc' . $i .'_name';
 				$cols_return[] 				= 'loc' . $i .'_name';
 			}
+			$cols_return[] 				= 'loc' . $type_id .'_name';
 
 		//	$cols.= 'fm_location' . $type_id . '.change_type,';
 			$cols_return[] 				= 'change_type';
