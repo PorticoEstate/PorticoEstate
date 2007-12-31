@@ -504,7 +504,6 @@
 			$this->oProc->m_odb->Halt_On_Error	= 'yes';
 		}
 
-
 		function save_config($values='',$column_name='')
 		{
 			$this->db->query("SELECT * FROM fm_location_config  WHERE column_name='$column_name' ",__LINE__,__FILE__);
@@ -515,19 +514,17 @@
 			$column_info['scale']		= $this->db->f('scale');
 			$column_info['default']		= $this->db->f('default_value');
 			$column_info['nullable']	= $this->db->f('nullable');
-			$location_type			= $this->db->f('location_type');
+			$location_type				= $this->db->f('location_type');
 
 			$custom 	= createObject('phpgwapi.custom_fields');
 			$table_def = $custom->get_table_def('fm_location'.$location_type);
 			$history_table_def = $custom->get_table_def('fm_location' . $location_type . '_history');
 //_debug_array($table_def);
 //_debug_array($history_table_def);
-//die();
 			if(!($location_type==$values[$column_name]))
 			{
+				$id = $this->bocommon->next_id('phpgw_cust_attribute',array('appname' => 'property', 'location' => '.location.' .$values[$column_name]));
 
-				$id = $this->bocommon->next_id('phpgw_cust_attribute',array('appname' => 'property', 'location' => 'fm_location' .$values[$column_name]));
-				
 				$this->init_process();
 
 				$this->oProc->m_odb->transaction_begin();
@@ -569,7 +566,7 @@
 					$this->db->query("INSERT INTO phpgw_cust_attribute (appname,location,id,column_name, input_text, statustext,datatype,precision_,scale,default_value,nullable,custom) "
 						. "VALUES ($values)",__LINE__,__FILE__);
 
-					$this->db->query("DELETE from phpgw_cust_attribute WHERE appname = 'property' AND location = '.location.". $location_type . " AND column_name = '" . $column_name . "'",__LINE__,__FILE__);
+					$this->db->query("DELETE from phpgw_cust_attribute WHERE appname = 'property' AND location = '.location.". $location_type . "' AND column_name = '" . $column_name . "'",__LINE__,__FILE__);
 
 					$ok = true;
 				}
