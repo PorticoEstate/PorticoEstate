@@ -476,7 +476,7 @@
 					$sFieldSQL .= ' NULL';
 				}
 				
-				if($sDefault == '0')
+				if($sDefault === '0' || $sDefault === 0)
 				{
 					$sFieldSQL .= ' DEFAULT 0';
 				}								
