@@ -60,7 +60,6 @@
 		function property_uilocation()
 		{
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = True;
-		//	$this->currentapp			= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->nextmatchs			= CreateObject('phpgwapi.nextmatchs');
 			$this->account				= $GLOBALS['phpgw_info']['user']['account_id'];
 			$this->bo					= CreateObject('property.bolocation',True);
@@ -616,7 +615,7 @@
 			$insert_record = $GLOBALS['phpgw']->session->appsession('insert_record','property');
 			$GLOBALS['phpgw']->session->appsession('insert_record','property','');
 
-			$values = false;
+			$values = array();
 			if(isset($_POST['save']))
 			{
 				if(isset($insert_record['location']) && is_array($insert_record['location']))
@@ -627,9 +626,22 @@
 					}
 				}
 
-				for ($i=0; $i<count($insert_record['extra']); $i++)
+				if(isset($insert_record['extra']) && is_array($insert_record['extra']))
 				{
-					$values[$insert_record['extra'][$i]]= $_POST[$insert_record['extra'][$i]];
+					for ($i=0; $i<count($insert_record['extra']); $i++)
+					{
+						$values[$insert_record['extra'][$i]]= $_POST[$insert_record['extra'][$i]];
+					}
+				}
+
+				$insert_record_attributes	= $GLOBALS['phpgw']->session->appsession('insert_record_values' . '.location.' . $this->type_id,'property');
+
+				if(is_array($insert_record_attributes))
+				{
+					for ($j=0;$j<count($insert_record_attributes);$j++)
+					{
+						$insert_record['extra'][$insert_record_attributes[$j]]	= $insert_record_attributes[$j];
+					}
 				}
 			}
 
@@ -642,7 +654,7 @@
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('location','attributes_form'));
 
-			if (is_array($values) )
+			if ($values)
 			{
 				for ($i=1; $i<($type_id+1); $i++)
 				{
@@ -665,15 +677,15 @@
 					$receipt['error'][]=array('msg'=>lang('Please select a category'));
 				}
 
-				if (array_search('street_id',$insert_record['extra']) && (!isset($values['street_id']) || !$values['street_id']))
+				if (isset($insert_record['extra']) && array_search('street_id',$insert_record['extra']) && (!isset($values['street_id']) || !$values['street_id']))
 				{
 					$receipt['error'][]=array('msg'=>lang('Please select a street'));
 				}
-				if (array_search('part_of_town_id',$insert_record['extra']) && (!isset($values['part_of_town_id']) || !$values['part_of_town_id']))
+				if (isset($insert_record['extra']) && array_search('part_of_town_id',$insert_record['extra']) && (!isset($values['part_of_town_id']) || !$values['part_of_town_id']))
 				{
 					$receipt['error'][]=array('msg'=>lang('Please select a part of town'));
 				}
-				if (array_search('owner_id',$insert_record['extra']) && (!isset($values['owner_id']) || !$values['owner_id']))
+				if (isset($insert_record['extra']) && array_search('owner_id',$insert_record['extra']) && (!isset($values['owner_id']) || !$values['owner_id']))
 				{
 					$receipt['error'][]=array('msg'=>lang('Please select an owner'));
 				}
@@ -717,9 +729,12 @@
 						$location_code_parent=implode("-", $location_parent);
 						$values = $this->bo->read_single($location_code_parent);
 						/* restore date from posting */
-						for ($i=0; $i<count($insert_record['extra']); $i++)
+						if(isset($insert_record['extra']) && is_array($insert_record['extra']))
 						{
-							$values[$insert_record['extra'][$i]]= $_POST[$insert_record['extra'][$i]];
+							for ($i=0; $i<count($insert_record['extra']); $i++)
+							{
+								$values[$insert_record['extra'][$i]]= $_POST[$insert_record['extra'][$i]];
+							}
 						}
 					}
 				}
@@ -728,6 +743,7 @@
 			if(!isset($error_id) && $location_code)
 			{
 				$values = $this->bo->read_single($location_code,array('tenant_id'=>'lookup'));
+
 				$check_history = $this->bo->check_history($location_code);
 				if($get_history)
 				{
@@ -768,11 +784,13 @@
 					}
 				}
 			}
-			else
+			/* Preserve attribute values from post */
+
+			if(isset($receipt['error']) && (isset( $values_attribute) && is_array( $values_attribute)))
 			{
+				$values = $this->bocommon->preserve_attribute_values($values,$values_attribute);
 				unset($values['location_code']);
 			}
-
 
 			if ($values['cat_id'] > 0)
 			{
@@ -811,10 +829,6 @@
 
 			$function_msg .= ' ' .$location_types[($type_id-1)]['name'];
 
-			//FIXME
-			$custom_fields	= $this->soadmin_location->read_attrib(array('type_id'=>$type_id,'allrows'=>True));
-		//	$custom 	= createObject('phpgwapi.custom_fields');
-		//	$custom_fields	= $custom->get_attribs('property', '.location.' . $type_id, 0, '', '', '', true);
 			$insert_record = $GLOBALS['phpgw']->session->appsession('insert_record','property');
 
 			if(!is_array($insert_record))
@@ -828,7 +842,7 @@
 			$additional_fields[$j]['datatype']		= 'varchar';
 			$additional_fields[$j]['input_name']	= 'loc' . $type_id;
 			$additional_fields[$j]['name']			= 'loc' . $type_id;
-			$additional_fields[$j]['value']			= (isset($values[$additional_fields[$j]['input_name']])?$values[$additional_fields[$j]['input_name']]:'');
+			$additional_fields[$j]['value']			= isset($values[$additional_fields[$j]['input_name']])?$values[$additional_fields[$j]['input_name']]:'';
 			$additional_fields[$j]['class']			= 'th_text';
 			$insert_record['extra'][]				= $additional_fields[$j]['input_name'];
 
@@ -838,145 +852,13 @@
 			$additional_fields[$j]['datatype']		= 'varchar';
 			$additional_fields[$j]['input_name']	= 'loc' . $type_id . '_name';
 			$additional_fields[$j]['name']			= 'loc' . $type_id . '_name';
-			$additional_fields[$j]['value']			= (isset($values[$additional_fields[$j]['input_name']])?$values[$additional_fields[$j]['input_name']]:'');
+			$additional_fields[$j]['value']			= isset($values[$additional_fields[$j]['input_name']])?$values[$additional_fields[$j]['input_name']]:'';
 			$insert_record['extra'][]				= $additional_fields[$j]['input_name'];
 			$j++;
 
 
-			$contacts			= CreateObject('phpgwapi.contacts');
-
-			$dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
-			$sep = '/';
-			$dlarr[strpos($dateformat,'Y')] = 'Y';
-			$dlarr[strpos($dateformat,'m')] = 'm';
-			$dlarr[strpos($dateformat,'d')] = 'd';
-			ksort($dlarr);
-
-			$dateformat= (implode($sep,$dlarr));
-
-			$input_type_array = array(
-				'R' => 'radio',
-				'CH' => 'checkbox',
-				'LB' => 'listbox'
-			);
-
-			$vendor = CreateObject('property.soactor');
-			$vendor->role = 'vendor';
-
-			$r=0;
-			$m=0;
-			while (is_array($custom_fields) && list(,$custom) = each($custom_fields))
-			{
-				$location_datatype[]= array(
-					'input_name'	=> $custom['column_name'],
-					'datatype'	=> $custom['datatype']
-					);
-
-				$attributes_values[$r]['attrib_id']		= $custom['id'];
-				$attributes_values[$r]['id']			= $custom['id'];
-				$attributes_values[$r]['input_text']	= $custom['input_text'];
-				$attributes_values[$r]['statustext']	= $custom['statustext'];
-				$attributes_values[$r]['datatype']		= $custom['datatype'];
-				$attributes_values[$r]['name']			= $custom['column_name'];
-				$attributes_values[$r]['input_name']	= $custom['column_name'];
-				$attributes_values[$r]['value']			= $values[$custom['column_name']];
-				
-				/* Preserve attribute values from post */
-				if(isset($receipt['error']) && (isset( $values_attribute) && is_array( $values_attribute)))
-				{
-					$attributes_values[$r]['value'] = $values_attribute[$r]['value'];
-				}
-
-				if($attributes_values[$r]['datatype']=='D' && $attributes_values[$r]['value'])
-				{
-					$timestamp_date= mktime(0,0,0,date(m,strtotime($attributes_values[$r]['value'])),date(d,strtotime($attributes_values[$r]['value'])),date(y,strtotime($attributes_values[$r]['value'])));
-					$attributes_values[$r]['value']	= $GLOBALS['phpgw']->common->show_date($timestamp_date,$dateformat);
-				}
-				if($attributes_values[$r]['datatype']=='AB')
-				{
-					if($attributes_values[$r]['value'])
-					{
-						$contact_data	= $contacts->read_single_entry($attributes_values[$r]['value'],array('n_given'=>'n_given','n_family'=>'n_family','email'=>'email'));
-						$attributes_values[$r]['contact_name']	= $contact_data[0]['n_family'] . ', ' . $contact_data[0]['n_given'];
-					}
-
-					$functions[$m]['name'] = 'lookup_'. $attributes_values[$r]['name'] .'()';
-					$functions[$m]['link'] = "menuaction:'" . 'property'.".uilookup.addressbook',"
-													. "column:'" . $attributes_values[$r]['name'] . "'";
-					$functions[$m]['action'] = 'Window1=window.open(strURL,"Search","width=800,height=700,toolbar=no,scrollbars=yes,resizable=yes");';
-					$m++;
-				}
-
-				if($attributes_values[$r]['datatype']=='VENDOR')
-				{
-					if($attributes_values[$r]['value'])
-					{
-						$vendor_data	= $vendor->read_single(array('actor_id'=>$attributes_values[$r]['value']));
-
-						for ($n=0;$n<count($vendor_data['attributes']);$n++)
-						{
-							if($vendor_data['attributes'][$n]['name'] == 'org_name')
-							{
-								$attributes_values[$r]['vendor_name']= $vendor_data['attributes'][$n]['value'];
-								$n =count($vendor_data['attributes']);
-							}
-						}
-					}
-
-					$functions[$m]['name'] = 'lookup_'. $attributes_values[$r]['name'] .'()';
-					$functions[$m]['link'] = "menuaction:'" . 'property'.".uilookup.vendor',"
-													. "column:'" . $attributes_values[$r]['name'] . "'";												
-
-					$functions[$m]['action'] = 'Window1=window.open(strURL,"Search","width=800,height=700,toolbar=no,scrollbars=yes,resizable=yes");';
-					$m++;
-				}
-
-
-				if($attributes_values[$r]['datatype']=='R' || $attributes_values[$r]['datatype']=='CH' || $attributes_values[$r]['datatype']=='LB')
-				{
-					$attributes_values[$r]['choice'] = $this->soadmin_location->read_attrib_choice($type_id,$attributes_values[$r]['id']);
-					$input_type=$input_type_array[$attributes_values[$r]['datatype']];
-
-					if($attributes_values[$r]['datatype']=='CH')
-					{
-						$attributes_values[$r]['value']=unserialize($attributes_values[$r]['value']);
-						$attributes_values[$r]['choice'] = $this->bocommon->select_multi_list_2($attributes_values[$r]['value'],$attributes_values[$r]['choice'],$input_type);
-
-					}
-					else
-					{
-						for ($j=0;$j<count($attributes_values[$r]['choice']);$j++)
-						{
-							$attributes_values[$r]['choice'][$j]['input_type']=$input_type;
-							if($attributes_values[$r]['choice'][$j]['id']==$attributes_values[$r]['value'])
-							{
-								$attributes_values[$r]['choice'][$j]['checked']='checked';
-							}
-						}
-					}
-				}
-
-				$attributes_values[$r]['datatype_text'] = $this->bocommon->translate_datatype($attributes_values[$r]['datatype']);
-				$attributes_values[$r]['counter']	= $r;
-				$attributes_values[$r]['type_id']	= $type_id;
-				$r++;
-
-				if(isset($functions) && is_array($functions))
-				{
-					for ($j=0;$j<count($functions);$j++)
-					{
-						$lookup_functions .= "\t".'function ' . $functions[$j]['name'] ."\n";
-						$lookup_functions .= "\t".'{'."\n";
-						$lookup_functions .= "\t\tvar oArgs = {" . $functions[$j]['link'] ."};" . "\n";
-						$lookup_functions .= "\t\tvar strURL = phpGWLink('index.php', oArgs);\n";
-						$lookup_functions .= "\t\t".$functions[$j]['action'] ."\n";
-						$lookup_functions .= "\t".'}'."\n";
-					}
-				}
-			}
 
 //_debug_array($attributes_values);
-			$GLOBALS['phpgw']->session->appsession('location_datatype','property',$location_datatype);
 
 			$insert_record['extra'][]						= 'cat_id';
 
@@ -1020,35 +902,6 @@
 			}
 
 			$GLOBALS['phpgw']->session->appsession('insert_record','property',$insert_record);
-
-
-			$dateformat = strtolower($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']);
-			$sep = '/';
-			$dlarr[strpos($dateformat,'y')] = 'yyyy';
-			$dlarr[strpos($dateformat,'m')] = 'MM';
-			$dlarr[strpos($dateformat,'d')] = 'DD';
-			ksort($dlarr);
-
-			$dateformat= (implode($sep,$dlarr));
-
-			switch(substr($dateformat,0,1))
-			{
-				case 'M':
-					$dateformat_validate= "javascript:vDateType='1'";
-					$onKeyUp	= "DateFormat(this,this.value,event,false,'1')";
-					$onBlur		= "DateFormat(this,this.value,event,true,'1')";
-					break;
-				case 'y':
-					$dateformat_validate="javascript:vDateType='2'";
-					$onKeyUp	= "DateFormat(this,this.value,event,false,'2')";
-					$onBlur		= "DateFormat(this,this.value,event,true,'2')";
-					break;
-				case 'D':
-					$dateformat_validate="javascript:vDateType='3'";
-					$onKeyUp	= "DateFormat(this,this.value,event,false,'3')";
-					$onBlur		= "DateFormat(this,this.value,event,true,'3')";
-					break;
-			}
 
 			if(isset($receipt))
 			{
@@ -1129,8 +982,6 @@
 				}
 			}
 
-			$GLOBALS['phpgw']->js->validate_file('dateformat','dateformat','property');
-
 			$data = array
 			(
 				'lang_change_type'				=> lang('Change type'),
@@ -1159,15 +1010,12 @@
 				'lang_select_owner'				=> (isset($lang_select_owner)?$lang_select_owner:''),
 				'lang_owner_statustext'			=> (isset($lang_owner_statustext)?$lang_owner_statustext:''),
 				'additional_fields'				=> $additional_fields,
-				'attributes_values'				=> $attributes_values,
+				'attributes_values'				=> $values['attributes'],
 				'lookup_functions'				=> (isset($lookup_functions)?$lookup_functions:''),
 				'lang_none'						=> lang('None'),
 
 				'msgbox_data'					=> (isset($msgbox_data)?$GLOBALS['phpgw']->common->msgbox($msgbox_data):''),
-				'lang_dateformat' 				=> lang(strtolower($dateformat)),
-				'dateformat_validate'			=> $dateformat_validate,
-				'onKeyUp'						=> $onKeyUp,
-				'onBlur'						=> $onBlur,
+
 				'street_link'					=> "menuaction:'" . 'property'.".uilookup.street'",
 				'lang_street'					=> lang('Street'),
 				'lang_select_street_help'		=> lang('Select the street name'),
@@ -1205,7 +1053,6 @@
 
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('edit' => $data));
-		//	$GLOBALS['phpgw']->xslttpl->pp();
 		}
 
 
@@ -1286,7 +1133,7 @@
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('location','attributes_view'));
 
-			$values = $this->bo->read_single($location_code,array('tenant_id'=>'lookup'));
+			$values = $this->bo->read_single($location_code,array('tenant_id'=>'lookup', 'view' => true));
 
 			$check_history = $this->bo->check_history($location_code);
 			if($get_history)
@@ -1344,8 +1191,6 @@
 
 			$function_msg .= ' ' .$location_types[($type_id-1)]['name'];
 
-			$custom_fields	= $this->soadmin_location->read_attrib(array('type_id'=>$type_id,'allrows'=>True));
-
 			$j=0;
 			$additional_fields[$j]['input_text']	= $location_types[($type_id-1)]['name'];
 			$additional_fields[$j]['input_name']	= 'loc' . $type_id;
@@ -1361,8 +1206,6 @@
 			$j++;
 
 
-			$contacts			= CreateObject('phpgwapi.contacts');
-
 			$dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
 			$sep = '/';
 			$dlarr[strpos($dateformat,'Y')] = 'Y';
@@ -1372,104 +1215,6 @@
 
 			$dateformat= (implode($sep,$dlarr));
 
-			$input_type_array = array(
-				'R' => 'radio',
-				'CH' => 'checkbox',
-				'LB' => 'listbox'
-			);
-
-			$vendor = CreateObject('property.soactor');
-			$vendor->role = 'vendor';
-
-			$r=0;
-			$m=0;
-
-			while (is_array($custom_fields) && list(,$custom) = each($custom_fields))
-			{
-				$location_datatype[]= array(
-					'input_name'	=> $custom['column_name'],
-					'datatype'	=> $custom['datatype']
-					);
-
-				$attributes_values[$r]['id']	= $custom['id'];
-				$attributes_values[$r]['input_text']	= $custom['input_text'];
-				$attributes_values[$r]['statustext']	= $custom['statustext'];
-				$attributes_values[$r]['datatype']	= $custom['datatype'];
-				$attributes_values[$r]['name']	= $custom['column_name'];
-				$attributes_values[$r]['input_name']	= $custom['column_name'];
-				$attributes_values[$r]['value']			= $values[$custom['column_name']];
-				if($attributes_values[$r]['datatype']=='D' && $attributes_values[$r]['value'])
-				{
-					$timestamp_date= mktime(0,0,0,date(m,strtotime($attributes_values[$r]['value'])),date(d,strtotime($attributes_values[$r]['value'])),date(y,strtotime($attributes_values[$r]['value'])));
-					$attributes_values[$r]['value']	= $GLOBALS['phpgw']->common->show_date($timestamp_date,$dateformat);
-				}
-				if($attributes_values[$r]['datatype']=='AB')
-				{
-					if($attributes_values[$r]['value'])
-					{
-						$contact_data	= $contacts->read_single_entry($attributes_values[$r]['value'],array('n_given'=>'n_given','n_family'=>'n_family','email'=>'email'));
-						$attributes_values[$r]['contact_name']	= $contact_data[0]['n_family'] . ', ' . $contact_data[0]['n_given'];
-					}
-
-					$functions[$m]['name'] = 'lookup_'. $attributes_values[$r]['name'] .'()';
-					$functions[$m]['link'] = $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uilookup.addressbook', 'column'=> $attributes_values[$r]['name']));
-					$functions[$m]['action'] = 'Window1=window.open(link,"Search","width=800,height=700,toolbar=no,scrollbars=yes,resizable=yes");';
-					$m++;
-				}
-
-				if($attributes_values[$r]['datatype']=='VENDOR')
-				{
-					if($attributes_values[$r]['value'])
-					{
-						$vendor_data	= $vendor->read_single(array('actor_id'=>$attributes_values[$r]['value']));
-
-						for ($n=0;$n<count($vendor_data['attributes']);$n++)
-						{
-							if($vendor_data['attributes'][$n]['name'] == 'org_name')
-							{
-								$attributes_values[$r]['vendor_name']= $vendor_data['attributes'][$n]['value'];
-								$n =count($vendor_data['attributes']);
-							}
-						}
-					}
-
-
-					$lookup_functions[$m]['name'] = 'lookup_'. $attributes_values[$r]['name'] .'()';
-					$lookup_functions[$m]['link'] = "menuaction:'" . 'property'.".uilookup.vendor',column:'" . $attributes_values[$r]['name'] . "'";
-					$lookup_functions[$m]['action'] = 'Window1=window.open(strURL,"Search","width=800,height=700,toolbar=no,scrollbars=yes,resizable=yes");';
-					$m++;
-				}
-
-				if($attributes_values[$r]['datatype']=='R' || $attributes_values[$r]['datatype']=='CH' || $attributes_values[$r]['datatype']=='LB')
-				{
-					$attributes_values[$r]['choice']	= $this->soadmin_location->read_attrib_choice($type_id,$attributes_values[$r]['id']);
-					$input_type=$input_type_array[$attributes_values[$r]['datatype']];
-
-					if($attributes_values[$r]['datatype']=='CH')
-					{
-						$attributes_values[$r]['value']=unserialize($attributes_values[$r]['value']);
-						$attributes_values[$r]['choice'] = $this->bocommon->select_multi_list_2($attributes_values[$r]['value'],$attributes_values[$r]['choice'],$input_type);
-
-					}
-					else
-					{
-						for ($j=0;$j<count($attributes_values[$r]['choice']);$j++)
-						{
-							$attributes_values[$r]['choice'][$j]['input_type']=$input_type;
-							if($attributes_values[$r]['choice'][$j]['id']==$attributes_values[$r]['value'])
-							{
-								$attributes_values[$r]['choice'][$j]['checked']='checked';
-							}
-						}
-					}
-				}
-
-				$attributes_values[$r]['datatype_text'] = $this->bocommon->translate_datatype($attributes_values[$r]['datatype']);
-				$r++;
-			}
-
-
-//	_debug_array($custom_fields);
 
 			for ($j=0;$j<count($config);$j++)
 			{
@@ -1620,7 +1365,8 @@
 				'value_street_name'			=> $values['street_name'],
 				'value_street_number'			=> $values['street_number'],
 
-				'attributes_view'			=> $attributes_values,
+				'attributes_view'				=> $values['attributes'],
+
 				'dateformat'				=> $dateformat,
 				'lang_dateformat' 			=> strtolower($dateformat),
 				'lang_none'				=> lang('None'),
