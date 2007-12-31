@@ -581,7 +581,7 @@
 				'nullable' => array('type' => 'varchar','precision' => '5','nullable' => True),
 				'disabled' => array('type' => 'int','precision' => '2','nullable' => True),
 				'lookup_form' => array('type' => 'int','precision' => '2','nullable' => True),
-				'custom' => array('type' => 'int','precision' => '2','nullable' => True),
+				'custom' => array('type' => 'int','precision' => '2','nullable' => True,'default' => 1),
 				'helpmsg' => array('type' => 'text','nullable' => True)
 			),
 			'pk' => array('appname','location','id'),
