@@ -150,7 +150,7 @@
 			}
 			if ($year && $month && $day)
 			{
-				$date = date($this->dateformat,mktime(12,0,0,$month,$day,$year));
+				$date = date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'],mktime(12,0,0,$month,$day,$year));
 			}
 			if ($helpmsg !== '')
 			{
