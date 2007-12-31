@@ -605,7 +605,8 @@
 
 		function AddColumn($oProc, &$aTables, $sTableName, $sColumnName, &$aColumnDef)
 		{
-			if (isset($aColumnDef['default']))	// pgsql cant add a colum with a default
+			$default = '';
+			if (isset($aColumnDef['default']) && $aColumnDef['default'])	// pgsql cant add a colum with a default
 			{
 				$default = $aColumnDef['default'];
 				unset($aColumnDef['default']);
@@ -618,7 +619,7 @@
 			$oProc->_GetFieldSQL($aColumnDef, $sFieldSQL);
 			$query = "ALTER TABLE $sTableName ADD COLUMN $sColumnName $sFieldSQL";
 
-			if (($Ok = !!$oProc->m_odb->query($query, __LINE__, __FILE__)) && isset($default))
+			if (($Ok = !!$oProc->m_odb->query($query, __LINE__, __FILE__)) && isset($default) && $default)
 			{
 				if($default == '0')
 				{
