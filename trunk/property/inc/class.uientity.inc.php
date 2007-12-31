@@ -652,7 +652,7 @@
 					$receipt['error'][]=array('msg'=>lang('Please select entity type !'));
 					$error_id=true;
 				}
-_debug_array($values_attribute);
+
 				if(isset($values_attribute) && is_array($values_attribute))
 				{
 					foreach ($values_attribute as $attribute )
