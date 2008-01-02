@@ -1,0 +1,164 @@
+projects	common	es	Proyectos
+project administration	admin	es	Administracion de Proyectos
+Account	projects	es	Cuenta
+Active	projects	es	Activa
+Activities	projects	es	Actividades
+Activities list	projects	es	Listado de Actividades
+Activity	projects	es	Actividad
+Activity ID	projects	es	Codigo Actividad
+Activity %1 has been added !	projects	es	La Actividad %1 ha sido agregada !
+Activity %1 has been updated !	projects	es	La Actividad %1 ha sido actualizada !
+Add Activity	projects	es	Agregar Actividad
+Add work hours	projects	es	Agregar Horas de Trabajo
+Add job	projects	es	Agregar Trabajo
+Add project	projects	es	Agregar Proyecto
+Add project hours	projects	es	Agregar horas de proyecto
+Administrator	projects	es	Administrador
+All invoices	projects	es	Todos los recibos
+All	projects	es	Todos
+All delivery notes	projects	es	Todas las notas de envio
+archive	projects	es	Archivo
+arial	projects	es	Arial
+billed	projects	es	Facturado
+Billed only	projects	es	Solo Facturados
+Billing	projects	es	Facturacion
+Bookable activities	projects	es	Actividades Registrables
+Billable activities	projects	es	Actividades Facturables
+bill per hour	projects	es	Suma por hora
+Bill per workunit	projects	es	Suma por unidad de trabajo
+bookkeeper	projects	es	Contador
+Budget	projects	es	Presupuesto
+Calculate	projects	es	Calcular
+closed	projects	es	Cerrado
+Coordinator	projects	es	Coordinador
+Create delivery	projects	es	Crear envio
+Create invoice	projects	es	Crear factura
+courier new	projects	es	Courier New
+Customer	projects	es	Cliente
+Delete hours	projects	es	Eliminar horas
+Deliveries	projects	es	Envios
+Delivery	projects	es	Envio
+Delivery date	projects	es	Fecha de Envio
+Delivery note	projects	es	Nota de Envio
+delivery note for project	projects	es	Nota de Envío para el proyecto
+Delivery ID	projects	es	ID de Envio
+Delivery list	projects	es	Lista de Envios
+Delivery notes	projects	es	Notas de Envios
+Delivery %1 has been created !	projects	es	El envio %1 ha sido creado !
+Delivery %1 has been updated !	projects	es	El envio %1 ha sido actualizdo !
+Edit Activity	projects	es	Editar Actividad
+Edit hours	projects	es	Editar Horas
+Edit project administrator list	projects	es	Editar lista de administradores de proyecto
+edit project bookkeeper list	projects	es	Editar lista de contadores del proyecto
+Edit project	projects	es	Editar proyecto
+Edit project hours	projects	es	Editar horas de proyecto
+Employee	projects	es	Empleado
+Ending date can not be after main projects ending date !	projects	es	La fecha de finalizaciòn no puede ser posterior a la del proyecto principal!
+Generate Activity ID ?	projects	es	Generar ID de Actividad ?
+Generate Delivery ID ?	projects	es	Generar ID de Envio ?
+Generate Project ID ?	projects	es	Generar ID de Proyecto ?
+Generate Invoice ID ?	projects	es	Generar ID de Factura ?
+Generate Job ID ?	projects	es	Generar ID de Trabajo ?
+georgia	projects	es	Georgia
+helvetiva	projects	es	Helvetica
+Hours	projects	es	Horas
+Invoice	projects	es	Factura
+Invoice date	projects	es	Fecha de Factura
+Invoice for project	projects	es	Factura para el Proyecto
+Invoice ID	projects	es	ID de Factura
+Invoice layout	projects	es	Dise&ntilde;o de Factura
+Invoice list	projects	es	Listado de Facturas
+Invoices	projects	es	Facturas
+Invoice %1 has been created !	projects	es	La Factura %1 ha sido creada !
+Invoice %1 has been updated !	projects	es	La factura %1 ha sido actualizada !
+invoicing	projects	es	Facturando
+Job	projects	es	Trabajo
+job archive	projects	es	Archivo de Trabajos
+Job date	projects	es	Fecha del Trabajo
+Job description	projects	es	Descripcion del Trabajo
+Job has been added !	projects	es	El trabajo ha sido a&ntilde;adido !
+Job has been updated !	projects	es	El trabajo ha sido actualizado !
+Job ID	projects	es	ID del Trabajo
+Job list	projects	es	Listado de Trabajos
+Jobs	projects	es	Trabajos
+large	projects	es	Grande
+Main project:	projects	es	Proyecto Principal:
+Minutes per workunit	projects	es	Minutos por Unidad de Trabajo
+net	projects	es	total
+New project	projects	es	Nuevo Proyecto
+Nonactive	projects	es	Inactivo
+Number	projects	es	Numero
+open	projects	es	Abrir
+Overall	projects	es	Resumen
+per	projects	es	por
+per workunit	projects	es	por unidad de trabajo
+Please enter an ID !	projects	es	Por favor ingrese un ID !
+Please choose activities for that project first !	projects	es	Por favor seleccione actividades para ese proyecto primero !
+Please enter a remark !	projects	es	Por favor ingrese una nota !
+Please enter the bill !	projects	es	Por favor ingrese la factura !
+Please enter the bill per workunit !	projects	es	Por favor ingrese el costo por unidad de trabajo !
+Please enter the minutes per workunit !	projects	es	Por favor ingrese los minutos por unidad de trabajo !
+Position	projects	es	Posicion
+Print delivery	projects	es	Imprimir nota de envio
+Print invoice	projects	es	Imprimir factura
+Project	projects	es	Proyecto
+Project administration	projects	es	Administracion de Proyectos
+Project archive	projects	es	Archivo de Proyectos
+Project billing	projects	es	Facturacion de Proyectos
+Project delivery	projects	es	Envio de Proyectos
+Project ID	projects	es	ID de Proyectos
+Project list	projects	es	Listado de Proyectos
+Project name	projects	es	Nombre de Proyectos
+Project preferences	projects	es	Preferencias de Proyecto
+Projects preferences	preferences	es	Preferencias de Proyectos
+Project statistic	projects	es	Estadisticas de Proyecto
+project statistics	projects	es	Estadisticas de Proyecto
+Remark	projects	es	Nota
+Remark required	projects	es	Nota requerida
+select font	projects	es	Seleccion de Tipografía
+Select font size for own address	projects	es	Seleccione tamaño de tipografía para la dirección propia
+Select font size for customer address	projects	es	Seleccione tamaño de tipografía para la dirección del cliente
+Select main project	projects	es	Seleccione proyecto principal
+Select project	projects	es	Seleccione proyecto
+Select tax for workhours	projects	es	Seleccione impuestos por hora de trabajo
+Select users	projects	es	Seleccione Usuarios
+Select groups	projects	es	Seleccione grupos
+Select your address	projects	es	Seleccione su direccion
+small	projects	es	Pequeño
+Start date can not be before main projects start date !	projects	es	La fecha de inicio no puede ser previa a la del proyecto principal
+Statistic	projects	es	Estadisticas
+Statistics	projects	es	Estadisticas
+Short description	projects	es	Descripcion Corta
+Sorry, no preferences to set for you :)	projects	es	Lo siento, no hay preferencias que configurar
+sum net	projects	es	Suma Total
+sum hours	projects	es	Suma de Horas
+Sum	projects	es	Sumatoria
+Sum workunits	projects	es	Sumatoria de Unidades de Trabajo
+tahoma	projects	es	Tahoma
+tax	projects	es	impuesto
+That ID has been used already !	projects	es	Este ID ya ha sido usado !
+times new roman	projects	es	Times New Roman
+Update invoice	projects	es	Actualizar factura
+Update delivery	projects	es	Actualizar envio
+Username / Group	projects	es	Usuario /Grupo
+User statistic	projects	es	Estadisticas del Usuario
+user statistics	projects	es	Estadisticas del Usuario
+verdana	projects	es	Verdana
+very large	projects	es	Muy Grande
+very small	projects	es	Muy Pequeño
+View work hours	projects	es	Ver horas de Trabajo
+View job	projects	es	Ver Trabajo
+View project	projects	es	Ver Proyecto
+Work date	projects	es	Fecha del Trabajo
+Work hours	projects	es	Horas de Trabajo
+Work hours archive	projects	es	Archivo de Horas de Trabajo
+Work hours list	projects	es	Listado de Horas del TRabajo
+Work time	projects	es	Tiempo de Trabajo
+Workunit	projects	es	Unidad de Trabajo
+Workunits	projects	es	Unidades de Trabajo
+written by:	projects	es	Escrito por:
+You have entered an invalid start date !	projects	es	Usted ha ingresado una fecha de inicio invalida !
+You have entered an invalid end date !	projects	es	Usted ha ingresado una fecha de finalizacion invalida !
+You have selected an invalid activity !	projects	es	Usted ha seleccionado una actividad invalida !
+You have no customer selected !	projects	es	No ha seleccionado ningun cliente!
+You have to CREATE a delivery or invoice first !	projects	es	Usted debe CREAR un envio o factura primero !

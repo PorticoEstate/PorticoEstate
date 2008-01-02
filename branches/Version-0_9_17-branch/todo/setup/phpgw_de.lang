@@ -1,0 +1,25 @@
+add main project	todo	de	Hauptprojekt hinzuf&uuml;gen
+add sub project	todo	de	Teilprojekt hinzuf&uuml;gen
+are you sure you want to delete this entry	todo	de	Sind Sie sicher, da&szlig; Sie diesen Eintrag l&ouml;schen wollen ?
+completed	todo	de	fertig
+Description can not exceed 8000 characters in length	todo	de	Beschreibung darf nicht mehr als 8000 Zeichen umfassen !
+do you also want to delete all sub projects ?	todo	de	M&ouml;chten Sie auch alle Teilprojekte l&ouml;schen ?
+edit main project	todo	de	Hauptprojekt editieren
+edit sub project	todo	de	Teilprojekt editieren
+Ending date can not be before start date	todo	de	Enddatum kann nicht vor dem Startdatum liegen !
+high	todo	de	Hoch
+low	todo	de	Niedrig
+normal	todo	de	Normal
+or: days from startdate:	todo	de	alternativ: Tage ab Startdatum:
+or: select for today:	todo	de	alternativ: heute:
+parent project:	todo	de	Hauptprojekt:
+Please enter a title	todo	de	Bitte geben Sie einen Titel ein !
+sub	todo	de	Teilprojekt
+todo	common	de	Aufgabenliste
+todo list	common	de	Aufgabenliste
+to do list	common	de	Aufgabenliste
+urgency	todo	de	Dringlichkeit
+view matrix of actual month	todo	de	Matrix des aktuellen Monats anzeigen
+You can only enter numbers for days from now	todo	de	Sie k&ouml;nnen nur Zahlen als Tage ab Startdatum verwenden !
+You have entered an invalid start date	todo	de	Sie haben ein ung&uuml;ltiges Startdatum angegeben !
+You have entered an invalid end date	todo	de	Sie haben ein ung&uuml;ltiges Enddatum angegeben !

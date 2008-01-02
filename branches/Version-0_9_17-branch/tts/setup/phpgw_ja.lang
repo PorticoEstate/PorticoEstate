@@ -1,0 +1,76 @@
+action	tts	ja	アクション
+add new ticket	tts	ja	追加
+add ticket	tts	ja	追加
+additional notes	tts	ja	追加情報
+admin options	admin	ja	環境設定
+assign to	tts	ja	アサイン
+assigned from	tts	ja	提供者
+assigned to	tts	ja	アサイン
+attachment	tts	ja	添付情報
+attachment added	tts	ja	添付情報追加
+attachment changed	tts	ja	添付情報変更
+billable hours	tts	ja	支払時間
+billable hours changed	tts	ja	支払時間変更
+billable hours rate	tts	ja	支払レート
+billable rate	tts	ja	支払レート
+billable rate changed	tts	ja	支払レート変更
+category changed	tts	ja	カテゴリ変更
+clear form	tts	ja	Clear Form
+close	tts	ja	作業終了
+close date	tts	ja	終了日
+closed	tts	ja	作業終了
+create new ticket	tts	ja	新規作成
+date opened	tts	ja	提供日
+deadline	tts	ja	期日
+deadline changed	tts	ja	期日変更
+default assign to	tts	ja	初期アサイン
+default group	tts	ja	初期グループ
+default priority	tts	ja	初期優先度
+detail	tts	ja	詳細
+details	tts	ja	詳細情報
+disabled	tts	ja	なし
+effort	tts	ja	Effort
+effort changed	tts	ja	Effort changed
+force	tts	ja	必須
+group ownership changed	tts	ja	グループ変更
+highest	tts	ja	高
+in progress	tts	ja	作業進行中
+lowest	tts	ja	低
+new ticket	tts	ja	新しいチケット
+new value	tts	ja	変更後
+no additional notes	tts	ja	追加情報はありません
+no subject	tts	ja	件名なし
+no tickets found	tts	ja	見つかりません。
+not assigned	tts	ja	アサインなし
+old value	tts	ja	変更前
+open	tts	ja	オープン
+open date	tts	ja	提供日
+opened	tts	ja	オープン
+opened by	tts	ja	提供者
+prio	tts	ja	優先度
+priority	tts	ja	優先度
+priority changed	tts	ja	優先度変更
+re-assigned	tts	ja	アサイン変更
+refresh every (seconds)	tts	ja	更新間隔（秒）
+reopen	tts	ja	作業再開
+search	tts	ja	検索
+show new/updated tickets on main screen	tts	ja	新しいチケットをメイン画面に表示する
+status/date closed	tts	ja	状態/終了日
+ticket	tts	ja	チケット
+ticket assigned to %1	tts	ja	%1 にアサイン
+ticket closed	tts	ja	作業終了
+ticket has been updated	tts	ja	チケットを更新しました
+ticket reopened	tts	ja	作業再開
+tickets found %1	tts	ja	%1 件見つかりました
+tickets open %1	tts	ja	オープン %1
+tickets total %1	tts	ja	合計 %1
+total billable	tts	ja	支払合計
+trouble ticket system	common	ja	チケットシステム
+tts	common	ja	チケットシステム
+tts preferences	tts	ja	チケットシステムユーザ設定
+update	tts	ja	内容更新
+use email notification	tts	ja	電子メール通知を使う
+users choice	tts	ja	ユーザ選択
+view all tickets	tts	ja	チケット表示
+view job detail	tts	ja	詳細表示
+view only open tickets	tts	ja	オープンチケット表示
