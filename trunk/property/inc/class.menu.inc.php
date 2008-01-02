@@ -602,7 +602,7 @@
 			if ( $acl->check('.agreement', PHPGW_ACL_READ, 'property') )
 			{
 				$admin_menu = array();
-				if($acl->check('.agreement',16) && $page=='agreement')
+				if ( $acl->check('.agreement',16) )
 				{
 					$admin_menu = array
 					(
