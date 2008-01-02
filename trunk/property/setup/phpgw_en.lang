@@ -1107,7 +1107,7 @@ Project ID	property	en	Project ID
 Project name	property	en	Project name
 Project start date	property	en	Project start date
 propagate	property	en	propagate
-property	property	en	property
+property	common	en	Facilities Management
 Property has been edited	property	en	Property has been edited
 Property has been saved	property	en	Property has been saved
 property id	property	en	property id
