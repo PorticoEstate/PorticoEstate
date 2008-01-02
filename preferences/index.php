@@ -17,18 +17,19 @@
 	 */
 	include('../header.inc.php');
 
-	$pref_tpl = CreateObject('phpgwapi.Template',PHPGW_APP_TPL);
-	$templates = Array(
+	$GLOBALS['phpgw']->template->set_root(PHPGW_APP_TPL);
+	$templates = array
+	(
 		'pref' => 'index.tpl'
 	);
 
-	$pref_tpl->set_file($templates);
+	$GLOBALS['phpgw']->template->set_file($templates);
 
-	$pref_tpl->set_block('pref', 'list');
-	$pref_tpl->set_block('pref', 'app_row');
-	$pref_tpl->set_block('pref', 'app_row_noicon');
-	$pref_tpl->set_block('pref', 'link_row');
-	$pref_tpl->set_block('pref', 'spacer_row');
+	$GLOBALS['phpgw']->template->set_block('pref', 'list');
+	$GLOBALS['phpgw']->template->set_block('pref', 'app_row');
+	$GLOBALS['phpgw']->template->set_block('pref', 'app_row_noicon');
+	$GLOBALS['phpgw']->template->set_block('pref', 'link_row');
+	$GLOBALS['phpgw']->template->set_block('pref', 'spacer_row');
 
 	if ( !$GLOBALS['phpgw']->acl->check('run', 1, 'admin') )
 	{
@@ -56,6 +57,7 @@
 		$GLOBALS['phpgw']->session->appsession('session_data', 'preferences', $session_data);
 	}
 
+	$tabs = array();
 	$tabs[] = array(
 		'label' => lang('Your preferences'),
 		'link'  => $GLOBALS['phpgw']->link('/preferences/index.php',array('type'=>'user'))
@@ -81,13 +83,7 @@
 		default:
 			$selected = 0;
 	}
-	$pref_tpl->set_var('tabs', $GLOBALS['phpgw']->common->create_tabs($tabs, $selected));
-
-	$menus = execMethod('phpgwapi.menu.get');
-	foreach ( $menus['preferences'] as $menu )
-	{
-		echo '<h1>I need to fix this</h1><pre>' . print_r($menu, true) . '</pre>';
-	}
+	$GLOBALS['phpgw']->template->set_var('tabs', $GLOBALS['phpgw']->common->create_tabs($tabs, $selected));
 
 	/**
 	 * Dump a row header
@@ -97,20 +93,16 @@
 	 */ 
 	function section_start($appname='', $icon='')
 	{
-		global $pref_tpl;
-
-		$pref_tpl->set_var('icon_backcolor',(isset($GLOBALS['phpgw_info']['theme']['row_off'])?$GLOBALS['phpgw_info']['theme']['row_off']:''));
-//		$pref_tpl->set_var('link_backcolor', $GLOBALS['phpgw_info']['theme']['row_off']);
-		$pref_tpl->set_var('a_name', $appname);
-		$pref_tpl->set_var('app_name', $GLOBALS['phpgw_info']['apps'][$appname]['title']);
-		$pref_tpl->set_var('app_icon', $icon);
-		if ($icon)
+		$GLOBALS['phpgw']->template->set_var('a_name', $appname);
+		$GLOBALS['phpgw']->template->set_var('app_name', $appname);
+		$GLOBALS['phpgw']->template->set_var('app_icon', $icon);
+		if ( $icon )
 		{
-			$pref_tpl->parse('rows', 'app_row', true);
+			$GLOBALS['phpgw']->template->parse('rows', 'app_row', true);
 		}
 		else
 		{
-			$pref_tpl->parse('rows', 'app_row_noicon', true);
+			$GLOBALS['phpgw']->template->parse('rows', 'app_row_noicon', true);
 		} 
 	}
 
@@ -122,9 +114,7 @@
 	 */
 	function section_item($pref_link='', $pref_text='')
 	{
-		global $pref_tpl;
-
-		$pref_tpl->set_var('pref_link', $pref_link);
+		$GLOBALS['phpgw']->template->set_var('pref_link', $pref_link);
 
 		if (strtolower($pref_text) == 'grant access' && isset($GLOBALS['phpgw_info']['server']['deny_user_grants_access']) && $GLOBALS['phpgw_info']['server']['deny_user_grants_access'])
 		{
@@ -132,10 +122,10 @@
 		}
 		else
 		{
-			$pref_tpl->set_var('pref_text', $pref_text);
+			$GLOBALS['phpgw']->template->set_var('pref_text', $pref_text);
 		}
 
-		$pref_tpl->parse('rows', 'link_row', true);
+		$GLOBALS['phpgw']->template->parse('rows', 'link_row', true);
 	} 
 
 	/**
@@ -143,9 +133,7 @@
 	 */
 	function section_end()
 	{
-		global $pref_tpl;
-
-		$pref_tpl->parse('rows', 'spacer_row', true);
+		$GLOBALS['phpgw']->template->parse('rows', 'spacer_row', true);
 	}
 
 	/**
@@ -155,26 +143,22 @@
 	 * @param $file
 	 * @param $file2
 	 */
-	function display_section($appname, $file, $file2 = array() )
+	function display_section($nav, $items)
 	{
-		if ( is_array($file2) && count($file2) )
+		section_start($nav['text'], $GLOBALS['phpgw']->common->image($nav['image'][0], $nav['image'][1]));
+		foreach ( $items as $item )
 		{
-			$file = $file2;
+			section_item($item['url'], $item['text']);
 		}
-		
-
-		if ( is_array($file) )
-		{
-			section_start($appname, $GLOBALS['phpgw']->common->image($appname,Array('navbar', $appname)));
-			foreach ( $file as $text => $url )
-			{
-				section_item($url,lang($text));
-			}
-			section_end(); 
-		}
+		section_end(); 
 	}
 
-	$GLOBALS['phpgw']->hooks->process('preferences',array('preferences'));
-	$pref_tpl->pfp('out', 'list');
+	$menus = execMethod('phpgwapi.menu.get');
+	foreach ( $menus['preferences'] as $app => $menu )
+	{
+		display_section($menus['navbar'][$app], $menu);
+	}
+
+	$GLOBALS['phpgw']->template->pfp('out', 'list');
 	$GLOBALS['phpgw']->common->phpgw_footer();
 ?>
