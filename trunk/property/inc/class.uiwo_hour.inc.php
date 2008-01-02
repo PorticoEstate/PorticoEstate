@@ -83,14 +83,14 @@
 			$this->acl_edit 			= $this->acl->check('.project',4);
 			$this->acl_delete 			= $this->acl->check('.project',8);
 
-			$this->start				= $this->bo->start;
-			$this->query				= $this->bo->query;
+			$this->start				= $this->bopricebook->start;
+			$this->query				= $this->bopricebook->query;
 			$this->sort				= $this->bo->sort;
 			$this->order				= $this->bo->order;
 			$this->filter				= $this->bo->filter;
 			$this->cat_id				= $this->bo->cat_id;
 			$this->chapter_id			= $this->bo->chapter_id;
-			$this->allrows				= $this->bo->allrows;
+			$this->allrows				= $this->bopricebook->allrows;
 		}
 
 		function save_sessiondata()
