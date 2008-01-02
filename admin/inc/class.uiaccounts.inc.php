@@ -413,30 +413,38 @@
 			
 			$apps = array_keys($GLOBALS['phpgw_info']['apps']);
 			asort($apps);
+			
+			$img_acl = $GLOBALS['phpgw']->common->image('admin', 'share', '.png', false);
+			$img_acl_grey = $GLOBALS['phpgw']->common->image('admin', 'share-grey', '.png', false);
+			$img_grants = $GLOBALS['phpgw']->common->image('admin', 'dot', '.png', false);
+			$img_grants_grey = $GLOBALS['phpgw']->common->image('admin', 'dot-grey', '.png', false);
+
 			foreach ( $apps as $app )
 			{
 				if ($GLOBALS['phpgw_info']['apps'][$app]['enabled'] && $GLOBALS['phpgw_info']['apps'][$app]['status'] != 3)
 				{
+					$grants_enabled = isset($apps_with_acl[$app]) && $account_id;
 					$app_list[] = array
 					(
-						'acl_url'       => (isset($apps_with_acl[$app]) && $account_id) 
-											? $GLOBALS['phpgw']->link('/index.php',array('menuaction'	=> 'preferences.uiadmin_acl.list_acl',
-																						'acl_app'		=> $app,
-																						'cat_id'=>'groups',
-																						'module'=>'.')) : '',
-						'acl_img'		=> $GLOBALS['phpgw']->common->image('admin','dot', '.png', false),
 						'app_name'		=> $app,
 						'app_title'		=> lang($app),
 						'checkbox_name'	=> "account_apps[{$app}]",
 						'checked'       => isset($group_apps[$app]) ? 'checked' : '',
-						'grant_url'		=> (isset($apps_with_acl[$app]) && $account_id) 
+						'acl_url'       => $grants_enabled
+											? $GLOBALS['phpgw']->link('/index.php',array('menuaction'	=> 'preferences.uiadmin_acl.list_acl',
+																						'acl_app'		=> $app,
+																						'cat_id'=>'groups',
+																						'module'=>'.')) : '',
+						'acl_img'		=> $grants_enabled ? $img_acl : $img_acl_grey,
+						'acl_img_name'	=> lang('Set general permissions'),
+						'grant_img'		=> $grants_enabled ? $img_grants : $img_grants_grey,
+						'grant_img_name'=> lang('Grant Access'),
+						'grant_url'		=> $grants_enabled
 											? $GLOBALS['phpgw']->link('/index.php',array('menuaction'	=> 'preferences.uiadmin_acl.aclprefs',
 																						'acl_app'		=> $app,
 																						'cat_id'=>'groups',
 																						'module'=>'.',
-																						'granting_group'=>$account_id)) : '',
-						'grant_img_name'=> lang('Grant Access'),
-						'acl_img_name'      => lang('Set general permissions')
+																						'granting_group'=>$account_id)) : ''
 					);
 				}
 			}
