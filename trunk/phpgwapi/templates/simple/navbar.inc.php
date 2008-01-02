@@ -65,7 +65,7 @@
 		{
 			$var['navbar_color'] = $GLOBALS['phpgw_info']['theme']['bg_color'];
 			$var['align'] = 'right';
-			$var['value'] = $GLOBALS['phpgw']->common->create_tabs($tabs,$selected,-1);
+			$var['value'] = $GLOBALS['phpgw']->common->create_tabs($tabs,$selected);
 			$tpl->set_var($var);
 			$tpl->parse('applications','navbar_app',True);
 		}
