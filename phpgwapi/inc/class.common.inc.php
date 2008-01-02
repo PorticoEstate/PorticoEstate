@@ -480,118 +480,33 @@
 		* Create tabs
 		*
 		* @param array $tabs With ($id,$tab) pairs
-		* @param integer $selected Id of selected tab
-		* @param string $fontsize Optional font size
+		* @param integer $selection array key of selected tab
 		* @param boolean $lang When true use translation otherwise use given label
-		* @param boolean $no_image Do not use an image for the tabs
 		* @return string HTML output string
 		*/
-		function create_tabs($tabs, $selected, $fontsize = '', $lang = False, $no_image = True)
+		function create_tabs($tabs, $selection, $lang = false)
 		{
-			if($no_image)
-			{
-				$output_text = "<table style=\"{padding: 0px; border-collapse: collapse; width: 100%;}\">\n\t<tr>\n";
-//				$output_text = "<table style=\"{padding: 0px; width: 100%;}\">\n\t<tr>\n";
-				foreach($tabs as $id => $tab)
-				{
-					$output_text .= "\t\t" . '<th class="';
-					$output_text .= ($id != $selected ? 'in' : '');
-					$output_text .= 'activetab">';
-					$output_text .= '<a href="' . $tab['link'] . '">';
-					$output_text .= ($lang ? lang($tab['label']) : $tab['label']);
-					$output_text .= "</a></th>\n";
-//					$output_text .= "<th style=\"border-bottom: 1px solid #000000; \">&nbsp;</th>\n";
-				}
-				$output_text .= "\t\t" . '<th class="tablast">&nbsp;</th>' . "\n"; 
-				$output_text .= "\t</tr>\n</table>\n";
-				return $output_text;
-			}
-			
-			$output_text = '<table border="0" cellspacing="0" cellpadding="0"><tr>';
+			$output = <<<HTML
+			<div class="yui-navset">
+				<ul class="yui-nav">
 
-			/* This is a php3 workaround */
-			if(PHPGW_IMAGES_DIR == 'PHPGW_IMAGES_DIR')
+HTML;
+			foreach($tabs as $id => $tab)
 			{
-				$ir = ExecMethod('phpgwapi.phpgw.common.get_image_path', 'phpgwapi');
-			}
-			else
-			{
-				$ir = PHPGW_IMAGES_DIR;
-			}
+				$selected = $id == $selection ? ' class="selected"' : '';
+				$label = $lang ? lang($tab['label']) : $tab['label'];
+				$output .= <<<HTML
+					<li{$selected}><a href="{$tab['link']}"><em>{$label}</em></a></li>
 
-			if ($fontsize)
-			{
-				$fs  = '<font size="' . $fontsize . '">';
-				$fse = '</font>';
+HTML;
 			}
+			$output .= <<<HTML
+				</ul>
+			</div>
 
-			$i = 1;
-			if( !is_array($tabs) )
-			{
-				$tabs = array();
-			}
-			foreach($tabs as $tabs)
-			{
-				if ($tab[0] == $selected)
-				{
-					if ($i == 1)
-					{
-						$output_text .= '<td align="right"><img src="' . $ir . '/tabs-start1.gif" /></td>';
-					}
+HTML;
+			return $output;
 
-					$output_text .= '<td nowrap="nowrap" align="left" background="' . $ir . '/tabs-bg1.gif">&nbsp;<strong><a href="'
-						. $tab[1]['link'] . '" class="tablink">' . $fs . $tab[1]['label']
-						. $fse . '</a></strong>&nbsp;</td>';
-					if ($i == count($tabs))
-					{
-						$output_text .= '<td align="left"><img src="' . $ir . '/tabs-end1.gif" /></td>';
-					}
-					else
-					{
-						$output_text .= '<td align="left"><img src="' . $ir . '/tabs-sepr.gif" /></td>';
-					}
-				}
-				else
-				{
-					if ($i == 1)
-					{
-						$output_text .= '<td align="right"><img src="' . $ir . '/tabs-start0.gif" /></td>';
-					}
-					$output_text .= '<td nowrap="nowrap" align="left" background="' . $ir . '/tabs-bg0.gif">&nbsp;<strong><a href="'
-						. $tab[1]['link'] . '" class="tablink">' . $fs . $tab[1]['label'] . $fse
-						. '</a></strong>&nbsp;</td>';
-					if (($i + 1) == $selected)
-					{
-						$output_text .= '<td align="left"><img src="' . $ir . '/tabs-sepl.gif" /></td>';
-					}
-					elseif ($i == $selected || $i != count($tabs))
-					{
-						$output_text .= '<td align="left"><img src="' . $ir . '/tabs-sepm.gif" /></td>';
-					}
-					elseif ($i == count($tabs))
-					{
-						if ($i == $selected)
-						{
-							$output_text .= '<td align="left"><img src="' . $ir . '/tabs-end1.gif" /></td>';
-						}
-						else
-						{
-							$output_text .= '<td align="left"><img src="' . $ir . '/tabs-end0.gif" /></td>';
-						}
-					}
-					else
-					{
-						if ($i != count($tabs))
-						{
-							$output_text .= '<td align="left"><img src="' . $ir . '/tabs-sepr.gif" /></td>';
-						}
-					}
-				}
-				++$i;
-				$output_text .= "\n";
-			}
-			$output_text .= "</table>\n";
-			return $output_text;
 		}
 
 		/**

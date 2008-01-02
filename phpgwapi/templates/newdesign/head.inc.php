@@ -14,6 +14,7 @@
 		"/phpgwapi/js/yahoo/build/menu/assets/skins/sam/menu.css",
 		"/phpgwapi/js/yahoo/build/button/assets/skins/sam/button.css",
 		"/phpgwapi/js/yahoo/build/treeview/assets/skins/sam/treeview.css",
+		"/phpgwapi/js/yahoo/build/tabview/assets/skins/sam/tabview.css",
 		"/phpgwapi/templates/newdesign/css/base.css",
 		"/phpgwapi/templates/newdesign/css/{$GLOBALS['phpgw_info']['user']['preferences']['common']['theme']}.css",
 		"/{$app}/templates/base/css/base.css",
@@ -26,11 +27,11 @@
 	$GLOBALS['phpgw']->template->set_file('head', 'head.tpl');
 	$GLOBALS['phpgw']->template->set_block('head', 'stylesheet', 'stylesheets');
 
-	phpgwapi_yui::load_widget( 'dragdrop' );
-	phpgwapi_yui::load_widget( 'element' );
-	phpgwapi_yui::load_widget( 'container' );
-	phpgwapi_yui::load_widget( 'menu' );
-	phpgwapi_yui::load_widget( 'button' );
+	phpgwapi_yui::load_widget('dragdrop');
+	phpgwapi_yui::load_widget('element');
+	phpgwapi_yui::load_widget('container');
+	phpgwapi_yui::load_widget('menu');
+	phpgwapi_yui::load_widget('button');
 
 	foreach ( $stylesheets as $stylesheet )
 	{
