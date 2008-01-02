@@ -345,6 +345,11 @@ div.treeview
 	background-color: #e9e9e9;
 }
 
+.row_on, .row_off
+{
+	padding: 3px;
+}
+
 .row_on:hover, .row_off:hover
 {
 	background-color: #fff;
