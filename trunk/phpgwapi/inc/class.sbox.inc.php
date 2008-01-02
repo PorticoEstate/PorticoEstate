@@ -191,15 +191,20 @@ HTML;
 		*/
 		public static function getMonthText($name, $selected = null)
 		{
+			if ( empty($selected) )
+			{
+				$selected = date('n');
+			}
+
 			$html = <<<HTML
 			<select name="{$name}" id="{$name}">
 
 HTML;
 			foreach ( phpgwapi_datetime::get_month_fullnames() as $id => $month )
 			{
-				$slctd = $id == $selected ? ' selected' : '';
+				$slctd = $id == $selected ? ' selected="selected"' : '';
 				$html .= <<<HTML
-				<option value="{$id}"{$selected}>$month</option>
+				<option value="{$id}"{$slctd}>$month</option>
 
 HTML;
 			}
@@ -219,16 +224,18 @@ HTML;
 		*/
 		public static function getDays($name, $selected = null)
 		{
-			$lang_day = lang('day');
+			if ( empty($selected) )
+			{
+				$selected = date('j');
+			}
 
 			$html = <<<HTML
 			<select name="{$name}" id="{$name}">
-				<option value="0">$day</option>
 
 HTML;
 			for ( $i=1; $i <= 31; ++$i )
 			{
-				$slctd = $i == $selected ? ' selected' : '';
+				$slctd = $i == $selected ? ' selected="selected"' : '';
 				$html .= <<<HTML
 				<option value="{$i}"{$slctd}>{$i}</option>
 
@@ -247,11 +254,16 @@ HTML;
 		* @param string $name the name and id of the html select element
 		* @param int $selected the currently selected year
 		* @param int $start_year the year to start (default: current year - 5)
-		* @param int $endYear the last year in the list (default: current year + 10)
+		* @param int $end_year the last year in the list (default: current year + 10)
 		* @return string html select element populated with year options
 		*/
-		public static function getYears($name, $selected = null, $startYear = null, $endYear = null)
+		public static function getYears($name, $selected = null, $start_year = null, $end_year = null)
 		{
+			if ( empty($selected) )
+			{
+				$selected = date('Y');
+			}
+
 			if (!$start_year)
 			{
 				$start_year = date('Y') - 5;
@@ -261,9 +273,9 @@ HTML;
 				$start_year = $selected;
 			}
 
-			if (!$endYear)
+			if (!$end_year)
 			{
-				$endYear = date('Y') + 10;
+				$end_year = date('Y') + 10;
 			}
 
 			if ($selected && $end_year < $selected)
@@ -274,13 +286,12 @@ HTML;
 			$lang_year = lang('year');
 
 			$html = <<<HTML
-			<select name="{$name}" id="{$id}">
-				<option value="0">$lang_year</option>
+			<select name="{$name}" id="{$name}">
 
 HTML;
 			for ( $i = $start_year; $i <= $end_year; ++$i )
 			{
-				$slctd = $id == $selected ? ' selected' : '';
+				$slctd = $i == $selected ? ' selected="selected"' : '';
 				$html .= <<<HTML
 					<option value="$i"{$slctd}>{$i}</option>
 
