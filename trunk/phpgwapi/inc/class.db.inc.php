@@ -205,7 +205,7 @@
 				$this->Password = $Password;
 			}
 
-			return $this->adodb->connect($this->Host, $this->User, $this->Password, $this->Database);
+			return @$this->adodb->connect($this->Host, $this->User, $this->Password, $this->Database);
 		}
 
 		/**
