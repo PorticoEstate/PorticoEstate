@@ -66,10 +66,10 @@ function check_all(strTargetAction)
 <!-- END apps -->
 
 <!-- BEGIN detail -->
-  <tr class="{bg_color}">
-    <td>{name}&nbsp;</td>
-    <td>{details}&nbsp;</td>
-  </tr>
+		<li>
+			<strong>{name}</strong><br>
+			{details}
+		</li>
 <!-- END detail -->
 
 <!-- BEGIN table -->
@@ -124,6 +124,7 @@ function check_all(strTargetAction)
 <!-- END app_footer -->
 
 <!-- BEGIN footer -->
+	{footer_text}
 	<div class="banner"> </div>
 </div>
 <!-- END footer -->
