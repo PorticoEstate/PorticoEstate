@@ -60,6 +60,7 @@
 		function property_uilocation()
 		{
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = True;
+			$GLOBALS['phpgw_info']['flags']['current_location'] = 'property::location';
 			$this->nextmatchs			= CreateObject('phpgwapi.nextmatchs');
 			$this->account				= $GLOBALS['phpgw_info']['user']['account_id'];
 			$this->bo					= CreateObject('property.bolocation',True);
@@ -205,11 +206,20 @@
 
 			if(!$type_id)
 			{
-				$type_id=1;
+				$type_id = 1;
 			}
 			if($lookup)
 			{
 				$GLOBALS['phpgw_info']['flags']['noframework'] = True;
+			}
+
+			if ( $type_id && !$lookup_tenant )
+			{
+				$GLOBALS['phpgw_info']['flags']['current_location'] .= "::loc_$type_id";
+			}
+			else
+			{
+				$GLOBALS['phpgw_info']['flags']['current_location'] .= '::tenant';
 			}
 
 			$location_list = $this->bo->read(array('type_id'=>$type_id,'lookup_tenant'=>$lookup_tenant,'lookup'=>$lookup,'allrows'=>$this->allrows));
@@ -220,7 +230,7 @@
 
 			$content = array();
 			$j=0;
-			if (isSet($location_list) AND is_array($location_list))
+			if (isSet($location_list) && is_array($location_list))
 			{
 				foreach($location_list as $location)
 				{
@@ -610,7 +620,7 @@
 			$lookup_tenant 		= phpgw::get_var('lookup_tenant', 'bool');
 			$location_code		= phpgw::get_var('location_code');
 			$values_attribute	= phpgw::get_var('values_attribute');
-			$location = split('-',$location_code);
+			$location 			= explode('-',$location_code);
 
 			$insert_record = $GLOBALS['phpgw']->session->appsession('insert_record','property');
 			$GLOBALS['phpgw']->session->appsession('insert_record','property','');
@@ -647,6 +657,15 @@
 
 			$type_id	 	= $this->type_id;
 
+			if ( $type_id && !$lookup_tenant )
+			{
+				$GLOBALS['phpgw_info']['flags']['current_location'] .= "::loc_$type_id";
+			}
+			else
+			{
+				$GLOBALS['phpgw_info']['flags']['current_location'] .= '::tenant';
+			}
+			
 			if($location_code)
 			{
 				$type_id = count($location);
@@ -751,7 +770,7 @@
 					$uicols = $this->bo->uicols;
 
 					$j=0;
-					if (isSet($history) AND is_array($history))
+					if (isSet($history) && is_array($history))
 					{
 						foreach($history as $entry)
 						{
@@ -954,7 +973,7 @@
 
 				$entities= $this->bo->read_entity_to_link($location_code);
 
-				if (isset($entities) AND is_array($entities))
+				if (isset($entities) && is_array($entities))
 				{
 					foreach($entities as $entity_entry)
 					{
@@ -1075,6 +1094,14 @@
 			$location_code	 	= phpgw::get_var('location_code', 'string', 'GET');
 			$type_id	 	= $this->type_id;
 
+			if ( $type_id && !$lookup_tenant )
+			{
+				$GLOBALS['phpgw_info']['flags']['current_location'] .= "::loc_$type_id";
+			}
+			else
+			{
+				$GLOBALS['phpgw_info']['flags']['current_location'] .= '::tenant';
+			}
 
 			$confirm	= phpgw::get_var('confirm', 'bool', 'POST');
 
@@ -1126,15 +1153,24 @@
 			$get_history 		= phpgw::get_var('get_history', 'bool', 'POST');
 			$lookup_tenant		= phpgw::get_var('lookup_tenant', 'bool');
 			$location_code 		= phpgw::get_var('location_code');
-			$location 		= split('-',$location_code);
+			$location 			= explode('-',$location_code);
 
-			$type_id	 	= $this->type_id;
+			$type_id	 		= $this->type_id;
 
 			if($location_code)
 			{
 				$type_id = count($location);
 			}
 
+			if ( $type_id && !$lookup_tenant )
+			{
+				$GLOBALS['phpgw_info']['flags']['current_location'] .= "::loc_$type_id";
+			}
+			else
+			{
+				$GLOBALS['phpgw_info']['flags']['current_location'] .= '::tenant';
+			}
+			
 			$GLOBALS['phpgw']->xslttpl->add_file(array('location','attributes_view'));
 
 			$values = $this->bo->read_single($location_code,array('tenant_id'=>'lookup', 'view' => true));
@@ -1146,7 +1182,7 @@
 				$uicols = $this->bo->uicols;
 
 				$j=0;
-				if (isSet($history) AND is_array($history))
+				if (isSet($history) && is_array($history))
 				{
 					foreach($history as $entry)
 					{
@@ -1303,7 +1339,7 @@
 
 			$entities= $this->bo->read_entity_to_link($location_code);
 
-			if (isset($entities) AND is_array($entities))
+			if (isset($entities) && is_array($entities))
 			{
 				foreach($entities as $entity_entry)
 				{
@@ -1458,11 +1494,18 @@
 			$perm	 		= phpgw::get_var('perm', 'int');
 			$location	 	= phpgw::get_var('acl_location');
 
-			$right		= array(1=>'read',2=>'add',4=>'edit',8=>'delete',16=>'manage');
+			$right = array
+			(
+				PHPGW_ACL_READ		=> 'read',
+				PHPGW_ACL_ADD		=> 'add',
+				PHPGW_ACL_EDIT		=> 'edit',
+				PHPGW_ACL_DELETE	=> 'delete',
+				PHPGW_ACL_PRIVATE	=> 'manage'
+			);
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('location'));
 
-			$receipt['error'][]=array('msg'=>lang('You need the right "%1" for this application at "%2" to access this function',lang($right[$perm]),$location));
+			$receipt['error'][] = array('msg' => lang('You need the right "%1" for this application at "%2" to access this function', lang($right[$perm]), $location));
 
 			$msgbox_data = $this->bocommon->msgbox_data($receipt);
 
@@ -1479,6 +1522,7 @@
 
 		function summary()
 		{
+			$GLOBALS['phpgw_info']['flags']['current_location'] .= '::summary';
 			$GLOBALS['phpgw']->xslttpl->add_file(array('location'));
 
 			$GLOBALS['phpgw']->js->validate_file('overlib','overlib','property');
@@ -1487,7 +1531,7 @@
 			$uicols	= $this->bo->uicols;
 
 			$j=0;
-			if (isSet($summary_list) AND is_array($summary_list))
+			if (isSet($summary_list) && is_array($summary_list))
 			{
 				foreach($summary_list as $summary)
 				{
