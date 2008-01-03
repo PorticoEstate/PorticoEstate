@@ -8,7 +8,6 @@
 	* @version $Id: applications.php 18358 2007-11-27 04:43:37Z skwashd $
 	*/
 
-	$DEBUG = (isset($_POST['debug']) && $_POST['debug']) || (isset($_GET['debug']) && $_GET['debug']);
 	/*
 	 TODO: We allow a user to hose their setup here, need to make use
 	 of dependencies so they are warned that they are pulling the rug
@@ -24,18 +23,22 @@
 		'noapi'			=> true
 	);
 	
+
 	/**
 	 * Include setup functions
 	 */
 	include ('./inc/functions.inc.php');
 
-	if ( isset($_POST['cancel']) && $_POST['cancel'] )
+	if ( phpgw::get_var('cancel', 'bool', 'POST') )
 	{
-		Header("Location: index.php");
+		Header('Location: index.php');
 		exit;
 	}
 
 	@set_time_limit(0);
+
+	$DEBUG = phpgw::get_var('debug', 'bool');
+
 
 	// Check header and authentication
 	if (!$GLOBALS['phpgw_setup']->auth('Config'))
@@ -139,29 +142,28 @@
 		{
 			foreach($remove as $appname => $key)
 			{
-				echo '<h3>' . lang('Processing: %1', $appname) . "</h3>\n<ul>";
-				$terror = array();
-				$terror[] = $setup_info[$appname];
+				echo '<h3>' . lang('Processing: %1', lang($appname)) . "</h3>\n<ul>";
+				$terror = array( $setup_info[$appname] );
 
 				if ( isset($setup_info[$appname]['tables'])
 					&& $setup_info[$appname]['tables'] )
 				{
-					$GLOBALS['phpgw_setup']->process->droptables($terror,$DEBUG);
-					echo "<li>{$setup_info[$appname]['name']} " . lang('tables dropped') . ".</li>\n";
+					$GLOBALS['phpgw_setup']->process->droptables($terror, $DEBUG);
+					echo '<li>' . lang('%1 tables dropped', lang($appname)) . ".</li>\n";
 				}
 
-				$GLOBALS['phpgw_setup']->deregister_app($setup_info[$appname]['name']);
-				echo "<li>{$setup_info[$appname]['name']} " . lang('deregistered') . ".</li>\n";
+				$GLOBALS['phpgw_setup']->deregister_app($appname);
+				echo '<li>' . lang('%1 deregistered', lang($appname)) . ".</li>\n";
 
 				if (isset($setup_info[$appname]['hooks'])
 					&& $setup_info[$appname]['hooks'] )
 				{
-					$GLOBALS['phpgw_setup']->deregister_hooks($setup_info[$appname]['name']);
-					echo "<li>{$setup_info[$appname]['name']} " . lang('hooks deregistered') . ".</li>\n";
+					$GLOBALS['phpgw_setup']->deregister_hooks($appname);
+					echo '<li>' . lang('%1 hooks deregistered', lang($appname)) . ".</li>\n";
 				}
 
-				$terror = $GLOBALS['phpgw_setup']->process->drop_langs($terror,$DEBUG);
-				echo "<li>{$setup_info[$appname]['name']} " . lang('Translations removed') . ".</li>\n</ul>\n";
+				$terror = $GLOBALS['phpgw_setup']->process->drop_langs($terror, $DEBUG);
+				echo '<li>' . lang('%1 translations removed', $appname) . ".</li>\n</ul>\n";
 			}
 		}
 
@@ -169,9 +171,8 @@
 		{
 			foreach($install as $appname => $key)
 			{
-				echo '<h3>' . lang('Processing: %1', $appname) . "</h3>\n<ul>";
-				$terror = array();
-				$terror[] = $setup_info[$appname];
+				echo '<h3>' . lang('Processing: %1', lang($appname)) . "</h3>\n<ul>";
+				$terror = array($setup_info[$appname]);
 
 				if ( isset($setup_info[$appname]['tables'])
 					&& is_array($setup_info[$appname]['tables']) )
@@ -183,21 +184,21 @@
 				}
 				else
 				{
-					if ($GLOBALS['phpgw_setup']->app_registered($setup_info[$appname]['name']))
+					if ($GLOBALS['phpgw_setup']->app_registered($appname))
 					{
-						$GLOBALS['phpgw_setup']->update_app($setup_info[$appname]['name']);
+						$GLOBALS['phpgw_setup']->update_app($appname);
 					}
 					else
 					{
-						$GLOBALS['phpgw_setup']->register_app($setup_info[$appname]['name']);
+						$GLOBALS['phpgw_setup']->register_app($appname);
 					}
-					echo "<li>{$setup_info[$appname]['name']} " . lang('registered') . ".</li>\n";
+					echo '<li>' . lang('%1 registered', lang($appname)) . ".</li>\n";
 
 					if ( isset($setup_info[$appname]['hooks'])
 						&& is_array($setup_info[$appname]['hooks']) )
 					{
-						$GLOBALS['phpgw_setup']->register_hooks($setup_info[$appname]['name']);
-						echo "<li>{$setup_info[$appname]['name']} " . lang('hooks registered') . ".</li>\n";
+						$GLOBALS['phpgw_setup']->register_hooks($appname);
+						echo '<li>' . lang('%1 hooks registered', lang($appname)) . ".</li>\n";
 					}
 				}
 				$force_en = False;
@@ -206,7 +207,7 @@
 					$force_en = true;
 				}
 				$terror = $GLOBALS['phpgw_setup']->process->add_langs($terror,$DEBUG,$force_en);
-				echo "<li>{$setup_info[$appname]['name']} " . lang('Translations added') . ".</li>\n</ul>\n";
+				echo '<li>' . lang('%1 translations added', lang($appname)) . ".</li>\n</ul>\n";
 			}
 		}
 
@@ -214,23 +215,23 @@
 		{
 			foreach($upgrade as $appname => $key)
 			{
-				echo '<h3>' . lang('Processing: %1', $appname) . "</h3>\n<ul>";
+				echo '<h3>' . lang('Processing: %1', lang($appname)) . "</h3>\n<ul>";
 				$terror = array();
 				$terror[] = $setup_info[$appname];
 
 				$GLOBALS['phpgw_setup']->process->upgrade($terror,$DEBUG);
 				if ($setup_info[$appname]['tables'])
 				{
-					echo "<li>{$setup_info[$appname]['name']} " . lang('tables upgraded') . ".</li>";
+					echo '<li>' . lang('%1 tables upgraded', lang($appname)) . ".</li>";
 					// The process_upgrade() function also handles registration
 				}
 				else
 				{
-					echo "<li>{$setup_info[$appname]['name']} " . lang('upgraded') . ".</li>";
+					echo '<li>' . lang('%1 upgraded', lang($appname)) . ".</li>";
 				}
 
 				$terror = $GLOBALS['phpgw_setup']->process->upgrade_langs($terror,$DEBUG);
-				echo "<li>{$setup_info[$appname]['name']} " . lang('Translations upgraded') . ".</li>\n</ul>\n";
+				echo '<li>' . lang('%1 translations upgraded', lang($appname)) . ".</li>\n</ul>\n";
 			}
 		}
 
@@ -248,56 +249,53 @@
 	if($detail)
 	{
 		ksort($setup_info[$detail]);
-		$setup_tpl->set_var('description','<a href="applications.php?debug='.$DEBUG.'">' . lang('Go back') . '</a>');
+		$name = lang($setup_info[$detail]['name']);
+		$setup_tpl->set_var('description', "<h2>{$name}</h2>\n<ul>\n");
 		$setup_tpl->pparse('out','header');
-
-		
-		$name = ($setup_info[$detail]['title'] ? $setup_info[$detail]['title'] 
-			 : lang($setup_info[$detail]['name']));
-		$setup_tpl->set_var('name',lang('application'));
-		$setup_tpl->set_var('details', $name);
-		$setup_tpl->set_var('bg_class', 'th');
 		$setup_tpl->pparse('out','detail');
 	
 		$i = 1;
 		foreach($setup_info[$detail] as $key => $val)
 		{
-			if($key != 'title' && $key != 'name')
+			switch ($key)
 			{
-				$i = $i % 2;
+				case 'application':
+				case 'app_group':
+				case 'app_order':
+				case 'enable':
+				case 'name':
+				case 'title':
+				case '':
+					continue 2; //switch is a looping structure in php - see php.net/continue - skwashd jan08
 
-				if ($key == 'tables')
-				{
+				case 'tables':
 					$tblcnt = count($setup_info[$detail][$key]);
 					if(is_array($val))
 					{
-						$key = '<br/><a href="sqltoarray.php?appname=' . $detail . '&amp;submit=True">' . $key . '(' . $tblcnt . ')</a>:<br/>';
-						$val = implode(',<br/>',$val) .'<br/>';
+						$key = '<a href="sqltoarray.php?appname=' . $detail . '&amp;submit=True">' . $key . '(' . $tblcnt . ')</a>';
+						$val = implode(',<br>', $val);
 					}
-				}
-				
-				if ($key == 'hooks')
-				{
-					$val = implode(',',$val);
-				}
-				
-				if ($key == 'depends')
-				{
-					$val = parsedep($val);
-				}
-				
-				if (is_array($val))
-				{
-					$val = implode(',',$val);
-				}
+					break;
 
-				$setup_tpl->set_var('bg_class', $bg_class[$i]);
-				$setup_tpl->set_var('name',$key);
-				$setup_tpl->set_var('details',$val);
-				$setup_tpl->pparse('out','detail');
+				case 'depends':
+					$val = parsedep($val);
+					break;
+
+				case 'hooks':
+				default:
+					if (is_array($val))
+					{
+						$val = implode(', ', $val);
+					}
 			}
+
+			$i = $i % 2;
+			$setup_tpl->set_var('name', $key);
+			$setup_tpl->set_var('details', $val);
+			$setup_tpl->pparse('out','detail');
 			++$i;
 		}
+		$setup_tpl->set_var('footer_text', "</ul>\n<a href=\"applications.php?debug={$DEBUG}\">" . lang('Go back') . '</a>');
 		$setup_tpl->pparse('out','footer');
 		exit;
 	}
