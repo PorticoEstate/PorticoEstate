@@ -84,7 +84,7 @@
 				}
 			}
 			
-			if ( isset($GLOBALS['phpgw_info']['user']['apps']['admin']) )
+			if ( isset($navbar['admin']) )
 			{
 				$menus['navigation'][] = array
 				(
