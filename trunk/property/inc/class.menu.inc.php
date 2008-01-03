@@ -62,6 +62,14 @@
 					'image'	=> array('property', 'navbar'),
 					'order'	=> 35,
 					'group'	=> 'facilities management'
+				),
+				'gis' => array
+				(
+					'text'	=> 'GIS',
+					'url'	=> 'http://maps.google.no',
+					'image'	=> array('property', 'navbar'),
+					'order'	=> 350,
+					'group'	=> 'facilities management'
 				)
 			);
 
@@ -606,17 +614,17 @@
 				{
 					$admin_menu = array
 					(
-						array
+						'group'		=> array
 						(
 							'url'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uipricebook.agreement_group')),
 							'text'	=> lang('Agreement group')
 						),
-						array
+						'activities'	=> array
 						(
 							'url'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uipricebook.activity')),
 							'text'	=> lang('Activities')
 						),
-						array
+						'agreement'		=> array
 						(
 							'url'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiagreement.index')),
 							'text'	=> lang('Agreement')
@@ -630,23 +638,23 @@
 					'text'		=> lang('Agreement'),
 					'children'	=> array
 					(
-						array
+						'pricebook'	=> array
 						(
 							'url'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiagreement.index')),
 							'text'	=> lang('Pricebook'),
 							'children'	=> $admin_menu
 						),
-						array
+						'service'	=> array
 						(
 							'url'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uis_agreement.index')),
 							'text'	=> lang('Service')
 						),
-						array
+						'rental'	=> array
 						(
 							'url'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uir_agreement.index')),
 							'text'	=> lang('Rental')
 						),
-						array
+						'alarm'		=> array
 						(
 							'url'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uialarm.list_alarm')),
 							'text'	=> lang('alarm')
