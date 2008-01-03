@@ -38,7 +38,7 @@
 		 *
 		 * @return array available menus for the current user
 		 */
-		function get_menu()
+		public function get_menu()
 		{
 			$acl = CreateObject('phpgwapi.acl');
 			$menus = array();
@@ -60,8 +60,8 @@
 					'text'	=> lang('property'),
 					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => "property.ui{$start_page}.index") ),
 					'image'	=> array('property', 'navbar'),
-					'order'	=> 1,
-					'group'	=> 'office'
+					'order'	=> 35,
+					'group'	=> 'facilities management'
 				)
 			);
 
@@ -387,24 +387,24 @@
 				$locations	= $soadmin_location->select_location_type();
 				foreach ( $locations as $location )
 				{
-					$children[] = array
+					$children["loc_{$location['id']}"] = array
 					(
 						'url'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uilocation.index', 'type_id' => $location['id'])),
 						'text'	=> $location['name']
 					);
 				}
 
-				$children[] = array
+				$children['tenant'] = array
 				(
-					'url'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uilocation.index', 'lookup_tenant'=>1, 'type_id' => $soadmin_location->read_config_single('tenant_id'))),
+					'url'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uilocation.index', 'lookup_tenant' => 1, 'type_id' => $soadmin_location->read_config_single('tenant_id'))),
 					'text'	=> lang('Tenant')
 				);
-				$children[] = array
+				$children['gabnr'] = array
 				(
 					'url'	=>	$GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uigab.index')),
 					'text'	=> lang('gabnr')
 				);
-				$children[] = array
+				$children['summary'] = array
 				(
 					'url'	=>	$GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uilocation.summary')),
 					'text'	=>	lang('Summary')
@@ -412,19 +412,19 @@
 
 				if ( $acl->check('.location',16) )
 				{
-					$children[] = array
+					$children['type'] = array
 					(
 						'url'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiadmin_location.index')),
 						'text'	=> lang('Location type')
 					);
-					$children[] = array
+					$children['config'] = array
 					(
 						'url'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiadmin_location.config')),
 						'text'	=> lang('Config')
 					);
 				}
 
-				$menus['navigation'][] = array
+				$menus['navigation']['location'] = array
 				(
 					'url'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uilocation.index', 'type_id'=>1)),
 					'text'	=> lang('Location'),

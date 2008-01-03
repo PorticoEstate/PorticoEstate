@@ -67,7 +67,7 @@
 				{
 					if ( elms[i].className.match(/expanded|collapsed/) )
 					{
-						YAHOO.util.Event.addListener(elms[i], 'dblclick', expandCollapse); 
+						YAHOO.util.Event.addListener(elms[i], 'click', expandCollapse); 
 					}
 				}
 			};
