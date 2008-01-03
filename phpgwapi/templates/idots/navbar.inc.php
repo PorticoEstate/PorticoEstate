@@ -24,7 +24,6 @@
 		$GLOBALS['phpgw']->template->set_block('navbar','navbar_header','navbar_header');
 		$GLOBALS['phpgw']->template->set_block('navbar','extra_blocks_header','extra_block_header');
 		$GLOBALS['phpgw']->template->set_block('navbar','extra_block_row','extra_block_row');
-		$GLOBALS['phpgw']->template->set_block('navbar','extra_block_spacer','extra_block_spacer');
 		$GLOBALS['phpgw']->template->set_block('navbar','extra_blocks_footer','extra_blocks_footer');
 		$GLOBALS['phpgw']->template->set_block('navbar','navbar_footer','navbar_footer');
 
@@ -33,34 +32,36 @@
 		$applications = '';
 		$items = 0;
 
-//_debug_array($GLOBALS['phpgw_info']['navbar']);
+		$navbar = execMethod('phpgwapi.menu.get', 'navbar');
+		prepare_navbar($navbar);
 
+		$navigation = execMethod('phpgwapi.menu.get', 'navigation');
 		$sidecontent = isset($GLOBALS['phpgw_info']['user']['preferences']['common']['sidecontent']) && $GLOBALS['phpgw_info']['user']['preferences']['common']['sidecontent'] ? $GLOBALS['phpgw_info']['user']['preferences']['common']['sidecontent'] : 'sidebox';
 
-		foreach($GLOBALS['phpgw_info']['navbar'] as $app => $app_data)
+		foreach($navbar as $app => $app_data)
 		{
 			if (($app != 'home' && $app != 'preferences' && $app != 'about' && $app != 'logout')
 				|| ($sidecontent != 'sidebox' && $sidecontent != 'jsmenu'))
 			{
 				$item = array
-					(
-						'app_name'	=> '',
-						'alt_img_app'	=> lang($app),
-						'img_app'	=> "{$var['img_root']}/noimage_nav.png",
-						'url_app'	=> $app_data['url']
-					);
+				(
+					'app_name'		=> '',
+					'alt_img_app'	=> lang($app),
+					'img_app'		=> "{$var['img_root']}/noimage_nav.png",
+					'url_app'		=> $app_data['url']
+				);
 
 				switch($GLOBALS['phpgw_info']['user']['preferences']['common']['navbar_format'])
 				{
 					case 'icons':
-						$item['img_app'] =& $app_data['icon'];
+						$item['img_app'] = $GLOBALS['phpgw']->common->image($app_data['image'][0], $app_data['image'][1]);
 						break;
 					case 'text':
-						$item['app_name'] =& $item['alt_img_app'];
+						$item['app_name'] =& $app_data['text'];
 						break;
 					default:
-						$item['app_name'] =& $item['alt_img_app'];
-						$item['img_app'] =& $app_data['icon'];
+						$item['app_name'] =& $app_data['text'];
+						$item['img_app'] = $GLOBALS['phpgw']->common->image($app_data['image'][0], $app_data['image'][1]);
 				}
 				$GLOBALS['phpgw']->template->set_var($item);
 				$GLOBALS['phpgw']->template->parse('navbar_items', 'navbar_item', true);
@@ -117,23 +118,23 @@
 		{
 			$menu_title = lang('General Menu');
 
-			$file[] = array('text' => 'Home',
-					'url' => $GLOBALS['phpgw_info']['navbar']['home']['url']);
-			if ( isset($GLOBALS['phpgw_info']['navbar']['preferences']))
+			$file[] = $navbar['home'];
+			if ( isset($navbar['preferences']))
 			{
-				$file[] = array ('text' => 'Preferences',
-					'url' => $GLOBALS['phpgw_info']['navbar']['preferences']['url'] 
-							. '#' . $GLOBALS['phpgw_info']['flags']['currentapp']);
+				$file[] = $navbar['preferences'];
 			}
-			$file[] = array ('text' => 'About %1', 'url' => $GLOBALS['phpgw_info']['navbar']['about']['url']);
-			$file[] = array ('text' => 'Logout', 'url' => $GLOBALS['phpgw_info']['navbar']['logout']['url']);
+			$file[] = array ('text' => lang('About'), 'url' => $GLOBALS['phpgw']->link('/about.php', array('app' => $GLOBALS['phpgw_info']['flags']['currentapp']) ));
+			$file[] = $navbar['logout'];
 
 			display_sidebox('',$menu_title,$file);
-		
-			$GLOBALS['phpgw']->hooks->single('sidebox_menu',$GLOBALS['phpgw_info']['flags']['currentapp']);
 		}
 
-		$GLOBALS['phpgw']->template->pparse('out','navbar_footer');
+		if ( isset($navigation[$GLOBALS['phpgw_info']['flags']['currentapp']]) )
+		{
+			//echo '<pre>' . print_r($navigation[$GLOBALS['phpgw_info']['flags']['currentapp']], true) . '</pre>';
+			$GLOBALS['phpgw']->template->set_var('menubar', process_menu($navigation[$GLOBALS['phpgw_info']['flags']['currentapp']]));
+		}
+		$GLOBALS['phpgw']->template->pparse('out', 'navbar_footer');
 
 		// If the application has a header include, we now include it
 		if ( (!isset($GLOBALS['phpgw_info']['flags']['noappheader'])
@@ -148,7 +149,43 @@
 		}
 		$GLOBALS['phpgw']->template->set_root(PHPGW_APP_TPL);
 		$GLOBALS['phpgw']->hooks->process('after_navbar');
-		unset($GLOBALS['phpgw_info']['navbar']);
+	}
+
+	function process_menu($menus, $level = null, $item = null)
+	{
+		$class = $level ? '' : ' class="first-of-type"';
+		$html = <<<HTML
+			<div id="menubar{$level}{$item}" class="yuimenubar">
+				<div class="bd">
+					<ul{$class}>
+
+HTML;
+
+		++$level;
+		foreach ( $menus as $id => $menu )
+		{
+			$html .= <<<HTML
+						<li class="yuimenuitem">
+							<a href="{$menu['url']}" class="yuimenuitemlabel">{$menu['text']}</a>
+
+HTML;
+			if ( isset($menu['children']) && count($menu['children']) )
+			{
+				$html .= process_menu($menu['children'], $level, $id);
+			}
+
+			$html .= <<<HTML
+						</li>
+
+HTML;
+		}
+		$html .= <<<HTML
+					</ul>
+				</div>
+			</div>
+
+HTML;
+		return $html;
 	}
 
 
@@ -158,9 +195,8 @@
 	* @param string $appname
 	* @param string $menu_title
 	* @param string $file
-	* @param boolean $use_lang
 	*/
-	function display_sidebox($appname, $menu_title, $file, $use_lang = true)
+	function display_sidebox($appname, $menu_title, $file)
 	{
 		
 		if(!$appname || ($appname == $GLOBALS['phpgw_info']['flags']['currentapp'] && is_array($file) ) )
@@ -186,7 +222,7 @@
 					$item['this'] = '';
 				}
 
-				sidebox_menu_item($item['url'], $item['text'], $item['image'], $use_lang, $item['this']);
+				sidebox_menu_item($item['url'], $item['text'], $item['image'], $item['this']);
 			}
 
 			$GLOBALS['phpgw']->template->pfp('out','extra_blocks_footer');
@@ -200,25 +236,15 @@
 	* @param string $item_link
 	* @param string $item_text
 	* @param string $item_image
-	* @param boolean $use_lang
 	*/
-	function sidebox_menu_item($item_link='', $item_text='', $item_image='', $use_lang = True, $current_item = '')
+	function sidebox_menu_item($item_link='', $item_text='', $item_image='', $current_item = '')
 	{
-		if($item_text == '_NewLine_')
-		{
-			$GLOBALS['phpgw']->template->pfp('out','extra_block_spacer');
-		}
-		else
-		{
-			$lang_item = $use_lang ? lang($item_text) : $item_text;
-			$GLOBALS['phpgw']->template->set_var(array
-			(
-				'list_style_image'	=> ($item_image ? "url('{$item_image}')" : 'none'),
-				'lang_item'			=> $current_item ? '<b>' . $lang_item . '</b>': $lang_item,
-				'item_link'			=> $item_link
-			));
-			$GLOBALS['phpgw']->template->pfp('out','extra_block_row');
-		}
+		$GLOBALS['phpgw']->template->set_var(array
+		(
+			'lang_item'			=> $current_item ? "<b>$item_text</b>": $item_text,
+			'item_link'			=> $item_link
+		));
+		$GLOBALS['phpgw']->template->pfp('out','extra_block_row');
 	}
 	
 	/**
@@ -244,4 +270,33 @@
 		$GLOBALS['phpgw']->template->set_var($var);
 		$GLOBALS['phpgw']->template->pfp('out','footer');
 	}
-?>
+
+	/**
+	* Callback for usort($navbar)
+	*
+	* @param array $item1 the first item to compare
+	* @param array $item2 the second item to compare
+	* @return int result of comparision
+	*/
+	function sort_navbar($item1, $item2)
+	{
+		$a =& $item1['order'];
+		$b =& $item2['order'];
+
+		if ($a == $b)
+		{
+			return strcmp($item1['text'], $item2['text']);
+		}
+		return ($a < $b) ? -1 : 1;
+	}
+
+	/**
+	* Organise the navbar properly
+	*
+	* @param array $navbar the navbar items
+	* @return array the organised navbar
+	*/
+	function prepare_navbar(&$navbar)
+	{
+		uasort($navbar, 'sort_navbar');
+	}

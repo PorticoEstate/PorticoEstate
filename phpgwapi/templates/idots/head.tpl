@@ -1,5 +1,5 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
-	"http://www.w3.org/TR/html4/strict.dtd">
+	"http://www.w3.org/TR/html4/loose.dtd">
 <!-- BEGIN head -->
 <html>
 	<head>
@@ -22,6 +22,18 @@
 			-->
 		</script>
 		{javascript}
+		<script type="text/javascript">
+			YAHOO.util.Event.onContentReady('menubar', function ()
+			{
+				var oMenu = new YAHOO.widget.MenuBar('menubar',
+					{
+						autosubmenudisplay: true,
+						visible: true,
+						position: "static",
+					});
+				oMenu.render();
+			});
+		</script>
 	</head>
-	<body>
+	<body class="yui-skin-sam">
 <!-- END Head -->
