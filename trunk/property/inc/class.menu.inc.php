@@ -63,14 +63,6 @@
 					'order'	=> 35,
 					'group'	=> 'facilities management'
 				),
-				'gis' => array
-				(
-					'text'	=> 'GIS',
-					'url'	=> 'http://maps.google.no',
-					'image'	=> array('property', 'navbar'),
-					'order'	=> 350,
-					'group'	=> 'facilities management'
-				)
 			);
 
 			$menus['toolbar'] = array();
