@@ -48,7 +48,7 @@
 					'text'	=> lang('Calendar'),
 					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'calendar.uicalendar.index') ),
 					'image'	=> array('calendar', 'navbar'),
-					'order'	=> 2,
+					'order'	=> 4,
 					'group'	=> 'office'
 				)
 			);

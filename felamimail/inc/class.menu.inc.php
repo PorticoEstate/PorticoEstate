@@ -48,7 +48,7 @@
 					'text'	=> lang('Felamimail'),
 					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'felamimail.uifelamimail.index') ),
 					'image'	=> array('felamimail', 'navbar'),
-					'order'	=> 3,
+					'order'	=> 6,
 					'group'	=> 'office'
 				)
 			);

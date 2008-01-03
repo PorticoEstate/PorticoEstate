@@ -48,7 +48,7 @@
 					'text'	=> lang('Preferences'),
 					'url'	=> $GLOBALS['phpgw']->link('/preferences/index.php'),
 					'image'	=> array('preferences', 'navbar'),
-					'order'	=> 1,
+					'order'	=> 0,
 					'group'	=> 'office'
 				)
 			);
