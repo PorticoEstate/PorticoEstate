@@ -66,7 +66,7 @@
 					'text'	=> lang('Logout'),
 					'url'	=> $GLOBALS['phpgw']->link('/logout.php'),
 					'image'	=> array('phpgwapi', 'logout'),
-					'order'	=> 99,
+					'order'	=> 999,
 					'group'	=> 'core'
 				)
 			);
