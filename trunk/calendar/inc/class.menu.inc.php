@@ -176,38 +176,46 @@
 				),
 				array
 				(
-					'text'	=> lang('Today'),
-					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'calendar.uicalendar.day'))
-				),
-				array
-				(
-					'text'	=> lang('Week'),
-					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'calendar.uicalendar.week'))
-				),
-				array
-				(
-					'text'	=> lang('Week Detailed'),
-					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'calendar.uicalendar.week_new'))
-				),
-				array
-				(
-					'text'	=> lang('Month'),
-					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'calendar.uicalendar.month'))
-				),
-				array
-				(
-					'text'	=> lang('Year'),
-					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'calendar.uicalendar.year'))
-				),
-				array
-				(
-					'text'	=> lang('Group Planner'),
-					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'calendar.uicalendar.planner'))
-				),
-				array
-				(
-					'text'	=> lang('Daily Matrix View'),
-					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'calendar.uicalendar.matrixselect'))
+					'text'		=> lang('view'),
+					'url'		=> '#',
+					'children'	=> array
+					(
+						array
+						(
+							'text'	=> lang('Today'),
+							'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'calendar.uicalendar.day'))
+						),
+						array
+						(
+							'text'	=> lang('Week'),
+							'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'calendar.uicalendar.week'))
+						),
+						array
+						(
+							'text'	=> lang('Week Detailed'),
+							'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'calendar.uicalendar.week_new'))
+						),
+						array
+						(
+							'text'	=> lang('Month'),
+							'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'calendar.uicalendar.month'))
+						),
+						array
+						(
+							'text'	=> lang('Year'),
+							'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'calendar.uicalendar.year'))
+						),
+						array
+						(
+							'text'	=> lang('Group Planner'),
+							'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'calendar.uicalendar.planner'))
+						),
+						array
+						(
+							'text'	=> lang('Daily Matrix View'),
+							'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'calendar.uicalendar.matrixselect'))
+						)
+					)
 				),
 				array
 				(
