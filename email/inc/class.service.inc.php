@@ -39,7 +39,7 @@ class email_service
 				'text'	=> lang('Email'),
 				'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'email.uiindex.index') ),
 				'image'	=> array('email', 'navbar'),
-				'order'	=> 2,
+				'order'	=> 6,
 				'group'	=> 'office'
 			)
 		);
