@@ -624,16 +624,17 @@
 					);
 				}
 
-				$menus['navigation'][] = array
+				$menus['navigation']['agreement] = array
 				(
 					'url'		=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiagreement.index')),
 					'text'		=> lang('Agreement'),
-					'children'	=> array_merge(array
+					'children'	=> array
 					(
 						array
 						(
 							'url'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiagreement.index')),
-							'text'	=> lang('Pricebook')
+							'text'	=> lang('Pricebook'),
+							'children'	=> $admin_menu
 						),
 						array
 						(
@@ -650,7 +651,7 @@
 							'url'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uialarm.list_alarm')),
 							'text'	=> lang('alarm')
 						)
-					), $admin_menu)
+					)
 				);
 			}
 
