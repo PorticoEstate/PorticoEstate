@@ -61,6 +61,7 @@
 			$this->bo		= CreateObject('property.boalarm',True);
 			$this->boasync		= CreateObject('property.boasync');
 			$this->bocommon		= CreateObject('property.bocommon');
+			$this->menu		= CreateObject('property.menu');
 
 			$this->start		= $this->bo->start;
 			$this->query		= $this->bo->query;
@@ -89,9 +90,12 @@
 		function index()
 		{
 			$GLOBALS['phpgw']->xslttpl->add_file(array('alarm',
+										'menu',
 										'receipt',
 										'search_field',
 										'nextmatchs'));
+
+			$links = $this->menu->links();
 
 			$receipt = $GLOBALS['phpgw']->session->appsession('session_data','alarm_receipt');
 			$GLOBALS['phpgw']->session->appsession('session_data','alarm_receipt','');
@@ -256,6 +260,7 @@
 			$data = array
 			(
 				'msgbox_data'					=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
+				'links'						=> $links,
  				'allow_allrows'					=> true,
 				'allrows'					=> $this->allrows,
 				'start_record'					=> $this->start,
@@ -292,9 +297,13 @@
 		function list_alarm()
 		{
 			$GLOBALS['phpgw']->xslttpl->add_file(array('alarm',
+										'menu',
 										'receipt',
 										'search_field',
 										'nextmatchs'));
+
+			$this->menu->sub = 'agreement';
+			$links = $this->menu->links('alarm');
 
 			$receipt = $GLOBALS['phpgw']->session->appsession('session_data','alarm_receipt');
 			$GLOBALS['phpgw']->session->appsession('session_data','alarm_receipt','');
@@ -467,6 +476,7 @@
 			$data = array
 			(
 				'msgbox_data'					=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
+				'links'						=> $links,
  				'allow_allrows'					=> true,
 				'allrows'					=> $this->allrows,
 				'start_record'					=> $this->start,

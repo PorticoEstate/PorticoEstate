@@ -59,6 +59,9 @@
 			$this->bo			= CreateObject('property.bob_account',true);
 			$this->bocommon			= CreateObject('property.bocommon');
 
+			$this->menu			= CreateObject('property.menu');
+			$this->menu->sub		='invoice';
+
 			$this->acl 			= CreateObject('phpgwapi.acl');
 			$this->acl_location		= '.b_account';
 			$this->acl_read 		= $this->acl->check('.b_account',1);
@@ -93,7 +96,10 @@
 				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=>1, 'acl_location'=> $this->acl_location));
 			}
 
-			$GLOBALS['phpgw']->xslttpl->add_file(array('b_account', 'nextmatchs', 'search_field'));
+			$GLOBALS['phpgw']->xslttpl->add_file(array('b_account','nextmatchs','menu',
+										'search_field'));
+
+			$links = $this->menu->links('b_account');
 
 			$b_account_list = $this->bo->read($type);
 
@@ -164,6 +170,7 @@
 
 			$data = array
 			(
+				'links'					=> $links,
 				'allow_allrows'				=> True,
 				'allrows'				=> $this->allrows,
 				'start_record'				=> $this->start,

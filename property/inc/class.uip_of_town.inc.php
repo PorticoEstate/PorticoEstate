@@ -59,6 +59,7 @@
 
 			$this->bo		= CreateObject('property.bop_of_town',True);
 			$this->bocommon		= CreateObject('property.bocommon');
+			$this->menu		= CreateObject('property.menu');
 
 			$this->acl 		= CreateObject('phpgwapi.acl');
 			$this->acl_location	= '.admin';
@@ -100,9 +101,12 @@
 			}
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('p_of_town',
+										'menu',
 										'receipt',
 										'search_field',
 										'nextmatchs'));
+
+			$links = $this->menu->links();
 
 			$receipt = $GLOBALS['phpgw']->session->appsession('session_data','p_of_town_receipt');
 			$GLOBALS['phpgw']->session->appsession('session_data','p_of_town_receipt','');
@@ -203,6 +207,7 @@
 			$data = array
 			(
 				'msgbox_data'					=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
+				'links'						=> $links,
  				'allow_allrows'					=> true,
 				'allrows'					=> $this->allrows,
 				'start_record'					=> $this->start,

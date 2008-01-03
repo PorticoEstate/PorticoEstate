@@ -25,7 +25,8 @@
 	
 	<xsl:template match="list">
 		<xsl:variable name="autorefresh"><xsl:value-of select="autorefresh"/></xsl:variable>
-		<meta http-equiv="refresh" content="{$autorefresh}"/>
+		<META HTTP-EQUIV="Refresh" CONTENT="{$autorefresh}"/>
+		<xsl:call-template name="menu"/> 
 		<table width="100%" cellpadding="2" cellspacing="2" align="center">
 			<xsl:choose>
 				<xsl:when test="msgbox_data != ''">
@@ -237,7 +238,8 @@
 
 	<xsl:template match="list2">
 		<xsl:variable name="autorefresh"><xsl:value-of select="autorefresh"/></xsl:variable>
-		<meta http-equiv="refresh" content="{$autorefresh}"/>		
+		<META HTTP-EQUIV="Refresh" CONTENT="{$autorefresh}"/>		
+		<xsl:call-template name="menu"/> 
 		<table width="100%" cellpadding="2" cellspacing="2" align="center">
 			<xsl:choose>
 				<xsl:when test="msgbox_data != ''">

@@ -70,6 +70,7 @@
 
 			$this->bo			= CreateObject('property.boinvoice',True);
 			$this->bocommon			= CreateObject('property.bocommon');
+			$this->menu			= CreateObject('property.menu');
 
 			$this->start			= $this->bo->start;
 			$this->query			= $this->bo->query;
@@ -89,6 +90,7 @@
 			$this->acl_edit 		= $this->acl->check('.invoice',4);
 			$this->acl_delete 		= $this->acl->check('.invoice',8);
 
+			$this->menu->sub		='invoice';
 		}
 
 		function save_sessiondata()
@@ -194,7 +196,7 @@
 				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=>1, 'acl_location'=> $this->acl_location));
 			}
 
-			$GLOBALS['phpgw']->xslttpl->add_file(array('invoice',
+			$GLOBALS['phpgw']->xslttpl->add_file(array('invoice','menu',
 										'nextmatchs',
 										'search_field'));
 
@@ -216,6 +218,8 @@
 				$end_date = $GLOBALS['phpgw']->common->show_date(mktime(0,0,0,date("m"),date("d"),date("Y")),$GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']);
 				$start_date = $end_date;
 			}
+
+			$links = $this->menu->links('invoice_'.!!$paid);
 
 			$values  = phpgw::get_var('values');
 			$receipt = array();
@@ -409,6 +413,7 @@
 
 			$data['msgbox_data']					= $GLOBALS['phpgw']->common->msgbox($msgbox_data);
 			$data['sum']							= number_format($sum, 2, ',', '');
+			$data['links']							= $links;
 			$data['allow_allrows']					= true;
 			$data['allrows']						= $this->allrows;
 			$data['start_record']					= $this->start;
@@ -509,10 +514,12 @@
 
 		function list_sub()
 		{
-			$GLOBALS['phpgw']->xslttpl->add_file(array('invoice',
+			$GLOBALS['phpgw']->xslttpl->add_file(array('invoice','menu',
 										'nextmatchs'));
 
 			$paid = phpgw::get_var('paid', 'bool');
+
+			$links = $this->menu->links('invoice_');
 
 			$values  = phpgw::get_var('values');
 			$voucher_id = phpgw::get_var('voucher_id', 'int');
@@ -682,6 +689,7 @@
 				'done_action'					=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiinvoice.index', 'user_lid'=> $this->user_lid, 'query'=> $this->query)),
 				'lang_done_statustext'				=> lang('Back to the list'),
 				'lang_save_statustext'				=> lang('Save the voucher'),
+				'links'						=> $links,
 				'allow_allrows'					=> false,
 				'start_record'					=> $this->start,
 				'record_limit'					=> count($content),//$GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'],
@@ -781,7 +789,7 @@
 
 		function consume()
 		{
-			$GLOBALS['phpgw']->xslttpl->add_file(array('invoice',
+			$GLOBALS['phpgw']->xslttpl->add_file(array('invoice','menu',
 										'nextmatchs',
 										'search_field'));
 
@@ -812,6 +820,8 @@
 					}
 				}
 			}
+
+			$links = $this->menu->links('consume');
 
 			$dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
 //_debug_array($values);
@@ -882,6 +892,7 @@
 
 			$data['lang_sum']				= lang('Sum');
 			$data['sum']					= number_format($sum, 0, ',', ' ');
+			$data['links']					= $links;
 			$data['allow_allrows']				= false;
 			$data['start_record']				= $this->start;
 			$data['record_limit']				= $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
@@ -1066,6 +1077,8 @@
 			$add_invoice 			= phpgw::get_var('add_invoice', 'bool');
 
 
+			$links = $this->menu->links('add_inv');
+
 			if($location_code)
 			{
 				$values['location_data'] = $bolocation->read_single($location_code,array('tenant_id'=>$tenant_id,'p_num'=>$p_num));
@@ -1207,6 +1220,7 @@
 			$data = array
 			(
 				'msgbox_data'						=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
+				'links'								=> $links,
 
 				'img_cal'							=> $GLOBALS['phpgw']->common->image('phpgwapi','cal'),
 				'lang_datetitle'					=> lang('Select date'),
@@ -1308,7 +1322,7 @@
 
 //_debug_array($data);
 
-			$GLOBALS['phpgw']->xslttpl->add_file(array('invoice'));
+			$GLOBALS['phpgw']->xslttpl->add_file(array('invoice','menu'));
 
 			$appname						= lang('Invoice');
 			$function_msg					= lang('Add invoice');
@@ -1522,7 +1536,7 @@
 			$GLOBALS['phpgw_info']['flags'][nofooter] = True;
 			$GLOBALS['phpgw_info']['flags']['noframework'] = True;
 
-			$GLOBALS['phpgw']->xslttpl->add_file(array('invoice','table_header'));
+			$GLOBALS['phpgw']->xslttpl->add_file(array('invoice','menu','table_header'));
 			
 			$link_data_add = array
 			(

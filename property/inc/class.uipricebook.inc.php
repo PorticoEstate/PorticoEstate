@@ -67,6 +67,7 @@
 
 			$this->bo				= CreateObject('property.bopricebook',True);
 			$this->bocommon				= CreateObject('property.bocommon');
+			$this->menu				= CreateObject('property.menu');
 			$this->contacts				= CreateObject('property.soactor');
 			$this->contacts->role			= 'vendor';
 
@@ -85,6 +86,8 @@
 			$this->filter				= $this->bo->filter;
 			$this->cat_id				= $this->bo->cat_id;
 			$this->allrows				= $this->bo->allrows;
+
+			$this->menu->sub			='agreement';
 		}
 
 		function save_sessiondata()
@@ -132,8 +135,11 @@
 			$GLOBALS['phpgw']->session->appsession('referer','property','');
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('pricebook',
+										'menu',
 										'nextmatchs',
 										'search_field'));
+
+			$links = $this->menu->links('price_vendor');
 
 			$values			= phpgw::get_var('values');
 
@@ -283,6 +289,7 @@
 				'lang_excel_help'				=> lang('Download table to MS Excel'),
 
 				'msgbox_data'					=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
+				'links'						=> $links,
 				'allrows'					=> $this->allrows,
 				'allow_allrows'					=> true,
 				'start_record'					=> $this->start,
@@ -328,8 +335,11 @@
 			$GLOBALS['phpgw']->session->appsession('referer','property','');
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('pricebook',
+										'menu',
 										'nextmatchs',
 										'search_field'));
+
+			$links = $this->menu->links('agreement','agreement_group');
 
 			$agreement_list = $this->bo->read_agreement_group();
 
@@ -398,6 +408,7 @@
 
 			$data = array
 			(
+				'links'						=> $links,
 				'allrows'					=> $this->allrows,
 				'allow_allrows'					=> true,
 				'start_record'					=> $this->start,
@@ -572,8 +583,11 @@
 			}
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('pricebook',
+										'menu',
 										'nextmatchs',
 										'search_field'));
+
+			$links = $this->menu->links();
 
 			$cat_id			= phpgw::get_var('cat_id', 'int', 'GET');
 			$activity_id	= phpgw::get_var('activity_id', 'int');
@@ -743,6 +757,7 @@
 				'done_action'					=> $referer,
 				'lang_done'					=> lang('done'),
 				'lang_done_statustext'				=> lang('Back to the list'),
+				'links'						=> $links,
 				'allrows'					=> $this->allrows,
 				'allow_allrows'					=> true,
 				'start_record'					=> $this->start,
@@ -818,8 +833,11 @@
 			}
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('pricebook',
+										'menu',
 										'nextmatchs',
 										'search_field'));
+
+			$links = $this->menu->links('agreement','activity');
 
 			$pricebook_list = $this->bo->read_activities_pr_agreement_group();
 //_debug_array($pricebook_list);
@@ -913,6 +931,7 @@
 				'lang_excel'					=> 'excel',
 				'link_excel'					=> $GLOBALS['phpgw']->link('/index.php',$link_excel),
 				'lang_excel_help'				=> lang('Download table to MS Excel'),
+				'links'						=> $links,
 				'allrows'					=> $this->allrows,
 				'allow_allrows'					=> true,
 				'start_record'					=> $this->start,
@@ -957,8 +976,11 @@
 			$GLOBALS['phpgw']->session->appsession('referer','property','');
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('pricebook',
+										'menu',
 										'nextmatchs',
 										'search_field'));
+
+			$links = $this->menu->links('agreement','activity');
 
 			$activity_id		= phpgw::get_var('activity_id', 'int');
 			$values				= phpgw::get_var('values');
@@ -1046,6 +1068,7 @@
 				'msgbox_data'					=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
 				'activity_id'					=> $activity_id,
 				'vendor_data'					=> $vendor_data,
+				'links'						=> $links,
 				'allrows'					=> $this->allrows,
 				'allow_allrows'					=> true,
 				'start_record'					=> $this->start,

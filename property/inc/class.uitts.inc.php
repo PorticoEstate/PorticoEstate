@@ -64,6 +64,7 @@
 
 			$this->bo					= CreateObject('property.botts',True);
 			$this->bocommon				= CreateObject('property.bocommon');
+			$this->menu					= CreateObject('property.menu');
 
 		//	$this->acl 					= CreateObject('phpgwapi.acl');
 			$this->acl 					= & $GLOBALS['phpgw']->acl;
@@ -87,6 +88,8 @@
 			$this->start_date			= $this->bo->start_date;
 			$this->end_date				= $this->bo->end_date;
 			$this->fakebase 			= $this->bo->fakebase;
+
+			$this->menu->sub			='ticket';
 		}
 
 		function save_sessiondata()
@@ -223,6 +226,7 @@
 			}
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('tts',
+										'menu',
 										'nextmatchs'));
 
 
@@ -256,6 +260,8 @@
 			$bgcolor_array[9]	= '#da8a8a';
 			$bgcolor_array[10]	= '#da7a7a';
 
+
+			$links = $this->menu->links();
 
 			$ticket_list = $this->bo->read($start_date,$end_date);
 
@@ -565,6 +571,7 @@
 
 				'msgbox_data'					=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
 				'autorefresh'					=> $autorefresh,
+				'links'							=> $links,
 				'allow_allrows'					=> True,
 				'allrows'						=> $this->allrows,
 				'start_record'					=> $this->start,
@@ -620,6 +627,7 @@
 			}
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('tts',
+										'menu',
 										'nextmatchs'));
 
 
@@ -653,6 +661,8 @@
 			$bgcolor['9']	= '#da8a8a';
 			$bgcolor['10']	= '#da7a7a';
 
+
+			$links = $this->menu->links();
 
 			$ticket_list = $this->bo->read($start_date,$end_date,$external=true);
 
@@ -915,6 +925,7 @@
 
 				'msgbox_data'					=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
 				'autorefresh'					=> $autorefresh,
+				'links'							=> $links,
 				'allow_allrows'					=> True,
 				'allrows'						=> $this->allrows,
 				'start_record'					=> $this->start,

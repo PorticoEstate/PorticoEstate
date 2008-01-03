@@ -15,6 +15,7 @@
 	</xsl:template>
 	
 	<xsl:template match="list">
+		<xsl:call-template name="menu"/> 
 		<xsl:variable name="form_action"><xsl:value-of select="form_action"/></xsl:variable>
 		<form method="post" name="form_search" action="{$form_action}">
 		<table width="100%" cellpadding="2" cellspacing="2" align="center">
@@ -302,6 +303,7 @@
 
 	<xsl:template match="history">
 		
+		<xsl:call-template name="menu"/> 
 		<table width="100%" cellpadding="2" cellspacing="2" align="center">
 			<xsl:choose>
 				<xsl:when test="msgbox_data != ''">

@@ -64,6 +64,7 @@
 			$this->account				= $GLOBALS['phpgw_info']['user']['account_id'];
 			$this->bo					= CreateObject('property.bolocation',True);
 			$this->bocommon				= CreateObject('property.bocommon');
+			$this->menu					= CreateObject('property.menu');
 			$this->soadmin_location		= CreateObject('property.soadmin_location');
 
 			$this->acl 					= & $GLOBALS['phpgw']->acl;
@@ -89,6 +90,8 @@
 			$this->type_id				= $this->bo->type_id;
 			$this->allrows				= $this->bo->allrows;
 			$this->lookup				= $this->bo->lookup;
+
+			$this->menu->sub			='location';
 		}
 
 		function save_sessiondata()
@@ -192,6 +195,7 @@
 			}
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('location',
+										'menu',
 										'nextmatchs',
 										'search_field'));
 
@@ -211,6 +215,8 @@
 			{
 				$GLOBALS['phpgw_info']['flags']['noframework'] = True;
 			}
+			$links = $this->menu->links('location'.$type_id . '_' . !!$lookup_tenant);
+
 
 			$location_list = $this->bo->read(array('type_id'=>$type_id,'lookup_tenant'=>$lookup_tenant,'lookup'=>$lookup,'allrows'=>$this->allrows));
 
@@ -525,6 +531,7 @@
 				'lang_select'				=> lang('select'),
 				'lookup'				=> $lookup,
 				'lang_property_name'			=> lang('Property name'),
+				'links'					=> $links,
 				'allow_allrows'				=> True,
 				'allrows'				=> $this->allrows,
 				'start_record'				=> $this->start,
@@ -1460,7 +1467,9 @@
 
 			$right		= array(1=>'read',2=>'add',4=>'edit',8=>'delete',16=>'manage');
 
-			$GLOBALS['phpgw']->xslttpl->add_file(array('location'));
+			$links = $this->menu->links();
+
+			$GLOBALS['phpgw']->xslttpl->add_file(array('location','menu'));
 
 			$receipt['error'][]=array('msg'=>lang('You need the right "%1" for this application at "%2" to access this function',lang($right[$perm]),$location));
 
@@ -1469,6 +1478,7 @@
 			$data = array
 			(
 				'msgbox_data'	=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
+				'links'			=> $links
 			);
 
 			$appname		= lang('Access error');
@@ -1479,7 +1489,9 @@
 
 		function summary()
 		{
-			$GLOBALS['phpgw']->xslttpl->add_file(array('location'));
+			$links = $this->menu->links('summary');
+
+			$GLOBALS['phpgw']->xslttpl->add_file(array('location','menu'));
 
 			$GLOBALS['phpgw']->js->validate_file('overlib','overlib','property');
 
@@ -1548,6 +1560,7 @@
 
 			$data = array
 			(
+				'links'					=> $links,
 				'select_action'				=> $GLOBALS['phpgw']->link('/index.php',$link_data),
 				'owner_name'				=> 'filter',
 				'owner_list'				=> $owner_list,

@@ -8,10 +8,9 @@
 		{
 			display_sidebox($appname,$menu['menu_title_2'] . ' ' . lang ('sub menu'),$menu['sub_menu'],$use_lang = false);	
 		}
-
 		if(isset($menu['menu_title_3']) && $menu['menu_title_3'])
 		{
-			display_sidebox($appname,$menu['menu_title_3'] . ' ' . lang ('sub menu'),$menu['sub_menu_2'],$use_lang = false);
+		display_sidebox($appname,$menu['menu_title_3'] . ' ' . lang ('sub menu'),$menu['sub_menu_2'],$use_lang = false);
 		}
 	}	
 ?>
