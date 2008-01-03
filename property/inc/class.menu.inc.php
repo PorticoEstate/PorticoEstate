@@ -624,7 +624,7 @@
 					);
 				}
 
-				$menus['navigation']['agreement] = array
+				$menus['navigation']['agreement'] = array
 				(
 					'url'		=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiagreement.index')),
 					'text'		=> lang('Agreement'),
