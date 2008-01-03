@@ -13,7 +13,6 @@
 		"/phpgwapi/js/yahoo/reset-fonts-grids/reset-fonts-grids.css",
 		"/phpgwapi/js/yahoo/build/menu/assets/skins/sam/menu.css",
 		"/phpgwapi/js/yahoo/build/button/assets/skins/sam/button.css",
-		"/phpgwapi/js/yahoo/build/treeview/assets/skins/sam/treeview.css",
 		"/phpgwapi/js/yahoo/build/tabview/assets/skins/sam/tabview.css",
 		"/phpgwapi/templates/newdesign/css/base.css",
 		"/phpgwapi/templates/newdesign/css/{$GLOBALS['phpgw_info']['user']['preferences']['common']['theme']}.css",
