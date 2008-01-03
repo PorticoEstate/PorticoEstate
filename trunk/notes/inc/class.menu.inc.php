@@ -48,7 +48,7 @@
 					'text'	=> lang('notes'),
 					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'notes.uinotes.index') ),
 					'image'	=> array('notes', 'navbar'),
-					'order'	=> 1,
+					'order'	=> 8,
 					'group'	=> 'office'
 				)
 			);

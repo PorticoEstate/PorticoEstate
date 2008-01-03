@@ -47,7 +47,7 @@
 					'text'	=> lang('Contacts'),
 					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'addressbook.uiaddressbook.index', 'section' => 'Persons') ),
 					'image'	=> array('addressbook', 'navbar'),
-					'order'	=> 1,
+					'order'	=> 2,
 					'group'	=> 'office'
 				)
 			);

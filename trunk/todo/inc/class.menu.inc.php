@@ -48,7 +48,7 @@
 					'text'	=> lang('todo'),
 					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'todo.uitodo.show_list') ),
 					'image'	=> array('todo', 'navbar'),
-					'order'	=> 1,
+					'order'	=> 10,
 					'group'	=> 'office'
 				)
 			);
