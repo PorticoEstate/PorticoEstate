@@ -46,13 +46,14 @@
 		$GLOBALS['phpgw']->session->appsession('session_data', 'preferences', $session_data);
 	}
 
-	if (! isset($_GET['type']))
+	$type = phpgw::get_var('type', 'string', 'GET');
+
+	if ( !$type )
 	{
 		$type = $session_data['type'];
 	}
 	else
 	{
-		$type = $_GET['type'];
 		$session_data = array('type' => $type);
 		$GLOBALS['phpgw']->session->appsession('session_data', 'preferences', $session_data);
 	}
@@ -82,6 +83,7 @@
 		case 'user':
 		default:
 			$selected = 0;
+			$type = 'user';
 	}
 	$GLOBALS['phpgw']->template->set_var('tabs', $GLOBALS['phpgw']->common->create_tabs($tabs, $selected));
 
@@ -143,12 +145,12 @@
 	 * @param $file
 	 * @param $file2
 	 */
-	function display_section($nav, $items)
+	function display_section($nav, $items, $type)
 	{
 		section_start($nav['text'], $GLOBALS['phpgw']->common->image($nav['image'][0], $nav['image'][1]));
 		foreach ( $items as $item )
 		{
-			section_item($item['url'], $item['text']);
+			section_item("{$item['url']}&amp;type={$type}", $item['text']);
 		}
 		section_end(); 
 	}
@@ -156,7 +158,7 @@
 	$menus = execMethod('phpgwapi.menu.get');
 	foreach ( $menus['preferences'] as $app => $menu )
 	{
-		display_section($menus['navbar'][$app], $menu);
+		display_section($menus['navbar'][$app], $menu, $type);
 	}
 
 	$GLOBALS['phpgw']->template->pfp('out', 'list');
