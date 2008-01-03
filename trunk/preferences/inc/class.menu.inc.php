@@ -56,7 +56,6 @@
 			$menus['toolbar'] = array();
 
 			$menus['navigation'] = array();
-
 			$menus['navigation'][] = array
 			(
 				'text'	=> lang('My Preferences'),
@@ -98,6 +97,22 @@
 					'url'	=> $GLOBALS['phpgw']->link('/preferences/index.php', array('type' => 'forced') )
 				);
 			}
+
+			$menus['preferences'] = array
+			(
+				array
+				(
+					'text'	=> lang('Preferences'),
+					'url'	=> $GLOBALS['phpgw']->link('/preferences/preferences.php', array('appname'	=> 'preferences')),
+					'image'	=> array('preferences', 'preferences')
+				),
+				array
+				(
+					'text'	=> lang('Change your Password'),
+					'url'	=> $GLOBALS['phpgw']->link('/preferences/changepassword.php')
+				)
+			);
+
 			return $menus;
 		}
 	}
