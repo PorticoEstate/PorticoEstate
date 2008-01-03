@@ -66,6 +66,7 @@
 			$this->account				= $GLOBALS['phpgw_info']['user']['account_id'];
 			$this->bo				= CreateObject('property.boadmin_entity',True);
 			$this->bocommon				= CreateObject('property.bocommon');
+			$this->menu				= CreateObject('property.menu');
 
 			$this->acl 				= CreateObject('phpgwapi.acl');
 			$this->acl_location			= '.admin.entity';
@@ -83,6 +84,7 @@
 			$this->cat_id				= $this->bo->cat_id;
 			$this->allrows				= $this->bo->allrows;
 
+			$this->menu->sub			='admin_entity';
 		}
 
 		function save_sessiondata()
@@ -111,7 +113,9 @@
 			$GLOBALS['phpgw']->xslttpl->add_file(array(
 								'admin_entity',
 								'nextmatchs',
+								'menu',
 								'search_field'));
+			$links = $this->menu->links();
 
 			$entity_list = $this->bo->read();
 
@@ -196,6 +200,7 @@
 
 			$data = array
 			(
+				'links'					=> $links,
 				'allow_allrows'				=> True,
 				'allrows'				=> $this->allrows,
 				'start_record'				=> $this->start,
@@ -235,7 +240,9 @@
 			$GLOBALS['phpgw']->xslttpl->add_file(array(
 								'admin_entity',
 								'nextmatchs',
+								'menu',
 								'search_field'));
+			$links = $this->menu->links();
 
 			$category_list = $this->bo->read_category($entity_id);
 
@@ -834,6 +841,7 @@
 				'entity_name'					=> $entity['name'],
 				'lang_category'					=> lang('category'),
 				'category_name'					=> $category['name'],
+				'links'						=> $links,
 				'allow_allrows'					=> True,
 				'allrows'					=> $this->allrows,
 				'start_record'					=> $this->start,
@@ -1090,7 +1098,9 @@
 			$GLOBALS['phpgw']->xslttpl->add_file(array(
 								'admin_entity',
 								'nextmatchs',
+								'menu',
 								'search_field'));
+			$links = $this->menu->links();
 
 			if($resort)
 			{
@@ -1193,6 +1203,7 @@
 			(
 				'lang_entity'					=> lang('entity'),
 				'entity_name'					=> $entity['name'],
+				'links'							=> $links,
 				'lang_category'					=> lang('category'),
 				'category_name'					=> $category['name'],
 				'allow_allrows'					=> True,

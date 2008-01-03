@@ -16,6 +16,7 @@
 	
 	<xsl:template match="list_project">
 
+		<xsl:call-template name="menu"/> 
 		<table width="100%"  cellpadding="2" cellspacing="2" align="center">
 			<tr>
 				<td>

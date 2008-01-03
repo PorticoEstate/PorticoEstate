@@ -46,6 +46,7 @@
 		var $public_functions = array
 		(
 			'select_part_of_town'	=> True,
+			'menu'					=> True,
 		);
 
 		var $soap_functions = array(

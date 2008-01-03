@@ -63,6 +63,7 @@
 			$this->account				= $GLOBALS['phpgw_info']['user']['account_id'];
 			$this->bo					= CreateObject('property.bodocument',True);
 			$this->bocommon				= CreateObject('property.bocommon');
+			$this->menu					= CreateObject('property.menu');
 			$this->bolocation			= CreateObject('property.bolocation');
 			$this->config				= CreateObject('phpgwapi.config','property');
 			$this->boadmin_entity		= CreateObject('property.boadmin_entity');
@@ -87,6 +88,7 @@
 			$this->doc_type				= $this->bo->doc_type;
 			$this->query_location			= $this->bo->query_location;
 
+			$this->menu->sub			='document';
 		}
 
 		function save_sessiondata()
@@ -118,12 +120,14 @@
 										'document',
 										'values',
 										'table_header',
+										'menu',
 										'nextmatchs',
 										'search_field'
 										)
 			);
 
 			$entity_id = phpgw::get_var('entity_id', 'int');
+			$links = $this->menu->links('document_'.$entity_id);
 
 			$preserve = phpgw::get_var('preserve', 'bool');
 
@@ -294,6 +298,7 @@
 				'link_history'							=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'property.uidocument.index', 'cat_id'=> $this->cat_id)),
 				'lang_history_statustext'				=> lang('search for history at this location'),
 				'lang_select'							=> lang('select'),
+				'links'									=> $links,
 				'allow_allrows'							=> false,
 				'start_record'							=> $this->start,
 				'record_limit'							=> $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'],
@@ -367,6 +372,7 @@
 //_debug_array($this->cat_id);
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('document',
+										'menu',
 										'receipt',
 										'nextmatchs',
 										'search_field'));
@@ -406,6 +412,8 @@
 
 			$this->config->read_repository();
 			$files_url = $this->config->config_data['files_url'];
+
+			$links = $this->menu->links();
 
 			$document_list = $this->bo->read_at_location($location_code);
 
@@ -551,6 +559,7 @@
 				'lang_select'					=> lang('select'),
 				'lookup_action'					=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'property.uiworkorder.edit')),
 				'lookup'					=> $lookup,
+				'links'						=> $links,
 				'allow_allrows'					=> false,
 				'start_record'					=> $this->start,
 				'record_limit'					=> $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'],

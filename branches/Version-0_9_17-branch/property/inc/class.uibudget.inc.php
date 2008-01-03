@@ -64,6 +64,7 @@
 
 			$this->bo		= CreateObject('property.bobudget',True);
 			$this->bocommon		= CreateObject('property.bocommon');
+			$this->menu		= CreateObject('property.menu');
 
 			$this->start		= $this->bo->start;
 			$this->query		= $this->bo->query;
@@ -76,6 +77,8 @@
 			$this->year		= $this->bo->year;
 			$this->grouping		= $this->bo->grouping;
 			$this->revision		= $this->bo->revision;
+
+			$this->menu->sub	='budget';
 
 			$this->acl 		= CreateObject('phpgwapi.acl');
 
@@ -113,9 +116,12 @@
 			}
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('budget',
+										'menu',
 										'receipt',
 										'search_field',
 										'nextmatchs'));
+
+			$links = $this->menu->links('budget');
 
 			$receipt = $GLOBALS['phpgw']->session->appsession('session_data','budget_receipt');
 			$GLOBALS['phpgw']->session->appsession('session_data','budget_receipt','');
@@ -257,6 +263,7 @@
 				'sum'						=> $sum,
 				'lang_sum'					=> lang('sum'),
 				'msgbox_data'					=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
+				'links'						=> $links,
  				'allow_allrows'					=> true,
 				'allrows'					=> $this->allrows,
 				'start_record'					=> $this->start,
@@ -314,9 +321,12 @@
 			}
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('budget',
+										'menu',
 										'receipt',
 										'search_field',
 										'nextmatchs'));
+
+			$links = $this->menu->links('budget.basis');
 
 			$receipt = $GLOBALS['phpgw']->session->appsession('session_basis_data','budget_receipt');
 			$GLOBALS['phpgw']->session->appsession('session_data','budget_receipt','');
@@ -456,6 +466,7 @@
 				'sum'						=> $sum,
 				'lang_sum'					=> lang('sum'),
 				'msgbox_data'					=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
+				'links'						=> $links,
  				'allow_allrows'					=> true,
 				'allrows'					=> $this->allrows,
 				'start_record'					=> $this->start,
@@ -510,10 +521,12 @@
 			}
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('budget',
+										'menu',
 										'receipt',
 										'search_field',
 										'nextmatchs'));
 
+			$links = $this->menu->links('budget.obligations');
 
 			$receipt = $GLOBALS['phpgw']->session->appsession('session_obligations_data','budget_receipt');
 			$GLOBALS['phpgw']->session->appsession('session_data','budget_receipt','');
@@ -620,6 +633,7 @@
 				'sum_budget_cost'					=> $sum_budget_cost,
 				'lang_sum'							=> lang('sum'),
 				'msgbox_data'						=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
+				'links'								=> $links,
  				'allow_allrows'						=> false,
 				'allrows'							=> $this->allrows,
 				'start_record'						=> $this->start,

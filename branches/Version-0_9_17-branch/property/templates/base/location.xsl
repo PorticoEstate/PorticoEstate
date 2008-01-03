@@ -35,6 +35,11 @@
 			</xsl:when>
 		</xsl:choose>
 
+		<xsl:choose>
+			<xsl:when test="lookup=''">
+				<xsl:call-template name="menu"/> 
+			</xsl:when>
+		</xsl:choose>
 		<table width="100%" cellpadding="0" cellspacing="1" align="center">
 			<tr>
 				<td>
@@ -773,6 +778,7 @@
 <!-- stop -->
 
 	<xsl:template match="stop">
+			<xsl:call-template name="menu"/> 
 			<table cellpadding="2" cellspacing="2" align="center">
 			<xsl:choose>
 				<xsl:when test="msgbox_data != ''">
@@ -799,6 +805,7 @@
 
 
 	<xsl:template match="summary">
+		<xsl:call-template name="menu"/> 
 		<table width="100%" cellpadding="2" cellspacing="2" align="center">
 			<tr>
 				<td>

@@ -65,6 +65,7 @@
 
 			$this->bo			= CreateObject('property.boproject',True);
 			$this->bocommon			= CreateObject('property.bocommon');
+			$this->menu			= CreateObject('property.menu');
 
 			$this->acl 			= CreateObject('phpgwapi.acl');
 			$this->acl_location		= '.project';
@@ -81,6 +82,9 @@
 			$this->cat_id			= $this->bo->cat_id;
 			$this->status_id		= $this->bo->status_id;
 			$this->wo_hour_cat_id		= $this->bo->wo_hour_cat_id;
+
+
+			$this->menu->sub		='project';
 		}
 
 		function save_sessiondata()
@@ -116,6 +120,7 @@
 			}
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('project','values','table_header',
+										'menu',
 										'nextmatchs',
 										'search_field',
 										'wo_hour_cat_filter'));
@@ -124,6 +129,8 @@
 			$from 			= phpgw::get_var('from');
 			$start_date 		= urldecode(phpgw::get_var('start_date'));
 			$end_date 		= urldecode(phpgw::get_var('end_date'));
+
+			$links = $this->menu->links('project');
 
 			$project_list = $this->bo->read($start_date,$end_date);
 			$uicols	= $this->bo->uicols;
@@ -389,6 +396,7 @@
 				'lang_select'			=> lang('select'),
 				'lookup_action'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiworkorder.edit')),
 				'lookup'			=> $lookup,
+				'links'				=> $links,
 				'allow_allrows'			=> false,
 				'start_record'			=> $this->start,
 				'record_limit'			=> $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'],

@@ -63,6 +63,7 @@
 			$this->account				= $GLOBALS['phpgw_info']['user']['account_id'];
 			$this->bo					= CreateObject('property.bogab',True);
 			$this->bocommon				= CreateObject('property.bocommon');
+			$this->menu					= CreateObject('property.menu');
 			$this->bolocation				= CreateObject('property.bolocation');
 
 			$this->config				= CreateObject('phpgwapi.config');
@@ -82,6 +83,7 @@
 			$this->allrows				= $this->bo->allrows;
 			$this->gab_insert_level			= $this->bo->gab_insert_level;
 
+			$this->menu->sub			='location';
 		}
 
 		function save_sessiondata()
@@ -179,6 +181,7 @@
 			}
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('gab',
+										'menu',
 										'nextmatchs'));
 
 			$address 		= phpgw::get_var('address');
@@ -200,6 +203,8 @@
 				unset($feste_nr);
 				unset($seksjons_nr);
 			}
+
+			$links = $this->menu->links('gab');
 
 			$gab_list = $this->bo->read($location_code,$gaards_nr,$bruksnr,$feste_nr,$seksjons_nr,$address,$check_payments);
 
@@ -427,6 +432,7 @@
 				'lang_excel_help'			=> lang('Download table to MS Excel'),
 				
 				'search_field_header'			=> $search_field_header,
+				'links'					=> $links,
 				'allrows'				=> $this->allrows,
 				'allow_allrows'				=> true,
 				'start_record'				=> $this->start,
@@ -475,9 +481,13 @@
 				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=>1, 'acl_location'=> $this->acl_location));
 			}
 
-			$GLOBALS['phpgw']->xslttpl->add_file(array('gab', 'values', 'table_header', 'nextmatchs'));
+			$GLOBALS['phpgw']->xslttpl->add_file(array('gab','values','table_header',
+										'menu',
+										'nextmatchs'));
 
 			$gab_id 		= phpgw::get_var('gab_id');
+
+			$links = $this->menu->links('gab');
 
 			$gab_list = $this->bo->read_detail($gab_id);
 
@@ -667,6 +677,7 @@
 				'lang_feste_nr'					=> lang('Feste nr'),
 				'lang_seksjons_nr'				=> lang('Seksjons nr'),
 
+				'links'							=> $links,
 				'allrows'						=> $this->allrows,
 				'allow_allrows'					=> true,
 				'start_record'					=> $this->start,

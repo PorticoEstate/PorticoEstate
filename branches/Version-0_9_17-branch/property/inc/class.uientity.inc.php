@@ -67,6 +67,7 @@
 
 			$this->bo				= CreateObject('property.boentity',True);
 			$this->bocommon				= CreateObject('property.bocommon');
+			$this->menu				= CreateObject('property.menu');
 
 			$this->boadmin_entity			= CreateObject('property.boadmin_entity',True);
 
@@ -96,6 +97,7 @@
 			$this->status				= $this->bo->status;
 			$this->fakebase 			= $this->bo->fakebase;
 			$this->category_dir			= $this->bo->category_dir;
+			$this->menu->sub			='entity_'.$this->entity_id;
 			$GLOBALS['phpgw']->session->appsession('entity_id','property',$this->entity_id);
 			$this->start_date			= $this->bo->start_date;
 			$this->end_date				= $this->bo->end_date;
@@ -245,7 +247,10 @@
 			}
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('entity',
+									'menu',
 									'nextmatchs'));
+
+			$links = $this->menu->links();
 
 			$receipt = $GLOBALS['phpgw']->session->appsession('session_data','entity_receipt_' . $this->entity_id . '_' . $this->cat_id);
 			$GLOBALS['phpgw']->session->appsession('session_data','entity_receipt_' . $this->entity_id . '_' . $this->cat_id,'');
@@ -476,6 +481,7 @@
 				'link_date_search'			=> $link_date_search,
 				'lang_date_search'			=> lang('Date search'),
 
+				'links'						=> $links,
 				'allow_allrows'				=> true,
 				'allrows'					=> $this->allrows,
 				'start_record'				=> $this->start,
