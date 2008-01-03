@@ -2,6 +2,7 @@
 
 <!-- BEGIN form -->
 {tabs}
+
 <form method="POST" action="{action_url}">
 
 	<!-- BEGIN list -->
