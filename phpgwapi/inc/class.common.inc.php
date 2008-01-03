@@ -923,98 +923,6 @@ HTML;
 			}
 		}
 
-		function navbar()
-		{
-			$GLOBALS['phpgw_info']['navbar']['home']['title'] = 'Home';
-			$GLOBALS['phpgw_info']['navbar']['home']['url']   = $GLOBALS['phpgw']->link('/home.php');
-			$GLOBALS['phpgw_info']['navbar']['home']['icon']  = $this->image('phpgwapi',Array('home','nonav'));
-			$GLOBALS['phpgw_info']['navbar']['home']['icon_hover']  = $this->image_on('phpgwapi',Array('home','nonav'),'-over');
-
-			list($first) = each($GLOBALS['phpgw_info']['user']['apps']);
-			if ( isset($GLOBALS['phpgw_info']['user']['apps']['admin'])
-				&& is_array($GLOBALS['phpgw_info']['user']['apps']['admin']) 
-				&& $first != 'admin')
-			{
-				$newarray['admin'] = $GLOBALS['phpgw_info']['user']['apps']['admin'];
-				foreach($GLOBALS['phpgw_info']['user']['apps'] as $index => $value)
-				{
-					if($index != 'admin')
-					{
-						$newarray[$index] = $value;
-					}
-				}
-				$GLOBALS['phpgw_info']['user']['apps'] = $newarray;
-				reset($GLOBALS['phpgw_info']['user']['apps']);
-			}
-			unset($index);
-			unset($value);
-			unset($newarray);
-			
-			foreach($GLOBALS['phpgw_info']['user']['apps'] as $app => $data)
-			{
-				if (is_long($app))
-				{
-					continue;
-				}
-
-				if ($app == 'preferences' || $GLOBALS['phpgw_info']['apps'][$app]['status'] != 2 && $GLOBALS['phpgw_info']['apps'][$app]['status'] != 3)
-				{
-					$GLOBALS['phpgw_info']['navbar'][$app]['title'] = $GLOBALS['phpgw_info']['apps'][$app]['title'];
-					$GLOBALS['phpgw_info']['navbar'][$app]['url']   = $GLOBALS['phpgw']->link('/' . $app . '/index.php');
-					$GLOBALS['phpgw_info']['navbar'][$app]['name']  = $app;
-
-					if ($app != $GLOBALS['phpgw_info']['flags']['currentapp'])
-					{
-						$GLOBALS['phpgw_info']['navbar'][$app]['icon']  = $this->image($app,Array('navbar','nonav'));
-						$GLOBALS['phpgw_info']['navbar'][$app]['icon_hover']  = $this->image_on($app,Array('navbar','nonav'),'-over');
-					}
-					else
-					{
-						$GLOBALS['phpgw_info']['navbar'][$app]['icon']  = $this->image_on($app,Array('navbar','nonav'),'-over');
-						$GLOBALS['phpgw_info']['navbar'][$app]['icon_hover']  = $this->image($app,Array('navbar','nonav'));
-					}
-
-					if($GLOBALS['phpgw_info']['navbar'][$app]['icon'] == '')
-					{
-						$GLOBALS['phpgw_info']['navbar'][$app]['icon']  = $this->image('phpgwapi','nonav');
-					}
-				}
-			}
-			if ($GLOBALS['phpgw_info']['flags']['currentapp'] == 'home' || $GLOBALS['phpgw_info']['flags']['currentapp'] == 'preferences' || $GLOBALS['phpgw_info']['flags']['currentapp'] == 'about')
-			{
-				$app = $app_title = 'phpGroupWare';
-			}
-			else
-			{
-				$app = $GLOBALS['phpgw_info']['flags']['currentapp'];
-				$app_title = lang($app);
-			}
-
-			if (isset($GLOBALS['phpgw_info']['user']['apps']['preferences']) 
-				&& $GLOBALS['phpgw_info']['user']['apps']['preferences'])	// preferences last
-			{
-				$prefs = $GLOBALS['phpgw_info']['navbar']['preferences'];
-				unset($GLOBALS['phpgw_info']['navbar']['preferences']);
-				$GLOBALS['phpgw_info']['navbar']['preferences'] = $prefs;
-			}
-
-			// We handle this here becuase its special
-			if(isset($GLOBALS['phpgw_info']['navbar']['manual']))
-			{
-				$GLOBALS['phpgw_info']['navbar']['manual']['url']   = "javascript:openwindow('" . $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'manual.uimanual.help', 'app' => isset($GLOBALS['phpgw_info']['apps']['manual']['app']) && $GLOBALS['phpgw_info']['apps']['manual']['app'] ? $GLOBALS['phpgw_info']['apps']['manual']['app'] : $app, 'section' => isset($GLOBALS['phpgw_info']['apps']['manual']['section'])?$GLOBALS['phpgw_info']['apps']['manual']['section']:'')) . "','700','600')";
-			}
-
-			$GLOBALS['phpgw_info']['navbar']['about']['title'] = lang('About %1', $app_title);
-			$GLOBALS['phpgw_info']['navbar']['about']['url']   = $GLOBALS['phpgw']->link('/about.php', array('app' => $app) );
-			$GLOBALS['phpgw_info']['navbar']['about']['icon']  = $this->image('phpgwapi',Array('about','nonav'));
-			$GLOBALS['phpgw_info']['navbar']['about']['icon_hover']  = $this->image_on('phpgwapi',Array('about','nonav'),'-over');
-
-			$GLOBALS['phpgw_info']['navbar']['logout']['title'] = 'Logout';
-			$GLOBALS['phpgw_info']['navbar']['logout']['url']   = $GLOBALS['phpgw']->link('/logout.php');
-			$GLOBALS['phpgw_info']['navbar']['logout']['icon']  = $this->image('phpgwapi',Array('logout','nonav'));
-			$GLOBALS['phpgw_info']['navbar']['logout']['icon_hover']  = $this->image_on('phpgwapi',Array('logout','nonav'),'-over');
-		}
-
 		/**
 		* Load header.inc.php for an application
 		*/
@@ -1032,7 +940,6 @@ HTML;
 		function phpgw_header($navbar = False)
 		{
 			include(PHPGW_INCLUDE_ROOT . '/phpgwapi/templates/' . $GLOBALS['phpgw_info']['server']['template_set'] . '/head.inc.php');
-			$this->navbar(False);
 			include(PHPGW_INCLUDE_ROOT . '/phpgwapi/templates/' . $GLOBALS['phpgw_info']['server']['template_set'] . '/navbar.inc.php');
 			if ($navbar)
 			{
