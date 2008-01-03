@@ -83,7 +83,6 @@
 		case 'user':
 		default:
 			$selected = 0;
-			$type = 'user';
 	}
 	$GLOBALS['phpgw']->template->set_var('tabs', $GLOBALS['phpgw']->common->create_tabs($tabs, $selected));
 
@@ -145,12 +144,12 @@
 	 * @param $file
 	 * @param $file2
 	 */
-	function display_section($nav, $items, $type)
+	function display_section($nav, $items)
 	{
 		section_start($nav['text'], $GLOBALS['phpgw']->common->image($nav['image'][0], $nav['image'][1]));
 		foreach ( $items as $item )
 		{
-			section_item("{$item['url']}&amp;type={$type}", $item['text']);
+			section_item($item['url'], $item['text']);
 		}
 		section_end(); 
 	}
@@ -158,7 +157,7 @@
 	$menus = execMethod('phpgwapi.menu.get');
 	foreach ( $menus['preferences'] as $app => $menu )
 	{
-		display_section($menus['navbar'][$app], $menu, $type);
+		display_section($menus['navbar'][$app], $menu);
 	}
 
 	$GLOBALS['phpgw']->template->pfp('out', 'list');
