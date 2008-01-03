@@ -262,7 +262,6 @@
 					<img src="{$grant_img}" title="{$grant_img_name}" alt="{$grant_img_name}" />
 				</xsl:otherwise>
 			</xsl:choose>
-
 			<xsl:choose>
 				<xsl:when test="checked = '1'">
 					<input type="checkbox" id="{$checkbox_name}" name="{$checkbox_name}" value="1" checked="checked" />

@@ -429,7 +429,7 @@
 						'app_name'		=> $app,
 						'app_title'		=> lang($app),
 						'checkbox_name'	=> "account_apps[{$app}]",
-						'checked'       => isset($group_apps[$app]) ? 'checked' : '',
+						'checked'       => isset($group_apps[$app]),
 						'acl_url'       => $grants_enabled
 											? $GLOBALS['phpgw']->link('/index.php',array('menuaction'	=> 'preferences.uiadmin_acl.list_acl',
 																						'acl_app'		=> $app,
@@ -707,7 +707,8 @@
 				(
 					'app_title'		=> $perm_display[$i]['translatedName'],
 					'checkbox_name'	=> 'account_permissions[' . $perm_display[$i]['appName'] . ']',
-					'checked'		=> ( (isset($userData['account_permissions']) && $userData['account_permissions'][$perm_display[$i]['appName']]) || (isset($db_perms[$perm_display[$i]['appName']]) && $db_perms[$perm_display[$i]['appName']])? '1' : '0')
+					'checked'		=> (isset($userData['account_permissions']) && $userData['account_permissions'][$perm_display[$i]['appName']]) 
+										|| (isset($db_perms[$perm_display[$i]['appName']]) && $db_perms[$perm_display[$i]['appName']])
 				);
 			}
 
