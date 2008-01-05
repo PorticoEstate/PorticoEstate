@@ -417,7 +417,8 @@
 		*/
 		function getuser_ip()
 		{
-			return (isset($_SERVER['HTTP_X_FORWARDED_FOR']) ? $_SERVER['HTTP_X_FORWARDED_FOR'] : $_SERVER['REMOTE_ADDR']);
+			return phpgw::get_var('HTTP_X_FORWARDED_FOR', 'ip', 'SERVER',
+				phpgw::get_var('REMOTE_ADDR', 'ip', 'SERVER'));
 		}
 
 		/**
@@ -427,7 +428,7 @@
 		*/
 		function phpgw_set_cookiedomain()
 		{
-			$dom = $_SERVER['HTTP_HOST'];
+			$dom = phpgw::get_var('HTTP_HOST', 'string', 'SERVER');
 			if (preg_match("/^(.*):(.*)$/",$dom,$arr))
 			{
 				$dom = $arr[1];
@@ -513,7 +514,7 @@
 			$user_ip = $this->getuser_ip();
 
 			$blocked = false;
-			if ( ($blocked = $this->login_blocked($login, $_SERVER['REMOTE_ADDR'])) // too many unsuccessful attempts
+			if ( ($blocked = $this->login_blocked($login, $this->getuser_ip())) // too many unsuccessful attempts
 				|| ( isset($GLOBALS['phpgw_info']['server']['global_denied_users'][$this->account_lid]) && $GLOBALS['phpgw_info']['server']['global_denied_users'][$this->account_lid] )
 				|| ($passwd_type != 'known' && !$GLOBALS['phpgw']->auth->authenticate($this->account_lid, $this->passwd, $this->passwd_type) )
 				|| $GLOBALS['phpgw']->accounts->get_type($this->account_lid) == 'g')
