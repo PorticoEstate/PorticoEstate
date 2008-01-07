@@ -877,7 +877,7 @@
 			//error_reporting(7);
 			//error_reporting(E_ALL);
 			set_time_limit(1800);
-			$pdf -> ezSetMargins(50,70,50,50);
+			$pdf -> ezSetMargins(90,70,50,50);
 			$pdf->selectFont(PHPGW_API_INC . '/pdf/fonts/Helvetica.afm');
 
 			// put a line top and bottom on all the pages
@@ -903,7 +903,6 @@
 			$pdf->addObject($all,'all');
 			$pdf->ezStartPageNumbers(500,28,10,'right','{PAGENUM} ' . lang('of') . ' {TOTALPAGENUM}',1);
 
-			$pdf->ezSetDy(-50);
 			$pdf->ezTable($content_heading,'','',
 							array('xPos'=>220,'xOrientation'=>'right','width'=>300,0,'shaded'=>0,'fontSize' => 10,'showLines'=> 0,'titleFontSize' => 12,'outerLineThickness'=>0,'showHeadings'=>0
 							,'cols'=>array('text'=>array('justification'=>'left','width'=>100),
