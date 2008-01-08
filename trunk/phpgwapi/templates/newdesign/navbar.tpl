@@ -1,5 +1,5 @@
 		<div id="theme-gray">
-			<div class="border-layout">
+			<div class="border-layout" id="border-layout">
 				<div class="layout-north">
 					<div class="panel">
 						<div class="header">
