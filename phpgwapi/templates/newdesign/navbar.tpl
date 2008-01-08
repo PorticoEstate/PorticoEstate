@@ -33,7 +33,7 @@
 				</div>
 
 				<div class="split-bar split-bar-w-c">
-					<div clasS="split-bar-handle"></div>
+					<div class="split-bar-handle"><div class="left-arrow"></div></div>
 				</div>
 
 				<div class="layout-center">
