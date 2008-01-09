@@ -31,22 +31,38 @@
 		var splitBarWest 	= this.getElementsByClassName('split-bar-w-c', 'div' )[0];
 		var splitBarEast 	= this.getElementsByClassName('split-bar-c-e', 'div' )[0];
 
-		var test = new YAHOO.newdesign.SplitBar( splitBarWest,
-			{
-				layoutLeft: this._layoutWest,
-				layoutRight: this._layoutCenter
-			}
+		this._splitBarWest	= new YAHOO.newdesign.SplitBar( splitBarWest,
+			{ layoutLeft: this._layoutWest, layoutRight: this._layoutCenter }
 		);
-		var test2 = new YAHOO.newdesign.SplitBar( splitBarEast,
-			{
-				layoutLeft: this._layoutCenter,
-				layoutRight: this._layoutEast,
-				mode: 'right'
-			}
+		this._splitBarEast = new YAHOO.newdesign.SplitBar( splitBarEast,
+			{ layoutLeft: this._layoutCenter, layoutRight: this._layoutEast, mode: 'right' }
 		);
-		test.onPositionChange.subscribe( function(e, args) { alert('hi') } );
+
+		YAHOO.util.Event.addListener(window, "resize", this.resize, window, this );
 	};
 
+	bl_proto.resize = function(e, obj)
+	{
+		//TODO: CLEANUP
+		var sb_el = this._splitBarEast.getEl();
+
+		var borderRegion = region.getRegion( this.get('element') );
+		var eastRegion = region.getRegion( this._layoutEast );
+		var centerRegion = region.getRegion( this._layoutCenter );
+
+		var ce_width = centerRegion.right - centerRegion.left;
+
+		var of_right = (borderRegion.right - eastRegion.right);
+
+		if( ce_width + of_right < 0)
+		{
+			of_right = ce_width*-1;
+		}
+
+		sb_el.style.left = ( region.getRegion( sb_el ).left + of_right ) + 'px';
+		this._layoutEast.style.left = region.getRegion( sb_el ).right + 'px';
+		this._splitBarEast.resize();
+	}
 	/* SplitBat -------------------------------------------------------------*/
 
 	YAHOO.newdesign.SplitBar = function(id, config) {
@@ -70,6 +86,7 @@
 	sb_proto.minimized = false;
 	sb_proto.mode = 'left';
 	sb_proto.oldLeft = 100;
+	sb_proto.oldWidth = 100;
 	sb_proto.arrow = null;
 
 	sb_proto.applyConfig = function()
@@ -82,6 +99,14 @@
 
 	sb_proto.startDrag = function(x,y)
 	{
+		if(this.mode == 'left')
+		{
+			this.oldWidth = region.getRegion( this.layoutLeft).right - region.getRegion( this.layoutLeft).left;
+		}
+		else
+		{
+			this.oldWidth = region.getRegion( this.layoutRight).right - region.getRegion( this.layoutRight).left;
+		}
 		var iLeft = region.getRegion( this.getEl() ).left - region.getRegion( this.layoutLeft ).left;
 		var iRight = region.getRegion( this.layoutRight ).right - region.getRegion( this.getEl() ).right;
 		this.setXConstraint(iLeft,iRight);
@@ -132,29 +157,31 @@
 
 	sb_proto.toggleMinimized = function(e, obj)
 	{
-		this.oldLeft = Math.max(this.oldLeft, 100);
-
 		if(this.minimized)
 		{
+			this.oldWidth = Math.max(100, this.oldWidth);
+
 			if(this.mode == 'left')
 			{
 				var rightWidth = region.getRegion( this.layoutRight ).right - region.getRegion( this.getEl() ).right;
-				var newLeft = Math.min(this.oldLeft, rightWidth);
+				var newLeft = Math.min(this.oldWidth, rightWidth);
 			}
 			else
 			{
-				var newLeft = Math.max(this.oldLeft, region.getRegion( this.layoutLeft ).left);
+				var newLeft = region.getRegion( this.getEl() ).left - this.oldWidth;
+				var newLeft = Math.max(newLeft, region.getRegion( this.layoutLeft ).left);
 			}
 		}
 		else
 		{
-			this.oldLeft = region.getRegion( this.getEl() ).left;
 			if(this.mode == 'left')
 			{
+				this.oldWidth = region.getRegion( this.layoutLeft).right - region.getRegion( this.layoutLeft).left;
 				var newLeft = region.getRegion( this.layoutLeft ).left;
 			}
 			else
 			{
+				this.oldWidth = region.getRegion( this.layoutRight).right - region.getRegion( this.layoutRight).left;
 				var newLeft = region.getRegion( this.layoutRight ).right - ( region.getRegion( this.getEl() ).right - region.getRegion( this.getEl() ).left );
 			}
 		}
