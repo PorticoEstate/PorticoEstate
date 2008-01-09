@@ -3,24 +3,24 @@
 
 	YAHOO.newdesign.BorderLayout = function(el, attr)
 	{
-        attr = attr || {};
-        if (arguments.length == 1 && !YAHOO.lang.isString(el) && !el.nodeName) {
-            attr = el; // treat first arg as attr object
-            el = attr.element || null;
-        }
+		attr = attr || {};
+		if (arguments.length == 1 && !YAHOO.lang.isString(el) && !el.nodeName) {
+			attr = el; // treat first arg as attr object
+			el = attr.element || null;
+		}
 
-        if (!el && !attr.element) {
-            alert('No valid BorderLayout element was supplied');
-        }
-    	YAHOO.newdesign.BorderLayout.superclass.constructor.call(this, el, attr);
-    };
+		if (!el && !attr.element) {
+			alert('No valid BorderLayout element was supplied');
+		}
+		YAHOO.newdesign.BorderLayout.superclass.constructor.call(this, el, attr);
+	};
 
-    YAHOO.extend(YAHOO.newdesign.BorderLayout, YAHOO.util.Element);
+	YAHOO.extend(YAHOO.newdesign.BorderLayout, YAHOO.util.Element);
 
 	var bl_proto = YAHOO.newdesign.BorderLayout.prototype;
 	var region = YAHOO.util.Region;
 
-    bl_proto.initAttributes = function(attr)
+	bl_proto.initAttributes = function(attr)
  	{
  		YAHOO.newdesign.BorderLayout.superclass.initAttributes.call(this, attr);
 
@@ -45,23 +45,23 @@
 			}
 		);
 		test.onPositionChange.subscribe( function(e, args) { alert('hi') } );
-    };
+	};
 
 	/* SplitBat -------------------------------------------------------------*/
 
 	YAHOO.newdesign.SplitBar = function(id, config) {
-    	YAHOO.newdesign.SplitBar.superclass.constructor.call(this, id, null, config);
-    	this.setYConstraint(0,0);
+		YAHOO.newdesign.SplitBar.superclass.constructor.call(this, id, null, config);
+		this.setYConstraint(0,0);
 
-    	var handle = YAHOO.util.Dom.getElementsByClassName( 'split-bar-handle', 'div', this.getEl() )[0];
-    	YAHOO.util.Event.addListener(handle, "click", this.toggleMinimized, handle, this );
+		var handle = YAHOO.util.Dom.getElementsByClassName( 'split-bar-handle', 'div', this.getEl() )[0];
+		YAHOO.util.Event.addListener(handle, "click", this.toggleMinimized, handle, this );
 
-    	this.arrow = document.createElement('div');
-    	this.arrow.className = "arrow-" + this.mode;
-    	handle.appendChild(this.arrow);
+		this.arrow = document.createElement('div');
+		this.arrow.className = "arrow-" + this.mode;
+		handle.appendChild(this.arrow);
 	};
 
-    YAHOO.extend(YAHOO.newdesign.SplitBar, YAHOO.util.DDProxy);
+	YAHOO.extend(YAHOO.newdesign.SplitBar, YAHOO.util.DDProxy);
 
 	var sb_proto = YAHOO.newdesign.SplitBar.prototype;
 
@@ -74,7 +74,7 @@
 
 	sb_proto.applyConfig = function()
 	{
-    	YAHOO.newdesign.SplitBar.superclass.applyConfig.call(this);
+		YAHOO.newdesign.SplitBar.superclass.applyConfig.call(this);
 		this.layoutLeft = this.config.layoutLeft;
 		this.layoutRight = this.config.layoutRight;
 		this.mode = this.config.mode || this.mode;
