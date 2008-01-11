@@ -138,7 +138,7 @@
 				// navbar
 				$linkData = array
 				(
-					'menuaction'	=> 'felamimail.uifelamimail.viewMainScreen'
+					'menuaction'	=> 'felamimail.uifelamimail.index'
 				);
 				$this->t->set_var("link_message_list",$GLOBALS['phpgw']->link('/felamimail/index.php',$linkData));
 	

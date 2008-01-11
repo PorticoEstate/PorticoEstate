@@ -35,17 +35,15 @@
 	);
 
 	/* The hooks this app includes, needed for hooks registration */
-	$setup_info['felamimail']['hooks'][] = 'preferences';
-	$setup_info['felamimail']['hooks'][] = 'admin';
 	$setup_info['felamimail']['hooks'][] = 'manual';
 	$setup_info['felamimail']['hooks'][] = 'help';
 	$setup_info['felamimail']['hooks'][] = 'settings';
 	$setup_info['felamimail']['hooks'][] = 'home';
-	$setup_info['felamimail']['hooks'][] = 'sidebox_menu';
+	$setup_info['felamimail']['hooks'][] = 'felamimail.menu.get_menu';
 
 	/* Dependacies for this app to work */
 	$setup_info['felamimail']['depends'][] = array(
 		'appname'  => 'phpgwapi',
-		'versions' => Array('0.9.17','0.9.18')
+		'versions' => Array('0.9.17', '0.9.18')
 	);
 ?>

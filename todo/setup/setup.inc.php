@@ -48,8 +48,7 @@
 		'home',
 		'deleteaccount',
 		'manual',
-		'preferences',
-		'admin'
+		'menu'	=> 'todo.menu.get_menu'
 	);
 
 	/* Dependencies for this app to work */

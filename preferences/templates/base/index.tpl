@@ -1,36 +1,25 @@
 <!-- BEGIN list -->
-<table border="0" width="75%" cellspacing="0" cellpadding="0">
- <tr>
-  <td align="left">{tabs}</td>
- </tr>
-</table>
-
-<table width="75%" border="0" cellspacing="0" cellpadding="0">
- {rows}
-</table>
+<div id="preferences-index">
+	<div class="tabs">
+		{tabs}
+	</div>
+	{rows}
+</div>
 <!-- END list -->
 
 <!-- BEGIN app_row -->
- <tr bgcolor="{icon_backcolor}">
-  <td width="5%" valign="middle"><a name="{a_name}"></a><img src="{app_icon}" alt="[ {app_name} ]"> <a name="{a_name}"></a></td>
-  <td width="95%" valign="middle"><strong>&nbsp;&nbsp;{app_name}</strong></td>
- </tr>
+	<h2><a name="{a_name}"></a><img src="{app_icon}" alt="{app_name}"> {app_name}</h2>
 <!-- END app_row -->
 
 <!-- BEGIN app_row_noicon -->
- <tr bgcolor="{icon_backcolor}">
-  <td colspan="2" width="95%" valign="middle"><a name="{a_name}"></a><strong>&nbsp;&nbsp;{app_name}</strong> <a name="{a_name}"></a></td>
- </tr>
+	<h2><a name="{a_name}"></a> {app_name}</h2>
+	<ul>
 <!-- END app_row_noicon -->
 
 <!-- BEGIN link_row -->
- <tr>
-  <td colspan="2">&nbsp;&#8226;&nbsp;<a href="{pref_link}">{pref_text}</a></td>
- </tr>
+		<li class="{pref_class}"><a href="{pref_link}">{pref_text}</a></li>
 <!-- END link_row -->
 
 <!-- BEGIN spacer_row -->
- <tr>
-  <td colspan="2">&nbsp;</td>
- </tr>
+	</ul>
 <!-- END spacer_row -->
