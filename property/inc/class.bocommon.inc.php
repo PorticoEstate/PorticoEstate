@@ -533,9 +533,6 @@
 		{
 //_debug_array($data);
 
-			$contacts	= CreateObject('property.soactor');
-			$contacts->role='vendor';
-
 			if( isset($data['type']) && $data['type']=='view')
 			{
 				$GLOBALS['phpgw']->xslttpl->add_file(array('vendor_view'));
@@ -548,9 +545,15 @@
 			$vendor['value_vendor_id']		= $data['vendor_id'];
 			$vendor['value_vendor_name']		= $data['vendor_name'];
 
-			if($data['vendor_id'] && !$data['vendor_name'])
+			if(isset($data['vendor_id']) && $data['vendor_id'] && !$data['vendor_name'])
 			{
-				$vendor_data	= $contacts->read_single(array('actor_id'=>$data['vendor_id']));
+				$contacts	= CreateObject('property.soactor');
+				$contacts->role='vendor';
+				$custom 		= createObject('phpgwapi.custom_fields');
+	
+				$vendor_data['attributes'] = $custom->get_attribs('property','.vendor', 0, '', 'ASC', 'attrib_sort', true, true);
+
+				$vendor_data	= $contacts->read_single($data['vendor_id'],$vendor_data);
 				if(is_array($vendor_data))
 				{
 					foreach($vendor_data['attributes'] as $attribute)
@@ -562,6 +565,7 @@
 						}
 					}
 				}
+				unset($contacts);
 			}
 
 			$vendor['vendor_link']			= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uilookup.vendor'));
@@ -569,7 +573,6 @@
 			$vendor['lang_select_vendor_help']	= lang('Klick this link to select vendor');
 			$vendor['lang_vendor_name']		= lang('Vendor Name');
 
-			unset($contacts);
 //_debug_array($vendor);
 			return $vendor;
 		}
