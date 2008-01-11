@@ -17,13 +17,13 @@
 	{
 		var $public_functions = array
 		(
-			'addVcard'		=> true,
-			'changeFilter'	=> true,
-			'compressFolder'=> true,
-			'deleteMessage'	=> true,
-			'handleButtons'	=> true,
-			'toggleFilter'	=> true,
-			'index'			=> true
+			'addVcard'		=> True,
+			'changeFilter'		=> True,
+			'compressFolder'	=> True,
+			'deleteMessage'		=> True,
+			'handleButtons'		=> True,
+			'toggleFilter'		=> True,
+			'viewMainScreen'	=> True
 		);
 		
 		var $mailbox;		// the current folder in use
@@ -174,13 +174,13 @@
 				$data['filter']		= $_GET["filter"];
 				$this->bofilter->updateFilter($data);
 			}
-			$this->index();
+			$this->viewMainScreen();
 		}
 
 		function compressFolder()
 		{
 			$this->bofelamimail->compressFolder();
-			$this->index();
+			$this->viewMainScreen();
 		}
 
 		function deleteMessage()
@@ -189,7 +189,7 @@
 
 			$this->bofelamimail->deleteMessages($message);
 
-			$this->index();
+			$this->viewMainScreen();
 		}
 		
 		function display_app_header()
@@ -245,10 +245,10 @@
 			}
 			
 
-			$this->index();
+			$this->viewMainScreen();
 		}
 
-		function index()
+		function viewMainScreen()
 		{
 			$bopreferences		= CreateObject('felamimail.bopreferences');
 			$preferences		= $bopreferences->getPreferences();
@@ -347,7 +347,7 @@
 			// set the url to open when refreshing
 			$linkData = array
 			(
-				'menuaction'	=> 'felamimail.uifelamimail.index'
+				'menuaction'	=> 'felamimail.uifelamimail.viewMainScreen'
 			);
 			$this->t->set_var('refresh_url', $GLOBALS['phpgw']->link('/index.php',$linkData));
 			
@@ -355,7 +355,7 @@
 			// set the default values for the sort links (sort by url)
 			$linkData = array
 			(
-				'menuaction'	=> 'felamimail.uifelamimail.index',
+				'menuaction'	=> 'felamimail.uifelamimail.viewMainScreen',
 				'startMessage'	=> 1,
 				'sort'			=> 2
 			);
@@ -364,7 +364,7 @@
 			// set the default values for the sort links (sort by date)
 			$linkData = array
 			(
-				'menuaction'	=> 'felamimail.uifelamimail.index',
+				'menuaction'	=> 'felamimail.uifelamimail.viewMainScreen',
 				'startMessage'	=> 1,
 				'sort'			=> 0
 			);
@@ -373,7 +373,7 @@
 			// set the default values for the sort links (sort by subject)
 			$linkData = array
 			(
-				'menuaction'	=> 'felamimail.uifelamimail.index',
+				'menuaction'	=> 'felamimail.uifelamimail.viewMainScreen',
 				'startMessage'	=> 1,
 				'sort'			=> 4
 			);
@@ -411,7 +411,7 @@
 				case 2:
 					$linkData = array
 					(
-						'menuaction'	=> 'felamimail.uifelamimail.index',
+						'menuaction'	=> 'felamimail.uifelamimail.viewMainScreen',
 						'startMessage'	=> 1,
 						'sort'			=> 3
 					);
@@ -421,7 +421,7 @@
 				case 4:
 					$linkData = array
 					(
-						'menuaction'	=> 'felamimail.uifelamimail.index',
+						'menuaction'	=> 'felamimail.uifelamimail.viewMainScreen',
 						'startMessage'	=> 1,
 						'sort'			=> 5
 					);
@@ -431,7 +431,7 @@
 				case 0:
 					$linkData = array
 					(
-						'menuaction'	=> 'felamimail.uifelamimail.index',
+						'menuaction'	=> 'felamimail.uifelamimail.viewMainScreen',
 						'startMessage'	=> 1,
 						'sort'			=> 1
 					);
@@ -663,7 +663,7 @@
 				// link to unselect all messages
 				$linkData = array
 				(
-					'menuaction'	=> 'felamimail.uifelamimail.index'
+					'menuaction'	=> 'felamimail.uifelamimail.viewMainScreen'
 				);
 				$selectLink = sprintf("<a class=\"body_link\" href=\"%s\">%s</a>",
 							$GLOBALS['phpgw']->link('/index.php',$linkData),
@@ -677,7 +677,7 @@
 				$linkData = array
 				(
 					'select_all'	=> 'select_all',
-					'menuaction'	=> 'felamimail.uifelamimail.index'
+					'menuaction'	=> 'felamimail.uifelamimail.viewMainScreen'
 				);
 				$selectLink = sprintf("<a class=\"body_link\" href=\"%s\">%s</a>",
 							$GLOBALS['phpgw']->link('/index.php',$linkData),
@@ -725,7 +725,7 @@
 			{
 				$linkData = array
 				(
-					'menuaction'	=> 'felamimail.uifelamimail.index',
+					'menuaction'	=> 'felamimail.uifelamimail.viewMainScreen',
 					'startMessage'	=> $this->startMessage - $maxMessages
 				);
 				$link = $GLOBALS['phpgw']->link('/index.php',$linkData);
@@ -740,7 +740,7 @@
 			{
 				$linkData = array
 				(
-					'menuaction'	=> 'felamimail.uifelamimail.index',
+					'menuaction'	=> 'felamimail.uifelamimail.viewMainScreen',
 					'startMessage'	=> $this->startMessage + $maxMessages
 				);
 				$link = $GLOBALS['phpgw']->link('/index.php',$linkData);
@@ -833,7 +833,7 @@
 		function toggleFilter()
 		{
 			$this->bofelamimail->toggleFilter();
-			$this->index();
+			$this->viewMainScreen();
 		}
 
 		function translate()

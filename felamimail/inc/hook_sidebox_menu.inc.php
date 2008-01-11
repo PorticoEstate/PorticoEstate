@@ -28,7 +28,7 @@
 		'text'	=> 'Compose',
 		'url'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=>'felamimail.uicompose.compose')));
 		#'_NewLine_'=>'', // give a newline
-		#'INBOX'=>$GLOBALS['phpgw']->link('/index.php',array('menuaction'=>'felamimail.uifelamimail.index'))
+		#'INBOX'=>$GLOBALS['phpgw']->link('/index.php',array('menuaction'=>'felamimail.uifelamimail.viewMainScreen'))
 
 	display_sidebox($appname,$menu_title,$file);
 	unset($file);

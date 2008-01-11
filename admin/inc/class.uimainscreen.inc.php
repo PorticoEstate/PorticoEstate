@@ -22,36 +22,12 @@
 		function uimainscreen()
 		{
 			$menuaction = phpgw::get_var('menuaction', 'location');
-			$GLOBALS['phpgw_info']['flags']['xslt_app'] = false; //$menuaction == 'admin.uimainscreen.mainscreen';
+			$GLOBALS['phpgw_info']['flags']['xslt_app'] = $menuaction == 'admin.uimainscreen.mainscreen';
 			$GLOBALS['phpgw']->nextmatchs = CreateObject('phpgwapi.nextmatchs');
 		}
 
 		function mainscreen()
 		{
-			$menu = execMethod('phpgwapi.menu.get', 'admin');
-			// this is any ugly hack cos the XSLT template engine sucks
-			$html = '';
-			foreach ( $menu as $module => $entries )
-			{
-				$html .= <<<HTML
-				<h2>$module</h2>
-				<ul>
-
-HTML;
-				foreach ( $entries as $cnt => $entry )
-				{
-					$row = $cnt % 2 ? 'on' : 'off';
-					$html .= <<<HTML
-					<li class="row_{$row}"><a href="{$entry['url']}">{$entry['text']}</a></li>
-HTML;
-				}
-				$html .= <<<HTML
-				</ul>
-HTML;
-			}
-			$GLOBALS['phpgw']->common->phpgw_header(true);
-			echo $html;
-			/*
 			function display_section($appname,$file,$file2='')
 			{
 				$GLOBALS['phpgw']->common->display_mainscreen($appname,$file2 ? $file2 : $file);
@@ -59,7 +35,6 @@ HTML;
 
 			$GLOBALS['phpgw']->hooks->process('admin');
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw', array('list' => $GLOBALS['phpgw']->common->output));
-			*/
 		}
 
 		function index()
