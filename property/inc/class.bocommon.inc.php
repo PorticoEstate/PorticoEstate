@@ -610,7 +610,8 @@
 			{
 				$tenant_object	= CreateObject('property.soactor');
 				$tenant_object->role = 'tenant';
-				$tenant_data	= $tenant_object->read_single(array('actor_id' => $data['tenant_id']));
+				$tenant_data['attributes'] = $custom->get_attribs('property','.tenant', 0, '', 'ASC', 'attrib_sort', true, true);
+				$tenant_data	= $tenant_object->read_single($data['tenant_id'],$tenant_data);
 				if(is_array($tenant_data['attributes']))
 				{
 //_debug_array($tenant_data);
