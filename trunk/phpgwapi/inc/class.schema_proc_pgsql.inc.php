@@ -606,6 +606,7 @@
 		function AddColumn($oProc, &$aTables, $sTableName, $sColumnName, &$aColumnDef)
 		{
 			$default = '';
+			$Ok = '';
 			if (isset($aColumnDef['default']) && $aColumnDef['default'])	// pgsql cant add a colum with a default
 			{
 				$default = $aColumnDef['default'];
