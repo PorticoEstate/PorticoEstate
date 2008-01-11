@@ -1,8 +1,6 @@
 <!-- BEGIN list -->
 <div id="preferences-index">
-	<div class="tabs">
-		{tabs}
-	</div>
+	{tabs}
 	{rows}
 </div>
 <!-- END list -->

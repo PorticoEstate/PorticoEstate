@@ -12,7 +12,7 @@
 	*/
 
 	chdir('phpgwapi/inc/sso');
-   	include_once('include_login.inc.php');
+   	include_once('phpgwapi/inc/sso/include_login.inc.php');
 
 	$partial_url = 'login.php';
 	$phpgw_url_for_sso = 'phpgwapi/inc/sso/login_server.php';

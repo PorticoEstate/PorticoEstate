@@ -191,8 +191,10 @@
 		'deleteaccount',
 		'manual',
 		'settings',
+		'preferences',
+		'admin',
 		'help',
-		'menu'	=> 'property.menu.get_menu'
+		'sidebox_menu'
 	);
 
 	/* Dependencies for this app to work */

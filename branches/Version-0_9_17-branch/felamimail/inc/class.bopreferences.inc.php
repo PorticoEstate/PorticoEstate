@@ -13,7 +13,7 @@
 	\***************************************************************************/
 	/* $Id: class.bopreferences.inc.php 18001 2007-02-26 22:22:53Z sigurdne $ */
 
-	class felamimail_bopreferences
+	class bopreferences
 	{
 		var $public_functions = array
 		(
@@ -21,11 +21,9 @@
 			'none'	=> True
 		);
 		
-		/*
-		function __construct()
+		function bopreferences()
 		{
 		}
-		*/
 		
 		function getPreferences()
 		{

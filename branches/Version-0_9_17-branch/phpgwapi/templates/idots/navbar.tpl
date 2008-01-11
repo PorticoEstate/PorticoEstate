@@ -21,8 +21,8 @@
 				</tr>
 			</table>
 			</div>
-			<table style="{width: 100%;}">
-				<tr style="{vertical-align: top;}">
+			<table style="width: 100%;">
+				<tr style="vertical-align: top;">
 					<td class="spacer">&nbsp;</td>
 					<td class="sidecontent">
 					<!-- start blocks -->
@@ -47,7 +47,7 @@
 										</tr>
 										<tr> 
 											<td class="sideboxcontent">
-											<ul style="{list-style: none inside; margin: 5px; padding: 10px; text-indent: -10px;}">
+											<ul style="list-style: none inside; margin: 5px; padding: 10px; text-indent: -10px;">
 <!-- END extra_blocks_header -->
 <!-- BEGIN extra_blocks_footer -->
 											</ul>

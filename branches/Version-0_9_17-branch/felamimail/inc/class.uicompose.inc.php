@@ -117,7 +117,7 @@
 					
 					$linkData = array
 					(
-						'menuaction'=> 'felamimail.uifelamimail.index',
+						'menuaction'=> 'felamimail.uifelamimail.viewMainScreen',
 						'mailbox'	=> isset($_GET['mailbox']) ? $_GET['mailbox'] : '',
 						'startMessage'	=> '1'
 					);
@@ -155,7 +155,7 @@
 
 			$linkData = array
 			(
-				'menuaction'	=> 'felamimail.uifelamimail.index'
+				'menuaction'	=> 'felamimail.uifelamimail.viewMainScreen'
 			);
 			$this->t->set_var("link_message_list",$GLOBALS['phpgw']->link('/felamimail/index.php',$linkData));
 
