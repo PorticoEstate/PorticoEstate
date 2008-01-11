@@ -21,6 +21,5 @@
 	);
 	include('../header.inc.php');
 
-	$obj = CreateObject('felamimail.uifelamimail');
-	$obj->viewMainScreen();
+	execMethod('felamimail.uifelamimail.index');
 ?>

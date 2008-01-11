@@ -21,7 +21,7 @@
 	* GLOBALS[phpgw]->msg->expire_session_cache_item("mailserver_callstr")
 	* @package email
 	*/	
-	class bopreferences
+	class email_bopreferences
 	{
 		var $public_functions = array(
 			'preferences' => True,
@@ -55,7 +55,7 @@
 		//var $debug_set_prefs = 4;
 		
 		
-		function bopreferences()
+		public function __construct()
 		{
 			if ($this->debug_set_prefs > 0) { echo 'email.bopreferences *constructor*: ENTERING <br />'; }
 			/*!
