@@ -55,7 +55,8 @@
 		'add_def_pref',
 		'deleteaccount',
 		'help',
-		'menu'	=> 'notes.menu.get_menu'
+		'preferences',
+		'admin'
 	);
 
 	/* Dependencies for this app to work */

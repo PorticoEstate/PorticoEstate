@@ -507,7 +507,7 @@
 	$session_data = $GLOBALS['phpgw']->session->appsession('session_data','preferences');
 
 	$prefix = phpgw::get_var('prefix', 'string', 'GET');
-	if ( !$prefix && (isset($session_data['appname']) && $session_data['appname'] == phpgw::get_var('appname', 'string', 'GET') ) )
+	if ( !$prefix && (isset($session_data['appname']) && $session_data['appname'] == $_GET['appname']) )
 	{
 		$prefix = $session_data['prefix'];
 	}

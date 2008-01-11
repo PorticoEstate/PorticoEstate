@@ -152,7 +152,7 @@
 			$this->t->set_var("filterrows",'');
 			$linkData = array
 			(
-				'menuaction'	=> 'felamimail.uifelamimail.index',
+				'menuaction'	=> 'felamimail.uifelamimail.viewMainScreen',
 				'filter'	=> -1
 			);
 			$link = $GLOBALS['phpgw']->link('/index.php',$linkData);

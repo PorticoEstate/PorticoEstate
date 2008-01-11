@@ -3293,7 +3293,7 @@ class calendar_boicalendar
 			      );
 			$GLOBALS['phpgw']->common->phpgw_exit();
 		}
-		$uploaddir = $GLOBALS['phpgw_info']['server']['temp_dir'] . SEP;
+		$uploaddir = "{$GLOBALS['phpgw_info']['server']['temp_dir']}/";
 
 		srand((double)microtime()*1000000);
 		$random_number = rand(100000000,999999999);
@@ -3385,7 +3385,7 @@ class calendar_boicalendar
 		// time limit should be controlled elsewhere
 		@set_time_limit(0);
 
-		$gmt_offset = date('O', phpgw_datetime::user_localtime() );  // offset to GMT
+		$gmt_offset = date('O', phpgwapi_datetime::user_localtime() );  // offset to GMT
 		$offset_mins = intval(substr($gmt_offset, 1, 2)) * 60 + intval(substr($gmt_offset, 3, 2));
 
 		$users_email = ExecMethod('phpgwapi.contacts.get_email', $GLOBALS['phpgw_info']['user']['person_id']);
