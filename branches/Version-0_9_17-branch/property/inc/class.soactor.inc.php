@@ -330,6 +330,13 @@
 
 		function read_single($actor_id, $values = array())
 		{
+			if(is_array($actor_id))
+			{
+				$actor_id = $actor_id['actor_id'];
+				$bt = debug_backtrace();
+				echo "<b>wrong call to soactor::" . $bt[0]['function'] . "<br/>Called from file: " . $bt[0]['file'] . "<br/> line: " . $bt[0]['line'] . '<br/>args: ' . print_r($bt[0]['args'][0],true) . '</b>';
+				unset($bt);
+			}
 			$table = 'fm_' . $this->role;
 
 			$this->db->query("SELECT * from $table where id='$actor_id'");
