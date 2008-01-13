@@ -684,7 +684,7 @@
 		{
 			$vendor_id=(int)$vendor_id;
 
-			$this->db->query("select column_name from fm_vendor_attribute WHERE datatype='email'",__LINE__,__FILE__);
+			$this->db->query("select column_name from phpgw_cust_attribute WHERE appname='property' AND location = '.vendor' AND datatype='email'",__LINE__,__FILE__);
 			while ($this->db->next_record())
 			{
 				$this->db2->query("select " . $this->db->f('column_name') . " from fm_vendor where id=$vendor_id",__LINE__,__FILE__);
