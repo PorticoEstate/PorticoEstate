@@ -224,10 +224,12 @@
 			$document						= $this->so->read_single($document_id);
 			$dateformat						= $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
 			$document['document_date']		= $GLOBALS['phpgw']->common->show_date($document['document_date'],$dateformat);
-			$vendor							= $this->contacts->read_single(array('actor_id'=>$document['vendor_id']));
 
-			if(is_array($vendor))
+			if(isset($document['vendor_id']) && $document['vendor_id'])
 			{
+				$custom 				= createObject('phpgwapi.custom_fields');
+				$vendor['attributes']	= $custom->get_attribs('property','.vendor', 0, '', 'ASC', 'attrib_sort', true, true);
+				$vendor					= $this->contacts->read_single($document['vendor_id'],$vendor);
 				foreach($vendor['attributes'] as $attribute)
 				{
 					if($attribute['name']=='org_name')

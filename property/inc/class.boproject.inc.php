@@ -258,6 +258,7 @@
 			$sum_workorder_calculation = 0;
 			$sum_workorder_actual_cost = 0;
 
+			$custom 		= createObject('phpgwapi.custom_fields');
 			for ($i=0;$i<count($workorder_data);$i++)
 			{
 				$sum_workorder_budget= $sum_workorder_budget+$workorder_data[$i]['budget'];
@@ -270,9 +271,12 @@
 				$project['workorder_budget'][$i]['calculation']=number_format($workorder_data[$i]['calculation']*$tax, 2, ',', '');
 				$project['workorder_budget'][$i]['charge_tenant'] = $workorder_data[$i]['charge_tenant'];
 				$project['workorder_budget'][$i]['status'] = $workorder_data[$i]['status'];
-				$vendor	= $contacts->read_single(array('actor_id'=>(int)$workorder_data[$i]['vendor_id']));
-				if(is_array($vendor))
+
+				if(isset($workorder_data[$i]['vendor_id']) && $workorder_data[$i]['vendor_id'])
 				{
+					$vendor['attributes'] = $custom->get_attribs('property','.vendor', 0, '', 'ASC', 'attrib_sort', true, true);
+
+					$vendor	= $contacts->read_single($workorder_data[$i]['vendor_id'], $vendor);
 					foreach($vendor['attributes'] as $attribute)
 					{
 						if($attribute['name']=='org_name')
