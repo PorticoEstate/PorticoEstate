@@ -1,5 +1,5 @@
 		<div id="theme-gray">
-			<div class="border-layout">
+			<div class="border-layout" id="border-layout">
 				<div class="layout-north">
 					<div class="panel">
 						<div class="header">
@@ -33,7 +33,7 @@
 				</div>
 
 				<div class="split-bar split-bar-w-c">
-					<div clasS="split-bar-handle"></div>
+					<div class="split-bar-handle"></div>
 				</div>
 
 				<div class="layout-center">

@@ -232,7 +232,7 @@
 		{
 			$lang_item = $use_lang ? lang($item_text) : $item_text;
 
-			$var['icon_or_star']= ($item_image ? $item_image : '');
+			$var['icon_or_star']= !is_array($item_image)?($item_image ? $item_image : ''):'';
 			$var['lang_item'] = $current_item ? '<b>' . $lang_item . '</b>': $lang_item;
 			$var['item_link']=$item_link;
 

@@ -194,7 +194,9 @@
 		'preferences',
 		'admin',
 		'help',
-		'sidebox_menu'
+		'sidebox_menu',
+		'menu'	=> 'property.menu.get_menu'
+
 	);
 
 	/* Dependencies for this app to work */

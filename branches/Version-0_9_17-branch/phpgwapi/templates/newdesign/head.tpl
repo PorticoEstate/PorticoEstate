@@ -67,7 +67,7 @@
 				{
 					if ( elms[i].className.match(/expanded|collapsed/) )
 					{
-						YAHOO.util.Event.addListener(elms[i], 'dblclick', expandCollapse); 
+						YAHOO.util.Event.addListener(elms[i], 'click', expandCollapse);
 					}
 				}
 			};
@@ -75,6 +75,8 @@
 			YAHOO.util.Event.addListener(window, 'load', addNewdesignListeners);
 		//-->
 		</script>
+
+		<script type="text/javascript" src="{webserver_url}/phpgwapi/templates/newdesign/js/border-layout.js"></script>
 	</head>
 	<body class="yui-skin-sam">
 <!-- END head -->
