@@ -26,11 +26,22 @@
 	$GLOBALS['phpgw']->template->set_file('head', 'head.tpl');
 	$GLOBALS['phpgw']->template->set_block('head', 'stylesheet', 'stylesheets');
 
+	/*
+	if(!@is_object($GLOBALS['phpgw']->js))
+	{
+		$GLOBALS['phpgw']->js = createObject('phpgwapi.javascript');
+	}
+	$GLOBALS['phpgw']->js->validate_file('json', 'json');
+	*/
+
 	phpgwapi_yui::load_widget('dragdrop');
 	phpgwapi_yui::load_widget('element');
 	phpgwapi_yui::load_widget('container');
 	phpgwapi_yui::load_widget('menu');
 	phpgwapi_yui::load_widget('button');
+	phpgwapi_yui::load_widget('connection');
+	//phpgwapi_yui::load_widget('json');
+
 
 	foreach ( $stylesheets as $stylesheet )
 	{
@@ -47,12 +58,14 @@
 	(
 		'css'			=> $GLOBALS['phpgw']->common->get_css(),
 		'javascript'	=> $GLOBALS['phpgw']->common->get_javascript(),
-		'img_icon'      => $GLOBALS['phpgw']->common->find_image('phpgwapi', 'favicon.ico'),
+		'img_icon'      => PHPGW_IMAGES_DIR . '/favicon.ico',
 		'site_title'	=> "{$GLOBALS['phpgw_info']['server']['site_title']}",
 		'str_base_url'	=> $GLOBALS['phpgw']->link('/', array(), true),
 		'webserver_url'		=> $GLOBALS['phpgw_info']['server']['webserver_url'],
 		'win_on_events'	=> $GLOBALS['phpgw']->common->get_on_events(),
+		'border_layout_config' => execMethod('phpgwapi.template_newdesign.retrive_local', 'border_layout_config')
 	);
+
 	$GLOBALS['phpgw']->template->set_var($tpl_vars);
 
 	$GLOBALS['phpgw']->template->pfp('out', 'head');

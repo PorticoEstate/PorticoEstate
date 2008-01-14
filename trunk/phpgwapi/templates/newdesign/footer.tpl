@@ -8,10 +8,10 @@
 				<div class="layout-east">
 					<div class="panel">
 						<div class="header">
-							<h2>Online Help</h2>
+							<h2>Widgetpanel</h2>
 						</div>
-						<div class="body">
-							Coming soon to a movie near you...
+						<div class="body" id="debug">
+
 						</div>
 					</div>
 				</div>
