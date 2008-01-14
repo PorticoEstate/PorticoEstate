@@ -49,8 +49,8 @@
 		*/
 		public function get($mtype = null)
 		{
-			//$menu = $GLOBALS['phpgw']->session->appsession('phpgwapi', 'menu');
-			$menu = null;
+			$menu = $GLOBALS['phpgw']->session->appsession('phpgwapi', 'menu');
+		//	$menu = null;
 			if ( !$menu )
 			{
 				$menu = self::load();

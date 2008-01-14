@@ -29,6 +29,11 @@
 			$var['current_app_title'] = lang($GLOBALS['phpgw_info']['flags']['currentapp']);
 		}
 
+		if ( !isset($GLOBALS['phpgw_info']['flags']['current_location']) )
+		{
+			$GLOBALS['phpgw_info']['flags']['current_location'] = '';
+		}
+
 		$treemenu = <<<HTML
 		<ul id="navbar" class="expanded">
 
@@ -36,7 +41,12 @@ HTML;
 
 		prepare_navbar($navbar);
 		$navigation = execMethod('phpgwapi.menu.get', 'navigation');
-
+		$selection = explode('::', $GLOBALS['phpgw_info']['flags']['current_location']);
+//_debug_array($GLOBALS['phpgw_info']['flags']['current_location']);
+//_debug_array($selection);
+		$selected_app = array_shift($selection);
+//_debug_array($navbar);
+//_debug_array($navigation);
 		foreach($navbar as $app => $app_data)
 		{
 			switch( $app )
@@ -48,16 +58,15 @@ HTML;
 					$class = '';
 					if ( isset($navigation[$app]) && count($navigation[$app]) )
 					{
-						if ( $app == $GLOBALS['phpgw_info']['flags']['currentapp'] )
+						if ( $app == $selected_app )
 						{
-							$class = 'current expanded ';
+							$class = ' class="current expanded"';
 						}
 						else
 						{
-							$class .= 'collapsed';
+							$class = ' class="collapsed"';
 						}
 					}
-					$class = $class ? " class=\"{$class}\"" : '';
 					$img = ' style="background-image: url(' . $GLOBALS['phpgw']->common->image($app_data['image'][0], $app_data['image'][1]) . ');"';
 					$treemenu .= <<<HTML
 			<li{$class}>
@@ -66,7 +75,7 @@ HTML;
 HTML;
 					if ( isset($navigation[$app]) )
 					{
-						$treemenu .= render_submenu($navigation[$app], $app == $GLOBALS['phpgw_info']['flags']['currentapp']);
+						$treemenu .= render_submenu($navigation[$app], $app == $selected_app, $selection);
 					}
 
 					$treemenu .= <<<HTML
@@ -90,19 +99,32 @@ HTML;
 		register_shutdown_function('parse_footer_end');
 	}
 
-	function render_submenu($menu, $expanded)
+	function render_submenu($menu, $expanded, $selection)
 	{
 		$class = $expanded ? ' class="expanded"' : ' class="collapsed"';
 		$submenu = <<<HTML
 				<ul{$class}>
 
 HTML;
-		foreach ( $menu as $item )
+		$level_selection = array_shift($selection);
+		foreach ( $menu as $key => $item )
 		{
+			$expanded = false;
 			$class = '';
+			if ( $level_selection === $key )
+			{
+				$class = 'current ';
+				$expanded = true;
+			}
+
+			//echo "level_selection: $level_selection, key: $key, class: $class<br>";
 			if ( isset($item['children']) && count($item['children']) )
 			{
-				$class = $expanded ? ' class="expanded"' : ' class="collapsed"';
+				$class = $expanded ? " class=\"{$class}expanded\"" : " class=\"{$class}collapsed\"";
+			}
+			else if ( $class )
+			{
+				$class = " class=\"{$class}\"";
 			}
 			$style = isset($item['image']) ? ' style="background-image: url(' . $GLOBALS['phpgw']->common->image($item['image'][0], $item['image'][1]) . ');"' : '';
 			$submenu .= <<<HTML
@@ -112,7 +134,7 @@ HTML;
 HTML;
 			if ( isset($item['children']) && count($item['children']) )
 			{
-				$submenu .= render_submenu($item['children'], $expanded);
+				$submenu .= render_submenu($item['children'], $expanded, $selection);
 			}
 			$submenu .= <<<HTML
 					</li>

@@ -13,7 +13,6 @@
 		"/phpgwapi/js/yahoo/reset-fonts-grids/reset-fonts-grids.css",
 		"/phpgwapi/js/yahoo/build/menu/assets/skins/sam/menu.css",
 		"/phpgwapi/js/yahoo/build/button/assets/skins/sam/button.css",
-		"/phpgwapi/js/yahoo/build/treeview/assets/skins/sam/treeview.css",
 		"/phpgwapi/js/yahoo/build/tabview/assets/skins/sam/tabview.css",
 		"/phpgwapi/templates/newdesign/css/base.css",
 		"/phpgwapi/templates/newdesign/css/{$GLOBALS['phpgw_info']['user']['preferences']['common']['theme']}.css",
@@ -49,11 +48,12 @@
 		'css'			=> $GLOBALS['phpgw']->common->get_css(),
 		'javascript'	=> $GLOBALS['phpgw']->common->get_javascript(),
 		'img_icon'      => PHPGW_IMAGES_DIR . '/favicon.ico',
-		'site_title'	=> "{$GLOBALS['phpgw_info']['server']['site_title']} | {$app}",
+		'site_title'	=> "{$GLOBALS['phpgw_info']['server']['site_title']}",
 		'str_base_url'	=> $GLOBALS['phpgw']->link('/', array(), true),
+		'webserver_url'		=> $GLOBALS['phpgw_info']['server']['webserver_url'],
 		'win_on_events'	=> $GLOBALS['phpgw']->common->get_on_events(),
 	);
 	$GLOBALS['phpgw']->template->set_var($tpl_vars);
-	
+
 	$GLOBALS['phpgw']->template->pfp('out', 'head');
 	unset($tpl_vars);
