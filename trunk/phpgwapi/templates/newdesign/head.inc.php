@@ -47,7 +47,7 @@
 	(
 		'css'			=> $GLOBALS['phpgw']->common->get_css(),
 		'javascript'	=> $GLOBALS['phpgw']->common->get_javascript(),
-		'img_icon'      => PHPGW_IMAGES_DIR . '/favicon.ico',
+		'img_icon'      => $GLOBALS['phpgw']->common->find_image('phpgwapi', 'favicon.ico'),
 		'site_title'	=> "{$GLOBALS['phpgw_info']['server']['site_title']}",
 		'str_base_url'	=> $GLOBALS['phpgw']->link('/', array(), true),
 		'webserver_url'		=> $GLOBALS['phpgw_info']['server']['webserver_url'],
