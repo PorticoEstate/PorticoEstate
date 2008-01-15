@@ -66,13 +66,13 @@ HTML;
 					}
 					$img = ' style="background-image: url(' . $GLOBALS['phpgw']->common->image($app_data['image'][0], $app_data['image'][1]) . ');"';
 					$treemenu .= <<<HTML
-			<li{$class}>
+			<li{$class} id="navbar_{$app}">
 				<a href="{$app_data['url']}"{$img}>{$app_data['text']}</a>
 
 HTML;
 					if ( isset($navigation[$app]) )
 					{
-						$treemenu .= render_submenu($navigation[$app], $app == $selected_app, $selection);
+						$treemenu .= render_submenu("navbar_{$app}", $navigation[$app], $app == $selected_app, $selection);
 					}
 
 					$treemenu .= <<<HTML
@@ -96,7 +96,7 @@ HTML;
 		register_shutdown_function('parse_footer_end');
 	}
 
-	function render_submenu($menu, $expanded, $selection)
+	function render_submenu($parent, $menu, $expanded, $selection)
 	{
 		$class = $expanded ? ' class="expanded"' : ' class="collapsed"';
 		$submenu = <<<HTML
@@ -125,13 +125,13 @@ HTML;
 			}
 			$style = isset($item['image']) ? ' style="background-image: url(' . $GLOBALS['phpgw']->common->image($item['image'][0], $item['image'][1]) . ');"' : '';
 			$submenu .= <<<HTML
-					<li{$class}>
+					<li{$class} id="{$parent}::{$key}">
 						<a href="{$item['url']}"{$style}>{$item['text']}</a>
 
 HTML;
 			if ( isset($item['children']) && count($item['children']) )
 			{
-				$submenu .= render_submenu($item['children'], $expanded, $selection);
+				$submenu .= render_submenu("{$parent}::{$key}", $item['children'], $expanded, $selection);
 			}
 			$submenu .= <<<HTML
 					</li>
