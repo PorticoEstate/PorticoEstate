@@ -59,6 +59,8 @@
 		function property_uiproject()
 		{
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = True;
+			$GLOBALS['phpgw_info']['flags']['menu_selection'] = 'property::project';
+
 		//	$this->currentapp		= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->nextmatchs		= CreateObject('phpgwapi.nextmatchs');
 			$this->account			= $GLOBALS['phpgw_info']['user']['account_id'];
@@ -110,6 +112,7 @@
 
 		function index()
 		{
+			$GLOBALS['phpgw_info']['flags']['menu_selection'] .= '::index';
 			if(!$this->acl_read)
 			{
 				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=>1,'acl_location'=> $this->acl_location));

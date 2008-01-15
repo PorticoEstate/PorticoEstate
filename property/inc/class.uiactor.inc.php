@@ -59,6 +59,7 @@
 		function property_uiactor()
 		{
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = True;
+
 			$this->nextmatchs		= CreateObject('phpgwapi.nextmatchs');
 			$this->account			= $GLOBALS['phpgw_info']['user']['account_id'];
 
@@ -97,6 +98,8 @@
 			{
 				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.index'));
 			}
+
+			$GLOBALS['phpgw_info']['flags']['menu_selection'] = "property::invoice::{$this->role}";
 		}
 
 		function save_sessiondata()

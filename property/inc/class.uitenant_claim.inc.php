@@ -55,6 +55,7 @@
 		function property_uitenant_claim()
 		{
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = True;
+			$GLOBALS['phpgw_info']['flags']['menu_selection'] = 'property::project::claim';
 		//	$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->nextmatchs	= CreateObject('phpgwapi.nextmatchs');
 			$this->account		= $GLOBALS['phpgw_info']['user']['account_id'];

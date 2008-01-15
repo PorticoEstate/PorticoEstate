@@ -64,6 +64,7 @@
 		function property_uiinvoice()
 		{
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = True;
+			$GLOBALS['phpgw_info']['flags']['menu_selection'] = 'property::invoice';
 		//	$this->currentapp		= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->nextmatchs		= CreateObject('phpgwapi.nextmatchs');
 			$this->account			= $GLOBALS['phpgw_info']['user']['account_id'];
@@ -207,7 +208,12 @@
 			$loc1 			= phpgw::get_var('loc1');
 			$voucher_id 	= phpgw::get_var('voucher_id', 'int');
 			$b_account_class= phpgw::get_var('b_account_class', 'int');
-			
+
+			if ( $paid )
+			{
+				$GLOBALS['phpgw_info']['flags']['menu_selection'] .= '::paid';
+			}
+		
 			$start_date=urldecode($start_date);
 			$end_date=urldecode($end_date);
 
@@ -781,6 +787,8 @@
 
 		function consume()
 		{
+			$GLOBALS['phpgw_info']['flags']['menu_selection'] .= '::consume';
+
 			$GLOBALS['phpgw']->xslttpl->add_file(array('invoice',
 										'nextmatchs',
 										'search_field'));
@@ -1003,6 +1011,8 @@
 			{
 				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=>2, 'acl_location'=> $this->acl_location));
 			}
+
+			$GLOBALS['phpgw_info']['flags']['menu_selection'] .= '::add';
 
 			$receipt = $GLOBALS['phpgw']->session->appsession('session_data','add_receipt');
 

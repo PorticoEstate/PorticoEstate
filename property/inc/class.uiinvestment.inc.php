@@ -55,6 +55,8 @@
 		function property_uiinvestment()
 		{
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = True;
+			$GLOBALS['phpgw_info']['flags']['menu_selection'] = 'property::invoice::investment';
+
 		//	$this->currentapp		= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->account			= $GLOBALS['phpgw_info']['user']['account_id'];
 
