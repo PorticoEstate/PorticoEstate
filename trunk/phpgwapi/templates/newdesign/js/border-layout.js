@@ -74,16 +74,10 @@
 
   bl_proto.serialize = function()
   {
-  	var config =
-  	{
-  		splitBarWest: {
-  			width: this._splitBarWest.getWidth()
-  		},
-  		splitBarEast: {
-  			width: this._splitBarEast.getWidth()
-  		}
+  	return {
+  		splitBarWest: this._splitBarWest.serialize(),
+  		splitBarEast: this._splitBarEast.serialize()
   	}
-  	return config;
   };
 
   bl_proto.resize = function(e, obj)
@@ -94,14 +88,18 @@
     var borderRegion = region.getRegion( this.get('element') );
     var eastRegion = region.getRegion( this._layoutEast );
     var centerRegion = region.getRegion( this._layoutCenter );
+	var westRegion = region.getRegion( this._layoutWest );
 
     var ce_width = centerRegion.right - centerRegion.left;
+	var es_width = eastRegion.right - eastRegion.left;
+	var we_region = westRegion.right - westRegion.left;
 
     var of_right = (borderRegion.right - eastRegion.right);
 
     if( ce_width + of_right < 0)
     {
-      of_right = ce_width*-1;
+    	this._layoutWest.style.width = (es_width + of_right) + 'px';
+		of_right = ce_width*-1;
     }
 
     sb_el.style.left = ( region.getRegion( sb_el ).left + of_right ) + 'px';
@@ -133,7 +131,6 @@
   sb_proto.mode = 'left';
   sb_proto.oldWidth = 100;
   sb_proto.arrow = null;
-  sb_proto.onSizeC
   sb_proto.onSizeChange = new YAHOO.util.CustomEvent("onSizeChange");
 
   sb_proto.applyConfig = function()
@@ -141,23 +138,22 @@
     YAHOO.newdesign.SplitBar.superclass.applyConfig.call(this);
     this.layoutLeft = this.config.layoutLeft;
     this.layoutRight = this.config.layoutRight;
+    this.oldWidth = this.config.oldWidth || this.oldWidth;
     this.mode = this.config.mode || this.mode;
+  };
+
+  sb_proto.serialize = function()
+  {
+  	return {
+  		width: this.getWidth(),
+  		oldWidth: this.oldWidth
+  	}
   };
 
   sb_proto.startDrag = function(x,y)
   {
-    if(this.mode == 'left')
-    {
-      this.oldWidth = region.getRegion( this.layoutLeft).right - region.getRegion( this.layoutLeft).left;
-    }
-    else
-    {
-      this.oldWidth = region.getRegion( this.layoutRight).right - region.getRegion( this.layoutRight).left;
-    }
-
-    var iLeft = region.getRegion( this.getEl() ).left - region.getRegion( this.layoutLeft ).left;
-    var iRight = region.getRegion( this.layoutRight ).right - region.getRegion( this.getEl() ).right;
-    this.setXConstraint(iLeft,iRight);
+    this.oldWidth = this.getWidth();
+    this.setXConstraint( this.getElWidth( this.layoutLeft ), this.getElWidth( this.layoutRight ) );
   };
 
   sb_proto.endDrag = function(e)
@@ -168,6 +164,9 @@
 
   sb_proto.resize = function()
   {
+	// TODO: Clean up this mess
+  	var oldWidth = this.getWidth();
+
     var newLeftWidth = region.getRegion( this.getEl() ).left - region.getRegion( this.layoutLeft ).left;
     var newRightLeft = region.getRegion( this.getEl() ).right;
     var newRightWidth = region.getRegion( this.layoutRight ).right - region.getRegion( this.getEl() ).right;
@@ -177,96 +176,70 @@
     this.layoutRight.style.width = newRightWidth + 'px';
     this.resetConstraints();
 
+	this.minimized = (this.getWidth() <= 0);
     if(this.mode == 'left')
     {
-      if( (region.getRegion( this.getEl() ).left - region.getRegion( this.layoutLeft ).left) <= 0 )
-      {
-        this.minimized = true;
-      }
-      else
-      {
-        this.minimized = false;
-      }
-      this.arrow.className = (this.minimized ? "arrow-right" : "arrow-left");
+      this.arrow.className = (this.minimized  ? "arrow-right" : "arrow-left");
     }
     else
     {
-      if( region.getRegion( this.layoutRight ).right - (region.getRegion( this.getEl() ).right ) <= 0 )
-      {
-        this.minimized = true;
-      }
-      else
-      {
-        this.minimized = false;
-      }
       this.arrow.className = (this.minimized ? "arrow-left" : "arrow-right");
     }
-    this.onSizeChange.fire();
+
+    if( oldWidth != this.getWidth() )
+    {
+    	this.onSizeChange.fire();
+    }
   }
 
   sb_proto.setWidth = function(width)
   {
-  	var sbWidth =  region.getRegion( this.getEl() ).right - region.getRegion( this.getEl() ).left;
-
   	if(this.mode == 'left')
   	{
-        var rightWidth = region.getRegion( this.layoutRight ).right - sbWidth;
-        var newLeft = Math.min(width, rightWidth);
+  		var maxWidth = this.getElWidth( this.layoutRight ) - this.getHandleWidth();
+        var newLeft = Math.min( width, maxWidth );
   	}
   	else
   	{
-		var newLeft = region.getRegion( this.layoutRight ).right - width - sbWidth;
-        newLeft = Math.max(newLeft, region.getRegion( this.layoutLeft ).left);
+  		// When setting new size for righthand sidebar the following applies:
+  		// * newLeft >= layoutLeft.left
+  		// * newLeft <= layoutRight.right - sbWidth
+		var newLeft = region.getRegion( this.layoutRight ).right - width - this.getHandleWidth();
+		var minLeft = region.getRegion( this.layoutLeft ).left;
+        newLeft = Math.max(newLeft, minLeft);
   	}
     this.getEl().style.left =  newLeft + 'px';
     this.resize();
   }
 
-	sb_proto.getWidth = function()
+	sb_proto.getElWidth = function( el )
 	{
-		if(this.mode == 'left')
-		{
-			return region.getRegion( this.layoutLeft ).right - region.getRegion( this.layoutLeft ).left;
-		}
-		else
-		{
-			return region.getRegion( this.layoutRight ).right - region.getRegion( this.layoutRight ).left;
-		}
+		var reg = region.getRegion( el );
+		return reg.right - reg.left;
 	}
 
-  sb_proto.toggleMinimized = function(e, obj)
-  {
-    if(this.minimized)
-    {
-      this.oldWidth = Math.max(100, this.oldWidth);
+	sb_proto.getHandleWidth = function()
+	{
+		return this.getElWidth( this.getEl() );
+	}
 
-      if(this.mode == 'left')
-      {
-        var rightWidth = region.getRegion( this.layoutRight ).right - region.getRegion( this.getEl() ).right;
-        var newLeft = Math.min(this.oldWidth, rightWidth);
-      }
-      else
-      {
-        var newLeft = region.getRegion( this.getEl() ).left - this.oldWidth;
-        newLeft = Math.max(newLeft, region.getRegion( this.layoutLeft ).left);
-      }
-    }
-    else
-    {
-      if(this.mode == 'left')
-      {
-        this.oldWidth = region.getRegion( this.layoutLeft).right - region.getRegion( this.layoutLeft).left;
-        var newLeft = region.getRegion( this.layoutLeft ).left;
-      }
-      else
-      {
-        this.oldWidth = region.getRegion( this.layoutRight).right - region.getRegion( this.layoutRight).left;
-        var newLeft = region.getRegion( this.layoutRight ).right - ( region.getRegion( this.getEl() ).right - region.getRegion( this.getEl() ).left );
-      }
-    }
-    this.getEl().style.left =  newLeft + 'px';
-    this.resize();
-  }
+	sb_proto.getWidth = function()
+	{
+		return this.mode == 'left' ? this.getElWidth( this.layoutLeft ) : this.getElWidth( this.layoutRight );
+	}
+
+	sb_proto.toggleMinimized = function(e, obj)
+  	{
+    	if(this.minimized)
+    	{
+      		this.setWidth( Math.max(100, this.oldWidth) );
+    	}
+    	else
+    	{
+    		this.oldWidth = this.getWidth();
+			this.setWidth(0);
+    	}
+  	}
 })();
 
 
@@ -277,11 +250,12 @@ function store(config)
 	var handleSuccess = function(o)
 	{
 		if(o.responseText !== undefined){
+			div.innerHTML += "<li>Success:</li>";
 			div.innerHTML += "<li>Transaction id: " + o.tId + "</li>";
 			div.innerHTML += "<li>HTTP status: " + o.status + "</li>";
 			div.innerHTML += "<li>Status code message: " + o.statusText + "</li>";
-			div.innerHTML += "<li>HTTP headers received: <ul>" + o.getAllResponseHeaders + "</ul></li>";
-			div.innerHTML += "<li>PHP response: " + o.responseText + "</li>";
+			//div.innerHTML += "<li>HTTP headers received: <ul>" + o.getAllResponseHeaders + "</ul></li>";
+			//div.innerHTML += "<li>PHP response: " + o.responseText + "</li>";
    		}
    	}
 
@@ -305,16 +279,21 @@ function store(config)
     	failure:handleFailure
   	};
 
-  	var sUrl = strBaseURL + "&menuaction=phpgwapi.template_newdesign.store&phpgw_return_as=json";
-	var postData = 'location=border_layout_config&data=' + JSON.stringify( config );
-	div.innerHTML = sUrl + " - " + postData;
+	var sUrl = phpGWLink('index.php',
+		{
+			menuaction: 'phpgwapi.template_newdesign.store',
+			phpgw_return_as: 'json',
+			location: 'border_layout_config'
+		}
+	);
+
+	var postData = 'data=' + JSON.stringify( config );
 	var request = YAHOO.util.Connect.asyncRequest('POST', sUrl, callback, postData);
+	div.innerHTML = "Sending:<br><pre>" + JSON.stringify( config ) + "</pre>";
 };
 
 function initBL() {
-	var config = typeof border_layout_config != 'undefined' ? border_layout_config : {};
-  	var bl = new YAHOO.newdesign.BorderLayout('border-layout', config );
+  	var bl = new YAHOO.newdesign.BorderLayout('border-layout', border_layout_config );
 }
 
 YAHOO.util.Event.onDOMReady(initBL);
-
