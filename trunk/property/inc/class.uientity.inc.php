@@ -100,6 +100,8 @@
 			$this->start_date			= $this->bo->start_date;
 			$this->end_date				= $this->bo->end_date;
 			$this->allrows				= $this->bo->allrows;
+
+			$GLOBALS['phpgw_info']['flags']['menu_selection'] = "property::entity_{$this->entity_id}";
 		}
 
 		function save_sessiondata()

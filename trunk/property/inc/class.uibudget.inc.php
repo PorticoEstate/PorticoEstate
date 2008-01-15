@@ -58,6 +58,8 @@
 		function property_uibudget()
 		{
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = True;
+			$GLOBALS['phpgw_info']['flags']['menu_selection'] = 'property::budget';
+
 		//	$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->nextmatchs	= CreateObject('phpgwapi.nextmatchs');
 			$this->account		= $GLOBALS['phpgw_info']['user']['account_id'];
@@ -100,6 +102,12 @@
 		{
 			$acl_location	= '.budget';
 			$acl_read 	= $this->acl->check($acl_location,1);
+			
+			if(!$acl_read)
+			{
+				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=>1, 'acl_location'=> $acl_location));
+			}
+
 			$acl_add 	= $this->acl->check($acl_location,2);
 			$acl_edit 	= $this->acl->check($acl_location,4);
 			$acl_delete 	= $this->acl->check($acl_location,8);
@@ -107,10 +115,7 @@
 			$this->year	= $this->bo->year;
 			$this->revision = $this->bo->revision;
 
-			if(!$acl_read)
-			{
-				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=>1, 'acl_location'=> $acl_location));
-			}
+			$GLOBALS['phpgw_info']['flags']['menu_selection'] .= '::budget';
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('budget',
 										'receipt',
@@ -301,6 +306,12 @@
 		{
 			$acl_location	= '.budget';
 			$acl_read 	= $this->acl->check($acl_location,1);
+
+			if(!$acl_read)
+			{
+				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=>1, 'acl_location'=> $acl_location));
+			}
+
 			$acl_add 	= $this->acl->check($acl_location,2);
 			$acl_edit 	= $this->acl->check($acl_location,4);
 			$acl_delete 	= $this->acl->check($acl_location,8);
@@ -308,10 +319,8 @@
 			$this->year	= $this->bo->year;
 			$this->revision = $this->bo->revision;
 
-			if(!$acl_read)
-			{
-				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=>1, 'acl_location'=> $acl_location));
-			}
+
+			$GLOBALS['phpgw_info']['flags']['menu_selection'] .= '::basis';
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('budget',
 										'receipt',
@@ -500,15 +509,18 @@
 		{
 			$acl_location	= '.budget.obligations';
 			$acl_read 	= $this->acl->check($acl_location,1);
-			$acl_add 	= $this->acl->check($acl_location,2);
-			$acl_edit 	= $this->acl->check($acl_location,4);
-			$acl_delete 	= $this->acl->check($acl_location,8);
 
 			if(!$acl_read)
 			{
 				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=>1, 'acl_location'=> $acl_location));
 			}
 
+			$acl_add 	= $this->acl->check($acl_location,2);
+			$acl_edit 	= $this->acl->check($acl_location,4);
+			$acl_delete 	= $this->acl->check($acl_location,8);
+
+			$GLOBALS['phpgw_info']['flags']['menu_selection'] .= '::obligations';
+		
 			$GLOBALS['phpgw']->xslttpl->add_file(array('budget',
 										'receipt',
 										'search_field',

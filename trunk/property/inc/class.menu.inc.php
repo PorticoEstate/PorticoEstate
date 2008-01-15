@@ -657,7 +657,7 @@
 
 			if ( $acl->check('.document', PHPGW_ACL_READ, 'property') )
 			{
-				$menus['navigation']['doc'] = array
+				$menus['navigation']['documentation'] = array
 				(
 					'url'		=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uidocument.index')),
 					'text'		=> lang('Documentation'),
@@ -676,7 +676,7 @@
 					{
 						if($entry['documentation'])
 						{
-							$menus['navigation']['doc']['children']["ent_{$entry['name']}"] = array
+							$menus['navigation']['documentation']['children']["entity_{$entry['id']}"] = array
 							(
 								'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'property.uidocument.index', 'entity_id' => $entry['id'])),
 								'text'	=> $entry['name']
@@ -701,7 +701,7 @@
 				{
 					if ( $acl->check(".entity.{$entry['id']}", PHPGW_ACL_READ, 'property') )
 					{
-						$menus['navigation']["ent_{$entry['name']}"] = array
+						$menus['navigation']["entity_{$entry['id']}"] = array
 						(
 							'url'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uientity.index', 'entity_id'=> $entry['id'])),
 							'text'	=> $entry['name']

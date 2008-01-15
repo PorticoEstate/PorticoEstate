@@ -58,6 +58,8 @@
 		function property_uidocument()
 		{
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = True;
+			$GLOBALS['phpgw_info']['flags']['menu_selection'] = "property::documentation";
+
 		//	$this->currentapp			= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->nextmatchs			= CreateObject('phpgwapi.nextmatchs');
 			$this->account				= $GLOBALS['phpgw_info']['user']['account_id'];
@@ -87,6 +89,14 @@
 			$this->doc_type				= $this->bo->doc_type;
 			$this->query_location			= $this->bo->query_location;
 
+			if ( $this->entity_id )
+			{
+				$GLOBALS['phpgw_info']['flags']['menu_selection'] .= "::entity_{$this->entity_id}";
+			}
+			else
+			{
+				$GLOBALS['phpgw_info']['flags']['menu_selection'] .= '::location';
+			}
 		}
 
 		function save_sessiondata()
