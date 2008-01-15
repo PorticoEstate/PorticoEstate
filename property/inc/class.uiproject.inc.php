@@ -112,7 +112,7 @@
 
 		function index()
 		{
-			$GLOBALS['phpgw_info']['flags']['menu_selection'] .= '::index';
+			$GLOBALS['phpgw_info']['flags']['menu_selection'] .= '::project';
 			if(!$this->acl_read)
 			{
 				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=>1,'acl_location'=> $this->acl_location));

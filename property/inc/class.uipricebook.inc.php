@@ -325,6 +325,8 @@
 				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=>16, 'acl_location'=> $this->acl_location));
 			}
 
+			$GLOBALS['phpgw_info']['flags']['menu_selection'] = 'property::agreement::pricebook::group';
+
 			$GLOBALS['phpgw']->session->appsession('referer','property','');
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('pricebook',
@@ -816,6 +818,8 @@
 			{
 				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=>16, 'acl_location'=> $this->acl_location));
 			}
+
+			$GLOBALS['phpgw_info']['flags']['menu_selection'] = 'property::agreement::pricebook::activities';
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('pricebook',
 										'nextmatchs',
