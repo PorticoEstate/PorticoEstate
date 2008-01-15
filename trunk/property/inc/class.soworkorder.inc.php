@@ -421,6 +421,7 @@
 
 			$count_cols_return=count($cols_return);
 			$j=0;
+			$workorder_list = array();
 			while ($this->db->next_record())
 			{
 				for ($i=0;$i<$count_cols_return;$i++)
@@ -441,7 +442,7 @@
 				$j++;
 			}
 
-			return (isset($workorder_list)?$workorder_list:array());
+			return $workorder_list;
 		}
 
 		function read_single($workorder_id)
