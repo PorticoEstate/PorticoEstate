@@ -358,7 +358,7 @@
 					{
 						for ($i=0;$i<count($values['delete_file']);$i++)
 						{
-							$file = $this->fakebase. SEP . 'rental_agreement' . SEP . $values['r_agreement_id'] . SEP . $values['delete_file'][$i];
+							$file = $this->fakebase. '/' . 'rental_agreement' . '/' . $values['r_agreement_id'] . '/' . $values['delete_file'][$i];
 
 							if($this->vfs->file_exists(array(
 									'string' => $file,
@@ -374,11 +374,11 @@
 								     )
 								)))
 								{
-									$receipt['error'][]=array('msg'=>lang('failed to delete file') . ' :'. $this->fakebase. SEP . 'rental_agreement'. SEP . $values['r_agreement_id'] . SEP .$values['delete_file'][$i]);
+									$receipt['error'][]=array('msg'=>lang('failed to delete file') . ' :'. $this->fakebase. '/' . 'rental_agreement'. '/' . $values['r_agreement_id'] . '/' .$values['delete_file'][$i]);
 								}
 								else
 								{
-									$receipt['message'][]=array('msg'=>lang('file deleted') . ' :'. $this->fakebase. SEP . 'rental_agreement'. SEP . $values['id'] . SEP . $values['delete_file'][$i]);
+									$receipt['message'][]=array('msg'=>lang('file deleted') . ' :'. $this->fakebase. '/' . 'rental_agreement'. '/' . $values['id'] . '/' . $values['delete_file'][$i]);
 								}
 								$this->vfs->override_acl = 0;
 							}
@@ -504,24 +504,24 @@
 		function create_home_dir($receipt='')
 		{
 			if(!$this->vfs->file_exists(array(
-					'string' => $this->fakebase. SEP . 'rental_agreement',
+					'string' => $this->fakebase. '/' . 'rental_agreement',
 					'relatives' => Array(RELATIVE_NONE)
 				)))
 			{
 				$this->vfs->override_acl = 1;
 
 				if(!$this->vfs->mkdir (array(
-				     'string' => $this->fakebase. SEP . 'rental_agreement',
+				     'string' => $this->fakebase. '/' . 'rental_agreement',
 				     'relatives' => array(
 				          RELATIVE_NONE
 				     )
 				)))
 				{
-					$receipt['error'][]=array('msg'=>lang('failed to create directory') . ' :'. $this->fakebase. SEP . 'rental_agreement');
+					$receipt['error'][]=array('msg'=>lang('failed to create directory') . ' :'. $this->fakebase. '/' . 'rental_agreement');
 				}
 				else
 				{
-					$receipt['message'][]=array('msg'=>lang('directory created') . ' :'. $this->fakebase. SEP . 'rental_agreement');
+					$receipt['message'][]=array('msg'=>lang('directory created') . ' :'. $this->fakebase. '/' . 'rental_agreement');
 				}
 				$this->vfs->override_acl = 0;
 			}
@@ -533,23 +533,23 @@
 		{
 
 			if(!$this->vfs->file_exists(array(
-					'string' => $this->fakebase. SEP . 'rental_agreement' .  SEP . $id,
+					'string' => $this->fakebase. '/' . 'rental_agreement' .  '/' . $id,
 					'relatives' => Array(RELATIVE_NONE)
 				)))
 			{
 				$this->vfs->override_acl = 1;
 				if(!$this->vfs->mkdir (array(
-				     'string' => $this->fakebase. SEP . 'rental_agreement' .  SEP . $id,
+				     'string' => $this->fakebase. '/' . 'rental_agreement' .  '/' . $id,
 				     'relatives' => array(
 				          RELATIVE_NONE
 				     )
 				)))
 				{
-					$receipt['error'][]=array('msg'=>lang('failed to create directory') . ' :'. $this->fakebase. SEP  . 'rental_agreement' .  SEP . $id);
+					$receipt['error'][]=array('msg'=>lang('failed to create directory') . ' :'. $this->fakebase. '/'  . 'rental_agreement' .  '/' . $id);
 				}
 				else
 				{
-					$receipt['message'][]=array('msg'=>lang('directory created') . ' :'. $this->fakebase. SEP . 'rental_agreement' .  SEP . $id);
+					$receipt['message'][]=array('msg'=>lang('directory created') . ' :'. $this->fakebase. '/' . 'rental_agreement' .  '/' . $id);
 				}
 				$this->vfs->override_acl = 0;
 			}

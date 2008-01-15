@@ -119,7 +119,7 @@
 			$location_code 	= phpgw::get_var('location_code');
 			$id 		= phpgw::get_var('id', 'int');
 
-			$file = $this->fakebase. SEP . 'request' . SEP . $location_code . SEP . $id . SEP . $file_name;
+			$file = $this->fakebase. '/' . 'request' . '/' . $location_code . '/' . $id . '/' . $file_name;
 
 			if($this->bo->vfs->file_exists(array(
 				'string' => $file,
@@ -645,7 +645,7 @@
 				}
 
 				$values['file_name']=str_replace(" ","_",$_FILES['file']['name']);
-				$to_file = $this->fakebase. SEP . 'request' . SEP . implode("-",$values['location']) . SEP . $values['request_id'] . SEP . $values['file_name'];
+				$to_file = $this->fakebase. '/' . 'request' . '/' . implode("-",$values['location']) . '/' . $values['request_id'] . '/' . $values['file_name'];
 
 				if(!$values['document_name_orig'] && $this->bo->vfs->file_exists(array(
 						'string' => $to_file,

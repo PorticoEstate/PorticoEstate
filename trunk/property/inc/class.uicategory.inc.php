@@ -53,6 +53,7 @@
 		function property_uicategory()
 		{
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = True;
+			$GLOBALS['phpgw_info']['flags']['menu_selection'] = 'admin::property';
 		//	$this->currentapp			= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->nextmatchs			= CreateObject('phpgwapi.nextmatchs');
 			$this->account				= $GLOBALS['phpgw_info']['user']['account_id'];
@@ -98,7 +99,8 @@
 			$type		= phpgw::get_var('type');
 			$type_id	= phpgw::get_var('type_id', 'int');
 
-			$GLOBALS['phpgw_info']['apps']['manual']['section'] = 'category.index.' . $type;
+			$GLOBALS['phpgw_info']['flags']['menu_selection'] .= "::{$type}";
+			$GLOBALS['phpgw_info']['apps']['manual']['section'] = "category.index.{$type}";
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('category','nextmatchs',
 										'search_field'));
@@ -205,6 +207,7 @@
 			$id	= phpgw::get_var('id', 'int');
 			$values			= phpgw::get_var('values');
 
+			$GLOBALS['phpgw_info']['flags']['menu_selection'] .= "::{$type}";
 			$GLOBALS['phpgw_info']['apps']['manual']['section'] = 'category.edit.' . $type;
 			
 			$GLOBALS['phpgw']->xslttpl->add_file(array('category'));
@@ -292,6 +295,8 @@
 			$type_id	= phpgw::get_var('type_id', 'int');
 			$id		= phpgw::get_var('id', 'int');
 			$confirm	= phpgw::get_var('confirm', 'bool', 'POST');
+
+			$GLOBALS['phpgw_info']['flags']['menu_selection'] .= "::{$type}";
 
 			$link_data = array
 			(

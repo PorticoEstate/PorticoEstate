@@ -110,11 +110,11 @@
 
 		function select_import_conv($selected='')
 		{
-			$dir_handle = @opendir(PHPGW_APP_INC . SEP . 'import');
+			$dir_handle = @opendir(PHPGW_APP_INC . '/import');
 			$i=0; $myfilearray = '';
 			while ($file = readdir($dir_handle))
 			{
-				if ((substr($file, 0, 1) != '.') && is_file(PHPGW_APP_INC . SEP . 'import' . SEP . $file) )
+				if ((substr($file, 0, 1) != '.') && is_file(PHPGW_APP_INC . '/import/' . $file) )
 				{
 					$myfilearray[$i] = $file;
 					$i++;
@@ -154,11 +154,11 @@
 
 		function select_export_conv($selected='')
 		{
-			$dir_handle = @opendir(PHPGW_APP_INC . SEP . 'export');
+			$dir_handle = @opendir(PHPGW_APP_INC . '/export');
 			$i=0; $myfilearray = '';
 			while ($file = readdir($dir_handle))
 			{
-				if ((substr($file, 0, 1) != '.') && is_file(PHPGW_APP_INC . SEP . 'export' . SEP . $file) )
+				if ((substr($file, 0, 1) != '.') && is_file(PHPGW_APP_INC . '/export/' . $file) )
 				{
 					$myfilearray[$i] = $file;
 					$i++;
@@ -205,7 +205,7 @@
 			$i=0; $myfilearray = '';
 			while ($file = readdir($dir_handle))
 			{
-				if ((substr($file, 0, 1) != '.') && is_file($file_catalog . SEP . $file) )
+				if ((substr($file, 0, 1) != '.') && is_file("{$file_catalog}/{$file}") )
 				{
 					$myfilearray[$i] = $file;
 					$i++;

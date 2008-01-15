@@ -171,7 +171,7 @@
 			$file_name	= urldecode(phpgw::get_var('file_name'));
 			$id 		= phpgw::get_var('id', 'int');
 
-			$file = $this->fakebase. SEP . 'service_agreement' . SEP . $id . SEP . $file_name;
+			$file = $this->fakebase. '/' . 'service_agreement' . '/' . $id . '/' . $file_name;
 
 			if($this->bo->vfs->file_exists(array(
 				'string' => $file,
@@ -601,7 +601,7 @@
 					}
 
 					$values['file_name'] = str_replace (' ','_',$_FILES['file']['name']);
-					$to_file = $this->fakebase. SEP . 'service_agreement' . SEP . $values['s_agreement_id'] . SEP . $values['file_name'];
+					$to_file = $this->fakebase. '/' . 'service_agreement' . '/' . $values['s_agreement_id'] . '/' . $values['file_name'];
 
 					if(!$values['document_name_orig'] && $this->bo->vfs->file_exists(array(
 							'string' => $to_file,

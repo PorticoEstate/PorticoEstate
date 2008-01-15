@@ -42,8 +42,7 @@
 			}
 			else
 			{
- 				$dir = PHPGW_APP_INC  . '/..';
- 				$dir = $dir . SEP . 'pdf_files';
+ 				$dir = realpath(PHPGW_APP_INC  . "/../pdf_files");
   
  				//save the file
  				if (!file_exists($dir))
@@ -51,7 +50,7 @@
  					die('Directory for temporary pdf-files is missing - pleace notify the Administrator');
  				}
 
- 				$fname = tempnam($dir.SEP,'PDF_').'.pdf';
+ 				$fname = tempnam("{$dir}/PDF_") . '.pdf';
  
  				$fp = fopen($fname,'w');
 				fwrite($fp,$document);

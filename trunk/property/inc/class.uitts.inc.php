@@ -48,8 +48,9 @@
 			'view_file'	=> True
 		);
 
-		function property_uitts()
+		public function __construct()
 		{
+			$GLOBALS['phpgw_info']['flags']['menu_selection'] = 'property::helpdesk';
 			if($this->tenant_id	= $GLOBALS['phpgw']->session->appsession('tenant_id','property'))
 			{
 				$GLOBALS['phpgw_info']['flags']['noframework'] = True;
@@ -1083,7 +1084,7 @@
 
 					if($values['file_name'])
 					{
-						$to_file = $this->fakebase. SEP . 'fmticket' . SEP . $receipt['id'] . SEP . $values['file_name'];
+						$to_file = $this->fakebase. '/' . 'fmticket' . '/' . $receipt['id'] . '/' . $values['file_name'];
 	
 						if($this->bo->vfs->file_exists(array(
 								'string' => $to_file,
@@ -1536,7 +1537,7 @@
 
 				if($values['file_name'])
 				{
-					$to_file = $this->fakebase. SEP . 'fmticket' . SEP . $id . SEP . $values['file_name'];
+					$to_file = $this->fakebase. '/' . 'fmticket' . '/' . $id . '/' . $values['file_name'];
 	
 					if($this->bo->vfs->file_exists(array(
 							'string' => $to_file,
@@ -2136,7 +2137,7 @@
 			$file_name	= urldecode(phpgw::get_var('file_name'));
 			$id 		= phpgw::get_var('id', 'int');
 
-			$file = $this->fakebase. SEP . 'fmticket' . SEP . $id . SEP . $file_name;
+			$file = $this->fakebase. '/' . 'fmticket' . '/' . $id . '/' . $file_name;
 
 			if($this->bo->vfs->file_exists(array(
 				'string' => $file,

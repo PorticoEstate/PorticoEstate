@@ -297,8 +297,10 @@
 				{
 					foreach($custom_functions as $entry)
 					{
-						if (is_file(PHPGW_APP_INC . SEP . 'custom' . SEP . $entry['file_name']) && $entry['active'])
-						include (PHPGW_APP_INC . SEP . 'custom' . SEP . $entry['file_name']);
+						if (is_file(PHPGW_APP_INC . "/custom/{$entry['file_name']}") && $entry['active'])
+						{
+							include_once(PHPGW_APP_INC . "/custom/{$entry['file_name']}");
+						}
 					}
 				}
 

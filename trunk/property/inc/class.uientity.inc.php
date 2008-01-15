@@ -206,7 +206,7 @@
 			$loc1 		= phpgw::get_var('loc1');
 			$id 		= phpgw::get_var('id', 'int');
 
-			$file = $this->fakebase. SEP . $this->category_dir . SEP . $loc1 . SEP . $id . SEP . $file_name;
+			$file = "{$this->fakebase}/{$this->category_dir}/{$loc1}/{$id}/{$file_name}";
 
 //echo 'file: ' . $file . '<br>';
 			if($this->bo->vfs->file_exists(array(
@@ -677,7 +677,7 @@
 				if(isset($_FILES['file']['name']) && $_FILES['file']['name'])
 				{
 					$values['file_name']=str_replace (' ','_',$_FILES['file']['name']);
-					$to_file = $this->fakebase. SEP . $this->category_dir . SEP . $values['location']['loc1'] . SEP . $values['id'] . SEP . $values['file_name'];
+					$to_file = "{$this->fakebase}/{$this->category_dir}/{$values['location']['loc1']}/{$values['id']}/{$values['file_name']}";
 
 					if((!isset($values['document_name_orig']) || !$values['document_name_orig']) && $this->bo->vfs->file_exists(array(
 							'string' => $to_file,
