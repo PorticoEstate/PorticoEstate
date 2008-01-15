@@ -31,7 +31,7 @@
 			return $json;
 		}
 
-		function retrive($location=null)
+		function retrive()
 		{
 			$location = phpgw::get_var('location');
 
