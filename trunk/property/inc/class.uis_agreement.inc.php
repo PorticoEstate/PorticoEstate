@@ -60,7 +60,7 @@
 		function property_uis_agreement()
 		{
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = True;
-			$GLOBALS['phpgw_info']['flags']['menu_selection'] = 'property::project::service';
+			$GLOBALS['phpgw_info']['flags']['menu_selection'] = 'property::agreement::service';
 			$this->nextmatchs	= CreateObject('phpgwapi.nextmatchs');
 			$this->account		= $GLOBALS['phpgw_info']['user']['account_id'];
 

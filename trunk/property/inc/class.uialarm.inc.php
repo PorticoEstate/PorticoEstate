@@ -293,6 +293,7 @@
 
 		function list_alarm()
 		{
+			$GLOBALS['phpgw_info']['flags']['menu_selection'] = 'property::agreement::alarm';
 			$GLOBALS['phpgw']->xslttpl->add_file(array('alarm',
 										'receipt',
 										'search_field',
