@@ -366,7 +366,7 @@
 			{		
 				$fil_katalog = $this->config->config_data['export_path'];			
 			
-				if(unlink ($fil_katalog. SEP . $Filnavn))
+				if(unlink ($fil_katalog. '/' . $Filnavn))
 				{
 					$this->db->transaction_commit();
 					$receipt['message'][]= array('msg' => $antall . ' ' . lang('bilag/underbilag rullet tilbake'));
