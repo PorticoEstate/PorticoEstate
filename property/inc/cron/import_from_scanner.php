@@ -272,9 +272,9 @@
 							}
 						}
 
-						unlink($this->dir . SEP . $file_entry['file_name'] . $this->suffix);
-						unlink($this->dir . SEP . $file_entry['file_name'] . $this->meta_suffix);
-												
+						unlink("{$this->dir}/{$file_entry['file_name']}{$this->suffix}");
+						unlink("{$this->dir}/{$file_entry['file_name']}{$this->meta_suffix}");
+
 						$msgbox_data = $this->bocommon->msgbox_data($this->receipt);
 
 						$insert_values= array(
@@ -307,7 +307,7 @@
 			$myfilearray = array();
 			while ($file = @readdir($dir_handle))
 			{
-				if ((strtolower(substr($file, -3, 3)) == $this->meta_suffix) && is_file($this->dir . SEP . $file) )
+				if ((strtolower(substr($file, -3, 3)) == $this->meta_suffix) && is_file("{$this->dir}/{$file}") )
 				{
 					$myfilearray[] = $file;
 				}
@@ -321,7 +321,7 @@
 				$fname = $myfilearray[$i];
 				$file_list[$i]['file_name'] = substr($fname,0, strlen($fname)-strlen($this->meta_suffix));
 
-				$fp = fopen($this->dir . SEP . $fname,'rb');
+				$fp = fopen("{$this->dir}/{$fname}", 'rb');
 
 				$row = 1;
 				while ($data = fgetcsv($fp,8000,$this->delimiter))
@@ -348,7 +348,7 @@
 
 		function add_file_to_ticket($id,$file_name)
 		{
-				$to_file = $this->fakebase. SEP . 'fmticket' . SEP . $id . SEP . $file_name . $this->suffix;
+				$to_file = "{$this->fakebase}/fmticket/{$id}/{$file_name}{$this->suffix}";
 	
 				if($this->botts->vfs->file_exists(array(
 					'string' => $to_file,
@@ -363,7 +363,7 @@
 					$this->botts->vfs->override_acl = 1;
 
 					if(!$this->botts->vfs->cp (array (
-						'from'	=> $this->dir . SEP . $file_name . $this->suffix,
+						'from'	=> $this->dir . '/' . $file_name . $this->suffix,
 						'to'	=> $to_file,
 						'relatives'	=> array (RELATIVE_NONE|VFS_REAL, RELATIVE_ALL))))
 					{
@@ -435,24 +435,24 @@
 		function create_loc1_dir($loc1='')
 		{
 			if(!$this->vfs->file_exists(array(
-					'string' => $this->fakebase . SEP . 'document' . SEP . $loc1,
+					'string' => $this->fakebase . '/' . 'document' . '/' . $loc1,
 					'relatives' => Array(RELATIVE_NONE)
 				)))
 			{
 				$this->vfs->override_acl = 1;
 
 				if(!$this->vfs->mkdir (array(
-				     'string' => $this->fakebase. SEP . 'document' . SEP . $loc1,
+				     'string' => $this->fakebase. '/' . 'document' . '/' . $loc1,
 				     'relatives' => array(
 				          RELATIVE_NONE
 				     )
 				)))
 				{
-					$this->receipt['error'][]=array('msg'=>lang('failed to create directory') . ' :'. $this->fakebase. SEP . 'document' . SEP . $loc1);
+					$this->receipt['error'][]=array('msg'=>lang('failed to create directory') . ' :'. $this->fakebase. '/' . 'document' . '/' . $loc1);
 				}
 				else
 				{
-					$this->receipt['message'][]=array('msg'=>lang('directory created') . ' :'. $this->fakebase. SEP . 'document' . SEP . $loc1);
+					$this->receipt['message'][]=array('msg'=>lang('directory created') . ' :'. $this->fakebase. '/' . 'document' . '/' . $loc1);
 				}
 				$this->vfs->override_acl = 0;
 			}
@@ -460,8 +460,8 @@
 
 		function copy_files($values)
 		{
-			$to_file = $this->fakebase . SEP . 'document' . SEP . $values['loc1'] . SEP . $values['file_name'] . $this->suffix;
-			$from_file = $this->dir . SEP . $values['file_name'] . $this->suffix;
+			$to_file = $this->fakebase . '/' . 'document' . '/' . $values['loc1'] . '/' . $values['file_name'] . $this->suffix;
+			$from_file = $this->dir . '/' . $values['file_name'] . $this->suffix;
 			$this->vfs->override_acl = 1;
 
 			if($this->vfs->file_exists(array(

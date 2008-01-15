@@ -57,6 +57,7 @@
 		function property_uiadmin()
 		{
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = True;
+			$GLOBALS['phpgw_info']['flags']['menu_selection'] = 'admin::property';
 		//	$this->currentapp			= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->nextmatchs			= CreateObject('phpgwapi.nextmatchs');
 			$this->account				= $GLOBALS['phpgw_info']['user']['account_id'];
@@ -306,7 +307,7 @@
 
 		function list_acl()
 		{
-
+			$GLOBALS['phpgw_info']['flags']['menu_selection'] .= '::permissions';
 			$GLOBALS['phpgw']->xslttpl->add_file(array('admin','nextmatchs',
 										'search_field'));
 
@@ -567,6 +568,7 @@
 
 		function edit_id()
 		{
+			$GLOBALS['phpgw_info']['flags']['menu_selection'] .= '::edit_id';
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('admin'));
 
@@ -630,12 +632,15 @@
 
 		function contact_info()
 		{
+			$GLOBALS['phpgw_info']['flags']['menu_selection'] = '::contact_info';
+
 			$GLOBALS['phpgw']->xslttpl->add_file(array('admin'));
 
 			$values		= phpgw::get_var('values');
 
 			if ($values['save'])
 			{
+				// this should use the contacts backend in the API - each account is already linked to a contact
 				$GLOBALS['phpgw']->preferences->account_id=$this->filter;
 				$GLOBALS['phpgw']->preferences->read_repository();
 

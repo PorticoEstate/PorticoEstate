@@ -173,7 +173,7 @@
 			$file_name	= urldecode(phpgw::get_var('file_name'));
 			$id 		= phpgw::get_var('id', 'int');
 
-			$file = $this->fakebase. SEP . 'rental_agreement' . SEP . $id . SEP . $file_name;
+			$file = "{$this->fakebase}/rental_agreement/{$id}/{$file_name}";
 
 			if($this->bo->vfs->file_exists(array(
 				'string' => $file,
@@ -591,7 +591,7 @@
 					if(isset($_FILES['file']['name']) && $_FILES['file']['name'])
 					{
 						$values['file_name']=str_replace (' ','_',$_FILES['file']['name']);
-						$to_file = $this->fakebase. SEP . 'rental_agreement' . SEP . $values['r_agreement_id'] . SEP . $values['file_name'];
+						$to_file = "{$this->fakebase}/rental_agreement/{$values['r_agreement_id']}/{$values['file_name']}";
 
 						if(!$values['document_name_orig'] && $this->bo->vfs->file_exists(array(
 								'string' => $to_file,

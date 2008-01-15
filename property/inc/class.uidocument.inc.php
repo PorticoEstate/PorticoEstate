@@ -413,11 +413,11 @@
 
 			if($this->cat_id)
 			{
-				$directory = $this->fakebase. SEP . 'document' . SEP . $location['loc1'] . SEP . $entity['name'] . SEP . $category['name'] . SEP . $p_num;
+				$directory = $this->fakebase. '/' . 'document' . '/' . $location['loc1'] . '/' . $entity['name'] . '/' . $category['name'] . '/' . $p_num;
 			}
 			else
 			{
-				$directory = $this->fakebase. SEP . 'document' . SEP . $location['loc1'];
+				$directory = $this->fakebase. '/' . 'document' . '/' . $location['loc1'];
 			}
 
 			while (is_array($document_list) && list(,$document) = each($document_list))
@@ -618,11 +618,11 @@
 			{
 				$entity = $this->boadmin_entity->read_single($this->entity_id,false);
 				$category = $this->boadmin_entity->read_single_category($this->entity_id,$this->cat_id);
-				$file	= $this->fakebase. SEP . 'document' . SEP . $values['location_data']['loc1'] . SEP . $entity['name'] . SEP . $category['name'] . SEP . $p_num . SEP . $values['document_name'];
+				$file	= $this->fakebase. '/' . 'document' . '/' . $values['location_data']['loc1'] . '/' . $entity['name'] . '/' . $category['name'] . '/' . $p_num . '/' . $values['document_name'];
 			}
 			else
 			{
-				$file	= $this->fakebase. SEP . 'document' . SEP .$values['location_data']['loc1'] . SEP . $values['document_name'];
+				$file	= $this->fakebase. '/' . 'document' . '/' .$values['location_data']['loc1'] . '/' . $values['document_name'];
 			}
 
 			if($this->bo->vfs->file_exists(array(
@@ -759,11 +759,11 @@
 
 				if($values['extra']['p_num'])
 				{
-					$to_file = $this->fakebase. SEP . 'document' . SEP . $values['location']['loc1'] . SEP . $entity['name'] . SEP . $category['name'] . SEP . $values['extra']['p_num'] . SEP . $values['document_name'];
+					$to_file = $this->fakebase. '/' . 'document' . '/' . $values['location']['loc1'] . '/' . $entity['name'] . '/' . $category['name'] . '/' . $values['extra']['p_num'] . '/' . $values['document_name'];
 				}
 				else
 				{
-					$to_file = $this->fakebase. SEP . 'document' . SEP . $values['location']['loc1'] . SEP . $values['document_name'];
+					$to_file = $this->fakebase. '/' . 'document' . '/' . $values['location']['loc1'] . '/' . $values['document_name'];
 				}
 
 				if(!$values['document_name_orig'] && $this->bo->vfs->file_exists(array(

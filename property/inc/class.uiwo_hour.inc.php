@@ -788,37 +788,25 @@
 
 			if($to_email)
 			{
-				$this->create_html->add_file(array(PHPGW_SERVER_ROOT . SEP . 'property' . SEP . 'templates' . SEP . 'base' . SEP . 'wo_hour'));
-				$this->create_html->add_file(array(PHPGW_SERVER_ROOT . SEP . 'property' . SEP . 'templates' . SEP . 'base' . SEP . 'location_view'));
+				$this->create_html->add_file(array(PHPGW_SERVER_ROOT . '/' . 'property' . '/' . 'templates' . '/' . 'base' . '/' . 'wo_hour'));
+				$this->create_html->add_file(array(PHPGW_SERVER_ROOT . '/' . 'property' . '/' . 'templates' . '/' . 'base' . '/' . 'location_view'));
 
 				$this->create_html->set_var('phpgw',array('email_data' => $email_data));
 
 				$this->create_html->xsl_parse();
 				$this->create_html->xml_parse();
 
-				$minor = explode(".",phpversion());
+				$xml = new DOMDocument;
+				$xml->loadXML($this->create_html->xmldata);
 
-				if ($minor[0] == 5)
-				{
-					$xml = new DOMDocument;
-					$xml->loadXML($this->create_html->xmldata);
+				$xsl = new DOMDocument;
+				$xsl->loadXML($this->create_html->xsldata);
 
-					$xsl = new DOMDocument;
-					$xsl->loadXML($this->create_html->xsldata);
+				// Configure the transformer
+				$proc = new XSLTProcessor;
+				$proc->importStyleSheet($xsl); // attach the xsl rules
 
-					// Configure the transformer
-					$proc = new XSLTProcessor;
-					$proc->importStyleSheet($xsl); // attach the xsl rules
-
-					$html =  $proc->transformToXML($xml);
-				}
-				else
-				{
-					$xsltproc = xslt_create();
-					$arguments = array('/_xml' => $this->create_html->xmldata, '/_xsl' => $this->create_html->xsldata);
-					$html = xslt_process($xsltproc,'arg:/_xml','arg:/_xsl',NULL,$arguments);
-					xslt_free($xsltproc);
-				}
+				$html =  $proc->transformToXML($xml);
 
 //				print $html;
 

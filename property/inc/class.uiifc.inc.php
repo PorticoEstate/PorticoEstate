@@ -55,6 +55,7 @@
 		function uiifc()
 		{
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = True;
+			$GLOBALS['phpgw_info']['flags']['menu_selection'] = 'property::ifc';
 		//	$this->currentapp		= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->cats				= CreateObject('phpgwapi.categories');
 			$this->nextmatchs		= CreateObject('phpgwapi.nextmatchs');
@@ -273,6 +274,7 @@
 
 		function import()
 		{
+			$GLOBALS['phpgw_info']['flags']['menu_selection'] .= '::import';
 			$acl_location = '.ifc.import';
 			if(!$this->acl->check($acl_location,PHPGW_ACL_ADD))
 			{

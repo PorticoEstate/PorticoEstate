@@ -405,7 +405,7 @@
 			$this->vfs->override_acl = 1;
 
 			$ticket['files'] = $this->vfs->ls (array(
-			     'string' => $this->fakebase. SEP . 'fmticket' . SEP . $id,
+			     'string' => $this->fakebase. '/' . 'fmticket' . '/' . $id,
 			     'relatives' => array(RELATIVE_NONE)));
 
 			$this->vfs->override_acl = 0;
@@ -552,8 +552,8 @@
 			{
 				foreach($custom_functions as $entry)
 				{
-					if (is_file(PHPGW_APP_INC . SEP . 'custom' . SEP . $entry['file_name']) && $entry['active'])
-					include (PHPGW_APP_INC . SEP . 'custom' . SEP . $entry['file_name']);
+					if (is_file(PHPGW_APP_INC . '/' . 'custom' . '/' . $entry['file_name']) && $entry['active'])
+					include (PHPGW_APP_INC . '/' . 'custom' . '/' . $entry['file_name']);
 				}
 			}
 
@@ -806,46 +806,46 @@
 		function create_document_dir($id='')
 		{
 			if(!$this->vfs->file_exists(array(
-					'string' => $this->fakebase. SEP . 'fmticket',
+					'string' => $this->fakebase. '/' . 'fmticket',
 					'relatives' => Array(RELATIVE_NONE)
 				)))
 			{
 				$this->vfs->override_acl = 1;
 				if(!$this->vfs->mkdir (array(
-				     'string' => $this->fakebase. SEP . 'fmticket',
+				     'string' => $this->fakebase. '/' . 'fmticket',
 				     'relatives' => array(
 				          RELATIVE_NONE
 				     )
 				)))
 				{
-					$receipt['error'][]=array('msg'=>lang('failed to create directory') . ' :'. $this->fakebase. SEP . 'fmticket');
+					$receipt['error'][]=array('msg'=>lang('failed to create directory') . ' :'. $this->fakebase. '/' . 'fmticket');
 				}
 				else
 				{
-					$receipt['message'][]=array('msg'=>lang('directory created') . ' :'. $this->fakebase. SEP . 'fmticket');
+					$receipt['message'][]=array('msg'=>lang('directory created') . ' :'. $this->fakebase. '/' . 'fmticket');
 				}
 				$this->vfs->override_acl = 0;
 			}
 
 
 			if(!$this->vfs->file_exists(array(
-					'string' => $this->fakebase. SEP . 'fmticket' .  SEP . $id,
+					'string' => $this->fakebase. '/' . 'fmticket' .  '/' . $id,
 					'relatives' => Array(RELATIVE_NONE)
 				)))
 			{
 				$this->vfs->override_acl = 1;
 				if(!$this->vfs->mkdir (array(
-				     'string' => $this->fakebase. SEP . 'fmticket' .  SEP . $id,
+				     'string' => $this->fakebase. '/' . 'fmticket' .  '/' . $id,
 				     'relatives' => array(
 				          RELATIVE_NONE
 				     )
 				)))
 				{
-					$receipt['error'][]=array('msg'=>lang('failed to create directory') . ' :'. $this->fakebase. SEP  . 'fmticket' .  SEP . $id);
+					$receipt['error'][]=array('msg'=>lang('failed to create directory') . ' :'. $this->fakebase. '/'  . 'fmticket' .  '/' . $id);
 				}
 				else
 				{
-					$receipt['message'][]=array('msg'=>lang('directory created') . ' :'. $this->fakebase. SEP . 'fmticket' .  SEP . $id);
+					$receipt['message'][]=array('msg'=>lang('directory created') . ' :'. $this->fakebase. '/' . 'fmticket' .  '/' . $id);
 				}
 				$this->vfs->override_acl = 0;
 			}
@@ -858,7 +858,7 @@
 		{
 			for ($i=0;$i<count($values['delete_file']);$i++)
 			{
-				$file = $this->fakebase. SEP . 'fmticket' . SEP . $id . SEP . $values['delete_file'][$i];
+				$file = $this->fakebase. '/' . 'fmticket' . '/' . $id . '/' . $values['delete_file'][$i];
 
 				if($this->vfs->file_exists(array(
 					'string' => $file,
@@ -874,11 +874,11 @@
 					     )
 					)))
 					{
-						$receipt['error'][]=array('msg'=>lang('failed to delete file') . ' :'. $this->fakebase. SEP . 'fmticket' . SEP . $id . SEP .$values['delete_file'][$i]);
+						$receipt['error'][]=array('msg'=>lang('failed to delete file') . ' :'. $this->fakebase. '/' . 'fmticket' . '/' . $id . '/' .$values['delete_file'][$i]);
 					}
 					else
 					{
-						$receipt['message'][]=array('msg'=>lang('file deleted') . ' :'. $this->fakebase. SEP . 'fmticket' . SEP . $id . SEP . $values['delete_file'][$i]);
+						$receipt['message'][]=array('msg'=>lang('file deleted') . ' :'. $this->fakebase. '/' . 'fmticket' . '/' . $id . '/' . $values['delete_file'][$i]);
 					}
 					$this->vfs->override_acl = 0;
 				}

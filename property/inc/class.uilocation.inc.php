@@ -60,7 +60,7 @@
 		function property_uilocation()
 		{
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = True;
-			$GLOBALS['phpgw_info']['flags']['current_location'] = 'property::location';
+			$GLOBALS['phpgw_info']['flags']['menu_selection'] = 'property::location';
 			$this->nextmatchs			= CreateObject('phpgwapi.nextmatchs');
 			$this->account				= $GLOBALS['phpgw_info']['user']['account_id'];
 			$this->bo					= CreateObject('property.bolocation',True);
@@ -215,11 +215,11 @@
 
 			if ( $type_id && !$lookup_tenant )
 			{
-				$GLOBALS['phpgw_info']['flags']['current_location'] .= "::loc_$type_id";
+				$GLOBALS['phpgw_info']['flags']['menu_selection'] .= "::loc_$type_id";
 			}
 			else
 			{
-				$GLOBALS['phpgw_info']['flags']['current_location'] .= '::tenant';
+				$GLOBALS['phpgw_info']['flags']['menu_selection'] .= '::tenant';
 			}
 
 			$location_list = $this->bo->read(array('type_id'=>$type_id,'lookup_tenant'=>$lookup_tenant,'lookup'=>$lookup,'allrows'=>$this->allrows));
@@ -659,11 +659,11 @@
 
 			if ( $type_id && !$lookup_tenant )
 			{
-				$GLOBALS['phpgw_info']['flags']['current_location'] .= "::loc_$type_id";
+				$GLOBALS['phpgw_info']['flags']['menu_selection'] .= "::loc_$type_id";
 			}
 			else
 			{
-				$GLOBALS['phpgw_info']['flags']['current_location'] .= '::tenant';
+				$GLOBALS['phpgw_info']['flags']['menu_selection'] .= '::tenant';
 			}
 			
 			if($location_code)
@@ -1096,11 +1096,11 @@
 
 			if ( $type_id && !$lookup_tenant )
 			{
-				$GLOBALS['phpgw_info']['flags']['current_location'] .= "::loc_$type_id";
+				$GLOBALS['phpgw_info']['flags']['menu_selection'] .= "::loc_$type_id";
 			}
 			else
 			{
-				$GLOBALS['phpgw_info']['flags']['current_location'] .= '::tenant';
+				$GLOBALS['phpgw_info']['flags']['menu_selection'] .= '::tenant';
 			}
 
 			$confirm	= phpgw::get_var('confirm', 'bool', 'POST');
@@ -1164,11 +1164,11 @@
 
 			if ( $type_id && !$lookup_tenant )
 			{
-				$GLOBALS['phpgw_info']['flags']['current_location'] .= "::loc_$type_id";
+				$GLOBALS['phpgw_info']['flags']['menu_selection'] .= "::loc_$type_id";
 			}
 			else
 			{
-				$GLOBALS['phpgw_info']['flags']['current_location'] .= '::tenant';
+				$GLOBALS['phpgw_info']['flags']['menu_selection'] .= '::tenant';
 			}
 			
 			$GLOBALS['phpgw']->xslttpl->add_file(array('location','attributes_view'));
@@ -1446,6 +1446,7 @@
 
 		function update_cat()
 		{
+			$GLOBALS['phpgw_info']['flags']['menu_selection'] = 'admin::property::inactive_cats';
 			$confirm	= phpgw::get_var('confirm', 'bool', 'POST');
 
 			$link_data = array
@@ -1522,7 +1523,7 @@
 
 		function summary()
 		{
-			$GLOBALS['phpgw_info']['flags']['current_location'] .= '::summary';
+			$GLOBALS['phpgw_info']['flags']['menu_selection'] .= '::summary';
 			$GLOBALS['phpgw']->xslttpl->add_file(array('location'));
 
 			$GLOBALS['phpgw']->js->validate_file('overlib','overlib','property');

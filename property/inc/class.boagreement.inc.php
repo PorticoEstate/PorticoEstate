@@ -309,7 +309,7 @@
 					{
 						for ($i=0;$i<count($values['delete_file']);$i++)
 						{
-							$file = $this->fakebase. SEP . 'agreement' . SEP . $values['agreement_id'] . SEP . $values['delete_file'][$i];
+							$file = "{$this->fakebase}/agreement/{$values['agreement_id']}/{$values['delete_file'][$i]}";
 
 							if($this->vfs->file_exists(array(
 									'string' => $file,
@@ -325,11 +325,11 @@
 								     )
 								)))
 								{
-									$receipt['error'][]=array('msg'=>lang('failed to delete file') . ' :'. $this->fakebase. SEP . 'agreement'. SEP . $values['agreement_id'] . SEP .$values['delete_file'][$i]);
+									$receipt['error'][] = array('msg' => lang('failed to delete file: %1', $file));
 								}
 								else
 								{
-									$receipt['message'][]=array('msg'=>lang('file deleted') . ' :'. $this->fakebase. SEP . 'agreement'. SEP . $values['id'] . SEP . $values['delete_file'][$i]);
+									$receipt['message'][] = array('msg' => lang('file deleted: %1', $file));
 								}
 								$this->vfs->override_acl = 0;
 							}
@@ -411,25 +411,26 @@
 
 		function create_home_dir($receipt='')
 		{
+			$dir = "{$this->fakebase}/agreement";
 			if(!$this->vfs->file_exists(array(
-					'string' => $this->fakebase. SEP . 'agreement',
+					'string' => $dir,
 					'relatives' => Array(RELATIVE_NONE)
 				)))
 			{
 				$this->vfs->override_acl = 1;
 
 				if(!$this->vfs->mkdir (array(
-				     'string' => $this->fakebase. SEP . 'agreement',
+				     'string' => $dir,
 				     'relatives' => array(
 				          RELATIVE_NONE
 				     )
 				)))
 				{
-					$receipt['error'][]=array('msg'=>lang('failed to create directory') . ' :'. $this->fakebase. SEP . 'agreement');
+					$receipt['error'][] = array('msg' => lang('failed to create directory: %1', $dir));
 				}
 				else
 				{
-					$receipt['message'][]=array('msg'=>lang('directory created') . ' :'. $this->fakebase. SEP . 'agreement');
+					$receipt['message'][] = array('msg' => lang('directory created: %1', $dir));
 				}
 				$this->vfs->override_acl = 0;
 			}
@@ -439,25 +440,25 @@
 
 		function create_document_dir($id='')
 		{
-
+			$doc_id = "{$this->fakebase}/agreement/{$id}";
 			if(!$this->vfs->file_exists(array(
-					'string' => $this->fakebase. SEP . 'agreement' .  SEP . $id,
+					'string' => $doc_id,
 					'relatives' => Array(RELATIVE_NONE)
 				)))
 			{
 				$this->vfs->override_acl = 1;
 				if(!$this->vfs->mkdir (array(
-				     'string' => $this->fakebase. SEP . 'agreement' .  SEP . $id,
-				     'relatives' => array(
+					'string' => $doc_id,
+					'relatives' => array(
 				          RELATIVE_NONE
 				     )
 				)))
 				{
-					$receipt['error'][]=array('msg'=>lang('failed to create directory') . ' :'. $this->fakebase. SEP  . 'agreement' .  SEP . $id);
+					$receipt['error'][] = array('msg' => lang('failed to create directory: %1', $doc_id));
 				}
 				else
 				{
-					$receipt['message'][]=array('msg'=>lang('directory created') . ' :'. $this->fakebase. SEP . 'agreement' .  SEP . $id);
+					$receipt['message'][] = array('msg' => lang('directory created: %1', $doc_id));
 				}
 				$this->vfs->override_acl = 0;
 			}

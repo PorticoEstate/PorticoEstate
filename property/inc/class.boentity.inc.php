@@ -322,24 +322,24 @@
 		function create_home_dir($receipt='')
 		{
 			if(!$this->vfs->file_exists(array(
-					'string' => $this->fakebase. SEP . $this->category_dir,
+					'string' => $this->fakebase. '/' . $this->category_dir,
 					'relatives' => Array(RELATIVE_NONE)
 				)))
 			{
 				$this->vfs->override_acl = 1;
 
 				if(!$this->vfs->mkdir (array(
-				     'string' => $this->fakebase. SEP . $this->category_dir,
+				     'string' => $this->fakebase. '/' . $this->category_dir,
 				     'relatives' => array(
 				          RELATIVE_NONE
 				     )
 				)))
 				{
-					$receipt['error'][]=array('msg'=>lang('failed to create directory') . ' :'. $this->fakebase. SEP . $this->category_dir);
+					$receipt['error'][]=array('msg'=>lang('failed to create directory') . ' :'. $this->fakebase. '/' . $this->category_dir);
 				}
 				else
 				{
-					$receipt['message'][]=array('msg'=>lang('directory created') . ' :'. $this->fakebase. SEP . $this->category_dir);
+					$receipt['message'][]=array('msg'=>lang('directory created') . ' :'. $this->fakebase. '/' . $this->category_dir);
 				}
 				$this->vfs->override_acl = 0;
 			}
@@ -350,46 +350,46 @@
 		function create_document_dir($loc1='',$id='')
 		{
 			if(!$this->vfs->file_exists(array(
-					'string' => $this->fakebase. SEP . $this->category_dir .  SEP . $loc1,
+					'string' => $this->fakebase. '/' . $this->category_dir .  '/' . $loc1,
 					'relatives' => Array(RELATIVE_NONE)
 				)))
 			{
 				$this->vfs->override_acl = 1;
 				if(!$this->vfs->mkdir (array(
-				     'string' => $this->fakebase. SEP . $this->category_dir .  SEP . $loc1,
+				     'string' => $this->fakebase. '/' . $this->category_dir .  '/' . $loc1,
 				     'relatives' => array(
 				          RELATIVE_NONE
 				     )
 				)))
 				{
-					$receipt['error'][]=array('msg'=>lang('failed to create directory') . ' :'. $this->fakebase. SEP . $this->category_dir .  SEP . $loc1);
+					$receipt['error'][]=array('msg'=>lang('failed to create directory') . ' :'. $this->fakebase. '/' . $this->category_dir .  '/' . $loc1);
 				}
 				else
 				{
-					$receipt['message'][]=array('msg'=>lang('directory created') . ' :'. $this->fakebase. SEP . $this->category_dir .  SEP . $loc1);
+					$receipt['message'][]=array('msg'=>lang('directory created') . ' :'. $this->fakebase. '/' . $this->category_dir .  '/' . $loc1);
 				}
 				$this->vfs->override_acl = 0;
 			}
 
 
 			if(!$this->vfs->file_exists(array(
-					'string' => $this->fakebase. SEP . $this->category_dir .  SEP . $loc1 .  SEP . $id,
+					'string' => $this->fakebase. '/' . $this->category_dir .  '/' . $loc1 .  '/' . $id,
 					'relatives' => Array(RELATIVE_NONE)
 				)))
 			{
 				$this->vfs->override_acl = 1;
 				if(!$this->vfs->mkdir (array(
-				     'string' => $this->fakebase. SEP . $this->category_dir .  SEP . $loc1 .  SEP . $id,
+				     'string' => $this->fakebase. '/' . $this->category_dir .  '/' . $loc1 .  '/' . $id,
 				     'relatives' => array(
 				          RELATIVE_NONE
 				     )
 				)))
 				{
-					$receipt['error'][]=array('msg'=>lang('failed to create directory') . ' :'. $this->fakebase. SEP  . $this->category_dir  .  SEP . $loc1 .  SEP . $id);
+					$receipt['error'][]=array('msg'=>lang('failed to create directory') . ' :'. $this->fakebase. '/'  . $this->category_dir  .  '/' . $loc1 .  '/' . $id);
 				}
 				else
 				{
-					$receipt['message'][]=array('msg'=>lang('directory created') . ' :'. $this->fakebase. SEP . $this->category_dir .  SEP . $loc1 .  SEP . $id);
+					$receipt['message'][]=array('msg'=>lang('directory created') . ' :'. $this->fakebase. '/' . $this->category_dir .  '/' . $loc1 .  '/' . $id);
 				}
 				$this->vfs->override_acl = 0;
 			}
@@ -425,7 +425,7 @@
 				{
 					for ($i=0;$i<count($values['delete_file']);$i++)
 					{
-						$file = $this->fakebase. SEP . $this->category_dir . SEP . $location[0] . SEP . $values['id'] . SEP . $values['delete_file'][$i];
+						$file = $this->fakebase. '/' . $this->category_dir . '/' . $location[0] . '/' . $values['id'] . '/' . $values['delete_file'][$i];
 
 						if($this->vfs->file_exists(array(
 								'string' => $file,
@@ -441,11 +441,11 @@
 							     )
 							)))
 							{
-								$receipt['error'][]=array('msg'=>lang('failed to delete file') . ' :'. $this->fakebase. SEP . $this->category_dir . SEP . $location[0]. SEP . $values['id'] . SEP .$values['delete_file'][$i]);
+								$receipt['error'][]=array('msg'=>lang('failed to delete file') . ' :'. $this->fakebase. '/' . $this->category_dir . '/' . $location[0]. '/' . $values['id'] . '/' .$values['delete_file'][$i]);
 							}
 							else
 							{
-								$receipt['message'][]=array('msg'=>lang('file deleted') . ' :'. $this->fakebase. SEP . $this->category_dir . SEP . $location[0]. SEP . $values['id'] . SEP . $values['delete_file'][$i]);
+								$receipt['message'][]=array('msg'=>lang('file deleted') . ' :'. $this->fakebase. '/' . $this->category_dir . '/' . $location[0]. '/' . $values['id'] . '/' . $values['delete_file'][$i]);
 							}
 							$this->vfs->override_acl = 0;
 						}
@@ -464,8 +464,8 @@
 			{
 				foreach($custom_functions as $entry)
 				{
-					if (is_file(PHPGW_APP_INC . SEP . 'custom' . SEP . $entry['file_name']) && $entry['active'])
-					include (PHPGW_APP_INC . SEP . 'custom' . SEP . $entry['file_name']);
+					if (is_file(PHPGW_APP_INC . '/' . 'custom' . '/' . $entry['file_name']) && $entry['active'])
+					include (PHPGW_APP_INC . '/' . 'custom' . '/' . $entry['file_name']);
 				}
 			}
 			return $receipt;

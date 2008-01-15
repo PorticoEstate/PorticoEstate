@@ -271,7 +271,7 @@
 		
 		function export_as_excel($name,$descr,$filename, $sql)
 		{
-			$workbook	= CreateObject('phpgwapi.excel',$this->saveto . SEP . $filename . '.xls');
+			$workbook	= CreateObject('phpgwapi.excel', "{$this->saveto}/{$filename}.xls");
 
 			$worksheet1 =& $workbook->add_worksheet('First One');
 
@@ -302,7 +302,7 @@
 		function export_as_csv($name,$descr,$filename, $sql)
 		{
 
-			$fp = fopen($this->saveto . SEP . $filename . '.txt','wb');
+			$fp = fopen("{$this->saveto}/{$filename}.txt",'wb');
 			
 		    $descr[] = 'Dato';
 		    fputcsv($fp, $descr, ';');
@@ -351,7 +351,7 @@
 			}
 
 			$xml = var2xml('PHPGW',$xmldata);
-			$fp = fopen($this->saveto . SEP . $filename . '.xml','wb');
+			$fp = fopen("{$this->saveto}/{$filename}.xml",'wb');
 			fwrite($fp,$xml);
 			fclose($fp);
 		}
