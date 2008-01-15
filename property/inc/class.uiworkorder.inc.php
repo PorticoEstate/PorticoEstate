@@ -135,6 +135,7 @@
 			$uicols	= $this->bo->uicols;
 			$count_uicols_name=count($uicols['name']);
 
+			$content = array();
 			$j=0;
 			if (isSet($workorder_list) AND is_array($workorder_list))
 			{
