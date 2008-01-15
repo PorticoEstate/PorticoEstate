@@ -49,8 +49,8 @@
 		*/
 		public function get($mtype = null)
 		{
-			$menu = $GLOBALS['phpgw']->session->appsession('phpgwapi', 'menu');
-			//$menu = null;
+			//$menu = $GLOBALS['phpgw']->session->appsession('phpgwapi', 'menu');
+			$menu = null;
 			if ( !$menu )
 			{
 				$menu = self::load();
@@ -109,6 +109,16 @@
 					{
 						case 'navbar':
 							$menus[$mtype] = array_merge($menus[$mtype], $menu);
+							break;
+						case 'admin':
+							$app_text = $app == 'admin' ? lang('General') : lang($app);
+							$menus['navigation']['admin'][$app] = array
+							(
+								'text'	=> $app_text,
+								'url'	=> '#',
+								'image'	=> $raw_menu['navbar'][$app]['image'],
+								'children'	=> $menu
+							);
 							break;
 						default:
 							$menus[$mtype][$app] = $menu;
