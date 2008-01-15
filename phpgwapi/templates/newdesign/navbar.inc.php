@@ -29,9 +29,9 @@
 			$var['current_app_title'] = lang($GLOBALS['phpgw_info']['flags']['currentapp']);
 		}
 
-		if ( !isset($GLOBALS['phpgw_info']['flags']['current_location']) )
+		if ( !isset($GLOBALS['phpgw_info']['flags']['menu_selection']) )
 		{
-			$GLOBALS['phpgw_info']['flags']['current_location'] = '';
+			$GLOBALS['phpgw_info']['flags']['menu_selection'] = '';
 		}
 
 		$treemenu = <<<HTML
@@ -41,7 +41,7 @@ HTML;
 
 		prepare_navbar($navbar);
 		$navigation = execMethod('phpgwapi.menu.get', 'navigation');
-		$selection = explode('::', $GLOBALS['phpgw_info']['flags']['current_location']);
+		$selection = explode('::', $GLOBALS['phpgw_info']['flags']['menu_selection']);
 		$selected_app = array_shift($selection);
 
 		foreach($navbar as $app => $app_data)
@@ -196,5 +196,9 @@ HTML;
 	*/
 	function prepare_navbar(&$navbar)
 	{
+		if ( isset($navbar['admin']) )
+		{
+			$navbar['admin']['children'] = execMethod('phpgwapi.menu.get', 'admin');
+		}
 		uasort($navbar, 'sort_navbar');
 	}
