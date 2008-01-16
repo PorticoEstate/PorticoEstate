@@ -137,6 +137,7 @@
 		var $num_months;
 
 		var $save_owner;
+		var $return_to;
 
 		public function __construct($session = false)
 		{
@@ -504,6 +505,11 @@
 		{
 			$data = $GLOBALS['phpgw']->session->appsession('session_data','calendar');
 			print_debug('Read',_debug_array($data,False));
+			// no data is returned as an empty string
+			if ( !$data )
+			{
+				return;
+			}
 
 			$this->filter = $data['filter'];
 			$this->cat_id = $data['cat_id'];
