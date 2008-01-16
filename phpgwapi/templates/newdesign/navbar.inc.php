@@ -72,7 +72,7 @@ HTML;
 HTML;
 					if ( isset($navigation[$app]) )
 					{
-						$treemenu .= render_submenu("navbar_{$app}", $navigation[$app], $app == $selected_app, $selection);
+						$treemenu .= render_submenu($app, $navigation[$app], $app == $selected_app, $selection);
 					}
 
 					$treemenu .= <<<HTML
@@ -108,7 +108,9 @@ HTML;
 		{
 			$expanded = false;
 			$class = '';
-			if ( $level_selection === $key )
+
+			if ( $level_selection === $key 
+				&& preg_match("/^{$parent}::{$key}/", $GLOBALS['phpgw_info']['flags']['menu_selection']) )
 			{
 				$class = 'current ';
 				$expanded = true;
@@ -125,7 +127,7 @@ HTML;
 			}
 			$style = isset($item['image']) ? ' style="background-image: url(' . $GLOBALS['phpgw']->common->image($item['image'][0], $item['image'][1]) . ');"' : '';
 			$submenu .= <<<HTML
-					<li{$class} id="{$parent}::{$key}">
+					<li{$class} id="navbar_{$parent}::{$key}">
 						<a href="{$item['url']}"{$style}>{$item['text']}</a>
 
 HTML;
