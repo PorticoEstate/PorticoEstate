@@ -102,7 +102,13 @@
 			$this->allrows				= $this->bo->allrows;
 
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] = "property::entity_{$this->entity_id}";
+			if($this->cat_id > 0)
+			{
+				 $GLOBALS['phpgw_info']['flags']['menu_selection'] .= "::entity_{$this->entity_id}_{$this->cat_id}";
+			}	
 		}
+		
+		
 
 		function save_sessiondata()
 		{

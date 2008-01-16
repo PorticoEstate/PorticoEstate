@@ -232,6 +232,7 @@
 			}
 
 			$entity_id	= phpgw::get_var('entity_id', 'int');
+			$GLOBALS['phpgw_info']['flags']['menu_selection'] .= "::entity_{$entity_id}";
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array(
 								'admin_entity',
@@ -720,6 +721,9 @@
 
 			$entity_id	= $this->entity_id;
 			$cat_id	= $this->cat_id;
+
+			$GLOBALS['phpgw_info']['flags']['menu_selection'] .= "::entity_{$entity_id}::entity_{$entity_id}_{$cat_id}";
+
 			$id	= phpgw::get_var('id', 'int');
 			$resort	= phpgw::get_var('resort');
 
