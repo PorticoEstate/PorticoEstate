@@ -34,6 +34,8 @@
 		*/
 		var $loaded_from_shm;
 		
+		var $message_id_field = 'lower(message_id)'; // postgres is case sensitive.
+		
 		function translation($reset = false)
 		{
 			if ( !isset($GLOBALS['phpgw']->shm) || !is_object($GLOBALS['phpgw']->shm) )
@@ -65,6 +67,15 @@
 			elseif ( !isset($GLOBALS['lang']) || !is_array($GLOBALS['lang']) )
 			{
 				$GLOBALS['lang'] = array();
+			}
+			
+			switch ( $GLOBALS['phpgw']->db->Type )
+			{
+				case 'mysql':
+					$this->message_id_field = 'message_id';
+					break;
+				default:
+					//do nothing for now
 			}
 		}
 		
@@ -104,7 +115,7 @@
 				|| (!array_key_exists(strtolower(trim(substr($key,0,MAX_MESSAGE_ID_LENGTH))),$GLOBALS['lang']) && !$this->loaded_from_shm) ) //Using array_key_exists permits empty string ... Ugly but ... (Caeies)
 			{
  				$sql = "SELECT message_id,content FROM phpgw_lang WHERE lang = '".$userlang."' ".
-					"AND message_id = '".$GLOBALS['phpgw']->db->db_addslashes($key)."' AND (app_name = '".$GLOBALS['phpgw_info']['flags']['currentapp']."' OR app_name = 'common' or app_name = 'all')";
+					"AND $this->message_id_field = '".strtolower($GLOBALS['phpgw']->db->db_addslashes($key))."' AND (app_name = '".$GLOBALS['phpgw_info']['flags']['currentapp']."' OR app_name = 'common' or app_name = 'all')";
 			//		"AND message_id = '".$GLOBALS['phpgw']->db->db_addslashes($key)."' OR message_id = 'charset' AND (app_name = '".$GLOBALS['phpgw_info']['flags']['currentapp']."' OR app_name = 'common' or app_name = 'all')";
 
 				if (strcasecmp ($GLOBALS['phpgw_info']['flags']['currentapp'], 'common')>0)
