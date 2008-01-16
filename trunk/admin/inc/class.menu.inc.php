@@ -56,7 +56,7 @@
 			$menus['admin'] = array();
 			if (! $GLOBALS['phpgw']->acl->check('site_config_access', PHPGW_ACL_READ, 'admin'))
 			{
-				$menus['admin'][] = array
+				$menus['admin']['index'] = array
 				(
 					'text'	=> lang('Site Configuration'),
 					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.uiconfig.index', 'appname' => 'admin') )
@@ -65,16 +65,7 @@
 
 			if (! $GLOBALS['phpgw']->acl->check('account_access', PHPGW_ACL_READ, 'admin'))
 			{
-				$menus['admin'][] = array
-				(
-					'text'	=> lang('addressmasters'),
-					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.uiaclmanager.list_addressmasters', 'account_id' => $GLOBALS['phpgw_info']['user']['account_id']) )
-				);
-			}
-
-			if (! $GLOBALS['phpgw']->acl->check('account_access', PHPGW_ACL_READ, 'admin'))
-			{
-				$menus['admin'][] = array
+				$menus['admin']['users'] = array
 				(
 					'text'	=> lang('User Accounts'),
 					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.uiaccounts.list_users') )
@@ -83,7 +74,7 @@
 
 			if (! $GLOBALS['phpgw']->acl->check('group_access', PHPGW_ACL_READ, 'admin'))
 			{
-				$menus['admin'][] = array
+				$menus['admin']['groups'] = array
 				(
 					'text'	=> lang('User Groups'),
 					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.uiaccounts.list_groups') )
@@ -92,7 +83,7 @@
 
 			if (! $GLOBALS['phpgw']->acl->check('applications_access', PHPGW_ACL_READ, 'admin'))
 			{
-				$menus['admin'][] = array
+				$menus['admin']['apps'] = array
 				(
 					'text'	=> lang('Applications'),
 					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.uiapplications.get_list') )
@@ -101,16 +92,25 @@
 
 			if (! $GLOBALS['phpgw']->acl->check('global_categories_access', PHPGW_ACL_READ, 'admin'))
 			{
-				$menus['admin'][] = array
+				$menus['admin']['categories'] = array
 				(
 					'text'	=> lang('Global Categories'),
 					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.uicategories.index') )
 				);
 			}
 
+			if (! $GLOBALS['phpgw']->acl->check('account_access', PHPGW_ACL_READ, 'admin'))
+			{
+				$menus['admin']['addressmasters'] = array
+				(
+					'text'	=> lang('addressmasters'),
+					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.uiaclmanager.list_addressmasters', 'account_id' => $GLOBALS['phpgw_info']['user']['account_id']) )
+				);
+			}
+
 			if (! $GLOBALS['phpgw']->acl->check('custom_fields_access', PHPGW_ACL_READ, 'admin'))
 			{
-				$menus['admin'][] = array
+				$menus['admin']['list_functions'] = array
 				(
 					'text'	=> lang('custom functions'),
 					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.ui_custom.list_custom_function', 'appname' => 'tts') )
@@ -119,7 +119,7 @@
 
 			if (!$GLOBALS['phpgw']->acl->check('mainscreen_message_access', PHPGW_ACL_READ, 'admin') || !$GLOBALS['phpgw']->acl->check('mainscreen_message_access',2,'admin'))
 			{
-				$menus['admin'][] = array
+				$menus['admin']['mainscreen'] = array
 				(
 					'text'	=> lang('Change Main Screen Message'),
 					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.uimainscreen.index') )
@@ -128,7 +128,7 @@
 
 			if (! $GLOBALS['phpgw']->acl->check('current_sessions_access', PHPGW_ACL_READ, 'admin'))
 			{
-				$menus['admin'][] = array
+				$menus['admin']['sessions'] = array
 				(
 					'text'	=> lang('View Sessions'),
 					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.uicurrentsessions.list_sessions') )
@@ -137,7 +137,7 @@
 
 			if (! $GLOBALS['phpgw']->acl->check('access_log_access', PHPGW_ACL_READ, 'admin'))
 			{
-				$menus['admin'][] = array
+				$menus['admin']['access_log'] = array
 				(
 					'text'	=> lang('View Access Log'),
 					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.uiaccess_history.list_history') )
@@ -146,7 +146,7 @@
 
 			if (! $GLOBALS['phpgw']->acl->check('error_log_access', PHPGW_ACL_READ, 'admin'))
 			{
-				$menus['admin'][] = array
+				$menus['admin']['error_log'] = array
 				(
 					'text'	=> lang('View Error Log'),
 					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.uilog.list_log') )
@@ -155,7 +155,7 @@
 
 			if (! $GLOBALS['phpgw']->acl->check('error_log_access', PHPGW_ACL_READ, 'admin'))
 			{
-				$menus['admin'][] = array
+				$menus['admin']['log_levels'] = array
 				(
 					'text'	=> lang('Edit Log Levels'),
 					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.uiloglevels.edit_log_levels') )
@@ -164,7 +164,7 @@
 
 			if (! $GLOBALS['phpgw']->acl->check('applications_access', PHPGW_ACL_PRIVATE, 'admin'))
 			{
-				$menus['admin'][] = array
+				$menus['admin']['hooks'] = array
 				(
 					'text'	=> lang('Find and Register all Application Hooks'),
 					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.uiapplications.register_all_hooks') )
@@ -173,7 +173,7 @@
 
 			if (! $GLOBALS['phpgw']->acl->check('asyncservice_access', PHPGW_ACL_READ, 'admin'))
 			{
-				$menus['admin'][] = array
+				$menus['admin']['async'] = array
 				(
 					'text'	=> lang('Asynchronous timed services'),
 					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.uiasyncservice.index') )
@@ -182,10 +182,11 @@
 
 			if (! $GLOBALS['phpgw']->acl->check('info_access', PHPGW_ACL_READ, 'admin'))
 			{
-				$menus['admin'][] = array
+				$menus['admin']['phpinfo'] = array
 				(
 					'text'	=> lang('PHP Configuration'),
-					'url'	=> "javascript:openwindow('" . $GLOBALS['phpgw']->link('/admin/phpinfo.php') . "')"
+					// degrade gracefully hack
+					'url'	=> $GLOBALS['phpgw']->link('/admin/phpinfo.php') . '" onclick="window.open(\'' . $GLOBALS['phpgw']->link('/admin/phpinfo.php', array('noheader' => 1)) . '\'); return false;"',
 				);
 			}
 
@@ -221,12 +222,13 @@
 				$menus['toolbar'][] = array
 				(
 					'text'	=> lang('phpInfo'),
-					'url'	=> "javascript:openwindow('" . $GLOBALS['phpgw']->link('/admin/phpinfo.php') . "','700','600')",
+					// degrade gracefully hack
+					'url'	=> $GLOBALS['phpgw']->link('/admin/phpinfo.php') . '" onclick="window.open(\'' . $GLOBALS['phpgw']->link('/admin/phpinfo.php') . '\'); return false;"',
 					'image'	=> array('admin', 'php')
 				);
 			}
 
-			$menus['navigation'] = $menus['admin'];
+			//$menus['navigation'] = $menus['admin'];
 
 			return $menus;
 		}

@@ -11,9 +11,9 @@
 	\**************************************************************************/
 	/* $Id: class.uiaccounts.inc.php 18358 2007-11-27 04:43:37Z skwashd $ */
 
-	class uiaccounts
+	class admin_uiaccounts
 	{
-		var $public_functions = array
+		public $public_functions = array
 		(
 			'list_groups'	=> True,
 			'list_users'	=> True,
@@ -25,12 +25,13 @@
 			'group_manager'	=> True
 		);
 
-		var $bo;
-		var $nextmatchs;
+		private $bo;
+		private $nextmatchs;
 
-		function uiaccounts()
+		public function __construct()
 		{
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = True;
+			$GLOBALS['phpgw_info']['flags']['menu_selection'] = 'admin::admin';
 
 			$this->bo = createObject('admin.boaccounts');
 			$this->nextmatchs =createObject('phpgwapi.nextmatchs');
@@ -48,6 +49,8 @@
 
 		function list_groups()
 		{
+			$GLOBALS['phpgw_info']['flags']['menu_selection'] .= '::groups';
+			
 			if ( phpgw::get_var('done', 'bool', 'POST') || $GLOBALS['phpgw']->acl->check('group_access', PHPGW_ACL_READ,'admin'))
 			{
 				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'admin.uimainscreen.mainscreen'));
@@ -144,6 +147,8 @@
 
 		function list_users($param_cd = '')
 		{
+			$GLOBALS['phpgw_info']['flags']['menu_selection'] .= '::users';
+
 			if ( phpgw::get_var('done', 'bool', 'POST') 
 				|| $GLOBALS['phpgw']->acl->check('account_access',1,'admin') )
 			{
@@ -279,6 +284,8 @@
 
 		function edit_group()
 		{
+			$GLOBALS['phpgw_info']['flags']['menu_selection'] .= '::groups';
+
 			$account_apps	= array();
 			$account_id		= phpgw::get_var('account_id', 'int');
 			$error_list		= '';
@@ -483,6 +490,8 @@
 
 		function edit_user()
 		{
+			$GLOBALS['phpgw_info']['flags']['menu_selection'] .= '::users';
+
 			$cd                            = phpgw::get_var('cd', 'int', 'GET');
 			$account_id                    = phpgw::get_var('account_id', 'int');
 			$values                        = phpgw::get_var('values', 'string', 'POST');
@@ -587,7 +596,7 @@
 				$lang_homedir	= lang('home directory');
 				$lang_shell		= lang('login shell');
 				$homedirectory = '<input name="homedirectory" value="'
-					. ($account_id?$userData['homedirectory']:$GLOBALS['phpgw_info']['server']['ldap_account_home'].SEP.$account_lid)
+					. ($account_id ? $userData['homedirectory'] : "{$GLOBALS['phpgw_info']['server']['ldap_account_home']}/{$account_lid}")
 					. '">';
 				$loginshell = '<input name="loginshell" value="'
 					. ($account_id?$userData['loginshell']:$GLOBALS['phpgw_info']['server']['ldap_account_shell'])
@@ -769,6 +778,8 @@
 
 		function view_user()
 		{
+			$GLOBALS['phpgw_info']['flags']['menu_selection'] .= '::users';
+
 			$account_id = phpgw::get_var('account_id', 'int', 'GET');
 			if ( $GLOBALS['phpgw']->acl->check('account_access', 8, 'admin') || !$account_id )
 			{
@@ -860,6 +871,8 @@
 
 		function delete_group()
 		{
+			$GLOBALS['phpgw_info']['flags']['menu_selection'] .= '::groups';
+
 			$account_id = phpgw::get_var('account_id', 'int');
 
 			if ( phpgw::get_var('cancel', 'bool', 'POST') || $GLOBALS['phpgw']->acl->check('group_access',32,'admin'))
@@ -914,6 +927,8 @@
 
 		function delete_user()
 		{
+			$GLOBALS['phpgw_info']['flags']['menu_selection'] .= '::users';
+
 			if ( $GLOBALS['phpgw']->acl->check('account_access',32,'admin') 
 				|| $GLOBALS['phpgw_info']['user']['account_id'] == phpgw::get_var('account_id', 'int', 'GET') )
 			{
@@ -978,6 +993,8 @@
 
 		function group_manager($cd='',$account_id='')
 		{
+			$GLOBALS['phpgw_info']['flags']['menu_selection'] .= '::users';
+
 			if ($GLOBALS['phpgw']->acl->check('group_access',16,'admin'))
 			{
 				$this->list_groups();
@@ -1011,6 +1028,8 @@
 
 		function edit_group_managers($group_info,$_errors='')
 		{
+			$GLOBALS['phpgw_info']['flags']['menu_selection'] .= '::users';
+
 			if ($GLOBALS['phpgw']->acl->check('group_access',16,'admin'))
 			{
 				$this->list_groups();

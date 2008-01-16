@@ -11,25 +11,28 @@
 
 	/* $Id: class.uiaccess_history.inc.php 18358 2007-11-27 04:43:37Z skwashd $ */
 
-	class uiaccess_history
+	class admin_uiaccess_history
 	{
-		var $template;
-		var $public_functions = array(
+		private $template;
+		public $public_functions = array
+		(
 			'list_history' => True
 		);
 
-		function uiaccess_history()
+		public function __construct()
 		{
+			$GLOBALS['phpgw_info']['flags']['menu_selection'] = 'admin::admin::access_log';
+
 			if ($GLOBALS['phpgw']->acl->check('access_log_access',1,'admin'))
 			{
 				$GLOBALS['phpgw']->redirect_link('/index.php');
 			}
 			
-			$this->bo         = createobject('admin.boaccess_history');
-			$this->nextmatchs = createobject('phpgwapi.nextmatchs');
-			$this->template   = $GLOBALS['phpgw']->template;
-			$this->template->set_file(
-				Array(
+			$this->template   =& $GLOBALS['phpgw']->template;
+			$this->template->set_file
+			(
+				array
+				(
 					'accesslog' => 'accesslog.tpl'
 				)
 			);
@@ -38,24 +41,26 @@
 			$this->template->set_block('accesslog','row_empty');
 		}
 
-		function list_history()
+		public function list_history()
 		{
+			$bo         = createobject('admin.boaccess_history');
+			$nextmatches = createobject('phpgwapi.nextmatchs');
+
 			$account_id	= phpgw::get_var('account_id', 'int', 'REQUEST');
 			$start		= phpgw::get_var('start', 'int', 'POST', 0);
 			$sort		= phpgw::get_var('sort', 'int', 'POST', 0);
 			$order		= phpgw::get_var('order', 'int', 'POST', 0);
 			
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('Admin').' - '.lang('View access log');
-			$GLOBALS['phpgw']->common->phpgw_header();
-			echo parse_navbar();
+			$GLOBALS['phpgw']->common->phpgw_header(true);
 
-			$total_records = $this->bo->total($account_id);
+			$total_records = $bo->total($account_id);
 
 			$var = array
 			(
-				'nextmatchs_left'  => $this->nextmatchs->left('/index.php',$start,$total_records,'&menuaction=admin.uiaccess_history.list_history&account_id=' . $account_id),
-				'nextmatchs_right' => $this->nextmatchs->right('/index.php',$start,$total_records,'&menuaction=admin.uiaccess_history.list_history&account_id=' . $account_id),
-				'showing'          => $this->nextmatchs->show_hits($total_records,$start),
+				'nextmatchs_left'  => $nextmatches->left('/index.php',$start,$total_records,'&menuaction=admin.uiaccess_history.list_history&account_id=' . $account_id),
+				'nextmatchs_right' => $nextmatches->right('/index.php',$start,$total_records,'&menuaction=admin.uiaccess_history.list_history&account_id=' . $account_id),
+				'showing'          => $nextmatches->show_hits($total_records,$start),
 				'lang_loginid'     => lang('LoginID'),
 				'lang_ip'     => lang('IP'),
 				'lang_login'  => lang('Login'),
@@ -80,12 +85,12 @@
 
 			$this->template->set_var($var);
 
-			$records = $this->bo->list_history($account_id, $start, $order, $sort);
+			$records = $bo->list_history($account_id, $start, $order, $sort);
 			if ( is_array($records) )
 			{
 				foreach ( $records as &$record )
 				{
-					$this->nextmatchs->template_alternate_row_class($this->template);
+					$nextmatches->template_alternate_row_class($this->template);
 
 					$var = array
 					(
@@ -102,12 +107,12 @@
 
 			if (! $total_records && $account_id)
 			{
-				$this->nextmatchs->template_alternate_row_class($this->template);
+				$nextmatches->template_alternate_row_class($this->template);
 				$this->template->set_var('row_message',lang('No login history exists for this user'));
 				$this->template->fp('rows_access','row_empty', true);
 			}
 
-			$loggedout = $this->bo->return_logged_out($account_id);
+			$loggedout = $bo->return_logged_out($account_id);
 
 			if ($total_records)
 			{

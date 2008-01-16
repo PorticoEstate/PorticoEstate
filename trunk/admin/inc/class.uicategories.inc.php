@@ -12,7 +12,7 @@
 	/* $Id: class.uicategories.inc.php 18358 2007-11-27 04:43:37Z skwashd $ */
 	/* $Source$ */
 
-	class uicategories
+	class admin_uicategories
 	{
 		var $bo;
 		var $nextmatchs;
@@ -25,16 +25,19 @@
 		var $cat_id;
 		var $debug = False;
 
-		var $public_functions = array
+		public $public_functions = array
 		(
 			'index'  => True,
 			'edit'   => True,
 			'delete' => True
 		);
 
-		function uicategories()
+		public function __construct()
 		{
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = True;
+
+			$appname = phpgw::get_var('appname', 'string', 'REQUEST', 'admin');
+			$GLOBALS['phpgw_info']['flags']['menu_selection'] = "admin::$appname::categories";
 
 			$this->bo			= CreateObject('admin.bocategories');
 			$this->nextmatchs	= CreateObject('phpgwapi.nextmatchs');

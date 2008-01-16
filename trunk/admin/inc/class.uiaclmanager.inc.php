@@ -13,7 +13,7 @@
 	\**************************************************************************/
 	/* $Id: class.uiaclmanager.inc.php 18358 2007-11-27 04:43:37Z skwashd $ */
 
-	class uiaclmanager
+	class admin_uiaclmanager
 	{
 		var $template;
 		var $nextmatchs;
@@ -28,7 +28,7 @@
 			'java_script'			=> true
 		);
 
-		function uiaclmanager()
+		public function __construct()
 		{
 			$this->account_id	= phpgw::get_var('account_id', 'int', 'GET', $GLOBALS['phpgw_info']['user']['account_id']);
 
@@ -36,7 +36,7 @@
 			{
 				$GLOBALS['phpgw']->redirect_link('/index.php');
 			}
-			$this->template		= createobject('phpgwapi.Template',PHPGW_APP_TPL);
+			$this->template		=& $GLOBALS['phpgw']->template;
 			$this->nextmatchs	= CreateObject('phpgwapi.nextmatchs');
 			$this->boacl		= CreateObject('admin.boaclmanager');
 		}
@@ -44,6 +44,7 @@
 		function common_header()
 		{
 			$GLOBALS['phpgw']->common->phpgw_header();
+			$this->template->set_root(PHPGW_APP_TPL);
 		}
 
 		function list_apps()

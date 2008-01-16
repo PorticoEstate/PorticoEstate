@@ -16,7 +16,7 @@
 	 * @package property
 	 */
 
-	class ui_custom
+	class admin_ui_custom
 	{
 		var $grants;
 		var $start;
@@ -35,7 +35,7 @@
 			'edit_custom_function'	=> True
 		);
 
-		function ui_custom()
+		public function __construct()
 		{
 			$this->bo					= CreateObject('admin.bo_custom',True);
 
@@ -53,6 +53,8 @@
 			$this->account				= $GLOBALS['phpgw_info']['user']['account_id'];
 			$this->bolocation			= CreateObject('preferences.boadmin_acl');
 			$this->bolocation->acl_app 	= $this->appname;
+
+			$GLOBALS['phpgw_info']['flags']['menu_selection'] = "admin::{$this->appname}";
 		}
 
 		function save_sessiondata()
@@ -77,6 +79,8 @@
 			$location	= $this->location;
 			$id			= phpgw::get_var('id', 'int');
 			$resort		= phpgw::get_var('resort');
+
+			$GLOBALS['phpgw_info']['flags']['menu_selection'] .= '::list_atrribs';
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array(
 								'custom',
@@ -443,6 +447,8 @@
 
 		function list_custom_function()
 		{
+			$GLOBALS['phpgw_info']['flags']['menu_selection'] .= '::list_functions';
+
 			$appname	= $this->appname;
 			$location	= $this->location;
 			$id			= phpgw::get_var('id', 'int');

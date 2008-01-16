@@ -22,32 +22,34 @@
 
 	/* $Id: class.uiasyncservice.inc.php 18358 2007-11-27 04:43:37Z skwashd $ */
 
-	class uiasyncservice
+	class admin_uiasyncservice
 	{
-		var $public_functions = array(
-			'index' => True,
-		);
-		function uiasyncservice()
+		public $public_functions = array('index' => True);
+
+		public function __construct()
 		{
-			if (!is_object($GLOBALS['phpgw']->asyncservice))
+			if ( !isset($GLOBALS['phpgw']->asyncservice)
+				|| !is_object($GLOBALS['phpgw']->asyncservice) )
 			{
 				$GLOBALS['phpgw']->asyncservice = CreateObject('phpgwapi.asyncservice');
 			}
 		}
 
-		function index()
+		public function index()
 		{
 			if ($GLOBALS['phpgw']->acl->check('asyncservice_access',1,'admin'))
 			{
 				$GLOBALS['phpgw']->redirect_link('/index.php');
 			}
+
+			$GLOBALS['phpgw_info']['flags']['current_selection'] = 'admin::admin::async';
+
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('Admin').' - '.lang('Asynchronous timed services');
-			$GLOBALS['phpgw']->common->phpgw_header();
-			echo parse_navbar();
+			$GLOBALS['phpgw']->common->phpgw_header(true);
 
 			$async = clone($GLOBALS['phpgw']->asyncservice);	// use an own instance, as we might set debug=True
 
-			$async->debug = !!$_POST['debug'];
+			$async->debug = phpgw::get_var('debug', 'bool', 'POST');
 
 			$units = array
 			(
@@ -115,7 +117,8 @@
 			$lr_date = $last_run['end'] ? $GLOBALS['phpgw']->common->show_date($last_run['end']) : lang('never');
 			echo '<p><b>'.lang('Async services last executed').'</b>: '.$lr_date.' ('.$last_run['run_by'].")</p>\n<hr>\n";
 
-			if ( $asyncservice != $GLOBALS['phpgw_info']['server']['asyncservice'] )
+			if ( !isset($GLOBALS['phpgw_info']['server']['asyncservice'])
+				|| $asyncservice != $GLOBALS['phpgw_info']['server']['asyncservice'] )
 			{
 				$config = CreateObject('phpgwapi.config','phpgwapi');
 				$config->read_repository();
@@ -177,7 +180,7 @@
 			echo ' <td colspan="8"><input type="checkbox" name="debug" value="1"' . ($debug ? ' checked' : '')."> \n".
 				lang('Enable debug-messages')."</td>\n</tr></table>\n";
 
-			if ( $send ])
+			if ( $send )
 			{
 				$next = $async->next_run($times,True);
 
@@ -211,7 +214,7 @@
 			
 		}
 		
-		function test($to)
+		private function test($to)
 		{
 			if (!is_object($GLOBALS['phpgw']->send))
 			{
