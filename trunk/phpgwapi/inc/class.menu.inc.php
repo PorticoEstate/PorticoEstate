@@ -115,7 +115,7 @@
 							$menus['navigation']['admin'][$app] = array
 							(
 								'text'	=> $app_text,
-								'url'	=> '#',
+								'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.uiconfig.index', 'appname' => $app)),
 								'image'	=> $raw_menu['navbar'][$app]['image'],
 								'children'	=> $menu
 							);
