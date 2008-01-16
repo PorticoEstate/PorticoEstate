@@ -278,7 +278,7 @@
 
 			$custom_url = stripslashes($this->db->f('custom_url'));
 
-		//	PHPGW_SERVER_ROOT . SEP . 'sms' . SEP . 'bin';
+		//	PHPGW_SERVER_ROOT . '/sms/bin';
 		//	$custom_url = str_replace($feat_custom_path['bin'],'',$custom_url);
 
 			$content .= "

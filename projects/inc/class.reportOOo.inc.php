@@ -200,7 +200,7 @@
 
    			//$saveFilename = "TB_" . $this->accounts->id2name($account_id) . "_" . $sstring . "-" . $estring . ".sxw";
    			$saveFilename = $filename . ".sxw";
-				$source = stripslashes($GLOBALS['phpgw_info']['server']['temp_dir']).SEP.$saveFilename;
+				$source = stripslashes($GLOBALS['phpgw_info']['server']['temp_dir']). "/$saveFilename";
    			$this->doc->savefile($source);
   			$this->doc->clean();
 

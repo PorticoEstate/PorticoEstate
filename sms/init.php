@@ -17,6 +17,4 @@
 	$apps_config['multilogin']      = 1; // 0 for single session login; 1 for multi session login
 	$GLOBALS['phpgw_info']['sms_config']['common']['apps_config'] = $apps_config;
 
-	include_once($path_to_phpgroupware . SEP . 'sms' . SEP . 'inc' . SEP . 'config.php');
-
-?>
+	include_once($path_to_phpgroupware . '/sms/inc/config.php');

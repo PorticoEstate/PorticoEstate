@@ -94,7 +94,7 @@
             if (is_uploaded_file($_FILES['userfile']['tmp_name'])) 
 			{ 
                 $filename = $_FILES['userfile']['name'];
-                $filename_real = $GLOBALS['phpgw_info']['server']['temp_dir'].SEP.'phpgw_fax_'.$GLOBALS['phpgw']->accounts->data['account_lid'].'_'.$this->randomname(8).'_'.$filename;
+                $filename_real = "{$GLOBALS['phpgw_info']['server']['temp_dir']}/phpgw_fax_{$GLOBALS['phpgw']->accounts->data['account_lid']}_" . $this->randomname(8) . "_{$filename}";
 				
 				# avoid to add wrong files
 				if (filesize($_FILES['userfile']['tmp_name']) != 0)
@@ -276,8 +276,8 @@
 			   'filename_real'	=>	$filename_real,
 			   'fc_url'	=>	$file_chooser,
 			   'preview_url'	=>	$preview_url,
-			   'img_dn'	=>	$img_path.SEP.'down.png',
-			   'img_up'	=>	$img_path.SEP.'up.png',
+			   'img_dn'	=>	$img_path.'/down.png',
+			   'img_up'	=>	$img_path.'/up.png',
 			   'l_faxnumber'	=>	lang('faxnumber'),
 			   'l_recipient'	=>	lang('recipient'),
 			   'l_company'	=>	lang('company'),
@@ -503,10 +503,11 @@
                 $i = 0;
                 foreach ($ls as $cover_file)
 				{
-                    $tpl->set_var('cover_path', $cp.SEP.$cover_file);
+                    $tpl->set_var('cover_path', "{$cp}/{$cover_file}");
                     $tpl->set_var('cover_name', $cover_file);
 					
-                    if ($_POST['cover'] == $cp.SEP.$cover_file or ($_POST['cover'] == '' and $i == 0))
+                    if ($_POST['cover'] == "{$cp}/{$cover_file}"
+						|| ($_POST['cover'] == '' && $i == 0))
 					{
                         $i = 1;
                         $tpl->set_var('sel', 'selected');
@@ -549,7 +550,7 @@
                 $rand_name = $this->randomname(12);
                 $tmp_dir = $GLOBALS['phpgw_info']['server']['temp_dir'];
 				
-                $filename_real = $tmp_dir.SEP.'phpgw_fax_'.$user_login.'_'.$rand_name.'.txt';
+                $filename_real = "{$tmp_dir}/phpgw_fax_{$user_login}_{$rand_name}.txt";
                 
                 #ToDo: catch errors!
                 $fle = fopen($filename_real, 'w+');
@@ -960,12 +961,13 @@
             $i = 0;
             foreach ($ls as $cover_file)
 			{
-                $tpl->set_var('cover_path', $cp.SEP.$cover_file);
+                $tpl->set_var('cover_path', "{$cp}/{$cover_file}");
                 $tpl->set_var('cover_name', $cover_file);
-                if ($prefs['cover'] == $cp.SEP.$cover_file or (!$prefs['cover'] and $i == 0)) 
+                if ($prefs['cover'] == "{$cp}/{$cover_file}" 
+					|| (!$prefs['cover'] && $i == 0)) 
 				{
                     $i = 1;
-                    $prefs['cover'] = $cp.SEP.$cover_file;
+                    $prefs['cover'] = "{$cp}/{$cover_file}";
                     $tpl->set_var('sel', 'selected');
 				}
                 else 
@@ -984,7 +986,7 @@
 			
 			#ToDo: use the cover_preview func?
 			
-            $command = 'faxcover -C "'.$prefs['cover'].'" -f "'.$user_name.'" -n "'.$c_faxnum.'" -t "'.$recipient.'" -c "'.$comments.'" -r "'.$regarding.'" -x "'.$company.'" > '.$tmp_dir.SEP.$user_login.'_COVER.ps';
+            $command = "faxcover -C \"{$prefs['cover']}\" -f \"{$user_name}\" -n \"{$c_faxnum}\" -t \"{$recipient}\" -c \"{$comments}\" -r \"{$regarding}\" -x \"{$company}\" > {$tmp_dir}/{$user_login}_COVER.ps";
 			
 			exec ($command,$ou);
             
@@ -992,9 +994,9 @@
             #ToDo: check acl
             #Memo: original pics: 596x842 
 			
-            $command = 'convert -size 596x842 '.$tmp_dir.SEP.$user_login.'_COVER.ps  '.$tmp_dir.SEP.$user_login.'_COVER.jpg';
+            $command = "convert -size 596x842 {$tmp_dir}/{$user_login}_COVER.ps {$tmp_dir}/{$user_login}_COVER.jpg";
             exec ($command, $ou);
-			$tpl->set_var('img_src', $tmp_dir.SEP.$user_login.'_COVER.jpg');
+			$tpl->set_var('img_src', "{$tmp_dir}/{$user_login}_COVER.jpg");
 			
             $tpl->pparse('write_cover_footer', 'cover_footer');
 			
@@ -1088,7 +1090,7 @@
 
 			$tmp_dir = $GLOBALS['phpgw_info']['server']['temp_dir'];
 			
-			$command = 'faxcover -C "'.$cp.SEP.$cover_file.'" -f "'.$user_name.'" -n "'.$c_faxnum.'" -t "'.$recipient.'" -c "'.$comments.'" -r "'.$regarding.'" -x "'.$company.'" > '.$tmp_dir.SEP.$user_login.'_COVER.ps';
+			$command = "faxcover -C \"{$cp}/{$cover_file}\" -f \"{$user_name}\" -n \"{$c_faxnum}\" -t \"{$recipient}\" -c \"{$comments}\" -r \"{$regarding}\" -x \"{$company}\" > {$tmp_dir}/{$user_login}_COVER.ps";
 			#print $command;
 			exec ($command, $ou);
 			
@@ -1096,10 +1098,10 @@
 			#ToDO: check the rights over the files
 			#Memo: Original pic size: 596x842
 			
-			$command = 'convert -size 596x842 '.$tmp_dir.SEP.$user_login.'_COVER.ps  '.$tmp_dir.SEP.$user_login.'_COVER.jpg';
+			$command = "convert -size 596x842 {$tmp_dir}/{$user_login}_COVER.ps  {$tmp_dir}/{$user_login}_COVER.jpg";
 			exec ($command, $ou);
 			
-			$tpl->set_var('img_src', $tmp_dir.SEP.$user_login.'_COVER.jpg');
+			$tpl->set_var('img_src', "{$tmp_dir}/{$user_login}_COVER.jpg}");
 			$tpl->set_var('back_url',$back_url);
 			$tpl->set_var('l_goback',lang('goback'));
 			$tpl->pparse('write_form_header','form_header');

@@ -132,7 +132,7 @@
 			$terror[$appname]['version'] = $version[$appname];
 			$terror[$appname]['status'] = 'U';
 
-			$appdir  = PHPGW_SERVER_ROOT . SEP . $appname . SEP . 'setup' . SEP;
+			$appdir  = PHPGW_SERVER_ROOT . "/{$appname}/setup/";
 
 			// Drop newest tables
 			$terror[$appname]['tables'] = $GLOBALS['setup_info'][$appname]['tables'];

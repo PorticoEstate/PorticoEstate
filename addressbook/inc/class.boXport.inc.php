@@ -271,7 +271,7 @@
 				// Here, buffer becomes a string suitable for printing
 				$buffer = $contacts->export_end_file($buffer);
 
-				$tsvfilename = $GLOBALS['phpgw_info']['server']['temp_dir'] . SEP . $tsvfilename;
+				$tsvfilename = "{$GLOBALS['phpgw_info']['server']['temp_dir']}/{$tsvfilename}";
 
 			}
 			else // this is the openoffice section

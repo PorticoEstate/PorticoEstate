@@ -67,8 +67,8 @@
 		public function oo_convert($xml)
 		{
 			$xls = new DOMDocument;
-			$xls->load(PHPGW_SERVER_ROOT . SEP . 'manual' . SEP . 'templates' . SEP . 'base' . SEP . 'odt2html.xsl');
-		//	$xls->load(PHPGW_SERVER_ROOT . SEP . 'manual' . SEP . 'templates' . SEP . 'base' . SEP . 'odt2xhtml.xsl');
+			$xls->load(PHPGW_SERVER_ROOT . '/manual/templates/base/odt2html.xsl');
+		//	$xls->load(PHPGW_SERVER_ROOT . '/manual/templates/base/odt2xhtml.xsl');
 		//	$xls->load('xslt/export/xhtml/ooo2xhtml.xsl');
 		//	$xls->load('template.xsl');
 			$xslt = new XSLTProcessor;

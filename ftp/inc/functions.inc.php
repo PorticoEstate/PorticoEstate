@@ -17,13 +17,11 @@
 	foreach($_GET as $name => $value)
 	{
 		$$name = $value;
-		$HTTP_GET_VARS[$name] = $value;
 	}
 	
 	foreach($_POST as $name => $value)
 	{
 		$$name = $value;
-		$HTTP_POST_VARS[$name] = $value;
 	}
 	
 	function createLink($string,$params='')
@@ -176,7 +174,7 @@
 	function getMimeType($file)
 	{
 		$file=basename($file);
-		$mimefile = PHPGW_APP_ROOT . SEP . 'mime.types';
+		$mimefile = PHPGW_APP_ROOT . '/mime.types';
 		$fp=fopen($mimefile,"r");
 		$contents = explode("\n",fread ($fp, filesize($mimefile)));
 		fclose($fp);

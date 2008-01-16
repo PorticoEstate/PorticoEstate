@@ -317,7 +317,7 @@
 				'lang_help4'			=> lang('##COMMANDCODE## replaced by command code'),
 				'lang_help5'			=> lang('##COMMANDPARAM## replaced by command parameter passed to server from SMS'),
 				'lang_binary_path'		=> lang('SMS command binary path'),
-				'value_binary_path'		=> PHPGW_SERVER_ROOT . SEP . 'sms' . SEP . 'bin',
+				'value_binary_path'		=> PHPGW_SERVER_ROOT . '/sms/bin',
 
 				'lang_type'			=> lang('command type'),				
 				'type_list'			=> $this->bo->select_type_list($values['type']),

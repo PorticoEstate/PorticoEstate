@@ -19,7 +19,7 @@
 	$param 		= explode(' ' , $command_param);
 	$receipt ='';
 
-	include(PHPGW_SERVER_ROOT . SEP . 'sms' . SEP . 'bin'  . SEP .  'config_' . strtoupper(basename($command_code)));
+	include(PHPGW_SERVER_ROOT . '/sms/bin/config_' . strtoupper(basename($command_code)));
 	if(isset($filter) && $filter)
 	{
 		$sql = "SELECT id from fm_s_agreement_detail $filter";

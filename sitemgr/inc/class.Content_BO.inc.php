@@ -1,6 +1,6 @@
 <?php
 
-require_once(PHPGW_INCLUDE_ROOT . SEP . 'sitemgr' . SEP . 'inc' . SEP . 'class.module.inc.php');
+require_once(PHPGW_INCLUDE_ROOT . '/sitemgr/inc/class.module.inc.php');
 
 define('SITEMGR_STATE_DRAFT',0);
 define('SITEMGR_STATE_PREPUBLISH',1);
@@ -23,8 +23,7 @@ define('SITEMGR_VIEWABLE_ANONYMOUS',3);
 
 		function getContentAreas()
 		{
-			$templatefile =  $GLOBALS['Common_BO']->sites->current_site['site_dir'] .  SEP . 'templates' . 
-				SEP . $GLOBALS['Common_BO']->sites->current_site['themesel'] . SEP . 'main.tpl';
+			$templatefile =  "{$GLOBALS['Common_BO']->sites->current_site['site_dir']}/templates/{$GLOBALS['Common_BO']->sites->current_site['themesel']}/main.tpl";
 
 			if (file_exists($templatefile))
 			{

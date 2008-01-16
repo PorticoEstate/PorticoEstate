@@ -65,12 +65,12 @@ class module_galerie extends Module
 				'type' => "array",
 				'i18n' => True
 			);
-			while (file_exists($defaults['imagedirpath'] . SEP . $defaults['imagename'] . $i . '.' . $defaults['imagetype']))
+			while (file_exists("{$defaults['imagedirpath']}/{$defaults['imagename']}{$i}.{$defaults['imagetype']}"))
 			{
 				$this->arguments['subtext'][$i-1] = array(
 					'type' => 'textfield',
 					'label' => 'Subtext for image ' . $i . '<br /><img src="' . 
-						$defaults['imagedirurl'] . SEP . $defaults['imagename'] . $i . '.' . $defaults['imagetype'] . '" />',
+						"{$defaults['imagedirurl']}/{$defaults['imagename']}{$i}.{$defaults['imagetype']}\" />",
 					'i18n' => True
 				);
 				$i++;
@@ -100,22 +100,20 @@ class module_galerie extends Module
 			{
 				$this->block->arguments['filenumber']--;
 			}
-			if ($this->block->arguments['filenumber'] < 1 || !file_exists(
-					$this->block->arguments['imagedirpath'] . SEP . $this->block->arguments['imagename'] . 
-					$this->block->arguments['filenumber'] . '.' . $this->block->arguments['imagetype']
-				))
+			if ($this->block->arguments['filenumber'] < 1 
+				|| !file_exists("{$this->block->arguments['imagedirpath']}/{$this->block->arguments['imagename']}{$this->block->arguments['filenumber']}.{$this->block->arguments['imagetype']}"))
 			{
 				$this->block->arguments['filenumber'] = 1;
 			}
 			$prevlink = ($this->block->arguments['filenumber'] > 1) ? $this->build_post_element('prev') : '';
 			$nextlink = 
 				(file_exists(
-					$this->block->arguments['imagedirpath'] . SEP . $this->block->arguments['imagename'] . 
+					"{$this->block->arguments['imagedirpath']}/{$this->block->arguments['imagename']}" . 
 					($this->block->arguments['filenumber'] + 1) . '.' . $this->block->arguments['imagetype']
 				)) ?
 				$this->build_post_element('next') : 
 				'';
-			require_once(PHPGW_INCLUDE_ROOT . SEP . 'sitemgr' . SEP . 'inc' . SEP . 'class.browser_transform.inc.php');
+			require_once(PHPGW_INCLUDE_ROOT . '/sitemgr/inc/class.browser_transform.inc.php');
 			$this->add_transformer(new browser_transform($prevlink,$nextlink));
 		}
 	}
@@ -124,7 +122,7 @@ class module_galerie extends Module
 	
 	function get_content(&$arguments,$properties)
 	{
-		$content .= '<div align="center"><img  hspace="20" align="absmiddle" src="'. $arguments['imagedirurl'] . SEP . $arguments['imagename'] . $arguments['filenumber'] . '.' . $arguments['imagetype'] . '" /></div>';
+		$content .= '<div align="center"><img  hspace="20" align="absmiddle" src="'. "{$arguments['imagedirurl']}/{$arguments['imagename']}{$arguments['filenumber']}.{$arguments['imagetype']}\" /></div>";
 		$content .= '<div align="center" style="margin:5mm">' . $arguments['subtext'][$arguments['filenumber']-1] . '</div>';
 		return $content;
 	}

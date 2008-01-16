@@ -73,7 +73,7 @@
 			{
 				$this->output = array();
 			}
-			$GLOBALS['phpgw']->xslttpl->add_file($GLOBALS['phpgw']->common->get_tpl_dir('manual','base') . SEP . 'help');
+			$GLOBALS['phpgw']->xslttpl->add_file($GLOBALS['phpgw']->common->get_tpl_dir('manual','base') . '/help');
 		}
 
 		/*
@@ -109,8 +109,8 @@
 		{
 			if ($this->app_name)
 			{
-				$GLOBALS['phpgw']->xslttpl->add_file($GLOBALS['phpgw']->common->get_tpl_dir('manual','base') . SEP . 'help_data');
-		//		$GLOBALS['phpgw']->xslttpl->add_file($GLOBALS['phpgw']->common->get_tpl_dir($this->app_name,'base') . SEP . 'help_data');
+				$GLOBALS['phpgw']->xslttpl->add_file($GLOBALS['phpgw']->common->get_tpl_dir('manual','base') . '/help_data');
+		//		$GLOBALS['phpgw']->xslttpl->add_file($GLOBALS['phpgw']->common->get_tpl_dir($this->app_name,'base') . '/help_data');
 			}
 		}
 
