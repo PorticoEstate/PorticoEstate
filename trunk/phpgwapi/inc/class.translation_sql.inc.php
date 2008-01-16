@@ -34,7 +34,10 @@
 		*/
 		var $loaded_from_shm;
 		
-		var $message_id_field = 'lower(message_id)'; // postgres is case sensitive.
+		/**
+		* @var string $message_id_field - postgres is case sensitive while mysql is not.
+		*/
+		var $message_id_field = 'message_id';
 		
 		function translation($reset = false)
 		{
@@ -71,8 +74,8 @@
 			
 			switch ( $GLOBALS['phpgw']->db->Type )
 			{
-				case 'mysql':
-					$this->message_id_field = 'message_id';
+				case 'postgres':
+					$this->message_id_field = 'lower(message_id)';
 					break;
 				default:
 					//do nothing for now
