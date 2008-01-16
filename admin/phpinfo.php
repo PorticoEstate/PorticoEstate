@@ -12,12 +12,23 @@
 
 	$GLOBALS['phpgw_info']['flags'] = array
 	(
-		'nofooter'		=> true,
-		'noframework'	=> true,
-		'noheader'		=> true,
-		'nonavbar'		=> true,
-		'currentapp'	=> 'admin'
+		'currentapp'		=> 'admin',
+		'menu_selection'	=> 'admin::admin::phpinfo'
 	);
-	include('../header.inc.php');
+
+	if ( isset($_GET['noheader']) && $_GET['noheader'] )
+	{
+		$GLOBALS['phpgw_info']['flags'] = array
+		(
+			'nofooter'			=> true,
+			'noframework'		=> true,
+			'noheader'			=> true,
+			'nonavbar'			=> true,
+			'currentapp'		=> 'admin',
+			'menu_selection'	=> 'admin::admin::phpinfo'
+		);
+	}
+
+	include_once('../header.inc.php');
 	phpinfo();
 ?>

@@ -11,15 +11,16 @@
 
 	/* $Id: class.uiloglevels.inc.php 18358 2007-11-27 04:43:37Z skwashd $ */
 
-	class uiloglevels
+	class admin_uiloglevels
 	{
-		var $template;
-		var $select_template;
-		var $public_functions = array(
+		private $template;
+		private $select_template;
+		public $public_functions = array
+		(
 			'edit_log_levels' => True
 		);
 
-		function uiloglevels()
+		public function __construct()
 		{
 			
 			if ($GLOBALS['phpgw']->acl->check('error_log_access',1,'admin'))
@@ -27,20 +28,22 @@
 				$GLOBALS['phpgw']->redirect_link('/index.php');
 			}
 
+			$GLOBALS['phpgw_info']['flags']['menu_selection'] = 'admin::admin::log_levels';
+
 			$this->template   = $GLOBALS['phpgw']->template;
-			$this->template->set_file(
-				Array(
-					'loglevels' => 'loglevels.tpl',
-					'log_level_select' => 'log_level_select.tpl'
-				)
-			);
+			$this->template->set_file(array
+			(
+				'loglevels' => 'loglevels.tpl',
+				'log_level_select' => 'log_level_select.tpl'
+			));
+
   			// foo removes the module template.  I don't understand Templates enough to
   			// know why I needed it.  Trial and error.
 			$this->template->set_block('loglevels','module', 'foo'); 
 			$this->template->set_block('loglevels','module_add', 'foo'); 
 		}
 
-		function edit_log_levels()
+		public function edit_log_levels()
 		{
 			if ($GLOBALS['phpgw']->acl->check('error_log_access',1,'admin'))
 			{
@@ -96,7 +99,7 @@
 		}
 		
 		
-		function add_modules_list() 
+		private function add_modules_list() 
 		{
 			$apps_with_logging = $GLOBALS['phpgw_info']['server']['log_levels']['module'];
 			$sorted_apps = array();
@@ -160,7 +163,7 @@
 			
 		}
 		
-		function add_users_list() 
+		private function add_users_list() 
 		{
 			$add_options = '';
 			$tr_class = 'row_on';
@@ -215,7 +218,7 @@
 			}
 		}		
 		
-		function create_select_box($level_type, $level_key, $current_level)
+		private function create_select_box($level_type, $level_key, $current_level)
 		{
 			$select_name = $level_type . '_' . $level_key . '_select';
 
@@ -252,7 +255,7 @@
 			return $this->template->fp('select', 'log_level_select', True);	
 		}
 		
-		function update_level($level_type, $level_key, $new_level)
+		private function update_level($level_type, $level_key, $new_level)
 		{
 			if ( $new_level )
 			{

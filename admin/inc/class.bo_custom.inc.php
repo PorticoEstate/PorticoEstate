@@ -210,16 +210,21 @@
 		function select_custom_function($selected='', $appname)
 		{
 			$file_list = array();
-			$dir_handle = @opendir(PHPGW_SERVER_ROOT . SEP . $appname . SEP . 'inc' . SEP . 'custom');
-			$i=0; $myfilearray = '';
+			$dir = PHPGW_SERVER_ROOT . "{$appname}/inc/custom";
+			if ( !is_dir($dir) )
+			{
+				return $file_list;
+			}
+
+			$dir_handle = opendir($dir);
+			$myfilearray = '';
 			if ($dir_handle)
 			{
 				while ($file = readdir($dir_handle))
 				{
-					if ((substr($file, 0, 1) != '.') && is_file(PHPGW_SERVER_ROOT . SEP . $appname . SEP . 'inc' . SEP . 'custom' . SEP . $file) )
+					if ((substr($file, 0, 1) != '.') && is_file("{$dir}/{$file}") )
 					{
-						$myfilearray[$i] = $file;
-						$i++;
+						$myfilearray[] = $file;
 					}
 				}
 				closedir($dir_handle);

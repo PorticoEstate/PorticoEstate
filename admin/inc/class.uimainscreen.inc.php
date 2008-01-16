@@ -11,7 +11,7 @@
 	\**************************************************************************/
 	/* $Id: class.uimainscreen.inc.php 18358 2007-11-27 04:43:37Z skwashd $ */
 
-	class uimainscreen
+	class admin_uimainscreen
 	{
 		var $public_functions = array
 		(
@@ -19,14 +19,14 @@
 			'mainscreen'	=> True
 		);
 
-		function uimainscreen()
+		public function __construct()
 		{
 			$menuaction = phpgw::get_var('menuaction', 'location');
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = false; //$menuaction == 'admin.uimainscreen.mainscreen';
 			$GLOBALS['phpgw']->nextmatchs = CreateObject('phpgwapi.nextmatchs');
 		}
 
-		function mainscreen()
+		public function mainscreen()
 		{
 			$menu = execMethod('phpgwapi.menu.get', 'admin');
 			// this is any ugly hack cos the XSLT template engine sucks
@@ -51,19 +51,12 @@ HTML;
 			}
 			$GLOBALS['phpgw']->common->phpgw_header(true);
 			echo $html;
-			/*
-			function display_section($appname,$file,$file2='')
-			{
-				$GLOBALS['phpgw']->common->display_mainscreen($appname,$file2 ? $file2 : $file);
-			}
-
-			$GLOBALS['phpgw']->hooks->process('admin');
-			$GLOBALS['phpgw']->xslttpl->set_var('phpgw', array('list' => $GLOBALS['phpgw']->common->output));
-			*/
 		}
 
-		function index()
+		public function index()
 		{
+			$GLOBALS['phpgw_info']['flags']['menu_selection'] = 'admin::admin::mainscreen';
+
 			if ( phpgw::get_var('cancel', 'bool', 'POST') )
 			{
 				$GLOBALS['phpgw']->redirect_link('/admin/index.php');

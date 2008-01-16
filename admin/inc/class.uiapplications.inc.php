@@ -11,9 +11,9 @@
 
   /* $Id: class.uiapplications.inc.php 18358 2007-11-27 04:43:37Z skwashd $ */
 
-	class uiapplications
+	class admin_uiapplications
 	{
-		var $public_functions = array
+		public $public_functions = array
 		(
 			'get_list'	=> true,
 			'add'		=> true,
@@ -22,20 +22,20 @@
 			'register_all_hooks' => true
 		);
 
-		var $bo;
-		var $nextmatchs;
+		private $bo;
+		private $nextmatchs;
 
-		function uiapplications()
+		public function __construct()
 		{
+			$GLOBALS['phpgw_info']['flags']['menu_selection'] = 'admin::admin';
 			$this->bo =& CreateObject('admin.boapplications');
 			$this->nextmatchs =& CreateObject('phpgwapi.nextmatchs');
-			$GLOBALS['phpgw']->template->set_root(PHPGW_APP_TPL);
 		}
 
 		function get_list()
 		{
-			$GLOBALS['phpgw']->common->phpgw_header();
-			echo parse_navbar();
+			$GLOBALS['phpgw_info']['flags']['menu_selection'] .= '::apps';
+			$GLOBALS['phpgw']->common->phpgw_header(true);
 			
 			$GLOBALS['phpgw']->template->set_root(PHPGW_APP_TPL);
 			$GLOBALS['phpgw']->template->set_file(array('applications' => 'applications.tpl'));
@@ -154,7 +154,7 @@
 			$GLOBALS['phpgw']->template->pparse('out','list');
 		}
 
-		function display_row($label, $value)
+		private function display_row($label, $value)
 		{
 			$GLOBALS['phpgw']->template->set_var('tr_color',$this->nextmatchs->alternate_row_class());
 			$GLOBALS['phpgw']->template->set_var('label',$label);
@@ -162,8 +162,10 @@
 			$GLOBALS['phpgw']->template->parse('rows','row',True);
 		}
 
-		function add()
+		public function add()
 		{
+			$GLOBALS['phpgw_info']['flags']['menu_selection'] .= '::apps';
+
 			$GLOBALS['phpgw']->template->set_file(array('application' => 'application_form.tpl'));
 			$GLOBALS['phpgw']->template->set_block('application','form','form');
 			$GLOBALS['phpgw']->template->set_block('application','row','row');
@@ -244,8 +246,10 @@
 			$GLOBALS['phpgw']->template->pparse('out','form');
 		}
 
-		function edit()
+		public function edit()
 		{
+			$GLOBALS['phpgw_info']['flags']['menu_selection'] .= '::apps';
+
 			$app_name = phpgw::get_var('app_name', 'string', 'GET');
 
 			$GLOBALS['phpgw']->template->set_file(array('application' => 'application_form.tpl'));
@@ -324,8 +328,10 @@
 			$GLOBALS['phpgw']->template->pparse('out','form');
 		}
 
-		function delete()
+		public function delete()
 		{
+			$GLOBALS['phpgw_info']['flags']['menu_selection'] .= '::apps';
+
 			$app_name = phpgw::get_var('app_name', 'string', 'GET');
 
 			if (!$app_name)
@@ -343,8 +349,7 @@
 				exit;
 			}
 
-			$GLOBALS['phpgw']->common->phpgw_header();
-			echo parse_navbar();
+			$GLOBALS['phpgw']->common->phpgw_header(true);
 
 			$GLOBALS['phpgw']->template->set_var('messages',lang('Are you sure you want to delete this application ?'));
 			$GLOBALS['phpgw']->template->set_var('no','<a href="' . $GLOBALS['phpgw']->link('/index.php',array('menuaction'=>'admin.uiapplications.get_list')) . '">' . lang('No') . '</a>');
@@ -354,13 +359,21 @@
 		
 		function register_all_hooks()
 		{
+			$GLOBALS['phpgw_info']['flags']['menu_selection'] .= '::hooks';
 			if ( !isset($GLOBALS['phpgw']->hooks) && !is_object($GLOBALS['phpgw']->hooks) )
 			{
 				$GLOBALS['phpgw']->hooks = CreateObject('phpgwapi.hooks');
 			}
 			$GLOBALS['phpgw']->hooks->register_all_hooks();
-			
-			$GLOBALS['phpgw']->redirect_link('/admin/index.php');
+
+			$GLOBALS['phpgw']->common->phpgw_header(true);
+			$updated = lang('hooks updated');
+			$detail = lang('the new hooks should be available to all users');
+			echo <<<HTML
+				<h1>$updated</h1>
+				<p>$detail</p>
+
+HTML;
 		}
 	}
 ?>

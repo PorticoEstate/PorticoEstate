@@ -224,7 +224,7 @@
 			// FIXME this needs to be changed to work with all VFS backends
 			if($old_group->account_lid != $new_group->account_lid)
 			{
-				$basedir = $GLOBALS['phpgw_info']['server']['files_dir'] . SEP . 'groups' . SEP;
+				$basedir = "{$GLOBALS['phpgw_info']['server']['files_dir']}/groups/";
 				@rename($basedir . $old_group->account_lid, $basedir . $new_group->account_lid);
 			}			
 			return $id;
@@ -488,7 +488,7 @@
 
 			$GLOBALS['phpgw']->acl->delete_repository('%%','run',$account_id);
 
-			@rmdir($GLOBALS['phpgw_info']['server']['files_dir'].SEP.'groups'.SEP.$GLOBALS['phpgw']->accounts->id2name($account_id));
+			@rmdir("{$GLOBALS['phpgw_info']['server']['files_dir']}/groups/" . $GLOBALS['phpgw']->accounts->id2name($account_id));
 
 			$GLOBALS['phpgw']->accounts->delete($account_id);
 			$GLOBALS['phpgw']->db->unlock();
@@ -526,7 +526,7 @@
 			$GLOBALS['phpgw']->hooks->process('deleteaccount');
 
 			//<??[+_+]??
-			$basedir = $GLOBALS['phpgw_info']['server']['files_dir'] . SEP . 'users' . SEP;
+			$basedir = "{$GLOBALS['phpgw_info']['server']['files_dir']}/users/";
 			$lid = $GLOBALS['phpgw']->accounts->id2name($account_id);
 			if (! @rmdir($basedir . $lid))
 			{
