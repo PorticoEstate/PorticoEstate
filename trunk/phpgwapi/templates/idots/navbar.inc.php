@@ -118,22 +118,39 @@
 		{
 			$menu_title = lang('General Menu');
 
-			$file[] = $navbar['home'];
+			$menu['home'] = $navbar['home'];
 			if ( isset($navbar['preferences']))
 			{
-				$file[] = $navbar['preferences'];
+				$menu['preferences'] = $navbar['preferences'];
 			}
-			$file[] = array ('text' => lang('About'), 'url' => $GLOBALS['phpgw']->link('/about.php', array('app' => $GLOBALS['phpgw_info']['flags']['currentapp']) ));
-			$file[] = $navbar['logout'];
+			$menu['about'] = array ('text' => lang('About'), 'url' => $GLOBALS['phpgw']->link('/about.php', array('app' => $GLOBALS['phpgw_info']['flags']['currentapp']) ));
+			$menu['logout'] = $navbar['logout'];
 
-			display_sidebox('',$menu_title,$file);
+			display_sidebox($menu_title, $menu);
 		}
 
 		if ( isset($navigation[$GLOBALS['phpgw_info']['flags']['currentapp']]) )
 		{
-			//echo '<pre>' . print_r($navigation[$GLOBALS['phpgw_info']['flags']['currentapp']], true) . '</pre>';
-			$GLOBALS['phpgw']->template->set_var('menubar', process_menu($navigation[$GLOBALS['phpgw_info']['flags']['currentapp']]));
+			display_sidebox($navbar[$GLOBALS['phpgw_info']['flags']['currentapp']]['text'], $navigation[$GLOBALS['phpgw_info']['flags']['currentapp']]);
 		}
+
+		if ( $GLOBALS['phpgw_info']['flags']['currentapp'] != 'preferences' )
+		{
+			$prefs = execMethod('phpgwapi.menu.get', 'preferences');
+			if ( isset($prefs[$GLOBALS['phpgw_info']['flags']['currentapp']]) )
+			{
+				display_sidebox(lang('preferences'), $prefs[$GLOBALS['phpgw_info']['flags']['currentapp']]);
+			}
+		}
+
+		if ( $GLOBALS['phpgw_info']['flags']['currentapp'] != 'admin' )
+		{
+			if ( isset($navigation['admin'][$GLOBALS['phpgw_info']['flags']['currentapp']]['children']) )
+			{
+				display_sidebox(lang('administration'), $navigation['admin'][$GLOBALS['phpgw_info']['flags']['currentapp']]['children']);
+			}
+		}
+
 		$GLOBALS['phpgw']->template->pparse('out', 'navbar_footer');
 
 		// If the application has a header include, we now include it
@@ -151,6 +168,7 @@
 		$GLOBALS['phpgw']->hooks->process('after_navbar');
 	}
 
+	/*
 	function process_menu($menus, $level = null, $item = null)
 	{
 		$class = $level ? '' : ' class="first-of-type"';
@@ -187,6 +205,7 @@ HTML;
 HTML;
 		return $html;
 	}
+	*/
 
 
 	/**
@@ -196,37 +215,33 @@ HTML;
 	* @param string $menu_title
 	* @param string $file
 	*/
-	function display_sidebox($appname, $menu_title, $file)
+	function display_sidebox($menu_title, $menu)
 	{
+		$var['lang_title'] = $menu_title;
+		$GLOBALS['phpgw']->template->set_var($var);
+		$GLOBALS['phpgw']->template->pfp('out','extra_blocks_header');
 		
-		if(!$appname || ($appname == $GLOBALS['phpgw_info']['flags']['currentapp'] && is_array($file) ) )
+		foreach ( $menu as $key => $item )
 		{
-			$var['lang_title'] = $menu_title;
-			$GLOBALS['phpgw']->template->set_var($var);
-			$GLOBALS['phpgw']->template->pfp('out','extra_blocks_header');
-			
-			foreach ( $file as $item )
+			if ( !isset($item['url']) )
 			{
-				if ( !isset($item['url']) )
-				{
-					$item['url'] = '';
-				}
-
-				if ( !isset($item['image']) )
-				{
-					$item['image'] = '';
-				}
-
-				if ( !isset($item['this']) )
-				{
-					$item['this'] = '';
-				}
-
-				sidebox_menu_item($item['url'], $item['text'], $item['image'], $item['this']);
+				$item['url'] = '';
 			}
 
-			$GLOBALS['phpgw']->template->pfp('out','extra_blocks_footer');
+			if ( !isset($item['image']) )
+			{
+				$item['image'] = '';
+			}
+
+			if ( !isset($item['this']) )
+			{
+				$item['this'] = '';
+			}
+
+			sidebox_menu_item($item['url'], $item['text'], $item['image'], $item['this']);
 		}
+
+		$GLOBALS['phpgw']->template->pfp('out', 'extra_blocks_footer');
 	}
 
 
@@ -237,11 +252,11 @@ HTML;
 	* @param string $item_text
 	* @param string $item_image
 	*/
-	function sidebox_menu_item($item_link='', $item_text='', $item_image='', $current_item = '')
+	function sidebox_menu_item($item_link='', $item_text='', $item_image='', $highlight = '')
 	{
 		$GLOBALS['phpgw']->template->set_var(array
 		(
-			'lang_item'			=> $current_item ? "<b>$item_text</b>": $item_text,
+			'lang_item'			=> $highlight ? "<strong>$item_text</strong>": $item_text,
 			'item_link'			=> $item_link
 		));
 		$GLOBALS['phpgw']->template->pfp('out','extra_block_row');
