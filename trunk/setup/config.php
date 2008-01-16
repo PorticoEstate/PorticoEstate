@@ -57,13 +57,13 @@
 			{
 				$rest = substr($path,$len);
 
-				if (!strlen($rest) || $rest[0] == DIRECTORY_SEPARATOR)
+				if (!strlen($rest) || $rest[0] == '/')
 				{
-					return True;
+					return true;
 				}
 			}
 		}
-		return False;
+		return false;
 	}
 
 	$setup_tpl->set_file(array(

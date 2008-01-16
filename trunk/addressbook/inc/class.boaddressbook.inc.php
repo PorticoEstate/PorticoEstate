@@ -736,7 +736,7 @@
 			else
 			{
 				$uploadedfile = $_FILES['uploadedfile']['tmp_name'];
-				$uploaddir = $GLOBALS['phpgw_info']['server']['temp_dir'] . SEP;
+				$uploaddir = $GLOBALS['phpgw_info']['server']['temp_dir'] . '/';
 
 				srand((double)microtime()*1000000);
 				$random_number = rand(100000000,999999999);

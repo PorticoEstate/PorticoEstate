@@ -42,8 +42,6 @@
 		include(PHPGW_API_INC.'/class.common.inc.php');
 
 		$common = new phpgwapi_common;
-		// this is not used
-		//$sep = $common->filesystem_separator();
 	}
 	elseif ($included != 'from_login')
 	{

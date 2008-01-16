@@ -1892,7 +1892,7 @@
 				$num_main_cat ++;
 				$categories_str .= "<tr><td valign=top>";
 				if ($cat['icon'])
-						$categories_str .= "<img src='" . $GLOBALS['phpgw_info']['server']['webserver_url'] . SEP . 'phpgwapi' . SEP . 'images' . SEP . $cat['icon'] . "'>";
+						$categories_str .= "<img src=\"{$GLOBALS['phpgw_info']['server']['webserver_url']}/phpgwapi/images/cats/{$cat['icon']}\">";
 				$categories_str .= "</td><td><a href='".$this->link('menuaction=phpbrain.uikb.index&cat='.$cat['id'])
 										."'><b>".$cat['name']."</b></a><br><div style='padding-left:10px'>";
 				$has_subcats = False;

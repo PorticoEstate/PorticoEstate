@@ -457,7 +457,7 @@
 						);
 
 						$ls_array = $GLOBALS['phpgw']->vfs->ls(array(
-						'string' => $this->bofilemanager->fakebase.SEP.$GLOBALS['phpgw']->accounts->id2lid($group_array['account_id']),
+						'string' => "{$this->bofilemanager->fakebase}/" . $GLOBALS['phpgw']->accounts->id2lid($group_array['account_id']),
 						'relatives' => Array(RELATIVE_NONE),
 						'checksubdirs'	=> True,
 						'mime_type' => 'Directory'
@@ -483,7 +483,7 @@
 
 						if($dir['directory'] != '/')
 						{
-							$dir['directory'] .= SEP;
+							$dir['directory'] .= '/';
 						}
 
 						// No point in displaying the current directory, or a directory that doesn't exist
@@ -1311,7 +1311,7 @@
 				$this->bofilemanager->path = $file_array['path'];
 				$this->bofilemanager->file = $file_array['file'];
 			}
-			$file = $this->bofilemanager->path.SEP.$this->bofilemanager->file;
+			$file = "{$this->bofilemanager->path}/{$this->bofilemanager->file}";
 			if($GLOBALS['phpgw']->vfs->file_exists(array('string' => $file,'relatives' => Array(RELATIVE_NONE))))
 			{
 				$ls_array = $GLOBALS['phpgw']->vfs->ls(array('string' => $file,'relatives' => array (RELATIVE_ALL),'checksubdirs' => False,'nofiles' => True));

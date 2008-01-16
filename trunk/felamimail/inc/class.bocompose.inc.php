@@ -81,14 +81,11 @@
 					$_formData['type'] = $mime_type_default;
 				}
 				
-				$tmpFileName = $GLOBALS['phpgw_info']['server']['temp_dir'].
-					SEP.
-					$GLOBALS['phpgw_info']['user']['account_id'].
-					$this->composeID.
-					basename($_formData['file']);
+				$tmpFileName = "{$GLOBALS['phpgw_info']['server']['temp_dir']}/{$GLOBALS['phpgw_info']['user']['account_id']}/{$this->composeID}"
+					. basename($_formData['file']);
 				move_uploaded_file($_FILES['attachfile']['tmp_name'],$tmpFileName);
 				
-				$this->sessionData['attachments'][]=array
+				$this->sessionData['attachments'][] = array
 				(
 					'name'	=> $_formData['name'],
 					'type'	=> $_formData['type'],
@@ -187,12 +184,9 @@
 				{
 					$attachmentData = $bofelamimail->getAttachment($_uid, $partID);
 					#_debug_array($attachmentData);
-					
-					$tmpFileName = $GLOBALS['phpgw_info']['server']['temp_dir'].
-						SEP.
-						$GLOBALS['phpgw_info']['user']['account_id'].
-						$this->composeID.
-						basename($attachmentData['filename']);
+
+					$tmpFileName = "{$GLOBALS['phpgw_info']['server']['temp_dir']}/{$GLOBALS['phpgw_info']['user']['account_id']}/{$this->composeID}"
+						. basename($attachmentData['file']);	
 				
 					if ($handle = fopen($tmpFileName, 'w')) 
 					{

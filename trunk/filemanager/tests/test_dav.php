@@ -52,7 +52,7 @@ html_break (1);
 //html_table_begin();
 
 
-$sep = SEP;
+$sep = '/';
 $user = $phpgw->vfs->working_lid;
 $homedir = $phpgw->vfs->fakebase . "/" . $user;
 $realhomedir = preg_replace ("|/|", $sep, $homedir);

@@ -35,7 +35,6 @@
 		//Known Issue, if a phrase contains a ' or a " the parse will be thrown off. unless ' are nested inside " or vice versa
 		function parse_php_app($fd,$plist)
 		{
-	//		define('SEP',filesystem_separator());
 			$d=dir($fd);
 			while ($fn=$d->read())
 			{

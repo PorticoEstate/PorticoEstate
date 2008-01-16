@@ -17,24 +17,6 @@
 
   /* $Id: functions.inc.php 18358 2007-11-27 04:43:37Z skwashd $ */
 
-	// PHP5 compat fix
-	if (version_compare(phpversion(), '5.0') < 0)
-	{
-		eval('
-			function clone($obj)
-			{
-				if ( method_exists($obj, "__clone") )
-				{
-					$new_obj = $obj;
-					$new_obj->__clone();
-					return $new_obj;
-				}
-				return $obj;
-			}
-		');
-	}
-
-
 	/**
 	* phpGroupWare Information level "error"
 	*/
@@ -50,9 +32,9 @@
 		require_once('../header.inc.php');
 	}
 
-	if (!function_exists('html_entity_decode'))//html_entity_decode() is only available in PHP4.3+
+	if (!function_exists('filter_var')) // filter_var() is only available in PHP 5.2+
 	{
-		die('<h1>You appear to be using PHP ' . PHP_VERSION . " phpGroupWare requires 4.3.0 or later <br>\n"
+		die('<h1>You appear to be using PHP ' . PHP_VERSION . " phpGroupWare requires 5.2.0 or later <br>\n"
 			. 'Please contact your System Administrator</h1>');
 	}
 
@@ -63,14 +45,12 @@
 		define('PHPGW_INCLUDE_ROOT', realpath('..') );
 	}
 
-	define('SEP', DIRECTORY_SEPARATOR);
-
-	if ( is_dir(PHPGW_INCLUDE_ROOT . SEP . 'phpgwapi') && is_dir(PHPGW_INCLUDE_ROOT . SEP . 'phpgwapi' . SEP . 'inc')
-		&& is_file(PHPGW_INCLUDE_ROOT . SEP . 'phpgwapi' .  SEP . 'inc' . SEP . 'common_functions.inc.php') )
+	if ( is_dir(PHPGW_INCLUDE_ROOT . '/phpgwapi') && is_dir(PHPGW_INCLUDE_ROOT . '/phpgwapi/inc')
+		&& is_file(PHPGW_INCLUDE_ROOT . '/phpgwapi/inc/common_functions.inc.php') )
 	{
-		require_once(PHPGW_INCLUDE_ROOT . SEP . 'phpgwapi' .  SEP . 'inc' . SEP . 'common_functions.inc.php');
+		require_once(PHPGW_INCLUDE_ROOT . '/phpgwapi/inc/common_functions.inc.php');
 		$GLOBALS['phpgw'] = createObject('phpgwapi.phpgw');
-		require_once(PHPGW_INCLUDE_ROOT . SEP . 'phpgwapi' . SEP . 'inc' . SEP . 'log_functions.inc.php');
+		require_once(PHPGW_INCLUDE_ROOT . 'phpgwapi/inc/log_functions.inc.php');
 	}
 	else
 	{

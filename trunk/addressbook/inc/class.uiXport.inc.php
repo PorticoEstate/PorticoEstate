@@ -115,11 +115,11 @@
 
 				$this->template->set_file(array('import' => 'import.tpl'));
 
-				$dir_handle = opendir(PHPGW_APP_INC . SEP . 'import');
+				$dir_handle = opendir(PHPGW_APP_INC . '/import');
 				$i=0; $myfilearray = '';
 				while ($file = readdir($dir_handle))
 				{
-					if ((substr($file, 0, 1) != '.') && is_file(PHPGW_APP_INC . SEP . 'import' . SEP . $file) )
+					if ((substr($file, 0, 1) != '.') && is_file(PHPGW_APP_INC . "/import/{$file}") )
 					{
 						$myfilearray[$i] = $file;
 						$i++;
@@ -232,11 +232,11 @@
 				
 				$this->template->set_file(array('export' => 'export.tpl'));
 
-				$dir_handle = opendir(PHPGW_APP_INC. SEP . 'export');
+				$dir_handle = opendir(PHPGW_APP_INC. '/export');
 				$i=0; $myfilearray = '';
 				while ($file = readdir($dir_handle))
 				{
-					if ((substr($file, 0, 1) != '.') && is_file(PHPGW_APP_INC . SEP . 'export' . SEP . $file) )
+					if ((substr($file, 0, 1) != '.') && is_file(PHPGW_APP_INC . "/export/{$file}") )
 					{
 						$myfilearray[$i] = $file;
 						$i++;

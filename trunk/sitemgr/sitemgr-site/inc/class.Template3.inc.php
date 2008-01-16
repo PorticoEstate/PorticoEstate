@@ -1,6 +1,8 @@
 <?php
 
-require_once(PHPGW_INCLUDE_ROOT . SEP . 'sitemgr' . SEP . 'inc' . SEP . 'class.module.inc.php');
+//FIXME - this should really extend the api tpl class
+
+require_once(PHPGW_INCLUDE_ROOT . '/sitemgr/inc/class.module.inc.php');
 
 	class Template3
 	{
@@ -17,7 +19,7 @@ require_once(PHPGW_INCLUDE_ROOT . SEP . 'sitemgr' . SEP . 'inc' . SEP . 'class.m
 		function Template3($root)
 		{
 			$this->set_root($root);
-			$this->file = $this->root . SEP . 'main.tpl';
+			$this->file = $this->root . '/main.tpl';
 			$this->loadfile();
 			$this->bo = &$GLOBALS['Common_BO']->content;
 			$this->modulebo = &$GLOBALS['Common_BO']->modules;
@@ -84,7 +86,7 @@ require_once(PHPGW_INCLUDE_ROOT . SEP . 'sitemgr' . SEP . 'inc' . SEP . 'class.m
 		{
 			if ($GLOBALS['sitemgr_info']['mode'] == 'Draft')
 			{
-				$transformerfile = $this->root . SEP . 'draft_transform.inc.php';
+				$transformerfile = $this->root . '/draft_transform.inc.php';
 				if (file_exists($transformerfile))
 				{
 					include($transformerfile);
@@ -96,7 +98,7 @@ require_once(PHPGW_INCLUDE_ROOT . SEP . 'sitemgr' . SEP . 'inc' . SEP . 'class.m
 			}
 			elseif ($GLOBALS['sitemgr_info']['mode'] == 'Edit')
 			{
-				$transformerfile = $this->root . SEP . 'edit_transform.inc.php';
+				$transformerfile = $this->root . '/edit_transform.inc.php';
 				if (file_exists($transformerfile))
 				{
 					include($transformerfile);
@@ -143,7 +145,7 @@ require_once(PHPGW_INCLUDE_ROOT . SEP . 'sitemgr' . SEP . 'inc' . SEP . 'class.m
 
 			$transformername = $areaname . '_bt';
 
-			$transformerfile = $this->root . SEP . $transformername . '.inc.php';
+			$transformerfile = "{$this->root}/{$transformername}.inc.php";
 			if (file_exists($transformerfile))
 			{
 				include($transformerfile);
@@ -153,7 +155,7 @@ require_once(PHPGW_INCLUDE_ROOT . SEP . 'sitemgr' . SEP . 'inc' . SEP . 'class.m
 				}
 			}
 			//compatibility with former sideblocks template
-			elseif (($areaname == "left" || $areaname == "right") && file_exists($this->root . SEP . 'sideblock.tpl'))
+			elseif (($areaname == "left" || $areaname == "right") && file_exists("{$this->root}/sideblock.tpl"))
 			{
 				$t = Createobject('phpgwapi.Template');
 				$t->set_root($this->root);
