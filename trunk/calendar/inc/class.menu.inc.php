@@ -116,22 +116,22 @@
 			{
 				$menus['admin'] = array
 				(
-					array
+					'admin'	=> array
 					(
 						'text'	=> lang('Site Configuration'),
 						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'	=> 'admin.uiconfig.index', 'appname'	=> 'calendar') )
 					),
-					array
+					'custom'	=> array
 					(
 						'text'	=> lang('Custom fields and sorting'),
 						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'	=> 'calendar.uicustom_fields.index') )
 					),
-					array
+					'holiday'	=> array
 					(
 						'text'	=> lang('Calendar Holiday Management'),
 						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'	=> 'calendar.uiholiday.admin') )
 					),
-					array
+					'categories'	=> array
 					(
 						'text'	=> lang('Global Categories'),
 						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'	=> 'admin.uicategories.index', 'appname'	=> 'calendar') )
@@ -143,17 +143,17 @@
 			{
 				$menus['preferences'] = array
 				(
-					array
+					'preferences'	=> array
 					(
 						'text'	=> lang('Preferences'),
 						'url'	=> $GLOBALS['phpgw']->link('/preferences/preferences.php', array('appname'	=> 'calendar'))
 					),
-					array
+					'acls'	=> array
 					(
 						'text'	=> lang('Grant Access'),
 						'url'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'	=> 'preferences.uiaclprefs.index', 'acl_app'	=> 'calendar') )
 					),
-					array
+					'categories'	=> array
 					(
 						'text'	=> lang('Edit Categories'),
 						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'	=> 'preferences.uicategories.index', 'cats_app'	=> 'calendar', 'cats_level'	=> 1, 'global_cats'	=> true))
