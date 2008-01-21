@@ -113,7 +113,7 @@ div.border-layout div.split-bar div.split-bar-handle
 
 div.border-layout div.split-bar div.split-bar-handle:hover
 {
-	background: orange url(../images/ofm-split-bar-bg.png) center top repeat-y;
+	background: #b3d4ff url(../images/ofm-split-bar-bg.png) center top repeat-y;
 }
 
 div.border-layout div.split-bar div.split-bar-handle div, div.border-layout div.split-bar div.split-bar-handle div
@@ -271,55 +271,43 @@ div.treeview
 	padding: 0.2em;
 }
 
-#navbar ul.expanded
+#navbar ul
 {
-	display: block;
+	margin-left: 20px;
 }
 
-#navbar ul.collapsed
+#navbar li.collapsed ul
 {
 	display: none;
 }
-
-#navbar li
-{
-	background-color: transparent;
-	background-position: middle left;
-	background-repeat: no-repeat;
-	margin: 0;
-	padding: 0.2em 0 0.2em 16px;
-}
-
-#navbar li.expanded
-{
-	background-image: url(../images/expanded.png);
-}
-
-#navbar li.collapsed
-{
-	background-image: url(../images/collapsed.png);
-}
-
-#navbar a
-{
-	background-color: transparent;
-	background-position: top left;
-	background-repeat: no-repeat;
-	color: #000;
-	padding-left: 18px;
+#navbar a {
+	color: #333;
+	display: block;
+	padding: 0.2em 0em;
 	text-decoration: none;
 }
-
-#navbar li a
+#navbar ul li a.current span
 {
-	display: block;
+	background: lightblue;
+	padding: 0.2em;
+	color: #000;
 }
 
-
-#navbar li.current > a
+#navbar img
 {
-	display: block;
-	font-weight: bold;
+
+	vertical-align: -20%;
+}
+
+#navbar img.collapsed
+{
+	background: url(../images/collapsed.png) no-repeat center center;
+}
+
+#navbar img.expanded
+{
+
+	background: url(../images/expanded.png) no-repeat center center;
 }
 
 #theme-gray
