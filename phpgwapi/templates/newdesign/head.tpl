@@ -26,58 +26,11 @@
 		<script type="text/javascript">
 		<!--
 			var border_layout_config = {border_layout_config};
-			function expandCollapse(e)
-			{
-				if (!e)
-				{
-					var e = window.event;
-				};
-
-				var elm = e.target ? e.target : e.srcElement;
-				if (elm.nodeType == 3)
-				{
-					elm = elm.parentNode;
-				}
-
-				var child;
-				if ( elm.className.match(/expanded/) )
-				{
-					elm.className = elm.className.replace(/expanded/, 'collapsed');
-					child = elm.getElementsByTagName('ul').item(0);
-					child.className = child.className.replace(/expanded/, 'collapsed');
-				}
-				else if ( elm.className.match(/collapsed/) )
-				{
-					elm.className = elm.className.replace(/collapsed/, 'expanded');
-					child = elm.getElementsByTagName('ul').item(0);
-					child.className = child.className.replace(/collapsed/, 'expanded');
-				}
-
-				e.cancelBubble = true;
-				if (e.stopPropagation)
-				{
-					e.stopPropagation();
-				};
-			};
-
-			function addNewdesignListeners()
-			{
-				var elms = document.getElementById('navbar').getElementsByTagName('li');
-				var cntElms = elms.length;
-				for ( var i = 0; i < cntElms; ++i )
-				{
-					if ( elms[i].className.match(/expanded|collapsed/) )
-					{
-						YAHOO.util.Event.addListener(elms[i], 'click', expandCollapse);
-					}
-				}
-			};
-
-			YAHOO.util.Event.addListener(window, 'load', addNewdesignListeners);
 		//-->
 		</script>
 
 		<script type="text/javascript" src="{webserver_url}/phpgwapi/templates/newdesign/js/border-layout.js"></script>
+		<script type="text/javascript" src="{webserver_url}/phpgwapi/templates/newdesign/js/navbar.js"></script>
 		<script type="text/javascript" src="{webserver_url}/phpgwapi/js/json/json.js"></script>
 	</head>
 	<body class="yui-skin-sam">

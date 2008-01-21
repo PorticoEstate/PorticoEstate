@@ -1,6 +1,7 @@
 <?php
 	function parse_navbar($force = False)
 	{
+		$flags = &$GLOBALS['phpgw_info']['flags'];
 		$navbar = execMethod('phpgwapi.menu.get', 'navbar');
 		$var = array
 		(
@@ -20,29 +21,20 @@
 		$GLOBALS['phpgw']->template->set_root(PHPGW_TEMPLATE_DIR);
 		$GLOBALS['phpgw']->template->set_file('navbar', 'navbar.tpl');
 
-		if (isset($GLOBALS['phpgw_info']['flags']['app_header']))
-		{
-			$var['current_app_title'] = $GLOBALS['phpgw_info']['flags']['app_header'];
-		}
-		else
-		{
-			$var['current_app_title'] = lang($GLOBALS['phpgw_info']['flags']['currentapp']);
-		}
+		$var['current_app_title'] = isset($flags['app_header']) ? $flags['app_header'] : lang($GLOBALS['phpgw_info']['flags']['currentapp']);
 
-		if ( !isset($GLOBALS['phpgw_info']['flags']['menu_selection']) )
+		if ( !isset($flags['menu_selection']) )
 		{
-			$GLOBALS['phpgw_info']['flags']['menu_selection'] = '';
+			$flags['menu_selection'] = '';
 		}
-
-		$treemenu = <<<HTML
-		<ul id="navbar" class="expanded">
-
-HTML;
 
 		prepare_navbar($navbar);
 		$navigation = execMethod('phpgwapi.menu.get', 'navigation');
-		$selection = explode('::', $GLOBALS['phpgw_info']['flags']['menu_selection']);
+		$selection = explode('::', $flags['menu_selection']);
 		$selected_app = array_shift($selection);
+		$blank_image = $GLOBALS['phpgw']->common->find_image('phpgwapi', 'blank.png');
+
+		$treemenu = '<ul id="navbar" class="expanded">';
 
 		foreach($navbar as $app => $app_data)
 		{
@@ -51,42 +43,26 @@ HTML;
 				case in_array($app, array('logout', 'about', 'preferences')):
 					continue;
 					break;
+				case isset($navigation[$app]) && count($navigation[$app]):
+					$class = ($app == $selected_app) ? 'expanded' : 'collapsed';
+					$submenu = render_submenu($app, $navigation[$app], $selection);
 				default:
-					$class = '';
-					if ( isset($navigation[$app]) && count($navigation[$app]) )
-					{
-						if ( $app == $selected_app )
-						{
-							$class = ' class="current expanded"';
-						}
-						else
-						{
-							$class = ' class="collapsed"';
-						}
-					}
-					$img = ' style="background-image: url(' . $GLOBALS['phpgw']->common->image($app_data['image'][0], $app_data['image'][1]) . ');"';
-					$treemenu .= <<<HTML
-			<li{$class} id="navbar_{$app}">
-				<a href="{$app_data['url']}"{$img}>{$app_data['text']}</a>
+					$class = isset( $class ) ? $class : '';
+					$icon  = $GLOBALS['phpgw']->common->image($app_data['image'][0], $app_data['image'][1]);
 
-HTML;
-					if ( isset($navigation[$app]) )
-					{
-						$treemenu .= render_submenu($app, $navigation[$app], $app == $selected_app, $selection);
-					}
-
-					$treemenu .= <<<HTML
-			</li>
-
-HTML;
+					$treemenu .= "<li class=\"{$class}\">";
+					$treemenu .= "	<a href=\"{$app_data['url']}\">";
+					$treemenu .= "		<img src=\"{$blank_image}\" class=\"{$class}\" />";
+					$treemenu .= "		<img src=\"{$icon}\" /> ";
+					$treemenu .= "		{$app_data['text']}";
+					$treemenu .= "	</a>";
+					$treemenu .= isset($submenu) ? $submenu : '';
+					$treemenu .= "</li>";
 					break;
 			}
 		}
 
-		$treemenu .= <<<HTML
-		</ul>
-
-HTML;
+		$treemenu .= '</ul>';
 
 		$var['treemenu'] = $treemenu;
 
@@ -96,54 +72,49 @@ HTML;
 		register_shutdown_function('parse_footer_end');
 	}
 
-	function render_submenu($parent, $menu, $expanded, $selection)
+	function render_submenu($parent, $menu, $selection)
 	{
-		$class = $expanded ? ' class="expanded"' : ' class="collapsed"';
-		$submenu = <<<HTML
-				<ul{$class}>
-
-HTML;
+		$blank_image = $GLOBALS['phpgw']->common->find_image('phpgwapi', 'blank.png');
 		$level_selection = array_shift($selection);
+
+		$submenu = '<ul>';
 		foreach ( $menu as $key => $item )
 		{
-			$expanded = false;
-			$class = '';
-
-			if ( $level_selection === $key 
-				&& preg_match("/^{$parent}::{$key}/", $GLOBALS['phpgw_info']['flags']['menu_selection']) )
+			$expanded = '';
+			$current = '';
+			if( $GLOBALS['phpgw_info']['flags']['menu_selection'] == "{$parent}::{$key}" )
 			{
-				$class = 'current ';
-				$expanded = true;
+				$current = "current";
 			}
 
-			//echo "level_selection: $level_selection, key: $key, class: $class<br>";
-			if ( isset($item['children']) && count($item['children']) )
+			if( isset($item['children']) && count($item['children']) )
 			{
-				$class = $expanded ? " class=\"{$class}expanded\"" : " class=\"{$class}collapsed\"";
-			}
-			else if ( $class )
-			{
-				$class = " class=\"{$class}\"";
-			}
-			$style = isset($item['image']) ? ' style="background-image: url(' . $GLOBALS['phpgw']->common->image($item['image'][0], $item['image'][1]) . ');"' : '';
-			$submenu .= <<<HTML
-					<li{$class} id="navbar_{$parent}::{$key}">
-						<a href="{$item['url']}"{$style}>{$item['text']}</a>
+				if ( $level_selection === $key && preg_match("/^{$parent}::{$key}/", $GLOBALS['phpgw_info']['flags']['menu_selection']) )
+				{
 
-HTML;
-			if ( isset($item['children']) && count($item['children']) )
-			{
-				$submenu .= render_submenu("{$parent}::{$key}", $item['children'], $expanded, $selection);
-			}
-			$submenu .= <<<HTML
-					</li>
+					$expanded = 'expanded';
+				}
+				else
+				{
+					$expanded = 'collapsed';
+				}
 
-HTML;
+				$children = render_submenu("{$parent}::{$key}", $item['children'], $selection);
+			}
+
+			$icon = isset($item['image']) ? $GLOBALS['phpgw']->common->image($item['image'][0], $item['image'][1]) : $blank_image;
+
+			$submenu .= "<li class=\"{$expanded}\" id=\"navbar_{$parent}::{$key}\">";
+			$submenu .= "	<a href=\"{$item['url']}\" class=\"{$current}\">";
+			$submenu .= "		<img src=\"{$blank_image}\" class=\"{$expanded}\" />";
+			$submenu .= "		<img src=\"{$icon}\" />";
+			$submenu .= "		<span>{$item['text']}</span>";
+			$submenu .= "	</a>";
+			$submenu .= isset($children) ? $children : '';
+			$submenu .= '</li>';
 		}
-		$submenu .= <<<HTML
-				</ul>
+		$submenu .= '</ul>';
 
-HTML;
 		return $submenu;
 	}
 
