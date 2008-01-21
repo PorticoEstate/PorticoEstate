@@ -34,7 +34,7 @@
     var splitBarEast 	= this.getElementsByClassName('split-bar-c-e', 'div' )[0];
 
     this._splitBarWest	= new YAHOO.newdesign.SplitBar( splitBarWest,
-		{
+    	{
 			layoutLeft: this._layoutWest,
 			layoutRight: this._layoutCenter
 		}
@@ -48,69 +48,67 @@
     	}
     );
 
-	// TODO: Find a smarter way of doing this :)
-	if( typeof attr.splitBarEast != 'undefined' && typeof attr.splitBarEast.width != 'undefined')
-	{
-		this._splitBarEast.setWidth( attr.splitBarEast.width );
-	}
+	this.setAttributeConfig('splitBarEast', {
+		value: this._splitBarEast.serialize(),
+		method: function(config) { this._splitBarEast.setConfig(config) }
+    });
 
-	if( typeof attr.splitBarWest != 'undefined' && typeof attr.splitBarWest.width != 'undefined')
-	{
-		this._splitBarWest.setWidth( attr.splitBarWest.width );
-	}
+    this.setAttributeConfig('splitBarWest', {
+		value: this._splitBarWest.serialize(),
+		method: function(config){ this._splitBarWest.setConfig(config) }
+    });
 
     YAHOO.util.Event.addListener(window, "resize", this.resize, window, this );
-    YAHOO.util.Event.addListener(this._splitBarWest, "SizeChange", function() {alert("hi")}, window, this );
+
 	this._splitBarWest.onSizeChange.subscribe(this.store, this, true);
 	this._splitBarEast.onSizeChange.subscribe(this.store, this, true);
-    //YAHOO.util.Event.addListener(window, "unload", this.store, window, this );
   };
 
-  bl_proto.store = function()
-  {
-
-  	 store(this.serialize());
-  }
-
-  bl_proto.serialize = function()
-  {
-  	return {
-  		splitBarWest: this._splitBarWest.serialize(),
-  		splitBarEast: this._splitBarEast.serialize()
+  	bl_proto.store = function()
+  	{
+  		store(this.serialize());
   	}
-  };
 
-  bl_proto.resize = function(e, obj)
-  {
-    //TODO: CLEANUP
-    var sb_el = this._splitBarEast.getEl();
+ 	bl_proto.serialize = function()
+  	{
+  		return {
+  			splitBarWest: this._splitBarWest.serialize(),
+  			splitBarEast: this._splitBarEast.serialize()
+  		}
+  	};
 
-    var borderRegion = region.getRegion( this.get('element') );
-    var eastRegion = region.getRegion( this._layoutEast );
-    var centerRegion = region.getRegion( this._layoutCenter );
-	var westRegion = region.getRegion( this._layoutWest );
+	bl_proto.resize = function(e, obj)
+  	{
+	   //TODO: CLEANUP
+	    var sb_el = this._splitBarEast.getEl();
 
-    var ce_width = centerRegion.right - centerRegion.left;
-	var es_width = eastRegion.right - eastRegion.left;
-	var we_region = westRegion.right - westRegion.left;
+	    var borderRegion = region.getRegion( this.get('element') );
+	    var eastRegion = region.getRegion( this._layoutEast );
+	    var centerRegion = region.getRegion( this._layoutCenter );
+		var westRegion = region.getRegion( this._layoutWest );
 
-    var of_right = (borderRegion.right - eastRegion.right);
+	    var ce_width = centerRegion.right - centerRegion.left;
+		var es_width = eastRegion.right - eastRegion.left;
+		var we_region = westRegion.right - westRegion.left;
 
-    if( ce_width + of_right < 0)
-    {
-    	this._layoutWest.style.width = (es_width + of_right) + 'px';
-		of_right = ce_width*-1;
-    }
+	    var of_right = (borderRegion.right - eastRegion.right);
 
-    sb_el.style.left = ( region.getRegion( sb_el ).left + of_right ) + 'px';
-    this._layoutEast.style.left = region.getRegion( sb_el ).right + 'px';
-    this._splitBarEast.resize();
-  };
+	    if( ce_width + of_right < 0)
+	    {
+	    	this._layoutWest.style.width = (es_width + of_right) + 'px';
+			of_right = ce_width*-1;
+	    }
+
+	    sb_el.style.left = ( region.getRegion( sb_el ).left + of_right ) + 'px';
+	    this._layoutEast.style.left = region.getRegion( sb_el ).right + 'px';
+	    this._splitBarEast.resize();
+  	};
 
   /* SplitBat -------------------------------------------------------------*/
 
   YAHOO.newdesign.SplitBar = function(id, config) {
     YAHOO.newdesign.SplitBar.superclass.constructor.call(this, id, null, config);
+
     this.setYConstraint(0,0);
 
     var handle = YAHOO.util.Dom.getElementsByClassName( 'split-bar-handle', 'div', this.getEl() )[0];
@@ -119,6 +117,11 @@
     this.arrow = document.createElement('div');
     this.arrow.className = "arrow-" + this.mode;
     handle.appendChild(this.arrow);
+
+    this.layoutLeft = config.layoutLeft;
+    this.layoutRight = config.layoutRight;
+
+    this.setConfig(config);
   };
 
   YAHOO.extend(YAHOO.newdesign.SplitBar, YAHOO.util.DDProxy);
@@ -133,13 +136,14 @@
   sb_proto.arrow = null;
   sb_proto.onSizeChange = new YAHOO.util.CustomEvent("onSizeChange");
 
-  sb_proto.applyConfig = function()
+  sb_proto.setConfig = function(config)
   {
-    YAHOO.newdesign.SplitBar.superclass.applyConfig.call(this);
-    this.layoutLeft = this.config.layoutLeft;
-    this.layoutRight = this.config.layoutRight;
-    this.oldWidth = this.config.oldWidth || this.oldWidth;
-    this.mode = this.config.mode || this.mode;
+    this.oldWidth = config.oldWidth || this.oldWidth;
+    this.mode = config.mode || this.mode;
+    if( typeof config.width != 'undefined')
+    {
+    	this.setWidth(config.width);
+    }
   };
 
   sb_proto.serialize = function()
@@ -162,55 +166,48 @@
     this.resize();
   };
 
-  sb_proto.resize = function()
-  {
-	// TODO: Clean up this mess
-  	var oldWidth = this.getWidth();
-
-    var newLeftWidth = region.getRegion( this.getEl() ).left - region.getRegion( this.layoutLeft ).left;
-    var newRightLeft = region.getRegion( this.getEl() ).right;
-    var newRightWidth = region.getRegion( this.layoutRight ).right - region.getRegion( this.getEl() ).right;
-
-    this.layoutLeft.style.width = newLeftWidth + 'px';
-    this.layoutRight.style.left = newRightLeft + 'px';
-    this.layoutRight.style.width = newRightWidth + 'px';
-    this.resetConstraints();
-
-	this.minimized = (this.getWidth() <= 0);
-    if(this.mode == 'left')
-    {
-      this.arrow.className = (this.minimized  ? "arrow-right" : "arrow-left");
-    }
-    else
-    {
-      this.arrow.className = (this.minimized ? "arrow-left" : "arrow-right");
-    }
-
-    if( oldWidth != this.getWidth() )
-    {
-    	this.onSizeChange.fire();
-    }
-  }
-
-  sb_proto.setWidth = function(width)
-  {
-  	if(this.mode == 'left')
+	sb_proto.resize = function()
   	{
-  		var maxWidth = this.getElWidth( this.layoutRight ) - this.getHandleWidth();
-        var newLeft = Math.min( width, maxWidth );
+		// TODO: Clean up this mess
+	  	var oldWidth = this.getWidth();
+
+	    var newLeftWidth = region.getRegion( this.getEl() ).left - region.getRegion( this.layoutLeft ).left;
+	    var newRightLeft = region.getRegion( this.getEl() ).right;
+	    var newRightWidth = region.getRegion( this.layoutRight ).right - newRightLeft;
+
+	    this.layoutLeft.style.width = newLeftWidth + 'px';
+	    this.layoutRight.style.left = newRightLeft + 'px';
+	    this.layoutRight.style.width = newRightWidth + 'px';
+	    this.resetConstraints();
+
+		this.minimized = (this.getWidth() <= 0);
+		this.arrow.className = (this.minimized  ? "minimized" : "");
+
+	    if( oldWidth != this.getWidth() )
+	    {
+	    	this.onSizeChange.fire();
+	    }
   	}
-  	else
+
+  	sb_proto.setWidth = function(width)
   	{
-  		// When setting new size for righthand sidebar the following applies:
-  		// * newLeft >= layoutLeft.left
-  		// * newLeft <= layoutRight.right - sbWidth
-		var newLeft = region.getRegion( this.layoutRight ).right - width - this.getHandleWidth();
-		var minLeft = region.getRegion( this.layoutLeft ).left;
-        newLeft = Math.max(newLeft, minLeft);
+  		if(this.mode == 'left')
+  		{
+  			var maxWidth = this.getElWidth( this.layoutRight ) - this.getHandleWidth();
+        	var newLeft = Math.min( width, maxWidth );
+  		}
+  		else
+  		{
+  			// When setting new size for righthand sidebar the following applies:
+  			// * newLeft >= layoutLeft.left
+  			// * newLeft <= layoutRight.right - sbWidth
+			var newLeft = region.getRegion( this.layoutRight ).right - width - this.getHandleWidth();
+			var minLeft = region.getRegion( this.layoutLeft ).left;
+        	newLeft = Math.max(newLeft, minLeft);
+  		}
+    	this.getEl().style.left =  newLeft + 'px';
+    	this.resize();
   	}
-    this.getEl().style.left =  newLeft + 'px';
-    this.resize();
-  }
 
 	sb_proto.getElWidth = function( el )
 	{
