@@ -791,7 +791,7 @@
 						$oRsOverfBilag['dima'] = 9999;
 					}
 					
-					$Konto		= sprintf("%-8s",$oRsOverfBilag['spbudact_code']);// verdi: Art, type: c8, plass: 21 - 28
+					$Konto		= sprintf("%08s",$oRsOverfBilag['spbudact_code']);// verdi: Art, type: c8, plass: 21 - 28
 					$Dim_1		= sprintf("%8s",$oRsOverfBilag['district_id']);// verdi: Ansvarssted, type: c8, plass: 29 - 36
 					$Dim_2		= sprintf("%-8s",$oRsOverfBilag['kostra_id']);// verdi: Tjeneste, type: c8, plass: 37 - 44
 					
