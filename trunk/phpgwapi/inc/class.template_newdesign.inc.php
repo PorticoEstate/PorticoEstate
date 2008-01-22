@@ -1,14 +1,15 @@
 <?php
-
+	// INSERT HEADER HERE
 	class phpgwapi_template_newdesign
 	{
-		var $public_functions = array
+		public $public_functions = array
 		(
 			'store'			=> True,
 			'retrive'		=> True
 		);
 
-		function store()
+		// TODO: document me with phpdoc
+		public function store()
 		{
 			$location = phpgw::get_var('location');
 			$data = phpgw::get_var('data', 'raw');
@@ -19,7 +20,7 @@
 				return "Missing location parameter";
 			}
 
-			$json = execMethod('phpgwapi.Services_JSON.decode', $data);
+			$json = json_decode($data);
 
 			if( $json == null )
 			{
@@ -31,7 +32,8 @@
 			return $json;
 		}
 
-		function retrive()
+		// TODO: document me with phpdoc
+		public function retrieve()
 		{
 			$location = phpgw::get_var('location');
 
@@ -41,9 +43,8 @@
 				return "Missing location parameter";
 			}
 
-			$data = $GLOBALS['phpgw']->session->appsession($location,'template_newdesign');
-
-			if($data == null)
+			$data = self::retrieve_local($location);
+			if ( $data == null )
 			{
 				header("HTTP/1.0 404 Not Found");
 				return "No data found on that location";
@@ -52,10 +53,9 @@
 			return $data;
 		}
 
-		function retrive_local($location)
+		// TODO: document me with phpdoc
+		public static function retrieve_local($location)
 		{
-			$data = $GLOBALS['phpgw']->session->appsession($location,'template_newdesign');
-			return execMethod('phpgwapi.Services_JSON.encode', $data);
+			return $GLOBALS['phpgw']->session->appsession("template_newdesign_{$location}", 'phpgwapi');
 		}
 	}
-?>
