@@ -1235,6 +1235,8 @@
 	$test[] = '0.9.17.004';
 	function phpgwapi_upgrade0_9_17_004()
 	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
 		$GLOBALS['phpgw_setup']->oProc->AddColumn('phpgw_cust_attribute','lookup_form',array(
 			'type' => 'int',
 			'precision' => '2',
