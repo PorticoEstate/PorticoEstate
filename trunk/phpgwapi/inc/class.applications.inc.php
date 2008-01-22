@@ -2,8 +2,9 @@
 	/**
 	* Applications manager functions
 	* @author Mark Peters <skeeter@phpgroupware.org>
+	* @author Dave Hall <skwashd@phpgroupware.org>
 	* @copyright Copyright (C) 2001,2002 Mark Peters
-	* @copyright Portions Copyright (C) 2003,2004 Free Software Foundation, Inc. http://www.fsf.org/
+	* @copyright Copyright (C) 2003 - 2008 Free Software Foundation, Inc. http://www.fsf.org/
 	* @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License
 	* @package phpgwapi
 	* @subpackage application
@@ -16,32 +17,34 @@
 	* @package phpgwapi
 	* @subpackage application
 	*/
-	class applications
+	class phpgwapi_applications
 	{
-		var $account_id;
-		var $data = array();
-		var $db;
-		var $public_functions = array(
+		private $account_id;
+		private $data = array();
+		private $db;
+		public $public_functions = array
+		(
 			'list_methods' => True,
 			'read'         => True
 		);
-		var $xmlrpc_methods = array();
-
 
 		/**
 		* Standard constructor for setting $account_id
 		*
 		* @param integer $account_id Account id
 		*/
-		function applications($account_id = '')
+		public function __construct($account_id = '')
 		{
 			$this->db =& $GLOBALS['phpgw']->db;
-			$this->account_id = get_account_id($account_id);
+			$this->set_account_id($account_id);
+		}
 
-			$this->xmlrpc_methods[] = array(
-				'name'        => 'read',
-				'description' => 'Return a list of applications the current user has access to'
-			);
+		/**
+		* Set the user's id
+		*/
+		public function set_account_id($account_id)
+		{
+			$this->account_id = get_account_id($account_id);
 		}
 
 		/**
@@ -53,7 +56,7 @@
 		* in which case the input might be an array.  The server always calls
 		* this function to fill the server dispatch map using a string.
 		*/
-		function list_methods($_type='xmlrpc')
+		function list_methods($_type = 'xmlrpc')
 		{
 			if (is_array($_type))
 			{
@@ -75,8 +78,10 @@
 						)
 					);
 					return $xml_functions;
+				/* SOAP disabled - no instance variable
 				case 'soap':
 					return $this->soap_functions;
+				*/
 				default:
 					return array();
 			}
@@ -121,7 +126,6 @@
 					);
 				} 
 			}
-			reset($this->data);
 			return $this->data;
 		}
 
@@ -136,7 +140,6 @@
 			{
 				$this->read_repository();
 			}
-			reset($this->data);
 			return $this->data;
 		}
 
@@ -150,7 +153,7 @@
 		{
 			if(is_array($apps))
 			{
-				while($app = each($apps))
+				foreach ( $apps as $app )
 				{
 					$this->data[$app[1]] = array(
 						'title'   => $GLOBALS['phpgw_info']['apps'][$app[1]]['title'],
@@ -171,7 +174,6 @@
 					'id'      => $GLOBALS['phpgw_info']['apps'][$apps]['id']
 				);
 			}
-			reset($this->data);
 			return $this->data;
 		}
 		
@@ -187,7 +189,6 @@
 			{
 				unset($this->data[$appname]);
 			}
-			reset($this->data);
 			return $this->data;
 		}
 		
@@ -199,10 +200,7 @@
 		*/
 		function update_data($data)
 		{
-			reset($data);
-			$this->data = Array();
 			$this->data = $data;
-			reset($this->data);
 			return $this->data;
 		}
 		
@@ -214,7 +212,6 @@
 		function save_repository()
 		{
 			$num_rows = $GLOBALS['phpgw']->acl->delete_repository("%%", 'run', $this->account_id);
-			reset($this->data);
 			while($app = each($this->data))
 			{
 				if(!$this->is_system_enabled($app[0]))
@@ -223,7 +220,6 @@
 				}
 				$GLOBALS['phpgw']->acl->add_repository($app[0],'run',$this->account_id,1);
 			}
-			reset($this->data);
 			return $this->data;
 		}
 
@@ -237,7 +233,6 @@
 			{
 				$this->read_repository();
 			}
-			@reset($this->data);
 			while (list ($key) = each ($this->data))
 			{
 				$app[] = $this->data[$key]['name'];
@@ -316,22 +311,20 @@
 
 		function id2name($id)
 		{
-			@reset($GLOBALS['phpgw_info']['apps']);
-			while (list($appname,$app) = each($GLOBALS['phpgw_info']['apps']))
+			$id = (int) $id;
+			foreach ( $GLOBALS['phpgw_info']['apps'] as $appname => $app )
 			{
-				if(intval($app['id']) == intval($id))
+				if( $app['id'] == $id )
 				{
-					@reset($GLOBALS['phpgw_info']['apps']);
 					return $appname;
 				}
 			}
-			@reset($GLOBALS['phpgw_info']['apps']);
 			return '';
 		}
 		
 		function name2id($appname)
 		{
-			if(is_array($GLOBALS['phpgw_info']['apps'][$appname]))
+			if ( is_array($GLOBALS['phpgw_info']['apps'][$appname]) )
 			{
 				return $GLOBALS['phpgw_info']['apps'][$appname]['id'];
 			}

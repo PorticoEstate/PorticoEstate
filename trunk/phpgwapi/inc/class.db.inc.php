@@ -26,7 +26,6 @@
 	* 
 	* @package phpgwapi
 	* @subpackage database
-	* @abstract
 	*/
 	class phpgwapi_db
 	{

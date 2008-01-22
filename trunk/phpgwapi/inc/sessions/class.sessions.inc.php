@@ -21,9 +21,8 @@
 	*
 	* @package phpgwapi
 	* @subpackage accounts
-	* @abstract
 	*/
-	class sessions
+	abstract class sessions
 	{
 		/**
 		* @var string current user login
@@ -119,7 +118,7 @@
 		/**
 		* Constructor just loads up some defaults from cookies
 		*/
-		function sessions()
+		public function __construct()
 		{
 			$this->db =& $GLOBALS['phpgw']->db;
 			$this->sessionid = phpgw::get_var('sessionid');
@@ -378,7 +377,7 @@
 			$GLOBALS['phpgw']->acl->acl($this->account_id);
 			$GLOBALS['phpgw']->accounts->set_account($this->account_id);
 			$GLOBALS['phpgw']->preferences->set_account_id($this->account_id);
-			$GLOBALS['phpgw']->applications->applications($this->account_id);
+			$GLOBALS['phpgw']->applications->set_account_id($this->account_id);
 
 			if (! $this->account_lid)
 			{
@@ -908,7 +907,7 @@
 			$GLOBALS['phpgw']->acl->acl($this->account_id);
 			$GLOBALS['phpgw']->accounts->set_account($this->account_id);
 			$GLOBALS['phpgw']->preferences->set_account_id($this->account_id);
-			$GLOBALS['phpgw']->applications->applications($this->account_id);
+			$GLOBALS['phpgw']->applications->set_account_id($this->account_id);
 			
 			if($cached)
 			{
@@ -1216,6 +1215,12 @@
 			//used for repost prevention
 			$extravars['click_history'] = $this->generate_click_history();
 
+			/* enable easy use of xdebug */
+			if ( isset($_REQUEST['XDEBUG_PROFILE']) )
+			{
+				$extravars['XDEBUG_PROFILE'] = 1;
+			}
+
 			if (is_array($extravars)) //we have something to append
 			{
 				return "{$url}?" . http_build_query($extravars, null, $term);
@@ -1234,22 +1239,19 @@
 		* @param string $sessionid user's session id string
 		* @return mixed the session data
 		*/
-		function read_session($sessionid)
-		{}
+		abstract public function read_session($sessionid);
 
 		/**
 		* Remove stale sessions out of the database
 		*/
-		function clean_sessions()
-		{}
+		abstract public function clean_sessions();
 
 		/**
-		* Set paramaters for cookies - only implemented in PHP4 sessions
+		* Set paramaters for cookies
 		*
 		* @param string $domain domain name to use in cookie
 		*/
-		function set_cookie_params($domain)
-		{}
+		abstract public function set_cookie_params($domain);
 
 		/**
 		* Create a new session
@@ -1259,16 +1261,14 @@
 		* @param int $now time now as a unix timestamp
 		* @param string $session_flags A = Anonymous, N = Normal
 		*/
-		function register_session($login,$user_ip,$now,$session_flags)
-		{}
+		abstract public function register_session($login,$user_ip,$now,$session_flags);
 
 		/**
 		* Update the date last active info for the session, so the login does not expire
 		*
 		* @return bool did it suceed?
 		*/
-		function update_dla()
-		{}
+		abstract public function update_dla();
 
 		/**
 		* Terminate a session
@@ -1277,8 +1277,7 @@
 		* @param string $kp3 - NOT SURE
 		* @return bool did it suceed?
 		*/
-		function destroy($sessionid, $kp3)
-		{}
+		abstract public function destroy($sessionid, $kp3);
 
 		/**
 		* Functions for appsession data and session cache
@@ -1289,8 +1288,7 @@
 		* 
 		* @param int $accountid user account id, defaults to current user (optional)
 		*/
-		function delete_cache($accountid='')
-		{}
+		abstract public function delete_cache($accountid='');
 
 		/**
 		* Stores or retrieves information from the sessions cache
@@ -1300,8 +1298,7 @@
 		* @param mixed $data data to be stored, if left blank data is retreived (optional)
 		* @return mixed data from cache, only returned if $data arg is not used 
 		*/
-		function appsession($location = 'default', $appname = '', $data = '##NOTHING##')
-		{}
+		abstract public function appsession($location = 'default', $appname = '', $data = '##NOTHING##');
 
 		/**
 		* Get list of normal / non-anonymous sessions
@@ -1315,8 +1312,7 @@
 		* @param bool $all_no_sort list all with out sorting (optional) default False
 		* @return array info for all current sessions  
 		*/
-		function list_sessions($start,$order,$sort,$all_no_sort = False)
-		{}
+		abstract public function list_sessions($start, $order, $sort, $all_no_sort = false);
 		
 		/**
 		* Get the number of normal / non-anonymous sessions
@@ -1324,21 +1320,14 @@
 		* @author ralfbecker
 		* @return int number of sessions
 		*/
-		function total()
-		{
-			return 0;
-		}
+		abstract public function total();
 
 		/**
 		* Get the list of session variables used for non cookie based sessions
 		*
-		* @access private
 		* @return array the variables which are specific to this session type
 		*/
-		function _get_session_vars()
-		{
-			return array();
-		}
+		abstract protected function _get_session_vars();
 
 		/**
 		* Stores or retrieves information from persistant cache

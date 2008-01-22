@@ -196,9 +196,8 @@
 	*
 	* @package phpgwapi
 	* @subpackage accounts
-	* @abstract
 	*/
-	class accounts_
+	abstract class accounts_
 	{
 		var $account_id;
 		var $lid;
@@ -579,8 +578,7 @@
 			$GLOBALS['phpgw']->template->set_var('img',$GLOBALS['phpgw']->common->image('phpgwapi','select'));
 			$GLOBALS['phpgw']->template->set_var('lang_select_user',lang('Select user'));
 			$GLOBALS['phpgw']->template->set_var('lang_select_group',lang('Select group'));
-			$GLOBALS['phpgw']->template->set_var('css_file',$GLOBALS['phpgw_info']['server']['webserver_url'] . SEP . 'phpgwapi' . SEP . 'templates'
-															. SEP . 'idots' . SEP . 'css' . SEP . 'idots.css');
+			$GLOBALS['phpgw']->template->set_var('css_file', "{$GLOBALS['phpgw_info']['server']['webserver_url']}/phpgwapi/templates/idots/css/idots.css");
 
 			switch($app)
 			{
