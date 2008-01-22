@@ -189,11 +189,13 @@
 
 		function write_error_to_db($err)
 		{
-			if(is_object($GLOBALS['phpgw']->db))
+			if ( isset($GLOBALS['phpgw']->db)
+				&& is_object($GLOBALS['phpgw']->db))
 			{
 				$db =& $GLOBALS['phpgw']->db;
 			}
-			else // during setup
+			else if ( isset($GLOBALS['phpgw_setup']->oProc->m_odb)
+				&& is_object($GLOBALS['phpgw_setup']->oProc->m_odb) ) // during setup
 			{
 				$db =& $GLOBALS['phpgw_setup']->oProc->m_odb;
 				if(!$db->metadata('phpgw_log'))
@@ -201,6 +203,11 @@
 					echo 'Failed to log error to database. DB errno ' . $db->Errno . ': message ' . $db->Error;
 					return;
 				}
+			}
+			else
+			{
+				//trigger_error("Failed to log error to database: no database object available");
+				return;
 			}
 			$db->query("insert into phpgw_log (log_date, log_app, log_account_id, log_account_lid, log_severity, log_file, log_line, log_msg) values "
 				. "('" . $db->to_timestamp(time()) . "'"
@@ -216,7 +223,7 @@
 			);
 			if ( isset($db->Errno) )
 			{
-				trigger_error("Failed to log error to database. DB errno " . $db->Errno . ": message " . $db->Error,  E_USER_NOTICE);
+				//trigger_error("Failed to log error to database. DB errno " . $db->Errno . ": message " . $db->Error,  E_USER_NOTICE);
 			}
 		}
 
