@@ -25,26 +25,28 @@
 	*/
 	include_once('header.inc.php');
 
-	$GLOBALS['sessionid'] = phpgw::get_var('sessionid', 'string', 'any');
-	$GLOBALS['kp3']       = phpgw::get_var('kp3', 'string', 'any');
+	$sessionid = phpgw::get_var('sessionid');
+	$kp3       = phpgw::get_var('kp3');
 
 	$verified = $GLOBALS['phpgw']->session->verify();
 	if ($verified)
 	{
-		if (file_exists($GLOBALS['phpgw_info']['server']['temp_dir'] . SEP . $GLOBALS['sessionid']))
+		if ( is_dir("{$GLOBALS['phpgw_info']['server']['temp_dir']}/{$sessionid}") )
 		{
-			$dh = opendir($GLOBALS['phpgw_info']['server']['temp_dir'] . SEP . $GLOBALS['sessionid']);
-			while ($file = readdir($dh))
+			$dh = dir("{$GLOBALS['phpgw_info']['server']['temp_dir']}/{$sessionid}");
+			while ( ($file = $dh->read()) !== false )
 			{
-				if ($file != '.' && $file != '..')
+				if ( $file == '.' || $file == '..' )
 				{
-					unlink($GLOBALS['phpgw_info']['server']['temp_dir'] . SEP . $GLOBALS['sessionid'] . SEP . $file);
+					continue;
 				}
+				unlink("{$GLOBALS['phpgw_info']['server']['temp_dir']}/{$sessionid}/{$file}");
 			}
-			rmdir($GLOBALS['phpgw_info']['server']['temp_dir'] . SEP . $GLOBALS['sessionid']);
+			rmdir("{$GLOBALS['phpgw_info']['server']['temp_dir']}/{$sessionid}");
+			$dh->close();
 		}
 		$GLOBALS['phpgw']->hooks->process('logout');
-		$GLOBALS['phpgw']->session->destroy($GLOBALS['sessionid'],$GLOBALS['kp3']);
+		$GLOBALS['phpgw']->session->destroy($sessionid,$kp3);
 	}
 	else
 	{
@@ -66,4 +68,3 @@
 	}
 
 	$GLOBALS['phpgw']->redirect($GLOBALS['phpgw_info']['server']['webserver_url'].'/login.php?cd=1');
-?>
