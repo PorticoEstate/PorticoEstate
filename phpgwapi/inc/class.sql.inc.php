@@ -97,9 +97,8 @@
 	* to use in a query (for the where clause).
 	* @package phpgwapi
 	* @subpackage database
-	* @abstract
 	*/
-	class sql_
+	abstract class sql_
 	{
 		function sql_()
 		{
