@@ -1391,7 +1391,7 @@
 			{
 				if ($GLOBALS['phpgw_info']['server']['ldap_account_home'] != '')
 				{
-					$return = $GLOBALS['phpgw_info']['server']['ldap_account_home'].SEP.$login;
+					$return = "{$GLOBALS['phpgw_info']['server']['ldap_account_home']}/{$login}";
 				}
 				else
 				{

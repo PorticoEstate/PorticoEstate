@@ -119,9 +119,10 @@
 					$rootdir=$this->rootdir;
 				}
 
-				if (substr($filename, 0, 1) != SEP && substr($filename, 1, 1) != ':')
+				if ( substr($filename, 0, 1) != '/' 
+					&& substr($filename, 1, 1) != ':' )
 				{
-					$new_filename = $rootdir . SEP . $filename;
+					$new_filename = "{$rootdir}/{$filename}";
 				}
 				else
 				{
@@ -230,7 +231,7 @@
 		*/
 		function xsl_parse()
 		{
-			if( is_array($this->xslfiles) && count($this->xslfiles) > 0)
+			if ( is_array($this->xslfiles) && count($this->xslfiles) )
 			{
 				$this->xsldata = <<<XSLT
 <?xml version="1.0" encoding="UTF-8"?>
@@ -370,4 +371,3 @@ XSLT;
 			return $this->pparse();
 		}
 	}
-?>
