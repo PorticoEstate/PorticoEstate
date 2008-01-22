@@ -226,10 +226,7 @@
 			case E_USER_NOTICE:
 				$log_args['severity'] = 'N';
 				$log->notice($log_args);
-				if(isset($GLOBALS['phpgw_info']['server']['log_levels']['global_level']) && $GLOBALS['phpgw_info']['server']['log_levels']['global_level'] == 'N')
-				{
-					echo "\n<br>" . lang('ERROR Notice: %1 in %2 at line %3', $error_msg, $error_file, $error_line) . "<br>\n"; //this will be commented in the final version
-				}
+				echo "\n<br>" . lang('ERROR Notice: %1 in %2 at line %3', $error_msg, $error_file, $error_line) . "<br>\n"; //this will be commented in the final version
 			//No default, we just ignore it, for now
 		}
 	}
@@ -446,12 +443,6 @@
 	// This include was here before for the old error class.  I've left it in for the
 	// new log_message class with replaced error.  I'm not sure if it is needed, though. -doug
 	include_once(PHPGW_INCLUDE_ROOT.'/phpgwapi/inc/class.log_message.inc.php');
-
-	/****************************************************************************\
-	* This is a global constant that should be used                              *
-	* instead of / or \ in file paths                                            *
-	\****************************************************************************/
-	define('SEP', filesystem_separator());
 
 	/*****************************************************************************\
 	* ACL defines - moved here to work for xml-rpc/soap, also                     *
