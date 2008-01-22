@@ -1,3 +1,6 @@
+<div id="debug-navbar">
+{debug}
+</div>
 		<div id="theme-gray">
 			<div class="border-layout" id="border-layout">
 				<div class="layout-north">
