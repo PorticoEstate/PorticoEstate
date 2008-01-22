@@ -38,12 +38,14 @@
 				<ul>
 
 HTML;
-				foreach ( $entries as $cnt => $entry )
+				$i = 0;
+				foreach ( $entries as $entry )
 				{
-					$row = $cnt % 2 ? 'on' : 'off';
+					$row = $i % 2 ? 'on' : 'off';
 					$html .= <<<HTML
 					<li class="row_{$row}"><a href="{$entry['url']}">{$entry['text']}</a></li>
 HTML;
+					++$i;
 				}
 				$html .= <<<HTML
 				</ul>
@@ -55,12 +57,12 @@ HTML;
 
 		public function index()
 		{
-			$GLOBALS['phpgw_info']['flags']['menu_selection'] = 'admin::admin::mainscreen';
-
 			if ( phpgw::get_var('cancel', 'bool', 'POST') )
 			{
-				$GLOBALS['phpgw']->redirect_link('/admin/index.php');
+				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'admin.uimainscreen.mainscreen'));
 			}
+
+			$GLOBALS['phpgw_info']['flags']['menu_selection'] = 'admin::admin::mainscreen';
 
 			$GLOBALS['phpgw']->template->set_file(array('message' => 'mainscreen_message.tpl'));
 			$GLOBALS['phpgw']->template->set_block('message','form','form');
