@@ -89,6 +89,7 @@
 			$this->doc_type				= $this->bo->doc_type;
 			$this->query_location			= $this->bo->query_location;
 
+			// FIXME: $this->entity_id always has a value set here - skwashd jan08
 			if ( $this->entity_id )
 			{
 				$GLOBALS['phpgw_info']['flags']['menu_selection'] .= "::entity_{$this->entity_id}";
