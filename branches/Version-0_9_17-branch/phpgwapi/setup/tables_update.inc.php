@@ -1229,12 +1229,16 @@
 	$test[] = '0.9.17.003';
 	function phpgwapi_upgrade0_9_17_003()
 	{
-		$GLOBALS['setup_info']['phpgwapi']['currentver'] = '0.9.17.512';
+		$GLOBALS['setup_info']['phpgwapi']['currentver'] = '0.9.17.004';
 		return $GLOBALS['setup_info']['phpgwapi']['currentver'];
 	}
 	$test[] = '0.9.17.004';
 	function phpgwapi_upgrade0_9_17_004()
 	{
+		$GLOBALS['setup_info']['phpgwapi']['currentver'] = '0.9.17.512';
+		return $GLOBALS['setup_info']['phpgwapi']['currentver'];
+
+/*
 		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
 
 		$GLOBALS['phpgw_setup']->oProc->AddColumn('phpgw_cust_attribute','lookup_form',array(
@@ -1256,6 +1260,7 @@
 			$GLOBALS['setup_info']['phpgwapi']['currentver'] = '0.9.17.513';
 			return $GLOBALS['setup_info']['phpgwapi']['currentver'];
 		}
+*/
 	}
 
 	$test[] = '0.9.17.500';
