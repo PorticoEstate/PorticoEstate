@@ -85,7 +85,7 @@
 					{
 						case 'href':
 							$string = urldecode(trim($c->node_value()));
-							$idx = strrpos($string,SEP);
+							$idx = strrpos($string, '/');
 							if( $idx && ($idx == strlen( $string ) - 1 ) )
 							{
 								$string = substr($string, 0, $idx);
@@ -918,11 +918,11 @@ if (DEBUG_CACHE) echo '<b>cache cleared</b>';
 					$ret = $this->http_client->Unlock($uri,$token);
 				}
 			}
-			elseif ( isset($this->cached_propfind[$uri.SEP]) )
+			elseif ( isset($this->cached_propfind["{$uri}/"]) )
 			{
-				if ( ($ret = $this->cached_propfind[$uri.SEP]) == 207 )
+				if ( ($ret = $this->cached_propfind["{$uri}/"]) == 207 )
 				{
-					$ret = $this->http_client->Unlock($uri.SEP,$token);
+					$ret = $this->http_client->Unlock("{$uri}/",$token);
 				}
 			}
 			else
@@ -931,9 +931,9 @@ if (DEBUG_CACHE) echo '<b>cache cleared</b>';
 				{
 					$this->cached_propfind[$uri] = 207;
 				}
-				elseif( $ret == 301 && ($ret = $this->http_client->Unlock($uri.SEP,$token)) == 204 )
+				elseif( $ret == 301 && ($ret = $this->http_client->Unlock("{$uri}/",$token)) == 204 )
 				{
-					$this->cached_propfind[$uri.SEP] = 207;
+					$this->cached_propfind["{$uri}/"] = 207;
 				}
 			}
 
@@ -977,11 +977,11 @@ if (DEBUG_CACHE) echo '<b>cache cleared</b>';
 					$ret = $this->http_client->Lock($uri, 'exclusive', 'write', $owner);
 				}
 			}
-			elseif ( isset($this->cached_propfind[$uri.SEP]) )
+			elseif ( isset($this->cached_propfind["{$uri}/"]) )
 			{
-				if ( ($ret = $this->cached_propfind[$uri.SEP]) == 207 )
+				if ( ($ret = $this->cached_propfind["{$uri}/"]) == 207 )
 				{
-					$ret = $this->http_client->Lock($uri.SEP, 'exclusive', 'write', $owner);
+					$ret = $this->http_client->Lock("{$uri}/", 'exclusive', 'write', $owner);
 				}
 			}
 			else
@@ -991,9 +991,9 @@ if (DEBUG_CACHE) echo '<b>cache cleared</b>';
 				{
 					$this->cached_propfind[$uri] = 207;
 				}
-				elseif ( $ret == 301 && ($ret = $this->http_client->Lock($uri.SEP, 'exclusive', 'write', $owner)) == 200)
+				elseif ( $ret == 301 && ($ret = $this->http_client->Lock("{$uri}/", 'exclusive', 'write', $owner)) == 200)
 				{
-					$this->cached_propfind[$uri.SEP] = 207;
+					$this->cached_propfind["{$uri}/"] = 207;
 				}
 			}
 
