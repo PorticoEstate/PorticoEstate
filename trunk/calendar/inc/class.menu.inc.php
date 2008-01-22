@@ -116,7 +116,7 @@
 			{
 				$menus['admin'] = array
 				(
-					'admin'	=> array
+					'index'	=> array
 					(
 						'text'	=> lang('Site Configuration'),
 						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'	=> 'admin.uiconfig.index', 'appname'	=> 'calendar') )
