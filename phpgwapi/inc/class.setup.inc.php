@@ -589,14 +589,13 @@
 			return $this->hooks->single($location,$appname,True,True);
 		}
 
-		/*
-		@function alessthanb
-		@abstract phpgw version checking, is param 1 < param 2 in phpgw versionspeak?
-		@param	$a	phpgw version number to check if less than $b
-		@param	$b	phpgw version number to check $a against
-		#return	True if $a < $b
+		/**
+		* phpgw version checking, is param 1 < param 2 in phpgw versionspeak?
+		* @param string $a phpgw version number to check if less than $b
+		* @param sting $b phpgw version number to check $a against
+		* @return bool True if $a < $b
 		*/
-		function alessthanb($a,$b,$DEBUG=False)
+		function alessthanb($a, $b, $DEBUG=False)
 		{
 			$num = array('1st','2nd','3rd','4th');
 

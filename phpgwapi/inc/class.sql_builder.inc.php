@@ -19,7 +19,6 @@
 	* This class provide common methods to create transaction sql queries.
 	* @package phpgwapi
 	* @subpackage database
-	* @abstract
 	*/
 	class sql_builder
 	{

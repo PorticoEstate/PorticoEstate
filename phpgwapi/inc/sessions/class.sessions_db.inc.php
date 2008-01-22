@@ -22,9 +22,9 @@
 	*/
 	class sessions_db extends sessions
 	{
-		function sessions_db()
+		public function __construct()
 		{
-			parent::sessions();
+			parent::__construct();
 		}
 		
 		function read_session($sessionid)
@@ -168,13 +168,17 @@
 			}
 		}
 
-		function list_sessions($start, $order = 'ASC', $sort = 'session_lid', $all_no_sort = false)
+		function list_sessions($start, $order, $sort, $all_no_sort = false)
 		{
-			$SQL_sort  =  strlen($sort) ? 'ORDER BY '.$sort : '';
-			$SQL_sort .= (strlen($sort) && strlen($order)) ? ' '.$order : '' ;
-			
+			$sql_sort = '';
+			if ( strlen($sort) )
+			{
+				$order = $order == 'DESC' ? 'DESC' : 'ASC';
+				$sql_sort = 'ORDER BY ' . $sort = $this->db->db_addslashes($sort) . " $order";
+			}
+ 
 			$this->db->limit_query('SELECT * FROM phpgw_sessions'
-					. " WHERE session_flags != 'A' $SQL_sort", $start, __LINE__, __FILE__);
+					. " WHERE session_flags != 'A' $sql_sort", $start, __LINE__, __FILE__);
 
 			$values = array();
 				
@@ -219,5 +223,15 @@
 				'domain'	=> $this->account_domain
 			);
 		}
+
+		/**
+		* Set the paramaters for the cookie
+		*
+		* @internal does nothing for db sessions
+		* @param string $domain the domain for the cookie
+		*/
+		function set_cookie_params($domain)
+		{
+			//nothing to do here
+		}
 	}
-?>
