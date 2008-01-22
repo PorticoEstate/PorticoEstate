@@ -83,7 +83,7 @@
 		{
 			Header('Content-Type: text/javascript');
 			$return_data = $GLOBALS[$class]->$method();
-			echo execMethod('phpgwapi.Services_JSON.encode', $return_data);
+			echo json_encode($return_data);
 			$GLOBALS['phpgw_info']['flags']['nofooter'] = true;
 			$GLOBALS['phpgw']->common->phpgw_exit();
 		}

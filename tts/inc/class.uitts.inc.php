@@ -140,8 +140,7 @@
 			$group_id = (int) $_GET['group_id'];
 			$accounts = createObject('phpgwapi.accounts');
 			$members = $accounts->member($group_id);
-			$json = createObject('phpgwapi.Services_JSON');
-			echo $json->encode($members);
+			echo json_encode($members);
 			exit;
 		}
 		
