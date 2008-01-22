@@ -5,6 +5,7 @@ html
 }
 
 #debug-navbar {
+	display: none;
 	position: absolute;
 	width: 1000px;
 	border: 2px solid gray;
