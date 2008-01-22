@@ -33,23 +33,12 @@
 		var $mime_magic_file;
 		
 		/**
-		* Wrapper to PHP5 Compatiable Constructor
-		*
-		* @author skwashd
-		
-		function mime_magic()
-		{
-			$this->__constructor()
-		}
-		*/
-
-		/**
 		* Constructor 
 		*
 		* Load the map values into the instance arrays
 		* @author skwashd
 		*/
-		function mime_magic() //__constructor()
+		function __construct()
 		{
 			$this->mime_extension_map = $this->get_mime_ext_map();
 			$this->mime_magic_file = $this->get_mime_magic_file();
@@ -205,8 +194,7 @@
 				return false;
 			}
 			
-			mt_srand(time());
-			$filename = $GLOBALS['phpgw_info']['server']['temp_dir'] . SEP 
+			$filename = "{$GLOBALS['phpgw_info']['server']['temp_dir']}/" 
 				. md5( time() + mt_rand() ) . '.tmp';
 
 			$fp = @fopen($filename, 'ab');
