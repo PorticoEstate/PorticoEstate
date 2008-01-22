@@ -69,14 +69,14 @@
 			/* hack to get tpl dir */
 			if (is_dir(PHPGW_SERVER_ROOT))
 			{
-				$srv_root = PHPGW_SERVER_ROOT . SEP . "$app_name" . SEP;
+				$srv_root = PHPGW_SERVER_ROOT . "/$app_name/";
 			}
 			else
 			{
 				$srv_root = '';
 			}
 
-			return $srv_root . 'templates' . SEP . 'base';
+			return "{$srv_root}/templates/base";
 		}
 
 		function show_header($title='',$nologoutbutton=False, $logoutfrom='config', $configdomain='')

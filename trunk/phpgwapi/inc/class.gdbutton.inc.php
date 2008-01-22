@@ -37,14 +37,14 @@
 			$this->image		= 0;
 			$this->font_size	= 0;
 			$this->font_text	= '';
-			$this->ttf_font		= PHPGW_SERVER_ROOT . SEP . 'phpgwapi' . SEP . 'fonts' . SEP . 'FreeSans.ttf';
+			$this->ttf_font		= PHPGW_SERVER_ROOT . '/phpgwapi/fonts/FreeSans.ttf';
 			$this->filename		= '';
 
 			$this->xspace		= 4;
 			$this->yspace		= 4;
 
-			$this->save_dir		= $_SERVER['DOCUMENT_ROOT'] . PHPGW_IMAGES_DIR . SEP;
-			$this->img_dir		= PHPGW_IMAGES_DIR . SEP;
+			$this->save_dir		= $_SERVER['DOCUMENT_ROOT'] . PHPGW_IMAGES_DIR . '/';
+			$this->img_dir		= PHPGW_IMAGES_DIR . '/';
 		}
 
 		function button_init()

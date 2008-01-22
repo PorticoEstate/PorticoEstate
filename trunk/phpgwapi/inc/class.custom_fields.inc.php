@@ -884,45 +884,45 @@
 
 		function select_custom_function($selected='', $appname)
 		{
-
-			$dir_handle = @opendir(PHPGW_SERVER_ROOT . SEP . $appname . SEP . 'inc' . SEP . 'custom');
-			$i=0; $myfilearray = '';
+			$dirname = PHPGW_SERVER_ROOT . "/{$appname}/inc/custom"; 
+			$myfilearray = array();
+			$dir_handle = dir($dirname);
 			if ($dir_handle)
 			{
-				while ($file = readdir($dir_handle))
+				while ( ($file = $dir_handle->read($dir_handle)) !== false )
 				{
-					if ((substr($file, 0, 1) != '.') && is_file(PHPGW_SERVER_ROOT . SEP . $appname . SEP . 'inc' . SEP . 'custom' . SEP . $file) )
+					if ((substr($file, 0, 1) != '.') && is_file("{$dirname}/{$file}") )
 					{
-						$myfilearray[$i] = $file;
-						$i++;
+						$myfilearray[] = $file;
 					}
 				}
-				closedir($dir_handle);
+				$dir_handle->close();
 				sort($myfilearray);
 			}
 
-			for ($i=0;$i<count($myfilearray);$i++)
+			$file_list = array();
+			foreach ( $myfilearray as $myfile )
 			{
-				$fname = ereg_replace('_',' ',$myfilearray[$i]);
+				$fname = preg_replace('/_/', ' ', $myfile);
 				$sel_file = '';
-				if ($myfilearray[$i]==$selected)
+				if ( $myfile == $selected )
 				{
 					$sel_file = 'selected';
 				}
 
 				$file_list[] = array
 				(
-					'id'		=> $myfilearray[$i],
+					'id'		=> $myfile,
 					'name'		=> $fname,
 					'selected'	=> $sel_file
 				);
 			}
 
-			for ($i=0;$i<count($file_list);$i++)
+			foreach ( $file_list as &$file )
 			{
-				if ($file_list[$i]['selected'] != 'selected')
+				if ( $file['selected'] != 'selected' )
 				{
-					unset($file_list[$i]['selected']);
+					unset($file['selected']);
 				}
 			}
 

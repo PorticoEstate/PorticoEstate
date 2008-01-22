@@ -545,10 +545,6 @@ Here are some examples:
   directory.
   	This is defaulted by the server, and changeable by the user.
 
-  $GLOBALS['phpgw_info']['server']['dir_separator'] = Allows compatibility with
-  WindowsNT directory format
-  	- same as php constant SEP
-
   $GLOBALS['phpgw_info']['server']['encrpytkey'] = Key used for encryption
   functions
 

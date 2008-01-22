@@ -936,8 +936,16 @@ HTML;
 		*/
 		public function phpgw_header($navbar = False)
 		{
-			include(PHPGW_INCLUDE_ROOT . '/phpgwapi/templates/' . $GLOBALS['phpgw_info']['server']['template_set'] . '/head.inc.php');
-			include(PHPGW_INCLUDE_ROOT . '/phpgwapi/templates/' . $GLOBALS['phpgw_info']['server']['template_set'] . '/navbar.inc.php');
+			static $called = false;
+			if ( $called )
+			{
+				return;
+			}
+
+			$called = true;
+
+			include_once(PHPGW_INCLUDE_ROOT . '/phpgwapi/templates/' . $GLOBALS['phpgw_info']['server']['template_set'] . '/head.inc.php');
+			include_once(PHPGW_INCLUDE_ROOT . '/phpgwapi/templates/' . $GLOBALS['phpgw_info']['server']['template_set'] . '/navbar.inc.php');
 			if ($navbar)
 			{
 				echo parse_navbar();
@@ -1584,7 +1592,7 @@ HTML;
 				return;
 			}
 
-			$GLOBALS['phpgw']->xslttpl->add_file($this->get_tpl_dir('phpgwapi','base') . SEP . 'msgbox');
+			$GLOBALS['phpgw']->xslttpl->add_file($this->get_tpl_dir('phpgwapi','base') . '/msgbox');
 
 		//	$prev_helper = $GLOBALS['phpgw']->translation->translator_helper;
 		//	$GLOBALS['phpgw']->translation->translator_helper = '';

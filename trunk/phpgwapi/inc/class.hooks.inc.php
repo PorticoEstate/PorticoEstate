@@ -148,7 +148,6 @@
 			{
 				$appname = is_array($args) && isset($args['appname']) ? $args['appname'] : $GLOBALS['phpgw_info']['flags']['currentapp'];
 			}
-			$SEP = filesystem_separator();
 
 			/* First include the ordered apps hook file */
 			if (isset($this->found_hooks[$appname][$location]) || $try_unregistered)
@@ -165,7 +164,7 @@
 					{
 						$method = 'hook_'.$location.'.inc.php';
 					}
-					$f = PHPGW_SERVER_ROOT . $SEP . $appname . $SEP . 'inc' . $SEP . $method;
+					$f = PHPGW_SERVER_ROOT . "/{$appname}/inc/{$method}";
 					if ( ( (isset($GLOBALS['phpgw_info']['user']['apps'][$appname]) && $GLOBALS['phpgw_info']['user']['apps'][$appname]) 
 							|| (($no_permission_check || $location == 'config' || $appname == 'phpgwapi') && $appname)) 
 						&& file_exists($f) )

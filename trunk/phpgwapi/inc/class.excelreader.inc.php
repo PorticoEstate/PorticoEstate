@@ -23,6 +23,6 @@
 	/**
 	* 
 	*/
-	require_once(PHPGW_API_INC . SEP . 'excelreader' . SEP . 'reader.php');
+	require_once(PHPGW_API_INC . '/excelreader/reader.php');
 
 ?>

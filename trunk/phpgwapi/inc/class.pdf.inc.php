@@ -58,7 +58,7 @@
 			}
 			else
 			{
- 				$dir = PHPGW_API_INC  . SEP . 'pdf' . SEP . 'pdf_files';
+ 				$dir = PHPGW_API_INC  . '/pdf/pdf_files';
   
  				//save the file
  				if (!file_exists($dir))
@@ -66,7 +66,7 @@
  					die('Directory for temporary pdf-files is missing - pleace notify the Administrator');
  				}
 
- 				$fname = tempnam($dir.SEP,'PDF_').'.pdf';
+ 				$fname = tempnam("{$dir}/PDF_") . '.pdf';
  
  				if(!$fp = @fopen($fname,'wb'))
  				{
@@ -98,10 +98,10 @@
 			 			if (substr($file,0,4)=="PDF_")
 			 			{
  							// then check to see if this one is too old
- 							$ftime = filemtime($dir.SEP.$file);
+ 							$ftime = filemtime("{$dir}/{$file}");
  							if (time()-$ftime > 3600*1) // one hour
  							{
- 								unlink($dir.SEP.$file);
+ 								unlink("{$dir}/{$file}");
  							}
  						}
  					}  
@@ -122,4 +122,4 @@
 	* @see @pdf
 	*/
 	include (PHPGW_API_INC . '/pdf/class.ezpdf.php');
-?>
+

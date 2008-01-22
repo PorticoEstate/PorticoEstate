@@ -265,7 +265,7 @@
 
 				if($DEBUG) { echo '<br>process->current(): Incoming status: ' . $appname . ',status: '. $setup_info[$key]['status']; }
 
-				$appdir  = PHPGW_SERVER_ROOT . SEP . $appname . SEP . 'setup' . SEP;
+				$appdir  = PHPGW_SERVER_ROOT . "{$appname}/setup/";
 
 				if ( isset($setup_info[$key]['tables']) 
 					&& $setup_info[$key]['tables'] 
@@ -348,7 +348,7 @@
 			foreach ( array_keys($setup_info) as $key )
 			{
 				$appname = isset($setup_info[$key]['name']) ? $setup_info[$key]['name'] : '';
-				$appdir  = PHPGW_SERVER_ROOT . SEP . $appname . SEP . 'setup' . SEP;
+				$appdir  = PHPGW_SERVER_ROOT . "/{$appname}/setup/";
 
 				if( isset($setup_info[$key]['tables'])
 					&& $setup_info[$key]['tables']
@@ -459,7 +459,7 @@
 			foreach($setup_info as $key => $ignored)
 			{
 				$appname = $setup_info[$key]['name'];
-				$appdir  = PHPGW_SERVER_ROOT . SEP . $appname . SEP . 'setup' . SEP;
+				$appdir  = PHPGW_SERVER_ROOT . "/{$appname}/setup/";
 
 				if(file_exists($appdir.'test_data.inc.php'))
 				{
@@ -496,7 +496,7 @@
 			foreach($setup_info as $key => $ignored)
 			{
 				$appname = $setup_info[$key]['name'];
-				$appdir  = PHPGW_SERVER_ROOT . SEP . $appname . SEP . 'setup' . SEP;
+				$appdir  = PHPGW_SERVER_ROOT . "/{$appname}/setup/";
 
 				if(file_exists($appdir.'tables_baseline.inc.php'))
 				{
@@ -570,7 +570,7 @@
 					$apptitle   = isset($setup_info[$key]['title']) ? $setup_info[$key]['title'] : '';
 					$currentver = $setup_info[$key]['currentver'];
 					$targetver  = $setup_info[$key]['version'];	// The version we need to match when done
-					$appdir     = PHPGW_SERVER_ROOT . SEP . $appname . SEP . 'setup' . SEP;
+					$appdir     = PHPGW_SERVER_ROOT . "/{$appname}/setup/";
 
 					$test   = array();
 					$GLOBALS['phpgw_setup']->oProc->m_aTables = $phpgw_baseline = array();
