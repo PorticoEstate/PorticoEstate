@@ -3,7 +3,7 @@
 	 * phpGroupWare menu handler class
 	 *
 	 * @author Dave Hall <skwashd@phpgroupware.org>
-	 * @copyright Copyright (C) 2007 Free Software Foundation, Inc. http://www.fsf.org/
+	 * @copyright Copyright (C) 2007-2008 Free Software Foundation, Inc. http://www.fsf.org/
 	 * @license http://www.fsf.org/licenses/gpl.html GNU General Public License
 	 * @package phpgwapi
 	 * @subpackage utitlity
@@ -114,12 +114,12 @@
 							$app_text = $app == 'admin' ? lang('General') : lang($app);
 							$menus['navigation']['admin'][$app] = array
 							(
-								'text'	=> $app_text,
+								'text'	=> lang($app),
 								'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.uiconfig.index', 'appname' => $app)),
 								'image'	=> $raw_menu['navbar'][$app]['image'],
 								'children'	=> $menu
 							);
-							break;
+							// no break here - fall thru
 						default:
 							$menus[$mtype][$app] = $menu;
 					}

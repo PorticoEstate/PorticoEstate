@@ -1,6 +1,6 @@
 <?php
 	/**
-	 * Addressbook - Menus
+	 * Admin - Menus
 	 *
 	 * @author Dave Hall <skwashd@phpgroupware.org>
 	 * @copyright Copyright (C) 2007 Free Software Foundation, Inc. http://www.fsf.org/
@@ -28,12 +28,12 @@
 	/**
 	 * Menus
 	 *
-	 * @package addressbook
+	 * @package admin
 	 */	
 	class admin_menu
 	{
 		/**
-		 * Get the menus for the addressbook
+		 * Get the menus for admin
 		 *
 		 * @return array available menus for the current user
 		 */
