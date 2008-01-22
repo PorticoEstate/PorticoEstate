@@ -4,6 +4,19 @@ html
 	height: 100%;
 }
 
+#debug-navbar {
+	position: absolute;
+	width: 1000px;
+	border: 2px solid gray;
+	padding: 1em;
+	z-index: 100;
+	background: white;
+	right: 0px;
+	overflow: scroll;
+	font-size: 11px;
+	bottom: 0px;
+	top: 0px;
+}
 body
 {
 	text-align: left;
@@ -280,12 +293,14 @@ div.treeview
 {
 	display: none;
 }
+
 #navbar a {
 	color: #333;
 	display: block;
 	padding: 0.2em 0em;
 	text-decoration: none;
 }
+
 #navbar ul li a.current span
 {
 	background: lightblue;
