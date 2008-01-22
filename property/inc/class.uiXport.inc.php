@@ -85,7 +85,7 @@
 				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=>2, 'acl_location'=> $this->acl_location));
 			}
 
-			$GLOBALS['phpgw_info']['flags']['menu_selection'] .= 'import';
+			$GLOBALS['phpgw_info']['flags']['menu_selection'] .= '::import';
 			$receipt = $GLOBALS['phpgw']->session->appsession('session_data','import_receipt');
 			$GLOBALS['phpgw']->session->appsession('session_data','import_receipt','');
 
@@ -515,7 +515,7 @@
 				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=>16, 'acl_location'=> $this->acl_location));
 			}
 
-			$GLOBALS['phpgw_info']['flags']['menu_selection'] .= 'export';
+			$GLOBALS['phpgw_info']['flags']['menu_selection'] .= '::export';
 			$GLOBALS['phpgw']->xslttpl->add_file(array('invoice',
 										'search_field'));
 
