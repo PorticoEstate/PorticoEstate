@@ -294,11 +294,13 @@ div.treeview
 	display: none;
 }
 
-#navbar a {
+#navbar a
+{
 	color: #333;
 	display: block;
 	padding: 0.2em 0em;
 	text-decoration: none;
+	white-space: nowrap;
 }
 
 #navbar ul li a.current span
