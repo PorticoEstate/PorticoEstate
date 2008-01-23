@@ -230,7 +230,7 @@
 			(
 				'phpgwapi'		=> true,
 				//if this isn't here, it can never be installed as it is part of the api - skwashd
-				'notifywindows'	=> true ,
+				'notifywindow'	=> true ,
 				'admin'			=> true,
 				'preferences'	=> true
 			);

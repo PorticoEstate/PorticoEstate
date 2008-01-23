@@ -32,11 +32,10 @@
 		require_once('../header.inc.php');
 	}
 
-	if (!function_exists('filter_var')) // filter_var() is only available in PHP 5.2+
+	if ( !function_exists('filter_var') || !function_exists('json_encode') ) // filter_var() and json_encode are only available in PHP 5.2+
 	{
 		die('<h1>You appear to be using PHP ' . PHP_VERSION . " phpGroupWare requires 5.2.0 or later <br>\n"
-			. 'Please contact your System Administrator</h1>'
-			. '<i>Function filter_var missing</i><br>\n');
+			. 'Please contact your System Administrator</h1>');
 	}
 
 	/*  If we included the header.inc.php, but it is somehow broken, cover ourselves... */

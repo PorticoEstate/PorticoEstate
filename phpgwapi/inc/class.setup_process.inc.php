@@ -265,7 +265,7 @@
 
 				if($DEBUG) { echo '<br>process->current(): Incoming status: ' . $appname . ',status: '. $setup_info[$key]['status']; }
 
-				$appdir  = PHPGW_SERVER_ROOT . "{$appname}/setup/";
+				$appdir  = PHPGW_SERVER_ROOT . "/{$appname}/setup/";
 
 				if ( isset($setup_info[$key]['tables']) 
 					&& $setup_info[$key]['tables'] 

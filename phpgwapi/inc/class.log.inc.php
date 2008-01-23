@@ -200,7 +200,7 @@
 				$db =& $GLOBALS['phpgw_setup']->oProc->m_odb;
 				if(!$db->metadata('phpgw_log'))
 				{
-					echo 'Failed to log error to database. DB errno ' . $db->Errno . ': message ' . $db->Error;
+					echo 'Failed to log error to database.';
 					return;
 				}
 			}

@@ -258,7 +258,7 @@
 
 					// Only process phpgwapi, admin and preferences.
 					$setup_info = $GLOBALS['phpgw_setup']->detection->base_install($setup_info);
-					$setup_info = $GLOBALS['phpgw_setup']->process->pass($setup_info,'new',$GLOBALS['DEBUG'],True);
+					$setup_info = $GLOBALS['phpgw_setup']->process->pass($setup_info, 'new', false, true);
 					$GLOBALS['included'] = True;
 					include_once('lang.php');
 					$GLOBALS['phpgw_info']['setup']['currentver']['phpgwapi'] = 'oldversion';

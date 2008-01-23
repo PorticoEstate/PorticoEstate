@@ -52,7 +52,8 @@
 
 	$tpl_root = $GLOBALS['phpgw_setup']->html->setup_tpl_dir('setup');
 	$setup_tpl = CreateObject('phpgwapi.Template',$tpl_root);
-	$setup_tpl->set_file(array(
+	$setup_tpl->set_file(array
+	(
 		'T_head' => 'head.tpl',
 		'T_footer' => 'footer.tpl',
 		'T_alert_msg' => 'msg_alert_msg.tpl',
@@ -74,8 +75,6 @@
 	$setup_tpl->set_block('T_setup_main','submit','submit');
 	$setup_tpl->set_block('T_setup_main','footer','footer');
 	$setup_tpl->set_var('lang_cookies_must_be_enabled', lang('<b>NOTE:</b> You must have cookies enabled to use setup and header admin!') );
-
-	$bg_class = array('row_on', 'row_off');
 
 	/**
 	 * Parse dependencies
@@ -259,6 +258,7 @@
 		{
 			switch ($key)
 			{
+				// ignore these ones
 				case 'application':
 				case 'app_group':
 				case 'app_order':
@@ -429,7 +429,6 @@
 		$setup_tpl->set_var('remove_all',lang('Remove All'));
 		$setup_tpl->set_var('lang_debug',lang('enable debug messages'));
 		$setup_tpl->set_var('debug','<input type="checkbox" name="debug" value="True"' .($DEBUG ? ' checked' : '') . '>');
-		$setup_tpl->set_var('bg_class',$bg_class[0]);
 
 		$setup_tpl->pparse('out','app_header');
 
@@ -438,25 +437,26 @@
 		{
 			if( isset($value['name']) && $value['name'] != 'phpgwapi' && $value['name'] != 'notifywindow')
 			{
-				$i = ++$i % 2;
+				++$i;
+				$row = $i % 2 ? 'off' : 'on';
 				$value['title'] = !isset($value['title']) || !strlen($value['title']) ? str_replace('*', '', lang($value['name'])) : $value['title'];
 				$setup_tpl->set_var('apptitle',$value['title']);
 				$setup_tpl->set_var('currentver', isset($value['currentver']) ? $value['currentver'] : '');
 				$setup_tpl->set_var('version',$value['version']);
-				$setup_tpl->set_var('bg_class', $bg_class[$i]);
+				$setup_tpl->set_var('bg_class',  "row_{$row}");
 				$setup_tpl->set_var('row_remove', '');
                         
 				switch($value['status'])
 				{
 					case 'C':
-						$setup_tpl->set_var('row_remove', 'row_remove_' . ($i ? 'off' : 'on') );
+						$setup_tpl->set_var('row_remove', "row_remove_{$row}");
 						$setup_tpl->set_var('remove','<input type="checkbox" name="remove[' . $value['name'] . ']" />');
 						$setup_tpl->set_var('upgrade','&nbsp;');
 						if (!$GLOBALS['phpgw_setup']->detection->check_app_tables($value['name']))
 						{
 							// App installed and enabled, but some tables are missing
 							$setup_tpl->set_var('instimg','stock_database.png');
-							$setup_tpl->set_var('bg_class','row_err_table_' . ( $i % 1 ? 'off' : 'on') );
+							$setup_tpl->set_var('bg_class', "row_err_table_{$row}");
 							$setup_tpl->set_var('instalt',lang('Not Completed'));
 							$setup_tpl->set_var('resolution','<a href="applications.php?resolve=' . $value['name'] . '&amp;badinstall=True">' . lang('Potential Problem') . '</a>');
 							$status = lang('Requires reinstall or manual repair') . ' - ' . $value['status'];
@@ -479,7 +479,7 @@
 								{
 									$notables = '&amp;notables=True';
 								}
-								$setup_tpl->set_var('bg_class','row_err_gen_' . ( $i % 1 ? 'off' : 'on') );
+								$setup_tpl->set_var('bg_class', "row_err_gen_{$row}");
 								$setup_tpl->set_var('resolution',
 									'<a href="applications.php?resolve=' . $value['name'] .  $notables . '">' . lang('Possible Reasons') . '</a>'
 								);
@@ -492,12 +492,12 @@
 						$setup_tpl->set_var('instalt',lang('Not Completed'));
 						if ( !isset($value['currentver']) || !$value['currentver'] )
 						{
-							$setup_tpl->set_var('bg_class','row_install_' . ( $i % 1 ? 'off' : 'on') );
+							$setup_tpl->set_var('bg_class', "row_install_{$row}");
 							$status = "[{$value['status']}] " . lang('Please install');
 							if ( isset($value['tables']) && is_array($value['tables']) && $GLOBALS['phpgw_setup']->detection->check_app_tables($value['name'],True))
 							{
 								// Some tables missing
-								$setup_tpl->set_var('bg_class', 'row_err_gen_' . ( $i % 1 ? 'off' : 'on') );
+								$setup_tpl->set_var('bg_class', "row_err_gen_{$row}");
 								$setup_tpl->set_var('instimg','stock_database.png');
 								$setup_tpl->set_var('row_remove', 'row_remove_' . ($i ? 'off' : 'on') );
 								$setup_tpl->set_var('remove','<input type="checkbox" name="remove[' . $value['name'] . ']" />');
@@ -508,14 +508,14 @@
 							{
 								$setup_tpl->set_var('remove','&nbsp;');
 								$setup_tpl->set_var('resolution','');
-								$status = "[{$value['status']}] " . lang('Requires upgrade');
+								$status = "[{$value['status']}] " . lang('Available to install');
 							}
 							$setup_tpl->set_var('install','<input type="checkbox" name="install[' . $value['name'] . ']" />');
 							$setup_tpl->set_var('upgrade','&nbsp;');
 						}
 						else
 						{
-							$setup_tpl->set_var('bg_class','row_upgrade_' . ( $i % 1 ? 'off' : 'on') );
+							$setup_tpl->set_var('bg_class', "row_upgrade_{$row}");
 							$setup_tpl->set_var('install','&nbsp;');
 							// TODO display some info about breakage if you mess with this app
 							$setup_tpl->set_var('upgrade','<input type="checkbox" name="upgrade[' . $value['name'] . ']">');
@@ -536,7 +536,7 @@
 						$status = "[{$value['status']}] " . lang('Version Mismatch');
 						break;
 					case 'D':
-						$setup_tpl->set_var('bg_class', 'row_err_gen_' . ( $i % 1 ? 'off' : 'on') );
+						$setup_tpl->set_var('bg_class', "row_err_gen_{$row}");
 						$depstring = parsedep($value['depends']);
 						$setup_tpl->set_var('instimg', 'stock_no.png');
 						$setup_tpl->set_var('instalt',lang('Dependency Failure'));
@@ -547,7 +547,7 @@
 						$status = "[{$value['status']}] " . lang('Dependency Failure') . $depstring;
 						break;
 					case 'P':
-						$setup_tpl->set_var('bg_class', 'row_err_gen_' . ( $i % 1 ? 'off' : 'on') );
+						$setup_tpl->set_var('bg_class', "row_err_gen_{$row}");
 						$depstring = parsedep($value['depends']);
 						$setup_tpl->set_var('instimg', 'stock_no.png');
 						$setup_tpl->set_var('instalt',lang('Post-install Dependency Failure'));
@@ -580,4 +580,3 @@
 		$setup_tpl->pparse('out','footer');
 		$GLOBALS['phpgw_setup']->html->show_footer();
 	}
-?>
