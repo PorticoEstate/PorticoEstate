@@ -33,16 +33,16 @@ function check_all(strTargetAction)
 			<th>{app_status}</th>
 			<th>{app_currentver}</th>
 			<th>{app_version}</th>
-			<th>
+			<th class="checkcell">
 				{app_install}<br>
 				<a href="javascript:check_all('install')"><img src="../phpgwapi/templates/base/images/{check}" title="{install_all}" alt="{install_all}"></a>
 			</th>
-			<th>
+			<th class="checkcell">
 				{app_upgrade}<br>
 				<a href="javascript:check_all('upgrade')"><img src="../phpgwapi/templates/base/images/{check}" title="{install_all}" alt="{install_all}"></a>
 			</th>
 			<th>{app_resolve}</th>
-			<th>
+			<th class="checkcell">
 				{app_remove}<br>
 				<a href="javascript:check_all('remove')"><img src="../phpgwapi/templates/base/images/{check}" title="{install_all}" alt="{install_all}"></a>
 			</th>
@@ -58,10 +58,10 @@ function check_all(strTargetAction)
 			<td>{appinfo}</td>
 			<td>{currentver}</td>
 			<td>{version}</td>
-			<td class="{row_install} centered">{install}</td>
-			<td class="{row_upgrade} centered">{upgrade}</td>
-			<td class="centered">{resolution}&nbsp;</td>
-			<td class="{row_remove} centered">{remove}</td>
+			<td class="{row_install} checkcell">{install}</td>
+			<td class="{row_upgrade} checkcell">{upgrade}</td>
+			<td class="checkcell">{resolution}&nbsp;</td>
+			<td class="{row_remove} checkcell">{remove}</td>
 		</tr>
 <!-- END apps -->
 
@@ -104,14 +104,14 @@ function check_all(strTargetAction)
   </tbody>
   <tr class="th">
     <td colspan="5">{debug} {lang_debug}</td>
-    <td align="center">
+    <td class="checkcell">
      <a href="javascript:check_all('install')"><img src="../phpgwapi/templates/base/images/{check}" title="{install_all}" alt="{install_all}"></a>
     </td>
-    <td align="center">
+    <td class="checkcell">
      <a href="javascript:check_all('upgrade')"><img src="../phpgwapi/templates/base/images/{check}" title="{upgrade_all}" alt="{upgrade_all}"></a>
     </td>
     <td>&nbsp;</td>
-    <td align="center">
+    <td class="checkcell">
       <a href="javascript:check_all('remove')"><img src="../phpgwapi/templates/base/images/{check}" title="{remove_all}" alt="{remove_all}"></a>
     </td>
   </tr>

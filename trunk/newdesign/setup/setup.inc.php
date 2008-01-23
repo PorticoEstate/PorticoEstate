@@ -40,10 +40,6 @@
 	$setup_info['newdesign']['note'] =
 		'Notes for the demo goes here';
 
-	$setup_info['newdesign']['tables'] = array(
-		//'phpgw_demo_table'
-	);
-
 	/* The hooks this app includes, needed for hooks registration */
 	$setup_info['newdesign']['hooks'] = array
 	(
