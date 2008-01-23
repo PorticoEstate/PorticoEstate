@@ -26,7 +26,7 @@
 	* phpGroupWare debug level "error"
 	*/
 	define('PHPGW_E_DEBUG', -1024);
-	
+
 	if ( file_exists('../header.inc.php') )
 	{
 		require_once('../header.inc.php');
@@ -35,7 +35,8 @@
 	if (!function_exists('filter_var')) // filter_var() is only available in PHP 5.2+
 	{
 		die('<h1>You appear to be using PHP ' . PHP_VERSION . " phpGroupWare requires 5.2.0 or later <br>\n"
-			. 'Please contact your System Administrator</h1>');
+			. 'Please contact your System Administrator</h1>'
+			. '<i>Function filter_var missing</i><br>\n');
 	}
 
 	/*  If we included the header.inc.php, but it is somehow broken, cover ourselves... */
@@ -50,7 +51,7 @@
 	{
 		require_once(PHPGW_INCLUDE_ROOT . '/phpgwapi/inc/common_functions.inc.php');
 		$GLOBALS['phpgw'] = createObject('phpgwapi.phpgw');
-		require_once(PHPGW_INCLUDE_ROOT . 'phpgwapi/inc/log_functions.inc.php');
+		require_once(PHPGW_INCLUDE_ROOT . '/phpgwapi/inc/log_functions.inc.php');
 	}
 	else
 	{
@@ -97,7 +98,7 @@
 	/**
 	* cleans up a backtrace array and converts it to a string
 	*
-	* @internal this is such an ugly piece of code due to a reference to the error context 
+	* @internal this is such an ugly piece of code due to a reference to the error context
 	* being in the backtrace and the error context can not be edited - see php.net/set_error_handler
 	* @param array $bt php backtrace
 	* @return string the formatted backtrace, empty if the user is not an admin
@@ -195,11 +196,11 @@
 	* phpGroupWare generic error handler
 	*
 	* @link http://php.net/set_error_handler
-	* 
+	*
 	*/
 	function phpgw_handle_error($error_level, $error_msg, $error_file, $error_line, $error_context = array())
 	{
-		if ( error_reporting() == 0 ) // 0 == @function() so we ignore it, as the dev requested 
+		if ( error_reporting() == 0 ) // 0 == @function() so we ignore it, as the dev requested
 		{
 			return true;
 		}
