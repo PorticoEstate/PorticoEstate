@@ -253,19 +253,24 @@
 			}
 		}
 
-			   // foreign key supports needs MySQL 3.23.44 and up with InnoDB or MySQL 5.1
-			   // or other versions the syntax is parsed in table create commands
-			   // see chapter 1.8.4.5
-			   function GetFKSQL($sFields)
-			   {
-				 if (ereg("\((.*)\)", $sFields, $regs))
-				 {
-				   $ret = "FOREIGN KEY (".$regs[1].")\n" .
-					 "  REFERENCES ".$sFields;
-				   return $ret;
-				 } else
-				   return ""; // incorrect FK declaration found
-			   }
+	   	// foreign key supports needs MySQL 3.23.44 and up with InnoDB or MySQL 5.1
+	   	// or other versions the syntax is parsed in table create commands
+	   	// see chapter 1.8.4.5
+
+		function GetFKSQL($reftable, $sFields)
+		{
+			if(is_array($sFields))
+			{
+				$ret = "FOREIGN KEY (".implode(',',array_keys($sFields)).")\n" .
+					"  REFERENCES $reftable(".implode(',',array_values($sFields)).")";
+				return $ret;
+			}
+			else
+			{
+				return ""; // incorrect FK declaration found
+			}
+		}
+
 
 		function _GetColumns($oProc, $sTableName, &$sColumns, $sDropColumn = '')
 		{

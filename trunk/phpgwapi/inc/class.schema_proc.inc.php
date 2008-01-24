@@ -601,7 +601,10 @@
 			{
 				$sFKSQLarr[] = $this->m_oTranslator->GetFKSQL($reftable, $sField);
 			}
-			$sFKSQL = implode(",\n",$sFKSQLarr);
+			if(isset($sFKSQLarr[0]) && $sFKSQLarr[0])
+			{
+				$sFKSQL = implode(",\n",$sFKSQLarr);
+			}
 			
 			return True;
 		}
