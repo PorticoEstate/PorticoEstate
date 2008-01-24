@@ -129,7 +129,8 @@
 			display_sidebox($menu_title, $menu);
 		}
 
-		if ( isset($navigation[$GLOBALS['phpgw_info']['flags']['currentapp']]) )
+		if ( isset($navigation[$GLOBALS['phpgw_info']['flags']['currentapp']])
+			&& $GLOBALS['phpgw_info']['flags']['currentapp'] != 'admin' )
 		{
 			display_sidebox($navbar[$GLOBALS['phpgw_info']['flags']['currentapp']]['text'], $navigation[$GLOBALS['phpgw_info']['flags']['currentapp']]);
 		}
@@ -143,12 +144,9 @@
 			}
 		}
 
-		if ( $GLOBALS['phpgw_info']['flags']['currentapp'] != 'admin' )
+		if ( isset($navigation['admin'][$GLOBALS['phpgw_info']['flags']['currentapp']]['children']) )
 		{
-			if ( isset($navigation['admin'][$GLOBALS['phpgw_info']['flags']['currentapp']]['children']) )
-			{
-				display_sidebox(lang('administration'), $navigation['admin'][$GLOBALS['phpgw_info']['flags']['currentapp']]['children']);
-			}
+			display_sidebox(lang('administration'), $navigation['admin'][$GLOBALS['phpgw_info']['flags']['currentapp']]['children']);
 		}
 
 		$GLOBALS['phpgw']->template->pparse('out', 'navbar_footer');
@@ -167,46 +165,6 @@
 		$GLOBALS['phpgw']->template->set_root(PHPGW_APP_TPL);
 		$GLOBALS['phpgw']->hooks->process('after_navbar');
 	}
-
-	/*
-	function process_menu($menus, $level = null, $item = null)
-	{
-		$class = $level ? '' : ' class="first-of-type"';
-		$html = <<<HTML
-			<div id="menubar{$level}{$item}" class="yuimenubar">
-				<div class="bd">
-					<ul{$class}>
-
-HTML;
-
-		++$level;
-		foreach ( $menus as $id => $menu )
-		{
-			$html .= <<<HTML
-						<li class="yuimenuitem">
-							<a href="{$menu['url']}" class="yuimenuitemlabel">{$menu['text']}</a>
-
-HTML;
-			if ( isset($menu['children']) && count($menu['children']) )
-			{
-				$html .= process_menu($menu['children'], $level, $id);
-			}
-
-			$html .= <<<HTML
-						</li>
-
-HTML;
-		}
-		$html .= <<<HTML
-					</ul>
-				</div>
-			</div>
-
-HTML;
-		return $html;
-	}
-	*/
-
 
 	/**
 	* Display sidebox
