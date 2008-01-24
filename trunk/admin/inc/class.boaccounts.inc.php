@@ -112,6 +112,7 @@
 			$new_group = CreateObject('phpgwapi.accounts', $values['account_id'], 'g');
 			$new_group->read_repository();
 			$new_group->firstname = $values['account_name'];
+			$new_group->lastname = lang('group');
 
 			//TODO Move to transactions?
 			$GLOBALS['phpgw']->db->lock(array('phpgw_accounts',
@@ -125,19 +126,19 @@
 											  'phpgw_lang' // why lang? no idea, ask sigurd :)
 											 ));
 
-			$id = $values['account_id'];
+			$id = (int) $values['account_id'];
 			if ( $id == 0 ) // add new group?
 			{
 			  	$new_group_values = array
-			  						(
-										'account_type'	=> 'g',
-										'account_lid'	=> $values['account_name'],
-										'passwd'		=> '',
-										'firstname'		=> $values['account_name'],
-										'lastname'		=> lang('group'),
-										'status'		=> 'A',
-										'expires'		=> -1
-									);
+				(
+					'account_type'	=> 'g',
+					'account_lid'	=> $values['account_name'],
+					'passwd'		=> '',
+					'firstname'		=> $values['account_name'],
+					'lastname'		=> $new_group->lastname ,
+					'status'		=> 'A',
+					'expires'		=> -1
+				);
 				$id = $new_group->create($new_group_values, false);
 				//echo "bo::edit_group id == {$id}";
 			}
@@ -145,10 +146,12 @@
 			{
 				$new_group->save_repository();
 			}
-			$GLOBALS['phpgw']->db->unlock();															 
+			$GLOBALS['phpgw']->db->unlock();
+
+			$new_apps = array();
 
 			// get all new applications for this group
-			$apps = CreateObject('phpgwapi.applications', $values['account_id']);
+			$apps = CreateObject('phpgwapi.applications', $id);
 			$old_apps = array_keys($apps->read()); 	 
 			foreach($values['account_apps'] as $key => $value)
 			{
@@ -157,11 +160,11 @@
 					$new_apps[] = $key;
 				}
 			}
-			$this->set_module_permissions($new_group->account_id, $values['account_apps']);
+			$this->set_module_permissions($id, $values['account_apps']);
 
 			// members handling
 			// Add new members to group
-			$acl = CreateObject('phpgwapi.acl', $values['account_id']);
+			$acl = CreateObject('phpgwapi.acl', $id);
 			$old_group_list = $old_group->get_members();
 			for($i = 0; $i < count($values['account_user']); $i++)
 			{
@@ -177,7 +180,7 @@
 				}
 				if($is_new)
 				{
-					$acl->add_repository('phpgw_group', $new_group->account_id, $values['account_user'][$i],1);
+					$acl->add_repository('phpgw_group', $id, $values['account_user'][$i],1);
 					$this->refresh_session_data($values['account_user'][$i]);
 					
 					// The following sets any default preferences needed for new applications..
@@ -212,13 +215,13 @@
 			{
 				if($value)
 				{
-					$acl->delete_repository('phpgw_group',$new_group->account_id, $value);
+					$acl->delete_repository('phpgw_group',$id, $value);
 					$this->refresh_session_data($values['account_user'][$i]);
 				}
 			}
 			
 			//Add the group manager
-			$acl->add_repository('phpgw_group', $new_group->account_id, $values['group_manager'], PHPGW_ACL_GROUP_MANAGERS | 1);
+			$acl->add_repository('phpgw_group', $id, $values['group_manager'], PHPGW_ACL_GROUP_MANAGERS | 1);
 
 			// Things that have to change because of new group name
 			// FIXME this needs to be changed to work with all VFS backends
@@ -636,14 +639,15 @@
 			if($id && is_array($modules) )
 			{
 				$apps = CreateObject('phpgwapi.applications', $id);
-				$apps->data = array(); //remove all existing rights
+				$data = array(); //remove all existing rights
 				foreach ( $modules as $app_name => $app_status ) 
 				{
 					if ( $app_status )
 					{
-						$apps->add($app_name);
+						$data[] = $app_name;
 					}
 				}
+				$apps->update_data($data);
 				$apps->save_repository();
 			}
 		}
