@@ -425,65 +425,74 @@
 			$this->set_data($account_info, $default_prefs);
 			$this->db->transaction_begin();
 			
-			$values= array
+			$person_id = 0;
+			if ( $account_info['account_type'] == 'u' )
+			{
+				// FIXME this should use the contacts classes via this->save_contact_for_account
+				$values= array
+				(
+					-3,
+					'public',
+					1,
+				);
+
+				$values	= $this->db->validate_insert($values);
+
+				$this->db->query("INSERT INTO phpgw_contact (owner,access,contact_type_id) "
+					. "VALUES ($values)",__LINE__,__FILE__);
+				$person_id = $this->db->get_last_insert_id('phpgw_contact','contact_id');
+
+				$ts = time();
+				$values= array
+				(
+					$person_id,
+					$this->db->db_addslashes($this->firstname),
+					$this->db->db_addslashes($this->lastname),
+					((isset($this->status) && $this->status == 'A') ? 'Y':'N'),
+					$ts,
+					-3,
+					$ts,
+					-3	
+				);
+
+				$values	= $this->db->validate_insert($values);
+
+				$this->db->query("INSERT INTO phpgw_contact_person (person_id,first_name,last_name,active,created_on,created_by,modified_on,modified_by) "
+					. "VALUES ($values)",__LINE__,__FILE__);
+			}
+
+
+			$fields = array
 			(
-				-3,
-				'public',
-				1,
+				'account_lid',
+				'account_type',
+				'account_pwd',
+				'account_firstname',
+				'account_lastname',
+				'account_status',
+				'account_expires',
+				'person_id',
+				'account_quota'
 			);
-
-			$values	= $this->db->validate_insert($values);
-
-			$this->db->query("INSERT INTO phpgw_contact (owner,access,contact_type_id) "
-				. "VALUES ($values)",__LINE__,__FILE__);
-			$person_id = $this->db->get_last_insert_id('phpgw_contact','contact_id');
-
-			$values= array
+			$values = array
 			(
-				$person_id,
-				$this->db->db_addslashes($this->firstname),
-				$this->db->db_addslashes($this->lastname),
-				((isset($this->status) && $this->status == 'A') ? 'Y':'N'),
-				time(),
-				0,
-				time(),
-				0	
+				"'".$this->db->db_addslashes($this->lid)."'",
+				"'".$this->db->db_addslashes($account_info['account_type'])."'",
+				"'".md5($this->password)."'",
+				"'".$this->db->db_addslashes($this->firstname)."'",
+				"'".$this->db->db_addslashes($this->lastname)."'",
+				"'".$this->db->db_addslashes($this->status)."'",
+				(int) $this->expires,
+				(int) $person_id,
+				(int) $this->quota
 			);
-
-			$values	= $this->db->validate_insert($values);
-
-			$this->db->query("INSERT INTO phpgw_contact_person (person_id,first_name,last_name,active,created_on,created_by,modified_on,modified_by) "
-				. "VALUES ($values)",__LINE__,__FILE__);
-
-
-			$fields = array('account_lid',
-							'account_type',
-							'account_pwd',
-							'account_firstname',
-							'account_lastname',
-							'account_status',
-							'account_expires',
-							'person_id',
-							'account_quota'
-						   );
-			$values = array("'".$this->db->db_addslashes($this->lid)."'",
-							"'".$this->db->db_addslashes($account_info['account_type'])."'",
-							"'".md5($this->password)."'",
-							"'".$this->db->db_addslashes($this->firstname)."'",
-							"'".$this->db->db_addslashes($this->lastname)."'",
-							"'".$this->db->db_addslashes($this->status)."'",
-							intval($this->expires),
-							intval($person_id),
-							intval($this->quota)
-						   );
 			if((int)$this->account_id && !$this->exists((int)$this->account_id))
 			{
 				$fields[] = 'account_id';
 				$values[] = (int)$this->account_id;
 			}
 			$this->db->query('INSERT INTO phpgw_accounts ('.implode($fields, ',').') '.
-												 'VALUES ('.implode($values, ',').')',
-							 __LINE__,__FILE__);
+							'VALUES ('.implode($values, ',').')',  __LINE__, __FILE__);
 
 			$account_info['account_id'] = $this->db->get_last_insert_id('phpgw_accounts','account_id');
 			$this->db->transaction_commit();

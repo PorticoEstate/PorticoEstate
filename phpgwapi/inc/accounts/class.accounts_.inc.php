@@ -293,43 +293,46 @@
 
 		function save_contact_for_account($userData)
 		{
+			
 			$owner = $GLOBALS['phpgw_info']['server']['addressmaster'];
 			$contacts = createObject('phpgwapi.contacts');
 			$type = $contacts->search_contact_type('Persons');
 
 			$comms=(is_array($userData['extra_contact']['comms'])) ? $userData['extra_contact']['comms'] : false;
-						$principal=(is_array($userData['extra_contact']['principal'])) ? $userData['extra_contact']['principal'] : false;
-						$locations=(is_array($userData['extra_contact']['locations'])) ? $userData['extra_contact']['locations'] : false;
-						$categories=(is_array($userData['extra_contact']['categories'])) ? $userData['extra_contact']['categories'] : false;
-						$others=(is_array($userData['extra_contact']['others'])) ? $userData['extra_contact']['others'] : false;
-						$notes=(is_array($userData['extra_contact']['notes'])) ? $userData['extra_contact']['notes'] : false;
-						$relationship=(is_array($userData['extra_contact']['relationship'])) ? $userData['extra_contact']['relationship'] : false;
+			$principal=(is_array($userData['extra_contact']['principal'])) ? $userData['extra_contact']['principal'] : false;
+			$locations=(is_array($userData['extra_contact']['locations'])) ? $userData['extra_contact']['locations'] : false;
+			$categories=(is_array($userData['extra_contact']['categories'])) ? $userData['extra_contact']['categories'] : false;
+			$others=(is_array($userData['extra_contact']['others'])) ? $userData['extra_contact']['others'] : false;
+			$notes=(is_array($userData['extra_contact']['notes'])) ? $userData['extra_contact']['notes'] : false;
+			$relationship=(is_array($userData['extra_contact']['relationship'])) ? $userData['extra_contact']['relationship'] : false;
 
 			$principal['owner'] = $owner;
-						$principal['access']= 'public';
-						$principal['per_prefix'] = $userData['account_lid'];
-						$principal['per_first_name'] = $userData['account_firstname'];
-						$principal['per_last_name'] = $userData['account_lastname'];
-			
+			$principal['access']= 'public';
+			$principal['per_prefix'] = $userData['account_lid'];
+			$principal['per_first_name'] = $userData['account_firstname'];
+			$principal['per_last_name'] = $userData['account_lastname'];
+
 			if(isset($userData['domain']))
-						{
-								$domain=$userData['domain'];
-						}
-						else
-						{
-								$domain=$GLOBALS['phpgw_info']['server']['mail_server'];
-						}
-						if($domain)//Attempts to grab domain succeded
-						{
-								$comm['comm_descr']=$contacts->search_comm_descr('work email');
-								$comm['comm_data']=$userData['account_lid'].'@'.$domain;
-								$comm['comm_preferred']='Y';
+			{
+				$domain=$userData['domain'];
+			}
+			else
+			{
+				$domain=$GLOBALS['phpgw_info']['server']['mail_server'];
+			}
+
+
+			if($domain)//Attempts to grab domain succeded
+			{
+				$comm['comm_descr'] = $contacts->search_comm_descr('work email');
+				$comm['comm_data'] = $userData['account_lid'].'@'.$domain;
+				$comm['comm_preferred']='Y';
 				$comms = array($comm);
-						}
-						else
-						{
-								$comms='';
-						}
+			}
+			else
+			{
+				$comms='';
+			}
 
 			if ($userData['person_id'] && $contacts->exist_contact($userData['person_id']))
 			{
