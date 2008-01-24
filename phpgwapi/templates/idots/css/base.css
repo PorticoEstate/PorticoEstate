@@ -21,32 +21,35 @@ img
 	border: 0px;
 }
 
-label, input[type=text], input[type=password], select, textarea
-{
-	/*
-	display: block;
-	float: left;
-	margin-bottom: 8px;
-	width: 400px;
-	*/
-}
-
 input.button
 {
 	margin: 10px;
 	width: auto;
 }
 
-input.error, select.error, textarea.error
+.error
 {
+	background-color: #fcc;
 	border: 1px solid #f00;
-	background-color: #f99;
 	color: #f00;
+}
+
+.warn
+{
+	background-color: #ff8;
+	border: 1px solid #fc0;
+	color: #fc0;
+}
+
+div.error, div.warn
+{
+	font-weight: bold;
+	padding: 5px;
+	text-align: center;
 }
 
 label
 {
-	font-weight: bold;
 	padding-right: 10px;
 	text-align: right;
 	vertical-align: top;

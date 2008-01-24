@@ -597,10 +597,14 @@
 		{
 			if (!$GLOBALS['phpgw']->acl->check('run', PHPGW_ACL_READ, $GLOBALS['phpgw_info']['flags']['currentapp']))
 			{
-				$GLOBALS['phpgw']->common->phpgw_header( true ); //!(isset($GLOBALS['phpgw_info']['flags']['nonavbar']) && $GLOBALS['phpgw_info']['flags']['nonavbar']) );
+				$GLOBALS['phpgw']->common->phpgw_header(true);
 				$GLOBALS['phpgw']->log->write(array('text'=>'W-Permissions, Attempted to access %1','p1'=>$GLOBALS['phpgw_info']['flags']['currentapp']));
 
-				echo '<p><center><b>'.lang('Access not permitted').'</b></center>';
+				$lang_denied = lang('Access not permitted');
+				echo <<<HTML
+					<div class="error">$lang_denied</div>
+
+HTML;
 				$GLOBALS['phpgw']->common->phpgw_exit(True);
 			}
 		}
