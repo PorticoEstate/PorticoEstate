@@ -102,7 +102,7 @@
 	$username	= '';
 	$fname		= '';
 	$lname		= '';
-	$create_demo = true;
+	$create_demo = false;
 	
 	$errors = array();
 	$GLOBALS['phpgw_setup']->loaddb();
@@ -305,4 +305,3 @@
 		$setup_tpl->pparse('out','T_setup_demo');
 		$GLOBALS['phpgw_setup']->html->show_footer();
 	}
-?>

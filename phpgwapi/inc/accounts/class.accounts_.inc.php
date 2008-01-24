@@ -200,6 +200,7 @@
 	abstract class accounts_
 	{
 		var $account_id;
+		var $account_lid;
 		var $lid;
 		var $firstname;
 		var $lastname;
@@ -877,14 +878,14 @@
 		{
 			$this->account_id		= isset($data['account_id']) ? (int)$data['account_id'] : $this->account_id;
 			$this->lid				= isset($data['account_lid']) ? $data['account_lid'] : $this->lid;
-			$this->firstname		= $data['account_firstname'] ? $data['account_firstname'] : $this->firstname;
-			$this->lastname			= $data['account_lastname'] ? $data['account_lastname'] : $this->lastname;
-			$this->password			= $data['account_passwd'] ? $data['account_passwd'] : $this->password;
-			$data['account_status']	= !$data['account_status'] ? $data['status'] : $data['account_status'];
-			$this->status			= $data['account_status'] ? $data['account_status'] : $this->status;
-			$data['account_expires']= !$data['account_expires'] ? $data['expires'] : $data['account_expires'];
-			$this->expires			= $data['account_expires'] ? $data['account_expires'] : $this->expires;
-			$this->person_id		= $data['person_id'] ? $data['person_id'] : $this->person_id;
+			$this->firstname		= isset($data['account_firstname']) ? $data['account_firstname'] : $this->firstname;
+			$this->lastname			= isset($data['account_lastname']) ? $data['account_lastname'] : $this->lastname;
+			$this->password			= isset($data['account_passwd']) ? $data['account_passwd'] : $this->password;
+			$data['account_status']	= !isset($data['account_status']) ? $data['status'] : $data['account_status'];
+			$this->status			= isset($data['account_status']) ? $data['account_status'] : $this->status;
+			$data['account_expires']= !isset($data['account_expires']) ? $data['expires'] : $data['account_expires'];
+			$this->expires			= isset($data['account_expires']) ? $data['account_expires'] : $this->expires;
+			$this->person_id		= isset($data['person_id']) ? $data['person_id'] : $this->person_id;
 			$this->quota			= isset($data['quota']) ? (int)$data['quota'] : $this->quota;
 			return true;
 		}

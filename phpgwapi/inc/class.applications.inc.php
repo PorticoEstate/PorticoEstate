@@ -212,13 +212,19 @@
 		function save_repository()
 		{
 			$num_rows = $GLOBALS['phpgw']->acl->delete_repository("%%", 'run', $this->account_id);
-			while($app = each($this->data))
+
+			if ( !is_array($this->data) || !count($this->data) )
 			{
-				if(!$this->is_system_enabled($app[0]))
+				return array();
+			}
+
+			foreach ( $this->data as $app )
+			{
+				if ( !$this->is_system_enabled($app) )
 				{
 					continue;
 				}
-				$GLOBALS['phpgw']->acl->add_repository($app[0],'run',$this->account_id,1);
+				$GLOBALS['phpgw']->acl->add_repository($app, 'run', $this->account_id, 1);
 			}
 			return $this->data;
 		}

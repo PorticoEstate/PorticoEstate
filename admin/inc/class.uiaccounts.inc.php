@@ -393,7 +393,7 @@
 																				  $entry['account_firstname'],
 																				  $entry['account_lastname']
 																				 ),
- 					'selected'		=> in_array(intval($entry['account_id']), $group_members) ? ' selected' : ''
+ 					'selected'		=> in_array((int) $entry['account_id'], $group_members) ? ' selected' : ''
 				);
 				if ( in_array( (int)$entry['account_id'], $group_members) )
 				{
@@ -880,7 +880,7 @@
 				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'admin.uiaccounts.list_groups'));
 			}
 
-			if ($account_id && phpgw::get_var('delete', 'bool', 'POST') )
+			if ($account_id && phpgw::get_var('confirm', 'bool', 'POST') )
 			{
 				$this->bo->delete_group($account_id);
 				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'admin.uiaccounts.list_groups'));
@@ -892,13 +892,15 @@
 
 			$data = array
 			(
-				'delete_url'				=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.uiaccounts.delete_group', 'account_id' => $account_id)),
-				'lang_delete'				=> lang('delete'),
-				'lang_cancel'				=> lang('cancel'),
+				'delete_action'				=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.uiaccounts.delete_group', 'account_id' => $account_id)),
+				'lang_yes'					=> lang('delete'),
+				'lang_no'					=> lang('cancel'),
 				'lang_delete_statustext'	=> lang('delete the group'),
 				'lang_cancel_statustext'	=> lang('Leave the group untouched and return back to the list'),
 				'lang_delete_msg'			=> lang('are you sure you want to delete this group ?')
 			);
+			// avoid another call to phpgw::link
+			$data['cancel_action'] = $data['delete_action'];
 
 			$old_group_list = $GLOBALS['phpgw']->acl->get_ids_for_location(intval($account_id),1,'phpgw_group');
 
