@@ -97,9 +97,6 @@
 
 // -- end config
 
-
-	$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_sms_gwmodUplink (up_local_slid,up_remote_slid,up_status) VALUES (3,259,1)");
-
 	$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_sms_featautoreply (uid, autoreply_code) VALUES (1,'HELP')");
 
 	$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_sms_featautoreply_scenario (autoreply_id,autoreply_scenario_param1,autoreply_scenario_param2,autoreply_scenario_param3,autoreply_scenario_param4,autoreply_scenario_param5,autoreply_scenario_param6,autoreply_scenario_param7,autoreply_scenario_result) VALUES (1,'INTERNET','DOWN','','','','','','Please contact sysadmin via phone: +62 21 8613027')");
