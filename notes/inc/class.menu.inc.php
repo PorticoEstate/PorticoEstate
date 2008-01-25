@@ -45,7 +45,7 @@
 			(
 				'notes' => array
 				(
-					'text'	=> $GLOBALS['phpgw']->translations->translate('notes', array(), true),
+					'text'	=> $GLOBALS['phpgw']->translation->translate('notes', array(), true),
 					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'notes.uinotes.index') ),
 					'image'	=> array('notes', 'navbar'),
 					'order'	=> 8,
@@ -58,7 +58,7 @@
 				array
 				(
 					'url'   => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'notes.uinotes.edit')),
-					'text'  => $GLOBALS['phpgw']->translations->translate('New', array(), true),
+					'text'  => $GLOBALS['phpgw']->translation->translate('New', array(), true),
 					'image' => array('notes', 'new')
 				)
 
@@ -98,7 +98,7 @@
 				array
 				(
 					'url'   => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'notes.uinotes.edit')),
-					'text'  => $GLOBALS['phpgw']->translations->translate('New', array(), true),
+					'text'  => $GLOBALS['phpgw']->translation->translate('New', array(), true),
 					'image' => array('notes', 'new')
 				)
 			);

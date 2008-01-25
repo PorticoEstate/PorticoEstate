@@ -45,7 +45,7 @@
 			(
 				'preferences' => array
 				(
-					'text'	=> $GLOBALS['phpgw']->translations->translate('Preferences', array(), true),
+					'text'	=> $GLOBALS['phpgw']->translation->translate('Preferences', array(), true),
 					'url'	=> $GLOBALS['phpgw']->link('/preferences/index.php'),
 					'image'	=> array('preferences', 'navbar'),
 					'order'	=> 0,
@@ -58,7 +58,7 @@
 			$menus['navigation'] = array();
 			$menus['navigation'][] = array
 			(
-				'text'	=> $GLOBALS['phpgw']->translations->translate('My Preferences', array(), true),
+				'text'	=> $GLOBALS['phpgw']->translation->translate('My Preferences', array(), true),
 				'url'	=> $GLOBALS['phpgw']->link('/preferences/preferences.php', array('appname'	=> 'preferences')),
 				'image'	=> array('preferences', 'preferences')
 			);
@@ -67,7 +67,7 @@
 			{
 				$menus['navigation'][] = array
 				(
-					'text'	=> $GLOBALS['phpgw']->translations->translate('Change your Password', array(), true),
+					'text'	=> $GLOBALS['phpgw']->translation->translate('Change your Password', array(), true),
 					'url'	=> $GLOBALS['phpgw']->link('/preferences/changepassword.php')
 				);
 			}
@@ -78,7 +78,7 @@
 				{
 					$menus['navigation'][] = array
 					(
-						'text'	=> $GLOBALS['phpgw']->translations->translate('Mapping', array(), true),
+						'text'	=> $GLOBALS['phpgw']->translation->translate('Mapping', array(), true),
 						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'preferences.uimapping.index', 'appname' => 'preferences') )
 					);
 				}
@@ -88,12 +88,12 @@
 			{
 				$menus['navigation'][] = array
 				(
-					'text'	=> $GLOBALS['phpgw']->translations->translate('Default Preferences', array(), true),
+					'text'	=> $GLOBALS['phpgw']->translation->translate('Default Preferences', array(), true),
 					'url'	=> $GLOBALS['phpgw']->link('/preferences/index.php', array('type' => 'default') )
 				);
 				$menus['navigation'][] = array
 				(
-					'text'	=> $GLOBALS['phpgw']->translations->translate('Forced Preferences', array(), true),
+					'text'	=> $GLOBALS['phpgw']->translation->translate('Forced Preferences', array(), true),
 					'url'	=> $GLOBALS['phpgw']->link('/preferences/index.php', array('type' => 'forced') )
 				);
 			}
@@ -102,13 +102,13 @@
 			(
 				array
 				(
-					'text'	=> $GLOBALS['phpgw']->translations->translate('Preferences', array(), true),
+					'text'	=> $GLOBALS['phpgw']->translation->translate('Preferences', array(), true),
 					'url'	=> $GLOBALS['phpgw']->link('/preferences/preferences.php', array('appname'	=> 'preferences')),
 					'image'	=> array('preferences', 'preferences')
 				),
 				array
 				(
-					'text'	=> $GLOBALS['phpgw']->translations->translate('Change your Password', array(), true),
+					'text'	=> $GLOBALS['phpgw']->translation->translate('Change your Password', array(), true),
 					'url'	=> $GLOBALS['phpgw']->link('/preferences/changepassword.php')
 				)
 			);
