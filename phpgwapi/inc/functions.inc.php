@@ -506,7 +506,7 @@
 		if(isset($GLOBALS['phpgw_info']['user']['preferences']['common']['lang']) && $GLOBALS['phpgw_info']['user']['preferences']['common']['lang'] !='en')
 		{
 			$GLOBALS['phpgw']->translation->userlang = $GLOBALS['phpgw_info']['user']['preferences']['common']['lang'];
-			$GLOBALS['phpgw']->translation->translation($reset = True);
+			$GLOBALS['phpgw']->translation->__construct($reset = True);
 		}
 
 		$redirect = unserialize(phpgw::get_var('redirect','raw', 'COOKIE'));
