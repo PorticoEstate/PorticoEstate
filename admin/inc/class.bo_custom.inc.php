@@ -68,7 +68,7 @@
 			$start		= phpgw::get_var('start', 'int');
 			$query		= phpgw::get_var('query');
 			$sort		= phpgw::get_var('sort');
-			$order		= phpgw::get_var('order', 'string', 'REQUEST', 'attrib_sort');
+			$order		= phpgw::get_var('order');
 			$filter		= phpgw::get_var('filter');
 			$location	= phpgw::get_var('location');
 			$allrows	= phpgw::get_var('allrows', 'bool');

@@ -583,6 +583,7 @@
 
 		function edit_custom_function()
 		{
+			$GLOBALS['phpgw_info']['flags']['menu_selection'] .= '::list_functions';
 			$appname	= $this->appname;
 			$location	= $this->location;
 			$id			= phpgw::get_var('id', 'int');
