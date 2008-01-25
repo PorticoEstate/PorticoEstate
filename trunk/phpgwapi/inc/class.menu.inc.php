@@ -114,7 +114,7 @@
 							$app_text = $app == 'admin' ? lang('General') : lang($app);
 							$menus['navigation']['admin'][$app] = array
 							(
-								'text'	=> lang($app),
+								'text'	=> $GLOBALS['phpgw']->translations->translate($app, array(), true),
 								'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.uiconfig.index', 'appname' => $app)),
 								'image'	=> $raw_menu['navbar'][$app]['image'],
 								'children'	=> $menu

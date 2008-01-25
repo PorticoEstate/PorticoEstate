@@ -45,7 +45,7 @@
 			(
 				'todo' => array
 				(
-					'text'	=> lang('todo'),
+					'text'	=> $GLOBALS['phpgw']->translations->translate('todo', array(), true),
 					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'todo.uitodo.show_list') ),
 					'image'	=> array('todo', 'navbar'),
 					'order'	=> 10,
@@ -57,7 +57,7 @@
 			(
 				array
 				(
-					'text'	=> lang('New'),
+					'text'	=> $GLOBALS['phpgw']->translations->translate('New', array(), true),
 					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'todo.uitodo.add') ),
 				)
 			);
@@ -68,7 +68,7 @@
 				(
 					array
 					(
-						'text'	=> lang('Global Categories'),
+						'text'	=> $GLOBALS['phpgw']->translations->translate('Global Categories', array(), true),
 						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.uicategories.index', 'appname' => 'todo', 'global_cats' => 1) )
 					)
 				);
@@ -80,24 +80,24 @@
 				(
 					array
 					(
-						'text'	=> lang('Preferences'),
+						'text'	=> $GLOBALS['phpgw']->translations->translate('Preferences', array(), true),
 						'url'	=> $GLOBALS['phpgw']->link('/preferences/preferences.php', array('appname'	=> 'todo')),
 					),
 					array
 					(
-						'text'	=> lang('Grant Access'),
+						'text'	=> $GLOBALS['phpgw']->translations->translate('Grant Access', array(), true),
 						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'preferences.uiadmin_acl.aclprefs', 'acl_app' => 'todo'))
 					),
 					array
 					(
-						'text'	=> lang('Edit categories'),
+						'text'	=> $GLOBALS['phpgw']->translations->translate('Edit categories', array(), true),
 						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'preferences.uicategories.index', 'cats_app' => 'todo', 'cats_level' => 1, 'global_cats'=> 1))
 					)
 				);
 
 				$menus['toolbar'][] = array
 				(
-					'text'	=> lang('Preferences'),
+					'text'	=> $GLOBALS['phpgw']->translations->translate('Preferences', array(), true),
 					'url'	=> $GLOBALS['phpgw']->link('/preferences/preferences.php', array('appname'	=> 'todo')),
 					'image'	=> array('todo', 'preferences')
 				);
@@ -107,7 +107,7 @@
 			(
 				array
 				(
-					'text'	=> lang('New'),
+					'text'	=> $GLOBALS['phpgw']->translations->translate('New', array(), true),
 					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'todo.uitodo.add') ),
 				)
 			);

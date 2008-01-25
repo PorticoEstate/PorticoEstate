@@ -178,4 +178,3 @@
 	}
 
 	$uilogin->phpgw_display_login($variables);
-?>
