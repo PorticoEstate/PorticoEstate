@@ -211,6 +211,7 @@
 			$choice_table = 'phpgw_cust_choice';
 			$attribute_table = 'phpgw_cust_attribute';
 			$attribute_filter = " custom = 1 AND appname = 'property' AND location = '.location." . $type_id . "'";
+			$attribute_choice_filter = " appname = 'property' AND location = '.location." . $type_id . "'";
 
 			if(!$sql)
 			{
@@ -584,7 +585,7 @@
 						if(($cols_return_extra[$i]['datatype']=='R' || $cols_return_extra[$i]['datatype']=='LB') && $value)
 						{
 					//		$sql="SELECT value FROM fm_location_choice where type_id=$type_id AND attrib_id=" .$cols_return_extra[$i]['attrib_id']. "  AND id=" . $value;
-							$sql="SELECT value FROM $choice_table WHERE $attribute_filter AND attrib_id=" .$cols_return_extra[$i]['attrib_id']. "  AND id=" . $value;
+							$sql="SELECT value FROM $choice_table WHERE $attribute_choice_filter AND attrib_id=" .$cols_return_extra[$i]['attrib_id']. "  AND id=" . $value;
 							$this->db2->query($sql);
 							$this->db2->next_record();
 							$location_list[$j][$cols_return_extra[$i]['name']] = $this->db2->f('value');
@@ -610,7 +611,7 @@
 								for ($k=0;$k<count($ch);$k++)
 								{
 			//						$sql="SELECT value FROM fm_location_choice where type_id=$type_id AND attrib_id=" .$cols_return_extra[$i]['attrib_id']. "  AND id=" . $ch[$k];
-									$sql="SELECT value FROM $choice_table WHERE $attribute_filter AND attrib_id=" .$cols_return_extra[$i]['attrib_id']. "  AND id=" . $ch[$k];
+									$sql="SELECT value FROM $choice_table WHERE $attribute_choice_filter AND attrib_id=" .$cols_return_extra[$i]['attrib_id']. "  AND id=" . $ch[$k];
 									$this->db2->query($sql);
 									while ($this->db2->next_record())
 									{
