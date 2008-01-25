@@ -40,6 +40,8 @@
 		var $sort;
 		var $order;
 		var $cat_id;
+		var $entity_id;
+		var $status_id;
 
 		var $public_functions = array
 		(
@@ -115,7 +117,7 @@
 			{
 				$this->status_id = $status_id;
 			}
-			if(isset($entity_id))
+			if($entity_id)
 			{
 				$this->entity_id = $entity_id;
 			}
@@ -150,7 +152,7 @@
 			$this->sort		= $data['sort'];
 			$this->order	= $data['order'];
 			$this->cat_id	= $data['cat_id'];
-			$this->entity_id	= $data['entity_id'];
+		//	$this->entity_id	= $data['entity_id'];
 			$this->doc_type	= $data['doc_type'];
 			$this->query_location	= $data['query_location'];
 		}
