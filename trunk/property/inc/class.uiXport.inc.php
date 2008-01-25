@@ -42,7 +42,6 @@
 		);
 
 		var $start;
-		var $limit;
 		var $query;
 		var $sort;
 		var $order;
@@ -53,7 +52,7 @@
 		{
 
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = True;
-			$GLOBALS['phpgw_info']['flags']['menu_selection'] = 'admin::property';
+			$GLOBALS['phpgw_info']['flags']['menu_selection'] = 'property::invoice';
 		//	$this->currentapp		= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->bo       		= CreateObject('property.boXport',True);
 			$this->invoice  		= CreateObject('property.boinvoice');
@@ -70,7 +69,6 @@
 			$this->acl_manage 		= $this->acl->check('.invoice',16);
 
 			$this->start    		= $this->bo->start;
-			$this->limit    		= $this->bo->limit;
 			$this->query    		= $this->bo->query;
 			$this->sort     		= $this->bo->sort;
 			$this->order    		= $this->bo->order;
@@ -521,6 +519,7 @@
 
 			$values 	= phpgw::get_var('values');
 			$date 	= phpgw::get_var('date');
+			$receipt = array();
 
 			if($values['submit'])
 			{
@@ -552,14 +551,13 @@
 
 			$link_data = array
 			(
-				'menuaction'		=> 'property.uiXport.export',
-				'invoice_id'		=> $invoice_id,
-				'sub'			=> $sub);
+				'menuaction'		=> 'property.uiXport.export'
+			);
 
 			$msgbox_data = $this->bocommon->msgbox_data($receipt);
 
-			$force_period_year[0]['id'] = date(Y);
-			$force_period_year[1]['id'] = date(Y) -1;
+			$force_period_year[0]['id'] = date('Y');
+			$force_period_year[1]['id'] = date('Y') -1;
 
 
 			$data = array
@@ -584,7 +582,6 @@
 				'lang_submit'				=> lang('Submit'),
 				'lang_cancel'				=> lang('Cancel'),
 
-				'message'				=> $message,
 				'form_action'				=> $GLOBALS['phpgw']->link('/index.php',$link_data),
 				'lang_save'				=> lang('save')
 			);

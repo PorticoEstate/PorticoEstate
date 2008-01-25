@@ -98,7 +98,6 @@
 		function read_sessiondata()
 		{
 			$data = $GLOBALS['phpgw']->session->appsession('session_data','export');
-			if($this->debug) { echo '<br>Read:'; _debug_array($data); }
 
 			$this->start  = $data['start'];
 			$this->query  = $data['query'];

@@ -166,14 +166,13 @@
 				{
 					if($uicols['input_type'][$k]!='hidden')
 					{
-
-						if($document_entry['query_location'][$uicols['name'][$k]])
+						if(isset($document_entry['query_location'][$uicols['name'][$k]]) && $document_entry['query_location'][$uicols['name'][$k]])
 						{
 
 							$content[$j]['row'][]= array(
 								'statustext'	=> lang('search'),
 								'text'		=> $document_entry[$uicols['name'][$k]],
-								'link'		=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'property.uidocument.index', 'query'=> $document_entry['query_location'][$uicols['name'][$k]], 'entity_id'=> $document_entry['p_entity_id'], 'cat_id'=> $document_entry['p_cat_id']))
+								'link'		=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'property.uidocument.index', 'query'=> $document_entry['query_location'][$uicols['name'][$k]], 'entity_id'=> isset($document_entry['p_entity_id'])?$document_entry['p_entity_id']:'', 'cat_id'=> isset($document_entry['p_cat_id'])?$document_entry['p_cat_id']:''))
 								);
 						}
 						else
@@ -192,7 +191,7 @@
 					$content[$j]['row'][]= array(
 						'statustext'		=> lang('view documents for this location/entity'),
 						'text'			=> lang('documents'),
-						'link'			=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'property.uidocument.list_doc', 'location_code'=>  $document_entry['location_code'], 'p_num'=> $document_entry['p_num'], 'entity_id'=> $document_entry['p_entity_id'], 'cat_id'=> $document_entry['p_cat_id'], 'doc_type'=> $this->doc_type))
+						'link'			=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'property.uidocument.list_doc', 'location_code'=>  $document_entry['location_code'], 'p_num'=> isset($document_entry['p_num']) ? $document_entry['p_num'] :'', 'entity_id'=> isset($document_entry['p_entity_id']) ? $document_entry['p_entity_id'] : '', 'cat_id'=> isset($document_entry['p_cat_id']) ? $document_entry['p_cat_id'] : '', 'doc_type'=> $this->doc_type))
 						);
 				}
 

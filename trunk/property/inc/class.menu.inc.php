@@ -192,16 +192,6 @@
 					(
 						'text'	=> $GLOBALS['phpgw']->translation->translate('Accounting voucher type', array(), true),
 						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uicategory.index', 'type' => 'voucher_type') )
-					),
-					'import'	=> array
-					(
-						'text'	=> $GLOBALS['phpgw']->translation->translate('Import', array(), true),
-						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiXport.import') )
-					),
-					'export'	=> array
-					(
-						'text'	=> $GLOBALS['phpgw']->translation->translate('Export', array(), true),
-						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiXport.export') )
 					)
 				);
 
@@ -444,10 +434,10 @@
 						'text'	=> $GLOBALS['phpgw']->translation->translate('Async services', array(), true),
 						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiasync.index') )
 					),
-					'cust_func'	=> array
+					'list_functions'	=> array
 					(
 						'text'	=> $GLOBALS['phpgw']->translation->translate('Admin custom functions', array(), true),
-						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiadmin_custom.index') )
+						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.ui_custom.list_custom_function','appname' => 'property') )
 					),
 				);
 			}
