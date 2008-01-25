@@ -35,6 +35,7 @@
 			exit;
 		}
 		$GLOBALS['phpgw_setup']->loaddb();
+		$GLOBALS['phpgw']->db =& $GLOBALS['phpgw_setup']->db;
 
 		/**
 		 * Include API Common class
@@ -50,154 +51,12 @@
 		$submit = true;
 	}
 
-	if (!defined('MAX_MESSAGE_ID_LENGTH'))
-	{
-		define('MAX_MESSAGE_ID_LENGTH',230);
-	}
-
 	if (isset($_POST['submit']) && $_POST['submit'] )
-	{
-		if ( !isset($GLOBALS['phpgw']->shm) 
-			|| !is_object($GLOBALS['phpgw']->shm) )
-		{
-			$GLOBALS['phpgw']->shm = CreateObject('phpgwapi.shm');
-		}
-				
+	{				
 		$lang_selected = $_POST['lang_selected'];
 		$upgrademethod = $_POST['upgrademethod'];
-		if(!isset($GLOBALS['phpgw_info']['server']['lang_ctimes']))
-		{
-			$GLOBALS['phpgw_info']['server']['lang_ctimes'] = array();
-		}
-		
-		if (!isset($GLOBALS['phpgw_info']['server']) && $upgrademethod != 'dumpold')
-		{
-			$GLOBALS['phpgw_setup']->db->query("select * from phpgw_config WHERE config_app='phpgwapi' AND config_name='lang_ctimes'",__LINE__,__FILE__);
-			if ($GLOBALS['phpgw_setup']->db->next_record())
-			{
-				$GLOBALS['phpgw_info']['server']['lang_ctimes'] = unserialize(stripslashes($GLOBALS['phpgw_setup']->db->f('config_value')));
-			}
-		}
-		
-		$GLOBALS['phpgw_setup']->db->transaction_begin();
-		if (count($lang_selected))
-		{
-			if ($upgrademethod == 'dumpold')
-			{
-				// dont delete the custom main- & loginscreen messages every time
-				$GLOBALS['phpgw_setup']->db->query("DELETE FROM phpgw_lang where app_name != 'mainscreen' AND app_name != 'loginscreen'",__LINE__,__FILE__);
-				//echo '<br />Test: dumpold';
-				$GLOBALS['phpgw_info']['server']['lang_ctimes'] = array();
-			}
-			foreach($lang_selected as $lang)
-			{
-				if ( strlen($lang) != 2 )
-				{
-					echo 'Invalid lang code: ' . htmlspecialchars($lang) . ' - skipping<br>\n';
-					continue;
-				}
 
-				$lang = strtolower($lang);
-				//echo '<br />Working on: ' . $lang;
-				if(function_exists('sem_get') && function_exists('shmop_open'))
-				{
-					$GLOBALS['phpgw']->shm->delete_key('lang_' . $lang);
-				}
-				$addlang = False;
-				if ($upgrademethod == 'addonlynew')
-				{
-					//echo "<br />Test: addonlynew - select count(*) from phpgw_lang where lang='".$lang."'";
-					$GLOBALS['phpgw_setup']->db->query("SELECT COUNT(*) FROM phpgw_lang WHERE lang='".$lang."'",__LINE__,__FILE__);
-					$GLOBALS['phpgw_setup']->db->next_record();
-
-					if ($GLOBALS['phpgw_setup']->db->f(0) == 0)
-					{
-						//echo '<br />Test: addonlynew - True';
-						$addlang = True;
-					}
-				}
-				if (($addlang && $upgrademethod == 'addonlynew') || ($upgrademethod != 'addonlynew'))
-				{
-					//echo '<br />Test: loop above file()';
-					$setup_info = $GLOBALS['phpgw_setup']->detection->get_versions();
-					$setup_info = $GLOBALS['phpgw_setup']->detection->get_db_versions($setup_info);
-					$raw = array();
-					// Visit each app/setup dir, look for a phpgw_lang file
-					foreach ( $setup_info as $app )
-					{
-						if(!array_key_exists('name', $app))
-						{
-							continue;
-						}
-
-						$appfile = PHPGW_SERVER_ROOT . "/{$app['name']}/setup/phpgw_{$lang}.lang";
-						//echo '<br />Checking in: ' . $app['name'];
-						if($GLOBALS['phpgw_setup']->app_registered($app['name']) && file_exists($appfile))
-						{
-							//echo '<br />Including: ' . $appfile;
-							$lines = file($appfile);
-							foreach($lines as $cnt => $line)
-							{
-								$entry = explode("\t", $line);
-								//Make sure the lang files only have valid entries
-								if ( count($entry) != 4  || $entry[2] != $lang )
-								{
-									$err_line = $cnt + 1;
-									$error .= "Invalid entry in {$app['name']}/setup/phpgw_{$lang}.lang @ line {$err_line}: <code>" . htmlspecialchars(preg_replace('/\t/', '\\t', $line)) . "</code> - skipping<br>\n";
-									continue;
-								}
-
-								list($message_id,$app_name,$ignore,$content) = $entry;
-								$message_id = $GLOBALS['phpgw_setup']->db->db_addslashes(substr(chop($message_id),0,MAX_MESSAGE_ID_LENGTH));
-								$app_name = $GLOBALS['phpgw_setup']->db->db_addslashes(chop($app_name));
-								$content = $GLOBALS['phpgw_setup']->db->db_addslashes(chop($content));
-								
-								$raw[$app_name][$message_id] = $content;
-							}
-							$GLOBALS['phpgw_info']['server']['lang_ctimes'][$lang][$app['name']] = filectime($appfile);
-						}
-					}
-					foreach($raw as $app_name => $ids)
-					{
-						foreach($ids as $message_id => $content)
-						{
-							$addit = False;
-							//echo '<br />APPNAME:' . $app_name . ' PHRASE:' . $message_id;
-							if ($upgrademethod == 'addmissing')
-							{
-								//echo '<br />Test: addmissing';
-								$GLOBALS['phpgw_setup']->db->query("SELECT COUNT(*) FROM phpgw_lang WHERE message_id='$message_id' and lang='$lang' and (app_name='$app_name' or app_name='common')",__LINE__,__FILE__);
-								$GLOBALS['phpgw_setup']->db->next_record();
-
-								if ($GLOBALS['phpgw_setup']->db->f(0) == 0)
-								{
-									//echo '<br />Test: addmissing - True - Total: ' . $GLOBALS['phpgw_setup']->db->f(0);
-									$addit = True;
-								}
-							}
-
-							if ($addit || (isset($newinstall) && $newinstall) || $upgrademethod == 'addonlynew' || $upgrademethod == 'dumpold')
-							{
-								if($message_id && $content)
-								{
-									//echo "<br />adding - insert into phpgw_lang values ('$message_id','$app_name','$lang','$content')";
-									$result = $GLOBALS['phpgw_setup']->db->query("INSERT INTO phpgw_lang (message_id,app_name,lang,content) VALUES('$message_id','$app_name','$lang','$content')",__LINE__,__FILE__);
-									if (intval($result) <= 0)
-									{
-										$error .= "Error inserting record: phpgw_lang values ('$message_id','$app_name','$lang','$content')<br>";
-									}
-								}
-							}
-						}
-					}
-				}
-			}
-			$GLOBALS['phpgw_setup']->db->transaction_commit();
-			
-			$GLOBALS['phpgw_setup']->db->query("DELETE from phpgw_config WHERE config_app='phpgwapi' AND config_name='lang_ctimes'",__LINE__,__FILE__);
-			$GLOBALS['phpgw_setup']->db->query("INSERT INTO phpgw_config(config_app,config_name,config_value) VALUES ('phpgwapi','lang_ctimes','".
-				$GLOBALS['phpgw_setup']->db->db_addslashes(serialize($GLOBALS['phpgw_info']['server']['lang_ctimes']))."')",__LINE__,__FILE__);
-		}
+		$error = $GLOBALS['phpgw']->translation->update_db($lang_selected, $upgrademethod);
 
 		if ( $error )
 		{
@@ -340,4 +199,3 @@ HTML;
 			$GLOBALS['phpgw_setup']->html->show_footer();
 		}
 	}
-?>

@@ -117,8 +117,9 @@
 				$check = isset($apps[$app['name']]) ? $apps[$app['name']] : False;
 				if ($check)
 				{
-					$this->data[$app['name']] = array(
-						'title'   => $GLOBALS['phpgw_info']['apps'][$app['name']]['title'],
+					$this->data[$app['name']] = array
+					(
+						'title'   => lang($app['name']),
 						'name'    => $app['name'],
 						'enabled' => True,
 						'status'  => $GLOBALS['phpgw_info']['apps'][$app['name']]['status'],
@@ -156,7 +157,7 @@
 				foreach ( $apps as $app )
 				{
 					$this->data[$app[1]] = array(
-						'title'   => $GLOBALS['phpgw_info']['apps'][$app[1]]['title'],
+						'title'   => lang($app[1]),
 						'name'    => $app[1],
 						'enabled' => True,
 						'status'  => $GLOBALS['phpgw_info']['apps'][$app[1]]['status'],
@@ -167,7 +168,7 @@
 			else if (is_string($apps))
 			{
 				$this->data[$apps] = array(
-					'title'   => $GLOBALS['phpgw_info']['apps'][$apps]['title'],
+					'title'   => lang($apps),
 					'name'    => $apps,
 					'enabled' => True,
 					'status'  => $GLOBALS['phpgw_info']['apps'][$apps]['status'],
@@ -262,8 +263,9 @@
 			{
 				if ($this->is_system_enabled($app))
 				{
-					$this->data[$app] = array(
-						'title'   => $GLOBALS['phpgw_info']['apps'][$app]['title'],
+					$this->data[$app] = array
+					(
+						'title'   => lang($app),
 						'name'    => $app,
 						'enabled' => true,
 						'status'  => $GLOBALS['phpgw_info']['apps'][$app]['status'],
@@ -288,8 +290,8 @@
 			{
 				$GLOBALS['phpgw_info']['apps'][$value['app_name']] = array
 				(
-					'title'   => $value['app_name'],
 					'name'    => $value['app_name'],
+					'title'   => lang($value['app_name']),
 					'enabled' => true,
 					'status'  => $value['app_enabled'],
 					'id'      => (int) $value['app_id'],

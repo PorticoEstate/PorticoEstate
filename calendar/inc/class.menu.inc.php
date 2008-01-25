@@ -45,7 +45,7 @@
 			(
 				'calendar'	=> array
 				(
-					'text'	=> lang('Calendar'),
+					'text'	=> $GLOBALS['phpgw']->translations->translate('Calendar', array(), true),
 					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'calendar.uicalendar.index') ),
 					'image'	=> array('calendar', 'navbar'),
 					'order'	=> 4,
@@ -57,56 +57,56 @@
 			(
 				array
 				(
-					'text'	=> lang('New'),
+					'text'	=> $GLOBALS['phpgw']->translations->translate('New', array(), true),
 					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'calendar.uicalendar.add')),
 					'image'	=> array('calendar', 'new')
 
 				),
 				array
 				(
-					'text'	=> lang('Today'),
+					'text'	=> $GLOBALS['phpgw']->translations->translate('Today', array(), true),
 					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'calendar.uicalendar.day')),
 					'image'	=> array('calendar', 'today')
 				),
 				array
 				(
-					'text'	=> lang('Week'),
+					'text'	=> $GLOBALS['phpgw']->translations->translate('Week', array(), true),
 					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'calendar.uicalendar.week')),
 					'image'	=> array('calendar', 'week')
 				),
 				array
 				(
-					'text'	=> lang('Week Detailed'),
+					'text'	=> $GLOBALS['phpgw']->translations->translate('Week Detailed', array(), true),
 					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'calendar.uicalendar.week_new')),
 					'image'	=> array('calendar', 'week_detailed')
 				),
 				array
 				(
-					'text'	=> lang('Month'),
+					'text'	=> $GLOBALS['phpgw']->translations->translate('Month', array(), true),
 					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'calendar.uicalendar.month')),
 					'image'	=> array('calendar', 'month')
 				),
 				array
 				(
-					'text'	=> lang('Year'),
+					'text'	=> $GLOBALS['phpgw']->translations->translate('Year', array(), true),
 					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'calendar.uicalendar.year')),
 					'image'	=> array('calendar', 'year')
 				),
 				array
 				(
-					'text'	=> lang('Group Planner'),
+					'text'	=> $GLOBALS['phpgw']->translations->translate('Group Planner', array(), true),
 					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'calendar.uicalendar.planner')),
 					'image'	=> array('calendar', 'planner')
 				),
 				array
 				(
-					'text'	=> lang('Busy/Free'),
+					'text'	=> $GLOBALS['phpgw']->translations->translate('Busy/Free', array(), true),
 					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'calendar.uicalendar.matrixselect')),
 					'image'	=> array('calendar', 'busy_free')
 				),
 				array
 				(
-					'text'	=> lang('Import'),
+					'text'	=> $GLOBALS['phpgw']->translations->translate('Import', array(), true),
 					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'calendar.uiicalendar.import')),
 					'image'	=> array('calendar', 'import')
 				)
@@ -118,22 +118,22 @@
 				(
 					'index'	=> array
 					(
-						'text'	=> lang('Site Configuration'),
+						'text'	=> $GLOBALS['phpgw']->translations->translate('Site Configuration', array(), true),
 						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'	=> 'admin.uiconfig.index', 'appname'	=> 'calendar') )
 					),
 					'custom'	=> array
 					(
-						'text'	=> lang('Custom fields and sorting'),
+						'text'	=> $GLOBALS['phpgw']->translations->translate('Custom fields and sorting', array(), true),
 						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'	=> 'calendar.uicustom_fields.index') )
 					),
 					'holiday'	=> array
 					(
-						'text'	=> lang('Calendar Holiday Management'),
+						'text'	=> $GLOBALS['phpgw']->translations->translate('Calendar Holiday Management', array(), true),
 						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'	=> 'calendar.uiholiday.admin') )
 					),
 					'categories'	=> array
 					(
-						'text'	=> lang('Global Categories'),
+						'text'	=> $GLOBALS['phpgw']->translations->translate('Global Categories', array(), true),
 						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'	=> 'admin.uicategories.index', 'appname'	=> 'calendar') )
 					)
 				);
@@ -145,23 +145,23 @@
 				(
 					'preferences'	=> array
 					(
-						'text'	=> lang('Preferences'),
+						'text'	=> $GLOBALS['phpgw']->translations->translate('Preferences', array(), true),
 						'url'	=> $GLOBALS['phpgw']->link('/preferences/preferences.php', array('appname'	=> 'calendar'))
 					),
 					'acls'	=> array
 					(
-						'text'	=> lang('Grant Access'),
+						'text'	=> $GLOBALS['phpgw']->translations->translate('Grant Access', array(), true),
 						'url'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'	=> 'preferences.uiaclprefs.index', 'acl_app'	=> 'calendar') )
 					),
 					'categories'	=> array
 					(
-						'text'	=> lang('Edit Categories'),
+						'text'	=> $GLOBALS['phpgw']->translations->translate('Edit Categories', array(), true),
 						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'	=> 'preferences.uicategories.index', 'cats_app'	=> 'calendar', 'cats_level'	=> 1, 'global_cats'	=> true))
 					)
 				);
 				$menus['toolbar'][] = array
 				(
-					'text'	=> lang('Preferences'),
+					'text'	=> $GLOBALS['phpgw']->translations->translate('Preferences', array(), true),
 					'url'	=> $GLOBALS['phpgw']->link('/preferences/preferences.php', array('appname'	=> 'calendar')),
 					'image'	=> array('calendar', 'preferences')
 				);
@@ -171,55 +171,55 @@
 			(
 				array
 				(
-					'text'	=> lang('New'),
+					'text'	=> $GLOBALS['phpgw']->translations->translate('New', array(), true),
 					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'calendar.uicalendar.add'))
 				),
 				array
 				(
-					'text'		=> lang('view'),
+					'text'		=> $GLOBALS['phpgw']->translations->translate('view', array(), true),
 					'url'		=> '#',
 					'children'	=> array
 					(
 						array
 						(
-							'text'	=> lang('Today'),
+							'text'	=> $GLOBALS['phpgw']->translations->translate('Today', array(), true),
 							'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'calendar.uicalendar.day'))
 						),
 						array
 						(
-							'text'	=> lang('Week'),
+							'text'	=> $GLOBALS['phpgw']->translations->translate('Week', array(), true),
 							'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'calendar.uicalendar.week'))
 						),
 						array
 						(
-							'text'	=> lang('Week Detailed'),
+							'text'	=> $GLOBALS['phpgw']->translations->translate('Week Detailed', array(), true),
 							'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'calendar.uicalendar.week_new'))
 						),
 						array
 						(
-							'text'	=> lang('Month'),
+							'text'	=> $GLOBALS['phpgw']->translations->translate('Month', array(), true),
 							'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'calendar.uicalendar.month'))
 						),
 						array
 						(
-							'text'	=> lang('Year'),
+							'text'	=> $GLOBALS['phpgw']->translations->translate('Year', array(), true),
 							'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'calendar.uicalendar.year'))
 						),
 						array
 						(
-							'text'	=> lang('Group Planner'),
+							'text'	=> $GLOBALS['phpgw']->translations->translate('Group Planner', array(), true),
 							'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'calendar.uicalendar.planner'))
 						),
 						array
 						(
-							'text'	=> lang('Daily Matrix View'),
+							'text'	=> $GLOBALS['phpgw']->translations->translate('Daily Matrix View', array(), true),
 							'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'calendar.uicalendar.matrixselect'))
 						)
 					)
 				),
 				array
 				(
-					'text'	=> lang('Import'),
+					'text'	=> $GLOBALS['phpgw']->translations->translate('Import', array(), true),
 					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'calendar.uiicalendar.import'))
 				)
 

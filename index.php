@@ -18,6 +18,7 @@
 
 	/**
 	* @global string $GLOBALS['sessionid']
+	* @internal FIXME this is ugly and probably not needed - skwashd jan08
 	*/
 	$GLOBALS['sessionid'] = isset($_REQUEST['sessionid'])? $_REQUEST['sessionid'] : '';
 
