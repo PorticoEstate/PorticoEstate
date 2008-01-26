@@ -210,7 +210,7 @@
 					'service_agree_cats'	=> array
 					(
 						'text'	=> $GLOBALS['phpgw']->translation->translate('service agreement categories', array(), true),
-						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uicategory.index', 'type' => 's_agreement') )
+						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uicategory.index', 'type' => 's_agreement', 'menu_selection' => 'admin::property::agreement_status::service_agree_cats') )
 					),
 					'service_agree_attribs'	=> array
 					(
@@ -225,7 +225,7 @@
 					'rental_agree_cats'	=> array
 					(
 						'text'	=> $GLOBALS['phpgw']->translation->translate('rental agreement categories', array(), true),
-						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uicategory.index', 'type' => 'r_agreement') )
+						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uicategory.index', 'type' => 'r_agreement', 'menu_selection' => 'admin::property::agreement_status::rental_agree_cats') )
 					),
 					'rental_agree_attribs'	=> array
 					(
@@ -247,9 +247,9 @@
 						'url'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiadmin_location.list_attribute', 'type_id' => $location['id'])),
 						'text'	=> $location['name'] . ' ' . $GLOBALS['phpgw']->translation->translate('attributes', array(), true),
 					);
-					$admin_children_location_children["category_loc_{$location['id']}"] = array
+					$admin_children_location_children["category_{$location['id']}"] = array
 					(
-						'url'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uicategory.index', 'type' => 'location', 'type_id' => $location['id'])),
+						'url'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uicategory.index', 'type' => 'location', 'type_id' => $location['id'], 'menu_selection' => "admin::property::location::location::category_{$location['id']}") ),
 						'text'	=> $location['name'] . ' ' . $GLOBALS['phpgw']->translation->translate('categories', array(), true),
 					);	
 				}
@@ -259,12 +259,12 @@
 					'street'	=> array
 					(
 						'text'	=> $GLOBALS['phpgw']->translation->translate('Street', array(), true),
-						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uicategory.index', 'type' => 'street') )
+						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uicategory.index', 'type' => 'street', 'menu_selection' => 'admin::property::location::street') )
 					),
 					'district'	=> array
 					(
 						'text'	=> $GLOBALS['phpgw']->translation->translate('District', array(), true),
-						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uicategory.index', 'type' => 'district') )
+						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uicategory.index', 'type' => 'district', 'menu_selection' => 'admin::property::location::district') )
 					),
 					'town'	=> array
 					(
@@ -312,22 +312,22 @@
 					'request_cats'	=> array
 					(
 						'text'	=> $GLOBALS['phpgw']->translation->translate('Request Categories', array(), true),
-						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uicategory.index', 'type' => 'request') )
+						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uicategory.index', 'type' => 'request', 'menu_selection' => 'admin::property::request_cats') )
 					),
 					'workorder_cats'	=> array
 					(
 						'text'	=> $GLOBALS['phpgw']->translation->translate('Workorder Categories', array(), true),
-						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uicategory.index', 'type' => 'wo') )
+						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uicategory.index', 'type' => 'wo', 'menu_selection' => 'admin::property::workorder_cats') )
 					),
 					'workorder_detail'	=> array
 					(
 						'text'	=> $GLOBALS['phpgw']->translation->translate('Workorder Detail Categories', array(), true),
-						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uicategory.index', 'type' => 'wo_hours') )
+						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uicategory.index', 'type' => 'wo_hours', 'menu_selection' => 'admin::property::workorder_detail') )
 					),
 					'ticket_cats'	=> array
 					(
 						'text'	=> $GLOBALS['phpgw']->translation->translate('Ticket Categories', array(), true),
-						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uicategory.index', 'type' => 'ticket') )
+						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uicategory.index', 'type' => 'ticket', 'menu_selection' => 'admin::property::ticket_cats') )
 					),
 					'tenant'	=> array
 					(
@@ -350,7 +350,7 @@
 					'doc_cats'	=> array
 					(
 						'text'	=> $GLOBALS['phpgw']->translation->translate('Document Categories', array(), true),
-						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uicategory.index', 'type' => 'document') )
+						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uicategory.index', 'type' => 'document', 'menu_selection' => 'admin::property::doc_cats') )
 					),
 					'building_part'	=> array
 					(
@@ -360,7 +360,7 @@
 					'tender'	=> array
 					(
 						'text'	=> $GLOBALS['phpgw']->translation->translate('Tender chapter', array(), true),
-						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uicategory.index', 'type' => 'tender_chapter') )
+						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uicategory.index', 'type' => 'tender_chapter', 'menu_selection' => 'admin::property::tender') )
 					),
 					'id_control'	=> array
 					(
@@ -385,7 +385,7 @@
 					'request_condition'	=> array
 					(
 						'text'	=> $GLOBALS['phpgw']->translation->translate('Request condition_type', array(), true),
-						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uicategory.index', 'type' => 'r_condition_type') )
+						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uicategory.index', 'type' => 'r_condition_type', 'menu_selection' => 'admin::property::request_condition') )
 					),
 					'workorder_status'	=> array
 					(

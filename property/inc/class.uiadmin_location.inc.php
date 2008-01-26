@@ -57,7 +57,7 @@
 		function property_uiadmin_location()
 		{
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = True;
-			$GLOBALS['phpgw_info']['flags']['menu_selection'] = 'admin::property::entity';
+			$GLOBALS['phpgw_info']['flags']['menu_selection'] = 'admin::property::location';
 		//	$this->currentapp			= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->nextmatchs			= CreateObject('phpgwapi.nextmatchs');
 			$this->account				= $GLOBALS['phpgw_info']['user']['account_id'];
@@ -98,6 +98,8 @@
 			{
 				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=>1, 'acl_location'=> $this->acl_location));
 			}
+
+			$GLOBALS['phpgw_info']['flags']['menu_selection'] .= '::location';
 
 			$this->bocommon->reset_fm_cache();
 			$GLOBALS['phpgw']->xslttpl->add_file(array(
@@ -357,6 +359,7 @@
 			$type_id	= phpgw::get_var('type_id', 'int');
 			$id	= phpgw::get_var('id', 'int');
 			$resort	= phpgw::get_var('resort');
+			$GLOBALS['phpgw_info']['flags']['menu_selection'] .= "::location::attribute_loc_{$type_id}";
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array(
 								'admin_location',
@@ -495,6 +498,9 @@
 			$type_id	= phpgw::get_var('type_id', 'int');
 			$id			= phpgw::get_var('id', 'int');
 			$values		= phpgw::get_var('values');
+
+			$GLOBALS['phpgw_info']['flags']['menu_selection'] .= "::location::attribute_loc_{$type_id}";
+
 			if(!$values)
 			{
 			  $values = array();
@@ -680,11 +686,12 @@
 
 		function config()
 		{
-
 			if(!$this->acl_manage)
 			{
 				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=> 16, 'acl_location'=> $this->acl_location));
 			}
+
+			$GLOBALS['phpgw_info']['flags']['menu_selection'] .= '::config';
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array(
 								'admin_location',
@@ -775,6 +782,8 @@
 			{
 				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=> 16, 'acl_location'=> $this->acl_location));
 			}
+
+			$GLOBALS['phpgw_info']['flags']['menu_selection'] .= '::config';
 
 			$column_name	= phpgw::get_var('column_name');
 			$values			= phpgw::get_var('values');
