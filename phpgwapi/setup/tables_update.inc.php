@@ -1743,7 +1743,7 @@
 		{
 			$log_levels			=> unserialize($GLOBALS['phpgw_setup']->oProc->f('config_value'));
 			$log_levels['global_level'] = 'N';
-			$GLOBALS['phpgw_setup']->oProc->query("UPDAGE phpgw_config SET config_value ='" . serialize($log_levels) . "' WHERE config_app = 'phpgwapi' AND config_name = 'log_levels' ");			
+			$GLOBALS['phpgw_setup']->oProc->query("UPDATE phpgw_config SET config_value ='" . serialize($log_levels) . "' WHERE config_app = 'phpgwapi' AND config_name = 'log_levels' ");			
 		}
 		else
 		{
