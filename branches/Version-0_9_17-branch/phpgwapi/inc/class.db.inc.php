@@ -139,6 +139,11 @@
 		*/
 		private function new_adodb()
 		{
+			$type = $this->Type;
+			if ( $type == 'mysql' )
+			{
+				$type = 'mysqlt';
+			}
 			$this->adodb = newADOConnection($this->Type);
 			$this->connect();
 			 // would be good if one day we just use ADODB_FETCH_ASSOC
@@ -503,20 +508,20 @@
 			$insert_value = array();
 			foreach ( $values as $value )
 			{
-				if($value || $value === 0)
+				if ( is_numeric($value) )
 				{
-					if ( is_numeric($value) )
+					if ( !$value )
 					{
-						$insert_value[]	= "$value";
+						$insert_value[] = 'NULL';
 					}
 					else
 					{
-						$insert_value[]	= "'$value'";
+						$insert_value[] = $value;
 					}
 				}
 				else
 				{
-					$insert_value[]	= 'NULL';
+					$insert_value[]	= "'$value'";
 				}
 			}
 			return implode(",", $insert_value);
