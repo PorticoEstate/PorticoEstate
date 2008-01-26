@@ -53,7 +53,7 @@
 		function property_uicategory()
 		{
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = True;
-			$GLOBALS['phpgw_info']['flags']['menu_selection'] = 'admin::property';
+			$GLOBALS['phpgw_info']['flags']['menu_selection'] = phpgw::get_var('menu_selection');
 		//	$this->currentapp			= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->nextmatchs			= CreateObject('phpgwapi.nextmatchs');
 			$this->account				= $GLOBALS['phpgw_info']['user']['account_id'];
@@ -99,7 +99,6 @@
 			$type		= phpgw::get_var('type');
 			$type_id	= phpgw::get_var('type_id', 'int');
 
-			$GLOBALS['phpgw_info']['flags']['menu_selection'] .= "::{$type}";
 			$GLOBALS['phpgw_info']['apps']['manual']['section'] = "category.index.{$type}";
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('category','nextmatchs',
@@ -116,8 +115,8 @@
 				(
 					'id'				=> $category['id'],
 					'first'				=> $first,
-					'link_edit'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uicategory.edit', 'id'=> $category['id'], 'type'=> $type, 'type_id'=> $type_id)),
-					'link_delete'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uicategory.delete', 'id'=> $category['id'], 'type'=> $type, 'type_id'=> $type_id)),
+					'link_edit'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uicategory.edit', 'id'=> $category['id'], 'type'=> $type, 'type_id'=> $type_id, 'menu_selection' => $GLOBALS['phpgw_info']['flags']['menu_selection'])),
+					'link_delete'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uicategory.delete', 'id'=> $category['id'], 'type'=> $type, 'type_id'=> $type_id, 'menu_selection' => $GLOBALS['phpgw_info']['flags']['menu_selection'])),
 					'lang_view_categorytext'	=> lang('view the category'),
 					'lang_edit_categorytext'	=> lang('edit the category'),
 					'lang_delete_categorytext'	=> lang('delete the category'),
@@ -142,7 +141,9 @@
 											'order'	=> $this->order,
 											'extra'	=> array('menuaction'	=> 'property.uicategory.index',
 																	'type'	=> $type,
-																	'type_id' => $type_id)
+																	'type_id' => $type_id,
+																	'menu_selection' => $GLOBALS['phpgw_info']['flags']['menu_selection']
+															)
 										)),
 				'lang_id'		=> lang('category id'),
 			);
@@ -151,7 +152,7 @@
 			(
 				'lang_add'		=> lang('add'),
 				'lang_add_categorytext'	=> lang('add a category'),
-				'add_action'		=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uicategory.edit', 'type'=> $type,  'type_id'=> $type_id)),
+				'add_action'		=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uicategory.edit', 'type'=> $type,  'type_id'=> $type_id, 'menu_selection' => $GLOBALS['phpgw_info']['flags']['menu_selection'])),
 				'lang_done'		=> lang('done'),
 				'lang_done_categorytext'=> lang('back to admin'),
 				'done_action'		=> $GLOBALS['phpgw']->link('/admin/index.php')
@@ -175,7 +176,7 @@
 				'record_limit'					=> $record_limit,
 				'num_records'					=> count($category_list),
 				'all_records'					=> $this->bo->total_records,
-				'link_url'					=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uicategory.index', 'type'=> $type, 'type_id'=> $type_id)),
+				'link_url'					=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uicategory.index', 'type'=> $type, 'type_id'=> $type_id,'menu_selection' => $GLOBALS['phpgw_info']['flags']['menu_selection'])),
 				'img_path'					=> $GLOBALS['phpgw']->common->get_image_path('phpgwapi','default'),
 				'lang_searchfield_categorytext'			=> lang('Enter the search string. To show all entries, empty this field and press the SUBMIT button again'),
 				'lang_searchbutton_categorytext'		=> lang('Submit the search string'),
@@ -207,7 +208,6 @@
 			$id	= phpgw::get_var('id', 'int');
 			$values			= phpgw::get_var('values');
 
-			$GLOBALS['phpgw_info']['flags']['menu_selection'] .= "::{$type}";
 			$GLOBALS['phpgw_info']['apps']['manual']['section'] = 'category.edit.' . $type;
 			
 			$GLOBALS['phpgw']->xslttpl->add_file(array('category'));
@@ -254,7 +254,8 @@
 				'menuaction'	=> 'property.uicategory.edit',
 				'id'		=> $id,
 				'type'		=> $type,
-				'type_id'	=> $type_id
+				'type_id'	=> $type_id,
+				'menu_selection' => $GLOBALS['phpgw_info']['flags']['menu_selection']
 			);
 //_debug_array($link_data);
 
@@ -264,7 +265,7 @@
 			(
 				'msgbox_data'					=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
 				'form_action'					=> $GLOBALS['phpgw']->link('/index.php',$link_data),
-				'done_action'					=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uicategory.index', 'type'=> $type, 'type_id'=> $type_id)),
+				'done_action'					=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uicategory.index', 'type'=> $type, 'type_id'=> $type_id,'menu_selection' => $GLOBALS['phpgw_info']['flags']['menu_selection'])),
 				'lang_id'					=> lang('category ID'),
 				'lang_descr'					=> lang('Descr'),
 				'lang_save'					=> lang('save'),
@@ -296,13 +297,12 @@
 			$id		= phpgw::get_var('id', 'int');
 			$confirm	= phpgw::get_var('confirm', 'bool', 'POST');
 
-			$GLOBALS['phpgw_info']['flags']['menu_selection'] .= "::{$type}";
-
 			$link_data = array
 			(
 				'menuaction'	=> 'property.uicategory.index',
 				'type'		=> $type,
-				'type_id'	=> $type_id
+				'type_id'	=> $type_id,
+				'menu_selection' => $GLOBALS['phpgw_info']['flags']['menu_selection']
 			);
 
 			if (phpgw::get_var('confirm', 'bool', 'POST'))
@@ -316,7 +316,7 @@
 			$data = array
 			(
 				'done_action'			=> $GLOBALS['phpgw']->link('/index.php',$link_data),
-				'delete_action'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uicategory.delete', 'id'=> $id, 'type'=> $type, 'type_id'=> $type_id)),
+				'delete_action'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uicategory.delete', 'id'=> $id, 'type'=> $type, 'type_id'=> $type_id,'menu_selection' => $GLOBALS['phpgw_info']['flags']['menu_selection'])),
 				'lang_confirm_msg'		=> lang('do you really want to delete this entry'),
 				'lang_yes'			=> lang('yes'),
 				'lang_yes_categorytext'		=> lang('Delete the entry'),
