@@ -150,7 +150,7 @@
 
 	$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_config (config_app, config_name, config_value) VALUES ('phpgwapi','sessions_checkip','True')");
 
-	$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_config (config_app, config_name, config_value) VALUES ('phpgwapi','log_levels', '" . serialize(array( 'global_level' => 'E', 'module' => array(), 'user' => array())) ."')");
+	$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_config (config_app, config_name, config_value) VALUES ('phpgwapi','log_levels', '" . serialize(array( 'global_level' => 'N', 'module' => array(), 'user' => array())) ."')");
 	$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_config (config_app, config_name, config_value) VALUES ('phpgwapi','addressmaster','-3')");
 
 	$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_interserv(server_name,server_host,server_url,trust_level,trust_rel,server_mode) VALUES ('phpGW cvsdemo',NULL,'http://www.phpgroupware.org/cvsdemo/xmlrpc.php',99,0,'xmlrpc')");

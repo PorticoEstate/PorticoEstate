@@ -1736,6 +1736,22 @@
 	{
 		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
 
+//-- setting default log_level to N (Notice)
+
+		$GLOBALS['phpgw_setup']->oProc->query("SELECT config_value FROM phpgw_config WHERE config_app = 'phpgwapi' AND config_name = 'log_levels' "); 
+		if ( $GLOBALS['phpgw_setup']->oProc->next_record() )
+		{
+			$log_levels			=> unserialize($GLOBALS['phpgw_setup']->oProc->f('config_value'));
+			$log_levels['global_level'] = 'N';
+			$GLOBALS['phpgw_setup']->oProc->query("UPDAGE phpgw_config SET config_value ='" . serialize($log_levels) . "' WHERE config_app = 'phpgwapi' AND config_name = 'log_levels' ");			
+		}
+		else
+		{
+			$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_config (config_app, config_name, config_value) VALUES ('phpgwapi','log_levels', '" . serialize(array( 'global_level' => 'N', 'module' => array(), 'user' => array())) ."')");
+		}
+//--
+
+
 //-- phpgw_acl_location : new table due to change in pk
 
 		$GLOBALS['phpgw_setup']->oProc->RenameTable('phpgw_acl_location','phpgw_acl_location_old');
