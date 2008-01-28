@@ -20,7 +20,7 @@
 				return "Missing location parameter";
 			}
 
-			$json = json_decode($data);
+			$json = json_decode($data, true);
 
 			if( $json == null )
 			{
@@ -28,7 +28,7 @@
 				return "Invalid JSON data parameter";
 			}
 
-			$GLOBALS['phpgw']->session->appsession($location,'template_newdesign', $json);
+			$GLOBALS['phpgw']->session->appsession("template_newdesign_$location", 'phpgwapi', $json);
 			return $json;
 		}
 
@@ -44,6 +44,7 @@
 			}
 
 			$data = self::retrieve_local($location);
+
 			if ( $data == null )
 			{
 				header("HTTP/1.0 404 Not Found");
