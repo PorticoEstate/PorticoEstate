@@ -1,6 +1,24 @@
 function initNavBar() {
 	var state = navbar_config || {};
 
+	// Get current state
+	var navbar = document.getElementById('navbar');
+	var expanded = YAHOO.util.Dom.getElementsByClassName  ( 'expanded', 'li', navbar );
+
+	for(var i=0;i<expanded.length;i++)
+	{
+		// Find the a element to find the item id
+		for(var c=0;c<expanded[i].childNodes.length;c++)
+		{
+			if(expanded[i].childNodes[c].nodeName.toUpperCase() == "A")
+			{
+				state[expanded[i].childNodes[c].id] = true;
+				break;
+			}
+		}
+	}
+	store('navbar_config', state);
+
   	//var bl = new YAHOO.newdesign.BorderLayout('border-layout', border_layout_config );
 	function clickHandler(e)
 	{
