@@ -66,7 +66,7 @@
 
   	bl_proto.store = function()
   	{
-  		store(this.serialize());
+  		store('border_layout_config', this.serialize());
   	}
 
  	bl_proto.serialize = function()
@@ -240,7 +240,7 @@
 })();
 
 
-function store(config)
+function store(location, config)
 {
 	var div = document.getElementById('debug');
 
@@ -280,13 +280,13 @@ function store(config)
 		{
 			menuaction: 'phpgwapi.template_newdesign.store',
 			phpgw_return_as: 'json',
-			location: 'border_layout_config'
+			location: location
 		}
 	);
 
 	var postData = 'data=' + JSON.stringify( config );
 	var request = YAHOO.util.Connect.asyncRequest('POST', sUrl, callback, postData);
-	div.innerHTML = "Sending:<br><pre>" + JSON.stringify( config ) + "</pre>";
+	div.innerHTML = "Sending to:" + sUrl + "<br>Payload:<pre>" + JSON.stringify( config ) + "</pre>";
 };
 
 function initBL() {

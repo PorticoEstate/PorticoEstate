@@ -322,12 +322,21 @@ div.treeview
 	background: url(../images/collapsed.png) no-repeat center center;
 }
 
+#navbar a:hover img.collapsed
+{
+	background-image: url(../images/collapsed-hover.png);
+}
+
 #navbar img.expanded
 {
 
 	background: url(../images/expanded.png) no-repeat center center;
 }
 
+#navbar a:hover img.expanded
+{
+	background-image: url(../images/expanded-hover.png);
+}
 #theme-gray
 {
 	height: 100%;

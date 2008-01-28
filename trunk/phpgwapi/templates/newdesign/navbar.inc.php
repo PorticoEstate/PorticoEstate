@@ -35,6 +35,9 @@
 
 		$debug .= "<b>" . $GLOBALS['phpgw_info']['flags']['menu_selection'] . "</b><br>";
 
+		$state = execMethod('phpgwapi.template_newdesign.retrieve_local', 'navbar_config');
+
+
 		$treemenu = "";
 		foreach($navbar as $app => $app_data)
 		{
@@ -45,14 +48,15 @@
 				default:
 					if( isset($navigation[$app]) && count($navigation[$app]) )
 					{
-						$expanded = ($selected_app == $app) ? 'expanded' : 'collapsed';
+						$expanded = ($selected_app == $app) ||
+							isset($state["navbar::{$app}"]) ? 'expanded' : 'collapsed';
 						$submenu = render_submenu($app, $navigation[$app]);
 					}
 					else
 					{
 						$expanded = $submenu = "";
 					}
-					$treemenu .= render_item($app_data, $expanded, "", $submenu);
+					$treemenu .= render_item($app_data, "navbar::{$app}", $expanded, "", $submenu);
 					break;
 			}
 		}
@@ -70,15 +74,15 @@ HTML;
 		register_shutdown_function('parse_footer_end');
 	}
 
-	function render_item($item, $expanded = "", $current = "", $children="")
+	function render_item($item, $id= "", $expanded = "", $current = "", $children="")
 	{
 		$blank_image = $GLOBALS['phpgw']->common->find_image('phpgwapi', 'blank.png');
 		$icon_image = isset($item['image']) ? $GLOBALS['phpgw']->common->image($item['image'][0], $item['image'][1]) : $blank_image;
 
 		return <<<HTML
 			<li class="{$expanded}">
-				<a href="{$item['url']}" class="{$current}">
-					<img src="{$blank_image}" class="{$expanded}" width="16" height="16" />
+				<a href="{$item['url']}" class="{$current}" id="{$id}">
+					<img src="{$blank_image}" class="{$expanded}" width="16" height="16" alt="{$expanded}" />
 					<img src="{$icon_image}" width="16" height="16" />
 					<span>
 						{$item['text']}
@@ -93,6 +97,8 @@ HTML;
 	{
 		global $debug;
 		$menu_selection = $GLOBALS['phpgw_info']['flags']['menu_selection'];
+		$state = execMethod('phpgwapi.template_newdesign.retrieve_local', 'navbar_config');
+
 		$out = "";
 
 		foreach ( $menu as $key => $item )
@@ -102,11 +108,12 @@ HTML;
 			if( isset($item['children']) )
 			{
 				$children = render_submenu(	"{$parent}::{$key}", $item['children']);
-				$expanded = preg_match("/^{$parent}::{$key}/", $menu_selection) ? 'expanded' : 'collapsed';
+				$expanded = preg_match("/^{$parent}::{$key}/", $menu_selection) ||
+					isset($state["navbar::{$parent}::{$key}"]) ? 'expanded' : 'collapsed';
 			}
 			$current = "{$parent}::{$key}" == $menu_selection ? 'current' : '';
 
-			$out .= render_item($item, $expanded, $current, $children);
+			$out .= render_item($item, "navbar::{$parent}::{$key}", $expanded, $current, $children);
 
 			$debug .= "{$parent}::{$key}<br>";
 		}

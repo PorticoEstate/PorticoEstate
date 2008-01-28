@@ -63,7 +63,8 @@
 		'str_base_url'	=> $GLOBALS['phpgw']->link('/', array(), true),
 		'webserver_url'		=> $GLOBALS['phpgw_info']['server']['webserver_url'],
 		'win_on_events'	=> $GLOBALS['phpgw']->common->get_on_events(),
-		'border_layout_config' => json_encode(execMethod('phpgwapi.template_newdesign.retrieve_local', 'border_layout_config'))
+		'border_layout_config' => json_encode(execMethod('phpgwapi.template_newdesign.retrieve_local', 'border_layout_config')),
+		'navbar_config' => json_encode(execMethod('phpgwapi.template_newdesign.retrieve_local', 'navbar_config'))
 	);
 
 	$GLOBALS['phpgw']->template->set_var($tpl_vars);
