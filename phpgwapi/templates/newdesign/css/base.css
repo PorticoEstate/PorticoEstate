@@ -147,13 +147,6 @@ div.border-layout div.split-bar-c-e div.split-bar-handle div, div.border-layout 
 	background: url(../images/ofm-split-bar-right.png) center center no-repeat;
 }
 
-/*
-div.border-layout div.split-bar div.split-bar-handle div
-{
-	background: url(../images/ofm-split-bar-right.png) center center no-repeat;
-}
-*/
-
 div.border-layout div.split-bar-w-c
 {
 	left: 200px;
@@ -162,12 +155,6 @@ div.border-layout div.split-bar-w-c
 div.border-layout div.split-bar-c-e
 {
 	right: 200px;
-}
-
-div.border-layout div.split-bar-c-e div.split-bar-handle
-{
-
-	/*background-image: url(../images/ofm-split-bar-right.png);*/
 }
 
 div.panel
@@ -294,12 +281,14 @@ div.treeview
 {
 	display: none;
 }
-
+#navbar li
+{
+	padding: 0.2em 0em;
+}
 #navbar a
 {
 	color: #333;
-	display: block;
-	padding: 0.2em 0em;
+	/*display: block;*/
 	text-decoration: none;
 	white-space: nowrap;
 }
@@ -366,15 +355,27 @@ div.treeview
 {
 	background-color: #000;
 }
+#theme-gray div.layout-north div.panel div.header a {
+	color: #aaa;
+}
+#theme-gray div.layout-north div.panel div.header a:hover {
+	color: #999;
+}
+
 #theme-gray div.layout-north div.panel div.header h2
 {
 	color: #ccc;
 }
 
-#theme-gray div.layout-south div.panel a
+#theme-gray div.layout-south div.panel
 {
 	color: #999;
 }
+#theme-gray div.layout-south div.panel a
+{
+	margin: 0px;
+}
+
 #theme-gray div.layout-south div.panel a:hover
 {
 	color: #fff;
