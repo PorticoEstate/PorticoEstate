@@ -2,9 +2,7 @@
 
 	function parse_navbar($force = False)
 	{
-		global $debug;
-
-		$flags = &$GLOBALS['phpgw_info']['flags'];
+		//global $debug;
 		$navbar = execMethod('phpgwapi.menu.get', 'navbar');
 
 		$var = array
@@ -25,19 +23,16 @@
 		$GLOBALS['phpgw']->template->set_root(PHPGW_TEMPLATE_DIR);
 		$GLOBALS['phpgw']->template->set_file('navbar', 'navbar.tpl');
 
+		$flags = &$GLOBALS['phpgw_info']['flags'];
 		$var['current_app_title'] = isset($flags['app_header']) ? $flags['app_header'] : lang($GLOBALS['phpgw_info']['flags']['currentapp']);
 		$flags['menu_selection'] = isset($flags['menu_selection']) ? $flags['menu_selection'] : '';
 
 		prepare_navbar($navbar);
 		$navigation = execMethod('phpgwapi.menu.get', 'navigation');
-		$selection = explode('::', $flags['menu_selection']);
-		$selected_app = array_shift($selection);
 
-		$debug .= "<b>" . $GLOBALS['phpgw_info']['flags']['menu_selection'] . "</b><br>";
+		//$debug .= "<b>" . $GLOBALS['phpgw_info']['flags']['menu_selection'] . "</b><br>";
 
-		$state = execMethod('phpgwapi.template_newdesign.retrieve_local', 'navbar_config');
-
-
+		//$now = microtime(true);
 		$treemenu = "";
 		foreach($navbar as $app => $app_data)
 		{
@@ -46,20 +41,20 @@
 				case in_array($app, array('logout', 'about', 'preferences')):
 					break;
 				default:
-					if( isset($navigation[$app]) && count($navigation[$app]) )
+					if( isset($navigation[$app]) )
 					{
-						$expanded = ($selected_app == $app) ||
-							isset($state["navbar::{$app}"]) ? 'expanded' : 'collapsed';
 						$submenu = render_submenu($app, $navigation[$app]);
 					}
 					else
 					{
-						$expanded = $submenu = "";
+						$submenu = "";
 					}
-					$treemenu .= render_item($app_data, "navbar::{$app}", $expanded, "", $submenu);
+					$treemenu .= render_item($app_data, "navbar::{$app}", $submenu);
 					break;
 			}
 		}
+		//$delta = microtime(true)-$now;
+		//echo $delta;
 
 		$var['treemenu'] = <<<HTML
 			<ul id="navbar">
@@ -67,22 +62,50 @@
 			</ul>
 HTML;
 
-		$var['debug'] = $debug;
+		//$var['debug'] = $debug;
+		$var['debug'] = 'empty';
 		$GLOBALS['phpgw']->template->set_var($var);
 		$GLOBALS['phpgw']->template->pfp('out','navbar');
 
 		register_shutdown_function('parse_footer_end');
 	}
 
-	function render_item($item, $id= "", $expanded = "", $current = "", $children="")
+	function item_expanded($id)
 	{
-		$blank_image = $GLOBALS['phpgw']->common->find_image('phpgwapi', 'blank.png');
+		static $navbar_state, $selected_item;
+		if( !isset( $navbar_state ) )
+		{
+			$navbar_state = execMethod('phpgwapi.template_newdesign.retrieve_local', 'navbar_config');
+			$selected_item = "navbar::{$GLOBALS['phpgw_info']['flags']['menu_selection']}";
+		}
+		return isset( $navbar_state[ $id ]) ? true : preg_match("/^{$id}/", $selected_item );
+	}
+
+
+	function render_item($item, $id= "", $children="")
+	{
+		static $blank_image;
+		if(!isset($blank_image))
+		{
+			$blank_image = $GLOBALS['phpgw']->common->find_image('phpgwapi', 'blank.png');
+		}
 		$icon_image = isset($item['image']) ? $GLOBALS['phpgw']->common->image($item['image'][0], $item['image'][1]) : $blank_image;
 
+		if( $children )
+		{
+			$expand_class = item_expanded($id) ? ' class="expanded"' : ' class="collapsed"';
+		}
+		else
+		{
+			$expand_class = '';
+		}
+
+		$current_class = $id == "navbar::{$GLOBALS['phpgw_info']['flags']['menu_selection']}" ? 'class="current"' : '';
+
 		return <<<HTML
-			<li class="{$expanded}">
-				<a href="{$item['url']}" class="{$current}" id="{$id}">
-					<img src="{$blank_image}" class="{$expanded}" width="16" height="16" alt="{$expanded}" />
+			<li{$expand_class}>
+				<a href="{$item['url']}"{$current_class} id="{$id}">
+					<img src="{$blank_image}"{$expand_class}width="16" height="16" alt="+/-" />
 					<img src="{$icon_image}" width="16" height="16" />
 					<span>
 						{$item['text']}
@@ -95,27 +118,20 @@ HTML;
 
 	function render_submenu($parent, $menu)
 	{
-		global $debug;
-		$menu_selection = $GLOBALS['phpgw_info']['flags']['menu_selection'];
-		$state = execMethod('phpgwapi.template_newdesign.retrieve_local', 'navbar_config');
-
+		//global $debug;
 		$out = "";
-
 		foreach ( $menu as $key => $item )
 		{
-			$expanded = $children = "";
-
 			if( isset($item['children']) )
 			{
 				$children = render_submenu(	"{$parent}::{$key}", $item['children']);
-				$expanded = preg_match("/^{$parent}::{$key}/", $menu_selection) ||
-					isset($state["navbar::{$parent}::{$key}"]) ? 'expanded' : 'collapsed';
 			}
-			$current = "{$parent}::{$key}" == $menu_selection ? 'current' : '';
-
-			$out .= render_item($item, "navbar::{$parent}::{$key}", $expanded, $current, $children);
-
-			$debug .= "{$parent}::{$key}<br>";
+			else
+			{
+				$children = "";
+			}
+			$out .= render_item($item, "navbar::{$parent}::{$key}", $children);
+			//$debug .= "{$parent}::{$key}<br>";
 		}
 
 		$out = <<<HTML
