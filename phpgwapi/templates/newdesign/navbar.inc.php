@@ -32,7 +32,7 @@
 
 		//$debug .= "<b>" . $GLOBALS['phpgw_info']['flags']['menu_selection'] . "</b><br>";
 
-		$now = microtime(true);
+		//$now = microtime(true);
 		$treemenu = "";
 		foreach($navbar as $app => $app_data)
 		{
@@ -42,8 +42,8 @@
 				$treemenu .= render_item($app_data, "navbar::{$app}", $submenu);
 			}
 		}
-		$delta = microtime(true)-$now;
-		echo $delta;
+		//$delta = microtime(true)-$now;
+		//echo $delta;
 
 		$var['treemenu'] = <<<HTML
 			<ul id="navbar">
@@ -61,15 +61,12 @@ HTML;
 
 	function item_expanded($id)
 	{
-		static $navbar_state; //, $selected_item;
+		static $navbar_state;
 		if( !isset( $navbar_state ) )
 		{
 			$navbar_state = execMethod('phpgwapi.template_newdesign.retrieve_local', 'navbar_config');
-			//$selected_item = "navbar::{$GLOBALS['phpgw_info']['flags']['menu_selection']}";
 		}
-		//if( isset( $navbar_state[ $id ]) )
-		//	return true;
-		return isset( $navbar_state[ $id ]); // ? true : false; // preg_match("/^{$id}/", $selected_item );
+		return isset( $navbar_state[ $id ]);
 	}
 
 	function render_item($item, $id= "", $children="")
