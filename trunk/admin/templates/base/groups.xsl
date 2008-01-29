@@ -253,14 +253,14 @@
 					<img src="{$grant_img}" title="{$grant_img_name}" alt="{$grant_img_name}" />
 				</xsl:otherwise>
 			</xsl:choose>
-			<xsl:choose>
-				<xsl:when test="checked = '1'">
-					<input type="checkbox" id="{$elm_id}" name="{$checkbox_name}" value="1" checked="checked" />
-				</xsl:when>
-				<xsl:otherwise>
-					<input type="checkbox" id="{$elmid}" name="{$checkbox_name}" value="1" />
-				</xsl:otherwise>
-			</xsl:choose>
+
+			<input type="checkbox" id="{$elmid}" name="{$checkbox_name}" value="1">
+				<xsl:if test="checked = '1'">
+					<xsl:attribute name="checked">
+						<xsl:text>checked</xsl:text>
+					</xsl:attribute>
+				</xsl:if>
+			</input>
 			<label for="{$elmid}">
 				<xsl:value-of select="app_title" />
 			</label>
