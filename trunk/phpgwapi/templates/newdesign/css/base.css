@@ -320,7 +320,7 @@ div.treeview
 	background: url(../images/collapsed.png) no-repeat center center;
 }
 
-#navbar a:hover img.collapsed
+#navbar img.collapsed:hover
 {
 	background-image: url(../images/collapsed-hover.png);
 }
@@ -331,7 +331,7 @@ div.treeview
 	background: url(../images/expanded.png) no-repeat center center;
 }
 
-#navbar a:hover img.expanded
+#navbar img.expanded:hover
 {
 	background-image: url(../images/expanded-hover.png);
 }
