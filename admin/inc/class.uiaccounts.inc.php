@@ -363,6 +363,7 @@
 				'bookmarks'		=> array('top_grant' => true),
 				'calendar'		=> array('top_grant' => true),
 				'filemanager'	=> array('top_grant' => true),
+				'hrm'			=> array('top_grant' => true),
 				'img'			=> array('top_grant' => true),
 				'infolog'		=> array('top_grant' => true),
 				'inv'			=> array('top_grant' => true),
@@ -371,6 +372,8 @@
 				'phonelog'		=> array('top_grant' => true),
 				'phpwebhosting'	=> array('top_grant' => true),
 				'projects'		=> array('top_grant' => true),
+				'property'		=> array('top_grant' => true),
+				'sms'			=> array('top_grant' => true),
 				'todo'			=> array('top_grant' => true),
 				'tts'			=> array('top_grant' => true),
 			);
