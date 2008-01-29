@@ -153,9 +153,9 @@
 			// _debug_array($GLOBALS['phpgw_info']['server']['lang_ctimes']);
 			
 			$lang = $GLOBALS['phpgw_info']['user']['preferences']['common']['lang'];
-			$apps = (array)$GLOBALS['phpgw_info']['user']['apps'];
+			$apps = $GLOBALS['phpgw_info']['user']['apps'];
 			$apps['phpgwapi'] = true;	// check the api too
-			foreach ( array_keys($apps) as $app )
+			while (list($app,$data) = each($apps))
 			{
 				$fname = PHPGW_SERVER_ROOT . "/$app/setup/phpgw_$lang.lang";
 				
@@ -164,7 +164,7 @@
 					$ctime = filectime($fname);
 					$ltime = isset($GLOBALS['phpgw_info']['server']['lang_ctimes'][$lang]) && 
 						isset($GLOBALS['phpgw_info']['server']['lang_ctimes'][$lang][$app]) ? 
-						(int) $GLOBALS['phpgw_info']['server']['lang_ctimes'][$lang][$app] : 0;
+						intval($GLOBALS['phpgw_info']['server']['lang_ctimes'][$lang][$app]) : 0;
 					//echo "checking lang='$lang', app='$app', ctime='$ctime', ltime='$ltime'<br>\n";
 					
 					if ($ctime != $ltime)
@@ -181,12 +181,24 @@
 		*/
 		function update_langs()
 		{
-			$langs = $GLOBALS['phpgw']->translation->get_installed_langs();
-			foreach ( array_keys($langs) as $lang )
+			$GLOBALS['phpgw_setup'] = CreateObject('phpgwapi.setup');
+			$GLOBALS['phpgw_setup']->db = $GLOBALS['phpgw']->db;
+			
+			$GLOBALS['phpgw_setup']->detection->check_lang(false);	// get installed langs
+			$langs = $GLOBALS['phpgw_info']['setup']['installed_langs'];
+			while (list($lang) = @each($langs))
 			{
 				$langs[$lang] = $lang;
 			}
-			$GLOBALS['phpgw']->translation->update_db($langs, 'dumpold');
+			$_POST['submit'] = true;
+			$_POST['lang_selected'] = $langs;
+			$_POST['upgrademethod'] = 'dumpold';
+			$included = 'from_login';
+			
+			/**
+			* Include languages setup
+			*/
+			include(PHPGW_SERVER_ROOT . '/setup/lang.php');
 		}
 
 		function phpgw_display_login($variables)
@@ -272,7 +284,7 @@
 			}
 			$GLOBALS['phpgw']->translation->add_app('login');
 			$GLOBALS['phpgw']->translation->add_app('loginscreen');
-			if ( ($login_msg = lang('loginscreen_message') ) != '!loginscreen_message')
+			if ( ($login_msg = lang('loginscreen_message') ) != 'loginscreen_message*')
 			{
 				$this->tmpl->set_var('lang_message', stripslashes($login_msg) );
 			}

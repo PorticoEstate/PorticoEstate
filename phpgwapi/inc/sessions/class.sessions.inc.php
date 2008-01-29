@@ -21,8 +21,9 @@
 	*
 	* @package phpgwapi
 	* @subpackage accounts
+	* @abstract
 	*/
-	abstract class sessions
+	class sessions
 	{
 		/**
 		* @var string current user login
@@ -118,7 +119,7 @@
 		/**
 		* Constructor just loads up some defaults from cookies
 		*/
-		public function __construct()
+		function sessions()
 		{
 			$this->db =& $GLOBALS['phpgw']->db;
 			$this->sessionid = phpgw::get_var('sessionid');
@@ -295,8 +296,7 @@
 			$this->iv  = $GLOBALS['phpgw_info']['server']['mcrypt_iv'];
 			$GLOBALS['phpgw']->crypto->init(array($this->key,$this->iv));
 
-			$use_cache = isset($GLOBALS['phpgw_info']['server']['cache_phpgw_info']) ? !!$GLOBALS['phpgw_info']['server']['cache_phpgw_info'] : false;
-			$this->read_repositories($use_cache);
+			$this->read_repositories(@$GLOBALS['phpgw_info']['server']['cache_phpgw_info']);
 			
 			if ($this->user['expires'] != -1 && $this->user['expires'] < time())
 			{
@@ -347,8 +347,7 @@
 				return False;
 			}
 
-			$check_ip = isset($GLOBALS['phpgw_info']['server']['sessions_checkip']) ? !!$GLOBALS['phpgw_info']['server']['sessions_checkip'] : false;
-			if ($check_ip)
+			if (@$GLOBALS['phpgw_info']['server']['sessions_checkip'])
 			{
 				if (PHP_OS != 'Windows' && (! $GLOBALS['phpgw_info']['user']['session_ip'] || $GLOBALS['phpgw_info']['user']['session_ip'] != $this->getuser_ip()))
 				{
@@ -375,9 +374,9 @@
 			}
 
 			$GLOBALS['phpgw']->acl->acl($this->account_id);
-			$GLOBALS['phpgw']->accounts->set_account($this->account_id);
-			$GLOBALS['phpgw']->preferences->set_account_id($this->account_id);
-			$GLOBALS['phpgw']->applications->set_account_id($this->account_id);
+			$GLOBALS['phpgw']->accounts->accounts($this->account_id);
+			$GLOBALS['phpgw']->preferences->preferences($this->account_id);
+			$GLOBALS['phpgw']->applications->applications($this->account_id);
 
 			if (! $this->account_lid)
 			{
@@ -416,8 +415,7 @@
 		*/
 		function getuser_ip()
 		{
-			return phpgw::get_var('HTTP_X_FORWARDED_FOR', 'ip', 'SERVER',
-				phpgw::get_var('REMOTE_ADDR', 'ip', 'SERVER'));
+			return (isset($_SERVER['HTTP_X_FORWARDED_FOR']) ? $_SERVER['HTTP_X_FORWARDED_FOR'] : $_SERVER['REMOTE_ADDR']);
 		}
 
 		/**
@@ -427,7 +425,7 @@
 		*/
 		function phpgw_set_cookiedomain()
 		{
-			$dom = phpgw::get_var('HTTP_HOST', 'string', 'SERVER');
+			$dom = $_SERVER['HTTP_HOST'];
 			if (preg_match("/^(.*):(.*)$/",$dom,$arr))
 			{
 				$dom = $arr[1];
@@ -513,7 +511,7 @@
 			$user_ip = $this->getuser_ip();
 
 			$blocked = false;
-			if ( ($blocked = $this->login_blocked($login, $this->getuser_ip())) // too many unsuccessful attempts
+			if ( ($blocked = $this->login_blocked($login, $_SERVER['REMOTE_ADDR'])) // too many unsuccessful attempts
 				|| ( isset($GLOBALS['phpgw_info']['server']['global_denied_users'][$this->account_lid]) && $GLOBALS['phpgw_info']['server']['global_denied_users'][$this->account_lid] )
 				|| ($passwd_type != 'known' && !$GLOBALS['phpgw']->auth->authenticate($this->account_lid, $this->passwd, $this->passwd_type) )
 				|| $GLOBALS['phpgw']->accounts->get_type($this->account_lid) == 'g')
@@ -534,7 +532,7 @@
 				$this->account_id = $GLOBALS['phpgw']->accounts->name2id($this->account_lid);
 			}
 			$GLOBALS['phpgw_info']['user']['account_id'] = $this->account_id;
-			$GLOBALS['phpgw']->accounts->set_account($this->account_id);
+			$GLOBALS['phpgw']->accounts->accounts($this->account_id);
 			$this->sessionid = md5($GLOBALS['phpgw']->common->randomstring(15));
 			$this->kp3       = md5($GLOBALS['phpgw']->common->randomstring(15));
 
@@ -727,8 +725,7 @@
 
 			$GLOBALS['phpgw_info']['user']['account_id'] = $this->account_id;
 			
-			$use_cache = isset($GLOBALS['phpgw_info']['server']['cache_phpgw_info']) ? !!$GLOBALS['phpgw_info']['server']['cache_phpgw_info'] : false;
-			$this->read_repositories($use_cache);
+			$this->read_repositories(@$GLOBALS['phpgw_info']['server']['cache_phpgw_info']);
 
 			/* init the crypto object before appsession call below */
 			$this->key = md5($this->kp3 . $this->sessionid . $GLOBALS['phpgw_info']['server']['encryptkey']);
@@ -763,8 +760,7 @@
 				return False;
 			}
 
-			$verify_ip = isset($GLOBALS['phpgw_info']['server']['sessions_checkip']) ? !!$GLOBALS['phpgw_info']['server']['sessions_checkip'] : false;
-			if ( $verify_ip )
+			if (@$GLOBALS['phpgw_info']['server']['sessions_checkip'])
 			{
 				if (PHP_OS != 'Windows' && (! $GLOBALS['phpgw_info']['user']['session_ip'] || $GLOBALS['phpgw_info']['user']['session_ip'] != $this->getuser_ip()))
 				{
@@ -791,8 +787,8 @@
 			}
 
 			$GLOBALS['phpgw']->acl->acl($this->account_id);
-			$GLOBALS['phpgw']->accounts->set_account($this->account_id);
-			$GLOBALS['phpgw']->preferences->set_account_id($this->account_id);
+			$GLOBALS['phpgw']->accounts->accounts($this->account_id);
+			$GLOBALS['phpgw']->preferences->preferences($this->account_id);
 			$GLOBALS['phpgw']->applications->applications($this->account_id);
 
 			if (! $this->account_lid)
@@ -902,12 +898,12 @@
 		/**
 		* Someone needs to document me
 		*/
-		function read_repositories($cached = true, $write_cache = true)
+		function read_repositories($cached = false, $write_cache = true)
 		{
 			$GLOBALS['phpgw']->acl->acl($this->account_id);
-			$GLOBALS['phpgw']->accounts->set_account($this->account_id);
-			$GLOBALS['phpgw']->preferences->set_account_id($this->account_id);
-			$GLOBALS['phpgw']->applications->set_account_id($this->account_id);
+			$GLOBALS['phpgw']->accounts->accounts($this->account_id);
+			$GLOBALS['phpgw']->preferences->preferences($this->account_id);
+			$GLOBALS['phpgw']->applications->applications($this->account_id);
 			
 			if($cached)
 			{
@@ -933,14 +929,6 @@
 		}
 
 		/**
-		* Clears the appsession cache, should be called before saving preferences or other information which will invalidate the cache
-		*/
-		public function clear_phpgw_info_cache()
-		{
-			$this->appsession('phpgw_info_cache', 'phpgwapi', null);
-		}
-
-		/**
 		* Someone needs to document me
 		*/
 		function setup_cache($write_cache=True)
@@ -960,9 +948,7 @@
 			$this->user['account_lid'] = $this->account_lid;
 			$this->user['userid']      = $this->account_lid;
 			$this->user['passwd']      = $this->passwd;
-			
-			$use_cache = isset($GLOBALS['phpgw_info']['server']['cache_phpgw_info']) ? !!$GLOBALS['phpgw_info']['server']['cache_phpgw_info'] : false;
-			if($use_cache && $write_cache)
+			if(@$GLOBALS['phpgw_info']['server']['cache_phpgw_info'] && $write_cache)
 			{
 				$this->delete_cache();
 				$this->appsession('phpgw_info_cache','phpgwapi',$this->user);
@@ -1215,12 +1201,6 @@
 			//used for repost prevention
 			$extravars['click_history'] = $this->generate_click_history();
 
-			/* enable easy use of xdebug */
-			if ( isset($_REQUEST['XDEBUG_PROFILE']) )
-			{
-				$extravars['XDEBUG_PROFILE'] = 1;
-			}
-
 			if (is_array($extravars)) //we have something to append
 			{
 				return "{$url}?" . http_build_query($extravars, null, $term);
@@ -1239,19 +1219,22 @@
 		* @param string $sessionid user's session id string
 		* @return mixed the session data
 		*/
-		abstract public function read_session($sessionid);
+		function read_session($sessionid)
+		{}
 
 		/**
 		* Remove stale sessions out of the database
 		*/
-		abstract public function clean_sessions();
+		function clean_sessions()
+		{}
 
 		/**
-		* Set paramaters for cookies
+		* Set paramaters for cookies - only implemented in PHP4 sessions
 		*
 		* @param string $domain domain name to use in cookie
 		*/
-		abstract public function set_cookie_params($domain);
+		function set_cookie_params($domain)
+		{}
 
 		/**
 		* Create a new session
@@ -1261,14 +1244,16 @@
 		* @param int $now time now as a unix timestamp
 		* @param string $session_flags A = Anonymous, N = Normal
 		*/
-		abstract public function register_session($login,$user_ip,$now,$session_flags);
+		function register_session($login,$user_ip,$now,$session_flags)
+		{}
 
 		/**
 		* Update the date last active info for the session, so the login does not expire
 		*
 		* @return bool did it suceed?
 		*/
-		abstract public function update_dla();
+		function update_dla()
+		{}
 
 		/**
 		* Terminate a session
@@ -1277,7 +1262,8 @@
 		* @param string $kp3 - NOT SURE
 		* @return bool did it suceed?
 		*/
-		abstract public function destroy($sessionid, $kp3);
+		function destroy($sessionid, $kp3)
+		{}
 
 		/**
 		* Functions for appsession data and session cache
@@ -1288,7 +1274,8 @@
 		* 
 		* @param int $accountid user account id, defaults to current user (optional)
 		*/
-		abstract public function delete_cache($accountid='');
+		function delete_cache($accountid='')
+		{}
 
 		/**
 		* Stores or retrieves information from the sessions cache
@@ -1298,7 +1285,8 @@
 		* @param mixed $data data to be stored, if left blank data is retreived (optional)
 		* @return mixed data from cache, only returned if $data arg is not used 
 		*/
-		abstract public function appsession($location = 'default', $appname = '', $data = '##NOTHING##');
+		function appsession($location = 'default', $appname = '', $data = '##NOTHING##')
+		{}
 
 		/**
 		* Get list of normal / non-anonymous sessions
@@ -1312,7 +1300,8 @@
 		* @param bool $all_no_sort list all with out sorting (optional) default False
 		* @return array info for all current sessions  
 		*/
-		abstract public function list_sessions($start, $order, $sort, $all_no_sort = false);
+		function list_sessions($start,$order,$sort,$all_no_sort = False)
+		{}
 		
 		/**
 		* Get the number of normal / non-anonymous sessions
@@ -1320,14 +1309,21 @@
 		* @author ralfbecker
 		* @return int number of sessions
 		*/
-		abstract public function total();
+		function total()
+		{
+			return 0;
+		}
 
 		/**
 		* Get the list of session variables used for non cookie based sessions
 		*
+		* @access private
 		* @return array the variables which are specific to this session type
 		*/
-		abstract protected function _get_session_vars();
+		function _get_session_vars()
+		{
+			return array();
+		}
 
 		/**
 		* Stores or retrieves information from persistant cache

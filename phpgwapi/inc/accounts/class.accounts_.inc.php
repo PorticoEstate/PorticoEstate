@@ -196,11 +196,11 @@
 	*
 	* @package phpgwapi
 	* @subpackage accounts
+	* @abstract
 	*/
-	abstract class accounts_
+	class accounts_
 	{
 		var $account_id;
-		var $account_lid;
 		var $lid;
 		var $firstname;
 		var $lastname;
@@ -227,12 +227,21 @@
 		* @param string $account_type Account type 'u': account; 'g' : group; defaults to current account type
 		* @internal I might move this to the accounts_shared if it stays around
 		*/
-		function __construct($account_id = null, $account_type = null)
+		function accounts($account_id = null, $account_type = null)
 		{
 			$this->db =& $GLOBALS['phpgw']->db;
 			$this->like = $this->db->like;
-			
-			// FIXME move me to a proper instance variable
+
+			if($account_id != '')
+			{
+				$this->account_id = get_account_id($account_id);
+			}
+
+			if($account_type != '')
+			{
+				$this->account_type = $account_type;
+			}
+
 			$this->xmlrpc_methods[] = array(
 				'name'        => 'get_list',
 				'description' => 'Returns a list of accounts and/or groups'
@@ -245,21 +254,6 @@
 				'name'        => 'id2name',
 				'description' => 'Cross reference account_id with account_lid'
 			);
-
-			$this->set_account($account_id, $account_type);
-		}
-
-		public function set_account($account_id = null, $account_type = null)
-		{
-			if ( !is_null($account_id) )
-			{
-				$this->account_id = get_account_id($account_id);
-			}
-
-			if( !is_null($account_type))
-			{
-				$this->account_type = $account_type;
-			}
 		}
 
 		function sync_accounts_contacts()
@@ -293,46 +287,43 @@
 
 		function save_contact_for_account($userData)
 		{
-			
 			$owner = $GLOBALS['phpgw_info']['server']['addressmaster'];
 			$contacts = createObject('phpgwapi.contacts');
 			$type = $contacts->search_contact_type('Persons');
 
 			$comms=(is_array($userData['extra_contact']['comms'])) ? $userData['extra_contact']['comms'] : false;
-			$principal=(is_array($userData['extra_contact']['principal'])) ? $userData['extra_contact']['principal'] : false;
-			$locations=(is_array($userData['extra_contact']['locations'])) ? $userData['extra_contact']['locations'] : false;
-			$categories=(is_array($userData['extra_contact']['categories'])) ? $userData['extra_contact']['categories'] : false;
-			$others=(is_array($userData['extra_contact']['others'])) ? $userData['extra_contact']['others'] : false;
-			$notes=(is_array($userData['extra_contact']['notes'])) ? $userData['extra_contact']['notes'] : false;
-			$relationship=(is_array($userData['extra_contact']['relationship'])) ? $userData['extra_contact']['relationship'] : false;
+						$principal=(is_array($userData['extra_contact']['principal'])) ? $userData['extra_contact']['principal'] : false;
+						$locations=(is_array($userData['extra_contact']['locations'])) ? $userData['extra_contact']['locations'] : false;
+						$categories=(is_array($userData['extra_contact']['categories'])) ? $userData['extra_contact']['categories'] : false;
+						$others=(is_array($userData['extra_contact']['others'])) ? $userData['extra_contact']['others'] : false;
+						$notes=(is_array($userData['extra_contact']['notes'])) ? $userData['extra_contact']['notes'] : false;
+						$relationship=(is_array($userData['extra_contact']['relationship'])) ? $userData['extra_contact']['relationship'] : false;
 
 			$principal['owner'] = $owner;
-			$principal['access']= 'public';
-			$principal['per_prefix'] = $userData['account_lid'];
-			$principal['per_first_name'] = $userData['account_firstname'];
-			$principal['per_last_name'] = $userData['account_lastname'];
-
+						$principal['access']= 'public';
+						$principal['per_prefix'] = $userData['account_lid'];
+						$principal['per_first_name'] = $userData['account_firstname'];
+						$principal['per_last_name'] = $userData['account_lastname'];
+			
 			if(isset($userData['domain']))
-			{
-				$domain=$userData['domain'];
-			}
-			else
-			{
-				$domain=$GLOBALS['phpgw_info']['server']['mail_server'];
-			}
-
-
-			if($domain)//Attempts to grab domain succeded
-			{
-				$comm['comm_descr'] = $contacts->search_comm_descr('work email');
-				$comm['comm_data'] = $userData['account_lid'].'@'.$domain;
-				$comm['comm_preferred']='Y';
+						{
+								$domain=$userData['domain'];
+						}
+						else
+						{
+								$domain=$GLOBALS['phpgw_info']['server']['mail_server'];
+						}
+						if($domain)//Attempts to grab domain succeded
+						{
+								$comm['comm_descr']=$contacts->search_comm_descr('work email');
+								$comm['comm_data']=$userData['account_lid'].'@'.$domain;
+								$comm['comm_preferred']='Y';
 				$comms = array($comm);
-			}
-			else
-			{
-				$comms='';
-			}
+						}
+						else
+						{
+								$comms='';
+						}
 
 			if ($userData['person_id'] && $contacts->exist_contact($userData['person_id']))
 			{
@@ -582,7 +573,8 @@
 			$GLOBALS['phpgw']->template->set_var('img',$GLOBALS['phpgw']->common->image('phpgwapi','select'));
 			$GLOBALS['phpgw']->template->set_var('lang_select_user',lang('Select user'));
 			$GLOBALS['phpgw']->template->set_var('lang_select_group',lang('Select group'));
-			$GLOBALS['phpgw']->template->set_var('css_file', "{$GLOBALS['phpgw_info']['server']['webserver_url']}/phpgwapi/templates/idots/css/idots.css");
+			$GLOBALS['phpgw']->template->set_var('css_file',$GLOBALS['phpgw_info']['server']['webserver_url'] . SEP . 'phpgwapi' . SEP . 'templates'
+															. SEP . 'idots' . SEP . 'css' . SEP . 'idots.css');
 
 			switch($app)
 			{
@@ -881,14 +873,14 @@
 		{
 			$this->account_id		= isset($data['account_id']) ? (int)$data['account_id'] : $this->account_id;
 			$this->lid				= isset($data['account_lid']) ? $data['account_lid'] : $this->lid;
-			$this->firstname		= isset($data['account_firstname']) ? $data['account_firstname'] : $this->firstname;
-			$this->lastname			= isset($data['account_lastname']) ? $data['account_lastname'] : $this->lastname;
-			$this->password			= isset($data['account_passwd']) ? $data['account_passwd'] : $this->password;
-			$data['account_status']	= !isset($data['account_status']) ? $data['status'] : $data['account_status'];
-			$this->status			= isset($data['account_status']) ? $data['account_status'] : $this->status;
-			$data['account_expires']= !isset($data['account_expires']) ? $data['expires'] : $data['account_expires'];
-			$this->expires			= isset($data['account_expires']) ? $data['account_expires'] : $this->expires;
-			$this->person_id		= isset($data['person_id']) ? $data['person_id'] : $this->person_id;
+			$this->firstname		= $data['account_firstname'] ? $data['account_firstname'] : $this->firstname;
+			$this->lastname			= $data['account_lastname'] ? $data['account_lastname'] : $this->lastname;
+			$this->password			= $data['account_passwd'] ? $data['account_passwd'] : $this->password;
+			$data['account_status']	= !$data['account_status'] ? $data['status'] : $data['account_status'];
+			$this->status			= $data['account_status'] ? $data['account_status'] : $this->status;
+			$data['account_expires']= !$data['account_expires'] ? $data['expires'] : $data['account_expires'];
+			$this->expires			= $data['account_expires'] ? $data['account_expires'] : $this->expires;
+			$this->person_id		= $data['person_id'] ? $data['person_id'] : $this->person_id;
 			$this->quota			= isset($data['quota']) ? (int)$data['quota'] : $this->quota;
 			return true;
 		}

@@ -1,4 +1,13 @@
 <?php
+	/**
+	* Template header
+	* @copyright Copyright (C) 2005-2007 Free Software Foundation, Inc. http://www.fsf.org/
+	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
+	* @package phpgwapi
+	* @subpackage gui
+	* @version $Id: head.inc.php,v 1.4 2004/12/30 06:47:34 skwashd Exp
+	*/
+
 	phpgw::import_class('phpgwapi.yui');
 
 	if ( !isset($GLOBALS['phpgw_info']['server']['site_title']) )
@@ -6,68 +15,61 @@
 		$GLOBALS['phpgw_info']['server']['site_title'] = lang('please set a site name in admin &gt; siteconfig');
 	}
 
-	$app = $GLOBALS['phpgw_info']['flags']['currentapp'];
-
-	$stylesheets = array
-	(
-		"/phpgwapi/js/yahoo/reset-fonts-grids/reset-fonts-grids.css",
-		"/phpgwapi/js/yahoo/build/menu/assets/skins/sam/menu.css",
-		"/phpgwapi/js/yahoo/build/button/assets/skins/sam/button.css",
-		"/phpgwapi/js/yahoo/build/tabview/assets/skins/sam/tabview.css",
-		"/phpgwapi/templates/newdesign/css/base.css",
-		"/phpgwapi/templates/newdesign/css/{$GLOBALS['phpgw_info']['user']['preferences']['common']['theme']}.css",
-		"/{$app}/templates/base/css/base.css",
-		"/{$app}/templates/newdesign/css/base.css",
-		"/{$app}/templates/newdesign/css/{$GLOBALS['phpgw_info']['user']['preferences']['common']['theme']}.css"
-	);
-
 	$GLOBALS['phpgw']->template->set_root(PHPGW_TEMPLATE_DIR);
 	$GLOBALS['phpgw']->template->set_unknowns('remove');
 	$GLOBALS['phpgw']->template->set_file('head', 'head.tpl');
-	$GLOBALS['phpgw']->template->set_block('head', 'stylesheet', 'stylesheets');
+	$GLOBALS['phpgw']->template->set_block('head', 'theme_stylesheet', 'theme_stylesheets');
 
-	/*
-	if(!@is_object($GLOBALS['phpgw']->js))
+	$app = $GLOBALS['phpgw_info']['flags']['currentapp'];
+
+	$theme_styles[] = "{$GLOBALS['phpgw_info']['server']['webserver_url']}/phpgwapi/templates/newdesign/css/base.css";
+
+	if(file_exists(PHPGW_SERVER_ROOT . '/phpgwapi/templates/newdesign/css/' . $GLOBALS['phpgw_info']['user']['preferences']['common']['theme'] . '.css'))
 	{
-		$GLOBALS['phpgw']->js = createObject('phpgwapi.javascript');
+		$theme_styles[] = "{$GLOBALS['phpgw_info']['server']['webserver_url']}/phpgwapi/templates/newdesign/css/{$GLOBALS['phpgw_info']['user']['preferences']['common']['theme']}.css";
 	}
-	$GLOBALS['phpgw']->js->validate_file('json', 'json');
-	*/
-
-	phpgwapi_yui::load_widget('dragdrop');
-	phpgwapi_yui::load_widget('element');
-	phpgwapi_yui::load_widget('container');
-	phpgwapi_yui::load_widget('menu');
-	phpgwapi_yui::load_widget('button');
-	phpgwapi_yui::load_widget('connection');
-	//phpgwapi_yui::load_widget('json');
-
-
-	foreach ( $stylesheets as $stylesheet )
+	else
 	{
-		if( file_exists( PHPGW_SERVER_ROOT . $stylesheet ) )
-		{
-			$GLOBALS['phpgw']->template->set_var( 'stylesheet_uri', $GLOBALS['phpgw_info']['server']['webserver_url'] . $stylesheet );
-			$GLOBALS['phpgw']->template->parse('stylesheets', 'stylesheet', true);
-		}
+		$theme_styles[] = "{$GLOBALS['phpgw_info']['server']['webserver_url']}/phpgwapi/templates/newdesign/css/newdesign.css";
+		$GLOBALS['phpgw_info']['user']['preferences']['common']['theme'] = 'newdesign';
 	}
 
+	if(file_exists(PHPGW_SERVER_ROOT . "/{$app}/templates/base/css/base.css"))
+	{
+		$theme_styles[] = "{$GLOBALS['phpgw_info']['server']['webserver_url']}/{$app}/templates/base/css/base.css";
+	}
 
-	$app = lang($app);
-	$tpl_vars = array
+	if(file_exists(PHPGW_SERVER_ROOT . "/{$app}/templates/newdesign/css/base.css"))
+	{
+		$theme_styles[] = "{$GLOBALS['phpgw_info']['server']['webserver_url']}/{$app}/templates/newdesign/css/base.css";
+	}
+
+	if(file_exists(PHPGW_SERVER_ROOT . "/{$app}/templates/newdesign/css/{$GLOBALS['phpgw_info']['user']['preferences']['common']['theme']}.css"))
+	{
+		$theme_styles[] = "{$GLOBALS['phpgw_info']['server']['webserver_url']}/{$app}/templates/newdesign/css/{$GLOBALS['phpgw_info']['user']['preferences']['common']['theme']}.css";
+	}
+
+	$theme_styles[] = "{$GLOBALS['phpgw_info']['server']['webserver_url']}/newdesign/js/yahoo/yui/build/treeview/assets/skins/sam/treeview.css";
+
+	foreach ( $theme_styles as $style )
+	{
+		$GLOBALS['phpgw']->template->set_var('theme_style', $style);
+		$GLOBALS['phpgw']->template->parse('theme_stylesheets', 'theme_stylesheet', true);
+	}
+
+	phpgwapi_yui::load_widget('treeview');
+
+	$app = $app ? ' ['.(isset($GLOBALS['phpgw_info']['apps'][$app]) ? $GLOBALS['phpgw_info']['apps'][$app]['title'] : lang($app)).']':'';
+
+	$GLOBALS['phpgw']->template->set_var(array
 	(
 		'css'			=> $GLOBALS['phpgw']->common->get_css(),
 		'javascript'	=> $GLOBALS['phpgw']->common->get_javascript(),
-		'img_icon'      => $GLOBALS['phpgw']->common->find_image('phpgwapi', 'favicon.ico'),
-		'site_title'	=> "{$GLOBALS['phpgw_info']['server']['site_title']}",
+		'img_icon'      => PHPGW_IMAGES_DIR . '/favicon.ico',
+		'img_shortcut'  => PHPGW_IMAGES_DIR . '/favicon.ico',
 		'str_base_url'	=> $GLOBALS['phpgw']->link('/', array(), true),
-		'webserver_url'	=> $GLOBALS['phpgw_info']['server']['webserver_url'],
+		'website_title'	=> $GLOBALS['phpgw_info']['server']['site_title'] . $app,
 		'win_on_events'	=> $GLOBALS['phpgw']->common->get_on_events(),
-		'border_layout_config' => json_encode(execMethod('phpgwapi.template_newdesign.retrieve_local', 'border_layout_config')),
-		'navbar_config' => json_encode(execMethod('phpgwapi.template_newdesign.retrieve_local', 'navbar_config'))
-	);
-
-	$GLOBALS['phpgw']->template->set_var($tpl_vars);
-
-	$GLOBALS['phpgw']->template->pfp('out', 'head');
-	unset($tpl_vars);
+	));
+	$GLOBALS['phpgw']->template->pfp('out','head');
+?>

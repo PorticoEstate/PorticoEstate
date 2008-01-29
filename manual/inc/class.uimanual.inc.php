@@ -11,8 +11,8 @@
 	*/
 
 	/**
-	 * Manual Renderer
-	 * @package manual
+	 * Description
+	 * @package property
 	 */
 
 	class manual_uimanual
@@ -27,12 +27,11 @@
 
 		var $public_functions = array
 		(
-			'index'			=> true,
-			'help'			=> true,
-			'attrib_help'	=> true
+			'index'  => True,
+			'help'  => True
 		);
 
-		public function __construct()
+		function manual_uimanual()
 		{
 			$GLOBALS['phpgw']->help = CreateObject('manual.help_helper');
 		}
@@ -40,7 +39,7 @@
 		function index()
 		{
 //			$GLOBALS['phpgw_info']['flags']['xslt_app'] = True;
-			$this->currentapp		= phpgw::get_var('app');
+			$this->currentapp		= get_var('app',array('POST','GET'));
 
 			if (!$this->currentapp || $this->currentapp == 'manual')
 			{
@@ -69,33 +68,40 @@
 		function help()
 		{
 			$odt2xhtml	= CreateObject('manual.odt2xhtml');
-			$app = phpgw::get_var('app', 'string', 'GET');
-			$section = phpgw::get_var('section', 'string', 'GET');
+			$app = get_var('app',array('GET'));
+			$section = get_var('section',array('GET'));
 
 			if(!$section)
 			{
-				$referer = parse_url(phpgw::get_var('HTTP_REFERER', 'string', 'SERVER') );
+				$referer = parse_url($_SERVER['HTTP_REFERER']);
 				parse_str($referer['query']);
 
 				if(isset($menuaction) && $menuaction)
 				{
-					list($app_from_referer, $class, $method) = explode('.',$menuaction);
-					if ( strpos($class, 'ui') === 0 )
+					list($app_from_referer,$class,$method) = explode('.',$menuaction);
+					if(strpos($class,'ui')== 0 )
 					{
-						$class = ltrim($class, 'ui');
+						$class = ltrim($class,'ui');
 					}
-					$section = "{$class}.{$method}";
+					$section = $class . '.' . $method;
 				}
 			}	
 
 			if(!$app)
 			{
-				$app = isset($app_from_referer) && $app_from_referer ? $app_from_referer : 'manual';
+				if(isset($app_from_referer) && $app_from_referer)
+				{
+					$app = $app_from_referer;
+				}
+				else
+				{
+					$app = 'manual';
+				}
 			}
 
-			$section 	= $section ? $section : 'overview';
-			$lang 		= strtoupper(isset($GLOBALS['phpgw_info']['user']['preferences']['common']['lang']) && $GLOBALS['phpgw_info']['user']['preferences']['common']['lang'] ? $GLOBALS['phpgw_info']['user']['preferences']['common']['lang']: 'en');
-			$navbar 	= phpgw::get_var('navbar', 'string', 'GET');
+			$section 	= $section?$section:'overview';
+			$lang 		= isset($GLOBALS['phpgw_info']['user']['preferences']['common']['lang']) && $GLOBALS['phpgw_info']['user']['preferences']['common']['lang'] ? $GLOBALS['phpgw_info']['user']['preferences']['common']['lang']: 'en';
+			$navbar = get_var('navbar',array('GET'));
 
 			$GLOBALS['phpgw_info']['flags']['app_header'] = $app . '::' . lang($section);
 			$GLOBALS['phpgw']->common->phpgw_header();
@@ -107,7 +113,7 @@
 				parse_navbar();
 			}
 				
-			$odtfile = PHPGW_SERVER_ROOT . "/{$app}/help/{$lang}/{$section}.odt";
+			$odtfile = PHPGW_SERVER_ROOT . SEP . $app . SEP . 'help' . SEP . strtoupper($lang) . SEP . $section . '.odt';
 
 			if(is_file($odtfile))
 			{
@@ -115,41 +121,11 @@
 			}
 			else
 			{
-				$error = lang('Invalid or missing manual entry requested, please contact your system administrator');
-				echo <<<HTML
-					<div class="err">$error</div>
-
-HTML;
+				echo '<h2 align = "center">Missing manual entry</h2>'; // fix this to a proper message
 			}
 			
 			$GLOBALS['phpgw']->common->phpgw_footer();
 
 		}
-
-		function attrib_help()
-		{
-			$t =& $GLOBALS['phpgw']->template;
-			$t->set_root(PHPGW_APP_TPL);
-
-			$GLOBALS['phpgw_info']['flags']['xslt_app'] = false;
-			$GLOBALS['phpgw_info']['flags']['nofooter'] = True;
-
-			$appname	= phpgw::get_var('appname');
-			$location 	= phpgw::get_var('location');
-			$id			= phpgw::get_var('id', 'int');
-
-			$custom 	= createObject('phpgwapi.custom_fields');
-			
-			$attrib_data 	= $custom->get_attrib_single($appname, $location, $id);
-
-			$function_msg	= lang('Help');
-
-			$t->set_file('help','help.tpl');
-			$t->set_var('title',lang('Help') . ' - "' . $attrib_data['input_text'] . '"');
-			$t->set_var('help_msg',$attrib_data['helpmsg'] );
-			$t->set_var('lang_close',lang('close') );
-											
-			$GLOBALS['phpgw']->common->phpgw_header();
-			$t->pfp('out','help');
-		}
 	}
+?>

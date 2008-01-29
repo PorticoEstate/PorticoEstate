@@ -54,7 +54,7 @@
 
 		function sms_bocommon()
 		{
-		//	$this->currentapp		= 'sms';
+			$this->currentapp		= 'sms';
 			$this->socommon			= createObject('sms.socommon');
 			$this->account			= $GLOBALS['phpgw_info']['user']['account_id'];
 
@@ -470,7 +470,7 @@
 
 			$appname	= lang('No access');
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('sms') . ' - ' . $appname;
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($this->currentapp) . ' - ' . $appname;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('no_access' => $data));
 		}
 

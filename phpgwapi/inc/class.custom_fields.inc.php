@@ -15,7 +15,6 @@
 	 * Custom Fields
 	 * @package phpgwapi
 	 */
-	phpgw::import_class('phpgwapi.datetime');
 	class custom_fields
 	{
 		/**
@@ -89,12 +88,10 @@
 			
 			$this->location = $location;
 		
-			$this->account			= $GLOBALS['phpgw_info']['user']['account_id'];
-			$this->db           	=& $GLOBALS['phpgw']->db; // clone to avoid conflict the db in lang-function
-			$this->join				= $this->db->join;
-			$this->like				= $this->db->like;
-			$this->dateformat 		= phpgwapi_db::date_format();
-			$this->datetimeformat 	= phpgwapi_db::datetime_format();
+			$this->account		= $GLOBALS['phpgw_info']['user']['account_id'];
+			$this->db           =& $GLOBALS['phpgw']->db; // clone to avoid conflict the db in lang-function
+			$this->join			= $this->db->join;
+			$this->like			= $this->db->like;
 
 			if($this->appname && $this->location)
 			{
@@ -122,11 +119,10 @@
 		/**
 		 * Add a custom field/attribute
 		 * 
-		 * @param array $attrib the field data
-		 * @param string $attrib_table where to append the attrib
+		 * @param array $attirb the field data
 		 * @return int the the new custom field db pk
 		 */
-		function add_attrib($attrib, $attrib_table = '')
+		function add_attrib($attrib)
 		{
 			$receipt = array();
 			// Checkboxes are only present if ticked, so we declare them here to stop errors
@@ -134,11 +130,10 @@
 			$attrib['list'] = isset($attrib['list']) ? !!$attrib['list'] : false;
 			$attrib['history'] = isset($attrib['history']) ? !!$attrib['history'] : false;
 
-			$attrib['column_name'] = $this->db->db_addslashes(strtolower($attrib['column_name']));
+			$attrib['column_name'] = $this->db->db_addslashes($attrib['column_name']);
 			$attrib['input_text'] = $this->db->db_addslashes($attrib['input_text']);
 			$attrib['statustext'] = $this->db->db_addslashes($attrib['statustext']);
 			$attrib['default'] =  isset($arrib['default']) ? $this->db->db_addslashes($attrib['default']) : '';
-			$attrib['helpmsg'] = $this->db->db_addslashes($attrib['helpmsg']);
 
 			$sql = "SELECT * FROM phpgw_cust_attribute where appname='{$attrib['appname']}' AND location='{$attrib['location']}' AND column_name = '{$attrib['column_name']}'";
 			$this->db->query($sql,__LINE__,__FILE__);
@@ -151,7 +146,7 @@
 				return $receipt; //no point continuing
 			}
 
-
+			$this->db->transaction_begin();
 
 			$sql = 'SELECT MAX(attrib_sort) AS max_sort, MAX(id) AS current_id FROM phpgw_cust_attribute'
 					. " WHERE appname='{$attrib['appname']}' AND location='{$attrib['location']}'";
@@ -181,8 +176,6 @@
 				$attrib['search'],
 				$attrib['list'],
 				$attrib['history'],
-				$attrib['disabled'],
-				$attrib['helpmsg'],
 				$attrib_sort,
 				$attrib['column_info']['type'],
 				$attrib['column_info']['precision'],
@@ -193,11 +186,7 @@
 
 			$values	= $this->db->validate_insert($values);
 
-			$this->_init_process();
-
-			$this->db->transaction_begin();
-
-			$this->db->query("INSERT INTO phpgw_cust_attribute (appname,location,id,column_name, input_text, statustext,search,list,history,disabled,helpmsg,attrib_sort, datatype,precision_,scale,default_value,nullable) "
+			$this->db->query("INSERT INTO phpgw_cust_attribute (appname,location,id,column_name, input_text, statustext,search,list,history,attrib_sort, datatype,precision_,scale,default_value,nullable) "
 				. "VALUES ($values)",__LINE__,__FILE__);
 
 			$receipt['id']= $attrib['id'];
@@ -217,19 +206,15 @@
 				unset($attrib['column_info']['default']);
 			}
 
-			if(!$attrib_table)
-			{
-				$attrib_table = $this->get_attrib_table($attrib['appname'],$attrib['location']);
-			}
+			$attrib_table = $this->get_attrib_table($attrib['appname'],$attrib['location']);
 
-			$this->oProc->m_odb->transaction_begin();
-
-			$this->oProc->AddColumn($attrib_table,$attrib['column_name'], $attrib['column_info']);
-
-			if($this->oProc->m_odb->transaction_commit())
+			$this->_init_process();
+			
+			if($this->oProc->AddColumn($attrib_table,$attrib['column_name'], $attrib['column_info']))
 			{
 				$receipt['message'][] = array('msg'	=> lang('Attribute has been saved')	);
 				$this->db->transaction_commit();
+
 			}
 			else
 			{
@@ -245,7 +230,6 @@
 
 				}
 			}
-
 			return $receipt;
 		}
 
@@ -321,31 +305,26 @@
 			}
 			endif;
 		}
-
+		
 		/**
 		 * Edit a custom field
 		 * 
 		 * @param array $attrib the field data
-		 * @param string $attrib_table where to edit the attrib
 		 * @return int the field db pk
 		 */
-		function edit_attrib($attrib, $attrib_table = '')
+		function edit_attrib($attrib)
 		{
 			// Checkboxes are only present if ticked, so we declare them here to stop errors
 			$attrib['search'] = isset($attrib['search']) ? !!$attrib['search'] : false;
 			$attrib['list'] = isset($attrib['list']) ? !!$attrib['list'] : false;
 			$attrib['history'] = isset($attrib['history']) ? !!$attrib['history'] : false;
-
-			if(!$attrib_table)
-			{
-				$attrib_table = $this->get_attrib_table($attrib['appname'],$attrib['location']);
-			}
+			
+			$attrib_table = $this->get_attrib_table($attrib['appname'],$attrib['location']);
 			$choice_table = 'phpgw_cust_choice';
 
 			$attrib['column_name'] = $this->db->db_addslashes($attrib['column_name']);
 			$attrib['input_text'] = $this->db->db_addslashes($attrib['input_text']);
 			$attrib['statustext'] = $this->db->db_addslashes($attrib['statustext']);
-			$attrib['helpmsg'] = $this->db->db_addslashes($attrib['helpmsg']);
 			$attrib['column_info']['default'] = $this->db->db_addslashes($attrib['column_info']['default']);
 
 			if($attrib['column_info']['type']=='R' || $attrib['column_info']['type']== 'CH' || $attrib['column_info']['type'] =='LB' || $attrib['column_info']['type'] =='AB' || $attrib['column_info']['type'] =='VENDOR')
@@ -364,7 +343,7 @@
 			$OldDataType		= $this->db->f('datatype');
 			$OldPrecision		= $this->db->f('precision_');			
 			
-			$table_def = $this->get_table_def($attrib_table);	
+//			$table_def = $this->get_table_def($attrib['appname'],$attrib['location']);	
 
 			$this->db->transaction_begin();
 
@@ -375,18 +354,18 @@
 				'search'		=> isset($attrib['search']) ? $attrib['search'] : '',
 				'list'			=> isset($attrib['list']) ? $attrib['list'] : '',
 				'history'		=> isset($attrib['history']) ? $attrib['history'] : '',
-				'nullable'		=> $attrib['column_info']['nullable'] == 'False' ? 'False' : 'True',
-				'disabled'		=> isset($attrib['disabled']) ? $attrib['disabled'] : '',
-				'helpmsg'		=> $attrib['helpmsg'],
+				'nullable'		=> $attrib['column_info']['nullable'] == False ? 'False' : 'True'
 			);
 
 			$value_set	= $this->db->validate_update($value_set);
 
 			$this->db->query("UPDATE phpgw_cust_attribute set $value_set WHERE appname='" . $attrib['appname']. "' AND location='" . $attrib['location']. "' AND id=" . $attrib['id'],__LINE__,__FILE__);
 
+			$this->_init_process();
+			
 			$this->oProc->m_odb->transaction_begin();
 
-			$this->oProc->m_aTables = $table_def;
+//			$this->oProc->m_aTables = $table_def;
 
 			if($OldColumnName !=$attrib['column_name'])
 			{
@@ -512,7 +491,7 @@
 		 * @param string $appname the name of the application
 		 * @param string $location the name of the location
 		 */
-		function get_attribs($appname, $location, $start = 0, $query = '', $sort = 'ASC', $order = 'attrib_sort', $allrows = false, $inc_choices = false,$filtermethod='')
+		function get_attribs($appname, $location, $start = 0, $query = '', $sort = 'ASC', $order = 'attrib_sort', $allrows = false, $inc_choices = false)
 		{
 			$start		= (int) $start;
 			$query		= $this->db->db_addslashes($query);
@@ -543,7 +522,7 @@
 				$querymethod = " AND (phpgw_cust_attribute.column_name $this->like '%$query%' or phpgw_cust_attribute.input_text $this->like '%$query%')";
 			}
 
-			$sql = "FROM phpgw_cust_attribute WHERE appname='$appname' AND location = '$location' AND custom = 1 $querymethod $filtermethod";
+			$sql = "FROM phpgw_cust_attribute WHERE appname='$appname' AND location = '$location' $querymethod";
 
 			$this->total_records = 0;
 			$this->db->query("SELECT COUNT(id) AS cnt_rec $sql",__LINE__,__FILE__);
@@ -567,14 +546,13 @@
 				$attribs[] = array
 				(
 					'id'				=> $this->db->f('id'),
-					'attrib_id'			=> $this->db->f('id'), // FIXME: for now...
 					'entity_type'		=> $this->db->f('type_id'),
 					'attrib_sort'		=> (int) $this->db->f('attrib_sort'),
 					'list'				=> $this->db->f('list'),
 					'lookup_form'		=> $this->db->f('lookup_form'),
 					'entity_form'		=> $this->db->f('entity_form'),
 					'column_name'		=> $this->db->f('column_name'),
-					'name'				=> $this->db->f('column_name'),
+					'name'				=> $this->db->f('input_text', true),
 					'size'				=> $this->db->f('size'),
 					'statustext'		=> $this->db->f('statustext', true),
 					'input_text'		=> $this->db->f('input_text', true),
@@ -582,12 +560,7 @@
 					'datatype'			=> $this->db->f('datatype'),
 					'search'			=> $this->db->f('search'),
 					'trans_datatype'	=> $this->translate_datatype($this->db->f('datatype')),
-					'nullable'			=> ($this->db->f('nullable') == 'True'),
-					'allow_null'		=> ($this->db->f('nullable') == 'True'), // FIXME: for now...
-					'history'			=> $this->db->f('history'),
-					'disabled'			=> $this->db->f('disabled'),
-					'helpmsg'			=> !!$this->db->f('helpmsg')
-
+					'nullable'			=> ($this->db->f('nullable') == 'True')
 				);
 			}
 
@@ -625,7 +598,6 @@
 			if ($this->db->next_record())
 			{
 				$attrib['id']						= $this->db->f('id');
-				$attrib['attrib_id']				= $this->db->f('id'); // for now...
 				$attrib['column_name']				= $this->db->f('column_name');
 				$attrib['input_text']				= $this->db->f('input_text', true);
 				$attrib['statustext']				= $this->db->f('statustext', true);
@@ -641,11 +613,7 @@
 				$attrib['search']					= $this->db->f('search');
 				$attrib['history']					= $this->db->f('history');
 				$attrib['location']					= $this->db->f('location');
-				$attrib['nullable']					= ($this->db->f('nullable') == 'True');
-				$attrib['allow_null']				= ($this->db->f('nullable') == 'True'); // FIXME: for now...
-				$attrib['disabled']					= $this->db->f('disabled');
-				$attrib['helpmsg']					= stripslashes($this->db->f('helpmsg'));
-
+				
 				if ( $inc_choices 
 					&& ( $this->db->f('datatype') == 'R' 
 						|| $this->db->f('datatype') == 'CH' 
@@ -837,8 +805,8 @@
 		function resort_custom_function($id, $resort, $appname, $location)
 		{
 			$resort = $resort == 'down' ? 'down' : 'up';
-			$appname = $this->db->db_addslashes($appname);
-			$location = $this->db->db_addslashes($location);
+			$appname = $this->db->db_addslashes($this->appname);
+			$location = $this->db->db_addslashes($this->location);
 			$id = (int)$id;
 
 			if(!$location || !$appname)
@@ -884,45 +852,45 @@
 
 		function select_custom_function($selected='', $appname)
 		{
-			$dirname = PHPGW_SERVER_ROOT . "/{$appname}/inc/custom"; 
-			$myfilearray = array();
-			$dir_handle = dir($dirname);
+
+			$dir_handle = @opendir(PHPGW_SERVER_ROOT . SEP . $appname . SEP . 'inc' . SEP . 'custom');
+			$i=0; $myfilearray = '';
 			if ($dir_handle)
 			{
-				while ( ($file = $dir_handle->read($dir_handle)) !== false )
+				while ($file = readdir($dir_handle))
 				{
-					if ((substr($file, 0, 1) != '.') && is_file("{$dirname}/{$file}") )
+					if ((substr($file, 0, 1) != '.') && is_file(PHPGW_SERVER_ROOT . SEP . $appname . SEP . 'inc' . SEP . 'custom' . SEP . $file) )
 					{
-						$myfilearray[] = $file;
+						$myfilearray[$i] = $file;
+						$i++;
 					}
 				}
-				$dir_handle->close();
+				closedir($dir_handle);
 				sort($myfilearray);
 			}
 
-			$file_list = array();
-			foreach ( $myfilearray as $myfile )
+			for ($i=0;$i<count($myfilearray);$i++)
 			{
-				$fname = preg_replace('/_/', ' ', $myfile);
+				$fname = ereg_replace('_',' ',$myfilearray[$i]);
 				$sel_file = '';
-				if ( $myfile == $selected )
+				if ($myfilearray[$i]==$selected)
 				{
 					$sel_file = 'selected';
 				}
 
 				$file_list[] = array
 				(
-					'id'		=> $myfile,
+					'id'		=> $myfilearray[$i],
 					'name'		=> $fname,
 					'selected'	=> $sel_file
 				);
 			}
 
-			foreach ( $file_list as &$file )
+			for ($i=0;$i<count($file_list);$i++)
 			{
-				if ( $file['selected'] != 'selected' )
+				if ($file_list[$i]['selected'] != 'selected')
 				{
-					unset($file['selected']);
+					unset($file_list[$i]['selected']);
 				}
 			}
 
@@ -974,7 +942,7 @@
 			return isset($datatype_precision[$datatype])?$datatype_precision[$datatype]:'';
 		}
 
-		function _delete_attrib($location,$appname,$attrib_id,$table = '')
+		function _delete_attrib($location,$appname,$attrib_id)
 		{
 			$this->_init_process();
 			$this->oProc->m_odb->transaction_begin();
@@ -986,10 +954,7 @@
 			$this->db->next_record();
 
 			$ColumnName		= $this->db->f('column_name');
-			if(!$table)
-			{
-				$table = $this->get_attrib_table($appname,$location);
-			}
+			$table = $this->get_attrib_table($appname,$location);
 
 			$this->oProc->DropColumn($table,false, $ColumnName);
 
@@ -1013,30 +978,6 @@
 	//		$this->db->query("DELETE FROM history...
 			$this->db->transaction_commit();
 			$this->oProc->m_odb->transaction_commit();
-		}
-
-		function get_table_def($table = '', $table_def = array())
-		{
-			if(!isset($this->oProc) || !is_object($this->oProc))
-			{
-				$this->_init_process();
-				$GLOBALS['phpgw_setup']->oProc = $this->oProc;
-			}
-
-			$setup = createobject('phpgwapi.setup_process');
-			$tableinfo = $setup->sql_to_array($table);
-
-			$fd = '$fd = array(' . str_replace("\t",'',$tableinfo[0]) .');';
-
-			eval($fd);
-			$table_def[$table]['fd'] = isset($table_def[$table]['fd']) && $table_def[$table]['fd'] ? $table_def[$table]['fd'] + $fd : $fd;
-			$table_def[$table]['pk'] = isset($table_def[$table]['pk']) && $table_def[$table]['pk'] ? $table_def[$table]['pk'] : $tableinfo[1];
-			$table_def[$table]['fk'] = isset($table_def[$table]['fk']) && $table_def[$table]['fk'] ? $table_def[$table]['fk'] : $tableinfo[2];		
-			$table_def[$table]['ix'] = isset($table_def[$table]['ix']) && $table_def[$table]['ix'] ? $table_def[$table]['ix'] : $tableinfo[3];
-			$table_def[$table]['uc'] = isset($table_def[$table]['uc']) && $table_def[$table]['uc'] ? $table_def[$table]['uc'] : $tableinfo[4];
-			
-//	_debug_array($table_def);
-			return $table_def;
 		}
 		
 		function _delete_custom_function($appname,$location,$custom_function_id)
@@ -1062,8 +1003,8 @@
 		function _init_process()
 		{
 			$this->oProc 				= createObject('phpgwapi.schema_proc',$GLOBALS['phpgw_info']['server']['db_type']);
-			$this->oProc->m_odb			= clone($this->db); // nested transactions
-			$this->oProc->m_odb->Halt_On_Error	= 'yes';
+			$this->oProc->m_odb			=& $this->db;
+			$this->oProc->m_odb->Halt_On_Error	= 'report';
 		}
 		
 		/**
@@ -1103,12 +1044,8 @@
 		 * @return array values and definitions of custom attributes prepared for ui
 		 */
 
-		function prepare_attributes($values='',$appname, $location,$view_only='')
+		function prepare_attributes($values='',$appname, $location)
 		{
-			$contacts		= CreateObject('phpgwapi.contacts');
-			$vendor 		= CreateObject('property.soactor');
-			$vendor->role	= 'vendor';
-
 			$dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
 
 			$input_type_array = array(
@@ -1117,24 +1054,21 @@
 				'LB' => 'listbox'
 			);
 
+//_debug_array($values['attributes']);
 			$m=0;
 			for ($i=0;$i<count($values['attributes']);$i++)
 			{
 				$values['attributes'][$i]['datatype_text'] 	= $this->translate_datatype($values['attributes'][$i]['datatype']);
-				$values['attributes'][$i]['help_url']		= $values['attributes'][$i]['helpmsg'] ? $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'manual.uimanual.attrib_help', 'appname'=> $appname, 'location'=> $location, 'id' => $values['attributes'][$i]['id'])): '';
 				if($values['attributes'][$i]['datatype']=='D')
 				{
-					if(!$view_only)
+					if ( !isset($GLOBALS['phpgw']->jscal) || !is_object($GLOBALS['phpgw']->jscal) )
 					{
-						if ( !isset($GLOBALS['phpgw']->jscal) || !is_object($GLOBALS['phpgw']->jscal) )
-						{
-							$GLOBALS['phpgw']->jscal = createObject('phpgwapi.jscalendar');
-						}
-
-						$GLOBALS['phpgw']->jscal->add_listener('values_attribute_' . $i);
-						$values['attributes'][$i]['img_cal']= $GLOBALS['phpgw']->common->image('phpgwapi','cal');
-						$values['attributes'][$i]['lang_datetitle']= lang('Select date');
+						$GLOBALS['phpgw']->jscal = createObject('phpgwapi.jscalendar');
 					}
+
+					$GLOBALS['phpgw']->jscal->add_listener('values_attribute_' . $i);
+					$values['attributes'][$i]['img_cal']= $GLOBALS['phpgw']->common->image('phpgwapi','cal');
+					$values['attributes'][$i]['lang_datetitle']= lang('Select date');
 
 					if(isset($values['attributes'][$i]['value']) && $values['attributes'][$i]['value'])
 					{
@@ -1142,7 +1076,7 @@
 						$values['attributes'][$i]['value']	= $GLOBALS['phpgw']->common->show_date($timestamp_date,$dateformat);
 					}
 				}
-				else if($values['attributes'][$i]['datatype']=='AB')
+				if($values['attributes'][$i]['datatype']=='AB')
 				{
 					if($values['attributes'][$i]['value'])
 					{
@@ -1151,13 +1085,13 @@
 					}
 
 					$insert_record_values[]	= $values['attributes'][$i]['name'];
-					$lookup_link		= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uilookup.addressbook', 'column'=> $values['attributes'][$i]['name']));
+					$lookup_link		= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uilookup.addressbook', 'column'=> $values['attributes'][$i]['name']));
 
 					$lookup_functions[$m]['name'] = 'lookup_'. $values['attributes'][$i]['name'] .'()';
 					$lookup_functions[$m]['action'] = 'Window1=window.open('."'" . $lookup_link ."'" .',"Search","width=800,height=700,toolbar=no,scrollbars=yes,resizable=yes");';
 					$m++;
 				}
-				else if($values['attributes'][$i]['datatype']=='VENDOR')
+/*				if($values['attributes'][$i]['datatype']=='VENDOR')
 				{
 					if($values['attributes'][$i]['value'])
 					{
@@ -1174,13 +1108,14 @@
 					}
 
 					$insert_record_values[]	= $values['attributes'][$i]['name'];
-					$lookup_link		= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uilookup.vendor', 'column'=> $values['attributes'][$i]['name']));
+					$lookup_link		= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uilookup.vendor', 'column'=> $values['attributes'][$i]['name']));
 
 					$lookup_functions[$m]['name'] = 'lookup_'. $values['attributes'][$i]['name'] .'()';
 					$lookup_functions[$m]['action'] = 'Window1=window.open('."'" . $lookup_link ."'" .',"Search","width=800,height=700,toolbar=no,scrollbars=yes,resizable=yes");';
 					$m++;
 				}
-				else if($values['attributes'][$i]['datatype']=='user')
+*/
+				if($values['attributes'][$i]['datatype']=='user')
 				{
 					if($values['attributes'][$i]['value'])
 					{
@@ -1188,13 +1123,14 @@
 					}
 
 					$insert_record_values[]	= $values['attributes'][$i]['name'];
-					$lookup_link		= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->appname.'.uilookup.phpgw_user', 'column'=> $values['attributes'][$i]['name']));
+					$lookup_link		= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uilookup.phpgw_user', 'column'=> $values['attributes'][$i]['name']));
 
 					$lookup_functions[$m]['name'] = 'lookup_'. $values['attributes'][$i]['name'] .'()';
 					$lookup_functions[$m]['action'] = 'Window1=window.open('."'" . $lookup_link ."'" .',"Search","width=800,height=700,toolbar=no,scrollbars=yes,resizable=yes");';
 					$m++;
 				}
-				else if($values['attributes'][$i]['datatype']=='R' || $values['attributes'][$i]['datatype']=='CH' || $values['attributes'][$i]['datatype']=='LB')
+
+				if($values['attributes'][$i]['datatype']=='R' || $values['attributes'][$i]['datatype']=='CH' || $values['attributes'][$i]['datatype']=='LB')
 				{
 					$values['attributes'][$i]['choice']	= $this->read_attrib_choice($appname, $location,$values['attributes'][$i]['id']);
 					$input_type=$input_type_array[$values['attributes'][$i]['datatype']];
@@ -1202,24 +1138,8 @@
 					if($values['attributes'][$i]['datatype']=='CH')
 					{
 						$values['attributes'][$i]['value']=unserialize($values['attributes'][$i]['value']);
+						$values['attributes'][$i]['choice'] = $this->bocommon->select_multi_list_2($values['attributes'][$i]['value'],$values['attributes'][$i]['choice'],$input_type);
 
-						if (isset($values['attributes'][$i]['choice']) AND is_array($values['attributes'][$i]['choice']))
-						{
-							foreach($values['attributes'][$i]['choice'] as &$choice)
-							{
-								$choice['input_type'] = $input_type;
-								if(isset($values['attributes'][$i]['value']) && is_array($values['attributes'][$i]['value']))
-								{
-									foreach ($values['attributes'][$i]['value'] as &$selected)
-									{
-										if($selected == $choice['id'])
-										{
-											$choice['checked'] = 'checked';
-										}
-									}
-								}
-							}
-						}
 					}
 					else
 					{
@@ -1232,10 +1152,6 @@
 							}
 						}
 					}
-				}
-				else if ($entity['attributes'][$i]['datatype']!='I' && $entity['attributes'][$i]['value'])
-				{
-					$entity['attributes'][$i]['value'] = stripslashes($entity['attributes'][$i]['value']);
 				}
 
 				$values['attributes'][$i]['datatype_text'] = $this->translate_datatype($values['attributes'][$i]['datatype']);
@@ -1271,78 +1187,29 @@
 		*/
 		function preserve_attribute_values($values,$values_attribute)
 		{
-//_debug_array($values);
-//_debug_array($values_attribute);
 			foreach ( $values_attribute as $key => $attribute )
 			{	
 				for ($i=0;$i<count($values['attributes']);$i++)
 				{
 					if($values['attributes'][$i]['id'] == $attribute['attrib_id'])
 					{
-						if(isset($attribute['value']))
-						{
-							if(is_array($attribute['value']))
-							{
-								foreach($values['attributes'][$i]['choice'] as &$choice)
-								{
-									foreach ($attribute['value'] as &$selected)
-									{
-										if($selected == $choice['id'])
-										{
-											$choice['checked'] = 'checked';
-										}
-									}
-								}
-							}
-							else if(isset($values['attributes'][$i]['choice']) && is_array($values['attributes'][$i]['choice']))
-							{
+						$values['attributes'][$i]['value'] = $attribute['value'];
 
-								foreach ($values['attributes'][$i]['choice'] as &$choice)
-								{
-									if($choice['id'] == $attribute['value'])
-									{
-										$choice['checked'] = 'checked';	
-									}
-								}
-							}
-							else
+						if(isset($values['attributes'][$i]['choice']) && is_array($values['attributes'][$i]['choice']))
+						{
+							for ($j=0;$j<count($values['attributes'][$i]['choice']);$j++)
 							{
-								$values['attributes'][$i]['value'] = $attribute['value'];
+								if($values['attributes'][$i]['choice'][$j]['id'] == $attribute['value'])
+								{
+									$values['attributes'][$i]['choice'][$j]['checked'] = 'checked';	
+								}
 							}
 						}
 					}
 				}
 			}
+			
 			return $values;
-		}
-
-		function convert_attribute_save($values_attribute='')
-		{
-			if(is_array($values_attribute))
-			{
-				foreach ( $values_attribute as &$attrib )
-				{
-					if ( $attrib['datatype'] == 'CH' && $attrib['value'] )
-					{
-						$attrib['value'] = serialize($attrib['value'] );
-					}
-					if ( $attrib['datatype'] == 'R' && $attrib['value'] )
-					{
-						$attrib['value'] = $attrib['value'][0];
-					}
-
-					if ( $attrib['datatype'] == 'N' && $attrib['value'] )
-					{
-						$attrib['value'] = str_replace(',', '.', $attrib['value']);
-					}
-	
-					if ( $attrib['datatype'] == 'D' && $attrib['value'] )
-					{
-						$attrib['value'] = date($this->dateformat, phpgwapi_datetime::date_to_timestamp($attrib['value']));
-					}
-				}
-			}
-			return $values_attribute;
 		}
 	}
 ?>

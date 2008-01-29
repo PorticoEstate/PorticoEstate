@@ -38,7 +38,7 @@
 
 		function lag_lang_filer()
 		{
-		//	$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
+			$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->bocommon		= CreateObject('property.bocommon');
 			$this->db 		= $this->bocommon->new_db();
 		}
@@ -70,7 +70,7 @@
 		{
 			$link_data = array
 			(
-				'menuaction' => 'property.custom_functions.index',
+				'menuaction' => $this->currentapp.'.custom_functions.index',
 				'function'	=>$this->function_name,
 				'execute'	=> $execute,
 			);
@@ -99,7 +99,7 @@
 
 			$appname		= lang('location');
 			$function_msg	= 'lag_lang_filer';
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($this->currentapp) . ' - ' . $appname . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('confirm' => $data));
 			$GLOBALS['phpgw']->xslttpl->pp();
 		}

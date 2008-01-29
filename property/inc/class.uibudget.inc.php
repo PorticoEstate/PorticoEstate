@@ -58,14 +58,13 @@
 		function property_uibudget()
 		{
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = True;
-			$GLOBALS['phpgw_info']['flags']['menu_selection'] = 'property::budget';
-
-		//	$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
+			$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->nextmatchs	= CreateObject('phpgwapi.nextmatchs');
 			$this->account		= $GLOBALS['phpgw_info']['user']['account_id'];
 
 			$this->bo		= CreateObject('property.bobudget',True);
 			$this->bocommon		= CreateObject('property.bocommon');
+			$this->menu		= CreateObject('property.menu');
 
 			$this->start		= $this->bo->start;
 			$this->query		= $this->bo->query;
@@ -78,6 +77,8 @@
 			$this->year		= $this->bo->year;
 			$this->grouping		= $this->bo->grouping;
 			$this->revision		= $this->bo->revision;
+
+			$this->menu->sub	='budget';
 
 			$this->acl 		= CreateObject('phpgwapi.acl');
 
@@ -102,12 +103,6 @@
 		{
 			$acl_location	= '.budget';
 			$acl_read 	= $this->acl->check($acl_location,1);
-			
-			if(!$acl_read)
-			{
-				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=>1, 'acl_location'=> $acl_location));
-			}
-
 			$acl_add 	= $this->acl->check($acl_location,2);
 			$acl_edit 	= $this->acl->check($acl_location,4);
 			$acl_delete 	= $this->acl->check($acl_location,8);
@@ -115,12 +110,18 @@
 			$this->year	= $this->bo->year;
 			$this->revision = $this->bo->revision;
 
-			$GLOBALS['phpgw_info']['flags']['menu_selection'] .= '::budget';
+			if(!$acl_read)
+			{
+				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> $this->currentapp.'.uilocation.stop', 'perm'=>1, 'acl_location'=> $acl_location));
+			}
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('budget',
+										'menu',
 										'receipt',
 										'search_field',
 										'nextmatchs'));
+
+			$links = $this->menu->links('budget');
 
 			$receipt = $GLOBALS['phpgw']->session->appsession('session_data','budget_receipt');
 			$GLOBALS['phpgw']->session->appsession('session_data','budget_receipt','');
@@ -141,8 +142,8 @@
 						'district_id'			=> $entry['district_id'],
 						'revision'			=> $entry['revision'],
 						'budget_cost'			=> $entry['budget_cost'],
-						'link_edit'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uibudget.edit', 'budget_id'=> $entry['budget_id'])),
-						'link_delete'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uibudget.delete', 'budget_id'=> $entry['budget_id'])),
+						'link_edit'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uibudget.edit', 'budget_id'=> $entry['budget_id'])),
+						'link_delete'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uibudget.delete', 'budget_id'=> $entry['budget_id'])),
 						'lang_edit_text'		=> lang('edit the budget record'),
 						'lang_delete_text'		=> lang('delete the budget record'),
 						'text_edit'			=> lang('edit'),
@@ -169,7 +170,7 @@
 											'sort'	=> $this->sort,
 											'var'	=> 'district_id',
 											'order'	=> $this->order,
-											'extra'	=> array('menuaction'	=> 'property.uibudget.index',
+											'extra'	=> array('menuaction'	=> $this->currentapp.'.uibudget.index',
 																'district_id'	=>$this->district_id,
 																'year'		=>$this->year,
 																'period'	=>$this->period,
@@ -183,7 +184,7 @@
 											'sort'	=> $this->sort,
 											'var'	=> 'b_account_id',
 											'order'	=> $this->order,
-											'extra'	=> array('menuaction'	=> 'property.uibudget.index',
+											'extra'	=> array('menuaction'	=> $this->currentapp.'.uibudget.index',
 																'district_id'	=>$this->district_id,
 																'year'		=>$this->year,
 																'period'	=>$this->period,
@@ -197,7 +198,7 @@
 											'sort'	=> $this->sort,
 											'var'	=> 'category',
 											'order'	=> $this->order,
-											'extra'	=> array('menuaction'	=> 'property.uibudget.index',
+											'extra'	=> array('menuaction'	=> $this->currentapp.'.uibudget.index',
 																'district_id'	=>$this->district_id,
 																'year'		=>$this->year,
 																'period'	=>$this->period,
@@ -211,7 +212,7 @@
 											'sort'	=> $this->sort,
 											'var'	=> 'budget_cost',
 											'order'	=> $this->order,
-											'extra'	=> array('menuaction'	=> 'property.uibudget.index',
+											'extra'	=> array('menuaction'	=> $this->currentapp.'.uibudget.index',
 																'district_id'	=>$this->district_id,
 																'year'		=>$this->year,
 																'period'	=>$this->period,
@@ -227,13 +228,13 @@
 				(
 					'lang_add'		=> lang('add'),
 					'lang_add_statustext'	=> lang('add a budget query'),
-					'add_action'		=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uibudget.edit'))
+					'add_action'		=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uibudget.edit'))
 				);
 			}
 
 			$link_data = array
 			(
-				'menuaction'	=> 'property.uibudget.index',
+				'menuaction'	=> $this->currentapp.'.uibudget.index',
 				'sort'		=>$this->sort,
 				'order'		=>$this->order,
 				'cat_id'	=>$this->cat_id,
@@ -262,6 +263,7 @@
 				'sum'						=> $sum,
 				'lang_sum'					=> lang('sum'),
 				'msgbox_data'					=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
+				'links'						=> $links,
  				'allow_allrows'					=> true,
 				'allrows'					=> $this->allrows,
 				'start_record'					=> $this->start,
@@ -306,12 +308,6 @@
 		{
 			$acl_location	= '.budget';
 			$acl_read 	= $this->acl->check($acl_location,1);
-
-			if(!$acl_read)
-			{
-				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=>1, 'acl_location'=> $acl_location));
-			}
-
 			$acl_add 	= $this->acl->check($acl_location,2);
 			$acl_edit 	= $this->acl->check($acl_location,4);
 			$acl_delete 	= $this->acl->check($acl_location,8);
@@ -319,13 +315,18 @@
 			$this->year	= $this->bo->year;
 			$this->revision = $this->bo->revision;
 
-
-			$GLOBALS['phpgw_info']['flags']['menu_selection'] .= '::basis';
+			if(!$acl_read)
+			{
+				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> $this->currentapp.'.uilocation.stop', 'perm'=>1, 'acl_location'=> $acl_location));
+			}
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('budget',
+										'menu',
 										'receipt',
 										'search_field',
 										'nextmatchs'));
+
+			$links = $this->menu->links('budget.basis');
 
 			$receipt = $GLOBALS['phpgw']->session->appsession('session_basis_data','budget_receipt');
 			$GLOBALS['phpgw']->session->appsession('session_data','budget_receipt','');
@@ -344,8 +345,8 @@
 						'district_id'			=> $entry['district_id'],
 						'revision'			=> $entry['revision'],
 						'budget_cost'			=> $entry['budget_cost'],
-						'link_edit'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uibudget.edit_basis', 'budget_id'=> $entry['budget_id'])),
-						'link_delete'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uibudget.delete_basis', 'budget_id'=> $entry['budget_id'])),
+						'link_edit'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uibudget.edit_basis', 'budget_id'=> $entry['budget_id'])),
+						'link_delete'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uibudget.delete_basis', 'budget_id'=> $entry['budget_id'])),
 						'lang_edit_text'		=> lang('edit the budget record'),
 						'lang_delete_text'		=> lang('delete the budget record'),
 						'text_edit'			=> lang('edit'),
@@ -370,7 +371,7 @@
 											'sort'	=> $this->sort,
 											'var'	=> 'district_id',
 											'order'	=> $this->order,
-											'extra'	=> array('menuaction'	=> 'property.uibudget.basis',
+											'extra'	=> array('menuaction'	=> $this->currentapp.'.uibudget.basis',
 																'district_id'	=>$this->district_id,
 																'year'		=>$this->year,
 																'period'	=>$this->period,
@@ -384,7 +385,7 @@
 											'sort'	=> $this->sort,
 											'var'	=> 'b_account_id',
 											'order'	=> $this->order,
-											'extra'	=> array('menuaction'	=> 'property.uibudget.basis',
+											'extra'	=> array('menuaction'	=> $this->currentapp.'.uibudget.basis',
 																'district_id'	=>$this->district_id,
 																'year'		=>$this->year,
 																'period'	=>$this->period,
@@ -398,7 +399,7 @@
 											'sort'	=> $this->sort,
 											'var'	=> 'b_group',
 											'order'	=> $this->order,
-											'extra'	=> array('menuaction'	=> 'property.uibudget.basis',
+											'extra'	=> array('menuaction'	=> $this->currentapp.'.uibudget.basis',
 																'district_id'	=>$this->district_id,
 																'year'		=>$this->year,
 																'period'	=>$this->period,
@@ -412,7 +413,7 @@
 											'sort'	=> $this->sort,
 											'var'	=> 'budget_cost',
 											'order'	=> $this->order,
-											'extra'	=> array('menuaction'	=> 'property.uibudget.basis',
+											'extra'	=> array('menuaction'	=> $this->currentapp.'.uibudget.basis',
 																'district_id'	=>$this->district_id,
 																'year'		=>$this->year,
 																'period'	=>$this->period,
@@ -430,13 +431,13 @@
 				(
 					'lang_add'		=> lang('add'),
 					'lang_add_statustext'	=> lang('add a budget query'),
-					'add_action'		=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uibudget.edit_basis'))
+					'add_action'		=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uibudget.edit_basis'))
 				);
 			}
 
 			$link_data = array
 			(
-				'menuaction'	=> 'property.uibudget.basis',
+				'menuaction'	=> $this->currentapp.'.uibudget.basis',
 				'sort'		=>$this->sort,
 				'order'		=>$this->order,
 				'cat_id'	=>$this->cat_id,
@@ -465,6 +466,7 @@
 				'sum'						=> $sum,
 				'lang_sum'					=> lang('sum'),
 				'msgbox_data'					=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
+				'links'						=> $links,
  				'allow_allrows'					=> true,
 				'allrows'					=> $this->allrows,
 				'start_record'					=> $this->start,
@@ -509,23 +511,22 @@
 		{
 			$acl_location	= '.budget.obligations';
 			$acl_read 	= $this->acl->check($acl_location,1);
-
-			if(!$acl_read)
-			{
-				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=>1, 'acl_location'=> $acl_location));
-			}
-
 			$acl_add 	= $this->acl->check($acl_location,2);
 			$acl_edit 	= $this->acl->check($acl_location,4);
 			$acl_delete 	= $this->acl->check($acl_location,8);
 
-			$GLOBALS['phpgw_info']['flags']['menu_selection'] .= '::obligations';
-		
+			if(!$acl_read)
+			{
+				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> $this->currentapp.'.uilocation.stop', 'perm'=>1, 'acl_location'=> $acl_location));
+			}
+
 			$GLOBALS['phpgw']->xslttpl->add_file(array('budget',
+										'menu',
 										'receipt',
 										'search_field',
 										'nextmatchs'));
 
+			$links = $this->menu->links('budget.obligations');
 
 			$receipt = $GLOBALS['phpgw']->session->appsession('session_obligations_data','budget_receipt');
 			$GLOBALS['phpgw']->session->appsession('session_data','budget_receipt','');
@@ -545,9 +546,9 @@
 						'grouping'			=> $entry['grouping'],
 						'district_id'			=> $entry['district_id'],
 						'obligation'			=> number_format($entry['obligation'], 0, ',', ' '),
-						'link_obligation'		=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiworkorder.index', 'filter'=>'all', 'paid'=>1, 'district_id'=> $entry['district_id'], 'b_group'=> $entry['grouping'])),
+						'link_obligation'		=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uiworkorder.index', 'filter'=>'all', 'paid'=>1, 'district_id'=> $entry['district_id'], 'b_group'=> $entry['grouping'])),
 						'actual_cost'			=> number_format($entry['actual_cost'], 0, ',', ' '),
-						'link_actual_cost'		=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiinvoice.consume', 'district_id'=> $entry['district_id'], 'b_account_class'=> $entry['grouping'], 'start_date'=> $start_date, 'end_date'=> $end_date, 'submit_search'=>true)),
+						'link_actual_cost'		=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uiinvoice.consume', 'district_id'=> $entry['district_id'], 'b_account_class'=> $entry['grouping'], 'start_date'=> $start_date, 'end_date'=> $end_date, 'submit_search'=>true)),
 						'diff'				=> number_format($entry['budget_cost'] - $entry['actual_cost'] - $entry['obligation'], 0, ',', ' '),
 						'hits'				=> number_format($entry['hits'], 0, ',', ' '),
 
@@ -580,7 +581,7 @@
 											'sort'	=> $this->sort,
 											'var'	=> 'b_group',
 											'order'	=> $this->order,
-											'extra'	=> array('menuaction'	=> 'property.uibudget.obligations',
+											'extra'	=> array('menuaction'	=> $this->currentapp.'.uibudget.obligations',
 																'district_id'	=>$this->district_id,
 																'year'		=>$this->year,
 																'period'	=>$this->period,
@@ -595,13 +596,13 @@
 				(
 					'lang_add'		=> lang('add'),
 					'lang_add_statustext'	=> lang('add a budget query'),
-					'add_action'		=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uibudget.edit_obligations'))
+					'add_action'		=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uibudget.edit_obligations'))
 				);
 			}
 
 			$link_data = array
 			(
-				'menuaction'	=> 'property.uibudget.obligations',
+				'menuaction'	=> $this->currentapp.'.uibudget.obligations',
 				'sort'		=>$this->sort,
 				'order'		=>$this->order,
 				'cat_id'	=>$this->cat_id,
@@ -632,6 +633,7 @@
 				'sum_budget_cost'					=> $sum_budget_cost,
 				'lang_sum'							=> lang('sum'),
 				'msgbox_data'						=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
+				'links'								=> $links,
  				'allow_allrows'						=> false,
 				'allrows'							=> $this->allrows,
 				'start_record'						=> $this->start,
@@ -681,7 +683,7 @@
 
 			if(!$acl_add && !$acl_edit)
 			{
-				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=>2, 'acl_location'=> $acl_location));
+				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> $this->currentapp.'.uilocation.stop', 'perm'=>2, 'acl_location'=> $acl_location));
 			}
 
 			$budget_id	= phpgw::get_var('budget_id', 'int');
@@ -721,7 +723,7 @@
 					if (isset($values['save']) && $values['save'])
 					{
 						$GLOBALS['phpgw']->session->appsession('session_data','budget_receipt',$receipt);
-						$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uibudget.index'));
+						$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> $this->currentapp.'.uibudget.index'));
 					}
 				}
 				else
@@ -738,7 +740,7 @@
 
 			if (isset($values['cancel']) && $values['cancel'])
 			{
-				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uibudget.index'));
+				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> $this->currentapp.'.uibudget.index'));
 			}
 
 
@@ -749,7 +751,7 @@
 
 			$link_data = array
 			(
-				'menuaction'	=> 'property.uibudget.edit',
+				'menuaction'	=> $this->currentapp.'.uibudget.edit',
 				'budget_id'	=> $budget_id
 			);
 
@@ -812,7 +814,7 @@
 
 			if(!$acl_add && !$acl_edit)
 			{
-				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=>2, 'acl_location'=> $acl_location));
+				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> $this->currentapp.'.uilocation.stop', 'perm'=>2, 'acl_location'=> $acl_location));
 			}
 
 			$budget_id	= phpgw::get_var('budget_id', 'int');
@@ -848,7 +850,7 @@
 					if ($values['save'])
 					{
 						$GLOBALS['phpgw']->session->appsession('session_data','budget_basis_receipt',$receipt);
-						$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uibudget.basis'));
+						$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> $this->currentapp.'.uibudget.basis'));
 					}
 				}
 				else
@@ -867,7 +869,7 @@
 
 			if ($values['cancel'])
 			{
-				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uibudget.basis'));
+				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> $this->currentapp.'.uibudget.basis'));
 			}
 
 			if ($budget_id)
@@ -877,7 +879,7 @@
 
 			$link_data = array
 			(
-				'menuaction'	=> 'property.uibudget.edit_basis',
+				'menuaction'	=> $this->currentapp.'.uibudget.edit_basis',
 				'budget_id'	=> $budget_id
 			);
 
@@ -952,7 +954,7 @@
 
 			$link_data = array
 			(
-				'menuaction' => 'property.uibudget.index'
+				'menuaction' => $this->currentapp.'.uibudget.index'
 			);
 
 			if (phpgw::get_var('confirm', 'bool', 'POST'))
@@ -966,7 +968,7 @@
 			$data = array
 			(
 				'done_action'		=> $GLOBALS['phpgw']->link('/index.php',$link_data),
-				'delete_action'		=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uibudget.delete', 'budget_id'=> $budget_id)),
+				'delete_action'		=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uibudget.delete', 'budget_id'=> $budget_id)),
 				'lang_confirm_msg'	=> lang('do you really want to delete this entry'),
 				'lang_yes'		=> lang('yes'),
 				'lang_yes_statustext'	=> lang('Delete the entry'),
@@ -977,7 +979,7 @@
 			$appname		= lang('budget');
 			$function_msg		= lang('delete budget');
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($this->currentapp) . ' - ' . $appname . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('delete' => $data));
 
 		}
@@ -989,7 +991,7 @@
 
 			$link_data = array
 			(
-				'menuaction' => 'property.uibudget.basis'
+				'menuaction' => $this->currentapp.'.uibudget.basis'
 			);
 
 			if (phpgw::get_var('confirm', 'bool', 'POST'))
@@ -1003,7 +1005,7 @@
 			$data = array
 			(
 				'done_action'		=> $GLOBALS['phpgw']->link('/index.php',$link_data),
-				'delete_action'		=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uibudget.delete_basis', 'budget_id'=> $budget_id)),
+				'delete_action'		=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uibudget.delete_basis', 'budget_id'=> $budget_id)),
 				'lang_confirm_msg'	=> lang('do you really want to delete this entry'),
 				'lang_yes'		=> lang('yes'),
 				'lang_yes_statustext'	=> lang('Delete the entry'),
@@ -1014,7 +1016,7 @@
 			$appname	= lang('budget');
 			$function_msg	= lang('delete budget');
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($this->currentapp) . ' - ' . $appname . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('delete' => $data));
 
 		}
@@ -1061,7 +1063,7 @@
 
 			$link_data = array
 			(
-				'menuaction'	=> 'property.uibudget.view',
+				'menuaction'	=> $this->currentapp.'.uibudget.view',
 				'sort'		=>$this->sort,
 				'order'		=>$this->order,
 				'budget_id'	=>$budget_id,
@@ -1081,7 +1083,7 @@
 
 			$link_excel = array
 			(
-				'menuaction'	=> 'property.uibudget.excel',
+				'menuaction'	=> $this->currentapp.'.uibudget.excel',
 				'sort'		=>$this->sort,
 				'order'		=>$this->order,
 				'filter'	=>$this->filter,
@@ -1090,7 +1092,7 @@
 				'allrows'	=> $this->allrows
 			);
 
-			$GLOBALS['phpgw']->js->validate_file('overlib','overlib','property');
+			$GLOBALS['phpgw']->js->validate_file('overlib','overlib',$this->currentapp);
 
 			$data = array
 			(
@@ -1114,7 +1116,7 @@
 				'table_header'				=> $table_header,
 				'values'				=> $content,
 
-				'done_action'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uibudget.index')),
+				'done_action'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uibudget.index')),
 				'lang_done'				=> lang('done'),
 			);
 

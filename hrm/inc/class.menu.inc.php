@@ -28,72 +28,64 @@
 		function hrm_menu($sub='')
 		{
 			$this->sub		= $sub;
+			$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
 		}
 
 		function links($page='',$page_2='')
 		{
-			$currentapp='hrm';
+			$currentapp=$this->currentapp;
 			$sub = $this->sub;
 
-			$menu = $GLOBALS['phpgw']->session->appsession('menu',substr(md5($currentapp.$sub . '_' . $page . '_' . $page_2),-20));
-
-			if(!isset($menu) || !$menu)
+			$i=0;
+			if($sub=='user')
 			{
-				$menu = array(); 
-
-				$i=0;
-				if($sub=='user')
-				{
-					$menu['module'][$i]['this']=True;
-				}
-				$menu['module'][$i]['url'] 		= $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> $currentapp.'.uiuser.index'));
-				$menu['module'][$i]['text'] 		= lang('User');
-				$menu['module'][$i]['statustext'] 	= lang('User');
-				$i++;
-
-				if($sub=='job')
-				{
-					$menu['module'][$i]['this']=True;
-				}
-				$menu['module'][$i]['url']			=	$GLOBALS['phpgw']->link('/index.php', array('menuaction'=> $currentapp.'.uijob.index'));
-				$menu['module'][$i]['text']			=	lang('Job');
-				$menu['module'][$i]['statustext']		=	lang('Job');
-				$i++;
-
-				if($sub=='place')
-				{
-					$menu['module'][$i]['this']=True;
-				}
-				$menu['module'][$i]['url']			=	$GLOBALS['phpgw']->link('/index.php', array('menuaction'=> $currentapp.'.uiplace.index'));
-				$menu['module'][$i]['text']			=	lang('PLace');
-				$menu['module'][$i]['statustext']		=	lang('Place');
-				$i++;
-
-				$j=0;
-				if ($sub == 'job')
-				{
-					if($page=='job_type')
-					{
-						$menu['sub_menu'][$j]['this']=True;
-					}
-					$menu['sub_menu'][$j]['url']			=	$GLOBALS['phpgw']->link('/index.php', array('menuaction'=> $currentapp.'.uijob.index'));
-					$menu['sub_menu'][$j]['text']			=	lang('Job type');
-					$menu['sub_menu'][$j]['statustext']		=	lang('Job type');
-					$j++;
-
-					if($page=='hierarchy')
-					{
-						$menu['sub_menu'][$j]['this']=True;
-					}
-					$menu['sub_menu'][$j]['url']			=	$GLOBALS['phpgw']->link('/index.php', array('menuaction'=> $currentapp.'.uijob.hierarchy'));
-					$menu['sub_menu'][$j]['text']			=	lang('Organisation');
-					$menu['sub_menu'][$j]['statustext']		=	lang('Organisation');
-					$j++;
-				}
-
-				$GLOBALS['phpgw']->session->appsession('menu',substr(md5($currentapp.$sub . '_' . $page . '_' . $page_2),-20),$menu);
+				$menu['module'][$i]['this']=True;
 			}
-			$GLOBALS['phpgw']->session->appsession('menu_hrm','sidebox',$menu);
+			$menu['module'][$i]['link'] 		= $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> $currentapp.'.uiuser.index'));
+			$menu['module'][$i]['name'] 		= lang('User');
+			$menu['module'][$i]['statustext'] 	= lang('User');
+			$i++;
+
+			if($sub=='job')
+			{
+				$menu['module'][$i]['this']=True;
+			}
+			$menu['module'][$i]['link']			=	$GLOBALS['phpgw']->link('/index.php', array('menuaction'=> $currentapp.'.uijob.index'));
+			$menu['module'][$i]['name']			=	lang('Job');
+			$menu['module'][$i]['statustext']		=	lang('Job');
+			$i++;
+
+			if($sub=='place')
+			{
+				$menu['module'][$i]['this']=True;
+			}
+			$menu['module'][$i]['link']			=	$GLOBALS['phpgw']->link('/index.php', array('menuaction'=> $currentapp.'.uiplace.index'));
+			$menu['module'][$i]['name']			=	lang('PLace');
+			$menu['module'][$i]['statustext']		=	lang('Place');
+			$i++;
+
+			$j=0;
+			if ($sub == 'job')
+			{
+				if($page=='job_type')
+				{
+					$menu['sub_menu'][$j]['this']=True;
+				}
+				$menu['sub_menu'][$j]['link']			=	$GLOBALS['phpgw']->link('/index.php', array('menuaction'=> $currentapp.'.uijob.index'));
+				$menu['sub_menu'][$j]['name']			=	lang('Job type');
+				$menu['sub_menu'][$j]['statustext']		=	lang('Job type');
+				$j++;
+
+				if($page=='hierarchy')
+				{
+					$menu['sub_menu'][$j]['this']=True;
+				}
+				$menu['sub_menu'][$j]['link']			=	$GLOBALS['phpgw']->link('/index.php', array('menuaction'=> $currentapp.'.uijob.hierarchy'));
+				$menu['sub_menu'][$j]['name']			=	lang('Organisation');
+				$menu['sub_menu'][$j]['statustext']		=	lang('Organisation');
+				$j++;
+			}
+
 			return $menu;
 		}
 	}

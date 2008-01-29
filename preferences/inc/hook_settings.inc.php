@@ -151,7 +151,7 @@
 
 	$menu_formats = array(
 		'sidebox' => lang('Sidebox'),
-		'jsmenu' => lang('JS-menu'),
+		'javamenu' => lang('Javamenu'),
 		'no_sidecontent' => lang('No SideContent')
 	);
 	create_select_box('SideContent','sidecontent',$menu_formats,

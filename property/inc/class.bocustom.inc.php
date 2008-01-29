@@ -52,7 +52,7 @@
 
 		function property_bocustom($session=False)
 		{
-		//	$this->currentapp		= $GLOBALS['phpgw_info']['flags']['currentapp'];
+			$this->currentapp		= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->so = CreateObject('property.socustom');
 
 			if ($session)

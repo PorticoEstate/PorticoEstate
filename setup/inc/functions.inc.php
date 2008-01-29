@@ -17,6 +17,24 @@
 
   /* $Id: functions.inc.php 18358 2007-11-27 04:43:37Z skwashd $ */
 
+	// PHP5 compat fix
+	if (version_compare(phpversion(), '5.0') < 0)
+	{
+		eval('
+			function clone($obj)
+			{
+				if ( method_exists($obj, "__clone") )
+				{
+					$new_obj = $obj;
+					$new_obj->__clone();
+					return $new_obj;
+				}
+				return $obj;
+			}
+		');
+	}
+
+
 	/**
 	* phpGroupWare Information level "error"
 	*/
@@ -26,15 +44,15 @@
 	* phpGroupWare debug level "error"
 	*/
 	define('PHPGW_E_DEBUG', -1024);
-
+	
 	if ( file_exists('../header.inc.php') )
 	{
 		require_once('../header.inc.php');
 	}
 
-	if ( !function_exists('filter_var') || !function_exists('json_encode') ) // filter_var() and json_encode are only available in PHP 5.2+
+	if (!function_exists('html_entity_decode'))//html_entity_decode() is only available in PHP4.3+
 	{
-		die('<h1>You appear to be using PHP ' . PHP_VERSION . " phpGroupWare requires 5.2.0 or later <br>\n"
+		die('<h1>You appear to be using PHP ' . PHP_VERSION . " phpGroupWare requires 4.3.0 or later <br>\n"
 			. 'Please contact your System Administrator</h1>');
 	}
 
@@ -45,12 +63,14 @@
 		define('PHPGW_INCLUDE_ROOT', realpath('..') );
 	}
 
-	if ( is_dir(PHPGW_INCLUDE_ROOT . '/phpgwapi') && is_dir(PHPGW_INCLUDE_ROOT . '/phpgwapi/inc')
-		&& is_file(PHPGW_INCLUDE_ROOT . '/phpgwapi/inc/common_functions.inc.php') )
+	define('SEP', DIRECTORY_SEPARATOR);
+
+	if ( is_dir(PHPGW_INCLUDE_ROOT . SEP . 'phpgwapi') && is_dir(PHPGW_INCLUDE_ROOT . SEP . 'phpgwapi' . SEP . 'inc')
+		&& is_file(PHPGW_INCLUDE_ROOT . SEP . 'phpgwapi' .  SEP . 'inc' . SEP . 'common_functions.inc.php') )
 	{
-		require_once(PHPGW_INCLUDE_ROOT . '/phpgwapi/inc/common_functions.inc.php');
+		require_once(PHPGW_INCLUDE_ROOT . SEP . 'phpgwapi' .  SEP . 'inc' . SEP . 'common_functions.inc.php');
 		$GLOBALS['phpgw'] = createObject('phpgwapi.phpgw');
-		require_once(PHPGW_INCLUDE_ROOT . '/phpgwapi/inc/log_functions.inc.php');
+		require_once(PHPGW_INCLUDE_ROOT . SEP . 'phpgwapi' . SEP . 'inc' . SEP . 'log_functions.inc.php');
 	}
 	else
 	{
@@ -97,7 +117,7 @@
 	/**
 	* cleans up a backtrace array and converts it to a string
 	*
-	* @internal this is such an ugly piece of code due to a reference to the error context
+	* @internal this is such an ugly piece of code due to a reference to the error context 
 	* being in the backtrace and the error context can not be edited - see php.net/set_error_handler
 	* @param array $bt php backtrace
 	* @return string the formatted backtrace, empty if the user is not an admin
@@ -195,11 +215,11 @@
 	* phpGroupWare generic error handler
 	*
 	* @link http://php.net/set_error_handler
-	*
+	* 
 	*/
 	function phpgw_handle_error($error_level, $error_msg, $error_file, $error_line, $error_context = array())
 	{
-		if ( error_reporting() == 0 ) // 0 == @function() so we ignore it, as the dev requested
+		if ( error_reporting() == 0 ) // 0 == @function() so we ignore it, as the dev requested 
 		{
 			return true;
 		}

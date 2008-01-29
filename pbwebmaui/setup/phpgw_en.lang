@@ -37,11 +37,11 @@ mail copy to recipient	pbwebmaui	en	Mail mail copy to recipient
 Mailfilter Menu	pbwebmaui	en	Mailfilter Menu
 mail filter	pbwebmaui	en	mail filter
 mail redirect to recipient	pbwebmaui	en	mail redirect to recipient
-Mailaccount spool directory	pbwebmaui	en	Mailaccount spool directory
+Mailaccount spool directory	pbwebmaui	en	Mailaccount spool directory	pbwebmaui
 Maildomain Menu	pbwebmaui	en	Maildomain Menu
 maildrops	pbwebmaui	en	maildrops
 Maildrops Menu	pbwebmaui	en	Maildrops Menu
-Mailserver Type	admin	en	Mailserver Type
+Mailserver Type	admin	en	Mailserver Type	admin
 message	pbwebmaui	en	message
 move mail in the folder	pbwebmaui	en	move mail in the folder
 New Mail Account	pbwebmaui	en	New Mail Account
@@ -65,7 +65,7 @@ Synchronize Accounts	pbwebmaui	en	Synchronize Accounts
 Synchronize Groups	pbwebmaui	en	Synchronize Groups
 text file	pbwebmaui	en	text file
 until	pbwebmaui	en	until
-select address	pbwebmaui	en	select address
-Generate Out of Office Message	calendar	en	Generate Out of Office Message
-forward to	calendar	en	Forward to
-select address	calendar	en	select address
+select address	pbwebmaui	de	select address
+Generate Out of Office Message	calendar	de	Generate Out of Office Message
+forward to	calendar	de	Forward to
+select address	calendar	de	select address

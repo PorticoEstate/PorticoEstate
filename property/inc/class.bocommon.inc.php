@@ -46,6 +46,7 @@
 		var $public_functions = array
 		(
 			'select_part_of_town'	=> True,
+			'menu'					=> True,
 		);
 
 		var $soap_functions = array(
@@ -71,14 +72,14 @@
 		{
 			if($currentapp)
 			{
-			//	$this->currentapp	= $currentapp;
+				$this->currentapp	= $currentapp;
 			}
 			else
 			{
-			//	$this->currentapp	= 'property';			
+				$this->currentapp	= 'property';			
 			}
 
-			$this->socommon			= CreateObject('property.socommon','property');
+			$this->socommon			= CreateObject('property.socommon',$this->currentapp);
 			$this->account		= $GLOBALS['phpgw_info']['user']['account_id'];
 
 			if (!isset($GLOBALS['phpgw']->asyncservice))
@@ -533,6 +534,9 @@
 		{
 //_debug_array($data);
 
+			$contacts	= CreateObject('property.soactor');
+			$contacts->role='vendor';
+
 			if( isset($data['type']) && $data['type']=='view')
 			{
 				$GLOBALS['phpgw']->xslttpl->add_file(array('vendor_view'));
@@ -545,14 +549,9 @@
 			$vendor['value_vendor_id']		= $data['vendor_id'];
 			$vendor['value_vendor_name']		= $data['vendor_name'];
 
-			if(isset($data['vendor_id']) && $data['vendor_id'] && !$data['vendor_name'])
+			if($data['vendor_id'] && !$data['vendor_name'])
 			{
-				$contacts	= CreateObject('property.soactor');
-				$contacts->role='vendor';
-				$custom 		= createObject('phpgwapi.custom_fields');	
-				$vendor_data['attributes'] = $custom->get_attribs('property','.vendor', 0, '', 'ASC', 'attrib_sort', true, true);
-
-				$vendor_data	= $contacts->read_single($data['vendor_id'],$vendor_data);
+				$vendor_data	= $contacts->read_single(array('actor_id'=>$data['vendor_id']));
 				if(is_array($vendor_data))
 				{
 					foreach($vendor_data['attributes'] as $attribute)
@@ -564,14 +563,14 @@
 						}
 					}
 				}
-				unset($contacts);
 			}
 
-			$vendor['vendor_link']			= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uilookup.vendor'));
+			$vendor['vendor_link']			= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uilookup.vendor'));
 			$vendor['lang_vendor']			= lang('Vendor');
 			$vendor['lang_select_vendor_help']	= lang('Klick this link to select vendor');
 			$vendor['lang_vendor_name']		= lang('Vendor Name');
 
+			unset($contacts);
 //_debug_array($vendor);
 			return $vendor;
 		}
@@ -590,7 +589,7 @@
 			$tenant['value_tenant_id']			= $data['tenant_id'];
 			$tenant['value_first_name']			= $data['first_name'];
 			$tenant['value_last_name']			= $data['last_name'];
-			$tenant['tenant_link']				= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uilookup.tenant'));
+			$tenant['tenant_link']				= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uilookup.tenant'));
 			if($data['role']=='customer')
 			{
 				$tenant['lang_select_tenant_help']		= lang('Klick this link to select customer');
@@ -608,9 +607,7 @@
 			{
 				$tenant_object	= CreateObject('property.soactor');
 				$tenant_object->role = 'tenant';
-				$custom 		= createObject('phpgwapi.custom_fields');
-				$tenant_data['attributes'] = $custom->get_attribs('property','.tenant', 0, '', 'ASC', 'attrib_sort', true, true);
-				$tenant_data	= $tenant_object->read_single($data['tenant_id'],$tenant_data);
+				$tenant_data	= $tenant_object->read_single(array('actor_id' => $data['tenant_id']));
 				if(is_array($tenant_data['attributes']))
 				{
 //_debug_array($tenant_data);
@@ -646,7 +643,7 @@
 
 			$b_account['value_b_account_id']		= $data['b_account_id'];
 			$b_account['value_b_account_name']		= $data['b_account_name'];
-			$b_account['b_account_link']			= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uilookup.b_account'));
+			$b_account['b_account_link']			= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uilookup.b_account'));
 			$b_account['lang_select_b_account_help']	= lang('Klick this link to select budget account');
 			$b_account['lang_b_account']			= lang('Budget account');
 			if($data['b_account_id'] && !$data['b_account_name'])
@@ -735,26 +732,37 @@
 		}
 
 
-		function select_multi_list_2($selected='',$list,$input_type='')
+		function select_multi_list_2($selected='',$input_list,$input_type='')
 		{
-			if (isset($list) AND is_array($list))
+			$j=0;
+			if (isset($input_list) AND is_array($input_list))
 			{
-				foreach($list as &$choice)
+				foreach($input_list as $entry)
 				{
-					$choice['input_type'] = $input_type;
-					if(isset($selected) && is_array($selected))
+					$output_list[$j]['id'] = $entry['id'];
+					$output_list[$j]['value'] = $entry['value'];
+					$output_list[$j]['input_type'] = $input_type;
+
+					for ($i=0;$i<count($selected);$i++)
 					{
-						foreach ($selected as &$sel)
+						if($selected[$i] == $entry['id'])
 						{
-							if($sel == $choice['id'])
-							{
-								$choice['checked'] = 'checked';
-							}
+							$output_list[$j]['checked'] = 'checked';
 						}
 					}
+					$j++;
 				}
 			}
-			return $list;
+
+/*			for ($i=0;$i<count($output_list);$i++)
+			{
+				if ($output_list[$i]['checked'] != 'checked')
+				{
+					unset($output_list[$i]['checked']);
+				}
+			}
+*/
+			return $output_list;
 		}
 
 		function translate_datatype($datatype)
@@ -1392,15 +1400,15 @@
 		{
 			if($type=='tts'):
 			{
-				$link = array('menuaction' => 'property.uitts.view');
+				$link = array('menuaction' => $this->currentapp.'.uitts.view');
 			}
 			elseif($type=='request'):
 			{
-				$link = array('menuaction' => 'property.uirequest.view');
+				$link = array('menuaction' => $this->currentapp.'.uirequest.view');
 			}
 			elseif($type=='project'):
 			{
-				$link = array('menuaction' => 'property.uiproject.view');
+				$link = array('menuaction' => $this->currentapp.'.uiproject.view');
 			}
 			elseif(substr($type,0,6)=='entity'):
 			{
@@ -1409,7 +1417,7 @@
 				$cat_id		= $type[2];
 				$link =	array
 				(
-					'menuaction'	=> 'property.uientity.view',
+					'menuaction'	=> $this->currentapp.'.uientity.view',
 					'entity_id'	=> $entity_id,
 					'cat_id'	=> $cat_id
 				);
@@ -1447,42 +1455,24 @@
 			{	
 				for ($i=0;$i<count($values['attributes']);$i++)
 				{
-					if($values['attributes'][$i]['id'] == $attribute['attrib_id'])
+					if($values['attributes'][$i]['attrib_id'] == $attribute['attrib_id'])
 					{
-						if(isset($attribute['value']))
-						{
-							if(is_array($attribute['value']))
-							{
-								foreach($values['attributes'][$i]['choice'] as &$choice)
-								{
-									foreach ($attribute['value'] as &$selected)
-									{
-										if($selected == $choice['id'])
-										{
-											$choice['checked'] = 'checked';
-										}
-									}
-								}
-							}
-							else if(isset($values['attributes'][$i]['choice']) && is_array($values['attributes'][$i]['choice']))
-							{
+						$values['attributes'][$i]['value'] = $attribute['value'];
 
-								foreach ($values['attributes'][$i]['choice'] as &$choice)
-								{
-									if($choice['id'] == $attribute['value'])
-									{
-										$choice['checked'] = 'checked';	
-									}
-								}
-							}
-							else
+						if(isset($values['attributes'][$i]['choice']) && is_array($values['attributes'][$i]['choice']))
+						{
+							for ($j=0;$j<count($values['attributes'][$i]['choice']);$j++)
 							{
-								$values['attributes'][$i]['value'] = $attribute['value'];
+								if($values['attributes'][$i]['choice'][$j]['id'] == $attribute['value'])
+								{
+									$values['attributes'][$i]['choice'][$j]['checked'] = 'checked';	
+								}
 							}
 						}
 					}
 				}
 			}
+			
 			return $values;
 		}
 		

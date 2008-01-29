@@ -5,7 +5,7 @@ headline sites	admin	no	Headline Siter
 listings displayed	admin	no	Lister vist
 minutes between reloads	admin	no	Minutter mellom Reloads
 news file	admin	no	Nyhets Fil
-news headlines	common	no	Nyhets headlines
+news headlines  common  no  Nyhets headlines
 news type	admin	no	Nyhets Type
 select headline news sites	preferences	no	Velg Headline News sites
 that site has already been entered	admin	no	Den siten har allerede blitt brukt

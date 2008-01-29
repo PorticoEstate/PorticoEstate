@@ -12,46 +12,38 @@
 
 	/* $Id: class.uicurrentsessions.inc.php 18039 2007-03-16 08:59:37Z sigurdne $ */
 
-	class admin_uicurrentsessions
+	class uicurrentsessions
 	{
-		private $template;
-
-		private $bo;
-
-		public $public_functions = array
-		(
-			'list_sessions' => true,
-			'kill'          => true
+		var $template;
+		var $bo;
+		var $public_functions = array(
+			'list_sessions' => True,
+			'kill'          => True
 		);
 
-		public function __construct()
+		function uicurrentsessions()
 		{
+			$this->template   = createobject('phpgwapi.Template',PHPGW_APP_TPL);
 			$this->bo         = createobject('admin.bocurrentsessions');
-
-			$this->template   =& $GLOBALS['phpgw']->template;
+			$this->nextmatchs = createobject('phpgwapi.nextmatchs');
 		}
 
-		private function header()
+		function header()
 		{
 			$GLOBALS['phpgw']->common->phpgw_header(true);
-			// header sets the tpl dir to the api/tpl dir - so we reset it
-			$this->template->set_root(PHPGW_APP_TPL);
 		}
 
-		private function store_location($info)
+		function store_location($info)
 		{
 			$GLOBALS['phpgw']->session->appsession('currentsessions_session_data','admin',$info);
 		}
 
-		public function list_sessions()
+		function list_sessions()
 		{
-			$GLOBALS['phpgw_info']['flags']['menu_selection'] = 'admin::admin::sessions';
-
 			$info = $GLOBALS['phpgw']->session->appsession('currentsessions_session_data','admin');
 			if (! is_array($info))
 			{
-				$info = array
-				(
+				$info = array(
 					'start' => 0,
 					'sort'  => 'asc',
 					'order' => 'session_dla'
@@ -98,20 +90,20 @@
 
 			$total = $this->bo->total();
 
-			$nextmatchs = createobject('phpgwapi.nextmatchs');
+			$this->template->set_var('bg_color',(isset($GLOBALS['phpgw_info']['theme']['bg_color'])?$GLOBALS['phpgw_info']['theme']['bg_color']:''));
+			$this->template->set_var('left_next_matchs',$this->nextmatchs->left('/admin/currentusers.php',$info['start'],$total));
+			$this->template->set_var('right_next_matchs',$this->nextmatchs->right('/admin/currentusers.php',$info['start'],$total));
+			$this->template->set_var('th_bg',(isset($GLOBALS['phpgw_info']['theme']['th_bg'])?$GLOBALS['phpgw_info']['theme']['th_bg']:''));
 
-			$this->template->set_var('left_next_matchs',$nextmatchs->left('/admin/currentusers.php',$info['start'],$total));
-			$this->template->set_var('right_next_matchs',$nextmatchs->right('/admin/currentusers.php',$info['start'],$total));
-
-			$this->template->set_var('sort_loginid',$nextmatchs->show_sort_order($info['sort'],'session_lid',$info['order'],
+			$this->template->set_var('sort_loginid',$this->nextmatchs->show_sort_order($info['sort'],'session_lid',$info['order'],
 				'/admin/currentusers.php',lang('LoginID')));
-			$this->template->set_var('sort_ip',$nextmatchs->show_sort_order($info['sort'],'session_ip',$info['order'],
+			$this->template->set_var('sort_ip',$this->nextmatchs->show_sort_order($info['sort'],'session_ip',$info['order'],
 				'/admin/currentusers.php',lang('IP')));
-			$this->template->set_var('sort_login_time',$nextmatchs->show_sort_order($info['sort'],'session_logintime',$info['order'],
+			$this->template->set_var('sort_login_time',$this->nextmatchs->show_sort_order($info['sort'],'session_logintime',$info['order'],
 				'/admin/currentusers.php',lang('Login Time')));
-			$this->template->set_var('sort_action',$nextmatchs->show_sort_order($info['sort'],'session_action',$info['order'],
+			$this->template->set_var('sort_action',$this->nextmatchs->show_sort_order($info['sort'],'session_action',$info['order'],
 				'/admin/currentusers.php',lang('Action')));
-			$this->template->set_var('sort_idle',$nextmatchs->show_sort_order($info['sort'],'session_dla',$info['order'],
+			$this->template->set_var('sort_idle',$this->nextmatchs->show_sort_order($info['sort'],'session_dla',$info['order'],
 				'/admin/currentusers.php',lang('idle')));
 			$this->template->set_var('lang_kill',lang('Kill'));
 
@@ -119,7 +111,7 @@
 
 			while (list(,$value) = @each($values))
 			{
-				$nextmatchs->template_alternate_row_class($this->template);
+				$this->nextmatchs->template_alternate_row_class($this->template);
 
 				$this->template->set_var('row_loginid',$value['session_lid']);
 
@@ -164,7 +156,7 @@
 			$this->template->pfp('out','list');
 		}
 
-		public function kill()
+		function kill()
 		{
 			if ($GLOBALS['phpgw']->acl->check('current_sessions_access',8,'admin'))
 			{

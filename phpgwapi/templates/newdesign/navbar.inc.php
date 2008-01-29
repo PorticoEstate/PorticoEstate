@@ -1,201 +1,255 @@
 <?php
+	/**
+	* Template navigation bar
+	* @copyright Copyright (C) 2003-2005 Free Software Foundation, Inc. http://www.fsf.org/
+	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
+	* @package phpgwapi
+	* @subpackage gui
+	* @version $Id: navbar.inc.php,v 1.17 2007/01/07 01:04:17 skwashd Exp $
+	*/
 
+
+	/**
+	* Parse navigation var
+	*
+	* @param boolean $force
+	* @ignore
+	*/
 	function parse_navbar($force = False)
 	{
-		//global $debug;
-		$navbar = execMethod('phpgwapi.menu.get', 'navbar');
-
-		$var = array
-		(
-			'about_url'		=> $GLOBALS['phpgw']->link('/about.php', array('appname' => $GLOBALS['phpgw_info']['flags']['currentapp']) ),
-			'about_text'	=> lang('about'),
-			'logout_url'	=> $navbar['logout']['url'],
-			'logout_text'	=> $navbar['logout']['text'],
-			'user_fullname' => $GLOBALS['phpgw']->common->display_fullname()
-		);
-
-		if ( isset($navbar['preferences']) )
-		{
-			$var['preferences_url'] = $navbar['preferences']['url'];
-			$var['preferences_text'] = $navbar['preferences']['text'];
-		}
-
 		$GLOBALS['phpgw']->template->set_root(PHPGW_TEMPLATE_DIR);
+
 		$GLOBALS['phpgw']->template->set_file('navbar', 'navbar.tpl');
+		$GLOBALS['phpgw']->template->set_block('navbar', 'navbar_item', 'navbar_items');
+		$GLOBALS['phpgw']->template->set_block('navbar','navbar_header','navbar_header');
+		$GLOBALS['phpgw']->template->set_block('navbar','extra_blocks_header','extra_block_header');
+		$GLOBALS['phpgw']->template->set_block('navbar','extra_block_row','extra_block_row');
+		$GLOBALS['phpgw']->template->set_block('navbar','extra_block_spacer','extra_block_spacer');
+		$GLOBALS['phpgw']->template->set_block('navbar','extra_blocks_footer','extra_blocks_footer');
+		$GLOBALS['phpgw']->template->set_block('navbar','navbar_footer','navbar_footer');
 
-		$flags = &$GLOBALS['phpgw_info']['flags'];
-		$var['current_app_title'] = isset($flags['app_header']) ? $flags['app_header'] : lang($GLOBALS['phpgw_info']['flags']['currentapp']);
-		$flags['menu_selection'] = isset($flags['menu_selection']) ? $flags['menu_selection'] : '';
+		$var['img_root'] = $GLOBALS['phpgw_info']['server']['webserver_url'] . '/phpgwapi/templates/newdesign/images';
 
-		prepare_navbar($navbar);
-		$navigation = execMethod('phpgwapi.menu.get', 'navigation');
+		$applications = '';
+		$items = 0;
 
-		//$debug .= "<b>" . $GLOBALS['phpgw_info']['flags']['menu_selection'] . "</b><br>";
+//_debug_array($GLOBALS['phpgw_info']['navbar']);
 
-		//$now = microtime(true);
-		$treemenu = "";
-		foreach($navbar as $app => $app_data)
+
+		foreach($GLOBALS['phpgw_info']['navbar'] as $app => $app_data)
 		{
-			switch( $app )
+			if ($app != 'home' && $app != 'preferences' && $app != 'about' && $app != 'logout')
 			{
-				case in_array($app, array('logout', 'about', 'preferences')):
-					break;
-				default:
-					if( isset($navigation[$app]) )
-					{
-						$submenu = render_submenu($app, $navigation[$app]);
-					}
-					else
-					{
-						$submenu = "";
-					}
-					$treemenu .= render_item($app_data, "navbar::{$app}", $submenu);
-					break;
+				$item = array
+					(
+						'app_name'	=> '',
+						'alt_img_app'	=> lang($app),
+						'img_app'	=> "{$var['img_root']}/noimage_nav.png",
+						'url_app'	=> $app_data['url']
+					);
+
+				switch($GLOBALS['phpgw_info']['user']['preferences']['common']['navbar_format'])
+				{
+					case 'icons':
+						$item['img_app'] =& $app_data['icon'];
+						break;
+					case 'text':
+						$item['app_name'] =& $item['alt_img_app'];
+						break;
+					default:
+						$item['app_name'] =& $item['alt_img_app'];
+						$item['img_app'] =& $app_data['icon'];
+				}
+				$GLOBALS['phpgw']->template->set_var($item);
+				$GLOBALS['phpgw']->template->parse('navbar_items', 'navbar_item', true);
 			}
 		}
-		//$delta = microtime(true)-$now;
-		//echo $delta;
 
-		$var['treemenu'] = <<<HTML
-			<ul id="navbar">
-				{$treemenu}
-			</ul>
-HTML;
-
-		//$var['debug'] = $debug;
-		$var['debug'] = 'empty';
-		$GLOBALS['phpgw']->template->set_var($var);
-		$GLOBALS['phpgw']->template->pfp('out','navbar');
-
-		register_shutdown_function('parse_footer_end');
-	}
-
-	function item_expanded($id)
-	{
-		static $navbar_state, $selected_item;
-		if( !isset( $navbar_state ) )
+		if (isset($GLOBALS['phpgw_info']['flags']['app_header']))
 		{
-			$navbar_state = execMethod('phpgwapi.template_newdesign.retrieve_local', 'navbar_config');
-			$selected_item = "navbar::{$GLOBALS['phpgw_info']['flags']['menu_selection']}";
-		}
-		return isset( $navbar_state[ $id ]) ? true : preg_match("/^{$id}/", $selected_item );
-	}
-
-
-	function render_item($item, $id= "", $children="")
-	{
-		static $blank_image;
-		if(!isset($blank_image))
-		{
-			$blank_image = $GLOBALS['phpgw']->common->find_image('phpgwapi', 'blank.png');
-		}
-		$icon_image = isset($item['image']) ? $GLOBALS['phpgw']->common->image($item['image'][0], $item['image'][1]) : $blank_image;
-
-		if( $children )
-		{
-			$expand_class = item_expanded($id) ? ' class="expanded"' : ' class="collapsed"';
+			$var['current_app_title'] = $GLOBALS['phpgw_info']['flags']['app_header'];
 		}
 		else
 		{
-			$expand_class = '';
+			$var['current_app_title'] = lang($GLOBALS['phpgw_info']['flags']['currentapp']);
 		}
 
-		$current_class = $id == "navbar::{$GLOBALS['phpgw_info']['flags']['menu_selection']}" ? 'class="current"' : '';
+		if (isset($GLOBALS['phpgw_info']['navbar']['admin'])
+			&& isset($GLOBALS['phpgw_info']['user']['preferences']['common']['show_currentusers'])
+			&& $GLOBALS['phpgw_info']['user']['preferences']['common']['show_currentusers'] )
+		{
+			$var['current_users'] = '<a href="'
+			. $GLOBALS['phpgw']->link('/index.php','menuaction=admin.uicurrentsessions.list_sessions') . '">'
+			. lang('Current users') . ': ' . $GLOBALS['phpgw']->session->total() . '</a>';
+		}
+		$now = time();
+		$var['user_info'] = '<b>'.$GLOBALS['phpgw']->common->display_fullname() .'</b>'. ' - '
+		. lang($GLOBALS['phpgw']->common->show_date($now,'l')) . ' '
+		. $GLOBALS['phpgw']->common->show_date($now, $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']);
 
-		return <<<HTML
-			<li{$expand_class}>
-				<a href="{$item['url']}"{$current_class} id="{$id}">
-					<img src="{$blank_image}"{$expand_class}width="16" height="16" alt="+/-" />
-					<img src="{$icon_image}" width="16" height="16" />
-					<span>
-						{$item['text']}
-					</span>
-				</a>
-				{$children}
-			</li>
-HTML;
+		if ( !isset($GLOBALS['phpgw_info']['user']['lastpasswd_change'])
+			|| $GLOBALS['phpgw_info']['user']['lastpasswd_change'] == 0)
+		{
+			$api_messages = lang('You are required to change your password during your first login')
+			. '<br> Click this image on the navbar: <img src="'
+			. $GLOBALS['phpgw']->common->image('preferences','navbar').'">';
+		}
+		else if ( isset($GLOBALS['phpgw_info']['user']['lastpasswd_change'])
+			&& $GLOBALS['phpgw_info']['user']['lastpasswd_change'] < time() - (86400*30))
+		{
+			$api_messages = lang('it has been more then %1 days since you changed your password',30);
+		}
+
+		// This is gonna change
+		if (isset($cd))
+		{
+			$var['messages'] = $api_messages . '<br>' . checkcode($cd);
+		}
+
+		$GLOBALS['phpgw']->template->set_var($var);
+		$GLOBALS['phpgw']->template->pfp('out','navbar_header');
+
+		$menu_title = lang('General Menu');
+
+		$file[] = array('text' => 'Home',
+				'url' => $GLOBALS['phpgw_info']['navbar']['home']['url']);
+		if ( isset($GLOBALS['phpgw_info']['navbar']['preferences']))
+		{
+			$file[] = array ('text' => 'Preferences',
+					'url' => $GLOBALS['phpgw_info']['navbar']['preferences']['url']
+							. '#' . $GLOBALS['phpgw_info']['flags']['currentapp']);
+		}
+		$file[] = array ('text' => 'About %1', 'url' => $GLOBALS['phpgw_info']['navbar']['about']['url']);
+		$file[] = array ('text' => 'Logout', 'url' => $GLOBALS['phpgw_info']['navbar']['logout']['url']);
+
+		display_sidebox('',$menu_title,$file);
+		//echo $GLOBALS['phpgw_info']['flags']['currentapp'];
+
+		echo '<div id="treeDiv2">';
+		echo "<ul>";
+		foreach($GLOBALS['phpgw_info']['navbar'] as $app => $app_data)
+		{
+			$GLOBALS['phpgw']->hooks->single('sidebox_menu', $app);
+		}
+		echo "</ul>";
+		echo "</div>";
+
+		//$GLOBALS['phpgw']->hooks->single('sidebox_menu',$GLOBALS['phpgw_info']['flags']['currentapp']);
+		//$GLOBALS['phpgw']->hooks->single('sidebox_menu','newdesign');
+
+
+		$GLOBALS['phpgw']->template->pparse('out','navbar_footer');
+
+		// If the application has a header include, we now include it
+		if ( (!isset($GLOBALS['phpgw_info']['flags']['noappheader'])
+			|| !$GLOBALS['phpgw_info']['flags']['noappheader'] )
+			&& isset($_GET['menuaction']) )
+		{
+			list($app,$class,$method) = explode('.',$_GET['menuaction']);
+			if (is_array($GLOBALS[$class]->public_functions) && isset($GLOBALS[$class]->public_functions['header']) )
+			{
+				$GLOBALS[$class]->header();
+			}
+		}
+		$GLOBALS['phpgw']->template->set_root(PHPGW_APP_TPL);
+		$GLOBALS['phpgw']->hooks->process('after_navbar');
+		unset($GLOBALS['phpgw_info']['navbar']);
 	}
 
-	function render_submenu($parent, $menu)
-	{
-		//global $debug;
-		$out = "";
-		foreach ( $menu as $key => $item )
-		{
-			if( isset($item['children']) )
-			{
-				$children = render_submenu(	"{$parent}::{$key}", $item['children']);
-			}
-			else
-			{
-				$children = "";
-			}
-			$out .= render_item($item, "navbar::{$parent}::{$key}", $children);
-			//$debug .= "{$parent}::{$key}<br>";
-		}
 
-		$out = <<<HTML
-			<ul>
-				{$out}
-			</ul>
-HTML;
-		return $out;
+	/**
+	* Display sidebox
+	*
+	* @param string $appname
+	* @param string $menu_title
+	* @param string $file
+	* @param boolean $use_lang
+	*/
+	function display_sidebox($appname, $menu_title, $file, $use_lang = true)
+	{
+		//echo "<li>$appname</li>";
+		//echo "appname: '$appname', menu_title: '$menu_title', file: '$file', use_lang: '$use_lang'";
+		//var_dump($file);
+		//if(!$appname || ($appname == $GLOBALS['phpgw_info']['flags']['currentapp'] && is_array($file) ) )
+		if( is_array($file) )
+		{
+			$var['lang_title'] = $menu_title;
+			$GLOBALS['phpgw']->template->set_var($var);
+			$GLOBALS['phpgw']->template->pfp('out','extra_blocks_header');
+
+			foreach ( $file as $item )
+			{
+				if ( !isset($item['url']) )
+				{
+					$item['url'] = '';
+				}
+
+				if ( !isset($item['image']) )
+				{
+					$item['image'] = '';
+				}
+
+				if ( !isset($item['this']) )
+				{
+					$item['this'] = '';
+				}
+
+				sidebox_menu_item($item['url'], $item['text'], $item['image'], $use_lang, $item['this']);
+			}
+
+			$GLOBALS['phpgw']->template->pfp('out','extra_blocks_footer');
+		}
 	}
 
-	function parse_footer_end()
+
+	/**
+	* Sidebox menu item
+	*
+	* @param string $item_link
+	* @param string $item_text
+	* @param string $item_image
+	* @param boolean $use_lang
+	*/
+	function sidebox_menu_item($item_link='', $item_text='', $item_image='', $use_lang = True, $current_item = '')
 	{
-		// Stop the register_shutdown_function causing the footer to be included twice - skwashd dec07
-		static $footer_included = false;
-		if ( $footer_included )
+		if($item_text == '_NewLine_')
 		{
-			return true;
+			$GLOBALS['phpgw']->template->pfp('out','extra_block_spacer');
 		}
+		else
+		{
+			$lang_item = $use_lang ? lang($item_text) : $item_text;
+			$GLOBALS['phpgw']->template->set_var(array
+			(
+				'list_style_image'	=> ($item_image ? "url('{$item_image}')" : 'none'),
+				'lang_item'			=> $current_item ? '<b>' . $lang_item . '</b>': $lang_item,
+				'item_link'			=> $item_link
+			));
+			$GLOBALS['phpgw']->template->pfp('out','extra_block_row');
+		}
+	}
+
+	/**
+	* Parse navigation bar end
+	* @ignore
+	*/
+	/**
+	* Parse navigation bar end
+	* @ignore
+	*/
+	function parse_navbar_end()
+	{
+		$GLOBALS['phpgw']->hooks->process('navbar_end');
 
 		$GLOBALS['phpgw']->template->set_root(PHPGW_TEMPLATE_DIR);
 		$GLOBALS['phpgw']->template->set_file('footer', 'footer.tpl');
-
 		$var = array
 		(
+			'img_root'		=> $GLOBALS['phpgw_info']['server']['webserver_url'] . '/phpgwapi/templates/newdesign/images',
 			'powered_by'	=> lang('Powered by phpGroupWare version %1', $GLOBALS['phpgw_info']['server']['versions']['phpgwapi']),
+			'version'		=> $GLOBALS['phpgw_info']['server']['versions']['phpgwapi']
 		);
-
 		$GLOBALS['phpgw']->template->set_var($var);
-
-		$GLOBALS['phpgw']->template->pfp('out', 'footer');
-
-		$footer_included = true;
+		$GLOBALS['phpgw']->template->pfp('out','footer');
 	}
-
-	/**
-	* Callback for usort($navbar)
-	*
-	* @param array $item1 the first item to compare
-	* @param array $item2 the second item to compare
-	* @return int result of comparision
-	*/
-	function sort_navbar($item1, $item2)
-	{
-		$a =& $item1['order'];
-		$b =& $item2['order'];
-
-		if ($a == $b)
-		{
-			return strcmp($item1['text'], $item2['text']);
-		}
-		return ($a < $b) ? -1 : 1;
-	}
-
-	/**
-	* Organise the navbar properly
-	*
-	* @param array $navbar the navbar items
-	* @return array the organised navbar
-	*/
-	function prepare_navbar(&$navbar)
-	{
-		if ( isset($navbar['admin']) )
-		{
-			$navbar['admin']['children'] = execMethod('phpgwapi.menu.get', 'admin');
-		}
-		uasort($navbar, 'sort_navbar');
-	}
+?>

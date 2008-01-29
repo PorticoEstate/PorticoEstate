@@ -17,6 +17,7 @@
 	</xsl:template>
 
 	<xsl:template match="list">
+		<xsl:call-template name="menu"/>
 		<table width="100%" cellpadding="2" cellspacing="2" align="center">
 			<xsl:choose>
 				<xsl:when test="msgbox_data != ''">
@@ -426,6 +427,7 @@
 
 
 	<xsl:template match="list_alarm">
+		<xsl:call-template name="menu"/>
 		<table width="100%" cellpadding="2" cellspacing="2" align="center">
 			<xsl:choose>
 				<xsl:when test="msgbox_data != ''">

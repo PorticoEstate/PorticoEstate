@@ -335,7 +335,7 @@
 			$sUCSQL = '';
 			$sPKSQL = '';
 			$sIXSQL = '';
-			$sFKSQL = '';
+					   $sFKSQL = '';
 
 			if(isset($aTableDef['pk']) && is_array($aTableDef['pk']) && count($aTableDef['pk']) > 0)
 			{
@@ -476,7 +476,7 @@
 					$sFieldSQL .= ' NULL';
 				}
 				
-				if($sDefault === '0' || $sDefault === 0)
+				if($sDefault == '0')
 				{
 					$sFieldSQL .= ' DEFAULT 0';
 				}								
@@ -589,7 +589,6 @@
 		function _GetFK($aFields, &$sFKSQL)
 		{
 			$sFKSQL = '';
-			$sFKSQLarr = array();
 			if(count($aFields) < 1)
 			{
 				return True;
@@ -597,15 +596,17 @@
 
 			$sFields = '';
 			reset($aFields);
-			foreach($aFields as $reftable => $sField)
+			foreach($aFields as $key => $sField)
 			{
-				$sFKSQLarr[] = $this->m_oTranslator->GetFKSQL($reftable, $sField);
+				if(@is_array($sField))
+				{
+					$sFKSQL .= $this->m_oTranslator->GetFKSQL(implode(',', $sField));
+				}
+				else
+				{
+					$sFKSQL .= $this->m_oTranslator->GetFKSQL($sField);
+				}
 			}
-			if(isset($sFKSQLarr[0]) && $sFKSQLarr[0])
-			{
-				$sFKSQL = implode(",\n",$sFKSQLarr);
-			}
-			
 			return True;
 		}
 		
@@ -650,7 +651,7 @@
 			
 			if($this->dbms == 'mysql' && $sIXSQL)
 			{
-				$this->query($sIXSQL, __LINE__, __FILE__);
+				$this->query($sIXSQL);
 			}
 			
 			// postgres
@@ -658,22 +659,11 @@
 			{
 				foreach($this->m_oTranslator->indexes_sql as $key => $sIndexSQL)
 				{
-					$ix_name = $key.'_'.$sTableName.'_idx';
+					$ix_name = str_replace(',','_',$key).'_'.$sTableName.'_idx';
 					$IndexSQL = str_replace(array('__index_name__','__table_name__'), array($ix_name,$sTableName), $sIndexSQL);
-					$this->query($IndexSQL, __LINE__, __FILE__);
+					$this->query($IndexSQL);
 				}
 			}			
-		}
-
-		/**
-		 * Prepare the VALUES component of an INSERT sql statement
-		 * 
-		 * @param array $value_set array of values to insert into the database
-		 * @return string the prepared sql, empty string for invalid input
-		 */
-		function validate_insert($values)
-		{
-			return $this->m_odb->validate_insert($values);
 		}
 	}
 ?>

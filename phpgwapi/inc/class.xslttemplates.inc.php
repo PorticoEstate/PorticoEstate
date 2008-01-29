@@ -119,10 +119,9 @@
 					$rootdir=$this->rootdir;
 				}
 
-				if ( substr($filename, 0, 1) != '/' 
-					&& substr($filename, 1, 1) != ':' )
+				if (substr($filename, 0, 1) != SEP && substr($filename, 1, 1) != ':')
 				{
-					$new_filename = "{$rootdir}/{$filename}";
+					$new_filename = $rootdir . SEP . $filename;
 				}
 				else
 				{
@@ -231,7 +230,7 @@
 		*/
 		function xsl_parse()
 		{
-			if ( is_array($this->xslfiles) && count($this->xslfiles) )
+			if( is_array($this->xslfiles) && count($this->xslfiles) > 0)
 			{
 				$this->xsldata = <<<XSLT
 <?xml version="1.0" encoding="UTF-8"?>
@@ -347,15 +346,12 @@ XSLT;
 			$proc = new XSLTProcessor;
 			$proc->importStyleSheet($xsl); // attach the xsl rules
 
-			$html =  trim($proc->transformToXML($xml));
+			$html =  $proc->transformToXML($xml);
 
-			if (!$html || $html == '<?xml version="1.0"?>')
+			if (!$html)
 			{
-				echo "<h2>xml-data</h2>";
-				$this->list_lineno($this->xmldata);
-
-				echo "<h2>xsl-data</h2>";
-				$this->list_lineno($this->xsldata);
+				echo "<h2>xml-data</h2>";  $this->list_lineno($this->xmldata);
+				echo "<h2>xsl-data</h2>"; $this->list_lineno($this->xsldata);
 				return '';
 			}
 			return preg_replace('/<!DOCTYPE([^>])+>/', '', $html);
@@ -371,3 +367,4 @@ XSLT;
 			return $this->pparse();
 		}
 	}
+?>

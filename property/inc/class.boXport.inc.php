@@ -52,9 +52,9 @@
 		{
 
 			$GLOBALS['phpgw_info']['flags']['currentapp']	=	'property';
-		//	$this->currentapp		= $GLOBALS['phpgw_info']['flags']['currentapp'];
+			$this->currentapp		= $GLOBALS['phpgw_info']['flags']['currentapp'];
 
-			$this->config		= CreateObject('phpgwapi.config','property');
+			$this->config		= CreateObject('phpgwapi.config',$this->currentapp);
 
 			if($session)
 			{
@@ -98,6 +98,7 @@
 		function read_sessiondata()
 		{
 			$data = $GLOBALS['phpgw']->session->appsession('session_data','export');
+			if($this->debug) { echo '<br>Read:'; _debug_array($data); }
 
 			$this->start  = $data['start'];
 			$this->query  = $data['query'];
@@ -109,11 +110,11 @@
 
 		function select_import_conv($selected='')
 		{
-			$dir_handle = @opendir(PHPGW_APP_INC . '/import');
+			$dir_handle = @opendir(PHPGW_APP_INC . SEP . 'import');
 			$i=0; $myfilearray = '';
 			while ($file = readdir($dir_handle))
 			{
-				if ((substr($file, 0, 1) != '.') && is_file(PHPGW_APP_INC . '/import/' . $file) )
+				if ((substr($file, 0, 1) != '.') && is_file(PHPGW_APP_INC . SEP . 'import' . SEP . $file) )
 				{
 					$myfilearray[$i] = $file;
 					$i++;
@@ -124,7 +125,7 @@
 
 			for ($i=0;$i<count($myfilearray);$i++)
 			{
-				$fname = preg_replace('/_/',' ',$myfilearray[$i]);
+				$fname = ereg_replace('_',' ',$myfilearray[$i]);
 				$sel_file = '';
 				if ($myfilearray[$i]==$selected)
 				{
@@ -153,11 +154,11 @@
 
 		function select_export_conv($selected='')
 		{
-			$dir_handle = @opendir(PHPGW_APP_INC . '/export');
+			$dir_handle = @opendir(PHPGW_APP_INC . SEP . 'export');
 			$i=0; $myfilearray = '';
 			while ($file = readdir($dir_handle))
 			{
-				if ((substr($file, 0, 1) != '.') && is_file(PHPGW_APP_INC . '/export/' . $file) )
+				if ((substr($file, 0, 1) != '.') && is_file(PHPGW_APP_INC . SEP . 'export' . SEP . $file) )
 				{
 					$myfilearray[$i] = $file;
 					$i++;
@@ -168,7 +169,7 @@
 
 			for ($i=0;$i<count($myfilearray);$i++)
 			{
-				$fname = preg_replace('/_/',' ',$myfilearray[$i]);
+				$fname = ereg_replace('_',' ',$myfilearray[$i]);
 				$sel_file = '';
 				if ($myfilearray[$i]==$selected)
 				{
@@ -204,7 +205,7 @@
 			$i=0; $myfilearray = '';
 			while ($file = readdir($dir_handle))
 			{
-				if ((substr($file, 0, 1) != '.') && is_file("{$file_catalog}/{$file}") )
+				if ((substr($file, 0, 1) != '.') && is_file($file_catalog . SEP . $file) )
 				{
 					$myfilearray[$i] = $file;
 					$i++;
@@ -215,7 +216,7 @@
 
 			for ($i=0;$i<count($myfilearray);$i++)
 			{
-				$fname = preg_replace('/_/',' ',$myfilearray[$i]);
+				$fname = ereg_replace('_',' ',$myfilearray[$i]);
 				$sel_file = '';
 				if ($myfilearray[$i]==$selected)
 				{

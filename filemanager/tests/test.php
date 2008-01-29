@@ -28,7 +28,7 @@ html_break (1);
 html_text_italic (PHP_OS . " - " . $phpgw_info["server"]["db_type"] . " - " . PHP_VERSION . " - " . $phpgw->vfs->basedir);
 html_break (1);
 
-$sep = '/';
+$sep = SEP;
 $phpgw =& $GLOBALS['phpgw'];
 $user = $phpgw->vfs->working_lid;
 $homedir = $phpgw->vfs->fakebase . "/" . $user;

@@ -45,7 +45,7 @@
 
 		function property_botenant_claim($session=False)
 		{
-		//	$this->currentapp		= $GLOBALS['phpgw_info']['flags']['currentapp'];
+			$this->currentapp		= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->bocommon = CreateObject('property.bocommon');
 			$this->so = CreateObject('property.sotenant_claim');
 
@@ -220,14 +220,14 @@
 			}
 
 
-			$this->config = CreateObject('phpgwapi.config','property');
+			$this->config = CreateObject('phpgwapi.config',$this->currentapp);
 			$this->config->read_repository();
 			$claim_notify_mails = $this->config->config_data['tenant_claim_notify_mails'];
 			if ($claim_notify_mails)
 			{
 				// notify via email
 				$current_user_id=$GLOBALS['phpgw_info']['user']['account_id'];
-				$current_prefs_user = $this->bocommon->create_preferences('property',$current_user_id);
+				$current_prefs_user = $this->bocommon->create_preferences($this->currentapp,$current_user_id);
 				$from=$current_prefs_user['email'];
 				$subject = lang("Tenant claim %1",$receipt['claim_id']) .' ' . $action;
 				$body    = lang('Reminder');

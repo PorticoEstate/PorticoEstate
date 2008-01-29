@@ -56,13 +56,12 @@
 		function property_uitemplate()
 		{
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = True;
-			$GLOBALS['phpgw_info']['flags']['menu_selection'] = 'property::project::template';
-
-		//	$this->currentapp			= $GLOBALS['phpgw_info']['flags']['currentapp'];
+			$this->currentapp			= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->nextmatchs			= CreateObject('phpgwapi.nextmatchs');
 			$this->bo				= CreateObject('property.botemplate',True);
 			$this->bowo_hour			= CreateObject('property.bowo_hour');
 			$this->bocommon				= CreateObject('property.bocommon');
+			$this->menu				= CreateObject('property.menu');
 
 			$this->start				= $this->bo->start;
 			$this->query				= $this->bo->query;
@@ -72,6 +71,8 @@
 			$this->cat_id				= $this->bo->cat_id;
 			$this->chapter_id			= $this->bo->chapter_id;
 			$this->allrows				= $this->bo->allrows;
+
+			$this->menu->sub			='project';
 		}
 
 		function save_sessiondata()
@@ -94,11 +95,14 @@
 		{
 			$GLOBALS['phpgw']->xslttpl->add_file(array(
 								'template',
+								'menu',
 								'nextmatchs',
 								'search_field'));
 
 			$workorder_id = phpgw::get_var('workorder_id', 'int');
 			$lookup 	= phpgw::get_var('lookup', 'bool');
+
+			$links = $this->menu->links('template');
 
 			$template_list	= $this->bo->read();
 
@@ -114,11 +118,11 @@
 					'entry_date'			=> $template['entry_date'],
 					'chapter'			=> $template['chapter'],
 					'lang_select'			=> lang('Select'),
-					'form_action_select'		=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiwo_hour.template')),
+					'form_action_select'		=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uiwo_hour.template')),
 					'lang_select_statustext'	=> lang('Select this template to view the details'),
-					'link_view'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uitemplate.hour','template_id'=> $template['template_id'])),
-					'link_edit'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uitemplate.edit_template','template_id'=> $template['template_id'])),
-					'link_delete'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uitemplate.delete', 'id'=> $template['template_id'])),
+					'link_view'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uitemplate.hour','template_id'=> $template['template_id'])),
+					'link_edit'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uitemplate.edit_template','template_id'=> $template['template_id'])),
+					'link_delete'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uitemplate.delete', 'id'=> $template['template_id'])),
 					'lang_view_statustext'		=> lang('view the template'),
 					'lang_edit_statustext'		=> lang('edit the template'),
 					'lang_delete_statustext'	=> lang('delete the template'),
@@ -138,7 +142,7 @@
 											'sort'	=> $this->sort,
 											'var'	=> 'fm_template.id',
 											'order'	=> $this->order,
-											'extra'	=> array('menuaction' => 'property.uitemplate.index',
+											'extra'	=> array('menuaction' => $this->currentapp.'.uitemplate.index',
 																	'chapter_id'	=>$this->chapter_id,
 																	'query'			=>$this->query,
 																	'workorder_id'	=>$workorder_id,
@@ -151,7 +155,7 @@
 											'sort'	=> $this->sort,
 											'var'	=> 'name',
 											'order'	=> $this->order,
-											'extra'	=> array('menuaction' => 'property.uitemplate.index',
+											'extra'	=> array('menuaction' => $this->currentapp.'.uitemplate.index',
 																	'chapter_id'	=>$this->chapter_id,
 																	'query'			=>$this->query,
 																	'workorder_id'	=>$workorder_id,
@@ -170,7 +174,7 @@
 
 			$link_data = array
 			(
-				'menuaction'	=> 'property.uitemplate.index',
+				'menuaction'	=> $this->currentapp.'.uitemplate.index',
 				'sort'		=> $this->sort,
 				'order'		=> $this->order,
 				'chapter_id'	=> $this->chapter_id,
@@ -191,14 +195,14 @@
 			(
 				'lang_add'		=> lang('add'),
 				'lang_add_statustext'	=> lang('add a template'),
-				'add_action'		=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uitemplate.edit_template'))
+				'add_action'		=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uitemplate.edit_template'))
 			);
 
 			$table_done[] = array
 			(
 				'lang_done'		=> lang('Done'),
 				'lang_done_statustext'	=> lang('Back to list'),
-				'done_action'		=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiwo_hour.index','workorder_id'=> $workorder_id))
+				'done_action'		=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uiwo_hour.index','workorder_id'=> $workorder_id))
 			);
 
 			$data = array
@@ -215,6 +219,7 @@
 
 				'lookup'			=> $lookup,
 				'function'			=> 'template',
+				'links'				=> $links,
 				'allrows'			=> $this->allrows,
 				'allow_allrows'			=> true,
 				'start_record'			=> $this->start,
@@ -243,7 +248,7 @@
 			$appname	= lang('template');
 			$function_msg	= lang('list template');
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($this->currentapp) . ' - ' . $appname . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('list' => $data));
 		//	$GLOBALS['phpgw']->xslttpl->pp();
 			$this->save_sessiondata();
@@ -252,6 +257,7 @@
 		function hour()
 		{
 			$GLOBALS['phpgw']->xslttpl->add_file(array('template',
+										'menu',
 										'nextmatchs',
 										'search_field'));
 
@@ -265,6 +271,7 @@
 				$receipt = $this->bo->delete_hour($hour_id,$template_id);
 			}
 
+			$links = $this->menu->links();
 
 			$template_list	= $this->bo->read_template_hour($template_id);
 
@@ -315,8 +322,8 @@
 					'billperae'			=> $template['billperae'],
 					'building_part'			=> $template['building_part'],
 					'dim_d'				=> $template['dim_d'],
-					'link_edit'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uitemplate.edit_hour','hour_id'=> $template['hour_id'], 'template_id'=> $template_id)),
-					'link_delete'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uitemplate.hour','delete'=>true, 'template_id'=> $template_id, 'hour_id'=> $template['hour_id'])),
+					'link_edit'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uitemplate.edit_hour','hour_id'=> $template['hour_id'], 'template_id'=> $template_id)),
+					'link_delete'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uitemplate.hour','delete'=>true, 'template_id'=> $template_id, 'hour_id'=> $template['hour_id'])),
 					'lang_edit_statustext'		=> lang('edit the template'),
 					'lang_delete_statustext'	=> lang('delete the template'),
 					'text_edit'			=> lang('edit'),
@@ -341,7 +348,7 @@
 											'sort'	=> $this->sort,
 											'var'	=> 'billperae',
 											'order'	=> $this->order,
-											'extra'	=> array('menuaction' => 'property.uitemplate.hour',
+											'extra'	=> array('menuaction' => $this->currentapp.'.uitemplate.hour',
 																	'workorder_id'	=>$workorder_id,
 																	'template_id'	=>$template_id,
 																	'query'			=>$this->query,
@@ -353,7 +360,7 @@
 											'sort'	=> $this->sort,
 											'var'	=> 'building_part',
 											'order'	=> $this->order,
-											'extra'	=> array('menuaction' => 'property.uitemplate.hour',
+											'extra'	=> array('menuaction' => $this->currentapp.'.uitemplate.hour',
 																	'workorder_id'	=>$workorder_id,
 																	'template_id'	=>$template_id,
 																	'query'			=>$this->query,
@@ -369,12 +376,12 @@
 			(
 				'lang_done'		=> lang('Done'),
 				'lang_done_statustext'	=> lang('Back to list'),
-				'done_action'		=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uitemplate.index'))
+				'done_action'		=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uitemplate.index'))
 			);
 
 			$link_data = array
 			(
-				'menuaction'	=> 'property.uitemplate.hour',
+				'menuaction'	=> $this->currentapp.'.uitemplate.hour',
 				'sort'		=> $this->sort,
 				'order'		=> $this->order,
 				'workorder_id'	=> $workorder_id,
@@ -385,7 +392,7 @@
 
 			$link_data_nextmatch = array
 			(
-				'menuaction'	=> 'property.uitemplate.hour',
+				'menuaction'	=> $this->currentapp.'.uitemplate.hour',
 				'sort'		=> $this->sort,
 				'order'		=> $this->order,
 				'workorder_id'	=> $workorder_id,
@@ -395,7 +402,7 @@
 
 			$link_data_delete = array
 			(
-				'menuaction'	=> 'property.uitemplate.hour',
+				'menuaction'	=> $this->currentapp.'.uitemplate.hour',
 				'sort'		=> $this->sort,
 				'order'		=> $this->order,
 				'workorder_id'	=> $workorder_id,
@@ -408,7 +415,7 @@
 			(
 				'lang_add'	=> lang('add'),
 				'lang_add_statustext'	=> lang('add a hour'),
-				'add_action'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uitemplate.edit_hour','template_id'=> $template_id))
+				'add_action'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uitemplate.edit_hour','template_id'=> $template_id))
 			);
 
 			if(!$this->allrows)
@@ -432,6 +439,7 @@
 				'link_delete'				=> $GLOBALS['phpgw']->link('/index.php',$link_data_delete),
 
 				'function'				=> 'template',
+				'links'					=> $links,
 				'allrows'				=> $this->allrows,
 				'allow_allrows'				=> true,
 				'start_record'				=> $this->start,
@@ -455,7 +463,7 @@
 			$appname					= lang('template');
 			$function_msg					= lang('view template detail');
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($this->currentapp) . ' - ' . $appname . ': ' . $function_msg;
 
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('list_template_hour' => $data));
 		//	$GLOBALS['phpgw']->xslttpl->pp();
@@ -499,7 +507,7 @@
 
 			$link_data = array
 			(
-				'menuaction'	=> 'property.uitemplate.edit_template',
+				'menuaction'	=> $this->currentapp.'.uitemplate.edit_template',
 				'template_id'	=> $template_id
 			);
 
@@ -509,7 +517,7 @@
 			(
 				'msgbox_data'				=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
 				'form_action'				=> $GLOBALS['phpgw']->link('/index.php',$link_data),
-				'done_action'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uitemplate.index', 'template_id'=> $template_id)),
+				'done_action'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uitemplate.index', 'template_id'=> $template_id)),
 
 				'lang_template_id'			=> lang('Template ID'),
 				'value_template_id'			=> $template_id,
@@ -536,13 +544,13 @@
 				'lang_chapter_statustext'		=> lang('Select the chapter (for tender) for this activity.'),
 				'lang_add'				=> lang('add a hour'),
 				'lang_add_statustext'			=> lang('add a hour to this template'),
-				'add_action'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uitemplate.edit_hour', 'template_id'=> $template_id))
+				'add_action'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uitemplate.edit_hour', 'template_id'=> $template_id))
 			);
 
 			$appname	= lang('Workorder template');
 			$function_msg	= lang('view ticket detail');
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($this->currentapp) . ' - ' . $appname . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('edit_template' => $data));
 		//	$GLOBALS['phpgw']->xslttpl->pp();
 		}
@@ -600,7 +608,7 @@
 
 			$link_data = array
 			(
-				'menuaction'	=> 'property.uitemplate.edit_hour',
+				'menuaction'	=> $this->currentapp.'.uitemplate.edit_hour',
 				'template_id'	=> $template_id,
 				'hour_id'	=> $hour_id
 			);
@@ -611,7 +619,7 @@
 			(
 				'msgbox_data'				=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
 				'form_action'				=> $GLOBALS['phpgw']->link('/index.php',$link_data),
-				'done_action'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uitemplate.hour', 'template_id'=> $template_id)),
+				'done_action'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uitemplate.hour', 'template_id'=> $template_id)),
 				'lang_template'				=> lang('template'),
 				'value_template_id'			=> $template['template_id'],
 				'value_template_name'			=> $template['name'],
@@ -691,7 +699,7 @@
 				'lang_building_part_statustext'		=> lang('Select the building part for this activity.'),
 
 
-				'ns3420_link'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uilookup.ns3420')),
+				'ns3420_link'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uilookup.ns3420')),
 				'lang_ns3420'				=> lang('NS3420'),
 				'value_ns3420_id'			=> $values['ns3420_id'],
 				'lang_ns3420_statustext'		=> lang('Select a standard-code from the norwegian standard'),
@@ -701,7 +709,7 @@
 
 			$appname	= lang('Workorder template');
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($this->currentapp) . ' - ' . $appname . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('edit_hour' => $data));
 		//	$GLOBALS['phpgw']->xslttpl->pp();
 		}
@@ -713,7 +721,7 @@
 
 			$link_data = array
 			(
-				'menuaction' => 'property.uitemplate.index'
+				'menuaction' => $this->currentapp.'.uitemplate.index'
 			);
 
 			if (phpgw::get_var('confirm', 'bool', 'POST'))
@@ -727,7 +735,7 @@
 			$data = array
 			(
 				'done_action'		=> $GLOBALS['phpgw']->link('/index.php',$link_data),
-				'delete_action'		=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uitemplate.delete', 'id'=> $id)),
+				'delete_action'		=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uitemplate.delete', 'id'=> $id)),
 				'lang_confirm_msg'	=> lang('do you really want to delete this entry'),
 				'lang_yes'		=> lang('yes'),
 				'lang_yes_statustext'	=> lang('Delete the entry'),
@@ -738,7 +746,7 @@
 			$appname		= lang('Workorder template');
 			$function_msg		= lang('delete template');
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($this->currentapp) . ' - ' . $appname . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('delete' => $data));
 		//	$GLOBALS['phpgw']->xslttpl->pp();
 		}

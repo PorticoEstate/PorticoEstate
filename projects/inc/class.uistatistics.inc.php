@@ -884,7 +884,8 @@
 		$GLOBALS['phpgw']->template->set_var('sdate_select',$jscal->input('sdate[str]',$start));
 		$GLOBALS['phpgw']->template->set_var('edate_select',$jscal->input('edate[str]',$end));
 
-		$GLOBALS['phpgw']->template->set_var('css_file', "{$GLOBALS['phpgw_info']['server']['webserver_url']}/{phpgwapi}/{templates}/idots/css/idots.css");
+		$GLOBALS['phpgw']->template->set_var('css_file',$GLOBALS['phpgw_info']['server']['webserver_url'] . SEP . 'phpgwapi' . SEP . 'templates'
+		                          . SEP . 'idots' . SEP . 'css' . SEP . 'idots.css');
 		$GLOBALS['phpgw']->template->set_var('gantt_link',$GLOBALS['phpgw']->link('/index.php',array
 																								(
 																									'menuaction'=>'projects.uistatistics.get_screen_size',
@@ -914,8 +915,7 @@
 
 		$GLOBALS['phpgw']->template->set_var('lang_close_window', lang('close window'));
 		$GLOBALS['phpgw']->template->set_var('lang_show_gantt_in_new_window', lang('show gantt chart in new window'));
-		// FIXME: should use phpgwapi_common::find_image here - skwashd jan08
-		$GLOBALS['phpgw']->template->set_var('pix_src', "{$GLOBALS['phpgw_info']['server']['webserver_url']}/phpgwapi/images/{$gantt_data['img_file']}");
+		$GLOBALS['phpgw']->template->set_var('pix_src', $GLOBALS['phpgw_info']['server']['webserver_url'] . SEP . 'phpgwapi' . SEP . 'images' . SEP . $gantt_data['img_file']);
 
 		//_debug_array($gantt_data);
 

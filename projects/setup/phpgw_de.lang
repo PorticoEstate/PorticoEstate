@@ -191,7 +191,7 @@ imported hours	projects	de	Importierte Arbeitsstunden
 imported hours on	projects	de	Importierte Arbeitsstunden am
 insert parent employees	projects	de	Mitarbeiter vom übergeordneten Projekt übernehmen
 investment nr	projects	de	Referenz-Nr.
-invoicing method	projects	de	Anmerkungen zur Abrechnung
+invoicing method	projects	de	Anmerkungen zur Abrechnung	
 invoicing of work time	admin	de	Arbrechnung von Arbeitszeit
 It will NOT check if you already have uploaded hours for a certain day.	projects	de	Es wird NICHT geprüft, ob Sie bereits Arbeitsstunden für einen bestimmten Tag hochgeladen haben.
 large	projects	de	Gro&szlig;
@@ -325,7 +325,7 @@ quality check	projects	de	Qualität
 reference	projects	de	Referenz
 Remark can not exceed 8000 characters in length !	projects	de	Die Betreff der Tätigkeit darf nicht mehr als 8000 Zeichen enthalten.
 remark	projects	de	Betreff
-remark can not exceed 8000 characters in length	projects	de	Betreff darf 8000 Zeichen nicht überschreiten.
+remark can not exceed 8000 characters in length	projects	en	Betreff darf 8000 Zeichen nicht überschreiten.
 remark required	projects	de	Betreff notwendig
 remove	projects	de	Entfernen
 result	projects	de	Resultat
@@ -424,7 +424,7 @@ View controlling sheet	projects	de	Controlling Sheet
 view employees	projects	de	Mitarbeiter anzeigen
 view hours	projects	de	Stunden anzeigen
 view project	projects	de	Projekt anzeigen
-view project activities	projects	de	Projekt Aktivitäten anzeigen
+view project activities	projects	de	Projekt Aktivitäten anzeigen	
 view projects	projects	de	Projekte anzeigen
 view sheet	projects	de	Anzeigen
 view work hours	projects	de	Arbeitsstunden anzeigen

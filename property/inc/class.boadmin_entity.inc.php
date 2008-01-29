@@ -72,9 +72,9 @@
 
 		function property_boadmin_entity($session=False)
 		{
+			$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->so 		= CreateObject('property.soadmin_entity');
 			$this->bocommon = CreateObject('property.bocommon');
-			$this->custom 	= createObject('phpgwapi.custom_fields');
 
 			if ($session)
 			{
@@ -220,6 +220,31 @@
 			return $category;
 		}
 
+		function read_status()
+		{
+			$status = $this->so->read_status(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,
+				'order' => $this->order,'allrows'=>$this->allrows,'entity_id'=>$this->entity_id,'cat_id'=>$this->cat_id));
+
+			$this->total_records = $this->so->total_records;
+
+			return $status;
+		}
+
+		function read_config()
+		{
+			$standard = $this->so->read_config(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order));
+
+			$this->total_records = $this->so->total_records;
+
+
+			return $standard;
+		}
+
+		function read_config_single($column_name)
+		{
+			return $this->so->read_config_single($column_name);
+		}
+
 		function read_single($id)
 		{
 			return $this->so->read_single($id);
@@ -228,6 +253,11 @@
 		function read_single_category($entity_id,$cat_id)
 		{
 			return $this->so->read_single_category($entity_id,$cat_id);
+		}
+
+		function read_single_status($id)
+		{
+			return $this->so->read_single_status($this->entity_id,$this->cat_id,$id);
 		}
 
 		function save($values,$action='')
@@ -262,25 +292,47 @@
 			return $receipt;
 		}
 
-		function delete($cat_id='',$entity_id='',$attrib_id='',$acl_location='',$custom_function_id='')
+		function save_status($values,$action='')
 		{
-			if(!$attrib_id && !$cat_id && $entity_id && !$custom_function_id)
+			if ($action=='edit')
+			{
+				if ($values['id'] != '')
+				{
+					$receipt = $this->so->edit_status($values,$this->entity_id,$this->cat_id);
+				}
+			}
+			else
+			{
+				$receipt = $this->so->add_status($values,$this->entity_id,$this->cat_id);
+			}
+			return $receipt;
+		}
+
+		function delete($cat_id='',$entity_id='',$attrib_id='',$status_id='',$acl_location='',$custom_function_id='')
+		{
+			if(!$status_id && !$attrib_id && !$cat_id && $entity_id && !$custom_function_id):
 			{
 				$this->so->delete_entity($entity_id);
 			}
-			else if(!$attrib_id && $cat_id && $entity_id && !$custom_function_id)
+			elseif(!$status_id && !$attrib_id && $cat_id && $entity_id && !$custom_function_id):
 			{
-				$this->so->delete_category($entity_id, $cat_id);
+				$this->so->delete_category($cat_id,$entity_id);
 			}
-			else if($attrib_id && $cat_id && $entity_id && !$custom_function_id)
+			elseif(!$status_id && $attrib_id && $cat_id && $entity_id && !$custom_function_id):
 			{
-				$this->custom->_delete_attrib('.entity.' . $entity_id . '.' . $cat_id,'property',$attrib_id);
-				$this->so->delete_history($entity_id, $cat_id,$attrib_id);
+				$this->so->delete_attrib($cat_id,$entity_id,$attrib_id);
 			}
-			else if($custom_function_id && $acl_location)
+			elseif($status_id && !$attrib_id && $cat_id && $entity_id && !$custom_function_id):
 			{
-				$this->custom->_delete_custom_function('property', $acl_location,$custom_function_id);
+				$this->so->delete_status($cat_id,$entity_id,$status_id);
 			}
+			elseif(!$status_id && $custom_function_id && $acl_location):
+			{
+				$this->so->delete_custom_function($acl_location,$custom_function_id);
+			}
+			endif;
+
+
 		}
 
 		function read_attrib($entity_id='',$cat_id='',$allrows='')
@@ -290,41 +342,49 @@
 				$this->allrows = $allrows;
 			}
 
-			$attrib = $this->custom->get_attribs('property', '.entity.' . $entity_id . '.' . $cat_id, $this->start, $this->query, $this->sort, $this->order, $this->allrows);
+			$attrib = $this->so->read_attrib(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
+											'cat_id' => $cat_id,'entity_id' => $entity_id,'allrows'=>$this->allrows));
 
-			$this->total_records = $this->custom->total_records;
+			for ($i=0; $i<count($attrib); $i++)
+			{
+				$attrib[$i]['datatype'] = $this->bocommon->translate_datatype($attrib[$i]['datatype']);
+			}
+
+			$this->total_records = $this->so->total_records;
 
 			return $attrib;
 		}
 
 		function read_single_attrib($entity_id,$cat_id,$id)
 		{
-			return $this->custom->get_attrib_single('property', '.entity.' . $entity_id . '.' . $cat_id, $id, true);
+			return $this->so->read_single_attrib($entity_id,$cat_id,$id);
 		}
 
 		function resort_attrib($id,$resort)
 		{
-			$this->custom->resort_attrib($id, $resort, 'property', '.entity.' . $this->entity_id . '.' . $this->cat_id);
+			$this->so->resort_attrib(array('resort'=>$resort,'entity_id' => $this->entity_id,'cat_id' => $this->cat_id,'id'=>$id));
 		}
 
 		function save_attrib($attrib,$action='')
 		{
-			$attrib['appname'] = 'property';
- 			$attrib['location'] = '.entity.' . $attrib['entity_id'] . '.' . $attrib['cat_id'];
-
 			if ($action=='edit')
 			{
 				if ($attrib['id'] != '')
 				{
 
-					$receipt = $this->custom->edit_attrib($attrib);
+					$receipt = $this->so->edit_attrib($attrib);
 				}
 			}
 			else
 			{
-				$receipt = $this->custom->add_attrib($attrib);
+				$receipt = $this->so->add_attrib($attrib);
 			}
 			return $receipt;
+		}
+
+		function save_config($values='',$column_name='')
+		{
+				return $this->so->save_config($values,$column_name);
 		}
 
 		function read_custom_function($entity_id='',$cat_id='',$allrows='', $acl_location='')
@@ -339,55 +399,86 @@
 				$acl_location = '.entity.' . $entity_id . '.' . $cat_id;
 			}
 
-			$custom_function =$this->custom->read_custom_function(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
-											'appname'=>'property','location' => $acl_location,'allrows'=>$this->allrows));
+			$custom_function = $this->so->read_custom_function(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
+											'acl_location' => $acl_location,'allrows'=>$this->allrows));
 
-			$this->total_records = $this->custom->total_records;
+			$this->total_records = $this->so->total_records;
 
 			return $custom_function;
 		}
 
 		function resort_custom_function($id,$resort)
 		{
-			$location = '.entity.' . $this->entity_id . '.' . $this->cat_id;
-			return $this->custom->resort_custom_function($id, $resort, 'property', $location);
+			$this->so->resort_custom_function(array('resort'=>$resort,'entity_id' => $this->entity_id,'cat_id' => $this->cat_id,'id'=>$id));
 		}
 
 		function save_custom_function($custom_function,$action='')
 		{
-			$custom_function['appname']='property';
-			if(!$custom_function['location'] && $custom_function['entity_id'] && $custom_function['cat_id'])
-			{
-				$custom_function['location'] = '.entity.' . $custom_function['entity_id'] . '.' . $custom_function['cat_id'];
-			}
-
 			if ($action=='edit')
 			{
 				if ($custom_function['id'] != '')
 				{
 
-					$receipt = $this->custom->edit_custom_function($custom_function);
+					$receipt = $this->so->edit_custom_function($custom_function);
 				}
 			}
 			else
 			{
-				$receipt = $this->custom->add_custom_function($custom_function);
+				$receipt = $this->so->add_custom_function($custom_function);
 			}
 			return $receipt;
 		}
 
 		function select_custom_function($selected='')
 		{
-			return $this->custom->select_custom_function($selected, 'property');
-		}
 
-		function read_single_custom_function($entity_id='',$cat_id='',$id,$location='')
-		{
-			if (!$location && $entity_id && $cat_id)
+			$dir_handle = @opendir(PHPGW_APP_INC . SEP . 'custom');
+			$i=0; $myfilearray = '';
+			while ($file = readdir($dir_handle))
 			{
-				$location = '.entity.' . $entity_id . '.' . $cat_id;
+				if ((substr($file, 0, 1) != '.') && is_file(PHPGW_APP_INC . SEP . 'custom' . SEP . $file) )
+				{
+					$myfilearray[$i] = $file;
+					$i++;
+				}
 			}
-			return $this->custom->read_single_custom_function('property',$location,$id);
+			closedir($dir_handle);
+			sort($myfilearray);
+
+			for ($i=0;$i<count($myfilearray);$i++)
+			{
+				$fname = ereg_replace('_',' ',$myfilearray[$i]);
+				$sel_file = '';
+				if ($myfilearray[$i]==$selected)
+				{
+					$sel_file = 'selected';
+				}
+
+				$file_list[] = array
+				(
+					'id'		=> $myfilearray[$i],
+					'name'		=> $fname,
+					'selected'	=> $sel_file
+				);
+			}
+
+			for ($i=0;$i<count($file_list);$i++)
+			{
+				if ($file_list[$i]['selected'] != 'selected')
+				{
+					unset($conv_list[$i]['selected']);
+				}
+			}
+
+			return $file_list;
+		}
+		function read_single_custom_function($entity_id='',$cat_id='',$id,$acl_location='')
+		{
+			if (!$acl_location && $entity_id && $cat_id)
+			{
+				$acl_location = '.entity.' . $entity_id . '.' . $cat_id;
+			}
+			return $this->so->read_single_custom_function($acl_location,$id);
 		}
 	}
 ?>

@@ -55,7 +55,7 @@
 
 		function sms_boconfig($session=False)
 		{
-		//	$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
+			$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->so 		= CreateObject('sms.soconfig');
 			$this->bocommon 	= CreateObject('sms.bocommon');
 

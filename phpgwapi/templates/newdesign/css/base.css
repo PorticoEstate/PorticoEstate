@@ -1,428 +1,78 @@
-html
+body, div, input, p, select, textarea
 {
-	overflow:hidden; /* Hide scrollbars from IE */
-	height: 100%;
-}
-
-#debug-navbar {
-	display: none;
-	position: absolute;
-	width: 1000px;
-	border: 2px solid gray;
-	padding: 1em;
-	z-index: 100;
-	background: white;
-	right: 0px;
-	overflow: scroll;
+	color: #069;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
 	font-size: 11px;
-	bottom: 0px;
-	top: 0px;
-}
-body
-{
-	text-align: left;
-	height: 100%;
 }
 
-/* Reset headings which get broken by YUI! - based on firefox 2 html.css */
-h1
+a
 {
-  font-size: 2em;
-  font-weight: bold;
-  margin: .67em 0;
+	color: #f93;
+	text-decoration: none;
 }
 
-h2
+a:hover, a:active
 {
-  font-size: 1.5em;
-  font-weight: bold;
-  margin: .83em 0;
+	text-decoration: underline;
 }
 
-h3
+img
 {
-  font-size: 1.17em;
-  font-weight: bold;
-  margin: 1em 0;
+	border: 0px;
 }
 
-h4
+label, input[type=text], input[type=password], select, textarea
 {
-  font-weight: bold;
-  margin: 1.33em 0;
-}
-/* End headings fix */
-
-div.header h2
-{
-	font-size: 1em;
-	margin: 0;
-}
-
-div.border-layout
-{
-	position: relative;
-	height: 100%;
-}
-
-div.border-layout div.layout-north
-{
-	position: absolute;
-	width: 100%;
-	height: 2em;
-}
-
-div.border-layout div.layout-west, div.border-layout div.layout-east
-{
-	position: absolute;
-	width: 200px;
-	top: 2em;
-	bottom: 2em;
-}
-
-div.border-layout div.layout-center
-{
-	z-index:0;
-	position: absolute;
-	left: 210px;
-	right: 210px;
-	top: 2em;
-	bottom: 2em;
-}
-
-div.border-layout div.layout-east
-{
-	right: 0px;
-}
-
-div.border-layout div.layout-south
-{
-	position: absolute;
-	width: 100%;
-	bottom: 0em;
-	height: 2em;
-	background: red;
-}
-
-div.border-layout div.split-bar
-{
-	position: absolute;
-	z-index: 10;
-	width: 10px;
-	top: 2em;
-	bottom: 2em;
-	background: url(../images/ofm-split-bar-bg.png) center top repeat-y;
-	cursor: e-resize;
-}
-
-div.border-layout div.split-bar div.split-bar-handle
-{
-	position: absolute;
-	width: 100%;
-	left: 0px;
-	height: 6%;
-	top: 46%;
-	cursor: pointer;
-}
-
-div.border-layout div.split-bar div.split-bar-handle:hover
-{
-	background: #b3d4ff url(../images/ofm-split-bar-bg.png) center top repeat-y;
-}
-
-div.border-layout div.split-bar div.split-bar-handle div, div.border-layout div.split-bar div.split-bar-handle div
-{
-	width: 100%;
-	height: 100%;
-}
-
-div.border-layout div.split-bar-w-c div.split-bar-handle div, div.border-layout div.split-bar-c-e div.split-bar-handle div.minimized
-{
-	background: url(../images/ofm-split-bar-left.png) center center no-repeat;
-
-}
-
-div.border-layout div.split-bar-c-e div.split-bar-handle div, div.border-layout div.split-bar-w-c div.split-bar-handle div.minimized
-{
-	background: url(../images/ofm-split-bar-right.png) center center no-repeat;
-}
-
-div.border-layout div.split-bar-w-c
-{
-	left: 200px;
-}
-
-div.border-layout div.split-bar-c-e
-{
-	right: 200px;
-}
-
-div.panel
-{
-	height: 100%;
-	width: 100%;
-}
-
-div.panel div.header
-{
-	height: 2em;
-	background: #eee;
-	padding: 0em 0.6em;
-	overflow: hidden;
-}
-
-div.panel div.header h2
-{
+	/*
+	display: block;
 	float: left;
-	line-height: 2em;
+	margin-bottom: 8px;
+	width: 400px;
+	*/
+}
+
+input.button
+{
+	margin: 10px;
+	width: auto;
+}
+
+input.error, select.error, textarea.error
+{
+	border: 1px solid #f00;
+	background-color: #f99;
+	color: #f00;
+}
+
+label
+{
 	font-weight: bold;
-
+	padding-right: 10px;
+	text-align: right;
+	vertical-align: top;
+	width: 150px;
 }
 
-div.panel div.header h2.icon
+form br
 {
-	padding-left: 30px;
-	background: url(../images/phpgw-icon-logo.png) left center no-repeat;
+	clear: left;
 }
 
-div.panel div.header div.button-bar
+thead
 {
-	float: right;
+	background-color: #d3dce3;
 	font-weight: bold;
-	white-space: nowrap;
+	text-align: center;
 }
 
-div.panel div.header div.button-bar a
+.button_group
 {
-	line-height: 2.5em;
-	text-decoration: none;
-	color: #666;
-	margin-left: 1em;
-	font-size: 85%;
-	padding: 0.1em 0em;
+	text-align: right;
 }
 
-div.panel div.header div.button-bar a:hover
+.msg
 {
-	color: #000;
-}
-
-div.panel div.header div.button-bar a.icon
-{
-	padding-left: 20px;
-	background-position: left center;
-	background-repeat: no-repeat;
-}
-
-div.panel div.body
-{
-	overflow: auto;
-	position: absolute;
-	top: 2em;
-	left: 0em;
-	right: 0em;
-	padding: 0.6em;
-	background: #fff;
-	bottom: 0em;
-	border-top: 1px solid #000;
-}
-
-div.panel div.body div.toolbar
-{
-	background: silver;
-	border-top: 1px solid #eee;
-	border-bottom: 1px solid gray;
-	padding: 0.2em 0.4em;
-	position: relative;
-}
-
-.layout-center div.panel div.body table td
-{
-	border: 1px solid silver;
-}
-
-div.panel div.body div.toolbar a
-{
-	font-size: 85%;
+	color: #f00;
 	font-weight: bold;
-	color: #666;
-}
-
-div.panel div.body div.toolbar button
-{
-	font-size: 85%;
-	font-weight: bold;
-	color: #666;
-}
-
-
-div.panel div.body div.toolbar input
-{
-	vertical-align: middle;
-}
-
-.layout-west .panel .body
-{
-	padding: 0;
-}
-
-div.treeview
-{
-	margin: 0.2em;
-	padding: 0.2em;
-}
-
-#navbar ul
-{
-	margin-left: 20px;
-}
-
-#navbar li.collapsed ul
-{
-	display: none;
-}
-#navbar li
-{
-	padding: 0.2em 0em;
-}
-#navbar a
-{
-	color: #333;
-	/*display: block;*/
-	text-decoration: none;
-	white-space: nowrap;
-}
-
-#navbar ul li a.current span
-{
-	background: lightblue;
-	padding: 0.2em;
-	color: #000;
-}
-
-#navbar img
-{
-
-	vertical-align: -20%;
-}
-
-#navbar img.collapsed
-{
-	background: url(../images/collapsed.png) no-repeat center center;
-}
-
-#navbar a:hover img.collapsed
-{
-	background-image: url(../images/collapsed-hover.png);
-}
-
-#navbar img.expanded
-{
-
-	background: url(../images/expanded.png) no-repeat center center;
-}
-
-#navbar a:hover img.expanded
-{
-	background-image: url(../images/expanded-hover.png);
-}
-#theme-gray
-{
-	height: 100%;
-}
-
-#theme-gray div.panel div.header
-{
-	background: #ddd url(../images/ofm-gard-top.png) top left repeat-x;
-}
-
-#theme-gray div.panel div.header h2
-{
-	color: #666;
-}
-
-#theme-gray div.border-layout div.split-bar
-{
-	background-color: #ddd;
-}
-
-#theme-gray div.panel div.body
-{
-	border-color: #d0d0d0;
-}
-
-#theme-gray div.layout-north div.panel div.header, #theme-gray div.layout-south div.panel div.header
-{
-	background-color: #000;
-}
-#theme-gray div.layout-north div.panel div.header a {
-	color: #aaa;
-}
-#theme-gray div.layout-north div.panel div.header a:hover {
-	color: #999;
-}
-
-#theme-gray div.layout-north div.panel div.header h2
-{
-	color: #ccc;
-}
-
-#theme-gray div.layout-south div.panel
-{
-	color: #999;
-}
-#theme-gray div.layout-south div.panel a
-{
-	margin: 0px;
-}
-
-#theme-gray div.layout-south div.panel a:hover
-{
-	color: #fff;
-}
-
-.row_on
-{
-	background-color: #eee;
-}
-
-.row_off
-{
-	background-color: #e9e9e9;
-}
-
-.row_on, .row_off
-{
-	padding: 3px;
-}
-
-.row_on:hover, .row_off:hover
-{
-	background-color: #fff;
-}
-
-thead, th, .th
-{
-	background: #ddd url(../images/ofm-gard-top.png) top left repeat-x;
-}
-
-.icon-about
-{
-	background-image: url(../images/icons/messagebox_info.png);
-}
-
-.icon-help
-{
-	background-image: url(../images/icons/help.png);
-}
-
-.icon-preferences
-{
-	background-image: url(../images/icons/identity.png);
-}
-
-
-.icon-logout
-{
-	background-image: url(../images/icons/lock.png);
+	text-align: center;
 }

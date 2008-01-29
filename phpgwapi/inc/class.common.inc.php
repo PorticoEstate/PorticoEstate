@@ -29,6 +29,7 @@
 		* @var array Debugging info from the API
 		*/
 		var $debug_info;
+		var $found_files;
 
 		/**
 		* @var array $output array to be converted by XSLT
@@ -43,10 +44,10 @@
 		* @param boolean $debug Debug flag
 		* @return integer 1 when str2 is newest (bigger version number) than str1
 		*/
-		public function cmp_version($str1,$str2,$debug=False)
+		function cmp_version($str1,$str2,$debug=False)
 		{
-			preg_match("/([0-9]+)\.([0-9]+)\.([0-9]+)[a-z]*([0-9]*)/i", $str1, $regs);
-			preg_match("/([0-9]+)\.([0-9]+)\.([0-9]+)[a-z]*([0-9]*)/i", $str2, $regs2);
+			ereg("([0-9]+)\.([0-9]+)\.([0-9]+)[a-zA-Z]*([0-9]*)",$str1,$regs);
+			ereg("([0-9]+)\.([0-9]+)\.([0-9]+)[a-zA-Z]*([0-9]*)",$str2,$regs2);
 			if($debug) { echo "<br />$regs[0] - $regs2[0]"; }
 
 			for($i=1;$i<5;++$i)
@@ -75,10 +76,10 @@
 		* @param boolean $debug Debug flag
 		* @return integer 1 when str2 is newest (bigger version number) than str1
 		*/
-		public function cmp_version_long($str1,$str2,$debug=False)
+		function cmp_version_long($str1,$str2,$debug=False)
 		{
-			preg_match("/([0-9]+)\.([0-9]+)\.([0-9]+)[a-z]*([0-9]*)\.([0-9]*)/i", $str1, $regs);
-			preg_match("/([0-9]+)\.([0-9]+)\.([0-9]+)[a-z]*([0-9]*)\.([0-9]*)/i", $str2, $regs2);
+			ereg("([0-9]+)\.([0-9]+)\.([0-9]+)[a-zA-Z]*([0-9]*)\.([0-9]*)",$str1,$regs);
+			ereg("([0-9]+)\.([0-9]+)\.([0-9]+)[a-zA-Z]*([0-9]*)\.([0-9]*)",$str2,$regs2);
 			if($debug) { echo "<br />$regs[0] - $regs2[0]"; }
 
 			for($i=1;$i<6;++$i)
@@ -112,7 +113,7 @@
 		* @return string SQL where clause
 		* @deprecated Use ACL class instead
 		*/
-		public function sql_search($table, $owner=0 )
+		function sql_search($table, $owner=0 )
 		{
 			echo 'common::sql_search() is a deprecated function - use ACL class instead';
 			if (!$owner)
@@ -137,10 +138,10 @@
 		*
 		* @return array List of installed languages
 		*/
-		public function getInstalledLanguages()
+		function getInstalledLanguages()
 		{
 			$GLOBALS['phpgw']->db->query('select distinct lang from phpgw_lang');
-			while ($GLOBALS['phpgw']->db->next_record()) 
+			while (@$GLOBALS['phpgw']->db->next_record()) 
 			{
 				$installedLanguages[$GLOBALS['phpgw']->db->f('lang')] = $GLOBALS['phpgw']->db->f('lang');
 			}
@@ -154,10 +155,10 @@
 		* Uses HTTP_ACCEPT_LANGUAGE (from the users browser) to find out which languages are installed
 		* @return string Users preferred language (two character ISO code)
 		*/
-		public function getPreferredLanguage()
+		function getPreferredLanguage()
 		{
 			// create a array of languages the user is accepting
-			$userLanguages = explode(',', phpgw::get_var('HTTP_ACCEPT_LANGUAGE', 'string', 'SERVER'));
+			$userLanguages = explode(',',$_SERVER['HTTP_ACCEPT_LANGUAGE']);
 			$supportedLanguages = $this->getInstalledLanguages();
 
 			// find usersupported language
@@ -192,7 +193,7 @@
 		* @param string $passwd LDAP password
 		* @return resource LDAP link identifier
 		*/
-		public function ldapConnect($host = '', $dn = '', $passwd = '')
+		function ldapConnect($host = '', $dn = '', $passwd = '')
 		{
 			if (! $host)
 			{
@@ -261,7 +262,7 @@
 		* @internal There may need to be some cleanup before hand
 		* @param boolean $call_footer When true then call footer else exit
 		*/
-		public function phpgw_exit($call_footer = False)
+		function phpgw_exit($call_footer = False)
 		{
 			if (!defined('PHPGW_EXIT'))
 			{
@@ -275,23 +276,19 @@
 			exit;
 		}
 
-		/**
-		* Do some cleaning up before we exit
-		*
-		* @internal called by register_shutdown_function()
-		*/
-		public function phpgw_final()
+		function phpgw_final()
 		{
-			static $final_called = null;
-			if ( is_null($final_called) )
+			if (!defined('PHPGW_FINAL'))
 			{
+				define('PHPGW_FINAL',True);
+
 				// call the asyncservice check_run function if it is not explicitly set to cron-only
+				//
 				if (!isset($GLOBALS['phpgw_info']['server']['asyncservice']) || !$GLOBALS['phpgw_info']['server']['asyncservice'] )
 				{
-					ExecMethod('phpgwapi.asyncservice.check_run', 'fallback');
+					ExecMethod('phpgwapi.asyncservice.check_run','fallback');
 				}
 				$GLOBALS['phpgw']->db->disconnect();
-				$final_called = true;
 			}
 		}
 
@@ -299,11 +296,12 @@
 		* Get random string of size $size
 		*
 		* @param integer $size Size of random string to return
-		* @return string randomly generated characters
+		* @return string STring with random generated characters and numbers
 		*/
-		public function randomstring($size = 20)
+		function randomstring($size)
 		{
 			$s = '';
+			srand((double)microtime()*1000000);
 			$random_char = array('0','1','2','3','4','5','6','7','8','9','a','b','c','d','e','f',
 				'g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v',
 				'w','x','y','z','A','B','C','D','E','F','G','H','I','J','K','L',
@@ -311,9 +309,15 @@
 
 			for ($i=0; $i<$size; ++$i)
 			{
-				$s .= $random_char[mt_rand(1,61)];
+				$s .= $random_char[rand(1,61)];
 			}
 			return $s;
+		}
+
+
+		function filesystem_separator()
+		{
+			return filesystem_separator();
 		}
 
 		/**
@@ -323,7 +327,7 @@
 		* @param string $text Heading error text
 		* @return string HTML table with error messages or empty string when there is no error/s
 		*/
-		public function error_list($errors, $text='Error')
+		function error_list($errors, $text='Error')
 		{
 			if (! is_array($errors))
 			{
@@ -348,11 +352,11 @@
 		* @param array $extravars URL parameter
 		* @deprecated use ACL instead
 		*/
-		public function check_owner($record, $link, $label, $extravars = array())
+		function check_owner($record, $link, $label, $extravars = array())
 		{
 			echo 'check_owner() is a depreciated function - use ACL class instead <br>';
 			$s = '<a href="' . $GLOBALS['phpgw']->link($link,$extravars) . '"> ' . lang($label) . ' </a>';
-			if ( preg_match('/^[0-9]+$/',$record))
+			if (ereg('^[0-9]+$',$record))
 			{
 				if ($record != $GLOBALS['phpgw_info']['user']['account_id'])
 				{
@@ -378,7 +382,7 @@
 		* @param string $lastname Lastname
 		* @return Fullname
 		*/
-		public function display_fullname($lid = '', $firstname = '', $lastname = '')
+		function display_fullname($lid = '', $firstname = '', $lastname = '')
 		{
 			if (! $lid && ! $firstname && ! $lastname)
 			{
@@ -429,7 +433,7 @@
 		* @param array menu data
 		* @returns array menu data
 		*/
-		public function display_mainscreen($appname, $file)
+		function display_mainscreen($appname, $file)
 		{
 			if(is_array($file))
 			{
@@ -466,7 +470,7 @@
 		* @param integer $accountid Account id
 		* @return string Users fullname
 		*/
-		public function grab_owner_name($accountid = '')
+		function grab_owner_name($accountid = '')
 		{
 			$GLOBALS['phpgw']->accounts->get_account_name($accountid,$lid,$fname,$lname);
 			return $this->display_fullname($lid,$fname,$lname);
@@ -476,33 +480,118 @@
 		* Create tabs
 		*
 		* @param array $tabs With ($id,$tab) pairs
-		* @param integer $selection array key of selected tab
+		* @param integer $selected Id of selected tab
+		* @param string $fontsize Optional font size
 		* @param boolean $lang When true use translation otherwise use given label
+		* @param boolean $no_image Do not use an image for the tabs
 		* @return string HTML output string
 		*/
-		public function create_tabs($tabs, $selection, $lang = false)
+		function create_tabs($tabs, $selected, $fontsize = '', $lang = False, $no_image = True)
 		{
-			$output = <<<HTML
-			<div class="yui-navset">
-				<ul class="yui-nav">
-
-HTML;
-			foreach($tabs as $id => $tab)
+			if($no_image)
 			{
-				$selected = $id == $selection ? ' class="selected"' : '';
-				$label = $lang ? lang($tab['label']) : $tab['label'];
-				$output .= <<<HTML
-					<li{$selected}><a href="{$tab['link']}"><em>{$label}</em></a></li>
-
-HTML;
+				$output_text = "<table style=\"{padding: 0px; border-collapse: collapse; width: 100%;}\">\n\t<tr>\n";
+//				$output_text = "<table style=\"{padding: 0px; width: 100%;}\">\n\t<tr>\n";
+				foreach($tabs as $id => $tab)
+				{
+					$output_text .= "\t\t" . '<th class="';
+					$output_text .= ($id != $selected ? 'in' : '');
+					$output_text .= 'activetab">';
+					$output_text .= '<a href="' . $tab['link'] . '">';
+					$output_text .= ($lang ? lang($tab['label']) : $tab['label']);
+					$output_text .= "</a></th>\n";
+//					$output_text .= "<th style=\"border-bottom: 1px solid #000000; \">&nbsp;</th>\n";
+				}
+				$output_text .= "\t\t" . '<th class="tablast">&nbsp;</th>' . "\n"; 
+				$output_text .= "\t</tr>\n</table>\n";
+				return $output_text;
 			}
-			$output .= <<<HTML
-				</ul>
-			</div>
+			
+			$output_text = '<table border="0" cellspacing="0" cellpadding="0"><tr>';
 
-HTML;
-			return $output;
+			/* This is a php3 workaround */
+			if(PHPGW_IMAGES_DIR == 'PHPGW_IMAGES_DIR')
+			{
+				$ir = ExecMethod('phpgwapi.phpgw.common.get_image_path', 'phpgwapi');
+			}
+			else
+			{
+				$ir = PHPGW_IMAGES_DIR;
+			}
 
+			if ($fontsize)
+			{
+				$fs  = '<font size="' . $fontsize . '">';
+				$fse = '</font>';
+			}
+
+			$i = 1;
+			if( !is_array($tabs) )
+			{
+				$tabs = array();
+			}
+			foreach($tabs as $tabs)
+			{
+				if ($tab[0] == $selected)
+				{
+					if ($i == 1)
+					{
+						$output_text .= '<td align="right"><img src="' . $ir . '/tabs-start1.gif" /></td>';
+					}
+
+					$output_text .= '<td nowrap="nowrap" align="left" background="' . $ir . '/tabs-bg1.gif">&nbsp;<strong><a href="'
+						. $tab[1]['link'] . '" class="tablink">' . $fs . $tab[1]['label']
+						. $fse . '</a></strong>&nbsp;</td>';
+					if ($i == count($tabs))
+					{
+						$output_text .= '<td align="left"><img src="' . $ir . '/tabs-end1.gif" /></td>';
+					}
+					else
+					{
+						$output_text .= '<td align="left"><img src="' . $ir . '/tabs-sepr.gif" /></td>';
+					}
+				}
+				else
+				{
+					if ($i == 1)
+					{
+						$output_text .= '<td align="right"><img src="' . $ir . '/tabs-start0.gif" /></td>';
+					}
+					$output_text .= '<td nowrap="nowrap" align="left" background="' . $ir . '/tabs-bg0.gif">&nbsp;<strong><a href="'
+						. $tab[1]['link'] . '" class="tablink">' . $fs . $tab[1]['label'] . $fse
+						. '</a></strong>&nbsp;</td>';
+					if (($i + 1) == $selected)
+					{
+						$output_text .= '<td align="left"><img src="' . $ir . '/tabs-sepl.gif" /></td>';
+					}
+					elseif ($i == $selected || $i != count($tabs))
+					{
+						$output_text .= '<td align="left"><img src="' . $ir . '/tabs-sepm.gif" /></td>';
+					}
+					elseif ($i == count($tabs))
+					{
+						if ($i == $selected)
+						{
+							$output_text .= '<td align="left"><img src="' . $ir . '/tabs-end1.gif" /></td>';
+						}
+						else
+						{
+							$output_text .= '<td align="left"><img src="' . $ir . '/tabs-end0.gif" /></td>';
+						}
+					}
+					else
+					{
+						if ($i != count($tabs))
+						{
+							$output_text .= '<td align="left"><img src="' . $ir . '/tabs-sepr.gif" /></td>';
+						}
+					}
+				}
+				++$i;
+				$output_text .= "\n";
+			}
+			$output_text .= "</table>\n";
+			return $output_text;
 		}
 
 		/**
@@ -511,7 +600,7 @@ HTML;
 		* @param string $appname Name of application defaults to $GLOBALS['phpgw_info']['flags']['currentapp']
 		* @return string|boolean Application directory or false
 		*/
-		public function get_app_dir($appname = '')
+		function get_app_dir($appname = '')
 		{
 			if ($appname == '')
 			{
@@ -545,7 +634,7 @@ HTML;
 		* @param string $appname Name of application, defaults to $GLOBALS['phpgw_info']['flags']['currentapp']
 		* @return string|boolean Include directory or false
 		*/
-		public function get_inc_dir($appname = '')
+		function get_inc_dir($appname = '')
 		{
 			if (! $appname)
 			{
@@ -647,7 +736,7 @@ HTML;
 		* @param string $appname application name optional can be derived from $GLOBALS['phpgw_info']['flags']['currentapp'];
 		* @param string? $layout optional can force the template set to a specific layout
 		*/
-		public function get_tpl_dir($appname = '',$layout = '')
+		function get_tpl_dir($appname = '',$layout = '')
 		{
 			if (! $appname)
 			{
@@ -710,7 +799,7 @@ HTML;
 		* @return boolean True when it is an image directory, otherwise false.
 		* @internal This is just a workaround for idots, better to use find_image, which has a fallback on a per image basis to the default dir
 		*/
-		public function is_image_dir($dir)
+		function is_image_dir($dir)
 		{
 			if (!@is_dir($dir))
 			{
@@ -736,7 +825,7 @@ HTML;
 		* @param string $appname Application name, defaults to $GLOBALS['phpgw_info']['flags']['currentapp']
 		* @return string|boolean Image directory of given application or false
 		*/
-		public function get_image_dir($appname = '')
+		function get_image_dir($appname = '')
 		{
 			if ($appname == '')
 			{
@@ -770,7 +859,7 @@ HTML;
 		* @param string $appname Appication name, defaults to $GLOBALS['phpgw_info']['flags']['currentapp']
 		* @return string|boolean Image directory path of given application or false
 		*/
-		public function get_image_path($appname = '')
+		function get_image_path($appname = '')
 		{
 			if ($appname == '')
 			{
@@ -799,71 +888,72 @@ HTML;
 			}
 		}
 
-		/**
-		* Find an image
-		*
-		* @internal caches look ups for faster response times on subsequent searches
-		* @param string $module the module to check first for the image
-		* @param string $image the image to look for - without the extension, this is added during the checks
-		* @return string the URL pointing to the image
-		*/
-		public static function find_image($module, $image)
+		function find_image($appname,$image)
 		{
-			static $found_files = null;
-			if ( !isset($found_files[$module]) || is_array($found_files[$module]) )
+			if ( !(isset($this->found_files[$appname]) && is_array($this->found_files[$appname]) ) )
 			{
-				$paths = array
-				(
-					"/{$module}/templates/base/images",
-					"/{$module}/templates/{$GLOBALS['phpgw_info']['user']['preferences']['common']['template_set']}/images"
-				);
+				$imagedir_default	= "/{$appname}/templates/base/images";
+				$imagedir = "/{$appname}/templates/{$GLOBALS['phpgw_info']['user']['preferences']['common']['template_set']}/images";
 
-				foreach ( $paths as $path )
+				if (@is_dir(PHPGW_INCLUDE_ROOT.$imagedir_default))
 				{
-					if ( is_dir(PHPGW_INCLUDE_ROOT . $path) )
+					$d = dir(PHPGW_INCLUDE_ROOT.$imagedir_default);
+					while (false != ($entry = $d->read()))
 					{
-						$d = dir(PHPGW_INCLUDE_ROOT . $path);
-						while (false != ($entry = $d->read()))
+						if ($entry != '.' && $entry != '..')
 						{
-							if ($entry == '.' || $entry == '..')
-							{
-								continue;
-							}
-							$found_files[$module][$entry] = $path;
+							$this->found_files[$appname][$entry] = $imagedir_default;
 						}
-						$d->close();
 					}
+					$d->close();
+				}
+
+				if (@is_dir(PHPGW_INCLUDE_ROOT.$imagedir))
+				{
+					$d = dir(PHPGW_INCLUDE_ROOT.$imagedir);
+					while (false != ($entry = $d->read()))
+					{
+						if ($entry != '.' && $entry != '..')
+						{
+							$this->found_files[$appname][$entry] = $imagedir;
+						}
+					}
+					$d->close();
 				}
 			}
 
-			$exts = array('.png', '.jpg', '');
-			foreach ( array($module, 'phpgwapi') as $module )
+			if(isset($this->found_files[$appname]["{$image}.png"]))
 			{
-				if ( !isset($found_files[$module]) )
-				{
-					continue;
-				}
-				foreach ( $exts as $ext )
-				{
-					if ( isset($found_files[$module]["{$image}{$ext}"]) )
-					{
-						return "{$GLOBALS['phpgw_info']['server']['webserver_url']}{$found_files[$module]["{$image}{$ext}"]}/{$image}{$ext}";
-					}
-				}
+				$imgfile = $GLOBALS['phpgw_info']['server']['webserver_url'].$this->found_files[$appname][$image.'.png'].'/'.$image.'.png';
 			}
-			return '';
+			elseif(isset($this->found_files[$appname]["{$image}.jpg"]))
+			{
+				$imgfile = $GLOBALS['phpgw_info']['server']['webserver_url'].$this->found_files[$appname][$image.'.jpg'].'/'.$image.'.jpg';
+			}
+			elseif(isset($this->found_files[$appname][$image]))
+			{
+				$imgfile = $GLOBALS['phpgw_info']['server']['webserver_url'].$this->found_files[$appname][$image].'/'.$image;
+			}
+			elseif(isset($this->found_files['phpgwapi']["{$image}.png"]))
+			{
+				$imgfile = $GLOBALS['phpgw_info']['server']['webserver_url'].$this->found_files['phpgwapi'][$image.'.png'].'/'.$image.'.png';
+			}
+			elseif(isset($this->found_files['phpgwapi']["{$image}.jpg"]))
+			{
+				$imgfile = $GLOBALS['phpgw_info']['server']['webserver_url'].$this->found_files['phpgwapi'][$image.'.jpg'].'/'.$image.'.jpg';
+			}
+			elseif(isset($this->found_files['phpgwapi'][$image]))
+			{
+				$imgfile = $GLOBALS['phpgw_info']['server']['webserver_url'].$this->found_files['phpgwapi'][$image].'/'.$image;
+			}
+			else
+			{
+				$imgfile = '';
+			}
+			return $imgfile;
 		}
 
-		/**
-		* Find an individual image
-		*
-		* @param string $module the module the image is for
-		* @param string $image the image to search for
-		* @param string $ext the filename extension of the image - should usually be an empty string
-		* @param bool $use_lang use a translated verison of the image
-		* @return string URL to image
-		*/
-		public static function image($module, $image = '', $ext = '', $use_lang = true)
+		function image($appname, $image='', $ext='', $use_lang=True)
 		{
 			if (!is_array($image))
 			{
@@ -876,54 +966,144 @@ HTML;
 
 			if ($use_lang)
 			{
-				foreach ( $image as $img )
+				while (list(,$img) = each($image))
 				{
 					$lang_images[] = $img . '_' . $GLOBALS['phpgw_info']['user']['preferences']['common']['lang'];
 					$lang_images[] = $img;
 				}
 				$image = $lang_images;
 			}
-
-			foreach ( $image as $img )
+			
+			$image_found = false;
+			while (!$image_found && (list(,$img) = each($image)))
 			{
-				$image_found = self::find_image($module, $img.$ext); 
-				if ( $image_found )
+				if(isset($this->found_files[$appname][$img.$ext]))
 				{
-					return $image_found;
+					$image_found = "{$GLOBALS['phpgw_info']['server']['webserver_url']}{$this->found_files[$appname][$img.$ext]}/{$img}{$ext}";
+				}
+				else
+				{
+					$image_found = $this->find_image($appname, $img.$ext);
 				}
 			}
-			return '';
+			//echo "image: {" . print_r($image, true) . " image_found: {$image_found}<br />\n";
+			return $image_found;
 		}
 
-		/**
-		* Find an individual "mouse over" image
-		*
-		* @param string $module the module the image is for
-		* @param string $image the image to search for
-		* @param string $ext the extension used to indicate a "mouse ob" image
-		* @return string URL to image
-		*/
-		public function image_on($appname, $image, $extension = '_on')
+		function image_on($appname,$image,$extension='_on')
 		{
 			$with_extension = $this->image($appname,$image,$extension);
-			if ( $with_extension )
+			$without_extension = $this->image($appname,$image);
+			if($with_extension != '')
 			{
 				return $with_extension;
 			}
-			
-			$without_extension = $this->image($appname,$image);
-			if ( $without_extension )
+			elseif($without_extension != '')
 			{
 				return $without_extension;
 			}
+			else
+			{
+				return '';
+			}
+		}
 
-			return '';
+		function navbar()
+		{
+			$GLOBALS['phpgw_info']['navbar']['home']['title'] = 'Home';
+			$GLOBALS['phpgw_info']['navbar']['home']['url']   = $GLOBALS['phpgw']->link('/home.php');
+			$GLOBALS['phpgw_info']['navbar']['home']['icon']  = $this->image('phpgwapi',Array('home','nonav'));
+			$GLOBALS['phpgw_info']['navbar']['home']['icon_hover']  = $this->image_on('phpgwapi',Array('home','nonav'),'-over');
+
+			list($first) = each($GLOBALS['phpgw_info']['user']['apps']);
+			if ( isset($GLOBALS['phpgw_info']['user']['apps']['admin'])
+				&& is_array($GLOBALS['phpgw_info']['user']['apps']['admin']) 
+				&& $first != 'admin')
+			{
+				$newarray['admin'] = $GLOBALS['phpgw_info']['user']['apps']['admin'];
+				foreach($GLOBALS['phpgw_info']['user']['apps'] as $index => $value)
+				{
+					if($index != 'admin')
+					{
+						$newarray[$index] = $value;
+					}
+				}
+				$GLOBALS['phpgw_info']['user']['apps'] = $newarray;
+				reset($GLOBALS['phpgw_info']['user']['apps']);
+			}
+			unset($index);
+			unset($value);
+			unset($newarray);
+			
+			foreach($GLOBALS['phpgw_info']['user']['apps'] as $app => $data)
+			{
+				if (is_long($app))
+				{
+					continue;
+				}
+
+				if ($app == 'preferences' || $GLOBALS['phpgw_info']['apps'][$app]['status'] != 2 && $GLOBALS['phpgw_info']['apps'][$app]['status'] != 3)
+				{
+					$GLOBALS['phpgw_info']['navbar'][$app]['title'] = $GLOBALS['phpgw_info']['apps'][$app]['title'];
+					$GLOBALS['phpgw_info']['navbar'][$app]['url']   = $GLOBALS['phpgw']->link('/' . $app . '/index.php');
+					$GLOBALS['phpgw_info']['navbar'][$app]['name']  = $app;
+
+					if ($app != $GLOBALS['phpgw_info']['flags']['currentapp'])
+					{
+						$GLOBALS['phpgw_info']['navbar'][$app]['icon']  = $this->image($app,Array('navbar','nonav'));
+						$GLOBALS['phpgw_info']['navbar'][$app]['icon_hover']  = $this->image_on($app,Array('navbar','nonav'),'-over');
+					}
+					else
+					{
+						$GLOBALS['phpgw_info']['navbar'][$app]['icon']  = $this->image_on($app,Array('navbar','nonav'),'-over');
+						$GLOBALS['phpgw_info']['navbar'][$app]['icon_hover']  = $this->image($app,Array('navbar','nonav'));
+					}
+
+					if($GLOBALS['phpgw_info']['navbar'][$app]['icon'] == '')
+					{
+						$GLOBALS['phpgw_info']['navbar'][$app]['icon']  = $this->image('phpgwapi','nonav');
+					}
+				}
+			}
+			if ($GLOBALS['phpgw_info']['flags']['currentapp'] == 'home' || $GLOBALS['phpgw_info']['flags']['currentapp'] == 'preferences' || $GLOBALS['phpgw_info']['flags']['currentapp'] == 'about')
+			{
+				$app = $app_title = 'phpGroupWare';
+			}
+			else
+			{
+				$app = $GLOBALS['phpgw_info']['flags']['currentapp'];
+				$app_title = lang($app);
+			}
+
+			if (isset($GLOBALS['phpgw_info']['user']['apps']['preferences']) 
+				&& $GLOBALS['phpgw_info']['user']['apps']['preferences'])	// preferences last
+			{
+				$prefs = $GLOBALS['phpgw_info']['navbar']['preferences'];
+				unset($GLOBALS['phpgw_info']['navbar']['preferences']);
+				$GLOBALS['phpgw_info']['navbar']['preferences'] = $prefs;
+			}
+
+			// We handle this here becuase its special
+			if(isset($GLOBALS['phpgw_info']['navbar']['manual']))
+			{
+				$GLOBALS['phpgw_info']['navbar']['manual']['url']   = "javascript:openwindow('" . $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'manual.uimanual.help', 'app' => isset($GLOBALS['phpgw_info']['apps']['manual']['app']) && $GLOBALS['phpgw_info']['apps']['manual']['app'] ? $GLOBALS['phpgw_info']['apps']['manual']['app'] : $app, 'section' => isset($GLOBALS['phpgw_info']['apps']['manual']['section'])?$GLOBALS['phpgw_info']['apps']['manual']['section']:'')) . "','700','600')";
+			}
+
+			$GLOBALS['phpgw_info']['navbar']['about']['title'] = lang('About %1', $app_title);
+			$GLOBALS['phpgw_info']['navbar']['about']['url']   = $GLOBALS['phpgw']->link('/about.php', array('app' => $app) );
+			$GLOBALS['phpgw_info']['navbar']['about']['icon']  = $this->image('phpgwapi',Array('about','nonav'));
+			$GLOBALS['phpgw_info']['navbar']['about']['icon_hover']  = $this->image_on('phpgwapi',Array('about','nonav'),'-over');
+
+			$GLOBALS['phpgw_info']['navbar']['logout']['title'] = 'Logout';
+			$GLOBALS['phpgw_info']['navbar']['logout']['url']   = $GLOBALS['phpgw']->link('/logout.php');
+			$GLOBALS['phpgw_info']['navbar']['logout']['icon']  = $this->image('phpgwapi',Array('logout','nonav'));
+			$GLOBALS['phpgw_info']['navbar']['logout']['icon_hover']  = $this->image_on('phpgwapi',Array('logout','nonav'),'-over');
 		}
 
 		/**
 		* Load header.inc.php for an application
 		*/
-		public function app_header()
+		function app_header()
 		{
 			if (file_exists(PHPGW_APP_INC . '/header.inc.php'))
 			{
@@ -934,18 +1114,11 @@ HTML;
 		/**
 		* Load the phpgw header
 		*/
-		public function phpgw_header($navbar = False)
+		function phpgw_header($navbar = False)
 		{
-			static $called = false;
-			if ( $called )
-			{
-				return;
-			}
-
-			$called = true;
-
-			include_once(PHPGW_INCLUDE_ROOT . '/phpgwapi/templates/' . $GLOBALS['phpgw_info']['server']['template_set'] . '/head.inc.php');
-			include_once(PHPGW_INCLUDE_ROOT . '/phpgwapi/templates/' . $GLOBALS['phpgw_info']['server']['template_set'] . '/navbar.inc.php');
+			include(PHPGW_INCLUDE_ROOT . '/phpgwapi/templates/' . $GLOBALS['phpgw_info']['server']['template_set'] . '/head.inc.php');
+			$this->navbar(False);
+			include(PHPGW_INCLUDE_ROOT . '/phpgwapi/templates/' . $GLOBALS['phpgw_info']['server']['template_set'] . '/navbar.inc.php');
 			if ($navbar)
 			{
 				echo parse_navbar();
@@ -958,15 +1131,12 @@ HTML;
 			}
 		}
 
-		/**
-		* Render the page footer
-		*/
-		public function phpgw_footer()
+		function phpgw_footer()
 		{
-			static $footer_rendered = false;
-			if ( !$footer_rendered )
+			if (!defined('PHPGW_FOOTER'))
 			{
-				$footer_rendered = true;
+				define('PHPGW_FOOTER',True);
+
 				/* used for xslt apps without xslt framework */
 				if ( isset($GLOBALS['phpgw_info']['flags']['xslt_app'])
 					&& $GLOBALS['phpgw_info']['flags']['xslt_app'] )
@@ -974,8 +1144,7 @@ HTML;
 					$GLOBALS['phpgw']->xslttpl->pparse();
 				}
 
-				if ( !isset($GLOBALS['phpgw_info']['flags']['nofooter']) 
-					|| !$GLOBALS['phpgw_info']['flags']['nofooter'] )
+				if (!isset($GLOBALS['phpgw_info']['flags']['nofooter']) || !$GLOBALS['phpgw_info']['flags']['nofooter'])
 				{
 					include(PHPGW_API_INC . '/footer.inc.php');
 				}
@@ -992,7 +1161,7 @@ HTML;
 		* @author Dave Hall skwashd at phpgroupware.org
 		* @return string Template including CSS definitions
 		*/
-		public function get_css()
+		function get_css()
 		{
 			$all_css = '';
 			if( isset($GLOBALS['phpgw']->css) && is_object($GLOBALS['phpgw']->css) )
@@ -1031,7 +1200,7 @@ HTML;
 		* Backwards compatibility method
 		* @see get_javascript
 		*/
-		public function get_java_script()
+		function get_java_script()
 		{
 			return $this->get_javascript();
 		}
@@ -1046,7 +1215,7 @@ HTML;
 		* @author Dave Hall skwashd at phpgroupware.org
 		* @return string The JavaScript code to include
 		*/
-		public function get_javascript()
+		function get_javascript()
 		{
 			$js = '';
 			if( isset($GLOBALS['phpgw']->js) && is_object($GLOBALS['phpgw']->js))
@@ -1073,13 +1242,13 @@ HTML;
 			return $js;
 		}
 		
-		/**
+				/**
 		* Get window.on* events from javascript class
 		*
 		* @author Dave Hall skwashd at phpgroupware.org
 		* @return string the wndow events to be used or empty
 		*/
-		public function get_on_events()
+		function get_on_events()
 		{
 			if(@is_object($GLOBALS['phpgw']->js))
 			{
@@ -1091,16 +1260,10 @@ HTML;
 			}
 		}
 
-		/**
-		* Convert hexadecimal data into binary
-		*
-		* @param string $data hexidecimal data as a string
-		* @return string binary value of $data;
-		*/
-		public function hex2bin($data)
+		function hex2bin($data)
 		{
 			$len = strlen($data);
-			return pack('H' . $len, $data);
+			return @pack('H' . $len, $data);
 		}
 
 		/**
@@ -1109,7 +1272,7 @@ HTML;
 		* @param string $data Data to be encrypted
 		* @return string Encrypted data
 		*/
-		public function encrypt($data)
+		function encrypt($data)
 		{
 			return $GLOBALS['phpgw']->crypto->encrypt($data);
 		}
@@ -1119,7 +1282,7 @@ HTML;
 		* @param string $data Data to be decrypted
 		* @return string Decrypted data
 		*/
-		public function decrypt($data)
+		function decrypt($data)
 		{
 			return $GLOBALS['phpgw']->crypto->decrypt($data);
 		}
@@ -1131,7 +1294,7 @@ HTML;
 		* @param string $random Random seed
 		* @return string DES encrypted password
 		*/
-		public function des_cryptpasswd($userpass, $random)
+		function des_cryptpasswd($userpass, $random)
 		{
 			$lcrypt = '{crypt}';
 			$password = crypt($userpass, $random);
@@ -1148,7 +1311,7 @@ HTML;
 		* @param string $random Random seed
 		* @return string MD5 encrypted password
 		*/ 
-		public function md5_cryptpasswd($userpass)
+		function md5_cryptpasswd($userpass)
 		{
 			return '{md5}' . base64_encode(pack('H*', md5($userpass)));
 		}
@@ -1159,7 +1322,7 @@ HTML;
 		* @param string $password Password to encrypt
 		* @return Encrypted password or false
 		*/
-		public function encrypt_password($password)
+		function encrypt_password($password)
 		{
 			if (strtolower($GLOBALS['phpgw_info']['server']['ldap_encryption_type']) == 'des')
 			{
@@ -1182,7 +1345,7 @@ HTML;
 		* @param integer $app Application id to find current position
 		* @return integer Applications position or -1
 		*/
-		public function find_portal_order($app)
+		function find_portal_order($app)
 		{
 			if(!is_array($GLOBALS['phpgw_info']['user']['preferences']['portal_order']))
 			{
@@ -1208,7 +1371,7 @@ HTML;
 		* @return mixed Result of $GLOBALS['phpgw']->session->appsession()
 		* @deprecated
 		*/
-		public function appsession($data = '##NOTHING##')
+		function appsession($data = '##NOTHING##')
 		{
 			echo 'common::appsession() is a depreciated function'
 				. " - use session::appsession() instead<br>\n";
@@ -1223,7 +1386,7 @@ HTML;
 		* @param string $format Date format, defaults to user preferences
 		* @return string Formated date
 		*/
-		public function show_date($t = '', $format = '')
+		function show_date($t = '', $format = '')
 		{
 			if (!$t || (substr(php_uname(), 0, 7) == "Windows" && intval($t) <= 0))
 			{
@@ -1257,7 +1420,7 @@ HTML;
 		* @param boolean $add_seperator Use separator, defaults to space
 		* @return string Formatted date
 		*/
-		public function dateformatorder($yearstr,$monthstr,$daystr,$add_seperator = False)
+		function dateformatorder($yearstr,$monthstr,$daystr,$add_seperator = False)
 		{
 			$dateformat = strtolower($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']);
 			$sep = substr($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'],1,1);
@@ -1285,7 +1448,7 @@ HTML;
 		* @param integer $sec Second
 		* @return string Time formatted as hhmmss with am/pm
 		*/
-		public function formattime($hour, $min = 0, $sec = null)
+		function formattime($hour, $min = 0, $sec = null)
 		{
 			die('use phpgwapi_datetime::format_time()');
 		}
@@ -1297,7 +1460,7 @@ HTML;
 		* @param integer $account_id Account id, defaults to phpgw_info['user']['account_id']
 		* @internal This is not the best place for it, but it needs to be shared between Aeromail and SM
 		*/
-		public function create_emailpreferences($prefs='',$accountid='')
+		function create_emailpreferences($prefs='',$accountid='')
 		{
 			return $GLOBALS['phpgw']->preferences->create_email_preferences($accountid);
 			// Create the email Message Class if needed
@@ -1328,7 +1491,7 @@ HTML;
 		* @return string HTML string with code check result message
 		* @internal This will be moved into the applications area
 		*/
-		public function check_code($code)
+		function check_code($code)
 		{
 			$s = '<br />';
 			switch ($code)
@@ -1422,7 +1585,7 @@ HTML;
 		* @param integer $line Line number of error
 		* @param string $file Filename in which the error occured
 		*/
-		public function phpgw_error($error,$line = '', $file = '') 
+		function phpgw_error($error,$line = '', $file = '') 
 		{
 			echo '<p><strong>phpGroupWare internal error:</strong><p>'.$error;
 			if ($line)
@@ -1442,7 +1605,7 @@ HTML;
 		*
 		* @internal Works on systems with grep only
 		*/
-		public function debug_list_core_functions()
+		function debug_list_core_functions()
 		{
 			echo 'common::debug_list_core_functions() is deprecated - no output generated!<br />';
 		}
@@ -1455,7 +1618,7 @@ HTML;
 		* @param integer $max Maximum of id range
 		* @return integer|boolean Next available id or false
 		*/
-		public function next_id($appname,$min=0,$max=0)
+		function next_id($appname,$min=0,$max=0)
 		{
 			if (!$appname)
 			{
@@ -1499,7 +1662,7 @@ HTML;
 		* @param integer $max Maximum of id range
 		* @return integer|boolean Last used id or false
 		*/
-		public function last_id($appname,$min=0,$max=0)
+		function last_id($appname,$min=0,$max=0)
 		{
 			if (!$appname)
 			{
@@ -1539,10 +1702,7 @@ HTML;
 			}
 		}
 
-		/**
-		* Starts capturing all output so it can be used by the XSLT temaplte engine
-		*/
-		public function start_xslt_capture()
+		function start_xslt_capture()
 		{
 			if (!isset($GLOBALS['phpgw_info']['xslt_capture']))
 			{
@@ -1551,14 +1711,10 @@ HTML;
 			}
 		}
 
-		/**
-		* Stops capturing all output and uses it in the XSLT temaplte engine by stuffing it 
-		* into an xml node called "body_data"
-		*
-		* @internal Note: need to be run BEFORE exit is called, as buffers get flushed automatically before
-		* any registered shutdown-functions (eg. phpgw_footer) gets called
-		*/
-		public function stop_xslt_capture()
+		/* Note: need to be run BEFORE exit is called, as buffers get flushed automatically before
+		 *       any registered shutdown-functions (eg. phpgw_footer) gets called
+		 */
+		function stop_xslt_capture()
 		{
 			if (isset($GLOBALS['phpgw_info']['xslt_capture']))
 			{
@@ -1580,7 +1736,8 @@ HTML;
 		* @param string $base ???
 		* @returns ????
 		*/
-		public function msgbox($text = '', $type = True, $base = '')
+
+		function msgbox($text = '', $type = True, $base = '')
 		{
 			if ($text=='' && @isset($GLOBALS['phpgw_info']['flags']['msgbox_data']))
 			{
@@ -1592,7 +1749,7 @@ HTML;
 				return;
 			}
 
-			$GLOBALS['phpgw']->xslttpl->add_file($this->get_tpl_dir('phpgwapi','base') . '/msgbox');
+			$GLOBALS['phpgw']->xslttpl->add_file($this->get_tpl_dir('phpgwapi','base') . SEP . 'msgbox');
 
 		//	$prev_helper = $GLOBALS['phpgw']->translation->translator_helper;
 		//	$GLOBALS['phpgw']->translation->translator_helper = '';
@@ -1664,7 +1821,7 @@ HTML;
 		* @returns array for use with msgbox
 		*/
 		
-		public function msgbox_data($receipt)
+		function msgbox_data($receipt)
 		{
 			$msgbox_data_error=array();
 			if (isSet($receipt['error']) AND is_array($receipt['error']))

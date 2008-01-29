@@ -1107,7 +1107,7 @@ Project ID	property	en	Project ID
 Project name	property	en	Project name
 Project start date	property	en	Project start date
 propagate	property	en	propagate
-property	common	en	Facilities Management
+property	property	en	property
 Property has been edited	property	en	Property has been edited
 Property has been saved	property	en	Property has been saved
 property id	property	en	property id
@@ -1440,7 +1440,7 @@ Sum calculation	property	en	Sum calculation
 Sum deviation	property	en	Sum deviation
 Sum of calculation	property	en	Sum of calculation
 Sum tax	property	en	Sum tax
-Sum workorder	property	en	Sum workorder
+Sum	workorder	property	en	Sum workorder
 Summary	property	en	Summary
 Supervisor	property	en	Supervisor
 table %1 has been saved	property	en	table %1 has been saved

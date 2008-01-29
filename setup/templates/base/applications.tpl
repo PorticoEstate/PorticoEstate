@@ -33,16 +33,16 @@ function check_all(strTargetAction)
 			<th>{app_status}</th>
 			<th>{app_currentver}</th>
 			<th>{app_version}</th>
-			<th class="checkcell">
+			<th>
 				{app_install}<br>
 				<a href="javascript:check_all('install')"><img src="../phpgwapi/templates/base/images/{check}" title="{install_all}" alt="{install_all}"></a>
 			</th>
-			<th class="checkcell">
+			<th>
 				{app_upgrade}<br>
 				<a href="javascript:check_all('upgrade')"><img src="../phpgwapi/templates/base/images/{check}" title="{install_all}" alt="{install_all}"></a>
 			</th>
 			<th>{app_resolve}</th>
-			<th class="checkcell">
+			<th>
 				{app_remove}<br>
 				<a href="javascript:check_all('remove')"><img src="../phpgwapi/templates/base/images/{check}" title="{install_all}" alt="{install_all}"></a>
 			</th>
@@ -58,18 +58,18 @@ function check_all(strTargetAction)
 			<td>{appinfo}</td>
 			<td>{currentver}</td>
 			<td>{version}</td>
-			<td class="{row_install} checkcell">{install}</td>
-			<td class="{row_upgrade} checkcell">{upgrade}</td>
-			<td class="checkcell">{resolution}&nbsp;</td>
-			<td class="{row_remove} checkcell">{remove}</td>
+			<td class="{row_install} centered">{install}</td>
+			<td class="{row_upgrade} centered">{upgrade}</td>
+			<td class="centered">{resolution}&nbsp;</td>
+			<td class="{row_remove} centered">{remove}</td>
 		</tr>
 <!-- END apps -->
 
 <!-- BEGIN detail -->
-		<li>
-			<strong>{name}</strong><br>
-			{details}
-		</li>
+  <tr class="{bg_color}">
+    <td>{name}&nbsp;</td>
+    <td>{details}&nbsp;</td>
+  </tr>
 <!-- END detail -->
 
 <!-- BEGIN table -->
@@ -104,14 +104,14 @@ function check_all(strTargetAction)
   </tbody>
   <tr class="th">
     <td colspan="5">{debug} {lang_debug}</td>
-    <td class="checkcell">
+    <td align="center">
      <a href="javascript:check_all('install')"><img src="../phpgwapi/templates/base/images/{check}" title="{install_all}" alt="{install_all}"></a>
     </td>
-    <td class="checkcell">
+    <td align="center">
      <a href="javascript:check_all('upgrade')"><img src="../phpgwapi/templates/base/images/{check}" title="{upgrade_all}" alt="{upgrade_all}"></a>
     </td>
     <td>&nbsp;</td>
-    <td class="checkcell">
+    <td align="center">
       <a href="javascript:check_all('remove')"><img src="../phpgwapi/templates/base/images/{check}" title="{remove_all}" alt="{remove_all}"></a>
     </td>
   </tr>
@@ -124,7 +124,6 @@ function check_all(strTargetAction)
 <!-- END app_footer -->
 
 <!-- BEGIN footer -->
-	{footer_text}
 	<div class="banner"> </div>
 </div>
 <!-- END footer -->

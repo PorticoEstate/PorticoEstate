@@ -16,7 +16,7 @@
 	 * @package property
 	 */
 
-	class admin_ui_custom
+	class ui_custom
 	{
 		var $grants;
 		var $start;
@@ -35,7 +35,7 @@
 			'edit_custom_function'	=> True
 		);
 
-		public function __construct()
+		function ui_custom()
 		{
 			$this->bo					= CreateObject('admin.bo_custom',True);
 
@@ -53,8 +53,6 @@
 			$this->account				= $GLOBALS['phpgw_info']['user']['account_id'];
 			$this->bolocation			= CreateObject('preferences.boadmin_acl');
 			$this->bolocation->acl_app 	= $this->appname;
-
-			$GLOBALS['phpgw_info']['flags']['menu_selection'] = "admin::{$this->appname}";
 		}
 
 		function save_sessiondata()
@@ -79,8 +77,6 @@
 			$location	= $this->location;
 			$id			= phpgw::get_var('id', 'int');
 			$resort		= phpgw::get_var('resort');
-
-			$GLOBALS['phpgw_info']['flags']['menu_selection'] .= '::list_atrribs';
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array(
 								'custom',
@@ -426,16 +422,7 @@
 				'lang_location_statustext'			=> lang('Select submodule'),
 				'select_name_location'				=> 'values[location]',
 
-				'location_list'						=> $this->bolocation->select_location('select',(isset($values['location'])?$values['location']:''),False,True),
-
-				'value_disabled'					=> isset($values['disabled']) ? $values['disabled'] : '',
-				'lang_disabled'						=> lang('disabled'),
-				'lang_disabled_statustext'			=> lang('This attribute turn up as disabled in the form'),
-
-				'value_helpmsg'						=> isset($values['helpmsg']) ? $values['helpmsg'] : '',
-				'lang_helpmsg'						=> lang('help message'),
-				'lang_helpmsg_statustext'			=> lang('Enables help message for this attribute'),
-				'value_location'					=> isset($values['location']) ? $values['location'] : ''
+				'location_list'						=> $this->bolocation->select_location('select',(isset($values['location'])?$values['location']:''),False,True)
 			);
 //_debug_array($values);
 
@@ -447,8 +434,6 @@
 
 		function list_custom_function()
 		{
-			$GLOBALS['phpgw_info']['flags']['menu_selection'] .= '::list_functions';
-
 			$appname	= $this->appname;
 			$location	= $this->location;
 			$id			= phpgw::get_var('id', 'int');
@@ -589,7 +574,6 @@
 
 		function edit_custom_function()
 		{
-			$GLOBALS['phpgw_info']['flags']['menu_selection'] .= '::list_functions';
 			$appname	= $this->appname;
 			$location	= $this->location;
 			$id			= phpgw::get_var('id', 'int');

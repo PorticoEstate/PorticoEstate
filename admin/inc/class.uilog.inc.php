@@ -11,28 +11,29 @@
 
 	/* $Id: class.uilog.inc.php 18358 2007-11-27 04:43:37Z skwashd $ */
 
-	class admin_uilog
+	class uilog
 	{
-		private $template;
-		public $public_functions = array
+		var $template;
+		var $public_functions = array
 		(
 			'list_log'	=> true,
 			'purge_log'	=> true
 		);
 
-		public function __construct()
+		function uilog()
 		{
 			if ($GLOBALS['phpgw']->acl->check('error_log_access',1,'admin'))
 			{
 				$GLOBALS['phpgw']->redirect_link('/index.php');
 			}
 			
+			$this->bo         = createobject('admin.bolog');
+			$this->nextmatchs = createobject('phpgwapi.nextmatchs');
 			$this->template   =& $GLOBALS['phpgw']->template;
 
-			$GLOBALS['phpgw_info']['flags']['menu_selection'] = 'admin::admin::error_log';
 		}
 
-		public function list_log()
+		function list_log()
 		{
 			if ($GLOBALS['phpgw']->acl->check('error_log_access',1,'admin'))
 			{
@@ -60,18 +61,16 @@
 				$GLOBALS['phpgw_info']['flags']['app_header'] .= ' ' . lang('for') . ' ' . $GLOBALS['phpgw']->common->grab_owner_name($account_id);
 			}
 			
-			$GLOBALS['phpgw']->common->phpgw_header(true);
+			$GLOBALS['phpgw']->common->phpgw_header();
+			echo parse_navbar();
 
-			$bo = createObject('admin.bolog');
-			$nextmatches = createObject('phpgwapi.nextmatchs');
-
-			$total_records = $bo->total($account_id);
+			$total_records = $this->bo->total($account_id);
 
 			$var = array
 			(
-				'nextmatchs_left'  => $nextmatches->left('/index.php',$start,$total_records,'&menuaction=admin.uilog.list_log&account_id=' . $account_id),
-				'nextmatchs_right' => $nextmatches->right('/index.php',$start,$total_records,'&menuaction=admin.uilog.list_log&account_id=' . $account_id),
-				'showing'          => $nextmatches->show_hits($total_records,$start),
+				'nextmatchs_left'  => $this->nextmatchs->left('/index.php',$start,$total_records,'&menuaction=admin.uilog.list_log&account_id=' . $account_id),
+				'nextmatchs_right' => $this->nextmatchs->right('/index.php',$start,$total_records,'&menuaction=admin.uilog.list_log&account_id=' . $account_id),
+				'showing'          => $this->nextmatchs->show_hits($total_records,$start),
 				'lang_loginid'     => lang('LoginID'),
 				'lang_date'        => lang('time'),
 				'lang_app'         => lang('module'),
@@ -84,7 +83,7 @@
 
 			$this->template->set_var($var);
 
-			$records = $bo->list_log($account_id,$start,$order,$sort);
+			$records = $this->bo->list_log($account_id,$start,$order,$sort);
 			if ( !is_array($records) || !count($records) )
 			{
 				$this->template->set_var(array
@@ -100,7 +99,7 @@
 				foreach ( $records as $record )
 				{
 
-					$tr_class = $nextmatches->alternate_row_class($tr_class);
+					$tr_class = $this->nextmatchs->alternate_row_class($tr_class);
 					$this->template->set_var(array
 					(
 						'row_date' 		=> $record['log_date'],
@@ -160,13 +159,13 @@
 			$this->template->pfp('out','list');
 		}
 		
-		public function purge_log()
+		function purge_log()
 		{
 			if ($GLOBALS['phpgw']->acl->check('error_log_access',1,'admin'))
 			{
 				$GLOBALS['phpgw']->redirect_link('/index.php');
 			}
-			execMethod('admin.bolog.purge_log', phpgw::get_var('account_id', 'int') );
+			$this->bo->purge_log( phpgw::get_var('account_id', 'int') );
 			$GLOBALS['phpgw']->redirect_link('index.php', array('menuaction', 'admin.uilog.list_log'));
 		}
 	}

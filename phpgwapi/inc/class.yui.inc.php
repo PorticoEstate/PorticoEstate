@@ -139,10 +139,6 @@
 					$load = array('element-beta', 'tabview');
 					break;
 
-				case 'treeview-hacked':
-					$load = array('treeview-hacked');
-					break;
-
 				case 'treeview':
 					$load = array('treeview');
 					break;

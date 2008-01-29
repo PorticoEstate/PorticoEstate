@@ -44,7 +44,7 @@
 		{
 
 			$GLOBALS['phpgw_info']['flags']['currentapp']	=	'property';
-		//	$this->currentapp		= $GLOBALS['phpgw_info']['flags']['currentapp'];
+			$this->currentapp		= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			if (!is_object($GLOBALS['phpgw']->asyncservice))
 			{
 				$GLOBALS['phpgw']->asyncservice = CreateObject('phpgwapi.asyncservice');
@@ -258,7 +258,7 @@
 		{
 			if(!$method)
 			{
-				$method = 'property' .'.boalarm.send_alarm';
+				$method = $this->currentapp .'.boalarm.send_alarm';
 			}
 //			echo "<p>save_alarm(event_id=$event_id, alarm="; print_r($alarm); echo ")</p>\n";
 
@@ -388,7 +388,7 @@
 			// build subject
 			$subject = lang('Alarm').': '.$alarm['event_name'];
 
-			$prefs_user = $this->bocommon->create_preferences('property',$alarm['owner']);
+			$prefs_user = $this->bocommon->create_preferences($this->currentapp,$alarm['owner']);
 
 			$from_address=$prefs_user['email'];
 
@@ -403,7 +403,7 @@
 
 			$current_user_name= $user_firstname . " " .$user_lastname ;
 
-			$current_prefs_user = $this->bocommon->create_preferences('property',$alarm['owner']);
+			$current_prefs_user = $this->bocommon->create_preferences($this->currentapp,$alarm['owner']);
 			$current_user_address=$current_prefs_user['email'];
 
 			$headers = "Return-Path: <". $current_user_address .">\r\n";
@@ -433,7 +433,7 @@
 			{
 				if ($members[$i]['account_id'])
 				{
-					$prefs = $this->bocommon->create_preferences('property',$members[$i]['account_id']);
+					$prefs = $this->bocommon->create_preferences($this->currentapp,$members[$i]['account_id']);
 					if (strlen($prefs['email'])> (strlen($members[$i]['account_name'])+1))
 					{
 						$toarray[$prefs['email']] = $prefs['email'];

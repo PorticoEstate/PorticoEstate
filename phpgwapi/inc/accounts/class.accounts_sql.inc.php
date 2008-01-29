@@ -19,9 +19,9 @@
 	*/
 	class accounts_sql extends accounts_
 	{
-		function __construct($account_id = null, $account_type = null)
+		function accounts_sql($account_id = null, $account_type = null)
 		{
-			parent::__construct($account_id, $account_type);
+			parent::accounts($account_id, $account_type);
 		}
 
 		function list_methods($_type='xmlrpc')
@@ -244,14 +244,14 @@
 		{
 			static $lid_list;
 
-			$account_id = (int)$account_id;
+			(int)$account_id;
 
 			if (! $account_id)
 			{
 				return '';
 			}
 
-			if( isset($lid_list[$account_id]) ) 
+			if( isset($lid_list[$account_id]) && $id_list[$account_id] ) 
 			{
 				return $lid_list[$account_id];
 			}
@@ -269,37 +269,29 @@
 			return $lid_list[$account_id];
 		}
 
-		/**
-		* Convert an id into its corresponding account or group name
-		*
-		* @param integer $id Account or group id
-		* @param bool $only_lid only return the account_lid for the user, should not be used when output is displayed to other users
-		* @return string Name of the account or the group when found othwerwise empty string
-		*/
 		function id2name($account_id)
 		{
 			static $id_list;
 
-			$account_id = (int) $account_id;
-
 			if (! $account_id)
 			{
-				return '';
+				return False;
 			}
 
-			if( isset($id_list[$account_id]) ) 
+			if( isset($id_list[$account_id]) && $id_list[$account_id] ) 
 			{
 				return $id_list[$account_id];
 			}
 
-			$this->db->query("SELECT account_lid, account_firstname, account_lastname FROM phpgw_accounts WHERE account_id={$account_id}", __LINE__, __FILE__);
-			if($this->db->next_record())
+			$this->db->query('SELECT account_lid, account_firstname, account_lastname FROM phpgw_accounts WHERE account_id=' . intval($account_id),__LINE__,__FILE__);
+			if($this->db->num_rows())
 			{
+				$this->db->next_record();
 				$id_list[$account_id] = $GLOBALS['phpgw']->common->display_fullname($this->db->f('account_lid'), $this->db->f('account_firstname'), $this->db->f('account_lastname') );
 			}
 			else
 			{
-				$id_list[$account_id] = '';
+				$id_list[$account_id] = False;
 			}
 			return $id_list[$account_id];
 		}
@@ -425,74 +417,65 @@
 			$this->set_data($account_info, $default_prefs);
 			$this->db->transaction_begin();
 			
-			$person_id = 0;
-			if ( $account_info['account_type'] == 'u' )
-			{
-				// FIXME this should use the contacts classes via this->save_contact_for_account
-				$values= array
-				(
-					-3,
-					'public',
-					1,
-				);
-
-				$values	= $this->db->validate_insert($values);
-
-				$this->db->query("INSERT INTO phpgw_contact (owner,access,contact_type_id) "
-					. "VALUES ($values)",__LINE__,__FILE__);
-				$person_id = $this->db->get_last_insert_id('phpgw_contact','contact_id');
-
-				$ts = time();
-				$values= array
-				(
-					$person_id,
-					$this->db->db_addslashes($this->firstname),
-					$this->db->db_addslashes($this->lastname),
-					((isset($this->status) && $this->status == 'A') ? 'Y':'N'),
-					$ts,
-					-3,
-					$ts,
-					-3	
-				);
-
-				$values	= $this->db->validate_insert($values);
-
-				$this->db->query("INSERT INTO phpgw_contact_person (person_id,first_name,last_name,active,created_on,created_by,modified_on,modified_by) "
-					. "VALUES ($values)",__LINE__,__FILE__);
-			}
-
-
-			$fields = array
+			$values= array
 			(
-				'account_lid',
-				'account_type',
-				'account_pwd',
-				'account_firstname',
-				'account_lastname',
-				'account_status',
-				'account_expires',
-				'person_id',
-				'account_quota'
+				-3,
+				'public',
+				1,
 			);
-			$values = array
+
+			$values	= $this->db->validate_insert($values);
+
+			$this->db->query("INSERT INTO phpgw_contact (owner,access,contact_type_id) "
+				. "VALUES ($values)",__LINE__,__FILE__);
+			$person_id = $this->db->get_last_insert_id('phpgw_contact','contact_id');
+
+			$values= array
 			(
-				"'".$this->db->db_addslashes($this->lid)."'",
-				"'".$this->db->db_addslashes($account_info['account_type'])."'",
-				"'".md5($this->password)."'",
-				"'".$this->db->db_addslashes($this->firstname)."'",
-				"'".$this->db->db_addslashes($this->lastname)."'",
-				"'".$this->db->db_addslashes($this->status)."'",
-				(int) $this->expires,
-				(int) $person_id,
-				(int) $this->quota
+				$person_id,
+				$this->db->db_addslashes($this->firstname),
+				$this->db->db_addslashes($this->lastname),
+				((isset($this->status) && $this->status == 'A') ? 'Y':'N'),
+				time(),
+				0,
+				time(),
+				0	
 			);
+
+			$values	= $this->db->validate_insert($values);
+
+			$this->db->query("INSERT INTO phpgw_contact_person (person_id,first_name,last_name,active,created_on,created_by,modified_on,modified_by) "
+				. "VALUES ($values)",__LINE__,__FILE__);
+
+
+			$fields = array('account_lid',
+							'account_type',
+							'account_pwd',
+							'account_firstname',
+							'account_lastname',
+							'account_status',
+							'account_expires',
+							'person_id',
+							'account_quota'
+						   );
+			$values = array("'".$this->db->db_addslashes($this->lid)."'",
+							"'".$this->db->db_addslashes($account_info['account_type'])."'",
+							"'".md5($this->password)."'",
+							"'".$this->db->db_addslashes($this->firstname)."'",
+							"'".$this->db->db_addslashes($this->lastname)."'",
+							"'".$this->db->db_addslashes($this->status)."'",
+							intval($this->expires),
+							intval($person_id),
+							intval($this->quota)
+						   );
 			if((int)$this->account_id && !$this->exists((int)$this->account_id))
 			{
 				$fields[] = 'account_id';
 				$values[] = (int)$this->account_id;
 			}
 			$this->db->query('INSERT INTO phpgw_accounts ('.implode($fields, ',').') '.
-							'VALUES ('.implode($values, ',').')',  __LINE__, __FILE__);
+												 'VALUES ('.implode($values, ',').')',
+							 __LINE__,__FILE__);
 
 			$account_info['account_id'] = $this->db->get_last_insert_id('phpgw_accounts','account_id');
 			$this->db->transaction_commit();

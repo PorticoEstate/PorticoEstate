@@ -72,7 +72,7 @@
 
 		function property_botts($session=False)
 		{
-		//	$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
+			$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->so 			= CreateObject('property.sotts');
 			$this->bocommon 	= CreateObject('property.bocommon');
 			$this->historylog	= CreateObject('property.historylog','tts');
@@ -223,9 +223,9 @@
 
 		function get_priority_list($selected='')
 		{
-			if(!$selected && isset($GLOBALS['phpgw_info']['user']['preferences']['property']['prioritydefault']))
+			if(!$selected && isset($GLOBALS['phpgw_info']['user']['preferences'][$this->currentapp]['prioritydefault']))
 			{
-				$selected = $GLOBALS['phpgw_info']['user']['preferences']['property']['prioritydefault'];
+				$selected = $GLOBALS['phpgw_info']['user']['preferences'][$this->currentapp]['prioritydefault'];
 			}
 
 			$priority_comment[1]=' - '.lang('Lowest');
@@ -405,7 +405,7 @@
 			$this->vfs->override_acl = 1;
 
 			$ticket['files'] = $this->vfs->ls (array(
-			     'string' => $this->fakebase. '/' . 'fmticket' . '/' . $id,
+			     'string' => $this->fakebase. SEP . 'fmticket' . SEP . $id,
 			     'relatives' => array(RELATIVE_NONE)));
 
 			$this->vfs->override_acl = 0;
@@ -552,8 +552,8 @@
 			{
 				foreach($custom_functions as $entry)
 				{
-					if (is_file(PHPGW_APP_INC . '/' . 'custom' . '/' . $entry['file_name']) && $entry['active'])
-					include (PHPGW_APP_INC . '/' . 'custom' . '/' . $entry['file_name']);
+					if (is_file(PHPGW_APP_INC . SEP . 'custom' . SEP . $entry['file_name']) && $entry['active'])
+					include (PHPGW_APP_INC . SEP . 'custom' . SEP . $entry['file_name']);
 				}
 			}
 
@@ -630,7 +630,7 @@
 
 
 		//	$prefs_user = $GLOBALS['phpgw']->preferences->create_email_preferences($ticket['user_id']);
-			$prefs_user = $this->bocommon->create_preferences('property',$ticket['user_id']);
+			$prefs_user = $this->bocommon->create_preferences($this->currentapp,$ticket['user_id']);
 
 			$from_address=$prefs_user['email'];
 
@@ -645,7 +645,7 @@
 			$current_user_name= $user_firstname . " " .$user_lastname ;
 
 //			$current_prefs_user = $GLOBALS['phpgw']->preferences->create_email_preferences($current_user_id);
-			$current_prefs_user = $this->bocommon->create_preferences('property',$current_user_id);
+			$current_prefs_user = $this->bocommon->create_preferences($this->currentapp,$current_user_id);
 			$current_user_address=$current_prefs_user['email'];
 
 			$headers = "Return-Path: <". $current_user_address .">\r\n";
@@ -658,7 +658,7 @@
 		// build body
 			$body  = '';
 	//		$body .= lang('Ticket').' #'.$id."\n";
-			$body .= '<a href ="http://' . $GLOBALS['phpgw_info']['server']['hostname'] . $GLOBALS['phpgw']->link('/index.php','menuaction='.'property.uitts.view&id=' . $id).'">' . lang('Ticket').' #' .$id .'</a>'."\n";
+			$body .= '<a href ="http://' . $GLOBALS['phpgw_info']['server']['hostname'] . $GLOBALS['phpgw']->link('/index.php','menuaction='.$this->currentapp.'.uitts.view&id=' . $id).'">' . lang('Ticket').' #' .$id .'</a>'."\n";
 			$body .= lang('Date Opened').': '.$timestampopened."\n";
 			$body .= lang('Category').': '. $this->get_category_name($ticket['cat_id']) ."\n";
 //			$body .= lang('Subject').': '. $ticket['subject'] ."\n";
@@ -746,7 +746,7 @@
 				if ($members[$i]['account_id'])
 				{
 			//		$prefs = $GLOBALS['phpgw']->preferences->create_email_preferences($members[$i]['account_id']);
-					$prefs = $this->bocommon->create_preferences('property',$members[$i]['account_id']);
+					$prefs = $this->bocommon->create_preferences($this->currentapp,$members[$i]['account_id']);
 					if (strlen($prefs['email'])> (strlen($members[$i]['account_name'])+1))
 					{
 						$toarray[$prefs['email']] = $prefs['email'];
@@ -806,46 +806,46 @@
 		function create_document_dir($id='')
 		{
 			if(!$this->vfs->file_exists(array(
-					'string' => $this->fakebase. '/' . 'fmticket',
+					'string' => $this->fakebase. SEP . 'fmticket',
 					'relatives' => Array(RELATIVE_NONE)
 				)))
 			{
 				$this->vfs->override_acl = 1;
 				if(!$this->vfs->mkdir (array(
-				     'string' => $this->fakebase. '/' . 'fmticket',
+				     'string' => $this->fakebase. SEP . 'fmticket',
 				     'relatives' => array(
 				          RELATIVE_NONE
 				     )
 				)))
 				{
-					$receipt['error'][]=array('msg'=>lang('failed to create directory') . ' :'. $this->fakebase. '/' . 'fmticket');
+					$receipt['error'][]=array('msg'=>lang('failed to create directory') . ' :'. $this->fakebase. SEP . 'fmticket');
 				}
 				else
 				{
-					$receipt['message'][]=array('msg'=>lang('directory created') . ' :'. $this->fakebase. '/' . 'fmticket');
+					$receipt['message'][]=array('msg'=>lang('directory created') . ' :'. $this->fakebase. SEP . 'fmticket');
 				}
 				$this->vfs->override_acl = 0;
 			}
 
 
 			if(!$this->vfs->file_exists(array(
-					'string' => $this->fakebase. '/' . 'fmticket' .  '/' . $id,
+					'string' => $this->fakebase. SEP . 'fmticket' .  SEP . $id,
 					'relatives' => Array(RELATIVE_NONE)
 				)))
 			{
 				$this->vfs->override_acl = 1;
 				if(!$this->vfs->mkdir (array(
-				     'string' => $this->fakebase. '/' . 'fmticket' .  '/' . $id,
+				     'string' => $this->fakebase. SEP . 'fmticket' .  SEP . $id,
 				     'relatives' => array(
 				          RELATIVE_NONE
 				     )
 				)))
 				{
-					$receipt['error'][]=array('msg'=>lang('failed to create directory') . ' :'. $this->fakebase. '/'  . 'fmticket' .  '/' . $id);
+					$receipt['error'][]=array('msg'=>lang('failed to create directory') . ' :'. $this->fakebase. SEP  . 'fmticket' .  SEP . $id);
 				}
 				else
 				{
-					$receipt['message'][]=array('msg'=>lang('directory created') . ' :'. $this->fakebase. '/' . 'fmticket' .  '/' . $id);
+					$receipt['message'][]=array('msg'=>lang('directory created') . ' :'. $this->fakebase. SEP . 'fmticket' .  SEP . $id);
 				}
 				$this->vfs->override_acl = 0;
 			}
@@ -858,7 +858,7 @@
 		{
 			for ($i=0;$i<count($values['delete_file']);$i++)
 			{
-				$file = $this->fakebase. '/' . 'fmticket' . '/' . $id . '/' . $values['delete_file'][$i];
+				$file = $this->fakebase. SEP . 'fmticket' . SEP . $id . SEP . $values['delete_file'][$i];
 
 				if($this->vfs->file_exists(array(
 					'string' => $file,
@@ -874,11 +874,11 @@
 					     )
 					)))
 					{
-						$receipt['error'][]=array('msg'=>lang('failed to delete file') . ' :'. $this->fakebase. '/' . 'fmticket' . '/' . $id . '/' .$values['delete_file'][$i]);
+						$receipt['error'][]=array('msg'=>lang('failed to delete file') . ' :'. $this->fakebase. SEP . 'fmticket' . SEP . $id . SEP .$values['delete_file'][$i]);
 					}
 					else
 					{
-						$receipt['message'][]=array('msg'=>lang('file deleted') . ' :'. $this->fakebase. '/' . 'fmticket' . '/' . $id . '/' . $values['delete_file'][$i]);
+						$receipt['message'][]=array('msg'=>lang('file deleted') . ' :'. $this->fakebase. SEP . 'fmticket' . SEP . $id . SEP . $values['delete_file'][$i]);
 					}
 					$this->vfs->override_acl = 0;
 				}

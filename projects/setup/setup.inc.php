@@ -11,7 +11,6 @@
   /* $Id: setup.inc.php,v 1.61 2006/12/05 19:40:45 sigurdne Exp $ */
 
 	$setup_info['projects']['name']      = 'projects';
-	$setup_info['projects']['title']	 = 'Projects';
 	$setup_info['projects']['version']   = '0.8.7.055';
 	$setup_info['projects']['app_order'] = 13;
 	$setup_info['projects']['enable']    = 1;

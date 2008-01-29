@@ -74,14 +74,12 @@
 
 		function property_bolocation($session=False)
 		{
-		//	$this->currentapp			= $GLOBALS['phpgw_info']['flags']['currentapp'];
+			$this->currentapp			= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->so 					= CreateObject('property.solocation');
 			$this->bocommon 			= CreateObject('property.bocommon');
 			$this->soadmin_location		= CreateObject('property.soadmin_location');
-			$this->custom 				= createObject('phpgwapi.custom_fields');
 
-			$this->lookup    = phpgw::get_var('lookup', 'bool');
-
+			$this->lookup	= phpgw::get_var('lookup', 'bool');
 			if ($session && !$this->lookup)
 			{
 				$this->read_sessiondata();
@@ -142,11 +140,14 @@
 
 		function column_list($selected='',$type_id='',$allrows='')
 		{
+			$soadmin_location	= CreateObject('property.soadmin_location');
+
 			if(!$selected)
 			{
-				$selected = isset($GLOBALS['phpgw_info']['user']['preferences']['property']['location_columns_' . $this->type_id . !!$this->lookup]) ? $GLOBALS['phpgw_info']['user']['preferences']['property']["location_columns_" . $this->type_id . !!$this->lookup]:'';
+				$selected = isset($GLOBALS['phpgw_info']['user']['preferences'][$this->currentapp]["location_columns_" . $this->type_id]) ? $GLOBALS['phpgw_info']['user']['preferences'][$this->currentapp]["location_columns_" . $this->type_id]:'';
 			}
-			$columns = $this->custom->get_attribs('property','.location.' . $type_id, 0, '','','',true);
+
+			$columns = $soadmin_location->read_attrib(array('type_id'=>$type_id,'allrows'=>$allrows,'filter_list' =>true));
 			$column_list=$this->bocommon->select_multi_list($selected,$columns);
 			return $column_list;
 		}
@@ -225,7 +226,7 @@
 				}
 			}
 
-			$location_link		= "menuaction:'". 'property'.".uilocation.index',lookup:1";
+			$location_link		= "menuaction:'". $this->currentapp.".uilocation.index',lookup:1";
 
 			$config = $this->soadmin_location->read_config('');
 
@@ -240,11 +241,7 @@
 			}
 //_debug_array($data);
 //_debug_array($location_types);
-//			$filtermethod = " OR (type_id < $lookup_type AND lookup_form=1)";
-			$filtermethod = " OR (lookup_form=1)";
-			$fm_location_cols = $this->custom->get_attribs('property', '.location.' . $data['type_id'], 0, '', '', '', true,$filtermethod);
-
-
+			$fm_location_cols = $this->soadmin_location->read_attrib(array('type_id'=>$data['type_id'],'lookup_type'=>$data['type_id']));
 //_debug_array($fm_location_cols);
 
 			for ($i=0;$i<$data['type_id'];$i++)
@@ -313,7 +310,6 @@
 			$location_cols_count =count($fm_location_cols);
 			for ($j=0;$j<$location_cols_count;$j++)
 			{
-				//FIXME: location_type is currently empty - should'nt be...
 				if(($fm_location_cols[$j]['location_type'] <= $data['type_id']) && $fm_location_cols[$j]['lookup_form'])
 				{
 					$location['location'][$i]['input_type']				= 'text';
@@ -435,7 +431,7 @@
 					$m++;
 
 					$lookup_functions[$m]['name'] = 'lookup_entity_' . $entity['id'] .'()';
-					$lookup_functions[$m]['link'] = "menuaction:'". 'property'.".uilookup.entity',location_type:".$data['type_id'] . ',entity_id:'. $entity['id'];
+					$lookup_functions[$m]['link'] = "menuaction:'". $this->currentapp.".uilookup.entity',location_type:".$data['type_id'] . ',entity_id:'. $entity['id'];
 					$lookup_functions[$m]['action'] = 'Window1=window.open(strURL,"Search","width=800,height=700,toolbar=no,scrollbars=yes,resizable=yes");';
 
 					$location['location'][$i]['input_type']						= 'text';
@@ -491,13 +487,13 @@
 //_debug_array($location['location']);
 			if(isset($input_name))
 			{
-				$GLOBALS['phpgw']->session->appsession('lookup_fields','property',$input_name);
+				$GLOBALS['phpgw']->session->appsession('lookup_fields',$this->currentapp,$input_name);
 			}
 			if(isset($insert_record))
 			{
-				$GLOBALS['phpgw']->session->appsession('insert_record','property',$insert_record);
+				$GLOBALS['phpgw']->session->appsession('insert_record',$this->currentapp,$insert_record);
 			}
-//			$GLOBALS['phpgw']->session->appsession('input_name','property',$input_name);
+//			$GLOBALS['phpgw']->session->appsession('input_name',$this->currentapp,$input_name);
 
 
 			if(isset($lookup_functions) && is_array($lookup_functions))
@@ -521,7 +517,7 @@
 					$lookup_name[] = $location['location'][$i]['name'];
 				}
 
-				$GLOBALS['phpgw']->session->appsession('lookup_name','property',$lookup_name);
+				$GLOBALS['phpgw']->session->appsession('lookup_name',$this->currentapp,$lookup_name);
 
 				return $location;
 			}
@@ -540,47 +536,7 @@
 			return $location;
 		}
 
-		function read_single($location_code='',$extra=array())
-		{
-			$location_array = split('-',$location_code);
-			$type_id= count($location_array);
-
-			if (!$type_id)
-			{
-				return;
-			}
-
-			$values['attributes'] = $this->custom->get_attribs('property','.location.' . $type_id, 0, '', 'ASC', 'attrib_sort', true, true);
-			$values = $this->so->read_single($location_code, $values);
-			$values = $this->custom->prepare_attributes($values, 'property','.location.' . $type_id, $extra['view']);
-
-			if( isset($extra['tenant_id']) && $extra['tenant_id']!='lookup')
-			{
-				if($extra['tenant_id']>0)
-				{
-					$tenant_data=$this->bocommon->read_single_tenant($extra['tenant_id']);
-					$values['tenant_id']		= $extra['tenant_id'];
-					$values['contact_phone']	= $extra['contact_phone']?$extra['contact_phone']:$tenant_data['contact_phone'];
-					$values['last_name']		= $tenant_data['last_name'];
-					$values['first_name']	= $tenant_data['first_name'];
-				}
-				else
-				{
-					unset($values['tenant_id']);
-					unset($values['contact_phone']);
-					unset($values['last_name']);
-					unset($values['first_name']);
-				}
-			}
-
-			if(is_array($extra))
-			{
-				$values = $values + $extra;
-			}
-			return $values;
-		}
-
-		function read_single_old($location_code='',$extra='')
+		function read_single($location_code='',$extra='')
 		{
 			$location_data = $this->so->read_single($location_code);
 
@@ -618,9 +574,32 @@
 
 		function save($location,$values_attribute,$action='',$type_id='',$location_code_parent='')
 		{
-			if(is_array($values_attribute))
+			$m=count($values_attribute);
+			for ($i=0;$i<$m;$i++)
 			{
-				$values_attribute = $this->custom->convert_attribute_save($values_attribute);
+				if($values_attribute[$i]['datatype']=='AB' || $values_attribute[$i]['datatype']=='VENDOR')
+				{
+					$values_attribute[$i]['value'] = $_POST[$values_attribute[$i]['name']];
+				}
+				if($values_attribute[$i]['datatype']=='CH' && $values_attribute[$i]['value'])
+				{
+					$values_attribute[$i]['value'] = serialize($values_attribute[$i]['value']);
+				}
+				if($values_attribute[$i]['datatype']=='R' && $values_attribute[$i]['value'])
+				{
+					$values_attribute[$i]['value'] = $values_attribute[$i]['value'][0];
+				}
+
+				if($values_attribute[$i]['datatype']=='N' && $values_attribute[$i]['value'])
+				{
+					$values_attribute[$i]['value'] = str_replace(",",".",$values_attribute[$i]['value']);
+				}
+
+				if($values_attribute[$i]['datatype']=='D' && $values_attribute[$i]['value'])
+				{
+
+					$values_attribute[$i]['value'] = date($this->bocommon->dateformat,$this->bocommon->date_to_timestamp($values_attribute[$i]['value']));
+				}
 			}
 
 			if ($action=='edit')
@@ -636,23 +615,31 @@
 			}
 			else
 			{
+
+/*				if($type_id>1)
+				{
+					if(!$this->so->check_location($location_code_parent,($type_id-1)))
+					{
+						$receipt['error'][]=array('msg'=>lang('This location parent ID does not exist!'));
+					}
+				}
+*/
 				if(!$receipt['error'])
 				{
 					$receipt = $this->so->add($location,$values_attribute,$type_id);
 				}
 			}
 
-			$acl_location = '.location.' . $type_id;
-			$custom_functions = $this->custom->read_custom_function(array('appname'=>'property','location' => $acl_location,'allrows'=>True));
+
+			$soadmin_custom = CreateObject('property.soadmin_custom');
+			$custom_functions = $soadmin_custom->read(array('acl_location' => $this->acl_location,'allrows'=>True));
 
 			if (isSet($custom_functions) AND is_array($custom_functions))
 			{
 				foreach($custom_functions as $entry)
 				{
-					if (is_file(PHPGW_APP_INC . "/custom/{$entry['file_name']}") && $entry['active'])
-					{
-						include_once (PHPGW_APP_INC . "/custom/{$entry['file_name']}");
-					}
+					if (is_file(PHPGW_APP_INC . SEP . 'custom' . SEP . $entry['file_name']) && $entry['active'])
+					include (PHPGW_APP_INC . SEP . 'custom' . SEP . $entry['file_name']);
 				}
 			}
 

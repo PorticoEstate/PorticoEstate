@@ -32,10 +32,10 @@
 	$tpl_root = $GLOBALS['phpgw_setup']->html->setup_tpl_dir('setup');
 	$setup_tpl = CreateObject('phpgwapi.Template',$tpl_root);
 
-	$download = phpgw::get_var('download','bool');
-	$submit   = phpgw::get_var('submit','bool');
-	$showall  = phpgw::get_var('showall','bool');
-	$appname  = phpgw::get_var('appname','string');
+	$download = get_var('download',Array('GET','POST'));
+	$submit   = get_var('submit',Array('GET','POST'));
+	$showall  = get_var('showall',Array('GET','POST'));
+	$appname  = get_var('appname',Array('GET','POST'));
 	if ($download)
 	{
 		$setup_tpl->set_file(array(
@@ -101,11 +101,11 @@
 
 		if (count($fk) > 1)
 		{
-			$GLOBALS['setup_tpl']->set_var('fks', "\n\t\t\t\t'" . implode(",\n\t\t\t\t'",$fk) );
+			$GLOBALS['setup_tpl']->set_var('fks', "'" . implode("','",$fk) . "'");
 		}
 		elseif($fk && !empty($fk))
 		{
-			$GLOBALS['setup_tpl']->set_var('fks', "'" . $fk[0]);
+			$GLOBALS['setup_tpl']->set_var('fks', "'" . $fk[0] . "'");
 		}
 		else
 		{
@@ -114,11 +114,11 @@
 
 		if (count($ix) > 1)
 		{
-			$GLOBALS['setup_tpl']->set_var('ixs', implode(",",$ix));
+			$GLOBALS['setup_tpl']->set_var('ixs', "'" . implode("','",$ix) . "'");
 		}
 		elseif($ix && !empty($ix))
 		{
-			$GLOBALS['setup_tpl']->set_var('ixs', $ix[0]);
+			$GLOBALS['setup_tpl']->set_var('ixs', "'" . $ix[0] . "'");
 		}
 		else
 		{
@@ -148,7 +148,6 @@
 	function printout($template)
 	{
 		global $download,$appname,$table,$showall;
-		$string = '';
 
 		if ($download)
 		{
@@ -198,7 +197,7 @@
 			$table = $appname = '';
 		}
 
-		if((!isset($table) || !$table) && !$appname)
+		if(!$table && !$appname)
 		{
 			$term = ',';
 			$dlstring .= printout('sqlheader');
@@ -219,7 +218,7 @@
 			$dlstring .= printout('sqlheader');
 			$term = ',';
 
-			if(!isset($setup_info[$appname]['tables']) || !$setup_info[$appname]['tables'])
+			if(!$setup_info[$appname]['tables'])
 			{
 				$f = PHPGW_SERVER_ROOT . '/' . $appname . '/setup/setup.inc.php';
 				if (file_exists ($f)) 

@@ -64,13 +64,13 @@
 		function property_uiinvoice()
 		{
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = True;
-			$GLOBALS['phpgw_info']['flags']['menu_selection'] = 'property::invoice';
-		//	$this->currentapp		= $GLOBALS['phpgw_info']['flags']['currentapp'];
+			$this->currentapp		= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->nextmatchs		= CreateObject('phpgwapi.nextmatchs');
 			$this->account			= $GLOBALS['phpgw_info']['user']['account_id'];
 
 			$this->bo			= CreateObject('property.boinvoice',True);
 			$this->bocommon			= CreateObject('property.bocommon');
+			$this->menu			= CreateObject('property.menu');
 
 			$this->start			= $this->bo->start;
 			$this->query			= $this->bo->query;
@@ -90,6 +90,7 @@
 			$this->acl_edit 		= $this->acl->check('.invoice',4);
 			$this->acl_delete 		= $this->acl->check('.invoice',8);
 
+			$this->menu->sub		='invoice';
 		}
 
 		function save_sessiondata()
@@ -192,10 +193,10 @@
 		{
 			if(!$this->acl_read)
 			{
-				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=>1, 'acl_location'=> $this->acl_location));
+				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> $this->currentapp.'.uilocation.stop', 'perm'=>1, 'acl_location'=> $this->acl_location));
 			}
 
-			$GLOBALS['phpgw']->xslttpl->add_file(array('invoice',
+			$GLOBALS['phpgw']->xslttpl->add_file(array('invoice','menu',
 										'nextmatchs',
 										'search_field'));
 
@@ -208,12 +209,7 @@
 			$loc1 			= phpgw::get_var('loc1');
 			$voucher_id 	= phpgw::get_var('voucher_id', 'int');
 			$b_account_class= phpgw::get_var('b_account_class', 'int');
-
-			if ( $paid )
-			{
-				$GLOBALS['phpgw_info']['flags']['menu_selection'] .= '::paid';
-			}
-		
+			
 			$start_date=urldecode($start_date);
 			$end_date=urldecode($end_date);
 
@@ -222,6 +218,8 @@
 				$end_date = $GLOBALS['phpgw']->common->show_date(mktime(0,0,0,date("m"),date("d"),date("Y")),$GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']);
 				$start_date = $end_date;
 			}
+
+			$links = $this->menu->links('invoice_'.!!$paid);
 
 			$values  = phpgw::get_var('values');
 			$receipt = array();
@@ -243,21 +241,21 @@
 					$sum								= $sum + $extra['amount'];
 					$content[$i]['amount'] 				= number_format($extra['amount'], 2, ',', ' ');
 					$content[$i]['lang_payment_date'] 	= lang('Payment Date');
-					$content[$i]['link_sub'] 			= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiinvoice.list_sub', 'user_lid'=> $this->user_lid, 'query'=> $this->query));
+					$content[$i]['link_sub'] 			= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uiinvoice.list_sub', 'user_lid'=> $this->user_lid, 'query'=> $this->query));
 					$content[$i]['lang_sub'] 			= lang('Voucher ID');
 					$content[$i]['lang_sub_help'] 		= lang('Klick this link to enter the list of sub-invoices');
-					$content[$i]['link_period'] 		= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiinvoice.edit_period'));
+					$content[$i]['link_period'] 		= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uiinvoice.edit_period'));
 					$content[$i]['lang_period'] 		= lang('Period');
 					$content[$i]['lang_period_help'] 	= lang('Klick this link to edit the period');
 
 					if($this->acl_delete && !$paid)
 					{
-						$content[$i]['link_delete']				= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiinvoice.delete', 'voucher_id'=> $extra['voucher_id']));
+						$content[$i]['link_delete']				= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uiinvoice.delete', 'voucher_id'=> $extra['voucher_id']));
 						$content[$i]['lang_delete_statustext']	= lang('delete the voucher');
 						$content[$i]['text_delete']				= lang('delete');
 					}
 
-					$content[$i]['link_front']				= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiinvoice.receipt', 'voucher_id'=> $extra['voucher_id']));
+					$content[$i]['link_front']				= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uiinvoice.receipt', 'voucher_id'=> $extra['voucher_id']));
 					$content[$i]['lang_front_statustext']	= lang('A printout version of the frontpage');
 					$content[$i]['text_front']				= 'F';
 
@@ -273,7 +271,7 @@
 													'var'	=> 'bilagsnr',
 													'order'	=> $this->order,
 													'extra'	=> array(
-															'menuaction' 		=> 'property.uiinvoice.index',
+															'menuaction' 		=> $this->currentapp.'.uiinvoice.index',
 															'cat_id'		=> $this->cat_id,
 															'sub'			=> $this->sub,
 															'paid'			=> $paid,
@@ -291,7 +289,7 @@
 													'sort'	=> $this->sort,
 													'var'	=> 'fakturadato',
 													'order'	=> $this->order,
-													'extra'	=> array('menuaction' => 'property.uiinvoice.index',
+													'extra'	=> array('menuaction' => $this->currentapp.'.uiinvoice.index',
 																	'cat_id'		=> $this->cat_id,
 																	'sub'			=> $this->sub,
 																	'paid'			=> $paid,
@@ -311,7 +309,7 @@
 													'sort'	=> $this->sort,
 													'var'	=> 'spvend_code',
 													'order'	=> $this->order,
-													'extra'	=> array('menuaction' => 'property.uiinvoice.index',
+													'extra'	=> array('menuaction' => $this->currentapp.'.uiinvoice.index',
 																	'cat_id'		=> $this->cat_id,
 																	'sub'			=> $this->sub,
 																	'paid'			=> $paid,
@@ -345,7 +343,7 @@
 
 			$link_data = array
 			(
-				'menuaction'		=> 'property.uiinvoice.index',
+				'menuaction'		=> $this->currentapp.'.uiinvoice.index',
 				'order'				=> $this->order,
 				'sort'				=> $this->sort,
 				'cat_id'			=> $this->cat_id,
@@ -369,7 +367,7 @@
 				(
 					'lang_add'				=> lang('add'),
 					'lang_add_statustext'	=> lang('add an invoice'),
-					'add_action'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiinvoice.add'))
+					'add_action'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uiinvoice.add'))
 				);
 			}
 
@@ -387,7 +385,7 @@
 
 			$link_excel = array
 			(
-				'menuaction'		=> 'property.uiinvoice.excel',
+				'menuaction'		=> $this->currentapp.'.uiinvoice.excel',
 				'order'				=> $this->order,
 				'sort'				=> $this->sort,
 				'cat_id'			=> $this->cat_id,
@@ -406,8 +404,8 @@
 				'district_id'		=> $this->district_id
 			);
 
-			$GLOBALS['phpgw']->js->validate_file('overlib','overlib','property');
-			$GLOBALS['phpgw']->js->validate_file('core','check','property');
+			$GLOBALS['phpgw']->js->validate_file('overlib','overlib',$this->currentapp);
+			$GLOBALS['phpgw']->js->validate_file('core','check',$this->currentapp);
 
 			$data['lang_excel']						= 'excel';
 			$data['link_excel']						= $GLOBALS['phpgw']->link('/index.php',$link_excel);
@@ -415,6 +413,7 @@
 
 			$data['msgbox_data']					= $GLOBALS['phpgw']->common->msgbox($msgbox_data);
 			$data['sum']							= number_format($sum, 2, ',', '');
+			$data['links']							= $links;
 			$data['allow_allrows']					= true;
 			$data['allrows']						= $this->allrows;
 			$data['start_record']					= $this->start;
@@ -440,7 +439,7 @@
 			$appname	= lang('invoice');
 			$function_msg	= lang('list voucher');
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($this->currentapp) . ' - ' . $appname . ': ' . $function_msg;
 
 			if (isset($paid) && $paid)
 			{
@@ -464,10 +463,10 @@
 				$data['lang_workorder_statustext']		= lang('enter the Workorder ID to search by workorder - at any date');
 				$data['workorder_id']					= $workorder_id;
 
-				$data['addressbook_link']				= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uilookup.vendor'));
+				$data['addressbook_link']				= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uilookup.vendor'));
 				$data['lang_select_vendor_statustext']	= lang('Select the vendor by klicking this link');
 				$data['lang_vendor']					= lang('Vendor');
-				$data['property_link']					= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uilocation.index', 'lookup'=> 1, 'type_id'=> 1, 'lookup_name'=> 0));
+				$data['property_link']					= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uilocation.index', 'lookup'=> 1, 'type_id'=> 1, 'lookup_name'=> 0));
 				$data['lang_select_property_statustext']= lang('Select the property by klicking this link');
 				$data['lang_property_statustext']		= lang('Search by property');
 				$data['lang_property']					= lang('property');
@@ -494,9 +493,9 @@
 				$data['user_list']						= $this->bo->get_invoice_user_list('filter',$this->user_lid,array('all'),$default='none');
 				$data['cat_list']						= $this->bo->select_category('filter',$this->cat_id);
 				$data['table_done']						= $table_done;
-				$data['img_check']						= $GLOBALS['phpgw']->common->get_image_path('property').'/check.png';
+				$data['img_check']						= $GLOBALS['phpgw']->common->get_image_path($this->currentapp).'/check.png';
 				$data['lang_save']						= lang('save');
-				$data['done_action']					= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiinvoice.index'));
+				$data['done_action']					= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uiinvoice.index'));
 				$data['lang_done_statustext']			= lang('Back to the list');
 				$data['lang_save_statustext']			= lang('Save the voucher');
 				$data['lang_select_all']				= lang('Select All');
@@ -515,10 +514,12 @@
 
 		function list_sub()
 		{
-			$GLOBALS['phpgw']->xslttpl->add_file(array('invoice',
+			$GLOBALS['phpgw']->xslttpl->add_file(array('invoice','menu',
 										'nextmatchs'));
 
 			$paid = phpgw::get_var('paid', 'bool');
+
+			$links = $this->menu->links('invoice_');
 
 			$values  = phpgw::get_var('values');
 			$voucher_id = phpgw::get_var('voucher_id', 'int');
@@ -552,10 +553,10 @@
 					$content[$i]['dimb_list']				= $this->bo->select_dimb_list($content[$i]['dimb']);
 					$content[$i]['tax_code_list']			= $this->bo->tax_code_list($content[$i]['tax_code']);
 					$content[$i]['lang_remark'] 			= lang('Remark');
-					$content[$i]['link_remark'] 			= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiinvoice.remark'));
+					$content[$i]['link_remark'] 			= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uiinvoice.remark'));
 					$content[$i]['lang_remark_help'] 		= lang('Klick this link to view the remark');
-					$content[$i]['link_order'] 				= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiinvoice.view_order'));
-					$content[$i]['link_claim'] 				= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uitenant_claim.check'));
+					$content[$i]['link_order'] 				= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uiinvoice.view_order'));
+					$content[$i]['link_claim'] 				= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uitenant_claim.check'));
 					$i++;
 				}
 			}
@@ -568,7 +569,7 @@
 													'sort'	=> $this->sort,
 													'var'	=> 'pmwrkord_code',
 													'order'	=> $this->order,
-													'extra'	=> array('menuaction'	=> 'property.uiinvoice.list_sub',
+													'extra'	=> array('menuaction'	=> $this->currentapp.'.uiinvoice.list_sub',
 															'cat_id'	=> $this->cat_id,
 															'sub'		=> $this->sub,
 															'paid'		=> $paid,
@@ -581,7 +582,7 @@
 													'sort'	=> $this->sort,
 													'var'	=> 'spbudact_code',
 													'order'	=> $this->order,
-													'extra'	=> array('menuaction'	=> 'property.uiinvoice.list_sub',
+													'extra'	=> array('menuaction'	=> $this->currentapp.'.uiinvoice.list_sub',
 															'cat_id'	=> $this->cat_id,
 															'sub'		=> $this->sub,
 															'paid'		=> $paid,
@@ -595,7 +596,7 @@
 													'sort'	=> $this->sort,
 													'var'	=> 'belop',
 													'order'	=> $this->order,
-													'extra'	=> array('menuaction'	=> 'property.uiinvoice.list_sub',
+													'extra'	=> array('menuaction'	=> $this->currentapp.'.uiinvoice.list_sub',
 															'cat_id'	=> $this->cat_id,
 															'sub'		=> $this->sub,
 															'paid'		=> $paid,
@@ -613,7 +614,7 @@
 													'sort'	=> $this->sort,
 													'var'	=>	'dima',
 													'order'	=>	$this->order,
-													'extra'		=> array('menuaction'	=> 'property.uiinvoice.list_sub',
+													'extra'		=> array('menuaction'	=> $this->currentapp.'.uiinvoice.list_sub',
 																'cat_id'	=> $this->cat_id,
 																'sub'		=> $this->sub,
 																'paid'		=> $paid,
@@ -635,7 +636,7 @@
 
 			$link_data = array
 			(
-				'menuaction'		=> 'property.uiinvoice.list_sub',
+				'menuaction'		=> $this->currentapp.'.uiinvoice.list_sub',
 				'order'			=> $this->order,
 				'sort'			=> $this->sort,
 				'cat_id'		=> $this->cat_id,
@@ -664,13 +665,13 @@
 
 			$link_excel = array
 			(
-				'menuaction'	=> 'property.uiinvoice.excel_sub',
+				'menuaction'	=> $this->currentapp.'.uiinvoice.excel_sub',
 				'voucher_id'	=> $voucher_id,
 				'paid'		=> $paid
 			);
 
-			$GLOBALS['phpgw']->js->validate_file('overlib','overlib','property');
-			$GLOBALS['phpgw']->js->validate_file('core','check','property');
+			$GLOBALS['phpgw']->js->validate_file('overlib','overlib',$this->currentapp);
+			$GLOBALS['phpgw']->js->validate_file('core','check',$this->currentapp);
 
 			$data = array
 			(
@@ -679,15 +680,16 @@
 				'link_excel'					=> $GLOBALS['phpgw']->link('/index.php',$link_excel),
 				'lang_excel_help'				=> lang('Download table to MS Excel'),
 
-				'img_check'					=> $GLOBALS['phpgw']->common->get_image_path('property').'/check.png',
+				'img_check'					=> $GLOBALS['phpgw']->common->get_image_path($this->currentapp).'/check.png',
 				'msgbox_data'					=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
 				'sum'						=> number_format($sum, 2, ',', ''),
 				'form_action'					=> $GLOBALS['phpgw']->link('/index.php',$link_data),
 				'lang_save'					=> lang('save'),
 				'lang_done'					=> lang('Done'),
-				'done_action'					=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiinvoice.index', 'user_lid'=> $this->user_lid, 'query'=> $this->query)),
+				'done_action'					=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uiinvoice.index', 'user_lid'=> $this->user_lid, 'query'=> $this->query)),
 				'lang_done_statustext'				=> lang('Back to the list'),
 				'lang_save_statustext'				=> lang('Save the voucher'),
+				'links'						=> $links,
 				'allow_allrows'					=> false,
 				'start_record'					=> $this->start,
 				'record_limit'					=> count($content),//$GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'],
@@ -711,7 +713,7 @@
 
 			$appname = lang('invoice');
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($this->currentapp) . ' - ' . $appname . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('list_invoice_sub' => $data));
 		//	$GLOBALS['phpgw']->xslttpl->pp();
 			$this->save_sessiondata();
@@ -738,7 +740,7 @@
 
 			$link_data = array
 			(
-				'menuaction'	=> 'property.uiinvoice.edit_period',
+				'menuaction'	=> $this->currentapp.'.uiinvoice.edit_period',
 				'voucher_id'	=> $voucher_id);
 
 
@@ -780,16 +782,14 @@
 			$appname	= lang('invoice');
 			$function_msg	= lang('remark');
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($this->currentapp) . ' - ' . $appname . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('remark' => $data));
 		//	$GLOBALS['phpgw']->xslttpl->pp();
 		}
 
 		function consume()
 		{
-			$GLOBALS['phpgw_info']['flags']['menu_selection'] .= '::consume';
-
-			$GLOBALS['phpgw']->xslttpl->add_file(array('invoice',
+			$GLOBALS['phpgw']->xslttpl->add_file(array('invoice','menu',
 										'nextmatchs',
 										'search_field'));
 
@@ -821,6 +821,8 @@
 				}
 			}
 
+			$links = $this->menu->links('consume');
+
 			$dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
 //_debug_array($values);
 			if(!$submit_search)
@@ -844,7 +846,7 @@
 					$p_end_date = $GLOBALS['phpgw']->common->show_date(mktime(0,0,0,($content[$i]['period']+1),0,$p_year),$dateformat);
 					$sum				= $sum+$content[$i]['consume'];
 					$content[$i]['link_voucher'] 	= $GLOBALS['phpgw']->link('/index.php',array(
-														'menuaction'	=> 'property.uiinvoice.index',
+														'menuaction'	=> $this->currentapp.'.uiinvoice.index',
 														'paid'		=> true,
 														'user_lid'	=> 'all',
 														'district_id'	=> $district_id,
@@ -875,7 +877,7 @@
 
 			$link_data = array
 			(
-				'menuaction'		=> 'property.uiinvoice.consume',
+				'menuaction'		=> $this->currentapp.'.uiinvoice.consume',
 				'order'			=> $this->order,
 				'sort'			=> $this->sort,
 				'cat_id'		=> $this->cat_id,
@@ -886,10 +888,11 @@
 				'filter'		=> $this->filter
 			);
 
-			$GLOBALS['phpgw']->js->validate_file('overlib','overlib','property');
+			$GLOBALS['phpgw']->js->validate_file('overlib','overlib',$this->currentapp);
 
 			$data['lang_sum']				= lang('Sum');
 			$data['sum']					= number_format($sum, 0, ',', ' ');
+			$data['links']					= $links;
 			$data['allow_allrows']				= false;
 			$data['start_record']				= $this->start;
 			$data['record_limit']				= $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
@@ -933,14 +936,14 @@
 			$data['lang_workorder_statustext']		= lang('enter the Workorder ID to search by workorder - at any date');
 			$data['workorder_id']				= $workorder_id;
 
-			$data['addressbook_link']			= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uilookup.vendor'));
+			$data['addressbook_link']			= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uilookup.vendor'));
 			$data['lang_select_vendor_statustext']		= lang('Select the vendor by klicking this link');
 			$data['lang_vendor']				= lang('Vendor');
 
 			$bolocation					= CreateObject('property.bolocation');
 			$location_data					= $bolocation->initiate_ui_location(array('type_id'=> 1));
 
-			$data['property_link']				= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uilocation.index', 'lookup'=> 1, 'type_id'=> 1, 'lookup_name'=> 0));
+			$data['property_link']				= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uilocation.index', 'lookup'=> 1, 'type_id'=> 1, 'lookup_name'=> 0));
 
 			$data['lang_select_property_statustext']	= lang('Select the property by klicking this link');
 			$data['lang_property_statustext']		= lang('Search by property');
@@ -956,7 +959,7 @@
 			$appname					= lang('consume');
 			$function_msg					= lang('list consume');
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($this->currentapp) . ' - ' . $appname . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('consume' => $data));
 		//	$GLOBALS['phpgw']->xslttpl->pp();
 
@@ -967,7 +970,7 @@
 		{
 			if(!$this->acl_delete)
 			{
-				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=>8, 'acl_location'=> $this->acl_location));
+				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> $this->currentapp.'.uilocation.stop', 'perm'=>8, 'acl_location'=> $this->acl_location));
 			}
 
 			$voucher_id = phpgw::get_var('voucher_id', 'int');
@@ -975,7 +978,7 @@
 
 			$link_data = array
 			(
-				'menuaction' => 'property.uiinvoice.index'
+				'menuaction' => $this->currentapp.'.uiinvoice.index'
 			);
 
 			if (phpgw::get_var('confirm', 'bool', 'POST'))
@@ -989,7 +992,7 @@
 			$data = array
 			(
 				'done_action'		=> $GLOBALS['phpgw']->link('/index.php',$link_data),
-				'delete_action'		=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiinvoice.delete', 'voucher_id'=> $voucher_id)),
+				'delete_action'		=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uiinvoice.delete', 'voucher_id'=> $voucher_id)),
 				'lang_confirm_msg'	=> lang('do you really want to delete this entry'),
 				'lang_yes'		=> lang('yes'),
 				'lang_yes_statustext'	=> lang('Delete the entry'),
@@ -1000,7 +1003,7 @@
 			$appname	= lang('invoice');
 			$function_msg	= lang('delete voucher');
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($this->currentapp) . ' - ' . $appname . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('delete' => $data));
 		//	$GLOBALS['phpgw']->xslttpl->pp();
 		}
@@ -1009,16 +1012,14 @@
 		{
 			if(!$this->acl_add)
 			{
-				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=>2, 'acl_location'=> $this->acl_location));
+				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> $this->currentapp.'.uilocation.stop', 'perm'=>2, 'acl_location'=> $this->acl_location));
 			}
-
-			$GLOBALS['phpgw_info']['flags']['menu_selection'] .= '::add';
 
 			$receipt = $GLOBALS['phpgw']->session->appsession('session_data','add_receipt');
 
 			if(isset($receipt['voucher_id']) && $receipt['voucher_id'])
 			{
-				$link_receipt = $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiinvoice.receipt', 'voucher_id'=> $receipt['voucher_id']));
+				$link_receipt = $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uiinvoice.receipt', 'voucher_id'=> $receipt['voucher_id']));
 			}
 
 			$GLOBALS['phpgw']->session->appsession('session_data','add_receipt','');
@@ -1027,7 +1028,7 @@
 
 			$referer = parse_url($_SERVER['HTTP_REFERER']);
 			parse_str($referer['query']); // produce $menuaction
-			if(phpgw::get_var('cancel', 'bool') || $menuaction != 'property.uiinvoice.add')
+			if(phpgw::get_var('cancel', 'bool') || $menuaction != $this->currentapp.'.uiinvoice.add')
 			{
 				$GLOBALS['phpgw']->session->appsession('session_data','add_values','');
 			}
@@ -1060,7 +1061,7 @@
 				$values['amount']		= phpgw::get_var('amount', 'float');
 				$values['order_id']		= phpgw::get_var('order_id', 'int');
 
-				$insert_record = $GLOBALS['phpgw']->session->appsession('insert_record','property');
+				$insert_record = $GLOBALS['phpgw']->session->appsession('insert_record',$this->currentapp);
 				$values = $this->bocommon->collect_locationdata($values,$insert_record);
 
 				$GLOBALS['phpgw']->session->appsession('session_data','add_values',$values);
@@ -1075,6 +1076,8 @@
 			$debug 				= phpgw::get_var('debug', 'bool');
 			$add_invoice 			= phpgw::get_var('add_invoice', 'bool');
 
+
+			$links = $this->menu->links('add_inv');
 
 			if($location_code)
 			{
@@ -1166,7 +1169,7 @@
 					}
 					unset($values);
 					$GLOBALS['phpgw']->session->appsession('session_data','add_receipt',$receipt);
-					$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uiinvoice.add'));
+					$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> $this->currentapp.'.uiinvoice.add'));
 				}
 				else
 				{
@@ -1195,7 +1198,7 @@
 
 			$link_data = array
 			(
-				'menuaction'	=> 'property.uiinvoice.add',
+				'menuaction'	=> $this->currentapp.'.uiinvoice.add',
 				'debug'		=> True
 			);
 
@@ -1217,15 +1220,16 @@
 			$data = array
 			(
 				'msgbox_data'						=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
+				'links'								=> $links,
 
 				'img_cal'							=> $GLOBALS['phpgw']->common->image('phpgwapi','cal'),
 				'lang_datetitle'					=> lang('Select date'),
 
 				'form_action'						=> $GLOBALS['phpgw']->link('/index.php',$link_data),
-				'cancel_action'						=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiinvoice.index')),
+				'cancel_action'						=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uiinvoice.index')),
 				'lang_cancel'						=> lang('Cancel'),
 				'lang_cancel_statustext'			=> lang('cancel'),
-				'action_url'						=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=>  'property' .'.uiinvoice.add')),
+				'action_url'						=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=>  $this->currentapp .'.uiinvoice.add')),
 				'tsvfilename'						=> '',
 
 				'lang_add'							=> lang('add'),
@@ -1242,7 +1246,7 @@
 				'lang_kid_nr_statustext'			=> lang('Enter Kid nr'),
 
 				'lang_vendor'						=> lang('Vendor'),
-				'addressbook_link'					=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uilookup.vendor')),
+				'addressbook_link'					=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uilookup.vendor')),
 
 				'lang_invoice_date_statustext'		=> lang('Enter the invoice date'),
 				'lang_num_days_statustext'			=> lang('Enter the payment date or the payment delay'),
@@ -1318,12 +1322,12 @@
 
 //_debug_array($data);
 
-			$GLOBALS['phpgw']->xslttpl->add_file(array('invoice'));
+			$GLOBALS['phpgw']->xslttpl->add_file(array('invoice','menu'));
 
 			$appname						= lang('Invoice');
 			$function_msg					= lang('Add invoice');
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($this->currentapp) . ' - ' . $appname . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('add' => $data));
 		//	$GLOBALS['phpgw']->xslttpl->pp();
 		}
@@ -1333,7 +1337,7 @@
 
 			if(!$this->acl_read)
 			{
-				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=>1, 'acl_location'=> $this->acl_location));
+				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> $this->currentapp.'.uilocation.stop', 'perm'=>1, 'acl_location'=> $this->acl_location));
 			}
 
 			$GLOBALS['phpgw_info']['flags'][noheader] = True;
@@ -1356,9 +1360,7 @@
 				$contacts->role='vendor';
 				if($values[0]['vendor_id'])
 				{
-					$custom 					= createObject('phpgwapi.custom_fields');	
-					$vendor_data['attributes']	= $custom->get_attribs('property','.vendor', 0, '', 'ASC', 'attrib_sort', true, true);
-					$vendor_data				= $contacts->read_single($values[0]['vendor_id'],$vendor_data);
+					$vendor_data	= $contacts->read_single(array('actor_id'=>$values[0]['vendor_id']));
 					if(is_array($vendor_data))
 					{
 						foreach($vendor_data['attributes'] as $attribute)
@@ -1534,17 +1536,17 @@
 			$GLOBALS['phpgw_info']['flags'][nofooter] = True;
 			$GLOBALS['phpgw_info']['flags']['noframework'] = True;
 
-			$GLOBALS['phpgw']->xslttpl->add_file(array('invoice','table_header'));
+			$GLOBALS['phpgw']->xslttpl->add_file(array('invoice','menu','table_header'));
 			
 			$link_data_add = array
 			(
-				'menuaction'	=> 'property.uiinvoice.add',
+				'menuaction'	=> $this->currentapp.'.uiinvoice.add',
 				'add_invoice'	=> True
 			);
 
 			$link_data_cancel = array
 			(
-				'menuaction'	=> 'property.uiinvoice.add'
+				'menuaction'	=> $this->currentapp.'.uiinvoice.add'
 			);
 
 			$post_data = array
@@ -1660,7 +1662,7 @@
 			$appname						= lang('Invoice');
 			$function_msg					= lang('Add invoice: Debug');
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($this->currentapp) . ' - ' . $appname . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('debug' => $data));
 		//	$GLOBALS['phpgw']->xslttpl->pp();
 		}
@@ -1674,10 +1676,10 @@
 			switch($order_type)
 			{
 				case 'workorder':
-					$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uiwo_hour.view', 'no_email'=> true, 'show_cost'=> true, 'workorder_id'=> $order_id));
+					$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> $this->currentapp.'.uiwo_hour.view', 'no_email'=> true, 'show_cost'=> true, 'workorder_id'=> $order_id));
 					break;
 				case 's_agreement':
-					$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uis_agreement.view', 'id'=> $order_id));
+					$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> $this->currentapp.'.uis_agreement.view', 'id'=> $order_id));
 					break;
 			}
 		}

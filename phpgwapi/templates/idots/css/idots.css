@@ -37,7 +37,6 @@ h1.articletitle
 	min-height: 90%;
 	margin: 0px;
 	padding: 0px;
-	text-align: left;
 	vertical-align: top;
 	width: 100%;
 }
@@ -191,20 +190,15 @@ h1.articletitle
 	margin-left: 20px;
 }
 
-ul.sideboxcontent
+.sideboxcontent 
 {
 	background-color: #efefef;
 	font-family: Verdana, Arial, Helvetica, sans-serif;
 	font-size: 12px;
+	list-style-position: inside;
 	margin: 0px;
 	padding: 5px;
 	width: 150px; 
-}
-
-ul.sideboxcontent li
-{
-	list-style: square inside url(../images/dot.png);
-	padding: 1px 3px;
 }
 
 #sidecontent h2
@@ -224,9 +218,22 @@ ul.sideboxcontent li
 .sidebox
 {
 	border: 1px solid #98aab1;
+	border-collapse: collapse;
 	margin-bottom: 25px;
 	padding: 0px;
 	width: 160px; 
+}
+
+.sidebox li
+{
+	list-style-type: square;
+}
+
+.sidebox li.empty_item
+{
+	font-size: 6px;
+	height: 8px;
+	list-style-type: none;
 }
 
 /* Save some space when printing */
@@ -314,6 +321,71 @@ label
 form br
 {
 	clear: left;
+}
+
+/* Used by tabs */
+ul.tabs
+{
+	background-image: url('../images/tabs-bg.png');
+	height: 32px;
+	list-style: none;
+	margin: 0px;
+	padding: 0px;
+}
+
+ul.tabs li
+{
+	display: block;
+	float: left;
+	height: 32px;
+	margin: 0px;
+	padding: 0px;
+	width: 150px;
+}
+
+ul.tabs li a, ul.tabs li input
+{
+	background-image: url('../images/tab-r.png');
+	background-color: transparent;
+	background-repeat: no-repeat;
+	border: 0px;
+	color: #000;
+	display: block;
+	height: 32px;
+	overflow: hidden;
+	padding-top: 7px;
+	text-decoration: none;
+	white-space: nowrap; 
+	width: 150px;
+}
+
+ul.tabs li.tablast
+{
+	background-color: transparent;
+	background-image: url('../images/tab-last.png');
+	background-repeat: no-repeat;
+}
+
+ul.tabs li.activetab
+{
+	background-color: transparent;
+	background-image: url('../images/tab-active-bg.png');
+	height: 32px;
+}
+
+ul.tabs li.activetab a
+{
+	background-image: url('../images/tab-active-r.png');
+	background-position: top right;
+}
+ 
+ul.tabs li
+{
+	background-image: url('../images/tab-bg.png');
+	color:#069;
+	height: 32px;
+	text-align: center;
+	white-space: nowrap;
 }
 
 /* nextmatch values */

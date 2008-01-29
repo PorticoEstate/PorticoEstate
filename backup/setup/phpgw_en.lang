@@ -19,7 +19,7 @@ LDAP	common	en	LDAP
 ldap database	admin	en	LDAP database
 maildir	admin	en	Mail directory
 monthly	backup	en	monthly
-mysql	admin	en	MySQL
+mysql	admin	en	MySQL	
 nfs	backup	en	NFS
 No backup archives available !	backup	en	No backup archives available !
 Number of stored backup versions	backup	en	Number of stored backup versions
@@ -54,7 +54,7 @@ tar.bz2	backup	en	tar.bz2
 tar.gz	backup	en	tar.gz
 The backup application is not configured for showing the archives in phpGroupWare yet !	backup	en	The backup application is not configured for showing the archives in phpGroupWare yet !
 The directory to store the backup script must be outside of the webservers *DocumentRoot* !	backup	en	The directory to store the backup script must be outside of the webservers *DocumentRoot* !
-The ftp connection failed ! Please check your configuration !	backup	en	The ftp connection failed ! Please check your configuration !
+The ftp connection failed ! Please check your configuration !	backup	en	The ftp connection failed ! Please check your configuration !	
 Transport application	backup	en	Transport application
 User	backup	en	User
 versions can only be a number !	backup	en	Versions can only be a number !

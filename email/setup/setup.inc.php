@@ -43,8 +43,7 @@
 	$setup_info['email']['hooks'][] = 'add_def_prefs';
 	$setup_info['email']['hooks'][] = 'preferences';
 	$setup_info['email']['hooks'][] = 'settings';
-	//$setup_info['email']['hooks']['getFolderContent'] = 'email.email_service.getFolderContent';
-	$setup_info['email']['hooks']['menu'] = 'email.service.get_menu';
+	$setup_info['email']['hooks']['getFolderContent'] = 'email.email_service.getFolderContent';
 
 	/* Dependacies for this app to work */
 	$setup_info['email']['depends'][] = array(

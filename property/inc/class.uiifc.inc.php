@@ -55,12 +55,13 @@
 		function uiifc()
 		{
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = True;
-			$GLOBALS['phpgw_info']['flags']['menu_selection'] = 'property::ifc';
-		//	$this->currentapp		= $GLOBALS['phpgw_info']['flags']['currentapp'];
+			$this->currentapp		= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->cats				= CreateObject('phpgwapi.categories');
 			$this->nextmatchs		= CreateObject('phpgwapi.nextmatchs');
 			$this->account			= $GLOBALS['phpgw_info']['user']['account_id'];
 			$this->bo				= CreateObject('property.boifc',true);
+			$this->menu				= CreateObject('property.menu');
+			$this->menu->sub		='ifc';
 			$this->acl 				= & $GLOBALS['phpgw']->acl;
 			$this->acl_location 	= '.ifc';
 			$this->acl_read 			= $this->acl->check($this->acl_location,PHPGW_ACL_READ);
@@ -99,13 +100,16 @@
 				$output = 'html';
 			}
 			
+			$this->menu->sub = 'alternative';
+			$links = $this->menu->links();
 			if(!$this->acl_read)
 			{
-				$this->no_access();
+				$this->no_access($links);
 				return;
 			}
 
-			$GLOBALS['phpgw']->xslttpl->add_file(array('ifc','nextmatchs','search_field'));
+			$GLOBALS['phpgw']->xslttpl->add_file(array('ifc','nextmatchs','menu',
+										'search_field'));
 
 			$ifc_info = $this->bo->read();
 
@@ -136,19 +140,19 @@
 					{
 						$content[$j]['row'][$i]['statustext']			= lang('view the record');
 						$content[$j]['row'][$i]['text']					= lang('view');
-						$content[$j]['row'][$i++]['link']				= $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'property.uiifc.view','ifc_id'=> $entry['id']));
+						$content[$j]['row'][$i++]['link']				= $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> $this->currentapp.'.uiifc.view','ifc_id'=> $entry['id']));
 					}
 					if($this->acl_edit)
 					{
 						$content[$j]['row'][$i]['statustext']			= lang('edit the record');
 						$content[$j]['row'][$i]['text']					= lang('edit');
-						$content[$j]['row'][$i++]['link']				= $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'property.uiifc.edit', 'ifc_id'=> $entry['id']));
+						$content[$j]['row'][$i++]['link']				= $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> $this->currentapp.'.uiifc.edit', 'ifc_id'=> $entry['id']));
 					}
 					if($this->acl_delete)
 					{
 						$content[$j]['row'][$i]['statustext']			= lang('delete the record');
 						$content[$j]['row'][$i]['text']					= lang('delete');
-						$content[$j]['row'][$i++]['link']				= $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'property.uiifc.delete', 'ifc_id'=> $entry['id']));
+						$content[$j]['row'][$i++]['link']				= $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> $this->currentapp.'.uiifc.delete', 'ifc_id'=> $entry['id']));
 					}
 
 					$j++;
@@ -170,7 +174,7 @@
 								'sort'	=> $this->sort,
 								'var'	=> $uicols['name'][$i],
 								'order'	=> $this->order,
-								'extra'	=> array('menuaction'	=> 'property.uiifc.index',
+								'extra'	=> array('menuaction'	=> $this->currentapp.'.uiifc.index',
 												'query'			=> $this->query,
 												'cat_id'		=> $this->cat_id,
 												'filter'		=> $this->filter,
@@ -211,7 +215,7 @@
 				(
 					'lang_add'				=> lang('add'),
 					'lang_add_statustext'	=> lang('add a ifc'),
-					'add_action'			=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'property.uiifc.edit','output'=>$output)),
+					'add_action'			=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> $this->currentapp.'.uiifc.edit','output'=>$output)),
 				);
 			}
 
@@ -226,7 +230,7 @@
 
 			$link_data = array
 			(
-				'menuaction'	=> 'property.uiifc.index',
+				'menuaction'	=> $this->currentapp.'.uiifc.index',
 				'sort'			=> $this->sort,
 				'order'			=> $this->order,
 				'cat_id'		=> $this->cat_id,
@@ -240,6 +244,7 @@
 			$data = array
 			(
 				'msgbox_data'							=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
+				'links'									=> $links,
 				'cat_filter'							=> $this->cats->formatted_xslt_list(array('select_name' => 'cat_id','selected' => $this->cat_id,'globals' => True,'link_data' => $link_data)),
 				'filter_data'							=> $this->nextmatchs->xslt_filter(array('filter' => $this->filter,'link_data' => $link_data)),
 				'allow_allrows'							=> True,
@@ -262,7 +267,7 @@
 //_debug_array($data);
 			$function_msg= lang('list ifc values');
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property'). ': ' . $function_msg;
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($this->currentapp). ': ' . $function_msg;
 			
 			if($output == 'wml')
 			{
@@ -274,7 +279,6 @@
 
 		function import()
 		{
-			$GLOBALS['phpgw_info']['flags']['menu_selection'] .= '::import';
 			$acl_location = '.ifc.import';
 			if(!$this->acl->check($acl_location,PHPGW_ACL_ADD))
 			{
@@ -291,7 +295,7 @@
 			{
 				if ((isset($values['save']) && $values['save']) || (isset($values['apply']) && $values['apply']))
 				{
-					$insert_record = $GLOBALS['phpgw']->session->appsession('insert_record','property');
+					$insert_record = $GLOBALS['phpgw']->session->appsession('insert_record',$this->currentapp);
 					$values = $this->bocommon->collect_locationdata($values,$insert_record);
 
 					$ifcfile = $_FILES['ifcfile']['tmp_name'];
@@ -311,7 +315,7 @@
 						if (isset($values['save']) && $values['save'])
 						{
 							$GLOBALS['phpgw']->session->appsession('session_data','ifc_receipt',$receipt);
-							$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uiifc.index'));
+							$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> $this->currentapp.'.uiifc.index'));
 						}
 					}
 				}
@@ -321,7 +325,7 @@
 					{
 						unlink ($ifcfile);
 					}
-					$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uiifc.index'));
+					$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> $this->currentapp.'.uiifc.index'));
 				}
 			}				
 
@@ -338,7 +342,7 @@
 
 			$link_data = array
 			(
-				'menuaction'	=> 'property.uiifc.import'
+				'menuaction'	=> $this->currentapp.'.uiifc.import'
 			);
 
 			$msgbox_data = isset($msgbox_data) ? $GLOBALS['phpgw']->common->msgbox_data($receipt) : '';
@@ -404,7 +408,7 @@
 			{
 				if(!$this->acl_edit)
 				{
-					$this->no_access();
+					$this->no_access($links);
 					return;
 				}
 
@@ -466,13 +470,13 @@
 						if (isset($values['save']) && $values['save'])
 						{
 							$GLOBALS['phpgw']->session->appsession('session_data','hrm_training_receipt',$receipt);
-							$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction'=> 'property.uiifc.index', 'output'=> $output));
+							$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction'=> $this->currentapp.'.uiifc.index', 'output'=> $output));
 						}
 					}
 				}
 				else
 				{
-					$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction'=> 'property.uiifc.index', 'output'=> $output));
+					$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction'=> $this->currentapp.'.uiifc.index', 'output'=> $output));
 				}
 			}
 
@@ -495,7 +499,7 @@
 
 			$link_data = array
 			(
-				'menuaction'	=> 'property.uiifc.edit',
+				'menuaction'	=> $this->currentapp.'.uiifc.edit',
 				'ifc_id'		=> $ifc_id,
 				'output'		=> $output
 			);
@@ -537,14 +541,12 @@
 				'lang_access'					=> lang('private'),
 				'value_access'					=> (isset($values['access'])?$values['access']:''),
 				'lang_access_off_statustext'	=> lang('The note is public. If the note should be private, check this box'),
-				'lang_access_on_statustext'		=> lang('The note is private. If the note should be public, uncheck this box'),
-				'textareacols'					=> isset($GLOBALS['phpgw_info']['user']['preferences']['property']['textareacols']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['textareacols'] ? $GLOBALS['phpgw_info']['user']['preferences']['property']['textareacols'] : 40,
-				'textarearows'					=> isset($GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows'] ? $GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows'] : 6
+				'lang_access_on_statustext'		=> lang('The note is private. If the note should be public, uncheck this box')
 			);
 
 			$appname		= lang('ifc');
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($this->currentapp) . ' - ' . $appname . ': ' . $function_msg;
 			if($output == 'wml')
 			{
 				$GLOBALS['phpgw']->xslttpl->set_output('wml');
@@ -599,21 +601,19 @@
 				'lang_town'					=> lang('town'),
 				'lang_remark'				=> lang('remark'),
 
-				'form_action'				=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'property.uiifc.index','output'=>$output)),
+				'form_action'				=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> $this->currentapp.'.uiifc.index','output'=>$output)),
 				'lang_cancel'				=> lang('cancel'),
 				'value_id'					=> $ifc_id,
 				'lang_category'				=> lang('category'),
 				'value_cat'					=> $this->cats->id2name($values['cat_id']),
 				'attributes_values'			=> $values['attributes'],
 				'lang_access'				=> lang('private'),
-				'value_access'				=> (isset($values['access'])?lang($values['access']):''),
-				'textareacols'				=> isset($GLOBALS['phpgw_info']['user']['preferences']['property']['textareacols']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['textareacols'] ? $GLOBALS['phpgw_info']['user']['preferences']['property']['textareacols'] : 40,
-				'textarearows'				=> isset($GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows'] ? $GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows'] : 6
+				'value_access'				=> (isset($values['access'])?lang($values['access']):'')
 			);
 
 			$appname	= lang('ifc');
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($this->currentapp) . ' - ' . $appname . ': ' . $function_msg;
 			if($output == 'wml')
 			{
 				$GLOBALS['phpgw']->xslttpl->set_output('wml');
@@ -642,7 +642,7 @@
 
 			$link_data = array
 			(
-				'menuaction' => 'property.uiifc.index'
+				'menuaction' => $this->currentapp.'.uiifc.index'
 			);
 
 			if (phpgw::get_var('confirm', 'bool', 'POST'))
@@ -656,7 +656,7 @@
 			$data = array
 			(
 				'done_action'			=> $GLOBALS['phpgw']->link('/index.php',$link_data),
-				'delete_action'			=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'property.uiifc.delete', 'ifc_id'=> $ifc_id)),
+				'delete_action'			=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> $this->currentapp.'.uiifc.delete', 'ifc_id'=> $ifc_id)),
 				'lang_confirm_msg'		=> lang('do you really want to delete this entry'),
 				'lang_yes'				=> lang('yes'),
 				'lang_yes_statustext'	=> lang('Delete the entry'),
@@ -667,7 +667,7 @@
 			$appname		= lang('ifc');
 			$function_msg	= lang('delete');
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($this->currentapp) . ' - ' . $appname . ': ' . $function_msg;
 
 			if($output == 'wml')
 			{
@@ -677,9 +677,9 @@
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('delete' => $data));
 		}
 
-		function no_access()
+		function no_access($links = '')
 		{
-			$GLOBALS['phpgw']->xslttpl->add_file(array('no_access'));
+			$GLOBALS['phpgw']->xslttpl->add_file(array('no_access','menu'));
 
 			$receipt['error'][]=array('msg'=>lang('NO ACCESS'));
 
@@ -688,11 +688,12 @@
 			$data = array
 			(
 				'msgbox_data'	=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
+				'links'			=> $links,
 			);
 
 			$appname	= lang('No access');
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname;
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($this->currentapp) . ' - ' . $appname;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('no_access' => $data));
 		}
 	}

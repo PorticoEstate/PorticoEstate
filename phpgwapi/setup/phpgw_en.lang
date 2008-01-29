@@ -1,4 +1,5 @@
-about	common	en	About
+about	common	en	about
+about %1	common	en	About %1
 access	common	en	Access
 access not permitted	common	en	Access not permitted
 account has been created	common	en	Account has been created

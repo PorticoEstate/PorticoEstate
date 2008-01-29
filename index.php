@@ -18,7 +18,6 @@
 
 	/**
 	* @global string $GLOBALS['sessionid']
-	* @internal FIXME this is ugly and probably not needed - skwashd jan08
 	*/
 	$GLOBALS['sessionid'] = isset($_REQUEST['sessionid'])? $_REQUEST['sessionid'] : '';
 
@@ -84,7 +83,7 @@
 		{
 			Header('Content-Type: text/javascript');
 			$return_data = $GLOBALS[$class]->$method();
-			echo json_encode($return_data);
+			echo execMethod('phpgwapi.Services_JSON.encode', $return_data);
 			$GLOBALS['phpgw_info']['flags']['nofooter'] = true;
 			$GLOBALS['phpgw']->common->phpgw_exit();
 		}

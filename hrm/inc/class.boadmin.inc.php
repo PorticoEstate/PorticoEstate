@@ -27,7 +27,7 @@
 
 		function hrm_boadmin($session='')
 		{
-		//	$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
+			$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->so 			= CreateObject('hrm.soadmin');
 			$this->catbo = createobject('phpgwapi.categories');
 
@@ -67,7 +67,7 @@
 			}
 			else
 			{
-				$this->acl_app = 'hrm';
+				$this->acl_app = $this->currentapp;
 			}
 			if(isset($query))
 			{

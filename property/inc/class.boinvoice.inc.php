@@ -39,7 +39,7 @@
 		function property_boinvoice($session=False)
 		{
 			$this->db		= $GLOBALS['phpgw']->db;
-		//	$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
+			$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->so		= CreateObject('property.soinvoice',True);
 			$this->bocommon		= CreateObject('property.bocommon');
 			$this->account_id	= $GLOBALS['phpgw_info']['user']['account_id'];

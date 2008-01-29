@@ -55,7 +55,7 @@
 
 		function hrm_boplace($session=False)
 		{
-		//	$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
+			$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->so 		= CreateObject('hrm.soplace');
 			$this->bocommon 	= CreateObject('hrm.bocommon');
 

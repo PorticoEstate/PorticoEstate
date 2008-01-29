@@ -26,8 +26,8 @@
 	{
 		function sessions_php()
 		{
-			//Call parent constructor
-			parent::__construct();
+			//Call abstract class constructor
+			parent::sessions();
 			
 			//respect the config option for cookies
 			ini_set('session.use_cookies',!!@$GLOBALS['phpgw_info']['server']['usecookies']);
@@ -53,11 +53,6 @@
 			return array();
 		}
 
-		/**
-		* Set the paramaters for the cookie
-		*
-		* @param string $domain the domain for the cookie
-		*/
 		function set_cookie_params($domain)
 		{
 			session_set_cookie_params(0,'/',$domain);
@@ -318,12 +313,4 @@
 				'domain'		=> $this->account_domain
 			);
 		}
-
-		/**
-		* Remove stale sessions out of the database
-		*
-		* @internal this does nothing as PHP handles this internally
-		*/
-		public function clean_sessions()
-		{}
 	}

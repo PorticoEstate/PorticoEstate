@@ -5,8 +5,14 @@
 			<xsl:when test="edit">
 				<xsl:apply-templates select="edit"/>
 			</xsl:when>
+			<xsl:when test="edit_status">
+				<xsl:apply-templates select="edit_status"/>
+			</xsl:when>
 			<xsl:when test="list_attribute">
 				<xsl:apply-templates select="list_attribute"/>
+			</xsl:when>
+			<xsl:when test="list_status">
+				<xsl:apply-templates select="list_status"/>
 			</xsl:when>
 			<xsl:when test="edit_attrib">
 				<xsl:apply-templates select="edit_attrib"/>
@@ -34,6 +40,7 @@
 	
 
 	<xsl:template match="list">		
+		<xsl:call-template name="menu"/> 
 		<table width="100%" cellpadding="2" cellspacing="2" align="center">
 			<tr>
 				<td align="right">
@@ -120,8 +127,98 @@
 				</td>
 			</tr>
 	</xsl:template>
-		
+	
+	<xsl:template match="list_status">		
+		<xsl:call-template name="menu"/> 
+		<table width="100%" cellpadding="2" cellspacing="2" align="center">
+			<tr>
+				<td align="right">
+					<xsl:call-template name="search_field"/>
+				</td>
+			</tr>
+			<tr>
+				<td class="th_text" align="left">
+					<xsl:value-of select="lang_entity"/>
+					<xsl:text>: </xsl:text>
+					<xsl:value-of select="entity_name"/>
+				</td>
+			</tr>
+			<tr>
+				<td class="th_text" align="left">
+					<xsl:value-of select="lang_category"/>
+					<xsl:text>: </xsl:text>
+					<xsl:value-of select="category_name"/>
+				</td>
+			</tr>
+			<tr>
+				<td colspan="3" width="100%">
+					<xsl:call-template name="nextmatchs"/>
+				</td>
+			</tr>
+		</table>
+		<table width="100%" cellpadding="2" cellspacing="2" align="center">
+				<xsl:apply-templates select="table_header_status"/>
+				<xsl:apply-templates select="values_status"/>
+				<xsl:apply-templates select="table_add"/>
+		</table>
+	</xsl:template>
+
+	<xsl:template match="table_header_status">
+		<xsl:variable name="sort_id"><xsl:value-of select="sort_id"/></xsl:variable>
+		<xsl:variable name="sort_name"><xsl:value-of select="sort_name"/></xsl:variable>
+		<tr class="th">
+			<td class="th_text" width="10%" align="right">
+				<a href="{$sort_id}"><xsl:value-of select="lang_id"/></a>
+			</td>
+			<td class="th_text" width="20%" align="center">
+				<xsl:value-of select="lang_descr"/>
+			</td>
+			<td class="th_text" width="5%" align="center">
+				<xsl:value-of select="lang_edit"/>
+			</td>
+			<td class="th_text" width="5%" align="center">
+				<xsl:value-of select="lang_delete"/>
+			</td>
+		</tr>
+	</xsl:template>
+
+	<xsl:template match="values_status"> 
+		<xsl:variable name="lang_edit_standardtext"><xsl:value-of select="lang_edit_standardtext"/></xsl:variable>
+		<xsl:variable name="lang_delete_standardtext"><xsl:value-of select="lang_delete_standardtext"/></xsl:variable>
+			<tr>
+				<xsl:attribute name="class">
+					<xsl:choose>
+						<xsl:when test="@class">
+							<xsl:value-of select="@class"/>
+						</xsl:when>
+						<xsl:when test="position() mod 2 = 0">
+							<xsl:text>row_off</xsl:text>
+						</xsl:when>
+						<xsl:otherwise>
+							<xsl:text>row_on</xsl:text>
+						</xsl:otherwise>
+					</xsl:choose>
+				</xsl:attribute>
+
+				<td align="right">
+					<xsl:value-of select="id"/>
+				</td>
+				<td align="left">
+					<xsl:value-of select="descr"/>
+				</td>
+				<td align="center">
+					<xsl:variable name="link_edit"><xsl:value-of select="link_edit"/></xsl:variable>
+					<a href="{$link_edit}" onMouseover="window.status='{$lang_edit_standardtext}';return true;" onMouseout="window.status='';return true;"><xsl:value-of select="text_edit"/></a>
+				</td>
+				<td align="center">
+					<xsl:variable name="link_delete"><xsl:value-of select="link_delete"/></xsl:variable>
+					<a href="{$link_delete}" onMouseover="window.status='{$lang_delete_standardtext}';return true;" onMouseout="window.status='';return true;"><xsl:value-of select="text_delete"/></a>
+				</td>
+			</tr>
+	</xsl:template>
+	
 	<xsl:template match="list_category">		
+		<xsl:call-template name="menu"/> 
 		<table width="100%" cellpadding="2" cellspacing="2" align="center">
 			<tr>
 				<td align="right">
@@ -232,6 +329,7 @@
 	
 	
 		<xsl:template match="list_config">		
+			<xsl:call-template name="menu"/> 
 			<table width="100%" cellpadding="2" cellspacing="2" align="center">
 				<tr>
 					<td align="right">
@@ -709,6 +807,111 @@
 					</tr>
 				</xsl:when>
 			</xsl:choose>
+
+			<tr height="50">
+				<td>
+					<xsl:variable name="lang_save"><xsl:value-of select="lang_save"/></xsl:variable>
+					<input type="submit" name="values[save]" value="{$lang_save}" onMouseout="window.status='';return true;">
+						<xsl:attribute name="onMouseover">
+							<xsl:text>window.status='</xsl:text>
+								<xsl:value-of select="lang_save_standardtext"/>
+							<xsl:text>'; return true;</xsl:text>
+						</xsl:attribute>
+					</input>
+				</td>
+			</tr>
+			</form>
+			<tr>
+				<td>
+					<xsl:variable name="done_action"><xsl:value-of select="done_action"/></xsl:variable>
+					<xsl:variable name="lang_done"><xsl:value-of select="lang_done"/></xsl:variable>
+					<form method="post" action="{$done_action}">
+						<input type="submit" name="done" value="{$lang_done}" onMouseout="window.status='';return true;">
+							<xsl:attribute name="onMouseover">
+								<xsl:text>window.status='</xsl:text>
+									<xsl:value-of select="lang_done_standardtext"/>
+								<xsl:text>'; return true;</xsl:text>
+							</xsl:attribute>
+						</input>
+					</form>
+				</td>
+			</tr>
+		</table>
+		</div>
+	</xsl:template>
+
+<!-- add_status / edit_status  -->
+	<xsl:template match="edit_status">
+		<div align="left">
+		
+		<table cellpadding="2" cellspacing="2" width="80%" align="center">
+			<xsl:choose>
+				<xsl:when test="msgbox_data != ''">
+					<tr>
+						<td align="left" colspan="3">
+							<xsl:call-template name="msgbox"/>
+						</td>
+					</tr>
+				</xsl:when>
+			</xsl:choose>
+			<xsl:variable name="form_action"><xsl:value-of select="form_action"/></xsl:variable>
+			<form method="post" action="{$form_action}">
+			<tr>
+				<td class="th_text" align="left">
+					<xsl:value-of select="lang_entity"/>
+				</td>
+				<td class="th_text" align="left">
+					<xsl:value-of select="entity_name"/>
+				</td>
+			</tr>
+			<tr>
+				<td class="th_text" align="left">
+					<xsl:value-of select="lang_category"/>
+				</td>
+				<td class="th_text" align="left">
+					<xsl:value-of select="category_name"/>
+				</td>
+			</tr>
+			<tr>
+				<td valign="top">
+					<xsl:value-of select="lang_id"/>
+				</td>
+				<xsl:choose>
+					<xsl:when test="value_id != ''">
+						<td>
+							<xsl:value-of select="value_id"/>
+							<input type="hidden" name="values[id]" value="{value_id}"></input>
+						</td>
+					</xsl:when>
+					<xsl:otherwise>
+						<td>
+							<input type="text" name="values[id]" value="{value_id}" onMouseout="window.status='';return true;">
+								<xsl:attribute name="onMouseover">
+									<xsl:text>window.status='</xsl:text>
+										<xsl:value-of select="lang_id_standardtext"/>
+									<xsl:text>'; return true;</xsl:text>
+								</xsl:attribute>
+							</input>
+						</td>
+					</xsl:otherwise>
+				</xsl:choose>
+			</tr>
+			<tr>
+				<td valign="top">
+					<xsl:value-of select="lang_descr"/>
+				</td>
+				<td>
+					<textarea cols="60" rows="10" name="values[descr]" wrap="virtual" onMouseout="window.status='';return true;">
+						<xsl:attribute name="onMouseover">
+							<xsl:text>window.status='</xsl:text>
+								<xsl:value-of select="lang_descr_standardtext"/>
+							<xsl:text>'; return true;</xsl:text>
+						</xsl:attribute>
+						<xsl:value-of select="value_descr"/>		
+					</textarea>
+
+				</td>
+			</tr>
 
 			<tr height="50">
 				<td>

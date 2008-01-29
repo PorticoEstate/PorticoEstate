@@ -21,4 +21,3 @@ simple client	xmlrpc	sv	Enkel klient
 system	xmlrpc	sv	System
 test suite	xmlrpc	sv	Test svit
 xmlrpc test	common	sv	XMLRPC Test
-

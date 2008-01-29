@@ -230,7 +230,7 @@
 			(
 				'phpgwapi'		=> true,
 				//if this isn't here, it can never be installed as it is part of the api - skwashd
-				'notifywindow'	=> true ,
+				'notifywindows'	=> true ,
 				'admin'			=> true,
 				'preferences'	=> true
 			);
@@ -413,10 +413,11 @@
 			}
 		}
 
-		/**
-		* Verify that all of an app's tables exist in the db
-		* @param $appname
-		* @param $any optional, set to True to see if any of the apps tables are installed
+		/*
+		@function check_app_tables
+		@abstract	Verify that all of an app's tables exist in the db
+		@param $appname
+		@param $any		optional, set to True to see if any of the apps tables are installed
 		*/
 		function check_app_tables($appname,$any=False)
 		{

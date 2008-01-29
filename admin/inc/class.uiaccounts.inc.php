@@ -11,9 +11,9 @@
 	\**************************************************************************/
 	/* $Id: class.uiaccounts.inc.php 18358 2007-11-27 04:43:37Z skwashd $ */
 
-	class admin_uiaccounts
+	class uiaccounts
 	{
-		public $public_functions = array
+		var $public_functions = array
 		(
 			'list_groups'	=> True,
 			'list_users'	=> True,
@@ -25,13 +25,12 @@
 			'group_manager'	=> True
 		);
 
-		private $bo;
-		private $nextmatchs;
+		var $bo;
+		var $nextmatchs;
 
-		public function __construct()
+		function uiaccounts()
 		{
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = True;
-			$GLOBALS['phpgw_info']['flags']['menu_selection'] = 'admin::admin';
 
 			$this->bo = createObject('admin.boaccounts');
 			$this->nextmatchs =createObject('phpgwapi.nextmatchs');
@@ -49,8 +48,6 @@
 
 		function list_groups()
 		{
-			$GLOBALS['phpgw_info']['flags']['menu_selection'] .= '::groups';
-			
 			if ( phpgw::get_var('done', 'bool', 'POST') || $GLOBALS['phpgw']->acl->check('group_access', PHPGW_ACL_READ,'admin'))
 			{
 				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'admin.uimainscreen.mainscreen'));
@@ -147,8 +144,6 @@
 
 		function list_users($param_cd = '')
 		{
-			$GLOBALS['phpgw_info']['flags']['menu_selection'] .= '::users';
-
 			if ( phpgw::get_var('done', 'bool', 'POST') 
 				|| $GLOBALS['phpgw']->acl->check('account_access',1,'admin') )
 			{
@@ -284,16 +279,12 @@
 
 		function edit_group()
 		{
-			$GLOBALS['phpgw_info']['flags']['menu_selection'] .= '::groups';
-
 			$account_apps	= array();
 			$account_id		= phpgw::get_var('account_id', 'int');
 			$error_list		= '';
 			$values			= phpgw::get_var('values', 'string', 'POST', array());
 
-			if ( (isset($values['cancel']) && $values['cancel'])
-				|| !$account_id && $GLOBALS['phpgw']->acl->check('group_access', PHPGW_ACL_EDIT, 'admin')
-				|| $account_id && $GLOBALS['phpgw']->acl->check('group_access', PHPGW_ACL_PRIVATE, 'admin') )
+			if ( (isset($values['cancel']) && $values['cancel']) || (!$account_id && $GLOBALS['phpgw']->acl->check('group_access',4,'admin')) || ($account_id && $GLOBALS['phpgw']->acl->check('group_access',16,'admin')))
 			{
 				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'admin.uiaccounts.list_groups'));
 			}
@@ -393,7 +384,7 @@
 																				  $entry['account_firstname'],
 																				  $entry['account_lastname']
 																				 ),
- 					'selected'		=> in_array((int) $entry['account_id'], $group_members) ? ' selected' : ''
+ 					'selected'		=> in_array(intval($entry['account_id']), $group_members) ? ' selected' : ''
 				);
 				if ( in_array( (int)$entry['account_id'], $group_members) )
 				{
@@ -420,38 +411,30 @@
 			
 			$apps = array_keys($GLOBALS['phpgw_info']['apps']);
 			asort($apps);
-			
-			$img_acl = $GLOBALS['phpgw']->common->image('admin', 'share', '.png', false);
-			$img_acl_grey = $GLOBALS['phpgw']->common->image('admin', 'share-grey', '.png', false);
-			$img_grants = $GLOBALS['phpgw']->common->image('admin', 'dot', '.png', false);
-			$img_grants_grey = $GLOBALS['phpgw']->common->image('admin', 'dot-grey', '.png', false);
-
 			foreach ( $apps as $app )
 			{
 				if ($GLOBALS['phpgw_info']['apps'][$app]['enabled'] && $GLOBALS['phpgw_info']['apps'][$app]['status'] != 3)
 				{
-					$grants_enabled = isset($apps_with_acl[$app]) && $account_id;
 					$app_list[] = array
 					(
-						'app_name'		=> $app,
-						'app_title'		=> lang($app),
-						'checkbox_name'	=> "account_apps[{$app}]",
-						'checked'       => isset($group_apps[$app]),
-						'acl_url'       => $grants_enabled
+						'acl_url'       => (isset($apps_with_acl[$app]) && $account_id) 
 											? $GLOBALS['phpgw']->link('/index.php',array('menuaction'	=> 'preferences.uiadmin_acl.list_acl',
 																						'acl_app'		=> $app,
 																						'cat_id'=>'groups',
 																						'module'=>'.')) : '',
-						'acl_img'		=> $grants_enabled ? $img_acl : $img_acl_grey,
-						'acl_img_name'	=> lang('Set general permissions'),
-						'grant_img'		=> $grants_enabled ? $img_grants : $img_grants_grey,
-						'grant_img_name'=> lang('Grant Access'),
-						'grant_url'		=> $grants_enabled
+						'acl_img'		=> $GLOBALS['phpgw']->common->image('admin','dot', '.png', false),
+						'app_name'		=> $app,
+						'app_title'		=> lang($app),
+						'checkbox_name'	=> "account_apps[{$app}]",
+						'checked'       => isset($group_apps[$app]) ? 'checked' : '',
+						'grant_url'		=> (isset($apps_with_acl[$app]) && $account_id) 
 											? $GLOBALS['phpgw']->link('/index.php',array('menuaction'	=> 'preferences.uiadmin_acl.aclprefs',
 																						'acl_app'		=> $app,
 																						'cat_id'=>'groups',
 																						'module'=>'.',
-																						'granting_group'=>$account_id)) : ''
+																						'granting_group'=>$account_id)) : '',
+						'grant_img_name'=> lang('Grant Access'),
+						'acl_img_name'      => lang('Set general permissions')
 					);
 				}
 			}
@@ -490,8 +473,6 @@
 
 		function edit_user()
 		{
-			$GLOBALS['phpgw_info']['flags']['menu_selection'] .= '::users';
-
 			$cd                            = phpgw::get_var('cd', 'int', 'GET');
 			$account_id                    = phpgw::get_var('account_id', 'int');
 			$values                        = phpgw::get_var('values', 'string', 'POST');
@@ -503,9 +484,7 @@
 			$values['account_expires_month']= phpgw::get_var('account_expires_month', 'string', 'POST'); // we use string here to allow for MMM
 			$values['account_expires_day'] = phpgw::get_var('account_expires_day', 'int', 'POST');
 
-			if ( (isset($values['cancel']) && $values['cancel']) 
-				|| !$account_id && $GLOBALS['phpgw']->acl->check('account_access', PHPGW_ACL_EDIT, 'admin') 
-				|| $account_id && $GLOBALS['phpgw']->acl->check('account_access', PHPGW_ACL_PRIVATE, 'admin') )
+			if ( (isset($values['cancel']) && $values['cancel']) || (!$account_id && $GLOBALS['phpgw']->acl->check('account_access',4,'admin')) || ($account_id && $GLOBALS['phpgw']->acl->check('account_access',16,'admin')))
 			{
 				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'admin.uiaccounts.list_users'));
 			}
@@ -596,7 +575,7 @@
 				$lang_homedir	= lang('home directory');
 				$lang_shell		= lang('login shell');
 				$homedirectory = '<input name="homedirectory" value="'
-					. ($account_id ? $userData['homedirectory'] : "{$GLOBALS['phpgw_info']['server']['ldap_account_home']}/{$account_lid}")
+					. ($account_id?$userData['homedirectory']:$GLOBALS['phpgw_info']['server']['ldap_account_home'].SEP.$account_lid)
 					. '">';
 				$loginshell = '<input name="loginshell" value="'
 					. ($account_id?$userData['loginshell']:$GLOBALS['phpgw_info']['server']['ldap_account_shell'])
@@ -716,8 +695,7 @@
 				(
 					'app_title'		=> $perm_display[$i]['translatedName'],
 					'checkbox_name'	=> 'account_permissions[' . $perm_display[$i]['appName'] . ']',
-					'checked'		=> (isset($userData['account_permissions']) && $userData['account_permissions'][$perm_display[$i]['appName']]) 
-										|| (isset($db_perms[$perm_display[$i]['appName']]) && $db_perms[$perm_display[$i]['appName']])
+					'checked'		=> ( (isset($userData['account_permissions']) && $userData['account_permissions'][$perm_display[$i]['appName']]) || (isset($db_perms[$perm_display[$i]['appName']]) && $db_perms[$perm_display[$i]['appName']])? '1' : '0')
 				);
 			}
 
@@ -778,8 +756,6 @@
 
 		function view_user()
 		{
-			$GLOBALS['phpgw_info']['flags']['menu_selection'] .= '::users';
-
 			$account_id = phpgw::get_var('account_id', 'int', 'GET');
 			if ( $GLOBALS['phpgw']->acl->check('account_access', 8, 'admin') || !$account_id )
 			{
@@ -871,8 +847,6 @@
 
 		function delete_group()
 		{
-			$GLOBALS['phpgw_info']['flags']['menu_selection'] .= '::groups';
-
 			$account_id = phpgw::get_var('account_id', 'int');
 
 			if ( phpgw::get_var('cancel', 'bool', 'POST') || $GLOBALS['phpgw']->acl->check('group_access',32,'admin'))
@@ -880,7 +854,7 @@
 				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'admin.uiaccounts.list_groups'));
 			}
 
-			if ($account_id && phpgw::get_var('confirm', 'bool', 'POST') )
+			if ($account_id && phpgw::get_var('delete', 'bool', 'POST') )
 			{
 				$this->bo->delete_group($account_id);
 				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'admin.uiaccounts.list_groups'));
@@ -892,15 +866,13 @@
 
 			$data = array
 			(
-				'delete_action'				=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.uiaccounts.delete_group', 'account_id' => $account_id)),
-				'lang_yes'					=> lang('delete'),
-				'lang_no'					=> lang('cancel'),
+				'delete_url'				=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.uiaccounts.delete_group', 'account_id' => $account_id)),
+				'lang_delete'				=> lang('delete'),
+				'lang_cancel'				=> lang('cancel'),
 				'lang_delete_statustext'	=> lang('delete the group'),
 				'lang_cancel_statustext'	=> lang('Leave the group untouched and return back to the list'),
 				'lang_delete_msg'			=> lang('are you sure you want to delete this group ?')
 			);
-			// avoid another call to phpgw::link
-			$data['cancel_action'] = $data['delete_action'];
 
 			$old_group_list = $GLOBALS['phpgw']->acl->get_ids_for_location(intval($account_id),1,'phpgw_group');
 
@@ -929,8 +901,6 @@
 
 		function delete_user()
 		{
-			$GLOBALS['phpgw_info']['flags']['menu_selection'] .= '::users';
-
 			if ( $GLOBALS['phpgw']->acl->check('account_access',32,'admin') 
 				|| $GLOBALS['phpgw_info']['user']['account_id'] == phpgw::get_var('account_id', 'int', 'GET') )
 			{
@@ -995,8 +965,6 @@
 
 		function group_manager($cd='',$account_id='')
 		{
-			$GLOBALS['phpgw_info']['flags']['menu_selection'] .= '::users';
-
 			if ($GLOBALS['phpgw']->acl->check('group_access',16,'admin'))
 			{
 				$this->list_groups();
@@ -1030,8 +998,6 @@
 
 		function edit_group_managers($group_info,$_errors='')
 		{
-			$GLOBALS['phpgw_info']['flags']['menu_selection'] .= '::users';
-
 			if ($GLOBALS['phpgw']->acl->check('group_access',16,'admin'))
 			{
 				$this->list_groups();

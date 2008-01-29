@@ -74,8 +74,10 @@
 
 	/**
 	* @global string $GLOBALS['phpgw_info']['server']['sessions_type']
-	* phpGroupWare can handle session management using the database (db), 
-	* or you can use PHP's internal session handling (php)
+	* phpGroupWare can handle session management using the database, but if
+	* you are using PHP4+ you can usually get better performance by having phpGroupWare
+	* use the session support built into PHP4. PHP3 users will have to use the database.
+	* Your choices are 'db' or 'php'
 	*/
 	$GLOBALS['phpgw_info']['server']['sessions_type'] = '{SESSIONS_TYPE}';
 

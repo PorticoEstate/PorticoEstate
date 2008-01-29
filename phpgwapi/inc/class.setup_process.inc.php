@@ -51,7 +51,7 @@
 			$GLOBALS['phpgw_setup']->oProc->m_odb->Database = $phpgw_domain[$ConfigDomain]['db_name'];
 			$GLOBALS['phpgw_setup']->oProc->m_odb->User     = $phpgw_domain[$ConfigDomain]['db_user'];
 			$GLOBALS['phpgw_setup']->oProc->m_odb->Password = $phpgw_domain[$ConfigDomain]['db_pass'];
-			$GLOBALS['phpgw_setup']->oProc->m_odb->Halt_On_Error = 'yes';
+			$GLOBALS['phpgw_setup']->oProc->m_odb->Halt_On_Error = 'report';
 			$GLOBALS['phpgw_setup']->oProc->m_odb->connect();
 		}
 
@@ -265,7 +265,7 @@
 
 				if($DEBUG) { echo '<br>process->current(): Incoming status: ' . $appname . ',status: '. $setup_info[$key]['status']; }
 
-				$appdir  = PHPGW_SERVER_ROOT . "/{$appname}/setup/";
+				$appdir  = PHPGW_SERVER_ROOT . SEP . $appname . SEP . 'setup' . SEP;
 
 				if ( isset($setup_info[$key]['tables']) 
 					&& $setup_info[$key]['tables'] 
@@ -348,7 +348,7 @@
 			foreach ( array_keys($setup_info) as $key )
 			{
 				$appname = isset($setup_info[$key]['name']) ? $setup_info[$key]['name'] : '';
-				$appdir  = PHPGW_SERVER_ROOT . "/{$appname}/setup/";
+				$appdir  = PHPGW_SERVER_ROOT . SEP . $appname . SEP . 'setup' . SEP;
 
 				if( isset($setup_info[$key]['tables'])
 					&& $setup_info[$key]['tables']
@@ -459,7 +459,7 @@
 			foreach($setup_info as $key => $ignored)
 			{
 				$appname = $setup_info[$key]['name'];
-				$appdir  = PHPGW_SERVER_ROOT . "/{$appname}/setup/";
+				$appdir  = PHPGW_SERVER_ROOT . SEP . $appname . SEP . 'setup' . SEP;
 
 				if(file_exists($appdir.'test_data.inc.php'))
 				{
@@ -496,7 +496,7 @@
 			foreach($setup_info as $key => $ignored)
 			{
 				$appname = $setup_info[$key]['name'];
-				$appdir  = PHPGW_SERVER_ROOT . "/{$appname}/setup/";
+				$appdir  = PHPGW_SERVER_ROOT . SEP . $appname . SEP . 'setup' . SEP;
 
 				if(file_exists($appdir.'tables_baseline.inc.php'))
 				{
@@ -570,7 +570,7 @@
 					$apptitle   = isset($setup_info[$key]['title']) ? $setup_info[$key]['title'] : '';
 					$currentver = $setup_info[$key]['currentver'];
 					$targetver  = $setup_info[$key]['version'];	// The version we need to match when done
-					$appdir     = PHPGW_SERVER_ROOT . "/{$appname}/setup/";
+					$appdir     = PHPGW_SERVER_ROOT . SEP . $appname . SEP . 'setup' . SEP;
 
 					$test   = array();
 					$GLOBALS['phpgw_setup']->oProc->m_aTables = $phpgw_baseline = array();
@@ -820,23 +820,17 @@
 				$this->init_process();
 			}
 
-			$GLOBALS['phpgw_setup']->oProc->m_oTranslator->sCol = array();
-			$GLOBALS['phpgw_setup']->oProc->m_oTranslator->_GetColumns($GLOBALS['phpgw_setup']->oProc, $tablename, $sColumns);
+			$GLOBALS['phpgw_setup']->oProc->m_oTranslator->_GetColumns($GLOBALS['phpgw_setup']->oProc, $tablename, $sColumns, $sColumnName);
 
-			$arr = '';
-			if(is_array($GLOBALS['phpgw_setup']->oProc->m_oTranslator->sCol))
+			while(list($key,$tbldata) = each($GLOBALS['phpgw_setup']->oProc->m_oTranslator->sCol))
 			{
-				reset($GLOBALS['phpgw_setup']->oProc->m_oTranslator->sCol);
-				foreach($GLOBALS['phpgw_setup']->oProc->m_oTranslator->sCol as $tbldata)
-				{
-					$arr .= $tbldata;
-				}
+				$arr .= $tbldata;
 			}
-			
 			$pk = $GLOBALS['phpgw_setup']->oProc->m_oTranslator->pk;
 			$fk = $GLOBALS['phpgw_setup']->oProc->m_oTranslator->fk;
 			$ix = $GLOBALS['phpgw_setup']->oProc->m_oTranslator->ix;
 			$uc = $GLOBALS['phpgw_setup']->oProc->m_oTranslator->uc;
+
 			return array($arr,$pk,$fk,$ix,$uc);
 		}
 	}

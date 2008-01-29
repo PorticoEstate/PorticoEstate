@@ -54,15 +54,14 @@
 		function property_uialarm()
 		{
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = True;
-			$GLOBALS['phpgw_info']['flags']['menu_selection'] = 'admin::property::admin_async';
-
-		//	$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
+			$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->nextmatchs	= CreateObject('phpgwapi.nextmatchs');
 			$this->account		= $GLOBALS['phpgw_info']['user']['account_id'];
 
 			$this->bo		= CreateObject('property.boalarm',True);
 			$this->boasync		= CreateObject('property.boasync');
 			$this->bocommon		= CreateObject('property.bocommon');
+			$this->menu		= CreateObject('property.menu');
 
 			$this->start		= $this->bo->start;
 			$this->query		= $this->bo->query;
@@ -91,9 +90,12 @@
 		function index()
 		{
 			$GLOBALS['phpgw']->xslttpl->add_file(array('alarm',
+										'menu',
 										'receipt',
 										'search_field',
 										'nextmatchs'));
+
+			$links = $this->menu->links();
 
 			$receipt = $GLOBALS['phpgw']->session->appsession('session_data','alarm_receipt');
 			$GLOBALS['phpgw']->session->appsession('session_data','alarm_receipt','');
@@ -140,7 +142,7 @@
 
 				if (substr($alarm['id'],0,8)=='fm_async')
 				{
-					$link_edit			= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uialarm.edit', 'async_id'=> urlencode($alarm['id'])));
+					$link_edit			= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uialarm.edit', 'async_id'=> urlencode($alarm['id'])));
 					$lang_edit_statustext		= lang('edit the alarm');
 					$text_edit			= lang('edit');
 				}
@@ -182,7 +184,7 @@
 											'sort'	=> $this->sort,
 											'var'	=> 'account_lid',
 											'order'	=> $this->order,
-											'extra'	=> array('menuaction'	=> 'property.uialarm.index',
+											'extra'	=> array('menuaction'	=> $this->currentapp.'.uialarm.index',
 																	'cat_id'	=> $this->cat_id,
 																	'query'		=> $this->query,
 																	'allrows'	=> $this->allrows)
@@ -192,7 +194,7 @@
 											'sort'	=> $this->sort,
 											'var'	=> 'method',
 											'order'	=> $this->order,
-											'extra'	=> array('menuaction'	=> 'property.uialarm.index',
+											'extra'	=> array('menuaction'	=> $this->currentapp.'.uialarm.index',
 																	'cat_id'	=> $this->cat_id,
 																	'query'		=> $this->query,
 																	'allrows'	=> $this->allrows)
@@ -202,7 +204,7 @@
 											'sort'	=> $this->sort,
 											'var'	=> 'next',
 											'order'	=> $this->order,
-											'extra'	=> array('menuaction'	=> 'property.uialarm.index',
+											'extra'	=> array('menuaction'	=> $this->currentapp.'.uialarm.index',
 																	'cat_id'	=> $this->cat_id,
 																	'query'		=> $this->query,
 																	'allrows'	=> $this->allrows)
@@ -212,7 +214,7 @@
 											'sort'	=> $this->sort,
 											'var'	=> 'id',
 											'order'	=> $this->order,
-											'extra'	=> array('menuaction'	=> 'property.uialarm.index',
+											'extra'	=> array('menuaction'	=> $this->currentapp.'.uialarm.index',
 																	'cat_id'	=> $this->cat_id,
 																	'query'		=> $this->query,
 																	'allrows'	=> $this->allrows)
@@ -231,12 +233,12 @@
 			(
 				'lang_add'		=> lang('add'),
 				'lang_add_statustext'	=> lang('add an alarm'),
-				'add_action'		=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uialarm.edit'))
+				'add_action'		=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uialarm.edit'))
 			);
 
 			$link_data = array
 			(
-				'menuaction'	=> 'property.uialarm.index',
+				'menuaction'	=> $this->currentapp.'.uialarm.index',
 				'sort'		=>$this->sort,
 				'order'		=>$this->order,
 				'cat_id'	=>$this->cat_id,
@@ -258,6 +260,7 @@
 			$data = array
 			(
 				'msgbox_data'					=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
+				'links'						=> $links,
  				'allow_allrows'					=> true,
 				'allrows'					=> $this->allrows,
 				'start_record'					=> $this->start,
@@ -293,11 +296,14 @@
 
 		function list_alarm()
 		{
-			$GLOBALS['phpgw_info']['flags']['menu_selection'] = 'property::agreement::alarm';
 			$GLOBALS['phpgw']->xslttpl->add_file(array('alarm',
+										'menu',
 										'receipt',
 										'search_field',
 										'nextmatchs'));
+
+			$this->menu->sub = 'agreement';
+			$links = $this->menu->links('alarm');
 
 			$receipt = $GLOBALS['phpgw']->session->appsession('session_data','alarm_receipt');
 			$GLOBALS['phpgw']->session->appsession('session_data','alarm_receipt','');
@@ -351,7 +357,7 @@
 				
 				if($id[0] == 's_agreement' || $id[0] == 'agreement')
 				{
-					$link_edit			= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.ui' .$id[0] .'.edit', 'id'=> $id[1]));
+					$link_edit			= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.ui' .$id[0] .'.edit', 'id'=> $id[1]));
 					$lang_edit_statustext		= lang('edit the alarm');
 					$text_edit			= lang('edit');
 
@@ -394,7 +400,7 @@
 											'sort'	=> $this->sort,
 											'var'	=> 'account_lid',
 											'order'	=> $this->order,
-											'extra'	=> array('menuaction'	=> 'property.uialarm.list_alarm',
+											'extra'	=> array('menuaction'	=> $this->currentapp.'.uialarm.list_alarm',
 																	'cat_id'	=> $this->cat_id,
 																	'query'		=> $this->query,
 																	'allrows'	=> $this->allrows)
@@ -404,7 +410,7 @@
 											'sort'	=> $this->sort,
 											'var'	=> 'method',
 											'order'	=> $this->order,
-											'extra'	=> array('menuaction'	=> 'property.uialarm.list_alarm',
+											'extra'	=> array('menuaction'	=> $this->currentapp.'.uialarm.list_alarm',
 																	'cat_id'	=> $this->cat_id,
 																	'query'		=> $this->query,
 																	'allrows'	=> $this->allrows)
@@ -414,7 +420,7 @@
 											'sort'	=> $this->sort,
 											'var'	=> 'next',
 											'order'	=> $this->order,
-											'extra'	=> array('menuaction'	=> 'property.uialarm.list_alarm',
+											'extra'	=> array('menuaction'	=> $this->currentapp.'.uialarm.list_alarm',
 																	'cat_id'	=> $this->cat_id,
 																	'query'		=> $this->query,
 																	'allrows'	=> $this->allrows)
@@ -424,7 +430,7 @@
 											'sort'	=> $this->sort,
 											'var'	=> 'id',
 											'order'	=> $this->order,
-											'extra'	=> array('menuaction'	=> 'property.uialarm.list_alarm',
+											'extra'	=> array('menuaction'	=> $this->currentapp.'.uialarm.list_alarm',
 																	'cat_id'	=> $this->cat_id,
 																	'query'		=> $this->query,
 																	'allrows'	=> $this->allrows)
@@ -443,12 +449,12 @@
 			(
 				'lang_add'		=> lang('add'),
 				'lang_add_statustext'	=> lang('add an alarm'),
-				'add_action'		=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uialarm.edit'))
+				'add_action'		=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uialarm.edit'))
 			);
 
 			$link_data = array
 			(
-				'menuaction'	=> 'property.uialarm.list_alarm',
+				'menuaction'	=> $this->currentapp.'.uialarm.list_alarm',
 				'sort'		=>$this->sort,
 				'order'		=>$this->order,
 				'cat_id'	=>$this->cat_id,
@@ -470,6 +476,7 @@
 			$data = array
 			(
 				'msgbox_data'					=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
+				'links'						=> $links,
  				'allow_allrows'					=> true,
 				'allrows'					=> $this->allrows,
 				'start_record'					=> $this->start,
@@ -558,14 +565,14 @@
 					if ($values['save'])
 					{
 						$GLOBALS['phpgw']->session->appsession('session_data','alarm_receipt',$receipt);
-						$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uialarm.index'));
+						$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> $this->currentapp.'.uialarm.index'));
 					}
 				}
 			}
 
 			if ($values['cancel'])
 			{
-				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uialarm.index'));
+				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> $this->currentapp.'.uialarm.index'));
 			}
 
 			if ($async_id)
@@ -576,7 +583,7 @@
 
 			$link_data = array
 			(
-				'menuaction'	=> 'property.uialarm.edit',
+				'menuaction'	=> $this->currentapp.'.uialarm.edit',
 				'async_id'	=> $async_id
 			);
 
@@ -635,7 +642,7 @@
 
 			$link_data = array
 			(
-				'menuaction' => 'property.uiowner.index'
+				'menuaction' => $this->currentapp.'.uiowner.index'
 			);
 
 			if (phpgw::get_var('confirm', 'bool', 'POST'))
@@ -649,7 +656,7 @@
 			$data = array
 			(
 				'done_action'			=> $GLOBALS['phpgw']->link('/index.php',$link_data),
-				'delete_action'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiowner.delete', 'owner_id'=> $owner_id)),
+				'delete_action'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uiowner.delete', 'owner_id'=> $owner_id)),
 				'lang_confirm_msg'		=> lang('do you really want to delete this entry'),
 				'lang_yes'			=> lang('yes'),
 				'lang_yes_statustext'		=> lang('Delete the entry'),
@@ -660,7 +667,7 @@
 			$appname	= lang('owner');
 			$function_msg	= lang('delete owner');
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($this->currentapp) . ' - ' . $appname . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('delete' => $data));
 		//	$GLOBALS['phpgw']->xslttpl->pp();
 		}
@@ -679,7 +686,7 @@
 
 			$data = array
 			(
-				'done_action'		=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiowner.index')),
+				'done_action'		=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uiowner.index')),
 				'lang_name'		=> lang('name'),
 				'lang_category'		=> lang('category'),
 				'lang_time_created'	=> lang('time created'),

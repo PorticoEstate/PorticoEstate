@@ -86,6 +86,41 @@
 			'ix' => array(),
 			'uc' => array()
 		),
+		'fm_tenant_attribute' => array(
+			'fd' => array(
+				'id' => array('type' => 'int','precision' => '4','nullable' => False),
+				'column_name' => array('type' => 'varchar','precision' => '20','nullable' => False),
+				'input_text' => array('type' => 'varchar','precision' => '50','nullable' => False),
+				'list' => array('type' => 'int','precision' => '2','nullable' => True),
+				'location_form' => array('type' => 'int','precision' => '2','nullable' => True),
+				'lookup_form' => array('type' => 'int','precision' => '2','nullable' => True),
+				'search' => array('type' => 'int','precision' => '2','nullable' => True),
+				'statustext' => array('type' => 'varchar','precision' => '100','nullable' => False),
+				'size' => array('type' => 'int','precision' => '4','nullable' => True),
+				'datatype' => array('type' => 'varchar','precision' => '10','nullable' => True),
+				'attrib_sort' => array('type' => 'int','precision' => '4','nullable' => True),
+				'precision_' => array('type' => 'int','precision' => '4','nullable' => True),
+				'scale' => array('type' => 'int','precision' => '4','nullable' => True),
+				'default_value' => array('type' => 'varchar','precision' => '20','nullable' => True),
+				'nullable' => array('type' => 'varchar','precision' => '5','nullable' => False,'default' => 'True')
+			),
+			'pk' => array('id'),
+			'fk' => array(),
+			'ix' => array(),
+			'uc' => array()
+		),
+
+		'fm_tenant_choice' => array(
+			'fd' => array(
+				'attrib_id' => array('type' => 'int','precision' => '4','nullable' => False),
+				'id' => array('type' => 'int','precision' => '4','nullable' => False),
+				'value' => array('type' => 'text','nullable' => False)
+			),
+			'pk' => array('attrib_id','id'),
+			'fk' => array(),
+			'ix' => array(),
+			'uc' => array()
+		),
 
 		'fm_vendor' => array(
 			'fd' => array(
@@ -115,6 +150,42 @@
 			'ix' => array(),
 			'uc' => array()
 		),
+		'fm_vendor_attribute' => array(
+			'fd' => array(
+				'id' => array('type' => 'int','precision' => '4','nullable' => False),
+				'column_name' => array('type' => 'varchar','precision' => '20','nullable' => False),
+				'input_text' => array('type' => 'varchar','precision' => '50','nullable' => False),
+				'list' => array('type' => 'int','precision' => '2','nullable' => True),
+				'location_form' => array('type' => 'int','precision' => '2','nullable' => True),
+				'lookup_form' => array('type' => 'int','precision' => '2','nullable' => True),
+				'search' => array('type' => 'int','precision' => '2','nullable' => True),
+				'statustext' => array('type' => 'varchar','precision' => '100','nullable' => False),
+				'size' => array('type' => 'int','precision' => '4','nullable' => True),
+				'datatype' => array('type' => 'varchar','precision' => '10','nullable' => True),
+				'attrib_sort' => array('type' => 'int','precision' => '4','nullable' => True),
+				'precision_' => array('type' => 'int','precision' => '4','nullable' => True),
+				'scale' => array('type' => 'int','precision' => '4','nullable' => True),
+				'default_value' => array('type' => 'varchar','precision' => '20','nullable' => True),
+				'nullable' => array('type' => 'varchar','precision' => '5','nullable' => False,'default' => 'True')
+			),
+			'pk' => array('id'),
+			'fk' => array(),
+			'ix' => array(),
+			'uc' => array()
+		),
+
+		'fm_vendor_choice' => array(
+			'fd' => array(
+				'attrib_id' => array('type' => 'int','precision' => '4','nullable' => False),
+				'id' => array('type' => 'int','precision' => '4','nullable' => False),
+				'value' => array('type' => 'text','nullable' => False)
+			),
+			'pk' => array('attrib_id','id'),
+			'fk' => array(),
+			'ix' => array(),
+			'uc' => array()
+		),
+
 
 		'fm_district' => array(
 			'fd' => array(
@@ -155,16 +226,6 @@
 			'uc' => array()
 		),
 
-		'fm_location1_category' => array(
-			'fd' => array(
-				'id' => array('type' => 'int','precision' => '4','nullable' => False),
-				'descr' => array('type' => 'varchar','precision' => '255','nullable' => False)
-			),
-			'pk' => array('id'),
-			'fk' => array(),
-			'ix' => array(),
-			'uc' => array()
-		),
 		'fm_location1' => array(
 			'fd' => array(
 				'location_code' => array('type' => 'varchar','precision' => '16','nullable' => False),
@@ -183,7 +244,7 @@
 				'rental_area' => array('type' => 'decimal','precision' => '20','scale' => '2','nullable' => True,'default' => '0.00')
 			),
 			'pk' => array('loc1'),
-			'fk' => array('fm_location1_category' => array('category' => 'id')),
+			'fk' => array(),
 			'ix' => array('location_code'),
 			'uc' => array()
 		),
@@ -210,7 +271,7 @@
 			'ix' => array(),
 			'uc' => array()
 		),
-		'fm_location2_category' => array(
+		'fm_location1_category' => array(
 			'fd' => array(
 				'id' => array('type' => 'int','precision' => '4','nullable' => False),
 				'descr' => array('type' => 'varchar','precision' => '255','nullable' => False)
@@ -235,10 +296,7 @@
 				'rental_area' => array('type' => 'decimal','precision' => '20','scale' => '2','nullable' => True,'default' => '0.00')
 			),
 			'pk' => array('loc1','loc2'),
-			'fk' => array(
-				'fm_location1' => array('loc1' =>'loc1'),
-				'fm_location2_category' => array('category' => 'id')
-			),
+			'fk' => array('loc1' => 'fm_location1.loc1'),
 			'ix' => array('location_code'),
 			'uc' => array()
 		),
@@ -262,7 +320,7 @@
 			'ix' => array(),
 			'uc' => array()
 		),
-		'fm_location3_category' => array(
+		'fm_location2_category' => array(
 			'fd' => array(
 				'id' => array('type' => 'int','precision' => '4','nullable' => False),
 				'descr' => array('type' => 'varchar','precision' => '255','nullable' => False)
@@ -288,10 +346,7 @@
 				'rental_area' => array('type' => 'decimal','precision' => '20','scale' => '2','nullable' => True,'default' => '0.00')
 			),
 			'pk' => array('loc1','loc2','loc3'),
-			'fk' => array(
-				'fm_location2' => array('loc1' => 'loc1', 'loc2' => 'loc2'),
-				'fm_location3_category' => array('category' => 'id')
-			),
+			'fk' => array('loc1' => 'fm_location2.loc1','loc2' => 'fm_location2.loc2'),
 			'ix' => array('location_code'),
 			'uc' => array()
 		),
@@ -316,7 +371,7 @@
 			'ix' => array(),
 			'uc' => array()
 		),
-		'fm_location4_category' => array(
+		'fm_location3_category' => array(
 			'fd' => array(
 				'id' => array('type' => 'int','precision' => '4','nullable' => False),
 				'descr' => array('type' => 'varchar','precision' => '255','nullable' => False)
@@ -347,10 +402,7 @@
 				'rental_area' => array('type' => 'decimal','precision' => '20','scale' => '2','nullable' => True,'default' => '0.00')
 			),
 			'pk' => array('loc1','loc2','loc3','loc4'),
-			'fk' => array(
-				'fm_location3' => array('loc1' => 'loc1', 'loc2' => 'loc2', 'loc3' => 'loc3'),
-				'fm_location4_category' => array('category' => 'id')
-			),
+			'fk' => array('loc1' => 'fm_location3.loc1','loc2' => 'fm_location3.loc2','loc3' => 'fm_location3.loc3'),
 			'ix' => array('location_code'),
 			'uc' => array()
 		),
@@ -379,6 +431,16 @@
 			'ix' => array(),
 			'uc' => array()
 		),
+		'fm_location4_category' => array(
+			'fd' => array(
+				'id' => array('type' => 'int','precision' => '4','nullable' => False),
+				'descr' => array('type' => 'varchar','precision' => '255','nullable' => False)
+			),
+			'pk' => array('id'),
+			'fk' => array(),
+			'ix' => array(),
+			'uc' => array()
+		),
 
 		'fm_location_config' => array(
 			'fd' => array(
@@ -398,6 +460,44 @@
 				'nullable' => array('type' => 'varchar','precision' => '5','nullable' => False,'default' => 'True')
 			),
 			'pk' => array('column_name'),
+			'fk' => array(),
+			'ix' => array(),
+			'uc' => array()
+		),
+
+		'fm_location_attrib' => array(
+			'fd' => array(
+				'type_id' => array('type' => 'int','precision' => '4','nullable' => False),
+				'id' => array('type' => 'int','precision' => '4','nullable' => False),
+				'custom' => array('type' => 'int','precision' => '4','nullable' => True),
+				'column_name' => array('type' => 'varchar','precision' => '20','nullable' => False),
+				'input_text' => array('type' => 'varchar','precision' => '50','nullable' => False),
+				'list' => array('type' => 'int','precision' => '2','nullable' => True),
+				'location_form' => array('type' => 'int','precision' => '2','nullable' => True),
+				'lookup_form' => array('type' => 'int','precision' => '2','nullable' => True),
+				'statustext' => array('type' => 'varchar','precision' => '100','nullable' => False),
+				'size' => array('type' => 'int','precision' => '4','nullable' => True),
+				'datatype' => array('type' => 'varchar','precision' => '10','nullable' => True),
+				'attrib_sort' => array('type' => 'int','precision' => '4','nullable' => True),
+				'precision_' => array('type' => 'int','precision' => '4','nullable' => True),
+				'scale' => array('type' => 'int','precision' => '4','nullable' => True),
+				'default_value' => array('type' => 'varchar','precision' => '20','nullable' => True),
+				'nullable' => array('type' => 'varchar','precision' => '5','nullable' => False,'default' => 'True')
+			),
+			'pk' => array('type_id','id'),
+			'fk' => array(),
+			'ix' => array(),
+			'uc' => array()
+		),
+
+		'fm_location_choice' => array(
+			'fd' => array(
+				'type_id' => array('type' => 'int','precision' => '4','nullable' => False),
+				'attrib_id' => array('type' => 'int','precision' => '4','nullable' => False),
+				'id' => array('type' => 'int','precision' => '4','nullable' => False),
+				'value' => array('type' => 'text','nullable' => False)
+			),
+			'pk' => array('type_id','attrib_id','id'),
 			'fk' => array(),
 			'ix' => array(),
 			'uc' => array()
@@ -552,6 +652,44 @@
 				'descr' => array('type' => 'varchar','precision' => '255','nullable' => False)
 			),
 			'pk' => array('id'),
+			'fk' => array(),
+			'ix' => array(),
+			'uc' => array()
+		),
+
+		'fm_agreement_attribute' => array(
+			'fd' => array(
+				'id' => array('type' => 'int', 'precision' => 4,'nullable' => False,'default' => '0'),
+				'attrib_detail' => array('type' => 'int', 'precision' => 2,'nullable' => False,'default' => '0'),
+				'list' => array('type' => 'int', 'precision' => 2,'nullable' => True),
+				'location_form' => array('type' => 'int', 'precision' => 2,'nullable' => True),
+				'lookup_form' => array('type' => 'int', 'precision' => 4,'nullable' => True),
+				'column_name' => array('type' => 'varchar', 'precision' => 20,'nullable' => False),
+				'input_text' => array('type' => 'varchar', 'precision' => 50,'nullable' => False),
+				'statustext' => array('type' => 'varchar', 'precision' => 100,'nullable' => False),
+				'size' => array('type' => 'int', 'precision' => 4,'nullable' => True),
+				'datatype' => array('type' => 'varchar', 'precision' => 10,'nullable' => False),
+				'attrib_sort' => array('type' => 'int', 'precision' => 4,'nullable' => True),
+				'precision_' => array('type' => 'int', 'precision' => 4,'nullable' => True),
+				'scale' => array('type' => 'int', 'precision' => 4,'nullable' => True),
+				'default_value' => array('type' => 'varchar', 'precision' => 18,'nullable' => True),
+				'nullable' => array('type' => 'varchar', 'precision' => 5,'nullable' => False,'default' => 'True'),
+				'search' => array('type' => 'int', 'precision' => 2,'nullable' => True)
+			),
+			'pk' => array('id','attrib_detail'),
+			'fk' => array(),
+			'ix' => array(),
+			'uc' => array()
+		),
+
+		'fm_agreement_choice' => array(
+			'fd' => array(
+				'attrib_id' => array('type' => 'int', 'precision' => 4,'nullable' => False,'default' => '0'),
+				'id' => array('type' => 'int', 'precision' => 4,'nullable' => False,'default' => '0'),
+				'value' => array('type' => 'varchar', 'precision' => 255,'nullable' => True),
+				'attrib_detail' => array('type' => 'int', 'precision' => 2,'nullable' => False,'default' => '0')
+			),
+			'pk' => array('attrib_id','id','attrib_detail'),
 			'fk' => array(),
 			'ix' => array(),
 			'uc' => array()
@@ -1325,6 +1463,41 @@
 			'ix' => array(),
 			'uc' => array()
 		),
+		'fm_owner_attribute' => array(
+			'fd' => array(
+				'id' => array('type' => 'int','precision' => '4','nullable' => False),
+				'column_name' => array('type' => 'varchar','precision' => '20','nullable' => False),
+				'input_text' => array('type' => 'varchar','precision' => '50','nullable' => False),
+				'list' => array('type' => 'int','precision' => '2','nullable' => True),
+				'location_form' => array('type' => 'int','precision' => '2','nullable' => True),
+				'lookup_form' => array('type' => 'int','precision' => '2','nullable' => True),
+				'search' => array('type' => 'int','precision' => '2','nullable' => True),
+				'statustext' => array('type' => 'varchar','precision' => '100','nullable' => False),
+				'size' => array('type' => 'int','precision' => '4','nullable' => True),
+				'datatype' => array('type' => 'varchar','precision' => '10','nullable' => True),
+				'attrib_sort' => array('type' => 'int','precision' => '4','nullable' => True),
+				'precision_' => array('type' => 'int','precision' => '4','nullable' => True),
+				'scale' => array('type' => 'int','precision' => '4','nullable' => True),
+				'default_value' => array('type' => 'varchar','precision' => '20','nullable' => True),
+				'nullable' => array('type' => 'varchar','precision' => '5','nullable' => False,'default' => 'True')
+			),
+			'pk' => array('id'),
+			'fk' => array(),
+			'ix' => array(),
+			'uc' => array()
+		),
+
+		'fm_owner_choice' => array(
+			'fd' => array(
+				'attrib_id' => array('type' => 'int','precision' => '4','nullable' => False),
+				'id' => array('type' => 'int','precision' => '4','nullable' => False),
+				'value' => array('type' => 'text','nullable' => False)
+			),
+			'pk' => array('attrib_id','id'),
+			'fk' => array(),
+			'ix' => array(),
+			'uc' => array()
+		),
 
 		'fm_cache' => array(
 			'fd' => array(
@@ -1350,6 +1523,32 @@
 			'ix' => array(),
 			'uc' => array()
 		),
+		'fm_entity_attribute' => array(
+			'fd' => array(
+				'entity_id' => array('type' => 'int','precision' => '4','nullable' => False),
+				'cat_id' => array('type' => 'int','precision' => '4','nullable' => False),
+				'id' => array('type' => 'int','precision' => '4','nullable' => False),
+				'column_name' => array('type' => 'varchar','precision' => '20','nullable' => False),
+				'input_text' => array('type' => 'varchar','precision' => '50','nullable' => False),
+				'statustext' => array('type' => 'varchar','precision' => '150','nullable' => False),
+				'datatype' => array('type' => 'varchar','precision' => '10','nullable' => False),
+				'search' => array('type' => 'int','precision' => '2','nullable' => True),
+				'history' => array('type' => 'int','precision' => '2','nullable' => True),
+				'list' => array('type' => 'int','precision' => '4','nullable' => True),
+				'attrib_sort' => array('type' => 'int','precision' => '4','nullable' => True),
+				'size' => array('type' => 'int','precision' => '4','nullable' => True),
+				'precision_' => array('type' => 'int','precision' => '4','nullable' => True),
+				'scale' => array('type' => 'int','precision' => '4','nullable' => True),
+				'default_value' => array('type' => 'varchar','precision' => '20','nullable' => True),
+				'nullable' => array('type' => 'varchar','precision' => '5','nullable' => True),
+				'disabled' => array('type' => 'int','precision' => '4','nullable' => True),
+				'helpmsg' => array('type' => 'text','nullable' => True)
+			),
+			'pk' => array('entity_id','cat_id','id'),
+			'fk' => array(),
+			'ix' => array(),
+			'uc' => array()
+		),
 		'fm_entity_category' => array(
 			'fd' => array(
 				'entity_id' => array('type' => 'int','precision' => '4','nullable' => False),
@@ -1366,6 +1565,19 @@
 				'start_ticket' => array('type' => 'int','precision' => '2','nullable' => True)
 			),
 			'pk' => array('entity_id','id'),
+			'fk' => array(),
+			'ix' => array(),
+			'uc' => array()
+		),
+		'fm_entity_choice' => array(
+			'fd' => array(
+				'entity_id' => array('type' => 'int','precision' => '4','nullable' => False),
+				'cat_id' => array('type' => 'int','precision' => '4','nullable' => False),
+				'attrib_id' => array('type' => 'int','precision' => '4','nullable' => False),
+				'id' => array('type' => 'int','precision' => '4','nullable' => False),
+				'value' => array('type' => 'text','nullable' => False)
+			),
+			'pk' => array('entity_id','cat_id','attrib_id','id'),
 			'fk' => array(),
 			'ix' => array(),
 			'uc' => array()
@@ -1615,12 +1827,51 @@
 			'uc' => array()
 		),
 
+		'fm_s_agreement_attribute' => array(
+			'fd' => array(
+				'id' => array('type' => 'int', 'precision' => 4,'nullable' => False,'default' => '0'),
+				'attrib_detail' => array('type' => 'int', 'precision' => 2,'nullable' => False,'default' => '0'),
+				'list' => array('type' => 'int', 'precision' => 2,'nullable' => True),
+				'location_form' => array('type' => 'int', 'precision' => 2,'nullable' => True),
+				'lookup_form' => array('type' => 'int', 'precision' => 4,'nullable' => True),
+				'column_name' => array('type' => 'varchar', 'precision' => 20,'nullable' => False),
+				'input_text' => array('type' => 'varchar', 'precision' => 50,'nullable' => False),
+				'statustext' => array('type' => 'varchar', 'precision' => 100,'nullable' => False),
+				'size' => array('type' => 'int', 'precision' => 4,'nullable' => True),
+				'datatype' => array('type' => 'varchar', 'precision' => 10,'nullable' => False),
+				'attrib_sort' => array('type' => 'int', 'precision' => 4,'nullable' => True),
+				'precision_' => array('type' => 'int', 'precision' => 4,'nullable' => True),
+				'scale' => array('type' => 'int', 'precision' => 4,'nullable' => True),
+				'default_value' => array('type' => 'varchar', 'precision' => 18,'nullable' => True),
+				'nullable' => array('type' => 'varchar', 'precision' => 5,'nullable' => False,'default' => 'True'),
+				'search' => array('type' => 'int', 'precision' => 2,'nullable' => True),
+				'history' => array('type' => 'int','precision' => '2','nullable' => True)
+			),
+			'pk' => array('id','attrib_detail'),
+			'fk' => array(),
+			'ix' => array(),
+			'uc' => array()
+		),
+
 		'fm_s_agreement_category' => array(
 			'fd' => array(
 				'id' => array('type' => 'int', 'precision' => 4,'nullable' => False,'default' => '0'),
 				'descr' => array('type' => 'varchar', 'precision' => 50,'nullable' => True)
 			),
 			'pk' => array('id'),
+			'fk' => array(),
+			'ix' => array(),
+			'uc' => array()
+		),
+
+		'fm_s_agreement_choice' => array(
+			'fd' => array(
+				'attrib_id' => array('type' => 'int', 'precision' => 4,'nullable' => False,'default' => '0'),
+				'id' => array('type' => 'int', 'precision' => 4,'nullable' => False,'default' => '0'),
+				'value' => array('type' => 'varchar', 'precision' => 255,'nullable' => True),
+				'attrib_detail' => array('type' => 'int', 'precision' => 2,'nullable' => False,'default' => '0')
+			),
+			'pk' => array('attrib_id','id','attrib_detail'),
 			'fk' => array(),
 			'ix' => array(),
 			'uc' => array()
@@ -1739,6 +1990,21 @@
 			'ix' => array(),
 			'uc' => array()
 		),
+		'fm_custom_function' => array(
+			'fd' => array(
+				'acl_location' => array('type' => 'varchar','precision' => '50','nullable' => False),
+				'id' => array('type' => 'int','precision' => '4','nullable' => False),
+				'descr' => array('type' => 'text','nullable' => True),
+				'file_name ' => array('type' => 'varchar','precision' => '50','nullable' => False),
+				'active' => array('type' => 'int','precision' => '2','nullable' => True),
+				'custom_sort' => array('type' => 'int','precision' => '4','nullable' => True)
+			),
+			'pk' => array('acl_location','id'),
+			'fk' => array(),
+			'ix' => array(),
+			'uc' => array()
+		),
+
 		'fm_r_agreement' => array(
 			'fd' => array(
 				'id' => array('type' => 'int', 'precision' => 4,'nullable' => False,'default' => '0'),
@@ -1763,6 +2029,30 @@
 			'uc' => array()
 		),
 
+		'fm_r_agreement_attribute' => array(
+			'fd' => array(
+				'id' => array('type' => 'int', 'precision' => 4,'nullable' => False,'default' => '0'),
+				'attrib_detail' => array('type' => 'int', 'precision' => 2,'nullable' => False,'default' => '0'),
+				'list' => array('type' => 'int', 'precision' => 2,'nullable' => True),
+				'location_form' => array('type' => 'int', 'precision' => 2,'nullable' => True),
+				'lookup_form' => array('type' => 'int', 'precision' => 4,'nullable' => True),
+				'column_name' => array('type' => 'varchar', 'precision' => 20,'nullable' => False),
+				'input_text' => array('type' => 'varchar', 'precision' => 50,'nullable' => False),
+				'statustext' => array('type' => 'varchar', 'precision' => 100,'nullable' => False),
+				'size' => array('type' => 'int', 'precision' => 4,'nullable' => True),
+				'datatype' => array('type' => 'varchar', 'precision' => 10,'nullable' => False),
+				'attrib_sort' => array('type' => 'int', 'precision' => 4,'nullable' => True),
+				'precision_' => array('type' => 'int', 'precision' => 4,'nullable' => True),
+				'scale' => array('type' => 'int', 'precision' => 4,'nullable' => True),
+				'default_value' => array('type' => 'varchar', 'precision' => 18,'nullable' => True),
+				'nullable' => array('type' => 'varchar', 'precision' => 5,'nullable' => False,'default' => 'True'),
+				'search' => array('type' => 'int', 'precision' => 2,'nullable' => True)
+			),
+			'pk' => array('id','attrib_detail'),
+			'fk' => array(),
+			'ix' => array(),
+			'uc' => array()
+		),
 
 		'fm_r_agreement_category' => array(
 			'fd' => array(
@@ -1770,6 +2060,19 @@
 				'descr' => array('type' => 'varchar', 'precision' => 50,'nullable' => True)
 			),
 			'pk' => array('id'),
+			'fk' => array(),
+			'ix' => array(),
+			'uc' => array()
+		),
+
+		'fm_r_agreement_choice' => array(
+			'fd' => array(
+				'attrib_id' => array('type' => 'int', 'precision' => 4,'nullable' => False,'default' => '0'),
+				'id' => array('type' => 'int', 'precision' => 4,'nullable' => False,'default' => '0'),
+				'value' => array('type' => 'varchar', 'precision' => 255,'nullable' => True),
+				'attrib_detail' => array('type' => 'int', 'precision' => 2,'nullable' => False,'default' => '0')
+			),
+			'pk' => array('attrib_id','id','attrib_detail'),
 			'fk' => array(),
 			'ix' => array(),
 			'uc' => array()

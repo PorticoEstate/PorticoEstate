@@ -9,13 +9,12 @@
 	*/
 
 	$phpgw_info = array();
-	$GLOBALS['phpgw_info']['flags'] = array
-	(
-		'nocachecontrol'	=> true,
-		'noheader'			=> true,
-		'nonavbar'			=> true,
+	$GLOBALS['phpgw_info']['flags'] = array(
+		'nocachecontrol'	=> True,
+		'noheader'		=> True,
+		'nonavbar'		=> True,
 		'currentapp'		=> 'setup',
-		'noapi' 			=> true
+		'noapi' 		=> True
 	);
 	
 	/**
@@ -39,7 +38,7 @@
 		{
 			$domains = array();
 		}
-
+		reset($domains);
 		foreach($domains as $k => $v)
 		{
 			$deletedomain = phpgw::get_var('deletedomain', 'string', 'POST');
@@ -74,8 +73,7 @@
 	// added these to let the app work, need to templatize still
 	$tpl_root = $GLOBALS['phpgw_setup']->html->setup_tpl_dir('setup');
 	$setup_tpl = CreateObject('phpgwapi.Template',$tpl_root);
-	$setup_tpl->set_file(array
-	(
+	$setup_tpl->set_file(array(
 		'T_head' => 'head.tpl',
 		'T_footer' => 'footer.tpl',
 		'T_alert_msg' => 'msg_alert_msg.tpl',
@@ -279,23 +277,15 @@
 				$detected .= lang('No ODBC/SAPDB support found. Disabling') . '<br />' . "\n";
 			}
 			*/
-			if ( !count($supported_db) )
+			if(!count($supported_db))
 			{
-				$lang_nodb = lang('Did not find any valid DB support!');
-				$lang_fix = lang('Try to configure your php to support one of the above mentioned DBMS, or install phpGroupWare by hand.');
-				$detected .= <<<HTML
-							<li class="err">$lang_nodb</li>
-						</ul>
-						<h2>$lang_fix</h2>
-					</b>
-				<td>
-			</tr>
-		</table>
-	</body>
-</html>
-
-HTML;
+				$detected .= '<li class="err"'
+					. lang('Did not find any valid DB support!')
+					. "</li>\n</ul>\n"
+					. lang('Try to configure your php to support one of the above mentioned DBMS, or install phpGroupWare by hand.')
+					. '</b><td></tr></table></body></html>';
 				die($detected);
+				exit;
 			}
 
 			/*
@@ -324,25 +314,10 @@ HTML;
 			}
 			else
 			{
-				$lang_noxsl = lang('No XSL support found.');
-				$lang_fix = lang('You must install the php-xsl extension to continue');
-				$detected .= <<<HTML
-							<li class="err">$lang_noxsl</li>
-						</ul>
-						<h2>$lang_fix</h2>
-					</b>
-				<td>
-			</tr>
-		</table>
-	</body>
-</html>
-
-HTML;
-				die($detected);
-
+				$detected .= '<li class="err">' . lang('No XSLT support found.') . "</li>\n";
 			}
 			
-			$no_guess = false;
+			$no_guess = False;
 			if(file_exists('../header.inc.php') && is_file('../header.inc.php') && is_readable('../header.inc.php'))
 			{
 				$detected .= '<li>' . lang('Found existing configuration file. Loading settings from the file...') . "</li>\n";

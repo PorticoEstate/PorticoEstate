@@ -25,7 +25,7 @@
 
 		function sms_sosms()
 		{
-		//	$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
+			$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->account		= $GLOBALS['phpgw_info']['user']['account_id'];
 			$this->bocommon	= CreateObject('sms.bocommon');
 			$this->db 		= clone($GLOBALS['phpgw']->db);
@@ -89,8 +89,8 @@
 */
 			if($query)
 			{
-				$query = preg_replace("/'/",'',$query);
-				$query = preg_replace('/"/','',$query);
+				$query = ereg_replace("'",'',$query);
+				$query = ereg_replace('"','',$query);
 
 				$querymethod = " $where in_sender $this->like '%$query%' OR in_msg $this->like '%$query%'";
 				
@@ -182,8 +182,8 @@
 			$querymethod = '';
 			if($query)
 			{
-				$query = preg_replace("/'/",'',$query);
-				$query = preg_replace('/"/','',$query);
+				$query = ereg_replace("'",'',$query);
+				$query = ereg_replace('"','',$query);
 
 				$querymethod = " AND p_dst $this->like '%$query%' OR p_msg $this->like '%$query%'";
 			}

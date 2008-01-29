@@ -12,12 +12,13 @@
 	*/
 
 	$setup_info['property']['name']		= 'property';
-	$setup_info['property']['version']	= '0.9.17.541';
+	$setup_info['property']['title']	= 'Property';
+	$setup_info['property']['version']	= '0.9.17.540';
 	$setup_info['property']['app_order']	= 8;
 	$setup_info['property']['enable']	= 1;
 	$setup_info['property']['app_group']	= 'office';
 
-	$setup_info['property']['author'] = array
+	$setup_info['property']['author'][] = array
 	(
 		'name'	=> 'Sigurd Nes',
 		'email'	=> 'sigurdne@online.no'
@@ -76,8 +77,12 @@
 		'fm_streetaddress',
 		'fm_tenant',
 		'fm_tenant_category',
+		'fm_tenant_attribute',
+		'fm_tenant_choice',
 		'fm_vendor',
 		'fm_vendor_category',
+		'fm_vendor_attribute',
+		'fm_vendor_choice',
 		'fm_district',
 		'fm_location1',
 		'fm_location1_category',
@@ -92,6 +97,8 @@
 		'fm_location4_category',
 		'fm_location4_history',
 		'fm_location_type',
+		'fm_location_attrib',
+		'fm_location_choice',
 		'fm_location_config',
 		'fm_building_part',
 		'fm_b_account',
@@ -104,6 +111,8 @@
 		'fm_agreement_group',
 		'fm_agreement',
 		'fm_agreement_status',
+		'fm_agreement_attribute',
+		'fm_agreement_choice',
 		'fm_activity_price_index',
 		'fm_branch',
 		'fm_wo_hours',
@@ -149,9 +158,13 @@
 		'fm_standard_unit',
 		'fm_owner',
 		'fm_owner_category',
+		'fm_owner_attribute',
+		'fm_owner_choice',
 		'fm_cache',
 		'fm_entity',
+		'fm_entity_attribute',
 		'fm_entity_category',
+		'fm_entity_choice',
 		'fm_entity_lookup',
 		'fm_entity_history',
 		'fm_entity_1_1',
@@ -159,11 +172,14 @@
 		'fm_entity_1_3',
 		'fm_entity_2_1',
 		'fm_entity_2_2',
+		'fm_custom_function',
 		'fm_custom',
 		'fm_custom_cols',
 		'fm_orders',
 		'fm_s_agreement',
+		'fm_s_agreement_attribute',
 		'fm_s_agreement_category',
+		'fm_s_agreement_choice',
 		'fm_s_agreement_detail',
 		'fm_s_agreement_pricing',
 		'fm_s_agreement_history',
@@ -173,7 +189,9 @@
 		'fm_tenant_claim',
 		'fm_tenant_claim_category',
 		'fm_r_agreement',
+		'fm_r_agreement_attribute',
 		'fm_r_agreement_category',
+		'fm_r_agreement_choice',
 		'fm_r_agreement_item',
 		'fm_r_agreement_item_history',
 		'fm_r_agreement_common',
@@ -187,29 +205,31 @@
 	/* The hooks this app includes, needed for hooks registration */
 	$setup_info['property']['hooks'] = array
 	(
+//		'home',
 		'add_def_pref',
 		'deleteaccount',
 		'manual',
 		'settings',
+		'preferences',
+		'admin',
 		'help',
-		'menu'	=> 'property.menu.get_menu'
+		'sidebox_menu'
 	);
 
 	/* Dependencies for this app to work */
 	$setup_info['property']['depends'][] = array
 	(
 		'appname'  => 'phpgwapi',
-		'versions' => Array('0.9.17', '0.9.18')
+		'versions' => Array('0.9.15', '0.9.16', '0.9.17', '0.9.18')
 	);
 
-	$setup_info['property']['depends'][] = array
-	(
+	$setup_info['property']['depends'][] = array(
 		'appname'  => 'admin',
-		'versions' => Array('0.9.17', '0.9.18')
+		'versions' => Array('0.9.13', '0.9.14', '0.9.15', '0.9.16', '0.9.17', '0.9.18')
 	);
 
-	$setup_info['property']['depends'][] = array
-	(
+	$setup_info['property']['depends'][] = array(
 		'appname'  => 'preferences',
-		'versions' => Array('0.9.17', '0.9.18')
+		'versions' => Array('0.9.13', '0.9.14', '0.9.15', '0.9.16', '0.9.17', '0.9.18')
 	);
+?>

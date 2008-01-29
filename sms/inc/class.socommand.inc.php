@@ -26,7 +26,7 @@
 
 		function sms_socommand()
 		{
-		//	$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
+			$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->account		= $GLOBALS['phpgw_info']['user']['account_id'];
 			$this->bocommon		= CreateObject('sms.bocommon');
 			$this->db 		= clone($GLOBALS['phpgw']->db);
@@ -87,8 +87,8 @@
 
 			if($query)
 			{
-				$query = preg_replace("/'/",'',$query);
-				$query = preg_replace('/"/','',$query);
+				$query = ereg_replace("'",'',$query);
+				$query = ereg_replace('"','',$query);
 
 				$querymethod = " $where command_code $this->like '%$query%'";
 			}
@@ -164,8 +164,8 @@
 			
 			if($query)
 			{
-				$query = preg_replace("/'/",'',$query);
-				$query = preg_replace('/"/','',$query);
+				$query = ereg_replace("'",'',$query);
+				$query = ereg_replace('"','',$query);
 
 				$querymethod = " $where command_log_code $this->like '%$query%' OR command_log_param $this->like '%$query%' OR sms_sender $this->like '%$query%'";
 			}
@@ -219,7 +219,7 @@
 		{
 			$sql = 'SELECT * FROM phpgw_sms_featcommand WHERE command_id=' . intval($id);
 			$this->db->query($sql,__LINE__,__FILE__);
-			$bin_path = PHPGW_SERVER_ROOT . 'sms/bin';
+			$bin_path = PHPGW_SERVER_ROOT . SEP . 'sms' . SEP . 'bin';
 			if ($this->db->next_record())
 			{
 				$values['id']		= $id;
@@ -236,7 +236,7 @@
 		{
 			$this->db->transaction_begin();
 
-			$values['exec'] = PHPGW_SERVER_ROOT . '/sms/bin/' . $values['exec'];
+			$values['exec'] = PHPGW_SERVER_ROOT . SEP . 'sms' . SEP . 'bin/' . $values['exec'];
 			$values['exec'] = str_replace("//","/",$values['exec']);
 			$values['exec'] = str_replace("..",".",$values['exec']);
 			$values['exec'] = $this->db->db_addslashes($values['exec']);
@@ -268,7 +268,7 @@
 		{
 			$this->db->transaction_begin();
 
-			$values['exec'] = PHPGW_SERVER_ROOT . '/sms/bin/' . $values['exec'];
+			$values['exec'] = PHPGW_SERVER_ROOT . SEP . 'sms' . SEP . 'bin/' . $values['exec'];
 			$values['exec'] = str_replace("//","/",$values['exec']);
 			$values['exec'] = str_replace("..",".",$values['exec']);
 			$value_set['command_type'] 	= $this->db->db_addslashes($values['type']);

@@ -53,9 +53,7 @@
 		function property_uiasync()
 		{
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = True;
-			$GLOBALS['phpgw_info']['flags']['menu_selection'] = 'admin::property::async';
-
-		//	$this->currentapp			= $GLOBALS['phpgw_info']['flags']['currentapp'];
+			$this->currentapp			= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->nextmatchs			= CreateObject('phpgwapi.nextmatchs');
 			$this->account				= $GLOBALS['phpgw_info']['user']['account_id'];
 			$this->bo				= CreateObject('property.boasync',True);
@@ -77,7 +75,7 @@
 
 			if(!$this->acl_manage)
 			{
-				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=>16, 'acl_location'=> $this->acl_location));
+				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> $this->currentapp.'.uilocation.stop', 'perm'=>16, 'acl_location'=> $this->acl_location));
 			}
 
 		}
@@ -122,9 +120,9 @@
 					'first'					=> $method['descr'],
 					'data'					=> @implode (',',$method_data),
 					'link_run'				=> $GLOBALS['phpgw']->link('/index.php',$run_link_data),
-					'link_schedule'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uialarm.edit', 'method_id'=> $method['id'])),
-					'link_edit'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiasync.edit', 'id'=> $method['id'])),
-					'link_delete'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiasync.delete', 'id'=> $method['id'])),
+					'link_schedule'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uialarm.edit', 'method_id'=> $method['id'])),
+					'link_edit'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uiasync.edit', 'id'=> $method['id'])),
+					'link_delete'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uiasync.delete', 'id'=> $method['id'])),
 					'lang_schedule_statustext'		=> lang('schedule the method'),
 					'lang_run_statustext'			=> lang('Run the method now'),
 					'lang_view_statustext'			=> lang('view the method'),
@@ -154,7 +152,7 @@
 											'sort'	=> $this->sort,
 											'var'	=> 'id',
 											'order'	=> $this->order,
-											'extra'	=> array('menuaction'	=> 'property.uiasync.index')
+											'extra'	=> array('menuaction'	=> $this->currentapp.'.uiasync.index')
 										)),
 				'lang_id'		=> lang('method id'),
 				'sort_name'		=> $this->nextmatchs->show_sort_order(array
@@ -162,7 +160,7 @@
 											'sort'	=> $this->sort,
 											'var'	=> 'name',
 											'order'	=> $this->order,
-											'extra'	=> array('menuaction'	=> 'property.uiasync.index')
+											'extra'	=> array('menuaction'	=> $this->currentapp.'.uiasync.index')
 										)),
 				'lang_name'		=> lang('Name'),
 			);
@@ -171,7 +169,7 @@
 			(
 				'lang_add'		=> lang('add'),
 				'lang_add_statustext'	=> lang('add a method'),
-				'add_action'		=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiasync.edit')),
+				'add_action'		=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uiasync.edit')),
 				'lang_done'		=> lang('done'),
 				'lang_done_statustext'	=> lang('back to admin'),
 				'done_action'		=> $GLOBALS['phpgw']->link('/admin/index.php')
@@ -185,7 +183,7 @@
 				'record_limit'				=> $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'],
 				'num_records'				=> count($method_list),
 				'all_records'				=> $this->bo->total_records,
-				'link_url'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiasync.index')),
+				'link_url'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uiasync.index')),
 				'img_path'				=> $GLOBALS['phpgw']->common->get_image_path('phpgwapi','default'),
 				'lang_searchfield_statustext'		=> lang('Enter the search string. To show all entries, empty this field and press the SUBMIT button again'),
 				'lang_searchbutton_statustext'		=> lang('Submit the search string'),
@@ -199,7 +197,7 @@
 			$appname	= lang('method');
 			$function_msg	= lang('list async method');
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($this->currentapp) . ' - ' . $appname . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('list' => $data));
 		//	$GLOBALS['phpgw']->xslttpl->pp();
 			$this->save_sessiondata();
@@ -269,7 +267,7 @@
 
 			$link_data = array
 			(
-				'menuaction'	=> 'property.uiasync.edit',
+				'menuaction'	=> $this->currentapp.'.uiasync.edit',
 				'id'		=> $id
 			);
 
@@ -279,7 +277,7 @@
 			(
 				'msgbox_data'				=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
 				'form_action'				=> $GLOBALS['phpgw']->link('/index.php',$link_data),
-				'done_action'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiasync.index')),
+				'done_action'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uiasync.index')),
 				'lang_id'				=> lang('method ID'),
 				'lang_name'				=> lang('Name'),
 				'lang_descr'				=> lang('Descr'),
@@ -301,7 +299,7 @@
 
 			$appname	= lang('async method');
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($this->currentapp) . ' - ' . $appname . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('edit' => $data));
 		//	$GLOBALS['phpgw']->xslttpl->pp();
 		}
@@ -313,7 +311,7 @@
 
 			$link_data = array
 			(
-				'menuaction' => 'property.uiasync.index'
+				'menuaction' => $this->currentapp.'.uiasync.index'
 			);
 
 			if (phpgw::get_var('confirm', 'bool', 'POST'))
@@ -327,7 +325,7 @@
 			$data = array
 			(
 				'done_action'			=> $GLOBALS['phpgw']->link('/index.php',$link_data),
-				'delete_action'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiasync.delete', 'id'=> $id)),
+				'delete_action'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uiasync.delete', 'id'=> $id)),
 				'lang_confirm_msg'		=> lang('do you really want to delete this entry'),
 				'lang_yes'			=> lang('yes'),
 				'lang_yes_statustext'		=> lang('Delete the entry'),
@@ -338,7 +336,7 @@
 			$appname		= lang('async method');
 			$function_msg		= lang('delete async method');
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($this->currentapp) . ' - ' . $appname . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('delete' => $data));
 		//	$GLOBALS['phpgw']->xslttpl->pp();
 		}

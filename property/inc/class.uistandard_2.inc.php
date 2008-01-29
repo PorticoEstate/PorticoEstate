@@ -53,11 +53,7 @@
 		function property_uistandard_2()
 		{
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = True;
-			
-			$type	= phpgw::get_var('type');
-			$GLOBALS['phpgw_info']['flags']['menu_selection'] = "admin::property::{$type}";
-
-		//	$this->currentapp			= $GLOBALS['phpgw_info']['flags']['currentapp'];
+			$this->currentapp			= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->nextmatchs			= CreateObject('phpgwapi.nextmatchs');
 			$this->account				= $GLOBALS['phpgw_info']['user']['account_id'];
 			$this->bo					= CreateObject('property.bostandard_2',True);
@@ -95,7 +91,7 @@
 		{
 			if(!$this->acl_read)
 			{
-				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=>1, 'acl_location'=> $this->acl_location));
+				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> $this->currentapp.'.uilocation.stop', 'perm'=>1, 'acl_location'=> $this->acl_location));
 			}
 
 			$type	= phpgw::get_var('type');
@@ -114,8 +110,8 @@
 				(
 					'id'					=> $standard['id'],
 					'first'					=> $first,
-					'link_edit'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uistandard_2.edit', 'id'=> $standard['id'], 'type'=> $type)),
-					'link_delete'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uistandard_2.delete', 'id'=> $standard['id'], 'type'=> $type)),
+					'link_edit'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uistandard_2.edit', 'id'=> $standard['id'], 'type'=> $type)),
+					'link_delete'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uistandard_2.delete', 'id'=> $standard['id'], 'type'=> $type)),
 					'lang_view_standardtext'		=> lang('view the standard'),
 					'lang_edit_standardtext'		=> lang('edit the standard'),
 					'lang_delete_standardtext'		=> lang('delete the standard'),
@@ -138,7 +134,7 @@
 											'sort'	=> $this->sort,
 											'var'	=> 'id',
 											'order'	=> $this->order,
-											'extra'	=> array('menuaction'	=> 'property.uistandard_2.index',
+											'extra'	=> array('menuaction'	=> $this->currentapp.'.uistandard_2.index',
 														'type'	=>$type)
 										)),
 				'lang_id'		=> lang('standard id'),
@@ -148,7 +144,7 @@
 			(
 				'lang_add'		=> lang('add'),
 				'lang_add_standardtext'	=> lang('add a standard'),
-				'add_action'		=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uistandard_2.edit', 'type'=> $type)),
+				'add_action'		=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uistandard_2.edit', 'type'=> $type)),
 				'lang_done'		=> lang('done'),
 				'lang_done_standardtext'=> lang('back to admin'),
 				'done_action'		=> $GLOBALS['phpgw']->link('/admin/index.php')
@@ -172,7 +168,7 @@
 				'record_limit'				=> $record_limit,
 				'num_records'				=> count($standard_list),
 				'all_records'				=> $this->bo->total_records,
-				'link_url'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uistandard_2.index', 'type'=> $type)),
+				'link_url'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uistandard_2.index', 'type'=> $type)),
 				'img_path'				=> $GLOBALS['phpgw']->common->get_image_path('phpgwapi','default'),
 				'lang_searchfield_standardtext'		=> lang('Enter the search string. To show all entries, empty this field and press the SUBMIT button again'),
 				'lang_searchbutton_standardtext'	=> lang('Submit the search string'),
@@ -186,7 +182,7 @@
 			$appname	= lang($type);
 			$function_msg	= lang('list '.$type.' standard');
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($this->currentapp) . ' - ' . $appname . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('list' => $data));
 		//	$GLOBALS['phpgw']->xslttpl->pp();
 			$this->save_sessiondata();
@@ -196,7 +192,7 @@
 		{
 			if(!$this->acl_add)
 			{
-				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=> 2, 'acl_location'=> $this->acl_location));
+				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> $this->currentapp.'.uilocation.stop', 'perm'=> 2, 'acl_location'=> $this->acl_location));
 			}
 
 			$type		= phpgw::get_var('type');
@@ -235,7 +231,7 @@
 
 			$link_data = array
 			(
-				'menuaction'	=> 'property.uistandard_2.edit',
+				'menuaction'	=> $this->currentapp.'.uistandard_2.edit',
 				'id'		=> $id,
 				'type'		=> $type
 			);
@@ -246,7 +242,7 @@
 			(
 				'msgbox_data'					=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
 				'form_action'					=> $GLOBALS['phpgw']->link('/index.php',$link_data),
-				'done_action'					=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uistandard_2.index', 'type'=> $type)),
+				'done_action'					=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uistandard_2.index', 'type'=> $type)),
 				'lang_id'					=> lang('standard ID'),
 				'lang_name'					=> lang('name'),
 				'lang_descr'					=> lang('Descr'),
@@ -267,7 +263,7 @@
 
 			$appname	= lang($type);
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($this->currentapp) . ' - ' . $appname . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('edit' => $data));
 		//	$GLOBALS['phpgw']->xslttpl->pp();
 		}
@@ -276,7 +272,7 @@
 		{
 			if(!$this->acl_delete)
 			{
-				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=> 8, 'acl_location'=> $this->acl_location));
+				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> $this->currentapp.'.uilocation.stop', 'perm'=> 8, 'acl_location'=> $this->acl_location));
 			}
 
 			$type	= phpgw::get_var('type');
@@ -285,7 +281,7 @@
 
 			$link_data = array
 			(
-				'menuaction' => 'property.uistandard_2.index',
+				'menuaction' => $this->currentapp.'.uistandard_2.index',
 				'type' => $type
 			);
 
@@ -300,7 +296,7 @@
 			$data = array
 			(
 				'done_action'			=> $GLOBALS['phpgw']->link('/index.php',$link_data),
-				'delete_action'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uistandard_2.delete', 'id'=> $id, 'type'=>$type)),
+				'delete_action'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uistandard_2.delete', 'id'=> $id, 'type'=>$type)),
 				'lang_confirm_msg'		=> lang('do you really want to delete this entry'),
 				'lang_yes'			=> lang('yes'),
 				'lang_yes_standardtext'		=> lang('Delete the entry'),
@@ -311,7 +307,7 @@
 			$appname	= lang($type);
 			$function_msg	= lang('delete '.$type.' standard');
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($this->currentapp) . ' - ' . $appname . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('delete' => $data));
 		//	$GLOBALS['phpgw']->xslttpl->pp();
 		}

@@ -38,7 +38,7 @@
 
 		function bosms($session=False)
 		{
-		//	$this->currentapp	= 'sms';//$GLOBALS['phpgw_info']['flags']['currentapp'];
+			$this->currentapp	= 'sms';//$GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->sms 		= CreateObject('sms.sms');
 			$this->so 		= CreateObject('sms.sosms');
 	//		$this->bocommon 	= CreateObject('sms.bocommon');

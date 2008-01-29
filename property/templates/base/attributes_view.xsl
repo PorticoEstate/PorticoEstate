@@ -28,6 +28,8 @@
 				<td align="left">
 					<xsl:choose>
 						<xsl:when test="name!=''">
+							<input type="hidden" name="values_attribute[{counter}][name]" value="{name}"></input>
+							<input type="hidden" name="values_attribute[{counter}][datatype]" value="{datatype}"></input>
 							<xsl:choose>
 								<xsl:when test="datatype='R'">
 									<xsl:call-template name="choice_view"/>
@@ -36,10 +38,20 @@
 									<xsl:call-template name="choice_view"/>
 								</xsl:when>
 								<xsl:when test="datatype='LB'">
-									<xsl:for-each select="choice[checked='checked']" >
-										<xsl:value-of select="value"/>
-										<xsl:if test="position() != last()">, </xsl:if>
-									</xsl:for-each>
+									<select disabled="disabled" class="forms" onMouseover="window.status='{statustext}'; return true;" onMouseout="window.status='';return true;">
+										<option value=""><xsl:value-of select="//lang_none"/></option>
+										<xsl:for-each select="choice">	
+											<xsl:variable name="id"><xsl:value-of select="id"/></xsl:variable>
+											<xsl:choose>
+												<xsl:when test="checked='checked'">
+													<option value="{$id}" selected="selected"><xsl:value-of disable-output-escaping="yes" select="value"/></option>
+												</xsl:when>
+												<xsl:otherwise>
+													<option value="{$id}"><xsl:value-of disable-output-escaping="yes" select="value"/></option>
+												</xsl:otherwise>
+											</xsl:choose>				
+										</xsl:for-each>
+									</select>
 								</xsl:when>
 								<xsl:when test="datatype='AB'">
 									<input type="text" value="{value}" readonly="readonly" size="5" onMouseout="window.status='';return true;" >
@@ -74,11 +86,32 @@
 									</input>
 								</xsl:when>
 								<xsl:when test="datatype='D'">
-									<xsl:value-of select="value"/>
-									<img id="values_attribute_{counter}-trigger"/>
+									<input type="text" name="values_attribute[{counter}][value]" value="{value}" readonly="readonly" size="12" maxlength="10"  onMouseout="window.status='';return true;" >
+										<xsl:attribute name="onMouseover">
+											<xsl:text>window.status='</xsl:text>
+												<xsl:value-of select="statustext"/>
+											<xsl:text>';return true;</xsl:text>
+										</xsl:attribute>
+									</input>
+								</xsl:when>
+								<xsl:when test="datatype='T'">
+									<textarea cols="40" rows="6" name="values_attribute[{counter}][value]" wrap="virtual" readonly="readonly" onMouseout="window.status='';return true;">
+										<xsl:attribute name="onMouseover">
+											<xsl:text>window.status='</xsl:text>
+												<xsl:value-of select="statustext"/>
+											<xsl:text>';return true;</xsl:text>
+										</xsl:attribute>
+										<xsl:value-of select="value"/>		
+									</textarea>
 								</xsl:when>
 								<xsl:otherwise>
-									<xsl:value-of select="value"/>
+									<input type="text" name="values_attribute[{counter}][value]" value="{value}" readonly="readonly" size="30" onMouseout="window.status='';return true;" >
+										<xsl:attribute name="onMouseover">
+											<xsl:text>window.status='</xsl:text>
+												<xsl:value-of select="statustext"/>
+											<xsl:text>';return true;</xsl:text>
+										</xsl:attribute>
+									</input>
 								</xsl:otherwise>
 							</xsl:choose>
 							<xsl:choose>

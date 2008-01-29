@@ -292,19 +292,26 @@
 						</tr>
 						<tr>
 							<td colspan="4">
-								<h2><xsl:value-of select="lang_applications" /></h2>
-								<ul>
-									<xsl:apply-templates select="app_list" />
-								</ul>
+								<table width="100%" border="0" cellpadding="2" cellspacing="2">
+									<tr class="th">
+										<td><xsl:value-of select="lang_applications"/></td>
+										<td></td>
+									</tr>
+										<xsl:apply-templates select="app_list"/>
+								</table>
+							</td>
+						</tr>
+						<tr height="50" valign="bottom">
+							<td colspan="3">
+							<xsl:variable name="lang_save"><xsl:value-of select="lang_save"/></xsl:variable>
+								<input type="submit" name="values[save]" value="{$lang_save}"/>
+							</td>
+							<td colspan="3" align="right">
+								<xsl:variable name="lang_cancel"><xsl:value-of select="lang_cancel"/></xsl:variable>
+								<input type="submit" name="values[cancel]" value="{$lang_cancel}"/>
 							</td>
 						</tr>
 					</table>
-					<div class="button_group">
-						<xsl:variable name="lang_save"><xsl:value-of select="lang_save"/></xsl:variable>
-						<input type="submit" name="values[save]" value="{$lang_save}"/>
-						<xsl:variable name="lang_cancel"><xsl:value-of select="lang_cancel"/></xsl:variable>
-						<input type="submit" name="values[cancel]" value="{$lang_cancel}"/>
-					</div>
 				</form>
 				</td>
 			</tr>
@@ -328,10 +335,13 @@
 <!-- BEGIN app_list -->
 
 	<xsl:template match="app_list">
-		<xsl:variable name="checkbox_name" select="checkbox_name" />
-		<li>
+		<xsl:variable name="checkbox_name" select="checkbox_name"/>
+		<tr>
 			<xsl:attribute name="class">
 				<xsl:choose>
+					<xsl:when test="@class">
+						<xsl:value-of select="@class"/>
+					</xsl:when>
 					<xsl:when test="position() mod 2 = 0">
 						<xsl:text>row_off</xsl:text>
 					</xsl:when>
@@ -340,18 +350,18 @@
 					</xsl:otherwise>
 				</xsl:choose>
 			</xsl:attribute>
-			<xsl:choose>
-				<xsl:when test="checked = '1'">
-					<input type="checkbox" id="{$checkbox_name}" name="{$checkbox_name}" value="1" checked="checked" />
-				</xsl:when>
-				<xsl:otherwise>
-					<input type="checkbox" id="{$checkbox_name}" name="{$checkbox_name}" value="1" />
-				</xsl:otherwise>
-			</xsl:choose>
-			<label for="{$checkbox_name}">
-				<xsl:value-of select="app_title" />
-			</label>
-		</li>
+			<td width="40%"><xsl:value-of select="app_title"/></td>
+			<td width="5%" align="center">
+				<xsl:choose>
+					<xsl:when test="checked = '1'">
+						<input type="checkbox" name="{$checkbox_name}" value="1" checked="checked" />
+					</xsl:when>
+					<xsl:otherwise>
+						<input type="checkbox" name="{$checkbox_name}" value="1" />
+					</xsl:otherwise>
+				</xsl:choose>
+			</td>
+		</tr>
 	</xsl:template>
 
 	<xsl:template match="permissions">

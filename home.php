@@ -122,7 +122,7 @@
 		}
 
 		$GLOBALS['phpgw']->translation->add_app('mainscreen');
-		if (lang('mainscreen_message') != '!mainscreen_message')
+		if (lang('mainscreen_message') != 'mainscreen_message*')
 		{
 			echo '<div class="msg">' . stripslashes(lang('mainscreen_message')) . '</div>';
 		}

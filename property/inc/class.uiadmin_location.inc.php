@@ -57,12 +57,12 @@
 		function property_uiadmin_location()
 		{
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = True;
-			$GLOBALS['phpgw_info']['flags']['menu_selection'] = 'admin::property::location';
-		//	$this->currentapp			= $GLOBALS['phpgw_info']['flags']['currentapp'];
+			$this->currentapp			= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->nextmatchs			= CreateObject('phpgwapi.nextmatchs');
 			$this->account				= $GLOBALS['phpgw_info']['user']['account_id'];
 			$this->bo					= CreateObject('property.boadmin_location',True);
 			$this->bocommon				= CreateObject('property.bocommon');
+			$this->menu					= CreateObject('property.menu');
 
 			$this->acl 					= CreateObject('phpgwapi.acl');
 			$this->acl_location			= '.admin.location';
@@ -78,6 +78,7 @@
 			$this->order				= $this->bo->order;
 			$this->allrows				= $this->bo->allrows;
 
+			$this->menu->sub			='adm_loc';
 		}
 
 		function save_sessiondata()
@@ -96,16 +97,16 @@
 		{
 			if(!$this->acl_read)
 			{
-				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=>1, 'acl_location'=> $this->acl_location));
+				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> $this->currentapp.'.uilocation.stop', 'perm'=>1, 'acl_location'=> $this->acl_location));
 			}
-
-			$GLOBALS['phpgw_info']['flags']['menu_selection'] .= '::location';
 
 			$this->bocommon->reset_fm_cache();
 			$GLOBALS['phpgw']->xslttpl->add_file(array(
 								'admin_location',
 								'nextmatchs',
+								'menu',
 								'search_field'));
+			$links = $this->menu->links('loc_type');
 
 			$standard_list = $this->bo->read();
 
@@ -116,10 +117,10 @@
 					'id'							=> $standard['id'],
 					'name'							=> $standard['name'],
 					'first'							=> $standard['descr'],
-					'link_categories'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uicategory.index', 'type'=>'location', 'type_id'=> $standard['id'])),
-					'link_attribute'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiadmin_location.list_attribute', 'type_id'=> $standard['id'])),
-					'link_edit'						=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiadmin_location.edit' ,'id'=> $standard['id'])),
-					'link_delete'					=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiadmin_location.delete' ,'id'=> $standard['id'])),
+					'link_categories'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uicategory.index', 'type'=>'location', 'type_id'=> $standard['id'])),
+					'link_attribute'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uiadmin_location.list_attribute', 'type_id'=> $standard['id'])),
+					'link_edit'						=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uiadmin_location.edit' ,'id'=> $standard['id'])),
+					'link_delete'					=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uiadmin_location.delete' ,'id'=> $standard['id'])),
 					'lang_view_standardtext'		=> lang('view the standard'),
 					'lang_category_text'			=> lang('categories for the location type'),
 					'lang_attribute_standardtext'	=> lang('attributes for the location type'),
@@ -147,7 +148,7 @@
 											'sort'	=> $this->sort,
 											'var'	=> 'id',
 											'order'	=> $this->order,
-											'extra'	=> array('menuaction'	=> 'property.uiadmin_location.index')
+											'extra'	=> array('menuaction'	=> $this->currentapp.'.uiadmin_location.index')
 										)),
 				'lang_id'			=> lang('standard id'),
 				'sort_name'			=> $this->nextmatchs->show_sort_order(array
@@ -155,7 +156,7 @@
 											'sort'	=> $this->sort,
 											'var'	=> 'name',
 											'order'	=> $this->order,
-											'extra'	=> array('menuaction'	=> 'property.uiadmin_location.index')
+											'extra'	=> array('menuaction'	=> $this->currentapp.'.uiadmin_location.index')
 										)),
 				'lang_name'			=> lang('Name'),
 			);
@@ -164,25 +165,26 @@
 			(
 				'lang_add'				=> lang('add'),
 				'lang_add_standardtext'	=> lang('add a standard'),
-				'add_action'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiadmin_location.edit')),
+				'add_action'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uiadmin_location.edit')),
 				'lang_done'				=> lang('done'),
 				'lang_done_standardtext'=> lang('back to admin'),
 				'done_action'			=> $GLOBALS['phpgw']->link('/admin/index.php')
 			);
 
-			$receipt = $GLOBALS['phpgw']->session->appsession('receipt','property');
-			$GLOBALS['phpgw']->session->appsession('receipt','property','');
+			$receipt = $GLOBALS['phpgw']->session->appsession('receipt',$this->currentapp);
+			$GLOBALS['phpgw']->session->appsession('receipt',$this->currentapp,'');
 			$msgbox_data = $this->bocommon->msgbox_data($receipt);
 
 			$data = array
 			(
 				'msgbox_data'						=> $msgbox_data,
+				'links'								=> $links,
 				'allow_allrows'						=> False,
 				'start_record'						=> $this->start,
 				'record_limit'						=> $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'],
 				'num_records'						=> count($standard_list),
 				'all_records'						=> $this->bo->total_records,
-				'link_url'							=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiadmin_location.index')),
+				'link_url'							=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uiadmin_location.index')),
 				'img_path'							=> $GLOBALS['phpgw']->common->get_image_path('phpgwapi','default'),
 				'lang_searchfield_standardtext'		=> lang('Enter the search string. To show all entries, empty this field and press the SUBMIT button again'),
 				'lang_searchbutton_standardtext'	=> lang('Submit the search string'),
@@ -196,7 +198,7 @@
 			$appname		= lang('location');
 			$function_msg		= lang('list location standard');
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($this->currentapp) . ' - ' . $appname . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('list' => $data));
 		//	$GLOBALS['phpgw']->xslttpl->pp();
 			$this->save_sessiondata();
@@ -206,7 +208,7 @@
 		{
 			if(!$this->acl_add)
 			{
-				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=> 2, 'acl_location'=> $this->acl_location));
+				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> $this->currentapp.'.uilocation.stop', 'perm'=> 2, 'acl_location'=> $this->acl_location));
 			}
 
 			$id		= phpgw::get_var('id', 'int');
@@ -253,7 +255,7 @@
 
 			$link_data = array
 			(
-				'menuaction'	=> 'property.uiadmin_location.edit',
+				'menuaction'	=> $this->currentapp.'.uiadmin_location.edit',
 				'id'		=> $id
 			);
 //_debug_array($values);
@@ -265,7 +267,7 @@
 				'msgbox_data'					=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
 				'lang_name_standardtext'		=> lang('Enter a name of the standard'),
 				'form_action'					=> $GLOBALS['phpgw']->link('/index.php',$link_data),
-				'done_action'					=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiadmin_location.index')),
+				'done_action'					=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uiadmin_location.index')),
 				'lang_id'						=> lang('standard ID'),
 				'lang_name'						=> lang('Name'),
 				'lang_descr'					=> lang('Descr'),
@@ -290,7 +292,7 @@
 
 			$appname	= lang('location');
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($this->currentapp) . ' - ' . $appname . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('edit' => $data));
 		//	$GLOBALS['phpgw']->xslttpl->pp();
 		}
@@ -299,7 +301,7 @@
 		{
 			if(!$this->acl_delete)
 			{
-				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=> 8, 'acl_location'=> $this->acl_location));
+				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> $this->currentapp.'.uilocation.stop', 'perm'=> 8, 'acl_location'=> $this->acl_location));
 			}
 
 			$attrib		= phpgw::get_var('attrib');
@@ -317,7 +319,7 @@
 			}
 			$link_data = array
 			(
-				'menuaction' => 'property.uiadmin_location.'.$function,
+				'menuaction' => $this->currentapp.'.uiadmin_location.'.$function,
 				'type_id' => $type_id
 			);
 
@@ -332,7 +334,7 @@
 			$data = array
 			(
 				'done_action'				=> $GLOBALS['phpgw']->link('/index.php',$link_data),
-				'delete_action'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiadmin_location.delete', 'id'=> $id, 'attrib'=> $attrib, 'type_id'=> $type_id)),
+				'delete_action'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uiadmin_location.delete', 'id'=> $id, 'attrib'=> $attrib, 'type_id'=> $type_id)),
 				'lang_confirm_msg'			=> lang('do you really want to delete this entry'),
 				'lang_yes'					=> lang('yes'),
 				'lang_yes_standardtext'		=> lang('Delete the entry'),
@@ -343,7 +345,7 @@
 			$appname		= lang('location');
 			$function_msg	= lang('delete location standard');
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($this->currentapp) . ' - ' . $appname . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('delete' => $data));
 		//	$GLOBALS['phpgw']->xslttpl->pp();
 		}
@@ -353,13 +355,12 @@
 		{
 			if(!$this->acl_read)
 			{
-				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=> 1, 'acl_location'=> $this->acl_location));
+				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> $this->currentapp.'.uilocation.stop', 'perm'=> 1, 'acl_location'=> $this->acl_location));
 			}
 
 			$type_id	= phpgw::get_var('type_id', 'int');
 			$id	= phpgw::get_var('id', 'int');
 			$resort	= phpgw::get_var('resort');
-			$GLOBALS['phpgw_info']['flags']['menu_selection'] .= "::location::attribute_loc_{$type_id}";
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array(
 								'admin_location',
@@ -371,22 +372,22 @@
 				$this->bo->resort_attrib(array('resort'=>$resort,'type_id' => $type_id,'id'=>$id));
 			}
 
-			$type = $this->bo->read_single($type_id);
-			
 			$attrib_list = $this->bo->read_attrib($type_id);
 
 			while (is_array($attrib_list) && list(,$attrib) = each($attrib_list))
 			{
 				$content[] = array
 				(
-					'datatype'					=> $attrib['trans_datatype'],
+		//			'name'						=> $attrib['name'],
+					'type_name'					=> $attrib['type_name'],
+					'datatype'					=> $attrib['datatype'],
 					'column_name'				=> $attrib['column_name'],
 					'input_text'				=> $attrib['input_text'],
 					'sorting'					=> $attrib['attrib_sort'],
-					'link_up'					=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiadmin_location.list_attribute', 'resort'=> 'up', 'id'=> $attrib['id'], 'type_id'=> $type_id, 'allrows'=> $this->allrows)),
-					'link_down'					=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiadmin_location.list_attribute', 'resort'=> 'down', 'id'=> $attrib['id'], 'type_id'=> $type_id, 'allrows'=> $this->allrows)),
-					'link_edit'					=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiadmin_location.edit_attrib', 'id'=> $attrib['id'], 'type_id'=> $type_id)),
-					'link_delete'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiadmin_location.delete', 'id'=> $attrib['id'], 'type_id'=> $type_id, 'attrib'=>true)),
+					'link_up'					=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uiadmin_location.list_attribute', 'resort'=> 'up', 'id'=> $attrib['id'], 'type_id'=> $type_id, 'allrows'=> $this->allrows)),
+					'link_down'					=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uiadmin_location.list_attribute', 'resort'=> 'down', 'id'=> $attrib['id'], 'type_id'=> $type_id, 'allrows'=> $this->allrows)),
+					'link_edit'					=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uiadmin_location.edit_attrib', 'id'=> $attrib['id'], 'type_id'=> $type_id)),
+					'link_delete'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uiadmin_location.delete', 'id'=> $attrib['id'], 'type_id'=> $type_id, 'attrib'=>true)),
 					'lang_view_attribtext'		=> lang('view the attrib'),
 					'lang_attribute_attribtext'	=> lang('attributes for the attrib'). ' ' . lang('location'),
 					'lang_edit_attribtext'		=> lang('edit the attrib'),
@@ -403,6 +404,7 @@
 
 			$table_header[] = array
 			(
+				'lang_type_name'	=> lang('Type'),
 				'lang_descr'		=> lang('Descr'),
 				'lang_datatype'		=> lang('Datatype'),
 				'lang_sorting'		=> lang('sorting'),
@@ -413,7 +415,7 @@
 											'sort'	=> $this->sort,
 											'var'	=> 'attrib_sort',
 											'order'	=> $this->order,
-											'extra'	=> array('menuaction'	=> 'property.uiadmin_location.list_attribute',
+											'extra'	=> array('menuaction'	=> $this->currentapp.'.uiadmin_location.list_attribute',
 															'type_id'	=> $type_id,
 															'allrows'	=> $this->allrows)
 										)),
@@ -423,7 +425,7 @@
 											'sort'	=> $this->sort,
 											'var'	=> 'column_name',
 											'order'	=> $this->order,
-											'extra' => array('menuaction'	=> 'property.uiadmin_location.list_attribute',
+											'extra' => array('menuaction'	=> $this->currentapp.'.uiadmin_location.list_attribute',
 																'type_id'	=>$type_id,
 																'allrows'	=>$this->allrows)
 										)),
@@ -434,10 +436,10 @@
 			(
 				'lang_add'				=> lang('add'),
 				'lang_add_attribtext'	=> lang('add an attrib'),
-				'add_action'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiadmin_location.edit_attrib', 'type_id'=> $type_id)),
+				'add_action'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uiadmin_location.edit_attrib', 'type_id'=> $type_id)),
 				'lang_done'				=> lang('done'),
 				'lang_done_attribtext'	=> lang('back to admin'),
-				'done_action'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiadmin_location.index')),
+				'done_action'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uiadmin_location.index')),
 			);
 
 			if(!$this->allrows)
@@ -451,7 +453,7 @@
 
 			$link_data = array
 			(
-				'menuaction'	=> 'property.uiadmin_location.list_attribute',
+				'menuaction'	=> $this->currentapp.'.uiadmin_location.list_attribute',
 				'sort'			=> $this->sort,
 				'order'			=> $this->order,
 				'query'			=> $this->query,
@@ -460,8 +462,6 @@
 
 			$data = array
 			(
-				'value_type_name'				=> $type['name'],
-				'lang_type'						=> lang('Location type'),
 				'allow_allrows'					=> True,
 				'allrows'						=> $this->allrows,
 				'start_record'					=> $this->start,
@@ -482,7 +482,7 @@
 			$appname	= lang('attribute');
 			$function_msg	= lang('list location attribute');
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($this->currentapp) . ' - ' . $appname . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('list_attribute' => $data));
 		//	$GLOBALS['phpgw']->xslttpl->pp();
 			$this->save_sessiondata();
@@ -492,15 +492,12 @@
 		{
 			if(!$this->acl_add)
 			{
-				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=> 2, 'acl_location'=> $this->acl_location));
+				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> $this->currentapp.'.uilocation.stop', 'perm'=> 2, 'acl_location'=> $this->acl_location));
 			}
 
 			$type_id	= phpgw::get_var('type_id', 'int');
 			$id			= phpgw::get_var('id', 'int');
 			$values		= phpgw::get_var('values');
-
-			$GLOBALS['phpgw_info']['flags']['menu_selection'] .= "::location::attribute_loc_{$type_id}";
-
 			if(!$values)
 			{
 			  $values = array();
@@ -592,7 +589,7 @@
 
 			$link_data = array
 			(
-				'menuaction'	=> 'property.uiadmin_location.edit_attrib',
+				'menuaction'	=> $this->currentapp.'.uiadmin_location.edit_attrib',
 				'id'		=> $id
 			);
 //_debug_array($values);
@@ -619,7 +616,7 @@
 
 				'msgbox_data'					=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
 				'form_action'					=> $GLOBALS['phpgw']->link('/index.php',$link_data),
-				'done_action'					=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiadmin_location.list_attribute', 'type_id'=> $type_id)),
+				'done_action'					=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uiadmin_location.list_attribute', 'type_id'=> $type_id)),
 				'lang_id'						=> lang('Attribute ID'),
 				'lang_location_type'			=> lang('Type'),
 				'lang_no_location_type'			=> lang('No entity type'),
@@ -679,24 +676,25 @@
 
 			$appname = lang('location');
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($this->currentapp) . ' - ' . $appname . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('edit_attrib' => $data));
 		//	$GLOBALS['phpgw']->xslttpl->pp();
 		}
 
 		function config()
 		{
+
 			if(!$this->acl_manage)
 			{
-				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=> 16, 'acl_location'=> $this->acl_location));
+				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> $this->currentapp.'.uilocation.stop', 'perm'=> 16, 'acl_location'=> $this->acl_location));
 			}
-
-			$GLOBALS['phpgw_info']['flags']['menu_selection'] .= '::config';
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array(
 								'admin_location',
 								'nextmatchs',
+								'menu',
 								'search_field'));
+			$links = $this->menu->links('loc_config');
 
 			$standard_list = $this->bo->read_config();
 
@@ -706,7 +704,7 @@
 				(
 					'column_name'				=> $standard['column_name'],
 					'name'						=> $standard['location_name'],
-					'link_edit'					=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiadmin_location.edit_config', 'column_name'=> $standard['column_name'])),
+					'link_edit'					=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uiadmin_location.edit_config', 'column_name'=> $standard['column_name'])),
 					'lang_edit_standardtext'	=> lang('edit the column relation'),
 					'text_edit'					=> lang('edit')
 				);
@@ -725,7 +723,7 @@
 											'sort'	=> $this->sort,
 											'var'	=> 'column_name',
 											'order'	=> $this->order,
-											'extra'	=> array('menuaction'	=> 'property.uiadmin_location.config')
+											'extra'	=> array('menuaction'	=> $this->currentapp.'.uiadmin_location.config')
 										)),
 				'lang_column_name'	=> lang('column name'),
 				'sort_name'			=> $this->nextmatchs->show_sort_order(array
@@ -733,7 +731,7 @@
 											'sort'	=> $this->sort,
 											'var'	=> 'name',
 											'order'	=> $this->order,
-											'extra'	=> array('menuaction'	=> 'property.uiadmin_location.config')
+											'extra'	=> array('menuaction'	=> $this->currentapp.'.uiadmin_location.config')
 										)),
 				'lang_name'			=> lang('Table Name'),
 			);
@@ -742,7 +740,7 @@
 			(
 				'lang_add'				=> lang('add'),
 				'lang_add_standardtext'	=> lang('add a standard'),
-				'add_action'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiadmin_location.edit')),
+				'add_action'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uiadmin_location.edit')),
 				'lang_done'				=> lang('done'),
 				'lang_done_standardtext'=> lang('back to admin'),
 				'done_action'			=> $GLOBALS['phpgw']->link('/admin/index.php')
@@ -751,12 +749,13 @@
 
 			$data = array
 			(
+				'links'								=> $links,
 				'allow_allrows'						=> False,
 				'start_record'						=> $this->start,
 				'record_limit'						=> $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'],
 				'num_records'						=> count($standard_list),
 				'all_records'						=> $this->bo->total_records,
-				'link_url'							=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiadmin_location.index')),
+				'link_url'							=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uiadmin_location.index')),
 				'img_path'							=> $GLOBALS['phpgw']->common->get_image_path('phpgwapi','default'),
 				'lang_searchfield_standardtext'		=> lang('Enter the search string. To show all entries, empty this field and press the SUBMIT button again'),
 				'lang_searchbutton_standardtext'	=> lang('Submit the search string'),
@@ -770,7 +769,7 @@
 			$appname	= lang('location');
 			$function_msg	= lang('list config');
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($this->currentapp) . ' - ' . $appname . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('list_config' => $data));
 		//	$GLOBALS['phpgw']->xslttpl->pp();
 			$this->save_sessiondata();
@@ -780,10 +779,8 @@
 		{
 			if(!$this->acl_manage)
 			{
-				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=> 16, 'acl_location'=> $this->acl_location));
+				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> $this->currentapp.'.uilocation.stop', 'perm'=> 16, 'acl_location'=> $this->acl_location));
 			}
-
-			$GLOBALS['phpgw_info']['flags']['menu_selection'] .= '::config';
 
 			$column_name	= phpgw::get_var('column_name');
 			$values			= phpgw::get_var('values');
@@ -801,7 +798,7 @@
 
 			$link_data = array
 			(
-				'menuaction'	=> 'property.uiadmin_location.edit_config',
+				'menuaction'	=> $this->currentapp.'.uiadmin_location.edit_config',
 				'column_name'	=> $column_name
 			);
 
@@ -812,7 +809,7 @@
 				'msgbox_data'				=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
 
 				'form_action'				=> $GLOBALS['phpgw']->link('/index.php',$link_data),
-				'done_action'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiadmin_location.config')),
+				'done_action'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uiadmin_location.config')),
 
 				'lang_column_name'			=> lang('Column name'),
 				'lang_save'					=> lang('save'),
@@ -832,7 +829,7 @@
 			$appname	= lang('location');
 
 //_debug_array($data);
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($this->currentapp) . ' - ' . $appname . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('edit_config' => $data));
 		//	$GLOBALS['phpgw']->xslttpl->pp();
 		}

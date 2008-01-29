@@ -39,9 +39,9 @@ class module_bookmarks extends Module
 
 		if ($produce)
 		{
-			require_once(PHPGW_INCLUDE_ROOT . 'sitemgr/inc/class.xslt_transform.inc.php');
+			require_once(PHPGW_INCLUDE_ROOT . SEP . 'sitemgr' . SEP . 'inc' . SEP . 'class.xslt_transform.inc.php');
 			$this->add_transformer(new xslt_transform(
-				$this->find_template_dir() . '/xbel.xsl',
+				$this->find_template_dir() . SEP . 'xbel.xsl',
 				array('blockid' => $this->block->id)
 			));
 		}
