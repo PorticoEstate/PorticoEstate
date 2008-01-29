@@ -59,4 +59,9 @@
 		{
 			return $GLOBALS['phpgw']->session->appsession("template_newdesign_{$location}", 'phpgwapi');
 		}
+
+		public static function store_local($location, $data)
+		{
+			$GLOBALS['phpgw']->session->appsession("template_newdesign_$location", 'phpgwapi', $data);
+		}
 	}
