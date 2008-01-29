@@ -239,7 +239,7 @@
 					<img src="{$acl_img}" title="{$acl_img_name}" alt="{$acl_img_name}" />
 				</xsl:otherwise>
 			</xsl:choose>
-
+			<xsl:text> </xsl:text>
 			<xsl:choose>
 				<xsl:when test="grant_url != ''">
 					<xsl:variable name="grant_url" select="grant_url"/>
