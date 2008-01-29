@@ -356,7 +356,7 @@
 				$group_members = array();
 			}
 
-			// this information should be provided by the app itself
+			// this information should be provided by the app itself - thats why we have hooks
 			$apps_with_acl = array
 			(
 				'addressbook'	=> array('top_grant' => true),
@@ -433,6 +433,7 @@
 					$grants_enabled = isset($apps_with_acl[$app]) && $account_id;
 					$app_list[] = array
 					(
+						'elmid'			=> "admin_applist_$app",
 						'app_name'		=> $app,
 						'app_title'		=> lang($app),
 						'checkbox_name'	=> "account_apps[{$app}]",

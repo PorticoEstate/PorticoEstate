@@ -186,7 +186,7 @@
 				(
 					'text'	=> $GLOBALS['phpgw']->translation->translate('PHP Configuration', array(), true),
 					// degrade gracefully hack
-					'url'	=> $GLOBALS['phpgw']->link('/admin/phpinfo.php') . '" onclick="window.open(\'' . $GLOBALS['phpgw']->link('/admin/phpinfo.php', array('noheader' => 1)) . '\'); return false;"',
+					'url'	=> $GLOBALS['phpgw']->link('/admin/phpinfo.php') . '" onclick="window.open(\'' . $GLOBALS['phpgw']->link('/admin/phpinfo.php', array('noheader' => 1)) . '\'); return false;',
 				);
 			}
 
