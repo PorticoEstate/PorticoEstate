@@ -1,7 +1,7 @@
 <!-- BEGIN list -->
 <br>
 <table border="0" width="95%" align="center">
- <tr>
+ <tr class="bg_color">
    {left_next_matchs}
    <td>&nbsp;</td>
    <td>&nbsp;</td>

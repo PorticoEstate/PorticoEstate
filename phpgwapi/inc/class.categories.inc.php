@@ -571,7 +571,7 @@
 				$cats = $this->return_sorted_array(0, false, '', '', '',$globals);
 			}
 
-			$GLOBALS['phpgw']->xslttpl->add_file($GLOBALS['phpgw']->common->get_tpl_dir('phpgwapi','base') . '/categories');
+			$GLOBALS['phpgw']->xslttpl->add_file($GLOBALS['phpgw']->common->get_tpl_dir('phpgwapi','base') . SEP . 'categories');
 
 			if($self)
 			{

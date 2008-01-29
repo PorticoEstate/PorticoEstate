@@ -184,32 +184,26 @@ class Template
 	 * @access    public
 	 * @return    boolean
 	 */
-	function set_root($root = null, $attempt = 0)
+	function set_root($root, $attempt = 0)
 	{
-		if ( is_null($root) )
+		if ( empty($root) )
 		{
 			$root = PHPGW_APP_TPL;
 		}
 
-		if ( !is_dir($root) )
+		if (!is_dir($root) && $attempt == 1 )
 		{
-			if ( $attempt == 1 )
-			{
-				$this->halt("set_root: $root is not a directory.");
-				return false;
-			}
-			else
-			{
-				$new_root = preg_replace("/{$GLOBALS['phpgw_info']['server']['template_set']}\/$/base\/", $root);
-				$this->set_root($new_root, 1);
-				//$this->set_root(substr($root, 0, (0 - strlen($GLOBALS['phpgw_info']['server']['template_set']))) . 'base', 1);
-			}
+			$this->halt("set_root: $root is not a directory.");
+			return false;
+		}
+		elseif ( !is_dir($root) )
+		{
+			$this->set_root(substr($root, 0, (0 - strlen($GLOBALS['phpgw_info']['server']['template_set']))) . 'base', 1);
 		}
 
 		$this->root = $root;
 
-		if ($this->debug & 4)
-		{
+		if ($this->debug & 4) {
 			echo "<p><b>set_root:</b> root = $root</p>\n";
 		}
 

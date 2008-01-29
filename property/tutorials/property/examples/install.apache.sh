@@ -31,8 +31,8 @@ LIBXML="libxml2-2.6.30"
 LIBXSLTAR="libxslt-1.1.22.tar.gz"
 LIBXSL="libxslt-1.1.22"
 
-IMAPTAR="imap-2006k.tar.Z"
-IMAP="imap-2006k"
+IMAPTAR="imap-2006k.DEV.SNAP-0709051605.tar.Z"
+IMAP="imap-2006k.DEV.SNAP-0709051605"
 
 PHP_PREFIX="/usr/local"
 
@@ -49,8 +49,8 @@ APACHE="httpd-2.2.6"
 #  * 
 #  * @var               string PHP, PHPTAR
 #  */
-PHPTAR="php-5.2.5.tar.bz2"
-PHP="php-5.2.5"
+PHPTAR="php-5.2.4.tar.bz2"
+PHP="php-5.2.4"
 
 #/**
 #  * Name of the EACCELERATOR tarball e.g eaccelerator-0.9.5.tar.bz2
@@ -59,16 +59,6 @@ PHP="php-5.2.5"
 #  */
 EACCELERATORTAR="eaccelerator-0.9.5.2.tar.bz2"
 EACCELERATOR="eaccelerator-0.9.5.2"
-
-# clean up from previous
-
-rm $FREETDS -rf &&\
-rm $LIBXML -rf &&\
-rm $LIBXSL -rf &&\
-rm $IMAP -rf &&\
-rm $PHP -rf &&\
-rm $EACCELERATOR -rf &&\
-rm $APACHE -rf &&\
 
 # perform the install
 

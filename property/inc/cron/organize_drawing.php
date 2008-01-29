@@ -46,7 +46,7 @@
 
 		function organize_drawing()
 		{
-		//	$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
+			$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->bocommon		= CreateObject('property.bocommon');
 			$this->vfs 		= CreateObject('phpgwapi.vfs');
 			$this->rootdir 		= $this->vfs->basedir;
@@ -105,7 +105,7 @@
 		{
 			$link_data = array
 			(
-				'menuaction' => 'property.custom_functions.index',
+				'menuaction' => $this->currentapp.'.custom_functions.index',
 				'function'	=> $this->function_name,
 				'execute'	=> $execute,
 				'dir'		=> $this->dir,
@@ -147,7 +147,7 @@
 
 			$appname		= 'Organisere tegninger';
 			$function_msg	= 'Organisere tegninger i register og pa disk';
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($this->currentapp) . ' - ' . $appname . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('confirm' => $data));
 			$GLOBALS['phpgw']->xslttpl->pp();
 		}
@@ -226,7 +226,7 @@
 			$i=0; $myfilearray = '';
 			while ($file = @readdir($dir_handle))
 			{
-				if ((strtolower(substr($file, -3, 3)) == $this->suffix) && is_file($this->dir . '/' . $file) )
+				if ((strtolower(substr($file, -3, 3)) == $this->suffix) && is_file($this->dir . SEP . $file) )
 				{
 					$myfilearray[$i] = $file;
 					$i++;
@@ -331,24 +331,24 @@
 		function create_loc1_dir($loc1='')
 		{
 			if(!$this->vfs->file_exists(array(
-					'string' => $this->fakebase . '/' . 'document' . '/' . $loc1,
+					'string' => $this->fakebase . SEP . 'document' . SEP . $loc1,
 					'relatives' => Array(RELATIVE_NONE)
 				)))
 			{
 				$this->vfs->override_acl = 1;
 
 				if(!$this->vfs->mkdir (array(
-				     'string' => $this->fakebase. '/' . 'document' . '/' . $loc1,
+				     'string' => $this->fakebase. SEP . 'document' . SEP . $loc1,
 				     'relatives' => array(
 				          RELATIVE_NONE
 				     )
 				)))
 				{
-					$this->receipt['error'][]=array('msg'=>lang('failed to create directory') . ' :'. $this->fakebase. '/' . 'document' . '/' . $loc1);
+					$this->receipt['error'][]=array('msg'=>lang('failed to create directory') . ' :'. $this->fakebase. SEP . 'document' . SEP . $loc1);
 				}
 				else
 				{
-					$this->receipt['message'][]=array('msg'=>lang('directory created') . ' :'. $this->fakebase. '/' . 'document' . '/' . $loc1);
+					$this->receipt['message'][]=array('msg'=>lang('directory created') . ' :'. $this->fakebase. SEP . 'document' . SEP . $loc1);
 				}
 				$this->vfs->override_acl = 0;
 			}
@@ -358,8 +358,8 @@
 
 		function copy_files($values)
 		{
-			$to_file = $this->fakebase . '/' . 'document' . '/' . $values['loc1'] . '/' . $values['file_name'];
-			$from_file = $this->dir . '/' . $values['file_name'];
+			$to_file = $this->fakebase . SEP . 'document' . SEP . $values['loc1'] . SEP . $values['file_name'];
+			$from_file = $this->dir . SEP . $values['file_name'];
 			$this->vfs->override_acl = 1;
 
 

@@ -34,14 +34,14 @@
 
 	class property_uiXport
 	{
-		var $public_functions = array
-		(
+		var $public_functions = array(
 			'import' 	=> True,
 			'export' 	=> True,
 			'rollback'	=> True
 		);
 
 		var $start;
+		var $limit;
 		var $query;
 		var $sort;
 		var $order;
@@ -52,11 +52,11 @@
 		{
 
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = True;
-			$GLOBALS['phpgw_info']['flags']['menu_selection'] = 'property::invoice';
-		//	$this->currentapp		= $GLOBALS['phpgw_info']['flags']['currentapp'];
+			$this->currentapp		= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->bo       		= CreateObject('property.boXport',True);
 			$this->invoice  		= CreateObject('property.boinvoice');
 			$this->bocommon  		= CreateObject('property.bocommon');
+			$this->menu			= CreateObject('property.menu');
 			$this->contacts			= CreateObject('property.soactor');
 			$this->contacts->role		= 'vendor';
 
@@ -69,21 +69,22 @@
 			$this->acl_manage 		= $this->acl->check('.invoice',16);
 
 			$this->start    		= $this->bo->start;
+			$this->limit    		= $this->bo->limit;
 			$this->query    		= $this->bo->query;
 			$this->sort     		= $this->bo->sort;
 			$this->order    		= $this->bo->order;
 			$this->filter   		= $this->bo->filter;
 			$this->cat_id   		= $this->bo->cat_id;
+			$this->menu->sub		='invoice';
 		}
 
 		function import()
 		{
 			if(!$this->acl_add)
 			{
-				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=>2, 'acl_location'=> $this->acl_location));
+				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> $this->currentapp.'.uilocation.stop', 'perm'=>2, 'acl_location'=> $this->acl_location));
 			}
 
-			$GLOBALS['phpgw_info']['flags']['menu_selection'] .= '::import';
 			$receipt = $GLOBALS['phpgw']->session->appsession('session_data','import_receipt');
 			$GLOBALS['phpgw']->session->appsession('session_data','import_receipt','');
 
@@ -118,6 +119,8 @@
 			{
 				$tsvfile = phpgw::get_var('tsvfile');
 			}
+
+			$links = $this->menu->links('import_inv');
 
 			if ($cancel && $tsvfile)
 			{
@@ -248,7 +251,7 @@
 						unset($payment_date);
 						unset($conv_type);
 						unset($auto_tax);
-//						$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uiXport.import'));
+//						$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> $this->currentapp.'.uiXport.import'));
 					}
 					else
 					{
@@ -263,7 +266,7 @@
 
 			$link_data = array
 			(
-				'menuaction'	=> 'property.uiXport.import',
+				'menuaction'	=> $this->currentapp.'.uiXport.import',
 				'sub'		=> $sub
 			);
 
@@ -285,15 +288,16 @@
 			$data = array
 			(
 				'msgbox_data'					=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
+				'links'						=> $links,
 
 				'img_cal'						=> $GLOBALS['phpgw']->common->image('phpgwapi','cal'),
 				'lang_datetitle'				=> lang('Select date'),
 
 				'form_action'					=> $GLOBALS['phpgw']->link('/index.php',$link_data),
-				'cancel_action'					=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiinvoice.index', 'sub'=> $sub)),
+				'cancel_action'					=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uiinvoice.index', 'sub'=> $sub)),
 				'lang_cancel'					=> lang('Cancel'),
 				'lang_cancel_statustext'			=> lang('cancel the import'),
-				'action_url'					=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=>  'property' .'.uiXport.import')),
+				'action_url'					=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=>  $this->currentapp .'.uiXport.import')),
 				'tsvfilename'					=> '',
 
 				'lang_debug'					=> lang('Debug output in browser'),
@@ -314,7 +318,7 @@
 				'lang_kid_nr_statustext'			=> lang('Enter Kid nr'),
 
 				'lang_vendor'					=> lang('Vendor'),
-				'addressbook_link'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uilookup.vendor')),
+				'addressbook_link'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uilookup.vendor')),
 
 				'lang_invoice_date_statustext'			=> lang('Enter the invoice date'),
 				'lang_num_days_statustext'			=> lang('Enter the payment date or the payment delay'),
@@ -384,12 +388,12 @@
 				'lang_budget_responsible_statustext'		=> lang('You have to select a budget responsible for this invoice in order to make the import')
 			);
 
-			$GLOBALS['phpgw']->xslttpl->add_file(array('invoice'));
+			$GLOBALS['phpgw']->xslttpl->add_file(array('invoice','menu'));
 
 			$appname	= lang('Invoice');
 			$function_msg	= lang('Import from CSV');
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($this->currentapp) . ' - ' . $appname . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('import' => $data));
 		//	$GLOBALS['phpgw']->xslttpl->pp();
 		}
@@ -428,13 +432,13 @@
 
 			$link_data_add = array
 			(
-				'menuaction'	=> 'property.uiXport.import',
+				'menuaction'	=> $this->currentapp.'.uiXport.import',
 				'convert'	=> 'true'
 			);
 
 			$link_data_cancel = array
 			(
-				'menuaction'	=> 'property.uiXport.import',
+				'menuaction'	=> $this->currentapp.'.uiXport.import',
 				'cancel'	=> True
 
 			);
@@ -500,7 +504,7 @@
 			$appname						= lang('Invoice');
 			$function_msg	= lang('Debug');
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($this->currentapp) . ' - ' . $appname . ': ' . $function_msg;
 
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('debug' => $data));
 		//	$GLOBALS['phpgw']->xslttpl->pp();
@@ -510,16 +514,16 @@
 		{
 			if(!$this->acl_manage)
 			{
-				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=>16, 'acl_location'=> $this->acl_location));
+				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> $this->currentapp.'.uilocation.stop', 'perm'=>16, 'acl_location'=> $this->acl_location));
 			}
 
-			$GLOBALS['phpgw_info']['flags']['menu_selection'] .= '::export';
-			$GLOBALS['phpgw']->xslttpl->add_file(array('invoice',
+			$GLOBALS['phpgw']->xslttpl->add_file(array('invoice','menu',
 										'search_field'));
 
 			$values 	= phpgw::get_var('values');
 			$date 	= phpgw::get_var('date');
-			$receipt = array();
+
+			$links = $this->menu->links('export_inv');
 
 			if($values['submit'])
 			{
@@ -538,7 +542,7 @@
 						$GLOBALS['phpgw_info']['flags']['xslt_app'] = False;
 						$GLOBALS['phpgw_info']['flags']['noframework'] = True;
 						echo '<pre>' . $receipt['message'][0]['msg'] . '</pre>';
-						echo '&nbsp<a href="'.$GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiXport.export')) . '">' . lang('Back') . '</a>';
+						echo '&nbsp<a href="'.$GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uiXport.export')) . '">' . lang('Back') . '</a>';
 					}
 				}
 				endif;
@@ -551,13 +555,14 @@
 
 			$link_data = array
 			(
-				'menuaction'		=> 'property.uiXport.export'
-			);
+				'menuaction'		=> $this->currentapp.'.uiXport.export',
+				'invoice_id'		=> $invoice_id,
+				'sub'			=> $sub);
 
 			$msgbox_data = $this->bocommon->msgbox_data($receipt);
 
-			$force_period_year[0]['id'] = date('Y');
-			$force_period_year[1]['id'] = date('Y') -1;
+			$force_period_year[0]['id'] = date(Y);
+			$force_period_year[1]['id'] = date(Y) -1;
 
 
 			$data = array
@@ -567,13 +572,14 @@
 				'lang_force_period_year'		=> lang('Force year for period'),
 				'lang_force_period_year_statustext'	=> lang('Force year for period'),
 				'lang_select_year'			=> lang('select year'),
+				'links'					=> $links,
 				'lang_select_conv'			=> lang('Select conversion'),
 				'conv_list'				=> $this->bo->select_export_conv($values['conv_type']),
 				'select_conv'				=> 'values[conv_type]',
 				'lang_conv_statustext'			=> lang('Select conversion'),
 
 				'lang_rollback_file'			=> lang('Roll back'),
-				'link_rollback_file'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiXport.rollback')),
+				'link_rollback_file'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uiXport.rollback')),
 
 				'lang_export_to_file'			=> lang('Export to file'),
 				'value_debug'				=> $values['debug'],
@@ -582,6 +588,7 @@
 				'lang_submit'				=> lang('Submit'),
 				'lang_cancel'				=> lang('Cancel'),
 
+				'message'				=> $message,
 				'form_action'				=> $GLOBALS['phpgw']->link('/index.php',$link_data),
 				'lang_save'				=> lang('save')
 			);
@@ -590,7 +597,7 @@
 			$appname	= lang('Invoice');
 			$function_msg	= lang('Export invoice');
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($this->currentapp) . ' - ' . $appname . ': ' . $function_msg;
 
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('export' => $data));
 		//	$GLOBALS['phpgw']->xslttpl->pp();
@@ -600,15 +607,17 @@
 		{
 			if(!$this->acl_manage)
 			{
-				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=>16, 'acl_location'=> $this->acl_location));
+				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> $this->currentapp.'.uilocation.stop', 'perm'=>16, 'acl_location'=> $this->acl_location));
 			}
 
-			$GLOBALS['phpgw']->xslttpl->add_file(array('invoice',
+			$GLOBALS['phpgw']->xslttpl->add_file(array('invoice','menu',
 										'search_field'));
 
 			$values 	= phpgw::get_var('values');
 			$date 	= phpgw::get_var('date');
 //_debug_array($values);
+
+			$links = $this->menu->links('export_inv');
 
 			if($values['submit'])
 			{
@@ -632,7 +641,7 @@
 				$date = $GLOBALS['phpgw']->common->show_date(mktime(0,0,0,date("m"),date("d"),date("Y")),$GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']);
 			}
 
-			$link_data = array('menuaction'	=> 'property.uiXport.rollback');
+			$link_data = array('menuaction'	=> $this->currentapp.'.uiXport.rollback');
 
 			$dateformat = strtolower($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']);
 			$sep = '/';
@@ -652,6 +661,7 @@
 			$data = array
 			(
 				'msgbox_data'				=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
+				'links'					=> $links,
 
 				'img_cal'					=> $GLOBALS['phpgw']->common->image('phpgwapi','cal'),
 				'lang_datetitle'			=> lang('Select date'),
@@ -687,7 +697,7 @@
 			$appname		= lang('Invoice');
 			$function_msg		= lang('Rollback invoice');
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($this->currentapp) . ' - ' . $appname . ': ' . $function_msg;
 
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('rollback' => $data));
 		//	$GLOBALS['phpgw']->xslttpl->pp();

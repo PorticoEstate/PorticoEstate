@@ -37,7 +37,7 @@
 
 		function property_sodocument()
 		{
-		//	$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
+			$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->account		= $GLOBALS['phpgw_info']['user']['account_id'];
 			$this->bocommon		= CreateObject('property.bocommon');
 			$this->db           = $this->bocommon->new_db();
@@ -227,8 +227,8 @@
 			$querymethod = '';
 			if($query)
 			{
-				$query = preg_replace("/'/",'',$query);
-				$query = preg_replace('/"/','',$query);
+				$query = ereg_replace("'",'',$query);
+				$query = ereg_replace('"','',$query);
 
 				$querymethod = " $where (fm_document.address $this->like '%$query%' or fm_document.location_code $this->like '$query%')";
 			}
@@ -316,8 +316,8 @@
 
 			if($query)
 			{
-				$query = preg_replace("/'/",'',$query);
-				$query = preg_replace('/"/','',$query);
+				$query = ereg_replace("'",'',$query);
+				$query = ereg_replace('"','',$query);
 
 				$querymethod = " AND fm_document.title $this->like '%$query%' or fm_document.document_name $this->like '%$query%'";
 			}
@@ -543,11 +543,11 @@
 
 				if($old_p_num)
 				{
-					$file = $this->fakebase. '/' . 'document' . '/' . $old_loc1 . '/' . $document['entity_name'] . '/' . $document['category_name'] . '/' . $p_num . '/' . $old_document_name;
+					$file = $this->fakebase. SEP . 'document' . SEP . $old_loc1 . SEP . $document['entity_name'] . SEP . $document['category_name'] . SEP . $p_num . SEP . $old_document_name;
 				}
 				else
 				{
-					$file = $this->fakebase. '/' . 'document' . '/' . $old_loc1 . '/' . $old_document_name;
+					$file = $this->fakebase. SEP . 'document' . SEP . $old_loc1 . SEP . $old_document_name;
 				}
 
 				$receipt= $this->delete_file($file);
@@ -604,11 +604,11 @@
 				     )
 				)))
 				{
-					$receipt['error'][]=array('msg'=>lang('failed to delete file') . ' :'. $this->fakebase. '/' . 'document'. '/' . $document_name);
+					$receipt['error'][]=array('msg'=>lang('failed to delete file') . ' :'. $this->fakebase. SEP . 'document'. SEP . $document_name);
 				}
 				else
 				{
-					$receipt['message'][]=array('msg'=>lang('file deleted') . ' :'. $this->fakebase. '/' . 'document'. '/' . $document_name);
+					$receipt['message'][]=array('msg'=>lang('file deleted') . ' :'. $this->fakebase. SEP . 'document'. SEP . $document_name);
 				}
 				$this->vfs->override_acl = 0;
 			}
@@ -638,11 +638,11 @@
 			{
 				if($p_num)
 				{
-					$file = $this->fakebase. '/' . 'document' . '/' . $loc1 . '/' . $entity['name'] . '/' . $category['name'] . '/' . $p_num . '/' . $document_name;
+					$file = $this->fakebase. SEP . 'document' . SEP . $loc1 . SEP . $entity['name'] . SEP . $category['name'] . SEP . $p_num . SEP . $document_name;
 				}
 				else
 				{
-					$file = $this->fakebase. '/' . 'document' . '/' . $loc1 . '/' . $document_name;
+					$file = $this->fakebase. SEP . 'document' . SEP . $loc1 . SEP . $document_name;
 				}
 
 				$receipt= $this->delete_file($file);

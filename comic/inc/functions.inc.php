@@ -1074,7 +1074,9 @@ function comic_display_frontpage($data_id, $scale, $censor_level)
 
 function template_options($app_template, &$options_c, &$images_c)
 {
-    $directory = opendir(PHPGW_SERVER_ROOT . "comic/templates/base/");
+    $appname = $GLOBALS['phpgw_info']['flags']['currentapp'];
+    
+    $directory = opendir(PHPGW_SERVER_ROOT . SEP. $appname . SEP . 'templates' . SEP . 'default' . SEP);
 
     $index=0;
 

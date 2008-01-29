@@ -39,20 +39,21 @@
 		function parse_php_app($fd,$plist)
 		{
 			$reg_expr = '('.implode('|',array_keys($this->functions)).")[ \t]*\([ \t]*(.*)$";
-			list($app) = explode(DIRECTORY_SEPARATOR,$fd);
+			define('SEP',filesystem_separator());
+			list($app) = explode(SEP,$fd);
 			$d=dir($fd);
 			while ($fn=$d->read())
 			{
-				if (@is_dir($fd.$fn.DIRECTORY_SEPARATOR))
+				if (@is_dir($fd.$fn.SEP))
 				{
 					if (($fn!='.')&&($fn!='..')&&($fn!='CVS'))
 					{
-						$plist=$this->parse_php_app($fd.$fn.DIRECTORY_SEPARATOR,$plist);
+						$plist=$this->parse_php_app($fd.$fn.SEP,$plist);
 					}
 				}
 				elseif ((strpos($fn,'.php')>1) && (is_readable($fd.$fn)))
 				{
-					$lines = file($fd.DIRECTORY_SEPARATOR.$fn);
+					$lines = file($fd.SEP.$fn);
 
 					foreach($lines as $n => $line)
 					{
@@ -113,7 +114,8 @@
 		function missing_app($app,$userlang=en)
 		{
 			$cur_lang=$this->load_app($app,$userlang);
-			$fd = PHPGW_SERVER_ROOT . "/{$app}/";
+			define('SEP',filesystem_separator());
+			$fd = PHPGW_SERVER_ROOT . SEP . $app . SEP;
 			$plist=array();
 			$plist = $this->parse_php_app($fd,$plist);
 			reset($plist);
@@ -127,8 +129,10 @@
 		*/
 		function add_app($app,$userlang='en')
 		{
-			$fd = PHPGW_SERVER_ROOT . "/{$app}/setup";
-			$fn = "{$fd}/phpgw_{$userlang}.lang";
+			define('SEP',filesystem_separator());
+
+			$fd = PHPGW_SERVER_ROOT . SEP . $app . SEP . 'setup';
+			$fn = $fd . SEP . 'phpgw_' . $userlang . '.lang';
 			if (@is_writeable($fn) || is_writeable($fd))
 			{
 				$wr = True;
@@ -176,8 +180,10 @@
 		*/
 		function load_app($app,$userlang='en')
 		{
-			$fd = PHPGW_SERVER_ROOT . "/{$app}/setup";
-			$fn = "{$fd}/phpgw_{$userlang}.lang";
+			define('SEP',filesystem_separator());
+
+			$fd = PHPGW_SERVER_ROOT . SEP . $app . SEP . 'setup';
+			$fn = $fd . SEP . 'phpgw_' . $userlang . '.lang';
 			if (@is_writeable($fn) || is_writeable($fd))
 			{
 				$wr = True;
@@ -242,7 +248,7 @@
 
 		function write_file($app_name,$langarray,$userlang)
 		{
-			$fn = PHPGW_SERVER_ROOT . "/{$app_name}/setup/phpgw_{$userlang}.lang";
+			$fn = PHPGW_SERVER_ROOT . SEP . $app_name . SEP . 'setup' . SEP . 'phpgw_' . $userlang . '.lang';
 			if (file_exists($fn))
 			{
 				$backup = $fn . '.old';

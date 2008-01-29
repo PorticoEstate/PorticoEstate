@@ -12,11 +12,10 @@
 
 		<style type="text/css">
 		<!-- 
-			/* FIXME move this to an external CSS file */
 			a, body, tr, th, td, input, select
 			{
 				font-family: Verdana, Arial, Helvetica, sans-serif;
-				font-size: 0.9em;
+				font-size: 12px;
 				text-decoration: none;
 			}
 
@@ -50,6 +49,7 @@
 			thead, tfoot, .th
 			{
 				background: #486591;
+				font-size: 14px;
 				font-weight: bold;
 				color: #fff;
 			}
@@ -131,7 +131,7 @@
 				color: #fff;
 			}
 
-			.checkcell
+			.centered
 			{
 				text-align: center;
 			}

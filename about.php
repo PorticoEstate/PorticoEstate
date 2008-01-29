@@ -19,21 +19,7 @@
 	*/
 	include_once('header.inc.php');
 
-	$app = phpgw::get_var('app', 'string', 'get');
-	switch ( $app )
-	{
-		case 'about':
-		case 'admin':
-		case 'home':
-		case 'preferences':
-		case '':
-			$app = $app_title = 'phpGroupWare';
-			break;
-
-		default:
-			$app_title = lang($app);
-	}
-
+	$app = $_GET['app'];
 	if ($app)
 	{
 		if (!($included = $GLOBALS['phpgw']->hooks->single('about',$app)))

@@ -259,27 +259,26 @@
 		if ($partscount == 2)
 		{
 			list($appname,$classname,$functionname) = explode(".", $method);
-			$unique_class = "{$appname}-{$classname}";
-			if ( !isset($GLOBALS[$unique_class]) || !is_object($GLOBALS[$unique_class]) )
+			if ( !isset($GLOBALS[$classname]) || !is_object($GLOBALS[$classname]) )
 			{
 				if ($classparams != '_UNDEF_' && ($classparams || $classparams != 'True'))
 				{
-					$GLOBALS[$unique_class] = createObject($appname.'.'.$classname, $classparams);
+					$GLOBALS[$classname] = createObject($appname.'.'.$classname, $classparams);
 				}
 				else
 				{
-					$GLOBALS[$unique_class] = createObject($appname.'.'.$classname);
+					$GLOBALS[$classname] = createObject($appname.'.'.$classname);
 				}
 			}
 
 			if ( (is_array($functionparams) || is_object($functionparams) || $functionparams != '_UNDEF_') 
 				&& ($functionparams || $functionparams != 'True'))
 			{
-				return $GLOBALS[$unique_class]->$functionname($functionparams);
+				return $GLOBALS[$classname]->$functionname($functionparams);
 			}
 			else
 			{
-				return $GLOBALS[$unique_class]->$functionname();
+				return $GLOBALS[$classname]->$functionname();
 			}
 		}
 		/* if the $method includes a parent class (multi-dimensional) then we have to work from it */
@@ -407,12 +406,13 @@
 		return '';
 	}
 
-	/**
-	* phpgw version checking, is param 1 < param 2 in phpgw versionspeak?
-	* @param string $a phpgw version number to check if less than $b
-	* @param string $b phpgw version number to check $a against
-	* @return bool true if $a < $b
-	*/
+	/*
+	   @function alessthanb
+	   @abstract phpgw version checking, is param 1 < param 2 in phpgw versionspeak?
+	   @param	$a	phpgw version number to check if less than $b
+	   @param	$b	phpgw version number to check $a against
+	#return	True if $a < $b
+	 */
 	function alessthanb($a,$b,$DEBUG=False)
 	{
 		$num = array('1st','2nd','3rd','4th');
@@ -422,8 +422,8 @@
 			echo'<br>Input values: '
 				. 'A="'.$a.'", B="'.$b.'"';
 		}
-		$newa = preg_replace('/pre/','.',$a);
-		$newb = preg_replace('/pre/','.',$b);
+		$newa = ereg_replace('pre','.',$a);
+		$newb = ereg_replace('pre','.',$b);
 		$testa = explode('.',$newa);
 		if(@$testa[1] == '')
 		{
@@ -511,8 +511,8 @@
 			echo'<br>Input values: '
 				. 'A="'.$a.'", B="'.$b.'"';
 		}
-		$newa = preg_replace('/pre/','.',$a);
-		$newb = preg_replace('/pre/','.',$b);
+		$newa = ereg_replace('pre','.',$a);
+		$newb = ereg_replace('pre','.',$b);
 		$testa = explode('.',$newa);
 		if($testa[3] == '')
 		{
@@ -584,6 +584,7 @@
 	 * @param	$tables	and array of tables to have the prefix prepended to
 	 * @return array of table names with the prefix prepended
 	 */
+
 	function prepend_tables_prefix($prefix,$tables)
 	{
 		foreach($tables as $key => $value)

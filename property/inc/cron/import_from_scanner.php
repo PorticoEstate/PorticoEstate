@@ -52,7 +52,7 @@
 
 		function import_from_scanner()
 		{
-		//	$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
+			$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->bocommon		= CreateObject('property.bocommon');
 			$this->vfs 			= CreateObject('phpgwapi.vfs');
 			$this->rootdir 		= $this->vfs->basedir;
@@ -113,7 +113,7 @@
 		{
 			$link_data = array
 			(
-				'menuaction' => 'property.custom_functions.index',
+				'menuaction' => $this->currentapp.'.custom_functions.index',
 				'function'	=> $this->function_name,
 				'execute'	=> $execute,
 				'dir'		=> $this->dir,
@@ -154,7 +154,7 @@
 
 			$appname		= 'import from scanner';
 			$function_msg	= 'import files from scanner-drop-catalog';
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($this->currentapp) . ' - ' . $appname . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('confirm' => $data));
 			$GLOBALS['phpgw']->xslttpl->pp();
 		}
@@ -186,7 +186,7 @@
 							{
 								$this->bolocation->initiate_ui_location(array('type_id'	=> -1,'tenant'	=> True));
 
-								$insert_record = $GLOBALS['phpgw']->session->appsession('insert_record','property');
+								$insert_record = $GLOBALS['phpgw']->session->appsession('insert_record',$this->currentapp);
 
 								$values = $this->bolocation->read_single($values['location_code'],array('tenant_id'=>'lookup'));
 								for ($i=0; $i<count($insert_record['location']); $i++)
@@ -224,7 +224,7 @@
 								{
 									$this->bolocation->initiate_ui_location(array('type_id'	=> -1,'tenant'	=> True));
 
-									$insert_record = $GLOBALS['phpgw']->session->appsession('insert_record','property');
+									$insert_record = $GLOBALS['phpgw']->session->appsession('insert_record',$this->currentapp);
 
 									$values = $this->bolocation->read_single($values['location_code'],array('tenant_id'=>'lookup'));
 									for ($i=0; $i<count($insert_record['location']); $i++)
@@ -237,10 +237,10 @@
 
 									$values['details']		= $file_entry['descr'];
 									$values['subject']		= $file_entry['descr'];
-									$values['assignedto']	= (isset($GLOBALS['phpgw_info']['user']['preferences']['property']['assigntodefault'])?$GLOBALS['phpgw_info']['user']['preferences']['property']['assigntodefault']:'');								
-									$values['group_id']		= (isset($GLOBALS['phpgw_info']['user']['preferences']['property']['groupdefault'])?$GLOBALS['phpgw_info']['user']['preferences']['property']['groupdefault']:'');
-									$values['cat_id']		= (isset($GLOBALS['phpgw_info']['user']['preferences']['property']['tts_category'])?$GLOBALS['phpgw_info']['user']['preferences']['property']['tts_category']:'');
-									$values['priority']		= (isset($GLOBALS['phpgw_info']['user']['preferences']['property']['prioritydefault'])?$GLOBALS['phpgw_info']['user']['preferences']['property']['prioritydefault']:'');								
+									$values['assignedto']	= (isset($GLOBALS['phpgw_info']['user']['preferences'][$this->currentapp]['assigntodefault'])?$GLOBALS['phpgw_info']['user']['preferences'][$this->currentapp]['assigntodefault']:'');								
+									$values['group_id']		= (isset($GLOBALS['phpgw_info']['user']['preferences'][$this->currentapp]['groupdefault'])?$GLOBALS['phpgw_info']['user']['preferences'][$this->currentapp]['groupdefault']:'');
+									$values['cat_id']		= (isset($GLOBALS['phpgw_info']['user']['preferences'][$this->currentapp]['tts_category'])?$GLOBALS['phpgw_info']['user']['preferences'][$this->currentapp]['tts_category']:'');
+									$values['priority']		= (isset($GLOBALS['phpgw_info']['user']['preferences'][$this->currentapp]['prioritydefault'])?$GLOBALS['phpgw_info']['user']['preferences'][$this->currentapp]['prioritydefault']:'');								
 
 									$receipt = $this->botts->add($values);
 									$this->add_file_to_ticket($receipt['id'],$file_entry['file_name']);
@@ -254,7 +254,7 @@
 					
 						if($this->mail_receipt)
 						{			
-							$prefs = $this->bocommon->create_preferences('property',$file_entry['user_id']);
+							$prefs = $this->bocommon->create_preferences($this->currentapp,$file_entry['user_id']);
 							if (strlen($prefs['email'])> (strlen($members[$i]['account_name'])+1))
 							{
 								$subject = 'Resultat fra scanner';
@@ -272,9 +272,9 @@
 							}
 						}
 
-						unlink("{$this->dir}/{$file_entry['file_name']}{$this->suffix}");
-						unlink("{$this->dir}/{$file_entry['file_name']}{$this->meta_suffix}");
-
+						unlink($this->dir . SEP . $file_entry['file_name'] . $this->suffix);
+						unlink($this->dir . SEP . $file_entry['file_name'] . $this->meta_suffix);
+												
 						$msgbox_data = $this->bocommon->msgbox_data($this->receipt);
 
 						$insert_values= array(
@@ -307,7 +307,7 @@
 			$myfilearray = array();
 			while ($file = @readdir($dir_handle))
 			{
-				if ((strtolower(substr($file, -3, 3)) == $this->meta_suffix) && is_file("{$this->dir}/{$file}") )
+				if ((strtolower(substr($file, -3, 3)) == $this->meta_suffix) && is_file($this->dir . SEP . $file) )
 				{
 					$myfilearray[] = $file;
 				}
@@ -321,7 +321,7 @@
 				$fname = $myfilearray[$i];
 				$file_list[$i]['file_name'] = substr($fname,0, strlen($fname)-strlen($this->meta_suffix));
 
-				$fp = fopen("{$this->dir}/{$fname}", 'rb');
+				$fp = fopen($this->dir . SEP . $fname,'rb');
 
 				$row = 1;
 				while ($data = fgetcsv($fp,8000,$this->delimiter))
@@ -348,7 +348,7 @@
 
 		function add_file_to_ticket($id,$file_name)
 		{
-				$to_file = "{$this->fakebase}/fmticket/{$id}/{$file_name}{$this->suffix}";
+				$to_file = $this->fakebase. SEP . 'fmticket' . SEP . $id . SEP . $file_name . $this->suffix;
 	
 				if($this->botts->vfs->file_exists(array(
 					'string' => $to_file,
@@ -363,7 +363,7 @@
 					$this->botts->vfs->override_acl = 1;
 
 					if(!$this->botts->vfs->cp (array (
-						'from'	=> $this->dir . '/' . $file_name . $this->suffix,
+						'from'	=> $this->dir . SEP . $file_name . $this->suffix,
 						'to'	=> $to_file,
 						'relatives'	=> array (RELATIVE_NONE|VFS_REAL, RELATIVE_ALL))))
 					{
@@ -435,24 +435,24 @@
 		function create_loc1_dir($loc1='')
 		{
 			if(!$this->vfs->file_exists(array(
-					'string' => $this->fakebase . '/' . 'document' . '/' . $loc1,
+					'string' => $this->fakebase . SEP . 'document' . SEP . $loc1,
 					'relatives' => Array(RELATIVE_NONE)
 				)))
 			{
 				$this->vfs->override_acl = 1;
 
 				if(!$this->vfs->mkdir (array(
-				     'string' => $this->fakebase. '/' . 'document' . '/' . $loc1,
+				     'string' => $this->fakebase. SEP . 'document' . SEP . $loc1,
 				     'relatives' => array(
 				          RELATIVE_NONE
 				     )
 				)))
 				{
-					$this->receipt['error'][]=array('msg'=>lang('failed to create directory') . ' :'. $this->fakebase. '/' . 'document' . '/' . $loc1);
+					$this->receipt['error'][]=array('msg'=>lang('failed to create directory') . ' :'. $this->fakebase. SEP . 'document' . SEP . $loc1);
 				}
 				else
 				{
-					$this->receipt['message'][]=array('msg'=>lang('directory created') . ' :'. $this->fakebase. '/' . 'document' . '/' . $loc1);
+					$this->receipt['message'][]=array('msg'=>lang('directory created') . ' :'. $this->fakebase. SEP . 'document' . SEP . $loc1);
 				}
 				$this->vfs->override_acl = 0;
 			}
@@ -460,8 +460,8 @@
 
 		function copy_files($values)
 		{
-			$to_file = $this->fakebase . '/' . 'document' . '/' . $values['loc1'] . '/' . $values['file_name'] . $this->suffix;
-			$from_file = $this->dir . '/' . $values['file_name'] . $this->suffix;
+			$to_file = $this->fakebase . SEP . 'document' . SEP . $values['loc1'] . SEP . $values['file_name'] . $this->suffix;
+			$from_file = $this->dir . SEP . $values['file_name'] . $this->suffix;
 			$this->vfs->override_acl = 1;
 
 			if($this->vfs->file_exists(array(

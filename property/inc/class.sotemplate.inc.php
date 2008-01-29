@@ -36,7 +36,7 @@
 	{
 		function property_sotemplate()
 		{
-		//	$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
+			$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->account		= $GLOBALS['phpgw_info']['user']['account_id'];
 			$this->bocommon		= CreateObject('property.bocommon');
 			$this->db           	= $this->bocommon->new_db();
@@ -94,8 +94,8 @@
 
 			if($query)
 			{
-				$query = preg_replace("/'/",'',$query);
-				$query = preg_replace('/"/','',$query);
+				$query = ereg_replace("'",'',$query);
+				$query = ereg_replace('"','',$query);
 
 				$querymethod = " $where (fm_template.descr $this->like '%$query%')";
 			}
@@ -166,8 +166,8 @@
 
 			if($query)
 			{
-				$query = preg_replace("/'/",'',$query);
-				$query = preg_replace('/"/','',$query);
+				$query = ereg_replace("'",'',$query);
+				$query = ereg_replace('"','',$query);
 
 				$querymethod = " AND (hours_descr $this->like '%$query%' or fm_template_hours.remark $this->like '%$query%' or ns3420_id $this->like '%$query%')";
 			}

@@ -68,7 +68,7 @@
 			$start		= phpgw::get_var('start', 'int');
 			$query		= phpgw::get_var('query');
 			$sort		= phpgw::get_var('sort');
-			$order		= phpgw::get_var('order');
+			$order		= phpgw::get_var('order', 'string', 'REQUEST', 'attrib_sort');
 			$filter		= phpgw::get_var('filter');
 			$location	= phpgw::get_var('location');
 			$allrows	= phpgw::get_var('allrows', 'bool');
@@ -210,21 +210,16 @@
 		function select_custom_function($selected='', $appname)
 		{
 			$file_list = array();
-			$dir = PHPGW_SERVER_ROOT . "{$appname}/inc/custom";
-			if ( !is_dir($dir) )
-			{
-				return $file_list;
-			}
-
-			$dir_handle = opendir($dir);
-			$myfilearray = '';
+			$dir_handle = @opendir(PHPGW_SERVER_ROOT . SEP . $appname . SEP . 'inc' . SEP . 'custom');
+			$i=0; $myfilearray = '';
 			if ($dir_handle)
 			{
 				while ($file = readdir($dir_handle))
 				{
-					if ((substr($file, 0, 1) != '.') && is_file("{$dir}/{$file}") )
+					if ((substr($file, 0, 1) != '.') && is_file(PHPGW_SERVER_ROOT . SEP . $appname . SEP . 'inc' . SEP . 'custom' . SEP . $file) )
 					{
-						$myfilearray[] = $file;
+						$myfilearray[$i] = $file;
+						$i++;
 					}
 				}
 				closedir($dir_handle);

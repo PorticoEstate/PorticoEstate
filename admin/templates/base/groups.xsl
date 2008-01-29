@@ -132,11 +132,11 @@
 <!-- {rows} -->
 				</td>
 				<td valign="top">
-					<xsl:variable name="edit_url"><xsl:value-of select="edit_url"/></xsl:variable>
-					<form action="{$edit_url}" method="POST">
 					<table border="0" width="100%">
+						<xsl:variable name="edit_url"><xsl:value-of select="edit_url"/></xsl:variable>
 						<xsl:variable name="account_id" select="account_id"/>
 						<xsl:variable name="select_size" select="select_size"/>
+						<form action="{$edit_url}" method="POST">
 						<input type="hidden" name="values[account_id]" value="{$account_id}"/>
 						<tr>
 							<td><xsl:value-of select="lang_account_name"/></td>
@@ -170,28 +170,31 @@
 							</td>
 						</tr>
 						<tr>
-							<td colspan="4">
-								<h2><xsl:value-of select="lang_permissions" /></h2>
-								<ul>
-									<!--
-									<li>
-										<xsl:value-of select="lang_acl"/>
-										<xsl:value-of select="lang_grant"/>
-										<xsl:value-of select="lang_application"/>
-									</li>
-									-->
-									<xsl:apply-templates select="app_list" />
-								</ul>
+							<td valign="top"><xsl:value-of select="lang_permissions"/></td>
+							<td>
+								<table width="100%" border="0" cellpadding="2" cellspacing="2">
+									<tr class="th">
+										<td><xsl:value-of select="lang_application"/></td>
+										<td>&nbsp;</td>
+										<td><xsl:value-of select="lang_acl"/></td>
+										<td><xsl:value-of select="lang_grant"/></td>
+									</tr>
+										<xsl:apply-templates select="app_list"/>
+								</table>
 							</td>
 						</tr>
+						<tr>
+							<td>
+							<xsl:variable name="lang_save"><xsl:value-of select="lang_save"/></xsl:variable>
+								<input type="submit" name="values[save]" value="{$lang_save}"/>
+							</td>
+							<td align="right">
+								<xsl:variable name="lang_cancel"><xsl:value-of select="lang_cancel"/></xsl:variable>
+								<input type="submit" name="values[cancel]" value="{$lang_cancel}"/>
+							</td>
+						</tr>
+ 						</form>
 					</table>
-					<div class="button_group">
-						<xsl:variable name="lang_save"><xsl:value-of select="lang_save"/></xsl:variable>
-						<input type="submit" name="values[save]" value="{$lang_save}"/>
-						<xsl:variable name="lang_cancel"><xsl:value-of select="lang_cancel"/></xsl:variable>
-						<input type="submit" name="values[cancel]" value="{$lang_cancel}"/>
-					</div>
- 					</form>
 				</td>
 			</tr>
 		</table>
@@ -222,10 +225,13 @@
 	</xsl:template>
 
 	<xsl:template match="app_list">
-		<xsl:variable name="checkbox_name" select="checkbox_name" />
-		<li>
+		<xsl:variable name="checkbox_name" select="checkbox_name"/>
+		<tr>
 			<xsl:attribute name="class">
 				<xsl:choose>
+					<xsl:when test="@class">
+						<xsl:value-of select="@class"/>
+					</xsl:when>
 					<xsl:when test="position() mod 2 = 0">
 						<xsl:text>row_off</xsl:text>
 					</xsl:when>
@@ -234,45 +240,36 @@
 					</xsl:otherwise>
 				</xsl:choose>
 			</xsl:attribute>
-
-			<xsl:choose>
-				<xsl:when test="acl_url != ''">
-					<xsl:variable name="acl_url" select="acl_url"/>
-					<xsl:variable name="acl_img" select="acl_img"/>
-					<xsl:variable name="acl_img_name" select="acl_img_name"/>
-					<a href="{$acl_url}"><img src="{$acl_img}" title="{$acl_img_name}" alt="{$acl_img_name}" /></a>
-				</xsl:when>
-				<xsl:otherwise>
-					<xsl:variable name="acl_img" select="acl_img"/>
-					<xsl:variable name="acl_img_name" select="acl_img_name"/>
-					<img src="{$acl_img}" title="{$acl_img_name}" alt="{$acl_img_name}" />
-				</xsl:otherwise>
-			</xsl:choose>
-
-			<xsl:choose>
-				<xsl:when test="grant_url != ''">
-					<xsl:variable name="grant_url" select="grant_url"/>
-					<xsl:variable name="grant_img" select="grant_img"/>
-					<xsl:variable name="grant_img_name" select="grant_img_name"/>
-					<a href="{$grant_url}"><img src="{$grant_img}" title="{$grant_img_name}" alt="{$grant_img_name}" /></a>
-				</xsl:when>
-				<xsl:otherwise>
-					<xsl:variable name="grant_img" select="grant_img"/>
-					<xsl:variable name="grant_img_name" select="grant_img_name"/>
-					<img src="{$grant_img}" title="{$grant_img_name}" alt="{$grant_img_name}" />
-				</xsl:otherwise>
-			</xsl:choose>
-			<xsl:choose>
-				<xsl:when test="checked = '1'">
-					<input type="checkbox" id="{$checkbox_name}" name="{$checkbox_name}" value="1" checked="checked" />
-				</xsl:when>
-				<xsl:otherwise>
-					<input type="checkbox" id="{$checkbox_name}" name="{$checkbox_name}" value="1" />
-				</xsl:otherwise>
-			</xsl:choose>
-			<label for="{$checkbox_name}">
-				<xsl:value-of select="app_title" />
-			</label>
-		</li>
+			<td width="40%"><xsl:value-of select="app_name"/></td>
+			<td width="5%" align="center">
+				<xsl:choose>
+					<xsl:when test="checked != ''">
+						<input type="checkbox" name="{$checkbox_name}" value="True" checked="checked"/>
+					</xsl:when>
+					<xsl:otherwise>
+						<input type="checkbox" name="{$checkbox_name}" value="True"/>
+					</xsl:otherwise>
+				</xsl:choose>
+			</td>
+			<td width="5%" align="center">
+				<xsl:choose>
+					<xsl:when test="acl_url != ''">
+						<xsl:variable name="acl_url" select="acl_url"/>
+						<xsl:variable name="acl_img" select="acl_img"/>
+						<xsl:variable name="acl_img_name" select="acl_img_name"/>
+						<a href="{$acl_url}"><img src="{$acl_img}" border="0" hspace="3" align="absmiddle" alt="{$acl_img_name}" name="{$acl_img_name}"/></a>
+					</xsl:when>
+				</xsl:choose>
+			</td>
+			<td width="5%" align="center">
+				<xsl:choose>
+					<xsl:when test="grant_url != ''">
+						<xsl:variable name="grant_url" select="grant_url"/>
+						<xsl:variable name="acl_img" select="acl_img"/>
+						<xsl:variable name="grant_img_name" select="grant_img_name"/>
+						<a href="{$grant_url}"><img src="{$acl_img}" border="0" hspace="3" align="absmiddle" alt="{$grant_img_name}" name="{$grant_img_name}"/></a>
+					</xsl:when>
+				</xsl:choose>
+			</td>
+		</tr>
 	</xsl:template>
-

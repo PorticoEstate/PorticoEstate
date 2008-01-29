@@ -36,7 +36,7 @@
 	{
 		function property_sorequest()
 		{
-		//	$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
+			$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->account		= $GLOBALS['phpgw_info']['user']['account_id'];
 			$this->soproject	= CreateObject('property.soproject');
 			$this->historylog	= CreateObject('property.historylog','request');
@@ -294,8 +294,8 @@
 
 			if($query)
 			{
-				$query = preg_replace("/'/",'',$query);
-				$query = preg_replace('/"/','',$query);
+				$query = ereg_replace("'",'',$query);
+				$query = ereg_replace('"','',$query);
 
 				$querymethod = " $where (fm_request.title $this->like '%$query%' or fm_request.address $this->like '%$query%' or fm_request.location_code $this->like '%$query%')";
 			}

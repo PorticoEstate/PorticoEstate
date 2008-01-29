@@ -47,10 +47,10 @@
 				$lang = $ConfigLang;
 			}
 
-			$fn = "./lang/phpgw_{$lang}.lang";
+			$fn = '.' . SEP . 'lang' . SEP . 'phpgw_' . $lang . '.lang';
 			if (!file_exists($fn))
 			{
-				$fn = './lang/phpgw_en.lang';
+				$fn = '.' . SEP . 'lang' . SEP . 'phpgw_en.lang';
 			}
 
 			if (file_exists($fn))
@@ -196,7 +196,7 @@
 				{
 					echo '<br>add_langs(): Working on: ' . $lang . ' for ' . $appname;
 				}
-				$appfile = PHPGW_SERVER_ROOT . "/{$appname}/setup/phpgw_" . strtolower($lang) . '.lang';
+				$appfile = PHPGW_SERVER_ROOT . SEP . $appname . SEP . 'setup' . SEP . 'phpgw_' . strtolower($lang) . '.lang';
 				if(file_exists($appfile))
 				{
 					if($DEBUG)

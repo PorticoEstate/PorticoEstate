@@ -22,16 +22,19 @@
 				</xsl:attribute>
 
 				<td class="{class}" align="left" valign="top" title="{$statustext}" style="cursor:help">
+					<xsl:value-of select="input_text"/>
 					<xsl:choose>
 						<xsl:when test="helpmsg=1">
-							<xsl:variable name="help_url"><xsl:value-of select="help_url"/></xsl:variable>
+							<xsl:variable name="help_url"><xsl:value-of select="//help_url"/>&amp;attrib_id=<xsl:value-of select="attrib_id"/></xsl:variable>
+							<xsl:variable name="lang_help"><xsl:value-of select="//lang_help"/></xsl:variable>
 							<a href="javascript:var w=window.open('{$help_url}','','width=550,height=400,scrollbars')">
-								<xsl:text>[</xsl:text><xsl:value-of select="input_text"/><xsl:text>]</xsl:text>
-							</a>
+							<xsl:text> [</xsl:text><xsl:value-of select="$lang_help"/><xsl:text>]</xsl:text></a>
 						</xsl:when>
-						<xsl:otherwise>
-							<xsl:value-of select="input_text"/>
-						</xsl:otherwise>
+					</xsl:choose>
+					<xsl:choose>
+						<xsl:when test="datatype='D'">
+							<xsl:text>[</xsl:text><xsl:value-of select="//lang_dateformat"/><xsl:text>]</xsl:text>			
+						</xsl:when>
 					</xsl:choose>
 					<xsl:choose>
 						<xsl:when test="datatype='pwd'">
@@ -56,7 +59,7 @@
 							<input type="hidden" name="values_attribute[{counter}][datatype]" value="{datatype}"></input>
 							<input type="hidden" name="values_attribute[{counter}][history]" value="{history}"></input>
 							<input type="hidden" name="values_attribute[{counter}][attrib_id]" value="{attrib_id}"></input>
-							<input type="hidden" name="values_attribute[{counter}][nullable]" value="{nullable}"></input>
+							<input type="hidden" name="values_attribute[{counter}][allow_null]" value="{allow_null}"></input>
 							<input type="hidden" name="values_attribute[{counter}][input_text]" value="{input_text}"></input>
 							<xsl:choose>
 								<xsl:when test="datatype='R'">
@@ -184,7 +187,7 @@
 										</xsl:attribute>
 									</input>
 								</xsl:when>
-					<!--			<xsl:when test="datatype='D'">
+								<xsl:when test="datatype='D'">
 									<input type="text" name="values_attribute[{counter}][value]" value="{value}" onFocus="{//dateformat_validate}" onKeyUp="{//onKeyUp}" onBlur="{//onBlur}" size="12" maxlength="10"  onMouseout="window.status='';return true;" >
 										<xsl:choose>
 											<xsl:when test="disabled!=''">
@@ -200,31 +203,8 @@
 										</xsl:attribute>
 									</input>
 								</xsl:when>
-					-->
-								<xsl:when test="datatype='D'">
-									<input type="text" id="values_attribute_{counter}" name="values_attribute[{counter}][value]" value="{value}"  size="12" maxlength="12"  onMouseout="window.status='';return true;" >
-										<xsl:attribute name="readonly">
-											<xsl:text> readonly</xsl:text>
-										</xsl:attribute>
-										<xsl:attribute name="onMouseover">
-											<xsl:text>window.status='</xsl:text>
-												<xsl:value-of select="statustext"/>
-											<xsl:text>';return true;</xsl:text>
-										</xsl:attribute>
-										<xsl:choose>
-											<xsl:when test="disabled!=''">
-												<xsl:attribute name="disabled">
-													<xsl:text> disabled</xsl:text>
-												</xsl:attribute>
-											</xsl:when>
-										</xsl:choose>
-									</input>
-									<img id="values_attribute_{counter}-trigger" src="{img_cal}" alt="{lang_datetitle}" title="{lang_datetitle}" style="cursor:pointer; cursor:hand;" />
-								</xsl:when>
-
-
 								<xsl:when test="datatype='T'">
-									<textarea cols="{//textareacols}" rows="{//textarearows}" name="values_attribute[{counter}][value]" wrap="virtual" onMouseout="window.status='';return true;">
+									<textarea cols="40" rows="6" name="values_attribute[{counter}][value]" wrap="virtual" onMouseout="window.status='';return true;">
 										<xsl:choose>
 											<xsl:when test="disabled!=''">
 												<xsl:attribute name="disabled">
@@ -270,7 +250,7 @@
 															<xsl:attribute name="disabled">
 																<xsl:text> disabled</xsl:text>
 															</xsl:attribute>
-														</xsl:when>
+															</xsl:when>
 													</xsl:choose>
 													<xsl:attribute name="onMouseover">
 														<xsl:text>window.status='</xsl:text>

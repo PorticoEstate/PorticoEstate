@@ -29,8 +29,8 @@
 
 	$title = $appname;
 	$file = Array(
-		'Preferences'	=> $GLOBALS['phpgw']->link('/preferences/preferences.php', array('appname' => 'property', 'type'=> 'user') ),
-		'Grant Access'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiadmin.aclprefs', 'acl_app'=> 'property'))
+		'Preferences'	=> $GLOBALS['phpgw']->link('/preferences/preferences.php',array('appname'=> $appname, 'type'=> 'user')),
+		'Grant Access'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $appname.'.uiadmin.aclprefs', 'acl_app'=> $appname))
 	);
 	display_section($appname,$file);
 

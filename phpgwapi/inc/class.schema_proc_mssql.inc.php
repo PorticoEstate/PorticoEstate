@@ -211,7 +211,7 @@
 			$this->uc = array();
 
 			// Field, Type, Null, Key, Default, Extra
-			$oProc->m_odb->query("exec sp_columns '$sTableName'", __LINE__, __FILE__);
+			$oProc->m_odb->query("exec sp_columns '$sTableName'");
 			while ($oProc->m_odb->next_record())
 			{
 				$type = $default = $null = $nullcomma = $prec = $scale = $ret = $colinfo = $scales = '';

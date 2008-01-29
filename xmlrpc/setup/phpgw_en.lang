@@ -21,4 +21,3 @@ simple client	xmlrpc	en	Simple Client
 system	xmlrpc	en	System
 test suite	xmlrpc	en	Test Suite
 xmlrpc test	common	en	XMLRPC Test
-xmlrpc	common	en	XMLRPC Test Suite

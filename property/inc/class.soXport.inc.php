@@ -43,7 +43,7 @@
 		{
 
 			$GLOBALS['phpgw_info']['flags']['currentapp']	=	'property';
-		//	$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
+			$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->bocommon		= CreateObject('property.bocommon');
 			$this->soinvoice	= CreateObject('property.soinvoice',True);
 			$this->db           	= $this->bocommon->new_db();

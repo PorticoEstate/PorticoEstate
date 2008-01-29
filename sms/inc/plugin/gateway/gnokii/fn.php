@@ -98,7 +98,7 @@
 		    $handle = @opendir($this->gnokii_param[path] . "/cache/smsd");
 		    while ($sms_in_file = @readdir($handle))
 		    {
-			if (preg_match("/^ERR.in/i",$sms_in_file) && !preg_match("/^[.]/",$sms_in_file))
+			if (eregi("^ERR.in",$sms_in_file) && !eregi("^[.]",$sms_in_file))
 			{
 			    $fn = $this->gnokii_param[path] . "/cache/smsd/$sms_in_file";
 			    $tobe_deleted = $fn;

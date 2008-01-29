@@ -40,8 +40,6 @@
 		var $sort;
 		var $order;
 		var $cat_id;
-		var $entity_id;
-		var $status_id;
 
 		var $public_functions = array
 		(
@@ -54,7 +52,7 @@
 
 		function property_bodocument($session=False)
 		{
-		//	$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
+			$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->so 			= CreateObject('property.sodocument');
 			$this->bocommon 	= CreateObject('property.bocommon');
 			$this->solocation 	= CreateObject('property.solocation');
@@ -117,7 +115,7 @@
 			{
 				$this->status_id = $status_id;
 			}
-			if($entity_id)
+			if(isset($entity_id))
 			{
 				$this->entity_id = $entity_id;
 			}
@@ -152,7 +150,7 @@
 			$this->sort		= $data['sort'];
 			$this->order	= $data['order'];
 			$this->cat_id	= $data['cat_id'];
-		//	$this->entity_id	= $data['entity_id'];
+			$this->entity_id	= $data['entity_id'];
 			$this->doc_type	= $data['doc_type'];
 			$this->query_location	= $data['query_location'];
 		}
@@ -226,12 +224,10 @@
 			$document						= $this->so->read_single($document_id);
 			$dateformat						= $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
 			$document['document_date']		= $GLOBALS['phpgw']->common->show_date($document['document_date'],$dateformat);
+			$vendor							= $this->contacts->read_single(array('actor_id'=>$document['vendor_id']));
 
-			if(isset($document['vendor_id']) && $document['vendor_id'])
+			if(is_array($vendor))
 			{
-				$custom 				= createObject('phpgwapi.custom_fields');
-				$vendor['attributes']	= $custom->get_attribs('property','.vendor', 0, '', 'ASC', 'attrib_sort', true, true);
-				$vendor					= $this->contacts->read_single($document['vendor_id'],$vendor);
 				foreach($vendor['attributes'] as $attribute)
 				{
 					if($attribute['name']=='org_name')
@@ -354,26 +350,25 @@
 
 		function create_home_dir()
 		{
-			$dir = "{$this->fakebase}/agreement";
 			if(!$this->vfs->file_exists(array(
-					'string' => $dir,
+					'string' => $this->fakebase. SEP . 'document',
 					'relatives' => Array(RELATIVE_NONE)
 				)))
 			{
 				$this->vfs->override_acl = 1;
 
 				if(!$this->vfs->mkdir (array(
-				     'string' => $dir,
+				     'string' => $this->fakebase. SEP . 'document',
 				     'relatives' => array(
 				          RELATIVE_NONE
 				     )
 				)))
 				{
-					$receipt['error'][] = array('msg' => lang('failed to create directory: %1', $dir));
+					$receipt['error'][]=array('msg'=>lang('failed to create directory') . ' :'. $this->fakebase. SEP . 'document');
 				}
 				else
 				{
-					$receipt['message'][] = array('msg' => lang('directory created: %1', $dir));
+					$receipt['message'][]=array('msg'=>lang('directory created') . ' :'. $this->fakebase. SEP . 'document');
 				}
 				$this->vfs->override_acl = 0;
 				return $receipt;
@@ -394,22 +389,22 @@
 			$this->vfs->override_acl = 1;
 //_debug_array($data);
 			if(!$this->vfs->file_exists(array(
-					'string' => $this->fakebase. '/' . 'document' .  '/' . $loc1,
+					'string' => $this->fakebase. SEP . 'document' .  SEP . $loc1,
 					'relatives' => Array(RELATIVE_NONE)
 				)))
 			{
 				if(!$this->vfs->mkdir (array(
-				     'string' => $this->fakebase. '/' . 'document' .  '/' . $loc1,
+				     'string' => $this->fakebase. SEP . 'document' .  SEP . $loc1,
 				     'relatives' => array(
 				          RELATIVE_NONE
 				     )
 				)))
 				{
-					$receipt['error'][]=array('msg'=>lang('failed to create directory') . ' :'. $this->fakebase. '/' . 'document' .  '/' . $loc1);
+					$receipt['error'][]=array('msg'=>lang('failed to create directory') . ' :'. $this->fakebase. SEP . 'document' .  SEP . $loc1);
 				}
 				else
 				{
-					$receipt['message'][]=array('msg'=>lang('directory created') . ' :'. $this->fakebase. '/' . 'document' .  '/' . $loc1);
+					$receipt['message'][]=array('msg'=>lang('directory created') . ' :'. $this->fakebase. SEP . 'document' .  SEP . $loc1);
 				}
 				$this->vfs->override_acl = 0;
 			}
@@ -417,69 +412,69 @@
 			if($entity_name)
 			{
 				if(!$this->vfs->file_exists(array(
-						'string' => $this->fakebase. '/' . 'document' .  '/' . $loc1 .  '/' . $entity_name,
+						'string' => $this->fakebase. SEP . 'document' .  SEP . $loc1 .  SEP . $entity_name,
 						'relatives' => Array(RELATIVE_NONE)
 					)))
 				{
 
 					if(!$this->vfs->mkdir (array(
-						 'string' => $this->fakebase. '/' . 'document' .  '/' . $loc1 .  '/' . $entity_name,
+						 'string' => $this->fakebase. SEP . 'document' .  SEP . $loc1 .  SEP . $entity_name,
 					     'relatives' => array(
 					          RELATIVE_NONE
 					     )
 					)))
 					{
-						$receipt['error'][]=array('msg'=>lang('failed to create directory') . ' :'. $this->fakebase. '/' . 'document'  .  '/' . $loc1 .  '/' . $entity_name);
+						$receipt['error'][]=array('msg'=>lang('failed to create directory') . ' :'. $this->fakebase. SEP . 'document'  .  SEP . $loc1 .  SEP . $entity_name);
 					}
 					else
 					{
-						$receipt['message'][]=array('msg'=>lang('directory created') . ' :'. $this->fakebase. '/' . 'document'  .  '/' . $loc1 .  '/' . $entity_name);
+						$receipt['message'][]=array('msg'=>lang('directory created') . ' :'. $this->fakebase. SEP . 'document'  .  SEP . $loc1 .  SEP . $entity_name);
 					}
 				}
 			}
 			if($category_name)
 			{
 				if(!$this->vfs->file_exists(array(
-						'string' => $this->fakebase. '/' . 'document' .  '/' . $loc1 .  '/' . $entity_name .  '/' . $category_name,
+						'string' => $this->fakebase. SEP . 'document' .  SEP . $loc1 .  SEP . $entity_name .  SEP . $category_name,
 						'relatives' => Array(RELATIVE_NONE)
 					)))
 				{
 
 					if(!$this->vfs->mkdir (array(
-						 'string' => $this->fakebase. '/' . 'document' .  '/' . $loc1 .  '/' . $entity_name .  '/' . $category_name,
+						 'string' => $this->fakebase. SEP . 'document' .  SEP . $loc1 .  SEP . $entity_name .  SEP . $category_name,
 					     'relatives' => array(
 					          RELATIVE_NONE
 					     )
 					)))
 					{
-						$receipt['error'][]=array('msg'=>lang('failed to create directory') . ' :'. $this->fakebase. '/' . 'document'  .  '/' . $loc1 .  '/' . $entity_name .  '/' . $category_name);
+						$receipt['error'][]=array('msg'=>lang('failed to create directory') . ' :'. $this->fakebase. SEP . 'document'  .  SEP . $loc1 .  SEP . $entity_name .  SEP . $category_name);
 					}
 					else
 					{
-						$receipt['message'][]=array('msg'=>lang('directory created') . ' :'. $this->fakebase. '/' . 'document'  .  '/' . $loc1 .  '/' . $entity_name .  '/' . $category_name);
+						$receipt['message'][]=array('msg'=>lang('directory created') . ' :'. $this->fakebase. SEP . 'document'  .  SEP . $loc1 .  SEP . $entity_name .  SEP . $category_name);
 					}
 				}
 			}
 			if($p_num)
 			{
 				if(!$this->vfs->file_exists(array(
-						'string' => $this->fakebase. '/' . 'document' .  '/' . $loc1 .  '/' . $entity_name .  '/' . $category_name .  '/' . $p_num,
+						'string' => $this->fakebase. SEP . 'document' .  SEP . $loc1 .  SEP . $entity_name .  SEP . $category_name .  SEP . $p_num,
 						'relatives' => Array(RELATIVE_NONE)
 					)))
 				{
 
 					if(!$this->vfs->mkdir (array(
-						 'string' => $this->fakebase. '/' . 'document' .  '/' . $loc1 .  '/' . $entity_name .  '/' . $category_name .  '/' . $p_num,
+						 'string' => $this->fakebase. SEP . 'document' .  SEP . $loc1 .  SEP . $entity_name .  SEP . $category_name .  SEP . $p_num,
 					     'relatives' => array(
 					          RELATIVE_NONE
 					     )
 					)))
 					{
-						$receipt['error'][]=array('msg'=>lang('failed to create directory') . ' :'. $this->fakebase. '/' . 'document'  .  '/' . $loc1 .  '/' . $entity_name .  '/' . $category_name .  '/' . $p_num);
+						$receipt['error'][]=array('msg'=>lang('failed to create directory') . ' :'. $this->fakebase. SEP . 'document'  .  SEP . $loc1 .  SEP . $entity_name .  SEP . $category_name .  SEP . $p_num);
 					}
 					else
 					{
-						$receipt['message'][]=array('msg'=>lang('directory created') . ' :'. $this->fakebase. '/' . 'document'  .  '/' . $loc1 .  '/' . $entity_name .  '/' . $category_name .  '/' . $p_num);
+						$receipt['message'][]=array('msg'=>lang('directory created') . ' :'. $this->fakebase. SEP . 'document'  .  SEP . $loc1 .  SEP . $entity_name .  SEP . $category_name .  SEP . $p_num);
 					}
 				}
 			}

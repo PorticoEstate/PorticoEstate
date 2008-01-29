@@ -122,7 +122,7 @@ class Module
 
 	function find_template_dir()
 	{
-		$templaterootformat = "{$GLOBALS['sitemgr_info']['site_dir']}/templates/%s/modules/{$this->block->module_name}";
+		$templaterootformat = $GLOBALS['sitemgr_info']['site_dir']. SEP . 'templates' . SEP . '%s' . SEP . 'modules' . SEP . $this->block->module_name;
 		$themetemplatedir = sprintf($templaterootformat,$GLOBALS['sitemgr_info']['themesel']);
 		if (is_dir($themetemplatedir))
 		{

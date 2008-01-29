@@ -12,6 +12,6 @@
   /* $Id: hook_website_left.inc.php 9572 2002-02-20 13:42:21Z milosch $ */
 
 	$GLOBALS['phpgw']->nextmatchs = CreateObject('phpgwapi.nextmatchs');
-	include_once(PHPGW_SERVER_ROOT . 'polls/inc/functions.inc.php');
+	include(PHPGW_SERVER_ROOT . SEP . 'polls' . SEP . 'inc' . SEP . 'functions.inc.php');
 	$GLOBALS['phpgw_info']['wcm']['left'] = display_poll('website');
 ?>

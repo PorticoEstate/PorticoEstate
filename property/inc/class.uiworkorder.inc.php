@@ -58,14 +58,13 @@
 		function property_uiworkorder()
 		{
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = True;
-			$GLOBALS['phpgw_info']['flags']['menu_selection'] = 'property::project::workorder';
-
-		//	$this->currentapp			= $GLOBALS['phpgw_info']['flags']['currentapp'];
+			$this->currentapp			= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->nextmatchs			= CreateObject('phpgwapi.nextmatchs');
 			$this->account				= $GLOBALS['phpgw_info']['user']['account_id'];
 
 			$this->bo				= CreateObject('property.boworkorder',True);
 			$this->bocommon				= CreateObject('property.bocommon');
+			$this->menu				= CreateObject('property.menu');
 			$this->acl 				= CreateObject('phpgwapi.acl');
 			$this->acl_location			= '.project';
 			$this->acl_read 			= $this->acl->check('.project',1);
@@ -86,6 +85,8 @@
 			$this->end_date				= $this->bo->end_date;
 			$this->b_group				= $this->bo->b_group;
 			$this->paid				= $this->bo->paid;			
+
+			$this->menu->sub			='project';
 		}
 
 		function save_sessiondata()
@@ -123,12 +124,15 @@
 		{
 			if(!$this->acl_read)
 			{
-				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop','perm'=>1, 'acl_location'=> $this->acl_location));
+				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> $this->currentapp.'.uilocation.stop','perm'=>1, 'acl_location'=> $this->acl_location));
 			}
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('workorder','values','table_header',
+										'menu',
 										'nextmatchs'));
 			$lookup = ''; //Fix this
+
+			$links = $this->menu->links('workorder');
 
 			$start_date 	= urldecode($this->start_date);
 			$end_date 	= urldecode($this->end_date);
@@ -137,7 +141,6 @@
 			$uicols	= $this->bo->uicols;
 			$count_uicols_name=count($uicols['name']);
 
-			$content = array();
 			$j=0;
 			if (isSet($workorder_list) AND is_array($workorder_list))
 			{
@@ -151,7 +154,7 @@
 							{
 								$content[$j]['row'][$k]['statustext']			= lang('search');
 								$content[$j]['row'][$k]['text']				= $workorder_entry[$uicols['name'][$k]];
-								$content[$j]['row'][$k]['link']				= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiworkorder.index','query'=> $workorder_entry['query_location'][$uicols['name'][$k]],'lookup'=> $lookup, 'filter'=> $this->filter));
+								$content[$j]['row'][$k]['link']				= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uiworkorder.index','query'=> $workorder_entry['query_location'][$uicols['name'][$k]],'lookup'=> $lookup, 'filter'=> $this->filter));
 							}
 							else
 							{
@@ -166,7 +169,7 @@
 							}
 						}
 						if($lookup && $k==($count_uicols_name - 2))
-						$content[$j]['row'][$k]['lookup_action'] 				= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiworkorder.edit', 'workorder_id'=> $workorder_entry['workorder_id']));
+						$content[$j]['row'][$k]['lookup_action'] 				= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uiworkorder.edit', 'workorder_id'=> $workorder_entry['workorder_id']));
 					}
 					if(!$lookup)
 					{
@@ -175,7 +178,7 @@
 						{
 							$content[$j]['row'][$k]['statustext']				= lang('view the workorder');
 							$content[$j]['row'][$k]['text']					= lang('view');
-							$content[$j]['row'][$k]['link']					= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiworkorder.view','id'=> $workorder_entry['workorder_id']));
+							$content[$j]['row'][$k]['link']					= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uiworkorder.view','id'=> $workorder_entry['workorder_id']));
 							$k++;
 						}
 						else
@@ -187,12 +190,12 @@
 						{
 							$content[$j]['row'][$k]['statustext']				= lang('edit the workorder');
 							$content[$j]['row'][$k]['text']					= lang('edit');
-							$content[$j]['row'][$k]['link']					= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiworkorder.edit', 'id' => $workorder_entry['workorder_id']));
+							$content[$j]['row'][$k]['link']					= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uiworkorder.edit', 'id' => $workorder_entry['workorder_id']));
 							$k++;
 
 							$content[$j]['row'][$k]['statustext']				= lang('calculate the workorder');
 							$content[$j]['row'][$k]['text']					= lang('calculate');
-							$content[$j]['row'][$k]['link']					= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=>'property.uiwo_hour.index', 'workorder_id'=> $workorder_entry['workorder_id']));
+							$content[$j]['row'][$k]['link']					= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=>$this->currentapp.'.uiwo_hour.index', 'workorder_id'=> $workorder_entry['workorder_id']));
 							$k++;
 						}
 						else
@@ -205,7 +208,7 @@
 						{
 							$content[$j]['row'][$k]['statustext']				= lang('delete the workorder');
 							$content[$j]['row'][$k]['text']					= lang('delete');
-							$content[$j]['row'][$k]['link']					= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiworkorder.delete', 'id'=> $workorder_entry['workorder_id']));
+							$content[$j]['row'][$k]['link']					= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uiworkorder.delete', 'id'=> $workorder_entry['workorder_id']));
 							$k++;
 						}
 						else
@@ -233,7 +236,7 @@
 											'sort'	=> $this->sort,
 											'var'	=>	'fm_location1.loc1',
 											'order'	=>	$this->order,
-											'extra'		=> array('menuaction'	=> 'property.uiworkorder.index',
+											'extra'		=> array('menuaction'	=> $this->currentapp.'.uiworkorder.index',
 																//	'type_id'	=>$type_id,
 																	'query'		=>$this->query,
 																	'lookup'	=>$lookup,
@@ -256,7 +259,7 @@
 											'sort'	=> $this->sort,
 											'var'	=>	'project_id',
 											'order'	=>	$this->order,
-											'extra'		=> array('menuaction'	=> 'property.uiworkorder.index',
+											'extra'		=> array('menuaction'	=> $this->currentapp.'.uiworkorder.index',
 															//		'type_id'	=>$type_id,
 																	'query'		=>$this->query,
 																	'lookup'	=>$lookup,
@@ -279,7 +282,7 @@
 											'sort'	=> $this->sort,
 											'var'	=>	'workorder_id',
 											'order'	=>	$this->order,
-											'extra'		=> array('menuaction'	=> 'property.uiworkorder.index',
+											'extra'		=> array('menuaction'	=> $this->currentapp.'.uiworkorder.index',
 															//		'type_id'	=>$type_id,
 																	'query'		=>$this->query,
 																	'lookup'	=>$lookup,
@@ -302,7 +305,7 @@
 											'sort'	=> $this->sort,
 											'var'	=>	'address',
 											'order'	=>	$this->order,
-											'extra'		=> array('menuaction'	=> 'property.uiworkorder.index',
+											'extra'		=> array('menuaction'	=> $this->currentapp.'.uiworkorder.index',
 															//		'type_id'	=>$type_id,
 																	'query'		=>$this->query,
 																	'lookup'	=>$lookup,
@@ -364,13 +367,13 @@
 				(
 					'lang_add'			=> lang('add'),
 					'lang_add_statustext'		=> lang('add a workorder'),
-					'add_action'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiworkorder.add'))
+					'add_action'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uiworkorder.add'))
 				);
 			}
 
 			$link_data = array
 			(
-				'menuaction'	=> 'property.uiworkorder.index',
+				'menuaction'	=> $this->currentapp.'.uiworkorder.index',
 						'sort'			=> $this->sort,
 						'order'			=> $this->order,
 						'cat_id'		=> $this->cat_id,
@@ -386,11 +389,11 @@
 						'paid'			=> $this->paid
 			);
 
-			$link_date_search				= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiproject.date_search'));
+			$link_date_search				= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uiproject.date_search'));
 
 			$link_excel = array
 			(
-				'menuaction'	=> 'property.uiworkorder.excel',
+				'menuaction'	=> $this->currentapp.'.uiworkorder.excel',
 						'sort'			=> $this->sort,
 						'order'			=> $this->order,
 						'cat_id'		=> $this->cat_id,
@@ -408,7 +411,7 @@
 			);
 
 
-			if(isset($GLOBALS['phpgw_info']['user']['preferences']['property']['group_filters']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['group_filters'])
+			if(isset($GLOBALS['phpgw_info']['user']['preferences'][$this->currentapp]['group_filters']) && $GLOBALS['phpgw_info']['user']['preferences'][$this->currentapp]['group_filters'])
 			{
 				$group_filters = 'select';
 				$GLOBALS['phpgw']->xslttpl->add_file(array('wo_hour_cat_select'));
@@ -419,11 +422,11 @@
 				$GLOBALS['phpgw']->xslttpl->add_file(array('wo_hour_cat_filter'));
 			}
 
-			$GLOBALS['phpgw']->js->validate_file('overlib','overlib','property');
+			$GLOBALS['phpgw']->js->validate_file('overlib','overlib',$this->currentapp);
 
 			$data = array
 			(
-				'group_filters'					=> isset($GLOBALS['phpgw_info']['user']['preferences']['property']['group_filters'])?$GLOBALS['phpgw_info']['user']['preferences']['property']['group_filters']:'',
+				'group_filters'					=> isset($GLOBALS['phpgw_info']['user']['preferences'][$this->currentapp]['group_filters'])?$GLOBALS['phpgw_info']['user']['preferences'][$this->currentapp]['group_filters']:'',
 				'lang_excel'					=> 'excel',
 				'link_excel'					=> $GLOBALS['phpgw']->link('/index.php',$link_excel),
 				'lang_excel_help'				=> lang('Download table to MS Excel'),
@@ -435,8 +438,9 @@
 				'lang_date_search_help'			=> lang('Narrow the search by dates'),
 				'link_date_search'				=> $link_date_search,
 
-				'link_history'					=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiworkorder.index')),
+				'link_history'					=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uiworkorder.index')),
 				'lang_history_statustext'		=> lang('search for history at this location'),
+				'links'							=> $links,
 				'allow_allrows'					=> false,
 				'start_record'					=> $this->start,
 				'record_limit'					=> $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'],
@@ -479,7 +483,7 @@
 			$appname			= lang('Workorder');
 			$function_msg		= lang('list workorder');
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($this->currentapp) . ' - ' . $appname . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('list_workorder' => $data));
 		//	$GLOBALS['phpgw']->xslttpl->pp();
 			$this->save_sessiondata();
@@ -489,7 +493,7 @@
 		{
 			if(!$this->acl_add && !$this->acl_edit)
 			{
-				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop','perm'=>2, 'acl_location'=> $this->acl_location));
+				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> $this->currentapp.'.uilocation.stop','perm'=>2, 'acl_location'=> $this->acl_location));
 			}
 			$boproject			= CreateObject('property.boproject');
 			$bolocation			= CreateObject('property.bolocation');
@@ -555,7 +559,7 @@
 					if ($values['approval'] && $values['mail_address'])
 					{
 						$coordinator_name=$GLOBALS['phpgw_info']['user']['fullname'];
-						$coordinator_email=$GLOBALS['phpgw_info']['user']['preferences']['property']['email'];
+						$coordinator_email=$GLOBALS['phpgw_info']['user']['preferences'][$this->currentapp]['email'];
 						$headers = "Return-Path: <". $coordinator_email .">\r\n";
 						$headers .= "From: " . $coordinator_name . "<" . $coordinator_email .">\r\n";
 						$headers .= "Bcc: " . $coordinator_name . "<" . $coordinator_email .">\r\n";
@@ -564,7 +568,7 @@
 
 						$subject = lang(Approval).": ". $values['workorder_id'];
 					//	$message = lang('Workorder %1 needs approval',$values['workorder_id']);
-						$message = '<a href ="http://' . $GLOBALS['phpgw_info']['server']['hostname'] . $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiworkorder.edit', 'id'=> $values['project_id'])).'">' . lang('Workorder %1 needs approval',$values['workorder_id']) .'</a>';
+						$message = '<a href ="http://' . $GLOBALS['phpgw_info']['server']['hostname'] . $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uiworkorder.edit', 'id'=> $values['project_id'])).'">' . lang('Workorder %1 needs approval',$values['workorder_id']) .'</a>';
 
 						if (isset($GLOBALS['phpgw_info']['server']['smtp_server']) && $GLOBALS['phpgw_info']['server']['smtp_server'])
 						{
@@ -615,18 +619,18 @@
 				if (!$this->bocommon->check_perms($project['grants'],PHPGW_ACL_EDIT))
 				{
 					$receipt['error'][]=array('msg'=>lang('You have no edit right for this project'));
-					$GLOBALS['phpgw']->session->appsession('receipt','property',$receipt);
-					$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uiworkorder.view', 'id'=>$id));
+					$GLOBALS['phpgw']->session->appsession('receipt',$this->currentapp,$receipt);
+					$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> $this->currentapp.'.uiworkorder.view', 'id'=>$id));
 				}
 				if (isset($receipt['notice_owner']) AND is_array($receipt['notice_owner']))
 				{
 					if($this->account!=$project['coordinator'] && $config->config_data['workorder_approval'])
 					{
-						$prefs_coordinator = $this->bocommon->create_preferences('property',$project['coordinator']);
+						$prefs_coordinator = $this->bocommon->create_preferences($this->currentapp,$project['coordinator']);
 						$to = $prefs_coordinator['email'];
 						$from_name=$GLOBALS['phpgw_info']['user']['fullname'];
-						$from_email=$GLOBALS['phpgw_info']['user']['preferences']['property']['email'];
-						$body = '<a href ="http://' . $GLOBALS['phpgw_info']['server']['hostname'] . $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiworkorder.edit','id'=> $id)).'">' . lang('workorder %1 has been edited',$id) .'</a>' . "\n";
+						$from_email=$GLOBALS['phpgw_info']['user']['preferences'][$this->currentapp]['email'];
+						$body = '<a href ="http://' . $GLOBALS['phpgw_info']['server']['hostname'] . $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uiworkorder.edit','id'=> $id)).'">' . lang('workorder %1 has been edited',$id) .'</a>' . "\n";
 						foreach($receipt['notice_owner'] as $notice)
 						{
 							$body .= $notice . "\n";
@@ -762,7 +766,7 @@
 
 			$link_data = array
 			(
-				'menuaction'	=> 'property.uiworkorder.edit',
+				'menuaction'	=> $this->currentapp.'.uiworkorder.edit',
 				'id'		=> $id
 			);
 
@@ -776,10 +780,10 @@
 			$dateformat= (implode($sep,$dlarr));
 
 
-			if ( isset($GLOBALS['phpgw_info']['user']['preferences']['property']['approval_from'])
-				&& $GLOBALS['phpgw_info']['user']['preferences']['property']['approval_from'] )
+			if ( isset($GLOBALS['phpgw_info']['user']['preferences'][$this->currentapp]['approval_from'])
+				&& $GLOBALS['phpgw_info']['user']['preferences'][$this->currentapp]['approval_from'] )
 			{
-				$supervisor_id = $GLOBALS['phpgw_info']['user']['preferences']['property']['approval_from'];
+				$supervisor_id = $GLOBALS['phpgw_info']['user']['preferences'][$this->currentapp]['approval_from'];
 			}
 			else
 			{
@@ -790,7 +794,7 @@
 
 			if ($supervisor_id && ($need_approval=='yes'))
 			{
-				$prefs = $this->bocommon->create_preferences('property',$supervisor_id);
+				$prefs = $this->bocommon->create_preferences($this->currentapp,$supervisor_id);
 				$supervisor_email = $prefs['email'];
 			}
 			else
@@ -798,7 +802,7 @@
 				$supervisor_email = '';
 			}
 
-			$project_status=(isset($GLOBALS['phpgw_info']['user']['preferences']['property']['project_status'])?$GLOBALS['phpgw_info']['user']['preferences']['property']['project_status']:'');
+			$project_status=(isset($GLOBALS['phpgw_info']['user']['preferences'][$this->currentapp]['project_status'])?$GLOBALS['phpgw_info']['user']['preferences'][$this->currentapp]['project_status']:'');
 			if(!$values['status'])
 			{
 				$values['status']=$project_status;
@@ -834,19 +838,19 @@
 				'lang_extra' 					=> lang('Extra'),
 
 				'msgbox_data'				=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
-				'calculate_action'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiwo_hour.index')),
+				'calculate_action'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uiwo_hour.index')),
 				'lang_calculate'			=> lang('Calculate Workorder'),
 				'lang_calculate_statustext'		=> lang('Calculate workorder by adding items from vendors prizebook or adding general hours'),
 
-				'send_action'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=>'property.uiwo_hour.view', 'from'=>'index')),
+				'send_action'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=>$this->currentapp.'.uiwo_hour.view', 'from'=>'index')),
 				'lang_send'				=> lang('Send Workorder'),
 				'lang_send_statustext'			=> lang('send this workorder to vendor'),
 
-				'project_link'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiproject.edit')),
+				'project_link'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uiproject.edit')),
 				'b_account_data'			=> $b_account_data,
 				'table_header_workorder_budget'		=> $table_header_workorder_budget,
 				'lang_no_workorders'			=> lang('No workorder budget'),
-				'workorder_link'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiworkorder.w_edit')),
+				'workorder_link'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uiworkorder.w_edit')),
 				'record_history'			=> $record_history,
 				'table_header_history'			=> $table_header_history,
 				'lang_history'				=> lang('History'),
@@ -900,7 +904,7 @@
 				'location_data'				=> $location_data,
 				'location_type'				=> 'view',
 				'form_action'				=> $GLOBALS['phpgw']->link('/index.php',$link_data),
-				'done_action'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiworkorder.index')),
+				'done_action'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uiworkorder.index')),
 				'lang_year'				=> lang('Year'),
 				'lang_category'				=> lang('category'),
 				'lang_save'				=> lang('save'),
@@ -980,7 +984,7 @@
 
 			$appname						= lang('Workorder');
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($this->currentapp) . ' - ' . $appname . ': ' . $function_msg;
 
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('edit' => $data));
 		//	$GLOBALS['phpgw']->xslttpl->pp();
@@ -990,22 +994,23 @@
 		{
 			if(!$this->acl_edit)
 			{
-				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop','perm'=>2, 'acl_location'=> $this->acl_location));
+				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> $this->currentapp.'.uilocation.stop','perm'=>2, 'acl_location'=> $this->acl_location));
 			}
 
 			$link_data = array
 			(
-				'menuaction' => 'property.uiworkorder.index'
+				'menuaction' => $this->currentapp.'.uiworkorder.index'
 			);
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('workorder',
+										'menu',
 										'search_field'));
 
 			$data = array
 			(
 				'done_action'			=> $GLOBALS['phpgw']->link('/index.php',$link_data),
-				'add_action'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiproject.edit')),
-				'search_action'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiproject.index', 'lookup'=> true, 'from'=> 'workorder')),
+				'add_action'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uiproject.edit')),
+				'search_action'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uiproject.index', 'lookup'=> true, 'from'=> 'workorder')),
 
 				'lang_done_statustext'		=> lang('Back to the workorder list'),
 				'lang_add_statustext'		=> lang('Adds a new project - then a new workorder'),
@@ -1019,7 +1024,7 @@
 			$appname				= lang('Workorder');
 			$function_msg				= lang('Add workorder');
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($this->currentapp) . ' - ' . $appname . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('add' => $data));
 		//	$GLOBALS['phpgw']->xslttpl->pp();
 		}
@@ -1028,14 +1033,14 @@
 		{
 			if(!$this->acl_delete)
 			{
-				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop','perm'=>8, 'acl_location'=> $this->acl_location));
+				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> $this->currentapp.'.uilocation.stop','perm'=>8, 'acl_location'=> $this->acl_location));
 			}
 			$id = phpgw::get_var('id', 'int');
 			$confirm	= phpgw::get_var('confirm', 'bool', 'POST');
 
 			$link_data = array
 			(
-				'menuaction' => 'property.uiworkorder.index'
+				'menuaction' => $this->currentapp.'.uiworkorder.index'
 			);
 
 			if (phpgw::get_var('confirm', 'bool', 'POST'))
@@ -1049,7 +1054,7 @@
 			$data = array
 			(
 				'done_action'			=> $GLOBALS['phpgw']->link('/index.php',$link_data),
-				'delete_action'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiworkorder.delete', 'id'=> $id)),
+				'delete_action'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uiworkorder.delete', 'id'=> $id)),
 				'lang_confirm_msg'		=> lang('do you really want to delete this entry'),
 				'lang_yes'			=> lang('yes'),
 				'lang_yes_statustext'		=> lang('Delete the entry'),
@@ -1060,7 +1065,7 @@
 			$appname				= lang('workorder');
 			$function_msg				= lang('delete workorder');
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($this->currentapp) . ' - ' . $appname . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('delete' => $data));
 		//	$GLOBALS['phpgw']->xslttpl->pp();
 		}
@@ -1069,14 +1074,14 @@
 		{
 			if(!$this->acl_read)
 			{
-				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop','perm'=>1, 'acl_location'=> $this->acl_location));
+				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> $this->currentapp.'.uilocation.stop','perm'=>1, 'acl_location'=> $this->acl_location));
 			}
 
 			$boproject			= CreateObject('property.boproject');
 			$bolocation			= CreateObject('property.bolocation');
 
-			$receipt = $GLOBALS['phpgw']->session->appsession('receipt','property');
-			$GLOBALS['phpgw']->session->appsession('receipt','property','');
+			$receipt = $GLOBALS['phpgw']->session->appsession('receipt',$this->currentapp);
+			$GLOBALS['phpgw']->session->appsession('receipt',$this->currentapp,'');
 
 			$id	= phpgw::get_var('id', 'int');
 
@@ -1127,10 +1132,10 @@
 
 			$data = array
 			(
-				'project_link'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiproject.view')),
+				'project_link'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uiproject.view')),
 				'table_header_workorder_budget'		=> $table_header_workorder_budget,
 				'lang_no_workorders'			=> lang('No workorder budget'),
-				'workorder_link'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiworkorder.view')),
+				'workorder_link'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uiworkorder.view')),
 				'record_history'			=> $record_history,
 				'table_header_history'			=> $table_header_history,
 				'lang_history'				=> lang('History'),
@@ -1175,7 +1180,7 @@
 
 				'location_data'				=> $location_data,
 				'location_type'				=> 'view',
-				'done_action'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiworkorder.index')),
+				'done_action'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uiworkorder.index')),
 				'lang_year'				=> lang('Year'),
 				'lang_category'				=> lang('category'),
 				'lang_save'				=> lang('save'),
@@ -1220,7 +1225,7 @@
 				'key_deliver_list'			=> $this->bo->select_key_location_list($values['key_deliver']),
 				'lang_key_deliver'			=> lang('key deliver location'),
 
-				'edit_action'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction' => 'property.uiworkorder.edit', 'id' => $id)),
+				'edit_action'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction' => $this->currentapp.'.uiworkorder.edit', 'id' => $id)),
 				'lang_edit_statustext'			=> lang('Edit this entry workorder'),
 				'lang_edit'				=> lang('Edit'),
 				'currency'				=> $GLOBALS['phpgw_info']['user']['preferences']['common']['currency'],
@@ -1235,7 +1240,7 @@
 
 			$appname					= lang('Workorder');
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($this->currentapp) . ' - ' . $appname . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('view' => $data));
 		//	$GLOBALS['phpgw']->xslttpl->pp();
 		}

@@ -12,13 +12,14 @@
 	*/
 
 	$setup_info['demo']['name']      = 'demo';
+	$setup_info['demo']['title']     = 'Demo application';
 	$setup_info['demo']['version']   = '0.9.17.001';
 	$setup_info['demo']['app_order'] = 20;
 	$setup_info['demo']['enable']    = 1;
 	$setup_info['demo']['globals_checked']    = True;
 	$setup_info['demo']['app_group']	= 'office';
 
-	$setup_info['demo']['author'] = array
+	$setup_info['demo']['author'][] = array
 	(
 		'name'	=> 'Sigurd Nes',
 		'email'	=> 'sigurdne@online.no'

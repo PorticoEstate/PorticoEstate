@@ -38,7 +38,7 @@
 
 		function export_info_as_files()
 		{
-		//	$this->currentapp		= $GLOBALS['phpgw_info']['flags']['currentapp'];
+			$this->currentapp		= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->bocommon			= CreateObject('property.bocommon');
 			$this->db     			= & $GLOBALS['phpgw']->db;
 			$this->db2				= clone($this->db);
@@ -84,7 +84,7 @@
 		{
 			$link_data = array
 			(
-				'menuaction' => 'property.custom_functions.index',
+				'menuaction' => $this->currentapp.'.custom_functions.index',
 				'function'	=>$this->function_name,
 				'execute'	=> $execute,
 			);
@@ -119,7 +119,7 @@
 
 			$appname		= lang('location');
 			$function_msg	= lang('Export info as files');
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($this->currentapp) . ' - ' . $appname . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('confirm' => $data));
 			$GLOBALS['phpgw']->xslttpl->pp();
 		}
@@ -271,7 +271,7 @@
 		
 		function export_as_excel($name,$descr,$filename, $sql)
 		{
-			$workbook	= CreateObject('phpgwapi.excel', "{$this->saveto}/{$filename}.xls");
+			$workbook	= CreateObject('phpgwapi.excel',$this->saveto . SEP . $filename . '.xls');
 
 			$worksheet1 =& $workbook->add_worksheet('First One');
 
@@ -302,7 +302,7 @@
 		function export_as_csv($name,$descr,$filename, $sql)
 		{
 
-			$fp = fopen("{$this->saveto}/{$filename}.txt",'wb');
+			$fp = fopen($this->saveto . SEP . $filename . '.txt','wb');
 			
 		    $descr[] = 'Dato';
 		    fputcsv($fp, $descr, ';');
@@ -351,7 +351,7 @@
 			}
 
 			$xml = var2xml('PHPGW',$xmldata);
-			$fp = fopen("{$this->saveto}/{$filename}.xml",'wb');
+			$fp = fopen($this->saveto . SEP . $filename . '.xml','wb');
 			fwrite($fp,$xml);
 			fclose($fp);
 		}

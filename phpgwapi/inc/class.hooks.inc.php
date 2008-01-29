@@ -1,51 +1,29 @@
 <?php
 	/**
-	 * Allows applications to "hook" into each other
-	 * @author Dan Kuykendall <seek3r@phpgroupware.org>
-	 * @copyright Copyright (C) 2000-2004 Free Software Foundation, Inc. http://www.fsf.org/
-	 * @license http://www.fsf.org/licenses/lgpl.html GNU Lesser General Public License
-	 * @package phpgwapi
-	 * @subpackage application
-	 * @version $Id: class.hooks.inc.php 18013 2007-03-06 14:30:39Z sigurdne $
-	 */
-
-	/*
-	   This program is free software: you can redistribute it and/or modify
-	   it under the terms of the GNU Lesser General Public License as published by
-	   the Free Software Foundation, either version 3 of the License, or
-	   (at your option) any later version.
-
-	   This program is distributed in the hope that it will be useful,
-	   but WITHOUT ANY WARRANTY; without even the implied warranty of
-	   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-	   GNU General Public License for more details.
-
-	   You should have received a copy of the GNU General Public License
-	   along with this program.  If not, see <http://www.gnu.org/licenses/>.
-	 */
+	* Allows applications to "hook" into each other
+	* @author Dan Kuykendall <seek3r@phpgroupware.org>
+	* @copyright Copyright (C) 2000-2004 Free Software Foundation, Inc. http://www.fsf.org/
+	* @license http://www.fsf.org/licenses/lgpl.html GNU Lesser General Public License
+	* @package phpgwapi
+	* @subpackage application
+	* @version $Id: class.hooks.inc.php 18013 2007-03-06 14:30:39Z sigurdne $
+	*/
 
 	/**
-	 * Ability for applications to set and use hooks to communicate with each other
-	 * 
-	 * @package phpgwapi
-	 * @subpackage application
-	 */
-	class phpgwapi_hooks
+	* Ability for applications to set and use hooks to communicate with each other
+	* 
+	* @package phpgwapi
+	* @subpackage application
+	*/
+	class hooks
 	{
 		var $found_hooks = Array();
-		var $db = null;
+		var $db = '';
 
-		function __construct($db = null)
+		function hooks($db='')
 		{
-			$this->db = !is_null($db) ? $db : $GLOBALS['phpgw']->db;	// this is to allow setup to set the db
-			$this->read();
-		}
+			$this->db = $db ? $db : $GLOBALS['phpgw']->db;	// this is to allow setup to set the db
 
-		/**
-		* Read all the hooks
-		*/
-		public function read()
-		{
 			$this->db->query("SELECT hook_appname, hook_location, hook_filename FROM phpgw_hooks",__LINE__,__FILE__);
 			while( $this->db->next_record() )
 			{
@@ -54,7 +32,6 @@
 			//echo '<pre>';
 			//print_r($this->found_hooks);
 			//echo '</pre>';
-			return $this->found_hooks;
 		}
 		
 		/**
@@ -84,7 +61,7 @@
 			{
 				$results[$appname] = $this->single($args,$appname,$no_permission_check);
 
-				if (!isset($results[$appname]))	// happens if th methode hook has no return-value
+				if (!isset($results[$appname]))	// happens if the methode hook has no return-value
 				{
 					$results[$appname] = False;
 				}
@@ -100,10 +77,6 @@
 			{
 				$apps = $GLOBALS['phpgw_info']['user']['apps'];
 			}
-
-			// Run any API hooks first
-			$results['phpgwapi'] = $this->single($args, 'phpgwapi', false);
-
 			if(is_array($apps))
 			{
 				foreach($apps as $app)
@@ -148,6 +121,7 @@
 			{
 				$appname = is_array($args) && isset($args['appname']) ? $args['appname'] : $GLOBALS['phpgw_info']['flags']['currentapp'];
 			}
+			$SEP = filesystem_separator();
 
 			/* First include the ordered apps hook file */
 			if (isset($this->found_hooks[$appname][$location]) || $try_unregistered)
@@ -164,7 +138,7 @@
 					{
 						$method = 'hook_'.$location.'.inc.php';
 					}
-					$f = PHPGW_SERVER_ROOT . "/{$appname}/inc/{$method}";
+					$f = PHPGW_SERVER_ROOT . $SEP . $appname . $SEP . 'inc' . $SEP . $method;
 					if ( ( (isset($GLOBALS['phpgw_info']['user']['apps'][$appname]) && $GLOBALS['phpgw_info']['user']['apps'][$appname]) 
 							|| (($no_permission_check || $location == 'config' || $appname == 'phpgwapi') && $appname)) 
 						&& file_exists($f) )
@@ -184,6 +158,7 @@
 
 		/**
 		 * loop through the applications and count the hooks
+		*
 		 */
 		function count($location)
 		{
@@ -198,6 +173,19 @@
 			return $count;
 		}
 		
+		/**
+		 * currently not being used
+		*
+		 */
+		function read()
+		{
+			//if (!is_array($this->found_hooks))
+			//{
+				$this->hooks();
+			//}
+			return $this->found_hooks;
+		}
+
 		/**
 		 * Register and/or de-register an application's hooks
 		*
@@ -220,7 +208,7 @@
 			//echo "<p>ADDING hooks for: $appname</p>";
 			foreach($hooks as $key => $hook)
 			{
-				if (!is_numeric($key))	// new method based hook
+				if (!is_numeric($key))	// new methode-hook
 				{
 					$location = $key;
 					$filename = $hook;
@@ -243,19 +231,17 @@
 		 */
 		function register_all_hooks()
 		{
-			$app_list = array_keys($GLOBALS['phpgw_info']['apps']);
-			$app_list[] = 'phpgwapi';
-
-			foreach ( $app_list as $appname )
-			{
-				$f = PHPGW_SERVER_ROOT . "/$appname/setup/setup.inc.php";
-				if ( file_exists($f) )
+			$SEP = filesystem_separator();
+			
+			foreach($GLOBALS['phpgw_info']['apps'] as $appname => $app)
+			{			
+				$f = PHPGW_SERVER_ROOT . $SEP . $appname . $SEP . 'setup' . $SEP . 'setup.inc.php';
+				if(@file_exists($f))
 				{
-					//DO NOT USE include_once here it breaks API hooks - skwashd dec07
 					include($f);
-					if ( isset($setup_info[$appname]['hooks']) )
+					if(isset($setup_info[$appname]['hooks']))
 					{
-						$this->register_hooks($appname, $setup_info[$appname]['hooks']);
+						$this->register_hooks($appname,$setup_info[$appname]['hooks']);
 					}
 				}
 			}

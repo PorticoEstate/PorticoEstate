@@ -10,7 +10,7 @@
 		function getAvailableThemes()
 		{
 			$sitemgr_dir = $GLOBALS['Common_BO']->sites->current_site['site_dir'];
-			$dirname = "{$sitemgr_dir}/templates/";
+			$dirname = $sitemgr_dir . SEP . 'templates' . SEP;
 			$result_array=array();
 			@$handle=opendir($dirname);
 		
@@ -18,7 +18,7 @@
 			{
 				while (($file = readdir($handle)) !== false)
 				{
-					if (is_dir($dirname . $file) && file_exists("{$dirname}{$file}/main.tpl"))
+					if (is_dir($dirname . $file) && file_exists($dirname . $file . SEP . 'main.tpl'))
 					{
 						$result_array[]=array('value'=>$file,'display'=>$file);
 					}	

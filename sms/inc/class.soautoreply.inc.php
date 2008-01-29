@@ -26,7 +26,7 @@
 
 		function sms_soautoreply()
 		{
-		//	$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
+			$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->account		= $GLOBALS['phpgw_info']['user']['account_id'];
 			$this->bocommon		= CreateObject('sms.bocommon');
 			$this->db 		= clone($GLOBALS['phpgw']->db);
@@ -87,8 +87,8 @@
 
 			if($query)
 			{
-				$query = preg_replace("/'/",'',$query);
-				$query = preg_replace('/"/','',$query);
+				$query = ereg_replace("'",'',$query);
+				$query = ereg_replace('"','',$query);
 
 				$querymethod = " $where autoreply_code $this->like '%$query%'";
 			}
@@ -227,8 +227,8 @@
 			
 			if($query)
 			{
-				$query = preg_replace("/'/",'',$query);
-				$query = preg_replace('/"/','',$query);
+				$query = ereg_replace("'",'',$query);
+				$query = ereg_replace('"','',$query);
 
 				$querymethod = " AND name $this->like '%$query%'";
 			}
@@ -421,8 +421,8 @@
 
 			if($query)
 			{
-				$query = preg_replace("/'/",'',$query);
-				$query = preg_replace('/"/','',$query);
+				$query = ereg_replace("'",'',$query);
+				$query = ereg_replace('"','',$query);
 
 				$querymethod = " AND name $this->like '%$query%'";
 			}

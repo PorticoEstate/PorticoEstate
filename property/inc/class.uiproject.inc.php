@@ -59,14 +59,13 @@
 		function property_uiproject()
 		{
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = True;
-			$GLOBALS['phpgw_info']['flags']['menu_selection'] = 'property::project';
-
-		//	$this->currentapp		= $GLOBALS['phpgw_info']['flags']['currentapp'];
+			$this->currentapp		= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->nextmatchs		= CreateObject('phpgwapi.nextmatchs');
 			$this->account			= $GLOBALS['phpgw_info']['user']['account_id'];
 
 			$this->bo			= CreateObject('property.boproject',True);
 			$this->bocommon			= CreateObject('property.bocommon');
+			$this->menu			= CreateObject('property.menu');
 
 			$this->acl 			= CreateObject('phpgwapi.acl');
 			$this->acl_location		= '.project';
@@ -83,6 +82,9 @@
 			$this->cat_id			= $this->bo->cat_id;
 			$this->status_id		= $this->bo->status_id;
 			$this->wo_hour_cat_id		= $this->bo->wo_hour_cat_id;
+
+
+			$this->menu->sub		='project';
 		}
 
 		function save_sessiondata()
@@ -112,13 +114,13 @@
 
 		function index()
 		{
-			$GLOBALS['phpgw_info']['flags']['menu_selection'] .= '::project';
 			if(!$this->acl_read)
 			{
-				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=>1,'acl_location'=> $this->acl_location));
+				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> $this->currentapp.'.uilocation.stop', 'perm'=>1,'acl_location'=> $this->acl_location));
 			}
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('project','values','table_header',
+										'menu',
 										'nextmatchs',
 										'search_field',
 										'wo_hour_cat_filter'));
@@ -127,6 +129,8 @@
 			$from 			= phpgw::get_var('from');
 			$start_date 		= urldecode(phpgw::get_var('start_date'));
 			$end_date 		= urldecode(phpgw::get_var('end_date'));
+
+			$links = $this->menu->links('project');
 
 			$project_list = $this->bo->read($start_date,$end_date);
 			$uicols	= $this->bo->uicols;
@@ -147,7 +151,7 @@
 								$content[$j]['row'][]= array(
 									'statustext' => lang('search'),
 									'text'		=> $project_entry[$uicols['name'][$k]],
-									'link'		=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiproject.index', 'query'=> $project_entry['query_location'][$uicols['name'][$k]], 'lookup'=> $lookup, 'from'=> $from, 'filter'=> $this->filter))
+									'link'		=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uiproject.index', 'query'=> $project_entry['query_location'][$uicols['name'][$k]], 'lookup'=> $lookup, 'from'=> $from, 'filter'=> $this->filter))
 								);
 							}
 							else
@@ -163,14 +167,14 @@
 								$content[$j]['row'][]= array(
 								'statustext'	=> lang('search'),
 								'text'		=> $project_entry[$uicols['name'][$k]],
-								'link'		=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uitts.view', 'id'=> $project_entry[$uicols['name'][$k]]))
+								'link'		=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uitts.view', 'id'=> $project_entry[$uicols['name'][$k]]))
 								);
 						}
 
 						if($lookup && $k==($count_uicols_name-1))
 						{
 							$content[$j]['row'][]= array(
-							'lookup_action'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.ui' . $from . '.edit', 'project_id'=> $project_entry['project_id']))
+							'lookup_action'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.ui' . $from . '.edit', 'project_id'=> $project_entry['project_id']))
 							);
 						}
 					}
@@ -182,7 +186,7 @@
 							$content[$j]['row'][]= array(
 							'statustext'	=> lang('view the project'),
 							'text'		=> lang('view'),
-							'link'		=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiproject.view', 'id'=> $project_entry['project_id']))
+							'link'		=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uiproject.view', 'id'=> $project_entry['project_id']))
 							);
 						}
 						else
@@ -195,7 +199,7 @@
 							$content[$j]['row'][]= array(
 							'statustext'	=> lang('edit the project'),
 							'text'		=> lang('edit'),
-							'link'		=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiproject.edit','id'=> $project_entry['project_id']))
+							'link'		=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uiproject.edit','id'=> $project_entry['project_id']))
 							);
 						}
 						else
@@ -208,7 +212,7 @@
 							$content[$j]['row'][]= array(
 							'statustext'	=> lang('delete the project'),
 							'text'		=> lang('delete'),
-							'link'		=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiproject.delete', 'project_id'=> $project_entry['project_id']))
+							'link'		=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uiproject.delete', 'project_id'=> $project_entry['project_id']))
 							);
 						}
 						else
@@ -237,7 +241,7 @@
 											'sort'	=> $this->sort,
 											'var'	=> 'location_code',
 											'order'	=> $this->order,
-											'extra'	=> array('menuaction' => 'property.uiproject.index',
+											'extra'	=> array('menuaction' => $this->currentapp.'.uiproject.index',
 																//	'type_id'	=> $type_id,
 																	'query'		=> $this->query,
 																	'lookup'	=> $lookup,
@@ -258,7 +262,7 @@
 											'sort'	=> $this->sort,
 											'var'	=> 'project_id',
 											'order'	=> $this->order,
-											'extra'	=> array('menuaction' => 'property.uiproject.index',
+											'extra'	=> array('menuaction' => $this->currentapp.'.uiproject.index',
 																//	'type_id'	=> $type_id,
 																	'query'		=> $this->query,
 																	'lookup'	=> $lookup,
@@ -279,7 +283,7 @@
 											'sort'	=> $this->sort,
 											'var'	=> 'address',
 											'order'	=> $this->order,
-											'extra'	=> array('menuaction' => 'property.uiproject.index',
+											'extra'	=> array('menuaction' => $this->currentapp.'.uiproject.index',
 																//	'type_id'	=> $type_id,
 																	'query'		=> $this->query,
 																	'lookup'	=> $lookup,
@@ -333,13 +337,13 @@
 				(
 					'lang_add'			=> lang('add'),
 					'lang_add_statustext'		=> lang('add a project'),
-					'add_action'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiproject.edit'))
+					'add_action'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uiproject.edit'))
 				);
 			}
 
 			$link_data = array
 			(
-				'menuaction'	=> 'property.uiproject.index',
+				'menuaction'	=> $this->currentapp.'.uiproject.index',
 						'sort'			=>$this->sort,
 						'order'			=>$this->order,
 						'cat_id'		=>$this->cat_id,
@@ -354,11 +358,11 @@
 						'wo_hour_cat_id'	=>$this->wo_hour_cat_id,
 			);
 
-			$link_date_search = $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiproject.date_search'));
+			$link_date_search = $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uiproject.date_search'));
 
 			$link_excel = array
 			(
-				'menuaction'	=> 'property.uiproject.excel',
+				'menuaction'	=> $this->currentapp.'.uiproject.excel',
 						'sort'			=>$this->sort,
 						'order'			=>$this->order,
 						'cat_id'		=>$this->cat_id,
@@ -374,7 +378,7 @@
 						'wo_hour_cat_id'	=>$this->wo_hour_cat_id,
 			);
 
-			$GLOBALS['phpgw']->js->validate_file('overlib','overlib','property');
+			$GLOBALS['phpgw']->js->validate_file('overlib','overlib',$this->currentapp);
 
 			$data = array
 			(
@@ -390,8 +394,9 @@
 				'link_date_search'		=> $link_date_search,
 
 				'lang_select'			=> lang('select'),
-				'lookup_action'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiworkorder.edit')),
+				'lookup_action'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uiworkorder.edit')),
 				'lookup'			=> $lookup,
+				'links'				=> $links,
 				'allow_allrows'			=> false,
 				'start_record'			=> $this->start,
 				'record_limit'			=> $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'],
@@ -435,7 +440,7 @@
 			$appname	= lang('Project');
 			$function_msg	= lang('list Project');
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($this->currentapp) . ' - ' . $appname . ': ' . $function_msg;
 
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('list_project' => $data));
 		//	$GLOBALS['phpgw']->xslttpl->pp();
@@ -481,7 +486,7 @@
 				'lang_submit'			=> lang('Submit')
 			);
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($this->currentapp) . ' - ' . $appname . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('date_search' => $data));
 		}
 
@@ -489,7 +494,7 @@
 		{
 			if(!$this->acl_add && !$this->acl_edit)
 			{
-				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=> 2, 'acl_location'=> $this->acl_location));
+				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> $this->currentapp.'.uilocation.stop', 'perm'=> 2, 'acl_location'=> $this->acl_location));
 			}
 			$id 				= phpgw::get_var('id', 'int');
 			$values				= phpgw::get_var('values');
@@ -498,8 +503,8 @@
 			$config				= CreateObject('phpgwapi.config');
 			$bolocation			= CreateObject('property.bolocation');
 
-			$insert_record = $GLOBALS['phpgw']->session->appsession('insert_record','property');
-			$insert_record_entity = $GLOBALS['phpgw']->session->appsession('insert_record_entity','property');
+			$insert_record = $GLOBALS['phpgw']->session->appsession('insert_record',$this->currentapp);
+			$insert_record_entity = $GLOBALS['phpgw']->session->appsession('insert_record_entity',$this->currentapp);
 
 			if(isset($insert_record_entity) && is_array($insert_record_entity))
 			{
@@ -646,7 +651,7 @@
 						if ($values['approval'] && $values['mail_address'])
 						{
 							$from_name=$GLOBALS['phpgw_info']['user']['fullname'];
-							$from_email=$GLOBALS['phpgw_info']['user']['preferences']['property']['email'];
+							$from_email=$GLOBALS['phpgw_info']['user']['preferences'][$this->currentapp]['email'];
 							$headers = "Return-Path: <". $from_email .">\r\n";
 							$headers .= "From: " . $from_name . "<" . $from_email .">\r\n";
 							$headers .= "Bcc: " . $from_name . "<" . $from_email .">\r\n";
@@ -654,7 +659,7 @@
 							$headers .= "MIME-Version: 1.0\r\n";
 
 							$subject = lang(Approval).": ". $values['project_id'];
-							$message = '<a href ="http://' . $GLOBALS['phpgw_info']['server']['hostname'] . $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiproject.edit','id'=> $values['project_id'])).'">' . lang(Project) . " " . $values['project_id'] ." ". lang('needs approval') .'</a>';
+							$message = '<a href ="http://' . $GLOBALS['phpgw_info']['server']['hostname'] . $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uiproject.edit','id'=> $values['project_id'])).'">' . lang(Project) . " " . $values['project_id'] ." ". lang('needs approval') .'</a>';
 
 							$bcc = $from_email;
 
@@ -676,13 +681,13 @@
 						{
 							if($this->account!=$values['coordinator'] && $config->config_data['workorder_approval'])
 							{
-								$prefs_coordinator = $this->bocommon->create_preferences('property',$values['coordinator']);
+								$prefs_coordinator = $this->bocommon->create_preferences($this->currentapp,$values['coordinator']);
 								$to = $prefs_coordinator['email'];
 
 								$from_name=$GLOBALS['phpgw_info']['user']['fullname'];
-								$from_email=$GLOBALS['phpgw_info']['user']['preferences']['property']['email'];
+								$from_email=$GLOBALS['phpgw_info']['user']['preferences'][$this->currentapp]['email'];
 
-								$body = '<a href ="http://' . $GLOBALS['phpgw_info']['server']['hostname'] . $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiproject.edit', 'id'=> $values['project_id'])).'">' . lang('project %1 has been edited',$id) .'</a>' . "\n";
+								$body = '<a href ="http://' . $GLOBALS['phpgw_info']['server']['hostname'] . $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uiproject.edit', 'id'=> $values['project_id'])).'">' . lang('project %1 has been edited',$id) .'</a>' . "\n";
 								foreach($receipt['notice_owner'] as $notice)
 								{
 									$body .= $notice . "\n";
@@ -745,14 +750,14 @@
 
 				if(!isset($values['workorder_budget']) && $save)
 				{
-					$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uiworkorder.edit', 'project_id'=> $id));
+					$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> $this->currentapp.'.uiworkorder.edit', 'project_id'=> $id));
 				}
 
 				if (!$this->bocommon->check_perms($values['grants'],PHPGW_ACL_EDIT))
 				{
 					$receipt['error'][]=array('msg'=>lang('You have no edit right for this project'));
-					$GLOBALS['phpgw']->session->appsession('receipt','property',$receipt);
-					$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=>'property.uiproject.view', 'id'=> $id));
+					$GLOBALS['phpgw']->session->appsession('receipt',$this->currentapp,$receipt);
+					$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=>$this->currentapp.'.uiproject.view', 'id'=> $id));
 				}
 				else
 				{
@@ -817,22 +822,22 @@
 
 			$link_data = array
 			(
-				'menuaction'	=> 'property.uiproject.edit',
+				'menuaction'	=> $this->currentapp.'.uiproject.edit',
 				'id'		=> $id
 			);
 
 			$link_request_data = array
 			(
-				'menuaction'	=> 'property.uirequest.index',
+				'menuaction'	=> $this->currentapp.'.uirequest.index',
 				'query'		=> (isset($values['location_data']['loc1'])?$values['location_data']['loc1']:''),
 				'project_id'	=> (isset($values['project_id'])?$values['project_id']:'')
 			);
 
-			$supervisor_id= (isset($GLOBALS['phpgw_info']['user']['preferences']['property']['approval_from'])?$GLOBALS['phpgw_info']['user']['preferences']['property']['approval_from']:'');
+			$supervisor_id= (isset($GLOBALS['phpgw_info']['user']['preferences'][$this->currentapp]['approval_from'])?$GLOBALS['phpgw_info']['user']['preferences'][$this->currentapp]['approval_from']:'');
 			$need_approval = (isset($config->config_data['workorder_approval'])?$config->config_data['workorder_approval']:'');
 
-			$project_status=(isset($GLOBALS['phpgw_info']['user']['preferences']['property']['project_status'])?$GLOBALS['phpgw_info']['user']['preferences']['property']['project_status']:'');
-			$project_category=(isset($GLOBALS['phpgw_info']['user']['preferences']['property']['project_category'])?$GLOBALS['phpgw_info']['user']['preferences']['property']['project_category']:'');
+			$project_status=(isset($GLOBALS['phpgw_info']['user']['preferences'][$this->currentapp]['project_status'])?$GLOBALS['phpgw_info']['user']['preferences'][$this->currentapp]['project_status']:'');
+			$project_category=(isset($GLOBALS['phpgw_info']['user']['preferences'][$this->currentapp]['project_category'])?$GLOBALS['phpgw_info']['user']['preferences'][$this->currentapp]['project_category']:'');
 			if(!isset($values['status']))
 			{
 				$values['status']=$project_status;
@@ -850,7 +855,7 @@
 
 			if ($supervisor_id && $need_approval=='yes')
 			{
-				$prefs = $this->bocommon->create_preferences('property',$supervisor_id);
+				$prefs = $this->bocommon->create_preferences($this->currentapp,$supervisor_id);
 				$supervisor_email = $prefs['email'];
 			}
 
@@ -938,15 +943,15 @@
 				'lang_request_statustext'			=> lang('Link to the request for this project'),
 				'lang_delete_request_statustext'		=> lang('Check to delete this request from this project'),
 				'link_select_request'				=> $GLOBALS['phpgw']->link('/index.php',$link_request_data),
-				'link_request'					=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uirequest.view')),
+				'link_request'					=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uirequest.view')),
 
-				'add_workorder_action'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiworkorder.edit')),
+				'add_workorder_action'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uiworkorder.edit')),
 				'lang_add_workorder'				=> lang('Add workorder'),
 				'lang_add_workorder_statustext'			=> lang('Add a workorder to this project'),
 
 				'table_header_workorder_budget'			=> $table_header_workorder_budget,
 				'lang_no_workorders'				=> lang('No workorder budget'),
-				'workorder_link'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiworkorder.edit')),
+				'workorder_link'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uiworkorder.edit')),
 				'record_history'				=> $record_history,
 				'table_header_history'				=> $table_header_history,
 				'lang_history'					=> lang('History'),
@@ -991,7 +996,7 @@
 				'location_data'					=> $location_data,
 				'location_type'					=> 'form',
 				'form_action'					=> $GLOBALS['phpgw']->link('/index.php',$link_data),
-				'done_action'					=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiproject.index')),
+				'done_action'					=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uiproject.index')),
 				'lang_year'					=> lang('Year'),
 				'lang_category'					=> lang('category'),
 				'lang_save'					=> lang('save'),
@@ -1071,7 +1076,7 @@
 			);
 
 			$appname		= lang('project');
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($this->currentapp) . ' - ' . $appname . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('edit' => $data));
 		//	$GLOBALS['phpgw']->xslttpl->pp();
 		}
@@ -1080,7 +1085,7 @@
 		{
 			if(!$this->acl_delete)
 			{
-				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=>8, 'acl_location'=>$this->acl_location));
+				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> $this->currentapp.'.uilocation.stop', 'perm'=>8, 'acl_location'=>$this->acl_location));
 			}
 
 			$project_id = phpgw::get_var('project_id', 'int');
@@ -1088,7 +1093,7 @@
 
 			$link_data = array
 			(
-				'menuaction' => 'property.uiproject.index',
+				'menuaction' => $this->currentapp.'.uiproject.index',
 				'project_id'	=> $project_id
 			);
 
@@ -1103,7 +1108,7 @@
 			$data = array
 			(
 				'done_action'		=> $GLOBALS['phpgw']->link('/index.php',$link_data),
-				'delete_action'		=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiproject.delete', 'project_id'=> $project_id)),
+				'delete_action'		=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uiproject.delete', 'project_id'=> $project_id)),
 				'lang_confirm_msg'	=> lang('do you really want to delete this entry'),
 				'lang_yes'		=> lang('yes'),
 				'lang_yes_statustext'	=> lang('Delete the entry'),
@@ -1114,7 +1119,7 @@
 			$appname			= lang('project');
 			$function_msg			= lang('delete project');
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($this->currentapp) . ' - ' . $appname . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('delete' => $data));
 		//	$GLOBALS['phpgw']->xslttpl->pp();
 		}
@@ -1123,11 +1128,11 @@
 		{
 			if(!$this->acl_read)
 			{
-				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=>1, 'acl_location'=> $this->acl_location));
+				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> $this->currentapp.'.uilocation.stop', 'perm'=>1, 'acl_location'=> $this->acl_location));
 			}
 
-			$receipt = $GLOBALS['phpgw']->session->appsession('receipt','property');
-			$GLOBALS['phpgw']->session->appsession('receipt','property','');
+			$receipt = $GLOBALS['phpgw']->session->appsession('receipt',$this->currentapp);
+			$GLOBALS['phpgw']->session->appsession('receipt',$this->currentapp,'');
 			$bolocation			= CreateObject('property.bolocation');
 
 			$id	= phpgw::get_var('id', 'int');
@@ -1229,7 +1234,7 @@
 
 				'table_header_workorder_budget'		=> $table_header_workorder_budget,
 				'lang_no_workorders'			=> lang('No workorder budget'),
-				'workorder_link'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiworkorder.view')),
+				'workorder_link'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uiworkorder.view')),
 				'record_history'			=> $record_history,
 				'table_header_history'			=> $table_header_history,
 				'lang_history'				=> lang('History'),
@@ -1262,7 +1267,7 @@
 				'vendor_data'				=> isset($vendor_data)?$vendor_data:'',
 				'location_data'				=> $location_data,
 				'location_type'				=> 'view',
-				'done_action'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiproject.index')),
+				'done_action'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uiproject.index')),
 				'lang_year'				=> lang('Year'),
 				'lang_category'				=> lang('category'),
 				'lang_save'				=> lang('save'),
@@ -1310,7 +1315,7 @@
 				'key_deliver_list'			=> $this->bo->select_key_location_list($values['key_deliver']),
 				'lang_key_deliver'			=> lang('key deliver location'),
 
-				'edit_action'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiproject.edit', 'id'=> $id)),
+				'edit_action'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uiproject.edit', 'id'=> $id)),
 				'lang_edit_statustext'			=> lang('Edit this entry project'),
 				'lang_edit'				=> lang('Edit'),
 				'currency'				=> $GLOBALS['phpgw_info']['user']['preferences']['common']['currency'],
@@ -1320,7 +1325,7 @@
 			);
 
 			$appname		= lang('project');
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($this->currentapp) . ' - ' . $appname . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('view' => $data));
 		//	$GLOBALS['phpgw']->xslttpl->pp();
 		}

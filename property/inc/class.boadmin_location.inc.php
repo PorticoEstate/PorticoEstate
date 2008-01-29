@@ -69,13 +69,13 @@
 
 		function property_boadmin_location($session=False)
 		{
+			$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->so 		= CreateObject('property.soadmin_location');
 			$this->bocommon = CreateObject('property.bocommon');
-			$this->custom 	= createObject('phpgwapi.custom_fields');
 
 			if ($session)
 			{
-		//		$this->read_sessiondata();
+				$this->read_sessiondata();
 				$this->use_session = True;
 			}
 
@@ -175,72 +175,49 @@
 			return $receipt;
 		}
 
-		function delete($type_id,$id,$attrib='')
+		function delete($type_id,$id,$attrib)
 		{
-			if($id && !$attrib)
-			{
-				$this->so->delete($id);
-			}
-			else if($type_id && $id && $attrib)
-			{
-				$this->custom->_delete_attrib('.location.' . $type_id,'property',$id, 'fm_location' . $type_id);
-				$this->custom->_delete_attrib('.location.' . $type_id,'property',$id, 'fm_location' . $type_id . '_history');
-			}
+			$this->so->delete($type_id,$id,$attrib);
 		}
 
-		function read_attrib($type_id)
+		function read_attrib($type_id='')
 		{
-			if($allrows)
+			$attrib = $this->so->read_attrib(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
+											'type_id' => $type_id,'allrows'=>$this->allrows));
+
+			for ($i=0; $i<count($attrib); $i++)
 			{
-				$this->allrows = $allrows;
+				$attrib[$i]['datatype'] = $this->bocommon->translate_datatype($attrib[$i]['datatype']);
 			}
 
-			$attrib = $this->custom->get_attribs('property', '.location.' . $type_id, $this->start, $this->query, $this->sort, $this->order, $this->allrows);
-
-			$this->total_records = $this->custom->total_records;
+			$this->total_records = $this->so->total_records;
 
 			return $attrib;
 		}
 
 		function read_single_attrib($type_id,$id)
 		{
-			return $this->custom->get_attrib_single('property', '.location.' . $type_id, $id, true);
+			return $this->so->read_single_attrib($type_id,$id);
 		}
 
-		function resort_attrib($data = array())
+		function resort_attrib($data)
 		{
-			$resort = isset($data['resort'])?$data['resort']:'up';
-			$type_id = isset($data['type_id'])?$data['type_id']:'';
-			$id = (isset($data['id'])?$data['id']:'');
-
-			if(!$type_id || !$id)
-			{
-				return;
-			}
-
-			$this->custom->resort_attrib($id, $resort, 'property', '.location.' . $type_id);
+			$this->so->resort_attrib($data);
 		}
 
 		function save_attrib($attrib,$action='')
 		{
-			$attrib['appname'] = 'property';
- 			$attrib['location'] = '.location.' . $attrib['type_id'];
- 			$primary_table = 'fm_location' . $attrib['type_id'];
- 			$history_table = 'fm_location' . $attrib['type_id'] . '_history';
-
 			if ($action=='edit')
 			{
 				if ($attrib['id'] != '')
 				{
 
-					$receipt = $this->custom->edit_attrib($attrib, $primary_table);
-					$this->custom->edit_attrib($attrib, $history_table);
+					$receipt = $this->so->edit_attrib($attrib);
 				}
 			}
 			else
 			{
-				$receipt = $this->custom->add_attrib($attrib, $primary_table);
-				$this->custom->add_attrib($attrib, $history_table);
+				$receipt = $this->so->add_attrib($attrib);
 			}
 			return $receipt;
 		}

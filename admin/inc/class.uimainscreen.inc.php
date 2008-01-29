@@ -11,7 +11,7 @@
 	\**************************************************************************/
 	/* $Id: class.uimainscreen.inc.php 18358 2007-11-27 04:43:37Z skwashd $ */
 
-	class admin_uimainscreen
+	class uimainscreen
 	{
 		var $public_functions = array
 		(
@@ -19,50 +19,30 @@
 			'mainscreen'	=> True
 		);
 
-		public function __construct()
+		function uimainscreen()
 		{
 			$menuaction = phpgw::get_var('menuaction', 'location');
-			$GLOBALS['phpgw_info']['flags']['xslt_app'] = false; //$menuaction == 'admin.uimainscreen.mainscreen';
+			$GLOBALS['phpgw_info']['flags']['xslt_app'] = $menuaction == 'admin.uimainscreen.mainscreen';
 			$GLOBALS['phpgw']->nextmatchs = CreateObject('phpgwapi.nextmatchs');
 		}
 
-		public function mainscreen()
+		function mainscreen()
 		{
-			$menu = execMethod('phpgwapi.menu.get', 'admin');
-			// this is any ugly hack cos the XSLT template engine sucks
-			$html = '';
-			foreach ( $menu as $module => $entries )
+			function display_section($appname,$file,$file2='')
 			{
-				$html .= <<<HTML
-				<h2>$module</h2>
-				<ul>
-
-HTML;
-				$i = 0;
-				foreach ( $entries as $entry )
-				{
-					$row = $i % 2 ? 'on' : 'off';
-					$html .= <<<HTML
-					<li class="row_{$row}"><a href="{$entry['url']}">{$entry['text']}</a></li>
-HTML;
-					++$i;
-				}
-				$html .= <<<HTML
-				</ul>
-HTML;
+				$GLOBALS['phpgw']->common->display_mainscreen($appname,$file2 ? $file2 : $file);
 			}
-			$GLOBALS['phpgw']->common->phpgw_header(true);
-			echo $html;
+
+			$GLOBALS['phpgw']->hooks->process('admin');
+			$GLOBALS['phpgw']->xslttpl->set_var('phpgw', array('list' => $GLOBALS['phpgw']->common->output));
 		}
 
-		public function index()
+		function index()
 		{
 			if ( phpgw::get_var('cancel', 'bool', 'POST') )
 			{
-				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'admin.uimainscreen.mainscreen'));
+				$GLOBALS['phpgw']->redirect_link('/admin/index.php');
 			}
-
-			$GLOBALS['phpgw_info']['flags']['menu_selection'] = 'admin::admin::mainscreen';
 
 			$GLOBALS['phpgw']->template->set_file(array('message' => 'mainscreen_message.tpl'));
 			$GLOBALS['phpgw']->template->set_block('message','form','form');
@@ -70,11 +50,11 @@ HTML;
 			$GLOBALS['phpgw']->template->set_block('message','row_2','row_2');
 
 			$GLOBALS['phpgw']->common->phpgw_header(true);
-			$select_lang = phpgw::get_var('select_lang', 'string', 'POST');
-			$section     = phpgw::get_var('section', 'string', 'POST');
 
-			if ( phpgw::get_var('update', 'bool', 'POST') )
+			if ( phpgw::get_var('submit', 'bool', 'POST') )
 			{
+				$section     = phpgw::get_var('section', 'string', 'POST');
+				$select_lang = phpgw::get_var('select_lang', 'string', 'POST');
 				$message     = phpgw::get_var('message', 'string', 'POST');
 
 				$GLOBALS['phpgw']->db->query("DELETE FROM phpgw_lang WHERE message_id='$section" . "_message' AND app_name='"
@@ -121,7 +101,7 @@ HTML;
 
 				$tr_class = $GLOBALS['phpgw']->nextmatchs->alternate_row_class($tr_class);
 				$GLOBALS['phpgw']->template->set_var('tr_class', $tr_class);
-				$GLOBALS['phpgw']->template->set_var('value','<input type="submit" name="submit" value="' . lang('Submit')
+				$GLOBALS['phpgw']->template->set_var('value','<input type="submit" value="' . lang('Submit')
 					. '"><input type="submit" name="cancel" value="'. lang('cancel') .'">');
 				$GLOBALS['phpgw']->template->fp('rows','row_2',True);
 			}
@@ -155,7 +135,7 @@ HTML;
 
 				$tr_class = $GLOBALS['phpgw']->nextmatchs->alternate_row_class($tr_class);
 				$GLOBALS['phpgw']->template->set_var('tr_class', $tr_class);
-				$GLOBALS['phpgw']->template->set_var('value','<input type="submit" name="update" value="' . lang('Update')
+				$GLOBALS['phpgw']->template->set_var('value','<input type="submit" name="submit" value="' . lang('Update')
 					. '"><input type="submit" name="cancel" value="'. lang('cancel') .'">'
 				);
 				$GLOBALS['phpgw']->template->fp('rows','row_2',True);

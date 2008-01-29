@@ -70,19 +70,7 @@
 		--$argc;
 	}
 
-	$destroy_session = false;
-	if(!isset($GLOBALS['phpgw']->session->sessionid) || !$GLOBALS['phpgw']->session->sessionid)
-	{
-		$GLOBALS['phpgw']->session->sessionid = md5($GLOBALS['phpgw']->common->randomstring(10));
-		$destroy_session = true;
-	}
-
 	$num = ExecMethod('property.custom_functions.index',$data);
 	// echo date('Y/m/d H:i:s ').$_GET['domain'].': '.($num ? "$num job(s) executed" : 'Nothing to execute')."\n";
 
-	if($destroy_session)
-	{
-		$GLOBALS['phpgw']->session->destroy($GLOBALS['phpgw']->session->sessionid, true);
-	}
-
-	$GLOBALS['phpgw']->common->phpgw_exit();	
+	$GLOBALS['phpgw']->common->phpgw_exit();

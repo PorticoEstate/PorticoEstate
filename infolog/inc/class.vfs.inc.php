@@ -687,7 +687,7 @@
 				$relatives = array (RELATIVE_CURRENT);
 			}
 
-			$sep = '/';
+			$sep = SEP;
 
 			$rarray['mask'] = RELATIVE_NONE;
 

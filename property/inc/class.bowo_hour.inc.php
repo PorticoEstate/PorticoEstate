@@ -52,7 +52,7 @@
 
 		function property_bowo_hour($session=False)
 		{
-		//	$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
+			$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->so 		= CreateObject('property.sowo_hour');
 			$this->bocommon 	= CreateObject('property.bocommon');
 

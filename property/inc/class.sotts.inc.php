@@ -36,7 +36,7 @@
 	{
 		function property_sotts()
 		{
-		//	$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
+			$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->account		= $GLOBALS['phpgw_info']['user']['account_id'];
 			$this->historylog	= CreateObject('property.historylog','tts');
 			$this->config		= CreateObject('phpgwapi.config');
@@ -74,13 +74,13 @@
 				$external = (isset($data['external'])?$data['external']:'');
 			}
 
-			$this->grants 	= $GLOBALS['phpgw']->session->appsession('grants_ticket','property');
+			$this->grants 	= $GLOBALS['phpgw']->session->appsession('grants_ticket',$this->currentapp);
 
 			if(!$this->grants)
 			{
 				$this->acl 		= & $GLOBALS['phpgw']->acl;
-				$this->grants	= $this->acl->get_grants('property','.ticket');
-				$GLOBALS['phpgw']->session->appsession('grants_ticket','property',$this->grants);
+				$this->grants	= $this->acl->get_grants($this->currentapp,'.ticket');
+				$GLOBALS['phpgw']->session->appsession('grants_ticket',$this->currentapp,$this->grants);
 			}
 
 			if ($order)
@@ -165,8 +165,8 @@
 				}
 				else
 				{
-					$query = preg_replace("/'/",'',$query);
-					$query = preg_replace('/"/','',$query);
+					$query = ereg_replace("'",'',$query);
+					$query = ereg_replace('"','',$query);
 					$querymethod = " $where (subject $this->like '%$query%' or address $this->like '%$query%' or fm_tts_tickets.location_code $this->like '%$query%')";
 				}
 			}
@@ -273,12 +273,12 @@
 				$date_info['date_info'][$i]['entry_date']= $GLOBALS['phpgw']->common->show_date($this->db->f('entry_date'),$this->dateformat);
 				if($cat_id)
 				{
-					$date_info['date_info'][$i]['link']=$GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uientity.view','entity_id'=> $entity_id,'cat_id'=> $cat_id, 'id'=> $this->db->f('destination_id')));
+					$date_info['date_info'][$i]['link']=$GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uientity.view','entity_id'=> $entity_id,'cat_id'=> $cat_id, 'id'=> $this->db->f('destination_id')));
 					$date_info['date_info'][$i]['descr']=$this->soadmin_entity->read_category_name($entity_id,$cat_id);
 				}
 				else
 				{
-					$date_info['date_info'][$i]['link']=$GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.ui' . $type . '.view','id'=> $this->db->f('destination_id')));
+					$date_info['date_info'][$i]['link']=$GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.ui' . $type . '.view','id'=> $this->db->f('destination_id')));
 					$date_info['date_info'][$i]['descr']=lang($type);
 				}
 				$i++;

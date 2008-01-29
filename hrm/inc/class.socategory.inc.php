@@ -20,7 +20,7 @@
 	{
 		public function __construct()
 		{
-		//	$this->currentapp	= 'hrm';
+			$this->currentapp	= 'hrm';
 			$this->account		= $GLOBALS['phpgw_info']['user']['account_id'];
 			$this->bocommon		= CreateObject('hrm.bocommon');
 			$this->db			= $this->bocommon->new_db();
@@ -67,8 +67,8 @@
 
 			if($query)
 			{
-				$query = preg_replace("/'/",'',$query);
-				$query = preg_replace('/"/','',$query);
+				$query = ereg_replace("'",'',$query);
+				$query = ereg_replace('"','',$query);
 
 				$querymethod = " where id $this->like '%$query%' or descr $this->like '%$query%'";
 			}

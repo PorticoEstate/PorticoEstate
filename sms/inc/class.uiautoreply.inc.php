@@ -33,7 +33,7 @@
 
 		function sms_uiautoreply()
 		{
-		//	$this->currentapp			= $GLOBALS['phpgw_info']['flags']['currentapp'];
+			$this->currentapp			= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->nextmatchs			= CreateObject('phpgwapi.nextmatchs');
 			$this->account				= $GLOBALS['phpgw_info']['user']['account_id'];
 			$this->bo				= CreateObject('sms.boautoreply',true);
@@ -90,7 +90,7 @@
 
 				if($this->bocommon->check_perms($entry['grants'], PHPGW_ACL_DELETE))
 				{
-					$link_delete		= $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'sms.uiautoreply.delete', 'autoreply_id'=> $entry['id']));
+					$link_delete		= $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> $this->currentapp.'.uiautoreply.delete', 'autoreply_id'=> $entry['id']));
 					$text_delete		= lang('delete');
 					$lang_delete_text 	= lang('delete the autoreply code');
 				}
@@ -99,9 +99,9 @@
 				(
 					'code'					=> $entry['code'],
 					'user'					=> $GLOBALS['phpgw']->accounts->id2name($entry['uid']),
-					'link_edit'				=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'sms.uiautoreply.manage', 'autoreply_id'=> $entry['id'])),
+					'link_edit'				=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> $this->currentapp.'.uiautoreply.manage', 'autoreply_id'=> $entry['id'])),
 					'link_delete'				=> $link_delete,
-//					'link_view'				=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'sms.uiautoreply.view&', 'autoreply_id'=> $entry['id'])),
+//					'link_view'				=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> $this->currentapp.'.uiautoreply.view&', 'autoreply_id'=> $entry['id'])),
 //					'lang_view_config_text'			=> lang('view the config'),
 					'lang_edit_config_text'			=> lang('manage the autoreply code'),
 //					'text_view'				=> lang('view'),
@@ -124,7 +124,7 @@
 											'sort'	=> $this->sort,
 											'var'	=> 'autoreply_code',
 											'order'	=> $this->order,
-											'extra'	=> array('menuaction'	=> 'sms.uiautoreply.index',
+											'extra'	=> array('menuaction'	=> $this->currentapp.'.uiautoreply.index',
 														'query'		=> $this->query,
 														'cat_id'	=> $this->cat_id,
 														'allrows'	=> $this->allrows)
@@ -147,7 +147,7 @@
 
 			$link_data = array
 			(
-				'menuaction'	=> 'sms.uiautoreply.index',
+				'menuaction'	=> $this->currentapp.'.uiautoreply.index',
 				'sort'		=> $this->sort,
 				'order'		=> $this->order,
 				'cat_id'	=> $this->cat_id,
@@ -161,7 +161,7 @@
 				(
 					'lang_add'		=> lang('add'),
 					'lang_add_statustext'	=> lang('add a autoreply'),
-					'add_action'		=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'sms.uiautoreply.add')),
+					'add_action'		=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> $this->currentapp.'.uiautoreply.add')),
 				);
 			}
 
@@ -191,7 +191,7 @@
 			$appname					= lang('autoreplies');
 			$function_msg					= lang('list SMS autoreplies');
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('sms') . ' - ' . $appname . ': ' . $function_msg;
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($this->currentapp) . ' - ' . $appname . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('list' => $data));
 			$this->save_sessiondata();
 		}
@@ -222,7 +222,7 @@
 			}
 
 			$add_data = array(
-				'menuaction'	=> 'sms.uiautoreply.add_yes',
+				'menuaction'	=> $this->currentapp.'.uiautoreply.add_yes',
 				'autoreply_id'	=> $autoreply_id
 				);
 				
@@ -238,7 +238,7 @@
 			";
 
 
-			$done_data = array('menuaction'	=> 'sms.uiautoreply.index');
+			$done_data = array('menuaction'	=> $this->currentapp.'.uiautoreply.index');
 			$done_url = $GLOBALS['phpgw']->link('/index.php',$done_data);
 
 			$content .= "
@@ -303,7 +303,7 @@
 			}
 			
 			$add_data = array(
-				'menuaction'	=> 'sms.uiautoreply.' . $target,
+				'menuaction'	=> $this->currentapp.'.uiautoreply.' . $target,
 				'err'		=> urlencode($error_string)
 				);
 
@@ -347,7 +347,7 @@
 
 
 			$add_data = array(
-				'menuaction'	=> 'sms.uiautoreply.add_scenario_yes',
+				'menuaction'	=> $this->currentapp.'.uiautoreply.add_scenario_yes',
 				'autoreply_id'	=> $autoreply_id
 				);
 				
@@ -373,7 +373,7 @@
 			";
 
 			$done_data = array(
-				'menuaction'	=> 'sms.uiautoreply.manage',
+				'menuaction'	=> $this->currentapp.'.uiautoreply.manage',
 				'autoreply_id'	=> $autoreply_id);
 				
 			$done_url = $GLOBALS['phpgw']->link('/index.php',$done_data);
@@ -446,7 +446,7 @@
 			$target = 'add_scenario';
 			
 			$add_data = array(
-				'menuaction'			=> 'sms.uiautoreply.' . $target,
+				'menuaction'			=> $this->currentapp.'.uiautoreply.' . $target,
 				'autoreply_id' 			=> $autoreply_id,
 				'err' 				=> urlencode($error_string),
 				'add_autoreply_scenario_result' => $add_autoreply_scenario_result
@@ -497,7 +497,7 @@
 
 
 			$edit_data = array(
-				'menuaction'		=> 'sms.uiautoreply.edit_scenario_yes',
+				'menuaction'		=> $this->currentapp.'.uiautoreply.edit_scenario_yes',
 				'autoreply_id'		=> $autoreply_id,
 				'autoreply_scenario_id'	=> $autoreply_scenario_id
 				);
@@ -529,7 +529,7 @@
 			    </form>
 			";
 			$done_data = array(
-				'menuaction'	=> 'sms.uiautoreply.manage',
+				'menuaction'	=> $this->currentapp.'.uiautoreply.manage',
 				'autoreply_id'	=> $autoreply_id);
 				
 			$done_url = $GLOBALS['phpgw']->link('/index.php',$done_data);
@@ -602,7 +602,7 @@
 			$target = 'edit_scenario';
 			
 			$add_data = array(
-				'menuaction'				=> 'sms.uiautoreply.' . $target,
+				'menuaction'				=> $this->currentapp.'.uiautoreply.' . $target,
 				'autoreply_id' 				=> $autoreply_id,
 				'autoreply_scenario_id'			=> $autoreply_scenario_id,
 				'err' 					=> urlencode($error_string),
@@ -656,7 +656,7 @@
 			}
 
 			$add_data = array(
-				'menuaction'	=> 'sms.uiautoreply.add_scenario',
+				'menuaction'	=> $this->currentapp.'.uiautoreply.add_scenario',
 				'autoreply_id'	=> $autoreply_id
 				);
 				
@@ -696,7 +696,7 @@
 			";
 
 			$done_data = array(
-				'menuaction'	=> 'sms.uiautoreply.index');
+				'menuaction'	=> $this->currentapp.'.uiautoreply.index');
 				
 			$done_url = $GLOBALS['phpgw']->link('/index.php',$done_data);
 
@@ -724,7 +724,7 @@
 
 			$link_data = array
 			(
-				'menuaction' => 'sms.uiautoreply.index',
+				'menuaction' => $this->currentapp.'.uiautoreply.index',
 				'autoreply_id' => $autoreply_id
 			);
 
@@ -768,7 +768,7 @@
 			$data = array
 			(
 				'done_action'			=> $GLOBALS['phpgw']->link('/index.php',$link_data),
-				'delete_action'			=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'sms.uiautoreply.delete', 'autoreply_id'=> $autoreply_id)),
+				'delete_action'			=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> $this->currentapp.'.uiautoreply.delete', 'autoreply_id'=> $autoreply_id)),
 				'lang_confirm_msg'		=> lang('do you really want to delete this entry'),
 				'lang_yes'			=> lang('yes'),
 				'lang_yes_statustext'		=> lang('Delete the entry'),
@@ -779,7 +779,7 @@
 			$appname	= lang('autoreply');
 			$function_msg	= lang('delete autoreply');
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('sms') . ' - ' . $appname . ': ' . $function_msg;
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($this->currentapp) . ' - ' . $appname . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('delete' => $data));
 		}
 
@@ -800,7 +800,7 @@
 
 			$link_data = array
 			(
-				'menuaction' => 'sms.uiautoreply.manage',
+				'menuaction' => $this->currentapp.'.uiautoreply.manage',
 				'autoreply_id' => $autoreply_id
 			);
 
@@ -838,7 +838,7 @@
 			$data = array
 			(
 				'done_action'			=> $GLOBALS['phpgw']->link('/index.php',$link_data),
-				'delete_action'			=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'sms.uiautoreply.delete_scenario', 'autoreply_id'=> $autoreply_id, 'autoreply_scenario_id'=> $autoreply_scenario_id)),
+				'delete_action'			=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> $this->currentapp.'.uiautoreply.delete_scenario', 'autoreply_id'=> $autoreply_id, 'autoreply_scenario_id'=> $autoreply_scenario_id)),
 				'lang_confirm_msg'		=> lang('do you really want to delete this entry'),
 				'lang_yes'			=> lang('yes'),
 				'lang_yes_statustext'		=> lang('Delete the entry'),
@@ -849,7 +849,7 @@
 			$appname	= lang('autoreply');
 			$function_msg	= lang('delete autoreply');
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('sms') . ' - ' . $appname . ': ' . $function_msg;
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($this->currentapp) . ' - ' . $appname . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('delete' => $data));
 		}
 

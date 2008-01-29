@@ -78,7 +78,7 @@
 			}
 
 			$apps->account_type = 'u';
-			$apps->set_account_id($userData['account_id']);
+			$apps->account_id = $userData['account_id'];
 			$apps->account_apps = Array(Array());
 
 /* moved to bo

@@ -45,7 +45,7 @@
 
 		function property_boadmin($session='')
 		{
-		//	$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
+			$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->so 			= CreateObject('property.soadmin');
 			$this->acl 			= CreateObject('phpgwapi.acl');
 			$this->bocommon 	= CreateObject('property.bocommon');
@@ -68,7 +68,7 @@
 			$module	= phpgw::get_var('module');
 			$granting_group	= phpgw::get_var('granting_group', 'int');
 			$allrows	= phpgw::get_var('allrows', 'bool');
-			$acl_app	= 'property'; //get_var('acl_app',array('POST','GET'));
+			$acl_app	= $this->currentapp; //get_var('acl_app',array('POST','GET'));
 
 			if ($start)
 			{

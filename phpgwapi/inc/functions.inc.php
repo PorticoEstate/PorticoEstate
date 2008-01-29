@@ -447,6 +447,12 @@
 	// new log_message class with replaced error.  I'm not sure if it is needed, though. -doug
 	include_once(PHPGW_INCLUDE_ROOT.'/phpgwapi/inc/class.log_message.inc.php');
 
+	/****************************************************************************\
+	* This is a global constant that should be used                              *
+	* instead of / or \ in file paths                                            *
+	\****************************************************************************/
+	define('SEP', filesystem_separator());
+
 	/*****************************************************************************\
 	* ACL defines - moved here to work for xml-rpc/soap, also                     *
 	\*****************************************************************************/
@@ -478,8 +484,8 @@
 				print_debug('LID',$login,'app');
 				$login_id = $GLOBALS['phpgw']->accounts->name2id($login);
 				print_debug('User ID',$login_id,'app');
-				$GLOBALS['phpgw']->accounts->set_account($login_id);
-				$GLOBALS['phpgw']->preferences->set_account_id($login_id);
+				$GLOBALS['phpgw']->accounts->accounts($login_id);
+				$GLOBALS['phpgw']->preferences->preferences($login_id);
 			}
 		}
 	/**************************************************************************\
@@ -509,7 +515,7 @@
 		if(isset($GLOBALS['phpgw_info']['user']['preferences']['common']['lang']) && $GLOBALS['phpgw_info']['user']['preferences']['common']['lang'] !='en')
 		{
 			$GLOBALS['phpgw']->translation->userlang = $GLOBALS['phpgw_info']['user']['preferences']['common']['lang'];
-			$GLOBALS['phpgw']->translation->__construct($reset = True);
+			$GLOBALS['phpgw']->translation->translation($reset = True);
 		}
 
 		$redirect = unserialize(phpgw::get_var('redirect','raw', 'COOKIE'));
@@ -600,20 +606,15 @@
 		{
 			if (!$GLOBALS['phpgw']->acl->check('run', PHPGW_ACL_READ, $GLOBALS['phpgw_info']['flags']['currentapp']))
 			{
-				$GLOBALS['phpgw']->common->phpgw_header(true);
+				$GLOBALS['phpgw']->common->phpgw_header( true ); //!(isset($GLOBALS['phpgw_info']['flags']['nonavbar']) && $GLOBALS['phpgw_info']['flags']['nonavbar']) );
 				$GLOBALS['phpgw']->log->write(array('text'=>'W-Permissions, Attempted to access %1','p1'=>$GLOBALS['phpgw_info']['flags']['currentapp']));
 
-				$lang_denied = lang('Access not permitted');
-				echo <<<HTML
-					<div class="error">$lang_denied</div>
-
-HTML;
+				echo '<p><center><b>'.lang('Access not permitted').'</b></center>';
 				$GLOBALS['phpgw']->common->phpgw_exit(True);
 			}
 		}
 
-	//  Already called from sessions::verify
-	//	$GLOBALS['phpgw']->applications->read_installed_apps();	// to get translated app-titles
+		$GLOBALS['phpgw']->applications->read_installed_apps();	// to get translated app-titles
 		
 		/*************************************************************************\
 		* Load the header unless the developer turns it off                       *

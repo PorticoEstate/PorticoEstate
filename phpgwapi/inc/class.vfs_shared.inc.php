@@ -1152,7 +1152,14 @@
 				return $data['string'];
 			}
 
-			$sep = '/';
+			if ($data['fake'])
+			{
+				$sep = '/';
+			}
+			else
+			{
+				$sep = SEP;
+			}
 
 			/* if RELATIVE_CURRENT, retrieve the current mask */
 			if ($data['mask'][0] & RELATIVE_CURRENT)
@@ -1379,7 +1386,7 @@
 
 			$data = array_merge ($this->default_values ($data, $default_values), $data);
 
-			$sep = '/';
+			$sep = SEP;
 
 			$rarray['mask'] = RELATIVE_NONE;
 			$fake = false;
@@ -1494,7 +1501,7 @@
 					if (ereg ("^$link_info[directory]/$link_info[name](/|$)", $rarray['fake_full_path']))
 					{
 						$rarray['real_full_path'] = ereg_replace ("^$this->basedir", '', $rarray['real_full_path']);
-						$rarray['real_full_path'] = ereg_replace ("^{$link_info['directory']}/{$link_info['name']}", "{$link_info['link_directory']}/{$link_info['link_name']}", $rarray['real_full_path']);
+						$rarray['real_full_path'] = ereg_replace ("^$link_info[directory]" . SEP . "$link_info[name]", $link_info['link_directory'] . SEP . $link_info['link_name'], $rarray['real_full_path']);
 
 						$p = $this->path_parts (array(
 								'string'	=> $rarray['real_full_path'],
@@ -1587,7 +1594,14 @@
 
 			$data = array_merge ($this->default_values ($data, $default_values), $data);
 
-			$sep = '/';
+			if ($data['relatives'][0] & VFS_REAL)
+			{
+				$sep = SEP;
+			}
+			else
+			{
+				$sep = '/';
+			}
 
 			if ($data['relative'] == 'relative' || $data['relative'] == True)
 			{

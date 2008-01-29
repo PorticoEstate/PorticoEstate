@@ -24,7 +24,7 @@
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/bbb_/ekstern/
 	* @package property
 	* @subpackage agreement
- 	* @version $Id: class.bos_agreement.inc.php,v 1.16 2007/08/12 21:25:10 sigurdne Exp $
+ 	* @version $Id: class.bos_agreement.inc.php 18358 2007-11-27 04:43:37Z skwashd $
 	*/
 
 	/**
@@ -54,9 +54,9 @@
 
 		function property_bos_agreement($session=False)
 		{
+			$this->currentapp		= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->so = CreateObject('property.sos_agreement');
 			$this->bocommon = CreateObject('property.bocommon');
-			$this->custom 		= createObject('phpgwapi.custom_fields');
 			$this->vfs 			= CreateObject('phpgwapi.vfs');
 			$this->rootdir 		= $this->vfs->basedir;
 			$this->fakebase 	= $this->vfs->fakebase;
@@ -243,69 +243,204 @@
 
 		function read_single($data)
 		{
-			$values['attributes'] = $this->custom->get_attribs('property', '.s_agreement', 0, '', 'ASC', 'attrib_sort', true, true);
-			
-			if(isset($data['s_agreement_id']) && $data['s_agreement_id'])
-			{
-				$values = $this->so->read_single($data['s_agreement_id'], $values);
-			}
-
-			$values = $this->custom->prepare_attributes($values, 'property', '.s_agreement', $data['view']);
-
+			$s_agreement	= $this->so->read_single($data);
 			$dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
-			$values['start_date']		= $GLOBALS['phpgw']->common->show_date($values['start_date'],$dateformat);
-			$values['end_date']		= $GLOBALS['phpgw']->common->show_date($values['end_date'],$dateformat);
-			if($values['termination_date'])
+			$s_agreement['start_date']		= $GLOBALS['phpgw']->common->show_date($s_agreement['start_date'],$dateformat);
+			$s_agreement['end_date']		= $GLOBALS['phpgw']->common->show_date($s_agreement['end_date'],$dateformat);
+			if($s_agreement['termination_date'])
 			{
-				$values['termination_date']= $GLOBALS['phpgw']->common->show_date($values['termination_date'],$dateformat);
+				$s_agreement['termination_date']= $GLOBALS['phpgw']->common->show_date($s_agreement['termination_date'],$dateformat);
 			}
+
+			$s_agreement = $this->convert_attribute($s_agreement);
 
 			$this->vfs->override_acl = 1;
 
-			$values['files'] = $this->vfs->ls (array(
+			$s_agreement['files'] = $this->vfs->ls (array(
 			     'string' => $this->fakebase. '/' . 'service_agreement' .  '/' . $data['s_agreement_id'],
 			     'relatives' => array(RELATIVE_NONE)));
 
 			$this->vfs->override_acl = 0;
 
-			if(!$values['files'][0]['file_id'])
+			if(!$s_agreement['files'][0]['file_id'])
 			{
-				unset($values['files']);
+				unset($s_agreement['files']);
 			}
 
-			return $values;
+			return $s_agreement;
+
 		}
 
 		function read_single_item($data)
 		{
-			$values['attributes'] = $this->custom->get_attribs('property', '.s_agreement.detail', 0, '', 'ASC', 'attrib_sort', true, true);
-			
-			if(isset($data['s_agreement_id']) && $data['s_agreement_id'] && isset($data['id']) && $data['id'])
-			{
-				$values = $this->so->read_single_item($data, $values);
-			}
-			$values = $this->custom->prepare_attributes($values, 'property', '.s_agreement.detail');
-
+			$item	= $this->so->read_single_item($data);
 //_debug_array($item);
+			$item	= $this->convert_attribute($item,True);
 
-			if($values['location_code'])
+			if($item['location_code'])
 			{
 				$solocation	= CreateObject('property.solocation');
-				$values['location_data'] =$solocation->read_single($values['location_code']);
+				$item['location_data'] =$solocation->read_single($item['location_code']);
 			}
 
-			if($values['p_num'])
+			if($item['p_num'])
 			{
 				$soadmin_entity	= CreateObject('property.soadmin_entity');
-				$category = $soadmin_entity->read_single_category($values['p_entity_id'],$values['p_cat_id']);
+				$category = $soadmin_entity->read_single_category($item['p_entity_id'],$item['p_cat_id']);
 
-				$values['p'][$values['p_entity_id']]['p_num']=$values['p_num'];
-				$values['p'][$values['p_entity_id']]['p_entity_id']=$values['p_entity_id'];
-				$values['p'][$values['p_entity_id']]['p_cat_id']=$values['p_cat_id'];
-				$values['p'][$values['p_entity_id']]['p_cat_name'] = $category['name'];
+				$item['p'][$item['p_entity_id']]['p_num']=$item['p_num'];
+				$item['p'][$item['p_entity_id']]['p_entity_id']=$item['p_entity_id'];
+				$item['p'][$item['p_entity_id']]['p_cat_id']=$item['p_cat_id'];
+				$item['p'][$item['p_entity_id']]['p_cat_name'] = $category['name'];
 			}
 
-			return $values;
+			return $item;
+		}
+
+		function convert_attribute($list,$detail='')
+		{
+			if($detail)
+			{
+				$this->so->role	= 'detail';
+			}
+			$contacts			= CreateObject('phpgwapi.contacts');
+
+			$vendor = CreateObject('property.soactor');
+			$vendor->role = 'vendor';
+
+			$dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
+
+			$input_type_array = array(
+				'R' => 'radio',
+				'CH' => 'checkbox',
+				'LB' => 'listbox'
+			);
+
+			$sep = '/';
+			$dlarr[strpos($dateformat,'Y')] = 'Y';
+			$dlarr[strpos($dateformat,'m')] = 'm';
+			$dlarr[strpos($dateformat,'d')] = 'd';
+			ksort($dlarr);
+
+			$dateformat= (implode($sep,$dlarr));
+
+//html_print_r($list);
+			$m=0;
+			for ($i=0;$i<count($list['attributes']);$i++)
+			{
+				if($list['attributes'][$i]['datatype']=='D' && $list['attributes'][$i]['value'])
+				{
+					$timestamp_date= mktime(0,0,0,date(m,strtotime($list['attributes'][$i]['value'])),date(d,strtotime($list['attributes'][$i]['value'])),date(y,strtotime($list['attributes'][$i]['value'])));
+					$list['attributes'][$i]['value']	= $GLOBALS['phpgw']->common->show_date($timestamp_date,$dateformat);
+				}
+				if($list['attributes'][$i]['datatype']=='AB')
+				{
+					if($list['attributes'][$i]['value'])
+					{
+						$contact_data	= $contacts->read_single_entry($list['attributes'][$i]['value'],array('n_given'=>'n_given','n_family'=>'n_family','email'=>'email'));
+						$list['attributes'][$i]['contact_name']	= $contact_data[0]['n_family'] . ', ' . $contact_data[0]['n_given'];
+					}
+
+					$insert_record_list[]	= $list['attributes'][$i]['name'];
+					$lookup_link		= $GLOBALS['phpgw']->link('/index.php','menuaction='.$this->currentapp.'.uilookup.addressbook&column=' . $list['attributes'][$i]['name']);
+
+					$lookup_functions[$m]['name'] = 'lookup_'. $list['attributes'][$i]['name'] .'()';
+					$lookup_functions[$m]['action'] = 'Window1=window.open('."'" . $lookup_link ."'" .',"Search","width=800,height=700,toolbar=no,scrollbars=yes,resizable=yes");';
+					$m++;
+				}
+				if($list['attributes'][$i]['datatype']=='VENDOR')
+				{
+					if($list['attributes'][$i]['value'])
+					{
+						$vendor_data	= $vendor->read_single(array('actor_id'=>$list['attributes'][$i]['value']));
+
+						for ($n=0;$n<count($vendor_data['attributes']);$n++)
+						{
+							if($vendor_data['attributes'][$n]['name'] == 'org_name')
+							{
+								$list['attributes'][$i]['vendor_name']= $vendor_data['attributes'][$n]['value'];
+								$n =count($vendor_data['attributes']);
+							}
+						}
+					}
+
+					$insert_record_list[]	= $list['attributes'][$i]['name'];
+					$lookup_link		= $GLOBALS['phpgw']->link('/index.php','menuaction='.$this->currentapp.'.uilookup.vendor&column=' . $list['attributes'][$i]['name']);
+
+					$lookup_functions[$m]['name'] = 'lookup_'. $list['attributes'][$i]['name'] .'()';
+					$lookup_functions[$m]['action'] = 'Window1=window.open('."'" . $lookup_link ."'" .',"Search","width=800,height=700,toolbar=no,scrollbars=yes,resizable=yes");';
+					$m++;
+				}
+				if($list['attributes'][$i]['datatype']=='R' || $list['attributes'][$i]['datatype']=='CH' || $list['attributes'][$i]['datatype']=='LB')
+				{
+					$list['attributes'][$i]['choice']	= $this->so->read_attrib_choice($list['attributes'][$i]['attrib_id']);
+					$input_type=$input_type_array[$list['attributes'][$i]['datatype']];
+
+					if($list['attributes'][$i]['datatype']=='CH')
+					{
+						$list['attributes'][$i]['value']=unserialize($list['attributes'][$i]['value']);
+						$list['attributes'][$i]['choice'] = $this->bocommon->select_multi_list_2($list['attributes'][$i]['value'],$list['attributes'][$i]['choice'],$input_type);
+
+					}
+					else
+					{
+						for ($j=0;$j<count($list['attributes'][$i]['choice']);$j++)
+						{
+							$list['attributes'][$i]['choice'][$j]['input_type']=$input_type;
+							if($list['attributes'][$i]['choice'][$j]['id']==$list['attributes'][$i]['value'])
+							{
+								$list['attributes'][$i]['choice'][$j]['checked']='checked';
+							}
+						}
+					}
+				}
+
+				$list['attributes'][$i]['datatype_text'] = $this->bocommon->translate_datatype($list['attributes'][$i]['datatype']);
+				$list['attributes'][$i]['counter']	= $i;
+				$list['attributes'][$i]['type_id']	= $data['type_id'];
+			}
+
+			for ($j=0;$j<count($lookup_functions);$j++)
+			{
+				$list['lookup_functions'] .= 'function ' . $lookup_functions[$j]['name'] ."\r\n";
+				$list['lookup_functions'] .= '{'."\r\n";
+				$list['lookup_functions'] .= $lookup_functions[$j]['action'] ."\r\n";
+				$list['lookup_functions'] .= '}'."\r\n";
+			}
+
+			$GLOBALS['phpgw']->session->appsession('insert_record_s_agreement' . !!$detail,$this->currentapp,$insert_record_list);
+
+//html_print_r($list);
+			return $list;
+
+		}
+
+		function convert_attribute_save($values_attribute='')
+		{
+
+			for ($i=0;$i<count($values_attribute);$i++)
+			{
+				if($values_attribute[$i]['datatype']=='CH' && $values_attribute[$i]['value'])
+				{
+					$values_attribute[$i]['value'] = serialize($values_attribute[$i]['value']);
+				}
+				if($values_attribute[$i]['datatype']=='R' && $values_attribute[$i]['value'])
+				{
+					$values_attribute[$i]['value'] = $values_attribute[$i]['value'][0];
+				}
+
+				if($values_attribute[$i]['datatype']=='N' && $values_attribute[$i]['value'])
+				{
+					$values_attribute[$i]['value'] = str_replace(",",".",$values_attribute[$i]['value']);
+				}
+
+				if($values_attribute[$i]['datatype']=='D' && $values_attribute[$i]['value'])
+				{
+					$values_attribute[$i]['value'] = date($this->bocommon->dateformat,$this->bocommon->date_to_timestamp($values_attribute[$i]['value']));
+				}
+			}
+
+			return $values_attribute;
 		}
 
 		function save($values,$values_attribute='',$action='')
@@ -315,9 +450,9 @@
 			$values['end_date']	= $this->bocommon->date_to_timestamp($values['end_date']);
 			$values['termination_date']	= $this->bocommon->date_to_timestamp($values['termination_date']);
 
-			if(is_array($values_attribute))
+			if (is_array($values_attribute))
 			{
-				$values_attribute = $this->custom->convert_attribute_save($values_attribute);
+				$values_attribute = $this->convert_attribute_save($values_attribute);
 			}
 
 			if ($action=='edit')
@@ -331,7 +466,7 @@
 					{
 						for ($i=0;$i<count($values['delete_file']);$i++)
 						{
-							$file = $this->fakebase. '/' . 'service_agreement' . '/' . $values['s_agreement_id'] . '/' . $values['delete_file'][$i];
+							$file = $this->fakebase. SEP . 'service_agreement' . SEP . $values['s_agreement_id'] . SEP . $values['delete_file'][$i];
 
 							if($this->vfs->file_exists(array(
 									'string' => $file,
@@ -347,11 +482,11 @@
 								     )
 								)))
 								{
-									$receipt['error'][]=array('msg'=>lang('failed to delete file') . ' :'. $this->fakebase. '/' . 'service_agreement'. '/' . $values['s_agreement_id'] . '/' .$values['delete_file'][$i]);
+									$receipt['error'][]=array('msg'=>lang('failed to delete file') . ' :'. $this->fakebase. SEP . 'service_agreement'. SEP . $values['s_agreement_id'] . SEP .$values['delete_file'][$i]);
 								}
 								else
 								{
-									$receipt['message'][]=array('msg'=>lang('file deleted') . ' :'. $this->fakebase. '/' . 'service_agreement'. '/' . $values['id'] . '/' . $values['delete_file'][$i]);
+									$receipt['message'][]=array('msg'=>lang('file deleted') . ' :'. $this->fakebase. SEP . 'service_agreement'. SEP . $values['id'] . SEP . $values['delete_file'][$i]);
 								}
 								$this->vfs->override_acl = 0;
 							}
@@ -381,7 +516,7 @@
 
 			if (is_array($values_attribute))
 			{
-				$values_attribute = $this->custom->convert_attribute_save($values_attribute);
+				$values_attribute = $this->convert_attribute_save($values_attribute);
 			}
 
 			if ($values['id'])
@@ -399,34 +534,6 @@
 		}
 
 
-		function import($import_data,$id)
-		{
-			$this->so->role = 'detail';
-			$custom_attributes = $this->so->read_attrib(array('allrows'=>true));
-
-			foreach($custom_attributes as $attrib)
-			{
-				if(array_key_exists($attrib['column_name'],$import_data)
-					&& ($attrib['datatype'] == 'LB' || $attrib['datatype'] == 'R' || $attrib['datatype'] == 'CH')
-				)
-				{
-					$import_data[$attrib['column_name']] = $this->so->attrib_choise2id($attrib['id'],$import_data[$attrib['column_name']]);
-				}
-			}
-
-			$values = array(
-			'extra' 			=> $import_data,
-			's_agreement_id' 	=> $id,
-			'location_code'		=> $import_data['location_code'],
-			'location_name'		=> $import_data['address'],
-			'cost'				=> $import_data['cost']			
-			);
-			unset($values['extra']['location_code']);
-			unset($values['extra']['address']);
-			unset($values['extra']['cost']);
-			return $this->so->add_item($values);
-		}
-
 		function update($values)
 		{
 			$values['date']	= $this->bocommon->date_to_timestamp($values['date']);
@@ -439,24 +546,74 @@
 			$this->so->delete_last_index($s_agreement_id,$id);
 		}
 
+
 		function delete_item($s_agreement_id,$item_id)
 		{
 			$this->so->delete_item($s_agreement_id,$item_id);
 		}
 
-		function delete($s_agreement_id)
+		function delete($s_agreement_id='',$id='',$attrib='')
 		{
-			$this->so->delete($s_agreement_id);
+			if ($attrib)
+			{
+				$this->so->delete_attrib($id);
+			}
+			else
+			{
+				$this->so->delete($s_agreement_id);
+			}
+		}
+
+		function read_attrib($type_id='')
+		{
+			$attrib = $this->so->read_attrib(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
+											'allrows'=>$this->allrows));
+
+			for ($i=0; $i<count($attrib); $i++)
+			{
+				$attrib[$i]['datatype'] = $this->bocommon->translate_datatype($attrib[$i]['datatype']);
+			}
+
+			$this->total_records = $this->so->total_records;
+
+			return $attrib;
+		}
+
+		function read_single_attrib($id)
+		{
+			return $this->so->read_single_attrib($id);
+		}
+
+		function resort_attrib($data)
+		{
+			$this->so->resort_attrib($data);
+		}
+
+		function save_attrib($attrib,$action='')
+		{
+			if ($action=='edit')
+			{
+				if ($attrib['id'] != '')
+				{
+
+					$receipt = $this->so->edit_attrib($attrib);
+				}
+			}
+			else
+			{
+				$receipt = $this->so->add_attrib($attrib);
+			}
+			return $receipt;
 		}
 
 		function column_list($selected='',$allrows='')
 		{
 			if(!$selected)
 			{
-				$selected=$GLOBALS['phpgw_info']['user']['preferences']['property']['s_agreement_columns'];
+				$selected=$GLOBALS['phpgw_info']['user']['preferences'][$this->currentapp]["s_agreement_columns"];
 			}
 
-			$columns = $this->custom->get_attribs('property','.s_agreement', 0, '','','',true);
+			$columns = $this->so->read_attrib(array('allrows'=>$allrows,'column_list'=>True));
 
 			$column_list=$this->bocommon->select_multi_list($selected,$columns);
 
@@ -471,24 +628,24 @@
 		function create_home_dir($receipt='')
 		{
 			if(!$this->vfs->file_exists(array(
-					'string' => $this->fakebase. '/' . 'service_agreement',
+					'string' => $this->fakebase. SEP . 'service_agreement',
 					'relatives' => Array(RELATIVE_NONE)
 				)))
 			{
 				$this->vfs->override_acl = 1;
 
 				if(!$this->vfs->mkdir (array(
-				     'string' => $this->fakebase. '/' . 'service_agreement',
+				     'string' => $this->fakebase. SEP . 'service_agreement',
 				     'relatives' => array(
 				          RELATIVE_NONE
 				     )
 				)))
 				{
-					$receipt['error'][]=array('msg'=>lang('failed to create directory') . ' :'. $this->fakebase. '/' . 'service_agreement');
+					$receipt['error'][]=array('msg'=>lang('failed to create directory') . ' :'. $this->fakebase. SEP . 'service_agreement');
 				}
 				else
 				{
-					$receipt['message'][]=array('msg'=>lang('directory created') . ' :'. $this->fakebase. '/' . 'service_agreement');
+					$receipt['message'][]=array('msg'=>lang('directory created') . ' :'. $this->fakebase. SEP . 'service_agreement');
 				}
 				$this->vfs->override_acl = 0;
 			}
@@ -498,24 +655,25 @@
 
 		function create_document_dir($id='')
 		{
+
 			if(!$this->vfs->file_exists(array(
-					'string' => $this->fakebase. '/' . 'service_agreement' .  '/' . $id,
+					'string' => $this->fakebase. SEP . 'service_agreement' .  SEP . $id,
 					'relatives' => Array(RELATIVE_NONE)
 				)))
 			{
 				$this->vfs->override_acl = 1;
 				if(!$this->vfs->mkdir (array(
-				     'string' => $this->fakebase. '/' . 'service_agreement' .  '/' . $id,
+				     'string' => $this->fakebase. SEP . 'service_agreement' .  SEP . $id,
 				     'relatives' => array(
 				          RELATIVE_NONE
 				     )
 				)))
 				{
-					$receipt['error'][]=array('msg'=>lang('failed to create directory') . ' :'. $this->fakebase. '/'  . 'service_agreement' .  '/' . $id);
+					$receipt['error'][]=array('msg'=>lang('failed to create directory') . ' :'. $this->fakebase. SEP  . 'service_agreement' .  SEP . $id);
 				}
 				else
 				{
-					$receipt['message'][]=array('msg'=>lang('directory created') . ' :'. $this->fakebase. '/' . 'service_agreement' .  '/' . $id);
+					$receipt['message'][]=array('msg'=>lang('directory created') . ' :'. $this->fakebase. SEP . 'service_agreement' .  SEP . $id);
 				}
 				$this->vfs->override_acl = 0;
 			}
@@ -539,5 +697,7 @@
 			$historylog = CreateObject('property.historylog','s_agreement');
 			$historylog->delete_single_record($data['history_id']);
 		}
+
+
 	}
 ?>

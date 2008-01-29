@@ -26,6 +26,7 @@
 	* 
 	* @package phpgwapi
 	* @subpackage database
+	* @abstract
 	*/
 	class phpgwapi_db
 	{
@@ -85,8 +86,6 @@
 		*/
 		var $auto_stripslashes = false;
 		
-		var $resultSet;
-		
 		/**
 		* Constructor
 		* @param string $query query to be executed (optional)
@@ -138,11 +137,6 @@
 		*/
 		private function new_adodb()
 		{
-			$type = $this->Type;
-			if ( $type == 'mysql' )
-			{
-				$type = 'mysqlt';
-			}
 			$this->adodb = newADOConnection($this->Type);
 			$this->connect();
 			 // would be good if one day we just use ADODB_FETCH_ASSOC
@@ -209,7 +203,7 @@
 				$this->Password = $Password;
 			}
 
-			return @$this->adodb->connect($this->Host, $this->User, $this->Password, $this->Database);
+			return $this->adodb->connect($this->Host, $this->User, $this->Password, $this->Database);
 		}
 
 		/**
@@ -507,20 +501,20 @@
 			$insert_value = array();
 			foreach ( $values as $value )
 			{
-				if ( is_numeric($value) )
+				if($value || $value === 0)
 				{
-					if ( !$value )
+					if ( is_numeric($value) )
 					{
-						$insert_value[] = 'NULL';
+						$insert_value[]	= "$value";
 					}
 					else
 					{
-						$insert_value[] = $value;
+						$insert_value[]	= "'$value'";
 					}
 				}
 				else
 				{
-					$insert_value[]	= "'$value'";
+					$insert_value[]	= 'NULL';
 				}
 			}
 			return implode(",", $insert_value);
@@ -715,27 +709,6 @@
 			 *   The last one is used, if you have a field name, but no index.
 			 *   Test:  if (isset($result['meta']['myfield'])) { ...
 			 */
-		}
-
-		/**
-		* Returns an associate array of foreign keys, or false if not supported.
-		*
-		* @param string $table name of table to describe
-		* @param boolean $owner optional, default False. The optional schema or owner can be defined in $owner.
-		* @param boolean $upper optional, default False. If $upper is true, then the table names (array keys) are upper-cased.
-		* @return array Table meta data
-		*/  
-		public function MetaForeignKeys($table = '', $owner=false, $upper=false)
-		{
-			if(!$this->adodb->IsConnected())
-			{
-				$this->connect();
-			}
-			if(!($return =& $this->adodb->MetaForeignKeys($table, $owner, $upper)))
-			{
-				$return = array();
-			}
-			return $return;
 		}
 
 		/**

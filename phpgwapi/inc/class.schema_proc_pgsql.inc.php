@@ -145,12 +145,9 @@
 					}
 					break;
 				case 'numeric':
-					if($iPrecision == -1)
-					{
-						/* Borrowed from phpPgAdmin */
-						$iPrecision = ($iScale >> 16) & 0xffff;
-						$iScale     = ($iScale - 4) & 0xffff;
-					}
+					/* Borrowed from phpPgAdmin */
+					$iPrecision = ($iScale >> 16) & 0xffff;
+					$iScale     = ($iScale - 4) & 0xffff;
 					$sTranslated = "'type' => 'decimal', 'precision' => $iPrecision, 'scale' => $iScale";
 					break;
 				case 'float':
@@ -197,29 +194,26 @@
 
 		function GetIXSQL($sFields)
 		{
-			$this->indexes_sql[str_replace(',','_',$sFields)] = "CREATE INDEX __index_name__ ON __table_name__ USING btree ($sFields)";
+			$this->indexes_sql[$sFields] = "CREATE INDEX __index_name__ ON __table_name__ USING btree ($sFields)";
 			return '';
 		}
 
 			
-		function GetFKSQL($reftable, $sFields)
-		{
-			if(is_array($sFields))
-			{
-				$ret = "FOREIGN KEY (".implode(',',array_keys($sFields)).")\n" .
-					"  REFERENCES $reftable(".implode(',',array_values($sFields)).")";
-				return $ret;
-			}
-			else
-			{
-				return ""; // incorrect FK declaration found
-			}
-		}
+			   function GetFKSQL($sFields)
+			   {
+				 if (ereg("\((.*)\)", $sFields, $regs))
+				 {
+				   $ret = "FOREIGN KEY (".$regs[1].")\n" .
+					 "  REFERENCES ".$sFields;
+				   return $ret;
+				 } else
+				   return ""; // incorrect FK declaration found
+			   }
 			
 		function _GetColumns($oProc, $sTableName, &$sColumns, $sDropColumn = '', $sAlteredColumn = '', $sAlteredColumnType = '')
 		{
-			$sdb = clone($oProc->m_odb);
-			$sdc = clone($oProc->m_odb);
+			$sdb = $oProc->m_odb;
+			$sdc = $oProc->m_odb;
 
 			$sColumns = '';
 			$this->pk = array();
@@ -235,7 +229,7 @@
 			}
 			$query .= ' ORDER BY a.attnum';
 
-			$sdb->query($query, __LINE__, __FILE__);
+			$oProc->m_odb->query($query);
 			while ($oProc->m_odb->next_record())
 			{
 				if ($sColumns != '')
@@ -271,13 +265,13 @@
 					and a.atttypid = t.oid
 					ORDER BY a.attnum";
 			/* attnum field type length lengthvar notnull(Yes/No) */
-			$sdb->query($sql_get_fields, __LINE__, __FILE__);
+			$sdb->query($sql_get_fields);
 			while ($sdb->next_record())
 			{
 				$colnum  = $sdb->f(0);
 				$colname = $sdb->f(1);
 
-				if ($sdb->f(5) == 'f')
+				if ($sdb->f(5) == 'Yes')
 				{
 					$null = "'nullable' => True";
 				}
@@ -317,7 +311,7 @@
 							c.oid = d.adrelid AND
 							d.adnum = $colnum
 					";
-				$sdc->query($sql_get_default, __LINE__, __FILE__);
+				$sdc->query($sql_get_default);
 				$sdc->next_record();
 				if ($sdc->f(0))
 				{
@@ -325,16 +319,10 @@
 					{
 						$default = '';
 						$nullcomma = '';
-						$type = "'type' => 'auto'";
 					}
 					else
 					{
-						$default = "'default' => '" . str_replace(array('::bpchar','::character varying','now()'),array('','','current_timestamp'),$sdc->f(0));
-						// For db-functions - add an apos
-						if(substr($default,-1)!= "'")
-						{
-							$default .= "'"; 
-						}
+						$default = "'default' => '".$sdc->f(0)."'";
 						$nullcomma = ',';
 					}
 				}
@@ -370,7 +358,7 @@
 					AND ta.attnum = i.indkey[ia.attnum-1]
 				ORDER BY
 					index_name, tab_name, column_name";
-			$sdc->query($sql_pri_keys, __LINE__, __FILE__);
+			$sdc->query($sql_pri_keys);
 			while ($sdc->next_record())
 			{
 				//echo '<br> checking: ' . $sdc->f(4);
@@ -383,42 +371,12 @@
 					$this->uc[] = $sdc->f(2);
 				}
 			}
-
-			$ForeignKeys = $sdc->MetaForeignKeys($sTableName);
-
-			foreach($ForeignKeys as $table => $keys)
-			{
-				$keystr = array();
-				foreach ($keys as $keypair)
-				{
-					$keypair = explode('=',$keypair);
-					$keystr[] = "'" . $keypair[0] . "' => '" . $keypair[1] . "'";
-				}
-				$this->fk[] = $table . "' => array(" . implode(', ',$keystr)  . ')';
-			}
-
-			$MetaIndexes = $sdc->adodb->MetaIndexes($sTableName);
-
-			foreach($MetaIndexes as $key => $index)
-			{
-				if(count($index['columns']) > 1)
-				{
-					$this->ix[] = "array('" . implode("', '",$index['columns']) . "')";
-				}
-				else
-				{
-					$this->ix[] = "'" . $index['columns'][0] . "'";	
-				}
-			}
-
 			/* ugly as heck, but is here to chop the trailing comma on the last element (for php3) */
-			if($this->sCol)
-			{
-				$this->sCol[count($this->sCol) - 1] = substr($this->sCol[count($this->sCol) - 1],0,-2) . "\n";
-			}
+			$this->sCol[count($this->sCol) - 1] = substr($this->sCol[count($this->sCol) - 1],0,-2) . "\n";
 
 			return false;
 		}
+
 
 		function GetSequenceForTable($oProc,$table,&$sSequenceName)
 		{
@@ -438,7 +396,7 @@
 		{
 			global $DEBUG;
 			if($DEBUG) { echo '<br>GetSequenceFieldForTable: You rang?'; }
-			$oProc->m_odb->query("SELECT a.attname FROM pg_attribute a, pg_class c, pg_attrdef d WHERE c.relname='$table' AND c.oid=d.adrelid AND d.adsrc LIKE '%seq_$table%' AND a.attrelid=c.oid AND d.adnum=a.attnum", __LINE__, __FILE__);
+			$oProc->m_odb->query("SELECT a.attname FROM pg_attribute a, pg_class c, pg_attrdef d WHERE c.relname='$table' AND c.oid=d.adrelid AND d.adsrc LIKE '%seq_$table%' AND a.attrelid=c.oid AND d.adnum=a.attnum");
 			$oProc->m_odb->next_record();
 			if ($oProc->m_odb->f('attname'))
 			{
@@ -464,14 +422,14 @@
 		{
 			$this->DropSequenceForTable($oProc,$sTableName);
 
-			return $oProc->m_odb->query("DROP TABLE " . $sTableName . " CASCADE", __LINE__, __FILE__) &&
+			return $oProc->m_odb->query("DROP TABLE " . $sTableName . " CASCADE") &&
 				   $this->DropSequenceForTable($oProc, $sTableName);
 		}
 
 		function DropColumn($oProc, &$aTables, $sTableName, $aNewTableDef, $sColumnName, $bCopyData = true)
 		{
 			$query = "ALTER TABLE $sTableName DROP COLUMN $sColumnName CASCADE";
-			$bRet = !!($oProc->m_odb->query($query, __LINE__, __FILE__));
+			$bRet = !!($oProc->m_odb->query($query));
 			return $bRet;
 		}
 
@@ -503,10 +461,10 @@
 				if ($DEBUG) { echo '<br>RenameTable(): Altering column default for: ' . $sField; }
 			}
 
-			$oProc->m_odb->query("ALTER TABLE $sOldTableName RENAME TO $sNewTableName", __LINE__, __FILE__);
+			$oProc->m_odb->query("ALTER TABLE $sOldTableName RENAME TO $sNewTableName");			
 			if ($sSequenceName)
 			{
-				$Ok = !!$oProc->m_odb->query("ALTER TABLE $sNewTableName ALTER $sField SET DEFAULT nextval('seq_" . $sNewTableName . "')", __LINE__, __FILE__);
+				$Ok = !!($oProc->m_odb->query("ALTER TABLE $sNewTableName ALTER $sField SET DEFAULT nextval('seq_" . $sNewTableName . "')"));
 				$this->DropSequenceForTable($oProc,$sOldTableName);
 			}
 			
@@ -535,7 +493,7 @@
 		function RenameColumn($oProc, &$aTables, $sTableName, $sOldColumnName, $sNewColumnName, $bCopyData = true)
 		{
 			$query = "ALTER TABLE $sTableName RENAME COLUMN $sOldColumnName TO $sNewColumnName";
-			return !!($oProc->m_odb->query($query, __LINE__, __FILE__));
+			return !!($oProc->m_odb->query($query));
 		}
 
 		function AlterColumn($oProc, &$aTables, $sTableName, $sColumnName, &$aColumnDef, $bCopyData = true)
@@ -571,13 +529,13 @@
 
 			$sFieldSQL = $this->TranslateType($sType, $iPrecision, $iScale);
 			$query = "ALTER TABLE $sTableName ALTER COLUMN $sColumnName TYPE $sFieldSQL";
-			$Ok = !!($oProc->m_odb->query($query, __LINE__, __FILE__));
+			$Ok = !!($oProc->m_odb->query($query));
 
 			if($bNullable == False || $bNullable == 'False')
 			{
 				$sFieldSQL = ' NOT NULL';
 				$query = "ALTER TABLE $sTableName ALTER COLUMN $sColumnName SET $sFieldSQL";
-				$Ok = !!$oProc->m_odb->query($query, __LINE__, __FILE__);
+				$Ok = !!($oProc->m_odb->query($query));
 			}
 
 			if($sDefault == '0')
@@ -597,7 +555,7 @@
 			if(isset($defaultSQL) && $defaultSQL)
 			{
 				$query = "ALTER TABLE $sTableName ALTER COLUMN $sColumnName SET $defaultSQL";
-				$Ok = !!$oProc->m_odb->query($query, __LINE__, __FILE__);
+				$Ok = !!($oProc->m_odb->query($query));
 			}
 
 			return $Ok;
@@ -605,9 +563,7 @@
 
 		function AddColumn($oProc, &$aTables, $sTableName, $sColumnName, &$aColumnDef)
 		{
-			$default = '';
-			$Ok = '';
-			if (isset($aColumnDef['default']) && $aColumnDef['default'])	// pgsql cant add a colum with a default
+			if (isset($aColumnDef['default']))	// pgsql cant add a colum with a default
 			{
 				$default = $aColumnDef['default'];
 				unset($aColumnDef['default']);
@@ -620,7 +576,7 @@
 			$oProc->_GetFieldSQL($aColumnDef, $sFieldSQL);
 			$query = "ALTER TABLE $sTableName ADD COLUMN $sColumnName $sFieldSQL";
 
-			if (($Ok = !!$oProc->m_odb->query($query, __LINE__, __FILE__)) && isset($default) && $default)
+			if (($Ok = !!($oProc->m_odb->query($query))) && isset($default))
 			{
 				if($default == '0')
 				{
@@ -640,7 +596,7 @@
 
 				$query .= "UPDATE $sTableName SET $sColumnName='$default';\n";
 
-				$Ok = !!$oProc->m_odb->query($query, __LINE__, __FILE__);
+				$Ok = !!($oProc->m_odb->query($query));
 
 				if ($OK && $notnull)
 				{
@@ -676,13 +632,13 @@
 				if ($bCreateSequence && $sSequenceSQL != '')
 				{
 					if ($DEBUG) { echo '<br>Making sequence using: ' . $sSequenceSQL; }
-					$oProc->m_odb->query($sSequenceSQL, __LINE__, __FILE__);
+					$oProc->m_odb->query($sSequenceSQL);
 				}
 
-				$query = "CREATE TABLE $sTableName ($sTableSQL)";
+				$query = "CREATE TABLE $sTableName ($sTableSQL) WITH OIDS";
 				//echo 'sql' .$query . "\n";
 
-				$result = !!$oProc->m_odb->query($query, __LINE__, __FILE__);
+				$result = !!($oProc->m_odb->query($query));
 				if($result==True)
 				{
 					if (isset($this->indexes_sql) && $DEBUG)
@@ -698,7 +654,7 @@
 						{
 							$ix_name = str_replace(',','_',$key).'_'.$sTableName.'_idx';
 							$IndexSQL = str_replace(array('__index_name__','__table_name__'), array($ix_name,$sTableName), $sIndexSQL);
-							$oProc->m_odb->query($IndexSQL, __LINE__, __FILE__);
+							$oProc->m_odb->query($IndexSQL);
 						}
 					}			
 				}

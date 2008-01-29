@@ -40,13 +40,14 @@
 	(
 		'acl_manager',
 		'add_def_pref',
+		'admin',
 		'after_navbar',
 		'config',
 		'deleteaccount',
 		'manual',
+		'sidebox_menu',
 		'view_user'
 	);
-	$setup_info['admin']['hooks']['menu'] = 'admin.menu.get_menu';
 
 	/* Dependencies for this app to work */
 	$setup_info['admin']['depends'][] = array

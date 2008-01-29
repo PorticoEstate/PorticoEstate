@@ -55,13 +55,12 @@
 		function property_uiinvestment()
 		{
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = True;
-			$GLOBALS['phpgw_info']['flags']['menu_selection'] = 'property::invoice::investment';
-
-		//	$this->currentapp		= $GLOBALS['phpgw_info']['flags']['currentapp'];
+			$this->currentapp		= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->account			= $GLOBALS['phpgw_info']['user']['account_id'];
 
 			$this->bo			= CreateObject('property.boinvestment',True);
 			$this->bocommon			= CreateObject('property.bocommon');
+			$this->menu			= CreateObject('property.menu');
 			$this->bolocation		= CreateObject('property.bolocation');
 			$this->acl 			= CreateObject('phpgwapi.acl');
 			$this->acl_location		= '.invoice';
@@ -79,6 +78,7 @@
 			$this->part_of_town_id		= $this->bo->part_of_town_id;
 			$this->allrows			= $this->bo->allrows;
 			$this->admin_invoice		= $this->acl->check('.invoice',16);
+			$this->menu->sub		='invoice';
 		}
 
 		function save_sessiondata()
@@ -101,12 +101,14 @@
 		{
 			if(!$this->acl_read)
 			{
-				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=>1, 'acl_location'=> $this->acl_location));
+				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> $this->currentapp.'.uilocation.stop', 'perm'=>1, 'acl_location'=> $this->acl_location));
 			}
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('investment',
+										'menu',
 										'nextmatchs'));
 
+			$links = $this->menu->links('investment');
 			$preserve	= phpgw::get_var('preserve', 'bool');
 			$values		= phpgw::get_var('values');
 
@@ -162,7 +164,7 @@
 					'index_count'				=> $investment['index_count'],
 					'entity_name'				=> $investment['entity_name'],
 					'this_write_off'			=> number_format($investment['this_write_off'], 0, ',', ''),
-					'link_history'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiinvestment.history', 'entity_id'=> $investment['entity_id'], 'investment_id'=> $investment['investment_id'], 'entity_type'=> $this->cat_id)),
+					'link_history'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uiinvestment.history', 'entity_id'=> $investment['entity_id'], 'investment_id'=> $investment['investment_id'], 'entity_type'=> $this->cat_id)),
 					'lang_history'				=> lang('History'),
 					'lang_history_statustext'		=> lang('View/Edit the history'),
 					'is_admin'				=> $this->admin_invoice
@@ -210,12 +212,12 @@
 			(
 				'lang_add'		=> lang('Add'),
 				'lang_add_statustext'	=> lang('add an investment'),
-				'add_action'		=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiinvestment.add'))
+				'add_action'		=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uiinvestment.add'))
 			);
 
 			$link_data = array
 			(
-				'menuaction'		=> 'property.uiinvestment.index',
+				'menuaction'		=> $this->currentapp.'.uiinvestment.index',
 				'order'			=> $this->order,
 				'sort'			=> $this->sort,
 				'cat_id'		=> $this->cat_id,
@@ -237,17 +239,18 @@
 
 			$msgbox_data = $this->bocommon->msgbox_data($receipt);
 
-			$GLOBALS['phpgw']->js->validate_file('core','check','property');
+			$GLOBALS['phpgw']->js->validate_file('core','check',$this->currentapp);
 
 			$data = array
 			(
 				'msgbox_data'					=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
+				'links'						=> $links,
 				'lang_search'					=> lang('Search'),
 				'lang_search_statustext'			=> lang('Search for investment entries'),
 //				'form_action'					=> $GLOBALS['phpgw']->link('/index.php',$link_data),
-				'form_action'					=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiinvestment.index')),
+				'form_action'					=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uiinvestment.index')),
 				'lang_select_all'				=> lang('Select All'),
-				'img_check'					=> $GLOBALS['phpgw']->common->get_image_path('property').'/check.png',
+				'img_check'					=> $GLOBALS['phpgw']->common->get_image_path($this->currentapp).'/check.png',
 				'allow_allrows'					=> true,
 				'allrows'					=> $this->allrows,
 				'start_record'					=> $this->start,
@@ -277,14 +280,14 @@
 				'sum_value'					=> number_format($sum_value, 0, ',', ''),
 
 				'table_update'					=> $table_update,
-				'update_action'					=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiinvestment.index')),
+				'update_action'					=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uiinvestment.index')),
 				'table_add'					=> $table_add
 			);
 
 			$appname		= lang('investment');
 			$function_msg		= lang('list investment');
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($this->currentapp) . ' - ' . $appname . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('list' => $data));
 		//	$GLOBALS['phpgw']->xslttpl->pp();
 			$this->save_sessiondata();
@@ -319,8 +322,10 @@
 		function history()
 		{
 			$GLOBALS['phpgw']->xslttpl->add_file(array('investment',
+										'menu',
 										'nextmatchs'));
 
+			$links = $this->menu->links();
 			$values		= phpgw::get_var('values');
 			$entity_type	= phpgw::get_var('entity_type');
 			$entity_id	= phpgw::get_var('entity_id', 'int');
@@ -359,7 +364,7 @@
 					'current_index'				=> $investment['current_index'],
 					'index_count'				=> $investment['index_count'],
 					'this_write_off'			=> number_format($investment['this_write_off'], 0, ',', ''),
-					'link_delete'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiinvestment.delete', 'entity_id'=> $entity_id, 'investment_id'=> $investment_id, 'index_count'=> $investment['index_count'], 'entity_type'=> $entity_type)),
+					'link_delete'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uiinvestment.delete', 'entity_id'=> $entity_id, 'investment_id'=> $investment_id, 'index_count'=> $investment['index_count'], 'entity_type'=> $entity_type)),
 					'lang_delete'				=> lang('Delete'),
 					'lang_delete_statustext'		=> lang('Delete last entry'),
 					'is_admin'				=> $this->admin_invoice
@@ -400,12 +405,12 @@
 			(
 				'lang_done'				=> lang('done'),
 				'lang_done_statustext'	=> lang('Back to investment list '),
-				'done_action'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiinvestment.index', 'preserve'=>1))
+				'done_action'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uiinvestment.index', 'preserve'=>1))
 			);
 
 			$link_data = array
 			(
-				'menuaction'		=> 'property.uiinvestment.index',
+				'menuaction'		=> $this->currentapp.'.uiinvestment.index',
 				'order'			=> $this->order,
 				'sort'			=> $this->sort,
 				'cat_id'		=> $this->cat_id,
@@ -438,6 +443,7 @@
 				'lang_investment_id'				=> lang('Investment Id'),
 				'entity_type'					=> lang($entity_type),
 				'lang_entity_type'				=> lang('Entity Type'),
+				'links'						=> $links,
 				'form_action'					=> $GLOBALS['phpgw']->link('/index.php',$link_data),
 				'allow_allrows'					=> true,
 				'allrows'					=> $this->allrows,
@@ -445,21 +451,21 @@
 				'record_limit'					=> $record_limit,
 				'num_records'					=> count($investment_list),
 				'all_records'					=> $this->bo->total_records,
-				'link_url'					=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiinvestment.history', 'entity_id'=> $entity_id, 'investment_id'=> $investment_id, 'entity_type'=> $entity_type)),
+				'link_url'					=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uiinvestment.history', 'entity_id'=> $entity_id, 'investment_id'=> $investment_id, 'entity_type'=> $entity_type)),
 				'img_path'					=> $GLOBALS['phpgw']->common->get_image_path('phpgwapi','default'),
 				'entity_id'					=> $entity_id,
 				'investment_id'					=> $investment_id,
 				'table_header_history'				=> $table_header,
 				'values_history'				=> $content,
 				'table_update'					=> $table_update,
-				'update_action'					=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiinvestment.history', 'entity_id'=> $entity_id, 'investment_id'=> $investment_id, 'entity_type'=> $entity_type)),
+				'update_action'					=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uiinvestment.history', 'entity_id'=> $entity_id, 'investment_id'=> $investment_id, 'entity_type'=> $entity_type)),
 				'table_done'					=> $table_done
 			);
 
 			$appname	= lang('investment');
 			$function_msg	= lang('investment history');
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($this->currentapp) . ' - ' . $appname . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('history' => $data));
 		//	$GLOBALS['phpgw']->xslttpl->pp();
 //			$this->save_sessiondata();
@@ -470,7 +476,7 @@
 		{
 			if(!$this->acl_add && !$this->acl_edit)
 			{
-				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=>2, 'acl_location'=> $this->acl_location));
+				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> $this->currentapp.'.uilocation.stop', 'perm'=>2, 'acl_location'=> $this->acl_location));
 			}
 			$values					= phpgw::get_var('values');
 
@@ -478,8 +484,8 @@
 
 			if (isset($values['save']) && $values['save'])
 			{
-				$insert_record = $GLOBALS['phpgw']->session->appsession('insert_record','property');
-				$insert_record_entity = $GLOBALS['phpgw']->session->appsession('insert_record_entity','property');
+				$insert_record = $GLOBALS['phpgw']->session->appsession('insert_record',$this->currentapp);
+				$insert_record_entity = $GLOBALS['phpgw']->session->appsession('insert_record_entity',$this->currentapp);
 
 				for ($j=0;$j<count($insert_record_entity);$j++)
 				{
@@ -549,7 +555,7 @@
 
 			$link_data = array
 			(
-				'menuaction'	=> 'property.uiinvestment.add'
+				'menuaction'	=> $this->currentapp.'.uiinvestment.add'
 			);
 
 			$msgbox_data = $this->bocommon->msgbox_data($receipt);
@@ -573,7 +579,7 @@
 				'lang_select_location_statustext'	=> lang('select either a location or an entity'),
 
 				'form_action'				=> $GLOBALS['phpgw']->link('/index.php',$link_data),
-				'done_action'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiinvestment.index', 'preserve'=>1)),
+				'done_action'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uiinvestment.index', 'preserve'=>1)),
 
 				'lang_write_off_period'			=> lang('Write off period'),
 				'lang_new'				=> lang('New'),
@@ -606,7 +612,7 @@
 			$appname		= lang('investment');
 			$function_msg		= lang('add investment');
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($this->currentapp) . ' - ' . $appname . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('add' => $data));
 		//	$GLOBALS['phpgw']->xslttpl->pp();
 		}
@@ -622,7 +628,7 @@
 
 			$link_data = array
 			(
-				'menuaction'	=> 'property.uiinvestment.history',
+				'menuaction'	=> $this->currentapp.'.uiinvestment.history',
 				'entity_id'	=> $entity_id,
 				'investment_id'	=> $investment_id,
 				'index_count'	=> $index_count,
@@ -641,7 +647,7 @@
 			$data = array
 			(
 				'done_action'		=> $GLOBALS['phpgw']->link('/index.php',$link_data),
-				'delete_action'		=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiinvestment.delete', 'entity_id'=> $entity_id, 'investment_id'=> $investment_id, 'index_count'=> $index_count, 'entity_type'=> $entity_type)),
+				'delete_action'		=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uiinvestment.delete', 'entity_id'=> $entity_id, 'investment_id'=> $investment_id, 'index_count'=> $index_count, 'entity_type'=> $entity_type)),
 				'lang_confirm_msg'	=> lang('do you really want to delete this entry'),
 				'lang_yes'		=> lang('yes'),
 				'lang_yes_statustext'	=> lang('Delete the entry'),
@@ -652,7 +658,7 @@
 			$appname	= lang('investment');
 			$function_msg	= lang('delete investment history element');
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($this->currentapp) . ' - ' . $appname . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('delete' => $data));
 		//	$GLOBALS['phpgw']->xslttpl->pp();
 		}

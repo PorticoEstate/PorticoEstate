@@ -24,7 +24,7 @@
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/bbb_/ekstern/
 	* @package property
 	* @subpackage agreement
- 	* @version $Id: class.uipricebook.inc.php,v 1.25 2007/01/26 14:53:47 sigurdne Exp $
+ 	* @version $Id: class.uipricebook.inc.php 18358 2007-11-27 04:43:37Z skwashd $
 	*/
 
 	/**
@@ -62,11 +62,12 @@
 		function property_uipricebook()
 		{
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = True;
-		//	$this->currentapp			= $GLOBALS['phpgw_info']['flags']['currentapp'];
+			$this->currentapp			= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->nextmatchs			= CreateObject('phpgwapi.nextmatchs');
 
 			$this->bo				= CreateObject('property.bopricebook',True);
 			$this->bocommon				= CreateObject('property.bocommon');
+			$this->menu				= CreateObject('property.menu');
 			$this->contacts				= CreateObject('property.soactor');
 			$this->contacts->role			= 'vendor';
 
@@ -85,6 +86,8 @@
 			$this->filter				= $this->bo->filter;
 			$this->cat_id				= $this->bo->cat_id;
 			$this->allrows				= $this->bo->allrows;
+
+			$this->menu->sub			='agreement';
 		}
 
 		function save_sessiondata()
@@ -126,14 +129,17 @@
 		{
 			if(!$this->acl_read)
 			{
-				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=>1, 'acl_location'=> $this->acl_location));
+				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> $this->currentapp.'.uilocation.stop', 'perm'=>1, 'acl_location'=> $this->acl_location));
 			}
 
-			$GLOBALS['phpgw']->session->appsession('referer','property','');
+			$GLOBALS['phpgw']->session->appsession('referer',$this->currentapp,'');
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('pricebook',
+										'menu',
 										'nextmatchs',
 										'search_field'));
+
+			$links = $this->menu->links('price_vendor');
 
 			$values			= phpgw::get_var('values');
 
@@ -152,8 +158,8 @@
 				{
 					if($this->acl_manage)
 					{
-						$link_edit			= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uipricebook.edit_activity', 'activity_id'=> $pricebook['activity_id']));
-						$link_prizing			= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uipricebook.prizing', 'activity_id'=> $pricebook['activity_id'], 'agreement_id'=> $pricebook['agreement_id'], 'cat_id'=> $this->cat_id));
+						$link_edit			= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uipricebook.edit_activity', 'activity_id'=> $pricebook['activity_id']));
+						$link_prizing			= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uipricebook.prizing', 'activity_id'=> $pricebook['activity_id'], 'vendor_id'=> $pricebook['vendor_id'], 'cat_id'=> $this->cat_id));
 						$lang_edit_statustext		= lang('edit the pricebook');
 						$lang_prizing_statustext	= lang('view or edit prizing history of this element');
 						$text_edit			= lang('edit');
@@ -167,7 +173,6 @@
 						'num'				=> $pricebook['num'],
 						'branch'			=> $pricebook['branch'],
 						'vendor_id'			=> $pricebook['vendor_id'],
-						'agreement_id'			=> $pricebook['agreement_id'],
 						'm_cost'			=> $pricebook['m_cost'],
 						'w_cost'			=> $pricebook['w_cost'],
 						'total_cost'			=> $pricebook['total_cost'],
@@ -193,7 +198,7 @@
 											'sort'	=> $this->sort,
 											'var'	=> 'num',
 											'order'	=> $this->order,
-											'extra'	=> array('menuaction'	=> 'property.uipricebook.index',
+											'extra'	=> array('menuaction'	=> $this->currentapp.'.uipricebook.index',
 																	'cat_id'	=>$this->cat_id,
 																	'allrows'	=>$this->allrows)
 										)),
@@ -217,7 +222,7 @@
 											'sort'	=> $this->sort,
 											'var'	=> 'total_cost',
 											'order'	=> $this->order,
-											'extra'	=> array('menuaction'	=> 'property.uipricebook.index',
+											'extra'	=> array('menuaction'	=> $this->currentapp.'.uipricebook.index',
 																	'cat_id'	=>$this->cat_id,
 																	'allrows'	=>$this->allrows)
 										))
@@ -243,7 +248,7 @@
 
 			$link_data = array
 			(
-				'menuaction'	=> 'property.uipricebook.index',
+				'menuaction'	=> $this->currentapp.'.uipricebook.index',
 				'sort'		=> $this->sort,
 				'order'		=> $this->order,
 				'cat_id'	=> $this->cat_id,
@@ -264,7 +269,7 @@
 
 			$link_excel = array
 			(
-				'menuaction'	=> 'property.uipricebook.excel',
+				'menuaction'	=> $this->currentapp.'.uipricebook.excel',
 				'sort'		=> $this->sort,
 				'order'		=> $this->order,
 				'cat_id'	=> $this->cat_id,
@@ -274,7 +279,7 @@
 				'start'		=> $this->start
 			);
 
-			$GLOBALS['phpgw']->js->validate_file('core','check','property');
+			$GLOBALS['phpgw']->js->validate_file('core','check',$this->currentapp);
 
 			$data = array
 			(
@@ -283,6 +288,7 @@
 				'lang_excel_help'				=> lang('Download table to MS Excel'),
 
 				'msgbox_data'					=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
+				'links'						=> $links,
 				'allrows'					=> $this->allrows,
 				'allow_allrows'					=> true,
 				'start_record'					=> $this->start,
@@ -290,7 +296,7 @@
 				'num_records'					=> count($pricebook_list),
 				'all_records'					=> $this->bo->total_records,
 				'lang_select_all'				=> lang('Select All'),
-				'img_check'					=> $GLOBALS['phpgw']->common->get_image_path('property').'/check.png',
+				'img_check'					=> $GLOBALS['phpgw']->common->get_image_path($this->currentapp).'/check.png',
 				'link_url'					=> $GLOBALS['phpgw']->link('/index.php',$link_data),
 				'img_path'					=> $GLOBALS['phpgw']->common->get_image_path('phpgwapi','default'),
 				'lang_no_cat'					=> lang('no category'),
@@ -307,12 +313,12 @@
 				'table_header'					=> $table_header,
 				'values'					=> $content,
 				'table_update'					=> $table_update,
-				'update_action'					=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uipricebook.index'))			);
+				'update_action'					=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uipricebook.index'))			);
 
 			$appname	= lang('pricebook');
 			$function_msg	= lang('list pricebook per vendor');
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($this->currentapp) . ' - ' . $appname . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('list' => $data));
 		//	$GLOBALS['phpgw']->xslttpl->pp();
 			$this->save_sessiondata();
@@ -322,16 +328,17 @@
 		{
 			if(!$this->acl_manage)
 			{
-				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=>16, 'acl_location'=> $this->acl_location));
+				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> $this->currentapp.'.uilocation.stop', 'perm'=>16, 'acl_location'=> $this->acl_location));
 			}
 
-			$GLOBALS['phpgw_info']['flags']['menu_selection'] = 'property::agreement::pricebook::group';
-
-			$GLOBALS['phpgw']->session->appsession('referer','property','');
+			$GLOBALS['phpgw']->session->appsession('referer',$this->currentapp,'');
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('pricebook',
+										'menu',
 										'nextmatchs',
 										'search_field'));
+
+			$links = $this->menu->links('agreement','agreement_group');
 
 			$agreement_list = $this->bo->read_agreement_group();
 
@@ -343,8 +350,8 @@
 					'num'				=> $agreement['num'],
 					'status'			=> lang($agreement['status']),
 					'descr'				=> $agreement['descr'],
-					'link_edit'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uipricebook.edit_agreement_group', 'agreement_group_id'=> $agreement['agreement_group_id'])),
-					'link_delete'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uipricebook.delete', 'method'=>'agreement_group', 'agreement_group_id'=> $agreement['agreement_group_id'], 'start'=>$this->start)),
+					'link_edit'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uipricebook.edit_agreement_group', 'agreement_group_id'=> $agreement['agreement_group_id'])),
+					'link_delete'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uipricebook.delete', 'method'=>'agreement_group', 'agreement_group_id'=> $agreement['agreement_group_id'], 'start'=>$this->start)),
 					'lang_edit_statustext'		=> lang('edit the agreement_group'),
 					'lang_delete_statustext'	=> lang('Delete this agreement group'),
 					'text_edit'			=> lang('edit'),
@@ -360,7 +367,7 @@
 											'sort'	=> $this->sort,
 											'var'	=> 'num',
 											'order'	=> $this->order,
-											'extra'	=> array('menuaction'	=> 'property.uipricebook.agreement_group',
+											'extra'	=> array('menuaction'	=> $this->currentapp.'.uipricebook.agreement_group',
 																	'cat_id'	=>$this->cat_id,
 																	'allrows'	=>$this->allrows)
 										)),
@@ -372,7 +379,7 @@
 
 			$link_data = array
 			(
-				'menuaction'	=> 'property.uipricebook.agreement_group',
+				'menuaction'	=> $this->currentapp.'.uipricebook.agreement_group',
 				'sort'		=> $this->sort,
 				'order'		=> $this->order,
 				'cat_id'	=> $this->cat_id,
@@ -384,7 +391,7 @@
 			(
 				'lang_add'		=> lang('add'),
 				'lang_add_statustext'	=> lang('add an activity'),
-				'add_action'		=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uipricebook.edit_agreement_group'))
+				'add_action'		=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uipricebook.edit_agreement_group'))
 			);
 
 			if(!$this->allrows)
@@ -396,10 +403,11 @@
 				$record_limit	= $this->bo->total_records;
 			}
 
-			$GLOBALS['phpgw']->js->validate_file('core','check','property');
+			$GLOBALS['phpgw']->js->validate_file('core','check',$this->currentapp);
 
 			$data = array
 			(
+				'links'						=> $links,
 				'allrows'					=> $this->allrows,
 				'allow_allrows'					=> true,
 				'start_record'					=> $this->start,
@@ -407,7 +415,7 @@
 				'num_records'					=> count($agreement_list),
 				'all_records'					=> $this->bo->total_records,
 				'lang_select_all'				=> lang('Select All'),
-				'img_check'					=> $GLOBALS['phpgw']->common->get_image_path('property').'/check.png',
+				'img_check'					=> $GLOBALS['phpgw']->common->get_image_path($this->currentapp).'/check.png',
 				'link_url'					=> $GLOBALS['phpgw']->link('/index.php',$link_data),
 				'img_path'					=> $GLOBALS['phpgw']->common->get_image_path('phpgwapi','default'),
 				'lang_status_statustext'			=> lang('Select the status the agreement group belongs to. To do not use a category select NO STATUS'),
@@ -424,13 +432,13 @@
 				'table_header_agreement_group'			=> $table_header,
 				'values_agreement_group'			=> $content,
 				'table_add'					=> $table_add,
-				'update_action'					=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uipricebook.agreement_group'))
+				'update_action'					=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uipricebook.agreement_group'))
 				);
 
 			$appname	= lang('pricebook');
 			$function_msg	= lang('list agreement group');
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($this->currentapp) . ' - ' . $appname . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('agreement_group' => $data));
 		//	$GLOBALS['phpgw']->xslttpl->pp();
 			$this->save_sessiondata();
@@ -440,7 +448,7 @@
 		{
 			if(!$this->acl_manage)
 			{
-				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=>16, 'acl_location'=> $this->acl_location));
+				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> $this->currentapp.'.uilocation.stop', 'perm'=>16, 'acl_location'=> $this->acl_location));
 			}
 
 			$agreement_group_id	 	= phpgw::get_var('agreement_group_id', 'int');
@@ -528,7 +536,7 @@
 
 			$link_data = array
 			(
-				'menuaction'		=> 'property.uipricebook.edit_agreement_group',
+				'menuaction'		=> $this->currentapp.'.uipricebook.edit_agreement_group',
 				'agreement_group_id'	=> $agreement_group_id
 			);
 
@@ -538,7 +546,7 @@
 			(
 				'msgbox_data'					=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
 				'form_action'					=> $GLOBALS['phpgw']->link('/index.php',$link_data),
-				'done_action'					=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uipricebook.agreement_group')),
+				'done_action'					=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uipricebook.agreement_group')),
 				'lang_agreement_group_id'			=> lang('Agreement group ID'),
 				'lang_num'					=> lang('Agreement group code'),
 				'lang_status'					=> lang('Status'),
@@ -560,7 +568,7 @@
 
 			$appname	= lang('pricebook');
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($this->currentapp) . ' - ' . $appname . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('edit_agreement_group' => $data));
 		//	$GLOBALS['phpgw']->xslttpl->pp();
 		}
@@ -570,25 +578,27 @@
 		{
 			if(!$this->acl_manage)
 			{
-				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=>16, 'acl_location'=> $this->acl_location));
+				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> $this->currentapp.'.uilocation.stop', 'perm'=>16, 'acl_location'=> $this->acl_location));
 			}
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('pricebook',
+										'menu',
 										'nextmatchs',
 										'search_field'));
 
+			$links = $this->menu->links();
+
 			$cat_id			= phpgw::get_var('cat_id', 'int', 'GET');
-			$activity_id	= phpgw::get_var('activity_id', 'int');
-			$vendor_id	= phpgw::get_var('vendor_id', 'int', 'GET');
-			$agreement_id	= phpgw::get_var('agreement_id', 'int', 'GET');
+			$activity_id		= phpgw::get_var('activity_id', 'int');
+			$vendor_id		= phpgw::get_var('vendor_id', 'int', 'GET');
 			$values			= phpgw::get_var('values');
 
-			$referer	= $GLOBALS['phpgw']->session->appsession('referer','property');
+			$referer	= $GLOBALS['phpgw']->session->appsession('referer',$this->currentapp);
 			if(!$referer)
 			{
 				$referer = $GLOBALS['HTTP_SERVER_VARS']['HTTP_REFERER'] ? $GLOBALS['HTTP_SERVER_VARS']['HTTP_REFERER'] : $GLOBALS['HTTP_REFERER'];
 				$referer = $referer . '&cat_id=' . $cat_id;
-				$GLOBALS['phpgw']->session->appsession('referer','property',$referer);
+				$GLOBALS['phpgw']->session->appsession('referer',$this->currentapp,$referer);
 			}
 
 			if($values['submit_update'])
@@ -628,7 +638,7 @@
 			}
 
 
-			$pricebook_list = $this->bo->read_activity_prize($activity_id,$agreement_id);
+			$pricebook_list = $this->bo->read_activity_prize($activity_id,$vendor_id);
 
 			$dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
 
@@ -639,7 +649,7 @@
 
 					if($pricebook['current_index'])
 					{
-						$link_delete		= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uipricebook.delete', 'method'=>'prize', 'activity_id'=> $activity_id, 'agreement_id'=> $agreement_id, 'index_count'=> $pricebook['index_count']));
+						$link_delete		= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uipricebook.delete', 'method'=>'prize', 'activity_id'=> $activity_id, 'vendor_id'=> $vendor_id, 'index_count'=> $pricebook['index_count']));
 						$value_m_cost		= $pricebook['m_cost'];
 						$value_w_cost		= $pricebook['w_cost'];
 						$value_total_cost	= $pricebook['total_cost'];
@@ -704,9 +714,9 @@
 
 			$link_data = array
 			(
-				'menuaction'	=> 'property.uipricebook.prizing',
+				'menuaction'	=> $this->currentapp.'.uipricebook.prizing',
 				'activity_id'	=> $activity_id,
-				'agreement_id'	=> $agreement_id
+				'vendor_id'	=> $vendor_id
 			);
 
 			if(!$this->allrows)
@@ -745,6 +755,7 @@
 				'done_action'					=> $referer,
 				'lang_done'					=> lang('done'),
 				'lang_done_statustext'				=> lang('Back to the list'),
+				'links'						=> $links,
 				'allrows'					=> $this->allrows,
 				'allow_allrows'					=> true,
 				'start_record'					=> $this->start,
@@ -767,13 +778,13 @@
 				'values_prizing'				=> $content,
 				'table_update'					=> $table_update,
 				'table_first_entry'				=> $table_first_entry,
-				'update_action'					=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uipricebook.prizing', 'activity_id'=> $activity_id, 'vendor_id'=> $vendor_id))
+				'update_action'					=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uipricebook.prizing', 'activity_id'=> $activity_id, 'vendor_id'=> $vendor_id))
 				);
 
 			$appname	= lang('pricebook');
 			$function_msg	= lang('edit pricing');
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($this->currentapp) . ' - ' . $appname . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('prizing' => $data));
 		//	$GLOBALS['phpgw']->xslttpl->pp();
 			$this->save_sessiondata();
@@ -816,14 +827,15 @@
 		{
 			if(!$this->acl_manage)
 			{
-				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=>16, 'acl_location'=> $this->acl_location));
+				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> $this->currentapp.'.uilocation.stop', 'perm'=>16, 'acl_location'=> $this->acl_location));
 			}
 
-			$GLOBALS['phpgw_info']['flags']['menu_selection'] = 'property::agreement::pricebook::activities';
-
 			$GLOBALS['phpgw']->xslttpl->add_file(array('pricebook',
+										'menu',
 										'nextmatchs',
 										'search_field'));
+
+			$links = $this->menu->links('agreement','activity');
 
 			$pricebook_list = $this->bo->read_activities_pr_agreement_group();
 //_debug_array($pricebook_list);
@@ -839,9 +851,9 @@
 					'ns3420'				=> $pricebook['ns3420'],
 					'unit'					=> $pricebook['unit'],
 					'descr'					=> $pricebook['descr'],
-					'link_vendor'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uipricebook.activity_vendor', 'activity_id'=> $pricebook['activity_id'], 'agreement_group'=> $this->cat_id)),
-					'link_edit'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uipricebook.edit_activity', 'activity_id'=> $pricebook['activity_id'], 'agreement_group'=> $this->cat_id)),
-					'link_delete'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uipricebook.delete', 'method'=> 'activity', 'activity_id'=> $pricebook['activity_id'])),
+					'link_vendor'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uipricebook.activity_vendor', 'activity_id'=> $pricebook['activity_id'], 'agreement_group'=> $this->cat_id)),
+					'link_edit'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uipricebook.edit_activity', 'activity_id'=> $pricebook['activity_id'], 'agreement_group'=> $this->cat_id)),
+					'link_delete'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uipricebook.delete', 'method'=> 'activity', 'activity_id'=> $pricebook['activity_id'])),
 					'lang_vendor_statustext'		=> lang('view the vendor(s) for this activity'),
 					'lang_edit_statustext'			=> lang('edit this activity'),
 					'lang_delete_statustext'		=> lang('delete this activity'),
@@ -858,7 +870,7 @@
 											'sort'	=> $this->sort,
 											'var'	=> 'num',
 											'order'	=> $this->order,
-											'extra'	=> array('menuaction'	=> 'property.uipricebook.activity',
+											'extra'	=> array('menuaction'	=> $this->currentapp.'.uipricebook.activity',
 																	'cat_id'	=>$this->cat_id,
 																	'allrows'	=>$this->allrows)
 										)),
@@ -878,12 +890,12 @@
 			(
 				'lang_add'		=> lang('add'),
 				'lang_add_statustext'	=> lang('add an activity'),
-				'add_action'		=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uipricebook.edit_activity', 'agreement_group'=> $this->cat_id))
+				'add_action'		=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uipricebook.edit_activity', 'agreement_group'=> $this->cat_id))
 			);
 
 			$link_data = array
 			(
-				'menuaction'	=> 'property.uipricebook.activity',
+				'menuaction'	=> $this->currentapp.'.uipricebook.activity',
 				'sort'		=> $this->sort,
 				'order'		=> $this->order,
 				'cat_id'	=> $this->cat_id,
@@ -902,7 +914,7 @@
 
 			$link_excel = array
 			(
-				'menuaction'	=> 'property.uipricebook.excel_2',
+				'menuaction'	=> $this->currentapp.'.uipricebook.excel_2',
 				'sort'		=> $this->sort,
 				'order'		=> $this->order,
 				'cat_id'	=> $this->cat_id,
@@ -917,6 +929,7 @@
 				'lang_excel'					=> 'excel',
 				'link_excel'					=> $GLOBALS['phpgw']->link('/index.php',$link_excel),
 				'lang_excel_help'				=> lang('Download table to MS Excel'),
+				'links'						=> $links,
 				'allrows'					=> $this->allrows,
 				'allow_allrows'					=> true,
 				'start_record'					=> $this->start,
@@ -945,7 +958,7 @@
 			$appname	= lang('pricebook');
 			$function_msg	= lang('list activities per agreement_group');
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($this->currentapp) . ' - ' . $appname . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('list_activities' => $data));
 		//	$GLOBALS['phpgw']->xslttpl->pp();
 			$this->save_sessiondata();
@@ -955,14 +968,17 @@
 		{
 			if(!$this->acl_manage)
 			{
-				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=>16, 'acl_location'=> $this->acl_location));
+				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> $this->currentapp.'.uilocation.stop', 'perm'=>16, 'acl_location'=> $this->acl_location));
 			}
 
-			$GLOBALS['phpgw']->session->appsession('referer','property','');
+			$GLOBALS['phpgw']->session->appsession('referer',$this->currentapp,'');
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('pricebook',
+										'menu',
 										'nextmatchs',
 										'search_field'));
+
+			$links = $this->menu->links('agreement','activity');
 
 			$activity_id		= phpgw::get_var('activity_id', 'int');
 			$values				= phpgw::get_var('values');
@@ -982,7 +998,7 @@
 
 			$pricebook_list = $this->bo->read_vendor_pr_activity($activity_id);
 
-			foreach ($pricebook_list as $pricebook)
+			while (is_array($pricebook_list) && list(,$pricebook) = each($pricebook_list))
 			{
 				$content[] = array
 				(
@@ -990,8 +1006,8 @@
 					'num'					=> $pricebook['num'],
 					'branch'				=> $pricebook['branch'],
 					'vendor_name'				=> $pricebook['vendor_name'],
-					'link_prizing'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiagreement.edit_item', 'id'=> $pricebook['activity_id'], 'agreement_id'=> $pricebook['agreement_id'], 'from' =>'uipricebook.activity_vendor')),
-					'link_delete'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uipricebook.delete', 'method'=>'activity_vendor','activity_id'=> $pricebook['activity_id'], 'agreement_id'=> $pricebook['agreement_id'])),
+					'link_prizing'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uipricebook.prizing', 'activity_id'=> $pricebook['activity_id'], 'vendor_id'=> $pricebook['vendor_id'])),
+					'link_delete'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uipricebook.delete', 'method'=>'activity_vendor','activity_id'=> $pricebook['activity_id'], '&vendor_id'=> $pricebook['vendor_id'])),
 					'lang_prizing_statustext'		=> lang('view edit the prize for this activity'),
 					'lang_delete_statustext'		=> lang('delete this vendor from this activity'),
 					'text_prizing'				=> lang('Prizing'),
@@ -1006,7 +1022,7 @@
 											'sort'	=> $this->sort,
 											'var'	=> 'org_name',
 											'order'	=> $this->order,
-											'extra'	=> array('menuaction'	=> 'property.uipricebook.activity_vendor',
+											'extra'	=> array('menuaction'	=> $this->currentapp.'.uipricebook.activity_vendor',
 																	'cat_id'	=>$this->cat_id,
 																	'activity_id'	=>$activity_id,
 																	'allrows'	=>$this->allrows)
@@ -1020,7 +1036,7 @@
 
 			$link_data = array
 			(
-				'menuaction'	=> 'property.uipricebook.activity_vendor',
+				'menuaction'	=> $this->currentapp.'.uipricebook.activity_vendor',
 				'sort'		=> $this->sort,
 				'order'		=> $this->order,
 				'cat_id'	=> $this->cat_id,
@@ -1050,6 +1066,7 @@
 				'msgbox_data'					=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
 				'activity_id'					=> $activity_id,
 				'vendor_data'					=> $vendor_data,
+				'links'						=> $links,
 				'allrows'					=> $this->allrows,
 				'allow_allrows'					=> true,
 				'start_record'					=> $this->start,
@@ -1070,7 +1087,7 @@
 				'lang_done_statustext'				=> lang('Back to the list'),
 				'lang_save_statustext'				=> lang('Add this vendor to this activity'),
 				'form_action'					=> $GLOBALS['phpgw']->link('/index.php',$link_data),
-				'done_action'					=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uipricebook.activity', 'cat_id'=> $values['cat_id'])),
+				'done_action'					=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uipricebook.activity', 'cat_id'=> $values['cat_id'])),
 				'lang_save'					=> lang('save'),
 				'lang_done'					=> lang('done'),
 
@@ -1079,7 +1096,7 @@
 			$appname	= lang('pricebook');
 			$function_msg	= lang('list vendors per activity');
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($this->currentapp) . ' - ' . $appname . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('list_activity_vendor' => $data));
 		//	$GLOBALS['phpgw']->xslttpl->pp();
 			$this->save_sessiondata();
@@ -1089,7 +1106,7 @@
 		{
 			if(!$this->acl_manage)
 			{
-				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=>16, 'acl_location'=> $this->acl_location));
+				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> $this->currentapp.'.uilocation.stop', 'perm'=>16, 'acl_location'=> $this->acl_location));
 			}
 
 			$activity_id	 	= phpgw::get_var('activity_id', 'int');
@@ -1179,7 +1196,7 @@
 
 			$link_data = array
 			(
-				'menuaction'		=> 'property.uipricebook.edit_activity',
+				'menuaction'		=> $this->currentapp.'.uipricebook.edit_activity',
 				'activity_id'		=> $activity_id,
 				'agreement_group'	=> $agreement_group
 			);
@@ -1190,7 +1207,7 @@
 			(
 				'msgbox_data'					=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
 				'form_action'					=> $GLOBALS['phpgw']->link('/index.php',$link_data),
-				'done_action'					=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uipricebook.activity', 'cat_id'=> $values['cat_id'])),
+				'done_action'					=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uipricebook.activity', 'cat_id'=> $values['cat_id'])),
 				'lang_activity_id'				=> lang('Activity ID'),
 				'lang_num'					=> lang('Activity code'),
 				'lang_category'					=> lang('Agreement group'),
@@ -1233,7 +1250,7 @@
 				'lang_no_branch'				=> lang('Select branch'),
 				'lang_branch_statustext'			=> lang('Select the branch for this activity.'),
 
-				'ns3420_link'					=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uilookup.ns3420')),
+				'ns3420_link'					=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uilookup.ns3420')),
 				'lang_ns3420'					=> lang('NS3420'),
 				'value_ns3420_id'				=> $values['ns3420_id'],
 				'lang_ns3420_statustext'			=> lang('Select a standard-code from the norwegian standard'),
@@ -1241,7 +1258,7 @@
 
 			$appname = lang('pricebook');
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($this->currentapp) . ' - ' . $appname . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('edit_activity' => $data));
 		//	$GLOBALS['phpgw']->xslttpl->pp();
 		}
@@ -1250,12 +1267,12 @@
 		{
 			if(!$this->acl_manage)
 			{
-				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=>16, 'acl_location'=> $this->acl_location));
+				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> $this->currentapp.'.uilocation.stop', 'perm'=>16, 'acl_location'=> $this->acl_location));
 			}
 
 			$method			= phpgw::get_var('method');
 			$activity_id	= phpgw::get_var('activity_id', 'int');
-			$agreement_id		= phpgw::get_var('agreement_id', 'int', 'GET');
+			$vendor_id		= phpgw::get_var('vendor_id', 'int', 'GET');
 			$index_count	= phpgw::get_var('index_count', 'int', 'GET');
 			$agreement_group_id	= phpgw::get_var('agreement_group_id', 'int');
 			$confirm		= phpgw::get_var('confirm', 'bool', 'POST');
@@ -1264,16 +1281,16 @@
 			{
 				$link_data = array
 				(
-					'menuaction' => 'property.uipricebook.activity_vendor',
+					'menuaction' => $this->currentapp.'.uipricebook.activity_vendor',
 					'activity_id' => $activity_id
 				);
 
 				$function_msg	=lang('delete vendor activity');
-				$delete_action	= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uipricebook.delete', 'method'=> $method, 'activity_id'=> $activity_id, 'agreement_id'=> $agreement_id));
+				$delete_action	= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uipricebook.delete', 'method'=> $method, 'activity_id'=> $activity_id, 'vendor_id'=> $vendor_id));
 
 				if (phpgw::get_var('confirm', 'bool', 'POST'))
 				{
-					$this->bo->delete_activity_vendor($activity_id,$agreement_id);
+					$this->bo->delete_activity_vendor($activity_id,$vendor_id);
 					$GLOBALS['phpgw']->redirect_link('/index.php',$link_data);
 				}
 			}
@@ -1281,11 +1298,11 @@
 			{
 				$link_data = array
 				(
-					'menuaction' => 'property.uipricebook.activity'
+					'menuaction' => $this->currentapp.'.uipricebook.activity'
 				);
 
 				$function_msg	=lang('delete activity');
-				$delete_action	= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uipricebook.delete', 'method'=> $method, 'activity_id'=> $activity_id));
+				$delete_action	= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uipricebook.delete', 'method'=> $method, 'activity_id'=> $activity_id));
 
 				if (phpgw::get_var('confirm', 'bool', 'POST'))
 				{
@@ -1297,17 +1314,17 @@
 			{
 				$link_data = array
 				(
-					'menuaction'	=> 'property.uipricebook.prizing',
+					'menuaction'	=> $this->currentapp.'.uipricebook.prizing',
 					'activity_id'	=> $activity_id,
-					'agreement_id'	=> $agreement_id
+					'vendor_id'	=> $vendor_id
 				);
 
 				$function_msg	=lang('delete prize-index');
-				$delete_action	= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uipricebook.delete', 'method'=> $method, 'activity_id'=> $activity_id, 'agreement_id'=> $agreement_id, 'index_count'=> $index_count));
+				$delete_action	= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uipricebook.delete', 'method'=> $method, 'activity_id'=> $activity_id, 'vendor_id'=> $vendor_id, 'index_count'=> $index_count));
 
 				if (phpgw::get_var('confirm', 'bool', 'POST'))
 				{
-					$this->bo->delete_prize_index($activity_id,$agreement_id,$index_count);
+					$this->bo->delete_prize_index($activity_id,$vendor_id,$index_count);
 					$GLOBALS['phpgw']->redirect_link('/index.php',$link_data);
 				}
 			}
@@ -1315,12 +1332,12 @@
 			{
 				$link_data = array
 				(
-					'menuaction'	=> 'property.uipricebook.agreement_group',
+					'menuaction'	=> $this->currentapp.'.uipricebook.agreement_group',
 					'start'		=> $this->start
 				);
 
 				$function_msg	=lang('Delete agreement group and all the activities associated with it!');
-				$delete_action	= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uipricebook.delete', 'method'=> $method, 'agreement_group_id'=> $agreement_group_id, 'start'=> $this->start));
+				$delete_action	= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uipricebook.delete', 'method'=> $method, 'agreement_group_id'=> $agreement_group_id, 'start'=> $this->start));
 
 				if (phpgw::get_var('confirm', 'bool', 'POST'))
 				{
@@ -1344,7 +1361,7 @@
 
 			$appname						= lang('pricebook');
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($this->currentapp) . ' - ' . $appname . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('delete' => $data));
 		//	$GLOBALS['phpgw']->xslttpl->pp();
 		}

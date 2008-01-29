@@ -267,4 +267,3 @@ writes a 'etemplates.inc.php' file (for application in name) in the setup-dir of
 xml-file to import	etemplate	sv	xml-fil att importera
 xslt template	etemplate	sv	XSLT-mall
 year	etemplate	sv	År
-

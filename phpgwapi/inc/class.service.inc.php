@@ -15,8 +15,9 @@
 	* 
 	* @package phpgwapi
 	* @subpackage application
+	* @abstract
 	*/
-	abstract class service
+	class service
 	{
 		var $provider = '';
 		var $svc      = '';

@@ -18,7 +18,7 @@
 	*  
 	* @package todo
 	*/
-	class todo_bopreferences
+	class bopreferences
 	{
 		var $public_functions = Array(
 			'preferences'  => True
@@ -27,7 +27,7 @@
 		var $prefs;
 		var $debug = False;
 
-		function __construct()
+		function bopreferences()
 		{
 			$GLOBALS['phpgw']->nextmatchs = CreateObject('phpgwapi.nextmatchs');
 			$this->prefs['todo']    = $GLOBALS['phpgw_info']['user']['preferences']['todo'];

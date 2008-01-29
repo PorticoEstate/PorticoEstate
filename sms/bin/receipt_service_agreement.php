@@ -8,7 +8,7 @@
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/bbb_/ekstern/
 	* @package sms
 	* @subpackage sms
- 	* @version $Id: receipt_service_agreement.php,v 1.3 2007/09/25 08:17:17 sigurdne Exp $
+ 	* @version $Id: receipt_service_agreement.php 18284 2007-09-25 08:17:17Z sigurdne $
 	*/
 
 	/**
@@ -16,10 +16,9 @@
 	 * @package sms
 	 */
 
-	$param 		= explode(' ' , $command_param);
-	$receipt ='';
+	$param 		= explode(' ' , $command_param);	
 
-	include(PHPGW_SERVER_ROOT . '/sms/bin/config_' . strtoupper(basename($command_code)));
+	include(PHPGW_SERVER_ROOT . SEP . 'sms' . SEP . 'bin'  . SEP .  'config_' . strtoupper(basename($command_code)));
 	if(isset($filter) && $filter)
 	{
 		$sql = "SELECT id from fm_s_agreement_detail $filter";
@@ -28,12 +27,12 @@
 		if($this->db->next_record() && $agreement_id && $attrib_id)
 		{
 			$id = $this->db->f('id');
-			$value = $receipt . $sms_datetime . ' (' . $sms_sender . ')';
+			$value = $sms_datetime . ' (' . $sms_sender . ')';
 
 			$this->db->query("UPDATE fm_s_agreement_detail set $target_field = '$value' WHERE agreement_id = $agreement_id AND  id=$id" ,__LINE__,__FILE__);
 			$historylog	= CreateObject('property.historylog','s_agreement');
 			$historylog->account = 6;
-			$historylog->add('SO',$agreement_id ,$receipt . $sms_sender,False, $attrib_id,strtotime($sms_datetime),$id);
+			$historylog->add('SO',$agreement_id ,$sms_sender,False, $attrib_id,strtotime($sms_datetime),$id);
 			$command_output = 'success';
 			$this->account = 6;
 			$this->websend2pv('Admin',$sms_sender,'Takk for det! - Melding er mottatt','text','0');

@@ -47,4 +47,3 @@ visible	news_admin	sv	Synlig
 webpage news admin	news_admin	sv	Webside nyhetsadmin
 write	news_admin	sv	Skriv
 write permissions	news_admin	sv	Skrivrättigheter
-

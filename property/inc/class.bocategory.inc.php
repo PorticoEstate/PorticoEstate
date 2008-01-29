@@ -71,7 +71,7 @@
 
 		function property_bocategory($session=False)
 		{
-		//	$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
+			$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->so 		= CreateObject('property.socategory');
 			$this->socommon = CreateObject('property.socommon');
 

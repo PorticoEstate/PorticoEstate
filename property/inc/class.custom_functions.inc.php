@@ -49,8 +49,8 @@
 
 			$GLOBALS['phpgw_info']['flags']['currentapp']	=	'property';
 
-		//	$this->currentapp		= $GLOBALS['phpgw_info']['flags']['currentapp'];
-			$this->config		= CreateObject('phpgwapi.config','property');
+			$this->currentapp		= $GLOBALS['phpgw_info']['flags']['currentapp'];
+			$this->config		= CreateObject('phpgwapi.config',$this->currentapp);
 
 		}
 

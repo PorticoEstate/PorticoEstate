@@ -11,6 +11,8 @@
  	* @version $Id: hook_settings.inc.php 16382 2006-02-06 13:29:16Z sigurdne $
 	*/
 
+	$this->currentapp			= $GLOBALS['phpgw_info']['flags']['currentapp'];
+
 	$yes_and_no = array(
 		'True' => 'Yes',
 		''     => 'No'

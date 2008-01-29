@@ -19,13 +19,24 @@
 			<xsl:when test="edit_attrib">
 				<xsl:apply-templates select="edit_attrib"/>
 			</xsl:when>
+			<xsl:when test="import">
+				<xsl:apply-templates select="import"/>
+			</xsl:when>
 			<xsl:otherwise>
 				<xsl:apply-templates select="list"/>
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:template>
 
+	<xsl:template match="import">
+		<table width="100%" cellpadding="2" cellspacing="2" align="center">
+						<xsl:call-template name="table_header"/>
+						<xsl:call-template name="values"/>
+		</table>
+	</xsl:template>
+
 	<xsl:template match="list">
+		<xsl:call-template name="menu"/>
 		<table width="100%" cellpadding="2" cellspacing="2" align="center">
 			<xsl:choose>
 				<xsl:when test="msgbox_data != ''">
@@ -498,7 +509,7 @@
 										<xsl:value-of select="lang_import_detail"/>
 									</td>
 									<td>
-										<input type="file" name="importfile" size="40" onMouseout="window.status='';return true;">
+										<input type="file" name="import_detail" size="40" onMouseout="window.status='';return true;">
 											<xsl:attribute name="onMouseover">
 												<xsl:text>window.status='</xsl:text>
 												<xsl:value-of select="lang_detail_import_statustext"/>

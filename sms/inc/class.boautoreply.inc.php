@@ -37,7 +37,7 @@
 
 		function sms_boautoreply($session=False)
 		{
-		//	$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
+			$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->so 		= CreateObject('sms.soautoreply');
 			$this->bocommon 	= CreateObject('sms.bocommon');
 

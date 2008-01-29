@@ -5,8 +5,8 @@
 
 	$oProc->query("select config_value FROM phpgw_config WHERE config_name='webserver_url'");
 	$oProc->next_record();
-	$siteurl = $oProc->f('config_value') . '/sitemgr/sitemgr-site/';
-	$sitedir = PHPGW_INCLUDE_ROOT . '/sitemgr/sitemgr-site';
+	$siteurl = $oProc->f('config_value') . SEP . 'sitemgr' . SEP . 'sitemgr-site' . SEP;
+	$sitedir = PHPGW_INCLUDE_ROOT . SEP . 'sitemgr' . SEP . 'sitemgr-site';
 	$oProc->query("INSERT INTO phpgw_sitemgr_sites (site_id,site_name,site_url,site_dir,themesel,site_languages,home_page_id,anonymous_user,anonymous_passwd) VALUES ($site_id,'Default Website','$siteurl','$sitedir','phpgroupware','en',0,'anonymous','anonymous')");
 
 	foreach (array('html','index','toc') as $module)

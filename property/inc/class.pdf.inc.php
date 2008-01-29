@@ -30,7 +30,7 @@
 	{
 		function print_pdf($document = '',$document_name = 'document')
 		{
-		//	$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
+			$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			
 			$browser = CreateObject('phpgwapi.browser');
 
@@ -42,7 +42,8 @@
 			}
 			else
 			{
- 				$dir = realpath(PHPGW_APP_INC  . "/../pdf_files");
+ 				$dir = PHPGW_APP_INC  . '/..';
+ 				$dir = $dir . SEP . 'pdf_files';
   
  				//save the file
  				if (!file_exists($dir))
@@ -50,7 +51,7 @@
  					die('Directory for temporary pdf-files is missing - pleace notify the Administrator');
  				}
 
- 				$fname = tempnam("{$dir}/PDF_") . '.pdf';
+ 				$fname = tempnam($dir.SEP,'PDF_').'.pdf';
  
  				$fp = fopen($fname,'w');
 				fwrite($fp,$document);
@@ -61,7 +62,7 @@
  					die('Directory for temporary pdf-files is not writeable to the webserver - pleace notify the Administrator');
  				}
 
-  				$fname = 'property' . '/pdf_files/'. basename($fname);
+  				$fname = $this->currentapp . '/pdf_files/'. basename($fname);
  				echo '<html>
  				<head>
  				<SCRIPT LANGUAGE="JavaScript"><!-- 

@@ -399,6 +399,7 @@
 							
 							if ($lang != $GLOBALS['phpgw_info']['user']['preferences']['common']['lang'])
 							{
+								unset($GLOBALS['lang']);
 								$GLOBALS['phpgw']->translation->add_app('common');
 							}
 						}

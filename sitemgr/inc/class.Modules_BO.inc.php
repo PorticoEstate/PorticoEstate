@@ -1,6 +1,6 @@
 <?php
 
-require_once(PHPGW_INCLUDE_ROOT '/sitemgr/inc/class.module.inc.php');
+require_once(PHPGW_INCLUDE_ROOT . SEP . 'sitemgr' . SEP . 'inc' . SEP . 'class.module.inc.php');
 
 	class Modules_BO
 	{

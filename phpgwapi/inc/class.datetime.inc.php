@@ -125,11 +125,6 @@
 			'Su'
 		);
 
-		/**
-		* Get the current GMT time as a unixtime stamp
-		*
-		* @return int unixtime stamp
-		*/
 		public static function gmtnow()
 		{
 			static $offset = null;
@@ -148,32 +143,17 @@
 			return time() + $offset;
 		}
 
-		/**
-		* Gets the current user's UTC offset in seconds
-		*
-		* @return int offset in seconds
-		*/
 		public static function user_timezone()
 		{
 				return isset($GLOBALS['phpgw_info']['user']['preferences']['common']['tz_offset']) 
 					? (int) $GLOBALS['phpgw_info']['user']['preferences']['common']['tz_offset'] * self::SECONDS_IN_HOUR : 0;
 		}
 
-		/**
-		* Get the current user's localtime as a unix timestmap
-		*
-		* @return int unix timestmap
-		*/
 		public static function user_localtime()
 		{
 			return time() + self::user_timezone();
 		}
 		
-		/**
-		* Get the current server UTC offset using an NTP server
-		*
-		* @return int offset in hours
-		*/
 		public static function getntpoffset()
 		{
 			$error_occured = False;
@@ -207,7 +187,7 @@
 				{
 					$date = explode('-',$array[1]);
 					$time = explode(':',$array[2]);
-					$gmtnow = mktime((int) $time[0], (int) $time[1], (int) $time[2], (int) $date[1], (int) $date[2], (int) $date[0] + 2000);
+					$gmtnow = mktime(intval($time[0]),intval($time[1]),intval($time[2]),intval($date[1]),intval($date[2]),intval($date[0]) + 2000);
 					print_debug('Temporary RFC epoch',$gmtnow,'api');
 					print_debug('GMT',date('Ymd H:i:s',$gmtnow),'api');
 				}
@@ -227,11 +207,6 @@
 			}
 		}
 
-		/**
-		* Get the current server UTC offset using a NIST's time information webpage
-		*
-		* @return int offset in hours
-		*/
 		public static function gethttpoffset()
 		{
 			$error_occured = false;
@@ -268,11 +243,6 @@
 			return (int) ($server_time - $gmtnow) / self::SECONDS_IN_HOUR;
 		}
 
-		/**
-		* Get the current server UTC offset using a guess
-		*
-		* @return int offset in hours
-		*/
 		public static function getbestguess()
 		{
 			print_debug('datetime::datetime::debug: Inside getting from local server','api');
@@ -357,9 +327,9 @@
 
 			if ( substr($dta[5],0,3) != 'GMT' )
 			{
-				$tzoffset = substr($dta[5], 0, 1);
-				$tzhours = (int) substr($dta[5], 1, 2);
-				$tzmins = (int) substr($dta[5], 3, 2);
+				$tzoffset = substr($dta[5],0,1);
+				$tzhours = intval(substr($dta[5],1,2));
+				$tzmins = intval(substr($dta[5],3,2));
 				switch ($tzoffset)
 				{
 					case '-':
@@ -375,15 +345,7 @@
 			return mktime($ta[0],$ta[1],$ta[2],$month[$dta[2]],$dta[1],$dta[3]);
 		}
 
-		/**
-		* Get the first day of the current week
-		*
-		* @param int $year the year to check
-		* @param int $month the month to check
-		* @param int $day the day to check
-		* @return int starting weekday
-		*/
-		function get_weekday_start($year, $month, $day)
+		function get_weekday_start($year,$month,$day)
 		{
 			$weekday = self::day_of_week($year, $month, $day);
 			switch($GLOBALS['phpgw_info']['user']['preferences']['calendar']['weekdaystarts'])
@@ -552,7 +514,7 @@
 		*/
 		function days_in_month($month, $year)
 		{
-			return cal_days_in_month(CAL_GREGORIAN, (int) $month, (int) $year);
+			return date('t', mktime(13, 0, 0, (int)$month, 1, (int)$year) );
 		}
 
 		/**
@@ -636,18 +598,6 @@
 			return (mktime(0, 0, 0, $m2, $d2, $y2, 0) - mktime(13, 0, 0, $m1, $d1, $y1, 0) ) / self::SECONDS_IN_DAY;
 		}
 
-		/**
-		* Compare 2 dates
-		*
-		* @internal see http://php.net/strcmp
-		* @param int $a_year the year of the first date
-		* @param int $a_month the month of the first date
-		* @param int $a_day the day of the first date
-		* @param int $b_year the year of the second date
-		* @param int $b_month the month of the second date
-		* @param int $b_day the day of the second date
-		* @return int comparsion result - same as php's native strcmp()
-		*/ 
 		public static function date_compare($a_year, $a_month, $a_day, $b_year, $b_month, $b_day)
 		{
 			$a_date = mktime(13, 0, 0, (int)$a_month, (int)$a_day, (int)$a_year);
@@ -663,18 +613,6 @@
 			return -1;
 		}
 
-		/**
-		* Compare 2 dates
-		*
-		* @internal see http://php.net/strcmp
-		* @param int $a_hour the hour of the first time
-		* @param int $a_minute the minutes of the first time
-		* @param int $a_second the seconds of the first time
-		* @param int $b_hour the hour of the second time
-		* @param int $b_minute the minutes of the second time
-		* @param int $b_second the seconds of the second time
-		* @return int comparsion result - same as php's native strcmp()
-		*/
 		public static function time_compare($a_hour, $a_minute, $a_second, $b_hour, $b_minute, $b_second)
 		{
 			// I use the 1970/1/2 to compare the times, as the 1. can get via TZ-offest still 
@@ -692,52 +630,29 @@
 			return -1;
 		}
 
-		/**
-		* Convert a local date and time to UTC
-		*
-		* @param int $hour the hour to convert
-		* @param int $minute the minute to convert
-		* @param int $second the second to convert
-		* @param int $month the month to convert
-		* @param int $day the day to convert
-		* @oaram int $year the year to convert
-		* @return int the localtime as a UTC unix timestamp
-		*/
 		public static function makegmttime($hour,$minute,$second,$month,$day,$year)
 		{
 			return self::gmtdate(mktime($hour, $minute, $second, $month, $day, $year));
 		}
 
-		/**
-		* Convert a unix timestamp to an array of date information
-		*
-		* @param int $localtime the current user's local time as a unix timestamp
-		* @return array date information - keys 'raw', 'day', 'month', 'year', 'full', 'dow', 'dm' & 'bd'
-		*/
 		public static function localdates($localtime)
 		{
 			$date = Array('raw', 'day', 'month', 'year', 'full', 'dow', 'dm', 'bd');
 			$date['raw'] = $localtime;
-			$date['year'] = (int) $GLOBALS['phpgw']->common->show_date($date['raw'],'Y');
-			$date['month'] = (int) $GLOBALS['phpgw']->common->show_date($date['raw'],'m');
-			$date['day'] = (int) $GLOBALS['phpgw']->common->show_date($date['raw'],'d');
-			$date['full'] = (int) $GLOBALS['phpgw']->common->show_date($date['raw'],'Ymd');
+			$date['year'] = intval($GLOBALS['phpgw']->common->show_date($date['raw'],'Y'));
+			$date['month'] = intval($GLOBALS['phpgw']->common->show_date($date['raw'],'m'));
+			$date['day'] = intval($GLOBALS['phpgw']->common->show_date($date['raw'],'d'));
+			$date['full'] = intval($GLOBALS['phpgw']->common->show_date($date['raw'],'Ymd'));
 			$date['bd'] = mktime(13, 0, 0, $date['month'], $date['day'], $date['year']);
-			$date['dm'] = (int) $GLOBALS['phpgw']->common->show_date($date['raw'],'dm');
+			$date['dm'] = intval($GLOBALS['phpgw']->common->show_date($date['raw'],'dm'));
 			$date['dow'] = self::day_of_week($date['year'],$date['month'],$date['day']);
-			$date['hour'] = (int) $GLOBALS['phpgw']->common->show_date($date['raw'],'H');
-			$date['minute'] = (int) $GLOBALS['phpgw']->common->show_date($date['raw'],'i');
-			$date['second'] = (int) $GLOBALS['phpgw']->common->show_date($date['raw'],'s');
+			$date['hour'] = intval($GLOBALS['phpgw']->common->show_date($date['raw'],'H'));
+			$date['minute'] = intval($GLOBALS['phpgw']->common->show_date($date['raw'],'i'));
+			$date['second'] = intval($GLOBALS['phpgw']->common->show_date($date['raw'],'s'));
 		
 			return $date;
 		}
 
-		/**
-		* Convert user's current local time to a UTC unix timestamp
-		*
-		* @param int $locatime the user's local time as a unix timestamp
-		* @return int UTC unix timestamp
-		*/
 		public static function gmtdate($localtime)
 		{
 			return self::localdates($localtime - self::user_timezone());
@@ -773,35 +688,41 @@
 
 				if($key == 'M')
 				{
-					$map_date['m'] = self::convert_m_to_int($val);
+					for($j=1; $j <=12; $j++)
+					{
+						if(date('M',mktime(0,0,0,$j,1,2000)) == $val)
+						{
+							$map_date['m'] = $j;
+						}
+					}
 				}
 				else
 				{
-					$map_date[strtolower($key)] = (int) $val;
+					$map_date[strtolower($key)] = intval($val);
 				}
 			}
-			return date($formatTarget, mktime(0, 0, 0, $map_date['m'], $map_date['d'], $map_date['y']));
+			return date($formatTarget, mktime(0,0,0,$map_date['m'], $map_date['d'], $map_date['y']));
 		}
 
-		/**
-		* Convert a date string to a unix timestamp
-		*
-		* @param string $datestr the date string to convert - must match user's preferred date format
-		* @return int unix timestamp
-		*/
 		public static function date_array($datestr)
 		{
 			$dateformat =& $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
 
-			$pattern = '/[\.\/\-]/';
-			$fields = preg_split($pattern, $datestr);
-			foreach(preg_split($pattern, $dateformat) as $n => $field)
+			$fields = preg_split('/[./-]/',$datestr);
+			foreach ( preg_split('/[./-]/', $dateformat) as $n => $field )
 			{
 				$date[$field] = (int) $fields[$n];
 
 				if ( $field == 'M' )
 				{
-					$date['m'] = self::convert_M_to_int($fields[$n]);
+					for($i=1; $i <=12; $i++)
+					{
+						if ( date('M', mktime(0, 0, 0, $i, 1, 2000)) == $fields[$n] )
+						{
+							$date['m'] = $i;
+							break;
+						}
+					}
 				}
 			}
 
@@ -813,12 +734,6 @@
 			);
 		}
 
-		/**
-		* Convert a date araray to a unix timestamp
-		*
-		* @param array $date the date array to convert, must contain keys day, month & year
-		* @return int unix timestamp
-		*/
 		public static function date_to_timestamp($date = array())
 		{
 			if ( !count($date) )
@@ -828,24 +743,6 @@
 
 			$date_array	= self::date_array($date);
 			return mktime (13, 0, 0, $date_array['month'], $date_array['day'], $date_array['year']);
-		}
-
-		/**
-		* Convert a M month string to an int
-		*
-		* @param string $str abbreviated month name string
-		* @return int the month number - 0 is returned for invalid input
-		*/
-		private static function convert_M_to_int($str)
-		{
-			for($i=1; $i <=12; ++$i)
-			{
-				if ( date('M', mktime(0, 0, 0, $i, 1, 2000)) == $str )
-				{
-					return $i;
-				}
-			}
-			return 0;
 		}
 
 		/**

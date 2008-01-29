@@ -35,7 +35,7 @@
 		function sms_uipoll()
 		{
 
-		//	$this->currentapp			= $GLOBALS['phpgw_info']['flags']['currentapp'];
+			$this->currentapp			= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->nextmatchs			= CreateObject('phpgwapi.nextmatchs');
 			$this->account				= $GLOBALS['phpgw_info']['user']['account_id'];
 			$this->bo				= CreateObject('sms.bopoll',true);
@@ -94,7 +94,7 @@
 			{
 				if($this->bocommon->check_perms($entry['grants'], PHPGW_ACL_DELETE))
 				{
-					$link_delete		= $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'sms.uipoll.delete', 'poll_id'=> $entry['id']));
+					$link_delete		= $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> $this->currentapp.'.uipoll.delete', 'poll_id'=> $entry['id']));
 					$text_delete		= lang('delete');
 					$lang_delete_text 	= lang('delete the poll code');
 				}
@@ -114,9 +114,9 @@
 					'title'					=> $entry['title'],
 					'status'				=> $status,
 					'user'					=> $GLOBALS['phpgw']->accounts->id2name($entry['uid']),
-					'link_edit'				=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'sms.uipoll.edit', 'poll_id'=> $entry['id'])),
+					'link_edit'				=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> $this->currentapp.'.uipoll.edit', 'poll_id'=> $entry['id'])),
 					'link_delete'				=> $link_delete,
-					'link_view'				=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'sms.uipoll.view', 'poll_id'=> $entry['id'])),
+					'link_view'				=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> $this->currentapp.'.uipoll.view', 'poll_id'=> $entry['id'])),
 					'lang_view_config_text'			=> lang('view the config'),
 					'lang_edit_config_text'			=> lang('manage the poll code'),
 					'text_view'				=> lang('view'),
@@ -139,7 +139,7 @@
 											'sort'	=> $this->sort,
 											'var'	=> 'poll_code',
 											'order'	=> $this->order,
-											'extra'	=> array('menuaction'	=> 'sms.uipoll.index',
+											'extra'	=> array('menuaction'	=> $this->currentapp.'.uipoll.index',
 														'query'		=> $this->query,
 														'cat_id'	=> $this->cat_id,
 														'allrows'	=> $this->allrows)
@@ -164,7 +164,7 @@
 
 			$link_data = array
 			(
-				'menuaction'	=> 'sms.uipoll.index',
+				'menuaction'	=> $this->currentapp.'.uipoll.index',
 				'sort'		=> $this->sort,
 				'order'		=> $this->order,
 				'cat_id'	=> $this->cat_id,
@@ -178,7 +178,7 @@
 				(
 					'lang_add'		=> lang('add'),
 					'lang_add_statustext'	=> lang('add a poll'),
-					'add_action'		=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'sms.uipoll.add')),
+					'add_action'		=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> $this->currentapp.'.uipoll.add')),
 				);
 			}
 
@@ -208,7 +208,7 @@
 			$appname		= lang('polls');
 			$function_msg		= lang('list SMS polls');
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('sms') . ' - ' . $appname . ': ' . $function_msg;
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($this->currentapp) . ' - ' . $appname . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('list' => $data));
 			$this->save_sessiondata();
 		}
@@ -238,7 +238,7 @@
 			}
 
 			$add_data = array(
-				'menuaction'	=> 'sms.uipoll.add_yes',
+				'menuaction'	=> $this->currentapp.'.uipoll.add_yes',
 				'autoreply_id'	=> $autoreply_id
 				);
 				
@@ -254,7 +254,7 @@
 			    </form>
 			";
 
-			$done_data = array('menuaction'	=> 'sms.uipoll.index');
+			$done_data = array('menuaction'	=> $this->currentapp.'.uipoll.index');
 			$done_url = $GLOBALS['phpgw']->link('/index.php',$done_data);
 
 			$content .= "
@@ -318,7 +318,7 @@
 
 			$add_data = array
 			(
-				'menuaction'	=> 'sms.uipoll.' . $target,
+				'menuaction'	=> $this->currentapp.'.uipoll.' . $target,
 				'err'		=> urlencode($error_string)
 			);
 
@@ -380,7 +380,7 @@
 			}
 
 			$add_data = array(
-				'menuaction'	=> 'sms.uipoll.' . $target,
+				'menuaction'	=> $this->currentapp.'.uipoll.' . $target,
 				'poll_id'	=> $poll_id,
 				'err'		=> urlencode($error_string)
 				);
@@ -415,7 +415,7 @@
 			$this->db->transaction_commit();
 	
 			$add_data = array(
-				'menuaction'	=> 'sms.uipoll.edit',
+				'menuaction'	=> $this->currentapp.'.uipoll.edit',
 				'poll_id' => $poll_id,
 				'err' => urlencode($error_string)
 				);
@@ -460,7 +460,7 @@
 
 
 			$edit_data = array(
-				'menuaction'	=> 'sms.uipoll.edit_yes',
+				'menuaction'	=> $this->currentapp.'.uipoll.edit_yes',
 				'poll_id' => $poll_id,
 				'poll_code' => $poll_code,
 				);
@@ -494,7 +494,7 @@
 			}
 
 			$add_data = array(
-				'menuaction'	=> 'sms.uipoll.add_choice',
+				'menuaction'	=> $this->currentapp.'.uipoll.add_choice',
 				'poll_id'	=> $poll_id,
 				);
 			
@@ -512,13 +512,13 @@
 			
 			echo $content;
 
-			$enable_data = array('menuaction'	=> 'sms.uipoll.status',
+			$enable_data = array('menuaction'	=> $this->currentapp.'.uipoll.status',
 					'poll_id' => $poll_id,
 					'ps' => 1,
 					);
 			$enable_url = $GLOBALS['phpgw']->link('/index.php',$enable_data);
 
-			$disable_data = array('menuaction'	=> 'sms.uipoll.status',
+			$disable_data = array('menuaction'	=> $this->currentapp.'.uipoll.status',
 					'poll_id' => $poll_id,
 					'ps' => 0,
 					);
@@ -548,7 +548,7 @@
 			    <br>
 			    ";
 
-			$done_data = array('menuaction'	=> 'sms.uipoll.index');
+			$done_data = array('menuaction'	=> $this->currentapp.'.uipoll.index');
 			$done_url = $GLOBALS['phpgw']->link('/index.php',$done_data);
 
 			$content .= "
@@ -598,7 +598,7 @@
 			}
 
 			$add_data = array(
-				'menuaction'	=> 'sms.uipoll.' . $target,
+				'menuaction'	=> $this->currentapp.'.uipoll.' . $target,
 				'poll_id' => $poll_id,
 				'err' => urlencode($error_string)
 				);
@@ -697,7 +697,7 @@
 			    ";
 
 				$done_data = array(
-				'menuaction'	=> 'sms.uipoll.index');
+				'menuaction'	=> $this->currentapp.'.uipoll.index');
 				
 				$done_url = $GLOBALS['phpgw']->link('/index.php',$done_data);
 
@@ -726,7 +726,7 @@
 
 			$link_data = array
 			(
-				'menuaction' => 'sms.uipoll.index',
+				'menuaction' => $this->currentapp.'.uipoll.index',
 				'poll_id' => $poll_id
 			);
 
@@ -768,7 +768,7 @@
 			$data = array
 			(
 				'done_action'			=> $GLOBALS['phpgw']->link('/index.php',$link_data),
-				'delete_action'			=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'sms.uipoll.delete', 'poll_id'=> $poll_id)),
+				'delete_action'			=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> $this->currentapp.'.uipoll.delete', 'poll_id'=> $poll_id)),
 				'lang_confirm_msg'		=> lang('do you really want to delete this entry'),
 				'lang_yes'				=> lang('yes'),
 				'lang_yes_statustext'	=> lang('Delete the entry'),
@@ -779,7 +779,7 @@
 			$appname					= lang('sms');
 			$function_msg					= lang('delete poll');
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('sms') . ' - ' . $appname . ': ' . $function_msg;
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($this->currentapp) . ' - ' . $appname . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('delete' => $data));
 		}
 
@@ -800,7 +800,7 @@
 
 			$link_data = array
 			(
-				'menuaction' => 'sms.uipoll.edit',
+				'menuaction' => $this->currentapp.'.uipoll.edit',
 				'poll_id' => $poll_id
 			);
 
@@ -840,7 +840,7 @@
 			$data = array
 			(
 				'done_action'			=> $GLOBALS['phpgw']->link('/index.php',$link_data),
-				'delete_action'			=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'sms.uipoll.delete_choice', 'poll_id'=> $poll_id, 'choice_id'=> $choice_id)),
+				'delete_action'			=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> $this->currentapp.'.uipoll.delete_choice', 'poll_id'=> $poll_id, 'choice_id'=> $choice_id)),
 				'lang_confirm_msg'		=> lang('do you really want to delete this entry'),
 				'lang_yes'			=> lang('yes'),
 				'lang_yes_statustext'		=> lang('Delete the entry'),
@@ -851,7 +851,7 @@
 			$appname		= lang('sms');
 			$function_msg		= lang('delete poll choice');
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('sms') . ' - ' . $appname . ': ' . $function_msg;
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($this->currentapp) . ' - ' . $appname . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('delete' => $data));
 		}
 	}

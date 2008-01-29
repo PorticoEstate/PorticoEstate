@@ -39,7 +39,7 @@
 		function sms_uisms()
 		{
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = True;
-		//	$this->currentapp			= $GLOBALS['phpgw_info']['flags']['currentapp'];
+			$this->currentapp			= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->nextmatchs			= CreateObject('phpgwapi.nextmatchs');
 			$this->account				= $GLOBALS['phpgw_info']['user']['account_id'];
 			$this->bocommon				= CreateObject('sms.bocommon');
@@ -107,7 +107,7 @@
 			{
 				if($this->bocommon->check_perms($entry['grants'], PHPGW_ACL_DELETE))
 				{
-					$link_delete		= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'sms.uisms.delete_in', 'id'=> $entry['id']));
+					$link_delete		= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uisms.delete_in', 'id'=> $entry['id']));
 					$text_delete		= lang('delete');
 					$lang_delete_sms_text 	= lang('delete the sms from inbox');
 				}
@@ -120,7 +120,7 @@
 
 				if($add_right)
 				{
-					$link_answer		= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'sms.uisms.send' ,'p_num'=> $entry['sender']));
+					$link_answer		= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uisms.send' ,'p_num'=> $entry['sender']));
 				}
 
 
@@ -151,7 +151,7 @@
 											'sort'	=> $this->sort,
 											'var'	=> 'in_datetime',
 											'order'	=> $this->order,
-											'extra'	=> array('menuaction'	=> 'sms.uisms.index',
+											'extra'	=> array('menuaction'	=> $this->currentapp.'.uisms.index',
 														'query'		=>$this->query,
 														'cat_id'	=>$this->cat_id,
 														'allrows'	=> $this->allrows)
@@ -161,7 +161,7 @@
 											'sort'	=> $this->sort,
 											'var'	=> 'in_sender',
 											'order'	=> $this->order,
-											'extra'	=> array('menuaction'	=> 'sms.uisms.index',
+											'extra'	=> array('menuaction'	=> $this->currentapp.'.uisms.index',
 														'query'		=>$this->query,
 														'cat_id'	=>$this->cat_id,
 														'allrows'	=> $this->allrows)
@@ -187,7 +187,7 @@
 
 			$link_data = array
 			(
-				'menuaction'	=> 'sms.uisms.index',
+				'menuaction'	=> $this->currentapp.'.uisms.index',
 				'sort'		=> $this->sort,
 				'order'		=> $this->order,
 				'cat_id'	=> $this->cat_id,
@@ -203,10 +203,10 @@
 				(
 					'lang_send'			=> lang('Send text SMS'),
 					'lang_send_statustext'		=> lang('send single'),
-					'send_action'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'sms.uisms.send', 'from'=>'index')),
+					'send_action'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uisms.send', 'from'=>'index')),
 					'lang_send_group'		=> lang('Send broadcast SMS'),
 					'lang_send_group_statustext'	=> lang('send group'),
-					'send_group_action'		=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'sms.uisms.send_group', 'from'=>'index')),
+					'send_group_action'		=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uisms.send_group', 'from'=>'index')),
 				);
 			}
 
@@ -236,7 +236,7 @@
 			$appname	= lang('inbox');
 			$function_msg	= lang('list inbox');
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('sms') . ' - ' . $appname . ': ' . $function_msg;
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($this->currentapp) . ' - ' . $appname . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('list_inbox' => $data));
 			$this->save_sessiondata();
 		}
@@ -268,7 +268,7 @@
 			{
 				if($this->bocommon->check_perms($entry['grants'], PHPGW_ACL_DELETE))
 				{
-					$link_delete		= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'sms.uisms.delete_out', 'id'=> $entry['id']));
+					$link_delete		= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uisms.delete_out', 'id'=> $entry['id']));
 					$text_delete		= lang('delete');
 					$lang_delete_sms_text = lang('delete the sms from outbox');
 				}
@@ -303,7 +303,7 @@
 											'sort'	=> $this->sort,
 											'var'	=> 'p_datetime',
 											'order'	=> $this->order,
-											'extra'	=> array('menuaction'	=> 'sms.uisms.outbox',
+											'extra'	=> array('menuaction'	=> $this->currentapp.'.uisms.outbox',
 														'query'		=> $this->query,
 														'cat_id'	=> $this->cat_id,
 														'allrows'	=> $this->allrows)
@@ -329,7 +329,7 @@
 
 			$link_data = array
 			(
-				'menuaction'	=> 'sms.uisms.outbox',
+				'menuaction'	=> $this->currentapp.'.uisms.outbox',
 				'sort'		=> $this->sort,
 				'order'		=> $this->order,
 				'cat_id'	=> $this->cat_id,
@@ -344,10 +344,10 @@
 				(
 					'lang_send'			=> lang('Send text SMS'),
 					'lang_send_statustext'		=> lang('send single'),
-					'send_action'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'sms.uisms.send', 'from'=>'outbox')),
+					'send_action'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uisms.send', 'from'=>'outbox')),
 					'lang_send_group'		=> lang('Send broadcast SMS'),
 					'lang_send_group_statustext'	=> lang('send group'),
-					'send_group_action'		=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'sms.uisms.send_group', 'from'=>'outbox')),
+					'send_group_action'		=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uisms.send_group', 'from'=>'outbox')),
 				);
 			}
 
@@ -378,7 +378,7 @@
 			$appname	= lang('outbox');
 			$function_msg	= lang('list outbox');
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('sms') . ' - ' . $appname . ': ' . $function_msg;
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($this->currentapp) . ' - ' . $appname . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('list_outbox' => $data));
 			$this->save_sessiondata();
 
@@ -433,13 +433,13 @@
 						if ($values['save'])
 						{
 							$GLOBALS['phpgw']->session->appsession('session_data','sms_send_receipt',$receipt);
-							$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'sms.uisms.' . $from));
+							$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> $this->currentapp.'.uisms.' . $from));
 						}
 					}
 				}
 				else
 				{
-					$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'sms.uisms.' . $from));
+					$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> $this->currentapp.'.uisms.' . $from));
 				}
 			}
 
@@ -461,7 +461,7 @@
 
 			$link_data = array
 			(
-				'menuaction'	=> 'sms.uisms.send',
+				'menuaction'	=> $this->currentapp.'.uisms.send',
 				'sms_id'	=> $sms_id,
 				'from'		=> $from
 			);
@@ -537,7 +537,7 @@
 
 			$appname	= lang('send sms');
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('sms') . ' - ' . $appname;
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($this->currentapp) . ' - ' . $appname;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('send' => $data));
 		}
 
@@ -556,7 +556,7 @@
 
 			$link_data = array
 			(
-				'menuaction' => 'sms.uisms.index'
+				'menuaction' => $this->currentapp.'.uisms.index'
 			);
 
 			if (phpgw::get_var('confirm', 'bool', 'POST'))
@@ -570,7 +570,7 @@
 			$data = array
 			(
 				'done_action'			=> $GLOBALS['phpgw']->link('/index.php',$link_data),
-				'delete_action'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'sms.uisms.delete_in', 'id'=> $id)),
+				'delete_action'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uisms.delete_in', 'id'=> $id)),
 				'lang_confirm_msg'		=> lang('do you really want to delete this entry'),
 				'lang_yes'			=> lang('yes'),
 				'lang_yes_statustext'		=> lang('Delete the entry'),
@@ -581,7 +581,7 @@
 			$appname				= lang('outbox');
 			$function_msg				= lang('delete');
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('sms') . ' - ' . $appname . ': ' . $function_msg;
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($this->currentapp) . ' - ' . $appname . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('delete' => $data));
 		}
 
@@ -600,7 +600,7 @@
 
 			$link_data = array
 			(
-				'menuaction' => 'sms.uisms.outbox'
+				'menuaction' => $this->currentapp.'.uisms.outbox'
 			);
 
 			if (phpgw::get_var('confirm', 'bool', 'POST'))
@@ -614,7 +614,7 @@
 			$data = array
 			(
 				'done_action'			=> $GLOBALS['phpgw']->link('/index.php',$link_data),
-				'delete_action'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'sms.uisms.delete_out', 'id'=> $id)),
+				'delete_action'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uisms.delete_out', 'id'=> $id)),
 				'lang_confirm_msg'		=> lang('do you really want to delete this entry'),
 				'lang_yes'			=> lang('yes'),
 				'lang_yes_statustext'		=> lang('Delete the entry'),
@@ -625,7 +625,7 @@
 			$appname	= lang('outbox');
 			$function_msg	= lang('delete');
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('sms') . ' - ' . $appname . ': ' . $function_msg;
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($this->currentapp) . ' - ' . $appname . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('delete' => $data));
 		}
 	}

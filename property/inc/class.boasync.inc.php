@@ -71,7 +71,7 @@
 
 		function property_boasync($session=False)
 		{
-		//	$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
+			$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->so 		= CreateObject('property.soasync');
 			$this->socommon = CreateObject('property.socommon');
 

@@ -37,7 +37,7 @@
 
 		function property_soproject()
 		{
-		//	$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
+			$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->account		= $GLOBALS['phpgw_info']['user']['account_id'];
 			$this->bocommon		= CreateObject('property.bocommon');
 			$this->db =& $GLOBALS['phpgw']->db;
@@ -48,7 +48,7 @@
 			$this->left_join = " LEFT JOIN ";
 
 			$this->acl 		= CreateObject('phpgwapi.acl');
-			$this->grants	= $this->acl->get_grants('property','.project');
+			$this->grants	= $this->acl->get_grants($this->currentapp,'.project');
 		}
 
 
@@ -300,8 +300,8 @@
 				}
 				else
 				{
-					$query = preg_replace("/'/",'',$query);
-					$query = preg_replace('/"/','',$query);
+					$query = ereg_replace("'",'',$query);
+					$query = ereg_replace('"','',$query);
 					$querymethod = " $where (fm_project.name $this->like '%$query%' or fm_project.address $this->like '%$query%' or fm_project.location_code $this->like '%$query%' or fm_project.id $this->like '%$query%')";
 				}
 			}

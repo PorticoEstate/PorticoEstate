@@ -64,7 +64,7 @@
 			$GLOBALS['phpgw_info']['flags']['noframework'] = True;
 			$GLOBALS['phpgw_info']['flags']['headonly']=true;
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = True;
-		//	$this->currentapp			= $GLOBALS['phpgw_info']['flags']['currentapp'];
+			$this->currentapp			= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->nextmatchs			= CreateObject('phpgwapi.nextmatchs');
 			$this->bo					= CreateObject('property.bolookup',True);
 
@@ -138,7 +138,7 @@
 											'sort'	=> $this->sort,
 											'var'	=>	'last_name',
 											'order'	=>	$this->order,
-											'extra'		=> array('menuaction'	=> 'property.uilookup.addressbook',
+											'extra'		=> array('menuaction'	=> $this->currentapp.'.uilookup.addressbook',
 																	'cat_id'	=> $this->cat_id,
 																	'column'	=> $column)
 										)),
@@ -148,7 +148,7 @@
 											'sort'	=> $this->sort,
 											'var'	=>	'person_id',
 											'order'	=>	$this->order,
-											'extra'		=> array('menuaction'	=> 'property.uilookup.addressbook',
+											'extra'		=> array('menuaction'	=> $this->currentapp.'.uilookup.addressbook',
 																	'cat_id'	=>$this->cat_id,
 																	'column'	=> $column)
 										)),
@@ -164,7 +164,7 @@
 
 			$link_select = array
 			(
-				'menuaction'		=> 'property.uilookup.addressbook',
+				'menuaction'		=> $this->currentapp.'.uilookup.addressbook',
 				'second_display'	=> true,
 				'order'				=> $this->order,
 				'sort'				=> $this->sort,
@@ -216,7 +216,7 @@
 			$appname						= lang('addressbook');
 			$function_msg					= lang('list vendors');
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($this->currentapp) . ' - ' . $appname . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('list_contact' => $data));
 		//	$GLOBALS['phpgw']->xslttpl->pp();
 			$this->save_sessiondata();
@@ -237,7 +237,7 @@
 			$column = phpgw::get_var('column');
 
 
-			$default_category = $GLOBALS['phpgw_info']['user']['preferences']['property']['default_vendor_category'];
+			$default_category = $GLOBALS['phpgw_info']['user']['preferences'][$this->currentapp]['default_vendor_category'];
 
 			if ($default_category && !$second_display)
 			{
@@ -265,7 +265,7 @@
 											'sort'	=> $this->sort,
 											'var'	=>	'org_name',
 											'order'	=>	$this->order,
-											'extra'		=> array('menuaction'	=> 'property.uilookup.vendor',
+											'extra'		=> array('menuaction'	=> $this->currentapp.'.uilookup.vendor',
 																	'cat_id'	=> $this->cat_id,
 																	'column'	=> $column)
 										)),
@@ -275,7 +275,7 @@
 											'sort'	=> $this->sort,
 											'var'	=>	'id',
 											'order'	=>	$this->order,
-											'extra'		=> array('menuaction'	=> 'property.uilookup.vendor',
+											'extra'		=> array('menuaction'	=> $this->currentapp.'.uilookup.vendor',
 																	'cat_id'	=>$this->cat_id,
 																	'column'	=> $column)
 										)),
@@ -291,7 +291,7 @@
 
 			$link_select = array
 			(
-				'menuaction'		=> 'property.uilookup.vendor',
+				'menuaction'		=> $this->currentapp.'.uilookup.vendor',
 				'second_display'	=> true,
 				'order'				=> $this->order,
 				'sort'				=> $this->sort,
@@ -343,7 +343,7 @@
 			$appname						= lang('vendor');
 			$function_msg					= lang('list vendors');
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($this->currentapp) . ' - ' . $appname . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('list_vendor' => $data));
 		//	$GLOBALS['phpgw']->xslttpl->pp();
 			$this->save_sessiondata();
@@ -376,7 +376,7 @@
 											'sort'	=> $this->sort,
 											'var'	=>	'descr',
 											'order'	=>	$this->order,
-											'extra'		=> array('menuaction'	=> 'property.uilookup.b_account',
+											'extra'		=> array('menuaction'	=> $this->currentapp.'.uilookup.b_account',
 																	'cat_id'	=>$this->cat_id)
 										)),
 				'lang_name'		=> lang('Name'),
@@ -385,7 +385,7 @@
 											'sort'	=> $this->sort,
 											'var'	=>	'id',
 											'order'	=>	$this->order,
-											'extra'		=> array('menuaction'	=> 'property.uilookup.b_account',
+											'extra'		=> array('menuaction'	=> $this->currentapp.'.uilookup.b_account',
 																	'cat_id'	=>$this->cat_id)
 										)),
 				'lang_id'		=> lang('ID'),
@@ -400,7 +400,7 @@
 
 			$link_select = array
 			(
-				'menuaction'		=> 'property.uilookup.b_account',
+				'menuaction'		=> $this->currentapp.'.uilookup.b_account',
 				'second_display'	=> true,
 				'order'				=> $this->order,
 				'sort'				=> $this->sort,
@@ -434,7 +434,7 @@
 			$appname						= lang('budget account');
 			$function_msg					= lang('list budget account');
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($this->currentapp) . ' - ' . $appname . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('list_b_account' => $data));
 		//	$GLOBALS['phpgw']->xslttpl->pp();
 			$this->save_sessiondata();
@@ -468,7 +468,7 @@
 											'sort'	=> $this->sort,
 											'var'	=>	'descr',
 											'order'	=>	$this->order,
-											'extra'		=> array('menuaction'	=> 'property.uilookup.street',
+											'extra'		=> array('menuaction'	=> $this->currentapp.'.uilookup.street',
 																	'cat_id'	=>$this->cat_id)
 										)),
 				'lang_name'		=> lang('Street name'),
@@ -477,7 +477,7 @@
 											'sort'	=> $this->sort,
 											'var'	=>	'id',
 											'order'	=>	$this->order,
-											'extra'		=> array('menuaction'	=> 'property.uilookup.street',
+											'extra'		=> array('menuaction'	=> $this->currentapp.'.uilookup.street',
 																	'cat_id'	=>$this->cat_id)
 										)),
 				'lang_id'		=> lang('ID'),
@@ -492,7 +492,7 @@
 
 			$link_select = array
 			(
-				'menuaction'		=> 'property.uilookup.street',
+				'menuaction'		=> $this->currentapp.'.uilookup.street',
 				'second_display'	=> true,
 				'order'				=> $this->order,
 				'sort'				=> $this->sort,
@@ -529,7 +529,7 @@
 			$appname						= lang('street');
 			$function_msg					= lang('list street');
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($this->currentapp) . ' - ' . $appname . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('list_street' => $data));
 		//	$GLOBALS['phpgw']->xslttpl->pp();
 			$this->save_sessiondata();
@@ -563,7 +563,7 @@
 											'sort'	=> $this->sort,
 											'var'	=>	'last_name',
 											'order'	=>	$this->order,
-											'extra'		=> array('menuaction'	=> 'property.uilookup.tenant',
+											'extra'		=> array('menuaction'	=> $this->currentapp.'.uilookup.tenant',
 																	'cat_id'	=>$this->cat_id)
 										)),
 				'sort_first_name'	=> $this->nextmatchs->show_sort_order(array
@@ -571,7 +571,7 @@
 											'sort'	=> $this->sort,
 											'var'	=>	'first_name',
 											'order'	=>	$this->order,
-											'extra'		=> array('menuaction'	=> 'property.uilookup.tenant',
+											'extra'		=> array('menuaction'	=> $this->currentapp.'.uilookup.tenant',
 																	'cat_id'	=>$this->cat_id)
 										)),
 				'lang_last_name'		=> lang('last name'),
@@ -581,7 +581,7 @@
 											'sort'	=> $this->sort,
 											'var'	=>	'id',
 											'order'	=>	$this->order,
-											'extra'		=> array('menuaction'	=> 'property.uilookup.tenant',
+											'extra'		=> array('menuaction'	=> $this->currentapp.'.uilookup.tenant',
 																	'cat_id'	=>$this->cat_id)
 										)),
 				'lang_id'		=> lang('ID'),
@@ -596,7 +596,7 @@
 
 			$link_select = array
 			(
-				'menuaction'		=> 'property.uilookup.tenant',
+				'menuaction'		=> $this->currentapp.'.uilookup.tenant',
 				'second_display'	=> true,
 				'order'				=> $this->order,
 				'sort'				=> $this->sort,
@@ -631,7 +631,7 @@
 			$appname						= lang('tenant');
 			$function_msg					= lang('list tenant');
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($this->currentapp) . ' - ' . $appname . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('list_tenant' => $data));
 		//	$GLOBALS['phpgw']->xslttpl->pp();
 			$this->save_sessiondata();
@@ -664,7 +664,7 @@
 											'sort'	=> $this->sort,
 											'var'	=>	'tekst1',
 											'order'	=>	$this->order,
-											'extra'		=> array('menuaction'	=> 'property.uilookup.ns3420',
+											'extra'		=> array('menuaction'	=> $this->currentapp.'.uilookup.ns3420',
 																	'query'	=>$this->query)
 										)),
 				'lang_descr'		=> lang('ns3420 description'),
@@ -673,7 +673,7 @@
 											'sort'	=> $this->sort,
 											'var'	=>	'id',
 											'order'	=>	$this->order,
-											'extra'		=> array('menuaction'	=> 'property.uilookup.ns3420',
+											'extra'		=> array('menuaction'	=> $this->currentapp.'.uilookup.ns3420',
 																	'query'	=>$this->query)
 										)),
 				'lang_id'		=> lang('ID'),
@@ -688,7 +688,7 @@
 
 			$link_select = array
 			(
-				'menuaction'		=> 'property.uilookup.ns3420',
+				'menuaction'		=> $this->currentapp.'.uilookup.ns3420',
 				'second_display'	=> true,
 				'order'				=> $this->order,
 				'sort'				=> $this->sort,
@@ -720,7 +720,7 @@
 			$appname						= lang('standard description');
 			$function_msg					= lang('list standard description');
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($this->currentapp) . ' - ' . $appname . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('list_ns3420' => $data));
 		//	$GLOBALS['phpgw']->xslttpl->pp();
 			$this->save_sessiondata();
@@ -748,7 +748,7 @@
 
 			$entity_list = $boentity->read(array('lookup'=>True));
 
-			$input_name = $GLOBALS['phpgw']->session->appsession('lookup_fields','property');
+			$input_name = $GLOBALS['phpgw']->session->appsession('lookup_fields',$this->currentapp);
 //_debug_array($input_name);
 
 			$uicols	= $boentity->uicols;
@@ -797,7 +797,7 @@
 											'sort'	=> $this->sort,
 											'var'	=>	'loc1',
 											'order'	=>	$this->order,
-											'extra'		=> array('menuaction'	=> 'property.uilookup.entity',
+											'extra'		=> array('menuaction'	=> $this->currentapp.'.uilookup.entity',
 																	'type_id'	=>$type_id,
 																	'query'		=>$this->query,
 																	'district_id'	=> $this->district_id,
@@ -814,7 +814,7 @@
 											'sort'	=> $this->sort,
 											'var'	=>	'num',
 											'order'	=>	$this->order,
-											'extra'		=> array('menuaction'	=> 'property.uilookup.entity',
+											'extra'		=> array('menuaction'	=> $this->currentapp.'.uilookup.entity',
 																	'type_id'	=>$type_id,
 																	'query'		=>$this->query,
 																	'lookup'	=>$lookup,
@@ -842,7 +842,7 @@
 
 			$link_select = array
 			(
-				'menuaction'		=> 'property.uilookup.entity',
+				'menuaction'		=> $this->currentapp.'.uilookup.entity',
 				'order'				=> $this->order,
 				'sort'				=> $this->sort,
 				'cat_id'			=> $this->cat_id,
@@ -906,10 +906,10 @@
 			{
 				$category = $boadmin_entity->read_single_category($this->entity_id,$this->cat_id);
 				$function_msg					= lang('lookup') . ' ' . $category['name'];
-				$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
+				$GLOBALS['phpgw_info']['flags']['app_header'] = lang($this->currentapp) . ' - ' . $appname . ': ' . $function_msg;
 			}
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($this->currentapp) . ' - ' . $appname . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('list_entity' => $data));
 		//	$GLOBALS['phpgw']->xslttpl->pp();
 			$this->save_sessiondata();
@@ -946,7 +946,7 @@
 											'sort'	=> $this->sort,
 											'var'	=>	'account_lid',
 											'order'	=>	$this->order,
-											'extra'		=> array('menuaction'	=> 'property.uilookup.phpgw_user',
+											'extra'		=> array('menuaction'	=> $this->currentapp.'.uilookup.phpgw_user',
 																	'cat_id'	=>$this->cat_id,
 																	'column'	=> $column)
 										)),
@@ -955,7 +955,7 @@
 											'sort'	=> $this->sort,
 											'var'	=>	'account_lastname',
 											'order'	=>	$this->order,
-											'extra'		=> array('menuaction'	=> 'property.uilookup.phpgw_user',
+											'extra'		=> array('menuaction'	=> $this->currentapp.'.uilookup.phpgw_user',
 																	'cat_id'	=>$this->cat_id,
 																	'column'	=> $column)
 										)),
@@ -964,7 +964,7 @@
 											'sort'	=> $this->sort,
 											'var'	=>	'account_firstname',
 											'order'	=>	$this->order,
-											'extra'		=> array('menuaction'	=> 'property.uilookup.phpgw_user',
+											'extra'		=> array('menuaction'	=> $this->currentapp.'.uilookup.phpgw_user',
 																	'cat_id'	=>$this->cat_id,
 																	'column'	=> $column)
 										)),
@@ -975,7 +975,7 @@
 											'sort'	=> $this->sort,
 											'var'	=>	'account_id',
 											'order'	=>	$this->order,
-											'extra'		=> array('menuaction'	=> 'property.uilookup.phpgw_user',
+											'extra'		=> array('menuaction'	=> $this->currentapp.'.uilookup.phpgw_user',
 																	'cat_id'	=>$this->cat_id,
 																	'column'	=> $column)
 										)),
@@ -991,7 +991,7 @@
 
 			$link_select = array
 			(
-				'menuaction'		=> 'property.uilookup.phpgw_user',
+				'menuaction'		=> $this->currentapp.'.uilookup.phpgw_user',
 				'order'				=> $this->order,
 				'sort'				=> $this->sort,
 				'cat_id'			=> $this->cat_id,
@@ -1040,7 +1040,7 @@
 			$appname						= lang('phpgw_user');
 			$function_msg					= lang('list phpgw_user');
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($this->currentapp) . ' - ' . $appname . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('list_phpgw_user' => $data));
 			$this->save_sessiondata();
 		}

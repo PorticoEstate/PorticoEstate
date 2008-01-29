@@ -25,9 +25,9 @@
 	{
 		var $LDAPRepository;
 		
-		function __construct($account_id = null, $account_type = null)
+		function accounts_SQLLDAP($account_id = null, $account_type = null)
 		{
-			parent::__construct($account_id, $account_type);
+			parent::accounts_sql($account_id, $account_type);
 			include_once(PHPGW_API_INC . '/accounts/class.accounts_ldap.inc.php');
 			$this->LDAPRepository = new Accounts_LDAP($account_id, $account_type);
 		}

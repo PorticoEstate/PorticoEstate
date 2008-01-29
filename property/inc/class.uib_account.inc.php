@@ -52,14 +52,15 @@
 		function property_uib_account()
 		{
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = True;
-			$GLOBALS['phpgw_info']['flags']['menu_selection'] = 'property::invoice::budget';
-
-		//	$this->currentapp		= $GLOBALS['phpgw_info']['flags']['currentapp'];
+			$this->currentapp		= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->nextmatchs		= CreateObject('phpgwapi.nextmatchs');
 			$this->account			= $GLOBALS['phpgw_info']['user']['account_id'];
 
 			$this->bo			= CreateObject('property.bob_account',true);
 			$this->bocommon			= CreateObject('property.bocommon');
+
+			$this->menu			= CreateObject('property.menu');
+			$this->menu->sub		='invoice';
 
 			$this->acl 			= CreateObject('phpgwapi.acl');
 			$this->acl_location		= '.b_account';
@@ -92,10 +93,13 @@
 		{
 			if(!$this->acl_read)
 			{
-				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=>1, 'acl_location'=> $this->acl_location));
+				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> $this->currentapp.'.uilocation.stop', 'perm'=>1, 'acl_location'=> $this->acl_location));
 			}
 
-			$GLOBALS['phpgw']->xslttpl->add_file(array('b_account', 'nextmatchs', 'search_field'));
+			$GLOBALS['phpgw']->xslttpl->add_file(array('b_account','nextmatchs','menu',
+										'search_field'));
+
+			$links = $this->menu->links('b_account');
 
 			$b_account_list = $this->bo->read($type);
 
@@ -103,12 +107,12 @@
 			{
 				if($this->acl_edit)
 				{
-					$link_edit	= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uib_account.edit', 'id'=> $b_account['id']));
+					$link_edit	= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uib_account.edit', 'id'=> $b_account['id']));
 				}
 
 				if($this->acl_delete)
 				{
-					$link_delete	= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uib_account.delete', 'id'=> $b_account['id']));
+					$link_delete	= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uib_account.delete', 'id'=> $b_account['id']));
 				}
 
 				$content[] = array
@@ -139,7 +143,7 @@
 											'sort'	=> $this->sort,
 											'var'	=> 'id',
 											'order'	=> $this->order,
-											'extra'	=> array('menuaction' => 'property.uib_account.index')
+											'extra'	=> array('menuaction' => $this->currentapp.'.uib_account.index')
 										)),
 				'lang_id'	=> lang('budget account'),
 			);
@@ -148,7 +152,7 @@
 			(
 				'lang_add'			=> lang('add'),
 				'lang_add_b_accounttext'	=> lang('add a budget account'),
-				'add_action'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uib_account.edit')),
+				'add_action'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uib_account.edit')),
 				'lang_done'			=> lang('done'),
 				'lang_done_b_accounttext'	=> lang('back to admin'),
 				'done_action'			=> $GLOBALS['phpgw']->link('/admin/index.php')
@@ -166,13 +170,14 @@
 
 			$data = array
 			(
+				'links'					=> $links,
 				'allow_allrows'				=> True,
 				'allrows'				=> $this->allrows,
 				'start_record'				=> $this->start,
 				'record_limit'				=> $record_limit,
 				'num_records'				=> count($b_account_list),
 				'all_records'				=> $this->bo->total_records,
-				'link_url'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uib_account.index', 'type'=> $type)),
+				'link_url'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uib_account.index', 'type'=> $type)),
 				'img_path'				=> $GLOBALS['phpgw']->common->get_image_path('phpgwapi','default'),
 				'lang_searchfield_b_accounttext'	=> lang('Enter the search string. To show all entries, empty this field and press the SUBMIT button again'),
 				'lang_searchbutton_b_accounttext'	=> lang('Submit the search string'),
@@ -186,7 +191,7 @@
 			$appname		= lang('budget account');
 			$function_msg		= lang('list budget account');
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($this->currentapp) . ' - ' . $appname . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('list' => $data));
 		//	$GLOBALS['phpgw']->xslttpl->pp();
 			$this->save_sessiondata();
@@ -196,7 +201,7 @@
 		{
 			if(!$this->acl_add && !$this->acl_edit)
 			{
-				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=>2, 'acl_location'=> $this->acl_location));
+				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> $this->currentapp.'.uilocation.stop', 'perm'=>2, 'acl_location'=> $this->acl_location));
 			}
 
 			$id	= phpgw::get_var('id', 'int');
@@ -248,7 +253,7 @@
 
 			$link_data = array
 			(
-				'menuaction'	=> 'property.uib_account.edit',
+				'menuaction'	=> $this->currentapp.'.uib_account.edit',
 				'id'		=> $id
 			);
 //_debug_array($b_account);
@@ -259,7 +264,7 @@
 			(
 				'msgbox_data'				=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
 				'form_action'				=> $GLOBALS['phpgw']->link('/index.php',$link_data),
-				'done_action'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uib_account.index', 'type'=> $type)),
+				'done_action'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uib_account.index', 'type'=> $type)),
 				'lang_id'				=> lang('budget account'),
 				'lang_descr'				=> lang('Descr'),
 				'lang_save'				=> lang('save'),
@@ -285,7 +290,7 @@
 
 			$appname						= lang('budget account');
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($this->currentapp) . ' - ' . $appname . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('edit' => $data));
 		//	$GLOBALS['phpgw']->xslttpl->pp();
 		}
@@ -294,7 +299,7 @@
 		{
 			if(!$this->acl_delete)
 			{
-				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=>8, 'acl_location'=> $this->acl_location));
+				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> $this->currentapp.'.uilocation.stop', 'perm'=>8, 'acl_location'=> $this->acl_location));
 			}
 
 			$id		= phpgw::get_var('id', 'int');
@@ -302,7 +307,7 @@
 
 			$link_data = array
 			(
-				'menuaction' => 'property.uib_account.index'
+				'menuaction' => $this->currentapp.'.uib_account.index'
 			);
 
 			if (phpgw::get_var('confirm', 'bool', 'POST'))
@@ -316,7 +321,7 @@
 			$data = array
 			(
 				'done_action'			=> $GLOBALS['phpgw']->link('/index.php',$link_data),
-				'delete_action'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uib_account.delete', 'id'=> $id)),
+				'delete_action'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.uib_account.delete', 'id'=> $id)),
 				'lang_confirm_msg'		=> lang('do you really want to delete this entry'),
 				'lang_yes'			=> lang('yes'),
 				'lang_yes_b_accounttext'	=> lang('Delete the entry'),
@@ -327,7 +332,7 @@
 			$appname		= lang('budget account');
 			$function_msg		= lang('delete budget account');
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($this->currentapp) . ' - ' . $appname . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('delete' => $data));
 		//	$GLOBALS['phpgw']->xslttpl->pp();
 		}

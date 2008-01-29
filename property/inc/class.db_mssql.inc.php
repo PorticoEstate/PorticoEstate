@@ -63,7 +63,7 @@
 			{
 				return '';
 			}
-			return preg_replace("/'/", "''", $str);
+			return ereg_replace("'", "''", $str);
 		}
 
 		function free_result()

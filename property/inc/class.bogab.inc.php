@@ -52,7 +52,7 @@
 
 		function property_bogab($session=False)
 		{
-		//	$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
+			$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->bocommon 	= CreateObject('property.bocommon');
 			$this->solocation 	= CreateObject('property.solocation');
 			$this->config		= CreateObject('phpgwapi.config');
@@ -125,13 +125,13 @@
 
 			//_debug_array($data);
 
-			$this->start	= isset($data['start']) ? $data['start'] : '';
-			$this->query	= isset($data['query']) ? $data['query'] : '';
-			$this->filter	= isset($data['filter']) ? $data['filter'] : '';
-			$this->sort		= isset($data['sort']) ? $data['sort'] : '';
-			$this->order	= isset($data['order']) ? $data['order'] : '';
-			$this->cat_id	= isset($data['cat_id']) ? $data['cat_id'] : '';
-			$this->allrows	= isset($data['allrows']) ? $data['allrows'] : '';
+			$this->start	= $data['start'];
+			$this->query	= $data['query'];
+			$this->filter	= $data['filter'];
+			$this->sort		= $data['sort'];
+			$this->order	= $data['order'];
+			$this->cat_id	= $data['cat_id'];
+			$this->allrows	= $data['allrows'];
 		}
 
 

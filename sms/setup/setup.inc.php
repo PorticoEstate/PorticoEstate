@@ -10,13 +10,14 @@
 	*/
 
 	$setup_info['sms']['name']      = 'sms';
+	$setup_info['sms']['title']= 'SMS';
 	$setup_info['sms']['version']   = '0.9.17.506';
 	$setup_info['sms']['app_order'] = 8;
 	$setup_info['sms']['enable']    = 1;
 	$setup_info['sms']['app_group']	= 'office';
 	$setup_info['sms']['description'] = 'sms gateway';
 
-	$setup_info['sms']['author'] = array
+	$setup_info['sms']['author'][] = array
 	(
 		'name'	=> 'Sigurd Nes',
 		'email'	=> 'sigurdne@online.no'
@@ -70,8 +71,7 @@
 //		'help',
 		'settings',
 		'preferences',
-		'admin',
-		'sidebox_menu'
+		'admin'
 	);
 
 	/* Dependencies for this app to work */

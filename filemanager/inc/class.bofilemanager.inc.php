@@ -170,7 +170,7 @@
 			$this->userinfo['account_id']	= $GLOBALS['phpgw_info']['user']['account_id'];
 			$this->userinfo['account_lid']	= $GLOBALS['phpgw_info']['user']['account_lid'];
 			$this->userinfo['hdspace']		= 10000000000;
-			$this->homedir					= "{$this->fakebase}/{$this->userinfo['account_lid']}";
+			$this->homedir					= $this->fakebase.SEP.$this->userinfo['account_lid'];
 
 			if(!defined('NULL'))
 			{
@@ -707,7 +707,7 @@
 				if($this->fileman[$i])
 				{
 					$ls_array = $GLOBALS['phpgw']->vfs->ls(array(
-								'string' => "{$this->path}/{$this->fileman[$i]}",
+								'string' => $this->path.SEP.$this->fileman[$i],
 								'relatives' => array(RELATIVE_NONE),
 								'checksubdirs' =>False,
 								'nofiles' => True));
@@ -725,19 +725,19 @@
 							$mime_type = 'File';
 						}
 						if($GLOBALS['phpgw']->vfs->delete(array(
-										'string' => "{$this->path}/{$this->fileman[$i]}",
+										'string' => $this->path.SEP.$this->fileman[$i],
 										'relatives' => Array(RELATIVE_USER_NONE))))
 						{
-							$result[] = lang('deleted %1', "{$this->path}/{$this->fileman[$i]}");
+							$result[] = lang('deleted %1', $this->path.SEP.$this->fileman[$i]);
 						}
 						else
 						{
-							$result[] = lang('could not delete %1', "{$this->path}/{$this->fileman[$i]}");
+							$result[] = lang('could not delete %1',$this->path.SEP.$this->fileman[$i]);
 						}
 					}
 					else
 					{
-						$result[] = lang('%1 does not exist', "{$this->path}/{$this->fileman[$i]}");
+						$result[] = lang('%1 does not exist', $this->path.SEP.$this->fileman[$i]);
 					}
 				}
 			}
@@ -752,18 +752,18 @@
 				{
 					if(!$this->check_quota($this->fileman[$i]))
 					{
-						$result[] = lang('Could not copy %1 to %2 quota exceeded', "{$this->todir}/{$this->fileman[$i]}", "{$this->path}/{$this->fileman[$i]}");
+						$result[] = lang('Could not copy %1 to %2 quota exceeded',$this->todir.SEP.$this->fileman[$i],$this->path.SEP.$this->fileman[$i]);
 					}
 					elseif($GLOBALS['phpgw']->vfs->cp(array(
-									'from' => "{$this->path}/{$this->fileman[$i]}",
-									'to' => "{$this->todir}/{$this->fileman[$i]}",
+									'from' => $this->path.SEP.$this->fileman[$i],
+									'to' => $this->todir.SEP.$this->fileman[$i],
 									'relatives' => array(RELATIVE_NONE,RELATIVE_NONE))))
 					{
-						$result[] = lang('file %1 copied to %2'. "{$this->todir}/{$this->fileman[$i]}", "{$this->path}/{$this->fileman[$i]}");
+						$result[] = lang('file %1 copied to %2'. $this->todir.SEP.$this->fileman[$i],$this->path.SEP.$this->fileman[$i]);
 					}
 					else
 					{					
-						$result[] = lang('could not copy %1 to %2', "{$this->todir}/{$this->fileman[$i]}", "{$this->path}/{$this->fileman[$i]}");
+						$result[] = lang('could not copy %1 to %2', $this->todir.SEP.$this->fileman[$i],$this->path.SEP.$this->fileman[$i]);
 					}
 				}
 			}
@@ -777,19 +777,19 @@
 				if($this->fileman[$i])
 				{
 					if($GLOBALS['phpgw']->vfs->mv(array(
-									'from' => "{$this->path}/{$this->fileman[$i]}",
-									'to' => "{$this->todir}/{$this->fileman[$i]}",
+									'from' => $this->path.SEP.$this->fileman[$i],
+									'to' => $this->todir.SEP.$this->fileman[$i],
 									'relatives' => array(RELATIVE_NONE,RELATIVE_NONE))))
 					{
-						$result[] = lang('file %1 moved to %2', "{$this->path}/{$this->fileman[$i]}", "{$this->todir}/{$this->fileman[$i]}");
+						$result[] = lang('file %1 moved to %2',$this->path.SEP.$this->fileman[$i], $this->todir.SEP.$this->fileman[$i]);
 					}
 					else
 					{					
-						$result[] = lang('could not move %1 to %2', "{$this->path}/{$this->fileman[$i]}", "{$this->todir}/{$this->fileman[$i]}");
+						$result[] = lang('could not move %1 to %2',$this->path.SEP.$this->fileman[$i], $this->todir.SEP.$this->fileman[$i]);
 					}
 				}
 			}
-			return is_array($result) ? $result : true;
+			return is_array($result)?$result:True;
 		}
 
 		function f_download()
@@ -838,7 +838,7 @@
 				}
 				
 				$dir_to_check = array(
-						'string' => "{$this->path}/{$this->createdir}/",
+						'string' => $this->path.SEP.$this->createdir.SEP,
 						'relatives' => array(RELATIVE_NONE),
 						'checksubdirs' => False,
 						'nofiles' => True);
@@ -859,15 +859,15 @@
 				else
 				{
 					if ($GLOBALS['phpgw']->vfs->mkdir(array(
-									'string' => "{$this->path}/{$this->createdir}",
+									'string' => $this->path.SEP.$this->createdir,
 									'relatives' => Array(RELATIVE_NONE))))
 					{
-						$this->path = "{$this->path}/{$this->createdir}";
-						$result[] = lang('created directory %1', $this->path);
+						$result[] = lang('created directory %1', $this->path.SEP.$this->createdir);
+						$this->path = $this->path.SEP.$this->createdir;
 					}
 					else
 					{
-						$result[] = lang('could not create %1', "{$this->path}/{$this->createdir}");
+						$result[] = lang('could not create %1', $this->path.SEP.$this->createdir);
 					}
 				}
 			}
@@ -883,21 +883,21 @@
 			{
 				if($badchar = $this->bad_chars($this->createfile,True,True))
 				{
-					$result[] = lang('file names cannot contain %1, file %2', $badchar, "{$this->path}/{$this->createfile}");
+					$result[] = lang('file names cannot contain %1, file %2', $badchar,$this->path.SEP.$this->createfile);
 					return $result;
 				}
 				if($GLOBALS['phpgw']->vfs->file_exists(array(
 								'string' => $this->createfile,
 								'relatives' => array(RELATIVE_ALL))))
 				{
-					$result[] = lang('file %1 already exists. Please edit it or delete it first', "{$this->path}/{$this->createfile}");
+					$result[] = lang('file %1 already exists. Please edit it or delete it first', $this->path.SEP.$this->createfile);
 					return $result;
 				}
 				if(!$GLOBALS['phpgw']->vfs->touch(array(
 								'string' => $this->createfile,
 								'relatives' => Array(RELATIVE_ALL))))
 				{
-					$result[] = lang('file %1 could not be created', "{$this->path}/{$this->createfile}");
+					$result[] = lang('file %1 could not be created', $this->path.SEP.$this->createfile);
 				}
 			}
 			else

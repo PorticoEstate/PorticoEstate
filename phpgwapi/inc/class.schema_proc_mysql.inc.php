@@ -74,7 +74,7 @@
 			switch($sType)
 			{
 				case 'auto':
-					$sTranslated = 'int(11) auto_increment';
+					$sTranslated = 'int(11) auto_increment not null';
 					break;
 				case 'blob':
 					$sTranslated = 'blob';
@@ -253,24 +253,19 @@
 			}
 		}
 
-	   	// foreign key supports needs MySQL 3.23.44 and up with InnoDB or MySQL 5.1
-	   	// or other versions the syntax is parsed in table create commands
-	   	// see chapter 1.8.4.5
-
-		function GetFKSQL($reftable, $sFields)
-		{
-			if(is_array($sFields))
-			{
-				$ret = "FOREIGN KEY (".implode(',',array_keys($sFields)).")\n" .
-					"  REFERENCES $reftable(".implode(',',array_values($sFields)).")";
-				return $ret;
-			}
-			else
-			{
-				return ""; // incorrect FK declaration found
-			}
-		}
-
+			   // foreign key supports needs MySQL 3.23.44 and up with InnoDB or MySQL 5.1
+			   // or other versions the syntax is parsed in table create commands
+			   // see chapter 1.8.4.5
+			   function GetFKSQL($sFields)
+			   {
+				 if (ereg("\((.*)\)", $sFields, $regs))
+				 {
+				   $ret = "FOREIGN KEY (".$regs[1].")\n" .
+					 "  REFERENCES ".$sFields;
+				   return $ret;
+				 } else
+				   return ""; // incorrect FK declaration found
+			   }
 
 		function _GetColumns($oProc, $sTableName, &$sColumns, $sDropColumn = '')
 		{
@@ -281,7 +276,7 @@
 			$this->uc = array();
 
 			/* Field, Type, Null, Key, Default, Extra */
-			$oProc->m_odb->query("DESCRIBE $sTableName", __LINE__, __FILE__);
+			$oProc->m_odb->query("describe $sTableName");
 			while ($oProc->m_odb->next_record())
 			{
 				$type = $default = $null = $nullcomma = $prec = $scale = $ret = $colinfo = $scales = '';
@@ -360,17 +355,17 @@
 
 		function DropTable($oProc, &$aTables, $sTableName)
 		{
-			return !!($oProc->m_odb->query("DROP TABLE " . $sTableName, __LINE__, __FILE__));
+			return !!($oProc->m_odb->query("DROP TABLE " . $sTableName));
 		}
 
 		function DropColumn($oProc, &$aTables, $sTableName, $aNewTableDef, $sColumnName, $bCopyData = true)
 		{
-			return !!($oProc->m_odb->query("ALTER TABLE $sTableName DROP COLUMN $sColumnName", __LINE__, __FILE__));
+			return !!($oProc->m_odb->query("ALTER TABLE $sTableName DROP COLUMN $sColumnName"));
 		}
 
 		function RenameTable($oProc, &$aTables, $sOldTableName, $sNewTableName)
 		{
-			return !!($oProc->m_odb->query("ALTER TABLE $sOldTableName RENAME $sNewTableName", __LINE__, __FILE__));
+			return !!($oProc->m_odb->query("ALTER TABLE $sOldTableName RENAME $sNewTableName"));
 		}
 
 		function RenameColumn($oProc, &$aTables, $sTableName, $sOldColumnName, $sNewColumnName, $bCopyData = true)
@@ -383,7 +378,7 @@
 			if ($DEBUG) { echo '<br>RenameColumn: calling _GetFieldSQL for ' . $sNewColumnName; }
 			if (isset($aTables[$sTableName]["fd"][$sNewColumnName]) && $oProc->_GetFieldSQL($aTables[$sTableName]["fd"][$sNewColumnName], $sNewColumnSQL))
 			{
-				return !!($oProc->m_odb->query("ALTER TABLE $sTableName CHANGE $sOldColumnName $sNewColumnName " . $sNewColumnSQL, __LINE__, __FILE__));
+				return !!($oProc->m_odb->query("ALTER TABLE $sTableName CHANGE $sOldColumnName $sNewColumnName " . $sNewColumnSQL));
 			}
 			return false;
 		}
@@ -394,7 +389,7 @@
 			if ($DEBUG) { echo '<br>AlterColumn: calling _GetFieldSQL for ' . $sNewColumnName; }
 			if (isset($aTables[$sTableName]["fd"][$sColumnName]) && $oProc->_GetFieldSQL($aTables[$sTableName]["fd"][$sColumnName], $sNewColumnSQL))
 			{
-				return !!($oProc->m_odb->query("ALTER TABLE $sTableName MODIFY $sColumnName " . $sNewColumnSQL, __LINE__, __FILE__));
+				return !!($oProc->m_odb->query("ALTER TABLE $sTableName MODIFY $sColumnName " . $sNewColumnSQL));
 				/* return !!($oProc->m_odb->query("ALTER TABLE $sTableName CHANGE $sColumnName $sColumnName " . $sNewColumnSQL)); */
 			}
 
@@ -406,7 +401,7 @@
 			$oProc->_GetFieldSQL($aColumnDef, $sFieldSQL);
 			$query = "ALTER TABLE $sTableName ADD COLUMN $sColumnName $sFieldSQL";
 
-			return !!($oProc->m_odb->query($query, __LINE__, __FILE__));
+			return !!($oProc->m_odb->query($query));
 		}
 
 		function GetSequenceSQL($sTableName, &$sSequenceSQL)
@@ -428,11 +423,11 @@
 				/* create sequence first since it will be needed for default */
 				if ($sSequenceSQL != '')
 				{
-					$oProc->m_odb->query($sSequenceSQL, __LINE__, __FILE__);
+					$oProc->m_odb->query($sSequenceSQL);
 				}
 
 				$query = "CREATE TABLE $sTableName ($sTableSQL)";
-				return !!($oProc->m_odb->query($query, __LINE__, __FILE__));
+				return !!($oProc->m_odb->query($query));
 			}
 
 			return false;

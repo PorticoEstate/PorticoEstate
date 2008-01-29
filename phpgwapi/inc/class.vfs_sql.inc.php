@@ -2285,7 +2285,7 @@
 							continue;
 						}
 						$rarray[] = $this->get_real_info (array(
-								'string'	=> "{$p->real_full_path}/{$filename}",
+								'string'	=> $p->real_full_path . SEP . $filename,
 								'relatives'	=> array ($p->mask)
 							)
 						);

@@ -29,8 +29,7 @@
 
 	$phpgw_info = array();
 	
-	$GLOBALS['phpgw_info']['flags'] = array
-	(
+	$GLOBALS['phpgw_info']['flags'] = array(
 		'disable_template_class' => true,
 		'login'                  => true,
 		'currentapp'             => 'login',
@@ -288,7 +287,7 @@
 			$extra_vars['phpgw_forward'] =  $forward;
 			foreach($_GET as $name => $value)
 			{
-				if (preg_match('/phpgw_/',$name))
+				if (ereg('phpgw_',$name))
 				{
 					$extra_vars[$name] = $value;
 				}
@@ -461,7 +460,7 @@
 	$extra_vars = array();
 	foreach($_GET as $name => $value)
 	{
-		if (preg_match('/phpgw_/',$name))
+		if (ereg('phpgw_',$name))
 		{
 			$extra_vars[$name] = urlencode($value);
 		}
@@ -492,24 +491,24 @@
 
 	$tmpl->set_var('template_set', $GLOBALS['phpgw_info']['login_template_set']);
 	
-	// This really should just use the API CSS, which would fix any conflicts
-	if( is_file(PHPGW_SERVER_ROOT . "/property/templates/{$GLOBALS['phpgw_info']['login_template_set']}/css/base.css") )
+	if( is_file( PHPGW_SERVER_ROOT . SEP . 'property' . SEP . 'templates' 
+		. SEP . $GLOBALS['phpgw_info']['login_template_set'] . SEP . 'css' . SEP . 'base.css') )
 	{
-		$base_css = "{$GLOBALS['phpgw_info']['server']['webserver_url']}/property/templates/{$GLOBALS['phpgw_info']['login_template_set']}/css/base.css";
+		$base_css = '../property/templates/' . $GLOBALS['phpgw_info']['login_template_set'] . '/css/base.css';
 	}
 	else
 	{
-		$base_css = "{$GLOBALS['phpgw_info']['server']['webserver_url']}/property/templates/base/css/base.css";
+		$base_css = '../property/templates/base/css/base.css';
 	}
 
-	// ditto
-	if( is_file(PHPGW_SERVER_ROOT . "/property/templates/{$GLOBALS['phpgw_info']['login_template_set']}/css/login.css") )
+	if( is_file( PHPGW_SERVER_ROOT . SEP . 'property' . SEP . 'templates' 
+		. SEP . $GLOBALS['phpgw_info']['login_template_set'] . SEP . 'css' . SEP . 'login.css') )
 	{
-		$login_css = "{$GLOBALS['phpgw_info']['server']['webserver_url']}/property/templates/{$GLOBALS['phpgw_info']['login_template_set']}/css/login.css";
+		$login_css = '../property/templates/' . $GLOBALS['phpgw_info']['login_template_set'] . '/css/login.css';
 	}
 	else
 	{
-		$login_css = "{$GLOBALS['phpgw_info']['server']['webserver_url']}/property/templates/base/css/login.css";
+		$login_css = '../property/templates/base/css/login.css';
 	}
 
 	$tmpl->set_var('base_css', $base_css);

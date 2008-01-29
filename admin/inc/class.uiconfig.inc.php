@@ -12,9 +12,9 @@
 
   /* $Id: class.uiconfig.inc.php 18358 2007-11-27 04:43:37Z skwashd $ */
 
-	class admin_uiconfig
+	class uiconfig
 	{
-		public $public_functions = array('index' => True);
+		var $public_functions = array('index' => True);
 
 		function index()
 		{
@@ -37,7 +37,6 @@
 			}
 						
 			$appname = phpgw::get_var('appname', 'string', 'GET');
-			$GLOBALS['phpgw_info']['flags']['menu_selection'] = "admin::{$appname}::index";
 
 			$GLOBALS['phpgw_info']['apps']['manual']['app'] = $appname; // override the appname fetched from the referer for the manual.
 
@@ -259,3 +258,4 @@
 			$t->pfp('out','config');
 		}
 	}
+?>

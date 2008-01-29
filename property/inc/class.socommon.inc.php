@@ -49,11 +49,11 @@
 		{
 			if($currentapp)
 			{
-			//	$this->currentapp	= $currentapp;
+				$this->currentapp	= $currentapp;
 			}
 			else
 			{
-			//	$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];			
+				$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];			
 			}
 
 			if(is_object($GLOBALS['phpgw']->db))
@@ -159,7 +159,6 @@
 		{
 			$acl 	= CreateObject('phpgwapi.acl');
 			$myaccounts = CreateObject('phpgwapi.accounts');
-			$active_accounts = array();
 
 			$sql = "SELECT * FROM phpgw_accounts $this->join phpgw_acl on phpgw_accounts.account_id=phpgw_acl.acl_account WHERE account_status = 'A' AND acl_location $this->like '%$acl_location%' order by account_lastname ASC";
 			$this->db->query($sql,__LINE__,__FILE__);

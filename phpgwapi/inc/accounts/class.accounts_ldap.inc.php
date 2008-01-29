@@ -67,7 +67,7 @@
 		*/
 		var $fallback_apps = array('addressbook', 'calendar', 'email', 'notes', 'todo');
 
-		function __construct($account_id = null, $account_type = null)
+		function accounts_ldap($account_id = null, $account_type = null)
 		{
 			$this->ds = $GLOBALS['phpgw']->common->ldapConnect();
 			$this->user_context  = $GLOBALS['phpgw_info']['server']['ldap_context'];
@@ -466,7 +466,7 @@
 		* Convert an id into its corresponding account or group name
 		*
 		* @param integer $id Account or group id
-		* @return string Name of the account or the group when found othwerwise empty string
+		* @return string|boolean Name of the account or the group when found othwerwise false
 		*/
 		function id2name($id)
 		{
@@ -1391,7 +1391,7 @@
 			{
 				if ($GLOBALS['phpgw_info']['server']['ldap_account_home'] != '')
 				{
-					$return = "{$GLOBALS['phpgw_info']['server']['ldap_account_home']}/{$login}";
+					$return = $GLOBALS['phpgw_info']['server']['ldap_account_home'].SEP.$login;
 				}
 				else
 				{

@@ -537,12 +537,12 @@
 			}
 		}
 
-		/**
-		* DAV (class 2) locking - sets an exclusive write lock
-		*
-		* @param string filename
-		* @param relatives Relativity array
-		* @result True if successfull 
+		/*
+		@function lock
+		@abstract DAV (class 2) locking - sets an exclusive write lock
+		@param string filename
+		@param relatives Relativity array
+		@result True if successfull 
 		*/		
 		function lock ($data)
 		{
@@ -633,12 +633,13 @@
 		}
 
 		
-		/**
-		* DAV (class 2) unlocking - unsets the specified lock
-		* @param string filename
-		* @param relatives Relativity array
-		* @param token	The token for the lock we wish to remove.
-		* @return bool true if successfull
+		/*
+		@function unlock
+		@abstract DAV (class 2) unlocking - unsets the specified lock
+		@param string filename
+		@param relatives Relativity array
+		@param tocken	The token for the lock we wish to remove.
+		@result True if successfull
 		*/		
 		function unlock ($data)
 		{
@@ -676,16 +677,16 @@
 			}
 		}
 
-		/**
-		* Allows querying for optional features - esp optional DAV features like locking
-		*
-		* @internal	This should really check the server.  Unfortunately the overhead of doing 
-		* this in every VFS instance is unacceptable (it essentially doubles the time for 
-		* any request). Ideally we would store these features in the session perhaps?
-		* 
-		* @param option	The option you want to test for.  Options include 'LOCKING'
-		*	'VIEW', 'VERSION-CONTROL (eventually) etc
-		* @return true if the specified option is supported
+		/*
+		@function options
+		@abstract Allows querying for optional features - esp optional DAV features 
+		like locking
+		@param option	The option you want to test for.  Options include 'LOCKING'
+			'VIEW', 'VERSION-CONTROL (eventually) etc
+		@result true if the specified option is supported
+		@discussion This should really check the server.  Unfortunately the overhead of doing this
+		in every VFS instance is unacceptable (it essentially doubles the time for any request). Ideally
+		we would store these features in the session perhaps?
 		*/		
 		function options($option)
 		{
@@ -1902,7 +1903,7 @@ $this->debug('ls branch 2 (outside)',DEBUG_LS);
 						}
 
 						$rarray[] = $this->get_real_info (array(
-								'string'	=> "{$p->real_full_path}/{$filename}",
+								'string'	=> $p->real_full_path . SEP . $filename,
 								'relatives'	=> array ($p->mask)
 							)
 						);
@@ -1981,16 +1982,16 @@ $this->debug('ls branch 3',DEBUG_LS);
 					* since forbiden infinite recursion is a good idea 
 					* to avoid DoS 
 					*/
-/*_debug_array($p->fake_full_path.$value['name'].'/');*/
-//					$datanew['string'] = "{$p->fake_full_path}/{$value['name']};
-					$datanew['string'] = preg_replace('#[/]+#','/', "{$p->fake_full_path}/{$value['name']}");
+/*_debug_array($p->fake_full_path.$value['name'].SEP);*/
+//					$datanew['string'] = $p->fake_full_path.SEP.$value['name'];
+					$datanew['string'] = preg_replace('#[/]+#','/',$p->fake_full_path.SEP.$value['name']);
 					$tmp = $this->ls($datanew);
 					foreach($tmp as $f)
 					{
 						//If ls is working well, 
 						//the returned ls match the values
 						//except if the directory is protected
-						if ( "{$f['directory']}/{$f['name']}" != "{$p->fake_full_path}/{$value['name']}" )
+						if ( $f['directory'].SEP.$f['name'] != $p->fake_full_path.SEP.$value['name'] )
 							$rarray[] = $f;
 					}
 				}

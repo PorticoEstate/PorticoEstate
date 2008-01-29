@@ -26,7 +26,6 @@
 	</div>
 	<div id="{content_class}">
 		<h1 class="articletitle">{current_app_title}</h1>
-{menubar}
 		<div id="articlecontent">
 <!-- END navbar_footer -->
 
@@ -42,6 +41,9 @@
 <!-- END extra_blocks_footer -->
 
 <!-- BEGIN extra_block_row -->
-				<li><a href="{item_link}">{lang_item}</a></li>
+				<li style="list-style-image: {list_style_image};"><a href="{item_link}">{lang_item}</a></li>
 <!-- END extra_block_row -->
 
+<!-- BEGIN extra_block_spacer -->
+				<li class="empty_item">&nbsp;</li>
+<!-- END extra_block_spacer -->

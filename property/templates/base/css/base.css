@@ -1,11 +1,9 @@
-/*
- * Conflicts with newdesign
 body, div, input, p, select, textarea
 {
 	font-family: Verdana, Arial, Helvetica, sans-serif;
 	font-size: 11px;
 }
-*/
+
 a
 {
 	text-decoration: none;

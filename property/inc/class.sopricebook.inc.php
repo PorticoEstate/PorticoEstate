@@ -24,7 +24,7 @@
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/bbb_/ekstern/
 	* @package property
 	* @subpackage agreement
- 	* @version $Id: class.sopricebook.inc.php,v 1.19 2007/01/26 14:53:47 sigurdne Exp $
+ 	* @version $Id: class.sopricebook.inc.php 18358 2007-11-27 04:43:37Z skwashd $
 	*/
 
 	/**
@@ -37,7 +37,7 @@
 
 		function property_sopricebook()
 		{
-		//	$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
+			$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->account	= $GLOBALS['phpgw_info']['user']['account_id'];
 			$this->bocommon		= CreateObject('property.bocommon');
 			$this->db           	= $this->bocommon->new_db();
@@ -47,9 +47,9 @@
 			$this->like			= $this->bocommon->like;
 		}
 
-		function add_activity_first_prize($m_cost,$w_cost,$total_cost,$activity_id,$agreement_id,$date)
+		function add_activity_first_prize($m_cost,$w_cost,$total_cost,$activity_id,$vendor_id,$date)
 		{
-			$this->db->query("update fm_activity_price_index  set index_count='1',this_index='1', m_cost='$m_cost',w_cost='$w_cost',total_cost='$total_cost',index_date='$date',current_index='1' where activity_id='$activity_id' and agreement_id= '$agreement_id' and index_count= '1'",__LINE__,__FILE__);
+			$this->db->query("update fm_activity_price_index  set index_count='1',this_index='1', m_cost='$m_cost',w_cost='$w_cost',total_cost='$total_cost',index_date='$date',current_index='1' where activity_id='$activity_id' and vendor_id= '$vendor_id' and index_count= '1'",__LINE__,__FILE__);
 
 			$receipt['message'][] = array('msg'=>lang('First entry is added!'));
 
@@ -60,17 +60,17 @@
 		{
 			for ($i=0; $i<count($update); $i++)
 			{
-				$this->db->query("select max(index_count) as max_index_count from fm_activity_price_index Where activity_id='". $update[$i]['activity_id'] . "' and agreement_id='".$update[$i]['agreement_id'] . "'",__LINE__,__FILE__);
+				$this->db->query("select max(index_count) as max_index_count from fm_activity_price_index Where activity_id='". $update[$i]['activity_id'] . "' and vendor_id='".$update[$i]['vendor_id'] . "'",__LINE__,__FILE__);
 				$this->db->next_record();
 				$next_index_count  = $this->db->f('max_index_count')+1;
 
 				$this->db->query("update fm_activity_price_index set current_index = Null"
-				. " WHERE activity_id='" . $update[$i]['activity_id'] . "' and agreement_id='" . $update[$i]['agreement_id'] . "'",__LINE__,__FILE__);
+				. " WHERE activity_id='" . $update[$i]['activity_id'] . "' and vendor_id='" . $update[$i]['vendor_id'] . "'",__LINE__,__FILE__);
 
-				$this->db->query("insert into fm_activity_price_index (activity_id, agreement_id, index_count, this_index, m_cost, w_cost, total_cost, index_date,current_index) "
+				$this->db->query("insert into fm_activity_price_index (activity_id, vendor_id, index_count, this_index, m_cost, w_cost, total_cost, index_date,current_index) "
 				. " values ('" .
 					$update[$i]['activity_id'] . "','" .
-					$update[$i]['agreement_id'] . "','" .
+					$update[$i]['vendor_id'] . "','" .
 					$next_index_count . "','" .
 					$update[$i]['new_index'] . "','" .
 					$update[$i]['new_m_cost'] . "','" .
@@ -229,8 +229,8 @@
 
 			if($query)
 			{
-				$query = preg_replace("/'/",'',$query);
-				$query = preg_replace('/"/','',$query);
+				$query = ereg_replace("'",'',$query);
+				$query = ereg_replace('"','',$query);
 
 				$querymethod = " AND (fm_activities.descr $this->like '%$query%' or fm_activities.num $this->like '%$query%')";
 			}
@@ -280,8 +280,7 @@
 					'ns3420_id'		=> $this->db->f('ns3420'),
 					'descr'			=> stripslashes($this->db->f('descr')),
 					'base_descr'		=> stripslashes($this->db->f('base_descr')),
-					'index_count'		=> $this->db->f('index_count'),
-					'agreement_id'		=> $this->db->f('fm_agreement.id')
+					'index_count'		=> $this->db->f('index_count')
 				);
 			}
 //		_debug_array($pricebook);
@@ -327,8 +326,8 @@
 
 			if($query)
 			{
-				$query = preg_replace("/'/",'',$query);
-				$query = preg_replace('/"/','',$query);
+				$query = ereg_replace("'",'',$query);
+				$query = ereg_replace('"','',$query);
 
 				$querymethod = " $where (descr $this->like '%$query%' or num $this->like '%$query%')";
 			}
@@ -380,15 +379,22 @@
 		{
 			if(is_array($data))
 			{
-				$start			= isset($data['start']) && $data['start'] ? $data['start']:0;
-				$filter			= isset($data['filter'])?$data['filter']:'none';
-				$query			= isset($data['query'])?$data['query']:'';
-				$sort			= isset($data['sort']) && $data['sort'] ? $data['sort']:'DESC';
-				$order			= isset($data['order'])?$data['order']:'';
-				$cat_id			= isset($data['cat_id'])?$data['cat_id']:0;
-				$activity_id	= isset($data['activity_id'])?$data['activity_id']:0;
-				$agreement_id	= isset($data['agreement_id']) && $data['agreement_id'] ? $data['agreement_id']:0;
-				$allrows 		= isset($data['allrows'])?$data['allrows']:'';
+				if ($data['start'])
+				{
+					$start=$data['start'];
+				}
+				else
+				{
+					$start=0;
+				}
+				$filter	= (isset($data['filter'])?$data['filter']:'none');
+				$query = (isset($data['query'])?$data['query']:'');
+				$sort = (isset($data['sort'])?$data['sort']:'DESC');
+				$order = (isset($data['order'])?$data['order']:'');
+				$cat_id = (isset($data['cat_id'])?$data['cat_id']:0);
+				$activity_id = (isset($data['activity_id'])?$data['activity_id']:0);
+				$vendor_id = (isset($data['vendor_id'])?$data['vendor_id']:0);
+				$allrows 		= (isset($data['allrows'])?$data['allrows']:'');
 			}
 
 			if ($order)
@@ -407,15 +413,16 @@
 
 			if($query)
 			{
-				$query = preg_replace("/'/",'',$query);
-				$query = preg_replace('/"/','',$query);
+				$query = ereg_replace("'",'',$query);
+				$query = ereg_replace('"','',$query);
 
 				$querymethod = " AND (fm_activities.descr $this->like '%$query%' or fm_activities.num $this->like '%$query%')";
 			}
 
 			$sql = "SELECT index_count,this_index,current_index,m_cost,w_cost,total_cost,index_date"
 				. " FROM fm_activity_price_index $this->join fm_agreement on fm_activity_price_index.agreement_id = fm_agreement.id "
-				. " Where activity_id= '$activity_id' and fm_activity_price_index.agreement_id= '$agreement_id'";
+				. " Where activity_id= '$activity_id' and fm_activity_price_index.vendor_id= '$vendor_id'";
+
 
 			$this->db2->query($sql,__LINE__,__FILE__);
 			$this->total_records = $this->db2->num_rows();
@@ -485,8 +492,8 @@
 			}
 			if($query)
 			{
-				$query = preg_replace("/'/",'',$query);
-				$query = preg_replace('/"/','',$query);
+				$query = ereg_replace("'",'',$query);
+				$query = ereg_replace('"','',$query);
 
 //				$querymethod = " AND (fm_activities.descr $this->like '%$query%' or fm_activities.num $this->like '%$query%')";
 				$querymethod = " and (fm_activities.descr $this->like '%$query%' or fm_activities.base_descr $this->like '%$query%' or fm_activities.num $this->like '%$query%') ";
@@ -531,14 +538,21 @@
 		{
 			if(is_array($data))
 			{
-				$start			= isset($data['start']) && $data['start'] ? $data['start'] : 0;
-				$filter			= isset($data['filter']) && $data['filter'] ? $data['filter'] : 'none';
-				$query 			= isset($data['query'])?$data['query']:'';
-				$sort 			= isset($data['sort']) && $data['sort'] ? $data['sort'] : 'DESC';
-				$order 			= isset($data['order'])?$data['order']:'';
-				$cat_id 		= isset($data['cat_id']) && $data['cat_id'] ? $data['cat_id'] : 0;
-				$allrows 		= isset($data['allrows'])?$data['allrows']:'';
-				$activity_id 	= isset($data['activity_id'])?$data['activity_id']:'';
+				if ($data['start'])
+				{
+					$start=$data['start'];
+				}
+				else
+				{
+					$start=0;
+				}
+				$filter			= (isset($data['filter'])?$data['filter']:'none');
+				$query 			= (isset($data['query'])?$data['query']:'');
+				$sort 			= (isset($data['sort'])?$data['sort']:'DESC');
+				$order 			= (isset($data['order'])?$data['order']:'');
+				$cat_id 		= (isset($data['cat_id'])?$data['cat_id']:0);
+				$allrows 		= (isset($data['allrows'])?$data['allrows']:'');
+				$activity_id 	= (isset($data['activity_id'])?$data['activity_id']:'');
 			}
 
 			if ($order)
@@ -560,19 +574,19 @@
 			}
 			if($query)
 			{
-				$query = preg_replace("/'/",'',$query);
-				$query = preg_replace('/"/','',$query);
+				$query = ereg_replace("'",'',$query);
+				$query = ereg_replace('"','',$query);
 
 				$querymethod = " AND (fm_vendor.org_name $this->like '%$query%' or vendor_id $this->like '%$query%')";
 			}
 
-			$sql = "SELECT fm_activities.id as activity_id,fm_activities.num, fm_vendor.org_name,fm_branch.descr as branch ,fm_agreement.id as agreement_id"
+			$sql = "SELECT fm_activities.id as activity_id,fm_activities.num, fm_vendor.org_name,fm_branch.descr as branch ,fm_activity_price_index.vendor_id "
 				. " FROM (fm_activities  $this->join fm_activity_price_index ON fm_activities.id = fm_activity_price_index.activity_id) "
 				. " $this->join fm_agreement ON fm_activity_price_index.agreement_id = fm_agreement.id "
 				. " $this->join fm_vendor ON fm_agreement.vendor_id = fm_vendor.id "
 				. " $this->join fm_branch on fm_branch.id = fm_activities.branch_id "
 				. " Where fm_activity_price_index.activity_id= '$activity_id' $querymethod group by fm_activities.id,fm_activities.num,"
-				. " fm_branch.descr,org_name , fm_agreement.id ";
+				. " fm_branch.descr,org_name ,fm_activity_price_index.vendor_id ";
 
 			$this->db2->query($sql,__LINE__,__FILE__);
 			$this->total_records = $this->db2->num_rows();
@@ -586,7 +600,6 @@
 				$this->db->query($sql . $ordermethod,__LINE__,__FILE__);
 			}
 
-			$pricebook = array();
 			while ($this->db->next_record())
 			{
 				$pricebook[] = array
@@ -595,8 +608,7 @@
 					'num'			=> $this->db->f('num'),
 					'branch'		=> $this->db->f('branch'),
 					'vendor_name'	=> $this->db->f('org_name'),
-				//	'vendor_id'		=> $this->db->f('vendor_id'),
-					'agreement_id'		=> $this->db->f('agreement_id')
+					'vendor_id'		=> $this->db->f('vendor_id')
 				);
 			}
 			return $pricebook;
@@ -738,9 +750,9 @@
 			return $receipt;
 		}
 
-		function delete_activity_vendor($activity_id,$agreement_id)
+		function delete_activity_vendor($activity_id,$vendor_id)
 		{
-			$this->db->query("DELETE FROM fm_activity_price_index WHERE activity_id='$activity_id' and agreement_id='$agreement_id'",__LINE__,__FILE__);
+			$this->db->query("DELETE FROM fm_activity_price_index WHERE activity_id='$activity_id' and vendor_id='$vendor_id'",__LINE__,__FILE__);
 		}
 
 		function delete_activity($activity_id)
@@ -749,19 +761,19 @@
 			$this->db->query("DELETE FROM fm_activity_price_index WHERE activity_id='$activity_id'",__LINE__,__FILE__);
 		}
 
-		function delete_prize_index($activity_id,$agreement_id,$index_count)
+		function delete_prize_index($activity_id,$vendor_id,$index_count)
 		{
 			if ($index_count==1)
 			{
-				$this->db->query("update fm_activity_price_index set index_count = '1', current_index = '0', this_index=Null, m_cost=Null,w_cost=Null,total_cost=Null,index_date=Null  where activity_id='$activity_id' and agreement_id= '$agreement_id' and index_count= '1'",__LINE__,__FILE__);
+				$this->db->query("update fm_activity_price_index set index_count = '1', current_index = '0', this_index=Null, m_cost=Null,w_cost=Null,total_cost=Null,index_date=Null  where activity_id='$activity_id' and vendor_id= '$vendor_id' and index_count= '1'",__LINE__,__FILE__);
 			}
 			else
 			{
-				$this->db->query("delete from fm_activity_price_index where activity_id='$activity_id' and agreement_id= '$agreement_id' and index_count= '$index_count'",__LINE__,__FILE__);
+				$this->db->query("delete from fm_activity_price_index where activity_id='$activity_id' and vendor_id= '$vendor_id' and index_count= '$index_count'",__LINE__,__FILE__);
 
 				$new_index_count= $index_count -1;
 
-				$this->db->query("update fm_activity_price_index set current_index = '1' where activity_id='$activity_id' and agreement_id= '$agreement_id' and index_count= '$new_index_count'",__LINE__,__FILE__);
+				$this->db->query("update fm_activity_price_index set current_index = '1' where activity_id='$activity_id' and vendor_id= '$vendor_id' and index_count= '$new_index_count'",__LINE__,__FILE__);
 			}
 
 		}
@@ -780,7 +792,7 @@
 
 		function add_activity_vendor($values)
 		{
-			$this->db->query("SELECT count(*) FROM fm_activity_price_index WHERE activity_id='" . $values['activity_id'] . "' and agreement_id='" . $values['agreement_id'] . "'",__LINE__,__FILE__);
+			$this->db->query("SELECT count(*) FROM fm_activity_price_index WHERE activity_id='" . $values['activity_id'] . "' and vendor_id='" . $values['vendor_id'] . "'",__LINE__,__FILE__);
 
 			$this->db->next_record();
 
@@ -790,10 +802,10 @@
 			}
 			else
 			{
-				$this->db->query("insert into fm_activity_price_index (activity_id, agreement_id, index_count,current_index,m_cost,w_cost,total_cost) "
+				$this->db->query("insert into fm_activity_price_index (activity_id, vendor_id, index_count,current_index,m_cost,w_cost,total_cost) "
 					. " values ('" .
 					$values['activity_id']. "','" .
-					$values['agreement_id']. "','1','0',NULL,NULL,NULL)",__LINE__,__FILE__);
+					$values['vendor_id']. "','1','0',NULL,NULL,NULL)",__LINE__,__FILE__);
 
 				$receipt['message'][] = array('msg'=>lang('Vendor has been added'));
 

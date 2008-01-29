@@ -23,6 +23,7 @@
 		</xsl:choose>
 	</xsl:template>
 	<xsl:template match="list">		
+		<xsl:call-template name="menu"/> 
 		<table width="100%" cellpadding="2" cellspacing="2" align="center">
 			<xsl:choose>
 				<xsl:when test="msgbox_data != ''">
@@ -130,6 +131,7 @@
 	
 	
 		<xsl:template match="list_config">		
+			<xsl:call-template name="menu"/> 
 			<table width="100%" cellpadding="2" cellspacing="2" align="center">
 				<tr>
 					<td align="right">
@@ -452,13 +454,6 @@
 		
 		<table width="100%" cellpadding="2" cellspacing="2" align="center">
 			<tr>
-				<td align="left">
-					<xsl:value-of select="lang_type"/>
-					<xsl:text>: </xsl:text>
-					<xsl:value-of select="value_type_name"/>
-				</td>
-			</tr>
-			<tr>
 				<td align="right">
 					<xsl:call-template name="search_field"/>
 				</td>
@@ -480,6 +475,9 @@
 		<xsl:variable name="sort_id"><xsl:value-of select="sort_id"/></xsl:variable>
 		<xsl:variable name="sort_name"><xsl:value-of select="sort_name"/></xsl:variable>
 		<tr class="th">
+			<td class="th_text" width="10%" align="left">
+				<xsl:value-of select="lang_type_name"/>
+			</td>
 			<td class="th_text" width="10%" align="left">
 				<a href="{$sort_name}"><xsl:value-of select="lang_name"/></a>
 			</td>
@@ -521,6 +519,10 @@
 						</xsl:otherwise>
 					</xsl:choose>
 				</xsl:attribute>
+
+				<td align="left">
+					<xsl:value-of select="type_name"/>
+				</td>
 				<td align="left">
 					<xsl:value-of select="column_name"/>
 				</td>

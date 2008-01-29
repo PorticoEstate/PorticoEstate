@@ -37,7 +37,7 @@
 
 		function property_soworkorder()
 		{
-		//	$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
+			$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->account		= $GLOBALS['phpgw_info']['user']['account_id'];
 			$this->bocommon		= CreateObject('property.bocommon');
 			$this->db           	= $this->bocommon->new_db();
@@ -48,12 +48,12 @@
 
 			$this->like			= $this->bocommon->like;
 
-		//	$this->grants 		= $GLOBALS['phpgw']->session->appsession('grants_project','property');
+		//	$this->grants 		= $GLOBALS['phpgw']->session->appsession('grants_project',$this->currentapp);
 		//	if(!$this->grants)
 			{
 				$this->acl 		= CreateObject('phpgwapi.acl');
-				$this->grants		= $this->acl->get_grants('property','.project');
-		//		$GLOBALS['phpgw']->session->appsession('grants_project','property',$this->grants);
+				$this->grants		= $this->acl->get_grants($this->currentapp,'.project');
+		//		$GLOBALS['phpgw']->session->appsession('grants_project',$this->currentapp,$this->grants);
 			}
 		}
 
@@ -370,8 +370,8 @@
 				}
 				else
 				{
-					$query = preg_replace("/'/",'',$query);
-					$query = preg_replace('/"/','',$query);
+					$query = ereg_replace("'",'',$query);
+					$query = ereg_replace('"','',$query);
 
 					$querymethod = " $where (fm_workorder.title $this->like '%$query%' or fm_workorder.descr $this->like '%$query%' or fm_project.address $this->like '%$query%' or fm_project.location_code $this->like '%$query%' or fm_workorder.id $this->like '%$query%')";
 				}
@@ -421,7 +421,6 @@
 
 			$count_cols_return=count($cols_return);
 			$j=0;
-			$workorder_list = array();
 			while ($this->db->next_record())
 			{
 				for ($i=0;$i<$count_cols_return;$i++)
@@ -442,7 +441,7 @@
 				$j++;
 			}
 
-			return $workorder_list;
+			return (isset($workorder_list)?$workorder_list:array());
 		}
 
 		function read_single($workorder_id)

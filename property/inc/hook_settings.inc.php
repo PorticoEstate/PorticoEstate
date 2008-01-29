@@ -27,6 +27,7 @@
  	* @version $Id: hook_settings.inc.php 18358 2007-11-27 04:43:37Z skwashd $
 	*/
 
+	$this->currentapp	= & $GLOBALS['phpgw_info']['flags']['currentapp'];
 
 	$select_property_filter = array(
 		''	=> lang('Owner type'),
@@ -197,7 +198,4 @@
 	}
 
 	create_select_box('Default vendor type','default_vendor_category',$_categories_vendor,'which agreement');
-	create_input_box('With of textarea','textareacols','With of textarea in forms');
-	create_input_box('Height of textarea','textarearows','Height of textarea in forms');
-	
 

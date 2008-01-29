@@ -51,8 +51,8 @@
 			$this->hColor = 0;
 			$this->font = 0;
 			$this->type = 'png';			
-			$this->temp_dir	= PHPGW_SERVER_ROOT . '/phpgwapi/images/';
-//			$this->temp_dir	= $GLOBALS['phpgw_info']['server']['temp_dir'] . '/';
+			$this->temp_dir	= PHPGW_SERVER_ROOT . SEP . 'phpgwapi' . SEP . 'images' . SEP;
+//			$this->temp_dir	= $GLOBALS['phpgw_info']['server']['temp_dir'] . SEP;
 		}
 
 		function check_gd()
