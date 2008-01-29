@@ -1,5 +1,6 @@
 <?php
 	phpgw::import_class('phpgwapi.yui');
+	phpgw::import_class('phpgwapi.template_newdesign');
 
 	if ( !isset($GLOBALS['phpgw_info']['server']['site_title']) )
 	{
@@ -42,7 +43,6 @@
 	phpgwapi_yui::load_widget('connection');
 	//phpgwapi_yui::load_widget('json');
 
-
 	foreach ( $stylesheets as $stylesheet )
 	{
 		if( file_exists( PHPGW_SERVER_ROOT . $stylesheet ) )
@@ -52,6 +52,31 @@
 		}
 	}
 
+	// Construct navbar_config by taking into account the current selected menu
+	// The only problem with this loop is that nodes without children allso will
+	// get set at expanded even though that isn't needed.
+
+	$navbar_config = execMethod('phpgwapi.template_newdesign.retrieve_local', 'navbar_config');
+	//var_dump($navbar_config);
+	if(!isset($navbar_config))
+	{
+		$navbar_config = array();
+	}
+
+	$current_selection = $GLOBALS['phpgw_info']['flags']['menu_selection'];
+	while($current_selection)
+	{
+		$navbar_config["navbar::$current_selection"] = true;
+		$current_selection = implode("::", explode("::", $current_selection, -1));
+	}
+
+	//var_dump( $navbar_config );
+
+	// Doesn't work :(
+	//execMethod('phpgwapi.template_newdesign.store_local', array('navbar_config', $navbar_config) );
+	phpgwapi_template_newdesign::store_local('navbar_config', $navbar_config);
+	//$navbar_config = execMethod('phpgwapi.template_newdesign.retrieve_local', 'navbar_config');
+	//var_dump( $navbar_config );
 
 	$app = lang($app);
 	$tpl_vars = array
@@ -64,7 +89,7 @@
 		'webserver_url'	=> $GLOBALS['phpgw_info']['server']['webserver_url'],
 		'win_on_events'	=> $GLOBALS['phpgw']->common->get_on_events(),
 		'border_layout_config' => json_encode(execMethod('phpgwapi.template_newdesign.retrieve_local', 'border_layout_config')),
-		'navbar_config' => json_encode(execMethod('phpgwapi.template_newdesign.retrieve_local', 'navbar_config'))
+		'navbar_config' => json_encode($navbar_config)
 	);
 
 	$GLOBALS['phpgw']->template->set_var($tpl_vars);

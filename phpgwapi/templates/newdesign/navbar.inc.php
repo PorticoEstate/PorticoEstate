@@ -32,29 +32,18 @@
 
 		//$debug .= "<b>" . $GLOBALS['phpgw_info']['flags']['menu_selection'] . "</b><br>";
 
-		//$now = microtime(true);
+		$now = microtime(true);
 		$treemenu = "";
 		foreach($navbar as $app => $app_data)
 		{
-			switch( $app )
+			if(!in_array($app, array('logout', 'about', 'preferences')))
 			{
-				case in_array($app, array('logout', 'about', 'preferences')):
-					break;
-				default:
-					if( isset($navigation[$app]) )
-					{
-						$submenu = render_submenu($app, $navigation[$app]);
-					}
-					else
-					{
-						$submenu = "";
-					}
-					$treemenu .= render_item($app_data, "navbar::{$app}", $submenu);
-					break;
+				$submenu = isset($navigation[$app]) ? render_submenu($app, $navigation[$app]) : '';
+				$treemenu .= render_item($app_data, "navbar::{$app}", $submenu);
 			}
 		}
-		//$delta = microtime(true)-$now;
-		//echo $delta;
+		$delta = microtime(true)-$now;
+		echo $delta;
 
 		$var['treemenu'] = <<<HTML
 			<ul id="navbar">
@@ -72,41 +61,53 @@ HTML;
 
 	function item_expanded($id)
 	{
-		static $navbar_state, $selected_item;
+		static $navbar_state; //, $selected_item;
 		if( !isset( $navbar_state ) )
 		{
 			$navbar_state = execMethod('phpgwapi.template_newdesign.retrieve_local', 'navbar_config');
-			$selected_item = "navbar::{$GLOBALS['phpgw_info']['flags']['menu_selection']}";
+			//$selected_item = "navbar::{$GLOBALS['phpgw_info']['flags']['menu_selection']}";
 		}
-		return isset( $navbar_state[ $id ]) ? true : preg_match("/^{$id}/", $selected_item );
+		//if( isset( $navbar_state[ $id ]) )
+		//	return true;
+		return isset( $navbar_state[ $id ]); // ? true : false; // preg_match("/^{$id}/", $selected_item );
 	}
-
 
 	function render_item($item, $id= "", $children="")
 	{
+		$icon_style = $expand_class = $current_class = $link_class = $parent_class = "";
 		static $blank_image;
 		if(!isset($blank_image))
 		{
 			$blank_image = $GLOBALS['phpgw']->common->find_image('phpgwapi', 'blank.png');
 		}
-		$icon_image = isset($item['image']) ? $GLOBALS['phpgw']->common->image($item['image'][0], $item['image'][1]) : $blank_image;
-
+		if( isset($item['image']) )
+		{
+			$icon_style = ' style="background-image: url(' . $GLOBALS['phpgw']->common->image($item['image'][0], $item['image'][1]) . ')"';
+		}
 		if( $children )
 		{
 			$expand_class = item_expanded($id) ? ' class="expanded"' : ' class="collapsed"';
+			$parent_class = ' parent';
 		}
-		else
+		if( $id == "navbar::{$GLOBALS['phpgw_info']['flags']['menu_selection']}" )
 		{
-			$expand_class = '';
+			$current_class = 'current';
 		}
 
-		$current_class = $id == "navbar::{$GLOBALS['phpgw_info']['flags']['menu_selection']}" ? 'class="current"' : '';
+		$link_class =" class=\"{$current_class}{$parent_class}\"";
 
-		return <<<HTML
+		$out = <<<HTML
 			<li{$expand_class}>
-				<a href="{$item['url']}"{$current_class} id="{$id}">
-					<img src="{$blank_image}"{$expand_class}width="16" height="16" alt="+/-" />
-					<img src="{$icon_image}" width="16" height="16" />
+HTML;
+		if( $expand_class )
+		{
+		$out .= <<<HTML
+				<img src="{$blank_image}"{$expand_class}width="16" height="16" alt="+/-" />
+HTML;
+		}
+		return <<<HTML
+				$out
+				<a href="{$item['url']}"{$link_class}{$icon_style} id="{$id}">
 					<span>
 						{$item['text']}
 					</span>
@@ -122,14 +123,7 @@ HTML;
 		$out = "";
 		foreach ( $menu as $key => $item )
 		{
-			if( isset($item['children']) )
-			{
-				$children = render_submenu(	"{$parent}::{$key}", $item['children']);
-			}
-			else
-			{
-				$children = "";
-			}
+			$children = isset($item['children']) ? render_submenu(	"{$parent}::{$key}", $item['children']) : '';
 			$out .= render_item($item, "navbar::{$parent}::{$key}", $children);
 			//$debug .= "{$parent}::{$key}<br>";
 		}
