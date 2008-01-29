@@ -141,8 +141,7 @@ end date	common	sv	Slutdatum
 end time	common	sv	Sluttid
 entry has been deleted sucessfully	common	sv	Det har blivit borttaget
 entry updated sucessfully	common	sv	Det är uppdaterat
-equatorial guinea	common	sv	 	
-EKVATORIALGUINEA
+equatorial guinea	common	sv	EKVATORIALGUINEA
 eritrea	common	sv	ERITREA
 error	common	sv	Fel
 error creating %1 %2 directory	common	sv	Fel vid skapandet av %1 %2 mapp
@@ -556,3 +555,4 @@ yugoslavia	common	sv	JUGOSLAVIEN
 zambia	common	sv	ZAMBIA
 zimbabwe	common	sv	ZIMBABWE
 zip code	common	sv	Postnummer
+
