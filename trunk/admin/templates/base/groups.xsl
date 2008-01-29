@@ -111,7 +111,7 @@
 			<xsl:choose>
 				<xsl:when test="msgbox_data != ''">
 					<tr>
-						<td align="center"><xsl:call-template name="msgbox"/></td>
+						<xsl:call-template name="msgbox"/>
 					</tr>
 				</xsl:when>
 			</xsl:choose>

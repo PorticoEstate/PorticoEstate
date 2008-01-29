@@ -288,7 +288,7 @@
 
 			$account_apps	= array();
 			$account_id		= phpgw::get_var('account_id', 'int');
-			$error_list		= '';
+			$error_list		= array();
 			$values			= phpgw::get_var('values', 'string', 'POST', array());
 
 			if ( (isset($values['cancel']) && $values['cancel'])
@@ -307,10 +307,9 @@
 				
 				$error = $this->bo->validate_group($values);
 
-				if (is_array($error))
+				if ( is_array($error) )
 				{
-					$error_list = $GLOBALS['phpgw']->common->error_list($error);
-					echo 'FIXME errors are not displayed with idots :(<pre>' . print_r($error, true) . '</pre>';
+					$error_list = array('msgbox_text' => $GLOBALS['phpgw']->common->error_list($error));
 				}
 				else
 				{
@@ -460,7 +459,7 @@
 				}
 			}
 			
-			$GLOBALS['phpgw']->xslttpl->add_file('msgbox', PHPGW_TEMPLATE_DIR);			
+			$GLOBALS['phpgw']->xslttpl->add_file('msgbox', PHPGW_TEMPLATE_DIR, 3); // no point in wasting loops
 			$GLOBALS['phpgw']->xslttpl->add_file('groups');
 			$GLOBALS['phpgw_info']['flags']['app_header'] =  $account_id > 0 ? lang('edit group') : lang('add group');
 			$data = array
@@ -513,14 +512,14 @@
 			{
 				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'admin.uiaccounts.list_users'));
 			}
-			$error_list = '';
+			$error_list = array();
 			if (isset($values['save']) && $values['save'])
 			{
 				$error = $this->bo->validate_user($values);
 
 				if (is_array($error))
 				{
-					$error_list = $GLOBALS['phpgw']->common->error_list($error);
+					$error_list = array('msgbox_text' => $GLOBALS['phpgw']->common->error_list($error));
 				}
 				else
 				{
@@ -544,6 +543,8 @@
 			//print_debug('Type : '.gettype($_userData).'<br>_userData(size) = "'.$_userData.'"('.strlen($_userData).')');
 
 			$GLOBALS['phpgw']->xslttpl->add_file('users');
+			$GLOBALS['phpgw']->xslttpl->add_file('msgbox', PHPGW_TEMPLATE_DIR, 3); // no point in wasting loops
+
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('administration') . ': ' . ($account_id?lang('edit user account'):lang('add user account'));
 
 			$acl = createObject('phpgwapi.acl', $account_id);

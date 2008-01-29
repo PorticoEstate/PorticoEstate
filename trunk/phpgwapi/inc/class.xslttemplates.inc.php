@@ -27,7 +27,7 @@
 	* @package phpgwapi
 	* @subpackage gui
 	*/
-	class xslttemplates
+	class phpgwapi_xslttemplates
 	{
 		var $rootdir = '';
 		var $prev_rootdir = '';
@@ -54,7 +54,12 @@
 		var $xmlvars = array();
 		var $xmldata = '';
 
-		function xslttemplates($root = '.')
+		/**
+		* Constructor
+		*
+		* @param string $root the root directory
+		*/
+		function __construct($root = '.')
 		{
 			//FIXME Print view/mode should be handled by CSS not different markup
 			if ( isset($GLOBALS['phpgw_info']['flags']['printview']) && $GLOBALS['phpgw_info']['flags']['printview'] )
@@ -68,6 +73,11 @@
 			}
 		}
 
+		/**
+		* Error hanlder
+		*
+		* @param string $msg the error message
+		*/
 		function halt($msg)
 		{
 			die($msg);
@@ -112,62 +122,61 @@
 
 		function add_file($filename, $rootdir='', $time=1)
 		{
-			if (!is_array($filename))
-			{
-				if($rootdir=='')
-				{
-					$rootdir=$this->rootdir;
-				}
-
-				if ( substr($filename, 0, 1) != '/' 
-					&& substr($filename, 1, 1) != ':' )
-				{
-					$new_filename = "{$rootdir}/{$filename}";
-				}
-				else
-				{
-					$new_filename = $filename;
-				}
-
-//				echo 'Rootdir: '.$rootdir.'<br>'."\n".'Filename: '.$filename.'<br>'."\n".'New Filename: '.$new_filename.'<br>'."\n";
-				if (!file_exists($new_filename.'.xsl'))
-				{
-					switch($time)
-					{
-						case 2:
-							$new_root = str_replace($GLOBALS['phpgw_info']['server']['template_set'],'base',$rootdir);
-							$this->add_file($filename,$new_root,3);
-							return true;
-						case 3:
-							$new_root = PHPGW_SERVER_ROOT . '/phpgwapi/templates/' . $GLOBALS['phpgw_info']['server']['template_set'];
-							$this->add_file($filename,$new_root,4);
-							return true;
-						case 4:
-							$new_root = PHPGW_SERVER_ROOT . '/phpgwapi/templates/base';
-							$this->add_file($filename,$new_root,5);
-							return true;
-						case 5:
-							$this->add_file($filename,$rootdir,6);
-							return true;
-						case 6:
-							$this->halt("filename: file $new_filename.xsl does not exist.");
-							break true;
-						default:
-							$this->add_file($filename,$rootdir,2);
-							return true;
-					}
-				}
-				else
-				{
-					$this->xslfiles[$filename] = $new_filename.'.xsl';
-				}
-			}
-			else
+			if ( is_array($filename) )
 			{
 				foreach ( $filename as $file )
 				{
 					$this->add_file($file);
 				}
+				return;
+			}
+
+			if($rootdir=='')
+			{
+				$rootdir=$this->rootdir;
+			}
+
+			if ( substr($filename, 0, 1) != '/' 
+				&& substr($filename, 1, 1) != ':' )
+			{
+				$new_filename = "{$rootdir}/{$filename}";
+			}
+			else
+			{
+				$new_filename = $filename;
+			}
+
+//				echo 'Rootdir: '.$rootdir.'<br>'."\n".'Filename: '.$filename.'<br>'."\n".'New Filename: '.$new_filename.'<br>'."\n";
+			if (!file_exists($new_filename.'.xsl'))
+			{
+				switch($time)
+				{
+					case 2:
+						$new_root = str_replace($GLOBALS['phpgw_info']['server']['template_set'],'base',$rootdir);
+						$this->add_file($filename, $new_root, 3);
+						return true;
+					case 3:
+						$new_root = PHPGW_SERVER_ROOT . '/phpgwapi/templates/' . $GLOBALS['phpgw_info']['server']['template_set'];
+						$this->add_file($filename, $new_root, 4);
+						return true;
+					case 4:
+						$new_root = PHPGW_SERVER_ROOT . '/phpgwapi/templates/base';
+						$this->add_file($filename, $new_root, 5);
+						return true;
+					case 5:
+						$this->add_file($filename, $rootdir, 6);
+						return true;
+					case 6:
+						$this->halt("filename: file $new_filename.xsl does not exist.");
+						break true;
+					default:
+						$this->add_file($filename, $rootdir, 2);
+						return true;
+				}
+			}
+			else
+			{
+				$this->xslfiles[$filename] = $new_filename.'.xsl';
 			}
 		}
 
