@@ -307,3 +307,4 @@ you need to set either a day or a occurence !!!	calendar	sv	Du måste ange anting
 your meeting scheduled for %1 has been canceled	calendar	sv	Ditt möte %1 har blivit inställt
 your meeting that had been scheduled for %1 has been rescheduled to %2	calendar	sv	Ditt möte planerat till %1 har blivit flyttat till %2
 your suggested time of <b> %1 - %2 </b> conflicts with the following existing calendar entries:	calendar	sv	Din föreslagna tid av <B> %1 - %2 </B> är i konflikt med de följande kalender entries:
+

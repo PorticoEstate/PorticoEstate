@@ -9,3 +9,4 @@ port	javassh	sv	Port
 protocol	javassh	sv	Protokoll
 server	javassh	sv	Server
 servers	javassh	sv	Servrar
+
