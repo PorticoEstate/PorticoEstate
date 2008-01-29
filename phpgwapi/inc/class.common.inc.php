@@ -323,20 +323,31 @@
 		* @param string $text Heading error text
 		* @return string HTML table with error messages or empty string when there is no error/s
 		*/
-		public function error_list($errors, $text='Error')
+		public function error_list($errors, $text = 'Error')
 		{
-			if (! is_array($errors))
+			if ( !is_array($errors) || !count($errors) )
 			{
 				return '';
 			}
 
-			$html_error = '<h3>' . lang($text) . "</h3>\n"
-						. "<ul class=\"errors\">\n<ul>\n<li>{$errors[0]}</li>";
-			for ($i=1; $i<count($errors); ++$i)
+			$text = lang($text);
+			$html_error = <<<HTML
+				<h3>$text</h3>
+					<ul>
+
+HTML;
+			foreach ( $errors as $error )
 			{
-				$html_error .= "<li>{$errors[$i]}</li>\n";
+				$html_error .= <<<HTML
+						<li>{$error}</li>
+
+HTML;
 			}
-			return "$html_error</ul>\n";
+			$html_error .= <<<HTML
+				</ul>
+
+HTML;
+			return $html_error;
 		}
 
 		/**

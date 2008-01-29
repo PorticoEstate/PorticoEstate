@@ -435,3 +435,25 @@ thead, th, .th
 {
 	background-image: url(../images/icons/lock.png);
 }
+
+/* Error Related CSS */
+.error
+{
+	background-color: #fcc;
+	border: 1px solid #f00;
+	color: #f00;
+}
+
+.warn
+{
+	background-color: #ff8;
+	border: 1px solid #fc0;
+	color: #fc0;
+}
+
+div.error, div.warn
+{
+	font-weight: bold;
+	padding: 2px;
+	text-align: center;
+}
