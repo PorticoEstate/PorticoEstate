@@ -411,7 +411,7 @@
 			'fd' => array(
 				'org_id' => array('type' => 'int','precision' => '4','nullable' => False),
 				'name' => array('type' => 'varchar','precision' => '80','nullable' => False),
-				'active' => array('type' => 'char','precision' => '1','nullable' => False,'default' => 'Y'),
+				'active' => array('type' => 'char','precision' => '1','nullable' => True,'default' => 'Y'),
 				'parent' => array('type' => 'int','precision' => '4','nullable' => True),
 				'created_on' => array('type' => 'int','precision' => '4','nullable' => False),
 				'created_by' => array('type' => 'int','precision' => '4','nullable' => False),
@@ -441,7 +441,7 @@
 			'fd' => array(
 				'contact_addr_id' => array('type' => 'auto','nullable' => False),
 				'contact_id' => array('type' => 'int','precision' => '4','nullable' => False),
-				'addr_type_id' => array('type' => 'int','precision' => '4','nullable' => False),
+				'addr_type_id' => array('type' => 'int','precision' => '4','nullable' => True),
 				'add1' => array('type' => 'varchar','precision' => '64','nullable' => True),
 				'add2' => array('type' => 'varchar','precision' => '64','nullable' => True),
 				'add3' => array('type' => 'varchar','precision' => '64','nullable' => True),
