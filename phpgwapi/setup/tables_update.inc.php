@@ -1736,6 +1736,22 @@
 	{
 		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
 
+// -- fix addressbook : insertion of organisation
+
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('phpgw_contact_addr','addr_type_id',array(
+			'type' => 'int',
+			'precision' => '4',
+			'nullable' => True
+		));
+
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('phpgw_contact_org','active',array(
+			'type' => 'char',
+			'precision' => '1',
+			'nullable' => True,
+			'default' => 'Y'
+		));
+//--
+
 //-- setting default log_level to N (Notice)
 
 		$GLOBALS['phpgw_setup']->oProc->query("SELECT config_value FROM phpgw_config WHERE config_app = 'phpgwapi' AND config_name = 'log_levels' "); 
