@@ -573,12 +573,17 @@
 			$query = "ALTER TABLE $sTableName ALTER COLUMN $sColumnName TYPE $sFieldSQL";
 			$Ok = !!($oProc->m_odb->query($query, __LINE__, __FILE__));
 
-			if($bNullable == False || $bNullable == 'False')
+			if($bNullable === False || $bNullable === 'False')
 			{
-				$sFieldSQL = ' NOT NULL';
-				$query = "ALTER TABLE $sTableName ALTER COLUMN $sColumnName SET $sFieldSQL";
-				$Ok = !!$oProc->m_odb->query($query, __LINE__, __FILE__);
+				$sFieldSQL = ' SET NOT NULL';
 			}
+			else
+			{
+				$sFieldSQL = ' DROP NOT NULL';			
+			}
+
+			$query = "ALTER TABLE $sTableName ALTER COLUMN $sColumnName $sFieldSQL";
+			$Ok = !!$oProc->m_odb->query($query, __LINE__, __FILE__);
 
 			if($sDefault == '0')
 			{
