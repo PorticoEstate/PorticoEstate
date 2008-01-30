@@ -1729,4 +1729,34 @@
 			return $GLOBALS['setup_info']['phpgwapi']['currentver'];
 		}
 	}
+
+	$test[] = '0.9.17.513';
+	function phpgwapi_upgrade0_9_17_513()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+// -- fix addressbook : insertion of organisation
+
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('phpgw_contact_addr','addr_type_id',array(
+			'type' => 'int',
+			'precision' => '4',
+			'nullable' => True
+		));
+
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('phpgw_contact_org','active',array(
+			'type' => 'char',
+			'precision' => '1',
+			'nullable' => True,
+			'default' => 'Y'
+		));
+//--
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['phpgwapi']['currentver'] = '0.9.17.513.01';
+			return $GLOBALS['setup_info']['phpgwapi']['currentver'];
+		}
+	}
+
+
 ?>
