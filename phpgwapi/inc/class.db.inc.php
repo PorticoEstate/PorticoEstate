@@ -237,7 +237,7 @@
 			{
 				return addslashes($str);
 			}
-			return substr($this->adodb->qstr($str, get_magic_quotes_gpc()), 1, -1);
+			return substr($this->adodb->Quote($str), 1, -1);
 		}
 
 		/**
