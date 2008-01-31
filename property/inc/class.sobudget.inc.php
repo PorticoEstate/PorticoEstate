@@ -270,6 +270,8 @@
 			if($this->db->next_record())
 			{
 				$receipt['error'][] = array('msg'=>lang('budget %1 already saved',$this->db->f('id')));
+				$receipt['budget_id']= $this->db->f('id');
+				return $receipt;
 			}
 
 			if(!$receipt['error'])
@@ -793,7 +795,7 @@
 				
 			}
 			
-			$this->db->query("DELETE FROM fm_budget WHERE year ='" . $basis['year'] . "'  AND b_account_id in (" . implode(",",$b_account) . ") AND revision = '" . $basis['revision'] . "' AND district_id='" . $basis['district_id'] . "'" ,__LINE__,__FILE__);
+			$this->db->query("DELETE FROM fm_budget WHERE year ='" . $basis['year'] . "'  AND b_account_id in ('" . implode("','",$b_account) . "') AND revision = '" . $basis['revision'] . "' AND district_id='" . $basis['district_id'] . "'" ,__LINE__,__FILE__);
 			$this->db->query('DELETE FROM fm_budget_basis WHERE id=' . intval($basis_id),__LINE__,__FILE__);
 			$this->db->transaction_commit();
 		}
@@ -845,7 +847,7 @@
 				$sql = "DELETE FROM fm_budget WHERE year = " . (int)$basis['year']
 					. " AND district_id = " . (int)$basis['district_id']
 					. " AND revision = " . (int)$basis['revision']
-					. " AND b_account_id in (" . implode(",",$b_account) . ")";
+					. " AND b_account_id in ('" . implode("','",$b_account) . "')";
 					
 				$this->db->query($sql,__LINE__,__FILE__);
 				
@@ -892,6 +894,7 @@
 				}
 			}
 			$this->db->transaction_commit();
+			return $receipt;
 		}
 	}
 ?>
