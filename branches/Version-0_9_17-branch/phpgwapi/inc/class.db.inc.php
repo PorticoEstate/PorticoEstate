@@ -238,9 +238,7 @@
 			{
 				return addslashes($str);
 			}
-			// Sigurd: this is broken for postgres - anyway it should probably be adodb->qstr - not adodb->quote
-			//return substr($this->adodb->quote($str, get_magic_quotes_gpc()), 1, -1);
-			return addslashes($str);
+			return substr($this->adodb->qstr($str, magic_quotes_runtime()), 1, -1);
 		}
 
 		/**

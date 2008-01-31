@@ -351,15 +351,18 @@
 
 			return false;
 		}
-		function GetFKSQL($sFields)
+		function GetFKSQL($reftable, $sFields)
 		{
-		   if (ereg("\((.*)\)", $sFields, $regs))
+			if(is_array($sFields))
 			{
-			  $ret = "FOREIGN KEY (".$regs[1].")\n" .
-				"  REFERENCES ".$sFields;
-			  return $ret;
-			} else
-			  return ""; // incorrect FK declaration found
+				$ret = "FOREIGN KEY (".implode(',',array_keys($sFields)).")\n" .
+					"  REFERENCES $reftable(".implode(',',array_values($sFields)).")";
+				return $ret;
+			}
+			else
+			{
+				return ""; // incorrect FK declaration found
+			}
 		}
 	}
 ?>
