@@ -202,7 +202,7 @@ modifications have been completed!	setup	en	Modifications have been completed!
 modify	setup	en	Modify
 modify an existing ldap account store for use with phpgroupware (for a new install using ldap accounts)	setup	en	Modify an existing LDAP account store for use with phpGroupWare (for a new install using LDAP accounts)
 multi-language support setup	setup	en	Multi-Language support setup
-mysqlinstr	setup	en	Instructions for creating the database in MySQL:<br>Login to mysql -<br><i>[user@server user]# mysql -u root -p</i><br>Create the empty database and grant user permissions -<br><i>mysql> create database phpgroupware;</i><br><i>mysql> grant all on phpgroupware.* to phpgroupware@localhost identified by 'password';</i>
+mysqlinstr %1	setup	en	Instructions for creating the database in MySQL:<br>Login to mysql -<br><i>[user@server user]# mysql -u root -p</i><br>Create the empty database and grant user permissions -<br><i>mysql> create database %1;</i><br><i>mysql> grant all on %1.* to phpgroupware@localhost identified by 'password';</i>
 name of database	setup	en	Name of database
 name of db user phpgroupware uses to connect	setup	en	Name of db user phpGroupWare uses to connect
 never	setup	en	never
@@ -238,7 +238,7 @@ passwords did not match, please re-enter	setup	en	Passwords did not match, pleas
 path information	setup	en	Path information
 path to user and group files has to be outside of the webservers document-root!!!	setup	en	Path to user and group files HAS TO BE OUTSIDE of the webservers document-root!!!
 persistent connections	setup	en	Persistent connections
-pgsqlinstr	setup	en	Instructions for creating the database in PostgreSQL:<br>Start the postmaster<br><i>[user@server user]# postmaster -i -D /home/[username]/[dataDir]</i><br>Create the empty database -<br><i>[user@server user]# createdb phpgroupware</i>
+pgsqlinstr %1	setup	en	Instructions for creating the database in PostgreSQL:<br>Start the postmaster<br><i>[user@server user]# postmaster -i -D /home/[username]/[dataDir]</i><br>Create the empty database -<br><i>[user@server user]# createdb %1</i>
 phpgroupware administration manual	setup	en	phpGroupWare Administration Manual
 please check for sql scripts within the application's directory	setup	en	Please check for sql scripts within the application's directory
 please check read/write permissions on directories, or back up and use another option.	setup	en	Please check read/write permissions on directories, or back up and use another option.

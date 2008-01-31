@@ -180,10 +180,12 @@
 			switch ($phpgw_domain[$GLOBALS['ConfigDomain']]['db_type'])
 			{
 				case 'mysql':
-					$setup_tpl->set_var('instr',lang('mysqlinstr'));
+					$setup_tpl->set_var('instr',lang('mysqlinstr %1', $phpgw_domain[$GLOBALS['ConfigDomain']]['db_name']));
+					$setup_tpl->set_var('db_root','root');
 					break;
 				case 'postgres':
-					$setup_tpl->set_var('instr',lang('pgsqlinstr'));
+					$setup_tpl->set_var('instr',lang('pgsqlinstr %1', $phpgw_domain[$GLOBALS['ConfigDomain']]['db_name']));
+					$setup_tpl->set_var('db_root','postgres');
 					break;
 			}
 			$setup_tpl->parse('V_db_stage_1','B_db_stage_1');
