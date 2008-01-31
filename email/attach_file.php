@@ -74,12 +74,12 @@
 			. '<br />';
 	}
 
-	if (!file_exists($GLOBALS['phpgw_info']['server']['temp_dir'] . SEP . $GLOBALS['phpgw_info']['user']['sessionid']))
+	if (!file_exists("{$GLOBALS['phpgw_info']['server']['temp_dir']}/{$GLOBALS['phpgw_info']['user']['sessionid']}"))
 	{
-		mkdir($GLOBALS['phpgw_info']['server']['temp_dir'] . SEP . $GLOBALS['phpgw_info']['user']['sessionid'],0700);
+		mkdir("{$GLOBALS['phpgw_info']['server']['temp_dir']}/{$GLOBALS['phpgw_info']['user']['sessionid']}",0700);
 	}
 
-	//$uploaddir = $GLOBALS['phpgw_info']['server']['temp_dir'] . SEP . $GLOBALS['phpgw_info']['user']['sessionid'] . SEP;
+	//$uploaddir = "{$GLOBALS['phpgw_info']['server']['temp_dir']}/{$GLOBALS['phpgw_info']['user']['sessionid']}/";
 	$uploaddir = $GLOBALS['phpgw']->msg->att_files_dir;
 	
 	// if we were NOT able to create this temp directory, then make an ERROR report
@@ -108,25 +108,6 @@
 	// also note that uploading file to *memory* is wasteful
 	*/
 	
-	// probably UNNECESSARY debug code, delete it after this is all stable
-	if (($GLOBALS['phpgw']->msg->minimum_version("4.1.0"))
-	&& (!isset($GLOBALS['phpgw']->msg->ref_FILES)))
-	{
-		echo 'file attach_file ('.__LINE__.') ERROR: $GLOBALS[phpgw]->msg->ref_FILES should be set here, but it IS NOT set<br />';
-	}
-	
-	// the following code only applies to php < 4.1.0 where that superglobal was not available
-	// thanks Dave Hall for this code suggestion
-	if (
-	  (! (isset($HTTP_POST_FILES) || isset($GLOBALS['HTTP_POST_FILES'])) )
-	  && ($GLOBALS['phpgw']->msg->minimum_version("4.1.0") == False)
-	)
-	{
-		$_FILES = $GLOBALS['HTTP_POST_FILES'];
-		global $_FILES;
-		// REDEFINE THE REFERENCE TO THE FILES DATA
-		$GLOBALS['phpgw']->msg->ref_FILES = &$_FILES;
-	}
 	// yes I am aware that the above code and the below code kind of deal with the same thing
 	// if  the above code still does not give a good reference to FILES data, below there is "oldschool" fallback code
 	// also I do not want to force global something every script run when it is only needed here
@@ -134,23 +115,13 @@
 	
 	// clean / prepare PHP provided file info
 	// note that "uploadedfile" is the POST submit form identification for the file
-	if ( ($GLOBALS['phpgw']->msg->minimum_version("4.1.0"))
-	// or we may have otherwise obtained a good reference above
-	|| (isset($GLOBALS['phpgw']->msg->ref_FILES['uploadedfile'])) )
+	if ( isset($GLOBALS['phpgw']->msg->ref_FILES['uploadedfile']) )
 	{
 		$file_tmp_name = $GLOBALS['phpgw']->msg->stripslashes_gpc(trim($GLOBALS['phpgw']->msg->ref_FILES['uploadedfile']['tmp_name']));
 		$file_name = $GLOBALS['phpgw']->msg->stripslashes_gpc(trim($GLOBALS['phpgw']->msg->ref_FILES['uploadedfile']['name']));
 		$file_size = $GLOBALS['phpgw']->msg->stripslashes_gpc(trim($GLOBALS['phpgw']->msg->ref_FILES['uploadedfile']['size']));
 		$file_type = $GLOBALS['phpgw']->msg->stripslashes_gpc(trim($GLOBALS['phpgw']->msg->ref_FILES['uploadedfile']['type']));
 		if ($fup_debug > 1) { echo 'ref_FILE dump: '.htmlspecialchars(serialize($GLOBALS['phpgw']->msg->ref_FILES)).'<br />'; } 
-	}
-	else
-	{
-		// php less then 4.1 uses these pre-superglobals enviornment vars
-		$file_tmp_name = $GLOBALS['phpgw']->msg->stripslashes_gpc(trim($uploadedfile));
-		$file_name = $GLOBALS['phpgw']->msg->stripslashes_gpc(trim($uploadedfile_name));
-		$file_size = $GLOBALS['phpgw']->msg->stripslashes_gpc(trim($uploadedfile_size));
-		$file_type = $GLOBALS['phpgw']->msg->stripslashes_gpc(trim($uploadedfile_type));	
 	}
 	
 	// sometimes PHP is very clue-less about MIME types, and gives NO file_type
@@ -162,30 +133,6 @@
 		$file_type = $mime_type_default;
 	}
 
-	// Netscape 6 sometimes passes file_name with a full path, we need to extract just the filename
-	function wbasename($input)
-	{
-		if (strstr($input, SEP) == False)
-		{
-			// no filesystem seperator is present
-			return $input;
-		}
-
-		for($i=0; $i < strlen($input); $i++ )
-		{
-			$pos = strpos($input, SEP, $i);
-			if ($pos != false)
-			{
-				$lastpos = $pos;
-			}
-		}
-		return substr($input, $lastpos + 1, strlen($input));
-	}
-	// now use that function to get a clean file name
-	if ($fup_debug > 1) { echo 'file_name (pre-wbasename): ' .$file_name .'<br />'; } 
-	// Netscape 6 passes file_name with a full path, we need to extract just the filename
-	$file_name = wbasename($file_name);
-
 	// Some server side attachment upload handling code is borrowed from
 	// Squirrelmail <Luke Ehresman> http://www.squirrelmail.org
 	// particularly the moving, temporary naming, and the ".info" file code.
@@ -193,8 +140,8 @@
 	{
 		for ($i=0; $i<count($delete); $i++)
 		{
-			unlink($uploaddir.SEP.$delete[$i]);
-			unlink($uploaddir.SEP.$delete[$i] . '.info');
+			unlink("{$uploaddir}/{$delete[$i]}");
+			unlink("{$uploaddir}/{$delete[$i]}.info");
 		}
 	}
 
@@ -211,14 +158,14 @@
 		//if ($file_tmp_name == "none" && $file_size == 0) This could work also
 		if ($file_size == 0)
 		{
-			touch ($uploaddir.SEP.$newfilename);
+			touch ("{$uploaddir}/{$newfilename}");
 		}
 		else
 		{
-			copy($file_tmp_name, $uploaddir.SEP.$newfilename);
+			copy($file_tmp_name, "{$uploaddir}/{$newfilename}");
 		}
 
-		$ftp = fopen($uploaddir.SEP.$newfilename . '.info','wb');
+		$ftp = fopen("{$uploaddir}/{$newfilename}.info",'wb');
 		fputs($ftp,$file_type."\n".$file_name."\n");
 		fclose($ftp);
 	}
@@ -232,39 +179,40 @@
 			. '<br />';
 	}
 
-	$dh = opendir($uploaddir);
-	//while ($file = readdir($dh)) // http://www.php.net/manual/en/function.readdir.php says this is wrong ... 
-	while (false !== ($file = readdir($dh))) // is correct according to the manual but only works with 4.0.0RC2+
+	$dh = dir($uploaddir);
+	while ( false !== ($file = $dh->dir() ) )
 	{
 		if (($file != '.')
 		&& ($file != '..')
-		&& (ereg("\.info",$file)))
+		&& (preg_match('/\.info/', $file)))
 		{
-			$file_info = file($uploaddir.SEP.$file);
+			$file_info = file("{$uploaddir}/{$file}");
 			
 			//get filesize in kb, but do not tell user a file is 0kb, because it is probably closer to 1kb
 			$real_file = str_replace('.info','',$file);
-			$real_file_size = ((int) (@filesize($uploaddir.SEP.$real_file)/1024));
-			if ($real_file_size < 1)
+
+			$real_file_size = (int) filesize("{$uploaddir}/{$real_file}");
+			if ( $real_file_size / 1024 > 1 )
 			{
-				$real_file_size = 1;
+				$real_file_size = ($real_file_size / 1024) . 'kb';
+			}
+			else
+			{
+				$real_file_size .= 'b';
 			}
 			
-			if ($fup_debug > 2) { echo 'FILE contents DUMP: <pre>'; print_r(file($uploaddir.SEP.$real_file)); echo '</pre>'; } 
+			if ($fup_debug > 2) { echo 'FILE contents DUMP: <pre>'; print_r(file("{$uploaddir}/{$real_file}")); echo '</pre>'; } 
 			// for every file, fill the file list template with it
-			$GLOBALS['phpgw']->template->set_var('ckbox_delete_name','delete[]');
-			$GLOBALS['phpgw']->template->set_var('ckbox_delete_value',substr($file,0,-5));
-			$GLOBALS['phpgw']->template->set_var('hidden_delete_name',substr($file,0,-5));
-			$GLOBALS['phpgw']->template->set_var('hidden_delete_filename',
-					$file_info[1]);
-			$GLOBALS['phpgw']->template->set_var('ckbox_delete_filename',
-					//$file_info[1].' ('.((int) (@filesize($uploaddir.SEP.$real_file)/1024)).'k)'); //also shows file size in kb
-					$file_info[1].' ('.$real_file_size.'k)'); //also shows file size in kb
+			$GLOBALS['phpgw']->template->set_var('ckbox_delete_name', 'delete[]');
+			$GLOBALS['phpgw']->template->set_var('ckbox_delete_value', substr($file,0,-5));
+			$GLOBALS['phpgw']->template->set_var('hidden_delete_name', substr($file,0,-5));
+			$GLOBALS['phpgw']->template->set_var('hidden_delete_filename', $file_info[1]);
+			$GLOBALS['phpgw']->template->set_var('ckbox_delete_filename', "{$file_info[1]} ({$real_file_size})");
 			$GLOBALS['phpgw']->template->parse('V_attached_list','B_attached_list',True);
 			$totalfiles++;
 		}
 	}
-	closedir($dh);
+	$dh->close();
 	if ($totalfiles == 0)
 	{
 		// there is no list of files, clear that block

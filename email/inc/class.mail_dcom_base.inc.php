@@ -52,7 +52,7 @@
 			$this->err["code"] = " ";
 			$this->err["msg"]  = " ";
 			$this->err["desc"] = " ";
-			$this->tempfile = $GLOBALS['phpgw_info']['server']['temp_dir'].SEP.$GLOBALS['phpgw_info']['user']['sessionid'].'.mhd';
+			$this->tempfile = "{$GLOBALS['phpgw_info']['server']['temp_dir']}/" . $GLOBALS['phpgw']->common->randomstring() . '.mhd';
 			$this->force_check = false;
 			$this->got_structure = false;
 		}

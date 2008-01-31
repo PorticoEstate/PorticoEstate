@@ -347,8 +347,8 @@
 		*/
 		function mail_msg_base()
 		{
-			if (($this->debug_logins > 0) && (is_object($this->dbug->out))) { $this->dbug->out('mail_msg('.__LINE__.'): *constructor*: $GLOBALS[PHP_SELF] = ['.$GLOBALS['PHP_SELF'].'] $this->acctnum = ['.$this->acctnum.']  get_class($this) : "'.get_class($this).'" ; get_parent_class($this) : "'.get_parent_class($this).'"<br />'); }
-			if ($this->debug_logins > 0) { echo 'mail_msg('.__LINE__.'): *constructor*: $GLOBALS[PHP_SELF] = ['.$GLOBALS['PHP_SELF'].'] $this->acctnum = ['.$this->acctnum.']  get_class($this) : "'.get_class($this).'" ; get_parent_class($this) : "'.get_parent_class($this).'"<br />'; }
+			if (($this->debug_logins > 0) && (is_object($this->dbug->out))) { $this->dbug->out('mail_msg('.__LINE__.'): *constructor*: $GLOBALS[PHP_SELF] = ['.$_SERVER['PHP_SELF'].'] $this->acctnum = ['.$this->acctnum.']  get_class($this) : "'.get_class($this).'" ; get_parent_class($this) : "'.get_parent_class($this).'"<br />'); }
+			if ($this->debug_logins > 0) { echo 'mail_msg('.__LINE__.'): *constructor*: $GLOBALS[PHP_SELF] = ['.$_SERVER['PHP_SELF'].'] $this->acctnum = ['.$this->acctnum.']  get_class($this) : "'.get_class($this).'" ; get_parent_class($this) : "'.get_parent_class($this).'"<br />'; }
 			return;
 		}
 		
@@ -378,51 +378,15 @@
 				$this->dbug = CreateObject('email.svc_debug');
 			}
 			
-			if ($this->debug_logins > 0) { $this->dbug->out('mail_msg.initialize_mail_msg('.__LINE__.'): ENTERING manual *constructor*: $GLOBALS[PHP_SELF] = ['.$GLOBALS['PHP_SELF'].'] $this->acctnum = ['.$this->acctnum.']  get_class($this) : "'.get_class($this).'" ; get_parent_class($this) : "'.get_parent_class($this).'"<br />'); }
+			if ($this->debug_logins > 0) { $this->dbug->out('mail_msg.initialize_mail_msg('.__LINE__.'): ENTERING manual *constructor*: $GLOBALS[PHP_SELF] = ['.$_SERVER['PHP_SELF'].'] $this->acctnum = ['.$this->acctnum.']  get_class($this) : "'.get_class($this).'" ; get_parent_class($this) : "'.get_parent_class($this).'"<br />'); }
 			if ($this->debug_logins > 1) { $this->dbug->out('mail_msg.initialize_mail_msg('.__LINE__.'): manual *constructor*: $this->acctnum = ['.$this->acctnum.'] ; $this->a  DUMP:', $this->a); }
 			if ($this->debug_logins > 1) { $this->dbug->out('mail_msg.initialize_mail_msg('.__LINE__.'): manual *constructor*: extra data $p1 (if provided): '.serialize($p1).'<br />'); }
 			
-			if ($this->debug_logins > 1) { $this->dbug->out('mail_msg.initialize_mail_msg('.__LINE__.'): manual *constructor*: checking and or setting GET and POST reference based on PHP version<br />'); }
-			// make GPC reference for php versions < 4.1 and > 4.2
-			// since this constructor is apparently called many times 
-			// during the script run (not sure why) we check if we've already done it first
-			$force_GPC_new = False;
-			//$force_GPC_new = True;
-			if (($this->ref_GET == '##NOTHING##')
-			|| ($this->ref_POST == '##NOTHING##')
-			|| ($this->ref_SERVER == '##NOTHING##')
-			|| ($this->ref_FILES == '##NOTHING##')
-			|| ($this->ref_SESSION == '##NOTHING##'))
-			{
-				// set this to force using the new superglobals
-				if ($force_GPC_new == True)
-				{
-					$this->ref_GET = &$_GET;
-					$this->ref_POST = &$_POST;
-					$this->ref_SERVER = &$_SERVER;
-					$this->ref_FILES = &$_FILES;
-					$this->ref_SESSION = &$_SESSION;
-				}
-				// make the appropriate reference (pointer) based on php version 4.1.0
-				elseif ($this->minimum_version("4.1.0"))
-				{
-					$this->ref_GET = &$_GET;
-					$this->ref_POST = &$_POST;
-					$this->ref_SERVER = &$_SERVER;
-					$this->ref_FILES = &$_FILES;
-					$this->ref_SESSION = &$_SESSION;
-				}
-				// fallback to the "old way"
-				else
-				{
-					$this->ref_GET = &$GLOBALS['HTTP_GET_VARS'];
-					$this->ref_POST = &$GLOBALS['HTTP_POST_VARS'];
-					$this->ref_SERVER = &$GLOBALS['HTTP_SERVER_VARS'];
-					//$this->ref_FILES = &$HTTP_POST_FILES;
-					$this->ref_FILES = &$GLOBALS['HTTP_POST_FILES'];
-					$this->ref_SESSION = &$GLOBALS['HTTP_SESSION_VARS'];
-				}
-			}
+			$this->ref_GET = &$_GET;
+			$this->ref_POST = &$_POST;
+			$this->ref_SERVER = &$_SERVER;
+			$this->ref_FILES = &$_FILES;
+			$this->ref_SESSION = &$_SESSION;
 
 			// SO object has data storage functions
 			if ($this->so == '##NOTHING##')
@@ -486,46 +450,6 @@
 					$this->phpgw_before_xslt = True;
 				}
 			}
-			/*
-			// relfbecker recommends NOT using a version test for xslt check
-			if ($this->phpgw_before_xslt == '-1')
-			{
-				$this_ver = $GLOBALS['phpgw_info']['server']['versions']['phpgwapi'];
-				$pre_xslt_ver = '0.9.14.0.1.1';
-				if (!$this_ver)
-				{
-					// damn stupid fallback if the api moves the version to another place
-					$this->phpgw_before_xslt = True;
-				}
-				// this is a function in phpgwapi "common_functions" file for phpgw 0.9.15+
-				elseif (function_exists(amorethanb))
-				{
-					if (amorethanb($this_ver, $pre_xslt_ver))
-					{
-						// this phpgw version is after the switch to xslt templates
-						$this->phpgw_before_xslt = False;
-					}
-					else
-					{
-						// this phpgw version is NOT in the xslt era
-						$this->phpgw_before_xslt = True;
-					}
-				}
-				else
-				{
-					if ($GLOBALS['phpgw']->common->cmp_version_long($this_ver, $pre_xslt_ver))
-					{
-						// this phpgw version is after the switch to xslt templates
-						$this->phpgw_before_xslt = False;
-					}
-					else
-					{
-						// this phpgw version is NOT in the xslt era
-						$this->phpgw_before_xslt = True;
-					}
-				}
-			}
-			*/
 			
 			$this->known_external_args = array(
 				// === NEW GPC "OBJECTS" or Associative Arrays === 
@@ -816,68 +740,36 @@
 		*/
 		// ----  BEGIN request from Mailserver / Initialize This Mail Session  -----
 		function begin_request($args_array)
-		{
-			if ($this->debug_logins > 0) { $this->dbug->out('mail_msg.begin_request('.__LINE__.'): ENTERING'.'<br />'); } 
-			if ($this->debug_logins > 1) { $this->dbug->out('mail_msg.begin_request('.__LINE__.'): feed var args_array[] DUMP:', $args_array); }
-			
+		{			
+			$got_args=array();
 			// Grab GPC vars, after we get an acctnum, we'll put them in the appropriate account's "args" data
 			// issue?: which acctnum arg array would this be talking to when we inquire about "already_grab_class_args_gpc"?
-			if ( ($this->get_isset_arg('already_grab_class_args_gpc'))
-			&& ((string)$this->get_arg_value('already_grab_class_args_gpc') != '') )
+			if ( !$this->get_isset_arg('already_grab_class_args_gpc') )
 			{
-				// somewhere, there's already been a call to grab_class_args_gpc(), do NOT re-run
-				if ($this->debug_logins > 1) { $this->dbug->out('mail_msg.begin_request('.__LINE__.'): "already_grab_class_args_gpc" is set, do not re-grab<br />'); }
-				if ($this->debug_logins > 2) { $this->dbug->out('mail_msg.begin_request('.__LINE__.'): "already_grab_class_args_gpc" pre-existing $this->get_all_args() DUMP:', $this->get_all_args()); } 
-				$got_args=array();
-			}
-			else
-			{
-				if ($this->debug_logins > 1) { $this->dbug->out('mail_msg.begin_request('.__LINE__.'): "already_grab_class_args_gpc" is NOT set, call grab_class_args_gpc() now<br />'); }
-				$got_args=array();
 				$got_args = $this->grab_class_args_gpc();
 			}
 			
 			// FIND THE "BEST ACCTNUM" and set it
-			if ($this->debug_logins > 1) { $this->dbug->out('mail_msg.begin_request('.__LINE__.'): about to call:  get_best_acctnum($args_array, $got_args) <br />'); }
 			$acctnum = $this->get_best_acctnum($args_array, $got_args);
-			if ($this->debug_logins > 1) { $this->dbug->out('mail_msg.begin_request('.__LINE__.'): "get_best_acctnum" returns $acctnum ['.$acctnum.']<br />'); }
-			if ($this->debug_logins > 1) { $this->dbug->out('mail_msg.begin_request('.__LINE__.'): * * * *SETTING CLASS ACCTNUM* * * * by calling $this->set_acctnum('.serialize($acctnum).')<br />'); }
 			$this->set_acctnum($acctnum);
 			
 			// SET GOT_ARGS TO THAT ACCTNUM
 			// use that acctnum to set "got_args" to the appropiate acctnum
-			if ($this->debug_logins > 1) { $this->dbug->out('mail_msg.begin_request('.__LINE__.'): about to call: $this->set_arg_array($got_args); <br />'); }
 			$this->set_arg_array($got_args, $acctnum);
-			if ($this->debug_logins > 2) { $this->dbug->out('mail_msg.begin_request('.__LINE__.'): post set_arg_array $this->get_all_args() DUMP:', $this->get_all_args()); } 
 			
 			// Initialize Internal Args
-			if ($this->debug_logins > 1) { $this->dbug->out('mail_msg.begin_request('.__LINE__.'): about to call: "init_internal_args_and_set_them('.$acctnum.')"<br />'); }
 			$this->init_internal_args_and_set_them($acctnum);
 			
-			if ($this->debug_logins > 2) { $this->dbug->out('mail_msg.begin_request('.__LINE__.'): POST "grab_class_args_gpc", "get_best_acctnum", and "init_internal_args_and_set_them" : this->get_all_args() DUMP:', $this->get_all_args()); } 
-			
-			// (chopped out the re-use existing object code - never worked right, maybe later...)
-			
 			// ----  Things To Be Done Whether You Login Or Not  -----
-			
 			// UNDER DEVELOPMEMT - backwards_compat with sessions_db where php4 sessions are not being used
 			// ALSO UNDER DEVELOPMENT - using private table for anglemail
 			if (($GLOBALS['phpgw_info']['server']['sessions_type'] == 'db')
 			|| ($this->use_private_table == True))
 			{
-				/*
-				if (! is_object($this->so))
-				{
-					$this->initialize_mail_msg();
-				}
-				*/
-
-				// REF_SESSION should not really be in $_SESSION namespace so RE-CREATE all this outside of php4 sessions
 				$this->so->prep_db_session_compat('begin_request LINE '.__LINE__);
 			}
 			
 			
-			if ($this->debug_logins > 1) { $this->dbug->out('mail_msg.begin_request('.__LINE__.'): about to handle email preferences and setup extra accounts<br />'); } 
 			// ----  Obtain Preferences Data  ----
 			
 			/*
@@ -1191,14 +1083,6 @@
 				// -end- extra account init handling
 			}
 			
-			//if ($this->debug_logins > 2) { echo 'mail_msg.begin_request('.__LINE__.'): POST create_email_preferences GLOBALS[phpgw_info][user][preferences][email] dump:<pre>'; print_r($GLOBALS['phpgw_info']['user']['preferences']['email']) ; echo '</pre>';}
-			//if ($this->debug_logins > 2) { echo 'mail_msg.begin_request('.__LINE__.'): POST create_email_preferences $this->get_all_prefs() dump:<pre>'; print_r($this->get_all_prefs()) ; echo '</pre>';}
-			if ($this->debug_logins > 2) { $this->dbug->out('mail_msg.begin_request('.__LINE__.'): POST create_email_preferences direct access dump of $this->a DUMP:', $this->a); } 
-			//if ($this->debug_logins > 2) { echo 'mail_msg.begin_request('.__LINE__.'):  preferences->create_email_preferences called, GLOBALS[phpgw_info][user][preferences] dump:<pre>'; print_r($GLOBALS['phpgw_info']['user']['preferences']) ; echo '</pre>';}
-			//if ($this->debug_logins > 2) { echo 'mail_msg.begin_request('.__LINE__.'):  preferences->create_email_preferences called, GLOBALS[phpgw_info][user] dump:<pre>'; print_r($GLOBALS['phpgw_info']['user']) ; echo '</pre>';}
-			//if ($this->debug_logins > 2) { echo 'mail_msg.begin_request('.__LINE__.'): preferences->create_email_preferences called, GLOBALS[phpgw_info] dump:<pre>'; print_r($GLOBALS['phpgw_info']) ; echo '</pre>';}
-			//if ($this->debug_logins > 2) { echo 'mail_msg.begin_request('.__LINE__.'): preferences->create_email_preferences called, GLOBALS[phpgw] dump:<pre>'; print_r($GLOBALS['phpgw']) ; echo '</pre>';}
-			
 			// ---- CACHE THE COMPLETED PREF DATA
 			if (($this->use_cached_prefs == True)
 			&& (!$cached_prefs))
@@ -1249,16 +1133,19 @@
 				$cached_prefs['extra_accounts'] = $this->extra_accounts;
 				$cached_prefs['extra_and_default_acounts'] = $this->extra_and_default_acounts;
 				$cached_prefs['a'] = array();
-				$defang_these = array();
-				$defang_these[0] = 'passwd';
-				$defang_these[1] = 'email_sig';
-				$defang_these[2] = 'trash_folder_name';
-				$defang_these[3] = 'sent_folder_name';
-				$defang_these[4] = 'userid';
-				$defang_these[5] = 'address';
-				$defang_these[6] = 'mail_folder';
-				$defang_these[7] = 'fullname';
-				$defang_these[8] = 'account_name';
+				$defang_these = array
+				(
+					'passwd',
+					'email_sig',
+					'trash_folder_name',
+					'sent_folder_name',
+					'userid',
+					'address',
+					'mail_folder',
+					'fullname',
+					'account_name'
+				);
+
 				$loops = count($this->extra_and_default_acounts);
 				for ($i=0; $i < $loops; $i++)
 				{
@@ -1282,7 +1169,7 @@
 			}
 			
 			// ---- SET important class vars  ----
-			$this->att_files_dir = $GLOBALS['phpgw_info']['server']['temp_dir'].SEP.$GLOBALS['phpgw_info']['user']['sessionid'];
+			$this->att_files_dir = "{$GLOBALS['phpgw_info']['server']['temp_dir']}/{$GLOBALS['phpgw_info']['user']['sessionid']}";
 			
 			// and.or get some vars we will use later in this function
 			$mailsvr_callstr = $this->get_arg_value('mailsvr_callstr');
@@ -1448,30 +1335,6 @@
 					$this->set_arg_value('mailsvr_account_username', $user, $acctnum);
 				}
 			}
-			/*
-			elseif ($args_array['do_login_ex'] == BS_LOGIN_ONLY_IF_NEEDED)
-			{
-				// if extreme is on and "BS_LOGIN_ONLY_IF_NEEDED" then that's taken care of above, 
-				// therefor
-				// * if we are here then caching is NOT on
-				// * we are told a login is "not 100% necessary"
-				// in that case we'll pass thru this function without logging in
-				// and rely on the rest of the code to open a stream if it is needed
-				$decision_to_login = False;
-				
-				// get a few more things that we would otherwise get during the login code (which we'll be skiping)
-				$processed_folder_arg = $this->get_best_folder_arg($args_array, $got_args, $acctnum);
-				if ($this->debug_logins > 1) { $this->dbug->out('mail_msg: begin_request ('.__LINE__.'): we are NOT allowed to log in (see code this line) but we still need to get this info, so about to issue: $this->set_arg_value("folder", '.$processed_folder_arg.', '.serialize($acctnum).')<br />'); }
-				$this->set_arg_value('folder', $processed_folder_arg, $acctnum);
-				if ( $this->get_isset_pref('userid')
-				&& ($this->get_pref_value('userid') != ''))
-				{
-					$user = $this->get_pref_value('userid');
-					if ($this->debug_logins > 1) { $this->dbug->out('mail_msg: begin_request ('.__LINE__.'): we are NOT allowed to log in (see code this line) but we still need to get this info, so about to issue: $this->set_arg_value("mailsvr_account_username", '.$user.', '.serialize($acctnum).')<br />'); }
-					$this->set_arg_value('mailsvr_account_username', $user, $acctnum);
-				}
-			}
-			*/
 			else
 			{
 				// extreme caching and logins handled above in the first if .. then
@@ -1570,21 +1433,16 @@
 				//@set_time_limit(60);
 				// login to INBOX because we know that always(?) should exist on an imap server and pop server
 				// after we are logged in we can get additional info that will lead us to the desired folder (if not INBOX)
-				if ($this->debug_logins > 1) { $this->dbug->out('mail_msg.begin_request('.__LINE__.'): about to call dcom->open: $GLOBALS["phpgw_dcom_".$acctnum('.$acctnum.')]->dcom->open('.$mailsvr_callstr."INBOX".', '.$user.', '.$pass.', )'.'<br />'); }
-				if ($this->debug_logins > 0) { $this->dbug->out('mail_msg.begin_request('.__LINE__.'): <font color="red">MAIL SERVER COMMAND</font>'.'<br />'); } 
 				$mailsvr_stream = $GLOBALS['phpgw_dcom_'.$acctnum]->dcom->open($mailsvr_callstr."INBOX", $user, $pass, '');
 				$pass = '';
-				//@set_time_limit(0);
 				
 				if ($this->debug_logins > 1) { $this->dbug->out('mail_msg.begin_request('.__LINE__.'): open returns $mailsvr_stream = ['.serialize($mailsvr_stream).']<br />'); } 
 				
 				// Logged In Success or Faliure check
-				if ( (!isset($mailsvr_stream))
-				|| ($mailsvr_stream == '') )
+				if ( !$mailsvr_stream )
 				{
 					// set the "mailsvr_stream" to blank so all will know the login failed
 					$this->set_arg_value('mailsvr_stream', '');
-					if ($this->debug_logins > 0) { $this->dbug->out('mail_msg.begin_request('.__LINE__.'): LEAVING with ERROR: failed to open mailsvr_stream : '.$mailsvr_stream.'<br />'); } 
 					// we return false, but SHOULD WE ERROR EXIT HERE?
 					return False;
 				}
@@ -1771,12 +1629,11 @@
 		the source or destination mail  server stream is open and the required folder is selected. If not, this 
 		function will open the connection and select the desired folder.
 		*/
-		function ensure_stream_and_folder($fldball='', $called_from='')
+		function ensure_stream_and_folder($fldball='', $called_from='', $display_error = true)
 		{
 			if ($this->debug_logins > 0) { $this->dbug->out('mail_msg: ensure_stream_and_folder: ENTERING, $fldball: ['.serialize($fldball).'] ; $called_from: ['.$called_from.']<br />'); }
-			
-			if ((isset($fldball['acctnum']))
-			&& ((string)$fldball['acctnum'] != ''))
+
+			if ( isset($fldball['acctnum']) && (string)$fldball['acctnum'] != '' )
 			{
 				$acctnum = (int)$fldball['acctnum'];
 			}
@@ -1784,54 +1641,47 @@
 			{
 				$acctnum = $this->get_acctnum();
 			}
-			if ((isset($fldball['folder']))
-			&& ((string)$fldball['folder'] != ''))
+			if ( isset($fldball['folder']) 
+					&& (string)$fldball['folder'] != '' )
 			{
 				$input_folder_arg = $fldball['folder'];
-				//$input_folder_arg = urldecode($fldball['folder']);
-				//$input_folder_arg = $this->prep_folder_in($fldball['folder']);
 			}
 			else
 			{
-				// an empty string means folder is NOT important, such as with "listmailbox"
-				//$input_folder_arg = '';
-				
-				// DAMN - this thing has been moved to the "no_select_away"
-				// therefor this *should* be INBOX if none was given
 				$input_folder_arg = 'INBOX';
 			}
-			
+
 			// initialize this stuff
 			$ctrl_info = array();
 			$ctrl_info['first_open'] = '';
 			$ctrl_info['pre_existing_folder_arg'] = '';
 			$ctrl_info['no_switch_away'] = '';
 			$ctrl_info['do_reopen_to_folder'] = '';
-			
+
 			// fill it with what we know
-			if (($this->get_isset_arg('folder', $acctnum))
-			&& ($this->get_arg_value('folder', $acctnum) != ''))
+			if ( $this->get_isset_arg('folder', $acctnum) 
+					&& $this->get_arg_value('folder', $acctnum) != '' )
 			{
 				$ctrl_info['pre_existing_folder_arg'] = $this->get_arg_value('folder', $acctnum);
 				// folder arg is stored urlDEcoded, but fldball and all other folder stuff is urlENcoded until the last second
 				$ctrl_info['pre_existing_folder_arg'] = $this->prep_folder_out($ctrl_info['pre_existing_folder_arg']);
 			}
-			if ((isset($fldball['no_switch_away']))
-			&& ($fldball['no_switch_away']))
+			if ( isset($fldball['no_switch_away'])
+					&& $fldball['no_switch_away'] )
 			{
 				// "no_switch_away" means folder is NOT important, such as with "listmailbox"
 				if ($this->debug_logins > 1) { $this->dbug->out('mail_msg: ensure_stream_and_folder: there may be NO need to switch folders: setting $ctrl_info[no_switch_away] because $fldball[no_switch_away] is ['.serialize($fldball['no_switch_away']).'],  $called_from: ['.$called_from.']<br />'); } 
 				$ctrl_info['no_switch_away'] = True;
 			}
-			
-			
+
+
 			if ($this->debug_logins > 1) { $this->dbug->out('mail_msg: ensure_stream_and_folder: $acctnum: ['.serialize($acctnum).'] ; $input_folder_arg: ['.serialize($input_folder_arg).']<br />'); } 
 			// get mailsvr_callstr now, it does not require a login stream
 			$mailsvr_callstr = $this->get_arg_value('mailsvr_callstr', $acctnum);
 			if ($this->debug_logins > 1) { $this->dbug->out('mail_msg: ensure_stream_and_folder: $mailsvr_callstr: '.serialize($mailsvr_callstr).'<br />'); }
-			
+
 			if (($this->get_isset_arg('mailsvr_stream', $acctnum))
-			&& ((string)$this->get_arg_value('mailsvr_stream', $acctnum) != ''))
+					&& ((string)$this->get_arg_value('mailsvr_stream', $acctnum) != ''))
 			{
 				$ctrl_info['first_open'] = False;
 				$mailsvr_stream = $this->get_arg_value('mailsvr_stream', $acctnum);
@@ -1856,32 +1706,32 @@
 					if ($this->debug_logins > 1) { $this->dbug->out('mail_msg: ensure_stream_and_folder: pass from prefs: decrypted: '.htmlspecialchars(serialize($pass)).'<br />'); }
 				}
 				if ( $this->get_isset_pref('userid', $acctnum)
-				&& ($this->get_pref_value('userid', $acctnum) != '')
-				&& (isset($pass))
-				&& ($pass != '') )
+						&& ($this->get_pref_value('userid', $acctnum) != '')
+						&& (isset($pass))
+						&& ($pass != '') )
 				{
 					$user = $this->get_pref_value('userid', $acctnum);
 				}
-				else
+				else if ( $display_error )
 				{
-						echo 'mail_msg: ensure_stream_and_folder: ERROR: userid or passwd empty'."<br />\r\n"
-							.' * * $this->get_pref_value(userid, '.$acctnum.') = '
-								.$this->get_pref_value('userid', $acctnum)."<br />\r\n"
-							.' * * if the userid is filled, then it must be the password that is missing'."<br />\r\n"
-							.' * * tell your admin if a) you have a custom email password or not when reporting this error'."<br />\r\n";
+					echo 'mail_msg: ensure_stream_and_folder: ERROR: userid or passwd empty'."<br />\r\n"
+						.' * * $this->get_pref_value(userid, '.$acctnum.') = '
+						.$this->get_pref_value('userid', $acctnum)."<br />\r\n"
+						.' * * if the userid is filled, then it must be the password that is missing'."<br />\r\n"
+						.' * * tell your admin if a) you have a custom email password or not when reporting this error'."<br />\r\n";
 					if ($this->debug_logins > 0) { $this->dbug->out('mail_msg: ensure_stream_and_folder: LEAVING with ERROR: userid or passwd empty<br />'); } 
 					return False;
 				}
-				
+
 				// ----  Create email server Data Communication Class  ----
 				$this_server_type = $this->get_pref_value('mail_server_type', $acctnum);
 				if ($this->debug_logins > 1) { $this->dbug->out('mail_msg: ensure_stream_and_folder: creating new dcom_holder at $GLOBALS["phpgw_dcom_'.$acctnum.'] = new mail_dcom_holder'.'<br />'); }
 				$GLOBALS['phpgw_dcom_'.$acctnum] = new mail_dcom_holder;
 				$GLOBALS['phpgw_dcom_'.$acctnum]->dcom = CreateObject("email.mail_dcom", $this_server_type);
 				$GLOBALS['phpgw_dcom_'.$acctnum]->dcom->mail_dcom_base();
-				
+
 				if (($this->get_isset_pref('enable_utf7', $acctnum))
-				&& ($this->get_pref_value('enable_utf7', $acctnum)))
+						&& ($this->get_pref_value('enable_utf7', $acctnum)))
 				{
 					$GLOBALS['phpgw_dcom_'.$acctnum]->dcom->enable_utf7 = True;
 				}
@@ -1897,58 +1747,36 @@
 				$pass = '';
 				//@set_time_limit(0);
 				if ($this->debug_logins > 1) { $this->dbug->out('mail_msg: ensure_stream_and_folder: open returns $mailsvr_stream = ['.serialize($mailsvr_stream).']<br />'); } 
-				
-				if ( (!isset($mailsvr_stream)) || ($mailsvr_stream == '') )
+
+				if ( !$mailsvr_stream )
 				{
-					if ($this->debug_logins > 1) { $this->dbug->out('mail_msg: ensure_stream_and_folder ('.__LINE__.'): $mailsvr_stream FAILS ['.serialize($mailsvr_stream).']<br />'); } 
-					//$this->set_arg_value('mailsvr_stream', '', $acctnum);
-					// this error function will try to call this function again to attempt RedHat bug recovery
-					// the "ensure_stream_and_folder_already_tried_again" lets us try again before exiting
-					// otherwise the code would never continue below to a place where recovery could be detected
-					//$GLOBALS['phpgw']->msg->login_error($GLOBALS['PHP_SELF'].', mail_msg: ensure_mail_msg_exists(), called_from: '.$called_from);
-					// DIRECTLY call the retry logic
-					$mail_server_type = $this->get_pref_value('mail_server_type', $acctnum);
-					//$this->loginerr_tryagain_buggy_cert('ensure_stream_and_folder line ('.__LINE__.'), which was called_from: '.$called_from, 'error_report_HUH?', $mail_server_type, $acctnum);
-					// oops, that means we just skipped possible showing the right login error message
-					$this->login_error($GLOBALS['PHP_SELF'].', mail_msg: ensure_stream_and_folder(), called_from: '.$called_from, $acctnum);
-					
-					//if ($this->debug_logins > 0) { echo 'mail_msg: ensure_stream_and_folder: LEAVING with ERROR: failed to open mailsvr_stream : '.$mailsvr_stream.'<br />';}
-					//return False;
-					if ($this->debug_logins > 1) { $this->dbug->out('mail_msg: ensure_stream_and_folder ('.__LINE__.'): code just called the "login_error" function, did we get to here?<br />'); } 
-				}
-				
-				// if we get here either 
-				// (a) all is fine and dandy, 
-				// or (b) then the error function has called us again with the RehHat buggy server fix attempt
-				// in case of (b) we need to test the $mailsvr_stream again
-				// if the failure was not recoverable or if already tried, the above error function would have exited the script by now
-				if ( (!isset($mailsvr_stream)) || ($mailsvr_stream == '') )
-				{
-					if ($this->debug_logins > 1) { $this->dbug->out('mail_msg: ensure_stream_and_folder ('.__LINE__.'): 2nd test, $mailsvr_stream fails ['.serialize($mailsvr_stream).'] as expected, but the recursive call may have left behind a a sign this has been fixed ...<br />'); } 
-					// try to obtain the mailsvr_stream that the recursive call to here may have left for us
 					$mailsvr_stream_test2 = $this->get_arg_value('mailsvr_stream', $acctnum);
-					if ( (isset($mailsvr_stream_test2))
-					&& ((string)$mailsvr_stream_test2 != '') )
+					if ( $mailsvr_stream_test2 )
 					{
 						// recursive call to this function has done the job for us
 						if ($this->debug_logins > 0) { $this->dbug->out('mail_msg: ensure_stream_and_folder: LEAVING, apparently a recursive call to this function fixed the RH bug for us, returning $this->get_arg_value(mailsvr_stream, '.$acctnum.') ['.$mailsvr_stream_test2.']<br />'); }
 						// IF THE RECURSIVE FUNCION DID THE JOB, I GUESS WE JUST EXIT NOW
 						return $mailsvr_stream_test2;
 					}
-					else
+					if ( $display_error )
 					{
-						if ($this->debug_logins > 0) { $this->dbug->out('mail_msg: ensure_stream_and_folder: LEAVING, 2nd test using $mailsvr_stream_test2 looked for recursive fix but not found, now calling this->login_error which will exit the script probably<br />'); }
-						//$GLOBALS['phpgw']->msg->login_error($GLOBALS['PHP_SELF'].', mail_msg ('.__LINE__.'): ensure_mail_msg_exists(), called_by: '.$called_by);
-						$this->login_error($GLOBALS['PHP_SELF'].', mail_msg ('.__LINE__.'): ensure_stream_and_folder(), called_by: '.$called_by);
-						if ($this->debug_logins > 1) { $this->dbug->out('mail_msg: ensure_stream_and_folder ('.__LINE__.'): 2nd test, code just called the "login_error" function, did we get to here?<br />'); } 
+						if ($this->debug_logins > 1) { $this->dbug->out('mail_msg: ensure_stream_and_folder ('.__LINE__.'): $mailsvr_stream FAILS ['.serialize($mailsvr_stream).']<br />'); } 
+						//$this->set_arg_value('mailsvr_stream', '', $acctnum);
+						// this error function will try to call this function again to attempt RedHat bug recovery
+						// the "ensure_stream_and_folder_already_tried_again" lets us try again before exiting
+						// otherwise the code would never continue below to a place where recovery could be detected
+						//$GLOBALS['phpgw']->msg->login_error($_SERVER['PHP_SELF'].', mail_msg: ensure_mail_msg_exists(), called_from: '.$called_from);
+						// DIRECTLY call the retry logic
+						$mail_server_type = $this->get_pref_value('mail_server_type', $acctnum);
+						//$this->loginerr_tryagain_buggy_cert('ensure_stream_and_folder line ('.__LINE__.'), which was called_from: '.$called_from, 'error_report_HUH?', $mail_server_type, $acctnum);
+						// oops, that means we just skipped possible showing the right login error message
+						return $this->login_error($_SERVER['PHP_SELF'].', mail_msg: ensure_stream_and_folder(), called_from: '.$called_from, $acctnum);
 					}
+					return false;
 				}
-				else
-				{
-					// if login_error is able to recover, it will set "mailsvr_stream", we do not want to over write the recovered mailsvr_stream
-					if ($this->debug_logins > 1) { $this->dbug->out('mail_msg: ensure_stream_and_folder ('.__LINE__.'): $mailsvr_stream is GOOD<br />'); } 
-					$this->set_arg_value('mailsvr_stream', $mailsvr_stream, $acctnum);
-				}
+
+				$this->set_arg_value('mailsvr_stream', $mailsvr_stream, $acctnum);
+
 				$this->set_arg_value('mailsvr_account_username', $user, $acctnum);
 				// SET FOLDER ARG NOW because we'll need to check against it below!!!
 				// WHY: because we DID actually OPEN a stream AND we DID select the INBOX
@@ -1958,10 +1786,10 @@
 				if ($this->debug_logins > 1) { $this->dbug->out('mail_msg: ensure_stream_and_folder: ... we just opened stream for $acctnum: ['.serialize($acctnum).'] continue ...<br />'); }
 			}
 			if ($this->debug_logins > 1) { $this->dbug->out('mail_msg: ensure_stream_and_folder: we have a stream for $acctnum: ['.serialize($acctnum).'] continue ...<br />'); }
-			
+
 			$current_folder_arg = '';
 			if (($this->get_isset_arg('folder', $acctnum))
-			&& ($this->get_arg_value('folder', $acctnum) != ''))
+					&& ($this->get_arg_value('folder', $acctnum) != ''))
 			{
 				$current_folder_arg = $this->get_arg_value('folder', $acctnum);
 				// folder arg is stored urlDEcoded, but fldball and all other folder stuff is urlENcoded until the last second
@@ -1983,19 +1811,19 @@
 			// and the calling func does not *require* us to change folders, WE MUST USE
 			// the folder arg we had before.
 			if (($ctrl_info['first_open'])
-			&& ($ctrl_info['pre_existing_folder_arg'])
-			&& ($ctrl_info['no_switch_away']))
+					&& ($ctrl_info['pre_existing_folder_arg'])
+					&& ($ctrl_info['no_switch_away']))
 			{
 				if ($this->debug_logins > 1) { $this->dbug->out('mail_msg: ensure_stream_and_folder('.__LINE__.'): already had a folder arg, first open of stream, calling func does not care about reopen, so we MUST open to the preexisting folder arg ['.htmlspecialchars($ctrl_info['pre_existing_folder_arg']).'], $called_from: ['.$called_from.']<br />'); } 
 				$ctrl_info['do_reopen_to_folder'] = $ctrl_info['pre_existing_folder_arg'];
 			}
 			elseif (($ctrl_info['no_switch_away'])
-			&& ($ctrl_info['first_open']) == False)
+					&& ($ctrl_info['first_open']) == False)
 			{
 				if ($this->debug_logins > 1) { $this->dbug->out('mail_msg: ensure_stream_and_folder('.__LINE__.'): stream was already open, calling func does not care about reopen, so NO NEED to switch folder, $called_from: ['.$called_from.']<br />'); } 
 			}
 			elseif (($input_folder_arg == 'INBOX')
-			&& ($current_folder_arg == 'INBOX' ))
+					&& ($current_folder_arg == 'INBOX' ))
 			{
 				// no need to do anything because
 				// 1) "INBOX" does not need to be passed thru $this->prep_folder_in(), so we directly can test against $input_folder_arg
@@ -2012,7 +1840,7 @@
 				if ($this->debug_logins > 1) { $this->dbug->out('mail_msg: ensure_stream_and_folder('.__LINE__.'): no "skip folder change" conditions match, so WE WILL CHANGE FOLDERS to $input_folder_arg ['.htmlspecialchars($input_folder_arg).'], $called_from: ['.$called_from.']<br />'); } 
 				$ctrl_info['do_reopen_to_folder'] = $input_folder_arg;
 			}
-			
+
 			// PROCEED ...
 			if ($this->debug_logins > 1) { $this->dbug->out('mail_msg: ensure_stream_and_folder('.__LINE__.'): after logic, if $ctrl_info[do_reopen_to_folder] is filled we WILL REOPEN folder, it is ['.htmlspecialchars($ctrl_info['do_reopen_to_folder']).']<br />'); } 
 			if ($ctrl_info['do_reopen_to_folder'])
@@ -2028,9 +1856,9 @@
 				// one last check (maybe redundant now)
 				$preped_current_folder_arg = $this->prep_folder_in($current_folder_arg);
 				if ($this->debug_logins > 1) { $this->dbug->out('mail_msg: ensure_stream_and_folder('.__LINE__.'): $preped_current_folder_arg: '.serialize($preped_current_folder_arg).'<br />'); }
-				
+
 				if (($current_folder_arg != '')
-				&& ($preped_current_folder_arg == $preped_folder))
+						&& ($preped_current_folder_arg == $preped_folder))
 				{
 					// the desired folder is already opened, note this could simply be INBOX
 					// because we did set "folder" arg during the initial open just above 
@@ -2111,67 +1939,49 @@
 			if ($this->debug_logins > 0) { $this->dbug->out('mail_msg: login_error('.__LINE__.'): $error_report ['.$error_report.']<br />'); }
 			
 			// ATTEMPT TO RECOVER FROM KNOWS PHP BUG even if "Certificate failure" is not obvious
-			$always_try_recover = True;
+			$always_try_recover = true;
 			
 			if ($this->get_isset_arg('beenthere_loginerr_tryagain_buggy_cert', $acctnum))
 			{
 				if ($this->debug_logins > 0) { $this->dbug->out('mail_msg: login_error('.__LINE__.'): ALREADY TRIED THIS: this arg is set: "beenthere_loginerr_tryagain_buggy_cert"<br />'); } 
 			}
-			elseif ((stristr($imap_err,'Certificate failure'))
-			|| ($always_try_recover == True))
+			else if ( preg_match('/certificate failure/i', $imap_err) || $always_try_recover )
 			{
 				$mail_server_type = $this->get_pref_value('mail_server_type', $acctnum);
 				// onhy happens with non-ssl connections
-				if (($mail_server_type == 'pop3')
-				|| ($mail_server_type == 'imap'))
+				if ( $mail_server_type == 'pop3' || $mail_server_type == 'imap' )
 				{
-					if ($this->debug_logins > 0) { $this->dbug->out('mail_msg: login_error('.__LINE__.'): LEAVING, with call to: $this->loginerr_tryagain_buggy_cert('.$called_from.', '.$error_report.', '.$mail_server_type.', '.$acctnum.');<br />'); } 
-					$this->loginerr_tryagain_buggy_cert($called_from, $error_report, $mail_server_type, $acctnum);
-					return;
+					return $this->loginerr_tryagain_buggy_cert($called_from, $error_report, $mail_server_type, $acctnum);
 				}
 				// not recoverable, continue with error report
 			}
 			if ($this->debug_logins > 0) { $this->dbug->out('mail_msg: login_error('.__LINE__.'): this is not an error related to RH Cert issue because server string is already (apparently) correct in that respect.<br />'); }
 			
-			/*
-			// this should be templated
-			echo "<p><center><b>"
-			  . lang("There was an error trying to connect to your mail server.<br />Please, check your username and password, or contact your admin.")."<br /> \r\n"
-			  ."source: email class.mail_msg_base.inc.php"."<br /> \r\n"
-			  ."called from: ".$called_from."<br /> \r\n"
-			  ."imap_last_error: [".$error_report."]<br /> \r\n"
-			  ."tried RH bug recovery?: [".$this->get_isset_arg('beenthere_loginerr_tryagain_buggy_cert', $acctnum)."] <br /> \r\n"
-			  ."if there is no obvious error, then check your username and password first.<br /> \r\n"
-			  . "</b></center></p>"
-			  .'<p><center>'
-			  .'<a href="'.$GLOBALS['phpgw']->link('/index.php').'">Click here to continue.</a>'
-			  .'</center></p>'."<br /> \r\n";
-			*/
 			// we could just return this text
 			$error_text_plain = 
-			  lang("There was an error trying to connect to your mail server.<br />Please, check your username and password, or contact your admin.")."\r\n"
-			  ."source: email class.mail_msg_base.inc.php"."\r\n"
-			  ."called from: ".$called_from."\r\n"
-			  ."imap_last_error: [".$error_report."]\r\n"
-			  ."tried RH bug recovery?: [".$this->get_isset_arg('beenthere_loginerr_tryagain_buggy_cert', $acctnum)."]\r\n"
-			  .lang('if there is no obvious error, check your username and password first.')."\r\n";
+			  lang("There was an error trying to connect to your mail server.<br />Please, check your username and password, or contact your admin.")."\n"
+			  ."source: email class.mail_msg_base.inc.php"."\n"
+			  ."called from: {$called_from}\n"
+			  ."imap_last_error: [{$error_report}]\n"
+			  ."tried RH bug recovery?: [".$this->get_isset_arg('beenthere_loginerr_tryagain_buggy_cert', $acctnum)."]\n"
+			  .lang('if there is no obvious error, check your username and password first.')."\n";
 			// or use this text in an html error report
 			$error_text_formatted = 
-			  lang("There was an error trying to connect to your mail server.<br />Please, check your username and password, or contact your admin.")."<br /> \r\n"
-			  ."<br /> \r\n"
-			  ."<br /> \r\n"
-			  ."source: email class.mail_msg_base.inc.php"."<br /> \r\n"
-			  ."<br /> \r\n"
-			  ."called from: ".$called_from."<br /> \r\n"
-			  ."<br /> \r\n"
-			  ."imap_last_error: [".$error_report."]<br /> \r\n"
-			  ."tried RH bug recovery?: [".$this->get_isset_arg('beenthere_loginerr_tryagain_buggy_cert', $acctnum)."] <br /> \r\n"
-			  ."<br /> \r\n"
-			  ."<br /> \r\n"
-			  .lang('if there is no obvious error, check your username and password first.')."<br /> \r\n";
+			  '<div class="error">'
+			  .lang("There was an error trying to connect to your mail server.<br />Please, check your username and password, or contact your admin.")."<br>\n"
+			  ."<br>\n"
+			  ."source: email class.mail_msg_base.inc.php<br>\n"
+			  ."<br>\n"
+			  ."called from: {$called_from}<br>\n"
+			  ."<br>\n"
+			  ."imap_last_error: [{$error_report}]<br\n"
+			  ."tried RH bug recovery?: [".$this->get_isset_arg('beenthere_loginerr_tryagain_buggy_cert', $acctnum)."] <br>\n"
+			  ."<br>\n"
+			  .lang('if there is no obvious error, check your username and password first.')."<br>\n</div>\n";
 			// HOW we were called determines HOW we display the error 
-			if (stristr($this->ref_SERVER['REQUEST_URI'] ,'index.php?menuaction=email'))
+			if ( preg_match('/menuaction=email/', phpgw::get_var('REQUEST_URI', 'string', 'SERVER') ) ) 
 			{
+				$GLOBALS['phpgw']->common->phpgw_header(true);
 				// we were called from within the email app itself
 				// so show the error PAGE and then have it EXIT for us
 				// use the error report page widget
@@ -2179,7 +1989,7 @@
 				$widgets->init_error_report_values();
 				$widgets->prop_error_report_text($error_text_formatted);
 				
-				if ((string)$acctnum == '0')
+				if ( $acctnum == 0 )
 				{
 					$go_somewhere_url = $GLOBALS['phpgw']->link('/index.php',array(
 															'menuaction' => 'email.uipreferences.preferences',
@@ -2197,20 +2007,10 @@
 				
 				if ($this->debug_logins > 0) { $this->dbug->out('mail_msg: login_error('.__LINE__.'): LEAVING, called from within the email app, so use out own error page and exit.<br />'); }
 				// by putting anything (or TRUE) in the param of this function, it will shutdown the script for us.
-				$widgets->display_error_report_page('do_exit');
-				// we should not get here if the error widget exits for us
-				//$GLOBALS['phpgw']->common->phpgw_exit();
+				$widgets->display_error_report_page(true);
+				$GLOBALS['phpgw']->common->phpgw_exit(False);
 			}
-			else
-			{
-				// we were called by another app, maybe the home page, do not monopolize the page, but DO EXIT the script so we don't loop
-				if ($this->debug_logins > 0) { $this->dbug->out('mail_msg: login_error('.__LINE__.'): LEAVING, we were called by another app, the home page perhaps, so simple output the message and common EXIT (return causes a loop).<br />'); }
-				//echo '<center><b>'.$error_text_plain.'</b></center>';
-				echo '<center><b>'.$error_text_formatted.'</b></center>'."<br /> \r\n";
-				$GLOBALS['phpgw']->common->phpgw_exit();
-			}
-			// we should not get here
-			$GLOBALS['phpgw']->common->phpgw_exit(False);
+			return false;
 		}
 		
 		/*!
@@ -2240,28 +2040,7 @@
 			// avoid infinite RECURSION by setting this flag, says we've alreasy been here
 			if ($this->debug_logins > 1) { $this->dbug->out('mail_msg: loginerr_tryagain_buggy_cert('.__LINE__.'): setting flag "beenthere_loginerr_tryagain_buggy_cert" to "beenthere" so we know we have been here.<br />'); } 
 			$this->set_arg_value('beenthere_loginerr_tryagain_buggy_cert', 'beenthere', $acctnum);
-			/*!
-			@capability "show_recover_msg" during loginerr_tryagain_buggy_cert
-			@abstract whether ot not to show the user a "show_recover_msg" 
-			@discussion set this "show_recover_msg" var to True to show the user an error 
-			message during the recovery from the initial error a RH73+ php imap module can cause. 
-			Or set "show_recover_msg" to False to not show such a message. NOTE the error generated 
-			by php itself is controlled by your ini file settings, show_errors and log_errors.
-			*/
-			//$show_recover_msg = True;
-			$show_recover_msg = False;
-			if ($show_recover_msg == True)
-			{
-				// this should be templated
-				//echo "<br /><center><b>"
-				//  .'You have encountered a <u>KNOWN PHP - UWASH bug</u>, called the "<u>non-ssl no validate cert bug</u>"'
-				//  .' attempting to recover ...'.'<br />'."\r\n"
-				//  . "</b></center><br />";
-				echo '<small><i>'
-						.'Please ignore this message, you will only see this once on login'
-					.'</i></small><br />'."\r\n";
-			}
-			
+
 			// MAKE A NEW MAILSVR_CALLSTR with the "novalidate-cert"
 			// UPDATE: using "notls" because user did not specifically request encryption
 			$old_mailsvr_callstr = $this->get_mailsvr_callstr($acctnum);
@@ -2281,10 +2060,14 @@
 			//elseif(stristr($old_mailsvr_callstr,'novalidate-cert'))
 			elseif(stristr($old_mailsvr_callstr,'notls'))
 			{
-				echo "<p><center><b>"
-				  .'detected that there has already been an attempting to recover that failed'.'<br />'."\r\n"
-				  .'exiting...'
-				  . "</b></center></p>";
+				return false;
+				echo <<<HTML
+					<div class="error">
+						Detected that there has already been an attempt to recover that failed<br>
+						exiting...'
+					</div>
+
+HTML;
 				if ($this->debug_logins > 0) { $this->dbug->out('mail_msg: loginerr_tryagain_buggy_cert('.__LINE__.'): LEAVING, calling $this->login_error because it will show the error msg to the user.<br />'); }
 				//$GLOBALS['phpgw']->common->phpgw_exit(False);
 				$this->login_error('mail_msg: loginerr_tryagain_buggy_cert(LINE '.__LINE__.'), called_from: '.$called_from, $acctnum);
@@ -2837,35 +2620,16 @@
 		name string, such as a bare forward slash, or dot dot slash, etc. 
 		@access private or public 
 		*/
-		function uwash_string_ok($namespace='')
+		function uwash_string_ok($ns = '')
 		{
-			// it os OK unless we find bad stuff
-			$is_ok = True;
-			$ns = trim($namespace);
-			if ($ns == '')
+			$ns = trim($ns);
+			if ( $ns == '' 
+				|| $ns == '/'
+				|| preg_match('#\./|/\.|\.\.#', $ns) )
 			{
-				$is_ok = False;
+				return false;
 			}
-			elseif (($ns == '/')
-			|| ($ns == SEP))
-			{
-				$is_ok = False;
-			}
-			elseif ((stristr($ns,'..'))
-			|| (stristr($ns,'./'))
-			|| (stristr($ns,'/.')))
-			{
-				$is_ok = False;
-			}
-			// return False if bad, else return the ns we verified as OK	
-			if ($is_ok == True)
-			{
-				return $ns;
-			}
-			else
-			{
-				return False;
-			}
+			return $ns;
 		}
 		
 		/*!
@@ -2905,33 +2669,21 @@
 				return $class_cached_mailsvr_delimiter;
 			}
 			
-			//if ($this->debug_args_special_handlers > 0) { $this->dbug->out('mail_msg: get_mailsvr_delimiter: $this->get_pref_value(imap_server_type, '.$acctnum.') returns: ['.$this->get_pref_value('imap_server_type', $acctnum).'] ; api var SEP: ['.serialize(SEP).']<br />'); }
 			if ($this->get_pref_value('imap_server_type', $acctnum) == 'UWash')
 			{
-				//$delimiter = '/';
-				//$delimiter = SEP;
-				
+				$delimiter = '/';
+			
+				// Comment from Angles
 				// UWASH is a filesystem based thing, so the delimiter is whatever the system SEP is
 				// unix = /  and win = \ (win maybe even "\\" because the backslash needs escaping???
 				// currently the filesystem seterator is provided by phpgw api as constant "SEP"
-				if ($this->debug_args_special_handlers > 1) { $this->dbug->out('mail_msg: get_mailsvr_delimiter: imap_server_type is UWash<br />'); }
-				if (!SEP)
-				{
-					$delimiter = '/';
-				}
-				else
-				{
-					$delimiter = SEP;
-				}
+				//
+				// why this is wrong from skwashd jan08
+				// The UWIMAP server could be running on a different box - we need to be smarter about 
+				// this, but this will do for now.
 			}
 			else
 			{
-				// GENERIC IMAP DELIMITER
-				// imap servers usually use a "." as their delimiter
-				// this is supposed to be discoverable with the NAMESPACE command
-				// see http://www.rfc-editor.org/rfc/rfc2342.txt
-				// however as of PHP 4.0 this is not implemented
-				if ($this->debug_args_special_handlers > 1) { $this->dbug->out('mail_msg: get_mailsvr_delimiter: imap_server_type is OTHER than UWash<br />'); }
 				$delimiter = '.';
 			}
 			// cache the result to "level 1 cache" class arg holder var
@@ -3103,36 +2855,26 @@
 			return $sucess;
 		}
 		
-		/*!
-		@function get_folder_list
-		@abstract  list of folders in a numbered array, each element has 2 properties, "folder_long" and "folder_short"
-		@param $acctnum (int) OPTIONAL
-		@param $force_refresh   boolean, will cause any cached folder data to expire, and "fresh" data is retrieved from the mailserver
-		@return   array   numbered, with each numbered element having array keys  "folder_long" and "folder_short"
-		@discussion  returns a numbered array, each element has 2 properties, "folder_long" and "folder_short"
-		so every available folder is in the structure in both long form [namespace][delimiter][foldername]
-		and short form (does not have the [namespace][delimiter] prefix to the folder name)
-		This function can cache data in 2 ways
-		(1) caching as server data in the prefs DB cache department, and
-		(2) in the class var $this->get_arg_value("folder_list")
-		Data will be grabbed from cache when available and when allowed.
-		CACHE NOTE: this item is saved in the appsession cache.		
-		@access private  - public access is object->get_arg_value("folder_list") but may be 
-		called directly if you need to manually force_refresh any cached data, although this is still for 
-		private use as well.
+		/**
+		* list of folders in a numbered array, each element has 2 properties, "folder_long" and "folder_short"
+		*
+		* @internal this method should be accessed via this->get_arg_value("folder_list") but may be 
+		*	called directly if you need to manually force_refresh
+		* @param int $acctnum the account to use
+		* @param bool $force_refresh should the cache be disregarded
+		* @return array folder data with each element containing keys  "folder_long" and "folder_short"
 		*/
-		function get_folder_list($acctnum='', $force_refresh=False)
+		public function get_folder_list($acctnum = -1, $force_refresh=False)
 		{
 			if ($this->debug_args_special_handlers > 0) { $this->dbug->out('mail_msg: get_folder_list: ENTERING<br />'); }
 			// what acctnum is operative here, we can only get a folder list for one account at a time (obviously)
-			if ((!isset($acctnum))
-			|| ((string)$acctnum == ''))
+			if ( $acctnum == -1)
 			{
 				$acctnum = $this->get_acctnum();
 			}
 			if ($this->debug_args_special_handlers > 1) { $this->dbug->out('mail_msg: get_folder_list: for the rest of this function we will use $acctnum: ['.$acctnum.'] <br />'); }
 			// hardcore debug
-			if (stristr($this->skip_args_special_handlers, 'get_folder_list'))
+			if ( preg_match('/get_folder_list/', $this->skip_args_special_handlers) )
 			{
 				$fake_return = array();
 				$fake_return[0] = array();
@@ -3143,39 +2885,17 @@
 				return $fake_return;
 			}
 			
-			//if ($this->debug_args_special_handlers > 2) { $this->dbug->out('mail_msg: get_folder_list: $this->_direct_access_arg_value(folder_list, '.$acctnum.') dump:<pre>'; print_r($this->_direct_access_arg_value('folder_list', $acctnum)); echo '</pre>'); }
-			
-			// check if class dcom reports that the folder list has changed
-			// is this accounts dcom object has not been created yet, then obviously we did not just change its folder list
-			// NOTE THIS IS OBSOLETED - THE DCOM CLASS NOW USES CALLBACK FUNCTION "folder_list_change_callback"
-			if ((isset($GLOBALS['phpgw_dcom_'.$acctnum]->dcom) && is_object($GLOBALS['phpgw_dcom_'.$acctnum]->dcom))
-			&& ($GLOBALS['phpgw_dcom_'.$acctnum]->dcom->folder_list_changed == True))
-			{
-				// class dcom recorded a change in the folder list
-				// supposed to happen when create or delete mailbox is called
-				// reset the changed flag
-				$GLOBALS['phpgw_dcom_'.$acctnum]->dcom->folder_list_changed = False;
-				// set up for a force_refresh
-				$force_refresh = True;
-				if ($this->debug_args_special_handlers > 1) { $this->dbug->out('mail_msg: get_folder_list: class dcom report folder list changed<br />'); }
-				if ($this->debug_args_special_handlers > 1) { $this->dbug->out('mail_msg: get_folder_list: make sure folder data is removed from cache <br />'); }
-				// expire appsession cache
-				$this->expire_session_cache_item('folder_list', $acctnum);
-			}
-	
 			// see if we have object class var cached data that we can use
 			$class_cached_folder_list = $this->_direct_access_arg_value('folder_list', $acctnum);
-			if ($this->debug_args_special_handlers > 2) { $this->dbug->out('mail_msg: get_folder_list: $this->_direct_access_arg_value(folder_list, '.$acctnum.') DUMP:', $this->_direct_access_arg_value('folder_list', $acctnum)); }
-			if ((count($class_cached_folder_list) > 0)
-			&& ($force_refresh == False))
+			if ( count($class_cached_folder_list) > 0 && !$force_refresh == False)
 			{
 				// use the cached data
 				if ($this->debug_args_special_handlers > 2) { $this->dbug->out(' * * $class_cached_folder_list DUMP:', $class_cached_folder_list); }
 				if ($this->debug_args_special_handlers > 0) { $this->dbug->out('mail_msg: get_folder_list: LEAVING,  using object cached folder list data<br />'); }
 				return $class_cached_folder_list;
 			}
-			elseif (($this->get_pref_value('mail_server_type', $acctnum) == 'pop3')
-			|| ($this->get_pref_value('mail_server_type', $acctnum) == 'pop3s'))
+			else if ( $this->get_pref_value('mail_server_type', $acctnum) == 'pop3'
+				|| $this->get_pref_value('mail_server_type', $acctnum) == 'pop3s' )
 			{
 				// normalize the folder_list property
 				$my_folder_list = array();
@@ -3189,7 +2909,7 @@
 				if ($this->debug_args_special_handlers > 0) { $this->dbug->out('mail_msg: get_folder_list: LEAVING,  pop3 servers only have one folder: INBOX<br />'); }
 				return $my_folder_list;
 			}
-			elseif ($force_refresh == False)
+			else if ( !$force_refresh )
 			{
 				// -----------
 				// TRY CACHED DATA FROM APPSESSION
@@ -3198,23 +2918,18 @@
 				$appsession_cached_folder_list = $this->read_session_cache_item('folder_list', $acctnum);
 				if ($appsession_cached_folder_list)
 				{
-					if ($this->debug_args_special_handlers > 1) { $this->dbug->out('mail_msg: get_folder_list: got appsession cached data<br />'); }
 					$cached_data = $appsession_cached_folder_list;
-					if ($this->debug_args_special_handlers > 2) { $this->dbug->out('mail_msg: get_folder_list: appsession cached data DUMP:', $cached_data); }
 					// we no longer need this var
-					$appsession_cached_folder_list = '';
 					unset($appsession_cached_folder_list);
 				}
 				else
 				{
-					if ($this->debug_args_special_handlers > 1) { $this->dbug->out('mail_msg: get_folder_list: NO appsession cached data was available<br />'); }
 					$cached_data = False;
 				}
 				
 				// if there's no data we'll get back a FALSE
-				if ($cached_data && is_array($cached_data))
+				if ( $cached_data && is_array($cached_data) )
 				{
-					//if ($this->debug_args_special_handlers > 1) { echo 'mail_msg: get_folder_list: using *Prefs DB* cached folder list data<br />';}
 					if ($this->debug_args_special_handlers > 1) { $this->dbug->out('mail_msg: get_folder_list: using appsession cached folder list data<br />'); } 
 					if (!isset($cached_data[0]['folder_short']))
 					{
@@ -3247,17 +2962,7 @@
 					if ($this->debug_args_special_handlers > 0) { $this->dbug->out('mail_msg: get_folder_list: LEAVING, got data from cache<br />'); }
 					return $cached_data;
 				}
-				else
-				{
-					if ($this->debug_args_special_handlers > 1) { $this->dbug->out('mail_msg: get_folder_list: NO cached folder list data, fallback to get data from mailserver<br />'); } 
-				}
 			}
-			
-			// if we get here we must actually get the data from the mailsvr
-			// otherwise we would have return/broke out of this function
-			// only IF statement above that allows code to reach here is if we are allowed to use
-			// cached data, BUT none exists
-			if ($this->debug_args_special_handlers > 1) { $this->dbug->out('mail_msg: get_folder_list: need to get data from mailserver<br />'); }
 			
 			// Establish Email Server Connectivity Information
 			$mailsvr_stream = $this->get_arg_value('mailsvr_stream', $acctnum);
@@ -3269,31 +2974,7 @@
 			if ($this->get_pref_value('imap_server_type', $acctnum) == 'UWash')
 			{
 				if ($this->debug_args_special_handlers > 1) { $this->dbug->out('mail_msg: get_folder_list: mailserver is of type UWash<br />'); } 
-				/*!
-				@concept UWash IMAP Namespace
-				@discussion uwash is file system based, so it requires a filesystem slash after the namespace. 
-				Note that with uwash the delimiter is in fact the file system slash. 
-				example: requesting list for "mail/*" 
-				(NOTE  this <slash><star> request will NOT yield a list the INBOX folder included in the returned folder list). 
-				However, we have no choice since without the <slash> filesystem delimiter, requesting "email*" returns NOTHING. 
-				Example queries: (a) "~/" 
-				OR (b) if the user specifies specific mbox folder, then: "~/emails/*"  
-				OR (c) "emails/*" give the same result, much like a unix "ls" command.
-				At this time we use "unqualified" a.k.a. "relative" directory names if the user provides a namespace. 
-				UWash will consider it relative to the mailuser's $HOME property as with "emails/*" (DOES THIS WORK ON ALL PLATFORMS??).
-				BUT we use <tilde><slash> "~/" if no namespace is given.
-				@returns
-				UWASH IMAP returns information in this format (same as any other IMAP server format):
-				{SERVER_NAME:PORT}FOLDERNAME 
-				(inline docparser repeat): &#123;SERVER_NAME:PORT&#125;FOLDERNAME 
-				For Example: 
-				{some.server.com:143}Trash AND 
-				{some.server.com:143}Archives/Letters 
-				(inline docparser repeat): 
-				&#123;some.server.com:143&#125;Trash AND 
-				&#123;some.server.com:143&#125;Archives/Letters 				
-				*/
-				$mailboxes = $this->phpgw_listmailbox($mailsvr_callstr, "$name_space" ."$delimiter" ."*", $acctnum);
+				$mailboxes = $this->phpgw_listmailbox($mailsvr_callstr, "$name_space" ."$delimiter" ."*", $acctnum, false);
 				// UWASH IMAP returns information in this format:
 				// {SERVER_NAME:PORT}FOLDERNAME
 				// example:
@@ -3302,25 +2983,7 @@
 			}
 			else
 			{
-				if ($this->debug_args_special_handlers > 1) { $this->dbug->out('mail_msg: get_folder_list: mailserver is other than UWash type<br />'); } 
-				/*!
-				@concept non-UWash IMAP Server Namespace
-				@discussion when handling handle non-UWash IMAP servers, 
-				i.e. typical IMAP servers that do not use a filesystem slash as the "delimiter", 
-				the last arg is typically "INBOX*" (no dot) which DOES include the inbox in the list of folders. 
-				Wheres adding the delimiter "INBOX.*" (has dot) will NOT include the INBOX in the list of folders. 
-				So - it's theoretically safe to include the delimiter here, but the INBOX will not be included in the list, 
-				this is typically the ONLY TIME you would ever *not* use the delimiter between the namespace and what comes after it.
-				HOWEVER to get *shared* folders included in the return, better NOT include the "." delimiter.
-				For example: Cyrus does not like anything but a "*" as the pattern IF you want shared folders returned.
-				Return data is a list suck as this:
-				{some.server.com:143}INBOX
-				{some.server.com:143}INBOX.Trash
-				(inline docparser repeat): 
-				&#123;some.server.com:143&#125;INBOX AND 
-				&#123;some.server.com:143&#125;INBOX.Trash			
-				*/
-				$mailboxes = $this->phpgw_listmailbox($mailsvr_callstr, "*", $acctnum);
+				$mailboxes = $this->phpgw_listmailbox($mailsvr_callstr, "*", $acctnum, false);
 				// returns information in this format:
 				// {SERVER_NAME:PORT} NAMESPACE DELIMITER FOLDERNAME
 				// example:
@@ -3328,7 +2991,6 @@
 				// {some.server.com:143}INBOX.Trash
 			}
 			if ($this->debug_args_special_handlers > 2) { $this->dbug->out('mail_msg: get_folder_list: server returned $mailboxes DUMP:', $mailboxes); }
-			//echo 'raw mailbox list:<br />'.htmlspecialchars(serialize($mailboxes)).'<br />';
 			
 			// ERROR DETECTION
 			if (!$mailboxes)
@@ -3355,10 +3017,9 @@
 				$this_folder = $this->get_folder_short($mailboxes[$i]);
 				//if ($this_folder == 'INBOX')
 				// rfc2060 says "INBOX" as a namespace can not be case sensitive
-				if ((stristr($this_folder, 'INBOX'))
-				&& (strlen($this_folder) == strlen('INBOX')))
+				if ( preg_match('/^INBOX$/i', $this_folder) )
 				{
-					$has_inbox = True;
+					$has_inbox = true;
 					break;
 				}
 			}
@@ -6210,4 +5871,3 @@
 	
 	}
 	// end of class mail_msg
-?>

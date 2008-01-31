@@ -1806,7 +1806,8 @@
 			$GLOBALS['phpgw']->common->phpgw_header(True);
 			$GLOBALS['phpgw']->template->set_root(PHPGW_APP_TPL);
 
-			$GLOBALS['phpgw']->template->set_file(array(
+			$GLOBALS['phpgw']->template->set_file(array
+			(
 				'T_error_report' => 'error_report.tpl'
 			));
 			$GLOBALS['phpgw']->template->set_var('error_report_text', $this->prop_error_report_text());
@@ -1816,11 +1817,9 @@
 			// do we exit the script here?
 			if ($do_exit)
 			{
-				// kill this script, we re outa here...
 				if (is_object($GLOBALS['phpgw']->msg))
 				{
 					$GLOBALS['phpgw']->msg->end_request();
-					$GLOBALS['phpgw']->msg = '';
 					unset($GLOBALS['phpgw']->msg);
 				}
 				$GLOBALS['phpgw']->common->phpgw_exit();
@@ -1834,6 +1833,9 @@
 		*/
 		function get_geek_bar()
 		{
+			//disabling "geekbar"
+			return '';
+
 			$row_on = $GLOBALS['phpgw_info']['theme']['row_on'];
 			$this_server_type = $GLOBALS['phpgw']->msg->get_pref_value('mail_server_type');
 			if (extension_loaded('imap') && function_exists('imap_open'))

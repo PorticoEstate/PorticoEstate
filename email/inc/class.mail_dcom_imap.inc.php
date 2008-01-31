@@ -164,9 +164,13 @@
 
 		function listmailbox($stream,$ref,$pattern)
 		{
+			if ( !is_resource($stream) )
+			{
+				return array();
+			}
 			//return imap_listmailbox($stream,$ref,$pattern);
 			$pattern = $this->utf7_encode($pattern);
-			$return_list = imap_listmailbox($stream,$ref,$pattern);
+			$return_list = imap_list($stream,$ref,$pattern);
 			return $this->utf7_decode($return_list);
 		}
 
@@ -212,7 +216,7 @@
 		function open($mailbox,$username,$password,$flags=0)
 		{
 			$mailbox = $this->utf7_encode($mailbox);
-			return imap_open($mailbox,$username,$password,$flags);
+			return @imap_open($mailbox, $username, $password, $flags);
 		}
 
 		function qprint($message)
@@ -259,6 +263,10 @@
 
 		function status($stream,$mailbox,$options=0)
 		{
+			if ( !is_resource($stream) )
+			{
+				return;
+			}
 			$mailbox = $this->utf7_encode($mailbox);
 			return imap_status($stream,$mailbox,$options);
 		}

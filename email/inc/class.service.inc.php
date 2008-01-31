@@ -59,7 +59,8 @@ class email_service
 		(
 			array
 			(
-				'url'	=> 'javascript:window.open(\'' . $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'email.uicompose.compose')) . '\');',
+				// this is a bit of a hack, but it means that we can degrade gracefully
+				'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'email.uicompose.compose')) . '" onclick="window.open(\'' . $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'email.uicompose.compose')) . '\'); return false;"',
 				'text'	=> lang('New'),
 				'image'	=> array('email', 'new')
 			),
@@ -127,7 +128,7 @@ class email_service
 				$folders = array();
 				if ( substr($acct['prefs']['mail_server_type'], 0, 4) == 'imap' )
 				{
-					$raw_folders = $GLOBALS['phpgw']->msg->get_arg_value('folder_list', $id);
+					$raw_folders = $GLOBALS['phpgw']->msg->get_arg_value('folder_list', $id, '', false);
 					$sep = $acct['prefs']['imap_server_type'] == 'Cyrus' ? '.' : '/';
 					$folders = self::process_folders($raw_folders, $sep, $id);
 				}
@@ -161,84 +162,6 @@ class email_service
 	function getFolderContent()
 	{
 		return array('content', 'this is being phased out');
-		/*
-		$bopreferences = CreateObject('email.bopreferences');
-		$tpl_set = $GLOBALS['phpgw_info']['user']['preferences']['common']['template_set'];
-
-		// make sure we have msg object and a server stream
-		$msg_bootstrap = CreateObject('email.msg_bootstrap');
-		$msg_bootstrap->ensure_mail_msg_exists('email.bofolder.folder', $this->debug);
-
-		$standard_account = array
-		(
-			'acctnum'        => 0,
-			'status'         => 'enabled',
-			'display_string' => '[0] standard'
-		);
-
-		$extra_account_list = $bopreferences->ex_accounts_list();
-
-		array_unshift($extra_account_list, $standard_account);
-		$account_list = $extra_account_list;
-
-		$return = array();
-		for ($i=0; $i < count($account_list); $i++)
-		{
-			if ($account_list[$i]['status'] == 'enabled')
-			{
-				$account_name = substr($account_list[$i]['display_string'],(strrpos($account_list[$i]['display_string'],']')+2));
-				$account_name = lang('mailbox').' \''.$account_name.'\'';
-				$id = strval('email_'.$account_list[$i]['acctnum']);
-				$return[$id] = array('text'      => $account_name,
-						'parent_id' => '0',
-						'icon'      => ''
-						);
-
-				$folder_list_i = $GLOBALS['phpgw']->msg->get_arg_value('folder_list',$account_list[$i]['acctnum']);
-
-				for ($j=0; $j < count($folder_list_i); $j++)
-				{
-					$separator = self::get_IMAP_folder_separator($folder_list_i[$j]['folder_long']);
-					$path = explode($separator, $folder_list_i[$j]['folder_long']);
-
-					// calculate parent folder
-					if (count($path) == 1)
-					{
-						$parent = 'email_'.$account_list[$i]['acctnum'];
-					}
-					else
-					{
-						//special handling for the courir server
-						if ( $path[count($path) - 2] == 'INBOX' && $separator == '.' )
-						{
-							$parent = 'email_'.$account_list[$i]['acctnum'];
-						}
-						else
-						{
-							$parent = 'email_'.$account_list[$i]['acctnum'].'_'.$path[count($path) - 2];
-						}
-					}
-
-					// parse link to view email folder
-					$folderName = $GLOBALS['phpgw']->msg->prep_folder_out($folder_list_i[$j]['folder_long']);
-					$folderLink = $GLOBALS['phpgw']->link('/index.php',array('menuaction'=>'email.uiindex.index',
-								'fldball[folder]'=>$folderName,
-								'fldball[acctnum]'=>$account_list[$i]['acctnum']
-								));
-
-					$id = 'email_'.$account_list[$i]['acctnum'].'_'.$path[count($path)-1];
-					$return[$id] = array('text'      => $path[count($path)-1],
-							'title'     => $folder_list_i[$j]['folder_long'],
-							'icon'      => 'email/templates/'.$tpl_set.'/images/folders.png',
-							'parent_id' => $parent,
-							'href'      => $folderLink,
-							'target'    => '_parent'
-							);
-				}
-			}
-		}
-		return array('content' => $return);
-		*/
 	}
 
 	/**

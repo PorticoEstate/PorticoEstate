@@ -188,10 +188,11 @@
 				$dh = dir($upload_dir);
 				while ( ($file = $dh->read() ) !== false )
 				{
-					if( $file != '.' && $file != '..' )
+					if( $file == '.' || $file == '..' )
 					{
-						unlink($upload_dir . SEP . $file);
+						continue;
 					}
+					unlink("{$upload_dir}/{$file}");
 				}
 				$dh->close();
 				rmdir($upload_dir);
@@ -723,9 +724,9 @@
 					&& ( strpos($file, '.info') )
 					)
 					{
-						$meta_data = explode("\n", file_get_contents($upload_dir . SEP . $file) );
+						$meta_data = explode("\n", file_get_contents("{$upload_dir}/{$file}") );
 						$real_file = substr($file, 0, strpos($file, '.info'));
-						$this->smtp->AddAttachment( $upload_dir .SEP. $real_file, 
+						$this->smtp->AddAttachment( "{$upload_dir}/{$real_file}", 
 								trim($meta_data[1]), 
 								'base64', 
 								trim($meta_data[0]) );

@@ -75,6 +75,8 @@
 			$this->bo = CreateObject('email.boindex');
 			$this->bo->index_data();
 			
+			$this->index_old_tpl();
+			return;
 			if ($GLOBALS['phpgw']->msg->phpgw_before_xslt)
 			{
 				$this->index_old_tpl();
@@ -96,19 +98,8 @@
 			// we point to the global template for this version of phpgw templatings
 			$this->tpl =& $GLOBALS['phpgw']->template;
 			
-			// NOW we can out the header, because "index_data()" filled this global
-			//	$GLOBALS['phpgw_info']['flags']['email_refresh_uri']
-			// which is needed to preserve folder and sort settings during the auto-refresh-ing
-			// currently (Dec 6, 2001) that logic is in phpgwapi/inc/templates/idsociety/head.inc.php
-			unset($GLOBALS['phpgw_info']['flags']['noheader']);
-			unset($GLOBALS['phpgw_info']['flags']['nonavbar']);
-			$GLOBALS['phpgw_info']['flags']['noappheader'] = True;
-			$GLOBALS['phpgw_info']['flags']['noappfooter'] = True;
 			$GLOBALS['phpgw']->common->phpgw_header(true);
 			$this->tpl->set_root(PHPGW_APP_TPL);
-			// HOWEVER still this class must NOT invoke $GLOBALS['phpgw']->common->phpgw_header()
-			// even though we had to output the header (go figure... :)
-			// later: What does that mean ?
 			
 			$this->bo->xi['my_layout'] = $GLOBALS['phpgw']->msg->get_pref_value('layout');
 			$this->bo->xi['my_browser'] = $GLOBALS['phpgw']->msg->browser;
@@ -593,9 +584,6 @@ EOD;
 		*/
 		function mlist()
 		{
-			//raw HTTP_POST_VARS dump
-			//echo 'HTTP_POST_VARS print_r dump:<b><pre>'."\r\n"; print_r($GLOBALS['HTTP_POST_VARS']); echo '</pre><br /><br />'."\r\n";
-			
 			$this->bo = CreateObject("email.boindex");
 			$this->bo->mlist_data();
 			
@@ -603,16 +591,8 @@ EOD;
 			// NOW we can out the header, because "index_data()" filled this global
 			//	$GLOBALS['phpgw_info']['flags']['email_refresh_uri']
 			// which is needed to preserve folder and sort settings during the auto-refresh-ing
-			// currently (Dec 6, 2001) that logic is in phpgwapi/inc/templates/idsociety/head.inc.php
-			unset($GLOBALS['phpgw_info']['flags']['noheader']);
-			unset($GLOBALS['phpgw_info']['flags']['nonavbar']);
-			$GLOBALS['phpgw_info']['flags']['noappheader'] = True;
-			$GLOBALS['phpgw_info']['flags']['noappfooter'] = True;
-			$GLOBALS['phpgw']->common->phpgw_header();
+			$GLOBALS['phpgw']->common->phpgw_header(true);
 			$GLOBALS['phpgw']->template->set_root(PHPGW_APP_TPL);
-			// NOTE: as of Dec 10, 2001 a call from menuaction defaults to NOT modular
-			// HOWEVER still this class must NOT invoke $GLOBALS['phpgw']->common->phpgw_header()
-			// even though we had to output the header and navbar, (go figure... :)
 
 			// MUCH of this data may not be necessary nor used for mlists 
 			$this->bo->xi['my_layout'] = $GLOBALS['phpgw']->msg->prefs['layout'];

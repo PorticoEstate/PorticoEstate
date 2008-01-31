@@ -476,8 +476,8 @@
 			$this->network(True);
 			if (isset($GLOBALS['phpgw_info']))
 			{
-				$this->tempfile = $GLOBALS['phpgw_info']['server']['temp_dir'].SEP.$GLOBALS['phpgw_info']['user']['sessionid'].'.mhd';
-				$this->att_files_dir = $GLOBALS['phpgw_info']['server']['temp_dir'].SEP.$GLOBALS['phpgw_info']['user']['sessionid'];
+				$this->tempfile = "{$GLOBALS['phpgw_info']['server']['temp_dir']}/" . $GLOBALS['phpgw']->common->randomstring() . '.mhd';
+				$this->att_files_dir = "{$GLOBALS['phpgw_info']['server']['temp_dir']}/{$GLOBALS['phpgw_info']['user']['sessionid']}";
 			}
 			else
 			{
