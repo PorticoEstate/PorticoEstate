@@ -9,7 +9,7 @@
 	* @link http://www.sanisoft.com/phplib/manual/DB_sql.php
 	* @package phpgwapi
 	* @subpackage database
-	* @version $Id: class.db.inc.php 18358 2007-11-27 04:43:37Z skwashd $
+	* @version $Id$
 	*/
 
 	if (empty($GLOBALS['phpgw_info']['server']['db_type']))
@@ -237,7 +237,7 @@
 			{
 				return addslashes($str);
 			}
-			return substr($this->adodb->qstr($str, magic_quotes_runtime()), 1, -1);
+			return substr($this->adodb->qstr($str, get_magic_quotes_gpc()), 1, -1);
 		}
 
 		/**
