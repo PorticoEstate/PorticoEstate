@@ -107,33 +107,6 @@
 			}
 		}
 		
-		/*!
-		@function wbasename
-		@abstract returns a filename with the path stripped off
-		@param $input (string) filename with or without the path. If path is there it will be stripped. 
-		@authors Angles and some help from php.net manual
-		@discussion Netscape 6 sometimes passes file_name with a full path, we need to extract just the filename. 
-		WHY use this insead of the buildin PHP function, I DO NOT KNOW. 
-		*/
-		function wbasename($input)
-		{
-			if (strstr($input, SEP) == False)
-			{
-				// no filesystem seperator is present
-				return $input;
-			}
-	
-			for($i=0; $i < strlen($input); $i++ )
-			{
-				$pos = strpos($input, SEP, $i);
-				if ($pos != false)
-				{
-					$lastpos = $pos;
-				}
-			}
-			return substr($input, $lastpos + 1, strlen($input));
-		}
-		
 		/**
 		* Grab gpc POST vars used in this script for "this->action" and "this->delete" values.
 		*
@@ -181,11 +154,6 @@
 			{
 				$this->file_data['file_type'] = $mime_type_default;
 			}
-			
-			// Netscape 6 passes file_name with a full path, we need to extract just the filename
-			if ($this->debug > 1) { echo 'emai.boattach_file.fill_file_data_gpc ('.__LINE__.'): file_name (pre-wbasename): ' .$this->file_data['file_name'] .'<br />'; } 
-			$this->file_data['file_name'] = $this->wbasename($this->file_data['file_name']);
-			if ($this->debug > 1) { echo 'emai.boattach_file.fill_file_data_gpc ('.__LINE__.'): file_name (post-wbasename): ' .$this->file_data['file_name'] .'<br />'; } 
 			
 			if ($this->debug > 2) { echo 'emai.boattach_file.fill_file_data_gpc ('.__LINE__.'): filled $this->file_data DUMP<pre>'; print_r($this->file_data);  echo '</pre>'; } 
 			if ($this->debug > 0) { echo 'LEAVING emai.boattach_file.fill_file_data_gpc ('.__LINE__.')<br />'; }
@@ -271,8 +239,8 @@
 				// sometimes $this->control_data[delete][] seems to have multiple entries for the same filename
 				for ($i=0; $i<count($this->control_data['delete']); $i++)
 				{
-					$full_fname_attachment = $this->uploaddir.SEP.$this->control_data['delete'][$i];
-					$full_fname_metafile = $this->uploaddir.SEP.$this->control_data['delete'][$i] . '.info';
+					$full_fname_attachment = "{$this->uploaddir}/{$this->control_data['delete'][$i]}";
+					$full_fname_metafile = "{$this->uploaddir}/{$this->control_data['delete'][$i]}.info";
 					if (file_exists($full_fname_attachment))
 					{
 						if ($this->debug > 1) { echo 'boattach_file.attach ('.__LINE__.'): loop['.$i.'] deleting file: ['.$full_fname_attachment.']: <br />'; } 
@@ -308,14 +276,14 @@
 				//if ($this->file_data['file_tmp_name'] == "none" && $this->file_data['file_size'] == 0) This could work also
 				if ($this->file_data['file_size'] == 0)
 				{
-					touch ($this->uploaddir.SEP.$newfilename);
+					touch ("{$this->uploaddir}/{$newfilename}");
 				}
 				else
 				{
-					move_uploaded_file($this->file_data['file_tmp_name'], $this->uploaddir.SEP.$newfilename);
+					move_uploaded_file($this->file_data['file_tmp_name'], "{$this->uploaddir}/{$newfilename}");
 				}
 		
-				$ftp = fopen($this->uploaddir.SEP.$newfilename . '.info','wb');
+				$ftp = fopen("{$this->uploaddir}/{$newfilename}.info",'wb');
 				fputs($ftp,$this->file_data['file_type']."\n".$this->file_data['file_name']."\n");
 				fclose($ftp);
 			}
@@ -328,39 +296,41 @@
 					. lang('You must click %1 for the file to actually upload','"'.lang('Attach File').'"').'.<br />'
 					. '<br />';
 			}
-		
-			$dh = opendir($this->uploaddir);
-			//while ($file = readdir($dh)) // http://www.php.net/manual/en/function.readdir.php says this is wrong ... 
-			while (false !== ($file = readdir($dh))) // is correct according to the manual but only works with 4.0.0RC2+
+
+			$dh = dir($uploaddir);
+			while ( false !== ($file = $dh->dir() ) )
 			{
 				if (($file != '.')
-				&& ($file != '..')
-				&& (ereg("\.info",$file)))
+					&& ($file != '..')
+					&& (preg_match('/\.info/', $file)))
 				{
-					$file_info = file($this->uploaddir.SEP.$file);
-					
+					$file_info = file("{$uploaddir}/{$file}");
+
 					//get filesize in kb, but do not tell user a file is 0kb, because it is probably closer to 1kb
-					// actual 0kb files are probably an error, and are detected in the actual upload code (HOPEFULLY) 
 					$real_file = str_replace('.info','',$file);
-					$real_file_size = ((int) (@filesize($this->uploaddir.SEP.$real_file)/1024));
-					if ($real_file_size < 1)
+
+					$real_file_size = (int) filesize("{$uploaddir}/{$real_file}");
+					if ( $real_file_size / 1024 > 1 )
 					{
-						$real_file_size = 1;
+						$real_file_size = ($real_file_size / 1024) . 'kb';
 					}
-					
-					if ($this->debug > 2) { echo 'FILE contents DUMP: <pre>'; print_r(file($this->uploaddir.SEP.$real_file)); echo '</pre>'; } 
+					else
+					{
+						$real_file_size .= 'b';
+					}
+
+					if ($fup_debug > 2) { echo 'FILE contents DUMP: <pre>'; print_r(file("{$uploaddir}/{$real_file}")); echo '</pre>'; } 
 					// for every file, fill the file list template with it
-					$GLOBALS['phpgw']->template->set_var('ckbox_delete_name','delete[]');
-					$GLOBALS['phpgw']->template->set_var('ckbox_delete_value',substr($file,0,-5));
-					$GLOBALS['phpgw']->template->set_var('hidden_delete_name',substr($file,0,-5));
+					$GLOBALS['phpgw']->template->set_var('ckbox_delete_name', 'delete[]');
+					$GLOBALS['phpgw']->template->set_var('ckbox_delete_value', substr($file,0,-5));
+					$GLOBALS['phpgw']->template->set_var('hidden_delete_name', substr($file,0,-5));
 					$GLOBALS['phpgw']->template->set_var('hidden_delete_filename', $file_info[1]);
-					$GLOBALS['phpgw']->template->set_var('ckbox_delete_filename', 
-							$file_info[1].' ('.$real_file_size.'k)'); //also shows file size in kb
+					$GLOBALS['phpgw']->template->set_var('ckbox_delete_filename', "{$file_info[1]} ({$real_file_size})");
 					$GLOBALS['phpgw']->template->parse('V_attached_list','B_attached_list',True);
 					$totalfiles++;
 				}
 			}
-			closedir($dh);
+			$dh->close();
 			if ($totalfiles == 0)
 			{
 				// there is no list of files, clear that block

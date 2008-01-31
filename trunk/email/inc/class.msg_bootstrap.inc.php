@@ -27,7 +27,7 @@
 	* message, and the script exits.
 	* @package email
 	*/	
-	class msg_bootstrap
+	class email_msg_bootstrap
 	{
 		/**
 		 * @var boolean $do_login Defaults to True, most often you do not need to change this.
@@ -39,7 +39,7 @@
 		var $debug_level=0;
 		//var $debug_level=3;
 		
-		function msg_bootstrap()
+		function __construct()
 		{
 			if (defined('BS_LOGIN_NEVER') == False)
 			{
@@ -56,38 +56,6 @@
 			//return;
 		}
 		
-		
-		/* * * * 
-		@function set_do_login
-		@abstract whether to try to login to the mail server or not during a call to "ensure_mail_msg_exists". 
-		OPTIONAL, default is True. Behavior depends on caching method.
-		@param $do_login (boolean) 
-		@author Angles
-		@result (boolean) whatever the value var $this->do_login has on exiting the function.
-		@discussion OPTONAL, default of True works for most situations. This do_login value is 
-		used in this objects function "ensure_mail_msg_exists" where it is passed to the mail_msg class. 
-		Again, this is OPTONAL, default of True works for most situations, such as 
-		(1a) If session_cache_extreme is True, and do_login=True, this will _allow_ a server login, 
-		if needed, only if the app needs to get data that is not already cached.
-		(1b) If session_cache_extreme is False, and do_login=True, this will _always_ try to establish 
-		a mail server stream at the beginning of every script run. 
-		(2a and 2b) Setting do_login to False is useful in certain limited situations, such as the email settings page, 
-		or the preferences page. There you want to set or get email preference data but you do NOT 
-		require a login, or when there may be no preference data set yet, such as the first time a user 
-		sets the preferences, so a login is not even possible. The preference data will be handled by the 
-		mail_msg class as usual. Setting do_login to False for these occasions is OK no matter if 
-		session_cache_extreme is True or False. 
-		@access public
-		*
-		function set_do_login($do_login='##NOTHING##')
-		{
-			if (is_bool($do_login))
-			{
-				$this->do_login = $do_login;
-			}
-			return $this->do_login;
-		}
-		*/
 		
 		/*!
 		@function set_do_login REIMPLEMENTATION
@@ -119,46 +87,33 @@
 			{
 				if ($do_login == True)
 				{
-					$this->do_login = True;
 					$this->do_login_ex = BS_LOGIN_ONLY_IF_NEEDED;
 				}
 				else
 				{
-					$this->do_login = False;
 					$this->do_login_ex = BS_LOGIN_NEVER;
 				}
+
+				$this->do_login = $do_login;
+
 				// LEAVING HERE
-				if ($this->debug_level > 0) { echo 'LEAVING: msg_bootstrap: set_do_login: (bool input) (called_by: '.$called_by.') $this->do_login: ['.$this->do_login.'] $this->do_login_ex: ['.$this->do_login_ex.'] '.'<br />'; }
 				return $this->do_login;
 			}
 			elseif (is_int($do_login))
 			{
 				// new way has 3 possibilities
+				$this->do_login = true;
 				switch($do_login)
 				{
 					case BS_LOGIN_NEVER:
-						{
-							$this->do_login = False;
-							$this->do_login_ex = BS_LOGIN_NEVER;
-							break;
-						}
+						$this->do_login = false;
+						// no break here - we want to fall thru
 					case BS_LOGIN_ONLY_IF_NEEDED:
-						{
-							$this->do_login = True;
-							$this->do_login_ex = BS_LOGIN_ONLY_IF_NEEDED;
-							break;
-						}
 					case BS_LOGIN_YES:
-						{
-							$this->do_login = True;
-							$this->do_login_ex = BS_LOGIN_YES;
-							break;
-						}
+						$this->do_login_ex = $do_login;
+
 					default:
-						{
-							$this->do_login = True;
 							$this->do_login_ex = BS_LOGIN_ONLY_IF_NEEDED;
-						}
 				}
 			}
 			else
@@ -166,7 +121,6 @@
 				$this->do_login = True;
 				$this->do_login_ex = BS_LOGIN_ONLY_IF_NEEDED;
 			}
-			if ($this->debug_level > 0) { echo 'LEAVING: msg_bootstrap: set_do_login: (not bool input) (called_by: '.$called_by.') $this->do_login: ['.$this->do_login.'] $this->do_login_ex: ['.$this->do_login_ex.'] '.'<br />'; }
 			return $this->do_login_ex;
 		}
 		
@@ -241,15 +195,7 @@
 			// make sure utility classes (like html widgets) exist for global access
 			//$this->ensure_utility_classes($debug_level);
 			
-			if (is_object($GLOBALS['phpgw']->msg))
-			//if ((isset($GLOBALS['phpgw']->msg))
-			//&& (isset($GLOBALS['phpgw']->msg->been_constructed))
-			//&& ($GLOBALS['phpgw']->msg->been_constructed == True)
-			//)
-			{
-				if ($this->debug_level > 1) { echo 'msg_bootstrap: ensure_mail_msg_exists('.__LINE__.'): (called_by: '.$called_by.'): is_object test: $GLOBALS[phpgw]->msg is already set, do not create again<br />'; }
-			}
-			else
+			if ( !is_object($GLOBALS['phpgw']->msg) )
 			{
 				if ($this->debug_level > 1) { echo 'msg_bootstrap: ensure_mail_msg_exists('.__LINE__.'): (called_by: '.$called_by.'): $GLOBALS[phpgw]->msg is NOT set, creating mail_msg object<br />'; }
 				$GLOBALS['phpgw']->msg = CreateObject("email.mail_msg");
@@ -269,19 +215,17 @@
 				return True;
 			}
 			
-			$args_array = Array();
-			// should we log in or not
-			if ($this->debug_level > 1) { echo 'msg_bootstrap: ensure_mail_msg_exists: (called_by: '.$called_by.'): $this->do_login: ['.serialize($this->do_login).']<br />'; }
-			$args_array['do_login'] = $this->do_login;
-			if ($this->debug_level > 1) { echo 'msg_bootstrap: ensure_mail_msg_exists: (called_by: '.$called_by.'): $this->do_login_ex: ['.serialize($this->do_login_ex).']<br />'; }
-			$args_array['do_login_ex'] = $this->do_login_ex;
+			$args_array = array
+			(
+				'do_login'		=> $this->do_login,
+				'do_login_ex'	=> $this->do_login_ex
+			);
 			
 			// "start your engines"
 			if ($this->debug_level > 1) { echo 'msg_bootstrap: ensure_mail_msg_exists: (called_by: '.$called_by.'): call msg->begin_request with args array:<pre>'; print_r($args_array); echo '</pre>'; }
 			$some_stream = $GLOBALS['phpgw']->msg->begin_request($args_array);
 			// error if login failed
-			if (($args_array['do_login'] == True)
-			&& (!$some_stream))
+			if (  $args_array['do_login']  && !$some_stream )
 			{
 				$GLOBALS['phpgw']->msg->login_error($_SERVER['PHP_SELF'].', msg_bootstrap: ensure_mail_msg_exists(), called_by: '.$called_by);
 			}
@@ -326,4 +270,3 @@
 
 	}
 	
-?>

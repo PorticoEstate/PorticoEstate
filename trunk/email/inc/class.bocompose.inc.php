@@ -524,13 +524,13 @@
 								$part_string = base64_decode($part_string);
 							}
 							
-							$fpart = fopen($GLOBALS['phpgw']->msg->att_files_dir . SEP . $newfilename,'wb');
+							$fpart = fopen("{$GLOBALS['phpgw']->msg->att_files_dir}/{$newfilename}",'wb');
 							fputs($fpart, $part_string);
 							fclose($fpart);
 							unset($fpart);
 							unset($part_string);
 				
-							$finfo = fopen($GLOBALS['phpgw']->msg->att_files_dir . SEP . $newfilename . '.info','wb');
+							$finfo = fopen("{$GLOBALS['phpgw']->msg->att_files_dir}/{$newfilename}" . '.info','wb');
 							fputs($finfo, strtolower($mimemajors[$part->type] . '/' . $part->subtype) ."\n" 
 								. $filename . "\n");
 							fclose($finfo);
