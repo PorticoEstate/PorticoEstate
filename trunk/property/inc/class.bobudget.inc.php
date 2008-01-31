@@ -239,10 +239,8 @@
 			return $receipt;
 		}
 
-
 		function save_basis($values)
 		{
-
 			if ($values['budget_id'])
 			{
 				if ($values['budget_id'] != 0)
@@ -256,7 +254,7 @@
 				$receipt = $this->so->add_basis($values);
 			}
 
-			if(is_array($values['distribute']) && is_array($values['distribute_year']))
+			if(is_array($values['distribute']) && is_array($values['distribute_year']) && (!isset($receipt['error']) || !$receipt['error']))
 			{
 				if($values['distribute'][0]=='new')
 				{
