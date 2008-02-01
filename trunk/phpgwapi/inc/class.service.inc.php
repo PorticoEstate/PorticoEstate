@@ -7,7 +7,7 @@
 	* @license http://www.fsf.org/licenses/lgpl.html GNU Lesser General Public License
 	* @package phpgwapi
 	* @subpackage application
-	* @version $Id: class.service.inc.php 17062 2006-09-03 06:15:27Z skwashd $
+	* @version $Id$
 	*/
 
 	/**

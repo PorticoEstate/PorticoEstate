@@ -8,7 +8,7 @@
 	* @license http://www.fsf.org/licenses/gpl.html GNU General Public License
 	* @package phpgwapi
 	* @subpackage database
-	* @version $Id: class.sql_entity.inc.php 17460 2006-10-20 13:43:45Z skwashd $
+	* @version $Id$
 	* @internal Development of this application was funded by http://www.sogrp.com
 	* @link http://www.sogrp.com/
 	*/

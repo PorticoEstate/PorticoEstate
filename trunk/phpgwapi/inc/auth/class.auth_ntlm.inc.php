@@ -6,7 +6,7 @@
 	* @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License
 	* @package phpgwapi
 	* @subpackage accounts
-	* @version $Id: class.auth_ntlm.inc.php 15793 2005-03-22 14:53:43Z fipsfuchs $
+	* @version $Id$
 	*/
 
 	/**

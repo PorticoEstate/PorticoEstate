@@ -7,7 +7,7 @@
 	* @license http://www.fsf.org/licenses/gpl.html GNU General Public License
 	* @package phpgwapi
 	* @subpackage gui
-	* @version $Id: class.jscalendar.inc.php 17882 2007-01-14 11:10:08Z skwashd $
+	* @version $Id$
 	*/
 
 	/**

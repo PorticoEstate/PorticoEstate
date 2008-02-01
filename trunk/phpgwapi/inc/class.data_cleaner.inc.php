@@ -1,7 +1,7 @@
 <?php
 /**
  * HTML Sanitizer, attemtpts to make variables safe for users.
- * $Id: class.data_cleaner.inc.php 17066 2006-09-03 11:14:42Z skwashd $
+ * $Id$
  *
  * Taken from the horde project by Dave Hall for use in phpGroupWare
  *

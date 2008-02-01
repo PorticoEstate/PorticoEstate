@@ -7,17 +7,10 @@
 	* @license http://www.fsf.org/licenses/lgpl.html GNU Lesser General Public License
 	* @package phpgwapi
 	* @subpackage application
-	* @version $Id: class.setup_translation.inc.php 18358 2007-11-27 04:43:37Z skwashd $
+	* @version $Id$
 	*/
 
-	if (!defined('MAX_MESSAGE_ID_LENGTH'))
-	{
-		/**
-		* Maximum message id length
-		*/
-		define('MAX_MESSAGE_ID_LENGTH',230);
-	}
-
+	phpgw::import_class('phpgwapi.translation');
 
 	/**
 	* Setup translation - Handles multi-language support using flat files
@@ -25,7 +18,7 @@
 	* @package phpgwapi
 	* @subpackage application
 	*/
-	class setup_translation
+	class phpgwapi_setup_translation
 	{
 		var $langarray;
 
@@ -34,17 +27,13 @@
 		*
 		 * @param $lang	user lang variable (defaults to en)
 		 */
-		function setup_translation()
+		function __construct()
 		{
 			$ConfigLang = phpgw::get_var('ConfigLang');
 
-			if(!$ConfigLang)
+			if($ConfigLang)
 			{
-				$lang = 'en';
-			}
-			else
-			{
-				$lang = $ConfigLang;
+				$this->userlang = $ConfigLang;
 			}
 
 			$fn = "./lang/phpgw_{$lang}.lang";
@@ -241,4 +230,3 @@
 			}
 		}
 	}
-?>

@@ -6,7 +6,7 @@
 	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
 	* @package phpgwapi
 	* @subpackage contacts
-	* @version $Id: class.contacts_sql.inc.php 17914 2007-02-03 23:22:24Z sigurdne $
+	* @version $Id$
 	* @internal Development of this application was funded by http://www.sogrp.com
 	*/
 

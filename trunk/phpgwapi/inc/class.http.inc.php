@@ -7,7 +7,7 @@
 	* @license http://www.fsf.org/licenses/gpl.html GNU General Public License
 	* @package phpgwapi
 	* @subpackage network
-	* @version $Id: class.http.inc.php 15897 2005-05-04 13:05:20Z powerstat $
+	* @version $Id$
 	*/
 
 	/**

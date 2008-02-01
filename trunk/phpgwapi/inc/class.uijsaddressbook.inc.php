@@ -9,7 +9,7 @@
 	* @license http://www.fsf.org/licenses/gpl.html GNU General Public License
 	* @package phpgwapi
 	* @subpackage gui
-	* @version $Id: class.uijsaddressbook.inc.php 18358 2007-11-27 04:43:37Z skwashd $
+	* @version $Id$
 	* @internal Inherited some code from the addressbook.php file
 	*/
 

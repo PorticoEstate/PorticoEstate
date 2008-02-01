@@ -12,7 +12,7 @@
 	* @license http://www.fsf.org/licenses/gpl.html GNU General Public License
 	* @package phpgwapi
 	* @subpackage database
-	* @version $Id: class.schema_proc_pgsql.inc.php 17987 2007-02-23 10:45:22Z sigurdne $
+	* @version $Id$
 	* @link http://www.greatbridge.org/project/phppgadmin
 	* @internal SQL for table properties taken from phpPgAdmin Version 2.2.1
 	*/

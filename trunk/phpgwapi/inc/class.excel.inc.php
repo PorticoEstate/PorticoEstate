@@ -8,7 +8,7 @@
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/bbb_/ekstern/
 	* @package phpgwapi
 	* @subpackage utilities
- 	* @version $Id: class.excel.inc.php 17062 2006-09-03 06:15:27Z skwashd $
+ 	* @version $Id$
 	*
 	* Example
 	* <code>

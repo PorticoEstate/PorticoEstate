@@ -6,7 +6,7 @@
 	* @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License
 	* @package phpgwapi
 	* @subpackage network
-	* @version $Id: class.crypto.inc.php 18358 2007-11-27 04:43:37Z skwashd $
+	* @version $Id$
 	*/
 
 	/**

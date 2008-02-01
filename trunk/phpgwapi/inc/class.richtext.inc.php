@@ -9,7 +9,7 @@
 	* @license http://www.fsf.org/licenses/gpl.html GNU General Public License
 	* @package phpgwapi
 	* @subpackage gui
-	* @version $Id: class.richtext.inc.php 17066 2006-09-03 11:14:42Z skwashd $
+	* @version $Id$
 	*/
 
 	/**

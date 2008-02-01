@@ -8,7 +8,7 @@
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/bbb_/ekstern/
 	* @package phpgwapi
 	* @subpackage utilities
- 	* @version $Id: class.pdf.inc.php 17066 2006-09-03 11:14:42Z skwashd $
+ 	* @version $Id$
 	*
 	* Example
 	* <code>

@@ -7,7 +7,7 @@
 	* @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License
 	* @package phpgwapi
 	* @subpackage accounts
-	* @version $Id: class.accounts_SQLLDAP.inc.php 15869 2005-04-26 06:45:23Z powerstat $
+	* @version $Id$
 	*/
 
 	/**

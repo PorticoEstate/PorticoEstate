@@ -5,7 +5,7 @@
 	* @copyright Copyright (C) 1999-2001 Edd Dumbill
 	* @package phpgwapi
 	* @subpackage xml
-	* @version $Id: class.xmlrpcmsg.inc.php 17165 2006-09-17 11:18:31Z skwashd $
+	* @version $Id$
 	*/
 
 	// License is granted to use or modify this software ('XML-RPC for PHP')

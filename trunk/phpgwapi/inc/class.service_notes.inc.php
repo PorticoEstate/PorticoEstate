@@ -7,7 +7,7 @@
 	* @license http://www.fsf.org/licenses/lgpl.html GNU Lesser General Public License
 	* @package phpgwapi
 	* @subpackage application
-	* @version $Id: class.service_notes.inc.php 15872 2005-04-26 10:55:25Z powerstat $
+	* @version $Id$
 	*/
 
 	/**

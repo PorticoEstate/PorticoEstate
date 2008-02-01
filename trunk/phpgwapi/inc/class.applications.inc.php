@@ -8,7 +8,7 @@
 	* @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License
 	* @package phpgwapi
 	* @subpackage application
-	* @version $Id: class.applications.inc.php 18358 2007-11-27 04:43:37Z skwashd $
+	* @version $Id$
 	*/
 
 	/**
@@ -65,15 +65,18 @@
 			switch($_type)
 			{
 				case 'xmlrpc':
-					$xml_functions = array(
-						'read' => array(
+					$xml_functions = array
+					(
+						'read' => array
+						(
 							'function'  => 'read',
 							'signature' => array(array(xmlrpcStruct)),
 							'docstring' => lang('Returns struct of users application access')
 						),
-						'list_methods' => array(
+						'list_methods' => array
+						(
 							'function'  => 'list_methods',
-							'signature' => array(array(xmlrpcStruct,xmlrpcString)),
+							'signature' => array(array(xmlrpcStruct, xmlrpcString)),
 							'docstring' => lang('Read this list of methods.')
 						)
 					);
@@ -156,10 +159,11 @@
 			{
 				foreach ( $apps as $app )
 				{
-					$this->data[$app[1]] = array(
+					$this->data[$app[1]] = array
+					(
 						'title'   => lang($app[1]),
 						'name'    => $app[1],
-						'enabled' => True,
+						'enabled' => true,
 						'status'  => $GLOBALS['phpgw_info']['apps'][$app[1]]['status'],
 						'id'      => $GLOBALS['phpgw_info']['apps'][$app[1]]['id']
 					);
@@ -167,10 +171,11 @@
 			}
 			else if (is_string($apps))
 			{
-				$this->data[$apps] = array(
+				$this->data[$apps] = array
+				(
 					'title'   => lang($apps),
 					'name'    => $apps,
-					'enabled' => True,
+					'enabled' => true,
 					'status'  => $GLOBALS['phpgw_info']['apps'][$apps]['status'],
 					'id'      => $GLOBALS['phpgw_info']['apps'][$apps]['id']
 				);

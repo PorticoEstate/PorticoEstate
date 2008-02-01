@@ -14,7 +14,7 @@
 	* @license http://www.fsf.org/licenses/gpl.html GNU General Public License
 	* @package phpgwapi
 	* @subpackage gui
-	* @version $Id: class.csstooltip.inc.php 17630 2006-12-03 18:31:43Z sigurdne $
+	* @version $Id$
 	*/
 	
 	/**

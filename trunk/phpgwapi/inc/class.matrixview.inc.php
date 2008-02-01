@@ -7,7 +7,7 @@
 	* @license http://www.fsf.org/licenses/lgpl.html GNU Lesser General Public License
 	* @package phpgwapi
 	* @subpackage gui
-	* @version $Id: class.matrixview.inc.php 17815 2006-12-28 10:38:44Z skwashd $
+	* @version $Id$
 	*/
 
 	/**

@@ -8,7 +8,7 @@
 	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
 	* @package phpgwapi
 	* @subpackage sso
-	* @version $Id: create_mapping.php 17331 2006-10-03 19:40:45Z sigurdne $
+	* @version $Id$
 	*/
 										
 	/**

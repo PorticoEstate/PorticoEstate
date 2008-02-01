@@ -7,7 +7,7 @@
 	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
 	* @package phpgwapi
 	* @subpackage network
-	* @version $Id: class.clientsniffer.inc.php 15562 2004-12-30 06:47:35Z skwashd $
+	* @version $Id$
 	*
 	* @internal BASED ON WORKS AND IDEAS BY:
 	* @internal Tim Perdue of PHPBuilder.com

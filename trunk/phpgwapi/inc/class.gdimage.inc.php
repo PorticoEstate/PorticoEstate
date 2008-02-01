@@ -6,7 +6,7 @@
 	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
 	* @package phpgwapi
 	* @subpackage gui
-	* @version $Id: class.gdimage.inc.php 17597 2006-11-26 22:22:01Z sigurdne $
+	* @version $Id$
 	* @internal This class based on htmlGD.php3 - Double Choco Latte - Source Configuration Management System - Copyright (C) 1999  Michael L. Dean & Tim R. Norman
 	*/
 

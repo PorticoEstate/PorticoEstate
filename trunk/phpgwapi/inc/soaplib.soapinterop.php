@@ -7,7 +7,7 @@
 	* @license http://www.fsf.org/licenses/lgpl.html GNU Lesser General Public License
 	* @package phpgwapi
 	* @subpackage communication
-	* @version $Id: soaplib.soapinterop.php 15562 2004-12-30 06:47:35Z skwashd $
+	* @version $Id$
 	*/
 
 	$GLOBALS['server']->add_to_map(

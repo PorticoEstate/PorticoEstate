@@ -7,7 +7,7 @@
 	 * @license http://www.fsf.org/licenses/lgpl.html GNU Lesser General Public License
 	 * @package phpgwapi
 	 * @subpackage application
-	 * @version $Id: class.preferences.inc.php 18358 2007-11-27 04:43:37Z skwashd $
+	 * @version $Id$
 	 */
 
 	/**

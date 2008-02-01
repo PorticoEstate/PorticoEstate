@@ -8,7 +8,7 @@
 	* @license http://www.fsf.org/licenses/lgpl.html GNU Lesser General Public License
 	* @package phpgwapi
 	* @subpackage sessions
-	* @version $Id: class.sessions_php.inc.php 18101 2007-04-03 11:27:36Z skwashd $
+	* @version $Id$
 	*/
 
 	/**

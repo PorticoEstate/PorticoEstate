@@ -7,7 +7,7 @@
 	 * @license http://www.fsf.org/licenses/gpl.html GNU General Public License
 	 * @package phpgwapi
 	 * @subpackage utitlity
-	 * @version $Id: class.hooks.inc.php 18013 2007-03-06 14:30:39Z sigurdne $
+	 * @version $Id$
 	 */
 
 	/*

@@ -10,7 +10,7 @@
 	* @copyright Portions Copyright (C) 2003,2004 Free Software Foundation, Inc. http://www.fsf.org/
 	* @package phpgwapi
 	* @subpackage communication
-	* @version $Id: class.soapmsg.inc.php 17062 2006-09-03 06:15:27Z skwashd $
+	* @version $Id$
 	* @internal This project began based on code from the 2 projects below,
 	* @internal and still contains some original code. The licenses of both must be respected.
 	* @internal XML-RPC for PHP; SOAP for PHP
