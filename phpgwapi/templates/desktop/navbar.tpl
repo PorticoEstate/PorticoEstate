@@ -4,17 +4,10 @@
 				<ul id="navbar_ul">
 					<li><img src="{img_base_url}logo.png" alt="phpGroupWare Logo" height="21" width="25" />{lang_applications}
 						<ul>
-							<!-- BEGIN app_both -->
+							<!-- BEGIN app -->
 							<li><a href="{url}"{target}><img src="{icon}" alt="{title}" 
 								title="{title}" height="16" width="16" /> {title}</a></li>
-							<!-- END app_both -->
-							<!-- BEGIN app_text -->
-							<li><a href="{url}"{target}>{title}</a></li>
-							<!-- END app_text -->
-							<!-- BEGIN app_icon -->
-							<li><a href="{url}"{target}><img src="{icon}" alt="{title}" 
-								title="{title}" height="16" width="16" /></a></li>
-							<!-- END app_icon -->
+							<!-- END app -->
 						</ul>
 					</li>
 					<!-- BEGIN prefs -->

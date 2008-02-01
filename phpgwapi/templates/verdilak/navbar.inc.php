@@ -5,7 +5,7 @@
 	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
 	* @package phpgwapi
 	* @subpackage gui
-	* @version $Id: navbar.inc.php 18011 2007-03-06 13:39:29Z sigurdne $
+	* @version $Id$
 	*/
 
 
@@ -18,6 +18,7 @@
 	function parse_navbar($force = False)
 	{
 
+		/* FIXME remove this rubbish
 		$GLOBALS['phpgw_info']['theme']['bg_color']    = '#FFFFFF';
 		$GLOBALS['phpgw_info']['theme']['bg_text']     = '#000000';
 		$GLOBALS['phpgw_info']['theme']['vlink']       = 'blue';
@@ -43,15 +44,12 @@
 		$GLOBALS['phpgw_info']['theme']['bg08']        = '#da9090';
 		$GLOBALS['phpgw_info']['theme']['bg09']        = '#da8a8a';
 		$GLOBALS['phpgw_info']['theme']['bg10']        = '#da7a7a';
+		*/
 
 
 		$tpl = createobject('phpgwapi.Template',PHPGW_TEMPLATE_DIR);
 
-		$tpl->set_file(
-			array(
-				'navbartpl' => 'navbar.tpl'
-			)
-		);
+		$tpl->set_file('navbartpl', 'navbar.tpl');
 		$tpl->set_block('navbartpl','preferences');
 		$tpl->set_block('navbartpl','navbar');
 
@@ -59,28 +57,23 @@
 		$var['table_bg_color'] = $GLOBALS['phpgw_info']['theme']['navbar_bg'];
 		$var['navbar_text'] = $GLOBALS['phpgw_info']['theme']['navbar_text'];
 		$applications = '';
-		foreach($GLOBALS['phpgw_info']['navbar'] as $app => $app_data)
+		$exclude = array('home', 'preferences', 'about', 'logout');
+		$navbar = execMethod('phpgwapi.menu.get', 'navbar');
+		prepare_navbar($navbar);
+		foreach ( $navbar as $app => $app_data )
 		{
-			if ($app != 'home' && $app != 'preferences' && ! ereg('about',$app) && $app != 'logout')
+			if ( in_array($app, $exclude) )
 			{
-				if ($GLOBALS['phpgw_info']['user']['preferences']['common']['navbar_format'] != 'text')
-				{
-					$title = '<img src="' . $app_data['icon'] . '" alt="' . $app_data['title'] . '" title="'
-						. $app_data['title'] . '" border="0">';
-				}
-
-				if ($GLOBALS['phpgw_info']['user']['preferences']['common']['navbar_format'] != 'icons')
-				{
-					$title .= '<br>' . $app_data['title'];
-				}
-				$applications .= '<br><a href="' . $app_data['url'] . '"';
-				if (isset($app_data['target']) &&  $app_data['target'])
-				{
-					$applications .= ' target="' . $app_data['target'] . '"';
-				}
-				$applications .= '>' . $title . '</a>';
-				unset($title);
+				continue;
 			}
+			$icon = $GLOBALS['phpgw']->common->image($app_data['image'][0], $app_data['image'][1]);
+			$applications .= <<<HTML
+				<br>
+				<a href="{$app_data['url']}">
+					<img src="{$icon}" alt="{$app_data['text']}" title="{{$app_data['text']}">
+				</a>
+
+HTML;
 		}
 		$var['applications'] = $applications;
 
@@ -274,4 +267,34 @@
 
 			return $return;
 		}
+	}
+
+	/**
+	* Callback for usort($navbar)
+	*
+	* @param array $item1 the first item to compare
+	* @param array $item2 the second item to compare
+	* @return int result of comparision
+	*/
+	function sort_navbar($item1, $item2)
+	{
+		$a =& $item1['order'];
+		$b =& $item2['order'];
+
+		if ($a == $b)
+		{
+			return strcmp($item1['text'], $item2['text']);
+		}
+		return ($a < $b) ? -1 : 1;
+	}
+
+	/**
+	* Organise the navbar properly
+	*
+	* @param array $navbar the navbar items
+	* @return array the organised navbar
+	*/
+	function prepare_navbar(&$navbar)
+	{
+		uasort($navbar, 'sort_navbar');
 	}

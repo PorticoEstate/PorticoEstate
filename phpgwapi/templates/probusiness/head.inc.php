@@ -7,7 +7,7 @@
  * @license http://www.fsf.org/licenses/gpl.html GNU General Public License
  * @package phpgwapi
  * @subpackage gui
- * @version $Id: head.inc.php 17590 2006-11-25 16:27:17Z sigurdne $
+ * @version $Id$
  */
 	
 	$app_css = $java_script = '';

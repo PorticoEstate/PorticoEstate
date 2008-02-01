@@ -31,6 +31,49 @@ body
 	background-color: #eee;
 }
 
+#navbar, #footer ul
+{
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+
+#navbar, #footer
+{
+	background-color: #99f;
+}
+
+#navbar li
+{
+	display: inline;
+	margin: 0;
+	padding: 3px;
+}
+
+#navbar-current-app
+{
+	text-align: center;
+	font-weight: bold;
+	background-color: #d3dce3;
+	padding:5px;
+}
+
+#footer li
+{
+	display: block;
+	float: left;
+	font-size: smaller;
+	font-weight: bold;
+	padding: 3px; 
+	text-align: center;
+	width: 33%;
+}
+
+#footer li, #footer a
+{
+	color: #fff;
+}
+
 th
 {
 	color: #000;
@@ -39,11 +82,10 @@ th
 
 .tablink
 {
-	color: #000000;
+	color: #000;
 }
 
 img, input[type=image]
 {
 	border: 0px;
 }
-

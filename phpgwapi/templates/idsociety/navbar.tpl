@@ -1,14 +1,3 @@
- marginwidth="0" marginheight="0" topmargin="0" bottommargin="0" rightmargin="0" leftmargin="0" border="0" 
- onLoad="MM_preloadImages('{app_images}',
-'{logout_img_hover}',
-'{preferences_img_hover}',
-'{about_img_hover}',
-'{welcome_img_hover}');"
- background="{content_spacer_middle_img}">
-  <!-- the above is the continuation and finishing if the < body > element started in head.tpl
-  the margin items could be merged into head, as head already supplies some
-  the variables for onLoad are set in navbar -->
-
 <table border="0" width="100%" height="73" cellspacing="0" cellpadding="0">
 	<tr>
 		<!-- top row back images are 58px high, but the row may be smaller than that -->
@@ -19,7 +8,6 @@
 		<td width="100%" align="right" background="{em_img}">
 			<table width="100%" height="28" cellpadding="0" cellspacing="0" border="0" valign="top">
 				<tr>
-					<!-- <td width="100%" align="right" valign="top"><font size="{powered_by_size}" color="{powered_by_color}">{powered_by}&nbsp;{current_users}</font></td> -->
 					<td width="50%" align="left" valign="top">
 						<font size="{powered_by_size}" color="{powered_by_color}">{current_users}</font>
 					</td>
@@ -63,8 +51,11 @@
 		<td width="154" align="left" valign="top" background="{nav_bar_left_spacer_img}">
 			<!-- left nav table -->
 			<table border="0" cellpadding="0" cellspacing="0">
-				<!-- applications supplies their own tr's and td's -->
-				{applications}
+				<ul id="navbar">
+					<!-- BEGIN app -->
+					<li><a href="{url}">{text}</a></li>
+					<!-- END app -->
+				</ul>
 				<tr>
 					<td><img src="{nav_bar_left_top_bg_img}"></td>
 				</tr>

@@ -4,6 +4,13 @@ body, div, input, p, select, textarea
 	font-size: 11px;
 }
 
+body
+{
+	background-color: #ccc;
+	margin: 0;
+	padding: 0;
+}
+
 a
 {
 	text-decoration: none;
@@ -18,13 +25,6 @@ a:active
 {
 	color: #f00;
 }
-
-body
-{
-	background-color: #ccc;
-	margin: 0px;
-}
-
 
 img
 {
@@ -73,4 +73,36 @@ thead
 	color: #f00;
 	font-weight: bold;
 	text-align: center;
+}
+
+#navbar
+{
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+
+#navbar li
+{
+	background: #999 url(../images/nonav.png) no-repeat scroll top right;
+	display: block;
+	font-size: 9px;
+	font-weight: bold;
+	height: 15px;
+	overflow: hidden;
+	margin: 0;
+	padding: 7px 0 0 0;
+	width: 154px;
+	white-space: nowrap;
+}
+
+#navbar li a
+{
+	color: #fff;
+	padding: 3px 0 0 15px;
+}
+
+#navbar li:hover
+{
+	background-image: url(../images/nonav-over.png);
 }

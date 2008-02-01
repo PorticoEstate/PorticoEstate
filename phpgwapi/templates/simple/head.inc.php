@@ -5,7 +5,7 @@
 	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
 	* @package phpgwapi
 	* @subpackage gui
-	* @version $Id: head.inc.php 17835 2007-01-02 12:04:29Z sigurdne $
+	* @version $Id$
 	*/
 
 	if ( !isset($GLOBALS['phpgw_info']['server']['site_title']) )
@@ -13,8 +13,8 @@
 		$GLOBALS['phpgw_info']['server']['site_title'] = lang('please set a site name in admin &gt; siteconfig');
 	}
 
-	$tpl = CreateObject('phpgwapi.Template',PHPGW_TEMPLATE_DIR);
-	$tpl->set_unknowns('remove');
+	// we hack the template root here as this is the template set of last resort
+	$tpl = CreateObject('phpgwapi.Template', dirname(__FILE__), "remove");
 	$tpl->set_file(array('head' => 'head.tpl'));
 	$tpl->set_block('head', 'theme_stylesheet', 'theme_stylesheets');
 

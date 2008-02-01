@@ -5,7 +5,7 @@
 * @license http://www.gnu.org/licenses/gpl.html GNU General Public License
 * @package phpgwapi
 * @subpackage gui
-* @version $Id: head.inc.php 16691 2006-04-24 09:49:25Z sigurdne $
+* @version $Id$
 */
 	$p = createobject('phpgwapi.preferences');
 	$preferences = $p->read_repository();

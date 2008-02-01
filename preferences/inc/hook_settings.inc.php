@@ -5,7 +5,7 @@
 	* @copyright Copyright (C) 2000-2005 Free Software Foundation, Inc. http://www.fsf.org/
 	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
 	* @package preferences
-	* @version $Id: hook_settings.inc.php 18358 2007-11-27 04:43:37Z skwashd $
+	* @version $Id$
 	*/
 
 	phpgw::import_class('phpgwapi.country');
@@ -30,14 +30,6 @@
 		'A template defines the layout of phpGroupWare and it contains icons for each application.');
 	create_select_box('Theme (colors/fonts) Selection','theme',$_themes,
 		'A theme defines the colors and fonts used by the template.');
-
-	$navbar_format = array(
-		'icons'          => lang('Icons only'),
-		'icons_and_text' => lang('Icons and text'),
-		'text'           => lang('Text only')
-	);
-	create_select_box('Show navigation bar as','navbar_format',$navbar_format,
-		'You can show the applications as icons only, icons with app-name or both.');
 
 	$format = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
 	$format = ($format ? $format : 'Y/m/d') . ', ';

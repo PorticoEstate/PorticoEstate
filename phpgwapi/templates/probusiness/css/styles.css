@@ -433,8 +433,8 @@ TABLE.APINavBar TD#logo { border-bottom: 2px solid #FFFFFF }
 TABLE.APINavBar TD.modBg {background-color: #808080; padding-top: 2px; padding-bottom: 9px}
 TABLE.APINavBar TD.modBg IMG           { border: 1px solid #808080 }
 TABLE.APINavBar TD.modBg IMG:hover  { border: 1px solid #DACACA }
-TABLE.APINavBar TD.modBg A#selectedNavLink IMG { border: 1px solid #DACACA }
-TABLE.APINavBar TD.modBg A#selectedNavLink SPAN {color: #FFFFFF }
+TABLE.APINavBar TD.modBg A.selectedNavLink IMG { border: 1px solid #DACACA }
+TABLE.APINavBar TD.modBg A.selectedNavLink SPAN {color: #FFFFFF }
 TABLE.APINavBar IFRAME { height: 650px; width: 250px; }
 
 P.current_app_header { font-variant: small-caps; font-weight: bold }

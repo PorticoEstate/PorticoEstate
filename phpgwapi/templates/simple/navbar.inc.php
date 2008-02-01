@@ -5,7 +5,7 @@
 	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
 	* @package phpgwapi
 	* @subpackage gui
-	* @version $Id: navbar.inc.php 17902 2007-01-24 16:04:52Z Caeies $
+	* @version $Id$
 	*/
 
 
@@ -14,79 +14,26 @@
 	*
 	* @param boolean $force
 	*/
-  function parse_navbar($force = False)
-  {
-		$tpl = createobject('phpgwapi.Template',PHPGW_TEMPLATE_DIR);
-		$tpl->set_unknowns('remove');
+ 	function parse_navbar($force = False)
+	{
+		// we hack the template root here as this is the template set of last resort
+		$tpl = CreateObject('phpgwapi.Template', dirname(__FILE__), "remove");
 
-		$tpl->set_file(
-			array(
-				'navbar'		=> 'navbar.tpl',
-				'navbar_app'	=> 'navbar_app.tpl'
-			)
-		);
+		$tpl->set_file('navbar', 'navbar.tpl');
+		$tpl->set_block('navbar', 'app', 'apps');
 
-		$var['navbar_color'] = (isset($GLOBALS['phpgw_info']['theme']['navbar_bg'])?$GLOBALS['phpgw_info']['theme']['navbar_bg']:'#9999FF');
-
-		$i = 1;
-		foreach($GLOBALS['phpgw_info']['navbar'] as $app => $app_data)
+		$navbar = execMethod('phpgwapi.menu.get', 'navbar');
+		prepare_navbar($navbar);
+		foreach ( $navbar as $app => $app_data )
 		{
-			if ($GLOBALS['phpgw_info']['user']['preferences']['common']['navbar_format'] == 'text')
-			{
-				$tabs[$i]['label'] = $app_data['title'];
-				$tabs[$i]['link']  = $app_data['url'];
-				if (ereg($GLOBALS['phpgw_info']['navbar'][$app],$_SERVER['PHP_SELF']))
-				{
-					$selected = $i;
-				}
-				$i++;
-			}
-			else
-			{
-				$title = '<img src="' . $app_data['icon'] . '" alt="' . $app_data['title'] . '" title="'
-					. $app_data['title'] . '" border="0">';
-				if ($GLOBALS['phpgw_info']['user']['preferences']['common']['navbar_format'] == 'icons_and_text')
-				{
-					$title .= "<br>" . $app_data['title'];
-					$var['width'] = '7%';
-				}
-				else
-				{
-					$var['width']  = '3%';
-				}
-   
-				$var['value'] = '<a href="' . $app_data['url'] . '">' . $title . '</a>';
-				$var['align'] = 'center';
-				$tpl->set_var($var);
-				$tpl->parse('applications','navbar_app',True);
-			}
+			$tpl->set_var(array
+			(
+				'url'	=> $app_data['url'],
+				'text'	=> $app_data['text'],
+				'icon'	=> $GLOBALS['phpgw']->common->image($app_data['image'][0], $app_data['image'][1])
+			));
+			$tpl->parse('apps', 'app', true);
 		}
-		if ($GLOBALS['phpgw_info']['user']['preferences']['common']['navbar_format'] == 'text')
-		{
-			$var['navbar_color'] = $GLOBALS['phpgw_info']['theme']['bg_color'];
-			$var['align'] = 'right';
-			$var['value'] = $GLOBALS['phpgw']->common->create_tabs($tabs,$selected);
-			$tpl->set_var($var);
-			$tpl->parse('applications','navbar_app',True);
-		}
-
-		if ($GLOBALS['phpgw_info']['server']['showpoweredbyon'] == 'top')
-		{
-			$var['powered_by'] = lang('Powered by phpGroupWare version %1',$GLOBALS['phpgw_info']['server']['versions']['phpgwapi']);
-		}
-		if (isset($GLOBALS['phpgw_info']['navbar']['admin'])
-			&& isset($GLOBALS['phpgw_info']['user']['preferences']['common']['show_currentusers'])
-			&& $GLOBALS['phpgw_info']['user']['preferences']['common']['show_currentusers'])
-		{
-			$var['current_users'] = '<a href="' . $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.uicurrentsessions.list_sessions'))
-				. '">&nbsp;' . lang('Current users') . ': ' . $GLOBALS['phpgw']->session->total() . '</a>';
-		}
-		$now = time();
-		$var['user_info'] = $GLOBALS['phpgw']->common->display_fullname() . ' - '
-				. lang($GLOBALS['phpgw']->common->show_date($now,'l')) . ' '
-				. $GLOBALS['phpgw']->common->show_date($now,$GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']);
-//				. lang($GLOBALS['phpgw']->common->show_date($now,'F')) . ' '
-//				. $GLOBALS['phpgw']->common->show_date($now,'d, Y');
 
 		// Maybe we should create a common function in the phpgw_accounts_shared.inc.php file
 		// to get rid of duplicate code.
@@ -94,7 +41,7 @@
 		{
 			$api_messages = lang('You are required to change your password during your first login')
 				. '<br> Click this image on the navbar: <img src="'
-				. $GLOBALS['phpgw']->common->image('preferences','navbar.gif').'">';
+				. $GLOBALS['phpgw']->common->image('preferences', 'navbar').'">';
 		}
 		elseif ($GLOBALS['phpgw_info']['user']['lastpasswd_change'] < time() - (86400*30))
 		{
@@ -104,13 +51,12 @@
 		// This is gonna change
 		if (isset($cd))
 		{
-			$var['messages'] = $api_messages . '<br>' . checkcode($cd);
+			$var['messages'] = "<div class=\"warn\">$api_messages<br>\n" . checkcode($cd) . "</div>\n";
 		}
 
 		if (isset($GLOBALS['phpgw_info']['flags']['app_header']))
 		{
 			$var['current_app_header'] = $GLOBALS['phpgw_info']['flags']['app_header'];
-			$var['th_bg'] = isset($GLOBALS['phpgw_info']['theme']['th_bg'])?$GLOBALS['phpgw_info']['theme']['th_bg']:'#D3DCE3';
 		}
 		else
 		{
@@ -119,7 +65,8 @@
 		}
 
 		$tpl->set_var($var);
-		$tpl->pfp('out','navbar');
+		$tpl->pfp('out', 'navbar');
+
 		// If the application has a header include, we now include it
 		if ( (!isset($GLOBALS['phpgw_info']['flags']['noappheader'])
 			|| !$GLOBALS['phpgw_info']['flags']['noappheader'] )
@@ -142,33 +89,58 @@
 	*/
 	function parse_navbar_end()
 	{
-		if ($GLOBALS['phpgw_info']['server']['showpoweredbyon'] == 'bottom')
+		// we hack the template root here as this is the template set of last resort
+		$tpl = CreateObject('phpgwapi.Template', dirname(__FILE__), "remove");
+
+		$tpl->set_file('footer', 'footer.tpl');
+
+		$var = array
+		(
+			'powered_by' => lang('Powered by phpGroupWare version %1',$GLOBALS['phpgw_info']['server']['versions']['phpgwapi'])
+		);
+
+		if (isset($GLOBALS['phpgw_info']['navbar']['admin'])
+			&& isset($GLOBALS['phpgw_info']['user']['preferences']['common']['show_currentusers'])
+			&& $GLOBALS['phpgw_info']['user']['preferences']['common']['show_currentusers'])
 		{
-			$tpl = createobject('phpgwapi.Template',PHPGW_TEMPLATE_DIR);
-			$tpl->set_unknowns('remove');
-   
-			$tpl->set_file(
-				array(
-					'footer' => 'footer.tpl'
-				)
-			);
-			$var = Array(
-				'table_bg_color'	=> (isset($GLOBALS['phpgw_info']['theme']['navbar_bg'])?$GLOBALS['phpgw_info']['theme']['navbar_bg']:'#9999FF'),
-			);
-			$var['powered_by'] = lang('Powered by phpGroupWare version %1',$GLOBALS['phpgw_info']['server']['versions']['phpgwapi']);
-			if (isset($GLOBALS['phpgw_info']['navbar']['admin'])
-				&& isset($GLOBALS['phpgw_info']['user']['preferences']['common']['show_currentusers'])
-				&& $GLOBALS['phpgw_info']['user']['preferences']['common']['show_currentusers'])
-			{
-				$var['current_users'] = '<a href="' . $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.uicurrentsessions.list_sessions'))
-					. '">&nbsp;' . lang('Current users') . ': ' . $GLOBALS['phpgw']->session->total() . '</a>';
-			}
-			$now = time();
-			$var['user_info'] = $GLOBALS['phpgw']->common->display_fullname() . ' - '
-					. lang($GLOBALS['phpgw']->common->show_date($now,'l')) . ' '
-					. $GLOBALS['phpgw']->common->show_date($now,$GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']);
-			$tpl->set_var($var);
-			$GLOBALS['phpgw']->hooks->process('navbar_end');
-			$tpl->pfp('out','footer');
+			$var['current_users'] = '<a href="' . $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.uicurrentsessions.list_sessions'))
+				. '">&nbsp;' . lang('Current users') . ': ' . $GLOBALS['phpgw']->session->total() . '</a>';
 		}
+		$now = time();
+		$var['user_info'] = $GLOBALS['phpgw']->common->display_fullname() . ' - '
+				. lang($GLOBALS['phpgw']->common->show_date($now,'l')) . ' '
+				. $GLOBALS['phpgw']->common->show_date($now,$GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']);
+		$tpl->set_var($var);
+		$GLOBALS['phpgw']->hooks->process('navbar_end');
+		$tpl->pfp('out','footer');
+	}
+
+	/**
+	* Callback for usort($navbar)
+	*
+	* @param array $item1 the first item to compare
+	* @param array $item2 the second item to compare
+	* @return int result of comparision
+	*/
+	function sort_navbar($item1, $item2)
+	{
+		$a =& $item1['order'];
+		$b =& $item2['order'];
+
+		if ($a == $b)
+		{
+			return strcmp($item1['text'], $item2['text']);
+		}
+		return ($a < $b) ? -1 : 1;
+	}
+
+	/**
+	* Organise the navbar properly
+	*
+	* @param array $navbar the navbar items
+	* @return array the organised navbar
+	*/
+	function prepare_navbar(&$navbar)
+	{
+		uasort($navbar, 'sort_navbar');
 	}
