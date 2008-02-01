@@ -237,8 +237,12 @@ select viewname,'V' from pg_views where viewname like $mask";
 	function qstr($s,$magic_quotes=false)
 	{
 		if (!$magic_quotes) {
+			// FIXME this is a hack until we get something better - skwashd feb08
+			return  "'".pg_escape_string($s)."'";
+			// end hack
+
 			if (ADODB_PHPVER >= 0x5200) {
-				return  "'".@pg_escape_string($this->_connectionID,$s)."'";
+				return  "'".pg_escape_string($this->_connectionID,$s)."'";
 			} 
 			if (ADODB_PHPVER >= 0x4200) {
 				return  "'".pg_escape_string($s)."'";
