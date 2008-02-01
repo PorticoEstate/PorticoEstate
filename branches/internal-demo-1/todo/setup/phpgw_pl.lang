@@ -1,0 +1,45 @@
+add main project	todo	pl	Dodaj główny projekt
+add sub project	todo	pl	Dodaj podprojekt
+addsub	todo	pl	DodPodproj
+are you sure you want to delete this entry	todo	pl	Na pewno usunąć ten wpis?
+assigned to	todo	pl	Przypisane do
+back to projectlist	todo	pl	Powrót do listy zadań
+completed	todo	pl	Wykonano
+days datedue	todo	pl	Termin płatności
+description can not exceed 8000 characters in length	todo	pl	
+displaying subprojects of following project	todo	pl	Wyświetlanie podzadań
+do you also want to delete all sub projects ?	todo	pl	Chcesz usunąć także podprojekty?
+edit main project	todo	pl	Edycja projektu głównego
+edit sub project	todo	pl	Edycja podprojektu
+ending date can not be before start date	todo	pl	Data zakończenia nie może być wcześniejsza od daty rozpoczęcia!
+high	todo	pl	Wysoki
+last updated	todo	pl	Ostatnio aktualizowane
+low	todo	pl	Niski
+month	todo	pl	Miesiąc
+normal	todo	pl	Normalny
+or: days from startdate:	todo	pl	lub liczba dni
+or: select for today:	todo	pl	lub wybierz dzisiaj
+parent project	todo	pl	Zadanie nadrzędne
+please enter a title	todo	pl	Proszę podać tytuł
+project description	todo	pl	Zadanie
+projectname	todo	pl	Nazwa zadania
+select	todo	pl	Wybór
+show todo items on main screen	todo	pl	Wyświetlać czynności na stronie głównej?
+sub	todo	pl	Podprojekt
+subproject description	todo	pl	Opis podzadania
+to do list	common	pl	Lista czynności
+todo	common	pl	Lista czynności
+todo list	common	pl	Lista czynności
+todo list - add	todo	pl	Dodaj czynność do wykonania
+todo list - add sub-project	todo	pl	Lista czynności - dodaj podzadanie
+todo list - edit	todo	pl	Edycja listy czynności
+todo preferences	todo	pl	Preferencje lista czynności
+urgency	todo	pl	Priorytet
+view matrix of actual month	todo	pl	Harmonogram zadań w bieżącym miesiącu
+view todo item	todo	pl	
+viewsub	todo	pl	Pokaż
+year	todo	pl	Rok
+you can only enter numbers for days from now	todo	pl	
+you have entered an ending invalid date	todo	pl	
+you have entered an invailed date	todo	pl	Podałeś niepoprawną datę
+you have entered an starting invalid date	todo	pl	

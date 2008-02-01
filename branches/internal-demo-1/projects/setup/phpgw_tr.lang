@@ -1,0 +1,229 @@
+Account	projects	tr	Hesap
+accountancy	common	tr	Muhasebe
+Active	projects	tr	Aktif
+Activities	projects	tr	Aktiviteler
+Activity	projects	tr	Aktivite
+Activity %1 has been added !	projects	tr	Aktivite %1 eklendi.
+Activity %1 has been updated !	projects	tr	Aktivite %1 güncellendi.
+Activity ID	projects	tr	Aktivite ID
+Add Activity	projects	tr	Aktivite Ekle
+Add job	projects	tr	Görev ekle
+add milestone	projects	tr	önemli olay ekle
+Add project	projects	tr	Proje ekle
+Add project hours	projects	tr	Proje saatleri ekle
+Add work hours	projects	tr	İş saatleri ekle
+Administrator	projects	tr	Yönetici
+All	projects	tr	Hepsi
+All delivery notes	projects	tr	Teslim alınan TÜM notlar
+All invoices	projects	tr	Tüm faturalar
+anonymous public	projects	tr	Anonim public
+archive	projects	tr	Arşiv
+are you sure you want to delete this activity	projects	tr	Bu aktiviteyi silmek istediğinde emin misin ?
+are you sure you want to delete this project	projects	tr	Bu projeyi silmek istediğinden emin misin ?
+arial	projects	tr	Arial
+bill per hour	projects	tr	Saat başına düşen fatura
+bill per hour/workunit	projects	tr	işbölümü/saat başına düşen fatura
+Bill per workunit	projects	tr	işbölümü başına düşen fatura
+Billable activities	projects	tr	Hesaplanabilien aktiviteler
+billed	projects	tr	Hesaplanmış
+Billed only	projects	tr	Sadece hesaplanmış
+Billing	projects	tr	Hesaplama
+Bookable activities	projects	tr	Kaydedilebilen aktiviteler
+bookkeeper	projects	tr	Muhasebeci
+bookkeeping	common	tr	Muhasebe
+Budget	projects	tr	Bütçe
+budget main project	projects	tr	Ana projenin bütçesi
+budget sum of all sub projects is bigger than the budget of the main project	projects	tr	Tüm alt projelerin toplam bütçesi ana projenin bütçesinden daha büyüktür !
+Calculate	projects	tr	Hesapla
+closed	projects	tr	Kapalı
+Coordinator	common	tr	Koordinatör
+courier new	projects	tr	Courier New
+Create delivery	projects	tr	Ulaştırılacak proje oluştur
+Create invoice	projects	tr	Fatura oluştur
+creator	projects	tr	Oluşturan
+customer	projects	tr	Müşteri
+date created	projects	tr	Oluşturulan tarih
+Delete hours	projects	tr	Saatleri sil
+Deliveries	projects	tr	Servisler
+Delivery	projects	tr	Servis
+Delivery %1 has been created !	projects	tr	Servis %1 oluşturuldu.
+Delivery %1 has been updated !	projects	tr	Servis %1 güncellendi.
+Delivery date	projects	tr	Dağıtım tarihi
+Delivery ID	projects	tr	Dağıtım ID
+Delivery list	projects	tr	Dağıtım listesi
+Delivery note	projects	tr	Servis notu
+delivery note for project	projects	tr	Proje için servis notu
+Delivery notes	projects	tr	Dağıtım notları
+description can not exceed 255 characters in length !	projects	tr	Tanımlama 255 karakterden büyük olamaz !
+description can not exceed 8000 characters in length !	projects	tr	Tanımlama 8000 karakterden büyük olamaz !
+Do you also want to delete all sub projects ?	projects	tr	Tüm alt projeleri de silmek ister misin ?
+Edit Activity	projects	tr	Aktiviteyi düzenle
+Edit administrator list	projects	tr	Proje yönetici listesini düzenle
+edit bookkeeper list	projects	tr	Proje muhasebeci listesini düzenle
+Edit job	projects	tr	Görevi düzenle
+Edit project	projects	tr	Proje düzenle
+Edit project hours	projects	tr	Proje saatlerini düzenle
+Edit work hours	projects	tr	Çalışma saatlerini düzenle
+Employee	projects	tr	Çalışan
+employees	projects	tr	Çalışanlar
+enable acl for invoicing section	common	tr	Fatura yazma bölümü için acl yi aktifleştir
+ending date can not be after main projects ending date	projects	tr	Bitiş tarihi ana projenin bitiş tarihinden sonra olamaz !
+ending date can not be before start date	projects	tr	Bitiş tarihi başlangıç tarihinden önce olamaz !
+Error in calculation sum does not match !	projects	tr	Hesaplamada hata var, toplam uyuşmuyor !
+exactly accounting	projects	tr	Tam olarak hesaplaşma
+Generate Activity ID ?	projects	tr	Aktivite ID oluştur ?
+Generate Delivery ID ?	projects	tr	Dağıtım ID oluştur ?
+Generate Invoice ID ?	projects	tr	Fatura ID oluştur ?
+Generate Job ID ?	projects	tr	İş ID oluştur ?
+Generate Project ID ?	projects	tr	Proje ID oluştur ?
+georgia	projects	tr	Georgia
+helvetica	projects	tr	Helvetica
+Hours	projects	tr	Saat
+id can not exceed 19 characters in length	projects	tr	ID 19 karakteri geçemez !
+id can not exceed 25 characters in length	projects	tr	ID 25 karakteri geçemez !
+if you are an administrator, please set the preferences for this application	projects	tr	Eğer yöneticiyseniz, bu uygulama için tercihleri düzenleyin !
+if you are not an administrator, please inform the administrator to set the preferences for this application	projects	tr	Eğer yönetici değilseniz, lütfen yönetciye bu uygulamanın tercihlerini düzenlemesi için haber verin !
+investment nr	projects	tr	Yatırım Sayısı
+Invoice	projects	tr	Fatura
+Invoice %1 has been created !	projects	tr	Fatura %1 oluşturuldu.
+Invoice %1 has been updated !	projects	tr	Fatura %1 düzenlendi.
+Invoice date	projects	tr	Fatura tarihi
+invoice for project	projects	tr	Proje faturası
+Invoice ID	projects	tr	Fatura ID
+Invoice layout	projects	tr	Fatura görünümü
+Invoice list	projects	tr	Fatura listesi
+Invoices	projects	tr	Faturalar
+invoicing	common	tr	Fatur yazma
+invoicing of work time	projects	tr	Çalışma zamanı için fatura
+Job	projects	tr	İş
+job archive	projects	tr	İş arşivi
+Job date	projects	tr	İş tarihi
+Job description	projects	tr	İş açıklaması
+Job has been added !	projects	tr	İş oluşturuldu.
+Job has been updated !	projects	tr	İş güncellendi.
+Job ID	projects	tr	İş ID
+job list	projects	tr	İş listesi
+jobs	common	tr	İşler
+large	projects	tr	Geniş
+last update	projects	tr	Son güncellene
+list activities	projects	tr	Aktiviteleri listele
+list budget	projects	tr	Bütçeyi listele
+list jobs	projects	tr	İşleri listele
+list pcosts	projects	tr	Planlanan maliyeti listele
+list projects	projects	tr	Projeleri listele
+list work hours	projects	tr	Çalışma saatlerini listele
+main project	projects	tr	ana proje
+Main project:	projects	tr	Ana proje:
+milestones	common	tr	önemli olay
+Minutes per workunit	projects	tr	İş bölümü başına düşen dakika
+month	projects	tr	Ay
+net	projects	tr	net
+New project	projects	tr	Yeni proje
+Nonactive	common	tr	Aktif değil
+notifications	projects	tr	bildiriler
+Number	projects	tr	Sayı
+open	projects	tr	Açık
+open popup window	projects	tr	popup pencereyi aç
+Overall	projects	tr	Tümünü gözden geçir
+parent project	projects	tr	Parent proje
+parent project:	projects	tr	Parent proje:
+pcosts can not be higher than the budget	projects	tr	Planlanan maliyet bütçeden daha fazla olamaz !
+per hour	projects	tr	saat başına
+per hour/workunit	projects	tr	iş bölümü/saat başına
+per workunit	projects	tr	iş bölümü başına
+planned costs	projects	tr	Planlanan maliyet
+planned time	projects	tr	Planlanan zaman
+planned time sum of all sub projects is bigger than the planned time of the main project	projects	tr	Tüm alt projelerin planlanan süre toplamı ana projenin süre toplamından büyüktür !
+please choose a project coordinator	projects	tr	Lütfen bir proje koordinatörü seçin !
+please choose activities for the project	projects	tr	Lütfen proje aktivitesi seçin !
+please enter a remark !	projects	tr	Lütfen görüşünüzü bildirin !
+please enter an id !	projects	tr	Lütfen bir ID girin!
+please enter the bill	projects	tr	Lütfen hesap girin !
+please enter the minutes per workunit	projects	tr	Lütfen iş bölümü başına düşen dakikayı girin !
+please set the minutes per workunit for each activity now !	projects	tr	Şimdi her aktivite için iş bölümü başına düşen dakikayı düzenleyin !
+please set your preferences for this application !	projects	tr	Lütfen bu uygulama için tercihlerinizi ayarlayın !
+please specify country and currency in the global preferences section	projects	tr	Global tercihlerden para ve ülkeyi seçin !
+please specify the budget	projects	tr	Lütfen bütçeyi belirtin !
+Position	projects	tr	Konum
+preferences for accountancy	projects	tr	Muhasebe tercihler
+previous project	projects	tr	Öncekiproje
+Print delivery	projects	tr	Dağıtımı yazdır
+Print invoice	projects	tr	Faturayı yazdır
+processor	projects	tr	İşlemci
+Project	projects	tr	Proje
+project %1 has been saved	projects	tr	proje %1 kaydedildi
+Project archive	projects	tr	Proje arşivi
+Project billing	projects	tr	Proje hesaplama
+Project delivery	projects	tr	Proje dağıtımı
+Project ID	common	tr	Proje ID
+project list	projects	tr	Proje listesi
+Project name	projects	tr	Project adı
+Project preferences	projects	tr	Proje tercihleri
+Project statistic	projects	tr	Proje istatistiği
+project statistics	projects	tr	Proje istatistikleri
+projects	common	tr	Projeler
+projects preferences	preferences	tr	Proje tercihleri
+Remark	projects	tr	Görüş
+remark can not exceed 8000 characters in length !	projects	tr	Görüş 8000 karakteri geçemez !
+Remark required	projects	tr	Görüş gerekli
+select font	projects	tr	Font seçin
+Select font size for customer address	projects	tr	Müşteri adresi için font büyüklüğü seçin
+Select font size for own address	projects	tr	Kendi adresiniz için font büyüklüğü seçin
+Select groups	projects	tr	Grupları seçin
+Select main project	projects	tr	Ana projeyi seçin
+Select own address	projects	tr	Kendi adresinizi seçin
+Select project	projects	tr	Projeyi seçin
+Select tax for work time	projects	tr	İş zamanı için belirtilen vergiyi seçin
+Select users	projects	tr	Kullanıcıları seçin
+Short description	projects	tr	Kısa açıklama
+small	projects	tr	Küçük
+sorry, no preferences to set for you	projects	tr	Üzgünüm, senin için düzenlenen tercih yok :)
+start date can not be before main projects start date	projects	tr	Başlangıç tarihi ana projenin başlangıç tarihinden önce olamaz !
+Statistic	projects	tr	İstatistik
+statistics	projects	tr	İstatistikler
+Sum	projects	tr	Toplan
+sum budget	projects	tr	Toplam bütçe
+sum hours	projects	tr	Toplam saat
+sum net	projects	tr	Toplam net
+sum pcosts	projects	tr	Planlanan toplam maliyet
+Sum workunits	projects	tr	Toplam iş bölümü
+tahoma	projects	tr	Tahoma
+tax	projects	tr	vergi
+that id has been used already !	projects	tr	That ID has been used already !
+the choosen previous project does not have an end date specified	projects	tr	The choosen previous project does not have an end date specified !
+The delivery note contains no items !	projects	tr	The delivery note contains no items !
+The invoice contains no items !	projects	tr	The invoice contains no items !
+time planned	projects	tr	Planlanan zaman
+time planned main project	projects	tr	Ana projenin planlanan zamanı
+time used	projects	tr	Kullanılan süre
+times new roman	projects	tr	Times New Roman
+title can not exceed 255 characters in length	projects	tr	Başlık 255 karakteri geçemez !
+Update delivery	projects	tr	Dağıtımı güncelle
+Update invoice	projects	tr	Faturayı güncelle
+User statistic	projects	tr	Kullanıcı istatistiği
+user statistics	projects	tr	Kullanıcı istatistikleri
+Username / Group	projects	tr	Kullanıcadı / Grup
+verdana	projects	tr	Verdana
+very large	projects	tr	Çok Geniş
+very small	projects	tr	Çok Küçük
+View job	projects	tr	İşi gör
+View project	projects	tr	Projeyi gör
+View work hours	projects	tr	Çalışma saatlerini gör
+Work date	projects	tr	Çlaşıma tarihi
+Work hours	projects	tr	Çlaşıma saatleri
+Work hours archive	projects	tr	Çalışma saatleri arşivi
+Work hours list	projects	tr	Çalışma saatleri listesi
+Work time	projects	tr	Çalışma saati
+Workunit	projects	tr	İş bölümü
+Workunits	projects	tr	İş bölümleri
+would you like to get notified via email about changes of milestones date due	projects	tr	Direkt olarak önemli olayların tarih değişikliğinden e-posta aracılığyla haberdar olmak ister misiniz
+would you like to get notified via email about changes of tasks	projects	tr	Görevlerin değişikliğinden e-posta aracılığyla haberdar olmak ister misiniz
+would you like to get notified via email about dates due	projects	tr	Direkt olarak tarih değişikliğinden e-posta aracılığyla haberdar olmak ister misiniz
+would you like to get notified via email if you get assigned to a project	projects	tr	Bir projeye atandığınızdan e-posta aracılığyla haberdar olmak istermisiniz
+written by:	projects	tr	Yazan:
+you have entered an invalid date !	projects	tr	Geçersiz bir tarih girdiniz !
+you have entered an invalid end date !	projects	tr	Geçersiz bir bitiş tarihi girdiniz !
+you have entered an invalid start date !	projects	tr	Geçersiz bir başlangıç tarihi girdiniz !
+You have no customer selected !	projects	tr	Müşteri seçmediniz !
+You have selected an invalid activity !	projects	tr	Geçersiz bir aktivite seçtiniz !
+You have to CREATE a delivery or invoice first !	projects	tr	Bir dağıtım oluşturmak için ÖNCELİKLE fatura oluşturmalısınız !

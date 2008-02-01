@@ -1,0 +1,32 @@
+[2004]
+New functions for TroubleTicketSystem
+
+- Attachments
+To add an attachment to a ticket, a group tts has to be created and every user,
+who works with tts has to be in that group.
+
+- New field "Type"
+If Setup works correctly, the subcategories needed schould be created. If not,
+create a global (under admin->admin, not admin->tts) category called "tts" and
+a subcategory called "type". Every
+subcategory added under "type" will then appear in the field.
+
+- New field "Platform"
+Same as "Type", with "platform" being a subcategory of "tts".
+
+- New field "Effort"
+It's just a string ;-)
+
+- Auto-Filters
+There are dropdown-boxes for "category", "assigned to", "created by" and "priority".
+Choose any entry from the boxes and the list of tickets will be filtered.
+
+[2001]
+TTS is undergoing some masive changes at the molment, I have changed the format at least 4 times now.
+Everytime I do this, I have to create upgrades.  Which is making things more difficault.  As I make my way
+through the code, I am coming up with new and better ways of handling the data.  Until I have settled on a
+format DO NOT run upgrades on it.  DO NOT use it for production!!! You WILL loose data this way.  I hope to
+have everything settled in the next week.
+
+You have been warned.
+Joseph Engo

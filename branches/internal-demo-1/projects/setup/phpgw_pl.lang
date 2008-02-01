@@ -1,0 +1,217 @@
+account	projects	pl	Konto
+accountancy	common	pl	
+active	projects	pl	Aktywny
+activities	projects	pl	Dzia³alno¶ci
+activities list	projects	pl	Lista dzia³alno¶ci
+activity	projects	pl	Dzia³alno¶æ
+activity id	projects	pl	ID Dzia³alno¶ci
+activity %1 has been added !	projects	pl	Dodano dzia³alno¶æ %1
+activity %1 has been updated !	projects	pl	Zaktualizowano dzia³alno¶æ %1
+add activity	projects	pl	Dodaj dzia³alno¶æ
+add hours	projects	pl	Dodaj godziny
+add job	projects	pl	Dodaj zadanie
+add project	projects	pl	Dodaj projekt
+add project hours	projects	pl	Dodaj godziny
+add work hours	projects	pl	
+address book	projects	pl	Ksi±¿ka adresowa
+admin	projects	pl	Admininistracja
+administrator	projects	pl	Zarz±dzaj±cy
+all	projects	pl	Wszystko
+all delivery notes	projects	pl	Wszystkie dostawy
+all deliverys	projects	pl	Wszystkie dostawy
+all done hours	projects	pl	Wszystkie wykonane godziny
+all invoices	projects	pl	Wszystkie faktury
+all open hours	projects	pl	Wszystkie otwarte godziny
+archive	projects	pl	Archiwum
+are you sure you want to delete this entry	projects	pl	Na pewno usun±æ ten wpis?
+arial	projects	pl	Arial
+bill per hour	projects	pl	
+bill per workunit	projects	pl	Warto¶æ jednostki pracy
+billable activities	projects	pl	Warto¶æ dzia³alno¶ci
+billed	projects	pl	Rozliczone
+billed only	projects	pl	Tylko rozliczone
+billing	projects	pl	Rachunek
+bookable activities	projects	pl	Przypisana dzia³alno¶æ
+bookkeeper	projects	pl	
+bookkeeping	common	pl	
+budget	projects	pl	Bud¿et
+calculate	projects	pl	Oblicz
+category	projects	pl	Kategoria
+closed	projects	pl	Zamkniêty
+coordinator	projects	pl	Prowadz±cy
+courier new	projects	pl	Courier New
+create delivery	projects	pl	Twórz dostawê
+create invoice	projects	pl	Twórz fakturê
+customer	projects	pl	Klient
+date	projects	pl	Data
+date due	projects	pl	Termin wykonania
+delete hours	projects	pl	Usuñ godziny
+deliveries	projects	pl	Dostawcy
+delivery	projects	pl	Dostawa
+delivery date	projects	pl	Data dostawy
+delivery id	projects	pl	ID Dostawy
+delivery list	projects	pl	Lista dostaw
+delivery note	projects	pl	Dostawy
+delivery note for project	projects	pl	
+delivery notes	projects	pl	Dostawy
+delivery %1 has been created !	projects	pl	Utworzono dostawê %1
+delivery %1 has been updated !	projects	pl	Zaktualizowano dostawê %1
+description	projects	pl	Opis
+done	projects	pl	Gotowe
+edit	projects	pl	Edycja
+edit activity	projects	pl	Edycja dzia³alno¶ci
+edit hours	projects	pl	Edycja godzin
+edit project	projects	pl	Edycja projektu
+edit project administrator list	projects	pl	Edycja listy zarz±dzaj±cych projektem
+edit project bookkeeper list	projects	pl	
+edit project hours	projects	pl	Edycja godzin
+edit work hours	projects	pl	
+employee	projects	pl	Osoba
+end date	projects	pl	Zakoñczenie
+end time	projects	pl	Zakoñczenie
+ending date can not be after main projects ending date !	projects	pl	
+entry date	projects	pl	Data wprowadzenia
+firstname	projects	pl	Imiê
+generate activity id ?	projects	pl	Wygenerowaæ ID Dzia³alno¶ci
+generate delivery id ?	projects	pl	Wygenerowaæ ID Dostawy?
+generate invoice id ?	projects	pl	Wygenerowaæ ID Faktury?
+generate job id ?	projects	pl	Wygenerowaæ ID Zadania?
+generate project id ?	projects	pl	Wygenerowaæ ID Projektu?
+georgia	projects	pl	Georgia
+helvetica	projects	pl	Helvetica
+hours	projects	pl	Godzin
+invoice	projects	pl	Faktura
+invoice date	projects	pl	Data faktury
+invoice for project	projects	pl	Faktura dla projektu
+invoice id	projects	pl	ID Faktury
+invoice layout	projects	pl	Uk³ad faktury
+invoice list	projects	pl	Lista faktur
+invoice %1 has been created !	projects	pl	Utworzono fakturê %1
+invoice %1 has been updated !	projects	pl	Zaktualizowano fakturê %1
+invoices	projects	pl	Faktury
+invoicing	projects	pl	
+job	projects	pl	Zadanie
+job archive	projects	pl	Zadanie archiwalne
+job date	projects	pl	Data zadania
+job description	projects	pl	Opis zadania
+job has been added !	projects	pl	Dodano zadanie
+job has been updated !	projects	pl	Zaktualizowano zadanie
+job id	projects	pl	ID Zadania
+job list	projects	pl	Lista zadañ
+jobs	projects	pl	Zadania
+large	projects	pl	Du¿a
+lastname	projects	pl	Nazwisko
+list hours	projects	pl	Lista godzin
+main project:	projects	pl	G³ówny projekt:
+minutes per workunit	projects	pl	Minut na jednostkê pracy
+net	projects	pl	Netto
+new project	projects	pl	Nowy projekt
+nonactive	projects	pl	Nieaktywny
+number	projects	pl	Numer
+open	projects	pl	Otwarte
+overall	projects	pl	Podsumowanie
+per	projects	pl	za
+per hour	projects	pl	na godzinê
+per workunit	projects	pl	za jednostkê pracy
+please choose activities for that project first !	projects	pl	Proszê wybraæ dzia³alno¶æ dla projektu
+please enter a delivery id for that delivery !	projects	pl	Proszê podaæ ID Dostawy dla dostawy
+please enter a remark !	projects	pl	Proszê wpisaæ komentarz!
+please enter an id !	projects	pl	Proszê podaæ ID
+please enter an id for that activity !	projects	pl	Proszê podaæ ID Dzia³alno¶ci
+please enter an invoice id for that invoice !	projects	pl	Proszê podaæ ID Faktury dla faktury
+please enter the bill !	projects	pl	
+please enter the bill per workunit !	projects	pl	Proszê podaæ warto¶æ jednostki pracy
+please enter the minutes per workunit !	projects	pl	Proszê podaæ liczbê minut na jednostkê czasu
+please select currency,tax and your address in preferences!	projects	pl	Proszê wybraæ walutê, podatek i swój adres w preferencjach
+please select your address in preferences!	projects	pl	Proszê wybraæ swój adres w preferencjach
+please select your currency in preferences!	projects	pl	Proszê wybraæ walutê w preferencjach
+please set the minutes per workunit for each activity now !	projects	pl	
+position	projects	pl	Pozycja
+print delivery	projects	pl	Drukuj dostawê
+print invoice	projects	pl	Drukuj fakturê
+project	projects	pl	Projekt
+project administration	projects	pl	Zarz±dzanie projektem
+project archive	projects	pl	Archiwum projektów
+project billing	projects	pl	Rozliczenie projektu
+project delivery	projects	pl	Przekazanie projektu
+project hours	projects	pl	Godziny
+project id	projects	pl	ID Projektu
+project list	projects	pl	Lista projektów
+project name	projects	pl	Nazwa projektu
+project preferences	projects	pl	Preferencje projektu
+project statistic	projects	pl	Statystyka projektu
+project statistics	projects	pl	Statystyki projektów
+project %1 %2 has been added !	projects	pl	Dodano projekt %1 %2
+project %1 %2 has been updated !	projects	pl	Zaktualizowano projekt %1 %2
+projects	common	pl	Projekty
+projects archive	projects	pl	Projekty archiwalne
+projects list	projects	pl	Lista projektów
+projects preferences	preferences	pl	Preferencje projektu
+remark	projects	pl	Komentarz
+remark required	projects	pl	Wymagaæ komentarza?
+return to projects	projects	pl	Powrót do projektów
+select category	projects	pl	Wybierz kategoriê
+select customer	projects	pl	Wybierz klienta
+select font	projects	pl	Wybierz cziconkê
+select font size for customer address	projects	pl	Wybierz wielko¶æ czcionki dla adresu klienta
+select font size for own address	projects	pl	Wybierz wielko¶æ czcionki dla w³asnego adresu
+select groups	projects	pl	Wybierz grupy
+select main project	projects	pl	Wybierz projekt g³ówny
+select project	projects	pl	Wybierz projekt
+select tax for work hours	projects	pl	Podatek od roboczogodzin
+select tax for workhours	projects	pl	Podatek od roboczogodzin
+select users	projects	pl	Wybierz u¿ytkowników
+select your address	projects	pl	Wybierz swój adres
+short description	projects	pl	Krótki opis
+small	projects	pl	Ma³a
+sorry, no preferences to set for you :)	projects	pl	Niestety, nie ma preferencji do ustawienia przez Ciebie
+start date	projects	pl	Pocz±tek
+start date can not be before main projects start date !	projects	pl	
+start time	projects	pl	Pocz±tek
+statistic	projects	pl	Statystyka
+statistics	projects	pl	Statystyki
+status	projects	pl	Status
+submit	projects	pl	OK
+sum	projects	pl	Suma
+sum hours	projects	pl	Suma godzin
+sum net	projects	pl	Suma netto
+sum workunits	projects	pl	Suma jednostek pracy
+tahoma	projects	pl	Tahoma
+tax	projects	pl	Podatek
+that activity id has been used already !	projects	pl	Ten ID Dzia³alno¶ci ju¿ istnieje
+that delivery id has been used already !	projects	pl	Ten ID Dostawy ju¿ istnieje
+that id has been used already !	projects	pl	Podany ID jest ju¿ u¿ywany
+that invoice id has been used already !	projects	pl	Ten ID Faktury ju¿ istnieje
+there are no entries	projects	pl	Nie ma wpisów!
+time	projects	pl	Czas
+times new roman	projects	pl	Times New Roman
+title	projects	pl	Tytu³
+update	projects	pl	Aktualizuj
+update delivery	projects	pl	Aktualizuj dostawê
+update invoice	projects	pl	Aktualizuj fakturê
+update project	projects	pl	Aktualizuj projekt
+user statistic	projects	pl	Statystyka u¿ytkownika
+user statistics	projects	pl	Statystyki u¿ytkowników
+username	projects	pl	Nazwa u¿ytkownika
+username / group	projects	pl	Nazwa u¿ytkownika/Grupa
+verdana	projects	pl	Verdana
+very large	projects	pl	Bardzo du¿a
+very small	projects	pl	Bardzo ma³a
+view job	projects	pl	Pogl±d zadania
+view project	projects	pl	Pogl±d projektu
+view work hours	projects	pl	
+work date	projects	pl	Dni
+work hours	projects	pl	Roboczogodziny
+work hours archive	projects	pl	Archiwum roboczogodzin
+work hours list	projects	pl	Lista roboczogodzin
+work time	projects	pl	Godziny
+workunit	projects	pl	Jednostka pracy
+workunits	projects	pl	Jednostki pracy
+written by:	projects	pl	
+you have entered an invalid delivery date !	projects	pl	Poda³e¶ niepoprawn± datê dostawy
+you have entered an invalid end date !	projects	pl	Poda³e¶ niepopran± datê zakoñczenia projektu
+you have entered an invalid invoice date !	projects	pl	Poda³e¶ niepoprawn± datê faktury
+you have entered an invalid start date !	projects	pl	Poda³e¶ niepoprawn± datê rozpoczêcia projektu
+you have no customer selected !	projects	pl	Nie wybra³e¶ klienta
+you have selected an invalid activity !	projects	pl	Wybra³e¶ niew³a¶ciw± dzia³alno¶æ
+you have to create a delivery or invoice first !	projects	pl	Najpierw musisz utworzyæ dostawê lub fakturê

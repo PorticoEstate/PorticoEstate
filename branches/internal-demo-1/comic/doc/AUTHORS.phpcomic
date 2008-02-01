@@ -1,0 +1,19 @@
+   After looking at the docs on porting phpComic to phpGroupWare I have a 
+   couple of comments. 
+
+   1. I don't have a problem with you porting it, just give a link to the 
+   sourceforge phpComic site someplace. 
+   2. Just to maintain some compatibility with phpComic can we try and leave 
+   comic_functions.php as it is. This way people can 
+   upgrade to a new set of comics as they come along. 
+   3. If you want to add it to a CVS branch somewhere name it
+   phpComicGroupWare 
+   or something appropriate. If you would like to 
+   maintain it on the official phpComic sourceforge CVS repository as a 
+   seperate branch that is also an option. I would just 
+   add you as a developer. 
+
+   Other than that do what you like with it, after all it is Open Source ;-) 
+
+   Regards, 
+   Ryan Phillips 
