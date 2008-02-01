@@ -27,21 +27,12 @@
 	$GLOBALS['phpgw']->template->set_file('head', 'head.tpl');
 	$GLOBALS['phpgw']->template->set_block('head', 'stylesheet', 'stylesheets');
 
-	/*
-	if(!@is_object($GLOBALS['phpgw']->js))
-	{
-		$GLOBALS['phpgw']->js = createObject('phpgwapi.javascript');
-	}
-	$GLOBALS['phpgw']->js->validate_file('json', 'json');
-	*/
-
 	phpgwapi_yui::load_widget('dragdrop');
 	phpgwapi_yui::load_widget('element');
 	phpgwapi_yui::load_widget('container');
 	phpgwapi_yui::load_widget('menu');
 	phpgwapi_yui::load_widget('button');
 	phpgwapi_yui::load_widget('connection');
-	//phpgwapi_yui::load_widget('json');
 
 	foreach ( $stylesheets as $stylesheet )
 	{
@@ -57,7 +48,6 @@
 	// get set at expanded even though that isn't needed.
 
 	$navbar_config = execMethod('phpgwapi.template_newdesign.retrieve_local', 'navbar_config');
-	//var_dump($navbar_config);
 	if(!isset($navbar_config))
 	{
 		$navbar_config = array();
@@ -70,13 +60,12 @@
 		$current_selection = implode("::", explode("::", $current_selection, -1));
 	}
 
-	//var_dump( $navbar_config );
-
-	// Doesn't work :(
-	//execMethod('phpgwapi.template_newdesign.store_local', array('navbar_config', $navbar_config) );
-	phpgwapi_template_newdesign::store_local('navbar_config', $navbar_config);
-	//$navbar_config = execMethod('phpgwapi.template_newdesign.retrieve_local', 'navbar_config');
-	//var_dump( $navbar_config );
+	if(count($navbar_config)) {
+		phpgwapi_template_newdesign::store_local('navbar_config', $navbar_config);
+	}
+	else {
+		$navbar_config = null;
+	}
 
 	$app = lang($app);
 	$tpl_vars = array
