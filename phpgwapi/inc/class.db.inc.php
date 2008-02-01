@@ -463,6 +463,22 @@
 				}
 				return $Record[0];
 			}
+			else if($GLOBALS['phpgw_info']['server']['db_type'] == 'mssql')
+			{
+				/*  MSSQL uses a query to retrieve the last
+				 *  identity on the connection, so table and field are ignored here as well.
+				 */
+				if(!isset($table) || $table == '' || !isset($field) || $field == '')
+				{
+				return -1;
+				}
+				$result = @mssql_query("select @@identity", $this->adodb->_queryID);
+				if(!$result)
+				{
+					return -1;
+				}
+				return mssql_result($result, 0, 0);
+			}
 			return $this->adodb->Insert_ID($table, $field);
 		}
 
