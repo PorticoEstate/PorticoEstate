@@ -99,7 +99,14 @@
 				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.index'));
 			}
 
-			$GLOBALS['phpgw_info']['flags']['menu_selection'] = "property::invoice::{$this->role}";
+			if (phpgw::get_var('admin', 'bool'))
+			{
+				$GLOBALS['phpgw_info']['flags']['menu_selection'] = "admin::property::{$this->role}";			
+			}
+			else
+			{
+				$GLOBALS['phpgw_info']['flags']['menu_selection'] = "property::invoice::{$this->role}";
+			}
 		}
 
 		function save_sessiondata()

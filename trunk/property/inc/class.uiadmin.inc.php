@@ -568,7 +568,7 @@
 
 		function edit_id()
 		{
-			$GLOBALS['phpgw_info']['flags']['menu_selection'] .= '::edit_id';
+			$GLOBALS['phpgw_info']['flags']['menu_selection'] .= '::id_control';
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('admin'));
 
@@ -632,7 +632,7 @@
 
 		function contact_info()
 		{
-			$GLOBALS['phpgw_info']['flags']['menu_selection'] = '::contact_info';
+			$GLOBALS['phpgw_info']['flags']['menu_selection'] .= '::user_contact';
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('admin'));
 
