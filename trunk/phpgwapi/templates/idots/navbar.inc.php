@@ -5,7 +5,7 @@
 	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
 	* @package phpgwapi
 	* @subpackage gui
-	* @version $Id: navbar.inc.php 18358 2007-11-27 04:43:37Z skwashd $
+	* @version $Id$
 	*/
 
 
@@ -48,21 +48,11 @@
 					'app_name'		=> '',
 					'alt_img_app'	=> lang($app),
 					'img_app'		=> "{$var['img_root']}/noimage_nav.png",
-					'url_app'		=> $app_data['url']
+					'url_app'		=> $app_data['url'],
+					'app_name'		=> $app_data['text'],
+					'img_app'		=> $GLOBALS['phpgw']->common->image($app_data['image'][0], $app_data['image'][1])
 				);
 
-				switch($GLOBALS['phpgw_info']['user']['preferences']['common']['navbar_format'])
-				{
-					case 'icons':
-						$item['img_app'] = $GLOBALS['phpgw']->common->image($app_data['image'][0], $app_data['image'][1]);
-						break;
-					case 'text':
-						$item['app_name'] =& $app_data['text'];
-						break;
-					default:
-						$item['app_name'] =& $app_data['text'];
-						$item['img_app'] = $GLOBALS['phpgw']->common->image($app_data['image'][0], $app_data['image'][1]);
-				}
 				$GLOBALS['phpgw']->template->set_var($item);
 				$GLOBALS['phpgw']->template->parse('navbar_items', 'navbar_item', true);
 			}
@@ -175,8 +165,7 @@
 	*/
 	function display_sidebox($menu_title, $menu)
 	{
-		$var['lang_title'] = $menu_title;
-		$GLOBALS['phpgw']->template->set_var($var);
+		$GLOBALS['phpgw']->template->set_var('lang_title', $menu_title);
 		$GLOBALS['phpgw']->template->pfp('out','extra_blocks_header');
 		
 		foreach ( $menu as $key => $item )

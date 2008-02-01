@@ -22,18 +22,6 @@
 			-->
 		</script>
 		{javascript}
-		<script type="text/javascript">
-			YAHOO.util.Event.onContentReady('menubar', function ()
-			{
-				var oMenu = new YAHOO.widget.MenuBar('menubar',
-					{
-						autosubmenudisplay: true,
-						visible: true,
-						position: "static",
-					});
-				oMenu.render();
-			});
-		</script>
 	</head>
 	<body class="yui-skin-sam">
 <!-- END Head -->

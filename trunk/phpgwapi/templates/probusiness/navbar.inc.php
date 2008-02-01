@@ -7,7 +7,7 @@
  * @license http://www.fsf.org/licenses/gpl.html GNU General Public License
  * @package phpgwapi
  * @subpackage gui
- * @version $Id: navbar.inc.php 17902 2007-01-24 16:04:52Z Caeies $
+ * @version $Id$
  */
 
 
@@ -22,16 +22,14 @@
 		$tpl = createobject('phpgwapi.Template',PHPGW_TEMPLATE_DIR);
 		$tpl->set_unknowns('remove');
 
-		$tpl->set_file(array('navbar'           => 'navbar.tpl',
-                         'navbar_app'       => 'navbar_app.tpl',
-                         'navbar_app_select'=> 'navbar_app_select.tpl',
-                         'navbar_app_table' => 'navbar_app_tablecontent.tpl'
-                        ));
+		$tpl->set_file('navbar', 'navbar.tpl');
+		$tpl->set_block('navbar', 'app_row', 'app_rows');
 
 		$var['api_root'] = $GLOBALS['phpgw_info']['server']['webserver_url'] . '/phpgwapi/templates/probusiness/';
-	/*
-	 *  folder handling
-	 */
+		
+		/*
+		 *  folder handling
+		 */
 		if ( $GLOBALS['phpgw_info']['user']['apps']['folders']['enabled'] == true )
 		{
 			$mtree = createobject('folders.uifolders', '');
@@ -39,7 +37,7 @@
 			$folderMode = $mtree->get_folderMode();
 		}
 
-		if ( $folderMode == 'enabled' )
+		if ( false ) //$folderMode == 'enabled' )
 		{
 			if ($GLOBALS['phpgw_info']['user']['apps']['folders']['enabled'] == true)
 			{
@@ -49,48 +47,22 @@
 		else
 		{
 
-		/*
-		 *  application list
-		 */
-			$navBarMode = $GLOBALS['phpgw_info']['user']['preferences']['common']['navbar_format'];
-			$tpl->set_block('navbar_app_table','app_row','app_rows');
-			foreach($GLOBALS['phpgw_info']['navbar'] as $app => $app_data)
+			/*
+			 *  application list
+			 */
+			$navbar = execMethod('phpgwapi.menu.get', 'navbar');
+			prepare_navbar($navbar);
+			foreach ( $navbar as $app => $app_data )
 			{
+				if ( $app == $GLOBALS['phpgw_info']['flags']['currentapp'] )
+				{
+					$app_data['class'] = ' class="selectedNavLink"';
+				}
+				$app_data['image'] = $GLOBALS['phpgw']->common->image($app_data['image'][0], $app_data['image'][1]);
+				$tpl->set_var($app_data);
 
-				$label = '';
-				if ( $navBarMode == 'text' OR $navBarMode == 'icons_and_text' )
-				{
-					$label = $app_data['title'];
-				}
-				if ( $navBarMode == 'icons_and_text' )
-				{
-					$var['break'] = '<br />';
-				}
-				if (  $navBarMode == 'icons' OR $navBarMode == 'icons_and_text' OR $navBarMode == '')
-				{
-					
-					$image = '<img src="' . $app_data['icon'] .
-					         '" alt="' . $app_data['title'] .
-					         '" title="' . $app_data['title'] .
-					         '" />';
-				}
-
-				$var['appllink'] = $app_data['url'];
-				$var['image'] = $image;
-				$var['label'] = $label;
-				$tpl->set_var($var);
-				// mark actual selected application
-				if ($GLOBALS['phpgw_info']['flags']['currentapp'] == $app)
-				{
-					$tpl->fp('appdiv','navbar_app_select');
-				}
-				else
-				{
-					$tpl->fp('appdiv','navbar_app');
-				}
-				$tpl->fp('app_rows','app_row',true);
+				$tpl->parse('app_rows','app_row',true);
 			}
-			$tpl->parse('navbarview','app_rows',false);
 		}
 
 		// get sidebox content and parse it as a menu
@@ -157,7 +129,7 @@
 		$tpl->set_unknowns('remove');
 		$tpl->set_file(array('footer' => 'footer.tpl'));
 
-		$var['powered_by'] = '[ layout powered by <a target="_blank" href="http://www.probusiness.de">pro|business AG</a> ]';
+		$var['powered_by'] = lang('Powered by phpGroupWare version %1', $GLOBALS['phpgw_info']['server']['versions']['phpgwapi']);
 
 		if (isset($GLOBALS['phpgw_info']['navbar']['admin'])
 			&& isset($GLOBALS['phpgw_info']['user']['preferences']['common']['show_currentusers'])
@@ -227,4 +199,35 @@
 
 			return $return;
 		}
+	}
+
+	
+	/**
+	* Callback for usort($navbar)
+	*
+	* @param array $item1 the first item to compare
+	* @param array $item2 the second item to compare
+	* @return int result of comparision
+	*/
+	function sort_navbar($item1, $item2)
+	{
+		$a =& $item1['order'];
+		$b =& $item2['order'];
+
+		if ($a == $b)
+		{
+			return strcmp($item1['text'], $item2['text']);
+		}
+		return ($a < $b) ? -1 : 1;
+	}
+
+	/**
+	* Organise the navbar properly
+	*
+	* @param array $navbar the navbar items
+	* @return array the organised navbar
+	*/
+	function prepare_navbar(&$navbar)
+	{
+		uasort($navbar, 'sort_navbar');
 	}

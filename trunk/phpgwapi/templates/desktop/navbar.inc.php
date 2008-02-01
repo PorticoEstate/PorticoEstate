@@ -9,7 +9,7 @@
   *  option) any later version.                                              *
   \**************************************************************************/
 
-  /* $Id: navbar.inc.php 18311 2007-10-10 08:53:53Z skwashd $ */
+  /* $Id$ */
 
   function parse_navbar($force = False)
   {
@@ -23,48 +23,9 @@
 			)
 		);
 
-		$tpl->set_block('navbar', 'app_text', 'apps_text');
-		$tpl->set_block('navbar', 'app_icon', 'apps_icon');
-		$tpl->set_block('navbar', 'app_both', 'apps_both');
+		$tpl->set_block('navbar', 'app', 'apps');
 		$tpl->set_block('navbar', 'prefs', 'prefs_block');
 
-		switch ($GLOBALS['phpgw_info']['user']['preferences']['common']['navbar_format'])
-		{
-			case 'text':
-				$block = 'app_text';
-				$block_out = 'apps_text';
-				$tpl->set_var(
-						array(
-							'apps_icon'	=> '',
-							'apps_both'	=> ''
-						)
-				);
-				break;
-
-			case 'icons':
-				$block = 'app_icon';
-				$block_out = 'apps_icon';
-				$tpl->set_var(
-						array(
-							'apps_text'	=> '',
-							'apps_both'	=> ''
-						)
-				);
-
-				break;
-
-			default:
-				$block = 'app_both';
-				$block_out = 'apps_both';
-				$tpl->set_var(
-						array(
-							'apps_text'	=> '',
-							'apps_icon'	=> ''
-						)
-				);
-				break;
-		}
-		
 		$target = '';
 		if ( isset($GLOBALS['phpgw_info']['flags']['navbar_target']) && $GLOBALS['phpgw_info']['flags']['navbar_target'] )
 		{
@@ -76,12 +37,12 @@
 		{
 			if($app == 'preferences')
 			{
-				$tpl->set_var(
-					array(
+				$tpl->set_var(array
+				(
 						'prefs_url'	=> $app_data['url'],
 						'lang_prefs'	=> $app_data['title']
-					)
-				);
+				));
+
 				$tpl->parse('prefs_block', 'prefs');
 				$prefs_ok = True;
 				continue;
@@ -94,7 +55,7 @@
 
 			$app_data['target'] = $target;
 			$tpl->set_var($app_data);
-			$tpl->parse($block_out, $block, True);
+			$tpl->parse('apps', 'app', True);
 		}
 
 		if( !$prefs_ok )

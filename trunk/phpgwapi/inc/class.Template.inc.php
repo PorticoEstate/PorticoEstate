@@ -8,7 +8,7 @@
  * @license http://www.fsf.org/licenses/lgpl.html GNU Lesser General Public License
  * @package phpgwapi
  * @subpackage gui
- * @version $Id: class.Template.inc.php 17222 2006-09-25 06:28:32Z skwashd $
+ * @version $Id$
  * @internal Based on phplib
  *
  */
@@ -200,9 +200,8 @@ class Template
 			}
 			else
 			{
-				$new_root = preg_replace("/{$GLOBALS['phpgw_info']['server']['template_set']}\/$/base\/", $root);
+				$new_root = preg_replace("/\/{$GLOBALS['phpgw_info']['server']['template_set']}\$/", '/base', $root);
 				$this->set_root($new_root, 1);
-				//$this->set_root(substr($root, 0, (0 - strlen($GLOBALS['phpgw_info']['server']['template_set']))) . 'base', 1);
 			}
 		}
 
@@ -872,8 +871,8 @@ class Template
 			}
 			else
 			{
-				$new_root = substr($root, 0, (0 - strlen($GLOBALS['phpgw_info']['server']['template_set']))) . 'base';
-				$new_filename = $this->filename(str_replace($root.'/','',$new_filename), $new_root, 1);
+				$new_root = preg_replace("/\/templates\/{$GLOBALS['phpgw_info']['server']['template_set']}\$/", '/templates/base', $root);
+				$new_filename = $this->filename($filename, $new_root, 1);
 			}
 		}
 		return $new_filename;

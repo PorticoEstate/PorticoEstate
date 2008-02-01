@@ -19,35 +19,38 @@
 	{
 		$tpl = createobject('phpgwapi.Template',PHPGW_TEMPLATE_DIR);
 
-		$tpl->set_file(
-			array(
-				'navbar' => 'navbar.tpl'
-			)
-		);
+		$tpl->set_file('navbar', 'navbar.tpl');
 		$tpl->set_block('navbar','preferences','preferences_icon');
 		
+		// FIXME this is a lazy hack
+		$var = array();
 		$var['img_root'] = $GLOBALS['phpgw_info']['server']['webserver_url'] . '/phpgwapi/templates/justweb/images';
-		$var['table_bg_color'] = $GLOBALS['phpgw_info']['theme']['navbar_bg'];
+		$var['applications'] = '';
 
-		if ($GLOBALS['phpgw_info']['flags']['navbar_target'])
+		$exclude = array('home', 'preferences', 'about', 'logout');
+		$navbar = execMethod('phpgwapi.menu.get', 'navbar');
+		prepare_navbar($navbar);
+		foreach ( $navbar as $app => $app_data )
 		{
-			$target = ' target="' . $GLOBALS['phpgw_info']['flags']['navbar_target'] . '"';
-		}
-
-		foreach($GLOBALS['phpgw_info']['navbar'] as $app => $app_data)
-		{
-			if ($app != 'home' && $app != 'preferences' && !ereg('about',$app) && $app != 'logout')
+			if ( in_array($app, $exclude) )
 			{
-				$title = '<img src="' . $app_data['icon'] . '" alt="' . $app_data['title'] . '" title="'
-					. $app_data['title'] . '" border="0">';
-				if ($GLOBALS['phpgw_info']['user']['preferences']['common']['navbar_format'] == 'icons_and_text')
-				{
-					$title .= '<br>' . $app_data['title'];
-				}
-				$applications .= '<br><a href="' . $app_data['url'] . '"' . $target . '>' . $title . '</a>';
+				continue;
 			}
+			$img = $GLOBALS['phpgw']->common->image($app_data['image'][0], $app_data['image'][1]);
+			$var['applications'] .= <<<HTML
+			<a href="{$app_data['url']}"><img src="{$img}" alt="{$app_data['text']}" title="{$app_data['text']}"></a><br>
+
+HTML;
+			/* TODO this should be implemented at some point - skwashd feb08
+			$tpl->set_var(array
+			(
+				'text'	=> strtoupper($app_data['text']),
+				'url'	=> $app_data['url']
+				'img'	=> $GLOBALS['phpgw']->common->image($app_data['image'][0], $app_data['image'][1])
+			));
+			$tpl->parse('apps', 'app', true);
+			*/
 		}
-		$var ['applications'] = $applications;
      
 		$var['home_link'] = $GLOBALS['phpgw_info']['navbar']['home']['url'];
 		$var['preferences_link'] = $GLOBALS['phpgw_info']['navbar']['preferences']['url'];
@@ -162,4 +165,27 @@
 		$tpl->set_var($var);
 		$GLOBALS['phpgw']->hooks->process('navbar_end');
 		echo $tpl->pfp('out','footer');
+	}
+
+	/**
+	* Callback for usort($navbar)
+	*
+	* @param array $item1 the first item to compare
+	* @param array $item2 the second item to compare
+	* @return int result of comparision
+	*/
+	function sort_navbar($item1, $item2)
+	{
+		return strcmp($item1['text'], $item2['text']);
+	}
+
+	/**
+	* Organise the navbar properly
+	*
+	* @param array $navbar the navbar items
+	* @return array the organised navbar
+	*/
+	function prepare_navbar(&$navbar)
+	{
+		uasort($navbar, 'sort_navbar');
 	}

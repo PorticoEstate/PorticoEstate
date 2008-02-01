@@ -5,7 +5,7 @@
 	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
 	* @package phpgwapi
 	* @subpackage gui
-	* @version $Id: navbar.inc.php 17902 2007-01-24 16:04:52Z Caeies $
+	* @version $Id$
 	*/
 
 
@@ -27,44 +27,46 @@
 		);
 		$tpl->set_block('navbar','preferences','preferences_icon');
 
-		//$tpl->set_block('navbar','B_powered_top','V_powered_top');
-		//$tpl->set_block('navbar','B_num_users','V_num_users');
-
 		$var['img_root'] = PHPGW_IMAGES_DIR;
 		$var['img_root_roll'] = PHPGW_IMAGES_DIR . '/rollover';
-		$var['table_bg_color'] = $GLOBALS['phpgw_info']['theme']['navbar_bg'];
 
-		#  echo '<pre>'; print_r($GLOBALS['phpgw_info']['navbar']); echo '</pre>';
-		$applications = '';
-		foreach($GLOBALS['phpgw_info']['navbar'] as $app => $app_data)
+		$exclude = array('home', 'preferences', 'about', 'logout');
+		$navbar = execMethod('phpgwapi.menu.get', 'navbar');
+		prepare_navbar($navbar);
+		foreach ( $navbar as $app => $app_data )
 		{
-			if ($app != 'home' && $app != 'preferences' && ! ereg('about',$app) && $app != 'logout')
+			if ( in_array($app, $exclude) )
 			{
-				$applications .= '<tr><td class="main_menu_apps"><a class="main_menu" href="' . $app_data['url'] . '"';
-				if (isset($GLOBALS['phpgw_info']['flags']['navbar_target']))
-				{
-					$applications .= ' target="' . $GLOBALS['phpgw_info']['flags']['navbar_target'] . '"';
-				}
+				continue;
+			}
+			$img = $GLOBALS['phpgw']->common->image($app_data['image'][0], $app_data['image'][1]);
+			$var['applications'] .= <<<HTML
+			<tr>
+				<td class="main_menu_apps">
+					<a class="main_menu" href="{$app_data['url']}">{$app_data['text']}></a>
+				</td>
+			</tr>
 
-				$applications .= '>'.$app_data['title'].'</a></td></tr>'."\r\n";
-			}
-			$img_src_over = $GLOBALS['phpgw']->common->image($app,'navbar-over.gif');
-			if($img_src_over)
-			{
-				$pre_load[] = $img_src_over;
-			}
+HTML;
+			/* TODO this should be implemented at some point - skwashd feb08
+			$tpl->set_var(array
+			(
+				'text'	=> strtoupper($app_data['text']),
+				'url'	=> $app_data['url']
+				'img'	=> $GLOBALS['phpgw']->common->image($app_data['image'][0], $app_data['image'][1])
+			));
+			$tpl->parse('apps', 'app', true);
+			*/
 		}
 
-		$var['applications'] = $applications;
-     
-		$var['home_link'] 	= $GLOBALS['phpgw_info']['navbar']['home']['url'];
-		$var['preferences_link'] = $GLOBALS['phpgw_info']['navbar']['preferences']['url'];
-		$var['logout_link'] 	= $GLOBALS['phpgw_info']['navbar']['logout']['url'];
-		$var['help_link'] 	= $GLOBALS['phpgw_info']['navbar']['about']['url'];
-		$var['lang_welcome']	= lang('welcome');
-		$var['lang_preferences']	= lang('preferences');
-		$var['lang_logout']	= lang('logout');
-		$var['lang_help']	= lang('help');
+		$var['home_link'] 	= $navbar['home']['url'];
+		$var['preferences_link'] = $navbar['preferences']['url'];
+		$var['logout_link'] 	= $navbar['logout']['url'];
+		$var['help_link'] 	= $navbar['about']['url'];
+		$var['lang_welcome']	= $navbar['home']['text'];;
+		$var['lang_preferences']	= $navbar['preferences']['text'];
+		$var['lang_logout']	=  $navbar['logout']['text'];
+		$var['lang_help']	= $navbar['about']['text'];
 
 		// "powered_by_color" and "_size" are is also used by number of current users thing
 		$var['powered_by_size'] = '2';
@@ -194,4 +196,27 @@
 		$GLOBALS['phpgw']->hooks->process('navbar_end');
 		$tpl->pfp('out','footer');
 */
+	}
+
+	/**
+	* Callback for usort($navbar)
+	*
+	* @param array $item1 the first item to compare
+	* @param array $item2 the second item to compare
+	* @return int result of comparision
+	*/
+	function sort_navbar($item1, $item2)
+	{
+		return strcmp($item1['text'], $item2['text']);
+	}
+
+	/**
+	* Organise the navbar properly
+	*
+	* @param array $navbar the navbar items
+	* @return array the organised navbar
+	*/
+	function prepare_navbar(&$navbar)
+	{
+		uasort($navbar, 'sort_navbar');
 	}

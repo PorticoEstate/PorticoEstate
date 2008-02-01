@@ -22,13 +22,18 @@
 
 	$app = $GLOBALS['phpgw_info']['flags']['currentapp'];
 
+	if ( !is_readable("/phpgwapi/templates/idsociety/css/{$GLOBALS['phpgw_info']['user']['preferences']['common']['theme']}.css") )
+	{
+		$GLOBALS['phpgw_info']['user']['preferences']['common']['theme'] = 'idots';
+	}
+
 	$theme_styles = array
 	(
 		'/phpgwapi/js/yahoo/reset-fonts-grids/reset-fonts-grids.css',
 		'/phpgwapi/js/yahoo/build/menu/assets/skins/sam/menu.css',
 		'/phpgwapi/js/yahoo/build/tabview/assets/skins/sam/tabview.css',
 		'/phpgwapi/templates/idots/css/base.css',
-		'/phpgwapi/templates/idots/css/idots.css',
+		"/phpgwapi/templates/idots/css/{$GLOBALS['phpgw_info']['user']['preferences']['common']['theme']}.css",
 		"/{$app}/templates/base/css/base.css",
 		"/{$app}/templates/idots/css/base.css",
 		"/{$app}/templates/idots/css/{$GLOBALS['phpgw_info']['user']['preferences']['common']['theme']}.css"
@@ -36,6 +41,7 @@
 
 	foreach ( $theme_styles as $style )
 	{
+
 		if( file_exists( PHPGW_SERVER_ROOT . $style ) )
 		{
 			$GLOBALS['phpgw']->template->set_var('theme_style', "{$GLOBALS['phpgw_info']['server']['webserver_url']}$style");
@@ -53,7 +59,7 @@
 		'img_icon'      => PHPGW_IMAGES_DIR . '/favicon.ico',
 		'str_base_url'	=> $GLOBALS['phpgw']->link('/', array(), true),		
 		'website_title'	=> "{$GLOBALS['phpgw_info']['server']['site_title']} | {$app}",
-		'win_on_events'	=> $GLOBALS['phpgw']->common->get_on_events(),
+		'win_on_events'	=> $GLOBALS['phpgw']->common->get_on_events()
 	));
 
 	$GLOBALS['phpgw']->template->pfp('out','head');

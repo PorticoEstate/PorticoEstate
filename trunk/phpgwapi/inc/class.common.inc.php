@@ -4,11 +4,11 @@
 	* @author Dan Kuykendall <seek3r@phpgroupware.org>
 	* @author Joseph Engo <jengo@phpgroupware.org>
 	* @author Mark Peters <skeeter@phpgroupware.org>
-	* @copyright Copyright (C) 2000-2005 Free Software Foundation, Inc http://www.fsf.org/
+	* @copyright Copyright (C) 2000-2008 Free Software Foundation, Inc http://www.fsf.org/
 	* @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License
 	* @package phpgwapi
 	* @subpackage utilities
-	* @version $Id: class.common.inc.php 18358 2007-11-27 04:43:37Z skwashd $
+	* @version $Id$
 	*/
 
 	/**
@@ -947,16 +947,23 @@ HTML;
 		*/
 		public function phpgw_header($navbar = False)
 		{
+			// this prevents infinite loops caused by bad code - skwashd jan08
 			static $called = false;
 			if ( $called )
 			{
 				return;
 			}
-
 			$called = true;
 
-			include_once(PHPGW_INCLUDE_ROOT . '/phpgwapi/templates/' . $GLOBALS['phpgw_info']['server']['template_set'] . '/head.inc.php');
-			include_once(PHPGW_INCLUDE_ROOT . '/phpgwapi/templates/' . $GLOBALS['phpgw_info']['server']['template_set'] . '/navbar.inc.php');
+			$tpl_name = $GLOBALS['phpgw_info']['server']['template_set'];
+			if ( !is_dir(PHPGW_INCLUDE_ROOT . "/phpgwapi/templates/{$tpl_name}/")
+				|| !is_readable(PHPGW_INCLUDE_ROOT . "/phpgwapi/templates/{$tpl_name}/head.inc.php") )
+			{
+				$tpl_name = 'simple';
+			}
+
+			include_once(PHPGW_INCLUDE_ROOT . "/phpgwapi/templates/{$tpl_name}/head.inc.php");
+			include_once(PHPGW_INCLUDE_ROOT . "/phpgwapi/templates/{$tpl_name}/navbar.inc.php");
 			if ($navbar)
 			{
 				echo parse_navbar();
@@ -1701,4 +1708,3 @@ HTML;
 			return $msgbox_data;
 		}
 	}
-?>

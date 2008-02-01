@@ -1,11 +1,11 @@
 <?php
 	/**
 	* Template navigation bar
-	* @copyright Copyright (C) 2003-2005 Free Software Foundation, Inc. http://www.fsf.org/
+	* @copyright Copyright (C) 2003-2008 Free Software Foundation, Inc. http://www.fsf.org/
 	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
 	* @package phpgwapi
 	* @subpackage gui
-	* @version $Id: navbar.inc.php,v 1.30.2.7.2.3 2003/05/01 07:49:27 ralfbecker Exp $
+	* @version $Id$
 	*/
 
 
@@ -17,94 +17,34 @@
 	*/
 	function parse_navbar($force = False)
 	{
-		$tpl = CreateObject('phpgwapi.Template',PHPGW_TEMPLATE_DIR);
-		$tpl->set_unknowns('remove');
+		$tpl = CreateObject('phpgwapi.Template',PHPGW_TEMPLATE_DIR, 'remove');
 
-		$tpl->set_file(
-			array(
-				'navbar' => 'navbar.tpl'
-			)
-		);
+		$tpl->set_file('navbar', 'navbar.tpl');
+		$tpl->set_block('navbar','app', 'apps');
 		$tpl->set_block('navbar','preferences','preferences_icon');
 
-		//$tpl->set_block('navbar','B_powered_top','V_powered_top');
-		//$tpl->set_block('navbar','B_num_users','V_num_users');
-
-		$var['img_root'] = PHPGW_IMAGES_DIR;
-		$var['table_bg_color'] = $GLOBALS['phpgw_info']['theme']['navbar_bg'];
-
-		$find_single = strrpos($GLOBALS['phpgw_info']['server']['webserver_url'],'/');
-		$find_double = strpos(strrev($GLOBALS['phpgw_info']['server']['webserver_url'].' '),'//');
-		if($find_double)
+		$exclude = array('home', 'preferences', 'about', 'logout');
+		$navbar = execMethod('phpgwapi.menu.get', 'navbar');
+		prepare_navbar($navbar);
+		foreach ( $navbar as $app => $app_data )
 		{
-			$find_double = strlen($GLOBALS['phpgw_info']['server']['webserver_url']) - $find_double - 1;
-		}
-		if($find_double)
-		{
-			if($find_single == $find_double + 1)
+			if ( in_array($app, $exclude) )
 			{
-				$strip_portion = $GLOBALS['phpgw_info']['server']['webserver_url'];
+				continue;
 			}
-			else
-			{
-				$strip_portion = substr($GLOBALS['phpgw_info']['server']['webserver_url'],0,$find_double + 1);
-			}
-		}
-		else
-		{
-			$strip_portion = '';
+
+			$tpl->set_var(array
+			(
+				'text'	=> strtoupper($app_data['text']),
+				'url'	=> $app_data['url']
+			));
+			$tpl->parse('apps', 'app', true);
 		}
 
-		#  echo '<pre>'; print_r($GLOBALS['phpgw_info']['navbar']); echo '</pre>';
-		$applications = '';
-		foreach($GLOBALS['phpgw_info']['navbar'] as $app => $app_data)
-		{
-			if ($app != 'home' && $app != 'preferences' && !ereg('about',$app) && $app != 'logout')
-			{
-				$title = '<img src="' . $app_data['icon'] . '" alt="' . $app_data['title'] . '" title="'
-					. $app_data['title'] . '" border="0" name="' . str_replace('-','_',$app) . '">';
-				$img_src_over = $app_data['icon_hover'];
-				$img_src_out = $app_data['icon'];
-
-				$applications .= '<tr><td><a href="' . $app_data['url'] . '"';
-				if (isset($GLOBALS['phpgw_info']['flags']['navbar_target']))
-				{
-					$applications .= ' target="' . $GLOBALS['phpgw_info']['flags']['navbar_target'] . '"';
-				}
-
-				if($img_src_over != '')
-				{
-					$applications .= ' onMouseOver="' . str_replace('-','_',$app) . ".src='" . $img_src_over . '\'"';
-				}
-				if($img_src_out != '')
-				{
-					$applications .= ' onMouseOut="' . str_replace('-','_',$app) . ".src='" . $img_src_out . '\'"';
-				}
-				$applications .= '>'.$title.'</a></td></tr>'."\r\n";
-			}
-			else
-			{
-				$img_src_over = $GLOBALS['phpgw']->common->image_on($app,Array('navbar','nonav'),'-over');
-			}
-			if($img_src_over != '')
-			{
-//				if($strip_portion)
-//				{
-//					$img_src_over = str_replace($strip_portion,'',$img_src_over);
-//				}
-					
-				$pre_load[] = $img_src_over;
-			}
-		}
-
-		$var['app_images'] = implode("',\r\n'",$pre_load);
-
-		$var['applications'] = $applications;
-     
-		$var['home_link'] = $GLOBALS['phpgw_info']['navbar']['home']['url'];
-		$var['preferences_link'] = $GLOBALS['phpgw_info']['navbar']['preferences']['url'];
-		$var['logout_link'] = $GLOBALS['phpgw_info']['navbar']['logout']['url'];
-		$var['help_link'] = $GLOBALS['phpgw_info']['navbar']['about']['url'];
+		$var['home_link'] = $navbar['home']['url'];
+		$var['preferences_link'] = $navbar['preferences']['url'];
+		$var['logout_link'] = $navbar['logout']['url'];
+		$var['help_link'] = $navbar['about']['url'];
 
 		if ($GLOBALS['phpgw_info']['flags']['currentapp'] != 'home')
 		{
@@ -144,7 +84,7 @@
 
 		$var['content_spacer_middle_img'] = $GLOBALS['phpgw']->common->image('phpgwapi','content_spacer_middle');
 		$var['em_img'] = $GLOBALS['phpgw']->common->image('phpgwapi','em');
-		$var['logo_img'] = $GLOBALS['phpgw']->common->image('phpgwapi','logo2');
+		$var['logo_img'] = $GLOBALS['phpgw']->common->image('phpgwapi','logo');
 		$var['top_spacer_middle_img'] = $GLOBALS['phpgw']->common->image('phpgwapi','top_spacer_middle');
 		$var['nav_bar_left_spacer_img'] = $GLOBALS['phpgw']->common->image('phpgwapi','nav_bar_left_spacer');
 		$var['nav_bar_left_top_bg_img'] = $GLOBALS['phpgw']->common->image('phpgwapi','nav_bar_left_top_bg');
@@ -226,9 +166,9 @@
 		}
 		$tpl->pfp('out','navbar');
 		// If the application has a header include, we now include it
-		if (!@$GLOBALS['phpgw_info']['flags']['noappheader'] && @isset($GLOBALS['HTTP_GET_VARS']['menuaction']))
+		if ( !isset($GLOBALS['phpgw_info']['flags']['noappheader']) && $menuaction = phpgw::get_var('menuaction', 'string', 'GET') )
 		{
-			list($app,$class,$method) = explode('.',$GLOBALS['HTTP_GET_VARS']['menuaction']);
+			list($app,$class,$method) = explode('.', $menuaction);
 			if (is_array($GLOBALS[$class]->public_functions) && $GLOBALS[$class]->public_functions['header'])
 			{
 				$GLOBALS[$class]->header();
@@ -251,23 +191,45 @@
 		$tpl->set_file(array('footer' => 'footer.tpl'));
 		$tpl->set_block('footer','B_powered_bottom','V_powered_bottom');
 
-		if ($GLOBALS['phpgw_info']['server']['showpoweredbyon'] == 'bottom')
-		{
-			$var = Array(
-				'powered'	=> lang('Powered by phpGroupWare version %1', $GLOBALS['phpgw_info']['server']['versions']['phpgwapi']),
-				'img_root'	=> PHPGW_IMAGES_DIR,
-				'power_backcolor'	=> $GLOBALS['phpgw_info']['theme']['navbar_bg'],
-				'power_textcolor'	=> $GLOBALS['phpgw_info']['theme']['navbar_text']
-//				'version'	=> $GLOBALS['phpgw_info']['server']['versions']['phpgwapi']
-			);
-			$tpl->set_var($var);
- 			$tpl->parse('V_powered_bottom','B_powered_bottom');
-		}
-		else
-		{
-			$tpl->set_var('V_powered_bottom','');
-		}
+		$var = array
+		(
+			'powered'	=> lang('Powered by phpGroupWare version %1', $GLOBALS['phpgw_info']['server']['versions']['phpgwapi']),
+			'img_root'	=> PHPGW_IMAGES_DIR,
+		);
+		$tpl->set_var($var);
+		$tpl->parse('V_powered_bottom','B_powered_bottom');
 
 		$GLOBALS['phpgw']->hooks->process('navbar_end');
 		$tpl->pfp('out','footer');
+	}
+
+
+	/**
+	* Callback for usort($navbar)
+	*
+	* @param array $item1 the first item to compare
+	* @param array $item2 the second item to compare
+	* @return int result of comparision
+	*/
+	function sort_navbar($item1, $item2)
+	{
+		$a =& $item1['order'];
+		$b =& $item2['order'];
+
+		if ($a == $b)
+		{
+			return strcmp($item1['text'], $item2['text']);
+		}
+		return ($a < $b) ? -1 : 1;
+	}
+
+	/**
+	* Organise the navbar properly
+	*
+	* @param array $navbar the navbar items
+	* @return array the organised navbar
+	*/
+	function prepare_navbar(&$navbar)
+	{
+		uasort($navbar, 'sort_navbar');
 	}

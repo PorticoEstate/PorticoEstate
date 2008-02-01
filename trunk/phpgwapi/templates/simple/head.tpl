@@ -1,14 +1,14 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <!-- BEGIN head -->
-<HTML>
-	<HEAD>
-		<META http-equiv="Content-Type" content="text/html; charset=utf-8">
-		<META name="AUTHOR" content="phpGroupWare http://www.phpgroupware.org">
-		<META NAME="description" CONTENT="phpGroupWare">
-		<META NAME="keywords" CONTENT="phpGroupWare">
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<meta name="AUTHOR" content="phpGroupWare http://www.phpgroupware.org">
+		<meta name="description" content="phpGroupWare">
+		<meta name="keywords" content="phpGroupWare">
 		<meta name="robots" content="none">
-		<LINK REL="ICON" href="{img_icon}" type="image/x-ico">
-		<LINK REL="SHORTCUT ICON" href="{img_shortcut}">
+		<link rel="ICON" href="{img_icon}" type="image/x-ico">
+		<link rel="SHORTCUT ICON" href="{img_icon}">
 		{css}
 		<!-- BEGIN theme_stylesheet -->
 		<link href="{theme_style}" type="text/css" rel="StyleSheet">
@@ -20,8 +20,7 @@
 			-->
 		</script>
 		{java_script}
-		<TITLE>{website_title}</TITLE>
-
-	</HEAD>
-<BODY {body_tags}>
+		<title>{website_title}</title>
+	</head>
+<body>
 <!-- END Head -->
