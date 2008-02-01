@@ -2,7 +2,6 @@
 
 	function parse_navbar($force = False)
 	{
-		//global $debug;
 		$navbar = execMethod('phpgwapi.menu.get', 'navbar');
 
 		$var = array
@@ -30,9 +29,6 @@
 		prepare_navbar($navbar);
 		$navigation = execMethod('phpgwapi.menu.get', 'navigation');
 
-		//$debug .= "<b>" . $GLOBALS['phpgw_info']['flags']['menu_selection'] . "</b><br>";
-
-		//$now = microtime(true);
 		$treemenu = "";
 		foreach($navbar as $app => $app_data)
 		{
@@ -42,17 +38,12 @@
 				$treemenu .= render_item($app_data, "navbar::{$app}", $submenu);
 			}
 		}
-		//$delta = microtime(true)-$now;
-		//echo $delta;
-
 		$var['treemenu'] = <<<HTML
 			<ul id="navbar">
 				{$treemenu}
 			</ul>
 HTML;
 
-		//$var['debug'] = $debug;
-		$var['debug'] = 'empty';
 		$GLOBALS['phpgw']->template->set_var($var);
 		$GLOBALS['phpgw']->template->pfp('out','navbar');
 
@@ -116,7 +107,6 @@ HTML;
 
 	function render_submenu($parent, $menu)
 	{
-		//global $debug;
 		$out = "";
 		foreach ( $menu as $key => $item )
 		{

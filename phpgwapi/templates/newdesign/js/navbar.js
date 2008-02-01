@@ -32,7 +32,7 @@ function initNavBar() {
 
 			if(elTarget.className ==  'expanded')
 			{
-				state[id] = elTarget.className;
+				state[id] = true;
 				store('navbar_config', state);
 			}
 			else if( state[id] )
