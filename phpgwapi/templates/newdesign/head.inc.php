@@ -67,8 +67,6 @@
 		phpgwapi_template_newdesign::store_local('navbar_config', $navbar_config);
 	}
 
-	//var_dump($navbar_config);
-
 	$app = lang($app);
 	$tpl_vars = array
 	(
