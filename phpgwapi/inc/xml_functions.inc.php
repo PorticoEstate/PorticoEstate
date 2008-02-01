@@ -6,7 +6,7 @@
 	* @copyright Portions Copyright (C) 2004 - 2006 Free Software Foundation, Inc. http://www.fsf.org/
 	* @package phpgwapi
 	* @subpackage communication
-	* @version $Id: xml_functions.inc.php 17476 2006-10-24 00:31:33Z skwashd $
+	* @version $Id$
 	*/
 
 	/**

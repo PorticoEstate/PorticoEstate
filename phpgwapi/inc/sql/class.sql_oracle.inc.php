@@ -6,7 +6,7 @@
 	* @license http://www.fsf.org/licenses/gpl.html GNU General Public License
 	* @package phpgwapi
 	* @subpackage database
-	* @version $Id: class.sql_oracle.inc.php 17763 2006-12-26 11:37:44Z skwashd $
+	* @version $Id$
 	*/
 
 	/**

@@ -6,7 +6,7 @@
 	* @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License
 	* @package phpgwapi
 	* @subpackage communication
-	* @version $Id: class.ipc_manager.inc.php 18167 2007-07-18 11:34:48Z skwashd $
+	* @version $Id$
 	*/
 
 	/**

@@ -8,7 +8,7 @@
 	* @license http://www.fsf.org/licenses/lgpl.html GNU Lesser General Public License
 	* @package phpgwapi
 	* @subpackage application
-	* @version $Id: class.translation_sql.inc.php 18358 2007-11-27 04:43:37Z skwashd $
+	* @version $Id$
 	*/
 
 	/**
@@ -23,7 +23,7 @@
 		* @var string $userlang user's prefered language
 		* @internal this should probably be private and probably will become private
 		*/
-		public $userlang;
+		public $userlang = 'en';
 
 		/**
 		* @var bool $loaded_from_shm was the lang data loaded from shared memory?
@@ -47,11 +47,6 @@
 		*/
 		public function __construct($reset = false)
 		{
-			if(!$userlang = $this->userlang)
-			{
-				$userlang = 'en';
-			}
-
 			if ( isset($GLOBALS['phpgw_info']['server']['shm_lang']) && $GLOBALS['phpgw_info']['server']['shm_lang']
 				&& function_exists('sem_get'))
 			{
@@ -72,6 +67,15 @@
 			{
 				$this->lang = array();
 			}
+		}
+
+		function set_userlang($lang)
+		{
+			if ( strlen($lang) != 2 )
+			{
+				$lang = 'en';
+			}
+			$this->userlang = $lang;
 		}
 
 		/**

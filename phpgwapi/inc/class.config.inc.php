@@ -6,7 +6,7 @@
 	* @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License
 	* @package phpgwapi
 	* @subpackage application
-	* @version $Id: class.config.inc.php 16884 2006-07-19 01:40:11Z skwashd $
+	* @version $Id$
 	*/
 
 	/**

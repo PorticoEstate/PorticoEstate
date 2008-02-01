@@ -8,7 +8,7 @@
 	* @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License
 	* @package phpgwapi
 	* @subpackage accounts
-	* @version $Id: class.accounts_sql.inc.php 18237 2007-08-22 07:40:55Z sigurdne $
+	* @version $Id$
 	*/
 
 	/**

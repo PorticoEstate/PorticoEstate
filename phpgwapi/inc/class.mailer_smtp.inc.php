@@ -6,7 +6,7 @@
 	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
 	* @package phpgwapi
 	* @subpackage communication
-	* @version $Id: class.mailer_smtp.inc.php 17977 2007-02-21 15:15:09Z sigurdne $
+	* @version $Id$
 	*/
 
 	/**

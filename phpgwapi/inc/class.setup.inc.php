@@ -9,7 +9,7 @@
 	* @license http://www.fsf.org/licenses/gpl.html GNU General Public License
 	* @package phpgwapi
 	* @subpackage application
-	* @version $Id: class.setup.inc.php 18358 2007-11-27 04:43:37Z skwashd $
+	* @version $Id$
 	*/
 
 	/**

@@ -8,7 +8,7 @@
 	* @license http://www.fsf.org/licenses/lgpl.html GNU Lesser General Public License
 	* @package phpgwapi
 	* @subpackage communication
-	* @version $Id: class.send.inc.php 18042 2007-03-16 09:15:55Z sigurdne $
+	* @version $Id$
 	*/
 
 	/**

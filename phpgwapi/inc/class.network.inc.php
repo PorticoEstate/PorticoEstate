@@ -7,7 +7,7 @@
 	* @license http://www.fsf.org/licenses/lgpl.html GNU Lesser General Public License
 	* @package phpgwapi
 	* @subpackage network
-	* @version $Id: class.network.inc.php 17710 2006-12-17 16:46:37Z Caeies $
+	* @version $Id$
 	*/
 
 	/**

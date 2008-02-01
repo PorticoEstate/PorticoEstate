@@ -7,7 +7,7 @@
 	* @license http://www.fsf.org/licenses/lgpl.html GNU Lesser General Public License
 	* @package phpgwapi
 	* @subpackage gui
-	* @version $Id: class.sbox.inc.php 18358 2007-11-27 04:43:37Z skwashd $
+	* @version $Id$
 	*/
 
 	phpgw::import_class('phpgwapi.datetime');

@@ -7,7 +7,7 @@
 	* @license http://www.fsf.org/licenses/lgpl.html GNU Lesser General Public License
 	* @package phpgwapi
 	* @subpackage communication
-	* @version $Id: class.interserver.inc.php 17186 2006-09-19 16:04:43Z skwashd $
+	* @version $Id$
 	*/
 
 	/**

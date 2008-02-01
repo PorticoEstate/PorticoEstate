@@ -7,7 +7,7 @@
 	* @license http://www.fsf.org/licenses/lgpl.html GNU Lesser General Public License
 	* @package phpgwapi
 	* @subpackage utilities
-	* @version $Id: footer.inc.php 17286 2006-09-30 11:47:12Z skwashd $
+	* @version $Id$
 	*/
 
 	/**************************************************************************\

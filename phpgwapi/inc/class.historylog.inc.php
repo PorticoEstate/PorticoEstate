@@ -6,7 +6,7 @@
 	* @license http://www.fsf.org/licenses/lgpl.html GNU Lesser General Public License
 	* @package phpgwapi
 	* @subpackage application
-	* @version $Id: class.historylog.inc.php 17814 2006-12-28 10:28:55Z skwashd $
+	* @version $Id$
 	*/
 
 	/**

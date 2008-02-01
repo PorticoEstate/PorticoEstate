@@ -7,7 +7,7 @@
 	* @license http://www.fsf.org/licenses/gpl.html GNU General Public License
 	* @package phpgwapi
 	* @subpackage application
-	* @version $Id: class.log_message.inc.php 17221 2006-09-25 06:27:34Z skwashd $
+	* @version $Id$
 	*/
 
 	/**

@@ -7,7 +7,7 @@
 	* @license http://www.fsf.org/licenses/gpl.html GNU General Public License
 	* @package phpgwapi
 	* @subpackage application
-	* @version $Id: class.object_factory.inc.php 17771 2006-12-27 02:49:50Z skwashd $
+	* @version $Id$
 	*/
 
 	/**

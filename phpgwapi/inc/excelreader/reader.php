@@ -14,7 +14,7 @@
 	* @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License
 	* @package phpgwapi
 	* @subpackage utilities
- 	* @version $Id: reader.php 18254 2007-09-01 08:00:59Z sigurdne $
+ 	* @version $Id$
 	*
 	*/
 

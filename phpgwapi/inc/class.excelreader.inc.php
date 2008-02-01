@@ -15,7 +15,7 @@
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/bbb_/ekstern/
 	* @package phpgwapi
 	* @subpackage utilities
- 	* @version $Id: class.excelreader.inc.php 18253 2007-08-31 22:53:03Z sigurdne $
+ 	* @version $Id$
 	*
 	*/
 

@@ -7,7 +7,7 @@
 	* @license http://www.mozilla.org/MPL/ Mozilla Public License Version 1.1
 	* @package phpgwapi
 	* @subpackage xml
-	* @version $Id: class.xml.inc.php 17062 2006-09-03 06:15:27Z skwashd $
+	* @version $Id$
 	* @link http://www.phpxml.org/
 	* @link http://www.w3.org/TR/xpath
 	*/

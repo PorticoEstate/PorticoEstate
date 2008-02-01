@@ -7,7 +7,7 @@
 	* @license http://www.fsf.org/licenses/lgpl.html GNU Lesser General Public License
 	* @package phpgwapi
 	* @subpackage network
-	* @version $Id: class.http_dav_client.inc.php 17125 2006-09-10 15:53:15Z Caeies $
+	* @version $Id$
 	* @internal At the moment much of this is simply a wrapper around the NET_HTTP_Client class, with some other methods for parsing the returned XML etc Ideally this will eventually use groupware's inbuilt HTTP class
 	*/
 
