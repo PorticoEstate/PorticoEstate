@@ -17,7 +17,7 @@
 // along with this program; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 //
-// $Id: class.mbm5.inc.php 16207 2005-11-19 05:29:54Z skwashd $
+// $Id$
 //
 // Note: Make sure you set MBM5 Interval Logging to csv and to the root of PHPSysInfo.
 // Also make sure MBM5 doesn't at symbols to the values. Did is a Quick MBM5 log parser,

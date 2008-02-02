@@ -24,7 +24,7 @@
 // | Author: Chuck Hagenbuch <chuck@horde.org>                            |
 // +----------------------------------------------------------------------+
 //
-// $Id: Mail.php 14804 2004-04-22 07:19:46Z powerstat $
+// $Id$
 
 /**
  * Include PEAR base class

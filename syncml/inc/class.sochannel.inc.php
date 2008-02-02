@@ -7,7 +7,7 @@
 	 * @copyright Copyright (c) 2007 Free Software Foundation, Inc.
 	 * @license   GNU General Public License 3 or later
 	 * @package   syncml
-	 * @version   $Id: class.sochannel.inc.php 18188 2007-08-05 17:15:41Z johang $
+	 * @version   $Id$
 	 */
 
 	class syncml_sochannel

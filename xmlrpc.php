@@ -7,7 +7,7 @@
 	* @copyright Copyright (C) 2000-2005 Free Software Foundation, Inc. http://www.fsf.org/
 	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
 	* @package phpgroupware
-	* @version $Id: xmlrpc.php 17489 2006-10-24 22:53:55Z skwashd $
+	* @version $Id$
 	*/
 	
 	$GLOBALS['phpgw_info'] = array();

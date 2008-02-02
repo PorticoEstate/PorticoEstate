@@ -8,7 +8,7 @@
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/bbb_/ekstern/
 	* @package demo
 	* @subpackage setup
- 	* @version $Id: setup.inc.php,v 1.3 2006/11/19 19:02:36 sigurdne Exp $
+ 	* @version $Id$
 	*/
 
 	$setup_info['newdesign']['name']      = 'newdesign';

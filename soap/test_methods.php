@@ -10,7 +10,7 @@
 *  option) any later version.                                              *
 \**************************************************************************/
 
-/* $Id: test_methods.php 8733 2001-12-23 17:24:22Z milosch $ */
+/* $Id$ */
 
 	$phpgw_info = array();
 	$GLOBALS['phpgw_info']['flags'] = array(

@@ -8,7 +8,7 @@
  * @copyright Copyright (C) 2003,2005 Free Software Foundation http://www.fsf.org/
  * @license http://www.fsf.org/licenses/gpl.html GNU General Public License
  * @package folders
- * @version $Id: class.layersmenu.inc.php 17642 2006-12-06 19:10:45Z sigurdne $
+ * @version $Id$
  */
 
 

@@ -10,7 +10,7 @@
   *  option) any later version.                                              *
   \**************************************************************************/
 
-	/* $Id: index.php 8324 2001-11-19 15:50:05Z milosch $ */
+	/* $Id$ */
 
 	$server_id = $HTTP_GET_VARS['server_id'];
 

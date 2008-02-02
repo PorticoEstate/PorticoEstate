@@ -5,7 +5,7 @@
 	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
 	* @package phpgwapi
 	* @subpackage setup
-	* @version $Id: tables_update.inc.php 18004 2007-02-27 12:16:05Z sigurdne $
+	* @version $Id$
 	* @internal $Source$
 	*/
 

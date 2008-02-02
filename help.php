@@ -8,7 +8,7 @@
 	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
 	* @package phpgroupware
 	* @subpackage help
-	* @version $Id: help.php 17968 2007-02-20 13:40:04Z sigurdne $
+	* @version $Id$
 	*/
 
 	/**

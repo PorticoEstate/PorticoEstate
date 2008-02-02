@@ -1,5 +1,5 @@
 <?php
-// $Id: save.php 15975 2005-05-15 12:55:31Z skwashd $
+// $Id$
 
 require(TemplateDir . '/save.php');
 require('lib/category.php');

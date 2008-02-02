@@ -11,7 +11,7 @@
 	* Free Software Foundation; either version 2 of the License, or (at your    *
 	* option) any later version.                                                *
 	\***************************************************************************/
-	/* $Id: class.bopreferences.inc.php 18001 2007-02-26 22:22:53Z sigurdne $ */
+	/* $Id$ */
 
 	class felamimail_bopreferences
 	{

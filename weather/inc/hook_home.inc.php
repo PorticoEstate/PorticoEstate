@@ -9,7 +9,7 @@
 	*  option) any later version.                                              *
 	\**************************************************************************/
 
-	/* $Id: hook_home.inc.php 11326 2002-10-26 01:05:28Z ceb $ */
+	/* $Id$ */
 	{
 	global $weather_user, $weather_admin, $g_image_type;
 	global $strings,

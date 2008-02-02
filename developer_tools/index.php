@@ -9,7 +9,7 @@
 	*  option) any later version.                                              *
 	\**************************************************************************/
 
-	/* $Id: index.php 11806 2003-02-22 13:48:08Z ralfbecker $ */
+	/* $Id$ */
 
 	$phpgw_info['flags'] = array(
 		'currentapp'              => 'developer_tools'

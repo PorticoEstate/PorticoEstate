@@ -9,7 +9,7 @@
 	* Free Software Foundation; either version 2 of the License, or (at your   *
 	* option) any later version.                                               *
 	\**************************************************************************/
-	/* $Id: header.inc.php 9701 2002-03-11 11:04:57Z milosch $ */
+	/* $Id$ */
 
 	$GLOBALS['phpgw']->template->set_file(array('cart_header' => 'header.tpl'));
 	$GLOBALS['phpgw']->template->set_var('lang_cart',lang('Shopping cart'));

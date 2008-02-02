@@ -8,7 +8,7 @@
 	* @copyright Portions Copyright (C) 2000-2005 Free Software Foundation, Inc http://www.fsf.org/
 	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
 	* @package filemanager
-	* @version $Id: class.uifilemanager.inc.php 17909 2007-01-24 17:26:17Z Caeies $
+	* @version $Id$
 	* @internal Based on phpWebhosting
 	*/
 

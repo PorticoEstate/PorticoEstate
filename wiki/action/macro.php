@@ -1,5 +1,5 @@
 <?php
-// $Id: macro.php 11866 2003-03-03 14:16:25Z ralfbecker $
+// $Id$
 
 require('parse/macros.php');
 require('parse/html.php');

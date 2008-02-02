@@ -5,7 +5,7 @@
 * @author Ralf Becker <ralf.becker@outdoortraining.de>
 * @license http://www.gnu.org/licenses/gpl.html GNU General Public License
 * @package etemplate
-* @version $Id: class.select_widget.inc.php 17947 2007-02-13 12:59:32Z sigurdne $
+* @version $Id$
 */
 
 	/**

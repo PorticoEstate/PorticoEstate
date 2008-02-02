@@ -14,7 +14,7 @@
   * edited by hand.                                                          *
   \**************************************************************************/
 
-  /* $Id: tables_current.inc.php 8318 2001-11-19 05:02:49Z milosch $ */
+  /* $Id$ */
 
   /* table array for chat */
 	$phpgw_baseline = array(

@@ -10,7 +10,7 @@
 *  option) any later version.                                              *
 \**************************************************************************/
 
-/* $Id: test_client.php 18147 2007-05-23 13:14:20Z Caeies $ */
+/* $Id$ */
 /*
 	$phpgw_info['flags'] = array(
 		'currentapp' => 'soap',

@@ -20,7 +20,7 @@
 	* Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA            *
 	\**************************************************************************/
 
-	/* $Id: class.uiasyncservice.inc.php 18358 2007-11-27 04:43:37Z skwashd $ */
+	/* $Id$ */
 
 	class admin_uiasyncservice
 	{

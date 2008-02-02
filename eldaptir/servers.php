@@ -10,7 +10,7 @@
   *  option) any later version.                                              *
   \**************************************************************************/
 
-	/* $Id: servers.php 8325 2001-11-19 16:08:46Z milosch $ */
+	/* $Id$ */
 
 	$GLOBALS['phpgw_info']["flags"] = array(
 		'currentapp' => 'eldaptir',

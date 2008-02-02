@@ -6,7 +6,7 @@
 	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
 	* @package preferences
 	* @subpackage setup
-	* @version $Id: setup.inc.php 16493 2006-03-11 23:24:02Z skwashd $
+	* @version $Id$
 	*/
 
 	$setup_info['preferences']['name']      = 'preferences';

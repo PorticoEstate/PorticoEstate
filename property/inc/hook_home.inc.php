@@ -24,7 +24,7 @@
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/bbb_/ekstern/
 	* @package property
 	* @subpackage core
- 	* @version $Id: hook_home.inc.php,v 1.8 2007/01/26 14:53:47 sigurdne Exp $
+ 	* @version $Id$
 	*/
 
 	if ($GLOBALS['phpgw_info']['user']['preferences']['property']['mainscreen_show_new_updated'])

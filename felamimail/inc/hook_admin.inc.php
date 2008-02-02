@@ -10,7 +10,7 @@
 	*  option) any later version.                                              *
 	\**************************************************************************/
 
-  /* $Id: hook_admin.inc.php 17730 2006-12-19 21:36:26Z sigurdne $ */
+  /* $Id$ */
 {
 // Only Modify the $file and $title variables.....
 	$title = $appname;

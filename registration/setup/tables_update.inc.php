@@ -9,7 +9,7 @@
 	*  option) any later version.                                              *
 	\**************************************************************************/
 
-	/* $Id: tables_update.inc.php 7928 2001-09-24 22:11:09Z jengo $ */
+	/* $Id$ */
 
 	$test[] = '0.8.1';
 	function registration_upgrade0_8_1()

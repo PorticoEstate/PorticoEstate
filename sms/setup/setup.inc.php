@@ -6,7 +6,7 @@
 	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
 	* @package sms
 	* @subpackage setup
-	* @version $Id: setup.inc.php 16812 2006-06-18 14:49:41Z sigurdne $
+	* @version $Id$
 	*/
 
 	$setup_info['sms']['name']      = 'sms';

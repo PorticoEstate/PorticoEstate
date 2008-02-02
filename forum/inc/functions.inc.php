@@ -11,7 +11,7 @@
 	*  option) any later version.                                                 *
 	\*****************************************************************************/
 
-	/* $Id: functions.inc.php 10299 2002-05-27 01:49:04Z milosch $ */
+	/* $Id$ */
 
 	// Keep track of what they are doing
 	$GLOBALS['session_info'] = $GLOBALS['phpgw']->session->appsession('session_data','forum');

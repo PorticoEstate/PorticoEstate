@@ -10,7 +10,7 @@
   *  option) any later version.                                              *
   \**************************************************************************/
 
-	/* $Id: editserver.php 12863 2003-05-25 21:34:36Z gugux $ */
+	/* $Id$ */
 
 	$GLOBALS['phpgw_info']['flags']['currentapp'] = 'eldaptir';
 	include('../header.inc.php');

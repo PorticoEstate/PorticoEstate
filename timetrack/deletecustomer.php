@@ -10,7 +10,7 @@
   *  option) any later version.                                              *
   \**************************************************************************/
 
-  /* $Id: deletecustomer.php 15851 2005-04-18 09:03:28Z powerstat $ */
+  /* $Id$ */
 
   if ($confirm) {
      $GLOBALS['phpgw_info']["flags"] = array("noheader" => True, "nonavbar" => True);

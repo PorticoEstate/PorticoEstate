@@ -9,7 +9,7 @@
   *  option) any later version.                                              *
   \**************************************************************************/
 
-  /* $Id: admin.php 15849 2005-04-18 08:42:42Z powerstat $ */
+  /* $Id$ */
 
 	$GLOBALS['phpgw_info'] = Array();
 	$GLOBALS['phpgw_info']['flags'] = array(

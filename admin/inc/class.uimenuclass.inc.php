@@ -9,7 +9,7 @@
   *  option) any later version.                                              *
   \**************************************************************************/
  
-  /* $Id: class.uimenuclass.inc.php 17910 2007-01-24 17:33:38Z Caeies $ */
+  /* $Id$ */
 
 	class uimenuclass
 	{

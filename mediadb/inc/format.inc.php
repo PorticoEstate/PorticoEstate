@@ -10,7 +10,7 @@
   *  option) any later version.                                              *
   \**************************************************************************/
 
-  /* $Id: format.inc.php 15848 2005-04-18 08:38:02Z powerstat $ */
+  /* $Id$ */
 
 function add_format_entry($order, $sort, $filter, $start, $query, $qfield)
 {

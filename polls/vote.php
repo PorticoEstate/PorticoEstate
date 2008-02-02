@@ -11,7 +11,7 @@
   *  option) any later version.                                              *
   \**************************************************************************/
 
-  /* $Id: vote.php 10106 2002-04-30 00:15:17Z skeeter $ */
+  /* $Id$ */
 
 	if($GLOBALS['HTTP_POST_VARS']['submit'])
 	{

@@ -6,7 +6,7 @@
 	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
 	* @package manual
 	* @subpackage setup
- 	* @version $Id: tables_update.inc.php 18030 2007-03-09 12:17:39Z sigurdne $
+ 	* @version $Id$
 	*/
 
 	/**

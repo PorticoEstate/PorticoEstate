@@ -23,7 +23,7 @@
 	* along with this program; if not, write to the Free Software       *
 	* Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.         *
 	\*******************************************************************/
-	/* $Id: class.uibilling.inc.php 15912 2005-05-05 14:32:50Z powerstat $ */
+	/* $Id$ */
 	// $Source$
 
 	class uibilling

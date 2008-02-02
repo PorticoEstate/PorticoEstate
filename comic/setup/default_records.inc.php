@@ -9,7 +9,7 @@
   *  option) any later version.                                              *
   \**************************************************************************/
 
-  /* $Id: default_records.inc.php 15277 2004-07-20 23:51:55Z skwashd $ */
+  /* $Id$ */
 
 	$oProc->query("INSERT INTO phpgw_comic_data VALUES (1,'T','userfriendly','Illiad','User Friendly','',0,0,'http://www.userfriendly.org/static/','http://www.userfriendly.org','/cartoons/archives/{y}{Ml}/{Ymd}.html','/cartoons/archives/{y}{Ml}/uf[0-9]*.gif','','Su:Mo:Tu:We:Th:Fr:Sa','None','Geek',1,'Remote',0,720,720)");
 	$oProc->query("INSERT INTO phpgw_comic_data VALUES (2,'T','dilbert','Scott Adams','Dilbert','',0,0,'http://www.dilbert.com/','http://www.comics.com','/comics/dilbert/index.html','/comics/dilbert/archive/images/dilbert[0-9]*.gif','','Su:Mo:Tu:We:Th:Fr:Sa','None','Geek',0,'Remote',0,600,725)");

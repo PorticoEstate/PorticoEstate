@@ -10,7 +10,7 @@
   *  option) any later version.                                              *
   \**************************************************************************/
 
-  /* $Id: metar_stations.inc.php 12483 2003-04-22 20:34:50Z gugux $ */
+  /* $Id$ */
 
 	function station_table($order, $sort, $filter, $start, $query, $qfield, &$table_c)
 	{

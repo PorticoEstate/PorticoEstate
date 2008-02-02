@@ -15,7 +15,7 @@
 *  option) any later version.                                              *
 \**************************************************************************/
 
-	/* $Id: hook_config.inc.php 16713 2006-05-09 05:14:07Z skwashd $ */
+	/* $Id$ */
 
 	function anon_user($config)
 	{

@@ -5,7 +5,7 @@
  * @copyright Copyright (C) 2003,2005 Free Software Foundation http://www.fsf.org/
  * @license http://www.fsf.org/licenses/gpl.html GNU General Public License
  * @package folders
- * @version $Id: class.bofolders.inc.php 15921 2005-05-10 12:21:25Z powerstat $
+ * @version $Id$
  */
 
 	/**

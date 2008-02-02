@@ -9,7 +9,7 @@
 	*  option) any later version.                                              *
 	\**************************************************************************/
 
-	/* $Id: setup.inc.php 16493 2006-03-11 23:24:02Z skwashd $ */
+	/* $Id$ */
 
 	$setup_info['vmailmgr']['name']      = 'vmailmgr';
 	$setup_info['vmailmgr']['version']   = '0.9.15.001';

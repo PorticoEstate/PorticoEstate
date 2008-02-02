@@ -10,7 +10,7 @@
   *  option) any later version.                                              *
   \**************************************************************************/
 
-  /* $Id: view_attachment.php 9329 2002-01-27 00:34:59Z skeeter $ */
+  /* $Id$ */
 
 	$phpgw_flags = Array(
 		'currentapp'			=>	'nntp',

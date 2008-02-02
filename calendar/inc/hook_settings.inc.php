@@ -13,7 +13,7 @@
 	*  option) any later version.                                              *
 	\**************************************************************************/
 
-	/* $Id: hook_settings.inc.php 18358 2007-11-27 04:43:37Z skwashd $ */
+	/* $Id$ */
 
 	ExecMethod('calendar.bocalendar.check_set_default_prefs');
 

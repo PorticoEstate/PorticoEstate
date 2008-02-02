@@ -13,7 +13,7 @@
  * the Free Software Foundation; either version 2 of the License, or 	*
  * at your option) any later version.					*
  \**********************************************************************/
- /* $Id: index.php 17941 2007-02-11 21:58:04Z sigurdne $ */
+ /* $Id$ */
 
 	$GLOBALS['phpgw_info']['flags'] = array(
 		'currentapp'	=> 'etemplate',

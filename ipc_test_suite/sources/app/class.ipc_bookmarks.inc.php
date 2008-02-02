@@ -6,7 +6,7 @@
 	* @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License
 	* @package phpgwapi
 	* @subpackage communication
-	* @version $Id: class.ipc_bookmarks.inc.php 14991 2004-05-26 14:36:27Z mkaemmerer $
+	* @version $Id$
 	*/
 
 	/**

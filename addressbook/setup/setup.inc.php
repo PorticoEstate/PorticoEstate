@@ -9,7 +9,7 @@
 	*  option) any later version.                                              *
 	\**************************************************************************/
 
-	/* $Id: setup.inc.php 16968 2006-08-16 15:02:31Z skwashd $ */
+	/* $Id$ */
 
 	/* Basic information about this app */
 	$setup_info['addressbook']['name']      = 'addressbook';

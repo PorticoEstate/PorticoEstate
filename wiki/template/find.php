@@ -1,5 +1,5 @@
 <?php
-// $Id: find.php 13158 2003-07-02 22:00:40Z ralfbecker $
+// $Id$
 
 require_once(TemplateDir . '/common.php');
 

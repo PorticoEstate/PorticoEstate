@@ -9,7 +9,7 @@
 	*  option) any later version.                                              *
 	\**************************************************************************/
 
-	/* $Id: tables_current.inc.php 15965 2005-05-15 02:16:27Z skwashd $ */
+	/* $Id$ */
 
 	$phpgw_baseline = array(
 		'phpgw_sitemgr_pages' => array(

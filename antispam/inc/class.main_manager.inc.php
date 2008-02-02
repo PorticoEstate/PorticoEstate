@@ -14,7 +14,7 @@
 *  option) any later version.                                              *
 \**************************************************************************/
 
-/* $Id: class.main_manager.inc.php 11580 2002-11-26 17:57:08Z ceb $ */
+/* $Id$ */
 
 	class main_manager
 	{

@@ -6,7 +6,7 @@
 	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
 	* @package todo
 	* @subpackage manual
-	* @version $Id: index.php 15931 2005-05-10 15:48:58Z powerstat $
+	* @version $Id$
 	*/
 
 	$phpgw_flags = Array(

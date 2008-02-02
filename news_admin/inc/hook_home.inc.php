@@ -12,7 +12,7 @@
 	* http://www.goldenglair.com                                               *
 	\**************************************************************************/
 
-	/* $Id: hook_home.inc.php 16046 2005-08-04 03:54:33Z skwashd $ */
+	/* $Id$ */
 
 // 	$news = createobject('news_admin.uinews');
 // 	$news->show_news_home();

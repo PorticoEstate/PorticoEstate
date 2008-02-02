@@ -9,7 +9,7 @@
 	*  option) any later version.                                              *
 	\**************************************************************************/
 
-	/* $Id: default_records.inc.php 9841 2002-03-31 17:04:23Z milosch $ */
+	/* $Id$ */
 
 	$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_headlines_sites (display,base_url,newsfile,lastread,newstype,cachetime,listings) VALUES('Slashdot','http://slashdot.org','/slashdot.rdf',0,'rdf',60,20)");
 	$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_headlines_sites (display,base_url,newsfile,lastread,newstype,cachetime,listings) VALUES('Freshmeat','http://freshmeat.net','/backend/fm.rdf',0,'fm',60,20)");

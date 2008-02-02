@@ -10,7 +10,7 @@
   *  option) any later version.                                              *
   \**************************************************************************/
 
-  /* $Id: admin5.php 12053 2003-03-19 05:16:00Z skwashd $ */
+  /* $Id$ */
   /* This one will most likely be eliminated or changed in order
    * to use acl's instead, which might just be assignable on a user's
    * main account editing page.

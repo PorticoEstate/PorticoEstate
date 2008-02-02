@@ -10,7 +10,7 @@
 * option) any later version.                                              *
 \*************************************************************************/
 
-/* $Id: class.uicomics.inc.php 7026 2001-08-02 15:09:33Z darw1n $ */
+/* $Id$ */
 
 class uicomics
 {

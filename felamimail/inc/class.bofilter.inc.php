@@ -11,7 +11,7 @@
 	* Free Software Foundation; either version 2 of the License, or (at your    *
 	* option) any later version.                                                *
 	\***************************************************************************/
-	/* $Id: class.bofilter.inc.php 17984 2007-02-22 10:43:10Z sigurdne $ */
+	/* $Id$ */
 
 	class bofilter
 	{

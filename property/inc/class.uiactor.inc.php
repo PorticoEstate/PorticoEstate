@@ -24,7 +24,7 @@
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/bbb_/ekstern/
 	* @package property
 	* @subpackage admin
- 	* @version $Id: class.uiactor.inc.php 18358 2007-11-27 04:43:37Z skwashd $
+ 	* @version $Id$
 	*/
 
 	/**
@@ -99,14 +99,7 @@
 				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.index'));
 			}
 
-			if (phpgw::get_var('admin', 'bool'))
-			{
-				$GLOBALS['phpgw_info']['flags']['menu_selection'] = "admin::property::{$this->role}";			
-			}
-			else
-			{
-				$GLOBALS['phpgw_info']['flags']['menu_selection'] = "property::invoice::{$this->role}";
-			}
+			$GLOBALS['phpgw_info']['flags']['menu_selection'] = "property::invoice::{$this->role}";
 		}
 
 		function save_sessiondata()

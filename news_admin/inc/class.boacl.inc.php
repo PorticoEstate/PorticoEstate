@@ -9,7 +9,7 @@
 	*  option) any later version.                                              *
 	\**************************************************************************/
 
-	/* $Id: class.boacl.inc.php 17992 2007-02-24 20:42:12Z sigurdne $ */
+	/* $Id$ */
 
 	/**
 	* Access Controls class

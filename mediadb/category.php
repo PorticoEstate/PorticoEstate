@@ -10,7 +10,7 @@
   *  option) any later version.                                              *
   \**************************************************************************/
 
-    /* $Id: category.php 6023 2001-06-17 20:49:29Z milosch $ */
+    /* $Id$ */
 {
     
     $phpgw_info["flags"] = array("currentapp" => "admin",

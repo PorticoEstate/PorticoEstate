@@ -13,7 +13,7 @@
   * This file should be generated for you. It should never be edited by hand *
   \**************************************************************************/
 
-  /* $Id: tables_baseline.inc.php 6087 2001-06-20 01:00:04Z milosch $ */
+  /* $Id$ */
 
   // table array for eldaptir
 	$phpgw_baseline = array(

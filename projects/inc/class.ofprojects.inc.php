@@ -6,7 +6,7 @@
 	* @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License
 	* @package phpgwapi
 	* @subpackage communication
-	* @version $Id: class.ofprojects.inc.php,v 1.1 2006/12/05 19:40:45 sigurdne Exp $
+	* @version $Id$
 	*/
 
 	class ofprojects extends object_factory

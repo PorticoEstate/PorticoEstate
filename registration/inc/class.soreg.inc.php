@@ -14,7 +14,7 @@
 	*  option) any later version.                                              *
 	\**************************************************************************/
 
-	/* $Id: class.soreg.inc.php 9463 2002-02-14 02:51:10Z milosch $ */
+	/* $Id$ */
 
 	class soreg
 	{

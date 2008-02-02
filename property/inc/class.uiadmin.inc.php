@@ -24,7 +24,7 @@
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/bbb_/ekstern/
 	* @package property
 	* @subpackage admin
- 	* @version $Id: class.uiadmin.inc.php 18358 2007-11-27 04:43:37Z skwashd $
+ 	* @version $Id$
 	*/
 
 	/**
@@ -568,7 +568,7 @@
 
 		function edit_id()
 		{
-			$GLOBALS['phpgw_info']['flags']['menu_selection'] .= '::id_control';
+			$GLOBALS['phpgw_info']['flags']['menu_selection'] .= '::edit_id';
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('admin'));
 
@@ -632,7 +632,7 @@
 
 		function contact_info()
 		{
-			$GLOBALS['phpgw_info']['flags']['menu_selection'] .= '::user_contact';
+			$GLOBALS['phpgw_info']['flags']['menu_selection'] = '::contact_info';
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('admin'));
 

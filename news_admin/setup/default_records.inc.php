@@ -9,7 +9,7 @@
   *  option) any later version.                                              *
   \**************************************************************************/
 
-  /* $Id: default_records.inc.php 16046 2005-08-04 03:54:33Z skwashd $ */
+  /* $Id$ */
 
 // 	$oProc->query("INSERT INTO phpgw_news (news_date,news_subject,news_submittedby,news_content,news_status) "
 // 		. "VALUES ('" . time()

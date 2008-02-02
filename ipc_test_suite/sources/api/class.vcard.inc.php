@@ -7,7 +7,7 @@
 	* @license http://www.fsf.org/licenses/lgpl.html GNU Lesser General Public License
 	* @package phpgwapi
 	* @subpackage network
-	* @version $Id: class.vcard.inc.php 14991 2004-05-26 14:36:27Z mkaemmerer $
+	* @version $Id$
 	*/
 
 	/**

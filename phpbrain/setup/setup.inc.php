@@ -9,7 +9,7 @@
 	*  option) any later version.                                              *
 	\**************************************************************************/
 
-	/* $Id: setup.inc.php 16713 2006-05-09 05:14:07Z skwashd $ */
+	/* $Id$ */
 
 	/* Basic information about this app */
 	$setup_info['phpbrain']['name']      = 'phpbrain';

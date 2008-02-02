@@ -12,7 +12,7 @@
 	* http://www.goldenglair.com                                               *
 	\**************************************************************************/
 
-	/* $Id: index.php 16046 2005-08-04 03:54:33Z skwashd $ */
+	/* $Id$ */
 
 	$phpgw_info = array();
 	$GLOBALS['phpgw_info']['flags'] = array(

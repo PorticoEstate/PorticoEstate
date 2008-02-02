@@ -9,7 +9,7 @@
   *  option) any later version.                                              *
   \**************************************************************************/
 
-  /* $Id: tables_current.inc.php 5461 2001-06-04 14:04:13Z milosch $ */
+  /* $Id$ */
 
 	$phpgw_baseline = array(
 		'newsgroups' => array(

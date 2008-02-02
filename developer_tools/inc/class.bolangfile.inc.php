@@ -9,7 +9,7 @@
   *  option) any later version.                                              *
   \**************************************************************************/
 
-  /* $Id: class.bolangfile.inc.php 10499 2002-07-04 23:41:40Z skeeter $ */
+  /* $Id$ */
 
 	class bolangfile
 	{

@@ -24,7 +24,7 @@
 	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
 	* @package phpgwapi
 	* @subpackage xml
-	* @version $Id: class.XmlToArray.inc.php,v 1.5 2007/01/28 19:13:19 sigurdne Exp $
+	* @version $Id$
 	* @internal This class originated from: kris@h3x.com AT: http://www.devdump.com/phpxml.php
 	*/
 

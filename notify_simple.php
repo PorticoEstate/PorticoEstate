@@ -6,7 +6,7 @@
 	* @copyright Copyright (C) 2000-2005 Free Software Foundation, Inc. http://www.fsf.org/
 	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
 	* @package phpgroupware
-	* @version $Id: notify_simple.php 15834 2005-04-15 13:19:15Z powerstat $
+	* @version $Id$
 	*/
 
 	$phpgw_info = array();

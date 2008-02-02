@@ -25,7 +25,7 @@
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/bbb_/ekstern/
 	* @package property
 	* @subpackage admin
- 	* @version $Id: cron.php,v 1.2 2007/10/07 21:25:22 sigurdne Exp $
+ 	* @version $Id$
 	*/
 
 	/**

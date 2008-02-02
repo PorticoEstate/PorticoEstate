@@ -11,7 +11,7 @@
   * option) any later version.                                               *
 	\**************************************************************************/
 
-	/* $Id: class.base.php 16400 2006-02-14 08:48:21Z skwashd $ */
+	/* $Id$ */
 
 	class admin_base
 	{

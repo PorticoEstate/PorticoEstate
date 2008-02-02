@@ -19,7 +19,7 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-// $Id: filesystems.php 18212 2007-08-14 11:44:16Z skwashd $
+// $Id$
 
 //
 // xml_filesystems()

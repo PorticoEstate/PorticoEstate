@@ -11,7 +11,7 @@
 	*  option) any later version.                                              *
 	\**************************************************************************/
 
-	/* $Id: class.somanagefields.inc.php 8532 2001-12-10 00:46:01Z milosch $ */
+	/* $Id$ */
 
 	class somanagefields
 	{

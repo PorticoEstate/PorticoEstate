@@ -9,7 +9,7 @@
   *  Free Software Foundation; either version 2 of the License, or (at your  *
   *  option) any later version.                                              *
   \**************************************************************************/
-	/* $Id: hook_deleteaccount.inc.php 17079 2006-09-05 10:53:10Z skwashd $ */
+	/* $Id$ */
 
 	// Delete all records for a user
 	if ( (int)$_POST['new_owner'] == 0)

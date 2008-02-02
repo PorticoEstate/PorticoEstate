@@ -8,7 +8,7 @@
  * @license http://www.fsf.org/licenses/gpl.html GNU General Public License
  * @package notes
  * @subpackage ipc
- * @version $Id: class.ipc_notes.inc.php 18230 2007-08-20 12:23:00Z skwashd $
+ * @version $Id$
  */
 
 	/*

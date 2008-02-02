@@ -10,7 +10,7 @@
     *  option) any later version.                                              *
     \**************************************************************************/
 
-    /* $Id: preferences.php 15915 2005-05-05 16:33:09Z powerstat $ */
+    /* $Id$ */
 {
     $GLOBALS['phpgw_info']['flags']['currentapp'] = 'comic';
 

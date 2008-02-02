@@ -10,7 +10,7 @@
 	*  option) any later version.                                              *
 	\**************************************************************************/
 
-	/* $Id: class.uicurrentsessions.inc.php 18039 2007-03-16 08:59:37Z sigurdne $ */
+	/* $Id$ */
 
 	class admin_uicurrentsessions
 	{

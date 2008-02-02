@@ -10,7 +10,7 @@
     *  option) any later version.                                              *
     \**************************************************************************/
 
-    /* $Id: index.php 8454 2001-12-03 18:01:51Z milosch $ */
+    /* $Id$ */
 
 	$expire = date('D, M d Y h:i:s ', time()+3600).strftime('%Z');
 	Header('Last Modified: ' . $expire);

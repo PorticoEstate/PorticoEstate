@@ -13,7 +13,7 @@
   * This file should be generated for you. It should never be edited by hand *
   \**************************************************************************/
 
-  /* $Id: tables_baseline.inc.php 7945 2001-09-25 18:38:55Z milosch $ */
+  /* $Id$ */
 
   // table array for registration
 	$phpgw_baseline = array(

@@ -23,7 +23,7 @@
 	* along with this program; if not, write to the Free Software       *
 	* Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.         *
 	\*******************************************************************/
-	/* $Id: class.boinvoice.inc.php 10504 2002-07-05 20:40:01Z ceb $ */
+	/* $Id$ */
 
 	class boinvoice
 	{

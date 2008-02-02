@@ -24,7 +24,7 @@
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/bbb_/ekstern/
 	* @package property
 	* @subpackage custom
- 	* @version $Id: update_googlemap.php,v 1.9 2007/09/27 13:03:56 sigurdne Exp $
+ 	* @version $Id$
 	*/
 
 	/**

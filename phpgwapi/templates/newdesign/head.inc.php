@@ -48,23 +48,23 @@
 	// get set at expanded even though that isn't needed.
 
 	$navbar_config = execMethod('phpgwapi.template_newdesign.retrieve_local', 'navbar_config');
-
-	if( isset($GLOBALS['phpgw_info']['flags']['menu_selection']) )
+	if(!isset($navbar_config))
 	{
-		if(!isset($navbar_config))
-		{
-			$navbar_config = array();
-		}
+		$navbar_config = array();
+	}
 
-		$current_selection = $GLOBALS['phpgw_info']['flags']['menu_selection'];
+	$current_selection = $GLOBALS['phpgw_info']['flags']['menu_selection'];
+	while($current_selection)
+	{
+		$navbar_config["navbar::$current_selection"] = true;
+		$current_selection = implode("::", explode("::", $current_selection, -1));
+	}
 
-		while($current_selection)
-		{
-			$navbar_config["navbar::$current_selection"] = true;
-			$current_selection = implode("::", explode("::", $current_selection, -1));
-		}
-
+	if(count($navbar_config)) {
 		phpgwapi_template_newdesign::store_local('navbar_config', $navbar_config);
+	}
+	else {
+		$navbar_config = null;
 	}
 
 	$app = lang($app);

@@ -6,7 +6,7 @@
 	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
 	* @package filemanager
 	* @subpackage setup
-	* @version $Id: tables_baseline.inc.php 15879 2005-04-28 20:45:53Z powerstat $
+	* @version $Id$
 	*/
 
   // This file should be generated for you. It should never be edited by hand 

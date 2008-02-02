@@ -1,7 +1,7 @@
 <?
 
 /*
- * $Id: class.sieve.inc.php 17722 2006-12-18 20:03:33Z sigurdne $ 
+ * $Id$ 
  *
  * Copyright 2001 Dan Ellis <danellis@rushmore.com>
  *

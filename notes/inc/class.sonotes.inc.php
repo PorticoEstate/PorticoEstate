@@ -7,7 +7,7 @@
 	* @copyright Copyright (C) 2000-2003,2005,2007 Free Software Foundation, Inc. http://www.fsf.org/
 	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
 	* @package notes
-	* @version $Id: class.sonotes.inc.php 18231 2007-08-20 18:31:19Z johang $
+	* @version $Id$
 	*/
 
 	/*

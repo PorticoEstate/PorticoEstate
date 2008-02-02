@@ -14,7 +14,7 @@
   * edited by hand.                                                          *
   \**************************************************************************/
 
-  /* $Id: tables_current.inc.php,v 1.13 2007/11/06 14:20:57 maat Exp $ */
+  /* $Id$ */
 
   /* table array for ged */
 	$phpgw_baseline = array(

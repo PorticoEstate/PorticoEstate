@@ -10,7 +10,7 @@
   *  option) any later version.                                              *
   \**************************************************************************/
 
-  /* $Id: genre.inc.php 6023 2001-06-17 20:49:29Z milosch $ */
+  /* $Id$ */
 
 function add_genre_entry($order, $sort, $filter, $start, $query, $qfield)
 {

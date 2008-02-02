@@ -15,7 +15,7 @@
   *  option) any later version.                                              *
   \**************************************************************************/
 
-  /* $Id: functions.inc.php 18358 2007-11-27 04:43:37Z skwashd $ */
+  /* $Id$ */
 
 	/**
 	* phpGroupWare Information level "error"

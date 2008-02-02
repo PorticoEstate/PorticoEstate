@@ -6,7 +6,7 @@
 	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
 	* @package admin
 	* @subpackage manual
-	* @version $Id: admin.php 15933 2005-05-11 06:59:37Z powerstat $
+	* @version $Id$
 	*/
 
 	$phpgw_flags = Array(

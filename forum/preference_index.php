@@ -10,7 +10,7 @@
 	*  option) any later version.                                                 *
 	\*****************************************************************************/
 
-	/* $Id: preference_index.php 6777 2001-07-14 01:44:06Z jengo $ */
+	/* $Id$ */
 
   $phpgw_info["flags"] = array("currentapp" => "forum", "enable_nextmatchs_class" => True);
   include("../header.inc.php");

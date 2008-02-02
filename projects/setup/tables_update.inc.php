@@ -8,7 +8,7 @@
 	* Free Software Foundation; either version 2 of the License, or (at your   *
 	* option) any later version.                                               *
 	\**************************************************************************/
-	/* $Id: tables_update.inc.php,v 1.56 2007/01/15 22:39:34 skwashd Exp $ */
+	/* $Id$ */
 
 	function projects_table_exists($table)
 	{

@@ -9,7 +9,7 @@
   *  option) any later version.                                              *
   \**************************************************************************/
 
-	/* $Id: hook_notifywindow.inc.php 17901 2007-01-24 15:59:38Z Caeies $ */
+	/* $Id$ */
 
 	$d1 = strtolower(substr(PHPGW_APP_INC,0,3));
 	if($d1 == 'htt' || $d1 == 'ftp' )

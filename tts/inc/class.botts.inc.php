@@ -5,7 +5,7 @@
 	* @copyright Copyright (C) 2000-2005 Free Software Foundation, Inc. http://www.fsf.org/
 	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
 	* @package tts
-	* @version $Id: class.botts.inc.php 17868 2007-01-09 01:21:53Z skwashd $
+	* @version $Id$
 	*/
 
 

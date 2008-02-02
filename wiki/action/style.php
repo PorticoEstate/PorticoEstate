@@ -1,5 +1,5 @@
 <?php
-// $Id: style.php 11866 2003-03-03 14:16:25Z ralfbecker $
+// $Id$
 
 // This function emits the current template's stylesheet.
 

@@ -9,7 +9,7 @@
   *  option) any later version.                                              *
   \**************************************************************************/
 
-  /* $Id: header.inc.php 17679 2006-12-12 15:19:11Z sigurdne $ */
+  /* $Id$ */
 
 	function add_col(&$tpl,$str)
 	{

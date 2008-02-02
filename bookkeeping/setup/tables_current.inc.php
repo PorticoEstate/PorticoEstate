@@ -9,7 +9,7 @@
 	* Free Software Foundation; either version 2 of the License, or (at your  *
 	* option) any later version.                                              *
 	\*************************************************************************/
-	/* $Id: tables_current.inc.php 14131 2003-12-01 16:31:35Z ceb $ */
+	/* $Id$ */
 
 	//$phpgw_baseline = array();
 ?>

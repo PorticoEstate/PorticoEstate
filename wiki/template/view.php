@@ -1,5 +1,5 @@
 <?php
-// $Id: view.php 12067 2003-03-20 00:46:15Z ralfbecker $
+// $Id$
 
 require_once(TemplateDir . '/common.php');
 

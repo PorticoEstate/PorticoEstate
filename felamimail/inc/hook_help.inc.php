@@ -23,7 +23,7 @@
 	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
 	* @package felamimail
 	* @subpackage manual
- 	* @version $Id: hook_help.inc.php 18016 2007-03-06 15:01:13Z sigurdne $
+ 	* @version $Id$
 	*/
 
 

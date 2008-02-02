@@ -24,7 +24,7 @@
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/bbb_/ekstern/
 	* @package property
 	* @subpackage core
- 	* @version $Id: class.historylog.inc.php,v 1.19 2007/08/13 06:31:30 sigurdne Exp $
+ 	* @version $Id$
 	*/
 
 	/**

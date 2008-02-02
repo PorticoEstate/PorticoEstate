@@ -9,7 +9,7 @@
 	*  option) any later version.                                              *
 	\**************************************************************************/
 
-	/* $Id: default_records.inc.php 9642 2002-03-04 07:18:46Z milosch $ */
+	/* $Id$ */
 
 	$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_forum_categories (name,descr) VALUES ('Just a sample', 'This is a sample category')");
 	$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_forum_categories (name,descr) VALUES ('Another sample category', 'Just another sample')");

@@ -7,7 +7,7 @@
 	* @copyright Copyright (C) 2000-2003,2005,2007 Free Software Foundation, Inc. http://www.fsf.org/
 	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
 	* @package notes
-	* @version $Id: class.bonotes.inc.php 18230 2007-08-20 12:23:00Z skwashd $
+	* @version $Id$
 	*/
 
 	/*

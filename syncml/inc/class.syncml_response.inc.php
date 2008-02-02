@@ -7,7 +7,7 @@
 	 * @copyright Copyright (c) 2007 Free Software Foundation, Inc.
 	 * @license   GNU General Public License 3 or later
 	 * @package   syncml
-	 * @version   $Id: class.syncml_response.inc.php 18245 2007-08-27 07:49:58Z johang $
+	 * @version   $Id$
 	 */
 
 	define('METINF', 'xmlns="syncml:metinf"');

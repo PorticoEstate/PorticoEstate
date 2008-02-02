@@ -23,7 +23,7 @@
 	* along with this program; if not, write to the Free Software       *
 	* Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.         *
 	\*******************************************************************/
-	/* $Id: class.boinventory.inc.php 11225 2002-10-13 22:05:53Z ceb $ */
+	/* $Id$ */
 
 	class boinventory
 	{

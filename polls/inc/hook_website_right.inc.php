@@ -9,7 +9,7 @@
   *  option) any later version.                                              *
   \**************************************************************************/
 
-  /* $Id: hook_website_right.inc.php 9572 2002-02-20 13:42:21Z milosch $ */
+  /* $Id$ */
 
 	$GLOBALS['phpgw']->nextmatchs = CreateObject('phpgwapi.nextmatchs');
 	include_once(PHPGW_SERVER_ROOT . '/polls/inc/functions.inc.php');

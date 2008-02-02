@@ -9,7 +9,7 @@
   *  option) any later version.                                              *
   \**************************************************************************/
 
-  /* $Id: tables_baseline.inc.php 16713 2006-05-09 05:14:07Z skwashd $ */
+  /* $Id$ */
 
 
 	$phpgw_baseline = array(

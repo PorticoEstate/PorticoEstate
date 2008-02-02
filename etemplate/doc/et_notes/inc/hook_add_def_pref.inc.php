@@ -13,7 +13,7 @@
  * the Free Software Foundation; either version 2 of the License, or 	*
  * at your option) any later version.					*
  \**********************************************************************/
- /* $Id: hook_add_def_pref.inc.php 17936 2007-02-10 16:03:46Z sigurdne $ */
+ /* $Id$ */
 
 	global $pref;
 	$pref->change('notes','notes_font','Verdana,Arial,Helvetica,sans-serif');

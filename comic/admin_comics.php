@@ -10,7 +10,7 @@
     *  option) any later version.                                              *
     \**************************************************************************/
 
-    /* $Id: admin_comics.php 15277 2004-07-20 23:51:55Z skwashd $ */
+    /* $Id$ */
 
 	$phpgw_info['flags'] = Array(
 		'currentapp' => 'comic',

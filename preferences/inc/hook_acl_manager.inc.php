@@ -9,7 +9,7 @@
 	*  option) any later version.                                              *
 	\**************************************************************************/
 
-	/* $Id: hook_acl_manager.inc.php 16368 2006-01-11 23:26:57Z ceb $ */
+	/* $Id$ */
 
 	$GLOBALS['acl_manager']['preferences']['session_only_preferences'] = array(
 		'name' => 'Restrict preferences changes to sessions',

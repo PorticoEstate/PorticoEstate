@@ -14,7 +14,7 @@
  *  option) any later version.                                              *
  \**************************************************************************/
 
-      /* $Id: default_records.inc.php 11580 2002-11-26 17:57:08Z ceb $ */
+      /* $Id$ */
 
 $oProc->query("INSERT INTO phpgw_antispam (username,preference,value,prefid) VALUES ('@GLOBAL','required_hits','5.0','')");
 $oProc->query("INSERT INTO phpgw_antispam (username,preference,value,prefid) VALUES ('@GLOBAL','rewrite_subject','1','')");

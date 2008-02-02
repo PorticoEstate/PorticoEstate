@@ -24,7 +24,7 @@
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/bbb_/ekstern/
 	* @package property
 	* @subpackage agreement
- 	* @version $Id: class.sos_agreement.inc.php,v 1.29 2007/08/12 09:30:50 sigurdne Exp $
+ 	* @version $Id$
 	*/
 
 	/**

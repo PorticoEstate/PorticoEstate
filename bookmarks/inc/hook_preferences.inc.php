@@ -5,7 +5,7 @@
 	* @copyright Copyright (C) 2005 Free Software Foundation, Inc. http://www.fsf.org/
 	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
 	* @package bookmarks
-	* @version $Id: hook_preferences.inc.php 17909 2007-01-24 17:26:17Z Caeies $
+	* @version $Id$
 	*/
 
 	$file = array(

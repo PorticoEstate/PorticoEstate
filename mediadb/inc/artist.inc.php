@@ -10,7 +10,7 @@
   *  option) any later version.                                              *
   \**************************************************************************/
 
-  /* $Id: artist.inc.php 12482 2003-04-22 20:30:22Z gugux $ */
+  /* $Id$ */
 
 	function list_artist($order, $sort, $filter, $start, $query, $qfield)
 	{

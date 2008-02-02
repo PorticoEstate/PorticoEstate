@@ -25,7 +25,7 @@
   * Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA            *
   \**************************************************************************/
 
-  /* $Id: class.pdb.inc.php 15977 2005-05-15 13:34:30Z skwashd $ */
+  /* $Id$ */
 
 	// ONLY THE FETCH FUNCTION SHOULD BE CALLED AT THIS TIME:
 	//     $pdb = CreateObject('addressbook.pdb');

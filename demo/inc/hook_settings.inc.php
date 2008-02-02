@@ -8,7 +8,7 @@
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/bbb_/ekstern/
 	* @package demo
 	* @subpackage core
- 	* @version $Id: hook_settings.inc.php 18358 2007-11-27 04:43:37Z skwashd $
+ 	* @version $Id$
 	*/
 
 	//$this->currentapp			= $GLOBALS['phpgw_info']['flags']['currentapp'];

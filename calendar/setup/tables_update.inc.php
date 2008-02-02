@@ -9,7 +9,7 @@
   *  option) any later version.                                              *
   \**************************************************************************/
 
-  /* $Id: tables_update.inc.php 16201 2005-11-18 11:40:45Z skwashd $ */
+  /* $Id$ */
 
 	function calendar_v0_9_2to0_9_3update_owner($table, $field)
 	{

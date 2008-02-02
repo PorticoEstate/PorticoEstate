@@ -5,7 +5,7 @@
 // Written by Fred Yankowski <fred@ontosys.com>
 //            OntoSys, Inc  <http://www.OntoSys.com>
 //
-// $Id: phpunit.php 15903 2005-05-04 14:14:34Z powerstat $
+// $Id$
 
 // Copyright (c) 2000 Fred Yankowski
 

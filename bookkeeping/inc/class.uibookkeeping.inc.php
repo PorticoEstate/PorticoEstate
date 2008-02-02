@@ -23,7 +23,7 @@
 	* along with this program; if not, write to the Free Software       *
 	* Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.         *
 	\*******************************************************************/
-	/* $Id: class.uibookkeeping.inc.php 14169 2004-01-05 13:35:20Z ceb $ */
+	/* $Id$ */
 	// $Source$
 
 	class uibookkeeping

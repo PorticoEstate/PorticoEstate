@@ -12,7 +12,7 @@
 	*  option) any later version.                                              *
 	\**************************************************************************/
 
-	/* $Id: setup.inc.php 16871 2006-07-09 03:12:17Z skwashd $ */
+	/* $Id$ */
 
 	/* Basic information about this app */
 	$setup_info['messenger']['name']      = 'messenger';

@@ -10,7 +10,7 @@
 	*  option) any later version.                                                *
 	\****************************************************************************/
 
-	/* $Id: setup.inc.php 16493 2006-03-11 23:24:02Z skwashd $ */
+	/* $Id$ */
 
 	$setup_info['forum']['name'] = 'forum';
 	$setup_info['forum']['version'] = '0.9.13.006';

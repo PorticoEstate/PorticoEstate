@@ -13,7 +13,7 @@
  * the Free Software Foundation; either version 2 of the License, or 	*
  * at your option) any later version.					*
  \**********************************************************************/
- /* $Id: class.et_media.inc.php 17936 2007-02-10 16:03:46Z sigurdne $ */
+ /* $Id$ */
 
 	include_once(PHPGW_INCLUDE_ROOT . '/etemplate/inc/class.so_sql.inc.php');
 	$GLOBALS['phpgw_info']['flags']['included_classes']['so_sql'] = True; // for 0.9.14

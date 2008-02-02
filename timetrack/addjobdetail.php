@@ -10,7 +10,7 @@
 	*  option) any later version.                                              *
 	\**************************************************************************/
 
-	/* $Id: addjobdetail.php 12082 2003-03-20 22:04:59Z gugux $ */
+	/* $Id$ */
 
 	if($submit_detail) {
 		$GLOBALS['phpgw_info']["flags"] = array("noheader" => True, "nonavbar" => True);

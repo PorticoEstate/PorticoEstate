@@ -10,7 +10,7 @@
 	*  option) any later version.                                                 *
 	\*****************************************************************************/
 
-	/* $Id: preference_deleteforum.php 17819 2006-12-28 11:43:05Z Caeies $ */
+	/* $Id$ */
 
   $phpgw_info["flags"] = array("currentapp" => "forum", "enable_nextmatchs_class" => True);
   if($confirm || ! $for_id) {

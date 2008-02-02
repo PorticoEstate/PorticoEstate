@@ -1,5 +1,5 @@
 <?php
-// $Id: prefs.php 11866 2003-03-03 14:16:25Z ralfbecker $
+// $Id$
 
 require('parse/html.php');
 require_once(TemplateDir . '/common.php');

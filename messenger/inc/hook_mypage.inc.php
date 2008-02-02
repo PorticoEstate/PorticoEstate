@@ -12,7 +12,7 @@
 	*  option) any later version.                                              *
 	\**************************************************************************/
 
-	/* $Id: hook_mypage.inc.php 17907 2007-01-24 16:51:08Z Caeies $ */
+	/* $Id$ */
 
 	global $hooks_string;
 

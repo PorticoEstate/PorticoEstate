@@ -6,7 +6,7 @@
  * @copyright   Copyright (C) 2003 Free Software Foundation http://www.fsf.org/
  * @license     http://www.fsf.org/licenses/gpl.html GNU General Public License
  * @package     ipc_test_suite
- * @version     $Id: setup.inc.php 17888 2007-01-15 23:41:04Z skwashd $
+ * @version     $Id$
  */
 
 	/* Basic information about this app */

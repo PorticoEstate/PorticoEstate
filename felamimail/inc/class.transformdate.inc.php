@@ -7,7 +7,7 @@
     	 **        <Tue,> 29 Jun 1999 09:52:11 -0500 (EDT)
     	 **  (as specified in RFC 822) -- 'Tue' is optional
     	 **
-    	 **  $Id: class.transformdate.inc.php 17722 2006-12-18 20:03:33Z sigurdne $
+    	 **  $Id$
     	 **/
 
 	class transformdate

@@ -13,7 +13,7 @@
   * This file should be generated for you. It should never be edited by hand *
   \**************************************************************************/
 
-  /* $Id: tables_current.inc.php 16990 2006-08-23 13:32:03Z skwashd $ */
+  /* $Id$ */
 
   // table array for news_admin
 	$phpgw_baseline = array(

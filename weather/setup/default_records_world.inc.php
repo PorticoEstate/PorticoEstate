@@ -9,7 +9,7 @@
   *  option) any later version.                                              *
   \**************************************************************************/
 
-  /* $Id: default_records_world.inc.php 9641 2002-03-04 05:23:19Z milosch $ */
+  /* $Id$ */
 
 	$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_weather_metar VALUES (1,'',20001104152747,'LATI','Tirana','','',1)");
 	$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_weather_metar VALUES (2,'',20001104152747,'DAUA','Adrar','','',2)");

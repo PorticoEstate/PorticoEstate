@@ -9,7 +9,7 @@
   *  option) any later version.                                              *
   \**************************************************************************/
 
-  /* $Id: tables_update.inc.php 17937 2007-02-10 16:11:37Z sigurdne $ */
+  /* $Id$ */
 
 	$test[] = '0.9.11';
 	function infolog_upgrade0_9_11()

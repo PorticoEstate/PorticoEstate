@@ -14,7 +14,7 @@
 *  option) any later version.                                              *
 \**************************************************************************/
 
- /* $Id: tables_current.inc.php 11580 2002-11-26 17:57:08Z ceb $ */
+ /* $Id$ */
 
 	$phpgw_baseline = array
 	(

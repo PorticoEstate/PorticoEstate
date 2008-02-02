@@ -10,7 +10,7 @@
 *  option) any later version.                                              *
 \**************************************************************************/
 
-/* $Id: test_server.php 6822 2001-07-16 06:20:34Z milosch $ */
+/* $Id$ */
 /*
 	$phpgw_info['flags'] = array(
 		'currentapp' => 'soap',

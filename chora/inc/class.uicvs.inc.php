@@ -8,7 +8,7 @@
   *  Free Software Foundation; either version 2 of the License, or (at your  *
   *  option) any later version.                                              *
   \**************************************************************************/
-	/* $Id: class.uicvs.inc.php 17909 2007-01-24 17:26:17Z Caeies $ */
+	/* $Id$ */
 
 	class uicvs
 	{

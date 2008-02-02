@@ -5,7 +5,7 @@
 * @author Ralf Becker <ralf.becker@outdoor-training.de>
 * @license http://www.gnu.org/licenses/gpl.html GNU General Public License
 * @package etemplate
-* @version $Id: class.xslt_widget.inc.php 17947 2007-02-13 12:59:32Z sigurdne $
+* @version $Id$
 */
 	/**
 	 * widget that generates its html-output via a xslt file with its in $options and the content as xml

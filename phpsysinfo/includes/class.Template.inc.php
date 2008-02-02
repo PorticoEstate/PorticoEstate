@@ -11,7 +11,7 @@
   * any later version.                                                       *
   \**************************************************************************/
 
-  /* $Id: class.Template.inc.php 18212 2007-08-14 11:44:16Z skwashd $ */
+  /* $Id$ */
 
   // we use the phpgw version
   include_once('../phpgwapi/inc/class.Template.inc.php');

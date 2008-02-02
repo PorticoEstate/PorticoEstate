@@ -13,7 +13,7 @@
   * This file should be generated for you. It should never be edited by hand *
   \**************************************************************************/
 
-  /* $Id: tables_current.inc.php 6857 2001-07-18 05:05:13Z milosch $ */
+  /* $Id$ */
 
   // table array for developer_tools
 	$phpgw_baseline = array(

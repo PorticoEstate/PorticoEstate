@@ -8,7 +8,7 @@
   * Free Software Foundation; either version 2 of the License, or (at your  *
   * option) any later version.                                              *
   \*************************************************************************/
-  /* $Id: setup.inc.php 16493 2006-03-11 23:24:02Z skwashd $ */
+  /* $Id$ */
 
 	$setup_info['inv']['name']      = 'inv';
 	$setup_info['inv']['version']   = '0.8.5.001';

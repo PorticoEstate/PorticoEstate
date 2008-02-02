@@ -10,7 +10,7 @@
   *  option) any later version.                                              *
   \**************************************************************************/
 
-  /* $Id: tables_current.inc.php 13409 2003-09-07 02:26:45Z skwashd $ */
+  /* $Id$ */
 
 
 	$phpgw_baseline = array(

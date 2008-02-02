@@ -5,7 +5,7 @@
 	* @copyright Copyright (C) 2006 Free Software Foundation, Inc. http://www.fsf.org/
 	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
 	* @package tts
-	* @version $Id: class.news_admin_bo_hooks.inc.php 16980 2006-08-19 04:16:50Z skwashd $
+	* @version $Id$
 	*/
 
 	/**

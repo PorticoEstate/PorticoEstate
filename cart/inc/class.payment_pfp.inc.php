@@ -10,7 +10,7 @@
   *  option) any later version.                                              *
   \**************************************************************************/
 
-  /* $Id: class.payment_pfp.inc.php 9800 2002-03-20 12:49:41Z milosch $ */
+  /* $Id$ */
 
 /*      Last Modified: 6/19/01 8:55PM by Jusitn Koivisto [Koivi Media]
 

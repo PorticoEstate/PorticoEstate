@@ -9,7 +9,7 @@
   *  option) any later version.                                              *
   \**************************************************************************/
 
-  /* $Id: default_records_us.inc.php 9641 2002-03-04 05:23:19Z milosch $ */
+  /* $Id$ */
 
 	$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_weather_metar VALUES (1455,'',20001104154906,'KABR','Aberdeen, Aberdeen Regional Airport','SDZ006','',177)");
 	$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_weather_metar VALUES (1456,'',20001104154907,'KABI','Abilene, Abilene Regional Airport','TXZ127','',177)");

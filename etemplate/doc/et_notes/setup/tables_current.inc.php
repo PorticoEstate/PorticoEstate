@@ -9,7 +9,7 @@
   *  option) any later version.                                              *
   \**************************************************************************/
 
-  /* $Id: tables_current.inc.php 17936 2007-02-10 16:03:46Z sigurdne $ */
+  /* $Id$ */
 
 	$phpgw_baseline = array(
 		'phpgw_et_notes' => array(

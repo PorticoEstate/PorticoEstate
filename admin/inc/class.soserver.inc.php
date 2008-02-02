@@ -10,7 +10,7 @@
   *  option) any later version.                                              *
   \**************************************************************************/
 
-  /* $Id: class.soserver.inc.php 16400 2006-02-14 08:48:21Z skwashd $ */
+  /* $Id$ */
 
 	class soserver
 	{

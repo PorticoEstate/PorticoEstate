@@ -8,7 +8,7 @@
 	*  Free Software Foundation; either version 2 of the License, or (at your  *
 	*  option) any later version.                                              *
 	\**************************************************************************/
-	/* $Id: default_records.inc.php,v 1.3 2006/12/05 19:40:45 sigurdne Exp $ */
+	/* $Id$ */
 
 	$GLOBALS['phpgw_setup']->oProc->query("INSERT into phpgw_p_events (event_name,event_type,event_extra) values('hours limit','percent',90)",__LINE__,__FILE__);
 	$GLOBALS['phpgw_setup']->oProc->query("INSERT into phpgw_p_events (event_name,event_type,event_extra) values('budget limit','percent',90)",__LINE__,__FILE__);

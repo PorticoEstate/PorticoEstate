@@ -11,7 +11,7 @@
 	*  option) any later version.                                                 *
 	\*****************************************************************************/
 
-	/* $Id: class.soforum.inc.php 10299 2002-05-27 01:49:04Z milosch $ */
+	/* $Id$ */
 
 	class soforum
 	{

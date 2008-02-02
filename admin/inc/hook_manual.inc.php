@@ -10,7 +10,7 @@
   *  option) any later version.                                              *
   \**************************************************************************/
 
-	/* $Id: hook_manual.inc.php 16400 2006-02-14 08:48:21Z skwashd $ */
+	/* $Id$ */
 
 // Only Modify the $file variable.....
 	$file = Array(

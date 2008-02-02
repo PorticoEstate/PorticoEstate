@@ -10,7 +10,7 @@
   *  option) any later version.                                              *
   \**************************************************************************/
 
-  /* $Id: server.php 8495 2001-12-05 16:27:28Z milosch $ */
+  /* $Id$ */
 
 	exit;
 	$GLOBALS['phpgw_info'] = array();

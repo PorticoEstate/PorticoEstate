@@ -23,7 +23,7 @@
 	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/bbb_/ekstern/
 	* @package Cpdf
- 	* @version $Id: class.pdf.inc.php,v 1.10 2007/01/26 14:53:46 sigurdne Exp $
+ 	* @version $Id$
 	*/
 
 	class property_pdf__

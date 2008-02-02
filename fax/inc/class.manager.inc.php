@@ -14,7 +14,7 @@
 *  option) any later version.                                              *
 \**************************************************************************/
 
- /* $Id: class.manager.inc.php 12312 2003-04-08 09:23:49Z stagno $ */
+ /* $Id$ */
 
 	class manager
 	{

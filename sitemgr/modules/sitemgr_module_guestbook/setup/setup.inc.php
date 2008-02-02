@@ -9,7 +9,7 @@
 	*  option) any later version.                                              *
 	\**************************************************************************/
 
-	/* $Id: setup.inc.php 16493 2006-03-11 23:24:02Z skwashd $ */
+	/* $Id$ */
 
 	$setup_info['sitemgr_module_guestbook']['name']      = 'sitemgr_module_guestbook';
 	$setup_info['sitemgr_module_guestbook']['title']     = 'Guestbook for SiteMgr';

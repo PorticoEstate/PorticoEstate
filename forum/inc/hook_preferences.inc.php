@@ -9,7 +9,7 @@
 	* option) any later version.                                               *
 	\**************************************************************************/
 
-	/* $Id: hook_preferences.inc.php 17909 2007-01-24 17:26:17Z Caeies $ */
+	/* $Id$ */
 {
 	display_section('forum','Forum',array(
 		'Preferences' => $GLOBALS['phpgw']->link('/preferences/preferences.php', array('appname' => 'forum'))

@@ -8,7 +8,7 @@
     * Free Software Foundation; either version 2 of the License, or (at your    *
     * option) any later version.                                                *
     \***************************************************************************/
-	/* $Id: hook_add_def_pref.inc.php 10731 2002-08-29 03:03:17Z pjw $ */
+	/* $Id$ */
 
 	global $pref;
 ?>

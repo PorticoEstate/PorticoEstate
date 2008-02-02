@@ -11,7 +11,7 @@
 	*  option) any later version.                                                 *
 	\*****************************************************************************/
 
-	/* $Id: class.uiforum.inc.php 18290 2007-09-27 12:07:49Z skwashd $ */
+	/* $Id$ */
 
 	class uiforum
 	{

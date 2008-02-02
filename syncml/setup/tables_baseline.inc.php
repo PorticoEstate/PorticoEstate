@@ -7,7 +7,7 @@
 	 * @copyright Copyright (c) 2007 Free Software Foundation, Inc.
 	 * @license   GNU General Public License 3 or later
 	 * @package   syncml
-	 * @version   $Id: tables_baseline.inc.php 18223 2007-08-16 23:58:02Z johang $
+	 * @version   $Id$
 	 */
 
 	$phpgw_baseline = array(

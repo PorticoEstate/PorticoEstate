@@ -24,7 +24,7 @@
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/bbb_/ekstern/
 	* @package property
 	* @subpackage custom
- 	* @version $Id: synkroniser_med_boei.php,v 1.7 2007/09/24 11:20:27 sigurdne Exp $
+ 	* @version $Id$
 	*/
 
 	/**

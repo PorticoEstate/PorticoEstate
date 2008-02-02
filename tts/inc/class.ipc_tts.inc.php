@@ -6,7 +6,7 @@
 	* @copyright Copyright (C) 2003-2004 Free Software Foundation, Inc. http://www.fsf.org/
 	* @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License
 	* @package tts
-	* @version $Id: class.ipc_tts.inc.php 17413 2006-10-14 05:39:42Z skwashd $
+	* @version $Id$
 	*/
 
 	/**

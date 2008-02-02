@@ -1,5 +1,5 @@
 <?php
-// $Id: save.php 11866 2003-03-03 14:16:25Z ralfbecker $
+// $Id$
 
 // Macros for on-save features.
 
