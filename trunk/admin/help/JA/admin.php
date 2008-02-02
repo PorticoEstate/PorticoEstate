@@ -9,7 +9,7 @@
   *  option) any later version.                                              *
   \**************************************************************************/
 
-	/* $Id: admin.php 16400 2006-02-14 08:48:21Z skwashd $ */
+	/* $Id$ */
 	$phpgw_flags = Array(
 		'currentapp'	=> 'manual',
 		'admin_header'	=> True,

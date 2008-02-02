@@ -10,7 +10,7 @@
   *  option) any later version.                                              *
   \**************************************************************************/
 
-  /* $Id: functions.inc.php 8699 2001-12-21 03:59:13Z milosch $ */
+  /* $Id$ */
 
 	$d1 = strtolower(substr(PHPGW_APP_INC,0,3));
 	if($d1 == 'htt' || $d1 == 'ftp' )

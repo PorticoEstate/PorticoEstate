@@ -9,7 +9,7 @@
   *  option) any later version.                                              *
   \**************************************************************************/
 
-  /* $Id: tables_baseline.inc.php 17937 2007-02-10 16:11:37Z sigurdne $ */
+  /* $Id$ */
 
 	$phpgw_baseline = array(
 		'phpgw_infolog' => array(

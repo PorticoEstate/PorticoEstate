@@ -15,7 +15,7 @@
  * the Free Software Foundation; either version 2 of the License, or 	*
  * at your option) any later version.					*
  \**********************************************************************/
- /* $Id: index.php 15973 2005-05-15 12:29:54Z skwashd $ */
+ /* $Id$ */
 
 	$GLOBALS['phpgw_info']['flags'] = array
 	(

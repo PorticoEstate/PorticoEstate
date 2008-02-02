@@ -8,7 +8,7 @@
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/bbb_/ekstern/
 	* @package sms
 	* @subpackage sms
- 	* @version $Id: class.uisms.inc.php 18358 2007-11-27 04:43:37Z skwashd $
+ 	* @version $Id$
 	*/
 
 	/**

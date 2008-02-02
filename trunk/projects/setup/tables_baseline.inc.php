@@ -8,7 +8,7 @@
 	* Free Software Foundation; either version 2 of the License, or (at your   *
 	* option) any later version.                                               *
 	\**************************************************************************/
-	/* $Id: tables_baseline.inc.php,v 1.4 2006/12/05 19:40:45 sigurdne Exp $ */
+	/* $Id$ */
 
 	$phpgw_baseline = array(
 		'p_projects' => array(

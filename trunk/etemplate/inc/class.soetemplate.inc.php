@@ -5,7 +5,7 @@
 * @author Ralf Becker <ralf.becker@outdoortraining.de>
 * @license http://www.gnu.org/licenses/gpl.html GNU General Public License
 * @package etemplate
-* @version $Id: class.soetemplate.inc.php 17957 2007-02-18 21:01:34Z Caeies $
+* @version $Id$
 */
 
 	/**

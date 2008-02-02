@@ -9,7 +9,7 @@
 	*  option) any later version.                                              *
 	\**************************************************************************/
 
-	/* $Id: setup.inc.php 16493 2006-03-11 23:24:02Z skwashd $ */
+	/* $Id$ */
 
 	/* Basic information about this app */
 	$setup_info['chat']['name']		= 'chat';

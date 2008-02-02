@@ -10,7 +10,7 @@
     *  option) any later version.                                              *
     \**************************************************************************/
 
-    /* $Id: admin_comics_reset.php 3638 2001-03-29 17:36:46Z neotexan $ */
+    /* $Id$ */
 {
     $phpgw_info["flags"] = array("currentapp"   => "comic", 
                                  "noheader"     => True,

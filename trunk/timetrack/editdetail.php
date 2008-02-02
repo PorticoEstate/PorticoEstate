@@ -11,7 +11,7 @@
 	*  option) any later version.                                              *
 	\**************************************************************************/
 
-	/* $Id: editdetail.php 12082 2003-03-20 22:04:59Z gugux $ */
+	/* $Id$ */
 
 	// Update complete for phpgroupware 0.9.10 - 4/14/2001 (api calls for accounts and contacts)
 	// Could not find where this file needed any significant changes to work in 0.9.10

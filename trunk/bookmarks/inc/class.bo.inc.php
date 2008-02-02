@@ -7,7 +7,7 @@
 	* @copyright Copyright (C) 2005 Free Software Foundation, Inc. http://www.fsf.org/
 	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
 	* @package bookmarks
-	* @version $Id: class.bo.inc.php 17821 2006-12-28 13:35:12Z skwashd $
+	* @version $Id$
 	* @internal Based on Bookmarker, Copyright (C) 1998 Padraic Renaghan, http://www.renaghan.com/bookmarker
 	* @internal Ported to phpGroupWare by Joseph Engo
 	* @internal Ported to three-layered design by Michael Totschnig

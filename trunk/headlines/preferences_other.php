@@ -9,7 +9,7 @@
 	*  option) any later version.                                              *
 	\**************************************************************************/
 
-	/* $Id: preferences_other.php 13408 2003-09-07 01:53:18Z skeeter $ */
+	/* $Id$ */
 
 	$GLOBALS['phpgw_info']['flags'] = array(
 		'currentapp' => 'headlines',

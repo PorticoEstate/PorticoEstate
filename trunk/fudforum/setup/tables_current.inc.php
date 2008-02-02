@@ -2,7 +2,7 @@
 /***************************************************************************
 * copyright            : (C) 2001-2003 Advanced Internet Designs Inc.
 * email                : forum@prohost.org
-* $Id: tables_current.inc.php 13837 2003-11-01 22:57:15Z skwashd $
+* $Id$
 *
 * This program is free software; you can redistribute it and/or modify it 
 * under the terms of the GNU General Public License as published by the 
@@ -14,7 +14,7 @@
   * This file should be generated for you. It should never be edited by hand *
   \**************************************************************************/
 
-  /* $Id: tables_current.inc.php 13837 2003-11-01 22:57:15Z skwashd $ */
+  /* $Id$ */
 
 	// table array for FUDforum
 	$phpgw_baseline = array(

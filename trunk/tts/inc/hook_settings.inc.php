@@ -8,7 +8,7 @@
 	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
 	* @package tts
 	* @subpackage hooks
-	* @version $Id: hook_settings.inc.php 17615 2006-11-28 10:09:32Z skwashd $
+	* @version $Id$
 	*/
 
 	$yes_and_no = array

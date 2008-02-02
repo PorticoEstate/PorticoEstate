@@ -10,7 +10,7 @@
 	*  option) any later version.                                              *
 	\**************************************************************************/
 
-	/* $Id: load.php 10128 2002-04-30 23:24:20Z skeeter $ */
+	/* $Id$ */
 
 	$GLOBALS['phpgw_info']['flags'] = array(
 		'currentapp' => 'chat',

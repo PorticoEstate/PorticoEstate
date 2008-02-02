@@ -8,7 +8,7 @@
   *  Free Software Foundation; either version 2 of the License, or (at your  *
   *  option) any later version.                                              *
   \**************************************************************************/
-  	/* $Id: testbutton.php 16400 2006-02-14 08:48:21Z skwashd $ */
+  	/* $Id$ */
   	
   	$phpgw_info["flags"] = array(
   		"currentapp" => "admin"

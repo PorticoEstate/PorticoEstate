@@ -12,7 +12,7 @@
 	*  option) any later version.                                              *
 	\**************************************************************************/
 
-	/* $Id: index.php 7887 2001-09-22 02:22:54Z milosch $ */
+	/* $Id$ */
 
 	$GLOBALS['phpgw_info']['flags'] = array(
 		'currentapp' => 'messenger',

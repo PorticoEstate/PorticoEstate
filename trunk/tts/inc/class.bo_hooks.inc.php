@@ -5,7 +5,7 @@
 	* @copyright Copyright (C) 2006 Free Software Foundation, Inc. http://www.fsf.org/
 	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
 	* @package tts
-	* @version $Id: class.bo_hooks.inc.php 17773 2006-12-27 02:57:18Z skwashd $
+	* @version $Id$
 	*/
 
 	/**

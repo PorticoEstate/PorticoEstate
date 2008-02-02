@@ -9,7 +9,7 @@
   *  option) any later version.                                              *
   \**************************************************************************/
 
-  /* $Id: admin_editanswer.php 17907 2007-01-24 16:51:08Z Caeies $ */
+  /* $Id$ */
 
 	$phpgw_info = array();
 	$GLOBALS['phpgw_info']['flags'] = array(

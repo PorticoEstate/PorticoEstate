@@ -9,7 +9,7 @@
   *  option) any later version.                                              *
   \**************************************************************************/
 
-  /* $Id: tables_update.inc.php 9782 2002-03-18 03:18:05Z rschader $ */
+  /* $Id$ */
 
 	$test[] = '0.9.13';
 	function timetrack_upgrade0_9_13()

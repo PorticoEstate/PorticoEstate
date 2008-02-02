@@ -14,7 +14,7 @@
  *  option) any later version.                                              *
  \**************************************************************************/
 
-/* $Id: hook_preferences.inc.php 11590 2002-11-27 15:50:40Z stagno $ */
+/* $Id$ */
 
 {
 	$title = $appname;

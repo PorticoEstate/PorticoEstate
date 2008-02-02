@@ -6,7 +6,7 @@
  * @copyright Copyright (C) 2003,2005 Free Software Foundation http://www.fsf.org/
  * @license http://www.fsf.org/licenses/gpl.html GNU General Public License
  * @package folders
- * @version $Id: class.uifolders.inc.php 17589 2006-11-25 16:27:04Z sigurdne $
+ * @version $Id$
  */
 
 	/**

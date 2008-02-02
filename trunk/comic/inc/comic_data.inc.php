@@ -10,7 +10,7 @@
   *  option) any later version.                                              *
   \**************************************************************************/
 
-  /* $Id: comic_data.inc.php 15277 2004-07-20 23:51:55Z skwashd $ */
+  /* $Id$ */
 
 	function get_db_var($field)
 	{

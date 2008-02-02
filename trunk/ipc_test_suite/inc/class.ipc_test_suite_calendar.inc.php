@@ -5,7 +5,7 @@
 	* @copyright Copyright (C) 2000-2004 Free Software Foundation, Inc. http://www.fsf.org/
 	* @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License
 	* @package ipc_test_suite
-	* @version $Id: class.ipc_test_suite_calendar.inc.php 14991 2004-05-26 14:36:27Z mkaemmerer $
+	* @version $Id$
 	*/
 
 	/**

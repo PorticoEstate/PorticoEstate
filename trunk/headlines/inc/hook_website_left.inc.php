@@ -11,7 +11,7 @@
 	*  option) any later version.                                              *
 	\**************************************************************************/
 
-	/* $Id: hook_website_left.inc.php 10110 2002-04-30 02:08:34Z milosch $ */
+	/* $Id$ */
 
 	$headlines = CreateObject('headlines.headlines');
 

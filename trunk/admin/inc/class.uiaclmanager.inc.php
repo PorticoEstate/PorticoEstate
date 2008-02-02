@@ -11,7 +11,7 @@
 	* Free Software Foundation; either version 2 of the License, or (at your   *
 	* option) any later version.                                               *
 	\**************************************************************************/
-	/* $Id: class.uiaclmanager.inc.php 18358 2007-11-27 04:43:37Z skwashd $ */
+	/* $Id$ */
 
 	class admin_uiaclmanager
 	{

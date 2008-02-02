@@ -5,7 +5,7 @@
 	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
 	* @package phpgwapi
 	* @subpackage setup
-	* @version $Id: test_data.inc.php 15874 2005-04-28 08:11:59Z powerstat $
+	* @version $Id$
 	*/
 
 	$oProc->query("INSERT INTO addressbook (

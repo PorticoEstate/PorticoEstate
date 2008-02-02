@@ -9,7 +9,7 @@
     *  option) any later version.                                              *
     \**************************************************************************/
 
-	/* $Id: hook_sidebox_menu.inc.php 16714 2006-05-09 05:49:38Z skwashd $ */
+	/* $Id$ */
 {
 	$menu_title = lang('%1 Menu', lang($appname));
 	$file=array

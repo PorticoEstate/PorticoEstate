@@ -10,7 +10,7 @@
 	*  option) any later version.                                              *
 	\**************************************************************************/
 
-	/* $Id: grabnewssites.php 10123 2002-04-30 17:46:28Z skeeter $ */
+	/* $Id$ */
 
 	$GLOBALS['phpgw_info']['flags'] = array(
 		'admin_only'           => True,

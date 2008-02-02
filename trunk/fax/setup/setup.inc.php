@@ -14,7 +14,7 @@
  *  option) any later version.                                              *
  \**************************************************************************/
 
- /* $Id: setup.inc.php 16493 2006-03-11 23:24:02Z skwashd $ */
+ /* $Id$ */
 
 	$setup_info['fax']['name']      = 'fax';
 	$setup_info['fax']['title']     = 'FAX';

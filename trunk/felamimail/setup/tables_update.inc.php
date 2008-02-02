@@ -9,7 +9,7 @@
 	*  option) any later version.                                              *
 	\**************************************************************************/
 
-	/* $Id: tables_update.inc.php 17722 2006-12-18 20:03:33Z sigurdne $ */
+	/* $Id$ */
 
 	$test[] = '0.8.2';
 	function felamimail_upgrade0_8_2()

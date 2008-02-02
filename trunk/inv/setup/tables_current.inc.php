@@ -12,7 +12,7 @@
   /**************************************************************************\
   * This file should be generated for you. It should never be edited by hand *
   \**************************************************************************/
-  /* $Id: tables_current.inc.php 5956 2001-06-16 03:53:26Z bettina $ */
+  /* $Id$ */
 
 	$phpgw_baseline = array(
 		'phpgw_inv_products' => array(

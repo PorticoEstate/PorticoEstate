@@ -8,7 +8,7 @@
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/bbb_/ekstern/
 	* @package property
 	* @subpackage setup
- 	* @version $Id: tables_current.inc.php,v 1.76 2007/10/13 10:02:54 sigurdne Exp $
+ 	* @version $Id$
 	*/
 
 	$phpgw_baseline = array(

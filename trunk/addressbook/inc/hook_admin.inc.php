@@ -10,7 +10,7 @@
 	*  option) any later version.                                              *
 	\**************************************************************************/
 
-	// $Id: hook_admin.inc.php 17106 2006-09-09 09:04:58Z skwashd $
+	// $Id$
 	// $Source$
 
 	// Only Modify the $file and $title variables.....

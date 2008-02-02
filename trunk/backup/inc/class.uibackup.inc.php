@@ -22,7 +22,7 @@
 	* along with this program; if not, write to the Free Software       *
 	* Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.         *
 	\*******************************************************************/
-	/* $Id: class.uibackup.inc.php 15899 2005-05-04 13:39:58Z powerstat $ */
+	/* $Id$ */
 
 	class uibackup
 	{

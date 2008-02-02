@@ -10,7 +10,7 @@
   *  option) any later version.                                              *
   \**************************************************************************/
 
-	/* $Id: class.mail.inc.php 15913 2005-05-05 14:59:34Z powerstat $ */
+	/* $Id$ */
 	$d1 = strtolower(substr(PHPGW_APP_INC,0,3));
 	$d2 = strtolower(substr(PHPGW_API_INC,0,3));
 	if($d1 == 'htt' || $d1 == 'ftp' || $d2 == 'htt' || $d2 == 'ftp')

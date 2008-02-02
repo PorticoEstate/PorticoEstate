@@ -9,7 +9,7 @@
 	*  option) any later version.                                              *
 	\**************************************************************************/
 
-	/* $Id: class.soaccounts.inc.php 16532 2006-03-19 19:12:31Z sigurdne $ */
+	/* $Id$ */
 
 	class soaccounts
 	{

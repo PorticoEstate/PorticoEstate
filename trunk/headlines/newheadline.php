@@ -10,7 +10,7 @@
 	*  option) any later version.                                              *
 	\**************************************************************************/
 
-	/* $Id: newheadline.php 12913 2003-05-30 20:45:44Z gugux $ */
+	/* $Id$ */
 
 	$phpgw_info = array();
 	$GLOBALS['phpgw_info']['flags'] = array(

@@ -6,7 +6,7 @@
 	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
 	* @package manual
 	* @subpackage manual
-	* @version $Id: home.php 15838 2005-04-17 14:04:32Z powerstat $
+	* @version $Id$
 	*/
 
 	$phpgw_info["flags"] = array("currentapp" => "manual", "enable_utilities_class" => True);

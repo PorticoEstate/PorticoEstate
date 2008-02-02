@@ -9,7 +9,7 @@
   *  Free Software Foundation; either version 2 of the License, or (at your  *
   *  option) any later version.                                              *
   \**************************************************************************/
-  /* $Id: deletesite.php 10078 2002-04-28 19:47:55Z milosch $ */
+  /* $Id$ */
 
 	$phpgw_info = array();
 	if($confirm)

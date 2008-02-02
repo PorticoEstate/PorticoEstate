@@ -5,7 +5,7 @@
 	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
 	* @package phpgwapi
 	* @subpackage gui
-	* @version $Id: navbar.inc.php,v 1.17 2007/01/07 01:04:17 skwashd Exp $
+	* @version $Id$
 	*/
 
 

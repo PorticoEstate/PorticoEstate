@@ -8,7 +8,7 @@
 	* @copyright Copyright (C) 2000-2005 Free Software Foundation, Inc. http://www.fsf.org/
 	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
 	* @package phpgroupware
-	* @version $Id: about.php 17969 2007-02-20 14:09:16Z sigurdne $
+	* @version $Id$
 	*/
 
 	$GLOBALS['phpgw_info']['flags']['currentapp'] = 'about';

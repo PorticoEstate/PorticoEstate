@@ -2,7 +2,7 @@
 	/***************************************************************************
 * copyright            : (C) 2001-2003 Advanced Internet Designs Inc.
 * email                : forum@prohost.org
-* $Id: setup.inc.php 16493 2006-03-11 23:24:02Z skwashd $
+* $Id$
 *
 * This program is free software; you can redistribute it and/or modify it 
 * under the terms of the GNU General Public License as published by the 
@@ -10,7 +10,7 @@
 * (at your option) any later version.
 ***************************************************************************/
 
-	/* $Id: setup.inc.php 16493 2006-03-11 23:24:02Z skwashd $ */
+	/* $Id$ */
 
 	$setup_info['fudforum']['name']		= 'fudforum';
 	$setup_info['fudforum']['title']	= 'FUDforum for phpGroupWare';

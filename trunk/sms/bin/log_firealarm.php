@@ -8,7 +8,7 @@
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/bbb_/ekstern/
 	* @package sms
 	* @subpackage sms
- 	* @version $Id: log_firealarm.php 17198 2006-09-21 13:50:50Z sigurdne $
+ 	* @version $Id$
 	*/
 
 	/**

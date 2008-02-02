@@ -10,7 +10,7 @@
   *  option) any later version.                                              *
   \**************************************************************************/
 
-    /* $Id: add.php 6025 2001-06-17 21:21:06Z milosch $ */
+    /* $Id$ */
 {
     
     $phpgw_info["flags"] = array("nonavbar" => True,

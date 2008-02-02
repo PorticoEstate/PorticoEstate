@@ -9,7 +9,7 @@
   *  option) any later version.                                              *
   \**************************************************************************/
 
-  /* $Id: hook_mainscreen.inc.php 8700 2001-12-21 14:59:46Z milosch $ */
+  /* $Id$ */
 
 	if (! $inindex)
 	{

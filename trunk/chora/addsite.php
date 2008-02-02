@@ -9,7 +9,7 @@
   *  Free Software Foundation; either version 2 of the License, or (at your  *
   *  option) any later version.                                              *
   \**************************************************************************/
-/* $Id: addsite.php 11830 2003-02-28 15:30:44Z ralfbecker $ */
+/* $Id$ */
 
 	$phpgw_info = array();
 	$GLOBALS['phpgw_info']['flags']['currentapp'] = 'chora';

@@ -12,7 +12,7 @@
 *  option) any later version.                                              *
 \**************************************************************************/
 
-/* $Id: class.sowiki.inc.php 15975 2005-05-15 12:55:31Z skwashd $ */
+/* $Id$ */
 
 /*!
 @class sowiki

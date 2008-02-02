@@ -9,7 +9,7 @@
 	*  option) any later version.                                              *
 	\**************************************************************************/
 
-	/* $Id: tables_update.inc.php 9841 2002-03-31 17:04:23Z milosch $ */
+	/* $Id$ */
 
 	$test[] = '0.8.1';
 	function headlines_upgrade0_8_1()

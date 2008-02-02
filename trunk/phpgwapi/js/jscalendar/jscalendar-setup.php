@@ -9,7 +9,7 @@
 	* @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License
 	* @package phpgwapi
 	* @subpackage javascript
-	* @version $Id: jscalendar-setup.php 17599 2006-11-27 05:29:10Z skwashd $
+	* @version $Id$
 	*/
 
 $GLOBALS['phpgw_info']['flags'] = Array(
@@ -70,7 +70,7 @@ if ( isset($GLOBALS['phpgw_info']['user']['preferences']['calendar']['weekdaysta
  * than modifying calendar.js itself).
  */
 
-// $Id: jscalendar-setup.php 17599 2006-11-27 05:29:10Z skwashd $
+// $Id$
 
 /**
  *  This function "patches" an input field (or other element) to use a calendar

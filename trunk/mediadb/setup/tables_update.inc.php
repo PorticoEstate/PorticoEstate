@@ -9,7 +9,7 @@
   *  option) any later version.                                              *
   \**************************************************************************/
 
-  /* $Id: tables_update.inc.php 6023 2001-06-17 20:49:29Z milosch $ */
+  /* $Id$ */
 
 	$test[] = '0.0.0';
 	function mediadb_upgrade0_0_0()

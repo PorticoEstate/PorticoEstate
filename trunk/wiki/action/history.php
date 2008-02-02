@@ -1,5 +1,5 @@
 <?php
-// $Id: history.php 11892 2003-03-04 20:55:15Z ralfbecker $
+// $Id$
 
 require('parse/main.php');
 require('parse/macros.php');

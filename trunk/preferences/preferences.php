@@ -5,7 +5,7 @@
 	* @copyright Copyright (C) 2000-2006 Free Software Foundation, Inc. http://www.fsf.org/
 	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
 	* @package preferences
-	* @version $Id: preferences.php 18358 2007-11-27 04:43:37Z skwashd $
+	* @version $Id$
 	*/
 
 	$GLOBALS['phpgw_info']['flags'] = array

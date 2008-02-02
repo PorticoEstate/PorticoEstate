@@ -7,7 +7,7 @@
 	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/bbb_/ekstern/
 	* @package manual
- 	* @version $Id: class.uimanual.inc.php 18114 2007-04-09 16:22:13Z sigurdne $
+ 	* @version $Id$
 	*/
 
 	/**

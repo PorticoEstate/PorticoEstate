@@ -7,7 +7,7 @@
 	* @license     http://www.fsf.org/licenses/gpl.html GNU General Public License
 	* @package     phpgwapi
 	* @subpackage  ipc
-	* @version     $Id: class.ipc_addressbook.inc.php 18187 2007-08-03 19:51:34Z johang $
+	* @version     $Id$
 	*/
 
 

@@ -14,7 +14,7 @@
  * the Free Software Foundation; either version 2 of the License, or 	*
  * at your option) any later version.					*
  \**********************************************************************/
- /* $Id: hook_settings.inc.php 17949 2007-02-13 15:02:07Z sigurdne $ */
+ /* $Id$ */
 
 	create_check_box('Show open entries: Tasks/Calls/Notes on main screen','homeShowEvents',
 		'Should InfoLog display your open entries - not finised tasks, phonecalls or notes - on the main screen. Works only if you dont selected an application for the main screen (in your preferences).');

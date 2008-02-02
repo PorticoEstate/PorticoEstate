@@ -7,7 +7,7 @@
 	 * @copyright Copyright (c) 2007 Free Software Foundation, Inc.
 	 * @license   GNU General Public License 3 or later
 	 * @package   syncml
-	 * @version   $Id: class.syncml_message.inc.php 18194 2007-08-09 14:01:18Z johang $
+	 * @version   $Id$
 	 */
 
 	require_once 'inc/class.syncml_command_final.inc.php';

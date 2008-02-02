@@ -9,7 +9,7 @@
 	*  option) any later version.                                              *
 	\**************************************************************************/
 
-	/* $Id: setup.inc.php 16493 2006-03-11 23:24:02Z skwashd $ */
+	/* $Id$ */
 
 	$setup_info['sitemgr']['name']      = 'sitemgr';
 	$setup_info['sitemgr']['title']     = 'SiteMgr Web Content Manager';

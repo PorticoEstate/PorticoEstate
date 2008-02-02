@@ -7,7 +7,7 @@
 	 * @copyright Copyright (c) 2007 Free Software Foundation, Inc.
 	 * @license   GNU General Public License 3 or later
 	 * @package   syncml
-	 * @version   $Id: class.uisyncml.inc.php 18179 2007-07-31 10:13:52Z johang $
+	 * @version   $Id$
 	 */
 
 	require_once 'syncml/inc/functions.inc.php';

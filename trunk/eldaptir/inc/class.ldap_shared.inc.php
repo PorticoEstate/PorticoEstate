@@ -11,7 +11,7 @@
   *  option) any later version.                                              *
   \**************************************************************************/
   
-  /* $Id: class.ldap_shared.inc.php 8324 2001-11-19 15:50:05Z milosch $ */
+  /* $Id$ */
 
 	class ldap
 	{

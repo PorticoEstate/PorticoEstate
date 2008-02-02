@@ -9,7 +9,7 @@
 	*  option) any later version.                                              *
 	\**************************************************************************/
 
-	/* $Id: class.sosf_project_tracker.inc.php 10126 2002-04-30 18:39:53Z skeeter $ */
+	/* $Id$ */
 
 	class sosf_project_tracker
 	{

@@ -5,7 +5,7 @@
 	* @copyright Copyright (C) 2005 Free Software Foundation, Inc. http://www.fsf.org/
 	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
 	* @package bookmarks
-	* @version $Id: hook_bookmarks_about.inc.php 15878 2005-04-28 18:59:46Z powerstat $
+	* @version $Id$
 	* @todo I would like to get the E-Mail address's to be a link to compose with a subject of the current app.
 	* @todo I will make this look better when I have more time to create a better layout.
 	*/

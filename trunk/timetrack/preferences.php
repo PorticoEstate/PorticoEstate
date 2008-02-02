@@ -9,7 +9,7 @@
   *  option) any later version.                                              *
   \**************************************************************************/
 
-  /* $Id: preferences.php 9782 2002-03-18 03:18:05Z rschader $ */
+  /* $Id$ */
 
   // Update complete for phpgroupware 0.9.10 - 4/17/2001 (api calls for accounts and contacts)
   // Nothing for contacts or accounts to update.

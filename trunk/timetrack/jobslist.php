@@ -10,7 +10,7 @@
   *  option) any later version.                                              *
   \**************************************************************************/
 
-  /* $Id: jobslist.php 12484 2003-04-22 20:38:51Z gugux $ */
+  /* $Id$ */
   // Update complete for phpgroupware 0.9.10 - 4/17/2001 (api calls for accounts and contacts)
   // Note: I have removed ability to do queries based on Contacts at this time
 

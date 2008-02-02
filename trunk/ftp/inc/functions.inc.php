@@ -10,7 +10,7 @@
 	*  option) any later version.                                              *
 	\**************************************************************************/
 
-	/* $Id: functions.inc.php 17823 2006-12-28 14:05:28Z skwashd $ */
+	/* $Id$ */
 
 	//NOTE: This is a hack to fix the register_globals problems with this app in 16
 	//TODO: Fix it properly

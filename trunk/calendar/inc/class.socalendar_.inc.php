@@ -12,7 +12,7 @@
   *  option) any later version.                                              *
   \**************************************************************************/
 
-  /* $Id: class.socalendar_.inc.php 18358 2007-11-27 04:43:37Z skwashd $ */
+  /* $Id$ */
 
 	/* I think this can go - skwashd Nov 2007
 	if( isset($GLOBALS['phpgw_info']['server']['calendar_type'])

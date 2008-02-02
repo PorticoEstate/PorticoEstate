@@ -10,7 +10,7 @@
   *  option) any later version.                                              *
   \**************************************************************************/
 
-  /* $Id: functions.inc.php 15977 2005-05-15 13:34:30Z skwashd $ */
+  /* $Id$ */
 
 	function formatted_list($name,$list,$id='',$default=False,$java=False)
 	{

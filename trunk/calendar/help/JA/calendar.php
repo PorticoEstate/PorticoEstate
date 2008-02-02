@@ -9,7 +9,7 @@
   *  option) any later version.                                              *
   \**************************************************************************/
 
-	/* $Id: calendar.php,v 1.1 2001/05/11 02:50:44 skeeter Exp $ */
+	/* $Id$ */
 
 	$phpgw_flags = Array(
 		'currentapp'	=> 'manual'

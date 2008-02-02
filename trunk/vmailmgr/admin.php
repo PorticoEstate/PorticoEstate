@@ -10,7 +10,7 @@
   *  option) any later version.                                              *
   \**************************************************************************/
 
-  /* $Id: admin.php 10274 2002-05-24 10:38:03Z seek3r $ */
+  /* $Id$ */
 
 	$GLOBALS['phpgw_info']['flags'] = array(
 		'currentapp'  => 'vmailmgr', 

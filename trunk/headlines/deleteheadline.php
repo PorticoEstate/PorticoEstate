@@ -10,7 +10,7 @@
 	*  option) any later version.                                              *
 	\**************************************************************************/
 
-	/* $Id: deleteheadline.php 17909 2007-01-24 17:26:17Z Caeies $ */
+	/* $Id$ */
 
 	$phpgw_info = array();
 	$GLOBALS['phpgw_info']['flags'] = array(

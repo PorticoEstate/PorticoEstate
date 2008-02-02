@@ -7,7 +7,7 @@
 	* Free Software Foundation; either version 2 of the License, or (at your  *
 	* option) any later version.                                              *
 	\*************************************************************************/
-	/* $Id: class.Pages_UI.inc.php 17906 2007-01-24 16:25:33Z Caeies $ */
+	/* $Id$ */
 	
 	class Pages_UI
 	{

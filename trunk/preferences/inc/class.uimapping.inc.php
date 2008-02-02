@@ -8,7 +8,7 @@
 * @license http://www.gnu.org/licenses/gpl.html GNU General Public License
 * @package phpgroupware
 * @subpackage preferences
-* @version $Id: class.uimapping.inc.php 17321 2006-10-03 14:05:03Z Caeies $
+* @version $Id$
 */
 
 /**

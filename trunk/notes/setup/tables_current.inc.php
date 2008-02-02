@@ -6,7 +6,7 @@
 	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
 	* @package notes
 	* @subpackage setup
-	* @version $Id: tables_current.inc.php 18230 2007-08-20 12:23:00Z skwashd $
+	* @version $Id$
 	*/
 
 	/*

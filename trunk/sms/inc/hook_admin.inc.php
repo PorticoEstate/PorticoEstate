@@ -8,7 +8,7 @@
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/bbb_/ekstern/
 	* @package sms
 	* @subpackage admin
- 	* @version $Id: hook_admin.inc.php 17135 2006-09-12 06:52:10Z sigurdne $
+ 	* @version $Id$
 	*/
 
 		{

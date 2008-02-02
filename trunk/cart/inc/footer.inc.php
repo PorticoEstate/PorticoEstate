@@ -10,7 +10,7 @@
 	* option) any later version.                                               *
 	\**************************************************************************/
 
-	/* $Id: footer.inc.php 9701 2002-03-11 11:04:57Z milosch $ */
+	/* $Id$ */
 
 	$GLOBALS['phpgw']->template->set_file(array('cart_footer' => 'footer.tpl'));
 	$GLOBALS['phpgw']->template->set_var('info',lang('Shopping cart'));

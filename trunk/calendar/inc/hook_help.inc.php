@@ -24,7 +24,7 @@
 	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
 	* @package calendar
 	* @subpackage manual
- 	* @version $Id: hook_help.inc.php 18020 2007-03-07 10:44:39Z sigurdne $
+ 	* @version $Id$
 	*/
 
 

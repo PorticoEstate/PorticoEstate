@@ -11,7 +11,7 @@
 	* Free Software Foundation; either version 2 of the License, or (at your    *
 	* option) any later version.                                                *
 	\***************************************************************************/
-	/* $Id: class.uifelamimail.inc.php 18314 2007-10-11 13:31:04Z skwashd $ */
+	/* $Id$ */
 
 	class uifelamimail
 	{

@@ -10,7 +10,7 @@
 	*  option) any later version.                                              *
 	\**************************************************************************/
 
-	/* $Id: hook_preferences.inc.php 17909 2007-01-24 17:26:17Z Caeies $ */
+	/* $Id$ */
 
 	$file  = array(
 		'Edit Categories' => $GLOBALS['phpgw']->link('/index.php','menuaction=preferences.uicategories.index&cats_app=developer_tools&cats_level=True&global_cats=True')

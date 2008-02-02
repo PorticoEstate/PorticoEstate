@@ -9,7 +9,7 @@
 	*  option) any later version.                                              *
 	\**************************************************************************/
 
-	/* $Id: setup.inc.php 16932 2006-08-06 10:03:24Z skwashd $ */
+	/* $Id$ */
 
 	$setup_info['admin']['name']		= 'admin';
 	$setup_info['admin']['version']		= '0.9.17.001';

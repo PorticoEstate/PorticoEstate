@@ -22,7 +22,7 @@
 	* along with this program; if not, write to the Free Software       *
 	* Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.         *
 	\*******************************************************************/
-	/* $Id: class.bobackup.inc.php 12837 2003-05-23 21:39:15Z gugux $ */
+	/* $Id$ */
 
 	class bobackup
 	{

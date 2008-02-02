@@ -9,7 +9,7 @@
   *  option) any later version.                                              *
   \**************************************************************************/
 
-  /* $Id: class.solangfile.inc.php 17946 2007-02-13 12:10:29Z sigurdne $ */
+  /* $Id$ */
 
 	class solangfile
 	{

@@ -8,7 +8,7 @@
 	*  Free Software Foundation; either version 2 of the License, or (at your  *
 	*  option) any later version.                                              *
 	\**************************************************************************/
-	/* $Id: class.boaclmanager.inc.php 17795 2006-12-28 01:35:35Z skwashd $ */
+	/* $Id$ */
 
 	class boaclmanager
 	{

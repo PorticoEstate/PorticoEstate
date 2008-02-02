@@ -8,7 +8,7 @@
   *  Free Software Foundation; either version 2 of the License, or (at your  *
   *  option) any later version.                                              *
   \**************************************************************************/
-  /* $Id: default_records.inc.php 9642 2002-03-04 07:18:46Z milosch $ */
+  /* $Id$ */
 
 	$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_inv_statuslist (status_name) VALUES ('available')");
 	$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_inv_statuslist (status_name) VALUES ('no longer available')");

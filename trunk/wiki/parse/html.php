@@ -1,5 +1,5 @@
 <?php
-// $Id: html.php 12395 2003-04-17 13:18:55Z ralfbecker $
+// $Id$
 
 // These functions take wiki entities like 'bold_begin' or 'ref' and return
 //   HTML representing these entities.  They are used throught this script

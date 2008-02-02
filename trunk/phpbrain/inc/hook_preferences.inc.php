@@ -7,7 +7,7 @@
 	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
 	* @package phpbrain
 	* @subpackage hooks
-	* @version $Id: hook_preferences.inc.php 16714 2006-05-09 05:49:38Z skwashd $
+	* @version $Id$
 	*/
 
 	$values = array(

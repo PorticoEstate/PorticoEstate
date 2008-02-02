@@ -6,7 +6,7 @@
 * @license http://www.gnu.org/licenses/gpl.html GNU General Public License
 * @internal based on phpgwapi/sbox2
 * @package etemplate
-* @version $Id: class.sbox2.inc.php 17947 2007-02-13 12:59:32Z sigurdne $
+* @version $Id$
 */
 
 	include_once(PHPGW_API_INC . '/class.sbox.inc.php');

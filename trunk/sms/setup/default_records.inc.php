@@ -8,7 +8,7 @@
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/bbb_/ekstern/
 	* @package sms
 	* @subpackage setup
- 	* @version $Id: default_records.inc.php 17160 2006-09-16 14:05:03Z sigurdne $
+ 	* @version $Id$
 	*/
 
 

@@ -10,7 +10,7 @@
 	*  option) any later version.                                                 *
 	\*****************************************************************************/
 
-	/* $Id: index.php 17909 2007-01-24 17:26:17Z Caeies $ */
+	/* $Id$ */
 
 	$phpgw_flags = Array(
 		'currentapp'	=>	'forum',

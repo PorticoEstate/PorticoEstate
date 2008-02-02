@@ -8,7 +8,7 @@
 	* @copyright Copyright (C) 2000-2005 Free Software Foundation, Inc. http://www.fsf.org/
 	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
 	* @package phpgroupware
-	* @version $Id: anon_wrapper.php 15834 2005-04-15 13:19:15Z powerstat $
+	* @version $Id$
 	* @todo Limit which users can access this program (ACL check)
 	* @todo Global disabler
 	* @todo Detect bad logins and passwords, spit out generic message

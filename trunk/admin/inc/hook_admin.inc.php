@@ -8,7 +8,7 @@
 	*  Free Software Foundation; either version 2 of the License, or (at your  *
 	*  option) any later version.                                              *
 	\**************************************************************************/
-	/* $Id: hook_admin.inc.php 17726 2006-12-19 13:59:48Z skwashd $ */
+	/* $Id$ */
 
 	if (! $GLOBALS['phpgw']->acl->check('site_config_access',1,'admin'))
 	{

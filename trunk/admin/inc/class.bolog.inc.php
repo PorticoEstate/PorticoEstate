@@ -9,7 +9,7 @@
 	*  option) any later version.                                              *
 	\**************************************************************************/
 
-	/* $Id: class.bolog.inc.php 17183 2006-09-19 15:16:42Z skwashd $ */
+	/* $Id$ */
 
 	class bolog
 	{

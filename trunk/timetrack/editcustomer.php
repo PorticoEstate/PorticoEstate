@@ -11,7 +11,7 @@
   *  option) any later version.                                              *
   \**************************************************************************/
 
-  /* $Id: editcustomer.php 9782 2002-03-18 03:18:05Z rschader $ */
+  /* $Id$ */
 
  if($submit) {
   $GLOBALS['phpgw_info']["flags"] = array("noheader" => True, "nonavbar" => True);

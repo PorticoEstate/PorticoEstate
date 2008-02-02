@@ -9,7 +9,7 @@
 	*  option) any later version.                                              *
 	\**************************************************************************/
 
-	/* $Id: setup.inc.php 18016 2007-03-06 15:01:13Z sigurdne $ */
+	/* $Id$ */
 
 	$setup_info['calendar']['name']    = 'calendar';
 	$setup_info['calendar']['version'] = '0.9.18.002';

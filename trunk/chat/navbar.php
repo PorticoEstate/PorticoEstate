@@ -10,7 +10,7 @@
 	*  option) any later version.                                              *
 	\**************************************************************************/
 
-	/* $Id: navbar.php 8319 2001-11-19 05:03:35Z milosch $ */
+	/* $Id$ */
 
 	$phpgw_info['flags'] = array(
 		'currentapp'    => 'chat', 

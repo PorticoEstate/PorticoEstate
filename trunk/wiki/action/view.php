@@ -1,5 +1,5 @@
 <?php
-// $Id: view.php 11932 2003-03-07 00:19:14Z ralfbecker $
+// $Id$
 
 require('parse/main.php');
 require('parse/macros.php');

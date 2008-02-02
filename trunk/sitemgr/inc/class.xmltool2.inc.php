@@ -23,7 +23,7 @@
 	* along with this program; if not, write to the Free Software       *
 	* Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.         *
 	\*******************************************************************/
-  /* $Id: class.xmltool2.inc.php 11698 2003-01-17 03:37:53Z totschnig $ */
+  /* $Id$ */
 
 	// Michael Totschnig: this is a variant of xmltool where export_var returns subelements
 	// in a subarray, even if there is only one of them

@@ -8,7 +8,7 @@
  * @license http://www.fsf.org/licenses/gpl.html GNU General Public License
  * @package pbwebmaui
  * @subpackage service
- * @version $Id: class.pbwebmaui_service.inc.php 15922 2005-05-10 12:42:25Z powerstat $
+ * @version $Id$
  */
 
 /**

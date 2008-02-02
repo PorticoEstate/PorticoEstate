@@ -17,7 +17,7 @@
 *  option) any later version.                                              *
 \**************************************************************************/
 
-	/* $Id: class.uikb.inc.php 16713 2006-05-09 05:14:07Z skwashd $ */
+	/* $Id$ */
 
 	/**
 	* User Interface layer of the Knowledge Base

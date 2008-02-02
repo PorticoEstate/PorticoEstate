@@ -11,7 +11,7 @@
   *  option) any later version.                                              *
   \**************************************************************************/
 
-  /* $Id: functions.inc.php 15899 2005-05-04 13:39:58Z powerstat $ */
+  /* $Id$ */
 
 	$GLOBALS['phpgw']->db->query("select * from phpgw_polls_settings");
 	while ($GLOBALS['phpgw']->db->next_record())

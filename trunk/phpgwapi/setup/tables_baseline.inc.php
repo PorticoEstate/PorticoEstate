@@ -5,7 +5,7 @@
 	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
 	* @package phpgwapi
 	* @subpackage setup
-	* @version $Id: tables_baseline.inc.php 15874 2005-04-28 08:11:59Z powerstat $
+	* @version $Id$
 	*/
 
 	$phpgw_baseline = array(

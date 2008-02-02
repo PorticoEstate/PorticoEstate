@@ -5,7 +5,7 @@
 	* @copyright Copyright (C) 2005 Free Software Foundation, Inc. http://www.fsf.org/
 	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
 	* @package bookmarks
-	* @version $Id: hook_admin.inc.php 17106 2006-09-09 09:04:58Z skwashd $
+	* @version $Id$
 	*/
 
 	$file = Array

@@ -8,7 +8,7 @@
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/bbb_/ekstern/
 	* @package property
 	* @subpackage manual
- 	* @version $Id: overview.php,v 1.7 2006/10/25 18:58:45 sigurdne Exp $
+ 	* @version $Id$
 	*/
 
 	/**

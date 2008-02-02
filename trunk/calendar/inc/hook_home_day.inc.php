@@ -12,7 +12,7 @@
   *  option) any later version.                                              *
   \**************************************************************************/
 
-  /* $Id: hook_home_day.inc.php 17799 2006-12-28 04:28:01Z skwashd $ */
+  /* $Id$ */
 
 	$GLOBALS['extra_data'] = $GLOBALS['css']."\n".'<td>'."\n".'<table border="0" cols="3"><tr><td align="center" width="35%" valign="top">'
 		. ExecMethod('calendar.uicalendar.mini_calendar',

@@ -9,7 +9,7 @@
   *  option) any later version.                                              *
   \**************************************************************************/
 
-  /* $Id: tables_baseline.inc.php 15968 2005-05-15 06:57:38Z skwashd $ */
+  /* $Id$ */
 
 	$phpgw_baseline = array(
 		"webcal_entry" => array(

@@ -10,7 +10,7 @@
 	* Free Software Foundation; either version 2 of the License, or (at your   *
 	* option) any later version.                                               *
 	\**************************************************************************/
-	/* $Id: functions.inc.php 5985 2001-06-17 02:15:04Z bettina $ */
+	/* $Id$ */
   
 // This is loaded by default
 

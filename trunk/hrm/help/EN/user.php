@@ -8,7 +8,7 @@
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/bbb_/ekstern/
 	* @package hrm
 	* @subpackage manual
- 	* @version $Id: user.php 16261 2005-11-23 13:11:53Z sigurdne $
+ 	* @version $Id$
 	*/
 
 

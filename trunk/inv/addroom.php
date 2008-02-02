@@ -9,7 +9,7 @@
 	* Free Software Foundation; either version 2 of the License, or (at your   *
 	* option) any later version.                                               *
 	\**************************************************************************/
-	/* $Id: addroom.php 12919 2003-05-30 22:25:43Z gugux $ */
+	/* $Id$ */
 
 	$phpgw_info['flags']['currentapp'] = 'inv';
 	include('../header.inc.php');

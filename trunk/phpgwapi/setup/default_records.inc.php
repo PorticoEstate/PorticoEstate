@@ -5,7 +5,7 @@
 	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
 	* @package phpgwapi
 	* @subpackage setup
-	* @version $Id: default_records.inc.php 17544 2006-11-12 12:44:13Z sigurdne $
+	* @version $Id$
 	*/
 
 	$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_languages (lang_id, lang_name, available) VALUES ('aa','Afar','No')");

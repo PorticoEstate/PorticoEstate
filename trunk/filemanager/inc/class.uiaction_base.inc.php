@@ -6,7 +6,7 @@
 	* @copyright Copyright (C) 2000-2005 Free Software Foundation, Inc http://www.fsf.org/
 	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
 	* @package filemanager
-	* @version $Id: class.uiaction_base.inc.php 17626 2006-11-29 15:32:21Z Caeies $
+	* @version $Id$
 	*/
 
 	/**

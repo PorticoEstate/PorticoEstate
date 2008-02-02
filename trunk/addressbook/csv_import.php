@@ -10,7 +10,7 @@
   *  option) any later version.                                              *
   \**************************************************************************/
 
-  /* $Id: csv_import.php 17625 2006-11-29 14:39:38Z sigurdne $ */
+  /* $Id$ */
 
 	$GLOBALS['phpgw_info']['flags'] = array(
 		'currentapp' => 'addressbook',

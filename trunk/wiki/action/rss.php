@@ -1,5 +1,5 @@
 <?php
-// $Id: rss.php 11866 2003-03-03 14:16:25Z ralfbecker $
+// $Id$
 
 require(TemplateDir . '/rss.php');
 require('parse/html.php');

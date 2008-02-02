@@ -14,7 +14,7 @@
   * edited by hand.                                                          *
   \**************************************************************************/
 
-  /* $Id: tables_current.inc.php 8454 2001-12-03 18:01:51Z milosch $ */
+  /* $Id$ */
 
   /* table array for weather */
 	$phpgw_baseline = array(

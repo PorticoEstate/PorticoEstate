@@ -1,5 +1,5 @@
 <?php
-/* $Id: url.php 11932 2003-03-07 00:19:14Z ralfbecker $ */
+/* $Id$ */
 
 // Under phpgw these URL's are NOT configurable, you can set the phpgw install-patch in setup
 

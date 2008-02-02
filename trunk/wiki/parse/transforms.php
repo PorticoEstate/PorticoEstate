@@ -1,5 +1,5 @@
 <?php
-// $Id: transforms.php 15975 2005-05-15 12:55:31Z skwashd $
+// $Id$
 
 //Portions of this script written by Dave Hall - skwashd at phpgroupware.org
 //Portions of this file are Copyright (c) 2004 The Free Software Foundation Inc

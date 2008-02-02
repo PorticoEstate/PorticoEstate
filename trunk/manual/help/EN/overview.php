@@ -6,7 +6,7 @@
 	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
 	* @package manual
 	* @subpackage manual
-	* @version $Id: overview.php 15838 2005-04-17 14:04:32Z powerstat $
+	* @version $Id$
 	*/
 
 	$GLOBALS['phpgw_info']['flags'] = array

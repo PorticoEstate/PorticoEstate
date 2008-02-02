@@ -8,7 +8,7 @@
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/bbb_/ekstern/
 	* @package sms
 	* @subpackage core
- 	* @version $Id: class.socommon.inc.php 17785 2006-12-27 10:39:15Z sigurdne $
+ 	* @version $Id$
 	*/
 
 	/**

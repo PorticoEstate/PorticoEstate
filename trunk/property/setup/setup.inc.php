@@ -8,7 +8,7 @@
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/bbb_/ekstern/
 	* @package property
 	* @subpackage setup
- 	* @version $Id: setup.inc.php,v 1.61 2007/10/13 10:02:54 sigurdne Exp $
+ 	* @version $Id$
 	*/
 
 	$setup_info['property']['name']		= 'property';

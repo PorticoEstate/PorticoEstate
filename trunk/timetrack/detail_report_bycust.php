@@ -10,7 +10,7 @@
   *  option) any later version.                                              *
   \**************************************************************************/
  
-  /* $Id: detail_report_bycust.php 11371 2002-10-28 02:36:04Z skeeter $ */
+  /* $Id$ */
 
 	// Update complete for phpgroupware 0.9.10 - 4/14/2001 (api calls for accounts and contacts)
 

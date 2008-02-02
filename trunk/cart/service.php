@@ -10,7 +10,7 @@
   *  option) any later version.                                              *
   \**************************************************************************/
 
-  /* $Id: service.php 9701 2002-03-11 11:04:57Z milosch $ */
+  /* $Id$ */
   
 	$GLOBALS['phpgw_info']['flags'] = array('currentapp' => 'cart');
 

@@ -8,7 +8,7 @@
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/bbb_/ekstern/
 	* @package property
 	* @subpackage setup
- 	* @version $Id: default_records.inc.php,v 1.42 2007/01/10 09:21:28 sigurdne Exp $
+ 	* @version $Id$
 	*/
 
 

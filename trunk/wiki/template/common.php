@@ -1,5 +1,5 @@
 <?php
-// $Id: common.php 15975 2005-05-15 12:55:31Z skwashd $
+// $Id$
 
 // This function generates the common prologue and header
 // for the various templates.

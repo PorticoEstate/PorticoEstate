@@ -8,7 +8,7 @@
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/bbb_/ekstern/
 	* @package property
 	* @subpackage manual
- 	* @version $Id: location.php,v 1.4 2005/05/12 21:26:28 sigurdne Exp $
+ 	* @version $Id$
 	*/
 
 	/**

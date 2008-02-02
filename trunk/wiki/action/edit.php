@@ -1,5 +1,5 @@
 <?php
-// $Id: edit.php 12052 2003-03-18 22:57:53Z ralfbecker $
+// $Id$
 
 require('parse/macros.php');
 require('parse/html.php');

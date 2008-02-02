@@ -9,7 +9,7 @@
 	*  option) any later version.                                              *
 	\**************************************************************************/
 
-	/* $Id: tables_update.inc.php 15965 2005-05-15 02:16:27Z skwashd $ */
+	/* $Id$ */
 
 	$test[] = '0.9.13.001';
 	function sitemgr_upgrade0_9_13_001()

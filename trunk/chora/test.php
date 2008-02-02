@@ -12,7 +12,7 @@
 	*  option) any later version.                                              *
 	\**************************************************************************/
 
-	/* $Id: test.php 10090 2002-04-28 20:36:01Z milosch $ */
+	/* $Id$ */
 
 	$phpgw_info['flags'] = array(
 		'currentapp' => 'chora',

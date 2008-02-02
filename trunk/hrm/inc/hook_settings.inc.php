@@ -8,7 +8,7 @@
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/bbb_/ekstern/
 	* @package hrm
 	* @subpackage core
- 	* @version $Id: hook_settings.inc.php 16382 2006-02-06 13:29:16Z sigurdne $
+ 	* @version $Id$
 	*/
 
 	$yes_and_no = array(

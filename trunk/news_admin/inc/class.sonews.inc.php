@@ -9,7 +9,7 @@
 	*  option) any later version.                                              *
 	\**************************************************************************/
 
-	/* $Id: class.sonews.inc.php 16996 2006-08-25 05:27:11Z skwashd $ */
+	/* $Id$ */
 
 	class sonews
 	{

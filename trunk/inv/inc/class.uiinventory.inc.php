@@ -23,7 +23,7 @@
 	* along with this program; if not, write to the Free Software       *
 	* Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.         *
 	\*******************************************************************/
-	/* $Id: class.uiinventory.inc.php 15901 2005-05-04 14:06:20Z powerstat $ */
+	/* $Id$ */
 
 	class uiinventory
 	{

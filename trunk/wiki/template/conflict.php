@@ -1,5 +1,5 @@
 <?php
-// $Id: conflict.php 11866 2003-03-03 14:16:25Z ralfbecker $
+// $Id$
 
 require_once(TemplateDir . '/common.php');
 

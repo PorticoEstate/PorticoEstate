@@ -9,7 +9,7 @@
   *  option) any later version.                                              *
   \**************************************************************************/
 
-  /* $Id: tables_current.inc.php 16201 2005-11-18 11:40:45Z skwashd $ */
+  /* $Id$ */
 
 	$phpgw_baseline = array(
 		'phpgw_cal' => array(

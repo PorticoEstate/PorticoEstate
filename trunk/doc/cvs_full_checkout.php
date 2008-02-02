@@ -11,7 +11,7 @@
 	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
 	* @package phpgroupware
 	* @subpackage development
-	* @version $Id: cvs_full_checkout.php 17058 2006-09-02 13:45:52Z sigurdne $
+	* @version $Id$
 	*/
 
 	exit; //remove this line to make the script work

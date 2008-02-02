@@ -9,7 +9,7 @@
 *  option) any later version.                                              *
 \**************************************************************************/
 
-/* $Id: testsuite.php 9428 2002-02-09 21:16:21Z milosch $ */
+/* $Id$ */
 
 	$GLOBALS['phpgw_info'] = array();
 	$GLOBALS['phpgw_info']['flags'] = array(

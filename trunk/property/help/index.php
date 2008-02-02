@@ -9,7 +9,7 @@
   *  option) any later version.                                              *
   \**************************************************************************/
 
-	/* $Id: index.php,v 1.1 2005/11/25 12:44:57 sigurdne Exp $ */
+	/* $Id$ */
 
 	$phpgw_flags = Array(
 		'currentapp'	=> 'manual'

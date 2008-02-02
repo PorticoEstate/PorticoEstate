@@ -9,7 +9,7 @@
   *  Free Software Foundation; either version 2 of the License, or (at your  *
   *  option) any later version.                                              *
   \**************************************************************************/
-  /* $Id: addressbook.php 17752 2006-12-22 10:36:52Z sigurdne $ */
+  /* $Id$ */
 
 	$phpgw_info["flags"] = array(
 		'noheader' => True,

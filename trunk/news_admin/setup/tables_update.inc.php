@@ -12,7 +12,7 @@
 	* http://www.goldenglair.com                                               *
 	\**************************************************************************/
 
-	/* $Id: tables_update.inc.php 16990 2006-08-23 13:32:03Z skwashd $ */
+	/* $Id$ */
 
 	$test[] = '0.0.1';
 	function news_admin_upgrade0_0_1()

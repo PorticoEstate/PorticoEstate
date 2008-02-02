@@ -7,7 +7,7 @@
 	* @copyright Copyright (C) 2000-2003,2005 Free Software Foundation, Inc. http://www.fsf.org/
 	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
 	* @package todo
-	* @version $Id: class.botodo.inc.php 18195 2007-08-10 07:36:08Z sigurdne $
+	* @version $Id$
 	*/
 
 	/**

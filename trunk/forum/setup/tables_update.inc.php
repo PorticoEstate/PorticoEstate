@@ -9,7 +9,7 @@
 	*  option) any later version.                                              *
 	\**************************************************************************/
 
-	/* $Id: tables_update.inc.php 9235 2002-01-20 03:37:08Z skeeter $ */
+	/* $Id$ */
 
 	$test[] = '0.9.13';
 	function forum_upgrade0_9_13()

@@ -10,7 +10,7 @@
 	*  option) any later version.                                              *
 	\**************************************************************************/
 
-	/* $Id: class.bocurrentsessions.inc.php 17507 2006-10-27 18:43:27Z sigurdne $ */
+	/* $Id$ */
 
 	class bocurrentsessions
 	{

@@ -11,7 +11,7 @@
   *  option) any later version.                                              *
   \**************************************************************************/
   
-  /* $Id: class.ldap_openldap1.inc.php 6387 2001-06-30 06:07:04Z milosch $ */
+  /* $Id$ */
 
 	/*
 		OpenLDAP 1.x has no schema information available via search, so the functions

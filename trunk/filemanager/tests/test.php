@@ -6,7 +6,7 @@
 	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
 	* @package filemanager
 	* @subpackage test
-	* @version $Id: test.php 15879 2005-04-28 20:45:53Z powerstat $
+	* @version $Id$
 	*/
 
 $phpgw_info["flags"] = array("currentapp" => "filemanager",

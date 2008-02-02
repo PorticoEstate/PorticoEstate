@@ -9,7 +9,7 @@
 	*  option) any later version.                                              *
 	\**************************************************************************/
 
-	/* $Id: setup.inc.php 16990 2006-08-23 13:32:03Z skwashd $ */
+	/* $Id$ */
 
 	/* Basic information about this app */
 	$setup_info['news_admin']['name']      = 'news_admin';

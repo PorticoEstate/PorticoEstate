@@ -2,7 +2,7 @@
 /**
  * Integrated Template - IT
  * @author   Ulf Wendel <uw@netuse.de>
- * @version  $Id: IT.php 14804 2004-04-22 07:19:46Z powerstat $
+ * @version  $Id$
  * @package  HTML_Template_IT
  */
 //
@@ -22,7 +22,7 @@
 // | Author: Ulf Wendel <ulf.wendel@phpdoc.de>                            |
 // +----------------------------------------------------------------------+
 //
-// $Id: IT.php 14804 2004-04-22 07:19:46Z powerstat $
+// $Id$
 //
 
 /**

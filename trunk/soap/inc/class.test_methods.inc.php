@@ -6,7 +6,7 @@
 	* @copyright Copyright (C) 2000-2006 Free Software Foundation, Inc. http://www.fsf.org/
 	* @licence http://www.gnu.org/licenses/gpl.html GNU General Public License
 	* @package soap
-	* @version $Id: class.test_methods.inc.php 17830 2006-12-28 18:12:15Z Caeies $
+	* @version $Id$
 	* @author Caeies (caeies@phpgroupware.org) / Original idea from Joseph Engo <jengo@phpgroupware.org> ?
 	*/
 

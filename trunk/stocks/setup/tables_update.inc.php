@@ -8,7 +8,7 @@
 	* Free Software Foundation; either version 2 of the License, or (at your   *
 	* option) any later version.                                               *
 	\**************************************************************************/
-	/* $Id: tables_update.inc.php 9304 2002-01-24 21:18:03Z ceb $ */
+	/* $Id$ */
 
 	$test[] = '0.8.1';
 	function stocks_upgrade0_8_1()

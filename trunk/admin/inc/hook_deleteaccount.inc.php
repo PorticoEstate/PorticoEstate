@@ -10,7 +10,7 @@
   *  option) any later version.                                              *
   \**************************************************************************/
 
-	/* $Id: hook_deleteaccount.inc.php 18358 2007-11-27 04:43:37Z skwashd $ */
+	/* $Id$ */
 
 	$account_id = phpgw::get_var('account_id', 'int');
 	if ( $account_id )
