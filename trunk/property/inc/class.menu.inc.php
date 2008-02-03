@@ -100,7 +100,7 @@
 					'tenant_cats'	=> array
 					(
 						'text'	=> $GLOBALS['phpgw']->translation->translate('Tenant Categories', array(), true),
-						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uicategory.index', 'type' => 'tenant') )
+						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uicategory.index', 'type' => 'tenant', 'menu_selection' => 'admin::property::tenant::tenant_cats') )
 					),
 					'tenant_global_cats'	=> array
 					(
@@ -115,21 +115,16 @@
 					'claims_cats'	=> array
 					(
 						'text'	=> $GLOBALS['phpgw']->translation->translate('Tenant Claim Categories', array(), true),
-						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uicategory.index', 'type' => 'tenant_claim') )
+						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uicategory.index', 'type' => 'tenant_claim', 'menu_selection' => 'admin::property::tenant::claims_cats') )
 					)
 				);
 
 				$admin_children_vendor = array
 				(
-					'vendor'	=> array
-					(
-						'text'	=> $GLOBALS['phpgw']->translation->translate('Vendor', array(), true),
-						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiactor.index', 'role' => 'vendor') )
-					),
 					'vendor_cats'	=> array
 					(
 						'text'	=> $GLOBALS['phpgw']->translation->translate('Vendor Categories', array(), true),
-						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uicategory.index', 'type' => 'vendor') )
+						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uicategory.index', 'type' => 'vendor', 'menu_selection' => 'admin::property::vendor::vendor_cats') )
 					),
 					'vendor_global_cats'	=> array
 					(
@@ -144,15 +139,10 @@
 				);
 				$admin_children_owner = array
 				(
-					'owner'	=> array
-					(
-						'text'	=> $GLOBALS['phpgw']->translation->translate('Owner', array(), true),
-						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiactor.index', 'role' => 'owner') )
-					),
 					'owner_cats'	=> array
 					(
 						'text'	=> $GLOBALS['phpgw']->translation->translate('Owner Categories', array(), true),
-						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uicategory.index', 'type' => 'owner') )
+						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uicategory.index', 'type' => 'owner', 'menu_selection' => 'admin::property::owner::owner_cats') )
 					),
 					'owner_attribs'	=> array
 					(
@@ -166,32 +156,32 @@
 					'accounting_cats'	=> array
 					(
 						'text'	=> $GLOBALS['phpgw']->translation->translate('Accounting Categories', array(), true),
-						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uicategory.index', 'type' => 'b_account') )
+						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uicategory.index', 'type' => 'b_account', 'menu_selection' => 'admin::property::accounting::accounting_cats') )
 					),
 					'accounting_dim_b'	=> array
 					(
 						'text'	=> $GLOBALS['phpgw']->translation->translate('Accounting dim b', array(), true),
-						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uicategory.index', 'type' => 'dim_b') )
+						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uicategory.index', 'type' => 'dim_b', 'menu_selection' => 'admin::property::accounting::accounting_dim_b') )
 					),
 					'accounting_dim_d'	=> array
 					(
 						'text'	=> $GLOBALS['phpgw']->translation->translate('Accounting dim d', array(), true),
-						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uicategory.index', 'type' => 'dim_d') )
+						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uicategory.index', 'type' => 'dim_d', 'menu_selection' => 'admin::property::accounting::accounting_dim_d') )
 					),
 					'accounting_tax'	=> array
 					(
 						'text'	=> $GLOBALS['phpgw']->translation->translate('Accounting tax', array(), true),
-						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uicategory.index', 'type' => 'tax') )
+						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uicategory.index', 'type' => 'tax', 'menu_selection' => 'admin::property::accounting::accounting_tax') )
 					),
-					'voucher_cat'	=> array
+					'voucher_cats'	=> array
 					(
 						'text'	=> $GLOBALS['phpgw']->translation->translate('Accounting voucher category', array(), true),
-						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uicategory.index', 'type' => 'voucher_cat') )
+						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uicategory.index', 'type' => 'voucher_cat', 'menu_selection' => 'admin::property::accounting::voucher_cats') )
 					),
 					'voucher_type'	=> array
 					(
 						'text'	=> $GLOBALS['phpgw']->translation->translate('Accounting voucher type', array(), true),
-						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uicategory.index', 'type' => 'voucher_type') )
+						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uicategory.index', 'type' => 'voucher_type', 'menu_selection' => 'admin::property::accounting::voucher_type') )
 					)
 				);
 
@@ -332,19 +322,19 @@
 					'tenant'	=> array
 					(
 						'text'	=> $GLOBALS['phpgw']->translation->translate('Tenant', array(), true),
-						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiactor.index', 'role' => 'tenant') ),
+						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiactor.index', 'role' => 'tenant', 'admin' => true) ),
 						'children'	=> $admin_children_tenant
 					),
 					'owner'	=> array
 					(
 						'text'	=> $GLOBALS['phpgw']->translation->translate('Owner', array(), true),
-						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiactor.index', 'role' => 'owner') ),
+						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiactor.index', 'role' => 'owner', 'admin' => true) ),
 						'children'	=> $admin_children_owner
 					),
 					'vendor'	=> array
 					(
 						'text'	=> $GLOBALS['phpgw']->translation->translate('Vendor', array(), true),
-						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiactor.index', 'role' => 'vendor') ),
+						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiactor.index', 'role' => 'vendor', 'admin' => true) ),
 						'children'	=> $admin_children_vendor
 					),
 					'doc_cats'	=> array
