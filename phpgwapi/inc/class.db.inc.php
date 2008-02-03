@@ -429,41 +429,58 @@
 		*/
 		public function get_last_insert_id($table, $field)
 		{
-			// This looks like a pretty ugly hack to me, is it really needed? skwashd nov07
-			if($GLOBALS['phpgw_info']['server']['db_type'] == 'postgres')
+			switch ( $GLOBALS['phpgw_info']['server']['db_type'] )
 			{
-				$params = explode('.',$this->adodb->pgVersion);
+				case 'postgres':
+					$params = explode('.',$this->adodb->pgVersion);
 
-				if ($params[0] < 8 || ($params[0] == 8 && $params[1] ==0))
-				{
-					$oid = pg_getlastoid($this->adodb->_queryID);
-					if ($oid == -1)
+					if ($params[0] < 8 || ($params[0] == 8 && $params[1] ==0))
+					{
+						$oid = pg_getlastoid($this->adodb->_queryID);
+						if ($oid == -1)
+						{
+							return -1;
+						}
+
+						$result = @pg_Exec($this->adodb->_connectionID, "select $field from $table where oid=$oid");
+					}
+					else
+					{
+						$result = @pg_Exec($this->adodb->_connectionID, "select lastval()");
+					}
+	
+					if (!$result)
 					{
 						return -1;
 					}
 
-					$result = @pg_Exec($this->adodb->_connectionID, "select $field from $table where oid=$oid");
-				}
-				else
-				{
-					$result = @pg_Exec($this->adodb->_connectionID, "select lastval()");
-				}
+					$Record = @pg_fetch_array($result, 0);
 
-				if (!$result)
-				{
+					@pg_freeresult($result);
+					if (!is_array($Record)) /* OID not found? */
+					{
+						return -1;
+					}
+					return $Record[0];
+					break;
+				case 'mssql':
+					/*  MSSQL uses a query to retrieve the last
+					 *  identity on the connection, so table and field are ignored here as well.
+					 */
+					if(!isset($table) || $table == '' || !isset($field) || $field == '')
+					{
 					return -1;
-				}
-
-				$Record = @pg_fetch_array($result, 0);
-
-				@pg_freeresult($result);
-				if (!is_array($Record)) /* OID not found? */
-				{
-					return -1;
-				}
-				return $Record[0];
+					}
+					$result = @mssql_query("select @@identity", $this->adodb->_queryID);
+					if(!$result)
+					{
+						return -1;
+					}
+					return mssql_result($result, 0, 0);
+					break;
+				default:
+					return $this->adodb->Insert_ID($table, $field);
 			}
-			return $this->adodb->Insert_ID($table, $field);
 		}
 
 		/**
