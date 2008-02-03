@@ -212,6 +212,7 @@ class ged_admin
 		$my_unplaced_types=$this->ged_dm->list_unplaced_types($project_root_id);
 		
 		if ( ! empty($my_unplaced_types))
+		{
 		foreach ( $my_unplaced_types as $my_unplaced_type )
 		{
 			$chrono_flag=$style="";
@@ -222,6 +223,7 @@ class ged_admin
 			}
 
 			$select_unplaced_types_html.="<option ".$style." value=\"".$my_unplaced_type['type_id']."\" >".$my_unplaced_type['type_desc'].$chrono_flag."</option>\n";
+		}
 		}
 		
 		$select_unplaced_types_html.="</select>\n";

@@ -34,14 +34,15 @@
 			{
 				$domains = array();
 			}
+
+			$settings = phpgw::get_var("settings", 'string', 'POST');
 			foreach($domains as $k => $v)
 			{
 				if(isset($deletedomain[$k]))
 				{
 					continue;
 				}
-				//$dom = phpgw::get_var("setting_{$k}", 'string', 'POST');
-				$dom = $_POST['settings'][$k];
+				$dom = $settings[$k];
 				$GLOBALS['header_template']->set_var('DB_DOMAIN',$v);
 				foreach($dom as $x => $y)
 				{

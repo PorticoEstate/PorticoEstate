@@ -501,7 +501,14 @@
 				}
 				else
 				{
+					if ( $context['custom_fields']['update_mode'] == 'update')
+					{
+						$minor=$version['minor'];
+					}
+					else
+					{
 					$minor=$version['minor']+1;
+				}
 				}
 				
 				$this->t->set_file(array('update_file_tpl'=>'update_file.tpl'));

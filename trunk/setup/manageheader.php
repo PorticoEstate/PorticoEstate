@@ -152,17 +152,25 @@
 			check_form_values();
 			$header_template = CreateObject('phpgwapi.Template','../');
 			$GLOBALS['phpgw_setup']->html->show_header('Generated header.inc.php', False, 'header');
-			echo '<br />' . lang('Save this text as contents of your header.inc.php') . '<br /><hr />';
-			$newheader = $GLOBALS['phpgw_setup']->html->generate_header();
-			echo '<pre>';
-			echo htmlentities($newheader);
-			echo '</pre><hr />';
-			echo '<form action="index.php" method="post">';
-			echo '<br />' . lang('After retrieving the file, put it into place as the header.inc.php.  Then, click "continue".') . '<br />';
-			echo '<input type="hidden" name="FormLogout" value="header" />';
-			echo '<input type="submit" name="junk" value="' . lang('Continue') . '" />';
-			echo '</form>';
-			echo '</body></html>';
+
+			$newheader = htmlspecialchars($GLOBALS['phpgw_setup']->html->generate_header());
+			$lang_intro = lang('Save this text as contents of your header.inc.php');
+			$lang_text = lang('After retrieving the file, put it into place as the header.inc.php.  Then, click "continue".');
+			$lang_continue = lang('continue');
+			echo  <<<HTML
+				<h1>{$lang_intro}</h1>
+				<pre id="header_contents">
+$newheader
+				</pre>
+				<form action="index.php" method="post">
+					$lang_text<br>
+					<input type="hidden" name="FormLogout" value="header">
+					<input type="submit" name="junk" value="{$lang_continue}">
+				</form>
+			</body>
+		</html>
+
+HTML;
 			break;
 		case 'write':
 			check_form_values();
@@ -204,9 +212,8 @@
 				die($detected);
 			}
 			
-			$phpver = lang('<li>You appear to be using PHP 5.2+') . "</li>\n";
-			$supported_sessions_type[] = 'db';
-			$supported_sessions_type[] = 'php';
+			$phpver = '<li>' . lang('You appear to be using PHP %1+', 5.2) . "</li>\n";
+			$supported_sessions_type = array('php', 'db');
 
 			$detected .= '<table id="manageheader">' . "\n";
 
@@ -356,7 +363,9 @@ HTML;
 				}
 				else
 				{
-					if(@$GLOBALS['phpgw_info']['server']['header_version'] != @$GLOBALS['phpgw_info']['server']['current_header_version'])
+					if ( !isset($GLOBALS['phpgw_info']['server']['header_version'])
+						|| !isset($GLOBALS['phpgw_info']['server']['current_header_version'])
+						|| $GLOBALS['phpgw_info']['server']['header_version'] != $GLOBALS['phpgw_info']['server']['current_header_version'] )
 					{
 						$detected .= '<li class="warn">' . lang("You're using an old header.inc.php version...") . "</li>\n";
 						$detected .= '<li>' . lang('Importing old settings into the new format....') . "</li>\n";
@@ -392,47 +401,46 @@ HTML;
 						$selected = '';
 						$dbtype_options = '';
 						$found_dbtype = False;
-						@reset($supported_db);
-						while(list($k,$v) = @each($supported_db))
+						foreach ( $supported_db as $db )
 						{
-							if($v == $GLOBALS['phpgw_domain'][$key]['db_type'])
+							if ( $db == $GLOBALS['phpgw_domain'][$key]['db_type'] )
 							{
-								$selected = ' selected="selected" ';
+								$selected = ' selected ';
 								$found_dbtype = true;
 							}
 							else
 							{
 								$selected = '';
 							}
-							$dbtype_options .= '<option ' . $selected . 'value="' . $v . '">' . $v . "\n";
-						}
-						$setup_tpl->set_var('dbtype_options',$dbtype_options);
+							$dbtype_options .= <<<HTML
+								<option{$selected}value="{$db}">$db</option>
 
-						$setup_tpl->parse('domains','domain',True);
+HTML;
+						}
+						$setup_tpl->set_var('dbtype_options', $dbtype_options);
+
+						$setup_tpl->parse('domains','domain', true);
 					}
 					$setup_tpl->set_var('domain','');
 				}
+
 				if (defined('PHPGW_SERVER_ROOT'))
 				{
 					$GLOBALS['phpgw_info']['server']['server_root'] = PHPGW_SERVER_ROOT;
 					$GLOBALS['phpgw_info']['server']['include_root'] = PHPGW_INCLUDE_ROOT; 
 				}
-				elseif(!@isset($GLOBALS['phpgw_info']['server']['include_root']) && @$GLOBALS['phpgw_info']['server']['header_version'] <= 1.6)
+				else if ( !isset($GLOBALS['phpgw_info']['server']['include_root']) && $GLOBALS['phpgw_info']['server']['header_version'] <= 1.6)
 				{
-					$GLOBALS['phpgw_info']['server']['include_root'] = @$GLOBALS['phpgw_info']['server']['server_root'];
+					$GLOBALS['phpgw_info']['server']['include_root'] = $GLOBALS['phpgw_info']['server']['server_root'];
 				}
-				elseif(!@isset($GLOBALS['phpgw_info']['server']['header_version']) && @$GLOBALS['phpgw_info']['server']['header_version'] <= 1.6)
+				else if ( !isset($GLOBALS['phpgw_info']['server']['header_version']) && $GLOBALS['phpgw_info']['server']['header_version'] <= 1.6)
 				{
-					$GLOBALS['phpgw_info']['server']['include_root'] = @$GLOBALS['phpgw_info']['server']['server_root'];
+					$GLOBALS['phpgw_info']['server']['include_root'] = $GLOBALS['phpgw_info']['server']['server_root'];
 				}
 			}
 			else
 			{
 				$detected .= '<li class="warn">' . lang('Sample configuration not found. using built in defaults') . "</li>\n";
-				$GLOBALS['phpgw_info']['server']['server_root'] = realpath('../'); //'/path/to/phpgroupware';
-				$GLOBALS['phpgw_info']['server']['include_root'] = realpath('../');//'/path/to/phpgroupware';
-				/* This is the basic include needed on each page for phpGroupWare application compliance */
-				$GLOBALS['phpgw_info']['flags']['htmlcompliant'] = True;
 
 				/* These are the settings for the database system */
 				$setup_tpl->set_var('lang_domain',lang('Domain'));
@@ -442,26 +450,24 @@ HTML;
 				$setup_tpl->set_var('db_name','phpgroupware');
 				$setup_tpl->set_var('db_user','phpgroupware');
 				$setup_tpl->set_var('db_pass','your_password');
-				$setup_tpl->set_var('db_type','mysql');
+				$setup_tpl->set_var('db_type', $supported_db[0]);
 				$setup_tpl->set_var('config_pass','changeme');
 
 				$dbtype_options = '';
-				foreach($supported_db as $k => $v)
+				foreach ( $supported_db as $db )
 				{
-					$dbtype_options .= '<option value="' . $v . '">' . $v . "\n";
+					$dbtype_options .= <<<HTML
+						<option value="{$db}">{$db}</option>
+
+HTML;
 				}
-				$setup_tpl->set_var('dbtype_options',$dbtype_options);
+				$setup_tpl->set_var('dbtype_options', $dbtype_options);
 
 				$setup_tpl->parse('domains','domain',True);
 				$setup_tpl->set_var('domain','');
 
 				$setup_tpl->set_var('comment_l','<!-- ');
 				$setup_tpl->set_var('comment_r',' -->');
-
-				/* These are a few of the advanced settings */
-				$GLOBALS['phpgw_info']['server']['db_persistent'] = True;
-				$GLOBALS['phpgw_info']['server']['mcrypt_enabled'] = extension_loaded('mcrypt');
-				$GLOBALS['phpgw_info']['server']['versions']['mcrypt'] = '';
 
 				srand((double)microtime()*1000000);
 				$random_char = array(
@@ -492,11 +498,11 @@ HTML;
 			$setup_tpl->set_var('detected',$detected);
 			/* End of detected settings, now display the form with the detected or prior values */
 
-			$setup_tpl->set_var('server_root',@$GLOBALS['phpgw_info']['server']['server_root']);
-			$setup_tpl->set_var('include_root',@$GLOBALS['phpgw_info']['server']['include_root']);
-			$setup_tpl->set_var('header_admin_password',@$GLOBALS['phpgw_info']['server']['header_admin_password']);
+			$setup_tpl->set_var('server_root', $GLOBALS['phpgw_info']['server']['server_root']);
+			$setup_tpl->set_var('include_root', $GLOBALS['phpgw_info']['server']['include_root']);
+			$setup_tpl->set_var('header_admin_password', $GLOBALS['phpgw_info']['server']['header_admin_password']);
 
-			if(@$GLOBALS['phpgw_info']['server']['db_persistent'])
+			if ( $GLOBALS['phpgw_info']['server']['db_persistent'] )
 			{
 				$setup_tpl->set_var('db_persistent_yes',' selected');
 			}
@@ -507,21 +513,24 @@ HTML;
 
 			$selected = '';
 			$session_options = '';
-			while(list($k,$v) = each($supported_sessions_type))
+			foreach ( $supported_sessions_type as $stype )
 			{
-				if($v == @$GLOBALS['phpgw_info']['server']['sessions_type'])
+				if( $stype == $GLOBALS['phpgw_info']['server']['sessions_type'])
 				{
-					$selected = ' selected="selected" ';
+					$selected = ' selected ';
 				}
 				else
 				{
 					$selected = '';
 				}
-				$session_options .= '<option ' . $selected . 'value="' . $v . '">' . $v . "\n";
+				$session_options .= <<<HTML
+					<option{$selected}value="{$stype}">{$stype}</option>
+
+HTML;
 			}
 			$setup_tpl->set_var('session_options',$session_options);
 
-			if(@$GLOBALS['phpgw_info']['server']['mcrypt_enabled'])
+			if ( $GLOBALS['phpgw_info']['server']['mcrypt_enabled'] )
 			{
 				$setup_tpl->set_var('mcrypt_enabled_yes',' selected');
 			}
@@ -540,7 +549,7 @@ HTML;
 			$setup_tpl->set_var('lang_setup_acl',lang('Limit access to setup to the following addresses or networks (e.g. 10.1.1,127.0.0.1)'));
 			$setup_tpl->set_var('setup_acl', $GLOBALS['phpgw_info']['server']['setup_acl']);
 
-			if(@$GLOBALS['phpgw_info']['server']['show_domain_selectbox'])
+			if ( $GLOBALS['phpgw_info']['server']['show_domain_selectbox'] )
 			{
 				$setup_tpl->set_var('domain_selectbox_yes',' selected');
 			}
@@ -549,7 +558,7 @@ HTML;
 				$setup_tpl->set_var('domain_selectbox_no',' selected');
 			}
 
-			if(@$GLOBALS['phpgw_info']['server']['domain_from_host'])
+			if ( $GLOBALS['phpgw_info']['server']['domain_from_host'] )
 			{
 				$setup_tpl->set_var('domain_from_host_yes',' selected');
 			}
