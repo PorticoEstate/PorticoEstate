@@ -521,6 +521,7 @@
 
 			$data = array
 			(
+				'menu'					=> $this->bocommon->get_menu(),
 				'colspan'				=> $uicols_count+1,
 				'lang_excel'				=> 'excel',
 				'link_excel'				=> $GLOBALS['phpgw']->link('/index.php',$link_excel),

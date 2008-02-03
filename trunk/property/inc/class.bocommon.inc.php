@@ -1567,6 +1567,46 @@
 				$values['location_name']	= $_POST['loc' . (count($values['location'])).'_name']; // if not address - get the parent name as address
 			}
 			return $values;
-		}		
+		}
+
+		function get_menu()
+		{
+			$GLOBALS['phpgw']->xslttpl->add_file(array('menu'));
+			$menu_brutto = execMethod('property.menu.get_menu');
+			$selection = explode('::',$GLOBALS['phpgw_info']['flags']['menu_selection']);
+			$level=0;
+			$menu['navigation'] = $this->get_sub_menu($menu_brutto['navigation'],$selection,$level);
+//_debug_array($GLOBALS['phpgw_info']['flags']['menu_selection']);
+//_debug_array($selection);			
+//_debug_array($menu);
+			return $menu;
+		}
+
+		function get_sub_menu($children = array(), $selection=array(),$level='')
+		{
+			$level++;
+			$i=0;
+			foreach($children as $key => $vals)
+			{
+				$menu[] = $vals;
+				if($key == $selection[$level])
+				{
+					$menu[$i]['this'] = true;
+					if(isset($menu[$i]['children']))
+					{
+						$menu[$i]['children'] = $this->get_sub_menu($menu[$i]['children'],$selection,$level);
+					}
+				}
+				else
+				{
+					if(isset($menu[$i]['children']))
+					{
+						unset($menu[$i]['children']);
+					}
+				}	
+				$i++;		
+			}
+			return $menu;
+		}
 	}
 ?>

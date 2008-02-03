@@ -35,6 +35,12 @@
 			</xsl:when>
 		</xsl:choose>
 
+		<xsl:choose>
+			<xsl:when test="lookup='' and menu!=''">
+				<xsl:apply-templates select="menu"/>
+			</xsl:when>
+		</xsl:choose>
+
 		<div class="toolbar">
 
 			<xsl:for-each select="table_add" >
