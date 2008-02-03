@@ -1,0 +1,194 @@
+/kb directory does not exist and could not be created, please ask the adminstrator to check the global configuration	phpbrain	cs	Adresáø /kb neexistuje a nelze ho zalo¾it. Kontaktujte pro kontrolu konfigurace administrátora systému.
+action	phpbrain	cs	Akce
+actions	phpbrain	cs	Akce
+add articles	phpbrain	cs	Vlo¾it pøíspìvek
+add link	phpbrain	cs	Vlo¾it odkaz
+add question	phpbrain	cs	Vlo¾it dotaz
+added file %1	phpbrain	cs	Pøidán soubor %1
+added link %1	phpbrain	cs	Pøidán odkaz %1
+added related articles %1	phpbrain	cs	Související pøíspìvek %1 pøidán
+advanced search	phpbrain	cs	Pokroèilé vyhledávání
+all articles	phpbrain	cs	V¹echny pøíspìvky
+answer	phpbrain	cs	odpovìï
+anytime	phpbrain	cs	kdykoliv
+anywhere in the article	phpbrain	cs	Kdekoliv v pøíspìvku
+article	phpbrain	cs	Pøíspìvek
+article added to database, you can now attach files or links, or relate to other articles	phpbrain	cs	Pøíspìvek pøidán do databáze, nyní mù¾ete pøilo¾it soubory nebo odkazy nebo propojit s jinými pøíspìvky.
+article created	phpbrain	cs	Pøíspìvek pøidán
+article deleted	phpbrain	cs	Pøíspìvek smazán
+article deleted successfully	phpbrain	cs	Pøíspìvek úspì¹nì smazán
+article edited	phpbrain	cs	Pøíspìvek zmìnìn
+article has been published	phpbrain	cs	Pøíspìvek byl publikován
+article id	phpbrain	cs	ID pøíspìvku
+articles added	phpbrain	cs	Pøíspìvky vlo¾eny
+articles deleted successfully	phpbrain	cs	Pøíspìvky úspì¹nì smazány
+articles have been published	phpbrain	cs	Pøíspìvky byly publikovány
+articles in %1	phpbrain	cs	Pøíspìvky v %1
+articles in %1 and all its subcategories	phpbrain	cs	Pøíspìvky v %1 a v¹echny jejich podkategorie
+articles not classified under any category	phpbrain	cs	Pøíspìvky nejsou zatøídìny do ¾ádné kategorie
+ascendent	phpbrain	cs	Vzestupnì
+attach file	phpbrain	cs	Pøilo¾it soubor
+attached files	phpbrain	cs	Pøilo¾ené soubory
+average rating	phpbrain	cs	Prùmìrné hodnocení
+base directory does not exist, please ask the adminstrator to check the global configuratio	phpbrain	cs	Hlavní adresáø neexistuje, pro celkovou kontrolu konfigurace kontaktujte administrátora.
+before submiting a question, please search in the knowledge base first	phpbrain	cs	Pøed vlo¾ením dotazu nejdøíve prohledejte znalostní databázi.
+by answering this question you will help to get the answer quicker the next time	phpbrain	cs	Odpovìdí na tuto otázku pomù¾ete získat pøí¹tì odpovìï rychleji.
+check spelling	phpbrain	cs	Kontrola pravopisu
+comment	phpbrain	cs	poznámka
+comment and rating have been published	phpbrain	cs	Komentáø a hodnocení byly publikovány
+comment could not be inserted in the database	phpbrain	cs	Nelze vlo¾it komentáø do databáze
+comment has been deleted	phpbrain	cs	Komentáø byl smazán
+comment has been published	phpbrain	cs	Komentáø byl publikován
+comment has been submited for revision	phpbrain	cs	Komentáø byl odeslán k pøezkoumání
+comment has been submited for revision and rating will be published	phpbrain	cs	Komentáø byl zaslán k pøezkoumání a hodnocení bude publikováno.
+comments	phpbrain	cs	Komentáøe
+configuration	phpbrain	cs	Konfigurace
+confirm	phpbrain	cs	Potvrdit
+correct the errors and press confirm	phpbrain	cs	Opravte chyby a stisknìte Potvrdit
+create a new article to answer the question asked by %1 in %2	phpbrain	cs	Vytvoøit nový pøíspìvek jako odpovìï na dotaz od %1 v %2
+created by %1 on %2	phpbrain	cs	Vytvoøil %1 v %2
+creation	phpbrain	cs	vytvoøení
+creation date	phpbrain	cs	Datum vytvoøení
+date	phpbrain	cs	Datum
+delete article	phpbrain	cs	Smazat pøíspìvek
+delete selected	phpbrain	cs	Smazat vybrané
+deleted relation to  article %1	phpbrain	cs	Vazba na èlánek %1 smazána
+deleted relation to article %1	phpbrain	cs	Vazba na èlánek %1 smazána
+descendent	phpbrain	cs	Sestupnì
+details	phpbrain	cs	Detaily
+e-groupware knowledge base article attached	phpbrain	cs	Pøíspìvek ze znalostní databáze eGroupWare pøilo¾en
+e-mail has been sent	phpbrain	cs	e-mail byl odeslán
+edit article	phpbrain	cs	Upravit pøíspìvek
+enter one or two words describing the issue, or type the article number if you know it	phpbrain	cs	Vlo¾te jedno nebo dvì slova popisující problém nebo napi¹te èíslo pøíspìvku pokud ho znáte
+error deleting article from database	phpbrain	cs	Odstranìní pøíspìvku z databáze skonèilo chybou
+error deleting link	phpbrain	cs	Smazání odkazu skonèilo chybou
+error downloading file	phpbrain	cs	Chyba pøi stahování souboru
+error locating files directory	phpbrain	cs	Adresáø se soubory nebyl nalezen
+error moving file to directory	phpbrain	cs	Chyba pøi pøesunu souboru do adresáøe
+error publishing comment	phpbrain	cs	Chyba pøi publikování pøíspìvku
+error retrieving article	phpbrain	cs	Chyba bìhem pøístupu k pøíspìvku
+error trying to delete comment	phpbrain	cs	Pokus o smazání komentáøe skonèil chybou
+error trying to delete question	phpbrain	cs	Pokus o smazání dotazu skonèil chybou
+error trying to edit article	phpbrain	cs	Chyba pøi pokusu o zmìnu pøíspìvku
+error trying to publish article	phpbrain	cs	Chyba pøi pokusu publikovat pøíspìvek
+error: file doesn't exist in the database	phpbrain	cs	Chyba: soubor v databázi neexistuje
+excellent	phpbrain	cs	Výborný
+failure trying to delete the file	phpbrain	cs	Chyba pøi mazání souboru
+file could be deleted from server but not from database	phpbrain	cs	Soubor lze smazat se serveru av¹ak nemù¾e být smazán z databáze.
+file has been successfully uploaded	phpbrain	cs	Soubor byl úspì¹nì odeslán
+file was already missing from server, and was deleted from the database	phpbrain	cs	Soubor se ji¾ nenalézal na serveru, ale byl smazán z databáze
+file was deleted successfully	phpbrain	cs	Soubor byl úspì¹nì smazán
+file wasn't in server and it couldn't be deleted from the database	phpbrain	cs	Soubor se nenalézal na serveru a nemohl být smazán z databáze
+find results	phpbrain	cs	Výsledky vyhledávání
+global categories	phpbrain	cs	Globální kategorie
+have to be approved first	common	cs	Nejprve musí být schválen
+history	phpbrain	cs	Historie
+if you can't find answers to your problem in the knowledge base, describe it below	phpbrain	cs	Pokud nemù¾ete nalézt odpovìdi na vá¹ problém ve znalostní databázi, popi¹te je ní¾e
+if you wish, you can comment this article here	phpbrain	cs	Pokud si pøejete, mù¾ete pøíspìvek opatøit komentáøem zde
+in %1	phpbrain	cs	v %1
+in the text	phpbrain	cs	v textu
+in the title	phpbrain	cs	v názvu
+in the topic	phpbrain	cs	v pøedmìtu
+include subcategories	phpbrain	cs	Vèetnì podkategorií
+keywords	phpbrain	cs	Klíèová slova
+knowledge base article #%1	phpbrain	cs	Pøíspìvek znalostní databáze #%1
+knowledge base configuration	common	cs	Konfigurace znalostní databáze
+last modification by %1 on %2	phpbrain	cs	Naposledy upravil %1 v %2
+latest	phpbrain	cs	Poslední
+latest comments	phpbrain	cs	Poslední komentáøe
+leave empty to automatically generate an id	phpbrain	cs	Pro automatické generování ID ponechte prázdné
+link could not be added	phpbrain	cs	Odkaz nebylo mo¾no vlo¾it
+link deleted successfully	phpbrain	cs	Odkaz úspì¹nì smazán
+link has been added	phpbrain	cs	Odkaz byl vlo¾en
+links	phpbrain	cs	Odkazy
+links & files	phpbrain	cs	Odkazy a soubory
+mail article	phpbrain	cs	Odeslat pøíspìvek po¹tou
+main view	phpbrain	cs	Hlavní pøehled
+maintain articles	phpbrain	cs	Údr¾ba pøíspìvkù
+maintain questions	phpbrain	cs	Údr¾ba dotazù
+maximum number of comments to show:	phpbrain	cs	Zobrazit maximální poèet komentáøù:
+maximum number of most popular articles, latest articles and unanswered questions to show in the main view:	phpbrain	cs	Maximální poèet nejpopulárnìj¹ích pøíspìvkù, posledních pøíspìvkù a nezodpovìzených dotazù zobrazovaných v hlavním pøehledu:
+modification date	phpbrain	cs	Datum poslední zmìny
+most viewed	phpbrain	cs	Nejèastìji prohlí¾ené
+new article	phpbrain	cs	Nový pøíspìvek
+nobody has rated this article so far	phpbrain	cs	Dosud nikdo nehodnotil tento pøíspìvek
+none	phpbrain	cs	®ádné
+nothing was uploaded!	phpbrain	cs	Nic nebylo odesláno!
+number of results per page	phpbrain	cs	Poèet výskytù
+ocurrences	phpbrain	cs	Výskyty
+or browse the categories	phpbrain	cs	Nebo prohlí¾et podle kategorií
+order results by	phpbrain	cs	Seøadit výsledky podle
+outstanding published questions	phpbrain	cs	Nezodpovìzené publikované dotazy
+past %1 months	phpbrain	cs	posledních %1 mìsícù
+past year	phpbrain	cs	minulý rok
+people have rated this article	phpbrain	cs	Ostatní hodnotili tento pøíspìvek
+phpbrain	common	cs	Znalostní databáze
+please rate the pertinence and quality of this article	phpbrain	cs	Prosím ohodno»te souvislost a kvalitu tohoto pøíspìvku
+please try again	phpbrain	cs	Prosím zkuste znovu
+poor	phpbrain	cs	Mizerný
+printer view	phpbrain	cs	Tiskový náhled
+problem relating articles	phpbrain	cs	Pøíspìvky vztahující se k problému
+publication date	phpbrain	cs	Publikováno dne
+publish	phpbrain	cs	Zveøejnit
+publish articles automatically?	common	cs	Automaticky publikovat pøíspìvky?
+publish comments automatically?	common	cs	Automaticky publikovat komentáøe?
+publish questions automatically?	common	cs	Automaticky publikovat dotazy?
+publish selected	phpbrain	cs	Publikovat vybrané
+published	phpbrain	cs	Zveøejnìno
+question deleted successfully	phpbrain	cs	Dotaz úspì¹nì smazán
+questions deleted successfully	phpbrain	cs	Dotazy úspì¹nì smazány
+rating has been submited	phpbrain	cs	Hodnocení bylo vlo¾eno
+rating invalid	phpbrain	cs	Neplatné hodnocení
+recipient	phpbrain	cs	Adresát
+related articles in the knowledge base	phpbrain	cs	Podobné pøíspìvky ve znalostní databázi
+relation with article was removed successfully	phpbrain	cs	Souvsta¾nost k pøíspìvku byla úspì¹nì odstranìna
+removed file %1	phpbrain	cs	Odstranìn soubor %1
+removed link %1	phpbrain	cs	Odstranìn odkaz %1
+reply-to	phpbrain	cs	Odpovìdìt
+search in all the knowledge base	phpbrain	cs	Vyhledat v celé znalostní databázi
+search results	phpbrain	cs	Výsledky vyhledávání
+see more questions	phpbrain	cs	Více dotazù
+see more questions...	phpbrain	cs	Více dotazù...
+select articles	phpbrain	cs	Vybrat pøíspìvky
+show all comments	phpbrain	cs	Zobrazit v¹echny komentáøe
+show articles belonging to:	phpbrain	cs	Zobrazit pøíspìvky nále¾ející:
+show messages in category	phpbrain	cs	Zobrazit zprávy z kategorie
+submit comment	phpbrain	cs	Vlo¾it komentáø
+submit comment and rating	phpbrain	cs	Vlo¾it komentáø a hodnocení
+suggested category	phpbrain	cs	Doporuèená kategorie
+summary	phpbarin	cs	Souhrn
+that file already exists	phpbrain	cs	Tento soubor ji¾ existuje
+the article doesn't have spell errors	phpbrain	cs	Pøíspìvek neobsahuje gramatické chyby
+the article id must be a number	phpbrain	cs	ID pøíspìvku musí být èíslo
+the article is empty	phpbrain	cs	Pøíspìvek je prázdný
+the file was already missing in the server	phpbrain	cs	Soubor ji¾ na serveru nebyl pøítomen.
+the following errors occurred	phpbrain	cs	Vyskytly se následující chyby
+the mail server returned:	phpbrain	cs	Mail server odpovìdìl:
+the present category and all subcategories under it	phpbrain	cs	Souèasná kategorie a v¹echny její podkategorie
+the present category only	phpbrain	cs	Pouze souèasná kategorie
+there are no articles	phpbrain	cs	Nejsou ¾ádné pøíspìvky
+there are no articles available	phpbrain	cs	®ádné pøíspìvky nejsou dostupné
+this article hasn't yet been published in the knowledge base	phpbrain	cs	Tento pøíspìvek nebyl dosud publikován ve znalostní databázi
+title	phpbrain	cs	Název
+to create categories, press 'edit categories' in the preferences menu	phpbrain	cs	Pro pøidání kategorie stisknìte 'Upravit kategorie' v menu pøedvoleb
+topic	phpbrain	cs	Pøedmìt
+unable to add rating to database	phpbrain	cs	Hodnocení nebylo mo¾no vlo¾it do databáze
+unanswered questions	phpbrain	cs	Nezodpovìzené dotazy
+unpublished	phpbrain	cs	nepublikováno
+upload	phpbrain	cs	Odeslat
+user	phpbrain	cs	U¾ivatel
+user preferences	phpbrain	cs	U¾ivatelská nastavení
+views	phpbrain	cs	pøeètení
+was it easy to find this article using the above search string?	phpbrain	cs	Bylo snadné najít tento pøíspìvek pomocí vý¹e pou¾itého vyhledávacího øetìzce?
+when navigating through categories, choose whether the list of articles shown corresponds only to the present category, or the present category and all categories under it.	phpbrain	cs	Pøi vyhledávání podle kategorií vyberte, zda se má seznam zobrazených pøíspìvkù vztahovat pouze k vybrané kategorii nebo k vybrané kategorii a v¹em jejím podkategoriím.
+with all the words	phpbrain	cs	V¹echna slova
+with at least one of the words	phpbrain	cs	Alespoò jedno ze slov
+with the exact phrase	phpbrain	cs	Pøesný výraz
+without the words	phpbrain	cs	Bez tìchto slov
+you are in %1	phpbrain	cs	Jste v %1
+you have not the proper permissions to do that	phpbrain	cs	Na vykonání tohoto nemáte dostateèná oprávnìní
+you must enter a title	phpbrain	cs	Musíte vlo¾it nadpis
+you must enter a topic	phpbrain	cs	Musíte vlo¾it pøedmìt
+your message could not be sent!	phpbrain	cs	Va¹e zpráva nemohla být odeslána!
+your question will be posted, but only will be published after approval by a user with publishing rights	phpbrain	cs	Vá¹ dotaz bude odeslán, ale publikován bude teprve po schválení u¾ivatelem s právy na publikování.
+your question will be published immediately	phpbrain	cs	Vá¹ dotaz bude okam¾itì publikován
