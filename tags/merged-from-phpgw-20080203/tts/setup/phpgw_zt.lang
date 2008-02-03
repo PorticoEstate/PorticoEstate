@@ -1,0 +1,50 @@
+add new ticket	tts	zt	新增傳票
+add ticket	tts	zt	新增傳票
+additional notes	tts	zt	新增備註
+admin options	admin	zt	管理者選項
+assign to	tts	zt	指派給
+assigned from	tts	zt	指派者
+assigned to	tts	zt	已指派給
+close	tts	zt	關閉
+close date	tts	zt	關閉日期
+closed	tts	zt	已關閉
+date opened	tts	zt	開啟日期
+Default assign to	tts	zt	預設指派給
+default group	tts	zt	預設群組
+Default Priority	tts	zt	預設優先權
+detail	tts	zt	詳細內容
+details	tts	zt	詳細內容
+disabled	tts	zt	停用
+force	tts	zt	強制
+highest	tts	zt	最高
+in progress	tts	zt	處理中
+lowest	tts	zt	最低
+new ticket	tts	zt	新增傳票
+no subject	tts	zt	無主題
+no tickets found	tts	zt	沒有找到任何傳票。
+not assigned	tts	zt	未指派
+open date	tts	zt	開啟日期
+opened by	tts	zt	開啟人
+prio	tts	zt	優先權
+refresh every (seconds)	tts	zt	重新整理（秒）
+reopen	tts	zt	重新開啟
+search	tts	zt	搜尋
+show new/updated tickets on main screen	tts	zt	顯示最新及更新過的傳票在主畫面
+status/date closed	tts	zt	目前狀態／關閉日期
+ticket	tts	zt	傳票
+ticket assigned to %1	tts	zt	傳票指配給 %1
+ticket closed	tts	zt	傳票已關閉
+ticket reopened	tts	zt	傳票重新開啟
+tickets found %1	tts	zt	找到 %1 張傳票
+tickets open %1	tts	zt	未處理的傳票有 %1
+tickets total %1	tts	zt	總計傳票有 %1
+trouble ticket system	common	zt	問題傳票系統
+tts	common	zt	問題傳票系統
+tts preferences	tts	zt	問題傳票系統喜好設定
+update	tts	zt	更新
+use email notification	tts	zt	使用電子郵件通知
+users choice	tts	zt	使用者選擇
+view all tickets	tts	zt	檢視所有傳票
+view job detail	tts	zt	檢視詳細內容
+view only open tickets	tts	zt	檢視未處理的傳票
+

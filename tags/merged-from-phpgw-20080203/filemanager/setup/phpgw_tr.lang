@@ -1,0 +1,101 @@
+%1 already exists as a file	filemanager	tr	%1 bir dosya olarak mevcut
+application	filemanager	tr	Uygulama
+back to file manager	filemanager	tr	Dosya yöneticisine geri dön
+cannot create directory because it begins or ends in a space	filemanager	tr	Dizin oluşturulamıyor. Çünkü dizin bir boşluk içerisinde sonlandırılır ya da başlatılır.
+cannot replace %1 because it is a directory	filemanager	tr	 %1 tekrarlanamıyor. Çünkü o bir dizin.
+command sucessfully run	filemanager	tr	Komut başarıyla çalıştırıldı.
+comment	filemanager	tr	Açıklama
+comments cannot contain "%1"	filemanager	tr	Açıklamalar "%1" içermiyor.
+copied %1 to %2	filemanager	tr	%1  %2 olarak kopyalandı.
+copy to	filemanager	tr	Kopyala
+copy to:	filemanager	tr	Kopyala:
+could not copy %1 to %2	filemanager	tr	%1 %2 olarak kopyalanamadı.
+Could not copy %1 to %2 Quota exceeded	filemanager	tr	%1 %2 olarak kopyalanamadı. Kota aşımı.
+could not create %1	filemanager	tr	%1 oluşturulamadı.
+could not create directory %1	filemanager	tr	%1 dizini oluşturulamadı.
+could not delete %1	filemanager	tr	%1 silinemedi.
+could not move %1 to %2	filemanager	tr	%1 %2 olarak taşınamadı.
+Could not move %1 to %2 Quota exceeded	filemanager	tr	%1 %2 olarak taşınamadı. Kota aşımı.
+could not rename %1 to %2	filemanager	tr	%1  %2 olarak yeniden adlandırılamadı.
+could not save %1	filemanager	tr	%1 kaydedilemedi.
+could not upload %1 Quota exceeded	filemanager	tr	%1 yüklenemedi. Kota aşımı
+create file	filemanager	tr	Dosya Oluştur.
+create folder	filemanager	tr	Klasör Oluştur.
+created	filemanager	tr	Oluşturuldu
+created %1	filemanager	tr	%1 Oluşturuldu.
+created by	filemanager	tr	Tarafından oluşturuldu.
+created directory %1	filemanager	tr	%1 dizini oluşturuldu.
+date	filemanager	tr	Tarih
+default number of upload fields to show	filemanager	tr	Yüklenen alanların varsayılan numaralarını göster.
+delete	filemanager	tr	Sil
+deleted %1	filemanager	tr	%1 silindi.
+directory	filemanager	tr	Dizin
+directory %1 already exists	filemanager	tr	%1 dizini her zaman mevcut.
+directory %1 does not exist	filemanager	tr	%1 dizini mevcut değil.
+directory names cannot contain "%1"	filemanager	tr	Dizin isimleri "%1" içermiyor.
+display attributes	filemanager	tr	Görüntüleme özellikleri
+download	filemanager	tr	İndir
+edit	filemanager	tr	Düzenle
+edit comments	filemanager	tr	Açıklamaları Düzenle
+edit quota	filemanager	tr	Kotayı Düzenle
+Enter comma separated Quota value in MB	filemanager	tr	 Kota değeri içerisindeki MB bölümü virgül ayıracı ile ayrıldı.
+erroneous input! check quota value!	filemanager	tr	Yanlış giriş! Kota değerini kontrol et!
+error running command	filemanager	tr	Komut hata döndürdü.
+execute	filemanager	tr	Çalıştır.
+failed to create directory	filemanager	tr	Dizin oluşturma başarısız.
+file	filemanager	tr	Dosya
+file %1 already exists. please edit it or delete it first.	filemanager	tr	%1 dosyası her zaman mevcut. Lütfen düzenleyin ya da silin.
+file %1 could not be created.	filemanager	tr	%1 dosyası oluşturulamadı.
+file name	filemanager	tr	Dosya Adı
+file names cannot contain "%1"	filemanager	tr	Dosya isimleri "%1" içermiyor.
+file names cannot contain \ or /	filemanager	tr	Dosya isimleri \ ya da / içermiyor.
+filemanager	common	tr	Dosya Yöneticisi
+filemanager preferences	filemanager	tr	Dosya Yöneticisi Tercihleri
+files	filemanager	tr	Dosyalar
+folder	filemanager	tr	Klasör
+go to	filemanager	tr	Git
+go to %1	filemanager	tr	%1 'e git.
+go to your home directory	filemanager	tr	Giriş dizinine git.
+go to:	filemanager	tr	Git:
+home	filemanager	tr	Giriş
+locked	filemanager	tr	Kitlendi
+mime type	filemanager	tr	MIME Tipi
+modified	filemanager	tr	Düzenlendi
+modified by	filemanager	tr	Tarafından Düzenlendi
+move to	filemanager	tr	Taşı
+move to:	filemanager	tr	Taşı:
+moved %1 to %2	filemanager	tr	 %1 %2 olarak taşındı.
+no version history for this file/directory	filemanager	tr	Bu dizin/dosya için eski bir sürüm yok.
+operation	filemanager	tr	İşlem
+owner	filemanager	tr	Sahip
+preview %1	filemanager	tr	%1 önizleme
+preview of %1	filemanager	tr	%1'in önizlemesi
+refresh	filemanager	tr	Yeniele
+rename	filemanager	tr	Yeniden Adlandır
+renamed %1 to %2	filemanager	tr	%1 %2 olarak isimlendirildi.
+replaced %1	filemanager	tr	%1 değiştirildi
+save %1	filemanager	tr	%1'i kaydet
+save all	filemanager	tr	Tümünü Kaydet
+saved %1	filemanager	tr	%1 kaydedildi
+show	filemanager	tr	Göster
+show ..	filemanager	tr	Göster ..
+show .files	filemanager	tr	Show .files
+show command line (experimental. dangerous.)	filemanager	tr	Komut satırını göster (DENEYSEL. TEHLİKELİ.)
+show help	filemanager	tr	Yardımı Göster
+size	filemanager	tr	Boyut
+sort by:	filemanager	tr	Sırala:
+total files	filemanager	tr	Tüm Dosyalar
+unknown mime-type defaults to text/plain when viewing	filemanager	tr	Görüntüleme işlemi sırasında bilinmeyem MIME tipinin varsayılanı  metin/düz yazı olarak ayarlandı.
+unused space	filemanager	tr	Kullanılmayan alan
+up	filemanager	tr	Yukarı
+update	filemanager	tr	Güncelle
+updated comment for %1	filemanager	tr	%1 açıklaması güncellendi.
+upload fields	filemanager	tr	alanlar yüklendi
+upload files	filemanager	tr	Dosyaları yükle
+used space	filemanager	tr	Kullanılan alan
+users	filemanager	tr	Kullanıcılar
+version	filemanager	tr	Sürüm
+view documents in new window	filemanager	tr	Yeni penceredeki dosyaları görüntüle
+view documents on server (if available)	filemanager	tr	Sunucudaki dokümanları görüntüle (Eğer mümkünse)
+who	filemanager	tr	Kim
+you do not have access to %1	filemanager	tr	İzniniz yok (%1)

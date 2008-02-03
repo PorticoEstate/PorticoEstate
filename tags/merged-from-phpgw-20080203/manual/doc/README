@@ -1,0 +1,7 @@
+Place your helpfiles (in .odt-format) in <application>/help/<uppercase(lang)>/
+Name your files as <class>.<function>.odt
+Do not keep the 'ui'-prefix from classnames.
+example: helpfile for the function 'index' in the class 'uiproject' will be named as 'project.index.odt'
+One can override the default helpfile with (inside the function in question):
+  $GLOBALS['phpgw_info']['apps']['manual']['app'] - to fetch help files for a choosen application
+  $GLOBALS['phpgw_info']['apps']['manual']['section'] - to spesify the helpfile <section>.odt

@@ -1,0 +1,13 @@
+Process of importing the 2 code-line of the wiki into our cvs:
+
+1) Importing the original Tavi Sources http://tavi.sf.net of their release 0.22 into the vendor branch/tag 'TAVI' and release tag 'TAVI-0_22':
+cvs -d :ext:ralfbecker@subversions.gnu.org:/cvsroot/phpgroupware  -z3 import -m "Import of Tavi's 0.22 release" wiki TAVI TAVI-0_22
+
+2) Importing the Axis port http://www.axisgroupware.org of there release 0.44 into the vendor branch/tag 'AXIS' and the release tag 'AXIS-0_44':
+cvs -d :ext:ralfbecker@subversions.gnu.org:/cvsroot/phpgroupware  -z3 import -b 1.1.3 -m "Import of Axis's 0.44 release" wiki AXIS AXIS-0_44
+
+3) checkout of Axis release to resolve conflicts:
+cvs -d :ext:ralfbecker@subversions.gnu.org:/cvsroot/phpgroupware checkout -jTAVI -jAXIS wiki
+
+4) make it the head-version by commiting the changes of the merge:
+cd wiki; cvs commit

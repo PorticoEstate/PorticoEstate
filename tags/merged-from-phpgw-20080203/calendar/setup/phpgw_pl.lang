@@ -1,0 +1,142 @@
+(for weekly)	calendar	pl	(dla tygodniowego)
+(i/v)cal	calendar	pl	
+1 match found	calendar	pl	Znaleziono 1 zgodny
+a	calendar	pl	a
+accept	calendar	pl	Akceptuj
+accepted	calendar	pl	Zaakceptowano
+add alarm	calendar	pl	Dodaj alarm
+added	calendar	pl	Dodano
+alarm management	calendar	pl	Zarządzanie alarmami
+all day	calendar	pl	Wszystkie dni
+are you sure you want to delete this holiday ?	calendar	pl	Na pewno chcesz usunąć święto?
+are you sure\nyou want to\ndelete this entry ?	calendar	pl	Na pewno\nchcesz\nusunąć ten wpis?
+are you sure\nyou want to\ndelete this entry ?\n\nthis will delete\nthis entry for all users.	calendar	pl	Na pewno\nchcesz\nusunąć ten wpis?\n\nWpis zostanie usunięty\ndla wszystkich użytkowników.
+brief description	calendar	pl	Krótki opis
+calendar	common	pl	Kalendarz
+calendar - [iv	calendar	pl	
+calendar - add	calendar	pl	Dodaj do kalendarza
+calendar - edit	calendar	pl	Edycja kalendarza
+calendar event	calendar	pl	Zdarzenai kalendarza
+calendar holiday management	admin	pl	Zarządzanie świętami
+calendar preferences	calendar	pl	Preferencje kalendarza
+calendar settings	admin	pl	Ustawienia kalendarza
+countries	calendar	pl	Kraje
+country	calendar	pl	Kraj
+daily	calendar	pl	Codziennie
+daily matrix view	calendar	pl	Harmonogram dnia
+days repeated	calendar	pl	Dni powtórzeń
+default calendar filter	calendar	pl	Domyślny filtr kalendarza
+default calendar view	calendar	pl	Domyślny układ kalendarza
+deleted	calendar	pl	Usunięto
+display interval in day view	calendar	pl	
+display mini calendars when printing	calendar	pl	Wyświetlać mini kaledarz przy wydruku?
+display status of events	calendar	pl	Wyświetl status zdarzeń
+do you wish to autoload calendar holidays files dynamically?	admin	pl	
+duration	calendar	pl	Czas trwania
+edit series	calendar	pl	
+edit single	calendar	pl	
+end date/time	calendar	pl	Data/godzina zakończenia
+ends	calendar	pl	
+export	calendar	pl	Eksport
+fr	calendar	pl	Pt
+free/busy	calendar	pl	Wolny/Zajęty
+frequency	calendar	pl	Częstość powtarzania
+fri	calendar	pl	Pt
+full description	calendar	pl	Pełny opis
+generate printer-friendly version	calendar	pl	Wersja do wydruku
+global public and group public	calendar	pl	Publiczne dla grupy i globalnie
+global public only	calendar	pl	Tylko globalnie publiczne
+go!	calendar	pl	Idź!
+grant calendar access	common	pl	
+group public only	calendar	pl	Tylko grupowo publiczne
+has been canceled	calendar	pl	
+has been rescheduled to	calendar	pl	
+holiday	calendar	pl	Święto
+i participate	calendar	pl	Uczestniczę
+ignore conflict	calendar	pl	Ignoruj konflikt
+import	calendar	pl	Import
+interval	calendar	pl	
+load [iv	calendar	pl	
+location	calendar	pl	Lokalizacja
+location to autoload from	admin	pl	
+minutes	calendar	pl	minuty
+mo	calendar	pl	Po
+modified	calendar	pl	
+mon	calendar	pl	Pon
+month	calendar	pl	Miesiąc
+monthly	calendar	pl	Miesięczny
+monthly (by date)	calendar	pl	Co miesiąc (wg dat)
+monthly (by day)	calendar	pl	Co miesiąc (wg dni)
+new entry	calendar	pl	Nowy wpis
+no matches found.	calendar	pl	Nie znaleziono zgodnych
+no matchs found	calendar	pl	Nie znaleziono zgodnych
+no response	calendar	pl	Brak odpowiedzi
+participant	calendar	pl	Uczestnik
+participants	calendar	pl	Uczestnicy
+participates	calendar	pl	uczestniczy?
+planner	calendar	pl	Zaplanowane
+print calendars in black & white	calendar	pl	Drukuj kalendarz jako czarno-biały
+printer friendly	calendar	pl	Wersja do wydruku
+private and global public	calendar	pl	Prywatne i Globalne Publiczne
+private and group public	calendar	pl	Prywatne i grupowo publiczne
+private only	calendar	pl	Tylko prywatne
+re-edit event	calendar	pl	Edytuj zdarzenie
+refresh	calendar	pl	Odśwież
+reject	calendar	pl	Odrzuć
+rejected	calendar	pl	Odrzucone
+repeat day	calendar	pl	Dni powtarzania
+repeat end date	calendar	pl	Data ostatniego powtórzenia
+repeat type	calendar	pl	Typ powtórek
+repeating event information	calendar	pl	Informacja o powtórkach
+repetition	calendar	pl	Powtarzanie
+reset	calendar	pl	Skasuj
+sa	calendar	pl	So
+sat	calendar	pl	So
+scheduling conflict	calendar	pl	Konflikt w terminarzu
+search results	calendar	pl	Wynik szukania
+select country for including holidays	calendar	pl	Wybierz kraj do włączenia świąt
+send updates via email	common	pl	
+send/receive updates via email	calendar	pl	Wyślij/Odbierz aktualizację przez e-mail
+show day view on main screen	calendar	pl	Wyświetl widok dnia na stronie głównej
+show default view on main screen	calendar	pl	
+show high priority events on main screen	calendar	pl	Wyświetl zdarzenia o wysokim priorytecie na stronie głównej
+sorry, the owner has just deleted this event	calendar	pl	Właściciel już usunął to zdarzenie
+start date/time	calendar	pl	Data/godzina rozpoczęcia
+su	calendar	pl	N
+submit to repository	calendar	pl	Wyślij do repozytorium
+sun	calendar	pl	Nie
+tentative	calendar	pl	Niezobowiązujący
+th	calendar	pl	Cz
+the following conflicts with the suggested time:<ul>x</ul>	calendar	pl	
+there was an error trying to connect to your news server.<br />please contact your admin to check the news servername, username or password.	calendar	pl	
+this month	calendar	pl	Bieżący miesiąc
+this week	calendar	pl	Bieżący tydzień
+this year	calendar	pl	Bieżący rok
+thu	calendar	pl	Czw
+today	calendar	pl	Dzisiaj
+tu	calendar	pl	Wt
+tue	calendar	pl	Wto
+use end date	calendar	pl	Użyj daty zakończenia
+view this entry	calendar	pl	Podgląd wpisu
+we	calendar	pl	Śr
+wed	calendar	pl	Śro
+week	calendar	pl	Tydzień
+weekday starts on	calendar	pl	Pierwszy dzień tygodnia
+weekly	calendar	pl	Tygodniowy
+when creating new events default set to private	calendar	pl	Ustawić nowe zdarzenia jako prywatne?
+work day ends on	calendar	pl	Koniec dnia o
+work day starts on	calendar	pl	Początek dnia o
+%1 matches found	calendar	pl	Znaleziono %1 zgodnych
+year	calendar	pl	Rok
+yearly	calendar	pl	Roczny
+you have 1 high priority event on your calendar today.	common	pl	
+you have a meeting scheduled for	calendar	pl	
+you have not entered a title	calendar	pl	Nie podałeś tytułu
+you have not entered a valid date	calendar	pl	Nie podałeś poprawnej daty
+you have not entered a valid time of day	calendar	pl	
+you have not entered participants	calendar	pl	Nie podałeś uczestników
+you have %1 high priority events on your calendar today.	common	pl	
+you must enter one or more search keywords	calendar	pl	Musisz podać jedno lub więcej słów kluczowych
+your meeting scheduled for	calendar	pl	
+your meeting that had been scheduled for	calendar	pl	
+your suggested time of <b> %1 - %2 </b> conflicts with the following existing calendar entries:	calendar	pl	Twój zaproponowany czas <B> %1 - %2 </B> jest w konflikcie z następującymi wpisami w kalendarzu:
