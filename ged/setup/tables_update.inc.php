@@ -395,49 +395,89 @@
 
 		// ged default flow : admin roles
 		
-		$GLOBALS['phpgw_setup']->oProc->query ("INSERT INTO `phpgw_flows_roles` VALUES (1,1,6,NULL)" );
-		$GLOBALS['phpgw_setup']->oProc->query ("INSERT INTO `phpgw_flows_roles` VALUES (2,2,6,NULL)" );
-		$GLOBALS['phpgw_setup']->oProc->query ("INSERT INTO `phpgw_flows_roles` VALUES (3,3,6,NULL)" );
-		$GLOBALS['phpgw_setup']->oProc->query ("INSERT INTO `phpgw_flows_roles` VALUES (4,4,6,NULL)" );
-		$GLOBALS['phpgw_setup']->oProc->query ("INSERT INTO `phpgw_flows_roles` VALUES (5,5,6,NULL)" );
-		$GLOBALS['phpgw_setup']->oProc->query ("INSERT INTO `phpgw_flows_roles` VALUES (6,6,6,NULL)" );
-		$GLOBALS['phpgw_setup']->oProc->query ("INSERT INTO `phpgw_flows_roles` VALUES (7,7,6,NULL)" );
-		$GLOBALS['phpgw_setup']->oProc->query ("INSERT INTO `phpgw_flows_roles` VALUES (8,8,6,NULL)" );
-		$GLOBALS['phpgw_setup']->oProc->query ("INSERT INTO `phpgw_flows_roles` VALUES (9,9,6,NULL)" );
-		$GLOBALS['phpgw_setup']->oProc->query ("INSERT INTO `phpgw_flows_roles` VALUES (10,10,6,NULL)" );
-		$GLOBALS['phpgw_setup']->oProc->query ("INSERT INTO `phpgw_flows_roles` VALUES (11,11,6,NULL)" );
-		$GLOBALS['phpgw_setup']->oProc->query ("INSERT INTO `phpgw_flows_roles` VALUES (12,12,6,NULL)" );
-		$GLOBALS['phpgw_setup']->oProc->query ("INSERT INTO `phpgw_flows_roles` VALUES (13,13,6,NULL)" );
-		$GLOBALS['phpgw_setup']->oProc->query ("INSERT INTO `phpgw_flows_roles` VALUES (14,14,6,NULL)" );
-		$GLOBALS['phpgw_setup']->oProc->query ("INSERT INTO `phpgw_flows_roles` VALUES (15,15,6,NULL)" );
-		$GLOBALS['phpgw_setup']->oProc->query ("INSERT INTO `phpgw_flows_roles` VALUES (16,16,6,NULL)" );
-		$GLOBALS['phpgw_setup']->oProc->query ("INSERT INTO `phpgw_flows_roles` VALUES (17,17,6,NULL)" );
-		$GLOBALS['phpgw_setup']->oProc->query ("INSERT INTO `phpgw_flows_roles` VALUES (18,18,6,NULL)" );
-		$GLOBALS['phpgw_setup']->oProc->query ("INSERT INTO `phpgw_flows_roles` VALUES (19,19,6,NULL)" );
-		$GLOBALS['phpgw_setup']->oProc->query ("INSERT INTO `phpgw_flows_roles` VALUES (20,20,6,NULL)" );
-		$GLOBALS['phpgw_setup']->oProc->query ("INSERT INTO `phpgw_flows_roles` VALUES (21,21,6,NULL)" );
+		$admins_uid=2;
 
-		$GLOBALS['phpgw_setup']->oProc->query ("INSERT INTO `phpgw_flows_roles` VALUES (22,1,2,NULL)" );
-		$GLOBALS['phpgw_setup']->oProc->query ("INSERT INTO `phpgw_flows_roles` VALUES (23,2,2,NULL)" );
-		$GLOBALS['phpgw_setup']->oProc->query ("INSERT INTO `phpgw_flows_roles` VALUES (24,3,2,NULL)" );
-		$GLOBALS['phpgw_setup']->oProc->query ("INSERT INTO `phpgw_flows_roles` VALUES (25,4,2,NULL)" );
-		$GLOBALS['phpgw_setup']->oProc->query ("INSERT INTO `phpgw_flows_roles` VALUES (26,5,2,NULL)" );
-		$GLOBALS['phpgw_setup']->oProc->query ("INSERT INTO `phpgw_flows_roles` VALUES (27,6,2,NULL)" );
-		$GLOBALS['phpgw_setup']->oProc->query ("INSERT INTO `phpgw_flows_roles` VALUES (28,7,2,NULL)" );
-		$GLOBALS['phpgw_setup']->oProc->query ("INSERT INTO `phpgw_flows_roles` VALUES (29,8,2,NULL)" );
-		$GLOBALS['phpgw_setup']->oProc->query ("INSERT INTO `phpgw_flows_roles` VALUES (30,9,2,NULL)" );
-		$GLOBALS['phpgw_setup']->oProc->query ("INSERT INTO `phpgw_flows_roles` VALUES (31,10,2,NULL)" );
-		$GLOBALS['phpgw_setup']->oProc->query ("INSERT INTO `phpgw_flows_roles` VALUES (32,11,2,NULL)" );
-		$GLOBALS['phpgw_setup']->oProc->query ("INSERT INTO `phpgw_flows_roles` VALUES (33,12,2,NULL)" );
-		$GLOBALS['phpgw_setup']->oProc->query ("INSERT INTO `phpgw_flows_roles` VALUES (34,13,2,NULL)" );
-		$GLOBALS['phpgw_setup']->oProc->query ("INSERT INTO `phpgw_flows_roles` VALUES (35,14,2,NULL)" );
-		$GLOBALS['phpgw_setup']->oProc->query ("INSERT INTO `phpgw_flows_roles` VALUES (36,15,2,NULL)" );
-		$GLOBALS['phpgw_setup']->oProc->query ("INSERT INTO `phpgw_flows_roles` VALUES (37,16,2,NULL)" );
-		$GLOBALS['phpgw_setup']->oProc->query ("INSERT INTO `phpgw_flows_roles` VALUES (38,17,2,NULL)" );
-		$GLOBALS['phpgw_setup']->oProc->query ("INSERT INTO `phpgw_flows_roles` VALUES (39,18,2,NULL)" );
-		$GLOBALS['phpgw_setup']->oProc->query ("INSERT INTO `phpgw_flows_roles` VALUES (40,19,2,NULL)" );
-		$GLOBALS['phpgw_setup']->oProc->query ("INSERT INTO `phpgw_flows_roles` VALUES (41,20,2,NULL)" );
-		$GLOBALS['phpgw_setup']->oProc->query ("INSERT INTO `phpgw_flows_roles` VALUES (42,21,2,NULL)" );
+		$GLOBALS['phpgw_setup']->oProc->query ("INSERT INTO `phpgw_flows_roles` VALUES (NULL,1,$admins_uid,NULL)" );
+		$GLOBALS['phpgw_setup']->oProc->query ("INSERT INTO `phpgw_flows_roles` VALUES (NULL,2,$admins_uid,NULL)" );
+		$GLOBALS['phpgw_setup']->oProc->query ("INSERT INTO `phpgw_flows_roles` VALUES (NULL,3,$admins_uid,NULL)" );
+		$GLOBALS['phpgw_setup']->oProc->query ("INSERT INTO `phpgw_flows_roles` VALUES (NULL,4,$admins_uid,NULL)" );
+		$GLOBALS['phpgw_setup']->oProc->query ("INSERT INTO `phpgw_flows_roles` VALUES (NULL,5,$admins_uid,NULL)" );
+		$GLOBALS['phpgw_setup']->oProc->query ("INSERT INTO `phpgw_flows_roles` VALUES (NULL,6,$admins_uid,NULL)" );
+		$GLOBALS['phpgw_setup']->oProc->query ("INSERT INTO `phpgw_flows_roles` VALUES (NULL,7,$admins_uid,NULL)" );
+		$GLOBALS['phpgw_setup']->oProc->query ("INSERT INTO `phpgw_flows_roles` VALUES (NULL,8,$admins_uid,NULL)" );
+		$GLOBALS['phpgw_setup']->oProc->query ("INSERT INTO `phpgw_flows_roles` VALUES (NULL,9,$admins_uid,NULL)" );
+		$GLOBALS['phpgw_setup']->oProc->query ("INSERT INTO `phpgw_flows_roles` VALUES (NULL,10,$admins_uid,NULL)" );
+		$GLOBALS['phpgw_setup']->oProc->query ("INSERT INTO `phpgw_flows_roles` VALUES (NULL,11,$admins_uid,NULL)" );
+		$GLOBALS['phpgw_setup']->oProc->query ("INSERT INTO `phpgw_flows_roles` VALUES (NULL,12,$admins_uid,NULL)" );
+		$GLOBALS['phpgw_setup']->oProc->query ("INSERT INTO `phpgw_flows_roles` VALUES (NULL,13,$admins_uid,NULL)" );
+		$GLOBALS['phpgw_setup']->oProc->query ("INSERT INTO `phpgw_flows_roles` VALUES (NULL,14,$admins_uid,NULL)" );
+		$GLOBALS['phpgw_setup']->oProc->query ("INSERT INTO `phpgw_flows_roles` VALUES (NULL,15,$admins_uid,NULL)" );
+		$GLOBALS['phpgw_setup']->oProc->query ("INSERT INTO `phpgw_flows_roles` VALUES (NULL,16,$admins_uid,NULL)" );
+		$GLOBALS['phpgw_setup']->oProc->query ("INSERT INTO `phpgw_flows_roles` VALUES (NULL,17,$admins_uid,NULL)" );
+		$GLOBALS['phpgw_setup']->oProc->query ("INSERT INTO `phpgw_flows_roles` VALUES (NULL,18,$admins_uid,NULL)" );
+		$GLOBALS['phpgw_setup']->oProc->query ("INSERT INTO `phpgw_flows_roles` VALUES (NULL,19,$admins_uid,NULL)" );
+		$GLOBALS['phpgw_setup']->oProc->query ("INSERT INTO `phpgw_flows_roles` VALUES (NULL,21,$admins_uid,NULL)" );
+		$GLOBALS['phpgw_setup']->oProc->query ("INSERT INTO `phpgw_flows_roles` VALUES (NULL,21,$admins_uid,NULL)" );
+		$GLOBALS['phpgw_setup']->oProc->query ("INSERT INTO `phpgw_flows_roles` VALUES (NULL,22,$admins_uid,NULL)" );
+
+		// ged default flow : managers roles
+		
+		$managers_uid=3;
+
+		$GLOBALS['phpgw_setup']->oProc->query ("INSERT INTO `phpgw_flows_roles` VALUES (NULL,1,$managers_uid,NULL)" );
+		$GLOBALS['phpgw_setup']->oProc->query ("INSERT INTO `phpgw_flows_roles` VALUES (NULL,2,$managers_uid,NULL)" );
+		$GLOBALS['phpgw_setup']->oProc->query ("INSERT INTO `phpgw_flows_roles` VALUES (NULL,3,$managers_uid,NULL)" );
+		$GLOBALS['phpgw_setup']->oProc->query ("INSERT INTO `phpgw_flows_roles` VALUES (NULL,4,$managers_uid,NULL)" );
+		$GLOBALS['phpgw_setup']->oProc->query ("INSERT INTO `phpgw_flows_roles` VALUES (NULL,5,$managers_uid,NULL)" );
+		$GLOBALS['phpgw_setup']->oProc->query ("INSERT INTO `phpgw_flows_roles` VALUES (NULL,6,$managers_uid,NULL)" );
+		$GLOBALS['phpgw_setup']->oProc->query ("INSERT INTO `phpgw_flows_roles` VALUES (NULL,7,$managers_uid,NULL)" );
+		$GLOBALS['phpgw_setup']->oProc->query ("INSERT INTO `phpgw_flows_roles` VALUES (NULL,8,$managers_uid,NULL)" );
+		$GLOBALS['phpgw_setup']->oProc->query ("INSERT INTO `phpgw_flows_roles` VALUES (NULL,9,$managers_uid,NULL)" );
+		$GLOBALS['phpgw_setup']->oProc->query ("INSERT INTO `phpgw_flows_roles` VALUES (NULL,10,$managers_uid,NULL)" );
+		$GLOBALS['phpgw_setup']->oProc->query ("INSERT INTO `phpgw_flows_roles` VALUES (NULL,11,$managers_uid,NULL)" );
+		$GLOBALS['phpgw_setup']->oProc->query ("INSERT INTO `phpgw_flows_roles` VALUES (NULL,12,$managers_uid,NULL)" );
+		$GLOBALS['phpgw_setup']->oProc->query ("INSERT INTO `phpgw_flows_roles` VALUES (NULL,13,$managers_uid,NULL)" );
+		$GLOBALS['phpgw_setup']->oProc->query ("INSERT INTO `phpgw_flows_roles` VALUES (NULL,14,$managers_uid,NULL)" );
+		$GLOBALS['phpgw_setup']->oProc->query ("INSERT INTO `phpgw_flows_roles` VALUES (NULL,15,$managers_uid,NULL)" );
+		$GLOBALS['phpgw_setup']->oProc->query ("INSERT INTO `phpgw_flows_roles` VALUES (NULL,16,$managers_uid,NULL)" );
+		$GLOBALS['phpgw_setup']->oProc->query ("INSERT INTO `phpgw_flows_roles` VALUES (NULL,17,$managers_uid,NULL)" );
+		$GLOBALS['phpgw_setup']->oProc->query ("INSERT INTO `phpgw_flows_roles` VALUES (NULL,18,$managers_uid,NULL)" );
+		$GLOBALS['phpgw_setup']->oProc->query ("INSERT INTO `phpgw_flows_roles` VALUES (NULL,19,$managers_uid,NULL)" );
+		$GLOBALS['phpgw_setup']->oProc->query ("INSERT INTO `phpgw_flows_roles` VALUES (NULL,20,$managers_uid,NULL)" );
+		$GLOBALS['phpgw_setup']->oProc->query ("INSERT INTO `phpgw_flows_roles` VALUES (NULL,21,$managers_uid,NULL)" );
+		$GLOBALS['phpgw_setup']->oProc->query ("INSERT INTO `phpgw_flows_roles` VALUES (NULL,22,$managers_uid,NULL)" );
+
+		// ged default flow : team roles
+		
+		$teams_uid=4;
+
+		$GLOBALS['phpgw_setup']->oProc->query ("INSERT INTO `phpgw_flows_roles` VALUES (NULL,1,$teams_uid,NULL)" );
+		$GLOBALS['phpgw_setup']->oProc->query ("INSERT INTO `phpgw_flows_roles` VALUES (NULL,16,$teams_uid,NULL)" );
+		$GLOBALS['phpgw_setup']->oProc->query ("INSERT INTO `phpgw_flows_roles` VALUES (NULL,17,$teams_uid,NULL)" );
+		$GLOBALS['phpgw_setup']->oProc->query ("INSERT INTO `phpgw_flows_roles` VALUES (NULL,18,$teams_uid,NULL)" );
+		$GLOBALS['phpgw_setup']->oProc->query ("INSERT INTO `phpgw_flows_roles` VALUES (NULL,19,$teams_uid,NULL)" );
+		$GLOBALS['phpgw_setup']->oProc->query ("INSERT INTO `phpgw_flows_roles` VALUES (NULL,22,$teams_uid,NULL)" );
+
+
+		// ged default flow : quality roles
+		
+		$quality_uid=5;
+
+		$GLOBALS['phpgw_setup']->oProc->query ("INSERT INTO `phpgw_flows_roles` VALUES (NULL,1,$quality_uid,NULL)" );
+		$GLOBALS['phpgw_setup']->oProc->query ("INSERT INTO `phpgw_flows_roles` VALUES (NULL,16,$quality_uid,NULL)" );
+		$GLOBALS['phpgw_setup']->oProc->query ("INSERT INTO `phpgw_flows_roles` VALUES (NULL,17,$quality_uid,NULL)" );
+		$GLOBALS['phpgw_setup']->oProc->query ("INSERT INTO `phpgw_flows_roles` VALUES (NULL,18,$quality_uid,NULL)" );
+		$GLOBALS['phpgw_setup']->oProc->query ("INSERT INTO `phpgw_flows_roles` VALUES (NULL,19,$quality_uid,NULL)" );
+		$GLOBALS['phpgw_setup']->oProc->query ("INSERT INTO `phpgw_flows_roles` VALUES (NULL,22,$quality_uid,NULL)" );
+		$GLOBALS['phpgw_setup']->oProc->query ("INSERT INTO `phpgw_flows_roles` VALUES (NULL,3,$quality_uid,NULL)" );
+		$GLOBALS['phpgw_setup']->oProc->query ("INSERT INTO `phpgw_flows_roles` VALUES (NULL,8,$quality_uid,NULL)" );
+
+		// ged default flow : customer roles
+		
+		$customers_uid=6;
+
+		$GLOBALS['phpgw_setup']->oProc->query ("INSERT INTO `phpgw_flows_roles` VALUES (NULL,5,$customers_uid,NULL)" );
+		$GLOBALS['phpgw_setup']->oProc->query ("INSERT INTO `phpgw_flows_roles` VALUES (NULL,6,$customers_uid,NULL)" );
 		
 		$GLOBALS['setup_info']['ged']['currentver']='0.9.18.007';
 		return $GLOBALS['setup_info']['ged']['currentver'];			

@@ -95,6 +95,15 @@
 				padding: 3px;
 			}
 
+			#header_contents
+			{
+				background-color: #ddd;
+				border: 2px solid #999;
+				margin: 1em auto;
+				padding: 2em;
+				width: 100em;
+			}
+
 			.banner
 			{
 				background-color: #4865f1;
@@ -151,12 +160,12 @@
 				background-color: #d99;
 			}
 
-			.row_err_gen_on, #analysis li.err
+			.row_err_gen_on
 			{
 				background-color: #fcc;
 			}
 
-			.row_err_gen_off
+			.row_err_gen_off, .err
 			{
 				background-color: #fdd;
 			}
@@ -197,13 +206,14 @@
 				background-color: #ddf;
 			}
 
-			#analysis li.err
+			/* Extra qualifiers are used here to override definitions above */
+			.err, #analysis li.err
 			{
-				background-color: #fcc;
 				border: 1px solid #f00;
+				color: #f00;
 			}
 
-			#analysis li.warn
+			.warn, #analysis li.warn
 			{
 				background-color: #ff8;
 				border-color: #fc0;

@@ -100,6 +100,25 @@ class ged_dm
 					// (willneed a find_versions(element_id, $statuses))
 
 					$the_id=$this->db->f('element_id');		
+					if ( isset($this->acl[$the_id]))
+					{
+						$this->acl[$the_id]['read']=max($this->acl[$the_id]['read'], $this->db->f('aclread'));
+						$this->acl[$the_id]['write']=max($this->acl[$the_id]['write'], $this->db->f('aclwrite'));
+						$this->acl[$the_id]['delete']=max($this->acl[$the_id]['delete'], $this->db->f('acldelete'));
+						$this->acl[$the_id]['changeacl']=max($this->acl[$the_id]['changeacl'], $this->db->f('aclchangeacl'));
+
+						$the_temp_statuses=$this->db->f('aclstatuses');
+						if ( ! empty ( $the_temp_statuses ) && ! empty ( $this->acl[$the_id]['statuses'] ))
+						{
+							$this->acl[$the_id]['statuses']=array_merge($this->acl[$the_id]['statuses'], unserialize($the_statuses));
+						}
+						else
+						{
+							$this->acl[$the_id]['statuses']=array();
+						}
+					}
+					else
+					{
 					$this->acl[$the_id]['read']=$this->db->f('aclread');
 					$this->acl[$the_id]['write']=$this->db->f('aclwrite');
 					$this->acl[$the_id]['delete']=$this->db->f('acldelete');
@@ -114,6 +133,9 @@ class ged_dm
 					{
 						$this->acl[$the_id]['statuses']=array();
 					}					
+				}
+					//DEBUG
+					//_debug_array($this->acl[$the_id]);
 				}
 				$this->db->unlock();
 				
