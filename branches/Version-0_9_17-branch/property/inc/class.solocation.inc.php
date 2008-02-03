@@ -708,7 +708,7 @@
 				if (($config[$i]['location_type'] <= $type_id) && ($config[$i]['f_key'] ==1))
 				{
 
-					if($config[$i]['column_name']=='tenant_id')
+					if($config[$i]['column_name']=='tenant_id' || $config[$i]['column_name']=='street_id')
 					{
 						$join=$this->left_join;
 					}
