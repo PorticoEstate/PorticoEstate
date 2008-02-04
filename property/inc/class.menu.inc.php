@@ -105,12 +105,12 @@
 					'tenant_global_cats'	=> array
 					(
 						'text'	=> $GLOBALS['phpgw']->translation->translate('Tenant Global Categories', array(), true),
-						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.uicategories.index', 'appname' => 'fm_tenant', 'global_cats' => 'True') )
+						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.uicategories.index', 'appname' => 'fm_tenant', 'global_cats' => 'True', 'menu_selection' => 'admin::property::tenant::tenant_global_cats') )
 					),
 					'tenant_attribs'	=> array
 					(
 						'text'	=> $GLOBALS['phpgw']->translation->translate('Tenant Attributes', array(), true),
-						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.ui_custom.list_attribute', 'appname' => 'property', 'location' =>'.tenant'))
+						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.ui_custom.list_attribute', 'appname' => 'property', 'location' =>'.tenant', 'menu_selection' => 'admin::property::tenant::tenant_attribs') )
 					),
 					'claims_cats'	=> array
 					(
@@ -129,12 +129,12 @@
 					'vendor_global_cats'	=> array
 					(
 						'text'	=> $GLOBALS['phpgw']->translation->translate('Vendor Global Categories', array(), true),
-						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.uicategories.index', 'appname' => 'fm_vendor', 'global_cats' => 'True') )
+						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.uicategories.index', 'appname' => 'fm_vendor', 'global_cats' => 'True', 'menu_selection' => 'admin::property::vendor::vendor_global_cats') )
 					),
 					'vendor_attribs'	=> array
 					(
 						'text'	=> $GLOBALS['phpgw']->translation->translate('Vendor Attributes', array(), true),
-						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.ui_custom.list_attribute', 'appname' => 'property', 'location' => '.vendor'))
+						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.ui_custom.list_attribute', 'appname' => 'property', 'location' => '.vendor', 'menu_selection' => 'admin::property::vendor::vendor_attribs') )
 					)		
 				);
 				$admin_children_owner = array

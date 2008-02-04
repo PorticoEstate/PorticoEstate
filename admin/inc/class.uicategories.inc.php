@@ -37,7 +37,7 @@
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = True;
 
 			$appname = phpgw::get_var('appname', 'string', 'REQUEST', 'admin');
-			$GLOBALS['phpgw_info']['flags']['menu_selection'] = "admin::$appname::categories";
+			$GLOBALS['phpgw_info']['flags']['menu_selection'] = phpgw::get_var('menu_selection');
 
 			$this->bo			= CreateObject('admin.bocategories');
 			$this->nextmatchs	= CreateObject('phpgwapi.nextmatchs');
@@ -91,12 +91,14 @@
 			(
 				'menuaction'  => 'admin.uicategories.index',
 				'appname'     => $appname,
-				'global_cats' => $global_cats
+				'global_cats' => $global_cats,
+				'menu_selection' => $GLOBALS['phpgw_info']['flags']['menu_selection']
 			);
 
 			if ( phpgw::get_var('add', 'bool') )
 			{
 				$link_data['menuaction'] = 'admin.uicategories.edit';
+				$link_data['menu_selection'] = $GLOBALS['phpgw_info']['flags']['menu_selection'];
 				$GLOBALS['phpgw']->redirect_link('/index.php', $link_data);
 			}
 
@@ -128,7 +130,8 @@
 											'sort'	=> $this->sort,
 											'var'	=> 'cat_name',
 											'order'	=> $this->order,
-											'extra'	=> $link_data
+											'extra'	=> $link_data,
+											'menu_selection' => $GLOBALS['phpgw_info']['flags']['menu_selection']
 										)),
 				'lang_add_sub'			=> lang('add sub'),
 				'lang_name'				=> lang('name'),
@@ -141,7 +144,8 @@
 												'sort'	=> $this->sort,
 												'var'	=> 'cat_description',
 												'order'	=> $this->order,
-												'extra'	=> $link_data
+												'extra'	=> $link_data,
+												'menu_selection' => $GLOBALS['phpgw_info']['flags']['menu_selection']
 											))
 			);
 
@@ -188,6 +192,7 @@
 				{
 					$link_data['cat_id']		= $cat['id'];
 					$link_data['menuaction']	= 'admin.uicategories.edit';
+					$link_data['menu_selection'] = $GLOBALS['phpgw_info']['flags']['menu_selection'];
 					$edit_url			= $GLOBALS['phpgw']->link('/index.php',$link_data);
 					$lang_edit			= lang('edit');
 
@@ -205,6 +210,7 @@
 
 				$link_data['menuaction'] = 'admin.uicategories.edit';
 				$link_data['parent'] = $cat['id'];
+				$link_data['menu_selection'] = $GLOBALS['phpgw_info']['flags']['menu_selection'];
 				unset($link_data['cat_id']);
 				$add_sub_url = $GLOBALS['phpgw']->link('/index.php',$link_data);
 
@@ -272,7 +278,8 @@
 			(
 				'menuaction'  => 'admin.uicategories.index',
 				'appname'     => $appname,
-				'global_cats' => $global_cats
+				'global_cats' => $global_cats,
+				'menu_selection' => $GLOBALS['phpgw_info']['flags']['menu_selection']
 			);
 
 			if ( isset($values['cancel']) && $values['cancel'] )
@@ -382,7 +389,8 @@
 			(
 				'menuaction'  => 'admin.uicategories.index',
 				'appname'     => $appname,
-				'global_cats' => $global_cats
+				'global_cats' => $global_cats,
+				'menu_selection' => $GLOBALS['phpgw_info']['flags']['menu_selection']
 			);
 
 			if ( phpgw::get_var('cancel', 'bool') || !$this->cat_id )
@@ -467,6 +475,7 @@
 
 			$link_data['menuaction']	= 'admin.uicategories.delete';
 			$link_data['cat_id']		= $this->cat_id;
+			$link_data['menu_selection'] = $GLOBALS['phpgw_info']['flags']['menu_selection'];
 
 			$data = array
 			(
