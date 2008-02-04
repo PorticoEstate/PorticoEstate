@@ -55,20 +55,22 @@
 			if ( isset($GLOBALS['phpgw_info']['server']['shm_lang']) && $GLOBALS['phpgw_info']['server']['shm_lang']
 				&& function_exists('sem_get'))
 			{
-				if ( (!isset($this->lang) || !is_array($this->lang)) || $reset) //This should avoid problems for php-nuke & postnuke I guess (Caeies)
-				{
-					if($this->lang = $GLOBALS['phpgw']->shm->get_value('lang_' . $userlang))
-					{
-						$this->loaded_from_shm = true;
-					}
-					else
-					{
-						$this->lang = array();
-						$this->loaded_from_shm = false;
-					}
-				}
+				$this->set_userlang($GLOBALS['phpgw_info']['user']['preferences']['common']['lang']);
+				$this->reset_lang($reset);
 			}
-			elseif ( !isset($this->lang) || !is_array($this->lang) )
+		}
+
+		/**
+		* Reset the current user's language settings
+		*/
+		protected function reset_lang()
+		{
+			$this->loaded_from_shm = false;
+			if ( $this->lang = $GLOBALS['phpgw']->shm->get_value("lang_{$this->userlang}") )
+			{
+				$this->loaded_from_shm = true;
+			}
+			else
 			{
 				$this->lang = array();
 			}
@@ -77,13 +79,17 @@
 		/**
 		* Set the user's selected language
 		*/
-		protected function set_userlang($lang)
+		public function set_userlang($lang, $reset = true)
 		{
 			if ( strlen($lang) != 2 )
 			{
 				$lang = 'en';
 			}
 			$this->userlang = $lang;
+			if ( $reset )
+			{
+				$this->reset_lang();
+			}
 		}
 
 		/**
@@ -135,7 +141,7 @@
 			$GLOBALS['phpgw']->db->query($sql,__LINE__,__FILE__);
 			while ($GLOBALS['phpgw']->db->next_record())
 			{
-				$lang_set[$GLOBALS['phpgw']->db->f('lang')][strtolower(trim(substr($GLOBALS['phpgw']->db->f('message_id', true), 0, self::MAX_MESSAGE_ID_LENGTH)))] = $GLOBALS['phpgw']->db->f('content', true);
+				$lang_set[$GLOBALS['phpgw']->db->f('lang')][$GLOBALS['phpgw']->db->f('message_id', true)] = $GLOBALS['phpgw']->db->f('content', true);
 			}
 
 			$language = array_keys($lang_set);
@@ -143,7 +149,7 @@
 			{
 				foreach($language as $lang)
 				{
-					$GLOBALS['phpgw']->shm->store_value('lang_' . $lang, $lang_set[$lang]);
+					$GLOBALS['phpgw']->shm->store_value("lang_{$lang}", $lang_set[$lang]);
 				}
 			}
 		}
