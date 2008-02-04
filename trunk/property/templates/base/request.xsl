@@ -75,6 +75,7 @@
 	</xsl:template>
 
 	<xsl:template match="list">
+		<xsl:apply-templates select="menu"/> 
 		<table width="100%"  cellpadding="2" cellspacing="2" align="center">
 			<tr>
 				<td>

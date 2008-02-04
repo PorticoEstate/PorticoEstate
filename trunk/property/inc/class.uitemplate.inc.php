@@ -203,6 +203,7 @@
 
 			$data = array
 			(
+				'menu'							=> $this->bocommon->get_menu(),
 				'form_action'			=> $GLOBALS['phpgw']->link('/index.php',$link_data),
 				'lang_add_statustext'		=> lang('Add the selected items'),
 				'lang_add'			=> lang('Add'),

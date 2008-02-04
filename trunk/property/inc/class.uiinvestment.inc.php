@@ -241,6 +241,7 @@
 
 			$data = array
 			(
+				'menu'							=> $this->bocommon->get_menu(),
 				'msgbox_data'					=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
 				'lang_search'					=> lang('Search'),
 				'lang_search_statustext'			=> lang('Search for investment entries'),

@@ -155,6 +155,7 @@
 	</xsl:template>
 
 	<xsl:template match="list_gab">
+		<xsl:apply-templates select="menu"/> 
 		<div align="center">
 		<table width="100%"  cellpadding="2" cellspacing="2" align="center">
 		<xsl:variable name="select_url"><xsl:value-of select="select_action"/></xsl:variable>
@@ -310,6 +311,7 @@
 	</xsl:template>
 
 	<xsl:template match="list_gab_detail">
+		<xsl:apply-templates select="menu"/> 
 		<table width="100%"  cellpadding="2" cellspacing="2" align="center">
 			<tr>
 				<td class="th_text" width="5%" align="left">

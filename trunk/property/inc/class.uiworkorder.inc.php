@@ -423,6 +423,7 @@
 
 			$data = array
 			(
+				'menu'							=> $this->bocommon->get_menu(),
 				'group_filters'					=> isset($GLOBALS['phpgw_info']['user']['preferences']['property']['group_filters'])?$GLOBALS['phpgw_info']['user']['preferences']['property']['group_filters']:'',
 				'lang_excel'					=> 'excel',
 				'link_excel'					=> $GLOBALS['phpgw']->link('/index.php',$link_excel),

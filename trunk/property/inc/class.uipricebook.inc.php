@@ -278,6 +278,7 @@
 
 			$data = array
 			(
+				'menu'							=> $this->bocommon->get_menu(),
 				'lang_excel'					=> 'excel',
 				'link_excel'					=> $GLOBALS['phpgw']->link('/index.php',$link_excel),
 				'lang_excel_help'				=> lang('Download table to MS Excel'),
@@ -400,6 +401,7 @@
 
 			$data = array
 			(
+				'menu'							=> $this->bocommon->get_menu(),
 				'allrows'					=> $this->allrows,
 				'allow_allrows'					=> true,
 				'start_record'					=> $this->start,
@@ -914,6 +916,7 @@
 
 			$data = array
 			(
+				'menu'							=> $this->bocommon->get_menu(),
 				'lang_excel'					=> 'excel',
 				'link_excel'					=> $GLOBALS['phpgw']->link('/index.php',$link_excel),
 				'lang_excel_help'				=> lang('Download table to MS Excel'),

@@ -284,6 +284,7 @@
 
 			$data = array
 			(
+				'menu'							=> $this->bocommon->get_menu(),
 				'msgbox_data'					=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
 
 				'img_cal'						=> $GLOBALS['phpgw']->common->image('phpgwapi','cal'),
@@ -562,6 +563,7 @@
 
 			$data = array
 			(
+				'menu'							=> $this->bocommon->get_menu(),
 				'msgbox_data'				=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
 				'force_period_year'			=> $force_period_year,
 				'lang_force_period_year'		=> lang('Force year for period'),

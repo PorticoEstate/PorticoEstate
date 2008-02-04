@@ -30,6 +30,7 @@
 	</xsl:template>
 	
 	<xsl:template match="list">
+		<xsl:apply-templates select="menu"/> 
 		<table width="100%" cellpadding="2" cellspacing="2" align="center">
 			<xsl:choose>
 				<xsl:when test="msgbox_data != ''">
@@ -234,6 +235,7 @@
 	</xsl:template>
 
 	<xsl:template match="agreement_group">
+		<xsl:apply-templates select="menu"/> 
 		<table width="100%" cellpadding="2" cellspacing="2" align="center">
 			<xsl:choose>
 				<xsl:when test="msgbox_data != ''">
@@ -340,6 +342,7 @@
 
 	<xsl:template match="prizing">
 		<div align="left">
+		<xsl:apply-templates select="menu"/> 
 		<table width="100%" cellpadding="2" cellspacing="2" align="center">
 			<xsl:choose>
 				<xsl:when test="msgbox_data != ''">
@@ -497,6 +500,7 @@
 	</xsl:template>
 
 	<xsl:template match="list_activities">		
+		<xsl:apply-templates select="menu"/> 
 		<table width="100%" cellpadding="2" cellspacing="2" align="center">
 			<xsl:choose>
 				<xsl:when test="msgbox_data != ''">
@@ -632,6 +636,7 @@
 
 	<xsl:template match="list_activity_vendor">
 		
+		<xsl:apply-templates select="menu"/> 
 		<table width="100%" cellpadding="2" cellspacing="2" align="center">
 			<xsl:choose>
 				<xsl:when test="msgbox_data != ''">
