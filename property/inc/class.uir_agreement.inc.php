@@ -365,6 +365,7 @@
 //_debug_array($member_of_data);
 			$data = array
 			(
+				'menu'							=> $this->bocommon->get_menu(),
 				'lang_columns'					=> lang('columns'),
 				'link_columns'					=> $GLOBALS['phpgw']->link('/index.php',$link_columns),
 				'lang_columns_help'				=> lang('Choose columns'),
