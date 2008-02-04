@@ -108,13 +108,10 @@
 
 			while (is_array($category_list) && list(,$category) = each($category_list))
 			{
-				$words = split(' ',$category['descr']);
-				$first = "$words[0] $words[1] $words[2] $words[3]";
-
 				$content[] = array
 				(
 					'id'				=> $category['id'],
-					'first'				=> $first,
+					'first'				=> $category['descr'],
 					'link_edit'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uicategory.edit', 'id'=> $category['id'], 'type'=> $type, 'type_id'=> $type_id, 'menu_selection' => $GLOBALS['phpgw_info']['flags']['menu_selection'])),
 					'link_delete'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uicategory.delete', 'id'=> $category['id'], 'type'=> $type, 'type_id'=> $type_id, 'menu_selection' => $GLOBALS['phpgw_info']['flags']['menu_selection'])),
 					'lang_view_categorytext'	=> lang('view the category'),
