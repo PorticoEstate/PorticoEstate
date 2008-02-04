@@ -54,7 +54,7 @@
 			$this->bolocation			= CreateObject('preferences.boadmin_acl');
 			$this->bolocation->acl_app 	= $this->appname;
 
-			$GLOBALS['phpgw_info']['flags']['menu_selection'] = "admin::{$this->appname}";
+			$GLOBALS['phpgw_info']['flags']['menu_selection'] = phpgw::get_var('menu_selection');
 		}
 
 		function save_sessiondata()
@@ -80,7 +80,7 @@
 			$id			= phpgw::get_var('id', 'int');
 			$resort		= phpgw::get_var('resort');
 
-			$GLOBALS['phpgw_info']['flags']['menu_selection'] .= '::list_atrribs';
+		//	$GLOBALS['phpgw_info']['flags']['menu_selection'] .= '::list_atrribs';
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array(
 								'custom',
@@ -105,10 +105,10 @@
 						'input_text'			=> $entry['input_text'],
 						'sorting'				=> $entry['attrib_sort'],
 						'search'				=> $entry['search'],
-						'link_up'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.ui_custom.list_attribute', 'resort'=>'up', 'appname'=> $appname, 'location'=> $location, 'id'=> $entry['id'], 'allrows'=> $this->allrows)),
-						'link_down'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.ui_custom.list_attribute', 'resort'=>'down', 'appname'=> $appname, 'location'=> $location, 'id'=> $entry['id'], 'allrows'=> $this->allrows)),
-						'link_edit'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.ui_custom.edit_attrib', 'appname'=> $appname, 'location'=> $location, 'id'=> $entry['id'])),
-						'link_delete'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.ui_custom.delete', 'appname'=> $appname, 'location'=> $location, 'attrib_id'=> $entry['id'])),
+						'link_up'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.ui_custom.list_attribute', 'resort'=>'up', 'appname'=> $appname, 'location'=> $location, 'id'=> $entry['id'], 'allrows'=> $this->allrows, 'menu_selection' => $GLOBALS['phpgw_info']['flags']['menu_selection'])),
+						'link_down'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.ui_custom.list_attribute', 'resort'=>'down', 'appname'=> $appname, 'location'=> $location, 'id'=> $entry['id'], 'allrows'=> $this->allrows, 'menu_selection' => $GLOBALS['phpgw_info']['flags']['menu_selection'])),
+						'link_edit'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.ui_custom.edit_attrib', 'appname'=> $appname, 'location'=> $location, 'id'=> $entry['id'], 'menu_selection' => $GLOBALS['phpgw_info']['flags']['menu_selection'])),
+						'link_delete'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.ui_custom.delete', 'appname'=> $appname, 'location'=> $location, 'attrib_id'=> $entry['id'], 'menu_selection' => $GLOBALS['phpgw_info']['flags']['menu_selection'])),
 						'lang_up_text'			=> lang('shift up'),
 						'lang_down_text'		=> lang('shift down'),
 						'lang_edit_text'		=> lang('edit the attrib'),
@@ -140,7 +140,9 @@
 											'extra'	=> array('menuaction'	=> $this->currentapp.'.ui_custom.list_attribute',
 														'appname'	=> $appname,
 														'location'	=> $location,
-														'allrows'	=> $this->allrows)
+														'allrows'	=> $this->allrows,
+														'menu_selection' => $GLOBALS['phpgw_info']['flags']['menu_selection']
+														 )
 										)),
 				'sort_sorting'		=> $this->nextmatchs->show_sort_order(array
 										(
@@ -150,7 +152,9 @@
 											'extra'	=> array('menuaction'	=> $this->currentapp.'.ui_custom.list_attribute',
 														'appname'	=> $appname,
 														'location'	=> $location,
-														'allrows'	=> $this->allrows)
+														'allrows'	=> $this->allrows,
+														'menu_selection' => $GLOBALS['phpgw_info']['flags']['menu_selection']
+														)
 										)),
 				'lang_name'		=> lang('Name'),
 			);
@@ -160,7 +164,7 @@
 			(
 				'lang_add'				=> lang('add'),
 				'lang_add_attribtext'	=> lang('add an attrib'),
-				'add_action'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.ui_custom.edit_attrib', 'appname'=> $appname, 'location'=> $location)),
+				'add_action'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.ui_custom.edit_attrib', 'appname'=> $appname, 'location'=> $location, 'menu_selection' => $GLOBALS['phpgw_info']['flags']['menu_selection'])),
 				'lang_done'				=> lang('done'),
 				'lang_done_attribtext'	=> lang('Return to admin'),
 				'done_action'			=> $GLOBALS['phpgw']->link('/admin/index.php'),
@@ -182,7 +186,8 @@
 				'order'			=> $this->order,
 				'query'			=> $this->query,
 				'appname'		=> $appname,
-				'location'		=> $location
+				'location'		=> $location,
+				'menu_selection' => $GLOBALS['phpgw_info']['flags']['menu_selection']
 			);
 
 			$data = array
@@ -305,7 +310,7 @@
 					{
 						$id=$receipt['id'];
 					}
-					$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'admin.ui_custom.edit_attrib', 'appname' => $values['appname'], 'location' => $values['location'], 'id' => $id));
+					$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'admin.ui_custom.edit_attrib', 'appname' => $values['appname'], 'location' => $values['location'], 'id' => $id, 'menu_selection' => $GLOBALS['phpgw_info']['flags']['menu_selection']));
 
 				}
 				else
@@ -331,7 +336,8 @@
 				'menuaction'	=> $this->currentapp.'.ui_custom.edit_attrib',
 				'appname'		=> $appname,
 				'location'		=> $values['location'],
-				'id'			=> $id
+				'id'			=> $id,
+				'menu_selection' => $GLOBALS['phpgw_info']['flags']['menu_selection']
 			);
 
 			$multiple_choice = '';
@@ -361,7 +367,7 @@
 
 				'msgbox_data'						=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
 				'form_action'						=> $GLOBALS['phpgw']->link('/index.php',$link_data),
-				'done_action'						=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.ui_custom.list_attribute', 'appname'=> $appname, 'location'=>$location)),
+				'done_action'						=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.ui_custom.list_attribute', 'appname'=> $appname, 'location'=>$location, 'menu_selection' => $GLOBALS['phpgw_info']['flags']['menu_selection'])),
 				'lang_id'							=> lang('Attribute ID'),
 				'lang_entity_type'					=> lang('Entity type'),
 				'lang_no_entity_type'				=> lang('No entity type'),
@@ -447,7 +453,7 @@
 
 		function list_custom_function()
 		{
-			$GLOBALS['phpgw_info']['flags']['menu_selection'] .= '::list_functions';
+	//		$GLOBALS['phpgw_info']['flags']['menu_selection'] .= '::list_functions';
 
 			$appname	= $this->appname;
 			$location	= $this->location;
@@ -476,10 +482,10 @@
 						'descr'						=> $entry['descr'],
 						'sorting'					=> $entry['sorting'],
 						'active'					=> $entry['active']?'X':'',
-						'link_up'					=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.ui_custom.list_custom_function', 'resort'=> 'up', 'appname'=> $appname, 'location'=> $location, 'id'=> $entry['id'], 'allrows'=> $this->allrows)),
-						'link_down'					=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.ui_custom.list_custom_function', 'resort'=> 'up', 'appname'=> $appname, 'location'=> $location, 'id'=> $entry['id'], 'allrows'=> $this->allrows)),
-						'link_edit'					=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.ui_custom.edit_custom_function', 'appname'=> $appname, 'location'=> $location, 'id'=> $entry['id'])),
-						'link_delete'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.ui_custom.delete', 'appname'=> $appname, 'location'=> $location, 'custom_function_id'=> $entry['id'])),
+						'link_up'					=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.ui_custom.list_custom_function', 'resort'=> 'up', 'appname'=> $appname, 'location'=> $location, 'id'=> $entry['id'], 'allrows'=> $this->allrows, 'menu_selection' => $GLOBALS['phpgw_info']['flags']['menu_selection'])),
+						'link_down'					=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.ui_custom.list_custom_function', 'resort'=> 'up', 'appname'=> $appname, 'location'=> $location, 'id'=> $entry['id'], 'allrows'=> $this->allrows, 'menu_selection' => $GLOBALS['phpgw_info']['flags']['menu_selection'])),
+						'link_edit'					=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.ui_custom.edit_custom_function', 'appname'=> $appname, 'location'=> $location, 'id'=> $entry['id'], 'menu_selection' => $GLOBALS['phpgw_info']['flags']['menu_selection'])),
+						'link_delete'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.ui_custom.delete', 'appname'=> $appname, 'location'=> $location, 'custom_function_id'=> $entry['id'], 'menu_selection' => $GLOBALS['phpgw_info']['flags']['menu_selection'])),
 						'lang_up_text'				=> lang('shift up'),
 						'lang_down_text'			=> lang('shift down'),
 						'lang_edit_text'			=> lang('edit the custom_function'),
@@ -509,7 +515,9 @@
 											'extra'	=> array('menuaction'	=> $this->currentapp.'.ui_custom.list_custom_function',
 														'appname'	=> $appname,
 														'location'	=> $location,
-														'allrows'	=> $this->allrows)
+														'allrows'	=> $this->allrows,
+														'menu_selection' => $GLOBALS['phpgw_info']['flags']['menu_selection']
+														)
 										)),
 				'sort_sorting'		=> $this->nextmatchs->show_sort_order(array
 										(
@@ -519,7 +527,9 @@
 											'extra'	=> array('menuaction'	=> $this->currentapp.'.ui_custom.list_custom_function',
 														'appname'	=> $appname,
 														'location'	=> $location,
-														'allrows'	=> $this->allrows)
+														'allrows'	=> $this->allrows,
+														'menu_selection' => $GLOBALS['phpgw_info']['flags']['menu_selection']
+														)
 										)),
 				'lang_name'			=> lang('Name'),
 			);
@@ -528,7 +538,7 @@
 			(
 				'lang_add'						=> lang('add'),
 				'lang_add_custom_functiontext'	=> lang('add a custom_function'),
-				'add_action'					=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.ui_custom.edit_custom_function', 'appname'=> $appname, 'location'=> $location)),
+				'add_action'					=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.ui_custom.edit_custom_function', 'appname'=> $appname, 'location'=> $location, 'menu_selection' => $GLOBALS['phpgw_info']['flags']['menu_selection'])),
 				'lang_done'						=> lang('done'),
 				'lang_done_custom_functiontext'	=> lang('Return to admin'),
 				'done_action'					=> $GLOBALS['phpgw']->link('/admin/index.php'),
@@ -550,7 +560,8 @@
 				'order'			=> $this->order,
 				'query'			=> $this->query,
 				'appname'		=> $appname,
-				'location'		=> $location
+				'location'		=> $location,
+				'menu_selection' => $GLOBALS['phpgw_info']['flags']['menu_selection']
 			);
 
 			$data = array
@@ -589,7 +600,7 @@
 
 		function edit_custom_function()
 		{
-			$GLOBALS['phpgw_info']['flags']['menu_selection'] .= '::list_functions';
+	//		$GLOBALS['phpgw_info']['flags']['menu_selection'] .= '::list_functions';
 			$appname	= $this->appname;
 			$location	= $this->location;
 			$id			= phpgw::get_var('id', 'int');
@@ -661,7 +672,8 @@
 				'menuaction'	=> $this->currentapp.'.ui_custom.edit_custom_function',
 				'appname'		=> $appname,
 				'location'		=> $location,
-				'id'			=> $id
+				'id'			=> $id,
+				'menu_selection' => $GLOBALS['phpgw_info']['flags']['menu_selection']
 			);
 
 
@@ -678,7 +690,7 @@
 
 				'msgbox_data'						=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
 				'form_action'						=> $GLOBALS['phpgw']->link('/index.php',$link_data),
-				'done_action'						=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.ui_custom.list_custom_function', 'appname'=> $appname, 'location'=> $location)),
+				'done_action'						=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->currentapp.'.ui_custom.list_custom_function', 'appname'=> $appname, 'location'=> $location, 'menu_selection' => $GLOBALS['phpgw_info']['flags']['menu_selection'])),
 				'lang_id'							=> lang('Custom function ID'),
 				'lang_entity_type'					=> lang('Entity type'),
 				'lang_no_entity_type'				=> lang('No entity type'),
@@ -730,7 +742,8 @@
 				'menuaction'	=> $this->currentapp.'.ui_custom.'.$function,
 				'location'		=> $location,
 				'appname'		=> $appname,
-				'attrib_id'		=> $attrib_id
+				'attrib_id'		=> $attrib_id,
+				'menu_selection' => $GLOBALS['phpgw_info']['flags']['menu_selection']
 			);
 
 			$delete_data = array
@@ -739,7 +752,8 @@
 				'location'				=> $location,
 				'appname'				=> $appname,
 				'attrib_id'				=> $attrib_id,
-				'custom_function_id' 	=> $custom_function_id
+				'custom_function_id' 	=> $custom_function_id,
+				'menu_selection' => $GLOBALS['phpgw_info']['flags']['menu_selection']
 			);
 
 			if ( $confirm )
