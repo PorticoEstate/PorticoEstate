@@ -36,6 +36,11 @@
 		private $lang = array();
 
 		/**
+		* @var array $errors errors returned from function calls
+		*/
+		public $errors = array();
+
+		/**
 		* Maxiumum length of a translation string
 		*/
 		const MAX_MESSAGE_ID_LENGTH = 230;
@@ -69,13 +74,56 @@
 			}
 		}
 
-		function set_userlang($lang)
+		/**
+		* Set the user's selected language
+		*/
+		protected function set_userlang($lang)
 		{
 			if ( strlen($lang) != 2 )
 			{
 				$lang = 'en';
 			}
 			$this->userlang = $lang;
+		}
+
+		/**
+		* Read a lang file and return it as an array
+		*
+		* @param $fn the filename parse
+		* @param $lang the lang to be parsed - used for validation
+		* @return the array of translation string - empty array on failure
+		*/
+		protected function parse_lang_file($fn, $lang)
+		{
+			if ( !file_exists($fn) )
+			{
+				$this->errors[] = "Failed load lang file: $fn";
+				return array();
+			}
+
+			$entries = array();
+			$lines = file($fn);
+			foreach ( $lines as $cnt => $line )
+			{
+				$entry = explode("\t", $line);
+				//Make sure the lang files only have valid entries
+				if ( count($entry) != 4  || $entry[2] != $lang )
+				{
+					$err_line = $cnt + 1;
+					$this->errors[] = "Invalid entry in $fn @ line {$err_line}: <code>" . htmlspecialchars(preg_replace('/\t/', '\\t', $line)) . "</code> - skipping";
+					continue;
+				}
+
+				//list($message_id,$app_name,$ignore,$content) = $entry;
+				$entries[] = array
+				(
+					'message_id'	=> trim($entry[0]),
+					'app_name'		=> trim($entry[1]),
+					'lang'			=> trim($entry[2]),
+					'content'		=> trim($entry[3])
+				);
+			}
+			return $entries;
 		}
 
 		/**
@@ -274,27 +322,25 @@
 					foreach ( array_keys($GLOBALS['phpgw_info']['apps']) as $app )
 					{
 						$appfile = PHPGW_SERVER_ROOT . "/{$app}/setup/phpgw_{$lang}.lang";
-						if ( !file_exists($appfile) )
+						if ( !is_file($appfile) )
 						{
+							// make sure file exists before trying to load it
 							continue;
 						}
-						//echo '<br />Including: ' . $appfile;
-						$lines = file($appfile);
-						foreach ( $lines as $cnt => $line )
-						{
-							$entry = explode("\t", $line);
-							//Make sure the lang files only have valid entries
-							if ( count($entry) != 4  || $entry[2] != $lang )
-							{
-								$err_line = $cnt + 1;
-								$error .= "Invalid entry in {$app['name']}/setup/phpgw_{$lang}.lang @ line {$err_line}: <code>" . htmlspecialchars(preg_replace('/\t/', '\\t', $line)) . "</code> - skipping<br>\n";
-								continue;
-							}
 
-							list($message_id,$app_name,$ignore,$content) = $entry;
-							$message_id = $GLOBALS['phpgw']->db->db_addslashes(strtolower(trim(substr($message_id, 0, self::MAX_MESSAGE_ID_LENGTH))));
-							$app_name = $GLOBALS['phpgw']->db->db_addslashes(chop($app_name));
-							$content = $GLOBALS['phpgw']->db->db_addslashes(chop($content));
+						$lines = $this->parse_lang_file($appfile, $lang);
+						if ( !count($lines) )
+						{
+							echo "<div class=\"error\">" . implode("<br>\n", $this->errors) . "</div>\n";
+							$this->errors = array();
+							continue;
+						}
+
+						foreach ( $lines as $line )
+						{
+							$message_id = $GLOBALS['phpgw']->db->db_addslashes(strtolower(trim(substr($line['message_id'], 0, self::MAX_MESSAGE_ID_LENGTH))));
+							$app_name = $GLOBALS['phpgw']->db->db_addslashes(trim($line['app_name']));
+							$content = $GLOBALS['phpgw']->db->db_addslashes(trim($line['content']));
 							
 							$raw[$app_name][$message_id] = $content;
 						}
