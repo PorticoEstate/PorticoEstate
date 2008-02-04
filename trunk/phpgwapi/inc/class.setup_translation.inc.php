@@ -18,7 +18,7 @@
 	* @package phpgwapi
 	* @subpackage application
 	*/
-	class phpgwapi_setup_translation
+	class phpgwapi_setup_translation extends phpgwapi_translation
 	{
 		var $langarray;
 
@@ -27,72 +27,63 @@
 		*
 		 * @param $lang	user lang variable (defaults to en)
 		 */
-		function __construct()
+		public function __construct()
 		{
 			$ConfigLang = phpgw::get_var('ConfigLang');
+			$this->set_userlang($ConfigLang);
 
-			if($ConfigLang)
-			{
-				$this->userlang = $ConfigLang;
-			}
-
-			$fn = "./lang/phpgw_{$lang}.lang";
+			$fn = "./lang/phpgw_{$this->userlang}.lang";
 			if (!file_exists($fn))
 			{
 				$fn = './lang/phpgw_en.lang';
 			}
 
-			if (file_exists($fn))
+			$strings = $this->parse_lang_file($fn, $this->userlang);
+
+			if ( !is_array($strings) || !count($strings) )
 			{
-				$fp = fopen($fn,'r');
-				while ($data = fgets($fp,8000))
-				{
-					list($message_id,$app_name,$null,$content) = explode("\t",$data);
-					if ($app_name == 'setup' || $app_name == 'common' || $app_name == 'all')
-					{
-						$this->langarray[] = array(
-							'message_id' => $message_id,
-							'content'    => trim($content)
-						);
-					}
-				}
-				fclose($fp);
+				echo "Unable to load lang file: {$fn}<br>String won't be translated";
+				return;
+			}
+			foreach ( $strings as $string )
+			{
+				$this->lang[strtolower($string['message_id'])] = $string['content'];
 			}
 		}
+
+		/**
+		* Populate shared memory with the available translation strings - disabled for setup
+		*/
+		public function populate_shm()
+		{}
 		
 		/**
 		 * Translate phrase to user selected lang
-		*
+		 *
 		 * @param $key  phrase to translate
 		 * @param $vars vars sent to lang function, passed to us
 		 */
-		function translate($key, $vars=False) 
+		public function translate($key, $vars = array(), $only_common = false ) 
 		{
-			if (!$vars)
+			if ( !is_array($vars) )
 			{
 				$vars = array();
 			}
 
 			$ret = $key;
 
-			@reset($this->langarray);
-			while(list($null,$data) = @each($this->langarray))
+			if ( isset($this->lang[strtolower($key)]) )
 			{
-				$lang[strtolower($data['message_id'])] = $data['content'];
-			}
-
-			if (isset($lang[strtolower ($key)]) && $lang[strtolower ($key)])
-			{
-				$ret = $lang[strtolower ($key)];
+				$ret = $this->lang[strtolower($key)];
 			}
 			else
 			{
-				$ret = $key.'*';
+				$ret = "!{$key}";
 			}
 			$ndx = 1;
-			while( list($key,$val) = each( $vars ) )
+			foreach ( $vars as $var )
 			{
-				$ret = preg_replace( "/%$ndx/", $val, $ret );
+				$ret = preg_replace( "/%$ndx/", $var, $ret );
 				++$ndx;
 			}
 			return $ret;
@@ -179,50 +170,48 @@
 				_debug_array($langs);
 			}
 
-			while (list($null,$lang) = each($langs))
+			foreach ( $langs as $lang )
 			{
+				// escape it here - that will increase the string length
+				$lang = $GLOBALS['phpgw_setup']->db->db_addslashes($lang);
+				if ( strlen($lang) != 2 )
+				{
+					continue; // invalid lang
+				}
+
+				$lang = strtolower($lang);
+
 				if($DEBUG)
 				{
 					echo '<br>add_langs(): Working on: ' . $lang . ' for ' . $appname;
 				}
-				$appfile = PHPGW_SERVER_ROOT . "/{$appname}/setup/phpgw_" . strtolower($lang) . '.lang';
+				$appfile = PHPGW_SERVER_ROOT . "/{$appname}/setup/phpgw_{$lang}.lang";
 				if(file_exists($appfile))
 				{
 					if($DEBUG)
 					{
 						echo '<br>add_langs(): Including: ' . $appfile;
 					}
-					$raw_file = file($appfile);
+					$raw_file = $this->parse_lang_file($appfile);
 
 					foreach ( $raw_file as $line ) 
 					{
-						list($message_id,$app_name,$GLOBALS['phpgw_setup']->db_lang,$content) = explode("\t",$line);
-						if ( !strlen($content) )
-						{
-							echo "ERROR: Invalid translation entry: '$line'\n in /path/to/phpgroupware/$appname/setup/phpgw_$lang.lang<br>\n";
-						}
-
-						$message_id = $GLOBALS['phpgw_setup']->db->db_addslashes(chop(substr($message_id,0,MAX_MESSAGE_ID_LENGTH)));
+						$message_id = $GLOBALS['phpgw_setup']->db->db_addslashes(strtolower(substr($line['message_id'], 0, self::MAX_MESSAGE_ID_LENGTH)));
 						/* echo '<br>APPNAME:' . $app_name . ' PHRASE:' . $message_id; */
-						$app_name   = $GLOBALS['phpgw_setup']->db->db_addslashes(chop($app_name));
-						$GLOBALS['phpgw_setup']->db_lang    = $GLOBALS['phpgw_setup']->db->db_addslashes(chop($GLOBALS['phpgw_setup']->db_lang));
-						$content    = $GLOBALS['phpgw_setup']->db->db_addslashes(chop($content));
+						$app_name   = $GLOBALS['phpgw_setup']->db->db_addslashes($line['app_name']);
+						$content    = $GLOBALS['phpgw_setup']->db->db_addslashes($line['content']);
 
-						$GLOBALS['phpgw_setup']->db->query("SELECT COUNT(*) FROM phpgw_lang WHERE message_id='$message_id' and lang='"
-							. $GLOBALS['phpgw_setup']->db_lang . "'",__LINE__,__FILE__);
+						$GLOBALS['phpgw_setup']->db->query("SELECT COUNT(*) FROM phpgw_lang WHERE message_id='$message_id' and lang='{$lang}' ", __LINE__, __FILE__);
 						$GLOBALS['phpgw_setup']->db->next_record();
-
 						if ($GLOBALS['phpgw_setup']->db->f(0) == 0)
 						{
 							if($message_id && $content)
 							{
 								if($DEBUG)
 								{
-									echo "<br>add_langs(): adding - INSERT INTO phpgw_lang VALUES ('$message_id','$app_name','"
-										. $GLOBALS['phpgw_setup']->db_lang . "','$content')";
+									echo "<br>add_langs(): adding - INSERT INTO phpgw_lang VALUES ('{$message_id}','{$app_name}','{$lang}','{$content}')";
 								}
-								$GLOBALS['phpgw_setup']->db->query("INSERT INTO phpgw_lang VALUES ('$message_id','$app_name','"
-									. $GLOBALS['phpgw_setup']->db_lang . "','$content')",__LINE__,__FILE__);
+								$GLOBALS['phpgw_setup']->db->query("INSERT INTO phpgw_lang VALUES ('{$message_id}','{$app_name}','{$lang}','{$content}')", __LINE__, __FILE__);
 							}
 						}
 					}
