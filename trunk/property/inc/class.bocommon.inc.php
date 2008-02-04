@@ -1571,6 +1571,10 @@
 
 		function get_menu()
 		{
+			if(!isset($GLOBALS['phpgw_info']['user']['preferences']['property']['horisontal_menus']) || $GLOBALS['phpgw_info']['user']['preferences']['property']['horisontal_menus'] == 'no')
+			{
+				return;			
+			}
 			$GLOBALS['phpgw']->xslttpl->add_file(array('menu'));
 			$menu_brutto = execMethod('property.menu.get_menu');
 			$selection = explode('::',$GLOBALS['phpgw_info']['flags']['menu_selection']);

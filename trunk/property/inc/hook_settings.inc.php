@@ -200,4 +200,4 @@
 	create_input_box('With of textarea','textareacols','With of textarea in forms');
 	create_input_box('Height of textarea','textarearows','Height of textarea in forms');
 	
-
+	create_select_box('show horisontal menues','horisontal_menus',array('no' => 'No','yes' => 'Yes'),'Horisontal menues are shown in top of page');
