@@ -44,27 +44,26 @@
 	}
 
 	// Construct navbar_config by taking into account the current selected menu
-	// The only problem with this loop is that nodes without children allso will
-	// get set at expanded even though that isn't needed.
+	// The only problem with this loop is that leafnodes will be included
 
 	$navbar_config = execMethod('phpgwapi.template_newdesign.retrieve_local', 'navbar_config');
-	if(!isset($navbar_config))
-	{
-		$navbar_config = array();
-	}
 
-	$current_selection = $GLOBALS['phpgw_info']['flags']['menu_selection'];
-	while($current_selection)
+	if( isset($GLOBALS['phpgw_info']['flags']['menu_selection']) )
 	{
-		$navbar_config["navbar::$current_selection"] = true;
-		$current_selection = implode("::", explode("::", $current_selection, -1));
-	}
+		if(!isset($navbar_config))
+		{
+			$navbar_config = array();
+		}
 
-	if(count($navbar_config)) {
+		$current_selection = $GLOBALS['phpgw_info']['flags']['menu_selection'];
+
+		while($current_selection)
+		{
+			$navbar_config["navbar::$current_selection"] = true;
+			$current_selection = implode("::", explode("::", $current_selection, -1));
+		}
+
 		phpgwapi_template_newdesign::store_local('navbar_config', $navbar_config);
-	}
-	else {
-		$navbar_config = null;
 	}
 
 	$app = lang($app);
