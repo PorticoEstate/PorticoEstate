@@ -52,8 +52,8 @@
 		*/
 		public function __construct($reset = false)
 		{
-			if ( isset($GLOBALS['phpgw_info']['server']['shm_lang']) && $GLOBALS['phpgw_info']['server']['shm_lang']
-				&& function_exists('sem_get'))
+			if ( $GLOBALS['phpgw']->shm->is_enabled()
+				&& isset($GLOBALS['phpgw_info']['server']['shm_lang']) && $GLOBALS['phpgw_info']['server']['shm_lang'] )
 			{
 				$this->set_userlang($GLOBALS['phpgw_info']['user']['preferences']['common']['lang']);
 				$this->reset_lang($reset);
@@ -66,7 +66,8 @@
 		protected function reset_lang()
 		{
 			$this->loaded_from_shm = false;
-			if ( $this->lang = $GLOBALS['phpgw']->shm->get_value("lang_{$this->userlang}") )
+			if ( $GLOBALS['phpgw']->shm->is_enabled() 
+				&& $this->lang = $GLOBALS['phpgw']->shm->get_value("lang_{$this->userlang}") )
 			{
 				$this->loaded_from_shm = true;
 			}
@@ -303,7 +304,7 @@
 					}
 
 					//echo '<br />Working on: ' . $lang;
-					if(function_exists('sem_get') && function_exists('shmop_open'))
+					if ( $GLOBALS['phpgw']->shm->is_enabled() )
 					{
 						$GLOBALS['phpgw']->shm->delete_key('lang_' . $lang);
 					}
