@@ -118,7 +118,40 @@
 					'image'	=> array('hrm', 'preferences')
 				);
 			}
-			$menus['navigation'] = array();
+			$job_children = array
+			(
+				'job_type'	=> array
+				(
+					'text'	=> $GLOBALS['phpgw']->translation->translate('Job type', array(), true),
+					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'hrm.uijob.index'))
+				),
+				'organisation'	=> array
+				(
+					'text'	=> $GLOBALS['phpgw']->translation->translate('Organisation', array(), true),
+					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'hrm.uijob.hierarchy'))
+				)
+			);
+
+			$menus['navigation'] = array
+			(
+				'user'	=> array
+				(
+					'text'	=> $GLOBALS['phpgw']->translation->translate('User', array(), true),
+					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'hrm.uiuser.index'))
+				),
+				'job'	=> array
+				(
+					'text'	=> $GLOBALS['phpgw']->translation->translate('Job type', array(), true),
+					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'hrm.uijob.index')),
+					'children' => $job_children
+				),
+				'place'	=> array
+				(
+					'text'	=> $GLOBALS['phpgw']->translation->translate('PLace', array(), true),
+					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'hrm.uiplace.index'))
+				)
+			);
+			return $menus;
 		}
 
 		function links($page='',$page_2='')
