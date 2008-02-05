@@ -181,111 +181,6 @@
 			$this->save_sessiondata();
 		}
 
-		// FIXME this really belongs in the bo layer
-		function get_user_data($user_id)
-		{
-			$account = CreateObject('phpgwapi.accounts',$user_id,'u');
-			$account_info = $account->read_repository();
-			$membership = $account->membership($user_id);
-			$contacts = CreateObject('phpgwapi.contacts');
-
-			$qcols = array
-			(
-				'n_given'    => 'n_given',
-				'n_family'   => 'n_family',
-				'tel_work'   => 'tel_work',
-				'tel_home'   => 'tel_home',
-				'tel_cell'   => 'tel_cell',
-				'title'      => 'title',
-				'email'      => 'email',
-				'email_home' => 'email_home',
-			);
-
-			$fields = $contacts->are_users($account_info['person_id'], $qcols);
-
-			$this->boaddressbook  = CreateObject('addressbook.boaddressbook');
-			$comms = $this->boaddressbook->get_comm_contact_data($fields[0]['contact_id']);
-
-			if(is_array($comms) && isset($comms[$fields[0]['contact_id']]) )
-			{
-				$fields[0]['tel_work'] = $comms[$fields[0]['contact_id']]['work phone'];			
-				$fields[0]['tel_home'] = $comms[$fields[0]['contact_id']]['home phone'];
-				$fields[0]['tel_cell'] = $comms[$fields[0]['contact_id']]['mobile (cell) phone'];
-				$fields[0]['email_home'] = $comms[$fields[0]['contact_id']]['home email'];
-			}
-		
-			if(!$account_info['person_id'])
-			{
-				$sfields = rawurlencode(serialize($fields[0]));
-				$contact_link   = $GLOBALS['phpgw']->link('/index.php', 
-					array
-					(
-						'menuaction'	=> 'addressbook.uiaddressbook.add_person',
-						'entry'			=> $sfields,
-					)
-				);
-			}
-			else
-			{
-				$contact_link   = $GLOBALS['phpgw']->link('/index.php',
-					array
-					(
-						'menuaction'	=> 'addressbook.uiaddressbook.view_person',
-						'ab_id'		=> $fields[0]['contact_id']
-					)
-				);
-			}
-
-			$prefs_user = $this->bocommon->create_preferences('email',$user_id);
-
-			$email_work = '';
-			if($fields[0]['email'] || $prefs_user['address'])
-			{
-				if(isset($prefs_user['address']) && $prefs_user['address'])
-				{
-					$email_work = $prefs_user['address'];
-				}
-				else
-				{
-					$email_work = $fields[0]['email'];
-				}
-			}
-
-			$email_home = '';
-			if($fields[0]['email_home'])
-			{
-				$email_home = $fields[0]['email_home'];
-			}
-
-			$qcols_extra = array
-			(
-				array('name' =>lang('first name'), 'type' => 'link', 'link_value' =>$contact_link),
-				array('name' =>lang('last name'), 'type' => 'text'),
-				array('name' =>lang('work phone'), 'type' => 'text'),
-				array('name' =>lang('home phone'), 'type' => 'text'),
-				array('name' =>lang('cellular phone'), 'type' => 'text'),
-				array('name' =>lang('title'), 'type' => 'text'),
-				array('name' =>lang('work email'), 'type' => 'mail', 'link_value' => $email_work),
-				array('name' =>lang('home email'), 'type' => 'mail', 'link_value' => $email_home),
-			);
-
-			if(is_array($fields))
-			{
-				$qcols = array_keys($qcols);
-				$j=0;
-				for ($i=0;$i<count($qcols);$i++)
-				{
-					$user_values[$j]['value'] = $fields[0][$qcols[$i]];
-					$user_values[$j]['name'] = $qcols_extra[$i]['name'];
-					$user_values[$j]['type'] = $qcols_extra[$i]['type'];
-					$user_values[$j]['link_value'] = isset($qcols_extra[$i]['link_value']) ? $qcols_extra[$i]['link_value'] : '';
-					$j++;
-				}
-			}
-			
-			return $user_values;
-		}
-
 		function training()
 		{
 			$user_id	= phpgw::get_var('user_id', 'int');
@@ -305,7 +200,7 @@
 
 			if ($user_id)
 			{
-				$user_values = $this->get_user_data($user_id);
+				$user_values = $this->bo->get_user_data($user_id);
 				$training = $this->bo->read_training($user_id);
 			}
 //_debug_array($training);
@@ -839,7 +734,7 @@
 
 			if($user_id)
 			{
-				$user_values = $this->get_user_data($user_id);
+				$user_values = $this->bo->get_user_data($user_id);
 				$training = $this->bo->read_training($user_id);
 			}
 			else

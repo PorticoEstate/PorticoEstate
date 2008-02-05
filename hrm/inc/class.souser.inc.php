@@ -105,10 +105,10 @@
 				{
 					$start=0;
 				}
-				$query		= (isset($data['query'])?$data['query']:'');
-				$sort		= (isset($data['sort'])?$data['sort']:'DESC');
-				$order		= (isset($data['order'])?$data['order']:'');
-				$allrows	= (isset($data['allrows'])?$data['allrows']:'');
+				$query		= isset($data['query']) ? $data['query'] : '';
+				$sort		= isset($data['sort']) && $data['sort'] ? $data['sort'] : 'ASC';
+				$order		= isset($data['order']) && $data['order'] ? $data['order'] : 'category DESC, start_date';
+				$allrows	= isset($data['allrows']) ? $data['allrows'] : '';
 			}
 
 			$user_id = $data['user_id'];
