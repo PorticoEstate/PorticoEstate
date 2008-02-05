@@ -1,5 +1,6 @@
 function initNavBar() {
 	var state = navbar_config || {};
+	var first_run = true;
 
 	function clickHandler(e)
 	{
@@ -30,18 +31,35 @@ function initNavBar() {
 
 			elTarget.className = new_state;
 
+			// Cleanup leaf nodes introduced by header.inc.php
+			if(first_run)
+			{
+				for (var i in state)
+				{
+					var elm = document.getElementById( i );
+					while( elm != null && elm.nodeName.toUpperCase() !=  "UL" )
+					{
+						elm = elm.nextSibling;
+					}
+
+					if( elm == null ) {
+						delete state[i];
+					}
+				}
+				first_run=false;
+			}
+
 			if(elTarget.className ==  'expanded')
 			{
-				state[id] = true;
-				store('navbar_config', state);
+				state[id] = true;				
 			}
 			else if( state[id] )
 			{
 				delete state[id];
-				store('navbar_config', state);
 			}
+			
+			store('navbar_config', state);
 		}
-
 	}
 	YAHOO.util.Event.on("navbar", "click", clickHandler);
 }
