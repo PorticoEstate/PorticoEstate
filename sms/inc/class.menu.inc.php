@@ -13,7 +13,7 @@
 
 	/**
 	 * Description
-	 * @package hrm
+	 * @package sms
 	 */
 
 	class sms_menu
@@ -32,6 +32,50 @@
 				$this->sub		= $sub;
 			}
 		}
+
+		/**
+		 * Get the menus for the sms
+		 *
+		 * @return array available menus for the current user
+		 */
+		public function get_menu()
+		{
+			$acl = CreateObject('phpgwapi.acl');
+			$menus = array();
+
+			$start_page = 'sms';
+			if ( isset($GLOBALS['phpgw_info']['user']['preferences']['sms']['default_start_page'])
+					&& $GLOBALS['phpgw_info']['user']['preferences']['sms']['default_start_page'] )
+			{
+					$start_page = $GLOBALS['phpgw_info']['user']['preferences']['sms']['default_start_page'];
+			}
+
+			$menus['navbar'] = array
+			(
+				'sms' => array
+				(
+					'text'	=> $GLOBALS['phpgw']->translation->translate('sms', array(), true),
+					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => "sms.ui{$start_page}.index") ),
+					'image'	=> array('sms', 'navbar'),
+					'order'	=> 35,
+					'group'	=> 'facilities management'
+				),
+			);
+
+			$menus['toolbar'] = array();
+			if ( isset($GLOBALS['phpgw_info']['user']['apps']['admin']) )
+			{
+				$menus['admin'] = array();
+			}
+			if ( isset($GLOBALS['phpgw_info']['user']['apps']['preferences']) )
+			{
+				$menus['preferences'] = array();
+			}
+			$menus['navigation'] = array();
+
+			return $menus;
+		}
+
 
 		function links($page='',$page_2='')
 		{

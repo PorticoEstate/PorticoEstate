@@ -71,7 +71,7 @@
 		'settings',
 		'preferences',
 		'admin',
-		'sidebox_menu'
+		'menu'	=> 'sms.menu.get_menu'
 	);
 
 	/* Dependencies for this app to work */
