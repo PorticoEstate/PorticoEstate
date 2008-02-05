@@ -37,7 +37,11 @@
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = True;
 
 			$appname = phpgw::get_var('appname', 'string', 'REQUEST', 'admin');
-			$GLOBALS['phpgw_info']['flags']['menu_selection'] = phpgw::get_var('menu_selection');
+
+			if(!$GLOBALS['phpgw_info']['flags']['menu_selection'] = phpgw::get_var('menu_selection'))
+			{
+				$GLOBALS['phpgw_info']['flags']['menu_selection'] = "admin::{$appname}::categories";
+			}
 
 			$this->bo			= CreateObject('admin.bocategories');
 			$this->nextmatchs	= CreateObject('phpgwapi.nextmatchs');

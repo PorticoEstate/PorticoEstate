@@ -25,6 +25,7 @@
 		var $order;
 		var $sub;
 		var $currentapp;
+		var $local_menu_selection = false;
 
 		var $public_functions = array
 		(
@@ -54,7 +55,11 @@
 			$this->bolocation			= CreateObject('preferences.boadmin_acl');
 			$this->bolocation->acl_app 	= $this->appname;
 
-			$GLOBALS['phpgw_info']['flags']['menu_selection'] = phpgw::get_var('menu_selection');
+			if(!$GLOBALS['phpgw_info']['flags']['menu_selection'] = phpgw::get_var('menu_selection'))
+			{
+				$GLOBALS['phpgw_info']['flags']['menu_selection'] = "admin::{$this->appname}";
+				$this->local_menu_selection = true;
+			}
 		}
 
 		function save_sessiondata()
@@ -80,7 +85,10 @@
 			$id			= phpgw::get_var('id', 'int');
 			$resort		= phpgw::get_var('resort');
 
-		//	$GLOBALS['phpgw_info']['flags']['menu_selection'] .= '::list_atrribs';
+			if($this->local_menu_selection)
+			{
+				$GLOBALS['phpgw_info']['flags']['menu_selection'] .= '::list_atrribs';
+			}
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array(
 								'custom',
@@ -453,7 +461,10 @@
 
 		function list_custom_function()
 		{
-	//		$GLOBALS['phpgw_info']['flags']['menu_selection'] .= '::list_functions';
+			if($this->local_menu_selection)
+			{
+				$GLOBALS['phpgw_info']['flags']['menu_selection'] .= '::list_functions';
+			}
 
 			$appname	= $this->appname;
 			$location	= $this->location;
