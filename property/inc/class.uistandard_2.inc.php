@@ -55,7 +55,7 @@
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = True;
 			
 			$type	= phpgw::get_var('type');
-			$GLOBALS['phpgw_info']['flags']['menu_selection'] = "admin::property::{$type}";
+			$GLOBALS['phpgw_info']['flags']['menu_selection'] = phpgw::get_var('menu_selection');
 
 		//	$this->currentapp			= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->nextmatchs			= CreateObject('phpgwapi.nextmatchs');
@@ -107,15 +107,13 @@
 
 			while (is_array($standard_list) && list(,$standard) = each($standard_list))
 			{
-				$words = split(' ',$standard['descr']);
-				$first = "$words[0] $words[1] $words[2] $words[3]";
 
 				$content[] = array
 				(
 					'id'					=> $standard['id'],
-					'first'					=> $first,
-					'link_edit'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uistandard_2.edit', 'id'=> $standard['id'], 'type'=> $type)),
-					'link_delete'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uistandard_2.delete', 'id'=> $standard['id'], 'type'=> $type)),
+					'first'					=> $standard['descr'],
+					'link_edit'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uistandard_2.edit', 'id'=> $standard['id'], 'type'=> $type, 'menu_selection' => $GLOBALS['phpgw_info']['flags']['menu_selection'])),
+					'link_delete'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uistandard_2.delete', 'id'=> $standard['id'], 'type'=> $type, 'menu_selection' => $GLOBALS['phpgw_info']['flags']['menu_selection'])),
 					'lang_view_standardtext'		=> lang('view the standard'),
 					'lang_edit_standardtext'		=> lang('edit the standard'),
 					'lang_delete_standardtext'		=> lang('delete the standard'),
@@ -139,7 +137,9 @@
 											'var'	=> 'id',
 											'order'	=> $this->order,
 											'extra'	=> array('menuaction'	=> 'property.uistandard_2.index',
-														'type'	=>$type)
+														'type'	=>$type,
+														'menu_selection' => $GLOBALS['phpgw_info']['flags']['menu_selection']
+														)
 										)),
 				'lang_id'		=> lang('standard id'),
 			);
@@ -148,7 +148,7 @@
 			(
 				'lang_add'		=> lang('add'),
 				'lang_add_standardtext'	=> lang('add a standard'),
-				'add_action'		=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uistandard_2.edit', 'type'=> $type)),
+				'add_action'		=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uistandard_2.edit', 'type'=> $type, 'menu_selection' => $GLOBALS['phpgw_info']['flags']['menu_selection'])),
 				'lang_done'		=> lang('done'),
 				'lang_done_standardtext'=> lang('back to admin'),
 				'done_action'		=> $GLOBALS['phpgw']->link('/admin/index.php')
@@ -237,7 +237,8 @@
 			(
 				'menuaction'	=> 'property.uistandard_2.edit',
 				'id'		=> $id,
-				'type'		=> $type
+				'type'		=> $type,
+				'menu_selection' => $GLOBALS['phpgw_info']['flags']['menu_selection']
 			);
 //_debug_array($link_data);
 			$msgbox_data = $this->bocommon->msgbox_data($receipt);
@@ -246,7 +247,7 @@
 			(
 				'msgbox_data'					=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
 				'form_action'					=> $GLOBALS['phpgw']->link('/index.php',$link_data),
-				'done_action'					=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uistandard_2.index', 'type'=> $type)),
+				'done_action'					=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uistandard_2.index', 'type'=> $type, 'menu_selection' => $GLOBALS['phpgw_info']['flags']['menu_selection'])),
 				'lang_id'					=> lang('standard ID'),
 				'lang_name'					=> lang('name'),
 				'lang_descr'					=> lang('Descr'),
@@ -286,7 +287,8 @@
 			$link_data = array
 			(
 				'menuaction' => 'property.uistandard_2.index',
-				'type' => $type
+				'type' => $type,
+				'menu_selection' => $GLOBALS['phpgw_info']['flags']['menu_selection']
 			);
 
 			if (phpgw::get_var('confirm', 'bool', 'POST'))
@@ -300,7 +302,7 @@
 			$data = array
 			(
 				'done_action'			=> $GLOBALS['phpgw']->link('/index.php',$link_data),
-				'delete_action'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uistandard_2.delete', 'id'=> $id, 'type'=>$type)),
+				'delete_action'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uistandard_2.delete', 'id'=> $id, 'type'=>$type, 'menu_selection' => $GLOBALS['phpgw_info']['flags']['menu_selection'])),
 				'lang_confirm_msg'		=> lang('do you really want to delete this entry'),
 				'lang_yes'			=> lang('yes'),
 				'lang_yes_standardtext'		=> lang('Delete the entry'),
