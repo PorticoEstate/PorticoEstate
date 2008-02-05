@@ -73,9 +73,8 @@
 		'manual',
 		'settings',
 		'preferences',
-		'admin',
 		'help',
-		'sidebox_menu'
+		'menu'	=> 'hrm.menu.get_menu'
 	);
 
 	/* Dependencies for this app to work */

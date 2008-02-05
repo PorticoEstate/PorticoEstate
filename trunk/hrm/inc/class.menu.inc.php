@@ -30,6 +30,97 @@
 			$this->sub		= $sub;
 		}
 
+		/**
+		 * Get the menus for the hrm
+		 *
+		 * @return array available menus for the current user
+		 */
+		public function get_menu()
+		{
+			$start_page = 'user';
+			if ( isset($GLOBALS['phpgw_info']['user']['preferences']['hrm']['default_start_page'])
+					&& $GLOBALS['phpgw_info']['user']['preferences']['hrm']['default_start_page'] )
+			{
+					$start_page = $GLOBALS['phpgw_info']['user']['preferences']['hrm']['default_start_page'];
+			}
+
+			$menus['navbar'] = array
+			(
+				'hrm' => array
+				(
+					'text'	=> $GLOBALS['phpgw']->translation->translate('hrm', array(), true),
+					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => "hrm.ui{$start_page}.index") ),
+					'image'	=> array('hrm', 'navbar'),
+					'order'	=> 35,
+					'group'	=> 'facilities management'
+				),
+			);
+
+			$menus['toolbar'] = array();
+
+			if ( isset($GLOBALS['phpgw_info']['user']['apps']['admin']) )
+			{
+				$menus['admin'] = array
+				(
+					'hrm_categories'	=> array
+					(
+						'text'	=> $GLOBALS['phpgw']->translation->translate('Global Categories', array(), true),
+						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.uicategories.index', 'appname' => 'hrm') )
+					),
+					'training_category'	=> array
+					(
+						'text'	=> $GLOBALS['phpgw']->translation->translate('training category', array(), true),
+						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'hrm.uicategory.index', 'type' => 'training') )
+					),
+					'skill_level'	=> array
+					(
+						'text'	=> $GLOBALS['phpgw']->translation->translate('skill level', array(), true),
+						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'hrm.uicategory.index', 'type' => 'skill_level') )
+					),
+					'experience_category'	=> array
+					(
+						'text'	=> $GLOBALS['phpgw']->translation->translate('experience category', array(), true),
+						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'hrm.uicategory.index', 'type' => 'experience') )
+					),
+					'qualification_category'	=> array
+					(
+						'text'	=> $GLOBALS['phpgw']->translation->translate('qualification category', array(), true),
+						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'hrm.uicategory.index', 'type' => 'qualification') )
+					),
+					'acl'	=> array
+					(
+						'text'	=> $GLOBALS['phpgw']->translation->translate('Configure Access Permissions', array(), true),
+						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'preferences.uiadmin_acl.list_acl', 'acl_app' => $appname) )
+					)
+				);
+			}
+
+			if ( isset($GLOBALS['phpgw_info']['user']['apps']['preferences']) )
+			{
+				$menus['preferences'] = array
+				(
+					array
+					(
+						'text'	=> $GLOBALS['phpgw']->translation->translate('Preferences', array(), true),
+						'url'	=> $GLOBALS['phpgw']->link('/preferences/preferences.php', array('appname' => 'hrm', 'type'=> 'user') )
+					),
+					array
+					(
+						'text'	=> $GLOBALS['phpgw']->translation->translate('Grant Access', array(), true),
+						'url'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'preferences.uiadmin_acl.aclprefs', 'acl_app'=> $appname) )
+					)
+				);
+
+				$menus['toolbar'][] = array
+				(
+					'text'	=> $GLOBALS['phpgw']->translation->translate('Preferences', array(), true),
+					'url'	=> $GLOBALS['phpgw']->link('/preferences/preferences.php', array('appname'	=> 'hrm')),
+					'image'	=> array('hrm', 'preferences')
+				);
+			}
+			$menus['navigation'] = array();
+		}
+
 		function links($page='',$page_2='')
 		{
 			$currentapp='hrm';
