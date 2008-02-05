@@ -90,7 +90,7 @@
 					'acl'	=> array
 					(
 						'text'	=> $GLOBALS['phpgw']->translation->translate('Configure Access Permissions', array(), true),
-						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'preferences.uiadmin_acl.list_acl', 'acl_app' => $appname) )
+						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'preferences.uiadmin_acl.list_acl', 'acl_app' => 'hrm') )
 					)
 				);
 			}
