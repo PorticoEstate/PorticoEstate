@@ -48,6 +48,8 @@
 			$this->sort				= $this->bo->sort;
 			$this->order				= $this->bo->order;
 			$this->allrows				= $this->bo->allrows;
+			$type						= phpgw::get_var('type');
+			$GLOBALS['phpgw_info']['flags']['menu_selection'] = "admin::hrm::$type";
 		}
 
 		function save_sessiondata()

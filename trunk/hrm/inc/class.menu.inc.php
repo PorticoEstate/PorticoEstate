@@ -62,12 +62,12 @@
 			{
 				$menus['admin'] = array
 				(
-					'hrm_categories'	=> array
+					'categories'	=> array
 					(
 						'text'	=> $GLOBALS['phpgw']->translation->translate('Global Categories', array(), true),
 						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.uicategories.index', 'appname' => 'hrm') )
 					),
-					'training_category'	=> array
+					'training'	=> array
 					(
 						'text'	=> $GLOBALS['phpgw']->translation->translate('training category', array(), true),
 						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'hrm.uicategory.index', 'type' => 'training') )
@@ -77,12 +77,12 @@
 						'text'	=> $GLOBALS['phpgw']->translation->translate('skill level', array(), true),
 						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'hrm.uicategory.index', 'type' => 'skill_level') )
 					),
-					'experience_category'	=> array
+					'experience'	=> array
 					(
 						'text'	=> $GLOBALS['phpgw']->translation->translate('experience category', array(), true),
 						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'hrm.uicategory.index', 'type' => 'experience') )
 					),
-					'qualification_category'	=> array
+					'qualification'	=> array
 					(
 						'text'	=> $GLOBALS['phpgw']->translation->translate('qualification category', array(), true),
 						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'hrm.uicategory.index', 'type' => 'qualification') )
