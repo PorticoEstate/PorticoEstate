@@ -270,7 +270,7 @@
 					'config' => array
 					(
 						'url'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiadmin_location.config') ),
-						'text'	=> lang('Config')
+						'text'	=> $GLOBALS['phpgw']->translation->translate('Config')
 					)
 				);
 
@@ -475,17 +475,17 @@
 				$children['tenant'] = array
 				(
 					'url'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uilocation.index', 'lookup_tenant' => 1, 'type_id' => $soadmin_location->read_config_single('tenant_id'))),
-					'text'	=> lang('Tenant')
+					'text'	=> $GLOBALS['phpgw']->translation->translate('Tenant', array(), 'property')
 				);
 				$children['gabnr'] = array
 				(
 					'url'	=>	$GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uigab.index')),
-					'text'	=> lang('gabnr')
+					'text'	=> $GLOBALS['phpgw']->translation->translate('gabnr', array(), 'property')
 				);
 				$children['summary'] = array
 				(
 					'url'	=>	$GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uilocation.summary')),
-					'text'	=>	lang('Summary')
+					'text'	=>	$GLOBALS['phpgw']->translation->translate('Summary', array(), 'property')
 				);
 
 /*				if ( $acl->check('.location',16) )
@@ -493,12 +493,12 @@
 					$children['type'] = array
 					(
 						'url'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiadmin_location.index')),
-						'text'	=> lang('Location type')
+						'text'	=> $GLOBALS['phpgw']->translation->translate('Location type')
 					);
 					$children['config'] = array
 					(
 						'url'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiadmin_location.config')),
-						'text'	=> lang('Config')
+						'text'	=> $GLOBALS['phpgw']->translation->translate('Config')
 					);
 				}
 */
@@ -523,7 +523,7 @@
 						'import'	=> array
 						(
 							'url'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiifc.import')),
-							'text'	=> lang('import')
+							'text'	=> $GLOBALS['phpgw']->translation->translate('import', array(), 'property')
 						)
 					)
 				);
@@ -534,7 +534,7 @@
 				$menus['navigation']['helpdesk'] = array
 				(
 					'url'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uitts.index')),
-					'text'	=> lang('Helpdesk')
+					'text'	=> $GLOBALS['phpgw']->translation->translate('Helpdesk', array(), 'property')
 				);
 			}
 
@@ -549,27 +549,27 @@
 						'project'	=> array
 						(
 							'url'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiproject.index')),
-							'text'	=> lang('Project')
+							'text'	=> $GLOBALS['phpgw']->translation->translate('Project', array(), 'property')
 						),
 						'workorder'	=> array
 						(
 							'url'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiworkorder.index')),
-							'text'	=> lang('Workorder')
+							'text'	=> $GLOBALS['phpgw']->translation->translate('Workorder', array(), 'property')
 						),
 						'request'	=> array
 						(
 							'url'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uirequest.index')),
-							'text'	=> lang('Request')
+							'text'	=> $GLOBALS['phpgw']->translation->translate('Request', array(), 'property')
 						),
 						'template'	=> array
 						(
 							'url'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uitemplate.index')),
-							'text'	=> lang('template')
+							'text'	=> $GLOBALS['phpgw']->translation->translate('template', array(), 'property')
 						),
 						'claim'		=> array
 						(
 							'url'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uitenant_claim.index')),
-							'text'	=> lang('Tenant claim')
+							'text'	=> $GLOBALS['phpgw']->translation->translate('Tenant claim', array(), 'property')
 						)
 					)
 				);
@@ -583,19 +583,19 @@
 					$children['investment'] = array
 					(
 						'url'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiinvestment.index')),
-						'text'	=>	lang('Investment value')
+						'text'	=>	$GLOBALS['phpgw']->translation->translate('Investment value', array(), 'property')
 					);
 
 					$children['import'] = array
 					(
 						'url'	=>	$GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiXport.import')),
-						'text'	=> lang('Import invoice')
+						'text'	=> $GLOBALS['phpgw']->translation->translate('Import invoice', array(), 'property')
 					);
 
 					$children['export'] = array
 					(
 						'url'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiXport.export')),
-						'text'	=>	lang('Export invoice')
+						'text'	=>	$GLOBALS['phpgw']->translation->translate('Export invoice', array(), 'property')
 					);
 				}
 
@@ -604,7 +604,7 @@
 					$children['add'] = array
 					(
 						'url'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiinvoice.add')),
-						'text'	=>	lang('Add')
+						'text'	=>	$GLOBALS['phpgw']->translation->translate('Add', array(), 'property')
 					);
 				}
 
@@ -618,28 +618,28 @@
 						'paid'		=> array
 						(
 							'url'	=>	$GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiinvoice.index', 'paid'=>true)),
-							'text'	=> lang('Paid')
+							'text'	=> $GLOBALS['phpgw']->translation->translate('Paid', array(), 'property')
 						),
 						// Should this be process? skwashd jan08
 						'consume'	=> array
 						(
 							'url'	=>	$GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiinvoice.consume')),
-							'text'	=> lang('consume')
+							'text'	=> $GLOBALS['phpgw']->translation->translate('consume', array(), 'property')
 						),
 						'budget'	=> array
 						(
 							'url'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uib_account.index')),
-							'text'	=> lang('Budget account')
+							'text'	=> $GLOBALS['phpgw']->translation->translate('Budget account', array(), 'property')
 						),
 						'vendor'	=> array
 						(
 							'url'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiactor.index', 'role'=> 'vendor')),
-							'text'	=> lang('Vendor')
+							'text'	=> $GLOBALS['phpgw']->translation->translate('Vendor', array(), 'property')
 						),
 						'tenant'	=> array
 						(
 							'url'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiactor.index', 'role'=> 'tenant')),
-							'text'	=> lang('Tenant')
+							'text'	=> $GLOBALS['phpgw']->translation->translate('Tenant', array(), 'property')
 						)
 					), $children)
 				);
@@ -656,17 +656,17 @@
 						'basis'		=> array
 						(
 							'url'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uibudget.basis')),
-							'text'	=> lang('basis')
+							'text'	=> $GLOBALS['phpgw']->translation->translate('basis', array(), 'property')
 						),
 						'budget'	=> array
 						(
 							'url'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uibudget.index')),
-							'text'	=> lang('budget')
+							'text'	=> $GLOBALS['phpgw']->translation->translate('budget', array(), 'property')
 						),
 						'obligations'	=> array
 						(
 							'url'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uibudget.obligations')),
-							'text'	=> lang('obligations')
+							'text'	=> $GLOBALS['phpgw']->translation->translate('obligations', array(), 'property')
 						)
 					)
 				);
@@ -682,17 +682,17 @@
 						'group'		=> array
 						(
 							'url'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uipricebook.agreement_group')),
-							'text'	=> lang('Agreement group')
+							'text'	=> $GLOBALS['phpgw']->translation->translate('Agreement group', array(), 'property')
 						),
 						'activities'	=> array
 						(
 							'url'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uipricebook.activity')),
-							'text'	=> lang('Activities')
+							'text'	=> $GLOBALS['phpgw']->translation->translate('Activities', array(), 'property')
 						),
 						'agreement'		=> array
 						(
 							'url'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiagreement.index')),
-							'text'	=> lang('Agreement')
+							'text'	=> $GLOBALS['phpgw']->translation->translate('Agreement', array(), 'property')
 						)
 					);
 				}
@@ -712,17 +712,17 @@
 						'service'	=> array
 						(
 							'url'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uis_agreement.index')),
-							'text'	=> lang('Service')
+							'text'	=> $GLOBALS['phpgw']->translation->translate('Service', array(), 'property')
 						),
 						'rental'	=> array
 						(
 							'url'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uir_agreement.index')),
-							'text'	=> lang('Rental')
+							'text'	=> $GLOBALS['phpgw']->translation->translate('Rental', array(), 'property')
 						),
 						'alarm'		=> array
 						(
 							'url'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uialarm.list_alarm')),
-							'text'	=> lang('alarm')
+							'text'	=> $GLOBALS['phpgw']->translation->translate('alarm', array(), 'property')
 						)
 					)
 				);
@@ -739,7 +739,7 @@
 						'location'	=> array
 						(
 							'url'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uidocument.index')),
-							'text'	=> lang('location')
+							'text'	=> $GLOBALS['phpgw']->translation->translate('location', array(), 'property')
 						)
 					)
 				);
