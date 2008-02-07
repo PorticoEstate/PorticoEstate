@@ -107,7 +107,7 @@
 					array
 					(
 						'text'	=> $GLOBALS['phpgw']->translation->translate('Grant Access', array(), true),
-						'url'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'preferences.uiadmin_acl.aclprefs', 'acl_app'=> $appname) )
+						'url'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'preferences.uiadmin_acl.aclprefs', 'acl_app'=> 'hrm') )
 					)
 				);
 
