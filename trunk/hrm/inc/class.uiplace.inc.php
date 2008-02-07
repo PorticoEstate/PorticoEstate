@@ -43,14 +43,13 @@
 			$this->account			= $GLOBALS['phpgw_info']['user']['account_id'];
 			$this->bo			= CreateObject('hrm.boplace',true);
 			$this->bocommon			= CreateObject('hrm.bocommon');
-			$this->menu			= CreateObject('hrm.menu');
-			$this->menu->sub		='place';
 
 			$this->start			= $this->bo->start;
 			$this->query			= $this->bo->query;
 			$this->sort			= $this->bo->sort;
 			$this->order			= $this->bo->order;
 			$this->allrows			= $this->bo->allrows;
+			$GLOBALS['phpgw_info']['flags']['menu_selection'] = 'hrm::place';
 		}
 
 		function save_sessiondata()
@@ -69,8 +68,6 @@
 		{
 			$GLOBALS['phpgw']->xslttpl->add_file(array('place','nextmatchs','menu',
 										'search_field'));
-
-			$links = $this->menu->links();
 
 			$place_info = $this->bo->read();
 
@@ -143,7 +140,7 @@
 			$data = array
 			(
 				'msgbox_data'					=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
-				'links'						=> $links,
+				'menu'							=> execMethod('hrm.menu.links'),
 				'allow_allrows'					=> True,
 				'allrows'					=> $this->allrows,
 				'start_record'					=> $this->start,
