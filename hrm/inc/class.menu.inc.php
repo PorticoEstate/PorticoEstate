@@ -48,7 +48,7 @@
 			(
 				'hrm' => array
 				(
-					'text'	=> $GLOBALS['phpgw']->translation->translate('hrm', array(), true),
+					'text'	=> $GLOBALS['phpgw']->translation->translate('hrm', array(), 'hrm'),
 					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => "hrm.ui{$start_page}.index") ),
 					'image'	=> array('hrm', 'navbar'),
 					'order'	=> 35,
@@ -64,32 +64,32 @@
 				(
 					'categories'	=> array
 					(
-						'text'	=> $GLOBALS['phpgw']->translation->translate('Global Categories', array(), true),
+						'text'	=> $GLOBALS['phpgw']->translation->translate('Global Categories', array(), 'hrm'),
 						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.uicategories.index', 'appname' => 'hrm') )
 					),
 					'training'	=> array
 					(
-						'text'	=> $GLOBALS['phpgw']->translation->translate('training category', array(), true),
+						'text'	=> $GLOBALS['phpgw']->translation->translate('training category', array(), 'hrm'),
 						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'hrm.uicategory.index', 'type' => 'training') )
 					),
 					'skill_level'	=> array
 					(
-						'text'	=> $GLOBALS['phpgw']->translation->translate('skill level', array(), true),
+						'text'	=> $GLOBALS['phpgw']->translation->translate('skill level', array(), 'hrm'),
 						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'hrm.uicategory.index', 'type' => 'skill_level') )
 					),
 					'experience'	=> array
 					(
-						'text'	=> $GLOBALS['phpgw']->translation->translate('experience category', array(), true),
+						'text'	=> $GLOBALS['phpgw']->translation->translate('experience category', array(), 'hrm'),
 						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'hrm.uicategory.index', 'type' => 'experience') )
 					),
 					'qualification'	=> array
 					(
-						'text'	=> $GLOBALS['phpgw']->translation->translate('qualification category', array(), true),
+						'text'	=> $GLOBALS['phpgw']->translation->translate('qualification category', array(), 'hrm'),
 						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'hrm.uicategory.index', 'type' => 'qualification') )
 					),
 					'acl'	=> array
 					(
-						'text'	=> $GLOBALS['phpgw']->translation->translate('Configure Access Permissions', array(), true),
+						'text'	=> $GLOBALS['phpgw']->translation->translate('Configure Access Permissions', array(), 'hrm'),
 						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'preferences.uiadmin_acl.list_acl', 'acl_app' => 'hrm') )
 					)
 				);
@@ -101,19 +101,19 @@
 				(
 					array
 					(
-						'text'	=> $GLOBALS['phpgw']->translation->translate('Preferences', array(), true),
+						'text'	=> $GLOBALS['phpgw']->translation->translate('Preferences', array(), 'hrm'),
 						'url'	=> $GLOBALS['phpgw']->link('/preferences/preferences.php', array('appname' => 'hrm', 'type'=> 'user') )
 					),
 					array
 					(
-						'text'	=> $GLOBALS['phpgw']->translation->translate('Grant Access', array(), true),
+						'text'	=> $GLOBALS['phpgw']->translation->translate('Grant Access', array(), 'hrm'),
 						'url'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'preferences.uiadmin_acl.aclprefs', 'acl_app'=> 'hrm') )
 					)
 				);
 
 				$menus['toolbar'][] = array
 				(
-					'text'	=> $GLOBALS['phpgw']->translation->translate('Preferences', array(), true),
+					'text'	=> $GLOBALS['phpgw']->translation->translate('Preferences', array(), 'hrm'),
 					'url'	=> $GLOBALS['phpgw']->link('/preferences/preferences.php', array('appname'	=> 'hrm')),
 					'image'	=> array('hrm', 'preferences')
 				);
@@ -122,12 +122,12 @@
 			(
 				'job_type'	=> array
 				(
-					'text'	=> $GLOBALS['phpgw']->translation->translate('Job type', array(), true),
+					'text'	=> $GLOBALS['phpgw']->translation->translate('Job type', array(), 'hrm'),
 					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'hrm.uijob.index'))
 				),
 				'organisation'	=> array
 				(
-					'text'	=> $GLOBALS['phpgw']->translation->translate('Organisation', array(), true),
+					'text'	=> $GLOBALS['phpgw']->translation->translate('Organisation', array(), 'hrm'),
 					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'hrm.uijob.hierarchy'))
 				)
 			);
@@ -136,18 +136,18 @@
 			(
 				'user'	=> array
 				(
-					'text'	=> $GLOBALS['phpgw']->translation->translate('User', array(), true),
+					'text'	=> $GLOBALS['phpgw']->translation->translate('User', array(), 'hrm'),
 					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'hrm.uiuser.index'))
 				),
 				'job'	=> array
 				(
-					'text'	=> $GLOBALS['phpgw']->translation->translate('Job type', array(), true),
+					'text'	=> $GLOBALS['phpgw']->translation->translate('Job type', array(), 'hrm'),
 					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'hrm.uijob.index')),
 					'children' => $job_children
 				),
 				'place'	=> array
 				(
-					'text'	=> $GLOBALS['phpgw']->translation->translate('PLace', array(), true),
+					'text'	=> $GLOBALS['phpgw']->translation->translate('PLace', array(), 'hrm'),
 					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'hrm.uiplace.index'))
 				)
 			);
