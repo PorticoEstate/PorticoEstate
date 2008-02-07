@@ -11,8 +11,4 @@
  	* @version $Id$
 	*/
 
-	$yes_and_no = array(
-		'True' => 'Yes',
-		''     => 'No'
-	);
-
+	create_select_box('show horisontal menues','horisontal_menus',array('no' => 'No','yes' => 'Yes'),'Horisontal menues are shown in top of page');

@@ -44,14 +44,13 @@
 			$this->bo					= CreateObject('hrm.bouser',False);
 			$this->bocommon				= CreateObject('hrm.bocommon');
 			$this->bocategory			= CreateObject('hrm.bocategory');
-			$this->menu					= CreateObject('hrm.menu');
-			$this->menu->sub			='user';
 			$this->grants 				= $this->bo->grants;
 			$this->start				= $this->bo->start;
 			$this->query				= $this->bo->query;
 			$this->sort					= $this->bo->sort;
 			$this->order				= $this->bo->order;
 			$this->allrows				= $this->bo->allrows;
+			$GLOBALS['phpgw_info']['flags']['menu_selection'] = 'hrm::user';
 		}
 
 		function save_sessiondata()
@@ -71,8 +70,6 @@
 		{
 			$GLOBALS['phpgw']->xslttpl->add_file(array('user','nextmatchs','menu',
 										'search_field'));
-
-			$links = $this->menu->links();
 
 			$account_info = $this->bo->read();
 
@@ -156,7 +153,7 @@
 
 			$data = array
 			(
-				'links'								=> $links,
+				'menu'								=> execMethod('hrm.menu.links'),
 				'allow_allrows'						=> True,
 				'allrows'							=> $this->allrows,
 				'start_record'						=> $this->start,

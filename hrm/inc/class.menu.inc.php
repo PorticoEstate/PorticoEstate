@@ -154,70 +154,44 @@
 			return $menus;
 		}
 
-		function links($page='',$page_2='')
+		function links()
 		{
-			$currentapp='hrm';
-			$sub = $this->sub;
-
-			$menu = $GLOBALS['phpgw']->session->appsession('menu',substr(md5($currentapp.$sub . '_' . $page . '_' . $page_2),-20));
-
-			if(!isset($menu) || !$menu)
+			if(!isset($GLOBALS['phpgw_info']['user']['preferences']['hrm']['horisontal_menus']) || $GLOBALS['phpgw_info']['user']['preferences']['hrm']['horisontal_menus'] == 'no')
 			{
-				$menu = array(); 
-
-				$i=0;
-				if($sub=='user')
-				{
-					$menu['module'][$i]['this']=True;
-				}
-				$menu['module'][$i]['url'] 		= $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> $currentapp.'.uiuser.index'));
-				$menu['module'][$i]['text'] 		= lang('User');
-				$menu['module'][$i]['statustext'] 	= lang('User');
-				$i++;
-
-				if($sub=='job')
-				{
-					$menu['module'][$i]['this']=True;
-				}
-				$menu['module'][$i]['url']			=	$GLOBALS['phpgw']->link('/index.php', array('menuaction'=> $currentapp.'.uijob.index'));
-				$menu['module'][$i]['text']			=	lang('Job');
-				$menu['module'][$i]['statustext']		=	lang('Job');
-				$i++;
-
-				if($sub=='place')
-				{
-					$menu['module'][$i]['this']=True;
-				}
-				$menu['module'][$i]['url']			=	$GLOBALS['phpgw']->link('/index.php', array('menuaction'=> $currentapp.'.uiplace.index'));
-				$menu['module'][$i]['text']			=	lang('PLace');
-				$menu['module'][$i]['statustext']		=	lang('Place');
-				$i++;
-
-				$j=0;
-				if ($sub == 'job')
-				{
-					if($page=='job_type')
-					{
-						$menu['sub_menu'][$j]['this']=True;
-					}
-					$menu['sub_menu'][$j]['url']			=	$GLOBALS['phpgw']->link('/index.php', array('menuaction'=> $currentapp.'.uijob.index'));
-					$menu['sub_menu'][$j]['text']			=	lang('Job type');
-					$menu['sub_menu'][$j]['statustext']		=	lang('Job type');
-					$j++;
-
-					if($page=='hierarchy')
-					{
-						$menu['sub_menu'][$j]['this']=True;
-					}
-					$menu['sub_menu'][$j]['url']			=	$GLOBALS['phpgw']->link('/index.php', array('menuaction'=> $currentapp.'.uijob.hierarchy'));
-					$menu['sub_menu'][$j]['text']			=	lang('Organisation');
-					$menu['sub_menu'][$j]['statustext']		=	lang('Organisation');
-					$j++;
-				}
-
-				$GLOBALS['phpgw']->session->appsession('menu',substr(md5($currentapp.$sub . '_' . $page . '_' . $page_2),-20),$menu);
+				return;			
 			}
-			$GLOBALS['phpgw']->session->appsession('menu_hrm','sidebox',$menu);
+			$GLOBALS['phpgw']->xslttpl->add_file(array('menu'));
+			$menu_brutto = execMethod('hrm.menu.get_menu');
+			$selection = explode('::',$GLOBALS['phpgw_info']['flags']['menu_selection']);
+			$level=0;
+			$menu['navigation'] = $this->get_sub_menu($menu_brutto['navigation'],$selection,$level);
+			return $menu;
+		}
+
+		function get_sub_menu($children = array(), $selection=array(),$level='')
+		{
+			$level++;
+			$i=0;
+			foreach($children as $key => $vals)
+			{
+				$menu[] = $vals;
+				if($key == $selection[$level])
+				{
+					$menu[$i]['this'] = true;
+					if(isset($menu[$i]['children']))
+					{
+						$menu[$i]['children'] = $this->get_sub_menu($menu[$i]['children'],$selection,$level);
+					}
+				}
+				else
+				{
+					if(isset($menu[$i]['children']))
+					{
+						unset($menu[$i]['children']);
+					}
+				}	
+				$i++;		
+			}
 			return $menu;
 		}
 	}
