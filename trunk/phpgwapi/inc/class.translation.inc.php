@@ -59,6 +59,7 @@
 				$this->set_userlang($lang);
 				$this->reset_lang($reset);
 			}
+			$this->lookup_app = $GLOBALS['phpgw_info']['flags']['currentapp']=='login' ? 'common' : $GLOBALS['phpgw_info']['flags']['currentapp'];
 		}
 
 		/**
@@ -191,11 +192,11 @@
 			}
 
 			$lookup_key = strtolower(trim(substr($key, 0, self::MAX_MESSAGE_ID_LENGTH)));
-			$lookup_app = $app_name ? $app_name : $GLOBALS['phpgw_info']['flags']['currentapp'];
+			$lookup_app = $app_name ? $app_name : $this->lookup_app;
 
 			if ( !is_array($this->lang) 
-				|| (!isset($this->lang[$lookup_app][$lookup_key]) && !$this->loaded_from_shm)
-				|| $app_name ) // if application is given - check spesific for that application
+				|| (!isset($this->lang[$lookup_app][$lookup_key]) && !$this->loaded_from_shm))
+			//	|| $app_name ) // if application is given - check spesific for that application
 			{
 				if ( !$app_name )
 				{
