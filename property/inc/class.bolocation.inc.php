@@ -314,7 +314,7 @@
 			for ($j=0;$j<$location_cols_count;$j++)
 			{
 				//FIXME: location_type is currently empty - should'nt be...
-				if(($fm_location_cols[$j]['location_type'] <= $data['type_id']) && $fm_location_cols[$j]['lookup_form'])
+				if((isset($fm_location_cols[$j]['location_type']) && $fm_location_cols[$j]['location_type'] <= $data['type_id']) && $fm_location_cols[$j]['lookup_form'])
 				{
 					$location['location'][$i]['input_type']				= 'text';
 					$location['location'][$i]['input_name']				= $fm_location_cols[$j]['column_name'];
