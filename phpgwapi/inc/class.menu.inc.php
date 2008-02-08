@@ -49,7 +49,7 @@
 		*/
 		public function get($mtype = null)
 		{
-		//	$menu = $GLOBALS['phpgw']->session->appsession('phpgwapi', 'menu');
+			//$menu = $GLOBALS['phpgw']->session->appsession('phpgwapi', 'menu');
 			$menu = null;
 			if ( !$menu )
 			{
@@ -114,7 +114,7 @@
 							$app_text = $app == 'admin' ? lang('General') : lang($app);
 							$menus['navigation']['admin'][$app] = array
 							(
-								'text'	=> $GLOBALS['phpgw']->translation->translate($app, array(), $app),
+								'text'	=> $GLOBALS['phpgw']->translation->translate($app, array(), true),
 								'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.uiconfig.index', 'appname' => $app)),
 								'image'	=> $raw_menu['navbar'][$app]['image'],
 								'children'	=> $menu

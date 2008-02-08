@@ -45,7 +45,7 @@
 			(
 				'felamimail'	=> array
 				(
-					'text'	=> $GLOBALS['phpgw']->translation->translate('Felamimail', array(), 'felamimail'),
+					'text'	=> $GLOBALS['phpgw']->translation->translate('Felamimail', array(), true),
 					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'felamimail.uifelamimail.index') ),
 					'image'	=> array('felamimail', 'navbar'),
 					'order'	=> 6,
@@ -57,7 +57,7 @@
 			(
 				array
 				(
-					'text'	=> $GLOBALS['phpgw']->translation->translate('New', array(), 'felamimail'),
+					'text'	=> $GLOBALS['phpgw']->translation->translate('New', array(), true),
 					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'felamimail.uicompose.compose'))
 				),
 			);
@@ -68,7 +68,7 @@
 				(
 					array
 					(
-						'text'	=> $GLOBALS['phpgw']->translation->translate('Site Configuration', array(), 'felamimail'),
+						'text'	=> $GLOBALS['phpgw']->translation->translate('Site Configuration', array(), true),
 						'url'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=>'admin.uiconfig.index','appname'=> 'felamimail'))
 					)
 				);
@@ -80,12 +80,12 @@
 				(
 					array
 					(
-						'text'	=> $GLOBALS['phpgw']->translation->translate('Preferences', array(), 'felamimail'),
+						'text'	=> $GLOBALS['phpgw']->translation->translate('Preferences', array(), true),
 						'url'	=> $GLOBALS['phpgw']->link('/preferences/preferences.php', array('appname' => 'felamimail')),
 					),
 					array
 					(
-						'text'	=> $GLOBALS['phpgw']->translation->translate('Manage Filters', array(), 'felamimail'),
+						'text'	=> $GLOBALS['phpgw']->translation->translate('Manage Filters', array(), true),
 						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'felamimail.uisieve.mainScreen', 'action' => 'updateFilter')),
 					),
 					array
@@ -97,18 +97,18 @@
 
 				$menus['toolbar'][] = array
 				(
-					'text'	=> $GLOBALS['phpgw']->translation->translate('Preferences', array(), 'felamimail'),
+					'text'	=> $GLOBALS['phpgw']->translation->translate('Preferences', array(), true),
 					'url'	=> $GLOBALS['phpgw']->link('/preferences/preferences.php', array('appname'	=> 'felamimail')),
 					'image'	=> array('felamimail', 'preferences')
 				);
 				$menus['toolbar'][] = array
 				(
-					'text'	=> $GLOBALS['phpgw']->translation->translate('Manage Filters', array(), 'felamimail'),
+					'text'	=> $GLOBALS['phpgw']->translation->translate('Manage Filters', array(), true),
 					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'felamimail.uisieve.mainScreen', 'action' => 'updateFilter')),
 				);
 				$menus['toolbar'][] = array
 				(
-					'text'	=> $GLOBALS['phpgw']->translation->translate('Manage Folders', array(), 'felamimail'),
+					'text'	=> $GLOBALS['phpgw']->translation->translate('Manage Folders', array(), true),
 					'url'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=>'felamimail.uipreferences.listFolder') )
 				);
 			}
@@ -117,7 +117,7 @@
 			(
 				array
 				(
-					'text'	=> $GLOBALS['phpgw']->translation->translate('New', array(), 'felamimail'),
+					'text'	=> $GLOBALS['phpgw']->translation->translate('New', array(), true),
 					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'felamimail.uicompose.compose'))
 				)
 			);

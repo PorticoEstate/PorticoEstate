@@ -44,7 +44,7 @@
 			(
 				'addressbook'	=> array
 				(
-					'text'	=> $GLOBALS['phpgw']->translation->translate('Contacts', array(), 'addressbook'),
+					'text'	=> $GLOBALS['phpgw']->translation->translate('Contacts', array(), true),
 					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'addressbook.uiaddressbook.index', 'section' => 'Persons') ),
 					'image'	=> array('addressbook', 'navbar'),
 					'order'	=> 2,
@@ -57,37 +57,37 @@
 				(
 					array
 					(
-						'text'	=> $GLOBALS['phpgw']->translation->translate('Site Configuration', array(), 'addressbook'),
+						'text'	=> $GLOBALS['phpgw']->translation->translate('Site Configuration', array(), true),
 						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.uiconfig.index', 'appname' => 'addressbook') )
 					),
 
 					array
 					(
-						'text'	=> $GLOBALS['phpgw']->translation->translate('Edit custom fields', array(), 'addressbook'),
+						'text'	=> $GLOBALS['phpgw']->translation->translate('Edit custom fields', array(), true),
 						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'addressbook.uifields.index') )
 					),
 
 					array
 					(
-						'text'	=> $GLOBALS['phpgw']->translation->translate('Global Categories', array(), 'addressbook'),
+						'text'	=> $GLOBALS['phpgw']->translation->translate('Global Categories', array(), true),
 						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.uicategories.index', 'appname' => 'addressbook') )
 					),
 
 					array
 					(
-						'text'	=> $GLOBALS['phpgw']->translation->translate('Communication Types Manager', array(), 'addressbook'),
+						'text'	=> $GLOBALS['phpgw']->translation->translate('Communication Types Manager', array(), true),
 						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'addressbook.uicatalog_contact_comm_type.view') )
 					),
 
 					array
 					(
-						'text'	=> $GLOBALS['phpgw']->translation->translate('Communication Descriptions Manager', array(), 'addressbook'),
+						'text'	=> $GLOBALS['phpgw']->translation->translate('Communication Descriptions Manager', array(), true),
 						'url'	=>  $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'addressbook.uicatalog_contact_comm_descr.view') )
 					),
 
 					array
 					(
-						'text'	=> $GLOBALS['phpgw']->translation->translate('Location Manager', array(), 'addressbook'),
+						'text'	=> $GLOBALS['phpgw']->translation->translate('Location Manager', array(), true),
 						'url'	=>  $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'addressbook.uicatalog_contact_addr_type.view') )
 					),
 
@@ -103,13 +103,13 @@
 			(
 				array
 				(
-					'text'	=> $GLOBALS['phpgw']->translation->translate('New Person', array(), 'addressbook'),
+					'text'	=> $GLOBALS['phpgw']->translation->translate('New Person', array(), true),
 					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'addressbook.uiaddressbook.add_person'))
 				),
 				
 				array
 				(
-					'text'	=> $GLOBALS['phpgw']->translation->translate('New Organisation', array(), 'addressbook'),
+					'text'	=> $GLOBALS['phpgw']->translation->translate('New Organisation', array(), true),
 					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'addressbook.uiaddressbook.add_org'))
 				)
 			);
@@ -118,43 +118,43 @@
 			(
 				array
 				(
-					'text'	=> $GLOBALS['phpgw']->translation->translate('New Person', array(), 'addressbook'),
+					'text'	=> $GLOBALS['phpgw']->translation->translate('New Person', array(), true),
 					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'addressbook.uiaddressbook.add_person'))
 				),
 				
 				array
 				(
-					'text'	=> $GLOBALS['phpgw']->translation->translate('New Organisation', array(), 'addressbook'),
+					'text'	=> $GLOBALS['phpgw']->translation->translate('New Organisation', array(), true),
 					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'addressbook.uiaddressbook.add_org'))
 				),
 
 				array
 				(
-					'text'	=> $GLOBALS['phpgw']->translation->translate('Import VCard', array(), 'addressbook'),
+					'text'	=> $GLOBALS['phpgw']->translation->translate('Import VCard', array(), true),
 					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'addressbook.uivcard.in'))
 				),
 
 				array
 				(
-					'text'	=> $GLOBALS['phpgw']->translation->translate('Categorise Persons', array(), 'addressbook'),
+					'text'	=> $GLOBALS['phpgw']->translation->translate('Categorise Persons', array(), true),
 					'url'	=>  $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'addressbook.uicategorize_contacts.index'))
 				),
 				
 				array
 				(
-					'text'	=> $GLOBALS['phpgw']->translation->translate('Bulk Import - Contacts', array(), 'addressbook'),
+					'text'	=> $GLOBALS['phpgw']->translation->translate('Bulk Import - Contacts', array(), true),
 					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'addressbook.uiXport.import'))
 				),
 				
 				array
 				(
-					'text'	=> $GLOBALS['phpgw']->translation->translate('Bulk Import - CSV', array(), 'addressbook'),
+					'text'	=> $GLOBALS['phpgw']->translation->translate('Bulk Import - CSV', array(), true),
 					'url'	=> $GLOBALS['phpgw']->link('/addressbook/csv_import.php')
 				),
 
 				array
 				(
-					'text'	=> $GLOBALS['phpgw']->translation->translate('Export Contacts', array(), 'addressbook'),
+					'text'	=> $GLOBALS['phpgw']->translation->translate('Export Contacts', array(), true),
 					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'addressbook.uiXport.export'))
 				)
 			);
@@ -165,26 +165,26 @@
 				(
 					array
 					(
-						'text'	=> $GLOBALS['phpgw']->translation->translate('Preferences', array(), 'addressbook'),
+						'text'	=> $GLOBALS['phpgw']->translation->translate('Preferences', array(), true),
 						'url'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction' => 'addressbook.uiaddressbook_prefs.index'))
 					),
 
 					array
 					(
-						'text'	=> $GLOBALS['phpgw']->translation->translate('Grant Access', array(), 'addressbook'),
+						'text'	=> $GLOBALS['phpgw']->translation->translate('Grant Access', array(), true),
 						'url'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction' => 'preferences.uiadmin_acl.aclprefs' , 'acl_app' => 'addressbook'))
 					),
 					
 					array
 					(
-						'text'	=> $GLOBALS['phpgw']->translation->translate('Edit Categories', array(), 'addressbook'),
+						'text'	=> $GLOBALS['phpgw']->translation->translate('Edit Categories', array(), true),
 						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'preferences.uicategories.index' , 'cats_app' => 'addressbook', 'cats_level' => true , 'global_cats' => true))
 					)
 				);
 
 				$menus['toolbar'][] = array
 				(
-					'text'	=> $GLOBALS['phpgw']->translation->translate('Preferences', array(), 'addressbook'),
+					'text'	=> $GLOBALS['phpgw']->translation->translate('Preferences', array(), true),
 					'url'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction' => 'addressbook.uiaddressbook_prefs.index'))
 				);
 			}
