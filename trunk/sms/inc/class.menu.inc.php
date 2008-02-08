@@ -54,7 +54,7 @@
 			(
 				'sms' => array
 				(
-					'text'	=> $GLOBALS['phpgw']->translation->translate('sms', array(), 'sms'),
+					'text'	=> $GLOBALS['phpgw']->translation->translate('sms', array(), true),
 					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => "sms.ui{$start_page}.index") ),
 					'image'	=> array('sms', 'navbar'),
 					'order'	=> 35,
@@ -70,12 +70,12 @@
 				(
 					'config'	=> array
 					(
-						'text'	=> $GLOBALS['phpgw']->translation->translate('config', array(), 'sms'),
+						'text'	=> $GLOBALS['phpgw']->translation->translate('config', array(), true),
 						'url'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'sms.uiconfig.index'))
 					),
 					'refresh'	=> array
 					(
-						'text'	=> $GLOBALS['phpgw']->translation->translate('Daemon manual refresh', array(), 'sms'),
+						'text'	=> $GLOBALS['phpgw']->translation->translate('Daemon manual refresh', array(), true),
 						'url'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'sms.uiconfig.daemon_manual'))
 					)
 				);
@@ -87,12 +87,12 @@
 				(
 					array
 					(
-						'text'	=> $GLOBALS['phpgw']->translation->translate('Preferences', array(), 'sms'),
+						'text'	=> $GLOBALS['phpgw']->translation->translate('Preferences', array(), true),
 						'url'	=> $GLOBALS['phpgw']->link('/preferences/preferences.php', array('appname' => 'sms', 'type'=> 'user') )
 					),
 					array
 					(
-						'text'	=> $GLOBALS['phpgw']->translation->translate('Grant Access', array(), 'sms'),
+						'text'	=> $GLOBALS['phpgw']->translation->translate('Grant Access', array(), true),
 						'url'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'preferences.uiadmin_acl.aclprefs', 'acl_app'=> 'sms') )
 					)
 				);
@@ -103,12 +103,12 @@
 			(
 				'commands'	=> array
 				(
-					'text'	=> $GLOBALS['phpgw']->translation->translate('commands', array(), 'sms'),
+					'text'	=> $GLOBALS['phpgw']->translation->translate('commands', array(), true),
 					'url'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'sms.uicommand.index'))
 				),
 				'log'	=> array
 				(
-					'text'	=> $GLOBALS['phpgw']->translation->translate('log', array(), 'sms'),
+					'text'	=> $GLOBALS['phpgw']->translation->translate('log', array(), true),
 					'url'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'sms.uicommand.log'))
 				)
 			);
@@ -117,38 +117,38 @@
 			(
 				'inbox'	=> array
 				(
-					'text'	=> $GLOBALS['phpgw']->translation->translate('Inbox', array(), 'sms'),
+					'text'	=> $GLOBALS['phpgw']->translation->translate('Inbox', array(), true),
 					'url'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'sms.uisms.index'))
 				),
 				'outbox'	=> array
 				(
-					'text'	=> $GLOBALS['phpgw']->translation->translate('Outbox', array(), 'sms'),
+					'text'	=> $GLOBALS['phpgw']->translation->translate('Outbox', array(), true),
 					'url'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'sms.uisms.outbox'))
 				),
 				'autoreply'	=> array
 				(
-					'text'	=> $GLOBALS['phpgw']->translation->translate('Autoreply', array(), 'sms'),
+					'text'	=> $GLOBALS['phpgw']->translation->translate('Autoreply', array(), true),
 					'url'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'sms.uiautoreply.index'))
 				),
 				'board'	=> array
 				(
-					'text'	=> $GLOBALS['phpgw']->translation->translate('Boards', array(), 'sms'),
+					'text'	=> $GLOBALS['phpgw']->translation->translate('Boards', array(), true),
 					'url'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'sms.uiboard.index'))
 				),
 				'command'	=> array
 				(
-					'text'	=> $GLOBALS['phpgw']->translation->translate('Command', array(), 'sms'),
+					'text'	=> $GLOBALS['phpgw']->translation->translate('Command', array(), true),
 					'url'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'sms.uicommand.index')),
 					'children'	=> $command_children
 				),
 				'custom'	=> array
 				(
-					'text'	=> $GLOBALS['phpgw']->translation->translate('Custom', array(), 'sms'),
+					'text'	=> $GLOBALS['phpgw']->translation->translate('Custom', array(), true),
 					'url'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'sms.uicustom.index'))
 				),
 				'poll'	=> array
 				(
-					'text'	=> $GLOBALS['phpgw']->translation->translate('Polls', array(), 'sms'),
+					'text'	=> $GLOBALS['phpgw']->translation->translate('Polls', array(), true),
 					'url'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'sms.uipoll.index'))
 				)
 			);

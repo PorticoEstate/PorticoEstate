@@ -55,11 +55,9 @@
 			if ( $GLOBALS['phpgw']->shm->is_enabled()
 				&& isset($GLOBALS['phpgw_info']['server']['shm_lang']) && $GLOBALS['phpgw_info']['server']['shm_lang'] )
 			{
-				$lang = isset($GLOBALS['phpgw_info']['user']['preferences']['common']['lang'])  && $GLOBALS['phpgw_info']['user']['preferences']['common']['lang'] ? $GLOBALS['phpgw_info']['user']['preferences']['common']['lang'] : 'en';
-				$this->set_userlang($lang);
+				$this->set_userlang($GLOBALS['phpgw_info']['user']['preferences']['common']['lang']);
 				$this->reset_lang($reset);
 			}
-			$this->lookup_app = $GLOBALS['phpgw_info']['flags']['currentapp']=='login' ? 'common' : $GLOBALS['phpgw_info']['flags']['currentapp'];
 		}
 
 		/**
@@ -140,32 +138,14 @@
 		*/
 		public function populate_shm()
 		{
-			//First load common and all
-			$sql = "SELECT * from phpgw_lang  WHERE app_name IN('common','all') ORDER BY app_name desc";
+			$sql = "SELECT * from phpgw_lang ORDER BY app_name desc";
 			$GLOBALS['phpgw']->db->query($sql,__LINE__,__FILE__);
 			while ($GLOBALS['phpgw']->db->next_record())
 			{
-				$lang_set[$GLOBALS['phpgw']->db->f('lang')]['common'][$GLOBALS['phpgw']->db->f('message_id', true)] = $GLOBALS['phpgw']->db->f('content', true);
+				$lang_set[$GLOBALS['phpgw']->db->f('lang')][$GLOBALS['phpgw']->db->f('message_id', true)] = $GLOBALS['phpgw']->db->f('content', true);
 			}
 
-			$sql = "SELECT lang, app_name from phpgw_lang WHERE app_name NOT IN('common','all') GROUP BY lang, app_name";
-			$GLOBALS['phpgw']->db->query($sql,__LINE__,__FILE__);
-			while ($GLOBALS['phpgw']->db->next_record())
-			{
-				$lang_set[$GLOBALS['phpgw']->db->f('lang')][$GLOBALS['phpgw']->db->f('app_name', true)] = $lang_set[$GLOBALS['phpgw']->db->f('lang')]['common'];
-				$language_set[$GLOBALS['phpgw']->db->f('lang')] = true;
-			}
-
-			//Override with local within applications
-			$sql = "SELECT * from phpgw_lang WHERE app_name NOT IN('common','all') ORDER BY app_name desc";
-			$GLOBALS['phpgw']->db->query($sql,__LINE__,__FILE__);
-			while ($GLOBALS['phpgw']->db->next_record())
-			{
-				$lang_set[$GLOBALS['phpgw']->db->f('lang')][$GLOBALS['phpgw']->db->f('app_name', true)][$GLOBALS['phpgw']->db->f('message_id', true)] = $GLOBALS['phpgw']->db->f('content', true);
-				$language_set[$GLOBALS['phpgw']->db->f('lang')] = true;
-			}
-
-			$language = array_keys($language_set);
+			$language = array_keys($lang_set);
 			if (isset($language) && is_array($language))
 			{
 				foreach($language as $lang)
@@ -183,7 +163,7 @@
 		* @param bool $only_common only use the "common" translation, should be used when calling this from non module contexts
 		* @return string the translated string - when unable to be translated, the string is returned as "!$key"
 		*/
-		public function translate($key, $vars = array(), $app_name = false )
+		public function translate($key, $vars = array(), $only_common = false )
 		{
 			$ret = $key;
 			if ( !$userlang = $this->userlang )
@@ -192,47 +172,38 @@
 			}
 
 			$lookup_key = strtolower(trim(substr($key, 0, self::MAX_MESSAGE_ID_LENGTH)));
-			$lookup_app = $app_name ? $app_name : $this->lookup_app;
 
 			if ( !is_array($this->lang) 
-				|| (!isset($this->lang[$lookup_app][$lookup_key]) && !$this->loaded_from_shm))
-			//	|| $app_name ) // if application is given - check spesific for that application
+				|| (!isset($this->lang[$lookup_key]) && !$this->loaded_from_shm) )
 			{
-				if ( !$app_name )
+				$applist = "'common', 'all'";
+				$order = ' ORDER BY app_name ASC';
+				if ( !$only_common )
 				{
-					$order = ' ORDER BY app_name ASC';
-					$applist = "'common', 'all', '{$GLOBALS['phpgw_info']['flags']['currentapp']}'";
+					$applist .= ", '{$GLOBALS['phpgw_info']['flags']['currentapp']}'";
 					if ( strcasecmp($GLOBALS['phpgw_info']['flags']['currentapp'], 'common') <= 1 )
 					{
 						$order = 'ORDER BY app_name DESC';
 					}
-					$filter = " AND app_name IN({$applist}) {$order}";
-				}
-				else
-				{
-					$filter = " AND app_name = '" . $lookup_app . "'";
 				}
 
  				$sql = 'SELECT message_id, content'
 					. " FROM phpgw_lang WHERE lang = '{$userlang}' AND message_id = '" . $GLOBALS['phpgw']->db->db_addslashes($lookup_key) . '\''
-					. $filter;
+					. " AND app_name IN({$applist}) {$order}";
 
 				$GLOBALS['phpgw']->db->query($sql,__LINE__,__FILE__);
-
 				while ($GLOBALS['phpgw']->db->next_record())
 				{
-					$this->lang[$lookup_app][$lookup_key] = $GLOBALS['phpgw']->db->f('content', true);
+					$this->lang[$lookup_key] = $GLOBALS['phpgw']->db->f('content', true);
 				}
 			}
-
 			$ret = "!{$key}";	// save key if we dont find a translation
 			$key = $lookup_key;
 
-			if ( isset($this->lang[$lookup_app][$key]) )
+			if ( isset($this->lang[$key]) )
 			{
-				$ret = $this->lang[$lookup_app][$key];
+				$ret = $this->lang[$key];
 			}
-
 			$ndx = 1;
 			foreach ( $vars as $key => $val )
 			{
