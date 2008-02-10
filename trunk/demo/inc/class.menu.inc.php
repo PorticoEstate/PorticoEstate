@@ -47,41 +47,107 @@
 		}
 
 		/**
-		* Generate a menu
-		*
-		* @param ??? $page ???
-		* @param ??? $page2 ???
-		*/
-		public function links($page = '', $page_2 = '')
+		 * Get the menus for the demo
+		 *
+		 * @return array available menus for the current user
+		 */
+		public function get_menu()
 		{
-			$menu['module'][] = array
+			$incoming_app = $GLOBALS['phpgw_info']['flags']['currentapp'];
+			$GLOBALS['phpgw_info']['flags']['currentapp'] = 'demo';
+
+			$start_page = 'demo';
+			if ( isset($GLOBALS['phpgw_info']['user']['preferences']['demo']['default_start_page'])
+					&& $GLOBALS['phpgw_info']['user']['preferences']['demo']['default_start_page'] )
+			{
+					$start_page = $GLOBALS['phpgw_info']['user']['preferences']['demo']['default_start_page'];
+			}
+
+			$menus['navbar'] = array
 			(
-				'url'			=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'demo.uidemo.index', 'output' => 'html')),
-				'text' 			=> 'HTML',
-				'statustext' 	=> 'HTML',
-				'this'			=> $this->sub == 'html'
+				'demo' => array
+				(
+					'text'	=> lang('demo'),
+					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => "demo.ui{$start_page}.index") ),
+					'image'	=> array('demo', 'navbar'),
+					'order'	=> 35,
+					'group'	=> 'office'
+				),
 			);
 
-			$menu['module'][] = array
-			(
-				'url'			=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'demo.uidemo.index', 'output' => 'wml')),
-				'text' 			=> 'WML',
-				'statustext' 	=> 'WML',
-				'this'			=> $this->sub == 'wml'
-			);
+			$menus['toolbar'] = array();
+			if ( isset($GLOBALS['phpgw_info']['user']['apps']['admin']) )
+			{
+				$menus['admin'] = array
+				(
+					'categories'	=> array
+					(
+						'text'	=> $GLOBALS['phpgw']->translation->translate('Global Categories', array(), true),
+						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.uicategories.index', 'appname' => 'demo'))
+					),
+					'acl'	=> array
+					(
+						'text'	=> $GLOBALS['phpgw']->translation->translate('Configure Access Permissions', array(), true),
+						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'preferences.uiadmin_acl.list_acl', 'acl_app' => 'demo'))
+					),
+					'list_atrribs'	=> array
+					(
+						'text'	=> $GLOBALS['phpgw']->translation->translate('custom fields', array(), true),
+						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.ui_custom.list_attribute', 'appname' => 'demo'))
+					),
+					'list_functions'	=> array
+					(
+						'text'	=> $GLOBALS['phpgw']->translation->translate('custom functions', array(), true),
+						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.ui_custom.list_custom_function', 'appname' =>  'demo'))
+					)
+				);
+			}
 
-			$menu['module'][] = array
-			(
-				'url'			=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'demo.uidemo.index2', 'output' => 'html')),
-				'text' 			=> 'Alternative',
-				'statustext' 	=> 'Alternative list',
-				'this'			=> $this->sub == 'alternative'
-			);
+			if ( isset($GLOBALS['phpgw_info']['user']['apps']['preferences']) )
+			{
+				$menus['preferences'] = array
+				(
+					array
+					(
+						'text'	=> $GLOBALS['phpgw']->translation->translate('Preferences', array(), true),
+						'url'	=> $GLOBALS['phpgw']->link('/preferences/preferences.php', array('appname' => 'demo', 'type'=> 'user') )
+					),
+					array
+					(
+						'text'	=> $GLOBALS['phpgw']->translation->translate('Grant Access', array(), true),
+						'url'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'preferences.uiadmin_acl.aclprefs', 'acl_app'=> 'demo') )
+					)
+				);
 
-			$GLOBALS['phpgw']->session->appsession('menu_demo', 'sidebox', $menu);
-			return $menu;
+				$menus['toolbar'][] = array
+				(
+					'text'	=> $GLOBALS['phpgw']->translation->translate('Preferences', array(), true),
+					'url'	=> $GLOBALS['phpgw']->link('/preferences/preferences.php', array('appname'	=> 'demo')),
+					'image'	=> array('demo', 'preferences')
+				);
+			}
+
+			$menus['navigation'] = array
+			(
+				'html'	=> array
+				(
+					'text'	=> 'HTML',
+					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'demo.uidemo.index', 'output' => 'html'))
+				),
+				'wml'	=> array
+				(
+					'text'	=> 'WML',
+					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'demo.uidemo.index', 'output' => 'wml'))
+				),
+				'alternative'	=> array
+				(
+					'text'	=> lang('Alternative'),
+					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'demo.uidemo.index2', 'output' => 'html'))
+				)
+			);
+			$GLOBALS['phpgw_info']['flags']['currentapp'] = $incoming_app;
+			return $menus;
 		}
-
 		
 		/**
 		* Set the submenu value

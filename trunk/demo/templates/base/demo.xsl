@@ -24,7 +24,6 @@
 	</xsl:template>
 	
 	<xsl:template match="list_html">
-		<xsl:call-template name="menu"/> 
 		<table width="100%" cellpadding="2" cellspacing="2" align="center">
 			<xsl:choose>
 				<xsl:when test="msgbox_data != ''">
@@ -144,12 +143,9 @@
 			</tr>
 	</xsl:template>
 
-
 	<xsl:template match="list_wml">
-		
 		<wml>
 		<card id = "card1" title = "list demo">
-		<xsl:call-template name="menu"/> 
 		<table width="100%" cellpadding="2" cellspacing="2" align="center">
 			<xsl:choose>
 				<xsl:when test="msgbox_data != ''">
@@ -190,9 +186,7 @@
 		</wml>
 	</xsl:template>
 
-
 	<xsl:template match="list2_html">
-		<xsl:call-template name="menu"/> 
 		<table width="100%" cellpadding="2" cellspacing="2" align="center">
 			<xsl:choose>
 				<xsl:when test="msgbox_data != ''">
