@@ -1,10 +1,9 @@
 <!-- $Id: no_access.xsl 16753 2006-05-23 13:02:42Z sigurdne $ -->
 
 	<xsl:template match="no_access">
-		
 		<xsl:choose>
-			<xsl:when test="links !=''">
-				<xsl:call-template name="menu"/> 
+			<xsl:when test="menu != ''">
+				<xsl:apply-templates select="menu"/> 
 			</xsl:when>
 		</xsl:choose>
 		<table width="100%" cellpadding="2" cellspacing="2" align="center">

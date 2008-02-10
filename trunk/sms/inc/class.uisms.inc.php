@@ -49,13 +49,13 @@
 			$this->gateway_number			= $this->config->config_data['common']['gateway_number'];
 			$this->bo				= CreateObject('sms.bosms',False);
 			$this->acl				= CreateObject('phpgwapi.acl');
-			$this->menu				= CreateObject('sms.menu');
 			$this->grants 				= $this->bo->grants;
 			$this->start				= $this->bo->start;
 			$this->query				= $this->bo->query;
 			$this->sort				= $this->bo->sort;
 			$this->order				= $this->bo->order;
 			$this->allrows				= $this->bo->allrows;
+			$GLOBALS['phpgw_info']['flags']['menu_selection'] = 'sms';
 		}
 
 		function save_sessiondata()
@@ -73,18 +73,17 @@
 
 		function index()
 		{
+			$GLOBALS['phpgw_info']['flags']['menu_selection'] .= '::inbox';
 			$acl_location = '.inbox';
 
-			$GLOBALS['phpgw']->xslttpl->add_file(array('sms','nextmatchs','menu',
+			$GLOBALS['phpgw']->xslttpl->add_file(array('sms','nextmatchs',
 										'search_field'));
 
 			$this->bo->acl_location = $acl_location;
-			$this->menu->sub = $acl_location;
-			$links = $this->menu->links();
 
 			if(!$this->acl->check($acl_location, PHPGW_ACL_READ))
 			{
-				$this->bocommon->no_access($links);
+				$this->bocommon->no_access();
 				return;
 			}
 
@@ -215,7 +214,7 @@
 			$data = array
 			(
 				'msgbox_data'					=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
-				'links'						=> $links,
+				'menu'							=> execMethod('sms.menu.links'),
 				'allow_allrows'					=> True,
 				'allrows'					=> $this->allrows,
 				'start_record'					=> $this->start,
@@ -244,18 +243,17 @@
 
 		function outbox()
 		{
+			$GLOBALS['phpgw_info']['flags']['menu_selection'] .= '::outbox';
 			$acl_location = '.outbox';
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('sms','nextmatchs','menu',
 										'search_field'));
 
 			$this->bo->acl_location = $acl_location;
-			$this->menu->sub = $acl_location;
-			$links = $this->menu->links();
 
 			if(!$this->acl->check($acl_location, PHPGW_ACL_READ))
 			{
-				$this->bocommon->no_access($links);
+				$this->bocommon->no_access();
 				return;
 			}
 
@@ -357,7 +355,7 @@
 			$data = array
 			(
 				'msgbox_data'					=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
-				'links'						=> $links,
+				'menu'							=> execMethod('sms.menu.links'),
 				'allow_allrows'					=> True,
 				'allrows'					=> $this->allrows,
 				'start_record'					=> $this->start,
@@ -387,10 +385,11 @@
 
 		function send()
 		{
+			$GLOBALS['phpgw_info']['flags']['menu_selection'] .= '::outbox';
 			$acl_location = '.outbox';
 			if(!$this->acl->check($acl_location, PHPGW_ACL_ADD))
 			{
-				$this->bocommon->no_access($links);
+				$this->bocommon->no_access();
 				return;
 			}
 
@@ -544,10 +543,11 @@
 
 		function delete_in()
 		{
+			$GLOBALS['phpgw_info']['flags']['menu_selection'] .= '::inbox';
 			$acl_location = '.inbox';
 			if(!$this->acl->check($acl_location, PHPGW_ACL_DELETE))
 			{
-				$this->bocommon->no_access($links);
+				$this->bocommon->no_access();
 				return;
 			}
 
@@ -588,10 +588,11 @@
 
 		function delete_out()
 		{
+			$GLOBALS['phpgw_info']['flags']['menu_selection'] .= '::outbox';
 			$acl_location = '.outbox';
 			if(!$this->acl->check($acl_location, PHPGW_ACL_DELETE))
 			{
-				$this->bocommon->no_access($links);
+				$this->bocommon->no_access();
 				return;
 			}
 

@@ -40,7 +40,6 @@
 			$this->account				= $GLOBALS['phpgw_info']['user']['account_id'];
 			$this->bo				= CreateObject('sms.bopoll',true);
 			$this->bocommon				= CreateObject('sms.bocommon');
-			$this->menu				= CreateObject('sms.menu');
 			$this->sms				= CreateObject('sms.sms');
 			$this->acl				= CreateObject('phpgwapi.acl');
 			$this->acl_location 			= '.poll';
@@ -53,6 +52,7 @@
 			
 			$this->db 				= clone($GLOBALS['phpgw']->db);
 			$this->db2 				= clone($GLOBALS['phpgw']->db);
+			$GLOBALS['phpgw_info']['flags']['menu_selection'] = 'sms::poll';
 		}
 
 		function save_sessiondata()
@@ -70,18 +70,15 @@
 
 		function index()
 		{
-
-			$links = $this->menu->links();
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = True;
 
 			if(!$this->acl->check($this->acl_location, PHPGW_ACL_READ))
 			{
-				$this->bocommon->no_access($links);
+				$this->bocommon->no_access();
 				return;
 			}
-			
 
-			$GLOBALS['phpgw']->xslttpl->add_file(array('poll','nextmatchs','menu',
+			$GLOBALS['phpgw']->xslttpl->add_file(array('poll','nextmatchs',
 										'search_field'));
 
 			$receipt = $GLOBALS['phpgw']->session->appsession('session_data','sms_poll_receipt');
@@ -187,7 +184,7 @@
 			$data = array
 			(
 				'msgbox_data'					=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
-				'links'						=> $links,
+				'menu'							=> execMethod('sms.menu.links'),
 				'allow_allrows'					=> True,
 				'allrows'					=> $this->allrows,
 				'start_record'					=> $this->start,
@@ -215,16 +212,13 @@
 
 		function add()
 		{
-		
 			if(!$this->acl->check($this->acl_location, PHPGW_ACL_READ))
 			{
-				$links = $this->menu->links();
 				$GLOBALS['phpgw_info']['flags']['xslt_app'] = True;
-				$this->bocommon->no_access($links);
+				$this->bocommon->no_access();
 				return;
 			}
-			
-			
+
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('SMS').' - '.lang('Add SMS poll');
 			$GLOBALS['phpgw']->common->phpgw_header();
 
@@ -270,12 +264,10 @@
 
 		function add_yes()
 		{
-		
 			if(!$this->acl->check($this->acl_location, PHPGW_ACL_READ))
 			{
-				$links = $this->menu->links();
 				$GLOBALS['phpgw_info']['flags']['xslt_app'] = True;
-				$this->bocommon->no_access($links);
+				$this->bocommon->no_access();
 				return;
 			}
 
@@ -325,16 +317,12 @@
 			$GLOBALS['phpgw']->redirect_link('/index.php',$add_data);
 		}
 
-
-
 		function add_choice()
 		{
-		
 			if(!$this->acl->check($this->acl_location, PHPGW_ACL_READ))
 			{
-				$links = $this->menu->links();
 				$GLOBALS['phpgw_info']['flags']['xslt_app'] = True;
-				$this->bocommon->no_access($links);
+				$this->bocommon->no_access();
 				return;
 			}
 
@@ -390,12 +378,10 @@
 
 		function status()
 		{
-		
 			if(!$this->acl->check($this->acl_location, PHPGW_ACL_READ))
 			{
-				$links = $this->menu->links();
 				$GLOBALS['phpgw_info']['flags']['xslt_app'] = True;
-				$this->bocommon->no_access($links);
+				$this->bocommon->no_access();
 				return;
 			}
 
@@ -427,16 +413,13 @@
 
 		function edit()
 		{
-		
 			if(!$this->acl->check($this->acl_location, PHPGW_ACL_READ))
 			{
-				$links = $this->menu->links();
 				$GLOBALS['phpgw_info']['flags']['xslt_app'] = True;
-				$this->bocommon->no_access($links);
+				$this->bocommon->no_access();
 				return;
-			}
-			
-			
+			}	
+
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('SMS').' - '.lang('Edit SMS poll');
 			$GLOBALS['phpgw']->common->phpgw_header();
 
@@ -561,12 +544,10 @@
 
 		function edit_yes()
 		{
-		
 			if(!$this->acl->check($this->acl_location, PHPGW_ACL_READ))
 			{
-				$links = $this->menu->links();
 				$GLOBALS['phpgw_info']['flags']['xslt_app'] = True;
-				$this->bocommon->no_access($links);
+				$this->bocommon->no_access();
 				return;
 			}
 
@@ -610,12 +591,10 @@
 		{
 			if(!$this->acl->check($this->acl_location, PHPGW_ACL_READ))
 			{
-				$links = $this->menu->links();
 				$GLOBALS['phpgw_info']['flags']['xslt_app'] = True;
-				$this->bocommon->no_access($links);
+				$this->bocommon->no_access();
 				return;
 			}
-			
 
 			$poll_id	= phpgw::get_var('poll_id', 'int');
 
@@ -716,8 +695,7 @@
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = True;
 			if(!$this->acl->check($this->acl_location, PHPGW_ACL_READ))
 			{
-				$links = $this->menu->links();
-				$this->bocommon->no_access($links);
+				$this->bocommon->no_access();
 				return;
 			}
 
@@ -789,8 +767,7 @@
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = True;
 			if(!$this->acl->check($this->acl_location, PHPGW_ACL_READ))
 			{
-				$links = $this->menu->links();
-				$this->bocommon->no_access($links);
+				$this->bocommon->no_access();
 				return;
 			}
 
