@@ -34,19 +34,6 @@
 	class demo_menu
 	{
 		/**
-		* @var string $sub the currently selected menu option??
-		*/
-		private $sub;
-
-		/**
-		* Constructor
-		*/
-		public function __construct($sub = null)
-		{
-			$this->sub	= $sub;
-		}
-
-		/**
 		 * Get the menus for the demo
 		 *
 		 * @return array available menus for the current user
@@ -147,15 +134,5 @@
 			);
 			$GLOBALS['phpgw_info']['flags']['currentapp'] = $incoming_app;
 			return $menus;
-		}
-		
-		/**
-		* Set the submenu value
-		*
-		* @param string $sub the current sub menu selection
-		*/
-		public function set_sub($sub)
-		{
-			$this->sub = phpgw::clean_value($sub, 'string');
 		}
 	}
