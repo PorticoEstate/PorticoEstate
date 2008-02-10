@@ -40,9 +40,6 @@
 		 */
 		public function get_menu()
 		{
-			$incoming_app = $GLOBALS['phpgw_info']['flags']['currentapp'];
-			$GLOBALS['phpgw_info']['flags']['currentapp'] = 'demo';
-
 			$start_page = 'demo';
 			if ( isset($GLOBALS['phpgw_info']['user']['preferences']['demo']['default_start_page'])
 					&& $GLOBALS['phpgw_info']['user']['preferences']['demo']['default_start_page'] )
@@ -132,7 +129,6 @@
 					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'demo.uidemo.index2', 'output' => 'html'))
 				)
 			);
-			$GLOBALS['phpgw_info']['flags']['currentapp'] = $incoming_app;
 			return $menus;
 		}
 	}
