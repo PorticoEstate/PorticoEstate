@@ -68,7 +68,7 @@
 
 		function index()
 		{
-			$GLOBALS['phpgw']->xslttpl->add_file(array('user','nextmatchs','menu',
+			$GLOBALS['phpgw']->xslttpl->add_file(array('user','nextmatchs',
 										'search_field'));
 
 			$account_info = $this->bo->read();
