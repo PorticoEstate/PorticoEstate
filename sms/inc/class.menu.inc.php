@@ -110,11 +110,6 @@
 
 			$command_children = array
 			(
-				'commands'	=> array
-				(
-					'text'	=> lang('commands'),
-					'url'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'sms.uicommand.index'))
-				),
 				'log'	=> array
 				(
 					'text'	=> lang('log'),
@@ -165,138 +160,44 @@
 			return $menus;
 		}
 
-
-		function links($page='',$page_2='')
+		function links()
 		{
-			$currentapp='sms';
-			$sub = $this->sub;
-
-			$menu = $GLOBALS['phpgw']->session->appsession('menu',substr(md5($currentapp.$sub . '_' . $page . '_' . $page_2),-20));
-
-			if(!isset($menu) || !$menu)
+			if(!isset($GLOBALS['phpgw_info']['user']['preferences']['sms']['horisontal_menus']) || $GLOBALS['phpgw_info']['user']['preferences']['sms']['horisontal_menus'] == 'no')
 			{
-				$menu = array(); 
-
-				$i=0;
-				if($sub=='.inbox')
-				{
-					$menu['module'][$i]['this']=True;
-				}
-				$menu['module'][$i]['url'] 		= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $currentapp.'.uisms.index'));
-				$menu['module'][$i]['text'] 		= lang('Inbox');
-				$menu['module'][$i]['statustext'] 	= lang('Inbox');
-				$i++;
-
-				if($sub=='.outbox')
-				{
-					$menu['module'][$i]['this']=True;
-				}
-				$menu['module'][$i]['url']			=	$GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $currentapp.'.uisms.outbox'));
-				$menu['module'][$i]['text']			=	lang('outbox');
-				$menu['module'][$i]['statustext']	=	lang('outbox');
-				$i++;
-
-				if($sub=='.autoreply')
-				{
-					$menu['module'][$i]['this']=True;
-				}
-				$menu['module'][$i]['url']			=	$GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $currentapp.'.uiautoreply.index'));
-				$menu['module'][$i]['text']			=	lang('autoreply');
-				$menu['module'][$i]['statustext']		=	lang('autoreply');
-				$i++;
-
-				if($sub=='.board')
-				{
-					$menu['module'][$i]['this']=True;
-				}
-				$menu['module'][$i]['url']			=	$GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $currentapp.'.uiboard.index'));
-				$menu['module'][$i]['text']			=	lang('boards');
-				$menu['module'][$i]['statustext']		=	lang('boards');
-				$i++;
-
-				if($sub=='.command')
-				{
-					$menu['module'][$i]['this']=True;
-				}
-				$menu['module'][$i]['url']			=	$GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $currentapp.'.uicommand.index'));
-				$menu['module'][$i]['text']			=	lang('commands');
-				$menu['module'][$i]['statustext']		=	lang('commands');
-				$i++;
-
-				if($sub=='.custom')
-				{
-					$menu['module'][$i]['this']=True;
-				}
-				$menu['module'][$i]['url']			=	$GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $currentapp.'.uicustom.index'));
-				$menu['module'][$i]['text']			=	lang('customs');
-				$menu['module'][$i]['statustext']		=	lang('customs');
-				$i++;
-
-				if($sub=='.poll')
-				{
-					$menu['module'][$i]['this']=True;
-				}
-				$menu['module'][$i]['url']			=	$GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $currentapp.'.uipoll.index'));
-				$menu['module'][$i]['text']			=	lang('polls');
-				$menu['module'][$i]['statustext']		=	lang('polls');
-				$i++;
-
-				if($sub=='.config')
-				{
-					$menu['module'][$i]['this']=True;
-				}
-				$menu['module'][$i]['url']			=	$GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $currentapp.'.uiconfig.index'));
-				$menu['module'][$i]['text']			=	lang('config');
-				$menu['module'][$i]['statustext']		=	lang('config');
-				$i++;
-
-				$j=0;
-				if ($sub == '.config')
-				{
-					if($page=='.config.type')
-					{
-						$menu['sub_menu'][$j]['this']=True;
-					}
-					$menu['sub_menu'][$j]['url']			=	$GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $currentapp.'.uiconfig.index'));
-					$menu['sub_menu'][$j]['text']			=	lang('config');
-					$menu['sub_menu'][$j]['statustext']		=	lang('config');
-					$j++;
-
-					if($page=='.config.daemon_manual')
-					{
-						$menu['sub_menu'][$j]['this']=True;
-					}
-					$menu['sub_menu'][$j]['url']			=	$GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $currentapp.'.uiconfig.daemon_manual'));
-					$menu['sub_menu'][$j]['text']			=	lang('Daemon manual refresh');
-					$menu['sub_menu'][$j]['statustext']		=	lang('Daemon manual refresh');
-					$j++;
-				}
-
-				if ($sub == '.command')
-				{
-					if($page=='.command.list')
-					{
-						$menu['sub_menu'][$j]['this']=True;
-					}
-					$menu['sub_menu'][$j]['url']			=	$GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $currentapp.'.uicommand.index'));
-					$menu['sub_menu'][$j]['text']			=	lang('commands');
-					$menu['sub_menu'][$j]['statustext']		=	lang('commands');
-					$j++;
-
-					if($page=='.command.log')
-					{
-						$menu['sub_menu'][$j]['this']=True;
-					}
-					$menu['sub_menu'][$j]['url']			=	$GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $currentapp.'.uicommand.log'));
-					$menu['sub_menu'][$j]['text']			=	lang('log');
-					$menu['sub_menu'][$j]['statustext']		=	lang('log');
-					$j++;
-				}
-
-				$GLOBALS['phpgw']->session->appsession('menu',substr(md5($currentapp.$sub . '_' . $page . '_' . $page_2),-20),$menu);
+				return;			
 			}
+			$GLOBALS['phpgw']->xslttpl->add_file(array('menu'));
+			$menu_brutto = execMethod('sms.menu.get_menu');
+			$selection = explode('::',$GLOBALS['phpgw_info']['flags']['menu_selection']);
+			$level=0;
+			$menu['navigation'] = $this->get_sub_menu($menu_brutto['navigation'],$selection,$level);
+			return $menu;
+		}
 
-			$GLOBALS['phpgw']->session->appsession('menu_sms','sidebox',$menu);
+		function get_sub_menu($children = array(), $selection=array(),$level='')
+		{
+			$level++;
+			$i=0;
+			foreach($children as $key => $vals)
+			{
+				$menu[] = $vals;
+				if($key == $selection[$level])
+				{
+					$menu[$i]['this'] = true;
+					if(isset($menu[$i]['children']))
+					{
+						$menu[$i]['children'] = $this->get_sub_menu($menu[$i]['children'],$selection,$level);
+					}
+				}
+				else
+				{
+					if(isset($menu[$i]['children']))
+					{
+						unset($menu[$i]['children']);
+					}
+				}	
+				$i++;		
+			}
 			return $menu;
 		}
 	}

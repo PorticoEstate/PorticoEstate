@@ -13,3 +13,4 @@
 
 	create_input_box('Your Cellphone','cellphone','help text','',15);
 	create_input_box('Your signature','signature','Signature to be appended to your sms-messages','',15);
+	create_select_box('show horisontal menues','horisontal_menus',array('no' => 'No','yes' => 'Yes'),'Horisontal menues are shown in top of page');

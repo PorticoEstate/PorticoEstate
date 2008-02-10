@@ -15,7 +15,11 @@
 	</xsl:template>
 	
 	<xsl:template match="list_type">
-		<xsl:call-template name="menu"/> 
+		<xsl:choose>
+			<xsl:when test="menu != ''">
+				<xsl:apply-templates select="menu"/> 
+			</xsl:when>
+		</xsl:choose>
 		<table width="100%" cellpadding="2" cellspacing="2" align="center">
 			<xsl:choose>
 				<xsl:when test="msgbox_data != ''">
@@ -111,7 +115,11 @@
 
 
 	<xsl:template match="list_attrib">
-		<xsl:call-template name="menu"/> 
+		<xsl:choose>
+			<xsl:when test="menu != ''">
+				<xsl:apply-templates select="menu"/> 
+			</xsl:when>
+		</xsl:choose>
 		<table width="100%" cellpadding="2" cellspacing="2" align="center">
 			<xsl:choose>
 				<xsl:when test="msgbox_data != ''">
@@ -204,7 +212,11 @@
 
 
 	<xsl:template match="list_value">
-		<xsl:call-template name="menu"/> 
+		<xsl:choose>
+			<xsl:when test="menu != ''">
+				<xsl:apply-templates select="menu"/> 
+			</xsl:when>
+		</xsl:choose>
 		<table width="100%" cellpadding="2" cellspacing="2" align="center">
 			<xsl:choose>
 				<xsl:when test="msgbox_data != ''">
@@ -792,7 +804,11 @@
 	</xsl:template>
 	
 	<xsl:template match="daemon_manual">
-		<xsl:call-template name="menu"/> 
+		<xsl:choose>
+			<xsl:when test="menu != ''">
+				<xsl:apply-templates select="menu"/> 
+			</xsl:when>
+		</xsl:choose>
 		<table width="100%" cellpadding="2" cellspacing="2" align="center">
 			<xsl:choose>
 				<xsl:when test="msgbox_data != ''">

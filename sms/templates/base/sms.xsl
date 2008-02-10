@@ -18,8 +18,11 @@
 	</xsl:template>
 	
 	<xsl:template match="list_inbox">
-		
-		<xsl:call-template name="menu"/> 
+		<xsl:choose>
+			<xsl:when test="menu != ''">
+				<xsl:apply-templates select="menu"/> 
+			</xsl:when>
+		</xsl:choose>
 		<table width="100%" cellpadding="2" cellspacing="2" align="center">
 			<xsl:choose>
 				<xsl:when test="msgbox_data != ''">
@@ -130,7 +133,11 @@
 	</xsl:template>
 
 	<xsl:template match="list_outbox">
-		<xsl:call-template name="menu"/> 
+		<xsl:choose>
+			<xsl:when test="menu != ''">
+				<xsl:apply-templates select="menu"/> 
+			</xsl:when>
+		</xsl:choose>
 		<table width="100%" cellpadding="2" cellspacing="2" align="center">
 			<xsl:choose>
 				<xsl:when test="msgbox_data != ''">

@@ -49,7 +49,6 @@
 			$this->account				= $GLOBALS['phpgw_info']['user']['account_id'];
 			$this->bo				= CreateObject('sms.boconfig',true);
 			$this->bocommon				= CreateObject('sms.bocommon');
-			$this->menu				= CreateObject('sms.menu');
 			$this->acl				= CreateObject('phpgwapi.acl');
 			$this->acl_location 			= '.config';
 			$this->menu->sub			=$this->acl_location;
@@ -58,6 +57,7 @@
 			$this->sort				= $this->bo->sort;
 			$this->order				= $this->bo->order;
 			$this->allrows				= $this->bo->allrows;
+			$GLOBALS['phpgw_info']['flags']['menu_selection'] = 'admin::sms::config';
 		}
 
 		function save_sessiondata()
@@ -74,15 +74,13 @@
 
 		function index()
 		{
-			$links = $this->menu->links('.config.type');
-
 			if(!$this->acl->check('run', PHPGW_ACL_READ,'admin'))
 			{
-				$this->bocommon->no_access($links);
+				$this->bocommon->no_access();
 				return;
 			}
 
-			$GLOBALS['phpgw']->xslttpl->add_file(array('config','nextmatchs','menu',
+			$GLOBALS['phpgw']->xslttpl->add_file(array('config','nextmatchs',
 										'search_field'));
 										
 			$receipt = $GLOBALS['phpgw']->session->appsession('session_data','sms_c_type_receipt');
@@ -163,7 +161,7 @@
 			$data = array
 			(
 				'msgbox_data'					=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
-				'links'						=> $links,
+				'menu'							=> execMethod('sms.menu.links'),
 				'allow_allrows'					=> True,
 				'allrows'					=> $this->allrows,
 				'start_record'					=> $this->start,
@@ -194,8 +192,7 @@
 		{
 			if(!$this->acl->check('run', PHPGW_ACL_READ,'admin'))
 			{
-				$links = $this->menu->links('.config.type');
-				$this->bocommon->no_access($links);
+				$this->bocommon->no_access();
 				return;
 			}
 
@@ -293,8 +290,7 @@
 		{
 			if(!$this->acl->check('run', PHPGW_ACL_READ,'admin'))
 			{
-				$links = $this->menu->links('.config.type');
-				$this->bocommon->no_access($links);
+				$this->bocommon->no_access();
 				return;
 			}
 
@@ -332,14 +328,11 @@
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('view_type' => $data));
 		}
 
-
-
 		function list_attrib()
 		{
 			if(!$this->acl->check('run', PHPGW_ACL_READ,'admin'))
 			{
-				$links = $this->menu->links('.config.type');
-				$this->bocommon->no_access($links);
+				$this->bocommon->no_access();
 				return;
 			}
 
@@ -350,13 +343,11 @@
 				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'sms.uiconfig.index'));
 			}
 			
-			$GLOBALS['phpgw']->xslttpl->add_file(array('config','nextmatchs','menu',
+			$GLOBALS['phpgw']->xslttpl->add_file(array('config','nextmatchs',
 										'search_field'));
 
 			$receipt = $GLOBALS['phpgw']->session->appsession('session_data','sms_c_attrib_receipt');
 			$GLOBALS['phpgw']->session->appsession('session_data','sms_c_attrib_receipt','');
-
-			$links = $this->menu->links();
 
 			$config_info = $this->bo->read_attrib($type_id);
 
@@ -435,7 +426,7 @@
 				'lang_type'					=> lang('type'),
 				'value_type_name'				=> $type['name'],
 				'msgbox_data'					=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
-				'links'						=> $links,
+				'menu'							=> execMethod('sms.menu.links'),
 				'allow_allrows'					=> True,
 				'allrows'					=> $this->allrows,
 				'start_record'					=> $this->start,
@@ -461,13 +452,11 @@
 			$this->save_sessiondata();
 		}
 
-
 		function edit_attrib()
 		{
 			if(!$this->acl->check('run', PHPGW_ACL_READ,'admin'))
 			{
-				$links = $this->menu->links('.config.type');
-				$this->bocommon->no_access($links);
+				$this->bocommon->no_access();
 				return;
 			}
 
@@ -595,8 +584,7 @@
 		{
 			if(!$this->acl->check('run', PHPGW_ACL_READ,'admin'))
 			{
-				$links = $this->menu->links('.config.type');
-				$this->bocommon->no_access($links);
+				$this->bocommon->no_access();
 				return;
 			}
 
@@ -608,13 +596,11 @@
 				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'sms.uiconfig.index'));
 			}
 			
-			$GLOBALS['phpgw']->xslttpl->add_file(array('config','nextmatchs','menu',
+			$GLOBALS['phpgw']->xslttpl->add_file(array('config','nextmatchs',
 										'search_field'));
 
 			$receipt = $GLOBALS['phpgw']->session->appsession('session_data','sms_c_value_receipt');
 			$GLOBALS['phpgw']->session->appsession('session_data','sms_c_attrib_value','');
-
-			$links = $this->menu->links();
 
 			$config_info = $this->bo->read_value($type_id,$attrib_id);
 
@@ -705,7 +691,7 @@
 				'value_attrib_name'				=> $attrib['name'],
 
 				'msgbox_data'					=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
-				'links'						=> $links,
+				'menu'							=> execMethod('sms.menu.links'),
 				'allow_allrows'					=> True,
 				'allrows'					=> $this->allrows,
 				'start_record'					=> $this->start,
@@ -737,8 +723,7 @@
 		{
 			if(!$this->acl->check('run', PHPGW_ACL_READ,'admin'))
 			{
-				$links = $this->menu->links('.config.type');
-				$this->bocommon->no_access($links);
+				$this->bocommon->no_access();
 				return;
 			}
 
@@ -861,8 +846,7 @@
 		{
 			if(!$this->acl->check('run', PHPGW_ACL_READ,'admin'))
 			{
-				$links = $this->menu->links('.config.type');
-				$this->bocommon->no_access($links);
+				$this->bocommon->no_access();
 				return;
 			}
 
@@ -905,8 +889,7 @@
 		{
 			if(!$this->acl->check('run', PHPGW_ACL_READ,'admin'))
 			{
-				$links = $this->menu->links('.config.type');
-				$this->bocommon->no_access($links);
+				$this->bocommon->no_access();
 				return;
 			}
 
@@ -952,8 +935,7 @@
 		{
 			if(!$this->acl->check('run', PHPGW_ACL_READ,'admin'))
 			{
-				$links = $this->menu->links('.config.type');
-				$this->bocommon->no_access($links);
+				$this->bocommon->no_access();
 				return;
 			}
 
@@ -998,14 +980,14 @@
 
 		function daemon_manual()
 		{
-			$links = $this->menu->links('.config.daemon_manual');
+			$GLOBALS['phpgw_info']['flags']['menu_selection'] = 'admin::sms::refresh';
 			if(!$this->acl->check('run', PHPGW_ACL_READ,'admin'))
 			{
-				$this->bocommon->no_access($links);
+				$this->bocommon->no_access();
 				return;
 			}
 
-			$GLOBALS['phpgw']->xslttpl->add_file(array('config','menu',));
+			$GLOBALS['phpgw']->xslttpl->add_file(array('config'));
 
 			$sms = CreateObject('sms.sms');
 			$sms->getsmsinbox();
@@ -1018,7 +1000,7 @@
 			$data = array
 			(
 				'msgbox_data'	=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
-				'links' 	=> $links
+				'menu'							=> execMethod('sms.menu.links'),
 			);
 
 			$appname	= lang('config');
