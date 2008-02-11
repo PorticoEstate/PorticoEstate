@@ -83,7 +83,7 @@ HTML;
 			$current_class = 'current';
 		}
 
-		$link_class =" class=\"{$current_class}{$parent_class}\'";
+		$link_class =" class=\"{$current_class}{$parent_class}\"";
 
 		$out = <<<HTML
 				<li{$expand_class}>
