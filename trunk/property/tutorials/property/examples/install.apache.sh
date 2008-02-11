@@ -41,8 +41,8 @@ PHP_PREFIX="/usr/local"
 #  * 
 #  * @var               string APACHE, APACHETAR
 #  */
-APACHETAR="httpd-2.2.6.tar.gz"
-APACHE="httpd-2.2.6"
+APACHETAR="httpd-2.2.8.tar.gz"
+APACHE="httpd-2.2.8"
 
 #/**
 #  * Name of the PHP tarball e.g php-5.2.tar.gz
