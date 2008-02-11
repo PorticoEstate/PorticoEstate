@@ -29,7 +29,7 @@
 		prepare_navbar($navbar);
 		$navigation = execMethod('phpgwapi.menu.get', 'navigation');
 
-		$treemenu = "";
+		$treemenu = '';
 		foreach($navbar as $app => $app_data)
 		{
 			if(!in_array($app, array('logout', 'about', 'preferences')))
@@ -40,8 +40,9 @@
 		}
 		$var['treemenu'] = <<<HTML
 			<ul id="navbar">
-				{$treemenu}
+{$treemenu}
 			</ul>
+
 HTML;
 
 		$GLOBALS['phpgw']->template->set_var($var);
@@ -60,54 +61,55 @@ HTML;
 		return isset( $navbar_state[ $id ]);
 	}
 
-	function render_item($item, $id= "", $children="")
+	function render_item($item, $id='', $children='')
 	{
-		$icon_style = $expand_class = $current_class = $link_class = $parent_class = "";
+		$icon_style = $expand_class = $current_class = $link_class = $parent_class = '';
 		static $blank_image;
-		if(!isset($blank_image))
+		if ( !isset($blank_image) )
 		{
 			$blank_image = $GLOBALS['phpgw']->common->find_image('phpgwapi', 'blank.png');
 		}
-		if( isset($item['image']) )
+		if ( isset($item['image']) )
 		{
 			$icon_style = ' style="background-image: url(' . $GLOBALS['phpgw']->common->image($item['image'][0], $item['image'][1]) . ')"';
 		}
-		if( $children )
+		if ( $children )
 		{
 			$expand_class = item_expanded($id) ? ' class="expanded"' : ' class="collapsed"';
 			$parent_class = ' parent';
 		}
-		if( $id == "navbar::{$GLOBALS['phpgw_info']['flags']['menu_selection']}" )
+		if ( $id == "navbar::{$GLOBALS['phpgw_info']['flags']['menu_selection']}" )
 		{
 			$current_class = 'current';
 		}
 
-		$link_class =" class=\"{$current_class}{$parent_class}\"";
+		$link_class =" class=\"{$current_class}{$parent_class}\'";
 
 		$out = <<<HTML
-			<li{$expand_class}>
+				<li{$expand_class}>
+
 HTML;
 		if( $expand_class )
 		{
 		$out .= <<<HTML
-				<img src="{$blank_image}"{$expand_class}width="16" height="16" alt="+/-" />
+							<img src="{$blank_image}"{$expand_class}width="16" height="16" alt="+/-" />
+
 HTML;
 		}
 		return <<<HTML
-				$out
-				<a href="{$item['url']}"{$link_class}{$icon_style} id="{$id}">
-					<span>
-						{$item['text']}
-					</span>
-				</a>
-				{$children}
-			</li>
+$out
+					<a href="{$item['url']}"{$link_class}{$icon_style} id="{$id}">
+						<span>{$item['text']}</span>
+					</a>
+{$children}
+				</li>
+
 HTML;
 	}
 
 	function render_submenu($parent, $menu)
 	{
-		$out = "";
+		$out = '';
 		foreach ( $menu as $key => $item )
 		{
 			$children = isset($item['children']) ? render_submenu(	"{$parent}::{$key}", $item['children']) : '';
@@ -117,8 +119,9 @@ HTML;
 
 		$out = <<<HTML
 			<ul>
-				{$out}
+{$out}
 			</ul>
+
 HTML;
 		return $out;
 	}
