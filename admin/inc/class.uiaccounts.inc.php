@@ -425,8 +425,11 @@
 			
 			$img_acl = $GLOBALS['phpgw']->common->image('admin', 'share', '.png', false);
 			$img_acl_grey = $GLOBALS['phpgw']->common->image('admin', 'share-grey', '.png', false);
+			$lang_acl = lang('Set general permissions');
 			$img_grants = $GLOBALS['phpgw']->common->image('admin', 'dot', '.png', false);
 			$img_grants_grey = $GLOBALS['phpgw']->common->image('admin', 'dot-grey', '.png', false);
+			$lang_grants = lang('grant access');
+
 
 			foreach ( $apps as $app )
 			{
@@ -445,10 +448,10 @@
 																						'acl_app'		=> $app,
 																						'cat_id'=>'groups',
 																						'module'=>'.')) : '',
-						'acl_img'		=> $grants_enabled ? $img_acl : $img_acl_grey,
-						'acl_img_name'	=> lang('Set general permissions'),
-						'grant_img'		=> $grants_enabled ? $img_grants : $img_grants_grey,
-						'grant_img_name'=> lang('Grant Access'),
+						'acl_img'		=> $grants_enabled ? $img_grants : $img_grants_grey,
+						'acl_img_name'	=> $lang_acl,
+						'grant_img'		=> $grants_enabled ? $img_acl : $img_acl_grey,
+						'grant_img_name'=> $lang_grants,
 						'grant_url'		=> $grants_enabled
 											? $GLOBALS['phpgw']->link('/index.php',array('menuaction'	=> 'preferences.uiadmin_acl.aclprefs',
 																						'acl_app'		=> $app,
