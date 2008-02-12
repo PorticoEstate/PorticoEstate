@@ -130,7 +130,7 @@
 		'project' => lang('Project'),
 		'tts' => lang('Ticket'),
 		'invoice' => lang('Invoice'),
-		'document'=> lang(Document)
+		'document'=> lang('Document')
 		);
 	create_select_box('Default start page','default_start_page',$default_start_page,'Select your start-submodule');
 
