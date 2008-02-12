@@ -372,7 +372,14 @@
 					<xsl:value-of select="sender"/>
 				</td>
 				<td align="left">
-					<xsl:value-of select="param"/>
+					<xsl:choose>
+					<xsl:when test="link_redirect != ''">
+						<a href="{link_redirect}" ><xsl:value-of select="param"/></a>
+					</xsl:when>
+					<xsl:otherwise>
+						<xsl:value-of select="param"/>
+					</xsl:otherwise>
+				</xsl:choose>
 				</td>
 				<td align="left">
 					<xsl:value-of select="datetime"/>
