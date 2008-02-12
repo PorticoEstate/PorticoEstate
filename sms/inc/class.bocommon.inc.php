@@ -454,18 +454,22 @@
 		}
 
 
-		function no_access($links = '')
+		function no_access($message = '')
 		{
-			$GLOBALS['phpgw']->xslttpl->add_file(array('no_access','menu'));
+			$GLOBALS['phpgw']->xslttpl->add_file(array('no_access'));
 
 			$receipt['error'][]=array('msg'=>lang('NO ACCESS'));
+			if($message)
+			{
+				$receipt['error'][] = array('msg'=>$message);
+			}
 
 			$msgbox_data = $this->msgbox_data($receipt);
 
 			$data = array
 			(
 				'msgbox_data'	=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
-				'links'		=> $links,
+				'message'		=> $message,
 			);
 
 			$appname	= lang('No access');

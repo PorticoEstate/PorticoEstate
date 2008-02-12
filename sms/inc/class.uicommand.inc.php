@@ -21,6 +21,7 @@
 		var $public_functions = array(
 			'index'			=> True,
 			'log'			=> True,
+			'redirect'		=> True,
 			'edit'			=> True,
 			'edit_command'	=> True,
 			'delete'		=> True,
@@ -35,7 +36,6 @@
 			$this->sms				= CreateObject('sms.sms');
 			$this->acl				= CreateObject('phpgwapi.acl');
 			$this->acl_location 			= '.command';
-			$this->menu->sub			=$this->acl_location;
 			$this->cat_id				= $this->bo->cat_id;
 			$this->start				= $this->bo->start;
 			$this->query				= $this->bo->query;
@@ -341,6 +341,25 @@
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('edit_command' => $data));
 		}
 
+		function redirect()
+		{
+			$code		= phpgw::get_var('code');
+			$param		= urldecode(phpgw::get_var('param'));
+
+			if(is_file(PHPGW_SERVER_ROOT . '/sms/bin/config_' . strtoupper(basename($code)) . '_log'))
+			{
+				include(PHPGW_SERVER_ROOT . '/sms/bin/config_' . strtoupper(basename($code)) . '_log');
+
+				$GLOBALS['phpgw']->redirect_link('/index.php',$link_data);
+			}
+			else
+			{
+				$GLOBALS['phpgw_info']['flags']['xslt_app'] = True;
+				$GLOBALS['phpgw_info']['flags']['menu_selection'] .= '::log';
+				$this->bocommon->no_access(lang('target not configured'));
+			}
+
+		}
 		function log()
 		{
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] .= '::log';
@@ -374,6 +393,7 @@
 					'success'		=> $entry['success'],
 					'datetime'		=> $entry['datetime'],
 					'code'			=> $entry['code'],
+					'link_redirect'	=> $entry['success'] == 1 ? $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'sms.uicommand.redirect','code' => $entry['code'], 'param'=> urlencode($entry['param']))) : '',
 					'param'			=> $entry['param'],
 					'link_delete'		=> $link_delete,
 					'text_delete'		=> $text_delete,
