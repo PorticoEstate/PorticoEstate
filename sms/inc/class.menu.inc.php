@@ -46,7 +46,7 @@
 			$acl = CreateObject('phpgwapi.acl');
 			$menus = array();
 
-			$start_page = 'sms';
+			$start_page = 'sms.index';
 			if ( isset($GLOBALS['phpgw_info']['user']['preferences']['sms']['default_start_page'])
 					&& $GLOBALS['phpgw_info']['user']['preferences']['sms']['default_start_page'] )
 			{
@@ -58,7 +58,7 @@
 				'sms' => array
 				(
 					'text'	=> lang('sms'),
-					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => "sms.ui{$start_page}.index") ),
+					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => "sms.ui{$start_page}") ),
 					'image'	=> array('sms', 'navbar'),
 					'order'	=> 35,
 					'group'	=> 'facilities management'
