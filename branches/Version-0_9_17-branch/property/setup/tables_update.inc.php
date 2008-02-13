@@ -8,7 +8,7 @@
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/bbb_/ekstern/
 	* @package property
 	* @subpackage setup
- 	* @version $Id: tables_update.inc.php,v 1.69 2007/10/13 10:02:54 sigurdne Exp $
+ 	* @version $Id: tables_update.inc.php 750 2008-02-13 12:37:10Z sigurd $
 	*/
 
 	/**
@@ -1979,7 +1979,8 @@
 					'precision_'	=> $GLOBALS['phpgw_setup']->oProc->f('precision_'),
 					'scale'			=> $GLOBALS['phpgw_setup']->oProc->f('scale'),
 					'default_value'	=> $GLOBALS['phpgw_setup']->oProc->f('default_value'),
-					'nullable'		=> $GLOBALS['phpgw_setup']->oProc->f('nullable')
+					'nullable'		=> $GLOBALS['phpgw_setup']->oProc->f('nullable'),
+					'custom'		=> 1
  			);
 		}
 
@@ -2002,7 +2003,8 @@
 					'precision_'	=> $GLOBALS['phpgw_setup']->oProc->f('precision_'),
 					'scale'			=> $GLOBALS['phpgw_setup']->oProc->f('scale'),
 					'default_value'	=> $GLOBALS['phpgw_setup']->oProc->f('default_value'),
-					'nullable'		=> $GLOBALS['phpgw_setup']->oProc->f('nullable')
+					'nullable'		=> $GLOBALS['phpgw_setup']->oProc->f('nullable'),
+					'custom'		=> 1
  			);
 		}
 
@@ -2025,7 +2027,8 @@
 					'precision_'	=> $GLOBALS['phpgw_setup']->oProc->f('precision_'),
 					'scale'			=> $GLOBALS['phpgw_setup']->oProc->f('scale'),
 					'default_value'	=> $GLOBALS['phpgw_setup']->oProc->f('default_value'),
-					'nullable'		=> $GLOBALS['phpgw_setup']->oProc->f('nullable')
+					'nullable'		=> $GLOBALS['phpgw_setup']->oProc->f('nullable'),
+					'custom'		=> 1
  			);
 		}
 
@@ -2048,7 +2051,8 @@
 					'precision_'	=> $GLOBALS['phpgw_setup']->oProc->f('precision_'),
 					'scale'			=> $GLOBALS['phpgw_setup']->oProc->f('scale'),
 					'default_value'	=> $GLOBALS['phpgw_setup']->oProc->f('default_value'),
-					'nullable'		=> $GLOBALS['phpgw_setup']->oProc->f('nullable')
+					'nullable'		=> $GLOBALS['phpgw_setup']->oProc->f('nullable'),
+					'custom'		=> 1
  			);
 		}
 
@@ -2071,7 +2075,8 @@
 					'precision_'	=> $GLOBALS['phpgw_setup']->oProc->f('precision_'),
 					'scale'			=> $GLOBALS['phpgw_setup']->oProc->f('scale'),
 					'default_value'	=> $GLOBALS['phpgw_setup']->oProc->f('default_value'),
-					'nullable'		=> $GLOBALS['phpgw_setup']->oProc->f('nullable')
+					'nullable'		=> $GLOBALS['phpgw_setup']->oProc->f('nullable'),
+					'custom'		=> 1
  			);
 		}
 
@@ -2094,7 +2099,8 @@
 					'precision_'	=> $GLOBALS['phpgw_setup']->oProc->f('precision_'),
 					'scale'			=> $GLOBALS['phpgw_setup']->oProc->f('scale'),
 					'default_value'	=> $GLOBALS['phpgw_setup']->oProc->f('default_value'),
-					'nullable'		=> $GLOBALS['phpgw_setup']->oProc->f('nullable')
+					'nullable'		=> $GLOBALS['phpgw_setup']->oProc->f('nullable'),
+					'custom'		=> 1
  			);
 		}
 
@@ -2215,7 +2221,8 @@
 					'scale'			=> $GLOBALS['phpgw_setup']->oProc->f('scale'),
 					'default_value'	=> $GLOBALS['phpgw_setup']->oProc->f('default_value'),
 					'nullable'		=> $GLOBALS['phpgw_setup']->oProc->f('nullable'),
-					'helpmsg'		=> $GLOBALS['phpgw_setup']->oProc->f('helpmsg')
+					'helpmsg'		=> $GLOBALS['phpgw_setup']->oProc->f('helpmsg'),
+					'custom'		=> 1
  			);
 		}
 
