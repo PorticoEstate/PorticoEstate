@@ -1656,7 +1656,7 @@
 
 		$GLOBALS['phpgw_setup']->oProc->DropTable('phpgw_cust_fields');
 		$GLOBALS['phpgw_setup']->oProc->DropTable('phpgw_cust_field_types');
-		$GLOBALS['phpgw_setup']->oProc->DropTable('phpgw_field_values');
+		$GLOBALS['phpgw_setup']->oProc->DropTable('phpgw_cust_field_values');
 
 		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit();
 
