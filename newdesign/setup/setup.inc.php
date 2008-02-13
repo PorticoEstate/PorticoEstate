@@ -49,7 +49,7 @@
 		'preferences',
 		'admin',
 //		'help',
-		'sidebox_menu'
+		'menu'	=> 'newdesign.menu.get_menu'
 	);
 
 	/* Dependencies for this app to work */

@@ -76,6 +76,7 @@
 		*/
 		function index()
 		{
+			$GLOBALS['phpgw_info']['flags']['menu_selection'] = 'newdesign::form';
 			$output = "html";
 
 			if ( !isset($GLOBALS['phpgw']->css) || !is_object($GLOBALS['phpgw']->css) )
@@ -209,6 +210,7 @@
 
 		function grid()
 		{
+			$GLOBALS['phpgw_info']['flags']['menu_selection'] = 'newdesign::grid';
 			if ( !isset($GLOBALS['phpgw']->css) || !is_object($GLOBALS['phpgw']->css) )
 			{
 				$GLOBALS['phpgw']->css = createObject('phpgwapi.css');
@@ -256,7 +258,9 @@
 			$GLOBALS['phpgw']->xslttpl->add_file(array('common', 'grid'));
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw', $datatable);
 		}
-		function project() {
+		function project() 
+		{
+			$GLOBALS['phpgw_info']['flags']['menu_selection'] = 'newdesign::project';
 			$output = "html";
 
 			if ( !isset($GLOBALS['phpgw']->css) || !is_object($GLOBALS['phpgw']->css) )
