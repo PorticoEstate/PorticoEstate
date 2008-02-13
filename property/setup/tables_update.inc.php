@@ -18,6 +18,7 @@
 	$test[] = '0.9.17.500';
 	function property_upgrade0_9_17_500()
 	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
 		$GLOBALS['phpgw_setup']->oProc->CreateTable(
 			'fm_origin', array(
 				'fd' => array(
@@ -90,8 +91,11 @@
 		$GLOBALS['phpgw_setup']->oProc->DropTable('fm_project_origin');
 		$GLOBALS['phpgw_setup']->oProc->DropTable('fm_entity_origin');
 
-		$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.501';
-		return $GLOBALS['setup_info']['property']['currentver'];
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.501';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
 	}
 
 	/**
@@ -101,9 +105,13 @@
 	$test[] = '0.9.17.501';
 	function property_upgrade0_9_17_501()
 	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
 		$GLOBALS['phpgw_setup']->oProc->AlterColumn('fm_request','descr',array('type' => 'text','nullable' => True));
-		$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.502';
-		return $GLOBALS['setup_info']['property']['currentver'];
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.502';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
 	}
 
 	/**
@@ -113,6 +121,7 @@
 	$test[] = '0.9.17.502';
 	function property_upgrade0_9_17_502()
 	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
 		$GLOBALS['phpgw_setup']->oProc->AlterColumn('fm_acl_location','id',array('type' => 'varchar','precision' => '20','nullable' => False));
 		$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_acl_location (id, descr) VALUES ('.tenant_claim', 'Tenant claim')");
 
@@ -155,8 +164,11 @@
 
 		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_workorder','claim_issued',array('type' => 'int','precision' => 2,'nullable' => True));
 
-		$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.503';
-		return $GLOBALS['setup_info']['property']['currentver'];
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.503';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
 	}
 
 	/**
@@ -166,6 +178,7 @@
 	$test[] = '0.9.17.503';
 	function property_upgrade0_9_17_503()
 	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
 		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_location_type','pk',array('type' => 'text','nullable' => True));
 		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_location_type','ix',array('type' => 'text','nullable' => True));
 		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_location_type','uc',array('type' => 'text','nullable' => True));
@@ -338,8 +351,11 @@
 			unset($default_attrib);
 		}
 
-		$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.504';
-		return $GLOBALS['setup_info']['property']['currentver'];
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.504';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
 	}
 	/**
 	* Update property version from 0.9.17.504 to 0.9.17.505
@@ -348,6 +364,7 @@
 	$test[] = '0.9.17.504';
 	function property_upgrade0_9_17_504()
 	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
 		$GLOBALS['phpgw_setup']->oProc->query("UPDATE fm_location_attrib SET custom = 1, input_text = 'Remark', statustext='Remark' WHERE column_name = 'remark'");
 		$GLOBALS['phpgw_setup']->oProc->query("UPDATE fm_location_attrib SET input_text = column_name, statustext = column_name WHERE custom IS NULL");
 
@@ -484,8 +501,11 @@
 			unset($fd);
 		}
 
-		$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.505';
-		return $GLOBALS['setup_info']['property']['currentver'];
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.505';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
 	}
 
 	/**
@@ -495,6 +515,7 @@
 	$test[] = '0.9.17.505';
 	function property_upgrade0_9_17_505()
 	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
 		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_wo_hours','category',array('type' => 'int','precision' => 4,'nullable' => True));
 
 		$GLOBALS['phpgw_setup']->oProc->CreateTable(
@@ -510,8 +531,11 @@
 			)
 		);
 
-		$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.506';
-		return $GLOBALS['setup_info']['property']['currentver'];
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.506';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
 	}
 	/**
 	* Update property version from 0.9.17.506 to 0.9.17.507
@@ -520,6 +544,7 @@
 	$test[] = '0.9.17.506';
 	function property_upgrade0_9_17_506()
 	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
 		$GLOBALS['phpgw_setup']->oProc->AlterColumn('fm_request','d_safety',array('type' => 'int','precision' => '4','default' => '0','nullable' => True));
 		$GLOBALS['phpgw_setup']->oProc->AlterColumn('fm_request','d_aesthetics',array('type' => 'int','precision' => '4','default' => '0','nullable' => True));
 		$GLOBALS['phpgw_setup']->oProc->AlterColumn('fm_request','d_indoor_climate',array('type' => 'int','precision' => '4','default' => '0','nullable' => True));
@@ -564,8 +589,11 @@
 		$GLOBALS['phpgw_setup']->oProc->query("UPDATE fm_workorder SET act_mtrl_cost = 0 WHERE act_mtrl_cost IS NULL ");
 		$GLOBALS['phpgw_setup']->oProc->query("UPDATE fm_workorder SET act_vendor_cost = 0 WHERE act_vendor_cost IS NULL ");
 
-		$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.507';
-		return $GLOBALS['setup_info']['property']['currentver'];
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.507';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
 	}
 	/**
 	* Update property version from 0.9.17.507 to 0.9.17.508
@@ -574,6 +602,7 @@
 	$test[] = '0.9.17.507';
 	function property_upgrade0_9_17_507()
 	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
 		$GLOBALS['phpgw_setup']->oProc->CreateTable(
 			'fm_request_condition_type', array(
 				'fd' => array(
@@ -721,8 +750,11 @@
 
 		$GLOBALS['phpgw_setup']->oProc->DropTable('fm_request_priority_key');
 
-		$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.508';
-		return $GLOBALS['setup_info']['property']['currentver'];
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.508';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
 	}
 
 	/**
@@ -732,6 +764,7 @@
 	$test[] = '0.9.17.508';
 	function property_upgrade0_9_17_508()
 	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
 		$GLOBALS['phpgw_setup']->oProc->CreateTable(
 			'fm_custom_function', array(
 				'fd' => array(
@@ -749,8 +782,11 @@
 			)
 		);
 
-		$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.509';
-		return $GLOBALS['setup_info']['property']['currentver'];
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.509';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
 	}
 
 	/**
@@ -760,13 +796,17 @@
 	$test[] = '0.9.17.509';
 	function property_upgrade0_9_17_509()
 	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
 		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_ecobilag','item_type',array('type' => 'int','precision' => 4,'nullable' => True));
 		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_ecobilag','item_id',array('type' => 'varchar','precision' => 20,'nullable' => True));
 		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_ecobilagoverf','item_type',array('type' => 'int','precision' => 4,'nullable' => True));
 		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_ecobilagoverf','item_id',array('type' => 'varchar','precision' => 20,'nullable' => True));
 
-		$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.510';
-		return $GLOBALS['setup_info']['property']['currentver'];
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.510';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
 	}
 
 	/**
@@ -798,9 +838,11 @@
 
 		$GLOBALS['phpgw_setup']->oProc->RenameColumn('fm_custom','sql','sql_text');
 
-		$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.511';
-		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit();
-		return $GLOBALS['setup_info']['property']['currentver'];
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.511';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
 	}
 
 	/**
@@ -833,9 +875,11 @@
 			)
 		);
 
-		$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.512';
-		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit();
-		return $GLOBALS['setup_info']['property']['currentver'];
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.512';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
 	}
 
 	/**
@@ -1022,9 +1066,11 @@
 
 		$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_acl_location (id, descr) VALUES ('.r_agreement', 'Rental agreement')");
 
-		$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.513';
-		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit();
-		return $GLOBALS['setup_info']['property']['currentver'];
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.513';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
 	}
 
 	/**
@@ -1092,10 +1138,11 @@
 		
 		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_wo_hours','cat_per_cent',array('type' => 'int','precision' => 4,'nullable' => True));
 		
-		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit();
-		
-		$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.516';
-		return $GLOBALS['setup_info']['property']['currentver'];
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.516';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
 	}
 
 	/**
@@ -1186,10 +1233,11 @@
 			)
 		);
 
-		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit();
-		
-		$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.517';
-		return $GLOBALS['setup_info']['property']['currentver'];
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.517';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
 	}
 
 
@@ -1246,9 +1294,11 @@
 
 		}		
 		
-		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit();
-		$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.518';
-		return $GLOBALS['setup_info']['property']['currentver'];
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.518';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
 	}
 
 	/**
@@ -1262,9 +1312,11 @@
 
 		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_template_hours','entry_date',array('type' => 'int','precision' => 4,'nullable' => True));
 		
-		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit();
-		$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.519';
-		return $GLOBALS['setup_info']['property']['currentver'];
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.519';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
 	}
 
 
@@ -1280,9 +1332,11 @@
 		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_request','start_date',array('type' => 'int','precision' => 4,'nullable' => True));
 		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_request','end_date',array('type' => 'int','precision' => 4,'nullable' => True));
 		
-		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit();
-		$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.520';
-		return $GLOBALS['setup_info']['property']['currentver'];
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.520';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
 	}
 
 
@@ -1297,9 +1351,11 @@
 
 		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_budget_basis','distribute_year',array('type' => 'text','nullable' => True));
 		
-		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit();
-		$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.521';
-		return $GLOBALS['setup_info']['property']['currentver'];
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.521';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
 	}
 
 	/**
@@ -1309,7 +1365,7 @@
 	$test[] = '0.9.17.521';
 	function property_upgrade0_9_17_521()
 	{
-		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+//		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin(); transaction have problem with nested db-objects
 
 		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_workorder','combined_cost', array('type' => 'decimal','precision' => '20','scale' => '2','nullable' => True,'default' => '0.00'));
 
@@ -1342,9 +1398,11 @@
 			}
 		}
 
-		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit();
-		$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.522';
-		return $GLOBALS['setup_info']['property']['currentver'];
+//		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.522';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
 	}
 	
 	/**
@@ -1358,9 +1416,11 @@
 
 		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_workorder','paid', array('type' => 'int','precision' => '2','nullable' => True,'default' => '1'));
 		
-		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit();
-		$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.523';
-		return $GLOBALS['setup_info']['property']['currentver'];
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.523';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
 	}
 
 	/**
@@ -1374,9 +1434,11 @@
 		$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_acl_location (id, descr) VALUES ('.admin', 'Admin')");
 		$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_acl_location (id, descr) VALUES ('.admin.entity', 'Admin entity')");
 		$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_acl_location (id, descr) VALUES ('.admin.location', 'Admin location')");
-		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit();
-		$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.524';
-		return $GLOBALS['setup_info']['property']['currentver'];
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.524';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
 	}
 
 	/**
@@ -1386,7 +1448,7 @@
 	$test[] = '0.9.17.524';
 	function property_upgrade0_9_17_524()
 	{
-		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+//		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin(); transaction have problem with nested db-objects
 
 		$GLOBALS['phpgw_setup']->oProc->query("delete from phpgw_acl where acl_appname = 'property' AND acl_location !='run' ");
 		
@@ -1425,9 +1487,11 @@
 		$GLOBALS['phpgw_setup']->oProc->DropTable('fm_acl_location');
 		$GLOBALS['phpgw_setup']->oProc->DropTable('fm_acl2');
 	
-		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit();
-		$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.525';
-		return $GLOBALS['setup_info']['property']['currentver'];
+//		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.525';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
 	}
 
 	/**
@@ -1442,9 +1506,11 @@
 		$GLOBALS['phpgw_setup']->oProc->AlterColumn('fm_vendor_attribute','input_text',array('type' => 'varchar','precision' => '50','nullable' => False));
 		$GLOBALS['phpgw_setup']->oProc->AlterColumn('fm_location_attrib','input_text',array('type' => 'varchar','precision' => '50','nullable' => False));
 		$GLOBALS['phpgw_setup']->oProc->AlterColumn('fm_owner_attribute','input_text',array('type' => 'varchar','precision' => '50','nullable' => False));
-		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit();
-		$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.526';
-		return $GLOBALS['setup_info']['property']['currentver'];
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.526';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
 	}
 
 	/**
@@ -1458,10 +1524,11 @@
 		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_entity_attribute','disabled', array('type' => 'int','precision' => '4','nullable' => True));
 		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_entity_attribute','helpmsg', array('type' => 'text','nullable' => True));
 
-
-		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit();
-		$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.527';
-		return $GLOBALS['setup_info']['property']['currentver'];
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.527';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
 	}
 
 	/**
@@ -1496,9 +1563,11 @@
 
 		$GLOBALS['phpgw_setup']->oProc->query("UPDATE fm_location_attrib set precision_ = '6' where column_name = 'loc1'");
 
-		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit();
-		$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.528';
-		return $GLOBALS['setup_info']['property']['currentver'];
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.528';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
 	}
 
 
@@ -1514,9 +1583,11 @@
 		$GLOBALS['phpgw_setup']->oProc->query("UPDATE phpgw_acl_location set id = '.agreement', descr = 'Agreement' where id = '.pricebook' AND appname = 'property'");
 		$GLOBALS['phpgw_setup']->oProc->query("UPDATE phpgw_acl set acl_location = '.agreement' where acl_location = '.pricebook' AND acl_appname = 'property'");
 
-		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit();
-		$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.529';
-		return $GLOBALS['setup_info']['property']['currentver'];
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.529';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
 	}
 
 	/**
@@ -1534,9 +1605,11 @@
 		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_tenant','account_pwd', array('type' => 'varchar','precision' => '32','nullable' => True));
 		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_tenant','account_status', array('type' => 'char','precision' => '1','nullable' => True,'default' => 'A'));
 
-		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit();
-		$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.530';
-		return $GLOBALS['setup_info']['property']['currentver'];
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.530';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
 	}
 
 	/**
@@ -1618,9 +1691,11 @@
 		unset($id);
 		unset($attrib_sort);
 		
-		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit();
-		$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.531';
-		return $GLOBALS['setup_info']['property']['currentver'];
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.531';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
 	}
 
 	/**
@@ -1648,9 +1723,11 @@
 		$GLOBALS['phpgw_setup']->oProc->query("DELETE FROM phpgw_acl WHERE acl_appname = 'property' AND acl_location = '.vendor' AND acl_grantor IS NOT NULL");
 		$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_acl (acl_appname, acl_location, acl_account, acl_rights, acl_grantor, acl_type) VALUES ('property', '.vendor', '1', '1', '6', '0')");
 
-		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit();
-		$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.532';
-		return $GLOBALS['setup_info']['property']['currentver'];
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.532';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
 	}
 
 	/**
@@ -1662,9 +1739,11 @@
 	{
 		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
 		$GLOBALS['phpgw_setup']->oProc->AlterColumn('fm_template_hours','hours_descr',array('type' => 'text','nullable' => True));
-		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit();
-		$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.533';
-		return $GLOBALS['setup_info']['property']['currentver'];
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.533';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
 	}
 
 	/**
@@ -1682,9 +1761,11 @@
 		$GLOBALS['phpgw_setup']->oProc->query("UPDATE fm_location_type set list_info = '" . 'a:2:{i:1;s:1:"1";i:2;s:1:"2";}' ."' WHERE id = '2'");
 		$GLOBALS['phpgw_setup']->oProc->query("UPDATE fm_location_type set list_info = '" . 'a:3:{i:1;s:1:"1";i:2;s:1:"2";i:3;s:1:"3";}' ."' WHERE id = '3'");
 		$GLOBALS['phpgw_setup']->oProc->query("UPDATE fm_location_type set list_info = '" . 'a:1:{i:1;s:1:"1";}' ."' WHERE id = '4'");		
-		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit();
-		$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.534';
-		return $GLOBALS['setup_info']['property']['currentver'];
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.534';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
 	}
 
 	/**
@@ -1699,9 +1780,11 @@
 		$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_acl_location (appname, id, descr) VALUES ('property', '.location.2', 'Building')");
 		$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_acl_location (appname, id, descr) VALUES ('property', '.location.3', 'Entrance')");
 		$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_acl_location (appname, id, descr) VALUES ('property', '.location.4', 'Apartment')");
-		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit();
-		$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.535';
-		return $GLOBALS['setup_info']['property']['currentver'];
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.535';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
 	}
 
 
