@@ -269,7 +269,7 @@
 
 
 			$values_acl_location= array(
-			//	$this->currentapp,
+				'property',
 				'.entity.' . $entity['id'],
 				$entity['name'],
 				1
