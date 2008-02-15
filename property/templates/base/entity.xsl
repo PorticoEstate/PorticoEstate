@@ -220,6 +220,15 @@
 					</tr>
 				</xsl:when>
 			</xsl:choose>
+			<xsl:choose>
+				<xsl:when test="value_id!=''">
+					<tr>
+						<td class="th_text" valign ="top">
+							<a href="{link_pdf}" target="_blank">PDF</a>
+						</td>
+					</tr>
+				</xsl:when>
+			</xsl:choose>
 			<xsl:variable name="form_action"><xsl:value-of select="form_action"/></xsl:variable>
 			<form ENCTYPE="multipart/form-data" method="post" name="form" action="{$form_action}">
 			<tr>
@@ -545,6 +554,11 @@
 	<xsl:template match="view">
 		<div align="left">		
 		<table cellpadding="2" cellspacing="2" width="80%" align="center">
+			<tr>
+				<td class="th_text" valign ="top">
+					<a href="{link_pdf}" target="_blank">PDF</a>
+				</td>
+			</tr>
 			<xsl:for-each select="value_origin" >
 			<xsl:variable name="link_origin_type"><xsl:value-of select="link"/></xsl:variable>
 			<tr>

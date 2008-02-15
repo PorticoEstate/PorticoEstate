@@ -55,7 +55,8 @@
 			'delete' 	=> True,
 			'view_file'	=> True,
 			'attrib_history'=> True,
-			'attrib_help'	=> True
+			'attrib_help'	=> True,
+			'print_pdf'		=> True
 		);
 
 		function property_uientity()
@@ -1002,8 +1003,17 @@
 				'lang_apply'					=> lang('apply'),
 			);
 
+			$pdf_data = array
+			(
+				'menuaction'	=> 'property.uientity.print_pdf',
+				'id'		=> $id,
+				'entity_id'	=> $this->entity_id,
+				'cat_id'	=> $this->cat_id
+			);
+
 			$data = array
 			(
+				'link_pdf'						=> $GLOBALS['phpgw']->link('/index.php',$pdf_data),
 				'start_project'					=> $category['start_project'],
 				'lang_start_project'			=> lang('start project'),
 				'project_link'					=> $GLOBALS['phpgw']->link('/index.php',$project_link_data),
@@ -1332,8 +1342,17 @@
 
 			$GLOBALS['phpgw']->js->validate_file('overlib','overlib','property');
 
+			$pdf_data = array
+			(
+				'menuaction'	=> 'property.uientity.print_pdf',
+				'id'		=> $id,
+				'entity_id'	=> $this->entity_id,
+				'cat_id'	=> $this->cat_id
+			);
+
 			$data = array
 			(
+				'link_pdf'						=> $GLOBALS['phpgw']->link('/index.php',$pdf_data),
 				'link_view_file'				=> $GLOBALS['phpgw']->link('/index.php',$link_file_data),
 		//		'link_to_files'					=> $link_to_files,
 				'files'							=> isset($values['files'])?$values['files']:'',
@@ -1484,6 +1503,170 @@
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
 			//_debug_array($GLOBALS['phpgw_info']['flags']['app_header']);
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('attrib_history' => $data));
+		}
+
+		function print_pdf()
+		{
+			if(!$this->acl_read)
+			{
+				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=>1, 'acl_location'=> $this->acl_location));
+			}
+
+			$GLOBALS['phpgw_info']['flags']['noheader'] = true;
+			$GLOBALS['phpgw_info']['flags']['nofooter'] = true;
+			$GLOBALS['phpgw_info']['flags']['xslt_app'] = false;
+
+			$bolocation			= CreateObject('property.bolocation');
+
+			$id	= phpgw::get_var('id', 'int');
+
+			if ($id)
+			{
+				$values	= $this->bo->read_single(array('entity_id'=>$this->entity_id,'cat_id'=>$this->cat_id,'id'=>$id, 'view' => true));
+			}
+			else
+			{
+				echo 'Nothing';
+				return;
+			}
+
+			if (isset($values['cat_id']) && $values['cat_id'])
+			{
+				$this->cat_id = $values['cat_id'];
+			}
+
+			$entity = $this->boadmin_entity->read_single($this->entity_id,false);
+			$category = $this->boadmin_entity->read_single_category($this->entity_id,$this->cat_id);
+
+			if (isset($entity['lookup_entity']) && is_array($entity['lookup_entity']))
+			{	for ($i=0;$i<count($entity['lookup_entity']);$i++)
+				{
+					if(isset($values['p'][$entity['lookup_entity'][$i]]) && $values['p'][$entity['lookup_entity'][$i]])
+					{
+						$lookup_entity[$i]['id'] = $entity['lookup_entity'][$i];
+						$entity_lookup = $this->boadmin_entity->read_single($entity['lookup_entity'][$i],false);
+						$lookup_entity[$i]['name'] = $entity_lookup['name'];
+					}
+				}
+			}
+
+			$location_data=$bolocation->initiate_ui_location(array(
+						'values'	=> $values['location_data'],
+						'type_id'	=> count(explode('-',$values['location_data']['location_code'])),
+						'no_link'	=> False, // disable lookup links for location type less than type_id
+						'lookup_type'	=> 'view',
+						'tenant'	=> $category['lookup_tenant'],
+						'lookup_entity'	=> isset($lookup_entity)?$lookup_entity:'', // Needed ?
+						'entity_data'	=> isset($values['p'])?$values['p']:'' // Needed ?
+						));
+
+//_debug_array($values);
+			$pdf	= CreateObject('phpgwapi.pdf');
+			
+			$date = $GLOBALS['phpgw']->common->show_date('',$GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']);
+			$entry_date = $GLOBALS['phpgw']->common->show_date($values['entry_date'],$GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']);
+
+			// don't want any warnings turning up in the pdf code if the server is set to 'anal' mode.
+			//error_reporting(7);
+			//error_reporting(E_ALL);
+			set_time_limit(1800);
+			$pdf -> ezSetMargins(90,70,50,50);
+			$pdf->selectFont(PHPGW_API_INC . '/pdf/fonts/Helvetica.afm');
+
+			// put a line top and bottom on all the pages
+			$all = $pdf->openObject();
+			$pdf->saveState();
+			$pdf->setStrokeColor(0,0,0,1);
+			$pdf->line(20,760,578,760);
+
+			$pdf->addText(50,790,10,$GLOBALS['phpgw']->accounts->id2name($values['user_id']) . ': ' . $entry_date);			
+			$pdf->addText(50,770,16,$entity['name'] . '::' . $category['name'] . ' #' . $id);
+			$pdf->addText(300,28,10,$date);
+
+			$pdf->restoreState();
+			$pdf->closeObject();
+			// note that object can be told to appear on just odd or even pages by changing 'all' to 'odd'
+			// or 'even'.
+			$pdf->addObject($all,'all');
+			$pdf->ezStartPageNumbers(500,28,10,'right','{PAGENUM} ' . lang('of') . ' {TOTALPAGENUM}',1);
+
+			$pdf->ezTable($content_heading,'','',
+							array('xPos'=>220,'xOrientation'=>'right','width'=>300,0,'shaded'=>0,'fontSize' => 10,'showLines'=> 0,'titleFontSize' => 12,'outerLineThickness'=>0,'showHeadings'=>0
+							,'cols'=>array('text'=>array('justification'=>'left','width'=>100),
+									'value'=>array('justification'=>'left','width'=>200))
+							)
+						);
+		
+			$table_header = array(
+				'name'=>array('justification'=>'left','width'=>110),
+				'sep'=>array('justification'=>'center','width'=>15),
+				'value'=>array('justification'=>'left','width'=>300)
+				);
+
+			if(is_array($location_data['location']))
+			{
+				foreach($location_data['location'] as $entry)
+				{
+					$value = '';
+					if($entry['input_type'] != 'hidden')
+					{
+						$value = $entry['value'];
+					}
+					if(isset($entry['extra']) && is_array($entry['extra']))
+					{
+						foreach($entry['extra'] as $extra)
+						{
+							if($extra['input_type'] != 'hidden')
+							{
+								$value .= ' ' . $extra['value'];
+							}
+						}
+					}
+		
+					$content[] = array
+					(
+						'name'		=> $entry['name'],
+						'sep'			=> '-',
+						'value'			=> trim($value)
+					);
+				}
+			}
+
+			if(is_array($values['attributes']))
+			{
+				foreach($values['attributes'] as $entry)
+				{
+					if(isset($entry['choice']) && is_array($entry['choice']))
+					{
+						foreach($entry['choice'] as $choice)
+						{
+							if(isset($choice['checked']) && $choice['checked'])
+							{
+								$value = $choice['value'];
+							}
+						} 
+					}
+					else
+					{
+						$value = $entry['value'];
+					}
+
+					$content[] = array
+					(
+						'name'		=> $entry['input_text'],
+						'sep'			=> '-',
+						'value'			=> $value
+					);
+				}
+				$pdf->ezTable($content,'','',
+						array('xPos'=>50,'xOrientation'=>'right','width'=>500,0,'shaded'=>0,'fontSize' => 10,'showLines'=> 0,'titleFontSize' => 12,'outerLineThickness'=>2,'showHeadings'=>0
+						,'cols'=>$table_header
+						)
+					);
+			}
+
+			$document = $pdf->ezOutput();
+			$pdf->print_pdf($document,$entity['name'] . '_' . str_replace(' ','_',$GLOBALS['phpgw']->accounts->id2name($this->account)));  
 		}
 	}
 ?>
