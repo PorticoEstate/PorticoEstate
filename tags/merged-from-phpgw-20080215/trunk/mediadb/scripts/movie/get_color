@@ -1,3 +1,0 @@
-#!/bin/tcsh -f
-
-grep "color-info" details | sed -f sed_color
