@@ -180,7 +180,7 @@
 				);
 			}
 
-			if (! $GLOBALS['phpgw']->acl->check('info_access', PHPGW_ACL_READ, 'admin'))
+			if (! $GLOBALS['phpgw']->acl->check('info_access', PHPGW_ACL_READ, 'admin') && function_exists('phpinfo') ) // it is possible to disable commands in php.ini
 			{
 				$menus['admin']['phpinfo'] = array
 				(
