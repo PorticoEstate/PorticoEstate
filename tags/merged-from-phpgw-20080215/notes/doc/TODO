@@ -1,0 +1,10 @@
+<jengo> <form>
+<jengo>   <input name="notes_font" value="<php echo $phpgw_info["user"]["preferences"]["notes"]["font_size"]; ?>">
+<jengo>   <input type="submit" name="submit" value="submit">
+<jengo> </form>
+<jengo> if ($submit) {
+<jengo>    $phpgw->preferences->preferences_add($phpgw_info["user"]["account_id"],"notes_font");
+<jengo> }
+<jengo> ok, thats a quick and to the point version
+<jengo> correction
+<jengo>   <input name="notes_font" value="<php echo $phpgw_info["user"]["preferences"]["notes"]["notes_font"]; ?>">
