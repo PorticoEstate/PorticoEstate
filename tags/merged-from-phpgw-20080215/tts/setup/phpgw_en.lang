@@ -1,0 +1,73 @@
+action	tts	en	Action
+add new ticket	tts	en	Add new ticket
+add ticket	tts	en	Add ticket
+additional notes	tts	en	Additional notes
+admin options	admin	en	Admin Options
+assign to	tts	en	Assign to
+assigned from	tts	en	Assigned from
+assigned to	tts	en	Assigned to
+attachment	tts	en	Attachment
+attachment changed	tts	en	Attachment changed
+billable hours	tts	en	Billable hours
+billable hours changed	tts	en	Billable hours changed
+billable hours rate	tts	en	Billable hours rate
+billable rate	tts	en	Billable rate
+billable rate changed	tts	en	Billable rate changed
+category changed	tts	en	Category changed
+clear form	tts	en	Clear Form
+closed	tts	en	Closed
+create new ticket	tts	en	Create new ticket
+creates a new ticket, returns ticket_id	tts	en	Creates a new ticket, returns ticket_id
+creates a struct of tickets	tts	en	Creates a struct of tickets
+date opened	tts	en	Date opened
+deadline	tts	en	Deadline
+deadline changed	tts	en	Deadline changed
+detail	tts	en	Detail
+effort	tts	en	Effort
+effort changed	tts	en	Effort changed
+force	tts	en	Force
+group ownership changed	tts	en	Group ownership changed
+in progress	tts	en	In progress
+latest note added	tts	en	Latest Note Added
+new ticket	tts	en	New Ticket
+new value	tts	en	New Value
+no additional notes	tts	en	No additional notes
+no notes for this ticket	tts	en	No notes for this ticket
+no tickets found	tts	en	No tickets found.
+not assigned	tts	en	Not Assigned
+old value	tts	en	Old Value
+open	tts	en	Open
+open date	tts	en	Open Date
+opened	tts	en	Opened
+opened by	tts	en	Opened by
+original ticket details	tts	en	Original Ticket Details
+platform	tts	en	Platform
+platform changed	tts	en	Platform changed
+prio	tts	en	Prio
+priority	tts	en	Priority
+priority changed	tts	en	Priority changed
+re-assigned	tts	en	Re-assigned
+re-opened	tts	en	Re-opened
+returns a struct of a tickets history	tts	en	Returns a struct of a tickets history
+returns a struct of values of a single ticket	tts	en	Returns a struct of values of a single ticket
+returns the additional notes attached to a ticket	tts	en	Returns the additional notes attached to a ticket
+status/date closed	tts	en	Status/Date closed
+subject changed	tts	en	Subject changed
+test	tts	en	TEST
+ticket	tts	en	Ticket
+ticket has been updated	tts	en	Ticket has been updated
+tickets found %1	tts	en	Tickets found %1
+tickets open %1	tts	en	Tickets open %1
+tickets total %1	tts	en	Tickets total %1
+to go back to the tts index, click <a href= %1 >here</a>	tts	en	To go back to the tts index, click <a href="%1">here</a>
+total billable	tts	en	Total billable
+trouble ticket system	common	en	Trouble Ticket System
+tts	common	en	Trouble Ticket System
+tts preferences	tts	en	Trouble Ticket System - preferences
+type	tts	en	Type
+type changed	tts	en	Type changed
+updates ticket	tts	en	Updates ticket
+use email notification	tts	en	Use email notification
+view all tickets	tts	en	View all tickets
+view job detail	tts	en	View Job Detail
+view only open tickets	tts	en	View only open tickets
