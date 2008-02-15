@@ -1,0 +1,7 @@
+connect	ftp	it	collegati
+ftp hostname	ftp	it	Nome server
+log into ftp server	ftp	it	Collegati al server FTP
+logout/relogin	ftp	it	ricollegati
+password	ftp	it	Password
+permissions	ftp	it	Permessi
+username	ftp	it	Nome Utente

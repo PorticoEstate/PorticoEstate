@@ -1,0 +1,35 @@
+TOPIC_TITLE: Foruma lietotâji
+TOPIC_HELP:
+<a href="{ROOT}?t=help_index&amp;section=usermaintance&amp;%_rsid%#register" class="GenLink">Kâdçï nepiecieðama reìistrâcija?</a><br>
+<a href="{ROOT}?t=help_index&amp;section=usermaintance&amp;%_rsid%#cookies" class="GenLink">Kâ ðis forums izmanto mainîgos cookies?</a><br>
+<a href="{ROOT}?t=help_index&amp;section=usermaintance&amp;%_rsid%#clrcookie" class="GenLink">Kâ var izdzçst foruma izveidotos cookie?</a><br>
+<a href="{ROOT}?t=help_index&amp;section=usermaintance&amp;%_rsid%#updprofile" class="GenLink">Kâdçï nepiecieðami uzstâdîjumi?</a><br>
+<a href="{ROOT}?t=help_index&amp;section=usermaintance&amp;%_rsid%#sigs" class="GenLink">Ka sir paraksts?</a><br>
+<a href="{ROOT}?t=help_index&amp;section=usermaintance&amp;%_rsid%#rstpasswd" class="GenLink">Ko iesâkt ja ir aizmirsta parole?</a><br>
+<a href="{ROOT}?t=help_index&amp;section=usermaintance&amp;%_rsid%#cstat" class="GenLink">Kâ var izveidot un pielietot nestandarta html tegus – kodus?</a><br>
+<a href="{ROOT}?t=help_index&amp;section=usermaintance&amp;%_rsid%#avatars" class="GenLink">Ka sir privâtâ nozîmîte?</a><br>
+<a href="{ROOT}?t=help_index&amp;section=usermaintance&amp;%_rsid%#blist" class="GenLink">Kâdam nolûkam kalpo Kontaktu saraksts?</a><br>
+<a href="{ROOT}?t=help_index&amp;section=usermaintance&amp;%_rsid%#ignlist" class="GenLink">Kâdam nolûkam kalpo Ignorçto saraksts?</a><br>
+
+TOPIC_TITLE: Jautâjumi kas saistîti ar foruma lietoðanu
+TOPIC_HELP:
+<a href="{ROOT}?t=help_index&amp;section=boardusage&amp;%_rsid%#bsearch" class="GenLink">Kâ strâdâ Meklçðanas sistçma?</a><br>
+<a href="{ROOT}?t=help_index&amp;section=boardusage&amp;%_rsid%#email" class="GenLink">Vai ir iespçjams nosûtît E-pastu kâdam no foruma dalîbniekiem?</a><br>
+<a href="{ROOT}?t=help_index&amp;section=boardusage&amp;%_rsid%#pmsg" class="GenLink">Kas ir privâtâ sarakste un kâ to lietot?</a><br>
+<a href="{ROOT}?t=help_index&amp;section=boardusage&amp;%_rsid%#mlist" class="GenLink">Lietotâju saraksts?</a><br>
+<a href="{ROOT}?t=help_index&amp;section=boardusage&amp;%_rsid%#ann" class="GenLink">Kas tas ir Sludinâjumi un Sticky un kâdam mçríim tie ir paredzçti?</a><br>
+<a href="{ROOT}?t=help_index&amp;section=boardusage&amp;%_rsid%#rate" class="GenLink">Vai ir iespçjams novçrtçt kâdu tçmu?</a><br>
+<a href="{ROOT}?t=help_index&amp;section=boardusage&amp;%_rsid%#ref" class="GenLink">Kas tie tâdi Uzaicinâtie"?</a><br>
+
+TOPIC_TITLE: Publikâciju lasîðana un nosûtîðana
+TOPIC_HELP:
+<a href="{ROOT}?t=help_index&amp;section=readingposting&amp;%_rsid%#style" class="GenLink">Kâ var noformatçt publikâcijas tekstu?</a><br>
+<a href="{ROOT}?t=help_index&amp;section=readingposting&amp;%_rsid%#sml" class="GenLink">Ka sir Smaidiòi?</a><br>
+<a href="{ROOT}?t=help_index&amp;section=readingposting&amp;%_rsid%#polls" class="GenLink">Kâ es varu pielietot balsojumu sistçmu?</a><br>
+<a href="{ROOT}?t=help_index&amp;section=readingposting&amp;%_rsid%#attach" class="GenLink">Vai ir iespçjams publikâcijai pievienot failu?</a><br>
+<a href="{ROOT}?t=help_index&amp;section=readingposting&amp;%_rsid%#msgico" class="GenLink">Kâdçï nepiecieðamas publikâciju nozîmîtes?</a><br>
+<a href="{ROOT}?t=help_index&amp;section=readingposting&amp;%_rsid%#edit" class="GenLink">Vai es varu labot savas publikâcijas teksta saturu pçc publicçðanas?</a><br>
+<a href="{ROOT}?t=help_index&amp;section=readingposting&amp;%_rsid%#mod" class="GenLink">Kas tie tâdi Moderâtori un Administrâtori?</a><br>
+<a href="{ROOT}?t=help_index&amp;section=readingposting&amp;%_rsid%#cens" class="GenLink">Kâdçï forumâ ir nepiecieðama cenzûra un kâ tâ strâdâ?</a><br>
+<a href="{ROOT}?t=help_index&amp;section=readingposting&amp;%_rsid%#not" class="GenLink">Kâ es varu uzzinât par saòemtajâm atbildçm manâm publikâcijâm?</a><br>
+

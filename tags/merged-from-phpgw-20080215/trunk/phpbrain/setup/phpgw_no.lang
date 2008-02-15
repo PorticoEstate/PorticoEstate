@@ -1,0 +1,188 @@
+/kb directory does not exist and could not be created, please ask the adminstrator to check the global configuration	phpbrain	no	/kb mappen eksisterer ikke og kunne ikke opprettes. Få EDB-ansvarlig til å kontrollere konfigurasjonen.
+action	phpbrain	no	Handling
+actions	phpbrain	no	Handlinger
+add articles	phpbrain	no	Legg til atikler
+add link	phpbrain	no	Legg til lenke
+add question	phpbrain	no	Legg til spørsmål
+added file %1	phpbrain	no	La til fil %1
+added link %1	phpbrain	no	La til lenke %1
+added related articles %1	phpbrain	no	La til relatert artikkel %1
+advanced search	phpbrain	no	Avansert søk
+all articles	phpbrain	no	Alle artikler
+answer	phpbrain	no	svar
+anytime	phpbrain	no	når som helst
+anywhere in the article	phpbrain	no	Hvor som helst i artikkelen
+article	phpbrain	no	Artikkel
+article added to database, you can now attach files or links, or relate to other articles	phpbrain	no	Artikkel lagt til database, du kan nå legge ved filer og lenker, eller relatere til andre artikler
+article created	phpbrain	no	Artikkel opprettet
+article deleted	phpbrain	no	Artikkel slettet
+article deleted successfully	phpbrain	no	Sletting av artikkel vellykket
+article edited	phpbrain	no	Artikkel endret
+article has been published	phpbrain	no	Artikkel er publisert
+article id	phpbrain	no	Artikkelident
+articles added	phpbrain	no	Artikler lagt til
+articles deleted successfully	phpbrain	no	Sletting av artikler vellykket
+articles have been published	phpbrain	no	Artikler ble publisert
+articles in %1	phpbrain	no	Artikler i %1
+articles in %1 and all its subcategories	phpbrain	no	Artikler i %1 og dennes underkategorier
+articles not classified under any category	phpbrain	no	Artikler ikke klassifisert i noen kategori
+ascendent	phpbrain	no	Stigende
+attach file	phpbrain	no	Tilknytt fil
+attached files	phpbrain	no	Tilknyttede filer
+average rating	phpbrain	no	Gjennomsn. bedømmelse
+base directory does not exist, please ask the adminstrator to check the global configuratio	phpbrain	no	Base mappen eksisterer ikke.  Få edb-ansvarlig til å kontrollere global konfigurasjon.
+before submiting a question, please search in the knowledge base first	phpbrain	no	Før du sender inn et spørsmål, se om du finner svar i kunnskapsbasen først
+by answering this question you will help to get the answer quicker the next time	phpbrain	no	Ved å svare på dette spørsmålet vil du hjelpe andre til å få raskere svar neste gang.
+comment	phpbrain	no	Kommentar
+comment and rating have been published	phpbrain	no	Kommentar og vurdering ble publisert
+comment could not be inserted in the database	phpbrain	no	Kommentar kunne ikke lagres i databasen
+comment has been deleted	phpbrain	no	Kommentar ble slettet
+comment has been published	phpbrain	no	Kommentar ble publisert
+comment has been submited for revision	phpbrain	no	Kommentar har blitt avsendt for revisjon
+comment has been submited for revision and rating will be published	phpbrain	no	Kommentar har blitt avsendt for revisjon og vurdering vil ble publisert
+comments	phpbrain	no	Kommentarer
+configuration	phpbrain	no	Konfigurasjon
+create a new article to answer the question asked by %1 in %2	phpbrain	no	Opprette en ny artikkel for å svare på spørsmål stilt av %1 i %2
+created by %1 on %2	phpbrain	no	Opprettet av %1 den %2
+creation	phpbrain	no	opprettelse
+creation date	phpbrain	no	Opprettet dato
+delete article	phpbrain	no	Slett artikkel
+delete selected	phpbrain	no	Slett valgte
+deleted relation to  article %1	phpbrain	no	Fjernet relasjon til artikkel %1
+deleted relation to article %1	phpbrain	no	Fjernet relasjon til artikkel %1
+descendent	phpbrain	no	Synkende
+details	phpbrain	no	Detaljer
+e-groupware knowledge base article attached	phpbrain	no	E-GroupWare kunnskapsbaseartikkel ble vedlagt
+e-mail has been sent	phpbrain	no	e-mail ble sendt
+edit article	phpbrain	no	Endre artikkel
+enter one or two words describing the issue, or type the article number if you know it	phpbrain	no	Registrer ett eller to ord som beskriver utgavene, eller tast inn artikkelnummer om du kjenner dette.
+error deleting article from database	phpbrain	no	Feil ved sletting av artikkel fra databasen
+error deleting link	phpbrain	no	Feil ved sletting av lenke
+error downloading file	phpbrain	no	Feil ved nedlasting av filen
+error locating files directory	phpbrain	no	Kan ikke lokaliser filmappen
+error moving file to directory	phpbrain	no	Kan ikke flytte filen til mappen
+error publishing comment	phpbrain	no	Feil ved publisering av kommentar
+error retrieving article	phpbrain	no	Feil ved henting av artikkel
+error trying to delete comment	phpbrain	no	Feil ved forsøk på å slette kommentar
+error trying to delete question	phpbrain	no	Feil ved forsøk på å slette spørsmåø
+error trying to edit article	phpbrain	no	Feil ved forsøk på å endre artikkel
+error trying to publish article	phpbrain	no	Feil ved forsøk på å publisere artikkel
+error: file doesn't exist in the database	phpbrain	no	Feil: filen eksisterer ikke i databasen
+excellent	phpbrain	no	Utmerket
+failure trying to delete the file	phpbrain	no	Feil ved forsøk på å slette filen
+file could be deleted from server but not from database	phpbrain	no	Filen kunne slettes fra tjener men ikke fra database
+file has been successfully uploaded	phpbrain	no	Opplasting av filen var vellykket
+file was already missing from server, and was deleted from the database	phpbrain	no	Filen manglet allerede på tjener og ble slettet fra database
+file was deleted successfully	phpbrain	no	Filen ble slettet
+file wasn't in server and it couldn't be deleted from the database	phpbrain	no	Filen var ikke på tjener og kunne ikke fjernes fra databasen
+find results	phpbrain	no	Søkeresultat
+global categories	phpbrain	no	Globale kategorier
+have to be approved first	common	no	Må først godkjennes
+history	phpbrain	no	Historikk
+if you can't find answers to your problem in the knowledge base, describe it below	phpbrain	no	Dersom du ikke finner svar på ditt problem i kunnskapsbasen, beskriv det nedenfor
+if you wish, you can comment this article here	phpbrain	no	Om ønskelig kan du kommentere artikkelen her
+in %1	phpbrain	no	i %1
+in the text	phpbrain	no	i teksten
+in the title	phpbrain	no	i tittelen
+in the topic	phpbrain	no	i emnet
+include subcategories	phpbrain	no	Inkluder underkategorier
+keywords	phpbrain	no	Nøkkelord
+knowledge base article #%1	phpbrain	no	Kunnskapsbase artikkel #%1
+knowledge base configuration	common	no	Kunnskapsbase konfigurasjon
+last modification by %1 on %2	phpbrain	no	Siste endret av %1 den %2
+latest	phpbrain	no	Siste
+latest comments	phpbrain	no	Siste kommentar
+leave empty to automatically generate an id	phpbrain	no	La denne stå blankt for å generere en ident
+link could not be added	phpbrain	no	Lenke kunne ikke legges til
+link deleted successfully	phpbrain	no	Lenke ble slettet
+link has been added	phpbrain	no	Lenke ble lagt til
+links	phpbrain	no	Lenker
+links & files	phpbrain	no	Lenker og filer
+mail article	phpbrain	no	Send artikkel via e-mail
+main view	phpbrain	no	Hovedoversikt
+maintain articles	phpbrain	no	Vedlikehold artikler
+maintain questions	phpbrain	no	Vedlikehold spørsmål
+maximum number of comments to show:	phpbrain	no	Maks. antall kommentarer for visning
+maximum number of most popular articles, latest articles and unanswered questions to show in the main view:	phpbrain	no	Maks. antall av de mest populære artikler, siste artikler og ubesvarte sprøsmål som skal vises på forsiden.
+modification date	phpbrain	no	Endringsdato
+most viewed	phpbrain	no	Mest vist
+new article	phpbrain	no	Ny artikkel
+nobody has rated this article so far	phpbrain	no	Ingen har vurdert artikkelen så langt
+nothing was uploaded!	phpbrain	no	Ingenting ble lastet opp
+number of results per page	phpbrain	no	Antall forekomster
+ocurrences	phpbrain	no	Forekomster
+or browse the categories	phpbrain	no	Eller vis kategoriene
+order results by	phpbrain	no	Sorter resultat etter
+outstanding published questions	phpbrain	no	Gjenstående publiserte spørsmål
+past %1 months	phpbrain	no	foregående %1 måneder
+past year	phpbrain	no	foregående år
+people have rated this article	phpbrain	no	antall som har rangert denne artikkelen
+phpbrain	common	no	Kunnskapsbase
+please rate the pertinence and quality of this article	phpbrain	no	Vennligst vurder relevans og kvalitet på denne artikkelen.
+please try again	phpbrain	no	Vennligst prøv igjen
+poor	phpbrain	no	Dårlig
+printer view	phpbrain	no	Forhåndsvis
+problem relating articles	phpbrain	no	Problem ved å relatere artikler
+publication date	phpbrain	no	Publiseringsdato
+publish	phpbrain	no	Publiser
+publish articles automatically?	common	no	Publisere artikler automatisk ?
+publish comments automatically?	common	no	Publisere kommentarer automatisk ?
+publish questions automatically?	common	no	Publisere spørsmål automatisk ?
+publish selected	phpbrain	no	Publiser valgte
+published	phpbrain	no	Publisert
+question deleted successfully	phpbrain	no	Spørsmål ble slettet
+questions deleted successfully	phpbrain	no	Spørsmålene ble slettet
+rating has been submited	phpbrain	no	Vurdering ble sendt
+rating invalid	phpbrain	no	Vurdering ikke gyldig
+recipient	phpbrain	no	Mottaker
+related articles in the knowledge base	phpbrain	no	Relaterte artikler i kunnskapsbasen
+relation with article was removed successfully	phpbrain	no	Relasjon med artikkel ble fjernet
+removed file %1	phpbrain	no	Fjernet fil %1
+removed link %1	phpbrain	no	Fjernet lenke %1
+reply-to	phpbrain	no	Svar til
+search in all the knowledge base	phpbrain	no	Søk i kunnskapsbasen
+search results	phpbrain	no	Søkeresultater
+see more questions	phpbrain	no	Se flere spørsmål
+see more questions...	phpbrain	no	Se flere spørsmål...
+select articles	phpbrain	no	Velg artikler
+show all comments	phpbrain	no	Vis alle kommentarer
+show articles belonging to:	phpbrain	no	Vis artikler som tilhører:
+show messages in category	phpbrain	no	Vis meldinger i kategori
+submit comment	phpbrain	no	Send kommentar
+submit comment and rating	phpbrain	no	Send kommentar og vurdering
+suggested category	phpbrain	no	Forslått kategori
+summary	phpbarin	no	Sammendrag
+that file already exists	phpbrain	no	File finnes allerede
+the article id must be a number	phpbrain	no	Artikkelident må være et nummer
+the article is empty	phpbrain	no	Artikkelen er tom
+the file was already missing in the server	phpbrain	no	Filen manglet allerede på tjener
+the following errors occurred	phpbrain	no	Følgende feil oppsto
+the mail server returned:	phpbrain	no	E-mail tjeneren returnerte:
+the present category and all subcategories under it	phpbrain	no	Gjeldende kategori og alle underkategorier av denne
+the present category only	phpbrain	no	Bare gjeldende kategori
+there are no articles	phpbrain	no	Det er ingen artikler
+there are no articles available	phpbrain	no	Det er ingen tilgjengelig artikler
+this article hasn't yet been published in the knowledge base	phpbrain	no	Denne artikkelen har ennå ikke blitt publisert i kunnskapsbasen.
+title	phpbrain	no	Tittel
+to create categories, press 'edit categories' in the preferences menu	phpbrain	no	For å opprette kategorier, trykk 'Endre Kategorier' i menyen for preferanser
+topic	phpbrain	no	Emne
+unable to add rating to database	phpbrain	no	Kan ikke legge vurdering inn i databasen
+unanswered questions	phpbrain	no	Ubesvarte spørsmål
+unpublish	phpbrain	no	Ikke publiser
+unpublished	phpbrain	no	Ikke publisert
+user preferences	phpbrain	no	Brukerpreferanser
+views	phpbrain	no	Visninger
+was it easy to find this article using the above search string?	phpbrain	no	Var det enkelt å finne denne artikkelen med ovenstående søkestreng?
+when navigating through categories, choose whether the list of articles shown corresponds only to the present category, or the present category and all categories under it.	phpbrain	no	Ved navigering gjennom kategorier, velg om artikkellisten skal vise bare fra kategorien eller også fra underliggende kategorier.
+with all the words	phpbrain	no	Med alle ordene
+with at least one of the words	phpbrain	no	Med minst et av ordene
+with the exact phrase	phpbrain	no	Med eksakt frase
+without the words	phpbrain	no	Uten ordene
+you are in %1	phpbrain	no	Du er i %1
+you have already qualified this article	phpbrain	no	Du har allerede vurdert denne artikkelen.
+you have not the proper permissions to do that	phpbrain	no	Du har ikke de rette tillatelser for å gjøre dette
+you must enter a title	phpbrain	no	Du må registrere en tittel
+you must enter a topic	phpbrain	no	Du må registrere et emne
+your message could not be sent!	phpbrain	no	Meldingen din kunne ikke sendes
+your question will be posted, but only will be published after approval by a user with publishing rights	phpbrain	no	Spørsmålet ditt ble postet, men vil først publiseres etter godkjenning av en bruker med publiseringsrettigheter.
+your question will be published immediately	phpbrain	no	Spørsmålet ditt blir publisert umiddelbart
