@@ -457,14 +457,16 @@
 					$values['tenant_id']		= $this->db->f('tenant_id');
 					$values['contact_phone']	= $this->db->f('contact_phone');
 					$values['status']			= $this->db->f('status');
+					$values['user_id']			= $this->db->f('user_id');
+					$values['entry_date']		= $this->db->f('entry_date');
 
-				if ( isset($values['attributes']) && is_array($values['attributes']) )
-				{
-					foreach ( $values['attributes'] as &$attr )
+					if ( isset($values['attributes']) && is_array($values['attributes']) )
 					{
-						$attr['value'] 	= $this->db->f($attr['column_name']);
+						foreach ( $values['attributes'] as &$attr )
+						{
+							$attr['value'] 	= $this->db->f($attr['column_name']);
+						}
 					}
-				}
 				}
 
 // ------------- get origin---------------
