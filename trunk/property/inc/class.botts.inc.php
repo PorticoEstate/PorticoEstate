@@ -545,8 +545,8 @@
 				$receipt = $this->mail_ticket($receipt['id'],$fields_updated,$receipt,$ticket['location_code']);
 			}
 
-			$soadmin_custom = CreateObject('property.soadmin_custom');
-			$custom_functions = $soadmin_custom->read(array('acl_location' => $this->acl_location,'allrows'=>True));
+			$custom = createObject('phpgwapi.custom_fields');
+			$custom_functions = $custom->read_custom_function(array('appname'=>'property','location' => $this->acl_location,'allrows'=>True));
 
 			if (isSet($custom_functions) AND is_array($custom_functions))
 			{
