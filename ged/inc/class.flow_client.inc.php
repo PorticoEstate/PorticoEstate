@@ -430,6 +430,8 @@
 	      				// print ( 'new version : '.$version_relation['version_id']."<br/>\n");
 	      				
 	      				// TODO : prepare data for future relation creation
+	      				// TOFIX : when obsolete or refused without current version
+	      				// TOFIX : there is a problem
 	      				$the_new_relations=$this->ged_dm->get_current_version($version_relation['element_id']);
 	      				
 	      				$new_relations[$nri]['linked_version_id']=$the_new_relations['version_id'];
@@ -439,7 +441,7 @@
 	      				$new_relations[$nri]['minor']=$the_new_relations['minor'];
 	      				$new_relations[$nri]['status']=$the_new_relations['status'];
 	      				
-	      				
+	      				// TODO : use real value
 	      				$new_relations[$nri]['relation_type']='dependancy';
 	      				
 	      				$nri++;      					
@@ -455,7 +457,7 @@
 	      				$new_relations[$nri]['status']=$version_relation['status'];
 	      				$new_relations[$nri]['reference']=$version_relation['reference'];
 	      				$new_relations[$nri]['name']=$version_relation['name'];
-	      				$new_relations[$nri]['relation_type']='dependancy';
+	      				$new_relations[$nri]['relation_type']=$version_relation['relation_type'];
 	      				
 	      				$nri++;     					
 	    				}     				
@@ -644,8 +646,25 @@
 			    		$this->t->set_var('relations_id_field', 'relations['.$nri.'][linked_version_id]');
 			    		$this->t->set_var('relations_id_value', $new_relation['linked_version_id']);
 			    		
-			    		$this->t->set_var('relations_type_field', 'relations['.$nri.'][relation_type]');
-			    		$this->t->set_var('relations_type_value', $new_relation['relation_type']);
+			    		$relations_types=Array('dependancy', 'delivery', 'review', 'notice');
+			    		
+							$select_relation_stypes_html="<select name=\"".'relations['.$nri.'][relation_type]'."\">\n";
+							foreach ($relations_types as $relation_type)
+							{
+								if ( $relation_type == $new_relation['relation_type'])
+								{
+									$selected_flag="selected";
+								}
+								else
+								{
+									$selected_flag="";
+								}
+					
+								$select_relation_stypes_html.="<option value=\"".$relation_type."\" ".$selected_flag." >".lang($relation_type)."</option>\n";
+							}
+							$select_relation_stypes_html.="</select>\n";
+					
+							$this->t->set_var('relations_type', $select_relation_stypes_html);
 			
 			    		$nri++;
 			    		$this->t->fp('relations_list_block_handle', 'relations_list_block', True);   

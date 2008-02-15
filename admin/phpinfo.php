@@ -29,6 +29,29 @@
 		);
 	}
 
-	include_once('../header.inc.php');
-	phpinfo();
-?>
+   	include_once('../header.inc.php');
+  
+  	if ( phpgw::get_var('noheader', 'bool', 'GET') )
+  	{
+  		$close = lang('close window');
+  
+  		echo <<<HTML
+  			<div style="text-align: center;">
+  				<a href="javascript:window.close();">{$close}</a>
+  			</div>
+  
+HTML;
+  	}
+  
+  	if ( function_exists('phpinfo') )
+  	{
+		phpinfo();
+  	}
+  	else
+  	{
+  		$error = lang('phpinfo is not available on this system!');
+  		echo <<<HTML
+  			<div class="error"><h1>$error</h1><div>
+  
+HTML;
+ 	}
