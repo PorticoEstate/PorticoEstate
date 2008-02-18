@@ -201,4 +201,4 @@
 	create_input_box('Height of textarea','textarearows','Height of textarea in forms');
 	
 	create_select_box('show horisontal menues','horisontal_menus',array('no' => 'No','yes' => 'Yes'),'Horisontal menues are shown in top of page');
-	create_select_box('Tabel export format','export_format',array('excel' => 'Excel','csv' => 'CSV'),'Horisontal menues are shown in top of page');
+	create_select_box('Tabel export format','export_format',array('excel' => 'Excel','csv' => 'CSV'),'Choose which format to export from the system for tables');
