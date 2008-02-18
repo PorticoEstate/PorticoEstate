@@ -1341,7 +1341,7 @@
 			$GLOBALS['phpgw_info']['flags']['nofooter'] = True;
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = False;
 
-			if(isset($GLOBALS['phpgw_info']['user']['preferences']['property']['export_format']) || $GLOBALS['phpgw_info']['user']['preferences']['property']['export_format'] == 'csv')
+			if(isset($GLOBALS['phpgw_info']['user']['preferences']['property']['export_format']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['export_format'] == 'csv')
 			{
 				$this->csv($list,$name,$descr,$input_type);
 				return;
@@ -1357,6 +1357,16 @@
 
 			$worksheet1 =& $workbook->add_worksheet('First One');
 
+			$m=0;
+			for ($k=0;$k<$count_uicols_name;$k++)
+			{
+				if($input_type[$k]!='hidden')
+				{
+					$worksheet1->write_string(0, $m, $this->utf2ascii($descr[$k]));
+					$m++;
+				}
+			}
+
 			$j=0;
 			if (isset($list) AND is_array($list))
 			{
@@ -1368,7 +1378,6 @@
 						if($input_type[$k]!='hidden')
 						{
 							$content[$j][$m]	= str_replace("\r\n"," ",$entry[$name[$k]]);
-							$worksheet1->write_string(0, $m, $this->utf2ascii($descr[$k]));
 							$m++;
 						}
 					}
