@@ -1341,10 +1341,14 @@
 			$GLOBALS['phpgw_info']['flags']['nofooter'] = True;
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = False;
 
-			if(isset($GLOBALS['phpgw_info']['user']['preferences']['property']['export_format']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['export_format'] == 'csv')
+			if(isset($GLOBALS['phpgw_info']['user']['preferences']['property']['export_format']))
 			{
-				$this->csv($list,$name,$descr,$input_type);
-				return;
+				switch ($GLOBALS['phpgw_info']['user']['preferences']['property']['export_format'])
+				{
+					case 'csv':
+						$this->csv_out($list,$name,$descr,$input_type);
+						return;
+				}				
 			}
 
  			$filename= $GLOBALS['phpgw_info']['user']['account_lid'].'.xls';
@@ -1397,7 +1401,7 @@
 			$workbook->close();
 		}
 
-		function csv($list,$name,$descr,$input_type='')
+		function csv_out($list,$name,$descr,$input_type='')
 		{
 			if ( !isset($GLOBALS['phpgw_info']['server']['temp_dir']) )
 			{
@@ -1418,7 +1422,7 @@
 
 			$count_uicols_name=count($name);
 
-			$file = $GLOBALS['phpgw_info']['server']['temp_dir'] . '/' .$filename . '.csv';
+			$file = $GLOBALS['phpgw_info']['server']['temp_dir'] . '/' .$filename;
 
  			if(!$fp = @fopen($file,'w'))
  			{
