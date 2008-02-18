@@ -1341,6 +1341,12 @@
 			$GLOBALS['phpgw_info']['flags']['nofooter'] = True;
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = False;
 
+			if(isset($GLOBALS['phpgw_info']['user']['preferences']['property']['export_format']) || $GLOBALS['phpgw_info']['user']['preferences']['property']['export_format'] == 'csv')
+			{
+				$this->csv($list,$name,$descr,$input_type);
+				return;
+			}
+
  			$filename= $GLOBALS['phpgw_info']['user']['account_lid'].'.xls';
 
 			$workbook	= CreateObject('phpgwapi.excel',"-");
@@ -1380,8 +1386,74 @@
 				}
 			}
 			$workbook->close();
-
 		}
+
+		function csv($list,$name,$descr,$input_type='')
+		{
+			if ( !isset($GLOBALS['phpgw_info']['server']['temp_dir']) )
+			{
+				if ( substr(PHP_OS, 3) == 'WIN' )
+				{
+					$GLOBALS['phpgw_info']['server']['temp_dir'] = 'c:/temp';
+				}
+				else
+				{
+					$GLOBALS['phpgw_info']['server']['temp_dir'] = '/tmp/';
+				}
+			}
+
+ 			$filename= str_replace(' ','_',$GLOBALS['phpgw_info']['user']['account_lid']).'.csv';
+
+			$browser = CreateObject('phpgwapi.browser');
+			$browser->content_header($filename,'application/csv');
+
+			$count_uicols_name=count($name);
+
+			$file = $GLOBALS['phpgw_info']['server']['temp_dir'] . '/' .$filename . '.csv';
+
+ 			if(!$fp = @fopen($file,'w'))
+ 			{
+  				die('Directory for temporary files is not writeable to the webserver - pleace notify the Administrator');				
+ 			}
+
+			for ($k=0;$k<$count_uicols_name;$k++)
+			{
+				if($input_type[$k]!='hidden')
+				{
+					$header[] = $this->utf2ascii($descr[$k]); 
+					$m++;
+				}
+			}
+			fputcsv($fp, $header);
+
+			$j=0;
+			if (isset($list) AND is_array($list))
+			{
+				$header = array();
+				foreach($list as $entry)
+				{
+					$m=0;
+					for ($k=0;$k<$count_uicols_name;$k++)
+					{
+						if($input_type[$k]!='hidden')
+						{
+							$content[$j][$m]	= str_replace("\r\n"," ",$entry[$name[$k]]);
+							$m++;
+						}
+					}
+					$j++;
+				}
+
+				foreach($content as $row)
+				{
+					fputcsv($fp, $row);
+				}
+			}
+			fclose($fp);
+			echo readfile($file);
+			unlink($file);
+		}
+
 
 		function increment_id($name)
 		{
