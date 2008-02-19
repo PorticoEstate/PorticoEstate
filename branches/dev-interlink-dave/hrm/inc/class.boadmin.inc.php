@@ -353,7 +353,7 @@
 					$count_right=count($right);
 					for ($i=0;$i<$count_right;$i++)
 					{
-						if($this->acl->check_brutto($this->location, $right[$i],$this->acl_app,$grantor,0,$check_account_type))
+						if($this->acl->check_rights($this->location, $right[$i],$this->acl_app,$grantor,0,$check_account_type))
 						{
 							if($this->acl->account_type == 'g')
 							{
@@ -365,7 +365,7 @@
 							}
 							$user_list[$j]['result'][$right[$i]] = 'checked';
 						}
-						if($this->acl->check_brutto($this->location, $right[$i],$this->acl_app,$grantor,1,$check_account_type))
+						if($this->acl->check_rights($this->location, $right[$i],$this->acl_app,$grantor,1,$check_account_type))
 						{
 							if($this->acl->account_type == 'g')
 							{

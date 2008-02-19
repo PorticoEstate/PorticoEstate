@@ -61,7 +61,7 @@
 		'preferences',
 		'admin',
 		'help',
-		'sidebox_menu'
+		'menu'	=> 'demo.menu.get_menu'
 	);
 
 	/* Dependencies for this app to work */

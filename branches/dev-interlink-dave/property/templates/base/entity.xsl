@@ -18,6 +18,7 @@
 	</xsl:template>
 	
 	<xsl:template match="list">
+		<xsl:apply-templates select="menu"/> 
 		<xsl:choose>
 			<xsl:when test="msgbox_data != ''">
 				<table align = "center">
@@ -215,6 +216,15 @@
 					<tr>
 						<td align="left" colspan="3">
 							<xsl:call-template name="msgbox"/>
+						</td>
+					</tr>
+				</xsl:when>
+			</xsl:choose>
+			<xsl:choose>
+				<xsl:when test="value_id!=''">
+					<tr>
+						<td class="th_text" valign ="top">
+							<a href="{link_pdf}" target="_blank">PDF</a>
 						</td>
 					</tr>
 				</xsl:when>
@@ -544,6 +554,11 @@
 	<xsl:template match="view">
 		<div align="left">		
 		<table cellpadding="2" cellspacing="2" width="80%" align="center">
+			<tr>
+				<td class="th_text" valign ="top">
+					<a href="{link_pdf}" target="_blank">PDF</a>
+				</td>
+			</tr>
 			<xsl:for-each select="value_origin" >
 			<xsl:variable name="link_origin_type"><xsl:value-of select="link"/></xsl:variable>
 			<tr>
@@ -689,6 +704,7 @@
 <!-- emtpy -->
 
 	<xsl:template match="empty">
+		<xsl:apply-templates select="menu"/> 
 		<table width="100%"  cellpadding="2" cellspacing="2" align="center">
 			<tr>
 				<td>

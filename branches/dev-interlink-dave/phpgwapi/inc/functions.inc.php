@@ -207,6 +207,7 @@
 			case E_ERROR:
 				$log_args['severity'] = 'F'; //all "ERRORS" should be fatal
 				$log->fatal($log_args);
+				die( '<pre>' . phpgw_parse_backtrace($bt) . '</pre>');
 				break;
 			case E_WARNING:
 			case E_USER_WARNING:
@@ -491,7 +492,7 @@
 	{
 		if (! $GLOBALS['phpgw']->session->verify())
 		{
-			if( isset($_GET['menuaction']) && $_GET['menuaction'])
+			if ( phpgw::get_var('menuaction', 'string', 'GET') )
 			{
 				unset($_GET['click_history']);
 				unset($_GET['sessionid']);
@@ -508,8 +509,7 @@
 
 		if(isset($GLOBALS['phpgw_info']['user']['preferences']['common']['lang']) && $GLOBALS['phpgw_info']['user']['preferences']['common']['lang'] !='en')
 		{
-			$GLOBALS['phpgw']->translation->userlang = $GLOBALS['phpgw_info']['user']['preferences']['common']['lang'];
-			$GLOBALS['phpgw']->translation->__construct($reset = True);
+			$GLOBALS['phpgw']->translation->set_userlang($GLOBALS['phpgw_info']['user']['preferences']['common']['lang']);
 		}
 
 		$redirect = unserialize(phpgw::get_var('redirect','raw', 'COOKIE'));

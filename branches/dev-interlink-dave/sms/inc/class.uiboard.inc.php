@@ -38,11 +38,9 @@
 			$this->account				= $GLOBALS['phpgw_info']['user']['account_id'];
 		//	$this->bo				= CreateObject('sms.boconfig',true);
 			$this->bocommon				= CreateObject('sms.bocommon');
-			$this->menu				= CreateObject('sms.menu');
 			$this->sms				= CreateObject('sms.sms');
 			$this->acl				= CreateObject('phpgwapi.acl');
 			$this->acl_location 			= '.board';
-			$this->menu->sub			=$this->acl_location;
 			$this->start				= $this->bo->start;
 			$this->query				= $this->bo->query;
 			$this->sort				= $this->bo->sort;
@@ -51,6 +49,7 @@
 			
 			$this->db 				= clone($GLOBALS['phpgw']->db);
 			$this->db2 				= clone($GLOBALS['phpgw']->db);
+			$GLOBALS['phpgw_info']['flags']['menu_selection'] = 'sms::board';
 		}
 
 		function index()
@@ -58,9 +57,8 @@
 
 			if(!$this->acl->check($this->acl_location, PHPGW_ACL_READ))
 			{
-				$links = $this->menu->links();
 				$GLOBALS['phpgw_info']['flags']['xslt_app'] = True;
-				$this->bocommon->no_access($links);
+				$this->bocommon->no_access();
 				return;
 			}
 			
@@ -129,9 +127,8 @@
 		
 			if(!$this->acl->check($this->acl_location, PHPGW_ACL_READ))
 			{
-				$links = $this->menu->links();
 				$GLOBALS['phpgw_info']['flags']['xslt_app'] = True;
-				$this->bocommon->no_access($links);
+				$this->bocommon->no_access();
 				return;
 			}
 			
@@ -190,9 +187,8 @@
 		
 			if(!$this->acl->check($this->acl_location, PHPGW_ACL_ADD))
 			{
-				$links = $this->menu->links();
 				$GLOBALS['phpgw_info']['flags']['xslt_app'] = True;
-				$this->bocommon->no_access($links);
+				$this->bocommon->no_access();
 				return;
 			}
 			
@@ -248,9 +244,8 @@
 		
 			if(!$this->acl->check($this->acl_location, PHPGW_ACL_ADD))
 			{
-				$links = $this->menu->links();
 				$GLOBALS['phpgw_info']['flags']['xslt_app'] = True;
-				$this->bocommon->no_access($links);
+				$this->bocommon->no_access();
 				return;
 			}
 
@@ -317,9 +312,8 @@
 	
 			if(!$this->acl->check($this->acl_location, PHPGW_ACL_EDIT))
 			{
-				$links = $this->menu->links();
 				$GLOBALS['phpgw_info']['flags']['xslt_app'] = True;
-				$this->bocommon->no_access($links);
+				$this->bocommon->no_access();
 				return;
 			}
 		
@@ -380,9 +374,8 @@
 		{
 			if(!$this->acl->check($this->acl_location, PHPGW_ACL_EDIT))
 			{
-				$links = $this->menu->links();
 				$GLOBALS['phpgw_info']['flags']['xslt_app'] = True;
-				$this->bocommon->no_access($links);
+				$this->bocommon->no_access();
 				return;
 			}
 
@@ -441,8 +434,7 @@
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = True;
 			if(!$this->acl->check($this->acl_location, PHPGW_ACL_DELETE))
 			{
-				$links = $this->menu->links();
-				$this->bocommon->no_access($links);
+				$this->bocommon->no_access();
 				return;
 			}
 

@@ -37,7 +37,6 @@
 			$this->account				= $GLOBALS['phpgw_info']['user']['account_id'];
 		//	$this->bo				= CreateObject('sms.boconfig',true);
 			$this->bocommon				= CreateObject('sms.bocommon');
-			$this->menu				= CreateObject('sms.menu');
 			$this->sms				= CreateObject('sms.sms');
 			$this->acl				= CreateObject('phpgwapi.acl');
 			$this->acl_location 			= '.custom';
@@ -50,6 +49,7 @@
 			
 			$this->db 				= clone($GLOBALS['phpgw']->db);
 			$this->db2 				= clone($GLOBALS['phpgw']->db);
+			$GLOBALS['phpgw_info']['flags']['menu_selection'] = 'sms::custom';
 		}
 
 		function index()
@@ -57,9 +57,8 @@
 
 			if(!$this->acl->check($this->acl_location, PHPGW_ACL_READ))
 			{
-				$links = $this->menu->links();
 				$GLOBALS['phpgw_info']['flags']['xslt_app'] = True;
-				$this->bocommon->no_access($links);
+				$this->bocommon->no_access();
 				return;
 			}
 			
@@ -124,9 +123,8 @@
 		{		
 			if(!$this->acl->check($this->acl_location, PHPGW_ACL_ADD))
 			{
-				$links = $this->menu->links();
 				$GLOBALS['phpgw_info']['flags']['xslt_app'] = True;
-				$this->bocommon->no_access($links);
+				$this->bocommon->no_access();
 				return;
 			}
 			
@@ -182,9 +180,8 @@
 		{
 			if(!$this->acl->check($this->acl_location, PHPGW_ACL_ADD))
 			{
-				$links = $this->menu->links();
 				$GLOBALS['phpgw_info']['flags']['xslt_app'] = True;
-				$this->bocommon->no_access($links);
+				$this->bocommon->no_access();
 				return;
 			}
 
@@ -241,9 +238,8 @@
 		{	
 			if(!$this->acl->check($this->acl_location, PHPGW_ACL_EDIT))
 			{
-				$links = $this->menu->links();
 				$GLOBALS['phpgw_info']['flags']['xslt_app'] = True;
-				$this->bocommon->no_access($links);
+				$this->bocommon->no_access();
 				return;
 			}
 		
@@ -311,9 +307,8 @@
 		{
 			if(!$this->acl->check($this->acl_location, PHPGW_ACL_EDIT))
 			{
-				$links = $this->menu->links();
 				$GLOBALS['phpgw_info']['flags']['xslt_app'] = True;
-				$this->bocommon->no_access($links);
+				$this->bocommon->no_access();
 				return;
 			}
 
@@ -362,8 +357,7 @@
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = True;
 			if(!$this->acl->check($this->acl_location, PHPGW_ACL_DELETE))
 			{
-				$links = $this->menu->links();
-				$this->bocommon->no_access($links);
+				$this->bocommon->no_access();
 				return;
 			}
 

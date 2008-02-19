@@ -32,11 +32,11 @@ class ged_dm
 	{
 		@session_register('ged_session');
 
-		// MEMO Le caract�re "administrateur est plut�t li� � l'activation du module Admin
+		// MEMO Le caractère "administrateur est plutôt lié à l'activation du module Admin
 		// MEMO=>existence de $GLOBALS['phpgw_info']['user']['apps']['admin']
 		$this->admin=isset($GLOBALS['phpgw_info']['user']['apps']['admin']);
 
-		// MEMO appartenance � des groupes
+		// MEMO appartenance à des groupes
 		// MEMO $GLOBALS['phpgw']->accounts->memberships[$i][account_id]
 		
 		if ( $this->admin == false )
@@ -100,25 +100,7 @@ class ged_dm
 					// (willneed a find_versions(element_id, $statuses))
 
 					$the_id=$this->db->f('element_id');		
-					if ( isset($this->acl[$the_id]))
-					{
-						$this->acl[$the_id]['read']=max($this->acl[$the_id]['read'], $this->db->f('aclread'));
-						$this->acl[$the_id]['write']=max($this->acl[$the_id]['write'], $this->db->f('aclwrite'));
-						$this->acl[$the_id]['delete']=max($this->acl[$the_id]['delete'], $this->db->f('acldelete'));
-						$this->acl[$the_id]['changeacl']=max($this->acl[$the_id]['changeacl'], $this->db->f('aclchangeacl'));
 
-						$the_temp_statuses=$this->db->f('aclstatuses');
-						if ( ! empty ( $the_temp_statuses ) && ! empty ( $this->acl[$the_id]['statuses'] ))
-						{
-							$this->acl[$the_id]['statuses']=array_merge($this->acl[$the_id]['statuses'], unserialize($the_statuses));
-						}
-						else
-						{
-							$this->acl[$the_id]['statuses']=array();
-						}
-					}
-					else
-					{
 					$this->acl[$the_id]['read']=$this->db->f('aclread');
 					$this->acl[$the_id]['write']=$this->db->f('aclwrite');
 					$this->acl[$the_id]['delete']=$this->db->f('acldelete');
@@ -133,9 +115,6 @@ class ged_dm
 					{
 						$this->acl[$the_id]['statuses']=array();
 					}					
-				}
-					//DEBUG
-					//_debug_array($this->acl[$the_id]);
 				}
 				$this->db->unlock();
 				
@@ -417,7 +396,7 @@ class ged_dm
 			
 			case 'folder':
 
-				// Effacement des sous r�pertoires
+				// Effacement des sous répertoires
 				$children=$this->list_elements($element_id);
 				
 				//_debug_array($children);
@@ -490,7 +469,7 @@ class ged_dm
 			else
 				return "PB download";
 	
-			// MEMO attention que if $new_version['status'] est current il faut rendre obsol�te la "vieille"
+ 		// MEMO attention que if $new_version['status'] est current il faut rendre obsolète la "vieille"
 	
 			if ($download_result=='OK')
 			{
@@ -594,7 +573,7 @@ class ged_dm
 			else
 				$download_result='';	
 	
-			// MEMO attention que if $new_version['status'] est current il faut rendre obsol�te la "vieille"
+ 		// MEMO attention que if $new_version['status'] est current il faut rendre obsolète la "vieille"
 	
 			if ($download_result=='OK')
 			{
@@ -1584,9 +1563,16 @@ class ged_dm
 	{
 		$result=false;
 		
+		// DEBUG
+		//print ( "element_id =".$element_id);
+		//_debug_array($this->acl[$element_id]);
+		
 		if ( (isset($this->acl[$element_id]) && $this->acl[$element_id]['read'] == 1) || $this->admin == true )
 		{
 			$result=true;
+
+			// DEBUG
+			//print ( "Can read !");
 		}
 			
 		return ($result );	
@@ -2121,7 +2107,7 @@ class ged_dm
 	}
 	
 	
-	// Positionnement des droits par d�faut
+	// Positionnement des droits par défaut
 	// Full droits au groupe Admin (huhu)
 	// Full droits au createur (presque huhu)
 	// Heritage des droits du parent
@@ -2300,6 +2286,7 @@ class ged_dm
 					$relations[$i]['reference']=$this->db->f('reference');
 					$relations[$i]['major']=$this->db->f('major');
 					$relations[$i]['minor']=$this->db->f('minor');
+					$relations[$i]['relation_type']=$this->db->f('relation_type');
 					$i ++;
 				}
 			}
@@ -2616,6 +2603,9 @@ class ged_dm
 		
 		$this->db->query($sql);
 
+		// DEBUG
+		//print ( $sql );
+
 		$i=0;
 		while ($this->db->next_record())
 		{
@@ -2625,21 +2615,23 @@ class ged_dm
 			
 			if ( $this->can_read($element_id) )
 			{
+				$go=false;
+
+				if ( $this->can_write($element_id) )
+				{
+					$go=true;
+				}
 				if (  ! isset($this->acl[$element_id]['statuses']) )
 				{
-					$go="ok";
+					$go=true;
 				}
 				elseif( empty($this->acl[$element_id]['statuses']) )
 				{
-					$go="ok";
+					$go=true;
 				}
 				elseif(in_array( $version_status,$this->acl[$element_id]['statuses']))
 				{
-					$go="ok";
-				}
-				else
-				{
-					$go=false;
+					$go=true;
 				}
 
 				if ( $go==true )
@@ -2697,18 +2689,41 @@ class ged_dm
 		{
 			$element_id=$this->db->f('element_id');
 			$version_id=$this->db->f('version_id');
+			$version_status=$this->db->f('status');
 			
+                        if ( $this->can_read($element_id) )
+                        {
+				$go=false;
 			if ( $this->can_write($element_id) )
 			{
+					$go=true;
+				}
+                                elseif (  ! isset($this->acl[$element_id]['statuses']) )
+                                {
+                                        $go=true;
+                                }
+                                elseif( empty($this->acl[$element_id]['statuses']) )
+                                {
+                                        $go=true;
+                                }
+                                elseif(in_array( $version_status,$this->acl[$element_id]['statuses']))
+                                {
+                                        $go=true;
+                                }
+
+                                if ( $go==true )
+                                {
 				$docs[$i]['element_id']=$element_id;
 				$docs[$i]['name']=$this->db->f('name');
-				$docs[$i]['status']=$this->db->f('status');
+                                        $docs[$i]['status']=$version_status;
 				$docs[$i]['reference']=$this->db->f('reference');
 				$docs[$i]['minor']=$this->db->f('minor');
 				$docs[$i]['major']=$this->db->f('major');
 				$docs[$i]['description']=$this->db->f('description');
 				$i ++;
 			}
+		}
+			
 		}
 			
 		$this->db->unlock();
@@ -2752,18 +2767,41 @@ class ged_dm
 		{
 			$element_id=$this->db->f('element_id');
 			$version_id=$this->db->f('version_id');
+			$version_status=$this->db->f('status');
 			
+                        if ( $this->can_read($element_id) )
+                        {
+                                $go=false;
 			if ( $this->can_write($element_id) )
 			{
+                                        $go=true;
+                                }
+                                elseif (  ! isset($this->acl[$element_id]['statuses']) )
+                                {
+                                        $go=true;
+                                }
+                                elseif( empty($this->acl[$element_id]['statuses']) )
+                                {
+                                        $go=true;
+                                }
+                                elseif(in_array( $version_status,$this->acl[$element_id]['statuses']))
+                                {
+                                        $go=true;
+                                }
+
+                                if ( $go==true )
+                                {
 				$docs[$i]['element_id']=$element_id;
 				$docs[$i]['name']=$this->db->f('name');
-				$docs[$i]['status']=$this->db->f('status');
+                                        $docs[$i]['status']=$version_status;
 				$docs[$i]['reference']=$this->db->f('reference');
 				$docs[$i]['minor']=$this->db->f('minor');
 				$docs[$i]['major']=$this->db->f('major');
 				$docs[$i]['description']=$this->db->f('description');
 				$i ++;
 			}
+		}
+			
 		}
 			
 		$this->db->unlock();
@@ -2810,18 +2848,41 @@ class ged_dm
 		{
 			$element_id=$this->db->f('element_id');
 			$version_id=$this->db->f('version_id');
+			$version_status=$this->db->f('status');
 			
+                        if ( $this->can_read($element_id) )
+                        {
+                                $go=false;
 			if ( $this->can_write($element_id) )
 			{
+                                        $go=true;
+                                }
+                                elseif (  ! isset($this->acl[$element_id]['statuses']) )
+                                {
+                                        $go=true;
+                                }
+                                elseif( empty($this->acl[$element_id]['statuses']) )
+                                {
+                                        $go=true;
+                                }
+                                elseif(in_array( $version_status,$this->acl[$element_id]['statuses']))
+                                {
+                                        $go=true;
+                                }
+
+                                if ( $go==true )
+                                {
 				$docs[$i]['element_id']=$element_id;
 				$docs[$i]['name']=$this->db->f('name');
-				$docs[$i]['status']=$this->db->f('status');
+                                        $docs[$i]['status']=$version_status;
 				$docs[$i]['reference']=$this->db->f('reference');
 				$docs[$i]['minor']=$this->db->f('minor');
 				$docs[$i]['major']=$this->db->f('major');
 				$docs[$i]['description']=$this->db->f('description');
 				$i ++;
 			}
+		}
+			
 		}
 			
 		$this->db->unlock();
@@ -2894,12 +2955,12 @@ class ged_dm
 		$sql="SELECT ged_elements.*, ged_current_version.*, ged_elements.description as descriptione, ged_current_version.description as descriptionv ";
 		$sql.="FROM ( ged_elements ";
 		$sql.="INNER JOIN ged_versions as ged_current_version ";
-		$sql.="ON ged_elements.element_id=ged_current_version.element_id ";
-		$sql.="AND ( ged_current_version.status='current' OR ged_current_version.status='working' OR ged_current_version.status='pending_for_technical_review' ";
-		$sql.="OR ged_current_version.status='pending_for_quality_review' OR ged_current_version.status='ready_for_delivery' OR ged_current_version.status='pending_for_acceptation' )) ";
+		$sql.="ON ged_elements.element_id=ged_current_version.element_id ) ";
 		$sql.="WHERE ged_elements.name like '%".$query."%' OR ged_elements.description like '%".$query."%' OR ged_elements.reference like '%".$query."%' ";
 		$sql.="OR  ged_current_version.description like '%".$query."%' ";
 		
+		// DEBUG
+		//print ( $sql);
 		$this->db->query($sql);
 
 		$i=0;
@@ -2909,7 +2970,7 @@ class ged_dm
 			$version_id=$this->db->f('version_id');
 			$version_status=$this->db->f('status');
 			
-			if ( $this->can_write($element_id) || ( $version_status == "pending_for_acceptation" || $version_status == "current" ) && $this->can_read($element_id) )
+			if ( $this->can_write($element_id) || $this->can_read($element_id) && ( (! isset($this->acl[$element_id]['statuses'])) || empty( $this->acl[$element_id]['statuses'] ) || ( is_array($this->acl[$element_id]['statuses'] ) && in_array($version_status, $this->acl[$element_id]['statuses'])) ))
 			{
 				$docs[$i]['element_id']=$element_id;
 				$docs[$i]['version_id']=$this->db->f('version_id');

@@ -4,12 +4,29 @@
 	* @author Joseph Engo <jengo@phpgroupware.org>
 	* @author Bettina Gille <ceb@phpgroupware.org>
 	* @author Philipp Kamps <pkamps@probusiness.de>
-	* @copyright Copyright (C) 2000-2004 Free Software Foundation, Inc. http://www.fsf.org/
-	* @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License
+	* @author Dave Hall <skwashd@phpgroupware.org>
+	* @copyright Copyright (C) 2000-2008 Free Software Foundation, Inc. http://www.fsf.org/
+	* @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License v3 or later
 	* @package phpgwapi
 	* @subpackage accounts
 	* @version $Id$
 	*/
+
+	/*
+	   This program is free software: you can redistribute it and/or modify
+	   it under the terms of the GNU Lesser General Public License as published by
+	   the Free Software Foundation, either version 3 of the License, or
+	   (at your option) any later version.
+
+	   This program is distributed in the hope that it will be useful,
+	   but WITHOUT ANY WARRANTY; without even the implied warranty of
+	   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	   GNU General Public License for more details.
+
+	   You should have received a copy of the GNU Lesser General Public License
+	   along with this program.  If not, see <http://www.gnu.org/licenses/>.
+	 */
+
 	if (empty($GLOBALS['phpgw_info']['server']['account_repository']))
 	{
 		if (!empty($GLOBALS['phpgw_info']['server']['auth_type']))
@@ -373,76 +390,110 @@
 		function update_data($data)
 		{
 			reset($data);
-			$this->data = Array();
 			$this->data = $data;
 
 			reset($this->data);
 			return $this->data;
 		}
 
-		function membership($accountid = '')
+		/**
+		* Get a list of groups the user is a member of
+		*
+		* @param int $account_id the user account to lookup
+		* @return array the groups the user is a member of 
+		* @internal return structure array(array('account_id' => id, 'account_name' => group name))
+		*/
+		function membership($account_id = 0)
 		{
-			$account_id = get_account_id($accountid);
+			$account_id = get_account_id($account_id);
 
-			$security_equals = Array();
-			$security_equals = $GLOBALS['phpgw']->acl->get_location_list_for_id('phpgw_group', 1, $account_id);
-
-			if ( !$security_equals )
+			if ( isset($this->memberships[$account_id]) )
 			{
-				return false;
+				return $this->memberships[$account_id];
 			}
 
-			$this->memberships = array();
+			$this->memberships[$account_id] = array();
 
-			for ($idx=0; $idx<count($security_equals); $idx++)
+			$sql = 'SELECT phpgw_accounts.account_id, phpgw_accounts.account_firstname FROM phpgw_accounts, phpgw_group_map'
+				. ' WHERE phpgw_accounts.account_id = phpgw_group_map.group_id'
+					. " AND phpgw_group_map.account_id = {$account_id}";
+
+			$this->db->query($sql, __LINE__, __FILE__);
+
+			while ( $this->db->next_record() )
 			{
-				$groups = intval($security_equals[$idx]);
-				$this->memberships[] = Array('account_id' => $groups, 'account_name' => $this->id2name($groups));
+				$this->memberships[$account_id][] = array
+				(
+					'account_id'	=> $this->db->f('account_id'),
+					'account_name'	=> lang('%1 group', $this->db->f('account_firstname'))
+				);
 			}
-
-			return $this->memberships;
-		}
-
-		function member($accountid = '')
-		{
-			$account_id = get_account_id($accountid);
-
-			$security_equals = Array();
-			$acl = createObject('phpgwapi.acl');
-			$security_equals = $acl->get_ids_for_location($account_id, 1, 'phpgw_group');
-			unset($acl);
-
-			if ($security_equals == False)
-			{
-				return False;
-			}
-
-			for ($idx=0; $idx<count($security_equals); $idx++)
-			{
-				$name = $this->id2name(intval($security_equals[$idx]));
-				$this->members[] = Array('account_id' => intval($security_equals[$idx]), 'account_name' => $name);
-			}
-
-			return $this->members;
+			return $this->memberships[$account_id];
 		}
 
 		/**
-		* Get a list of members of the current group
+		* Get a list of members of the group
+		*
+		* @param int $group_id the group to check
+		* @return array list of members
+		*/
+		function member($group_id = 0)
+		{
+			$group_id = get_account_id($group_id);
+
+			if ( isset($this->members[$group_id]) )
+			{
+				return $this->members[$group_id];
+			}
+
+			$this->members[$group_id] = array();
+
+			$sql = 'SELECT phpgw_accounts.account_id, phpgw_accounts.account_lid, phpgw_accounts.account_firstname, phpgw_accounts.account_lastname'
+				. ' FROM phpgw_accounts, phpgw_group_map'
+				. ' WHERE phpgw_accounts.account_id = phpgw_group_map.group_id'
+					. " AND phpgw_group_map.group_id = {$group_id}";
+
+			$this->db->query($sql, __LINE__, __FILE__);
+
+			while ( $this->db->next_record() )
+			{
+				$this->members[$account_id][] = array
+				(
+					'account_id'	=> $this->db->f('account_id'),
+					'account_name'	=> $GLOBALS['phpgw']->common->display_fullname($this->db-f('account_lid'), $this->db->f('account_firstname'), $this->db->f('account_lastname'))
+				);
+			}
+			return $this->members[$group_id];
+		}
+
+		/**
+		* Get a list of member account ids for a group
 		*
 		* @return arrray list of members of the current group
 		*/
-		function get_members()
+		function get_members($group_id = null)
 		{
+			if ( is_null($group_id) )
+			{
+				$group_id = $this->account_id;
+			}
+			$group_id = get_account_id($group_id);
+
+
+			$sql = 'SELECT phpgw_accounts.account_id'
+				. ' FROM phpgw_accounts, phpgw_group_map'
+				. ' WHERE phpgw_accounts.account_id = phpgw_group_map.group_id'
+					. " AND phpgw_group_map.group_id = {$this->account_id}";
+
+			$this->db->query($sql, __LINE__, __FILE__);
+
 			$members = array();
-			$sql = "SELECT acl_account FROM phpgw_acl WHERE acl_appname = 'phpgw_group' and acl_location =" . (int) $this->account_id;
-			$this->db->query($sql,__LINE__,__FILE__);
 			while ($this->db->next_record())
 			{
-				$members[] =  $this->db->f('acl_account');
+				$members[] =  $this->db->f('account_id');
 			}
 			return $members;
 		}
-
 
 		/**
 		* Find the next available account_id
@@ -501,50 +552,41 @@
 		/**
 		* Get an array of users and groups seperated, including all members of groups, which i.e. have acl access for an application
 		*
-		* @param array|integer $app_users Array with user/group names
+		* @param array $app_users Array with user/group names
 		* @return array 'users' contains the user names for the given group or application
 		*/
-		function return_members($app_users = 0)
+		function return_members($app_users = array() )
 		{
-			$members = array();
-			for ($i = 0;$i<count($app_users);$i++)
+			$users = array();
+			$groups = array();
+
+			foreach ( $app_users as $app_user )
 			{
-				$type = $GLOBALS['phpgw']->accounts->get_type($app_users[$i]);
+				$type = $GLOBALS['phpgw']->accounts->get_type($app_user);
 				if($type == 'g')
 				{
-					$add_users['groups'][] = $app_users[$i];
-					$memb = $GLOBALS['phpgw']->acl->get_ids_for_location($app_users[$i],1,'phpgw_group');
+					$groups[$app_user] = true;
 
+					$members = $this->get_members($app_user);
 					if(is_array($memb))
 					{
-						$members[] = $memb;
+						foreach ( $members as $member )
+						{
+							$users[$member] = true;
+						}
 					}
 				}
 				else
 				{
-					$add_users['users'][] = $app_users[$i];
+					$users[$app_user] = true;
 				}
 			}
 
-			if ( !isset($addusers['users']) || !is_array($add_users['users']))
-			{
-				$add_users['users'] = array();
-			}
-
-			$i = count($add_users['users']);
-
-			while(is_array($members) && (list(,$mem) = each($members)))
-			{
-				for($j=0;$j<count($mem);$j++)
-				{
-					if(!in_array($mem[$j],$add_users['users']))
-					{
-						$add_users['users'][$i] = $mem[$j];
-						$i++;
-					}
-				}
-			}
-			return $add_users;
+			return array
+			(
+				'groups'	=> array_keys($groups),
+				'users'		=> array_keys($users)
+			);
 		}
 
 		function accounts_popup($app)
@@ -706,7 +748,7 @@
 				if (isset($group_id) && !empty($group_id))
 				{
 					//echo 'GROUP_ID: ' . $group_id;
-					$users = $GLOBALS['phpgw']->acl->get_ids_for_location($group_id,1,'phpgw_group');
+					$users = $this->get_members($group_id);
 
 					for ($i=0;$i<count($users); ++$i)
 					{
@@ -971,10 +1013,9 @@
 			);
 
 			$this->db->transaction_begin();
-			$this->create($acct_info, $default_prefs);
-			$accountid = $this->name2id($accountname); //slow - a create should set the new accountid
+			$accountid = $this->create($acct_info, $default_prefs);
 
-			// this should be done via the acl class not direct db calls
+			// FIXME this needs to be done via the acl class not direct db calls
 			if ($default_acls == false)
 			{
 				$default_group_lid = intval($GLOBALS['phpgw_info']['server']['default_group_lid']);
@@ -982,6 +1023,7 @@
 				$defaultgroupid = $default_group_id ? $default_group_id : $this->name2id('Default');
 				if ($defaultgroupid)
 				{
+					// FIXME need a method to handle this now
 					$this->db->query('INSERT INTO phpgw_acl (acl_appname, acl_location, acl_account, acl_rights)'
 						. "VALUES('phpgw_group', " . $defaultgroupid . ', ' 
 						.	intval($accountid) . ', 1'
@@ -1019,4 +1061,3 @@
 		}
 		
 	}
-?>

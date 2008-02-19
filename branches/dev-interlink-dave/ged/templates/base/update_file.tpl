@@ -125,7 +125,7 @@
   <input name="{relations_id_field}" type="hidden" value="{relations_id_value}"/>
   </td>
   <td>
-  <input name="{relations_type_field}" type="text" value="{relations_type_value}"/>
+  {relations_type}
   </td>
   <td>
   <input type="image" src="{remove-image}" name="do_remove_relation" value="{relations_id_value}">

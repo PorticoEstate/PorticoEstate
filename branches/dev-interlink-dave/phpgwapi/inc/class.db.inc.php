@@ -145,7 +145,7 @@
 			}
 			$this->adodb = newADOConnection($this->Type);
 			$this->connect();
-			 // would be good if one day we just use ADODB_FETCH_ASSOC
+			// FIXME would we should be able to just use ADODB_FETCH_ASSOC
 			$this->adodb->SetFetchMode(ADODB_FETCH_BOTH);
 		}
 
@@ -303,12 +303,15 @@
 			{
 				if($file)
 				{
-					trigger_error("$sql\n in File: $file\n on Line: $line\n". $this->adodb->ErrorMsg(), E_USER_ERROR);
+					//trigger_error("$sql\n in File: $file\n on Line: $line\n". $this->adodb->ErrorMsg(), E_USER_ERROR);
+					trigger_error('Error: ' . $this->adodb->ErrorMsg() . "<br>SQL: $sql\n in File: $file\n on Line: $line\n", E_USER_ERROR);
 				}
 				else
 				{
 					trigger_error("$sql\n". $this->adodb->ErrorMsg(), E_USER_ERROR);
 				}
+				$this->transaction_abort();
+				exit;
 			}
 			$this->delayPointer = true;
 			return true;
@@ -339,13 +342,20 @@
 			$this->resultSet = $this->adodb->SelectLimit($Query_String, $num_rows, $offset);
 			if(!$this->resultSet && $this->Halt_On_Error == 'yes')
 			{
-				trigger_error("$Query_String\n" . $this->adodb->ErrorMsg(), E_USER_ERROR);
+				if($file)
+				{
+					//trigger_error("$sql\n in File: $file\n on Line: $line\n". $this->adodb->ErrorMsg(), E_USER_ERROR);
+					trigger_error('Error: ' . $this->adodb->ErrorMsg() . "<br>SQL: $sql\n in File: $file\n on Line: $line\n", E_USER_ERROR);
+				}
+				else
+				{
+					trigger_error("$sql\n". $this->adodb->ErrorMsg(), E_USER_ERROR);
+				}
+				$this->transaction_abort();
+				exit;
 			}
-			else
-			{
-				$this->delayPointer = true;
-				return true;
-			}
+			$this->delayPointer = true;
+			return true;
 		}
 		
 		/**

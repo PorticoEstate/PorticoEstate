@@ -42,6 +42,7 @@
 			}		
 		</script>
 
+		<xsl:apply-templates select="menu"/>
 		<xsl:variable name="form_action"><xsl:value-of select="form_action"/></xsl:variable>
 		<form method="post" name="form" action="{$form_action}">
 

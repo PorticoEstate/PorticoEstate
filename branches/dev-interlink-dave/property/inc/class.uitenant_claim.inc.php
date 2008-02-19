@@ -256,6 +256,7 @@
 
 			$data = array
 			(
+				'menu'							=> $this->bocommon->get_menu(),
 				'msgbox_data'				=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
  				'allow_allrows'				=> true,
 				'allrows'				=> $this->allrows,

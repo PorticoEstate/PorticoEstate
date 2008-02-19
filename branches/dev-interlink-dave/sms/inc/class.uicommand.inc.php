@@ -21,25 +21,21 @@
 		var $public_functions = array(
 			'index'			=> True,
 			'log'			=> True,
+			'redirect'		=> True,
 			'edit'			=> True,
-			'edit_command'		=> True,
+			'edit_command'	=> True,
 			'delete'		=> True,
 			);
 
-
 		function sms_uicommand()
 		{
-
-		//	$this->currentapp			= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->nextmatchs			= CreateObject('phpgwapi.nextmatchs');
 			$this->account				= $GLOBALS['phpgw_info']['user']['account_id'];
 			$this->bo				= CreateObject('sms.bocommand');
 			$this->bocommon				= CreateObject('sms.bocommon');
-			$this->menu				= CreateObject('sms.menu');
 			$this->sms				= CreateObject('sms.sms');
 			$this->acl				= CreateObject('phpgwapi.acl');
 			$this->acl_location 			= '.command';
-			$this->menu->sub			=$this->acl_location;
 			$this->cat_id				= $this->bo->cat_id;
 			$this->start				= $this->bo->start;
 			$this->query				= $this->bo->query;
@@ -49,6 +45,7 @@
 			
 			$this->db 				= clone($GLOBALS['phpgw']->db);
 			$this->db2 				= clone($GLOBALS['phpgw']->db);
+			$GLOBALS['phpgw_info']['flags']['menu_selection'] = 'sms::command';
 		}
 
 		function save_sessiondata()
@@ -66,16 +63,15 @@
 
 		function index()
 		{
-			$links = $this->menu->links($this->acl_location . '.list');
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = True;
 
 			if(!$this->acl->check($this->acl_location, PHPGW_ACL_READ))
 			{
-				$this->bocommon->no_access($links);
+				$this->bocommon->no_access();
 				return;
 			}
 
-			$GLOBALS['phpgw']->xslttpl->add_file(array('command','nextmatchs','menu',
+			$GLOBALS['phpgw']->xslttpl->add_file(array('command','nextmatchs',
 										'search_field'));
 
 			$receipt = $GLOBALS['phpgw']->session->appsession('session_data','sms_command_receipt');
@@ -171,7 +167,7 @@
 			$data = array
 			(
 				'msgbox_data'					=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
-				'links'						=> $links,
+				'menu'							=> execMethod('sms.menu.links'),
 				'allow_allrows'					=> True,
 				'allrows'					=> $this->allrows,
 				'start_record'					=> $this->start,
@@ -201,13 +197,12 @@
 		{
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = True;
 
-			$links = $this->menu->links();
 			$command_id	= phpgw::get_var('command_id', 'int');
 			if($command_id)
 			{
 				if(!$this->acl->check($this->acl_location, PHPGW_ACL_EDIT))
 				{
-					$this->bocommon->no_access($links);
+					$this->bocommon->no_access();
 					return;
 				}
 			}
@@ -215,7 +210,7 @@
 			{
 				if(!$this->acl->check($this->acl_location, PHPGW_ACL_ADD))
 				{
-					$this->bocommon->no_access($links);
+					$this->bocommon->no_access();
 					return;
 				}
 			}
@@ -346,18 +341,37 @@
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('edit_command' => $data));
 		}
 
+		function redirect()
+		{
+			$code		= phpgw::get_var('code');
+			$param		= urldecode(phpgw::get_var('param'));
+
+			if(is_file(PHPGW_SERVER_ROOT . '/sms/bin/config_' . strtoupper(basename($code)) . '_log'))
+			{
+				include(PHPGW_SERVER_ROOT . '/sms/bin/config_' . strtoupper(basename($code)) . '_log');
+
+				$GLOBALS['phpgw']->redirect_link('/index.php',$link_data);
+			}
+			else
+			{
+				$GLOBALS['phpgw_info']['flags']['xslt_app'] = True;
+				$GLOBALS['phpgw_info']['flags']['menu_selection'] .= '::log';
+				$this->bocommon->no_access(lang('target not configured'));
+			}
+
+		}
 		function log()
 		{
-			$links = $this->menu->links($this->acl_location . '.log');
+			$GLOBALS['phpgw_info']['flags']['menu_selection'] .= '::log';
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = True;
 
 			if(!$this->acl->check($this->acl_location, PHPGW_ACL_READ))
 			{
-				$this->bocommon->no_access($links);
+				$this->bocommon->no_access();
 				return;
 			}
 
-			$GLOBALS['phpgw']->xslttpl->add_file(array('command','nextmatchs','menu',
+			$GLOBALS['phpgw']->xslttpl->add_file(array('command','nextmatchs',
 										'search_field'));
 
 			$command_info = $this->bo->read_log();
@@ -379,6 +393,7 @@
 					'success'		=> $entry['success'],
 					'datetime'		=> $entry['datetime'],
 					'code'			=> $entry['code'],
+					'link_redirect'	=> $entry['success'] == 1 ? $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'sms.uicommand.redirect','code' => $entry['code'], 'param'=> urlencode($entry['param']))) : '',
 					'param'			=> $entry['param'],
 					'link_delete'		=> $link_delete,
 					'text_delete'		=> $text_delete,
@@ -457,7 +472,7 @@
 			$data = array
 			(
 				'msgbox_data'					=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
-				'links'						=> $links,
+				'menu'							=> execMethod('sms.menu.links'),
 				'allow_allrows'					=> True,
 				'allrows'					=> $this->allrows,
 				'start_record'					=> $this->start,
@@ -493,8 +508,7 @@
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = True;
 			if(!$this->acl->check($this->acl_location, PHPGW_ACL_DELETE))
 			{
-				$links = $this->menu->links();
-				$this->bocommon->no_access($links);
+				$this->bocommon->no_access();
 				return;
 			}
 

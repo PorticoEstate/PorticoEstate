@@ -14,7 +14,11 @@
 	</xsl:template>
 	
 	<xsl:template match="list">
-		<xsl:call-template name="menu"/> 
+		<xsl:choose>
+			<xsl:when test="menu != ''">
+				<xsl:apply-templates select="menu"/> 
+			</xsl:when>
+		</xsl:choose>
 		<table width="100%" cellpadding="2" cellspacing="2" align="center">
 			<xsl:choose>
 				<xsl:when test="msgbox_data != ''">
@@ -285,7 +289,11 @@
 
 
 	<xsl:template match="log">
-		<xsl:call-template name="menu"/> 
+		<xsl:choose>
+			<xsl:when test="menu != ''">
+				<xsl:apply-templates select="menu"/> 
+			</xsl:when>
+		</xsl:choose>
 		<table width="100%" cellpadding="2" cellspacing="2" align="center">
 			<tr>
 					<td>
@@ -364,7 +372,14 @@
 					<xsl:value-of select="sender"/>
 				</td>
 				<td align="left">
-					<xsl:value-of select="param"/>
+					<xsl:choose>
+					<xsl:when test="link_redirect != ''">
+						<a href="{link_redirect}" ><xsl:value-of select="param"/></a>
+					</xsl:when>
+					<xsl:otherwise>
+						<xsl:value-of select="param"/>
+					</xsl:otherwise>
+				</xsl:choose>
 				</td>
 				<td align="left">
 					<xsl:value-of select="datetime"/>

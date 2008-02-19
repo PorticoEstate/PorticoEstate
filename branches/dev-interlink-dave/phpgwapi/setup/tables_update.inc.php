@@ -1656,7 +1656,7 @@
 
 		$GLOBALS['phpgw_setup']->oProc->DropTable('phpgw_cust_fields');
 		$GLOBALS['phpgw_setup']->oProc->DropTable('phpgw_cust_field_types');
-		$GLOBALS['phpgw_setup']->oProc->DropTable('phpgw_field_values');
+		$GLOBALS['phpgw_setup']->oProc->DropTable('phpgw_cust_field_values');
 
 		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit();
 
@@ -1730,13 +1730,10 @@
 		}
 	}
 
-	/*
 	$test[] = '0.9.17.513';
 	function phpgwapi_upgrade0_9_17_513()
 	{
 		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
-
-// -- fix addressbook : insertion of organisation
 
 		$GLOBALS['phpgw_setup']->oProc->AlterColumn('phpgw_contact_addr','addr_type_id',array(
 			'type' => 'int',
@@ -1750,33 +1747,67 @@
 			'nullable' => True,
 			'default' => 'Y'
 		));
-//--
 
-//-- setting default log_level to N (Notice)
-
-		$GLOBALS['phpgw_setup']->oProc->query("SELECT config_value FROM phpgw_config WHERE config_app = 'phpgwapi' AND config_name = 'log_levels' "); 
-		if ( $GLOBALS['phpgw_setup']->oProc->next_record() )
+		if ( $GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit() )
 		{
-			$log_levels			=> unserialize($GLOBALS['phpgw_setup']->oProc->f('config_value'));
-			$log_levels['global_level'] = 'N';
-			$GLOBALS['phpgw_setup']->oProc->query("UPDATE phpgw_config SET config_value ='" . serialize($log_levels) . "' WHERE config_app = 'phpgwapi' AND config_name = 'log_levels' ");			
+			$GLOBALS['setup_info']['phpgwapi']['currentver'] = '0.9.17.514';
+			return $GLOBALS['setup_info']['phpgwapi']['currentver'];
 		}
-		else
-		{
-			$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_config (config_app, config_name, config_value) VALUES ('phpgwapi','log_levels', '" . serialize(array( 'global_level' => 'N', 'module' => array(), 'user' => array())) ."')");
-		}
-//--
+	}
 
+	$test[] = '0.9.17.514';
+	/**
+	* Implement new interlink and ACL systems - quite a few related changes here too
+	*
+	* @return string the new version number
+	*/
+	function phpgwapi_upgrade0_9_17_514()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
 
-//-- phpgw_acl_location : new table due to change in pk
-
-		$GLOBALS['phpgw_setup']->oProc->RenameTable('phpgw_acl_location','phpgw_acl_location_old');
-
-		$GLOBALS['phpgw_setup']->oProc->CreateTable('phpgw_acl_location',array
+		// New table for handling groups - only used for SQL accounts - LDAP will store it in LDAP - memberUID
+		$GLOBALS['phpgw_setup']->oProc->CreateTable('phpgw_group_map', array
 		(
 			'fd' => array
 			(
-				'id' => array('type' => 'auto','precision' => '4','nullable' => False),
+				'group_id'		=> array('type' => 'int', 'precision' => 4, 'nullable' => false),
+				'account_id'	=> array('type' => 'int', 'precision' => 4, 'nullable' => false),
+				'arights'		=> array('type' => 'int', 'precision' => 4, 'nullable' => false, 'default' => 1)
+			),
+			'pk' => array('group_id', 'account_id'),
+			'fk' => array(),
+			'ix' => array(),
+			'uc' => array()
+		));
+
+		$rows = array();
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query('SELECT acl_location, acl_account, acl_rights'
+			. " FROM phpgw_acl WHERE acl_appname = 'phpgw_group'", __LINE__, __FILE__);
+		while ( $GLOBALS['phpgw_setup']->oProc->m_odb->next_record() )
+		{
+			$rows[] = array
+			(
+				'group'	=> $GLOBALS['phpgw_setup']->oProc->m_odb->f('acl_location'),
+				'user'	=> $GLOBALS['phpgw_setup']->oProc->m_odb->f('acl_account'),
+				'rights'=> $GLOBALS['phpgw_setup']->oProc->m_odb->f('acl_rights')
+			);
+		}
+
+		foreach ( $rows as $row )
+		{
+			$GLOBALS['phpgw_setup']->oProc->m_odb->query("INSERT INTO phpgw_group_map VALUES({$row['group']}, {$row['user']}, {$row['rights']})", __LINE__, __FILE__);
+		}
+		unset($rows);
+
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("DELETE FROM phpgw_acl WHERE acl_appname = 'phpgw_group'", __LINE__, __FILE__);
+
+//-- phpgw_locations : new table due to change in pk - renamed as it isn't just ACLs
+
+		$GLOBALS['phpgw_setup']->oProc->CreateTable('phpgw_locations', array
+		(
+			'fd' => array
+			(
+				'location_id' => array('type' => 'auto','precision' => '4','nullable' => False),
 				'app_id' => array('type' => 'int','precision' => '4','nullable' => False),
 				'name' => array('type' => 'varchar','precision' => '50','nullable' => False),
 				'descr' => array('type' => 'varchar','precision' => '100','nullable' => False),
@@ -1784,16 +1815,19 @@
 				'allow_c_attrib' => array('type' => 'int','precision' => '2','nullable' => True),
 				'c_attrib_table' => array('type' => 'varchar','precision' => '25','nullable' => True)
 			),
-			'pk' => array('id'),
+			'pk' => array('location_id'),
 			'fk' => array(),
-			'ix' => array(),
+			'ix' => array('app_id', 'name'),
 			'uc' => array()
 		));
 
 // add records
 
 		$location = array();
-		$GLOBALS['phpgw_setup']->oProc->query("SELECT phpgw_acl_location_old.*,phpgw_applications.app_id FROM phpgw_acl_location_old $GLOBALS['phpgw_setup']->oProc->m_odb->join phpgw_applications ON phpgw_acl_location_old.appname = phpgw_applications.app_name"); 
+		$GLOBALS['phpgw_setup']->oProc->query('SELECT phpgw_acl_location.*, phpgw_applications.app_id '
+			. ' FROM phpgw_acl_location' 
+			. " {$GLOBALS['phpgw_setup']->oProc->m_odb->join} phpgw_applications ON phpgw_acl_location.appname = phpgw_applications.app_name" 
+			, __LINE__, __FILE__); 
 		while ( $GLOBALS['phpgw_setup']->oProc->next_record() )
 		{
 			$location[]=array
@@ -1809,12 +1843,11 @@
 
 		foreach ($location as $entry)
 		{
-			$GLOBALS['phpgw_setup']->oProc->query('INSERT INTO phpgw_acl_location (' . implode(',',array_keys($entry)) . ') VALUES (' . $GLOBALS['phpgw_setup']->oProc->validate_insert(array_values($entry)) . ')');
+			$GLOBALS['phpgw_setup']->oProc->query('INSERT INTO phpgw_locations(' . implode(',',array_keys($entry)) . ') VALUES (' . $GLOBALS['phpgw_setup']->oProc->validate_insert(array_values($entry)) . ')', __LINE__, __FILE__);
 		}
 		
 		unset($location);
 
-		$GLOBALS['phpgw_setup']->oProc->DropTable('fphpgw_acl_location_old');
 //-------------------
 
 
@@ -1824,14 +1857,16 @@
 			'precision' => '4',
 			'nullable' => True
 		));
-		$GLOBALS['phpgw_setup']->oProc->AddColumn('phpgw_acl','acl_location_id',array
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('phpgw_acl','location_id',array
 		(
 			'type' => 'int',
 			'precision' => '4',
 			'nullable' => True
 		));
 
-		$GLOBALS['phpgw_setup']->oProc->query("SELECT phpgw_acl.acl_appname, phpgw_applications.app_id FROM phpgw_acl $GLOBALS['phpgw_setup']->oProc->m_odb->join phpgw_applications ON phpgw_acl.acl_appname = phpgw_applications.app_name GROUP BY phpgw_acl.acl_appname"); 
+		$GLOBALS['phpgw_setup']->oProc->query('SELECT phpgw_acl.acl_appname, phpgw_applications.app_id FROM phpgw_acl'
+			. " {$GLOBALS['phpgw_setup']->oProc->m_odb->join} phpgw_applications ON phpgw_acl.acl_appname = phpgw_applications.app_name GROUP BY phpgw_acl.acl_appname"
+			, __LINE__, __FILE__); 
 		while ( $GLOBALS['phpgw_setup']->oProc->next_record() )
 		{
 			$app[]=array
@@ -1843,65 +1878,73 @@
 
 		foreach ($app as $entry)
 		{
-			$GLOBALS['phpgw_setup']->oProc->query("UPDATE phpgw_acl SET acl_app_id ='" $entry['app_id'] . "' WHERE acl_appname = '" . $entry['acl_appname'] . "'");
+			$GLOBALS['phpgw_setup']->oProc->query("UPDATE phpgw_acl SET acl_app_id ={$entry['app_id']} WHERE acl_appname = '{$entry['acl_appname']}'", __LINE__, __FILE__);
 		}
 
 		unset($app);
-		$GLOBALS['phpgw_setup']->oProc->DropColumn('phpgw_acl',null,'acl_appname');
 
-
-		$location = array();
-		$GLOBALS['phpgw_setup']->oProc->query("SELECT phpgw_acl.acl_location, phpgw_acl_location.id FROM phpgw_acl $GLOBALS['phpgw_setup']->oProc->m_odb->join phpgw_acl_location ON phpgw_acl.acl_location = phpgw_acl_location.name GROUP BY phpgw_acl.acl_location"); 
+		$locations = array();
+		$GLOBALS['phpgw_setup']->oProc->query('SELECT DISTINCT phpgw_acl.acl_location, phpgw_locations.location_id'
+			. ' FROM phpgw_acl, phpgw_locations, phpgw_applications'
+			. ' WHERE phpgw_acl.acl_location = phpgw_locations.name'
+				. ' AND phpgw_acl.acl_appname = phpgw_applications.app_id'
+				. ' AND phpgw_locations.app_id = phpgw_applications.app_id'
+			, __LINE__, __FILE__); 
 		while ( $GLOBALS['phpgw_setup']->oProc->next_record() )
 		{
-			$location[]=array
+			$locations[] = array
 			(
 					'location_id'		=> $GLOBALS['phpgw_setup']->oProc->f('id'),
 					'acl_location'		=> $GLOBALS['phpgw_setup']->oProc->f('acl_location')
 			);
 		}
 
-		foreach ($app as $entry)
+		foreach ( $locations as $entry )
 		{
-			$GLOBALS['phpgw_setup']->oProc->query("UPDATE phpgw_acl SET acl_location_id ='" $entry['location_id'] . "' WHERE acl_location = '" . $entry['acl_location'] . "'");
+			$GLOBALS['phpgw_setup']->oProc->query("UPDATE phpgw_acl SET location_id = {$entry['location_id']} WHERE acl_location = '{$entry['acl_location']}'", __LINE__, __FILE__);
 		}
+		unset($locations);
 
-		unset($location);
-
+		$GLOBALS['phpgw_setup']->oProc->DropTable('phpgw_acl_location');
 		$GLOBALS['phpgw_setup']->oProc->DropColumn('phpgw_acl',null,'acl_location');
+		$GLOBALS['phpgw_setup']->oProc->DropColumn('phpgw_acl',null,'acl_appname');
 
 //---------- history_log
 
-
-		$GLOBALS['phpgw_setup']->oProc->AddColumn('phpgw_history_log','history_app_id',array
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('phpgw_history_log', 'app_id', array
 		(
 			'type' => 'int',
 			'precision' => '4',
 			'nullable' => True
 		));
-		$GLOBALS['phpgw_setup']->oProc->AddColumn('phpgw_history_log','history_location_id',array
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('phpgw_history_log', 'location_id', array
 		(
 			'type' => 'int',
 			'precision' => '4',
 			'nullable' => True
 		));
 
-		$GLOBALS['phpgw_setup']->oProc->query("SELECT phpgw_history_log.history_appname, phpgw_applications.app_id FROM phpgw_history_log $GLOBALS['phpgw_setup']->oProc->m_odb->join phpgw_applications ON phpgw_acl.history_appname = phpgw_applications.app_name GROUP BY history_appname"); 
+		$apps = array();
+		$GLOBALS['phpgw_setup']->oProc->query('SELECT phpgw_history_log.history_appname, phpgw_applications.app_id'
+			. ' FROM phpgw_history_log'
+			. " {$GLOBALS['phpgw_setup']->oProc->m_odb->join} phpgw_applications ON phpgw_history_log.history_appname = phpgw_applications.app_name"
+			. ' GROUP BY history_appname'
+			, __LINE__, __FILE__);
 		while ( $GLOBALS['phpgw_setup']->oProc->next_record() )
 		{
-			$app[]=array
+			$apps[]=array
 			(
 					'app_id'				=> $GLOBALS['phpgw_setup']->oProc->f('app_id'),
 					'history_appname'		=> $GLOBALS['phpgw_setup']->oProc->f('history_appname')
 			);
 		}
 
-		foreach ( $app as $entry )
+		foreach ( $apps as $entry )
 		{
-			$GLOBALS['phpgw_setup']->oProc->query("UPDATE phpgw_history_log SET history_app_id ='" $entry['app_id'] . "' WHERE history_appname = '" . $entry['history_appname'] . "'");
+			$GLOBALS['phpgw_setup']->oProc->query("UPDATE phpgw_history_log SET app_id = {$entry['app_id']} WHERE history_appname = '{$entry['history_appname']}'");
 		}
 
-		unset($app);
+		unset($apps);
 		$GLOBALS['phpgw_setup']->oProc->DropColumn('phpgw_history_log',null,'history_appname');
 
 
@@ -1936,9 +1979,26 @@
 
 		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
 		{
-			$GLOBALS['setup_info']['phpgwapi']['currentver'] = '0.9.17.514';
+			$GLOBALS['setup_info']['phpgwapi']['currentver'] = '0.9.17.515';
 			return $GLOBALS['setup_info']['phpgwapi']['currentver'];
 		}
 	}
-*/
-?>
+	$test[] = '0.9.17.515';
+	/**
+	* Drop the old and unneeded addressbook tables
+	*
+	* @return string the new version number
+	*/
+	function phpgwapi_upgrade0_9_17_515()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->DropTable('phpgw_addressbook');
+		$GLOBALS['phpgw_setup']->oProc->DropTable('phpgw_addressbook_extra');
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['phpgwapi']['currentver'] = '0.9.17.516';
+			return $GLOBALS['setup_info']['phpgwapi']['currentver'];
+		}
+	}

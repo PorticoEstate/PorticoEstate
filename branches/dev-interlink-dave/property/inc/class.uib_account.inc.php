@@ -166,6 +166,7 @@
 
 			$data = array
 			(
+				'menu'						=> $this->bocommon->get_menu(),
 				'allow_allrows'				=> True,
 				'allrows'				=> $this->allrows,
 				'start_record'				=> $this->start,

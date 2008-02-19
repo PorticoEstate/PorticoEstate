@@ -409,6 +409,7 @@
 			$GLOBALS['phpgw']->js->validate_file('overlib','overlib','property');
 			$GLOBALS['phpgw']->js->validate_file('core','check','property');
 
+			$data['menu']							= $this->bocommon->get_menu();
 			$data['lang_excel']						= 'excel';
 			$data['link_excel']						= $GLOBALS['phpgw']->link('/index.php',$link_excel);
 			$data['lang_excel_help']				= lang('Download table to MS Excel');
@@ -674,7 +675,7 @@
 
 			$data = array
 			(
-
+				'menu'							=> $this->bocommon->get_menu(),
 				'lang_excel'					=> 'excel',
 				'link_excel'					=> $GLOBALS['phpgw']->link('/index.php',$link_excel),
 				'lang_excel_help'				=> lang('Download table to MS Excel'),
@@ -887,7 +888,7 @@
 			);
 
 			$GLOBALS['phpgw']->js->validate_file('overlib','overlib','property');
-
+			$data['menu']						= $this->bocommon->get_menu();
 			$data['lang_sum']				= lang('Sum');
 			$data['sum']					= number_format($sum, 0, ',', ' ');
 			$data['allow_allrows']				= false;
@@ -1216,6 +1217,7 @@
 
 			$data = array
 			(
+				'menu'							=> $this->bocommon->get_menu(),
 				'msgbox_data'						=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
 
 				'img_cal'							=> $GLOBALS['phpgw']->common->image('phpgwapi','cal'),

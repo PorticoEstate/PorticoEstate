@@ -259,6 +259,7 @@
 
 			$data = array
 			(
+				'menu'							=> $this->bocommon->get_menu(),
 				'sum'						=> $sum,
 				'lang_sum'					=> lang('sum'),
 				'msgbox_data'					=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
@@ -462,6 +463,7 @@
 
 			$data = array
 			(
+				'menu'							=> $this->bocommon->get_menu(),
 				'sum'						=> $sum,
 				'lang_sum'					=> lang('sum'),
 				'msgbox_data'					=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
@@ -625,6 +627,7 @@
 
 			$data = array
 			(
+				'menu'								=> $this->bocommon->get_menu(),
 				'sum_actual_cost'					=> $sum_actual_cost,
 				'sum_diff'							=> $sum_diff,
 				'sum_obligation'					=> $sum_obligation,

@@ -5,7 +5,11 @@
 	</xsl:template>
 	
 	<xsl:template match="list">
-		<xsl:call-template name="menu"/> 
+		<xsl:choose>
+			<xsl:when test="menu != ''">
+				<xsl:apply-templates select="menu"/> 
+			</xsl:when>
+		</xsl:choose>
 		<div style="width: 100%; height: 65px; background-color: #EEEEEE; font-family: Arial, Helvetica, Sans-Serif; font-size: 9pt;">
 			This example demonstrates a simple Hello World example
 		</div>

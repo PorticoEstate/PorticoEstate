@@ -79,11 +79,6 @@
 		private $bo;
 		
 		/**
-		* @var object $menu application menu handler
-		*/
-		private $menu;
-		
-		/**
 		* @var object $acl reference to global access control list manager
 		*/
 		private $acl;
@@ -143,8 +138,6 @@
 			$this->nextmatches		= CreateObject('phpgwapi.nextmatchs');
 			$this->account			=& $GLOBALS['phpgw_info']['user']['account_id'];
 			$this->bo				= CreateObject('demo.bodemo',true);
-			$this->menu				= CreateObject('demo.menu');
-			$this->menu->set_sub('demo');
 			$this->acl 				=& $GLOBALS['phpgw']->acl;
 			$this->acl_location 	= $this->bo->get_acl_location();
 			$this->acl_read 		= $this->acl->check($this->acl_location, PHPGW_ACL_READ);
@@ -159,6 +152,7 @@
 			$this->allrows			= $this->bo->allrows;
 			$this->cat_id			= $this->bo->cat_id;
 			$this->filter			= $this->bo->filter;
+			$GLOBALS['phpgw_info']['flags']['menu_selection'] = 'demo';
 		}
 
 		private function save_sessiondata()
@@ -176,17 +170,16 @@
 		public function index()
 		{
 			$output	= self::get_output();
-		
-			$this->menu->set_sub($output);
-			$links = $this->menu->links();
+
+			$GLOBALS['phpgw_info']['flags']['menu_selection'] .= "::{$output}";	
 
 			if(!$this->acl_read)
 			{
-				$this->no_access($links);
+				$this->no_access();
 				return;
 			}
 
-			$GLOBALS['phpgw']->xslttpl->add_file(array('demo','nextmatchs','menu',
+			$GLOBALS['phpgw']->xslttpl->add_file(array('demo','nextmatchs',
 										'search_field'));
 
 			$demo_info = $this->bo->read();
@@ -296,7 +289,6 @@
 			$data = array
 			(
 				'msgbox_data'							=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
-				'links'									=> $links,
 				'cat_filter'							=> $this->cats->formatted_xslt_list(array('select_name' => 'cat_id','selected' => $this->cat_id,'globals' => true,'link_data' => $link_data)),
 				'filter_data'							=> $this->nextmatches->xslt_filter(array('filter' => $this->filter,'link_data' => $link_data)),
 				'allow_allrows'							=> true,
@@ -327,16 +319,15 @@
 		public function index2()
 		{
 			$output	= self::get_output();
-			
-			$this->menu->set_sub('alternative');
-			$links = $this->menu->links();
+
+			$GLOBALS['phpgw_info']['flags']['menu_selection'] .= '::alternative';	
 			if(!$this->acl_read)
 			{
-				$this->no_access($links);
+				$this->no_access();
 				return;
 			}
 
-			$GLOBALS['phpgw']->xslttpl->add_file(array('demo','nextmatchs','menu',
+			$GLOBALS['phpgw']->xslttpl->add_file(array('demo','nextmatchs',
 										'search_field'));
 
 			$demo_info = $this->bo->read2();
@@ -474,7 +465,6 @@
 			$data = array
 			(
 				'msgbox_data'							=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
-				'links'									=> $links,
 				'cat_filter'							=> $this->cats->formatted_xslt_list(array('select_name' => 'cat_id','selected' => $this->cat_id,'globals' => true,'link_data' => $link_data)),
 				'filter_data'							=> $this->nextmatches->xslt_filter(array('filter' => $this->filter,'link_data' => $link_data)),
 				'allow_allrows'							=> true,
@@ -535,7 +525,7 @@
 			{
 				if(!$this->acl_edit)
 				{
-					$this->no_access($links);
+					$this->no_access();
 					return;
 				}
 
@@ -782,7 +772,7 @@
 
 		public function no_access($links = '')
 		{
-			$GLOBALS['phpgw']->xslttpl->add_file(array('no_access','menu'));
+			$GLOBALS['phpgw']->xslttpl->add_file(array('no_access'));
 
 			$receipt['error'][]=array('msg'=>lang('NO ACCESS'));
 

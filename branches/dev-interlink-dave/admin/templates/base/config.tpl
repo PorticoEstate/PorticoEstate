@@ -148,34 +148,6 @@
     <td><input name="newsettings[login_logo_title]" value="{value_login_logo_title}"></td>
    </tr>
 
-   <tr class="row_off">
-    <td>{lang_Show_'powered_by'_logo_on}:</td>
-    <td>
-     <select name="newsettings[showpoweredbyon]">
-      <option value="bottom" {selected_showpoweredbyon_bottom}>{lang_bottom}</option>
-      <option value="top" {selected_showpoweredbyon_top}>{lang_top}</option>
-     </select>
-    </td>
-   </tr>
-
-   <tr class="row_on">
-    <td>{lang_enable_fckeditor_wysiwyg_html_editor}:</td><td>
-     <select name="newsettings[enable_fckeditor]">
-      <option value="">{lang_No}</option>
-      <option value="True"{selected_enable_fckeditor_True}>{lang_Yes}</option>
-     </select>
-    </td>
-   </tr>
-
-   <tr class="row_off">
-    <td>{lang_enable_tinymce_wysiwyg_html_editor}:</td><td>
-     <select name="newsettings[enable_tinymce]">
-      <option value="">{lang_No}</option>
-      <option value="True"{selected_enable_tinymce_True}>{lang_Yes}</option>
-     </select>
-    </td>
-   </tr>
-
    <tr class="th">
     <td colspan="2">&nbsp;<b>{lang_security}</b></td>
    </tr>

@@ -24,6 +24,7 @@
 			$menuaction = phpgw::get_var('menuaction', 'location');
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = false; //$menuaction == 'admin.uimainscreen.mainscreen';
 			$GLOBALS['phpgw']->nextmatchs = CreateObject('phpgwapi.nextmatchs');
+			$GLOBALS['phpgw_info']['flags']['menu_selection'] = 'admin';
 		}
 
 		public function mainscreen()
@@ -62,7 +63,7 @@ HTML;
 				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'admin.uimainscreen.mainscreen'));
 			}
 
-			$GLOBALS['phpgw_info']['flags']['menu_selection'] = 'admin::admin::mainscreen';
+			$GLOBALS['phpgw_info']['flags']['menu_selection'] .= '::admin::mainscreen';
 
 			$GLOBALS['phpgw']->template->set_file(array('message' => 'mainscreen_message.tpl'));
 			$GLOBALS['phpgw']->template->set_block('message','form','form');
@@ -166,4 +167,3 @@ HTML;
 			$GLOBALS['phpgw']->template->pfp('out','form');
 		}
 	}
-?>

@@ -130,7 +130,7 @@
 		'project' => lang('Project'),
 		'tts' => lang('Ticket'),
 		'invoice' => lang('Invoice'),
-		'document'=> lang(Document)
+		'document'=> lang('Document')
 		);
 	create_select_box('Default start page','default_start_page',$default_start_page,'Select your start-submodule');
 
@@ -200,4 +200,5 @@
 	create_input_box('With of textarea','textareacols','With of textarea in forms');
 	create_input_box('Height of textarea','textarearows','Height of textarea in forms');
 	
-
+	create_select_box('show horisontal menues','horisontal_menus',array('no' => 'No','yes' => 'Yes'),'Horisontal menues are shown in top of page');
+	create_select_box('Tabel export format','export_format',array('excel' => 'Excel','csv' => 'CSV'),'Choose which format to export from the system for tables');

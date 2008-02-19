@@ -67,14 +67,13 @@
 			$this->bocommon				= CreateObject('hrm.bocommon');
 			$this->bocategory			= CreateObject('hrm.bocategory');
 			$this->acl				= CreateObject('phpgwapi.acl');
-			$this->menu				= CreateObject('hrm.menu');
-			$this->menu->sub			='job';
 
 			$this->start				= $this->bo->start;
 			$this->query				= $this->bo->query;
 			$this->sort				= $this->bo->sort;
 			$this->order				= $this->bo->order;
 			$this->allrows				= $this->bo->allrows;
+			$GLOBALS['phpgw_info']['flags']['menu_selection'] = 'hrm::job';
 		}
 
 		function save_sessiondata()
@@ -93,13 +92,14 @@
 
 		function index()
 		{
-			$links = $this->menu->links('job_type');
 
 			if(!$this->acl->check('.job', PHPGW_ACL_READ))
 			{
-				$this->bocommon->no_access($links);
+				$this->bocommon->no_access();
 				return;
 			}
+
+			$GLOBALS['phpgw_info']['flags']['menu_selection'] .= '::job_type';
 
 			if ( !isset($GLOBALS['phpgw']->js) || !is_object($GLOBALS['phpgw']->js) )
 			{
@@ -218,7 +218,7 @@
 			$data = array
 			(
 				'msgbox_data'					=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
-				'links'							=> $links,
+				'menu'							=> execMethod('hrm.menu.links'),
 				'allow_allrows'					=> True,
 				'allrows'						=> $this->allrows,
 				'start_record'					=> $this->start,
@@ -252,7 +252,7 @@
 		{
 			if(!$this->acl->check('.job', PHPGW_ACL_READ))
 			{
-				$this->bocommon->no_access($links);
+				$this->bocommon->no_access();
 				return;
 			}
 			$GLOBALS['phpgw_info']['flags'][noheader] = True;
@@ -352,9 +352,11 @@
 		{
 			if(!$this->acl->check('.job', PHPGW_ACL_READ))
 			{
-				$this->bocommon->no_access($links);
+				$this->bocommon->no_access();
 				return;
 			}
+
+			$GLOBALS['phpgw_info']['flags']['menu_selection'] .= '::job_type';
 
 			$job_id	= phpgw::get_var('job_id', 'int');
 			$id	= phpgw::get_var('id', 'int');
@@ -503,9 +505,11 @@
 		{
 			if(!$this->acl->check('.job', PHPGW_ACL_READ))
 			{
-				$this->bocommon->no_access($links);
+				$this->bocommon->no_access();
 				return;
 			}
+
+			$GLOBALS['phpgw_info']['flags']['menu_selection'] .= '::job_type';
 
 			$job_id	= phpgw::get_var('job_id', 'int');
 			$id	= phpgw::get_var('id', 'int');
@@ -650,11 +654,13 @@
 			$parent_id	= phpgw::get_var('parent_id', 'int');
 			$values		= phpgw::get_var('values');
 
+			$GLOBALS['phpgw_info']['flags']['menu_selection'] .= '::job_type';
+
 			if(!$id)
 			{
 				if(!$this->acl->check('.job', PHPGW_ACL_ADD))
 				{
-					$this->bocommon->no_access($links);
+					$this->bocommon->no_access();
 					return;
 				}
 			}
@@ -662,7 +668,7 @@
 			{
 				if(!$this->acl->check('.job', PHPGW_ACL_EDIT))
 				{
-					$this->bocommon->no_access($links);
+					$this->bocommon->no_access();
 					return;
 				}
 			}
@@ -776,10 +782,12 @@
 
 			if(!$this->acl->check('.job', PHPGW_ACL_READ))
 			{
-				$this->bocommon->no_access($links);
+				$this->bocommon->no_access();
 				return;
 			}
 
+			$GLOBALS['phpgw_info']['flags']['menu_selection'] .= '::job_type';
+	
 			$GLOBALS['phpgw']->xslttpl->add_file(array('job'));
 
 			if ($id)
@@ -837,10 +845,11 @@
 		{
 			if(!$this->acl->check('.job', PHPGW_ACL_ADD))
 			{
-				$this->bocommon->no_access($links);
+				$this->bocommon->no_access();
 				return;
 			}
 
+			$GLOBALS['phpgw_info']['flags']['menu_selection'] .= '::job_type';
 
 			$GLOBALS['phpgw_info']['flags']['noframework'] = True;
 			$GLOBALS['phpgw_info']['flags']['headonly']=true;
@@ -1116,7 +1125,7 @@
 			{
 				if(!$this->acl->check('.job', PHPGW_ACL_ADD))
 				{
-					$this->bocommon->no_access($links);
+					$this->bocommon->no_access();
 					return;
 				}
 			}
@@ -1124,11 +1133,12 @@
 			{
 				if(!$this->acl->check('.job', PHPGW_ACL_EDIT))
 				{
-					$this->bocommon->no_access($links);
+					$this->bocommon->no_access();
 					return;
 				}
 			}
 
+			$GLOBALS['phpgw_info']['flags']['menu_selection'] .= '::job_type';
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('job'));
 
@@ -1240,10 +1250,11 @@
 
 			if(!$this->acl->check('.job', PHPGW_ACL_READ))
 			{
-				$this->bocommon->no_access($links);
+				$this->bocommon->no_access();
 				return;
 			}
 
+			$GLOBALS['phpgw_info']['flags']['menu_selection'] .= '::job_type';
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('job'));
 
@@ -1312,7 +1323,7 @@
 			{
 				if(!$this->acl->check('.job', PHPGW_ACL_ADD))
 				{
-					$this->bocommon->no_access($links);
+					$this->bocommon->no_access();
 					return;
 				}
 			}
@@ -1320,10 +1331,12 @@
 			{
 				if(!$this->acl->check('.job', PHPGW_ACL_EDIT))
 				{
-					$this->bocommon->no_access($links);
+					$this->bocommon->no_access();
 					return;
 				}
 			}
+
+			$GLOBALS['phpgw_info']['flags']['menu_selection'] .= '::job_type';
 
 			$values		= phpgw::get_var('values');
 
@@ -1474,9 +1487,11 @@
 
 			if(!$this->acl->check('.job', PHPGW_ACL_READ))
 			{
-				$this->bocommon->no_access($links);
+				$this->bocommon->no_access();
 				return;
 			}
+
+			$GLOBALS['phpgw_info']['flags']['menu_selection'] .= '::job_type';
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('job'));
 
@@ -1543,9 +1558,11 @@
 		{
 			if(!$this->acl->check('.job', PHPGW_ACL_DELETE))
 			{
-				$this->bocommon->no_access($links);
+				$this->bocommon->no_access();
 				return;
 			}
+
+			$GLOBALS['phpgw_info']['flags']['menu_selection'] .= '::job_type';
 
 			$job_id	= phpgw::get_var('job_id', 'int');
 			$confirm		= phpgw::get_var('confirm', 'bool', 'POST');
@@ -1584,9 +1601,11 @@
 		{
 			if(!$this->acl->check('.job', PHPGW_ACL_DELETE))
 			{
-				$this->bocommon->no_access($links);
+				$this->bocommon->no_access();
 				return;
 			}
+
+			$GLOBALS['phpgw_info']['flags']['menu_selection'] .= '::job_type';
 
 			$id		= phpgw::get_var('id', 'int');
 			$job_id	= phpgw::get_var('job_id', 'int');
@@ -1628,9 +1647,11 @@
 		{
 			if(!$this->acl->check('.job', PHPGW_ACL_DELETE))
 			{
-				$this->bocommon->no_access($links);
+				$this->bocommon->no_access();
 				return;
 			}
+
+			$GLOBALS['phpgw_info']['flags']['menu_selection'] .= '::job_type';
 
 			$quali_id	= phpgw::get_var('quali_id', 'int');
 			$job_id		= phpgw::get_var('job_id', 'int');
@@ -1672,9 +1693,11 @@
 		{
 			if(!$this->acl->check('.job', PHPGW_ACL_DELETE))
 			{
-				$this->bocommon->no_access($links);
+				$this->bocommon->no_access();
 				return;
 			}
+
+			$GLOBALS['phpgw_info']['flags']['menu_selection'] .= '::job_type';
 
 			$confirm		= phpgw::get_var('confirm', 'bool', 'POST');
 			$link_data = array
@@ -1709,6 +1732,7 @@
 		
 		function hierarchy()
 		{
+			$GLOBALS['phpgw_info']['flags']['menu_selection'] .= '::organisation';
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = false;
 			$GLOBALS['phpgw']->common->phpgw_header(true);
 			echo '<div class="msg">FIXME: Implement something here!</div>';

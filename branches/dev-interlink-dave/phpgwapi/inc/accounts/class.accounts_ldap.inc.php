@@ -5,14 +5,30 @@
 	* @author Lars Kneschke <lkneschke@phpgw.de>
 	* @author Bettina Gille <ceb@phpgroupware.org>
 	* @author Philipp Kamps <pkamps@probusiness.de>
+	* @author Dave Hall <skwashd@phpgroupware.org>
 	* @copyright Copyright (C) 2000-2002 Joseph Engo, Lars Kneschke
 	* @copyright Copyright (C) 2003 Lars Kneschke, Bettina Gille
-	* @copyright Portions Copyright (C) 2000-2004 Free Software Foundation, Inc. http://www.fsf.org/
+	* @copyright Portions Copyright (C) 2000-2008 Free Software Foundation, Inc. http://www.fsf.org/
 	* @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License
 	* @package phpgwapi
 	* @subpackage accounts
 	* @version $Id$
 	*/
+
+	/*
+	   This program is free software: you can redistribute it and/or modify
+	   it under the terms of the GNU Lesser General Public License as published by
+	   the Free Software Foundation, either version 3 of the License, or
+	   (at your option) any later version.
+
+	   This program is distributed in the hope that it will be useful,
+	   but WITHOUT ANY WARRANTY; without even the implied warranty of
+	   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	   GNU General Public License for more details.
+
+	   You should have received a copy of the GNU Lesser General Public License
+	   along with this program.  If not, see <http://www.gnu.org/licenses/>.
+	 */
 
 	/**
 	* View and manipulate account records using LDAP
@@ -1421,6 +1437,7 @@
 			return $return;
 		}
 		
+		// FIXME replace this with an existing method
 		function get_member_uids($account_id = '')
 		{
 			if ( !empty($account_id) )
@@ -1454,16 +1471,16 @@
 		/**
 		* Add an account to a group entry by adding the account name to the memberuid attribute
 		*
-		* @param integer $accountID Account id
+		* @param integer $account_id Account id
 		* @param integer $groupID Group id
 		* @return boolean True on success otherwise false
 		*/
-		function add_account2group($accountID, $groupID)
+		function add_account2group($account_id, $groupID)
 		{
-			if ($accountID && $groupID)
+			if ($account_id && $groupID)
 			{
 				$groupEntry = $this->group_exists($groupID);
-				$memberUID = $this->id2name($accountID);
+				$memberUID = $this->id2name($account_id);
 				if ($groupEntry && $memberUID)
 				{
 					if (!is_array($groupEntry['memberuid']) || !in_array($memberUID, $groupEntry['memberuid']))
@@ -1479,16 +1496,16 @@
 		/**
 		* Delete an account for a group entry by removing the account name from the memberuid attribute
 		*
-		* @param integer $accountID Account id
+		* @param integer $account_id Account id
 		* @param integer $groupID Group id
 		* @return boolean True on success otherwise false
 		*/
-		function delete_account4Group($accountID, $groupID)
+		function delete_account4Group($account_id, $groupID)
 		{
-			if ($accountID && $groupID)
+			if ($account_id && $groupID)
 			{
 				$groupEntry = $this->group_exists($groupID);
-				$memberUID = $this->id2name($accountID);
+				$memberUID = $this->id2name($account_id);
 				if ($groupEntry && $memberUID)
 				{
 					if (is_array($groupEntry['memberuid']))
@@ -1497,7 +1514,7 @@
 						{
 							if ($groupEntry['memberuid'][$i] == $memberUID)
 							{
-								$entry['memberuid'][] = $memberUID;
+								$entry = array('memberuid' => array($memberUID));
 								return ldap_mod_del($this->ds, $groupEntry['dn'], $entry);
 							}
 						}
@@ -1506,5 +1523,100 @@
 			}
 			return false;
 		}
+
+		/**
+		* Get a list of groups the user is a member of
+		*
+		* @param int $account_id the user account to lookup
+		* @return array the groups the user is a member of 
+		* @internal return structure array(array('account_id' => id, 'account_name' => group name))
+		*/
+		function membership($account_id = 0)
+		{
+			$account_id = get_account_id($account_id);
+
+			if ( isset($this->memberships[$account_id]) )
+			{
+				return $this->memeberships[$account_id];
+			}
+
+			$this->memberships[$account_id] = array();
+
+			$sql = 'SELECT phpgw_accounts.account_id, phpgw_accounts.account_firstname FROM phpgw_accounts, phpgw_group_map'
+				. ' WHERE phpgw_accounts.account_id = phpgw_group_map.group_id'
+					. " AND phpgw_group_map.account_id = {$account_id}";
+
+			$this->db->query($sql, __LINE__, __FILE__);
+
+			while ( $this->db->next_record() )
+			{
+				$this->memberships[$account_id][] = array
+				(
+					'account_id'	=> $this->db->f('account_id'),
+					'account_name'	=> lang('%1 group', $this->db->f('account_firstname'))
+				);
+			}
+			return $this->memberships[$account_id];
+		}
+
+		/**
+		* Get a list of members of the group
+		*
+		* @param int $group_id the group to check
+		* @return array list of members
+		*/
+		function member($group_id = 0)
+		{
+			$group_id = get_account_id($group_id);
+
+			if ( isset($this->members[$group_id]) )
+			{
+				return $this->members[$group_id];
+			}
+
+			$sri = ldap_search($this->ds, $this->group_context, "gidnumber={$group_id}");
+			$entries = ldap_get_entries($this->ds, $sri);
+			if ( !is_array($entries) )
+			{
+				$entries = array();
+			}
+
+			foreach ( $entries as $entry )
+			{
+				$this->members[$account_id][] = array
+				(
+					'account_id'	=> $entry['uidnumber'],
+					'account_name'	=> $GLOBALS['phpgw']->common->display_fullname($entry[$this->rdn_account], $entry['givenname'], $entry['sn'])
+				);
+			}
+			return $this->members[$group_id];
+		}
+
+		/**
+		* Get a list of member account ids for a group
+		*
+		* @return arrray list of members of the current group
+		*/
+		function get_members($group_id = null)
+		{
+			if ( is_null($group_id) )
+			{
+				$group_id = $this->account_id;
+			}
+			$group_id = get_account_id($group_id);
+
+			$sri = ldap_search($this->ds, $this->group_context, "gidnumber={$group_id}");
+			$entries = ldap_get_entries($this->ds, $sri);
+			if ( !is_array($entries) )
+			{
+				$entries = array();
+			}
+
+			$members = array();
+			foreach ( $entries as $entry )
+			{
+				$members[] = $entry['uidnumber'];
+			}
+			return $members;
+		}
 	}
-?>

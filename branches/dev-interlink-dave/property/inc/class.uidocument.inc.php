@@ -301,6 +301,7 @@
 
 			$data = array
 			(
+				'menu'									=> $this->bocommon->get_menu(),
 				'link_history'							=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'property.uidocument.index', 'cat_id'=> $this->cat_id)),
 				'lang_history_statustext'				=> lang('search for history at this location'),
 				'lang_select'							=> lang('select'),
@@ -554,6 +555,7 @@
 
 			$data = array
 			(
+				'menu'							=> $this->bocommon->get_menu(),
 				'msgbox_data'					=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
 				'location_data'					=> $location_data,
 				'link_history'					=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'property.uidocument.list_doc', 'cat_id'=> $this->cat_id)),

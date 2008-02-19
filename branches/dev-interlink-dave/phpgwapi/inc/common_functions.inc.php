@@ -347,15 +347,15 @@
 	 * @param $account_id either a name or an id
 	 * @param $default_id either a name or an id
 	 */
-	function get_account_id($account_id = '', $default_id = '')
+	function get_account_id($account_id = '', $default_id = null)
 	{
 		if ( gettype($account_id) == 'integer' && $account_id <> 0 )
 		{
 			return $account_id;
 		}
-		elseif ( !$account_id )
+		else if ( !$account_id )
 		{
-			if ($default_id == '')
+			if ( $default_id == null )
 			{
 				return isset($GLOBALS['phpgw_info']['user']['account_id']) ? $GLOBALS['phpgw_info']['user']['account_id'] : 0;
 			}
@@ -365,11 +365,11 @@
 			}
 			return (int)$default_id;
 		}
-		elseif (is_string($account_id))
+		else if (is_string($account_id))
 		{
-			if($GLOBALS['phpgw']->accounts->exists(intval($account_id)) == True)
+			if ( $GLOBALS['phpgw']->accounts->exists((int) $account_id) )
 			{
-				return intval($account_id);
+				return (int) $account_id;
 			}
 			else
 			{

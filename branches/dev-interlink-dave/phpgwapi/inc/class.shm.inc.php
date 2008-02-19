@@ -71,7 +71,7 @@
 	{
 		if ( substr(PHP_OS, 3) == 'WIN' )
 		{
-			$GLOBALS['phpgw_info']['server']['temp_dir'] = 'C:\\temp';
+			$GLOBALS['phpgw_info']['server']['temp_dir'] = 'c:/temp';
 		}
 		else
 		{
@@ -102,12 +102,12 @@
 	/**
 	* The path to store the lock files
 	*/
-	define('PHPGW_SHM_LOCK', PHPGW_SERVER_ROOT);
+	define('PHPGW_SHM_LOCK', $GLOBALS['phpgw_info']['server']['temp_dir']);
 
 	/**
 	* Shared memory handler class
 	*/
-	class shm
+	class phpgwapi_shm
 	{
 		/**
 		 * @var string $hashid the hash_table_key - example: 'lang_en'
@@ -117,7 +117,7 @@
 		/**
 		* Constructor
 		*/
-		function shm()
+		function __construct()
 		{}
  
 		/**
@@ -448,5 +448,15 @@
 			}
 			$this->garbage_collection();
 			ob_start("cache_end"); // callback
+		}
+
+		/**
+		* Check if shared memeory is enabled
+		*
+		* @return bool is it enabled?
+		*/
+		public static function is_enabled()
+		{
+			return function_exists('sem_get');
 		}
 	}

@@ -176,83 +176,86 @@
 
 			$GLOBALS['phpgw']->hooks->single('config',$appname);
 
-			foreach ( $vars as $value )
+			if(is_array($vars))
 			{
-				$valarray = explode('_', $value);
-				$type = $valarray[0];
-				$new = $newval = '';
-
-				while($chunk = next($valarray))
+				foreach ( $vars as $value )
 				{
-					$new[] = $chunk;
-				}
-				$newval = implode(' ',$new);
+					$valarray = explode('_', $value);
+					$type = $valarray[0];
+					$new = $newval = '';
 
-				switch($type)
-				{
-					case 'lang':
-						$t->set_var($value,lang($newval));
-						break;
-					case 'value':
-						$newval = ereg_replace(' ','_',$newval);
-						/* Don't show passwords in the form */
-						if ( !isset($current_config[$newval]) || ereg('passwd',$value) || ereg('password',$value) || ereg('root_pw',$value))
-						{
+					while($chunk = next($valarray))
+					{
+						$new[] = $chunk;
+					}
+					$newval = implode(' ',$new);
+
+					switch($type)
+					{
+						case 'lang':
+							$t->set_var($value,lang($newval));
+							break;
+						case 'value':
+							$newval = ereg_replace(' ','_',$newval);
+							/* Don't show passwords in the form */
+							if ( !isset($current_config[$newval]) || ereg('passwd',$value) || ereg('password',$value) || ereg('root_pw',$value))
+							{
+								$t->set_var($value,'');
+							}
+							else
+							{
+								$t->set_var($value,(isset($current_config[$newval])?$current_config[$newval]:''));
+							}
+							break;
+						case 'checked':
+							/* '+' is used as a delimiter for the check value */
+							list($newvalue,$check) = split('\+',$newval);
+							$newval = ereg_replace(' ','_',$newvalue);
+							if($current_config[$newval] == $check)
+							{
+								$t->set_var($value, ' checked');
+							}
+							else
+							{
+								$t->set_var($value, '');
+							}
+							break;
+						case 'selected':
+							$configs = array();
+							$config  = '';
+							$newvals = explode(' ',$newval);
+							$setting = end($newvals);
+							for ($i=0;$i<(count($newvals) - 1); $i++)
+							{
+								$configs[] = $newvals[$i];
+							}
+							$config = implode('_',$configs);
+							/* echo $config . '=' . $current_config[$config]; */
+							if ( isset($current_config[$config]) 
+								&& $current_config[$config] == $setting)
+							{
+								$t->set_var($value,' selected');
+							}
+							else
+							{
+								$t->set_var($value,'');
+							}
+							break;
+						case 'hook':
+							$newval = ereg_replace(' ','_',$newval);
+							if(function_exists($newval))
+							{
+								$t->set_var($value,$newval($current_config));
+							}
+							else
+							{
+								$t->set_var($value,'');
+							}
+							break;
+						default:
 							$t->set_var($value,'');
-						}
-						else
-						{
-							$t->set_var($value,(isset($current_config[$newval])?$current_config[$newval]:''));
-						}
-						break;
-					case 'checked':
-						/* '+' is used as a delimiter for the check value */
-						list($newvalue,$check) = split('\+',$newval);
-						$newval = ereg_replace(' ','_',$newvalue);
-						if($current_config[$newval] == $check)
-						{
-							$t->set_var($value, ' checked');
-						}
-						else
-						{
-							$t->set_var($value, '');
-						}
-						break;
-					case 'selected':
-						$configs = array();
-						$config  = '';
-						$newvals = explode(' ',$newval);
-						$setting = end($newvals);
-						for ($i=0;$i<(count($newvals) - 1); $i++)
-						{
-							$configs[] = $newvals[$i];
-						}
-						$config = implode('_',$configs);
-						/* echo $config . '=' . $current_config[$config]; */
-						if ( isset($current_config[$config]) 
-							&& $current_config[$config] == $setting)
-						{
-							$t->set_var($value,' selected');
-						}
-						else
-						{
-							$t->set_var($value,'');
-						}
-						break;
-					case 'hook':
-						$newval = ereg_replace(' ','_',$newval);
-						if(function_exists($newval))
-						{
-							$t->set_var($value,$newval($current_config));
-						}
-						else
-						{
-							$t->set_var($value,'');
-						}
-						break;
-					default:
-						$t->set_var($value,'');
-						break;
+							break;
+					}
 				}
 			}
 			$GLOBALS['phpgw']->common->phpgw_header(true);

@@ -374,7 +374,7 @@
 				}
 			}
 
-			$GLOBALS['phpgw']->acl->acl($this->account_id);
+			$GLOBALS['phpgw']->acl->set_account_id($this->account_id);
 			$GLOBALS['phpgw']->accounts->set_account($this->account_id);
 			$GLOBALS['phpgw']->preferences->set_account_id($this->account_id);
 			$GLOBALS['phpgw']->applications->set_account_id($this->account_id);
@@ -904,7 +904,7 @@
 		*/
 		function read_repositories($cached = true, $write_cache = true)
 		{
-			$GLOBALS['phpgw']->acl->acl($this->account_id);
+			$GLOBALS['phpgw']->acl->set_account_id($this->account_id);
 			$GLOBALS['phpgw']->accounts->set_account($this->account_id);
 			$GLOBALS['phpgw']->preferences->set_account_id($this->account_id);
 			$GLOBALS['phpgw']->applications->set_account_id($this->account_id);

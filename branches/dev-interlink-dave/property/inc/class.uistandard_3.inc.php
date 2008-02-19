@@ -53,7 +53,7 @@
 		function property_uistandard_3()
 		{
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = True;
-		//	$this->currentapp			= $GLOBALS['phpgw_info']['flags']['currentapp'];
+
 			$this->nextmatchs			= CreateObject('phpgwapi.nextmatchs');
 			$this->account				= $GLOBALS['phpgw_info']['user']['account_id'];
 			$this->bo				= CreateObject('property.bostandard_3',True);
@@ -72,6 +72,8 @@
 			$this->sort				= $this->bo->sort;
 			$this->order				= $this->bo->order;
 			$this->allrows				= $this->bo->allrows;
+			$type	= phpgw::get_var('type');
+			$GLOBALS['phpgw_info']['flags']['menu_selection'] = "admin::property::{$type}";
 		}
 
 		function save_sessiondata()
@@ -103,14 +105,12 @@
 
 			while (is_array($standard_list) && list(,$standard) = each($standard_list))
 			{
-				$words = split(' ',$standard['descr']);
-				$first = "$words[0] $words[1] $words[2] $words[3]";
 
 				$content[] = array
 				(
 					'id'				=> $standard['id'],
 					'num'				=> $standard['num'],
-					'first'				=> $first,
+					'first'				=> $standard['descr'],
 					'link_edit'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uistandard_3.edit', 'id'=> $standard['id'], 'type'=> $type)),
 					'link_delete'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uistandard_3.delete', 'id'=> $standard['id'], 'type'=> $type)),
 					'lang_view_standardtext'	=> lang('view the standard'),
