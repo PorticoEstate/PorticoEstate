@@ -1334,24 +1334,45 @@
 			return $this->select_list($selected,$nullable);
 		}
 
-
+		/**
+		* FIXME: This function needs to be renamed to 'download' - or something
+		* Choose which  download format to use - and call the appropriate function
+		*
+		* @param array $list array with data to export
+		* @param array $name array containing keys in $list
+		* @param array $descr array containing Names for the heading of the output for the coresponding keys in $list
+		* @param array $input_type array containing information whether a field are to be suppressed from the output
+		*/
 		function excel($list,$name,$descr,$input_type='')
 		{
 			$GLOBALS['phpgw_info']['flags']['noheader'] = True;
 			$GLOBALS['phpgw_info']['flags']['nofooter'] = True;
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = False;
 
-			if(isset($GLOBALS['phpgw_info']['user']['preferences']['property']['export_format']))
-			{
-				switch ($GLOBALS['phpgw_info']['user']['preferences']['property']['export_format'])
-				{
-					case 'csv':
-						$this->csv_out($list,$name,$descr,$input_type);
-						return;
-				}				
-			}
+			$export_format = isset($GLOBALS['phpgw_info']['user']['preferences']['property']['export_format']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['export_format'] ? $GLOBALS['phpgw_info']['user']['preferences']['property']['export_format'] : 'csv';
 
- 			$filename= $GLOBALS['phpgw_info']['user']['account_lid'].'.xls';
+			switch ($export_format)
+			{
+				case 'csv':
+					$this->csv_out($list,$name,$descr,$input_type);
+					break;
+				case 'excel':
+					$this->excel_out($list,$name,$descr,$input_type);
+					break;
+			}
+		}
+
+		/**
+		* downloads data as MsExcel to the browser
+		*
+		* @param array $list array with data to export
+		* @param array $name array containing keys in $list
+		* @param array $descr array containing Names for the heading of the output for the coresponding keys in $list
+		* @param array $input_type array containing information whether a field are to be suppressed from the output
+		*/
+		function excel_out($list,$name,$descr,$input_type='')
+		{
+ 			$filename= str_replace(' ','_',$GLOBALS['phpgw_info']['user']['account_lid']).'.xls';
 
 			$workbook	= CreateObject('phpgwapi.excel',"-");
 			$browser = CreateObject('phpgwapi.browser');
@@ -1401,72 +1422,57 @@
 			$workbook->close();
 		}
 
-		function csv_out($list,$name,$descr,$input_type='')
+		/**
+		* downloads data as CSV to the browser
+		*
+		* @param array $list array with data to export
+		* @param array $name array containing keys in $list
+		* @param array $descr array containing Names for the heading of the output for the coresponding keys in $list
+		* @param array $input_type array containing information whether a field are to be suppressed from the output
+		*/
+		function csv_out($list, $name, $descr, $input_type = array() )
 		{
-			if ( !isset($GLOBALS['phpgw_info']['server']['temp_dir']) )
-			{
-				if ( substr(PHP_OS, 3) == 'WIN' )
-				{
-					$GLOBALS['phpgw_info']['server']['temp_dir'] = 'c:/temp';
-				}
-				else
-				{
-					$GLOBALS['phpgw_info']['server']['temp_dir'] = '/tmp/';
-				}
-			}
-
- 			$filename= str_replace(' ','_',$GLOBALS['phpgw_info']['user']['account_lid']).'.csv';
-
+			$filename= str_replace(' ','_',$GLOBALS['phpgw_info']['user']['account_lid']).'.csv'; 
 			$browser = CreateObject('phpgwapi.browser');
-			$browser->content_header($filename,'application/csv');
+			$browser->content_header($filename, 'application/csv');
+
+ 			if ( !$fp = fopen('php://output','w') )
+ 			{
+  				die('Unable to write to "php://output" - pleace notify the Administrator');				
+ 			}
 
 			$count_uicols_name=count($name);
 
-			$file = $GLOBALS['phpgw_info']['server']['temp_dir'] . '/' .$filename;
-
- 			if(!$fp = @fopen($file,'w'))
- 			{
-  				die('Directory for temporary files is not writeable to the webserver - pleace notify the Administrator');				
- 			}
-
-			for ($k=0;$k<$count_uicols_name;$k++)
+			$header = array();
+			for ( $i = 0; $i < $count_uicols_name; ++$i )
 			{
-				if($input_type[$k]!='hidden')
+				if ( $input_type[$i] == 'hidden' )
 				{
-					$header[] = $this->utf2ascii($descr[$k]); 
-					$m++;
+					continue;
 				}
+				$header[] = $this->utf2ascii($descr[$i]); 
 			}
 			fputcsv($fp, $header);
+			unset($header);
 
-			$j=0;
-			if (isset($list) AND is_array($list))
+			if ( is_array($list) )
 			{
-				$header = array();
-				foreach($list as $entry)
+				foreach ( $list as $entry )
 				{
-					$m=0;
-					for ($k=0;$k<$count_uicols_name;$k++)
+					$row = array();
+					for ( $i = 0; $i < $count_uicols_name; ++$i )
 					{
-						if($input_type[$k]!='hidden')
+						if ( $input_type[$i] == 'hidden' )
 						{
-							$content[$j][$m]	= str_replace("\r\n"," ",$entry[$name[$k]]);
-							$m++;
+							continue;
 						}
+						$row[] = preg_replace("/\r\n/", ' ', $entry[$name[$i]]);
 					}
-					$j++;
-				}
-
-				foreach($content as $row)
-				{
 					fputcsv($fp, $row);
 				}
 			}
 			fclose($fp);
-			echo readfile($file);
-			unlink($file);
 		}
-
 
 		function increment_id($name)
 		{
