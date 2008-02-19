@@ -1341,7 +1341,7 @@
 		* @param array $list array with data to export
 		* @param array $name array containing keys in $list
 		* @param array $descr array containing Names for the heading of the output for the coresponding keys in $list
-		* @param array $input_type array containing information whether a field are to be suppressed from the output
+		* @param array $input_type array containing information whether fields are to be suppressed from the output
 		*/
 		function excel($list,$name,$descr,$input_type='')
 		{
@@ -1368,7 +1368,7 @@
 		* @param array $list array with data to export
 		* @param array $name array containing keys in $list
 		* @param array $descr array containing Names for the heading of the output for the coresponding keys in $list
-		* @param array $input_type array containing information whether a field are to be suppressed from the output
+		* @param array $input_type array containing information whether fields are to be suppressed from the output
 		*/
 		function excel_out($list,$name,$descr,$input_type='')
 		{
@@ -1428,7 +1428,7 @@
 		* @param array $list array with data to export
 		* @param array $name array containing keys in $list
 		* @param array $descr array containing Names for the heading of the output for the coresponding keys in $list
-		* @param array $input_type array containing information whether a field are to be suppressed from the output
+		* @param array $input_type array containing information whether fields are to be suppressed from the output
 		*/
 		function csv_out($list, $name, $descr, $input_type = array() )
 		{
