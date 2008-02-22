@@ -1801,6 +1801,43 @@
 
 		$GLOBALS['phpgw_setup']->oProc->m_odb->query("DELETE FROM phpgw_acl WHERE acl_appname = 'phpgw_group'", __LINE__, __FILE__);
 
+		$location = array();
+
+		// First get all the current locations
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query('SELECT DISTINCT app_id, acl_location FROM phpgw_acl'
+			. "{$GLOBALS['phpgw_setup']->oProc->m_odb->join} phpgw_applications ON phpgw_applications.app_name = phpgw_acl.acl_appname", __LINE__, __FILE__);
+		while ( $GLOBALS['phpgw_setup']->oProc->next_record() )
+		{
+			$location[$GLOBALS['phpgw_setup']->oProc->f('app_id') . '::' . $GLOBALS['phpgw_setup']->oProc->f('acl_location')] = array
+			(
+					'app_id'			=> $GLOBALS['phpgw_setup']->oProc->f('app_id'),
+					'name'				=> $GLOBALS['phpgw_setup']->oProc->f('acl_location'),
+					'descr'				=> 'Automatically migrated location - created during 0.9.17.515 upgrade',
+					'allow_grant'		=> false,
+					'allow_c_attrib'	=> false,
+					'c_attrib_table'	=> ''
+			);
+		}
+
+		// If they have proper locations already, override the basic location entry for that location
+		$GLOBALS['phpgw_setup']->oProc->query('SELECT phpgw_acl_location.*, phpgw_applications.app_id '
+			. ' FROM phpgw_acl_location' 
+			. " {$GLOBALS['phpgw_setup']->oProc->m_odb->join} phpgw_applications ON phpgw_acl_location.appname = phpgw_applications.app_name" 
+			, __LINE__, __FILE__); 
+		while ( $GLOBALS['phpgw_setup']->oProc->next_record() )
+		{
+			$location[$GLOBALS['phpgw_setup']->oProc->f('app_id') . '::' . $GLOBALS['phpgw_setup']->oProc->f('id')] = array
+			(
+					'app_id'			=> $GLOBALS['phpgw_setup']->oProc->f('app_id'),
+					'name'				=> $GLOBALS['phpgw_setup']->oProc->f('id'),
+					'descr'				=> $GLOBALS['phpgw_setup']->oProc->f('descr'),
+					'allow_grant'		=> !!$GLOBALS['phpgw_setup']->oProc->f('allow_grant'),
+					'allow_c_attrib'	=> !!$GLOBALS['phpgw_setup']->oProc->f('allow_c_attrib'),
+					'c_attrib_table'	=> $GLOBALS['phpgw_setup']->oProc->f('c_attrib_table'),
+			);
+		}
+
+
 //-- phpgw_locations : new table due to change in pk - renamed as it isn't just ACLs
 
 		$GLOBALS['phpgw_setup']->oProc->CreateTable('phpgw_locations', array
@@ -1821,26 +1858,6 @@
 			'uc' => array()
 		));
 
-// add records
-
-		$location = array();
-		$GLOBALS['phpgw_setup']->oProc->query('SELECT phpgw_acl_location.*, phpgw_applications.app_id '
-			. ' FROM phpgw_acl_location' 
-			. " {$GLOBALS['phpgw_setup']->oProc->m_odb->join} phpgw_applications ON phpgw_acl_location.appname = phpgw_applications.app_name" 
-			, __LINE__, __FILE__); 
-		while ( $GLOBALS['phpgw_setup']->oProc->next_record() )
-		{
-			$location[]=array
-			(
-					'app_id'			=> $GLOBALS['phpgw_setup']->oProc->f('app_id'),
-					'name'				=> $GLOBALS['phpgw_setup']->oProc->f('id'),
-					'descr'				=> $GLOBALS['phpgw_setup']->oProc->f('descr'),
-					'allow_grant'		=> $GLOBALS['phpgw_setup']->oProc->f('allow_grant'),
-					'allow_c_attrib'	=> $GLOBALS['phpgw_setup']->oProc->f('allow_c_attrib'),
-					'c_attrib_table'	=> $GLOBALS['phpgw_setup']->oProc->f('c_attrib_table'),
-			);
-		}
-
 		foreach ($location as $entry)
 		{
 			$GLOBALS['phpgw_setup']->oProc->query('INSERT INTO phpgw_locations(' . implode(',',array_keys($entry)) . ') VALUES (' . $GLOBALS['phpgw_setup']->oProc->validate_insert(array_values($entry)) . ')', __LINE__, __FILE__);
@@ -1850,58 +1867,33 @@
 
 //-------------------
 
-
-		$GLOBALS['phpgw_setup']->oProc->AddColumn('phpgw_acl','acl_app_id',array
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('phpgw_acl', 'location_id', array
 		(
 			'type' => 'int',
 			'precision' => '4',
 			'nullable' => True
 		));
-		$GLOBALS['phpgw_setup']->oProc->AddColumn('phpgw_acl','location_id',array
-		(
-			'type' => 'int',
-			'precision' => '4',
-			'nullable' => True
-		));
-
-		$GLOBALS['phpgw_setup']->oProc->query('SELECT phpgw_acl.acl_appname, phpgw_applications.app_id FROM phpgw_acl'
-			. " {$GLOBALS['phpgw_setup']->oProc->m_odb->join} phpgw_applications ON phpgw_acl.acl_appname = phpgw_applications.app_name GROUP BY phpgw_acl.acl_appname"
-			, __LINE__, __FILE__); 
-		while ( $GLOBALS['phpgw_setup']->oProc->next_record() )
-		{
-			$app[]=array
-			(
-					'app_id'			=> $GLOBALS['phpgw_setup']->oProc->f('app_id'),
-					'acl_appname'		=> $GLOBALS['phpgw_setup']->oProc->f('acl_appname')
-			);
-		}
-
-		foreach ($app as $entry)
-		{
-			$GLOBALS['phpgw_setup']->oProc->query("UPDATE phpgw_acl SET acl_app_id ={$entry['app_id']} WHERE acl_appname = '{$entry['acl_appname']}'", __LINE__, __FILE__);
-		}
-
-		unset($app);
 
 		$locations = array();
-		$GLOBALS['phpgw_setup']->oProc->query('SELECT DISTINCT phpgw_acl.acl_location, phpgw_locations.location_id'
-			. ' FROM phpgw_acl, phpgw_locations, phpgw_applications'
-			. ' WHERE phpgw_acl.acl_location = phpgw_locations.name'
-				. ' AND phpgw_acl.acl_appname = phpgw_applications.app_id'
-				. ' AND phpgw_locations.app_id = phpgw_applications.app_id'
+		$GLOBALS['phpgw_setup']->oProc->query('SELECT DISTINCT phpgw_acl.acl_location, phpgw_locations.location_id, phpgw_applications.app_name'
+			. ' FROM phpgw_acl'
+			. " {$GLOBALS['phpgw_setup']->oProc->m_odb->join} phpgw_locations ON phpgw_acl.acl_location = phpgw_locations.name"
+			. " {$GLOBALS['phpgw_setup']->oProc->m_odb->join} phpgw_applications ON phpgw_acl.acl_appname = phpgw_applications.app_name"
+			. ' WHERE phpgw_locations.app_id = phpgw_applications.app_id'
 			, __LINE__, __FILE__); 
 		while ( $GLOBALS['phpgw_setup']->oProc->next_record() )
 		{
 			$locations[] = array
 			(
-					'location_id'		=> $GLOBALS['phpgw_setup']->oProc->f('id'),
-					'acl_location'		=> $GLOBALS['phpgw_setup']->oProc->f('acl_location')
+					'location_id'		=> $GLOBALS['phpgw_setup']->oProc->f('location_id'),
+					'acl_location'		=> $GLOBALS['phpgw_setup']->oProc->f('acl_location'),
+					'app_name'			=> $GLOBALS['phpgw_setup']->oProc->f('app_name')
 			);
 		}
 
 		foreach ( $locations as $entry )
 		{
-			$GLOBALS['phpgw_setup']->oProc->query("UPDATE phpgw_acl SET location_id = {$entry['location_id']} WHERE acl_location = '{$entry['acl_location']}'", __LINE__, __FILE__);
+			$GLOBALS['phpgw_setup']->oProc->query("UPDATE phpgw_acl SET location_id = {$entry['location_id']} WHERE acl_location = '{$entry['acl_location']}' AND acl_appname = '{$entry['app_name']}'", __LINE__, __FILE__);
 		}
 		unset($locations);
 

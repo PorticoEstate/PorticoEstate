@@ -414,10 +414,9 @@
 
 			$this->memberships[$account_id] = array();
 
-			$sql = 'SELECT phpgw_accounts.account_id, phpgw_accounts.account_firstname FROM phpgw_accounts, phpgw_group_map'
-				. ' WHERE phpgw_accounts.account_id = phpgw_group_map.group_id'
-					. " AND phpgw_group_map.account_id = {$account_id}";
-
+			$sql = 'SELECT phpgw_accounts.account_id, phpgw_accounts.account_firstname FROM phpgw_accounts'
+				. " {$this->db->join} phpgw_group_map ON phpgw_accounts.account_id = phpgw_group_map.group_id"
+				. " WHERE phpgw_group_map.account_id = {$account_id}";
 			$this->db->query($sql, __LINE__, __FILE__);
 
 			while ( $this->db->next_record() )
@@ -425,8 +424,12 @@
 				$this->memberships[$account_id][] = array
 				(
 					'account_id'	=> $this->db->f('account_id'),
-					'account_name'	=> lang('%1 group', $this->db->f('account_firstname'))
+					'account_name'	=> $this->db->f('account_firstname', true)
 				);
+			}
+			foreach ( $this->memberships[$account_id] as &$member )
+			{
+				$member['account_name']	= lang('%1 group', $member['account_name']);
 			}
 			return $this->memberships[$account_id];
 		}

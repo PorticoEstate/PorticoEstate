@@ -959,7 +959,7 @@
 				$cache_accountid[$accountid] = $account_id;
 			}
 
-			$id = array();
+			$id = array($accountid);
 			$memberships = $GLOBALS['phpgw']->accounts->membership($account_id);
 			foreach ( $memberships as $membership )
 			{
@@ -968,12 +968,11 @@
 			unset($memberships);
 			$ids = implode(',', $id);
 
-			//TODO decide if 'run' will be used or just an empty string to signify base level access			
 			$sql = 'SELECT phpgw_applications.app_name, phpgw_acl.acl_rights'
-				. ' FROM phpgw_applications, phpgw_locations, phpgw_acl'
-				. ' WHERE phpgw_locations.app_id = phpgw_applications.app_id'
-					. ' AND phpgw_acl.location_id = phpgw_locations.location_id'
-					. " AND phpgw_locations.name = 'run'"
+				. ' FROM phpgw_applications'
+				. " {$this->db->join} phpgw_locations ON phpgw_locations.app_id = phpgw_applications.app_id"
+				. " {$this->db->join} phpgw_acl ON phpgw_locations.location_id = phpgw_acl.location_id"
+				. " WHERE phpgw_locations.name = 'run'"
 					. " AND phpgw_acl.acl_account IN ({$ids})";
 			$this->db->query($sql, __LINE__, __FILE__);
 
@@ -1038,7 +1037,7 @@
 			if ($location)
 			{
 				$location = $this->db->db_addslashes($location);
-				$at_location = " AND acl_location = '$location'";
+				$at_location = " AND phpgw_locations.name = '$location'";
 			}
 
 
@@ -1056,10 +1055,13 @@
 			$accounts = array();
 
 			$ids = implode(',', $acct_ids);
-			$sql = "SELECT acl_account, acl_grantor, acl_rights"
-				. " FROM phpgw_acl WHERE acl_appname = '$app' $at_location"
+			$sql = 'SELECT acl_account, acl_grantor, acl_rights'
+				. ' FROM phpgw_acl'
+				. " {$this->db->join} phpgw_locations ON phpgw_acl.location_id = phpgw_locations.location_id"
+				. " {$this->db->join} phpgw_applications ON phpgw_applications.app_id = phpgw_locations.app_id"
+				. " WHERE phpgw_applications.app_name = '$app' $at_location"
 					. " AND acl_grantor IS NOT NULL AND acl_type = $type"
-					. "AND acl_account IN ($ids)";
+					. " AND acl_account IN ($ids)";
 
 			$this->db->query($sql, __LINE__, __FILE__);
 			if ( $this->db->num_rows() == 0 && $type == 0 )

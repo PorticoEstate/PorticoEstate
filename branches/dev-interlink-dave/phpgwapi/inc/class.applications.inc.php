@@ -146,9 +146,7 @@
 			$apps = $GLOBALS['phpgw']->acl->get_user_applications($this->account_id);
 			foreach ( $GLOBALS['phpgw_info']['apps'] as $app )
 			{
-				//$check = $GLOBALS['phpgw']->acl->check('run',1,$app[0]);
-				$check = isset($apps[$app['name']]) ? $apps[$app['name']] : False;
-				if ($check)
+				if ( isset($apps[$app['name']]) )
 				{
 					$this->data[$app['name']] = array
 					(

@@ -37,15 +37,14 @@
 		),
 		'phpgw_acl' => array(
 			'fd' => array(
-				'acl_appname' => array('type' => 'varchar','precision' => 50),
-				'location_id' => array('type' => 'varchar','precision' => 255),
-				'acl_account' => array('type' => 'int','precision' => 4),
-				'acl_rights' => array('type' => 'int','precision' => 4),
-				'acl_grantor' => array('type' => 'int','precision' => 4,'nullable' => True),
-				'acl_type' => array('type' => 'int','precision' => 2,'nullable' => True,'default' => '0')
+				'acl_account' => array('type' => 'int', 'precision' => 4),
+				'acl_rights' => array('type' => 'int', 'precision' => 4),
+				'acl_grantor' => array('type' => 'int', 'precision' => 4, 'nullable' => true),
+				'acl_type' => array('type' => 'int', 'precision' => 2, 'nullable' => true, 'default' => '0')
+				'location_id' => array('type' => 'int', 'precision' => 4),
 			),
 			'pk' => array(),
-			'ix' => array('acl_location','acl_account'),
+			'ix' => array('location_id','acl_account'),
 			'fk' => array(),
 			'uc' => array()
 		),
