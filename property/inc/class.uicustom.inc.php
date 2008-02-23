@@ -47,7 +47,7 @@
 			'index'  => True,
 			'view'   => True,
 			'edit'   => True,
-			'excel' => True,
+			'download' => True,
 			'delete' => True
 		);
 
@@ -516,9 +516,9 @@
 				$record_limit	= $this->bo->total_records;
 			}
 
-			$link_excel = array
+			$link_download = array
 			(
-				'menuaction'	=> 'property.uicustom.excel',
+				'menuaction'	=> 'property.uicustom.download',
 				'sort'		=> $this->sort,
 				'order'		=> $this->order,
 				'filter'	=> $this->filter,
@@ -531,9 +531,9 @@
 
 			$data = array
 			(
-				'lang_excel'				=> 'excel',
-				'link_excel'				=> $GLOBALS['phpgw']->link('/index.php',$link_excel),
-				'lang_excel_help'			=> lang('Download table to MS Excel'),
+				'lang_download'				=> 'download',
+				'link_download'				=> $GLOBALS['phpgw']->link('/index.php',$link_download),
+				'lang_download_help'			=> lang('Download table to your browser'),
 
  				'allow_allrows'				=> true,
 				'allrows'				=> $this->allrows,
@@ -559,7 +559,7 @@
 		//	$GLOBALS['phpgw']->xslttpl->pp();
 		}
 
-		function excel()
+		function download()
 		{
 			$custom_id = phpgw::get_var('custom_id', 'int');
 			$list= $this->bo->read_custom($custom_id,$allrows=True);
@@ -569,7 +569,7 @@
 				$names[] = $col['name'];
 				$descr[] = $col['descr'];
 			}
-			$this->bocommon->excel($list,$names,$descr);
+			$this->bocommon->download($list,$names,$descr);
 		}
 	}
 ?>

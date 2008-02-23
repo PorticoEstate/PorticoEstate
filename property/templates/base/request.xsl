@@ -105,13 +105,13 @@
 					<xsl:call-template name="search_field"/>
 				</td>
 				<td class="small_text" valign="top" align="left">
-					<xsl:variable name="link_excel"><xsl:value-of select="link_excel"/></xsl:variable>
-					<xsl:variable name="lang_excel_help"><xsl:value-of select="lang_excel_help"/></xsl:variable>
-					<xsl:variable name="lang_excel"><xsl:value-of select="lang_excel"/></xsl:variable>
-					<a href="javascript:var w=window.open('{$link_excel}','','')"
-						onMouseOver="overlib('{$lang_excel_help}', CAPTION, '{$lang_excel}')"
+					<xsl:variable name="link_download"><xsl:value-of select="link_download"/></xsl:variable>
+					<xsl:variable name="lang_download_help"><xsl:value-of select="lang_download_help"/></xsl:variable>
+					<xsl:variable name="lang_download"><xsl:value-of select="lang_download"/></xsl:variable>
+					<a href="javascript:var w=window.open('{$link_download}','','')"
+						onMouseOver="overlib('{$lang_download_help}', CAPTION, '{$lang_download}')"
 						onMouseOut="nd()">
-						<xsl:value-of select="lang_excel"/></a>
+						<xsl:value-of select="lang_download"/></a>
 				</td>
 			</tr>
 			<tr>

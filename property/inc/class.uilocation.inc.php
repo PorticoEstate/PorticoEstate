@@ -46,7 +46,7 @@
 
 		var $public_functions = array
 		(
-			'excel'  	=> True,
+			'download'  	=> True,
 			'index'  	=> True,
 			'view'   	=> True,
 			'edit'   	=> True,
@@ -111,7 +111,7 @@
 			$this->bo->save_sessiondata($data);
 		}
 
-		function excel()
+		function download()
 		{
 			$summary	= phpgw::get_var('summary', 'bool', 'GET');
 			$type_id	= phpgw::get_var('type_id', 'int', 'GET');
@@ -129,7 +129,7 @@
 			}
 
 			$uicols	= $this->bo->uicols;
-			$this->bocommon->excel($list,$uicols['name'],$uicols['descr'],$uicols['input_type']);
+			$this->bocommon->download($list,$uicols['name'],$uicols['descr'],$uicols['input_type']);
 		}
 
 		function columns()
@@ -139,7 +139,7 @@
 
 			$GLOBALS['phpgw_info']['flags']['noframework'] = True;
 			$GLOBALS['phpgw_info']['flags']['nofooter'] = True;
-			
+
 			$values 		= phpgw::get_var('values');
 
 			if (isset($values['save']) && $values['save'] && $this->type_id)
@@ -474,9 +474,9 @@
 			$function_exchange_values .='window.close()';
 
 //_debug_array($input_name);
-			$link_excel = array
+			$link_download = array
 			(
-				'menuaction'		=> 'property.uilocation.excel',
+				'menuaction'		=> 'property.uilocation.download',
 				'sort'			=> $this->sort,
 				'order'			=> $this->order,
 				'cat_id'		=> $this->cat_id,
@@ -523,9 +523,9 @@
 			(
 				'menu'					=> $this->bocommon->get_menu(),
 				'colspan'				=> $uicols_count+1,
-				'lang_excel'				=> 'excel',
-				'link_excel'				=> $GLOBALS['phpgw']->link('/index.php',$link_excel),
-				'lang_excel_help'			=> lang('Download table to MS Excel'),
+				'lang_download'				=> 'download',
+				'link_download'				=> $GLOBALS['phpgw']->link('/index.php',$link_download),
+				'lang_download_help'			=> lang('Download table to your browser'),
 
 				'lang_columns'				=> lang('columns'),
 				'link_columns'				=> $GLOBALS['phpgw']->link('/index.php',$link_columns),
@@ -666,7 +666,7 @@
 			{
 				$GLOBALS['phpgw_info']['flags']['menu_selection'] .= '::tenant';
 			}
-			
+
 			if($location_code)
 			{
 				$type_id = count($location);
@@ -830,7 +830,7 @@
 			);
 
 			$lookup_type='form';
-			
+
 			$location_data=$this->bo->initiate_ui_location(array(
 						'values'		=> $values,
 						'type_id'		=> ($type_id-1),
@@ -1171,7 +1171,7 @@
 			{
 				$GLOBALS['phpgw_info']['flags']['menu_selection'] .= '::tenant';
 			}
-			
+
 			$GLOBALS['phpgw']->xslttpl->add_file(array('location','attributes_view'));
 
 			$values = $this->bo->read_single($location_code,array('tenant_id'=>'lookup', 'view' => true));
@@ -1561,9 +1561,9 @@
 
 
 
-			$link_excel = array
+			$link_download = array
 			(
-				'menuaction'	=> 'property.uilocation.excel',
+				'menuaction'	=> 'property.uilocation.download',
 						'district_id'		=>$this->district_id,
 						'part_of_town_id'	=>$this->part_of_town_id,
 						'filter'		=>$this->filter,
@@ -1608,9 +1608,9 @@
 				'lang_no_district'			=> lang('no district'),
 				'lang_district_statustext'		=> lang('Select the district the selection belongs to. To do not use a district select NO DISTRICT'),
 				'select_district_name'			=> 'district_id',
-				'lang_excel'				=> 'excel',
-				'link_excel'				=> $GLOBALS['phpgw']->link('/index.php',$link_excel),
-				'lang_excel_help'			=> lang('Download table to MS Excel'),
+				'lang_download'				=> 'download',
+				'link_download'				=> $GLOBALS['phpgw']->link('/index.php',$link_download),
+				'lang_download_help'			=> lang('Download table to your browser'),
 				'table_header_summary'			=> $table_header,
 				'values'				=> $content
 			);

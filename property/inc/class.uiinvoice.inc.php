@@ -56,8 +56,8 @@
 			'add'		=> True,
 			'debug'		=> True,
 			'view_order'	=> True,
-			'excel'		=> True,
-			'excel_sub'	=> True,
+			'download'		=> True,
+			'download_sub'	=> True,
 			'receipt'	=> True
 		);
 
@@ -81,7 +81,7 @@
 			$this->user_lid			= $this->bo->user_lid;
 			$this->allrows			= $this->bo->allrows;
 			$this->district_id		= $this->bo->district_id;
-			
+
 			$this->acl 			= CreateObject('phpgwapi.acl');
 
 			$this->acl_location		= '.invoice';
@@ -110,7 +110,7 @@
 		}
 
 
-		function excel()
+		function download()
 		{
 			$paid 			= phpgw::get_var('paid', 'bool');
 			$start_date 	= phpgw::get_var('start_date');
@@ -137,17 +137,17 @@
 				$name[]=$name_entry;
 			}
 
-			$descr	= $name; 
+			$descr	= $name;
 
-			$this->bocommon->excel($list,$name,$descr);
+			$this->bocommon->download($list,$name,$descr);
 		}
 
 
-		function excel_sub()
+		function download_sub()
 		{
 			$voucher_id 	= phpgw::get_var('voucher_id', 'int');
 			$paid 		= phpgw::get_var('paid', 'bool');
-			
+
 			if ($voucher_id)
 			{
 				$list = $this->bo->read_invoice_sub($voucher_id,$paid);
@@ -184,7 +184,7 @@
 					lang('vendor')
 				    );
 
-				$this->bocommon->excel($list,$name,$descr);
+				$this->bocommon->download($list,$name,$descr);
 			}
 		}
 
@@ -213,7 +213,7 @@
 			{
 				$GLOBALS['phpgw_info']['flags']['menu_selection'] .= '::paid';
 			}
-		
+
 			$start_date=urldecode($start_date);
 			$end_date=urldecode($end_date);
 
@@ -225,7 +225,7 @@
 
 			$values  = phpgw::get_var('values');
 			$receipt = array();
-			
+
 			if(isset($values['save']) && $values['save'] && isset($values['counter']) && $values['counter'])
 			{
 				$receipt = $this->bo->update_invoice($values);
@@ -385,9 +385,9 @@
 
 			$msgbox_data = $this->bocommon->msgbox_data($receipt);
 
-			$link_excel = array
+			$link_download = array
 			(
-				'menuaction'		=> 'property.uiinvoice.excel',
+				'menuaction'		=> 'property.uiinvoice.download',
 				'order'				=> $this->order,
 				'sort'				=> $this->sort,
 				'cat_id'			=> $this->cat_id,
@@ -410,9 +410,9 @@
 			$GLOBALS['phpgw']->js->validate_file('core','check','property');
 
 			$data['menu']							= $this->bocommon->get_menu();
-			$data['lang_excel']						= 'excel';
-			$data['link_excel']						= $GLOBALS['phpgw']->link('/index.php',$link_excel);
-			$data['lang_excel_help']				= lang('Download table to MS Excel');
+			$data['lang_download']						= 'download';
+			$data['link_download']						= $GLOBALS['phpgw']->link('/index.php',$link_download);
+			$data['lang_download_help']				= lang('Download table to your browser');
 
 			$data['msgbox_data']					= $GLOBALS['phpgw']->common->msgbox($msgbox_data);
 			$data['sum']							= number_format($sum, 2, ',', '');
@@ -663,9 +663,9 @@
 			$msgbox_data = $this->bocommon->msgbox_data($receipt);
 
 
-			$link_excel = array
+			$link_download = array
 			(
-				'menuaction'	=> 'property.uiinvoice.excel_sub',
+				'menuaction'	=> 'property.uiinvoice.download_sub',
 				'voucher_id'	=> $voucher_id,
 				'paid'		=> $paid
 			);
@@ -676,9 +676,9 @@
 			$data = array
 			(
 				'menu'							=> $this->bocommon->get_menu(),
-				'lang_excel'					=> 'excel',
-				'link_excel'					=> $GLOBALS['phpgw']->link('/index.php',$link_excel),
-				'lang_excel_help'				=> lang('Download table to MS Excel'),
+				'lang_download'					=> 'download',
+				'link_download'					=> $GLOBALS['phpgw']->link('/index.php',$link_download),
+				'lang_download_help'				=> lang('Download table to your browser'),
 
 				'img_check'					=> $GLOBALS['phpgw']->common->get_image_path('property').'/check.png',
 				'msgbox_data'					=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
@@ -1032,7 +1032,7 @@
 			{
 				$GLOBALS['phpgw']->session->appsession('session_data','add_values','');
 			}
-			
+
 			if(!$GLOBALS['phpgw']->session->appsession('session_data','add_values') && phpgw::get_var('add_invoice', 'bool'))
 			{
 				$values['art']			= phpgw::get_var('art', 'int');
@@ -1126,7 +1126,7 @@
 						$receipt['error'][] = array('msg'=>lang('That Vendor ID is not valid !'). ' : ' . $values['vendor_id']);
 					}
 				}
-				
+
 				if (!$values['payment_date'] && !$values['num_days'])
 				{
 					$receipt['error'][] = array('msg'=>lang('Please - select either payment date or number of days from invoice date !'));
@@ -1358,7 +1358,7 @@
 				$contacts->role='vendor';
 				if($values[0]['vendor_id'])
 				{
-					$custom 					= createObject('phpgwapi.custom_fields');	
+					$custom 					= createObject('phpgwapi.custom_fields');
 					$vendor_data['attributes']	= $custom->get_attribs('property','.vendor', 0, '', 'ASC', 'attrib_sort', true, true);
 					$vendor_data				= $contacts->read_single($values[0]['vendor_id'],$vendor_data);
 					if(is_array($vendor_data))
@@ -1373,7 +1373,7 @@
 						}
 					}
 				}
-			
+
 				$sum = 0;
 				foreach($values as $entry)
 				{
@@ -1478,7 +1478,7 @@
 						'text'		=> lang('Budget Responsible'),
 						'value'		=> $values[0]['budget_responsible']
 					);
-			
+
 			if($values[0]['project_id'])
 			{
 				$content_heading[] = array
@@ -1487,7 +1487,7 @@
 							'value'		=> $values[0]['project_id']
 						);
 			}
-			
+
 			$content_heading[] = array
 					(
 						'text'		=> lang('Sum'),
@@ -1500,9 +1500,9 @@
 									'value'=>array('justification'=>'left','width'=>200))
 							)
 						);
-		
+
 			$pdf->ezSetDy(-20);
-			
+
 			$table_header = array(
 				lang('order')=>array('justification'=>'right','width'=>60),
 				lang('invoice id')=>array('justification'=>'right','width'=>60),
@@ -1513,7 +1513,7 @@
 				'Tjeneste'=>array('justification'=>'right','width'=>50),
 				lang('amount')=>array('justification'=>'right','width'=>80),
 				);
-			
+
 
 			if(is_array($values))
 			{
@@ -1537,7 +1537,7 @@
 			$GLOBALS['phpgw_info']['flags']['noframework'] = True;
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('invoice','table_header'));
-			
+
 			$link_data_add = array
 			(
 				'menuaction'	=> 'property.uiinvoice.add',

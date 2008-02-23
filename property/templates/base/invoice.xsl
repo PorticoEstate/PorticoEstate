@@ -111,14 +111,14 @@
 		</table>
 	</xsl:template>
 
-	<xsl:template name="excel">
-			<xsl:variable name="link_excel"><xsl:value-of select="link_excel"/></xsl:variable>
-			<xsl:variable name="lang_excel_help"><xsl:value-of select="lang_excel_help"/></xsl:variable>
-			<xsl:variable name="lang_excel"><xsl:value-of select="lang_excel"/></xsl:variable>
-			<a href="javascript:var w=window.open('{$link_excel}','','')"
-				onMouseOver="overlib('{$lang_excel_help}', CAPTION, '{$lang_excel}')"
+	<xsl:template name="download">
+			<xsl:variable name="link_download"><xsl:value-of select="link_download"/></xsl:variable>
+			<xsl:variable name="lang_download_help"><xsl:value-of select="lang_download_help"/></xsl:variable>
+			<xsl:variable name="lang_download"><xsl:value-of select="lang_download"/></xsl:variable>
+			<a href="javascript:var w=window.open('{$link_download}','','')"
+				onMouseOver="overlib('{$lang_download_help}', CAPTION, '{$lang_download}')"
 				onMouseOut="nd()">
-				<xsl:value-of select="lang_excel"/></a>
+				<xsl:value-of select="lang_download"/></a>
 	</xsl:template>
 
 
@@ -153,7 +153,7 @@
 					<xsl:call-template name="nextmatchs"/>
 				</td>
 				<td colspan="3" width="100%" class="small_text" valign="top" align="left">
-					<xsl:call-template name="excel"/>
+					<xsl:call-template name="download"/>
 				</td>
 			</tr>
 		</table>
@@ -2240,7 +2240,7 @@
 							<xsl:value-of select="vendor"/>
 						</td>
 						<td width="50%" class="small_text" valign="top" align="right">
-							<xsl:call-template name="excel"/>
+							<xsl:call-template name="download"/>
 						</td>
 					</tr>
 				</xsl:when>

@@ -50,7 +50,7 @@
 			'view'			=> True,
 			'edit'			=> True,
 			'edit_basis'		=> True,
-			'excel'			=> True,
+			'download'			=> True,
 			'delete'		=> True,
 			'delete_basis'		=> True
 		);
@@ -102,7 +102,7 @@
 		{
 			$acl_location	= '.budget';
 			$acl_read 	= $this->acl->check($acl_location,1);
-			
+
 			if(!$acl_read)
 			{
 				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=>1, 'acl_location'=> $acl_location));
@@ -177,7 +177,7 @@
 																'revision'	=>$this->revision,
 																'allrows'	=>$this->allrows)
 										)),
-		
+
 				'sort_b_account_id'	=> $this->nextmatchs->show_sort_order(array
 										(
 											'sort'	=> $this->sort,
@@ -254,7 +254,7 @@
 				$record_limit	= $this->bo->total_records;
 			}
 
-						
+
 			$msgbox_data = $this->bocommon->msgbox_data($receipt);
 
 			$data = array
@@ -379,7 +379,7 @@
 																'revision'	=>$this->revision,
 																'allrows'	=>$this->allrows)
 										)),
-		
+
 				'sort_b_account_id'	=> $this->nextmatchs->show_sort_order(array
 										(
 											'sort'	=> $this->sort,
@@ -458,7 +458,7 @@
 				$record_limit	= $this->bo->total_records;
 			}
 
-						
+
 			$msgbox_data = $this->bocommon->msgbox_data($receipt);
 
 			$data = array
@@ -522,7 +522,7 @@
 			$acl_delete 	= $this->acl->check($acl_location,8);
 
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] .= '::obligations';
-		
+
 			$GLOBALS['phpgw']->xslttpl->add_file(array('budget',
 										'receipt',
 										'search_field',
@@ -536,7 +536,7 @@
 			if (isset($list) AND is_array($list))
 			{
 				$start_date = $GLOBALS['phpgw']->common->show_date(mktime(0,0,0,1,1,date("Y")),$GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']);
-				$end_date = $GLOBALS['phpgw']->common->show_date(mktime(0,0,0,12,31,date("Y")),$GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']);				
+				$end_date = $GLOBALS['phpgw']->common->show_date(mktime(0,0,0,12,31,date("Y")),$GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']);
 				$sum = 0;
 				foreach($list as $entry)
 				{
@@ -565,7 +565,7 @@
 			$sum_obligation = number_format($sum_obligation, 0, ',', ' ');
 			$sum_hits = number_format($sum_hits, 0, ',', ' ');
 			$sum_budget_cost = number_format($sum_budget_cost, 0, ',', ' ');
-			$sum_actual_cost = number_format($sum_actual_cost, 0, ',', ' ');			
+			$sum_actual_cost = number_format($sum_actual_cost, 0, ',', ' ');
 
 			$table_header[] = array
 			(
@@ -622,7 +622,7 @@
 			{
 				$record_limit	= $this->bo->total_records;
 			}
-						
+
 			$msgbox_data = $this->bocommon->msgbox_data($receipt);
 
 			$data = array
@@ -704,7 +704,7 @@
 					$values['b_account_id']='';
 					$receipt['error'][]=array('msg'=>lang('Please select a budget account !'));
 				}
-				
+
 				if(!$values['district_id'] && !$budget_id > 0)
 				{
 					$receipt['error'][]=array('msg'=>lang('Please select a district !'));
@@ -732,7 +732,7 @@
 					$year_selected = $values['year'];
 					$district_id = $values['district_id'];
 					$revision = $values['revision'];
-					
+
 					$values['year'] ='';
 					$values['district_id'] = '';
 					$values['revision'] = '';
@@ -757,7 +757,7 @@
 			);
 
 			$msgbox_data = $this->bocommon->msgbox_data($receipt);
-		
+
 			$b_account_data=$this->bocommon->initiate_ui_budget_account_lookup(array(
 						'b_account_id'		=> $values['b_account_id'],
 						'b_account_name'	=> isset($values['b_account_name'])?$values['b_account_name']:'',
@@ -780,7 +780,7 @@
 				'lang_district_statustext'		=> lang('Select the district'),
 				'select_district_name'			=> 'values[district_id]',
 				'district_list'				=> $this->bocommon->select_district_list('select',$values['district_id']),
-			
+
 				'msgbox_data'				=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
 				'edit_url'				=> $GLOBALS['phpgw']->link('/index.php',$link_data),
 				'lang_budget_id'			=> lang('ID'),
@@ -831,7 +831,7 @@
 					$receipt['error'][]=array('msg'=>lang('Please select a budget group !'));
 				}
 
-				
+
 				if(!$values['district_id'] && !$budget_id)
 				{
 					$receipt['error'][]=array('msg'=>lang('Please select a district !'));
@@ -860,7 +860,7 @@
 					$district_id = $values['district_id'];
 					$revision = $values['revision'];
 					$b_group = $values['b_group'];
-					
+
 					unset ($values['year']);
 					unset ($values['district_id']);
 					unset ($values['revision']);
@@ -897,7 +897,7 @@
 				'lang_distribute_year'			=> lang('distribute year'),
 				'lang_distribute_year_statustext'	=> lang('of years'),
 				'distribute_year_list'			=> $this->bo->get_distribute_year_list($values['distribute_year']),
-				
+
 				'lang_revision'				=> lang('revision'),
 				'lang_revision_statustext'		=> lang('Select revision'),
 				'revision_list'				=> $this->bo->get_revision_list($revision),
@@ -905,7 +905,7 @@
 				'lang_b_group'				=> lang('budget group'),
 				'lang_b_group_statustext'		=> lang('Select budget group'),
 				'b_group_list'				=> $this->bo->get_b_group_list($b_group),
-		
+
 				'lang_year'				=> lang('year'),
 				'lang_year_statustext'			=> lang('Budget year'),
 				'year'					=> $this->bocommon->select_list($year_selected,$year),
@@ -915,7 +915,7 @@
 				'lang_district_statustext'		=> lang('Select the district'),
 				'select_district_name'			=> 'values[district_id]',
 				'district_list'				=> $this->bocommon->select_district_list('select',$district_id),
-				
+
 				'value_year'				=> $values['year'],
 				'value_district_id'			=> $values['district_id'],
 				'value_b_group'				=> $values['b_group'],
@@ -1082,9 +1082,9 @@
 				$record_limit	= $this->bo->total_records;
 			}
 
-			$link_excel = array
+			$link_download = array
 			(
-				'menuaction'	=> 'property.uibudget.excel',
+				'menuaction'	=> 'property.uibudget.download',
 				'sort'		=>$this->sort,
 				'order'		=>$this->order,
 				'filter'	=>$this->filter,
@@ -1097,9 +1097,9 @@
 
 			$data = array
 			(
-				'lang_excel'				=> 'excel',
-				'link_excel'				=> $GLOBALS['phpgw']->link('/index.php',$link_excel),
-				'lang_excel_help'			=> lang('Download table to MS Excel'),
+				'lang_download'				=> 'download',
+				'link_download'				=> $GLOBALS['phpgw']->link('/index.php',$link_download),
+				'lang_download_help'			=> lang('Download table to your browser'),
 
  				'allow_allrows'				=> true,
 				'allrows'				=> $this->allrows,
@@ -1125,7 +1125,7 @@
 		//	$GLOBALS['phpgw']->xslttpl->pp();
 		}
 
-		function excel()
+		function download()
 		{
 			$budget_id = phpgw::get_var('budget_id', 'int');
 			$list= $this->bo->read_budget($budget_id,$allrows=True);
@@ -1135,7 +1135,7 @@
 				$names[] = $col['name'];
 				$descr[] = $col['descr'];
 			}
-			$this->bocommon->excel($list,$names,$descr);
+			$this->bocommon->download($list,$names,$descr);
 		}
 	}
 ?>

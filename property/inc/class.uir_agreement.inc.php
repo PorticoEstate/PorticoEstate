@@ -52,7 +52,7 @@
 			'edit_item'			=> True,
 			'view_item'			=> True,
 			'view_file'			=> True,
-			'excel'				=> True,
+			'download'				=> True,
 			'edit_common'		=> True,
 			'delete_common_h'	=> True
 		);
@@ -565,7 +565,7 @@
 					{
 						$values['customer_name'] = $first_name . ' ' . $values['customer_name'];
 					}
-										
+
 					$values['b_account_id']		= phpgw::get_var('b_account_id', 'int', 'POST');
 					$values['b_account_name']	= phpgw::get_var('b_account_name', 'string', 'POST');
 
@@ -700,7 +700,7 @@
 			$jscal->add_listener('values_start_date');
 			$jscal->add_listener('values_end_date');
 			$jscal->add_listener('values_termination_date');
-			
+
 			if ($id)
 			{
 				$jscal->add_listener('values_date');
@@ -772,7 +772,7 @@
 							'text_edit'					=> $text_edit,
 							'text_delete'				=> $text_delete
 						);
-						
+
 						unset($link_edit);
 						unset($link_delete);
 						unset($text_edit);
@@ -900,9 +900,9 @@
 				$r_agreement['files'][$i]['file_name']=urlencode($r_agreement['files'][$i]['name']);
 			}
 
-			$link_excel = array
+			$link_download = array
 			(
-				'menuaction'	=> 'property.uir_agreement.excel',
+				'menuaction'	=> 'property.uir_agreement.download',
 				'id'		=>$id
 			);
 
@@ -915,9 +915,9 @@
 
 				'alarm_data'					=> $alarm_data,
 				'lang_alarm'					=> lang('Alarm'),
-				'lang_excel'					=> 'excel',
-				'link_excel'					=> $GLOBALS['phpgw']->link('/index.php',$link_excel),
-				'lang_excel_help'				=> lang('Download table to MS Excel'),
+				'lang_download'					=> 'download',
+				'link_download'					=> $GLOBALS['phpgw']->link('/index.php',$link_download),
+				'lang_download_help'				=> lang('Download table to your browser'),
 
 				'fileupload'					=> True,
 				'link_view_file'				=> $GLOBALS['phpgw']->link('/index.php',$link_file_data),
@@ -976,7 +976,7 @@
 				'lang_termination_date_statustext'	=> lang('Select the estimated termination date'),
 				'lang_termination_date'			=> lang('termination date'),
 				'value_termination_date'		=> $r_agreement['termination_date'],
-				
+
 				'tenant_data'					=> $tenant_data,
 				'b_account_data'				=> $b_account_data,
 				'lang_name'						=> lang('name'),
@@ -1012,12 +1012,12 @@
 		//	$GLOBALS['phpgw']->xslttpl->pp();
 		}
 
-		function excel()
+		function download()
 		{
 			$id	= phpgw::get_var('id', 'int');
 			$list = $this->bo->read_details($id);
 			$uicols		= $this->bo->uicols;
-			$this->bocommon->excel($list,$uicols['name'],$uicols['descr'],$uicols['input_type']);
+			$this->bocommon->download($list,$uicols['name'],$uicols['descr'],$uicols['input_type']);
 		}
 
 		function edit_item()
@@ -1165,7 +1165,7 @@
 			$jscal = CreateObject('phpgwapi.jscalendar');
 			$jscal->add_listener('values_start_date');
 			$jscal->add_listener('values_end_date');
-			
+
 			$msgbox_data = $this->bocommon->msgbox_data($receipt);
 
 	//		$member_of_data	= $this->cats->formatted_xslt_list(array('selected' => $this->member_id,'globals' => True,link_data => array()));
@@ -1188,7 +1188,7 @@
 			}
 			else
 			{
-				$lookup_type='form';			
+				$lookup_type='form';
 				$main_form_name = 'form';
 				$update_form_name = 'form2';
 			}
@@ -1602,7 +1602,7 @@
 		//	$GLOBALS['phpgw']->xslttpl->pp();
 		}
 
-	
+
 		function edit_common()
 		{
 			$r_agreement_id	= phpgw::get_var('r_agreement_id', 'int');
@@ -1668,7 +1668,7 @@
 			$r_agreement = $this->bo->read_single(array('r_agreement_id'=>$r_agreement_id));
 
 			$default_next_date = date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'],$this->bocommon->date_to_timestamp($r_agreement['start_date']));
-			
+
 			if($c_id)
 			{
 				$values = $this->bo->read_single_common(array('r_agreement_id'=>$r_agreement_id,'c_id'=>$c_id));
@@ -1713,7 +1713,7 @@
 							'text_edit'					=> $text_edit,
 							'text_delete'				=> $text_delete
 						);
-						
+
 						unset($link_edit);
 						unset($link_delete);
 						unset($text_edit);

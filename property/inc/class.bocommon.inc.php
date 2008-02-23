@@ -75,7 +75,7 @@
 			}
 			else
 			{
-			//	$this->currentapp	= 'property';			
+			//	$this->currentapp	= 'property';
 			}
 
 			$this->socommon			= CreateObject('property.socommon','property');
@@ -275,7 +275,7 @@
 						(
 							'id'		=> $entry['id'],
 							'name'		=> $entry['name'],
-						);					
+						);
 					}
 				}
 				return $entry_list;
@@ -451,7 +451,7 @@
 						'lid'			=> $user['account_lid'],
 						'firstname'		=> $user['account_firstname'],
 						'lastname'		=> $user['account_lastname'],
-					);				
+					);
 				}
 			}
 			return $user_list;
@@ -549,7 +549,7 @@
 			{
 				$contacts	= CreateObject('property.soactor');
 				$contacts->role='vendor';
-				$custom 		= createObject('phpgwapi.custom_fields');	
+				$custom 		= createObject('phpgwapi.custom_fields');
 				$vendor_data['attributes'] = $custom->get_attribs('property','.vendor', 0, '', 'ASC', 'attrib_sort', true, true);
 
 				$vendor_data	= $contacts->read_single($data['vendor_id'],$vendor_data);
@@ -603,7 +603,7 @@
 				$tenant['lang_tenant']				= lang('Tenant');
 			}
 
-			
+
 			if($data['tenant_id'] && !$data['tenant_name'])
 			{
 				$tenant_object	= CreateObject('property.soactor');
@@ -985,7 +985,7 @@
 
 			if($location_level || $force_location)
 			{
-				
+
 				if($location_level)
 				{
 					$type_id = $location_level;
@@ -994,7 +994,7 @@
 				{
 					$type_id	= count($location_types);
 				}
-				
+
 				$this->join = $this->socommon->join;
 				$joinmethod .= " $this->join  fm_location1 ON ($entity_table.loc1 = fm_location1.loc1))";
 				$paranthesis .='(';
@@ -1207,7 +1207,7 @@
 			}
 
 			$socategory = CreateObject('property.socategory');
-			
+
 			$categories= $socategory->select_category_list(array('type'=>$data['type'],
 										'type_id'=>(isset($data['type_id'])?$data['type_id']:''),
 										'order'	=>$data['order']));
@@ -1311,7 +1311,7 @@
 			$datatypes[11]['name']= lang('Email');
 			$datatypes[12]['id']= 'link';
 			$datatypes[12]['name']= lang('Link');
-			
+
 			if($sub_module == 'actor')
 			{
 				$datatypes[13]['id']= 'pwd';
@@ -1335,7 +1335,6 @@
 		}
 
 		/**
-		* FIXME: This function needs to be renamed to 'download' - or something
 		* Choose which  download format to use - and call the appropriate function
 		*
 		* @param array $list array with data to export
@@ -1343,7 +1342,7 @@
 		* @param array $descr array containing Names for the heading of the output for the coresponding keys in $list
 		* @param array $input_type array containing information whether fields are to be suppressed from the output
 		*/
-		function excel($list,$name,$descr,$input_type='')
+		function download($list,$name,$descr,$input_type='')
 		{
 			$GLOBALS['phpgw_info']['flags']['noheader'] = True;
 			$GLOBALS['phpgw_info']['flags']['nofooter'] = True;
@@ -1432,13 +1431,13 @@
 		*/
 		function csv_out($list, $name, $descr, $input_type = array() )
 		{
-			$filename= str_replace(' ','_',$GLOBALS['phpgw_info']['user']['account_lid']).'.csv'; 
+			$filename= str_replace(' ','_',$GLOBALS['phpgw_info']['user']['account_lid']).'.csv';
 			$browser = CreateObject('phpgwapi.browser');
 			$browser->content_header($filename, 'application/csv');
 
  			if ( !$fp = fopen('php://output','w') )
  			{
-  				die('Unable to write to "php://output" - pleace notify the Administrator');				
+  				die('Unable to write to "php://output" - pleace notify the Administrator');
  			}
 
 			$count_uicols_name=count($name);
@@ -1450,7 +1449,7 @@
 				{
 					continue;
 				}
-				$header[] = $this->utf2ascii($descr[$i]); 
+				$header[] = $this->utf2ascii($descr[$i]);
 			}
 			fputcsv($fp, $header);
 			unset($header);
@@ -1524,18 +1523,18 @@
 		{
 			return $this->socommon->active_group_members($group_id);
 		}
-		
+
 		/**
 		* Preserve attribute values from post in case of an error
 		*
 		* @param array $values_attribute attribute definition and values from posting
-		* @param array $values value set with 
+		* @param array $values value set with
 		* @return array Array with attribute definition and values
 		*/
 		function preserve_attribute_values($values,$values_attribute)
 		{
 			foreach ( $values_attribute as $key => $attribute )
-			{	
+			{
 				for ($i=0;$i<count($values['attributes']);$i++)
 				{
 					if($values['attributes'][$i]['id'] == $attribute['attrib_id'])
@@ -1562,7 +1561,7 @@
 								{
 									if($choice['id'] == $attribute['value'])
 									{
-										$choice['checked'] = 'checked';	
+										$choice['checked'] = 'checked';
 									}
 								}
 							}
@@ -1576,15 +1575,15 @@
 			}
 			return $values;
 		}
-		
+
 		/**
 		* Converts utf-8 to ascii
 		*
 		* @param string $text string
-		* @return string ascii encoded 
+		* @return string ascii encoded
 		*/
 		function utf2ascii($text = '')
-		{	
+		{
 			if(!isset($GLOBALS['phpgw_info']['server']['charset']) || $GLOBALS['phpgw_info']['server']['charset']=='utf-8')
 			{
 				if ($text == utf8_decode($text))
@@ -1606,10 +1605,10 @@
 		* Converts ascii to utf-8
 		*
 		* @param string $text string
-		* @return string utf-8 encoded 
+		* @return string utf-8 encoded
 		*/
 		function ascii2utf($text = '')
-		{	
+		{
 			if(!isset($GLOBALS['phpgw_info']['server']['charset']) || $GLOBALS['phpgw_info']['server']['charset']=='utf-8')
 			{
 				return utf8_encode($text);
@@ -1618,7 +1617,7 @@
 			{
 				return $text;
 			}
-		}		
+		}
 
 		/**
 		* Collects locationdata from location form and appends to values
@@ -1628,7 +1627,7 @@
 		* @return updated values
 		*/
 		function collect_locationdata($values = '',$insert_record = '')
-		{	
+		{
 			if($insert_record)
 			{
 				for ($i=0; $i<count($insert_record['location']); $i++)
@@ -1664,7 +1663,7 @@
 		{
 			if(!isset($GLOBALS['phpgw_info']['user']['preferences']['property']['horisontal_menus']) || $GLOBALS['phpgw_info']['user']['preferences']['property']['horisontal_menus'] == 'no')
 			{
-				return;			
+				return;
 			}
 			$GLOBALS['phpgw']->xslttpl->add_file(array('menu'));
 			$menu_brutto = execMethod('property.menu.get_menu');
@@ -1672,7 +1671,7 @@
 			$level=0;
 			$menu['navigation'] = $this->get_sub_menu($menu_brutto['navigation'],$selection,$level);
 //_debug_array($GLOBALS['phpgw_info']['flags']['menu_selection']);
-//_debug_array($selection);			
+//_debug_array($selection);
 //_debug_array($menu);
 			return $menu;
 		}
@@ -1698,8 +1697,8 @@
 					{
 						unset($menu[$i]['children']);
 					}
-				}	
-				$i++;		
+				}
+				$i++;
 			}
 			return $menu;
 		}

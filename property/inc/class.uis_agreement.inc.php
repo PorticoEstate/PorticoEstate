@@ -52,9 +52,9 @@
 			'edit_item'		=> True,
 			'view_item'		=> True,
 			'view_file'		=> True,
-			'excel'			=> True,
+			'download'			=> True,
 			'attrib_history'=> True,
-			'import'		=> True			
+			'import'		=> True
 		);
 
 		function property_uis_agreement()
@@ -501,7 +501,7 @@
 			}
 
 			$import = CreateObject('property.import');
-			
+
 			$importfile = $import->importfile();
 			$id		= phpgw::get_var('id', 'int');
 			if(isset($importfile) && is_file($importfile) && !phpgw::get_var('cancel'))
@@ -520,13 +520,13 @@
 					{
 						$this->bo->import($values,$id);
 					}
-					$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uis_agreement.edit', 'id'=> $id));	
+					$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uis_agreement.edit', 'id'=> $id));
 				}
 				else
 				{
 					$import_action	= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uis_agreement.import', 'id'=> $id));
 					$import->pre_import($importfile, $valueset, $import_action, $header_info = lang('service agreement'));
-				}			
+				}
 			}
 			else
 			{
@@ -711,7 +711,7 @@
 			$jscal->add_listener('values_start_date');
 			$jscal->add_listener('values_end_date');
 			$jscal->add_listener('values_termination_date');
-			
+
 			if ($id)
 			{
 				$this->cat_id = ($s_agreement['cat_id']?$s_agreement['cat_id']:$this->cat_id);
@@ -828,9 +828,9 @@
 				$s_agreement['files'][$i]['file_name']=urlencode($s_agreement['files'][$i]['name']);
 			}
 
-			$link_excel = array
+			$link_download = array
 			(
-				'menuaction'	=> 'property.uis_agreement.excel',
+				'menuaction'	=> 'property.uis_agreement.download',
 				'id'		=> $id
 			);
 
@@ -840,12 +840,12 @@
 
 			$data = array
 			(
-				'link_import'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction' => 'property.uis_agreement.import')),				
+				'link_import'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction' => 'property.uis_agreement.import')),
 				'alarm_data'				=> $alarm_data,
 				'lang_alarm'				=> lang('Alarm'),
-				'lang_excel'				=> 'excel',
-				'link_excel'				=> $GLOBALS['phpgw']->link('/index.php',$link_excel),
-				'lang_excel_help'			=> lang('Download table to MS Excel'),
+				'lang_download'				=> 'download',
+				'link_download'				=> $GLOBALS['phpgw']->link('/index.php',$link_download),
+				'lang_download_help'			=> lang('Download table to your browser'),
 
 				'fileupload'				=> True,
 				'link_view_file'			=> $GLOBALS['phpgw']->link('/index.php',$link_file_data),
@@ -935,12 +935,12 @@
 		//	$GLOBALS['phpgw']->xslttpl->pp();
 		}
 
-		function excel()
+		function download()
 		{
 			$id	= phpgw::get_var('id', 'int');
 			$list = $this->bo->read_details($id);
 			$uicols		= $this->bo->uicols;
-			$this->bocommon->excel($list,$uicols['name'],$uicols['descr'],$uicols['input_type']);
+			$this->bocommon->download($list,$uicols['name'],$uicols['descr'],$uicols['input_type']);
 		}
 
 		function edit_item()
@@ -1607,7 +1607,7 @@
 
 			$function_msg	= lang('history');
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;	
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
 
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('attrib_history' => $data));
 		}

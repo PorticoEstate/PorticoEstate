@@ -47,7 +47,7 @@
 
 		var $public_functions = array
 		(
-			'excel'  => True,
+			'download'  => True,
 			'index'  => True,
 			'view'   => True,
 			'add'   => True,
@@ -85,7 +85,7 @@
 			$this->start_date			= $this->bo->start_date;
 			$this->end_date				= $this->bo->end_date;
 			$this->b_group				= $this->bo->b_group;
-			$this->paid				= $this->bo->paid;			
+			$this->paid				= $this->bo->paid;
 		}
 
 		function save_sessiondata()
@@ -104,18 +104,18 @@
 				'start_date'			=> $this->start_date,
 				'end_date'			=> $this->end_date,
 				'b_group'			=> $this->b_group,
-				'paid'				=> $this->paid,				
+				'paid'				=> $this->paid,
 			);
 			$this->bo->save_sessiondata($data);
 		}
 
-		function excel()
+		function download()
 		{
 			$start_date 	= urldecode($this->start_date);
 			$end_date 		= urldecode($this->end_date);
 			$list 			= $this->bo->read($start_date,$end_date,$allrows=True);
 			$uicols			= $this->bo->uicols;
-			$this->bocommon->excel($list,$uicols['name'],$uicols['descr'],$uicols['input_type']);
+			$this->bocommon->download($list,$uicols['name'],$uicols['descr'],$uicols['input_type']);
 		}
 
 
@@ -270,7 +270,7 @@
 																	'paid'		=> $this->paid
 																)
 										));
-					}					
+					}
 					if($uicols['name'][$i]=='workorder_id')
 					{
 						$table_header[$i]['sort_link']	=true;
@@ -388,9 +388,9 @@
 
 			$link_date_search				= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiproject.date_search'));
 
-			$link_excel = array
+			$link_download = array
 			(
-				'menuaction'	=> 'property.uiworkorder.excel',
+				'menuaction'	=> 'property.uiworkorder.download',
 						'sort'			=> $this->sort,
 						'order'			=> $this->order,
 						'cat_id'		=> $this->cat_id,
@@ -425,9 +425,9 @@
 			(
 				'menu'							=> $this->bocommon->get_menu(),
 				'group_filters'					=> isset($GLOBALS['phpgw_info']['user']['preferences']['property']['group_filters'])?$GLOBALS['phpgw_info']['user']['preferences']['property']['group_filters']:'',
-				'lang_excel'					=> 'excel',
-				'link_excel'					=> $GLOBALS['phpgw']->link('/index.php',$link_excel),
-				'lang_excel_help'				=> lang('Download table to MS Excel'),
+				'lang_download'					=> 'download',
+				'link_download'					=> $GLOBALS['phpgw']->link('/index.php',$link_download),
+				'lang_download_help'				=> lang('Download table to your browser'),
 
 				'start_date'					=>$start_date,
 				'end_date'						=>$end_date,

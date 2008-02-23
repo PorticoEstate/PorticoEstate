@@ -52,7 +52,7 @@
 			'edit_item'		=> True,
 			'view_item'		=> True,
 			'view_file'		=> True,
-			'excel'			=> True,
+			'download'			=> True,
 			'add_activity'		=> True
 		);
 
@@ -118,7 +118,7 @@
 
 			$values		= phpgw::get_var('values');
 			$receipt	= array();
-			 
+
 			if ($values['save'])
 			{
 
@@ -759,7 +759,7 @@
 			$jscal->add_listener('values_start_date');
 			$jscal->add_listener('values_end_date');
 			$jscal->add_listener('values_termination_date');
-			
+
 			if ($id)
 			{
 				$this->cat_id = ($agreement['cat_id']?$agreement['cat_id']:$this->cat_id);
@@ -951,9 +951,9 @@
 				}
 			}
 
-			$link_excel = array
+			$link_download = array
 			(
-				'menuaction'	=> 'property.uiagreement.excel',
+				'menuaction'	=> 'property.uiagreement.download',
 				'id'		=>$id,
 				'allrows'	=>$this->allrows
 			);
@@ -985,9 +985,9 @@
 
 				'alarm_data'							=> $alarm_data,
 				'lang_alarm'							=> lang('Alarm'),
-				'lang_excel'							=> 'excel',
-				'link_excel'							=> $GLOBALS['phpgw']->link('/index.php',$link_excel),
-				'lang_excel_help'						=> lang('Download table to MS Excel'),
+				'lang_download'							=> 'download',
+				'link_download'							=> $GLOBALS['phpgw']->link('/index.php',$link_download),
+				'lang_download_help'						=> lang('Download table to your browser'),
 
 				'fileupload'							=> True,
 				'link_view_file'						=> $GLOBALS['phpgw']->link('/index.php',$link_file_data),
@@ -1080,12 +1080,12 @@
 		//	$GLOBALS['phpgw']->xslttpl->pp();
 		}
 
-		function excel()
+		function download()
 		{
 			$id	= phpgw::get_var('id', 'int');
 			$list = $this->bo->read_details($id);
 			$uicols		= $this->bo->uicols;
-			$this->bocommon->excel($list,$uicols['name'],$uicols['descr'],$uicols['input_type']);
+			$this->bocommon->download($list,$uicols['name'],$uicols['descr'],$uicols['input_type']);
 		}
 
 		function edit_item()

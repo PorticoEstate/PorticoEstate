@@ -53,7 +53,7 @@
 			'delete'		=> True,
 			'priority_key'	=> True,
 			'view_file'		=> True,
-			'excel'		=> True
+			'download'		=> True
 		);
 
 		function property_uirequest()
@@ -150,13 +150,13 @@
 			}
 		}
 
-		function excel()
+		function download()
 		{
 			$start_date 	= urldecode($this->start_date);
 			$end_date 	= urldecode($this->end_date);
 			$list 		= $this->bo->read(array('start_date' =>$start_date, 'end_date' =>$end_date,'allrows'=>True,'list_descr' => true));
 			$uicols		= $this->bo->uicols;
-			$this->bocommon->excel($list,$uicols['name'],$uicols['descr'],$uicols['input_type']);
+			$this->bocommon->download($list,$uicols['name'],$uicols['descr'],$uicols['input_type']);
 		}
 
 		function index()
@@ -399,9 +399,9 @@
 			);
 
 
-			$link_excel = array
+			$link_download = array
 			(
-				'menuaction'	=> 'property.uirequest.excel',
+				'menuaction'	=> 'property.uirequest.download',
 						'sort'		=> $this->sort,
 						'order'		=> $this->order,
 						'cat_id'	=> $this->cat_id,
@@ -431,9 +431,9 @@
 			$data = array
 			(
 				'menu'							=> $this->bocommon->get_menu(),
-				'lang_excel'				=> 'excel',
-				'link_excel'				=> $GLOBALS['phpgw']->link('/index.php',$link_excel),
-				'lang_excel_help'			=> lang('Download table to MS Excel'),
+				'lang_download'				=> 'download',
+				'link_download'				=> $GLOBALS['phpgw']->link('/index.php',$link_download),
+				'lang_download_help'			=> lang('Download table to your browser'),
 
 				'lang_priority_key'			=> lang('Priority key'),
 				'lang_priority_help'			=> lang('To alter the priority key'),
