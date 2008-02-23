@@ -445,7 +445,8 @@ Do not add this invoice	property	no	Ikke legg til denne fakturaen
 Do not import this invoice	property	no	Ikke importer dette bilaget
 down	property	no	Ned
 Down	property	no	Ned
-Download table to MS Excel	property	no	Last ned tabell til MS Excel
+download table to your browser	property	no	Last ned tabell til din nettleser
+download	property	no	Last ned
 do you really want to delete this entry	property	no	Vil du virkelig slette denne posten
 Do you really want to update the categories	property	no	vil du virkelig oppdatere kategoriene
 Do you really want to update the categories again	property	no	vil du virkelig oppdatere kategoriene igjen

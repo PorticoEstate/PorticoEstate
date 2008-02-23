@@ -48,7 +48,7 @@
 		var $public_functions = array
 		(
 			'columns'	=> True,
-			'excel'  	=> True,
+			'download'  	=> True,
 			'index'  	=> True,
 			'view'   	=> True,
 			'edit'   	=> True,
@@ -106,10 +106,10 @@
 			if($this->cat_id > 0)
 			{
 				 $GLOBALS['phpgw_info']['flags']['menu_selection'] .= "::entity_{$this->entity_id}_{$this->cat_id}";
-			}	
+			}
 		}
-		
-		
+
+
 
 		function save_sessiondata()
 		{
@@ -132,7 +132,7 @@
 			$this->bo->save_sessiondata($data);
 		}
 
-		function excel()
+		function download()
 		{
 			$GLOBALS['phpgw_info']['flags'][noheader] = True;
 			$GLOBALS['phpgw_info']['flags'][nofooter] = True;
@@ -144,7 +144,7 @@
 			$list = $this->bo->read(array('entity_id'=>$this->entity_id,'cat_id'=>$this->cat_id,'allrows'=>true,'start_date'=>$start_date,'end_date'=>$end_date));
 			$uicols	= $this->bo->uicols;
 
-			$this->bocommon->excel($list,$uicols['name'],$uicols['descr'],$uicols['input_type']);
+			$this->bocommon->download($list,$uicols['name'],$uicols['descr'],$uicols['input_type']);
 		}
 
 
@@ -154,7 +154,7 @@
 
 			$GLOBALS['phpgw_info']['flags']['noframework'] = True;
 			$GLOBALS['phpgw_info']['flags']['nofooter'] = True;
-			
+
 			$values 		= phpgw::get_var('values');
 			$receipt = array();
 
@@ -292,7 +292,7 @@
 									$content[$j]['row'][$i]['text']		= lang('link');
 									$content[$j]['row'][$i]['link']		= $entity_entry[$uicols['name'][$i]];
 									$content[$j]['row'][$i]['target']	= '_blank';
-								
+
 								}
 							}
 						}
@@ -397,9 +397,9 @@
 				'end_date'	=> $end_date
 			);
 
-			$link_excel = array
+			$link_download = array
 			(
-				'menuaction'	=> 'property.uientity.excel',
+				'menuaction'	=> 'property.uientity.download',
 				'sort'		=> $this->sort,
 				'order'		=> $this->order,
 				'entity_id'	=> $this->entity_id,
@@ -469,9 +469,9 @@
 			(
 				'menu'							=> $this->bocommon->get_menu(),
 				'group_filters'				=> isset($GLOBALS['phpgw_info']['user']['preferences']['property']['group_filters'])?$GLOBALS['phpgw_info']['user']['preferences']['property']['group_filters']:'',
-				'lang_excel'				=> 'excel',
-				'link_excel'				=> $GLOBALS['phpgw']->link('/index.php',$link_excel),
-				'lang_excel_help'			=> lang('Download table to MS Excel'),
+				'lang_download'				=> 'download',
+				'link_download'				=> $GLOBALS['phpgw']->link('/index.php',$link_download),
+				'lang_download_help'			=> lang('Download table to your browser'),
 				'msgbox_data'				=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
 
 				'lang_columns'				=> lang('columns'),
@@ -673,7 +673,7 @@
 						}
 					}
 				}
-				
+
 				if(isset($id) && $id)
 				{
 					$values['id']=$id;
@@ -798,7 +798,7 @@
 			{
 				$category['location_level']= count(explode('-',$location_code));
 			}
-			
+
 			if(!$category['location_level'])
 			{
 				$category['location_level']= -1;
@@ -995,7 +995,7 @@
 
 			$GLOBALS['phpgw']->js->validate_file('overlib','overlib','property');
 			$GLOBALS['phpgw']->js->validate_file('dateformat','dateformat','property');
-			
+
 			$table_apply[] = array
 			(
 				'lang_save'						=> lang('save'),
@@ -1076,7 +1076,7 @@
 
 				'lang_history_date_statustext'	=> lang('Enter the date for this reading'),
 				'lang_date'						=> lang('date'),
-				'table_apply' 					=> $table_apply,	
+				'table_apply' 					=> $table_apply,
 				'textareacols'					=> isset($GLOBALS['phpgw_info']['user']['preferences']['property']['textareacols']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['textareacols'] ? $GLOBALS['phpgw_info']['user']['preferences']['property']['textareacols'] : 40,
 				'textarearows'					=> isset($GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows'] ? $GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows'] : 6
 			);
@@ -1105,7 +1105,7 @@
 				'cat_id' 	=> $cat_id,
 				'attrib_id' 	=> $attrib_id
 				);
-			
+
 			$boadmin_entity	= CreateObject('property.boadmin_entity');
 
 			$entity_category = $boadmin_entity->read_single_category($entity_id,$cat_id);
@@ -1121,11 +1121,11 @@
 			$t->set_var('title',lang('Help') . '<br>' . $entity_category['descr'] .  ' - "' . $attrib_name . '"');
 			$t->set_var('help_msg',$help_msg );
 			$t->set_var('lang_close',lang('close') );
-											
+
 			$GLOBALS['phpgw']->common->phpgw_header();
 			$t->pfp('out','help');
 		}
-		
+
 		function delete()
 		{
 			if(!$this->acl_delete)
@@ -1365,7 +1365,7 @@
 				'value_origin_id'				=> isset($origin_id)?$origin_id:'',
 				'lang_destination'				=> lang('destination'),
 				'value_destination'				=> isset($values['destination'])?$values['destination']:'',
-				
+
 				'lang_entity'					=> lang('entity'),
 				'entity_name'					=> $entity['name'],
 				'lang_category'					=> lang('category'),
@@ -1562,7 +1562,7 @@
 
 //_debug_array($values);
 			$pdf	= CreateObject('phpgwapi.pdf');
-			
+
 			$date = $GLOBALS['phpgw']->common->show_date('',$GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']);
 			$entry_date = $GLOBALS['phpgw']->common->show_date($values['entry_date'],$GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']);
 
@@ -1579,7 +1579,7 @@
 			$pdf->setStrokeColor(0,0,0,1);
 			$pdf->line(20,760,578,760);
 
-			$pdf->addText(50,790,10,$GLOBALS['phpgw']->accounts->id2name($values['user_id']) . ': ' . $entry_date);			
+			$pdf->addText(50,790,10,$GLOBALS['phpgw']->accounts->id2name($values['user_id']) . ': ' . $entry_date);
 			$pdf->addText(50,770,16,$entity['name'] . '::' . $category['name'] . ' #' . $id);
 			$pdf->addText(300,28,10,$date);
 
@@ -1596,7 +1596,7 @@
 									'value'=>array('justification'=>'left','width'=>200))
 							)
 						);
-		
+
 			$table_header = array(
 				'name'=>array('justification'=>'left','width'=>110),
 				'sep'=>array('justification'=>'center','width'=>15),
@@ -1622,7 +1622,7 @@
 							}
 						}
 					}
-		
+
 					$content[] = array
 					(
 						'name'		=> $entry['name'],
@@ -1644,7 +1644,7 @@
 							{
 								$value = $choice['value'];
 							}
-						} 
+						}
 					}
 					else
 					{
@@ -1666,7 +1666,7 @@
 			}
 
 			$document = $pdf->ezOutput();
-			$pdf->print_pdf($document,$entity['name'] . '_' . str_replace(' ','_',$GLOBALS['phpgw']->accounts->id2name($this->account)));  
+			$pdf->print_pdf($document,$entity['name'] . '_' . str_replace(' ','_',$GLOBALS['phpgw']->accounts->id2name($this->account)));
 		}
 	}
 ?>

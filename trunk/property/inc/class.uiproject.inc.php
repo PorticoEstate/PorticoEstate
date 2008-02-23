@@ -48,7 +48,7 @@
 
 		var $public_functions = array
 		(
-			'excel'  => True,
+			'download'  => True,
 			'index'  => True,
 			'view'   => True,
 			'edit'   => True,
@@ -101,13 +101,13 @@
 			$this->bo->save_sessiondata($data);
 		}
 
-		function excel()
+		function download()
 		{
 			$start_date = urldecode(phpgw::get_var('start_date'));
 			$end_date 	= urldecode(phpgw::get_var('end_date'));
 			$list 		= $this->bo->read($start_date,$end_date,$allrows=True);
 			$uicols	= $this->bo->uicols;
-			$this->bocommon->excel($list,$uicols['name'],$uicols['descr'],$uicols['input_type']);
+			$this->bocommon->download($list,$uicols['name'],$uicols['descr'],$uicols['input_type']);
 		}
 
 		function index()
@@ -356,9 +356,9 @@
 
 			$link_date_search = $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiproject.date_search'));
 
-			$link_excel = array
+			$link_download = array
 			(
-				'menuaction'	=> 'property.uiproject.excel',
+				'menuaction'	=> 'property.uiproject.download',
 						'sort'			=>$this->sort,
 						'order'			=>$this->order,
 						'cat_id'		=>$this->cat_id,
@@ -379,9 +379,9 @@
 			$data = array
 			(
 				'menu'							=> $this->bocommon->get_menu(),
-				'lang_excel'			=> 'excel',
-				'link_excel'			=> $GLOBALS['phpgw']->link('/index.php',$link_excel),
-				'lang_excel_help'		=> lang('Download table to MS Excel'),
+				'lang_download'			=> 'download',
+				'link_download'			=> $GLOBALS['phpgw']->link('/index.php',$link_download),
+				'lang_download_help'		=> lang('Download table to your browser'),
 
 				'start_date'			=>$start_date,
 				'end_date'			=>$end_date,
@@ -643,7 +643,7 @@
 						{
 							$GLOBALS['phpgw']->send = CreateObject('phpgwapi.send');
 						}
-					
+
 						if ($values['approval'] && $values['mail_address'])
 						{
 							$from_name=$GLOBALS['phpgw_info']['user']['fullname'];
@@ -691,9 +691,9 @@
 
 								$body .= lang('Altered by') . ': ' . $from_name . "\n";
 								$body .= lang('remark') . ': ' . $values['remark'] . "\n";
-						
+
 								$body = nl2br($body);
-							
+
 								$returncode = $GLOBALS['phpgw']->send->msg('email',$to,$subject=lang('project %1 has been edited',$id),$body, False,False,False, $from_email, $from_name, 'html');
 
 								if (!$returncode)	// not nice, but better than failing silently
@@ -738,7 +738,7 @@
 			if(isset($bypass_error) || ((!isset($receipt['error']) || $add_request) && !$bypass) && $id)
 			{
 				$values	= $this->bo->read_single($id);
-				
+
 				if(!isset($values['origin']))
 				{
 					$values['origin'] = '';
@@ -870,7 +870,7 @@
 			}
 
 			$values['sum'] = isset($values['budget'])?$values['budget']:0;
-			
+
 			if(isset($values['reserve']) && $values['reserve']!=0)
 			{
 				$reserve_remainder=$values['reserve']-$values['deviation'];
@@ -926,7 +926,7 @@
 				'lang_coordination' 			=> lang('Coordination'),
 				'lang_time_and_budget' 			=> lang('Time and budget'),
 				'lang_extra' 					=> lang('Extra'),
-				
+
 				'msgbox_data'					=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
 
 				'value_origin'					=> isset($values['origin']) ? $values['origin'] : '',
@@ -1184,7 +1184,7 @@
 			}
 
 			$values['sum'] = isset($values['budget'])?$values['budget']:0;
-			
+
 			if(isset($values['reserve']) && $values['reserve']!=0)
 			{
 				$reserve_remainder=$values['reserve']-$values['deviation'];

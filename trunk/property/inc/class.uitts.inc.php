@@ -43,8 +43,8 @@
 			'add'		=> True,
 			'add2'		=> True,
 			'delete'	=> True,
-			'excel'		=> True,
-			'excel2'	=> True,
+			'download'		=> True,
+			'download2'	=> True,
 			'view_file'	=> True
 		);
 
@@ -109,18 +109,18 @@
 			$this->bo->save_sessiondata($data);
 		}
 
-		function excel2()
+		function download2()
 		{
 			if(!$this->acl->check('.ticket.external',1))
 			{
 				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=> 1, 'acl_location'=> '.ticket.external'));
 			}
-			
-			$this->excel($external = true);
+
+			$this->download($external = true);
 		}
 
 
-		function excel($external='')
+		function download($external='')
 		{
 			$start_date 	= urldecode($this->start_date);
 			$end_date 	= urldecode($this->end_date);
@@ -191,7 +191,7 @@
 
 //_debug_array($descr);
 
-			$this->bocommon->excel($list,$name,$descr);
+			$this->bocommon->download($list,$name,$descr);
 		}
 
 
@@ -201,7 +201,7 @@
 			{
 				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uitts.index2'));
 			}
-			
+
 			if(!$this->acl_read)
 			{
 				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=> 1, 'acl_location'=> $this->acl_location));
@@ -277,14 +277,14 @@
 
 				switch ($ticket['status'])
 				{
-					case 'X': 
-						$bgcolor = '#5EFB6E'; 
+					case 'X':
+						$bgcolor = '#5EFB6E';
 						$status = lang('Closed');
 						$text_edit_status = lang('Open');
 						$new_status = 'O';
 					break;
-					case 'I': 
-						$bgcolor = '#FF9933'; 
+					case 'I':
+						$bgcolor = '#FF9933';
 						$status = lang('In progress');
 						$text_edit_status = lang('Close');
 						$new_status = 'X';
@@ -295,7 +295,7 @@
 						$text_edit_status = lang('Close');
 						$new_status = 'X';
 					break;
-				}			
+				}
 
 				$link_status_data = array
 				(
@@ -313,7 +313,7 @@
 							'district_id'	=> $this->district_id,
 							'allrows'		=> $this->allrows
 				);
-				
+
 				$content[] = array
 				(
 					'id'					=> $ticket['id'],
@@ -518,9 +518,9 @@
 
 			$link_date_search	= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiproject.date_search'));
 
-			$link_excel = array
+			$link_download = array
 			(
-				'menuaction' 	=> 'property.uitts.excel',
+				'menuaction' 	=> 'property.uitts.download',
 				'second_display'=> true,
 				'sort'		=> $this->sort,
 				'order'		=> $this->order,
@@ -554,9 +554,9 @@
 			(
 				'menu'							=> $this->bocommon->get_menu(),
 				'group_filters'					=> $pref_group_filters,
-				'lang_excel'					=> 'excel',
-				'link_excel'					=> $GLOBALS['phpgw']->link('/index.php',$link_excel),
-				'lang_excel_help'				=> lang('Download table to MS Excel'),
+				'lang_download'					=> 'download',
+				'link_download'					=> $GLOBALS['phpgw']->link('/index.php',$link_download),
+				'lang_download_help'				=> lang('Download table to your browser'),
 
 				'start_date'					=> $start_date,
 				'end_date'						=> $end_date,
@@ -615,7 +615,7 @@
 		}
 
 		function index2()
-		{	
+		{
 			if(!$this->acl->check('.ticket.external',1))
 			{
 				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=> 1, 'acl_location'=> '.ticket.external'));
@@ -881,9 +881,9 @@
 
 			$link_date_search	= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiproject.date_search'));
 
-			$link_excel = array
+			$link_download = array
 			(
-				'menuaction' 		=> 'property.uitts.excel2',
+				'menuaction' 		=> 'property.uitts.download2',
 				'second_display'	=> true,
 				'sort'				=> $this->sort,
 				'order'				=> $this->order,
@@ -904,10 +904,10 @@
 
 			$data = array
 			(
-				'lang_excel'					=> 'excel',
-				'link_excel'					=> $GLOBALS['phpgw']->link('/index.php',$link_excel),
-				'lang_excel_help'				=> lang('Download table to MS Excel'),
-	
+				'lang_download'					=> 'download',
+				'link_download'					=> $GLOBALS['phpgw']->link('/index.php',$link_download),
+				'lang_download_help'				=> lang('Download table to your browser'),
+
 				'start_date'					=> $start_date,
 				'end_date'						=> $end_date,
 				'lang_none'						=> lang('None'),
@@ -1086,7 +1086,7 @@
 					if($values['file_name'])
 					{
 						$to_file = $this->fakebase. '/' . 'fmticket' . '/' . $receipt['id'] . '/' . $values['file_name'];
-	
+
 						if($this->bo->vfs->file_exists(array(
 								'string' => $to_file,
 								'relatives' => Array(RELATIVE_NONE)
@@ -1288,9 +1288,9 @@
 			else
 			{
 				$values['extra']['tenant_id'] = $this->tenant_id;
-				$values['location_code'] = $bolocation->get_tenant_location($this->tenant_id);			
-			
-				
+				$values['location_code'] = $bolocation->get_tenant_location($this->tenant_id);
+
+
 				if(!$values['location_code'])
 				{
 					$receipt['error'][]=array('msg'=>lang('No location for this tenant!'));
@@ -1303,7 +1303,7 @@
 					{
 						$values['location']["loc{$i}"]=$entry;
 						$i++;
-					}	
+					}
 				}
 				if(is_array($values['location_code']))
 				{
@@ -1316,17 +1316,17 @@
 			$values['street_name'] = $values['location_data']['street_name'];
 			$values['street_number'] = $values['location_data']['street_number'];
 
-			
+
 			$values['assignedto']= (isset($GLOBALS['phpgw_info']['user']['preferences']['property']['assigntodefault'])?$GLOBALS['phpgw_info']['user']['preferences']['property']['assigntodefault']:'');
 			if(!$values['assignedto'])
 			{
 				$receipt['error'][]=array('msg'=>lang('Please set default assign to in preferences for user %1!', $GLOBALS['phpgw']->accounts->id2name($this->account)));
 			}
 
-			$values['group_id']= (isset($GLOBALS['phpgw_info']['user']['preferences']['property']['groupdefault'])?$GLOBALS['phpgw_info']['user']['preferences']['property']['groupdefault']:'');			
-			
+			$values['group_id']= (isset($GLOBALS['phpgw_info']['user']['preferences']['property']['groupdefault'])?$GLOBALS['phpgw_info']['user']['preferences']['property']['groupdefault']:'');
+
 			$values['cat_id'] = (isset($GLOBALS['phpgw_info']['user']['preferences']['property']['tts_category'])?$GLOBALS['phpgw_info']['user']['preferences']['property']['tts_category']:'');
-			
+
 			if(!$values['cat_id'])
 			{
 				$receipt['error'][]=array('msg'=>lang('Please set default category in preferences for user %1!', $GLOBALS['phpgw']->accounts->id2name($this->account)));
@@ -1488,7 +1488,7 @@
 				'lang_contact_phone'				=> lang('contact phone'),
 				'lang_contact_phone_statustext'		=> lang('contact phone'),
 				'value_contact_phone'				=> (isset($values['contact_phone'])?$values['contact_phone']:''),
-				
+
 				'lang_contact_email'				=> lang('contact email'),
 				'lang_contact_email_statustext'		=> lang('contact email'),
 				'value_contact_email'				=> (isset($values['contact_email'])?$values['contact_email']:''),
@@ -1527,7 +1527,7 @@
 				}
 
 				$so2	= CreateObject('property.sotts2');
-				$so2->acl_location	= $this->acl_location;				
+				$so2->acl_location	= $this->acl_location;
 				$receipt = $so2->update_ticket($values,$id);
 				if(isset($values['delete_file']) && is_array($values['delete_file']))
 				{
@@ -1539,7 +1539,7 @@
 				if($values['file_name'])
 				{
 					$to_file = $this->fakebase. '/' . 'fmticket' . '/' . $id . '/' . $values['file_name'];
-	
+
 					if($this->bo->vfs->file_exists(array(
 							'string' => $to_file,
 							'relatives' => Array(RELATIVE_NONE)
@@ -1710,7 +1710,7 @@
 				for ($i=0;$i<count($ticket['origin']);$i++)
 				{
 					$ticket['origin'][$i]['link']=$GLOBALS['phpgw']->link('/index.php',$ticket['origin'][$i]['link']);
-					
+
 					if(substr($ticket['origin'][$i]['type'],0,6)=='entity')
 					{
 						$type		= explode("_",$ticket['origin'][$i]['type']);
@@ -1737,7 +1737,7 @@
 				for ($i=0;$i<count($ticket['destination']);$i++)
 				{
 					$ticket['destination'][$i]['link']=$GLOBALS['phpgw']->link('/index.php',$ticket['destination'][$i]['link']);
-					
+
 					if(substr($ticket['destination'][$i]['type'],0,6)=='entity')
 					{
 						$type		= explode("_",$ticket['destination'][$i]['type']);
@@ -1915,9 +1915,9 @@
 				$values['assignedto'] = 'ignore';
 				$values['group_id'] = 'ignore';
 				$values['cat_id'] = 'ignore';
-				
+
 				$so2	= CreateObject('property.sotts2');
-				$so2->acl_location	= '.ticket.external';				
+				$so2->acl_location	= '.ticket.external';
 				$receipt = $so2->update_ticket($values,$id);
 			}
 
@@ -2013,7 +2013,7 @@
 				for ($i=0;$i<count($ticket['origin']);$i++)
 				{
 					$ticket['origin'][$i]['link']=$GLOBALS['phpgw']->link('/index.php',$ticket['origin'][$i]['link']);
-					
+
 					if(substr($ticket['origin'][$i]['type'],0,6)=='entity')
 					{
 						$type		= explode("_",$ticket['origin'][$i]['type']);

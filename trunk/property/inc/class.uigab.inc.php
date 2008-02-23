@@ -52,7 +52,7 @@
 			'view' 		=> True,
 			'edit'   	=> True,
 			'delete' 	=> True,
-			'excel'  	=> True
+			'download'  	=> True
 		);
 
 		function property_uigab()
@@ -101,7 +101,7 @@
 			$this->bo->save_sessiondata($data);
 		}
 
-		function excel()
+		function download()
 		{
 			$address 		= phpgw::get_var('address');
 			$check_payments 	= phpgw::get_var('check_payments', 'bool');
@@ -122,7 +122,7 @@
 			$payment_date = $this->bo->payment_date;
 
 			$i=0;
-			
+
 			while (is_array($gab_list) && list(,$gab) = each($gab_list))
 			{
 				if(is_array($payment_date))
@@ -150,26 +150,26 @@
 				{
 					$content[$i][$date] = $gab['payment'][$date];
 				}
-				
+
 				$i++;
 			}
 
 			//_debug_array($content);
 			$table_header['name'] = array('owner','hits','address','gaards_nr','bruks_nr','feste_nr','seksjons_nr','location_code');
-			$table_header['descr'] = array(lang('owner'),lang('hits'),lang('address'),'gaards_nr','bruks_nr','feste_nr','seksjons_nr','location_code');			
+			$table_header['descr'] = array(lang('owner'),lang('hits'),lang('address'),'gaards_nr','bruks_nr','feste_nr','seksjons_nr','location_code');
 
 			if(is_array($payment_date))
 			{
 				reset($payment_date);
 			}
-			
+
 			while (is_array($payment_date) && list(,$date) = each($payment_date))
 			{
 				$table_header['name'][] = $date;
 				$table_header['descr'][] = $date;
 			}
 
-			$this->bocommon->excel($content,$table_header['name'],$table_header['descr'],array());
+			$this->bocommon->download($content,$table_header['name'],$table_header['descr'],array());
 		}
 
 
@@ -214,7 +214,7 @@
 			$config		= CreateObject('phpgwapi.config','property');
 
 			$config->read_repository();
-			
+
 			$link_to_map = (isset($config->config_data['map_url'])?$config->config_data['map_url']:'');
 
 			if($link_to_map)
@@ -230,9 +230,9 @@
 			}
 
 			$payment_date = $this->bo->payment_date;
-			
+
 			$i=0;
-			
+
 			$content=array();
 			while (is_array($gab_list) && list(,$gab) = each($gab_list))
 			{
@@ -269,7 +269,7 @@
 				{
 					$content[$i]['payment'][] = array('amount' => $gab['payment'][$date]);
 				}
-				
+
 				$i++;
 			}
 
@@ -346,12 +346,12 @@
 				);
 
 			$colspan = count($table_header[0]);
-			
+
 			if(is_array($payment_date))
 			{
 				reset($payment_date);
 			}
-			
+
 			while (is_array($payment_date) && list(,$date) = each($payment_date))
 			{
 				$table_header[0]['payment_header'][] = array('header'=>$date);
@@ -394,9 +394,9 @@
 			);
 
 
-			$link_excel = array
+			$link_download = array
 			(
-				'menuaction'	=> 'property.uigab.excel',
+				'menuaction'	=> 'property.uigab.download',
 					'sort'		=>$this->sort,
 					'order'		=>$this->order,
 					'cat_id'	=>$this->cat_id,
@@ -425,10 +425,10 @@
 			$data = array
 			(
 				'menu'							=> $this->bocommon->get_menu(),
-				'lang_excel'				=> 'excel',
-				'link_excel'				=> $GLOBALS['phpgw']->link('/index.php',$link_excel),
-				'lang_excel_help'			=> lang('Download table to MS Excel'),
-				
+				'lang_download'				=> 'download',
+				'link_download'				=> $GLOBALS['phpgw']->link('/index.php',$link_download),
+				'lang_download_help'			=> lang('Download table to your browser'),
+
 				'search_field_header'			=> $search_field_header,
 				'allrows'				=> $this->allrows,
 				'allow_allrows'				=> true,
@@ -794,7 +794,7 @@
 			);
 
 
-			
+
 			$done_data = array('menuaction'=> 'property.uigab.'.$from);
 			if($from=='list_detail')
 			{

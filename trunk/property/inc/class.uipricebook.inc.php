@@ -55,8 +55,8 @@
 			'activity_vendor'	=> True,
 			'prizing'		=> True,
 			'delete' 		=> True,
-			'excel'			=> True,
-			'excel_2'		=> True
+			'download'			=> True,
+			'download_2'		=> True
 		);
 
 		function property_uipricebook()
@@ -102,7 +102,7 @@
 			$this->bo->save_sessiondata($data);
 		}
 
-		function excel()
+		function download()
 		{
 			$list = $this->bo->read();
 
@@ -119,7 +119,7 @@
 						lang('Index Count')
 					);
 
-			$this->bocommon->excel($list,$name,$descr);
+			$this->bocommon->download($list,$name,$descr);
 		}
 
 		function index()
@@ -262,9 +262,9 @@
 
 			$msgbox_data = $this->bocommon->msgbox_data($receipt);
 
-			$link_excel = array
+			$link_download = array
 			(
-				'menuaction'	=> 'property.uipricebook.excel',
+				'menuaction'	=> 'property.uipricebook.download',
 				'sort'		=> $this->sort,
 				'order'		=> $this->order,
 				'cat_id'	=> $this->cat_id,
@@ -279,9 +279,9 @@
 			$data = array
 			(
 				'menu'							=> $this->bocommon->get_menu(),
-				'lang_excel'					=> 'excel',
-				'link_excel'					=> $GLOBALS['phpgw']->link('/index.php',$link_excel),
-				'lang_excel_help'				=> lang('Download table to MS Excel'),
+				'lang_download'					=> 'download',
+				'link_download'					=> $GLOBALS['phpgw']->link('/index.php',$link_download),
+				'lang_download_help'				=> lang('Download table to your browser'),
 
 				'msgbox_data'					=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
 				'allrows'					=> $this->allrows,
@@ -782,7 +782,7 @@
 		}
 
 
-		function excel_2()
+		function download_2()
 		{
 
 			$list = $this->bo->read_activities_pr_agreement_group();
@@ -810,7 +810,7 @@
 							);
 
 
-			$this->bocommon->excel($list,$name,$descr);
+			$this->bocommon->download($list,$name,$descr);
 		}
 
 
@@ -902,9 +902,9 @@
 				$record_limit	= $this->bo->total_records;
 			}
 
-			$link_excel = array
+			$link_download = array
 			(
-				'menuaction'	=> 'property.uipricebook.excel_2',
+				'menuaction'	=> 'property.uipricebook.download_2',
 				'sort'		=> $this->sort,
 				'order'		=> $this->order,
 				'cat_id'	=> $this->cat_id,
@@ -917,9 +917,9 @@
 			$data = array
 			(
 				'menu'							=> $this->bocommon->get_menu(),
-				'lang_excel'					=> 'excel',
-				'link_excel'					=> $GLOBALS['phpgw']->link('/index.php',$link_excel),
-				'lang_excel_help'				=> lang('Download table to MS Excel'),
+				'lang_download'					=> 'download',
+				'link_download'					=> $GLOBALS['phpgw']->link('/index.php',$link_download),
+				'lang_download_help'				=> lang('Download table to your browser'),
 				'allrows'					=> $this->allrows,
 				'allow_allrows'					=> true,
 				'start_record'					=> $this->start,
