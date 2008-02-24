@@ -517,10 +517,7 @@
 					}
 				}
 			}
-			if(isset($this->data[$this->account_id]) && is_array($this->data[$this->account_id]))
-			{
-				reset ($this->data[$this->account_id]);
-			}
+
 			if ($appname == False)
 			{
 				settype($appname,'string');
@@ -533,36 +530,37 @@
 			}
 			$rights = 0;
 
-
 			if(isset($this->data[$this->account_id]) && is_array($this->data[$this->account_id]))
 			{
-				foreach($this->data[$this->account_id] as $idx => $value)
+				foreach ( $this->data[$this->account_id] as $values )
 				{
-					if ($this->data[$this->account_id][$idx]['appname'] == $appname
-						&& ($this->data[$this->account_id][$idx]['location'] == $location 
-							|| $this->data[$this->account_id][$idx]['location'] == 'everywhere')
-						&& $this->data[$this->account_id][$idx]['type'] == $type
-						&& ($grantor || $this->data[$this->account_id][$idx]['grantor']) )
+					if ( $values['appname'] == $appname
+						&& ( $values['location'] == $location 
+							|| $values['location'] == 'everywhere') // FIXME this should probably be . not everywhere - skwashd jan08
+						&& $values['type'] == $type
+						&& (!$grantor || ( $grantor && $values['grantor'] ) ) )
 					{
-						if ($this->data[$this->account_id][$idx]['grantor'] == $grantor)
+						if ( $values['grantor'] == $grantor)
 						{
-							if ($this->data[$this->account_id][$idx]['rights'] == 0)
+							if ( $values['rights'] == 0 )
 							{
 								return False;
 							}
-							$rights |= $this->data[$this->account_id][$idx]['rights'];
-							$this->account_type = $this->data[$this->account_id][$idx]['account_type'];
+							$rights |= $values['rights'];
+							$this->account_type = $values['account_type'];
 						}
 					}
+					/*
 					else
 					{
-						if ($this->data[$this->account_id][$idx]['rights'] == 0)
+						if ( $rights ['rights'] == 0)
 						{
 							return False;
 						}
-						$rights |= $this->data[$this->account_id][$idx]['rights'];
-						$this->account_type = $this->data[$this->account_id][$idx]['account_type'];
+						$rights |= $values['rights'];
+						$this->account_type = $values['account_type'];
 					}
+					*/
 				}
 			}
 			return $rights;
