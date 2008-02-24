@@ -210,7 +210,7 @@
 			//	$filtermethod .= " $where $entity_table.id ='" . (int)$query . "'";
 				$where= 'AND';
 
-				$this->db->query("SELECT * FROM $attribute_table where search='1'");
+				$this->db->query("SELECT * FROM $attribute_table WHERE $attribute_filter AND search='1'");
 
 				while ($this->db->next_record())
 				{
