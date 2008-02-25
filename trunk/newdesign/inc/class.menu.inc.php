@@ -44,7 +44,7 @@
 				'newdesign' => array
 				(
 					'text'	=> 'Newdesign',
-					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => "newdesign.ui{$start_page}.index") ),
+					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => "newdesign.ui{$start_page}.datatable") ),
 					'image'	=> array('newdesign', 'navbar'),
 					'order'	=> 35,
 					'group'	=> 'office'
@@ -105,6 +105,7 @@
 
 			$menus['navigation'] = array
 			(
+				/*
 				'form'	=> array
 				(
 					'text'	=> 'Form',
@@ -119,6 +120,13 @@
 				(
 					'text'	=> 'Project',
 					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'newdesign.uinewdesign.project','output'=>'html'))
+				),
+				*/
+				'datatable'	=> array
+				(
+					'text'	=> 'DataTable',
+					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'newdesign.uinewdesign.datatable','output'=>'html')),
+					'image' => array('newdesign', 'table')
 				)
 			);
 			return $menus;
