@@ -139,38 +139,37 @@
 		print_debug('TZ_OFFSET', $newsettings['tz_offset']);
 
 		$GLOBALS['phpgw_setup']->db->transaction_begin();
-		// This is only temp:
-		$GLOBALS['phpgw_setup']->db->query("DELETE FROM phpgw_config WHERE config_name='useframes'");
-		$GLOBALS['phpgw_setup']->db->query("INSERT INTO phpgw_config (config_app,config_name, config_value) values ('phpgwapi','useframes','never')");
 		
 		foreach( $newsettings as $setting => $value ) 
 		{
 		//	echo '<br />Updating: ' . $setting . '=' . $value;
 			
+			$setting = $GLOBALS['phpgw_setup']->db->db_addslashes($setting);
+
 			/* Don't erase passwords, since we also do not print them below */
-			if($value || (!ereg('passwd',$setting) && !ereg('password',$setting) && !ereg('root_pw',$setting)))
+			if ( $value 
+				|| (!preg_match('/passwd/', $setting) && !preg_match('/password/', $setting) && !preg_match('/root_pw/', $setting)) )
 			{
-				@$GLOBALS['phpgw_setup']->db->query("DELETE FROM phpgw_config WHERE config_name='" . $setting . "'");
+				$GLOBALS['phpgw_setup']->db->query("DELETE FROM phpgw_config WHERE config_name='{$setting}'", __LINE__, __FILE__);
 			}
 			if($value)
 			{
-				$GLOBALS['phpgw_setup']->db->query("INSERT INTO phpgw_config (config_app,config_name, config_value) VALUES ('phpgwapi','" . $GLOBALS['phpgw_setup']->db->db_addslashes($setting)
-					. "','" . $GLOBALS['phpgw_setup']->db->db_addslashes($value) . "')");
+				$value = $GLOBALS['phpgw_setup']->db->db_addslashes($value);
+				$GLOBALS['phpgw_setup']->db->query("INSERT INTO phpgw_config (config_app,config_name, config_value) VALUES ('phpgwapi', '{$setting}','{$value}')", __LINE__, __FILE__);
 			}
 		}
 		$GLOBALS['phpgw_setup']->db->transaction_commit();		
 		
 		// Add cleaning of app_sessions per skeeter, but with a check for the table being there, just in case
-		$tablenames = $GLOBALS['phpgw_setup']->db->table_names();
-		while(list($key,$val) = @each($tablenames))
+		foreach ( (array) $GLOBALS['phpgw_setup']->db->table_names() as $key => $val)
 		{
 			$tables[] = $val;
 		}
 		if(in_array('phpgw_app_sessions',$tables))
 		{
 			$GLOBALS['phpgw_setup']->db->lock(array('phpgw_app_sessions'));
-			@$GLOBALS['phpgw_setup']->db->query("DELETE FROM phpgw_app_sessions WHERE sessionid = '0' and loginid = '0' and app = 'phpgwapi' and location = 'config'",__LINE__,__FILE__);
-			@$GLOBALS['phpgw_setup']->db->query("DELETE FROM phpgw_app_sessions WHERE app = 'phpgwapi' and location = 'phpgw_info_cache'",__LINE__,__FILE__);
+			$GLOBALS['phpgw_setup']->db->query("DELETE FROM phpgw_app_sessions WHERE sessionid = '0' and loginid = '0' and app = 'phpgwapi' and location = 'config'",__LINE__,__FILE__);
+			$GLOBALS['phpgw_setup']->db->query("DELETE FROM phpgw_app_sessions WHERE app = 'phpgwapi' and location = 'phpgw_info_cache'",__LINE__,__FILE__);
 			$GLOBALS['phpgw_setup']->db->unlock();
 		}
 		
@@ -202,7 +201,7 @@
 	// are we here because of an error: files-dir in docroot
 	if (isset($_POST['newsettings']) && is_array($_POST['newsettings']) && $files_in_docroot)
 	{
-		echo '<p align="center" style="color: red;"><strong>'.lang('Path to user and group files HAS TO BE OUTSIDE of the webservers document-root!!!')."</strong></p>\n";
+		echo '<p class="err">' . lang('Path to user and group files HAS TO BE OUTSIDE of the webservers document-root!!!') . "</strong></p>\n";
 
 		foreach($_POST['newsettings'] as $key => $val)
 		{

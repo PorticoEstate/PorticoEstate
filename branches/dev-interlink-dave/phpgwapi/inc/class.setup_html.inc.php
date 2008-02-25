@@ -58,6 +58,11 @@
 			{
 				foreach($setting as $k => $v)
 				{
+					if ( $k == 'server_root' 
+						&& substr(PHP_OS, 0, 3) == 'WIN' )
+					{
+						$v = preg_replace('/\\/', '/', $v);
+					}
 					$var[strtoupper($k)] = $v;
 				}
 			}

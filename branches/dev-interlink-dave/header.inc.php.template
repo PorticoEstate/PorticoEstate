@@ -109,12 +109,6 @@
 	$GLOBALS['phpgw_info']['server']['mcrypt_enabled'] = {ENABLE_MCRYPT};
 
 	/**
-	* @global string $phpgw_info['server']['versions']['mcrypt']
-	* Set this to 'old' for versions < 2.4, otherwise the exact mcrypt version you use. 
-	*/
-	$GLOBALS['phpgw_info']['server']['versions']['mcrypt'] = '{MCRYPT_VERSION}';
-
-	/**
 	* @global string $phpgw_info['server']['mcrypt_iv']
 	* This is a random string used as the initialization vector for mcrypt
 	* feel free to change it when setting up phpgroupware on a clean database,
