@@ -1,0 +1,19 @@
+#btn-new button {
+	padding-left: 1.6em;
+    background: url(../images/new_item.png) 10% 60% no-repeat;
+}
+
+#btn-delete button {
+	padding-left: 1.6em;
+    background: url(../images/delete_item.png) 10% 60% no-repeat;
+}
+
+#btn-next button {
+	padding-right: 1.5em;
+    background: url(../images/btn_next.png) 90% 50% no-repeat;
+}
+
+#btn-previous button {
+	padding-left: 1.5em;
+    background: url(../images/btn_prev.png) 10% 50% no-repeat;
+}

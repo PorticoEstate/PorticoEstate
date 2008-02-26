@@ -11,13 +11,13 @@ YAHOO.util.Event.addListener(window, "load", function() {
 
 	        var myColumnDefs = [
 	        	{key:"loc1", label:"Property", formatter:YAHOO.widget.DataTable.formatNumber, sortable:true},
-	        	{key:"loc1_name", label:"Location name"},
-	        	{key:"owner_name", label:"Owner"},
-	        	{key:"remark", label:"Location remark"},
-	        	{key:"town_name", label:"Town"},
-	        	{key:"category_descr", label:"Category"},
-	        	{key:"user_id", label:"User ID", formatter:YAHOO.widget.DataTable.formatNumber},
-	        	{key:"status", label:"Status ID", formatter:YAHOO.widget.DataTable.formatNumber}
+	        	{key:"loc1_name", label:"Location name", sortable: true},
+	        	{key:"owner_name", label:"Owner", sortable: true},
+	        	{key:"remark", label:"Location remark", sortable: true},
+	        	{key:"town_name", label:"Town", sortable: true},
+	        	{key:"category_descr", label:"Category", sortable: true},
+	        	{key:"user_id", label:"User ID", formatter:YAHOO.widget.DataTable.formatNumber, sortable: true},
+	        	{key:"status", label:"Status ID", formatter:YAHOO.widget.DataTable.formatNumber, sortable: true}
 	        /*
 	            {key:"Title", label:"Name", sortable:true, formatter:this.formatUrl},
             	{key:"Phone"},
@@ -38,7 +38,8 @@ YAHOO.util.Event.addListener(window, "load", function() {
 	        };
 
 			var oConfigs = {
-	            initialRequest: "start_offset=0&limit_records=30" // Initial values
+	            initialRequest: "start_offset=0&limit_records=30", // Initial values
+	            selectionMode:"single"
 	        };
 
 	        this.myDataTable = new YAHOO.widget.DataTable("datatable", myColumnDefs,
@@ -50,47 +51,120 @@ YAHOO.util.Event.addListener(window, "load", function() {
 
 			// Context menu
 			this.onContextMenuClick = function(p_sType, p_aArgs, p_myDataTable) {
-			alert("hutte meg tu");
-/*
-19	            var task = p_aArgs[1];
-20	            if(task) {
-21	                // Extract which TR element triggered the context menu
-22	                var elRow = this.contextEventTarget;
-23	                elRow = p_myDataTable.getTrEl(elRow);
-24
-25	                if(elRow) {
-26	                    switch(task.index) {
-27	                        case 0:     // Delete row upon confirmation
-28	                            if(confirm("Are you sure you want to delete SKU " +
-29	                                    elRow.cells[0].innerHTML + " (" +
-30	                                    elRow.cells[2].innerHTML + ")?")) {
-31	                                p_myDataTable.deleteRow(elRow);
-32	                            }
-33	                    }
-34	                }
-35	            }
-*/
+	            var task = p_aArgs[1];
+
+                switch(task.value) {
+					case "delete":
+	                	YAHOO.example.XHR_JSON.deleteSelectedItem();
+	                	break;
+	                case "new":
+	                	alert("new");
+	                	break;
+	            }
 	        };
 
+			this.onContextBeforeShow = function(p_sType, p_aArgs, p_myDataTable) {
+				// Extract which TR element triggered the context menu
+	            var elRow = this.contextEventTarget;
+	            elRow = p_myDataTable.getTrEl(elRow);
+				p_myDataTable.unselectAllRows();
+	            p_myDataTable.selectRow(elRow);
+			}
+
 			this.myContextMenu = new YAHOO.widget.ContextMenu("mycontextmenu", {trigger:this.myDataTable.getTbodyEl()});
-	        this.myContextMenu.addItem("Delete Item");
+
+	        this.myContextMenu.addItems([
+		        [
+			        {
+			        	text: "View",
+			        	value: "view",
+			        	groupIndex: 1
+					},
+			        {
+			        	text: "Edit",
+			        	value: "edit",
+			        	groupIndex: 1
+					},
+			        {
+			        	text: "History",
+			        	value: "history",
+			        	groupIndex: 1
+					}
+				],
+				[
+			        {
+			        	text: "Delete",
+			        	value: "delete",
+			        	groupIndex: 2
+					}
+				],
+				[
+			        {
+			        	text: "New",
+			        	groupIndex: 3,
+			        	submenu: {
+			        		id: "new",
+			        		itemdata:
+			        		[
+			        			{ text: "Property" },
+			        			{ text: "Building" },
+			        			{ text: "Entrance" },
+			        			{ text: "Apartment" },
+			        			{ text: "Tenant" }
+			        		]
+			        	}
+					}
+				]
+
+		        //	submenu: {
+		        //    id: "communication"
+		        //    itemdata: [ ... ] // Array of YAHOO.widget.MenuItem configuration properties
+	        ]);
+
 	        // Render the ContextMenu instance to the parent container of the DataTable
 	        this.myContextMenu.render("datatable");
 	        this.myContextMenu.clickEvent.subscribe(this.onContextMenuClick, this.myDataTable);
+			this.myContextMenu.beforeShowEvent.subscribe( this.onContextBeforeShow, this.myDataTable);
+
+			this.newButton = new YAHOO.widget.Button(
+			{
+				label: "New",
+				id: "btn-new",
+				container: "datatable-buttons"
+			});
+
+			this.viewButton = new YAHOO.widget.Button(
+			{
+				label: "View",
+				id: "btn-view",
+				container: "datatable-buttons"
+			});
+			this.editButton = new YAHOO.widget.Button(
+			{
+				label: "Edit",
+				id: "btn-edit",
+				container: "datatable-buttons"
+			});
+			this.deleteButton = new YAHOO.widget.Button(
+			{
+				label: "Delete",
+				id: "btn-delete",
+				container: "datatable-buttons"
+			});
 
 			// Buttons
 			this.prevButton = new YAHOO.widget.Button(
 			{
 				label: "Prev",
 				id: "btn-previous",
-				container: "datatable-toolbar"
+				container: "pagination-buttons"
 			});
 
 			this.nextButton = new YAHOO.widget.Button(
 			{
 				label: "Next",
 				id: "btn-next",
-				container: "datatable-toolbar"
+				container: "pagination-buttons"
 			});
 
 			this.myDataSource.doBeforeCallback = function(oRequest, oRawResponse, oParsedResponse) {
@@ -103,6 +177,16 @@ YAHOO.util.Event.addListener(window, "load", function() {
 	            var startIndex = oRawResponse.startIndex; // Start record index this page
 	            var endIndex = startIndex + recordsReturned -1; // End record index this page
 	            var totalRecords = oRawResponse.totalRecords; // Total records all pages
+
+				var sortCol = oRawResponse.sort; // Which column is sorted
+	            var sortDir = oRawResponse.sort_dir; // Which sort direction
+
+	            // Update the config sortedBy with new values
+	            var newSortedBy = {
+	                key: sortCol,
+	                dir: sortDir
+	            }
+	            oDataTable.set("sortedBy", newSortedBy);
 
 	            // Update the DataTable Paginator with new values
 	            var newPag = {
@@ -123,6 +207,27 @@ YAHOO.util.Event.addListener(window, "load", function() {
 	            return oParsedResponse;
 	        };
 
+			this.myDataTable.sortColumn = function(oColumn) {
+
+	            // Which direction
+	            var sDir = "asc";
+	            // Already sorted?
+	            if(oColumn.key === this.get("sortedBy").key) {
+	                sDir = (this.get("sortedBy").dir === "asc") ?
+	                        "desc" : "asc";
+	            }
+
+	            var nResults = this.get("paginator").totalRecords;
+
+	            if(!YAHOO.lang.isValue(nResults)) {
+	                nResults = this.myDataTable.get("paginator").totalRecords;
+	            }
+
+	            var newRequest = "sort=" + oColumn.key + "&sort_dir=" + sDir + "&limit_records=" + nResults + "&start_offset=0";
+				YAHOO.util.Dom.get("datatable-pages").innerHTML = "Loading...";
+            	this.getDataSource().sendRequest(newRequest, this.onDataReturnInitializeTable, this);
+	        };
+
 			this.getPage = function(nStartRecordIndex, nResults) {
 	            // If a new value is not passed in
 	            // use the old value
@@ -133,7 +238,13 @@ YAHOO.util.Event.addListener(window, "load", function() {
 	            if(!YAHOO.lang.isValue(nStartRecordIndex)) {
 	                return;
 	            }
-	            var newRequest = "start_offset=" + nStartRecordIndex + "&limit_records=" + nResults;
+
+	           	var sort = this.myDataTable.get("sortedBy").key;
+	           	var sort_dir = this.myDataTable.get("sortedBy").dir;
+
+	            YAHOO.util.Dom.get("datatable-pages").innerHTML = "Loading...";
+
+	            var newRequest = "start_offset=" + nStartRecordIndex + "&limit_records=" + nResults + "&sort=" + sort + "&sort_dir=" + sort_dir;
 	            this.myDataSource.sendRequest(newRequest, this.myDataTable.onDataReturnInitializeTable, this.myDataTable);
 	        };
 
@@ -159,8 +270,33 @@ YAHOO.util.Event.addListener(window, "load", function() {
 	            this.getPage(newStartRecordIndex);
 	        };
 
+	        this.deleteSelectedItem = function(e) {
+	        	var elRow = null;
+
+	        	if(  this.myDataTable.getSelectedRows().length )
+	        	{
+	        		var index = this.myDataTable.getSelectedRows()[0];
+	        		elRow = this.myDataTable.getTrEl( parseInt ( index ) );
+	        	}
+
+	        	if( elRow )
+	        	{
+	        		if(confirm("Are you sure you want to delete Property: " +
+	                    elRow.cells[0].innerHTML + " (" +
+                        elRow.cells[1].innerHTML + ")?")) {
+    	                //p_myDataTable.deleteRow(elRow);
+        	            alert("Sorry this demo does not allow you to delete yet");
+	                }
+	        	}
+	        	else
+	        	{
+	        		alert("To delete a row you first have to select it");
+	        	}
+	        };
+
 			this.prevButton.on("click", this.getPreviousPage, this, true);
 			this.nextButton.on("click", this.getNextPage, this, true);
+			this.deleteButton.on("click", this.deleteSelectedItem, this, true);
 	    };
 
 });
