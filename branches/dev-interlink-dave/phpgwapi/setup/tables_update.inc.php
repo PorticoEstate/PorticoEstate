@@ -1765,6 +1765,26 @@
 	{
 		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
 
+		// Convert the SQL accounts hashes to the new format
+		$accounts = array();
+		$sql = 'SELECT account_id, account_pwd FROM phpgw_accounts';
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query($sql, __LINE__, __FILE__);
+		while ( $GLOBALS['phpgw_setup']->oProc->m_odb->next_record() )
+		{
+			$accounts[$GLOBALS['phpgw_setup']->oProc->m_odb->f('account_id')] = $GLOBALS['phpgw_setup']->oProc->m_odb->f('account_pwd');
+		}
+
+		foreach ( $accounts as $id => $pwd )
+		{
+			$new_hash = '{MD5}' . base64_encode(pack('H*', $pwd));
+			$sql = 'UPDATE phpgw_accounts'
+				. " SET account_pwd = '{$new_hash}'"
+				. " WHERE account_id = {$id}";
+			$GLOBALS['phpgw_setup']->oProc->m_odb->query($sql, __LINE__, __FILE__);
+		}
+
+		unset($accounts);
+
 		// New table for handling groups - only used for SQL accounts - LDAP will store it in LDAP - memberUID
 		$GLOBALS['phpgw_setup']->oProc->CreateTable('phpgw_group_map', array
 		(
