@@ -1,18 +1,14 @@
 
 YAHOO.util.Event.addListener(window, "load", function() {
-		var oArgs =
-		{
-			menuaction: 'newdesign.uinewdesign.datatable_json'
-		};
+		var oArgs = { menuaction: 'newdesign.uinewdesign.datatable_json' };
 
 	    YAHOO.example.XHR_JSON = new function() {
+			/*
 	        this.formatUrl = function(elCell, oRecord, oColumn, sData) {
 	            elCell.innerHTML = "<a href='" + oRecord.getData("ClickUrl") + "' target='_blank'>" + sData + "</a>";
 	        };
-	        /*
-				SELECT loc1, loc1_name, fm_owner.org_name as owner_name, fm_location1.remark as remark,
-       			fm_part_of_town.name as town_name, fm_location1_category.descr as category_descr, user_id, status
 	        */
+
 	        var myColumnDefs = [
 	        	{key:"loc1", label:"Property", formatter:YAHOO.widget.DataTable.formatNumber, sortable:true},
 	        	{key:"loc1_name", label:"Location name"},
@@ -31,7 +27,6 @@ YAHOO.util.Event.addListener(window, "load", function() {
 	        ];
 
 			var datasource=phpGWLink('index.php', oArgs, true) + "&";
-			//alert(datasource);
 
 	        this.myDataSource = new YAHOO.util.DataSource( datasource );
 	        this.myDataSource.responseType = YAHOO.util.DataSource.TYPE_JSON;
@@ -41,16 +36,62 @@ YAHOO.util.Event.addListener(window, "load", function() {
 	            resultsList: "records",
 	            fields: ["loc1", "loc1_name", "owner_name", "remark", "town_name", "category_descr", "user_id", "status" ]
 	        };
-	        /*
- 			this.myDataTable = new YAHOO.widget.DataTable("serversorting", myColumnDefs,
-	                this.myDataSource, oConfigs);
-	        */
+
 			var oConfigs = {
 	            initialRequest: "start_offset=0&limit_records=30" // Initial values
 	        };
 
 	        this.myDataTable = new YAHOO.widget.DataTable("datatable", myColumnDefs,
 	                this.myDataSource, oConfigs );
+
+	        this.myDataTable.subscribe("rowMouseoverEvent", this.myDataTable.onEventHighlightRow);
+	        this.myDataTable.subscribe("rowMouseoutEvent", this.myDataTable.onEventUnhighlightRow);
+	        this.myDataTable.subscribe("rowClickEvent", this.myDataTable.onEventSelectRow);
+
+			// Context menu
+			this.onContextMenuClick = function(p_sType, p_aArgs, p_myDataTable) {
+			alert("hutte meg tu");
+/*
+19	            var task = p_aArgs[1];
+20	            if(task) {
+21	                // Extract which TR element triggered the context menu
+22	                var elRow = this.contextEventTarget;
+23	                elRow = p_myDataTable.getTrEl(elRow);
+24
+25	                if(elRow) {
+26	                    switch(task.index) {
+27	                        case 0:     // Delete row upon confirmation
+28	                            if(confirm("Are you sure you want to delete SKU " +
+29	                                    elRow.cells[0].innerHTML + " (" +
+30	                                    elRow.cells[2].innerHTML + ")?")) {
+31	                                p_myDataTable.deleteRow(elRow);
+32	                            }
+33	                    }
+34	                }
+35	            }
+*/
+	        };
+
+			this.myContextMenu = new YAHOO.widget.ContextMenu("mycontextmenu", {trigger:this.myDataTable.getTbodyEl()});
+	        this.myContextMenu.addItem("Delete Item");
+	        // Render the ContextMenu instance to the parent container of the DataTable
+	        this.myContextMenu.render("datatable");
+	        this.myContextMenu.clickEvent.subscribe(this.onContextMenuClick, this.myDataTable);
+
+			// Buttons
+			this.prevButton = new YAHOO.widget.Button(
+			{
+				label: "Prev",
+				id: "btn-previous",
+				container: "datatable-toolbar"
+			});
+
+			this.nextButton = new YAHOO.widget.Button(
+			{
+				label: "Next",
+				id: "btn-next",
+				container: "datatable-toolbar"
+			});
 
 			this.myDataSource.doBeforeCallback = function(oRequest, oRawResponse, oParsedResponse) {
 	            var oSelf =  YAHOO.example.XHR_JSON;
@@ -74,14 +115,9 @@ YAHOO.util.Event.addListener(window, "load", function() {
 	            oDataTable.updatePaginator(newPag);
 
 	            // Update the links UI
-	            YAHOO.util.Dom.get("prevLink").innerHTML = (startIndex === 0) ? "Previous" :
-	                    "<a href=\"#previous\" alt=\"Show previous items\">Previous</a>" ;
-	            YAHOO.util.Dom.get("nextLink").innerHTML =
-	                    (endIndex >= totalRecords) ? "Next" :
-	                    "<a href=\"#next\" alt=\"Show next items\">Next</a>";
-	            YAHOO.util.Dom.get("startIndex").innerHTML = startIndex;
-	            YAHOO.util.Dom.get("endIndex").innerHTML = endIndex;
-	            YAHOO.util.Dom.get("ofTotal").innerHTML = " of " + totalRecords;
+				YAHOO.util.Dom.get("datatable-pages").innerHTML = "Showing items " + (startIndex+1) + " - " + (endIndex+1) + " of " + (totalRecords+1);
+				oSelf.nextButton.set('disabled', (endIndex >= totalRecords) );
+				oSelf.prevButton.set('disabled', (startIndex === 0) );
 
 	            // Let the DataSource parse the rest of the response
 	            return oParsedResponse;
@@ -123,8 +159,8 @@ YAHOO.util.Event.addListener(window, "load", function() {
 	            this.getPage(newStartRecordIndex);
 	        };
 
-	        YAHOO.util.Event.addListener(YAHOO.util.Dom.get("prevLink"), "click", this.getPreviousPage, this, true);
-	        YAHOO.util.Event.addListener(YAHOO.util.Dom.get("nextLink"), "click", this.getNextPage, this, true);
+			this.prevButton.on("click", this.getPreviousPage, this, true);
+			this.nextButton.on("click", this.getNextPage, this, true);
 	    };
 
 });
