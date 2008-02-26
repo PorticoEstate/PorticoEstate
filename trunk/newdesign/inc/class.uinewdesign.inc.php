@@ -37,7 +37,8 @@
       'delete'	=> true,
       'no_access'	=> true,
       'datatable' => true,
-      'datatable_json' => true
+      'datatable_json' => true,
+      'property'	=> true
     );
 
     function newdesign_uinewdesign()
@@ -72,7 +73,112 @@
       $this->filter			= $this->bo->filter;
       */
     }
+	function property()
+	{
+		$GLOBALS['phpgw_info']['flags']['menu_selection'] = 'newdesign::property';
 
+		if ( !isset($GLOBALS['phpgw']->css) || !is_object($GLOBALS['phpgw']->css) )
+      	{
+        	$GLOBALS['phpgw']->css = createObject('phpgwapi.css');
+      	}
+
+      	$data=array();
+
+      	$loc1 = phpgw::get_var('loc1', 'string');
+
+      	$cmd = phpgw::get_var('cmd', 'string') ? phpgw::get_var('cmd', 'string') : 'view';
+
+      	if(!$loc1 && $cmd != 'new')
+      	{
+      		$data['error'] = "No location supplied";
+      	}
+		else {
+			$this->bocommon = CreateObject('property.bocommon');
+      		$this->db = $this->bocommon->new_db();
+
+			$query = "SELECT * FROM fm_location1 WHERE loc1 = '" . $loc1 . "'";
+
+			$this->db->query( $query );
+
+      		if( !$this->db->next_record() )
+      		{
+				$data['error'] = "Location: " . $loc1 . " not found";
+
+      		}
+      		else
+      		{
+      			$record = array();
+      			foreach ($this->db->resultSet->fields as $key => $value) {
+          			if(is_string($key)) {
+               			$record[$key] = $value;
+          			}
+        		}
+        		var_dump($record);
+        		/*
+        		 	property
+					name
+					category
+					part of town
+					owner
+					status
+					remark
+					mva
+					kostra_id
+					rental area
+        		 */
+        		$data['cmd']['form']=array
+        		(
+              		'field' => array
+              		(
+                		array
+                		(
+							'title' => 'Property',
+                			'value' => $record['location_code'],
+							'tooltip' => 'Please enter property code',
+							'required' => true
+                  			/*'error' => 'This field can not be empty!'	*/
+                		),
+                		array
+                		(
+                  			'title' => 'Name',
+                			'value' => $record['loc1_name'],
+                  			'name' => 'lastname',
+                  			'required' => true
+                  			//'tooltip' => 'Here you should input the tooltip'
+                		),
+                		array
+                		(
+                  			'title' => 'Category',
+                			'value' => $record['category'],
+                  			'name' => 'lastname',
+                  			'required' => true
+                  			//'tooltip' => 'Here you should input the tooltip'
+                		),
+                		array
+                		(
+                  			'title' => 'Part of town',
+                  			'name' => 'lastname',
+                			'required' => true
+                  			//'tooltip' => 'Here you should input the tooltip'
+                		),
+
+
+                	)
+                );
+      		}
+		}
+
+
+
+      	$output = "html";
+
+      	$this->menu->sub = $output;
+      	$links = $this->menu->links();
+
+      	$GLOBALS['phpgw']->xslttpl->add_file(array('property'));
+      	$GLOBALS['phpgw']->xslttpl->set_var('phpgw', $data);
+		var_dump ($GLOBALS['phpgw']->xslttpl->xml_parse());
+	}
     function datatable()
     {
       $GLOBALS['phpgw_info']['flags']['menu_selection'] = 'newdesign::datatable';

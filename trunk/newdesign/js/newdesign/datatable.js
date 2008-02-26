@@ -54,6 +54,12 @@ YAHOO.util.Event.addListener(window, "load", function() {
 	            var task = p_aArgs[1];
 
                 switch(task.value) {
+					case "view":
+						YAHOO.example.XHR_JSON.cmdSelectedItem(null, 'view');
+						break;
+					case "edit":
+						YAHOO.example.XHR_JSON.cmdSelectedItem(null, 'edit');
+						break;
 					case "delete":
 	                	YAHOO.example.XHR_JSON.deleteSelectedItem();
 	                	break;
@@ -288,8 +294,30 @@ YAHOO.util.Event.addListener(window, "load", function() {
 	        	}
 	        };
 
+	        this.cmdSelectedItem = function(e, cmd) {
+	        	if( this.myDataTable.getSelectedTrEls().length )
+	        	{
+	        		var elRow = this.myDataTable.getSelectedTrEls()[0];
+					var loc1 = elRow.cells[0].innerHTML;
+	                var args =
+	                {
+	                	menuaction: 'newdesign.uinewdesign.property',
+	                	loc1: loc1,
+	                	cmd: cmd
+	                };
+					var url=phpGWLink('index.php', args, false);
+					location.href=url;
+	        	}
+	        	else
+	        	{
+	        		alert("You have to select a row for this action");
+	        	}
+	        }
+
 			this.prevButton.on("click", this.getPreviousPage, this, true);
 			this.nextButton.on("click", this.getNextPage, this, true);
+			this.viewButton.on("click", this.cmdSelectedItem, "view", this);
+			this.editButton.on("click", this.cmdSelectedItem, "edit", this);
 			this.deleteButton.on("click", this.deleteSelectedItem, this, true);
 	    };
 
