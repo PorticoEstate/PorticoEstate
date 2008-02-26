@@ -103,6 +103,8 @@
 
     function datatable_json()
     {
+      $sort_dir = phpgw::get_var('sort_dir', 'string') ? phpgw::get_var('sort_dir', 'string') : 'asc';
+      $sort = phpgw::get_var('sort', 'string') ? phpgw::get_var('sort', 'string') : 'loc1';
       $start_offset	= phpgw::get_var('start_offset', 'int') ? phpgw::get_var('start_offset', 'int') : 0;
 	  $limit_records = phpgw::get_var('limit_records', 'int') ? phpgw::get_var('limit_records', 'int') : 30;
 
@@ -124,7 +126,8 @@
 				FROM fm_location1
 				JOIN fm_owner ON fm_location1.owner_id=fm_owner.id
 				JOIN fm_part_of_town ON fm_location1.part_of_town_id=fm_part_of_town.part_of_town_id
-				JOIN fm_location1_category ON fm_location1.category=fm_location1_category.id";
+				JOIN fm_location1_category ON fm_location1.category=fm_location1_category.id
+				ORDER BY $sort $sort_dir";
 
       $this->db->limit_query($query, $start_offset, '100', 'class.uinewdesign.inc.php', $limit_records);
 
@@ -143,8 +146,8 @@
                 'recordsReturned'	=> $this->db->num_rows(),
                 'totalRecords'		=> $total_records,
                 'startIndex'		=> $start_offset,
-                'sort'				=> null,
-                'dir'				=> 'asc',
+                'sort'				=> $sort,
+      			'sort_dir'			=> $sort_dir,
                 'records'			=> $records
       );
 
