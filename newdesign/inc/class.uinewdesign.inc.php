@@ -114,7 +114,7 @@
       $this->db->query( "SELECT count(loc1) as total_records FROM fm_location1");
       if( $this->db->next_record() )
       {
-        $total_records = $this->db->resultSet->fields['total_records'];
+        $total_records = (int)$this->db->resultSet->fields['total_records']-1;
       }
       else
       {

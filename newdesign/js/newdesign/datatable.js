@@ -200,6 +200,7 @@ YAHOO.util.Event.addListener(window, "load", function() {
 
 	            // Update the links UI
 				YAHOO.util.Dom.get("datatable-pages").innerHTML = "Showing items " + (startIndex+1) + " - " + (endIndex+1) + " of " + (totalRecords+1);
+
 				oSelf.nextButton.set('disabled', (endIndex >= totalRecords) );
 				oSelf.prevButton.set('disabled', (startIndex === 0) );
 
@@ -271,16 +272,9 @@ YAHOO.util.Event.addListener(window, "load", function() {
 	        };
 
 	        this.deleteSelectedItem = function(e) {
-	        	var elRow = null;
-
-	        	if(  this.myDataTable.getSelectedRows().length )
+	        	if( this.myDataTable.getSelectedTrEls().length )
 	        	{
-	        		var index = this.myDataTable.getSelectedRows()[0];
-	        		elRow = this.myDataTable.getTrEl( parseInt ( index ) );
-	        	}
-
-	        	if( elRow )
-	        	{
+	        		var elRow = this.myDataTable.getSelectedTrEls()[0];
 	        		if(confirm("Are you sure you want to delete Property: " +
 	                    elRow.cells[0].innerHTML + " (" +
                         elRow.cells[1].innerHTML + ")?")) {
