@@ -1174,11 +1174,14 @@ HTML;
 		/**
 		* Encrypt password based on encryption type set in setup
 		*
+		* @deprecated
+		* @see phpgwapi_auth::generate_hash
 		* @param string $password Password to encrypt
 		* @return Encrypted password or false
 		*/
 		public function encrypt_password($password)
 		{
+			return $GLOBALS['phpgw']->auth->generate_hash($password);
 			if (strtolower($GLOBALS['phpgw_info']['server']['ldap_encryption_type']) == 'des')
 			{
 				$salt       = $this->randomstring(2);

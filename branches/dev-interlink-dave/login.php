@@ -50,7 +50,6 @@
 		{
 			$_POST['submitit'] = true;
 		}
-		$_POST['passwd_type'] = 'text';
 	}
 	else
 	{
@@ -103,7 +102,7 @@
 		unset($sslattributes);
 	}
 
-	if (isset($_POST['passwd_type']) && (isset($_POST['submitit']) || isset($_POST['submit_x']) || isset($_POST['submit_y']) ) )
+	if ( (isset($_POST['submitit']) || isset($_POST['submit_x']) || isset($_POST['submit_y']) ) )
 	{
 		if ( $_SERVER['REQUEST_METHOD'] != 'POST' &&
 		   !isset($_SERVER['PHP_AUTH_USER']) &&
@@ -119,8 +118,7 @@
 			$login .= '@' . $_POST['logindomain'];
 		}
 
-		$passwd_type = $_POST['passwd_type'] == 'md5' ? 'md5' : 'text';
-		$GLOBALS['sessionid'] = $GLOBALS['phpgw']->session->create($login, $passwd, $passwd_type);
+		$GLOBALS['sessionid'] = $GLOBALS['phpgw']->session->create($login, $passwd);
 
 		if (! isset($GLOBALS['sessionid']) || ! $GLOBALS['sessionid'])
 		{

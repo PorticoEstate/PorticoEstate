@@ -226,15 +226,15 @@
 		var $expires;
 		var $person_id;
 		/**
-		* @var int the user's quota in Mb - i think
+		* @var int the user's quota in Mb
 		*/
 		var $quota = 0; //sane default
 		var $data;
-		var $db;
+		protected $db;
 		var $memberships = array();
 		var $members = array();
 		var $total;
-		var $xmlrpc_methods = array();
+		public $xmlrpc_methods = array();
 
 		/**
 		* Standard constructor for setting account_id

@@ -11,7 +11,7 @@
 	\**************************************************************************/
 	/* $Id$ */
 
-	//FIXME define constants for rights so we can fuck all these magic numbers
+	//FIXME define constants for rights so we can fuck off all these magic numbers
 	
 	class boaccounts
 	{
@@ -81,13 +81,24 @@
 
 		function check_rights($action, $access = 'group_access')
 		{
+			// this is ugly
 			switch($action)
 			{
-				case 'view':	$right = '8'; break;
-				case 'add':		$right = '4'; break;
-				case 'edit':	$right = '16'; break;
-				case 'delete':	$right = '32'; break;
-				case 'search':	$right = '2'; break;
+				case 'view':
+					$right = phpgwapi_acl::DELETE;
+					break;
+				case 'add':
+					$right = phpgwapi_acl::EDIT;
+					break;
+				case 'edit':
+					$right = phpgwapi_acl::PRIV;
+					break;
+				case 'delete':
+					$right = phpgwapi_acl::GROUP_MANAGER;
+					break;
+				case 'search':
+					$right = phpgwapi_acl::ADD;
+					break;
 			}
 
 			if (!$GLOBALS['phpgw']->acl->check($access,$right,'admin'))
@@ -99,7 +110,7 @@
 
 		function edit_group($values)
 		{
-			if ($GLOBALS['phpgw']->acl->check('group_access', PHPGW_ACL_EDIT,'admin'))
+			if ($GLOBALS['phpgw']->acl->check('group_access', phpgwapi_acl::EDIT,'admin'))
 			{
 				$error[] = lang('no permission to create groups');
 				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'admin.uiaccounts.list_groups'));
@@ -221,7 +232,7 @@
 			}
 			
 			//Add the group manager
-			$acl->add_repository('phpgw_group', $id, $values['group_manager'], PHPGW_ACL_GROUP_MANAGERS | 1);
+			$acl->add_repository('phpgw_group', $id, $values['group_manager'], phpgwapi_acl::GROUP_MANAGERS | 1);
 
 			// Things that have to change because of new group name
 			// FIXME this needs to be changed to work with all VFS backends
@@ -335,7 +346,7 @@
 				@reset($managers);
 				while($managers && list($key,$manager) = each($managers))
 				{
-					$acl->add_repository('phpgw_group', phpgw::get_var('account_id', 'int', 'POST'), $manager,(1 + PHPGW_ACL_GROUP_MANAGERS));
+					$acl->add_repository('phpgw_group', phpgw::get_var('account_id', 'int', 'POST'), $manager,(1 + phpgwapi_acl::GROUP_MANAGERS));
 				}
 			}
 			$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'admin.uiaccounts.list_groups'));
@@ -348,7 +359,7 @@
 			$group = CreateObject('phpgwapi.accounts',$values['account_id'],'g');
 			$group->read_repository();
 
-			if ( $values['account_id'] == 0 && $GLOBALS['phpgw']->acl->check('group_access', PHPGW_ACL_ADD,'admin'))
+			if ( $values['account_id'] == 0 && $GLOBALS['phpgw']->acl->check('group_access', phpgwapi_acl::ADD,'admin'))
 			{
 				$error[] = lang('no permission to add groups');
 			}
@@ -599,7 +610,7 @@
 		 */
 		function load_group_managers($account_id)
 		{
-			$temp_user = $GLOBALS['phpgw']->acl->get_ids_for_location($account_id,PHPGW_ACL_GROUP_MANAGERS,'phpgw_group');
+			$temp_user = $GLOBALS['phpgw']->acl->get_ids_for_location($account_id,phpgwapi_acl::GROUP_MANAGERS,'phpgw_group');
 			if(!$temp_user)
 			{
 				return Array();

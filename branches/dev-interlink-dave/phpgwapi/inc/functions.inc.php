@@ -584,16 +584,6 @@
 		}
 
 		/*************************************************************************\
-		* If they are using frames, we need to set some variables                 *
-		\*************************************************************************/
-		if ( ( (isset($GLOBALS['phpgw_info']['user']['preferences']['common']['useframes']) && $GLOBALS['phpgw_info']['user']['preferences']['common']['useframes']) 
-			&& ( isset($GLOBALS['phpgw_info']['server']['useframes']) && $GLOBALS['phpgw_info']['server']['useframes'] == 'allowed') ) 
-			|| ( isset($GLOBALS['phpgw_info']['server']['useframes']) && $GLOBALS['phpgw_info']['server']['useframes'] == 'always') )
-		{
-			$GLOBALS['phpgw_info']['flags']['navbar_target'] = 'phpgw_body';
-		}
-
-		/*************************************************************************\
 		* Verify that the users session is still active otherwise kick them out   *
 		\*************************************************************************/
 		if ($GLOBALS['phpgw_info']['flags']['currentapp'] != 'home' && $GLOBALS['phpgw_info']['flags']['currentapp'] != 'about')

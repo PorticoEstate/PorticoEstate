@@ -224,7 +224,7 @@
 		unset($sslattributes);
 	}
 
-	if (isset($_POST['passwd_type']) && (isset($_POST['submitit']) || isset($_POST['submit_x']) || isset($_POST['submit_y']) ) )
+	if ( (isset($_POST['submitit']) || isset($_POST['submit_x']) || isset($_POST['submit_y']) ) )
 	{
 		if ( $_SERVER['REQUEST_METHOD'] != 'POST' &&
 		   !isset($_SERVER['PHP_AUTH_USER']) &&
@@ -257,8 +257,6 @@
 			$login = $db->f('account_lid');
 			$passwd = $db->f('account_pwd');
 
-			$_POST['passwd_type'] = 'md5';
-
 			if ( isset($GLOBALS['phpgw_info']['server']['usecookies']) && $GLOBALS['phpgw_info']['server']['usecookies'] )
 			{ 
 				$GLOBALS['phpgw']->session->phpgw_setcookie('last_usertype', $_POST['loginusertype'] ,time()+1209600); /* For 2 weeks */
@@ -271,7 +269,7 @@
 			$login .= '@' . $_POST['logindomain'];
 		}
 
-		$GLOBALS['sessionid'] = $GLOBALS['phpgw']->session->create($login,$passwd,$_POST['passwd_type']);
+		$GLOBALS['sessionid'] = $GLOBALS['phpgw']->session->create($login, $passwd);
 
 		$GLOBALS['phpgw']->session->appsession('tenant_id','property',$tenant_id);
 

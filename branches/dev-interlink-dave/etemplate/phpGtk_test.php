@@ -38,7 +38,10 @@ $GLOBALS['phpgw_info']['flags'] = array(
 );
 include('../header.inc.php');
 
-$GLOBALS['phpgw']->session->create($argv[1],$argv[2],'text') || die("Can't create session !!!\n");
+if ( !$GLOBALS['phpgw']->session->create($argv[1],$argv[2]) )
+{
+	die("Can't create session !!!\n");
+}
 
 $GLOBALS['phpgw_info']['flags']['currentapp'] = 'etemplate';
 

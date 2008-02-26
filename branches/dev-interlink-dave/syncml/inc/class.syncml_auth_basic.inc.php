@@ -28,8 +28,7 @@
 			// neither username nor password should contain colon.
 			@list($username, $passwd) = explode(':', $data, 2);
 
-			return $GLOBALS['phpgw']->session->create(
-				$username, md5($passwd), 'md5');
+			return $GLOBALS['phpgw']->session->create($username, $passwd);
 		}
 	}
 ?>

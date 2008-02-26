@@ -17,24 +17,17 @@
 	* @subpackage accounts
 	* @ignore
 	*/
-	class auth_http extends auth_
+	class phpgwapi_auth_http extends phpgwapi_auth_
 	{
 
-		function auth_http()
+		function __construct()
 		{
-			parent::auth();
+			parent::__construct();
 		}
 
 		function authenticate($username, $passwd)
 		{
-			if (isset($GLOBALS['PHP_AUTH_USER']))
-			{
-				return True;
-			}
-			else
-			{
-				return False;
-			}
+			return isset($_SERVER['PHP_AUTH_USER']) && !!strlen($_SERVER['PHP_AUTH_USER']);
 		}
 
 		function change_password($old_passwd, $new_passwd)
@@ -43,4 +36,3 @@
 		}
 
 	}
-?>

@@ -66,7 +66,7 @@
 		// This is a hack and the data is a little dodgy, but it works, so we have a more accurate source IP address
 		$_SERVER['HTTP_HOST'] = $msg->ip;
 
-		if ( $GLOBALS['phpgw']->session->create($login, '', 'known') ) //assume email is legit - possible DDoS vector ?
+		if ( $GLOBALS['phpgw']->session->create($login, '', true) ) //assume email is legit - possible DDoS vector ?
 		{
 			$mail_handlers = createObject('phpgwapi.mail_handlers');
 			$handler = $mail_handlers->get_handler($email_to);

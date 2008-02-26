@@ -17,33 +17,26 @@
 	* Using with Single Sign-On(Shibboleth, CAS, ...)
 	*/
 	
-	class auth_remoteuser extends auth_
+	class phpgwapi_auth_remoteuser extends phpgwapi_auth_
 	{
 		
-		function auth_remoteuser()
+		public function __construct()
 		{
-			parent::auth();
+			parent::__construct();
 		}
 		
-		function authenticate($username, $passwd, $passwd_type)
+		public function authenticate($username, $passwd)
 		{
-			if(isset($_SERVER['REMOTE_USER']) && strlen($_SERVER['REMOTE_USER']) > 0)
-			{
-				return true;
-			}
-			else
-			{
-				return false;
-			}
+			return isset($_SERVER['REMOTE_USER']) && !!strlen($_SERVER['REMOTE_USER']);
 		}
 		
-		function change_password($old_passwd, $new_passwd, $account_id = '')
+		public function change_password($old_passwd, $new_passwd, $account_id = '')
 		{
 			return false;
 		}
 
-		function update_lastlogin($account_id, $ip)
+		public function update_lastlogin($account_id, $ip)
 		{
+			return '';
 		}
 	}
-?>

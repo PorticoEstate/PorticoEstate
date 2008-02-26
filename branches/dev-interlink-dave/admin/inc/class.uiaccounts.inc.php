@@ -41,10 +41,14 @@
 
 		function row_action($action,$type,$account_id)
 		{
-			return '<a href="'.$GLOBALS['phpgw']->link('/index.php',Array(
-				'menuaction' => 'admin.uiaccounts.'.$action.'_'.$type,
+			$lang_action = lang($action);
+			$url = $GLOBALS['phpgw']->link('/index.php', array
+			(
+				'menuaction' => "admin.uiaccounts.{$action}_{$type}",
 				'account_id' => $account_id
-			)).'"> '.lang($action).' </a>';
+			);
+
+			return "<a href=\"{$url}\">{$lang_action}</a>";
 		}
 
 		function list_groups()

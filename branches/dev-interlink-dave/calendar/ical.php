@@ -80,7 +80,7 @@
 
 	$uid = $GLOBALS['phpgw']->accounts->name2id($login);
 
-	$sessionid = $GLOBALS['phpgw']->session->create($login, $passwd, 'text');
+	$sessionid = $GLOBALS['phpgw']->session->create($login, $passwd);
 
 	$params = array('owner' => (int)$GLOBALS['phpgw_info']['user']['person_id']);
 	$owner = $params['owner'];

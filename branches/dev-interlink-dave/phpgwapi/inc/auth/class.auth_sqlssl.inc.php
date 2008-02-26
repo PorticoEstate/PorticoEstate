@@ -15,54 +15,38 @@
 	*
 	* @package phpgwapi
 	* @subpackage accounts
-	* @ignore
 	*/
-	class auth_sqlssl extends auth_
+	class phpgwapi_auth_sqlssl extends phpgwapi_auth_sql
 	{
 
-		function auth_sqlssl()
+		/**
+		* Constructor
+		*/
+		public function __construct()
 		{
-			parent::auth();
+			parent::__construct();
 		}
 
-		function authenticate($username, $passwd)
+		/**
+		* Authenticate a user
+		*
+		* @param string $username the login to authenticate
+		* @param string $passwd the password supplied by the user
+		* @return bool did the user authenticate?
+		* @return bool did the user sucessfully authenticate
+		*/
+		public function authenticate($username, $passwd)
 		{
-			$db =& $GLOBALS['phpgw']->db;
+			if ( isset($_SERVER['SSL_CLIENT_S_DN']) )
+			{
+				$username = $GLOBALS['phpgw']->db->db_addslashes($username);
 
-			$local_debug = False;
-
-			if($local_debug)
-			{
-				echo "<b>Debug SQL: uid - $username passwd - $passwd</b>";
+				$sql = 'SELECT account_lid FROM phpgw_accounts'
+					. " WHERE account_lid = '{$username}'"
+						. " AND account_status = 'A'";
+				$GLOBALS['phpgw']->db->query($sql, __LINE__, __FILE__);
+				return $GLOBALS['phpgw']->db->next_record();
 			}
-
-			// Apache + mod_ssl provide the data in the environment
-			// Certificate (chain) verification occurs inside mod_ssl
-			// see http://www.modssl.org/docs/2.8/ssl_howto.html#ToC6
-			if(!isset($_SERVER['SSL_CLIENT_S_DN']))
-			{
-				// if we're not doing SSL authentication, behave like auth_sql
-				$db->query("SELECT * FROM phpgw_accounts WHERE account_lid = '$username' AND "
-					. "account_pwd='" . md5($passwd) . "' AND account_status ='A'",__LINE__,__FILE__);
-				$db->next_record();
-			}
-			else
-			{
-				// use username only for authentication, ignore X.509 subject in $passwd for now
-				$db->query('SELECT * FROM phpgw_accounts'
-					. " WHERE account_lid = '" . $db->db_addslashes($username) . "'"
-					. "AND account_status ='A'",__LINE__,__FILE__);
-				$db->next_record();
-			}
-
-			if($db->f('account_lid'))
-			{
-				return True;
-			}
-			else
-			{
-				return False;
-			}
+			return parent::authenticate($username, $passwd);
 		}
 	}
-?>

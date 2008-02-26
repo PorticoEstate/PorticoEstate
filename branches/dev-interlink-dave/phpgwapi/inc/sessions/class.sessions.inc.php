@@ -477,23 +477,20 @@
 		*
 		* @param string $login user login
 		* @param string $passwd user password
-		* @param string $passwd_type type of password being used, ie (plain)text, md5, sha1, known (a known user - assume auth is ok)
 		* @return string session id
 		*/
-		function create($login,$passwd = '',$passwd_type = '')
+		function create($login,$passwd = '', $skip_auth = false)
 		{
 			if (is_array($login))
 			{
 				$this->login       = $login['login'];
 				$this->passwd      = $login['passwd'];
-				$this->passwd_type = $login['passwd_type'];
 				$login             = $this->login;
 			}
 			else
 			{
 				$this->login       = $login;
 				$this->passwd      = $passwd;
-				$this->passwd_type = $passwd_type;
 			}
 
 			$this->clean_sessions();
@@ -515,7 +512,7 @@
 			$blocked = false;
 			if ( ($blocked = $this->login_blocked($login, $this->getuser_ip())) // too many unsuccessful attempts
 				|| ( isset($GLOBALS['phpgw_info']['server']['global_denied_users'][$this->account_lid]) && $GLOBALS['phpgw_info']['server']['global_denied_users'][$this->account_lid] )
-				|| ($passwd_type != 'known' && !$GLOBALS['phpgw']->auth->authenticate($this->account_lid, $this->passwd, $this->passwd_type) )
+				|| ( !$skip_auth && !$GLOBALS['phpgw']->auth->authenticate($this->account_lid, $this->passwd) )
 				|| $GLOBALS['phpgw']->accounts->get_type($this->account_lid) == 'g')
 			{
 				$this->reason = $blocked ? 'blocked, too many attempts' : 'bad login or password';
@@ -593,7 +590,6 @@
 			$GLOBALS['phpgw']->db->transaction_begin();
 			$this->register_session($login,$user_ip,$now,$session_flags);
 			$this->log_access($this->sessionid,$login,$user_ip,$this->account_id);
-			$this->appsession('account_previous_login','phpgwapi',$GLOBALS['phpgw']->auth->previous_login);
 			$GLOBALS['phpgw']->auth->update_lastlogin($this->account_id,$user_ip);
 			$GLOBALS['phpgw']->db->transaction_commit();
 			
@@ -888,7 +884,6 @@
 
 			$this->log_access($this->sessionid,$login,$user_ip,$this->account_id);
 
-			$this->appsession('account_previous_login','phpgwapi',$GLOBALS['phpgw']->auth->previous_login);
 			$GLOBALS['phpgw']->auth->update_lastlogin($this->account_id,$user_ip);
 			$GLOBALS['phpgw']->db->transaction_commit();
 

@@ -123,22 +123,34 @@
 	*/
 	function passwdhashes($config)
 	{
-		$hashes = array('des', 'md5');
-		if ( function_exists('mhash') )
+		$hashes = array
+		(
+			'SSHA'	=> lang('Salted SHA1 - strong encryption'),
+			'SMD5'	=> lang('Salted MD5'),
+			'SHA'	=> lang('SHA1'),
+			'MD5'	=> lang('MD5 - Very vulnerable to dictionary attack'),
+			'CRYPT'	=> lang('Crypt - Very weak encryption')
+		);
+
+		if ( !isset($config['encryption_type']) )
 		{
-			$hashes[] = 'sha';
+			$config['encryption_type'] = 'SSHA';
 		}
+		$enc_type = $config['encryption_type'];
 
 		$out = '';
-		foreach ( $hashes as $hash )
+		foreach ( $hashes as $hash => $label)
 		{
 			$selected = '';
-			if ( isset($config['ldap_encryption_type']) && $config['ldap_encryption_type'] == $hash)
+			if ( $enc_type == $hash)
 			{
-				$selected = ' selected="selected"';
+				$selected = ' selected';
 			}
 
-			$out .= '<option value="' . $hash . '"' . $selected . '>' . strtoupper($hash) . "</option>\n";
+			$out .=  <<<HTML
+				<option value="{$hash}"{$selected}>{$label}</option>";
+
+HTML;
 		}
 		return $out;
 	}

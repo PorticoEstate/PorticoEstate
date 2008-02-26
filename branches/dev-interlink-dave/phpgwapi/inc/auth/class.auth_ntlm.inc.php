@@ -2,7 +2,7 @@
 	/**
 	* Authentication based on ntlm auth
 	* @author Philipp Kamps <pkamps@probusiness.de>
-	* @copyright Copyright (C) 2000-2004 Free Software Foundation, Inc http://www.fsf.org/
+	* @copyright Copyright (C) 2000-2008 Free Software Foundation, Inc http://www.fsf.org/
 	* @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License
 	* @package phpgwapi
 	* @subpackage accounts
@@ -16,31 +16,18 @@
 	* @subpackage accounts
 	* @ignore
 	*/
-	class auth_ntlm extends auth_
+	class phpgwapi_auth_ntlm extends phpgwapi_auth_remote_user
 	{
 
-		function auth_ntlm()
+		public function __construct()
 		{
-			parent::auth();
-		}
-
-		function authenticate($username, $passwd)
-		{
-			if (strlen($_SERVER['REMOTE_USER']))
-			{
-				return true;
-			}
-			else
-			{
-				return false;
-			}
+			parent::__construct();
 		}
 
 		function change_password($old_passwd, $new_passwd)
 		{
 			// not yet supported - this script would change the windows domain password
-			return false;
+			return '';
 		}
 
 	}
-?>

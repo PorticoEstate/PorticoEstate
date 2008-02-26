@@ -3,7 +3,7 @@
 	* Authentication based on NIS maps
 	* @author Dylan Adams <dadams@jhu.edu>
 	* @copyright Copyright (C) 2001 Dylan Adams
-	* @copyright Portions Copyright (C) 2004 Free Software Foundation, Inc http://www.fsf.org/
+	* @copyright Portions Copyright (C) 2004 - 2008 Free Software Foundation, Inc http://www.fsf.org/
 	* @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License
 	* @package phpgwapi
 	* @subpackage accounts
@@ -17,12 +17,12 @@
 	* @subpackage accounts
 	* @ignore
 	*/
-	class auth_nis extends auth_
+	class phpgwapi_auth_nis extends phpgwapi_auth_
 	{
 		
-		function auth_nis()
+		function __construct()
 		{
-			parent::auth();
+			parent::__construct();
 		}
 		
 		function authenticate($username, $passwd)
@@ -55,8 +55,6 @@
 		function change_password($old_passwd, $new_passwd, $account_id = '')
 		{
 			// can't change passwords unless server runs as root (bad idea)
-			return( False );
+			return '';
 		}
-
 	}
-?>

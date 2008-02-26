@@ -11,7 +11,7 @@
 	require '../../header.inc.php';
 	require '../inc/class.somappings.inc.php';
 
-	var_dump($GLOBALS['phpgw']->session->create('demo', md5('guest'), 'md5'));
+	var_dump($GLOBALS['phpgw']->session->create('demo', 'guest');
 
 	$ipc_manager = CreateObject('phpgwapi.ipc_manager');
 

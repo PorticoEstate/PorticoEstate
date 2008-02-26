@@ -15,29 +15,26 @@
 	* @package phpgwapi
 	* @subpackage accounts
 	*/
-	class auth_exchange extends auth_
+	class phpgwapi_auth_exchange extends phpgwapi_auth_
 	{
 		/**
-		*
-		* ldap connection
+		* @var resource $ldap ldap connection
 		*/
 		var $ldap;
 		
 		/**
-		*
-		* your windows domain
+		* @var string $domain your windows domain
 		*/
 		var $domain = '';
 
 		/**
-		*
-		* your exchange host
+		* @var string $host your exchange host
 		*/
 		var $host = '';
 
-		function auth_exchange()
+		public function __construct()
 		{
-			parent::auth();
+			parent::__construct();
 			if(!$this->ldap = ldap_connect($this->host))
 			{
 				die('not connected');
@@ -45,17 +42,17 @@
 			}
 		}
 		
-		function get_base_dn()
+		protected function get_base_dn()
 		{
 			return 'DC='.$this->domain;
 		}
 		
-		function transform_username($username)
+		protected function transform_username($username)
 		{
 			return $username;
 		}
 		
-		function authenticate($username, $passwd, $pwType)
+		public function authenticate($username, $passwd)
 		{
 			if($pwType == 'none')
 			{
@@ -71,8 +68,7 @@
 			$passwd = stripslashes($passwd);
 
 			/* Try to bind to the repository */
-			if(@ldap_bind($this->ldap,
-						  'cn='.$this->transform_username($username).','.$this->get_base_dn(),
+			return !! @ldap_bind($this->ldap, 'cn='.$this->transform_username($username).','.$this->get_base_dn(),
 						  $passwd
 						 ))
 			{
@@ -82,9 +78,8 @@
 			return false;
 		}
 
-		function change_password($old_passwd, $new_passwd, $_account_id='') 
+		public function change_password($old_passwd, $new_passwd, $_account_id='') 
 		{
 			return false;
 		}
 	}
-?>

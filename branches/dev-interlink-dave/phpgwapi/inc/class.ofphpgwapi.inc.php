@@ -69,53 +69,46 @@
 			switch($GLOBALS['phpgw_info']['server']['auth_type'])
 			{
 				case 'http':
-				include_once(PHPGW_API_INC . '/auth/class.auth_http.inc.php');
-				return new Auth_http();
-				break;
+					include_once(PHPGW_API_INC . '/auth/class.auth_http.inc.php');
+					return new phpgwapi_auth_http();
 				
 				case 'ldap':
-				include_once(PHPGW_API_INC . '/auth/class.auth_ldap.inc.php');
-				return new Auth_ldap();
-				break;
+					include_once(PHPGW_API_INC . '/auth/class.auth_ldap.inc.php');
+					return new phpgwapi_auth_ldap();
 
 				case 'mail':
-				include_once(PHPGW_API_INC . '/auth/class.auth_mail.inc.php');
-				return new Auth_mail();
-				break;
+					include_once(PHPGW_API_INC . '/auth/class.auth_mail.inc.php');
+					return new phpgwapi_auth_mail();
 
 				case 'nis':
-				include_once(PHPGW_API_INC . '/auth/class.auth_nis.inc.php');
-				return new Auth_nis();
-				break;
+					include_once(PHPGW_API_INC . '/auth/class.auth_nis.inc.php');
+					return new phpgwapi_auth_nis();
 
 				case 'ntlm':
-				include_once(PHPGW_API_INC . '/auth/class.auth_ntlm.inc.php');
-				return new Auth_ntlm();
-				break;
+					include_once(PHPGW_API_INC . '/auth/class.auth_ntlm.inc.php');
+					return new phpgwapi_auth_ntlm();
 
 				case 'sqlssl':
-				include_once(PHPGW_API_INC . '/auth/class.auth_sqlssl.inc.php');
-				return new Auth_sqlssl();
-				break;
+					include_once(PHPGW_API_INC . '/auth/class.auth_sql.inc.php');
+					include_once(PHPGW_API_INC . '/auth/class.auth_sqlssl.inc.php');
+					return new phpgwapi_auth_sqlssl();
 
 				case 'exchange':
-				include_once(PHPGW_API_INC . '/auth/class.auth_exchange.inc.php');
-				return new Auth_exchange();
-				break;
+					include_once(PHPGW_API_INC . '/auth/class.auth_exchange.inc.php');
+					return new phpgwapi_auth_exchange();
 
 				case 'ads':
-				include_once(PHPGW_API_INC . '/auth/class.auth_ads.inc.php');
-				return new Auth_ads();
-				break;
+					include_once(PHPGW_API_INC . '/auth/class.auth_exchange.inc.php');
+					include_once(PHPGW_API_INC . '/auth/class.auth_ads.inc.php');
+					return new phpgwapi_auth_ads();
 
 				case 'remoteuser':
-				include_once(PHPGW_API_INC . '/auth/class.auth_remoteuser.inc.php');
-				return new Auth_remoteuser();
-				break;
+					include_once(PHPGW_API_INC . '/auth/class.auth_remoteuser.inc.php');
+					return new phpgwapi_auth_remoteuser();
 
 				default:
-				include_once(PHPGW_API_INC . '/auth/class.auth_sql.inc.php');
-				return new Auth_sql();
+					include_once(PHPGW_API_INC . '/auth/class.auth_sql.inc.php');
+					return new phpgwapi_auth_sql();
 			}
 		}
 		

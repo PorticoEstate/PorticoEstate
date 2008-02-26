@@ -196,7 +196,7 @@
    <tr class="row_on">
     <td>{lang_password_encryption_type}:</td>
     <td>
-     <select name="newsettings[ldap_encryption_type]">
+     <select name="newsettings[encryption_type]">
 {hook_passwdhashes}
      </select>
     </td>
