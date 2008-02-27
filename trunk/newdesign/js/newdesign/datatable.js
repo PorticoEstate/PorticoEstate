@@ -305,8 +305,9 @@ YAHOO.util.Event.addListener(window, "load", function() {
 	                	loc1: loc1,
 	                	cmd: cmd
 	                };
-					var url=phpGWLink('index.php', args, false);
-					location.href=url;
+					//var url=phpGWLink('index.php', args, false);
+					//location.href=url;
+					alert("Sorry, the demo doesn't support new or edit yet :(");
 	        	}
 	        	else
 	        	{

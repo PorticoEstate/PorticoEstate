@@ -17,3 +17,51 @@
 	padding-left: 1.5em;
     background: url(../images/btn_prev.png) 10% 50% no-repeat;
 }
+
+#test-form h2 {
+	margin: 0px;
+}
+#test-form p.required {
+	font-size: 11px;
+	margin: 0.8em 0em;
+	padding-left: 20px;
+	background: url(../images/required.gif) left center no-repeat;
+}
+#test-form label {
+	width: 100px;
+	float: left;
+	margin: 3px 2px 2px 2px;
+	padding: 2px;
+	border-bottom: 1px solid #eee;
+	background: #fff right center no-repeat;
+}
+
+#test-form input, #test-form textarea {
+	border: 1px solid #888;
+	margin: 2px;
+	padding: 2px;
+}
+
+#test-form div.error {
+	display: none;
+}
+#test-form input.error {
+	background: #fff;
+	color: #000;
+}
+
+#test-form label.error {
+	border: none;
+	border-bottom: 1px solid #eee;
+	background-color: #fff;
+	background-image: url(../images/error.gif);
+	color: #000;
+}
+
+#test-form label.required {
+	background-image: url(../images/required.gif);
+}
+
+#test-form label.ok {
+	background-image: url(../images/ok.gif);
+}
