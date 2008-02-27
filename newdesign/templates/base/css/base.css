@@ -27,7 +27,9 @@
 	padding-left: 20px;
 	background: url(../images/required.gif) left center no-repeat;
 }
+
 #test-form label {
+	clear: left;
 	width: 100px;
 	float: left;
 	margin: 3px 2px 2px 2px;
