@@ -128,10 +128,18 @@
 					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'newdesign.uinewdesign.datatable','output'=>'html')),
 					'image' => array('newdesign', 'table')
 				),
+				/*
 				'property'	=> array
 				(
 					'text'	=> 'Property',
 					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'newdesign.uinewdesign.property','output'=>'html')),
+					'image' => array('newdesign', 'property')
+				),
+				*/
+				'form'	=> array
+				(
+					'text'	=> 'Property',
+					'url'	=>  $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'newdesign.uinewdesign.index','output'=>'html')),
 					'image' => array('newdesign', 'property')
 				)
 			);

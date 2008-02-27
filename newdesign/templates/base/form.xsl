@@ -55,8 +55,8 @@
 
 			<h2><xsl:value-of select="title"/></h2>
 
-			<p>
-				* Detonates required field
+			<p class="required">
+				Detonates required field
 			</p>
 
 			<div id="form-content">

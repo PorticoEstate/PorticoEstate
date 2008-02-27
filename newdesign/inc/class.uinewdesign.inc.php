@@ -285,50 +285,61 @@
       (
         'form' => array
         (
-          'title' => 'Add Contact',
+          'title' => 'New Property',
           'action' => "testaction",
           'fieldset' => array
           (
             array(
-              'title' => 'Basic',
               'field' => array
               (
                 array
                 (
-                  'title' => lang('Firstname'),
-                  'accesskey' => 'F',
-                  'tooltip' => 'Please enter your name',
+                  'title' => 'Property',
+                  'accesskey' => 'P',
+                  'tooltip' => 'Please enter property code',
                   'required' => true
-                  /*'error' => 'This field can not be empty!'	*/
+                  /*'error' => 'This field can not be empty!'*/
                 ),
                 array
                 (
-                  'title' => lang('Lastname'),
-                  'accesskey' => 'L',
+                  'title' => lang('Name'),
+                  'accesskey' => 'N',
                   'name' => 'lastname',
-                  'tooltip' => 'Here you should input the tooltip'
+                  'tooltip' => 'Please enter property name'
                 ),
                 array
                 (
-                  'title' => lang('Username'),
-                  'accesskey' => 'U',
+                  'title' => lang('Category'),
+                  'accesskey' => 'C',
                   'name' => 'username',
                   'required' => true
                 ),
                 array
                 (
-                  'title' => lang('Password'),
-                  'accesskey' => 'P',
+                  'title' => 'Part of town',
+                  'accesskey' => 'a',
                   'name' => 'password',
                   'type' => 'password',
                   'maxlength' => 8,
                   'required' => true
+                ),
+                array
+                (
+                  'title' => 'Owner',
+                  'accesskey' => 'O',
+                  'required' => true
+                ),
+                array
+                (
+                	'title' => 'Remark',
+                	'accesskey' => 'R',
+                	'type' => 'textarea'
                 )
               )
-            ),
+            )
+            /*
             array
             (
-              'title' => 'Advanced',
               'field' => array
               (
                 array
@@ -384,6 +395,7 @@
                 )
               )
             )
+			*/
           )
         )
       );
