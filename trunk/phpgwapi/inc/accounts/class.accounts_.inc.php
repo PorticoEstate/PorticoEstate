@@ -434,7 +434,7 @@
 		function get_members()
 		{
 			$members = array();
-			$sql = "SELECT acl_account FROM phpgw_acl WHERE acl_appname = 'phpgw_group' and acl_location =" . (int) $this->account_id;
+			$sql = "SELECT acl_account FROM phpgw_acl WHERE acl_appname = 'phpgw_group' and acl_location ='" . (int) $this->account_id . "'";
 			$this->db->query($sql,__LINE__,__FILE__);
 			while ($this->db->next_record())
 			{
