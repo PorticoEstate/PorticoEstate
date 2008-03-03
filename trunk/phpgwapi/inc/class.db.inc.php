@@ -522,20 +522,20 @@
 			$insert_value = array();
 			foreach ( $values as $value )
 			{
-				if ( is_numeric($value) )
+				if($value || $value === 0)
 				{
-					if ( !$value )
+					if ( is_numeric($value) )
 					{
-						$insert_value[] = 'NULL';
+						$insert_value[]	= "$value";
 					}
 					else
 					{
-						$insert_value[] = $value;
+						$insert_value[]	= "'$value'";
 					}
 				}
 				else
 				{
-					$insert_value[]	= "'$value'";
+					$insert_value[]	= 'NULL';
 				}
 			}
 			return implode(",", $insert_value);
