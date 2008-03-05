@@ -225,6 +225,7 @@
 			$location_list = $this->bo->read(array('type_id'=>$type_id,'lookup_tenant'=>$lookup_tenant,'lookup'=>$lookup,'allrows'=>$this->allrows));
 
 			$uicols = $this->bo->uicols;
+
 //_debug_array($location_list);
 //_debug_array($uicols);
 
@@ -259,7 +260,8 @@
 								$content[$j]['row'][$i]['name'] 			= $uicols['name'][$i];
 								$content[$j]['row'][$i]['lookup'] 			= $lookup;
 								$content[$j]['row'][$i]['align'] 			= (isset($uicols['align'][$i])?$uicols['align'][$i]:'center');
-								if($uicols['datatype'][$i]=='link' && $location[$uicols['name'][$i]])
+
+								if(isset($uicols['datatype']) && isset($uicols['datatype'][$i]) && $uicols['datatype'][$i]=='link' && $location[$uicols['name'][$i]])
 								{
 									$content[$j]['row'][$i]['text']		= lang('link');
 									$content[$j]['row'][$i]['link']		= $location[$uicols['name'][$i]];
