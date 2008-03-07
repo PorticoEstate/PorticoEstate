@@ -290,15 +290,17 @@
 
 				$receipt['message'][]= array('msg' => lang('Ticket has been updated'));
 
-				$soadmin_custom = CreateObject('property.soadmin_custom');
-				$custom_functions = $soadmin_custom->read(array('acl_location' => $this->acl_location,'allrows'=>True));
+				$custom = createObject('phpgwapi.custom_fields');
+				$custom_functions = $custom->read_custom_function(array('appname'=>'property','location' => $this->acl_location,'allrows'=>True));
 
 				if (isSet($custom_functions) AND is_array($custom_functions))
 				{
 					foreach($custom_functions as $entry)
 					{
-						if (is_file(PHPGW_APP_INC . SEP . 'custom' . SEP . $entry['file_name']) && $entry['active'])
-						include (PHPGW_APP_INC . SEP . 'custom' . SEP . $entry['file_name']);
+						if (is_file(PHPGW_APP_INC . "/custom/{$entry['file_name']}") && $entry['active'])
+						{
+							include_once(PHPGW_APP_INC . "/custom/{$entry['file_name']}");
+						}
 					}
 				}
 
