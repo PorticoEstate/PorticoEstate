@@ -55,7 +55,7 @@
       	phpgwapi_yui::load_widget('calendar');
 		phpgwapi_yui::load_widget('datatable');
 
-      	$type_id = phpgw::get_var('type_id', 'integer') ? phpgw::get_var('type_id', 'integer') : 1;
+      	$type_id = phpgw::get_var('type_id', 'int', 'REQUEST', 1);
       	$lookup_tenant = false;
       	$lookup = false;
       	$this->allrows = false;
