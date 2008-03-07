@@ -3,6 +3,12 @@
 
 		<div id="datatable-buttons" style="float: left; padding: 0em 0.5em">
 
+			<input type="submit" id="menubutton1" name="menubutton1_button" value="Menu Button 1"/>
+			<select id="menubutton1select" name="menubutton1select">
+			    <option value="0">One</option>
+			    <option value="1">Two</option>
+			    <option value="2">Three</option>
+			</select>
 		</div>
 
 		<div id="pagination-buttons" style="float: left; padding: 0em 0.5em">
