@@ -30,6 +30,7 @@
 
     var $public_functions = array
     (
+      'location'	=> true,
       'index'		=> true,
       'grid'		=> true,
       'project'	=> true,
@@ -40,6 +41,65 @@
       'datatable_json' => true,
       'property'	=> true
     );
+
+	function location()
+	{
+		$GLOBALS['phpgw_info']['flags']['menu_selection'] = 'newdesign::location';
+
+		$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/build/datatable/assets/datatable-core.css');
+      	$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/build/assets/skins/sam/datatable.css');
+
+      	$GLOBALS['phpgw']->js->validate_file( 'newdesign', 'location', $this->currentapp );
+
+      	phpgwapi_yui::load_widget('element');
+      	phpgwapi_yui::load_widget('connection');
+      	phpgwapi_yui::load_widget('dragdrop');
+      	phpgwapi_yui::load_widget('calendar');
+		phpgwapi_yui::load_widget('datatable');
+
+      	$type_id = 1;
+      	$lookup_tenant = false;
+      	$lookup = false;
+      	$this->allrows = false;
+
+      	$this->bo 		= CreateObject('property.bolocation',True);
+      	$location_list 	= $this->bo->read(array('type_id'=>$type_id,'lookup_tenant'=>$lookup_tenant,'lookup'=>$lookup,'allrows'=>$this->allrows));
+		$uicols 		= $this->bo->uicols;
+
+		$output = phpgw::get_var('phpgw_return_as', 'string') ? phpgw::get_var('phpgw_return_as', 'string') : 'html';
+
+		if($output == "html")
+		{
+			//var_dump($uicols);
+			$data = array();
+			$columnDefs = array();
+			for($i=0;$i<count($uicols['name']);$i++)
+			{
+				//$columnDefs['column'][$i]['input_type'] = $uicols['input_type'][$i];
+				$columnDefs['column'][$i]['name'] = $uicols['name'][$i];
+				$columnDefs['column'][$i]['descr'] = $uicols['descr'][$i];
+				//$columnDefs['column'][$i]['statustext'] = $uicols['statustext'][$i];
+				/* 'exchange', 'align', 'datatype' */
+			}
+			$data['locationDataTable']['columns'] = $columnDefs;
+
+			$GLOBALS['phpgw']->xslttpl->add_file(array('location'));
+      		$GLOBALS['phpgw']->xslttpl->set_var('phpgw', $data);
+      		//var_dump ($GLOBALS['phpgw']->xslttpl->xml_parse());
+		}
+		else
+		{
+			$data = array(
+                'recordsReturned'	=>	count($location_list),
+                'totalRecords'		=>	$this->bo->total_records,
+                'startIndex'		=> 	$this->bo->start,
+                'sort'				=> 	$this->bo->order,
+      			'sort_dir'			=> 	$this->bo->sort,
+                'records'			=> 	$location_list
+      		);
+			return $data;
+		}
+	}
 
     function newdesign_uinewdesign()
     {
