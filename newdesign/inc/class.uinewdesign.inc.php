@@ -89,10 +89,12 @@
 		}
 		else
 		{
+			//recordsReturned should come from bo
+			//TODO: totalRecords should be int no mather what...
 			$data = array(
                 'recordsReturned'	=>	count($location_list),
-                'totalRecords'		=>	$this->bo->total_records,
-                'startIndex'		=> 	$this->bo->start,
+                'totalRecords'		=>	(int)$this->bo->total_records,
+                'startIndex'		=> 	(int)$this->bo->start,
                 'sort'				=> 	$this->bo->order,
       			'sort_dir'			=> 	$this->bo->sort,
                 'records'			=> 	$location_list
