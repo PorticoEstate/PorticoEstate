@@ -1758,5 +1758,9 @@
 		}
 	}
 
-
+	$test[] = '0.9.17.513.01';
+	function phpgwapi_upgrade0_9_17_513_01()
+	{
+		return $GLOBALS['setup_info']['phpgwapi']['currentver']= '0.9.17.514';
+	}
 ?>
