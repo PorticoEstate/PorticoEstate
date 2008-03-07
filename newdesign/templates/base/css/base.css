@@ -67,3 +67,25 @@
 #test-form label.ok {
 	background-image: url(../images/ok.gif);
 }
+
+#center-loader {
+	left: 0px;
+	top: 0px;
+	width: 100%;
+	height: 100%;
+	position: absolute;
+	background: #fff;
+	-moz-opacity:.8;
+	z-index: 10;
+}
+
+#center-loader div {
+	background: #eee;
+	padding: 5px 10px;
+	font-size: 1em;
+	font-weight: bold;
+	position: absolute;
+	right: 10px;
+	bottom: 10px;
+	-moz-opacity:1;
+}

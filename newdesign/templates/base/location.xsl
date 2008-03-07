@@ -12,7 +12,7 @@
 		<div style="clear:left"></div>
 	</div>
 	<div id="datatable" style="margin: 1px;"></div>
-
+	<div id="center-loader"><div>Loading...</div></div>
 	<xsl:apply-templates />
 </xsl:template>
 
@@ -21,9 +21,9 @@
 	var type_id = <xsl:value-of select="type_id"/>;
 	var locationColumnDefs = [
 		 <xsl:for-each select="columns/column">
-  			{key:"<xsl:value-of select="name"/>", label:"<xsl:value-of select="descr"/>", sortable:true}
+  			{key:"<xsl:value-of select="name"/>", label:"<xsl:value-of select="descr"/>", sortable:true }
 			<xsl:if test="position()!=last()">
-  				<xsl:text>, </xsl:text>
+ 					<xsl:text>, </xsl:text>
       		</xsl:if>
 		</xsl:for-each>
 	];

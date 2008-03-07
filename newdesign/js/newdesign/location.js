@@ -28,6 +28,12 @@ YAHOO.util.Event.addListener(window, "load", function() {
 
 	   	this.myDataTable = new YAHOO.widget.DataTable("datatable", locationColumnDefs, this.myDataSource, oConfigs );
 
+		// Handle row highlighting and selection
+		this.myDataTable.subscribe("rowMouseoverEvent", this.myDataTable.onEventHighlightRow);
+	    this.myDataTable.subscribe("rowMouseoutEvent", this.myDataTable.onEventUnhighlightRow);
+	    this.myDataTable.subscribe("rowClickEvent", this.myDataTable.onEventSelectRow);
+
+
 	   	this.myDataSource.doBeforeCallback = function(oRequest, oRawResponse, oParsedResponse) {
             var oSelf =  YAHOO.example.XHR_JSON;
             var oDataTable = oSelf.myDataTable;
@@ -59,15 +65,19 @@ YAHOO.util.Event.addListener(window, "load", function() {
             oDataTable.set("sortedBy", newSortedBy);
 
             // Update the links UI
-			YAHOO.util.Dom.get("datatable-pages").innerHTML = "Showing items " + (startIndex+1) + " - " + (endIndex+1) + " of " + (totalRecords+1);
+			YAHOO.util.Dom.get("datatable-pages").innerHTML = "Showing items " + (startIndex+1) + " - " + (endIndex+1) + " of " + (totalRecords);
 
 			oSelf.nextButton.set('disabled', (endIndex >= totalRecords) );
 			oSelf.prevButton.set('disabled', (startIndex === 0) );
+
+			// Hide loader screen
+			oSelf.showLoader(false);
 
 			// Let the DataSource parse the rest of the response
 	    	return oParsedResponse;
 	   	};
 
+		// Sort handling
 		this.myDataTable.sortColumn = function(oColumn) {
 			try {
 			// Which direction
@@ -95,6 +105,7 @@ YAHOO.util.Event.addListener(window, "load", function() {
 			}
         };
 
+		// Pagination handling
 		this.getPage = function(nStartRecordIndex, nResults) {
             // If a new value is not passed in
             // use the old value
@@ -115,6 +126,11 @@ YAHOO.util.Event.addListener(window, "load", function() {
            		var sort = "";
            		var sort_dir = "";
            	}
+
+           	// Show loading screen and disable buttons
+           	this.showLoader(true);
+            this.nextButton.set('disabled', true );
+			this.prevButton.set('disabled', true );
 
             YAHOO.util.Dom.get("datatable-pages").innerHTML = "Loading...";
 
@@ -154,6 +170,19 @@ YAHOO.util.Event.addListener(window, "load", function() {
             this.getPage(newStartRecordIndex);
         };
 
+		// Row handling
+		this.onRowDoubleClick = function(e, target)
+		{
+			if( this.myDataTable.getSelectedTrEls().length )
+	        {
+	        	var elRow = this.myDataTable.getSelectedTrEls()[0];
+	        	var id = elRow.cells[0].innerHTML;
+	        	var url = phpGWLink('index.php', { menuaction: 'property.uilocation.view', location_code: id }, false);
+				this.showLoader(true);
+				document.location=url;
+	        }
+		}
+		this.myDataTable.on("rowDblclickEvent", this.onRowDoubleClick, this, true);
 
 	   	// Buttons
 		this.prevButton = new YAHOO.widget.Button(
@@ -172,6 +201,11 @@ YAHOO.util.Event.addListener(window, "load", function() {
 
 		this.prevButton.on("click", this.getPreviousPage, this, true);
 		this.nextButton.on("click", this.getNextPage, this, true);
+
+		this.showLoader = function(show)
+		{
+			YAHOO.util.Dom.get("center-loader").style.display = show ? 'block' : 'none';
+		};
 	};
 
 	//alert(locationColumnDefs);
