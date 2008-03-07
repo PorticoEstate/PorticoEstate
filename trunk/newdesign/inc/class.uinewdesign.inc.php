@@ -44,8 +44,6 @@
 
 	function location()
 	{
-		$GLOBALS['phpgw_info']['flags']['menu_selection'] = 'newdesign::location';
-
 		$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/build/datatable/assets/datatable-core.css');
       	$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/build/assets/skins/sam/datatable.css');
 
@@ -57,7 +55,7 @@
       	phpgwapi_yui::load_widget('calendar');
 		phpgwapi_yui::load_widget('datatable');
 
-      	$type_id = 1;
+      	$type_id = phpgw::get_var('type_id', 'integer') ? phpgw::get_var('type_id', 'integer') : 1;
       	$lookup_tenant = false;
       	$lookup = false;
       	$this->allrows = false;
@@ -70,6 +68,8 @@
 
 		if($output == "html")
 		{
+			$GLOBALS['phpgw_info']['flags']['menu_selection'] = 'newdesign::location::location_loc_' . $type_id;
+
 			//var_dump($uicols);
 			$data = array();
 			$columnDefs = array();
@@ -81,6 +81,8 @@
 				//$columnDefs['column'][$i]['statustext'] = $uicols['statustext'][$i];
 				/* 'exchange', 'align', 'datatype' */
 			}
+
+			$data['locationDataTable']['type_id'] = $type_id;
 			$data['locationDataTable']['columns'] = $columnDefs;
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('location'));

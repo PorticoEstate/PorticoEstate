@@ -4,7 +4,7 @@ YAHOO.util.Event.addListener(window, "load", function() {
 
 	YAHOO.example.XHR_JSON = new function() {
 		//locationColumnDefs
-		var datasource=phpGWLink('index.php', oArgs, true) + "&";
+		var datasource=phpGWLink('index.php', oArgs, true) + "&type_id=" + type_id + "&";
 
 		this.myDataSource = new YAHOO.util.DataSource( datasource );
 		this.myDataSource.responseType = YAHOO.util.DataSource.TYPE_JSON;
@@ -48,6 +48,16 @@ YAHOO.util.Event.addListener(window, "load", function() {
             }
             oDataTable.updatePaginator(newPag);
 
+			var sortCol = oRawResponse.sort; // Which column is sorted
+            var sortDir = oRawResponse.sort_dir; // Which sort direction
+
+            // Update the config sortedBy with new values
+            var newSortedBy = {
+                key: sortCol,
+                dir: sortDir
+            }
+            oDataTable.set("sortedBy", newSortedBy);
+
             // Update the links UI
 			YAHOO.util.Dom.get("datatable-pages").innerHTML = "Showing items " + (startIndex+1) + " - " + (endIndex+1) + " of " + (totalRecords+1);
 
@@ -57,6 +67,33 @@ YAHOO.util.Event.addListener(window, "load", function() {
 			// Let the DataSource parse the rest of the response
 	    	return oParsedResponse;
 	   	};
+
+		this.myDataTable.sortColumn = function(oColumn) {
+			try {
+			// Which direction
+            var sDir = "asc";
+
+            // Already sorted?
+
+            if(this.get("sortedBy") && oColumn.key === this.get("sortedBy").key) {
+                sDir = (this.get("sortedBy").dir === "asc") ?
+                        "desc" : "asc";
+            }
+
+            var nResults = this.get("paginator").totalRecords;
+
+			if(!YAHOO.lang.isValue(nResults)) {
+                nResults = this.myDataTable.get("paginator").totalRecords;
+            }
+
+            var newRequest = "sort=" + sDir + "&order=" + oColumn.key;
+			YAHOO.util.Dom.get("datatable-pages").innerHTML = "Loading...";
+           	this.getDataSource().sendRequest(newRequest, this.onDataReturnInitializeTable, this);
+			}
+			catch(e) {
+				alert(e);
+			}
+        };
 
 		this.getPage = function(nStartRecordIndex, nResults) {
             // If a new value is not passed in
@@ -68,14 +105,20 @@ YAHOO.util.Event.addListener(window, "load", function() {
             if(!YAHOO.lang.isValue(nStartRecordIndex)) {
                 return;
             }
-			/*
+			if(this.myDataTable.get("sortedBy"))
+			{
            		var sort = this.myDataTable.get("sortedBy").key;
            		var sort_dir = this.myDataTable.get("sortedBy").dir;
-           	*/
+           	}
+           	else
+           	{
+           		var sort = "";
+           		var sort_dir = "";
+           	}
 
             YAHOO.util.Dom.get("datatable-pages").innerHTML = "Loading...";
 
-            var newRequest = "start=" + nStartRecordIndex + "&limit_records=" + nResults; // + "&sort=" + sort + "&sort_dir=" + sort_dir;
+            var newRequest = "start=" + nStartRecordIndex + "&limit_records=" + nResults + "&sort=" + sort_dir + "&order=" + sort;
             this.myDataSource.sendRequest(newRequest, this.myDataTable.onDataReturnInitializeTable, this.myDataTable);
         };
 

@@ -18,6 +18,7 @@
 
 <xsl:template match="locationDataTable">
 	<script type="text/javascript">
+	var type_id = <xsl:value-of select="type_id"/>;
 	var locationColumnDefs = [
 		 <xsl:for-each select="columns/column">
   			{key:"<xsl:value-of select="name"/>", label:"<xsl:value-of select="descr"/>", sortable:true}

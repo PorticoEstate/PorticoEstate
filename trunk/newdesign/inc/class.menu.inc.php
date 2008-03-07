@@ -102,40 +102,39 @@
 					'image'	=> array('newdesign', 'preferences')
 				);
 			}
+			$location_children = array
+			(
+				'location_loc_1' => array
+				(
+					'text' => 'Eiendom',
+					'url'	=>  $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'newdesign.uinewdesign.location','output'=>'html', 'type_id' => 1 )),
+				),
+				'location_loc_2' => array
+				(
+					'text' => 'Bygg',
+					'url'	=>  $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'newdesign.uinewdesign.location','output'=>'html', 'type_id' => 2 )),
+				),
+				'location_loc_3' => array
+				(
+					'text' => 'Inngang',
+					'url'	=>  $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'newdesign.uinewdesign.location','output'=>'html', 'type_id' => 3 )),
+				),
+				'location_loc_4' => array
+				(
+					'text' => 'Leieobjekt',
+					'url'	=>  $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'newdesign.uinewdesign.location','output'=>'html', 'type_id' => 4 )),
+				)
+
+			);
 
 			$menus['navigation'] = array
 			(
-				/*
-				'form'	=> array
-				(
-					'text'	=> 'Form',
-					'url'	=>  $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'newdesign.uinewdesign.index','output'=>'html'))
-				),
-				'grid'	=> array
-				(
-					'text'	=> 'Grid',
-					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'newdesign.uinewdesign.grid','output'=>'html'))
-				),
-				'project'	=> array
-				(
-					'text'	=> 'Project',
-					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'newdesign.uinewdesign.project','output'=>'html'))
-				),
-				*/
 				'datatable'	=> array
 				(
 					'text'	=> 'DataTable',
 					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'newdesign.uinewdesign.datatable','output'=>'html')),
 					'image' => array('newdesign', 'table')
 				),
-				/*
-				'property'	=> array
-				(
-					'text'	=> 'Property',
-					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'newdesign.uinewdesign.property','output'=>'html')),
-					'image' => array('newdesign', 'property')
-				),
-				*/
 				'form'	=> array
 				(
 					'text'	=> 'Property',
@@ -146,9 +145,12 @@
 				(
 					'text'	=> 'Location',
 					'url'	=>  $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'newdesign.uinewdesign.location','output'=>'html')),
-					'image' => array('newdesign', 'property')
+					'image' => array('newdesign', 'property'),
+					'children' => $location_children
 				)
 			);
+
+
 			return $menus;
 		}
 
