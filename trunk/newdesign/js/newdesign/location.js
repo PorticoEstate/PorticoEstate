@@ -171,20 +171,17 @@ YAHOO.util.Event.addListener(window, "load", function() {
         };
 
 		// Row handling
-		this.onRowDoubleClick = function(e, target)
-		{
-			if( this.myDataTable.getSelectedTrEls().length )
-	        {
-	        	var elRow = this.myDataTable.getSelectedTrEls()[0];
-	        	var id = elRow.cells[0].innerHTML;
-	        	var url = phpGWLink('index.php', { menuaction: 'property.uilocation.view', location_code: id }, false);
-				this.showLoader(true);
-				document.location=url;
-	        }
-		}
+		this.onRowDoubleClick = function(e, target) { this.doLocationCmd('view') }
+
 		this.myDataTable.on("rowDblclickEvent", this.onRowDoubleClick, this, true);
 
 	   	// Buttons
+		var oMenuButton1 = new YAHOO.widget.Button(	"menubutton1",
+		{
+	    	type: "menu",
+	        menu: "menubutton1select"
+	    });
+
 		this.prevButton = new YAHOO.widget.Button(
 		{
 			label: "Prev",
@@ -202,10 +199,115 @@ YAHOO.util.Event.addListener(window, "load", function() {
 		this.prevButton.on("click", this.getPreviousPage, this, true);
 		this.nextButton.on("click", this.getNextPage, this, true);
 
+		// Loader
 		this.showLoader = function(show)
 		{
 			YAHOO.util.Dom.get("center-loader").style.display = show ? 'block' : 'none';
 		};
+
+		// Location functions
+		this.doLocationCmd = function(cmd)
+		{
+			if( this.myDataTable.getSelectedTrEls().length )
+	        {
+	        	var elRow = this.myDataTable.getSelectedTrEls()[0];
+	        	var id = elRow.cells[0].innerHTML;
+				var url = phpGWLink('index.php', { menuaction: 'property.uilocation.' + cmd, location_code: id }, false);
+				this.showLoader(true);
+				document.location=url;
+	        }
+		};
+
+		// Context menu
+		this.onContextMenuClick = function(p_sType, p_aArgs, p_myDataTable) {
+            var task = p_aArgs[1];
+
+ 			switch(task.value) {
+				case "view":
+					YAHOO.example.XHR_JSON.doLocationCmd('view');
+					break;
+				case "edit":
+					YAHOO.example.XHR_JSON.doLocationCmd('edit');
+					break;
+				case "delete":
+                	YAHOO.example.XHR_JSON.doLocationCmd('delete');
+                	break;
+                case "new":
+					var url = phpGWLink('index.php', { menuaction: 'property.uilocation.edit', type_id: type_id }, false);
+					YAHOO.example.XHR_JSON.showLoader(true);
+					document.location=url;
+                	break;
+            }
+        };
+
+		this.onContextBeforeShow = function(p_sType, p_aArgs, p_myDataTable) {
+			// Extract which TR element triggered the context menu
+            var elRow = this.contextEventTarget;
+            elRow = p_myDataTable.getTrEl(elRow);
+			p_myDataTable.unselectAllRows();
+            p_myDataTable.selectRow(elRow);
+		}
+
+		this.myContextMenu = new YAHOO.widget.ContextMenu("mycontextmenu", {trigger:this.myDataTable.getTbodyEl()});
+
+        this.myContextMenu.addItems([
+	        [
+		        {
+		        	text: "View",
+		        	value: "view",
+		        	groupIndex: 1
+				},
+		        {
+		        	text: "Edit",
+		        	value: "edit",
+		        	groupIndex: 1
+				}
+				/*
+				,
+		        {
+		        	text: "History",
+		        	value: "history",
+		        	groupIndex: 1
+				}
+				*/
+			],
+			[
+		        {
+		        	text: "Delete",
+		        	value: "delete",
+		        	groupIndex: 2
+				}
+			],
+			[
+		        {
+		        	text: "New",
+		        	groupIndex: 3,
+		        	value: "new"
+		        	/*
+		        	submenu: {
+		        		id: "new",
+		        		itemdata:
+		        		[
+		        			{ value: "new-property", text: "Property" },
+		        			{ text: "Building" },
+		        			{ text: "Entrance" },
+		        			{ text: "Apartment" },
+		        			{ text: "Tenant" }
+		        		]
+		        	}
+		        	*/
+				}
+			]
+
+	        //	submenu: {
+	        //    id: "communication"
+	        //    itemdata: [ ... ] // Array of YAHOO.widget.MenuItem configuration properties
+        ]);
+
+        // Render the ContextMenu instance to the parent container of the DataTable
+        this.myContextMenu.render("datatable");
+        this.myContextMenu.clickEvent.subscribe(this.onContextMenuClick, this.myDataTable);
+		this.myContextMenu.beforeShowEvent.subscribe( this.onContextBeforeShow, this.myDataTable);
 	};
 
 	//alert(locationColumnDefs);
