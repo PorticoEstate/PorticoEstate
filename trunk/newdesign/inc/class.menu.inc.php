@@ -141,6 +141,12 @@
 					'text'	=> 'Property',
 					'url'	=>  $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'newdesign.uinewdesign.index','output'=>'html')),
 					'image' => array('newdesign', 'property')
+				),
+				'location'	=> array
+				(
+					'text'	=> 'Location',
+					'url'	=>  $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'newdesign.uinewdesign.location','output'=>'html')),
+					'image' => array('newdesign', 'property')
 				)
 			);
 			return $menus;

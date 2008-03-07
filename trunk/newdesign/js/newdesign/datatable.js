@@ -27,6 +27,7 @@ YAHOO.util.Event.addListener(window, "load", function() {
 	        ];
 
 			var datasource=phpGWLink('index.php', oArgs, true) + "&";
+			alert(datasource);
 
 	        this.myDataSource = new YAHOO.util.DataSource( datasource );
 	        this.myDataSource.responseType = YAHOO.util.DataSource.TYPE_JSON;
