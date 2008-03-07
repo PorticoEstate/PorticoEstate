@@ -202,7 +202,6 @@ YAHOO.util.Event.addListener(window, "load", function() {
 	                endIndex: endIndex,
 	                totalResults: totalRecords
 	            }
-
 	            oDataTable.updatePaginator(newPag);
 
 	            // Update the links UI
