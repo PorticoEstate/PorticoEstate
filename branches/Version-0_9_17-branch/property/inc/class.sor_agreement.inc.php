@@ -354,7 +354,7 @@
 				$query = preg_replace("/'/",'',$query);
 				$query = preg_replace('/"/','',$query);
 
-				$this->db->query("SELECT * FROM $attribute_table where search='1'");
+				$this->db->query("SELECT * FROM $attribute_table WHERE search=1 AND $attribute_filter");
 
 				while ($this->db->next_record())
 				{
