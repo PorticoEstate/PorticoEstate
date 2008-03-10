@@ -83,7 +83,7 @@
 				$query = preg_replace("/'/",'',$query);
 				$query = preg_replace('/"/','',$query);
 
-				$querymethod = " $where ( abid = '$query' or org_name $this->like '%$query%')";
+				$querymethod = " $where name $this->like '%$query%'";
 			}
 
 			$sql = "SELECT * FROM fm_custom $filtermethod $querymethod";
