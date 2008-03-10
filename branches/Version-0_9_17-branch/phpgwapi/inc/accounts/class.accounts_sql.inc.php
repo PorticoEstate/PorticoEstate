@@ -163,7 +163,7 @@
 				}
 
 				$whereclause .= " account_firstname $this->like '%$query%' OR account_lastname $this->like "
-					. "'%$query%' OR account_lid $this->like '%$query%' OR person_id $this->like '%$query%')";
+					. "'%$query%' OR account_lid $this->like '%$query%' OR person_id =" . (int)$query . ')';
 			}
 
 			$sql = "SELECT * FROM phpgw_accounts $whereclause $orderclause";
