@@ -43,6 +43,7 @@
 			$this->db2           	= $this->bocommon->new_db();
 
 			$this->join			= $this->bocommon->join;
+			$this->like			= $this->bocommon->like;
 		}
 
 		function read($data)
@@ -101,10 +102,13 @@
 				$query = preg_replace("/'/",'',$query);
 				$query = preg_replace('/"/','',$query);
 
-				$querymethod = " $where ( abid = '$query' or org_name LIKE '%$query%')";
+				$querymethod = " $where ( first_name $this->like '%$query%' OR last_name $this->like '%$query%')";
 			}
 
-			$sql = "SELECT fm_tenant_claim.*, descr as category FROM fm_tenant_claim $this->join fm_tenant_claim_category on fm_tenant_claim.category=fm_tenant_claim_category.id $filtermethod $querymethod";
+			$sql = "SELECT fm_tenant_claim.*, descr as category FROM fm_tenant_claim "
+			 . " $this->join fm_tenant_claim_category on fm_tenant_claim.category=fm_tenant_claim_category.id"
+			 . " $this->join fm_tenant ON fm_tenant_claim.tenant_id = fm_tenant.id"
+			 . " $filtermethod $querymethod";
 
 			$this->db2->query($sql,__LINE__,__FILE__);
 			$this->total_records = $this->db2->num_rows();
