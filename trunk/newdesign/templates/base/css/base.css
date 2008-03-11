@@ -23,7 +23,19 @@
 	//background: #426fd9 !important;
 	background-position: 0px -1400px !important;
 }
+div.separator {
+	float: left;
+	padding-left: 1em;
+	margin-right: 1em;
+	border-right: 2px groove #fff;
+	height: 2em;
 
+}
+#datatable-toolbar {
+	background: #eee;
+	padding: 0.3em;
+
+}
 span.yui-button.pressed button {
 	color: #fff !important;
 }

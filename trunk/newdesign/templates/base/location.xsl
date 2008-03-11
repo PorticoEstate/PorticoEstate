@@ -1,16 +1,32 @@
 <xsl:template match="phpgw">
-	<div id="datatable-toolbar" style="width: 100%; background: #eee; border-top: 3px #eee solid">
+	<div id="datatable-toolbar">
 
 		<div id="datatable-buttons" style="float: left; padding: 0em 0.5em">
 
 		</div>
-		<div id="filter-buttons" style="float: left; padding: 0em 0.5em">
+		<div id="filter-buttons" style="float: left">
 			<xsl:apply-templates select="filter" />
 		</div>
-		<div id="pagination-buttons" style="float: left; padding: 0em 0.5em">
 
+		<div class="separator"></div>
+
+		<div id="search-controlls" style="float: left;line-height: 2em;">
+
+			<form id="search-form">
+				<input name="query" id="search-field"/>
+				<input type="submit" value="Search" />
+				<input type="button" value="clear" id="search-clean" />
+			</form>
 		</div>
-		<div id="datatable-pages" style="float:left; line-height:2em; padding: 0em 0.5em"></div>
+
+		<div class="separator"></div>
+
+		<div id="pagination-buttons" style="float: left;"></div>
+
+		<div class="separator"></div>
+
+		<div id="datatable-pages" style="float:left; line-height:2em;"></div>
+
 		<div style="clear:left"></div>
 	</div>
 	<div id="datatable" style="margin: 1px;"></div>
