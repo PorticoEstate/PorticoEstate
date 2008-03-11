@@ -55,10 +55,10 @@
       	phpgwapi_yui::load_widget('calendar');
 		phpgwapi_yui::load_widget('datatable');
 
-      	$type_id = phpgw::get_var('type_id', 'int', 'REQUEST', 1);
-      	$lookup_tenant = false;
-      	$lookup = false;
-      	$this->allrows = false;
+      	$type_id 		= phpgw::get_var('type_id', 'int', 'REQUEST', 1);
+      	$lookup_tenant 	= phpgw::get_var('lookup_tenant', 'int', 'REQUEST', false);
+      	$lookup 		= false;
+      	$this->allrows 	= false;
 
       	$this->bo 		= CreateObject('property.bolocation',True);
       	$location_list 	= $this->bo->read(array('type_id'=>$type_id,'lookup_tenant'=>$lookup_tenant,'lookup'=>$lookup,'allrows'=>$this->allrows));
@@ -69,6 +69,11 @@
 		if($output == "html")
 		{
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] = 'newdesign::location::location_loc_' . $type_id;
+
+			if($lookup_tenant)
+			{
+				$GLOBALS['phpgw_info']['flags']['menu_selection'] .= "_${lookup_tenant}";
+			}
 
 			//var_dump($uicols);
 			$data = array();
@@ -82,8 +87,64 @@
 				/* 'exchange', 'align', 'datatype' */
 			}
 
+			$data['locationDataTable']['datasrouce_url'] = $GLOBALS['phpgw']->link('/index.php', array(
+				'menuaction'		=> 'newdesign.uinewdesign.location',
+				'type_id'			=> $type_id,
+				'phpgw_return_as'	=> 'json',
+				'lookup_tenant'		=> $lookup_tenant
+			));
+
 			$data['locationDataTable']['type_id'] = $type_id;
 			$data['locationDataTable']['columns'] = $columnDefs;
+
+			// Get filter data for Category, District, Part of town and owner
+			$this->socommon 		= CreateObject('property.socommon', true);
+			$this->so 				= CreateObject('property.solocation');
+
+			$data['filter'] = array();
+			$i=0;
+			//$this->bocommon->select_category_list(array('format'=>'filter','selected' => $this->cat_id,'type' =>'location','type_id' =>$type_id,'order'=>'descr')),
+
+			$data['filter'][$i]['id'] = 'category';
+			$data['filter'][$i]['name'] = 'cat_id';
+			$data['filter'][$i]['title'] = 'Category';
+			$data['filter'][$i]['descr'] = lang('Select the category the location belongs to. To do not use a category select NO CATEGORY');
+			$data['filter'][$i]['selected'] = $this->bo->cat_id;
+			//$data['filter'][$i]['options'][] =
+
+			$socategory = CreateObject('property.socategory');
+			$categories = $socategory->select_category_list( array(
+				'type'=> 'location',
+				'type_id' => 1
+			));
+			$empty[] = array( 'id'	=>	'', "name"	=> lang('no category') );
+			$data['filter'][$i]['options'] = array_merge($empty, $categories);
+			unset($empty);
+
+			$i=1;
+			$data['filter'][$i]['id'] = 'part_of_town';
+			$data['filter'][$i]['name'] = 'part_of_town_id';
+			$data['filter'][$i]['title'] = 'Part of town';
+			$data['filter'][$i]['descr'] = lang('Select the part of town the selection belongs to. To do not use a part of town select NO PART OF TOWN');
+			$data['filter'][$i]['selected'] = $this->bo->part_of_town_id;
+			$empty[] = array( 'id'	=>	'', "name"	=> lang('no part of town') );
+			$data['filter'][$i]['options'] = array_merge($empty, $this->socommon->select_part_of_town($district_id));
+			unset($empty);
+
+			/*
+			$i++;
+			$data['filter'][$i]['name'] = 'owner';
+			$data['filter'][$i]['selected'] = $this->bo->part_of_town_id;
+			$data['filter'][$i]['options'] = $this->so->get_owner_type_list();
+			*/
+			//$this->so->get_owner_type_list()
+
+			//var_dump($this->bo->part_of_town_id);
+			//$test = $this->socommon->select_part_of_town($district_id);
+			//var_dump($test);
+
+			//$data['filter']['part_of_town_list'] = $this->bocommon->select_part_of_town('filter', $this->bo->part_of_town_id, $this->bo->district_id);
+			//	'lang_no_part_of_town'				=> lang('no part of town'),
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('location'));
       		$GLOBALS['phpgw']->xslttpl->set_var('phpgw', $data);
@@ -99,6 +160,8 @@
                 'startIndex'		=> 	(int)$this->bo->start,
                 'sort'				=> 	$this->bo->order,
       			'sort_dir'			=> 	$this->bo->sort,
+				'part_of_town_id'	=>	$this->bo->part_of_town_id,
+				'cat_id'			=>	$this->bo->cat_id,
                 'records'			=> 	$location_list
       		);
 			return $data;

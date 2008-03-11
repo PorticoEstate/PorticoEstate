@@ -1,11 +1,15 @@
 
 YAHOO.util.Event.addListener(window, "load", function() {
+
 	var oArgs = { menuaction: 'newdesign.uinewdesign.location' };
 
 	YAHOO.example.XHR_JSON = new function() {
 		//locationColumnDefs
-		var datasource=phpGWLink('index.php', oArgs, true) + "&type_id=" + type_id + "&";
-
+		//var datasource=phpGWLink('index.php', oArgs, true) + "&type_id=" + type_id + "&";
+		//alert(datasource);
+		//alert( datasource_url );
+		var datasource = datasource_url;
+		//alert(datasource);
 		this.myDataSource = new YAHOO.util.DataSource( datasource );
 		this.myDataSource.responseType = YAHOO.util.DataSource.TYPE_JSON;
 	    this.myDataSource.connXhrMode = "queueRequests";
@@ -27,12 +31,12 @@ YAHOO.util.Event.addListener(window, "load", function() {
 	   	};
 
 	   	this.myDataTable = new YAHOO.widget.DataTable("datatable", locationColumnDefs, this.myDataSource, oConfigs );
+		this.myDataTable.pConfig = { };
 
 		// Handle row highlighting and selection
 		this.myDataTable.subscribe("rowMouseoverEvent", this.myDataTable.onEventHighlightRow);
 	    this.myDataTable.subscribe("rowMouseoutEvent", this.myDataTable.onEventUnhighlightRow);
 	    this.myDataTable.subscribe("rowClickEvent", this.myDataTable.onEventSelectRow);
-
 
 	   	this.myDataSource.doBeforeCallback = function(oRequest, oRawResponse, oParsedResponse) {
             var oSelf =  YAHOO.example.XHR_JSON;
@@ -64,8 +68,35 @@ YAHOO.util.Event.addListener(window, "load", function() {
             }
             oDataTable.set("sortedBy", newSortedBy);
 
+			// Update filter values
+			var part_of_town_id = oRawResponse.part_of_town_id;
+			var part_of_town_items = oSelf.partOfTownMenu.getMenu().getItems();
+			for(i=0;i<part_of_town_items.length;i++) {
+				if( part_of_town_items[i].value == part_of_town_id )
+				{
+					part_of_town_items[i].cfg.setProperty("checked", true);
+				}
+				else
+				{
+					part_of_town_items[i].cfg.setProperty("checked", false);
+				}
+			}
+
+			var cat_id = oRawResponse.cat_id;
+			var category_items = oSelf.categoryMenu.getMenu().getItems();
+			for(i=0;i<category_items.length;i++) {
+				if( category_items[i].value == cat_id )
+				{
+					category_items[i].cfg.setProperty("checked", true);
+				}
+				else
+				{
+					category_items[i].cfg.setProperty("checked", false);
+				}
+			}
+
             // Update the links UI
-			YAHOO.util.Dom.get("datatable-pages").innerHTML = "Showing items " + (startIndex+1) + " - " + (endIndex+1) + " of " + (totalRecords);
+			YAHOO.util.Dom.get("datatable-pages").innerHTML = "Showing items " + (startIndex+1) + " - " + (endIndex) + " of " + (totalRecords);
 
 			oSelf.nextButton.set('disabled', (endIndex >= totalRecords) );
 			oSelf.prevButton.set('disabled', (startIndex === 0) );
@@ -80,30 +111,59 @@ YAHOO.util.Event.addListener(window, "load", function() {
 		// Sort handling
 		this.myDataTable.sortColumn = function(oColumn) {
 			try {
-			// Which direction
-            var sDir = "asc";
+				// Which direction
+	            var sDir = "asc";
 
-            // Already sorted?
+	            // Already sorted?
 
-            if(this.get("sortedBy") && oColumn.key === this.get("sortedBy").key) {
-                sDir = (this.get("sortedBy").dir === "asc") ?
-                        "desc" : "asc";
-            }
+	            if(this.get("sortedBy") && oColumn.key === this.get("sortedBy").key) {
+	                sDir = (this.get("sortedBy").dir === "asc") ?
+	                        "desc" : "asc";
+	            }
 
-            var nResults = this.get("paginator").totalRecords;
+	            var nResults = this.get("paginator").totalRecords;
 
-			if(!YAHOO.lang.isValue(nResults)) {
-                nResults = this.myDataTable.get("paginator").totalRecords;
-            }
+				if(!YAHOO.lang.isValue(nResults)) {
+	                nResults = this.myDataTable.get("paginator").totalRecords;
+	            }
 
-            var newRequest = "sort=" + sDir + "&order=" + oColumn.key;
-			YAHOO.util.Dom.get("datatable-pages").innerHTML = "Loading...";
-           	this.getDataSource().sendRequest(newRequest, this.onDataReturnInitializeTable, this);
+	            this.loadDataset( {sort: sDir, order: oColumn.key}, true );
+	    	}
+	    	catch(e) {
+	    		alert("This:" + this + " event: " +e);
+	    	}
+        };
+
+		// Load dataset
+		this.myDataTable.loadDataset = function(param, cleanPagination) {
+			var oSelf =  YAHOO.example.XHR_JSON;
+			var request = "";
+
+			if(cleanPagination)
+			{
+				delete this.pConfig.start;
+			}
+
+			for (var i in param)
+			{
+				this.pConfig[i] = param[i];
+			}
+
+			for (var i in this.pConfig)
+			{
+				request += "&" + i + "=" + this.pConfig[i];
+			}
+
+			try {
+				//var newRequest = "sort=" + sDir + "&order=" + oColumn.key;
+				YAHOO.util.Dom.get("datatable-pages").innerHTML = "Loading...";
+				oSelf.showLoader(true);
+	           	this.getDataSource().sendRequest(request, this.onDataReturnInitializeTable, this);
 			}
 			catch(e) {
 				alert(e);
 			}
-        };
+		}
 
 		// Pagination handling
 		this.getPage = function(nStartRecordIndex, nResults) {
@@ -134,12 +194,13 @@ YAHOO.util.Event.addListener(window, "load", function() {
 
             YAHOO.util.Dom.get("datatable-pages").innerHTML = "Loading...";
 
-            var newRequest = "start=" + nStartRecordIndex + "&limit_records=" + nResults + "&sort=" + sort_dir + "&order=" + sort;
-            this.myDataSource.sendRequest(newRequest, this.myDataTable.onDataReturnInitializeTable, this.myDataTable);
+            //var newRequest = "start=" + nStartRecordIndex + "&limit_records=" + nResults + "&sort=" + sort_dir + "&order=" + sort;
+            //this.myDataSource.sendRequest(newRequest, this.myDataTable.onDataReturnInitializeTable, this.myDataTable);
+
+            this.myDataTable.loadDataset( { start: nStartRecordIndex } );
         };
 
         this.getNextPage = function(e) {
-
             YAHOO.util.Event.stopEvent(e);
 
 			try {
@@ -147,7 +208,6 @@ YAHOO.util.Event.addListener(window, "load", function() {
 	            if(this.myDataTable.get("paginator").startRecordIndex +
 	                    this.myDataTable.get("paginator").rowsThispage >=
 	                    this.myDataTable.get("paginator").totalRecords) {
-
 	                return;
 	            }
 
@@ -175,13 +235,45 @@ YAHOO.util.Event.addListener(window, "load", function() {
 
 		this.myDataTable.on("rowDblclickEvent", this.onRowDoubleClick, this, true);
 
-	   	// Buttons
-		var oMenuButton1 = new YAHOO.widget.Button(	"menubutton1",
+	   	// Filters
+	   	this.categoryMenu = new YAHOO.widget.Button( "filter_category_button",
+	   	{
+	    	type: "menu",
+	        menu: "filter_category_select"
+	    });
+	    YAHOO.util.Event.on(this.categoryMenu.getForm(), "submit", function(event) {YAHOO.util.Event.preventDefault( event );});
+
+		this.categoryMenuClick = function(event, menu, dataTable) {
+			var menuitem = menu[1];
+			try {
+				dataTable.loadDataset( { cat_id: menuitem.value }, true );
+			}
+			catch(e) {
+				alert(e);
+			}
+		}
+		this.categoryMenu.getMenu().clickEvent.subscribe(this.categoryMenuClick, this.myDataTable);
+
+		this.partOfTownMenu = new YAHOO.widget.Button( "filter_part_of_town_button",
 		{
 	    	type: "menu",
-	        menu: "menubutton1select"
+	        menu: "filter_part_of_town_select"
 	    });
+		YAHOO.util.Event.on(this.partOfTownMenu.getForm(), "submit", function(event) {YAHOO.util.Event.preventDefault( event );});
 
+		this.onPartOfTownMenuClick = function(event, menu, dataTable) {
+			var menuitem = menu[1];
+			try {
+				dataTable.loadDataset( { part_of_town_id: menuitem.value }, true );
+			}
+			catch(e) {
+				alert(e);
+			}
+		}
+
+ 		this.partOfTownMenu.getMenu().clickEvent.subscribe(this.onPartOfTownMenuClick, this.myDataTable);
+
+		// Buttons
 		this.prevButton = new YAHOO.widget.Button(
 		{
 			label: "Prev",

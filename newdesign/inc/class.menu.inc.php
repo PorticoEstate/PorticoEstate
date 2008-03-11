@@ -123,6 +123,11 @@
 				(
 					'text' => 'Leieobjekt',
 					'url'	=>  $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'newdesign.uinewdesign.location','output'=>'html', 'type_id' => 4 )),
+				),
+				'location_loc_4_1' => array
+				(
+					'text' => 'Leieboer',
+					'url'	=>  $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'newdesign.uinewdesign.location','output'=>'html', 'type_id' => 4, 'lookup_tenant' => 1 )),
 				)
 
 			);
