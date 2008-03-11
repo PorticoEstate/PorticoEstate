@@ -58,6 +58,12 @@ YAHOO.util.Event.addListener(window, "load", function() {
             }
             oDataTable.updatePaginator(newPag);
 
+			// Update the links UI
+			YAHOO.util.Dom.get("datatable-pages").innerHTML = "Showing items " + (startIndex+1) + " - " + (endIndex) + " of " + (totalRecords);
+
+			oSelf.nextButton.set('disabled', (endIndex >= totalRecords) );
+			oSelf.prevButton.set('disabled', (startIndex === 0) );
+
 			var sortCol = oRawResponse.sort; // Which column is sorted
             var sortDir = oRawResponse.sort_dir; // Which sort direction
 
@@ -129,12 +135,6 @@ YAHOO.util.Event.addListener(window, "load", function() {
 			for(i=0;i<owner_type_items.length;i++) {
 				owner_type_items[i].cfg.setProperty("checked", owner_type_items[i].value == owner_type_id);
 			}
-
-            // Update the links UI
-			YAHOO.util.Dom.get("datatable-pages").innerHTML = "Showing items " + (startIndex+1) + " - " + (endIndex) + " of " + (totalRecords);
-
-			oSelf.nextButton.set('disabled', (endIndex >= totalRecords) );
-			oSelf.prevButton.set('disabled', (startIndex === 0) );
 
 			// Hide loader screen
 			oSelf.showLoader(false);
@@ -257,11 +257,16 @@ YAHOO.util.Event.addListener(window, "load", function() {
 
 		this.getPreviousPage = function(e) {
             YAHOO.util.Event.stopEvent(e);
+
             // Already at first page
             if(this.myDataTable.get("paginator").startRecordIndex === 0) {
                 return;
             }
-            var newStartRecordIndex = this.myDataTable.get("paginator").startRecordIndex - this.myDataTable.get("paginator").rowsThisPage;
+
+			var recordsBack = Math.max(15, this.myDataTable.get("paginator").rowsThisPage);
+            var newStartRecordIndex = this.myDataTable.get("paginator").startRecordIndex - recordsBack;
+			newStartRecordIndex = Math.max(0, newStartRecordIndex);
+
             this.getPage(newStartRecordIndex);
         };
 
@@ -341,6 +346,19 @@ YAHOO.util.Event.addListener(window, "load", function() {
 			}
 		}
 		this.ownerTypeMenu.getMenu().clickEvent.subscribe(this.onOwnerTypeMenuClick, this.myDataTable);
+
+		YAHOO.util.Event.on('search-form', "submit", function(event) {
+			YAHOO.util.Event.preventDefault( event );
+			var query = document.getElementById('search-field').value;
+
+			YAHOO.example.XHR_JSON.myDataTable.loadDataset( { query: query }, true );
+		});
+
+		YAHOO.util.Event.on('search-clean', "click", function(event) {
+			YAHOO.util.Event.preventDefault( event );
+			document.getElementById('search-field').value = '';
+			YAHOO.example.XHR_JSON.myDataTable.loadDataset( { query: '' }, true );
+		});
 
 		// Buttons
 		this.prevButton = new YAHOO.widget.Button(
