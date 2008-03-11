@@ -1149,30 +1149,28 @@
 
 			$parts= $this->socommon->select_part_of_town($district_id);
 
-			while (is_array($parts) && list(,$part) = each($parts))
+			foreach($parts as $entry)
 			{
-				$sel_part = '';
-				if ($part['id']==$selected)
+				if ($entry['id']==$selected)
 				{
-					$sel_part = 'selected';
+					$part_of_town_list[] = array
+					(
+						'id'			=> $entry['id'],
+						'name'			=> $entry['name'],
+						'district_id'	=> $entry['district_id'],
+						'selected'		=> 'selected'
+					);
 				}
-
-				$part_of_town_list[] = array
-				(
-					'id'	=> $part['id'],
-					'name'		=> $part['name'],
-					'selected'	=> $sel_part
-				);
-			}
-
-			for ($i=0;$i<count($part_of_town_list);$i++)
-			{
-				if ($part_of_town_list[$i]['selected'] != 'selected')
+				else
 				{
-					unset($part_of_town_list[$i]['selected']);
+					$part_of_town_list[] = array
+					(
+						'id'			=> $entry['id'],
+						'name'			=> $entry['name'],
+						'district_id'	=> $entry['district_id'],
+					);
 				}
 			}
-
 			return $part_of_town_list;
 		}
 

@@ -284,18 +284,21 @@
 		function select_part_of_town($district_id='')
 		{
 			$filter = '';
+			$part_of_town = array();
 			if($district_id)
 			{
 				$filter = "WHERE district_id = '$district_id'";
 			}
-			$this->db->query("SELECT name, part_of_town_id FROM fm_part_of_town $filter ORDER BY name ",__LINE__,__FILE__);
+			$this->db->query("SELECT name, part_of_town_id, district_id FROM fm_part_of_town $filter ORDER BY name ",__LINE__,__FILE__);
 
-			$i = 0;
 			while ($this->db->next_record())
 			{
-				$part_of_town[$i]['id']		= $this->db->f('part_of_town_id');
-				$part_of_town[$i]['name']	= stripslashes($this->db->f('name'));
-				$i++;
+				$part_of_town[] = array
+				(
+					'id'			=> $this->db->f('part_of_town_id'),
+					'name'			=> $this->db->f('name',true),
+					'district_id'	=> $this->db->f('district_id')
+				);
 			}
 
 			return $part_of_town;
