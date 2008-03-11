@@ -1150,30 +1150,28 @@
 
 			$parts= $this->socommon->select_part_of_town($district_id);
 
-			while (is_array($parts) && list(,$part) = each($parts))
+			foreach($parts as $entry)
 			{
-				$sel_part = '';
-				if ($part['id']==$selected)
+				if ($entry['id']==$selected)
 				{
-					$sel_part = 'selected';
+					$part_of_town_list[] = array
+					(
+						'id'			=> $entry['id'],
+						'name'			=> $entry['name'],
+						'district_id'	=> $entry['district_id'],
+						'selected'		=> 'selected'
+					);
 				}
-
-				$part_of_town_list[] = array
-				(
-					'id'	=> $part['id'],
-					'name'		=> $part['name'],
-					'selected'	=> $sel_part
-				);
-			}
-
-			for ($i=0;$i<count($part_of_town_list);$i++)
-			{
-				if ($part_of_town_list[$i]['selected'] != 'selected')
+				else
 				{
-					unset($part_of_town_list[$i]['selected']);
+					$part_of_town_list[] = array
+					(
+						'id'			=> $entry['id'],
+						'name'			=> $entry['name'],
+						'district_id'	=> $entry['district_id'],
+					);
 				}
 			}
-
 			return $part_of_town_list;
 		}
 
@@ -1545,7 +1543,7 @@
 				{
 					if(isset($_POST[$insert_record['location'][$i]]) && $_POST[$insert_record['location'][$i]])
 					{
-						$values['location'][$insert_record['location'][$i]]= $_POST[$insert_record['location'][$i]];
+						$values['location'][$insert_record['location'][$i]]= phpgw::get_var($insert_record['location'][$i]);
 					}
 				}
 
@@ -1555,17 +1553,17 @@
 					{
 						if(isset($_POST[$key]) && $_POST[$key])
 						{
-							$values['extra'][$column]	= $_POST[$key];
+							$values['extra'][$column]	= phpgw::get_var($key);
 						}
 					}
 				}
 			}
 
-			$values['street_name'] 		= isset($_POST['street_name'])?$_POST['street_name']:'';
-			$values['street_number']	= isset($_POST['street_number'])?$_POST['street_number']:'';
+			$values['street_name'] 		= phpgw::get_var('street_name');
+			$values['street_number']	= phpgw::get_var('street_number');
 			if(isset($values['location']) && is_array($values['location']))
 			{
-				$values['location_name']	= $_POST['loc' . (count($values['location'])).'_name']; // if not address - get the parent name as address
+				$values['location_name']	= phpgw::get_var('loc' . (count($values['location'])).'_name'); // if not address - get the parent name as address
 			}
 			return $values;
 		}		
