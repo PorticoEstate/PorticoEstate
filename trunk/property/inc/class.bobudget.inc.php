@@ -316,7 +316,7 @@
 		{
 			if(!isset($_GET['year']))
 			{
-				$selected = date(Y);
+				$selected = date('Y');
 			}
 			$year_list = $this->so->get_year_filter_list($basis);
 			return $this->bocommon->select_list($selected,$year_list);
@@ -343,7 +343,7 @@
 		{
 			if(!isset($_GET['year']))
 			{
-				$year = date(Y);
+				$year = date('Y');
 				$this->year = $year;
 				$selected = $this->so->get_max_revision($year,$basis);
 				$this->revision = $selected;
@@ -362,7 +362,7 @@
 		{
 			if(!isset($_GET['year']))
 			{
-				$year = date(Y);
+				$year = date('Y');
 			}
 			else
 			{
