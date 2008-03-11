@@ -343,7 +343,7 @@
 		{
 			if(!isset($_GET['year']))
 			{
-				$year = (isset($GET['year'])?$this->year:date(Y));
+				$year = date(Y);
 				$this->year = $year;
 				$selected = $this->so->get_max_revision($year,$basis);
 				$this->revision = $selected;
@@ -362,7 +362,7 @@
 		{
 			if(!isset($_GET['year']))
 			{
-				$year = (isset($GET['year'])?$this->year:date(Y));
+				$year = date(Y);
 			}
 			else
 			{

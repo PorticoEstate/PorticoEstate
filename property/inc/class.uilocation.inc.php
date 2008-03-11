@@ -629,7 +629,7 @@
 				{
 					for ($i=0; $i<count($insert_record['location']); $i++)
 					{
-						$values[$insert_record['location'][$i]]= $_POST[$insert_record['location'][$i]];
+						$values[$insert_record['location'][$i]]= phpgw::get_var($insert_record['location'][$i]);
 					}
 				}
 
@@ -637,7 +637,7 @@
 				{
 					for ($i=0; $i<count($insert_record['extra']); $i++)
 					{
-						$values[$insert_record['extra'][$i]]= $_POST[$insert_record['extra'][$i]];
+						$values[$insert_record['extra'][$i]]= phpgw::get_var($insert_record['extra'][$i]);
 					}
 				}
 
@@ -740,7 +740,7 @@
 						{
 							for ($i=0; $i<count($insert_record['extra']); $i++)
 							{
-								$values[$insert_record['extra'][$i]]= $_POST[$insert_record['extra'][$i]];
+								$values[$insert_record['extra'][$i]]= phpgw::get_var($insert_record['extra'][$i]);
 							}
 						}
 					}

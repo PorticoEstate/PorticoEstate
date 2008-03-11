@@ -598,8 +598,8 @@
 			$referer	= $GLOBALS['phpgw']->session->appsession('referer','property');
 			if(!$referer)
 			{
-				$referer = $GLOBALS['HTTP_SERVER_VARS']['HTTP_REFERER'] ? $GLOBALS['HTTP_SERVER_VARS']['HTTP_REFERER'] : $GLOBALS['HTTP_REFERER'];
-				$referer = $referer . '&cat_id=' . $cat_id;
+				$referer = phpgw::get_var('HTTP_REFERER', 'string' , 'SERVER',phpgw::clean_value($GLOBALS['HTTP_REFERER']))
+				$referer .= '&cat_id=' . $cat_id;
 				$GLOBALS['phpgw']->session->appsession('referer','property',$referer);
 			}
 

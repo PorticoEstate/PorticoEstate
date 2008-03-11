@@ -40,7 +40,7 @@
 		$GLOBALS['phpgw']->portalbox->set_params(array('app_id'	=> $app_id,
 														'title'	=> lang('property')));
 
-		$GLOBALS['HTTP_POST_VARS']['filter'] = $GLOBALS['filter'] = 'open';
+		$GLOBALS['HTTP_POST_VARS']['filter'] = phpgw::get_var('filter') = 'open';
 		$property = CreateObject('property.uitts');
 
 		$GLOBALS['phpgw']->portalbox->draw($property->index());

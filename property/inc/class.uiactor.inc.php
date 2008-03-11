@@ -396,7 +396,7 @@
 					{
 						if($_POST[$key])
 						{
-							$values['extra'][$column]	= $_POST[$key];
+							$values['extra'][$column]	= phpgw::get_var($key);
 						}
 					}
 				}
