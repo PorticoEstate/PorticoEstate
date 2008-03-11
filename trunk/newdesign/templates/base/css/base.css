@@ -1,3 +1,4 @@
+
 #btn-new button {
 	padding-left: 1.6em;
     background: url(../images/new_item.png) 10% 60% no-repeat;
@@ -16,6 +17,15 @@
 #btn-previous button {
 	padding-left: 1.5em;
     background: url(../images/btn_prev.png) 10% 50% no-repeat;
+}
+
+.yui-button.pressed {
+	//background: #426fd9 !important;
+	background-position: 0px -1400px !important;
+}
+
+span.yui-button.pressed button {
+	color: #fff !important;
 }
 
 #test-form h2 {

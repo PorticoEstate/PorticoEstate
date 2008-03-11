@@ -2,9 +2,11 @@
 	<div id="datatable-toolbar" style="width: 100%; background: #eee; border-top: 3px #eee solid">
 
 		<div id="datatable-buttons" style="float: left; padding: 0em 0.5em">
+
+		</div>
+		<div id="filter-buttons" style="float: left; padding: 0em 0.5em">
 			<xsl:apply-templates select="filter" />
 		</div>
-
 		<div id="pagination-buttons" style="float: left; padding: 0em 0.5em">
 
 		</div>
