@@ -100,6 +100,36 @@ YAHOO.util.Event.addListener(window, "load", function() {
 				category_items[i].cfg.setProperty("checked", category_items[i].value == cat_id);
 			}
 
+			var district_id = oRawResponse.district_id;
+			var district_items = oSelf.districtMenu.getMenu().getItems();
+			if(district_id != "")
+			{
+				oSelf.districtMenu.addClass('pressed');
+			}
+			else
+			{
+				oSelf.districtMenu.removeClass('pressed');
+			}
+
+			for(i=0;i<district_items.length;i++) {
+				district_items[i].cfg.setProperty("checked", district_items[i].value == district_id);
+			}
+
+			var owner_type_id = oRawResponse.filter;
+			var owner_type_items = oSelf.ownerTypeMenu.getMenu().getItems();
+			if(owner_type_id != "")
+			{
+				oSelf.ownerTypeMenu.addClass('pressed');
+			}
+			else
+			{
+				oSelf.ownerTypeMenu.removeClass('pressed');
+			}
+
+			for(i=0;i<owner_type_items.length;i++) {
+				owner_type_items[i].cfg.setProperty("checked", owner_type_items[i].value == owner_type_id);
+			}
+
             // Update the links UI
 			YAHOO.util.Dom.get("datatable-pages").innerHTML = "Showing items " + (startIndex+1) + " - " + (endIndex) + " of " + (totalRecords);
 
@@ -259,6 +289,24 @@ YAHOO.util.Event.addListener(window, "load", function() {
 		}
 		this.categoryMenu.getMenu().clickEvent.subscribe(this.categoryMenuClick, this.myDataTable);
 
+		this.districtMenu = new YAHOO.widget.Button( "filter_district_button",
+		{
+	    	type: "menu",
+	        menu: "filter_district_select"
+	    });
+		YAHOO.util.Event.on(this.districtMenu.getForm(), "submit", function(event) {YAHOO.util.Event.preventDefault( event );});
+
+		this.onDistrictMenuClick = function(event, menu, dataTable) {
+			var menuitem = menu[1];
+			try {
+				dataTable.loadDataset( { district_id: menuitem.value }, true );
+			}
+			catch(e) {
+				alert(e);
+			}
+		}
+		this.districtMenu.getMenu().clickEvent.subscribe(this.onDistrictMenuClick, this.myDataTable);
+
 		this.partOfTownMenu = new YAHOO.widget.Button( "filter_part_of_town_button",
 		{
 	    	type: "menu",
@@ -275,8 +323,24 @@ YAHOO.util.Event.addListener(window, "load", function() {
 				alert(e);
 			}
 		}
-
  		this.partOfTownMenu.getMenu().clickEvent.subscribe(this.onPartOfTownMenuClick, this.myDataTable);
+
+ 		this.ownerTypeMenu = new YAHOO.widget.Button( "filter_owner_button",
+		{
+	    	type: "menu",
+	        menu: "filter_owner_select"
+	    });
+
+		this.onOwnerTypeMenuClick = function(event, menu, dataTable) {
+			var menuitem = menu[1];
+			try {
+				dataTable.loadDataset( { filter: menuitem.value }, true );
+			}
+			catch(e) {
+				alert(e);
+			}
+		}
+		this.ownerTypeMenu.getMenu().clickEvent.subscribe(this.onOwnerTypeMenuClick, this.myDataTable);
 
 		// Buttons
 		this.prevButton = new YAHOO.widget.Button(
