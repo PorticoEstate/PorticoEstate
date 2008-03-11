@@ -28,7 +28,7 @@
 	*/
 
 	$phpgw_info = array();
-	
+
 	$GLOBALS['phpgw_info']['flags'] = array
 	(
 		'disable_template_class' => true,
@@ -38,12 +38,12 @@
 	);
 	if(file_exists('../header.inc.php'))
 	{
-	
+
 		/**
 		* Include phpgroupware header
 		*/
 		include_once('../header.inc.php');
-		
+
 		$GLOBALS['phpgw']->sessions = createObject('phpgwapi.sessions');
 	}
 	else
@@ -53,9 +53,9 @@
 	}
 	$GLOBALS['phpgw_info']['server']['template_set'] = $GLOBALS['phpgw_info']['login_template_set'];
 
-	$GLOBALS['phpgw_info']['server']['template_dir'] = PHPGW_SERVER_ROOT 
+	$GLOBALS['phpgw_info']['server']['template_dir'] = PHPGW_SERVER_ROOT
 							. "/phpgwapi/templates/{$GLOBALS['phpgw_info']['login_template_set']}";
-							
+
 	$tmpl = CreateObject('phpgwapi.Template', PHPGW_SERVER_ROOT . '/property/templates/base');
 
 	// This is used for system downtime, to prevent new logins.
@@ -72,7 +72,7 @@
 		$tmpl->pfp('loginout','login_form');
 		exit;
 	}
-	
+
 	/**
 	* Check logout error code
 	*
@@ -107,8 +107,8 @@
 				return '&nbsp;';
 		}
 	}
-	
-	
+
+
 	/**
 	* Check languages
 	*/
@@ -125,21 +125,21 @@
 			$GLOBALS['phpgw_info']['server']['lang_ctimes'] = array();
 		}
 		// _debug_array($GLOBALS['phpgw_info']['server']['lang_ctimes']);
-		
+
 		$lang = $GLOBALS['phpgw_info']['user']['preferences']['common']['lang'];
 		$apps = $GLOBALS['phpgw_info']['user']['apps'];
 		$apps['phpgwapi'] = true;	// check the api too
 		while (list($app,$data) = each($apps))
 		{
 			$fname = PHPGW_SERVER_ROOT . "/$app/setup/phpgw_$lang.lang";
-			
+
 			if (file_exists($fname))
 			{
 				$ctime = filectime($fname);
-				$ltime = isset($GLOBALS['phpgw_info']['server']['lang_ctimes'][$lang][$app]) 
+				$ltime = isset($GLOBALS['phpgw_info']['server']['lang_ctimes'][$lang][$app])
 						? intval($GLOBALS['phpgw_info']['server']['lang_ctimes'][$lang][$app]) : 0;
 				//echo "checking lang='$lang', app='$app', ctime='$ctime', ltime='$ltime'<br>\n";
-				
+
 				if ($ctime != $ltime)
 				{
 					update_langs();		// update all langs
@@ -148,8 +148,8 @@
 			}
 		}
 	}
-	
-	
+
+
 	/**
 	* Update languages
 	*/
@@ -157,7 +157,7 @@
 	{
 		$GLOBALS['phpgw_setup'] = CreateObject('phpgwapi.setup');
 		$GLOBALS['phpgw_setup']->db = $GLOBALS['phpgw']->db;
-		
+
 		$GLOBALS['phpgw_setup']->detection->check_lang(false);	// get installed langs
 		$langs = $GLOBALS['phpgw_info']['setup']['installed_langs'];
 		while (list($lang) = @each($langs))
@@ -168,7 +168,7 @@
 		$_POST['lang_selected'] = $langs;
 		$_POST['upgrademethod'] = 'dumpold';
 		$included = 'from_login';
-		
+
 		/**
 		* Include languages setup
 		*/
@@ -176,19 +176,21 @@
 	}
 
 	/* Program starts here */
-	$login = isset($_POST['login']) ? $_POST['login'] : '';
-	$passwd = isset($_POST['passwd']) ? $_POST['passwd'] : '';
+	$login = phpgw::get_var('login', 'string' , 'POST');
+	$passwd = phpgw::get_var('passwd', 'string' , 'POST');
+
 	if ($GLOBALS['phpgw_info']['server']['auth_type'] == 'http' && isset($_SERVER['PHP_AUTH_USER']))
 	{
 		$submit = true;
-		$login  = $_SERVER['PHP_AUTH_USER'];
-		$passwd = $_SERVER['PHP_AUTH_PW'];
+		$login = phpgw::get_var('PHP_AUTH_USER', 'string' , 'SERVER');
+		$passwd = phpgw::get_var('PHP_AUTH_PW', 'string' , 'SERVER');
 	}
-	
+
 	if ($GLOBALS['phpgw_info']['server']['auth_type'] == 'ntlm' && isset($_SERVER['REMOTE_USER']))
 	{
 		$submit = true;
-		$login  = $_SERVER['REMOTE_USER'];
+		$login = phpgw::get_var('REMOTE_USER', 'string' , 'SERVER');
+
 		$passwd = '';
 	}
 
@@ -199,7 +201,8 @@
 		# an X.509 subject looks like:
 		# /CN=john.doe/OU=Department/O=Company/C=xx/Email=john@comapy.tld/L=City/
 		# the username is deliberately lowercase, to ease LDAP integration
-		$sslattribs = explode('/',$_SERVER['SSL_CLIENT_S_DN']);
+		$sslattribs = phpgw::get_var('SSL_CLIENT_S_DN', 'string' , 'SERVER');
+		$sslattribs = explode('/',$sslattribs);
 		# skip the part in front of the first '/' (nothing)
 		while ($sslattrib = next($sslattribs))
 		{
@@ -216,7 +219,7 @@
 			if (!isset($_POST['login'])&&isset($sslattributes['Email'])) {
 				$login = $sslattributes['Email'];
 				# not checked against the database, but delivered to authentication module
-				$passwd = $_SERVER['SSL_CLIENT_S_DN'];
+				$passwd = phpgw::get_var('SSL_CLIENT_S_DN', 'string' , 'SERVER');
 			}
 		}
 		unset($key);
@@ -240,7 +243,7 @@
 		{
 			$db = & $GLOBALS['phpgw']->db;
 			$join = $db->join;
-			
+
 			$_passwd = md5($passwd);
 
 			$db->query("SELECT fm_tenant.id, phpgw_accounts.account_lid,phpgw_accounts.account_pwd  FROM fm_tenant $join phpgw_accounts ON fm_tenant.phpgw_account_id = phpgw_accounts.account_id WHERE fm_tenant.account_lid = '$login' AND "
@@ -250,7 +253,7 @@
 			if (!$db->f('account_lid'))
 			{
 				$GLOBALS['phpgw']->redirect('login.php?cd=5');
-				exit;			
+				exit;
 			}
 
 			$tenant_id = $db->f('id');
@@ -260,18 +263,18 @@
 			$_POST['passwd_type'] = 'md5';
 
 			if ( isset($GLOBALS['phpgw_info']['server']['usecookies']) && $GLOBALS['phpgw_info']['server']['usecookies'] )
-			{ 
-				$GLOBALS['phpgw']->session->phpgw_setcookie('last_usertype', $_POST['loginusertype'] ,time()+1209600); /* For 2 weeks */
+			{
+				$GLOBALS['phpgw']->session->phpgw_setcookie('last_usertype', phpgw::get_var('loginusertype') ,time()+1209600); /* For 2 weeks */
 			}
 		}
 // end mapping
 
 		if (strstr($login,'@') === false && isset($_POST['logindomain']))
 		{
-			$login .= '@' . $_POST['logindomain'];
+			$login .= '@' . phpgw::get_var('logindomain', 'string', 'POST');
 		}
 
-		$GLOBALS['sessionid'] = $GLOBALS['phpgw']->session->create($login,$passwd,$_POST['passwd_type']);
+		$GLOBALS['sessionid'] = $GLOBALS['phpgw']->session->create($login,$passwd,phpgw::get_var('passwd_type', 'string', 'POST'));
 
 		$GLOBALS['phpgw']->session->appsession('tenant_id','property',$tenant_id);
 
@@ -290,7 +293,7 @@
 			{
 				if (preg_match('/phpgw_/',$name))
 				{
-					$extra_vars[$name] = $value;
+					$extra_vars[$name] = phpgw::clean_value($value);
 				}
 			}
 		}
@@ -299,11 +302,11 @@
 			check_langs();
 		}
 		$extra_vars['cd'] = 'yes';
-		
+
 		$GLOBALS['phpgw']->hooks->process('login');
 
-		if( isset($GLOBALS['phpgw_info']['server']['shm_lang']) 
-			&& $GLOBALS['phpgw_info']['server']['shm_lang'] 
+		if( isset($GLOBALS['phpgw_info']['server']['shm_lang'])
+			&& $GLOBALS['phpgw_info']['server']['shm_lang']
 			&& function_exists('sem_get'))
 		{
 			if(!$GLOBALS['phpgw']->shm->get_value('lang_en'))
@@ -315,22 +318,22 @@
 		$GLOBALS['phpgw']->redirect_link('/home.php', $extra_vars);
 		exit;
 	}
-		
+
 	$tmpl->set_file(array('login_form'  => 'login.tpl'));
 	$tmpl->set_var('charset', lang('charset'));
 	$tmpl->set_block('login_form', 'domain_option', 'domain_options');
-	$tmpl->set_block('login_form', 'domain_select', 'domain_selects'); 
+	$tmpl->set_block('login_form', 'domain_select', 'domain_selects');
 	$tmpl->set_block('login_form', 'domain_from_host', 'domain_from_hosts');
 	$tmpl->set_block('login_form', 'usertype_option', 'usertype_options');
-	$tmpl->set_block('login_form', 'usertype_select', 'usertype_selects'); 
+	$tmpl->set_block('login_form', 'usertype_select', 'usertype_selects');
 
-	if( $GLOBALS['phpgw_info']['server']['domain_from_host'] 
+	if( $GLOBALS['phpgw_info']['server']['domain_from_host']
 		&& !$GLOBALS['phpgw_info']['server']['show_domain_selectbox'] )
 	{
 		$tmpl->set_var(
 				array(
 					'domain_selects'	=> '',
-					'logindomain'		=> $_SERVER['SERVER_NAME']
+					'logindomain'		=> phpgw::get_var('SERVER_NAME', 'string' , 'SERVER')
 				)
 			);
 		$tmpl->parse('domain_from_hosts', 'domain_from_host');
@@ -338,7 +341,7 @@
 	elseif( $GLOBALS['phpgw_info']['server']['show_domain_selectbox'] )
 	{
 		foreach($GLOBALS['phpgw_domain'] as $domain_name => $domain_vars)
-		{	
+		{
 			$tmpl->set_var('domain_name', $domain_name);
 
 			if (isset($_COOKIE['last_domain']) && $_COOKIE['last_domain'] == $domain_name)
@@ -367,12 +370,12 @@
 					'domain_from_hosts'	=> ''
 				)
 			);
-		
+
 	}
 
 	$usertypes = array('tenant'=>lang('tenant'),'internal'=>lang('internal'));
 	foreach($usertypes as $usertype_id => $usertype_name)
-	{	
+	{
 		$tmpl->set_var('usertype_id', $usertype_id);
 		$tmpl->set_var('usertype_name', $usertype_name);
 
@@ -382,7 +385,7 @@
 		}
 		else
 		{
-			$tmpl->set_var('usertype_selected', '');		
+			$tmpl->set_var('usertype_selected', '');
 		}
 		$tmpl->parse('usertype_options', 'usertype_option', true);
 	}
@@ -397,7 +400,7 @@
 	if (isset($_COOKIE['last_loginid']))
 	{
 		$accounts = CreateObject('phpgwapi.accounts');
-		$prefs = CreateObject('phpgwapi.preferences', $accounts->name2id($_COOKIE['last_loginid']));
+		$prefs = CreateObject('phpgwapi.preferences', $accounts->name2id(phpgw::get_var('last_loginid', 'string', 'COOKIE')));
 
 		if (! $prefs->account_id)
 		{
@@ -444,8 +447,8 @@
 		}
 
 	}
-	
-	$last_loginid = isset($_COOKIE['last_loginid']) ? $_COOKIE['last_loginid'] : '';
+
+	$last_loginid = phpgw::get_var('last_loginid', 'string', 'COOKIE');
 	if($GLOBALS['phpgw_info']['server']['show_domain_selectbox'] && $last_loginid !== '')
 	{
 		reset($GLOBALS['phpgw_domain']);
@@ -453,7 +456,7 @@
 
 		if ($_COOKIE['last_domain'] != $default_domain && !empty($_COOKIE['last_domain']))
 		{
-			$last_loginid .= '@' . $_COOKIE['last_domain'];
+			$last_loginid .= '@' . phpgw::get_var('last_domain', 'string', 'COOKIE');
 		}
 	}
 
@@ -463,7 +466,7 @@
 	{
 		if (preg_match('/phpgw_/',$name))
 		{
-			$extra_vars[$name] = urlencode($value);
+			$extra_vars[$name] = urlencode(phpgw::clean_value($value));
 		}
 	}
 
@@ -486,12 +489,12 @@
 	$tmpl->set_var('lang_testjs', lang('Your browser does not support javascript and/or css, please use a modern standards compliant browser.  If you have disabled either of these features please enable them for this site.') );
 
 	$tmpl->set_var('website_title', isset($GLOBALS['phpgw_info']['server']['site_title'])
-						? $GLOBALS['phpgw_info']['server']['site_title'] 
+						? $GLOBALS['phpgw_info']['server']['site_title']
 						: 'phpGroupWare'
 						);
 
 	$tmpl->set_var('template_set', $GLOBALS['phpgw_info']['login_template_set']);
-	
+
 	// This really should just use the API CSS, which would fix any conflicts
 	if( is_file(PHPGW_SERVER_ROOT . "/property/templates/{$GLOBALS['phpgw_info']['login_template_set']}/css/base.css") )
 	{
