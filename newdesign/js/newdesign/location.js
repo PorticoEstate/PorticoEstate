@@ -71,28 +71,33 @@ YAHOO.util.Event.addListener(window, "load", function() {
 			// Update filter values
 			var part_of_town_id = oRawResponse.part_of_town_id;
 			var part_of_town_items = oSelf.partOfTownMenu.getMenu().getItems();
+
+			if(part_of_town_id != "")
+			{
+				oSelf.partOfTownMenu.addClass('pressed');
+			}
+			else
+			{
+				oSelf.partOfTownMenu.removeClass('pressed');
+			}
+
 			for(i=0;i<part_of_town_items.length;i++) {
-				if( part_of_town_items[i].value == part_of_town_id )
-				{
-					part_of_town_items[i].cfg.setProperty("checked", true);
-				}
-				else
-				{
-					part_of_town_items[i].cfg.setProperty("checked", false);
-				}
+				part_of_town_items[i].cfg.setProperty("checked", (part_of_town_items[i].value == part_of_town_id) );
 			}
 
 			var cat_id = oRawResponse.cat_id;
 			var category_items = oSelf.categoryMenu.getMenu().getItems();
+			if(cat_id != "")
+			{
+				oSelf.categoryMenu.addClass('pressed');
+			}
+			else
+			{
+				oSelf.categoryMenu.removeClass('pressed');
+			}
+
 			for(i=0;i<category_items.length;i++) {
-				if( category_items[i].value == cat_id )
-				{
-					category_items[i].cfg.setProperty("checked", true);
-				}
-				else
-				{
-					category_items[i].cfg.setProperty("checked", false);
-				}
+				category_items[i].cfg.setProperty("checked", category_items[i].value == cat_id);
 			}
 
             // Update the links UI
@@ -278,7 +283,8 @@ YAHOO.util.Event.addListener(window, "load", function() {
 		{
 			label: "Prev",
 			id: "btn-previous",
-			container: "pagination-buttons"
+			container: "pagination-buttons",
+			checked: true
 		});
 
 		this.nextButton = new YAHOO.widget.Button(
