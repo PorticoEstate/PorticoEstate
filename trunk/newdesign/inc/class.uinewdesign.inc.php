@@ -121,7 +121,17 @@
 			$data['filter'][$i]['options'] = array_merge($empty, $categories);
 			unset($empty);
 
-			$i=1;
+			$i++;
+			$data['filter'][$i]['id'] = 'district';
+			$data['filter'][$i]['name'] = 'district_id';
+			$data['filter'][$i]['title'] = 'District';
+			$data['filter'][$i]['descr'] = lang('Select the district the selection belongs to. To do not use a district select NO DISTRICT');
+			$data['filter'][$i]['selected'] = $this->bo->district_id;
+			$empty[] = array( 'id'	=>	'', "name"	=> lang('no district') );
+			$data['filter'][$i]['options'] = array_merge($empty, $this->socommon->select_district_list());
+			unset($empty);
+
+			$i++;
 			$data['filter'][$i]['id'] = 'part_of_town';
 			$data['filter'][$i]['name'] = 'part_of_town_id';
 			$data['filter'][$i]['title'] = 'Part of town';
@@ -131,20 +141,15 @@
 			$data['filter'][$i]['options'] = array_merge($empty, $this->socommon->select_part_of_town($district_id));
 			unset($empty);
 
-			/*
 			$i++;
-			$data['filter'][$i]['name'] = 'owner';
-			$data['filter'][$i]['selected'] = $this->bo->part_of_town_id;
-			$data['filter'][$i]['options'] = $this->so->get_owner_type_list();
-			*/
-			//$this->so->get_owner_type_list()
-
-			//var_dump($this->bo->part_of_town_id);
-			//$test = $this->socommon->select_part_of_town($district_id);
-			//var_dump($test);
-
-			//$data['filter']['part_of_town_list'] = $this->bocommon->select_part_of_town('filter', $this->bo->part_of_town_id, $this->bo->district_id);
-			//	'lang_no_part_of_town'				=> lang('no part of town'),
+			$data['filter'][$i]['id'] = 'owner';
+			$data['filter'][$i]['name'] = 'filter';
+			$data['filter'][$i]['title'] = 'Owner';
+			$data['filter'][$i]['descr'] = lang('Select the owner type. To show all entries select SHOW ALL');
+			$data['filter'][$i]['selected'] = $this->bo->filter;
+			$empty[] = array( 'id'	=>	'', "name"	=> lang('Show all') );
+			$data['filter'][$i]['options'] = array_merge($empty, $this->so->get_owner_type_list());
+			unset($empty);
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('location'));
       		$GLOBALS['phpgw']->xslttpl->set_var('phpgw', $data);
@@ -162,6 +167,8 @@
       			'sort_dir'			=> 	$this->bo->sort,
 				'part_of_town_id'	=>	$this->bo->part_of_town_id,
 				'cat_id'			=>	$this->bo->cat_id,
+				'district_id'		=>	$this->bo->district_id,
+				'filter'			=>	$this->bo->filter,
                 'records'			=> 	$location_list
       		);
 			return $data;
