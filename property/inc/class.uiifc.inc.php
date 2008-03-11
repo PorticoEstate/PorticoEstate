@@ -412,9 +412,9 @@
 				{
 					while (is_array($insert_record['extra']) && list($key,$column) = each($insert_record['extra']))
 					{
-						if($_POST[$key])
+						if(isset($_POST[$key]) && $_POST[$key])
 						{
-							$values['extra'][$column]	= phpgw::get_var($key);
+							$values['extra'][$column]	= phpgw::get_var($key, 'string', 'POST');
 						}
 					}
 				}

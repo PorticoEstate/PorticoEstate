@@ -1632,7 +1632,7 @@
 				{
 					if(isset($_POST[$insert_record['location'][$i]]) && $_POST[$insert_record['location'][$i]])
 					{
-						$values['location'][$insert_record['location'][$i]]= phpgw::get_var($insert_record['location'][$i]);
+						$values['location'][$insert_record['location'][$i]]= phpgw::get_var($insert_record['location'][$i], 'string', 'POST');
 					}
 				}
 
@@ -1642,7 +1642,7 @@
 					{
 						if(isset($_POST[$key]) && $_POST[$key])
 						{
-							$values['extra'][$column]	= phpgw::get_var($key);
+							$values['extra'][$column]	= phpgw::get_var($key, 'string', 'POST');
 						}
 					}
 				}
@@ -1652,7 +1652,7 @@
 			$values['street_number']	= phpgw::get_var('street_number');
 			if(isset($values['location']) && is_array($values['location']))
 			{
-				$values['location_name']	= phpgw::get_var('loc' . (count($values['location'])).'_name'); // if not address - get the parent name as address
+				$values['location_name']	= phpgw::get_var('loc' . (count($values['location'])).'_name', 'string', 'POST'); // if not address - get the parent name as address
 			}
 			return $values;
 		}
