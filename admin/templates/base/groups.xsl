@@ -43,7 +43,7 @@
 		<xsl:variable name="sort_name" select="sort_name"/>
 		<xsl:variable name="lang_sort_statustext" select="lang_sort_statustext"/>
 		<tr class="th">
-			<td width="20%"><a href="{$sort_name}" onMouseover="window.status='{$lang_sort_statustext}';return true;" onMouseout="window.status='';return true;" class="th_text"><xsl:value-of select="lang_name"/></a></td>
+			<td width="20%"><a href="{$sort_name}" class="th_text"><xsl:value-of select="lang_name"/></a></td>
 			<td width="8%" align="center"><xsl:value-of select="lang_edit"/></td>
 			<td width="8%" align="center"><xsl:value-of select="lang_delete"/></td>
 		</tr>
@@ -52,8 +52,6 @@
 <!-- BEGIN group_data -->
 
 	<xsl:template match="group_data">
-		<xsl:variable name="lang_edit_statustext"><xsl:value-of select="lang_edit_statustext"/></xsl:variable>
-		<xsl:variable name="lang_delete_statustext"><xsl:value-of select="lang_delete_statustext"/></xsl:variable>
 		<tr>
 			<xsl:attribute name="class">
 				<xsl:choose>
@@ -71,11 +69,11 @@
 			<td><xsl:value-of select="group_name"/></td>
 			<td align="center">
 				<xsl:variable name="edit_url" select="edit_url"/>
-				<a href="{$edit_url}" onMouseover="window.status='{$lang_edit_statustext}';return true;" onMouseout="window.status='';return true;" class="th_text"><xsl:value-of select="lang_edit"/></a>
+				<a href="{$edit_url}" class="th_text"><xsl:value-of select="lang_edit"/></a>
 			</td>
 			<td align="center">
 				<xsl:variable name="delete_url" select="delete_url"/>
-				<a href="{$delete_url}" onMouseover="window.status='{$lang_delete_statustext}';return true;" onMouseout="window.status='';return true;" class="th_text"><xsl:value-of select="lang_delete"/></a>
+				<a href="{$delete_url}" class="th_text"><xsl:value-of select="lang_delete"/></a>
 			</td>
 		</tr>
 	</xsl:template>
@@ -90,25 +88,13 @@
 					<xsl:choose>
 						<xsl:when test="add_access = 'yes'">
 						<xsl:variable name="lang_add"><xsl:value-of select="lang_add"/></xsl:variable>
-							<input type="submit" name="add" value="{$lang_add}" onMouseout="window.status='';return true;">
-								<xsl:attribute name="onMouseover">
-									<xsl:text>window.status='</xsl:text>
-									<xsl:value-of select="lang_add_statustext"/>
-									<xsl:text>'; return true;</xsl:text>
-								</xsl:attribute>
-							</input>
+							<input type="submit" name="add" value="{$lang_add}" />
 						</xsl:when>
 					</xsl:choose>
 				</td>
 				<td align="right" valign="bottom" colspan="2">
 				<xsl:variable name="lang_done"><xsl:value-of select="lang_done"/></xsl:variable>
-					<input type="submit" name="done" value="{$lang_done}" onMouseout="window.status='';return true;">
-						<xsl:attribute name="onMouseover">
-							<xsl:text>window.status='</xsl:text>
-								<xsl:value-of select="lang_done_statustext"/>
-							<xsl:text>'; return true;</xsl:text>
-						</xsl:attribute>
-					</input>
+					<input type="submit" name="done" />
 				</td>
 			</form>
 			</tr>
@@ -119,11 +105,13 @@
 <!-- BEGIN group_edit -->
 
 	<xsl:template match="group_edit">
+		<xsl:variable name="edit_url"><xsl:value-of select="edit_url"/></xsl:variable>
+		<form action="{$edit_url}" method="POST">
 		<table border="0" cellpadding="2" cellspacing="2" align="center" width="79%">
 			<xsl:choose>
 				<xsl:when test="msgbox_data != ''">
 					<tr>
-						<td align="center"><xsl:call-template name="msgbox"/></td>
+						<xsl:call-template name="msgbox"/>
 					</tr>
 				</xsl:when>
 			</xsl:choose>
@@ -132,12 +120,9 @@
 <!-- {rows} -->
 				</td>
 				<td valign="top">
-					<xsl:variable name="edit_url"><xsl:value-of select="edit_url"/></xsl:variable>
-					<form action="{$edit_url}" method="POST">
 					<table border="0" width="100%">
 						<xsl:variable name="account_id" select="account_id"/>
 						<xsl:variable name="select_size" select="select_size"/>
-						<input type="hidden" name="values[account_id]" value="{$account_id}"/>
 						<tr>
 							<td><xsl:value-of select="lang_account_name"/></td>
 							<td><input name="values[account_name]">
@@ -145,6 +130,7 @@
 									<xsl:value-of select="value_account_name"/>
 								</xsl:attribute>
 								</input>
+								<input type="hidden" name="values[account_id]" value="{$account_id}"/>
 							</td>
 						</tr>
 						<tr>
@@ -163,12 +149,14 @@
 								</select>
 							</td>
 						</tr>
+						<!--
 						<tr>
 							<td><xsl:value-of select="lang_file_space"/></td>
 							<td>
-<!-- {account_file_space}{account_file_space_select} -->
+ {account_file_space}{account_file_space_select}
 							</td>
 						</tr>
+						-->
 						<tr>
 							<td colspan="4">
 								<h2><xsl:value-of select="lang_permissions" /></h2>
@@ -191,10 +179,10 @@
 						<xsl:variable name="lang_cancel"><xsl:value-of select="lang_cancel"/></xsl:variable>
 						<input type="submit" name="values[cancel]" value="{$lang_cancel}"/>
 					</div>
- 					</form>
 				</td>
 			</tr>
 		</table>
+ 		</form>
 	</xsl:template>
 
 	<xsl:template match="group_manager">
@@ -210,6 +198,7 @@
 	</xsl:template>
 
 	<xsl:template match="guser_list">
+
 		<xsl:variable name="account_id" select="account_id"/>
 		<xsl:choose>
 			<xsl:when test="selected != ''">
@@ -219,10 +208,12 @@
 				<option value="{$account_id}"><xsl:value-of select="account_name"/></option>
 			</xsl:otherwise>
 		</xsl:choose>
+
 	</xsl:template>
 
 	<xsl:template match="app_list">
 		<xsl:variable name="checkbox_name" select="checkbox_name" />
+		<xsl:variable name="elmid" select="elmid" />
 		<li>
 			<xsl:attribute name="class">
 				<xsl:choose>
@@ -248,7 +239,7 @@
 					<img src="{$acl_img}" title="{$acl_img_name}" alt="{$acl_img_name}" />
 				</xsl:otherwise>
 			</xsl:choose>
-
+			<xsl:text> </xsl:text>
 			<xsl:choose>
 				<xsl:when test="grant_url != ''">
 					<xsl:variable name="grant_url" select="grant_url"/>
@@ -263,15 +254,14 @@
 				</xsl:otherwise>
 			</xsl:choose>
 
-			<xsl:choose>
-				<xsl:when test="checked = '1'">
-					<input type="checkbox" id="{$checkbox_name}" name="{$checkbox_name}" value="1" checked="checked" />
-				</xsl:when>
-				<xsl:otherwise>
-					<input type="checkbox" id="{$checkbox_name}" name="{$checkbox_name}" value="1" />
-				</xsl:otherwise>
-			</xsl:choose>
-			<label for="{$checkbox_name}">
+			<input type="checkbox" id="{$elmid}" name="{$checkbox_name}" value="1">
+				<xsl:if test="checked = '1'">
+					<xsl:attribute name="checked">
+						<xsl:text>checked</xsl:text>
+					</xsl:attribute>
+				</xsl:if>
+			</input>
+			<label for="{$elmid}">
 				<xsl:value-of select="app_title" />
 			</label>
 		</li>

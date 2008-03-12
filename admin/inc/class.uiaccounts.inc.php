@@ -281,7 +281,7 @@
 		{
 			$account_apps	= array();
 			$account_id		= phpgw::get_var('account_id', 'int');
-			$error_list		= '';
+			$error_list		= array();
 			$values			= phpgw::get_var('values', 'string', 'POST', array());
 
 			if ( (isset($values['cancel']) && $values['cancel'])
@@ -300,10 +300,9 @@
 				
 				$error = $this->bo->validate_group($values);
 
-				if (is_array($error))
+				if ( is_array($error) )
 				{
-					$error_list = $GLOBALS['phpgw']->common->error_list($error);
-					echo 'FIXME errors are not displayed with idots :(<pre>' . print_r($error, true) . '</pre>';
+					$error_list = array('msgbox_text' => $GLOBALS['phpgw']->common->error_list($error));
 				}
 				else
 				{
@@ -349,13 +348,14 @@
 				$group_members = array();
 			}
 
-			// this information should be provided by the app itself
+			// this information should be provided by the app itself - thats why we have hooks
 			$apps_with_acl = array
 			(
 				'addressbook'	=> array('top_grant' => true),
 				'bookmarks'		=> array('top_grant' => true),
 				'calendar'		=> array('top_grant' => true),
 				'filemanager'	=> array('top_grant' => true),
+				'hrm'			=> array('top_grant' => true),
 				'img'			=> array('top_grant' => true),
 				'infolog'		=> array('top_grant' => true),
 				'inv'			=> array('top_grant' => true),
@@ -364,6 +364,8 @@
 				'phonelog'		=> array('top_grant' => true),
 				'phpwebhosting'	=> array('top_grant' => true),
 				'projects'		=> array('top_grant' => true),
+				'property'		=> array('top_grant' => true),
+				'sms'			=> array('top_grant' => true),
 				'todo'			=> array('top_grant' => true),
 				'tts'			=> array('top_grant' => true),
 			);
@@ -386,7 +388,7 @@
 																				  $entry['account_firstname'],
 																				  $entry['account_lastname']
 																				 ),
- 					'selected'		=> in_array(intval($entry['account_id']), $group_members) ? ' selected' : ''
+ 					'selected'		=> in_array((int) $entry['account_id'], $group_members) ? ' selected' : ''
 				);
 				if ( in_array( (int)$entry['account_id'], $group_members) )
 				{
@@ -416,8 +418,11 @@
 			
 			$img_acl = $GLOBALS['phpgw']->common->image('admin', 'share', '.png', false);
 			$img_acl_grey = $GLOBALS['phpgw']->common->image('admin', 'share-grey', '.png', false);
+			$lang_acl = lang('Set general permissions');
 			$img_grants = $GLOBALS['phpgw']->common->image('admin', 'dot', '.png', false);
 			$img_grants_grey = $GLOBALS['phpgw']->common->image('admin', 'dot-grey', '.png', false);
+			$lang_grants = lang('grant access');
+
 
 			foreach ( $apps as $app )
 			{
@@ -426,19 +431,20 @@
 					$grants_enabled = isset($apps_with_acl[$app]) && $account_id;
 					$app_list[] = array
 					(
+						'elmid'			=> "admin_applist_$app",
 						'app_name'		=> $app,
 						'app_title'		=> lang($app),
 						'checkbox_name'	=> "account_apps[{$app}]",
-						'checked'       => isset($group_apps[$app]) ? 'checked' : '',
+						'checked'       => isset($group_apps[$app]),
 						'acl_url'       => $grants_enabled
 											? $GLOBALS['phpgw']->link('/index.php',array('menuaction'	=> 'preferences.uiadmin_acl.list_acl',
 																						'acl_app'		=> $app,
 																						'cat_id'=>'groups',
 																						'module'=>'.')) : '',
-						'acl_img'		=> $grants_enabled ? $img_acl : $img_acl_grey,
-						'acl_img_name'	=> lang('Set general permissions'),
-						'grant_img'		=> $grants_enabled ? $img_grants : $img_grants_grey,
-						'grant_img_name'=> lang('Grant Access'),
+						'acl_img'		=> $grants_enabled ? $img_grants : $img_grants_grey,
+						'acl_img_name'	=> $lang_acl,
+						'grant_img'		=> $grants_enabled ? $img_acl : $img_acl_grey,
+						'grant_img_name'=> $lang_grants,
 						'grant_url'		=> $grants_enabled
 											? $GLOBALS['phpgw']->link('/index.php',array('menuaction'	=> 'preferences.uiadmin_acl.aclprefs',
 																						'acl_app'		=> $app,
@@ -449,7 +455,7 @@
 				}
 			}
 			
-			$GLOBALS['phpgw']->xslttpl->add_file('msgbox', PHPGW_TEMPLATE_DIR);			
+			$GLOBALS['phpgw']->xslttpl->add_file('msgbox', PHPGW_TEMPLATE_DIR, 3); // no point in wasting loops
 			$GLOBALS['phpgw']->xslttpl->add_file('groups');
 			$GLOBALS['phpgw_info']['flags']['app_header'] =  $account_id > 0 ? lang('edit group') : lang('add group');
 			$data = array
