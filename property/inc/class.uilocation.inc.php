@@ -1037,7 +1037,7 @@
 				'lang_owner_statustext'			=> (isset($lang_owner_statustext)?$lang_owner_statustext:''),
 				'additional_fields'				=> $additional_fields,
 				'attributes_values'				=> $values['attributes'],
-				'lookup_functions'				=> (isset($lookup_functions)?$lookup_functions:''),
+				'lookup_functions'				=> isset($values['lookup_functions'])?$values['lookup_functions']:'',
 				'lang_none'						=> lang('None'),
 
 				'msgbox_data'					=> (isset($msgbox_data)?$GLOBALS['phpgw']->common->msgbox($msgbox_data):''),
