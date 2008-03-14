@@ -183,7 +183,7 @@
 			}
 			else if($type_id && $id && $attrib)
 			{
-				$this->custom->_delete_attrib('.location.' . $type_id,'property',$id, 'fm_location' . $type_id);
+				$this->custom->_delete_attrib('.location.' . $type_id,'property',$id, 'fm_location' . $type_id, true);
 				$this->custom->_delete_attrib('.location.' . $type_id,'property',$id, 'fm_location' . $type_id . '_history');
 			}
 		}
@@ -226,7 +226,7 @@
 			$attrib['appname'] = 'property';
  			$attrib['location'] = '.location.' . $attrib['type_id'];
  			$primary_table = 'fm_location' . $attrib['type_id'];
- 			$history_table = 'fm_location' . $attrib['type_id'] . '_history';
+ 			$history_table = $primary_table . '_history';
 
 			if ($action=='edit')
 			{
@@ -240,7 +240,7 @@
 			else
 			{
 				$receipt = $this->custom->add_attrib($attrib, $primary_table);
-				$this->custom->add_attrib($attrib, $history_table);
+				$this->custom->add_attrib($attrib, $history_table, true);
 			}
 			return $receipt;
 		}
