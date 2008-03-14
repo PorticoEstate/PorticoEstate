@@ -276,6 +276,7 @@
 			// save it...  It would be nice if phpgwapi.config had an method for just saving one setting.
 
 			$c = CreateObject('phpgwapi.config','phpgwapi');
+			$c->appname='phpgwapi'; // FIXME the appname is sometimes lost - don't know why - shouldn't happen
 			$c->read_repository();
 			$c->value('log_levels', $GLOBALS['phpgw_info']['server']['log_levels']);
 			$c->save_repository();
