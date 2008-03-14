@@ -124,9 +124,10 @@
 		 * 
 		 * @param array $attrib the field data
 		 * @param string $attrib_table where to append the attrib
+		 * @param bool $doubled sometimes the attribute fits into a history-table as a double
 		 * @return int the the new custom field db pk
 		 */
-		function add_attrib($attrib, $attrib_table = '')
+		function add_attrib($attrib, $attrib_table = '', $doubled = false)
 		{
 			$receipt = array();
 			// Checkboxes are only present if ticked, so we declare them here to stop errors
@@ -142,7 +143,7 @@
 
 			$sql = "SELECT * FROM phpgw_cust_attribute where appname='{$attrib['appname']}' AND location='{$attrib['location']}' AND column_name = '{$attrib['column_name']}'";
 			$this->db->query($sql,__LINE__,__FILE__);
-			if ( $this->db->next_record() )
+			if ( $this->db->next_record() && !$doubled)
 			{
 				$receipt['id'] = 0;
 				$receipt['error'] = array();
@@ -197,8 +198,11 @@
 
 			$this->db->transaction_begin();
 
-			$this->db->query("INSERT INTO phpgw_cust_attribute (appname,location,id,column_name, input_text, statustext,search,list,history,disabled,helpmsg,attrib_sort, datatype,precision_,scale,default_value,nullable) "
-				. "VALUES ($values)",__LINE__,__FILE__);
+			if(!$doubled)
+			{
+				$this->db->query("INSERT INTO phpgw_cust_attribute (appname,location,id,column_name, input_text, statustext,search,list,history,disabled,helpmsg,attrib_sort, datatype,precision_,scale,default_value,nullable) "
+					. "VALUES ($values)",__LINE__,__FILE__);
+			}
 
 			$receipt['id']= $attrib['id'];
 
@@ -974,7 +978,15 @@
 			return isset($datatype_precision[$datatype])?$datatype_precision[$datatype]:'';
 		}
 
-		function _delete_attrib($location,$appname,$attrib_id,$table = '')
+		/**
+		 * Delete a custom field/attribute
+		 * 
+		 * @param string $location within an application
+		 * @param string $appname where to delete the attrib
+		 * @param integer $attrib_id id of attrib to delete
+		 * @param bool $doubled sometimes the attribute fits into a history-table as a double
+		 */
+		function _delete_attrib($location,$appname,$attrib_id,$table = '',$doubled = false )
 		{
 			$this->_init_process();
 			$this->oProc->m_odb->transaction_begin();
@@ -1009,7 +1021,10 @@
 				$this->db->query($sql,__LINE__,__FILE__);
 			}
 
-			$this->db->query("DELETE FROM phpgw_cust_attribute WHERE appname='$appname' AND location='$location' AND id=$attrib_id",__LINE__,__FILE__);
+			if(!$doubled) // else: wait for it - another one is coming
+			{
+				$this->db->query("DELETE FROM phpgw_cust_attribute WHERE appname='$appname' AND location='$location' AND id = " . (int)$attrib_id,__LINE__,__FILE__);
+			}
 	//		$this->db->query("DELETE FROM history...
 			$this->db->transaction_commit();
 			$this->oProc->m_odb->transaction_commit();
