@@ -1176,11 +1176,11 @@
 				{
 					if($values['attributes'][$i]['value'])
 					{
-						$vendor_data	= $vendor->read_single(array('values_id'=>$values['attributes'][$i]['value']));
+						$vendor_data	= $vendor->read_single($values['attributes'][$i]['value'],array('attributes' => array(0 => array('column_name' => 'org_name'))));
 
 						for ($n=0;$n<count($vendor_data['attributes']);$n++)
 						{
-							if($vendor_data['attributes'][$n]['name'] == 'org_name')
+							if($vendor_data['attributes'][$n]['column_name'] == 'org_name')
 							{
 								$values['attributes'][$i]['vendor_name']= $vendor_data['attributes'][$n]['value'];
 								$n =count($vendor_data['attributes']);
