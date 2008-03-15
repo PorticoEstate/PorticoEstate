@@ -1008,7 +1008,15 @@
 			for ($i=0; $i<count($metadata); $i++)
 			{
 				$cols[] = $metadata[$i]['name'];
-				$vals[] = $this->db->f($metadata[$i]['name']);
+
+				if (ctype_digit($this->db->f($metadata[$i]['name'])))
+				{
+					$vals[] = $this->db->f($metadata[$i]['name']);
+				}
+				else
+				{
+					$vals[] = $this->db->db_addslashes($this->db->f($metadata[$i]['name'],true));
+				}
 			}
 
 			$cols[] = 'exp_date';
