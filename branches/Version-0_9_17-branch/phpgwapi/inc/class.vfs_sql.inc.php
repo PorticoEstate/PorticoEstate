@@ -2005,6 +2005,11 @@
 						$edited_comment = True;
 					}
 
+					if ($attribute == 'owner_id' && !$$attribute)
+					{
+						$$attribute = $GLOBALS['phpgw_info']['user']['account_id'];
+					}
+
 					$$attribute = $this->clean_string (array ('string' => $$attribute));
 
 					if ($change_attributes > 0)
@@ -2285,7 +2290,7 @@
 							continue;
 						}
 						$rarray[] = $this->get_real_info (array(
-								'string'	=> $p->real_full_path . SEP . $filename,
+								'string'	=> "{$p->real_full_path}/{$filename}",
 								'relatives'	=> array ($p->mask)
 							)
 						);
