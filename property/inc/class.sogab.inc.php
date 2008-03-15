@@ -238,13 +238,12 @@
 
 			$entity_table = 'fm_gab_location';
 
-			$cols .= $entity_table . '.location_code,';
-			$cols .= $entity_table . '.owner';
+			$cols = $entity_table . '.*';
 
 			$cols_return[] = 'location_code';
-			$cols .= ',gab_id';
 			$cols_return[] = 'gab_id';
 			$cols_return[] = 'owner';
+			$cols_return[] = 'address';
 			
 			$sql	= $this->bocommon->generate_sql(array('entity_table'=>$entity_table,'cols'=>$cols,'cols_return'=>$cols_return,
 							'uicols'=>$uicols,'joinmethod'=>$joinmethod,'paranthesis'=>$paranthesis,'query'=>$query));
@@ -274,6 +273,14 @@
 			$this->uicols['name'][]			= 'owner';
 			$this->uicols['descr'][]		= lang('owner');
 			$this->uicols['statustext'][]		= lang('owner');
+			$this->uicols['input_type'][]		= 'text';
+			$this->uicols['name'][]			= 'location_code';
+			$this->uicols['descr'][]		= 'location code';
+			$this->uicols['statustext'][]	= 'location code';
+			$this->uicols['input_type'][]		= 'text';
+			$this->uicols['name'][]			= 'address';
+			$this->uicols['descr'][]		= lang('address');
+			$this->uicols['statustext'][]	= lang('address');
 
 			$cols_return		= $this->bocommon->cols_return;
 			$type_id		= $this->bocommon->type_id;
