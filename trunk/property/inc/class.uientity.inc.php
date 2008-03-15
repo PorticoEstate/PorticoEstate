@@ -287,7 +287,7 @@
 							{
 								$content[$j]['row'][$i]['value'] 		= $entity_entry[$uicols['name'][$i]];
 								$content[$j]['row'][$i]['name'] 		= $uicols['name'][$i];
-								if($uicols['datatype'][$i]=='link' && $entity_entry[$uicols['name'][$i]])
+								if(isset($uicols['datatype'][$i]) && $uicols['datatype'][$i]=='link' && $entity_entry[$uicols['name'][$i]])
 								{
 									$content[$j]['row'][$i]['text']		= lang('link');
 									$content[$j]['row'][$i]['link']		= $entity_entry[$uicols['name'][$i]];
