@@ -633,21 +633,27 @@
 					}
 				}
 
-				if(isset($insert_record['extra']) && is_array($insert_record['extra']))
-				{
-					for ($i=0; $i<count($insert_record['extra']); $i++)
-					{
-						$values[$insert_record['extra'][$i]]= phpgw::get_var($insert_record['extra'][$i]);
-					}
-				}
-
 				$insert_record_attributes	= $GLOBALS['phpgw']->session->appsession('insert_record_values' . '.location.' . $this->type_id,'property');
 
 				if(is_array($insert_record_attributes))
 				{
-					for ($j=0;$j<count($insert_record_attributes);$j++)
+					foreach ($insert_record_attributes as $attribute)
 					{
-						$insert_record['extra'][$insert_record_attributes[$j]]	= $insert_record_attributes[$j];
+						foreach ($values_attribute as &$attr)
+						{
+							if($attr['name'] ==  $attribute)
+							{
+								$attr['value'] = phpgw::get_var($attribute, 'string', 'POST');
+							}
+						}
+					}
+				}
+
+				if(isset($insert_record['extra']) && is_array($insert_record['extra']))
+				{
+					for ($i=0; $i<count($insert_record['extra']); $i++)
+					{
+						$values[$insert_record['extra'][$i]]= phpgw::get_var($insert_record['extra'][$i], 'string', 'POST');
 					}
 				}
 			}
