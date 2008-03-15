@@ -573,13 +573,12 @@
 
 			if($ticket['location_code'])
 			{
-
 				$solocation 		= CreateObject('property.solocation');
-				$soadmin_location 	= CreateObject('property.soadmin_location');
+				$custom = createObject('phpgwapi.custom_fields');
 				$location_data 		= $solocation->read_single($ticket['location_code']);
 
 				$type_id=count(explode('-',$ticket['location_code']));
-				$fm_location_cols = $soadmin_location->read_attrib(array('type_id'=>$type_id,'lookup_type'=>$type_id));
+				$fm_location_cols = $custom->get_attribs('property','.location.' . $type_id, 0, '', 'ASC', 'attrib_sort', true, true);
 				$i=0;
 				if (isset($fm_location_cols) AND is_array($fm_location_cols))
 				{
