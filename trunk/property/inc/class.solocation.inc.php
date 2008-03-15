@@ -217,7 +217,7 @@
 			{
 				$location_types	= $this->soadmin_location->select_location_type();
 
-				$cols = "fm_location" . ($type_id) .".location_code";
+				$cols = "fm_location" . ($type_id) .'.*';
 				$cols_return[] 				= 'location_code';
 				$uicols['input_type'][]		= 'hidden';
 				$uicols['name'][]			= 'location_code';
