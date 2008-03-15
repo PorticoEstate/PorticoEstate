@@ -1248,7 +1248,7 @@
 						}
 					}
 				}
-				else if ($entity['attributes'][$i]['datatype']!='I' && $entity['attributes'][$i]['value'])
+				else if (isset($entity['attributes'][$i]) && $entity['attributes'][$i]['datatype']!='I' && $entity['attributes'][$i]['value'])
 				{
 					$entity['attributes'][$i]['value'] = stripslashes($entity['attributes'][$i]['value']);
 				}
