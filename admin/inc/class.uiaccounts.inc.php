@@ -22,7 +22,8 @@
 			'edit_user'		=> True,
 			'edit_group'	=> True,
 			'view_user'		=> True,
-			'group_manager'	=> True
+			'group_manager'	=> True,
+			'sync_accounts_contacts' => True
 		);
 
 		var $bo;
@@ -1067,5 +1068,10 @@
 			$t->pfp('out','form');
 		}
 
+		function sync_accounts_contacts()
+		{
+			$GLOBALS['phpgw']->accounts->sync_accounts_contacts();
+			$GLOBALS['phpgw']->redirect_link('/admin/index.php');
+		}
 	}
 ?>
