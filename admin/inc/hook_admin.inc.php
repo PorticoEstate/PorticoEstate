@@ -38,6 +38,11 @@
 		$file['User Groups'] = $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.uiaccounts.list_groups') );
 	}
 
+	if (! $GLOBALS['phpgw']->acl->check('account_access',1,'admin'))
+	{
+		$file['Sync Account-Contact'] = $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.uiaccounts.sync_accounts_contacts') );
+	}
+
 	if (! $GLOBALS['phpgw']->acl->check('applications_access',1,'admin'))
 	{
 		$file['Applications'] = $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.uiapplications.get_list') );
