@@ -86,7 +86,7 @@
 				'Export'					=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiXport.export') ),
 				'Admin Async servises'		=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uialarm.index') ),
 				'Async servises'			=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiasync.index') ),
-				'Admin custom functions'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiadmin_custom.index') ),
+				'Admin custom functions'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.ui_custom.list_custom_function', 'appname' => 'property') ),
 			);
 		$GLOBALS['phpgw']->common->display_mainscreen($appname,$file);
 	}
