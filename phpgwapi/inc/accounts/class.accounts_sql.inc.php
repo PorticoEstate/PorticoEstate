@@ -91,7 +91,7 @@
 							. "', account_lastname='" . $this->data['account_lastname'] . "', account_status='"
 							. $this->data['status'] . "', account_expires=" . $this->data['expires']
 							. ($this->data['account_lid']?", account_lid='".$this->data['account_lid']."'":'')
-						//	. (isset($this->data['person_id'])?', person_id=' . $this->data['person_id']:'')
+							. (isset($this->data['person_id']) && $this->data['person_id'] ?', person_id=' . $this->data['person_id']:'')
 							. ', account_quota=' . intval($this->data['quota'])
 							. ' WHERE account_id=' . intval($this->data['account_id']),__LINE__,__FILE__);
 		}
@@ -531,7 +531,7 @@
 		function get_account_without_contact()
 		{
 			$sql = 'SELECT account_id FROM phpgw_accounts '
-				. 'WHERE person_id IS NULL OR person_id = 0';
+				. "WHERE account_type = 'u' AND (person_id IS NULL OR person_id = '0')";
 			$this->db->query($sql,__LINE__,__FILE__);
 			while ($this->db->next_record())
 			{
