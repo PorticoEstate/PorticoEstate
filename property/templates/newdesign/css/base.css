@@ -1,18 +1,46 @@
-div.border-layout div.layout-center hr {
-	display: none;
+div.layout-center div.panel div.body
+{
+	padding: 1em;
+}
+div.layout-center div.panel div.body table
+{
+	margin: 0em 0em 0.2em 0em;
 }
 
-div.border-layout div.layout-center div.panel div.body {
-	padding: 0px;
+div.layout-center div.panel div.body table td
+{
+	padding-right: 0.4em;
+	border: none;
 }
 
-div.border-layout div.layout-center div.toolbar form {
-	display: inline;
+div.layout-center div.panel div.body table tr.th td, div.layout-center div.panel div.body table tr.row_on td, div.layout-center div.panel div.body table tr.row_off td
+{
+	padding: 0.2em 0.4em;
 }
-div.border-layout div.layout-center div.toolbar select {
-	margin: 0px;
-	display: inline;
-	float: none;
-	margin: 0em 0.2em;
-	vertical-align: middle;
+
+div.layout-center div.panel div.body table td.th_text
+{
+	color: #666;
+	font-weight: bold;
+	border: 1px solid silver;
+	border-bottom: 1px solid gray;
+}
+
+div.layout-center div.panel div.body table tr.row_on td, div.layout-center div.panel div.body table tr.row_off td
+{
+	border: 1px solid silver;
+}
+
+div.layout-center div.panel div.body table tr.row_on
+{
+	background: #fafafa;
+}
+
+div.layout-center div.panel div.body table tr.row_on:hover, div.layout-center div.panel div.body table tr.row_off:hover
+{
+	background: lightblue;
+}
+
+div.layout-center div.panel div.body form td {
+	text-decoration: underline;
 }
