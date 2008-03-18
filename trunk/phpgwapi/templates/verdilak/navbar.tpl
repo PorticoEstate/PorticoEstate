@@ -24,7 +24,7 @@
 <tr background="{img_root}/bg_filler.png">
 <td background="{img_root}/bg_filler.png" align="left" valign="bottom"><a href="http://www.phpgroupware.org" target="_new"><img src="{img_root}/{logo}" border="0" alt="phpGroupWare"></a></td>
 <td background="{img_root}/bg_filler.png" align="center" valign="bottom" width="100%"><!--<font color="{navbar_text}" size="-1">{user_info}</font>--></td>
-<td background="{img_root}/bg_filler.png" align="right" valign="bottom" rowspan="2" nowrap><a href="{home_link}"><img src="{welcome_img}" border="0" alt="Welcome"></a>{preferences_icon}<a href="{logout_link}"><img src="{logout_img}" border="0" alt="Logout"></a><a href="{help_link}"><img src="{img_root}/help.png" border="0" alt="Help"></a></td></tr>
+<td background="{img_root}/bg_filler.png" align="right" valign="bottom" rowspan="2" nowrap><a href="{home_url}"><img src="{welcome_img}" border="0" alt="{home_text}"></a>{preferences_icon}<a href="{logout_url}"><img src="{logout_img}" border="0" alt="logout_text"></a><a href="{about_url}"><img src="{img_root}/help.png" border="0" alt="{about_text}"></a></td></tr>
 <tr background="{img_root}/bg_filler.png">
 <td align="center" width="100%" valign="bottom" colspan="2"><img src="{img_root}/greybar.jpg" height="6"  width="100%" alt="bar"></td></tr>
 </table>
@@ -36,7 +36,7 @@
   </td>
   <td width="100%">
 <!-- BEGIN app_header -->
-<div style="text-align: center; font-weight: bold; background-color: {th_bg}; padding:5px">{current_app_header}</div>
+<div class = "app_header">{current_app_header}</div>
 <!-- END app_header -->
 <div align="center">{messages}</div>
 <div align="center">{sideboxcontent}</div>
@@ -45,5 +45,5 @@
      <td>
 <!-- END navbar -->
 
-<!-- BEGIN preferences --><a href="{preferences_link}"><img src="{preferences_img}" border="0" alt="Preferences"></a>
+<!-- BEGIN preferences --><a href="{preferences_url}"><img src="{preferences_img}" border="0" alt="{preferences_text}"></a>
 <!-- END preferences -->
