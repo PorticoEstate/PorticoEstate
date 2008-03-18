@@ -17,35 +17,8 @@
 	*/
 	function parse_navbar($force = False)
 	{
-
-		/* FIXME remove this rubbish
-		$GLOBALS['phpgw_info']['theme']['bg_color']    = '#FFFFFF';
-		$GLOBALS['phpgw_info']['theme']['bg_text']     = '#000000';
-		$GLOBALS['phpgw_info']['theme']['vlink']       = 'blue';
-		$GLOBALS['phpgw_info']['theme']['alink']       = 'red';
-		$GLOBALS['phpgw_info']['theme']['link']        = 'blue';
-		$GLOBALS['phpgw_info']['theme']['row_on']      = '#CCEEFF';
-		$GLOBALS['phpgw_info']['theme']['row_off']     = '#DDF0FF';
-		$GLOBALS['phpgw_info']['theme']['row_text']    = '#000000';
-		$GLOBALS['phpgw_info']['theme']['th_bg']       = '#80BBFF';
-		$GLOBALS['phpgw_info']['theme']['th_text']     = '#000000';
 		$GLOBALS['phpgw_info']['theme']['navbar_bg']   = '#80CCFF';
 		$GLOBALS['phpgw_info']['theme']['navbar_text'] = '#FFFFFF';
-		$GLOBALS['phpgw_info']['theme']['table_bg']    = '#7090FF';
-		$GLOBALS['phpgw_info']['theme']['table_text']  = '#000000';
-		$GLOBALS['phpgw_info']['theme']['font']        = 'Arial, Helvetica, san-serif';
-		$GLOBALS['phpgw_info']['theme']['bg01']        = '#dadada';
-		$GLOBALS['phpgw_info']['theme']['bg02']        = '#dad0d0';
-		$GLOBALS['phpgw_info']['theme']['bg03']        = '#dacaca';
-		$GLOBALS['phpgw_info']['theme']['bg04']        = '#dac0c0';
-		$GLOBALS['phpgw_info']['theme']['bg05']        = '#dababa';
-		$GLOBALS['phpgw_info']['theme']['bg06']        = '#dab0b0';
-		$GLOBALS['phpgw_info']['theme']['bg07']        = '#daaaaa';
-		$GLOBALS['phpgw_info']['theme']['bg08']        = '#da9090';
-		$GLOBALS['phpgw_info']['theme']['bg09']        = '#da8a8a';
-		$GLOBALS['phpgw_info']['theme']['bg10']        = '#da7a7a';
-		*/
-
 
 		$tpl = createobject('phpgwapi.Template',PHPGW_TEMPLATE_DIR);
 
@@ -59,6 +32,7 @@
 		$applications = '';
 		$exclude = array('home', 'preferences', 'about', 'logout');
 		$navbar = execMethod('phpgwapi.menu.get', 'navbar');
+
 		prepare_navbar($navbar);
 		foreach ( $navbar as $app => $app_data )
 		{
@@ -70,7 +44,7 @@
 			$applications .= <<<HTML
 				<br>
 				<a href="{$app_data['url']}">
-					<img src="{$icon}" alt="{$app_data['text']}" title="{{$app_data['text']}">
+					<img src="{$icon}" alt="{$app_data['text']}" title="{$app_data['text']}">
 				</a>
 
 HTML;
@@ -86,11 +60,18 @@ HTML;
 			$var['logo'] = 'logo.png';
 		}
 
-		$var['home_link'] = $GLOBALS['phpgw_info']['navbar']['home']['url'];
-		//XXX Caeies not sure of that :(
-		$var['preferences_link'] = isset($GLOBALS['phpgw_info']['navbar']['preferences']) && isset($GLOBALS['phpgw_info']['navbar']['preferences']['url']) ? $GLOBALS['phpgw_info']['navbar']['preferences']['url'] : '' ;
-		$var['logout_link'] = $GLOBALS['phpgw_info']['navbar']['logout']['url'];
-		$var['help_link'] = $GLOBALS['phpgw_info']['navbar']['about']['url'];
+		$var['home_url'] 		= $GLOBALS['phpgw']->link('/home.php');
+		$var['home_text']		= lang('home');
+		$var['about_url']		= $GLOBALS['phpgw']->link('/about.php', array('appname' => $GLOBALS['phpgw_info']['flags']['currentapp']) );
+		$var['about_text']		= lang('about');
+		$var['logout_url']		= $GLOBALS['phpgw']->link('/logout.php');
+		$var['logout_text']		= lang('logout');
+
+		if ( isset($navbar['preferences']) )
+		{
+			$var['preferences_url'] = $navbar['preferences']['url'];
+			$var['preferences_text'] = $navbar['preferences']['text'];
+		}
 
 		if ($GLOBALS['phpgw_info']['flags']['currentapp'] == 'home')
 		{

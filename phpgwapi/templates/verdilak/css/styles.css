@@ -1,4 +1,12 @@
 
+#app_header 
+{
+	text-align: center;
+	font-weight: bold;
+	background-color: #80BBFF;
+	padding:5px
+}
+
 body,p,td,th,table,input,form,option
 {
 	font-family: Verdana,Arial,Helvetica,sans-serif;
