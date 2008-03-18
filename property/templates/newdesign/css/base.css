@@ -41,6 +41,31 @@ div.layout-center div.panel div.body table tr.row_on:hover, div.layout-center di
 	background: lightblue;
 }
 
-div.layout-center div.panel div.body form td {
-	text-decoration: underline;
+div.layout-center div.panel div.body div table {
+	border: 1px solid #silver;
 }
+
+div.layout-center div.panel div.body div table td {
+	padding: 0.2em 0.4em;
+	vertical-align: middle;
+}
+div.layout-center div.panel div.body div table td.th_text {
+	border: none;
+}
+
+div.layout-center div.panel div.body div table tr.row_on td, div.layout-center div.panel div.body div table tr.row_off td {
+	border: none;
+	background: #fff;
+}
+
+div.layout-center div.panel div.body div table tr.row_off td {
+	background: #eee;
+}
+
+div.layout-center div.panel div.body div table tr td input,
+div.layout-center div.panel div.body div table tr td select,
+div.layout-center div.panel div.body div table tr td textarea
+{
+	margin: 0;
+}
+
