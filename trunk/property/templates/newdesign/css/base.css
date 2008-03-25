@@ -42,7 +42,7 @@ div.layout-center div.panel div.body table tr.row_on:hover, div.layout-center di
 }
 
 div.layout-center div.panel div.body div table {
-	border: 1px solid #silver;
+	border: 1px solid silver;
 }
 
 div.layout-center div.panel div.body div table td {
@@ -67,5 +67,12 @@ div.layout-center div.panel div.body div table tr td select,
 div.layout-center div.panel div.body div table tr td textarea
 {
 	margin: 0;
+}
+
+div.layout-center div.panel div.body table.tabletab,
+div.layout-center div.panel div.body table.tabletab th,
+div.layout-center div.panel div.body table.tabletab table
+{
+	border: none;
 }
 
