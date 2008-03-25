@@ -19,10 +19,15 @@
     background: url(../images/btn_prev.png) 10% 50% no-repeat;
 }
 
-.yui-button.pressed {
-	//background: #426fd9 !important;
+.yui-button.pressed {	
 	background-position: 0px -1400px !important;
 }
+
+#search-form input {
+	margin-top: 0.3em;
+	vertical-align: top;
+}
+
 div.separator {
 	float: left;
 	padding-left: 1em;

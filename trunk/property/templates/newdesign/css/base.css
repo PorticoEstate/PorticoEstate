@@ -22,13 +22,13 @@ div.layout-center div.panel div.body table td.th_text
 {
 	color: #666;
 	font-weight: bold;
-	border: 1px solid silver;
-	border-bottom: 1px solid gray;
+	border: 1px solid #c0c0c0;
+	border-bottom: 1px solid #808080;
 }
 
 div.layout-center div.panel div.body table tr.row_on td, div.layout-center div.panel div.body table tr.row_off td
 {
-	border: 1px solid silver;
+	border: 1px solid #c0c0c0;
 }
 
 div.layout-center div.panel div.body table tr.row_on
@@ -38,11 +38,11 @@ div.layout-center div.panel div.body table tr.row_on
 
 div.layout-center div.panel div.body table tr.row_on:hover, div.layout-center div.panel div.body table tr.row_off:hover
 {
-	background: lightblue;
+	background: #add8e6;
 }
 
 div.layout-center div.panel div.body div table {
-	border: 1px solid silver;
+	border: 1px solid #c0c0c0;
 }
 
 div.layout-center div.panel div.body div table td {
