@@ -310,11 +310,6 @@ div.treeview
 	color: #000;
 }
 
-#navbar img
-{
-	vertical-align: -20%;
-}
-
 #navbar img.collapsed
 {
 	background: url(../images/collapsed.png) no-repeat center center;
