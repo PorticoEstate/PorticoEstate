@@ -1664,13 +1664,18 @@
 				return;
 			}
 			$GLOBALS['phpgw']->xslttpl->add_file(array('menu'));
-			$menu_brutto = execMethod('property.menu.get_menu');
-			$selection = explode('::',$GLOBALS['phpgw_info']['flags']['menu_selection']);
-			$level=0;
-			$menu['navigation'] = $this->get_sub_menu($menu_brutto['navigation'],$selection,$level);
+
+			if(!$menu = $GLOBALS['phpgw']->session->appsession($GLOBALS['phpgw_info']['flags']['menu_selection'], 'menu'))
+			{
+				$menu_brutto = execMethod('property.menu.get_menu');
+				$selection = explode('::',$GLOBALS['phpgw_info']['flags']['menu_selection']);
+				$level=0;
+				$menu['navigation'] = $this->get_sub_menu($menu_brutto['navigation'],$selection,$level);
 //_debug_array($GLOBALS['phpgw_info']['flags']['menu_selection']);
 //_debug_array($selection);
 //_debug_array($menu);
+				$GLOBALS['phpgw']->session->appsession(isset($GLOBALS['phpgw_info']['flags']['menu_selection']) && $GLOBALS['phpgw_info']['flags']['menu_selection'] ? $GLOBALS['phpgw_info']['flags']['menu_selection'] : 'property_missing_selection', 'menu', $menu);
+			}
 			return $menu;
 		}
 
