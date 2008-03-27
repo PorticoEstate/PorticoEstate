@@ -347,6 +347,9 @@ YAHOO.util.Event.addListener(window, "load", function() {
 		}
 		this.ownerTypeMenu.getMenu().clickEvent.subscribe(this.onOwnerTypeMenuClick, this.myDataTable);
 
+		this.searchButton = new YAHOO.widget.Button( 'search-button');
+		this.searchClearButton = new YAHOO.widget.Button( 'search-clean');
+
 		YAHOO.util.Event.on('search-form', "submit", function(event) {
 			YAHOO.util.Event.preventDefault( event );
 			var query = document.getElementById('search-field').value;
@@ -360,7 +363,26 @@ YAHOO.util.Event.addListener(window, "load", function() {
 			YAHOO.example.XHR_JSON.myDataTable.loadDataset( { query: '' }, true );
 		});
 
+		// Export functions
+		this.doExportCSV = function(e) {
+			var options = this.myDataTable.pConfig;
+			options.type_id=type_id;
+			options.menuaction = 'property.uilocation.download';
+			var url = phpGWLink('index.php', options, false);
+			document.location=url;
+		};
+
 		// Buttons
+		this.exportCSVButton = new YAHOO.widget.Button(
+		{
+			label: "Export",
+			id: "btn-export-csv",
+			container: "other-buttons",
+			checked: true
+		});
+
+		this.exportCSVButton.on("click", this.doExportCSV, this, true);
+
 		this.prevButton = new YAHOO.widget.Button(
 		{
 			label: "Prev",

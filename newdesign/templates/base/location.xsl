@@ -14,9 +14,15 @@
 
 			<form id="search-form">
 				<input name="query" id="search-field"/>
-				<input type="submit" value="Search" />
-				<input type="button" value="clear" id="search-clean" />
+				<input type="submit" value="Search" id="search-button" />
+				<input type="button" value="Clear" id="search-clean" />
 			</form>
+		</div>
+
+		<div class="separator"></div>
+
+		<div id="other-buttons" style="float: left">
+
 		</div>
 
 		<div class="separator"></div>
