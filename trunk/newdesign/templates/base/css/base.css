@@ -19,7 +19,12 @@
     background: url(../images/btn_prev.png) 10% 50% no-repeat;
 }
 
-.yui-button.pressed {	
+#btn-export-csv button {
+	padding-left: 1.5em;
+    background: url(../images/btn_excel.png) 10% 50% no-repeat;
+}
+
+.yui-button.pressed {
 	background-position: 0px -1400px !important;
 }
 
@@ -48,6 +53,7 @@ span.yui-button.pressed button {
 #test-form h2 {
 	margin: 0px;
 }
+
 #test-form p.required {
 	font-size: 11px;
 	margin: 0.8em 0em;
