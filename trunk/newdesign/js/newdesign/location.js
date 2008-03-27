@@ -75,22 +75,6 @@ YAHOO.util.Event.addListener(window, "load", function() {
             oDataTable.set("sortedBy", newSortedBy);
 
 			// Update filter values
-			var part_of_town_id = oRawResponse.part_of_town_id;
-			var part_of_town_items = oSelf.partOfTownMenu.getMenu().getItems();
-
-			if(part_of_town_id != "")
-			{
-				oSelf.partOfTownMenu.addClass('pressed');
-			}
-			else
-			{
-				oSelf.partOfTownMenu.removeClass('pressed');
-			}
-
-			for(i=0;i<part_of_town_items.length;i++) {
-				part_of_town_items[i].cfg.setProperty("checked", (part_of_town_items[i].value == part_of_town_id) );
-			}
-
 			var cat_id = oRawResponse.cat_id;
 			var category_items = oSelf.categoryMenu.getMenu().getItems();
 			if(cat_id != "")
@@ -119,6 +103,35 @@ YAHOO.util.Event.addListener(window, "load", function() {
 
 			for(i=0;i<district_items.length;i++) {
 				district_items[i].cfg.setProperty("checked", district_items[i].value == district_id);
+			}
+
+			var part_of_town_id = oRawResponse.part_of_town_id;
+			var part_of_town_items = oSelf.partOfTownMenu.getMenu().getItems();
+
+			if(part_of_town_id != "")
+			{
+				oSelf.partOfTownMenu.addClass('pressed');
+			}
+			else
+			{
+				oSelf.partOfTownMenu.removeClass('pressed');
+			}
+
+			for(i=0;i<part_of_town_items.length;i++) {
+				var value = part_of_town_items[i].value;
+				part_of_town_items[i].cfg.setProperty("checked", (value == part_of_town_id) );
+				part_of_town_items[i].element.style.display = "block";
+				if( district_id != '' )
+				{
+					if( district_id != part_of_town_district_mapping[value] && value != '' )
+					{
+						part_of_town_items[i].element.style.display = "none";
+					}
+					else
+					{
+						part_of_town_items[i].element.style.display = "block";
+					}
+				}
 			}
 
 			var owner_type_id = oRawResponse.filter;
@@ -304,7 +317,7 @@ YAHOO.util.Event.addListener(window, "load", function() {
 		this.onDistrictMenuClick = function(event, menu, dataTable) {
 			var menuitem = menu[1];
 			try {
-				dataTable.loadDataset( { district_id: menuitem.value }, true );
+				dataTable.loadDataset( { district_id: menuitem.value, part_of_town_id: null }, true );
 			}
 			catch(e) {
 				alert(e);

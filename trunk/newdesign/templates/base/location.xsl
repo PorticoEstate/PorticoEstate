@@ -42,7 +42,6 @@
 </xsl:template>
 
 <xsl:template match="filter">
-
 		<select id="filter_{id}_select" name="{name}">
 			<xsl:for-each select="options">
 				<option value="{id}">
@@ -54,7 +53,6 @@
 			</xsl:for-each>
 		</select>
 		<input type="submit" id="filter_{id}_button" name="filter_{name}_button" value="{title}" title="{descr}" />
-
 </xsl:template>
 
 <xsl:template match="locationDataTable">
@@ -70,6 +68,19 @@
       		</xsl:if>
 		</xsl:for-each>
 	];
+
+	<xsl:for-each select="../filter">
+		<!--  filter_<xsl:value-of select="id"/>_mapping =;  -->
+		<xsl:if test="options/district_id">
+			var part_of_town_district_mapping = new Array();
+			<xsl:for-each select="options">
+				<xsl:if test="district_id">
+					part_of_town_district_mapping[<xsl:value-of select="id"/>] = <xsl:value-of select="district_id"/>;
+				</xsl:if>
+			</xsl:for-each>
+		</xsl:if>
+	</xsl:for-each>
+
 	</script>
 </xsl:template>
 
