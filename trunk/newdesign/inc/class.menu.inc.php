@@ -144,13 +144,13 @@
 				(
 					'text'	=> 'Property',
 					'url'	=>  $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'newdesign.uinewdesign.index','output'=>'html')),
-					'image' => array('newdesign', 'property')
+					'image' => array('property', 'navbar')
 				),
 				'location'	=> array
 				(
 					'text'	=> 'Location',
 					'url'	=>  $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'newdesign.uinewdesign.location','output'=>'html')),
-					'image' => array('newdesign', 'property'),
+					'image' => array('property', 'location'),
 					'children' => $location_children
 				)
 			);
