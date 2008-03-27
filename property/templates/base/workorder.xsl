@@ -16,10 +16,10 @@
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:template>
-	
+
 	<xsl:template match="add">
-		
-		<xsl:apply-templates select="menu"/> 
+
+		<xsl:apply-templates select="menu"/>
 		<table width="50%"  cellpadding="2" cellspacing="2" align="center">
 
 			<tr height="50">
@@ -47,7 +47,7 @@
 						</xsl:attribute>
 					</input>
 					</form>
-					
+
 					<xsl:variable name="done_action"><xsl:value-of select="done_action"/></xsl:variable>
 					<xsl:variable name="lang_done"><xsl:value-of select="lang_done"/></xsl:variable>
 					<form method="post" action="{$done_action}">
@@ -64,8 +64,8 @@
 		</table>
 	</xsl:template>
 
-	<xsl:template match="list_workorder">		
-		<xsl:apply-templates select="menu"/> 
+	<xsl:template match="list_workorder">
+		<xsl:apply-templates select="menu"/>
 		<table width="100%"  cellpadding="2" cellspacing="2" align="center">
 			<tr>
 			<xsl:choose>
@@ -107,7 +107,7 @@
 						<xsl:call-template name="search_field_workorder"/>
 					</td>
 				</xsl:otherwise>
-			</xsl:choose>				
+			</xsl:choose>
 				<td class="small_text" valign="top" align="left">
 					<xsl:variable name="link_download"><xsl:value-of select="link_download"/></xsl:variable>
 					<xsl:variable name="lang_download_help"><xsl:value-of select="lang_download_help"/></xsl:variable>
@@ -135,7 +135,7 @@
 					<xsl:when test="table_add !=''">
 						<xsl:apply-templates select="table_add"/>
 					</xsl:when>
-				</xsl:choose>	
+				</xsl:choose>
 		</table>
 	</xsl:template>
 
@@ -172,7 +172,7 @@
 				<a href="javascript:var w=window.open('{$link_date_search}','','width=300,height=300')"
 					onMouseOver="overlib('{$lang_date_search_help}', CAPTION, '{$lang_date_search}')"
 					onMouseOut="nd()">
-					<xsl:value-of select="lang_date_search"/></a>					
+					<xsl:value-of select="lang_date_search"/></a>
 
 				<table>
 				<xsl:choose>
@@ -218,7 +218,7 @@
 					</xsl:attribute>
 				</input>
 				<xsl:text> </xsl:text>
-				<input type="submit" name="submit" value="{$lang_search}" onMouseout="window.status='';return true;"> 
+				<input type="submit" name="submit" value="{$lang_search}" onMouseout="window.status='';return true;">
 					<xsl:attribute name="onMouseover">
 						<xsl:text>window.status='</xsl:text>
 							<xsl:value-of select="lang_searchbutton_statustext"/>
@@ -244,7 +244,7 @@
 				<a href="javascript:var w=window.open('{$link_date_search}','','width=300,height=300')"
 					onMouseOver="overlib('{$lang_date_search_help}', CAPTION, '{$lang_date_search}')"
 					onMouseOut="nd()">
-					<xsl:value-of select="lang_date_search"/></a>					
+					<xsl:value-of select="lang_date_search"/></a>
 
 				<table>
 				<xsl:choose>
@@ -289,7 +289,7 @@
 					</xsl:attribute>
 				</input>
 				<xsl:text> </xsl:text>
-				<input type="submit" name="submit" value="{$lang_search}" onMouseout="window.status='';return true;"> 
+				<input type="submit" name="submit" value="{$lang_search}" onMouseout="window.status='';return true;">
 					<xsl:attribute name="onMouseover">
 						<xsl:text>window.status='</xsl:text>
 							<xsl:value-of select="lang_searchbutton_statustext"/>
@@ -306,8 +306,8 @@
 
 	<xsl:template match="edit">
 		<div align="left">
-		
-		<table cellpadding="2" cellspacing="2" width="80%" align="center">
+
+		<table cellpadding="2" cellspacing="2" align="center">
 			<xsl:choose>
 				<xsl:when test="msgbox_data != ''">
 					<tr>
@@ -355,6 +355,8 @@
 			</xsl:choose>
 			<xsl:variable name="form_action"><xsl:value-of select="form_action"/></xsl:variable>
 			<form method="post" name="form" action="{$form_action}">
+			<tr>
+				<td>
 
 <div align="center">
 <table class="tabletab">
@@ -489,7 +491,7 @@
 				</xsl:when>
 				<xsl:otherwise>
 					<xsl:call-template name="location_view"/>
-					
+
 					<xsl:choose>
 						<xsl:when test="contact_phone !=''">
 							<tr>
@@ -497,7 +499,7 @@
 									<xsl:value-of select="lang_contact_phone"/>
 								</td>
 								<td  align="left">
-									<xsl:value-of select="contact_phone"/>					
+									<xsl:value-of select="contact_phone"/>
 								</td>
 							</tr>
 						</xsl:when>
@@ -560,7 +562,7 @@
 						<td>
 							<xsl:value-of select="value_workorder_id"/>
 						</td>
-					</tr>	
+					</tr>
 					<tr>
 						<td>
 							<xsl:value-of select="lang_copy_workorder"/>
@@ -602,7 +604,7 @@
 								<xsl:value-of select="lang_descr_statustext"/>
 							<xsl:text>'; return true;</xsl:text>
 						</xsl:attribute>
-						<xsl:value-of select="value_descr"/>		
+						<xsl:value-of select="value_descr"/>
 					</textarea>
 				</td>
 			</tr>
@@ -861,13 +863,14 @@
 								<xsl:value-of select="lang_remark_statustext"/>
 							<xsl:text>'; return true;</xsl:text>
 						</xsl:attribute>
-						<xsl:value-of select="value_remark"/>		
+						<xsl:value-of select="value_remark"/>
 					</textarea>
 				</td>
 			</tr>
 </table>
 </div>
-
+				</td>
+			</tr>
 			<tr height="50">
 				<td>
 					<xsl:variable name="lang_save"><xsl:value-of select="lang_save"/></xsl:variable>
@@ -922,7 +925,7 @@
 				</xsl:otherwise>
 			</xsl:choose>
 		</table>
-</div>	
+</div>
 		</div>
 		<hr noshade="noshade" width="100%" align="center" size="1"/>
 <script language="JavaScript1.1" type="text/javascript">
@@ -1071,7 +1074,7 @@
 <!-- view -->
 
 	<xsl:template match="view">
-		<div align="left">		
+		<div align="left">
 		<table cellpadding="2" cellspacing="2" width="80%" align="center">
 			<tr>
 				<td width="25%" >
@@ -1114,7 +1117,7 @@
 							<xsl:value-of select="lang_contact_phone"/>
 						</td>
 						<td  align="left">
-							<xsl:value-of select="contact_phone"/>					
+							<xsl:value-of select="contact_phone"/>
 						</td>
 					</tr>
 				</xsl:when>
@@ -1180,7 +1183,7 @@
 				<td>
 					<xsl:value-of select="value_workorder_id"/>
 				</td>
-			</tr>	
+			</tr>
 			<tr>
 				<td valign="top">
 					<xsl:value-of select="lang_title"/>
@@ -1194,7 +1197,7 @@
 					<xsl:value-of select="lang_descr"/>
 				</td>
 				<td>
-					<xsl:value-of select="value_descr"/>		
+					<xsl:value-of select="value_descr"/>
 				</td>
 			</tr>
 			<tr>
@@ -1264,7 +1267,7 @@
 					<xsl:value-of select="lang_start_date"/>
 				</td>
 				<td>
-					<xsl:value-of select="value_start_date"/>			
+					<xsl:value-of select="value_start_date"/>
 				</td>
 			</tr>
 			<tr>
@@ -1272,7 +1275,7 @@
 					<xsl:value-of select="lang_end_date"/>
 				</td>
 				<td>
-					<xsl:value-of select="value_end_date"/>						
+					<xsl:value-of select="value_end_date"/>
 				</td>
 			</tr>
 			<tr>
@@ -1376,7 +1379,7 @@
 						<td class="th_text" align="left">
 							<xsl:value-of select="lang_history"/>
 						</td>
-					</tr>					
+					</tr>
 					<xsl:apply-templates select="table_header_history"/>
 					<xsl:apply-templates select="record_history"/>
 				</xsl:otherwise>
