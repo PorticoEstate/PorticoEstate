@@ -1,124 +1,152 @@
 
 #btn-new button {
-	padding-left: 1.6em;
+  padding-left: 1.6em;
     background: url(../images/new_item.png) 10% 60% no-repeat;
 }
 
 #btn-delete button {
-	padding-left: 1.6em;
+  padding-left: 1.6em;
     background: url(../images/delete_item.png) 10% 60% no-repeat;
 }
 
 #btn-next button {
-	padding-right: 1.5em;
+  padding-right: 1.5em;
     background: url(../images/btn_next.png) 90% 50% no-repeat;
 }
 
 #btn-previous button {
-	padding-left: 1.5em;
+  padding-left: 1.5em;
     background: url(../images/btn_prev.png) 10% 50% no-repeat;
 }
 
 #btn-export-csv button {
-	padding-left: 1.5em;
+  padding-left: 1.5em;
     background: url(../images/btn_excel.png) 10% 50% no-repeat;
 }
 
-.yui-button.pressed {
-	background-position: 0px -1400px !important;
+#search-field {
+  min-height: 1.3em;
+  padding: 0.2em;
+  padding-right: 2.2em;
+  vertical-align: top;
+  width: 8em;
 }
 
-#search-form input {
-	margin-top: 0.3em;
-	vertical-align: top;
+#search-button
+{
+  margin: 0;
+}
+
+#search-button button
+{
+	background: url(../images/btn_search.png) center center no-repeat;
+	text-indent: -10em;
+	overflow: hidden;
+	width: 2em;
+}
+#search-clean {
+	display: none;
+	margin: 0;
+  	margin-left: -2em;
+}
+
+#search-clean button {
+  background: url(../images/btn_cancel.png) center center no-repeat;
+  text-indent: -10em;
+  overflow: hidden;
+  width: 2em;
+}
+
+.yui-button.pressed {
+  background-position: 0px -1400px !important;
 }
 
 div.separator {
-	float: left;
-	padding-left: 1em;
-	margin-right: 1em;
-	border-right: 2px groove #fff;
-	height: 2em;
+  float: left;
+  padding-left: 1em;
+  margin-right: 1em;
+  border-right: 2px groove #fff;
+  height: 2em;
 
 }
 #datatable-toolbar {
-	background: #eee;
-	padding: 0.3em;
+  background: #eee;
+  padding: 0.3em;
 
 }
 span.yui-button.pressed button {
-	color: #fff !important;
+  color: #fff !important;
 }
 
 #test-form h2 {
-	margin: 0px;
+  margin: 0px;
 }
 
 #test-form p.required {
-	font-size: 11px;
-	margin: 0.8em 0em;
-	padding-left: 20px;
-	background: url(../images/required.gif) left center no-repeat;
+  font-size: 11px;
+  margin: 0.8em 0em;
+  padding-left: 20px;
+  background: url(../images/required.gif) left center no-repeat;
 }
 
 #test-form label {
-	clear: left;
-	width: 100px;
-	float: left;
-	margin: 3px 2px 2px 2px;
-	padding: 2px;
-	border-bottom: 1px solid #eee;
-	background: #fff right center no-repeat;
+  clear: left;
+  width: 100px;
+  float: left;
+  margin: 3px 2px 2px 2px;
+  padding: 2px;
+  border-bottom: 1px solid #eee;
+  background: #fff right center no-repeat;
 }
 
 #test-form input, #test-form textarea {
-	border: 1px solid #888;
-	margin: 2px;
-	padding: 2px;
+  border: 1px solid #888;
+  margin: 2px;
+  padding: 2px;
 }
 
 #test-form div.error {
-	display: none;
+  display: none;
 }
 #test-form input.error {
-	background: #fff;
-	color: #000;
+  background: #fff;
+  color: #000;
 }
 
 #test-form label.error {
-	border: none;
-	border-bottom: 1px solid #eee;
-	background-color: #fff;
-	background-image: url(../images/error.gif);
-	color: #000;
+  border: none;
+  border-bottom: 1px solid #eee;
+  background-color: #fff;
+  background-image: url(../images/error.gif);
+  color: #000;
 }
 
 #test-form label.required {
-	background-image: url(../images/required.gif);
+  background-image: url(../images/required.gif);
 }
 
 #test-form label.ok {
-	background-image: url(../images/ok.gif);
+  background-image: url(../images/ok.gif);
 }
 
 #center-loader {
-	left: 0px;
-	top: 0px;
-	width: 100%;
-	height: 100%;
-	position: absolute;
-	background: #fff;
-	-moz-opacity:.8;
-	z-index: 10;
+  left: 0px;
+  top: 0px;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  background: #fff;
+  -moz-opacity:.8;
+  z-index: 10;
 }
 
 #center-loader div {
-	background: #eee;
-	padding: 5px 10px;
-	font-size: 1em;
-	font-weight: bold;
-	position: absolute;
-	right: 10px;
-	bottom: 10px;
-	-moz-opacity:1;
+  background: #eee;
+  padding: 5px 10px;
+  font-size: 1em;
+  font-weight: bold;
+  position: absolute;
+  right: 10px;
+  bottom: 10px;
+  -moz-opacity:1;
 }

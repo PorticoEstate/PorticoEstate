@@ -10,12 +10,12 @@
 
 		<div class="separator"></div>
 
-		<div id="search-controlls" style="float: left;line-height: 2em;">
+		<div id="search-controlls" style="float: left;">
 
 			<form id="search-form">
 				<input name="query" id="search-field"/>
-				<input type="submit" value="Search" id="search-button" />
-				<input type="button" value="Clear" id="search-clean" />
+				<input type="button" value="Clear" id="search-clean" title="Clear search pattern" />
+				<input type="submit" value="Search" id="search-button" title="Seach" />
 			</form>
 		</div>
 
