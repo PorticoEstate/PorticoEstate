@@ -5,8 +5,8 @@
 	 * @author Dave Hall
 	 * @copyright Copyright (C) 2007 Free Software Foundation, Inc. http://www.fsf.org/
 	 * @license http://www.fsf.org/licenses/gpl.html GNU General Public License
-	 * @package phpgwapi
-	 * @subpackage gui
+	 * @package phpgroupware
+	 * @subpackage phpgwapi
 	 * @version $Id$
 	 */
 
@@ -25,19 +25,15 @@
 	   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	 */
 
-
 	/**
 	 * phpGroupWare YUI wrapper class
 	 *
-	 * @package phpgwapi
-	 * @subpackage gui
+	 * @package phpgroupware
+	 * @subpackage phpgwapi
+	 * @category gui
 	 */
 
-	if ( !isset($GLOBALS['phpgw']->js) && !is_object($GLOBALS['phpgw']->js) )
-	{
-		$GLOBALS['phpgw']->js = createObject('phpgwapi.javascript');
-	}
-	
+
 	class phpgwapi_yui
 	{
 		/**
@@ -55,8 +51,6 @@
 		*/
 		public static function load_widget($widget)
 		{
-			$min = ''; // '-min'; //disabled for now
-
 			$load = array();
 			switch ( $widget )
 			{
@@ -156,14 +150,13 @@
 			$GLOBALS['phpgw']->js->validate_file('yahoo', 'yahoo-dom-event');
 			foreach ( $load as $script )
 			{
-				$test = $GLOBALS['phpgw']->js->validate_file('yahoo', "{$script}{$min}");
+				$test = $GLOBALS['phpgw']->js->validate_file('yahoo', "{$script}");
 				if ( !$test || !$ok )
 				{
-					trigger_error(lang("Unable to load YUI script '%1' when attempting to load widget: '%2'", "{$script}{$min}", $widget), E_USER_WARNING);
+					trigger_error(lang("Unable to load YUI script '%1' when attempting to load widget: '%2'", "{$script}", $widget), E_USER_WARNING);
 					return '';
 				}
 			}
-
 			return "phpgroupware.{$widget}" . ++self::$counter;
 		}
 	}

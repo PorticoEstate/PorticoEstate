@@ -1,25 +1,41 @@
 <?php
 	/**
 	* Javascript support class
+	*
 	* @author Dave Hall <skwashd@phpgroupware.org>
-	* @copyright Portions Copyright (C) 2003,2004 Free Software Foundation, Inc http://www.fsf.org/
+	* @copyright Copyright (C) 2003-2008 Free Software Foundation, Inc http://www.fsf.org/
 	* @license http://www.fsf.org/licenses/gpl.html GNU General Public License
-	* @package phpgwapi
-	* @subpackage gui
+	* @package phpgroupware
+	* @subpackage phpgwapi
 	* @version $Id$
-	* @link http://docs.phpgroupware.org/wiki/classJavaScript
 	*/
+
+	/*
+	   This program is free software: you can redistribute it and/or modify
+	   it under the terms of the GNU General Public License as published by
+	   the Free Software Foundation, either version 3 of the License, or
+	   (at your option) any later version.
+
+	   This program is distributed in the hope that it will be useful,
+	   but WITHOUT ANY WARRANTY; without even the implied warranty of
+	   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	   GNU General Public License for more details.
+
+	   You should have received a copy of the GNU General Public License
+	   along with this program.  If not, see <http://www.gnu.org/licenses/>.
+	 */
 
 	/**
  	* phpGroupWare javascript support class
 	*
-	* Only instanstiate this class using:
-	* <code>
-	*  if(!@is_object($GLOBALS['phpgw']->js))
-	*  {
-	*    $GLOBALS['phpgw']->js = createObject('phpgwapi.javascript');
-	*  }
-	* </code>
+	* Don't instanstiate this class
+	*
+	* Simply use a reference to
+	* $GLOBALS['phpgw']->js
+	*
+	* Lke so
+	*
+	* $js =& $GLOBALS['phpgw']->js;
 	*
 	* This way a theme can see if this is a defined object and include the data,
 	* while the is_object() wrapper prevents whiping out existing data held in 
@@ -27,16 +43,16 @@
 	*
 	* Note: The package arguement is the subdirectory of js - all js should live in subdirectories
 	*
-	* @package phpgwapi
-	* @subpackage gui
-	* @uses template
+	* @package phpgroupware
+	* @subpackage phpgwapi
+	* @category gui
 	*/
-	class javascript
+	class phpgwapi_js
 	{
 		/**
 		* @var array elements to be used for the window.on* events
 		*/
-		var $win_events = array
+		protected $win_events = array
 				(
 					'load'		=> array(),
 					'unload'	=> array()
@@ -45,19 +61,12 @@
 		/**
 		* @var array list of validated files to be included in the head section of a page
 		*/
-		var $files = array();
+		protected $files = array();
 
 		/**
-		* @var object used for holding an instance of the Template class
-		*/
-		var $t;
-		
-		/**
 		* Constructor
-		*
-		* Initialize the instance variables
 		*/
-		function javascript()
+		public function __construct()
 		{
 			$this->validate_file('core', 'base');
 		}
@@ -68,7 +77,7 @@
 		* @param string $event the name of the event
 		* @param string $code the code to be called
 		*/
-		function add_event($event, $code)
+		public function add_event($event, $code)
 		{
 			if ( !isset($this->win_events[$event]) )
 			{
@@ -83,7 +92,7 @@
 		* @param string $msg the message to be displayed to user
 		* @returns string the javascript to be used for displaying the message
 		*/
-		function get_alert($msg)
+		public function get_alert($msg)
 		{
 		  return 'return alert("'.lang($msg).'");';
 		}
@@ -94,7 +103,7 @@
 		* @param string $msg the message to be displayed to user
 		* @returns string the javascript to be used for displaying the message
 		*/
-		function get_confirm($msg)
+		public function get_confirm($msg)
 		{
 			return 'return confirm("'.lang($msg).'");';
 		}
@@ -107,7 +116,7 @@
 		*
 		* @returns string the html needed for importing the js into a page
 		*/
-		function get_script_links()
+		public function get_script_links()
 		{
 			$links = '';
 			if( is_array($this->files) && count($this->files) )
@@ -139,7 +148,7 @@
 		/**
 		* @deprecated
 		*/
-		function get_body_attribs()
+		public function get_body_attribs()
 		{
 			return '';
 		}
@@ -150,7 +159,7 @@
 		*
 		* @returns string the attributes to be used
 		*/
-		function get_win_on_events()
+		public function get_win_on_events()
 		{
 			$ret_str = "\n// start phpGW javascript class imported window.on* event handlers\n";
 			foreach ( $this->win_events as $win_event => $actions )
@@ -175,7 +184,7 @@
 		* @deprecated
 		* @param string javascript to be used
 		*/
-		function set_onload($code)
+		public function set_onload($code)
 		{
 			$this->win_events['load'][] = $code;
 		}
@@ -186,7 +195,7 @@
 		* @deprecated
 		* @param string javascript to be used
 		*/
-		function set_onunload($code)
+		public function set_onunload($code)
 		{
 			$this->events['unload'][] = $code;
 		}
@@ -199,18 +208,9 @@
 		* @param string $package the name of the package to be removed
 		* @param string $file the name of a file in the package to be removed - if ommitted package is removed
 		*/
-		function unset_script_link($app, $package, $file=False)
+		public function unset_script_link($app, $package, $file=False)
 		{
-			/* THIS DOES NOTHING ATM :P
-			if($file !== False)
-			{
-				unset($this->files[$app][$package][$file]);
-			}
-			else
-			{
-				unset($this->files[$app][$package]);
-			}
-			*/
+			// THIS DOES NOTHING ATM :P
 		}
 
 		/**
@@ -221,7 +221,7 @@
 		* @param string $app application directory to search - default = phpgwapi
 		* @returns bool was the file found?
 		*/
-		function validate_file($package, $file, $app='phpgwapi')
+		public function validate_file($package, $file, $app='phpgwapi')
 		{
 			if(is_readable(PHPGW_INCLUDE_ROOT . "/$app/js/$package/$file.js"))
 			{
@@ -239,4 +239,3 @@
 			}
 		}
 	}
-?>
