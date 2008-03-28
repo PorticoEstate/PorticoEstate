@@ -83,14 +83,9 @@
 			$passwd = stripslashes($passwd);
 
 			/* Try to bind to the repository */
-			return !! @ldap_bind($this->ldap, 'cn='.$this->transform_username($username).','.$this->get_base_dn(),
-						  $passwd
-						 ))
-			{
-				return true;
-			}
-
-			return false;
+			return  @ldap_bind($this->ldap,
+						'cn='.$this->transform_username($username).','.$this->get_base_dn(),
+						$passwd);
 		}
 
 		public function change_password($old_passwd, $new_passwd, $_account_id='') 

@@ -131,13 +131,13 @@
 			$hash = $m[2];
 			unset($m);
 			
-			switch ( $algo )
+			switch ( strtoupper($algo) )
 			{
 				case 'CRYPT':
 					//TODO implement this
 					return false;
 				case 'MD5':
-					$hash = base64_decode($hash);
+					$hash = bin2hex(base64_decode($hash));
 					return $hash === md5($passwd);
 
 				case 'SHA':
@@ -145,13 +145,13 @@
 					return $hash === sha1($passwd);
 
 				case 'SMD5':
-					$hash = base64_decode($hash);
+					$hash = bin2hex(base64_decode($hash));
 					$salt = substr($hash, 32);
 					$hash = substr($hash, 0, 32);
 					return $hash === md5($passwd . $salt);
 
 				case 'SSHA':
-					$hash = base64_decode($hash);
+					$hash = bin2hex(base64_decode($hash));
 					$salt = substr($hash, 40);
 					$hash = substr($hash, 0, 40);
 					return $hash === sha1($passwd . $salt);
