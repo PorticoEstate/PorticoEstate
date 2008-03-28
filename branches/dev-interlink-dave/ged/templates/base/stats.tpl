@@ -3,7 +3,6 @@
 <div align=left>
 <form name="period" method="GET" action="{action_filer}">
 <input name="menuaction" type="hidden" value="{menuaction}">
-<input name="kp3" type="hidden" value="{kp3}">
 <input name="sessionid" type="hidden" value="{sessionid}">
 <input name="click_history" type="hidden" value="{click_history}">
 {jscal_start}
