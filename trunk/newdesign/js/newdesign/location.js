@@ -367,13 +367,17 @@ YAHOO.util.Event.addListener(window, "load", function() {
 		YAHOO.util.Event.on('search-form', "submit", function(event) {
 			YAHOO.util.Event.preventDefault( event );
 			var query = document.getElementById('search-field').value;
-
-			YAHOO.example.XHR_JSON.myDataTable.loadDataset( { query: query }, true );
+			if(query != "")
+			{
+				document.getElementById('search-clean').style.display="inline-block";
+				YAHOO.example.XHR_JSON.myDataTable.loadDataset( { query: query }, true );
+			}
 		});
 
 		YAHOO.util.Event.on('search-clean', "click", function(event) {
 			YAHOO.util.Event.preventDefault( event );
 			document.getElementById('search-field').value = '';
+			document.getElementById('search-clean').style.display = 'none';
 			YAHOO.example.XHR_JSON.myDataTable.loadDataset( { query: '' }, true );
 		});
 
