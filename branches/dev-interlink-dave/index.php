@@ -51,14 +51,13 @@
 	$GLOBALS['phpgw_info']['flags'] = array
 	(
 		'noheader'   => true,
-	//	'nonavbar'   => true,
 		'currentapp' => $app
 	);
 	
 	/**
 	* Include phpgroupware header
 	*/
-	include_once('header.inc.php');
+	require_once('header.inc.php');
 
 	if ($app == 'home' && ! $api_requested)
 	{
@@ -80,9 +79,10 @@
 		&& $GLOBALS[$class]->public_functions[$method] )
 
 	{
-		if ( isset($_GET['phpgw_return_as']) && $_GET['phpgw_return_as'] == 'json' )
+		if ( phpgw::get_var('X-Requested-With', 'string', 'SERVER') == 'XMLHttpRequest'
+			|| (isset($_GET['phpgw_return_as']) && $_GET['phpgw_return_as'] == 'json' ) ) // deprecated
 		{
-			Header('Content-Type: text/javascript');
+			Header('Content-Type: application/json'); // comply with RFC 4627
 			$return_data = $GLOBALS[$class]->$method();
 			echo json_encode($return_data);
 			$GLOBALS['phpgw_info']['flags']['nofooter'] = true;
@@ -129,4 +129,3 @@
 		$GLOBALS['phpgw']->redirect_link('/home.php');
 	}
 	$GLOBALS['phpgw']->common->phpgw_footer();
-?>
