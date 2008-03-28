@@ -12,11 +12,8 @@
 
 /* Please see class.base_nusoap.inc.php for more information */
 
-if (@!$GLOBALS['phpgw_info']['flags']['included_classes']['phpgwapi_soapval'])
-{
-	require_once(PHPGW_API_INC."/class.phpgwapi_soapval.inc.php");
-	$GLOBALS['phpgw_info']['flags']['included_classes']['phpgwapi_soapval'] = True;
-}
+	phpgw::import_class('phpgwapi.soapval');
+
 	/**
 	* SOAPx4 value object
 	* @author Edd Dumbill <edd@usefulinc.com>
