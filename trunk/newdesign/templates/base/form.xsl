@@ -112,7 +112,7 @@
 					data_array[i] = [ select.options[i].text, select.options[i].value ];
 				}
 			}
-			var data_source = new YAHOO.widget.DS_JSArray( data_array );
+			var data_source = new YAHOO.widget.DS_JSArray( data_array, {queryMatchContains: true} );
 
 			// Create autocomplete dropdown
 			var autocomplete = new YAHOO.widget.AutoComplete(input_node, drop_down_node, data_source, {
