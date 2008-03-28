@@ -16,12 +16,13 @@
 	* @package phpgwapi
 	* @subpackage application
 	*/
-	class object_factory
+	class phpgwapi_object_factory
 	{
-		function object_factory()
+		/* not currently used
+		public function __construct()
 		{
-			//die ('not allowed');
 		}
+		*/
 		
 		
 		/**
@@ -35,7 +36,7 @@
 		  * @param $classname name of class
 		  * @param $p1-$p16 class parameters (all optional)
 		 */
-		function CreateObject($class,
+		function createObject($class,
 			$p1='_UNDEF_',$p2='_UNDEF_',$p3='_UNDEF_',$p4='_UNDEF_',
 			$p5='_UNDEF_',$p6='_UNDEF_',$p7='_UNDEF_',$p8='_UNDEF_',
 			$p9='_UNDEF_',$p10='_UNDEF_',$p11='_UNDEF_',$p12='_UNDEF_',
@@ -101,6 +102,3 @@
 		}	
 		
 	}
-	
-
-?>

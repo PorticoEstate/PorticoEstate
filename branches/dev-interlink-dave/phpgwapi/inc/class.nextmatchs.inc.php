@@ -16,7 +16,7 @@
 	* @see nextmatchs_xslt
 	* @todo make a generic abstract base class which both classes extend, not this wacky relationship
 	*/
-	include_once(PHPGW_API_INC . '/class.nextmatchs_xslt.inc.php');
+	phpgw::import_class('phpgwapi.nextmatchs_xslt');
 
 	/**
 	* Handles limiting number of rows displayed
@@ -24,7 +24,7 @@
 	* @package phpgwapi
 	* @subpackage gui
 	*/
-	class nextmatchs extends nextmatchs_xslt
+	class phpgwapi_nextmatchs extends phpgwapi_nextmatchs_xslt
 	{
 		/**
 		* @var int $maxmatches the maximum number of records to return
