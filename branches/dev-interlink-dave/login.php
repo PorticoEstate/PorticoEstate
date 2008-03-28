@@ -150,19 +150,8 @@
 		$extra_vars['cd'] = 'yes';
 		
 		$GLOBALS['phpgw']->hooks->process('login');
-
-		if( isset($GLOBALS['phpgw_info']['server']['shm_lang']) 
-			&& $GLOBALS['phpgw_info']['server']['shm_lang'] 
-			&& function_exists('sem_get'))
-		{
-			if(!$GLOBALS['phpgw']->shm->get_value('lang_en'))
-			{
-				$GLOBALS['phpgw']->translation->populate_shm();
-			}
-		}
-
+		$GLOBALS['phpgw']->translation->populate_cache();
 		$GLOBALS['phpgw']->redirect_link('/home.php', $extra_vars);
-		exit;
 	}
 
 	//Build vars :
