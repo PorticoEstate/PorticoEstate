@@ -85,30 +85,13 @@
 		'phpgw_sessions' => array(
 			'fd' => array(
 				'session_id' => array('type' => 'varchar','precision' => 255,'nullable' => False),
-				'session_lid' => array('type' => 'varchar','precision' => 255),
-				'session_ip' => array('type' => 'varchar','precision' => 255),
-				'session_logintime' => array('type' => 'int','precision' => 4),
-				'session_dla' => array('type' => 'int','precision' => 4),
-				'session_action' => array('type' => 'varchar','precision' => 255),
-				'session_flags' => array('type' => 'char','precision' => 2)
+				'ip' => array('type' => 'varchar','precision' => 100),
+				'data' => array('type' => 'longtext'),
+				'lastmodts' => array('type' => 'int','precision' => 4),
 			),
-			'pk' => array(),
+			'pk' => array('session_id'),
 			'fk' => array(),
-			'ix' => array(),
-			'uc' => array('session_id')
-		),
-		'phpgw_app_sessions' => array(
-			'fd' => array(
-				'sessionid' => array('type' => 'varchar','precision' => 255,'nullable' => False),
-				'loginid' => array('type' => 'varchar','precision' => 20),
-				'location' => array('type' => 'varchar','precision' => 255),
-				'app' => array('type' => 'varchar','precision' => 20),
-				'content' => array('type' => 'text'),
-				'session_dla' => array('type' => 'int','precision' => 4)
-			),
-			'pk' => array(),
-			'fk' => array(),
-			'ix' => array(),
+			'ix' => array('lastmodts'),
 			'uc' => array()
 		),
 		'phpgw_access_log' => array(

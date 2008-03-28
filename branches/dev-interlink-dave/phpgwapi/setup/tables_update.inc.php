@@ -1757,11 +1757,31 @@
 
 	$test[] = '0.9.17.514';
 	/**
-	* Implement new interlink and ACL systems - quite a few related changes here too
+	* Drop the old and unneeded addressbook tables
 	*
 	* @return string the new version number
 	*/
 	function phpgwapi_upgrade0_9_17_514()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->DropTable('phpgw_addressbook');
+		$GLOBALS['phpgw_setup']->oProc->DropTable('phpgw_addressbook_extra');
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['phpgwapi']['currentver'] = '0.9.17.515';
+			return $GLOBALS['setup_info']['phpgwapi']['currentver'];
+		}
+	}
+
+	$test[] = '0.9.17.515';
+	/**
+	* Implement new interlink and ACL systems - quite a few related changes here too
+	*
+	* @return string the new version number
+	*/
+	function phpgwapi_upgrade0_9_17_515()
 	{
 		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
 
@@ -1989,24 +2009,48 @@
 //# phpgw_cust_choice
 //# phpgw_cust_function 
 
-		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
-		{
-			$GLOBALS['setup_info']['phpgwapi']['currentver'] = '0.9.17.515';
-			return $GLOBALS['setup_info']['phpgwapi']['currentver'];
-		}
-	}
-	$test[] = '0.9.17.515';
-	/**
-	* Drop the old and unneeded addressbook tables
-	*
-	* @return string the new version number
-	*/
-	function phpgwapi_upgrade0_9_17_515()
-	{
-		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+		// Sessions changes
+		$GLOBALS['phpgw_setup']->oProc->DropTable('phpgw_app_sessions'); // no longer needed
+		$GLOBALS['phpgw_setup']->oProc->DropTable('phpgw_sessions');
+		$GLOBALS['phpgw_setup']->oProc->CreateTable('phpgw_sessions', array
+		(
+			'fd' => array(
+				'session_id'	=> array('type' => 'varchar', 'precision' => 255, 'nullable' => False),
+				'ip'			=> array('type' => 'varchar', 'precision' => 100), // optional security
+				'data'			=> array('type' => 'longtext'), // gives us more room to move
+				'lastmodts'		=> array('type' => 'int', 'precision' => 4),
+			),
+			'pk' => array('session_id'),
+			'fk' => array(),
+			'ix' => array('lastmodts'),
+			'uc' => array()
+		));
 
-		$GLOBALS['phpgw_setup']->oProc->DropTable('phpgw_addressbook');
-		$GLOBALS['phpgw_setup']->oProc->DropTable('phpgw_addressbook_extra');
+		//Make sure the session defaults are properly set
+		$lookups = array
+		(
+			'max_access_log_age'	=> 90,
+			'block_time'			=> 30,
+			'num_unsuccessful_id'	=> 3,
+			'num_unsuccessful_ip'	=> 3,
+			'install_id'			=> sha1(uniqid(rand(), true)),
+			'max_history'			=> 20
+		);
+		foreach ( $lookups as $name => $val )
+		{
+			$sql = "SELECT * FROM phpgw_config WHERE config_name = '{$name}' AND config_app = 'phpgwapi'";
+			$GLOBALS['phpgw_setup']->oProc->m_odb->query($sql, __LINE__, __FILE__);
+			if ( $GLOBALS['phpgw_setup']->oProc->m_odb->next_record() )
+			{
+				unset($lookups[$name]);
+			}
+		}
+		
+		foreach ( $lookups as $name => $val )
+		{
+			$sql = "INSERT INTO phpgw_config VALUES('phpgwapi', '{$name}', '{$val}')";
+			$GLOBALS['phpgw_setup']->oProc->m_odb->query($sql, __LINE__, __FILE__);
+		}
 
 		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
 		{
