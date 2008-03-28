@@ -13,31 +13,28 @@
 	* Fassade of the adressbook application.
 	* @package addressbook
 	*/
-	class ipc_addressbook extends ipc_
+	class phpgwapi_ipc_addressbook extends phpgwapi_ipc_
 	{
 		/**
 		* @var object $contacts phpgwapi contacts object
-		* @access private
 		*/
-		var $contacts;
+		protected $contacts;
 
 		/**
 		* @var object $vcard import/export vcard object
-		* @access private
 		*/
-		var $vcard;
+		protected $vcard;
 		
 		/**
 		* @var object $validator object of validator class for check email syntax
-		* @access private
 		*/
-		var $validator;
+		protected $validator;
 
 
 		/**
 		* Constructor
 		*/
-		function ipc_addressbook()
+		public function __construct()
 		{
 			$this->contacts  = CreateObject('phpgwapi.contacts');
 			$this->vcard     = CreateObject('phpgwapi.vcard');

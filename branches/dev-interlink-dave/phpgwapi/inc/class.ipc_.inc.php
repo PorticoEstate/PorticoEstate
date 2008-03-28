@@ -15,17 +15,14 @@
 	* @package phpgwapi
 	* @subpackage communication
 	*/
-	abstract class ipc_
+	abstract class phpgwapi_ipc_
 	{
 		/**
 		* Constructor
 		*
 		* @access public
 		*/
-		function ipc_()
-		{
-			die('call abstract method: '.__class__.'::'.__function__);
-		}
+		abstract public function __construct();
 
 		/**
 		* Add data in a certain mime type format to the application.
@@ -34,10 +31,7 @@
 		* @param   string   $type  specifies the mime type of the passed data
 		* @return  integer         id of the added data
 		*/
-		function addData($data, $type)
-		{
-			die('call abstract method: '.__class__.'::'.__function__);
-		}
+		abstract public function addData($data, $type);
 
 		/**
 		* Convert data from a mime type to another.
@@ -48,10 +42,7 @@
 		* @param   string   $typeOut  specifies the output mime type of the passed data
 		* @return  mixed              converted data from application, the datatype depends on the passed output mime type
 		*/
-		function convertData($data, $typeIn, $typeOut)
-		{
-			die('call abstract method: '.__class__.'::'.__function__);
-		}
+		abstract public function convertData($data, $typeIn, $typeOut);
 
 		/**
 		* Checks if data for the passed id exists.
@@ -59,10 +50,7 @@
 		* @param   integer  $id  id to check
 		* @return  boolean       true if the data with id exist, otherwise false
 		*/
-		function existData($id)
-		{
-			die('call abstract method: '.__class__.'::'.__function__);
-		}
+		abstract public function existData($id);
 
 		/**
 		* Get data from the application in a certain mime type format.
@@ -71,10 +59,7 @@
 		* @param   string   $type  specifies the mime type of the returned data
 		* @return  mixed           data from application, the datatype depends on the passed mime type, false if no data exists for the passed id
 		*/
-		function getData($id, $type)
-		{
-			die('call abstract method: '.__class__.'::'.__function__);
-		}
+		abstract public function getData($id, $type);
 
 		/**
 		* Return a list with the available id's in the application.
@@ -84,10 +69,7 @@
 		* @param   integer  $lastmod  last modification time, default is -1 and means return all data id's
 		* @return  array              list of data id's
 		*/
-		function getIdList($time=-1)
-		{
-			die('call abstract method: '.__class__.'::'.__function__);
-		}
+		abstract public function getIdList($time = -1);
 
 		/**
 		* Remove data of the passed id.
@@ -95,10 +77,7 @@
 		* @param   integer  $id  id of data to remove from the application
 		* @return  boolean       true if the data is removed, otherwise false
 		*/
-		function removeData($id)
-		{
-			die('call abstract method: '.__class__.'::'.__function__);
-		}
+		abstract public function removeData($id);
 
 		/**
 		* Replace the existing data of the passed id with the passed data in a certain mime type format.
@@ -108,9 +87,5 @@
 		* @param   string   $type  specifies the mime type of the passed data
 		* @return  boolean         true if the data is replaced, otherwise false
 		*/
-		function replaceData($id, $data, $type)
-		{
-			die('call abstract method: '.__class__.'::'.__function__);
-		}
+		abstract public function replaceData($id, $data, $type);
 	}
-?>

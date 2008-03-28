@@ -13,25 +13,23 @@
 	* Fassade of the calendar application.
 	* @package calendar
 	*/
-	class ipc_calendar extends ipc_
+	class calendar_ipc_calendar extends phpgwapi_ipc_
 	{
 		/**
 		* @var object $bo application business object
-		* @access private
 		*/
-		var $bo;
+		protected $bo;
 
 		/**
 		* @var object $bo_iCal application business object for iCalendar import/export
-		* @access private
 		*/
-		var $bo_iCal;
+		protected $bo_iCal;
 
 
 		/**
 		* Constructor
 		*/
-		function ipc_calendar()
+		public function __construct()
 		{
 			$this->bo      =& CreateObject('calendar.bocalendar');
 			$this->bo_iCal =& CreateObject('calendar.boicalendar');
