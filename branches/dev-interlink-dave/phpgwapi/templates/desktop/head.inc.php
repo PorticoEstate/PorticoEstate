@@ -32,10 +32,6 @@
 			$theme_css = $GLOBALS['phpgw_info']['server']['webserver_url'] . '/phpgwapi/templates/desktop/css/desktop.css';
 	}
 
-	if( !is_object($GLOBALS['phpgw']->js) )
-	{
-		$GLOBALS['phpgw']->js = createObject('phpgwapi.javascript');
-	}
 	$GLOBALS['phpgw']->js->set_onload('initPage();');
 
 	$var = Array (
