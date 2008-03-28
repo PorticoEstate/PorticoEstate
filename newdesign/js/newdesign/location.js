@@ -328,7 +328,8 @@ YAHOO.util.Event.addListener(window, "load", function() {
 		this.partOfTownMenu = new YAHOO.widget.Button( "filter_part_of_town_button",
 		{
 	    	type: "menu",
-	        menu: "filter_part_of_town_select"
+	        menu: "filter_part_of_town_select",
+	        lazyloadmenu: false
 	    });
 		YAHOO.util.Event.on(this.partOfTownMenu.getForm(), "submit", function(event) {YAHOO.util.Event.preventDefault( event );});
 
