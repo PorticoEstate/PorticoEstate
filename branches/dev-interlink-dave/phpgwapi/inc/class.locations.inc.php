@@ -219,10 +219,10 @@
 			foreach ( $apps as $appname => $values )
 			{
 				$appname = $this->db->db_addslashes($appname);
-				$sql = 'SELECT phpgw_applications.name'
+				$sql = 'SELECT phpgw_applications.app_name'
 					. ' FROM phpgw_applications'
 					. " {$this->join} phpgw_locations ON phpgw_applications.app_id = phpgw_locations.app_id"
-					. " WHERE phpgw_applications.name = '{$appname}'"
+					. " WHERE phpgw_applications.app_name = '{$appname}'"
 						. " AND phpgw_locations.name = '{$location}'";
 				$this->db->query($sql ,__LINE__,__FILE__);
 

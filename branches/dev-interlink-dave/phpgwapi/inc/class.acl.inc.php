@@ -42,42 +42,43 @@
 	{
 		/**
 		* Account id
-		* @var integer Account id
+		* @var integer $account_id Account id
 		*/
-		private $account_id;
+		protected $account_id;
 
 		/**
 		* Account type
-		* @var string Account type
+		* @var string $account_type Account type
 		*/
-		private $account_type;
+		protected $account_type;
+
+		/**
+		 * Data cache
+		 * @var object $cache data cache object
+		 */
+		protected $cache;
 
 		/**
 		* Array with ACL records
-		* @var array Array with ACL records
+		* @var array $data Array with ACL records
 		*/
-		private $data = array();
+		protected $data = array();
 
 		/**
 		* Database connection
-		* @var object Database connection
+		* @var object $db Database connection
 		*/
-		private $db;
+		protected $db;
 
 		/**
 		* @var string like ???
 		*/
-		private $like = 'LIKE';
-
-		/**
-		* @var bool $load_from_shm  ACL data loaded from shared memory
-		*/
-		private $load_from_shm = false;
+		protected $like = 'LIKE';
 
 		/**
 		* @var string $join ???
 		*/
-		private $join = 'JOIN';
+		protected $join = 'JOIN';
 
 		/**
 		* Read rights
@@ -148,17 +149,28 @@
 
 			$this->like =& $this->db->like;
 			$this->join =& $this->db->join;
+			$this->cache =& $GLOBALS['phpgw']->cache;
 
 			$this->set_account_id($account_id);
 		}
 
-		public function set_account_id($account_id = 0)
+		/**
+		 * Set the account id used for lookups
+		 *
+		 * @param integer $account_id the account id to use - 0 = current user
+		 * @param boolean $read_repo call self::read_repository - prevents infinite looks when called from read_repo
+		 */
+		public function set_account_id($account_id = 0, $read_repo = true)
 		{			
 			if ( !($this->account_id = (int)$account_id) )
 			{
 				$this->account_id = get_account_id($account_id);
 			}
-			$this->load_from_shm = $GLOBALS['phpgw']->shm->is_enabled();
+
+			if ( $read_repo )
+			{
+				$this->read_repository();
+			}
 		}
 
 		/**
@@ -215,45 +227,31 @@
 		 *
 		 * @param string $account_type the type of accounts sought accounts|groups
 		 * @return array Array with ACL records
-		 * @access private
 		 */
-		public function read_repository($account_type = 'both')
+		protected function read_repository($account_type = 'both')
 		{
-			/*
-			For some reason, calling this via XML-RPC doesn't call the constructor.
-			Here is yet another work around(tm) (jengo)
-			*/
-			if (! $this->account_id)
+			if ( !$this->account_id )
 			{
-				$this->acl();
+				$this->set_account_id($this->account_id, false);
 			}
-			if ( $this->load_from_shm )
+
+			$data = $this->cache->system_get('phpgwapi', "acl_data_{$this->account_id}");
+			if ( !is_null($data) )
 			{
-				if(!($this->data[$this->account_id] = $GLOBALS['phpgw']->shm->get_value($GLOBALS['phpgw_info']['user']['domain'] . 'acl_data_' . $account_type . '_' . $this->account_id)))
-				{
-					$this->_read_repository($account_type);
-				}
+				$this->data[$this->account_id] = $data;
+				return; // nothing more to do
 			}
-			else
+
+			switch( $GLOBALS['phpgw_info']['server']['account_repository'] )
 			{
-				if(!($this->data[$this->account_id] = $GLOBALS['phpgw']->session->phpgw_cache($GLOBALS['phpgw_info']['user']['domain'] . 'acl_data_' . $account_type . '_' . $this->account_id, 'acl_data'))) // get value
-				{
-					$this->_read_repository($account_type);
-				}
-			}			
+				case 'ldap':
+					$this->_read_repository_ldap($account_type);
+
+				default: 
+					$this->_read_repository_sql($account_type);
+			}
 		}
 
-		public function _read_repository($account_type = 'both')
-		{
-			if ( $GLOBALS['phpgw_info']['server']['account_repository'] == 'ldap' )
-			{
-				return $this->_read_repository_ldap($account_type);
-			}
-			else
-			{
-				return $this->_read_repository_sql($account_type);
-			}
-		}
 		/**
 		* Get acl records
 		*
@@ -494,27 +492,19 @@
 				$type  	  = $a['type'];
 			}
 
-			if (!isset($this->data[$this->account_id]) || count($this->data[$this->account_id]) == 0)
+			if ( !isset($this->data[$this->account_id]) 
+				|| count($this->data[$this->account_id]) == 0)
 			{
 				$this->data[$this->account_id] = array();
-				if ( $this->load_from_shm )
+				$cached = $GLOBALS['phpgw']->cache->system_get('phpgwapi', "acl_data_{$this->account_id}");
+				if ( is_array($cached) && count($cached) )
 				{
-					if(!$this->data[$this->account_id] = $GLOBALS['phpgw']->shm->get_value($GLOBALS['phpgw_info']['user']['domain'] . 'acl_data_' . $account_type . '_' . $this->account_id))
-					{
-						$this->_read_repository($account_type);
-						if(count($this->data[$this->account_id])>0)
-						{
-							$GLOBALS['phpgw']->shm->store_value($GLOBALS['phpgw_info']['user']['domain'] . 'acl_data_' . $account_type . '_' . $this->account_id,$this->data[$this->account_id]);
-						}
-					}
+					$this->data[$this->account_id] = $cached;
 				}
-				else if(!$this->data[$this->account_id] = $GLOBALS['phpgw']->session->phpgw_cache($GLOBALS['phpgw_info']['user']['domain'] . 'acl_data_' . $account_type . '_' . $this->account_id, 'acl_data')) // get value
+				else
 				{
 					$this->_read_repository($account_type);
-					if(count($this->data[$this->account_id])>0)
-					{
-						$GLOBALS['phpgw']->session->phpgw_cache($GLOBALS['phpgw_info']['user']['domain'] . 'acl_data_' . $account_type . '_' . $this->account_id,'acl_data', $this->data[$this->account_id]); //store value
-					}
+					$GLOBALS['phpgw']->cache->system_set('phpgwapi', "acl_data_{$this->account_id}", $this->data[$this->account_id]);
 				}
 			}
 
@@ -833,7 +823,7 @@
 			$rights = 0;
 			$apps = array();
 
-			$sql = 'SELECT phpgw_applications.name, phpgw_acl.acl_rights FROM phpgw_acl'
+			$sql = 'SELECT phpgw_applications.app_name, phpgw_acl.acl_rights FROM phpgw_acl'
 				. " {$this->join} phpgw_locations ON phpgw_acl.location_id = phpgw_locations.location_id"
 				. " {$this->join} phpgw_applications ON phpgw_locations.app_id = phpgw_applications.app_id"
 				. " WHERE phpgw_locations.name = '{$location}'"
@@ -845,7 +835,7 @@
 				$rights |= $this->db->f('acl_rights');
 				if ( $rights & $required )
 				{
-					$apps[] = $this->db->f('name');
+					$apps[] = $this->db->f('app_name');
 				}
 			}
 			return $apps;
@@ -880,7 +870,7 @@
 			$sql = 'SELECT phpgw_locations.name, phpgw_acl.acl_rights FROM phpgw_acl'
 				. " {$this->join} phpgw_locations ON phpgw_acl.location_id = phpgw_locations.location_id"
 				. " {$this->join} phpgw_applications ON phpgw_locations.app_id = phpgw_applications.app_id"
-				. " WHERE phpgw_applications.name = '{$app}'"
+				. " WHERE phpgw_applications.app_name = '{$app}'"
 					. " AND acl_account = {$account_id}";
 
 			$this->db->query($sql ,__LINE__,__FILE__);
@@ -921,10 +911,11 @@
 			$sql = 'SELECT phpgw_acl.acl_account, phpgw_acl.acl_rights FROM phpgw_acl'
 				. " {$this->join} phpgw_locations ON phpgw_acl.location_id = phpgw_locations.location_id"
 				. " {$this->join} phpgw_applications ON phpgw_locations.app_id = phpgw_applications.app_id"
-				. " WHERE phpgw_applications.name = '{$app}'"
-					. " phpgw_locations.name = '{$location}'";
+				. " WHERE phpgw_applications.app_name = '{$app}'"
+					. " AND phpgw_locations.name = '{$location}'";
 
-			$this->db->query("SELECT acl_account, acl_rights FROM phpgw_acl WHERE acl_appname = '{$app}' AND acl_location = '{$location}'" ,__LINE__,__FILE__);
+			$this->db->query($sql, __LINE__, __FILE__);
+			//"SELECT acl_account, acl_rights FROM phpgw_acl WHERE acl_appname = '{$app}' AND acl_location = '{$location}'" ,__LINE__,__FILE__);
 			while ($this->db->next_record())
 			{
 				$rights = 0;
@@ -1164,9 +1155,8 @@
 		*
 		* @param string $account_type the type of accounts sought accounts|groups
 		* @return array Array with ACL records
-		* @access private
 		*/
-		public function _read_repository_ldap($account_type)
+		protected function _read_repository_ldap($account_type)
 		{
 			$this->data[$this->account_id] = array();
 
@@ -1222,28 +1212,22 @@
 		*
 		* @param string $account_type the type of accounts sought accounts|groups
 		* @return array Array with ACL records
-		* @access private
 		*/
-		public function _read_repository_sql($account_type)
+		protected function _read_repository_sql($account_type)
 		{
 			$this->data[$this->account_id] = array();
 
+			$account_list = array();
 			if(!$account_type || $account_type == 'accounts' || $account_type == 'both')
 			{
-				$account_list[] = $this->account_id;
-				$account_list[] = 0;
+				$account_list = array($this->account_id, 0);
 			}
 
 			if($account_type == 'groups' || $account_type == 'both')
 			{
-				$groups = $this->get_location_list_for_id('phpgw_group', 1, $this->account_id);
-				if ( is_array($groups) && count($groups) )
-				{
-					foreach ( $groups as $key => $value )
-					{
-							$account_list[] = $value;
-					}
-				}
+				$groups = createObject('phpgwapi.accounts')->membership($this->account_id);
+				$account_list = array_merge($account_list, array_keys($groups));
+				unset($groups);
 			}
 
 			if(!isset($account_list) || !is_array($account_list))
@@ -1251,18 +1235,22 @@
 				return array();
 			}
 
-			$sql = 'SELECT * FROM phpgw_acl '
+			$ids = implode(',', $account_list);
+			$sql = 'SELECT phpgw_applications.app_name, phpgw_locations.name, phpgw_acl.acl_account, phpgw_acl.acl_grantor, phpgw_acl.acl_rights, phpgw_acl.acl_type, phpgw_accounts.account_type'
+				. ' FROM phpgw_acl'
+				. " {$this->db->join} phpgw_locations ON phpgw_acl.location_id = phpgw_locations.location_id"
+				. " {$this->db->join} phpgw_applications ON phpgw_applications.app_id = phpgw_locations.app_id"
 				. "{$this->join} phpgw_accounts ON phpgw_acl.acl_account = phpgw_accounts.account_id "
-				. 'WHERE acl_account in (' . implode(',', $account_list) . ')';
-			
+				. " WHERE acl_account IN ($ids)";
+
 			$this->db->query($sql ,__LINE__,__FILE__);
 			
 			while ( $this->db->next_record() )
 			{
 				$this->data[$this->account_id][] = array
 				(
-					'appname'		=> $this->db->f('acl_appname'),
-					'location'		=> $this->db->f('acl_location'), 
+					'appname'		=> $this->db->f('app_name'),
+					'location'		=> $this->db->f('name'), 
 					'account'		=> $this->db->f('acl_account'),
 					'rights'		=> $this->db->f('acl_rights'),
 					'grantor'		=> $this->db->f('acl_grantor'),
@@ -1317,62 +1305,6 @@
 		*/
 		private function delete_cache($account_id)
 		{
-			if ( $this->load_from_shm )
-			{
-				$this->clear_shm($account_id);
-			}
-			else
-			{
-				$this->clear_cache($account_id);
-			}	
-		}
-
-		/**
-		* Delete ACL information from shared memory
-		*
-		* @param integer $account_id
-		*/
-		private function clear_shm($account_id)
-		{
-			$GLOBALS['phpgw']->shm->delete_key($GLOBALS['phpgw_info']['user']['domain'] . 'acl_data_groups_' . $account_id);
-			$GLOBALS['phpgw']->shm->delete_key($GLOBALS['phpgw_info']['user']['domain'] . 'acl_data_accounts_' . $account_id);
-			$GLOBALS['phpgw']->shm->delete_key($GLOBALS['phpgw_info']['user']['domain'] . 'acl_data_both_' . $account_id);
-
-			$members = $GLOBALS['phpgw']->get_members($account_id);
-
-			if (is_array($members) && count($members) > 0)
-			{
-				foreach ( $members as $account_id )
-				{
-					$GLOBALS['phpgw']->shm->delete_key($GLOBALS['phpgw_info']['user']['domain'] . 'acl_data_groups_' . $account_id);
-					$GLOBALS['phpgw']->shm->delete_key($GLOBALS['phpgw_info']['user']['domain'] . 'acl_data_accounts_' . $account_id);
-					$GLOBALS['phpgw']->shm->delete_key($GLOBALS['phpgw_info']['user']['domain'] . 'acl_data_both_' . $account_id);
-				}
-			}
-		}
-
-		/**
-		* Delete ACL information from phpgw_cache
-		*
-		* @param integer $account_id
-		*/
-		private function clear_cache($account_id)
-		{
-
-			$GLOBALS['phpgw']->session->phpgw_cache($GLOBALS['phpgw_info']['user']['domain'] . 'acl_data_groups_' . $account_id, 'acl_data', '##DELETE##');
-			$GLOBALS['phpgw']->session->phpgw_cache($GLOBALS['phpgw_info']['user']['domain'] . 'acl_data_accounts_' . $account_id, 'acl_data', '##DELETE##');
-			$GLOBALS['phpgw']->session->phpgw_cache($GLOBALS['phpgw_info']['user']['domain'] . 'acl_data_both_' . $account_id, 'acl_data', '##DELETE##');
-
-			$members = $GLOBALS['phpgw']->get_members($account_id);
-
-			if (is_array($members) && count($members) > 0)
-			{
-				foreach ( $members as $account_id )
-				{
-					$GLOBALS['phpgw']->session->phpgw_cache($GLOBALS['phpgw_info']['user']['domain'] . 'acl_data_groups_' . $account_id, 'acl_data', '##DELETE##');
-					$GLOBALS['phpgw']->session->phpgw_cache($GLOBALS['phpgw_info']['user']['domain'] . 'acl_data_accounts_' . $account_id, 'acl_data', '##DELETE##');
-					$GLOBALS['phpgw']->session->phpgw_cache($GLOBALS['phpgw_info']['user']['domain'] . 'acl_data_both_' . $account_id, 'acl_data', '##DELETE##');
-				}
-			}
+			$this->cache->system_clear('phpgwapi', "acl_data_{$account_id}");
 		}
 	}
