@@ -128,8 +128,8 @@
 			'SSHA'	=> lang('Salted SHA1 - strong encryption'),
 			'SMD5'	=> lang('Salted MD5'),
 			'SHA'	=> lang('SHA1'),
-			'MD5'	=> lang('MD5 - Very vulnerable to dictionary attack'),
-			'CRYPT'	=> lang('Crypt - Very weak encryption')
+			'MD5'	=> lang('MD5 - Vulnerable to dictionary attack'),
+			'CRYPT'	=> lang('Crypt - Weak encryption')
 		);
 
 		if ( !isset($config['encryption_type']) )
