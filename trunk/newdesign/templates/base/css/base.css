@@ -34,7 +34,7 @@
 
 #search-button
 {
-  margin: 0;
+  margin-left: 0;
 }
 
 #search-button button
@@ -63,8 +63,8 @@
 
 div.separator {
   float: left;
-  padding-left: 1em;
-  margin-right: 1em;
+  padding-left: 0.5em;
+  margin-right: 0.5em;
   border-right: 2px groove #fff;
   height: 2em;
 
@@ -72,7 +72,9 @@ div.separator {
 #datatable-toolbar {
   background: #eee;
   padding: 0.3em;
-
+  white-space: no-wrap;
+  overflow: hidden;
+  height: 2em;
 }
 span.yui-button.pressed button {
   color: #fff !important;
