@@ -1,28 +1,38 @@
-<?php 
+<?php
 	/**
-	* Session management
-	* @author NetUSE AG Boris Erdmann, Kristian Koehntopp
+	* Session management - Native php handler
 	* @author Dan Kuykendall <seek3r@phpgroupware.org>
 	* @author Joseph Engo <jengo@phpgroupware.org>
 	* @author Ralf Becker <ralfbecker@outdoor-training.de>
-	* @copyright Copyright (C) 1998-2000 NetUSE AG Boris Erdmann, Kristian Koehntopp
-	* @copyright Portions Copyright (C) 2000-2004 Free Software Foundation, Inc. http://www.fsf.org/
+	* @copyright Copyright (C) 2000-2004 Free Software Foundation, Inc. http://www.fsf.org/
 	* @license http://www.fsf.org/licenses/lgpl.html GNU Lesser General Public License
 	* @package phpgwapi
-	* @subpackage accounts
-	* @version $Id$
-	* @link http://www.sanisoft.com/phplib/manual/session.php
+	* @subpackage sessions
+	* @version $Id: class.sessions_php.inc.php 682 2008-02-01 12:19:55Z dave $
 	*/
 
 	/**
+	* Set the session name to something unique for phpgw
+	*/
+	session_name('phpgwsessid');
+
+	/*
+	 * Include the db session handler if required
+	 */
+	if ( $GLOBALS['phpgw_info']['server']['sessions_type'] == 'db' )
+	{
+		phpgw::import_class('phpgwapi.session_handler_db');
+	}
+
+	phpgw::import_class('phpgwapi.cache');
+
+	/**
 	* Session Management
-	* 
-	* This allows phpGroupWare to use php4 or database sessions 
 	*
 	* @package phpgwapi
-	* @subpackage accounts
+	* @subpackage sessions
 	*/
-	abstract class sessions
+	class phpgwapi_sessions
 	{
 		/**
 		* @var string current user login
@@ -63,11 +73,6 @@
 		* @var string current user session id
 		*/
 		var $sessionid;
-		
-		/**
-		* @var string not sure what this does, but it is important :)
-		*/
-		var $kp3;
 		
 		/**
 		* @var string encryption key?
@@ -121,76 +126,23 @@
 		public function __construct()
 		{
 			$this->db =& $GLOBALS['phpgw']->db;
-			$this->sessionid = phpgw::get_var('sessionid');
-			$this->kp3       = phpgw::get_var('kp3');
+			$this->sessionid = phpgw::get_var(session_name());
 			
-			/* Create the crypto object */
-			$GLOBALS['phpgw']->crypto = createObject('phpgwapi.crypto');
 			$this->phpgw_set_cookiedomain();
-			
-			// verfiy and if necessary create and save our config settings
-			//
-			$save_rep = False;
-			if (!isset($GLOBALS['phpgw_info']['server']['max_access_log_age']))
-			{
-				$GLOBALS['phpgw_info']['server']['max_access_log_age'] = 90;// default 90 days
-				$save_rep = True;
-			}
-			if (!isset($GLOBALS['phpgw_info']['server']['block_time']))
-			{
-				$GLOBALS['phpgw_info']['server']['block_time'] = 30;// default 30min
-				$save_rep = True;
-			}
-			if (!isset($GLOBALS['phpgw_info']['server']['num_unsuccessful_id']))
-			{
-				$GLOBALS['phpgw_info']['server']['num_unsuccessful_id'] = 3;// default 3 trys per id
-				$save_rep = True;
-			}
-			if (!isset($GLOBALS['phpgw_info']['server']['num_unsuccessful_ip']))
-			{
-				// default same as for id
-				$GLOBALS['phpgw_info']['server']['num_unsuccessful_ip']  
-					= $GLOBALS['phpgw_info']['server']['num_unsuccessful_id'];
-				$save_rep = True;
-			}
-			if (!isset($GLOBALS['phpgw_info']['server']['install_id']))
-			{
-				$GLOBALS['phpgw_info']['server']['install_id']
-					= md5($GLOBALS['phpgw']->common->randomstring(15));
-				$save_rep = True;
-			}
-			if (!isset($GLOBALS['phpgw_info']['server']['sessions_timeout']))
-			{
-				$GLOBALS['phpgw_info']['server']['sessions_timeout'] = 14400;
-				$save_rep = True;
-			}
-			if (!isset($GLOBALS['phpgw_info']['server']['sessions_app_timeout']))
-			{
-				$GLOBALS['phpgw_info']['server']['sessions_app_timeout'] = 86400;
-				$save_rep = True;
-			}
-			if (!isset($GLOBALS['phpgw_info']['server']['max_history']))
-			{
-				$GLOBALS['phpgw_info']['server']['max_history'] = 20;
-				$save_rep = True;
-			}
-			if ($save_rep)
-			{
-				$config = createObject('phpgwapi.config','phpgwapi');
-				$config->read_repository();
-				$config->value('max_access_log_age',$GLOBALS['phpgw_info']['server']['max_access_log_age']);
-				$config->value('block_time',$GLOBALS['phpgw_info']['server']['block_time']);
-				$config->value('num_unsuccessful_id',$GLOBALS['phpgw_info']['server']['num_unsuccessful_id']);
-				$config->value('num_unsuccessful_ip',$GLOBALS['phpgw_info']['server']['num_unsuccessful_ip']);
-				$config->value('install_id',$GLOBALS['phpgw_info']['server']['install_id']);
-				$config->value('sessions_timeout',$GLOBALS['phpgw_info']['server']['sessions_timeout']);
-				$config->value('sessions_app_timeout',$GLOBALS['phpgw_info']['server']['sessions_app_timeout']);
-				$config->value('max_history', $GLOBALS['phpgw_info']['server']['max_history'] );
-				$config->save_repository();
-				unset($config);
-			}
-		}
 
+			$use_cookies = true;
+			if ( !isset($GLOBALS['phpgw_info']['server']['usecookies'])
+				|| !$GLOBALS['phpgw_info']['server']['usecookies'] )
+			{
+				$use_cookies = false;
+			}
+			//respect the config option for cookies
+			ini_set('session.use_cookies', $use_cookies);
+
+			//don't rewrite URL, as we have to do it in link - why? cos it is buggy otherwise
+			ini_set('url_rewriter.tags', '');
+		}
+	
 		/**
 		* Introspection for XML-RPC/SOAP
 		* Diabled - why??
@@ -198,7 +150,7 @@
 		* @param string $_type tpye of introspection being sought
 		* @return array available methods and args
 		*/
-		function DONTlist_methods($_type)
+		public function list_methods($_type)
 		{
 			if (is_array($_type))
 			{
@@ -235,31 +187,26 @@
 		* Check to see if a session is still current and valid
 		*
 		* @param string $sessionid session id to be verfied
-		* @param string $kp3 ?? to be verified
 		* @return bool is the session valid?
 		*/
 		
-		function verify($sessionid='',$kp3='')
+		public function verify($sessionid='')
 		{
 			if(empty($sessionid) || !$sessionid)
 			{
-				$sessionid = phpgw::get_var('sessionid');
-				$kp3       = phpgw::get_var('kp3');
+				$sessionid = phpgw::get_var(session_name());
 			}
 			
 			$this->sessionid = $sessionid;
-			$this->kp3       = $kp3;
 			
 			$session = $this->read_session($sessionid);
-			//echo "<pre>session::verify(id='$sessionid'): \n" . print_r($session, true) . "</pre>\n";
 			
 			if ( !isset($session['session_dla']) || $session['session_dla'] <= (time() - $GLOBALS['phpgw_info']['server']['sessions_timeout']))
-                        {
+			{
 				if(isset($session['session_dla']))
 				{
 					$this->cd_reason = 10;
 				}
-				$this->clean_sessions();
 				return False;
 			}
 
@@ -278,8 +225,6 @@
 			}
 			unset($lid_data);
 
-			$GLOBALS['phpgw_info']['user']['kp3'] = $this->kp3;
-
 			$this->update_dla();
 			$this->account_id = $GLOBALS['phpgw']->accounts->name2id($this->account_lid);
 			if (!$this->account_id)
@@ -291,7 +236,7 @@
 			$GLOBALS['phpgw_info']['user']['account_id'] = $this->account_id;
 
 			/* init the crypto object before appsession call below */
-			$this->key = md5($this->kp3 . $this->sessionid . $GLOBALS['phpgw_info']['server']['encryptkey']);
+			$this->key = md5($this->sessionid . $GLOBALS['phpgw_info']['server']['encryptkey']);
 			$this->iv  = $GLOBALS['phpgw_info']['server']['mcrypt_iv'];
 			$GLOBALS['phpgw']->crypto->init(array($this->key,$this->iv));
 
@@ -347,6 +292,31 @@
 				return False;
 			}
 
+			// verify the user agent in an attempt to stop session hijacking
+			if ( $_SESSION['phpgw_session']['user_agent'] != md5(phpgw::get_var('USER_AGENT', 'string', 'SERVER')) )
+			{
+				if(is_object($GLOBALS['phpgw']->log))
+				{
+					// This needs some better wording
+					$GLOBALS['phpgw']->log->message(array(
+						'text' => 'W-VerifySession, User agent hash %1 doesn\'t match user agent hash %2 in session',
+						'p1'   => $_SESSION['phpgw_session']['user_agent'],
+						'p2'   => md5(phpgw::get_var('USER_AGENT', 'string', 'SERVER')),
+						'line' => __LINE__,
+						'file' => __FILE__
+					));
+					$GLOBALS['phpgw']->log->commit();
+				}
+				if(is_object($GLOBALS['phpgw']->crypto))
+				{
+					$GLOBALS['phpgw']->crypto->cleanup();
+					unset($GLOBALS['phpgw']->crypto);
+				}
+				// generic session can't be verified error - don't be specific about the problem
+				$this->cd_reason = 2; 
+				return False;
+			}
+
 			$check_ip = isset($GLOBALS['phpgw_info']['server']['sessions_checkip']) ? !!$GLOBALS['phpgw_info']['server']['sessions_checkip'] : false;
 			if ($check_ip)
 			{
@@ -356,7 +326,7 @@
 					{
 						// This needs some better wording
 						$GLOBALS['phpgw']->log->message(array(
-							'text' => 'W-VerifySession, IP %1 doesn\'t match IP %2 in session table',
+							'text' => 'W-VerifySession, IP %1 doesn\'t match IP %2 in session',
 							'p1'   => $this->getuser_ip(),
 							'p2'   => $GLOBALS['phpgw_info']['user']['session_ip'],
 							'line' => __LINE__,
@@ -397,12 +367,9 @@
 					unset($GLOBALS['phpgw']->crypto);
 				}
 				//echo 'DEBUG: Sessions: account_id is empty!<br>'."\n";
-				return False;
+				return false;
 			}
-			else
-			{
-				return True;
-			}
+			return true;
 		}
 
 		/**
@@ -414,7 +381,7 @@
 		*
 		* @return string ip address
 		*/
-		function getuser_ip()
+		public function getuser_ip()
 		{
 			return phpgw::get_var('HTTP_X_FORWARDED_FOR', 'ip', 'SERVER',
 				phpgw::get_var('REMOTE_ADDR', 'ip', 'SERVER'));
@@ -425,22 +392,20 @@
 		*
 		* @return string domain
 		*/
-		function phpgw_set_cookiedomain()
+		public function phpgw_set_cookiedomain()
 		{
 			$dom = phpgw::get_var('HTTP_HOST', 'string', 'SERVER');
-			if (preg_match("/^(.*):(.*)$/",$dom,$arr))
+			if ( preg_match('/^(.*):(.*)$/', $dom, $arr) )
 			{
 				$dom = $arr[1];
 			}
 			$parts = explode('.',$dom);
 			if (count($parts) > 2)
 			{
-				if (!ereg('[0-9]+',$parts[1]))
+				if ( !preg_match('[0-9]+', $parts[1]) )
 				{
-					for($i=1;$i<count($parts);$i++)
-					{
-						$this->cookie_domain .= '.'.$parts[$i];
-					}
+					unset($parts[0]);
+					$this->cookie_domain = implode('.', $parts);
 				}
 				else
 				{
@@ -451,9 +416,9 @@
 			{
 				$this->cookie_domain = '';
 			}
-			print_debug('COOKIE_DOMAIN',$this->cookie_domain,'api');
+			print_debug('COOKIE_DOMAIN',$this->cookie_domain, 'api');
 			
-			$this->set_cookie_params($this->cookie_domain);	// for php4 sessions necessary
+			$this->set_cookie_params($this->cookie_domain);
 		}
 
 		/**
@@ -463,13 +428,32 @@
 		* @param string $cookievalue value to be used, if unset cookie is cleared (optional)
 		* @param int $cookietime when cookie should expire, 0 for session only (optional)
 		*/
-		function phpgw_setcookie($cookiename,$cookievalue='',$cookietime=0)
+		public function phpgw_setcookie($cookiename, $cookievalue='', $cookietime=0)
 		{
 			if (!$this->cookie_domain)
 			{
 				$this->phpgw_set_cookiedomain();
 			}
-			setcookie($cookiename,$cookievalue,$cookietime,'/',$this->cookie_domain); 
+			$secure = phpgw::get_var('HTTPS', 'bool', 'SERVER');
+			setcookie($cookiename, $cookievalue, $cookietime, '/', $this->cookie_domain, $secure, true); 
+		}
+
+		/**
+		 * Set the user's login details
+		 *
+		 * @param string $login the user login to parse
+		 */
+		protected function _set_login($login)
+		{
+			$m = array();
+			if ( preg_match('/(.*)@(.*)/', $login, $m) )
+			{
+				$this->account_lid = $m[1];
+				$this->account_domain = $m[2];
+			}
+
+			$this->account_lid = $login;
+			$this->account_domain = $GLOBALS['phpgw_info']['server']['default_domain'];
 		}
 
 		/**
@@ -479,8 +463,10 @@
 		* @param string $passwd user password
 		* @return string session id
 		*/
-		function create($login,$passwd = '', $skip_auth = false)
+		public function create($login, $passwd = '', $skip_auth = false)
 		{
+			phpgw::import_class('phpgwapi.globally_denied');
+			
 			if (is_array($login))
 			{
 				$this->login       = $login['login'];
@@ -493,36 +479,34 @@
 				$this->passwd      = $passwd;
 			}
 
-			$this->clean_sessions();
 			$now = time();
 
-			if (strstr($login,'@') === False)
-			{
-				$this->account_domain = $GLOBALS['phpgw_info']['server']['default_domain'];
-				$this->account_lid = $login;
-			}
-			else
-			{
-				list($this->account_lid, $this->account_domain) = explode('@', $login);
-			}
+			$lid_parts = $this->_set_login($login);
 
 			//echo "<p>session::create(login='$login'): lid='$this->account_lid', domain='$this->account_domain'</p>\n";
 			$user_ip = $this->getuser_ip();
 
-			$blocked = false;
-			if ( ($blocked = $this->login_blocked($login, $this->getuser_ip())) // too many unsuccessful attempts
-				|| ( isset($GLOBALS['phpgw_info']['server']['global_denied_users'][$this->account_lid]) && $GLOBALS['phpgw_info']['server']['global_denied_users'][$this->account_lid] )
+			if ( $this->login_blocked($login, $this->getuser_ip() ) ) 
+			{
+				$this->reason = 'blocked, too many attempts';
+				$this->cd_reason = 99;
+				$this->log_access($this->reason,$login,$user_ip,0);	// log unsuccessfull login
+				return False;
+			}
+
+			if ( phpgwapi_globally_denied::user($this->account_lid) 
 				|| ( !$skip_auth && !$GLOBALS['phpgw']->auth->authenticate($this->account_lid, $this->passwd) )
 				|| $GLOBALS['phpgw']->accounts->get_type($this->account_lid) == 'g')
 			{
-				$this->reason = $blocked ? 'blocked, too many attempts' : 'bad login or password';
-				$this->cd_reason = $blocked ? 99 : 5;
+				$this->reason = 'bad login or password';
+				$this->cd_reason = 5;
 				
 				$this->log_access($this->reason,$login,$user_ip,0);	// log unsuccessfull login
 				return False;
 			}
 
-			if ((!$GLOBALS['phpgw']->accounts->exists($this->account_lid)) && $GLOBALS['phpgw_info']['server']['auto_create_acct'] == True)
+			if ( !$GLOBALS['phpgw']->accounts->exists($this->account_lid) 
+					&& $GLOBALS['phpgw_info']['server']['auto_create_acct'] )
 			{
 				$this->account_id = $GLOBALS['phpgw']->accounts->auto_add($this->account_lid, $passwd);
 			}
@@ -532,15 +516,14 @@
 			}
 			$GLOBALS['phpgw_info']['user']['account_id'] = $this->account_id;
 			$GLOBALS['phpgw']->accounts->set_account($this->account_id);
-			$this->sessionid = md5($GLOBALS['phpgw']->common->randomstring(15));
-			$this->kp3       = md5($GLOBALS['phpgw']->common->randomstring(15));
+			session_start();
+			$this->sessionid = session_id(); //md5($GLOBALS['phpgw']->common->randomstring(15));
 
 			if ( isset($GLOBALS['phpgw_info']['server']['usecookies'])
 				&& $GLOBALS['phpgw_info']['server']['usecookies'] )
 			{
-				$this->phpgw_setcookie('sessionid',$this->sessionid);
-				$this->phpgw_setcookie('kp3',$this->kp3);
-				$this->phpgw_setcookie('domain',$this->account_domain);
+				//$this->phpgw_setcookie(session_name(), $this->sessionid);
+				$this->phpgw_setcookie('domain', $this->account_domain);
 			}
 
 			if ( ( isset($GLOBALS['phpgw_info']['server']['usecookies']) && $GLOBALS['phpgw_info']['server']['usecookies'] )
@@ -552,12 +535,12 @@
 			unset($GLOBALS['phpgw_info']['server']['default_domain']); /* we kill this for security reasons */
 
 			/* init the crypto object */
-			$this->key = md5($this->kp3 . $this->sessionid . $GLOBALS['phpgw_info']['server']['encryptkey']);
+			$this->key = md5($this->sessionid . $GLOBALS['phpgw_info']['server']['encryptkey']);
 			$this->iv  = $GLOBALS['phpgw_info']['server']['mcrypt_iv'];
 			$GLOBALS['phpgw']->crypto->init(array($this->key,$this->iv));
 
 			$this->read_repositories();
-			if ($this->user['expires'] != -1 && $this->user['expires'] < time())
+			if ( $this->user['expires'] != -1 && $this->user['expires'] < time() )
 			{
 				if(is_object($GLOBALS['phpgw']->log))
 				{
@@ -570,14 +553,14 @@
 					$GLOBALS['phpgw']->log->commit();
 				}
 
-				$this->cd_reason=2;
+				$this->cd_reason = 2;
 				return False;
 			}
 
 			$GLOBALS['phpgw_info']['user']  = $this->user;
 			$GLOBALS['phpgw_info']['hooks'] = $this->hooks;
 
-			$this->appsession('password','phpgwapi',base64_encode($this->passwd));
+			phpgwapi_cache::session_set('phpgwapi', 'password', base64_encode($this->passwd));
 			if ($GLOBALS['phpgw']->acl->check('anonymous',1,'phpgwapi'))
 			{
 				$session_flags = 'A';
@@ -589,12 +572,10 @@
 
 			$GLOBALS['phpgw']->db->transaction_begin();
 			$this->register_session($login,$user_ip,$now,$session_flags);
-			$this->log_access($this->sessionid,$login,$user_ip,$this->account_id);
+			$this->log_access($this->sessionid, $login, $user_ip, $this->account_id);
 			$GLOBALS['phpgw']->auth->update_lastlogin($this->account_id,$user_ip);
 			$GLOBALS['phpgw']->db->transaction_commit();
 			
-			//if (!$this->sessionid) echo "<p>session::create(login='$login') = '$this->sessionid': lid='$this->account_lid', domain='$this->account_domain'</p>\n";
-
 			return $this->sessionid;
 		}
 
@@ -606,20 +587,20 @@
 		* @param string $user_ip ip to log
 		* @param int $account_id numerical account_id
 		*/
-		function log_access($sessionid,$login='',$user_ip='',$account_id='')
+		public function log_access($sessionid,$login='',$user_ip='',$account_id='')
 		{
 			$now = time();
 
 			if ($login != '')
 			{
 				$GLOBALS['phpgw']->db->query('INSERT INTO phpgw_access_log(sessionid,loginid,ip,li,lo,account_id)'.
-					" VALUES ('" . $sessionid . "','" . $this->db->db_addslashes($login). "','" . 
+					" VALUES ('" . $this->db->db_addslashes($sessionid) . "','" . $this->db->db_addslashes($login). "','" . 
 					$this->db->db_addslashes($user_ip) . "',$now,0,".intval($account_id).")",__LINE__,__FILE__);
 			}
 			else
 			{
 				$GLOBALS['phpgw']->db->query("UPDATE phpgw_access_log SET lo=" . $now . " WHERE sessionid='" .
-					$sessionid . "'",__LINE__,__FILE__);
+					$this->db->db_addslashes($sessionid) . "'",__LINE__,__FILE__);
 			}
 			if ($GLOBALS['phpgw_info']['server']['max_access_log_age'])
 			{
@@ -636,7 +617,7 @@
 		* @param string $ip the ip that made the request
 		* @returns bool login blocked?
 		*/
-		function login_blocked($login, $ip)
+		public function login_blocked($login, $ip)
 		{
 			$blocked = false;
 			$block_time = time() - $GLOBALS['phpgw_info']['server']['block_time'] * 60;
@@ -686,17 +667,17 @@
 		}
 
 		/**
-		* Verfy a peer server access request
+		* Verfy a peer server access request -DISABLED needs to be audited!
 		* 
 		* @param string $sessionid session id to verfiy
-		* @param string $kp3 ??
 		* @return bool verfied?
 		*/
-		function verify_server($sessionid, $kp3)
+		public function verify_server($sessionid)
 		{
+			return false;
+
 			$GLOBALS['phpgw']->interserver = createObject('phpgwapi.interserver');
 			$this->sessionid = $sessionid;
-			$this->kp3       = $kp3;
 
 			$session = $this->read_session($this->sessionid);
 			$this->session_flags = $session['session_flags'];
@@ -708,7 +689,6 @@
 				$this->account_domain = $GLOBALS['phpgw_info']['server']['default_domain'];
 			}
 
-			$GLOBALS['phpgw_info']['user']['kp3'] = $this->kp3;
 			$phpgw_info_flags = $GLOBALS['phpgw_info']['flags'];
 
 			$GLOBALS['phpgw_info']['flags'] = $phpgw_info_flags;
@@ -727,7 +707,7 @@
 			$this->read_repositories($use_cache);
 
 			/* init the crypto object before appsession call below */
-			$this->key = md5($this->kp3 . $this->sessionid . $GLOBALS['phpgw_info']['server']['encryptkey']);
+			$this->key = md5($this->sessionid . $GLOBALS['phpgw_info']['server']['encryptkey']);
 			$this->iv  = $GLOBALS['phpgw_info']['server']['mcrypt_iv'];
 			$GLOBALS['phpgw']->crypto->init(array($this->key,$this->iv));
 
@@ -824,12 +804,11 @@
 		* @param string $password password
 		* @return bool login ok?
 		*/
-		function create_server($login,$passwd)
+		public function create_server($login,$passwd)
 		{
 			$GLOBALS['phpgw']->interserver = createObject('phpgwapi.interserver');
 			$this->login  = $login;
 			$this->passwd = $passwd;
-			$this->clean_sessions();
 			$login_array = explode('@', $login);
 			$this->account_lid = $login_array[0];
 			$now = time();
@@ -862,10 +841,9 @@
 			$GLOBALS['phpgw']->interserver->serverid = $this->account_id;
 
 			$this->sessionid = md5($GLOBALS['phpgw']->common->randomstring(10));
-			$this->kp3       = md5($GLOBALS['phpgw']->common->randomstring(15));
 
 			/* re-init the crypto object */
-			$this->key = md5($this->kp3 . $this->sessionid . $GLOBALS['phpgw_info']['server']['encryptkey']);
+			$this->key = md5($this->sessionid . $GLOBALS['phpgw_info']['server']['encryptkey']);
 			$this->iv  = $GLOBALS['phpgw_info']['server']['mcrypt_iv'];
 			$GLOBALS['phpgw']->crypto->init(array($this->key,$this->iv));
 
@@ -887,7 +865,7 @@
 			$GLOBALS['phpgw']->auth->update_lastlogin($this->account_id,$user_ip);
 			$GLOBALS['phpgw']->db->transaction_commit();
 
-			return array($this->sessionid,$this->kp3);
+			return array($this->sessionid);
 		}
 
 		/**
@@ -897,7 +875,7 @@
 		/**
 		* Someone needs to document me
 		*/
-		function read_repositories($cached = true, $write_cache = true)
+		protected function read_repositories($cached = true, $write_cache = true)
 		{
 			$GLOBALS['phpgw']->acl->set_account_id($this->account_id);
 			$GLOBALS['phpgw']->accounts->set_account($this->account_id);
@@ -906,7 +884,7 @@
 			
 			if($cached)
 			{
-				$this->user = $this->appsession('phpgw_info_cache','phpgwapi');
+				$this->user = phpgwapi_cache::session_get('phpgwapi', 'phpgw_info');
 				if(!empty($this->user))
 				{
 					$GLOBALS['phpgw']->preferences->data = $this->user['preferences'];
@@ -930,40 +908,37 @@
 		/**
 		* Clears the appsession cache, should be called before saving preferences or other information which will invalidate the cache
 		*/
-		public function clear_phpgw_info_cache()
+		protected function clear_phpgw_info_cache()
 		{
-			$this->appsession('phpgw_info_cache', 'phpgwapi', null);
+			phpgwapi_cache::session_clear('phpgwapi', 'phpgw_info');
 		}
 
 		/**
-		* Someone needs to document me
-		*/
-		function setup_cache($write_cache=True)
+		 * Someone needs to document me
+		 */
+		protected function setup_cache($write_cache=True)
 		{
-			$this->user                = $GLOBALS['phpgw']->accounts->read_repository();
-			$this->user['acl']         = $GLOBALS['phpgw']->acl->read_repository();
+			$this->user                = $GLOBALS['phpgw']->accounts->read_repository()->toArray();
+			$this->user['acl']         = $GLOBALS['phpgw']->acl->read();
 			$this->user['preferences'] = $GLOBALS['phpgw']->preferences->read_repository();
 			$this->user['apps']        = $GLOBALS['phpgw']->applications->read_repository();
-			//@reset($this->data['user']['apps']);
 
 			$this->user['domain']      = $this->account_domain;
 			$this->user['sessionid']   = $this->sessionid;
-			$this->user['kp3']         = $this->kp3;
 			$this->user['session_ip']  = $this->getuser_ip();
 			$this->user['session_lid'] = $this->account_lid.'@'.$this->account_domain;
 			$this->user['account_id']  = $this->account_id;
 			$this->user['account_lid'] = $this->account_lid;
 			$this->user['userid']      = $this->account_lid;
 			$this->user['passwd']      = $this->passwd;
-			
-			$use_cache = isset($GLOBALS['phpgw_info']['server']['cache_phpgw_info']) ? !!$GLOBALS['phpgw_info']['server']['cache_phpgw_info'] : false;
-			if($use_cache && $write_cache)
+
+			//echo '<pre>' . print_r($this->user, true) . '</pre>';
+
+			if ( $write_cache )
 			{
-				$this->delete_cache();
-				$this->appsession('phpgw_info_cache','phpgwapi',$this->user);
+				phpgwapi_cache::session_set('phpgwapi', 'phpgw_info', $this->data);
 			}
 		}
-
 		
 		/**
 		* This looks to be useless
@@ -972,19 +947,15 @@
 		* from appsession as the saved user info is really in ['user'] rather than the root of
 		* the structure, which is what this class likes.
 		*/
-		function save_repositories()
+		protected function save_repositories()
 		{
 			$phpgw_info_temp = $GLOBALS['phpgw_info'];
-			$phpgw_info_temp['user']['kp3'] = '';
 			$phpgw_info_temp['flags'] = array();
 			
-			if ($GLOBALS['phpgw_info']['server']['cache_phpgw_info'])
-			{
-				$this->appsession('phpgw_info_cache','phpgwapi',$phpgw_info_temp);
-			}
+			phpgwapi_cache::session_set('phpgwapi', 'phpgw_info', $phpgw_info_temp);
 		}
 	
-		function restore()
+		public function restore()
 		{
 			$sessionData = $this->appsession('sessiondata');
 			
@@ -1003,7 +974,7 @@
 		/**
 		* Save the current values of all registered variables
 		*/
-		function save()
+		public function save()
 		{
 			if (is_array($this->variableNames))
 			{
@@ -1025,7 +996,7 @@
 		*
 		* @param string $_variableName name of variable to be registered
 		*/
-		function register($_variableName)
+		public function register($_variableName)
 		{
 			$this->variableNames[$_variableName]='registered';
 			#print 'registered '.$_variableName.'<br>';
@@ -1036,7 +1007,7 @@
 		*
 		* @param string $_variableName name of variable to deregister
 		*/
-		function unregister($_variableName)
+		public function unregister($_variableName)
 		{
 			$this->variableNames[$_variableName]='unregistered';
 			#print 'unregistered '.$_variableName.'<br>';
@@ -1048,7 +1019,7 @@
 		* @param string $_variableName name of variable to check
 		* @return bool was the variable found?
 		*/
-		function is_registered($_variableName)
+		public function is_registered($_variableName)
 		{
 			if ($this->variableNames[$_variableName] == 'registered')
 			{
@@ -1066,7 +1037,7 @@
 		* @author skwashd
 		* @return string current history id
 		*/
-		function generate_click_history()
+		public function generate_click_history()
 		{
 			if(!isset($this->history_id))
 			{
@@ -1089,7 +1060,7 @@
 		* @param bool $diplay_error when implemented will use the generic error handling code
 		* @return True if called previously, else False - call ok
 		*/
-		function is_repost($display_error = False)
+		public function is_repost($display_error = False)
 		{
 			$history = $this->appsession($location = 'history', $appname = 'phpgwapi');
 			if(isset($history[$_GET['click_history']]))
@@ -1119,7 +1090,7 @@
 		* @param bool $redirect is this for a redirect link ?
 		* @return string generated url
 		*/
-		function link($url, $extravars = array(), $redirect=false)
+		public function link($url, $extravars = array(), $redirect=false)
 		{
 			$term = '&amp;'; //W3C Compliant in markup
 			if ( $redirect )
@@ -1190,7 +1161,6 @@
 				unset($new_extravars);
 			}
 			
-			
 			/* if using frames we make sure there is a framepart */
 			if(defined('PHPGW_USE_FRAMES') && PHPGW_USE_FRAMES)
 			{
@@ -1216,125 +1186,136 @@
 				$extravars['XDEBUG_PROFILE'] = 1;
 			}
 
-			if (is_array($extravars)) //we have something to append
+			if ( is_array($extravars) ) //we have something to append
 			{
-				return "{$url}?" . http_build_query($extravars, null, $term);
+				$url .= '?' . http_build_query($extravars, null, $term);
 			}
 			return $url;
 		}
-		
-		/**
-		* The remaining methods are abstract - as they are unique for each session handler
-		*/
 
-		
-		/**
-		* Load user's session information
-		*
-		* @param string $sessionid user's session id string
-		* @return mixed the session data
-		*/
-		abstract public function read_session($sessionid);
-
-		/**
-		* Remove stale sessions out of the database
-		*/
-		abstract public function clean_sessions();
-
-		/**
-		* Set paramaters for cookies
-		*
-		* @param string $domain domain name to use in cookie
-		*/
-		abstract public function set_cookie_params($domain);
-
-		/**
-		* Create a new session
-		*
-		* @param string $login user login
-		* @param string $user_ip users ip address
-		* @param int $now time now as a unix timestamp
-		* @param string $session_flags A = Anonymous, N = Normal
-		*/
-		abstract public function register_session($login,$user_ip,$now,$session_flags);
-
-		/**
-		* Update the date last active info for the session, so the login does not expire
-		*
-		* @return bool did it suceed?
-		*/
-		abstract public function update_dla();
-
-		/**
-		* Terminate a session
-		*
-		* @param string $sessionid the id of the session to be terminated
-		* @param string $kp3 - NOT SURE
-		* @return bool did it suceed?
-		*/
-		abstract public function destroy($sessionid, $kp3);
-
-		/**
-		* Functions for appsession data and session cache
-		*/
-
-		/**
-		* Delete all data from the session cache for a user
-		* 
-		* @param int $accountid user account id, defaults to current user (optional)
-		*/
-		abstract public function delete_cache($accountid='');
-
-		/**
-		* Stores or retrieves information from the sessions cache
-		* 
-		* @param string $location identifier for data
-		* @param string $appname name of app which is responsbile for the data
-		* @param mixed $data data to be stored, if left blank data is retreived (optional)
-		* @return mixed data from cache, only returned if $data arg is not used 
-		*/
-		abstract public function appsession($location = 'default', $appname = '', $data = '##NOTHING##');
-
-		/**
-		* Get list of normal / non-anonymous sessions
-		* Note: The data from the session-files get cached in the 
-		*       app_session phpgwapi/php4_session_cache
-		*
-		* @author ralfbecker
-		* @param int $start session to start at
-		* @param string $order field to sort on
-		* @param string $sort sort order
-		* @param bool $all_no_sort list all with out sorting (optional) default False
-		* @return array info for all current sessions  
-		*/
-		abstract public function list_sessions($start, $order, $sort, $all_no_sort = false);
-		
-		/**
-		* Get the number of normal / non-anonymous sessions
-		* 
-		* @author ralfbecker
-		* @return int number of sessions
-		*/
-		abstract public function total();
-
-		/**
-		* Get the list of session variables used for non cookie based sessions
-		*
-		* @return array the variables which are specific to this session type
-		*/
-		abstract protected function _get_session_vars();
-
-		/**
-		* Stores or retrieves information from persistant cache
-		* 
-		* @param string $location identifier for data
-		* @param string $appname name of app which is responsbile for the data
-		* @param mixed $data data to be stored, if left blank data is retreived (optional), if set to ##DELETE## the record is deleted
-		* @return mixed data from cache, only returned if $data arg is not used 
-		*/
-		function phpgw_cache($location = 'default', $appname = '', $data = '##NOTHING##')
+		public function read_session($sessionid)
 		{
-			if (! $appname)
+			if($sessionid)
+			{
+				session_id($sessionid);
+			}
+			session_start();
+			if ( isset($_SESSION['phpgw_session']) && is_array($_SESSION['phpgw_session']) ) 
+			{
+				return $_SESSION['phpgw_session'];
+			}
+			return array();
+		}
+
+		/**
+		* Set the paramaters for the cookie
+		*
+		* @param string $domain the domain for the cookie
+		*/
+		public function set_cookie_params($domain)
+		{
+			$secure = phpgw::get_var('HTTPS', 'bool', 'SERVER');
+			session_set_cookie_params(0, '/', $domain, $secure, true);
+		}
+
+		public function register_session($login,$user_ip,$now,$session_flags)
+		{
+			if ( $this->sessionid )
+			{
+				session_id($this->sessionid);
+			}
+
+			if ( !strlen(session_id() ) )
+			{
+				session_start();
+			}
+
+			$_SESSION['phpgw_session'] = array
+			(
+				'session_id'		=> $this->sessionid,
+				'session_lid'		=> $login,
+				'session_ip'		=> $user_ip,
+				'session_logintime'	=> $now,
+				'session_dla'		=> $now,
+				'session_action'	=> $_SERVER['PHP_SELF'],
+				'session_flags'		=> $session_flags,
+				'user_agent'		=> md5(phpgw::get_var('USER_AGENT', 'string', 'SERVER')),
+				// we need the install-id to differ between serveral installs shareing one tmp-dir
+				'session_install_id'	=> $GLOBALS['phpgw_info']['server']['install_id']
+			);
+		}
+
+		// This will update the DateLastActive column, so the login does not expire
+		public function update_dla()
+		{
+			session_id($this->sessionid);
+			session_start();
+
+			if ( isset($GLOBALS['phpgw_info']['menuaction']) )
+			{
+				$action = $GLOBALS['phpgw_info']['menuaction'];
+			}
+			else
+			{
+				$action = $_SERVER['PHP_SELF'];
+			}
+
+			$_SESSION['phpgw_session']['session_dla'] = time();
+			$_SESSION['phpgw_session']['session_action'] = $action;
+		
+			return True;
+		}
+
+		public function destroy($sessionid)
+		{
+			if ( !$sessionid )
+			{
+				return False;
+			}
+
+			$this->log_access($this->sessionid);	// log logout-time
+
+			// Only do the following, if where working with the current user
+			if ($sessionid == $GLOBALS['phpgw_info']['user']['sessionid'])
+			{
+				session_unset();
+				session_destroy();
+				$this->phpgw_setcookie(session_name());
+			}
+			else
+			{
+				$sessions = $this->list_sessions(0,'','',True);
+				
+				if (isset($sessions[$sessionid]))
+				{
+					//echo "<p>session_php4::destroy($session_id): unlink('".$sessions[$sessionid]['php_session_file'].")</p>\n";
+					unlink($sessions[$sessionid]['php_session_file']);
+				}
+			}
+
+			return True;
+		}
+
+		/*************************************************************************\
+		* Functions for appsession data and session cache                         *
+		\*************************************************************************/
+		public function delete_cache($accountid='')
+		{
+			phpgwapi_cache::session_clear('phpgwapi', 'phpgw_info');
+		}
+
+		/**
+		 * Cache data for the user's current session
+		 *
+		 * @deprecated
+		 * @param string $id the unique id within the module for the data
+		 * @param string $module the module name that the data is stored for
+		 * @param mixed $data the data to store - use ##NOTHING## to retreive data - dodgy oldhack
+		 * @return mixed the data - even if storing
+		 */
+		public function appsession($id = 'default', $appname = '', $data = '##NOTHING##')
+		{
+			if ( !$appname )
 			{
 				$appname = $GLOBALS['phpgw_info']['flags']['currentapp'];
 			}
@@ -1342,69 +1323,144 @@
 			/* This allows the user to put '' as the value. */
 			if ($data == '##NOTHING##')
 			{
-				$query = "SELECT content FROM phpgw_app_sessions"
-					. " WHERE sessionid = 'persistent_cache'"
-					. " AND loginid='-1'"
-					. " AND app = '".$appname."'"
-					. " AND location='".$location."'";
-	
-				$GLOBALS['phpgw']->db->query($query,__LINE__,__FILE__);
-				$GLOBALS['phpgw']->db->next_record();
+				return phpgwapi_cache::session_get($appname, $id);
+			}
+			phpgwapi_cache::session_set($appname, $id, $data);
+			return $data;
+		}
 
-				$data = $GLOBALS['phpgw']->db->f('content');
-				if($data)
+		public function session_sort($a,$b)
+		{
+			$sign = strcasecmp($GLOBALS['phpgw']->session->sort_order,'ASC') ? 1 : -1;
+
+			return strcasecmp($a[$GLOBALS['phpgw']->session->sort_by],
+							  $b[$GLOBALS['phpgw']->session->sort_by]) * $sign;
+		}
+		
+		/**
+		 * get list of normal / non-anonymous sessions
+		*
+		 * The data form the session-files get cached in the app_session phpgwapi/php4_session_cache
+		 * @author ralfbecker
+		 */
+		public function list_sessions($start,$order,$sort,$all_no_sort = False)
+		{
+			// FIXME this now only works with php sessions :(
+			return array();
+
+			//echo "<p>session_php4::list_sessions($start,'$order','$sort',$all)</p>\n";
+			$session_cache = $this->appsession('php4_session_cache','phpgwapi');
+
+			$values = array();
+			$maxmatchs = $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
+			$dir = @opendir($path = ini_get('session.save_path'));
+			while ($dir && $file = readdir($dir))
+			{
+				if (substr($file,0,5) != 'sess_')
 				{
-					if(function_exists('gzcompress'))
+					continue;
+				}
+				if (isset($session_cache[$file]))	// use copy from cache
+				{
+					$session = $session_cache[$file];
+
+					if ($session['session_flags'] == 'A' || !$session['session_id'] ||
+						$session['session_install_id'] != $GLOBALS['phpgw_info']['server']['install_id'])
 					{
-						$data =  gzuncompress(base64_decode($data));
+						continue;	// no anonymous sessions or other domains or installations
+					}
+					if (!$all_no_sort)	// we need the up-to-date data --> unset and reread it
+					{
+						unset($session_cache[$file]);
+					}
+				}
+				if ( !isset($session_cache[$file]) && is_readable($file) )	// not in cache, read and cache it
+				{
+					$fd = fopen ($path . '/' . $file,'r');
+					$fs = filesize ($path . '/' . $file);
+					
+					// handle filesize 0 because php recently warns if fread is used on 0byte files 
+					if ($fs > 0)
+					{
+						$session = fread ($fd, filesize ($path . '/' . $file));
 					}
 					else
 					{
-						$data = stripslashes($data);
+						$session = '';
 					}
+					fclose ($fd);
 
-					return unserialize($data);
+					if (substr($session,0,14) != 'phpgw_session|')
+					{
+						continue;
+					}
+					$session = unserialize(substr($session,14));
+					unset($session['phpgw_app_sessions']);	// not needed, saves memory
+					$session_cache[$file] = $session;
 				}
-			}
-			else if($data == '##DELETE##')
-			{
-				$GLOBALS['phpgw']->db->query("DELETE FROM phpgw_app_sessions"
-					. " WHERE sessionid = 'persistent_cache'"
-					. " AND loginid = '-1'"
-					. " AND app = '".$appname."'"
-					. " AND location = '".$location."'",__LINE__,__FILE__);			
-			}
-			else
-			{
-				$GLOBALS['phpgw']->db->query("SELECT content FROM phpgw_app_sessions"
-					. " WHERE sessionid = 'persistent_cache'"
-					. " AND loginid = '-1'"
-					. " AND app = '".$appname."'"
-					. " AND location = '".$location."'",__LINE__,__FILE__);
 
-				if(function_exists('gzcompress'))
+				if ($session['session_flags'] == 'A' || !$session['session_id'] ||
+					$session['session_install_id'] != $GLOBALS['phpgw_info']['server']['install_id'])
 				{
-					$data =  base64_encode(gzcompress(serialize($data), 9));
+					continue;	// no anonymous sessions or other domains or installations
 				}
-				else
-				{
-					$data = $GLOBALS['phpgw']->db->db_addslashes(serialize($data));
-				}
-				if ($GLOBALS['phpgw']->db->num_rows()==0)
-				{
-					$GLOBALS['phpgw']->db->query("INSERT INTO phpgw_app_sessions (sessionid,loginid,app,location,content,session_dla) "
-						. "VALUES ('persistent_cache','-1','".$appname
-						. "','".$location."','".$data."','" . time() . "')",__LINE__,__FILE__);
-				}
-				else
-				{
-					$GLOBALS['phpgw']->db->query("UPDATE phpgw_app_sessions SET content='".$data."'"
-						. " WHERE sessionid = 'persistent_cache'"
-						. " AND loginid = '-1'"
-						. " AND app = '".$appname."'"
-						. " AND location = '".$location."'",__LINE__,__FILE__);
-				}
-				return $data;
+				//echo "file='$file'=<pre>"; print_r($session); echo "</pre>"; 
+				
+				$session['php_session_file'] = $path . '/' . $file;
+				$values[$session['session_id']] = $session;
 			}
+			@closedir($dir);
+			
+			if (!$all_no_sort)
+			{
+				$GLOBALS['phpgw']->session->sort_by = $sort;
+				$GLOBALS['phpgw']->session->sort_order = $order;
+			
+				uasort($values,array($this,'session_sort'));
+				
+				$i = 0;
+				$start = intval($start);
+				foreach($values as $id => $data)
+				{
+					if ($i < $start || $i > $start+$maxmatchs)
+					{
+						unset($values[$id]);
+					}
+					++$i;
+				}
+				reset($values);
+			}
+			$this->appsession('php4_session_cache','phpgwapi',$session_cache);
+
+			return $values;
+		}
+		
+		/**
+		 * get number of normal / non-anonymous sessions
+		*
+		 * @author ralfbecker
+		 */
+		public function total()
+		{
+			return count($this->list_sessions(0,'','',True));
+		}
+
+		/**
+		* Get the list of session variables used for non cookie based sessions
+		*
+		* @return array the variables which are specific to this session type
+		*/
+		protected function _get_session_vars()
+		{
+			return array
+			(
+				session_name()	=> $this->sessionid,
+				'domain'		=> $this->account_domain
+			);
+		}
+
+		public function regenerate_id()
+		{
+			return session_regenerate_id(true);
 		}
 	}

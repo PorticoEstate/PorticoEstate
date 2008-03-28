@@ -27,6 +27,8 @@
 	* @version $Id$
 	*/
 
+	// FIXME this should be changed significantly - it duplicates a lot of login code, most of which has been improved
+
 	$phpgw_info = array();
 	
 	$GLOBALS['phpgw_info']['flags'] = array
@@ -299,16 +301,6 @@
 		$extra_vars['cd'] = 'yes';
 		
 		$GLOBALS['phpgw']->hooks->process('login');
-
-		if( isset($GLOBALS['phpgw_info']['server']['shm_lang']) 
-			&& $GLOBALS['phpgw_info']['server']['shm_lang'] 
-			&& function_exists('sem_get'))
-		{
-			if(!$GLOBALS['phpgw']->shm->get_value('lang_en'))
-			{
-				$GLOBALS['phpgw']->translation->populate_shm();
-			}
-		}
 
 		$GLOBALS['phpgw']->redirect_link('/home.php', $extra_vars);
 		exit;

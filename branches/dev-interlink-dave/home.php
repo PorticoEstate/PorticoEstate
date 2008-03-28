@@ -13,22 +13,16 @@
 	/**
 	* @global array $phpgw_info
 	*/
-	$phpgw_info = array();
+	$GLOBALS['phpgw_info'] = array();
 
-	$GLOBALS['sessionid'] = $_REQUEST['sessionid'];
-	if (!isset($GLOBALS['sessionid']) || !$GLOBALS['sessionid'])
-	{
-		Header('Location: login.php');
-		exit;
-	}
-
-	$GLOBALS['phpgw_info']['flags'] = array(
-		'noheader'                => True,
-		'nonavbar'                => True,
+	$GLOBALS['phpgw_info']['flags'] = array
+	(
+		'noheader'                => true,
+		'nonavbar'                => true,
 		'currentapp'              => 'home',
-		'enable_network_class'    => True,
-		'enable_contacts_class'   => True,
-		'enable_nextmatchs_class' => True
+		'enable_network_class'    => true,
+		'enable_contacts_class'   => true,
+		'enable_nextmatchs_class' => true
 	);
 	
 	/**
