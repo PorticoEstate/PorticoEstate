@@ -54,7 +54,7 @@
 		/**
 		* Populate shared memory with the available translation strings - disabled for setup
 		*/
-		public function populate_shm()
+		public function populate_cache()
 		{}
 		
 		/**
@@ -132,15 +132,10 @@
 			{
 				if(function_exists('sem_get'))
 				{
-					if ( !isset($GLOBALS['phpgw']->shm) || !is_object($GLOBALS['phpgw']->shm) )
-					{
-						$GLOBALS['phpgw']->shm = CreateObject('phpgwapi.shm');
-					}
-
 					$GLOBALS['phpgw_setup']->db->query("SELECT lang FROM phpgw_lang WHERE app_name='$appname'",__LINE__,__FILE__);
 					while ($GLOBALS['phpgw_setup']->db->next_record())
 					{
-						$GLOBALS['phpgw']->shm->delete_key('lang_' . $GLOBALS['phpgw_setup']->db->f('lang'));
+						$GLOBALS['phpgw']->cache->system_clear('phpgwapi', 'lang_' . $GLOBALS['phpgw_setup']->db->f('lang'));
 					}
 				}
 

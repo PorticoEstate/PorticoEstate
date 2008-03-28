@@ -12,11 +12,7 @@
 
 /* Please see class.base_nusoap.inc.php for more information */
 
-if (@!$GLOBALS['phpgw_info']['flags']['included_classes']['phpgwapi_soap_transport_http'])
-{
-	require_once(PHPGW_API_INC."/class.phpgwapi_soap_transport_http.inc.php");
-	$GLOBALS['phpgw_info']['flags']['included_classes']['phpgwapi_soap_transport_http'] = True;
-}
+	phpgw::import_class('phpgwapi.phpgwapi_soap_transport_http');
 /***************************************************************************
 * TOTALY DEPRECATED , DON'T USE
 */

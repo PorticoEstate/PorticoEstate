@@ -12,15 +12,15 @@
 	/**
 	* Include XMLRPC Response class
 	*/
-	include_once(PHPGW_API_INC . '/class.xmlrpcresp.inc.php');
+	require_once PHPGW_API_INC . '/class.xmlrpcresp.inc.php';
 	/**
 	* Include XMLRPC values class
 	*/
-	include_once(PHPGW_API_INC . '/class.xmlrpcval.inc.php');
+	require_once PHPGW_API_INC . '/class.xmlrpcval.inc.php';
 	/**
 	* Include XMLRPC message class
 	*/
-	include_once(PHPGW_API_INC . '/class.xmlrpcmsg.inc.php');
+	require_once PHPGW_API_INC . '/class.xmlrpcmsg.inc.php';
 
 // Redistribution and use in source and binary forms, with or without
 // modification, are permitted provided that the following conditions

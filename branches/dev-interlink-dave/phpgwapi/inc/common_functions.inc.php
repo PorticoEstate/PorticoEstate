@@ -13,13 +13,14 @@
 
 	/**
 	* Require the phpgw class
+	* @internal the phpgw class is a special case
 	*/
-	require_once(PHPGW_INCLUDE_ROOT . '/phpgwapi/inc/class.phpgw.inc.php');
+	require_once PHPGW_INCLUDE_ROOT . '/phpgwapi/inc/class.phpgw.inc.php';
 
 	/**
 	* Include object factory base class once		
 	*/
-	include_once(PHPGW_SERVER_ROOT.'/phpgwapi/inc/class.object_factory.inc.php');
+	phpgw::import_class('phpgwapi.object_factory');
 	
 	/*
 	 * Direct functions which are not part of the API classes because they are required to be available at the lowest level.
@@ -199,7 +200,7 @@
 	{
 		if ( is_file(PHPGW_INCLUDE_ROOT . "/{$module}/{$includes_path}class.{$class_name}.inc.php") )
 		{
-			return include_once(PHPGW_INCLUDE_ROOT . "/{$module}/{$includes_path}class.{$class_name}.inc.php");
+			return require_once(PHPGW_INCLUDE_ROOT . "/{$module}/{$includes_path}class.{$class_name}.inc.php");
 		}
 		//trigger_error(lang('Unable to locate file: %1', "{$module}/{$includes_path}class.{$class_name}.inc.php"), E_USER_ERROR);
 		return false;
@@ -215,7 +216,7 @@
 	 * @param $classname name of class
 	 * @param $p1-$p16 class parameters (all optional)
 	 */
-	function CreateObject($class,
+	function createObject($class,
 			$p1='_UNDEF_',$p2='_UNDEF_',$p3='_UNDEF_',$p4='_UNDEF_',
 			$p5='_UNDEF_',$p6='_UNDEF_',$p7='_UNDEF_',$p8='_UNDEF_',
 			$p9='_UNDEF_',$p10='_UNDEF_',$p11='_UNDEF_',$p12='_UNDEF_',
@@ -230,7 +231,7 @@
 		if (!include_class($appname, $of_classname))
 		{
 			// fail to load module object factory -> use old CreateObject in base class
-			$of_class = new object_factory();
+			$of_class = new phpgwapi_object_factory();
 		}
 		else
 		{
@@ -238,7 +239,7 @@
 		}
 
 		// because $of_classname::CreateObject() is not allowed, we use call_user_func
-		return $of_class->createObject($class, $p1,$p2,$p3,$p4,$p5,$p6,$p7,$p8,$p9,$p10,$p11,$p12,$p13,$p14,$p15,$p16);
+		return $of_class->createObject($class, $p1, $p2, $p3, $p4, $p5, $p6, $p7, $p8, $p9, $p10, $p11, $p12, $p13, $p14, $p15, $p16);
 	}
 
 	/**

@@ -19,7 +19,7 @@
 			. '</p></body></html>');
 	}
 
-	include_once(PHPGW_API_INC.'/common_functions.inc.php');
+	require_once PHPGW_API_INC.'/common_functions.inc.php';
 
 	/**
 	* Translate a string to a user's prefer language - convience method
@@ -76,63 +76,35 @@
 			return '';
 		}
 
-		$trace = array();
-		$trace[0] = array();
-
-		if ( isset($bt[0]['function']) )
-		{
-			$trace[0]['function'] = $bt[0]['function'];
-		}
-
-		if ( isset($bt[0]['args']) && is_array($bt[0]['args']) && count($bt[0]['args']) )
-		{
-			$trace[0]['args'] = array($bt[0]['args'][0], $bt[0]['args'][1], $bt[0]['args'][2],  $bt[0]['args'][3], '***error_handler_content_data***');
-		}
-
-		if ( isset($bt[0]['file']) )
-		{
-			$trace[0]['file'] = $bt[0]['file'];
-		}
-
-		if ( isset($bt[0]['line']) )
-		{
-			$trace[0]['line'] = $bt[0]['line'];
-		}
+		// we don't need the call to the error handler
 		unset($bt[0]);
+		$bt = array_reverse($bt);
 
-		foreach ( $bt as $num => $entry )
+		$trace = '';
+		$i = 0;
+		foreach ( $bt as $entry )
 		{
-			if ( isset($entry['file']) )
-			{
-				$trace[$num]['file'] = '/path/to/phpgroupware' . substr($entry['file'], strlen(PHPGW_SERVER_ROOT) );
-			}
-
-			if ( isset($entry['line']) )
-			{
-				$trace[$num]['line'] = $entry['line'];
-			}
-
-			if ( isset($entry['line']) )
-			{
-				$trace[$num]['line'] = $entry['line'];
-			}
+			$line = "#{$i}\t";
 
 			if ( isset($entry['type']) && isset($entry['class']) )
 			{
-				$trace[$num]['function'] = "{$entry['class']}{$entry['type']}{$entry['function']}";
+				$line .= "{$entry['class']}{$entry['type']}{$entry['function']}";
 			}
-			else
+			else 
 			{
-				$trace[$num]['function'] = $entry['function'];
+				$line .= $entry['function'];
 			}
+
+			$line .= '(';
 
 			if ( isset($entry['args']) && is_array($entry['args']) && count($entry['args']) )
 			{
+				$args_count = count($entry['args']);
 				foreach ( $entry['args'] as $anum => $arg )
 				{
-					if ( is_array($arg) )
+					if ( is_array($arg) || is_object($arg) )
 					{
-						$trace[$num]['args'][$anum] = print_r($arg, true);
+						$line .= 'serialized_value = ' . serialize($arg);
 						continue;
 					}
 
@@ -143,19 +115,40 @@
 						|| (isset($GLOBALS['phpgw_info']['user']['passwd']) && $arg == $GLOBALS['phpgw_info']['user']['passwd'] ) )
 					)
 					{
-						$trace[$num]['args'][$anum] = '***PASSWORD***';
+						$line .= '***REMOVED_FOR_SECURITY***';
 					}
 					else
 					{
-						$trace[$num]['args'][$anum] = $arg;
+						$line .= $arg;
+					}
+
+					if ( ($anum + 1) != $args_count )
+					{
+						$line .= ', ';
 					}
 				}
 			}
+
+			$file = 'unknown';
+			if ( isset($entry['file']) )
+			{
+				$file = '/path/to/phpgroupware' . substr($entry['file'], strlen(PHPGW_SERVER_ROOT) );
+			}
+
+			if ( isset($entry['line']) )
+			{
+				$file .= ":{$entry['line']}";
+			}
 			else
 			{
-				$trace[$num]['args'] = 'NONE';
+				$file .= ':?';
 			}
+
+			$line .= ") [$file]";
+			$trace .= "$line\n";
+			++$i;
 		}
+
 		return print_r($trace, true);
 	}
 
@@ -235,6 +228,31 @@
 		}
 	}
 	set_error_handler('phpgw_handle_error');
+
+	/**
+	 * Last resort exception handler
+	 *
+	 * @param object $e the Exception that was thrown
+	 */
+	function phpgw_handle_exception(Exception $e)
+	{
+		$msg = $e->getMessage();
+		$help = lang('Please contact your administrator for assistance');
+		$trace = $e->getTraceAsString();
+		echo <<<HTML
+			<h1>Uncaught Exception: {$msg}</h1>
+			<p>{$help}</p>
+			<h2>Backtrace:</h2>
+			<pre>
+{$trace}
+			</pre>
+
+HTML;
+		// all exceptions that make it this far are fatal
+		exit;
+	}
+
+	set_exception_handler('phpgw_handle_exception');
 
 	function clean_vars($vars, $safe_redirect = True)
 	{
@@ -371,6 +389,7 @@
 		$GLOBALS['phpgw_info']['server']['cache_phpgw_info'] = stripslashes($GLOBALS['phpgw']->db->f('config_value'));
 	}
 
+	/*
 	$cache_query = "SELECT content from phpgw_app_sessions WHERE"
 		." sessionid = '0' AND loginid = '0' and app = 'phpgwapi' AND location = 'config'";
 
@@ -386,12 +405,15 @@
 	}
 	else
 	{
+	*/
 		$c = createObject('phpgwapi.config','phpgwapi');
 		$c->read_repository();
 		foreach ($c->config_data as $k => $v)
 		{
 			$GLOBALS['phpgw_info']['server'][$k] = $v;
 		}
+
+/*
 
 
 		if(isset($GLOBALS['phpgw_info']['server']['cache_phpgw_info'])
@@ -404,6 +426,7 @@
 	}
 	unset($cache_query);
 	unset($server_info_cache);
+*/
 
 	// In the case we use a fall back (mode Half remote_user)
 	if(isset($GLOBALS['phpgw_remote_user']) && !empty($GLOBALS['phpgw_remote_user']))

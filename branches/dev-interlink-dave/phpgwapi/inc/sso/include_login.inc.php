@@ -28,7 +28,7 @@
 		/**
 		* Include phpgroupware header
 		*/
-		include_once('../../../header.inc.php');
+		require_once '../../../header.inc.php';
 		if(!is_object($GLOBALS['phpgw']->session))
 		{
 			$GLOBALS['phpgw']->session = createObject('phpgwapi.sessions');
@@ -439,4 +439,3 @@
 			$this->tmpl->pfp('loginout','login_form');
 		}
 	}
-?>
