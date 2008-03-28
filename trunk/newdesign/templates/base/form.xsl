@@ -41,7 +41,109 @@
 
 <xsl:template match="phpgw">
 	<xsl:apply-templates />
-</xsl:template>
+	<div id="autocomplete">
+		<select id="assign-to-select" name="values[assignedto]" class="forms" onMouseover="window.status='!Select the user the selection belongs to. To do not use a user select NO USER'; return true;" onMouseout="window.status='';return true;"><option value="">!Select user</option>
+			<option value="97">Abrahamsen Alf Steinar</option>
+			<option value="94">Andreassen Kristin</option>
+
+			<option value="98">Eidissen Oystein</option>
+			<option value="14">Etternavn14 Fornavn14</option>
+			<option value="17">Etternavn17 Fornavn17</option>
+			<option value="19">Etternavn19 Fornavn19</option>
+			<option value="21">Etternavn21 Fornavn21</option>
+			<option value="30">Etternavn30 Fornavn30</option>
+			<option value="31">Etternavn31 Fornavn31</option>
+			<option value="32">Etternavn32 Fornavn32</option>
+			<option value="33">Etternavn33 Fornavn33</option>
+
+			<option value="35">Etternavn35 Fornavn35</option>
+			<option value="38">Etternavn38 Fornavn38</option>
+			<option value="39">Etternavn39 Fornavn39</option>
+			<option value="40">Etternavn40 Fornavn40</option>
+			<option value="41">Etternavn41 Fornavn41</option>
+			<option value="42">Etternavn42 Fornavn42</option>
+			<option value="43">Etternavn43 Fornavn43</option>
+			<option value="44">Etternavn44 Fornavn44</option>
+			<option value="45">Etternavn45 Fornavn45</option>
+
+			<option value="48">Etternavn48 Fornavn48</option>
+			<option value="49">Etternavn49 Fornavn49</option>
+			<option value="50">Etternavn50 Fornavn50</option>
+			<option value="52">Etternavn52 Fornavn52</option>
+			<option value="68">Etternavn68 Fornavn68</option>
+			<option value="8">Etternavn8 Fornavn8</option>
+			<option value="92">Jenssen Svein Inge</option>
+			<option value="84">Johansen Bengt</option>
+			<option value="91">Langvand Hans</option>
+
+			<option value="96">Lynum Kari</option>
+			<option value="82">Nes Sigurd</option>
+			<option value="83">Næss Bjørn</option>
+			<option value="101">Smevik Arnstein</option>
+			<option value="93">Svendsen Oddmund</option>
+			<option value="12">Tegnander jan</option>
+			<option value="85">Themte Roy</option>
+			<option value="90">Thomassen Knut H</option>
+			<option value="6">User Admin</option>
+
+			<option value="81">demo demo</option>
+		</select>
+	</div>
+
+	<script>
+		try
+		{
+			// Get select-element to create autocomplete from and hide it
+			var select = document.getElementById('assign-to-select');
+			select.style.display = "none";
+
+			// Insert HTML for autocomplete dropdown
+			var autocomplete_node = YAHOO.util.Dom.insertAfter( document.createElement('div'), select );
+			var input_node = autocomplete_node.appendChild(document.createElement('input'));
+			var drop_down_node = autocomplete_node.appendChild( document.createElement('div') );
+			input_node.style.width = drop_down_node.style.width = "15em";
+
+			// Create datasource from options inside select-element
+			var data_array = new Array();
+			for( var i=0; i &lt; select.options.length; i++ )
+			{
+				if( select.options[i].value )
+				{
+					data_array[i] = [ select.options[i].text, select.options[i].value ];
+				}
+			}
+			var data_source = new YAHOO.widget.DS_JSArray( data_array );
+
+			// Create autocomplete dropdown
+			var autocomplete = new YAHOO.widget.AutoComplete(input_node, drop_down_node, data_source, {
+				useShadow: true,
+				typeAhead: true,
+				minQueryLength: 0,
+				forceSelection: true,
+				maxResultsDisplayed: 20
+			});
+			// Show list when input gets focus
+
+			autocomplete.textboxFocusEvent.subscribe(function(){
+				var input_value = input_node.value;
+
+				if(input_value.length === 0) {
+					var oSelf = this;
+					setTimeout(function(){oSelf.sendQuery(input_value);},0);
+				}
+			});
+
+			// Set value of select-element when selected item in autocomplete changes
+			autocomplete.itemSelectEvent.subscribe(function(oSelf , elItem , oData){
+				select.value = elItem[1];
+			});
+		}
+		catch (e)
+		{
+			alert(e);
+		}
+	</script>
+	</xsl:template>
 
 
 <xsl:template name="form" match="form">
