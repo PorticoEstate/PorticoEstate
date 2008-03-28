@@ -49,10 +49,10 @@
 		<xsl:variable name="sort_status" select="sort_status"/>
 		<xsl:variable name="lang_sort_statustext" select="lang_sort_statustext"/>
 		<tr class="th">
-			<td width="20%"><a href="{$sort_lid}" onMouseover="window.status='{$lang_sort_statustext}';return true;" onMouseout="window.status='';return true;" class="th_text"><xsl:value-of select="lang_lid"/></a></td>
-			<td width="20%"><a href="{$sort_firstname}" onMouseover="window.status='{$lang_sort_statustext}';return true;" onMouseout="window.status='';return true;" class="th_text"><xsl:value-of select="lang_firstname"/></a></td>
-			<td width="20%"><a href="{$sort_lastname}" onMouseover="window.status='{$lang_sort_statustext}';return true;" onMouseout="window.status='';return true;" class="th_text"><xsl:value-of select="lang_lastname"/></a></td>
-			<td width="6%" align="center"><a href="{$sort_status}" onMouseover="window.status='{$lang_sort_statustext}';return true;" onMouseout="window.status='';return true;" class="th_text"><xsl:value-of select="lang_status"/></a></td>
+			<td width="20%"><a href="{$sort_lid}" class="th_text"><xsl:value-of select="lang_lid"/></a></td>
+			<td width="20%"><a href="{$sort_firstname}" class="th_text"><xsl:value-of select="lang_firstname"/></a></td>
+			<td width="20%"><a href="{$sort_lastname}" class="th_text"><xsl:value-of select="lang_lastname"/></a></td>
+			<td width="6%" align="center"><a href="{$sort_status}" class="th_text"><xsl:value-of select="lang_status"/></a></td>
 			<td width="8%" align="center"><xsl:value-of select="lang_view"/></td>
 			<td width="8%" align="center"><xsl:value-of select="lang_edit"/></td>
 			<td width="8%" align="center"><xsl:value-of select="lang_delete"/></td>
@@ -85,15 +85,15 @@
 			<td align="center"><xsl:value-of select="status"/></td>
 			<td align="center">
 				<xsl:variable name="view_url" select="view_url"/>
-				<a href="{$view_url}" onMouseover="window.status='{$lang_view_statustext}';return true;" onMouseout="window.status='';return true;" class="th_text"><xsl:value-of select="lang_view"/></a>
+				<a href="{$view_url}" class="th_text"><xsl:value-of select="lang_view"/></a>
 			</td>
 			<td align="center">
 				<xsl:variable name="edit_url" select="edit_url"/>
-				<a href="{$edit_url}" onMouseover="window.status='{$lang_edit_statustext}';return true;" onMouseout="window.status='';return true;" class="th_text"><xsl:value-of select="lang_edit"/></a>
+				<a href="{$edit_url}" class="th_text"><xsl:value-of select="lang_edit"/></a>
 			</td>
 			<td align="center">
 				<xsl:variable name="delete_url" select="delete_url"/>
-				<a href="{$delete_url}" onMouseover="window.status='{$lang_delete_statustext}';return true;" onMouseout="window.status='';return true;" class="th_text"><xsl:value-of select="lang_delete"/></a>
+				<a href="{$delete_url}" class="th_text"><xsl:value-of select="lang_delete"/></a>
 			</td>
 		</tr>
 	</xsl:template>
@@ -108,13 +108,7 @@
 				<xsl:choose>
 					<xsl:when test="add_access = 'yes'">
 					<xsl:variable name="lang_add"><xsl:value-of select="lang_add"/></xsl:variable>
-						<input type="submit" name="add" value="{$lang_add}" onMouseout="window.status='';return true;">
-							<xsl:attribute name="onMouseover">
-								<xsl:text>window.status='</xsl:text>
-								<xsl:value-of select="lang_add_statustext"/>
-								<xsl:text>'; return true;</xsl:text>
-							</xsl:attribute>
-						</input>
+						<input type="submit" name="add" value="{$lang_add}" />
 					</xsl:when>
 				</xsl:choose>
 			</td>
@@ -198,36 +192,32 @@
 						<xsl:variable name="account_passwd_2" select="account_passwd_2"/>
 						<tr class="row_on">
 							<td width="25%"><xsl:value-of select="lang_lid"/></td>
-							<td width="25%"><input type="text" name="values[account_lid]" value="{$account_lid}"/></td>
+							<td width="25%"><input type="text" name="values[lid]" value="{$account_lid}"/></td>
 							<td width="25%"><xsl:value-of select="lang_account_active"/></td>
 							<td width="25%">
 								<xsl:choose>
 									<xsl:when test="account_status = 'yes'">
-										<input type="checkbox" name="values[account_status]" value="A" checked="checked"/>
+										<input type="checkbox" name="values[status]" value="1" checked="checked"/>
 									</xsl:when>
 									<xsl:otherwise>
-										<input type="checkbox" name="values[account_status]" value="A"/>
+										<input type="checkbox" name="values[status]" value="1"/>
 									</xsl:otherwise>
 								</xsl:choose>
 							</td>
 						</tr>
 						<tr class="row_off">
 							<td><xsl:value-of select="lang_firstname"/></td>
-							<td><input type="text" name="values[account_firstname]" value="{$account_firstname}"/></td>
+							<td><input type="text" name="values[firstname]" value="{$account_firstname}"/></td>
 							<td><xsl:value-of select="lang_lastname"/></td>
-							<td><input type="text" name="values[account_lastname]" value="{$account_lastname}"/></td>
+							<td><input type="text" name="values[lastname]" value="{$account_lastname}"/></td>
 						</tr>
-
-<!-- BEGIN form_passwordinfo -->
 
 						<tr class="row_on">
 							<td><xsl:value-of select="lang_password"/></td>
-							<td><input type="password" name="values[account_passwd]" value="{$account_passwd}"/></td>
+							<td><input type="password" name="values[passwd]" value="{$account_passwd}"/></td>
 							<td><xsl:value-of select="lang_reenter_password"/></td>
-							<td><input type="password" name="values[account_passwd_2]" value="{$account_passwd_2}"/></td>
+							<td><input type="password" name="values[passwd_2]" value="{$account_passwd_2}"/></td>
 						</tr>
-
-<!-- END form_passwordinfo -->
 
 						<tr class="row_off">
 							<td><xsl:value-of select="lang_contact"/></td>

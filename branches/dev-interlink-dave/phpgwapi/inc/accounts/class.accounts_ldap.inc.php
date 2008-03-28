@@ -10,8 +10,8 @@
 	* @copyright Copyright (C) 2003 Lars Kneschke, Bettina Gille
 	* @copyright Portions Copyright (C) 2000-2008 Free Software Foundation, Inc. http://www.fsf.org/
 	* @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License
-	* @package phpgwapi
-	* @subpackage accounts
+	* @package phpgroupware
+	* @subpackage phpgwapi
 	* @version $Id$
 	*/
 
@@ -33,11 +33,11 @@
 	/**
 	* View and manipulate account records using LDAP
 	*
-	* @package phpgwapi
-	* @subpackage accounts
-	* @ignore
+	* @package phpgroupware
+	* @subpackage phpgwapi
+	* @category accounts
 	*/
-	class accounts_ldap extends accounts_
+	class phpgwapi_accounts_ldap extends phpgwapi_accounts_
 	{
 		/**
 		* @var resource $ds ldap connection resource
@@ -907,7 +907,7 @@
 			}
 			if ( isset($account_info['account_passwd']) )
 			{
-				$entry['userpassword'] = $GLOBALS['phpgw']->common->encrypt_password($account_info['account_passwd']);
+				$entry['userpassword'] = $GLOBALS['phpgw']->auth->generate_hash($account_info['account_passwd']);
 			}
 
 			// Fields are must for LDAP - so we write them in any case
@@ -1475,11 +1475,11 @@
 		* @param integer $groupID Group id
 		* @return boolean True on success otherwise false
 		*/
-		function add_account2group($account_id, $groupID)
+		function add_account2group($account_id, $group_id)
 		{
 			if ($account_id && $groupID)
 			{
-				$groupEntry = $this->group_exists($groupID);
+				$groupEntry = $this->group_exists($group_id);
 				$memberUID = $this->id2name($account_id);
 				if ($groupEntry && $memberUID)
 				{
@@ -1500,11 +1500,11 @@
 		* @param integer $groupID Group id
 		* @return boolean True on success otherwise false
 		*/
-		function delete_account4Group($account_id, $groupID)
+		function delete_account4Group($account_id, $group_id)
 		{
-			if ($account_id && $groupID)
+			if ($account_id && $group_id)
 			{
-				$groupEntry = $this->group_exists($groupID);
+				$groupEntry = $this->group_exists($group_id);
 				$memberUID = $this->id2name($account_id);
 				if ($groupEntry && $memberUID)
 				{

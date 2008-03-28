@@ -1,15 +1,29 @@
 <?php
-	/**************************************************************************\
-	* phpGroupWare - account administration                                    *
-	* http://www.phpgroupware.org                                              *
-	* Written by coreteam <phpgroupware-developers@gnu.org>                    *
-	* -----------------------------------------------------                    *
-	*  This program is free software; you can redistribute it and/or modify it *
-	*  under the terms of the GNU General Public License as published by the   *
-	*  Free Software Foundation; either version 2 of the License, or (at your  *
-	*  option) any later version.                                              *
-	\**************************************************************************/
-	/* $Id$ */
+	/**
+	* Shared functions for other account repository managers and loader
+	* @author coreteam <phpgroupware-developers@gnu.org>
+	* @author Dave Hall <skwashd@phpgroupware.org>
+	* @copyright Copyright (C) 2000-2008 Free Software Foundation, Inc. http://www.fsf.org/
+	* @license http://www.gnu.org/licenses/ GNU General Public License v3 or later
+	* @package admin
+	* @subpackage accounts
+	* @version $Id$
+	*/
+
+	/*
+	   This program is free software: you can redistribute it and/or modify
+	   it under the terms of the GNU General Public License as published by
+	   the Free Software Foundation, either version 3 of the License, or
+	   (at your option) any later version.
+
+	   This program is distributed in the hope that it will be useful,
+	   but WITHOUT ANY WARRANTY; without even the implied warranty of
+	   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	   GNU General Public License for more details.
+
+	   You should have received a copy of the GNU General Public License
+	   along with this program.  If not, see <http://www.gnu.org/licenses/>.
+	 */
 
 	class admin_uiaccounts
 	{
@@ -46,7 +60,7 @@
 			(
 				'menuaction' => "admin.uiaccounts.{$action}_{$type}",
 				'account_id' => $account_id
-			);
+			));
 
 			return "<a href=\"{$url}\">{$lang_action}</a>";
 		}
@@ -109,13 +123,13 @@
 			{
 				$group_data[] = Array
 				(
-					'edit_url'					=> ($this->bo->check_rights('edit')?$GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.uiaccounts.edit_group', 'account_id'=> $account['account_id'])):''),
-					'lang_edit'					=> ($this->bo->check_rights('edit')?lang('edit'):''),
-					'lang_edit_statustext'		=> ($this->bo->check_rights('edit')?lang('edit this group'):''),
-					'group_name'				=> (!$account['account_lid']?'':$account['account_lid']),
-					'delete_url'				=> ($this->bo->check_rights('delete')?$GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.uiaccounts.delete_group', 'account_id' =>$account['account_id'])):''),
-					'lang_delete_statustext'	=> ($this->bo->check_rights('delete')?lang('delete this group'):''),
-					'lang_delete'				=> ($this->bo->check_rights('delete')?lang('delete'):'')
+					'edit_url'					=> $this->bo->check_rights('edit') ? $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.uiaccounts.edit_group', 'account_id' => $account->id)) : '',
+					'lang_edit'					=> $this->bo->check_rights('edit') ? lang('edit') : '',
+					'lang_edit_statustext'		=> $this->bo->check_rights('edit') ? lang('edit this group') : '',
+					'group_name'				=> !$account->lid ? '' : $account->lid,
+					'delete_url'				=> $this->bo->check_rights('delete') ? $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.uiaccounts.delete_group', 'account_id' => $account->id)) : '',
+					'lang_delete_statustext'	=> $this->bo->check_rights('delete') ? lang('delete this group') : '',
+					'lang_delete'				=> $this->bo->check_rights('delete') ? lang('delete') : ''
 				);
 			}
 
@@ -339,10 +353,6 @@
 				}
 			}
 			
-			if ( !isset($GLOBALS['phpgw']->js) || !is_object($GLOBALS['phpgw']->js) )
-			{
-				$GLOBALS['phpgw']->js = createObject('phpgwapi.javascript');
-			}
 			$js =& $GLOBALS['phpgw']->js;
 			$js->validate_file('base', 'groups', 'admin');
 
@@ -381,7 +391,7 @@
 				'tts'			=> array('top_grant' => true),
 			);
 
-			$GLOBALS['phpgw']->acl->verify_location($apps_with_acl);
+			$GLOBALS['phpgw']->locations->verify($apps_with_acl);
 			
 			$accounts =& $GLOBALS['phpgw']->accounts;
 			$account_list = $accounts->get_list('accounts');
@@ -389,28 +399,18 @@
 			
 			$members = array();
 			$user_list = array();
-			$i = 0;
-			foreach ( $account_list as $key => $entry )
+			foreach ( $account_list as $id => $user )
 			{
-				$user_list[$i] = array
+				$user_list[$id] = array
 				(
-					'account_id'   => $entry['account_id'],
-					'account_name' => $GLOBALS['phpgw']->common->display_fullname($entry['account_lid'],
-																				  $entry['account_firstname'],
-																				  $entry['account_lastname']
-																				 ),
- 					'selected'		=> in_array((int) $entry['account_id'], $group_members) ? ' selected' : ''
+					'account_id'	=> $id,
+					'account_name'	=> (string) $user,
+ 					'selected'		=> in_array((int) $id, $group_members) ? ' selected' : ''
 				);
-				if ( in_array( (int)$entry['account_id'], $group_members) )
+				if ( in_array($id, $group_members) )
 				{
-					$user_list[$i]['selected'] = 'selected';
-					$members[$entry['account_id']] = $user_list[$i]['account_name'];
+					$members[$entry['account_id']] = (string) $user;
 				}
-				else
-				{
-					$user_list[$i]['selected'] = '';
-				} 
-				++$i;
 			}
 
 			$manager_list = array();

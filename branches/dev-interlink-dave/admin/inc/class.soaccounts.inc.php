@@ -1,40 +1,32 @@
 <?php
-	/**************************************************************************\
-	* phpGroupWare - account administration                                    *
-	* http://www.phpgroupware.org                                              *
-	* --------------------------------------------                             *
-	*  This program is free software; you can redistribute it and/or modify it *
-	*  under the terms of the GNU General Public License as published by the   *
-	*  Free Software Foundation; either version 2 of the License, or (at your  *
-	*  option) any later version.                                              *
-	\**************************************************************************/
+	/**
+	* Shared functions for other account repository managers and loader
+	* @author coreteam <phpgroupware-developers@gnu.org>
+	* @author Dave Hall <skwashd@phpgroupware.org>
+	* @copyright Copyright (C) 2000-2008 Free Software Foundation, Inc. http://www.fsf.org/
+	* @license http://www.gnu.org/licenses/ GNU General Public License v3 or later
+	* @package admin
+	* @subpackage accounts
+	* @version $Id$
+	*/
 
-	/* $Id$ */
+	/*
+	   This program is free software: you can redistribute it and/or modify
+	   it under the terms of the GNU General Public License as published by
+	   the Free Software Foundation, either version 3 of the License, or
+	   (at your option) any later version.
 
-	class soaccounts
+	   This program is distributed in the hope that it will be useful,
+	   but WITHOUT ANY WARRANTY; without even the implied warranty of
+	   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	   GNU General Public License for more details.
+
+	   You should have received a copy of the GNU General Public License
+	   along with this program.  If not, see <http://www.gnu.org/licenses/>.
+	 */
+
+	class admin_soaccounts
 	{
-		function soaccounts()
-		{
-		}
-
-		function delete_user($id)
-		{
-			if((int)$id)
-			{
-				return $GLOBALS['phpgw']->accounts->delete($id);
-			}
-			else
-			{
-				return false;
-			}
-		}
-		
-		function update_user($userData)
-		{
-			$GLOBALS['phpgw']->accounts->update_data($userData);
-			$GLOBALS['phpgw']->accounts->save_repository();
-		}
-		
 		function add_user($userData)
 		{
 			$GLOBALS['phpgw']->db->lock
@@ -140,4 +132,3 @@
 			return $userData['account_id'];
 		}
 	}
-?>
