@@ -12,7 +12,7 @@
 	/**
 	* @see phpmailer
 	*/
-	include_once(PHPGW_INCLUDE_ROOT . '/phpgwapi/inc/phpmailer/class.phpmailer.php');
+	require_once PHPGW_INCLUDE_ROOT . '/phpgwapi/inc/phpmailer/class.phpmailer.php';
 	
 	/**
 	* Send email messages via SMTP
@@ -21,17 +21,16 @@
 	* @package phpgwapi
 	* @subpackage communication
 	*/
-	class mailer_smtp extends PHPMailer
+	class phpgwapi_mailer_smtp extends PHPMailer
 	{
 		/**
 		* Constructor
 		*/
-		function mailer_smtp()
+		public function __construct()
 		{
 			$this->IsSMTP(true);
 			$this->Host = $GLOBALS['phpgw_info']['server']['smtp_server'];
-			$this->Port = isset($GLOBALS['phpgw_info']['server']['smtp_port'])?$GLOBALS['phpgw_info']['server']['smtp_port']:'';
+			$this->Port = isset($GLOBALS['phpgw_info']['server']['smtp_port']) ? $GLOBALS['phpgw_info']['server']['smtp_port'] : 25;
 			$this->Version = 'custom - phpGroupWare 1.73';
 		}
 	}
-?>
