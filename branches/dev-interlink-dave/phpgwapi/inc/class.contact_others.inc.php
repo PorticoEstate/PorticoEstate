@@ -12,11 +12,12 @@
 	/**
 	* Use SQL criteria
 	*/
-	include_once(PHPGW_API_INC . '/class.sql_criteria.inc.php');
+	phpgw::import_class('phpgwapi.sql_criteria');
+
 	/**
 	* Use SQL entity
 	*/
-	include_once(PHPGW_API_INC . '/class.sql_entity.inc.php');
+	phpgw::import_class('phpgwapi.sql_entity');
 
 	/**
 	* Query statements for "others" table

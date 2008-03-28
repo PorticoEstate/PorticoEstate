@@ -98,11 +98,13 @@
 	* @package phpgwapi
 	* @subpackage database
 	*/
-	abstract class sql_
+	abstract class phpgwapi_sql_
 	{
-		function sql_()
+		/*
+		public function __construct()
 		{
 		}
+		*/
 
 		/*************************************************************\
 		* Usefull low level functions to create queries logically   *

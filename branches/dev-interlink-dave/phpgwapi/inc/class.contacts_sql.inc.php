@@ -14,19 +14,19 @@
 	* Include SQL Builder
 	* @see sql_builder
 	*/
-	include_once(PHPGW_API_INC . '/class.sql_builder.inc.php');
+	phpgw::import_class('phpgwapi.sql_builder');
 	
 	/**
 	* Include SQL criteria
 	* @see sql_criteria
 	*/
-	include_once(PHPGW_API_INC . '/class.sql_criteria.inc.php');
+	phpgw::import_clas('phpgwapi.sql_criteria');
 	
 	/**
 	* Include SQL entity
 	* @see sql_entity
 	*/
-	include_once(PHPGW_API_INC . '/class.sql_entity.inc.php');
+	phpgw::import_class('phpgwapi.sql_entity');
 
 	/**
 	* All categories
@@ -2395,7 +2395,7 @@
 					break;
 			}
 
-			if(is_array($comms))
+			if ( is_array($comms) && count($comms) )
 			{
 				foreach($comms as $comm)
 				{
@@ -2403,7 +2403,7 @@
 					$this->unlock_table();
 				}
 			}
-			if(is_array($locations))
+			if ( is_array($locations) && count($locations) )
 			{
 				foreach($locations as $location)
 				{
@@ -2412,7 +2412,7 @@
 				}
 			}
 
-			if(is_array($others))
+			if ( is_array($others) && count($others) )
 			{
 				foreach($others as $other)
 				{
@@ -2420,7 +2420,7 @@
 					$this->unlock_table();
 				}
 			}
-			if(is_array($notes))
+			if ( is_array($notes) && count($notes) )
 			{
 				foreach($notes as $note)
 				{

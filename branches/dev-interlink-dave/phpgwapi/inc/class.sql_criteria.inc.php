@@ -16,7 +16,7 @@
 	/**
 	* Include SQL class
 	*/
-	include(PHPGW_API_INC . '/class.sql.inc.php');
+	phpgw::import_class('phpgwapi.sql');
 
 	/**
 	* SQL Generator Criteria - help to create criterias for common queries
@@ -26,11 +26,13 @@
 	* @package phpgwapi
 	* @subpackage database
 	*/
-	class sql_criteria extends sql
+	class phpgwapi_sql_criteria extends phpgwapi_sql
 	{
-		function sql_criteria()
+		/*
+		public function __construct()
 		{
 		}
+		*/
 
 		/************************************************************* \
 		* Usefull low level functions to create queries logically   *
