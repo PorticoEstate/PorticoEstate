@@ -628,26 +628,24 @@ HTML;
 
 			$list = array();
 
-			$d = dir(PHPGW_SERVER_ROOT . '/phpgwapi/templates');
-			while ($entry=$d->read())
+			$dirname = PHPGW_SERVER_ROOT . '/phpgwapi/templates';
+
+			$dir = new DirectoryIterator();
+			foreach ( $dir as $file )
 			{
-				if ( !in_array($entry, $ignore_list)
-					&& is_dir(PHPGW_SERVER_ROOT . "/phpgwapi/templates/{$entry}"))
+				$entry = (string) $file;
+				if ( !in_array($entry, $ignore_list) && $file->isDir() )
 				{
-					$list[$entry]['name'] = $entry;
-					$f = PHPGW_SERVER_ROOT . "/phpgwapi/templates/{$entry}/details.inc.php";
-					if (file_exists ($f))
+					$list[$entry]['title'] = $entry;
+
+					$f = "{$dirname}/{$entry}/details.inc.php";
+					if ( file_exists($f) )
 					{
-						include($f);
-						$list[$entry]['title'] = "Use {$GLOBALS['phpgw_info']['template'][$entry]['title']}interface";
-					}
-					else
-					{
-						$list[$entry]['title'] = $entry;
+						require_once $f;
+						$list[$entry]['title'] = lang ('Use %s interface', $GLOBALS['phpgw_info']['template'][$entry]['title']);
 					}
 				}
 			}
-			$d->close();
 			ksort($list);
 			return $list;
 		}
@@ -938,7 +936,7 @@ HTML;
 		{
 			if (file_exists(PHPGW_APP_INC . '/header.inc.php'))
 			{
-				include(PHPGW_APP_INC . '/header.inc.php');
+				require_once PHPGW_APP_INC . '/header.inc.php';
 			}
 		}
 
@@ -962,8 +960,8 @@ HTML;
 				$tpl_name = 'simple';
 			}
 
-			include_once(PHPGW_INCLUDE_ROOT . "/phpgwapi/templates/{$tpl_name}/head.inc.php");
-			include_once(PHPGW_INCLUDE_ROOT . "/phpgwapi/templates/{$tpl_name}/navbar.inc.php");
+			require_once PHPGW_INCLUDE_ROOT . "/phpgwapi/templates/{$tpl_name}/head.inc.php";
+			require_once PHPGW_INCLUDE_ROOT . "/phpgwapi/templates/{$tpl_name}/navbar.inc.php";
 			if ($navbar)
 			{
 				echo parse_navbar();
@@ -995,7 +993,7 @@ HTML;
 				if ( !isset($GLOBALS['phpgw_info']['flags']['nofooter']) 
 					|| !$GLOBALS['phpgw_info']['flags']['nofooter'] )
 				{
-					include(PHPGW_API_INC . '/footer.inc.php');
+					require_once PHPGW_API_INC . '/footer.inc.php';
 				}
 			}
 		}
@@ -1140,61 +1138,6 @@ HTML;
 		public function decrypt($data)
 		{
 			return $GLOBALS['phpgw']->crypto->decrypt($data);
-		}
-
-		/**
-		* DES encrypt a password
-		*
-		* @param string $userpass User password
-		* @param string $random Random seed
-		* @return string DES encrypted password
-		*/
-		public function des_cryptpasswd($userpass, $random)
-		{
-			$lcrypt = '{crypt}';
-			$password = crypt($userpass, $random);
-			$ldappassword = sprintf('%s%s', $lcrypt, $password);
-			return $ldappassword;
-		}
-
-		/**
-		* MD5 encrypt password
-		*
-		* @author fechner at ponton dot de (source http://au3.php.net/manual/en/function.ldap-modify.php)
-		* @internal as there is really only 1 way to do this, it isn't copyrightable :)
-		* @param string $userpass User password
-		* @param string $random Random seed
-		* @return string MD5 encrypted password
-		*/ 
-		public function md5_cryptpasswd($userpass)
-		{
-			return '{md5}' . base64_encode(pack('H*', md5($userpass)));
-		}
-
-		/**
-		* Encrypt password based on encryption type set in setup
-		*
-		* @deprecated
-		* @see phpgwapi_auth::generate_hash
-		* @param string $password Password to encrypt
-		* @return Encrypted password or false
-		*/
-		public function encrypt_password($password)
-		{
-			return $GLOBALS['phpgw']->auth->generate_hash($password);
-			if (strtolower($GLOBALS['phpgw_info']['server']['ldap_encryption_type']) == 'des')
-			{
-				$salt       = $this->randomstring(2);
-				$e_password = $this->des_cryptpasswd($password, $salt);
-				
-				return $e_password;
-			}
-			elseif (strtolower($GLOBALS['phpgw_info']['server']['ldap_encryption_type']) == 'md5')
-			{
-				return $this->md5_cryptpasswd($password);
-			}
-			
-			return false;
 		}
 
 		/**
