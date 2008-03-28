@@ -406,11 +406,13 @@
         $GLOBALS['phpgw']->css = createObject('phpgwapi.css');
       }
 
+	  $GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/build/assets/skins/sam/autocomplete.css');
       $GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/build/assets/skins/sam/calendar.css');
       $GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/build/assets/skins/sam/tabview.css');
 
       phpgwapi_yui::load_widget('calendar');
       phpgwapi_yui::load_widget('tabview');
+      phpgwapi_yui::load_widget('autocomplete');
 
       $GLOBALS['phpgw']->js->validate_file( 'newdesign', 'form', $this->currentapp );
 
