@@ -38,9 +38,18 @@
     <td colspan="2">&nbsp;<b>{lang_Host_information}</b></td>
    </tr>
 
-   <tr class="row_off">
+   <tr class="row_on">
     <td>{lang_Enter_the_hostname_of_the_machine_on_which_this_server_is_running}:</td>
     <td><input name="newsettings[hostname]" value="{value_hostname}"></td>
+   </tr>
+
+   <tr class="row_off">
+     <td>{lang_cookie_domain_for_sessions_-_if_unsure_use_request_fqdn}</td>
+	 <td>
+	   <select name="newsettings[cookie_domain]">
+         {hook_cookie_domain}
+	   </select>
+	 </td>
    </tr>
 
    <tr class="row_on">
