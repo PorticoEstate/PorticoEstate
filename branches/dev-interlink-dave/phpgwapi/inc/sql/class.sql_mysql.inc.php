@@ -19,7 +19,7 @@
 	* @package phpgwapi
 	* @subpackage database
 	*/
-	class sql extends sql_
+	class phpgwapi_sql extends phpgwapi_sql_
 	{
 		function sql_()
 		{
@@ -38,4 +38,3 @@
 			return ($str) ? 'concat('.$str.')' : '';
 		}
 	}
-?>

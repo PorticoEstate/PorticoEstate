@@ -458,8 +458,6 @@ HTML;
 	$GLOBALS['phpgw']->log			= createObject('phpgwapi.log');
 	include_once(PHPGW_API_INC . '/log_functions.inc.php');
 	$GLOBALS['phpgw']->translation	= createObject('phpgwapi.translation');
-	$GLOBALS['phpgw']->common		= createObject('phpgwapi.common');
-	$GLOBALS['phpgw']->hooks		= createObject('phpgwapi.hooks');
 	$GLOBALS['phpgw']->auth			= createObject('phpgwapi.auth');
 	$GLOBALS['phpgw']->accounts		= createObject('phpgwapi.accounts');
 	$GLOBALS['phpgw']->acl			= createObject('phpgwapi.acl');

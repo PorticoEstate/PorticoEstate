@@ -225,7 +225,7 @@
 
 		list($appname,$classname) = explode('.', $class, 2);
 
-		$of_classname = 'of'.$appname;
+		$of_classname = "of{$appname}";
 
 		// include module object factory class
 		if (!include_class($appname, $of_classname))
@@ -235,6 +235,7 @@
 		}
 		else
 		{
+			$of_classname = "{$appname}_{$of_classname}";
 			$of_class = new $of_classname;
 		}
 

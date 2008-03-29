@@ -23,8 +23,7 @@
 		{
 		}
 		*/
-		
-		
+
 		/**
 		  * Load a class and include the class file if not done so already.
 		 *

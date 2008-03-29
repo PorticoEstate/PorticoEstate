@@ -2,8 +2,9 @@
 	/**
 	 * Object Factory
 	 *
+	 * @author Dave Hall <skwashd@phpgroupware.org>
 	 * @author Dirk Schaller <dschaller@probusiness.de>
-	 * @copyright Copyright (C) 2003 Free Software Foundation, Inc. http://www.fsf.org/
+	 * @copyright Copyright (C) 2003-2008 Free Software Foundation, Inc. http://www.fsf.org/
 	 * @license http://www.fsf.org/licenses/gpl.html GNU General Public License
 	 * @package phpgwapi
 	 * @subpackage application
@@ -12,7 +13,7 @@
 
 	/*
 	   This program is free software: you can redistribute it and/or modify
-	   it under the terms of the GNU Lesser General Public License as published by
+	   it under the terms of the GNU General Public License as published by
 	   the Free Software Foundation, either version 3 of the License, or
 	   (at your option) any later version.
 
@@ -21,7 +22,7 @@
 	   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 	   GNU General Public License for more details.
 
-	   You should have received a copy of the GNU Lesser General Public License
+	   You should have received a copy of the GNU General Public License
 	   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	 */
 
@@ -44,7 +45,7 @@
 		  * @param $classname name of class
 		  * @param $p1-$p16 class parameters (all optional)
 		 */
-		function CreateObject($class,
+		function createObject($class,
 			$p1='_UNDEF_',$p2='_UNDEF_',$p3='_UNDEF_',$p4='_UNDEF_',
 			$p5='_UNDEF_',$p6='_UNDEF_',$p7='_UNDEF_',$p8='_UNDEF_',
 			$p9='_UNDEF_',$p10='_UNDEF_',$p11='_UNDEF_',$p12='_UNDEF_',
@@ -54,23 +55,28 @@
 			switch($classname)
 			{
 				case 'auth':
-					return ofphpgwapi::create_auth_object();
+					return self::_create_auth_object();
 				
 				case 'accounts':
 					$account_id   = ($p1 != '_UNDEF_')? $p1 : null;
 					$account_type = ($p2 != '_UNDEF_')? $p2 : null;
-					return ofphpgwapi::create_account_object($account_id, $account_type);
+					return self::_create_account_object($account_id, $account_type);
 
 				case 'mapping':
 					$auth_info = ($p1 != '_UNDEF_')? $p1 : null;
-					return ofphpgwapi::CreateMappingObject($auth_info);
+					return self::_create_mapping_object($auth_info);
 
 				default:
-					return parent::CreateObject($class, $p1, $p2, $p3, $p4, $p5, $p6, $p7, $p8, $p9, $p10, $p11, $p12, $p13, $p14, $p15, $p16); 
+					return parent::createObject($class, $p1, $p2, $p3, $p4, $p5, $p6, $p7, $p8, $p9, $p10, $p11, $p12, $p13, $p14, $p15, $p16); 
 			}
 		}
 
-		function create_auth_object()
+		/**
+		 * Create a new authentication object
+		 *
+		 * @return object new authentication object
+		 */
+		protected static function _create_auth_object()
 		{
 			require_once(PHPGW_API_INC . '/auth/class.auth_.inc.php');
 			
@@ -102,7 +108,12 @@
 			}
 		}
 		
-		function create_account_object($account_id, $account_type)
+		/**
+		 * Create a new account object
+		 *
+		 * @return object account object
+		 */
+		protected static function _create_account_object($account_id, $account_type)
 		{
 			require_once(PHPGW_API_INC . "/accounts/class.accounts_.inc.php");
 			
@@ -127,8 +138,10 @@
 
 		/**
 		* Create a new mapping object
+		*
+		* @return object new account mapping object
 		*/
-		function CreateMappingObject($auth_info)
+		protected static function _create_mapping_object($auth_info)
 		{
 			require_once(PHPGW_API_INC.'/mapping/class.mapping_.inc.php');
 

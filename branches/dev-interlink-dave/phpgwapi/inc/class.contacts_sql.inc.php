@@ -20,7 +20,7 @@
 	* Include SQL criteria
 	* @see sql_criteria
 	*/
-	phpgw::import_clas('phpgwapi.sql_criteria');
+	phpgw::import_class('phpgwapi.sql_criteria');
 	
 	/**
 	* Include SQL entity

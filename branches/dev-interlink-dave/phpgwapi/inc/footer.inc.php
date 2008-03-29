@@ -31,7 +31,7 @@
 	}
 	elseif(file_exists(PHPGW_APP_INC.'/footer.inc.php'))
 	{
-		require_once(PHPGW_APP_INC . '/footer.inc.php';
+		require_once PHPGW_APP_INC . '/footer.inc.php';
 	}
 
 	if (DEBUG_TIMER)
