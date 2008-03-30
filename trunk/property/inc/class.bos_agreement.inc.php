@@ -113,7 +113,7 @@
 			}
 			else
 			{
-				unset($this->cat_id);
+				$this->cat_id = '';
 			}
 			if(isset($allrows))
 			{
@@ -143,15 +143,15 @@
 
 			//_debug_array($data);
 
-			$this->start	= $data['start'];
-			$this->query	= $data['query'];
-			$this->filter	= $data['filter'];
-			$this->sort		= $data['sort'];
-			$this->order	= $data['order'];
-			$this->cat_id	= $data['cat_id'];
-			$this->vendor_id= $data['vendor_id'];
-			$this->member_id= $data['member_id'];
-			$this->allrows	= $data['allrows'];
+			$this->start	= isset($data['start']) ? $data['start'] : '';
+			$this->query	= isset($data['query']) ? $data['query'] : '';
+			$this->filter	= isset($data['filter']) ? $data['filter'] : '';
+			$this->sort		= isset($data['sort']) ? $data['sort'] : '';
+			$this->order	= isset($data['order']) ? $data['order'] : '';
+			$this->cat_id	= isset($data['cat_id']) ? $data['cat_id'] : '';
+			$this->vendor_id= isset($data['vendor_id']) ? $data['vendor_id'] : '';
+			$this->member_id= isset($data['member_id']) ? $data['member_id'] : '';
+			$this->allrows	= isset($data['allrows']) ? $data['allrows'] : '';
 		}
 
 		function check_perms($has, $needed)
