@@ -268,7 +268,7 @@
 					$table_header[$i]['header'] 	= $uicols['descr'][$i];
 					$table_header[$i]['width'] 		= '5%';
 					$table_header[$i]['align'] 		= 'center';
-					if($uicols['datatype'][$i]!='T' && $uicols['datatype'][$i]!='CH')
+					if(!isset($uicols['datatype'][$i]) || ($uicols['datatype'][$i]!='T' && $uicols['datatype'][$i]!='CH'))
 					{
 						$table_header[$i]['sort_link']	=true;
 						$table_header[$i]['sort'] 	= $this->nextmatchs->show_sort_order(array
@@ -278,13 +278,13 @@
 								'order'	=> $this->order,
 								'extra'	=> array('menuaction'	=> 'property.uis_agreement.index',
 													'query'		=> $this->query,
-													'lookup'	=> $lookup,
-													'district_id'	=> $this->district_id,
-													'start_date'	=> $start_date,
+										//			'lookup'	=> $lookup,
+										//			'district_id'	=> $this->district_id,
+										//			'start_date'	=> $start_date,
 													'role'		=> $this->role,
 													'member_id'	=> $this->member_id,
 													'allrows'	=> $this->allrows,
-													'end_date'	=> $end_date
+										//			'end_date'	=> $end_date
 													)
 							));
 					}
@@ -354,7 +354,7 @@
 				'role'		=> $this->role
 			);
 
-			$member_of_data	= $this->cats->formatted_xslt_list(array('selected' => $this->member_id,'globals' => True,link_data => $link_data));
+			$member_of_data	= $this->cats->formatted_xslt_list(array('selected' => $this->member_id,'globals' => True,'link_data' => $link_data));
 
 			$GLOBALS['phpgw']->js->validate_file('overlib','overlib','property');
 
