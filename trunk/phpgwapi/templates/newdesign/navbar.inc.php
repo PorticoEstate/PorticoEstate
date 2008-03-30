@@ -8,8 +8,8 @@
 		(
 			'about_url'		=> $GLOBALS['phpgw']->link('/about.php', array('appname' => $GLOBALS['phpgw_info']['flags']['currentapp']) ),
 			'about_text'	=> lang('about'),
-			'logout_url'	=> $navbar['logout']['url'],
-			'logout_text'	=> $navbar['logout']['text'],
+			'logout_url'	=> $GLOBALS['phpgw']->link('/logout.php'),
+			'logout_text'	=> lang('logout'),
 			'user_fullname' => $GLOBALS['phpgw']->common->display_fullname()
 		);
 
