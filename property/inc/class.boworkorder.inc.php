@@ -139,19 +139,19 @@
 		{
 			$data = $GLOBALS['phpgw']->session->appsession('session_data','workorder');
 
-			$this->start		= $data['start'];
-			$this->query		= $data['query'];
-			$this->filter		= $data['filter'];
-			$this->sort		= $data['sort'];
-			$this->order		= $data['order'];
-			$this->cat_id		= $data['cat_id'];
-			$this->search_vendor	= $data['search_vendor'];
-			$this->status_id	= $data['status_id'];
-			$this->wo_hour_cat_id	= $data['wo_hour_cat_id'];
-			$this->start_date	= $data['start_date'];
-			$this->end_date		= $data['end_date'];
-			$this->b_group		= $data['b_group'];
-			$this->paid		= $data['paid'];			
+			$this->start			= isset($data['start']) ? $data['start'] : '';
+			$this->query			= isset($data['query']) ? $data['query']: '';
+			$this->filter			= isset($data['filter']) ? $data['filter']: '';
+			$this->sort				= isset($data['sort']) ? $data['sort']: '';
+			$this->order			= isset($data['order']) ? $data['order']: '';
+			$this->cat_id			= isset($data['cat_id']) ? $data['cat_id']: '';
+			$this->search_vendor	= isset($data['search_vendor']) ? $data['search_vendor']: '';
+			$this->status_id		= isset($data['status_id']) ? $data['status_id']: '';
+			$this->wo_hour_cat_id	= isset($data['wo_hour_cat_id']) ? $data['wo_hour_cat_id']: '';
+			$this->start_date		= isset($data['start_date']) ? $data['start_date']: '';
+			$this->end_date			= isset($data['end_date']) ? $data['end_date']: '';
+			$this->b_group			= isset($data['b_group']) ? $data['b_group']: '';
+			$this->paid				= isset($data['paid']) ? $data['paid']: '';
 		}
 
 		function save_sessiondata($data)
