@@ -11,6 +11,9 @@
 								<a href="{about_url}" class="icon icon-about">
 									{about_text}
 								</a>
+								<a href="{help_url}" class="{help_icon}">
+									{help_text}
+								</a>
 								<a href="{preferences_url}" class="icon icon-preferences">
 									{preferences_text}
 								</a>
