@@ -51,22 +51,16 @@
 		{
 			if(is_array($data))
 			{
-				if ($data['start'])
-				{
-					$start=$data['start'];
-				}
-				else
-				{
-					$start=0;
-				}
-				$filter			= (isset($data['filter'])?$data['filter']:'');
-				$query 			= (isset($data['query'])?$data['query']:'');
-				$sort 			= (isset($data['sort'])?$data['sort']:'DESC');
-				$order 			= (isset($data['order'])?$data['order']:'');
-				$chapter_id 	= (isset($data['chapter_id'])?$data['chapter_id']:0);
-				$allrows 		= (isset($data['allrows'])?$data['allrows']:'');
-				$template_id 	= (isset($data['template_id'])?$data['template_id']:0);
+				$start			= isset($data['start']) && $data['start'] ? $data['start']:0;
+				$filter			= isset($data['filter']) ? $data['filter']:'';
+				$query 			= isset($data['query']) ? $data['query']:'';
+				$sort 			= isset($data['sort']) && $data['sort'] ? $data['sort']:'DESC';
+				$order 			= isset($data['order']) ? $data['order']:'';
+				$chapter_id 	= isset($data['chapter_id']) && $data['chapter_id'] ? $data['chapter_id']:0;
+				$allrows 		= isset($data['allrows']) ? $data['allrows']:'';
 			}
+
+			$filtermethod = '';
 
 			if ($order)
 			{
@@ -91,6 +85,7 @@
 				$where= 'AND';
 			}
 
+			$querymethod = '';
 
 			if($query)
 			{
@@ -162,8 +157,9 @@
 			}
 
 
-			$filtermethod .= " where template_id='$template_id' ";
+			$filtermethod = " where template_id='$template_id' ";
 
+			$querymethod = '';
 			if($query)
 			{
 				$query = preg_replace("/'/",'',$query);
@@ -435,14 +431,15 @@
 
 		function get_grouping_list($template_id='')
 		{
-			$this->db->query("SELECT grouping_id, grouping_descr FROM fm_template_hours where template_id='$template_id' and grouping_id >0 group by grouping_id, grouping_descr");
-
-			$i = 0;
+			$this->db->query('SELECT grouping_id, grouping_descr FROM fm_template_hours where template_id=' . (int)$template_id . ' AND grouping_id > 0 group by grouping_id, grouping_descr');
+			$grouping_entries = array();
 			while ($this->db->next_record())
 			{
-				$grouping_entries[$i]['id']		= $this->db->f('grouping_id');
-				$grouping_entries[$i]['name']		= stripslashes($this->db->f('grouping_descr'));
-				$i++;
+				$grouping_entries[] = array
+				(
+					'id'	=> $this->db->f('grouping_id'),
+					'name'	=> $this->db->f('grouping_descr',true)
+				);
 			}
 			return $grouping_entries;
 		}
