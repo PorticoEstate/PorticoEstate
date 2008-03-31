@@ -127,7 +127,6 @@
 					'text_delete'			=> lang('delete')
 				);
 
-				$i++;
 			}
 
 			$table_header_template[] = array
@@ -207,7 +206,6 @@
 				'form_action'			=> $GLOBALS['phpgw']->link('/index.php',$link_data),
 				'lang_add_statustext'		=> lang('Add the selected items'),
 				'lang_add'			=> lang('Add'),
-				'link_delete'			=> $GLOBALS['phpgw']->link('/index.php',$link_data_delete),
 
 				'chapter_list'			=> $this->bowo_hour->get_chapter_list('filter',$this->chapter_id),
 				'select_chapter'		=> 'chapter_id',
@@ -265,7 +263,10 @@
 			{
 				$receipt = $this->bo->delete_hour($hour_id,$template_id);
 			}
-
+			else
+			{
+				$receipt = array();
+			}
 
 			$template_list	= $this->bo->read_template_hour($template_id);
 
@@ -343,7 +344,6 @@
 											'var'	=> 'billperae',
 											'order'	=> $this->order,
 											'extra'	=> array('menuaction' => 'property.uitemplate.hour',
-																	'workorder_id'	=>$workorder_id,
 																	'template_id'	=>$template_id,
 																	'query'			=>$this->query,
 																	'allrows'		=>$this->allrows)
@@ -355,7 +355,6 @@
 											'var'	=> 'building_part',
 											'order'	=> $this->order,
 											'extra'	=> array('menuaction' => 'property.uitemplate.hour',
-																	'workorder_id'	=>$workorder_id,
 																	'template_id'	=>$template_id,
 																	'query'			=>$this->query,
 																	'allrows'		=>$this->allrows)
@@ -378,7 +377,6 @@
 				'menuaction'	=> 'property.uitemplate.hour',
 				'sort'		=> $this->sort,
 				'order'		=> $this->order,
-				'workorder_id'	=> $workorder_id,
 				'template_id'	=> $template_id,
 				'allrows'	=> $this->allrows,
 				'query'		=> $this->query
@@ -389,7 +387,6 @@
 				'menuaction'	=> 'property.uitemplate.hour',
 				'sort'		=> $this->sort,
 				'order'		=> $this->order,
-				'workorder_id'	=> $workorder_id,
 				'template_id'	=> $template_id,
 				'query'		=> $this->query
 			);
@@ -399,7 +396,6 @@
 				'menuaction'	=> 'property.uitemplate.hour',
 				'sort'		=> $this->sort,
 				'order'		=> $this->order,
-				'workorder_id'	=> $workorder_id,
 				'allrows'	=> $this->allrows,
 				'delete'	=> true,
 				'query'		=> $this->query
@@ -447,7 +443,6 @@
 				'lang_searchbutton_statustext'		=> lang('Submit the search string'),
 				'query'					=> $this->query,
 				'lang_search'				=> lang('search'),
-				'workorder_data' 			=> $common_data['workorder_data'],
 				'table_header_template_hour'		=> $table_header,
 				'values_template_hour'			=> $content,
 				'table_add'				=> $table_add,
@@ -467,7 +462,7 @@
 		{
 			$template_id 	= phpgw::get_var('template_id', 'int');
 			$values		= phpgw::get_var('values');
-
+			$receipt = array();
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('template'));
 
@@ -475,7 +470,7 @@
 			{
 				$values['template_id'] = $template_id;
 
-				if(!$receipt['error'])
+				if(!isset($receipt['error']) || !$receipt['error'])
 				{
 					$receipt = $this->bo->save_template($values);
 
@@ -491,11 +486,6 @@
 			else
 			{
 				$function_msg = lang('Add template');
-			}
-
-			if($error_id)
-			{
-				unset($values['template_id']);
 			}
 
 			$link_data = array
@@ -527,7 +517,7 @@
 				'lang_save_statustext'			=> lang('Save the building'),
 
 				'lang_remark'				=> lang('Remark'),
-				'value_remark'				=> $values['remark'],
+				'value_remark'				=> isset($values['remark']) ? $values['remark'] : '',
 				'lang_remark_statustext'		=> lang('Enter additional remarks to the description - if any'),
 
 				'lang_chapter'				=> lang('chapter'),
@@ -556,14 +546,16 @@
 			$values			= phpgw::get_var('values');
 			$values['ns3420_id']	= phpgw::get_var('ns3420_id');
 			$values['ns3420_descr']	= phpgw::get_var('ns3420_descr');
+			$error_id = false;
+			$receipt = array();
 
 			$bopricebook	= CreateObject('property.bopricebook');
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('template'));
 
-			if ($values['save'])
+			if (isset($values['save']) && $values['save'])
 			{
-				if($values['copy_hour'])
+				if(isset($values['copy_hour']) && $values['copy_hour'])
 				{
 					unset($hour_id);
 				}
@@ -624,42 +616,42 @@
 				'lang_copy_hour_statustext'		=> lang('Choose Copy Hour to copy this hour to a new hour'),
 
 				'lang_activity_num'			=> lang('Activity code'),
-				'value_activity_num'			=> $values['activity_num'],
-				'value_activity_id'			=> $values['activity_id'],
+				'value_activity_num'		=> isset($values['activity_num']) ? $values['activity_num'] : '',
+				'value_activity_id'			=> isset($values['activity_id']) ? $values['activity_id'] : '',
 
 				'lang_unit'				=> lang('Unit'),
 				'lang_save'				=> lang('save'),
 				'lang_done'				=> lang('done'),
 				'lang_descr'				=> lang('description'),
-				'value_descr'				=> $values['hours_descr'],
+				'value_descr'				=> isset($values['hours_descr']) ? $values['hours_descr'] : '',
 				'lang_descr_statustext'			=> lang('Enter the description for this activity'),
 				'lang_done_statustext'			=> lang('Back to the list'),
 				'lang_save_statustext'			=> lang('Save the building'),
 
 				'lang_remark'				=> lang('Remark'),
-				'value_remark'				=> $values['remark'],
+				'value_remark'				=> isset($values['remark']) ? $values['remark'] : '',
 				'lang_remark_statustext'		=> lang('Enter additional remarks to the description - if any'),
 
 				'lang_quantity'				=> lang('quantity'),
-				'value_quantity'			=> $values['quantity'],
+				'value_quantity'			=> isset($values['quantity']) ? $values['quantity'] : '',
 				'lang_quantity_statustext'		=> lang('Enter quantity of unit'),
 
 				'lang_billperae'			=> lang('Cost per unit'),
-				'value_billperae'			=> $values['billperae'],
+				'value_billperae'			=> isset($values['billperae']) ? $values['billperae'] : '',
 				'lang_billperae_statustext'		=> lang('Enter the cost per unit'),
 
 				'lang_total_cost'			=> lang('Total cost'),
-				'value_total_cost'			=> $values['cost'],
+				'value_total_cost'			=> isset($values['cost']) ? $values['cost'] : '',
 				'lang_total_cost_statustext'		=> lang('Enter the total cost of this activity - if not to be calculated from unit-cost'),
 
 				'lang_dim_d'				=> lang('Dim D'),
-				'dim_d_list'				=> $bopricebook->get_dim_d_list($values['dim_d']),
+				'dim_d_list'				=> $bopricebook->get_dim_d_list(isset($values['dim_d']) ? $values['dim_d'] : ''),
 				'select_dim_d'				=> 'values[dim_d]',
 				'lang_no_dim_d'				=> lang('No Dim D'),
 				'lang_dim_d_statustext'			=> lang('Select the Dim D for this activity. To do not use Dim D -  select NO DIM D'),
 
 				'lang_unit'				=> lang('Unit'),
-				'unit_list'				=> $bopricebook->get_unit_list($values['unit']),
+				'unit_list'				=> $bopricebook->get_unit_list(isset($values['unit']) ? $values['unit'] : ''),
 				'select_unit'				=> 'values[unit]',
 				'lang_no_unit'				=> lang('Select Unit'),
 				'lang_unit_statustext'			=> lang('Select the unit for this activity.'),
@@ -671,13 +663,13 @@
 				'lang_chapter_statustext'		=> lang('Select the chapter (for tender) for this activity.'),
 
 				'lang_tolerance'			=> lang('tolerance'),
-				'tolerance_list'			=> $this->bowo_hour->get_tolerance_list($values['tolerance_id']),
+				'tolerance_list'			=> $this->bowo_hour->get_tolerance_list(isset($values['tolerance_id'])?$values['tolerance_id']:''),
 				'select_tolerance'			=> 'values[tolerance_id]',
 				'lang_no_tolerance'			=> lang('Select tolerance'),
 				'lang_tolerance_statustext'		=> lang('Select the tolerance for this activity.'),
 
 				'lang_grouping'				=> lang('grouping'),
-				'grouping_list'				=> $this->bo->get_grouping_list($values['grouping_id'],$template_id),
+				'grouping_list'				=> $this->bo->get_grouping_list(isset($values['grouping_id']) ? $values['grouping_id']:'',isset($template_id) ? $template_id:''),
 				'select_grouping'			=> 'values[grouping_id]',
 				'lang_no_grouping'			=> lang('Select grouping'),
 				'lang_grouping_statustext'		=> lang('Select the grouping for this activity.'),
@@ -686,7 +678,7 @@
 				'lang_new_grouping_statustext'		=> lang('Enter a new grouping for this activity if not found in the list'),
 
 				'lang_building_part'			=> lang('building_part'),
-				'building_part_list'			=> $this->bowo_hour->get_building_part_list($values['building_part_id']),
+				'building_part_list'			=> $this->bowo_hour->get_building_part_list(isset($values['building_part_id']) ? $values['building_part_id'] : ''),
 				'select_building_part'			=> 'values[building_part_id]',
 				'lang_no_building_part'			=> lang('Select building part'),
 				'lang_building_part_statustext'		=> lang('Select the building part for this activity.'),
