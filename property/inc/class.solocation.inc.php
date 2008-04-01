@@ -63,7 +63,7 @@
 				$this->db2->query($sql,__LINE__,__FILE__);
 				$this->db2->next_record();
 				if($this->db2->f('hits'))
-				{		
+				{
 					$entity[] = array
 					(
 						'entity_id'	=> $this->db->f('entity_id'),
@@ -78,7 +78,7 @@
 			$this->db2->query($sql,__LINE__,__FILE__);
 			$this->db2->next_record();
 			if($this->db2->f('hits'))
-			{		
+			{
 				$entity[] = array
 				(
 					'entity_link'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uitts.index', 'query'=> $location_code)),
@@ -91,7 +91,7 @@
 			$this->db2->query($sql,__LINE__,__FILE__);
 			$this->db2->next_record();
 			if($this->db2->f('hits'))
-			{		
+			{
 				$entity[] = array
 				(
 					'entity_link'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction' => 'property.uidocument.index','query'=> $location_code)),
@@ -225,7 +225,7 @@
 				$uicols['statustext'][]		= 'dummy';
 				$uicols['exchange'][]		= false;
 				$uicols['align'][] 			= '';
-				
+
 				for ($i=0; $i<($type_id); $i++)
 				{
 					$uicols['input_type'][]		= 'text';
@@ -239,7 +239,7 @@
 				}
 
 				$list_info = $location_types[($type_id-1)]['list_info'];
-				
+
 				for ($i=1; $i<($type_id+1); $i++)
 				{
 					if(isset($list_info[$i]) && $list_info[$i])
@@ -298,7 +298,7 @@
 					$uicols['statustext'][]		= lang('last name');
 					$uicols['exchange'][]		= True;
 					$uicols['align'][] 			= 'left';
-					
+
 					$cols.= ',fm_tenant.first_name';
 					$cols_return[] 				= 'first_name';
 					$uicols['input_type'][]		= 'text';
@@ -316,7 +316,7 @@
 					$uicols['statustext'][]		= lang('contact phone');
 					$uicols['exchange'][]		= True;
 					$uicols['align'][] 			= 'left';
-					
+
 					$sub_query_tenant=1;
 					$this->socommon->fm_cache('sub_query_tenant_'. $type_id  . '_' . $lookup_tenant . '_' . $lookup,$sub_query_tenant);
 				}
@@ -365,7 +365,7 @@
 								$uicols['statustext'][]		= lang('street number');
 								$uicols['exchange'][]		= True;
 								$uicols['align'][] 			= 'right';
-							
+
 								$cols.= ',fm_location' . $config[$i]['location_type'] . '.' . $config[$i]['column_name'];
 								$cols_return[] 				= $config[$i]['column_name'];
 								$uicols['input_type'][]		= 'hidden';
@@ -438,7 +438,7 @@
 						'datatype'	=> $this->db->f('datatype'),
 						'attrib_id'	=> $this->db->f('id')
 					);
-	
+
 					$i++;
 				}
 
@@ -455,7 +455,7 @@
 			else
 			{
 				$ordermethod = ' order by fm_location' . ($type_id) .'.loc1 ASC';
-				
+
 				if ($type_id > 1)
 				{
 					for ($i=1;$i<($type_id+1);$i++)
@@ -516,7 +516,7 @@
 			}
 
 			$querymethod = '';
-			
+
 			if($query)
 			{
 				$query = str_replace(",",'.',$query);
@@ -529,6 +529,8 @@
 				{
 					$query = preg_replace("/'/",'',$query);
 					$query = preg_replace('/"/','',$query);
+
+					$sub_query = '';
 
 					if($sub_query_tenant)
 					{
@@ -1189,7 +1191,7 @@
 			$uicols['name'][]	= 'number';
 			$uicols['descr'][]	= lang('number');
 			$uicols['input_type'][]	= 'text';
-			
+
 			$joinmethod= "$this->join $entity_table"."_category on $entity_table.category=$entity_table"."_category.id";
 
 			$sql = $this->bocommon->generate_sql(array('entity_table'=>$entity_table,'cols_return'=>$cols_return,'cols'=>$cols,
@@ -1375,6 +1377,6 @@
 				return $location_code;
 			}
 		}
-		
+
 	}
 ?>
