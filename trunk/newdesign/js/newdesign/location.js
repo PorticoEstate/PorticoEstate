@@ -74,6 +74,11 @@ YAHOO.util.Event.addListener(window, "load", function() {
             }
             oDataTable.set("sortedBy", newSortedBy);
 
+			// Update search interface
+			var query = oRawResponse.query;
+			document.getElementById('search-clean').style.display = query ? 'inline-block' : 'none';
+			document.getElementById('search-field').value = query;
+
 			// Update filter values
 			var cat_id = oRawResponse.cat_id;
 			var category_items = oSelf.categoryMenu.getMenu().getItems();
@@ -369,15 +374,12 @@ YAHOO.util.Event.addListener(window, "load", function() {
 			var query = document.getElementById('search-field').value;
 			if(query != "")
 			{
-				document.getElementById('search-clean').style.display="inline-block";
 				YAHOO.example.XHR_JSON.myDataTable.loadDataset( { query: query }, true );
 			}
 		});
 
 		YAHOO.util.Event.on('search-clean', "click", function(event) {
 			YAHOO.util.Event.preventDefault( event );
-			document.getElementById('search-field').value = '';
-			document.getElementById('search-clean').style.display = 'none';
 			YAHOO.example.XHR_JSON.myDataTable.loadDataset( { query: '' }, true );
 		});
 
@@ -457,18 +459,65 @@ YAHOO.util.Event.addListener(window, "load", function() {
 					YAHOO.example.XHR_JSON.showLoader(true);
 					document.location=url;
                 	break;
+                default:
+                	//alert(task.value)
+                	break;
             }
         };
 
-		this.onContextBeforeShow = function(p_sType, p_aArgs, p_myDataTable) {
+		this.onContextMenuFilterClick = function(p_sType, p_aArgs, p_level)
+		{
+			if( this.myDataTable.getSelectedTrEls().length )
+	        {
+	        	var elRow = this.myDataTable.getSelectedTrEls()[0];
+	        	var id = elRow.cells[0].innerHTML;
+	        	var query = id.split('-', p_level).join('-');
+	        	YAHOO.example.XHR_JSON.myDataTable.loadDataset( { query: query }, true );
+	        }
+		};
+
+		this.onContextBeforeShow = function(p_sType, p_aArgs, p_myDataTable)
+		{
 			// Extract which TR element triggered the context menu
             var elRow = this.contextEventTarget;
             elRow = p_myDataTable.getTrEl(elRow);
 			p_myDataTable.unselectAllRows();
             p_myDataTable.selectRow(elRow);
-		}
+		};
 
 		this.myContextMenu = new YAHOO.widget.ContextMenu("mycontextmenu", {trigger:this.myDataTable.getTbodyEl()});
+
+		var filter_menu = new Array();
+		if(type_id > 1)
+		{
+			var filter_submenu = new Array();
+			var filters = ['Eiendom', 'Bygg', 'Inngang', 'Leieobjekt'];
+			for(var i=1; i < type_id; i++)
+			{
+				filter_submenu[i] =
+				{
+					text: filters[i-1],
+					onclick:
+					{
+						fn: this.onContextMenuFilterClick,
+						obj: i,
+						scope: this
+					}
+				}
+			}
+
+			filter_menu[0] =
+			{
+				text: "Filter",
+				value: "filter",
+				groupIndex: 2,
+				submenu:
+				{
+					id: "filter",
+					itemdata: filter_submenu
+				}
+			}
+		};
 
         this.myContextMenu.addItems([
 	        [
@@ -482,48 +531,43 @@ YAHOO.util.Event.addListener(window, "load", function() {
 		        	value: "edit",
 		        	groupIndex: 1
 				}
-				/*
-				,
-		        {
-		        	text: "History",
-		        	value: "history",
-		        	groupIndex: 1
-				}
-				*/
 			],
+			filter_menu,
 			[
 		        {
 		        	text: "Delete",
 		        	value: "delete",
-		        	groupIndex: 2
+		        	groupIndex: 3
 				}
 			],
 			[
 		        {
 		        	text: "New",
-		        	groupIndex: 3,
+		        	groupIndex: 4,
 		        	value: "new"
-		        	/*
-		        	submenu: {
-		        		id: "new",
-		        		itemdata:
-		        		[
-		        			{ value: "new-property", text: "Property" },
-		        			{ text: "Building" },
-		        			{ text: "Entrance" },
-		        			{ text: "Apartment" },
-		        			{ text: "Tenant" }
-		        		]
-		        	}
-		        	*/
 				}
 			]
-
-	        //	submenu: {
-	        //    id: "communication"
-	        //    itemdata: [ ... ] // Array of YAHOO.widget.MenuItem configuration properties
         ]);
 
+        /*
+        [
+				{
+					text: "Filter",
+					value: "filter",
+					grouIndex: 5,
+					submenu: {
+						id: "filter",
+						itemdata:
+						[
+							{
+								text: "Eiendom",
+								value: "property"
+							}
+						]
+					}
+				}
+			],
+			*/
         // Render the ContextMenu instance to the parent container of the DataTable
         this.myContextMenu.render("datatable");
         this.myContextMenu.clickEvent.subscribe(this.onContextMenuClick, this.myDataTable);
