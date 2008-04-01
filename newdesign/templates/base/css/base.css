@@ -25,8 +25,8 @@
 }
 
 #search-field {
-  min-height: 1.3em;
-  padding: 0.2em;
+	*margin-top: -1px; /* IE only */
+  padding: 0.25em;
   padding-right: 2.2em;
   vertical-align: top;
   width: 8em;
@@ -34,16 +34,24 @@
 
 #search-button
 {
-  margin-left: 0;
+	margin-left: 0;
+}
+
+#search-clean
+{
+	margin: 0;
 }
 
 #search-button button
 {
 	background: url(../images/btn_search.png) center center no-repeat;
-	text-indent: -10em;
-	overflow: hidden;
+	text-indent: -5em;
 	width: 2em;
+	overflow: hidden;
+	*margin-left: 5em;   /* IE only */
+    *padding: 0 1.75em;  /* IE only */
 }
+
 #search-clean {
 	display: none;
 	margin: 0;
@@ -52,10 +60,13 @@
 
 #search-clean button {
   background: url(../images/btn_cancel.png) center center no-repeat;
-  text-indent: -10em;
   overflow: hidden;
   width: 2em;
+  text-indent: -5em;
+  *margin-left: 5em;   /* IE only */
+  *padding: 0 1.75em;  /* IE only */
 }
+
 
 .yui-button.pressed {
   background-position: 0px -1400px !important;
