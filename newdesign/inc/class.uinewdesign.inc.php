@@ -165,6 +165,7 @@
                 'startIndex'		=> 	(int)$this->bo->start,
                 'sort'				=> 	$this->bo->order,
       			'sort_dir'			=> 	$this->bo->sort,
+				'query'				=>  $this->bo->query,
 				'part_of_town_id'	=>	$this->bo->part_of_town_id,
 				'cat_id'			=>	$this->bo->cat_id,
 				'district_id'		=>	$this->bo->district_id,
