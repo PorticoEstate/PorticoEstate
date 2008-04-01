@@ -225,14 +225,7 @@
 		function select_category_list($data)
 		{
 			$table = $this->select_table($data['type'],$data['type_id']);
-			if($data['order'] == 'id')
-			{
-				$order='id';
-			}
-			else
-			{
-				$order='descr';
-			}
+			$order		= isset($data['order']) && $data['order'] == 'id' ? 'id' :'descr';
 			
 			$this->db->query("SELECT id, descr FROM $table ORDER BY $order");
 
