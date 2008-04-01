@@ -179,6 +179,23 @@
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('columns' => $data));
 		}
 
+		/**
+		* Refresh menu with dynamically data from user-queries
+		*
+		*/
+
+		function refresh_menu() // will be moved to bo
+		{
+				//refresh menu
+				$menu = $GLOBALS['phpgw']->session->appsession('phpgwapi', 'menu');
+				$url = parse_url($menu['navigation']['property']['location']['url']);
+				parse_str(html_entity_decode($url['query']),$output);
+
+//_debug_array($output['type_id']);
+//_debug_array($menu['navigation']['property']['location']);				
+				
+
+		}
 
 		function index()
 		{
@@ -200,6 +217,13 @@
 			$lookup 	= $this->lookup;
 			$lookup_name 	= phpgw::get_var('lookup_name');
 			$lookup_tenant 	= phpgw::get_var('lookup_tenant', 'bool');
+
+			$query	= phpgw::get_var('query');
+
+			if($query)
+			{
+				$this->refresh_menu();
+			}
 
 			$GLOBALS['phpgw']->js->validate_file('overlib','overlib','property');
 			$GLOBALS['phpgw']->js->set_onload('document.search.query.focus();');
