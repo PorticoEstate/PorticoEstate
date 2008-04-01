@@ -1703,5 +1703,62 @@
 			}
 			return $menu;
 		}
+
+		/**
+		* Refresh menu with dynamically data from user-queries
+		*
+		*/
+		function refresh_menu()
+		{
+			$referer = parse_url(phpgw::get_var('HTTP_REFERER', 'string', 'SERVER') );
+			parse_str($referer['query']);
+			if(isset($menuaction) && $menuaction == 'property.uilocation.index')
+			{
+				$query	= phpgw::get_var('query');			
+			}
+			else
+			{
+				$query	= '';		
+			}
+
+			$query_temp = explode('-',$query);
+			$query_location = '';
+			$menu = $GLOBALS['phpgw']->session->appsession('phpgwapi', 'menu');
+
+			$url = parse_url($menu['navigation']['property']['location']['url']);
+			parse_str(html_entity_decode($url['query']),$output);
+			$output['query'] = $query_temp[0];
+
+			$menu['navigation']['property']['location']['url'] = $GLOBALS['phpgw']->link('/index.php',$output);
+			unset($url);
+			unset($output);
+
+			foreach($menu['navigation']['property']['location']['children'] as $sub => &$data)
+			{
+				if(ctype_digit(substr($sub,-1)) || $sub == 'tenant')
+				{
+					if($sub != 'tenant')
+					{
+						$j= ((int)substr($sub,-1))-1;
+					}
+					if(isset($query_temp[$j]) && $query_temp[$j])
+					{
+						$query_location[] = $query_temp[$j];
+					}
+					$url = parse_url($data['url']);
+					parse_str(html_entity_decode($url['query']),$output);
+					if(isset($query_location) && is_array($query_location))
+					{
+						$output['query'] = implode('-',$query_location);
+					}
+					else
+					{
+						$output['query'] = '';
+					}
+					$data['url'] = $GLOBALS['phpgw']->link('/index.php',$output);
+				}
+			}
+			$GLOBALS['phpgw']->session->appsession('phpgwapi', 'menu',$menu);
+		}
 	}
 ?>
