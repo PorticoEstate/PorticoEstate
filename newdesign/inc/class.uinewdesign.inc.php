@@ -39,8 +39,14 @@
       'no_access'	=> true,
       'datatable' => true,
       'datatable_json' => true,
-      'property'	=> true
+      'property'	=> true,
+      'gab' => true
     );
+
+    function gab()
+	{
+
+	}
 
 	function location()
 	{
@@ -138,7 +144,7 @@
 			$data['filter'][$i]['descr'] = lang('Select the part of town the selection belongs to. To do not use a part of town select NO PART OF TOWN');
 			$data['filter'][$i]['selected'] = $this->bo->part_of_town_id;
 			$empty[] = array( 'id'	=>	'', "name"	=> lang('no part of town') );
-			$data['filter'][$i]['options'] = array_merge($empty, $this->socommon->select_part_of_town($district_id));
+			$data['filter'][$i]['options'] = array_merge($empty, $this->socommon->select_part_of_town());
 			unset($empty);
 
 			$i++;
@@ -159,6 +165,7 @@
 		{
 			//recordsReturned should come from bo
 			//TODO: totalRecords should be int no mather what...
+
 			$data = array(
                 'recordsReturned'	=>	count($location_list),
                 'totalRecords'		=>	(int)$this->bo->total_records,
