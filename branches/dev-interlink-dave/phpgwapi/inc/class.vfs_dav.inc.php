@@ -1685,20 +1685,17 @@ $this->debug('cp : success '.$result);
 			}
 			if (isset($data['attributes']['owner_id']) && $id=$data['attributes']['owner_id'])
 			{
-				$GLOBALS['phpgw']->accounts->get_account_name($id,$lid,$fname,$lname);
-				$dav_properties['dc:publisher'] = $fname .' '. $lname;
+				$dav_properties['dc:publisher'] = (string) $GLOBALS['phpgw']->accounts->get($id);
 				$dav_properties['publisher_id'] = $id;
 			}
 			if (isset($data['attributes']['createdby_id']) && $id=$data['attributes']['createdby_id'])
 			{
-				$GLOBALS['phpgw']->accounts->get_account_name($id,$lid,$fname,$lname);
-				$dav_properties['dc:creator'] = $fname .' '. $lname;
+				$dav_properties['dc:creator'] = (string) $GLOBALS['phpgw']->accounts->get($id);
 				$dav_properties['creator_id'] = $id;
 			}
 			if (isset($data['attributes']['modifiedby_id']) && $id=$data['attributes']['modifiedby_id'])
 			{
-				$GLOBALS['phpgw']->accounts->get_account_name($id,$lid,$fname,$lname);
-				$dav_properties['dc:contributor'] = $fname .' '. $lname;
+				$dav_properties['dc:contributor'] = (string) $GLOBALS['phpgw']->accounts->get($id);
 				$dav_properties['contributor_id'] = $id;
 			}
 			if (isset($data['attributes']['app']) && $id=$data['attributes']['app'])

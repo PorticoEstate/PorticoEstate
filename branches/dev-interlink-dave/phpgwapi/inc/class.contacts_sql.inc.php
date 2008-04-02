@@ -4049,7 +4049,7 @@
 
 		function is_contact($account_id)
 		{
-			$account = $GLOBALS['phpgw']->accounts->get_account_data($account_id);
+			$account = $GLOBALS['phpgw']->accounts->get($account_id);
 			if(empty($account[$account_id]['person_id']))
 			{
 				return False;

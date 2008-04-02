@@ -2529,8 +2529,7 @@
 					{
 						continue;
 					}
-					$GLOBALS['phpgw']->accounts->get_account_name($userid,$lid,$details['to-firstname'],$details['to-lastname']);
-					$details['to-fullname'] = $GLOBALS['phpgw']->common->display_fullname('',$details['to-firstname'],$details['to-lastname']);
+					$details['to-fullname'] = (string) $GLOBALS['phpgw']->accounts->get($userid);
 
 					$to = $preferences->email_address($userid);
 					if (empty($to) || $to[0] == '@' || $to[0] == '$')	// we have no valid email-address

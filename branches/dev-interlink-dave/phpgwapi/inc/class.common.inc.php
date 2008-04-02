@@ -469,8 +469,6 @@ HTML;
 			}
 		}
 
-
-
 		/**
 		* Grab the owner name
 		*
@@ -479,8 +477,7 @@ HTML;
 		*/
 		public function grab_owner_name($accountid = '')
 		{
-			$GLOBALS['phpgw']->accounts->get_account_name($accountid,$lid,$fname,$lname);
-			return $this->display_fullname($lid,$fname,$lname);
+			return (string) $GLOBALS['phpgw']->get($accountid);
 		}
 
 		/**
