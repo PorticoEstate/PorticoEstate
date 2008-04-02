@@ -200,8 +200,6 @@
 			$lookup_name 	= phpgw::get_var('lookup_name');
 			$lookup_tenant 	= phpgw::get_var('lookup_tenant', 'bool');
 
-			$this->bocommon->refresh_menu();
-
 			$GLOBALS['phpgw']->js->validate_file('overlib','overlib','property');
 			$GLOBALS['phpgw']->js->set_onload('document.search.query.focus();');
 

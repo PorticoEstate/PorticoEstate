@@ -102,7 +102,7 @@
 			$allrows				= phpgw::get_var('allrows', 'bool');
 			
 			$this->start			= $start ? $start : 0;
-			$this->query			= isset($query) && $query ? $query : '';
+			$this->query			= isset($query) && $query ? $query : $this->query;
 			$this->filter			= isset($filter) && $filter ? $filter : '';
 			$this->sort				= isset($sort) && $sort ? $sort : '';
 			$this->order			= isset($order) && $order ? $order : '';
@@ -117,10 +117,38 @@
 
 		function read_sessiondata()
 		{
-			$data = $GLOBALS['phpgw']->session->appsession('session_data','location');
+			$referer = parse_url(phpgw::get_var('HTTP_REFERER', 'string', 'SERVER') );
+			parse_str($referer['query'],$referer_out);
+			$self = parse_url(phpgw::get_var('QUERY_STRING', 'string', 'SERVER') );
+			parse_str($self['path'],$self_out);
+
+			if($referer_out['menuaction'] == $self_out['menuaction'])
+			{
+				$data = $GLOBALS['phpgw']->session->appsession('session_data','location');
+			}
+
+			$query			= isset($data['query']) ? $data['query'] : '';
+			$type_id		= phpgw::get_var('type_id', 'int', 'REQUEST', 1);
+
+			$query_temp = explode('-',$query);
+
+			for ($i=0;$i<$type_id;$i++)
+			{
+				if(isset($query_temp[$i]) && $query_temp[$i])
+				{
+					$query_location[] = $query_temp[$i];
+				}
+			}
+			if(isset($query_location) && is_array($query_location))
+			{
+				$this->query = implode('-',$query_location);
+			}
+			else
+			{
+				$this->query = '';
+			}
 
 			$this->start			= isset($data['start'])?$data['start']:'';
-			$this->query			= isset($data['query'])?$data['query']:'';
 			$this->filter			= isset($data['filter'])?$data['filter']:'';
 			$this->sort				= isset($data['sort'])?$data['sort']:'';
 			$this->order			= isset($data['order'])?$data['order']:'';;
