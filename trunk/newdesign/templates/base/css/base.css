@@ -10,26 +10,27 @@
 }
 
 #btn-next button {
-  padding-right: 1.5em;
+  	padding-right: 1.5em;
     background: url(../images/btn_next.png) 90% 50% no-repeat;
 }
 
 #btn-previous button {
-  padding-left: 1.5em;
+  	padding-left: 1.5em;
     background: url(../images/btn_prev.png) 10% 50% no-repeat;
 }
 
 #btn-export-csv button {
-  padding-left: 1.5em;
+  	padding-left: 1.5em;
     background: url(../images/btn_excel.png) 10% 50% no-repeat;
 }
 
 #search-field {
 	*margin-top: -1px; /* IE only */
-  padding: 0.25em;
-  padding-right: 2.2em;
-  vertical-align: top;
-  width: 8em;
+  	padding: 0.25em;
+  	padding-right: 2.2em;
+  	vertical-align: top;
+  	width: 8em;
+  	z-index: 20;
 }
 
 #search-button
@@ -55,7 +56,7 @@
 #search-clean {
 	display: none;
 	margin: 0;
-  	margin-left: -2em;
+/*  	margin-left: -2em;*/
 }
 
 #search-clean button {
