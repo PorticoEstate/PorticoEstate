@@ -192,7 +192,7 @@
 					{
 						echo '<br>add_langs(): Including: ' . $appfile;
 					}
-					$raw_file = $this->parse_lang_file($appfile);
+					$raw_file = $this->parse_lang_file($appfile,$lang);
 
 					foreach ( $raw_file as $line ) 
 					{
