@@ -122,7 +122,7 @@
 			$self = parse_url(phpgw::get_var('QUERY_STRING', 'string', 'SERVER') );
 			parse_str($self['path'],$self_out);
 
-			if($referer_out['menuaction'] == $self_out['menuaction'])
+			if(isset($referer_out['menuaction']) && isset($self_out['menuaction']) && $referer_out['menuaction'] == $self_out['menuaction'])
 			{
 				$data = $GLOBALS['phpgw']->session->appsession('session_data','location');
 			}
