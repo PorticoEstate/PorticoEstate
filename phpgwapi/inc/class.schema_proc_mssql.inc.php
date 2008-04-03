@@ -210,8 +210,7 @@
 			$this->ix = array();
 			$this->uc = array();
 
-			// Field, Type, Null, Key, Default, Extra
-			$oProc->m_odb->query("exec sp_columns '$sTableName'", __LINE__, __FILE__);
+			$oProc->m_odb->query("EXEC sp_columns '$sTableName'", __LINE__, __FILE__);
 			while ($oProc->m_odb->next_record())
 			{
 				$type = $default = $null = $nullcomma = $prec = $scale = $ret = $colinfo = $scales = '';
@@ -219,20 +218,12 @@
 				{
 					$sColumns .= ',';
 				}
-				$sColumns .= $oProc->m_odb->f(0);
 
-				// The rest of this is used only for SQL->array
-				$colinfo = explode('(',$oProc->m_odb->f(1));
-				$prec = ereg_replace(')','',$colinfo[1]);
-				$scales = explode(',',$prec);
-				if ($scales[1])
-				{
-					$prec  = $scales[0];
-					$scale = $scales[1];
-				}
-				$type = $this->rTranslateType($colinfo[0], $prec, $scale);
+				$sColumns .= $oProc->m_odb->f('COLUMN_NAME');
 
-				if ($oProc->m_odb->f(2) == 'YES')
+				$type = $this->rTranslateType($oProc->m_odb->f('TYPE_NAME'),$oProc->m_odb->f('PRECISION'), $oProc->m_odb->f('SCALE'));
+
+				if ($oProc->m_odb->f('IS_NULLABLE') == 'YES')
 				{
 					$null = "'nullable' => True";
 				}
@@ -240,9 +231,10 @@
 				{
 					$null = "'nullable' => False";
 				}
-				if ($oProc->m_odb->f(4))
+
+				if ($oProc->m_odb->f('COLUMN_DEF'))
 				{
-					$default = "'default' => '".$oProc->m_odb->f(4)."'";
+					$default = "'default' => '".str_replace(array('((','))', "('", "')",'GetDate()'),array('','','','','current_timestamp'),$oProc->m_odb->f('COLUMN_DEF'))."'";
 					$nullcomma = ',';
 				}
 				else
@@ -250,25 +242,35 @@
 					$default = '';
 					$nullcomma = '';
 				}
-				if ($oProc->m_odb->f(5))
+				if ($oProc->m_odb->f('TYPE_NAME') == 'int identity')
 				{
 					$type = "'type' => 'auto'";
 				}
-				$this->sCol[] = "\t\t\t\t'" . $oProc->m_odb->f(0)."' => array(" . $type . ',' . $null . $nullcomma . $default . '),' . "\n";
-				if ($oProc->m_odb->f(3) == 'PRI')
-				{
-					$this->pk[] = $oProc->m_odb->f(0);
-				}
-				if ($oProc->m_odb->f(3) == 'UNI')
-				{
-					$this->uc[] = $oProc->m_odb->f(0);
-				}
-				/* Hmmm, MUL could also mean unique, or not... */
-				if ($oProc->m_odb->f(3) == 'MUL')
-				{
-					$this->ix[] = $oProc->m_odb->f(0);
-				}
+				$this->sCol[] = "\t\t\t\t'" . $oProc->m_odb->f('COLUMN_NAME')."' => array(" . $type . ',' . $null . $nullcomma . $default . '),' . "\n";
 			}
+
+			$this->pk = $oProc->m_odb->adodb->MetaPrimaryKeys($sTableName);
+
+			$ForeignKeys =$oProc->m_odb->MetaForeignKeys($sTableName);
+
+			foreach($ForeignKeys as $table => $keys)
+			{
+				$keystr = array();
+				foreach ($keys as $keypair)
+				{
+					$keypair = explode('=',$keypair);
+					$keystr[] = "'" . $keypair[0] . "' => '" . $keypair[1] . "'";
+				}
+				$this->fk[] = $table . "' => array(" . implode(', ',$keystr)  . ')';
+			}
+
+			/*FIXME: Should provide both uc and ix - but wouldn't execute */
+	/*		$oProc->m_odb->query("EXEC sp_indexes @table_name = '$sTableName'", __LINE__, __FILE__);
+			while ($oProc->m_odb->next_record())
+			{
+
+			}
+	*/
 			/* ugly as heck, but is here to chop the trailing comma on the last element (for php3) */
 			$this->sCol[count($this->sCol) - 1] = substr($this->sCol[count($this->sCol) - 1],0,-2) . "\n";
 
