@@ -264,13 +264,20 @@
 				$this->fk[] = $table . "' => array(" . implode(', ',$keystr)  . ')';
 			}
 
-			/*FIXME: Should provide both uc and ix - but wouldn't execute */
-	/*		$oProc->m_odb->query("EXEC sp_indexes @table_name = '$sTableName'", __LINE__, __FILE__);
+			/*FIXME: Should provide both uc and ix - not verified */
+			$oProc->m_odb->query("EXEC sp_indexes  @table_server = '{$GLOBALS['phpgw_info']['server']['db_host']}', @table_name = '$sTableName'", __LINE__, __FILE__);
 			while ($oProc->m_odb->next_record())
 			{
-
+				if($oProc->m_odb->f('NON_UNIQUE') == 1)
+				{
+					$this->ix[] = $oProc->m_odb->f('COLUMN_NAME');
+				}
+				else
+				{
+					$this->uc[] = $oProc->m_odb->f('COLUMN_NAME');
+				}
 			}
-	*/
+
 			/* ugly as heck, but is here to chop the trailing comma on the last element (for php3) */
 			$this->sCol[count($this->sCol) - 1] = substr($this->sCol[count($this->sCol) - 1],0,-2) . "\n";
 
