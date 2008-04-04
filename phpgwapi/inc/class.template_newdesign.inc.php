@@ -1,5 +1,25 @@
 <?php
-	// INSERT HEADER HERE
+	/**
+	 * phpGroupWare newdesign template class
+	 *
+	 * @author Jan Åge Johnsen <janaage@hikt.no>
+	 * @copyright Copyright (C) 2007-2008 Free Software Foundation, Inc. http://www.fsf.org/
+	 * @license http://www.fsf.org/licenses/lgpl.html GNU Lesser General Public License
+	 * @package phpgroupware
+	 * @subpackage phpgwapi
+	 * @category gui
+	 * @version $Id$
+	 */
+
+	/**
+	 * Allows you to store and retrive session variables under through php or
+	 * remote http JSON calls.
+	 *
+	 * @package phpgwapi
+	 * @subpackage gui
+	 * @category gui
+	 */
+
 	class phpgwapi_template_newdesign
 	{
 		public $public_functions = array
@@ -8,7 +28,16 @@
 			'retrive'		=> True
 		);
 
-		// TODO: document me with phpdoc
+		/******************************************************************************
+		 * Stores JSON data through httpd request
+		 *
+		 * Returns HTTP header error code on failure or JSON data on success
+		 *
+		 * @param	location	request parameter (string) deciding where data should be stored
+		 * @param	data		request (string) JSON payload
+		 * @return	mixed		HTTP header error code on failure, JSON decoded payload on success
+		 * @access	public
+		 */
 		public function store()
 		{
 			$location = phpgw::get_var('location');
@@ -32,7 +61,15 @@
 			return $json;
 		}
 
-		// TODO: document me with phpdoc
+		/******************************************************************************
+		 * Retrives stored data stored in session though httpd request
+		 *
+		 * Returns HTTP header error code on failure or stored data on success
+
+		 * @param	location	request parameter (string) deciding which data to return
+		 * @return	mixed		HTTP header error code on failure, stored data on success
+		 * @access	public
+		 */
 		public function retrieve()
 		{
 			$location = phpgw::get_var('location');
@@ -54,12 +91,34 @@
 			return $data;
 		}
 
-		// TODO: document me with phpdoc
+		/******************************************************************************
+		 * Retrives and returns stored session variable from given location
+		 *
+		 * Returns string containing data on success, nothing on failure
+		 *
+		 * usage: retrive_local(string $location)
+		 *
+		 * @param	$location	string identifying location for data
+		 * @return	string		stored data on success, noting on failure
+		 * @access	public
+		 */
 		public static function retrieve_local($location)
 		{
 			return $GLOBALS['phpgw']->session->appsession("template_newdesign_{$location}", 'phpgwapi');
 		}
 
+		/******************************************************************************
+		 * Stores session variable on given location
+		 *
+		 * Returns string containing data on success, nothing on failure
+ 		 *
+		 * usage: store_local(string $location, data)
+		 *
+		 * @param   $location	string identifying location for data
+		 * @param	$data		payload to store
+		 * @return	string		stored data on success, noting on failure
+		 * @access	public
+		 */
 		public static function store_local($location, $data)
 		{
 			$GLOBALS['phpgw']->session->appsession("template_newdesign_$location", 'phpgwapi', $data);
