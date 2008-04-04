@@ -12,7 +12,7 @@
 	*/
 
 	$setup_info['property']['name']		= 'property';
-	$setup_info['property']['version']	= '0.9.17.541';
+	$setup_info['property']['version']	= '0.9.17.542';
 	$setup_info['property']['app_order']	= 8;
 	$setup_info['property']['enable']	= 1;
 	$setup_info['property']['app_group']	= 'office';
@@ -79,17 +79,17 @@
 		'fm_vendor',
 		'fm_vendor_category',
 		'fm_district',
-		'fm_location1',
 		'fm_location1_category',
+		'fm_location1',
 		'fm_location1_history',
-		'fm_location2',
 		'fm_location2_category',
+		'fm_location2',
 		'fm_location2_history',
-		'fm_location3',
 		'fm_location3_category',
+		'fm_location3',
 		'fm_location3_history',
-		'fm_location4',
 		'fm_location4_category',
+		'fm_location4',
 		'fm_location4_history',
 		'fm_location_type',
 		'fm_location_config',

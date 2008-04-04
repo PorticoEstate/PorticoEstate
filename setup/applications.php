@@ -146,7 +146,9 @@
 				if ( isset($setup_info[$appname]['tables'])
 					&& $setup_info[$appname]['tables'] )
 				{
-					$GLOBALS['phpgw_setup']->process->droptables($terror,$DEBUG);
+					// Sigurd: Tables has to be dropped in reversed order (mssql) if they are referenced by others 
+					$terror[0]['tables'] = array_reverse($setup_info[$appname]['tables']); 
+					$GLOBALS['phpgw_setup']->process->droptables($terror, $DEBUG);
 					echo "<li>{$setup_info[$appname]['name']} " . lang('tables dropped') . ".</li>\n";
 				}
 
