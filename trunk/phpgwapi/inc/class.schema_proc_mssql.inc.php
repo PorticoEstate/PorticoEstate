@@ -110,7 +110,7 @@
 			{
 				case 'current_date':
 				case 'current_timestamp':
-				return "'GetDate()'";
+				return "GetDate()";
 			}
 
 			return "'" . $sDefault . "'";
