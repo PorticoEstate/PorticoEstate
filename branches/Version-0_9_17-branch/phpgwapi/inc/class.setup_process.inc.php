@@ -221,7 +221,8 @@
 				if ( isset($setup_info[$key]['tables'])
 					&& is_array($setup_info[$key]['tables']) )
 				{
-					foreach ( $setup_info[$key]['tables'] as $table )
+					// Sigurd: Tables has to be dropped in reversed order (mssql) if they are referenced by others
+					foreach ( array_reverse($setup_info[$key]['tables']) as $table )
 					{
 						//echo $table;
 						if(in_array($table,$tables))
