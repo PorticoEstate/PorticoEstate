@@ -197,8 +197,33 @@
 			return "UNIQUE($sFields)";
 		}
 
-		function GetIXSQL($sFields)
+
+		/* format:
+			CREATE [ UNIQUE ] [ CLUSTERED | NONCLUSTERED ] INDEX index_name
+			    ON { table | view } ( column [ ASC | DESC ] [ ,...n ] )
+			[ WITH < index_option > [ ,...n] ]
+			[ ON filegroup ]
+
+			< index_option > :: =
+			    { PAD_INDEX |
+			        FILLFACTOR = fillfactor |
+			        IGNORE_DUP_KEY |
+			        DROP_EXISTING |
+			    STATISTICS_NORECOMPUTE |
+			    SORT_IN_TEMPDB 
+			}
+		*/
+
+		function GetIXSQL($sFields,$sTableName = '')
 		{
+			if($sTableName)
+			{
+				return "CREATE NONCLUSTERED INDEX ". str_replace(',','_',$sFields).'_'.$sTableName.'_idx' ."  ON $sTableName ($sFields)";
+			}
+			else
+			{
+				$this->indexes_sql[str_replace(',','_',$sFields)] = "CREATE NONCLUSTERED INDEX __index_name__ ON __table_name__ ($sFields)";
+			}
 			return '';
 		}
 
@@ -264,7 +289,7 @@
 				$this->fk[] = $table . "' => array(" . implode(', ',$keystr)  . ')';
 			}
 
-			/*FIXME: Should provide both uc and ix - not verified */
+			/*FIXME: not working as expected */
 			$oProc->m_odb->query("EXEC sp_indexes  @table_server = '{$GLOBALS['phpgw_info']['server']['db_host']}', @table_name = '$sTableName'", __LINE__, __FILE__);
 			while ($oProc->m_odb->next_record())
 			{
@@ -346,6 +371,8 @@
 
 		function CreateTable($oProc, &$aTables, $sTableName, $aTableDef)
 		{
+			global $DEBUG;
+			unset($this->indexes_sql);
 			if ($oProc->_GetTableSQL($sTableName, $aTableDef, $sTableSQL, $sSequenceSQL, $sTriggerSQL))
 			{
 				// create sequence first since it will be needed for default
@@ -355,7 +382,28 @@
 				}
 
 				$query = "CREATE TABLE $sTableName ($sTableSQL)";
-				return !!($oProc->m_odb->query($query));
+
+				$result = !!$oProc->m_odb->query($query, __LINE__, __FILE__);
+				if($result==True)
+				{
+					if (isset($this->indexes_sql) && $DEBUG)
+					{
+						echo  '<pre>';
+						print_r($this->indexes_sql);
+						echo '</pre>';
+					}
+
+					if(isset($this->indexes_sql) && is_array($this->indexes_sql) && count($this->indexes_sql)>0)
+					{
+						foreach($this->indexes_sql as $key => $sIndexSQL)
+						{
+							$ix_name = str_replace(',','_',$key).'_'.$sTableName.'_idx';
+							$IndexSQL = str_replace(array('__index_name__','__table_name__'), array($ix_name,$sTableName), $sIndexSQL);
+							$oProc->m_odb->query($IndexSQL, __LINE__, __FILE__);
+						}
+					}			
+				}
+				return $result;
 			}
 
 			return false;
