@@ -431,6 +431,11 @@
 						'text'	=> lang('Admin custom functions'),
 						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.ui_custom.list_custom_function','appname' => 'property') )
 					),
+					'migrate_db'	=> array
+					(
+						'text'	=> lang('Migrate to alternative db'),
+						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uimigrate.index') )
+					),
 				);
 			}
 
