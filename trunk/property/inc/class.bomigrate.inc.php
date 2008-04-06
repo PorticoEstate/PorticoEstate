@@ -78,9 +78,75 @@
 			return $domain_info;
 		}
 
-		public function migrate($values)
+		public function migrate($values,$download_script=true)
 		{
-			_debug_array($values);
+//			_debug_array($values);
+			$oProc							= createObject('phpgwapi.schema_proc',$GLOBALS['phpgw_info']['server']['db_type']);
+			$oProc->m_odb					= $GLOBALS['phpgw']->db;
+			$oProc->m_odb->Halt_On_Error	= 'yes';
+			$GLOBALS['phpgw_setup']->oProc	= $oProc;
+
+			$tables = $GLOBALS['phpgw']->db->table_names();
+			
+			/* Work out the order of how the tables can be created
+			*/
+			foreach($tables as $tablename)
+			{
+				$ForeignKeys = $GLOBALS['phpgw']->db->MetaForeignKeys($tablename);
+				foreach($ForeignKeys as $table => $keys)
+				{
+				}
+			}
+
+			$setup = createObject('phpgwapi.setup_process');
+
+			$table_def = array();
+			foreach($tables as $table)
+			{
+				$tableinfo = $setup->sql_to_array($table);
+				$fd_temp = '$fd = array(' . str_replace("\t",'',$tableinfo[0]) .');';
+				@eval($fd_temp);
+				$table_def[$table]['fd'] = $fd;
+				$table_def[$table]['pk'] = $tableinfo[1];
+				$table_def[$table]['fk'] = $tableinfo[2];		
+				$table_def[$table]['ix'] = $tableinfo[3];
+				$table_def[$table]['uc'] = $tableinfo[4];
+			}
+//_debug_array($table_def);
+//_debug_array($tables);
+
+			foreach ($values as $domain)
+			{
+				$GLOBALS['phpgw_setup']->oProc = createObject('phpgwapi.schema_proc',$GLOBALS['phpgw_domain'][$domain]['db_type']);
+				$GLOBALS['phpgw_setup']->oProc->m_odb           = $GLOBALS['phpgw']->db;
+				$GLOBALS['phpgw_setup']->oProc->m_odb->Host     = $GLOBALS['phpgw_domain'][$domain]['db_host'];
+				$GLOBALS['phpgw_setup']->oProc->m_odb->Database = $GLOBALS['phpgw_domain'][$domain]['db_name'];
+				$GLOBALS['phpgw_setup']->oProc->m_odb->User     = $GLOBALS['phpgw_domain'][$domain]['db_user'];
+				$GLOBALS['phpgw_setup']->oProc->m_odb->Password = $GLOBALS['phpgw_domain'][$domain]['db_pass'];
+				$GLOBALS['phpgw_setup']->oProc->m_odb->Halt_On_Error = 'yes';
+				$GLOBALS['phpgw_setup']->oProc->m_odb->connect();
+
+				$filename = $domain . '_' . $GLOBALS['phpgw_domain'][$domain]['db_name'] . '_' . $GLOBALS['phpgw_domain'][$domain]['db_type'] . '.sql';
+				$script = $oProc->GenerateScripts($table_def, false, true);
+				if($download_script)
+				{
+					$this->download_script($script, $filename);
+				}
+			}
 		}
+
+		private function download_script($script, $filename)
+		{
+			$GLOBALS['phpgw_info']['flags']['noheader'] = True;
+			$GLOBALS['phpgw_info']['flags']['nofooter'] = True;
+			$GLOBALS['phpgw_info']['flags']['xslt_app'] = False;
+
+			$browser = CreateObject('phpgwapi.browser');
+			$size=strlen($script);
+			$browser->content_header($filename,'',$size);
+			echo $script;
+		}
+
+
 	}
 ?>
