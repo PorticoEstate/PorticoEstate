@@ -58,7 +58,7 @@
 			$this->dbms				= $dbms;
 		}
 
-		function GenerateScripts($aTables, $bOutputHTML=False)
+		function GenerateScripts($aTables, $bOutputHTML=False, $return_script=false)
 		{
 			if (!is_array($aTables))
 			{
@@ -102,6 +102,11 @@
 			if($bOutputHTML)
 			{
 				print('<pre>' . $sAllTableSQL . '</pre><br><br>');
+			}
+
+			if($return_script)
+			{
+				return $sAllTableSQL;
 			}
 
 			return True;
