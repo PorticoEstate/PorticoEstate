@@ -32,10 +32,10 @@
 			$ConfigLang = phpgw::get_var('ConfigLang');
 			$this->set_userlang($ConfigLang);
 
-			$fn = "./lang/phpgw_{$this->userlang}.lang";
+			$fn = "./phpgwapi/setup/phpgw_{$this->userlang}.lang";
 			if (!file_exists($fn))
 			{
-				$fn = './lang/phpgw_en.lang';
+				$fn = './phpgwapi/setup/phpgw_en.lang';
 			}
 
 			$strings = $this->parse_lang_file($fn, $this->userlang);
