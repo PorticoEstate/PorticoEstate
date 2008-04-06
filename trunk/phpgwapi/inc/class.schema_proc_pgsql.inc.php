@@ -378,7 +378,7 @@
 				{
 					$this->pk[] = $sdc->f(2);
 				}
-				if ($sdc->f(3) == 't')
+				else if ($sdc->f(3) == 't')
 				{
 					$this->uc[] = $sdc->f(2);
 				}
