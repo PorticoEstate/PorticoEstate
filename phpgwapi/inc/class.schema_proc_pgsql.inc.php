@@ -329,7 +329,7 @@
 					}
 					else
 					{
-						$default = "'default' => '" . str_replace(array('::bpchar','::character varying','now()'),array('','','current_timestamp'),$sdc->f(0));
+						$default = "'default' => '" . str_replace(array('::bpchar','::character varying','now()',"('now'::text)::timestamp(6) without time zone"),array('','','current_timestamp','current_timestamp'),$sdc->f(0));
 						// For db-functions - add an apos
 						if(substr($default,-1)!= "'")
 						{
