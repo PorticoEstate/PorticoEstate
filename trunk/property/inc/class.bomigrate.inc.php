@@ -117,17 +117,21 @@
 
 			foreach ($values as $domain)
 			{
-				$GLOBALS['phpgw_setup']->oProc = createObject('phpgwapi.schema_proc',$GLOBALS['phpgw_domain'][$domain]['db_type']);
-				$GLOBALS['phpgw_setup']->oProc->m_odb           = $GLOBALS['phpgw']->db;
-				$GLOBALS['phpgw_setup']->oProc->m_odb->Host     = $GLOBALS['phpgw_domain'][$domain]['db_host'];
-				$GLOBALS['phpgw_setup']->oProc->m_odb->Database = $GLOBALS['phpgw_domain'][$domain]['db_name'];
-				$GLOBALS['phpgw_setup']->oProc->m_odb->User     = $GLOBALS['phpgw_domain'][$domain]['db_user'];
-				$GLOBALS['phpgw_setup']->oProc->m_odb->Password = $GLOBALS['phpgw_domain'][$domain]['db_pass'];
-				$GLOBALS['phpgw_setup']->oProc->m_odb->Halt_On_Error = 'yes';
-				$GLOBALS['phpgw_setup']->oProc->m_odb->connect();
+				$this->oProc = createObject('phpgwapi.schema_proc',$GLOBALS['phpgw_domain'][$domain]['db_type']);
+				if(!$download_script)
+				{
+					$this->oProc->m_odb           = $GLOBALS['phpgw']->db;
+					$this->oProc->m_odb->Host     = $GLOBALS['phpgw_domain'][$domain]['db_host'];
+					$this->oProc->m_odb->Database = $GLOBALS['phpgw_domain'][$domain]['db_name'];
+					$this->oProc->m_odb->User     = $GLOBALS['phpgw_domain'][$domain]['db_user'];
+					$this->oProc->m_odb->Password = $GLOBALS['phpgw_domain'][$domain]['db_pass'];
+					$this->oProc->m_odb->Halt_On_Error = 'yes';
+					$this->oProc->m_odb->connect();
+				}
 
 				$filename = $domain . '_' . $GLOBALS['phpgw_domain'][$domain]['db_name'] . '_' . $GLOBALS['phpgw_domain'][$domain]['db_type'] . '.sql';
-				$script = $oProc->GenerateScripts($table_def, false, true);
+
+				$script = $this->oProc->GenerateScripts($table_def, false, true);
 				if($download_script)
 				{
 					$this->download_script($script, $filename);
