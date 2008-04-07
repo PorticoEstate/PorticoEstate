@@ -399,15 +399,16 @@
 
 			$MetaIndexes = $sdc->adodb->MetaIndexes($sTableName);
 
+			//FIXME: looks like unique is reported as index
 			foreach($MetaIndexes as $key => $index)
 			{
 				if(count($index['columns']) > 1)
 				{
-					$this->ix[] = "array('" . implode("', '",$index['columns']) . "')";
+					$this->ix[] = $index['columns'];
 				}
 				else
 				{
-					$this->ix[] = "'" . $index['columns'][0] . "'";	
+					$this->ix[] = $index['columns'][0];	
 				}
 			}
 
