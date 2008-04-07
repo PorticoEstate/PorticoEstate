@@ -71,6 +71,7 @@
 			{
 				$sSequenceSQL = '';
 				$sTriggerSQL = '';
+				$this->m_oTranslator->indexes_sql = array();
 				if($this->_GetTableSQL($sTableName, $aTableDef, $sTableSQL, $sSequenceSQL, $sTriggerSQL))
 				{
 					$sTableSQL = "CREATE TABLE $sTableName (\n$sTableSQL\n)"
@@ -86,6 +87,17 @@
 					}
 					
 					$sAllTableSQL .= $sTableSQL . "\n\n";
+
+					// postgres and mssql
+					if(isset($this->m_oTranslator->indexes_sql) && is_array($this->m_oTranslator->indexes_sql) && count($this->m_oTranslator->indexes_sql)>0)
+					{
+						foreach($this->m_oTranslator->indexes_sql as $key => $sIndexSQL)
+						{
+							$ix_name = $key.'_'.$sTableName.'_idx';
+							$IndexSQL = str_replace(array('__index_name__','__table_name__'), array($ix_name,$sTableName), $sIndexSQL);
+							$sAllTableSQL .= $IndexSQL . "\n\n";
+						}
+					}
 				}
 				else
 				{
@@ -658,7 +670,7 @@
 				$this->query($sIXSQL, __LINE__, __FILE__);
 			}
 			
-			// postgres
+			// postgres and mssql
 			if(isset($this->m_oTranslator->indexes_sql) && is_array($this->m_oTranslator->indexes_sql) && count($this->m_oTranslator->indexes_sql)>0)
 			{
 				foreach($this->m_oTranslator->indexes_sql as $key => $sIndexSQL)
