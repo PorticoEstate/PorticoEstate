@@ -308,7 +308,7 @@
 						}
 					}
 				}
-				elseif ($scales[1])
+				else if ( isset($scales[1]) )
 				{
 					$prec  = $scales[0];
 					$scale = $scales[1];
