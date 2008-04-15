@@ -591,6 +591,12 @@
 					$error_id=true;
 				}
 
+				if(!isset($values['end_date']) || !$values['end_date'])
+				{
+					$receipt['error'][]=array('msg'=>lang('Please select an end date!'));
+					$error_id=true;
+				}
+
 				if(!$values['name'])
 				{
 					$receipt['error'][]=array('msg'=>lang('Please enter a project NAME !'));
