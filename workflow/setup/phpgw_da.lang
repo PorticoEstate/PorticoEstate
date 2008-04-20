@@ -1,0 +1,99 @@
+#	workflow	da	Nr.
+%1 aborted	workflow	da	%1 afbrudt
+%1 active	workflow	da	%1 aktiv
+%1 completed	workflow	da	%1 færdig
+%1 configuration	workflow	da	%1 Konfiguration
+%1 days, %2:%3:%4	workflow	da	%1 dage, %2:%3:%4
+%1 exception	workflow	da	%1 undtagelse
+%1 menu	workflow	da	%1 Menu
+%1 monitoring	workflow	da	%1 Monitorering
+%1 processes (%2 active) (%3 being_run)	workflow	da	%1 proces (%2 aktiv) (%3 kørende)
+/workflow directory does not exist and could not be created, please ask adminstrator to check the global configuration	common	da	/workflow bibliotek eksisterer ikke og kan ikke dannes, bed administrator om at checke global konfiguration.
+abort instance	workflow	da	afbryd instans
+abort this instance	workflow	da	afbryd denne instans
+aborted	workflow	da	afbrudt
+access denied for user %1 on activity %2, no role	workflow	da	Adgang nægtet for bruger %1 på aktivitet %2, ingen rolle
+action %1 is impossible if we have no activity and no instance designated for it!	workflow	da	Handling %1 er umulig, hvis vi ikke har nogen aktivitet eller nogen instans tilegnet den!
+action %1 is impossible, another user is already in place	workflow	da	Handling %1 er umulig, en anden bruger er igang
+action %1 is impossible, there are no user assigned to this activity for this instance	workflow	da	handling %1 er umulig, der er ingen bruger tilegnet til denne aktivitet for denne instans
+action %1 needs an activity and activity %2 does not exists	workflow	da	Handling %1 behøver en aktivitet og aktivitet %2 eksisterer ikke
+action %1 needs an instance and instance %2 does not exists	workflow	da	handling %1 behøver en instans og instans %2 eksisterer ikke
+actions	workflow	da	Handlinger
+activate	workflow	da	Aktiver
+active	workflow	da	Aktiv
+active:	workflow	da	aktiv:
+activities	workflow	da	Aktiviteter
+activities selection	workflow	da	Vælg aktiviteter
+activities updated	workflow	da	Opdater aktiviteter
+activity	workflow	da	aktivitet
+activity  status	workflow	da	Aktivitets status
+activity %1	workflow	da	aktivitet %1
+activity %1 (#%2) is associated with a non-existent process (#%3)	workflow	da	Aktivitet %1 (#%2) er tilknyttet en ikke-eksisterende proces(#%3)
+activity %1 code is not avaible	workflow	da	aktivitet %1 kode er tilgængelig
+activity %1 is interactive but has no role assigned	workflow	da	Aktivitet %1 er interaktiv, men er ikke tilføjet nogen rolle
+activity %1 is interactive so it must use the $instance->complete() method	workflow	da	Aktivitet %1 er interaktiv, så den må benytte $instance->complete() metoden
+activity %1 is non-interactive and non-autorouted but has no role assigned	workflow	da	Aktivitet %1 er ikke interaktiv og ikke-autorutet, men ikke tilføjet nogen rolle
+activity %1 is non-interactive so it must not use the $instance->complete() method	workflow	da	Aktivitet %1 er ikke interaktive, så den må benytte $instance->complete() metoden
+activity %1 is standalone and is using the $instance object	workflow	da	Aktivitet %1 er stand-alone og benytter $instance objektet
+activity %1 is standalone but has transitions	workflow	da	Aktivitet %1 er stand-alone , men har ingen overgange
+activity %1 is standalone or view but has transitions	workflow	da	Aktivitet %1 er stand-alone eller view, men har ingen overgange
+activity saved	workflow	da	Aktivitet gemt
+activity start not avaible, no corresponding activity was found.	workflow	da	Aktivitet's start ikke tilgængelig, ingen korrosponderende aktivitet fundet.
+activity start not set, no corresponding activity was found.	workflow	da	Aktivitet's start ikke sat, ingen korrosponderende aktivitet fundet.
+activity status not avaible, no corresponding activity was found.	workflow	da	Aktivitet's status ikke tilgængelig, ingen korrosponderende aktivitet fundet.
+activity:	workflow	da	aktivitet:
+add a transition	workflow	da	Tilføj en overgang
+add aborted instances	workflow	da	Tilføj afbrudte instanser
+add advanced actions	workflow	da	Tilføj avancerede handlinger
+add agent	workflow	da	Tilføj agenter
+add completed instances	workflow	da	Tilføj færdige instanser
+add instances in exception	workflow	da	Tilføj untagelses instanser
+add new	workflow	da	Tilføj ny
+add new role	workflow	da	Tilføj ny rolle
+add or edit a process	workflow	da	Tilføj eller rediger proces
+add or edit a role	workflow	da	Tilføj eller rediger en rolle
+add or edit an activity	workflow	da	Tilføj eller rediger en aktivitet
+add property	workflow	da	Tilføj egenskab
+add role	workflow	da	Tilføj rolle
+add role to process	workflow	da	Tilføj rolle til proces
+add transition	workflow	da	Tilføj overgang
+add transitions	workflow	da	Tilføj overgange
+add transitions from	workflow	da	Tilføj overgange fra
+add transitions to	workflow	da	Tilføj overgange til
+admin instance	workflow	da	Admin Instans
+admin process activities	workflow	da	Admin proces aktiviteter
+admin process roles	workflow	da	Admin proces roller
+admin processes	workflow	da	Admin processer
+admin processes sources	workflow	da	Admin kilde processer
+administer instances	admin	da	Administrer instanser
+administer processes	admin	da	Administrrer processer
+agent associated with inexistent activity	workflow	da	Agent tilknyttet til ikke-eksiterende aktivitet
+agent without activity	workflow	da	Agent uden aktivitet
+agents assigned to this activity	workflow	da	Agenter tilføjet  til denne aktivitet
+all	workflow	da	Alle
+always show advanced actions	workflow	da	Vis altid avancerede handlinger
+always show advanced mode	workflow	da	Vis altid avanceret 'mode'
+assign me this activity	workflow	da	Tilknyt mig denne aktivitet
+at least one email address cannot be validated.	workflow	da	Mindst en E-mail kan ikke valideres
+auto routed	workflow	da	Automatisk routet
+auto-release on leaving activity	common	da	Frigør automatisk  ved udagnag af aktivitet
+automatic	workflow	da	Automatisk
+autorouted activities does not need to be sent by any user after their execution	workflow	da	Auto-routede aktivitet behøver ikke at blive sendt a nogen bruger efter den er eksekveret
+bad parameter for setagents, the parameter should be an array	workflow	da	Forkert parameter for 'setAgents', parameter skal være et array
+bad role type	workflow	da	Forkert rolle type
+bad user	workflow	da	Forkert bruger
+base directory does not exist, please ask adminstrator to check the global configuration	common	da	Basis biblioteket eksisterer ikke, bed administrator om at checke global konfiguration
+be carefull with interactive activity, end and start of theses activities are multiple.	workflow	da	Vær forsigtig med interakiv aktivitet, slut og start af disse aktiviteter er multiple.
+being run	workflow	da	kørende
+by running theses links you will create new instances of the related process.	workflow	da	ved at køre disse links skaber du nye instanser af den relaterede proces.
+cannot add transition only split or switch activities can have more than one outbound transition	workflow	da	Kan ikke tilføje overgang - kun split og skiftende aktiviteter kan have mere end en udgående overgang
+cannot add transition. only split activities can have more than one outbound transition	workflow	da	Kan ikke tilføje overgang. Kun split og skiftende aktiviteter kan have mere end en udgående overgang
+cannot create compiled file %1	workflow	da	kan ikke danne compileret fil %1
+you are not allowed to abort instance %1	workflow	da	Du har ikke ret til at afbryde instans %1
+you are not allowed to exception instance %1	workflow	da	Du har ikke ret til at undtage instans %1
+you are not allowed to grab instance %1	workflow	da	Du har ikke ret til at  tage instans %1
+you are not allowed to release instance %1	workflow	da	Du har ikke ret til at frigøre instans %1
+you are not allowed to restart instance %1	workflow	da	Du har ikke ret til at  genstarte instans %1
+you are not allowed to resume instance %1	workflow	da	Du har ikke ret til at  gen-optage instans %1
+you are not allowed to send instance %1	workflow	da	Du har ikke ret til at  sende instans %1
+you can use special values with this mail agent:	workflow	da	Du kan bruge specielle værdier med denne mail agent:

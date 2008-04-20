@@ -1,0 +1,605 @@
+#	workflow	ru	#
+%1 aborted	workflow	ru	%1 прерван
+%1 active	workflow	ru	%1 активен
+%1 completed	workflow	ru	%1 завершен
+%1 configuration	workflow	ru	%1 Конфигурация
+%1 days, %2:%3:%4	workflow	ru	%1 дней, %2:%3:%4
+%1 exception	workflow	ru	%1 исключение
+%1 menu	workflow	ru	%1 Меню
+%1 monitoring	workflow	ru	%1 Контроль
+%1 processes (%2 active) (%3 being_run)	workflow	ru	%1 процессов (%2 активны) (%3 запущены)
+/workflow directory does not exist and could not be created, please ask adminstrator to check the global configuration	common	ru	Каталог /workflow не существует и не может быть создана, пожалуйста, попросите администратора проверить общую конфигурацию
+<strong>%owner%</strong> is the instance owner email	workflow	ru	<strong>%owner%</strong> - это адрес электронной почты владельца экземпляра
+<strong>%property_xx%</strong> is the content of the instance's property xx	workflow	ru	<strong>%property_XX%</strong> - это содержание свойства XX экземпляра
+<strong>%role_xx%</strong> are all the emails of all users mapped to the role xx	workflow	ru	<strong>%role_XX%</strong> - это все адреса электронной почты всех пользователей, отображенных на роль ХХ
+<strong>%roles%</strong> are the emails of all users mapped to any role on this activity	workflow	ru	<strong>%roles%</strong> - это адреса электронной почты всех пользователей, отображенных на на любую роль в этой деятельности
+<strong>%signature%</strong> is the agent signature defined in the process configuration	workflow	ru	<strong>%signature%</strong> - это подпись агента, определенная в конфигурации процесса
+<strong>%user%</strong> is the instance user email	workflow	ru	<strong>%user%</strong> - это адрес электронной почты пользователя экземпляра
+<strong>%user_xx%</strong> is the email of the acount xx	workflow	ru	<strong>%user_XX%</strong> - это адрес электронной почты учетной записи XXX
+a please wait message is shown when loading the activity form usefull for long tasks	admin	ru	сообщение "пожалуйста, подождите", показываемое при при загрузке формы действия, полезно для долго выполняющихся задач
+abort instance	workflow	ru	прервать экземпляр
+abort this instance	workflow	ru	Прервать этот экземпляр
+aborted	workflow	ru	прервано
+access denied for user %1 on activity %2, no role	workflow	ru	Доступ запрещен для пользователя %1 для деятельности %2, нет роли
+act	workflow	ru	действие
+act. status	workflow	ru	Состояние деятельности
+act. status:	workflow	ru	Состояние деятельности:
+action %1 is impossible if we have no activity and no instance designated for it!	workflow	ru	Действие %1 невозможно если у нас нет деятельности или нет экземпляра, определенного для неё!
+action %1 is impossible, another user is already in place	workflow	ru	Действие %1 невозможно, другой пользователь уже в нем
+action %1 is impossible, there are no user assigned to this activity for this instance	workflow	ru	Действие %1 невозможно, не назначены пользователи для этой деятельности для этого экземпляра
+action %1 needs an activity and activity %2 does not exists	workflow	ru	Действие %1 требует деятельности и деятельность %2 не существует
+action %1 needs an instance and instance %2 does not exists	workflow	ru	Действие %1 требует экземпляр и экземпляр %2 не существует
+actions	workflow	ru	Действия
+actions right options	common	ru	Рекомендуемые Опции процесса
+activate	workflow	ru	активировать
+active	workflow	ru	Активен
+active:	workflow	ru	активен:
+activities	workflow	ru	Деятельности
+activities selection	workflow	ru	Выбор деятельностей
+activities updated	workflow	ru	Деятельности обновлены
+activity	workflow	ru	деятельность
+activity  status	workflow	ru	состояние деятельности
+activity %1	workflow	ru	деятельность %1
+activity %1 (#%2) is associated with a non-existent process (#%3)	workflow	ru	Деятельность %1 (#%2) связана с несуществующим процессом (#%3)
+activity %1 code is not avaible	workflow	ru	Код деятельности %1 недоступен
+activity %1 is interactive but has no role assigned	workflow	ru	Деятельность %1 - интерактивна, но не имеет назначенных ролей
+activity %1 is interactive so it must use the $instance->complete() method	workflow	ru	Деятельность %1 - интерактивна, поэтому она должна использовать метод $instance->complete()
+activity %1 is non-interactive and non-autorouted but has no role assigned	workflow	ru	Деятельность %1 - не интерактивна и не автомаршрутизируема, но не имеет назначенных ролей
+activity %1 is non-interactive so it must not use the $instance->complete() method	workflow	ru	Деятельность %1 - не интерактивна, поэтому она не должна использовать метод $instance->complete()
+activity %1 is standalone and is using the $instance object	workflow	ru	Деятельность %1 - самостоятельная и использует объект $instance
+activity %1 is standalone but has transitions	workflow	ru	Деятельность %1 - самостоятельная, но имеет переходы
+activity %1 is standalone or view but has transitions	workflow	ru	Деятельность %1 - самостоятельная или просмотр, но имеет переходы
+activity %1 is switch so it must use $instance->setnextactivity($actname) method	workflow	ru	Деятельность %1 - переключатель, поэтому должна использовать метод $instance->setNextActivity($actname)
+activity %1 is view and is using the $instance object in write mode	workflow	ru	Деятельность %1 - просмотр и использует объект $instance в режиме записи
+activity agent removed	workflow	ru	Агент деятельности удален
+activity completed	workflow	ru	Деятельность завершена
+activity failure	workflow	ru	ошибка деятельности
+activity in inexistent process	workflow	ru	Деятельность в несуществующем процессе
+activity is waiting for pending transitions	workflow	ru	Деятельность ожидает незавершенного перехода
+activity name already exists	workflow	ru	Название деятельности уже существует
+activity role #%1 removed	workflow	ru	Роль #%1 деятельности удалена
+activity role removed	workflow	ru	Роль деятельности удалена
+activity saved	workflow	ru	Деятельность сохранена
+activity start not avaible, no corresponding activity was found.	workflow	ru	запуск деятельности невозможен, не найдено соответствующей деятельности.
+activity start not set, no corresponding activity was found.	workflow	ru	запуск деятельноти не установлен, не найдено соответствующей деятельности.
+activity status not avaible, no corresponding activity was found.	workflow	ru	Состояние деятельности недоступно, не найдено соответствующей деятельности.
+activity:	workflow	ru	деятельность:
+add a transition	workflow	ru	Добавить переход
+add aborted instances	workflow	ru	Добавить прерванный экземпляр
+add advanced actions	workflow	ru	Добавить расширенные действия
+add agent	workflow	ru	Добавить агента
+add completed instances	workflow	ru	Добавить завершенный экземпляр
+add instances in exception	workflow	ru	Добавить экземпляр в исключение
+add new	workflow	ru	добавить новый
+add new role	workflow	ru	Добавить новую роль
+add or edit a process	workflow	ru	Добавить или редактировать процесс
+add or edit a role	workflow	ru	Добавитьь или редактировать роль
+add or edit an activity	workflow	ru	Добавить или редактировать деятельность
+add property	workflow	ru	Добавить свойство
+add role	workflow	ru	Добавить роль
+add role to process	workflow	ru	Добавить роль к процессу
+add transition	workflow	ru	добавить переход
+add transitions	workflow	ru	Добавить переходы
+add transitions from	workflow	ru	Добавить переходы из
+add transitions to	workflow	ru	Добавить переходы к
+admin instance	workflow	ru	Административный Экземпляр
+admin process activities	workflow	ru	Деятельности Административного Процесса
+admin process roles	workflow	ru	Роли Административного Процесса
+admin processes	workflow	ru	Административные Процессы
+admin processes sources	workflow	ru	Источникии Административных Процессов
+administer instances	admin	ru	Администрировать экземпляры
+administer processes	admin	ru	Администрировать процессы
+agent #%1 of type %2 is associated to an inexistent activity #%3	workflow	ru	Агент #%1 типа %2 сопоставлен с несуществующей деятельностью #%3
+agent #%1 of type %2 is not linked with an activity	workflow	ru	Агент #%1 типа %2 не связан с деятельностью
+agent associated with inexistent activity	workflow	ru	Агент сопоставлен с несуществующей деятельностью
+agent without activity	workflow	ru	Агент без деятельности
+agents assigned to this activity	workflow	ru	Агент назначен этой деятельности
+all	workflow	ru	Все
+always show advanced actions	workflow	ru	Всегда показывать расширенные действия
+always show advanced mode	workflow	ru	Всега показывать расширенные режимы
+assign me this activity	workflow	ru	Назначить мне эту деятельность
+at least one email address cannot be validated.	workflow	ru	Как минимум один из адресов электронной почты не может быть проверен
+auto routed	workflow	ru	Автоматически маршрутизируется
+auto-release on leaving activity	common	ru	авто разъединение после завершения деятельности
+automatic	workflow	ru	Автоматический
+autorouted activities does not need to be sent by any user after their execution	workflow	ru	Автоматически маршрутизируемые деятельности не нуждаются в отсылке их любым пользователем после их выполнении
+bad parameter for setagents, the parameter should be an array	workflow	ru	неправильный параметр для setAgents, параметр должны быть массивом
+bad role type	workflow	ru	Неправильны тип роли
+bad user	workflow	ru	Неправильный пользователь
+base directory does not exist, please ask adminstrator to check the global configuration	common	ru	Базовый каталог не существует, пожалуйста, попросите администратору проверить общую конфигурацию
+bcc:	workflow	ru	Bcc:
+be carefull with interactive activity, end and start of theses activities are multiple.	workflow	ru	Будьте внимательны с интерактивной деятельностью, начало и конец этих деятельностей - множественны.
+being run	workflow	ru	запущено
+by running theses links you will create new instances of the related process.	workflow	ru	запуская эти ссылки Вы создадите новые экземпляры связанных процессов
+cannot add transition only split or switch activities can have more than one outbound transition	workflow	ru	Невозможно добавить переход, только деятельности "разделить" и "переключить" могут иметь более одного исходящего переходы
+cannot add transition. only split activities can have more than one outbound transition	workflow	ru	Невозможно добавить переход. Только деятельности "разделить" могут иметь более одного исходящего перехода
+cannot create compiled file %1	workflow	ru	невозможно создать компилированный файл %1
+cannot retrieve the user running the security check	workflow	ru	Невозможно получить пользователя, запустившего проверку безопасности
+cannot run the activity	workflow	ru	Невозможно запустить деятельность
+cannot run the activity without her process	workflow	ru	Невозможно запустить деятельность без её процессов
+cannot run the activity without instance	workflow	ru	Невозможно запустить деятельность без экземпляров
+cannot run unknown activity	workflow	ru	Невозможно запустить незнакомую деятельность
+cc:	workflow	ru	Cc:
+circular reference found some activity has a transition leading to itself	workflow	ru	Циклическая ссылка обнаружила, что какая-то деятельность имеет переход, ведущие к ней же
+circular reference found. some activity has a transition leading to itself	workflow	ru	Обнаружена циклическая ссылка. Какая-то деятельность имеет переход, ведущие к ней же
+cleanup aborted instances	admin	ru	Очистка прерванные экземпляры
+cleanup actions	workflow	ru	очистить действия (действия по очистке?)
+close and get back later	workflow	ru	Закрыть и вернуться позже
+close printer friendly mode	workflow	ru	Закрыть оптимизированный для печати режим
+code	workflow	ru	код
+column activity status in instance lists	workflow	ru	Колонка состояния деятельности в списке экземпляров
+column category in instance lists	workflow	ru	Колонка категории в списке экземпляров
+column instance id in instance lists	workflow	ru	Колонка идентификаторов экземпляров в списке экземпляров
+column instance name in instance lists	workflow	ru	Колонка названий экземпляров в списке экземпляров
+column instance status in instance lists	workflow	ru	Колонка состояния операций в списке экземпляров
+column owner in instance lists	workflow	ru	Колонка владельца в списке экземпляров
+column priority in instance lists	workflow	ru	Колонка приоритета в списке экземпляров
+column process name in instance lists	workflow	ru	Колонка имени процесса в списке операций
+column start date in instance lists	workflow	ru	Колонка даты начала в списке экземпляров
+compilation	workflow	ru	Компилирование
+compiling activity %1 : %2	workflow	ru	компилирование деятельности %1 : %2
+complete	workflow	ru	Завершить
+complete cleanup of aborted instances done	workflow	ru	завершить очистка прерванных экземпляров выполнена
+complete cleanup of all instances done	workflow	ru	завершить очистка всех экземпляров выполнена
+completed	workflow	ru	завершено
+config values	common	ru	Значения конфигурации
+confirm delete	workflow	ru	Подвердить Удаление
+consult %1 to get the default values:	workflow	ru	Обратитесь к %1 для получение значений по умолчанию:
+couldn't add transition	workflow	ru	Невозможно добавить переход
+create	workflow	ru	создать
+created	workflow	ru	Создано
+date:	workflow	ru	дата:
+default config values	workflow	ru	Значения конфигурации по умолчанию
+default next user	workflow	ru	Следующий пользователь по умолчанию
+default owner	workflow	ru	Владелец по умолчанию
+default settings for processes	admin	ru	Установки для процессов по умолчанию
+default user	workflow	ru	Пользователь по умолчанию
+delete selected	workflow	ru	Удаление выбраные
+delete transition	workflow	ru	удалить переход
+deletion successful	workflow	ru	Удалено успешно
+delition successful	workflow	ru	Удалено успешно
+description	workflow	ru	Описание
+display please wait message	common	ru	показать сообщения "пожалуйста, подождите"
+do you want the activity status on instances lists. most of the time it is "running" but if you use non-autorouted transitions you will have some completed activities.	workflow	ru	Вы хотите состояние деятельности в списке операций. Большую часть времени это будет "идёт", но если Вы используете неавтомаршрутизируемые переходы Вы будете иметь некоторые завершенные деятельности.
+do you want the category column on instances lists, if yout instances use categories you should use it	workflow	ru	Вы хотите колонку категории в списке экземпляров, если ваши экземпляры используют категории вы должны использовать это
+do you want the category name column on instances lists, if your instances use categories you should use it	workflow	ru	Вы хотите колонку имени категории в списке экземпляров, если ваши экземпляры используют категории вы должны использовать это
+do you want the category name column on instances lists. if your instances use categories you should use this	workflow	ru	Вы хотите колонку категории в списке экземпляров. Если ваши экземпляры используют категории вы должны использовать это
+do you want the instance id column on instances lists. this is the unique identifier of an instance	workflow	ru	Вы хотите колонку идентификатора экземпляра категории в списке экземпляров. Это - уникальный идентификатор экземпляра
+do you want the instance name column on instances lists. if your instances have name you should really use this	workflow	ru	Вы хотите колонку кимени экземпляра в списке экземпляров. Если ваши экземпляры имеют имя вы должны действительно использовать это
+do you want the instance status on instances lists. the instance status is usefull to disting beteween aborted, completed, exception or active instances	workflow	ru	Вы хотите состояние экземпляра в списке экземпляров. Статус экземпляра полезен для разделения между прерванными, завершенными, исключениями или активными экземплярами
+do you want the owner column on instances lists. this will show you the actual owner, especially usefull if ownership is defined with special rights	workflow	ru	Вы хотите колонку владельца в списке экземпляров. Она будет показывать вам действующего владельца, особенно полезно если владелец определен со специальными правами
+do you want the priority column on instances lists. priority can be set with activities forms	workflow	ru	Вы хотите колонку приоритета в списке экземпляров. Приоритет можно установить в формах деятельностей
+do you want the process column on instances lists. usefull if you have different processes and/or versions of theses processes	workflow	ru	Вы хотите колонку процесса в списке экземпляров. Полезно если у вас разные процессы и/или версии этих процессов
+do you want the search instance button in the last row of instances list.	workflow	ru	Вы хотите кнопку поиск экземпляра в последней строке списка экземпляров.
+do you want the started date column on instances lists.	workflow	ru	Вы хотите колонку даты начала в списке экземпляров.
+don't move	workflow	ru	Не перемещать
+draw roles	common	ru	нарисовать роли
+draw roles on the graph beside activity name like [that]	admin	ru	нарисовать роли в графе рядом с именем деятельности как [здесь]
+duration	workflow	ru	Продолжительность
+empty agent type	workflow	ru	не заполнен тип агента
+end	workflow	ru	конец
+end activity is not reachable from start activity	workflow	ru	Конечная деятельнсть недостижима из начальной деятельности
+ended	workflow	ru	закончено
+enter an activity name	workflow	ru	Введите название деятельности
+error: nextactivity does not match any candidate in autorouting switch activity	workflow	ru	Ошибка: следующаяДеятельность не соответствует ни одному кандидату в автомаршрутизируемой переключающей деятельности
+error: non-deterministic decision for autorouting activity	workflow	ru	Ошибка: не-предопределенное решение для автомаршрутизируемой деятельности
+error: removing was not done	workflow	ru	ошибка: удаления не сделано
+error: trying to send an instance to an activity but it was impossible to get this activity	workflow	ru	Ошибка: попытка переслать экземпляр в деятельность, но невозможно получить эту деятельность
+error: trying to send an instance to an activity but no transition found	workflow	ru	Ошибка: попытка переслать экземпляр в деятельность, но не найден переход
+exception	workflow	ru	исключение
+exception instance	workflow	ru	экземпляр исключения
+exception raised by %1 %2: %3	workflow	ru	исключение вызвано %1 %2: %3
+exception resumed by %1 %2: %3	workflow	ru	исключение получено %1 %2: %3
+exception this instance	workflow	ru	Сделать этот экземпляр исключением (?)
+exceptions	workflow	ru	исключения
+execute this activity	workflow	ru	Выполнить деятельность
+export	workflow	ru	Экспорт
+failed to create workitem	workflow	ru	ошибка при создании элемента работы
+failed to execute automatic activity	workflow	ru	ошибка при выполнении автоматической деятельности
+failed to obtain lock on %1 table	workflow	ru	ошибка при получении блокировки на %1 таблицу
+failed to obtain lock on instances table	workflow	ru	ошибка при получении блокировки на таблицу экземпляров
+failed to obtain lock on instances_activities table	workflow	ru	ошибка при получении блокировки на таблицу экземпляры_деятельности
+failed to record instance properties	workflow	ru	ошибка при записи свойств экземпляра
+failed to synchronize instance data with the database	workflow	ru	ошибка при синхронизации данных экземпляра с базой данных
+failure	workflow	ru	ошибка
+fatal error: nextactivity does not match any candidate in autorouting switch activity	workflow	ru	Фатальная ошибка: следующаяДеятельность не соответствует ни одному кандидату в автомаршрутизируемой переключающей деятельности
+fatal error: non-deterministic decision for autorouting activity	workflow	ru	Фатальная ошибка: не-предопределенное решение для автомаршрутизируемой деятельности
+fatal error: setting next activity to an unexisting activity	workflow	ru	Фатальная ошибка: установка следующей активности в несуществующую активность
+fatal error: trying to send an instance to an activity but no transition found	workflow	ru	Фатальная ошибка: попытка переслать экземпляр в деятельность, но не найден переход
+filter	workflow	ru	Фильтр
+filter instance by id	workflow	ru	фильтровать экземпляры по идентификатору
+finally you have links with <strong>%link_xx|yy%</strong> syntax, xx is the address part, yy the text part.	workflow	ru	наконец у вас есть ссылки с синтаксисом <strong>%link_XX|YY%</strong>, ХХ - это адресная часть, УУ - текстовая часть.
+fix	workflow	ru	Зафиксировать
+fix concistency for selected rows	workflow	ru	Зафиксировать содержание для выбранных рядов
+font size	workflow	ru	Размер шрифта
+from	workflow	ru	Из (от?)
+from:	workflow	ru	Из (от?):
+get back to global activities	workflow	ru	вернуться к общим деятельностям
+get back to instance creation	workflow	ru	вернуться к созданию экземпляра
+get property	workflow	ru	Получить свойство
+global activities	workflow	ru	Общие деятельности
+global workflow preferences	workflow	ru	Общие Предпочтения Бизнес-Процессов
+go	workflow	ru	перейти
+go to same activities for other instances of this process	workflow	ru	перейти к этим же деятельностям других экземпляров этого процесса
+go to same process activities	workflow	ru	перейти к тем же деятельностям процесса
+go to the actual state of this instance	workflow	ru	перейти к текущему состоянию этого экземпляра
+grab instance	workflow	ru	захватить экземпляр
+grant access to the administration and development of workflow processes and activities.	admin	ru	Дать доступ к администрированию и разработке процессов и деятельностей бизнес-процессов.
+grant access to the administration of workflow elements	admin	ru	Дать доступ к администрированию элементов бизнес-процессов.
+grant access to the administration of workflow instances in monitor screens	admin	ru	Дать доступ к администрированию экземпляров бизнес-процессов на экранах контроля.
+grant access to the cleanup/deletion of workflow aborted instances in monitor screens	admin	ru	Дать доступ к очистке/удалению прерванных экземпляров бизнес-процессов на экранах контроля.
+grant access to the monitoring of workflow elements	admin	ru	Дать доступ к контролю элементов бизнес-процессов
+graph	workflow	ru	Граф
+graphic options	common	ru	Опции графики
+group	workflow	ru	Группа
+id	workflow	ru	Идентификатор
+if automatic parsing is disabled next options will be useless	admin	ru	если автоматический анализ отключен, следующие опции будут бесполезны
+if not in debug mail_smtp agent would have sent this email:	workflow	ru	при не в режиме отладки агент mail_smpt отправит это сообщение:
+if user is in a role for an activity he will have the right to abort the related instance	admin	ru	если пользователь в роли для деятельности он будет имеет право прервать связанный экземпляр
+if user is in a role for an activity he will have the right to exception or resume the related instance	admin	ru	если пользователь в роли для деятельности он будет имеет право прервать или продолжить связанный экземпляр
+if user is in a role for an activity he will have the right to release (un-assign) the related instance	admin	ru	если у пользоваетля есть роль в деятельности,он имеет право запускать операцию
+if:setnextact	workflow	ru	Если:УстановитьСледующийact
+import aborted	workflow	ru	Импорт прерван
+import successfull	workflow	ru	Импорт удачно завершен
+in role mappings user #%1 is specified as a "%2" but is maybe a "%3"	workflow	ru	В отображении ролей пользователь #%1 указан как "%2", но МОЖЕТ БЫТЬ "%3"
+inactive	workflow	ru	Неактивен
+inst.	workflow	ru	Экз.
+inst. status	workflow	ru	Состояние экз.
+instance	workflow	ru	Экземпляр
+instance %1	workflow	ru	экземпляр %1
+instance %1 is in %2 state, action %3 is impossible.	workflow	ru	Экземпляр %1 в состоянии %2, действие %3 невозможно.
+instance %1 is in exception, action %2 is not possible.	workflow	ru	Экземпляр %1 находится в исключении, действие %2 невозможно.
+instance %1 is not associated with activity %2, action %3 is impossible.	workflow	ru	Экземпляр %1 не сопоставлена с деятельностью %2, действие %3 невозможно.
+instance history	workflow	ru	История экземпляра
+instance properties	workflow	ru	Свойства экземпляра
+instance:	workflow	ru	экземпляр:
+instance: %1 (process: %2)	workflow	ru	Экземпляр: %1 (Процесс: %2)
+instance: unable to modify %1 [%2], someone has changed it before us	workflow	ru	Экземпляр: невозможно изменить %1[%2], кто-то уже изменил его до нас.
+instance: unable to modify %1, someone has changed it before us	workflow	ru	Экземпляр: невозможно изменить %1, кто-то уже изменил его до нас.
+instances	workflow	ru	Экземпляры
+instances selection	workflow	ru	Выбор экземпляров
+int.	workflow	ru	Инт.
+interactive	workflow	ru	Интерактивная
+interactive activities show form before being executed	workflow	ru	Интерактивные деятельности отображают форму перед выполнением
+interactive instances should not call the complete() method	workflow	ru	интерактивная операции не должны вызывать метод complete()
+interactive:	workflow	ru	интерактивная:
+interactivity	workflow	ru	Интерактивность
+invalid	workflow	ru	неправильный
+invalid process	workflow	ru	Неправильный Процесс
+invalid role name	workflow	ru	Неверное имя роли
+is active	workflow	ru	активен
+it seems this activity for this instance is not assigned to you anymore.	workflow	ru	Кажется, эта деятельность для этого экземпляра вам больше не назначена
+it was impossible to complete, no activity was given.	workflow	ru	завершить невозможно, не дана деятельность.
+it was impossible to complete, no corresponding activity was found.	workflow	ru	завершить невозможно, не найдена соответствующая деятельность.
+join	workflow	ru	присоединить
+link addresses are considered local if not containing <strong>http://</strong>. they will get appended the configured local prefix and scanned by egroupware link engine	workflow	ru	Адрес ссылки рассматриваются как локальные, если не содержат <strong>http://</strong>. Они будут предваряться сконфигурированным локальным префиксом и сканируются движком связей egroupware.
+list of activities	workflow	ru	Список деятельностей
+list of all activities with, for each,  counters of instances by status	workflow	ru	список всех деятельностей со счетчиками (для каждой) экземпляров по состояниям
+list of all history items made by instances while they travel in the workflow with information about duration and date	workflow	ru	список всех элементов истории, сделанных экземплярами, когда они проходят бизнес-процесс, с информацией о длительности и дате
+list of all instances with info about current status and activities and link to administration of theses instances	workflow	ru	список всех экземпляров с информацией о текущем состоянии и деятельностях и ссылка на администрирование этих экземпляров
+list of instances	workflow	ru	Список экземпляров
+list of mappings	workflow	ru	Список отображений
+list of monitors	workflow	ru	Cписок конролеров
+list of processes	workflow	ru	Список процессов
+list of processes (%1)	workflow	ru	Список процессов (%1)
+list of processes with status and validity and, for each, counters of instances by status	workflow	ru	список процессов с состоянием и верностью, и (для каждого) счетчиками экземпляров по состояниям
+list of transitions	workflow	ru	Список переходов
+list of workitems	workflow	ru	Список элементов работы
+mail automatically sent by mail smtp agent for egroupware's workflow	workflow	ru	Почтовое сообщение автоматически отправляется с помощью Почтового Агента SMTP для Бизнес-Процессов eGroupWare
+mail smtp agent	workflow	ru	Почтовый Агент SMTP
+mail smtp debug	common	ru	Отладка почты smtp
+mail smtp local link prefix	common	ru	Префикс локальных ссылок почты smtp
+mail smtp profile	common	ru	Профиль почты smtp
+mail smtp signature	common	ru	Подпись почты smtp
+mails can be sent at the begining or at the end of the activity, for interactive activities only it can be sent after completion.	workflow	ru	Почтовые сообщения могут быть отправлены в начале или в конце деятельности, Только для интерактивных деятельностей они могут быть отправлены после завершения.
+manual	workflow	ru	Руководство
+map	workflow	ru	отображение
+map users/groups to roles	workflow	ru	Отобразить пользователей/группа на роли
+mapping to inexistent role	workflow	ru	Отображение для несуществующих процессов
+mappings deleted	workflow	ru	Отображения удалены
+message:	workflow	ru	Сообщение:
+monitor activities	workflow	ru	Контролировать Деятельностей
+monitor instance	workflow	ru	контролировать экземпляр
+monitor instances	workflow	ru	Контролировать Экземпляры
+monitor processes	workflow	ru	Контролировать Процессы
+monitor this instance	workflow	ru	Контролировать этот экземпляр
+monitor work items	workflow	ru	Контролировать Элементы Работы
+monitor workitems	workflow	ru	Контролировать элементы работы
+monitoring	admin	ru	Контроль
+monitors	workflow	ru	Контролеры
+more options?	workflow	ru	больше опций?
+my activities	workflow	ru	Мои Деятельности
+my instances	workflow	ru	Мои Экземпляры
+my processes	workflow	ru	Мои Процессы
+name	workflow	ru	Имя
+new instance	workflow	ru	Новый Экземпляр
+new major	workflow	ru	Новый основной
+new major version created	workflow	ru	новая основная версия создана
+new mapping added	workflow	ru	Новое отображение добавлена
+new minor	workflow	ru	Новая неосновная
+new minor version created	workflow	ru	новая неосновная версия создана
+new status not set, no corresponding activity was found.	workflow	ru	новое состояние не установлено, не найдена соответствующая деятельность.
+new transition added	workflow	ru	Новый переход добавлен
+next activity	workflow	ru	следующая деятельность
+next user:	workflow	ru	Следующий пользователь:
+no action avaible because no activity and no instance are given!	workflow	ru	действия невозможны, т.к. не заданы ни деятельность, ни экземпляр!
+no activites	workflow	ru	Нет деятельностей
+no activity indicated	workflow	ru	Не выявлено деятельности
+no agents associated with this activity	workflow	ru	Нет агентов, сопоставленных с этой деятельностью
+no circular transitions allowed.	workflow	ru	Не разрешены циклические переходы.
+no corresponding activity was found.	workflow	ru	не найдена соответствующая деятельность
+no inbound for start activity	workflow	ru	Нет входящих для начала деятельности
+no inconcistency detected	workflow	ru	не обнаружено несовместимостей
+no instance avaible	workflow	ru	нет доступных экземпляров
+no instance given, nothing to show	workflow	ru	не задан экземпляр, нечего показывать
+no instance indicated	workflow	ru	Не выявлено экземпляров
+no outbound for end activity	workflow	ru	Нет исходящих для конечной деятельности
+no process indicated	workflow	ru	Не выявлено процессов
+no properties defined	workflow	ru	Не определены свойства
+no roles	workflow	ru	нет ролей
+no roles asociated with this activity	workflow	ru	Нет ролей сопоставленных с этой деятельностью
+no routage	workflow	ru	нет маршрутизации
+no scan done	workflow	ru	сканирование не сделано
+no transitions allowed for standalone or view activities	workflow	ru	Не разрешенных переходов для самостоятельной деятельностей или "просмотр"
+no work item indicated	workflow	ru	Не обнаружены элементы работы
+nobody	workflow	ru	Никто
+not defined	workflow	ru	не определено
+or import a process	workflow	ru	Или импортировать процесс
+owner	workflow	ru	Владелец
+owner of the instance will have the right to abort the instance at any time	admin	ru	владелец экземпляра будет иметь право прервать экземпляр в любой момент
+owner of the instance will have the right to exception or resume the instance at any time	admin	ru	владелец экземпляра будет иметь право исключать или возобновлять экземпляр в любое время
+owner of the instance will have the right to release (un-assign) an activity assigned to an user	admin	ru	владелец экземпляра будет иметь право освободить (анулировать назначение) деятельности, назначенной пользователю.
+owner:	workflow	ru	Владелец:
+ownership give abort right	common	ru	владение дает право прерывания
+ownership give exception right	common	ru	владение дает право исключения
+ownership give release right	common	ru	владение дает право освобождения
+please wait, task in progress ...	workflow	ru	Пожалуйста, подождите, задача обрабатывается ...
+post activity %1 code is not avaible	workflow	ru	Код, выполняемый после деятельности %1, не доступен
+post shared code is not avaible	workflow	ru	Код, выполняемый после разделяемого, не доступен
+post-agent %1 code is not avaible	workflow	ru	Код, выполняемый после агента %1, не доступен
+pr.	workflow	ru	Пр.
+pre-activity %1 code is not avaible	workflow	ru	Код, выполняемый перед деятельностью %1, не доступен
+pre-agent %1 code is not avaible	workflow	ru	Код, выполняемый перед агентом %1, не доступен
+pre-shared code is not avaible	workflow	ru	Код, выполняемый перед разделяемым, не доступен
+printer friendly	workflow	ru	Оптимизировано для печати
+priority level:	workflow	ru	Уровень приоритета:
+process	workflow	ru	Процесс
+process %1	workflow	ru	процесс %1
+process %1 %2 is not active, action %3 is impossible	workflow	ru	Процесс %1 %2 не активен, действие %3 невозможно
+process %1 v%2 as no related activity	workflow	ru	Процесс %1 v%2 не имеет сопоставленной деятельности
+process %d has been activated	workflow	ru	Процесс %d активирован
+process %d has been deactivated	workflow	ru	Процесс %d деактивирован
+process %s %s already exists, the import process was aborted	workflow	ru	Процесс %s %s уже существует, процесс импорта прерван
+process %s %s imported	workflow	ru	Процесс %s %s импортирован
+process %s has been created	workflow	ru	Процесс %s создан
+process %s has been updated	workflow	ru	Процесс %s обновлен
+process %s removed	workflow	ru	Процесс %s удален
+process activities	workflow	ru	Деятельности процесса
+process alone	workflow	ru	Процесс - одиночный
+process does not have a start activity	workflow	ru	Процесс не имеет начальную деятельности
+process does not have exactly one end activity	workflow	ru	Процесс не имеет именно одну конечную деятельность
+process form	workflow	ru	Форма процесса
+process name	workflow	ru	Имя Процесса
+process name already exists	workflow	ru	Имя процесса уже существует
+process roles	workflow	ru	Роли Процесса
+process saved	workflow	ru	Процесс сохранен
+process transitions	workflow	ru	Переходы процесса
+process version:	workflow	ru	версия процесса:
+process:	workflow	ru	процесс:
+processes	workflow	ru	Процессы
+properties	workflow	ru	Свойства
+property	workflow	ru	Свойство
+property %1 already exists	workflow	ru	свойство %1 уже существует
+property %1 not found	workflow	ru	свойство %1 не найдено
+quit without saving	workflow	ru	Выйти Без Сохранения
+read-only	workflow	ru	только чтение
+release access to this activity	workflow	ru	Освободить доступ к этой деятельности
+release activity for this instance	workflow	ru	Освободить деятельность для этого экземпляра
+release instance	workflow	ru	освободить экземпляр
+reload filter	workflow	ru	Перезагрузить фильтр
+remove active instances	workflow	ru	Удалить активные экземпляры
+remove all instances for this process	workflow	ru	удалить все экземпляры для этого процесса
+remove selected roles	workflow	ru	удалить выбранные роли
+removing instances and workitems for aborted instances on all processes	workflow	ru	удаление экземпляров и элементов работы для прерванных экземпляров во всех процессах
+removing instances and workitems for aborted instances on process #%1	workflow	ru	удаление экземпляров и элементов работы для прерванных экземпляров в процессе #%1
+removing instances and workitems for all instances on process #%1	workflow	ru	удаление экземпляров и элементов работы для всех экземпляров в процессе #%1
+replyto:	workflow	ru	Ответить:
+restart	workflow	ru	перезапустить
+restart activity	workflow	ru	перезапустить деятельность
+resume this exception instance	workflow	ru	Возобновить этот экземпляр исключения
+role	workflow	ru	Роль
+role #%1 in process %2 has different process (%3) in mapping with user #%4	workflow	ru	Роль #%1 в процессе #%2 имеет отличный процесс (%3) в отображении с пользователем #%4
+role %1 (#%2) is associated with a non-existent process (#%3)	workflow	ru	Роль %1 (#%2) ассоциирована с несуществующим процессом (#%3)
+role %1 is associated in a mapping with user #%2 with a non-existent process (%3)	workflow	ru	Роль %1 (#%2) ассоциирована в отображении с пользователем #%2 с несуществующим процессом (%3)
+role %1 is not mapped	workflow	ru	Роль %1 не отображена
+role added to activity	workflow	ru	Роль добавлена к деятельности
+role added to process	workflow	ru	Роль добавлена к процессу
+role give abort right	common	ru	роль дает право на прерывание
+role give exception right	common	ru	роль дает право на исключение
+role give release right	common	ru	роль дает право на освобождение
+role in inexistent process	workflow	ru	Роль в несуществующем процессе
+role mapping in inexistent process	workflow	ru	Отображение Роли в несуществующем процессе
+role name	workflow	ru	Имя Роли
+role not saved (maybe a name collision)	workflow	ru	Роль не сохранена (возможно - из-за конфликта имен)
+role process inconcistency in mappings	workflow	ru	Несогласованность Роли и Процесса в отображении
+role saved	workflow	ru	Роль сохранена
+roles	workflow	ru	Роли
+roles assigned to this activity	workflow	ru	Роли, назначенные этой деятельности
+roles deleted	workflow	ru	Роль удалена
+routing	workflow	ru	Маршрутизация
+routing:	workflow	ru	маршрутизация:
+run	workflow	ru	запустить
+run activity	workflow	ru	запустить деятельность
+run instance	workflow	ru	запустить экземпляр
+running	workflow	ru	в процессе
+running activities options	common	ru	Опции запущенных деятельностей
+running activity	workflow	ru	Запущенная Деятельность
+scan activities	workflow	ru	Сканировать деятельности
+scan agents	workflow	ru	Сканировать агентов
+scan instances	workflow	ru	Сканировать экземпляры
+scan processes	workflow	ru	Сканировать процессы
+scan roles	workflow	ru	Сканировать роли
+scan transitions	workflow	ru	Сканировать переходы
+search instance filter in the bottom of instance lists	workflow	ru	Фильтра поиска экземпляра внизу списка экземпляров
+search:	workflow	ru	поиск:
+security check: cannot understand asked action	workflow	ru	Проверка безопасности: Не могу понять запрашиваемое действие
+see as well <strong>%instance_name%</strong>, <strong>%activity_name%</strong>, <strong>%process_name%</strong>,<strong>%process_version%</strong>, <strong>%instance_id%</strong>, <strong>%activity_id%</strong> and <strong>%process_id%</strong>	workflow	ru	смотреть также <strong>%instance_name%</strong>, <strong>%activity_name%</strong>, <strong>%process_name%</strong>,<strong>%process_version%</strong>, <strong>%instance_id%</strong>, <strong>%activity_id%</strong> и <strong>%process_id%</strong>
+select a transition to remove	workflow	ru	Выбрать переход для удаления
+select source	workflow	ru	выбрать источник
+send after interactive activity is completed	workflow	ru	послать после завершения интерактивной деятельности
+send all to	workflow	ru	Послать все
+send an email	workflow	ru	Отправить почтовое сообщение
+send instance	workflow	ru	отправить экземпляр
+send this instance to the next activity	workflow	ru	отправить данный экземпляр к следующей деятельности
+send transition	workflow	ru	отправить переход
+send when the activity is ending	workflow	ru	отправить после окончания деятельности
+send when the activity is starting	workflow	ru	отправить при начале деятельности
+send when wf_agent_mail_smtp['submit_send'] is posted	workflow	ru	отправить, когда появится wf_agent_mail_smtp['submit_send']
+set next act	workflow	ru	Установить Следующее действие
+set next user	workflow	ru	Установить следующего пользователя
+set property	workflow	ru	Установить свойство
+setnextuser directives can override it	workflow	ru	Директива setNextUser может перекрыть это
+setting next activity to an unexisting activity	workflow	ru	установка следующей деятельности в несуществующую деятельность
+shared code	workflow	ru	Разделяемый код
+should we always give you the advanced search row on instances lists?	workflow	ru	Должны ли мы всегда давать Вам строку расширенного поиска в списке экземпляров?
+show activity info zone	common	ru	показать зону информации о деятельности
+show activity title	common	ru	показать заголовок деятельности
+show code	workflow	ru	показать код
+show instance name	common	ru	Показать имя экземпляра
+show instance owner	common	ru	показать владельца экземпляра
+show multiple submit as select	common	ru	показать множество, передать как выбрано (???)
+show template	workflow	ru	показать шаблон
+size of the font used on the graph 12 should be a good default value	admin	ru	размер 12 шрифта, используемого в графе, должен быть хорошим значением по умолчанию
+smtp agent has detected some errors when sending email after completion of the activity	workflow	ru	Агент Smtp обнаружил некоторые ошибки при отправке почты после завершения деятельности
+smtp agent has detected some errors when sending email at the beginning of the activity	workflow	ru	Агент Smtp обнаружил некоторые ошибки при отправке почты в начале деятельности
+smtp agent has detected some errors when sending email at the end of this activity	workflow	ru	Агент Smtp обнаружил ошибки при отправке почты при окончании этой деятельности
+smtp agent has detected some errors when sending email on demand whith this activity	workflow	ru	Агент Smtp обнаружил ошибки при отправке почты по требованию данной деятельности
+something was wrong while creating the new major version	workflow	ru	что-то не так при создании основной версии
+something was wrong while creating the new minor version	workflow	ru	что-то не так при создании новой неосновной версии
+source code file for activity %1 is not avaible	workflow	ru	файл исходного кода для деятельности %1 недоступен
+source code for activity %1 is not avaible	workflow	ru	исходный код для деятельности %1 не доступен
+source saved	workflow	ru	Источник сохранен
+special known values for local links address are <strong>userinstance</strong>, <strong>viewinstance</strong>, <strong>viewniceinstance</strong> and <strong>admininstance</strong>.	workflow	ru	Специальные значения для адресов локальных ссылок - <strong>userinstance</strong>, <strong>viewinstance</strong>, <strong>viewniceinstance</strong> и <strong>admininstance</strong>.
+split	workflow	ru	разделить
+standalone	workflow	ru	самостоятельная
+start	workflow	ru	Начало
+start activities must be autorouted	workflow	ru	начальная деятельность должна быть автомаршрутизируемой
+start activities must be interactive	workflow	ru	начальная деятельность должна быть интерактивной
+start activity	workflow	ru	Начать деятельность
+start process	workflow	ru	начать процесс
+started	workflow	ru	Запущено
+started:	workflow	ru	запущено:
+starting page	workflow	ru	Начальная страница
+status	workflow	ru	Состояние
+status:	workflow	ru	состояние:
+stop	workflow	ru	остановить
+subject:	workflow	ru	Предмет:
+switch	workflow	ru	переключатель
+switch construct	workflow	ru	Создание Переключателя
+template	workflow	ru	шаблон
+test concistency	workflow	ru	Проверить согласованность
+test consistency of datas in the database	workflow	ru	Проверить согласованность данных в базе данных
+test local installation	workflow	ru	Тестирование локальной установки
+the /workflow directory does not exist and could not be created. please ask your administrator to check the global configuration	common	ru	Каталог /workflow не существует и не может бытьсоздан. Пожалуйста, попросите администратора проверить общую конфигурацию
+the activity was not completed	workflow	ru	Деятельность не завершена
+the default user will only be set if he is mapped to a role on the activity	workflow	ru	Пользователь по умолчанию может быть установлен только если он отображен на роль в деятельности
+the following items must be corrected to be able to activate this process	workflow	ru	Следующий элемент должен быть правильным чтобы он мог активировать процесс
+the instance title is shown on top of the form	admin	ru	название операции указанно в заголовке формы
+the label you want	workflow	ru	метка, которая вам нужна
+the smtp configuration cannot be loaded by the mail_smtp workflow agent	workflow	ru	конфигурация SMTP не может быть загружена агентом mail_smtp бизнес-процессов
+there are no activities available	workflow	ru	Нет доступных деятельностей
+there are no config value defined	workflow	ru	Не определены значения конфигурации
+there are no instances available	workflow	ru	Не доступных экземпляров
+there are no mappings defined for this process	workflow	ru	Нет отображений, определенных для этого процесса
+there are no process available	workflow	ru	Нет доступного процесса
+there are no processes	workflow	ru	Нет процессов
+there are no processes available	workflow	ru	Нет доступных процессов
+there are no processes defined	workflow	ru	Нет определенных процессов
+there are no processes with the current filter	workflow	ru	Нет процессов с текущим фильтром
+there are no properties available	workflow	ru	Нет доступных свойств
+there are no roles defined for this process	workflow	ru	Нет ролей, определенных для этого процесса
+there are no transitions defined	workflow	ru	Нет определенных переходов
+there are no user activites available	workflow	ru	Нет доступных деятельностей пользователя
+there are no workitems available	workflow	ru	Нет доступных элементов работы
+there are some undefined preferences associated with this form : %1	workflow	ru	есть некоторые неопределенные предпочтения, связанные с данной формой: %1
+there is an unknown user or group #%1 in role mappings	workflow	ru	неизвестный пользователь или группа #%1 в отображении роли
+they were problems at the compilation of the source:	workflow	ru	Пробелмы при компиляции источника:
+this activity for this instance is actually avaible for you.	workflow	ru	Эта деятельность для этого экземпляра сейчас для Вас доступна.
+this activity for this instance is actually only avaible for you.	workflow	ru	Эта деятельность для этого экземпляра только сейчас для Вас доступна.
+this activity for this instance is not specifically assigned to you.	workflow	ru	Эта деятельность для этого экземпляра не специально назначена вам.
+this agent gives the activity the possibility to send an smtp message (mail)	workflow	ru	Этот агент дает деятельности возможность отправлять сообщения SMTP (почту)
+this form will test your local workflow installation to detect potential issues	workflow	ru	Эта форма протестирует вашу локальную установку бизнес-процессов чтобы определить потенциальные спорные моменты
+this is the first screen shown when you click on the workflow application icon	workflow	ru	Это - первый экран, показываемый, когда вы нажимаете пиктограмму приложения Бизнес-Процессы
+this process has a view activity. access in view mode is granted only for this view activty.	workflow	ru	Этот процесс имеет деятельность "просмотр". Доступ в режиме просмотра назначен только для этой деятельности "просмотр"
+this process has no end activity	workflow	ru	этот процесс не имеет конечной деятельности
+this will automatically release the instance when leaving an activity without completing	admin	ru	это вавтоматически освобожит экземпляр при выходе из деятельности без завершения
+this will display an activity footer when any activity is runned with workflow engine related informations	admin	ru	это покажет нижний колонтитул деятельности когда любая деятельность запущена с информацией, касающейся движка бизнес-процессов
+to	workflow	ru	К
+to:	workflow	ru	К:
+transition	workflow	ru	переход
+transition mode	workflow	ru	режим перехода
+transition to %1	workflow	ru	переход к %1
+transition waiting for human interaction	workflow	ru	переход ожидает действий пользователя
+transitions	workflow	ru	переходы
+transitions removed successfully	workflow	ru	переходы успешно удалены
+type	workflow	ru	тип
+type:	workflow	ru	тип:
+unknow fix instruction :%1	workflow	ru	неизвестная исправляющая инструкция: %1
+unknown instruction from the workflow engine: %1	workflow	ru	неизвестная инструкция движка бизнес-процессов: %1
+unknown status	workflow	ru	неизвестное состояние
+update	workflow	ru	обновление
+upload file	workflow	ru	Выгрузить файл
+use <a href="%1">emailadmin</a> to create mail profiles	workflow	ru	Используйте <a href="%1">Администрирование Почты</a>, чтобы создать профиль почты
+use automatic parsing	common	ru	использовать автоматический разбор
+use default	workflow	ru	Использовать значения по умолчанию
+use existing roles	workflow	ru	Использовать имеющиеся роли
+user	workflow	ru	Пользователь
+user #%1 is associated with a non-existent role #%2	workflow	ru	Пользователь #%1 ассоциирован с несуществующей ролью #%2
+user activities	workflow	ru	Деятельности Пользователя
+user instances	workflow	ru	Экземпляры Пользователя
+user instances form: columns	workflow	ru	Форма Экземпляры Пользователя: колонки
+user instances form: filters and actions	workflow	ru	Форма Экземпляры Пользователя: фильтры и действия
+user is not authorized to delete aborted instances	workflow	ru	пользователь не авторизован для удаления прерванных операций
+user is not authorized to delete instances	workflow	ru	пользователь не авторизован для удаления экземпляров
+user processes	workflow	ru	Процессы Пользователя
+user/group	workflow	ru	Пользователь/Группа
+user:	workflow	ru	пользователь:
+users can act on activity before its execution with form and after by sending it to the next activity	workflow	ru	Пользователи могут участвовать в деятельности до её выполнения с формой и после путем передачи их в следующую деятельность
+users/groups	workflow	ru	Пользователи/Группы
+valid	workflow	ru	Действителен
+valid process	workflow	ru	Действительный Процесс
+valid:	workflow	ru	действителен:
+validity:	workflow	ru	Действительность:
+value	workflow	ru	Значение
+version	workflow	ru	Версия
+view details	workflow	ru	смотреть подробности
+view this instance	workflow	ru	смотреть этот экземпляр
+view workitem	workflow	ru	Смотреть Элемент Работы
+warning this filter override all others filters	workflow	ru	предупреждение этот фильтр перекрывает все другие фильтры
+warning: by using this button you will definitively remove all aborted instances and their history (workitems) for the selected process.	workflow	ru	предупреждение: используя эту кнопку Вы окончательно удаляете все прерванные экземпляры И их историю (элементы работы) для выбранного процесса.
+warning: by using this button you will definitively remove all instances and their history (workitems) for the selected process, whatever the state they are.	workflow	ru	предупреждение: используя эту кнопку Вы окончательно удаляете все экземпляры И их историю (элементы работы) для выбранного процесса, в каком бы состоянии они не находились.
+we cannot run this activity, maybe this instance or this activity do not exists anymore.	workflow	ru	мы не можем запустить эту деятельность, возможно этот экземпляр или эта дейтельность больше не существует
+we were not able to build the message	workflow	ru	Мы не могли составить сообщение
+when in advanced mode, should we show you advanced actions by default (resume, exception, grab, etc.)?	workflow	ru	В расширенном режиме - должны ли мы показывать Вам расширенные действия по умолчанию (возобновить, исключение, захватить и т.д.)?
+when multiple submit options are avaible we draw a select box with only one submit instead of multiple buttons	admin	ru	когда разрешена опция множественного submit мы рисуем список выбора только с одним submit вместо множества кнопок
+when to send the message:	workflow	ru	Когда отправить Сообщение:
+workflow	common	ru	Бизнес-Процесс
+workflow configuration	admin	ru	Конфигурация Бизнес-процесса
+workflow navigation	workflow	ru	Навигация по бизнес-процессу
+workflow preferences	workflow	ru	Предпочтения Бизнес-Процесса
+workflow site configuration	workflow	ru	Конфигурация Сайта Бизнес-Процесса
+workflow.ui_useractivities	workflow	ru	workflow.ui_useractivities
+workitem information	workflow	ru	Информация об элементах работы
+workitems	workflow	ru	Элементы работы
+you are not allowed to abort instance %1	workflow	ru	Вам не разрешено прерывать экземпляр %1
+you are not allowed to exception instance %1	workflow	ru	Вам не разрешено исключать экземпляр %1
+you are not allowed to grab instance %1	workflow	ru	Вам не разрешено захватывать экземпляр %1
+you are not allowed to release instance %1	workflow	ru	Вам не разрешено освобождать экземпляр %1
+you are not allowed to restart instance %1	workflow	ru	Вам не разрешено начать сначала экземпляр %1
+you are not allowed to resume instance %1	workflow	ru	Вам не разрешено возобновлять экземпляр %1
+you are not allowed to send instance %1	workflow	ru	Вам не разрешено послать экземпляр %1
+you can use special values with this mail agent:	workflow	ru	Вы можете использовать специальные значения с этим агентом почты:
+you do not have the right to run this activity anymore, maybe a concurrent access problem, refresh your datas.	workflow	ru	У вас нет больше права запуска этой деятельности, возможно проблемы с конкурентным доступом, обновите ваши данные
+you don't have the rights necessary to exception instance %1	workflow	ru	У вас нет прав, необходимых для исключения экземпляра %1
+you have not permission to execute this activity	workflow	ru	У вас нет разрешения выполнять эту деятельность
+you were not allowed to complete the activity	workflow	ru	вам не разрешено завершение деятельности

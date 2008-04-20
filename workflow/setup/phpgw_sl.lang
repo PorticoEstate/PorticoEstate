@@ -1,0 +1,197 @@
+abort instance	workflow	sl	prekini primerek
+aborted	workflow	sl	prekinjeno
+act	workflow	sl	delovati
+act. status	workflow	sl	Status aktivnosti
+activate	workflow	sl	aktiviraj
+active	workflow	sl	Dejaven
+activities	workflow	sl	Dejavnosti
+activities updated	workflow	sl	Posodobljene dejavnosti
+activity	workflow	sl	dejavnost
+activity  status	workflow	sl	Status dejavnosti
+activity %1 is interactive but has no role assigned	workflow	sl	Dejavnost %1 je interaktivna, vendar nima prirejene nobene vloge.
+activity %1 is interactive so it must use the $instance->complete() method	workflow	sl	Dejavnost %1 je interaktivna, zato mora uporabiti postopek $instance->complete().
+activity %1 is non-interactive and non-autorouted but has no role assigned	workflow	sl	Dejavnost %1 je neinteraktivna in ni samodejno usmerjena, vendar ima prirejeno vlogo.
+activity %1 is non-interactive so it must not use the $instance->complete() method	workflow	sl	Dejavnost %1 je interaktivna, zato ne sme uporabiti postopka $instance->complete().
+activity %1 is standalone and is using the $instance object	workflow	sl	Dejavnost %1 je samostojna in uporablja objekt $instance.
+activity %1 is standalone but has transitions	workflow	sl	Dejavnost %1 je samostojna, vendar uporablja prehode.
+activity %1 is switch so it must use $instance->setnextactivity($actname) method	workflow	sl	Dejavnost %1 je stikalo, zato mora uporabiti postopek $instance->setNextActivity($actname).
+activity completed	workflow	sl	Dejavnost dokončana
+activity name already exists	workflow	sl	Ime dejavnosti že obstaja
+activity role removed	workflow	sl	Vloga dejavnosti odstranjena
+activity saved	workflow	sl	Dejavnost shranjena
+add a transition	workflow	sl	Dodaj prehod
+add new	workflow	sl	dodaj novo
+add or edit a process	workflow	sl	Dodaj ali uredi proces
+add or edit an activity	workflow	sl	Dodaj ali uredi dejavnost
+add property	workflow	sl	Dodaj lastnost
+add role	workflow	sl	Dodaj vlogo
+add role to process	workflow	sl	Dodaj vlogo procesu
+add transitions	workflow	sl	Dodaj prehod
+add transitions from	workflow	sl	Dodaj prehod od
+add transitions to	workflow	sl	Dodaj prehod k
+admin export	workflow	sl	Administrativni izvoz
+admin instance	workflow	sl	Oskrbnikov primerek
+admin process activities	workflow	sl	Dejavnosti oskrbnikovega procesa
+admin process roles	workflow	sl	Vloge oskrbnikovega procesa
+admin processes	workflow	sl	Oskrbnikovi procesi
+admin processes sources	workflow	sl	Viri oskrbnikovih procesov
+all	workflow	sl	Vsi
+auto routed	workflow	sl	Samodejno usmerjen
+automatic	workflow	sl	Samodejen
+base directory does not exist, please ask adminstrator to check the global configuration	common	sl	Osnovna mapa ne obstaja, prosite oskrbnika, da preveri globalno konfiguracijo.
+being run	workflow	sl	teče
+cannot add transition. only split activities can have more than one outbound transition	workflow	sl	Ne morem dodati prehoda. Le razcepne aktivnosti imajo lahko več kot en izhodni prehod.
+circular reference found. some activity has a transition leading to itself	workflow	sl	Najdena krožna referenca. Neka aktivnost vodi sama do sebe.
+code	workflow	sl	koda
+complete	workflow	sl	Končano
+completed	workflow	sl	dokončano
+couldn't add transition	workflow	sl	Ne morem dodati prehoda
+create	workflow	sl	ustvari
+created	workflow	sl	Ustvarjen
+delete selected	workflow	sl	Izbriši označeno
+deletion successful	workflow	sl	Izbris uspešen
+delition successful	workflow	sl	Izbris uspešen
+description	workflow	sl	Opis
+don't move	workflow	sl	Ne premakni
+duration	workflow	sl	Trajanje
+end	workflow	sl	konec
+end activity is not reachable from start activity	workflow	sl	Zaključna dejavnost ni dosegljiva iz začetne zadejavnosti
+exception instance	workflow	sl	izjemen primerek
+exceptions	workflow	sl	izjeme
+export	workflow	sl	Izvoz
+export a process	workflow	sl	Izvozi proces
+export file	workflow	sl	Izvozna datoteka
+fatal error: nextactivity does not match any candidate in autorouting switch activity	workflow	sl	Usodna napaka: naslednja dejavnost (nextActivity) se ne ujema z nobenim od kandidatov v samodejno usmerjenih dejavnostih.
+fatal error: non-deterministic decision for autorouting activity	workflow	sl	Usodna napaka: nedeterministična odločitev v samodejno usmerjeni dejavnosti.
+fatal error: setting next activity to an unexisting activity	workflow	sl	Usodna napaka: pošiljanje naslednje dejavnosti v neobstoječo dejavnost.
+fatal error: trying to send an instance to an activity but no transition found	workflow	sl	Usodna napaka: poskus pošiljanja primerka na dejavnost brez vmesnega prehoda.
+filter	workflow	sl	Filter
+from	workflow	sl	Od
+get property	workflow	sl	Pridobi lastnost
+grab instance	workflow	sl	primi primerek
+graph	workflow	sl	Graf
+group	workflow	sl	Skupina
+id	workflow	sl	Šifra
+if:setnextact	workflow	sl	Če:DoločiNaslednjoAktivnost
+inactive	workflow	sl	Nedejaven
+inst. status	workflow	sl	Status primerka
+instance	workflow	sl	Primerek
+instance properties	workflow	sl	Lastnosti primerka
+instance: %1 (process: %2)	workflow	sl	Primerek: %1 (Proces: %2)
+instances	workflow	sl	Primerki
+interactive	workflow	sl	Interaktiven
+interactivity	workflow	sl	Interaktivnost
+invalid	workflow	sl	neveljaven
+invalid process	workflow	sl	Neveljaven proces
+is active	workflow	sl	je dejaven
+join	workflow	sl	združi
+list of activities	workflow	sl	Seznam dejavnosti
+list of instances	workflow	sl	Seznam primerkov
+list of mappings	workflow	sl	Seznam preslikav
+list of processes	workflow	sl	Seznam procesov
+list of processes (%1)	workflow	sl	Seznam procesov (%1)
+list of transitions	workflow	sl	Seznam prehodov
+list of workitems	workflow	sl	Seznam delovnih elementov
+manual	workflow	sl	Priročnik
+map	workflow	sl	preslikaj
+map users/groups to roles	workflow	sl	Preslikaj vloge uporabnikom/skupinam
+mappings deleted	workflow	sl	Preslikave izbrisane
+monitor activities	workflow	sl	Pregled dejavnosti
+monitor instances	workflow	sl	Pregled primerkov
+monitor processes	workflow	sl	Pregled procesov
+monitor work items	workflow	sl	Pregled delovnih elementov
+name	workflow	sl	Ime
+new major	workflow	sl	Nov večji
+new mapping added	workflow	sl	Dodana nova preslikava
+new minor	workflow	sl	Nov manjši
+new transition added	workflow	sl	Dodan nov prehod
+no activity indicated	workflow	sl	Nobena dejavnost ni označena
+no instance indicated	workflow	sl	Noben primerek ni označen
+no process indicated	workflow	sl	Noben proces ni označen
+no properties defined	workflow	sl	Nobena lastnost ni definirana
+no roles	workflow	sl	ni vlog
+no roles asociated with this activity	workflow	sl	S to dejavnostjo ni povezana nobena vloga
+no work item indicated	workflow	sl	Noben delovni element ni označen
+or import a process	workflow	sl	Ali uvozi proces
+owner	workflow	sl	Lastnik
+process	workflow	sl	Proces
+process %d has been activated	workflow	sl	Proces %d je bil aktiviran
+process %d has been deactivated	workflow	sl	Proces %d je bil deaktiviran
+process %s %s imported	workflow	sl	Proces %s %s je bil uvožen
+process %s has been created	workflow	sl	Proces %s je bil ustvarjen
+process %s has been updated	workflow	sl	Proces %s je bil osvežen
+process %s removed	workflow	sl	Proces %s je bil odstranjen
+process activities	workflow	sl	Dejavnosti procesa
+process does not have a start activity	workflow	sl	Proces nima začetne dejavnosti
+process does not have exactly one end activity	workflow	sl	Proces nima natanko ene končne dejavnosti
+process form	workflow	sl	Obrazec procesa
+process name already exists	workflow	sl	Ime procesa je že uporabljeno
+process roles	workflow	sl	Vloge procesa
+process transitions	workflow	sl	Prehodi procesa
+processes	workflow	sl	Procesi
+properties	workflow	sl	Lastnosti
+property	workflow	sl	Lastnost
+release instance	workflow	sl	sprosti primerek
+role %1 is not mapped	workflow	sl	Vloga %1 ni preslikana
+role added to process	workflow	sl	Vloga je bila dodana k procesu
+role saved	workflow	sl	Vloga je bila shranjena
+roles	workflow	sl	Vloge
+roles assigned to this activity	workflow	sl	Vloge, ki so bile določene tej dejavnosti
+roles deleted	workflow	sl	Vloge so bile izbrisane
+routing	workflow	sl	Preusmerjanje
+run	workflow	sl	tek
+run activity	workflow	sl	poženi dejavnost
+run instance	workflow	sl	poženi primerek
+running	workflow	sl	teče
+running activity	workflow	sl	Tekoče dejavnosti
+select source	workflow	sl	izberi vir
+send all to	workflow	sl	Pošlji vse v
+send instance	workflow	sl	pošlji primerek
+set next act	workflow	sl	Določi naslednjo aktivnost
+set next user	workflow	sl	Določi naslednjega uporabnika
+set property	workflow	sl	Določi lastnost
+shared code	workflow	sl	Koda v souporabi
+show code	workflow	sl	pokaži kodo
+show template	workflow	sl	pokaži predlogo
+source saved	workflow	sl	Vir shranjen
+split	workflow	sl	razcepi
+standalone	workflow	sl	samostojen
+start	workflow	sl	Začetek
+started	workflow	sl	Začet
+status	workflow	sl	Status
+stop	workflow	sl	ustavi
+switch	workflow	sl	preklopi
+switch construct	workflow	sl	Preklopi obliko
+template	workflow	sl	predloga
+the /workflow directory does not exist and could not be created. please ask your administrator to check the global configuration	common	sl	Mapa /workflow ne obstaja in je ni mogoče ustvariti. Prosite oskrbnika, da preveri globalno konfiguracijo.
+the following items must be corrected to be able to activate this process	workflow	sl	Naslednje zadeve je potrebno popraviti, da bo aktiviranje procesa mogoče:
+there are no activities available	workflow	sl	Ni razpoložljivih dejavnosti
+there are no instances available	workflow	sl	Ni razpoložljivih primerkov
+there are no mappings defined for this process	workflow	sl	Za ta proces ni definiranih preslikav
+there are no processes	workflow	sl	Ni procesov
+there are no processes available	workflow	sl	Na voljo ni nobenih procesov
+there are no processes defined	workflow	sl	Noben proces ni definiran
+there are no properties available	workflow	sl	Na razpolago ni nobene lastnosti
+there are no roles defined for this process	workflow	sl	Za ta proces ni definiranih vlog
+there are no transitions defined	workflow	sl	Za ta proces ni definiranih prehodov
+there are no user activites available	workflow	sl	Za ta proces ni razpoložljivih uporabniških dejavnosti
+there are no workitems available	workflow	sl	Ni razpoložljivih delovnih elementov
+to	workflow	sl	K
+transitions removed successfully	workflow	sl	Prehodi so bili uspešno odstranjeni
+type	workflow	sl	tip
+update	workflow	sl	posodobi
+upload file	workflow	sl	Prenesi datoteko
+user	workflow	sl	Uporabnik
+user activities	workflow	sl	Uporabnikove dejavnosti
+user instances	workflow	sl	Uporabnikovi primerki
+user processes	workflow	sl	Uporabnikovi procesi
+user/group	workflow	sl	Uporabnik/Skupina
+users/groups	workflow	sl	Uporabniki/Skupine
+valid	workflow	sl	Veljaven
+valid process	workflow	sl	Veljaven proces
+value	workflow	sl	Vrednost
+version	workflow	sl	Različica
+workflow	common	sl	Delovni procesi
+workitem information	workflow	sl	Podatki o delovnem elementu
+workitems	workflow	sl	Delovni elementi
+you have not permission to execute this activity	workflow	sl	Za to dejavnost nimate dovoljenja
