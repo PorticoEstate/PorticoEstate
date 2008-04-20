@@ -1,0 +1,161 @@
+The second digit is pair (0,2,...) when the version is considered stable
+have a look at the roadmap and other info in the workflow wiki: http://egroupware.org/egroupware/wiki/index.php?page=Work-flow+engine
+mbartz is Michael Bartz
+alpeb is Alejandro Pedraza
+regis_glc or regis_leroy is Regis Leroy <regis.leroy@makina-corpus.org> and is actual maintainer for egroupware's galaxia version
+
+[1.3.00.001] unstable development version ** WARNING USE IT FOR TEST PURPOSE ONLY **
+	* ported to phpGroupWare
+
+
+[1.3.00.000] unstable development version ** WARNING USE IT FOR TEST PURPOSE ONLY **
+	* start xajax support in the workflow
+	* use processes.css to decorate process names in all listings
+	* integrate patch 1497085 new method gui_list_instance_by_owner by Mauricio Luiz Viani, integration with gui_list_user_instance
+	* patch 1533381 - Mauricio Luiz Viani- missing $ in GUI/gui_list_instances_by_owner and missing space in gui_list_user_instances
+	* patch 495 - Oscar Manuel Gomez Senovilla : fix bad version upgrade
+	* getInstance deprecated, use loadInstance
+	* patch #19 and patch#601 from Jose Luis Gordo Romero missing braket and Group name in role admin
+	* loadInstance broken on getInstance warning, fix by Nathan Gray (nathan at goarctic dot com)
+
+[1.2.01.007] bugfixes release ** LATEST STABLE RELEASE **
+	* fix bad synchro on Instance fields, especially on automatic and start activities (regis_leroy)
+	* pieces of patch 1532608 - Sidnei Drovetto drovetto@users.sourceforge.net - missing database synchro on instance nextUser property
+
+[1.2.01.006] bugfixes release
+        * fix error on InstanceManager->get_instance thanks to Gareth Walter <Gareth@irrational.com.au>
+	* fix SQL error on InstanceManager->get_instance_activities thanks to Gareth Walter <Gareth@irrational.com.au>
+	* fix wrong file existence check on ProcessManager->_create_directory_structure thanks to joseph.cachico@orange.fr
+	* fix broken css class name on instance status (regis_glc)
+	* fix ; instead of : in monitors.css (regis_glc)
+	* fix opx instead of 0px in ui_userintance (regis_glc)
+	* bugfix: instances without any properties cause SQL errors
+	* bugfix StartPage in user settings not saved, patch by Jose Luis Gordo Romero
+
+[1.2.01.005] on egroupware 1.2 RC8
+	* fix hard-coded link on app.css (regis_glc)
+	* fix broken next_user affectation (thanks to pierre gubernatis for bug report)
+	* fix php5 warning about empty properties on view instance and/or workitems
+
+[1.2.01.004] 
+	* fix sql bug on empty group membership (regis_glc)
+
+[1.2.01.003] Minor fixes and translations - egroupware 1.2 RC6
+	* fix bug #1395256 Missing css file on template other than default, solution by Mauricio Luiz Viani
+	* fix problem signaled by John Loft, prevent galaxia from crashing on bad configuration, this would crash user deletion as well (regis_glc)
+	* missing icon for view activities (regis_glc)
+
+[1.2.01.002] Minor fixes
+	* fix PHP5 warnings (regis_glc)
+	* fix for bug #1385356 Workflow Monitor InstanceSQL error with MySQL (regis_glc)
+
+[1.2.01.001] Release Candidate 5
+	* fix some warnings (regis_glc)
+	* translations fixes, 'please wait' message fix by omgs
+	* fixing bug with sort order filtering syntax, at least with postgres (regis_glc)
+	* cleanup of strings and bind query parameters in admin sections (regis_glc)
+	
+[1.2.01.000] Release candidate 4
+	* bugfix: support of groups mapping was broken with phpgwapi 1.2 (groups now have negative ids in egroupware) (regis_glc)
+	* bugfix: galaxia_retrieve_user_memberships adaptation to eally retrieve it and not an empty array with API changes (regis_glc)
+	* minor fix: user activities tabs loose info global/not global sometimes (regis_glc)
+	* minor fix: clean user activities filters in user activities tabs with only usefull activities (regis_glc)
+	* security: check filters parameters in user activities and user instances forms (regis_glc)
+
+[1.2.00.002] Release candidate 3 
+	* bugfix bug #1366362 SQL errors, missing space and SQL errors when the user had no group membership at all (regis_glc)
+	* fixed dependency with phpgwapi, only 1.2 is supported, no more 1.0 (regis_glc)
+
+[1.2.00.001] Release candidate 2
+	* review SQL cleanup functions (sort mode, properties) (regis_glc)
+	* fix process config unable to save, bul statements were encoded and should not (regis_glc)
+	* upgrade from 1.1.05.000 to 1.2 was broken for MySQL, properties were not encoded during upgrade, rerun the upgrade (set app version to 1.1.05.00) (regis_glc)
+	* upgrade the TestJoin2 example with htmlspecialchars, idem for screens showing properties (regis_glc)
+	* avoid some unnecessary stats queries on the admin_source form (regis_glc)
+	* bugfix with instance names greater than 120 chars (regis_glc)
+	* bugfix, agents were not created when importing process from xml (regis_glc)
+	* bugfix, wrong sql call with new db class on agent configuration (regis_glc)
+	* 2 bugfix with the "execute instance" icon shown without having real rights to execute. (regis_glc)
+	* translations (omgs) fixing shared translations between preferences and proccess administration (omgs - ralf becker)
+	* brazilian portuges translation by Mauricio Luiz Viani <viani@celepar.pr.gov.br>
+
+[1.2.00.000] Release candidate 1
+	* Modernization of the code for egroupware 1.2 (see egroupware's modernize.php script) $GLOBALS['phpgw']->$GLOBALS['egw'], etc (regis_glc, script by Ralf becker). The engine part is not impacted --except config file).
+	* Security related functions added on SQL, serialization of arrays encoded Base64, htmlspecialchars on queries parameters (regis_glc)
+	* hooks adapted for the new preference application syntax (regis_glc)
+
+
+[1.1.05.000] unstable. Beta. Lastest version compatibile with egroupware's phpgwapi 1.0.0
+	Next ones will only be compatible with series > 1.0.1 (1.2 release)
+	Note that with 1.0.0.009 you could experiment several problems:
+		* tables updates are not always done well
+		* with MySQL you should set your tables to Innodb type and get the adoDB from the 1.0.1 phpgwapi
+		or the 1.2 release and update some lines in egw.db class. All this to
+		support mylst ADOdb type with transactions and locks
+	Note as well this version is not securized with egroupware SQL checks,
+	you should not use it as a stable web-open application
+	You could notice as well some lost of data in the sources of your activities if you use javascript code 
+	which is emptied by some security filters of egroupware 1.0
+	* some fixes to support myslt type (regis_glc)
+	* somes fixes on the read-only functionnality on import/export an for the instances/activities listing (regis_glc)
+	* add user_viewinstance.tpl template which was forgotten (regis_glc)
+
+[1.1.004.000] unstable
+	* fix bugs on switch interactive activities after split -> need an array of NextActivity, not a single data (regis_glc)
+	* add a function to re-run a broken automatic activity or re-send a broken transition(regis_glc)
+	* securise run/release/complete() actions on instances (regis_glc)
+
+[1.1.003.000] unstable
+	* new agents concept to extend interaction of the workflow with other applications, one agent is implemented, a mail_smtp_agent to send emails (regis_glc)
+	* use new WfSecurity and WfRuntime objects to ensure multi-user concurrency problems with transactions and locks (regis_glc)
+	* add debug mode in the engine with, for example, number of queries per objects (regis_glc)
+	* allow an instances to be in user_instances list, even with no run rights -- read-only role-- (regis_glc)
+	* fix monitor forms asking for thousand unnecessary queries (regis_glc)
+	* delete users mapped to roles when users are deleted from egroupware (regis_glc)
+	* fix the preferences with new preference app (regis_glc)
+	* try to get some infos back from automated transitions and/or activities which have been done after the complete(), stop dying on every error (regis_glc)
+
+[1.1.002.000] unstable
+	* add buttons and rights for cleanup action on monitor screens (regis_glc)
+	* add category for instances (regis_glc)
+	* add 'view' type of read-only special activity. Only one per process. Not an obligation but used in the 'view' action if there. Else a default engine instance view is used. (regis_glc)
+	* add 'instance history' on default instance view, admin instance view and as a possibility for activities (regis_glc)
+	* add css for categories and priorities (regis_glc)
+
+
+[1.1.001.000] marking as unstable, which is the reality
+	* adding process level configuration, need a database upgrade (regis_glc)
+	* blue color for interactive send arrows in graph (regis_glc)
+	* adding possibility to quit an activity form without completing (regis_glc)
+	* adding a process example in doc/examples (regis_glc)
+	* new GUI function getUserActions which gives all avaible actions for a given user/activity/instance and gui_get_user_instance_status which gives complete infos very detailled a given instance (regis_glc)
+	* review monitor forms and add nextmatchs (max records per pages) (regis_glc)
+	* add real code under the 'import process' button and really import a process from the xml file (michael bartz)
+	* adding "open instance" form based on neomagic idea and review the sidebox (regis_glc, neomagic)
+	* use new GUI functions in user_instance and add a filter on unique instance_id. Link to this form when completing an activity (regis_glc)
+	* add a workflow information footer in automatic activity parsing (regis_glc)
+	* add a css for the running_activity (regis_glc)
+	* add user tabs for basic navigation with 'New Instances', 'Global Activities', 'My Activities', 'My Processes' and 'My instances' (regis_glc)
+	* add preferences for showing or not each column in user_instances (regis_glc)
+	* review filters and form interactions on the admin_activities form (mbartz)
+	* add monitor tabs for navigation (regis_glc)
+	* centralize security related problems in the engine with a WfSecurity object class (regis_glc)
+	* use new configuration rights and new WfSecurity object on actions when really launching theses actions (regis_glc)
+
+[1.1.000.000] maybe stable
+	* initial Port of Galaxia workflow engine from tikiwiki. (alpeb, mbartz)
+	* try to ad wf_ prefixes to tables and columns fields (alpeb,mbartz)
+	* migration of the galaxia library form phpgwapi to /workflow (regis_glc)
+	* upgrade database for future neomagic functionnalities (regis_glc, neomagic)
+	* automatic submit buttons and activity title on activity forms (regis_glc, neomagic)
+	* basic/advanced mode on user lists of instances (regis_glc)
+	* group mapping management (regis_glc)
+	* default user management (regis_glc, neomagic)
+	* adding instance priority  (regis_glc)
+	* run the post-completion code of activities before running next activities in the flow. usefull especially for start activities  (regis_glc)
+
+Before this lot of work has been done by Alejandro Pedraza and Michael
+Bartz. Prior to this there was as well a lot of work done on the original
+Galaxia engine, see http://tikiwiki.org/tiki-index.php?page=GalaxiaWorkflow
+ with contributors like Marc Laporte and others, gatto look at the sources
+Prior to this they was work done on Openflow (http://www.openflow.it)

@@ -1,0 +1,599 @@
+#	workflow	sk	#
+%1 aborted	workflow	sk	%1 zrušené
+%1 active	workflow	sk	%1 aktívne
+%1 completed	workflow	sk	%1 hotovo
+%1 configuration	workflow	sk	%1 Konfigurácia
+%1 days, %2:%3:%4	workflow	sk	%1 dní, %2:%3:%4
+%1 exception	workflow	sk	%1 výnimka
+%1 menu	workflow	sk	%1 Ponuka
+%1 monitoring	workflow	sk	%1 Sledovanie
+%1 processes (%2 active) (%3 being_run)	workflow	sk	%1 postupov (%2 aktívnych) (%3 spustených)
+/workflow directory does not exist and could not be created, please ask adminstrator to check the global configuration	common	sk	Adresár /workflow neexistuje a nedá sa vytvoriť, prosím požiadajte správcu aby skontroloval globálnu konfiguráciu
+<strong>%owner%</strong> is the instance owner email	workflow	sk	<strong>%owner%</strong> je E-mail vlastníka inštancie
+<strong>%property_xx%</strong> is the content of the instance's property xx	workflow	sk	<strong>%property_XX%</strong> je obsah vlastnosti XX inštancie
+<strong>%role_xx%</strong> are all the emails of all users mapped to the role xx	workflow	sk	<strong>%role_XX%</strong> sú všetko E-maily všetkých používateľov mapovaných do úlohy XX
+<strong>%roles%</strong> are the emails of all users mapped to any role on this activity	workflow	sk	<strong>%roles%</strong> sú E-maily všetkých používateľov mapovaných do akejkoľvek role tejto aktivity
+<strong>%signature%</strong> is the agent signature defined in the process configuration	workflow	sk	<strong>%signature%</strong> je podpis agenta, definovaný v konfigurácii postupu
+<strong>%user%</strong> is the instance user email	workflow	sk	<strong>%user%</strong> je E-mail používateľa inštancie
+<strong>%user_xx%</strong> is the email of the acount xx	workflow	sk	<strong>%user_XX%</strong> je E-mail účtu XX
+a please wait message is shown when loading the activity form usefull for long tasks	admin	sk	správa typu 'Prosím čakajte' sa zobrazuje počas nahrávania formulára aktivít, vhodné pre dlhé úlohy
+abort instance	workflow	sk	zrušiť inštanciu
+abort this instance	workflow	sk	Zrušiť túto inštanciu
+aborted	workflow	sk	Zrušené
+access denied for user %1 on activity %2, no role	workflow	sk	Prístup bol odmietnutý pre používateľa %1 pre aktivitu %2, bez rolí
+act	workflow	sk	akt
+act. status	workflow	sk	Stav akt.
+act. status:	workflow	sk	Stav akt.:
+action %1 is impossible if we have no activity and no instance designated for it!	workflow	sk	Akcia %1 je vylúčená, ak pre ňu nemáme žiadnu aktivitu ani inštanciu.
+action %1 is impossible, another user is already in place	workflow	sk	Akcia %1 nie je možná, už je tam iný používateľ
+action %1 is impossible, there are no user assigned to this activity for this instance	workflow	sk	Akcia %1 nie je možná, žiadny používateľ nie je priradený k tejto aktivite pre túto inštanciu
+action %1 needs an activity and activity %2 does not exists	workflow	sk	Akcia %1 vyžaduje aktivitu a aktivita %2 neexistuje
+action %1 needs an instance and instance %2 does not exists	workflow	sk	Akcia %1 vyžaduje inštanciu a inštancia %2 neexistuje
+actions	workflow	sk	Akcie
+actions right options	common	sk	Pravé možnosti akcií
+activate	workflow	sk	Aktivovať
+active	workflow	sk	Aktívne
+active:	workflow	sk	Aktívne:
+activities	workflow	sk	Aktivity
+activities selection	workflow	sk	Výber aktivít
+activities updated	workflow	sk	Aktivity aktualizované
+activity	workflow	sk	Aktivita
+activity  status	workflow	sk	Stav aktivity
+activity %1	workflow	sk	aktivita %1
+activity %1 (#%2) is associated with a non-existent process (#%3)	workflow	sk	Aktivita %1 (#%2) je priradená k neexistujúcemu postupu (#%3)
+activity %1 code is not avaible	workflow	sk	kód aktivity %1 je nedostupný
+activity %1 is interactive but has no role assigned	workflow	sk	Aktivita %1 je interaktívna, ale nemá priradenú žiadnu rolu
+activity %1 is interactive so it must use the $instance->complete() method	workflow	sk	Aktivita %1 je interaktívna, takže musí používať metódu $instance->complete()
+activity %1 is non-interactive and non-autorouted but has no role assigned	workflow	sk	Aktivita %1 nie je interaktívna a nie je automaticky smerovaná, ale nemá priradenú žiadnu rolu
+activity %1 is non-interactive so it must not use the $instance->complete() method	workflow	sk	Aktivita %1 nie je interaktívna, takže nesmie používať metódu $instance->complete()
+activity %1 is standalone and is using the $instance object	workflow	sk	Aktivita %1 je samostatná a používa objekt $instance
+activity %1 is standalone but has transitions	workflow	sk	Aktivita %1 je samostatná, ale má prechody
+activity %1 is standalone or view but has transitions	workflow	sk	Aktivita %1 je samostatná alebo zobrazenie, ale má prechody
+activity %1 is switch so it must use $instance->setnextactivity($actname) method	workflow	sk	Aktivita %1 je prepínačom, takže musí používať metódu $instance->setNextActivity($actname)
+activity %1 is view and is using the $instance object in write mode	workflow	sk	Aktivita %1 je zobrazením a používa objekt $instance v režime zapisovania
+activity agent removed	workflow	sk	Agent aktivity bol odstránený
+activity completed	workflow	sk	Aktivita bola dokončená
+activity failure	workflow	sk	Zlyhanie aktivity
+activity in inexistent process	workflow	sk	Aktivita v neexistujúcom postupe
+activity is waiting for pending transitions	workflow	sk	Aktivita čaká na prechody, ktoré ešte prebiehajú
+activity name already exists	workflow	sk	Takýto názov aktivity už existuje
+activity role #%1 removed	workflow	sk	Rola #%1 aktivity bola odstránená
+activity role removed	workflow	sk	Rola aktivity bola odstránená
+activity saved	workflow	sk	Aktivita bola uložená
+activity start not avaible, no corresponding activity was found.	workflow	sk	Začiatok aktivity je nedostupný, žiadna zodpovedajúca aktivita sa nenašla.
+activity start not set, no corresponding activity was found.	workflow	sk	Začiatok aktivity nebol zadaný, žiadna zodpovedajúca aktivita sa nenašla.
+activity status not avaible, no corresponding activity was found.	workflow	sk	Stav aktivity je nedostupný, žiadna zodpovedajúca aktivita sa nenašla.
+activity:	workflow	sk	Aktivita:
+add a transition	workflow	sk	Pridať prechod
+add aborted instances	workflow	sk	Pridať zrušené inštancie
+add advanced actions	workflow	sk	Pridať pokročilé akcie
+add agent	workflow	sk	Pridať agenta
+add completed instances	workflow	sk	Pridať dokončené inštancie
+add instances in exception	workflow	sk	Pridať inštancie vo výnimke
+add new	workflow	sk	Pridať nové
+add new role	workflow	sk	Pridať novú rolu
+add or edit a process	workflow	sk	Pridať alebo upraviť postup
+add or edit a role	workflow	sk	Pridať alebo upraviť rolu
+add or edit an activity	workflow	sk	Pridať alebo upraviť aktivitu
+add property	workflow	sk	Pridať vlastnosť
+add role	workflow	sk	Pridať rolu
+add role to process	workflow	sk	Pridať rolu k postupu
+add transition	workflow	sk	Pridať prechod
+add transitions	workflow	sk	Pridať prechody
+add transitions from	workflow	sk	Pridať prechody z
+add transitions to	workflow	sk	Pridať prechody do
+admin instance	workflow	sk	Správcovská inštancia
+admin process activities	workflow	sk	Správcovské aktivity postupu
+admin process roles	workflow	sk	Správcovské role postupu
+admin processes	common	sk	Správcovské postupy
+admin processes sources	workflow	sk	Správcovské zdroje postupov
+administer instances	admin	sk	Správa inštancií
+administer processes	admin	sk	Správa postupov
+agent #%1 of type %2 is associated to an inexistent activity #%3	workflow	sk	Agent #%1 typu %2 je priradený k neexistujúcej aktivite #%3
+agent #%1 of type %2 is not linked with an activity	workflow	sk	Agent #%1 typu %2 nie je pripojený k žiadnej aktivite
+agent associated with inexistent activity	workflow	sk	Agent priradený k neexistujúcej aktivite
+agent without activity	workflow	sk	Agent bez aktivity
+agents assigned to this activity	workflow	sk	Agenti priradení k tejto aktivite
+all	workflow	sk	Všetko
+always show advanced actions	workflow	sk	Vždy zobraziť pokročilé akcie
+always show advanced mode	workflow	sk	Vždy zobraziť pokročilý režim
+assign me this activity	workflow	sk	Priraďte mi túto aktivitu
+at least one email address cannot be validated.	workflow	sk	Najmenej jedna E-mailová adresa sa nedá overiť
+auto routed	workflow	sk	Automaticky smerované
+auto-release on leaving activity	common	sk	Automaticky uvoľniť pri opustení aktivity
+automatic	workflow	sk	Automatické
+autorouted activities does not need to be sent by any user after their execution	workflow	sk	Automaticky smerované aktivity nemusí žiadny používateľ posielať, keď sa vykonajú
+bad parameter for setagents, the parameter should be an array	workflow	sk	chybný parameter pre setAgents, parametrom musí byť pole
+bad role type	workflow	sk	Chybný typ role
+bad user	workflow	sk	Chybný používateľ
+base directory does not exist, please ask adminstrator to check the global configuration	common	sk	Základný adresár neexistuje, prosím požiadajte správcu aby skontroloval globálne nastavenia
+bcc:	workflow	sk	Skrytá kópia:
+be carefull with interactive activity, end and start of theses activities are multiple.	workflow	sk	Budťe opatrní pri interaktívnych aktivitách, majú viacero koncov a začiatkov.
+being run	workflow	sk	práve prebiehajúce
+by running theses links you will create new instances of the related process.	workflow	sk	Spustením týchto odkazov vytvoríte nové inštancie k zodpovedajúcim postupom.
+cannot add transition only split or switch activities can have more than one outbound transition	workflow	sk	Nedá sa pridať prechod, iba rozdelenie alebo prepnutie aktivít môže mať viac než jeden odchodzí prechod
+cannot add transition. only split activities can have more than one outbound transition	workflow	sk	Nedá sa pridať prechod. Iba rozdelené aktivity môžu mať viac než jeden odchodzí prechod
+cannot create compiled file %1	workflow	sk	Nedá sa vytvoriť kompilovaný súbor %1
+cannot retrieve the user running the security check	workflow	sk	Neviem získať používateľa, ktorý spúšťa bezpečnostnú kontrolu
+cannot run the activity	workflow	sk	Nemôžem spustiť túto aktivitu
+cannot run the activity without her process	workflow	sk	Nemôžem spustiť túto aktivitu bez jej postupu
+cannot run the activity without instance	workflow	sk	Nemôžem spustiť túto aktivitu bez inštancie
+cannot run unknown activity	workflow	sk	Nemôžem spustiť neznámu aktivitu
+cc:	workflow	sk	Kópia:
+circular reference found some activity has a transition leading to itself	workflow	sk	Vyskytlo sa prepojenie do kruhu, nejaká aktivita má prechod smerujúci na seba
+circular reference found. some activity has a transition leading to itself	workflow	sk	Vyskytlo sa prepojenie do kruhu, nejaká aktivita má prechod smerujúci na seba
+cleanup aborted instances	admin	sk	Vyčistiť zrušené inštancie
+cleanup actions	workflow	sk	Vyčistiť akcie
+close and get back later	workflow	sk	Zavrieť a vrátiť sa neskôr
+close printer friendly mode	workflow	sk	Zavrieť režim pre tlač
+code	workflow	sk	Kód
+column activity status in instance lists	workflow	sk	Stĺpec stavu aktivity v zoznamoch inštancií
+column category in instance lists	workflow	sk	Stĺpec kategórie v zoznamoch inštancií
+column instance id in instance lists	workflow	sk	Stĺpec ID sedenia v zoznamoch inštancií
+column instance name in instance lists	workflow	sk	Stĺpec názvu inštancie v zoznamoch inštancií
+column instance status in instance lists	workflow	sk	Stĺpec stavu inštancie v zoznamoch inštancií
+column owner in instance lists	workflow	sk	Stĺpec vlastníka v zoznamoch inštancií
+column priority in instance lists	workflow	sk	Stĺpec priority v zoznamoch inštancií
+column process name in instance lists	workflow	sk	Stĺpec názvu postupu v zoznamoch inštancií
+column start date in instance lists	workflow	sk	Stĺpec dátumu začatia v zoznamoch inštancií
+compilation	workflow	sk	Kompilácia
+compiling activity %1 : %2	workflow	sk	Kompilujem aktivitu %1 : %2
+complete	workflow	sk	Hotovo
+complete cleanup of aborted instances done	workflow	sk	Úplné čistenie zrušených inštancií bolo dokončené
+complete cleanup of all instances done	workflow	sk	Úplné čistenie všetkých inštancií bolo dokončené
+completed	workflow	sk	Hotovo
+config values	common	sk	Hodnoty nastavení
+confirm delete	workflow	sk	Potvrdiť odstránenie
+consult %1 to get the default values:	workflow	sk	Konzultovať %1 pre získanie predvolených hodnôt:
+couldn't add transition	workflow	sk	Nepodarilo sa pridať prechod
+create	workflow	sk	Vytvoriť
+created	workflow	sk	Vytvorené
+date:	workflow	sk	Dátum:
+default config values	workflow	sk	Predvolené hodnoty konfigurácie
+default next user	workflow	sk	Predvolený ďalší používateľ
+default owner	workflow	sk	Predvolený vlastník
+default settings for processes	admin	sk	Predvolené nastavenia pre postupy
+default user	workflow	sk	Predvolený používateľ
+delete selected	workflow	sk	Odstrániť vybrané
+delete transition	workflow	sk	Odstrániť prechod
+deletion successful	workflow	sk	Odstraňovanie bolo úspešne dokončené
+delition successful	workflow	sk	Odstraňovanie bolo úspešne dokončené
+description	workflow	sk	Popis
+display please wait message	common	sk	zobraziť správu prosím čakajte
+do you want the activity status on instances lists. most of the time it is "running" but if you use non-autorouted transitions you will have some completed activities.	workflow	sk	Chcete stav aktivity na zoznamoch inštancií? Po väčšinu času je "vykonáva sa" ale ak používate nie automaticky smerované prechody, budete mať nejaké dokončené aktivity.
+do you want the category column on instances lists, if yout instances use categories you should use it	workflow	sk	Chcete stĺpec kategórie v zoznamoch inštancií? Ak vaše inštancie používajú kategórie, mali by ste to použiť.
+do you want the category name column on instances lists, if your instances use categories you should use it	workflow	sk	Chcete stĺpec názvu kategórie v zoznamoch inštancií? Ak vaše inštancie používajú kategórie, mali by ste to použiť.
+do you want the category name column on instances lists. if your instances use categories you should use this	workflow	sk	Chcete stĺpec názvu kategórie v zoznamoch inštancií? Ak vaše inštancie používajú kategórie, mali by ste to použiť.
+do you want the instance id column on instances lists. this is the unique identifier of an instance	workflow	sk	Chcete stĺpec ID inštancie v zoznamoch inštancií? Je to jedinečný identifikátor inštancie.
+do you want the instance name column on instances lists. if your instances have name you should really use this	workflow	sk	Chcete stĺpec názvu inštancie v zoznamoch inštancií? Ak vaše inštancie majú názov, mali by ste to použiť.
+do you want the instance status on instances lists. the instance status is usefull to disting beteween aborted, completed, exception or active instances	workflow	sk	Chcete stĺpec stavu inštancie v zoznamoch inštancií? Stav inštancie je vhodný na rozlíšenie medzi zrušenými, dokončenými, výnimkami alebo aktívnymi inštanciami.
+do you want the owner column on instances lists. this will show you the actual owner, especially usefull if ownership is defined with special rights	workflow	sk	Chcete stĺpec vlastníka v zoznamoch inštancií? Zobrazuje súčasného vlastníka. Veľmi vhodné v prípade, že vlastníctvo je definované so špeciálnymi oprávneniami.
+do you want the priority column on instances lists. priority can be set with activities forms	workflow	sk	Chcete stĺpec priority v zoznamoch inštancií? Priorita sa nastavuje vo formulároch aktivít.
+do you want the process column on instances lists. usefull if you have different processes and/or versions of theses processes	workflow	sk	Chcete stĺpec postupu v zoznamoch inštancií? Vhodné ak máte rozličné postupy a/alebo verzie týchto postupov.
+do you want the search instance button in the last row of instances list.	workflow	sk	Chcete tlačítko hľadania inštancií v poslednom riadku zoznamu inštancií?
+do you want the started date column on instances lists.	workflow	sk	Chcete stĺpec Dátum skutočného začiatku v zoznamoch inštancií?
+don't move	workflow	sk	Nepresúvať
+draw roles	common	sk	Nakresliť role
+draw roles on the graph beside activity name like [that]	admin	sk	Nakresliť role v grafe vedľa názvu aktivity ako [toto]
+duration	workflow	sk	Trvanie
+empty agent type	workflow	sk	prázdny typ agenta
+end	workflow	sk	Koniec
+end activity is not reachable from start activity	workflow	sk	Koncová aktivita je nedosiahnuteľná zo začiatočnej aktivity
+ended	workflow	sk	Ukončené
+enter an activity name	workflow	sk	Zadajte názov aktivity
+error: nextactivity does not match any candidate in autorouting switch activity	workflow	sk	Chyba: ďalšiaAktivita (nextActivity) sa nezhoduje so žiadnym kandidátom v automaticky smerovanom prepínaní aktivity
+error: non-deterministic decision for autorouting activity	workflow	sk	Chyba: nepredvídateľné rozhodnutie pre automaticky smerovanú aktivitu
+error: removing was not done	workflow	sk	Chyba: odstraňovanie sa neuskutočnilo
+error: trying to send an instance to an activity but it was impossible to get this activity	workflow	sk	Chyba: pokus o odoslanie inštancie k aktivite, ale nedá sa dostať k tejto aktivite
+error: trying to send an instance to an activity but no transition found	workflow	sk	Chyba: pokus o odoslanie inštancie k aktivite, ale nenašiel sa žiadny prechod
+exception	workflow	sk	Výnimka
+exception instance	workflow	sk	Sedenie výnimky
+exception raised by %1 %2: %3	workflow	sk	Výnimka zvýšená o %1 %2: %3
+exception resumed by %1 %2: %3	workflow	sk	Výnimka ponížená o %1 %2: %3
+exception this instance	workflow	sk	Prideliť výnimku tejto inštancii
+exceptions	workflow	sk	Výnimky
+execute this activity	workflow	sk	Vykonať túto aktivitu
+export	workflow	sk	Export
+failed to create workitem	workflow	sk	Nepodarilo sa vytvoriť pracovnú položku
+failed to execute automatic activity	workflow	sk	Nepodarilo sa vykonať automatickú aktivitu
+failed to obtain lock on %1 table	workflow	sk	Nepodarilo sa získať zámok na tabuľke %1
+failed to obtain lock on instances table	workflow	sk	Nepodarilo sa získať zámok na tabuľke inštancií
+failed to obtain lock on instances_activities table	workflow	sk	Nepodarilo sa získať zámok na tabuľke aktivít_inštancií
+failed to record instance properties	workflow	sk	Nepodarilo sa zaznamenať vlastnosti inštancie
+failed to synchronize instance data with the database	workflow	sk	Neporadilo sa synchronizovať dáta sedenia s databázou
+failure	workflow	sk	zlyhanie
+fatal error: nextactivity does not match any candidate in autorouting switch activity	workflow	sk	Závažná chyba: ďalšiaAktivita (nextActivity) sa nezhoduje so žiadnym kandidátom  v automaticky smerovanom prepínaní aktivity
+fatal error: non-deterministic decision for autorouting activity	workflow	sk	Závažná chyba: nepredvídateľné rozhodnutie pre automaticky smerovanú aktivitu
+fatal error: setting next activity to an unexisting activity	workflow	sk	Závažná chyba: nastavujeme ďalšiu aktivitu na neexistujúcu aktivitu
+fatal error: trying to send an instance to an activity but no transition found	workflow	sk	Závažná chyba: pokus o odoslanie inštancie k aktivite, ale nenašiel sa žiadny prechod
+filter	workflow	sk	Filter
+filter instance by id	workflow	sk	Filtrovať sedenie pomocou ID
+finally you have links with <strong>%link_xx|yy%</strong> syntax, xx is the address part, yy the text part.	workflow	sk	Napokon máte odkazy so syntaxou <strong>%link_XX|YY%</strong>, XX je časť adresy, YY je časť textu.
+fix	workflow	sk	Opraviť
+fix concistency for selected rows	workflow	sk	Opraviť konzistenciu pre vybrané riadky
+font size	workflow	sk	Veľkosť písma
+from	workflow	sk	Od
+from:	workflow	sk	Od:
+get back to global activities	workflow	sk	návrat na globálne aktivity
+get back to instance creation	workflow	sk	návrat na vytváranie inštancie
+get property	workflow	sk	Získať vlastnosť
+global activities	workflow	sk	Globálne aktivity
+global workflow preferences	workflow	sk	Globálne predvoľby Pracovných Postupov
+go	workflow	sk	choď
+go to same activities for other instances of this process	workflow	sk	choď na rovnaké aktivity pre iné inštancie tohto postupu
+go to same process activities	workflow	sk	choď na rovnaké aktivity postupu
+go to the actual state of this instance	workflow	sk	choď na súčasný stav tejto inštancie
+grab instance	workflow	sk	Prevziať inštanciu
+grant access to the administration and development of workflow processes and activities.	admin	sk	Prideliť prístup na správu a vývoj postupov a aktivít Pracovných Postupov.
+grant access to the administration of workflow elements	admin	sk	Prideliť prístup na správu prvkov Pracovných Postupov
+grant access to the administration of workflow instances in monitor screens	admin	sk	Prideliť prístup na správu inštancií Pracovných Postupov na sledovacích stránkach
+grant access to the cleanup/deletion of workflow aborted instances in monitor screens	admin	sk	Prideliť prístup na čistenie/odstraňovanie zrušených inštancií Pracovných Postupov na sledovacích stránkach
+grant access to the monitoring of workflow elements	admin	sk	Prideliť prístup na sledovanie prvkov Pracovných Postupov
+graph	workflow	sk	Graf
+graphic options	common	sk	Grafické možnosti
+group	workflow	sk	Skupina
+id	workflow	sk	ID
+if automatic parsing is disabled next options will be useless	admin	sk	Ak je vypnuté automatické analyzovanie, nasledujúce voľby budú bezpredmetné
+if not in debug mail_smtp agent would have sent this email:	workflow	sk	Ak nie v debug mail_smtp, agent má odoslať tento E-mail:
+if user is in a role for an activity he will have the right to abort the related instance	admin	sk	Ak používateľ je v roli k aktivite, dostáva právo zrušiť zodpovedajúcu inštanciu
+if user is in a role for an activity he will have the right to exception or resume the related instance	admin	sk	Ak používateľ je v roli k aktivite, dostáva právo udeliť výnimku alebo ponížiť zodpovedajúcu inštanciu
+if user is in a role for an activity he will have the right to release (un-assign) the related instance	admin	sk	Ak používateľ je v roli k aktivite, dostáva právo uvoľniť (zrušiť priradenie) zodpovedajúcu inštanciu
+if:setnextact	workflow	sk	Ak:NastĎalAkt
+import aborted	workflow	sk	Import bol zrušený
+import successfull	workflow	sk	Import bol úspešný
+in role mappings user #%1 is specified as a "%2" but is maybe a "%3"	workflow	sk	V mapovaní rolí je používateľ #%1 uvedený ako "%2" ale MOŽNO je "%3"
+inactive	workflow	sk	Neaktívne
+inst.	workflow	sk	Inšt.
+inst. status	workflow	sk	Stav inšt.
+instance	workflow	sk	Inštancia
+instance %1	workflow	sk	inštancia %1
+instance %1 is in %2 state, action %3 is impossible.	workflow	sk	Inštancia %1 je v stave %2, akcia %3 je nemožná.
+instance %1 is in exception, action %2 is not possible.	workflow	sk	Inštancia %1 je vo výnimke, akcia %2 je nemožná.
+instance %1 is not associated with activity %2, action %3 is impossible.	workflow	sk	Inštancia %1 nie je priradené k aktivite %2, akcia %3 je nemožná.
+instance history	workflow	sk	História inštancií
+instance properties	workflow	sk	Vlastnosti inštancií
+instance:	workflow	sk	Inštancia:
+instance: %1 (process: %2)	workflow	sk	Inštancia: %1 (Postup: %2)
+instance: unable to modify %1 [%2], someone has changed it before us	workflow	sk	Inštancia: nepodarilo sa zmeniť %1 [%2], niekto to už stihol zmeniť pred nami
+instance: unable to modify %1, someone has changed it before us	workflow	sk	Inštancia: nepodarilo sa zmeniť %1, niekto to už stihol zmeniť pred nami
+instances	workflow	sk	Inštancie
+instances selection	workflow	sk	Výber inštancií
+int.	workflow	sk	Int.
+interactive	workflow	sk	Interaktívne
+interactive activities show form before being executed	workflow	sk	Interaktívne aktivity zobrazia formulár, než sa spustia
+interactive instances should not call the complete() method	workflow	sk	Interaktívne inštancie by nemali volať metódu complete()
+interactive:	workflow	sk	Interaktívne:
+interactivity	workflow	sk	Interaktívnosť
+invalid	workflow	sk	Chybné
+invalid process	workflow	sk	Chybný proces
+invalid role name	workflow	sk	Chybný názov role
+is active	workflow	sk	Je aktívne
+it seems this activity for this instance is not assigned to you anymore.	workflow	sk	Zdá sa, že táto aktivita pre túto inštanciu vám už nie je priradená.
+it was impossible to complete, no activity was given.	workflow	sk	Nedalo sa dokončiť, nebola zadaná aktivita.
+it was impossible to complete, no corresponding activity was found.	workflow	sk	Nedalo sa dokončiť, nenašla sa žiadna zodpovedajúca aktivita.
+join	workflow	sk	pripojiť
+link addresses are considered local if not containing <strong>http://</strong>. they will get appended the configured local prefix and scanned by egroupware link engine	workflow	sk	Adresy odkazov sú považované za lokálne, ak neobsahujú <strong>http://</strong>. Dostávajú prednastavenú lokálnu predponu a kontrolujú sa odkazovým mechanizmom eGroupWare
+list of activities	workflow	sk	Zoznam aktivít
+list of all activities with, for each,  counters of instances by status	workflow	sk	zoznam aktivít, zahŕňajúci pre každú aj počítadlá inštancií podľa stavov
+list of all history items made by instances while they travel in the workflow with information about duration and date	workflow	sk	zoznam všetkých položiek histórie vytvorených inštanciami počas ich putovania v Pracovných Postupoch, s informáciami o trvaní a čase
+list of all instances with info about current status and activities and link to administration of theses instances	workflow	sk	zoznam všetkých inštancií s informáciami o súčasnom stave a aktivitách a odkazu na správu týchto inštancií
+list of instances	workflow	sk	Zoznam inštancií
+list of mappings	workflow	sk	Zoznam mapovaní
+list of monitors	workflow	sk	Zoznam sledovaní
+list of processes	workflow	sk	Zoznam postupov
+list of processes (%1)	workflow	sk	Zoznam postupov (%1)
+list of processes with status and validity and, for each, counters of instances by status	workflow	sk	zoznam postupov so stavom, platnosťou a pre každé, počítadlami inštancií podľa stavu
+list of transitions	workflow	sk	Zoznam prechodov
+list of workitems	workflow	sk	Zoznam pracovných položiek
+mail automatically sent by mail smtp agent for egroupware's workflow	workflow	sk	Mail automaticky odoslaný poštovým SMTP agentom pre Pracovné Postupy v eGroupWare
+mails can be sent at the begining or at the end of the activity, for interactive activities only it can be sent after completion.	workflow	sk	Správy sa dajú posielať na začiatku alebo konci aktivity. Pri interaktívnych aktivitách sa dajú posielať len po dokončení.
+manual	workflow	sk	Manuál
+map	workflow	sk	mapovať
+map users/groups to roles	workflow	sk	Mapovať používateľov / skupiny do rolí
+mapping to inexistent role	workflow	sk	Mapuje sa do neexistujúcej role
+mappings deleted	workflow	sk	Mapovania boli odstránené
+message:	workflow	sk	Správa:
+monitor activities	workflow	sk	Sledovať aktivity
+monitor instance	workflow	sk	Sledovať inštanciu
+monitor instances	workflow	sk	Sledovať inštancie
+monitor processes	workflow	sk	Sledovať postupy
+monitor this instance	workflow	sk	Sledovať túto inštanciu
+monitor work items	workflow	sk	Sledovať pracovné položky
+monitor workitems	workflow	sk	Sledovať pracovné položky
+monitoring	admin	sk	Sledovanie
+monitors	workflow	sk	Sledovače
+more options?	workflow	sk	Viac možností?
+my activities	workflow	sk	Moje aktivity
+my instances	workflow	sk	Moje inštancie
+my processes	workflow	sk	Moje postupy
+name	workflow	sk	Názov
+new instance	workflow	sk	Nová inštancia
+new major	workflow	sk	Nové hlavné
+new major version created	workflow	sk	Nová hlavná verzia vytvorená
+new mapping added	workflow	sk	Bolo pridané nové mapovanie
+new minor	workflow	sk	Nová malá
+new minor version created	workflow	sk	Nová malá verzia vytvorená
+new status not set, no corresponding activity was found.	workflow	sk	Nový stav nebol nastavený, nenašli sa žiadne zodpovedajúce aktivity.
+new transition added	workflow	sk	Nový prechod bol pridaný
+next activity	workflow	sk	Ďalšia aktivita
+next user:	workflow	sk	Ďalší používateľ:
+no action avaible because no activity and no instance are given!	workflow	sk	Žiadna akcia nie je dostupná, pretože nebola zadaná ani aktivita, ani inštancia!
+no activites	workflow	sk	Žiadne aktivity
+no activity indicated	workflow	sk	Žiadna indikovaná aktivita
+no agents associated with this activity	workflow	sk	Žiadni agenti priradení k tejto aktivite
+no circular transitions allowed.	workflow	sk	Neboli povolené žiadne kruhové prechody.
+no corresponding activity was found.	workflow	sk	Žiadna zodpovedajúca aktivita sa nenašla.
+no inbound for start activity	workflow	sk	Žiadny vstup pre začiatok aktivity
+no inconcistency detected	workflow	sk	Neboli objavené žiadne nekonzistencie
+no instance avaible	workflow	sk	žiadna inštancia nie je dostupná
+no instance given, nothing to show	workflow	sk	žiadna inštancia nebola zadaná, niet čo zobraziť
+no instance indicated	workflow	sk	Žiadna indikovaná inštancia
+no outbound for end activity	workflow	sk	Žiadny výstup pre koniec aktivity
+no process indicated	workflow	sk	Žiadny indikovaný postup
+no properties defined	workflow	sk	Žiadne vlastnosti neboli definované
+no roles	workflow	sk	Žiadne role
+no roles asociated with this activity	workflow	sk	K tejto aktivite nie sú priradené žiadne role
+no routage	workflow	sk	Žiadne smerovanie
+no scan done	workflow	sk	Žiadna kontrola nebola vykonaná
+no transitions allowed for standalone or view activities	workflow	sk	Žiadne prechody nie sú povolené pre samostatné alebo zobrazovacie aktivity
+no work item indicated	workflow	sk	Žiadna indikovaná pracovná položka
+nobody	workflow	sk	Nikto
+not defined	workflow	sk	nedefinované
+or import a process	workflow	sk	Alebo importovať postup
+owner	workflow	sk	Vlastník
+owner of the instance will have the right to abort the instance at any time	admin	sk	Vlastník inštancie dostane právo kedykoľvek zrušiť inštanciu
+owner of the instance will have the right to exception or resume the instance at any time	admin	sk	Vlastník inštancie dostane právo kedykoľvek udeliť výnimku alebo ponížiť inštanciu
+owner of the instance will have the right to release (un-assign) an activity assigned to an user	admin	sk	Vlastník inštancie dostane právo zrušiť pridelenie aktivity k používateľovi
+owner:	workflow	sk	Vlastník:
+ownership give abort right	common	sk	prideliť právo zrušenia na základe vlastníctva
+ownership give exception right	common	sk	prideliť právo výnimky na základe vlastníctva
+ownership give release right	common	sk	prideliť právo zrušenia pridelenia na základe vlastníctva
+please wait, task in progress ...	workflow	sk	Prosím čakajte, úloha sa vykonáva...
+post activity %1 code is not avaible	workflow	sk	kód %1 po skončení aktivity nie je dostupný
+post shared code is not avaible	workflow	sk	kód po skončení zdieľania nie je dostupný
+post-agent %1 code is not avaible	workflow	sk	kód %1 po agentovi nie je dostupný
+pr.	workflow	sk	Pr.
+pre-activity %1 code is not avaible	workflow	sk	kód %1 pred aktivitou nie je dostupný
+pre-agent %1 code is not avaible	workflow	sk	kód %1 pred agentom nie je dostupný
+pre-shared code is not avaible	workflow	sk	kód pred zdieľaním nie je dostupný
+printer friendly	workflow	sk	Verzia pre tlač
+priority level:	workflow	sk	Úroveň priority:
+process	workflow	sk	Postup
+process %1	workflow	sk	postup %1
+process %1 %2 is not active, action %3 is impossible	workflow	sk	Postup %1 %2 nie je aktívny, akcia %3 nie je možná
+process %1 v%2 as no related activity	workflow	sk	Postup %1 v%2 nemá súvisiacu aktivitu
+process %d has been activated	workflow	sk	Postup %d bol aktivovaný
+process %d has been deactivated	workflow	sk	Postup %d bol deaktivovaný
+process %s %s already exists, the import process was aborted	workflow	sk	Postup %s %s už existuje, importný postup bol zrušený
+process %s %s imported	workflow	sk	Postup %s %s bol naimportovaný
+process %s has been created	workflow	sk	Postup %s bol vytvorený
+process %s has been updated	workflow	sk	Postup %s bol aktualizovaný
+process %s removed	workflow	sk	Postup %s bol odstránený
+process activities	workflow	sk	Aktivity postupu
+process alone	workflow	sk	Samotný postup
+process does not have a start activity	workflow	sk	Postup nemá začiatočnú aktivitu
+process does not have exactly one end activity	workflow	sk	Postup nemá jednu jasnú cieľovú aktivitu
+process form	workflow	sk	Formulár postupu
+process name	workflow	sk	Názov postupu
+process name already exists	workflow	sk	Tento názov postupu už existuje
+process roles	workflow	sk	Role postupu
+process saved	workflow	sk	Postup bol uložený
+process transitions	workflow	sk	Prechody postupu
+process version:	workflow	sk	Verzia postupu:
+process:	workflow	sk	Postup:
+processes	workflow	sk	Postupy
+properties	workflow	sk	Vlastnosti
+property	workflow	sk	Vlastnosť
+property %1 already exists	workflow	sk	Vlastnosť %1 už existuje
+property %1 not found	workflow	sk	Vlastnosť %1 sa nenašla
+quit without saving	workflow	sk	Skončiť bez uloženia
+read-only	workflow	sk	len na čítanie
+release access to this activity	workflow	sk	Uvoľniť prístup k tejto aktivite
+release activity for this instance	workflow	sk	Uvoľniť aktivitu pre túto inštanciu
+release instance	workflow	sk	Uvoľniť inštanciu
+reload filter	workflow	sk	Znovunačítať filter
+remove active instances	workflow	sk	Odstrániť aktívne inštancie
+remove all instances for this process	workflow	sk	Odstrániť všetky inštancie k tomuto postupu
+remove selected roles	workflow	sk	Odstrániť vybrané role
+removing instances and workitems for aborted instances on all processes	workflow	sk	Odstrániť inštancie a pracovné položky pre zrušené inštancie na všetkých postupoch
+removing instances and workitems for aborted instances on process #%1	workflow	sk	Odstraňujú sa inštancie a pracovné položky pre zrušené inštancie na postupe #%1
+removing instances and workitems for all instances on process #%1	workflow	sk	Odstraňujú sa inštancie a pracovné položky pre všetky inštancie na postupe #%1
+replyto:	workflow	sk	Odpovedať(komu):
+restart	workflow	sk	reštartovať
+restart activity	workflow	sk	reštartovať aktivitu
+resume this exception instance	workflow	sk	Ponížiť túto výnimočnú inštanciu
+role	workflow	sk	Rola
+role #%1 in process %2 has different process (%3) in mapping with user #%4	workflow	sk	Rola #%1 v postupe %2 má iný postup (%3) mapovaný na používateľa #%4
+role %1 (#%2) is associated with a non-existent process (#%3)	workflow	sk	Rola %1 (#%2) je priradená k neexistujúcemu postupu (#%3)
+role %1 is associated in a mapping with user #%2 with a non-existent process (%3)	workflow	sk	Rola %1 je priradená v mapovaní s používateľom #%2 k neexistujúcemu postupu (%3)
+role %1 is not mapped	workflow	sk	Rola %1 nie je mapovaná
+role added to activity	workflow	sk	Rola pridaná k aktivite
+role added to process	workflow	sk	Rola pridaná k postupu
+role give abort right	common	sk	dať roli právo zrušenia
+role give exception right	common	sk	dať roli právo výnimky
+role give release right	common	sk	dať roli právo zrušenia priradenia
+role in inexistent process	workflow	sk	Rola v neexistujúcom postupe
+role mapping in inexistent process	workflow	sk	Mapovanie role v neexistujúcom postupe
+role name	workflow	sk	Názov role
+role not saved (maybe a name collision)	workflow	sk	Rola nebola uložená
+role process inconcistency in mappings	workflow	sk	Nekonzistentnosť v mapovaní rolí postupu
+role saved	workflow	sk	Rola bola uložená
+roles	workflow	sk	Role
+roles assigned to this activity	workflow	sk	Role priradené k tejto aktivite
+roles deleted	workflow	sk	Role boli odstránené
+routing	workflow	sk	Smerovanie
+routing:	workflow	sk	smerovanie:
+run	workflow	sk	spustiť
+run activity	workflow	sk	spustiť aktivitu
+run instance	workflow	sk	spustiť inštanciu
+running	workflow	sk	bežiace
+running activities options	common	sk	Možnosti bežiacich aktivít
+running activity	workflow	sk	Bežiace aktivity
+scan activities	workflow	sk	Skontrolovať aktivity
+scan agents	workflow	sk	Skontrolovať agentov
+scan instances	workflow	sk	Skontrolovať inštancie
+scan processes	workflow	sk	Skontrolovať postupy
+scan roles	workflow	sk	Skontrolovať role
+scan transitions	workflow	sk	Skontrolovať prechody
+search instance filter in the bottom of instance lists	workflow	sk	Hľadať cez filter inštancií naspodku zoznamov inštancií
+search:	workflow	sk	hľadať:
+security check: cannot understand asked action	workflow	sk	Bezpečnostná kontrola: Nerozumiem zadanej akecii
+see as well <strong>%instance_name%</strong>, <strong>%activity_name%</strong>, <strong>%process_name%</strong>,<strong>%process_version%</strong>, <strong>%instance_id%</strong>, <strong>%activity_id%</strong> and <strong>%process_id%</strong>	workflow	sk	taktiež pozrite <strong>%instance_name%</strong>, <strong>%activity_name%</strong>, <strong>%process_name%</strong>,<strong>%process_version%</strong>, <strong>%instance_id%</strong>, <strong>%activity_id%</strong> a <strong>%process_id%</strong>
+select a transition to remove	workflow	sk	Vyberte, ktorý prechod odstrániť
+select source	workflow	sk	vyberte zdroj
+send after interactive activity is completed	workflow	sk	poslať po dokončení interaktívnej aktivity
+send all to	workflow	sk	Poslať všetko (kam)
+send an email	workflow	sk	Poslať E-mail
+send instance	workflow	sk	Poslať inštanciu
+send this instance to the next activity	workflow	sk	Poslať túto inštanciu ďalšej aktivite
+send transition	workflow	sk	Poslať prechod
+send when the activity is ending	workflow	sk	Poslať keď sa končí aktivita
+send when the activity is starting	workflow	sk	Poslať keď sa začína aktivita
+send when wf_agent_mail_smtp['submit_send'] is posted	workflow	sk	Poslať keď wf_agent_mail_smtp['submit_send'] je odoslaný
+set next act	workflow	sk	Nastav Ďalšiu aktivitu
+set next user	workflow	sk	Nastav ďalšieho používateľa
+set property	workflow	sk	Nastav vlastnosť
+setnextuser directives can override it	workflow	sk	direktívy setNextUser to môžu prebiť
+setting next activity to an unexisting activity	workflow	sk	ďalšia aktivita sa nastavuje na neexistujúcu aktivitu
+shared code	workflow	sk	Zdieľaný kód
+should we always give you the advanced search row on instances lists?	workflow	sk	Chcete mať vždy k dispozícii riadok pre pokročilé hľadanie v zoznamoch inštancií?
+show activity info zone	common	sk	Ukáž info zónu aktivít
+show activity title	common	sk	Ukáž titulok aktivity
+show code	workflow	sk	Ukáž kód
+show instance name	common	sk	Ukáž názov inštancie
+show instance owner	common	sk	Ukáž vlastníka inštancie
+show multiple submit as select	common	sk	Ukáž viacnásobné potvrdenie ako výber
+show template	workflow	sk	Ukáž šablónu
+size of the font used on the graph 12 should be a good default value	admin	sk	Veľkosť fontu použitého v grafe 12 by mala byť vhodnou predvolenou hodnotou
+smtp agent has detected some errors when sending email after completion of the activity	workflow	sk	SMTP agent zistil nejaké chyby počas odosielania E-mailu po dokončení aktivity
+smtp agent has detected some errors when sending email at the beginning of the activity	workflow	sk	SMTP agent zistil nejaké chyby počas odosielania E-mailu pred začatím aktivity
+smtp agent has detected some errors when sending email at the end of this activity	workflow	sk	SMTP agent zistil nejaké chyby počas odosielania E-mailu na konci tejto aktivity
+smtp agent has detected some errors when sending email on demand whith this activity	workflow	sk	SMTP agent zistil nejaké chyby počas odosielania E-mailu na vyžiadanie počas tejto aktivity
+something was wrong while creating the new major version	workflow	sk	Niečo sa nepodarilo počas vytvárania novej hlavnej verzie
+something was wrong while creating the new minor version	workflow	sk	Niečo sa nepodarilo počas vytvárania novej malej verzie
+source code file for activity %1 is not avaible	workflow	sk	Súbor zdrojového kódu pre aktivitu %1 nie je dostupný
+source code for activity %1 is not avaible	workflow	sk	Zdrojový kód pre aktivitu %1 nie je dostupný
+source saved	workflow	sk	Zdroj uložený
+special known values for local links address are <strong>userinstance</strong>, <strong>viewinstance</strong>, <strong>viewniceinstance</strong> and <strong>admininstance</strong>.	workflow	sk	Špeciálne známe hodnoty pre adresy lokálnych odkazov sú <strong>userinstance</strong>, <strong>viewinstance</strong>, <strong>viewniceinstance</strong> a <strong>admininstance</strong>.
+split	workflow	sk	Rozdeliť
+standalone	workflow	sk	samostatné
+start	workflow	sk	Začiatok
+start activities must be autorouted	workflow	sk	Začiatočné aktivity musia byť automaticky smerované
+start activities must be interactive	workflow	sk	Začiatočné aktivity musia byť interaktívne
+start activity	workflow	sk	Začať aktivitu
+start process	workflow	sk	Začať proces
+started	workflow	sk	Začaté
+started:	workflow	sk	Začaté:
+starting page	workflow	sk	Začiatočná stránka
+status	workflow	sk	Stav
+status:	workflow	sk	stav:
+stop	workflow	sk	Stop
+subject:	workflow	sk	Predmet:
+switch	workflow	sk	prepnúť
+switch construct	workflow	sk	Konštrukcia prepnutia
+template	workflow	sk	šablóna
+test concistency	workflow	sk	Testovať konzistenciu
+test consistency of datas in the database	workflow	sk	Testovať konzistenciu dát v databáze
+test local installation	workflow	sk	Testovať lokálnu inštaláciu
+the /workflow directory does not exist and could not be created. please ask your administrator to check the global configuration	common	sk	Adresár /workflow neexistuje a nedá sa vytvoriť. Prosím požiadajte svojho správcu aby skontroloval globálnu konfiguráciu
+the activity was not completed	workflow	sk	Aktivita nebola dokončená
+the default user will only be set if he is mapped to a role on the activity	workflow	sk	Predvolený používateľ bude nastavený len vtedy, ak je namapovaný do nejakej role v aktivite
+the following items must be corrected to be able to activate this process	workflow	sk	Nasledovné položky sa musia opraviť, ak chcete aktivovať proces
+the instance title is shown on top of the form	admin	sk	Titulok inštancie sa zobrazuje navrchu formulára
+the label you want	workflow	sk	označenie ktoré chcete
+the smtp configuration cannot be loaded by the mail_smtp workflow agent	workflow	sk	Mail_smtp agentovi Pracovných Postupov sa nepodarilo načítať SMTP konfiguráciu
+there are no activities available	workflow	sk	Nie sú dostupné žiadne aktivity
+there are no config value defined	workflow	sk	Nie je definovaná žiadna hodnota konfigurácie
+there are no instances available	workflow	sk	Nie sú dostupné žiadne inštancie
+there are no mappings defined for this process	workflow	sk	Nie sú definované žiadne mapovania pre tento postup
+there are no process available	workflow	sk	Nie je dostupný žiadny postup
+there are no processes	workflow	sk	Neexistujú žiadne postupy
+there are no processes available	workflow	sk	Nie sú dostupné žiadne postupy
+there are no processes defined	workflow	sk	Nie sú definované žiadne postupy
+there are no processes with the current filter	workflow	sk	Neexistujú žiadne postupy pri súčasnom filtri
+there are no properties available	workflow	sk	Nie sú dostupné žiadne vlastnosti
+there are no roles defined for this process	workflow	sk	Nie sú definované žiadne role pre tento postup
+there are no transitions defined	workflow	sk	Nie sú definované žiadne prechody
+there are no user activites available	workflow	sk	Nie sú dostupné žiadne používateľské aktivity
+there are no workitems available	workflow	sk	Nie sú dostupné žiadne pracovné položky
+there are some undefined preferences associated with this form : %1	workflow	sk	Máme tu nejaké nedefinované vlastnosti priradené k tomuto formuláru: %1
+there is an unknown user or group #%1 in role mappings	workflow	sk	Máme tu nejakého neznámeho používateľa alebo skupinu #%1 v mapovaných rolách
+they were problems at the compilation of the source:	workflow	sk	Počas kompilácie zdrojov nastali problémy:
+this activity for this instance is actually avaible for you.	workflow	sk	Táto aktivita k tejto inštancii je pre Vás v súčasnosti nedostupná.
+this activity for this instance is actually only avaible for you.	workflow	sk	Táto aktivita k tejto inštancii je v súčasnosti dostupná len pre Vás.
+this activity for this instance is not specifically assigned to you.	workflow	sk	Táto aktivita k tejto inštancii nie je priradená špecificky k Vám.
+this agent gives the activity the possibility to send an smtp message (mail)	workflow	sk	Tento agent dáva aktivite možnosť posielať SMTP správy (mail)
+this form will test your local workflow installation to detect potential issues	workflow	sk	Tento formulár otestuje Vašu lokálnu inštaláciu Pracovných Postupov, aby sa odhalili prípadné problémy
+this is the first screen shown when you click on the workflow application icon	workflow	sk	Toto je prvá stránka, ktorá sa zobrazí keď kliknete na ikonku aplikácie Pracovné Postupy
+this process has a view activity. access in view mode is granted only for this view activty.	workflow	sk	Tento postup má zobrazovaciu aktivitu. Prístup v zobrazovacom režime je umožnený len pre túto zobrazovaciu aktivitu.
+this process has no end activity	workflow	sk	Tento postup nemá koncovú aktivitu
+this will automatically release the instance when leaving an activity without completing	admin	sk	Týmto sa automaticky zruší priradenie inštancie, keď je aktivita opustená bez dokončenia
+this will display an activity footer when any activity is runned with workflow engine related informations	admin	sk	Týmto sa zobrazuje zápätie aktivity vtedy, keď je akákoľvek aktivita spustená s informáciami ohľadom mechanizmu Pracovných Postupov
+to	workflow	sk	Komu
+to:	workflow	sk	Komu:
+transition	workflow	sk	prechod
+transition mode	workflow	sk	režim prechodu
+transition to %1	workflow	sk	prechod na %1
+transition waiting for human interaction	workflow	sk	prechod čaká na zásah človeka
+transitions	workflow	sk	prechody
+transitions removed successfully	workflow	sk	Prechody úspešne odstránené
+type	workflow	sk	typ
+type:	workflow	sk	typ:
+unknow fix instruction :%1	workflow	sk	neznáma fix inštrukcia: %1
+unknown instruction from the workflow engine: %1	workflow	sk	neznáma inštrukcia z mechanizmu Pracovných Postupov: %1
+unknown status	workflow	sk	neznámy stav
+update	workflow	sk	aktualizácia
+upload file	workflow	sk	Nahrať súbor
+use <a href="%1">emailadmin</a> to create mail profiles	workflow	sk	Ak chcete vytvoriť poštové profily, použite <a href="%1">EmailAdmin</a>
+use automatic parsing	common	sk	použiť automatické analyzovanie
+use default	workflow	sk	Použiť predvolené
+use existing roles	workflow	sk	Použiť existujúce role
+user	workflow	sk	Používateľ
+user #%1 is associated with a non-existent role #%2	workflow	sk	Používateľ #%1 je priradený k neexistujúcej roli #%2
+user activities	workflow	sk	Používateľské aktivity
+user instances	workflow	sk	Používateľské inštancie
+user instances form: columns	workflow	sk	Formulár používateľských inštancií: stĺpce
+user instances form: filters and actions	workflow	sk	Formulár používateľských inštancií: filtre a akcie
+user is not authorized to delete aborted instances	workflow	sk	Používateľ nemá oprávnenie mazať zrušené inštancie
+user is not authorized to delete instances	workflow	sk	Používateľ nemá oprávnenie mazať inštancie
+user processes	workflow	sk	Používateľské postupy
+user/group	workflow	sk	Používateľ / skupina
+user:	workflow	sk	Používateľ
+users can act on activity before its execution with form and after by sending it to the next activity	workflow	sk	Používateľ môže nad aktivitou konať pred jej spustením pomocou formulára, a potom pomocou jej odoslania na nasledujúcu aktivitu
+users/groups	workflow	sk	Používatelia / skupiny
+valid	workflow	sk	Platné
+valid process	workflow	sk	Platný proces
+valid:	workflow	sk	platné:
+validity:	workflow	sk	Platnosť:
+value	workflow	sk	Hodnota
+version	workflow	sk	Verzia
+view details	workflow	sk	Zobraziť podrobnosti
+view this instance	workflow	sk	Zobraziť túto inštanciu
+view workitem	workflow	sk	Zobraziť pracovnú položku
+warning this filter override all others filters	workflow	sk	Varovanie: tento filter prebije všetky ostatné filtre
+warning: by using this button you will definitively remove all aborted instances and their history (workitems) for the selected process.	workflow	sk	Varovanie: stlačením tohto tlačitla definitívne odstránite všetky zrušené inštancie VRÁTANE ich histórie (pracovných položiek) pre vybrané postupy.
+warning: by using this button you will definitively remove all instances and their history (workitems) for the selected process, whatever the state they are.	workflow	sk	Varovanie: stlačením tohto tlačitla definitívne odstránite všetky inštancie VRÁTANE ich histórie (pracovných položiek) pre vybrané postupy, a to nezávisle na stave v ktorom sú.
+we cannot run this activity, maybe this instance or this activity do not exists anymore.	workflow	sk	Nemôžeme spustiť túto aktivitu, možnože táto inštancia alebo táto aktivita už neexistuje.
+we were not able to build the message	workflow	sk	Nepodarilo sa vytvoriť túto správu
+when in advanced mode, should we show you advanced actions by default (resume, exception, grab, etc.)?	workflow	sk	Majú sa v rozšírenom režime zobrazovať rozšírené akcie? Napríklad ponížiť, výnimka, prevziať..
+when multiple submit options are avaible we draw a select box with only one submit instead of multiple buttons	admin	sk	Keď sú dostupné voľby pre viacnásobné potvrdenie, vykresľujeme výberové okno kde je iba jedno tlačítko potvrdenia namiesto viacerých
+when to send the message:	workflow	sk	Kedy poslať túto správu:
+workflow	common	sk	Pracovné Postupy
+workflow configuration	admin	sk	Konfigurácia Pracovných Postupov
+workflow navigation	workflow	sk	Navigácia v Pracovných Postupoch
+workflow preferences	workflow	sk	Predvoľby Pracovných Postupov
+workflow site configuration	workflow	sk	Konfigurácia stránky Pracovných Postupov
+workitem information	workflow	sk	Informácie o pracovnej položke
+workitems	workflow	sk	Pracovné položky
+you are not allowed to abort instance %1	workflow	sk	Nemáte právo zrušiť inštanciu %1
+you are not allowed to exception instance %1	workflow	sk	Nemáte právo udeliť výnimku inštancii %1
+you are not allowed to grab instance %1	workflow	sk	Nemáte právo prevziať inštanciu %1
+you are not allowed to release instance %1	workflow	sk	Nemáte právo uvoľniť inštanciu %1
+you are not allowed to restart instance %1	workflow	sk	Nemáte právo reštartovať inštanciu %1
+you are not allowed to resume instance %1	workflow	sk	Nemáte právo ponížiť inštanciu %1
+you are not allowed to send instance %1	workflow	sk	Nemáte právo poslať inštanciu %1
+you can use special values with this mail agent:	workflow	sk	S týmto špeciálnym poštovým agentom máte k dispozícii špeciálne hodnoty:
+you do not have the right to run this activity anymore, maybe a concurrent access problem, refresh your datas.	workflow	sk	Nemáte právo znovu spustiť túto aplikáciu, možnože nastal problém súbežného prístupu, obnovte svoje dáta.
+you don't have the rights necessary to exception instance %1	workflow	sk	Nemáte právo k udeleniu výnimky inštancii %1
+you have not permission to execute this activity	workflow	sk	Nemáte právo vykonať túto aktivitu
+you were not allowed to complete the activity	workflow	sk	Nemáte právo dokončiť túto aktivitu

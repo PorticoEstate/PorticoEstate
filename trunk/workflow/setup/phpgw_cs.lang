@@ -1,0 +1,604 @@
+#	workflow	cs	#
+%1 aborted	workflow	cs	%1 zru¹ené
+%1 active	workflow	cs	%1 aktivní
+%1 completed	workflow	cs	%1 hotovo
+%1 configuration	workflow	cs	Konfigurace %1
+%1 days, %2:%3:%4	workflow	cs	%1 dní, %2:%3:%4
+%1 exception	workflow	cs	výjimka %1
+%1 menu	workflow	cs	%1 Menu
+%1 monitoring	workflow	cs	Monitorování %1
+%1 processes (%2 active) (%3 being_run)	workflow	cs	%1 procesù (%2 aktivních) (%3 bì¾ících)
+/workflow directory does not exist and could not be created, please ask adminstrator to check the global configuration	common	cs	adresáø /workflow neexistuje a nemohl být vytvoøen, po¾ádejte prosím administrátora o kontrolu globální konfigurace
+<strong>%owner%</strong> is the instance owner email	workflow	cs	<strong>%owner%</strong> je e-mail vlastníka instance
+<strong>%property_xx%</strong> is the content of the instance's property xx	workflow	cs	<strong>%property_XX%</strong> je obsah vlastnosti instance XX
+<strong>%role_xx%</strong> are all the emails of all users mapped to the role xx	workflow	cs	<strong>%role_XX%</strong> jsou v¹echny e-maily v¹ech u¾ivatelù mapovaných na roli XX
+<strong>%roles%</strong> are the emails of all users mapped to any role on this activity	workflow	cs	<strong>%roles%</strong> jsou e-maily v¹ech u¾ivatelù mapovaných na libovolnou roli v této èinnosti
+<strong>%signature%</strong> is the agent signature defined in the process configuration	workflow	cs	<strong>%signature%</strong> je podpis agenta definovaný v konfiguraci procesu
+<strong>%user%</strong> is the instance user email	workflow	cs	<strong>%user%</strong> je e-mail u¾ivatele instance
+<strong>%user_xx%</strong> is the email of the acount xx	workflow	cs	<strong>%user_XX%</strong> je e-mail úètu XX
+a please wait message is shown when loading the activity form usefull for long tasks	admin	cs	zpráva prosím èekejte je zobrazena pøi naèítání formuláøe aktivity, vhodné pro dlouhé úkoly
+abort instance	workflow	cs	zru¹it instanci
+abort this instance	workflow	cs	Zru¹it tuto instanci
+aborted	workflow	cs	zru¹eno
+access denied for user %1 on activity %2, no role	workflow	cs	Odepøen pøístup u¾ivateli %1 k ativitì %2, bez role
+act	workflow	cs	èinnost
+act. status	workflow	cs	Stav èinnosti
+act. status:	workflow	cs	Stav èinnosti:
+action %1 is impossible if we have no activity and no instance designated for it!	workflow	cs	Akce %1 není proveditelná, pokud pro ní není stanovená èinnost a instance!
+action %1 is impossible, another user is already in place	workflow	cs	Akce %1 není proveditelná, u¾ je tam jiný u¾ivatel
+action %1 is impossible, there are no user assigned to this activity for this instance	workflow	cs	Akce %1 není proveditelná, této èinnosti nejsou pøidìleni ¾ádní u¾ivatelé pro tuto instanci
+action %1 needs an activity and activity %2 does not exists	workflow	cs	Akce %1 vy¾aduje èinnost a èinnost %2 neexistuje
+action %1 needs an instance and instance %2 does not exists	workflow	cs	Akce %1 vy¾aduje instanci a instance %2 neexistuje
+actions	workflow	cs	Akce
+actions right options	common	cs	Volby práv pro akce
+activate	workflow	cs	aktivovat
+active	workflow	cs	Aktivní
+active:	workflow	cs	aktivní:
+activities	workflow	cs	Èinnosti
+activities selection	workflow	cs	Výbìr èinností
+activities updated	workflow	cs	Èinnosti zaktualizovány
+activity	workflow	cs	èinnost
+activity  status	workflow	cs	Stav èinnosti
+activity %1	workflow	cs	èinnost %1
+activity %1 (#%2) is associated with a non-existent process (#%3)	workflow	cs	Èinnost %1 (#%2) je pøiøazena neexistujícímu procesu (#%3)
+activity %1 code is not avaible	workflow	cs	kód èinnosti %1 není k dispozici
+activity %1 is interactive but has no role assigned	workflow	cs	Èinnost %1 je interaktivní, ale nemá pøidìlenou roli
+activity %1 is interactive so it must use the $instance->complete() method	workflow	cs	Èinnost %1 je interaktivní, tak¾e musí pou¾ívat metodu $instance->complete()
+activity %1 is non-interactive and non-autorouted but has no role assigned	workflow	cs	Èinnost %1 není interaktivní a není automaticky vedená, ale nemá pøidìlenou roli
+activity %1 is non-interactive so it must not use the $instance->complete() method	workflow	cs	Èinnost %1 není interaktivní, tak¾e nesmí pou¾ívat metodu $instance->complete()
+activity %1 is standalone and is using the $instance object	workflow	cs	Èinnost %1 je samostatná a pou¾ívá objekt $instance
+activity %1 is standalone but has transitions	workflow	cs	Èinnost %1 je samostatná ale má pøechody
+activity %1 is standalone or view but has transitions	workflow	cs	Èinnost %1 je samostatná nebo je pohledem, ale má pøechody
+activity %1 is switch so it must use $instance->setnextactivity($actname) method	workflow	cs	Èinnost %1 je pøepínaè, tak¾e musí pou¾ívat metodu $instance->setNextActivity($actname)
+activity %1 is view and is using the $instance object in write mode	workflow	cs	Èinnost %1 je pohled a pou¾ívá objekt $instance v re¾imu zápisu
+activity agent removed	workflow	cs	Agent èinnosti odstranìn
+activity completed	workflow	cs	Èinnost hotova
+activity failure	workflow	cs	chyba èinnosti
+activity in inexistent process	workflow	cs	Èinnost v neexistujícím procesu
+activity is waiting for pending transitions	workflow	cs	èinnost èeká na vyøizované pøechody
+activity name already exists	workflow	cs	Název èinnosti ji¾ existuje
+activity role #%1 removed	workflow	cs	Role èinnosti #%1 odstranìna
+activity role removed	workflow	cs	Role èinnosti odstranìna
+activity saved	workflow	cs	Èinnost ulo¾ena
+activity start not avaible, no corresponding activity was found.	workflow	cs	poèátek èinnosti není k dispozici, odpovídající èinnost nebyla nalezena.
+activity start not set, no corresponding activity was found.	workflow	cs	poèátek èinnosti není nastaven, odpovídající èinnost nebyla nalezena.
+activity status not avaible, no corresponding activity was found.	workflow	cs	stav èinnosti není k dispozici, odpovídající èinnost nebyla nalezena.
+activity:	workflow	cs	èinnost:
+add a transition	workflow	cs	Pøidat pøechod
+add aborted instances	workflow	cs	Pøidat zru¹ené instance
+add advanced actions	workflow	cs	Pøidat pokroèílé akce
+add agent	workflow	cs	Pøidat agenta
+add completed instances	workflow	cs	Pøidat hotové instance
+add instances in exception	workflow	cs	Pøidat instance ve vyjímce
+add new	workflow	cs	pøidat nový
+add new role	workflow	cs	Pøidat novou roli
+add or edit a process	workflow	cs	Pøidat nebo editovat proces
+add or edit a role	workflow	cs	Pøidat nebo edtovat roli
+add or edit an activity	workflow	cs	Pøidat nebo editovat èinnost
+add property	workflow	cs	Pøidat vlastnost
+add role	workflow	cs	Pøidat roli
+add role to process	workflow	cs	Pøidat roli procesu
+add transition	workflow	cs	pøidat pøechod
+add transitions	workflow	cs	Pøidat pøechody
+add transitions from	workflow	cs	Pøidat pøechody z
+add transitions to	workflow	cs	Pøidat pøechody do
+admin instance	workflow	cs	Správcovská instance
+admin process activities	workflow	cs	Administrovat èinnosti procesu
+admin process roles	workflow	cs	Administrovat role procesu
+admin processes	common	cs	Administrovat procesy
+admin processes sources	workflow	cs	Administrovat zdrojové kódy procesù
+administer instances	admin	cs	Administrovat instance
+administer processes	admin	cs	Administrovat procesy
+agent #%1 of type %2 is associated to an inexistent activity #%3	workflow	cs	Agent #%1 typu %2 je pøiøazen neexistující èinnosti #%3
+agent #%1 of type %2 is not linked with an activity	workflow	cs	Agent #%1 typu %2 není spojený s ¾ádnou èinností
+agent associated with inexistent activity	workflow	cs	Agent pøiøazený k neexistující èinnosti
+agent without activity	workflow	cs	Agent bez èinnosti
+agents assigned to this activity	workflow	cs	Agenti pøidìlení této èinnosti
+all	workflow	cs	V¹e
+always show advanced actions	workflow	cs	V¾dy zobrazovat pokroèilé akce
+always show advanced mode	workflow	cs	V¾dy zobrazovat pokroèilý re¾im
+assign me this activity	workflow	cs	Pøidìl mi tuto èinnost
+at least one email address cannot be validated.	workflow	cs	nejménì jedna e-mailová adresa nemohla být ovìøena
+auto routed	workflow	cs	Automaticky vedená
+auto-release on leaving activity	common	cs	Automaticky uvolnit pøi opu¹tìní èinnosti
+automatic	workflow	cs	Automatický
+autorouted activities does not need to be sent by any user after their execution	workflow	cs	Automaticky vedené èinnosti nemusí být po svém spu¹tìní odeslány ¾ádným u¾ivatelem
+bad parameter for setagents, the parameter should be an array	workflow	cs	¹patný parametr pro setAgents, parametrem má být pole
+bad role type	workflow	cs	©patný typ role
+bad user	workflow	cs	©patný u¾ivatel
+base directory does not exist, please ask adminstrator to check the global configuration	common	cs	Základní adresáø neexistuje, po¾ádejte prosím administrátora o kontrolu globální konfigurace
+bcc:	workflow	cs	Skrytá kopie:
+be carefull with interactive activity, end and start of theses activities are multiple.	workflow	cs	Pozor na interaktivní èinnosti, mají více poèátkù a koncù.
+being run	workflow	cs	bì¾ící
+by running theses links you will create new instances of the related process.	workflow	cs	Spu¹tìním tìchto odkazù vytvoøíte nové instance pøíslu¹ných procesù.
+cannot add transition only split or switch activities can have more than one outbound transition	workflow	cs	Není mo¾né pøidat pøechod - jen rozdìlení nebo pøepínání èinností mù¾e mít více ne¾ jeden odchozí pøechod
+cannot add transition. only split activities can have more than one outbound transition	workflow	cs	Není mo¾né pøidat pøechod. Jen rozdìlení èinností mù¾e mít více ne¾ jeden odchozí pøechod
+cannot create compiled file %1	workflow	cs	není mo¾né vytvoøit zkompilovaný soubor %1
+cannot retrieve the user running the security check	workflow	cs	Není mo¾né naèíst u¾ivatele, který spou¹tí bezpeènostní kontrolu
+cannot run the activity	workflow	cs	Není mo¾né spustit èinnost
+cannot run the activity without her process	workflow	cs	Není mo¾né spustit èinnost bez jejího procesu
+cannot run the activity without instance	workflow	cs	Není mo¾né spustit èinnost
+cannot run unknown activity	workflow	cs	Není mo¾né spustit neznámou èinnost
+cc:	workflow	cs	Kopie:
+circular reference found some activity has a transition leading to itself	workflow	cs	Byl nalezen zacyklený odkaz, nìjaká aktivita má pøechod vedoucí na ni samotnou
+circular reference found. some activity has a transition leading to itself	workflow	cs	Byl nalezen zacyklený odkaz. Nìjaká aktivita má pøechod vedoucí na ni samotnou
+cleanup aborted instances	admin	cs	Vyèistit zru¹ené instance
+cleanup actions	workflow	cs	vyèistit akce
+close and get back later	workflow	cs	Uzavøít a vrátit se zpìt pozdìji
+close printer friendly mode	workflow	cs	Zavøít re¾im pro tisk
+code	workflow	cs	kód
+column activity status in instance lists	workflow	cs	Sloupec stav èinností v seznamech instancí
+column category in instance lists	workflow	cs	Sloupec kategorie v seznamech instancí
+column instance id in instance lists	workflow	cs	Sloupec id instancí v seznamech instancí
+column instance name in instance lists	workflow	cs	Sloupec název instance v seznamech instancí
+column instance status in instance lists	workflow	cs	Sloupec stav instancí v seznamech instancí
+column owner in instance lists	workflow	cs	Sloupec vlastník v seznamech instancí
+column priority in instance lists	workflow	cs	Sloupec priorita v seznamech instancí
+column process name in instance lists	workflow	cs	Sloupec název procesu v seznamu instancí
+column start date in instance lists	workflow	cs	Sloupec poèateèní datum v seznamech instancí
+compilation	workflow	cs	Kompilace
+compiling activity %1 : %2	workflow	cs	kompilace èinnosti %1 : %2
+complete	workflow	cs	Hotovo
+complete cleanup of aborted instances done	workflow	cs	kompletní vyèi¹tìní zru¹ených instancí dokonèeno
+complete cleanup of all instances done	workflow	cs	kompletní vyèi¹tìní v¹ech instancí dokonèeno
+completed	workflow	cs	hotovo
+config values	common	cs	Konfiguraèní hodnoty
+confirm delete	workflow	cs	Potvrdit smazání
+consult %1 to get the default values:	workflow	cs	Konzultujte %1 pro získání výchozích hodnot
+couldn't add transition	workflow	cs	Není mo¾né pøidat pøechod
+create	workflow	cs	vytvoøit
+created	workflow	cs	Vytvoøeno
+date:	workflow	cs	datum:
+default config values	workflow	cs	Výchozí konfiguraèní hodnoty
+default next user	workflow	cs	Výchozí dal¹í u¾ivatel
+default owner	workflow	cs	Výchozí vlastník
+default settings for processes	admin	cs	Výchozí nastavení pro procesy
+default user	workflow	cs	Výchozí u¾ivatel
+delete selected	workflow	cs	Smazat vybrané
+delete transition	workflow	cs	smazat pøechod
+deletion successful	workflow	cs	Úspì¹nì smazáno
+delition successful	workflow	cs	Úspì¹nì smazáno
+description	workflow	cs	Popis
+display please wait message	common	cs	Zobrazit zprávu Prosím èekejte
+do you want the activity status on instances lists. most of the time it is "running" but if you use non-autorouted transitions you will have some completed activities.	workflow	cs	Chcete zobrazit stav èinností na seznamech instancí? Vìt¹inu èasu je "bì¾ící", ale pokud pou¾íváte pøechody, které nejsou vedeny automaticky, budete mít i nìjaké dokonèené èinnosti.
+do you want the category column on instances lists, if yout instances use categories you should use it	workflow	cs	Chcete zobrazit sloupec kategorií na seznamech instancí? Pokud Va¹e instance pou¾ívají kategorie, mìli by jste je zobrazovat
+do you want the category name column on instances lists, if your instances use categories you should use it	workflow	cs	Chcete zobrazit sloupec s názvem kategorie na seznamech instancí? Pokud Va¹e instance pou¾ívají kategorie, mìli by jste je zobrazovat
+do you want the category name column on instances lists. if your instances use categories you should use this	workflow	cs	Chcete zobrazit sloupec s názvem kategorie na seznamech instancí? Pokud Va¹e instance pou¾ívají kategorie, mìli by jste je zobrazovat
+do you want the instance id column on instances lists. this is the unique identifier of an instance	workflow	cs	Chcete zobrazovat sloupec s id instancí v seznamech instancí? Id pøedstavuje unikátní identifikátor instance
+do you want the instance name column on instances lists. if your instances have name you should really use this	workflow	cs	Chcete zobrazovat sloupec s názvem instancí v seznamech instancí? Pokud mají Va¹e instance názvy, urèitì byste jej mìli pou¾ívat
+do you want the instance status on instances lists. the instance status is usefull to disting beteween aborted, completed, exception or active instances	workflow	cs	Chcete zobrazovat stav instancí v seznamech instancí? Stav instancí je u¾iteèný pro rozli¹ení mezi zru¹enými a dokonèenými instancemi, výjimkou a aktivními instancemi
+do you want the owner column on instances lists. this will show you the actual owner, especially usefull if ownership is defined with special rights	workflow	cs	Chcete zobrazovat sloupec s vlastníkem v seznamech instancí? Uká¾e aktuálního vlastníka, co¾ je zvlá¹» u¾iteèné pokud je vlastnictví definováno se speciálními právy
+do you want the priority column on instances lists. priority can be set with activities forms	workflow	cs	Chcete zobrazovat sloupec priorit v seznamech instancí? Priorita mù¾e být nastavena na formuláøích èinností
+do you want the process column on instances lists. usefull if you have different processes and/or versions of theses processes	workflow	cs	Chcete zobrazovat sloupec procesù v seznamech instancí? Je u¾iteèný v pøípadech, kdy máte rùzné procesy a/nebo rùzné verze tìchto procesù
+do you want the search instance button in the last row of instances list.	workflow	cs	Chcete v posledním øádku seznamu instancí zobrazovat tlaèítko pro hledání instance?
+do you want the started date column on instances lists.	workflow	cs	Chcete v seznamech instancí zobrazovat sloupec s poèáteèním datem?
+don't move	workflow	cs	Nepøesouvat
+draw roles	common	cs	Nakreslit role
+draw roles on the graph beside activity name like [that]	admin	cs	nakreslit role na grafu vedle názvu èinnosti jako (takto)
+duration	workflow	cs	Trvání
+empty agent type	workflow	cs	prázdný typ agenta
+end	workflow	cs	konec
+end activity is not reachable from start activity	workflow	cs	Koncová èinnost není dosa¾itelná z poèáteèní èinnosti
+ended	workflow	cs	skonèilo
+enter an activity name	workflow	cs	Zadejte název èinnosti
+error: nextactivity does not match any candidate in autorouting switch activity	workflow	cs	Chyba: nextActivity se neshoduje s ¾ádným kandidátem v èinnosti pøepínaèe automatického vedení
+error: non-deterministic decision for autorouting activity	workflow	cs	Chyba: nedeterministické rozhodnutí pro èinnost automatického vedení
+error: removing was not done	workflow	cs	chyba: k odstranìní nedo¹lo
+error: trying to send an instance to an activity but it was impossible to get this activity	workflow	cs	Chyba: zkou¹ím odeslat instanci do èinnosti, ale není mo¾né tuto èinnost získat
+error: trying to send an instance to an activity but no transition found	workflow	cs	Chyba: zkou¹ím odeslat instanci do èinnosti, ale nebyl nalezen ¾ádný pøechod
+exception	workflow	cs	výjimka
+exception instance	workflow	cs	Instance výjimky
+exception raised by %1 %2: %3	workflow	cs	výjimka vyvolána (kým) %1 %2: %3
+exception resumed by %1 %2: %3	workflow	cs	výjimka o¹etøena (kým) %1 %2: %3
+exception this instance	workflow	cs	Výjimka v této instanci
+exceptions	workflow	cs	výjimky
+execute this activity	workflow	cs	Spustit tuto èinnost
+export	workflow	cs	Exportovat
+failed to create workitem	workflow	cs	nepodaøilo se vytvoøit pracovní polo¾ku
+failed to execute automatic activity	workflow	cs	nepodaøilo se spustit automatickou èinnost
+failed to obtain lock on %1 table	workflow	cs	nepodaøilo se získat zámek na tabulku %1
+failed to obtain lock on instances table	workflow	cs	nepodaøilo se získat zámek na tabulku instancí
+failed to obtain lock on instances_activities table	workflow	cs	nepodaøilo se získat zámek na tabulku instances_activities
+failed to record instance properties	workflow	cs	nepodaøilo se zaznamenat vlastnosti instance
+failed to synchronize instance data with the database	workflow	cs	nepodaøila se synchronizace dat instance s databází
+failure	workflow	cs	chyba
+fatal error: nextactivity does not match any candidate in autorouting switch activity	workflow	cs	Fatální chyba: nextActivity se neshoduje s ¾ádným kandidátem v èinnosti pøepínaèe automatického vedení
+fatal error: non-deterministic decision for autorouting activity	workflow	cs	Fatální chyba: nedeterministické rozhodnutí pro èinnost automatického vedení
+fatal error: setting next activity to an unexisting activity	workflow	cs	Fatální chyba: nastavení dal¹í èinnosti pro neexistující èinnost
+fatal error: trying to send an instance to an activity but no transition found	workflow	cs	Fatální chyba: zkou¹ím odeslat instanci do èinnosti, ale nebyl nalezen ¾ádný pøechod
+filter	workflow	cs	Filtr
+filter instance by id	workflow	cs	filtrovat instance podle id
+finally you have links with <strong>%link_xx|yy%</strong> syntax, xx is the address part, yy the text part.	workflow	cs	nakonec máte odkazy se syntaxí <strong>%link_XX|YY%</strong>, kde XX je adresní èást a YY je textová èást
+fix	workflow	cs	Opravit
+fix concistency for selected rows	workflow	cs	Opravit konsistenci vybraných øádkù
+font size	workflow	cs	Velikost písma
+from	workflow	cs	Od
+from:	workflow	cs	Od:
+get back to global activities	workflow	cs	vrátit se zpìt na globální èinnosti
+get back to instance creation	workflow	cs	vrátit se zpìt na vytváøení instancí
+get property	workflow	cs	Získat vlastnost
+global activities	workflow	cs	Globální èinnosti
+global workflow preferences	workflow	cs	Globální pøevolby Workflow
+go	workflow	cs	jít
+go to same activities for other instances of this process	workflow	cs	jít na shodné èinnosti pro jiné instance tohoto procesu
+go to same process activities	workflow	cs	jít na shodné èinnosti procesu
+go to the actual state of this instance	workflow	cs	jít na aktuální stav této instance
+grab instance	workflow	cs	pøevzít instanci
+grant access to the administration and development of workflow processes and activities.	admin	cs	Povolit pøístup ke administraci a vývoji workflow procesù a èinností.
+grant access to the administration of workflow elements	admin	cs	Povolit pøístup k administraci prvkù workflow.
+grant access to the administration of workflow instances in monitor screens	admin	cs	Povolit pøístup k administraci workflow instancí na monitorovacích obrazovkách
+grant access to the cleanup/deletion of workflow aborted instances in monitor screens	admin	cs	Povolit pøístup k vyèi¹tìní/vymazání zru¹ených instancí workflow na monitorovacích obrazovkách
+grant access to the monitoring of workflow elements	admin	cs	Povolit pøístup k monitorování workflow prvkù
+graph	workflow	cs	Graf
+graphic options	common	cs	Volby grafu
+group	workflow	cs	Skupina
+id	workflow	cs	Id
+if automatic parsing is disabled next options will be useless	admin	cs	pokud je automatická syntaktická analýza (parsing) vypnutá, jsou následující volby k nièemu
+if not in debug mail_smtp agent would have sent this email:	workflow	cs	pokud by mail_smtp agent nebyl v debug re¾imu, odeslal by tento e-mail:
+if user is in a role for an activity he will have the right to abort the related instance	admin	cs	pokud je u¾ivatel v roli pro èinnost, má také oprávnìní zru¹it související instanci
+if user is in a role for an activity he will have the right to exception or resume the related instance	admin	cs	pokud je u¾ivatel v roli pro èinnost, má také oprávnìní pro nastavení výjimky nebo obnovení související instance
+if user is in a role for an activity he will have the right to release (un-assign) the related instance	admin	cs	pokud je u¾ivatel v roli pro èinnost, má také oprávnìní zru¹it pøidìlení související instance
+if:setnextact	workflow	cs	If:SetNextact (Pokud:Nastavit dal¹í èinnost)
+import aborted	workflow	cs	Import zru¹en
+import successfull	workflow	cs	Import úspì¹ný
+in role mappings user #%1 is specified as a "%2" but is maybe a "%3"	workflow	cs	V mapování rolí je u¾ivatel #%1 uveden jako "%2" ale MO®NÁ je "%3"
+inactive	workflow	cs	Neaktivní
+inst.	workflow	cs	Inst.
+inst. status	workflow	cs	Stav instance
+instance	workflow	cs	Instance
+instance %1	workflow	cs	instance %1
+instance %1 is in %2 state, action %3 is impossible.	workflow	cs	Instance %1 je ve stavu %2, akce %3 není mo¾ná.
+instance %1 is in exception, action %2 is not possible.	workflow	cs	Instance %1 je ve výjimce, akce %2 není mo¾ná.
+instance %1 is not associated with activity %2, action %3 is impossible.	workflow	cs	Instance %1 není pøiøazena k èinnosti %2, akce %3 není mo¾ná.
+instance history	workflow	cs	Historie instance
+instance properties	workflow	cs	Vlastnosti instance
+instance:	workflow	cs	instance:
+instance: %1 (process: %2)	workflow	cs	Instance: %1 (Proces: %2)
+instance: unable to modify %1 [%2], someone has changed it before us	workflow	cs	Instance: není mo¾né zmìnit %1 [%2], nìkdo to zmìnil pøed námi
+instance: unable to modify %1, someone has changed it before us	workflow	cs	Instance: není mo¾né zmìnit %1, nìkdo to zmìnil pøed námi
+instances	workflow	cs	Instance
+instances selection	workflow	cs	Výbìr instancí
+int.	workflow	cs	Int.
+interactive	workflow	cs	Interaktivní
+interactive activities show form before being executed	workflow	cs	Interaktivní èinnosti zobrazují pøed spu¹tìním formuláø
+interactive instances should not call the complete() method	workflow	cs	interaktivní instance by nemìly volat metodu complete()
+interactive:	workflow	cs	interaktivní:
+interactivity	workflow	cs	Interaktivita
+invalid	workflow	cs	neplatný
+invalid process	workflow	cs	Neplatný proces
+invalid role name	workflow	cs	Název neplatné role
+is active	workflow	cs	je aktivní
+it seems this activity for this instance is not assigned to you anymore.	workflow	cs	Zdá se, ¾e èinnost pro tuto instanci Vám u¾ není pøidìlena.
+it was impossible to complete, no activity was given.	workflow	cs	nebylo mo¾né dokonèit, nebyla zadána ¾ádná èinnost.
+it was impossible to complete, no corresponding activity was found.	workflow	cs	nebylo mo¾né dokonèit, nebyla nalezena odpovídající aktivita.
+join	workflow	cs	pøipojit
+link addresses are considered local if not containing <strong>http://</strong>. they will get appended the configured local prefix and scanned by phpgroupware link engine	workflow	cs	Adresy odkazù jsou pova¾ovány za lokální, pokud neobsahují <strong>http://</strong>. Bude k nim pøipojen nakonfigurovaný lokální prefix a budou prohledávány odkazovým enginem eGroupWaru
+list of activities	workflow	cs	Seznam èinností
+list of all activities with, for each,  counters of instances by status	workflow	cs	seznam v¹ech èinností, pro ka¾dou uvedeno poèítadlo instancí podle stavu
+list of all history items made by instances while they travel in the workflow with information about duration and date	workflow	cs	seznam v¹ech historických polo¾ek vytvoøených instancemi bìhem jejich cesty po workflow s informacemi o trvání a datu
+list of all instances with info about current status and activities and link to administration of theses instances	workflow	cs	seznam v¹ech instancí s informacemi o aktuálním stavu a èinnostech a odkazem na administraci  tìchto instancí
+list of instances	workflow	cs	Seznam instancí
+list of mappings	workflow	cs	Seznam mapování
+list of monitors	workflow	cs	Seznam monitorù
+list of processes	workflow	cs	Seznam procesù
+list of processes (%1)	workflow	cs	Seznam procesù (%1)
+list of processes with status and validity and, for each, counters of instances by status	workflow	cs	seznam procesù vèetnì stavu a platnosti, pro ka¾dý uvedeno poèítadlo instancí podle stavu
+list of transitions	workflow	cs	Seznam pøechodù
+list of workitems	workflow	cs	Seznam pracovních polo¾ek
+mail automatically sent by mail smtp agent for phpgroupware's workflow	workflow	cs	E-mail automaticky zaslaný po¹tovním SMTP agentem pro Workflow v eGroupWaru
+mail smtp agent	workflow	cs	Po¹tovní SMTP agent
+mail smtp debug	common	cs	Ladìní SMTP po¹ty
+mail smtp local link prefix	common	cs	Prefix lokálních odkazù SMTP po¹ty
+mail smtp profile	common	cs	Profil SMTP po¹ty
+mail smtp signature	common	cs	Podpis SMTP po¹ty
+mails can be sent at the begining or at the end of the activity, for interactive activities only it can be sent after completion.	workflow	cs	E-maily mohou být zasílány na poèátku nebo ke konci èinnosti. V pøípadì interaktivních èinností mohou být zasílány jen po dokonèení.
+manual	workflow	cs	Manuál
+map	workflow	cs	mapovat
+map users/groups to roles	workflow	cs	Mapovat u¾ivatele/skupiny na role
+mapping to inexistent role	workflow	cs	Mapovaní na neexistující roli
+mappings deleted	workflow	cs	Mapování smazána
+message:	workflow	cs	Zpráva:
+monitor activities	workflow	cs	Monitorovat èinnosti
+monitor instance	workflow	cs	monitorovat instanci
+monitor instances	workflow	cs	Monitorovat èinnosti
+monitor processes	workflow	cs	Monitorovat procesy
+monitor this instance	workflow	cs	Monitorovat tuto instanci
+monitor work items	workflow	cs	Monitorovat pracovní polo¾ky
+monitor workitems	workflow	cs	Monitorovat pracovní polo¾ky
+monitoring	admin	cs	Monitorování
+monitors	workflow	cs	Monitory
+more options?	workflow	cs	více voleb?
+my activities	workflow	cs	Moje èinnosti
+my instances	workflow	cs	Moje instance
+my processes	workflow	cs	Moje procesy
+name	workflow	cs	Název
+new instance	workflow	cs	Nová instance
+new major	workflow	cs	Nová majoritní
+new major version created	workflow	cs	Vytvoøena nová majoritní verze
+new mapping added	workflow	cs	Pøidáno nové mapování
+new minor	workflow	cs	Nová minoritní
+new minor version created	workflow	cs	Vytvoøena nová minoritní verze
+new status not set, no corresponding activity was found.	workflow	cs	nový stav nebyl nastaven, nebyla nalezena odpovídající èinnost.
+new transition added	workflow	cs	Pøidán nový pøechod
+next activity	workflow	cs	dal¹í èinnost
+next user:	workflow	cs	Dal¹í u¾ivatel:
+no action avaible because no activity and no instance are given!	workflow	cs	není dostupná ¾ádná akce, proto¾e ¾ádná èinnost ani instance nejsou zadány!
+no activites	workflow	cs	®ádné èinnosti
+no activity indicated	workflow	cs	Není indikovaná ¾ádná èinnost
+no agents associated with this activity	workflow	cs	K této èinnosti nejsou pøiøazeni ¾ádní agenti
+no circular transitions allowed.	workflow	cs	Zacyklené odkazy nejsou povoleny
+no corresponding activity was found.	workflow	cs	nebyla nalezena odpovídající èinnost
+no inbound for start activity	workflow	cs	®ádný vstup pro poèátek èinnosti
+no inconcistency detected	workflow	cs	¾ádné nekonsistence nebyly detekovány
+no instance avaible	workflow	cs	¾ádná instance není k dispozici
+no instance given, nothing to show	workflow	cs	¾ádná instance nebyla zadána, není co zobrazit
+no instance indicated	workflow	cs	®ádná intance nebyla indikována
+no outbound for end activity	workflow	cs	®ádný výstup pro konec èinnosti
+no process indicated	workflow	cs	®ádný proces není indikován
+no properties defined	workflow	cs	®ádné vlastnosti nejsou definovány
+no roles	workflow	cs	¾ádné  role
+no roles asociated with this activity	workflow	cs	K této èinnosti nejsou pøiøazeny ¾ádné role
+no routage	workflow	cs	¾ádné vedení
+no scan done	workflow	cs	¾ádné prozkoumání nebylo provedeno
+no transitions allowed for standalone or view activities	workflow	cs	Pro samostatné a pohledové èinnosti nejsou povoleny pøechody
+no work item indicated	workflow	cs	®ádná pracovní polo¾ka není indikována
+nobody	workflow	cs	Nikdo
+not defined	workflow	cs	není definováno
+or import a process	workflow	cs	Nebo importovat proces
+owner	workflow	cs	Vlastník
+owner of the instance will have the right to abort the instance at any time	admin	cs	vlastník instance bude mít právo instanci kdykoli zru¹it
+owner of the instance will have the right to exception or resume the instance at any time	admin	cs	vlastník instance bude mít právo kdykoli vyvolat výjimku nebo obnovit instanci
+owner of the instance will have the right to release (un-assign) an activity assigned to an user	admin	cs	vlastník instance bude mít právo uvolnit (zru¹it pøidìlení) èinnost pøidìlenou u¾ivateli
+owner:	workflow	cs	Vlastník:
+ownership give abort right	common	cs	Vlastnictví dává právo ke zru¹ení
+ownership give exception right	common	cs	Vlastnictví dává právo k výjimkám
+ownership give release right	common	cs	Vlastnictví dává právo k uvolnìní
+please wait, task in progress ...	workflow	cs	Prosím èekejte, úloha se provádí
+post activity %1 code is not avaible	workflow	cs	kód po ukonèení èinnosti %1 není k dispozici
+post shared code is not avaible	workflow	cs	kód po ukoèení sdílení není k dispozici
+post-agent %1 code is not avaible	workflow	cs	kód po agentovi %1 není k dispozici
+pr.	workflow	cs	Priorita
+pre-activity %1 code is not avaible	workflow	cs	kód pøed èinností %1 není k dispozici
+pre-agent %1 code is not avaible	workflow	cs	kód pøed agentem %1 není k dispozici
+pre-shared code is not avaible	workflow	cs	kód pøed sdílením není k dispozici
+printer friendly	workflow	cs	Formát pro tisk
+priority level:	workflow	cs	Úroveò priority
+process	workflow	cs	Proces
+process %1	workflow	cs	proces %1
+process %1 %2 is not active, action %3 is impossible	workflow	cs	Proces %1 %2 není aktivní, akce %3 není mo¾ná
+process %1 v%2 as no related activity	workflow	cs	Proces %1 v%2 nemá související èinnost
+process %d has been activated	workflow	cs	Proces %d byl aktivován
+process %d has been deactivated	workflow	cs	Proces %d byl deaktivován
+process %s %s already exists, the import process was aborted	workflow	cs	Proces %s %s ji¾ existuje, import byl zru¹en
+process %s %s imported	workflow	cs	Proces %s %s importován
+process %s has been created	workflow	cs	Proces %s byl vytvoøen
+process %s has been updated	workflow	cs	Proces %s byl zaktualizován
+process %s removed	workflow	cs	Proces %s odstranìn
+process activities	workflow	cs	Èinnosti procesu
+process alone	workflow	cs	Samotný proces
+process does not have a start activity	workflow	cs	Proces nemá poèáteèní èinnost
+process does not have exactly one end activity	workflow	cs	Proces nemá právì jednu koncovou èinnost
+process form	workflow	cs	Formuláø procesu
+process name	workflow	cs	Název procesu
+process name already exists	workflow	cs	Název procesu ji¾ existuje
+process roles	workflow	cs	Role procesu
+process saved	workflow	cs	Proces ulo¾en
+process transitions	workflow	cs	Pøechody procesu
+process version:	workflow	cs	verze procesu:
+process:	workflow	cs	proces:
+processes	workflow	cs	Procesy
+properties	workflow	cs	Vlastnosti
+property	workflow	cs	Vlastnost
+property %1 already exists	workflow	cs	vlastnost %1 ji¾ existuje
+property %1 not found	workflow	cs	vlastnost %1 nebyla nalezena
+quit without saving	workflow	cs	Ukonèit bez ulo¾ení
+read-only	workflow	cs	jen ke ètení
+release access to this activity	workflow	cs	Uvolnit pøístup k této èinnosti
+release activity for this instance	workflow	cs	uvolnit èinnost pro tuto instanci
+release instance	workflow	cs	uvolnit instanci
+reload filter	workflow	cs	Znovu naèíst filtr
+remove active instances	workflow	cs	Odstranit aktivní instance
+remove all instances for this process	workflow	cs	odstranit v¹echny instance pro tento proces
+remove selected roles	workflow	cs	odstranit vybrané role
+removing instances and workitems for aborted instances on all processes	workflow	cs	odstraòují se instance a pracovní polo¾ky pro zru¹ené instance na v¹ech procesech
+removing instances and workitems for aborted instances on process #%1	workflow	cs	odstraòují se instance a pracovní polo¾ky pro zru¹ené instance na procesu #%1
+removing instances and workitems for all instances on process #%1	workflow	cs	odstraòují se instance a pracovní polo¾ky pro v¹echny instance na procesu #%1
+replyto:	workflow	cs	Odpovìdìt (komu):
+restart	workflow	cs	restartovat
+restart activity	workflow	cs	restartovat èinnost
+resume this exception instance	workflow	cs	Obnovit instanci výjimky
+role	workflow	cs	Role
+role #%1 in process %2 has different process (%3) in mapping with user #%4	workflow	cs	Role #%1 v procesu %2 má jiný proces (%3) v mapování s u¾ivatelem #%4
+role %1 (#%2) is associated with a non-existent process (#%3)	workflow	cs	Role %1 (#%2) je pøiøazena k neexistujícímu procesu (#%3)
+role %1 is associated in a mapping with user #%2 with a non-existent process (%3)	workflow	cs	Role %1 je pøiøazena v mapování s u¾ivatelem #%2 k neexistujícímu procesu (%3)
+role %1 is not mapped	workflow	cs	Role %1 není mapována
+role added to activity	workflow	cs	Role pøidána k èinnosti
+role added to process	workflow	cs	Role pøidána k procesu
+role give abort right	common	cs	Role dává právo ke zru¹ení
+role give exception right	common	cs	Role dává právo k výjimce
+role give release right	common	cs	Role dává právo k uvolnìní
+role in inexistent process	workflow	cs	Role v neexistujícím procesu
+role mapping in inexistent process	workflow	cs	Mapování role v neexistujícím procesu
+role name	workflow	cs	Název role
+role not saved (maybe a name collision)	workflow	cs	Role nebyla ulo¾ena (mo¾ná kolize v názvu)
+role process inconcistency in mappings	workflow	cs	Nekonsistence v mapování pøi zpracování role
+role saved	workflow	cs	Role ulo¾ena
+roles	workflow	cs	Role
+roles assigned to this activity	workflow	cs	Role pøidìleny této èinnosti
+roles deleted	workflow	cs	Role smazány
+routing	workflow	cs	Vedení
+routing:	workflow	cs	vedení:
+run	workflow	cs	spustit
+run activity	workflow	cs	spustit èinnost
+run instance	workflow	cs	spustit instanci
+running	workflow	cs	bì¾ící
+running activities options	common	cs	Volby bì¾ících èinností
+running activity	workflow	cs	Bì¾ící èinnost
+scan activities	workflow	cs	Prozkoumat èinnosti
+scan agents	workflow	cs	Prozkoumat agenty
+scan instances	workflow	cs	Prozkoumat  instance
+scan processes	workflow	cs	Prozkoumat  procesy
+scan roles	workflow	cs	Prozkoumat  role
+scan transitions	workflow	cs	Prozkoumat  pøechody
+search instance filter in the bottom of instance lists	workflow	cs	Vyhledání pomocí filtru instancí na konci seznamù instancí
+search:	workflow	cs	hledat:
+security check: cannot understand asked action	workflow	cs	Bezpeènostní kontrola: nerozumím po¾adované akci
+see as well <strong>%instance_name%</strong>, <strong>%activity_name%</strong>, <strong>%process_name%</strong>,<strong>%process_version%</strong>, <strong>%instance_id%</strong>, <strong>%activity_id%</strong> and <strong>%process_id%</strong>	workflow	cs	podívejte se také na <strong>%instance_name%</strong>, <strong>%activity_name%</strong>, <strong>%process_name%</strong>,<strong>%process_version%</strong>, <strong>%instance_id%</strong>, <strong>%activity_id%</strong> a <strong>%process_id%</strong>
+select a transition to remove	workflow	cs	Vyberte pøechod k odstranìní
+select source	workflow	cs	vybrat zdrojový kód
+send after interactive activity is completed	workflow	cs	poslat po dokonèení interaktivní èinnosti
+send all to	workflow	cs	Odeslat v¹e (komu)
+send an email	workflow	cs	Odeslat e-mail
+send instance	workflow	cs	odeslat instanci
+send this instance to the next activity	workflow	cs	Odeslat tuto instanci do dal¹í èinnosti
+send transition	workflow	cs	odeslat pøechod
+send when the activity is ending	workflow	cs	odeslat kdy¾ èinnost konèí
+send when the activity is starting	workflow	cs	odeslat kdy¾ èinnost zaèíná
+send when wf_agent_mail_smtp['submit_send'] is posted	workflow	cs	odeslat pøi zaslání wf_agent_mail_smtp['submit_send']
+set next act	workflow	cs	Nastavit dal¹í èinnost
+set next user	workflow	cs	Nastavit dal¹ího u¾ivatele
+set property	workflow	cs	Nastavit vlastnost
+setnextuser directives can override it	workflow	cs	direktivy setNextUser to mohou potlaèit
+setting next activity to an unexisting activity	workflow	cs	nastavení dal¹í èinnosti na neexistující èinnost
+shared code	workflow	cs	Sdílený kód
+should we always give you the advanced search row on instances lists?	workflow	cs	Máme Vám na seznamech instancí v¾dy nabídnout øádek pro roz¹íøené hledání?
+show activity info zone	common	cs	zobrazit informaèní oblast èinnosti
+show activity title	common	cs	Zobrazit název èinnosti
+show code	workflow	cs	zobrazit kód
+show instance name	common	cs	Zobrazit název instance
+show instance owner	common	cs	Zobrazit vlastníka instance
+show multiple submit as select	common	cs	zobrazit vícenásobné potvrzení jako výbìr
+show template	workflow	cs	zobrazit ¹ablonu
+size of the font used on the graph 12 should be a good default value	admin	cs	velikost písma pou¾itá na grafu 12 by mìla být dobrou výchozí hodnotou
+smtp agent has detected some errors when sending email after completion of the activity	workflow	cs	SMTP agent zjistil nìjaké chyby pøi odesílání e-mailu po dokonèení èinnosti
+smtp agent has detected some errors when sending email at the beginning of the activity	workflow	cs	SMTP agent zjistil nìjaké chyby pøi odesílání e-mailu po zahájení èinnosti
+smtp agent has detected some errors when sending email at the end of this activity	workflow	cs	SMTP agent zjistil nìjaké chyby pøi odesílání e-mailu po ukonèení této èinnosti
+smtp agent has detected some errors when sending email on demand whith this activity	workflow	cs	SMTP agent zjistil nìjaké chyby pøi odesílání e-mailu na vy¾ádání bìhem této èinnosti
+something was wrong while creating the new major version	workflow	cs	nìco se nezdaøilo pøi vytváøení nové majoritní verze
+something was wrong while creating the new minor version	workflow	cs	nìco se nezdaøilo pøi vytváøení nové minoritní verze
+source code file for activity %1 is not avaible	workflow	cs	soubor zdrojového kódu pro èinnost %1 není k dispozici
+source code for activity %1 is not avaible	workflow	cs	zdrojový kód pro èinnost %1 není k dispozici
+source saved	workflow	cs	Zdrojový kód ulo¾en
+special known values for local links address are <strong>userinstance</strong>, <strong>viewinstance</strong>, <strong>viewniceinstance</strong> and <strong>admininstance</strong>.	workflow	cs	Speciální známé hodnoty pro adresy lokálních odkazù jsou <strong>userinstance</strong>, <strong>viewinstance</strong>, <strong>viewniceinstance</strong> a <strong>admininstance</strong>.
+split	workflow	cs	rozdìlit
+standalone	workflow	cs	samostatný
+start	workflow	cs	Poèátek
+start activities must be autorouted	workflow	cs	poèáteèní èinnosti musí být automaticky vedené
+start activities must be interactive	workflow	cs	poèáteèní èinnosti musí být interaktivní
+start activity	workflow	cs	Poèáteèní èinnost
+start process	workflow	cs	zahájit proces
+started	workflow	cs	Zapoèato
+started:	workflow	cs	zapoèato:
+starting page	workflow	cs	Úvodní strana
+status	workflow	cs	Stav
+status:	workflow	cs	stav:
+stop	workflow	cs	zastavit
+subject:	workflow	cs	Pøedmìt:
+switch	workflow	cs	pøepínaè (rozhodnutí)
+switch construct	workflow	cs	Konstrukce pøepínaèe
+template	workflow	cs	¹ablona
+test concistency	workflow	cs	Testovat konsistenci
+test consistency of datas in the database	workflow	cs	Testovat konsistenci dat v databázi
+test local installation	workflow	cs	Testovat lokální instalaci
+the /workflow directory does not exist and could not be created. please ask your administrator to check the global configuration	common	cs	Adresáø /workflow neexistuje a nemohl být vytvoøen, po¾ádejte prosím administrátora o kontrolu globální konfigurace
+the activity was not completed	workflow	cs	Èinnost nebyla dokoèena
+the default user will only be set if he is mapped to a role on the activity	workflow	cs	Výchozí u¾ivatel bude nastaven jen pokud je namapován na roli v èinnosti
+the following items must be corrected to be able to activate this process	workflow	cs	Ne¾ bude mo¾né aktivovat proces, musí být opraveny následující polo¾ky
+the instance title is shown on top of the form	admin	cs	název instance je zobrazen na vrchu formuláøe
+the label you want	workflow	cs	jmenovka jakou si pøejete
+the smtp configuration cannot be loaded by the mail_smtp workflow agent	workflow	cs	Workflow agent mail_smtp nemù¾e nahrát SMTP konfiguraci
+there are no activities available	workflow	cs	®ádné èinnosti nejsou k dispozici
+there are no config value defined	workflow	cs	®ádné konfiguraèní hodnoty nejsou definovány
+there are no instances available	workflow	cs	®ádné instance nejsou k dispozici
+there are no mappings defined for this process	workflow	cs	Pro tento proces nejsou definována ¾ádná mapování
+there are no process available	workflow	cs	®ádný proces není k dispozici
+there are no processes	workflow	cs	Neexistují ¾ádné procesy
+there are no processes available	workflow	cs	®ádné procesy nejsou k dispozici
+there are no processes defined	workflow	cs	®ádné procesy nejsou definovány
+there are no processes with the current filter	workflow	cs	®ádné procesy nevyhovují aktuálnímu filtru
+there are no properties available	workflow	cs	®ádné vlastnosti nejsou k dispozici
+there are no roles defined for this process	workflow	cs	Pro tento proces nejsou definovány ¾ádné role
+there are no transitions defined	workflow	cs	®ádné pøechody nejsou definovány
+there are no user activites available	workflow	cs	®ádné u¾ivatelské èinnosti nejsou k dispozici
+there are no workitems available	workflow	cs	®ádné pracovní polo¾ky nejsou k dispozici
+there are some undefined preferences associated with this form : %1	workflow	cs	K tomuto formuláøi jsou pøiøazeny nìjaké nedefinované pøedvolby: %1
+there is an unknown user or group #%1 in role mappings	workflow	cs	V mapování role je neznámý u¾ivatel nebo skupina #%1
+they were problems at the compilation of the source:	workflow	cs	Vyskytly se problémy pøi kompilaci zdrojového kódu:
+this activity for this instance is actually avaible for you.	workflow	cs	Tato èinnost pro tuto instanci je Vám v souèasnosti k dispozici.
+this activity for this instance is actually only avaible for you.	workflow	cs	V souèasnosti je Vám pro tuto instanci k dispozici jen tato èinnost.
+this activity for this instance is not specifically assigned to you.	workflow	cs	Tato èinnost pro tuto instanci není výslovnì pøidìlena Vám.
+this agent gives the activity the possibility to send an smtp message (mail)	workflow	cs	Tento agent poskytuje èinnosti mo¾nost odeslat SMTP zprávu (e-mail)
+this form will test your local workflow installation to detect potential issues	workflow	cs	Tento formuláø otestuje Va¹í lokální instalaci workflow pro nalezení potenciálních problémù
+this is the first screen shown when you click on the workflow application icon	workflow	cs	Toto je první obrazovka, která se uká¾e pro kliknutí na ikonu aplikace workflow
+this process has a view activity. access in view mode is granted only for this view activty.	workflow	cs	Tento proces má pohledovou èinnost. Pøístup v re¾imu prohlí¾ení je povolen jen této pohledové èinnosti.
+this process has no end activity	workflow	cs	tento proces nemá koncovou èinnost
+this will automatically release the instance when leaving an activity without completing	admin	cs	tímto se automaticky uvolní instance pøi ukonèení èinnosti bez dokonèení
+this will display an activity footer when any activity is runned with workflow engine related informations	admin	cs	tímto se zobrazuje zápatí èinnosti s informacemi o workflow enginu kdykoli èinnost be¾í
+to	workflow	cs	Komu
+to:	workflow	cs	Komu:
+transition	workflow	cs	pøechod
+transition mode	workflow	cs	re¾im pøechodu
+transition to %1	workflow	cs	pøechod na %1
+transition waiting for human interaction	workflow	cs	pøechod èekající na interakci èlovìka
+transitions	workflow	cs	pøechody
+transitions removed successfully	workflow	cs	Pøechody úspì¹nì odstranìny
+type	workflow	cs	typ
+type:	workflow	cs	typ:
+unknow fix instruction :%1	workflow	cs	neznámá instrukce opravy: %1
+unknown instruction from the workflow engine: %1	workflow	cs	neznámá instrukce z workflow enginu: %1
+unknown status	workflow	cs	neznámý stav
+update	workflow	cs	aktualizoat
+upload file	workflow	cs	Uploadovat soubor:
+use <a href="%1">emailadmin</a> to create mail profiles	workflow	cs	Pou¾ít <a href="%1">Administrátor po¹ty</a> pro vytvoøení po¹tovních profilù
+use automatic parsing	common	cs	Pou¾ít automatickou syntaktickou kontrolu
+use default	workflow	cs	Pou¾ít výchozí
+use existing roles	workflow	cs	Pou¾ít stávající role
+user	workflow	cs	U¾ivatel
+user #%1 is associated with a non-existent role #%2	workflow	cs	U¾ivatel #%1 je pøiøazen k neexistující roli #%2
+user activities	workflow	cs	Èinnosti u¾ivatele
+user instances	workflow	cs	Instance u¾ivatele
+user instances form: columns	workflow	cs	Formuláø instancí u¾ivazele: sloupce
+user instances form: filters and actions	workflow	cs	Formuláø instancí u¾ivazele: filtry a èinnosti
+user is not authorized to delete aborted instances	workflow	cs	u¾ivatel nemá oprávnìní mazat zru¹ené instance
+user is not authorized to delete instances	workflow	cs	u¾ivatel nemá oprávnìní mazat instance
+user processes	workflow	cs	Procesy u¾ivatele
+user/group	workflow	cs	U¾ivatel/Skupina
+user:	workflow	cs	u¾ivatel:
+users can act on activity before its execution with form and after by sending it to the next activity	workflow	cs	U¾ivatel mù¾e ovlivòovat èinnost pøed jejím spu¹tìním pomocí formuláøe a po spu¹tìní jejím odesláním do následující èinnosti.
+users/groups	workflow	cs	U¾ivatelé/Skupiny
+valid	workflow	cs	Platný
+valid process	workflow	cs	Platný proces
+valid:	workflow	cs	platný:
+validity:	workflow	cs	Platnost:
+value	workflow	cs	Hodnota
+version	workflow	cs	Verze
+view details	workflow	cs	zobrazit detaily
+view this instance	workflow	cs	Zobrazit tuto instanci
+view workitem	workflow	cs	Zobrazit pracovní polo¾ku
+warning this filter override all others filters	workflow	cs	varování: tento filtr potlaèí v¹echny ostatní filtry
+warning: by using this button you will definitively remove all aborted instances and their history (workitems) for the selected process.	workflow	cs	varování: pou¾itím tohoto tlaèítka s koneènou platností odstraníte v¹echny zru¹ené instance A jejich historii (pracovní polo¾ky) pro vybraný proces
+warning: by using this button you will definitively remove all instances and their history (workitems) for the selected process, whatever the state they are.	workflow	cs	varování: pou¾itím tohoto tlaèítka s koneènou platností odstraníte v¹echny instance A jejich historii (pracovní polo¾ky) pro vybraný proces a» jsou v jakémkoli stavu
+we cannot run this activity, maybe this instance or this activity do not exists anymore.	workflow	cs	Nemù¾eme spustit tuto èinnost, mo¾ná, ¾e instance této èinnosti u¾ neexistuje
+we were not able to build the message	workflow	cs	Nemohli jsme sestavit zprávu
+when in advanced mode, should we show you advanced actions by default (resume, exception, grab, etc.)?	workflow	cs	Máme Vám v pokroèilém re¾imu rovnou (defaultnì) zobrazovat pokroèilé akce (obnovení, výjimka, pøevzetí)?
+when multiple submit options are avaible we draw a select box with only one submit instead of multiple buttons	admin	cs	kdy¾ je k dispozici více voleb pro potvrzení, vykreslíme rozbalovací nabídku s jedním potvrzovacím tlaèítkem místo nìkolika tlaèítek
+when to send the message:	workflow	cs	Kdy odeslat zprávu:
+workflow	common	cs	Workflow
+workflow configuration	admin	cs	Konfigurace workflow
+workflow navigation	workflow	cs	Navigace workflow
+workflow preferences	workflow	cs	Pøedvolby workflow
+workflow site configuration	workflow	cs	Konfigurace webu workflow
+workitem information	workflow	cs	Informace o pracovní polo¾ce
+workitems	workflow	cs	Pracovní polo¾ky
+you are not allowed to abort instance %1	workflow	cs	Nemáte oprávnìní zru¹it instanci %1
+you are not allowed to exception instance %1	workflow	cs	Nemáte oprávnìní pro výjimku instance %1
+you are not allowed to grab instance %1	workflow	cs	Nemáte oprávnìní pøevzít instanci %1
+you are not allowed to release instance %1	workflow	cs	Nemáte oprávnìní uvolnit instanci %1
+you are not allowed to restart instance %1	workflow	cs	Nemáte oprávnìní restartovat instanci %1
+you are not allowed to resume instance %1	workflow	cs	Nemáte oprávnìní obnovit %1
+you are not allowed to send instance %1	workflow	cs	Nemáte oprávnìní odeslat instanci %1
+you can use special values with this mail agent:	workflow	cs	S tímto po¹tovním agentem mù¾ete  pou¾ít speciální hodnoty:
+you do not have the right to run this activity anymore, maybe a concurrent access problem, refresh your datas.	workflow	cs	Pro spu¹tìní této èinnosti u¾ nemáte práva, mo¾ná se jedná o problém soubì¾ného pøístupu, obnovte svá data.
+you don't have the rights necessary to exception instance %1	workflow	cs	Nemáte práva potøebná pro výjimku instance %1
+you have not permission to execute this activity	workflow	cs	Nemáte oprávnìní ke spu¹tìní této èinnosti
+you were not allowed to complete the activity	workflow	cs	nemáte oprávnìní dokonèit tuto èinnost

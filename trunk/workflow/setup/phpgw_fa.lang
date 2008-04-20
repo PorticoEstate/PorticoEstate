@@ -1,0 +1,615 @@
+#	workflow	fa	شماره
+%1 aborted	workflow	fa	%1 لغو شده
+%1 active	workflow	fa	%1 فعال
+%1 completed	workflow	fa	%1 پایان یافته
+%1 configuration	workflow	fa	پیکر بندی %1
+%1 days, %2:%3:%4	workflow	fa	روزها، %2:%3:%4 %1
+%1 exception	workflow	fa	%1 استثناء شده
+%1 menu	workflow	fa	فهرست %1
+%1 monitoring	workflow	fa	پایشگری %1
+%1 processes (%2 active) (%3 being_run)	workflow	fa	فرآیندها(%2 فعال) (%3  %1 در حال اجرا)
+/workflow directory does not exist and could not be created, please ask adminstrator to check the global configuration	common	fa	پوشه گردش کار وجود ندارد و نمی تواند ایجاد شود. لطفا از مدیر سیستم بخواهید پیکربندی عمومی را بررسی کند
+<strong>%owner%</strong> is the instance owner email	workflow	fa	<strong>%owner%</strong> مالک فرم است
+<strong>%property_xx%</strong> is the content of the instance's property xx	workflow	fa	<strong>%property_XX%</strong> محتویات ویژگی فرم است
+<strong>%role_xx%</strong> are all the emails of all users mapped to the role xx	workflow	fa	<strong>%role_XX%</strong>  نامه های الکترونیکی تمام کاربران نگاشت شده به وظیفه هستند
+<strong>%roles%</strong> are the emails of all users mapped to any role on this activity	workflow	fa	<strong>%roles%</strong> نامه های الکترونیکی همه کاربران نگاشت شده به هر وظیفه ای روی این فعالیت هستند
+<strong>%signature%</strong> is the agent signature defined in the process configuration	workflow	fa	<strong>%signature%</strong> امضاء عامل تعریف شده در پیکر بندی فرآیند
+<strong>%user%</strong> is the instance user email	workflow	fa	<strong>%user%</strong> نشانی الکترونیکی کاربر فرم است
+<strong>%user_xx%</strong> is the email of the acount xx	workflow	fa	<strong>%user_XX%</strong>  نشانی الکترونیکی حساب کاربری است
+a please wait message is shown when loading the activity form usefull for long tasks	admin	fa	یک پیام لطفا صبر کنید در زمانی که فعالیت از عملیات طولانی باید بارگذاری شود نمایش داده می شود
+abort instance	workflow	fa	لغو فرم
+abort this instance	workflow	fa	لغو این فرم
+aborted	workflow	fa	لغو شده
+access denied for user %1 on activity %2, no role	workflow	fa	دسترسی برای کاربر %1 روی فعالیت %2 ممکن نیست، وظیفه ای نیست
+act	workflow	fa	فعالیت
+act status	workflow	fa	وضعیت فعالیت
+act. status	workflow	fa	وضعیت فعالیت
+act. status:	workflow	fa	وضعیت فعالیت:
+action %1 is impossible if we have no activity and no instance designated for it!	workflow	fa	عملیات %1 غیر ممکن است اگر ما فعالیت یا فرمی برای آن اختصاص نداده باشیم
+action %1 is impossible, another user is already in place	workflow	fa	عملیات %1 غیر ممکن است، کاربر دیگری روی آن کار میکند
+action %1 is impossible, there are no user assigned to this activity for this instance	workflow	fa	عملیات %1 غیر ممکن است، هیچ کاربری به این فعالیت برای این فرم تخصیص نیافته است
+action %1 needs an activity and activity %2 does not exists	workflow	fa	عملیات %1 نیاز به فعالیت دارد و فعالیت %2 وجود ندارد
+action %1 needs an instance and instance %2 does not exists	workflow	fa	عملیات %1 نیاز به فرم دارد و فرم %2 وجود ندارد
+actions	workflow	fa	فعالیتها
+actions right options	common	fa	گزینه های حقوق فعالیتها
+activate	workflow	fa	فعال
+active	workflow	fa	فعال
+active:	workflow	fa	فعال:
+activities	workflow	fa	فعالیتها:
+activities selection	workflow	fa	انتخاب فعالیتها
+activities updated	workflow	fa	فعالیتها به روز شد
+activity	workflow	fa	فعالیت
+activity  status	workflow	fa	وضعیت فعالیت
+activity %1	workflow	fa	%1 فعالیت
+activity %1 (#%2) is associated with a non-existent process (#%3)	workflow	fa	فعالیت %1 (#%2 ) فرآیند (#%3) تخصیص یافته که این فرآیند وجود ندارد
+activity %1 code is not avaible	workflow	fa	کد فعالیت %1 موجود نیست
+activity %1 is interactive but has no role assigned	workflow	fa	فعالیت %1  تعاملی است اما وظیفه ای به آن اختصاص داده نشده است
+activity %1 is interactive so it must use the $instance->complete() method	workflow	fa	فعالیت %1 تعاملی است و باید از روش $instance->complete()  استفاده شود
+activity %1 is non-interactive and non-autorouted but has no role assigned	workflow	fa	فعالیت %1 غیر تعاملی است و غیر ارجاع خودکار است اما هیچ وظیفه ای به آن نسبت نیافته است
+activity %1 is non-interactive so it must not use the $instance->complete() method	workflow	fa	فعالیت %1 غیر تعاملی است و نباید از $instance->complete() استفاده کند
+activity %1 is standalone and is using the $instance object	workflow	fa	فعالیت %1  مستقل است و از شئ $instance استفاده می کند
+activity %1 is standalone but has transitions	workflow	fa	فعالیت %1 مستقل است اما انتقال دارد
+activity %1 is standalone or view but has transitions	workflow	fa	فعالیت %1 مستقل یا نما است اما مرحله دارد
+activity %1 is switch so it must use $instance->setnextactivity($actname) method	workflow	fa	فعالیت %1 مبدل است و باید از روش $instance->setNextActivity($actname) استفاده می کند
+activity %1 is view and is using the $instance object in write mode	workflow	fa	فعالیت %1 یک نماست و از شئ $instance در حالت نوشتن استفاده می کند
+activity agent removed	workflow	fa	عامل فعالیت حذف شد
+activity completed	workflow	fa	فعالیت کامل شد
+activity failure	workflow	fa	فعالیت مشکل دارد
+activity in inexistent process	workflow	fa	فعالیت در فرآیند غیر موجود
+activity is waiting for pending transitions	workflow	fa	فعالیت در مرحله ای منتظر است
+activity name already exists	workflow	fa	نام فعالیت قبلا وجود دارد
+activity role #%1 removed	workflow	fa	وظیفه فعالیت #%1 حذف شد
+activity role removed	workflow	fa	وظیفه فعالیت حذف شد
+activity saved	workflow	fa	فعالیت ذخیره شد
+activity start not avaible, no corresponding activity was found.	workflow	fa	شروع فعالیت موجود نیست، فعالیت متناظری پیدا نشد
+activity start not set, no corresponding activity was found.	workflow	fa	شروع فعالیت تنظیم نشده، فعالیت متناظری پیدا نشد
+activity status not avaible, no corresponding activity was found.	workflow	fa	وضعیت فعالیت موجود نیست، فعالیت متناظری هم پیدا نشد
+activity:	workflow	fa	فعالیت:
+add a transition	workflow	fa	افزودن مرحله
+add aborted instances	workflow	fa	افزودن فرم لغو شده
+add advanced actions	workflow	fa	افزودن عملیات پیشرفته
+add agent	workflow	fa	افزودن عامل
+add completed instances	workflow	fa	افزودن فرم کامل شده
+add instances in exception	workflow	fa	افزودن فرم در استثناء
+add new	workflow	fa	افزودن جدید
+add new role	workflow	fa	افزودن وظیفه جدید
+add or edit a process	workflow	fa	افزودن یا ویرایش کردن فرآیند
+add or edit a role	workflow	fa	افزودن یا ویرایش کردن وظیفه
+add or edit an activity	workflow	fa	افزودن یا ویرایش کردن فعالیت
+add property	workflow	fa	افزودن صفت
+add role	workflow	fa	افزودن وظیفه
+add role to process	workflow	fa	افزودن وظیفه به فرآیند
+add transition	workflow	fa	افزودن مرحله
+add transitions	workflow	fa	افزودن مرحله
+add transitions from	workflow	fa	افزودن مرحله از
+add transitions to	workflow	fa	افزودن مرحله به
+admin instance	workflow	fa	مدیریت فرم
+admin process activities	workflow	fa	مدیریت فعالیتهای فرآیند
+admin process roles	workflow	fa	مدیریت وظیفه های فرآیند
+admin processes	workflow	fa	مدیریت فرآیند ها
+admin processes sources	workflow	fa	مدیریت منابع فرآیند ها
+administer instances	admin	fa	مدیریت فرم ها
+administer processes	admin	fa	مدیریت فرآیند ها
+agent #%1 of type %2 is associated to an inexistent activity #%3	workflow	fa	عامل #%1  از نوع %2 به فعالیت #%3 تخصیص یافته که این فعالیت وجود ندارد.
+agent #%1 of type %2 is not linked with an activity	workflow	fa	عامل #%1 از نوع %2 با فعالیت پیوند ندارد
+agent associated with inexistent activity	workflow	fa	عامل به فعالیت غیرموجود اختصاص داده شده
+agent without activity	workflow	fa	عامل بدون فعالیت
+agents assigned to this activity	workflow	fa	عوامل اختصاص یافته به این فعالیت
+all	workflow	fa	همه
+always show advanced actions	workflow	fa	همیشه عملیات پیشرفته را نشان بده
+always show advanced mode	workflow	fa	همیشه سبک پیشرفته را نشان بده
+assign me this activity	workflow	fa	این فعالیت را به من اختصاص بده
+at least one email address cannot be validated.	workflow	fa	حداقل یک نشانی پست الکترونیک نمی تواند معتبر باشد
+auto routed	workflow	fa	ارجاع خودکار
+auto-release on leaving activity	common	fa	آزادسازی خودکار در زمانی که فعالیت رها می شود
+automatic	workflow	fa	خودکار
+autorouted activities does not need to be sent by any user after their execution	workflow	fa	فعالیتهای ارجاع خودکار نیازی به ارسال توسط هیچ کاربری بعد از اجرایشان ندارند
+bad parameter for setagents, the parameter should be an array	workflow	fa	پارامتر نادرست برای setAgents، پارامتر باید یک آرایه باشد
+bad role type	workflow	fa	نوع وظیفه اشتباه است
+bad user	workflow	fa	کاربر غلط
+base directory does not exist, please ask adminstrator to check the global configuration	common	fa	پوشه پایه وجود ندارد، از مدیر سیستم بخواهید که تنظیمات عمومی را بررسی کند
+bcc:	workflow	fa	رونوشت دوم:
+be carefull with interactive activity, end and start of theses activities are multiple.	workflow	fa	در مورد فعالیتهای تعاملی دقت کنید! پایان و شروع این فعالیتها چندگانه اند.
+being run	workflow	fa	در حال اجرا
+by running theses links you will create new instances of the related process.	workflow	fa	با اجرا کردن این پیوندها شما یک فرم از فرم مرتبط می سازید
+cannot add transition only split or switch activities can have more than one outbound transition	workflow	fa	نمیشود مرحله اضافه کرد. فقط فعالیتهای تقسیم یا مبدل می توانند بیش از یک مرحله بیرونی داشته باشند
+cannot add transition. only split activities can have more than one outbound transition	workflow	fa	نمیشود مرحله اضافه کرد. فقط فعالیتهای تقسیم می توانند بیش از یک مرحله بیرونی داشته باشند
+cannot create compiled file %1	workflow	fa	نمیشود پرونده تالیف شده %1 را ساخت
+cannot retrieve the user running the security check	workflow	fa	نمیشود کاربری که بررسی امنیتی انجام می دهد را بازیافت کرد
+cannot run the activity	workflow	fa	امکان اجرای فعالیت وجود ندارد
+cannot run the activity without her process	workflow	fa	امکان اجرای فعالیت بدون فرآیند وجود ندارد
+cannot run the activity without instance	workflow	fa	امکان اجرای فعالیت بدون فرم وجود ندارد
+cannot run unknown activity	workflow	fa	امکان اجرای فعالیت ناشناخته وجود ندارد
+cc:	workflow	fa	رونوشت:
+circular reference found some activity has a transition leading to itself	workflow	fa	ارجاعات مدور پیدا شده است. فعالیتی که مرحله دارد به خودش هدایت شده!
+circular reference found. some activity has a transition leading to itself	workflow	fa	ارجاعات مدور پیدا شده است. فعالیتی که مرحله دارد به خودش هدایت شده!
+cleanup aborted instances	workflow	fa	پاکسازی فرم های لغو شده
+cleanup actions	workflow	fa	عملیات پاکسازی
+close and get back later	workflow	fa	ببند و بعدا برگرد
+close printer friendly mode	workflow	fa	بستن سبک قابل چاپ
+code	workflow	fa	کد
+column activity status in instance lists	workflow	fa	ستون وضعیت فعالیت در  لیستهای فرم
+column category in instance lists	workflow	fa	ستون مجموعه در لیستهای فرم
+column instance id in instance lists	workflow	fa	ستون شناسه فرم در لیستهای فرم
+column instance name in instance lists	workflow	fa	ستون نام فرم در لیستهای فرم
+column instance status in instance lists	workflow	fa	ستون وضعیت فرم در لیستهای فرم
+column owner in instance lists	workflow	fa	ستون مالک در لیستهای فرم
+column priority in instance lists	workflow	fa	ستون تقدم در لیستهای فرم
+column process name in instance lists	workflow	fa	ستون نام فرآیند در لیستهای فرم
+column start date in instance lists	workflow	fa	ستون تاریخ شروع در لیستهای فرم
+compilation	workflow	fa	تألیف
+compiling activity %1 : %2	workflow	fa	درحال تألیف فعالیت %1 : %2
+complete	workflow	fa	کامل شد
+complete cleanup of aborted instances done	workflow	fa	پاکسازی فرم های لغو شده پایان یافت
+complete cleanup of all instances done	workflow	fa	پاکسازی همه فرم ها پایان یافت
+completed	workflow	fa	پایان یافته
+config values	common	fa	مقادیر پیکربندی
+confirm delete	workflow	fa	تأیید حذف
+consult %1 to get the default values:	workflow	fa	با %1 مشورت کنید تا مقادیر پیش فرض را بدانید
+couldn't add transition	workflow	fa	ناتوان از افزودن مرحله
+create	workflow	fa	ایجاد
+created	workflow	fa	ایجاد شد
+date:	workflow	fa	تاریخ:
+default config values	workflow	fa	مقادیر پیش فرض پیکربندی
+default next user	workflow	fa	کاربر پیش فرض بعدی
+default owner	workflow	fa	مالک پیش فرض
+default settings for processes	admin	fa	تنظیمات پیش فرض برای فرآیند ها
+default user	workflow	fa	کاربر پیش فرض
+delete	workflow	fa	حذف
+delete selected	workflow	fa	حذف انتخاب شده ها
+delete transition	workflow	fa	حذف مرحله
+deletion successful	workflow	fa	حذف موفق بود
+delition successful	workflow	fa	حذف موفق بود
+description	workflow	fa	شرح
+display please wait message	common	fa	نمایش پیام لطفا صبر کنید
+do you want the activity status on instances lists. most of the time it is "running" but if you use non-autorouted transitions you will have some completed activities.	workflow	fa	آیا وضعیت فعالیت روی لیستهای فرم را می خواهید؟ اکثر مواقع آن در حال اجراست، اما اگر شما از مرحله غیر ارجاع خودکار استفاده کنید، تعدادی فعالیت پایان یافته خواهید داشت.
+do you want the category column on instances lists, if yout instances use categories you should use it	workflow	fa	آیا ستون رده روی لیستهای فرم را می خواهید؟ اگرفرم های شما از رده ها استفاده می کنند باید از آن استفاده کنید
+do you want the category name column on instances lists, if your instances use categories you should use it	workflow	fa	آیا ستون نام رده روی لیستهای فرم را می خواهید؟ اگر فرم های شما از رده ها استفاده می کنند باید از آن استفاده کنید
+do you want the category name column on instances lists. if your instances use categories you should use this	workflow	fa	آیا ستون نام رده روی لیستهای فرم را می خواهید؟ اگر فرم های شما از رده ها استفاده می کنند باید از این استفاده کنید
+do you want the instance id column on instances lists. this is the unique identifier of an instance	workflow	fa	آیا ستون شناسه فرم روی لیستهای فرم را می خواهید؟ این یک شناسه منحصر به فرد از یک فرم است
+do you want the instance name column on instances lists. if your instances have name you should really use this	workflow	fa	آیا ستون نام فرم روی لیستهای فرم را می خواهید؟ اگر فرم های شما نام دارند واقعا باید از این استفاده کنید
+do you want the instance status on instances lists. the instance status is usefull to disting beteween aborted, completed, exception or active instances	workflow	fa	آیا وضعیت فرم روی لیستهای فرم را می خواهید؟ وضعیت فرم برای تمایز بین فرم های فعال، استثناء، پایان یافته و لغو شده مفید خواهد بود
+do you want the owner column on instances lists. this will show you the actual owner, especially usefull if ownership is defined with special rights	workflow	fa	آیا ستون مالک روی لیستهای فرم را می خواهید؟ این مالک قطعی را نشان می دهد، زمانی مفید خواهد بود که مالکیت تعریف شده با حقوق ویژه داشته باشیم
+do you want the priority column on instances lists. priority can be set with activities forms	workflow	fa	آیا ستون تقدم روی لیستهای فرم را می خواهید؟ تقدم می تواند با فرمهای فعالیتها تنظیم شود
+do you want the process column on instances lists. usefull if you have different processes and/or versions of theses processes	workflow	fa	آیا ستون فرآیند روی لیستهای فرم را می خواهید؟ وقتی فرآیند های متفاوت و/یا نسخه های مختلف این فرآیند ها را داشته باشید مفید خواهد بود
+do you want the search instance button in the last row of instances list.	workflow	fa	آیا دکمه جستجوی فرم را در سطر آخر لیستهای فرم می خواهید؟
+do you want the started date column on instances lists.	workflow	fa	آیا تاریخ شروع روی لیستهای فرم را می خواهید؟
+don't move	workflow	fa	انتقال نده
+draw roles	common	fa	رسم وظایف
+draw roles on the graph beside activity name like [that]	admin	fa	رسم وظایف روی گراف کنار نام فعالیتها شبیه [آن]
+duration	workflow	fa	مدت
+empty	workflow	fa	خالی
+empty agent type	workflow	fa	خالی کردن نوع عامل
+end	workflow	fa	اتمام
+end activity is not reachable from start activity	workflow	fa	فعالیت پایانی قابل رسیدن از فعالیت آغازین نیست
+ended	workflow	fa	پایان یافت
+enter an activity name	workflow	fa	یک نام فعالیت وارد کنید
+error: nextactivity does not match any candidate in autorouting switch activity	workflow	fa	خطا: nextActivity با هیچکدام از فعالیتهای مبدل ارجاع خودکار جور نمیشود
+error: non-deterministic decision for autorouting activity	workflow	fa	خطا: تصمیم غیرقطعی برای فعالیت ارجاع خودکار
+error: removing was not done	workflow	fa	خطا: حذف انجام نشد
+error: trying to send an instance to an activity but it was impossible to get this activity	workflow	fa	خطا: تلاش برای ارسال یک فعالیت انجام شد، اما بدست آوردن این فعالیت غیر ممکن بود
+error: trying to send an instance to an activity but no transition found	workflow	fa	خطا: تلاش برای ارسال یک فرم به یک فعالیت  انجام شد، اما مرحله یافت نشد
+exception	workflow	fa	استثنا شده
+exception instance	workflow	fa	فرم استثناء
+exception raised by %1 %2: %3	workflow	fa	استثناء بوسیله %1 %2: %3 آزاد شد
+exception resumed by %1 %2: %3	workflow	fa	اشتثناء بوسیله %1 %2: %3 بازگردانده شد
+exception this instance	workflow	fa	این فرم را استثناء کن
+exceptions	workflow	fa	استثنائات
+execute this activity	workflow	fa	اجرای این فعالیت
+export	workflow	fa	صدور
+failed to create workitem	workflow	fa	ناتوان از ایجاد موضوع کاری
+failed to execute automatic activity	workflow	fa	ناتوان از اجرای خودکار فعالیت
+failed to obtain lock on %1 table	workflow	fa	ناتوان از فراهم کردن قفل روی جدول %1
+failed to obtain lock on instances table	workflow	fa	ناتوان از فراهم کردن قفل روی جدول فرم ها
+failed to obtain lock on instances_activities table	workflow	fa	ناتوان از فراهم کردن قفل روی جدول فرم هاـفعالیتها
+failed to record instance properties	workflow	fa	ناتوان از انباشتن جزئیات فرم
+failed to synchronize instance data with the database	workflow	fa	ناتوان از انطباق اطلاعات فرم با پایگاه داده
+failure	workflow	fa	عدم موفقیت
+fatal error: nextactivity does not match any candidate in autorouting switch activity	workflow	fa	خطای جدی: nextActivity با هیچکدام ار ارجاعهای خودکار فعالیت مبدل جور نیست
+fatal error: non-deterministic decision for autorouting activity	workflow	fa	خطای جدی: تصمیم غیر قطعی برای فعالیت ارجاع خودکار
+fatal error: setting next activity to an unexisting activity	workflow	fa	خطای جدی: تنظیم فعالیت بعدی برای فعالیتی که موجود نیست
+fatal error: trying to send an instance to an activity but no transition found	workflow	fa	خطای جدی: تلاش برای ارسال یک فرم به یک فعالیت انجام شد، اما هیچ مرحله ای یافت نشد
+filter	workflow	fa	صافی
+filter instance by id	workflow	fa	صافی کردن فرم بوسیله شناسه
+finally you have links with <strong>%link_xx|yy%</strong> syntax, xx is the address part, yy the text part.	workflow	fa	بالاخره شما پیوندهایی به شکل <strong>%link_XX|YY%</strong>  خواهید داشت که XX قسمت نشانی و  YY قسمت دیگر است
+fix	workflow	fa	درست کردن
+fix concistency for selected rows	workflow	fa	درست کردن پایداری برای سطور انتخاب شده
+font size	workflow	fa	اندازه قلم
+from	workflow	fa	از
+from:	workflow	fa	از:
+get back to global activities	workflow	fa	بازگشت به فعالیتهای عمومی
+get back to instance creation	workflow	fa	بازگشت به ایجاد فرم
+get property	workflow	fa	دریافت جزئیات
+global activities	workflow	fa	فعالیتهای عمومی
+global workflow preferences	workflow	fa	تنظیمات عمومی پیش فرض گردش کار
+go	workflow	fa	برو
+go to same activities for other instances of this process	workflow	fa	برو به فعالیتهایی برای دیگر فرم هایی از این فرآیند
+go to same process activities	workflow	fa	برو به فعالیتهایی از فرآیند
+go to the actual state of this instance	workflow	fa	برو به وضیت قطعی از این فرم
+grab instance	workflow	fa	تصرف کردن فرم
+grant access to the administration and development of workflow processes and activities.	admin	fa	اعطاء دسترسی به مدیریت و توسعه دهنده فرآیند ها و فعالیتهای گردش کار
+grant access to the administration of workflow elements	admin	fa	اعطاء دسترسی به مدیریت اشیاء گردش کار
+grant access to the administration of workflow instances in monitor screens	admin	fa	اعطاء دسترسی به مدیریت فرم ها در صفحه های پایشگری
+grant access to the cleanup/deletion of workflow aborted instances in monitor screens	admin	fa	اعطاء دسترسی به پاکسازی/حذف فرم های لغو شده در صفحه های پایشگری
+grant access to the monitoring of workflow elements	admin	fa	اعطاء دسترسی به پایشگری اشیاء گردش کار
+graph	workflow	fa	گراف
+graphic options	common	fa	گزینه های گراف
+group	workflow	fa	گروه
+id	workflow	fa	شناسه
+if automatic parsing is disabled next options will be useless	admin	fa	اگر تجزیه و تحلیل خودکار غیرفعال شود، گزینه بعدی غیرقابل استفاده خواهد بود
+if not in debug mail_smtp agent would have sent this email:	workflow	fa	اگر در رفع اشکال نباشد عامل mail_smtp می بایست این نامه الکترونیکی را بفرستد
+if user is in a role for an activity he will have the right to abort the related instance	admin	fa	اگر کاربر در یک وظیفه برای یک فعالیت است، بایدحق داشته باشد که فرم های مرتبط را لغو کند
+if user is in a role for an activity he will have the right to exception or resume the related instance	admin	fa	اگر کاربر در یک وظیفه برای یک فعالیت است باید حق داشته باشد که فرم مرتبط را استثناء کند یا بازگرداند
+if user is in a role for an activity he will have the right to release (un-assign) the related instance	admin	fa	اگر کاربر در یک وظیفه برای یک فعالیت است باید حق داشته باشد تا فرم های مرتبط را آزاد کند
+if:setnextact	workflow	fa	اگر:SetNextact
+import aborted	workflow	fa	وارد کردن لغو شده ها
+import successfull	workflow	fa	وارد کردن موفق ها
+in role mappings user #%1 is specified as a "%2" but is maybe a "%3"	workflow	fa	در نگاشت وظایف کاربر #%1 بعنوان "%2" تعریف شده اما شاید "%3" باشد
+inactive	workflow	fa	غیر فعال
+inst.	workflow	fa	فرم
+inst. status	workflow	fa	وضعیت فرم
+instance	workflow	fa	فرم
+instance %1	workflow	fa	فرم %1
+instance %1 is in %2 state, action %3 is impossible.	workflow	fa	فرم %1 در جایگاه %2 قراردارد، عملیات %3 غیر قابل انجام است
+instance %1 is in exception, action %2 is not possible.	workflow	fa	فرم %1  استثناء است، عملیات %2 ممکن نیست
+instance %1 is not associated with activity %2, action %3 is impossible.	workflow	fa	فرم %1 به فعالیت %2 تخصیص داده نشده، عملیات %3 ممکن نیست
+instance history	workflow	fa	سوابق فرم
+instance properties	workflow	fa	ویژگیهای فرم
+instance:	workflow	fa	فرم:
+instance: %1 (process: %2)	workflow	fa	فرم %1 (فرآیند: %2)
+instance: unable to modify %1 [%2], someone has changed it before us	workflow	fa	فرم: ناتوان از تغییر %1 [%2] ، یک نفر قبل از ما تغییرش داده است
+instance: unable to modify %1, someone has changed it before us	workflow	fa	فرم: ناتوان از تغییر %1، یک نفر قبل از ما تغییرش داده است
+instances	workflow	fa	فرم ها
+instances selection	workflow	fa	انتخاب فرم ها
+int.	workflow	fa	تعاملی
+interactive	workflow	fa	تعاملی
+interactive activities show form before being executed	workflow	fa	فعالیتهای تعاملی  قبل از اجرا فرم نمایش می دهند
+interactive instances should not call the complete() method	workflow	fa	فرم های تعاملی نباید روش complete() را صدا کنند
+interactive:	workflow	fa	تعاملی:
+interactivity	workflow	fa	تعاملی
+invalid	workflow	fa	نامعتبر
+invalid process	workflow	fa	فرآیند نامعتبر
+invalid role name	workflow	fa	نام وظیفه نامعتبر
+is active	workflow	fa	فعال است
+it seems this activity for this instance is not assigned to you anymore.	workflow	fa	به نظر می رسد این فعالیت برای این فرم بیشتر از این به شما اختصاص ندارد
+it was impossible to complete, no activity was given.	workflow	fa	پایان یافتن غیر ممکن است، فعالیتی دریافت نشد
+it was impossible to complete, no corresponding activity was found.	workflow	fa	پایان یافتن غیر ممکن است، فعالیت متناظری یافت نشد
+join	workflow	fa	پیوستن
+link addresses are considered local if not containing <strong>http://</strong>. they will get appended the configured local prefix and scanned by egroupware link engine	workflow	fa	نشانی پیوندها، محلی در نظر  گرفته می شود اگر شامل <strong>http://</strong> نباشد. این نشانی ها به پیشوندهای پیکربندی شده توسط سیستم اضافه می شوند و توسط موتور شناسائی سیستم مورد پیمایش قرار می گیرند.
+list of activities	workflow	fa	لیست فعالیتها
+list of all activities with, for each,  counters of instances by status	workflow	fa	لیست همه فعالیتها، برای هر کدام شمارنده فرم ها بوسیله وضعیت
+list of all history items made by instances while they travel in the workflow with information about duration and date	workflow	fa	لیست همه موارد سوابق ایجاد شده با فرم ها زمانی که در سیستم گردش کار حرکت می کنند با اطلاعاتی در مورد مدت و تاریخ
+list of all instances with info about current status and activities and link to administration of theses instances	workflow	fa	لیست همه فرم ها با اطلاعاتی در خصوص وضعیت جاری و فعالیتها و پیوندها به مدیریت این فرم ها
+list of instances	workflow	fa	لیست همه فرم ها
+list of mappings	workflow	fa	لیست همه نگاشتها
+list of monitors	workflow	fa	لیست همه پایشگریها
+list of processes	workflow	fa	لیست همه فرآیند ها
+list of processes (%1)	workflow	fa	لیست فرآیند ها (%1)
+list of processes with status and validity and, for each, counters of instances by status	workflow	fa	لیست همه فرآیند ها با وضعیت و اعتبار، برای هرکدام شمارنده فرم ها با وضعیت
+list of transitions	workflow	fa	لیست مرحله‌ها
+list of workitems	workflow	fa	لیست موضوعات کاری
+mail automatically sent by mail smtp agent for egroupware's workflow	workflow	fa	نامه بطور خودکار توسط سیستم نامه رسان گردش کار ارسال شد.
+mail smtp agent	workflow	fa	عامل نامه SMTP
+mail smtp debug	common	fa	اشکال زدای نامه SMTP
+mail smtp local link prefix	common	fa	پیشوند پیوند محلی نامه SMTP
+mail smtp profile	common	fa	پروفایل نامه SMTP
+mail smtp signature	common	fa	امضاء نامه SMTP
+mails can be sent at the begining or at the end of the activity, for interactive activities only it can be sent after completion.	workflow	fa	نامه ها می توانند در ابتدا یا انتهای فعالیت ارسال شوند، برای فعالیتهای تعاملی فقط زمانی می توانند ارسال شوند که پایان یافته باشند
+manual	workflow	fa	دستی
+map	workflow	fa	نگاشت
+map users/groups to roles	workflow	fa	نگاشت کاربران/گروهها به وظایف
+mapping to inexistent role	workflow	fa	نگاشت به وظیفه ای که موجود نیست
+mappings deleted	workflow	fa	نگاشت حذف شد
+message:	workflow	fa	پیام:
+monitor activities	workflow	fa	پایشگری فعالیتها
+monitor instance	workflow	fa	پایشگری فرم
+monitor instances	workflow	fa	پایشگری فرم ها
+monitor processes	workflow	fa	پایشگری فرآیند ها
+monitor this instance	workflow	fa	پایشگری این فرم
+monitor work items	workflow	fa	پایشگری موضوعات کاری
+monitor workitems	workflow	fa	پایشگری موضوعات کاری
+monitoring	admin	fa	پایشگری
+monitors	workflow	fa	پایشگران
+more options?	workflow	fa	گزینه های بیشتر؟
+my activities	workflow	fa	فعالیتهای من
+my instances	workflow	fa	فرمهای من
+my processes	workflow	fa	فرآیندهای من
+name	workflow	fa	نام
+new instance	workflow	fa	فرم جدید
+new major	workflow	fa	کلان جدید
+new major version created	workflow	fa	نسخه کلان جدید ایجاد شد
+new mapping added	workflow	fa	نگاشت جدید اضافه شد
+new minor	workflow	fa	خرد جدید
+new minor version created	workflow	fa	نسخه خرد جدید ایجاد شد
+new status not set, no corresponding activity was found.	workflow	fa	وضعیت جدید تنظیم نشد، فعالیت متناظری پیدا نشد
+new transition added	workflow	fa	مرحله جدید اضافه شد
+next activity	workflow	fa	فعالیت بعدی
+next user:	workflow	fa	کاربر بعدی:
+no action avaible because no activity and no instance are given!	workflow	fa	عملیاتی موجود نیست. چون فعالیت و فرمی دریافت نشد
+no activites	workflow	fa	فعالیتی نیست
+no activity indicated	workflow	fa	فعالیتی شناسائی نشد
+no agents associated with this activity	workflow	fa	عاملی برای این فعالیت اختصاص نیافته است
+no circular transitions allowed.	workflow	fa	مرحله مدور مجاز نیست
+no corresponding activity was found.	workflow	fa	فعالیت مرتبط پیدا نشد
+no inbound for start activity	workflow	fa	برای فعالیت شروع محدوده ورود وجود ندارد
+no inconcistency detected	workflow	fa	هیچ  ناپایداری شناسائی نشد
+no instance avaible	workflow	fa	هیچ فرمی یافت نشد
+no instance given, nothing to show	workflow	fa	هیچ فرمی دریافت نشد، چیزی برای نمایش نیست
+no instance indicated	workflow	fa	هیچ فرمی شناسائی نشد
+no outbound for end activity	workflow	fa	برای فعالیت اتمام محدوده خروج وجود ندارد
+no process indicated	workflow	fa	فرآیند ای شناسائی نشد
+no properties defined	workflow	fa	هیچ ویژگی تعریف نشد
+no roles	workflow	fa	وظیفه ای نیست
+no roles asociated with this activity	workflow	fa	هیچ وظیفه ای به این فعالیت تخصیص نیافته
+no routage	workflow	fa	ارجاعی نیست
+no scan done	workflow	fa	هیچ شناسائی انجام نشد
+no transitions allowed for standalone or view activities	workflow	fa	برای فعالیتهای مستقل یا نمایی، مرحله مجاز نیست
+no work item indicated	workflow	fa	هیچ موضوع کاری شناسائی نشد
+nobody	workflow	fa	هیچکس
+not defined	workflow	fa	تعریف نشده
+open instances	preferences	fa	فرمهای باز
+or import a process	workflow	fa	یا وارد کردن فرآیند
+owner	workflow	fa	مالک
+owner of the instance will have the right to abort the instance at any time	admin	fa	مالک فرم باید این حق را داشته باشد تا فرم را در هر زمان لغو کند
+owner of the instance will have the right to exception or resume the instance at any time	admin	fa	مالک فرم باید این حق را داشته باشد تا فرم را در هر زمان استثناء کند یا بازگرداند
+owner of the instance will have the right to release (un-assign) an activity assigned to an user	admin	fa	مالک فرم باید این حق را داشته باشد که فعالیت اختصاص یافته به کاربر را آزاد کند و از کاربر بگیرد
+owner:	workflow	fa	مالک:
+ownership give abort right	common	fa	مالکیت حق لغو میگیرد
+ownership give exception right	common	fa	مالکیت حق استثناء میگیرد
+ownership give release right	common	fa	مالکیت حق آزاد کردن دارد
+please wait, task in progress ...	workflow	fa	لطفا صبر کنید، تکلیف در حال انجام است
+post activity %1 code is not avaible	workflow	fa	کد پس فعالیت %1 موجود نیست
+post shared code is not avaible	workflow	fa	کد پس اشتراک موجود نیست
+post-agent %1 code is not avaible	workflow	fa	کد پس عامل %1 موجود نیست
+pr.	workflow	fa	پیش
+pre-activity %1 code is not avaible	workflow	fa	کد پیش فعالیت %1 موجود نیست
+pre-agent %1 code is not avaible	workflow	fa	کد پیش عامل %1 موجود نیست
+pre-shared code is not avaible	workflow	fa	کد پیش اشتراک موجود نیست
+printer friendly	workflow	fa	قابل چاپ
+priority level:	workflow	fa	سطح تقدم:
+process	workflow	fa	فرآیند
+process %1	workflow	fa	فرآیند %1
+process %1 %2 is not active, action %3 is impossible	workflow	fa	فرآیند %1 %2 فعال نیست، عملیات %3 ممکن نیست
+process %1 v%2 as no related activity	workflow	fa	فرآیند %1 %2 هیچ فعالیت مرتبطی ندارد
+process %d has been activated	workflow	fa	فرآیند %d فعال شد
+process %d has been deactivated	workflow	fa	فرآیند %d غیر فعال شد
+process %s %s already exists, the import process was aborted	workflow	fa	فرآیند %s %s قبلا وجود دارد، روال واردکردن لغو شد
+process %s %s imported	workflow	fa	فرآیند %s %s وارد شد
+process %s has been created	workflow	fa	فرآیند %s  ایجاد شد
+process %s has been updated	workflow	fa	فرایند %s بهنگام شد
+process %s removed	workflow	fa	فرآیند %s حذف شد
+process activities	workflow	fa	فعالیتهای فرآیند
+process alone	workflow	fa	فرآیند مستقل
+process does not have a start activity	workflow	fa	فرآیند فعالیت آغازین ندارد
+process does not have exactly one end activity	workflow	fa	فرآیند یک فعالیت پایانی قطعی ندارد
+process form	workflow	fa	فرم فرآیند
+process name	workflow	fa	نام فرآیند
+process name already exists	workflow	fa	نام فرآیند قبلا موجود است
+process roles	workflow	fa	وظایف فرآیند
+process saved	workflow	fa	فرآیند ذخیره شد
+process transitions	workflow	fa	مراحل فرآیند
+process version:	workflow	fa	نسخه فرآیند:
+process:	workflow	fa	فرآیند:
+processes	workflow	fa	فرآیند
+properties	workflow	fa	ویژگیها
+property	workflow	fa	ویژگی
+property %1 already exists	workflow	fa	ویژگی %1 قبلا موجود است
+property %1 not found	workflow	fa	ویژگی %1 پیدا نشد
+quit without saving	workflow	fa	خروج بدون ذخیره کردن
+read-only	workflow	fa	فقط خواندنی
+refresh	workflow	fa	بهنگام سازی
+release access to this activity	workflow	fa	دسترسی به این فعالیت را رها کن
+release activity for this instance	workflow	fa	فعالیت برای این فرم را رها کن
+release instance	workflow	fa	فرم را رها کن
+reload filter	workflow	fa	بارگذاری مجدد صافی
+remove active instances	workflow	fa	حذف فرم های فعال
+remove all instance for this process	workflow	fa	حذف همه فرم های این فرآیند
+remove all instances for this process	workflow	fa	حذف همه فرم های این فرآیند
+remove selected roles	workflow	fa	حذف وظایف انتخاب شده
+removing instances and workitems for aborted instances on all processes	workflow	fa	در حال حذف فرم ها و موضوعات کاری برای فرم های لغو شده همه فرآیندها
+removing instances and workitems for aborted instances on process #%1	workflow	fa	در حال حذف فرم ها و موضوعات کاری برای فرم های لغو شده فرآیند #%1
+removing instances and workitems for all instances on process #%1	workflow	fa	در حال حذف فرم ها و موضوعات کاری برای همه فرم های روی فرآیند #%1
+replyto:	workflow	fa	جواب به:
+restart	workflow	fa	شروع مجدد
+restart activity	workflow	fa	شروع مجدد فعالیت
+resume this exception instance	workflow	fa	بازگرداندن این فرم استثناء
+role	workflow	fa	وظیفه
+role #%1 in process %2 has different process (%3) in mapping with user #%4	workflow	fa	وظیفه #%1 در فرآیند %2 فرآیند متفاوتی (%3) در نگاشت با کاربر #%4  دارد
+role %1 (#%2) is associated with a non-existent process (#%3)	workflow	fa	وظیفه %1 (#%2) اختصاص یافته با فرآیندی ناموجود (#%3)
+role %1 is associated in a mapping with user #%2 with a non-existent process (%3)	workflow	fa	وظیفه %1 اختصاص یافته در نگاشت  کاربر #%2  با فرآیند ناموجود (%3)
+role %1 is not mapped	workflow	fa	وظیفه %1 نگاشت نشده
+role added to activity	workflow	fa	وظیفه به فعالیت اضافه شد
+role added to process	workflow	fa	وظیفه به فرآیند اضافه شد
+role give abort right	common	fa	وظیفه حق لغو گرفت
+role give exception right	common	fa	وظیفه حق استثناء گرفت
+role give release right	common	fa	وظیفه حق رها کردن گرفت
+role in inexistent process	workflow	fa	وظیفه در یک فرآیند ناموجود
+role mapping in inexistent process	workflow	fa	نگاشت وظیفه در یک فرآیند ناموجود
+role name	workflow	fa	نام وظیفه
+role not saved (maybe a name collision)	workflow	fa	وظیفه ذخیره نشد(ممکن است مشکل نام داشته باشد)
+role process inconcistency in mappings	workflow	fa	ناپایداری وظیفه فرآیند در نگاشت ها
+role saved	workflow	fa	وظیفه ذخیره شد
+roles	workflow	fa	وظایف
+roles assigned to this activity	workflow	fa	وظایف تخصیص یافته  به این فعالیت
+roles deleted	workflow	fa	وظایف حذف شد
+routing	workflow	fa	ارجاع
+routing:	workflow	fa	ارجاع:
+run	workflow	fa	اجرا
+run activity	workflow	fa	اجرای فعالیت
+run instance	workflow	fa	اجرای فرم
+running	workflow	fa	درحال اجرا
+running activities options	common	fa	گزینه های فعالیتهای در حال اجرا
+running activity	workflow	fa	فعالیتهای در حال اجرا
+scan activities	workflow	fa	شناسائی فعالیتها
+scan agents	workflow	fa	شناسائی عاملین
+scan instances	workflow	fa	شناسائی فرم ها
+scan processes	workflow	fa	شناسائی فرآیندها
+scan roles	workflow	fa	شناسائی وظایف
+scan transitions	workflow	fa	شناسائی مرحله‌ها
+search instance filter in the bottom of instance lists	workflow	fa	جستجوی صافی فرم در پایین لیست فرم ها
+search:	workflow	fa	جستجو:
+security check: cannot understand asked action	workflow	fa	بازرسی امنیتی: عملیات خواسته شده را نمی فهمم
+see as well <strong>%instance_name%</strong>, <strong>%activity_name%</strong>, <strong>%process_name%</strong>,<strong>%process_version%</strong>, <strong>%instance_id%</strong>, <strong>%activity_id%</strong> and <strong>%process_id%</strong>	workflow	fa	دیدن <strong>%instance_name%</strong>, <strong>%activity_name%</strong>, <strong>%process_name%</strong>,<strong>%process_version%</strong>, <strong>%instance_id%</strong>, <strong>%activity_id%</strong> و <strong>%process_id%</strong>
+select a transition to remove	workflow	fa	مرحله‌ای را برای حذف انتخاب کنید
+select source	workflow	fa	منبع را انتخاب کنید
+send after interactive activity is completed	workflow	fa	بعد از پایان یافتن فعالیت تعاملی، ارسال شود
+send all activities to	workflow	fa	ارسال همه فعالیتها به
+send all to	workflow	fa	ارسال همه به
+send an email	workflow	fa	ارسال یک نامه
+send instance	workflow	fa	ارسال فرم
+send this instance to the next activity	workflow	fa	ارسال این فرم به فعالیت بعدی
+send transition	workflow	fa	ارسال مرحله
+send when the activity is ending	workflow	fa	ارسال وقتی فعالیت در حال اتمام است
+send when the activity is starting	workflow	fa	ارسال وقتی فعالیت در حال آغاز است
+send when wf_agent_mail_smtp['submit_send'] is posted	workflow	fa	ارسال وقتی wf_agent_mail_smtp['submit_send'] پست می شود
+set next act	workflow	fa	تنظیم فعالیت بعدی
+set next user	workflow	fa	تنظیم کاربر بعدی
+set property	workflow	fa	تنظیم ویژگی
+setnextuser directives can override it	workflow	fa	setNextUser می تواند آنرا نادیده بگیرد
+setting next activity to an unexisting activity	workflow	fa	تنظیم فعالیت بعدی به فعالیت ناموجود
+shared code	workflow	fa	کد مشترک
+should we always give you the advanced search row on instances lists?	workflow	fa	آیا ما باید همیشه سطر جستجوی پیشرفته روی لیستهای فرم را در اختیارتان قرار دهیم؟
+show activity info zone	common	fa	نمایش ناحیه اطلاعات فعالیت
+show activity title	common	fa	نمایش عنوان فعالیت
+show code	workflow	fa	نمایش کد
+show instance name	common	fa	نمایش نام فرم
+show instance owner	common	fa	نمایش مالک فرم
+show multiple submit as select	common	fa	نمایش چند ثبتی اگر انتخاب شد
+show template	workflow	fa	نمایش قالب
+size of the font used on the graph 12 should be a good default value	admin	fa	اندازه قلم استفاده شده روی گراف. 12 باید عدد خوبی برای پیش فرض باشد
+smtp agent has detected some errors when sending email after completion of the activity	workflow	fa	عامل smtp در زمان ارسال نامه الکترونیکی بعد از تکمیل فعالیت به برخی خطاها بر خورد کرد
+smtp agent has detected some errors when sending email at the beginning of the activity	workflow	fa	عامل smtp در زمان ارسال نامه الکترونیکی موقع شروع فعالیت به برخی خطاها برخورد کرد
+smtp agent has detected some errors when sending email at the end of this activity	workflow	fa	عامل smtp در زمان ارسال نامه الکترونیکی موقع پایان این فعالیت به برخی خطاها برخورد کرد
+smtp agent has detected some errors when sending email on demand whith this activity	workflow	fa	عامل smpt در زمان ارسال نامه الکترونیکی درخواستی با این فعالیت به برخی خطاها برخورد کرد
+something was wrong while creating the new major version	workflow	fa	خطایی در زمان ایجاد نسخه کلان وجود دارد
+something was wrong while creating the new minor version	workflow	fa	خطایی در زمان ایجاد نسخه خرد وجود دارد
+source code file for activity %1 is not avaible	workflow	fa	پرونده کد منبع برای فعالیت %1 موجود نیست
+source code for activity %1 is not avaible	workflow	fa	کد منبع برای فعالیت %1 موجود نیست
+source saved	workflow	fa	کد ذخیره شد
+special known values for local links address are <strong>userinstance</strong>, <strong>viewinstance</strong>, <strong>viewniceinstance</strong> and <strong>admininstance</strong>.	workflow	fa	مقادیر ویژه شناخته شده برای نشانی پیوندها <strong>userinstance</strong> و <strong>viewinstance</strong> و <strong>admininstance</strong> و <strong>viewniceinstance</strong> است
+split	workflow	fa	تقسیم
+standalone	workflow	fa	مستقل
+start	workflow	fa	شروع
+start activities must be autorouted	workflow	fa	فعالیت آغازین باید ارجاع خودکار باشد
+start activities must be interactive	workflow	fa	فعالیت آغازین باید تعاملی باشد
+start activity	workflow	fa	فعالیت آغازین
+start process	workflow	fa	فرآیند آغازین
+started	workflow	fa	شروع شد
+started:	workflow	fa	شروع شد:
+starting page	workflow	fa	صفحه آغازین
+status	workflow	fa	وضعیت
+status:	workflow	fa	وضعیت:
+stop	workflow	fa	توقف
+subject:	workflow	fa	موضوع:
+switch	workflow	fa	مبدل
+switch construct	workflow	fa	ساخت مبدل
+template	workflow	fa	قالب
+test concistency	workflow	fa	آزمایش پایداری
+test consistency of datas in the database	workflow	fa	آزمایش پایداری از اطلاعات داخل پایگاه داده
+test local installation	workflow	fa	آزمایش نصب محلی
+the /workflow directory does not exist and could not be created. please ask your administrator to check the global configuration	common	fa	پوشه گردش کار وجود ندارد و نمی تواند ایجاد شود. لطفا از مدیر سیستم بخواهید پیکربندی عمومی را بررسی کند
+the activity was not completed	workflow	fa	فعالیت تکمیل نشده است
+the default user will only be set if he is mapped to a role on the activity	workflow	fa	کاربر پیش فرض فقط زمانی باید مشخص شود که نگاشت به یک وظیفه روی فعالیت داشته باشد
+the following items must be corrected to be able to activate this process	workflow	fa	موارد ذیل باید رفع شوند تا بتوان فرآیند را فعال کرد
+the instance title is shown on top of the form	admin	fa	نام فرم در بالای فرم نمایش داده می شود
+the label you want	workflow	fa	برچسبی که شما می خواهید
+the smtp configuration cannot be loaded by the mail_smtp workflow agent	workflow	fa	پیکربندی SMTP نمی تواند بوسیله عامل گردش کار mail_smtp بارگذاری شود
+there are no activities available	workflow	fa	هیچ فعالیت دیگری موجود نیست
+there are no config value defined	workflow	fa	هیچ مقدار پیکربندی تعریف نشده
+there are no instances available	workflow	fa	هیچ فرمی موجود نیست
+there are no mappings defined for this process	workflow	fa	هیچ نگاشتی برای این فرآیند تعریف نشده
+there are no process available	workflow	fa	هیچ فرآیندی موجود نیست
+there are no processes	workflow	fa	فرآیندی نیست
+there are no processes available	workflow	fa	فرآیندی موجود نیست
+there are no processes defined	workflow	fa	فرآیندی تعریف نشده
+there are no processes with the current filter	workflow	fa	فرآیندی با این صافی موجود نیست
+there are no properties available	workflow	fa	هیچ ویژگی موجود نیست
+there are no roles defined for this process	workflow	fa	هیچ وظیفه ای برای این فرآیند تعریف نشده
+there are no transitions defined	workflow	fa	هیچ مرحله‌ای تعریف نشده
+there are no user activites available	workflow	fa	هیچ فعالیت کاربری موجود نیست
+there are no workitems available	workflow	fa	هیچ موضوع کاری موجود نیست
+there are some undefined preferences associated with this form : %1	workflow	fa	برخی ویژگیهای تعریف نشده برای این فرم وجود دارد: %1
+there is an unknown user or group #%1 in role mappings	workflow	fa	کاربر یا گروه ناشناخته #%1 در نگاشت وظیفه وجود دارد
+they were problems at the compilation of the source:	workflow	fa	در زمان تالیف کد منبع مشکلاتی پیش آمد
+this activity for this instance is actually avaible for you.	workflow	fa	این فعالیت برای این فرم عملا برای شما موجود است
+this activity for this instance is actually only avaible for you.	workflow	fa	این فعالیت برای این فرم عملا فقط برای شما موجود است
+this activity for this instance is not specifically assigned to you.	workflow	fa	این فعالیت برای این فرم به شما اختصاص داده نشده
+this agent gives the activity the possibility to send an smtp message (mail)	workflow	fa	این عامل قابلیت ارسال نامه الکترونیکی SMTP را به فعالیت می دهد
+this form will test your local workflow installation to detect potential issues	workflow	fa	این فرم برپاسازی گردش کار شما  را آزمایش می کند تا پتانسیل اعمال شناسائی شود
+this is the first screen shown when you click on the workflow application icon	workflow	fa	این اولین صفحه ایست که وقتی شما نمایه گردش کار را کلیک می کنید دیده می شود
+this process has a view activity. access in view mode is granted only for this view activty.	workflow	fa	این فرآیند یک فعالیت نما دارد. دسترسی در شیوه نما فقط به این فعالیت نما داده می شود
+this process has no end activity	workflow	fa	این فرآیند هیچ فعالیت پایانی ندارد
+this will automatically release the instance when leaving an activity without completing	admin	fa	این باعث می شود تا وقتی فعالیتی بدون کامل نمودن ترک می شود، فرم رها شود
+this will display an activity footer when any activity is runned with workflow engine related informations	admin	fa	این باعث می شود وقتی هر فعالیتی با اطلاعات مربوط به موتور گردش کار اجرا می شود، یک پاصفحه فعالیت نمایش داده شود
+to	workflow	fa	به
+to:	workflow	fa	به:
+transition	workflow	fa	مرحله
+transition mode	workflow	fa	سبک مرحله
+transition to %1	workflow	fa	مرحله بعد %1
+transition waiting for human interaction	workflow	fa	مرحله منتظر تعامل نیروی انسانی است
+transitions	workflow	fa	مراحل
+transitions removed successfully	workflow	fa	مرحله با موفقیت حذف شد
+type	workflow	fa	نوع
+type:	workflow	fa	نوع:
+unknow fix instruction :%1	workflow	fa	روند درست کردن ناشناخته: %1
+unknown instruction from the workflow engine: %1	workflow	fa	روند ناشناخته از موتور گردش کار: %1
+unknown status	workflow	fa	وضعیت ناشناخته
+update	workflow	fa	بهنگام
+upload file	workflow	fa	ارسال پرونده
+use <a href="%1">emailadmin</a> to create mail profiles	workflow	fa	از <a href="%1">EmailAdmin</a> برای ایجاد پروفایل نامه استفاده کنید
+use automatic parsing	common	fa	از تجزیه خودکار استفاده شود
+use default	workflow	fa	از پیش فرض استفاده شود
+use existing roles	workflow	fa	از وظایف موجود استفاده شود
+user	workflow	fa	کاربر
+user #%1 is associated with a non-existent role #%2	workflow	fa	کاربر #%1 به وظیفه ناموجود #%2 اختصاص یافته
+user activities	workflow	fa	فعالیتهای کاربر
+user instances	workflow	fa	فرم های کاربر
+user instances form: columns	workflow	fa	فرم فرم های کاربر : ستونها
+user instances form: filters and actions	workflow	fa	فرم فرم های کاربر : صافیها و عملیات
+user is not authorized to delete aborted instances	workflow	fa	کاربر برای حذف فرم لغو شده تأیید نمی شود
+user is not authorized to delete instances	workflow	fa	کاربر برای حذف فرم تایید نشده
+user openinstances	workflow	fa	فرمهای باز کاربر
+user processes	workflow	fa	فرآیندهای کاربر
+user viewinstance	workflow	fa	نمایش فرم کاربر
+user/group	workflow	fa	گروه/کاربر
+user:	workflow	fa	کاربر:
+users can act on activity before its execution with form and after by sending it to the next activity	workflow	fa	کاربران می توانند روی فعالیت، قبل از اجرایش با فرم، کار کنند و بعد از اینکه آنرا به فعالیت بعدی فرستادند
+users/groups	workflow	fa	گروهها/کاربران
+valid	workflow	fa	معتبر
+valid process	workflow	fa	فرآیند معتبر
+valid:	workflow	fa	معتبر:
+validity:	workflow	fa	اعتبار:
+value	workflow	fa	مقدار
+version	workflow	fa	نسخه
+view details	workflow	fa	دیدن جزئیات
+view instance	workflow	fa	نمایش فرم
+view this instance	workflow	fa	دیدن این فرم
+view workitem	workflow	fa	دیدن موضوع کاری
+warning this filter override all others filters	workflow	fa	هشدار! این صافی همه صافیهای دیگر را نادیده می گیرد
+warning: by using this button you will definitively remove all aborted instances and their history (workitems) for the selected process.	workflow	fa	هشدار: با استفاده از این دکمه شما آگاهانه فرم های لغو شده  و سوابقشان (موضوعات کاری) برای فرآیند انتخاب شده را حذف می کنید
+warning: by using this button you will definitively remove all instances and their history (workitems) for the selected process, whatever the state they are.	workflow	fa	هشدار: با استفاده از این دکمه شما آگاهانه تمام فرم ها و سوابقشان (موضوعات کاری) برای فرآیند انتخاب شده را بدون توجه به وضع فعلیشان حذف می کنید
+we cannot run this activity, maybe this instance or this activity do not exists anymore.	workflow	fa	نمی توان این فعالیت را اجرا کرد. شاید این فرم یا فعالیت دیگر موجود نباشد
+we were not able to build the message	workflow	fa	نمی توان پیام را ساخت
+when in advanced mode, should we show you advanced actions by default (resume, exception, grab, etc.)?	workflow	fa	وقتی در شیوه پیشرفته هستید، آیا عملیات پیشرفته (مانند: برگرداندن، استثناء، تصرف کردن و غیره) نمایش داده شوند.
+when multiple submit options are avaible we draw a select box with only one submit instead of multiple buttons	admin	fa	وقتی گزینه چند ثبتی موجود است یک جعبه انتخاب ترسیم شود که بجای چندین دکمه ثبت یک دکمه ثبت دیده شود
+when to send the message:	workflow	fa	چه موقع پیام فرستاده شود:
+workflow	common	fa	گردش کار
+workflow configuration	admin	fa	پیکربندی گردش کار
+workflow navigation	workflow	fa	ناوبری گردش کار
+workflow preferences	workflow	fa	تنظیمات گردش کار
+workflow site configuration	workflow	fa	پیکربندی سایت گردش کار
+workflow.ui_useractivities	workflow	fa	فعالیتهای رابط کاربری کاربر در گردش کار
+workitem information	workflow	fa	اطلاعات موضوعات کاری
+workitems	workflow	fa	موضوعات کاری
+you are not allowed to abort instance %1	workflow	fa	شما برای لغو فرم %1 اجازه ندارید
+you are not allowed to exception instance %1	workflow	fa	شما برای استثناء کردن فرم %1 اجازه ندارید
+you are not allowed to grab instance %1	workflow	fa	شما برای تصرف کردن فرم %1 اجازه ندارید
+you are not allowed to release instance %1	workflow	fa	شما برای رها کردن فرم %1 اجازه ندارید
+you are not allowed to restart instance %1	workflow	fa	شما برای آغاز مجدد فرم %1 اجازه ندارید
+you are not allowed to resume instance %1	workflow	fa	شما برای از سرگیری فرم %1 اجازه ندارید
+you are not allowed to send instance %1	workflow	fa	شما برای ارسال فرم %1 اجازه ندارید
+you can use special values with this mail agent:	workflow	fa	شما نمی توانید مقادیر خاص برای این عامل نامه الکترونیکی استفاده کنید:
+you do not have the right to run this activity anymore, maybe a concurrent access problem, refresh your datas.	workflow	fa	شما دیگر دسترسی برای اجرای این فعالیت ندارید. شاید یک دسترسی همزمان باعث این مشکل شده باشد. اطلاعاتتان را بازآوری کنید.
+you don't have the rights necessary to exception instance %1	workflow	fa	شما حقوق  لازم برای استثناء کردن فرم%1  را ندارید
+you have not permission to execute this activity	workflow	fa	شما مجوز اجرای این فعالیت را ندارید
+you were not allowed to complete the activity	workflow	fa	شما مجاز به تکمیل این فعالیت نیستید
