@@ -1748,6 +1748,17 @@
 			'default' => 'Y'
 		));
 
+		//Get the menus
+		$GLOBALS['phpgw_setup']->oProc->query("SELECT * FROM phpgw_applications");
+		while ($GLOBALS['phpgw_setup']->oProc->next_record())
+		{
+			$GLOBALS['phpgw_info']['apps'][$GLOBALS['phpgw_setup']->oProc->f('app_name')]= true;
+		}
+
+		$hooks = CreateObject('phpgwapi.hooks', $GLOBALS['phpgw_setup']->oProc->m_odb);
+		$hooks->register_all_hooks();
+		unset($GLOBALS['phpgw_info']['apps']);
+
 		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
 		{
 			$GLOBALS['setup_info']['phpgwapi']['currentver'] = '0.9.17.514';
