@@ -2403,8 +2403,11 @@
 
 		foreach($change as $change_from => $change_to)
 		{
-			@rename($files_dir . $change_from[$i], $files_dir . $change_to[$i]);
+			@rename($files_dir . $change_from, $files_dir . $change_to);
 		}
+
+		$change_from = array_keys($change); 
+        $change_to = array_values($change); 
 
 		$GLOBALS['phpgw_setup']->oProc->query("SELECT * FROM phpgw_vfs WHERE app = 'property'");
 		while ($GLOBALS['phpgw_setup']->oProc->next_record())
