@@ -2373,3 +2373,57 @@
 		}
 	}
 
+	/**
+	* Update property version from 0.9.17.542 to 0.9.17.543
+	* Move files from 'home' to 'property'
+ 	*/
+
+	$test[] = '0.9.17.542';
+	function property_upgrade0_9_17_542()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$change = array
+		(
+			'/home/entity'				=> '/property/entity',
+			'/home/document'			=> '/property/document',
+			'/home/fmticket'			=> '/property/fmticket',
+			'/home/request'				=> '/property/request',
+			'/home/workorder'			=> '/property/workorder',
+			'/home/service_agreement'	=> '/property/service_agreement',
+			'/home/rental_agreement'	=> '/property/rental_agreement',
+			'/home/agreement'			=> '/property/agreement'
+		);
+
+		$GLOBALS['phpgw_setup']->oProc->query("SELECT config_value FROM phpgw_config WHERE config_app = 'phpgwapi' AND config_name = 'files_dir'");
+		$GLOBALS['phpgw_setup']->oProc->next_record();
+		$files_dir = $GLOBALS['phpgw_setup']->oProc->f('config_value');
+
+		@mkdir($files_dir . '/property', 0770);
+
+		foreach($change_from as $change_from => $change_to)
+		{
+			@rename($files_dir . $change_from[$i], $files_dir . $change_to[$i]);
+		}
+
+		$GLOBALS['phpgw_setup']->oProc->query("SELECT * FROM phpgw_vfs WHERE app = 'property'");
+		while ($GLOBALS['phpgw_setup']->oProc->next_record())
+		{
+			$files[]=array(
+				'file_id'	=> $GLOBALS['phpgw_setup']->oProc->f('file_id'),
+				'directory'	=> str_ireplace($change_from, $change_to, $GLOBALS['phpgw_setup']->oProc->f('directory')),
+			);
+		}
+
+		foreach($files as $file)
+		{
+			$GLOBALS['phpgw_setup']->oProc->query("UPDATE phpgw_vfs SET directory ='{$file['directory']}' WHERE file_id = {$file['file_id']}");
+		}
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.543';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}
+

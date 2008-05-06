@@ -599,7 +599,7 @@
 				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=>1, 'acl_location'=> $this->acl_location));
 			}
 
-			$GLOBALS['phpgw']->xslttpl->add_file(array('wo_hour'));
+			$GLOBALS['phpgw']->xslttpl->add_file(array('wo_hour', 'files'));
 
 			$show_cost		= phpgw::get_var('show_cost', 'bool');
 			$show_details		= phpgw::get_var('show_details', 'bool');
@@ -608,6 +608,7 @@
 			$update_email		= phpgw::get_var('update_email', 'bool');
 			$send_order		= phpgw::get_var('send_order', 'bool');
 			$no_email		= phpgw::get_var('no_email', 'bool');
+			$values	= phpgw::get_var('values');
 
 			if($update_email)
 			{
@@ -824,11 +825,18 @@
 
 				if (isset($GLOBALS['phpgw_info']['server']['smtp_server']) && $GLOBALS['phpgw_info']['server']['smtp_server'])
 				{
+
+					if(isset($values['file_action']) && is_array($values['file_action']))
+					{
+						$bofiles	= CreateObject('property.bofiles');
+						$attachments = $bofiles->get_attachments("/workorder/{$workorder_id}/", $values);
+					}
+
 					if (!is_object($GLOBALS['phpgw']->send))
 					{
 						$GLOBALS['phpgw']->send = CreateObject('phpgwapi.send');
 					}
-					$rcpt = $GLOBALS['phpgw']->send->msg('email', $to_email, $subject, $html, '', $cc, $bcc, $from_email, $from_name, 'html');
+					$rcpt = $GLOBALS['phpgw']->send->msg('email', $to_email, $subject, $html, '', $cc, $bcc, $from_email, $from_name, 'html', '', $attachments);
 				}
 				else
 				{
@@ -860,6 +868,12 @@
 				unset($email_list);
 			}
 
+			$link_file_data = array
+			(
+				'menuaction'	=> 'property.uiworkorder.view_file',
+				'id'			=> $workorder_id
+			);
+
 			$data = array
 			(
 				'msgbox_data'					=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
@@ -879,7 +893,15 @@
 				'email_data'					=> $email_data,
 				'no_email'					=> $no_email,
 				'table_send'					=> $table_send,
-				'table_done'					=> $table_done
+				'table_done'					=> $table_done,
+
+				'link_view_file'				=> $GLOBALS['phpgw']->link('/index.php',$link_file_data),
+				'files'							=> isset($workorder['files']) ? $workorder['files'] : '',
+				'lang_files'					=> lang('files'),
+				'lang_filename'					=> lang('Filename'),
+				'lang_file_action'				=> lang('attach file'),
+				'lang_view_file_statustext'		=> lang('click to view file'),
+				'lang_file_action_statustext'	=> lang('Check to attach file')
 			);
 
 //_debug_array($data);

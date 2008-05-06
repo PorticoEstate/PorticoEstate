@@ -95,7 +95,6 @@
 			$this->part_of_town_id			= $this->bo->part_of_town_id;
 			$this->district_id			= $this->bo->district_id;
 			$this->status				= $this->bo->status;
-			$this->fakebase 			= $this->bo->fakebase;
 			$this->category_dir			= $this->bo->category_dir;
 			$GLOBALS['phpgw']->session->appsession('entity_id','property',$this->entity_id);
 			$this->start_date			= $this->bo->start_date;
@@ -202,10 +201,6 @@
 
 		function view_file()
 		{
-			$GLOBALS['phpgw_info']['flags']['noheader'] = True;
-			$GLOBALS['phpgw_info']['flags']['nofooter'] = True;
-			$GLOBALS['phpgw_info']['flags']['xslt_app'] = False;
-
 			if(!$this->acl_read)
 			{
 				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=>1, 'acl_location'=> $this->acl_location));
@@ -215,35 +210,8 @@
 			$loc1 		= phpgw::get_var('loc1');
 			$id 		= phpgw::get_var('id', 'int');
 
-			$file = "{$this->fakebase}/{$this->category_dir}/{$loc1}/{$id}/{$file_name}";
-
-//echo 'file: ' . $file . '<br>';
-			if($this->bo->vfs->file_exists(array(
-				'string' => $file,
-				'relatives' => Array(RELATIVE_NONE)
-				)))
-			{
-				$ls_array = $this->bo->vfs->ls (array (
-						'string'	=>  $file,
-						'relatives' => Array(RELATIVE_NONE),
-						'checksubdirs'	=> False,
-						'nofiles'	=> True
-					)
-				);
-
-				$this->bo->vfs->override_acl = 1;
-
-				$document= $this->bo->vfs->read(array(
-					'string' => $file,
-					'relatives' => Array(RELATIVE_NONE)));
-
-				$this->bo->vfs->override_acl = 0;
-
-				$browser = CreateObject('phpgwapi.browser');
-				$browser->content_header($ls_array[0]['name'],$ls_array[0]['mime_type'],$ls_array[0]['size']);
-
-				echo $document;
-			}
+			$bofiles	= CreateObject('property.bofiles');
+			$bofiles->view_file("{$this->category_dir}/{$loc1}");
 		}
 
 		function index()
@@ -560,7 +528,7 @@
 			$lookup_tenant 		= phpgw::get_var('lookup_tenant', 'bool');
 			$tenant_id 			= phpgw::get_var('tenant_id', 'int');
 
-			$GLOBALS['phpgw']->xslttpl->add_file(array('entity','attributes_form'));
+			$GLOBALS['phpgw']->xslttpl->add_file(array('entity','attributes_form', 'files'));
 
 			$values['vendor_id']		= phpgw::get_var('vendor_id', 'int', 'POST');
 			$values['vendor_name']		= phpgw::get_var('vendor_name', 'string', 'POST');
@@ -684,42 +652,48 @@
 					$values['id']=$this->bo->generate_id(array('entity_id'=>$this->entity_id,'cat_id'=>$this->cat_id));
 				}
 
-				if(isset($_FILES['file']['name']) && $_FILES['file']['name'])
-				{
-					$values['file_name']=str_replace (' ','_',$_FILES['file']['name']);
-					$to_file = "{$this->fakebase}/{$this->category_dir}/{$values['location']['loc1']}/{$values['id']}/{$values['file_name']}";
-
-					if((!isset($values['document_name_orig']) || !$values['document_name_orig']) && $this->bo->vfs->file_exists(array(
-							'string' => $to_file,
-							'relatives' => Array(RELATIVE_NONE)
-						)))
-					{
-						$receipt['error'][]=array('msg'=>lang('This file already exists !'));
-					}
-				}
-
 				if(!isset($receipt['error']))
 				{
-					$receipt	= $this->bo->create_home_dir($receipt);
 					$receipt = $this->bo->save($values,$values_attribute,$action,$this->entity_id,$this->cat_id);
-
 					$id = $values['id'];
 					$function_msg = lang('edit entity');
+//--------------files
+					$bofiles	= CreateObject('property.bofiles');
+					if(isset($values['file_action']) && is_array($values['file_action']))
+					{
+						$bofiles->delete_file("/{$this->category_dir}/{$values['location']['loc1']}/{$id}/", $values);
+					}
+
+					if(isset($_FILES['file']['name']) && $_FILES['file']['name'])
+					{
+						$values['file_name']=str_replace (' ','_',$_FILES['file']['name']);
+						$to_file = "{$bofiles->fakebase}/{$this->category_dir}/{$values['location']['loc1']}/{$values['id']}/{$values['file_name']}";
+
+						if((!isset($values['document_name_orig']) || !$values['document_name_orig']) && $bofiles->vfs->file_exists(array(
+								'string' => $to_file,
+								'relatives' => Array(RELATIVE_NONE)
+							)))
+						{
+							$receipt['error'][]=array('msg'=>lang('This file already exists !'));
+						}
+					}
 
 					if(isset($values['file_name']) && $values['file_name'])
 					{
-						$this->bo->create_document_dir($values['location']['loc1'], $values['id']);
-						$this->bo->vfs->override_acl = 1;
+						$bofiles->create_document_dir("{$this->category_dir}/{$values['location']['loc1']}/{$values['id']}");
+						$bofiles->vfs->override_acl = 1;
 
-						if(!$this->bo->vfs->cp (array (
+						if(!$bofiles->vfs->cp (array (
 							'from'	=> $_FILES['file']['tmp_name'],
 							'to'	=> $to_file,
 							'relatives'	=> array (RELATIVE_NONE|VFS_REAL, RELATIVE_ALL))))
 						{
 							$receipt['error'][]=array('msg'=>lang('Failed to upload file !'));
 						}
-						$this->bo->vfs->override_acl = 0;
+						$bofiles->vfs->override_acl = 0;
 					}
+//-------------end files
+
 					if (isset($values['save']) && $values['save'])
 					{
 						$GLOBALS['phpgw']->session->appsession('session_data','entity_receipt_' . $this->entity_id . '_' . $this->cat_id,$receipt);
@@ -1026,9 +1000,9 @@
 				'files'							=> isset($values['files'])?$values['files']:'',
 				'lang_files'					=> lang('files'),
 				'lang_filename'					=> lang('Filename'),
-				'lang_delete_file'				=> lang('Delete file'),
+				'lang_file_action'				=> lang('Delete file'),
 				'lang_view_file_statustext'		=> lang('Klick to view file'),
-				'lang_delete_file_statustext'	=> lang('Check to delete file'),
+				'lang_file_action_statustext'	=> lang('Check to delete file'),
 				'lang_upload_file'				=> lang('Upload file'),
 				'lang_file_statustext'			=> lang('Select file to upload'),
 
@@ -1182,7 +1156,7 @@
 
 			$id	= phpgw::get_var('id', 'int');
 
-			$GLOBALS['phpgw']->xslttpl->add_file(array('entity','attributes_view'));
+			$GLOBALS['phpgw']->xslttpl->add_file(array('entity', 'attributes_view', 'files'));
 
 
 			if ($id)

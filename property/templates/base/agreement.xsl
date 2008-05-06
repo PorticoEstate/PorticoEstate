@@ -603,81 +603,13 @@
 			
 			<xsl:choose>
 				<xsl:when test="files!=''">
-			<tr>
-				<td align="left" valign="top">
-					<xsl:value-of select="//lang_files"/>
-				</td>
-				<td>
-				<table>
-					<tr class="th">
-						<td class="th_text" width="85%" align="left">
-							<xsl:value-of select="lang_filename"/>
-						</td>
-						<td class="th_text" width="15%" align="center">
-							<xsl:value-of select="lang_delete_file"/>
-						</td>
-					</tr>
-				<xsl:for-each select="files" >
-					<tr>
-						<xsl:attribute name="class">
-							<xsl:choose>
-								<xsl:when test="@class">
-									<xsl:value-of select="@class"/>
-								</xsl:when>
-								<xsl:when test="position() mod 2 = 0">
-									<xsl:text>row_off</xsl:text>
-								</xsl:when>
-								<xsl:otherwise>
-									<xsl:text>row_on</xsl:text>
-								</xsl:otherwise>
-							</xsl:choose>
-						</xsl:attribute>
-					<td align="left">
-						<xsl:choose>
-							<xsl:when test="//link_to_files!=''">
-								<xsl:variable name="link_to_file"><xsl:value-of select="//link_to_files"/>/<xsl:value-of select="directory"/>/<xsl:value-of select="file_name"/></xsl:variable>
-								<a href="{$link_to_file}" target="_blank" onMouseover="window.status='{//lang_view_file_statustext}';return true;" onMouseout="window.status='';return true;"><xsl:value-of select="name"/></a>
-							</xsl:when>
-							<xsl:otherwise>
-								<xsl:variable name="link_view_file"><xsl:value-of select="//link_view_file"/>&amp;file_name=<xsl:value-of select="file_name"/></xsl:variable>
-								<a href="{$link_view_file}" target="_blank" onMouseover="window.status='{//lang_view_file_statustext}';return true;" onMouseout="window.status='';return true;"><xsl:value-of select="name"/></a>
-							</xsl:otherwise>
-						</xsl:choose>
-						<xsl:text> </xsl:text>
-					</td>
-					<td align="center">
-						<input type="checkbox" name="values[delete_file][]" value="{name}"  onMouseout="window.status='';return true;">
-							<xsl:attribute name="onMouseover">
-								<xsl:text>window.status='</xsl:text>
-									<xsl:value-of select="//lang_delete_file_statustext"/>
-								<xsl:text>'; return true;</xsl:text>
-							</xsl:attribute>
-						</input>
-					</td>
-					</tr>
-				</xsl:for-each>
-				</table>
-				</td>
-			</tr>
+					<xsl:call-template name="file_list"/>
 				</xsl:when>
 			</xsl:choose>
 
 			<xsl:choose>
 				<xsl:when test="fileupload = 1">
-					<tr>
-						<td valign="top">
-							<xsl:value-of select="lang_upload_file"/>
-						</td>
-						<td>
-							<input type="file" name="file" size="40" onMouseout="window.status='';return true;">
-								<xsl:attribute name="onMouseover">
-									<xsl:text>window.status='</xsl:text>
-										<xsl:value-of select="lang_file_statustext"/>
-									<xsl:text>'; return true;</xsl:text>
-								</xsl:attribute>
-							</input>
-						</td>
-					</tr>
+					<xsl:call-template name="file_upload"/>
 				</xsl:when>
 			</xsl:choose>
 
@@ -1125,50 +1057,7 @@
 				</tr>
 				<xsl:choose>
 					<xsl:when test="files!=''">
-					<tr>
-						<td align="left" valign="top">
-							<xsl:value-of select="//lang_files"/>
-						</td>
-						<td>
-						<table>
-							<tr class="th">
-								<td class="th_text" width="85%" align="left">
-									<xsl:value-of select="lang_filename"/>
-								</td>
-							</tr>
-								<xsl:for-each select="files" >
-									<tr>
-										<xsl:attribute name="class">
-											<xsl:choose>
-												<xsl:when test="@class">
-													<xsl:value-of select="@class"/>
-												</xsl:when>
-												<xsl:when test="position() mod 2 = 0">
-													<xsl:text>row_off</xsl:text>
-												</xsl:when>
-												<xsl:otherwise>
-													<xsl:text>row_on</xsl:text>
-												</xsl:otherwise>
-											</xsl:choose>
-										</xsl:attribute>
-										<td align="left">
-											<xsl:choose>
-												<xsl:when test="//link_to_files!=''">
-													<xsl:variable name="link_to_file"><xsl:value-of select="//link_to_files"/>/<xsl:value-of select="directory"/>/<xsl:value-of select="file_name"/></xsl:variable>
-													<a href="{$link_to_file}" target="_blank" onMouseover="window.status='{//lang_view_file_statustext}';return true;" onMouseout="window.status='';return true;"><xsl:value-of select="name"/></a>
-												</xsl:when>
-												<xsl:otherwise>
-													<xsl:variable name="link_view_file"><xsl:value-of select="//link_view_file"/>&amp;file_name=<xsl:value-of select="file_name"/></xsl:variable>
-													<a href="{$link_view_file}" target="_blank" onMouseover="window.status='{//lang_view_file_statustext}';return true;" onMouseout="window.status='';return true;"><xsl:value-of select="name"/></a>
-												</xsl:otherwise>
-											</xsl:choose>
-											<xsl:text> </xsl:text>
-										</td>
-									</tr>
-								</xsl:for-each>
-							</table>
-						</td>
-					</tr>
+						<xsl:call-template name="file_list_view"/>
 					</xsl:when>
 				</xsl:choose>				
 				<xsl:choose>

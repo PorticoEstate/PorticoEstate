@@ -181,7 +181,7 @@
 				$this->cols_extra	= $this->bocommon->fm_cache('cols_extra_document_' . $entity_id);
 			}
 
-			$groupmethod= " GROUP BY fm_document.location_code,fm_document.address  ";
+			$groupmethod= " GROUP BY fm_document.location_code,fm_document.address,fm_document.document_name";
 
 			if ($entity_id)
 			{
@@ -319,10 +319,13 @@
 				$query = preg_replace("/'/",'',$query);
 				$query = preg_replace('/"/','',$query);
 
-				$querymethod = " AND fm_document.title $this->like '%$query%' or fm_document.document_name $this->like '%$query%'";
+				$querymethod = " AND fm_document.title $this->like '%$query%' OR fm_document.document_name"
+				. " $this->like '%$query%' OR fm_document.location_code $this->like '$location_code%'";
 			}
 
-			$sql = "SELECT fm_document.*, fm_document_category.descr as category FROM fm_document $this->join fm_document_category on fm_document.category = fm_document_category.id WHERE  $filtermethod $querymethod ";
+			$sql = "SELECT fm_document.*, fm_document_category.descr as category FROM fm_document"
+			. " $this->join fm_document_category on fm_document.category = fm_document_category.id"
+			. " WHERE  $filtermethod $querymethod";
 
 			$this->db2->query($sql,__LINE__,__FILE__);
 			$this->total_records = $this->db2->num_rows();
@@ -333,9 +336,9 @@
 				$document_list[] = array
 				(
 					'document_id'		=> $this->db->f('id'),
-					'document_name'		=> $this->db->f('document_name'),
-					'link'				=> $this->db->f('link'),
-					'title'				=> $this->db->f('title'),
+					'document_name'		=> $this->db->f('document_name', true),
+					'link'				=> $this->db->f('link', true),
+					'title'				=> $this->db->f('title', true),
 					'doc_type'			=> $this->db->f('category'),
 					'user_id'			=> $this->db->f('user_id')
 					);
@@ -353,15 +356,15 @@
 			if ($this->db->next_record())
 			{
 				$document['document_id']		= $this->db->f('id');
-				$document['title']				= $this->db->f('title');
-				$document['document_name']		= $this->db->f('document_name');
-				$document['link']				= $this->db->f('link');
+				$document['title']				= $this->db->f('title', true);
+				$document['document_name']		= $this->db->f('document_name', true);
+				$document['link']				= $this->db->f('link', true);
 				$document['location_code']		= $this->db->f('location_code');
 				$document['branch_id']			= $this->db->f('branch_id');
-				$document['version']			= $this->db->f('version');
+				$document['version']			= $this->db->f('version', true);
 				$document['vendor_id']			= $this->db->f('vendor_id');
 				$document['floor_id']			= $this->db->f('floor_id');
-				$document['descr']				= $this->db->f('descr');
+				$document['descr']				= $this->db->f('descr', true);
 				$document['status']				= $this->db->f('status');
 				$document['user_id']			= $this->db->f('user_id');
 				$document['coordinator']		= $this->db->f('coordinator');

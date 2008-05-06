@@ -57,9 +57,6 @@
 			$this->so = CreateObject('property.soagreement');
 			$this->bocommon = CreateObject('property.bocommon');
 			$this->custom 		= createObject('phpgwapi.custom_fields');
-			$this->vfs 			= CreateObject('phpgwapi.vfs');
-			$this->rootdir 		= $this->vfs->basedir;
-			$this->fakebase 	= $this->vfs->fakebase;
 
 			if ($session)
 			{
@@ -260,13 +257,14 @@
 				$values['termination_date']= $GLOBALS['phpgw']->common->show_date($values['termination_date'],$dateformat);
 			}
 
-			$this->vfs->override_acl = 1;
+			$vfs = CreateObject('phpgwapi.vfs');
+			$vfs->override_acl = 1;
 
-			$values['files'] = $this->vfs->ls (array(
-			     'string' => $this->fakebase. '/' . 'agreement' .  '/' . $data['agreement_id'],
+			$values['files'] = $vfs->ls (array(
+			     'string' => "/property/agreement/{$data['agreement_id']}",
 			     'relatives' => array(RELATIVE_NONE)));
 
-			$this->vfs->override_acl = 0;
+			$vfs->override_acl = 0;
 
 			if(!isset($values['files'][0]['file_id']) || !$values['files'][0]['file_id'])
 			{
@@ -304,37 +302,6 @@
 				if ($values['agreement_id'] != 0)
 				{
 					$receipt=$this->so->edit($values,$values_attribute);
-
-					if($values['delete_file'])
-					{
-						for ($i=0;$i<count($values['delete_file']);$i++)
-						{
-							$file = "{$this->fakebase}/agreement/{$values['agreement_id']}/{$values['delete_file'][$i]}";
-
-							if($this->vfs->file_exists(array(
-									'string' => $file,
-									'relatives' => Array(RELATIVE_NONE)
-								)))
-							{
-								$this->vfs->override_acl = 1;
-
-								if(!$this->vfs->rm (array(
-									'string' => $file,
-								     'relatives' => array(
-								          RELATIVE_NONE
-								     )
-								)))
-								{
-									$receipt['error'][] = array('msg' => lang('failed to delete file: %1', $file));
-								}
-								else
-								{
-									$receipt['message'][] = array('msg' => lang('file deleted: %1', $file));
-								}
-								$this->vfs->override_acl = 0;
-							}
-						}
-					}
 				}
 			}
 			else
@@ -378,7 +345,6 @@
 			$this->so->delete_last_index($agreement_id,$id);
 		}
 
-
 		function delete_item($agreement_id,$activity_id)
 		{
 			$this->so->delete_item($agreement_id,$activity_id);
@@ -388,7 +354,6 @@
 		{
 			$this->so->delete($agreement_id);
 		}
-
 	
 		function column_list($selected='',$allrows='')
 		{
@@ -407,64 +372,6 @@
 		function request_next_id()
 		{
 				return $this->so->request_next_id();
-		}
-
-		function create_home_dir($receipt='')
-		{
-			$dir = "{$this->fakebase}/agreement";
-			if(!$this->vfs->file_exists(array(
-					'string' => $dir,
-					'relatives' => Array(RELATIVE_NONE)
-				)))
-			{
-				$this->vfs->override_acl = 1;
-
-				if(!$this->vfs->mkdir (array(
-				     'string' => $dir,
-				     'relatives' => array(
-				          RELATIVE_NONE
-				     )
-				)))
-				{
-					$receipt['error'][] = array('msg' => lang('failed to create directory: %1', $dir));
-				}
-				else
-				{
-					$receipt['message'][] = array('msg' => lang('directory created: %1', $dir));
-				}
-				$this->vfs->override_acl = 0;
-			}
-
-			return $receipt;
-		}
-
-		function create_document_dir($id='')
-		{
-			$doc_id = "{$this->fakebase}/agreement/{$id}";
-			if(!$this->vfs->file_exists(array(
-					'string' => $doc_id,
-					'relatives' => Array(RELATIVE_NONE)
-				)))
-			{
-				$this->vfs->override_acl = 1;
-				if(!$this->vfs->mkdir (array(
-					'string' => $doc_id,
-					'relatives' => array(
-				          RELATIVE_NONE
-				     )
-				)))
-				{
-					$receipt['error'][] = array('msg' => lang('failed to create directory: %1', $doc_id));
-				}
-				else
-				{
-					$receipt['message'][] = array('msg' => lang('directory created: %1', $doc_id));
-				}
-				$this->vfs->override_acl = 0;
-			}
-
-//_debug_array($receipt);
-			return $receipt;
 		}
 
 		function get_agreement_group_list($selected='')

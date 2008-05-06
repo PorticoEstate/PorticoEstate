@@ -87,7 +87,6 @@
 			$this->allrows				= $this->bo->allrows;
 			$this->start_date			= $this->bo->start_date;
 			$this->end_date				= $this->bo->end_date;
-			$this->fakebase 			= $this->bo->fakebase;
 		}
 
 		function save_sessiondata()
@@ -960,7 +959,6 @@
 
 			$values		= phpgw::get_var('values');
 
-			$GLOBALS['phpgw']->xslttpl->add_file(array('tts'));
 //------------------- start ticket from other location
 			$bypass 		= phpgw::get_var('bypass', 'bool');
 			if(isset($_POST) && $_POST && isset($bypass) && $bypass)
@@ -1081,13 +1079,15 @@
 				{
 					$receipt = $this->bo->add($values);
 
+//------------ files
 					$values['file_name'] = @str_replace(' ','_',$_FILES['file']['name']);
 
 					if($values['file_name'])
 					{
-						$to_file = $this->fakebase. '/' . 'fmticket' . '/' . $receipt['id'] . '/' . $values['file_name'];
+						$bofiles	= CreateObject('property.bofiles');
+						$to_file = $bofiles->fakebase . '/fmticket/' . $receipt['id'] . '/' . $values['file_name'];
 
-						if($this->bo->vfs->file_exists(array(
+						if($bofiles->vfs->file_exists(array(
 								'string' => $to_file,
 								'relatives' => Array(RELATIVE_NONE)
 							)))
@@ -1096,20 +1096,20 @@
 						}
 						else
 						{
-							$this->bo->create_document_dir($receipt['id']);
-							$this->bo->vfs->override_acl = 1;
+							$bofiles->create_document_dir("fmticket/{$receipt['id']}");
+							$bofiles->vfs->override_acl = 1;
 
-							if(!$this->bo->vfs->cp (array (
+							if(!$bofiles->vfs->cp(array (
 								'from'	=> $_FILES['file']['tmp_name'],
 								'to'	=> $to_file,
 								'relatives'	=> array (RELATIVE_NONE|VFS_REAL, RELATIVE_ALL))))
 							{
 								$receipt['error'][]=array('msg'=>lang('Failed to upload file !'));
 							}
-							$this->bo->vfs->override_acl = 0;
+							$bofiles->vfs->override_acl = 0;
 						}
 					}
-
+//--------------end files
 					$GLOBALS['phpgw']->session->appsession('receipt','property',$receipt);
 					$GLOBALS['phpgw']->session->appsession('session_data','fm_tts','');
 					$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uitts.index'));
@@ -1263,6 +1263,7 @@
 			$function_msg					= lang('add ticket');
 
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
+			$GLOBALS['phpgw']->xslttpl->add_file(array('tts','files'));
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('add' => $data));
 		//	$GLOBALS['phpgw']->xslttpl->pp();
 		}
@@ -1278,7 +1279,7 @@
 
 			$values		= phpgw::get_var('values');
 
-			$GLOBALS['phpgw']->xslttpl->add_file(array('tts'));
+			$GLOBALS['phpgw']->xslttpl->add_file(array('tts','files'));
 
 
 			if(!$this->tenant_id)
@@ -1517,7 +1518,7 @@
 			$values = phpgw::get_var('values');
 			$receipt = '';
 
-			$GLOBALS['phpgw']->xslttpl->add_file(array('tts'));
+			$GLOBALS['phpgw']->xslttpl->add_file(array('tts', 'files'));
 
 			if(isset($values['save']))
 			{
@@ -1529,18 +1530,21 @@
 				$so2	= CreateObject('property.sotts2');
 				$so2->acl_location	= $this->acl_location;
 				$receipt = $so2->update_ticket($values,$id);
-				if(isset($values['delete_file']) && is_array($values['delete_file']))
+
+//--------- files
+				$bofiles	= CreateObject('property.bofiles');
+				if(isset($values['file_action']) && is_array($values['file_action']))
 				{
-					$this->bo->delete_file($values,$id);
+					$bofiles->delete_file("/fmticket/{$id}/", $values);
 				}
 
 				$values['file_name']=str_replace(' ','_',$_FILES['file']['name']);
 
 				if($values['file_name'])
 				{
-					$to_file = $this->fakebase. '/' . 'fmticket' . '/' . $id . '/' . $values['file_name'];
+					$to_file = $bofiles->fakebase . '/fmticket/' . $id . '/' . $values['file_name'];
 
-					if($this->bo->vfs->file_exists(array(
+					if($bofiles->vfs->file_exists(array(
 							'string' => $to_file,
 							'relatives' => Array(RELATIVE_NONE)
 						)))
@@ -1549,21 +1553,21 @@
 					}
 					else
 					{
-						$this->bo->create_document_dir($id);
-						$this->bo->vfs->override_acl = 1;
+						$bofiles->create_document_dir("fmticket/{$id}");
+						$bofiles->vfs->override_acl = 1;
 
-						if(!$this->bo->vfs->cp (array (
+						if(!$bofiles->vfs->cp (array (
 							'from'	=> $_FILES['file']['tmp_name'],
 							'to'	=> $to_file,
 							'relatives'	=> array (RELATIVE_NONE|VFS_REAL, RELATIVE_ALL))))
 						{
 							$receipt['error'][]=array('msg'=>lang('Failed to upload file !'));
 						}
-						$this->bo->vfs->override_acl = 0;
+						$bofiles->vfs->override_acl = 0;
 					}
 				}
 			}
-
+//---------end files
 			$ticket = $this->bo->read_single($id);
 
 			$additional_notes = $this->bo->read_additional_notes($id);
@@ -1855,9 +1859,9 @@
 				'order_link'				=> $GLOBALS['phpgw']->link('/index.php',$order_link_data),
 
 				'lang_generate_request'			=> lang('Generate Request'),
-				'lang_generate_request_statustext'	=> lang('Klick this to generate a request with this information'),
+				'lang_generate_request_statustext'	=> lang('click this to generate a request with this information'),
 				'lang_generate_order'			=> lang('Generate order'),
-				'lang_generate_order_statustext'	=> lang('Klick this to generate an order with this information'),
+				'lang_generate_order_statustext'	=> lang('click this to generate an order with this information'),
 
 				'lang_save'				=> lang('save'),
 				'lang_name'				=> lang('name'),
@@ -1874,9 +1878,9 @@
 				'files'							=> isset($ticket['files'])?$ticket['files']:'',
 				'lang_files'					=> lang('files'),
 				'lang_filename'					=> lang('Filename'),
-				'lang_delete_file'				=> lang('Delete file'),
-				'lang_view_file_statustext'		=> lang('Klick to view file'),
-				'lang_delete_file_statustext'	=> lang('Check to delete file'),
+				'lang_file_action'				=> lang('Delete file'),
+				'lang_view_file_statustext'		=> lang('click to view file'),
+				'lang_file_action_statustext'	=> lang('Check to delete file'),
 				'lang_upload_file'				=> lang('Upload file'),
 				'lang_file_statustext'			=> lang('Select file to upload'),
 
@@ -2126,48 +2130,13 @@
 
 		function view_file()
 		{
-			$GLOBALS['phpgw_info']['flags'][noheader] = True;
-			$GLOBALS['phpgw_info']['flags'][nofooter] = True;
-			$GLOBALS['phpgw_info']['flags']['xslt_app'] = False;
-
 			if(!$this->acl_read)
 			{
 				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=>1, 'acl_location'=> $this->acl_location));
 			}
 
-			$file_name	= urldecode(phpgw::get_var('file_name'));
-			$id 		= phpgw::get_var('id', 'int');
-
-			$file = $this->fakebase. '/' . 'fmticket' . '/' . $id . '/' . $file_name;
-
-			if($this->bo->vfs->file_exists(array(
-				'string' => $file,
-				'relatives' => Array(RELATIVE_NONE)
-				)))
-			{
-
-				$ls_array = $this->bo->vfs->ls (array (
-						'string'	=>  $file,
-						'relatives' => Array(RELATIVE_NONE),
-						'checksubdirs'	=> False,
-						'nofiles'	=> True
-					)
-				);
-
-				$this->bo->vfs->override_acl = 1;
-
-				$document= $this->bo->vfs->read(array(
-					'string' => $file,
-					'relatives' => Array(RELATIVE_NONE)));
-
-				$this->bo->vfs->override_acl = 0;
-
-				$browser = CreateObject('phpgwapi.browser');
-				$browser->content_header($ls_array[0]['name'],$ls_array[0]['mime_type'],$ls_array[0]['size']);
-
-				echo $document;
-
-			}
+			$bofiles	= CreateObject('property.bofiles');
+			$bofiles->view_file('fmticket');
 		}
 	}
 ?>

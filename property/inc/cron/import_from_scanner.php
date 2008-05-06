@@ -54,9 +54,7 @@
 		{
 		//	$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->bocommon		= CreateObject('property.bocommon');
-			$this->vfs 			= CreateObject('phpgwapi.vfs');
-			$this->rootdir 		= $this->vfs->basedir;
-			$this->fakebase 	= $this->vfs->fakebase;
+			$this->bofiles		= CreateObject('property.bofiles');
 			$this->db     		= clone($GLOBALS['phpgw']->db);
 
 		}
@@ -65,7 +63,7 @@
 		{
 			$cron		= False;
 			$dry_run	= False;
-			
+
 			if(isset($data['enabled']) && $data['enabled']==1)
 			{
 				$confirm		= True;
@@ -196,7 +194,7 @@
 										$values['location'][$insert_record['location'][$i]]= $values[$insert_record['location'][$i]];
 									}
 								}
-									
+
 								$values['category_id']	= 2;
 								$values['values_date']	= time();
 								$values['version']		= '1';
@@ -207,13 +205,13 @@
 								$values['user_id']		= $file_entry['user_id'];
 								$values['file_name']	= $file_entry['file_name'];
 								$values['title']		= $file_entry['descr'];
-								$this->create_loc1_dir($values['loc1']);
+								$this->bofiles->create_document_dir("document/{$values['loc1']}");
 								$this->copy_files($values);
 							}
 						}
 
 						if($file_entry['type'] == 'Reklamasjon')
-						{		
+						{
 							if($file_entry['target'] && $this->find_ticket($file_entry['target']))
 							{
 								$this->add_file_to_ticket($file_entry['target'],$file_entry['file_name']);
@@ -237,10 +235,10 @@
 
 									$values['details']		= $file_entry['descr'];
 									$values['subject']		= $file_entry['descr'];
-									$values['assignedto']	= (isset($GLOBALS['phpgw_info']['user']['preferences']['property']['assigntodefault'])?$GLOBALS['phpgw_info']['user']['preferences']['property']['assigntodefault']:'');								
+									$values['assignedto']	= (isset($GLOBALS['phpgw_info']['user']['preferences']['property']['assigntodefault'])?$GLOBALS['phpgw_info']['user']['preferences']['property']['assigntodefault']:'');
 									$values['group_id']		= (isset($GLOBALS['phpgw_info']['user']['preferences']['property']['groupdefault'])?$GLOBALS['phpgw_info']['user']['preferences']['property']['groupdefault']:'');
 									$values['cat_id']		= (isset($GLOBALS['phpgw_info']['user']['preferences']['property']['tts_category'])?$GLOBALS['phpgw_info']['user']['preferences']['property']['tts_category']:'');
-									$values['priority']		= (isset($GLOBALS['phpgw_info']['user']['preferences']['property']['prioritydefault'])?$GLOBALS['phpgw_info']['user']['preferences']['property']['prioritydefault']:'');								
+									$values['priority']		= (isset($GLOBALS['phpgw_info']['user']['preferences']['property']['prioritydefault'])?$GLOBALS['phpgw_info']['user']['preferences']['property']['prioritydefault']:'');
 
 									$receipt = $this->botts->add($values);
 									$this->add_file_to_ticket($receipt['id'],$file_entry['file_name']);
@@ -251,9 +249,9 @@
 								}
 							}
 						}
-					
+
 						if($this->mail_receipt)
-						{			
+						{
 							$prefs = $this->bocommon->create_preferences('property',$file_entry['user_id']);
 							if (strlen($prefs['email'])> (strlen($members[$i]['account_name'])+1))
 							{
@@ -261,7 +259,7 @@
 								$msgbox_data = $this->bocommon->msgbox_data($this->receipt);
 								$body = implode('</br>',array_keys($msgbox_data));
 								//, '', $cc, $bcc,$current_user_address,$current_user_name,
-								
+
 								$to = $prefs['email'];
 								$rc = $send->msg('email', $to, $subject, stripslashes($body), '', $cc, $bcc,$current_user_address,$current_user_name,'html');
 							}
@@ -289,7 +287,7 @@
 						$sql = "INSERT INTO fm_cron_log (cron,cron_date,process,message) "
 								. "VALUES ($insert_values)";
 						$this->db->query($sql,__LINE__,__FILE__);
-						$receipt = array();		
+						$receipt = array();
 					}
 				}
 
@@ -329,7 +327,7 @@
 					if ($row ==2) // Ther first row is headerinfo
 					{
 						$num = count($this->header);
-				
+
 						$this->currentrecord = array();
 						for ($c=0; $c<$num; $c++ )
 						{
@@ -348,9 +346,9 @@
 
 		function add_file_to_ticket($id,$file_name)
 		{
-				$to_file = "{$this->fakebase}/fmticket/{$id}/{$file_name}{$this->suffix}";
-	
-				if($this->botts->vfs->file_exists(array(
+				$to_file = "{$this->bofiles->fakebase}/fmticket/{$id}/{$file_name}{$this->suffix}";
+
+				if($this->bofiles->vfs->file_exists(array(
 					'string' => $to_file,
 					'relatives' => Array(RELATIVE_NONE)
 					)))
@@ -359,10 +357,10 @@
 				}
 				else
 				{
-					$this->botts->create_document_dir($id);
-					$this->botts->vfs->override_acl = 1;
+					$this->bofiles->create_document_dir("fmticket/{$id}");
+					$this->bofiles->vfs->override_acl = 1;
 
-					if(!$this->botts->vfs->cp (array (
+					if(!$this->bofiles->vfs->cp (array (
 						'from'	=> $this->dir . '/' . $file_name . $this->suffix,
 						'to'	=> $to_file,
 						'relatives'	=> array (RELATIVE_NONE|VFS_REAL, RELATIVE_ALL))))
@@ -373,7 +371,7 @@
 					{
 						$this->receipt['message'][]=array('msg'=>lang('File %1 added to ticket %2',$file_name . $this->suffix,$id));
 					}
-					$this->vfs->override_acl = 0;
+					$this->bofiles->vfs->override_acl = 0;
 				}
 		}
 
@@ -432,39 +430,13 @@
 		}
 
 
-		function create_loc1_dir($loc1='')
-		{
-			if(!$this->vfs->file_exists(array(
-					'string' => $this->fakebase . '/' . 'document' . '/' . $loc1,
-					'relatives' => Array(RELATIVE_NONE)
-				)))
-			{
-				$this->vfs->override_acl = 1;
-
-				if(!$this->vfs->mkdir (array(
-				     'string' => $this->fakebase. '/' . 'document' . '/' . $loc1,
-				     'relatives' => array(
-				          RELATIVE_NONE
-				     )
-				)))
-				{
-					$this->receipt['error'][]=array('msg'=>lang('failed to create directory') . ' :'. $this->fakebase. '/' . 'document' . '/' . $loc1);
-				}
-				else
-				{
-					$this->receipt['message'][]=array('msg'=>lang('directory created') . ' :'. $this->fakebase. '/' . 'document' . '/' . $loc1);
-				}
-				$this->vfs->override_acl = 0;
-			}
-		}
-
 		function copy_files($values)
 		{
-			$to_file = $this->fakebase . '/' . 'document' . '/' . $values['loc1'] . '/' . $values['file_name'] . $this->suffix;
-			$from_file = $this->dir . '/' . $values['file_name'] . $this->suffix;
-			$this->vfs->override_acl = 1;
+			$to_file = "{$bofiles->fakebase}/document/{$values['loc1']}/{$values['file_name']}{$this->suffix}";
+			$from_file = "{$this->dir}/{$values['file_name']}{$this->suffix}";
+			$this->bofiles->vfs->override_acl = 1;
 
-			if($this->vfs->file_exists(array(
+			if($this->bofiles->vfs->file_exists(array(
 					'string' => $to_file,
 					'relatives' => Array(RELATIVE_NONE)
 				)))
@@ -474,7 +446,7 @@
 			else
 			{
 
-				if(!$this->vfs->cp (array (
+				if(!$this->bofiles->vfs->cp (array (
 					'from'	=> $from_file,
 					'to'	=> $to_file,
 					'relatives'	=> array (RELATIVE_NONE|VFS_REAL, RELATIVE_ALL))))
@@ -487,7 +459,7 @@
 					{
 						$address	= $this->db->db_addslashes($values['street_name'] . ' ' . $values['street_number']);
 					}
-	
+
 					if(!$address)
 					{
 						$address = $this->db->db_addslashes($values['location_name']);
@@ -525,7 +497,7 @@
 					$this->receipt['message'][]=array('msg'=>lang('File %1 copied!',$values['file_name'] . $this->suffix));
 				}
 			}
-			$this->vfs->override_acl = 0;
+			$this->bofiles->vfs->override_acl = 0;
 		}
 	}
 ?>
