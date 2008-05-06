@@ -2401,7 +2401,7 @@
 
 		@mkdir($files_dir . '/property', 0770);
 
-		foreach($change_from as $change_from => $change_to)
+		foreach($change as $change_from => $change_to)
 		{
 			@rename($files_dir . $change_from[$i], $files_dir . $change_to[$i]);
 		}
