@@ -524,7 +524,7 @@ HTML;
 					$selected = '';
 				}
 				$session_options .= <<<HTML
-					<option{$selected}value="{$stype}">{$stype}</option>
+					<option {$selected}value="{$stype}">{$stype}</option>
 
 HTML;
 			}
