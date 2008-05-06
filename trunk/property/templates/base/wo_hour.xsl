@@ -288,8 +288,6 @@
 		</xsl:choose>
 	</xsl:template>
 
-
-
 	<xsl:template match="view">		
 		<xsl:variable name="send_order_action"><xsl:value-of select="send_order_action"/></xsl:variable>
 		<table align="left" width="100%">
@@ -365,6 +363,21 @@
 			<td><hr noshade="noshade" width="100%" align="center" size="1"/>
 			</td>
 		</tr>
+		<xsl:choose>
+			<xsl:when test="files!=''">
+				<tr>
+					<td>
+						<table>
+							<tr>
+								<td>
+									<xsl:call-template name="file_list"/>
+								</td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+			</xsl:when>
+		</xsl:choose>
 		<tr>
 			<td>
 				<table width="100%" cellpadding="2" cellspacing="2" align="center">

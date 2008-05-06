@@ -52,7 +52,8 @@
 			'view'   => True,
 			'add'   => True,
 			'edit'   => True,
-			'delete' => True
+			'delete' => True,
+			'view_file'	=> True
 		);
 
 		function property_uiworkorder()
@@ -86,6 +87,7 @@
 			$this->end_date				= $this->bo->end_date;
 			$this->b_group				= $this->bo->b_group;
 			$this->paid				= $this->bo->paid;
+
 		}
 
 		function save_sessiondata()
@@ -118,6 +120,15 @@
 			$this->bocommon->download($list,$uicols['name'],$uicols['descr'],$uicols['input_type']);
 		}
 
+		function view_file()
+		{
+			if(!$this->acl_read)
+			{
+				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=>1, 'acl_location'=> $this->acl_location));
+			}
+			$bofiles	= CreateObject('property.bofiles');
+			$bofiles->view_file('workorder');
+		}
 
 		function index()
 		{
@@ -499,8 +510,6 @@
 			$project_id 			= phpgw::get_var('project_id', 'int');
 			$values				= phpgw::get_var('values');
 
-			$GLOBALS['phpgw']->xslttpl->add_file(array('workorder'));
-
 			$values['vendor_id']		= phpgw::get_var('vendor_id', 'int', 'POST');
 			$values['vendor_name']		= phpgw::get_var('vendor_name', 'string', 'POST');
 			$values['b_account_id']		= phpgw::get_var('b_account_id', 'int', 'POST');
@@ -552,7 +561,42 @@
 					$receipt = $this->bo->save($values,$action);
 					$id = $values['workorder_id'];
 					$function_msg = lang('Edit Workorder');
+//----------files
+					$bofiles	= CreateObject('property.bofiles');
+					if(isset($values['file_action']) && is_array($values['file_action']))
+					{
+						$bofiles->delete_file("/workorder/{$id}/", $values);
+					}
 
+					$values['file_name'] = @str_replace(' ','_',$_FILES['file']['name']);
+
+					if($values['file_name'])
+					{
+						$to_file = $bofiles->fakebase . '/workorder/' . $id . '/' . $values['file_name'];
+
+						if($bofiles->vfs->file_exists(array(
+								'string' => $to_file,
+								'relatives' => Array(RELATIVE_NONE)
+							)))
+						{
+							$receipt['error'][]=array('msg'=>lang('This file already exists !'));
+						}
+						else
+						{
+							$bofiles->create_document_dir("workorder/$id");
+							$bofiles->vfs->override_acl = 1;
+
+							if(!$bofiles->vfs->cp (array (
+								'from'	=> $_FILES['file']['tmp_name'],
+								'to'	=> $to_file,
+								'relatives'	=> array (RELATIVE_NONE|VFS_REAL, RELATIVE_ALL))))
+							{
+								$receipt['error'][]=array('msg'=>lang('Failed to upload file !'));
+							}
+							$bofiles->vfs->override_acl = 0;
+						}
+					}
+//-----------
 					if ($values['approval'] && $values['mail_address'])
 					{
 						$coordinator_name=$GLOBALS['phpgw_info']['user']['fullname'];
@@ -826,6 +870,12 @@
 			}
 			$GLOBALS['phpgw']->css->validate_file('tabs','phpgwapi');
 
+			$link_file_data = array
+			(
+				'menuaction'	=> 'property.uiworkorder.view_file',
+				'id'		=> $id
+			);
+
 			$data = array
 			(
 				'lang_project_info'				=> lang('Project info'),
@@ -833,6 +883,7 @@
 				'lang_coordination' 			=> lang('Coordination'),
 				'lang_time_and_budget' 			=> lang('Time and budget'),
 				'lang_extra' 					=> lang('Extra'),
+				'lang_documents' 				=> lang('documents'),
 
 				'msgbox_data'				=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
 				'calculate_action'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiwo_hour.index')),
@@ -976,13 +1027,24 @@
 				'lang_ask_approval'			=> lang('Ask for approval'),
 				'lang_ask_approval_statustext'		=> lang('Check this to send a mail to your supervisor for approval'),
 				'value_approval_mail_address'		=> $supervisor_email,
-				'currency'				=> $GLOBALS['phpgw_info']['user']['preferences']['common']['currency']
+				'currency'				=> $GLOBALS['phpgw_info']['user']['preferences']['common']['currency'],
+				'link_view_file'				=> $GLOBALS['phpgw']->link('/index.php',$link_file_data),
+				'link_to_files'					=> (isset($this->bo->config->config_data['files_url'])?$this->bo->config->config_data['files_url']:''),
+				'files'							=> isset($values['files'])?$values['files']:'',
+				'lang_files'					=> lang('files'),
+				'lang_filename'					=> lang('Filename'),
+				'lang_file_action'				=> lang('Delete file'),
+				'lang_view_file_statustext'		=> lang('Klick to view file'),
+				'lang_file_action_statustext'	=> lang('Check to delete file'),
+				'lang_upload_file'				=> lang('Upload file'),
+				'lang_file_statustext'			=> lang('Select file to upload')
 			);
 
 			$appname						= lang('Workorder');
 
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
 
+			$GLOBALS['phpgw']->xslttpl->add_file(array('workorder','files'));
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('edit' => $data));
 		//	$GLOBALS['phpgw']->xslttpl->pp();
 		}
@@ -1081,7 +1143,7 @@
 
 			$id	= phpgw::get_var('id', 'int');
 
-			$GLOBALS['phpgw']->xslttpl->add_file(array('workorder','hour_data_view'));
+			$GLOBALS['phpgw']->xslttpl->add_file(array('workorder', 'hour_data_view', 'files'));
 
 			$uiwo_hour	= CreateObject('property.uiwo_hour');
 			$hour_data	= $uiwo_hour->common_data($id,$view=True);
@@ -1125,6 +1187,11 @@
 				}
 			}
 
+			$link_file_data = array
+			(
+				'menuaction'	=> 'property.uiworkorder.view_file',
+				'id'		=> $id
+			);
 
 			$data = array
 			(
@@ -1231,7 +1298,13 @@
 				'values_hour'				=> $hour_data['content'],
 				'table_sum'				=> $hour_data['table_sum'],
 				'lang_contact_phone'			=> lang('Contact phone'),
-				'contact_phone'				=> $project['contact_phone']
+				'contact_phone'				=> $project['contact_phone'],
+
+				'link_view_file'				=> $GLOBALS['phpgw']->link('/index.php',$link_file_data),
+				'files'							=> $values['files'],
+				'lang_files'					=> lang('files'),
+				'lang_filename'					=> lang('Filename'),
+				'lang_view_file_statustext'		=> lang('Klick to view file')
 			);
 
 			$appname					= lang('Workorder');

@@ -76,9 +76,6 @@
 			$this->solocation 	= CreateObject('property.solocation');
 			$this->bocommon 	= CreateObject('property.bocommon');
 			$this->custom 		= createObject('phpgwapi.custom_fields');
-			$this->vfs 			= CreateObject('phpgwapi.vfs');
-			$this->rootdir 		= $this->vfs->basedir;
-			$this->fakebase 	= $this->vfs->fakebase;
 
 			if ($session)
 			{
@@ -304,12 +301,13 @@
 				$values['p'][$values['p_entity_id']]['p_cat_name'] = $category['name'];
 			}
 
-			$this->vfs->override_acl = 1;
-			$values['files'] = $this->vfs->ls (array(
-			     'string' => $this->fakebase. '/' . $this->category_dir . '/' . $values['location_data']['loc1'] .  '/' . $data['id'],
+			$vfs = CreateObject('phpgwapi.vfs');
+			$vfs->override_acl = 1;
+			$values['files'] = $vfs->ls (array(
+			     'string' => "/property/{$this->category_dir}/{$values['location_data']['loc1']}/{$data['id']}",
 			     'relatives' => array(RELATIVE_NONE)));
 
-			$this->vfs->override_acl = 0;
+			$vfs->override_acl = 0;
 
 			if(!isset($values['files'][0]['file_id']) || !$values['files'][0]['file_id'])
 			{
@@ -317,85 +315,6 @@
 			}
 
 			return $values;
-		}
-
-		function create_home_dir($receipt='')
-		{
-			if(!$this->vfs->file_exists(array(
-					'string' => $this->fakebase. '/' . $this->category_dir,
-					'relatives' => Array(RELATIVE_NONE)
-				)))
-			{
-				$this->vfs->override_acl = 1;
-
-				if(!$this->vfs->mkdir (array(
-				     'string' => $this->fakebase. '/' . $this->category_dir,
-				     'relatives' => array(
-				          RELATIVE_NONE
-				     )
-				)))
-				{
-					$receipt['error'][]=array('msg'=>lang('failed to create directory') . ' :'. $this->fakebase. '/' . $this->category_dir);
-				}
-				else
-				{
-					$receipt['message'][]=array('msg'=>lang('directory created') . ' :'. $this->fakebase. '/' . $this->category_dir);
-				}
-				$this->vfs->override_acl = 0;
-			}
-
-			return $receipt;
-		}
-
-		function create_document_dir($loc1='',$id='')
-		{
-			if(!$this->vfs->file_exists(array(
-					'string' => $this->fakebase. '/' . $this->category_dir .  '/' . $loc1,
-					'relatives' => Array(RELATIVE_NONE)
-				)))
-			{
-				$this->vfs->override_acl = 1;
-				if(!$this->vfs->mkdir (array(
-				     'string' => $this->fakebase. '/' . $this->category_dir .  '/' . $loc1,
-				     'relatives' => array(
-				          RELATIVE_NONE
-				     )
-				)))
-				{
-					$receipt['error'][]=array('msg'=>lang('failed to create directory') . ' :'. $this->fakebase. '/' . $this->category_dir .  '/' . $loc1);
-				}
-				else
-				{
-					$receipt['message'][]=array('msg'=>lang('directory created') . ' :'. $this->fakebase. '/' . $this->category_dir .  '/' . $loc1);
-				}
-				$this->vfs->override_acl = 0;
-			}
-
-
-			if(!$this->vfs->file_exists(array(
-					'string' => $this->fakebase. '/' . $this->category_dir .  '/' . $loc1 .  '/' . $id,
-					'relatives' => Array(RELATIVE_NONE)
-				)))
-			{
-				$this->vfs->override_acl = 1;
-				if(!$this->vfs->mkdir (array(
-				     'string' => $this->fakebase. '/' . $this->category_dir .  '/' . $loc1 .  '/' . $id,
-				     'relatives' => array(
-				          RELATIVE_NONE
-				     )
-				)))
-				{
-					$receipt['error'][]=array('msg'=>lang('failed to create directory') . ' :'. $this->fakebase. '/'  . $this->category_dir  .  '/' . $loc1 .  '/' . $id);
-				}
-				else
-				{
-					$receipt['message'][]=array('msg'=>lang('directory created') . ' :'. $this->fakebase. '/' . $this->category_dir .  '/' . $loc1 .  '/' . $id);
-				}
-				$this->vfs->override_acl = 0;
-			}
-
-//_debug_array($receipt);
-			return $receipt;
 		}
 
 		function save($values,$values_attribute,$action='',$entity_id,$cat_id)
@@ -420,37 +339,6 @@
 			if ($action=='edit')
 			{
 				$receipt = $this->so->edit($values,$values_attribute,$entity_id,$cat_id);
-
-				if(isset($values['delete_file']) && is_array($values['delete_file']))
-				{
-					for ($i=0;$i<count($values['delete_file']);$i++)
-					{
-						$file = $this->fakebase. '/' . $this->category_dir . '/' . $location[0] . '/' . $values['id'] . '/' . $values['delete_file'][$i];
-
-						if($this->vfs->file_exists(array(
-								'string' => $file,
-								'relatives' => Array(RELATIVE_NONE)
-							)))
-						{
-							$this->vfs->override_acl = 1;
-
-							if(!$this->vfs->rm (array(
-								'string' => $file,
-							     'relatives' => array(
-							          RELATIVE_NONE
-							     )
-							)))
-							{
-								$receipt['error'][]=array('msg'=>lang('failed to delete file') . ' :'. $this->fakebase. '/' . $this->category_dir . '/' . $location[0]. '/' . $values['id'] . '/' .$values['delete_file'][$i]);
-							}
-							else
-							{
-								$receipt['message'][]=array('msg'=>lang('file deleted') . ' :'. $this->fakebase. '/' . $this->category_dir . '/' . $location[0]. '/' . $values['id'] . '/' . $values['delete_file'][$i]);
-							}
-							$this->vfs->override_acl = 0;
-						}
-					}
-				}
 			}
 			else
 			{
@@ -464,13 +352,12 @@
 			{
 				foreach($custom_functions as $entry)
 				{
-					if (is_file(PHPGW_APP_INC . '/' . 'custom' . '/' . $entry['file_name']) && $entry['active'])
-					include (PHPGW_APP_INC . '/' . 'custom' . '/' . $entry['file_name']);
+					if (is_file(PHPGW_APP_INC . "/custom/{$entry['file_name']}") && $entry['active'])
+					require_once(realpath(PHPGW_APP_INC . "/custom/{$entry['file_name']}"));
 				}
 			}
 			return $receipt;
 		}
-
 
 		function delete($id )
 		{

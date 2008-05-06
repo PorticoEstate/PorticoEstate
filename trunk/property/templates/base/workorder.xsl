@@ -354,7 +354,7 @@
 				</xsl:when>
 			</xsl:choose>
 			<xsl:variable name="form_action"><xsl:value-of select="form_action"/></xsl:variable>
-			<form method="post" name="form" action="{$form_action}">
+			<form ENCTYPE="multipart/form-data" method="post" name="form" action="{$form_action}">
 			<tr>
 				<td>
 
@@ -421,7 +421,18 @@
         <tr>
           <td id="tweentab_l"></td>
           <td>
-            <a href="#" tabindex="0" accesskey="6" onfocus="tab.display(6);" onclick="tab.display(6); return(false);"><xsl:value-of select="lang_history"/></a>
+            <a href="#" tabindex="0" accesskey="6" onfocus="tab.display(6);" onclick="tab.display(6); return(false);"><xsl:value-of select="lang_documents"/></a>
+          </td>
+          <td id="tweentab_r"></td>
+        </tr>
+      </table>
+    </th>
+    <th id="tab7" class="activetab" onclick="javascript:tab.display(7);">
+      <table>
+        <tr>
+          <td id="tweentab_l"></td>
+          <td>
+            <a href="#" tabindex="0" accesskey="7" onfocus="tab.display(7);" onclick="tab.display(7); return(false);"><xsl:value-of select="lang_history"/></a>
           </td>
           <td id="tweentab_r"></td>
         </tr>
@@ -869,6 +880,43 @@
 			</tr>
 </table>
 </div>
+
+<div id="tabcontent6" class="activetab">
+<table class="contenttab" align="left">
+	<xsl:choose>
+		<xsl:when test="files!=''">
+			<xsl:call-template name="file_list"/>
+		</xsl:when>
+	</xsl:choose>
+
+	<xsl:call-template name="file_upload"/>
+</table>
+
+</div>
+<div id="tabcontent7" class="activetab">
+
+		<hr noshade="noshade" width="100%" align="center" size="1"/>
+		<table width="80%" cellpadding="2" cellspacing="2" align="center">
+			<xsl:choose>
+				<xsl:when test="record_history=''">
+					<tr>
+						<td class="th_text" align="center">
+							<xsl:value-of select="lang_no_history"/>
+						</td>
+					</tr>
+				</xsl:when>
+				<xsl:otherwise>
+					<tr>
+						<td class="th_text" align="left">
+							<xsl:value-of select="lang_history"/>
+						</td>
+					</tr>
+					<xsl:apply-templates select="table_header_history"/>
+					<xsl:apply-templates select="record_history"/>
+				</xsl:otherwise>
+			</xsl:choose>
+		</table>
+</div>
 				</td>
 			</tr>
 			<tr height="50">
@@ -902,34 +950,10 @@
 				</td>
 			</tr>
 		</table>
-<div id="tabcontent6" class="activetab">
-
-		<hr noshade="noshade" width="100%" align="center" size="1"/>
-		<table width="80%" cellpadding="2" cellspacing="2" align="center">
-			<xsl:choose>
-				<xsl:when test="record_history=''">
-					<tr>
-						<td class="th_text" align="center">
-							<xsl:value-of select="lang_no_history"/>
-						</td>
-					</tr>
-				</xsl:when>
-				<xsl:otherwise>
-					<tr>
-						<td class="th_text" align="left">
-							<xsl:value-of select="lang_history"/>
-						</td>
-					</tr>
-					<xsl:apply-templates select="table_header_history"/>
-					<xsl:apply-templates select="record_history"/>
-				</xsl:otherwise>
-			</xsl:choose>
-		</table>
-</div>
 		</div>
 		<hr noshade="noshade" width="100%" align="center" size="1"/>
 <script language="JavaScript1.1" type="text/javascript">
-  var tab = new Tabs(6,'activetab','inactivetab','tab','tabcontent','','','tabpage','',2);
+  var tab = new Tabs(7,'activetab','inactivetab','tab','tabcontent','','','tabpage','',2);
   tab.init();
   tab.display(2);
 </script>
@@ -1320,6 +1344,11 @@
 					</xsl:for-each>
 				</td>
 			</tr>
+			<xsl:choose>
+				<xsl:when test="files!=''">
+					<xsl:call-template name="file_list_view"/>
+				</xsl:when>
+			</xsl:choose>
 			<tr>
 				<td align="left" colspan="2">
 					<table>

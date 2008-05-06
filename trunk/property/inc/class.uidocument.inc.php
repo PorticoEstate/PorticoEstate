@@ -87,7 +87,7 @@
 			$this->status_id			= $this->bo->status_id;
 			$this->entity_id			= $this->bo->entity_id;
 			$this->doc_type				= $this->bo->doc_type;
-			$this->query_location			= $this->bo->query_location;
+			$this->query_location		= $this->bo->query_location;
 
 			// FIXME: $this->entity_id always has a value set here - skwashd jan08
 			if ( $this->entity_id )
@@ -443,7 +443,7 @@
 				{
 					if(!$link_to_files)
 					{
-						$link_view_file = $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'property.uidocument.view_file', 'document_id'=> $document['document_id'], 'entity_id'=> $this->entity_id, 'cat_id'=> $this->cat_id, 'p_num'=> $p_num));
+						$link_view_file = $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'property.uidocument.view_file', 'id'=> $document['document_id'], 'entity_id'=> $this->entity_id, 'cat_id'=> $this->cat_id, 'p_num'=> $p_num));
 						$link_to_files = $files_url;
 					}
 				}
@@ -611,61 +611,30 @@
 
 		function view_file()
 		{
-			$GLOBALS['phpgw_info']['flags'][noheader] = True;
-			$GLOBALS['phpgw_info']['flags'][nofooter] = True;
-			$GLOBALS['phpgw_info']['flags']['xslt_app'] = False;
-
 			if(!$this->acl_read)
 			{
 				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=>1, 'acl_location'=> $this->acl_location));
 			}
 
-			$document_id 		= phpgw::get_var('document_id', 'int');
+			$document_id 		= phpgw::get_var('id', 'int');
 			$p_num = phpgw::get_var('p_num');
-
 
 			$values = $this->bo->read_single($document_id);
 
+			$bofiles	= CreateObject('property.bofiles');
 			if($this->cat_id)
 			{
 				$entity = $this->boadmin_entity->read_single($this->entity_id,false);
 				$category = $this->boadmin_entity->read_single_category($this->entity_id,$this->cat_id);
-				$file	= $this->fakebase. '/' . 'document' . '/' . $values['location_data']['loc1'] . '/' . $entity['name'] . '/' . $category['name'] . '/' . $p_num . '/' . $values['document_name'];
+				$file	= "{$bofiles->fakebase}/document/{$values['location_data']['loc1']}/entity_{$this->entity_id}_{$this->cat_id}/{$p_num}/{$values['document_name']}";
 			}
 			else
 			{
-				$file	= $this->fakebase. '/' . 'document' . '/' .$values['location_data']['loc1'] . '/' . $values['document_name'];
+				$file	= "{$bofiles->fakebase}/document/{$values['location_data']['loc1']}/{$values['document_name']}";
 			}
 
-			if($this->bo->vfs->file_exists(array(
-				'string' => $file,
-				'relatives' => Array(RELATIVE_NONE)
-				)))
-			{
-
-				$ls_array = $this->bo->vfs->ls (array (
-						'string'	=>  $file,
-						'relatives' => Array(RELATIVE_NONE),
-						'checksubdirs'	=> False,
-						'nofiles'	=> True
-					)
-				);
-
-				$this->bo->vfs->override_acl = 1;
-
-				$document= $this->bo->vfs->read(array(
-					'string' => $file,
-					'relatives' => Array(RELATIVE_NONE)));
-
-				$this->bo->vfs->override_acl = 0;
-
-				$browser = CreateObject('phpgwapi.browser');
-				$browser->content_header($ls_array[0]['name'],$ls_array[0]['mime_type'],$ls_array[0]['size']);
-
-				echo $document;
-			}
+			$bofiles->view_file('', $file);
 		}
-
 
 		function edit()
 		{
@@ -687,7 +656,7 @@
 
 			$bypass = phpgw::get_var('bypass', 'bool');
 
-			$receipt= $this->bo->create_home_dir();
+			$receipt = array();
 
 			if($_POST && !$bypass)
 			{
@@ -769,16 +738,18 @@
 					$receipt['error'][]=array('msg'=>lang('Please select a location !'));
 				}
 
+				$bofiles	= CreateObject('property.bofiles');
+
+				$document_dir = 'document/' . $values['location']['loc1'];
+
 				if($values['extra']['p_num'])
 				{
-					$to_file = $this->fakebase. '/' . 'document' . '/' . $values['location']['loc1'] . '/' . $entity['name'] . '/' . $category['name'] . '/' . $values['extra']['p_num'] . '/' . $values['document_name'];
-				}
-				else
-				{
-					$to_file = $this->fakebase. '/' . 'document' . '/' . $values['location']['loc1'] . '/' . $values['document_name'];
+					$document_dir .= "/entity_{$this->entity_id}_{$this->cat_id}/{$values['extra']['p_num']}";
 				}
 
-				if(!$values['document_name_orig'] && $this->bo->vfs->file_exists(array(
+				$to_file	= "{$bofiles->fakebase}/{$document_dir}/{$values['document_name']}";
+
+				if((!isset($values['document_name_orig']) || !$values['document_name_orig']) && $bofiles->vfs->file_exists(array(
 						'string' => $to_file,
 						'relatives' => Array(RELATIVE_NONE)
 					)))
@@ -786,7 +757,9 @@
 					$receipt['error'][]=array('msg'=>lang('This file already exists !'));
 				}
 
-				$receipt=$this->bo->create_document_dir(array('loc1'=>$values['location']['loc1'],'entity_name'=>$entity['name'],'category_name'=>$category['name'], 'p_num'=>$values['extra']['p_num']),$receipt);
+				$receipt2 = $bofiles->create_document_dir($document_dir);
+				$receipt = array_merge($receipt, $receipt2);
+				unset($receipt2);
 
 				$values['document_id'] = $document_id;
 
@@ -794,16 +767,16 @@
 				{
 					if($values['document_name'] && !$values['link'])
 					{
-						$this->bo->vfs->override_acl = 1;
+						$bofiles->vfs->override_acl = 1;
 
-						if(!$this->bo->vfs->cp (array (
+						if(!$bofiles->vfs->cp (array (
 							'from'		=> $_FILES['document_file']['tmp_name'],
 							'to'		=> $to_file,
 							'relatives'	=> array (RELATIVE_NONE|VFS_REAL, RELATIVE_ALL))))
 						{
 							$receipt['error'][]=array('msg'=>lang('Failed to upload file !'));
 						}
-						$this->bo->vfs->override_acl = 0;
+						$bofiles->vfs->override_acl = 0;
 					}
 
 					if(!$receipt['error'])

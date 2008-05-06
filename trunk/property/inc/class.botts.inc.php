@@ -80,10 +80,6 @@
 			$this->config->read_repository();
 			$this->dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
 
-			$this->vfs 			= CreateObject('phpgwapi.vfs');
-			$this->rootdir 		= $this->vfs->basedir;
-			$this->fakebase 	= $this->vfs->fakebase;
-
 			if ($session)
 			{
 				$this->read_sessiondata();
@@ -402,20 +398,20 @@
 			$ticket['user_lid']=$GLOBALS['phpgw']->accounts->id2name($ticket['user_id']);
 			$ticket['category_name']=ucfirst($this->get_category_name($ticket['cat_id']));
 
-			$this->vfs->override_acl = 1;
+			$vfs = CreateObject('phpgwapi.vfs');
+			$vfs->override_acl = 1;
 
-			$ticket['files'] = $this->vfs->ls (array(
-			     'string' => $this->fakebase. '/' . 'fmticket' . '/' . $id,
+			$ticket['files'] = $vfs->ls (array(
+			     'string' => "/property/fmticket/{$id}",
 			     'relatives' => array(RELATIVE_NONE)));
 
-			$this->vfs->override_acl = 0;
+			$vfs->override_acl = 0;
 
 			$j	= count($ticket['files']);
 			for ($i=0;$i<$j;$i++)
 			{
 				$ticket['files'][$i]['file_name']=urlencode($ticket['files'][$i]['name']);
 			}
-
 
 			if(!isset($ticket['files'][0]['file_id']) || !$ticket['files'][0]['file_id'])
 			{
@@ -802,89 +798,6 @@
 		function delete($id)
 		{
 			$this->so->delete($id);
-		}
-
-		function create_document_dir($id='')
-		{
-			if(!$this->vfs->file_exists(array(
-					'string' => $this->fakebase. '/' . 'fmticket',
-					'relatives' => Array(RELATIVE_NONE)
-				)))
-			{
-				$this->vfs->override_acl = 1;
-				if(!$this->vfs->mkdir (array(
-				     'string' => $this->fakebase. '/' . 'fmticket',
-				     'relatives' => array(
-				          RELATIVE_NONE
-				     )
-				)))
-				{
-					$receipt['error'][]=array('msg'=>lang('failed to create directory') . ' :'. $this->fakebase. '/' . 'fmticket');
-				}
-				else
-				{
-					$receipt['message'][]=array('msg'=>lang('directory created') . ' :'. $this->fakebase. '/' . 'fmticket');
-				}
-				$this->vfs->override_acl = 0;
-			}
-
-
-			if(!$this->vfs->file_exists(array(
-					'string' => $this->fakebase. '/' . 'fmticket' .  '/' . $id,
-					'relatives' => Array(RELATIVE_NONE)
-				)))
-			{
-				$this->vfs->override_acl = 1;
-				if(!$this->vfs->mkdir (array(
-				     'string' => $this->fakebase. '/' . 'fmticket' .  '/' . $id,
-				     'relatives' => array(
-				          RELATIVE_NONE
-				     )
-				)))
-				{
-					$receipt['error'][]=array('msg'=>lang('failed to create directory') . ' :'. $this->fakebase. '/'  . 'fmticket' .  '/' . $id);
-				}
-				else
-				{
-					$receipt['message'][]=array('msg'=>lang('directory created') . ' :'. $this->fakebase. '/' . 'fmticket' .  '/' . $id);
-				}
-				$this->vfs->override_acl = 0;
-			}
-
-//_debug_array($receipt);
-			return $receipt;
-		}
-		
-		function delete_file($values,$id='')
-		{
-			for ($i=0;$i<count($values['delete_file']);$i++)
-			{
-				$file = $this->fakebase. '/' . 'fmticket' . '/' . $id . '/' . $values['delete_file'][$i];
-
-				if($this->vfs->file_exists(array(
-					'string' => $file,
-					'relatives' => Array(RELATIVE_NONE)
-				)))
-				{
-					$this->vfs->override_acl = 1;
-
-					if(!$this->vfs->rm (array(
-						'string' => $file,
-					     'relatives' => array(
-					          RELATIVE_NONE
-					     )
-					)))
-					{
-						$receipt['error'][]=array('msg'=>lang('failed to delete file') . ' :'. $this->fakebase. '/' . 'fmticket' . '/' . $id . '/' .$values['delete_file'][$i]);
-					}
-					else
-					{
-						$receipt['message'][]=array('msg'=>lang('file deleted') . ' :'. $this->fakebase. '/' . 'fmticket' . '/' . $id . '/' . $values['delete_file'][$i]);
-					}
-					$this->vfs->override_acl = 0;
-				}
-			}
-			return $receipt;
 		}
 	}
 ?>

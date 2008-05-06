@@ -279,6 +279,27 @@
 			$workorder['calculation']	=number_format($workorder['calculation']*$tax, 2, ',', '');
 			$workorder['actual_cost']	=number_format(($workorder['act_mtrl_cost']+$workorder['act_vendor_cost']), 2, ',', '');
 
+			$vfs = CreateObject('phpgwapi.vfs');
+			$vfs->override_acl = 1;
+
+			$workorder['files'] = $vfs->ls(array(
+			     'string' => '/property/workorder/' . $workorder_id,
+			     'relatives' => array(RELATIVE_NONE)
+			     ));
+
+			$vfs->override_acl = 0;
+
+			$j	= count($workorder['files']);
+			for ($i=0;$i<$j;$i++)
+			{
+				$workorder['files'][$i]['file_name']=urlencode($workorder['files'][$i]['name']);
+			}
+
+			if(!isset($workorder['files'][0]['file_id']) || !$workorder['files'][0]['file_id'])
+			{
+				unset($workorder['files']);
+			}
+
 			return $workorder;
 		}
 

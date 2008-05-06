@@ -89,7 +89,6 @@
 			$this->vendor_id	= $this->bo->vendor_id;
 			$this->allrows		= $this->bo->allrows;
 			$this->member_id	= $this->bo->member_id;
-			$this->fakebase 	= $this->bo->fakebase;
 		}
 
 		function save_sessiondata()
@@ -159,46 +158,13 @@
 
 		function view_file()
 		{
-			$GLOBALS['phpgw_info']['flags'][noheader] = True;
-			$GLOBALS['phpgw_info']['flags'][nofooter] = True;
-			$GLOBALS['phpgw_info']['flags']['xslt_app'] = False;
-
 			if(!$this->acl_read)
 			{
 				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=>1, 'acl_location'=> $this->acl_location));
 			}
 
-			$file_name	= urldecode(phpgw::get_var('file_name'));
-			$id 		= phpgw::get_var('id', 'int');
-
-			$file = "{$this->fakebase}/agreement/{$id}/{$file_name}";
-
-			if($this->bo->vfs->file_exists(array(
-				'string' => $file,
-				'relatives' => Array(RELATIVE_NONE)
-				)))
-			{
-				$ls_array = $this->bo->vfs->ls (array (
-						'string'	=>  $file,
-						'relatives' => Array(RELATIVE_NONE),
-						'checksubdirs'	=> False,
-						'nofiles'	=> True
-					)
-				);
-
-				$this->bo->vfs->override_acl = 1;
-
-				$document= $this->bo->vfs->read(array(
-					'string' => $file,
-					'relatives' => Array(RELATIVE_NONE)));
-
-				$this->bo->vfs->override_acl = 0;
-
-				$browser = CreateObject('phpgwapi.browser');
-				$browser->content_header($ls_array[0]['name'],$ls_array[0]['mime_type'],$ls_array[0]['size']);
-
-				echo $document;
-			}
+			$bofiles	= CreateObject('property.bofiles');
+			$bofiles->view_file('agreement');
 		}
 
 		function index()
@@ -606,8 +572,7 @@
 				}
 			}
 
-
-			$GLOBALS['phpgw']->xslttpl->add_file(array('agreement','nextmatchs','attributes_form'));
+			$GLOBALS['phpgw']->xslttpl->add_file(array('agreement', 'nextmatchs', 'attributes_form', 'files'));
 			$receipt = array();
 			if (is_array($values))
 			{
@@ -651,10 +616,16 @@
 						$values['agreement_id']=$this->bo->request_next_id();
 					}
 
-					$values['file_name']=str_replace (' ','_',$_FILES['file']['name']);
-					$to_file = "{$this->fakebase}/agreement/{$values['agreement_id']}/{$values['file_name']}";
+					$bofiles	= CreateObject('property.bofiles');
+					if(isset($id) && $id && isset($values['file_action']) && is_array($values['file_action']))
+					{
+						$bofiles->delete_file("/agreement/{$id}/", $values);
+					}
 
-					if(!$values['document_name_orig'] && $this->bo->vfs->file_exists(array(
+					$values['file_name']=str_replace (' ','_',$_FILES['file']['name']);
+					$to_file = "{$bofiles->fakebase}/agreement/{$values['agreement_id']}/{$values['file_name']}";
+
+					if(!$values['document_name_orig'] && $bofiles->vfs->file_exists(array(
 							'string' => $to_file,
 							'relatives' => Array(RELATIVE_NONE)
 						)))
@@ -666,24 +637,24 @@
 					if(!$receipt['error'])
 					{
 //						$values['agreement_id']	= $id;
-						$receipt	= $this->bo->create_home_dir($receipt);
+
 						$receipt = $this->bo->save($values,$values_attribute,$action);
 						$id = $receipt['agreement_id'];
 						$this->cat_id = ($values['cat_id']?$values['cat_id']:$this->cat_id);
 
 						if($values['file_name'])
 						{
-							$this->bo->create_document_dir($id);
-							$this->bo->vfs->override_acl = 1;
+							$bofiles->create_document_dir("agreement/{$id}");
+							$bofiles->vfs->override_acl = 1;
 
-							if(!$this->bo->vfs->cp (array (
+							if(!$bofiles->vfs->cp (array (
 								'from'	=> $_FILES['file']['tmp_name'],
 								'to'	=> $to_file,
 								'relatives'	=> array (RELATIVE_NONE|VFS_REAL, RELATIVE_ALL))))
 							{
 								$receipt['error'][]=array('msg'=>lang('Failed to upload file !'));
 							}
-							$this->bo->vfs->override_acl = 0;
+							$bofiles->vfs->override_acl = 0;
 						}
 
 
@@ -995,9 +966,9 @@
 				'files'									=> isset($agreement['files'])?$agreement['files']:'',
 				'lang_files'							=> lang('files'),
 				'lang_filename'							=> lang('Filename'),
-				'lang_delete_file'						=> lang('Delete file'),
-				'lang_view_file_statustext'				=> lang('Klick to view file'),
-				'lang_delete_file_statustext'			=> lang('Check to delete file'),
+				'lang_file_action'						=> lang('Delete file'),
+				'lang_view_file_statustext'				=> lang('click to view file'),
+				'lang_file_action_statustext'			=> lang('Check to delete file'),
 				'lang_upload_file'						=> lang('Upload file'),
 				'lang_file_statustext'					=> lang('Select file to upload'),
 
@@ -1445,7 +1416,7 @@
 			$agreement_id	= phpgw::get_var('id', 'int');
 			$config		= CreateObject('phpgwapi.config','property');
 
-			$GLOBALS['phpgw']->xslttpl->add_file(array('agreement','nextmatchs','attributes_view'));
+			$GLOBALS['phpgw']->xslttpl->add_file(array('agreement', 'nextmatchs', 'attributes_view', 'files'));
 
 
 			$agreement = $this->bo->read_single(array('agreement_id'=>$agreement_id));
