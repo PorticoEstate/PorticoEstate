@@ -1,0 +1,38 @@
++ $Id: CHANGELOG,v 1.22 2006/12/05 19:40:45 sigurdne Exp $
+
+11/23/2000: Initial release on sourceforge - version 0.8.1
+11/25/2000: included projecthours in projects
+11/26/2000: included pstatistics,pbilling,pdelivery in projects
+11/28/2000: fixed bugs in invoice-print + numbers-counting
+            some layout changes
+            rework search & projects data access
+11/28/2000: release - version 0.8.2
+11/29/2000: update tax to work with float values
+11/30/2000: included address field in p_projects table
+            removed p_projectaddress table
+            included address in print invoice & delivery
+12/01/2000: update activities listing in editproject
+12/02/2000: update lang -> Project ID, Activity ID, Invoice ID, Delivery ID
+12/03/2000: moved select own address to preferences
+12/09/2000: update invoice & activities to display currency
+12/10/2000: create function to make sure if created invoice or delivery before printing them
+12/20/2000: update preferences
+12/22/2000: included call to function strip_html()  
+01/08/2001: release - version 0.8.3
+01/16/2001: updated coordinator/employee_select to display the current user at first when adding a project/hours
+            fixed delivery/invoice error when trying to save a delivery/invoice a second time with the same ID
+01/27/2001: update search
+01/29/2001: updated access_field in p_projects table
+02/04/2001: added ability to auto create project/invoice/delivery ID
+02/05/2001: updated invoice_id/delivery_id/_fields in p_invoicepos/p_deliverypos tables
+
+--- version 0.8.4.00X ---
+
+03/01/2001: start update to use the phpgw_prefix, acl, new functions ...
+03/20/2001: update hours, added new field hours_descr to phpgw_p_hours
+04/2001: new hours fields to save the work time, 
+	 edit activities is only possible for projectadmins now
+	 added archive functions
+
+05/25/2001: update table phpgw_p_projectsactivities in psql - change type bolean to char(1)
+05/28/2001: update table phpgw_p_activities in psql - change type bolean to char(1)
