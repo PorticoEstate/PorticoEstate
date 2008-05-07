@@ -218,26 +218,23 @@
 		{
 			$attachments = array();
 
-			for ($i=0;$i<count($values['file_action']);$i++)
+			foreach ($values['file_action'] as $file_name)
 			{
-				$file = "{$this->fakebase}{$path}{$values['file_action'][$i]}";
+				$file = "{$this->fakebase}{$path}{$file_name}";
 
 				if($this->vfs->file_exists(array(
 					'string' => $file,
-					'relatives' => array(RELATIVE_NONE)
-				)))
+					'relatives' => array(RELATIVE_NONE))))
 				{
-					$this->vfs->override_acl = 1;
-					
+					$mime_magic = createObject('phpgwapi.mime_magic');
+					$mime = $mime_magic->filename2mime($file_name);
+
 					$attachments[] = array
 					(
-						'file' => $this->vfs->read(array(
-									'string' => $file,
-									'relatives' => array(RELATIVE_NONE))),
-						'name' => $values['file_action'][$i]
+						'file' => "{$GLOBALS['phpgw_info']['server']['files_dir']}{$file}",
+						'name' => $file_name,
+						'type' => $mime
 					);
-
-					$this->vfs->override_acl = 0;
 				}
 			}
 			return $attachments;
