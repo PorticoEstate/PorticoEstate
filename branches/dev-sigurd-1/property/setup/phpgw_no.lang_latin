@@ -773,24 +773,24 @@ key deliver location	property	no	Sted for å levere nøkkel
 key fetch location	property	no	sted for å hente nøkkel
 key responsible	property	no	Nøkkel ansvarlig
 KID nr	property	no	KID nr
-Klick this button to add a invice	property	no	Klikk på denne knappen for å legg til en faktura
-Klick this button to start the import	property	no	Press denne knappen for å starte importen
-Klick this link to edit the period	property	no	klikk denne linken for å rette perioden
-Klick this link to enter the list of sub-invoices	property	no	klikk her for å entre liste over underbilag
-Klick this link to select	property	no	Klikk her for å velge
-Klick this link to select apartment	property	no	klikk her for å velge leilighet
-Klick this link to select budget account	property	no	klikk her for å velge budsjett konto
-Klick this link to select building	property	no	klikk her for å velge bygning
-Klick this link to select customer	property	no	Klikk her for å velge kunde
-Klick this link to select entrance	property	no	klikk her for å velge inngang
-Klick this link to select equipment	property	no	klikk her for å velge utstyr
-Klick this link to select property	property	no	klikk her for å velge eiendom
-Klick this link to select tenant	property	no	klikk her for å velge leietaker
-Klick this link to select vendor	property	no	klikk her for å velge leverandør
-Klick this link to view the remark	property	no	klikk her for å vise merknad
-Klick this to generate an order with this information	property	no	klikk her for å generere et prosjekt med basis denne informasjonen
-Klick this to generate a request with this information	property	no	klikk her for å generere en anmodning med basis denne informasjonen
-Klick to view file	property	no	Klikk for vise fil
+click this button to add a invice	property	no	Klikk på denne knappen for å legg til en faktura
+click this button to start the import	property	no	Press denne knappen for å starte importen
+click this link to edit the period	property	no	klikk denne linken for å rette perioden
+click this link to enter the list of sub-invoices	property	no	klikk her for å entre liste over underbilag
+click this link to select	property	no	Klikk her for å velge
+click this link to select apartment	property	no	klikk her for å velge leilighet
+click this link to select budget account	property	no	klikk her for å velge budsjett konto
+click this link to select building	property	no	klikk her for å velge bygning
+click this link to select customer	property	no	Klikk her for å velge kunde
+click this link to select entrance	property	no	klikk her for å velge inngang
+click this link to select equipment	property	no	klikk her for å velge utstyr
+click this link to select property	property	no	klikk her for å velge eiendom
+click this link to select tenant	property	no	klikk her for å velge leietaker
+click this link to select vendor	property	no	klikk her for å velge leverandør
+click this link to view the remark	property	no	klikk her for å vise merknad
+click this to generate an order with this information	property	no	klikk her for å generere et prosjekt med basis denne informasjonen
+click this to generate a request with this information	property	no	klikk her for å generere en anmodning med basis denne informasjonen
+click to view file	property	no	Klikk for vise fil
 kommune nr	property	no	Kommune nr
 KreditNota	property	no	Kreditnota
 Labour cost	property	no	Arbeid
@@ -1268,7 +1268,7 @@ Select the chapter (for tender) for this activity.	property	no	velg tilbudskapit
 Select the coordinator the document belongs to. To do not use a category select NO USER	property	no	velg koordinator dokument tilhører. For ikke å bruke koordinator velg BRUKER IKKE VALG
 Select the coordinator the project belongs to. To do not use a category select NO USER	property	no	velg koordinator prosjekt tilhører. For ikke å bruke koordinator velg BRUKER IKKE VALG
 Select the coordinator the request belongs to. To do not use a category select NO USER	property	no	velg koordinator anmodning tilhører. For ikke å bruke koordinator velg BRUKER IKKE VALG
-Select the customer by klicking this link	property	no	Velg kunde
+Select the customer by clicking this link	property	no	Velg kunde
 Select the date for the first value	property	no	angi dato for første verdi
 Select the date for the update	property	no	angi dato for oppdatering
 Select the Dim B for this invoice. To do not use Dim B -  select NO DIM B	property	no	velg DIM B for bilag. For ikke å bruke DIM B - velg DIMB IKKE VALGT
@@ -1296,7 +1296,7 @@ Select the part of town the investment belongs to. To do not use a part of town 
 Select the part of town the property belongs to. To do not use a part of town -  select NO PART OF TOWN	property	no	velg bydel eiendom tilhører. For ikke å bruke bydel velg BYDEL IKKE VALGT
 Select the part of town the selection belongs to. To do not use a part of town select NO PART OF TOWN	property	no	velg bydel
 Select the priority the selection belongs to.	property	no	velg prioritet
-Select the property by klicking this link	property	no	klikk her for å velge eiendom
+Select the property by clicking this link	property	no	klikk her for å velge eiendom
 Select the status the agreement belongs to. To do not use a category select NO STATUS	property	no	velg status avtale tilhører. For ikke å bruke status velg STATUS IKKE VALGT
 Select the status the agreement group belongs to. To do not use a category select NO STATUS	property	no	Velg status
 Select the status the document belongs to. To do not use a category select NO STATUS	property	no	velg status dokument tilhører. For ikke å bruke status velg STATUS IKKE VALGT
@@ -1319,9 +1319,9 @@ Select the user the template belongs to. To do not use a category select NO USER
 Select the user the workorder belongs to. To do not use a category select NO USER	property	no	velg bruker arbeidsordre tilhører. For ikke å bruke bruker velg BRUKER IKKE VALG
 Select the user. To do not use a category select NO USER	property	no	Velg bruker
 Select the user to edit email	property	no	Velg bruker for å rette epost
-Select the vendor by klicking the button	property	no	velg leverandør
-Select the vendor by klicking this button	property	no	velg leverandør
-Select the vendor by klicking this link	property	no	velg leverandør
+Select the vendor by clicking the button	property	no	velg leverandør
+Select the vendor by clicking this button	property	no	velg leverandør
+Select the vendor by clicking this link	property	no	velg leverandør
 Select the vendor the agreement belongs to.	property	no	Velg leverandør for avtalen
 Select the vendor the r_agreement belongs to.	property	no	Velg leverandør
 Select the vendor the s_agreement belongs to.	property	no	Velg leverandør

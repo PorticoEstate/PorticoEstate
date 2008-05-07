@@ -1034,7 +1034,7 @@
 				'lang_files'					=> lang('files'),
 				'lang_filename'					=> lang('Filename'),
 				'lang_file_action'				=> lang('Delete file'),
-				'lang_view_file_statustext'		=> lang('Klick to view file'),
+				'lang_view_file_statustext'		=> lang('click to view file'),
 				'lang_file_action_statustext'	=> lang('Check to delete file'),
 				'lang_upload_file'				=> lang('Upload file'),
 				'lang_file_statustext'			=> lang('Select file to upload')
@@ -1304,7 +1304,7 @@
 				'files'							=> $values['files'],
 				'lang_files'					=> lang('files'),
 				'lang_filename'					=> lang('Filename'),
-				'lang_view_file_statustext'		=> lang('Klick to view file')
+				'lang_view_file_statustext'		=> lang('click to view file')
 			);
 
 			$appname					= lang('Workorder');

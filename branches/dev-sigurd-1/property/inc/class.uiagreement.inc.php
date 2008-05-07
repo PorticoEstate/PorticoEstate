@@ -1519,7 +1519,7 @@
 				'files'						=> isset($agreement['files'])?$agreement['files']:'',
 				'lang_files'					=> lang('files'),
 				'lang_filename'					=> lang('Filename'),
-				'lang_view_file_statustext'			=> lang('Klick to view file'),
+				'lang_view_file_statustext'			=> lang('click to view file'),
 
 				'edit_url'					=> $GLOBALS['phpgw']->link('/index.php',$link_data),
 				'lang_id'					=> lang('ID'),

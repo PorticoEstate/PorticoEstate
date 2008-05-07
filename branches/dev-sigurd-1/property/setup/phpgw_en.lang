@@ -782,26 +782,26 @@ key deliver location	property	en	key deliver location
 key fetch location	property	en	key fetch location
 key responsible	property	en	key responsible
 KID nr	property	en	KID nr
-Klick this button to add a invoice	property	en	Klick this button to add a invoice
-Klick this button to start the import	property	en	Klick this button to start the import
-Klick this link to edit the period	property	en	Klick this link to edit the period
-Klick this link to enter the list of sub-invoices	property	en	Klick this link to enter the list of sub-invoices
-klick this link to select	property	en	Klick this link to select
-Klick this link to select apartment	property	en	Klick this link to select apartment
-Klick this link to select budget account	property	en	Klick this link to select budget account
-Klick this link to select building	property	en	Klick this link to select building
-Klick this link to select customer	property	en	Klick this link to select customer
-Klick this link to select entrance	property	en	Klick this link to select entrance
-Klick this link to select equipment	property	en	Klick this link to select equipment
-klick this link to select owner from the addressbook	property	en	Klick this link to select owner from the addressbook
-Klick this link to select property	property	en	Klick this link to select property
-Klick this link to select tenant	property	en	Klick this link to select tenant
-Klick this link to select vendor	property	en	Klick this link to select vendor
-Klick this link to view the remark	property	en	Klick this link to view the remark
-Klick this to generate a request with this information	property	en	Klick this to generate a request with this information
-Klick this to generate an order with this information	property	en	Klick this to generate an order with this information
-klick this to start a report	property	en	Klick this to start a report
-klick to view file	property	en	Klick to view file
+click this button to add a invoice	property	en	click this button to add a invoice
+click this button to start the import	property	en	click this button to start the import
+click this link to edit the period	property	en	click this link to edit the period
+click this link to enter the list of sub-invoices	property	en	click this link to enter the list of sub-invoices
+click this link to select	property	en	click this link to select
+click this link to select apartment	property	en	click this link to select apartment
+click this link to select budget account	property	en	click this link to select budget account
+click this link to select building	property	en	click this link to select building
+click this link to select customer	property	en	click this link to select customer
+click this link to select entrance	property	en	click this link to select entrance
+click this link to select equipment	property	en	click this link to select equipment
+click this link to select owner from the addressbook	property	en	click this link to select owner from the addressbook
+click this link to select property	property	en	click this link to select property
+click this link to select tenant	property	en	click this link to select tenant
+click this link to select vendor	property	en	click this link to select vendor
+click this link to view the remark	property	en	click this link to view the remark
+click this to generate a request with this information	property	en	click this to generate a request with this information
+click this to generate an order with this information	property	en	click this to generate an order with this information
+click this to start a report	property	en	click this to start a report
+click to view file	property	en	click to view file
 kommune nr	property	en	kommune nr
 KreditNota	property	en	KreditNota
 Labour cost	property	en	Labour cost
@@ -1304,7 +1304,7 @@ Select the chapter (for tender) for this activity.	property	en	Select the chapte
 Select the coordinator the document belongs to. To do not use a category select NO USER	property	en	Select the coordinator the document belongs to. To do not use a category select NO USER
 Select the coordinator the project belongs to. To do not use a category select NO USER	property	en	Select the coordinator the project belongs to. To do not use a category select NO USER
 Select the coordinator the request belongs to. To do not use a category select NO USER	property	en	Select the coordinator the request belongs to. To do not use a category select NO USER
-Select the customer by klicking this link	property	en	Select the customer by klicking this link
+Select the customer by clicking this link	property	en	Select the customer by clicking this link
 Select the date for the first value	property	en	Select the date for the first value
 Select the date for the update	property	en	Select the date for the update
 Select the Dim B for this invoice. To do not use Dim B -  select NO DIM B	property	en	Select the Dim B for this invoice. To do not use Dim B -  select NO DIM B
@@ -1332,7 +1332,7 @@ Select the part of town the investment belongs to. To do not use a part of town 
 Select the part of town the property belongs to. To do not use a part of town -  select NO PART OF TOWN	property	en	Select the part of town the property belongs to. To do not use a part of town -  select NO PART OF TOWN
 Select the part of town the selection belongs to. To do not use a part of town select NO PART OF TOWN	property	en	Select the part of town the selection belongs to. To do not use a part of town select NO PART OF TOWN
 Select the priority the selection belongs to.	property	en	Select the priority the selection belongs to.
-Select the property by klicking this link	property	en	Select the property by klicking this link
+Select the property by clicking this link	property	en	Select the property by clicking this link
 Select the status the agreement belongs to. To do not use a category select NO STATUS	property	en	Select the status the agreement belongs to. To do not use a category select NO STATUS
 Select the status the agreement group belongs to. To do not use a category select NO STATUS	property	en	Select the status the agreement group belongs to. To do not use a category select NO STATUS
 Select the status the document belongs to. To do not use a category select NO STATUS	property	en	Select the status the document belongs to. To do not use a category select NO STATUS
@@ -1355,9 +1355,9 @@ Select the user the workorder belongs to. To do not use a category select NO USE
 Select the user to edit email	property	en	Select the user to edit email
 Select the user. To do not use a category select NO USER	property	en	Select the user. To do not use a category select NO USER
 Select the users supervisor	property	en	Select the users supervisor
-Select the vendor by klicking the button	property	en	Select the vendor by klicking the button
-Select the vendor by klicking this button	property	en	Select the vendor by klicking this button
-Select the vendor by klicking this link	property	en	Select the vendor by klicking this link
+Select the vendor by clicking the button	property	en	Select the vendor by clicking the button
+Select the vendor by clicking this button	property	en	Select the vendor by clicking this button
+Select the vendor by clicking this link	property	en	Select the vendor by clicking this link
 Select the vendor the agreement belongs to.	property	en	Select the vendor the agreement belongs to.
 Select the vendor the r_agreement belongs to.	property	en	Select the vendor the r_agreement belongs to.
 Select the vendor the s_agreement belongs to.	property	en	Select the vendor the s_agreement belongs to.

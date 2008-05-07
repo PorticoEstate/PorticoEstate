@@ -284,7 +284,7 @@
 				$location['location'][$i]['size']					= 5;
 				$location['location'][$i]['name']					= $location_types[($i)]['name'];
 				$location['location'][$i]['value']					= (isset($data['values']['loc' . ($i+1)])?$data['values']['loc' . ($i+1)]:'');
-				$location['location'][$i]['statustext']				= lang('Klick this link to select') . ' ' . $location_types[($i)]['name'];
+				$location['location'][$i]['statustext']				= lang('click this link to select') . ' ' . $location_types[($i)]['name'];
 
 				if($i==0)
 				{
@@ -317,7 +317,7 @@
 					$location['location'][$i]['lookup_link']			= False;
 					$lookup_functions[$i]['link'] 					= $location_link .',type_id:' . ($data['no_link']-1) . ',lookup_name:' . ($data['no_link']-2);
 					$lookup_functions[$i]['action'] 				= 'Window1=window.open(strURL,"Search","width=800,height=700,toolbar=no,scrollbars=yes,resizable=yes");';
-					$location['location'][$i]['statustext']				= lang('Klick this link to select') . ' ' . $location_types[($data['no_link']-2)]['name'];
+					$location['location'][$i]['statustext']				= lang('click this link to select') . ' ' . $location_types[($data['no_link']-2)]['name'];
 				}
 
 				if(isset($data['query_link']) && $i < ($data['type_id']-1))
@@ -353,7 +353,7 @@
 					$location['location'][$i]['readonly']				= True;
 					$location['location'][$i]['name']				= $fm_location_cols[$j]['input_text'];
 					$location['location'][$i]['value']				= isset($data['values'][$fm_location_cols[$j]['column_name']]) ? $data['values'][$fm_location_cols[$j]['column_name']] : '';
-					$location['location'][$i]['statustext']				= lang('Klick this link to select') . ' ' . $location_types[($fm_location_cols[$j]['location_type']-1)]['name'];
+					$location['location'][$i]['statustext']				= lang('click this link to select') . ' ' . $location_types[($fm_location_cols[$j]['location_type']-1)]['name'];
 					$i++;
 
 				}
@@ -448,7 +448,7 @@
 						$location['location'][$i]['lookup_link']			= True;
 						$location['location'][$i]['name']					= $config[$j]['descr'];
 						$location['location'][$i]['value']					= $data['values'][$config[$j]['column_name']];
-						$location['location'][$i]['statustext']				= lang('Klick this link to select') . ' ' .$location_types[($fm_location_cols[$j]['location_type']-1)]['name'];
+						$location['location'][$i]['statustext']				= lang('click this link to select') . ' ' .$location_types[($fm_location_cols[$j]['location_type']-1)]['name'];
 						$location['location'][$i]['input_type']				= 'text';
 						$i++;
 					}
@@ -480,7 +480,7 @@
 					{
 						$location['location'][$i]['value']						= $data['entity_data'][$entity['id']]['p_num'];
 					}
-					$location['location'][$i]['statustext']						= lang('Klick this link to select') .' ' . $entity['name'];
+					$location['location'][$i]['statustext']						= lang('click this link to select') .' ' . $entity['name'];
 
 					$location['location'][$i]['extra'][0]['input_name']			= 'entity_cat_name_' . $entity['id'];
 					$input_name[]												= $location['location'][$i]['extra'][0]['input_name'];
