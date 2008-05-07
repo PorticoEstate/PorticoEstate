@@ -2385,7 +2385,6 @@
 
 		$change = array
 		(
-			'/home/entity'				=> '/property/entity',
 			'/home/document'			=> '/property/document',
 			'/home/fmticket'			=> '/property/fmticket',
 			'/home/request'				=> '/property/request',
@@ -2394,6 +2393,13 @@
 			'/home/rental_agreement'	=> '/property/rental_agreement',
 			'/home/agreement'			=> '/property/agreement'
 		);
+
+		$GLOBALS['phpgw_setup']->oProc->query("SELECT * FROM fm_entity_category");
+		while ($GLOBALS['phpgw_setup']->oProc->next_record())
+		{
+			$entity = "entity_{$GLOBALS['phpgw_setup']->oProc->f('entity_id')}_{$GLOBALS['phpgw_setup']->oProc->f('id')}";
+			$change["/home/{$entity}"] = "/property/{$entity}";
+		}
 
 		$GLOBALS['phpgw_setup']->oProc->query("SELECT config_value FROM phpgw_config WHERE config_app = 'phpgwapi' AND config_name = 'files_dir'");
 		$GLOBALS['phpgw_setup']->oProc->next_record();
