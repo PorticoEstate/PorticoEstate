@@ -41,10 +41,18 @@
 		*/
 		var $fakebase = '/property';
 
+		/**
+		* constructor
+		*
+		* @param string $fakebase fakebase
+		*
+		* @return
+		*/
+
 		function property_bofiles($fakebase='/property')
 		{
-			$this->vfs		= CreateObject('phpgwapi.vfs');
-			$this->rootdir	= $this->vfs->basedir;
+			$this->vfs     = CreateObject('phpgwapi.vfs');
+			$this->rootdir = $this->vfs->basedir;
 			if($fakebase)
 			{
 				$this->fakebase	= $fakebase;
@@ -55,7 +63,8 @@
 		/**
 		* Create catalog - starting with fakebase
 		*
-		* @param string $path part of path pointing to end target
+		* @param string $type part of path pointing to end target
+		*
 		* @return array Array with result on the action(failed/success) for each catalog down the path
 		*/
 
@@ -121,8 +130,9 @@
 		/**
 		* Delete Files
 		*
-		* @param string $path part of path where to look for files
-		* @param array $values array holding information of selected files
+		* @param string $path   part of path where to look for files
+		* @param array  $values array holding information of selected files
+		*
 		* @return array Array with result on the action(failed/success) for each file
 		*/
 
@@ -130,9 +140,9 @@
 		{
 			$receipt = array();
 
-			for ($i=0;$i<count($values['file_action']);$i++)
+			foreach ($values['file_action'] as $file_name)
 			{
-				$file = "{$this->fakebase}{$path}{$values['file_action'][$i]}";
+				$file = "{$this->fakebase}{$path}{$file_name}";
 
 				if($this->vfs->file_exists(array(
 					'string' => $file,
@@ -148,11 +158,11 @@
 					     )
 					)))
 					{
-						$receipt['error'][] = array('msg'=>lang('failed to delete file') . ' :'. $this->fakebase . $path . $values['file_action'][$i]);
+						$receipt['error'][] = array('msg'=>lang('failed to delete file') . ' :'. $this->fakebase . $path . $file_name);
 					}
 					else
 					{
-						$receipt['message'][] = array('msg'=>lang('file deleted') . ' :'. $this->fakebase . $path . $values['file_action'][$i]);
+						$receipt['message'][] = array('msg'=>lang('file deleted') . ' :'. $this->fakebase . $path . $file_name);
 					}
 					$this->vfs->override_acl = 0;
 				}
@@ -163,8 +173,10 @@
 		/**
 		* View File - echo (or download) to browser.
 		*
-		* @param string $path part of path where to look for files
+		* @param string $type part of path where to look for files
 		* @param string $file optional filename
+		*
+		* @return null
 		*/
 
 		function view_file($type = '', $file = '')
@@ -175,9 +187,9 @@
 
 			if(!$file)
 			{
-				$file_name	= urldecode(phpgw::get_var('file_name'));
-				$id 		= phpgw::get_var('id', 'int');
-				$file		= "{$this->fakebase}/{$type}/{$id}/{$file_name}";
+				$file_name = urldecode(phpgw::get_var('file_name'));
+				$id        = phpgw::get_var('id', 'int');
+				$file      = "{$this->fakebase}/{$type}/{$id}/{$file_name}";
 			}
 
 			if($this->vfs->file_exists(array(
@@ -210,8 +222,9 @@
 		/**
 		* Get attachments
 		*
-		* @param string $path part of path where to look for files
-		* @param array $values array holding information of selected files
+		* @param string $path   part of path where to look for files
+		* @param array  $values array holding information of selected files
+		*
 		* @return array Array with filecontent
 		*/
 		function get_attachments($path, $values)
@@ -227,7 +240,7 @@
 					'relatives' => array(RELATIVE_NONE))))
 				{
 					$mime_magic = createObject('phpgwapi.mime_magic');
-					$mime = $mime_magic->filename2mime($file_name);
+					$mime       = $mime_magic->filename2mime($file_name);
 
 					$attachments[] = array
 					(
