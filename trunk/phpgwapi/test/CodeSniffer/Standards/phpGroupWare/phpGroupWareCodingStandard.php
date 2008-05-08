@@ -49,7 +49,7 @@ class PHP_CodeSniffer_Standards_phpGroupWare_phpGroupWareCodingStandard extends 
 				'PEAR/Sniffs/Commenting/FunctionCommentSniff.php',
 				'Squiz/Sniffs/Functions/GlobalFunctionSniff.php',
 				'Squiz/Sniffs/Arrays/ArrayBracketSpacingSniff.php',
-		//		'Squiz/Sniffs/Arrays/ArrayDeclarationSniff.php', 				// seems to not work with tabs
+		//		'Squiz/Sniffs/Arrays/ArrayDeclarationSniff.php',
 				'Squiz/Sniffs/ControlStructures/ElseIfDeclarationSniff.php',
 				'PEAR/Sniffs/Commenting/InlineCommentSniff.php',
 				'Generic/Sniffs/Metrics/CyclomaticComplexitySniff.php',
