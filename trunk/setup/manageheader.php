@@ -500,9 +500,9 @@ HTML;
 
 			$setup_tpl->set_var('server_root', $GLOBALS['phpgw_info']['server']['server_root']);
 			$setup_tpl->set_var('include_root', $GLOBALS['phpgw_info']['server']['include_root']);
-			$setup_tpl->set_var('header_admin_password', $GLOBALS['phpgw_info']['server']['header_admin_password']);
+			$setup_tpl->set_var('header_admin_password', isset($GLOBALS['phpgw_info']['server']['header_admin_password']) ? $GLOBALS['phpgw_info']['server']['header_admin_password'] : '');
 
-			if ( $GLOBALS['phpgw_info']['server']['db_persistent'] )
+			if ( isset($GLOBALS['phpgw_info']['server']['db_persistent']) && $GLOBALS['phpgw_info']['server']['db_persistent'] )
 			{
 				$setup_tpl->set_var('db_persistent_yes',' selected');
 			}
@@ -515,7 +515,7 @@ HTML;
 			$session_options = '';
 			foreach ( $supported_sessions_type as $stype )
 			{
-				if( $stype == $GLOBALS['phpgw_info']['server']['sessions_type'])
+				if( isset($GLOBALS['phpgw_info']['server']['sessions_type']) && $stype == $GLOBALS['phpgw_info']['server']['sessions_type'])
 				{
 					$selected = ' selected ';
 				}
@@ -524,13 +524,13 @@ HTML;
 					$selected = '';
 				}
 				$session_options .= <<<HTML
-					<option{$selected}value="{$stype}">{$stype}</option>
+					<option {$selected}value="{$stype}">{$stype}</option>
 
 HTML;
 			}
 			$setup_tpl->set_var('session_options',$session_options);
 
-			if ( $GLOBALS['phpgw_info']['server']['mcrypt_enabled'] )
+			if ( isset($GLOBALS['phpgw_info']['server']['mcrypt_enabled']) && $GLOBALS['phpgw_info']['server']['mcrypt_enabled'] )
 			{
 				$setup_tpl->set_var('mcrypt_enabled_yes',' selected');
 			}
@@ -539,7 +539,7 @@ HTML;
 				$setup_tpl->set_var('mcrypt_enabled_no',' selected');
 			}
 
-			$setup_tpl->set_var('mcrypt',$GLOBALS['phpgw_info']['server']['versions']['mcrypt']);
+			$setup_tpl->set_var('mcrypt', isset($GLOBALS['phpgw_info']['server']['versions']['mcrypt']) ? $GLOBALS['phpgw_info']['server']['versions']['mcrypt'] : '');
 			$setup_tpl->set_var('mcrypt_iv',$GLOBALS['phpgw_info']['server']['mcrypt_iv']);
 
 			if ( !isset($GLOBALS['phpgw_info']['server']['setup_acl']) || !$GLOBALS['phpgw_info']['server']['setup_acl'] )
@@ -549,7 +549,7 @@ HTML;
 			$setup_tpl->set_var('lang_setup_acl',lang('Limit access to setup to the following addresses or networks (e.g. 10.1.1,127.0.0.1)'));
 			$setup_tpl->set_var('setup_acl', $GLOBALS['phpgw_info']['server']['setup_acl']);
 
-			if ( $GLOBALS['phpgw_info']['server']['show_domain_selectbox'] )
+			if ( isset($GLOBALS['phpgw_info']['server']['show_domain_selectbox']) && $GLOBALS['phpgw_info']['server']['show_domain_selectbox'] )
 			{
 				$setup_tpl->set_var('domain_selectbox_yes',' selected');
 			}
@@ -558,7 +558,7 @@ HTML;
 				$setup_tpl->set_var('domain_selectbox_no',' selected');
 			}
 
-			if ( $GLOBALS['phpgw_info']['server']['domain_from_host'] )
+			if ( isset($GLOBALS['phpgw_info']['server']['domain_from_host']) && $GLOBALS['phpgw_info']['server']['domain_from_host'] )
 			{
 				$setup_tpl->set_var('domain_from_host_yes',' selected');
 			}
