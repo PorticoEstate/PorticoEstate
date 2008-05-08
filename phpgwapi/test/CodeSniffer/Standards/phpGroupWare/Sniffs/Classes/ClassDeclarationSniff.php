@@ -100,7 +100,7 @@ class phpGroupWare_Sniffs_Classes_ClassDeclarationSniff implements PHP_CodeSniff
 			{
 				$blankSpace = substr($prevContent, strpos($prevContent, $phpcsFile->eolChar));
 				$spaces	    = strlen($blankSpace);
-				if ($spaces !== 1)
+				if ($spaces !== 4)
 				{
 					$error = "Expected 1 spaces before opening brace; $spaces found";
 					$phpcsFile->addError($error, $curlyBrace);

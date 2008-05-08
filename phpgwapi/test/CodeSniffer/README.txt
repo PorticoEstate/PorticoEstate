@@ -7,4 +7,4 @@ ln -s /path_to_phpGroupWareapi/test/CodeSniffer/Standards/phpGroupWare /usr/loca
 
 Usage (example):
 
-phpcs /path/to/code/my_dir --standard=phpGroupWare --report=summary
+phpcs /path/to/code/my_dir --standard=phpGroupWare --report=summary --tab-width=4
