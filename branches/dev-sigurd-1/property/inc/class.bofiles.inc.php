@@ -55,7 +55,7 @@
 			$this->rootdir = $this->vfs->basedir;
 			if($fakebase)
 			{
-				$this->fakebase	= $fakebase;
+				$this->fakebase = $fakebase;
 			}
 			$this->vfs->fakebase = $this->fakebase;
 		}
