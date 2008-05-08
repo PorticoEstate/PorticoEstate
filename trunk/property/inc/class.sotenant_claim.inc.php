@@ -75,7 +75,7 @@
 			$where = 'WHERE';
 			if ($cat_id > 0)
 			{
-				$filtermethod .= " $where category='$cat_id' ";
+				$filtermethod .= " $where fm_tenant_claim.category='$cat_id' ";
 				$where = 'AND';
 			}
 
