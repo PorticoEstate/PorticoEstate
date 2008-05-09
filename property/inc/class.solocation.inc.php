@@ -632,6 +632,10 @@
 						{
 							$location_list[$j][$cols_return_extra[$i]['name']]=date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'],$value);
 						}
+						else if($cols_return_extra[$i]['datatype']=='link' && $value)
+						{
+							$location_list[$j][$cols_return_extra[$i]['name']]= phpgw::safe_redirect($value);
+						}
 						else
 						{
 							$location_list[$j][$cols_return_extra[$i]['name']] = $value;
@@ -1301,7 +1305,7 @@
 					$location[$j][$attrib[$i]['column_name']]=$this->db->f($attrib[$i]['column_name']);
 
 					$value = $this->db->f($attrib[$i]['column_name']);
-					if(($attrib[$i]['datatype']=='R' || $attrib[$i]['datatype']=='LB') && $value):
+					if(($attrib[$i]['datatype']=='R' || $attrib[$i]['datatype']=='LB') && $value)
 					{
 
 						$sql="SELECT value FROM $choice_table WHERE $attribute_filter AND attrib_id=" .$attrib[$i]['attrib_id']. "  AND id=" . $value;
@@ -1309,19 +1313,19 @@
 						$this->db2->next_record();
 						$location[$j][$attrib[$i]['column_name']] = $this->db2->f('value');
 					}
-					elseif($attrib[$i]['datatype']=='AB' && $value):
+					else if($attrib[$i]['datatype']=='AB' && $value)
 					{
 						$contact_data	= $contacts->read_single_entry($value,array('n_given'=>'n_given','n_family'=>'n_family','email'=>'email'));
 						$location[$j][$attrib[$i]['column_name']]	= $contact_data[0]['n_family'] . ', ' . $contact_data[0]['n_given'];
 					}
-					elseif($attrib[$i]['datatype']=='VENDOR' && $value):
+					else if($attrib[$i]['datatype']=='VENDOR' && $value)
 					{
 						$sql="SELECT org_name FROM fm_vendor where id=$value";
 						$this->db2->query($sql);
 						$this->db2->next_record();
 						$location[$j][$attrib[$i]['column_name']] = $this->db2->f('org_name');
 					}
-					elseif($attrib[$i]['datatype']=='CH' && $value):
+					else if($attrib[$i]['datatype']=='CH' && $value)
 					{
 						$ch= unserialize($value);
 						if (isset($ch) AND is_array($ch))
@@ -1339,15 +1343,22 @@
 							unset($ch_value);
 						}
 					}
-					elseif($attrib[$i]['datatype']=='D' && $value):
+					else if($attrib[$i]['datatype']=='D' && $value)
 					{
 						$location[$j][$attrib[$i]['column_name']]=date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'],strtotime($value));
 					}
-					elseif($attrib[$i]['column_name']=='entry_date' && $value):
+					else if($cols_return_extra[$i]['datatype']=='link' && $value)
+					{
+						$location_list[$j][$cols_return_extra[$i]['name']]= phpgw::safe_redirect($value);
+					}
+					else if($attrib[$i]['column_name']=='entry_date' && $value)
 					{
 						$location[$j][$attrib[$i]['column_name']]=date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'],$value);
 					}
-					endif;
+					else
+					{
+						$location_list[$j][$cols_return_extra[$i]['name']] = $value;
+					}
 
 					unset($value);
 				}

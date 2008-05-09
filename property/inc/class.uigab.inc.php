@@ -258,10 +258,10 @@
 					'link_view'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=>'property.uigab.list_detail','gab_id'=>$gab['gab_id'])),
 					'lang_view_statustext'		=> $lang_view_statustext,
 					'text_view'			=> $text_view,
-					'link_map'			=> $link_to_map . '?maptype=Eiendomskart&gnr=' . (int)$value_gaards_nr . '&bnr=' . (int)$value_bruks_nr . '&fnr=' . (int)$value_feste_nr,
+					'link_map'			=> phpgw::safe_redirect($link_to_map . '?maptype=Eiendomskart&gnr=' . (int)$value_gaards_nr . '&bnr=' . (int)$value_bruks_nr . '&fnr=' . (int)$value_feste_nr),
 					'lang_map_statustext'		=> $lang_map_statustext,
 					'text_map'			=> $text_map,
-					'link_gab'			=> $link_to_gab . '?type=eiendom&Gnr=' . (int)$value_gaards_nr . '&Bnr=' . (int)$value_bruks_nr . '&Fnr=' . (int)$value_feste_nr . '&Snr=' . (int)$value_seksjons_nr,
+					'link_gab'			=> phpgw::safe_redirect($link_to_gab . '?type=eiendom&Gnr=' . (int)$value_gaards_nr . '&Bnr=' . (int)$value_bruks_nr . '&Fnr=' . (int)$value_feste_nr . '&Snr=' . (int)$value_seksjons_nr),
 					'lang_gab_statustext'		=> $lang_gab_statustext,
 					'text_gab'			=> $text_gab
 				);
