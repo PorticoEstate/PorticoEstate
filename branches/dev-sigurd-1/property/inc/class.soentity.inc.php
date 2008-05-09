@@ -416,6 +416,10 @@
 						{
 							$entity_list[$j][$cols_return_extra[$i]['name']]=date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'],$value);
 						}
+						else if($cols_return_extra[$i]['datatype']=='link' && $value)
+						{
+							$entity_list[$j][$cols_return_extra[$i]['name']]= phpgw::safe_redirect($value);
+						}
 						else
 						{
 							$entity_list[$j][$cols_return_extra[$i]['name']] = $value;

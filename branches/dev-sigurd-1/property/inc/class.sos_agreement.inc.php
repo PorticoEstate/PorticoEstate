@@ -444,6 +444,14 @@
 						{
 							$s_agreement_list[$j][$return_extra['name']]=date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'],strtotime($value));
 						}
+						else if($cols_return_extra[$i]['datatype']=='timestamp' && $value)
+						{
+							$s_agreement_list[$j][$return_extra['name']]=date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'],$value);
+						}
+						else if($cols_return_extra[$i]['datatype']=='link' && $value)
+						{
+							$s_agreement_list[$j][$return_extra['name']]= phpgw::safe_redirect($value);
+						}
 						else
 						{
 							$s_agreement_list[$j][$return_extra['name']]=$value;
