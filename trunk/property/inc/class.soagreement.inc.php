@@ -355,9 +355,15 @@
 						}
 						else if($cols_return_extra[$i]['datatype']=='D' && $value)
 						{
-//_debug_array($value);
-
 							$agreement_list[$j][$cols_return_extra[$i]['name']]=date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'],strtotime($value));
+						}
+						else if($cols_return_extra[$i]['datatype']=='timestamp' && $value)
+						{
+							$agreement_list[$j][$cols_return_extra[$i]['name']]=date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'],$value);
+						}
+						else if($cols_return_extra[$i]['datatype']=='link' && $value)
+						{
+							$agreement_list[$j][$cols_return_extra[$i]['name']]= phpgw::safe_redirect($value);
 						}
 						else
 						{
