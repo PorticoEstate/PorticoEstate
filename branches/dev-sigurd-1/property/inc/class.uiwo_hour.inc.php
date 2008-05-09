@@ -822,14 +822,14 @@
 				$headers .= "MIME-Version: 1.0\r\n";
 				$subject = lang('Workorder').": ".$workorder_id;
 
-
+				$attachment_log = '';
 				if (isset($GLOBALS['phpgw_info']['server']['smtp_server']) && $GLOBALS['phpgw_info']['server']['smtp_server'])
 				{
-
 					if(isset($values['file_action']) && is_array($values['file_action']))
 					{
 						$bofiles	= CreateObject('property.bofiles');
 						$attachments = $bofiles->get_attachments("/workorder/{$workorder_id}/", $values);
+						$attachment_log = lang('attachments') . ': ' . implode(', ',$values['file_action']);
 					}
 
 					if (!is_object($GLOBALS['phpgw']->send))
@@ -846,8 +846,12 @@
 				if ($rcpt)
 				{
 					$historylog	= CreateObject('property.historylog','workorder');
-					$historylog->add('M',$workorder_id,$to_email);
+					$historylog->add('M',$workorder_id,"{$to_email} {$attachment_log}");
 					$receipt['message'][]=array('msg'=>lang('Workorder is sent by email!'));
+					if($attachment_log)
+					{
+						$receipt['message'][]=array('msg' => $attachment_log);					
+					}
 				}
 				else
 				{
