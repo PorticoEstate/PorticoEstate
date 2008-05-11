@@ -84,7 +84,7 @@
 							'text'	=> $entry['name']
 						);
 			
-						$cat_list = $entity->read_category(array('allrows'=>True,'entity_id'=>$entry['id']));
+						$cat_list = $entity->read_category(array('allrows'=>true,'entity_id'=>$entry['id']));
 
 						foreach($cat_list as $category)
 						{
@@ -107,7 +107,7 @@
 					'tenant_global_cats'	=> array
 					(
 						'text'	=> lang('Tenant Global Categories'),
-						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.uicategories.index', 'appname' => 'fm_tenant', 'global_cats' => 'True', 'menu_selection' => 'admin::property::tenant::tenant_global_cats') )
+						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.uicategories.index', 'appname' => 'fm_tenant', 'global_cats' => 'true', 'menu_selection' => 'admin::property::tenant::tenant_global_cats') )
 					),
 					'tenant_attribs'	=> array
 					(
@@ -131,7 +131,7 @@
 					'vendor_global_cats'	=> array
 					(
 						'text'	=> lang('Vendor Global Categories'),
-						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.uicategories.index', 'appname' => 'fm_vendor', 'global_cats' => 'True', 'menu_selection' => 'admin::property::vendor::vendor_global_cats') )
+						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.uicategories.index', 'appname' => 'fm_vendor', 'global_cats' => 'true', 'menu_selection' => 'admin::property::vendor::vendor_global_cats') )
 					),
 					'vendor_attribs'	=> array
 					(
@@ -795,7 +795,7 @@
 						);
 					}
 					
-					$cat_list = $entity->read_category(array('allrows'=>True,'entity_id'=>$entry['id']));
+					$cat_list = $entity->read_category(array('allrows'=>true,'entity_id'=>$entry['id']));
 
 					foreach($cat_list as $category)
 					{

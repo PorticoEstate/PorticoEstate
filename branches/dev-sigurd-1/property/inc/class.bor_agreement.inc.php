@@ -45,14 +45,14 @@
 
 		var $public_functions = array
 		(
-			'read'				=> True,
-			'read_single'		=> True,
-			'save'				=> True,
-			'delete'			=> True,
-			'check_perms'		=> True
+			'read'				=> true,
+			'read_single'		=> true,
+			'save'				=> true,
+			'delete'			=> true,
+			'check_perms'		=> true
 		);
 
-		function property_bor_agreement($session=False)
+		function property_bor_agreement($session=false)
 		{
 		//	$this->currentapp		= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->so = CreateObject('property.sor_agreement');
@@ -62,7 +62,7 @@
 			if ($session)
 			{
 				$this->read_sessiondata();
-				$this->use_session = True;
+				$this->use_session = true;
 			}
 
 			$reset_query 		= phpgw::get_var('reset_query', 'bool');
@@ -175,7 +175,7 @@
 
 		function check_perms($has, $needed)
 		{
-			return (!!($has & $needed) == True);
+			return (!!($has & $needed) == true);
 		}
 
 
@@ -224,7 +224,7 @@
 		{
 			$list = $this->so->read(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
 											'filter' => $this->filter,'cat_id' => $this->cat_id,'allrows'=>$this->allrows,'member_id'=>$this->member_id,
-											'r_agreement_id'=>$id,'detail'=>True));
+											'r_agreement_id'=>$id,'detail'=>true));
 			$this->total_records = $this->so->total_records;
 
 			$this->uicols	= $this->so->uicols;
@@ -562,4 +562,4 @@
 			$this->so->delete_common_h($r_agreement_id,$c_id,$id);
 		}
 	}
-?>
+

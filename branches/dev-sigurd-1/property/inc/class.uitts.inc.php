@@ -36,16 +36,16 @@
 	{
 		var $public_functions = array
 		(
-			'index'		=> True,
-			'index2'	=> True,
-			'view'		=> True,
-			'view2'		=> True,
-			'add'		=> True,
-			'add2'		=> True,
-			'delete'	=> True,
-			'download'		=> True,
-			'download2'	=> True,
-			'view_file'	=> True
+			'index'		=> true,
+			'index2'	=> true,
+			'view'		=> true,
+			'view2'		=> true,
+			'add'		=> true,
+			'add2'		=> true,
+			'delete'	=> true,
+			'download'		=> true,
+			'download2'	=> true,
+			'view_file'	=> true
 		);
 
 		public function __construct()
@@ -53,17 +53,17 @@
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] = 'property::helpdesk';
 			if($this->tenant_id	= $GLOBALS['phpgw']->session->appsession('tenant_id','property'))
 			{
-				$GLOBALS['phpgw_info']['flags']['noframework'] = True;
-				$GLOBALS['phpgw_info']['flags']['noheader'] = True;
-				$GLOBALS['phpgw_info']['flags']['nofooter'] = True;
+				$GLOBALS['phpgw_info']['flags']['noframework'] = true;
+				$GLOBALS['phpgw_info']['flags']['noheader'] = true;
+				$GLOBALS['phpgw_info']['flags']['nofooter'] = true;
 			}
 
 			$this->account				= $GLOBALS['phpgw_info']['user']['account_id'];
-			$GLOBALS['phpgw_info']['flags']['xslt_app'] = True;
+			$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
 		//	$this->currentapp			= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->nextmatchs			= CreateObject('phpgwapi.nextmatchs');
 
-			$this->bo					= CreateObject('property.botts',True);
+			$this->bo					= CreateObject('property.botts',true);
 			$this->bocommon				= CreateObject('property.bocommon');
 
 		//	$this->acl 					= CreateObject('phpgwapi.acl');
@@ -124,7 +124,7 @@
 			$start_date 	= urldecode($this->start_date);
 			$end_date 	= urldecode($this->end_date);
 
-			$this->bo->allrows = True;
+			$this->bo->allrows = true;
 			$list = $this->bo->read($start_date,$end_date,$external);
 
 			if (isset($list) AND is_array($list))
@@ -145,8 +145,8 @@
 							if($date['date_info'][0]['descr'])
 							{
 							 	$list[$i]['date_' . $j]=$date['date_info'][0]['entry_date'];
-							 	$name_temp['date_' . $j]=True;
-							 	$descr_temp[$date['date_info'][0]['descr']]=True;
+							 	$name_temp['date_' . $j]=true;
+							 	$descr_temp[$date['date_info'][0]['descr']]=true;
 							 }
 							 $j++;
 						}
@@ -566,7 +566,7 @@
 
 				'msgbox_data'					=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
 				'autorefresh'					=> $autorefresh,
-				'allow_allrows'					=> True,
+				'allow_allrows'					=> true,
 				'allrows'						=> $this->allrows,
 				'start_record'					=> $this->start,
 				'record_limit'					=> $record_limit,
@@ -916,7 +916,7 @@
 
 				'msgbox_data'					=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
 				'autorefresh'					=> $autorefresh,
-				'allow_allrows'					=> True,
+				'allow_allrows'					=> true,
 				'allrows'						=> $this->allrows,
 				'start_record'					=> $this->start,
 				'record_limit'					=> $record_limit,
@@ -1028,7 +1028,7 @@
 						$values['origin'][$i]['descr']= lang($values['origin'][$i]['type']);
 						if($values['origin'][$i]['type'] == 'request')
 						{
-							$selected_request = True;
+							$selected_request = true;
 						}
 					}
 				}
@@ -1134,8 +1134,8 @@
 			$location_data=$bolocation->initiate_ui_location(array(
 						'values'	=> (isset($values['location_data'])?$values['location_data']:''),
 						'type_id'	=> -1, // calculated from location_types
-						'no_link'	=> False, // disable lookup links for location type less than type_id
-						'tenant'	=> True,
+						'no_link'	=> false, // disable lookup links for location type less than type_id
+						'tenant'	=> true,
 						'lookup_type'	=> 'form',
 						'lookup_entity'	=> $this->bocommon->get_lookup_entity('ticket'),
 						'entity_data'	=> (isset($values['p'])?$values['p']:'')
@@ -1387,8 +1387,8 @@
 			$location_data=$bolocation->initiate_ui_location(array(
 						'values'	=> (isset($values['location_data'])?$values['location_data']:''),
 						'type_id'	=> -1, // calculated from location_types
-						'no_link'	=> False, // disable lookup links for location type less than type_id
-						'tenant'	=> True,
+						'no_link'	=> false, // disable lookup links for location type less than type_id
+						'tenant'	=> true,
 						'lookup_type'	=> 'view',
 						'lookup_entity'	=> false,
 						'entity_data'	=> false
@@ -1627,7 +1627,7 @@
 			$location_data=$bolocation->initiate_ui_location(array(
 						'values'	=> $ticket['location_data'],
 						'type_id'	=> count(explode('-',$ticket['location_data']['location_code'])),
-						'no_link'	=> False, // disable lookup links for location type less than type_id
+						'no_link'	=> false, // disable lookup links for location type less than type_id
 						'tenant'	=> (isset($ticket['location_data']['tenant_id'])?$ticket['location_data']['tenant_id']:''),
 						'lookup_type'	=> 'view',
 						'lookup_entity'	=> $this->bocommon->get_lookup_entity('ticket'),
@@ -1957,7 +1957,7 @@
 			$location_data=$bolocation->initiate_ui_location(array(
 						'values'	=> $ticket['location_data'],
 						'type_id'	=> count(explode('-',$ticket['location_data']['location_code'])),
-						'no_link'	=> False, // disable lookup links for location type less than type_id
+						'no_link'	=> false, // disable lookup links for location type less than type_id
 						'tenant'	=> (isset($ticket['location_data']['tenant_id'])?$ticket['location_data']['tenant_id']:''),
 						'lookup_type'	=> 'view',
 						'lookup_entity'	=> $this->bocommon->get_lookup_entity('ticket'),
@@ -2139,4 +2139,4 @@
 			$bofiles->view_file('fmticket');
 		}
 	}
-?>
+

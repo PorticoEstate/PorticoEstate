@@ -41,7 +41,7 @@
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
 			$this->nextmatchs			= CreateObject('phpgwapi.nextmatchs');
 			$this->account				= $GLOBALS['phpgw_info']['user']['account_id'];
-			$this->bo					= CreateObject('hrm.bouser',False);
+			$this->bo					= CreateObject('hrm.bouser',false);
 			$this->bocommon				= CreateObject('hrm.bocommon');
 			$this->bocategory			= CreateObject('hrm.bocategory');
 			$this->grants 				= $this->bo->grants;
@@ -154,7 +154,7 @@
 			$data = array
 			(
 				'menu'								=> execMethod('hrm.menu.links'),
-				'allow_allrows'						=> True,
+				'allow_allrows'						=> true,
 				'allrows'							=> $this->allrows,
 				'start_record'						=> $this->start,
 				'record_limit'						=> $record_limit,

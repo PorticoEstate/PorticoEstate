@@ -43,14 +43,14 @@
 
 		var $public_functions = array
 		(
-			'read'				=> True,
-			'read_single'		=> True,
-			'save'				=> True,
-			'delete'			=> True,
-			'check_perms'		=> True
+			'read'				=> true,
+			'read_single'		=> true,
+			'save'				=> true,
+			'delete'			=> true,
+			'check_perms'		=> true
 		);
 
-		function property_bogab($session=False)
+		function property_bogab($session=false)
 		{
 		//	$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->bocommon 	= CreateObject('property.bocommon');
@@ -64,7 +64,7 @@
 			if ($session)
 			{
 				$this->read_sessiondata();
-				$this->use_session = True;
+				$this->use_session = true;
 			}
 
 			$start	= phpgw::get_var('start', 'int', 'REQUEST', 0);
@@ -220,4 +220,4 @@
 			$this->so->delete($gab_id,$location_code);
 		}
 	}
-?>
+

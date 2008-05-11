@@ -19,12 +19,12 @@
 	class sms_uicommand
 	{
 		var $public_functions = array(
-			'index'			=> True,
-			'log'			=> True,
-			'redirect'		=> True,
-			'edit'			=> True,
-			'edit_command'	=> True,
-			'delete'		=> True,
+			'index'			=> true,
+			'log'			=> true,
+			'redirect'		=> true,
+			'edit'			=> true,
+			'edit_command'	=> true,
+			'delete'		=> true,
 			);
 
 		function sms_uicommand()
@@ -63,7 +63,7 @@
 
 		function index()
 		{
-			$GLOBALS['phpgw_info']['flags']['xslt_app'] = True;
+			$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
 
 			if(!$this->acl->check($this->acl_location, PHPGW_ACL_READ))
 			{
@@ -168,7 +168,7 @@
 			(
 				'msgbox_data'					=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
 				'menu'							=> execMethod('sms.menu.links'),
-				'allow_allrows'					=> True,
+				'allow_allrows'					=> true,
 				'allrows'					=> $this->allrows,
 				'start_record'					=> $this->start,
 				'record_limit'					=> $record_limit,
@@ -195,7 +195,7 @@
 
 		function edit_command()
 		{
-			$GLOBALS['phpgw_info']['flags']['xslt_app'] = True;
+			$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
 
 			$command_id	= phpgw::get_var('command_id', 'int');
 			if($command_id)
@@ -354,7 +354,7 @@
 			}
 			else
 			{
-				$GLOBALS['phpgw_info']['flags']['xslt_app'] = True;
+				$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
 				$GLOBALS['phpgw_info']['flags']['menu_selection'] .= '::log';
 				$this->bocommon->no_access(lang('target not configured'));
 			}
@@ -363,7 +363,7 @@
 		function log()
 		{
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] .= '::log';
-			$GLOBALS['phpgw_info']['flags']['xslt_app'] = True;
+			$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
 
 			if(!$this->acl->check($this->acl_location, PHPGW_ACL_READ))
 			{
@@ -473,7 +473,7 @@
 			(
 				'msgbox_data'					=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
 				'menu'							=> execMethod('sms.menu.links'),
-				'allow_allrows'					=> True,
+				'allow_allrows'					=> true,
 				'allrows'					=> $this->allrows,
 				'start_record'					=> $this->start,
 				'record_limit'					=> $record_limit,
@@ -505,7 +505,7 @@
 
 		function delete()
 		{
-			$GLOBALS['phpgw_info']['flags']['xslt_app'] = True;
+			$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
 			if(!$this->acl->check($this->acl_location, PHPGW_ACL_DELETE))
 			{
 				$this->bocommon->no_access();
@@ -572,4 +572,4 @@
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('delete' => $data));
 		}
 	}
-?>
+

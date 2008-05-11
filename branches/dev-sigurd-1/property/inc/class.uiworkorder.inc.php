@@ -47,25 +47,25 @@
 
 		var $public_functions = array
 		(
-			'download'  => True,
-			'index'  => True,
-			'view'   => True,
-			'add'   => True,
-			'edit'   => True,
-			'delete' => True,
-			'view_file'	=> True
+			'download'  => true,
+			'index'  => true,
+			'view'   => true,
+			'add'   => true,
+			'edit'   => true,
+			'delete' => true,
+			'view_file'	=> true
 		);
 
 		function property_uiworkorder()
 		{
-			$GLOBALS['phpgw_info']['flags']['xslt_app'] = True;
+			$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] = 'property::project::workorder';
 
 		//	$this->currentapp			= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->nextmatchs			= CreateObject('phpgwapi.nextmatchs');
 			$this->account				= $GLOBALS['phpgw_info']['user']['account_id'];
 
-			$this->bo				= CreateObject('property.boworkorder',True);
+			$this->bo				= CreateObject('property.boworkorder',true);
 			$this->bocommon				= CreateObject('property.bocommon');
 			$this->acl 				= CreateObject('phpgwapi.acl');
 			$this->acl_location			= '.project';
@@ -115,7 +115,7 @@
 		{
 			$start_date 	= urldecode($this->start_date);
 			$end_date 		= urldecode($this->end_date);
-			$list 			= $this->bo->read($start_date,$end_date,$allrows=True);
+			$list 			= $this->bo->read($start_date,$end_date,$allrows=true);
 			$uicols			= $this->bo->uicols;
 			$this->bocommon->download($list,$uicols['name'],$uicols['descr'],$uicols['input_type']);
 		}
@@ -171,7 +171,7 @@
 								if($uicols['name'][$k]=='vendor_id')
 								{
 									$content[$j]['row'][$k]['statustext']		= $workorder_entry['org_name'];
-									$content[$j]['row'][$k]['overlib']		= True;
+									$content[$j]['row'][$k]['overlib']		= true;
 									$content[$j]['row'][$k]['text']			= $workorder_entry[$uicols['name'][$k]];
 								}
 							}
@@ -685,7 +685,7 @@
 							$GLOBALS['phpgw']->send = CreateObject('phpgwapi.send');
 						}
 
-						$returncode = $GLOBALS['phpgw']->send->msg('email',$to,$subject=lang('workorder %1 has been edited',$id),$body, False,False,False, $from_email, $from_name, 'html');
+						$returncode = $GLOBALS['phpgw']->send->msg('email',$to,$subject=lang('workorder %1 has been edited',$id),$body, false,false,false, $from_email, $from_name, 'html');
 
 						if (!$returncode)	// not nice, but better than failing silently
 						{
@@ -778,7 +778,7 @@
 			$location_data=$bolocation->initiate_ui_location(array(
 						'values'		=> (isset($project['location_data'])?$project['location_data']:''),
 						'type_id'		=> (isset($project['location_data']['location_code'])?count(explode('-',$project['location_data']['location_code'])):''),
-						'no_link'		=> False, // disable lookup links for location type less than type_id
+						'no_link'		=> false, // disable lookup links for location type less than type_id
 						'tenant'		=> (isset($project['location_data']['tenant_id'])?$project['location_data']['tenant_id']:''),
 						'lookup_type'		=> 'view'
 						));
@@ -996,7 +996,7 @@
 				'lang_coordinator'			=> lang('Coordinator'),
 				'lang_sum'				=> lang('Sum'),
 				'select_user_name'			=> 'values[coordinator]',
-				'user_list'				=> $this->bocommon->get_user_list('select',$project['coordinator'],$extra=False,$default=False,$start=-1,$sort=False,$order=False,$query='',$offset=-1),
+				'user_list'				=> $this->bocommon->get_user_list('select',$project['coordinator'],$extra=false,$default=false,$start=-1,$sort=false,$order=false,$query='',$offset=-1),
 
 				'status_list'				=> $this->bo->select_status_list('select',$values['status']),
 				'status_name'				=> 'values[status]',
@@ -1146,7 +1146,7 @@
 			$GLOBALS['phpgw']->xslttpl->add_file(array('workorder', 'hour_data_view', 'files'));
 
 			$uiwo_hour	= CreateObject('property.uiwo_hour');
-			$hour_data	= $uiwo_hour->common_data($id,$view=True);
+			$hour_data	= $uiwo_hour->common_data($id,$view=true);
 			$values		= $this->bo->read_single($id);
 			$project	= $boproject->read_single($values['project_id']);
 			$record_history = $this->bo->read_record_history($id);
@@ -1170,7 +1170,7 @@
 			$location_data=$bolocation->initiate_ui_location(array(
 						'values'	=> $project['location_data'],
 						'type_id'	=> count(explode('-',$project['location_data']['location_code'])),
-						'no_link'	=> False, // disable lookup links for location type less than type_id
+						'no_link'	=> false, // disable lookup links for location type less than type_id
 						'tenant'	=> $project['location_data']['tenant_id'],
 						'lookup_type'	=> 'view'
 						));
@@ -1270,7 +1270,7 @@
 
 				'lang_coordinator'			=> lang('Coordinator'),
 				'lang_sum'				=> lang('Sum'),
-				'user_list'				=> $this->bocommon->get_user_list('select',$project['coordinator'],$extra=False,$default=False,$start=-1,$sort=False,$order=False,$query='',$offset=-1),
+				'user_list'				=> $this->bocommon->get_user_list('select',$project['coordinator'],$extra=false,$default=false,$start=-1,$sort=false,$order=false,$query='',$offset=-1),
 
 				'status_list'				=> $this->bo->select_status_list('select',$values['status']),
 				'lang_no_status'			=> lang('Select status'),
@@ -1314,4 +1314,4 @@
 		//	$GLOBALS['phpgw']->xslttpl->pp();
 		}
 	}
-?>
+

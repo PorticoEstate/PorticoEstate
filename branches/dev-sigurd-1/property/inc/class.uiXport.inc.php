@@ -36,9 +36,9 @@
 	{
 		var $public_functions = array
 		(
-			'import' 	=> True,
-			'export' 	=> True,
-			'rollback'	=> True
+			'import' 	=> true,
+			'export' 	=> true,
+			'rollback'	=> true
 		);
 
 		var $start;
@@ -51,10 +51,10 @@
 		function property_uiXport()
 		{
 
-			$GLOBALS['phpgw_info']['flags']['xslt_app'] = True;
+			$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] = 'property::invoice';
 		//	$this->currentapp		= $GLOBALS['phpgw_info']['flags']['currentapp'];
-			$this->bo       		= CreateObject('property.boXport',True);
+			$this->bo       		= CreateObject('property.boXport',true);
 			$this->invoice  		= CreateObject('property.boinvoice');
 			$this->bocommon  		= CreateObject('property.bocommon');
 			$this->contacts			= CreateObject('property.soactor');
@@ -436,7 +436,7 @@
 			$link_data_cancel = array
 			(
 				'menuaction'	=> 'property.uiXport.import',
-				'cancel'	=> True
+				'cancel'	=> true
 
 			);
 
@@ -534,10 +534,10 @@
 					$receipt = $this->bo->export(array('conv_type'=>$values['conv_type'],'download'=>$values['download'],'force_period_year'=>$values['force_period_year']));
 					if(!$values['download'])
 					{
-						$GLOBALS['phpgw_info']['flags'][noheader] = True;
-						$GLOBALS['phpgw_info']['flags'][nofooter] = True;
-						$GLOBALS['phpgw_info']['flags']['xslt_app'] = False;
-						$GLOBALS['phpgw_info']['flags']['noframework'] = True;
+						$GLOBALS['phpgw_info']['flags'][noheader] = true;
+						$GLOBALS['phpgw_info']['flags'][nofooter] = true;
+						$GLOBALS['phpgw_info']['flags']['xslt_app'] = false;
+						$GLOBALS['phpgw_info']['flags']['noframework'] = true;
 						echo '<pre>' . $receipt['message'][0]['msg'] . '</pre>';
 						echo '&nbsp<a href="'.$GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiXport.export')) . '">' . lang('Back') . '</a>';
 					}
@@ -695,4 +695,4 @@
 		//	$GLOBALS['phpgw']->xslttpl->pp();
 		}
 	}
-?>
+

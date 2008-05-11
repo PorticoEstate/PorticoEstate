@@ -799,7 +799,7 @@
 					
 					if($this->db->num_rows()>0)
 					{
-						$already_vote = True;
+						$already_vote = true;
 					}
 					if ((!$already_vote) && $poll_enable)
 					{
@@ -912,4 +912,4 @@
 			return $ok;
 		}
 	}
-?>
+

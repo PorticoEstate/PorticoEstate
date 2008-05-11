@@ -44,21 +44,21 @@
 
 		var $public_functions = array
 		(
-			'index'  => True,
-			'view'   => True,
-			'edit'   => True,
-			'delete' => True
+			'index'  => true,
+			'view'   => true,
+			'edit'   => true,
+			'delete' => true
 		);
 
 		function property_uiasync()
 		{
-			$GLOBALS['phpgw_info']['flags']['xslt_app'] = True;
+			$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] = 'admin::property::async';
 
 		//	$this->currentapp			= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->nextmatchs			= CreateObject('phpgwapi.nextmatchs');
 			$this->account				= $GLOBALS['phpgw_info']['user']['account_id'];
-			$this->bo				= CreateObject('property.boasync',True);
+			$this->bo				= CreateObject('property.boasync',true);
 			$this->bocommon				= CreateObject('property.bocommon');
 
 			$this->acl 				= CreateObject('phpgwapi.acl');
@@ -180,7 +180,7 @@
 
 			$data = array
 			(
-				'allow_allrows'				=> False,
+				'allow_allrows'				=> false,
 				'start_record'				=> $this->start,
 				'record_limit'				=> $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'],
 				'num_records'				=> count($method_list),
@@ -344,4 +344,4 @@
 		}
 
 	}
-?>
+

@@ -47,8 +47,8 @@
 		{
 			if($data['enabled']==1)
 			{
-				$confirm	= True;
-				$cron		= True;
+				$confirm	= true;
+				$cron		= true;
 			}
 			else
 			{
@@ -61,7 +61,7 @@
 			}
 			else
 			{
-				$this->confirm($execute=False);
+				$this->confirm($execute=false);
 			}
 		}
 
@@ -136,8 +136,8 @@ _debug_array($str);
 
 			if(!$cron)
 			{
-				$this->confirm($execute=False);
+				$this->confirm($execute=false);
 			}
 		}
 	}
-?>
+

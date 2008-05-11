@@ -50,7 +50,7 @@
 
 	$GLOBALS['phpgw_info']['flags'] = array(
 		'currentapp' => 'login',
-		'noapi'      => True		// this stops header.inc.php to include phpgwapi/inc/function.inc.php
+		'noapi'      => true		// this stops header.inc.php to include phpgwapi/inc/function.inc.php
 	);
 	include($path_to_phpgroupware.'/header.inc.php');
 	unset($GLOBALS['phpgw_info']['flags']['noapi']);

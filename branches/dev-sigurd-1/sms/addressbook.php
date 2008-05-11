@@ -10,10 +10,10 @@
 	*/
 
 	$GLOBALS['phpgw_info']['flags'] = array(
-		'noheader' => True,
-		'nonavbar' => True,
+		'noheader' => true,
+		'nonavbar' => true,
 		'currentapp' => 'sms',
-		'enable_nextmatchs_class' => True
+		'enable_nextmatchs_class' => true
 	);
 
 	/**
@@ -34,7 +34,7 @@
  	$c = CreateObject('phpgwapi.categories');
 	$GLOBALS['phpgw_info']['flags']['currentapp'] = 'sms';
 	
-	$include_personal = True;
+	$include_personal = true;
 	
 	$charset = $GLOBALS['phpgw']->translation->translate('charset');
 	$GLOBALS['phpgw']->template->set_var('charset',$charset);
@@ -143,7 +143,7 @@
 	$GLOBALS['phpgw']->template->set_var('sort_company',$GLOBALS['phpgw']->nextmatchs->show_sort_order($sort,'org_name',$order,'/'.$GLOBALS['phpgw_info']['flags']['currentapp'].'/addressbook.php',lang('Company')));
 	$GLOBALS['phpgw']->template->set_var('lang_email',lang('Select work email address'));
 	$GLOBALS['phpgw']->template->set_var('lang_hemail',lang('Select home email address'));
-	$GLOBALS['phpgw']->template->set_var('cats_list',$c->formated_list('select','all',$cat_id,'True'));
+	$GLOBALS['phpgw']->template->set_var('cats_list',$c->formated_list('select','all',$cat_id,'true'));
 	$GLOBALS['phpgw']->template->set_var('lang_select',lang('Select'));
 	
 	//$GLOBALS['phpgw']->template->set_var('cats_action',$GLOBALS['phpgw']->link('/'.$GLOBALS['phpgw_info']['flags']['currentapp'].'/addressbook.php',"sort=$sort&order=$order&filter=$filter&start=$start&query=$query&cat_id=$cat_id"));
@@ -192,7 +192,7 @@
 		$tmp_email  = get_comm_value($entries[$i]['contact_id'], 'work email', $entries_comm);
 		$tmp_hemail = get_comm_value($entries[$i]['contact_id'], 'home email', $entries_comm);
 		if (($personal_part == '') ||
-			($include_personal == False))
+			($include_personal == false))
 		{
 			$id     = $entries[$i]['contact_id'];
 			$email  = $tmp_email;
@@ -232,12 +232,12 @@
 		$GLOBALS['phpgw']->template->set_var('email',$email);
 		$GLOBALS['phpgw']->template->set_var('hemail',$hemail);
 
-		$GLOBALS['phpgw']->template->parse('list','addressbook_list',True);
+		$GLOBALS['phpgw']->template->parse('list','addressbook_list',true);
 	}
 	// --------------------------- end record declaration ---------------------------
 
 	$GLOBALS['phpgw']->template->set_var('lang_done',lang('Done'));
-	$GLOBALS['phpgw']->template->parse('out','addressbook_list_t',True);
+	$GLOBALS['phpgw']->template->parse('out','addressbook_list_t',true);
 	$GLOBALS['phpgw']->template->p('out');
 
 	$GLOBALS['phpgw']->common->phpgw_exit();
@@ -257,4 +257,4 @@
 			}	
 		}
 	}
-?>
+

@@ -410,7 +410,7 @@ class RSSCreator10 extends FeedCreator {
      * @return    string    the feed's complete text 
      */
     function createFeed() {     
-        $feed = "<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?>\n";
+        $feed = "<?xml version=\"1.0\" encoding=\"ISO-8859-1\"\n";
         $feed.= "<rdf:RDF\n";
         $feed.= "    xmlns=\"http://purl.org/rss/1.0/\"\n";
         $feed.= "    xmlns:rdf=\"http://www.w3.org/1999/02/22-rdf-syntax-ns#\"\n"; 
@@ -498,7 +498,7 @@ class RSSCreator091 extends FeedCreator {
      * @return    string    the feed's complete text 
      */
     function createFeed() {
-        $feed = "<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?>\n";
+        $feed = "<?xml version=\"1.0\" encoding=\"ISO-8859-1\"\n";
         $feed.= "<rss version=\"".$this->RSSVersion."\">\n"; 
         $feed.= "    <channel>\n";
         $feed.= "        <title>".FeedCreator::iTrunc(htmlspecialchars($this->title),100)."</title>\n";
@@ -626,7 +626,7 @@ class PIECreator01 extends FeedCreator {
          * @return    string    the feed's complete text 
      */
 	function createFeed() {
-		$feed = "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n";
+		$feed = "<?xml version=\"1.0\" encoding=\"utf-8\"\n";
 		$feed.= "<feed version=\"0.1\" xmlns=\"http://example.com/newformat#\">\n"; 
 		$feed.= "    <title>".FeedCreator::iTrunc(htmlspecialchars($this->title),100)."</title>\n";
 		$feed.= "    <subtitle>".FeedCreator::iTrunc(htmlspecialchars($this->description),500)."</subtitle>\n";
@@ -830,4 +830,3 @@ class UniversalFeedCreator extends FeedCreator {
 
 }
 
-?>

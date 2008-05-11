@@ -47,29 +47,29 @@
 
 		var $public_functions = array
 		(
-			'index'  	=> True,
-			'edit_period'	=> True,
-			'list_sub'	=> True,
-			'consume'	=> True,
-			'remark'	=> True,
-			'delete'	=> True,
-			'add'		=> True,
-			'debug'		=> True,
-			'view_order'	=> True,
-			'download'		=> True,
-			'download_sub'	=> True,
-			'receipt'	=> True
+			'index'  	=> true,
+			'edit_period'	=> true,
+			'list_sub'	=> true,
+			'consume'	=> true,
+			'remark'	=> true,
+			'delete'	=> true,
+			'add'		=> true,
+			'debug'		=> true,
+			'view_order'	=> true,
+			'download'		=> true,
+			'download_sub'	=> true,
+			'receipt'	=> true
 		);
 
 		function property_uiinvoice()
 		{
-			$GLOBALS['phpgw_info']['flags']['xslt_app'] = True;
+			$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] = 'property::invoice';
 		//	$this->currentapp		= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->nextmatchs		= CreateObject('phpgwapi.nextmatchs');
 			$this->account			= $GLOBALS['phpgw_info']['user']['account_id'];
 
-			$this->bo			= CreateObject('property.boinvoice',True);
+			$this->bo			= CreateObject('property.boinvoice',true);
 			$this->bocommon			= CreateObject('property.bocommon');
 
 			$this->start			= $this->bo->start;
@@ -723,7 +723,7 @@
 		{
 			$GLOBALS['phpgw']->xslttpl->add_file(array('invoice'));
 
-			$GLOBALS['phpgw_info']['flags']['noframework'] = True;
+			$GLOBALS['phpgw_info']['flags']['noframework'] = true;
 
 			$voucher_id 	= phpgw::get_var('voucher_id', 'int');
 			$period 	= phpgw::get_var('period', 'int');
@@ -765,8 +765,8 @@
 		function remark()
 		{
 			$GLOBALS['phpgw']->xslttpl->add_file(array('invoice'));
-			$GLOBALS['phpgw_info']['flags']['nofooter'] = True;
-			$GLOBALS['phpgw_info']['flags']['noframework'] = True;
+			$GLOBALS['phpgw_info']['flags']['nofooter'] = true;
+			$GLOBALS['phpgw_info']['flags']['noframework'] = true;
 
 			$id 	= phpgw::get_var('id', 'int');
 			$paid 	= phpgw::get_var('paid', 'bool');
@@ -1092,7 +1092,7 @@
 				}
 				elseif($values['order_id']):
 				{
-					$order=True;
+					$order=true;
 				}
 				endif;
 
@@ -1183,11 +1183,11 @@
 			$location_data=$bolocation->initiate_ui_location(array(
    						'values'	=> isset($values['location_data'])?$values['location_data']:'',
    						'type_id'	=> -1, // calculated from location_types
-   						'no_link'	=> False, // disable lookup links for location type less than type_id
-   						'tenant'	=> False,
+   						'no_link'	=> false, // disable lookup links for location type less than type_id
+   						'tenant'	=> false,
    						'lookup_type'	=> 'form',
-   						'lookup_entity'	=> False, //$this->bocommon->get_lookup_entity('project'),
-   						'entity_data'	=> False //$values['p']
+   						'lookup_entity'	=> false, //$this->bocommon->get_lookup_entity('project'),
+   						'entity_data'	=> false //$values['p']
    						));
 
 			$b_account_data=$this->bocommon->initiate_ui_budget_account_lookup(array(
@@ -1197,7 +1197,7 @@
 			$link_data = array
 			(
 				'menuaction'	=> 'property.uiinvoice.add',
-				'debug'		=> True
+				'debug'		=> true
 			);
 
 			$dateformat = strtolower($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']);
@@ -1338,9 +1338,9 @@
 				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=>1, 'acl_location'=> $this->acl_location));
 			}
 
-			$GLOBALS['phpgw_info']['flags'][noheader] = True;
-			$GLOBALS['phpgw_info']['flags'][nofooter] = True;
-			$GLOBALS['phpgw_info']['flags']['xslt_app'] = False;
+			$GLOBALS['phpgw_info']['flags'][noheader] = true;
+			$GLOBALS['phpgw_info']['flags'][nofooter] = true;
+			$GLOBALS['phpgw_info']['flags']['xslt_app'] = false;
 
 			$voucher_id = phpgw::get_var('voucher_id', 'int');
 
@@ -1532,16 +1532,16 @@
 		function debug($values)
 		{
 //			_debug_array($values);
-			$GLOBALS['phpgw_info']['flags'][noheader] = True;
-			$GLOBALS['phpgw_info']['flags'][nofooter] = True;
-			$GLOBALS['phpgw_info']['flags']['noframework'] = True;
+			$GLOBALS['phpgw_info']['flags'][noheader] = true;
+			$GLOBALS['phpgw_info']['flags'][nofooter] = true;
+			$GLOBALS['phpgw_info']['flags']['noframework'] = true;
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('invoice','table_header'));
 
 			$link_data_add = array
 			(
 				'menuaction'	=> 'property.uiinvoice.add',
-				'add_invoice'	=> True
+				'add_invoice'	=> true
 			);
 
 			$link_data_cancel = array
@@ -1684,4 +1684,4 @@
 			}
 		}
 	}
-?>
+

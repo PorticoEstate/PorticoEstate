@@ -215,7 +215,7 @@
 
 				if (!$this->db2->f(0))
 				{
-					$tickets[$i]['new_ticket'] = True;
+					$tickets[$i]['new_ticket'] = true;
 				}
 
 				$i++;
@@ -494,4 +494,4 @@
 		}
 
 	}
-?>
+

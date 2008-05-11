@@ -342,4 +342,4 @@
 			$this->db->query('DELETE FROM fm_custom_cols WHERE custom_id=' . intval($custom_id),__LINE__,__FILE__);
 		}
 	}
-?>
+

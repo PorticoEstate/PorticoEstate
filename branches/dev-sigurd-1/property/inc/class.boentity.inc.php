@@ -45,11 +45,11 @@
 
 		var $public_functions = array
 		(
-			'read'			=> True,
-			'read_single'		=> True,
-			'save'			=> True,
-			'delete'		=> True,
-			'check_perms'		=> True
+			'read'			=> true,
+			'read_single'		=> true,
+			'save'			=> true,
+			'delete'		=> true,
+			'check_perms'		=> true
 		);
 
 		var $soap_functions = array(
@@ -71,7 +71,7 @@
 			)
 		);
 
-		function property_boentity($session=False)
+		function property_boentity($session=false)
 		{
 			$this->solocation 	= CreateObject('property.solocation');
 			$this->bocommon 	= CreateObject('property.bocommon');
@@ -80,7 +80,7 @@
 			if ($session)
 			{
 				$this->read_sessiondata();
-				$this->use_session = True;
+				$this->use_session = true;
 			}
 
 			$start		= phpgw::get_var('start', 'int', 'REQUEST', 0);
@@ -202,7 +202,7 @@
 					break;
 			}
 
-			$categories= $this->soadmin_entity->read_category(array('allrows'=>True,'entity_id'=>$this->entity_id));
+			$categories= $this->soadmin_entity->read_category(array('allrows'=>true,'entity_id'=>$this->entity_id));
 
 			return $this->bocommon->select_list($selected,$categories);
 		}
@@ -346,7 +346,7 @@
 			}
 
 			$acl_location = '.entity.' . $entity_id . '.' . $cat_id;
-			$custom_functions = $this->custom->read_custom_function(array('appname'=>'property','location' => $acl_location,'allrows'=>True));
+			$custom_functions = $this->custom->read_custom_function(array('appname'=>'property','location' => $acl_location,'allrows'=>true));
 
 			if (isSet($custom_functions) AND is_array($custom_functions))
 			{
@@ -393,4 +393,4 @@
 			return $this->so->read_attrib_help($data);
 		}
 	}
-?>
+

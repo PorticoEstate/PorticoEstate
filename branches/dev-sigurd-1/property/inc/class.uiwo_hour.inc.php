@@ -45,28 +45,28 @@
 
 		var $public_functions = array
 		(
-			'index'  		=> True,
-			'tender'  		=> True,
-			'view'  		=> True,
-			'template'		=> True,
-			'save_template'		=> True,
-			'prizebook'		=> True,
-			'add'			=> True,
-			'edit'			=> True,
-			'delete'		=> True,
-			'deviation'		=> True,
-			'edit_deviation'=> True
+			'index'  		=> true,
+			'tender'  		=> true,
+			'view'  		=> true,
+			'template'		=> true,
+			'save_template'		=> true,
+			'prizebook'		=> true,
+			'add'			=> true,
+			'edit'			=> true,
+			'delete'		=> true,
+			'deviation'		=> true,
+			'edit_deviation'=> true
 		);
 
 		function property_uiwo_hour()
 		{
-			$GLOBALS['phpgw_info']['flags']['xslt_app'] = True;
+			$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
 		//	$this->currentapp			= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->nextmatchs			= CreateObject('phpgwapi.nextmatchs');
 			$this->create_html			= CreateObject('phpgwapi.xslttemplates');
 			$this->account				= $GLOBALS['phpgw_info']['user']['account_id'];
 
-			$this->bo				= CreateObject('property.bowo_hour',True);
+			$this->bo				= CreateObject('property.bowo_hour',true);
 			$this->boworkorder			= CreateObject('property.boworkorder');
 			$this->boproject			= CreateObject('property.boproject');
 			$this->bopricebook			= CreateObject('property.bopricebook');
@@ -637,7 +637,7 @@
 			$location_data=$bolocation->initiate_ui_location(array(
 						'values'	=> $project['location_data'],
 						'type_id'	=> count(explode('-',$project['location_data']['location_code'])),
-						'no_link'	=> False, // disable lookup links for location type less than type_id
+						'no_link'	=> false, // disable lookup links for location type less than type_id
 						'tenant'	=> $project['location_data']['tenant_id'],
 						'lookup_type'	=> 'view'
 						));
@@ -924,9 +924,9 @@
 
 		function tender()
 		{
-			$GLOBALS['phpgw_info']['flags'][noheader] = True;
-			$GLOBALS['phpgw_info']['flags'][nofooter] = True;
-			$GLOBALS['phpgw_info']['flags']['xslt_app'] = False;
+			$GLOBALS['phpgw_info']['flags'][noheader] = true;
+			$GLOBALS['phpgw_info']['flags'][nofooter] = true;
+			$GLOBALS['phpgw_info']['flags']['xslt_app'] = false;
 
 			$pdf					= CreateObject('phpgwapi.pdf');
 			if(!$this->acl_read)
@@ -1740,4 +1740,4 @@
 		}
 
 	}
-?>
+

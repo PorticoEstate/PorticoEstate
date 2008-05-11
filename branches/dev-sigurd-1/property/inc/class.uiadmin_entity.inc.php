@@ -46,26 +46,26 @@
 
 		var $public_functions = array
 		(
-			'index'  		=> True,
-			'category' 		=> True,
-			'edit'   		=> True,
-			'edit_category'		=> True,
-			'view'   		=> True,
-			'delete' 		=> True,
-			'list_attribute'	=> True,
-			'edit_attrib' 		=> True,
-			'list_custom_function'	=>True,
-			'edit_custom_function'	=> True
+			'index'  		=> true,
+			'category' 		=> true,
+			'edit'   		=> true,
+			'edit_category'		=> true,
+			'view'   		=> true,
+			'delete' 		=> true,
+			'list_attribute'	=> true,
+			'edit_attrib' 		=> true,
+			'list_custom_function'	=>true,
+			'edit_custom_function'	=> true
 		);
 
 		function property_uiadmin_entity()
 		{
-			$GLOBALS['phpgw_info']['flags']['xslt_app'] = True;
+			$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] = 'admin::property::entity';
 		//	$this->currentapp			= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->nextmatchs			= CreateObject('phpgwapi.nextmatchs');
 			$this->account				= $GLOBALS['phpgw_info']['user']['account_id'];
-			$this->bo				= CreateObject('property.boadmin_entity',True);
+			$this->bo				= CreateObject('property.boadmin_entity',true);
 			$this->bocommon				= CreateObject('property.bocommon');
 
 			$this->acl 				= CreateObject('phpgwapi.acl');
@@ -197,7 +197,7 @@
 
 			$data = array
 			(
-				'allow_allrows'				=> True,
+				'allow_allrows'				=> true,
 				'allrows'				=> $this->allrows,
 				'start_record'				=> $this->start,
 				'record_limit'				=> $record_limit,
@@ -339,7 +339,7 @@
 			(
 				'lang_entity'					=> lang('entity'),
 				'entity_name'					=> $entity['name'],
-				'allow_allrows'					=> True,
+				'allow_allrows'					=> true,
 				'allrows'					=> $this->allrows,
 				'start_record'					=> $this->start,
 				'record_limit'					=> $record_limit,
@@ -839,7 +839,7 @@
 				'entity_name'					=> $entity['name'],
 				'lang_category'					=> lang('category'),
 				'category_name'					=> $category['name'],
-				'allow_allrows'					=> True,
+				'allow_allrows'					=> true,
 				'allrows'					=> $this->allrows,
 				'start_record'					=> $this->start,
 				'record_limit'					=> $record_limit,
@@ -976,7 +976,7 @@
 
 			if($values['column_info']['type']=='R' || $values['column_info']['type']=='CH' || $values['column_info']['type']=='LB')
 			{
-				$multiple_choice= True;
+				$multiple_choice= true;
 			}
 
 			$entity = $this->bo->read_single($entity_id,false);
@@ -1200,7 +1200,7 @@
 				'entity_name'					=> $entity['name'],
 				'lang_category'					=> lang('category'),
 				'category_name'					=> $category['name'],
-				'allow_allrows'					=> True,
+				'allow_allrows'					=> true,
 				'allrows'					=> $this->allrows,
 				'start_record'					=> $this->start,
 				'record_limit'					=> $record_limit,
@@ -1350,4 +1350,4 @@
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('edit_custom_function' => $data));
 		}
 	}
-?>
+

@@ -21,8 +21,8 @@
 	$currentapp='sms';
 
 	$GLOBALS['phpgw_info']['flags'] = array(
-		'noheader'   => True,
-		'nonavbar'   => True,
+		'noheader'   => true,
+		'nonavbar'   => true,
 		'currentapp'	=> $currentapp
 		);
 

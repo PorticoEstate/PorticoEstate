@@ -21,4 +21,4 @@
 	//$GLOBALS['phpgw_info']['sms_config']['email_footer'] = $config->config_data['email_footer'];
 	//$GLOBALS['phpgw_info']['sms_config']['gnokii_cfg'] = $config->config_data['gnokii_cfg'];
 
-?>
+

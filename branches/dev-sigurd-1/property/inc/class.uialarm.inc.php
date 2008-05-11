@@ -44,23 +44,23 @@
 
 		var $public_functions = array
 		(
-			'index'  	=> True,
-			'view'		=> True,
-			'edit'		=> True,
-			'delete'	=> True,
-			'list_alarm'	=> True,
+			'index'  	=> true,
+			'view'		=> true,
+			'edit'		=> true,
+			'delete'	=> true,
+			'list_alarm'	=> true,
 		);
 
 		function property_uialarm()
 		{
-			$GLOBALS['phpgw_info']['flags']['xslt_app'] = True;
+			$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] = 'admin::property::admin_async';
 
 		//	$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->nextmatchs	= CreateObject('phpgwapi.nextmatchs');
 			$this->account		= $GLOBALS['phpgw_info']['user']['account_id'];
 
-			$this->bo		= CreateObject('property.boalarm',True);
+			$this->bo		= CreateObject('property.boalarm',true);
 			$this->boasync		= CreateObject('property.boasync');
 			$this->bocommon		= CreateObject('property.bocommon');
 
@@ -548,7 +548,7 @@
 					$async=$this->boasync->read_single($this->method_id);
 //_debug_array($async);
 					$data_set = unserialize($async['data']);
-					$data_set['enabled']	= True;
+					$data_set['enabled']	= true;
 					$data_set['times'] 		= $times;
 					$data_set['owner']		= $this->account;
 					$data_set['event_id']	= $this->method_id;
@@ -694,4 +694,4 @@
 		//	$GLOBALS['phpgw']->xslttpl->pp();
 		}
 	}
-?>
+

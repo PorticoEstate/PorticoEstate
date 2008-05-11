@@ -47,23 +47,23 @@
 
 		var $public_functions = array
 		(
-			'index' 		=> True,
-			'view'  		=> True,
-			'edit'  		=> True,
-			'delete'		=> True,
-			'priority_key'	=> True,
-			'view_file'		=> True,
-			'download'		=> True
+			'index' 		=> true,
+			'view'  		=> true,
+			'edit'  		=> true,
+			'delete'		=> true,
+			'priority_key'	=> true,
+			'view_file'		=> true,
+			'download'		=> true
 		);
 
 		function property_uirequest()
 		{
-			$GLOBALS['phpgw_info']['flags']['xslt_app'] = True;
+			$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] = 'property::project::request';
 		//	$this->currentapp			= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->nextmatchs			= CreateObject('phpgwapi.nextmatchs');
 			$this->account				= $GLOBALS['phpgw_info']['user']['account_id'];
-			$this->bo				= CreateObject('property.borequest',True);
+			$this->bo				= CreateObject('property.borequest',true);
 			$this->boproject			= CreateObject('property.boproject');
 			$this->bocommon				= CreateObject('property.bocommon');
 			$this->bolocation			= CreateObject('property.bolocation');
@@ -121,7 +121,7 @@
 		{
 			$start_date 	= urldecode($this->start_date);
 			$end_date 	= urldecode($this->end_date);
-			$list 		= $this->bo->read(array('start_date' =>$start_date, 'end_date' =>$end_date,'allrows'=>True,'list_descr' => true));
+			$list 		= $this->bo->read(array('start_date' =>$start_date, 'end_date' =>$end_date,'allrows'=>true,'list_descr' => true));
 			$uicols		= $this->bo->uicols;
 			$this->bocommon->download($list,$uicols['name'],$uicols['descr'],$uicols['input_type']);
 		}
@@ -141,7 +141,7 @@
 
 			if($project_id)
 			{
-				$lookup	= True;
+				$lookup	= true;
 			}
 
 			$request_list = $this->bo->read(array('project_id' => 1,'allrows'=>$this->allrows));
@@ -442,7 +442,7 @@
 				'lang_user_statustext'			=> lang('Select the user the request belongs to. To do not use a category select NO USER'),
 				'select_user_name'			=> 'filter',
 				'lang_no_user'				=> lang('No user'),
-				'user_list'				=> $this->bocommon->get_user_list('filter',$this->filter,$extra=False,$default=False,$start=-1,$sort='ASC',$order='account_lastname',$query='',$offset=-1),
+				'user_list'				=> $this->bocommon->get_user_list('filter',$this->filter,$extra=false,$default=false,$start=-1,$sort='ASC',$order='account_lastname',$query='',$offset=-1),
 
 				'lang_searchfield_statustext'		=> lang('Enter the search string. To show all entries, empty this field and press the SUBMIT button again'),
 				'lang_searchbutton_statustext'		=> lang('Submit the search string'),
@@ -470,9 +470,9 @@
 				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=>16, 'acl_location'=> $this->acl_location));
 			}
 			$GLOBALS['phpgw']->xslttpl->add_file(array('request'));
-			$GLOBALS['phpgw_info']['flags'][noheader] = True;
-			$GLOBALS['phpgw_info']['flags'][nofooter] = True;
-			$GLOBALS['phpgw_info']['flags']['noframework'] = True;
+			$GLOBALS['phpgw_info']['flags'][noheader] = true;
+			$GLOBALS['phpgw_info']['flags'][nofooter] = true;
+			$GLOBALS['phpgw_info']['flags']['noframework'] = true;
 			$values 	= phpgw::get_var('values');
 
 			if($values['update'])
@@ -740,8 +740,8 @@
 			$location_data=$this->bolocation->initiate_ui_location(array(
 						'values'	=> $values['location_data'],
 						'type_id'	=> -1, // calculated from location_types
-						'no_link'	=> False, // disable lookup links for location type less than type_id
-						'tenant'	=> True,
+						'no_link'	=> false, // disable lookup links for location type less than type_id
+						'tenant'	=> true,
 						'lookup_type'	=> $lookup_type,
 						'lookup_entity'	=> $this->bocommon->get_lookup_entity('request'),
 						'entity_data'	=> $values['p']
@@ -847,7 +847,7 @@
 
 			$data = array
 			(
-				'fileupload'				=> True,
+				'fileupload'				=> true,
 				'link_view_file'			=> $GLOBALS['phpgw']->link('/index.php',$link_file_data),
 				'link_to_files'				=> $link_to_files,
 				'files'					=> $values['files'],
@@ -1052,7 +1052,7 @@
 			$location_data=$this->bolocation->initiate_ui_location(array(
 						'values'	=> $values['location_data'],
 						'type_id'	=> count(explode('-',$values['location_data']['location_code'])),
-						'no_link'	=> False, // disable lookup links for location type less than type_id
+						'no_link'	=> false, // disable lookup links for location type less than type_id
 						'tenant'	=> $values['location_data']['tenant_id'],
 						'lookup_type'	=> 'view',
 						'lookup_entity'	=> $this->bocommon->get_lookup_entity('project'),
@@ -1218,7 +1218,7 @@
 
 				'lang_coordinator'				=> lang('Coordinator'),
 				'lang_no_user'					=> lang('Select coordinator'),
-				'user_list'					=> $this->bocommon->get_user_list('select',$values['coordinator'],$extra=False,$default=False,$start=-1,$sort='ASC',$order='account_lastname',$query='',$offset=-1),
+				'user_list'					=> $this->bocommon->get_user_list('select',$values['coordinator'],$extra=false,$default=false,$start=-1,$sort='ASC',$order='account_lastname',$query='',$offset=-1),
 
 				'status_list'					=> $this->boproject->select_status_list('select',$values['status']),
 				'lang_status'					=> lang('Status'),
@@ -1246,4 +1246,4 @@
 		//	$GLOBALS['phpgw']->xslttpl->pp();
 		}
 	}
-?>
+

@@ -45,14 +45,14 @@
 
 		var $public_functions = array
 		(
-			'read'				=> True,
-			'read_single'		=> True,
-			'save'				=> True,
-			'delete'			=> True,
-			'check_perms'		=> True
+			'read'				=> true,
+			'read_single'		=> true,
+			'save'				=> true,
+			'delete'			=> true,
+			'check_perms'		=> true
 		);
 
-		function property_boagreement($session=False)
+		function property_boagreement($session=false)
 		{
 			$this->so = CreateObject('property.soagreement');
 			$this->bocommon = CreateObject('property.bocommon');
@@ -61,7 +61,7 @@
 			if ($session)
 			{
 				$this->read_sessiondata();
-				$this->use_session = True;
+				$this->use_session = true;
 			}
 
 			$start	= phpgw::get_var('start', 'int', 'REQUEST', 0);
@@ -150,7 +150,7 @@
 
 		function check_perms($has, $needed)
 		{
-			return (!!($has & $needed) == True);
+			return (!!($has & $needed) == true);
 		}
 
 		function select_vendor_list($format='',$selected='')
@@ -414,4 +414,4 @@
 			return $this->so->get_activity_descr($id);
 		}
 	}
-?>
+

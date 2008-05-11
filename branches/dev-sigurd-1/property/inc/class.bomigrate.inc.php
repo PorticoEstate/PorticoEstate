@@ -43,7 +43,7 @@
 			if ($session)
 			{
 				$this->read_sessiondata();
-				$this->use_session = True;
+				$this->use_session = true;
 			}
 
 			$start		= phpgw::get_var('start', 'int', 'REQUEST', 0);
@@ -141,9 +141,9 @@
 
 		private function download_script($script, $filename)
 		{
-			$GLOBALS['phpgw_info']['flags']['noheader'] = True;
-			$GLOBALS['phpgw_info']['flags']['nofooter'] = True;
-			$GLOBALS['phpgw_info']['flags']['xslt_app'] = False;
+			$GLOBALS['phpgw_info']['flags']['noheader'] = true;
+			$GLOBALS['phpgw_info']['flags']['nofooter'] = true;
+			$GLOBALS['phpgw_info']['flags']['xslt_app'] = false;
 
 			$browser = CreateObject('phpgwapi.browser');
 			$size=strlen($script);
@@ -162,11 +162,11 @@
 		* @return string sql-script for generate database for chosen db-platform.
 		*/
 
-		function GenerateScripts($aTables, $bOutputHTML=False, $return_script=false)
+		function GenerateScripts($aTables, $bOutputHTML=false, $return_script=false)
 		{
 			if (!is_array($aTables))
 			{
-				return False;
+				return false;
 			}
 			$this->oProc->m_aTables = $aTables;
 
@@ -226,4 +226,4 @@
 			}
 		}
 	}
-?>
+

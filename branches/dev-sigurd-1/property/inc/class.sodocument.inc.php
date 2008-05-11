@@ -529,7 +529,7 @@
 			if($old_link !=$document['link'] )
 			{
 					$this->historylog->add('L',$document['document_id'],$document['link']);
-					$alter_link=True;
+					$alter_link=true;
 			}
 
 //_debug_array($document);
@@ -655,4 +655,4 @@
 			$this->db->query("DELETE FROM fm_document_history  WHERE  history_record_id='$document_id'",__LINE__,__FILE__);
 		}
 	}
-?>
+

@@ -28,22 +28,22 @@
 
 		var $public_functions = array
 		(
-			'index'			=> True,
-			'view_type'		=> True,
-			'edit_type'		=> True,
-			'delete_type'		=> True,
-			'list_attrib'		=> True,
-			'edit_attrib'		=> True,
-			'delete_attrib'		=> True,
-			'list_value'		=> True,
-			'edit_value'		=> True,
-			'delete_value'		=> True,
-			'daemon_manual'		=> True,			
+			'index'			=> true,
+			'view_type'		=> true,
+			'edit_type'		=> true,
+			'delete_type'		=> true,
+			'list_attrib'		=> true,
+			'edit_attrib'		=> true,
+			'delete_attrib'		=> true,
+			'list_value'		=> true,
+			'edit_value'		=> true,
+			'delete_value'		=> true,
+			'daemon_manual'		=> true,			
 		);
 
 		function sms_uiconfig()
 		{
-			$GLOBALS['phpgw_info']['flags']['xslt_app'] = True;
+			$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
 		//	$this->currentapp			= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->nextmatchs			= CreateObject('phpgwapi.nextmatchs');
 			$this->account				= $GLOBALS['phpgw_info']['user']['account_id'];
@@ -162,7 +162,7 @@
 			(
 				'msgbox_data'					=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
 				'menu'							=> execMethod('sms.menu.links'),
-				'allow_allrows'					=> True,
+				'allow_allrows'					=> true,
 				'allrows'					=> $this->allrows,
 				'start_record'					=> $this->start,
 				'record_limit'					=> $record_limit,
@@ -427,7 +427,7 @@
 				'value_type_name'				=> $type['name'],
 				'msgbox_data'					=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
 				'menu'							=> execMethod('sms.menu.links'),
-				'allow_allrows'					=> True,
+				'allow_allrows'					=> true,
 				'allrows'					=> $this->allrows,
 				'start_record'					=> $this->start,
 				'record_limit'					=> $record_limit,
@@ -531,7 +531,7 @@
 
 			if($values['input_type']=='listbox')
 			{
-				$multiple_choice= True;
+				$multiple_choice= true;
 			}
 
 
@@ -692,7 +692,7 @@
 
 				'msgbox_data'					=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
 				'menu'							=> execMethod('sms.menu.links'),
-				'allow_allrows'					=> True,
+				'allow_allrows'					=> true,
 				'allrows'					=> $this->allrows,
 				'start_record'					=> $this->start,
 				'record_limit'					=> $record_limit,
