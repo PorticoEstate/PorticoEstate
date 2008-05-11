@@ -37,7 +37,7 @@
 			if ($session)
 			{
 				$this->read_sessiondata();
-				$this->use_session = True;
+				$this->use_session = true;
 			}
 
 			$acl_app	= phpgw::get_var('acl_app');
@@ -143,7 +143,7 @@
 			$locations= $this->so->select_location($grant);
 
 			$i = count($locations);
-			$api_cats = $this->catbo->return_array('all', 0, True, False, False, 'cat_name', True);
+			$api_cats = $this->catbo->return_array('all', 0, true, false, false, 'cat_name', true);
 			if ( is_array($api_cats) )
 			{
 				foreach ($api_cats as $cat)
@@ -228,7 +228,7 @@
 		}
 
 
-		function set_permission2($values,$r_processed, $grantor = False, $type = False)
+		function set_permission2($values,$r_processed, $grantor = false, $type = false)
 		{
 			@reset($values);
 			$totalacl = array();

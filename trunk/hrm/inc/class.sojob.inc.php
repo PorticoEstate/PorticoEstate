@@ -1085,11 +1085,11 @@
 			 {
 			 	if ($values['name'] == stripslashes($this->db->f('name')) && $values['descr'] == stripslashes($this->db->f('descr')))
 			 	{
-			 		return True;
+			 		return true;
 			 	}
 			 }
 
-			 return False;
+			 return false;
 		}
 
 		function add_qualification($values)
