@@ -44,27 +44,27 @@
 
 		var $public_functions = array
 		(
-			'index'			=> True,
-			'basis'			=> True,
-			'obligations'		=> True,
-			'view'			=> True,
-			'edit'			=> True,
-			'edit_basis'		=> True,
-			'download'			=> True,
-			'delete'		=> True,
-			'delete_basis'		=> True
+			'index'			=> true,
+			'basis'			=> true,
+			'obligations'		=> true,
+			'view'			=> true,
+			'edit'			=> true,
+			'edit_basis'		=> true,
+			'download'			=> true,
+			'delete'		=> true,
+			'delete_basis'		=> true
 		);
 
 		function property_uibudget()
 		{
-			$GLOBALS['phpgw_info']['flags']['xslt_app'] = True;
+			$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] = 'property::budget';
 
 		//	$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->nextmatchs	= CreateObject('phpgwapi.nextmatchs');
 			$this->account		= $GLOBALS['phpgw_info']['user']['account_id'];
 
-			$this->bo		= CreateObject('property.bobudget',True);
+			$this->bo		= CreateObject('property.bobudget',true);
 			$this->bocommon		= CreateObject('property.bocommon');
 
 			$this->start		= $this->bo->start;
@@ -1128,7 +1128,7 @@
 		function download()
 		{
 			$budget_id = phpgw::get_var('budget_id', 'int');
-			$list= $this->bo->read_budget($budget_id,$allrows=True);
+			$list= $this->bo->read_budget($budget_id,$allrows=true);
 			$uicols	= $this->bo->uicols;
 			foreach($uicols as $col)
 			{
@@ -1138,4 +1138,4 @@
 			$this->bocommon->download($list,$names,$descr);
 		}
 	}
-?>
+

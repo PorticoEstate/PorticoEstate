@@ -44,11 +44,11 @@
 
 		var $public_functions = array
 		(
-			'read'				=> True,
-			'read_single'		=> True,
-			'save'				=> True,
-			'delete'			=> True,
-			'check_perms'		=> True
+			'read'				=> true,
+			'read_single'		=> true,
+			'save'				=> true,
+			'delete'			=> true,
+			'check_perms'		=> true
 		);
 
 		var $soap_functions = array(
@@ -70,7 +70,7 @@
 			)
 		);
 
-		function property_boadmin_entity($session=False)
+		function property_boadmin_entity($session=false)
 		{
 			$this->so 		= CreateObject('property.soadmin_entity');
 			$this->bocommon = CreateObject('property.bocommon');
@@ -79,7 +79,7 @@
 			if ($session)
 			{
 				$this->read_sessiondata();
-				$this->use_session = True;
+				$this->use_session = true;
 			}
 
 			$start	= phpgw::get_var('start', 'int', 'REQUEST', 0);
@@ -172,7 +172,7 @@
 
 		function get_entity_list($selected='')
 		{
-			$list = $this->so->read(array('allrows'=>True));
+			$list = $this->so->read(array('allrows'=>true));
 			return $this->bocommon->select_multi_list($selected,$list);
 		}
 
@@ -390,4 +390,4 @@
 			return $this->custom->read_single_custom_function('property',$location,$id);
 		}
 	}
-?>
+

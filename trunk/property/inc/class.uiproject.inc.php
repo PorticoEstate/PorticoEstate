@@ -48,24 +48,24 @@
 
 		var $public_functions = array
 		(
-			'download'  => True,
-			'index'  => True,
-			'view'   => True,
-			'edit'   => True,
-			'delete' => True,
-			'date_search'=>True
+			'download'  => true,
+			'index'  => true,
+			'view'   => true,
+			'edit'   => true,
+			'delete' => true,
+			'date_search'=>true
 		);
 
 		function property_uiproject()
 		{
-			$GLOBALS['phpgw_info']['flags']['xslt_app'] = True;
+			$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] = 'property::project';
 
 		//	$this->currentapp		= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->nextmatchs		= CreateObject('phpgwapi.nextmatchs');
 			$this->account			= $GLOBALS['phpgw_info']['user']['account_id'];
 
-			$this->bo			= CreateObject('property.boproject',True);
+			$this->bo			= CreateObject('property.boproject',true);
 			$this->bocommon			= CreateObject('property.bocommon');
 
 			$this->acl 			= CreateObject('phpgwapi.acl');
@@ -105,7 +105,7 @@
 		{
 			$start_date = urldecode(phpgw::get_var('start_date'));
 			$end_date 	= urldecode(phpgw::get_var('end_date'));
-			$list 		= $this->bo->read($start_date,$end_date,$allrows=True);
+			$list 		= $this->bo->read($start_date,$end_date,$allrows=true);
 			$uicols	= $this->bo->uicols;
 			$this->bocommon->download($list,$uicols['name'],$uicols['descr'],$uicols['input_type']);
 		}
@@ -446,10 +446,10 @@
 		function date_search()
 		{
 			$GLOBALS['phpgw']->xslttpl->add_file(array('date_search'));
-			$GLOBALS['phpgw_info']['flags']['noframework'] = True;
-		//	$GLOBALS['phpgw_info']['flags']['nonavbar'] = True;
-		//	$GLOBALS['phpgw_info']['flags']['noheader'] = True;
-			$GLOBALS['phpgw_info']['flags']['nofooter'] = True;
+			$GLOBALS['phpgw_info']['flags']['noframework'] = true;
+		//	$GLOBALS['phpgw_info']['flags']['nonavbar'] = true;
+		//	$GLOBALS['phpgw_info']['flags']['noheader'] = true;
+			$GLOBALS['phpgw_info']['flags']['nofooter'] = true;
 			$values['start_date']	= phpgw::get_var('start_date', 'string', 'POST');
 			$values['end_date']	= phpgw::get_var('end_date', 'string', 'POST');
 
@@ -671,7 +671,7 @@
 							{
 								$receipt['error'][]=array('msg'=>"uiproject::edit: sending message to '" . $values['mail_address'] . "', subject='$subject' failed !!!");
 								$receipt['error'][]=array('msg'=> $GLOBALS['phpgw']->send->err['desc']);
-								$bypass_error=True;
+								$bypass_error=true;
 							}
 							else
 							{
@@ -700,13 +700,13 @@
 
 								$body = nl2br($body);
 
-								$returncode = $GLOBALS['phpgw']->send->msg('email',$to,$subject=lang('project %1 has been edited',$id),$body, False,False,False, $from_email, $from_name, 'html');
+								$returncode = $GLOBALS['phpgw']->send->msg('email',$to,$subject=lang('project %1 has been edited',$id),$body, false,false,false, $from_email, $from_name, 'html');
 
 								if (!$returncode)	// not nice, but better than failing silently
 								{
 									$receipt['error'][]=array('msg'=>"uiproject::edit: sending message to '$to' subject='$subject' failed !!!");
 									$receipt['error'][]=array('msg'=> $GLOBALS['phpgw']->send->err['desc']);
-									$bypass_error=True;
+									$bypass_error=true;
 								}
 								else
 								{
@@ -718,7 +718,7 @@
 					else
 					{
 						$receipt['error'][]=array('msg'=>lang('SMTP server is not set! (admin section)'));
-						$bypass_error=True;
+						$bypass_error=true;
 					}
 				}
 
@@ -804,8 +804,8 @@
 			$location_data=$bolocation->initiate_ui_location(array(
 						'values'	=> (isset($values['location_data'])?$values['location_data']:''),
 						'type_id'	=> -1, // calculated from location_types
-						'no_link'	=> False, // disable lookup links for location type less than type_id
-						'tenant'	=> True,
+						'no_link'	=> false, // disable lookup links for location type less than type_id
+						'tenant'	=> true,
 						'lookup_type'	=> $lookup_type,
 						'lookup_entity'	=> $this->bocommon->get_lookup_entity('project'),
 						'entity_data'	=> (isset($values['p'])?$values['p']:'')
@@ -911,7 +911,7 @@
 						$values['origin'][$i]['descr']= lang($values['origin'][$i]['type']);
 						if($values['origin'][$i]['type'] == 'request')
 						{
-							$selected_request = True;
+							$selected_request = true;
 						}
 					}
 				}
@@ -1171,7 +1171,7 @@
 			$location_data=$bolocation->initiate_ui_location(array(
 						'values'	=> $values['location_data'],
 						'type_id'	=> count(explode('-',$values['location_data']['location_code'])),
-						'no_link'	=> False, // disable lookup links for location type less than type_id
+						'no_link'	=> false, // disable lookup links for location type less than type_id
 						'tenant'	=> $values['location_data']['tenant_id'],
 						'lookup_type'	=> 'view',
 						'lookup_entity'	=> $this->bocommon->get_lookup_entity('project'),
@@ -1299,7 +1299,7 @@
 				'lang_sum'				=> lang('Sum'),
 				'select_user_name'			=> 'values[coordinator]',
 				'lang_no_user'				=> lang('Select coordinator'),
-				'user_list'				=> $this->bocommon->get_user_list('select',$values['coordinator'],$extra=False,$default=False,$start=-1,$sort='ASC',$order='account_lastname',$query='',$offset=-1),
+				'user_list'				=> $this->bocommon->get_user_list('select',$values['coordinator'],$extra=false,$default=false,$start=-1,$sort='ASC',$order='account_lastname',$query='',$offset=-1),
 
 				'status_list'				=> $this->bo->select_status_list('select',$values['status']),
 				'lang_no_status'			=> lang('Select status'),
@@ -1332,4 +1332,4 @@
 		//	$GLOBALS['phpgw']->xslttpl->pp();
 		}
 	}
-?>
+

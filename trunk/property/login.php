@@ -528,4 +528,4 @@
 	unset($autocomplete);
 
 	$tmpl->pfp('loginout','login_form');
-?>
+

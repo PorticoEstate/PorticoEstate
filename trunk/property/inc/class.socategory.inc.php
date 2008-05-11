@@ -275,4 +275,4 @@
 			$this->db->query("DELETE FROM $table WHERE id='" . $id . "'",__LINE__,__FILE__);
 		}
 	}
-?>
+

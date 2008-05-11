@@ -32,8 +32,8 @@
 		{
 			if(isset($data['enabled']) && $data['enabled']==1)
 			{
-				$confirm	= True;
-				$cron		= True;
+				$confirm	= true;
+				$cron		= true;
 			}
 			else
 			{
@@ -49,7 +49,7 @@
 			}
 			else
 			{
-				$this->confirm($execute=False);
+				$this->confirm($execute=false);
 			}
 		}
 
@@ -106,7 +106,7 @@
 
 			if(!$cron)
 			{
-				$this->confirm($execute=False);
+				$this->confirm($execute=false);
 			}
 		}
 
@@ -128,7 +128,7 @@
 
 		function perform_update_db()
 		{
-			$GLOBALS['phpgw_setup'] = CreateObject('phpgwapi.setup', True, True);
+			$GLOBALS['phpgw_setup'] = CreateObject('phpgwapi.setup', true, true);
 			$setup_info = $GLOBALS['phpgw_setup']->detection->get_versions();
 			$GLOBALS['phpgw_setup']->db = clone($GLOBALS['phpgw']->db);
 			$GLOBALS['phpgw_info']['setup']['stage']['db'] = $GLOBALS['phpgw_setup']->detection->check_db();	
@@ -148,7 +148,7 @@
 					$this->receipt['message'][]=array('msg'=> 'Upgraded application: ' . $appinfo['name']);
 					if($appinfo['name']=='property')
 					{
-						$clear_cache = True;
+						$clear_cache = true;
 					}
 				}
 			}
@@ -158,4 +158,4 @@
 			}
 		}
 	}
-?>
+

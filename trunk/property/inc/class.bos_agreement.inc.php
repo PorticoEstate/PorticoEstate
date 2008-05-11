@@ -45,14 +45,14 @@
 
 		var $public_functions = array
 		(
-			'read'				=> True,
-			'read_single'		=> True,
-			'save'				=> True,
-			'delete'			=> True,
-			'check_perms'		=> True
+			'read'				=> true,
+			'read_single'		=> true,
+			'save'				=> true,
+			'delete'			=> true,
+			'check_perms'		=> true
 		);
 
-		function property_bos_agreement($session=False)
+		function property_bos_agreement($session=false)
 		{
 			$this->so = CreateObject('property.sos_agreement');
 			$this->bocommon = CreateObject('property.bocommon');
@@ -61,7 +61,7 @@
 			if ($session)
 			{
 				$this->read_sessiondata();
-				$this->use_session = True;
+				$this->use_session = true;
 			}
 
 			$start	= phpgw::get_var('start', 'int', 'REQUEST', 0);
@@ -153,7 +153,7 @@
 
 		function check_perms($has, $needed)
 		{
-			return (!!($has & $needed) == True);
+			return (!!($has & $needed) == true);
 		}
 
 		function select_vendor_list($format='',$selected='')
@@ -201,7 +201,7 @@
 		{
 			$list = $this->so->read(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
 											'filter' => $this->filter,'cat_id' => $this->cat_id,'allrows'=>$this->allrows,'member_id'=>$this->member_id,
-											's_agreement_id'=>$id,'detail'=>True));
+											's_agreement_id'=>$id,'detail'=>true));
 			$this->total_records = $this->so->total_records;
 
 			$this->uicols	= $this->so->uicols;
@@ -451,4 +451,4 @@
 			$historylog->delete_single_record($data['history_id']);
 		}
 	}
-?>
+

@@ -45,22 +45,22 @@
 
 		var $public_functions = array
 		(
-			'index'  => True,
-			'check'  => True,
-			'view'   => True,
-			'edit'   => True,
-			'delete' => True
+			'index'  => true,
+			'check'  => true,
+			'view'   => true,
+			'edit'   => true,
+			'delete' => true
 		);
 
 		function property_uitenant_claim()
 		{
-			$GLOBALS['phpgw_info']['flags']['xslt_app'] = True;
+			$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] = 'property::project::claim';
 		//	$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->nextmatchs	= CreateObject('phpgwapi.nextmatchs');
 			$this->account		= $GLOBALS['phpgw_info']['user']['account_id'];
 
-			$this->bo		= CreateObject('property.botenant_claim',True);
+			$this->bo		= CreateObject('property.botenant_claim',true);
 			$this->bocommon		= CreateObject('property.bocommon');
 			$this->acl		= CreateObject('phpgwapi.acl');
 			$this->acl_location	= '.tenant_claim';
@@ -411,7 +411,7 @@
 			$location_data=$bolocation->initiate_ui_location(array(
 						'values'	=> $project_values['location_data'],
 						'type_id'	=> count(explode('-',$project_values['location_data']['location_code'])),
-						'no_link'	=> False, // disable lookup links for location type less than type_id
+						'no_link'	=> false, // disable lookup links for location type less than type_id
 						'tenant'	=> $project_values['location_data']['tenant_id'],
 						'lookup_type'	=> 'view',
 						'lookup_entity'	=> $this->bocommon->get_lookup_entity('project'),
@@ -453,7 +453,7 @@
 					{
 						if($project_values['workorder_budget'][$i]['workorder_id'] == $workorder_id)
 						{
-							$project_values['workorder_budget'][$i]['selected'] = True;
+							$project_values['workorder_budget'][$i]['selected'] = true;
 						}
 					}
 				}
@@ -534,7 +534,7 @@
 				'lang_sum'				=> lang('Sum'),
 				'select_user_name'			=> 'project_values[coordinator]',
 				'lang_no_user'				=> lang('Select coordinator'),
-				'user_list'				=> $this->bocommon->get_user_list('select',$project_values['coordinator'],$extra=False,$default=False,$start=-1,$sort='ASC',$order='account_lastname',$query='',$offset=-1),
+				'user_list'				=> $this->bocommon->get_user_list('select',$project_values['coordinator'],$extra=false,$default=false,$start=-1,$sort='ASC',$order='account_lastname',$query='',$offset=-1),
 
 				'status_list'				=> $this->boproject->select_status_list('select',$project_values['status']),
 				'lang_no_status'			=> lang('Select status'),
@@ -675,7 +675,7 @@
 			$location_data=$bolocation->initiate_ui_location(array(
 						'values'	=> $project_values['location_data'],
 						'type_id'	=> count(explode('-',$project_values['location_data']['location_code'])),
-						'no_link'	=> False, // disable lookup links for location type less than type_id
+						'no_link'	=> false, // disable lookup links for location type less than type_id
 						'tenant'	=> $project_values['location_data']['tenant_id'],
 						'lookup_type'	=> 'view',
 						'lookup_entity'	=> $this->bocommon->get_lookup_entity('project'),
@@ -717,7 +717,7 @@
 					{
 						if($project_values['workorder_budget'][$i]['workorder_id'] == $workorder_id)
 						{
-							$project_values['workorder_budget'][$i]['selected'] = True;
+							$project_values['workorder_budget'][$i]['selected'] = true;
 						}
 					}
 				}
@@ -791,7 +791,7 @@
 				'lang_sum'				=> lang('Sum'),
 				'select_user_name'			=> 'project_values[coordinator]',
 				'lang_no_user'				=> lang('Select coordinator'),
-				'user_list'				=> $this->bocommon->get_user_list('select',$project_values['coordinator'],$extra=False,$default=False,$start=-1,$sort='ASC',$order='account_lastname',$query='',$offset=-1),
+				'user_list'				=> $this->bocommon->get_user_list('select',$project_values['coordinator'],$extra=false,$default=false,$start=-1,$sort='ASC',$order='account_lastname',$query='',$offset=-1),
 
 				'status_list'				=> $this->boproject->select_status_list('select',$project_values['status']),
 				'lang_no_status'			=> lang('Select status'),
@@ -843,4 +843,4 @@
 		//	$GLOBALS['phpgw']->xslttpl->pp();
 		}
 	}
-?>
+

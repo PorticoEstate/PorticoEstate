@@ -419,7 +419,7 @@
 				$invoice[$i]['status']					= $this->db->f('status');
 				if ($this->db->f('status')=='closed')
 				{
-					$invoice[$i]['closed']				= True;
+					$invoice[$i]['closed']				= true;
 				}
 				$invoice[$i]['voucher_id']				= $voucher_id;
 				$invoice[$i]['id']						= $this->db->f('id');
@@ -430,7 +430,7 @@
 				$invoice[$i]['dimd']					= $this->db->f('dimd');
 				if ($this->db->f('merknad'))
 				{
-					$invoice[$i]['remark']				= True;
+					$invoice[$i]['remark']				= true;
 				}
 				$invoice[$i]['tax_code']				= $this->db->f('mvakode');
 				$invoice[$i]['amount']					= $this->db->f('belop');
@@ -586,11 +586,11 @@
 
 		function check_for_updates($values)
 		{
-			$update=False;
+			$update=false;
 
 			if($values['sign_orig']!=$values['sign'])
 			{
-				$update=True;
+				$update=true;
 				return $update;
 			}
 
@@ -601,13 +601,13 @@
 
 			if( ($this->db->f('utbetalingsigndato') && !$values['transfer']) || (!$this->db->f('utbetalingsigndato') && $values['transfer']))
 			{
-				$update=True;
+				$update=true;
 				return $update;
 			}
 
 			if( ($this->db->f('kreditnota') && !$values['kreditnota']) || (!$this->db->f('kreditnota') && $values['kreditnota']) )
 			{
-				$update=True;
+				$update=true;
 				return $update;
 			}
 
@@ -616,7 +616,7 @@
 
 			if( ((intval(($timestamp_payment_date-$timestamp_voucher_date)/(24*3600)))!=$values['num_days']) )
 			{
-				$update=True;
+				$update=true;
 				return $update;
 			}
 		}
@@ -1190,7 +1190,7 @@
 
 		function check_for_transfer($voucher_id='')
 		{
-			$allow_transfer=False;
+			$allow_transfer=false;
 
 			$sql = "SELECT * FROM fm_ecobilag WHERE bilagsnr='$voucher_id'";
 			$this->db->limit_query($sql,0,__LINE__,__FILE__,1);
@@ -1199,7 +1199,7 @@
 
 			if ($this->db->f('budsjettsigndato') && ($this->db->f('oppsynsigndato') || $this->db->f('saksigndato')))
 			{
-				$allow_transfer=True;
+				$allow_transfer=true;
 			}
 
 			return $allow_transfer;
@@ -1214,4 +1214,4 @@
 			return $this->db->f(0);
 		}
 	}
-?>
+

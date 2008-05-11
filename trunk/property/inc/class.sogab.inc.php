@@ -345,7 +345,7 @@
 
 			if ( $this->db2->f(0))
 			{
-				return True;
+				return true;
 			}
 		}
 
@@ -552,4 +552,4 @@
 			$this->db->query("DELETE FROM fm_gab_location WHERE gab_id='$gab_id' and location_code='$location_code'",__LINE__,__FILE__);
 		}
 	}
-?>
+

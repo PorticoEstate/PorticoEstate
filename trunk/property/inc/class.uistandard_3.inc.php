@@ -44,19 +44,19 @@
 
 		var $public_functions = array
 		(
-			'index'  => True,
-			'view'   => True,
-			'edit'   => True,
-			'delete' => True
+			'index'  => true,
+			'view'   => true,
+			'edit'   => true,
+			'delete' => true
 		);
 
 		function property_uistandard_3()
 		{
-			$GLOBALS['phpgw_info']['flags']['xslt_app'] = True;
+			$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
 
 			$this->nextmatchs			= CreateObject('phpgwapi.nextmatchs');
 			$this->account				= $GLOBALS['phpgw_info']['user']['account_id'];
-			$this->bo				= CreateObject('property.bostandard_3',True);
+			$this->bo				= CreateObject('property.bostandard_3',true);
 			$this->bocommon				= CreateObject('property.bocommon');
 
 			$this->acl 				= CreateObject('phpgwapi.acl');
@@ -163,7 +163,7 @@
 
 			$data = array
 			(
-				'allow_allrows'					=> False,
+				'allow_allrows'					=> false,
 				'start_record'					=> $this->start,
 				'record_limit'					=> $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'],
 				'num_records'					=> count($standard_list),
@@ -310,4 +310,4 @@
 		}
 
 	}
-?>
+

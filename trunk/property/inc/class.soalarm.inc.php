@@ -110,7 +110,7 @@
 			}
 
 			$id = $this->db->db_addslashes($id);
-			if (strpos($id,'%') !== False || strpos($id,'_') !== False)
+			if (strpos($id,'%') !== false || strpos($id,'_') !== false)
 			{
 				$filtermethod = "$where id $this->like '%$id%' AND id!='##last-check-run##'";
 			}
@@ -163,7 +163,7 @@
 			}
 			if (!count($jobs))
 			{
-				return False;
+				return false;
 			}
 			return $jobs;
 		}
@@ -171,7 +171,7 @@
 		function read_org($id=0)
 		{
 			$id = $this->db->db_addslashes($id);
-			if (strpos($id,'%') !== False || strpos($id,'_') !== False)
+			if (strpos($id,'%') !== false || strpos($id,'_') !== false)
 			{
 				$where = "id $this->like '%$id%' AND id!='##last-check-run##'";
 			}
@@ -202,7 +202,7 @@
 			}
 			if (!count($jobs))
 			{
-				return False;
+				return false;
 			}
 			return $jobs;
 		}
@@ -255,4 +255,4 @@
 			$this->db->query('DELETE FROM fm_owner WHERE owner_id=' . intval($owner_id),__LINE__,__FILE__);
 		}
 	}
-?>
+

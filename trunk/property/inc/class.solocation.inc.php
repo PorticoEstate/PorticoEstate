@@ -172,7 +172,7 @@
 
 			if ( $this->db->f(0))
 			{
-				return True;
+				return true;
 			}
 		}
 
@@ -232,7 +232,7 @@
 					$uicols['name'][]			= 'loc' . $location_types[$i]['id'];
 					$uicols['descr'][]			= $location_types[$i]['name'];
 					$uicols['statustext'][]		= $location_types[$i]['descr'];
-					$uicols['exchange'][]		= True;
+					$uicols['exchange'][]		= true;
 					$uicols['align'][] 			= 'center';
 					$cols 						.= ",fm_location" . ($type_id) .".loc" . $location_types[$i]['id'];
 					$cols_return[] 				= 'loc' . $location_types[$i]['id'];
@@ -250,7 +250,7 @@
 						$uicols['name'][]			= 'loc' . ($i) . '_name';
 						$uicols['descr'][]			= $location_types[($i-1)]['name'] . ' ' . lang('name');
 						$uicols['statustext'][]		= $location_types[($i-1)]['name'] . ' ' . lang('name');
-						$uicols['exchange'][]		= True;
+						$uicols['exchange'][]		= true;
 						$uicols['align'][] 			= 'left';
 					}
 				}
@@ -287,7 +287,7 @@
 					$uicols['name'][]			= 'tenant_id';
 					$uicols['descr'][]			= 'dummy';
 					$uicols['statustext'][]		= 'dummy';
-					$uicols['exchange'][]		= True;
+					$uicols['exchange'][]		= true;
 					$uicols['align'][] 			= '';
 
 					$cols.= ',fm_tenant.last_name';
@@ -296,7 +296,7 @@
 					$uicols['name'][]			= 'last_name';
 					$uicols['descr'][]			= lang('last name');
 					$uicols['statustext'][]		= lang('last name');
-					$uicols['exchange'][]		= True;
+					$uicols['exchange'][]		= true;
 					$uicols['align'][] 			= 'left';
 
 					$cols.= ',fm_tenant.first_name';
@@ -305,7 +305,7 @@
 					$uicols['name'][]			= 'first_name';
 					$uicols['descr'][]			= lang('first name');
 					$uicols['statustext'][]		= lang('first name');
-					$uicols['exchange'][]		= True;
+					$uicols['exchange'][]		= true;
 					$uicols['align'][] 			= 'left';
 
 					$cols.= ',fm_tenant.contact_phone';
@@ -314,7 +314,7 @@
 					$uicols['name'][]			= 'contact_phone';
 					$uicols['descr'][]			= lang('contact phone');
 					$uicols['statustext'][]		= lang('contact phone');
-					$uicols['exchange'][]		= True;
+					$uicols['exchange'][]		= true;
 					$uicols['align'][] 			= 'left';
 
 					$sub_query_tenant=1;
@@ -354,7 +354,7 @@
 								$uicols['name'][]			= 'street_name';
 								$uicols['descr'][]			= lang('street name');
 								$uicols['statustext'][]		= lang('street name');
-								$uicols['exchange'][]		= True;
+								$uicols['exchange'][]		= true;
 								$uicols['align'][] 			= 'left';
 
 								$cols.= ',street_number';
@@ -363,7 +363,7 @@
 								$uicols['name'][]			= 'street_number';
 								$uicols['descr'][]			= lang('street number');
 								$uicols['statustext'][]		= lang('street number');
-								$uicols['exchange'][]		= True;
+								$uicols['exchange'][]		= true;
 								$uicols['align'][] 			= 'right';
 
 								$cols.= ',fm_location' . $config[$i]['location_type'] . '.' . $config[$i]['column_name'];
@@ -372,7 +372,7 @@
 								$uicols['name'][]			= $config[$i]['column_name'];
 								$uicols['descr'][]			= lang($config[$i]['input_text']);
 								$uicols['statustext'][]		= lang($config[$i]['input_text']);
-								$uicols['exchange'][]		= True;
+								$uicols['exchange'][]		= true;
 								$uicols['align'][] 			= '';
 							}
 						}
@@ -384,7 +384,7 @@
 							$uicols['name'][]			= $config[$i]['column_name'];
 							$uicols['descr'][]			= $config[$i]['input_text'];
 							$uicols['statustext'][]		= $config[$i]['input_text'];
-							$uicols['exchange'][]		= True;
+							$uicols['exchange'][]		= true;
 							$uicols['align'][] 			= '';
 						}
 					}
@@ -881,7 +881,7 @@
 
 			if(!$sql)
 			{
-				$sql	= $this->generate_sql($type_id,$cols,$cols_return,$uicols,True);
+				$sql	= $this->generate_sql($type_id,$cols,$cols_return,$uicols,true);
 			}
 			else
 			{
@@ -1199,7 +1199,7 @@
 			$joinmethod= "$this->join $entity_table"."_category on $entity_table.category=$entity_table"."_category.id";
 
 			$sql = $this->bocommon->generate_sql(array('entity_table'=>$entity_table,'cols_return'=>$cols_return,'cols'=>$cols,
-								'uicols'=>$uicols,'joinmethod'=>$joinmethod,'paranthesis'=>$paranthesis,'no_address'=>True,'location_level'=>$type_id));
+								'uicols'=>$uicols,'joinmethod'=>$joinmethod,'paranthesis'=>$paranthesis,'no_address'=>true,'location_level'=>$type_id));
 
 			$this->db->query($sql . $filtermethod . $groupmethod . " ORDER BY $entity_table.category",__LINE__,__FILE__);
 
@@ -1238,7 +1238,7 @@
 
 			if($this->db->f('0')>0)
 			{
-				return True;
+				return true;
 			}
 			else
 			{
@@ -1390,4 +1390,4 @@
 		}
 
 	}
-?>
+

@@ -32,8 +32,8 @@
 		{
 			if(isset($data['enabled']) && $data['enabled']==1)
 			{
-				$confirm	= True;
-				$cron		= True;
+				$confirm	= true;
+				$cron		= true;
 				$data['account_id'] = $GLOBALS['phpgw']->accounts->name2id($data['user']);
 				$GLOBALS['phpgw_info']['user']['account_id'] = $data['account_id'];
 				$GLOBALS['phpgw']->session->account_id = $data['account_id'];
@@ -53,7 +53,7 @@
 			}
 			else
 			{
-				$this->confirm($execute=False);
+				$this->confirm($execute=false);
 				$data['account_id'] = $GLOBALS['phpgw']->accounts->name2id($data['user']);
 				$GLOBALS['phpgw']->session->appsession('session_data','mail2sms',$data);
 			}
@@ -111,7 +111,7 @@
 
 			if(!$cron)
 			{
-				$this->confirm($execute=False);
+				$this->confirm($execute=false);
 			}
 		}
 
@@ -161,12 +161,12 @@
 					$j++;
 				}
 			}
-			if($connectionStatus == 'True')
+			if($connectionStatus == 'true')
 			{
 				$bofelamimail->closeConnection();
 			}
 
-			$bosms	= CreateObject('sms.bosms',False);
+			$bosms	= CreateObject('sms.bosms',false);
 			if(isset($sms) && is_array($sms))
 			{
 				foreach ($sms as $entry)
@@ -188,4 +188,4 @@
 			}
 		}
 	}
-?>
+

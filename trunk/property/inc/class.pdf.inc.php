@@ -97,4 +97,4 @@
 	
 	include (PHPGW_APP_INC . '/pdf/class.pdf.php');
 	include (PHPGW_APP_INC . '/pdf/class.ezpdf.php');
-?>
+

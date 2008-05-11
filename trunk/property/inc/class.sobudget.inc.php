@@ -897,4 +897,4 @@
 			return $receipt;
 		}
 	}
-?>
+

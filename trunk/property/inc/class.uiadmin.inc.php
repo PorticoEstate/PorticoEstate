@@ -48,15 +48,15 @@
 
 		var $public_functions = array
 		(
-			'list_acl'		=> True,
-			'aclprefs'		=> True,
-			'edit_id'		=> True,
-			'contact_info'	=> True
+			'list_acl'		=> true,
+			'aclprefs'		=> true,
+			'edit_id'		=> true,
+			'contact_info'	=> true
 		);
 
 		function property_uiadmin()
 		{
-			$GLOBALS['phpgw_info']['flags']['xslt_app'] = True;
+			$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] = 'admin::property';
 		//	$this->currentapp			= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->nextmatchs			= CreateObject('phpgwapi.nextmatchs');
@@ -272,7 +272,7 @@
 				'cat_list'						=> $this->bo->select_category_list('filter',$this->cat_id),
 				'select_action'					=> $GLOBALS['phpgw']->link('/index.php',$link_data),
 				'cat_id'						=> $this->cat_id,
-				'permission'					=> False,
+				'permission'					=> false,
 				'grant'							=> 1,
 
 				'lang_searchfield_statustext'	=> lang('Enter the search string. To show all entries, empty this field and press the SUBMIT button again'),
@@ -285,7 +285,7 @@
 				'lang_no_location'				=> lang('No location'),
 				'lang_location_statustext'		=> lang('Select submodule'),
 				'select_name_location'			=> 'module',
-				'location_list'					=> $this->bopreferences->select_location('filter',$this->location,True),
+				'location_list'					=> $this->bopreferences->select_location('filter',$this->location,true),
 
 				'is_admin'						=> $GLOBALS['phpgw_info']['user']['apps']['admin'],
 				'lang_group_statustext'			=> lang('Select the granting group. To do not use a granting group select NO GRANTING GROUP'),
@@ -554,7 +554,7 @@
 				'lang_no_location'				=> lang('No location'),
 				'lang_location_statustext'		=> lang('Select submodule'),
 				'select_name_location'			=> 'module',
-				'location_list'					=> $this->bopreferences->select_location('filter',$this->location,False)
+				'location_list'					=> $this->bopreferences->select_location('filter',$this->location,false)
 			);
 
 			$appname	= lang('permission');
@@ -675,7 +675,7 @@
 			$cats		= CreateObject('phpgwapi.categories');
 			$cats->app_name = 'fm_vendor';
 
-			$cat_data	= $cats->formatted_xslt_list(array('selected' => $prefs['default_vendor_category'],'globals' => True, 'link_data' =>array()));
+			$cat_data	= $cats->formatted_xslt_list(array('selected' => $prefs['default_vendor_category'],'globals' => true, 'link_data' =>array()));
 
 			$msgbox_data = $this->bocommon->msgbox_data($receipt);
 
@@ -703,7 +703,7 @@
 
 				'lang_approval_from'			=> lang('Approval from'),
 				'value_old_approval_from'		=> $prefs['approval_from'],
-				'approval_from'					=> $this->bocommon->get_user_list('select',$prefs['approval_from'],$extra=False,$default=False,$start=-1,$sort='ASC',$order='account_lastname',$query='',$offset=-1),
+				'approval_from'					=> $this->bocommon->get_user_list('select',$prefs['approval_from'],$extra=false,$default=false,$start=-1,$sort='ASC',$order='account_lastname',$query='',$offset=-1),
 
 				'select_user_name'				=> 'approval_from',
 				'lang_approval_from_statustext'	=> lang('Select the users supervisor'),
@@ -720,7 +720,7 @@
 				'select_user_name'				=> 'filter',
 				'lang_no_user'					=> lang('No user'),
 				'value_user_id'					=> $this->filter,
-				'user_list'						=> $this->bocommon->get_user_list('filter',$this->filter,$extra=False,$default=False,$start=-1,$sort='ASC',$order='account_lastname',$query='',$offset=-1),
+				'user_list'						=> $this->bocommon->get_user_list('filter',$this->filter,$extra=false,$default=false,$start=-1,$sort='ASC',$order='account_lastname',$query='',$offset=-1),
 			);
 
 			$appname	= lang('User contact info');
@@ -732,4 +732,4 @@
 			$this->save_sessiondata();
 		}
 	}
-?>
+

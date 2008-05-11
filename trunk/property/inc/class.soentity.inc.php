@@ -531,7 +531,7 @@
 
 			if ( $this->db->f(0))
 			{
-				return True;
+				return true;
 			}
 		}
 
@@ -665,7 +665,7 @@
 				$historylog	= CreateObject('property.historylog','entity_' . $entity_id .'_' . $cat_id);
 				foreach ($history_set as $attrib_id => $new_value)
 				{
-					$historylog->add('SO',$values['id'],$new_value,False, $attrib_id);
+					$historylog->add('SO',$values['id'],$new_value,false, $attrib_id);
 				}
 			}
 
@@ -779,7 +779,7 @@
 				$historylog	= CreateObject('property.historylog','entity_' . $entity_id .'_' . $cat_id);
 				foreach ($history_set as $attrib_id => $history)
 				{
-					$historylog->add('SO',$values['id'],$history['value'],False, $attrib_id,$history['date']);
+					$historylog->add('SO',$values['id'],$history['value'],false, $attrib_id,$history['date']);
 				}
 			}
 
@@ -817,4 +817,4 @@
 			return $helpmsg;
 		}
 	}
-?>
+

@@ -44,17 +44,17 @@
 
 		var $public_functions = array
 		(
-			'index'		=> True,
-			'view'		=> True,
-			'edit'		=> True,
-			'import'	=> True,
-			'delete'	=> True,
+			'index'		=> true,
+			'view'		=> true,
+			'edit'		=> true,
+			'import'	=> true,
+			'delete'	=> true,
 			'no_access'	=> true
 		);
 
 		function uiifc()
 		{
-			$GLOBALS['phpgw_info']['flags']['xslt_app'] = True;
+			$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] = 'property::ifc';
 		//	$this->currentapp		= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->cats				= CreateObject('phpgwapi.categories');
@@ -240,9 +240,9 @@
 			$data = array
 			(
 				'msgbox_data'							=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
-				'cat_filter'							=> $this->cats->formatted_xslt_list(array('select_name' => 'cat_id','selected' => $this->cat_id,'globals' => True,'link_data' => $link_data)),
+				'cat_filter'							=> $this->cats->formatted_xslt_list(array('select_name' => 'cat_id','selected' => $this->cat_id,'globals' => true,'link_data' => $link_data)),
 				'filter_data'							=> $this->nextmatchs->xslt_filter(array('filter' => $this->filter,'link_data' => $link_data)),
-				'allow_allrows'							=> True,
+				'allow_allrows'							=> true,
 				'allrows'								=> $this->allrows,
 				'start_record'							=> $this->start,
 				'record_limit'							=> $record_limit,
@@ -328,8 +328,8 @@
 			$location_data=$bolocation->initiate_ui_location(array(
 						'values'	=> (isset($values['location_data'])?$values['location_data']:''),
 						'type_id'	=> -1, // calculated from location_types
-						'no_link'	=> False, // disable lookup links for location type less than type_id
-						'tenant'	=> False,
+						'no_link'	=> false, // disable lookup links for location type less than type_id
+						'tenant'	=> false,
 						'lookup_type'	=> 'form',
 						'lookup_entity'	=> false,
 						'entity_data'	=> (isset($values['p'])?$values['p']:'')
@@ -446,7 +446,7 @@
 					{
 						foreach ($values_attribute as $attribute )
 						{
-							if($attribute['allow_null'] != 'True' && !$attribute['value'])
+							if($attribute['allow_null'] != 'true' && !$attribute['value'])
 							{
 								$receipt['error'][]=array('msg'=>lang('Please enter value for attribute %1', $attribute['input_text']));
 							}

@@ -45,7 +45,7 @@
 
 		var $public_functions = array
 		(
-			'select_part_of_town'	=> True,
+			'select_part_of_town'	=> true,
 		);
 
 		var $soap_functions = array(
@@ -147,7 +147,7 @@
 			{
 				foreach($receipt['error'] as $errors)
 				{
-					$msgbox_data_error += array($errors['msg']=> False);
+					$msgbox_data_error += array($errors['msg']=> false);
 				}
 			}
 
@@ -157,7 +157,7 @@
 			{
 				foreach($receipt['message'] as $messages)
 				{
-					$msgbox_data_message += array($messages['msg']=> True);
+					$msgbox_data_message += array($messages['msg']=> true);
 				}
 			}
 
@@ -218,7 +218,7 @@
 		{
 			if (!$date)
 			{
-				return False;
+				return false;
 			}
 
 			$date_array	= $this->date_array($date);
@@ -719,7 +719,7 @@
 				$alarm['add_alarm']['lang_minute']					= lang('Minutes before the event');
 				$alarm['add_alarm']['lang_minute_statustext']		= lang('Minutes before the event');
 
-				$alarm['add_alarm']['user_list'] = $this->get_user_list_right2('select',4,False,$data['acl_location'],False,$default=$this->account);
+				$alarm['add_alarm']['user_list'] = $this->get_user_list_right2('select',4,false,$data['acl_location'],false,$default=$this->account);
 
 				$alarm['add_alarm']['lang_user']					= lang('User');
 				$alarm['add_alarm']['lang_user_statustext']			= lang('Select the user the alarm belongs to.');
@@ -1006,7 +1006,7 @@
 			else
 			{
 				$type_id	= 0;//count($location_types);
-				$no_address	= True;
+				$no_address	= true;
 			}
 			$this->type_id	= $type_id;
 
@@ -1324,10 +1324,10 @@
 
 		function select_nullable($selected='')
 		{
-			$nullable[0]['id']= 'True';
-			$nullable[0]['name']= lang('True');
-			$nullable[1]['id']= 'False';
-			$nullable[1]['name']= lang('False');
+			$nullable[0]['id']= 'true';
+			$nullable[0]['name']= lang('true');
+			$nullable[1]['id']= 'false';
+			$nullable[1]['name']= lang('false');
 
 			return $this->select_list($selected,$nullable);
 		}
@@ -1342,9 +1342,9 @@
 		*/
 		function download($list,$name,$descr,$input_type='')
 		{
-			$GLOBALS['phpgw_info']['flags']['noheader'] = True;
-			$GLOBALS['phpgw_info']['flags']['nofooter'] = True;
-			$GLOBALS['phpgw_info']['flags']['xslt_app'] = False;
+			$GLOBALS['phpgw_info']['flags']['noheader'] = true;
+			$GLOBALS['phpgw_info']['flags']['nofooter'] = true;
+			$GLOBALS['phpgw_info']['flags']['xslt_app'] = false;
 
 			$export_format = isset($GLOBALS['phpgw_info']['user']['preferences']['property']['export_format']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['export_format'] ? $GLOBALS['phpgw_info']['user']['preferences']['property']['export_format'] : 'csv';
 
@@ -1705,4 +1705,4 @@
 		}
 
 	}
-?>
+

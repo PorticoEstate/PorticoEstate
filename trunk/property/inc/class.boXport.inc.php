@@ -35,8 +35,8 @@
 	class property_boXport
 	{
 		var $public_functions = array(
-			'import' => True,
-			'export' => True
+			'import' => true,
+			'export' => true
 		);
 
 		var $start;
@@ -46,9 +46,9 @@
 		var $filter;
 		var $cat_id;
 
-		var $use_session = False;
+		var $use_session = false;
 
-		function property_boXport ($session=False)
+		function property_boXport ($session=false)
 		{
 
 			$GLOBALS['phpgw_info']['flags']['currentapp']	=	'property';
@@ -59,7 +59,7 @@
 			if($session)
 			{
 				$this->read_sessiondata();
-				$this->use_session = True;
+				$this->use_session = true;
 			}
 
 			$start	= phpgw::get_var('start', 'int', 'REQUEST', 0);
@@ -294,4 +294,4 @@
 		}
 
 	}
-?>
+

@@ -58,7 +58,7 @@
 		$property->bo->limit = 5;
 		$property->start = 0;
 		$property->limit = 5;
-		$extra_data = '<td>'."\n".$property->index(False).'</td>'."\n";
+		$extra_data = '<td>'."\n".$property->index(false).'</td>'."\n";
 
 		$app_id = $GLOBALS['phpgw']->applications->name2id('property');
 		$GLOBALS['portal_order'][] = $app_id;
@@ -68,4 +68,4 @@
 		$GLOBALS['phpgw']->portalbox->draw($extra_data);
 	}
 */
-?>
+

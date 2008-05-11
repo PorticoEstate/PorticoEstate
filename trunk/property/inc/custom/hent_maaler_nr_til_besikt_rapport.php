@@ -71,7 +71,7 @@
 								if($new_value != $old_value)
 								{
 									$historylog	= CreateObject('property.historylog','entity_1_11');
-									$historylog->add('SO',$id,$new_value,False, $attrib_id,$besiktet_dato);
+									$historylog->add('SO',$id,$new_value,false, $attrib_id,$besiktet_dato);
 									$this->db->query("UPDATE fm_entity_1_11 set maaler_stand = '$new_value' WHERE ext_meter_id = '$maaler_nr' AND location_code ='" . $values['location_code']. "'",__LINE__,__FILE__);								
 								}
 							}

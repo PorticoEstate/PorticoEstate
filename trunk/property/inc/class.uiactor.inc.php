@@ -49,21 +49,21 @@
 
 		var $public_functions = array
 		(
-			'index'  	=> True,
-			'view'   	=> True,
-			'edit'   	=> True,
-			'delete' 	=> True,
-			'columns'	=> True
+			'index'  	=> true,
+			'view'   	=> true,
+			'edit'   	=> true,
+			'delete' 	=> true,
+			'columns'	=> true
 		);
 
 		function property_uiactor()
 		{
-			$GLOBALS['phpgw_info']['flags']['xslt_app'] = True;
+			$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
 
 			$this->nextmatchs		= CreateObject('phpgwapi.nextmatchs');
 			$this->account			= $GLOBALS['phpgw_info']['user']['account_id'];
 
-			$this->bo				= CreateObject('property.boactor',True);
+			$this->bo				= CreateObject('property.boactor',true);
 			$this->bocommon			= CreateObject('property.bocommon');
 
 			$this->role				= $this->bo->role;
@@ -90,9 +90,9 @@
 			$this->member_id		= $this->bo->member_id;
 
 			$valid_role = array(
-				'tenant'=>True,
-				'owner'	=>True,
-				'vendor'=>True
+				'tenant'=>true,
+				'owner'	=>true,
+				'vendor'=>true
 				);
 			if(!$valid_role[$this->role])
 			{
@@ -128,7 +128,7 @@
 		function columns()
 		{
 			$GLOBALS['phpgw']->xslttpl->add_file(array('columns'));
-			$GLOBALS['phpgw_info']['flags']['noframework'] = True;
+			$GLOBALS['phpgw_info']['flags']['noframework'] = true;
 			$values	= phpgw::get_var('values');
 
 			if ($values['save'])
@@ -154,7 +154,7 @@
 			$data = array
 			(
 				'msgbox_data' 	=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
-				'column_list'	=> $this->bo->column_list($values['columns'],$allrows=True),
+				'column_list'	=> $this->bo->column_list($values['columns'],$allrows=true),
 				'function_msg'	=> $function_msg,
 				'form_action'	=> $GLOBALS['phpgw']->link('/index.php',$link_data),
 				'lang_columns'	=> lang('columns'),
@@ -321,7 +321,7 @@
 				'role'		=> $this->role
 			);
 
-			$member_of_data	= $this->cats->formatted_xslt_list(array('selected' => $this->member_id,'globals' => True, 'link_data' =>$link_data));
+			$member_of_data	= $this->cats->formatted_xslt_list(array('selected' => $this->member_id,'globals' => true, 'link_data' =>$link_data));
 
 			$GLOBALS['phpgw']->js->validate_file('overlib','overlib','property');
 
@@ -504,7 +504,7 @@
 
 			$msgbox_data = $this->bocommon->msgbox_data($receipt);
 
-			$member_of_data	= $this->cats->formatted_xslt_list(array('selected' => $this->member_id,'globals' => True, 'link_data' =>array()));
+			$member_of_data	= $this->cats->formatted_xslt_list(array('selected' => $this->member_id,'globals' => true, 'link_data' =>array()));
 
 			$GLOBALS['phpgw']->js->validate_file('dateformat','dateformat','property');
 
@@ -624,7 +624,7 @@
 
 			$dateformat= (implode($sep,$dlarr));
 
-			$member_of_data	= $this->cats->formatted_xslt_list(array('selected' => $actor['member_of'],'globals' => True, 'link_data' =>array()));
+			$member_of_data	= $this->cats->formatted_xslt_list(array('selected' => $actor['member_of'],'globals' => true, 'link_data' =>array()));
 
 			$data = array
 			(
@@ -652,4 +652,4 @@
 		//	$GLOBALS['phpgw']->xslttpl->pp();
 		}
 	}
-?>
+

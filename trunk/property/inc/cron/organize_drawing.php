@@ -41,7 +41,7 @@
 
 		var	$dir = '/mnt/filer2/Tegninger';
 		var	$suffix = 'dwg';
-		var 	$bypass = False; // bypass location check (only for debugging)
+		var 	$bypass = false; // bypass location check (only for debugging)
 		var	$function_name = 'organize_drawing';
 
 		function organize_drawing()
@@ -60,9 +60,9 @@
 
 			if($data['enabled']==1)
 			{
-				$confirm		= True;
-				$execute		= True;
-				$cron			= True;
+				$confirm		= true;
+				$execute		= true;
+				$cron			= true;
 				if($data['suffix'])
 				{
 					$this->suffix = $data['suffix'];
@@ -88,7 +88,7 @@
 
 			if(!$execute)
 			{
-				$dry_run=True;
+				$dry_run=true;
 			}
 
 			if ($confirm)
@@ -97,7 +97,7 @@
 			}
 			else
 			{
-				$this->confirm($execute=False);
+				$this->confirm($execute=false);
 			}
 		}
 
@@ -159,7 +159,7 @@
 
 			if($dry_run)
 			{
-				$this->confirm($execute=True);
+				$this->confirm($execute=true);
 				_debug_array($file_list);
 			}
 			else
@@ -168,7 +168,7 @@
 				{
 					foreach($file_list as $file_entry)
 					{
-						$loc1_list[$file_entry['loc1']] = True;
+						$loc1_list[$file_entry['loc1']] = true;
 					}
 
 					$loc1_list = array_keys($loc1_list);
@@ -185,7 +185,7 @@
 				}
 				if(!$cron)
 				{
-					$this->confirm($execute=false,$done=True);
+					$this->confirm($execute=false,$done=true);
 				}
 
 				$msgbox_data = $this->bocommon->msgbox_data($this->receipt);
@@ -318,12 +318,12 @@
 			$this->db->next_record();
 			if($this->db->f(0))
 			{
-				return True;
+				return true;
 			}
 
 			if($this->bypass)
 			{
-				return True;
+				return true;
 			}
 
 		}
@@ -453,4 +453,4 @@
 			return $this->db->f('address');
 		}
 	}
-?>
+

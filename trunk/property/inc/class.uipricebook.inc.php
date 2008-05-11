@@ -47,25 +47,25 @@
 
 		var $public_functions = array
 		(
-			'activity'		=> True,
-			'index'  		=> True,
-			'agreement_group'   	=> True,
-			'edit_agreement_group' 	=> True,
-			'edit_activity' 	=> True,
-			'activity_vendor'	=> True,
-			'prizing'		=> True,
-			'delete' 		=> True,
-			'download'			=> True,
-			'download_2'		=> True
+			'activity'		=> true,
+			'index'  		=> true,
+			'agreement_group'   	=> true,
+			'edit_agreement_group' 	=> true,
+			'edit_activity' 	=> true,
+			'activity_vendor'	=> true,
+			'prizing'		=> true,
+			'delete' 		=> true,
+			'download'			=> true,
+			'download_2'		=> true
 		);
 
 		function property_uipricebook()
 		{
-			$GLOBALS['phpgw_info']['flags']['xslt_app'] = True;
+			$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
 		//	$this->currentapp			= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->nextmatchs			= CreateObject('phpgwapi.nextmatchs');
 
-			$this->bo				= CreateObject('property.bopricebook',True);
+			$this->bo				= CreateObject('property.bopricebook',true);
 			$this->bocommon				= CreateObject('property.bocommon');
 			$this->contacts				= CreateObject('property.soactor');
 			$this->contacts->role			= 'vendor';
@@ -1352,4 +1352,4 @@
 		//	$GLOBALS['phpgw']->xslttpl->pp();
 		}
 	}
-?>
+

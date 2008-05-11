@@ -14,4 +14,4 @@
 			display_sidebox($appname,$menu['menu_title_3'] . ' ' . lang ('sub menu'),$menu['sub_menu_2'],$use_lang = false);
 		}
 	}	
-?>
+
