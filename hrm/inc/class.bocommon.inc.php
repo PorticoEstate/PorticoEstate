@@ -29,8 +29,8 @@
 
 		var $public_functions = array
 		(
-			'select_part_of_town'	=> True,
-			'menu'	=> True,
+			'select_part_of_town'	=> true,
+			'menu'	=> true,
 		);
 
 		var $soap_functions = array(
@@ -113,7 +113,7 @@
 			{
 				foreach($receipt['error'] as $errors)
 				{
-					$msgbox_data_error += array($errors['msg']=> False);
+					$msgbox_data_error += array($errors['msg']=> false);
 				}
 			}
 
@@ -123,7 +123,7 @@
 			{
 				foreach($receipt['message'] as $messages)
 				{
-					$msgbox_data_message += array($messages['msg']=> True);
+					$msgbox_data_message += array($messages['msg']=> true);
 				}
 			}
 
@@ -179,7 +179,7 @@
 		{
 			if (!$date)
 			{
-				return False;
+				return false;
 			}
 
 			$date_array	= $this->date_array($date);
@@ -426,7 +426,7 @@
 				$alarm['add_alarm']['lang_minute']					= lang('Minutes before the event');
 				$alarm['add_alarm']['lang_minute_statustext']		= lang('Minutes before the event');
 
-				$alarm['add_alarm']['user_list'] = $this->get_user_list_right2('select',4,False,$data['acl_location'],False,$default=$this->account);
+				$alarm['add_alarm']['user_list'] = $this->get_user_list_right2('select',4,false,$data['acl_location'],false,$default=$this->account);
 
 				$alarm['add_alarm']['lang_user']					= lang('User');
 				$alarm['add_alarm']['lang_user_statustext']			= lang('Select the user the alarm belongs to.');
@@ -606,9 +606,9 @@
 
 		function excel($list,$name,$descr,$input_type='')
 		{
-			$GLOBALS['phpgw_info']['flags'][noheader] = True;
-			$GLOBALS['phpgw_info']['flags'][nofooter] = True;
-			$GLOBALS['phpgw_info']['flags']['xslt_app'] = False;
+			$GLOBALS['phpgw_info']['flags'][noheader] = true;
+			$GLOBALS['phpgw_info']['flags'][nofooter] = true;
+			$GLOBALS['phpgw_info']['flags']['xslt_app'] = false;
 
  			$filename= $GLOBALS['phpgw_info']['user']['account_lid'].'.xls';
 
@@ -679,4 +679,4 @@
 			return $this->socommon->new_db();
 		}
 	}
-?>
+

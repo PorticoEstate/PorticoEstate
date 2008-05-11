@@ -38,28 +38,28 @@
 
 		var $public_functions = array
 		(
-			'index'  			=> True,
-			'view_qualification'		=> True,
-			'view_job'   			=> True,
-			'edit_job'			=> True,
-			'delete_job'			=> True,
-			'reset_job_type_hierarchy'	=> True,
-			'edit_qualification'		=> True,
-			'delete_qualification'		=> True,
-			'qualification'			=> True,
-			'task'				=> True,
-			'edit_task'			=> True,
-			'view_task'			=> True,
-			'delete_task'			=> True,
-			'lookup_qualification'		=> True,
-			'edit_qualification_type'	=> True,
-			'hierarchy'			=> True,
-			'print_pdf'			=> True
+			'index'  			=> true,
+			'view_qualification'		=> true,
+			'view_job'   			=> true,
+			'edit_job'			=> true,
+			'delete_job'			=> true,
+			'reset_job_type_hierarchy'	=> true,
+			'edit_qualification'		=> true,
+			'delete_qualification'		=> true,
+			'qualification'			=> true,
+			'task'				=> true,
+			'edit_task'			=> true,
+			'view_task'			=> true,
+			'delete_task'			=> true,
+			'lookup_qualification'		=> true,
+			'edit_qualification_type'	=> true,
+			'hierarchy'			=> true,
+			'print_pdf'			=> true
 		);
 
 		public function __construct()
 		{
-			$GLOBALS['phpgw_info']['flags']['xslt_app'] = True;
+			$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
 		//	$this->currentapp			= 'hrm';
 			$this->nextmatchs			= CreateObject('phpgwapi.nextmatchs');
 			$this->account				= $GLOBALS['phpgw_info']['user']['account_id'];
@@ -219,7 +219,7 @@
 			(
 				'msgbox_data'					=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
 				'menu'							=> execMethod('hrm.menu.links'),
-				'allow_allrows'					=> True,
+				'allow_allrows'					=> true,
 				'allrows'						=> $this->allrows,
 				'start_record'					=> $this->start,
 				'record_limit'					=> $record_limit,
@@ -255,9 +255,9 @@
 				$this->bocommon->no_access();
 				return;
 			}
-			$GLOBALS['phpgw_info']['flags'][noheader] = True;
-			$GLOBALS['phpgw_info']['flags'][nofooter] = True;
-			$GLOBALS['phpgw_info']['flags']['xslt_app'] = False;
+			$GLOBALS['phpgw_info']['flags'][noheader] = true;
+			$GLOBALS['phpgw_info']['flags'][nofooter] = true;
+			$GLOBALS['phpgw_info']['flags']['xslt_app'] = false;
 			
 			$pdf	= CreateObject('phpgwapi.pdf');
 			$dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
@@ -851,7 +851,7 @@
 
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] .= '::job_type';
 
-			$GLOBALS['phpgw_info']['flags']['noframework'] = True;
+			$GLOBALS['phpgw_info']['flags']['noframework'] = true;
 			$GLOBALS['phpgw_info']['flags']['headonly']=true;
 
 			$receipt = $GLOBALS['phpgw']->session->appsession('session_data','hrm_quali_tp_receipt');
@@ -966,7 +966,7 @@
 
 			$data = array
 			(
-				'allow_allrows'					=> True,
+				'allow_allrows'					=> true,
 				'allrows'					=> $this->allrows,
 				'start_record'					=> $this->start,
 				'record_limit'					=> $record_limit,
@@ -1017,7 +1017,7 @@
 
 		function edit_qualification_type()
 		{
-			$GLOBALS['phpgw_info']['flags']['noframework'] = True;
+			$GLOBALS['phpgw_info']['flags']['noframework'] = true;
 			$GLOBALS['phpgw_info']['flags']['headonly']=true;
 
 			$quali_type_id	= phpgw::get_var('quali_type_id', 'int');

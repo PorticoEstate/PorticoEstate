@@ -28,15 +28,15 @@
 
 		var $public_functions = array
 		(
-			'index'  => True,
-			'view'   => True,
-			'edit'   => True,
-			'delete' => True
+			'index'  => true,
+			'view'   => true,
+			'edit'   => true,
+			'delete' => true
 		);
 
 		function hrm_uicategory()
 		{
-			$GLOBALS['phpgw_info']['flags']['xslt_app'] = True;
+			$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
 		//	$this->currentapp			= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->nextmatchs			= CreateObject('phpgwapi.nextmatchs');
 			$this->account				= $GLOBALS['phpgw_info']['user']['account_id'];
@@ -137,7 +137,7 @@
 
 			$data = array
 			(
-				'allow_allrows'					=> True,
+				'allow_allrows'					=> true,
 				'allrows'					=> $this->allrows,
 				'start_record'					=> $this->start,
 				'record_limit'					=> $record_limit,

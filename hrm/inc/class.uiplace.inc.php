@@ -28,16 +28,16 @@
 
 		var $public_functions = array
 		(
-			'index'  => True,
-			'view'   => True,
-			'training'=> True,
-			'edit'   => True,
-			'delete' => True
+			'index'  => true,
+			'view'   => true,
+			'training'=> true,
+			'edit'   => true,
+			'delete' => true
 		);
 
 		function hrm_uiplace()
 		{
-			$GLOBALS['phpgw_info']['flags']['xslt_app'] = True;
+			$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
 		//	$this->currentapp		= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->nextmatchs		= CreateObject('phpgwapi.nextmatchs');
 			$this->account			= $GLOBALS['phpgw_info']['user']['account_id'];
@@ -141,7 +141,7 @@
 			(
 				'msgbox_data'					=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
 				'menu'							=> execMethod('hrm.menu.links'),
-				'allow_allrows'					=> True,
+				'allow_allrows'					=> true,
 				'allrows'					=> $this->allrows,
 				'start_record'					=> $this->start,
 				'record_limit'					=> $record_limit,
