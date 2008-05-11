@@ -277,7 +277,7 @@
 
 			if ( $this->db->f(0))
 			{
-				return True;
+				return true;
 			}
 		}
 
@@ -450,4 +450,4 @@
 			return $members;
 		}
 	}
-?>
+

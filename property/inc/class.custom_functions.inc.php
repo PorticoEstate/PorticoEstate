@@ -38,13 +38,13 @@
 	{
 
 		var $public_functions = array(
-			'index' => True
+			'index' => true
 		);
 
 		function property_custom_functions ()
 		{
-			$GLOBALS['phpgw_info']['flags']['noheader'] = True;
-			$GLOBALS['phpgw_info']['flags']['nonavbar'] = True;
+			$GLOBALS['phpgw_info']['flags']['noheader'] = true;
+			$GLOBALS['phpgw_info']['flags']['nonavbar'] = true;
 
 
 			$GLOBALS['phpgw_info']['flags']['currentapp']	=	'property';
@@ -82,4 +82,4 @@
 
 
 	}
-?>
+

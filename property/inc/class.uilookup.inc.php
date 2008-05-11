@@ -48,25 +48,25 @@
 
 		var $public_functions = array
 		(
-			'addressbook'	=> True,
-			'vendor'		=> True,
-			'b_account'		=> True,
-			'location'		=> True,
-			'entity'		=> True,
-			'ns3420'		=> True,
-			'street'		=> True,
-			'tenant'		=> True,
-			'phpgw_user'	=> True
+			'addressbook'	=> true,
+			'vendor'		=> true,
+			'b_account'		=> true,
+			'location'		=> true,
+			'entity'		=> true,
+			'ns3420'		=> true,
+			'street'		=> true,
+			'tenant'		=> true,
+			'phpgw_user'	=> true
 		);
 
 		function property_uilookup()
 		{
-			$GLOBALS['phpgw_info']['flags']['noframework'] = True;
+			$GLOBALS['phpgw_info']['flags']['noframework'] = true;
 			$GLOBALS['phpgw_info']['flags']['headonly']=true;
-			$GLOBALS['phpgw_info']['flags']['xslt_app'] = True;
+			$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
 		//	$this->currentapp			= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->nextmatchs			= CreateObject('phpgwapi.nextmatchs');
-			$this->bo					= CreateObject('property.bolookup',True);
+			$this->bo					= CreateObject('property.bolookup',true);
 
 			$this->start				= $this->bo->start;
 			$this->query				= $this->bo->query;
@@ -185,7 +185,7 @@
 				$contact_name	='contact_name';
 			}
 
-			$cat_data	= $this->cats->formatted_xslt_list(array('selected' => $this->cat_id,'globals' => True, 'link_data' =>$link_select));
+			$cat_data	= $this->cats->formatted_xslt_list(array('selected' => $this->cat_id,'globals' => true, 'link_data' =>$link_select));
 			$data = array
 			(
 				'allow_allrows'					=> false,
@@ -312,7 +312,7 @@
 				$org_name	='vendor_name';
 			}
 
-			$cat_data	= $this->cats->formatted_xslt_list(array('selected' => $this->cat_id,'globals' => True, 'link_data' =>$link_select));
+			$cat_data	= $this->cats->formatted_xslt_list(array('selected' => $this->cat_id,'globals' => true, 'link_data' =>$link_select));
 			$data = array
 			(
 				'allow_allrows'					=> false,
@@ -746,7 +746,7 @@
 										'nextmatchs',
 										'search_field'));
 
-			$entity_list = $boentity->read(array('lookup'=>True));
+			$entity_list = $boentity->read(array('lookup'=>true));
 
 			$input_name = $GLOBALS['phpgw']->session->appsession('lookup_fields','property');
 //_debug_array($input_name);
@@ -1045,4 +1045,4 @@
 			$this->save_sessiondata();
 		}
 	}
-?>
+

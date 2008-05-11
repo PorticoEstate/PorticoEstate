@@ -45,22 +45,22 @@
 
 		var $public_functions = array
 		(
-			'index'			=> True,
-			'view'			=> True,
-			'edit_template'		=> True,
-			'edit_hour'		=> True,
-			'delete'		=> True,
-			'hour'			=> True
+			'index'			=> true,
+			'view'			=> true,
+			'edit_template'		=> true,
+			'edit_hour'		=> true,
+			'delete'		=> true,
+			'hour'			=> true
 		);
 
 		function property_uitemplate()
 		{
-			$GLOBALS['phpgw_info']['flags']['xslt_app'] = True;
+			$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] = 'property::project::template';
 
 		//	$this->currentapp			= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->nextmatchs			= CreateObject('phpgwapi.nextmatchs');
-			$this->bo				= CreateObject('property.botemplate',True);
+			$this->bo				= CreateObject('property.botemplate',true);
 			$this->bowo_hour			= CreateObject('property.bowo_hour');
 			$this->bocommon				= CreateObject('property.bocommon');
 
@@ -227,7 +227,7 @@
 				'lang_user_statustext'		=> lang('Select the user the template belongs to. To do not use a category select NO USER'),
 				'select_user_name'		=> 'filter',
 				'lang_no_user'			=> lang('No user'),
-				'user_list'			=> $this->bocommon->get_user_list('filter',$this->filter,$extra=False,$default=False,$start=-1,$sort='ASC',$order='account_lastname',$query='',$offset=-1),
+				'user_list'			=> $this->bocommon->get_user_list('filter',$this->filter,$extra=false,$default=false,$start=-1,$sort='ASC',$order='account_lastname',$query='',$offset=-1),
 
 				'lang_searchfield_statustext'	=> lang('Enter the search string. To show all entries, empty this field and press the SUBMIT button again'),
 				'lang_searchbutton_statustext'	=> lang('Submit the search string'),
@@ -736,4 +736,4 @@
 		//	$GLOBALS['phpgw']->xslttpl->pp();
 		}
 	}
-?>
+

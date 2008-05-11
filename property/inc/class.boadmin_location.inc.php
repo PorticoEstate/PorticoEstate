@@ -41,11 +41,11 @@
 
 		var $public_functions = array
 		(
-			'read'				=> True,
-			'read_single'		=> True,
-			'save'				=> True,
-			'delete'			=> True,
-			'check_perms'		=> True
+			'read'				=> true,
+			'read_single'		=> true,
+			'save'				=> true,
+			'delete'			=> true,
+			'check_perms'		=> true
 		);
 
 		var $soap_functions = array(
@@ -67,7 +67,7 @@
 			)
 		);
 
-		function property_boadmin_location($session=False)
+		function property_boadmin_location($session=false)
 		{
 			$this->so 		= CreateObject('property.soadmin_location');
 			$this->bocommon = CreateObject('property.bocommon');
@@ -76,7 +76,7 @@
 			if ($session)
 			{
 		//		$this->read_sessiondata();
-				$this->use_session = True;
+				$this->use_session = true;
 			}
 
 			$start	= phpgw::get_var('start', 'int', 'REQUEST', 0);
@@ -258,10 +258,10 @@
 
 		function select_nullable($selected='')
 		{
-			$nullable[0]['id']= 'True';
-			$nullable[0]['name']= lang('True');
-			$nullable[1]['id']= 'False';
-			$nullable[1]['name']= lang('False');
+			$nullable[0]['id']= 'true';
+			$nullable[0]['name']= lang('true');
+			$nullable[1]['id']= 'false';
+			$nullable[1]['name']= lang('false');
 
 			return $this->bocommon->select_list($selected,$nullable);
 		}
@@ -285,4 +285,4 @@
 			}
 		}
 	}
-?>
+

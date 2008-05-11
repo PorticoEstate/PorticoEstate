@@ -204,7 +204,7 @@
 			$default_attrib['column_name'][]= 'location_code';
 			$default_attrib['type'][]='V';
 			$default_attrib['precision'][] =4*$standard['id'];
-			$default_attrib['nullable'][] ='False';
+			$default_attrib['nullable'][] ='false';
 			$default_attrib['input_text'][] ='dummy';
 			$default_attrib['statustext'][] ='dummy';
 			$default_attrib['attrib_sort'][] ='';
@@ -215,7 +215,7 @@
 			$default_attrib['column_name'][]= 'loc' . $standard['id'] . '_name';
 			$default_attrib['type'][]='V';
 			$default_attrib['precision'][] =50;
-			$default_attrib['nullable'][] ='True';
+			$default_attrib['nullable'][] ='true';
 			$default_attrib['input_text'][] ='dummy';
 			$default_attrib['statustext'][] ='dummy';
 			$default_attrib['attrib_sort'][] ='';
@@ -226,7 +226,7 @@
 			$default_attrib['column_name'][]= 'entry_date';
 			$default_attrib['type'][]='I';
 			$default_attrib['precision'][] =4;
-			$default_attrib['nullable'][] ='True';
+			$default_attrib['nullable'][] ='true';
 			$default_attrib['input_text'][] ='dummy';
 			$default_attrib['statustext'][] ='dummy';
 			$default_attrib['attrib_sort'][] ='';
@@ -237,7 +237,7 @@
 			$default_attrib['column_name'][]= 'category';
 			$default_attrib['type'][]='I';
 			$default_attrib['precision'][] =4;
-			$default_attrib['nullable'][] ='False';
+			$default_attrib['nullable'][] ='false';
 			$default_attrib['input_text'][] ='dummy';
 			$default_attrib['statustext'][] ='dummy';
 			$default_attrib['attrib_sort'][] ='';
@@ -248,7 +248,7 @@
 			$default_attrib['column_name'][]= 'user_id';
 			$default_attrib['type'][]='I';
 			$default_attrib['precision'][] =4;
-			$default_attrib['nullable'][] ='False';
+			$default_attrib['nullable'][] ='false';
 			$default_attrib['input_text'][] ='dummy';
 			$default_attrib['statustext'][] ='dummy';
 			$default_attrib['attrib_sort'][] ='';
@@ -259,8 +259,8 @@
 			$default_attrib['id'][]= $j;
 			$default_attrib['column_name'][]= 'status';
 			$default_attrib['type'][]='LB';
-			$default_attrib['precision'][] = False;
-			$default_attrib['nullable'][] ='True';
+			$default_attrib['precision'][] = false;
+			$default_attrib['nullable'][] ='true';
 			$default_attrib['input_text'][] ='Status';
 			$default_attrib['statustext'][] ='Status';
 			$default_attrib['attrib_sort'][] =1;
@@ -270,8 +270,8 @@
 			$default_attrib['id'][]= $j;
 			$default_attrib['column_name'][]= 'remark';
 			$default_attrib['type'][]='T';
-			$default_attrib['precision'][] = False;
-			$default_attrib['nullable'][] ='False';
+			$default_attrib['precision'][] = false;
+			$default_attrib['nullable'][] ='false';
 			$default_attrib['input_text'][] ='Remark';
 			$default_attrib['statustext'][] ='Remark';
 			$default_attrib['attrib_sort'][] =2;
@@ -282,24 +282,24 @@
 			$default_attrib['column_name'][]= 'change_type';
 			$default_attrib['type'][]='I';
 			$default_attrib['precision'][] =4;
-			$default_attrib['nullable'][] ='True';
+			$default_attrib['nullable'][] ='true';
 			$default_attrib['input_text'][] ='dummy';
 			$default_attrib['statustext'][] ='dummy';
 			$default_attrib['attrib_sort'][] ='';
 			$default_attrib['custom'][] ='';
 
 			$fd=array();
-			$fd['location_code'] = array('type' => 'varchar', 'precision' => 25, 'nullable' => False);
+			$fd['location_code'] = array('type' => 'varchar', 'precision' => 25, 'nullable' => false);
 
 			for ($i=1; $i<$standard['id']+1; $i++)
 			{
 				if($i==1)
 				{
-					$fd['loc' . $i] = array('type' => 'varchar', 'precision' => 6, 'nullable' => False);
+					$fd['loc' . $i] = array('type' => 'varchar', 'precision' => 6, 'nullable' => false);
 				}
 				else
 				{
-					$fd['loc' . $i] = array('type' => 'varchar', 'precision' => 4, 'nullable' => False);
+					$fd['loc' . $i] = array('type' => 'varchar', 'precision' => 4, 'nullable' => false);
 				}
 				
 				$pk[$i-1]= 'loc' . $i;
@@ -308,7 +308,7 @@
 				$default_attrib['column_name'][]= 'loc' . $i;
 				$default_attrib['type'][]='V';
 				$default_attrib['precision'][] =4;
-				$default_attrib['nullable'][] ='False';
+				$default_attrib['nullable'][] ='false';
 				$default_attrib['input_text'][] ='dummy';
 				$default_attrib['statustext'][] ='dummy';
 				$default_attrib['attrib_sort'][] ='';
@@ -324,22 +324,22 @@
 
 			if($standard['id']==1)
 			{
-				$fd['part_of_town_id'] = array('type' => 'int', 'precision' => 2, 'nullable' => True);
+				$fd['part_of_town_id'] = array('type' => 'int', 'precision' => 2, 'nullable' => true);
 			}
 
-			$fd['loc' .$standard['id'] . '_name'] = array('type' => 'varchar', 'precision' => 25, 'nullable' => True);
-			$fd['entry_date'] = array('type' => 'int', 'precision' => 4, 'nullable' => True);
-			$fd['category'] = array('type' => 'int', 'precision' => 4, 'nullable' => True);
-			$fd['user_id'] = array('type' => 'int', 'precision' => 4, 'nullable' => True);
-			$fd['remark'] = array('type' => 'text', 'nullable' => True);
-			$fd['status'] = array('type' => 'int', 'precision' => 4, 'nullable' => True);
-			$fd['change_type'] = array('type' => 'int', 'precision' => 4, 'nullable' => True);
+			$fd['loc' .$standard['id'] . '_name'] = array('type' => 'varchar', 'precision' => 25, 'nullable' => true);
+			$fd['entry_date'] = array('type' => 'int', 'precision' => 4, 'nullable' => true);
+			$fd['category'] = array('type' => 'int', 'precision' => 4, 'nullable' => true);
+			$fd['user_id'] = array('type' => 'int', 'precision' => 4, 'nullable' => true);
+			$fd['remark'] = array('type' => 'text', 'nullable' => true);
+			$fd['status'] = array('type' => 'int', 'precision' => 4, 'nullable' => true);
+			$fd['change_type'] = array('type' => 'int', 'precision' => 4, 'nullable' => true);
 
 			$ix = array('location_code');
 			$uc = array();
 
 			$fd_history = $fd;
-			$fd_history['exp_date'] = array('type' => 'timestamp','nullable' => True,'default' => 'current_timestamp');
+			$fd_history['exp_date'] = array('type' => 'timestamp','nullable' => true,'default' => 'current_timestamp');
 
 			$add_columns_in_tables=array('fm_project','fm_tts_tickets','fm_request','fm_document','fm_investment');
 
@@ -352,8 +352,8 @@
 
 				$this->oProc->CreateTable('fm_location'. $standard['id'] . '_category', array(
 				'fd' => array(
-					'id' => array('type' => 'int','precision' => '4','nullable' => False),
-					'descr' => array('type' => 'varchar','precision' => '50','nullable' => True)
+					'id' => array('type' => 'int','precision' => '4','nullable' => false),
+					'descr' => array('type' => 'varchar','precision' => '50','nullable' => true)
 				),
 				'pk' => array('id'),
 				'fk' => array(),
@@ -362,7 +362,7 @@
 
 				for ($i=0;$i<count($add_columns_in_tables);$i++)
 				{
-					$this->oProc->AddColumn($add_columns_in_tables[$i],'loc'. $standard['id'], array('type' => 'varchar', 'precision' => 4, 'nullable' => True));
+					$this->oProc->AddColumn($add_columns_in_tables[$i],'loc'. $standard['id'], array('type' => 'varchar', 'precision' => 4, 'nullable' => true));
 				}
 
 				$values_insert= array(
@@ -608,4 +608,4 @@
 			return $location_type;
 		}
 	}
-?>
+

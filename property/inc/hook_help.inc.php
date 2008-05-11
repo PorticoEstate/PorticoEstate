@@ -102,4 +102,4 @@
 
 
 	$GLOBALS['phpgw']->help->draw();
-?>
+

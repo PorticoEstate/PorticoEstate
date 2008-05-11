@@ -39,13 +39,13 @@
 		var $total_records = 0;
 		var $bilagsnr;
 
-		function property_soXport($useacl=True)
+		function property_soXport($useacl=true)
 		{
 
 			$GLOBALS['phpgw_info']['flags']['currentapp']	=	'property';
 		//	$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->bocommon		= CreateObject('property.bocommon');
-			$this->soinvoice	= CreateObject('property.soinvoice',True);
+			$this->soinvoice	= CreateObject('property.soinvoice',true);
 			$this->db           	= $this->bocommon->new_db();
 			$this->db2           	= $this->bocommon->new_db();
 			$this->join		= $this->bocommon->join;
@@ -244,10 +244,10 @@
 						$fields['mvakode'],
 						$fields['periode'],
 						$this->db->db_addslashes($fields['merknad']),
-						False,
-						False,
-						False,
-						False,
+						false,
+						false,
+						false,
+						false,
 						$fields['item_type'],
 						$fields['item_id']
 						);
@@ -566,4 +566,4 @@
 			return $responsible;
 		}
 	}
-?>
+

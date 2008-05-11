@@ -290,26 +290,26 @@
 		{
 		
 			$fd=array();
-			$fd['id'] = array('type' => 'int', 'precision' => 4, 'nullable' => False);
-			$fd['num'] = array('type' => 'varchar', 'precision' => 16, 'nullable' => False);
-			$fd['p_num'] = array('type' => 'varchar', 'precision' => 16, 'nullable' => True);
-			$fd['p_entity_id'] = array('type' => 'int', 'precision' => 4, 'nullable' => True);
-			$fd['p_cat_id'] = array('type' => 'int', 'precision' => 4, 'nullable' => True);
-			$fd['location_code'] = array('type' => 'varchar', 'precision' => 25, 'nullable' => True);
+			$fd['id'] = array('type' => 'int', 'precision' => 4, 'nullable' => false);
+			$fd['num'] = array('type' => 'varchar', 'precision' => 16, 'nullable' => false);
+			$fd['p_num'] = array('type' => 'varchar', 'precision' => 16, 'nullable' => true);
+			$fd['p_entity_id'] = array('type' => 'int', 'precision' => 4, 'nullable' => true);
+			$fd['p_cat_id'] = array('type' => 'int', 'precision' => 4, 'nullable' => true);
+			$fd['location_code'] = array('type' => 'varchar', 'precision' => 25, 'nullable' => true);
 
 			$location_type = $this->bocommon->next_id('fm_location_type');
 			
 			for ($i=1; $i<$location_type; $i++)
 			{
-				$fd['loc' . $i] = array('type' => 'varchar', 'precision' => 4, 'nullable' => True);
+				$fd['loc' . $i] = array('type' => 'varchar', 'precision' => 4, 'nullable' => true);
 			}
 
-			$fd['address'] = array('type' => 'varchar', 'precision' => 150, 'nullable' => True);
-			$fd['tenant_id'] = array('type' => 'int', 'precision' => 4, 'nullable' => True);
-			$fd['contact_phone'] = array('type' => 'varchar', 'precision' => 30, 'nullable' => True);
-			$fd['status'] = array('type' => 'int', 'precision' => 4, 'nullable' => True);
-			$fd['entry_date'] = array('type' => 'int', 'precision' => 4, 'nullable' => True);
-			$fd['user_id'] = array('type' => 'int', 'precision' => 4, 'nullable' => True);
+			$fd['address'] = array('type' => 'varchar', 'precision' => 150, 'nullable' => true);
+			$fd['tenant_id'] = array('type' => 'int', 'precision' => 4, 'nullable' => true);
+			$fd['contact_phone'] = array('type' => 'varchar', 'precision' => 30, 'nullable' => true);
+			$fd['status'] = array('type' => 'int', 'precision' => 4, 'nullable' => true);
+			$fd['entry_date'] = array('type' => 'int', 'precision' => 4, 'nullable' => true);
+			$fd['user_id'] = array('type' => 'int', 'precision' => 4, 'nullable' => true);
 			
 			return $fd;
 		}
@@ -376,7 +376,7 @@
 					'Status',
 					'LB',
 					1,
-					'True'
+					'true'
 					);
 
 				$values_insert	= $this->bocommon->validate_db_insert($values_insert);
@@ -628,4 +628,4 @@
 			$this->oProc->m_odb->Halt_On_Error	= 'yes';
 		}
 	}
-?>
+

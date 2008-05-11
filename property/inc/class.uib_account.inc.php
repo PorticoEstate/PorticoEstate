@@ -44,14 +44,14 @@
 
 		var $public_functions = array
 		(
-			'index'  => True,
-			'edit'   => True,
-			'delete' => True
+			'index'  => true,
+			'edit'   => true,
+			'delete' => true
 		);
 
 		function property_uib_account()
 		{
-			$GLOBALS['phpgw_info']['flags']['xslt_app'] = True;
+			$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] = 'property::invoice::budget';
 
 		//	$this->currentapp		= $GLOBALS['phpgw_info']['flags']['currentapp'];
@@ -167,7 +167,7 @@
 			$data = array
 			(
 				'menu'						=> $this->bocommon->get_menu(),
-				'allow_allrows'				=> True,
+				'allow_allrows'				=> true,
 				'allrows'				=> $this->allrows,
 				'start_record'				=> $this->start,
 				'record_limit'				=> $record_limit,
@@ -334,4 +334,4 @@
 		}
 
 	}
-?>
+

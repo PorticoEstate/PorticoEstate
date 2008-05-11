@@ -541,4 +541,4 @@
 			$this->db->query("DELETE FROM $table WHERE id=" . intval($actor_id));
 		}
 	}
-?>
+

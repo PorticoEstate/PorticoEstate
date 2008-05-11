@@ -46,11 +46,11 @@
 
 		var $public_functions = array
 		(
-			'read'		=> True,
-			'read_single'	=> True,
-			'save'		=> True,
-			'delete'	=> True,
-			'check_perms'	=> True
+			'read'		=> true,
+			'read_single'	=> true,
+			'save'		=> true,
+			'delete'	=> true,
+			'check_perms'	=> true
 		);
 
 		var $soap_functions = array(
@@ -72,7 +72,7 @@
 			)
 		);
 
-		function property_bolocation($session=False)
+		function property_bolocation($session=false)
 		{
 		//	$this->currentapp			= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->so 					= CreateObject('property.solocation');
@@ -85,7 +85,7 @@
 			if ($session && !$this->lookup)
 			{
 				$this->read_sessiondata();
-				$this->use_session = True;
+				$this->use_session = true;
 			}
 
 			$start					= phpgw::get_var('start', 'int', 'REQUEST', 0);
@@ -306,15 +306,15 @@
 				}
 
 				$location['location'][$i]['lookup_function_call']			= 'lookup_loc' . ($i+1) . '()';
-				$location['location'][$i]['lookup_link']				= True;
-				$location['location'][$i]['readonly']					= True;
+				$location['location'][$i]['lookup_link']				= true;
+				$location['location'][$i]['readonly']					= true;
 				$lookup_functions[$i]['name'] 						= 'lookup_loc' . ($i+1) . '()';
 				$lookup_functions[$i]['link']						=  $location_link .',type_id:' . ($i+1) . ',lookup_name:' . $i;
 				$lookup_functions[$i]['action'] 					= 'Window1=window.open(strURL,"Search","width=800,height=700,toolbar=no,scrollbars=yes,resizable=yes");';
 
 				if(isset($data['no_link']) && $data['no_link']>=($i+3))
 				{
-					$location['location'][$i]['lookup_link']			= False;
+					$location['location'][$i]['lookup_link']			= false;
 					$lookup_functions[$i]['link'] 					= $location_link .',type_id:' . ($data['no_link']-1) . ',lookup_name:' . ($data['no_link']-2);
 					$lookup_functions[$i]['action'] 				= 'Window1=window.open(strURL,"Search","width=800,height=700,toolbar=no,scrollbars=yes,resizable=yes");';
 					$location['location'][$i]['statustext']				= lang('Klick this link to select') . ' ' . $location_types[($data['no_link']-2)]['name'];
@@ -349,8 +349,8 @@
 					$input_name[]							= $location['location'][$i]['input_name'];
 					$location['location'][$i]['size']				= 5;
 					$location['location'][$i]['lookup_function_call']		= 'lookup_loc' . $fm_location_cols[$j]['location_type'] . '()';
-					$location['location'][$i]['lookup_link']			= True;
-					$location['location'][$i]['readonly']				= True;
+					$location['location'][$i]['lookup_link']			= true;
+					$location['location'][$i]['readonly']				= true;
 					$location['location'][$i]['name']				= $fm_location_cols[$j]['input_text'];
 					$location['location'][$i]['value']				= isset($data['values'][$fm_location_cols[$j]['column_name']]) ? $data['values'][$fm_location_cols[$j]['column_name']] : '';
 					$location['location'][$i]['statustext']				= lang('Klick this link to select') . ' ' . $location_types[($fm_location_cols[$j]['location_type']-1)]['name'];
@@ -368,7 +368,7 @@
 					{
 						$location['location'][$i]['input_name']				= $config[$j]['column_name'];
 						$input_name[]										= 'street_id';
-						$location['location'][$i]['lookup_link']			= True;
+						$location['location'][$i]['lookup_link']			= true;
 						$location['location'][$i]['lookup_function_call']	= 'lookup_loc' . $config[$j]['location_type'] . '()';
 						$location['location'][$i]['name']					= lang('address');
 						$location['location'][$i]['input_type']				= 'hidden';
@@ -376,7 +376,7 @@
 
 						$location['location'][$i]['extra'][0]['input_type']	= 'text';
 						$location['location'][$i]['extra'][0]['input_name']	= 'street_name';
-						$location['location'][$i]['extra'][0]['readonly']	= True;
+						$location['location'][$i]['extra'][0]['readonly']	= true;
 						$input_name[]										= $location['location'][$i]['extra'][0]['input_name'];
 						$location['location'][$i]['extra'][0]['size']		= 30;
 						$location['location'][$i]['extra'][0]['lookup_function_call']	= 'lookup_loc' . $config[$j]['location_type'] . '()';
@@ -384,7 +384,7 @@
 
 						$location['location'][$i]['extra'][1]['input_type']	= 'text';
 						$location['location'][$i]['extra'][1]['input_name']	= 'street_number';
-						$location['location'][$i]['extra'][1]['readonly']	= True;
+						$location['location'][$i]['extra'][1]['readonly']	= true;
 						$input_name[]										= $location['location'][$i]['extra'][1]['input_name'];
 						$location['location'][$i]['extra'][1]['size']		= 6;
 						$location['location'][$i]['extra'][1]['lookup_function_call']	= 'lookup_loc' . $config[$j]['location_type'] . '()';
@@ -398,7 +398,7 @@
 						$lookup_functions[$m]['link']						= $location_link .',lookup_tenant:1,type_id:' . $config[$j]['location_type'] . ',lookup_name:' . $i;
 						$lookup_functions[$m]['action'] 					= 'Window1=window.open(strURL,"Search","width=800,height=700,toolbar=no,scrollbars=yes,resizable=yes");';
 
-						$location['location'][$i]['lookup_link']			= True;
+						$location['location'][$i]['lookup_link']			= true;
 						$location['location'][$i]['name']					= lang('Tenant');
 						$location['location'][$i]['input_type']				= 'hidden';
 						$location['location'][$i]['input_name']				= 'tenant_id';
@@ -410,7 +410,7 @@
 
 						$location['location'][$i]['extra'][0]['input_type']	= 'text';
 						$location['location'][$i]['extra'][0]['input_name']	= 'last_name';
-						$location['location'][$i]['extra'][0]['readonly']	= True;
+						$location['location'][$i]['extra'][0]['readonly']	= true;
 						$input_name[]										= $location['location'][$i]['extra'][0]['input_name'];
 						$location['location'][$i]['extra'][0]['size']		= 15;
 						$location['location'][$i]['extra'][0]['lookup_function_call']	= $lookup_functions[$m]['name'];
@@ -419,7 +419,7 @@
 
 						$location['location'][$i]['extra'][1]['input_type']	= 'text';
 						$location['location'][$i]['extra'][1]['input_name']	= 'first_name';
-						$location['location'][$i]['extra'][1]['readonly']	= True;
+						$location['location'][$i]['extra'][1]['readonly']	= true;
 						$input_name[]										= $location['location'][$i]['extra'][1]['input_name'];
 						$location['location'][$i]['extra'][1]['size']		= 15;
 						$location['location'][$i]['extra'][1]['lookup_function_call']	= $lookup_functions[$m]['name'];
@@ -445,7 +445,7 @@
 						$location['location'][$i]['size']					= 5;
 						$location['location'][$i]['value']					= $data['location']['value'][$config[$j]['column_name']];
 						$location['location'][$i]['lookup_function_call']	= 'lookup_loc' . $fm_location_cols[$j]['location_type'] . '()';
-						$location['location'][$i]['lookup_link']			= True;
+						$location['location'][$i]['lookup_link']			= true;
 						$location['location'][$i]['name']					= $config[$j]['descr'];
 						$location['location'][$i]['value']					= $data['values'][$config[$j]['column_name']];
 						$location['location'][$i]['statustext']				= lang('Klick this link to select') . ' ' .$location_types[($fm_location_cols[$j]['location_type']-1)]['name'];
@@ -473,7 +473,7 @@
 
 					$location['location'][$i]['size']							= 8;
 					$location['location'][$i]['lookup_function_call']			= 'lookup_entity_' . $entity['id'] .'()';
-					$location['location'][$i]['lookup_link']					= True;
+					$location['location'][$i]['lookup_link']					= true;
 					$location['location'][$i]['name']							= $entity['name'];
 					
 					if (is_array($data['entity_data']))
@@ -671,7 +671,7 @@
 			}
 
 			$acl_location = '.location.' . $type_id;
-			$custom_functions = $this->custom->read_custom_function(array('appname'=>'property','location' => $acl_location,'allrows'=>True));
+			$custom_functions = $this->custom->read_custom_function(array('appname'=>'property','location' => $acl_location,'allrows'=>true));
 
 			if (isSet($custom_functions) AND is_array($custom_functions))
 			{
@@ -733,4 +733,4 @@
 			return $this->so->get_tenant_location($tenant_id);
 		}
 	}
-?>
+

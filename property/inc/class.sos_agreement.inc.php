@@ -136,7 +136,7 @@
 			}
 			else
 			{
-				$allrows=True;
+				$allrows=true;
 				$entity_table = 'fm_s_agreement_detail';
 				$attribute_filter = " appname = 'property' AND location = '.s_agreement.detail'";
 
@@ -162,8 +162,8 @@
 				$cols_return[] 				= 'id';
 				$uicols['input_type'][]		= 'hidden';
 				$uicols['name'][]			= 'id';
-				$uicols['descr'][]			= False;
-				$uicols['statustext'][]		= False;
+				$uicols['descr'][]			= false;
+				$uicols['statustext'][]		= false;
 				$uicols['import'][]			= false;
 
 				$cols_return[] 				= 'location_code';
@@ -184,14 +184,14 @@
 				$uicols['input_type'][]		= 'text';
 				$uicols['name'][]			= 'p_entity_id';
 				$uicols['descr'][]			= 'entity_id';
-				$uicols['statustext'][]		= False;
+				$uicols['statustext'][]		= false;
 				$uicols['import'][]			= true;
 
 				$cols_return[] 				= 'p_cat_id';
 				$uicols['input_type'][]		= 'text';
 				$uicols['name'][]			= 'p_cat_id';
 				$uicols['descr'][]			= 'cat_id';
-				$uicols['statustext'][]		= False;
+				$uicols['statustext'][]		= false;
 				$uicols['import'][]			= true;
 
 				$cols_return[] 				= 'p_num';
@@ -485,8 +485,8 @@
 			$cols_return[] 			= 'id';
 			$uicols['input_type'][]		= 'hidden';
 			$uicols['name'][]			= 'id';
-			$uicols['descr'][]			= False;
-			$uicols['statustext'][]		= False;
+			$uicols['descr'][]			= false;
+			$uicols['statustext'][]		= false;
 
 			$cols_return[] 			= 'cost';
 			$uicols['input_type'][]		= 'text';
@@ -799,7 +799,7 @@
 				$historylog	= CreateObject('property.historylog','s_agreement');
 				while (list($attrib_id,$new_value) = each($history_set))
 				{
-					$historylog->add('SO',$values['s_agreement_id'],$new_value,False, $attrib_id,false,$id);
+					$historylog->add('SO',$values['s_agreement_id'],$new_value,false, $attrib_id,false,$id);
 				}
 			}
 
@@ -937,7 +937,7 @@
 				foreach ($history_set as $attrib_id => $history)
 		//		while (list($attrib_id,$history) = each($history_set))
 				{
-					$historylog->add('SO',$values['s_agreement_id'],$history['value'],False, $attrib_id,$history['date'],$values['id']);
+					$historylog->add('SO',$values['s_agreement_id'],$history['value'],false, $attrib_id,$history['date'],$values['id']);
 				}
 			}
 
@@ -1036,4 +1036,4 @@
 			return $next_id;
 		}
 	}
-?>
+

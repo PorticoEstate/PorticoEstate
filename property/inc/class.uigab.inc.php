@@ -47,23 +47,23 @@
 
 		var $public_functions = array
 		(
-			'index'  	=> True,
-			'list_detail'  	=> True,
-			'view' 		=> True,
-			'edit'   	=> True,
-			'delete' 	=> True,
-			'download'  	=> True
+			'index'  	=> true,
+			'list_detail'  	=> true,
+			'view' 		=> true,
+			'edit'   	=> true,
+			'delete' 	=> true,
+			'download'  	=> true
 		);
 
 		function property_uigab()
 		{
-			$GLOBALS['phpgw_info']['flags']['xslt_app'] = True;
+			$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] = 'property::location::gabnr';
 
 		//	$this->currentapp			= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->nextmatchs			= CreateObject('phpgwapi.nextmatchs');
 			$this->account				= $GLOBALS['phpgw_info']['user']['account_id'];
-			$this->bo					= CreateObject('property.bogab',True);
+			$this->bo					= CreateObject('property.bogab',true);
 			$this->bocommon				= CreateObject('property.bocommon');
 			$this->bolocation				= CreateObject('property.bolocation');
 
@@ -117,7 +117,7 @@
 				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop','perm'=>1, 'acl_location'=> $this->acl_location));
 			}
 
-			$gab_list = $this->bo->read($location_code,$gaards_nr,$bruksnr,$feste_nr,$seksjons_nr,$address,$check_payments,$allrows=True);
+			$gab_list = $this->bo->read($location_code,$gaards_nr,$bruksnr,$feste_nr,$seksjons_nr,$address,$check_payments,$allrows=true);
 
 			$payment_date = $this->bo->payment_date;
 
@@ -780,8 +780,8 @@
 			$location_data=$this->bolocation->initiate_ui_location(array(
 						'values'		=> $values['location_data'],
 						'type_id'		=> $type_id,
-						'no_link'		=> False, // disable lookup links for location type less than type_id
-						'tenant'		=> False,
+						'no_link'		=> false, // disable lookup links for location type less than type_id
+						'tenant'		=> false,
 						'lookup_type'	=> $lookup_type
 						));
 
@@ -923,8 +923,8 @@
 			$location_data=$this->bolocation->initiate_ui_location(array(
 						'values'		=> $values['location_data'],
 						'type_id'		=> count(explode('-',$values['location_code'])),
-						'no_link'		=> False, // disable lookup links for location type less than type_id
-						'tenant'		=> False,
+						'no_link'		=> false, // disable lookup links for location type less than type_id
+						'tenant'		=> false,
 						'lookup_type'	=> 'view'
 						));
 
@@ -968,4 +968,4 @@
 		//	$GLOBALS['phpgw']->xslttpl->pp();
 		}
 	}
-?>
+

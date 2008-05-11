@@ -77,7 +77,7 @@
 
 			if ($old_status != $ticket['status'])
 			{
-				$fields_updated = True;
+				$fields_updated = true;
 				if($old_status=='X')
 				{
 					$this->historylog->add('R',$id,$ticket['status'],$old_status);
@@ -185,14 +185,14 @@
 			{
 				if ($oldfinnish_date != $finnish_date)
 				{
-					$fields_updated = True;
+					$fields_updated = true;
 					$this->historylog->add('F',$id,$finnish_date,$oldfinnish_date);
 				}
 			}
 
 			if ($old_status != $ticket['status'])
 			{
-				$fields_updated = True;
+				$fields_updated = true;
 				if($old_status=='X')
 				{
 					$this->historylog->add('R',$id,$ticket['status'],$old_status);
@@ -210,7 +210,7 @@
 
 			if (($oldassigned != $ticket['assignedto']) && $ticket['assignedto'] != 'ignore')
 			{
-				$fields_updated = True;
+				$fields_updated = true;
 
 				$value_set=array('assignedto'	=> $ticket['assignedto']);
 				$value_set	= $this->bocommon->validate_db_update($value_set);
@@ -221,7 +221,7 @@
 
 			if (($oldgroup_id != $ticket['group_id']) && $ticket['group_id'] != 'ignore')
 			{
-				$fields_updated = True;
+				$fields_updated = true;
 
 				$value_set=array('group_id'	=> $ticket['group_id']);
 				$value_set	= $this->bocommon->validate_db_update($value_set);
@@ -232,7 +232,7 @@
 
 			if ($oldpriority != $ticket['priority'])
 			{
-				$fields_updated = True;
+				$fields_updated = true;
 				$this->db->query("update fm_tts_tickets set priority='" . $ticket['priority']
 					. "' where id='$id'",__LINE__,__FILE__);
 				$this->historylog->add('P',$id,$ticket['priority'],$oldpriority);
@@ -240,7 +240,7 @@
 
 			if (($oldcat_id != $ticket['cat_id']) && $ticket['cat_id'] != 'ignore')
 			{
-				$fields_updated = True;
+				$fields_updated = true;
 				$this->db->query("update fm_tts_tickets set cat_id='" . $ticket['cat_id']
 					. "' where id='$id'",__LINE__,__FILE__);
 				$this->historylog->add('T',$id,$ticket['cat_id'],$oldcat_id);
@@ -248,7 +248,7 @@
 
 	/*		if ($old_billable_hours != $ticket['billable_hours'])
 			{
-				$fields_updated = True;
+				$fields_updated = true;
 				$this->db->query("update fm_tts_tickets set billable_hours='" . $ticket['billable_hours']
 					. "' where id='$id'",__LINE__,__FILE__);
 				$this->historylog->add('H',$id,$ticket['billable_hours'],$old_billable_hours);
@@ -256,7 +256,7 @@
 
 			if ($old_billable_rate != $ticket['billable_rate'])
 			{
-				$fields_updated = True;
+				$fields_updated = true;
 				$this->db->query("update fm_tts_tickets set billable_rate='" . $ticket['billable_rate']
 					. "' where id='$id'",__LINE__,__FILE__);
 				$this->historylog->add('B',$id,$ticket['billable_rate'],$old_billable_rate);
@@ -272,7 +272,7 @@
 
 			if (($old_note != $ticket['note']) && $ticket['note'])
 			{
-				$fields_updated = True;
+				$fields_updated = true;
 				$this->historylog->add('C',$id,$this->db->db_addslashes($ticket['note']),$old_note);
 			}
 
@@ -291,7 +291,7 @@
 				$receipt['message'][]= array('msg' => lang('Ticket has been updated'));
 
 				$custom = createObject('phpgwapi.custom_fields');
-				$custom_functions = $custom->read_custom_function(array('appname'=>'property','location' => $this->acl_location,'allrows'=>True));
+				$custom_functions = $custom->read_custom_function(array('appname'=>'property','location' => $this->acl_location,'allrows'=>true));
 
 				if (isSet($custom_functions) AND is_array($custom_functions))
 				{
@@ -308,4 +308,4 @@
 			return (isset($receipt)?$receipt:'');
 		}
 	}
-?>
+

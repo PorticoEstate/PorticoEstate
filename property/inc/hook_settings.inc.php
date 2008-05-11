@@ -36,7 +36,7 @@
 	create_select_box('Choose property filter','property_filter',$select_property_filter,'Filter by owner or owner type');
 
 	$yes_and_no = array(
-		'True' => 'Yes',
+		'true' => 'Yes',
 		''     => 'No'
 	);
 	create_select_box('show new/updated tickets on main screen','mainscreen_show_new_updated',$yes_and_no,'Dont think this is working - yet');
@@ -185,7 +185,7 @@
 
 	$cats		= CreateObject('phpgwapi.categories');
 	$cats->app_name = 'fm_vendor';
-	$cat_data	= $cats->formatted_xslt_list(array('globals' => True, 'link_data' =>array()));
+	$cat_data	= $cats->formatted_xslt_list(array('globals' => true, 'link_data' =>array()));
 	$cat_list = $cat_data['cat_list'];
 
 	if (is_array($cat_list))

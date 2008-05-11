@@ -44,15 +44,15 @@
 
 		var $public_functions = array
 		(
-			'index'  => True,
-			'view'   => True,
-			'edit'   => True,
-			'delete' => True
+			'index'  => true,
+			'view'   => true,
+			'edit'   => true,
+			'delete' => true
 		);
 
 		function property_uistandard_2()
 		{
-			$GLOBALS['phpgw_info']['flags']['xslt_app'] = True;
+			$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
 			
 			$type	= phpgw::get_var('type');
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] = phpgw::get_var('menu_selection');
@@ -60,7 +60,7 @@
 		//	$this->currentapp			= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->nextmatchs			= CreateObject('phpgwapi.nextmatchs');
 			$this->account				= $GLOBALS['phpgw_info']['user']['account_id'];
-			$this->bo					= CreateObject('property.bostandard_2',True);
+			$this->bo					= CreateObject('property.bostandard_2',true);
 			$this->bocommon				= CreateObject('property.bocommon');
 
 			$this->acl 				= CreateObject('phpgwapi.acl');
@@ -166,7 +166,7 @@
 
 			$data = array
 			(
-				'allow_allrows'				=> True,
+				'allow_allrows'				=> true,
 				'allrows'				=> $this->allrows,
 				'start_record'				=> $this->start,
 				'record_limit'				=> $record_limit,
@@ -318,4 +318,4 @@
 		//	$GLOBALS['phpgw']->xslttpl->pp();
 		}
 	}
-?>
+

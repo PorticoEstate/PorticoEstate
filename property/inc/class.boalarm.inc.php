@@ -37,7 +37,7 @@
 
 		var $public_functions = array
 		(
-			'send_alarm' => True
+			'send_alarm' => true
 		);
 
 		function property_boalarm($session = '')
@@ -55,7 +55,7 @@
 			if ($session)
 			{
 				$this->read_sessiondata();
-				$this->use_session = True;
+				$this->use_session = true;
 			}
 
 			$start	= phpgw::get_var('start', 'int', 'REQUEST', 0);
@@ -192,7 +192,7 @@
 		{
 			if (!($jobs = $this->async->read($id)))
 			{
-				return False;
+				return false;
 			}
 
 			$alarm         = $jobs[$id]['data'];	// text, enabled
@@ -209,12 +209,12 @@
 		/*!
 		@function enable
 		@abstract enable or disable one or more alarms identified by its ids
-		@syntax enable($ids,$enable=True)
+		@syntax enable($ids,$enable=true)
 		@param $ids array with alarm ids as keys (!)
 		@returns the number of alarms enabled or -1 for insuficent permission to do so
 		@note Not found alarms or insuficent perms stop the enableing of multiple alarms
 		*/
-		function enable_alarm($alarm_type,$alarms,$enable=True)
+		function enable_alarm($alarm_type,$alarms,$enable=true)
 		{
 			$enabled = 0;
 			foreach ($alarms as $id => $field)
@@ -250,7 +250,7 @@
 		/*!
 		@function save_alarm
 		@abstract saves a new or updated alarm
-		@syntax save_alarm($cal_id,$alarm,$id=False)
+		@syntax save_alarm($cal_id,$alarm,$id=false)
 		@param $cal_id Id of the calendar-entry
 		@param $alarm array with fields: text, owner, enabled, ..
 		*/
@@ -279,7 +279,7 @@
 
 				if (!$this->async->set_timer($alarm['times'],$id,$method,$alarm))
 				{
-					return False;
+					return false;
 				}
 				return $id;
 			}
@@ -298,13 +298,13 @@
 		@param &$event event to add the alarm too
 		@param $time for the alarm in sec before the starttime of the event
 		@param $login_id user to alarm
-		@returns the alarm or False
+		@returns the alarm or false
 		*/
 		function add_alarm($alarm_type,&$event,$time,$owner)
 		{
 /*			if (!$this->check_perms(PHPGW_ACL_SETALARM,$owner) || !($cal_id = $event['id']))
 			{
-				return False;
+				return false;
 			}
 */
 			if(!$owner>0)
@@ -376,7 +376,7 @@
 
 			if (!$alarm['enabled'] || !$alarm['owner'])
 			{
-				return False;	// event not found
+				return false;	// event not found
 			}
 
 			$this->config		= CreateObject('phpgwapi.config');
@@ -486,4 +486,4 @@
 		}
 
 	}
-?>
+

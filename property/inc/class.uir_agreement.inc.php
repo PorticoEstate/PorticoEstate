@@ -44,27 +44,27 @@
 
 		var $public_functions = array
 		(
-			'index'  			=> True,
-			'view'   			=> True,
-			'edit'   			=> True,
-			'delete' 			=> True,
-			'columns'			=> True,
-			'edit_item'			=> True,
-			'view_item'			=> True,
-			'view_file'			=> True,
-			'download'				=> True,
-			'edit_common'		=> True,
-			'delete_common_h'	=> True
+			'index'  			=> true,
+			'view'   			=> true,
+			'edit'   			=> true,
+			'delete' 			=> true,
+			'columns'			=> true,
+			'edit_item'			=> true,
+			'view_item'			=> true,
+			'view_file'			=> true,
+			'download'				=> true,
+			'edit_common'		=> true,
+			'delete_common_h'	=> true
 		);
 
 		function property_uir_agreement()
 		{
-			$GLOBALS['phpgw_info']['flags']['xslt_app'] = True;
+			$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] = 'property::agreement::rental';
 			$this->nextmatchs		= CreateObject('phpgwapi.nextmatchs');
 			$this->account			= $GLOBALS['phpgw_info']['user']['account_id'];
 
-			$this->bo				= CreateObject('property.bor_agreement',True);
+			$this->bo				= CreateObject('property.bor_agreement',true);
 			$this->bocommon			= CreateObject('property.bocommon');
 
 			$this->role				= $this->bo->role;
@@ -116,7 +116,7 @@
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('columns'));
 
-			$GLOBALS['phpgw_info']['flags']['noframework'] = True;
+			$GLOBALS['phpgw_info']['flags']['noframework'] = true;
 
 			$values = phpgw::get_var('values');
 
@@ -144,7 +144,7 @@
 			$data = array
 			(
 				'msgbox_data' 	=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
-				'column_list'	=> $this->bo->column_list($values['columns'],$allrows=True),
+				'column_list'	=> $this->bo->column_list($values['columns'],$allrows=true),
 				'function_msg'	=> $function_msg,
 				'form_action'	=> $GLOBALS['phpgw']->link('/index.php',$link_data),
 				'lang_columns'	=> lang('columns'),
@@ -323,7 +323,7 @@
 				'role'		=> $this->role
 			);
 
-			$member_of_data	= $this->cats->formatted_xslt_list(array('selected' => $this->member_id,'globals' => True,link_data => $link_data));
+			$member_of_data	= $this->cats->formatted_xslt_list(array('selected' => $this->member_id,'globals' => true,link_data => $link_data));
 
 			$GLOBALS['phpgw']->js->validate_file('overlib','overlib','property');
 
@@ -335,7 +335,7 @@
 				'link_columns'					=> $GLOBALS['phpgw']->link('/index.php',$link_columns),
 				'lang_columns_help'				=> lang('Choose columns'),
 				'msgbox_data'					=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
- 				'allow_allrows'					=> True,
+ 				'allow_allrows'					=> true,
 				'allrows'						=> $this->allrows,
 				'start_record'					=> $this->start,
 				'record_limit'					=> $record_limit,
@@ -684,7 +684,7 @@
 				$table_header=$list['table_header'];
 				for ($i=0; $i<count($list['content'][0]['row']); $i++)
 				{
-					$set_column[]=True;
+					$set_column[]=true;
 				}
 
 				if ($content)
@@ -831,7 +831,7 @@
 
 			$msgbox_data = $this->bocommon->msgbox_data($receipt);
 
-			$member_of_data	= $this->cats->formatted_xslt_list(array('selected' => $this->member_id,'globals' => True,link_data => array()));
+			$member_of_data	= $this->cats->formatted_xslt_list(array('selected' => $this->member_id,'globals' => true,link_data => array()));
 
 			$table_add_space[] = array
 			(
@@ -889,7 +889,7 @@
 				'link_download'					=> $GLOBALS['phpgw']->link('/index.php',$link_download),
 				'lang_download_help'				=> lang('Download table to your browser'),
 
-				'fileupload'					=> True,
+				'fileupload'					=> true,
 				'link_view_file'				=> $GLOBALS['phpgw']->link('/index.php',$link_file_data),
 				'link_to_files'					=> $link_to_files,
 				'files'							=> $r_agreement['files'],
@@ -1138,7 +1138,7 @@
 
 			$msgbox_data = $this->bocommon->msgbox_data($receipt);
 
-	//		$member_of_data	= $this->cats->formatted_xslt_list(array('selected' => $this->member_id,'globals' => True,link_data => array()));
+	//		$member_of_data	= $this->cats->formatted_xslt_list(array('selected' => $this->member_id,'globals' => true,link_data => array()));
 
 			$table_add[] = array
 			(
@@ -1164,13 +1164,13 @@
 			}
 
 			$uicols		= $this->bo->uicols;
-			$list		= $this->list_content($list,$uicols,$edit_item=True);
+			$list		= $this->list_content($list,$uicols,$edit_item=true);
 			$content	= $list['content'];
 			$table_header=$list['table_header'];
 
 			for ($i=0; $i<count($list['content'][0]['row']); $i++)
 			{
-				$set_column[]=True;
+				$set_column[]=true;
 			}
 //_debug_array($list);
 			$tenant_data=$this->bocommon->initiate_ui_tenant_lookup(array(
@@ -1202,11 +1202,11 @@
 			$location_data=$bolocation->initiate_ui_location(array(
 						'values'		=> $values['location_data'],
 						'type_id'		=> -1, // calculated from location_types
-						'no_link'		=> False, // disable lookup links for location type less than type_id
-						'tenant'		=> False,
+						'no_link'		=> false, // disable lookup links for location type less than type_id
+						'tenant'		=> false,
 						'lookup_type'	=> $lookup_type,
-						'lookup_entity'	=> False, // $this->bocommon->get_lookup_entity('r_agreement'),
-						'entity_data'	=> False,//$values['p']
+						'lookup_entity'	=> false, // $this->bocommon->get_lookup_entity('r_agreement'),
+						'entity_data'	=> false,//$values['p']
 						));
 
 			$GLOBALS['phpgw']->js->validate_file('core','check','property');
@@ -1316,7 +1316,7 @@
 			}
 
 			$uicols		= $this->bo->uicols;
-			$list		= $this->list_content($list,$uicols,$edit_item=True);
+			$list		= $this->list_content($list,$uicols,$edit_item=true);
 			$content	= $list['content'];
 			$table_header=$list['table_header'];
 
@@ -1325,8 +1325,8 @@
 			$location_data=$bolocation->initiate_ui_location(array(
 						'values'		=> $values['location_data'],
 						'type_id'		=> -1, // calculated from location_types
-						'no_link'		=> False, // disable lookup links for location type less than type_id
-						'tenant'		=> False,
+						'no_link'		=> false, // disable lookup links for location type less than type_id
+						'tenant'		=> false,
 						'lookup_type'	=> $lookup_type,
 						'lookup_entity'	=> $this->bocommon->get_lookup_entity('r_agreement'),
 						'entity_data'	=> $values['p']
@@ -1442,7 +1442,7 @@
 				$total_records = count($list);
 
 				$uicols		= $this->bo->uicols;
-				$list		= $this->list_content($list,$uicols,$edit_item=False,$view_only=True);
+				$list		= $this->list_content($list,$uicols,$edit_item=false,$view_only=true);
 				$content	= $list['content'];
 				$table_header=$list['table_header'];
 			}
@@ -1493,7 +1493,7 @@
 
 			$dateformat= (implode($sep,$dlarr));
 
-			$member_of_data	= $this->cats->formatted_xslt_list(array('selected' => $this->member_id,'globals' => True,link_data => array()));
+			$member_of_data	= $this->cats->formatted_xslt_list(array('selected' => $this->member_id,'globals' => true,link_data => array()));
 
 			$link_file_data = array
 			(
@@ -1858,4 +1858,4 @@
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('delete' => $data));
 		}
 	}
-?>
+

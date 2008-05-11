@@ -43,7 +43,7 @@
 		var $order;
 		var $cat_id;
 
-		function property_botenant_claim($session=False)
+		function property_botenant_claim($session=false)
 		{
 		//	$this->currentapp		= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->bocommon = CreateObject('property.bocommon');
@@ -52,7 +52,7 @@
 			if ($session)
 			{
 				$this->read_sessiondata();
-				$this->use_session = True;
+				$this->use_session = true;
 			}
 
 			$start	= phpgw::get_var('start', 'int', 'REQUEST', 0);
@@ -130,7 +130,7 @@
 
 		function check_perms($has, $needed)
 		{
-			return (!!($has & $needed) == True);
+			return (!!($has & $needed) == true);
 		}
 
 		function get_status_list($data=0)
@@ -259,4 +259,4 @@
 			}
 		}
 	}
-?>
+

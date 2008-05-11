@@ -44,23 +44,23 @@
 
 		var $public_functions = array
 		(
-			'index'  => True,
-			'view'   => True,
-			'edit'   => True,
-			'download' => True,
-			'delete' => True
+			'index'  => true,
+			'view'   => true,
+			'edit'   => true,
+			'download' => true,
+			'delete' => true
 		);
 
 		function property_uicustom()
 		{
-			$GLOBALS['phpgw_info']['flags']['xslt_app'] = True;
+			$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] = 'property::custom';
 
 		//	$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->nextmatchs	= CreateObject('phpgwapi.nextmatchs');
 			$this->account		= $GLOBALS['phpgw_info']['user']['account_id'];
 
-			$this->bo		= CreateObject('property.bocustom',True);
+			$this->bo		= CreateObject('property.bocustom',true);
 			$this->bocommon		= CreateObject('property.bocommon');
 			$this->start		= $this->bo->start;
 			$this->query		= $this->bo->query;
@@ -562,7 +562,7 @@
 		function download()
 		{
 			$custom_id = phpgw::get_var('custom_id', 'int');
-			$list= $this->bo->read_custom($custom_id,$allrows=True);
+			$list= $this->bo->read_custom($custom_id,$allrows=true);
 			$uicols	= $this->bo->uicols;
 			foreach($uicols as $col)
 			{
@@ -572,4 +572,4 @@
 			$this->bocommon->download($list,$names,$descr);
 		}
 	}
-?>
+

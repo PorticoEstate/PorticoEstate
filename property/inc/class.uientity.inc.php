@@ -47,29 +47,29 @@
 
 		var $public_functions = array
 		(
-			'columns'	=> True,
-			'download'  	=> True,
-			'index'  	=> True,
-			'view'   	=> True,
-			'edit'   	=> True,
-			'delete' 	=> True,
-			'view_file'	=> True,
-			'attrib_history'=> True,
-			'attrib_help'	=> True,
-			'print_pdf'		=> True
+			'columns'	=> true,
+			'download'  	=> true,
+			'index'  	=> true,
+			'view'   	=> true,
+			'edit'   	=> true,
+			'delete' 	=> true,
+			'view_file'	=> true,
+			'attrib_history'=> true,
+			'attrib_help'	=> true,
+			'print_pdf'		=> true
 		);
 
 		function property_uientity()
 		{
-			$GLOBALS['phpgw_info']['flags']['xslt_app'] = True;
+			$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
 		//	$this->currentapp			= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->nextmatchs			= CreateObject('phpgwapi.nextmatchs');
 			$this->account				= $GLOBALS['phpgw_info']['user']['account_id'];
 
-			$this->bo				= CreateObject('property.boentity',True);
+			$this->bo				= CreateObject('property.boentity',true);
 			$this->bocommon				= CreateObject('property.bocommon');
 
-			$this->boadmin_entity			= CreateObject('property.boadmin_entity',True);
+			$this->boadmin_entity			= CreateObject('property.boadmin_entity',true);
 
 			$this->entity_id			= $this->bo->entity_id;
 			$this->cat_id				= $this->bo->cat_id;
@@ -133,9 +133,9 @@
 
 		function download()
 		{
-			$GLOBALS['phpgw_info']['flags'][noheader] = True;
-			$GLOBALS['phpgw_info']['flags'][nofooter] = True;
-			$GLOBALS['phpgw_info']['flags']['xslt_app'] = False;
+			$GLOBALS['phpgw_info']['flags'][noheader] = true;
+			$GLOBALS['phpgw_info']['flags'][nofooter] = true;
+			$GLOBALS['phpgw_info']['flags']['xslt_app'] = false;
 
 			$start_date 	= urldecode($this->start_date);
 			$end_date 	= urldecode($this->end_date);
@@ -151,8 +151,8 @@
 		{
 			$GLOBALS['phpgw']->xslttpl->add_file(array('columns'));
 
-			$GLOBALS['phpgw_info']['flags']['noframework'] = True;
-			$GLOBALS['phpgw_info']['flags']['nofooter'] = True;
+			$GLOBALS['phpgw_info']['flags']['noframework'] = true;
+			$GLOBALS['phpgw_info']['flags']['nofooter'] = true;
 
 			$values 		= phpgw::get_var('values');
 			$receipt = array();
@@ -186,7 +186,7 @@
 			$data = array
 			(
 				'msgbox_data'		=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
-				'column_list'		=> $this->bo->column_list($values['columns'],$entity_id=$this->entity_id,$cat_id=$this->cat_id,$allrows=True),
+				'column_list'		=> $this->bo->column_list($values['columns'],$entity_id=$this->entity_id,$cat_id=$this->cat_id,$allrows=true),
 				'function_msg'		=> $function_msg,
 				'form_action'		=> $GLOBALS['phpgw']->link('/index.php',$link_data),
 				'lang_columns'		=> lang('columns'),
@@ -600,7 +600,7 @@
 
 			if(isset($tenant_id) && $tenant_id)
 			{
-				$lookup_tenant=True;
+				$lookup_tenant=true;
 			}
 
 			if($this->cat_id)
@@ -765,7 +765,7 @@
 
 			if(isset($category['lookup_tenant']) && $category['lookup_tenant'])
 			{
-				$lookup_tenant=True;
+				$lookup_tenant=true;
 			}
 
 			if($bypass && $location_code)
@@ -783,7 +783,7 @@
 				$location_data=$bolocation->initiate_ui_location(array(
 						'values'	=> $values['location_data'],
 						'type_id'	=> $category['location_level'],
-						'no_link'	=> False, // disable lookup links for location type less than type_id
+						'no_link'	=> false, // disable lookup links for location type less than type_id
 						'lookup_type'	=> $lookup_type,
 						'tenant'	=> $lookup_tenant,
 						'lookup_entity'	=> isset($lookup_entity)?$lookup_entity:'',
@@ -960,7 +960,7 @@
 						'cat_id'	=> $this->cat_id,
 						'attrib_id'	=> $values['attributes'][$i]['attrib_id'],
 						'id'		=> $id,
-						'edit'		=> True
+						'edit'		=> true
 					);
 
 					$values['attributes'][$i]['link_history']=$GLOBALS['phpgw']->link('/index.php',$link_history_data);
@@ -1068,7 +1068,7 @@
 			$t->set_root(PHPGW_APP_TPL);
 
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = false;
-			$GLOBALS['phpgw_info']['flags']['nofooter'] = True;
+			$GLOBALS['phpgw_info']['flags']['nofooter'] = true;
 
 			$entity_id	= phpgw::get_var('entity_id', 'int');
 			$cat_id 	= phpgw::get_var('cat_id', 'int');
@@ -1189,7 +1189,7 @@
 			$location_data=$bolocation->initiate_ui_location(array(
 						'values'	=> $values['location_data'],
 						'type_id'	=> count(explode('-',$values['location_data']['location_code'])),
-						'no_link'	=> False, // disable lookup links for location type less than type_id
+						'no_link'	=> false, // disable lookup links for location type less than type_id
 						'lookup_type'	=> $lookup_type,
 						'tenant'	=> $category['lookup_tenant'],
 						'lookup_entity'	=> isset($lookup_entity)?$lookup_entity:'', // Needed ?
@@ -1381,7 +1381,7 @@
 		function attrib_history()
 		{
 			$GLOBALS['phpgw']->xslttpl->add_file(array('attrib_history','nextmatchs'));
-			$GLOBALS['phpgw_info']['flags']['noframework'] = True;
+			$GLOBALS['phpgw_info']['flags']['noframework'] = true;
 
 			$id		= phpgw::get_var('id', 'int');
 			$entity_id	= phpgw::get_var('entity_id', 'int');
@@ -1527,7 +1527,7 @@
 			$location_data=$bolocation->initiate_ui_location(array(
 						'values'	=> $values['location_data'],
 						'type_id'	=> count(explode('-',$values['location_data']['location_code'])),
-						'no_link'	=> False, // disable lookup links for location type less than type_id
+						'no_link'	=> false, // disable lookup links for location type less than type_id
 						'lookup_type'	=> 'view',
 						'tenant'	=> $category['lookup_tenant'],
 						'lookup_entity'	=> isset($lookup_entity)?$lookup_entity:'', // Needed ?
@@ -1643,4 +1643,4 @@
 			$pdf->print_pdf($document,$entity['name'] . '_' . str_replace(' ','_',$GLOBALS['phpgw']->accounts->id2name($this->account)));
 		}
 	}
-?>
+

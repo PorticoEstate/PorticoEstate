@@ -528,8 +528,8 @@
 			$cols_return[] 			= 'id';
 			$uicols['input_type'][]		= 'hidden';
 			$uicols['name'][]			= 'id';
-			$uicols['descr'][]			= False;
-			$uicols['statustext'][]		= False;
+			$uicols['descr'][]			= false;
+			$uicols['statustext'][]		= false;
 
 			$cols_return[] 			= 'm_cost';
 			$uicols['input_type'][]		= 'text';
@@ -953,18 +953,18 @@
 			{
 				case 'fm_agreement':
 					$fd=array(
-						'group_id' => array('type' => 'int','precision' => '4','nullable' => False),
-						'id' => array('type' => 'int','precision' => '4','nullable' => False),
-						'vendor_id' => array('type' => 'int','precision' => '4','nullable' => False),
-						'name' => array('type' => 'varchar','precision' => '100','nullable' => False),
-						'descr' => array('type' => 'text','nullable' => True),
-						'status' => array('type' => 'varchar','precision' => '10','nullable' => True),
-						'entry_date' => array('type' => 'int','precision' => '4','nullable' => True),
-						'start_date' => array('type' => 'int','precision' => '4','nullable' => True),
-						'end_date' => array('type' => 'int','precision' => '4','nullable' => True),
-						'termination_date' => array('type' => 'int','precision' => '4','nullable' => True),
-						'category' => array('type' => 'int','precision' => '4','nullable' => True),
-						'user_id' => array('type' => 'int','precision' => '4','nullable' => True)
+						'group_id' => array('type' => 'int','precision' => '4','nullable' => false),
+						'id' => array('type' => 'int','precision' => '4','nullable' => false),
+						'vendor_id' => array('type' => 'int','precision' => '4','nullable' => false),
+						'name' => array('type' => 'varchar','precision' => '100','nullable' => false),
+						'descr' => array('type' => 'text','nullable' => true),
+						'status' => array('type' => 'varchar','precision' => '10','nullable' => true),
+						'entry_date' => array('type' => 'int','precision' => '4','nullable' => true),
+						'start_date' => array('type' => 'int','precision' => '4','nullable' => true),
+						'end_date' => array('type' => 'int','precision' => '4','nullable' => true),
+						'termination_date' => array('type' => 'int','precision' => '4','nullable' => true),
+						'category' => array('type' => 'int','precision' => '4','nullable' => true),
+						'user_id' => array('type' => 'int','precision' => '4','nullable' => true)
 						);
 					break;
 				case 'fm_agreement_detail':
@@ -1166,4 +1166,4 @@
 		}
 
 	}
-?>
+

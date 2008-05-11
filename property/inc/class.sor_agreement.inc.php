@@ -150,7 +150,7 @@
 			}
 			else
 			{
-				$allrows=True;
+				$allrows=true;
 				$entity_table = 'fm_r_agreement_item';
 				$attribute_filter = " appname = 'property' AND location = '.r_agreement.detail'";
 
@@ -176,8 +176,8 @@
 				$cols_return[] 			= 'id';
 				$uicols['input_type'][]		= 'hidden';
 				$uicols['name'][]		= 'id';
-				$uicols['descr'][]			= False;
-				$uicols['statustext'][]		= False;
+				$uicols['descr'][]			= false;
+				$uicols['statustext'][]		= false;
 
 				$cols_return[] 			= 'location_code';
 				$uicols['input_type'][]		= 'text';
@@ -494,8 +494,8 @@
 			$cols_return[] 			= 'id';
 			$uicols['input_type'][]		= 'hidden';
 			$uicols['name'][]			= 'id';
-			$uicols['descr'][]			= False;
-			$uicols['statustext'][]		= False;
+			$uicols['descr'][]			= false;
+			$uicols['statustext'][]		= false;
 
 			$cols_return[] 			= 'cost';
 			$uicols['input_type'][]		= 'text';
@@ -1287,4 +1287,4 @@
 			$this->db->transaction_commit();
 		}
 	}
-?>
+

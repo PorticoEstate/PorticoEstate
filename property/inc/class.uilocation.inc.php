@@ -46,24 +46,24 @@
 
 		var $public_functions = array
 		(
-			'download'  	=> True,
-			'index'  	=> True,
-			'view'   	=> True,
-			'edit'   	=> True,
-			'delete' 	=> True,
-			'update_cat'=> True,
-			'stop'		=> True,
-			'summary'	=> True,
-			'columns'	=> True
+			'download'  	=> true,
+			'index'  	=> true,
+			'view'   	=> true,
+			'edit'   	=> true,
+			'delete' 	=> true,
+			'update_cat'=> true,
+			'stop'		=> true,
+			'summary'	=> true,
+			'columns'	=> true
 		);
 
 		function property_uilocation()
 		{
-			$GLOBALS['phpgw_info']['flags']['xslt_app'] = True;
+			$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] = 'property::location';
 			$this->nextmatchs			= CreateObject('phpgwapi.nextmatchs');
 			$this->account				= $GLOBALS['phpgw_info']['user']['account_id'];
-			$this->bo					= CreateObject('property.bolocation',True);
+			$this->bo					= CreateObject('property.bolocation',true);
 			$this->bocommon				= CreateObject('property.bocommon');
 			$this->soadmin_location		= CreateObject('property.soadmin_location');
 
@@ -121,7 +121,7 @@
 
 			if(!$summary)
 			{
-				$list = $this->bo->read(array('type_id'=>$type_id,'lookup_tenant'=>$lookup_tenant,'lookup'=>$lookup,'allrows'=>True));
+				$list = $this->bo->read(array('type_id'=>$type_id,'lookup_tenant'=>$lookup_tenant,'lookup'=>$lookup,'allrows'=>true));
 			}
 			else
 			{
@@ -137,8 +137,8 @@
 			$receipt = array();
 			$GLOBALS['phpgw']->xslttpl->add_file(array('columns'));
 
-			$GLOBALS['phpgw_info']['flags']['noframework'] = True;
-			$GLOBALS['phpgw_info']['flags']['nofooter'] = True;
+			$GLOBALS['phpgw_info']['flags']['noframework'] = true;
+			$GLOBALS['phpgw_info']['flags']['nofooter'] = true;
 
 			$values 		= phpgw::get_var('values');
 
@@ -167,7 +167,7 @@
 			$data = array
 			(
 				'msgbox_data'		=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
-				'column_list'		=> $this->bo->column_list(isset($values['columns']) ? $values['columns']:'',$type_id=$this->type_id,$allrows=True),
+				'column_list'		=> $this->bo->column_list(isset($values['columns']) ? $values['columns']:'',$type_id=$this->type_id,$allrows=true),
 				'function_msg'		=> $function_msg,
 				'form_action'		=> $GLOBALS['phpgw']->link('/index.php',$link_data),
 				'lang_columns'		=> lang('columns'),
@@ -209,7 +209,7 @@
 			}
 			if($lookup)
 			{
-				$GLOBALS['phpgw_info']['flags']['noframework'] = True;
+				$GLOBALS['phpgw_info']['flags']['noframework'] = true;
 			}
 
 			if ( $type_id && !$lookup_tenant )
@@ -537,7 +537,7 @@
 				'lang_select'				=> lang('select'),
 				'lookup'				=> $lookup,
 				'lang_property_name'			=> lang('Property name'),
-				'allow_allrows'				=> True,
+				'allow_allrows'				=> true,
 				'allrows'				=> $this->allrows,
 				'start_record'				=> $this->start,
 				'record_limit'				=> $record_limit,
@@ -842,7 +842,7 @@
 						'values'		=> $values,
 						'type_id'		=> ($type_id-1),
 						'no_link'		=> ($type_id), // disable lookup links for location type less than type_id
-						'tenant'		=> False,
+						'tenant'		=> false,
 						'lookup_type'	=> $lookup_type
 						));
 
@@ -901,20 +901,20 @@
 
 					if($config[$j]['column_name']=='street_id')
 					{
-						$edit_street=True;
+						$edit_street=true;
 						$insert_record['extra'][]	= 'street_id';
 						$insert_record['extra'][]	= 'street_number';
 					}
 
 					if($config[$j]['column_name']=='tenant_id')
 					{
-						$edit_tenant=True;
+						$edit_tenant=true;
 						$insert_record['extra'][]	= 'tenant_id';
 					}
 
 					if($config[$j]['column_name']=='part_of_town_id')
 					{
-						$edit_part_of_town		= True;
+						$edit_part_of_town		= true;
 						$select_name_part_of_town	= 'part_of_town_id';
 						$part_of_town_list		= $this->bocommon->select_part_of_town('select',$values['part_of_town_id']);
 						$lang_town_statustext		= lang('Select the part of town the property belongs to. To do not use a part of town -  select NO PART OF TOWN');
@@ -922,7 +922,7 @@
 					}
 					if($config[$j]['column_name']=='owner_id')
 					{
-						$edit_owner			= True;
+						$edit_owner			= true;
 						$lang_owner			= lang('Owner');
 						$owner_list			= $this->bo->get_owner_list('',$values['owner_id']);
 						$lang_select_owner		= lang('Select owner');
@@ -1271,19 +1271,19 @@
 
 					if($config[$j]['column_name']=='street_id')
 					{
-						$edit_street=True;
+						$edit_street=true;
 						$insert_record[]	= 'street_id';
 					}
 
 					if($config[$j]['column_name']=='tenant_id')
 					{
-						$edit_tenant=True;
+						$edit_tenant=true;
 						$insert_record[]	= 'tenant_id';
 					}
 
 					if($config[$j]['column_name']=='part_of_town_id')
 					{
-						$edit_part_of_town=True;
+						$edit_part_of_town=true;
 						$select_name_part_of_town	= 'part_of_town_id';
 						$part_of_town_list		= $this->bocommon->select_part_of_town('select',$values['part_of_town_id']);
 						$lang_town_statustext		= lang('Select the part of town the property belongs to. To do not use a part of town -  select NO PART OF TOWN');
@@ -1291,7 +1291,7 @@
 					}
 					if($config[$j]['column_name']=='owner_id')
 					{
-						$edit_owner=True;
+						$edit_owner=true;
 						$lang_owner			= lang('Owner');
 						$owner_list			= $this->bo->get_owner_list('',$values['owner_id']);
 						$lang_select_owner		= lang('Select owner');
@@ -1575,7 +1575,7 @@
 						'part_of_town_id'	=>$this->part_of_town_id,
 						'filter'		=>$this->filter,
 					//	'type_id'		=>$type_id,
-						'summary'		=>True
+						'summary'		=>true
 			);
 
 
@@ -1630,4 +1630,4 @@
 		//	$GLOBALS['phpgw']->xslttpl->pp();
 		}
 	}
-?>
+

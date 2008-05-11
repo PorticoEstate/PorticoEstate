@@ -164,4 +164,4 @@
 			$this->db->query('DELETE FROM fm_part_of_town WHERE part_of_town_id=' . intval($part_of_town_id),__LINE__,__FILE__);
 		}
 	}
-?>
+

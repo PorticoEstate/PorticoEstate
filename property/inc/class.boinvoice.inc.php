@@ -36,18 +36,18 @@
 	{
 		var $db = '';
 
-		function property_boinvoice($session=False)
+		function property_boinvoice($session=false)
 		{
 			$this->db		= $GLOBALS['phpgw']->db;
 		//	$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
-			$this->so		= CreateObject('property.soinvoice',True);
+			$this->so		= CreateObject('property.soinvoice',true);
 			$this->bocommon		= CreateObject('property.bocommon');
 			$this->account_id	= $GLOBALS['phpgw_info']['user']['account_id'];
 
 			if ($session)
 			{
 				$this->read_sessiondata();
-				$this->use_session = True;
+				$this->use_session = true;
 			}
 
 			$start			= phpgw::get_var('start', 'int', 'REQUEST', 0);
@@ -432,7 +432,7 @@
 					$values = $this->set_responsible($values,$s_agreement['user_id'],$s_agreement['b_account_id']);
 
 
-					$s_agreement_detail = $sos_agreement->read(array('allrows'=>True,'s_agreement_id'=>$values['order_id'],'detail'=>True));
+					$s_agreement_detail = $sos_agreement->read(array('allrows'=>true,'s_agreement_id'=>$values['order_id'],'detail'=>true));
 
 					$sum_agreement=0;
 					for ($i=0;$i<count($s_agreement_detail);$i++)
@@ -535,4 +535,4 @@
 			return $values;
 		}
 	}
-?>
+

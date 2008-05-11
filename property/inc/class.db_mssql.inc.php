@@ -28,7 +28,7 @@
 		var $Error        = '';
 		var $Auto_Free    = 0;     ## set this to 1 to automatically free results
 		var $Debug        = false;
-		var $Transaction  = False;
+		var $Transaction  = false;
 
 		function connect()
 		{
@@ -192,7 +192,7 @@
 				return !!mssql_query('COMMIT TRAN', $this->Link_ID);
 			}
 
-			return False;
+			return false;
 		}
 
 		function transaction_abort()
@@ -380,4 +380,4 @@
 			return $return;
 		}
 	}
-?>
+

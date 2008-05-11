@@ -46,21 +46,21 @@
 
 		var $public_functions = array
 		(
-			'index'		=> True,
-			'history'	=> True,
-			'add'		=> True,
-			'delete'	=> True
+			'index'		=> true,
+			'history'	=> true,
+			'add'		=> true,
+			'delete'	=> true
 		);
 
 		function property_uiinvestment()
 		{
-			$GLOBALS['phpgw_info']['flags']['xslt_app'] = True;
+			$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] = 'property::invoice::investment';
 
 		//	$this->currentapp		= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->account			= $GLOBALS['phpgw_info']['user']['account_id'];
 
-			$this->bo			= CreateObject('property.boinvestment',True);
+			$this->bo			= CreateObject('property.boinvestment',true);
 			$this->bocommon			= CreateObject('property.bocommon');
 			$this->bolocation		= CreateObject('property.bolocation');
 			$this->acl 			= CreateObject('phpgwapi.acl');
@@ -541,7 +541,7 @@
 			$location_data=$this->bolocation->initiate_ui_location(array(
 						'values'	=> $values['location_data'],
 						'type_id'	=> -1, // calculated from location_types
-						'no_link'	=> False, // disable lookup links for location type less than type_id
+						'no_link'	=> false, // disable lookup links for location type less than type_id
 						'lookup_type'	=> 'form',
 						'lookup_entity'	=> $this->bocommon->get_lookup_entity('investment'),
 						'entity_data'	=> $values['p']
@@ -659,4 +659,4 @@
 		}
 
 	}
-?>
+

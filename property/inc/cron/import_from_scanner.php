@@ -43,10 +43,10 @@
 		var	$suffix = 'pdf';
 		var	$meta_suffix = 'csv';
 		var	$delimiter = ',';
-		var $bypass = False; // bypass location check (only for debugging)
+		var $bypass = false; // bypass location check (only for debugging)
 		var $default_user_id = 6;
 		var $default_user_last_name = 'Aspevik';
-		var $mail_receipt = True;
+		var $mail_receipt = true;
 		var	$function_name = 'import_from_scanner';
 		var	$header = array('type','descr','target','user');
 
@@ -61,14 +61,14 @@
 
 		function pre_run($data='')
 		{
-			$cron		= False;
-			$dry_run	= False;
+			$cron		= false;
+			$dry_run	= false;
 
 			if(isset($data['enabled']) && $data['enabled']==1)
 			{
-				$confirm		= True;
-				$execute		= True;
-				$cron			= True;
+				$confirm		= true;
+				$execute		= true;
+				$cron			= true;
 				if($data['suffix'])
 				{
 					$this->suffix = $data['suffix'];
@@ -94,7 +94,7 @@
 
 			if(!$execute)
 			{
-				$dry_run=True;
+				$dry_run=true;
 			}
 
 			if ($confirm)
@@ -103,7 +103,7 @@
 			}
 			else
 			{
-				$this->confirm($execute=False);
+				$this->confirm($execute=false);
 			}
 		}
 
@@ -164,7 +164,7 @@
 			if($dry_run)
 			{
 				_debug_array($file_list);
-				$this->confirm($execute=True);
+				$this->confirm($execute=true);
 
 			}
 			else
@@ -182,7 +182,7 @@
 						{
 							if($values['location_code'] = $this->get_location_code($file_entry['target']))
 							{
-								$this->bolocation->initiate_ui_location(array('type_id'	=> -1,'tenant'	=> True));
+								$this->bolocation->initiate_ui_location(array('type_id'	=> -1,'tenant'	=> true));
 
 								$insert_record = $GLOBALS['phpgw']->session->appsession('insert_record','property');
 
@@ -220,7 +220,7 @@
 							{
 								if($values['location_code'] = $this->get_location_code($file_entry['target']))
 								{
-									$this->bolocation->initiate_ui_location(array('type_id'	=> -1,'tenant'	=> True));
+									$this->bolocation->initiate_ui_location(array('type_id'	=> -1,'tenant'	=> true));
 
 									$insert_record = $GLOBALS['phpgw']->session->appsession('insert_record','property');
 
@@ -293,7 +293,7 @@
 
 				if(!$cron)
 				{
-					$this->confirm($execute=false,$done=True);
+					$this->confirm($execute=false,$done=true);
 				}
 			}
 		}
@@ -379,7 +379,7 @@
 		{
 			if(!ctype_digit($id))
 			{
-				return False;
+				return false;
 			}
 			else
 			{
@@ -388,7 +388,7 @@
 				$this->db->next_record();
 				if($this->db->f(0))
 				{
-					return True;
+					return true;
 				}
 			}
 		}
@@ -500,4 +500,4 @@
 			$this->bofiles->vfs->override_acl = 0;
 		}
 	}
-?>
+

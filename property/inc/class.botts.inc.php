@@ -44,11 +44,11 @@
 
 		var $public_functions = array
 		(
-			'read'			=> True,
-			'read_single'		=> True,
-			'save'			=> True,
-			'delete'		=> True,
-			'check_perms'		=> True
+			'read'			=> true,
+			'read_single'		=> true,
+			'save'			=> true,
+			'delete'		=> true,
+			'check_perms'		=> true
 		);
 
 		var $soap_functions = array(
@@ -70,7 +70,7 @@
 			)
 		);
 
-		function property_botts($session=False)
+		function property_botts($session=false)
 		{
 		//	$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->so 			= CreateObject('property.sotts');
@@ -83,7 +83,7 @@
 			if ($session)
 			{
 				$this->read_sessiondata();
-				$this->use_session = True;
+				$this->use_session = true;
 			}
 
 			$start	= phpgw::get_var('start', 'int', 'REQUEST', 0);
@@ -542,7 +542,7 @@
 			}
 
 			$custom = createObject('phpgwapi.custom_fields');
-			$custom_functions = $custom->read_custom_function(array('appname'=>'property','location' => $this->acl_location,'allrows'=>True));
+			$custom_functions = $custom->read_custom_function(array('appname'=>'property','location' => $this->acl_location,'allrows'=>true));
 
 			if (isSet($custom_functions) AND is_array($custom_functions))
 			{
@@ -800,4 +800,4 @@
 			$this->so->delete($id);
 		}
 	}
-?>
+

@@ -47,23 +47,23 @@
 
 		var $public_functions = array
 		(
-			'index'  	=> True,
-			'list_doc'	=> True,
-			'view' 		=> True,
-			'view_file' => True,
-			'edit'   	=> True,
-			'delete' 	=> True
+			'index'  	=> true,
+			'list_doc'	=> true,
+			'view' 		=> true,
+			'view_file' => true,
+			'edit'   	=> true,
+			'delete' 	=> true
 		);
 
 		function property_uidocument()
 		{
-			$GLOBALS['phpgw_info']['flags']['xslt_app'] = True;
+			$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] = "property::documentation";
 
 		//	$this->currentapp			= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->nextmatchs			= CreateObject('phpgwapi.nextmatchs');
 			$this->account				= $GLOBALS['phpgw_info']['user']['account_id'];
-			$this->bo					= CreateObject('property.bodocument',True);
+			$this->bo					= CreateObject('property.bodocument',true);
 			$this->bocommon				= CreateObject('property.bocommon');
 			$this->bolocation			= CreateObject('property.bolocation');
 			$this->config				= CreateObject('phpgwapi.config','property');
@@ -510,7 +510,7 @@
 				'cat_id'		=> $this->cat_id,
 				'p_num'			=> $p_num,
 				'from'			=> 'list_doc',
-				'bypass'		=> True
+				'bypass'		=> true
 			);
 
 			$table_add[] = array
@@ -539,13 +539,13 @@
 			$location_data=$this->bolocation->initiate_ui_location(array(
 						'values'		=> $location,
 						'type_id'		=> count(explode('-',$location_code)),
-						'no_link'		=> False, // disable lookup links for location type less than type_id
-						'tenant'		=> False,
+						'no_link'		=> false, // disable lookup links for location type less than type_id
+						'tenant'		=> false,
 						'lookup_type'		=> 'view',
 						'lookup_entity'		=> $lookup_entity,
 						'entity_data'		=> $entity_data,
 						'link_data'		=> $link_data,
-						'query_link'		=> True
+						'query_link'		=> true
 						));
 
 //_debug_array($location_data);
@@ -840,8 +840,8 @@
 			$location_data=$this->bolocation->initiate_ui_location(array(
 						'values'		=> $values['location_data'],
 						'type_id'		=> -1, // calculated from location_types
-						'no_link'		=> False, // disable lookup links for location type less than type_id
-						'tenant'		=> False,
+						'no_link'		=> false, // disable lookup links for location type less than type_id
+						'tenant'		=> false,
 						'lookup_type'		=> 'form',
 						'lookup_entity'		=> $this->bocommon->get_lookup_entity('document'),
 						'entity_data'		=> $values['p']
@@ -1042,8 +1042,8 @@
 			$location_data=$this->bolocation->initiate_ui_location(array(
 						'values'	=> $values['location_data'],
 						'type_id'	=> count(explode('-',$values['location_data']['location_code'])),
-						'no_link'	=> False, // disable lookup links for location type less than type_id
-						'tenant'	=> False,
+						'no_link'	=> false, // disable lookup links for location type less than type_id
+						'tenant'	=> false,
 						'lookup_type'	=> 'view',
 						'lookup_entity'	=> $this->bocommon->get_lookup_entity('document'),
 						'entity_data'	=> $values['p']
@@ -1119,7 +1119,7 @@
 				'lang_user_statustext'				=> lang('Select the coordinator the document belongs to. To do not use a category select NO USER'),
 				'select_user_name'				=> 'values[coordinator]',
 				'lang_no_user'					=> lang('Select coordinator'),
-				'user_list'					=> $this->bocommon->get_user_list('select',$values['coordinator'],$extra=False,$default=False,$start=-1,$sort='ASC',$order='account_lastname',$query='',$offset=-1),
+				'user_list'					=> $this->bocommon->get_user_list('select',$values['coordinator'],$extra=false,$default=false,$start=-1,$sort='ASC',$order='account_lastname',$query='',$offset=-1),
 
 				'status_list'					=> $this->bo->select_status_list('select',$values['status']),
 				'status_name'					=> 'values[status]',
@@ -1145,4 +1145,4 @@
 		//	$GLOBALS['phpgw']->xslttpl->pp();
 		}
 	}
-?>
+
