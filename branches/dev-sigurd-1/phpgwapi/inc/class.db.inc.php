@@ -99,15 +99,8 @@
 				$db_type = $this->Type ? $this->Type : $GLOBALS['phpgw_info']['server']['db_type'];
 			}
 
-			$this->Type = $db_type;
-
-			$this->Database = $GLOBALS['phpgw_info']['server']['db_name']; 
-			$this->Host = $GLOBALS['phpgw_info']['server']['db_host']; 
-			$this->User = $GLOBALS['phpgw_info']['server']['db_user']; 
-			$this->Password = $GLOBALS['phpgw_info']['server']['db_pass']; 
-
 			// We do it this way to allow it to be easily extended in the future
-			switch ( $this->Type )
+			switch ( $db_type )
 			{
 				case 'postgres':
 					$this->join = " JOIN ";
@@ -117,44 +110,12 @@
 					//do nothing for now
 			}
 			
-			$this->new_adodb();
-
-			if ( !is_null($query) )
+			$this->adodb = newADOConnection($db_type);
+			$this->adodb->SetFetchMode(3);
+			if($query != '')
 			{
 				$this->query($query);
 			}
-		}
-
-		/**
-		* Called when object is cloned
-		*/
-		public function __clone()
-		{
-			$this->new_adodb();
-		}
-
-		/**
-		* Create a new adodb object
-		*/
-		private function new_adodb()
-		{
-			$type = $this->Type;
-			if ( $type == 'mysql' )
-			{
-				$type = 'mysqlt';
-			}
-			$this->adodb = newADOConnection($this->Type);
-			$this->connect();
-			 // would be good if one day we just use ADODB_FETCH_ASSOC
-			$this->adodb->SetFetchMode(ADODB_FETCH_BOTH);
-		}
-
-		/**
-		* Destructor
-		*/
-		public function __destruct()
-		{
-			$this->disconnect();
 		}
 
 		/**
@@ -187,29 +148,13 @@
 		* @param string $User name of database user (optional)
 		* @param string $Password password for database user (optional)
 		*/
-		public function connect($Database = null, $Host = null, $User = null, $Password = null)
+		public function connect($Database = '', $Host = '', $User = '', $Password = '')
 		{
-			if ( !is_null($Database) )
-			{
-				$this->Database = $Database;
-			}
-
-			if ( !is_null($Host) )
-			{
-				$this->Host = $Host;
-			}
-
-			if ( !is_null($User) )
-			{
-				$this->User = $User;
-			}
-
-			if ( !is_null($Password) )
-			{
-				$this->Password = $Password;
-			}
-
-			return @$this->adodb->connect($this->Host, $this->User, $this->Password, $this->Database);
+			$this->Database = $Database != '' ? $Database : $this->Database;
+			$this->Host = $Host != '' ? $Host : $this->Host;
+			$this->User = $User != '' ? $User : $this->User;
+			$this->Password = $Password != '' ? $Password : $this->Password;
+			return $this->adodb->connect($this->Host, $this->User, $this->Password, $this->Database);
 		}
 
 		/**
@@ -436,7 +381,7 @@
 
 					if ($params[0] < 8 || ($params[0] == 8 && $params[1] ==0))
 					{
-						$oid = pg_getlastoid($this->adodb->_queryID);
+						$oid = pg_getlastoid($this->adodb->_resultid);
 						if ($oid == -1)
 						{
 							return -1;
@@ -471,7 +416,7 @@
 					{
 					return -1;
 					}
-					$result = @mssql_query("select @@identity", $this->adodb->_queryID);
+					$result = @mssql_query("select @@identity", $this->adodb->_resultid);
 					if(!$result)
 					{
 						return -1;
@@ -639,7 +584,7 @@
 		* @param boolean $strip_slashes string escape chars from field(optional), default false
 		* @return string the field value
 		*/
-		public function f($name, $strip_slashes = False)
+		public function f($name, $strip_slashes = false)
 		{
 			if($this->resultSet && get_class($this->resultSet) != 'adorecordset_empty')
 			{
@@ -664,7 +609,7 @@
 		* @param string $field name of field to print
 		* @param bool $strip_slashes string escape chars from field(optional), default false
 		*/
-		public function p($field, $strip_slashes = True)
+		public function p($field, $strip_slashes = true)
 		{
 			//echo "depi: p";
 			print $this->f($field, $strip_slashes);
@@ -815,7 +760,7 @@
 			if ( !$this->adodb->IsConnected() )
 			{
 				echo 'Connection FAILED<br />';
-				return False;
+				return false;
 			}
 
 			//create the db
@@ -832,8 +777,9 @@
 					//do nothing
 			}
 			$this->adodb->Disconnect();
-			return True;
+			return true;
 		}
+	 
 		/**
 		* Get the correct date format for DATE field for a particular RDBMS
 		*
@@ -921,4 +867,3 @@
 		}  
 
 	}
-?>
