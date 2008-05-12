@@ -474,16 +474,6 @@
 			'ix' => array(),
 			'uc' => array()
 		),
-		'fm_workorder_category' => array(
-			'fd' => array(
-				'id' => array('type' => 'int','precision' => '4','nullable' => False),
-				'descr' => array('type' => 'varchar','precision' => '50','nullable' => True)
-			),
-			'pk' => array('id'),
-			'fk' => array(),
-			'ix' => array(),
-			'uc' => array()
-		),
 		'fm_workorder_status' => array(
 			'fd' => array(
 				'id' => array('type' => 'varchar','precision' => '20','nullable' => False),
@@ -765,16 +755,6 @@
 			'ix' => array(),
 			'uc' => array()
 		),
-		'fm_request_category' => array(
-			'fd' => array(
-				'id' => array('type' => 'int','precision' => '4','nullable' => False),
-				'descr' => array('type' => 'varchar','precision' => '50','nullable' => True)
-			),
-			'pk' => array('id'),
-			'fk' => array(),
-			'ix' => array(),
-			'uc' => array()
-		),
 		'fm_ns3420' => array(
 			'fd' => array(
 				'id' => array('type' => 'varchar','precision' => '20','nullable' => False),
@@ -836,16 +816,6 @@
 			'pk' => array(),
 			'ix' => array(),
 			'fk' => array(),
-			'uc' => array()
-		),
-		'fm_tts_category' => array(
-			'fd' => array(
-				'id' => array('type' => 'int','precision' => '4','nullable' => False),
-				'descr' => array('type' => 'varchar','precision' => '255','nullable' => False)
-			),
-			'pk' => array('id'),
-			'fk' => array(),
-			'ix' => array(),
 			'uc' => array()
 		),
 		'fm_ecoart' => array(

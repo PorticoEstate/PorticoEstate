@@ -120,14 +120,6 @@
 			}
 		}
 
-
-		function read_single_request_category($id='')
-		{
-			$this->db->query("SELECT descr FROM fm_workorder_category where id='$id' ");
-			$this->db->next_record();
-			return $this->db->f('descr');
-		}
-
 		function select_status_list()
 		{
 			$this->db->query("SELECT id, descr FROM fm_request_status ORDER BY id ");

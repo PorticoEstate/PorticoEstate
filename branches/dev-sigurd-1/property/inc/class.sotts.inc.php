@@ -132,7 +132,7 @@
 
 			if ($cat_id > 0)
 			{
-				$filtermethod .= " $where cat_id='$cat_id' ";
+				$filtermethod .= " $where phpgw_categories.cat_id=" . (int)$cat_id;
 				$where = 'AND';
 			}
 
@@ -171,7 +171,7 @@
 				}
 			}
 
-			$sql = "SELECT fm_tts_tickets.*, fm_tts_category.descr as category,phpgw_accounts.account_lid as user_lid FROM fm_tts_tickets $this->join fm_tts_category on fm_tts_tickets.cat_id=fm_tts_category.id "
+			$sql = "SELECT fm_tts_tickets.*, phpgw_categories.cat_name as category,phpgw_accounts.account_lid as user_lid FROM fm_tts_tickets $this->join phpgw_categories on fm_tts_tickets.cat_id=phpgw_categories.cat_id "
 			. " $this->join phpgw_accounts on fm_tts_tickets.user_id=phpgw_accounts.account_id "
 			. " $this->join fm_location1 on fm_tts_tickets.loc1=fm_location1.loc1 "
 			. " $this->join fm_part_of_town on fm_location1.part_of_town_id=fm_part_of_town.part_of_town_id $filtermethod $querymethod";

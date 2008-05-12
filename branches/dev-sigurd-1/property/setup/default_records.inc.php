@@ -23,9 +23,9 @@ $GLOBALS['phpgw_setup']->oProc->query("DELETE FROM phpgw_cust_choice WHERE appna
 #
 #fm_workorder_category
 #
-
-$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_workorder_category (id, descr) VALUES (1, 'Preventive')");
-$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_workorder_category (id, descr) VALUES (2, 'Ad Hoc')");
+//FIXME: consider adding categories to global categories 'property.project'
+//$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_workorder_category (id, descr) VALUES (1, 'Preventive')");
+//$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_workorder_category (id, descr) VALUES (2, 'Ad Hoc')");
 
 #
 #fm_meter_category
@@ -174,9 +174,10 @@ $GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_document_category (id, des
 # fm_tts_category
 #
 
-$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_tts_category (id, descr) VALUES ('1', 'damage')");
-$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_tts_category (id, descr) VALUES ('2', 'user request')");
-$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_tts_category (id, descr) VALUES ('3', 'warranty')");
+//FIXME: consider adding categories to global categories 'property.ticket'
+//$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_tts_category (id, descr) VALUES ('1', 'damage')");
+//$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_tts_category (id, descr) VALUES ('2', 'user request')");
+//$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_tts_category (id, descr) VALUES ('3', 'warranty')");
 
 
 #

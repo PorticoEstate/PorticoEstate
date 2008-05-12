@@ -43,7 +43,7 @@
 					<xsl:variable name="select_action"><xsl:value-of select="select_action"/></xsl:variable>
 					<form method="post" name="search" action="{$select_action}">
 						<td>
-							<xsl:call-template name="cat_select"/>
+							<xsl:call-template name="categories"/>
 						</td>
 						<td>
 							<xsl:call-template name="select_district"/>
@@ -61,7 +61,7 @@
 				</xsl:when>
 				<xsl:otherwise>
 					<td>
-						<xsl:call-template name="cat_filter"/>
+						<xsl:call-template name="categories"/>
 					</td>
 					<td>
 						<xsl:call-template name="filter_district"/>
@@ -492,7 +492,7 @@
 					<xsl:value-of select="lang_category"/>
 				</td>
 				<td>
-					<xsl:call-template name="cat_select"/>
+					<xsl:call-template name="categories"/>
 				</td>
 			</tr>
 			<tr>
@@ -632,7 +632,7 @@
 					<xsl:value-of select="lang_category"/>
 				</td>
 				<td>
-					<xsl:call-template name="cat_select"/>
+					<xsl:call-template name="categories"/>
 				</td>
 			</tr>
 
@@ -1047,7 +1047,7 @@
 					<xsl:value-of select="lang_category"/>
 				</td>
 				<td>
-					<xsl:call-template name="cat_select"/>
+					<xsl:call-template name="categories"/>
 				</td>
 			</tr>
 			<tr>
@@ -1380,7 +1380,7 @@
 					<xsl:value-of select="lang_category"/>
 				</td>
 				<td>
-					<xsl:call-template name="cat_select"/>
+					<xsl:call-template name="categories"/>
 				</td>
 			</tr>
 -->

@@ -139,18 +139,6 @@
 				case 'tender_chapter':
 					$table='fm_chapter';
 					break;
-				case 'ticket':
-					$table='fm_tts_category';
-					break;
-				case 'request':
-					$table='fm_workorder_category';
-					break;
-				case 'project':
-					$table='fm_workorder_category';
-					break;
-				case 'wo':
-					$table='fm_workorder_category';
-					break;
 				case 'location':
 					$table='fm_location' . $type_id . '_category';
 					break;

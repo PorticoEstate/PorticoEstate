@@ -72,13 +72,14 @@
 
 		function property_botts($session=false)
 		{
-		//	$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->so 			= CreateObject('property.sotts');
 			$this->bocommon 	= CreateObject('property.bocommon');
 			$this->historylog	= CreateObject('property.historylog','tts');
 			$this->config		= CreateObject('phpgwapi.config');
 			$this->config->read_repository();
 			$this->dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
+			$this->cats					= CreateObject('phpgwapi.categories');
+			$this->cats->app_name		= 'property.ticket';
 
 			if ($session)
 			{
@@ -240,7 +241,8 @@
 
 		function get_category_name($cat_id)
 		{
-			return $this->so->get_category_name($cat_id);
+			$category = $this->cats->return_single($cat_id);
+			return $category[0]['name'];
 		}
 
 

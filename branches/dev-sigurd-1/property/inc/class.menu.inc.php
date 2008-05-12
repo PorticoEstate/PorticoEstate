@@ -301,15 +301,10 @@
 						'text'	=> lang('Update the not active category for locations'),
 						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uilocation.update_cat') )
 					),
-					'request_cats'	=> array
+					'project_cats'	=> array
 					(
-						'text'	=> lang('Request Categories'),
-						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uicategory.index', 'type' => 'request', 'menu_selection' => 'admin::property::request_cats') )
-					),
-					'workorder_cats'	=> array
-					(
-						'text'	=> lang('Workorder Categories'),
-						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uicategory.index', 'type' => 'wo', 'menu_selection' => 'admin::property::workorder_cats') )
+						'text'	=> lang('project categories'),
+						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.uicategories.index', 'appname' => 'property.project', 'global_cats' => 'true', 'menu_selection' => 'admin::property::project_cats') )
 					),
 					'workorder_detail'	=> array
 					(
@@ -319,7 +314,7 @@
 					'ticket_cats'	=> array
 					(
 						'text'	=> lang('Ticket Categories'),
-						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uicategory.index', 'type' => 'ticket', 'menu_selection' => 'admin::property::ticket_cats') )
+						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.uicategories.index', 'appname' => 'property.ticket', 'global_cats' => 'true', 'menu_selection' => 'admin::property::ticket_cats') )
 					),
 					'tenant'	=> array
 					(

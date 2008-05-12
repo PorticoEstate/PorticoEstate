@@ -2429,6 +2429,54 @@
 			$GLOBALS['phpgw_setup']->oProc->query("UPDATE phpgw_vfs SET directory ='{$file['directory']}' WHERE file_id = {$file['file_id']}");
 		}
 
+		$GLOBALS['phpgw']->db = $GLOBALS['phpgw_setup']->oProc->m_odb;
+		$GLOBALS['phpgw']->acl = CreateObject('phpgwapi.acl');
+		$GLOBALS['phpgw']->hooks = CreateObject('phpgwapi.hooks', $GLOBALS['phpgw_setup']->oProc->m_odb);
+		$cats = CreateObject('phpgwapi.categories', -1, 'property.ticket');
+
+		$GLOBALS['phpgw_setup']->oProc->query("SELECT * FROM fm_tts_category");
+		while ($GLOBALS['phpgw_setup']->oProc->next_record())
+		{
+			$categories[$GLOBALS['phpgw_setup']->oProc->f('id')]=array(
+				'name'	=> $GLOBALS['phpgw_setup']->oProc->f('descr', true),
+				'descr'	=> $GLOBALS['phpgw_setup']->oProc->f('descr', true),
+				'parent' => 'none',
+				'old_parent' => 0,
+				'access' => 'public'
+			);
+		}
+
+		foreach ($categories as $old => $values)
+		{
+			$cat_id = $cats->add($values);
+			$GLOBALS['phpgw_setup']->oProc->query("UPDATE fm_tts_tickets SET cat_id = $cat_id WHERE cat_id = $old");		
+		}
+
+		$cats->set_appname('property.project');
+
+		$GLOBALS['phpgw_setup']->oProc->query("SELECT * FROM fm_workorder_category");
+		while ($GLOBALS['phpgw_setup']->oProc->next_record())
+		{
+			$categories[$GLOBALS['phpgw_setup']->oProc->f('id')]=array(
+				'name'	=> $GLOBALS['phpgw_setup']->oProc->f('descr', true),
+				'descr'	=> $GLOBALS['phpgw_setup']->oProc->f('descr', true),
+				'parent' => 'none',
+				'old_parent' => 0,
+				'access' => 'public'
+			);
+		}
+
+		foreach ($categories as $old => $values)
+		{
+			$cat_id = $cats->add($values);
+			$GLOBALS['phpgw_setup']->oProc->query("UPDATE fm_project SET category = $cat_id WHERE category = $old");
+			$GLOBALS['phpgw_setup']->oProc->query("UPDATE fm_request SET category = $cat_id WHERE category = $old");		
+		}
+
+//		$GLOBALS['phpgw_setup']->oProc->DropTable('fm_tts_category');
+//		$GLOBALS['phpgw_setup']->oProc->DropTable('fm_workorder_category');
+//		$GLOBALS['phpgw_setup']->oProc->DropTable('fm_request_category');
+
 		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
 		{
 			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.543';

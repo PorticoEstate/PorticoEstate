@@ -73,7 +73,7 @@
 					<xsl:variable name="select_action"><xsl:value-of select="select_action"/></xsl:variable>
 					<form method="post" name="search" action="{$select_action}">
 						<td>
-							<xsl:call-template name="cat_select"/>
+							<xsl:call-template name="categories"/>
 						</td>
 						<td align="left">
 							<xsl:call-template name="status_select"/>
@@ -92,7 +92,7 @@
 				</xsl:when>
 				<xsl:otherwise>
 					<td>
-						<xsl:call-template name="cat_filter"/>
+						<xsl:call-template name="categories"/>
 					</td>
 					<td align="left">
 						<xsl:call-template name="status_filter"/>

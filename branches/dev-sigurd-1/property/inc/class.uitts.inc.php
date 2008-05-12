@@ -60,13 +60,13 @@
 
 			$this->account				= $GLOBALS['phpgw_info']['user']['account_id'];
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
-		//	$this->currentapp			= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->nextmatchs			= CreateObject('phpgwapi.nextmatchs');
 
 			$this->bo					= CreateObject('property.botts',true);
 			$this->bocommon				= CreateObject('property.bocommon');
 
-		//	$this->acl 					= CreateObject('phpgwapi.acl');
+			$this->cats					= & $this->bo->cats;
+
 			$this->acl 					= & $GLOBALS['phpgw']->acl;
 			$this->acl_location			= '.ticket';
 			$this->acl_read 			= $this->acl->check('.ticket',1);
@@ -534,20 +534,26 @@
 				'start'		=> $this->start
 			);
 
+			$cat_select = '';
+			$cat_filter = '';
 			$pref_group_filters = '';
 			if(isset($GLOBALS['phpgw_info']['user']['preferences']['property']['group_filters']))
 			{
 				$pref_group_filters = true;
 				$group_filters = 'select';
 				$GLOBALS['phpgw']->xslttpl->add_file(array('search_field_grouped'));
+				$cat_select	= $this->cats->formatted_xslt_list(array('select_name' => 'values[cat_id]','selected' => $this->cat_id));
 			}
 			else
 			{
 				$group_filters = 'filter';
 				$GLOBALS['phpgw']->xslttpl->add_file(array('search_field'));
+				$cat_filter = $this->cats->formatted_xslt_list(array('select_name' => 'cat_id','selected' => $this->cat_id,'globals' => True,'link_data' => $link_data));
 			}
 
 			$GLOBALS['phpgw']->js->validate_file('overlib','overlib','property');
+
+
 
 			$data = array
 			(
@@ -574,10 +580,9 @@
 				'all_records'					=> $this->bo->total_records,
 				'link_url'						=> $GLOBALS['phpgw']->link('/index.php',$link_data),
 				'img_path'						=> $GLOBALS['phpgw']->common->get_image_path('phpgwapi','default'),
-				'lang_no_cat'					=> lang('no category'),
-				'lang_cat_statustext'			=> lang('Select the category the ticket belongs to. To do not use a category select NO CATEGORY'),
-				'select_name'					=> 'cat_id',
-				'cat_list'						=> $this->bocommon->select_category_list(array('format'=>$group_filters,'selected' => $this->cat_id,'type' =>'ticket','order'=>'descr')),
+
+				'cat_select'					=> $cat_select,
+				'cat_filter'					=> $cat_filter,
 
 				'select_action'					=> $GLOBALS['phpgw']->link('/index.php',$link_data),
 				'filter_name'					=> 'filter',
@@ -1244,12 +1249,10 @@
 				'lang_done_statustext'			=> lang('Back to the ticket list'),
 				'lang_save_statustext'			=> lang('Save the ticket'),
 				'lang_no_cat'				=> lang('no category'),
-				'lang_cat_statustext'			=> lang('Select the category the selection belongs to. To do not use a category select NO CATEGORY'),
-				'select_name'				=> 'values[cat_id]',
 				'lang_town_statustext'			=> lang('Select the part of town the building belongs to. To do not use a part of town -  select NO PART OF TOWN'),
 				'lang_part_of_town'			=> lang('Part of town'),
 				'lang_no_part_of_town'			=> lang('No part of town'),
-				'cat_list'				=> $this->bocommon->select_category_list(array('format'=>'select','selected' => $this->cat_id,'type' =>'ticket','order'=>'descr')),
+				'cat_select'				=> $this->cats->formatted_xslt_list(array('select_name' => 'values[cat_id]','selected' => $this->cat_id)),
 
 				'mailnotification'			=> (isset($this->bo->config->config_data['mailnotification'])?$this->bo->config->config_data['mailnotification']:''),
 				'lang_mailnotification'			=> lang('Send e-mail'),
@@ -1475,13 +1478,10 @@
 				'lang_done_statustext'				=> lang('Back to the ticket list'),
 				'lang_save_statustext'				=> lang('Save the ticket'),
 				'lang_no_cat'						=> lang('no category'),
-				'lang_cat_statustext'				=> lang('Select the category the selection belongs to. To do not use a category select NO CATEGORY'),
-				'select_name'						=> 'values[cat_id]',
 				'lang_town_statustext'				=> lang('Select the part of town the building belongs to. To do not use a part of town -  select NO PART OF TOWN'),
 				'lang_part_of_town'					=> lang('Part of town'),
 				'lang_no_part_of_town'				=> lang('No part of town'),
-				'cat_list'							=> $this->bocommon->select_category_list(array('format'=>'select','selected' => $this->cat_id,'type' =>'ticket','order'=>'descr')),
-
+				'cat_select'						=> $this->cats->formatted_xslt_list(array('select_name' => 'values[cat_id]','selected' => $this->cat_id)),
 				'mailnotification'					=> (isset($this->bo->config->config_data['mailnotification'])?$this->bo->config->config_data['mailnotification']:''),
 				'lang_mailnotification'				=> lang('Send e-mail'),
 				'lang_mailnotification_statustext'	=> lang('Choose to send mailnotification'),
@@ -1822,10 +1822,7 @@
 				'priority_list'				=> $this->bo->get_priority_list($ticket['priority']),
 
 				'lang_no_cat'				=> lang('no category'),
-				'lang_cat_statustext'			=> lang('Select the category the building belongs to. To do not use a category select NO CATEGORY'),
-				'select_name'				=> 'values[cat_id]',
-				'cat_list'					=> $this->bocommon->select_category_list(array('format'=>'select','selected' => $this->cat_id,'type' =>'ticket','order'=>'descr')),
-
+				'cat_select'				=> $this->cats->formatted_xslt_list(array('select_name' => 'values[cat_id]','selected' => $this->cat_id)),
 				'lang_category'				=> lang('category'),
 				'value_category_name'			=> $ticket['category_name'],
 
@@ -2080,10 +2077,7 @@
 				'priority_list'					=> $this->bo->get_priority_list($ticket['priority']),
 
 				'lang_no_cat'					=> lang('no category'),
-				'lang_cat_statustext'			=> lang('Select the category the building belongs to. To do not use a category select NO CATEGORY'),
-				'select_name'					=> 'values[cat_id]',
-				'cat_list'						=> $this->bocommon->select_category_list(array('format'=>'select','selected' => $this->cat_id,'type' =>'ticket','order'=>'descr')),
-
+				'cat_select'				=> $this->cats->formatted_xslt_list(array('select_name' => 'values[cat_id]','selected' => $this->cat_id)),
 				'lang_category'					=> lang('category'),
 				'value_category_name'			=> $ticket['category_name'],
 

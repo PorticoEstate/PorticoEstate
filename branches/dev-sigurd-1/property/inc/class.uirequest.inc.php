@@ -65,7 +65,8 @@
 			$this->account				= $GLOBALS['phpgw_info']['user']['account_id'];
 			$this->bo				= CreateObject('property.borequest',true);
 			$this->boproject			= CreateObject('property.boproject');
-			$this->bocommon				= CreateObject('property.bocommon');
+			$this->bocommon				= & $this->bo->bocommon;
+			$this->cats					= & $this->bo->cats;
 			$this->bolocation			= CreateObject('property.bolocation');
 			$this->config				= CreateObject('phpgwapi.config');
 
@@ -423,10 +424,7 @@
 				'link_url'				=> $GLOBALS['phpgw']->link('/index.php',$link_data),
 				'img_path'				=> $GLOBALS['phpgw']->common->get_image_path('phpgwapi','default'),
 				'lang_no_cat'				=> lang('no category'),
-				'lang_cat_statustext'			=> lang('Select the category the request belongs to. To do not use a category select NO CATEGORY'),
-				'select_name'				=> 'cat_id',
-
-				'cat_list'				=> $this->bocommon->select_category_list(array('format'=>'filter','selected' => $this->cat_id,'type' =>'request','order'=>'descr')),
+				'cat_filter'			=> $this->cats->formatted_xslt_list(array('select_name' => 'cat_id','selected' => $this->cat_id,'globals' => True,'link_data' => $link_data)),
 
 				'district_list'				=> $this->bocommon->select_district_list('filter',$this->district_id),
 				'lang_no_district'			=> lang('no district'),
@@ -932,9 +930,9 @@
 				'lang_save_statustext'			=> lang('Save the request'),
 				'lang_no_cat'				=> lang('Select category'),
 				'lang_cat_statustext'			=> lang('Select the category the request belongs to. To do not use a category select NO CATEGORY'),
-				'select_name'				=> 'values[cat_id]',
 				'value_cat_id'				=> $values['cat_id'],
-				'cat_list'				=> $this->bocommon->select_category_list(array('format'=>'select','selected' => $values['cat_id'],'type' =>'request','order'=>'descr')),
+
+				'cat_select'				=> $this->cats->formatted_xslt_list(array('select_name' => 'values[cat_id]','selected' => $values['cat_id'])),
 
 				'lang_coordinator'			=> lang('Coordinator'),
 				'lang_user_statustext'			=> lang('Select the coordinator the request belongs to. To do not use a category select NO USER'),
@@ -1155,6 +1153,8 @@
 				}
 			}
 
+			$categories = $this->cats->formatted_xslt_list(array('selected' => $values['cat_id']));
+
 			$data = array
 			(
 				'link_view_file'				=> $GLOBALS['phpgw']->link('/index.php',$link_file_data),
@@ -1214,7 +1214,7 @@
 				'value_score'					=> $values['score'],
 				'lang_done_statustext'				=> lang('Back to the list'),
 				'value_cat_id'					=> $values['cat_id'],
-				'cat_list'					=> $this->bocommon->select_category_list(array('format'=>'select','selected' => $values['cat_id'],'type' =>'request','order'=>'descr')),
+				'cat_list'						=> $categories['cat_list'],
 
 				'lang_coordinator'				=> lang('Coordinator'),
 				'lang_no_user'					=> lang('Select coordinator'),
