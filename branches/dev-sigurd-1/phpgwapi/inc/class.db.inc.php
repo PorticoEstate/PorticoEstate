@@ -99,8 +99,15 @@
 				$db_type = $this->Type ? $this->Type : $GLOBALS['phpgw_info']['server']['db_type'];
 			}
 
+			$this->Type = $db_type;
+
+			$this->Database = $GLOBALS['phpgw_info']['server']['db_name']; 
+			$this->Host = $GLOBALS['phpgw_info']['server']['db_host']; 
+			$this->User = $GLOBALS['phpgw_info']['server']['db_user']; 
+			$this->Password = $GLOBALS['phpgw_info']['server']['db_pass']; 
+
 			// We do it this way to allow it to be easily extended in the future
-			switch ( $db_type )
+			switch ( $this->Type )
 			{
 				case 'postgres':
 					$this->join = " JOIN ";
