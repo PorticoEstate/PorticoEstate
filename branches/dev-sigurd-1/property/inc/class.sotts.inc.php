@@ -39,12 +39,10 @@
 		//	$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->account		= $GLOBALS['phpgw_info']['user']['account_id'];
 			$this->historylog	= CreateObject('property.historylog','tts');
-			$this->config		= CreateObject('phpgwapi.config');
 			$this->bocommon		= CreateObject('property.bocommon');
-			$this->db           	= $this->bocommon->new_db();
-			$this->db2           	= $this->bocommon->new_db();
-			$this->join		= $this->bocommon->join;
-			$this->like		= $this->bocommon->like;
+			$this->db           = $this->bocommon->new_db();
+			$this->join			= $this->bocommon->join;
+			$this->like			= $this->bocommon->like;
 			$this->soadmin_entity	= CreateObject('property.soadmin_entity');
 			$this->dateformat 	= $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
 		}
@@ -113,22 +111,26 @@
 				$filtermethod .= $where . ' fm_tts_tickets.tenant_id=' . $tenant_id;
 			}
 
-			if ($filter == 'closed'):
+			if ($filter == 'closed')
 			{
 				$filtermethod .= " $where fm_tts_tickets.status='X'";
 				$where = 'AND';
 			}
-			elseif($filter == 'open'):
+			else if($filter == 'open')
 			{
 				$filtermethod .= " $where (fm_tts_tickets.status='O' OR fm_tts_tickets.status='I')";
 				$where = 'AND';
 			}
-			elseif($filter == 'progress'):
+			else if($filter == 'progress')
 			{
 				$filtermethod .= " $where fm_tts_tickets.status='I'";
 				$where = 'AND';
 			}
-			endif;
+			else
+			{
+				$filtermethod .= " $where fm_tts_tickets.status='C'";
+				$where = 'AND';
+			}
 
 			if ($cat_id > 0)
 			{
@@ -171,14 +173,13 @@
 				}
 			}
 
-			$sql = "SELECT fm_tts_tickets.*, phpgw_categories.cat_name as category,phpgw_accounts.account_lid as user_lid FROM fm_tts_tickets $this->join phpgw_categories on fm_tts_tickets.cat_id=phpgw_categories.cat_id "
-			. " $this->join phpgw_accounts on fm_tts_tickets.user_id=phpgw_accounts.account_id "
-			. " $this->join fm_location1 on fm_tts_tickets.loc1=fm_location1.loc1 "
+			$sql = "SELECT fm_tts_tickets.* FROM fm_tts_tickets"
+			. " $this->join fm_location1 on fm_tts_tickets.loc1=fm_location1.loc1"
 			. " $this->join fm_part_of_town on fm_location1.part_of_town_id=fm_part_of_town.part_of_town_id $filtermethod $querymethod";
 
 //echo $sql;
-			$this->db2->query($sql,__LINE__,__FILE__);
-			$this->total_records = $this->db2->num_rows();
+			$this->db->query($sql,__LINE__,__FILE__);
+			$this->total_records = $this->db->num_rows();
 
 			if(!$allrows)
 			{
@@ -189,39 +190,38 @@
 				$this->db->query($sql . $ordermethod,__LINE__,__FILE__);
 			}
 
-			$i = 0;
+			$db2           	= $this->bocommon->new_db();
 
 			$tickets = array();
+			$i = 0;
 			while ($this->db->next_record())
 			{
-				$tickets[$i]['id']			= $this->db->f('id');
-				$tickets[$i]['subject']			= $this->db->f('subject');
-				$tickets[$i]['location_code']		= $this->db->f('location_code');
-				$tickets[$i]['user']			= $this->db->f('user_lid');
-				$tickets[$i]['address']			= stripslashes($this->db->f('address'));
+				$tickets[$i]['id']				= $this->db->f('id');
+				$tickets[$i]['subject']			= $this->db->f('subject',true);
+				$tickets[$i]['location_code']	= $this->db->f('location_code');
+				$tickets[$i]['user_id']			= $this->db->f('user_id');
+				$tickets[$i]['address']			= $this->db->f('address',true);
 				$tickets[$i]['assignedto']		= $this->db->f('assignedto');
 				$tickets[$i]['status']			= $this->db->f('status');
 				$tickets[$i]['priority']		= $this->db->f('priority');
-				$tickets[$i]['category']		= $this->db->f('category');
-				$tickets[$i]['subject']			= $this->db->f('subject');
+				$tickets[$i]['cat_id']			= $this->db->f('cat_id');
 				$tickets[$i]['group_id']		= $this->db->f('group_id');
 				$tickets[$i]['entry_date']		= $this->db->f('entry_date');
-				$tickets[$i]['finnish_date']		= $this->db->f('finnish_date');
-				$tickets[$i]['finnish_date2']		= $this->db->f('finnish_date2');
+				$tickets[$i]['finnish_date']	= $this->db->f('finnish_date');
+				$tickets[$i]['finnish_date2']	= $this->db->f('finnish_date2');
 
-				$this->db2->query("select count(*) from fm_tts_views where id='" . $this->db->f('id')
+				$db2->query("select count(*) from fm_tts_views where id='" . (int)$this->db->f('id')
 					. "' and account_id='" . $GLOBALS['phpgw_info']['user']['account_id'] . "'",__LINE__,__FILE__);
-				$this->db2->next_record();
+				$db2->next_record();
 
-				if (!$this->db2->f(0))
+				if (!$db2->f(0))
 				{
 					$tickets[$i]['new_ticket'] = true;
 				}
 
 				$i++;
-
 			}
-		return $tickets;
+			return $tickets;
 		}
 
 		function get_origin_entity_type()

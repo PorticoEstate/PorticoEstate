@@ -73,8 +73,8 @@
 		function property_botts($session=false)
 		{
 			$this->so 			= CreateObject('property.sotts');
-			$this->bocommon 	= CreateObject('property.bocommon');
-			$this->historylog	= CreateObject('property.historylog','tts');
+			$this->bocommon 	= & $this->so->bocommon;
+			$this->historylog	= & $this->so->historylog;
 			$this->config		= CreateObject('phpgwapi.config');
 			$this->config->read_repository();
 			$this->dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
@@ -200,6 +200,8 @@
 			$filters[1]['name']=lang('Closed');
 			$filters[2]['id']='all';
 			$filters[2]['name']=lang('All');
+			$filters[3]['id']='custom';
+			$filters[3]['name']=lang('custom'); // FIXME: make this optional
 
 			return $this->bocommon->select_list($selected,$filters);
 		}
@@ -213,6 +215,8 @@
 			$filters[1]['name']=lang('Open');
 			$filters[2]['id']='I';
 			$filters[2]['name']=lang('In progress');
+			$filters[3]['id']='C';
+			$filters[3]['name']=lang('custom'); // FIXME: make this optional
 
 			return $this->bocommon->select_list($selected,$filters);
 		}
@@ -266,45 +270,53 @@
 				$entity[0]['type']='project';			
 				$this->uicols[]	= lang('project');
 			}
-			
-			for ($i=0; $i<count($tickets); $i++)
+
+			foreach ($tickets as & $ticket)
 			{
-				if($tickets[$i]['assignedto'])
+				if(!$ticket['subject'])
 				{
-					$tickets[$i]['assignedto'] = $GLOBALS['phpgw']->accounts->id2name($tickets[$i]['assignedto']);
+					$ticket['subject']= $this->get_category_name($ticket['cat_id']);
+				}
+
+				$ticket['user'] = $GLOBALS['phpgw']->accounts->id2name($ticket['user_id']);
+
+				if($ticket['assignedto'])
+				{
+					$ticket['assignedto'] = $GLOBALS['phpgw']->accounts->id2name($ticket['assignedto']);
 				}
 				else
 				{
-					$tickets[$i]['assignedto'] = $GLOBALS['phpgw']->accounts->id2name($tickets[$i]['group_id']);
+					$ticket['assignedto'] = $GLOBALS['phpgw']->accounts->id2name($ticket['group_id']);
 				}
 
-				$tickets[$i]['timestampopened'] = $GLOBALS['phpgw']->common->show_date($tickets[$i]['entry_date'],$this->dateformat);
+				$ticket['timestampopened'] = $GLOBALS['phpgw']->common->show_date($ticket['entry_date'],$this->dateformat);
 
-				if($tickets[$i]['finnish_date2'])
+				if($ticket['finnish_date2'])
 				{
-					$tickets[$i]['delay']=($tickets[$i]['finnish_date2']-$tickets[$i]['finnish_date'])/(24*3600);
-					$tickets[$i]['finnish_date']=$tickets[$i]['finnish_date2'];
+					$ticket['delay']=($ticket['finnish_date2']-$ticket['finnish_date'])/(24*3600);
+					$ticket['finnish_date']=$ticket['finnish_date2'];
 				}
-				$tickets[$i]['finnish_date'] = (isset($tickets[$i]['finnish_date']) && $tickets[$i]['finnish_date'] ? $GLOBALS['phpgw']->common->show_date($tickets[$i]['finnish_date'],$this->dateformat):'');
+				$ticket['finnish_date'] = (isset($ticket['finnish_date']) && $ticket['finnish_date'] ? $GLOBALS['phpgw']->common->show_date($ticket['finnish_date'],$this->dateformat):'');
 
-				if ($tickets[$i]['status'] == 'X')
+				if ($ticket['status'] == 'X')
 				{
-					$history_values = $this->historylog->return_array(array(),array('X'),'history_timestamp','DESC',$tickets[$i]['id']);
-					$tickets[$i]['timestampclosed'] = $GLOBALS['phpgw']->common->show_date($history_values[0]['datetime'],$this->dateformat);
+					$history_values = $this->historylog->return_array(array(),array('X'),'history_timestamp','DESC',$ticket['id']);
+					$ticket['timestampclosed'] = $GLOBALS['phpgw']->common->show_date($history_values[0]['datetime'],$this->dateformat);
 				}
-				if (isset($tickets[$i]['new_ticket']))
+				if (isset($ticket['new_ticket']))
 				{
-					$tickets[$i]['new_ticket'] = lang('New');
+					$ticket['new_ticket'] = lang('New');
 				}
 
 				if(isset($entity) && is_array($entity))
 				{
 					for ($j=0;$j<count($entity);$j++)
 					{
-						$tickets[$i]['child_date'][$j] = $this->so->get_child_date($tickets[$i]['id'],$entity[$j]['type'],(isset($entity[$j]['entity_id'])?$entity[$j]['entity_id']:''),(isset($entity[$j]['cat_id'])?$entity[$j]['cat_id']:''));
+						$ticket['child_date'][$j] = $this->so->get_child_date($ticket['id'],$entity[$j]['type'],(isset($entity[$j]['entity_id'])?$entity[$j]['entity_id']:''),(isset($entity[$j]['cat_id'])?$entity[$j]['cat_id']:''));
 					}
 				}
 			}
+
 //_debug_array($tickets);
 			return $tickets;
 		}
@@ -379,8 +391,6 @@
 				$ticket['timestampclosed']= $GLOBALS['phpgw']->common->show_date($history_values[0]['datetime'],$this->dateformat);
 			}
 
-
-
 			$status_text = array(
 				'R' => 'Re-opened',
 				'X' => 'Closed',
@@ -393,7 +403,8 @@
 				'B' => 'Billing rate',
 				'H' => 'Billing hours',
 				'F' => 'finnish date',
-				'I' => 'In progress'
+				'I' => 'In progress',
+				'C' => 'Custom' //FIXME : make this configurable
 			);
 
 			$ticket['status_name'] = lang($status_text[$ticket['status']]);
@@ -470,6 +481,7 @@
 					case 'F': $type = lang('finnish date changed'); break;
 					case 'IF': $type = lang('Initial finnish date'); break;
 					case 'I': $type = lang('Status changed'); break;
+					case 'C': $type = lang('Status changed'); break; // FIXME: make configurable
 					default: break;
 				}
 
@@ -478,6 +490,7 @@
 					case 'O': $value['new_value']=lang('Opened'); break;
 					case 'X': $value['new_value']=lang('Closed'); break;
 					case 'I': $value['new_value']=lang('In Progress'); break; //initiated		
+					case 'C': $value['new_value']=lang('custom'); break; // FIXME: make configurable
 					default: break;
 				}
 
@@ -492,7 +505,6 @@
 					else
 					{
 						$record_history[$i]['value_new_value']	= lang('None');
-
 					}
 				}
 				else if ($value['status'] == 'T')
@@ -618,7 +630,8 @@
 				'B' => 'Billing rate',
 				'H' => 'Billing hours',
 				'F' => 'finnish date changed',
-				'I'=> 'Status changed'
+				'I'=> 'Status changed',
+				'C' => 'Custom' //FIXME : make this configurable - move into separate function
 			);
 
 

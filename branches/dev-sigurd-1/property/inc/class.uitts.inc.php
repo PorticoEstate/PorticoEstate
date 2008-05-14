@@ -61,20 +61,17 @@
 			$this->account				= $GLOBALS['phpgw_info']['user']['account_id'];
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
 			$this->nextmatchs			= CreateObject('phpgwapi.nextmatchs');
-
 			$this->bo					= CreateObject('property.botts',true);
-			$this->bocommon				= CreateObject('property.bocommon');
-
+			$this->bocommon 			= & $this->bo->bocommon;
 			$this->cats					= & $this->bo->cats;
-
 			$this->acl 					= & $GLOBALS['phpgw']->acl;
 			$this->acl_location			= '.ticket';
-			$this->acl_read 			= $this->acl->check('.ticket',1);
-			$this->acl_add 				= $this->acl->check('.ticket',2);
-			$this->acl_edit 			= $this->acl->check('.ticket',4);
-			$this->acl_delete 			= $this->acl->check('.ticket',8);
-			$this->acl_manage 			= $this->acl->check('.ticket',16);
-			$this->bo->acl_location			= $this->acl_location;
+			$this->acl_read 			= $this->acl->check('.ticket',PHPGW_ACL_READ);
+			$this->acl_add 				= $this->acl->check('.ticket',PHPGW_ACL_ADD);
+			$this->acl_edit 			= $this->acl->check('.ticket',PHPGW_ACL_EDIT);
+			$this->acl_delete 			= $this->acl->check('.ticket',PHPGW_ACL_DELETE);
+			$this->acl_manage 			= $this->acl->check('.ticket',PHPGW_ACL_PRIVATE); // manage
+			$this->bo->acl_location		= $this->acl_location;
 
 			$this->start				= $this->bo->start;
 			$this->query				= $this->bo->query;
@@ -263,81 +260,75 @@
 
 //_debug_array($uicols);
 //_debug_array($ticket_list);
-			while (is_array($ticket_list) && list(,$ticket) = each($ticket_list))
+			if(is_array($ticket_list))
 			{
-				if($ticket['subject'])
+				foreach($ticket_list as $ticket)
 				{
-					$first= $ticket['subject'];
-				}
-				else
-				{
-					$first= $ticket['category'];
-				}
+					switch ($ticket['status'])
+					{
+						case 'X':
+							$bgcolor = '#5EFB6E';
+							$status = lang('Closed');
+							$text_edit_status = lang('Open');
+							$new_status = 'O';
+						break;
+						case 'I':
+							$bgcolor = '#FF9933';
+							$status = lang('In progress');
+							$text_edit_status = lang('Close');
+							$new_status = 'X';
+						break;
+						default :
+							$bgcolor = $bgcolor_array[$ticket['priority']];
+							$status = lang('Open');
+							$text_edit_status = lang('Close');
+							$new_status = 'X';
+						break;
+					}
 
-				switch ($ticket['status'])
-				{
-					case 'X':
-						$bgcolor = '#5EFB6E';
-						$status = lang('Closed');
-						$text_edit_status = lang('Open');
-						$new_status = 'O';
-					break;
-					case 'I':
-						$bgcolor = '#FF9933';
-						$status = lang('In progress');
-						$text_edit_status = lang('Close');
-						$new_status = 'X';
-					break;
-					default :
-						$bgcolor = $bgcolor_array[$ticket['priority']];
-						$status = lang('Open');
-						$text_edit_status = lang('Close');
-						$new_status = 'X';
-					break;
+					$link_status_data = array
+					(
+						'menuaction'		=> 'property.uitts.index',
+						'id'				=> $ticket['id'],
+						'edit_status'		=> true,
+						'new_status'		=> $new_status,
+						'second_display'	=> true,
+						'sort'				=> $this->sort,
+						'order'				=> $this->order,
+						'cat_id'			=> $this->cat_id,
+						'filter'			=> $this->filter,
+						'user_filter'		=> $this->user_filter,
+						'query'				=> $this->query,
+						'district_id'		=> $this->district_id,
+						'allrows'			=> $this->allrows
+					);
+
+					$content[] = array
+					(
+						'id'					=> $ticket['id'],
+						'bgcolor'				=> $bgcolor,
+						'new_ticket'			=> (isset($ticket['new_ticket'])?$ticket['new_ticket']:''),
+						'priostr'				=> $ticket['priority'],
+						'subject'				=> $ticket['subject'],
+						'location_code'			=> $ticket['location_code'],
+						'address'				=> $ticket['address'],
+						'date'					=> $ticket['timestampopened'],
+						'finnish_date'			=> $ticket['finnish_date'],
+						'delay'					=> (isset($ticket['delay'])?$ticket['delay']:''),
+						'user'					=> $ticket['user'],
+						'assignedto'			=> $ticket['assignedto'],
+						'child_date'			=> $ticket['child_date'],
+						'link_view'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uitts.view', 'id'=> $ticket['id'])),
+						'lang_view_statustext'	=> lang('view the ticket'),
+						'text_view'				=> lang('view'),
+						'status'				=> $status,
+						'link_edit_status'		=> $GLOBALS['phpgw']->link('/index.php',$link_status_data),
+						'lang_edit_status'		=> lang('Edit status'),
+						'text_edit_status'		=> $text_edit_status,
+					);
 				}
-
-				$link_status_data = array
-				(
-					'menuaction'			=> 'property.uitts.index',
-							'id'			=> $ticket['id'],
-							'edit_status'	=> true,
-							'new_status'	=> $new_status,
-							'second_display'=> true,
-							'sort'			=> $this->sort,
-							'order'			=> $this->order,
-							'cat_id'		=> $this->cat_id,
-							'filter'		=> $this->filter,
-							'user_filter'	=> $this->user_filter,
-							'query'			=> $this->query,
-							'district_id'	=> $this->district_id,
-							'allrows'		=> $this->allrows
-				);
-
-				$content[] = array
-				(
-					'id'					=> $ticket['id'],
-					'bgcolor'				=> $bgcolor,
-					'new_ticket'			=> (isset($ticket['new_ticket'])?$ticket['new_ticket']:''),
-					'priostr'				=> $ticket['priority'],
-					'first'					=> $first,
-					'location_code'			=> $ticket['location_code'],
-					'address'				=> $ticket['address'],
-					'date'					=> $ticket['timestampopened'],
-					'finnish_date'			=> $ticket['finnish_date'],
-					'delay'					=> (isset($ticket['delay'])?$ticket['delay']:''),
-					'user'					=> $ticket['user'],
-					'assignedto'			=> $ticket['assignedto'],
-					'child_date'			=> $ticket['child_date'],
-					'link_view'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uitts.view', 'id'=> $ticket['id'])),
-					'lang_view_statustext'	=> lang('view the ticket'),
-					'text_view'				=> lang('view'),
-					'status'				=> $status,
-					'link_edit_status'		=> $GLOBALS['phpgw']->link('/index.php',$link_status_data),
-					'lang_edit_status'		=> lang('Edit status'),
-					'text_edit_status'		=> $text_edit_status,
-				);
 			}
-
+//_debug_array($content);
 			$table_header[] = array
 			(
 				'sort_priority'	=> $this->nextmatchs->show_sort_order(array
@@ -668,15 +659,6 @@
 //_debug_array($ticket_list);
 			while (is_array($ticket_list) && list(,$ticket) = each($ticket_list))
 			{
-				if($ticket['subject'])
-				{
-					$first= $ticket['subject'];
-				}
-				else
-				{
-					$first= $ticket['category'];
-				}
-
 				if ($ticket['status']=='O')
 				{
 					$status = lang('Open');
@@ -692,7 +674,7 @@
 					'bgcolor'				=> $bgcolor[$ticket['priority']],
 					'new_ticket'			=> (isset($ticket['new_ticket'])?$ticket['new_ticket']:''),
 					'priostr'				=> str_repeat("||", $ticket['priority']),
-					'first'					=> $first,
+					'subject'				=> $ticket['subject'],
 					'location_code'			=> $ticket['location_code'],
 					'address'				=> $ticket['address'],
 					'date'					=> $ticket['timestampopened'],

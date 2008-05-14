@@ -166,7 +166,7 @@
 					<a href="{$link_view}" onMouseover="window.status='{$lang_view_statustext}';return true;" onMouseout="window.status='';return true;"><xsl:value-of select="id"/></a>
 				</td>
 				<td class="small_text" align="left">
-					<xsl:value-of select="first"/>
+					<xsl:value-of select="subject"/>
 				</td>
 				<td class="small_text" align="left">
 					<xsl:value-of select="location_code"/>
@@ -174,10 +174,10 @@
 				<td class="small_text" align="left">
 					<xsl:value-of select="address"/>
 				</td>
-				<td class="small_text" align="center">
+				<td class="small_text" align="left">
 					<xsl:value-of select="user"/>
 				</td>
-				<td class="small_text" align="center">
+				<td class="small_text" align="left">
 					<xsl:value-of select="assignedto"/>
 				</td>
 				<td class="small_text" align="center">
@@ -346,7 +346,7 @@
 					<a href="{$link_view}" onMouseover="window.status='{$lang_view_statustext}';return true;" onMouseout="window.status='';return true;"><xsl:value-of select="id"/></a>
 				</td>
 				<td class="small_text" align="left">
-					<xsl:value-of select="first"/>
+					<xsl:value-of select="subject"/>
 				</td>
 				<td class="small_text" align="left">
 					<xsl:value-of select="location_code"/>
