@@ -117,12 +117,44 @@
 					//do nothing for now
 			}
 			
-			$this->adodb = newADOConnection($db_type);
-			$this->adodb->SetFetchMode(3);
-			if($query != '')
+			$this->new_adodb();
+
+			if ( !is_null($query) )
 			{
 				$this->query($query);
 			}
+		}
+
+		/**
+		* Called when object is cloned
+		*/
+		public function __clone()
+		{
+			$this->adodb = clone($this->adodb);
+		}
+
+		/**
+		* Create a new adodb object
+		*/
+		private function new_adodb()
+		{
+			$type = $this->Type;
+			if ( $type == 'mysql' )
+			{
+				$type = 'mysqlt';
+			}
+			$this->adodb = newADOConnection($this->Type);
+			$this->connect();
+			 // would be good if one day we just use ADODB_FETCH_ASSOC
+			$this->adodb->SetFetchMode(ADODB_FETCH_BOTH);
+		}
+
+		/**
+		* Destructor
+		*/
+		public function __destruct()
+		{
+//			$this->disconnect(); //This one kills a transaction when a cloned object is called
 		}
 
 		/**
@@ -155,13 +187,29 @@
 		* @param string $User name of database user (optional)
 		* @param string $Password password for database user (optional)
 		*/
-		public function connect($Database = '', $Host = '', $User = '', $Password = '')
+		public function connect($Database = null, $Host = null, $User = null, $Password = null)
 		{
-			$this->Database = $Database != '' ? $Database : $this->Database;
-			$this->Host = $Host != '' ? $Host : $this->Host;
-			$this->User = $User != '' ? $User : $this->User;
-			$this->Password = $Password != '' ? $Password : $this->Password;
-			return $this->adodb->connect($this->Host, $this->User, $this->Password, $this->Database);
+			if ( !is_null($Database) )
+			{
+				$this->Database = $Database;
+			}
+
+			if ( !is_null($Host) )
+			{
+				$this->Host = $Host;
+			}
+
+			if ( !is_null($User) )
+			{
+				$this->User = $User;
+			}
+
+			if ( !is_null($Password) )
+			{
+				$this->Password = $Password;
+			}
+
+			return @$this->adodb->connect($this->Host, $this->User, $this->Password, $this->Database);
 		}
 
 		/**
@@ -388,7 +436,7 @@
 
 					if ($params[0] < 8 || ($params[0] == 8 && $params[1] ==0))
 					{
-						$oid = pg_getlastoid($this->adodb->_resultid);
+						$oid = pg_getlastoid($this->adodb->_queryID);
 						if ($oid == -1)
 						{
 							return -1;
@@ -423,7 +471,7 @@
 					{
 					return -1;
 					}
-					$result = @mssql_query("select @@identity", $this->adodb->_resultid);
+					$result = @mssql_query("select @@identity", $this->adodb->_queryID);
 					if(!$result)
 					{
 						return -1;
@@ -591,7 +639,7 @@
 		* @param boolean $strip_slashes string escape chars from field(optional), default false
 		* @return string the field value
 		*/
-		public function f($name, $strip_slashes = false)
+		public function f($name, $strip_slashes = False)
 		{
 			if($this->resultSet && get_class($this->resultSet) != 'adorecordset_empty')
 			{
@@ -616,7 +664,7 @@
 		* @param string $field name of field to print
 		* @param bool $strip_slashes string escape chars from field(optional), default false
 		*/
-		public function p($field, $strip_slashes = true)
+		public function p($field, $strip_slashes = True)
 		{
 			//echo "depi: p";
 			print $this->f($field, $strip_slashes);
@@ -767,7 +815,7 @@
 			if ( !$this->adodb->IsConnected() )
 			{
 				echo 'Connection FAILED<br />';
-				return false;
+				return False;
 			}
 
 			//create the db
@@ -784,9 +832,8 @@
 					//do nothing
 			}
 			$this->adodb->Disconnect();
-			return true;
+			return True;
 		}
-	 
 		/**
 		* Get the correct date format for DATE field for a particular RDBMS
 		*
@@ -874,3 +921,4 @@
 		}  
 
 	}
+?>
