@@ -44,7 +44,7 @@ class PHP_CodeSniffer_Standards_phpGroupWare_phpGroupWareCodingStandard extends 
         return array(
                 // Useful Generics
                 'Generic/Sniffs/Files/LineEndingsSniff.php',
-                'Generic/Sniffs/Formatting/MultipleStatementAlignmentSniff.php',
+                // 'Generic/Sniffs/Formatting/MultipleStatementAlignmentSniff.php', - not working w/tabs
                 'Generic/Sniffs/Formatting/SpaceAfterCastSniff.php',
                 'Generic/Sniffs/Functions/OpeningFunctionBraceBsdAllmanSniff.php',
                 'Generic/Sniffs/Metrics/CyclomaticComplexitySniff.php',
