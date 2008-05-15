@@ -3,165 +3,102 @@
    Originally written by Pim Snel
    Currently Maintained by Dave Hall
 
-   $Id: idots.css 18358 2007-11-27 04:43:37Z skwashd $
+   $Id: idots.css,v 1.6 2007/09/21 12:24:44 sigurdne Exp $
 */
-
-#articlecontent 
+   
+/* Classes */
+.articlecontent 
 {
-	background-color: #efefef;
-	color: #069;
+	background-color: #EFEFEF;
+	color: #006699;
 	font-size: 12px;
-	font-family: Verdana, Arial, Helvetica, sans-serif;
-	min-height: 600px;
+	font-family: "Verdana", "Arial", "Helvetica", "sans-serif";
+	line-height: 20px;
+	text-align: left;
 	padding: 10px; 
 }
 
-h1.articletitle 
+.articletitle 
 {
-	background-image: url(../images/greypanel.png); 
-	background-repeat: repeat-x; 
-	color: #000;
-	height: 21px;
-	font-family: Verdana, Arial, Helvetica, sans-serif; 
 	font-weight: bold; 
 	font-size: 12px; 
-	margin: 0px;
-	padding: 0px;
+	background-image: url(../images/greypanel.png); 
+	color: #000000;
 	text-align: center;
+	text-indent: 5pt; 
+	background-repeat: repeat-x; 
+	font-family: "Verdana", "Arial", "Helvetica", "sans-serif"; 
+	height: 21px;
+	vertical-align: middle;
 }
 
-#box 
+.box 
 {
-	background-color: #fff;
+	background-color: #ffffff;
 	border: 1px solid #98aab1;
-	min-height: 90%;
+	border-collapse: collapse;
+	height: 90%;
 	margin: 0px;
 	padding: 0px;
-	text-align: left;
 	vertical-align: top;
 	width: 100%;
 }
 
-#content 
+/* not needed afaik - skwashd
+.content 
 {
-	background-color: #fff;
-	border: 1px solid #98aab1;
-	color: #000;
-	margin: 0px 6px 20px 200px;
-	padding: 0px;
-}
+	color: #000000; 
+	font-family: "Verdana", "Arial", "Helvetica", "sans-serif";
+	font-size: 12px;
+}*/
 
-#content_nosidebox
+.copyright 
 {
-	background-color: #fff;
-	border: 1px solid #98aab1;
-	color: #000;
-	margin: 0px 6px 20px 6px;
-	padding: 0px;
-
-}
-
-#copyright 
-{
-	clear: both;
-	color: #000;
+	color: #000000;
 	font-size: 9px;
-	padding: 10px;
 	text-align: center;
+}
+
+.logo
+{
+	background: url("../images/panel.png");
+	background-repeat: repeat-x;
+	margin: 0px;
+	padding: 0px;
+	text-align: center;
+	vertical-align: top;
 }
 
 .mainnote 
 {
-	background-color: #fff;
-	color: #069; 
-	font-family: Arial, Helvetica, sans-serif;
+	background-color: #FFFFFF; /* */
+	color: #006699; 
+	font-family: "Arial", "Helvetica", "sans-serif";
 	font-size: 12px;
 	height: 20px;
-	margin: 5px;
-	text-align: right;
 	vertical-align: top;
 }
 
-.mainnote #user_info
+.navpanel
 {
-	float: left;
-	text-align: left;
-	width: 300px;
-}
-
-#navpanel
-{
-	 background-color: #fff;
-	 background-image: url('../images/panel.png');
+	 background: url("../images/panel.png");
 	 background-repeat: repeat-x;
-	 height: 120px;
+	 background-color: #FFFFFF;
+	 border-collapse:collapse;
+	 height: 60px;
 	 margin: 0px;
 	 padding: 0px;
+	 text-align: left;
 	 vertical-align: top;
-	 width: 100%;
-}
-
-#navpanel ul
-{
-	height: 115px;
-	list-style: none;
-	margin: 0px;
-	padding: 0px;
-	overflow: hidden;
-	width: 100%;
-}
-
-#navpanel li
-{
-	display: block;
-	float: left;
-	height: 120px;
-	overflow: hidden;
-	margin-left: 3px;
-	text-align: center;
-	width: 72px;
-}
-
-#navpanel li.phpgw_logo
-{
-	margin: 0px 2px;
-	padding: 0px;
-	width: 190px;
-}
-
-#navpanel li.phpgw_logo img
-{
-	padding: 0px;
-}
-
-#navpanel a, #navpanel a:hover
-{
-	text-decoration: none;
-}
-
-#navpanel a img
-{
-	-moz-opacity: 0.65; /* old mozilla/gecko */
-	filter: alpha(opacity=6.5); /* IE 5.5+? */
-	opacity: 0.65; /* CSS3 */
-	padding-top: 18px;
-	padding-bottom: 8px;
-}
-
-#navpanel a:hover img, #navpanel li.phpgw_logo a img
-{
-	-moz-opacity: 1.0;
-	filter: alpha(opacity=10);
-	opacity: 1.0;
 }
 
 .popup
 {
-	background-color: #fff;
-	border-bottom: 2px solid #000;
-	border-left: 1px solid #000;
-	border-right: 2px solid #999;
-	border-top: 1px solid #999;
+	background-color: #FFFFFF;
+	border-bottom: 2px solid #000000;
+	border-left: 1px solid #000000;
+	border-right: 2px solid #999999;
+	border-top: 1px solid #999999;
 	border-collapse: collapse;
 	padding: 0px;
 	width: 300px;
@@ -171,90 +108,86 @@ h1.articletitle
 {
 	background-image: url(../images/boxbg.png);
 	background-repeat: repeat-x;
-	color: #000;
-	font-family: Verdana, Arial, Helvetica, sans-serif;
+	color: #000000;
+	font-family: "Verdana", "Arial", "Helvetica", "sans-serif";
 	font-weight: bold;
 	font-size: 12px;						
 }
 
-#sidecontent
+.sidecontent
 {
-	border: 0px;
-	float: left;
-	margin-left: 10px;
-	padding: 0px;
-	width: 160px;
+	 border:0px;
+	 border-collapse: collapse;
+	 padding:0px;
+	 vertical-align: top;
+	 width: 160px;
 }
 
-.box > #sidecontent /* Fix IE Hack */
+.sideboxcontent 
 {
-	margin-left: 20px;
+	background-color: #EFEFEF;
+	font-family: "Verdana", "Arial", "Helvetica", "sans-serif";
+	font-size: 9pt;
+	/*line-height: 18px;*/
+	/*padding: 2px;*/
+	width: 160px; 
 }
 
-ul.sideboxcontent
-{
-	background-color: #efefef;
-	font-family: Verdana, Arial, Helvetica, sans-serif;
-	font-size: 12px;
-	margin: 0px;
-	padding: 5px;
-	width: 150px; 
-}
-
-ul.sideboxcontent li
-{
-	list-style: square inside url(../images/dot.png);
-	padding: 1px 3px;
-}
-
-#sidecontent h2
+.sideboxtitle 
 {
 	background-image: url(../images/boxbg.png);
 	background-position: center 50%;
-	color: #000;
-	font-family: Verdana, Arial, Helvetica, sans-serif;
+	color: #000000;
+	font-family: "Verdana", "Arial", "Helvetica", "sans-serif";
 	font-size: 12px; 
 	font-weight: bold;
-	height: 24px;
-	margin: 0px;
-	padding: 3px 0px 0px 0px;
+	height: 26px;
 	text-align: center;
 }
 
-.sidebox
+spacer
 {
-	border: 1px solid #98aab1;
-	margin-bottom: 25px;
-	padding: 0px;
-	width: 160px; 
+	border: 0px;
+	width: 15px;
+}
+
+/* Not used afaik, also a tag name - skwashd
+.title 
+{
+	color: #000000;
+	font-size: 12px;
+	font-weight: 12px;
+	padding: 5px;
+}
+*/
+
+/* not used afaik - skwashd
+.toppannel 
+{
+	background-image: url(../images/panel.png); 
+	background-repeat: repeat-x
+}
+*/
+
+@media screen
+{
+	.sidebox
+	{
+		border: 1px solid #98aab1;
+		border-collapse: collapse;
+		padding: 0px;
+		width: 160px; 
+	}
 }
 
 /* Save some space when printing */
 @media print
 {
-	.box
-	{
-		border: 0px;
-		margin: 0px;
-	}
-
-	#content 
-	{
-		border: 0px;
-		margin: 0px;
-	}
-
-	.mainnote
+	.sidebox
 	{
 		display: none;
 	}
-
-	#navpanel
-	{
-		display: none;
-	}
-
-	#sidecontent
+	#nav
 	{
 		display: none;
 	}
@@ -263,117 +196,222 @@ ul.sideboxcontent li
 /* Tags */
 a, a:visited, a:link 
 {
-	color: #069; 
+	color: #006699; 
 	text-decoration: none;
 }
 
 a:active, a:hover 
 {
-	color: #f93;
+	color: #FF9933;
 	text-decoration: underline;
 }
 
-
-body, div, form, input, li, p, select, td, textarea  
-{
-	font-family: Verdana, Arial, Helvetica, sans-serif;
-	font-size: 12px;
-}
-
-body
+body 
 {
 	background-color: #e5e5e5;
+	font-family: "Verdana", "Arial", "Helvetica", "sans-serif";
+	font-size: 10pt;
 }
 
-img, input[type=image]
+form 
+{
+	font-family: "Verdana", "Arial", "Helvetica", "sans-serif";
+	font-size: 10pt;
+}
+
+img
 {
 	border: 0px;
 }
 
+/* this should work but doesn't - i will come back to it 
+td.navpanel > a > img
+{
+	-moz-opacity: 0.8;  mozilla/gecko 
+	filter: alpha(opacity=8); IE 5.5+? 
+	opacity: 0.8; CSS3 
+}
+
+td.navpanel > a > img:hover
+{
+	-moz-opacity: 1.0;
+	filter: alpha(opacity=10);
+	opacity: 1.0;
+}
+*/
+
 input, select, textarea 
 {
-	color: #069; 
-	border: 1px solid #000;
-	background-color: #f3f3f3;
+	color: #006699; 
+	background-color: #EFEFEF;
+	font-family: "Arial", "Helvetica", "sans-serif";
+	font-size: 9pt;
+}
+
+input, textarea
+{
+//	-moz-border-radius: 5px;
+	border: 1px solid #006699;
+//	border-radius: 5px;
 }
 
 input:focus, select:hover, textarea:focus
 {
-	background-color: #fff;
-	border: 1px solid #069;
-	color: #17a;
+	background-color: #F3F3F3;
+	color: #1177AA;
 }
 
-label
+input[type=image]
 {
-	margin-right: 10px;
-	text-align: right;
+	border: 0px;
+}
+
+.row_on input, .row_on textarea
+{
+	background-color: #E8F0F0;
+}
+
+.row_off input, .row_off textarea
+{
+	background-color: #DDDDDD;
+}
+
+span.star
+{
+	color: #FF9933;
+	font-weight: bold;
+}
+
+table 
+{
+	FONT-SIZE: 12px; 
+	FONT-FAMILY: "Verdana", "Arial", "Helvetica", "sans-serif"
+}
+
+/* Used by tabs */
+th.activetab
+{
+//	-moz-border-radius-topleft: 10px;
+//	-moz-border-radius-topright: 10px;
+	background-color: #FFFFFF;
+	/*border-color: #000000;*/
+//	border-radius-topleft: 10px;
+//	border-radius-topright: 10px;
+	/*border-style: solid;
+	border-width: 1px 1px 0px 1px;*/
+	height: 20px;
+	padding: 0px 5px 0px 5px;
+	white-space: nowrap; 
+}
+ 
+th.inactivetab
+{
+//	-moz-border-radius-topleft: 10px;
+//	-moz-border-radius-topright: 10px;
+	background-color:#CCCCCC;
+	/*border: 1px solid #000000;*/
+//	border-radius-topleft: 10px;
+//	border-radius-topright: 10px;
+	color:#006699;
+	height: 20px;
+	padding: 0px 5px 0px 5px;
+	white-space: nowrap;
+}
+
+th.tablast
+{
+/*	border-width: 0px 0px 1px 0px;
+	border-style: solid;
+	border-color: #000000;*/
+	width: 100%;
+}
+
+/* Used by tabs */
+ul.tabs
+{
+	background-image: url('../images/tabs-bg.png');
+	height: 32px;
+	list-style: none;
+	margin: 0px;
+	padding: 0px;
+}
+
+ul.tabs li
+{
+	display: block;
+	float: left;
+	height: 32px;
+	margin: 0px;
+	padding: 0px;
 	width: 150px;
 }
 
-form br
+ul.tabs li a, ul.tabs li input
 {
-	clear: left;
+	background-image: url('../images/tab-r.png');
+	background-color: transparent;
+	background-repeat: no-repeat;
+	border: 0px;
+	color: #000;
+	display: block;
+	height: 32px;
+	overflow: hidden;
+	padding-top: 7px;
+	text-decoration: none;
+	white-space: nowrap; 
+	width: 150px;
+}
+
+ul.tabs li.tablast
+{
+	background-color: transparent;
+	background-image: url('../images/tab-last.png');
+	background-repeat: no-repeat;
+}
+
+ul.tabs li.activetab
+{
+	background-color: transparent;
+	background-image: url('../images/tab-active-bg.png');
+	height: 32px;
+}
+
+ul.tabs li.activetab a
+{
+	background-image: url('../images/tab-active-r.png');
+	background-position: top right;
+}
+ 
+ul.tabs li
+{
+	background-image: url('../images/tab-bg.png');
+	color:#069;
+	height: 32px;
+	text-align: center;
+	white-space: nowrap;
 }
 
 /* nextmatch values */
 .row_off
 {
-	background-color: #e8f0f0;
-	color: #000;
+	background-color: #E8F0F0;
+	color: #000000;
 }
 
 .row_on
 {
-	background-color: #ddd;
-	color: #000;
+	background-color: #DDDDDD;
+	color: #000000;
 }
 
-thead, tfoot, .th /* th shouldn't be used where possible */
+.th
 {
-	background-color: #d3dce3;
-	color: #000;
+	background-color: #D3DCE3;
+	color: #000000;
 	font-weight: bold;
 }
 
-.app_header
+.small_text
 {
-	font-weight: bold;
-}
-
-/* Portal Box */
-.home_portal
-{
-	background-color: #fff;
-	border: 1px solid #000;
-	margin: 7px;
-	padding: 0px;
-}
-
-.home_portal_controls
-{
-	float: right;
-	text-align: right;
-	padding: 5px 5px 0px 0px;
-	width: 200px;
-}
-
-.home_portal_title h2
-{
-	font-size: small;
-	margin: 0px;
-	padding: 3px;
-	text-align: center;
-}
-
-.home_portal_title
-{
-	background-image: url(../images/greypanel.png); 
-	background-repeat: repeat-x; 
-	background-color: #ccc;
-	color: #000;
-	height: 21px;
-	list-style: none;
-	margin: 0px;
-	padding: 0px;
+	font-size: 8pt;
 }
