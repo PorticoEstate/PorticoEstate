@@ -784,7 +784,7 @@
 				'cat_id' => array('type' => 'int','precision' => '4','nullable' => True),
 				'billable_hours' => array('type' => 'decimal','precision' => '8','scale' => '2','nullable' => True),
 				'billable_rate' => array('type' => 'decimal','precision' => '8','scale' => '2','nullable' => True),
-				'status' => array('type' => 'char','precision' => '1','nullable' => False),
+				'status' => array('type' => 'varchar','precision' => '2','nullable' => False),
 				'details' => array('type' => 'text','nullable' => False),
 				'location_code' => array('type' => 'varchar','precision' => '50','nullable' => True),
 				'p_num' => array('type' => 'varchar','precision' => '15','nullable' => True),

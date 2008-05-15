@@ -2473,9 +2473,12 @@
 			$GLOBALS['phpgw_setup']->oProc->query("UPDATE fm_request SET category = $cat_id WHERE category = $old");		
 		}
 
-//		$GLOBALS['phpgw_setup']->oProc->DropTable('fm_tts_category');
-//		$GLOBALS['phpgw_setup']->oProc->DropTable('fm_workorder_category');
-//		$GLOBALS['phpgw_setup']->oProc->DropTable('fm_request_category');
+		$GLOBALS['phpgw_setup']->oProc->DropTable('fm_tts_category');
+		$GLOBALS['phpgw_setup']->oProc->DropTable('fm_workorder_category');
+		$GLOBALS['phpgw_setup']->oProc->DropTable('fm_request_category');
+
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('fm_tts_tickets','status',array('type' => 'varchar','precision' => '2','nullable' => False));
+
 
 		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
 		{

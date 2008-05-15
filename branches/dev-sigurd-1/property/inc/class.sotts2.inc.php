@@ -73,6 +73,7 @@
 			** B - Billing rate
 			** H - Billing hours
 			** F - finnish date
+			** C% - Status changed
 			*/
 
 			if ($old_status != $ticket['status'])
@@ -161,6 +162,7 @@
 			** B - Billing rate
 			** H - Billing hours
 			** F - finnish date
+			** C% - Status change
 			*/
 
 			$finnish_date	= (isset($ticket['finnish_date'])?$this->bocommon->date_to_timestamp($ticket['finnish_date']):'');
@@ -195,9 +197,10 @@
 				$fields_updated = true;
 				if($old_status=='X')
 				{
-					$this->historylog->add('R',$id,$ticket['status'],$old_status);
+					$this->historylog->add('R', $id, $ticket['status'], $old_status);
 
-					$this->db->query("update fm_tts_tickets set status='O' where id='$id'",__LINE__,__FILE__);
+					$this->db->query("update fm_tts_tickets set status='"
+					. $ticket['status'] . "' where id='$id'",__LINE__,__FILE__);
 				}
 				else
 				{

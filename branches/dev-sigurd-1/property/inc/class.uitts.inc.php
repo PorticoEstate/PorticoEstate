@@ -284,13 +284,16 @@
 						$i = 1;
 						
 						foreach($custom_status as $custom)
-						$status["C{$i}"] = array
-						(
-							'bgcolor'			=> isset($custom_status_colour[$i-1]) ? trim($custom_status_colour[$i-1]) : '',
-							'status'			=> trim($custom),
-							'text_edit_status'	=> lang('Close'),
-							'new_status'		=> 'X'
-						);
+						{
+							$status["C{$i}"] = array
+							(
+								'bgcolor'			=> isset($custom_status_colour[$i-1]) ? trim($custom_status_colour[$i-1]) : '',
+								'status'			=> trim($custom),
+								'text_edit_status'	=> lang('Close'),
+								'new_status'		=> 'X'
+							);
+							$i ++;
+						}
 					}
 				}
 
@@ -301,15 +304,15 @@
 					{
 						case 'O':
 							$bgcolor = $bgcolor_array[$ticket['priority']];
-							$status = lang('Open');
+							$status_text = lang('Open');
 							$text_edit_status = lang('Close');
 							$new_status = 'X';
 						break;
 						default :
-							$bgcolor = $status[$ticket['status']]['bgcolor'];
-							$status = $status[$ticket['status']]['status'];
-							$text_edit_status = $status[$ticket['status']]['text_edit_status'];
-							$new_status = $status[$ticket['status']]['new_status'];
+							$bgcolor	 		= $status[$ticket['status']]['bgcolor'];
+							$status_text		= $status[$ticket['status']]['status'];
+							$text_edit_status	= $status[$ticket['status']]['text_edit_status'];
+							$new_status			= $status[$ticket['status']]['new_status'];
 						break;
 					}
 
@@ -348,7 +351,7 @@
 						'link_view'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uitts.view', 'id'=> $ticket['id'])),
 						'lang_view_statustext'	=> lang('view the ticket'),
 						'text_view'				=> lang('view'),
-						'status'				=> $status,
+						'status'				=> $status_text,
 						'link_edit_status'		=> $GLOBALS['phpgw']->link('/index.php',$link_status_data),
 						'lang_edit_status'		=> lang('Edit status'),
 						'text_edit_status'		=> $text_edit_status,
@@ -604,7 +607,7 @@
 
 				'select_action'					=> $GLOBALS['phpgw']->link('/index.php',$link_data),
 				'filter_name'					=> 'filter',
-				'filter_list'					=> $this->bo->filter(array('format' => $group_filters, 'filter'=> $this->filter,'default' => 'open')),
+				'filter_list'					=> $this->bo->filter(array('format' => $group_filters, 'filter'=> $this->filter,'default' => 'O')),
 				'lang_show_all'					=> lang('Open'),
 				'lang_filter_statustext'		=> lang('Select the filter. To show all entries select SHOW ALL'),
 				'lang_searchfield_statustext'	=> lang('Enter the search string. To show all entries, empty this field and press the SUBMIT button again'),
@@ -1179,37 +1182,10 @@
 				$this->cat_id = $values['cat_id'];
 			}
 
-			$dateformat = strtolower($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']);
-			$sep = '/';
-			$dlarr[strpos($dateformat,'y')] = 'yyyy';
-			$dlarr[strpos($dateformat,'m')] = 'MM';
-			$dlarr[strpos($dateformat,'d')] = 'DD';
-			ksort($dlarr);
-
-			$dateformat= (implode($sep,$dlarr));
-
-			switch(substr($dateformat,0,1))
-			{
-				case 'M':
-					$dateformat_validate= "javascript:vDateType='1'";
-					$onKeyUp	= "DateFormat(this,this.value,event,false,'1')";
-					$onBlur		= "DateFormat(this,this.value,event,true,'1')";
-					break;
-				case 'y':
-					$dateformat_validate="javascript:vDateType='2'";
-					$onKeyUp	= "DateFormat(this,this.value,event,false,'2')";
-					$onBlur		= "DateFormat(this,this.value,event,true,'2')";
-					break;
-				case 'D':
-					$dateformat_validate="javascript:vDateType='3'";
-					$onKeyUp	= "DateFormat(this,this.value,event,false,'3')";
-					$onBlur		= "DateFormat(this,this.value,event,true,'3')";
-					break;
-			}
-
 			$msgbox_data = (isset($receipt)?$this->bocommon->msgbox_data($receipt):'');
 
-			$GLOBALS['phpgw']->js->validate_file('dateformat','dateformat','property');
+			$jscal = CreateObject('phpgwapi.jscalendar');
+			$jscal->add_listener('values_finnish_date');
 
 			$data = array
 			(
@@ -1217,10 +1193,6 @@
 				'value_origin_type'				=> (isset($origin)?$origin:''),
 				'value_origin_id'				=> (isset($origin_id)?$origin_id:''),
 
-				'lang_dateformat' 			=> strtolower($dateformat),
-				'dateformat_validate'			=> $dateformat_validate,
-				'onKeyUp'				=> $onKeyUp,
-				'onBlur'				=> $onBlur,
 				'msgbox_data'				=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
 				'location_data'				=> $location_data,
 				'lang_assign_to'			=> lang('Assign to'),
@@ -1254,6 +1226,9 @@
 
 				'lang_finnish_date'			=> lang('finnish date'),
 				'value_finnish_date'			=> (isset($values['finnish_date'])?$values['finnish_date']:''),
+				'img_cal'					=> $GLOBALS['phpgw']->common->image('phpgwapi','cal'),
+				'lang_datetitle'			=> lang('Select date'),
+				'lang_finnish_date_statustext'		=> lang('Select the estimated date for closing the task'),
 
 				'lang_done_statustext'			=> lang('Back to the ticket list'),
 				'lang_save_statustext'			=> lang('Save the ticket'),
@@ -1688,33 +1663,6 @@
 			}
 
 //_debug_array($link_entity);
-			$dateformat = strtolower($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']);
-			$sep = '/';
-			$dlarr[strpos($dateformat,'y')] = 'yyyy';
-			$dlarr[strpos($dateformat,'m')] = 'MM';
-			$dlarr[strpos($dateformat,'d')] = 'DD';
-			ksort($dlarr);
-
-			$dateformat= (implode($sep,$dlarr));
-
-			switch(substr($dateformat,0,1))
-			{
-				case 'M':
-					$dateformat_validate= "javascript:vDateType='1'";
-					$onKeyUp	= "DateFormat(this,this.value,event,false,'1')";
-					$onBlur		= "DateFormat(this,this.value,event,true,'1')";
-					break;
-				case 'y':
-					$dateformat_validate="javascript:vDateType='2'";
-					$onKeyUp	= "DateFormat(this,this.value,event,false,'2')";
-					$onBlur		= "DateFormat(this,this.value,event,true,'2')";
-					break;
-				case 'D':
-					$dateformat_validate="javascript:vDateType='3'";
-					$onKeyUp	= "DateFormat(this,this.value,event,false,'3')";
-					$onBlur		= "DateFormat(this,this.value,event,true,'3')";
-					break;
-			}
 
 			$msgbox_data = $this->bocommon->msgbox_data($receipt);
 
@@ -1771,37 +1719,27 @@
 				}
 			}
 
-			$GLOBALS['phpgw']->js->validate_file('dateformat','dateformat','property');
-
 			$link_file_data = array
 			(
 				'menuaction'	=> 'property.uitts.view_file',
 				'id'		=> $id
 			);
 
+			$jscal = CreateObject('phpgwapi.jscalendar');
+			$jscal->add_listener('values_finnish_date');
+
 			$data = array
 			(
 				'value_origin'				=> (isset($ticket['origin'])?$ticket['origin']:''),
 				'value_destination'			=> (isset($ticket['destination'])?$ticket['destination']:''),
-				'lang_dateformat' 			=> strtolower($dateformat),
-				'dateformat_validate'		=> $dateformat_validate,
-				'onKeyUp'					=> $onKeyUp,
-				'onBlur'					=> $onBlur,
 				'lang_finnish_date'			=> lang('finnish date'),
 				'value_finnish_date'		=> $ticket['finnish_date'],
+				'img_cal'					=> $GLOBALS['phpgw']->common->image('phpgwapi','cal'),
+				'lang_datetitle'			=> lang('Select date'),
+				'lang_finnish_date_statustext'		=> lang('Select the estimated date for closing the task'),
 
 				'link_entity'				=> $link_entity,
 				'msgbox_data'				=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
-
-			//	'lang_request'				=> lang('Request'),
-			//	'lang_request_statustext'		=> lang('Link to the request originatet from this ticket'),
-			//	'link_request'				=> $GLOBALS['phpgw']->link('/index.php',$request_lookup_data),
-			//	'value_request_id'			=> $ticket['request_id'],
-
-			//	'lang_project'				=> lang('Project'),
-			//	'lang_project_statustext'		=> lang('Link to the project originatet from this ticket'),
-			//	'link_project'				=> $GLOBALS['phpgw']->link('/index.php',$project_lookup_data),
-			//	'value_project_id'			=> $ticket['project_id'],
 
 				'location_data'				=> $location_data,
 				'lang_location_code'			=> lang('Location Code'),

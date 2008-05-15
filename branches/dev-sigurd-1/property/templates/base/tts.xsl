@@ -500,14 +500,15 @@
 					<xsl:value-of select="lang_finnish_date"/>
 				</td>
 				<td>
-					<input type="text" name="values[finnish_date]" value="{value_finnish_date}" onFocus="{dateformat_validate}" onKeyUp="{onKeyUp}" onBlur="{onBlur}" size="12" maxlength="10"  onMouseout="window.status='';return true;" >
-						<xsl:attribute name="onMouseover">
-							<xsl:text>window.status='</xsl:text>
-								<xsl:value-of select="statustext"/>
-							<xsl:text>';return true;</xsl:text>
+					<input type="text" id="values_finnish_date" name="values[finnish_date]" size="10" value="{value_finnish_date}" readonly="readonly" onMouseout="window.status='';return true;" >
+						<xsl:attribute name="title">
+							<xsl:value-of select="lang_finnish_date_statustext"/>
+						</xsl:attribute>
+						<xsl:attribute name="style">
+							<xsl:text>cursor:help</xsl:text>
 						</xsl:attribute>
 					</input>
-					[<xsl:value-of select="lang_dateformat"/>]
+					<img id="values_finnish_date-trigger" src="{img_cal}" alt="{lang_datetitle}" title="{lang_datetitle}" style="cursor:pointer; cursor:hand;" />
 				</td>
 			</tr>
 
@@ -1055,14 +1056,15 @@
 					<xsl:value-of select="lang_finnish_date"/>
 				</td>
 				<td>
-					<input type="text" name="values[finnish_date]" value="{value_finnish_date}" onFocus="{dateformat_validate}" onKeyUp="{onKeyUp}" onBlur="{onBlur}" size="12" maxlength="10"  onMouseout="window.status='';return true;" >
-						<xsl:attribute name="onMouseover">
-							<xsl:text>window.status='</xsl:text>
-								<xsl:value-of select="statustext"/>
-							<xsl:text>';return true;</xsl:text>
+					<input type="text" id="values_finnish_date" name="values[finnish_date]" size="10" value="{value_finnish_date}" readonly="readonly" onMouseout="window.status='';return true;" >
+						<xsl:attribute name="title">
+							<xsl:value-of select="lang_finnish_date_statustext"/>
+						</xsl:attribute>
+						<xsl:attribute name="style">
+							<xsl:text>cursor:help</xsl:text>
 						</xsl:attribute>
 					</input>
-					[<xsl:value-of select="lang_dateformat"/>]
+					<img id="values_finnish_date-trigger" src="{img_cal}" alt="{lang_datetitle}" title="{lang_datetitle}" style="cursor:pointer; cursor:hand;" />
 				</td>
 			</tr>
 			<tr>

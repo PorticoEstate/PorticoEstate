@@ -59,7 +59,7 @@
 			if(is_array($data))
 			{
 				$start	= (isset($data['start']) && $data['start'] ? $data['start']:0);
-				$filter	= (isset($data['filter']) && $data['filter'] ? $data['filter']:'open');
+				$filter	= (isset($data['filter']) && $data['filter'] ? $data['filter']:'O'); //O='Open'
 				$user_filter= (isset($data['user_filter'])?$data['user_filter']:'');
 				$query = (isset($data['query'])?$data['query']:'');
 				$sort = (isset($data['sort']) && $data['sort'] ? $data['sort']:'DESC');
@@ -111,24 +111,23 @@
 				$filtermethod .= $where . ' fm_tts_tickets.tenant_id=' . $tenant_id;
 			}
 
-			if ($filter == 'closed')
+			if ($filter == 'X')
 			{
 				$filtermethod .= " $where fm_tts_tickets.status='X'";
 				$where = 'AND';
 			}
-			else if($filter == 'open')
+			else if($filter == 'O')
 			{
-				$filtermethod .= " $where (fm_tts_tickets.status='O' OR fm_tts_tickets.status='I')";
+				$filtermethod .= " $where (fm_tts_tickets.status='O' OR fm_tts_tickets.status $this->like 'C%')";
 				$where = 'AND';
 			}
-			else if($filter == 'progress')
+			else if($filter == 'all')
 			{
-				$filtermethod .= " $where fm_tts_tickets.status='I'";
-				$where = 'AND';
+				//nothing
 			}
 			else
 			{
-				$filtermethod .= " $where fm_tts_tickets.status='C'";
+				$filtermethod .= " $where fm_tts_tickets.status='{$filter}'";
 				$where = 'AND';
 			}
 
