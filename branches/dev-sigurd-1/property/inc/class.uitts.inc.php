@@ -262,27 +262,54 @@
 //_debug_array($ticket_list);
 			if(is_array($ticket_list))
 			{
+				$status['X'] = array
+				(
+					'bgcolor'			=> '#5EFB6E',
+					'status'			=> lang('Closed'),
+					'text_edit_status'	=> lang('Open'),
+					'new_status' 		=> 'O',
+				);
+
+				if(isset($this->bo->config->config_data['ticket_custom_status']))
+				{
+					$custom_status_colour = explode(',', $this->bo->config->config_data['ticket_custom_status_colour']);
+				}
+
+				if(isset($this->bo->config->config_data['ticket_custom_status']))
+				{
+					$custom_status = explode(',', $this->bo->config->config_data['ticket_custom_status']);
+
+					if(is_array($custom_status))
+					{
+						$i = 1;
+						
+						foreach($custom_status as $custom)
+						$status["C{$i}"] = array
+						(
+							'bgcolor'			=> isset($custom_status_colour[$i-1]) ? trim($custom_status_colour[$i-1]) : '',
+							'status'			=> trim($custom),
+							'text_edit_status'	=> lang('Close'),
+							'new_status'		=> 'X'
+						);
+					}
+				}
+
+
 				foreach($ticket_list as $ticket)
 				{
 					switch ($ticket['status'])
 					{
-						case 'X':
-							$bgcolor = '#5EFB6E';
-							$status = lang('Closed');
-							$text_edit_status = lang('Open');
-							$new_status = 'O';
-						break;
-						case 'I':
-							$bgcolor = '#FF9933';
-							$status = lang('In progress');
-							$text_edit_status = lang('Close');
-							$new_status = 'X';
-						break;
-						default :
+						case 'O':
 							$bgcolor = $bgcolor_array[$ticket['priority']];
 							$status = lang('Open');
 							$text_edit_status = lang('Close');
 							$new_status = 'X';
+						break;
+						default :
+							$bgcolor = $status[$ticket['status']]['bgcolor'];
+							$status = $status[$ticket['status']]['status'];
+							$text_edit_status = $status[$ticket['status']]['text_edit_status'];
+							$new_status = $status[$ticket['status']]['new_status'];
 						break;
 					}
 

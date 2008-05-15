@@ -121,6 +121,18 @@
     </td>
    </tr>
    <tr class="row_on">
+    <td>{lang_custom_tts_(comma-separated)_status_(empty_for_none)}:</td>
+    <td>
+     <input name="newsettings[ticket_custom_status]" value="{value_ticket_custom_status}" size="40">
+    </td>
+   </tr>
+   <tr class="row_on">
+    <td>{lang_custom_tts_(comma-separated)_status_colour_(empty_for_none)}:</td>
+    <td>
+     <input name="newsettings[ticket_custom_status_colour]" value="{value_ticket_custom_status_colour}" size="40">
+    </td>
+   </tr>
+   <tr class="row_on">
     <td>{lang_Ask_for_workorder_approval_by_e-mail}.</td>
     <td>
      <select name="newsettings[workorder_approval]">
