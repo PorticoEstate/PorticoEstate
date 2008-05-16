@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
 <title>Textual Data Over XHR</title>
 
 <style type="text/css">
@@ -18,9 +18,11 @@ body {
 
 <link rel="stylesheet" type="text/css" href="../../build/fonts/fonts-min.css" />
 <link rel="stylesheet" type="text/css" href="../../build/datatable/assets/skins/sam/datatable.css" />
-<script type="text/javascript" src="../../build/utilities/utilities.js"></script>
-<script type="text/javascript" src="../../build/datasource/datasource-beta.js"></script>
-<script type="text/javascript" src="../../build/datatable/datatable-beta.js"></script>
+<script type="text/javascript" src="../../build/yahoo-dom-event/yahoo-dom-event.js"></script>
+<script type="text/javascript" src="../../build/connection/connection-min.js"></script>
+<script type="text/javascript" src="../../build/element/element-beta-min.js"></script>
+<script type="text/javascript" src="../../build/datasource/datasource-beta-min.js"></script>
+<script type="text/javascript" src="../../build/datatable/datatable-beta-min.js"></script>
 
 
 <!--begin custom header content for this example-->
@@ -65,7 +67,7 @@ YAHOO.util.Event.addListener(window, "load", function() {
 
         ];
 
-        this.myDataSource = new YAHOO.util.DataSource("assets/php/text_proxy.txt");
+        this.myDataSource = new YAHOO.util.DataSource("assets/php/text_proxy.txt?");
         this.myDataSource.responseType = YAHOO.util.DataSource.TYPE_TEXT;
         this.myDataSource.responseSchema = {
             recordDelim: "\n",
@@ -85,14 +87,16 @@ YAHOO.util.Event.addListener(window, "load", function() {
             {key:"Stars", formatter:YAHOO.widget.DataTable.formatNumber, sortable:true}
         ];
 
-        this.anotherDataSource = new YAHOO.util.DataSource("assets/php/text_with_headers_proxy.txt");
+        this.anotherDataSource = new YAHOO.util.DataSource("assets/php/text_with_headers_proxy.txt?");
         this.anotherDataSource.responseType = YAHOO.util.DataSource.TYPE_TEXT;
         this.anotherDataSource.responseSchema = {
             recordDelim: "\n",
             fieldDelim: "|",
             fields: ["Restaurant","Location","Town","Telephone",{key:"Stars",parser:YAHOO.util.DataSource.parseNumber},"Website"]
         };
-        this.anotherDataSource.doBeforeCallback = function(oRequest, oRawResponse, oParsedResponse) {
+        // Upgrade note: As of 2.5.0, the second argument is the full type-converted
+        // response from the live data, and not the unconverted raw response
+        this.anotherDataSource.doBeforeCallback = function(oRequest, oFullResponse, oParsedResponse) {
             // Remove the first result (i.e., the headers);
             oParsedResponse.results.shift();
             return oParsedResponse;

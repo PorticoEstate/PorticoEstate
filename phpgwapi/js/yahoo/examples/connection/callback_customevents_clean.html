@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
 <title>Subscribing to Connection Manager's Custom Events via the Callback Object</title>
 
 <style type="text/css">
@@ -17,17 +17,15 @@ body {
 </style>
 
 <link rel="stylesheet" type="text/css" href="../../build/fonts/fonts-min.css" />
-<script type="text/javascript" src="../../build/yahoo/yahoo.js"></script>
-<script type="text/javascript" src="../../build/event/event.js"></script>
-<script type="text/javascript" src="../../build/connection/connection.js"></script>
+<script type="text/javascript" src="../../build/yahoo/yahoo-min.js"></script>
+<script type="text/javascript" src="../../build/event/event-min.js"></script>
+<script type="text/javascript" src="../../build/connection/connection-min.js"></script>
 
 
 <!--begin custom header content for this example-->
 <style>
-#container {min-height:15em;}
-#container li {margin-left:2em;}
+#container {margin-left:2em;}
 </style>
-
 <!--end custom header content for this example-->
 
 </head>
@@ -56,7 +54,7 @@ var div = document.getElementById('container');
 var transactionObject = {
 	start:function(type, args){
 		YAHOO.log("Custom Event *start* fired for transaction" + args[0].tId + ".", "info", "example");
-		div.innerHTML += "<li>Transaction " + args[0].tId + " " + type + " event fired.</li>";
+		div.innerHTML = "<li>Transaction " + args[0].tId + " " + type + " event fired.</li>";
 	},
 
 	complete:function(type, args){

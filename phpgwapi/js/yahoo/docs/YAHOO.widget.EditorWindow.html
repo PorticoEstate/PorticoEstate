@@ -13,7 +13,7 @@
 
 	<div id="hd">
         <a href="http://developer.yahoo.com/yui/"><h1>Yahoo! UI Library</h1></a>
-        <h3>editor&nbsp; <span class="subtitle">2.3.1</span></h3>
+        <h3>editor&nbsp; <span class="subtitle">2.5.1</span></h3>
         <p>
         <a href="./index.html">Yahoo! UI Library</a> 
             &gt; <a href="./module_editor.html">editor</a>
@@ -60,7 +60,7 @@ This is what you pass to Editor.openWindow();. These parameters will not take ef
                             <h3 id="properties">Properties</h3>
                             <div class="content">
                                     <div class="private">
-                                    <h4><a name="_cache">_cache</a>
+                                    <h4><a name="property__cache">_cache</a>
                                         <code>- private object</code>
                                     </h4>
                                     <div class="detail">
@@ -75,7 +75,7 @@ This is what you pass to Editor.openWindow();. These parameters will not take ef
                                     <hr />
                                     </div>
                                     <div class="private">
-                                    <h4><a name="attrs">attrs</a>
+                                    <h4><a name="property_attrs">attrs</a>
                                         <code>- private object</code>
                                     </h4>
                                     <div class="detail">
@@ -90,7 +90,7 @@ This is what you pass to Editor.openWindow();. These parameters will not take ef
                                     <hr />
                                     </div>
                                     <div class="private">
-                                    <h4><a name="body">body</a>
+                                    <h4><a name="property_body">body</a>
                                         <code>- private object</code>
                                     </h4>
                                     <div class="detail">
@@ -105,7 +105,7 @@ This is what you pass to Editor.openWindow();. These parameters will not take ef
                                     <hr />
                                     </div>
                                     <div class="private">
-                                    <h4><a name="footer">footer</a>
+                                    <h4><a name="property_footer">footer</a>
                                         <code>- private object</code>
                                     </h4>
                                     <div class="detail">
@@ -120,7 +120,7 @@ This is what you pass to Editor.openWindow();. These parameters will not take ef
                                     <hr />
                                     </div>
                                     <div class="private">
-                                    <h4><a name="header">header</a>
+                                    <h4><a name="property_header">header</a>
                                         <code>- private object</code>
                                     </h4>
                                     <div class="detail">
@@ -135,7 +135,7 @@ This is what you pass to Editor.openWindow();. These parameters will not take ef
                                     <hr />
                                     </div>
                                     <div class="private">
-                                    <h4><a name="name">name</a>
+                                    <h4><a name="property_name">name</a>
                                         <code>- private object</code>
                                     </h4>
                                     <div class="detail">
@@ -160,7 +160,7 @@ This is what you pass to Editor.openWindow();. These parameters will not take ef
                             <div class="content">
                                     <div class="">
                                     <h4>
-                                        <a name="setBody">setBody</a></h4>
+                                        <a name="method_setBody">setBody</a></h4>
                                     <div class="detail">
                                         <code>
                                         
@@ -206,7 +206,7 @@ This is what you pass to Editor.openWindow();. These parameters will not take ef
                                     </div>
                                     <div class="">
                                     <h4>
-                                        <a name="setFooter">setFooter</a></h4>
+                                        <a name="method_setFooter">setFooter</a></h4>
                                     <div class="detail">
                                         <code>
                                         
@@ -252,7 +252,7 @@ This is what you pass to Editor.openWindow();. These parameters will not take ef
                                     </div>
                                     <div class="">
                                     <h4>
-                                        <a name="setHeader">setHeader</a></h4>
+                                        <a name="method_setHeader">setHeader</a></h4>
                                     <div class="detail">
                                         <code>
                                         
@@ -298,7 +298,7 @@ This is what you pass to Editor.openWindow();. These parameters will not take ef
                                     </div>
                                     <div class="">
                                     <h4>
-                                        <a name="toString">toString</a></h4>
+                                        <a name="method_toString">toString</a></h4>
                                     <div class="detail">
                                         <code>
                                         
@@ -334,6 +334,248 @@ This is what you pass to Editor.openWindow();. These parameters will not take ef
                         </div>
 
 
+                        <div class="section method details">
+                            <h3 id="events">Events</h3>
+                            <div class="content">
+                                    <div class="">
+                                    <h4>
+                                        <a name="event_afterOpenWindow">afterOpenWindow</a></h4>
+                                    <div class="detail">
+                                        <code>
+                                        
+                                        
+                                        
+                                            <strong>afterOpenWindow</strong>
+
+                                            (
+                                                
+                                                        
+                                                         win
+                                                    
+                                                
+                                                        , 
+                                                         panel
+                                                    
+                                                
+                                            )
+
+                                        </code>
+                                        
+                                        <div class="description">
+                                            Event fires after an Editor Window is opened. See <a href="YAHOO.util.Element.html#addListener">Element.addListener</a> for more information on listening for this event.
+                                        </div>
+
+                                        <div class="description">
+
+
+                                                <dl>
+                                                    <dt>Parameters:</dt>
+                                                        <dd>
+                                                            <code>win &lt;<a href="YAHOO.widget.EditorWindow.html">EditorWindow</a>&gt;</code>
+                                                             The EditorWindow object
+                                                        </dd>
+                                                        <dd>
+                                                            <code>panel &lt;Overlay&gt;</code>
+                                                             The Overlay object that is used to create the window.
+                                                        </dd>
+                                                </dl>
+
+
+                                        </div>
+
+                                    </div>
+                                    <hr />
+                                    </div>
+                                    <div class="">
+                                    <h4>
+                                        <a name="event_beforeOpenWindow">beforeOpenWindow</a></h4>
+                                    <div class="detail">
+                                        <code>
+                                        
+                                        
+                                        
+                                            <strong>beforeOpenWindow</strong>
+
+                                            (
+                                                
+                                                        
+                                                         win
+                                                    
+                                                
+                                                        , 
+                                                         panel
+                                                    
+                                                
+                                            )
+
+                                        </code>
+                                        
+                                        <div class="description">
+                                            Event fires before an Editor Window is opened. See <a href="YAHOO.util.Element.html#addListener">Element.addListener</a> for more information on listening for this event.
+                                        </div>
+
+                                        <div class="description">
+
+
+                                                <dl>
+                                                    <dt>Parameters:</dt>
+                                                        <dd>
+                                                            <code>win &lt;<a href="YAHOO.widget.EditorWindow.html">EditorWindow</a>&gt;</code>
+                                                             The EditorWindow object
+                                                        </dd>
+                                                        <dd>
+                                                            <code>panel &lt;Overlay&gt;</code>
+                                                             The Overlay object that is used to create the window.
+                                                        </dd>
+                                                </dl>
+
+
+                                        </div>
+
+                                    </div>
+                                    <hr />
+                                    </div>
+                                    <div class="">
+                                    <h4>
+                                        <a name="event_closeWindow">closeWindow</a></h4>
+                                    <div class="detail">
+                                        <code>
+                                        
+                                        
+                                        
+                                            <strong>closeWindow</strong>
+
+                                            (
+                                                
+                                                        
+                                                         win
+                                                    
+                                                
+                                            )
+
+                                        </code>
+                                        
+                                        <div class="description">
+                                            Event fires after an Editor Window is closed. See <a href="YAHOO.util.Element.html#addListener">Element.addListener</a> for more information on listening for this event.
+                                        </div>
+
+                                        <div class="description">
+
+
+                                                <dl>
+                                                    <dt>Parameters:</dt>
+                                                        <dd>
+                                                            <code>win &lt;<a href="YAHOO.widget.EditorWindow.html">EditorWindow</a>&gt;</code>
+                                                             The EditorWindow object
+                                                        </dd>
+                                                </dl>
+
+
+                                        </div>
+
+                                    </div>
+                                    <hr />
+                                    </div>
+                                    <div class="">
+                                    <h4>
+                                        <a name="event_windowCMDClose">windowCMDClose</a></h4>
+                                    <div class="detail">
+                                        <code>
+                                        
+                                        
+                                        
+                                            <strong>windowCMDClose</strong>
+
+                                            (
+                                                
+                                                        
+                                                         win
+                                                    
+                                                
+                                                        , 
+                                                         panel
+                                                    
+                                                
+                                            )
+
+                                        </code>
+                                        
+                                        <div class="description">
+                                            Dynamic event fired when an <a href="YAHOO.widget.EditorWindow.html">EditorWindow</a> is closed.. The dynamic event is based on the name of the window. Example Window: createlink, opening this window would fire the windowcreatelinkClose event. See <a href="YAHOO.util.Element.html#addListener">Element.addListener</a> for more information on listening for this event.
+                                        </div>
+
+                                        <div class="description">
+
+
+                                                <dl>
+                                                    <dt>Parameters:</dt>
+                                                        <dd>
+                                                            <code>win &lt;<a href="YAHOO.widget.EditorWindow.html">EditorWindow</a>&gt;</code>
+                                                             The EditorWindow object
+                                                        </dd>
+                                                        <dd>
+                                                            <code>panel &lt;Overlay&gt;</code>
+                                                             The Overlay object that is used to create the window.
+                                                        </dd>
+                                                </dl>
+
+
+                                        </div>
+
+                                    </div>
+                                    <hr />
+                                    </div>
+                                    <div class="">
+                                    <h4>
+                                        <a name="event_windowCMDOpen">windowCMDOpen</a></h4>
+                                    <div class="detail">
+                                        <code>
+                                        
+                                        
+                                        
+                                            <strong>windowCMDOpen</strong>
+
+                                            (
+                                                
+                                                        
+                                                         win
+                                                    
+                                                
+                                                        , 
+                                                         panel
+                                                    
+                                                
+                                            )
+
+                                        </code>
+                                        
+                                        <div class="description">
+                                            Dynamic event fired when an <a href="YAHOO.widget.EditorWindow.html">EditorWindow</a> is opened.. The dynamic event is based on the name of the window. Example Window: createlink, opening this window would fire the windowcreatelinkOpen event. See <a href="YAHOO.util.Element.html#addListener">Element.addListener</a> for more information on listening for this event.
+                                        </div>
+
+                                        <div class="description">
+
+
+                                                <dl>
+                                                    <dt>Parameters:</dt>
+                                                        <dd>
+                                                            <code>win &lt;<a href="YAHOO.widget.EditorWindow.html">EditorWindow</a>&gt;</code>
+                                                             The EditorWindow object
+                                                        </dd>
+                                                        <dd>
+                                                            <code>panel &lt;Overlay&gt;</code>
+                                                             The Overlay object that is used to create the window.
+                                                        </dd>
+                                                </dl>
+
+
+                                        </div>
+
+                                    </div>
+                                    <hr />
+                                    </div>
+                            </div>
+                        </div>
 
 
 
@@ -356,11 +598,15 @@ This is what you pass to Editor.openWindow();. These parameters will not take ef
 
                                 <li class=""><a href="module_calendar.html">calendar</a></li>
 
+                                <li class=""><a href="module_charts.html">charts</a></li>
+
                                 <li class=""><a href="module_colorpicker.html">colorpicker</a></li>
 
                                 <li class=""><a href="module_connection.html">connection</a></li>
 
                                 <li class=""><a href="module_container.html">container</a></li>
+
+                                <li class=""><a href="module_cookie.html">cookie</a></li>
 
                                 <li class=""><a href="module_datasource.html">datasource</a></li>
 
@@ -376,19 +622,37 @@ This is what you pass to Editor.openWindow();. These parameters will not take ef
 
                                 <li class=""><a href="module_event.html">event</a></li>
 
+                                <li class=""><a href="module_get.html">get</a></li>
+
                                 <li class=""><a href="module_history.html">history</a></li>
 
+                                <li class=""><a href="module_imagecropper.html">imagecropper</a></li>
+
                                 <li class=""><a href="module_imageloader.html">imageloader</a></li>
+
+                                <li class=""><a href="module_json.html">json</a></li>
+
+                                <li class=""><a href="module_layout.html">layout</a></li>
 
                                 <li class=""><a href="module_logger.html">logger</a></li>
 
                                 <li class=""><a href="module_menu.html">menu</a></li>
+
+                                <li class=""><a href="module_profiler.html">profiler</a></li>
+
+                                <li class=""><a href="module_profilerviewer.html">profilerviewer</a></li>
+
+                                <li class=""><a href="module_resize.html">resize</a></li>
+
+                                <li class=""><a href="module_selector.html">selector</a></li>
 
                                 <li class=""><a href="module_slider.html">slider</a></li>
 
                                 <li class=""><a href="module_tabview.html">tabview</a></li>
 
                                 <li class=""><a href="module_treeview.html">treeview</a></li>
+
+                                <li class=""><a href="module_uploader.html">uploader</a></li>
 
                                 <li class=""><a href="module_yahoo.html">yahoo</a></li>
 
@@ -404,7 +668,10 @@ This is what you pass to Editor.openWindow();. These parameters will not take ef
                                 <li class=""><a href="YAHOO.widget.Editor.html">YAHOO.widget.Editor</a></li>
                                 <li class=""><a href="YAHOO.widget.EditorInfo.html">YAHOO.widget.EditorInfo</a></li>
                                 <li class="selected"><a href="YAHOO.widget.EditorWindow.html">YAHOO.widget.EditorWindow</a></li>
+                                <li class=""><a href="YAHOO.widget.SimpleEditor.html">YAHOO.widget.SimpleEditor</a></li>
                                 <li class=""><a href="YAHOO.widget.Toolbar.html">YAHOO.widget.Toolbar</a></li>
+                                <li class=""><a href="YAHOO.widget.ToolbarButton.html">YAHOO.widget.ToolbarButton</a></li>
+                                <li class=""><a href="YAHOO.widget.ToolbarButtonAdvanced.html">YAHOO.widget.ToolbarButtonAdvanced</a></li>
                         </ul>
                     </div>
 
@@ -412,6 +679,8 @@ This is what you pass to Editor.openWindow();. These parameters will not take ef
                         <h4>Files</h4>
                         <ul class="content">        
                                 <li class=""><a href="editor.js.html">editor.js</a></li>
+                                <li class=""><a href="simple-editor.js.html">simple-editor.js</a></li>
+                                <li class=""><a href="toolbar-button.js.html">toolbar-button.js</a></li>
                                 <li class=""><a href="toolbar.js.html">toolbar.js</a></li>
                         </ul>
                     </div>
@@ -419,22 +688,22 @@ This is what you pass to Editor.openWindow();. These parameters will not take ef
                     <div class="module">
                         <h4>Properties</h4>
                         <ul class="content">        
-                                <li class="private"><a href="#_cache">_cache</a>
+                                <li class="private"><a href="#property__cache">_cache</a>
                                         <!--<code>&lt;object&gt;</code>-->
                                 </li>
-                                <li class="private"><a href="#attrs">attrs</a>
+                                <li class="private"><a href="#property_attrs">attrs</a>
                                         <!--<code>&lt;object&gt;</code>-->
                                 </li>
-                                <li class="private"><a href="#body">body</a>
+                                <li class="private"><a href="#property_body">body</a>
                                         <!--<code>&lt;object&gt;</code>-->
                                 </li>
-                                <li class="private"><a href="#footer">footer</a>
+                                <li class="private"><a href="#property_footer">footer</a>
                                         <!--<code>&lt;object&gt;</code>-->
                                 </li>
-                                <li class="private"><a href="#header">header</a>
+                                <li class="private"><a href="#property_header">header</a>
                                         <!--<code>&lt;object&gt;</code>-->
                                 </li>
-                                <li class="private"><a href="#name">name</a>
+                                <li class="private"><a href="#property_name">name</a>
                                         <!--<code>&lt;object&gt;</code>-->
                                 </li>
                         </ul>
@@ -444,20 +713,40 @@ This is what you pass to Editor.openWindow();. These parameters will not take ef
                         <h4>Methods</h4>
                         <ul class="content">        
                                 <li class=""><!--<code>void</code>-->
-                                <a href="#setBody">setBody</a>
+                                <a href="#method_setBody">setBody</a>
                                 </li>
                                 <li class=""><!--<code>void</code>-->
-                                <a href="#setFooter">setFooter</a>
+                                <a href="#method_setFooter">setFooter</a>
                                 </li>
                                 <li class=""><!--<code>void</code>-->
-                                <a href="#setHeader">setHeader</a>
+                                <a href="#method_setHeader">setHeader</a>
                                 </li>
                                 <li class=""><!--<code>String</code>-->
-                                <a href="#toString">toString</a>
+                                <a href="#method_toString">toString</a>
                                 </li>
                         </ul>
                     </div>
 
+                    <div class="module">
+                        <h4>Events</h4>
+                        <ul class="content">        
+                                <li class="">
+                                <a href="#event_afterOpenWindow">afterOpenWindow</a>
+                                </li>
+                                <li class="">
+                                <a href="#event_beforeOpenWindow">beforeOpenWindow</a>
+                                </li>
+                                <li class="">
+                                <a href="#event_closeWindow">closeWindow</a>
+                                </li>
+                                <li class="">
+                                <a href="#event_windowCMDClose">windowCMDClose</a>
+                                </li>
+                                <li class="">
+                                <a href="#event_windowCMDOpen">windowCMDOpen</a>
+                                </li>
+                        </ul>
+                    </div>
 
 
             </div>
