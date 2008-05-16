@@ -37,9 +37,76 @@
 		$app_titles = '';
 		$navbar = execMethod('phpgwapi.menu.get', 'navbar');
 
+		$sidecontent = isset($GLOBALS['phpgw_info']['user']['preferences']['common']['sidecontent']) && $GLOBALS['phpgw_info']['user']['preferences']['common']['sidecontent'] ? $GLOBALS['phpgw_info']['user']['preferences']['common']['sidecontent'] : 'sidebox'; 
+		if($sidecontent != 'sidebox' && $sidecontent != 'javamenu')
+		{
+			$home = array
+			(
+				'home' => array
+				(
+					'text'	=> lang('home'),
+					'url'	=> $GLOBALS['phpgw']->link('/home.php'),
+					'image' => array
+					(
+						0 => 'phpgwapi',
+						1 => 'home'
+					)
+				)
+			);
+
+			$navbar = array_merge($home, $navbar);
+			unset($home);
+			unset($navbar['preferences']);
+
+			$navbar_end_manual = array();
+			if ( isset($GLOBALS['phpgw_info']['user']['apps']['manual']) )
+			{
+				$navbar_end_manual = array
+				(
+					'text'	=> lang('help'),
+					'url'	=> "javascript:openwindow('" . $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'manual.uimanual.help', 'app' => $GLOBALS['phpgw_info']['flags']['currentapp'], 'section' => isset($GLOBALS['phpgw_info']['apps']['manual']['section'])?$GLOBALS['phpgw_info']['apps']['manual']['section']:'')) . "','700','600')",
+					'image' => array
+					(
+						0 => 'manual',
+						1 => 'navbar'
+					)
+					
+				);
+			}
+
+			$navbar_end = array
+			(
+				'manual' => $navbar_end_manual,
+				'preferences' => array
+				(
+					'text'	=> lang('preferences'),
+					'url'	=> $GLOBALS['phpgw']->link('/preferences/index.php'),
+					'image' => array
+					(
+						0 => 'preferences',
+						1 => 'navbar'
+					)
+				),
+				'logout' => array
+				(
+					'text'	=> lang('logout'),
+					'url'	=> $GLOBALS['phpgw']->link('/logout.php'),
+					'image' => array
+					(
+						0 => 'phpgwapi',
+						1 => 'logout'
+					)
+				)
+			);
+
+			$navbar = array_merge($navbar,$navbar_end);
+			unset($navbar_end);
+			unset($navbar_end_manual);
+		}
+
 		foreach($navbar as $app => $app_data)
 		{
-			if ($app != 'home' && $app != 'preferences' && $app != 'about' && $app != 'logout')
+			//if ($app != 'home' && $app != 'preferences' && $app != 'about' && $app != 'logout')
 			{
 				$title = $app_data['text'];
 				
@@ -139,21 +206,24 @@
 		$GLOBALS['phpgw']->template->set_var($var);
 		$GLOBALS['phpgw']->template->pfp('out','navbar_header');
 
-		$menu_title = lang('General Menu');
-
-		$file[] = array('text' => lang('Home'),
-				'url' => $GLOBALS['phpgw']->link('/home.php'));
-		if ( isset($GLOBALS['phpgw_info']['user']['apps']['preferences']) )
+		if($sidecontent == 'sidebox' || $sidecontent == 'javamenu') 
 		{
-			$file[] = array ('text' => lang('Preferences'),
-					'url' => $GLOBALS['phpgw']->link('/preferences/index.php'));
-		}
-		$file[] = array ('text' => lang('About'), 'url' => $GLOBALS['phpgw']->link('/about.php', array('app' => $GLOBALS['phpgw_info']['flags']['currentapp'])));
-		$file[] = array ('text' => lang('Logout'), 'url' => $GLOBALS['phpgw']->link('/logout.php'));
+			$menu_title = lang('General Menu');
 
-		display_sidebox('',$menu_title,$file);
+			$file[] = array('text' => lang('Home'),
+				'url' => $GLOBALS['phpgw']->link('/home.php'));
+			if ( isset($GLOBALS['phpgw_info']['user']['apps']['preferences']) )
+			{
+				$file[] = array ('text' => lang('Preferences'),
+					'url' => $GLOBALS['phpgw']->link('/preferences/index.php'));
+			}
+			$file[] = array ('text' => lang('About'), 'url' => $GLOBALS['phpgw']->link('/about.php', array('app' => $GLOBALS['phpgw_info']['flags']['currentapp'])));
+			$file[] = array ('text' => lang('Logout'), 'url' => $GLOBALS['phpgw']->link('/logout.php'));
+
+			display_sidebox('',$menu_title,$file);
 		
-		$GLOBALS['phpgw']->hooks->single('sidebox_menu',$GLOBALS['phpgw_info']['flags']['currentapp']);
+			$GLOBALS['phpgw']->hooks->single('sidebox_menu',$GLOBALS['phpgw_info']['flags']['currentapp']);
+		}
 
 		$GLOBALS['phpgw']->template->pparse('out','navbar_footer');
 

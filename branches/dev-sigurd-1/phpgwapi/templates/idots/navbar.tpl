@@ -30,7 +30,7 @@
 
 <!-- BEGIN navbar_footer -->	
 					</td>
-					<td class="spacer"><img src="{img_root}/spacer.png" alt="spacer" class="spacer" /></td>
+					<td class="spacer"><img src="{img_root}/spacer.png"  class="spacer" /></td>
 					<td width = "100%">
 						<table class="box">
 							<tr> 
