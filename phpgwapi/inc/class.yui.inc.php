@@ -3,7 +3,7 @@
 	 * phpGroupWare YUI wrapper class
 	 *
 	 * @author Dave Hall
-	 * @copyright Copyright (C) 2007 Free Software Foundation, Inc. http://www.fsf.org/
+	 * @copyright Copyright (C) 2007,2008 Free Software Foundation, Inc. http://www.fsf.org/
 	 * @license http://www.fsf.org/licenses/gpl.html GNU General Public License
 	 * @package phpgwapi
 	 * @subpackage gui
@@ -69,7 +69,7 @@
 					break;
 
 				case 'button':
-					$load = array('button-beta', 'element-beta');
+					$load = array('button', 'element-beta');
 					break;
 
 				case 'calendar':
@@ -78,7 +78,7 @@
 
 				case 'colorpicker':
 				case 'colourpicker': // be nice to the speakers of H.M. English :)
-					$load = array('colorpicker-beta');
+					$load = array('colorpicker');
 					break;
 
 				case 'container':
@@ -120,7 +120,7 @@
 				// not including history - as it isn't needed - need to handle the not included/used types somewhere
 
 				case 'imageloader':
-					$load = array('imageloader-experimental');
+					$load = array('imageloader');
 					break;
 
 				case 'logger':
@@ -137,10 +137,6 @@
 
 				case 'tabview':
 					$load = array('element-beta', 'tabview');
-					break;
-
-				case 'treeview-hacked':
-					$load = array('treeview-hacked');
 					break;
 
 				case 'treeview':
