@@ -773,6 +773,17 @@
 			'ix' => array(),
 			'uc' => array()
 		),
+		'fm_tts_status' => array(
+			'fd' => array(
+				'id' => array('type' => 'auto','nullable' => False),
+				'name' => array('type' => 'varchar','precision' => '50','nullable' => False),
+				'color' => array('type' => 'varchar','precision' => '10','nullable' => True)
+			),
+			'pk' => array('id'),
+			'ix' => array(),
+			'ix' => array(),
+			'uc' => array()
+		),
 		'fm_tts_tickets' => array(
 			'fd' => array(
 				'id' => array('type' => 'auto','nullable' => False),

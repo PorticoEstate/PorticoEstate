@@ -2523,6 +2523,20 @@
 			)
 		);
 
+		$GLOBALS['phpgw_setup']->oProc->CreateTable(
+			'fm_tts_status', array(
+				'fd' => array(
+					'id' => array('type' => 'auto','precision' => '4','nullable' => False),
+					'name' => array('type' => 'varchar','precision' => '50','nullable' => False),
+					'color' => array('type' => 'varchar','precision' => '10','nullable' => True)
+				),
+				'pk' => array('id'),
+				'fk' => array(),
+				'ix' => array(),
+				'uc' => array()
+			)
+		);
+
 		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
 		{
 			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.543';

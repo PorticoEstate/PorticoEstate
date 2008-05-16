@@ -121,6 +121,7 @@
 		'fm_project',
 		'fm_projectbranch',
 		'fm_project_history',
+		'fm_tts_status',
 		'fm_tts_tickets',
 		'fm_tts_history',
 		'fm_tts_views',
