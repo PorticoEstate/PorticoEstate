@@ -2479,6 +2479,49 @@
 
 		$GLOBALS['phpgw_setup']->oProc->AlterColumn('fm_tts_tickets','status',array('type' => 'varchar','precision' => '2','nullable' => False));
 
+		$GLOBALS['phpgw_setup']->oProc->CreateTable(
+			'fm_responsibility', array(
+				'fd' => array(
+					'responsibility_id' => array('type' => 'auto','precision' => '4','nullable' => False),
+					'name' => array('type' => 'varchar', 'precision' => 50,'nullable' => False),
+					'descr' => array('type' => 'varchar', 'precision' => 255,'nullable' => True),
+					'active' => array('type' => 'int','precision' => 2,'nullable' => True),
+					'cat_id' => array('type' => 'int','precision' => 4,'nullable' => False)
+				),
+				'pk' => array('responsibility_id'),
+				'fk' => array(
+					'phpgw_categories' => array('cat_id' => 'cat_id')
+				),
+				'ix' => array(),
+				'uc' => array()
+			)
+		);
+
+		$GLOBALS['phpgw_setup']->oProc->CreateTable(
+			'fm_responsibility_contact', array(
+				'fd' => array(
+					'rc_id' => array('type' => 'auto','precision' => '4','nullable' => False),
+					'responsibility_id' => array('type' => 'int', 'precision' => 4,'nullable' => False),
+					'contact_id' => array('type' => 'int', 'precision' => 4,'nullable' => True),
+					'location_id' => array('type' => 'int', 'precision' => 4,'nullable' => True), // acl_location
+					'location_code' => array('type' => 'varchar', 'precision' => 20,'nullable' => True),
+					'priority' => array('type' => 'int', 'precision' => 4,'nullable' => True),
+					'active_from' => array('type' => 'int', 'precision' => 4,'nullable' => True),
+					'active_to' => array('type' => 'int', 'precision' => 4,'nullable' => True),
+					'created_at' => array('type' => 'int', 'precision' => 4,'nullable' => False),
+					'created_by' => array('type' => 'int', 'precision' => 4,'nullable' => False),
+					'expired_at' => array('type' => 'int', 'precision' => 4,'nullable' => True),
+					'expired_by' => array('type' => 'int', 'precision' => 4,'nullable' => True)
+				),
+				'pk' => array('rc_id'),
+				'fk' => array(
+					'fm_responsibility' => array('responsibility_id' => 'responsibility_id'),
+					'phpgw_contact' => array('contact_id' => 'contact_id')
+				),
+				'ix' => array('location_id','location_code'),
+				'uc' => array()
+			)
+		);
 
 		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
 		{

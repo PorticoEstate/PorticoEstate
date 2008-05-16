@@ -179,6 +179,8 @@
 		'fm_budget',
 		'fm_budget_period',
 		'fm_budget_cost',
+		'fm_responsibility',
+		'fm_responsibility_contact'
 	);
 
 	/* The hooks this app includes, needed for hooks registration */

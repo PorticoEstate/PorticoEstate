@@ -431,6 +431,11 @@
 						'text'	=> lang('Migrate to alternative db'),
 						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uimigrate.index') )
 					),
+					'responsible_matrix'	=> array
+					(
+						'text'	=> lang('responsible matrix'),
+						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiresponsible.index') )
+					)
 				);
 			}
 
