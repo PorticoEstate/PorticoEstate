@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
 <title>JSON Data Over XHR</title>
 
 <style type="text/css">
@@ -18,9 +18,12 @@ body {
 
 <link rel="stylesheet" type="text/css" href="../../build/fonts/fonts-min.css" />
 <link rel="stylesheet" type="text/css" href="../../build/datatable/assets/skins/sam/datatable.css" />
-<script type="text/javascript" src="../../build/utilities/utilities.js"></script>
-<script type="text/javascript" src="../../build/datasource/datasource-beta.js"></script>
-<script type="text/javascript" src="../../build/datatable/datatable-beta.js"></script>
+<script type="text/javascript" src="../../build/yahoo-dom-event/yahoo-dom-event.js"></script>
+<script type="text/javascript" src="../../build/connection/connection-min.js"></script>
+<script type="text/javascript" src="../../build/json/json-min.js"></script>
+<script type="text/javascript" src="../../build/element/element-beta-min.js"></script>
+<script type="text/javascript" src="../../build/datasource/datasource-beta-min.js"></script>
+<script type="text/javascript" src="../../build/datatable/datatable-beta-min.js"></script>
 
 <!--there is no custom header content for this example-->
 
@@ -66,10 +69,21 @@ YAHOO.util.Event.addListener(window, "load", function() {
         this.myDataTable = new YAHOO.widget.DataTable("json", myColumnDefs,
                 this.myDataSource, {initialRequest:"query=pizza&zip=94089&results=10&output=json"});
 
+        var callback1 = {
+            success : this.myDataTable.onDataReturnAppendRows,
+            failure : this.myDataTable.onDataReturnAppendRows,
+            scope : this.myDataTable
+        };
         this.myDataSource.sendRequest("query=mexican&zip=94089&results=10&output=json",
-                this.myDataTable.onDataReturnAppendRows, this.myDataTable);
+                callback1);
+
+        var callback2 = {
+            success : this.myDataTable.onDataReturnInsertRows,
+            failure : this.myDataTable.onDataReturnInsertRows,
+            scope : this.myDataTable
+        };
         this.myDataSource.sendRequest("query=chinese&zip=94089&results=10&output=json",
-                this.myDataTable.onDataReturnInsertRows, this.myDataTable);
+                callback2);
     };
 });
 </script>

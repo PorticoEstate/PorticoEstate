@@ -13,7 +13,7 @@
 
 	<div id="hd">
         <a href="http://developer.yahoo.com/yui/"><h1>Yahoo! UI Library</h1></a>
-        <h3>DataSource Utility&nbsp; <span class="subtitle">2.3.1</span></h3>
+        <h3>DataSource Utility&nbsp; <span class="subtitle">2.5.1</span></h3>
         <p>
         <a href="./index.html">Yahoo! UI Library</a> 
             &gt; <a href="./module_datasource.html">datasource</a>
@@ -104,7 +104,7 @@ remote data such as data retrieved through an XHR connection.
                             <h3 id="properties">Properties</h3>
                             <div class="content">
                                     <div class="private">
-                                    <h4><a name="_aCache">_aCache</a>
+                                    <h4><a name="property__aCache">_aCache</a>
                                         <code>- private Object[]</code>
                                     </h4>
                                     <div class="detail">
@@ -119,7 +119,22 @@ remote data such as data retrieved through an XHR connection.
                                     <hr />
                                     </div>
                                     <div class="private">
-                                    <h4><a name="_oQueue">_oQueue</a>
+                                    <h4><a name="property__aIntervals">_aIntervals</a>
+                                        <code>- private Array</code>
+                                    </h4>
+                                    <div class="detail">
+                                        <div class="description">
+                                            Array of polling interval IDs that have been enabled, needed to clear all intervals.
+                                        </div>
+                                    </div>
+     
+                                        
+
+
+                                    <hr />
+                                    </div>
+                                    <div class="private">
+                                    <h4><a name="property__oQueue">_oQueue</a>
                                         <code>- private Object</code>
                                     </h4>
                                     <div class="detail">
@@ -134,7 +149,7 @@ remote data such as data retrieved through an XHR connection.
                                     <hr />
                                     </div>
                                     <div class="private">
-                                    <h4><a name="_sName">_sName</a>
+                                    <h4><a name="property__sName">_sName</a>
                                         <code>- private String</code>
                                     </h4>
                                     <div class="detail">
@@ -149,7 +164,7 @@ remote data such as data retrieved through an XHR connection.
                                     <hr />
                                     </div>
                                     <div class="private">
-                                    <h4><a name="_xhrCallback">_xhrCallback</a>
+                                    <h4><a name="property__xhrCallback">_xhrCallback</a>
                                         <code>- private object</code>
                                     </h4>
                                     <div class="detail">
@@ -164,7 +179,7 @@ remote data such as data retrieved through an XHR connection.
                                     <hr />
                                     </div>
                                     <div class="">
-                                    <h4><a name="connMethodPost">connMethodPost</a>
+                                    <h4><a name="property_connMethodPost">connMethodPost</a>
                                         <code>- Boolean</code>
                                     </h4>
                                     <div class="detail">
@@ -183,13 +198,12 @@ sent via POST, otherwise data will be sent via GET.
                                     <hr />
                                     </div>
                                     <div class="">
-                                    <h4><a name="connMgr">connMgr</a>
+                                    <h4><a name="property_connMgr">connMgr</a>
                                         <code>- Object</code>
                                     </h4>
                                     <div class="detail">
                                         <div class="description">
-                                            Alias to YUI Connection Manager. Allows implementers to specify their own
-subclasses of the YUI Connection Manager utility.
+                                            Alias to YUI Connection Manager, to allow implementers to customize the utility.
                                         </div>
                                     </div>
      
@@ -202,7 +216,7 @@ subclasses of the YUI Connection Manager utility.
                                     <hr />
                                     </div>
                                     <div class="">
-                                    <h4><a name="connTimeout">connTimeout</a>
+                                    <h4><a name="property_connTimeout">connTimeout</a>
                                         <code>- Number</code>
                                     </h4>
                                     <div class="detail">
@@ -223,7 +237,7 @@ Auto-Abort feature.
                                     <hr />
                                     </div>
                                     <div class="">
-                                    <h4><a name="connXhrMode">connXhrMode</a>
+                                    <h4><a name="property_connXhrMode">connXhrMode</a>
                                         <code>- String</code>
                                     </h4>
                                     <div class="detail">
@@ -255,7 +269,7 @@ sent request.</dd>
                                     <hr />
                                     </div>
                                     <div class="private">
-                                    <h4><a name="DataSource._nIndex">DataSource._nIndex</a>
+                                    <h4><a name="property_DataSource._nIndex">DataSource._nIndex</a>
                                         <code>- private static Number</code>
                                     </h4>
                                     <div class="detail">
@@ -270,7 +284,7 @@ sent request.</dd>
                                     <hr />
                                     </div>
                                     <div class="private">
-                                    <h4><a name="DataSource._nTransactionId">DataSource._nTransactionId</a>
+                                    <h4><a name="property_DataSource._nTransactionId">DataSource._nTransactionId</a>
                                         <code>- private static Number</code>
                                     </h4>
                                     <div class="detail">
@@ -285,7 +299,7 @@ sent request.</dd>
                                     <hr />
                                     </div>
                                     <div class="">
-                                    <h4><a name="dataType">dataType</a>
+                                    <h4><a name="property_dataType">dataType</a>
                                         <code>- Number</code>
                                     </h4>
                                     <div class="detail">
@@ -303,7 +317,7 @@ sent request.</dd>
                                     <hr />
                                     </div>
                                     <div class="">
-                                    <h4><a name="ERROR_DATAINVALID">ERROR_DATAINVALID</a>
+                                    <h4><a name="property_ERROR_DATAINVALID">ERROR_DATAINVALID</a>
                                         <code>- final String</code>
                                     </h4>
                                     <div class="detail">
@@ -321,7 +335,7 @@ sent request.</dd>
                                     <hr />
                                     </div>
                                     <div class="">
-                                    <h4><a name="ERROR_DATANULL">ERROR_DATANULL</a>
+                                    <h4><a name="property_ERROR_DATANULL">ERROR_DATANULL</a>
                                         <code>- final String</code>
                                     </h4>
                                     <div class="detail">
@@ -339,7 +353,7 @@ sent request.</dd>
                                     <hr />
                                     </div>
                                     <div class="">
-                                    <h4><a name="liveData">liveData</a>
+                                    <h4><a name="property_liveData">liveData</a>
                                         <code>- Object</code>
                                     </h4>
                                     <div class="detail">
@@ -354,7 +368,7 @@ sent request.</dd>
                                     <hr />
                                     </div>
                                     <div class="">
-                                    <h4><a name="maxCacheEntries">maxCacheEntries</a>
+                                    <h4><a name="property_maxCacheEntries">maxCacheEntries</a>
                                         <code>- Number</code>
                                     </h4>
                                     <div class="detail">
@@ -375,7 +389,7 @@ not an issue.
                                     <hr />
                                     </div>
                                     <div class="">
-                                    <h4><a name="responseSchema">responseSchema</a>
+                                    <h4><a name="property_responseSchema">responseSchema</a>
                                         <code>- Object</code>
                                     </h4>
                                     <div class="detail">
@@ -388,6 +402,8 @@ not an issue.
 <dt>fieldDelim</dt> <dd>Field delimiter (text data only)</dd>
 <dt>fields</dt> <dd>Array of field names (aka keys), or array of object literals
 such as: {key:"fieldname",parser:YAHOO.util.DataSource.parseDate}</dd>
+<dt>metaFields</dt> <dd>Object literal of keys to include in the oParsedResponse.meta collection</dd>
+<dt>metaNode</dt> <dd>Name of the node under which to search for meta information in XML response data</dd>
 </dl>
                                         </div>
                                     </div>
@@ -398,7 +414,7 @@ such as: {key:"fieldname",parser:YAHOO.util.DataSource.parseDate}</dd>
                                     <hr />
                                     </div>
                                     <div class="">
-                                    <h4><a name="responseType">responseType</a>
+                                    <h4><a name="property_responseType">responseType</a>
                                         <code>- Number</code>
                                     </h4>
                                     <div class="detail">
@@ -416,7 +432,7 @@ such as: {key:"fieldname",parser:YAHOO.util.DataSource.parseDate}</dd>
                                     <hr />
                                     </div>
                                     <div class="">
-                                    <h4><a name="TYPE_HTMLTABLE">TYPE_HTMLTABLE</a>
+                                    <h4><a name="property_TYPE_HTMLTABLE">TYPE_HTMLTABLE</a>
                                         <code>- final Number</code>
                                     </h4>
                                     <div class="detail">
@@ -434,7 +450,7 @@ such as: {key:"fieldname",parser:YAHOO.util.DataSource.parseDate}</dd>
                                     <hr />
                                     </div>
                                     <div class="">
-                                    <h4><a name="TYPE_JSARRAY">TYPE_JSARRAY</a>
+                                    <h4><a name="property_TYPE_JSARRAY">TYPE_JSARRAY</a>
                                         <code>- final Number</code>
                                     </h4>
                                     <div class="detail">
@@ -452,7 +468,7 @@ such as: {key:"fieldname",parser:YAHOO.util.DataSource.parseDate}</dd>
                                     <hr />
                                     </div>
                                     <div class="">
-                                    <h4><a name="TYPE_JSFUNCTION">TYPE_JSFUNCTION</a>
+                                    <h4><a name="property_TYPE_JSFUNCTION">TYPE_JSFUNCTION</a>
                                         <code>- final Number</code>
                                     </h4>
                                     <div class="detail">
@@ -470,7 +486,7 @@ such as: {key:"fieldname",parser:YAHOO.util.DataSource.parseDate}</dd>
                                     <hr />
                                     </div>
                                     <div class="">
-                                    <h4><a name="TYPE_JSON">TYPE_JSON</a>
+                                    <h4><a name="property_TYPE_JSON">TYPE_JSON</a>
                                         <code>- final Number</code>
                                     </h4>
                                     <div class="detail">
@@ -488,7 +504,7 @@ such as: {key:"fieldname",parser:YAHOO.util.DataSource.parseDate}</dd>
                                     <hr />
                                     </div>
                                     <div class="">
-                                    <h4><a name="TYPE_TEXT">TYPE_TEXT</a>
+                                    <h4><a name="property_TYPE_TEXT">TYPE_TEXT</a>
                                         <code>- final Number</code>
                                     </h4>
                                     <div class="detail">
@@ -506,7 +522,7 @@ such as: {key:"fieldname",parser:YAHOO.util.DataSource.parseDate}</dd>
                                     <hr />
                                     </div>
                                     <div class="">
-                                    <h4><a name="TYPE_UNKNOWN">TYPE_UNKNOWN</a>
+                                    <h4><a name="property_TYPE_UNKNOWN">TYPE_UNKNOWN</a>
                                         <code>- final Number</code>
                                     </h4>
                                     <div class="detail">
@@ -524,7 +540,7 @@ such as: {key:"fieldname",parser:YAHOO.util.DataSource.parseDate}</dd>
                                     <hr />
                                     </div>
                                     <div class="">
-                                    <h4><a name="TYPE_XHR">TYPE_XHR</a>
+                                    <h4><a name="property_TYPE_XHR">TYPE_XHR</a>
                                         <code>- final Number</code>
                                     </h4>
                                     <div class="detail">
@@ -542,7 +558,7 @@ such as: {key:"fieldname",parser:YAHOO.util.DataSource.parseDate}</dd>
                                     <hr />
                                     </div>
                                     <div class="">
-                                    <h4><a name="TYPE_XML">TYPE_XML</a>
+                                    <h4><a name="property_TYPE_XML">TYPE_XML</a>
                                         <code>- final Number</code>
                                     </h4>
                                     <div class="detail">
@@ -569,8 +585,8 @@ such as: {key:"fieldname",parser:YAHOO.util.DataSource.parseDate}</dd>
                             <div class="content">
                                 <code>
                                     
-                                        <a class="private" href="YAHOO.util.EventProvider.html#__yui_events">__yui_events</a><span class="private">,</span>
-                                        <a class="private" href="YAHOO.util.EventProvider.html#__yui_subscribers">__yui_subscribers</a>
+                                        <a class="private" href="YAHOO.util.EventProvider.html#property___yui_events">__yui_events</a><span class="private">,</span>
+                                        <a class="private" href="YAHOO.util.EventProvider.html#property___yui_subscribers">__yui_subscribers</a>
                                 </code>
                             </div>
                         </div>
@@ -580,7 +596,7 @@ such as: {key:"fieldname",parser:YAHOO.util.DataSource.parseDate}</dd>
                             <div class="content">
                                     <div class="private">
                                     <h4>
-                                        <a name="_xhrFailure">_xhrFailure</a></h4>
+                                        <a name="method__xhrFailure">_xhrFailure</a></h4>
                                     <div class="detail">
                                         <code>
                                          private 
@@ -626,7 +642,7 @@ such as: {key:"fieldname",parser:YAHOO.util.DataSource.parseDate}</dd>
                                     </div>
                                     <div class="private">
                                     <h4>
-                                        <a name="_xhrSuccess">_xhrSuccess</a></h4>
+                                        <a name="method__xhrSuccess">_xhrSuccess</a></h4>
                                     <div class="detail">
                                         <code>
                                          private 
@@ -672,7 +688,7 @@ such as: {key:"fieldname",parser:YAHOO.util.DataSource.parseDate}</dd>
                                     </div>
                                     <div class="">
                                     <h4>
-                                        <a name="addToCache">addToCache</a></h4>
+                                        <a name="method_addToCache">addToCache</a></h4>
                                     <div class="detail">
                                         <code>
                                         
@@ -727,7 +743,87 @@ before adding the new item.
                                     </div>
                                     <div class="">
                                     <h4>
-                                        <a name="DataSource.parseDate">DataSource.parseDate</a></h4>
+                                        <a name="method_clearAllIntervals">clearAllIntervals</a></h4>
+                                    <div class="detail">
+                                        <code>
+                                        
+                                        
+                                        
+                                        void
+                                            <strong>clearAllIntervals</strong>
+                                           (
+                                            )
+                                        </code>
+                                        
+                                        <div class="description">
+                                            Disables all known polling intervals.
+                                        </div>
+
+                                        <div class="description">
+
+
+                                                <dl>
+                                                    <dt>Returns:
+                                                    <code>
+                                                        void
+                                                    </code></dt>
+                                                    <dd></dd>
+                                                </dl>
+             
+                                        </div>
+
+                                    </div>
+                                    <hr />
+                                    </div>
+                                    <div class="">
+                                    <h4>
+                                        <a name="method_clearInterval">clearInterval</a></h4>
+                                    <div class="detail">
+                                        <code>
+                                        
+                                        
+                                        
+                                        void
+                                            <strong>clearInterval</strong>
+                                           (
+                                                
+                                                        
+                                                         nId
+                                                    
+                                                
+                                            )
+                                        </code>
+                                        
+                                        <div class="description">
+                                            Disables polling mechanism associated with the given interval ID.
+                                        </div>
+
+                                        <div class="description">
+
+                                                <dl>
+                                                    <dt>Parameters:</dt>
+                                                        <dd>
+                                                            <code>nId &lt;Number&gt;</code>
+                                                              Interval ID.
+                                                        </dd>
+                                                </dl>
+
+                                                <dl>
+                                                    <dt>Returns:
+                                                    <code>
+                                                        void
+                                                    </code></dt>
+                                                    <dd></dd>
+                                                </dl>
+             
+                                        </div>
+
+                                    </div>
+                                    <hr />
+                                    </div>
+                                    <div class="">
+                                    <h4>
+                                        <a name="method_DataSource.parseDate">DataSource.parseDate</a></h4>
                                     <div class="detail">
                                         <code>
                                         
@@ -773,7 +869,7 @@ before adding the new item.
                                     </div>
                                     <div class="">
                                     <h4>
-                                        <a name="DataSource.parseNumber">DataSource.parseNumber</a></h4>
+                                        <a name="method_DataSource.parseNumber">DataSource.parseNumber</a></h4>
                                     <div class="detail">
                                         <code>
                                         
@@ -820,7 +916,7 @@ returns as 0.
                                     </div>
                                     <div class="">
                                     <h4>
-                                        <a name="DataSource.parseString">DataSource.parseString</a></h4>
+                                        <a name="method_DataSource.parseString">DataSource.parseString</a></h4>
                                     <div class="detail">
                                         <code>
                                         
@@ -867,7 +963,7 @@ The special values null and undefined will return null.
                                     </div>
                                     <div class="">
                                     <h4>
-                                        <a name="doBeforeCallback">doBeforeCallback</a></h4>
+                                        <a name="method_doBeforeCallback">doBeforeCallback</a></h4>
                                     <div class="detail">
                                         <code>
                                         
@@ -882,7 +978,7 @@ The special values null and undefined will return null.
                                                     
                                                 
                                                         , 
-                                                         oRawResponse
+                                                         oFullResponse
                                                     
                                                 
                                                         , 
@@ -893,7 +989,7 @@ The special values null and undefined will return null.
                                         </code>
                                         
                                         <div class="description">
-                                            Overridable method gives implementers access to the original raw response and
+                                            Overridable method gives implementers access to the original full response and
 the parsed response (parsed against the given schema) before the data
 is added to the cache (if applicable) and then sent back to callback function.
 This is your chance to access the raw response and/or populate the parsed
@@ -909,8 +1005,8 @@ response with any custom data.
                                                               Request object.
                                                         </dd>
                                                         <dd>
-                                                            <code>oRawResponse &lt;Object&gt;</code>
-                                                              The raw response from the live database.
+                                                            <code>oFullResponse &lt;Object&gt;</code>
+                                                              The full response from the live database.
                                                         </dd>
                                                         <dd>
                                                             <code>oParsedResponse &lt;Object&gt;</code>
@@ -933,7 +1029,7 @@ response with any custom data.
                                     </div>
                                     <div class="">
                                     <h4>
-                                        <a name="doBeforeParseData">doBeforeParseData</a></h4>
+                                        <a name="method_doBeforeParseData">doBeforeParseData</a></h4>
                                     <div class="detail">
                                         <code>
                                         
@@ -948,16 +1044,16 @@ response with any custom data.
                                                     
                                                 
                                                         , 
-                                                         oRawResponse
+                                                         oFullResponse
                                                     
                                                 
                                             )
                                         </code>
                                         
                                         <div class="description">
-                                            Overridable method gives implementers access to the original raw response
+                                            Overridable method gives implementers access to the original full response
 before the data gets parsed. Implementers should take care not to return an
-unparsable or otherwise invalid raw response.
+unparsable or otherwise invalid response.
                                         </div>
 
                                         <div class="description">
@@ -969,8 +1065,8 @@ unparsable or otherwise invalid raw response.
                                                               Request object.
                                                         </dd>
                                                         <dd>
-                                                            <code>oRawResponse &lt;Object&gt;</code>
-                                                              The raw response from the live database.
+                                                            <code>oFullResponse &lt;Object&gt;</code>
+                                                              The full response from the live database.
                                                         </dd>
                                                 </dl>
 
@@ -979,7 +1075,7 @@ unparsable or otherwise invalid raw response.
                                                     <code>
                                                         Object
                                                     </code></dt>
-                                                    <dd>Raw response for parsing.</dd>
+                                                    <dd>Full response for parsing.</dd>
                                                 </dl>
              
                                         </div>
@@ -989,7 +1085,7 @@ unparsable or otherwise invalid raw response.
                                     </div>
                                     <div class="">
                                     <h4>
-                                        <a name="flushCache">flushCache</a></h4>
+                                        <a name="method_flushCache">flushCache</a></h4>
                                     <div class="detail">
                                         <code>
                                         
@@ -1023,7 +1119,7 @@ unparsable or otherwise invalid raw response.
                                     </div>
                                     <div class="">
                                     <h4>
-                                        <a name="getCachedResponse">getCachedResponse</a></h4>
+                                        <a name="method_getCachedResponse">getCachedResponse</a></h4>
                                     <div class="detail">
                                         <code>
                                         
@@ -1087,7 +1183,7 @@ no cache hit.
                                     </div>
                                     <div class="">
                                     <h4>
-                                        <a name="handleResponse">handleResponse</a></h4>
+                                        <a name="method_handleResponse">handleResponse</a></h4>
                                     <div class="detail">
                                         <code>
                                         
@@ -1121,15 +1217,17 @@ no cache hit.
                                         </code>
                                         
                                         <div class="description">
-                                            Handles raw data response from live data source. Sends a parsed response object
-to the callback function in this format:
-fnCallback(oRequest, oParsedResponse)
-where the oParsedResponse object literal with the following properties:
-<ul>
-<li>tId {Number} Unique transaction ID</li>
-<li>results {Array} Array of parsed data results</li>
-<li>error {Boolean} True if there was an error</li>
-</ul>
+                                            Receives raw data response and type converts to XML, JSON, etc as necessary.
+Forwards oFullResponse to appropriate parsing function to get turned into
+oParsedResponse. Calls doBeforeCallback() and adds oParsedResponse to 
+the cache when appropriate before calling issueCallback().
+The oParsedResponse object literal has the following properties:
+<dl>
+<dd><dt>tId {Number}</dt> Unique transaction ID</dd>
+<dd><dt>results {Array}</dt> Array of parsed data results</dd>
+<dd><dt>error {Boolean}</dt> True if there was an error</dd>
+<dd><dt>totalRecords {Number}</dt> Total number of records (if available)</dd> 
+</dl>
                                         </div>
 
                                         <div class="description">
@@ -1145,12 +1243,12 @@ where the oParsedResponse object literal with the following properties:
                                                               The raw response from the live database.
                                                         </dd>
                                                         <dd>
-                                                            <code>oCallback &lt;Function&gt;</code>
-                                                              Handler function to receive the response.
+                                                            <code>oCallback &lt;Object&gt;</code>
+                                                              Callback object literal.
                                                         </dd>
                                                         <dd>
                                                             <code>oCaller &lt;Object&gt;</code>
-                                                              The calling object that is making the request.
+                                                              (deprecated) Use oCallback.scope.
                                                         </dd>
                                                         <dd>
                                                             <code>tId &lt;Number&gt;</code>
@@ -1173,7 +1271,7 @@ where the oParsedResponse object literal with the following properties:
                                     </div>
                                     <div class="">
                                     <h4>
-                                        <a name="isCacheHit">isCacheHit</a></h4>
+                                        <a name="method_isCacheHit">isCacheHit</a></h4>
                                     <div class="detail">
                                         <code>
                                         
@@ -1229,7 +1327,79 @@ override this method to customize the cache-matching algorithm.
                                     </div>
                                     <div class="">
                                     <h4>
-                                        <a name="makeConnection">makeConnection</a></h4>
+                                        <a name="method_issueCallback">issueCallback</a></h4>
+                                    <div class="detail">
+                                        <code>
+                                        
+                                        
+                                        
+                                        void
+                                            <strong>issueCallback</strong>
+                                           (
+                                                
+                                                        
+                                                         callback
+                                                    
+                                                
+                                                        , 
+                                                         params
+                                                    
+                                                
+                                                        , 
+                                                         error
+                                                    
+                                                
+                                                        , 
+                                                         scope
+                                                    
+                                                
+                                            )
+                                        </code>
+                                        
+                                        <div class="description">
+                                            Executes a configured callback.  For object literal callbacks, the third
+param determines whether to execute the success handler or failure handler.
+                                        </div>
+
+                                        <div class="description">
+
+                                                <dl>
+                                                    <dt>Parameters:</dt>
+                                                        <dd>
+                                                            <code>callback &lt;Function|Object&gt;</code>
+                                                              the callback to execute
+                                                        </dd>
+                                                        <dd>
+                                                            <code>params &lt;Array&gt;</code>
+                                                              params to be passed to the callback method
+                                                        </dd>
+                                                        <dd>
+                                                            <code>error &lt;Boolean&gt;</code>
+                                                              whether an error occurred
+                                                        </dd>
+                                                        <dd>
+                                                            <code>scope &lt;Object&gt;</code>
+                                                              the scope from which to execute the callback
+(deprecated - use an object literal callback)
+                                                        </dd>
+                                                </dl>
+
+                                                <dl>
+                                                    <dt>Returns:
+                                                    <code>
+                                                        void
+                                                    </code></dt>
+                                                    <dd></dd>
+                                                </dl>
+             
+                                        </div>
+
+                                    </div>
+                                    <hr />
+                                    </div>
+                                    <div class="">
+                                    <h4>
+                                        <a name="method_makeConnection">makeConnection</a></h4>
                                     <div class="detail">
                                         <code>
                                         
@@ -1270,12 +1440,12 @@ to achieve more complex implementations.
                                                               Request object.
                                                         </dd>
                                                         <dd>
-                                                            <code>oCallback &lt;Function&gt;</code>
-                                                              Handler function to receive the response.
+                                                            <code>oCallback &lt;Object&gt;</code>
+                                                              Callback object literal.
                                                         </dd>
                                                         <dd>
                                                             <code>oCaller &lt;Object&gt;</code>
-                                                              The Calling object that is making the request.
+                                                              (deprecated) Use oCallback.scope.
                                                         </dd>
                                                 </dl>
 
@@ -1294,7 +1464,7 @@ to achieve more complex implementations.
                                     </div>
                                     <div class="">
                                     <h4>
-                                        <a name="parseArrayData">parseArrayData</a></h4>
+                                        <a name="method_parseArrayData">parseArrayData</a></h4>
                                     <div class="detail">
                                         <code>
                                         
@@ -1309,14 +1479,14 @@ to achieve more complex implementations.
                                                     
                                                 
                                                         , 
-                                                         oRawResponse
+                                                         oFullResponse
                                                     
                                                 
                                             )
                                         </code>
                                         
                                         <div class="description">
-                                            Overridable method parses raw array data into a response object.
+                                            Overridable method parses Array data into a response object.
                                         </div>
 
                                         <div class="description">
@@ -1328,8 +1498,8 @@ to achieve more complex implementations.
                                                               Request object.
                                                         </dd>
                                                         <dd>
-                                                            <code>oRawResponse &lt;Object&gt;</code>
-                                                              The raw response from the live database.
+                                                            <code>oFullResponse &lt;Object&gt;</code>
+                                                              The full Array from the live database.
                                                         </dd>
                                                 </dl>
 
@@ -1338,7 +1508,10 @@ to achieve more complex implementations.
                                                     <code>
                                                         Object
                                                     </code></dt>
-                                                    <dd>Parsed response object.</dd>
+                                                    <dd>Parsed response object with the following properties:<br>
+- results (Array) Array of parsed data results<br>
+- error (Boolean) True if there was an error<br>
+- totalRecords (Number) Total number of records (if available)</dd>
                                                 </dl>
              
                                         </div>
@@ -1348,7 +1521,7 @@ to achieve more complex implementations.
                                     </div>
                                     <div class="">
                                     <h4>
-                                        <a name="parseHTMLTableData">parseHTMLTableData</a></h4>
+                                        <a name="method_parseHTMLTableData">parseHTMLTableData</a></h4>
                                     <div class="detail">
                                         <code>
                                         
@@ -1363,14 +1536,14 @@ to achieve more complex implementations.
                                                     
                                                 
                                                         , 
-                                                         oRawResponse
+                                                         oFullResponse
                                                     
                                                 
                                             )
                                         </code>
                                         
                                         <div class="description">
-                                            Overridable method parses raw HTML TABLE element data into a response object.
+                                            Overridable method parses an HTML TABLE element reference into a response object.
                                         </div>
 
                                         <div class="description">
@@ -1382,8 +1555,8 @@ to achieve more complex implementations.
                                                               Request object.
                                                         </dd>
                                                         <dd>
-                                                            <code>oRawResponse &lt;Object&gt;</code>
-                                                              The raw response from the live database.
+                                                            <code>oFullResponse &lt;Object&gt;</code>
+                                                              The full HTML element reference from the live database.
                                                         </dd>
                                                 </dl>
 
@@ -1392,7 +1565,10 @@ to achieve more complex implementations.
                                                     <code>
                                                         Object
                                                     </code></dt>
-                                                    <dd>Parsed response object.</dd>
+                                                    <dd>Parsed response object with the following properties<br>
+- results (Array) Array of parsed data results<br>
+- error (Boolean) True if there was an error<br>
+- totalRecords (Number) Total number of records (if available)</dd>
                                                 </dl>
              
                                         </div>
@@ -1402,7 +1578,7 @@ to achieve more complex implementations.
                                     </div>
                                     <div class="">
                                     <h4>
-                                        <a name="parseJSONData">parseJSONData</a></h4>
+                                        <a name="method_parseJSONData">parseJSONData</a></h4>
                                     <div class="detail">
                                         <code>
                                         
@@ -1417,14 +1593,14 @@ to achieve more complex implementations.
                                                     
                                                 
                                                         , 
-                                                         oRawResponse
+                                                         oFullResponse
                                                     
                                                 
                                             )
                                         </code>
                                         
                                         <div class="description">
-                                            Overridable method parses raw JSON data into a response object.
+                                            Overridable method parses JSON data into a response object.
                                         </div>
 
                                         <div class="description">
@@ -1436,8 +1612,8 @@ to achieve more complex implementations.
                                                               Request object.
                                                         </dd>
                                                         <dd>
-                                                            <code>oRawResponse &lt;Object&gt;</code>
-                                                              The raw response from the live database.
+                                                            <code>oFullResponse &lt;Object&gt;</code>
+                                                              The full JSON from the live database.
                                                         </dd>
                                                 </dl>
 
@@ -1446,7 +1622,10 @@ to achieve more complex implementations.
                                                     <code>
                                                         Object
                                                     </code></dt>
-                                                    <dd>Parsed response object.</dd>
+                                                    <dd>Parsed response object with the following properties<br>
+- results (Array) Array of parsed data results<br>
+- error (Boolean) True if there was an error<br>
+- totalRecords (Number) Total number of records (if available)</dd>
                                                 </dl>
              
                                         </div>
@@ -1456,7 +1635,7 @@ to achieve more complex implementations.
                                     </div>
                                     <div class="">
                                     <h4>
-                                        <a name="parseTextData">parseTextData</a></h4>
+                                        <a name="method_parseTextData">parseTextData</a></h4>
                                     <div class="detail">
                                         <code>
                                         
@@ -1471,14 +1650,14 @@ to achieve more complex implementations.
                                                     
                                                 
                                                         , 
-                                                         oRawResponse
+                                                         oFullResponse
                                                     
                                                 
                                             )
                                         </code>
                                         
                                         <div class="description">
-                                            Overridable method parses raw plain text data into a response object.
+                                            Overridable method parses plain text data into a response object.
                                         </div>
 
                                         <div class="description">
@@ -1490,8 +1669,8 @@ to achieve more complex implementations.
                                                               Request object.
                                                         </dd>
                                                         <dd>
-                                                            <code>oRawResponse &lt;Object&gt;</code>
-                                                              The raw response from the live database.
+                                                            <code>oFullResponse &lt;Object&gt;</code>
+                                                              The full text response from the live database.
                                                         </dd>
                                                 </dl>
 
@@ -1500,7 +1679,10 @@ to achieve more complex implementations.
                                                     <code>
                                                         Object
                                                     </code></dt>
-                                                    <dd>Parsed response object.</dd>
+                                                    <dd>Parsed response object with the following properties:<br>
+- results (Array) Array of parsed data results<br>
+- error (Boolean) True if there was an error<br>
+- totalRecords (Number) Total number of records (if available)</dd>
                                                 </dl>
              
                                         </div>
@@ -1510,7 +1692,7 @@ to achieve more complex implementations.
                                     </div>
                                     <div class="">
                                     <h4>
-                                        <a name="parseXMLData">parseXMLData</a></h4>
+                                        <a name="method_parseXMLData">parseXMLData</a></h4>
                                     <div class="detail">
                                         <code>
                                         
@@ -1525,14 +1707,14 @@ to achieve more complex implementations.
                                                     
                                                 
                                                         , 
-                                                         oRawResponse
+                                                         oFullResponse
                                                     
                                                 
                                             )
                                         </code>
                                         
                                         <div class="description">
-                                            Overridable method parses raw XML data into a response object.
+                                            Overridable method parses XML data into a response object.
                                         </div>
 
                                         <div class="description">
@@ -1544,8 +1726,8 @@ to achieve more complex implementations.
                                                               Request object.
                                                         </dd>
                                                         <dd>
-                                                            <code>oRawResponse &lt;Object&gt;</code>
-                                                              The raw response from the live database.
+                                                            <code>oFullResponse &lt;Object&gt;</code>
+                                                              The full XML response from the live database.
                                                         </dd>
                                                 </dl>
 
@@ -1554,7 +1736,10 @@ to achieve more complex implementations.
                                                     <code>
                                                         Object
                                                     </code></dt>
-                                                    <dd>Parsed response object.</dd>
+                                                    <dd>Parsed response object with the following properties<br>
+- results (Array) Array of parsed data results<br>
+- error (Boolean) True if there was an error<br>
+- totalRecords (Number) Total number of records (if available)</dd>
                                                 </dl>
              
                                         </div>
@@ -1564,7 +1749,7 @@ to achieve more complex implementations.
                                     </div>
                                     <div class="">
                                     <h4>
-                                        <a name="sendRequest">sendRequest</a></h4>
+                                        <a name="method_sendRequest">sendRequest</a></h4>
                                     <div class="detail">
                                         <code>
                                         
@@ -1602,12 +1787,22 @@ to achieve more complex implementations.
                                                               Request object.
                                                         </dd>
                                                         <dd>
-                                                            <code>oCallback &lt;Function&gt;</code>
-                                                              Handler function to receive the response.
+                                                            <code>oCallback &lt;Object&gt;</code>
+                                                              An object literal with the following properties:
+<dl>
+<dt><code>success</code></dt>
+<dd>The function to call when the data is ready.</dd>
+<dt><code>failure</code></dt>
+<dd>The function to call upon a response failure condition.</dd>
+<dt><code>scope</code></dt>
+<dd>The object to serve as the scope for the success and failure handlers.</dd>
+<dt><code>argument</code></dt>
+<dd>Arbitrary data that will be passed back to the success and failure handlers.</dd>
+</dl>
                                                         </dd>
                                                         <dd>
                                                             <code>oCaller &lt;Object&gt;</code>
-                                                              The Calling object that is making the request.
+                                                              (deprecated) Use oCallback.scope.
                                                         </dd>
                                                 </dl>
 
@@ -1626,7 +1821,78 @@ to achieve more complex implementations.
                                     </div>
                                     <div class="">
                                     <h4>
-                                        <a name="toString">toString</a></h4>
+                                        <a name="method_setInterval">setInterval</a></h4>
+                                    <div class="detail">
+                                        <code>
+                                        
+                                        
+                                        
+                                        Number
+                                            <strong>setInterval</strong>
+                                           (
+                                                
+                                                        
+                                                         nMsec
+                                                    
+                                                
+                                                        , 
+                                                         oRequest
+                                                    
+                                                
+                                                        , 
+                                                         oCallback
+                                                    
+                                                
+                                                        , 
+                                                         oCaller
+                                                    
+                                                
+                                            )
+                                        </code>
+                                        
+                                        <div class="description">
+                                            Sets up a polling mechanism to send requests at set intervals and forward
+responses to given callback.
+                                        </div>
+
+                                        <div class="description">
+
+                                                <dl>
+                                                    <dt>Parameters:</dt>
+                                                        <dd>
+                                                            <code>nMsec &lt;Number&gt;</code>
+                                                              Length of interval in milliseconds.
+                                                        </dd>
+                                                        <dd>
+                                                            <code>oRequest &lt;Object&gt;</code>
+                                                              Request object.
+                                                        </dd>
+                                                        <dd>
+                                                            <code>oCallback &lt;Function&gt;</code>
+                                                              Handler function to receive the response.
+                                                        </dd>
+                                                        <dd>
+                                                            <code>oCaller &lt;Object&gt;</code>
+                                                              (deprecated) Use oCallback.scope.
+                                                        </dd>
+                                                </dl>
+
+                                                <dl>
+                                                    <dt>Returns:
+                                                    <code>
+                                                        Number
+                                                    </code></dt>
+                                                    <dd>Interval ID.</dd>
+                                                </dl>
+             
+                                        </div>
+
+                                    </div>
+                                    <hr />
+                                    </div>
+                                    <div class="">
+                                    <h4>
+                                        <a name="method_toString">toString</a></h4>
                                     <div class="detail">
                                         <code>
                                         
@@ -1665,7 +1931,7 @@ to achieve more complex implementations.
                                 <h4>Methods inherited from <a href="YAHOO.util.EventProvider.html">YAHOO.util.EventProvider</a>:</h4>
                                 <div class="content">
                                     <code>
-                                            <a class="" href="YAHOO.util.EventProvider.html#createEvent">createEvent</a><span class="">,</span>                                            <a class="" href="YAHOO.util.EventProvider.html#fireEvent">fireEvent</a><span class="">,</span>                                            <a class="" href="YAHOO.util.EventProvider.html#hasEvent">hasEvent</a><span class="">,</span>                                            <a class="" href="YAHOO.util.EventProvider.html#subscribe">subscribe</a><span class="">,</span>                                            <a class="" href="YAHOO.util.EventProvider.html#unsubscribe">unsubscribe</a><span class="">,</span>                                            <a class="" href="YAHOO.util.EventProvider.html#unsubscribeAll">unsubscribeAll</a>
+                                            <a class="" href="YAHOO.util.EventProvider.html#method_createEvent">createEvent</a><span class="">,</span>                                            <a class="" href="YAHOO.util.EventProvider.html#method_fireEvent">fireEvent</a><span class="">,</span>                                            <a class="" href="YAHOO.util.EventProvider.html#method_hasEvent">hasEvent</a><span class="">,</span>                                            <a class="" href="YAHOO.util.EventProvider.html#method_subscribe">subscribe</a><span class="">,</span>                                            <a class="" href="YAHOO.util.EventProvider.html#method_unsubscribe">unsubscribe</a><span class="">,</span>                                            <a class="" href="YAHOO.util.EventProvider.html#method_unsubscribeAll">unsubscribeAll</a>
                                     </code>
                                 </div>
                             </div>
@@ -1675,7 +1941,7 @@ to achieve more complex implementations.
                             <div class="content">
                                     <div class="">
                                     <h4>
-                                        <a name="cacheFlushEvent">cacheFlushEvent</a></h4>
+                                        <a name="event_cacheFlushEvent">cacheFlushEvent</a></h4>
                                     <div class="detail">
                                         <code>
                                         
@@ -1704,7 +1970,7 @@ to achieve more complex implementations.
                                     </div>
                                     <div class="">
                                     <h4>
-                                        <a name="cacheRequestEvent">cacheRequestEvent</a></h4>
+                                        <a name="event_cacheRequestEvent">cacheRequestEvent</a></h4>
                                     <div class="detail">
                                         <code>
                                         
@@ -1749,7 +2015,7 @@ to achieve more complex implementations.
                                                         </dd>
                                                         <dd>
                                                             <code>oArgs.caller &lt;Object&gt;</code>
-                                                              The parent object of the callback function.
+                                                              (deprecated) Use callback.scope.
                                                         </dd>
                                                 </dl>
 
@@ -1761,78 +2027,13 @@ to achieve more complex implementations.
                                     </div>
                                     <div class="">
                                     <h4>
-                                        <a name="dataErrorEvent">dataErrorEvent</a></h4>
+                                        <a name="event_cacheResponseEvent">cacheResponseEvent</a></h4>
                                     <div class="detail">
                                         <code>
                                         
                                         
                                         
-                                            <strong>dataErrorEvent</strong>
-
-                                            (
-                                                
-                                                        
-                                                         oArgs.request
-                                                    
-                                                
-                                                        , 
-                                                         oArgs.callback
-                                                    
-                                                
-                                                        , 
-                                                         oArgs.caller
-                                                    
-                                                
-                                                        , 
-                                                         oArgs.message
-                                                    
-                                                
-                                            )
-
-                                        </code>
-                                        
-                                        <div class="description">
-                                            Fired when an error is encountered with the live data source.
-                                        </div>
-
-                                        <div class="description">
-
-
-                                                <dl>
-                                                    <dt>Parameters:</dt>
-                                                        <dd>
-                                                            <code>oArgs.request &lt;Object&gt;</code>
-                                                              The request object.
-                                                        </dd>
-                                                        <dd>
-                                                            <code>oArgs.callback &lt;Function&gt;</code>
-                                                              The callback function.
-                                                        </dd>
-                                                        <dd>
-                                                            <code>oArgs.caller &lt;Object&gt;</code>
-                                                              The parent object of the callback function.
-                                                        </dd>
-                                                        <dd>
-                                                            <code>oArgs.message &lt;String&gt;</code>
-                                                              The error message.
-                                                        </dd>
-                                                </dl>
-
-
-                                        </div>
-
-                                    </div>
-                                    <hr />
-                                    </div>
-                                    <div class="">
-                                    <h4>
-                                        <a name="getCachedResponseEvent">getCachedResponseEvent</a></h4>
-                                    <div class="detail">
-                                        <code>
-                                        
-                                        
-                                        
-                                            <strong>getCachedResponseEvent</strong>
+                                            <strong>cacheResponseEvent</strong>
 
                                             (
                                                 
@@ -1883,7 +2084,7 @@ to achieve more complex implementations.
                                                         </dd>
                                                         <dd>
                                                             <code>oArgs.caller &lt;Object&gt;</code>
-                                                              The parent object of the callback function.
+                                                              (deprecated) Use callback.scope.
                                                         </dd>
                                                         <dd>
                                                             <code>oArgs.tId &lt;Number&gt;</code>
@@ -1899,7 +2100,72 @@ to achieve more complex implementations.
                                     </div>
                                     <div class="">
                                     <h4>
-                                        <a name="requestEvent">requestEvent</a></h4>
+                                        <a name="event_dataErrorEvent">dataErrorEvent</a></h4>
+                                    <div class="detail">
+                                        <code>
+                                        
+                                        
+                                        
+                                            <strong>dataErrorEvent</strong>
+
+                                            (
+                                                
+                                                        
+                                                         oArgs.request
+                                                    
+                                                
+                                                        , 
+                                                         oArgs.callback
+                                                    
+                                                
+                                                        , 
+                                                         oArgs.caller
+                                                    
+                                                
+                                                        , 
+                                                         oArgs.message
+                                                    
+                                                
+                                            )
+
+                                        </code>
+                                        
+                                        <div class="description">
+                                            Fired when an error is encountered with the live data source.
+                                        </div>
+
+                                        <div class="description">
+
+
+                                                <dl>
+                                                    <dt>Parameters:</dt>
+                                                        <dd>
+                                                            <code>oArgs.request &lt;Object&gt;</code>
+                                                              The request object.
+                                                        </dd>
+                                                        <dd>
+                                                            <code>oArgs.callback &lt;Function&gt;</code>
+                                                              The callback function.
+                                                        </dd>
+                                                        <dd>
+                                                            <code>oArgs.caller &lt;Object&gt;</code>
+                                                              (deprecated) Use callback.scope.
+                                                        </dd>
+                                                        <dd>
+                                                            <code>oArgs.message &lt;String&gt;</code>
+                                                              The error message.
+                                                        </dd>
+                                                </dl>
+
+
+                                        </div>
+
+                                    </div>
+                                    <hr />
+                                    </div>
+                                    <div class="">
+                                    <h4>
+                                        <a name="event_requestEvent">requestEvent</a></h4>
                                     <div class="detail">
                                         <code>
                                         
@@ -1944,7 +2210,7 @@ to achieve more complex implementations.
                                                         </dd>
                                                         <dd>
                                                             <code>oArgs.caller &lt;Object&gt;</code>
-                                                              The parent object of the callback function.
+                                                              (deprecated) Use callback.scope.
                                                         </dd>
                                                 </dl>
 
@@ -1956,7 +2222,7 @@ to achieve more complex implementations.
                                     </div>
                                     <div class="">
                                     <h4>
-                                        <a name="responseCacheEvent">responseCacheEvent</a></h4>
+                                        <a name="event_responseCacheEvent">responseCacheEvent</a></h4>
                                     <div class="detail">
                                         <code>
                                         
@@ -2009,7 +2275,7 @@ to achieve more complex implementations.
                                                         </dd>
                                                         <dd>
                                                             <code>oArgs.caller &lt;Object&gt;</code>
-                                                              The parent object of the callback function.
+                                                              (deprecated) Use callback.scope.
                                                         </dd>
                                                 </dl>
 
@@ -2021,7 +2287,7 @@ to achieve more complex implementations.
                                     </div>
                                     <div class="">
                                     <h4>
-                                        <a name="responseEvent">responseEvent</a></h4>
+                                        <a name="event_responseEvent">responseEvent</a></h4>
                                     <div class="detail">
                                         <code>
                                         
@@ -2074,7 +2340,7 @@ to achieve more complex implementations.
                                                         </dd>
                                                         <dd>
                                                             <code>oArgs.caller &lt;Object&gt;</code>
-                                                              The parent object of the callback function.
+                                                              (deprecated) Use callback.scope.
                                                         </dd>
                                                 </dl>
 
@@ -2086,7 +2352,7 @@ to achieve more complex implementations.
                                     </div>
                                     <div class="">
                                     <h4>
-                                        <a name="responseParseEvent">responseParseEvent</a></h4>
+                                        <a name="event_responseParseEvent">responseParseEvent</a></h4>
                                     <div class="detail">
                                         <code>
                                         
@@ -2139,7 +2405,7 @@ to achieve more complex implementations.
                                                         </dd>
                                                         <dd>
                                                             <code>oArgs.caller &lt;Object&gt;</code>
-                                                              The parent object of the callback function.
+                                                              (deprecated) Use callback.scope.
                                                         </dd>
                                                 </dl>
 
@@ -2173,11 +2439,15 @@ to achieve more complex implementations.
 
                                 <li class=""><a href="module_calendar.html">calendar</a></li>
 
+                                <li class=""><a href="module_charts.html">charts</a></li>
+
                                 <li class=""><a href="module_colorpicker.html">colorpicker</a></li>
 
                                 <li class=""><a href="module_connection.html">connection</a></li>
 
                                 <li class=""><a href="module_container.html">container</a></li>
+
+                                <li class=""><a href="module_cookie.html">cookie</a></li>
 
                                 <li class="selected"><a href="module_datasource.html">datasource</a></li>
 
@@ -2193,19 +2463,37 @@ to achieve more complex implementations.
 
                                 <li class=""><a href="module_event.html">event</a></li>
 
+                                <li class=""><a href="module_get.html">get</a></li>
+
                                 <li class=""><a href="module_history.html">history</a></li>
 
+                                <li class=""><a href="module_imagecropper.html">imagecropper</a></li>
+
                                 <li class=""><a href="module_imageloader.html">imageloader</a></li>
+
+                                <li class=""><a href="module_json.html">json</a></li>
+
+                                <li class=""><a href="module_layout.html">layout</a></li>
 
                                 <li class=""><a href="module_logger.html">logger</a></li>
 
                                 <li class=""><a href="module_menu.html">menu</a></li>
+
+                                <li class=""><a href="module_profiler.html">profiler</a></li>
+
+                                <li class=""><a href="module_profilerviewer.html">profilerviewer</a></li>
+
+                                <li class=""><a href="module_resize.html">resize</a></li>
+
+                                <li class=""><a href="module_selector.html">selector</a></li>
 
                                 <li class=""><a href="module_slider.html">slider</a></li>
 
                                 <li class=""><a href="module_tabview.html">tabview</a></li>
 
                                 <li class=""><a href="module_treeview.html">treeview</a></li>
+
+                                <li class=""><a href="module_uploader.html">uploader</a></li>
 
                                 <li class=""><a href="module_yahoo.html">yahoo</a></li>
 
@@ -2219,6 +2507,8 @@ to achieve more complex implementations.
                         <h4>Classes</h4>
                         <ul class="content">
                                 <li class="selected"><a href="YAHOO.util.DataSource.html">YAHOO.util.DataSource</a></li>
+                                <li class=""><a href="YAHOO.util.Date.html">YAHOO.util.Date</a></li>
+                                <li class=""><a href="YAHOO.util.Number.html">YAHOO.util.Number</a></li>
                         </ul>
                     </div>
 
@@ -2232,79 +2522,82 @@ to achieve more complex implementations.
                     <div class="module">
                         <h4>Properties</h4>
                         <ul class="content">        
-                                <li class="private"><a href="#_aCache">_aCache</a>
+                                <li class="private"><a href="#property__aCache">_aCache</a>
                                         <!--<code>&lt;Number&gt;</code>-->
                                 </li>
-                                <li class="private"><a href="#_oQueue">_oQueue</a>
+                                <li class="private"><a href="#property__aIntervals">_aIntervals</a>
                                         <!--<code>&lt;Number&gt;</code>-->
                                 </li>
-                                <li class="private"><a href="#_sName">_sName</a>
+                                <li class="private"><a href="#property__oQueue">_oQueue</a>
                                         <!--<code>&lt;Number&gt;</code>-->
                                 </li>
-                                <li class="private"><a href="#_xhrCallback">_xhrCallback</a>
+                                <li class="private"><a href="#property__sName">_sName</a>
                                         <!--<code>&lt;Number&gt;</code>-->
                                 </li>
-                                <li class=""><a href="#connMethodPost">connMethodPost</a>
+                                <li class="private"><a href="#property__xhrCallback">_xhrCallback</a>
                                         <!--<code>&lt;Number&gt;</code>-->
                                 </li>
-                                <li class=""><a href="#connMgr">connMgr</a>
+                                <li class=""><a href="#property_connMethodPost">connMethodPost</a>
                                         <!--<code>&lt;Number&gt;</code>-->
                                 </li>
-                                <li class=""><a href="#connTimeout">connTimeout</a>
+                                <li class=""><a href="#property_connMgr">connMgr</a>
                                         <!--<code>&lt;Number&gt;</code>-->
                                 </li>
-                                <li class=""><a href="#connXhrMode">connXhrMode</a>
+                                <li class=""><a href="#property_connTimeout">connTimeout</a>
                                         <!--<code>&lt;Number&gt;</code>-->
                                 </li>
-                                <li class="private"><a href="#DataSource._nIndex">DataSource._nIndex</a>
+                                <li class=""><a href="#property_connXhrMode">connXhrMode</a>
                                         <!--<code>&lt;Number&gt;</code>-->
                                 </li>
-                                <li class="private"><a href="#DataSource._nTransactionId">DataSource._nTransactionId</a>
+                                <li class="private"><a href="#property_DataSource._nIndex">DataSource._nIndex</a>
                                         <!--<code>&lt;Number&gt;</code>-->
                                 </li>
-                                <li class=""><a href="#dataType">dataType</a>
+                                <li class="private"><a href="#property_DataSource._nTransactionId">DataSource._nTransactionId</a>
                                         <!--<code>&lt;Number&gt;</code>-->
                                 </li>
-                                <li class=""><a href="#ERROR_DATAINVALID">ERROR_DATAINVALID</a>
+                                <li class=""><a href="#property_dataType">dataType</a>
                                         <!--<code>&lt;Number&gt;</code>-->
                                 </li>
-                                <li class=""><a href="#ERROR_DATANULL">ERROR_DATANULL</a>
+                                <li class=""><a href="#property_ERROR_DATAINVALID">ERROR_DATAINVALID</a>
                                         <!--<code>&lt;Number&gt;</code>-->
                                 </li>
-                                <li class=""><a href="#liveData">liveData</a>
+                                <li class=""><a href="#property_ERROR_DATANULL">ERROR_DATANULL</a>
                                         <!--<code>&lt;Number&gt;</code>-->
                                 </li>
-                                <li class=""><a href="#maxCacheEntries">maxCacheEntries</a>
+                                <li class=""><a href="#property_liveData">liveData</a>
                                         <!--<code>&lt;Number&gt;</code>-->
                                 </li>
-                                <li class=""><a href="#responseSchema">responseSchema</a>
+                                <li class=""><a href="#property_maxCacheEntries">maxCacheEntries</a>
                                         <!--<code>&lt;Number&gt;</code>-->
                                 </li>
-                                <li class=""><a href="#responseType">responseType</a>
+                                <li class=""><a href="#property_responseSchema">responseSchema</a>
                                         <!--<code>&lt;Number&gt;</code>-->
                                 </li>
-                                <li class=""><a href="#TYPE_HTMLTABLE">TYPE_HTMLTABLE</a>
+                                <li class=""><a href="#property_responseType">responseType</a>
                                         <!--<code>&lt;Number&gt;</code>-->
                                 </li>
-                                <li class=""><a href="#TYPE_JSARRAY">TYPE_JSARRAY</a>
+                                <li class=""><a href="#property_TYPE_HTMLTABLE">TYPE_HTMLTABLE</a>
                                         <!--<code>&lt;Number&gt;</code>-->
                                 </li>
-                                <li class=""><a href="#TYPE_JSFUNCTION">TYPE_JSFUNCTION</a>
+                                <li class=""><a href="#property_TYPE_JSARRAY">TYPE_JSARRAY</a>
                                         <!--<code>&lt;Number&gt;</code>-->
                                 </li>
-                                <li class=""><a href="#TYPE_JSON">TYPE_JSON</a>
+                                <li class=""><a href="#property_TYPE_JSFUNCTION">TYPE_JSFUNCTION</a>
                                         <!--<code>&lt;Number&gt;</code>-->
                                 </li>
-                                <li class=""><a href="#TYPE_TEXT">TYPE_TEXT</a>
+                                <li class=""><a href="#property_TYPE_JSON">TYPE_JSON</a>
                                         <!--<code>&lt;Number&gt;</code>-->
                                 </li>
-                                <li class=""><a href="#TYPE_UNKNOWN">TYPE_UNKNOWN</a>
+                                <li class=""><a href="#property_TYPE_TEXT">TYPE_TEXT</a>
                                         <!--<code>&lt;Number&gt;</code>-->
                                 </li>
-                                <li class=""><a href="#TYPE_XHR">TYPE_XHR</a>
+                                <li class=""><a href="#property_TYPE_UNKNOWN">TYPE_UNKNOWN</a>
                                         <!--<code>&lt;Number&gt;</code>-->
                                 </li>
-                                <li class=""><a href="#TYPE_XML">TYPE_XML</a>
+                                <li class=""><a href="#property_TYPE_XHR">TYPE_XHR</a>
+                                        <!--<code>&lt;Number&gt;</code>-->
+                                </li>
+                                <li class=""><a href="#property_TYPE_XML">TYPE_XML</a>
                                         <!--<code>&lt;Number&gt;</code>-->
                                 </li>
                         </ul>
@@ -2314,64 +2607,76 @@ to achieve more complex implementations.
                         <h4>Methods</h4>
                         <ul class="content">        
                                 <li class="private"><!--<code>void</code>-->
-                                <a href="#_xhrFailure">_xhrFailure</a>
+                                <a href="#method__xhrFailure">_xhrFailure</a>
                                 </li>
                                 <li class="private"><!--<code>void</code>-->
-                                <a href="#_xhrSuccess">_xhrSuccess</a>
+                                <a href="#method__xhrSuccess">_xhrSuccess</a>
                                 </li>
                                 <li class=""><!--<code>void</code>-->
-                                <a href="#addToCache">addToCache</a>
+                                <a href="#method_addToCache">addToCache</a>
+                                </li>
+                                <li class=""><!--<code>void</code>-->
+                                <a href="#method_clearAllIntervals">clearAllIntervals</a>
+                                </li>
+                                <li class=""><!--<code>void</code>-->
+                                <a href="#method_clearInterval">clearInterval</a>
                                 </li>
                                 <li class=""><!--<code>Date</code>-->
-                                <a href="#DataSource.parseDate">DataSource.parseDate</a>
+                                <a href="#method_DataSource.parseDate">DataSource.parseDate</a>
                                 </li>
                                 <li class=""><!--<code>Number</code>-->
-                                <a href="#DataSource.parseNumber">DataSource.parseNumber</a>
+                                <a href="#method_DataSource.parseNumber">DataSource.parseNumber</a>
                                 </li>
                                 <li class=""><!--<code>Number</code>-->
-                                <a href="#DataSource.parseString">DataSource.parseString</a>
+                                <a href="#method_DataSource.parseString">DataSource.parseString</a>
                                 </li>
                                 <li class=""><!--<code>Object</code>-->
-                                <a href="#doBeforeCallback">doBeforeCallback</a>
+                                <a href="#method_doBeforeCallback">doBeforeCallback</a>
                                 </li>
                                 <li class=""><!--<code>Object</code>-->
-                                <a href="#doBeforeParseData">doBeforeParseData</a>
+                                <a href="#method_doBeforeParseData">doBeforeParseData</a>
                                 </li>
                                 <li class=""><!--<code>void</code>-->
-                                <a href="#flushCache">flushCache</a>
+                                <a href="#method_flushCache">flushCache</a>
                                 </li>
                                 <li class=""><!--<code>Object</code>-->
-                                <a href="#getCachedResponse">getCachedResponse</a>
+                                <a href="#method_getCachedResponse">getCachedResponse</a>
                                 </li>
                                 <li class=""><!--<code>void</code>-->
-                                <a href="#handleResponse">handleResponse</a>
+                                <a href="#method_handleResponse">handleResponse</a>
                                 </li>
                                 <li class=""><!--<code>Boolean</code>-->
-                                <a href="#isCacheHit">isCacheHit</a>
+                                <a href="#method_isCacheHit">isCacheHit</a>
+                                </li>
+                                <li class=""><!--<code>void</code>-->
+                                <a href="#method_issueCallback">issueCallback</a>
                                 </li>
                                 <li class=""><!--<code>Number</code>-->
-                                <a href="#makeConnection">makeConnection</a>
+                                <a href="#method_makeConnection">makeConnection</a>
                                 </li>
                                 <li class=""><!--<code>Object</code>-->
-                                <a href="#parseArrayData">parseArrayData</a>
+                                <a href="#method_parseArrayData">parseArrayData</a>
                                 </li>
                                 <li class=""><!--<code>Object</code>-->
-                                <a href="#parseHTMLTableData">parseHTMLTableData</a>
+                                <a href="#method_parseHTMLTableData">parseHTMLTableData</a>
                                 </li>
                                 <li class=""><!--<code>Object</code>-->
-                                <a href="#parseJSONData">parseJSONData</a>
+                                <a href="#method_parseJSONData">parseJSONData</a>
                                 </li>
                                 <li class=""><!--<code>Object</code>-->
-                                <a href="#parseTextData">parseTextData</a>
+                                <a href="#method_parseTextData">parseTextData</a>
                                 </li>
                                 <li class=""><!--<code>Object</code>-->
-                                <a href="#parseXMLData">parseXMLData</a>
+                                <a href="#method_parseXMLData">parseXMLData</a>
                                 </li>
                                 <li class=""><!--<code>Number</code>-->
-                                <a href="#sendRequest">sendRequest</a>
+                                <a href="#method_sendRequest">sendRequest</a>
+                                </li>
+                                <li class=""><!--<code>Number</code>-->
+                                <a href="#method_setInterval">setInterval</a>
                                 </li>
                                 <li class=""><!--<code>String</code>-->
-                                <a href="#toString">toString</a>
+                                <a href="#method_toString">toString</a>
                                 </li>
                         </ul>
                     </div>
@@ -2380,28 +2685,28 @@ to achieve more complex implementations.
                         <h4>Events</h4>
                         <ul class="content">        
                                 <li class="">
-                                <a href="#cacheFlushEvent">cacheFlushEvent</a>
+                                <a href="#event_cacheFlushEvent">cacheFlushEvent</a>
                                 </li>
                                 <li class="">
-                                <a href="#cacheRequestEvent">cacheRequestEvent</a>
+                                <a href="#event_cacheRequestEvent">cacheRequestEvent</a>
                                 </li>
                                 <li class="">
-                                <a href="#dataErrorEvent">dataErrorEvent</a>
+                                <a href="#event_cacheResponseEvent">cacheResponseEvent</a>
                                 </li>
                                 <li class="">
-                                <a href="#getCachedResponseEvent">getCachedResponseEvent</a>
+                                <a href="#event_dataErrorEvent">dataErrorEvent</a>
                                 </li>
                                 <li class="">
-                                <a href="#requestEvent">requestEvent</a>
+                                <a href="#event_requestEvent">requestEvent</a>
                                 </li>
                                 <li class="">
-                                <a href="#responseCacheEvent">responseCacheEvent</a>
+                                <a href="#event_responseCacheEvent">responseCacheEvent</a>
                                 </li>
                                 <li class="">
-                                <a href="#responseEvent">responseEvent</a>
+                                <a href="#event_responseEvent">responseEvent</a>
                                 </li>
                                 <li class="">
-                                <a href="#responseParseEvent">responseParseEvent</a>
+                                <a href="#event_responseParseEvent">responseParseEvent</a>
                                 </li>
                         </ul>
                     </div>
