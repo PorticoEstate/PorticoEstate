@@ -265,38 +265,23 @@
 				$status['X'] = array
 				(
 					'bgcolor'			=> '#5EFB6E',
-					'status'			=> lang('Closed'),
+					'status'			=> lang('closed'),
 					'text_edit_status'	=> lang('Open'),
 					'new_status' 		=> 'O',
 				);
 
-				if(isset($this->bo->config->config_data['ticket_custom_status']))
+				$custom_status	= $this->bo->get_custom_status();
+
+				foreach($custom_status as $custom)
 				{
-					$custom_status_colour = explode(',', $this->bo->config->config_data['ticket_custom_status_colour']);
+					$status["C{$custom['id']}"] = array
+					(
+						'bgcolor'			=> $custom['color'] ? $custom['color'] : '',
+						'status'			=> $custom['name'],
+						'text_edit_status'	=> lang('close'),
+						'new_status'		=> 'X'
+					);
 				}
-
-				if(isset($this->bo->config->config_data['ticket_custom_status']))
-				{
-					$custom_status = explode(',', $this->bo->config->config_data['ticket_custom_status']);
-
-					if(is_array($custom_status))
-					{
-						$i = 1;
-						
-						foreach($custom_status as $custom)
-						{
-							$status["C{$i}"] = array
-							(
-								'bgcolor'			=> isset($custom_status_colour[$i-1]) ? trim($custom_status_colour[$i-1]) : '',
-								'status'			=> trim($custom),
-								'text_edit_status'	=> lang('Close'),
-								'new_status'		=> 'X'
-							);
-							$i ++;
-						}
-					}
-				}
-
 
 				foreach($ticket_list as $ticket)
 				{

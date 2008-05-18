@@ -492,5 +492,27 @@
 			return $receipt;
 		}
 
-	}
+		/**
+		* Get a list of user(admin)-configured status
+		*
+		* @return array with list of custom status 
+		*/
 
+		public function get_custom_status()
+		{
+			$sql = "SELECT * FROM fm_tts_status";
+			$this->db->query($sql,__LINE__,__FILE__);
+
+			$status= array();
+			while ($this->db->next_record())
+			{
+				$status[] = array
+				(
+					'id'	=> $this->db->f('id'),
+					'name'	=> $this->db->f('name', true),
+					'color'	=> $this->db->f('color')
+				);
+			}
+			return $status;
+		}
+	}

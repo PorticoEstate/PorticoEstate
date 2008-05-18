@@ -212,33 +212,29 @@
 
 		function _get_status_list($leave_out_open = '')
 		{
-			$status[0]['id']='X';
-			$status[0]['name']=lang('Closed');
+			$i = 0;
+			$status[$i]['id']='X';
+			$status[$i]['name']=lang('Closed');
+			$i++;
+
 			if(!$leave_out_open)
 			{
-				$status[1]['id']='O';
-				$status[1]['name']=lang('Open');
+				$status[$i]['id']='O';
+				$status[$i]['name']=lang('Open');
+				$i++;
 			}
 
-			if(isset($this->config->config_data['ticket_custom_status']))
+			$custom_status	= $this->so->get_custom_status();
+			foreach($custom_status as $custom)
 			{
-				$custom_status = explode(',', $this->config->config_data['ticket_custom_status']);
-
-				if(is_array($custom_status))
-				{
-					$i = 1;
-						
-					foreach($custom_status as $custom)
-					{
-						$status[($i+1)] = array
-						(
-							'id'			=> "C{$i}",
-							'name'			=> trim($custom),
-						);
-					}
-					$i ++;
-				}
+				$status[$i] = array
+				(
+					'id'			=> "C{$custom['id']}",
+					'name'			=> $custom['name']
+				);
+				$i++;
 			}
+
 			return $status;
 		}
 
@@ -259,19 +255,10 @@
 				'SC' => 'Status changed'
 			);
 
-			if(isset($this->config->config_data['ticket_custom_status']))
+			$custom_status	= $this->so->get_custom_status();
+			foreach($custom_status as $custom)
 			{
-				$custom_status = explode(',', $this->config->config_data['ticket_custom_status']);
-
-				if(is_array($custom_status))
-				{
-					$i = 1;
-					foreach($custom_status as $custom)
-					{
-						$status_text["C{$i}"] = trim($custom);
-					}
-					$i++;
-				}
+				$status_text["C{$custom['id']}"] = $custom['name'];
 			}
 
 			return $status_text;
@@ -848,5 +835,16 @@
 		{
 			$this->so->delete($id);
 		}
-	}
 
+		/**
+		* Get a list of user(admin)-configured status
+		*
+		* @return array with list of custom status 
+		*/
+
+		public function get_custom_status()
+		{
+			return $this->so->get_custom_status();
+		}
+
+	}
