@@ -2503,7 +2503,6 @@
 					'rc_id' => array('type' => 'auto','precision' => '4','nullable' => False),
 					'responsibility_id' => array('type' => 'int', 'precision' => 4,'nullable' => False),
 					'contact_id' => array('type' => 'int', 'precision' => 4,'nullable' => True),
-					'location_id' => array('type' => 'int', 'precision' => 4,'nullable' => True), // acl_location
 					'location_code' => array('type' => 'varchar', 'precision' => 20,'nullable' => True),
 					'priority' => array('type' => 'int', 'precision' => 4,'nullable' => True),
 					'active_from' => array('type' => 'int', 'precision' => 4,'nullable' => True),
@@ -2518,7 +2517,7 @@
 					'fm_responsibility' => array('responsibility_id' => 'responsibility_id'),
 					'phpgw_contact' => array('contact_id' => 'contact_id')
 				),
-				'ix' => array('location_id','location_code'),
+				'ix' => array('location_code'),
 				'uc' => array()
 			)
 		);
