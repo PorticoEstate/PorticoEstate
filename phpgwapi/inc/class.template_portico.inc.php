@@ -1,6 +1,6 @@
 <?php
 	/**
-	 * phpGroupWare newdesign template class
+	 * phpGroupWare portico template class
 	 *
 	 * @author Jan Åge Johnsen <janaage@hikt.no>
 	 * @copyright Copyright (C) 2007-2008 Free Software Foundation, Inc. http://www.fsf.org/
@@ -20,7 +20,7 @@
 	 * @category gui
 	 */
 
-	class phpgwapi_template_newdesign
+	class phpgwapi_template_portico
 	{
 		public $public_functions = array
 		(
@@ -57,7 +57,7 @@
 				return "Invalid JSON data parameter";
 			}
 
-			$GLOBALS['phpgw']->session->appsession("template_newdesign_$location", 'phpgwapi', $json);
+			$GLOBALS['phpgw']->session->appsession("template_portico_$location", 'phpgwapi', $json);
 			return $json;
 		}
 
@@ -104,7 +104,7 @@
 		 */
 		public static function retrieve_local($location)
 		{
-			return $GLOBALS['phpgw']->session->appsession("template_newdesign_{$location}", 'phpgwapi');
+			return $GLOBALS['phpgw']->session->appsession("template_portico_{$location}", 'phpgwapi');
 		}
 
 		/******************************************************************************
@@ -121,6 +121,6 @@
 		 */
 		public static function store_local($location, $data)
 		{
-			$GLOBALS['phpgw']->session->appsession("template_newdesign_$location", 'phpgwapi', $data);
+			$GLOBALS['phpgw']->session->appsession("template_portico_$location", 'phpgwapi', $data);
 		}
 	}

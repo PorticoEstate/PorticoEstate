@@ -63,7 +63,7 @@ HTML;
 		static $navbar_state;
 		if( !isset( $navbar_state ) )
 		{
-			$navbar_state = execMethod('phpgwapi.template_newdesign.retrieve_local', 'navbar_config');
+			$navbar_state = execMethod('phpgwapi.template_portico.retrieve_local', 'navbar_config');
 		}
 		return isset( $navbar_state[ $id ]);
 	}
