@@ -1,9 +1,9 @@
 (function() {
   var region = YAHOO.util.Region;
 
-  YAHOO.namespace ("newdesign");
+  YAHOO.namespace ("portico");
 
-  YAHOO.newdesign.BorderLayout = function(el, attr)
+  YAHOO.portico.BorderLayout = function(el, attr)
   {
     attr = attr || {};
     if (arguments.length == 1 && !YAHOO.lang.isString(el) && !el.nodeName)
@@ -15,16 +15,16 @@
     if (!el && !attr.element) {
       alert('No valid BorderLayout element was supplied');
     }
-    YAHOO.newdesign.BorderLayout.superclass.constructor.call(this, el, attr);
+    YAHOO.portico.BorderLayout.superclass.constructor.call(this, el, attr);
   };
 
-  YAHOO.extend(YAHOO.newdesign.BorderLayout, YAHOO.util.Element);
+  YAHOO.extend(YAHOO.portico.BorderLayout, YAHOO.util.Element);
 
-  var bl_proto = YAHOO.newdesign.BorderLayout.prototype;
+  var bl_proto = YAHOO.portico.BorderLayout.prototype;
 
   bl_proto.initAttributes = function(attr)
   {
-	YAHOO.newdesign.BorderLayout.superclass.initAttributes.call(this, attr);
+	YAHOO.portico.BorderLayout.superclass.initAttributes.call(this, attr);
 
 	this._layoutWest 	= this.getElementsByClassName('layout-west', 'div' )[0];
 	this._layoutCenter 	= this.getElementsByClassName('layout-center', 'div' )[0];
@@ -33,14 +33,14 @@
     var splitBarWest 	= this.getElementsByClassName('split-bar-w-c', 'div' )[0];
     var splitBarEast 	= this.getElementsByClassName('split-bar-c-e', 'div' )[0];
 
-    this._splitBarWest	= new YAHOO.newdesign.SplitBar( splitBarWest,
+    this._splitBarWest	= new YAHOO.portico.SplitBar( splitBarWest,
     	{
 			layoutLeft: this._layoutWest,
 			layoutRight: this._layoutCenter
 		}
     );
 
-    this._splitBarEast = new YAHOO.newdesign.SplitBar( splitBarEast,
+    this._splitBarEast = new YAHOO.portico.SplitBar( splitBarEast,
     	{
     		layoutLeft: this._layoutCenter,
     		layoutRight: this._layoutEast,
@@ -106,8 +106,8 @@
 
   /* SplitBat -------------------------------------------------------------*/
 
-  YAHOO.newdesign.SplitBar = function(id, config) {
-    YAHOO.newdesign.SplitBar.superclass.constructor.call(this, id, null, config);
+  YAHOO.portico.SplitBar = function(id, config) {
+    YAHOO.portico.SplitBar.superclass.constructor.call(this, id, null, config);
 
     this.setYConstraint(0,0);
 
@@ -124,9 +124,9 @@
     this.setConfig(config);
   };
 
-  YAHOO.extend(YAHOO.newdesign.SplitBar, YAHOO.util.DDProxy);
+  YAHOO.extend(YAHOO.portico.SplitBar, YAHOO.util.DDProxy);
 
-  var sb_proto = YAHOO.newdesign.SplitBar.prototype;
+  var sb_proto = YAHOO.portico.SplitBar.prototype;
 
   sb_proto.layoutLeft = null;
   sb_proto.layoutRight = null;
@@ -162,7 +162,7 @@
 
   sb_proto.endDrag = function(e)
   {
-    YAHOO.newdesign.SplitBar.superclass.endDrag.call(this);
+    YAHOO.portico.SplitBar.superclass.endDrag.call(this);
     this.resize();
   };
 
@@ -278,7 +278,7 @@ function store(location, config)
 
 	var sUrl = phpGWLink('index.php',
 		{
-			menuaction: 'phpgwapi.template_newdesign.store',
+			menuaction: 'phpgwapi.template_portico.store',
 			phpgw_return_as: 'json',
 			location: location
 		}
@@ -290,7 +290,7 @@ function store(location, config)
 };
 
 function initBL() {
-  	var bl = new YAHOO.newdesign.BorderLayout('border-layout', border_layout_config );
+  	var bl = new YAHOO.portico.BorderLayout('border-layout', border_layout_config );
 }
 
 YAHOO.util.Event.onDOMReady(initBL);

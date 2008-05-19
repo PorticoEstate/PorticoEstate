@@ -30,9 +30,9 @@
 		//-->
 		</script>
 
-		<script type="text/javascript" src="{webserver_url}/phpgwapi/templates/newdesign/js/border-layout.js"></script>
-		<script type="text/javascript" src="{webserver_url}/phpgwapi/templates/newdesign/js/navbar.js"></script>
-		<script type="text/javascript" src="{webserver_url}/phpgwapi/templates/newdesign/js/toolbar.js"></script>
+		<script type="text/javascript" src="{webserver_url}/phpgwapi/templates/portico/js/border-layout.js"></script>
+		<script type="text/javascript" src="{webserver_url}/phpgwapi/templates/portico/js/navbar.js"></script>
+		<script type="text/javascript" src="{webserver_url}/phpgwapi/templates/portico/js/toolbar.js"></script>
 		<script type="text/javascript" src="{webserver_url}/phpgwapi/js/json/json.js"></script>
 
 	</head>
