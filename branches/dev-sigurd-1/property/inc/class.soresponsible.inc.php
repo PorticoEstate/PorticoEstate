@@ -6,8 +6,9 @@
 	* @copyright Copyright (C) 2008 Free Software Foundation, Inc. http://www.fsf.org/
 	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/bbb_/ekstern/
-	* @package property
-	* @subpackage admin
+	* @package phpgroupware
+	* @subpackage property
+	* @category core
  	* @version $Id: class.uiresponsible.inc.php 732 2008-02-10 16:21:14Z sigurd $
 	*/
 
@@ -27,19 +28,19 @@
 	 */
 
 	/**
-	* import db class
-	*/
-	phpgw::import_class('phpgwapi.db');
-
-	/**
-	 * Description
-	 * @package property
+	 * ResponsibleMatrix - handles automated assigning of tasks based on (physical)location and category.
+	 *
+	 * @package phpgroupware
+	 * @subpackage property
+	 * @category core
 	 */
+
 	class property_soresponsible
 	{
 		var $grants;
 		var $db;
 		var $account;
+		var $acl_location;
 
 		/**
 		* @var the total number of records for a search
@@ -49,13 +50,11 @@
 		function __construct()
 		{
 			$this->account			=& $GLOBALS['phpgw_info']['user']['account_id'];
-			$this->db 				= clone($GLOBALS['phpgw']->db);
+			$this->db 				=& $GLOBALS['phpgw']->db;
 
 			$this->like 			=& $this->db->like;
 			$this->join 			=& $this->db->join;
 			$this->left_join		=& $this->db->left_join;
-			
-			$this->grants			= $GLOBALS['phpgw']->acl->get_grants('demo', $this->acl_location);
 		}
 
 		function read($data)
@@ -70,6 +69,8 @@
 				$cat_id 	= isset($data['cat_id']) && $data['cat_id'] ? $data['cat_id']:0;
 				$filter		= isset($data['filter'])?$data['filter']:'';
 			}
+
+			$grants			= $GLOBALS['phpgw']->acl->get_grants('property', $this->acl_location);
 
 			return $matrix;
 		}

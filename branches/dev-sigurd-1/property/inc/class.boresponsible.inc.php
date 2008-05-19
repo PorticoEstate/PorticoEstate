@@ -6,8 +6,9 @@
 	* @copyright Copyright (C) 2008 Free Software Foundation, Inc. http://www.fsf.org/
 	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/bbb_/ekstern/
-	* @package property
-	* @subpackage admin
+	* @package phpgroupware
+	* @subpackage property
+	* @category core
  	* @version $Id: class.uiresponsible.inc.php 732 2008-02-10 16:21:14Z sigurd $
 	*/
 
@@ -27,8 +28,11 @@
 	 */
 
 	/**
-	 * Description
-	 * @package property
+	 * ResponsibleMatrix - handles automated assigning of tasks based on (physical)location and category.
+	 *
+	 * @package phpgroupware
+	 * @subpackage property
+	 * @category core
 	 */
 
 	class property_boresponsible
@@ -39,8 +43,9 @@
 
 		public function __construct($session = false)
 		{
-			$this->so				= CreateObject('property.soresponsible');
 			$this->acl_location 	= '.admin';
+			$this->so				= CreateObject('property.soresponsible');
+			$this->so->acl_location = $this->acl_location;
 
 			if ($session)
 			{
