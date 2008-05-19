@@ -1,6 +1,6 @@
 <?php
 	phpgw::import_class('phpgwapi.yui');
-	phpgw::import_class('phpgwapi.template_newdesign');
+	phpgw::import_class('phpgwapi.template_portico');
 
 	if ( !isset($GLOBALS['phpgw_info']['server']['site_title']) )
 	{
@@ -15,11 +15,11 @@
 		"/phpgwapi/js/yahoo/build/menu/assets/skins/sam/menu.css",
 		"/phpgwapi/js/yahoo/build/button/assets/skins/sam/button.css",
 		"/phpgwapi/js/yahoo/build/tabview/assets/skins/sam/tabview.css",
-		"/phpgwapi/templates/newdesign/css/base.css",
-		"/phpgwapi/templates/newdesign/css/{$GLOBALS['phpgw_info']['user']['preferences']['common']['theme']}.css",
+		"/phpgwapi/templates/portico/css/base.css",
+		"/phpgwapi/templates/portico/css/{$GLOBALS['phpgw_info']['user']['preferences']['common']['theme']}.css",
 		"/{$app}/templates/base/css/base.css",
-		"/{$app}/templates/newdesign/css/base.css",
-		"/{$app}/templates/newdesign/css/{$GLOBALS['phpgw_info']['user']['preferences']['common']['theme']}.css"
+		"/{$app}/templates/portico/css/base.css",
+		"/{$app}/templates/portico/css/{$GLOBALS['phpgw_info']['user']['preferences']['common']['theme']}.css"
 	);
 
 	$GLOBALS['phpgw']->template->set_root(PHPGW_TEMPLATE_DIR);
@@ -46,7 +46,7 @@
 	// Construct navbar_config by taking into account the current selected menu
 	// The only problem with this loop is that leafnodes will be included
 
-	$navbar_config = execMethod('phpgwapi.template_newdesign.retrieve_local', 'navbar_config');
+	$navbar_config = execMethod('phpgwapi.template_portico.retrieve_local', 'navbar_config');
 
 	if( isset($GLOBALS['phpgw_info']['flags']['menu_selection']) )
 	{
@@ -63,7 +63,7 @@
 			$current_selection = implode("::", explode("::", $current_selection, -1));
 		}
 
-		phpgwapi_template_newdesign::store_local('navbar_config', $navbar_config);
+		phpgwapi_template_portico::store_local('navbar_config', $navbar_config);
 	}
 
 	$app = lang($app);
@@ -76,7 +76,7 @@
 		'str_base_url'	=> $GLOBALS['phpgw']->link('/', array(), true),
 		'webserver_url'	=> $GLOBALS['phpgw_info']['server']['webserver_url'],
 		'win_on_events'	=> $GLOBALS['phpgw']->common->get_on_events(),
-		'border_layout_config' => json_encode(execMethod('phpgwapi.template_newdesign.retrieve_local', 'border_layout_config')),
+		'border_layout_config' => json_encode(execMethod('phpgwapi.template_portico.retrieve_local', 'border_layout_config')),
 		'navbar_config' => json_encode($navbar_config)
 	);
 
