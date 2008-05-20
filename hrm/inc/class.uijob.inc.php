@@ -258,13 +258,13 @@
 			$GLOBALS['phpgw_info']['flags'][noheader] = true;
 			$GLOBALS['phpgw_info']['flags'][nofooter] = true;
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = false;
-			
+
 			$pdf	= CreateObject('phpgwapi.pdf');
 			$dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
 			$date = $GLOBALS['phpgw']->common->show_date('',$dateformat);
-			
+
 			$values	= phpgw::get_var('values');
-			
+
 			// don't want any warnings turning up in the pdf code if the server is set to 'anal' mode.
 			//error_reporting(7);
 			//error_reporting(E_ALL);
@@ -279,7 +279,7 @@
 
 //			$pdf->line(20,760,578,760);
 //			$pdf->line(200,40,200,822);
-			
+
 			$pdf->addText(220,770,16,'Stillings beskrivelse');
 			$pdf->addText(300,34,6,$date);
 
@@ -293,7 +293,7 @@
 			$pdf->ezSetDy(-50);
 
 			$i = 0;
-		
+
 			while (is_array($values) && list(,$job_id) = each($values['select']))
 			{
 				if($i > 0)
@@ -304,7 +304,7 @@
 				$qualification = $this->bo->read_qualification($job_id);
 				$task = $this->bo->read_task($job_id);
 				$i++;
-			
+
 				$pdf->ezSetY(720);
 				$pdf->ezText($job_info['name'],14);
 				$pdf->ezSetDy(-10);
@@ -323,9 +323,9 @@
 						$pdf->ezText($j . ' ' . $entry['name'],12,array('left' => 10));
 					}
 					$j++;
-				}	
+				}
 				$pdf->ezSetDy(-10);
-				
+
 				$pdf->ezText(lang('qualification') . ':',12);
 				$pdf->ezSetDy(-5);
 				$j = 1;
@@ -341,11 +341,11 @@
 						$pdf->ezText($j . ' ' . $entry['name'],12,array('left' => 10));
 					}
 					$j++;
-				}	
+				}
 			}
-			
+
 			$document = $pdf->ezOutput();
-			$pdf->print_pdf($document,'job');  
+			$pdf->print_pdf($document,'job');
 		}
 
 		function qualification()
@@ -366,7 +366,7 @@
 			{
 				$this->bo->resort_value(array('resort'=>$resort,'job_id' => $job_id,'id' => $id,'type'=>'qualification'));
 			}
-			
+
 			$receipt = $GLOBALS['phpgw']->session->appsession('session_data','hrm_quali_receipt');
 			$GLOBALS['phpgw']->session->appsession('session_data','hrm_quali_receipt','');
 
@@ -733,7 +733,7 @@
 			(
 				'menuaction'	=> 'hrm.uijob.edit_task',
 				'id'		=> $id,
-				'job_id'	=> $job_id				
+				'job_id'	=> $job_id
 			);
 
 			$msgbox_data = $this->bocommon->msgbox_data($receipt);
@@ -787,7 +787,7 @@
 			}
 
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] .= '::job_type';
-	
+
 			$GLOBALS['phpgw']->xslttpl->add_file(array('job'));
 
 			if ($id)
@@ -1094,7 +1094,7 @@
 				'lang_name'				=> lang('name'),
 				'lang_descr'				=> lang('descr'),
 				'lang_descr_status_text'		=> lang('Enter a description'),
-				
+
 				'msgbox_data'				=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
 				'form_action'				=> $GLOBALS['phpgw']->link('/index.php',$link_data),
 				'lang_id'				=> lang('qualification type ID'),
@@ -1729,7 +1729,7 @@
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('hrm') . ' - ' . $appname . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('delete' => $data));
 		}
-		
+
 		function hierarchy()
 		{
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] .= '::organisation';

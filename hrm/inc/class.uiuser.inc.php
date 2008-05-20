@@ -181,7 +181,7 @@
 		function training()
 		{
 			$user_id	= phpgw::get_var('user_id', 'int');
-  
+
 			if (!$this->grants[$user_id])
 			{
 				$this->bocommon->no_access($links);
@@ -228,7 +228,7 @@
 					$text_delete		= lang('delete');
 					$lang_delete_text	= lang('delete training item');
 				}
-				
+
 				$content[] = array
 				(
 					'title'			=> $entry['title'],
@@ -246,7 +246,7 @@
 					'text_edit'		=> $text_edit,
 					'text_delete'		=> $text_delete
 				);
-				
+
 				unset ($link_edit);
 				unset ($text_edit);
 				unset ($lang_edit_edit);
@@ -312,7 +312,7 @@
 				$add_action	= $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'hrm.uiuser.edit', 'user_id'=> $user_id));
 				$lang_add	= lang('add');
 			}
-			
+
 			$table_add[] = array
 			(
 				'lang_add'					=> $lang_add,
@@ -387,7 +387,7 @@
 				{
 					$this->bocommon->no_access($links);
 					return;
-				}	
+				}
 			}
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('user'));
@@ -592,7 +592,7 @@
 			$user_id	= phpgw::get_var('user_id', 'int');
 
 			if(!$this->bocommon->check_perms($this->grants[$user_id], PHPGW_ACL_READ))
-			{				
+			{
 				$this->bocommon->no_access($links);
 				return;
 			}
@@ -739,7 +739,7 @@
 				echo 'Nothing';
 				return;
 			}
-			
+
 //	_debug_array($user_values);
 
 //	_debug_array($training);
@@ -762,7 +762,7 @@
 
 
 //	_debug_array($content);
-			
+
 			$date = $GLOBALS['phpgw']->common->show_date('',$dateformat);
 
 			// don't want any warnings turning up in the pdf code if the server is set to 'anal' mode.
@@ -779,7 +779,7 @@
 //			$pdf->line(20,40,578,40);
 			$pdf->line(20,760,578,760);
 			$pdf->line(200,40,200,822);
-			
+
 			$pdf->addText(220,770,16,'CV');
 			$pdf->addText(300,34,6,$date);
 
@@ -801,7 +801,7 @@
 									'value'=>array('justification'=>'left','width'=>200))
 							)
 						);
-		
+
 			$table_header = array(
 				'start_date'=>array('justification'=>'left','width'=>70),
 				'sep'=>array('justification'=>'center','width'=>15),
@@ -852,7 +852,7 @@
 					'spacer'		=> '',
 					'what'			=> $entry['title'] . ', ' . $entry['place']
 				);
-				
+
 				$pdf->ezTable($content,'','',
 							array('xPos'=>50,'xOrientation'=>'right','width'=>500,0,'shaded'=>0,'fontSize' => 10,'showLines'=> 0,'titleFontSize' => 12,'outerLineThickness'=>2,'showHeadings'=>0
 							,'cols'=>$table_header
@@ -862,6 +862,6 @@
 				unset($content);
 			}
 			$document = $pdf->ezOutput();
-			$pdf->print_pdf($document,'cv_'.$GLOBALS['phpgw']->accounts->id2name($user_id));  
+			$pdf->print_pdf($document,'cv_'.$GLOBALS['phpgw']->accounts->id2name($user_id));
 		}
 	}

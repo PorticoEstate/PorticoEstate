@@ -249,16 +249,16 @@
 
 			if(is_array($comms) && isset($comms[$fields[0]['contact_id']]) )
 			{
-				$fields[0]['tel_work'] = $comms[$fields[0]['contact_id']]['work phone'];			
+				$fields[0]['tel_work'] = $comms[$fields[0]['contact_id']]['work phone'];
 				$fields[0]['tel_home'] = $comms[$fields[0]['contact_id']]['home phone'];
 				$fields[0]['tel_cell'] = $comms[$fields[0]['contact_id']]['mobile (cell) phone'];
 				$fields[0]['email_home'] = $comms[$fields[0]['contact_id']]['home email'];
 			}
-		
+
 			if(!$account_info['person_id'])
 			{
 				$sfields = rawurlencode(serialize($fields[0]));
-				$contact_link   = $GLOBALS['phpgw']->link('/index.php', 
+				$contact_link   = $GLOBALS['phpgw']->link('/index.php',
 					array
 					(
 						'menuaction'	=> 'addressbook.uiaddressbook.add_person',
@@ -323,7 +323,7 @@
 					$j++;
 				}
 			}
-			
+
 			return $user_values;
 		}
 	}

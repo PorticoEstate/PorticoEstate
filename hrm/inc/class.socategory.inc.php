@@ -118,7 +118,7 @@
 					break;
 				case 'qualification':
 					$table='phpgw_hrm_quali_category';
-					break;					
+					break;
 			}
 
 			return $table;
@@ -194,5 +194,5 @@
 				);
 			}
 			return $categories;
-		}		
+		}
 	}

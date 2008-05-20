@@ -38,7 +38,7 @@
 		$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO hrm_acl_location (appname,id, descr) VALUES ('hrm', '.', 'Top')");
 		$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO hrm_acl_location (appname,id, descr, allow_grant) VALUES ('hrm', '.user', 'User',1)");
 		$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO hrm_acl_location (appname,id, descr) VALUES ('hrm', '.job', 'Job description')");
-		
+
 		$GLOBALS['setup_info']['hrm']['currentver'] = '0.9.17.001';
 		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit();
 		return $GLOBALS['setup_info']['hrm']['currentver'];
@@ -67,7 +67,7 @@
 		$GLOBALS['phpgw_setup']->oProc->RenameTable('hrm_experience_category','phpgw_hrm_experience_category');
 		$GLOBALS['phpgw_setup']->oProc->RenameTable('hrm_skill_level','phpgw_hrm_skill_level');
 		$GLOBALS['phpgw_setup']->oProc->RenameTable('hrm_task_category','phpgw_hrm_task_category');
-		
+
 		$GLOBALS['setup_info']['hrm']['currentver'] = '0.9.17.002';
 		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit();
 		return $GLOBALS['setup_info']['hrm']['currentver'];

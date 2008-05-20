@@ -86,7 +86,7 @@
 			}
 
 		}
-		
+
 		//FIXME Remove the need for this - use the jscal class which now supports xslt
 		function jscalendar()
 		{

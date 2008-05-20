@@ -162,7 +162,7 @@
 		{
 			if(!isset($GLOBALS['phpgw_info']['user']['preferences']['hrm']['horisontal_menus']) || $GLOBALS['phpgw_info']['user']['preferences']['hrm']['horisontal_menus'] == 'no')
 			{
-				return;			
+				return;
 			}
 			$GLOBALS['phpgw']->xslttpl->add_file(array('menu'));
 			$menu_brutto = execMethod('hrm.menu.get_menu');
@@ -193,8 +193,8 @@
 					{
 						unset($menu[$i]['children']);
 					}
-				}	
-				$i++;		
+				}
+				$i++;
 			}
 			return $menu;
 		}
