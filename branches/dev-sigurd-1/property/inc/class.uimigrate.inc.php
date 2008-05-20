@@ -33,12 +33,12 @@
 
 	class property_uimigrate
 	{
-		
+
 		/**
 		* @var ??? $start ???
 		*/
 		private $start = 0;
-		
+
 		/**
 		* @var ??? $sort ???
 		*/
@@ -145,7 +145,7 @@
 				}
 				$this->bo->migrate($values);
 			}
-			
+
 			$domain_info = $this->bo->read();
 
 			$lang_select_migrate_text		= '';
@@ -160,7 +160,7 @@
 
 				$content[] = array
 				(
-					'domain'					=> $domain,					
+					'domain'					=> $domain,
 					'db_host'					=> $entry['db_host'],
 					'db_name'					=> $entry['db_name'],
 					'db_type'					=> $entry['db_type'],
@@ -237,7 +237,7 @@
 			$function_msg= lang('list available domains');
 
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('migrate') . ":: {$function_msg}";
-			
+
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('list' => $data));
 			$this->save_sessiondata();
 		}

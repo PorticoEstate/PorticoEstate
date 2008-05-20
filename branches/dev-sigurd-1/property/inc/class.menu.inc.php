@@ -83,7 +83,7 @@
 							'url'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiadmin_entity.category', 'entity_id'=> $entry['id'])),
 							'text'	=> $entry['name']
 						);
-			
+
 						$cat_list = $entity->read_category(array('allrows'=>true,'entity_id'=>$entry['id']));
 
 						foreach($cat_list as $category)
@@ -137,7 +137,7 @@
 					(
 						'text'	=> lang('Vendor Attributes'),
 						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.ui_custom.list_attribute', 'appname' => 'property', 'location' => '.vendor', 'menu_selection' => 'admin::property::vendor::vendor_attribs') )
-					)		
+					)
 				);
 				$admin_children_owner = array
 				(
@@ -243,7 +243,7 @@
 					(
 						'url'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uicategory.index', 'type' => 'location', 'type_id' => $location['id'], 'menu_selection' => "admin::property::location::location::category_{$location['id']}") ),
 						'text'	=> $location['name'] . ' ' . lang('categories'),
-					);	
+					);
 				}
 
 				$admin_children_location = array
@@ -751,18 +751,18 @@
 
 			if ( $acl->check('.document', PHPGW_ACL_READ, 'property') )
 			{
-				$laws_url = "{$GLOBALS['phpgw_info']['server']['webserver_url']}/redirect.php?go=". urlencode('http://www.regelhjelp.no/'); 
+				$laws_url = "{$GLOBALS['phpgw_info']['server']['webserver_url']}/redirect.php?go=". urlencode('http://www.regelhjelp.no/');
 				$menus['navigation']['documentation'] = array
 				(
 					'url'		=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uidocument.index')),
 					'text'		=> lang('Documentation'),
 					'children'	=> array
 					(
-						'legislation'   => array 
-						( 
-								'text'  => $GLOBALS['phpgw']->translation->translate('laws and regulations', array(), true), 
-								// degrade gracefully hack 
-								'url'   => $laws_url . '" onclick="window.open(\'' . $laws_url . '\'); return false;', 
+						'legislation'   => array
+						(
+								'text'  => $GLOBALS['phpgw']->translation->translate('laws and regulations', array(), true),
+								// degrade gracefully hack
+								'url'   => $laws_url . '" onclick="window.open(\'' . $laws_url . '\'); return false;',
 						),
 						'location'	=> array
 						(
@@ -808,7 +808,7 @@
 							'text'	=> $entry['name']
 						);
 					}
-					
+
 					$cat_list = $entity->read_category(array('allrows'=>true,'entity_id'=>$entry['id']));
 
 					foreach($cat_list as $category)

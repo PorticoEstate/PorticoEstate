@@ -37,12 +37,12 @@
 
 	class property_uiresponsible
 	{
-		
+
 		/**
 		* @var ??? $start ???
 		*/
 		private $start = 0;
-		
+
 		/**
 		* @var ??? $sort ???
 		*/
@@ -163,7 +163,7 @@
 				}
 				$this->bo->responsible($values);
 			}
-			
+
 			$responsible_info = $this->bo->read();
 
 			$lang_select_responsible_text		= '';
@@ -273,7 +273,7 @@
 			$function_msg= lang('list available responsible types');
 
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('responsible matrix') . ":: {$function_msg}";
-			
+
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('list_type' => $data));
 			$this->save_sessiondata();
 		}
@@ -416,7 +416,7 @@
 				}
 				$this->bo->responsible($values);
 			}
-			
+
 			$responsible_info = $this->bo->read();
 
 			$lang_select_responsible_text		= '';
@@ -526,7 +526,7 @@
 			$function_msg= lang('list available responsible contacts');
 
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('responsible matrix') . ":: {$function_msg}";
-			
+
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('list_contact' => $data));
 			$this->save_sessiondata();
 		}

@@ -739,17 +739,17 @@
 
 			$this->db->transaction_begin();
 			$this->db->query("UPDATE fm_workorder SET calculation = '$calculation' WHERE id=$id",__LINE__,__FILE__);
-			
+
 			if($calculation > 0)
 			{
 				$config		= CreateObject('phpgwapi.config');
 				$config->read_repository();
 				$tax = 1+(($config->config_data['fm_tax'])/100);
 				$calculation = $calculation * $tax;
-				
+
 				$this->db->query("UPDATE fm_workorder SET combined_cost = '$calculation' WHERE id=$id",__LINE__,__FILE__);
 			}
-			
+
 			$this->db->transaction_commit();
 			return $receipt;
 		}

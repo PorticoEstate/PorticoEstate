@@ -310,7 +310,7 @@
 			}
 			else
 			{
-				$entity[0]['type']='project';			
+				$entity[0]['type']='project';
 				$this->uicols[]	= lang('project');
 			}
 
@@ -519,7 +519,7 @@
 					{
 						case 'O': $value['new_value']=lang('Opened'); break;
 						case 'X': $value['new_value']=lang('Closed'); break;
-						case 'I': $value['new_value']=lang('In Progress'); break; //initiated		
+						case 'I': $value['new_value']=lang('In Progress'); break; //initiated
 						case 'C': $value['new_value']=lang('custom'); break; // FIXME: make configurable
 						default: break;
 					}
@@ -581,7 +581,7 @@
 			}
 
 			$ticket['finnish_date']	= $this->bocommon->date_to_timestamp($ticket['finnish_date']);
-			
+
 
 			$receipt = $this->so->add($ticket);
 
@@ -839,7 +839,7 @@
 		/**
 		* Get a list of user(admin)-configured status
 		*
-		* @return array with list of custom status 
+		* @return array with list of custom status
 		*/
 
 		public function get_custom_status()

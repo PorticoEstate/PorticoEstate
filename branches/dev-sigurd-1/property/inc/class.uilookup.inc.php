@@ -925,7 +925,7 @@
 			$phpgw_user_list = $this->bo->read_phpgw_user();
 
 			$column = phpgw::get_var('column');
-			
+
 			while (is_array($phpgw_user_list) && list(,$phpgw_user_entry) = each($phpgw_user_list))
 			{
 				$content[] = array

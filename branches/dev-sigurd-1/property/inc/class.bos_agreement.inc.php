@@ -241,7 +241,7 @@
 		function read_single($data)
 		{
 			$values['attributes'] = $this->custom->get_attribs('property', '.s_agreement', 0, '', 'ASC', 'attrib_sort', true, true);
-			
+
 			if(isset($data['s_agreement_id']) && $data['s_agreement_id'])
 			{
 				$values = $this->so->read_single($data['s_agreement_id'], $values);
@@ -277,7 +277,7 @@
 		function read_single_item($data)
 		{
 			$values['attributes'] = $this->custom->get_attribs('property', '.s_agreement.detail', 0, '', 'ASC', 'attrib_sort', true, true);
-			
+
 			if(isset($data['s_agreement_id']) && $data['s_agreement_id'] && isset($data['id']) && $data['id'])
 			{
 				$values = $this->so->read_single_item($data, $values);
@@ -386,7 +386,7 @@
 			's_agreement_id' 	=> $id,
 			'location_code'		=> $import_data['location_code'],
 			'location_name'		=> $import_data['address'],
-			'cost'				=> $import_data['cost']			
+			'cost'				=> $import_data['cost']
 			);
 			unset($values['extra']['location_code']);
 			unset($values['extra']['address']);

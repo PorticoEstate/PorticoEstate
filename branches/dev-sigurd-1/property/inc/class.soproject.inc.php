@@ -819,7 +819,7 @@
 				}
 
 			}
-			
+
 			if ($old_category != $project['cat_id'])
 			{
 				$historylog->add('T',$project['project_id'],$project['cat_id']);

@@ -372,7 +372,7 @@
 			}
 
 			$type = $this->bo->read_single($type_id);
-			
+
 			$attrib_list = $this->bo->read_attrib($type_id);
 
 			while (is_array($attrib_list) && list(,$attrib) = each($attrib_list))

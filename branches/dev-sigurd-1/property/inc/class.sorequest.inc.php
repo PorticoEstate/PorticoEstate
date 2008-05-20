@@ -115,7 +115,7 @@
 					$score = $this->db->f('score');
 					$this->db->query("UPDATE fm_request SET score = $score WHERE id = $id",__LINE__,__FILE__);
 				}
-				
+
 				$this->db->query("UPDATE fm_request SET score = score +10000 WHERE id = $id AND authorities_demands = 1",__LINE__,__FILE__);
 			}
 		}

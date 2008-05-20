@@ -100,7 +100,7 @@
 			$status					= phpgw::get_var('status');
 			$type_id				= phpgw::get_var('type_id', 'int');
 			$allrows				= phpgw::get_var('allrows', 'bool');
-			
+
 			$this->start			= $start ? $start : 0;
 			$this->query			= isset($query) && $query ? $query : $this->query;
 			$this->filter			= isset($filter) && $filter ? $filter : '';
@@ -156,7 +156,7 @@
 			$this->part_of_town_id	= isset($data['part_of_town_id'])?$data['part_of_town_id']:'';
 			$this->district_id		= isset($data['district_id'])?$data['district_id']:'';
 			$this->status			= isset($data['status'])?$data['status']:'';
-			$this->type_id			= isset($data['type_id'])?$data['type_id']:'';			
+			$this->type_id			= isset($data['type_id'])?$data['type_id']:'';
 		//	$this->allrows			= $data['allrows'];
 		}
 
@@ -475,7 +475,7 @@
 					$location['location'][$i]['lookup_function_call']			= 'lookup_entity_' . $entity['id'] .'()';
 					$location['location'][$i]['lookup_link']					= true;
 					$location['location'][$i]['name']							= $entity['name'];
-					
+
 					if (is_array($data['entity_data']))
 					{
 						$location['location'][$i]['value']						= $data['entity_data'][$entity['id']]['p_num'];
@@ -487,7 +487,7 @@
 					$location['location'][$i]['extra'][0]['input_type']			= 'text';
 					$location['location'][$i]['extra'][0]['size']				= 30;
 					$location['location'][$i]['extra'][0]['lookup_function_call']	= 'lookup_entity_' . $entity['id'] .'()';
-					
+
 					if (is_array($data['entity_data']))
 					{
 						$location['location'][$i]['extra'][0]['value']			= $data['entity_data'][$entity['id']]['p_cat_name'];
@@ -506,7 +506,7 @@
 					$location['location'][$i]['extra'][2]['input_name']			= 'cat_id_' . $entity['id'];
 					$input_name[]												= 'cat_id_' . $entity['id'];
 					$insert_record['extra']['cat_id_' . $entity['id']]			= 'p_cat_id';
-				
+
 					if (is_array($data['entity_data']))
 					{
 						$location['location'][$i]['extra'][2]['value']			= $data['entity_data'][$entity['id']]['p_cat_id'];

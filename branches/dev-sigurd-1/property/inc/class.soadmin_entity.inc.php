@@ -288,7 +288,7 @@
 
 		function get_default_column_def()
 		{
-		
+
 			$fd=array();
 			$fd['id'] = array('type' => 'int', 'precision' => 4, 'nullable' => false);
 			$fd['num'] = array('type' => 'varchar', 'precision' => 16, 'nullable' => false);
@@ -298,7 +298,7 @@
 			$fd['location_code'] = array('type' => 'varchar', 'precision' => 25, 'nullable' => true);
 
 			$location_type = $this->bocommon->next_id('fm_location_type');
-			
+
 			for ($i=1; $i<$location_type; $i++)
 			{
 				$fd['loc' . $i] = array('type' => 'varchar', 'precision' => 4, 'nullable' => true);
@@ -310,14 +310,14 @@
 			$fd['status'] = array('type' => 'int', 'precision' => 4, 'nullable' => true);
 			$fd['entry_date'] = array('type' => 'int', 'precision' => 4, 'nullable' => true);
 			$fd['user_id'] = array('type' => 'int', 'precision' => 4, 'nullable' => true);
-			
+
 			return $fd;
 		}
 
 		function add_category($values)
 		{
 			$this->db->transaction_begin();
-			
+
 			$values['name'] = $this->db->db_addslashes($values['name']);
 			$values['descr'] = $this->db->db_addslashes($values['descr']);
 
@@ -578,7 +578,7 @@
 			}
 
 			$fd = $this->get_default_column_def();
-			
+
 			for ($i=0; $i<count($metadata); $i++)
 			{
 				$sql = "SELECT * FROM fm_entity_attribute WHERE entity_id = $entity_id AND cat_id=$cat_id AND column_name = '" . $metadata[$i]['name'] . "'";
@@ -607,11 +607,11 @@
 					'fd' => $fd
 					)
 				);
-			
+
 			$table_def[$table]['pk'] = array('id');
-			$table_def[$table]['fk'] = array();			
-			$table_def[$table]['ix'] = array();			
-			$table_def[$table]['uc'] = array();			
+			$table_def[$table]['fk'] = array();
+			$table_def[$table]['ix'] = array();
+			$table_def[$table]['uc'] = array();
 
 			return $table_def;
 		}

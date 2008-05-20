@@ -321,7 +321,7 @@
 				{
 					$this->db->query("SELECT account_firstname,account_lastname FROM phpgw_accounts WHERE account_id='" . $ticket['assignedto'] . "'");
 					$this->db->next_record();
-					$ticket['assignedto_name']	= $this->db->f('account_firstname') . " " .$this->db->f('account_lastname') ;		
+					$ticket['assignedto_name']	= $this->db->f('account_firstname') . " " .$this->db->f('account_lastname') ;
 				}
 
 			}
@@ -495,7 +495,7 @@
 		/**
 		* Get a list of user(admin)-configured status
 		*
-		* @return array with list of custom status 
+		* @return array with list of custom status
 		*/
 
 		public function get_custom_status()

@@ -231,7 +231,7 @@
 				$from=$current_prefs_user['email'];
 				$subject = lang("Tenant claim %1",$receipt['claim_id']) .' ' . $action;
 				$body    = lang('Reminder');
-				
+
 				if(!is_object($GLOBALS['phpgw']->send))
 				{
 					$GLOBALS['phpgw']->send = CreateObject('phpgwapi.send');

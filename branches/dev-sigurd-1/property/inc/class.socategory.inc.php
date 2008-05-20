@@ -214,7 +214,7 @@
 		{
 			$table = $this->select_table($data['type'],$data['type_id']);
 			$order		= isset($data['order']) && $data['order'] == 'id' ? 'id' :'descr';
-			
+
 			$this->db->query("SELECT id, descr FROM $table ORDER BY $order");
 
 			while ($this->db->next_record())

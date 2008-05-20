@@ -118,7 +118,7 @@
 
 				$cols = $document_table . '.location_code';
 				$cols_return[] = 'location_code';
-	
+
 				$uicols = array();
 				$joinmethod = '';
 				$paranthesis = '';

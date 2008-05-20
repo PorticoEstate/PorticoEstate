@@ -35,7 +35,7 @@
 	class property_sotts2
 	{
 		var $acl_location;
-		
+
 		function property_sotts2()
 		{
 		//	$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];

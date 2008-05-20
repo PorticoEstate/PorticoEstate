@@ -67,7 +67,7 @@
 			{
 				$selector = $appname;
 			}
-			
+
 			switch($selector)
 			{
 				case 'request':
@@ -203,7 +203,7 @@
 					'datetime'   => $this->db->from_timestamp($this->db->f('history_timestamp'))
 				);
 			}
-			
+
 			if(isset ($return_values))
 			{
 				return $return_values;

@@ -301,7 +301,7 @@
 				{
 					$fd['loc' . $i] = array('type' => 'varchar', 'precision' => 4, 'nullable' => false);
 				}
-				
+
 				$pk[$i-1]= 'loc' . $i;
 
 				$default_attrib['id'][]= $i+$j;
@@ -414,7 +414,7 @@
 
 				$this->db->query("INSERT INTO phpgw_acl_location (appname, id, descr)"
 		 			. " VALUES ('" . 'property' ."','" . '.location.' . $standard['id'] ."', '" . $standard['name'] . "')");
-		 			
+
 	//			$GLOBALS['phpgw']->acl->add_location('.location.' . $standard['id'], $standard['name'], 'property', $allow_grant = false, $custom_tbl = '');
 
 				$receipt['message'][] = array('msg' => lang('table %1 has been saved','fm_location'. $receipt['id']));
@@ -450,7 +450,7 @@
 				'list_info'		=> (isset($values['list_info'])?serialize($values['list_info']):''),
 				'list_address'	=> (isset($values['list_address'])?$values['list_address']:''),
 				);
-			
+
 			$value_set	= $this->bocommon->validate_db_update($value_set);
 
 			$this->db->query("UPDATE $table SET $value_set WHERE id='" . $values['id']. "'",__LINE__,__FILE__);
@@ -476,17 +476,17 @@
 				$this->oProc->m_odb->transaction_abort();
 				$receipt['error'][] = array('msg' => lang('please delete from the bottom'));
 				$GLOBALS['phpgw']->session->appsession('receipt','property',$receipt);
-				
+
 				return;
 			}
-				
+
 			$this->oProc->DropTable('fm_location' . $id);
 			$this->oProc->DropTable('fm_location' . $id . '_category');
 			$this->oProc->DropTable('fm_location' . $id . '_history');
 
 			$attrib_table 	= 'phpgw_cust_attribute';
 			$choice_table 	= 'phpgw_cust_choice';
-			
+
 			$this->db->query("DELETE FROM $attrib_table WHERE appname = 'property' AND location = '.location. " . $id . "'",__LINE__,__FILE__);
 			$this->db->query("DELETE FROM $choice_table WHERE appname = 'property' AND location = '.location. " . $id . "'",__LINE__,__FILE__);
 			$this->db->query("DELETE FROM $table WHERE id=" . (int)$id,__LINE__,__FILE__);
@@ -570,11 +570,11 @@
 
 					$ok = true;
 				}
-				
+
 				if(isset($ok) && $ok)
 				{
 					$this->db->transaction_commit();
-					$this->oProc->m_odb->transaction_commit();				
+					$this->oProc->m_odb->transaction_commit();
 
 					$receipt['message'][] = array('msg'	=> lang('column %1 has been moved',$column_name));
 				}

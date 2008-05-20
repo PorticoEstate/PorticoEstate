@@ -276,7 +276,7 @@
 				'select_user_name'			=> 'values[responsible]',
 				'lang_no_user'				=> lang('Select responsible'),
 				'user_list'				=> $this->bocommon->get_user_list_right2('select',128,$b_account['responsible'],'.invoice'),
-				
+
 				'lang_category'				=> lang('category'),
 				'lang_no_cat'				=> lang('no category'),
 				'lang_cat_statustext'			=> lang('Select the category the selection belongs to. To do not use a category select NO CATEGORY'),

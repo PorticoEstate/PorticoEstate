@@ -138,7 +138,7 @@
 		}
 
 		function update_location4()
-		{		
+		{
 			$fieldname = 'googlemap';
 			$area = "Bergen";
 			$sql = "SELECT fm_location4.location_code,fm_location4.loc1,fm_location4.loc2,fm_location4.loc3,fm_location4.loc4,"
@@ -155,5 +155,5 @@
 			}
 		}
 	}
-	
+
 

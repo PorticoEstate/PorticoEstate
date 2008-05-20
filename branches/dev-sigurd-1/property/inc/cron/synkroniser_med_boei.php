@@ -53,7 +53,7 @@
 				$this->db_boei->Database 	= $GLOBALS['external_db']['boei']['db_name'];
 				$this->db_boei->User     	= $GLOBALS['external_db']['boei']['db_user'];
 				$this->db_boei->Password 	= $GLOBALS['external_db']['boei']['db_pass'];
-				$this->db_boei->Halt_On_Error 	= 'yes';			
+				$this->db_boei->Halt_On_Error 	= 'yes';
 				$this->db_boei->connect();
 			}
 			else
@@ -66,7 +66,7 @@
 				$this->db_boei->Password 	= $GLOBALS['external_db']['boei']['db_pass'];
 				$this->db_boei->Halt_On_Error 	= 'yes';
 			}
-			
+
 			$this->db_boei2 = clone($this->db_boei);
 		}
 
@@ -212,7 +212,7 @@
 				$owner[]= array (
 				 'id' 		=> $this->db_boei->f('id'),
 				 'category' 	=> $category,
-				 );			
+				 );
 			}
 	//		$this->db->transaction_begin();
 	//		$this->db_boei->transaction_begin();
@@ -691,7 +691,7 @@
 
 
 		function oppdater_leieobjekt()
-		{			
+		{
 			$sql = " SELECT TOP 100 PERCENT v_Leieobjekt.objekt_id,v_Leieobjekt.leie_id,v_Leieobjekt.leietaker_id, boareal, formaal_id, gateadresse_id, gatenr, etasje,driftsstatus_id, v_Leieobjekt.flyttenr, innflyttetdato"
 				. " FROM  v_Leieobjekt JOIN v_reskontro ON v_Leieobjekt.objekt_id=v_reskontro.objekt_id AND v_Leieobjekt.leie_id=v_reskontro.leie_id"
 				. " AND v_Leieobjekt.flyttenr=v_reskontro.flyttenr AND v_Leieobjekt.leietaker_id=v_reskontro.leietaker_id";

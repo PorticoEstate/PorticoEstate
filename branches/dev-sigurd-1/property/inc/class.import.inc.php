@@ -104,7 +104,7 @@
 					unlink ($importfile);
 				}
 			}
-			
+
 			return $importfile;
 		}
 
@@ -129,7 +129,7 @@
 			$this->uicols2 = $uicols2;
 
 			$data = CreateObject('phpgwapi.excelreader');
-			
+
 			$data->setOutputEncoding('CP1251');
 			$data->read($importfile);
 

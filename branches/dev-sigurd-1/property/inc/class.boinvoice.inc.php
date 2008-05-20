@@ -60,8 +60,8 @@
 			$allrows		= phpgw::get_var('allrows', 'bool');
 			$b_account_class	= phpgw::get_var('b_account_class', 'int');
 			$district_id		= phpgw::get_var('district_id', 'int');
-			
-			
+
+
 			if ($start)
 			{
 				$this->start=$start;
@@ -137,7 +137,7 @@
 			$this->sub				= isset($data['sub'])?$data['sub']:'';
 			$this->allrows			= isset($data['allrows'])?$data['allrows']:'';
 			$this->b_account_class	= isset($data['b_account_class'])?$data['b_account_class']:'';
-			$this->district_id		= isset($data['district_id'])?$data['district_id']:'';		
+			$this->district_id		= isset($data['district_id'])?$data['district_id']:'';
 		}
 
 		function read_invoice($paid='',$start_date='',$end_date='',$vendor_id='',$loc1='',$workorder_id='',$voucher_id='')

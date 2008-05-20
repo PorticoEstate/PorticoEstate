@@ -337,7 +337,7 @@
 						else if($cols_return_extra[$i]['datatype']=='CH' && $value)
 						{
 							$ch= unserialize($value);
-	
+
 							if (isset($ch) AND is_array($ch))
 							{
 								for ($k=0;$k<count($ch);$k++)
@@ -405,7 +405,7 @@
 			$uicols['name'][]			= 'activity_id';
 			$uicols['descr'][]			= lang('ID');
 			$uicols['input_type'][]		= 'I';
-			
+
 			$uicols['name'][]			= 'num';
 			$uicols['descr'][]			= lang('Code');
 			$uicols['input_type'][]		= 'V';
@@ -975,7 +975,7 @@
 					return;
 					break;
 			}
-			
+
 			return $fd;
 		}
 
@@ -1007,7 +1007,7 @@
 			}
 
 			$fd = $this->get_default_column_def($table);
-			
+
 			for ($i=0; $i<count($metadata); $i++)
 			{
 				$sql = "SELECT * FROM fm_agreement_attribute WHERE column_name = '" . $metadata[$i]['name'] . "' $filtermethod";
@@ -1036,11 +1036,11 @@
 					'fd' => $fd
 					)
 				);
-			
+
 			$table_def[$table]['pk'] = $pk;
-			$table_def[$table]['fk'] = array();			
-			$table_def[$table]['ix'] = array();			
-			$table_def[$table]['uc'] = array();			
+			$table_def[$table]['fk'] = array();
+			$table_def[$table]['ix'] = array();
+			$table_def[$table]['uc'] = array();
 
 			return $table_def;
 		}

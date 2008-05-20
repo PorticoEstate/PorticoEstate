@@ -141,7 +141,7 @@
 			{
 				$this->allrows = true;
 			}
-			
+
 			$gab = $this->so->read(array('start' => $this->start,'sort' => $this->sort,'order' => $this->order,'allrows'=>$this->allrows,
 											'cat_id' => $this->cat_id,'loc1' => $loc1,
 											'gaards_nr' => $gaards_nr,'bruksnr' => $bruksnr,'feste_nr' => $feste_nr,

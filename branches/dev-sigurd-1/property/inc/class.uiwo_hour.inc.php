@@ -696,7 +696,7 @@
 			$from_email =	$GLOBALS['phpgw_info']['user']['preferences']['property']['email'];
 
 			if($this->config->config_data['wo_status_sms'])
-			{		
+			{
 				$config_sms	= CreateObject('sms.soconfig');
 				if(is_object($config_sms))
 				{
@@ -711,10 +711,10 @@
 					$sms_data['lang_example'] = lang('Example');
 
 			//		_debug_array($sms_data);
-			
+
 				}
 			}
-			
+
 			$email_data = array
 			(
 				'location_data'					=> $location_data,
@@ -850,7 +850,7 @@
 					$receipt['message'][]=array('msg'=>lang('Workorder is sent by email!'));
 					if($attachment_log)
 					{
-						$receipt['message'][]=array('msg' => $attachment_log);					
+						$receipt['message'][]=array('msg' => $attachment_log);
 					}
 				}
 				else

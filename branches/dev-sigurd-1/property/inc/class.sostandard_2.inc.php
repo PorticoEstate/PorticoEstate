@@ -164,7 +164,7 @@
 			$table = $this->select_table($type);
 
 			$standard['descr'] = $this->db->db_addslashes($standard['descr']);
-			
+
 			$this->db->transaction_begin();
 
 			$this->db->query("INSERT INTO $table (id, descr) "

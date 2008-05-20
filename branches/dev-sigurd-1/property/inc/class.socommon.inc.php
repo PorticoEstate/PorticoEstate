@@ -38,7 +38,7 @@
 		 * @var string $join the sql syntax to use for JOIN
 		 */
 		 var $join = ' INNER JOIN ';
-		 
+
 		/**
 		 * @var string $like the sql syntax to use for a case insensitive LIKE
 		 */
@@ -53,7 +53,7 @@
 			}
 			else
 			{
-			//	$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];			
+			//	$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			}
 
 			if(is_object($GLOBALS['phpgw']->db))
@@ -234,7 +234,7 @@
 			{
 
 				$sql = 'SELECT * FROM phpgw_accounts where account_id in ('. implode(',',$in_list) . ') order by account_lastname';
-				$this->db->query($sql,__LINE__,__FILE__);			
+				$this->db->query($sql,__LINE__,__FILE__);
 				while ($this->db->next_record())
 				{
 					$employees[] = Array(
@@ -321,7 +321,7 @@
 
 		/**
 		* Finds the next ID for a record at a table
-		* 
+		*
 		* @param string $table tablename in question
 		* @param array $key conditions
 		* @return int the next id

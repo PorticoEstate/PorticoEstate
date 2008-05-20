@@ -31,7 +31,7 @@
 		function print_pdf($document = '',$document_name = 'document')
 		{
 		//	$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
-			
+
 			$browser = CreateObject('phpgwapi.browser');
 
 			if($browser->BROWSER_AGENT != 'IE')
@@ -43,7 +43,7 @@
 			else
 			{
  				$dir = realpath(PHPGW_APP_INC  . "/../pdf_files");
-  
+
  				//save the file
  				if (!file_exists($dir))
  				{
@@ -51,7 +51,7 @@
  				}
 
  				$fname = tempnam("{$dir}/PDF_") . '.pdf';
- 
+
  				$fp = fopen($fname,'w');
 				fwrite($fp,$document);
 				fclose($fp);
@@ -64,7 +64,7 @@
   				$fname = 'property' . '/pdf_files/'. basename($fname);
  				echo '<html>
  				<head>
- 				<SCRIPT LANGUAGE="JavaScript"><!-- 
+ 				<SCRIPT LANGUAGE="JavaScript"><!--
  				function go_now ()   { window.location.href = "'.$fname.'"; }
  				//--></SCRIPT>
  				</head>
@@ -88,13 +88,13 @@
  								unlink($dir.'/'.$file);
  							}
  						}
- 					}  
+ 					}
  					closedir($d);
  				}
  			}
 		}
 	}
-	
+
 	include (PHPGW_APP_INC . '/pdf/class.pdf.php');
 	include (PHPGW_APP_INC . '/pdf/class.ezpdf.php');
 

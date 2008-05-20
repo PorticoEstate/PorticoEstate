@@ -400,7 +400,7 @@
 							{
 								$entry['value'] = $this->db->db_addslashes($entry['value']);
 							}
-						
+
 							if($entry['datatype'] == 'pwd' && $entry['value'] && $entry['value2'])
 							{
 								if($entry['value'] == $entry['value2'])
@@ -436,7 +436,7 @@
 
 			$cols[]	= 'owner_id';
 			$vals[]	= $this->account;
-			
+
 			if($cols)
 			{
 				$cols	= "," . implode(",", $cols);

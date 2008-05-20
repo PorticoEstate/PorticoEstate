@@ -87,7 +87,7 @@
 			$GLOBALS['phpgw_setup']->oProc	= $oProc;
 
 			$tables = $GLOBALS['phpgw']->db->table_names();
-			
+
 			/* Work out the order of how the tables can be created
 			*/
 			foreach($tables as $tablename)
@@ -108,7 +108,7 @@
 				@eval($fd_temp);
 				$table_def[$table]['fd'] = $fd;
 				$table_def[$table]['pk'] = $tableinfo[1];
-				$table_def[$table]['fk'] = $tableinfo[2];		
+				$table_def[$table]['fk'] = $tableinfo[2];
 				$table_def[$table]['ix'] = $tableinfo[3];
 				$table_def[$table]['uc'] = $tableinfo[4];
 			}
@@ -189,7 +189,7 @@
 					{
 						$sAllTableSQL .= $sTriggerSQL . "\n";
 					}
-					
+
 					$sAllTableSQL .= $sTableSQL . "\n\n";
 
 					// postgres and mssql

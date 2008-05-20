@@ -146,7 +146,7 @@
 				$end_date = (isset($data['end_date'])?$data['end_date']:'');
 				$allrows = (isset($data['allrows'])?$data['allrows']:'');
 				$wo_hour_cat_id = (isset($data['wo_hour_cat_id'])?$data['wo_hour_cat_id']:'');
-				$b_group = (isset($data['b_group'])?$data['b_group']:'');	
+				$b_group = (isset($data['b_group'])?$data['b_group']:'');
 				$paid = (isset($data['paid'])?$data['paid']:'');
 			}
 
@@ -256,7 +256,7 @@
 
 				if($b_group)
 				{
-					$joinmethod .= " $this->join fm_b_account ON (fm_workorder.account_id =fm_b_account.id))"; 
+					$joinmethod .= " $this->join fm_b_account ON (fm_workorder.account_id =fm_b_account.id))";
 					$paranthesis .='(';
 				}
 
@@ -299,7 +299,7 @@
 			$where= 'WHERE';
 
 			$filtermethod = '';
-			
+
 			if ($cat_id > 0)
 			{
 				$filtermethod .= " $where fm_project.category=$cat_id ";
@@ -529,7 +529,7 @@
 			{
 				$workorder['workorder_num'] = $workorder['workorder_id'];
 			}
-			
+
 			$values= array(
 				$workorder['workorder_id'],
 				$workorder['workorder_num'],
@@ -647,7 +647,7 @@
 			{
 				$value_set['paid'] = $paid = (isset($paid)?$paid:0);
 			}
-			
+
 			$value_set	= $this->bocommon->validate_db_update($value_set);
 
 			$this->db->transaction_begin();

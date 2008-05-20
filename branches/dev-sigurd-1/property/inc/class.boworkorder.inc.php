@@ -77,7 +77,7 @@
 			$end_date	= phpgw::get_var('end_date');
 			$b_group	= phpgw::get_var('b_group');
 			$paid	= phpgw::get_var('paid', 'bool');
-			
+
 			if ($start)
 			{
 				$this->start=$start;

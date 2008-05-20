@@ -54,7 +54,7 @@
 				$this->db_boei->Database 	= $GLOBALS['external_db']['boei']['db_name'];
 				$this->db_boei->User     	= $GLOBALS['external_db']['boei']['db_user'];
 				$this->db_boei->Password 	= $GLOBALS['external_db']['boei']['db_pass'];
-				$this->db_boei->Halt_On_Error 	= 'yes';			
+				$this->db_boei->Halt_On_Error 	= 'yes';
 				$this->db_boei->connect();
 			}
 			else

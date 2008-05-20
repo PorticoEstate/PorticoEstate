@@ -205,7 +205,7 @@
 			$categories[0]['name']	= lang('Groups');
 			$categories[1]['id']	= 'accounts';
 			$categories[1]['name']	= lang('Users');
-			
+
 			return $this->bocommon->select_list($selected,$categories);
 		}
 
@@ -236,7 +236,7 @@
 
 				$this->acl->account_id = $user_id;
 				$this->acl->read_repository();
-				$this->acl->delete($this->acl_app, $this->location, $grantor, $type);			
+				$this->acl->delete($this->acl_app, $this->location, $grantor, $type);
 				$this->acl->add($this->acl_app, $this->location, $rights, $grantor, $type);
 				$this->acl->save_repository($this->acl_app, $this->location);
 			}
@@ -344,7 +344,7 @@
 				$this->start = -1;
 				$offset = -1;
 			}
-			
+
 			$allusers = $GLOBALS['phpgw']->accounts->get_list($type, $this->start,$this->sort, $this->order, $this->query, $offset);
 
 			if ( isset($allusers) && is_array($allusers))
@@ -356,18 +356,18 @@
 					$user_list[$j]['account_lid'] 			= $account['account_lid'];
 					$user_list[$j]['account_firstname'] 	= $account['account_firstname'];
 					$user_list[$j]['account_lastname'] 		= $account['account_lastname'];
-					
+
 					if($this->location == '.invoice')
 					{
 						$user_list[$j]['initials']			= $this->so->get_initials($account['account_id']);
 					}
-										
+
 					$this->acl->account_id=$account['account_id'];
 
 					$this->acl->read_repository();
 
 					$count_right=count($right);
-					
+
 					for ( $i = 0; $i < $count_right; ++$i )
 					{
 						if($this->acl->check_brutto($this->location, $right[$i],$this->acl_app,$grantor,0,$check_account_type))

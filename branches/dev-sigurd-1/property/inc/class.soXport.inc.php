@@ -217,7 +217,7 @@
 						$fields['bilagsnr']  = $this->soinvoice->next_bilagsnr();
 						$this->bilagsnr = $fields['bilagsnr'];
 					}
-					
+
 					$values= array(
 						$fields['project_id'],
 						$fields['kostra_id'],
