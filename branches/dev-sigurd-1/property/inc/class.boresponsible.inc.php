@@ -40,6 +40,7 @@
 		private $use_session;
 		public $start;
 		public $location;
+		public $query;
 
 		public function __construct($session = false)
 		{
@@ -53,8 +54,31 @@
 				$this->use_session = True;
 			}
 
-			$this->start				= phpgw::get_var('start', 'int', 'REQUEST', 0);
-			$this->location				= phpgw::get_var('location');
+			if(array_key_exists('query',$_POST) || array_key_exists('query',$_GET))
+			{
+				$this->query = phpgw::get_var('query');
+			}
+			if(array_key_exists('start',$_POST) || array_key_exists('start',$_GET))
+			{
+				$this->start = phpgw::get_var('start', 'int', 'REQUEST', 0);
+			}
+			if(array_key_exists('location',$_POST) || array_key_exists('location',$_GET))
+			{
+				$this->location = phpgw::get_var('location');
+			}
+			if(array_key_exists('sort',$_POST) || array_key_exists('sort',$_GET))
+			{
+				$this->sort = phpgw::get_var('sort');
+			}
+			if(array_key_exists('order',$_POST) || array_key_exists('order',$_GET))
+			{
+				$this->order = phpgw::get_var('order');
+			}
+			if(array_key_exists('allrows',$_POST) || array_key_exists('allrows',$_GET))
+			{
+				$this->allrows = phpgw::get_var('allrows');
+			}
+
 			$this->cats					= CreateObject('phpgwapi.categories');
 			$this->cats->app_name		= "property{$this->location}";
 		}
@@ -70,8 +94,12 @@
 		private function read_sessiondata()
 		{
 			$data = $GLOBALS['phpgw']->session->appsession('session_data', 'responsible');
-
-			//_debug_array($data);
+			$this->sort			= isset($data['sort']) ? $data['sort'] : '';
+			$this->order		= isset($data['order']) ? $data['order'] : '';
+			$this->start		= isset($data['start']) ? $data['start'] : '';
+			$this->query		= isset($data['query']) ? $data['query'] : '';
+	//		$this->location		= isset($data['location']) ? $data['location'] : '';
+			$this->allrows		= isset($data['allrows']) ? $data['allrows'] : '';
 		}
 
 		public function get_acl_location()
@@ -79,9 +107,12 @@
 			return $this->acl_location;
 		}
 
-		public function read()
+		public function read_type()
 		{
-			$values = $this->so->read(array());
+			$values = $this->so->read_type(array('start' => $this->start, 'query' => $this->query, 'sort' => $this->sort,
+												'order' => $this->order, 'location' => $this->location, 'allrows'=>$this->allrows));
+			$this->total_records = $this->so->total_records;
+
 			return $values;
 		}
 

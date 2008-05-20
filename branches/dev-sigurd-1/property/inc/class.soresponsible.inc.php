@@ -57,22 +57,75 @@
 			$this->left_join		=& $this->db->left_join;
 		}
 
-		function read($data)
+		public function read_type($data)
 		{
 			if(is_array($data))
 			{
-				$start		= isset($data['start']) && $data['start'] ? $data['start']:0;
-				$query		= isset($data['query'])?$data['query']:'';
-				$sort		= isset($data['sort']) && $data['sort'] ? $data['sort']:'DESC';
-				$order		= isset($data['order'])?$data['order']:'';
-				$allrows	= isset($data['allrows'])?$data['allrows']:'';
-				$cat_id 	= isset($data['cat_id']) && $data['cat_id'] ? $data['cat_id']:0;
-				$filter		= isset($data['filter'])?$data['filter']:'';
+				$start		= isset($data['start']) && $data['start'] ? $data['start'] : 0;
+				$query		= isset($data['query']) ? $data['query'] : '';
+				$sort		= isset($data['sort']) && $data['sort'] ? $data['sort'] : 'DESC';
+				$order		= isset($data['order']) ? $data['order'] : '';
+				$allrows	= isset($data['allrows']) ? $data['allrows'] : '';
+				$cat_id		= isset($data['cat_id']) && $data['cat_id'] ? $data['cat_id'] : 0;
 			}
 
-			$grants			= $GLOBALS['phpgw']->acl->get_grants('property', $this->acl_location);
+	//		$grants			= $GLOBALS['phpgw']->acl->get_grants('property', $this->acl_location);
 
-			return $matrix;
+			if ($order)
+			{
+				$ordermethod = " order by $order $sort";
+			}
+			else
+			{
+				$ordermethod = ' order by fm_responsibility.id DESC';
+			}
+
+			$where= 'WHERE';
+			$filtermethod = '';
+			if ($cat_id > 0)
+			{
+				$filtermethod .= " $where cat_id=" . (int)$cat_id;
+				$where = 'AND';
+			}
+
+			$querymethod = '';
+			if($query)
+			{
+				$querymethod = "$where (name $this->like '%$query%' OR descr $this->like '%$query%')";
+			}
+
+			$sql = "SELECT * FROM fm_responsibility $filtermethod $querymethod";
+
+//echo $sql;
+			$this->db->query($sql,__LINE__,__FILE__);
+			$this->total_records = $this->db->num_rows();
+
+			if(!$allrows)
+			{
+				$this->db->limit_query($sql . $ordermethod, $start,__LINE__,__FILE__);
+			}
+			else
+			{
+				$this->db->query($sql . $ordermethod,__LINE__,__FILE__);
+			}
+
+			$values = array();
+
+			while ($this->db->next_record())
+			{
+				$values[] = array
+				(
+					'id'			=> $this->db->f('id'),
+					'name'			=> $this->db->f('name', true),
+					'descr'			=> $this->db->f('descr', true),
+					'active'		=> $this->db->f('active'),
+					'cat_id'		=> $this->db->f('cat_id'),
+					'created_by'	=> $this->db->f('created_by'),
+					'created_on'	=> $this->db->f('created_on'),
+				);
+			}
+//_debug_array($values);
+			return $values;
 		}
 
 		/**
@@ -109,7 +162,7 @@
 			if($this->db->transaction_commit())
 			{
 				$receipt['message'][]=array('msg'=>lang('Responsibility type has been saved'));
-				$receipt['id']= $this->db->get_last_insert_id('fm_responsibility', 'responsibility_id');
+				$receipt['id']= $this->db->get_last_insert_id('fm_responsibility', 'id');
 			}
 			else
 			{

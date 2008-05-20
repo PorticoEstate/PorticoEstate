@@ -109,18 +109,22 @@
 		{
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] = 'admin::property::responsible_matrix';
-			$this->bo				= CreateObject('property.boresponsible',true);
-			$this->nextmatchs		= CreateObject('phpgwapi.nextmatchs');
-			$this->acl 				= & $GLOBALS['phpgw']->acl;
-			$this->acl_location 	= $this->bo->get_acl_location();
-			$this->acl_read 		= $this->acl->check($this->acl_location, PHPGW_ACL_READ);
-			$this->acl_add 			= $this->acl->check($this->acl_location, PHPGW_ACL_ADD);
-			$this->acl_edit 		= $this->acl->check($this->acl_location, PHPGW_ACL_EDIT);
-			$this->acl_delete 		= $this->acl->check($this->acl_location, PHPGW_ACL_DELETE);
+			$this->bo					= CreateObject('property.boresponsible',true);
+			$this->nextmatchs			= CreateObject('phpgwapi.nextmatchs');
+			$this->acl 					= & $GLOBALS['phpgw']->acl;
+			$this->acl_location 		= $this->bo->get_acl_location();
+			$this->acl_read 			= $this->acl->check($this->acl_location, PHPGW_ACL_READ);
+			$this->acl_add 				= $this->acl->check($this->acl_location, PHPGW_ACL_ADD);
+			$this->acl_edit 			= $this->acl->check($this->acl_location, PHPGW_ACL_EDIT);
+			$this->acl_delete 			= $this->acl->check($this->acl_location, PHPGW_ACL_DELETE);
 			$this->bolocation			= CreateObject('preferences.boadmin_acl');
 			$this->bolocation->acl_app 	= 'property';
 			$this->location				= $this->bo->location;
-			$this->cats				= & $this->bo->cats;
+			$this->cats					= & $this->bo->cats;
+			$this->query				= $this->bo->query;
+			$this->allrows				= $this->bo->allrows;
+			$this->sort					= $this->bo->sort;
+			$this->order				= $this->bo->order;
 		}
 
 		private function save_sessiondata()
@@ -128,9 +132,10 @@
 			$data = array
 			(
 				'start'		=> $this->start,
-		//		'query'		=> $this->query,
+				'query'		=> $this->query,
 				'sort'		=> $this->sort,
 				'order'		=> $this->order,
+				'allrows'	=> $this->allrows
 			);
 			$this->bo->save_sessiondata($data);
 		}
@@ -165,7 +170,7 @@
 				$this->bo->responsible($values);
 			}
 
-			$responsible_info = $this->bo->read();
+			$responsible_info = $this->bo->read_type();
 
 			$lang_select_responsible_text		= '';
 			$text_select					= '';

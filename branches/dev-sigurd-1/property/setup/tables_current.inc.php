@@ -1903,7 +1903,7 @@
 		),
 		'fm_responsibility' => array(
 			'fd' => array(
-				'responsibility_id' => array('type' => 'auto','precision' => '4','nullable' => False),
+				'id' => array('type' => 'auto','precision' => '4','nullable' => False),
 				'name' => array('type' => 'varchar', 'precision' => 50,'nullable' => False),
 				'descr' => array('type' => 'varchar', 'precision' => 255,'nullable' => True),
 				'active' => array('type' => 'int','precision' => 2,'nullable' => True),
@@ -1911,7 +1911,7 @@
 				'created_on' => array('type' => 'int', 'precision' => 4,'nullable' => False),
 				'created_by' => array('type' => 'int', 'precision' => 4,'nullable' => False),
 			),
-			'pk' => array('responsibility_id'),
+			'pk' => array('id'),
 			'fk' => array(
 				'phpgw_categories' => array('cat_id' => 'cat_id')
 			),
@@ -1934,7 +1934,7 @@
 			),
 			'pk' => array('rc_id'),
 			'fk' => array(
-				'fm_responsibility' => array('responsibility_id' => 'responsibility_id'),
+				'fm_responsibility' => array('responsibility_id' => 'id'),
 				'phpgw_contact' => array('contact_id' => 'contact_id')
 			),
 			'ix' => array('location_code'),
