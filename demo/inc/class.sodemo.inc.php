@@ -56,7 +56,7 @@
 			$this->join 			=& $this->db->join;
 			$this->left_join		=& $this->db->left_join;
 			$this->acl_location 	= $acl_location;
-			
+
 			$this->grants			= $GLOBALS['phpgw']->acl->get_grants('demo', $this->acl_location);
 		}
 
@@ -104,7 +104,7 @@
 			{
 				$filtermethod = "$where user_id='" . $this->account . "' AND access='private'";
 			}
-			
+
 			$where= 'AND';
 
 			if ($cat_id > 0)
@@ -182,7 +182,7 @@
 				$filter				= (isset($data['filter'])?$data['filter']:'');
 				$custom_attributes	= (isset($data['custom_attributes'])?$data['custom_attributes']:'');
 			}
-			
+
 			$contacts			= CreateObject('phpgwapi.contacts');
 
 			$table = 'phpgw_demo_table';
@@ -209,7 +209,7 @@
 			{
 				$filtermethod = "$where user_id='" . $this->account . "' AND access='private'";
 			}
-			
+
 			$where= 'AND';
 
 			if ($cat_id > 0)
@@ -400,7 +400,7 @@
 		function read_single($id, $values = array() )
 		{
 			$sql = 'SELECT * FROM phpgw_demo_table WHERE id = ' . (int) $id;
-	
+
 			$this->db->query($sql, __LINE__, __FILE__);
 
 			if ($this->db->next_record())
@@ -473,7 +473,7 @@
 							{
 								$entry['value'] = $this->db->db_addslashes($entry['value']);
 							}
-						
+
 							if($entry['datatype'] == 'pwd' && $entry['value'] && $entry['value2'])
 							{
 								if($entry['value'] == $entry['value2'])
@@ -513,7 +513,7 @@
 				$cols = '';
 				$vals = '';
 			}
-			
+
 			$this->db->query("INSERT INTO phpgw_demo_table (name, address, zip, town, remark, category, access, user_id, entry_date $cols) "
 				. "VALUES ($insert_values $vals)",__LINE__,__FILE__);
 
@@ -536,7 +536,7 @@
 			$value_set['town']			= $this->db->db_addslashes($values['town']);
 			$value_set['category']		= (int)$values['cat_id'];
 			$value_set['access']		= (isset($values['access'])?'private':'');
-		
+
 			if(isset($values['extra']) && is_array($values['extra']))
 			{
 				while (is_array($values['extra']) && list($column,$value) = each($values['extra']))
@@ -576,7 +576,7 @@
 					}
 				}
 			}
-			
+
 			$value_set	= $this->db->validate_update($value_set);
 
 			$this->db->query("UPDATE phpgw_demo_table set $value_set WHERE id=" . $values['demo_id'],__LINE__,__FILE__);
