@@ -1907,7 +1907,9 @@
 				'name' => array('type' => 'varchar', 'precision' => 50,'nullable' => False),
 				'descr' => array('type' => 'varchar', 'precision' => 255,'nullable' => True),
 				'active' => array('type' => 'int','precision' => 2,'nullable' => True),
-				'cat_id' => array('type' => 'int','precision' => 4,'nullable' => False)
+				'cat_id' => array('type' => 'int','precision' => 4,'nullable' => False),
+				'created_on' => array('type' => 'int', 'precision' => 4,'nullable' => False),
+				'created_by' => array('type' => 'int', 'precision' => 4,'nullable' => False),
 			),
 			'pk' => array('responsibility_id'),
 			'fk' => array(
@@ -1927,7 +1929,7 @@
 				'active_to' => array('type' => 'int', 'precision' => 4,'nullable' => True),
 				'created_at' => array('type' => 'int', 'precision' => 4,'nullable' => False),
 				'created_by' => array('type' => 'int', 'precision' => 4,'nullable' => False),
-				'expired_at' => array('type' => 'int', 'precision' => 4,'nullable' => True),
+				'expired_on' => array('type' => 'int', 'precision' => 4,'nullable' => True),
 				'expired_by' => array('type' => 'int', 'precision' => 4,'nullable' => True)
 			),
 			'pk' => array('rc_id'),

@@ -74,4 +74,48 @@
 
 			return $matrix;
 		}
+
+		/**
+		* Add responsibility type
+		*
+		* @param array $values  values to be stored/edited and referencing ID if editing
+		*
+		* @return array $receip with result on the action(failed/success)
+		*/
+
+		public function add_type($values)
+		{
+			$receipt = array();
+			$values['name'] = $this->db->db_addslashes($values['name']);
+			$values['descr'] = $this->db->db_addslashes($values['descr']);
+
+			$insert_values = array
+			(
+				$values['name'],
+				$values['descr'],
+				(int)$values['cat_id'],
+				isset($values['active']) ? !!$values['active'] : '',
+				$this->account,
+				time()
+			);
+
+			$insert_values	= $this->db->validate_insert($insert_values);
+
+			$this->db->transaction_begin();
+
+			$this->db->query("INSERT INTO fm_responsibility (name, descr, cat_id, active, created_by, created_on) "
+				. "VALUES ($insert_values)",__LINE__,__FILE__);
+
+			if($this->db->transaction_commit())
+			{
+				$receipt['message'][]=array('msg'=>lang('Responsibility type has been saved'));
+				$receipt['id']= $this->db->get_last_insert_id('fm_responsibility', 'responsibility_id');
+			}
+			else
+			{
+				$receipt['error'][]=array('msg'=>lang('Not saved'));
+			}
+
+			return $receipt;
+		}
 	}

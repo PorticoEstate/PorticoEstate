@@ -120,6 +120,7 @@
 			$this->bolocation			= CreateObject('preferences.boadmin_acl');
 			$this->bolocation->acl_app 	= 'property';
 			$this->location				= $this->bo->location;
+			$this->cats				= & $this->bo->cats;
 		}
 
 		private function save_sessiondata()
@@ -230,19 +231,22 @@
 
 			);
 
-			$table_add[] = array
-			(
-				'lang_add'				=> lang('add'),
-				'lang_add_statustext'	=> lang('add type'),
-			);
-
-			$table_add_action = array
+			$link_add_action = array
 			(
 				'menuaction'	=> 'property.uiresponsible.edit_type',
 				'location'		=> $this->location
 			);
 
-			$msgbox_data = (isset($receipt)?$GLOBALS['phpgw']->common->msgbox_data($receipt):'');
+			$table_add[] = array
+			(
+				'lang_add'				=> lang('add'),
+				'lang_add_statustext'	=> lang('add type'),
+				'add_action'			=> $GLOBALS['phpgw']->link('/index.php', $link_add_action)
+			);
+
+			$receipt = $GLOBALS['phpgw']->session->appsession('session_data','responsible_receipt');
+			$msgbox_data = $GLOBALS['phpgw']->common->msgbox_data($receipt);
+			$GLOBALS['phpgw']->session->appsession('session_data','responsible_receipt', '');
 
 			$data = array
 			(
@@ -262,7 +266,6 @@
 				'lang_search'							=> lang('search'),
 				'table_header_type'						=> $table_header,
 				'table_add'								=> $table_add,
-				'add_action'							=> $GLOBALS['phpgw']->link('/index.php', $table_add_action),
 				'values_type'							=> (isset($content)?$content:''),
 				'lang_no_location'						=> lang('No location'),
 				'lang_location_statustext'				=> lang('Select submodule'),
@@ -295,7 +298,6 @@
 			$id		= phpgw::get_var('id', 'int');
 			$values	= phpgw::get_var('values', 'string', 'POST');
 
-
 			$GLOBALS['phpgw']->xslttpl->add_file(array('responsible'));
 
 			if (isset($values) && is_array($values))
@@ -324,28 +326,27 @@
 
 					if(!isset($receipt['error']) || !$receipt['error'])
 					{
-						$receipt = $this->bo->save($values,$values_attribute);
+						$receipt = $this->bo->save_type($values);
 						$id = $receipt['id'];
 
 						if (isset($values['save']) && $values['save'])
 						{
 							$GLOBALS['phpgw']->session->appsession('session_data','responsible_receipt',$receipt);
-							$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction'=> 'property.uiresponsible.index'));
+							$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction'=> 'property.uiresponsible.index','location' => $this->location));
 						}
 					}
 				}
 				else
 				{
-					$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction'=> 'property.uiresponsible.index'));
+					$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction'=> 'property.uiresponsible.index','location' => $this->location));
 				}
 			}
-
-			$values = $this->bo->read_single($id);
 
 
 			if ($id)
 			{
 				$function_msg = lang('edit responsible type');
+				$values = $this->bo->read_single_type($id);
 			}
 			else
 			{
@@ -366,6 +367,7 @@
 				'value_entry_date'				=> isset($values['entry_date']) ? $values['entry_date'] : '',
 				'value_name'					=> isset($values['name']) ? $values['name'] : '',
 				'value_descr'					=> isset($values['descr']) ? $values['descr'] : '',
+				'value_active'					=> isset($values['active']) ? $values['active'] : '',
 
 				'lang_entry_date'				=> lang('Entry date'),
 				'lang_name'						=> lang('name'),
@@ -377,7 +379,10 @@
 				'lang_save'						=> lang('save'),
 				'lang_cancel'					=> lang('cancel'),
 				'value_id'						=> $id,
-				'lang_done_status_text'			=> lang('Back to the list'),
+				'lang_active'					=> lang('active'),
+				'lang_active_on_statustext'		=> lang('set this item inactive'),
+				'lang_active_off_statustext'	=> lang('set this item active'),
+				'lang_cancel_status_text'		=> lang('Back to the list'),
 				'lang_save_status_text'			=> lang('Save the responsible type'),
 				'lang_apply'					=> lang('apply'),
 				'lang_apply_status_text'		=> lang('Apply the values'),
@@ -389,7 +394,7 @@
 			);
 
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('responsible matrix') . "::{$function_msg}";
-			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('edit' => $data));
+			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('edit_type' => $data));
 		}
 
 
@@ -483,16 +488,17 @@
 
 			);
 
+			$link_add_action = array
+			(
+				'menuaction'	=> 'property.uiresponsible.edit_contact',
+				'location'		=> $this->location
+			);
+
 			$table_add[] = array
 			(
 				'lang_add'				=> lang('add'),
 				'lang_add_statustext'	=> lang('add contact'),
-			);
-
-			$table_add_action = array
-			(
-				'menuaction'	=> 'property.uiresponsible.edit_contact',
-				'location'		=> $this->location
+				'add_action'			=> $GLOBALS['phpgw']->link('/index.php', $link_add_action),
 			);
 
 			$msgbox_data = (isset($receipt)?$GLOBALS['phpgw']->common->msgbox_data($receipt):'');
@@ -515,7 +521,6 @@
 				'lang_search'							=> lang('search'),
 				'table_header_contact'					=> $table_header,
 				'table_add'								=> $table_add,
-				'add_action'							=> $GLOBALS['phpgw']->link('/index.php', $table_add_action),
 				'values_contact'						=> (isset($content)?$content:''),
 				'lang_no_location'						=> lang('No location'),
 				'lang_location_statustext'				=> lang('Select submodule'),

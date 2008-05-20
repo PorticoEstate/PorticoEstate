@@ -53,8 +53,10 @@
 				$this->use_session = True;
 			}
 
-			$this->start		= phpgw::get_var('start', 'int', 'REQUEST', 0);
-			$this->location	= phpgw::get_var('location');
+			$this->start				= phpgw::get_var('start', 'int', 'REQUEST', 0);
+			$this->location				= phpgw::get_var('location');
+			$this->cats					= CreateObject('phpgwapi.categories');
+			$this->cats->app_name		= "property{$this->location}";
 		}
 
 		public function save_sessiondata($data)
@@ -82,5 +84,61 @@
 			$values = $this->so->read(array());
 			return $values;
 		}
+
+		/**
+		* Save responsibility type
+		*
+		* @param array $values  values to be stored/edited and referencing ID if editing
+		*
+		* @return array $receip with result on the action(failed/success)
+		*/
+
+		public function save_type($values)
+		{
+			if (isset($values['id']) && $values['id'])
+			{
+				$receipt = $this->so->edit_type($values);
+			}
+			else
+			{
+				$receipt = $this->so->add_type($values);
+			}
+			return $receipt;
+		}
+
+		/**
+		* Save responsibility contact
+		*
+		* @param array $values  values to be stored/edited and referencing ID if editing
+		*
+		* @return array $receip with result on the action(failed/success)
+		*/
+
+		public function save_contact($values)
+		{
+			if (isset($values['id']) && $values['id'])
+			{
+				$receipt = $this->so->edit_contact($values);
+			}
+			else
+			{
+				$receipt = $this->so->add_contact($values);
+			}
+			return $receipt;
+		}
+
+		/**
+		* Read single responsibility type
+		*
+		* @param integer $id  ID of responsibility type
+		*
+		* @return array holding data of responsibility type
+		*/
+
+		public function read_single_type($id)
+		{
+	//		return $this->so->read_single_type($id);
+		}
+
 	}
 ?>
