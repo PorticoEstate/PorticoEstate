@@ -148,7 +148,7 @@
 		function send_sms($values)
 		{
 			$username = $GLOBALS['phpgw']->accounts->id2name($this->account);
-			
+
 			$p_num = $values['p_num'];
 			if (!$p_num[0])
 			{

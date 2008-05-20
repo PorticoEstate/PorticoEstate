@@ -28,14 +28,14 @@
 	$GLOBALS['phpgw']->template->set_block('addressbook_list_t','addressbook_list','list');
 
 	$d = CreateObject('phpgwapi.contacts');
-	
+
 	//We do it this way so the cats class gets the right rights, alright? - skwashd Dec-2005
 	$GLOBALS['phpgw_info']['flags']['currentapp'] = 'addressbook';
  	$c = CreateObject('phpgwapi.categories');
 	$GLOBALS['phpgw_info']['flags']['currentapp'] = 'sms';
-	
+
 	$include_personal = true;
-	
+
 	$charset = $GLOBALS['phpgw']->translation->translate('charset');
 	$GLOBALS['phpgw']->template->set_var('charset',$charset);
 	$GLOBALS['phpgw']->template->set_var('title',$GLOBALS['phpgw_info']['site_title']);
@@ -54,12 +54,12 @@
 	$query = get_var('query',array('get','post'));
 	$sort = get_var('sort',array('get','post'));
 	$order = get_var('order',array('get','post'));
-	
+
 	if(!$cat_id)
-	{		
+	{
 		$cat_id = $prefs['default_category'];
 	}
-			
+
 	switch ($filter)
 	{
 	case 'user_only':
@@ -86,7 +86,7 @@
 	{
 		$limit = 15;
 	}
-			
+
 	if($cat_id && $cat_id!=-1)
 	{
 		$category_filter = $cat_id;
@@ -128,8 +128,8 @@
 	$GLOBALS['phpgw']->template->set_var('right',$right);
 
 	//$lang_showing = $GLOBALS['phpgw']->nextmatchs->show_hits($total_records,$this->start);
-	$lang_showing = lang('%1 - %2 of %3 ', 
-			     ($d->total_records!=0)?$start+1:$start, 
+	$lang_showing = lang('%1 - %2 of %3 ',
+			     ($d->total_records!=0)?$start+1:$start,
 			     $start+$d->total_records,$total_all_persons);
 	$GLOBALS['phpgw']->template->set_var('lang_showing', $lang_showing);
 
@@ -145,7 +145,7 @@
 	$GLOBALS['phpgw']->template->set_var('lang_hemail',lang('Select home email address'));
 	$GLOBALS['phpgw']->template->set_var('cats_list',$c->formated_list('select','all',$cat_id,'true'));
 	$GLOBALS['phpgw']->template->set_var('lang_select',lang('Select'));
-	
+
 	//$GLOBALS['phpgw']->template->set_var('cats_action',$GLOBALS['phpgw']->link('/'.$GLOBALS['phpgw_info']['flags']['currentapp'].'/addressbook.php',"sort=$sort&order=$order&filter=$filter&start=$start&query=$query&cat_id=$cat_id"));
 	// thanks to  dave.hall@mbox.com.au for fixing drop down list filtering by categories
 	$GLOBALS['phpgw']->template->set_var('cats_action',$GLOBALS['phpgw']->link('/'.$GLOBALS['phpgw_info']['flags']['currentapp'].'/addressbook.php',"sort=$sort&order=$order&filter=$filter&start=$start&query=$query"));
@@ -171,7 +171,7 @@
 		{
 			$company = '&nbsp;';
 		}
-		
+
 		$personal_firstname = '';
 		$personal_lastname = '';
 		$personal_part = '';
@@ -188,7 +188,7 @@
 			$personal_lastname = $lastname;
 		}
 		$personal_part = $personal_firstname.$personal_lastname;
-		
+
 		$tmp_email  = get_comm_value($entries[$i]['contact_id'], 'work email', $entries_comm);
 		$tmp_hemail = get_comm_value($entries[$i]['contact_id'], 'home email', $entries_comm);
 		if (($personal_part == '') ||
@@ -220,7 +220,7 @@
 				$hemail = $tmp_hemail;
 			}
 		}
-		
+
 		// --------------------- template declaration for list records --------------------------
 		$GLOBALS['phpgw']->template->set_var(array(
 			'firstname' => $firstname,
@@ -248,13 +248,13 @@
 		{
 			$entries_comm=array();
 		}
-	
+
 		foreach($entries_comm as $comms)
 		{
 			if($contact_id == $comms['comm_contact_id'] && $column == $comms['comm_description'])
-			{	
+			{
 				return $comms['comm_data'];
-			}	
+			}
 		}
 	}
 
