@@ -37,82 +37,82 @@
 		* @var ??? $grants ???
 		*/
 		private $grants;
-		
+
 		/**
 		* @var ??? $start ???
 		*/
 		private $start;
-		
+
 		/**
 		* @var ??? $query ???
 		*/
 		private $query;
-		
+
 		/**
 		* @var ??? $sort ???
 		*/
 		private $sort;
-		
+
 		/**
 		* @var ??? $order ???
 		*/
 		private $order;
-		
+
 		/**
 		* @var object $cats categories object
 		*/
 		private $cats;
-		
+
 		/**
 		* @var object $nextmatches paging handler
 		*/
 		private $nextmatches;
-		
+
 		/**
 		* @var int $account reference to the current user id
 		*/
 		private $account;
-		
+
 		/**
 		* @var object $bo business logic
 		*/
 		private $bo;
-		
+
 		/**
 		* @var object $acl reference to global access control list manager
 		*/
 		private $acl;
-		
+
 		/**
 		* @var string $acl_location the access control location
 		*/
 		private $acl_location;
-		
+
 		/**
 		* @var bool $acl_read does the current user have read access to the current location
 		*/
 		private $acl_read;
-		
+
 		/**
 		* @var bool $acl_add does the current user have add access to the current location
 		*/
 		private $acl_add;
-		
+
 		/**
 		* @var bool $acl_edit does the current user have edit access to the current location
 		*/
 		private $acl_edit;
-		
+
 		/**
 		* @var bool $allrows display all rows of result set?
 		*/
 		private $allrows;
-		
+
 		/**
 		* @var int $cat_id the currently selected category
 		*/
 		private $cat_id;
-		
+
 		/**
 		* @var bool $filter the current filter
 		*/
@@ -171,7 +171,7 @@
 		{
 			$output	= self::get_output();
 
-			$GLOBALS['phpgw_info']['flags']['menu_selection'] .= "::{$output}";	
+			$GLOBALS['phpgw_info']['flags']['menu_selection'] .= "::{$output}";
 
 			if(!$this->acl_read)
 			{
@@ -311,7 +311,7 @@
 			$function_msg= lang('list demo values');
 
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('demo') . ": {$function_msg}";
-			
+
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array("list_{$output}" => $data));
 			$this->save_sessiondata();
 		}
@@ -320,7 +320,7 @@
 		{
 			$output	= self::get_output();
 
-			$GLOBALS['phpgw_info']['flags']['menu_selection'] .= '::alternative';	
+			$GLOBALS['phpgw_info']['flags']['menu_selection'] .= '::alternative';
 			if(!$this->acl_read)
 			{
 				$this->no_access();
@@ -488,7 +488,7 @@
 			$function_msg= lang('list demo values');
 
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('demo'). ": {$function_msg}";
-			
+
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array("list2_{$output}" => $data));
 			$this->save_sessiondata();
 		}
