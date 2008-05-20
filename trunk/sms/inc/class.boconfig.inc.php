@@ -273,11 +273,11 @@
 			$input_type[0]['name'] = 'text';
 			$input_type[1]['id'] = 'listbox';
 			$input_type[1]['name'] = 'listbox';
-			
+
 			return $this->bocommon->select_list($selected,$input_type);
 
 		}
-		
+
 		function select_category_list($format='',$selected='')
 		{
 

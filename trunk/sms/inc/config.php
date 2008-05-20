@@ -11,7 +11,7 @@
 	$GLOBALS['phpgw_info']['sms_config']['reserved_codes'] = $reserved_codes;
 
 //_debug_array($GLOBALS['phpgw_info']['sms_config']);
-	
+
 	//$GLOBALS['phpgw_info']['sms_config']['web_title'] = $config->config_data['web_title'];
 	//$GLOBALS['phpgw_info']['sms_config']['email_service'] = $config->config_data['email_service'];
 	//$GLOBALS['phpgw_info']['sms_config']['email_footer'] = $config->config_data['email_footer'];

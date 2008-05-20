@@ -23,7 +23,7 @@
 	$apps_path['libs']	= $apps_path['base'] . '/' . 'lib';
 	$apps_path['plug']	= $apps_path['base'] . '/' . 'inc' . '/' . 'plugin';
 	$apps_path['inc']	= $apps_path['base'] . '/' . 'inc';
-	
+
 	// SMS command security parameter
 	$feat_command_path['bin']	= $apps_path['base']."/bin";
 	$GLOBALS['phpgw_info']['sms_config']['common']['apps_path'] = $apps_path;
@@ -55,9 +55,9 @@
 	class sms_sms_
 	{
 		var $apps_path;
-		
+
 		function sms_sms_()
-		{	
+		{
 			$this->apps_config = $GLOBALS['phpgw_info']['sms_config']['common']['apps_config'];
 			$this->apps_path = $GLOBALS['phpgw_info']['sms_config']['common']['apps_path'];
 			$this->feat_command_path = $GLOBALS['phpgw_info']['sms_config']['common']['feat_command_path'];
@@ -67,7 +67,7 @@
 			$this->email_service = $GLOBALS['phpgw_info']['sms_config']['common']['email_service'];
 			$this->email_footer = $GLOBALS['phpgw_info']['sms_config']['common']['email_footer'];
 			$this->reserved_codes = $GLOBALS['phpgw_info']['sms_config']['reserved_codes'];
-			
+
 
 			$dateformat		= $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
 			$request['start_date']			= $GLOBALS['phpgw']->common->show_date($request['start_date'],$dateformat);
@@ -112,7 +112,7 @@
 		{
 			return date($this->datetimeformat, time());
 		}
-		
+
 		function gpcode2gpid($uid,$gp_code)
 		{
 			if ($uid && $gp_code)
@@ -127,29 +127,29 @@
 
 		function username2mobile($username)
 		{
-			
+
 		//	$GLOBALS['phpgw']->preferences->account_id = $this->account;
 		//	$GLOBALS['phpgw']->preferences->read_repository();
 			$mobile = $GLOBALS['phpgw_info']['user']['preferences']['sms']['cellphone'];
 			return $mobile;
 		}
-		
+
 		function username2sender($username)
-		{			
+		{
 			if($GLOBALS['phpgw_info']['user']['preferences']['sms']['signature'])
 			{
 				$sender = ' - ' . $GLOBALS['phpgw_info']['user']['preferences']['sms']['signature'];
 			}
 			return $sender;
 		}
-				
+
 		function username2name($username)
 		{
 			$name = $GLOBALS['phpgw_info']['user']['fullname'];
 			return $name;
 		}
-		
-		
+
+
 		function sendmail($mail_from,$mail_to,$subject="",$mail_body="")
 		{
 			if (!is_object($GLOBALS['phpgw']->send))
@@ -158,15 +158,15 @@
 			}
 
 			$rcpt = $GLOBALS['phpgw']->send->msg('email',$mail_to, $subject, stripslashes($mail_body), '', $cc, $bcc, $mail_from, $from_name, 'plain');
-			
+
 			return $rcpt;
 		}
-		
-		
+
+
 		function websend2pv($username,$sms_to,$message,$sms_type="text",$unicode="0")
 		{
 			$datetime_now = $this->datetime_now();
-			$gateway_module = $this->gateway_module; 
+			$gateway_module = $this->gateway_module;
 			$uid = $this->account;
 
 			$mobile_sender = $this->username2mobile($username);
@@ -200,16 +200,16 @@
 				$c_sms_to = str_replace("\'","",$array_sms_to[$i]);
 				$c_sms_to = str_replace("\"","",$array_sms_to[$i]);
 				$message = $this->db->db_addslashes($message);
-			
-				$db_query = "INSERT INTO phpgw_sms_tblSMSOutgoing 
-					(uid,p_gateway,p_src,p_dst,p_footer,p_msg,p_datetime,p_sms_type,unicode) 
+
+				$db_query = "INSERT INTO phpgw_sms_tblSMSOutgoing
+					(uid,p_gateway,p_src,p_dst,p_footer,p_msg,p_datetime,p_sms_type,unicode)
 					VALUES ('$uid','$gateway_module','$mobile_sender','$c_sms_to','$sms_sender','$message','$datetime_now','$sms_type','$unicode')";
-		
+
 				$GLOBALS['phpgw']->db->transaction_begin();
 				$GLOBALS['phpgw']->db->query($db_query,__LINE__,__FILE__);
 				$smslog_id = $GLOBALS['phpgw']->db->get_last_insert_id('phpgw_sms_tblSMSOutgoing','smslog_id');
 				$GLOBALS['phpgw']->db->transaction_commit();
-		
+
 				$gp_code = "PV";
 				$to[$i] = $c_sms_to;
 				$ok[$i] = 0;
@@ -223,7 +223,7 @@
 			}
 			return array($ok,$to);
 		}
-		
+
 		function websend2group($username,$gp_code,$message,$sms_type="text")
 		{
 			$datetime_now = $this->datetime_now();
@@ -270,8 +270,8 @@
 					$sms_to = str_replace("\"","",$sms_to);
 					$the_msg = "$sms_to\n$sms_msg";
 					$db_query1 = "
-					INSERT INTO phpgw_sms_tblSMSOutgoing 
-					(uid,p_gateway,p_src,p_dst,p_footer,p_msg,p_datetime,p_gpid,p_sms_type) 
+					INSERT INTO phpgw_sms_tblSMSOutgoing
+					(uid,p_gateway,p_src,p_dst,p_footer,p_msg,p_datetime,p_gpid,p_sms_type)
 					VALUES ('$uid','$gateway_module','$mobile_sender','$sms_to','$sms_sender','$message','$datetime_now','$gpid','$sms_type')
 					";
 					$smslog_id = @dba_insert_id($db_query1);
@@ -289,7 +289,7 @@
 			}
 			return array($ok,$to);
 		}
-		
+
 		function send2group($mobile_sender,$gp_code,$message)
 		{
 			$datetime_now = $this->datetime_now();
@@ -306,7 +306,7 @@
 				{
 					$gp_code = strtoupper($gp_code);
 					$db_query = "SELECT * FROM phpgw_sms_tblUserGroupPhonebook WHERE uid='$uid' AND gp_code='$gp_code'";
-					$db_result = dba_query($db_query);		
+					$db_result = dba_query($db_query);
 					$db_row = dba_fetch_array($db_result);
 					$gpid = $db_row[gpid];
 					if ($gpid && $message)
@@ -335,7 +335,7 @@
 							$sms_to = str_replace("\"","",$sms_to);
 							$send_code = md5(mktime().$sms_to);
 							$db_query1 = "
-							INSERT INTO phpgw_sms_tblSMSOutgoing (uid,p_src,p_dst,p_footer,p_msg,p_datetime,p_gpid) 
+							INSERT INTO phpgw_sms_tblSMSOutgoing (uid,p_src,p_dst,p_footer,p_msg,p_datetime,p_gpid)
 							VALUES ('$uid','$mobile_sender','$sms_to','$sms_sender','$message','$datetime_now','$gpid')";
 							$smslog_id = @dba_insert_id($db_query1);
 							$sms_id = "$gp_code.$uid.$smslog_id";
@@ -352,7 +352,7 @@
 			}
 			return $ok;
 		}
-		
+
 		function insertsmstodb($sms_datetime,$sms_sender,$target_code,$message)
 		{
 			$email_footer = $this->email_footer;
@@ -366,8 +366,8 @@
 			// masked sender sets here
 				$masked_sender = substr_replace($sms_sender,'xxxx',-4);
 				$sql = "
-					INSERT INTO phpgw_sms_tblsmsincoming 
-					(in_gateway,in_sender,in_masked,in_code,in_msg,in_datetime) 
+					INSERT INTO phpgw_sms_tblsmsincoming
+					(in_gateway,in_sender,in_masked,in_code,in_msg,in_datetime)
 					VALUES ('$gateway_module','$sms_sender','$masked_sender','$target_code','$message','$sms_datetime')
 					";
 				$this->db->query($sql,__LINE__,__FILE__);
@@ -394,7 +394,7 @@
 			}
 			return $ok;
 		}
-		
+
 		function insertsmstoinbox($sms_datetime,$sms_sender,$target_user,$message)
 		{
 			$email_footer = $this->email_footer;
@@ -415,7 +415,7 @@
 				{
 					$db_query = "
 					INSERT INTO phpgw_sms_tbluserinbox
-					(in_sender,in_uid,in_msg,in_datetime) 
+					(in_sender,in_uid,in_msg,in_datetime)
 					VALUES ('$sms_sender','$uid','$message','$sms_datetime')
 					";
 
@@ -440,18 +440,18 @@
 			}
 			return $ok;
 		}
-		
+
 		function getsmsinbox()
 		{
 			$this->gw_set_incoming_action();
 		}
-		
+
 		function getsmsstatus()
 		{
 			$gateway_module = $this->gateway_module;
 			$db_query = "SELECT * FROM phpgw_sms_tblsmsoutgoing WHERE p_status='0' AND p_gateway='$gateway_module'";
 			$this->db->query($db_query,__LINE__,__FILE__);
-			
+
 			while ($this->db->next_record())
 			{
 				$gpid = "";
@@ -470,7 +470,7 @@
 			}
 		//	$this->gw_set_delivery_status($gp_code,$uid,$smslog_id,$p_datetime,$p_update);
 		}
-		
+
 /*		function execgwcustomcmd()
 		{
 			if (function_exists("gw_customcmd"))
@@ -478,12 +478,12 @@
 				gw_customcmd();
 			}
 		}
-		
+
 		function execcommoncustomcmd($DAEMON_COUNTER = '')
 		{
 			@include $this->apps_path[inc]."/admin/commoncustomcmd.php";
 		}
-		
+
 */		function setsmsdeliverystatus($smslog_id,$uid,$p_status)
 		{
 			$datetime_now = $this->datetime_now();
@@ -491,14 +491,14 @@
 			$db_query = "UPDATE phpgw_sms_tblSMSOutgoing SET p_update='$datetime_now',p_status='$p_status' WHERE smslog_id='$smslog_id' AND uid='$uid'";
 			$this->db->transaction_begin();
 			$this->db->query($db_query,__LINE__,__FILE__);
-			
+
 			if ($this->db->transaction_commit())
 			{
 				$ok = true;
 			}
 			return $ok;
 		}
-		
+
 		function checkavailablecode($code)
 		{
 			$reserved_codes = $this->reserved_codes;
@@ -513,7 +513,7 @@
 			}
 			if ($reserved)
 			{
-				$ok = false;	
+				$ok = false;
 			}
 			else
 			{
@@ -555,7 +555,7 @@
 			}
 				return $ok;
 		}
-		
+
 		// part of SMS board
 		function outputtorss($code,$line="10")
 		{
@@ -566,7 +566,7 @@
 			{
 				$line = "10";
 			};
-			
+
 			$format_output = "RSS0.91";
 			$rss = new UniversalFeedCreator();
 			$db_query1 = "SELECT * FROM phpgw_sms_tblsmsincoming WHERE in_code='$code' ORDER BY in_datetime DESC LIMIT 0,$line";
@@ -581,12 +581,12 @@
 				$items->description = $description;
 				$items->comments = $datetime;
 				$items->date = strtotime($datetime);
-				$rss->addItem($items);		
+				$rss->addItem($items);
 			}
 			$feeds = $rss->createFeed($format_output);
 			return $feeds;
 		}
-		
+
 		// part of SMS board
 		function outputtohtml($code,$line="10",$pref_bodybgcolor="#E0D0C0",$pref_oddbgcolor="#EEDDCC",$pref_evenbgcolor="#FFEEDD")
 		{
@@ -632,7 +632,7 @@
 				return $content;
 			}
 		}
-		
+
 		// part of SMS command
 		function execcommand($sms_datetime,$sms_sender,$command_code,$command_param)
 		{
@@ -640,7 +640,7 @@
 			$ok = false;
 			$sql = "SELECT command_exec,command_type FROM phpgw_sms_featcommand WHERE command_code='$command_code'";
 			$this->db->query($sql,__LINE__,__FILE__);
-			$this->db->next_record();	
+			$this->db->next_record();
 			$command_exec = $this->db->f('command_exec');
 			$command_type = $this->db->f('command_type');
 
@@ -658,7 +658,7 @@
 			}
 			$sql = "
 			INSERT INTO phpgw_sms_featcommand_log
-			(sms_sender,command_log_datetime,command_log_code,command_log_exec,command_log_param,command_log_success) 
+			(sms_sender,command_log_datetime,command_log_code,command_log_exec,command_log_param,command_log_success)
 			VALUES
 			('$sms_sender','$datetime_now','$command_code','$command_exec','$command_param','" . (int)!!$command_output . "')
 			";
@@ -673,7 +673,7 @@
 			}
 			return $ok;
 		}
-		
+
 		// part of SMS custom
 		function processcustom($sms_datetime,$sms_sender,$custom_code,$custom_param)
 		{
@@ -681,25 +681,25 @@
 			$ok = false;
 			$sql = "SELECT custom_url FROM phpgw_sms_featcustom WHERE custom_code='$custom_code'";
 			$this->db->query($sql,__LINE__,__FILE__);
-			$this->db->next_record();	
+			$this->db->next_record();
 			$custom_url = $this->db->f('custom_url');
 			$custom_url = str_replace("##SMSDATETIME##",urlencode($sms_datetime),$custom_url);
 			$custom_url = str_replace("##SMSSENDER##",urlencode($sms_sender),$custom_url);
 			$custom_url = str_replace("##CUSTOMCODE##",urlencode($custom_code),$custom_url);
 			$custom_url = str_replace("##CUSTOMPARAM##",urlencode($custom_param),$custom_url);
 			$url = parse_url($custom_url);
-			if (!$url['port']) 
+			if (!$url['port'])
 			{
 				$url['port'] = 80;
 			}
 			$connection = fsockopen($url['host'],$url['port'],&$error_number,&$error_description,60);
-			if($connection) 
+			if($connection)
 			{
 				socket_set_blocking($connection, false);
 				fputs($connection, "GET $custom_url HTTP/1.0\r\n\r\n");
 				$sql = "
 				INSERT INTO phpgw_sms_featcustom_log
-				(sms_sender,custom_log_datetime,custom_log_code,custom_log_url) 
+				(sms_sender,custom_log_datetime,custom_log_code,custom_log_url)
 				VALUES
 				('$sms_sender','$datetime_now','$custom_code','$custom_url')
 				";
@@ -714,7 +714,7 @@
 			}
 			return $ok;
 		}
-		
+
 		// part of SMS autoreply
 		function processautoreply($sms_datetime,$sms_sender,$autoreply_code,$autoreply_param)
 		{
@@ -733,17 +733,17 @@
 				$autoreply_scenario_param_list .= "autoreply_scenario_param$i='".$autoreply_part[$i]."' AND ";
 			}
 			$sql = "
-			SELECT autoreply_scenario_result FROM phpgw_sms_featautoreply_scenario 
+			SELECT autoreply_scenario_result FROM phpgw_sms_featautoreply_scenario
 			WHERE $autoreply_scenario_param_list 1=1
 			";
 			$this->db->query($sql,__LINE__,__FILE__);
-			$this->db->next_record();	
-			
+			$this->db->next_record();
+
 			if ($autoreply_scenario_result = $this->db->f('autoreply_scenario_result'))
 			{
 				$sql = "
 				INSERT INTO phpgw_sms_featautoreply_log
-				(sms_sender,autoreply_log_datetime,autoreply_log_code,autoreply_log_request) 
+				(sms_sender,autoreply_log_datetime,autoreply_log_code,autoreply_log_request)
 				VALUES
 				('$sms_sender','$datetime_now','$autoreply_code','$autoreply_request')
 				";
@@ -761,7 +761,7 @@
 				$ok = false;
 				$sql = "SELECT uid FROM phpgw_sms_featautoreply WHERE autoreply_code='$autoreply_code'";
 				$this->db->query($sql,__LINE__,__FILE__);
-				$this->db->next_record();	
+				$this->db->next_record();
 
 				$c_uid = $this->db->f('uid');
 				$c_username = $GLOBALS['phpgw']->accounts->id2name($c_uid);
@@ -773,7 +773,7 @@
 			}
 			return $ok;
 		}
-		
+
 		// part of SMS poll
 		function savepoll($sms_sender,$target_poll,$target_choice)
 		{
@@ -784,19 +784,19 @@
 			{
 				$sql = "SELECT poll_id,poll_enable FROM phpgw_sms_featpoll WHERE poll_code='$target_poll'";
 				$this->db->query($sql,__LINE__,__FILE__);
-				$this->db->next_record();	
+				$this->db->next_record();
 
 				$poll_id = $this->db->f('poll_id');
 				$poll_enable = $this->db->f('poll_enable');
 				$sql = "SELECT choice_id FROM phpgw_sms_featpoll_choice WHERE choice_code='$target_choice' AND poll_id='$poll_id'";
 				$this->db->query($sql,__LINE__,__FILE__);
-				$this->db->next_record();	
+				$this->db->next_record();
 				$choice_id = $this->db->f('choice_id');
 				if ($poll_id && $choice_id)
 				{
 					$sql = "SELECT result_id FROM phpgw_sms_featpoll_result WHERE poll_sender='$sms_sender' AND poll_id='$poll_id'";
 					$this->db->query($sql,__LINE__,__FILE__);
-					
+
 					if($this->db->num_rows()>0)
 					{
 						$already_vote = True;
@@ -804,8 +804,8 @@
 					if ((!$already_vote) && $poll_enable)
 					{
 						$sql = "
-							INSERT INTO phpgw_sms_featpoll_result 
-							(poll_id,choice_id,poll_sender) 
+							INSERT INTO phpgw_sms_featpoll_result
+							(poll_id,choice_id,poll_sender)
 							VALUES ('$poll_id','$choice_id','$sms_sender')
 							";
 						$this->db->query($sql,__LINE__,__FILE__);
@@ -813,9 +813,9 @@
 					$ok = true;
 				}
 			}
-			return $ok;	
+			return $ok;
 		}
-		
+
 		// check incoming SMS for available codes
 		// and sets the action
 		function setsmsincomingaction($sms_datetime,$sms_sender,$target_code,$message)

@@ -74,7 +74,7 @@
 			$table = 'phpgw_sms_tbluserinbox';
 
 			$where= 'WHERE';
-			
+
 /*			if (is_array($grants))
 			{
 				while (list($user) = each($grants))
@@ -93,7 +93,7 @@
 				$query = preg_replace('/"/','',$query);
 
 				$querymethod = " $where in_sender $this->like '%$query%' OR in_msg $this->like '%$query%'";
-				
+
 				$where= 'AND';
 			}
 
@@ -166,7 +166,7 @@
 
 
 			$where= 'WHERE';
-			
+
 			if (is_array($grants))
 			{
 				while (list($user) = each($grants))
@@ -202,7 +202,7 @@
 				$this->db->query($sql . $ordermethod,__LINE__,__FILE__);
 			}
 
-			
+
 			$status_array = array(
 					0 => lang('pending'),
 	     				1 => lang('sent'),

@@ -46,7 +46,7 @@
 				. " phpgw_sms_config_value.attrib_id = phpgw_sms_config_attrib.id AND "
 				. " phpgw_sms_config_value.type_id = phpgw_sms_config_attrib.type_id"
 				. " $this->join phpgw_sms_config_type ON  phpgw_sms_config_value.type_id = phpgw_sms_config_type.id";
-				
+
 			$this->db->query($sql,__LINE__,__FILE__);
 			while ($this->db->next_record())
 			{
@@ -231,7 +231,7 @@
 
 			$attrib_table = 'phpgw_sms_config_attrib';
 			$value_table = 'phpgw_sms_config_value';
-			
+
 			if($query)
 			{
 				$query = preg_replace("/'/",'',$query);
@@ -260,7 +260,7 @@
 				(
 					'id'		=> $this->db->f(1),
 					'type_id'	=> $this->db->f('type_id'),
-					'value_id'	=> $this->db->f('value_id'),					
+					'value_id'	=> $this->db->f('value_id'),
 					'name'		=> stripslashes($this->db->f('name')),
 					'value'		=> stripslashes($this->db->f('value'))
 				);
@@ -354,7 +354,7 @@
 			if($values['new_choice'])
 			{
 				$choice_id = $this->bocommon->next_id('phpgw_sms_config_choice' ,array('type_id'=>$values['type_id'],'attrib_id'=>$values['attrib_id']));
-	
+
 				$values_insert= array(
 					$values['type_id'],
 					$values['attrib_id'],

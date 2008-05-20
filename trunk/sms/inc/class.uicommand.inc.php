@@ -42,7 +42,7 @@
 			$this->sort				= $this->bo->sort;
 			$this->order				= $this->bo->order;
 			$this->allrows				= $this->bo->allrows;
-			
+
 			$this->db 				= clone($GLOBALS['phpgw']->db);
 			$this->db2 				= clone($GLOBALS['phpgw']->db);
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] = 'sms::command';
@@ -105,7 +105,7 @@
 					'text_delete'				=> $text_delete,
 					'lang_delete_text'			=> $lang_delete_text,
 				);
-	
+
 				unset ($link_delete);
 				unset ($text_delete);
 				unset ($lang_delete_text);
@@ -237,7 +237,7 @@
 					{
 						$receipt['error'][]=array('msg'=>lang('Please select a command type !'));
 					}
-					
+
 					if(!$values['exec'])
 					{
 						$receipt['error'][]=array('msg'=>lang('Please enter a command exec !'));
@@ -256,7 +256,7 @@
 							unset($values['code']);
 						}
 					}
-					
+
 					if(!$receipt['error'])
 					{
 						$receipt = $this->bo->save_command($values,$action);
@@ -314,7 +314,7 @@
 				'lang_binary_path'		=> lang('SMS command binary path'),
 				'value_binary_path'		=> PHPGW_SERVER_ROOT . '/sms/bin',
 
-				'lang_type'			=> lang('command type'),				
+				'lang_type'			=> lang('command type'),
 				'type_list'			=> $this->bo->select_type_list($values['type']),
 				'lang_no_type'			=> lang('no exec type'),
 				'lang_lang_type_status_text'	=> lang('input type'),
@@ -399,7 +399,7 @@
 					'text_delete'		=> $text_delete,
 					'lang_delete_text'	=> $lang_delete_text,
 				);
-	
+
 				unset ($link_delete);
 				unset ($text_delete);
 				unset ($lang_delete_text);
@@ -542,12 +542,12 @@
 					else
 					{
 						$error_string = "Fail to delete SMS command code `$command_code`";
-					
+
 					}
 
 	    			$this->db->transaction_commit();
 				}
-					
+
 				$link_data['err'] = urlencode($error_string);
 
 				$GLOBALS['phpgw']->redirect_link('/index.php',$link_data);

@@ -71,7 +71,7 @@
 
 			$where= 'WHERE';
 			$grants = $this->grants;
-			
+
 /*			if (is_array($grants))
 			{
 				while (list($user) = each($grants))
@@ -224,7 +224,7 @@
 
 			$attrib_table = 'phpgw_sms_autoreply_attrib';
 			$value_table = 'phpgw_sms_autoreply_value';
-			
+
 			if($query)
 			{
 				$query = preg_replace("/'/",'',$query);
@@ -253,7 +253,7 @@
 				(
 					'id'		=> $this->db->f(1),
 					'type_id'	=> $this->db->f('type_id'),
-					'value_id'	=> $this->db->f('value_id'),					
+					'value_id'	=> $this->db->f('value_id'),
 					'name'		=> stripslashes($this->db->f('name')),
 					'value'		=> stripslashes($this->db->f('value'))
 				);
@@ -347,7 +347,7 @@
 			if($values['new_choice'])
 			{
 				$choice_id = $this->bocommon->next_id('phpgw_sms_autoreply_choice' ,array('type_id'=>$values['type_id'],'attrib_id'=>$values['attrib_id']));
-	
+
 				$values_insert= array(
 					$values['type_id'],
 					$values['attrib_id'],

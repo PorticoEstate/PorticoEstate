@@ -89,11 +89,11 @@
 		$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_sms_config_choice (type_id,attrib_id,id,value) VALUES (1, 1, 2, 'clickatell')");
 		$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_sms_config_choice (type_id,attrib_id,id,value) VALUES (1, 1, 3, 'uplink')");
 		$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_sms_config_choice (type_id,attrib_id,id,value) VALUES (1, 1, 4, 'kannel')");
-		
+
 		$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_sms_config_value (type_id,attrib_id,id,value) VALUES (1, 1, 1, 'gnokii')");
 		$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_sms_config_value (type_id,attrib_id,id,value) VALUES (1, 2, 1, '99999999')");
 		$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_sms_config_value (type_id,attrib_id,id,value) VALUES (2, 1, 1, '/usr/local')");
-		
+
 		$GLOBALS['setup_info']['sms']['currentver'] = '0.9.17.502';
 		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit();
 		return $GLOBALS['setup_info']['sms']['currentver'];
@@ -112,26 +112,26 @@
 		$GLOBALS['phpgw_setup']->oProc->DropTable('phpgw_sms_tblconfig_main');
 		$GLOBALS['phpgw_setup']->oProc->DropTable('phpgw_sms_tbluser');
 		$GLOBALS['phpgw_setup']->oProc->DropTable('phpgw_sms_tbluser_country');
-	
+
 		$GLOBALS['phpgw_setup']->oProc->query("DELETE from phpgw_config WHERE config_app='sms'");
-		
+
 		$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_sms_config_type (id,name, descr) VALUES ('3', 'clickatell', 'The clickatell Gateway')");
 		$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_sms_config_type (id,name, descr) VALUES ('4', 'uplink', 'The Uplink Gateway')");
 		$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_sms_config_type (id,name, descr) VALUES ('5', 'kannel', 'The Kannel Gateway')");
-	
+
 		$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_sms_config_attrib (type_id,id,input_type,name, descr) VALUES (3, 1, 'text', 'api_id', 'Clickatell API ID')");
 		$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_sms_config_attrib (type_id,id,input_type,name, descr) VALUES (3, 2, 'text', 'username', 'Clickatell username')");
 		$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_sms_config_attrib (type_id,id,input_type,name, descr) VALUES (3, 3, 'text', 'password', 'Clickatell password')");
 		$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_sms_config_attrib (type_id,id,input_type,name, descr) VALUES (3, 4, 'text', 'sender', 'Clickatell Global Sender')");
 		$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_sms_config_attrib (type_id,id,input_type,name, descr) VALUES (3, 5, 'text', 'send_url', 'Clickatell API URL')");
-		$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_sms_config_attrib (type_id,id,input_type,name, descr) VALUES (3, 6, 'text', 'incoming_path', 'Clickatell Incoming Path')");			
-		$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_sms_config_attrib (type_id,id,input_type,name, descr) VALUES (3, 7, 'text', 'credit', 'What is this')");			
+		$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_sms_config_attrib (type_id,id,input_type,name, descr) VALUES (3, 6, 'text', 'incoming_path', 'Clickatell Incoming Path')");
+		$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_sms_config_attrib (type_id,id,input_type,name, descr) VALUES (3, 7, 'text', 'credit', 'What is this')");
 
 		$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_sms_config_attrib (type_id,id,input_type,name, descr) VALUES (4, 1, 'text', 'master', 'Uplink Master URL')");
 		$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_sms_config_attrib (type_id,id,input_type,name, descr) VALUES (4, 2, 'text', 'username', 'Uplink username')");
 		$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_sms_config_attrib (type_id,id,input_type,name, descr) VALUES (4, 3, 'text', 'password', 'Uplink password')");
 		$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_sms_config_attrib (type_id,id,input_type,name, descr) VALUES (4, 4, 'text', 'global_sender', 'Uplink Global Sender')");
-		$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_sms_config_attrib (type_id,id,input_type,name, descr) VALUES (4, 5, 'text', 'incoming_path', 'Uplink Incoming Path')");	
+		$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_sms_config_attrib (type_id,id,input_type,name, descr) VALUES (4, 5, 'text', 'incoming_path', 'Uplink Incoming Path')");
 
 		$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_sms_config_attrib (type_id,id,input_type,name, descr) VALUES (5, 1, 'text', 'username', 'Kannel username')");
 		$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_sms_config_attrib (type_id,id,input_type,name, descr) VALUES (5, 2, 'text', 'password', 'Kannel password')");
@@ -140,7 +140,7 @@
 		$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_sms_config_attrib (type_id,id,input_type,name, descr) VALUES (5, 5, 'text', 'sendsms_port', 'Kannel Send SMS Port')");
 		$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_sms_config_attrib (type_id,id,input_type,name, descr) VALUES (5, 6, 'text', 'phpgwsms_web', 'phpgwsms Web URL')");
 		$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_sms_config_attrib (type_id,id,input_type,name, descr) VALUES (5, 7, 'text', 'incoming_path', 'Kannel incoming path')");
-	
+
 		$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_sms_config_value (type_id,attrib_id,id,value) VALUES (3, 1, 1, '123456')");
 		$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_sms_config_value (type_id,attrib_id,id,value) VALUES (3, 2, 1, 'phpgwsms')");
 		$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_sms_config_value (type_id,attrib_id,id,value) VALUES (3, 3, 1, 'pwd')");
@@ -148,7 +148,7 @@
 		$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_sms_config_value (type_id,attrib_id,id,value) VALUES (3, 5, 1, 'http://api.clickatell.com/http')");
 		$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_sms_config_value (type_id,attrib_id,id,value) VALUES (3, 6, 1, 'usr/local')");
 		$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_sms_config_value (type_id,attrib_id,id,value) VALUES (3, 7, 1, '10')");
-	
+
 		$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_sms_config_value (type_id,attrib_id,id,value) VALUES (4, 1, 1, 'http://cpanel.smsrakyat.net')");
 		$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_sms_config_value (type_id,attrib_id,id,value) VALUES (4, 2, 1, 'phpgwsms')");
 		$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_sms_config_value (type_id,attrib_id,id,value) VALUES (4, 3, 1, 'pwd')");
@@ -161,7 +161,7 @@
 		$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_sms_config_value (type_id,attrib_id,id,value) VALUES (5, 4, 1, '127.0.0.1')");
 		$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_sms_config_value (type_id,attrib_id,id,value) VALUES (5, 5, 1, '13131')");
 		$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_sms_config_value (type_id,attrib_id,id,value) VALUES (5, 6, 1, 'http://localhost/~phpgroupware/sms')");
-		$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_sms_config_value (type_id,attrib_id,id,value) VALUES (5, 7, 1, '/usr/local')");					
+		$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_sms_config_value (type_id,attrib_id,id,value) VALUES (5, 7, 1, '/usr/local')");
 
 		$GLOBALS['setup_info']['sms']['currentver'] = '0.9.17.503';
 		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit();
@@ -174,7 +174,7 @@
 		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
 		$GLOBALS['phpgw_setup']->oProc->AddColumn('phpgw_sms_featcommand','command_type',array('type' => 'varchar','precision' => 10,'nullable' => True));
 		$GLOBALS['phpgw_setup']->oProc->AddColumn('phpgw_sms_featcommand','command_descr',array('type' => 'text', 'nullable' => True));
-		
+
 		$GLOBALS['setup_info']['sms']['currentver'] = '0.9.17.504';
 		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit();
 		return $GLOBALS['setup_info']['sms']['currentver'];
@@ -186,12 +186,12 @@
 		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
 		$GLOBALS['phpgw_setup']->oProc->AddColumn('phpgw_sms_featcommand_log','command_log_param',array('type' => 'varchar','precision' => 150,'nullable' => True));
 		$GLOBALS['phpgw_setup']->oProc->AddColumn('phpgw_sms_featcommand_log','command_log_success',array('type' => 'int','precision' => 2,'nullable' => True));
-		
+
 		$GLOBALS['setup_info']['sms']['currentver'] = '0.9.17.505';
 		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit();
 		return $GLOBALS['setup_info']['sms']['currentver'];
-	}	
-	
+	}
+
 	$test[] = '0.9.17.505';
 	function sms_upgrade0_9_17_505()
 	{
@@ -203,7 +203,7 @@
 		$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_acl_location (appname,id, descr) VALUES ('sms', '.custom', 'Custom')");
 		$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_acl_location (appname,id, descr) VALUES ('sms', '.poll', 'Poll')");
 
-		
+
 		$GLOBALS['setup_info']['sms']['currentver'] = '0.9.17.506';
 		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit();
 		return $GLOBALS['setup_info']['sms']['currentver'];

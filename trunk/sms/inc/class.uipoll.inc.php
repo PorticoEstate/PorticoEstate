@@ -49,7 +49,7 @@
 			$this->sort				= $this->bo->sort;
 			$this->order				= $this->bo->order;
 			$this->allrows				= $this->bo->allrows;
-			
+
 			$this->db 				= clone($GLOBALS['phpgw']->db);
 			$this->db2 				= clone($GLOBALS['phpgw']->db);
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] = 'sms::poll';
@@ -104,7 +104,7 @@
 				{
 					$status = lang('disabled');
 				}
-				
+
 				$content[] = array
 				(
 					'code'					=> $entry['code'],
@@ -121,7 +121,7 @@
 					'text_delete'				=> $text_delete,
 					'lang_delete_text'			=> $lang_delete_text,
 				);
-	
+
 				unset ($link_delete);
 				unset ($text_delete);
 				unset ($lang_delete_text);
@@ -235,7 +235,7 @@
 				'menuaction'	=> 'sms.uipoll.add_yes',
 				'autoreply_id'	=> $autoreply_id
 				);
-				
+
 			$add_url = $GLOBALS['phpgw']->link('/index.php',$add_data);
 
 
@@ -292,7 +292,7 @@
 					$new_uid = $this->db->get_last_insert_id(phpgw_sms_featpoll,'poll_id');
 
 					$this->db->transaction_commit();
-					
+
 					if ($new_uid)
 					{
 					    $error_string = "SMS poll with code `$poll_code` has been added";
@@ -336,11 +336,11 @@
 			{
 				$sql = "SELECT choice_id FROM phpgw_sms_featpoll_choice WHERE poll_id='$poll_id' AND choice_code='$choice_code'";
 				$this->db->query($sql,__LINE__,__FILE__);
-	    
+
 					if (!$this->db->next_record())
 	    			{
 						$sql = "
-		    				INSERT INTO phpgw_sms_featpoll_choice 
+		    				INSERT INTO phpgw_sms_featpoll_choice
 		    				(poll_id,choice_title,choice_code)
 		    				VALUES ('$poll_id','$choice_title','$choice_code')
 							";
@@ -364,7 +364,7 @@
 			}
 			else
 			{
-				$error_string = "You must fill all fields!";	    
+				$error_string = "You must fill all fields!";
 			}
 
 			$add_data = array(
@@ -393,13 +393,13 @@
 			$this->db->transaction_begin();
 
 			$this->db->query($sql,__LINE__,__FILE__);
-	    
+
 			if ($this->db->affected_rows()>0)
 			{
 			    $error_string = "This poll status has been changed!";
 			}
 			$this->db->transaction_commit();
-	
+
 			$add_data = array(
 				'menuaction'	=> 'sms.uipoll.edit',
 				'poll_id' => $poll_id,
@@ -418,7 +418,7 @@
 				$GLOBALS['phpgw_info']['flags']['xslt_app'] = True;
 				$this->bocommon->no_access();
 				return;
-			}	
+			}
 
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('SMS').' - '.lang('Edit SMS poll');
 			$GLOBALS['phpgw']->common->phpgw_header();
@@ -447,7 +447,7 @@
 				'poll_id' => $poll_id,
 				'poll_code' => $poll_code,
 				);
-				
+
 			$edit_url = $GLOBALS['phpgw']->link('/index.php',$edit_data);
 
 			$content .= "
@@ -480,7 +480,7 @@
 				'menuaction'	=> 'sms.uipoll.add_choice',
 				'poll_id'	=> $poll_id,
 				);
-			
+
 			$add_url = $GLOBALS['phpgw']->link('/index.php',$add_data);
 
 
@@ -492,7 +492,7 @@
 			<p><input type=submit class=button value=\"Add Choice\">
 			</form>
 			<br>";
-			
+
 			echo $content;
 
 			$enable_data = array('menuaction'	=> 'sms.uipoll.status',
@@ -510,7 +510,7 @@
 			$sql = "SELECT poll_enable FROM phpgw_sms_featpoll WHERE poll_id='$poll_id'";
 			$this->db->query($sql,__LINE__,__FILE__);
 			$this->db->next_record();
-	
+
 			$poll_status = "<font color=red><b>Disable</b></font>";
 			if ($this->db->f('poll_enable'))
 			{
@@ -519,7 +519,7 @@
 			}
 			else
 			{
-			    $action = "<p>- <a href=\"$enable_url\">I want to <b>enable</b> this poll</a>";			
+			    $action = "<p>- <a href=\"$enable_url\">I want to <b>enable</b> this poll</a>";
 			}
 
 			$content = "
@@ -527,7 +527,7 @@
 			    <p>
 			    <p>Current status: $poll_status
 			    <p>What do you want to do ?
-			    $action			    
+			    $action
 			    <br>
 			    ";
 
@@ -560,10 +560,10 @@
 
 			if ($poll_id && $poll_title && $poll_code)
 			{
-			    
+
 					$sql = "UPDATE phpgw_sms_featpoll SET poll_title='$poll_title',poll_code='$poll_code'
 							WHERE poll_id='$poll_id'";
-					
+
 					$this->db->transaction_begin();
 
 					$this->db->query($sql,__LINE__,__FILE__);
@@ -603,8 +603,8 @@
 			$this->db->next_record();
 
 			$poll_title = $this->db->f('poll_title');
-			
-			
+
+
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('SMS').' - '.lang('view poll') . ': ' . $poll_title;
 			$GLOBALS['phpgw']->common->phpgw_header();
 
@@ -618,7 +618,7 @@
 			{
 			    $mult = $_GET[mult];
 			    $bodybgcolor = $_GET[bodybgcolor];
-			    if (!isset($mult)) 
+			    if (!isset($mult))
 			    {
 				$mult = "2";
 			    }
@@ -677,7 +677,7 @@
 
 				$done_data = array(
 				'menuaction'	=> 'sms.uipoll.index');
-				
+
 				$done_url = $GLOBALS['phpgw']->link('/index.php',$done_data);
 
 				$content .= "
@@ -726,7 +726,7 @@
 					if ($this->db->affected_rows())
 	    			{
 						$sql = "DELETE FROM phpgw_sms_tblsmsincoming WHERE in_code='$poll_title'";
-						$this->db->query($sql,__LINE__,__FILE__);	
+						$this->db->query($sql,__LINE__,__FILE__);
 						$error_string = "SMS poll `$poll_title` with all its messages has been deleted!";
 					}
 					else
@@ -735,7 +735,7 @@
 	    			}
 	    			$this->db->transaction_commit();
 				}
-					
+
 				$link_data['err'] = urlencode($error_string);
 
 				$GLOBALS['phpgw']->redirect_link('/index.php',$link_data);
@@ -800,13 +800,13 @@
 					if ($this->db->affected_rows())
 	    			{
 						$sql = "DELETE FROM phpgw_sms_featpoll_result WHERE poll_id='$poll_id' AND choice_id='$choice_id'";
-						$this->db->query($sql,__LINE__,__FILE__);	
+						$this->db->query($sql,__LINE__,__FILE__);
 						$error_string = "SMS poll choice with code `$choice_code` and all its voters has been deleted!";
 					}
 
 	    			$this->db->transaction_commit();
 				}
-					
+
 				$link_data['err'] = urlencode($error_string);
 
 				$GLOBALS['phpgw']->redirect_link('/index.php',$link_data);
