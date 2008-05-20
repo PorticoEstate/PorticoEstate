@@ -391,7 +391,7 @@
 			$qualification_list = $this->so->select_qualification_list($job_id,$quali_id);
 			return $qualification_list;
 		}
-		
+
 		function resort_value($data)
 		{
 			$this->so->resort_value($data);

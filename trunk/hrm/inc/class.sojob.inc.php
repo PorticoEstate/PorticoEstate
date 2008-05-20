@@ -186,7 +186,7 @@
 				}
 
 			}
-			
+
 			return $jobs;
 		}
 
@@ -265,7 +265,7 @@
 			}
 
 			$groupmethod = ' GROUP BY phpgw_hrm_quali.category';
-			
+
 			$sql = "SELECT phpgw_hrm_quali.id as quali_id, phpgw_hrm_quali.remark as remark,phpgw_hrm_quali_category.descr as category,phpgw_hrm_quali_type.name,phpgw_hrm_quali_type.descr from phpgw_hrm_quali"
 				. " $this->join phpgw_hrm_quali_type ON phpgw_hrm_quali.quali_type_id = phpgw_hrm_quali_type.id"
 				. " $this->join phpgw_hrm_quali_category ON phpgw_hrm_quali.category = phpgw_hrm_quali_category.id"
@@ -547,7 +547,7 @@
 					$subtasks[$j]['name']        = $this->db->f('name');
 					$subtasks[$j]['descr'] = $this->db->f('descr');
 					$subtasks[$j]['value_sort'] = $value_sort;
-					
+
 					$j++;
 					$value_sort ++;
 				}
@@ -1095,7 +1095,7 @@
 		function add_qualification($values)
 		{
 			$value['remark'] = $this->db->db_addslashes($values['remark']);
-			
+
 			$this->db->query("SELECT  max(value_sort) as value_sort FROM phpgw_hrm_quali WHERE job_id = " . (int)$values['job_id'],__LINE__,__FILE__);
 			$this->db->next_record();
 			$value_sort	= (int)$this->db->f('value_sort') +1;
@@ -1120,7 +1120,7 @@
 				. "VALUES ($insert_values)",__LINE__,__FILE__);
 
 			$quali_id = $this->db->get_last_insert_id('phpgw_hrm_quali','id');
-			
+
 			if(is_array($values['alternative_qualification']))
 			{
 				$this->db->query("UPDATE phpgw_hrm_quali set is_parent = 1 WHERE id= $quali_id",__LINE__,__FILE__);
@@ -1221,7 +1221,7 @@
 			$this->db->query('DELETE FROM phpgw_hrm_quali WHERE id='  . intval($id) . ' AND job_id='  . intval($job_id),__LINE__,__FILE__);
 			$this->db->transaction_commit();
 		}
-		
+
 		function resort_value($data)
 		{
 			if(is_array($data))
@@ -1281,5 +1281,5 @@
 					break;
 			}
 		}
-		
+
 	}

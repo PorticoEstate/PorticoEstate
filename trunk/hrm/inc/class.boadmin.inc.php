@@ -333,7 +333,7 @@
 				$this->start = -1;
 				$offset = -1;
 			}
-			
+
 			$allusers = $GLOBALS['phpgw']->accounts->get_list($type, $this->start,$this->sort, $this->order, $this->query, $offset);
 
 			if (isSet($allusers) AND is_array($allusers))
