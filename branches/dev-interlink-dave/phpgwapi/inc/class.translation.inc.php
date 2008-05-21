@@ -47,7 +47,13 @@
 		*/
 		public function __construct($reset = false)
 		{
-			$this->set_userlang($GLOBALS['phpgw_info']['user']['preferences']['common']['lang']);
+			$lang = 'en';
+			if ( isset($GLOBALS['phpgw_info']['user']['preferences']['common']['lang']) )
+			{
+				$lang = $GLOBALS['phpgw_info']['user']['preferences']['common']['lang'];
+			}
+
+			$this->set_userlang($lang);
 			$this->reset_lang($reset);
 		}
 
@@ -161,7 +167,7 @@
 
 			$lookup_key = strtolower(trim(substr($key, 0, self::MAX_MESSAGE_ID_LENGTH)));
 
-			if ( !is_array($this->lang) 
+			if ( !is_array($this->lang)
 				|| !isset($this->lang[$lookup_key]) )
 			{
 				$applist = "'common', 'all'";
@@ -262,7 +268,7 @@
 			{
 				$GLOBALS['phpgw_info']['server']['lang_ctimes'] = array();
 			}
-			
+
 			if (!isset($GLOBALS['phpgw_info']['server']) && $upgrademethod != 'dumpold')
 			{
 				$GLOBALS['phpgw']->db->query("select * from phpgw_config WHERE config_app='phpgwapi' AND config_name='lang_ctimes'",__LINE__,__FILE__);
@@ -271,7 +277,7 @@
 					$GLOBALS['phpgw_info']['server']['lang_ctimes'] = unserialize($GLOBALS['phpgw']->db->f('config_value', true));
 				}
 			}
-			
+
 			if (count($lang_selected))
 			{
 				if ($upgrademethod == 'dumpold')
@@ -333,7 +339,7 @@
 							$message_id = $GLOBALS['phpgw']->db->db_addslashes(strtolower(trim(substr($line['message_id'], 0, self::MAX_MESSAGE_ID_LENGTH))));
 							$app_name = $GLOBALS['phpgw']->db->db_addslashes(trim($line['app_name']));
 							$content = $GLOBALS['phpgw']->db->db_addslashes(trim($line['content']));
-							
+
 							$raw[$app_name][$message_id] = $content;
 						}
 						$GLOBALS['phpgw_info']['server']['lang_ctimes'][$lang][$app['name']] = filectime($appfile);
@@ -363,7 +369,7 @@
 						}
 					}
 				}
-				
+
 				$GLOBALS['phpgw']->db->query("DELETE from phpgw_config WHERE config_app='phpgwapi' AND config_name='lang_ctimes'",__LINE__,__FILE__);
 				$GLOBALS['phpgw']->db->query("INSERT INTO phpgw_config(config_app,config_name,config_value) VALUES ('phpgwapi','lang_ctimes','".
 					$GLOBALS['phpgw']->db->db_addslashes(serialize($GLOBALS['phpgw_info']['server']['lang_ctimes']))."')",__LINE__,__FILE__);
@@ -373,4 +379,3 @@
 			return $error;
 		}
 	}
-

@@ -25,7 +25,7 @@
 	* @package phpgwapi
 	* @subpackage contacts
 	*/
-	class contact_categories extends sql_entity
+	class contact_categories extends phpgwapi_sql_entity
 	{
 		var $map = array('key_cat_id'		=> array('select'	=> '',
 								 'criteria' 	=> '',
@@ -66,4 +66,3 @@
 			$this->set_elinks('key_cat_id', 'phpgwapi.contact_categories','parent_id');
 		}
 	}
-?>

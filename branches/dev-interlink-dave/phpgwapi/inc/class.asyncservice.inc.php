@@ -19,7 +19,8 @@
 	*/
 	class asyncservice
 	{
-		var $public_functions = array(
+		var $public_functions = array
+		(
 			'set_timer' => True,
 			'check_run' => True,
 			'cancel_timer' => True,
@@ -32,8 +33,8 @@
 		var $crontab = '';
 		var $db;
 		var $db_table = 'phpgw_async';
-		var $debug = 0;
-		
+		var $debug = true;
+
 		/**
 		* Constructor
 		*/
@@ -52,20 +53,23 @@
 		* @param string $method Method to be called via ExecMethod($method,$data). $method has the form '<app>.<class>.<public function>'.
 		* @param integer|array $data This data is passed back when the method is called. It might simply be an integer id, but it can also be a complete array.
 		* @param integer|boolean $account_id account_id, under which the methode should be called or False for the actual user
-		* @return boolean False if $id already exists, otherwise True	
+		* @return boolean False if $id already exists, otherwise True
 		*/
 		function set_timer($times,$id,$method,$data,$account_id=False)
 		{
-			if (empty($id) || empty($method) || $this->read($id) || 
-				!($next = $this->next_run($times)))
+			if ( empty($id) || empty($method) || $this->read($id)
+				|| !($next = $this->next_run($times)) )
 			{
-				return False;
+				return false;
 			}
+
 			if ($account_id === False)
 			{
 				$account_id = $GLOBALS['phpgw_info']['user']['account_id'];
 			}
-			$job = array(
+
+			$job = array
+			(
 				'id'     => $id,
 				'next'   => $next,
 				'times'  => $times,
@@ -74,14 +78,14 @@
 				'account_id' => $account_id
 			);
 			$this->write($job);
-			
-			return True;
+
+			return true;
 		}
 
 		/**
 		* Calculates the next execution time for $times
 		*
-		* @param integer|array $times unix timestamp or array('year'=>$year,'month'=>$month,'dow'=>$dow,'day'=>$day,'hour'=>$hour,'min'=>$min) with execution time. Repeated execution is possible to shedule by setting the array only partly, eg. array('day' => 1) for first day in each month 0am or array('min' => '/5', 'hour' => '9-17') for every 5mins in the time from 9am to 5pm. All not set units before the smallest one set, are taken into account as every possible value, all after as the smallest possible value. 
+		* @param integer|array $times unix timestamp or array('year'=>$year,'month'=>$month,'dow'=>$dow,'day'=>$day,'hour'=>$hour,'min'=>$min) with execution time. Repeated execution is possible to shedule by setting the array only partly, eg. array('day' => 1) for first day in each month 0am or array('min' => '/5', 'hour' => '9-17') for every 5mins in the time from 9am to 5pm. All not set units before the smallest one set, are taken into account as every possible value, all after as the smallest possible value.
 		* @param boolean $debug if True some debug-messages about syntax-errors in $times are echoed
 		* @return integer|boolean A unix timestamp of the next execution time or False if no more executions
 		*/
@@ -93,16 +97,17 @@
 				$debug = True;	// enable syntax-error messages too
 			}
 			$now = time();
-			
+
 			// $times is unix timestamp => if it's not expired return it, else False
-			if (!is_array($times))	
+			if (!is_array($times))
 			{
 				$next = intval($times);
 
 				return $next > $now ? $next : False;
 			}
 			// If an array is given, we have to enumerate the possible times first
-			$units = array(
+			$units = array
+			(
 				'year'  => 'Y',
 				'month' => 'm',
 				'day'   => 'd',
@@ -110,7 +115,8 @@
 				'hour'  => 'H',
 				'min'   => 'i'
 			);
-			$max_unit = array(
+			$max_unit = array
+			(
 				'min'   => 59,
 				'hour'  => 23,
 				'dow'   => 6,
@@ -118,7 +124,8 @@
 				'month' => 12,
 				'year'  => date('Y')+10	// else */[0-9] would never stop returning numbers
 			);
-			$min_unit = array(
+			$min_unit = array
+			(
 				'min'   => 0,
 				'hour'  => 0,
 				'dow'   => 0,
@@ -127,8 +134,8 @@
 				'year'  => date('Y')
 			);
 
-			// get the number of the first and last pattern set in $times, 
-			// as empty patterns get enumerated before the the last pattern and 
+			// get the number of the first and last pattern set in $times,
+			// as empty patterns get enumerated before the the last pattern and
 			// get set to the minimum after
 			$n = $first_set = $last_set = 0;
 			foreach($units as $u => $date_pattern)
@@ -164,7 +171,7 @@
 						if (strstr($t,'-') !== False && strstr($t,'/') === False)
 						{
 							list($min,$max) = $arr = explode('-',$t);
-							
+
 							if (count($arr) != 2 || !is_numeric($min) || !is_numeric($max) || $min > $max)
 							{
 								if ($debug) echo "<p>Syntax error in $u='$t', allowed is 'min-max', min <= max, min='$min', max='$max'</p>\n";
@@ -178,11 +185,14 @@
 						}
 						else
 						{
-							if ($t == '*') $t = '*/1';
+							if ($t == '*')
+							{
+								$t = '*/1';
+							}
 
 							list($one,$inc) = $arr = explode('/',$t);
-							
-							if (!(is_numeric($one) && count($arr) == 1 || 
+
+							if (!(is_numeric($one) && count($arr) == 1 ||
 								  count($arr) == 2 && is_numeric($inc)))
 							{
 								if ($debug) echo "<p>Syntax error in $u='$t', allowed is a number or '{*|range}/inc', inc='$inc'</p>\n";
@@ -201,7 +211,7 @@
 									$min = $min_unit[$u];
 									$max = $max_unit[$u];
 								}
-								elseif (count($arr) != 2 || $min > $max)
+								else if (count($arr) != 2 || $min > $max)
 								{
 									if ($debug) echo "<p>Syntax error in $u='$t', allowed is '{*|min-max}/inc', min='$min',max='$max', inc='$inc'</p>\n";
 									return False;
@@ -214,7 +224,7 @@
 						}
 					}
 				}
-				elseif ($n < $last_set || $u == 'dow')	// before last value set (or dow) => empty gets enumerated
+				else if ($n < $last_set || $u == 'dow')	// before last value set (or dow) => empty gets enumerated
 				{
 					for ($i = $min_unit[$u]; $i <= $max_unit[$u]; ++$i)
 					{
@@ -227,7 +237,7 @@
 				}
 			}
 			if ($this->debug) { echo "enumerated times=<pre>"; print_r($times); echo "</pre>\n"; }
-			
+
 			// now we have the times enumerated, lets find the first not expired one
 			$found = array();
 			while (!isset($found['min']))
@@ -258,7 +268,7 @@
 							default:
 								$valid = $future || $unit_value >= $unit_now;
 								break;
-							
+
 						}
 						if ($valid && ($u != $next || $unit_value > $over))	 // valid and not over
 						{
@@ -273,7 +283,7 @@
 						if (!isset($next[count($found)-1]))
 						{
 							if ($this->debug) echo "<p>Nothing found, exiting !!!</p>\n";
-							return False;							
+							return False;
 						}
 						$next = $next[count($found)-1];
 						$over = $found[$next];
@@ -300,7 +310,7 @@
 		}
 
 		/**
-		* Checks when the last check_run was run or set the run-semaphore if $semaphore == True 
+		* Checks when the last check_run was run or set the run-semaphore if $semaphore == True
 		*
 		* @param bollean $semaphore If false only check, if true try to set/release the semaphore
 		* @param boolean $release If $semaphore == True, tells if we should set or release the semaphore
@@ -373,7 +383,7 @@
 		function check_run($run_by='')
 		{
 			flush();
-			
+
 			if (!$this->last_check_run(True,False,$run_by))
 			{
 				return False;	// cant obtain semaphore
@@ -396,7 +406,7 @@
 							$GLOBALS['phpgw']->session->account_domain = $domain;
 							$GLOBALS['phpgw']->session->read_repositories(False,False);
 							$GLOBALS['phpgw_info']['user']  = $GLOBALS['phpgw']->session->user;
-							
+
 							if ($lang != $GLOBALS['phpgw_info']['user']['preferences']['common']['lang'])
 							{
 								$GLOBALS['phpgw']->translation->add_app('common');
@@ -481,7 +491,7 @@
 			}
 			return $jobs;
 		}
-		
+
 		/**
 		* Write a job to the db
 		*
@@ -521,7 +531,7 @@
 
 			return $this->db->affected_rows();
 		}
-		
+
 		function find_binarys()
 		{
 			static $run = False;
@@ -531,7 +541,7 @@
 			}
 			$run = True;
 
-			if (substr(php_uname(), 0, 7) == "Windows") 
+			if (substr(php_uname(), 0, 7) == "Windows")
 			{
 				// ToDo: find php-cgi on windows
 			}
@@ -568,9 +578,9 @@
 					$this->php = $this->php4;
 				}
 			}
-		
+
 		}
-		
+
 		/**
 		* Test if asyncservices is installed as cron-job
 		*
@@ -583,7 +593,7 @@
 				return 0;
 			}
 			$this->find_binarys();
-			
+
 			if (!is_executable($this->crontab))
 			{
 				//echo "<p>Error: $this->crontab not found !!!</p>";
@@ -598,14 +608,14 @@
 					if ($this->debug) echo 'line '.++$n.": $line<br>\n";
 					$parts = split(' ',$line,6);
 
-					if ($line[0] == '#' || count($parts) < 6 || ($parts[5][0] != '/' && substr($parts[5],0,3) != 'php')) 
+					if ($line[0] == '#' || count($parts) < 6 || ($parts[5][0] != '/' && substr($parts[5],0,3) != 'php'))
 					{
 						// ignore comments
 						if ($line[0] != '#')
 						{
 							$times['error'] .= $line;
 						}
-					} 
+					}
 					elseif (strstr($line,$this->cronline) !== False)
 					{
 						$cron_units = array('min','hour','day','month','dow');
@@ -624,7 +634,7 @@
 			}
 			return $times;
 		}
-		
+
 		/**
 		* Installs asyncservices as cron-job
 		*
@@ -649,7 +659,7 @@
 				$cronline .= $this->php.' -q '.$this->cronline."\n";
 				//echo "<p>Installing: '$cronline'</p>\n";
 				fwrite($crontab,$cronline);
-				
+
 				foreach ($this->other_cronlines as $cronline)
 				{
 					fwrite($crontab,$cronline);		// preserv the other lines

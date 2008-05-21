@@ -38,7 +38,7 @@
 			'list_value'		=> True,
 			'edit_value'		=> True,
 			'delete_value'		=> True,
-			'daemon_manual'		=> True,			
+			'daemon_manual'		=> True,
 		);
 
 		function sms_uiconfig()
@@ -82,7 +82,7 @@
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('config','nextmatchs',
 										'search_field'));
-										
+
 			$receipt = $GLOBALS['phpgw']->session->appsession('session_data','sms_c_type_receipt');
 			$GLOBALS['phpgw']->session->appsession('session_data','sms_c_type_receipt','');
 
@@ -337,12 +337,12 @@
 			}
 
 			$type_id	= phpgw::get_var('type_id', 'int');
-			
+
 			if(!$type_id)
 			{
 				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'sms.uiconfig.index'));
 			}
-			
+
 			$GLOBALS['phpgw']->xslttpl->add_file(array('config','nextmatchs',
 										'search_field'));
 
@@ -400,7 +400,7 @@
 			}
 
 			$type = $this->bo->read_single_type($type_id);
-			
+
 			$link_data = array
 			(
 				'menuaction'	=> 'sms.uiconfig.list_attrib',
@@ -472,7 +472,7 @@
 				{
 
 					$values[type_id] = $type_id;
-					
+
 					if(!$values['name'])
 					{
 						$receipt['error'][]=array('msg'=>lang('Please enter a name !'));
@@ -527,7 +527,7 @@
 
 
 			$type = $this->bo->read_single_type($type_id);
-			
+
 
 			if($values['input_type']=='listbox')
 			{
@@ -544,7 +544,7 @@
 				'value_descr'				=> $values['descr'],
 				'lang_name'				=> lang('name'),
 				'lang_descr'				=> lang('descr'),
-				'lang_input_type'			=> lang('input type'),				
+				'lang_input_type'			=> lang('input type'),
 				'input_type_list'			=> $this->bo->select_input_type_list($values['input_type']),
 				'lang_no_input_type'			=> lang('no input type'),
 				'lang_lang_input_type_status_text'	=> lang('input type'),
@@ -590,12 +590,12 @@
 
 			$type_id	= phpgw::get_var('type_id', 'int');
 			$attrib_id	= phpgw::get_var('attrib_id', 'int');
-						
+
 			if(!$type_id && !$attrib_id)
 			{
 				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'sms.uiconfig.index'));
 			}
-			
+
 			$GLOBALS['phpgw']->xslttpl->add_file(array('config','nextmatchs',
 										'search_field'));
 
@@ -657,7 +657,7 @@
 
 			$type = $this->bo->read_single_type($type_id);
 			$attrib = $this->bo->read_single_attrib($type_id,$attrib_id);
-						
+
 			$link_data = array
 			(
 				'menuaction'	=> 'sms.uiconfig.list_value',
@@ -741,7 +741,7 @@
 
 					$values[type_id] = $type_id;
 					$values[attrib_id] = $attrib_id;
-										
+
 					if(!$values['value'] && !$id)
 					{
 						$receipt['error'][]=array('msg'=>lang('Please enter a value !'));
@@ -796,7 +796,7 @@
 			);
 
 			$type = $this->bo->read_single_type($type_id);
-			$attrib = $this->bo->read_single_attrib($type_id,$attrib_id);			
+			$attrib = $this->bo->read_single_attrib($type_id,$attrib_id);
 
 			if($attrib['input_type']=='listbox')
 			{

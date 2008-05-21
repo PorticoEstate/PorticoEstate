@@ -3,9 +3,9 @@
 	 * preferences - Menus
 	 *
 	 * @author Dave Hall <skwashd@phpgroupware.org>
-	 * @copyright Copyright (C) 2007 Free Software Foundation, Inc. http://www.fsf.org/
+	 * @copyright Copyright (C) 2007-2008 Free Software Foundation, Inc. http://www.fsf.org/
 	 * @license http://www.gnu.org/licenses/gpl.html GNU General Public License
-	 * @package preferences 
+	 * @package preferences
 	 * @version $Id$
 	 */
 
@@ -29,7 +29,7 @@
 	 * Menus
 	 *
 	 * @package preferences
-	 */	
+	 */
 	class preferences_menu
 	{
 		/**
@@ -63,7 +63,7 @@
 				'image'	=> array('preferences', 'preferences')
 			);
 
-			if ($GLOBALS['phpgw']->acl->check('changepassword',1))
+			if ( !$GLOBALS['phpgw']->acl->check('changepassword', phpgwapi_acl::READ, 'preferences') )
 			{
 				$menus['navigation'][] = array
 				(
@@ -71,30 +71,37 @@
 					'url'	=> $GLOBALS['phpgw']->link('/preferences/changepassword.php')
 				);
 			}
-			if ( (isset($GLOBALS['phpgw_info']['server']['auth_type']) && $GLOBALS['phpgw_info']['server']['auth_type'] == 'remoteuser') 
-				|| (isset($GLOBALS['phpgw_info']['server']['half_remote_user']) && $GLOBALS['phpgw_info']['server']['half_remote_user'] == 'remoteuser') )
+			if ( (isset($GLOBALS['phpgw_info']['server']['auth_type'])
+					&& $GLOBALS['phpgw_info']['server']['auth_type'] == 'remoteuser')
+				|| (isset($GLOBALS['phpgw_info']['server']['half_remote_user'])
+					&& $GLOBALS['phpgw_info']['server']['half_remote_user'] == 'remoteuser') )
 			{
-				if($GLOBALS['phpgw_info']['server']['mapping'] == 'table' || $GLOBALS['phpgw_info']['server']['mapping'] == 'all')
+				if ( $GLOBALS['phpgw_info']['server']['mapping'] == 'table'
+					|| $GLOBALS['phpgw_info']['server']['mapping'] == 'all' )
 				{
 					$menus['navigation'][] = array
 					(
 						'text'	=> $GLOBALS['phpgw']->translation->translate('Mapping', array(), true),
-						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'preferences.uimapping.index', 'appname' => 'preferences') )
+						'url'	=> $GLOBALS['phpgw']->link('/index.php', array
+									(
+										'menuaction' => 'preferences.uimapping.index',
+										'appname' => 'preferences'
+									))
 					);
 				}
 			}
-			
+
 			if ( isset($navbar['admin']) )
 			{
 				$menus['navigation'][] = array
 				(
 					'text'	=> $GLOBALS['phpgw']->translation->translate('Default Preferences', array(), true),
-					'url'	=> $GLOBALS['phpgw']->link('/preferences/index.php', array('type' => 'default') )
+					'url'	=> $GLOBALS['phpgw']->link('/preferences/index.php', array('type' => 'default'))
 				);
 				$menus['navigation'][] = array
 				(
 					'text'	=> $GLOBALS['phpgw']->translation->translate('Forced Preferences', array(), true),
-					'url'	=> $GLOBALS['phpgw']->link('/preferences/index.php', array('type' => 'forced') )
+					'url'	=> $GLOBALS['phpgw']->link('/preferences/index.php', array('type' => 'forced'))
 				);
 			}
 
@@ -103,7 +110,8 @@
 				array
 				(
 					'text'	=> $GLOBALS['phpgw']->translation->translate('Preferences', array(), true),
-					'url'	=> $GLOBALS['phpgw']->link('/preferences/preferences.php', array('appname'	=> 'preferences')),
+					'url'	=> $GLOBALS['phpgw']->link('/preferences/preferences.php',
+									array('appname'	=> 'preferences')),
 					'image'	=> array('preferences', 'preferences')
 				),
 				array

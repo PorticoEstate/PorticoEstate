@@ -24,10 +24,10 @@
 <td width="2%" align="{align}" valign="top">
 	<form method="POST" action="{action}" name="{form_name}">
 	{hidden}
-	<table border="0" bgcolor="{th_bg}" cellspacing="0" cellpadding="0">
+	<table border="0" cellspacing="0" cellpadding="0">
 	<tr>
 		<td align="{align}">
-			<input type="image" src="{img}" border="{border}" alt="{label}" name="start" value="{start}">
+			<input type="image" src="{img}" alt="{label}" name="start" value="{start}">
 		</td>
 	</tr>
 	</table>
@@ -43,10 +43,10 @@
 
 <!-- BEGIN link -->
 <td width="2%" align="{align}" valign="top">
-	<table border="0" bgcolor="{th_bg}" cellspacing="0" cellpadding="0">
+	<table border="0" cellspacing="0" cellpadding="0">
 	<tr>
 		<td align="{align}">
-			<img src="{img}" border="{border}" alt="{label}">
+			<img src="{img}" alt="{label}">
 		</td>
 	</tr>
 	</table>
@@ -99,4 +99,3 @@
      </table>
     </form>
 <!-- END cats_search_filter -->
-

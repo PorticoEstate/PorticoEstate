@@ -10,15 +10,18 @@
 	* $Source: /sources/phpgroupware/projects/inc/hook_deleteaccount.inc.php,v $
 	*/
 
+	$account_id = phpgw::get_var('account_id', 'int');
+	$new_owner = phpgw::get_var('new_owner', 'int');
+
 	// Delete all records for a user
 	$pro = CreateObject('projects.boprojects');
 
-	if(intval($_POST['new_owner']) == 0)
+	if ( !$new_owner)
 	{
-		$pro->delete_project(intval($_POST['account_id']),0,'account');
+		$pro->delete_project($account_id, 0, 'account');
 	}
 	else
 	{
-		$pro->change_owner(intval($_POST['account_id']),intval($_POST['new_owner']));
+		$pro->change_owner($account_id, $new_owner);
 	}
-?>
+	unset($pro);

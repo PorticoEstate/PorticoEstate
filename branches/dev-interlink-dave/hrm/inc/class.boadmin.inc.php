@@ -3,8 +3,8 @@
 	* phpGroupWare - HRM: a  human resource competence management system.
 	*
 	* @author Sigurd Nes <sigurdne@online.no>
-	* @copyright Copyright (C) 2003-2005 Free Software Foundation, Inc. http://www.fsf.org/
-	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
+	* @copyright Copyright (C) 2003-2008 Free Software Foundation, Inc. http://www.fsf.org/
+	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License v3 or later
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/bbb_/ekstern/
 	* @package hrm
 	* @subpackage admin
@@ -37,7 +37,7 @@
 			if ($session)
 			{
 				$this->read_sessiondata();
-				$this->use_session = True;
+				$this->use_session = true;
 			}
 
 			$acl_app	= phpgw::get_var('acl_app');
@@ -143,7 +143,7 @@
 			$locations= $this->so->select_location($grant);
 
 			$i = count($locations);
-			$api_cats = $this->catbo->return_array('all', 0, True, False, False, 'cat_name', True);
+			$api_cats = $this->catbo->return_array('all', 0, true, false, false, 'cat_name', true);
 			if ( is_array($api_cats) )
 			{
 				foreach ($api_cats as $cat)
@@ -228,25 +228,24 @@
 		}
 
 
-		function set_permission2($values,$r_processed, $grantor = False, $type = False)
+		function set_permission2($values,$r_processed, $grantor = false, $type = false)
 		{
-			@reset($values);
 			$totalacl = array();
-			while(list($rowinfo,$perm) = each($values))
+			foreach ( $values as $rowinfo => $perm )
 			{
-				list($user_id,$rights) = split('_',$rowinfo);
+				list($user_id, $rights) = split('_', $rowinfo);
 				$totalacl[$user_id] += $rights;
 			}
-			@reset($totalacl);
-			while(list($user_id,$rights) = @each($totalacl))
-			{
-				$user_checked[]=$user_id;
 
-				$this->acl->account_id=$user_id;
+			foreach ( $totalacl as $user_id => $rights )
+			{
+				$user_checked[] = $user_id;
+
+				$this->acl->account_id = $user_id;
 				$this->acl->read_repository();
-				$this->acl->delete($appname = $this->acl_app, $this->location,$grantor,$type);
-				$this->acl->add($appname = $this->acl_app, $this->location, $rights,$grantor,$type);
-				$this->acl->save_repository();
+				$this->acl->delete($this->acl_app, $this->location,$grantor,$type);
+				$this->acl->add($this->acl_app, $this->location, $rights,$grantor,$type);
+				$this->acl->save_repository($this->acl_app, $this->location);
 			}
 
 			if(is_array($r_processed) && is_array($user_checked))
@@ -259,12 +258,12 @@
 			}
 			if(is_array($user_delete) && count($user_delete)>0)
 			{
-				while(list(,$user_id) = each($user_delete))
+				foreach ( $user_delete as$user_id )
 				{
-					$this->acl->account_id=$user_id;
+					$this->acl->account_id = $user_id;
 					$this->acl->read_repository();
-					$this->acl->delete($appname = $this->acl_app, $this->location,$grantor,$type);
-					$this->acl->save_repository();
+					$this->acl->delete($this->acl_app, $this->location, $grantor, $type);
+					$this->acl->save_repository($this->acl_app, $this->location);
 				}
 			}
 		}
@@ -333,7 +332,7 @@
 				$this->start = -1;
 				$offset = -1;
 			}
-			
+
 			$allusers = $GLOBALS['phpgw']->accounts->get_list($type, $this->start,$this->sort, $this->order, $this->query, $offset);
 
 			if (isSet($allusers) AND is_array($allusers))

@@ -44,24 +44,24 @@
 
 		var $public_functions = array
 		(
-			'index'  		=> True,
-			'config'  		=> True,
-			'edit_config'	=> True,
-			'view'   		=> True,
-			'edit'   		=> True,
-			'delete' 		=> True,
-			'list_attribute'=> True,
-			'edit_attrib' 	=> True,
+			'index'  		=> true,
+			'config'  		=> true,
+			'edit_config'	=> true,
+			'view'   		=> true,
+			'edit'   		=> true,
+			'delete' 		=> true,
+			'list_attribute'=> true,
+			'edit_attrib' 	=> true,
 		);
 
 		function property_uiadmin_location()
 		{
-			$GLOBALS['phpgw_info']['flags']['xslt_app'] = True;
+			$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] = 'admin::property::location';
 		//	$this->currentapp			= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->nextmatchs			= CreateObject('phpgwapi.nextmatchs');
 			$this->account				= $GLOBALS['phpgw_info']['user']['account_id'];
-			$this->bo					= CreateObject('property.boadmin_location',True);
+			$this->bo					= CreateObject('property.boadmin_location',true);
 			$this->bocommon				= CreateObject('property.bocommon');
 
 			$this->acl 					= CreateObject('phpgwapi.acl');
@@ -177,7 +177,7 @@
 			$data = array
 			(
 				'msgbox_data'						=> $msgbox_data,
-				'allow_allrows'						=> False,
+				'allow_allrows'						=> false,
 				'start_record'						=> $this->start,
 				'record_limit'						=> $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'],
 				'num_records'						=> count($standard_list),
@@ -462,7 +462,7 @@
 			(
 				'value_type_name'				=> $type['name'],
 				'lang_type'						=> lang('Location type'),
-				'allow_allrows'					=> True,
+				'allow_allrows'					=> true,
 				'allrows'						=> $this->allrows,
 				'start_record'					=> $this->start,
 				'record_limit'					=> $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'],
@@ -600,7 +600,7 @@
 			$multiple_choice = '';
 			if($values['column_info']['type']=='R' || $values['column_info']['type']=='CH' || $values['column_info']['type']=='LB')
 			{
-				$multiple_choice= True;
+				$multiple_choice= true;
 			}
 
 
@@ -751,7 +751,7 @@
 
 			$data = array
 			(
-				'allow_allrows'						=> False,
+				'allow_allrows'						=> false,
 				'start_record'						=> $this->start,
 				'record_limit'						=> $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'],
 				'num_records'						=> count($standard_list),
@@ -837,4 +837,4 @@
 		//	$GLOBALS['phpgw']->xslttpl->pp();
 		}
 	}
-?>
+

@@ -5,14 +5,14 @@
 
 	$GLOBALS['phpgw_info']['flags'] = array(
 		'currentapp' => 'login',
-		'noapi'      => True		// this stops header.inc.php to include phpgwapi/inc/function.inc.php
+		'noapi'      => true		// this stops header.inc.php to include phpgwapi/inc/function.inc.php
 	);
 	include($path_to_phpgroupware.'/header.inc.php');
 	unset($GLOBALS['phpgw_info']['flags']['noapi']);
 	$db_type = $GLOBALS['phpgw_domain'][$_GET['domain']]['db_type'];
 	$GLOBALS['phpgw_info']['server']['sessions_type'] = 'db';
 	include(PHPGW_API_INC.'/functions.inc.php');
-	
+
 	// more configuration
 	$apps_config['multilogin']      = 1; // 0 for single session login; 1 for multi session login
 	$GLOBALS['phpgw_info']['sms_config']['common']['apps_config'] = $apps_config;

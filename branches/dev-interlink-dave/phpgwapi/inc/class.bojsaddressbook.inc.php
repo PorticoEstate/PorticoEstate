@@ -571,7 +571,7 @@
 			if(intval($list))
 			{
 				$criteria = $this->contactsobject->criteria_for_index($GLOBALS['phpgw_info']['user']['account_id'], PHPGW_CONTACTS_ALL, $list);
-				$new = sql_criteria::token_and($criteria, sql_criteria::_equal('comm_descr', $this->contactsobject->search_comm_descr('work email')));
+				$new = phpgwapi_sql_criteria::token_and($criteria, phpgwapi_sql_criteria::_equal('comm_descr', $this->contactsobject->search_comm_descr('work email')));
 				$persons = $this->contactsobject->get_persons(array('per_full_name', 'comm_data'), '', '', '', '', '', $new);
 				if(!is_array($persons))
 				{
@@ -587,4 +587,3 @@
 			return $persons_list;
 		}
 	}
-?>

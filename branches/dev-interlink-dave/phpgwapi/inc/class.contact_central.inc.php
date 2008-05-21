@@ -25,7 +25,7 @@
 	* @package phpgwapi
 	* @subpackage contacts
 	*/
-	class contact_central extends sql_entity
+	class contact_central extends phpgwapi_sql_entity
 	{
 		var $map = array('contact_id'	=> array('select'	=> '',
 							 'criteria' 	=> '',
@@ -165,17 +165,16 @@
 			{
 				foreach($element['value'] as $value)
 				{
-					$data[] = sql_criteria::or_(sql_criteria::equal($field, sql::string($value)),
-									sql_criteria::has($field, ',' . $value . ','));
+					$data[] = phpgwapi_sql_criteria::or_(phpgwapi_sql_criteria::equal($field, sql::string($value)),
+									phpgwapi_sql_criteria::has($field, ',' . $value . ','));
 				}
 				
-				$criteria = sql_criteria::append_or($data);
+				$criteria = phpgwapi_sql_criteria::append_or($data);
 				$this->_add_criteria($criteria);
 			}
 			else
 			{
-				$this->_add_criteria(sql_criteria::equal($field, sql::string($element['value'])));
+				$this->_add_criteria(phpgwapi_sql_criteria::equal($field, phpgwapi_sql::string($element['value'])));
 			}
 		}
 	}
-?>

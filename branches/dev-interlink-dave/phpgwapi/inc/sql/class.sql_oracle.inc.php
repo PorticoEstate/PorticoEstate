@@ -31,7 +31,7 @@
 
 		function concat_null($elements)
 		{
-			$str =  implode(', ', sql::safe_null($elements));
+			$str =  implode(', ', self::safe_null($elements));
 			return ($str) ? 'concat('.$str.')' : '';
 		}
 	}

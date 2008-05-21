@@ -52,7 +52,7 @@
 				$GLOBALS['phpgw']->accounts = createObject('phpgwapi.accounts');
 			}
 			$accounts =& $GLOBALS['phpgw']->accounts;
-			
+
 			$account_info = $accounts->get_list('accounts', $start, $sort, $order, $query);
 			$this->total_records = $accounts->total;
 

@@ -71,7 +71,7 @@
 
 			$where= 'WHERE';
 			$grants = $this->grants;
-			
+
 /*			if (is_array($grants))
 			{
 				while (list($user) = each($grants))
@@ -161,7 +161,7 @@
 				);
 
 			$insert_values	= $this->bocommon->validate_db_insert($insert_values);
-			
+
 			$this->db->query("INSERT INTO phpgw_sms_featpoll (uid,poll_code,poll_exec,poll_type,poll_descr) "
 				. "VALUES ($insert_values)",__LINE__,__FILE__);
 

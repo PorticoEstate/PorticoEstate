@@ -44,10 +44,11 @@
 		/**
 		* Load all the dependencies for a YUI widget
 		*
-		* @internal this does not render the widget it only includes the header js files
 		* @param string $widget the name of the widget to load, such as autocomplete
-		* @param bool use the minimised versions of the files
+		*
 		* @return string yahoo namespace for widget - empty string on failure
+		*
+		* @internal this does not render the widget it only includes the header js files
 		*/
 		public static function load_widget($widget)
 		{
@@ -122,7 +123,7 @@
 					break;
 
 				case 'menu':
-					$load = array('container_core', 'menu'); // and containter??
+					$load = array('container_core', 'menu');
 					break;
 
 				case 'slider':
@@ -142,7 +143,8 @@
 					break;
 
 				default:
-					trigger_error(lang("Unsupported YUI widget '%1' supplied to phpgwapi_yui::load_widget()", $widget), E_USER_WARNING);
+					$err = "Unsupported YUI widget '%1' supplied to phpgwapi_yui::load_widget()";
+					trigger_error(lang($err, $widget), E_USER_WARNING);
 					return '';
 			}
 
@@ -153,10 +155,54 @@
 				$test = $GLOBALS['phpgw']->js->validate_file('yahoo', "{$script}");
 				if ( !$test || !$ok )
 				{
-					trigger_error(lang("Unable to load YUI script '%1' when attempting to load widget: '%2'", "{$script}", $widget), E_USER_WARNING);
+					$err = "Unable to load YUI script '%1' when attempting to load widget: '%2'";
+					trigger_error(lang($err, $script, $widget), E_USER_WARNING);
 					return '';
 				}
 			}
 			return "phpgroupware.{$widget}" . ++self::$counter;
+		}
+
+		/**
+		* Create a tabs "bar"
+		*
+		* @param array   $tabs      list of tabs as an array($id => $tab)
+		* @param integer $selection array key of selected tab
+		*
+		* @return string HTML output string
+		*/
+		public static function tabview_generate($tabs, $selection)
+		{
+			self::load_widget('tabview');
+			$output = <<<HTML
+				<ul class="yui-nav">
+
+HTML;
+			foreach($tabs as $id => $tab)
+			{
+				$selected = $id == $selection ? ' class="selected"' : '';
+				$label = $tab['label'];
+				$output .= <<<HTML
+					<li{$selected}><a href="{$tab['link']}"><em>{$label}</em></a></li>
+
+HTML;
+			}
+			$output .= <<<HTML
+				</ul>
+
+HTML;
+			return $output;
+		}
+
+		/**
+		 * Add the events required for tabs to work
+		 *
+		 * @param string $id html element id for the widget
+		 *
+		 * @return void
+		 */
+		public static function tabview_setup($id)
+		{
+			$GLOBALS['phpgw']->js->add_event('load', "var tabs_{$id} = new YAHOO.widget.TabView('{$id}');");
 		}
 	}

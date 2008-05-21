@@ -10,8 +10,10 @@
 	\**************************************************************************/
 	/* $Id$ */
 
+	$account_id = phpgw::get_var('account_id', 'int');
+	$new_owner = phpgw::get_var('new_owner', 'int');
+
 	// Delete all records for a user
 	$info = CreateObject('infolog.soinfolog');
-	$info->change_delete_owner($_POST['account_id'], $_POST['new_owner']);
+	$info->change_delete_owner($account_id, $new_owner);
 	unset($info);
-?>

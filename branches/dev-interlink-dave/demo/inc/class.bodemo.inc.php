@@ -135,7 +135,7 @@
 				'filter'	=> $this->filter,
 				'custom_attributes' => $custom_attributes
 			);
-			
+
 			$demo_info = $this->so->read2($lookup);
 			$this->total_records = $this->so->total_records;
 			$this->uicols	= $this->so->uicols;
@@ -145,14 +145,14 @@
 		public function read_single($id = 0)
 		{
 			$values['attributes'] = $this->custom->get_attribs($this->currentapp, $this->acl_location, 0, '', 'ASC', 'attrib_sort', true, true);
-			
+
 			if($id)
 			{
 				$values = $this->so->read_single($id, $values);
 			}
-			
+
 			$values = $this->custom->prepare_attributes($values, 'demo', $this->acl_location);
-			
+
 			$dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
 			if(isset($values['entry_date']) && $values['entry_date'])
 			{
@@ -190,7 +190,7 @@
 			{
 				foreach($custom_functions as $entry)
 				{
-					if ( is_file(PHPGW_APP_INC . "/custom/{$entry['file_name']}") 
+					if ( is_file(PHPGW_APP_INC . "/custom/{$entry['file_name']}")
 						&& $entry['active'] )
 					{
 						include_once(PHPGW_APP_INC . "/custom/{$entry['file_name']}");
@@ -251,7 +251,7 @@
 		* Preserve attribute values from post in case of an error
 		*
 		* @param array $values_attribute attribute definition and values from posting
-		* @param array $values value set with 
+		* @param array $values value set with
 		* @return array Array with attribute definition and values
 		*/
 		function preserve_attribute_values($values='',$values_attribute='')

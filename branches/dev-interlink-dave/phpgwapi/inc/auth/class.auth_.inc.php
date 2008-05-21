@@ -80,7 +80,9 @@
 			{
 				$chars = 32;
 			}
-			return substr(md5(uniqid(rand(), true)), 0, $chars);
+
+			$salt = substr(md5(uniqid(rand(), true)), 0, $chars);
+			return $salt;
 		}
 
 		/**
@@ -97,19 +99,19 @@
 					return '{CRYPT}' . crypt($passwd, $this->_shake_salt(CRYPT_SALT_LENGTH));
 
 				case 'MD5':
-					return "{MD5}" . base64_encode(hex2bin(md5($passwd)));
+					return "{MD5}" . base64_encode(phpgwapi_common::hex2bin(md5($passwd)));
 
 				case 'SHA':
-					return "{SHA}" . base64_encode(hex2bin(sha1($passwd)));
+					return "{SHA}" . base64_encode(phpgwapi_common::hex2bin(sha1($passwd)));
 
 				case 'SMD5':
 					$salt = $this->_shake_salt(4);
-					return "{SMD5}" . base64_encode(hex2bin(md5($passwd . $salt)) . $salt);
+					return "{SMD5}" . base64_encode(phpgwapi_common::hex2bin(md5($passwd . $salt) . $salt));
 
 				case 'SSHA':
 				default:
 					$salt = $this->_shake_salt(4);
-					return '{SSHA}' . base64_encode(hex2bin(sha1($passwd . $salt)) . $salt);
+					return '{SSHA}' . base64_encode(phpgwapi_common::hex2bin(sha1($passwd . $salt) . $salt));
 			}
 		}
 
@@ -130,7 +132,7 @@
 			$algo = $m[1];
 			$hash = $m[2];
 			unset($m);
-			
+
 			switch ( strtoupper($algo) )
 			{
 				case 'CRYPT':

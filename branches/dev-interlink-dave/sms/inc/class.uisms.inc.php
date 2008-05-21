@@ -410,7 +410,7 @@
 				$values['msg_unicode']		= phpgw::get_var('msg_unicode', 'bool', 'POST');
 
 				$p_num 		= $values['p_num_text']?$values['p_num_text']:$p_num;
-				
+
 				if ($values['save'] || $values['apply'])
 				{
 
@@ -510,13 +510,13 @@
 
 				'lang_to'			=> lang('to'),
 				'lang_from'			=> lang('from'),
-				
+
 				'value_sms_from'		=> $this->gateway_number,
 				'value_p_num'			=> $p_num,
 				'lang_format'			=> lang('International format'),
 				'lang_message'			=> lang('message'),
-				'lang_character_left'		=> lang('character left'),				
-				
+				'lang_character_left'		=> lang('character left'),
+
 				'lang_send_as_flash'		=> lang('send as flash message'),
 				'lang_send_as_unicode'		=> lang('send as unicode'),
 

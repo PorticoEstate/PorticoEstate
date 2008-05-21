@@ -25,7 +25,7 @@
 	* @package phpgwapi
 	* @subpackage contacts
 	*/
-	class contact_accounts extends sql_entity
+	class contact_accounts extends phpgwapi_sql_entity
 	{
 		var $map = array('account_id'		=> array('select'	=> '',
 								 'criteria' 	=> '',
@@ -68,7 +68,7 @@
 
 		function criteria_person_only($element)
 		{
-			$this->_add_criteria($this->put_alias(sql_criteria::not_null($this->real_field('account_person_id'))));
+			$this->_add_criteria($this->put_alias(phpgwapi_sql_criteria::not_null($this->real_field('account_person_id'))));
 		}
 
 		function criteria_account_person_id($element)
@@ -81,4 +81,3 @@
 			$this->add_field('is_user', 'count('.$this->real_field('account_id').')');
 		}
 	}
-?>

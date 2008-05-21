@@ -29,11 +29,11 @@
 
 		var $public_functions = array
 		(
-			'read'			=> True,
-			'read_single'		=> True,
-			'save'			=> True,
-			'delete'		=> True,
-			'check_perms'		=> True
+			'read'			=> true,
+			'read_single'		=> true,
+			'save'			=> true,
+			'delete'		=> true,
+			'check_perms'		=> true
 		);
 
 		var $soap_functions = array(
@@ -55,7 +55,7 @@
 			)
 		);
 
-		function hrm_bouser($session=False)
+		function hrm_bouser($session=false)
 		{
 		//	$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->so 		= CreateObject('hrm.souser');
@@ -65,7 +65,7 @@
 			if ($session)
 			{
 				$this->read_sessiondata();
-				$this->use_session = True;
+				$this->use_session = true;
 			}
 
 			$this->start	= phpgw::get_var('start', 'int', 'REQUEST', 0);
@@ -249,16 +249,16 @@
 
 			if(is_array($comms) && isset($comms[$fields[0]['contact_id']]) )
 			{
-				$fields[0]['tel_work'] = $comms[$fields[0]['contact_id']]['work phone'];			
+				$fields[0]['tel_work'] = $comms[$fields[0]['contact_id']]['work phone'];
 				$fields[0]['tel_home'] = $comms[$fields[0]['contact_id']]['home phone'];
 				$fields[0]['tel_cell'] = $comms[$fields[0]['contact_id']]['mobile (cell) phone'];
 				$fields[0]['email_home'] = $comms[$fields[0]['contact_id']]['home email'];
 			}
-		
+
 			if(!$account_info['person_id'])
 			{
 				$sfields = rawurlencode(serialize($fields[0]));
-				$contact_link   = $GLOBALS['phpgw']->link('/index.php', 
+				$contact_link   = $GLOBALS['phpgw']->link('/index.php',
 					array
 					(
 						'menuaction'	=> 'addressbook.uiaddressbook.add_person',
@@ -323,7 +323,7 @@
 					$j++;
 				}
 			}
-			
+
 			return $user_values;
 		}
 	}

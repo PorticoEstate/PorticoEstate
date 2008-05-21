@@ -71,7 +71,7 @@
 
 			$where= 'WHERE';
 			$grants = $this->grants;
-			
+
 /*			if (is_array($grants))
 			{
 				while (list($user) = each($grants))
@@ -161,7 +161,7 @@
 				$filtermethod = " $where command_log_code = '$cat_id'";
 				$where= 'AND';
 			}
-			
+
 			if($query)
 			{
 				$query = preg_replace("/'/",'',$query);
@@ -252,7 +252,7 @@
 				);
 
 			$insert_values	= $this->bocommon->validate_db_insert($insert_values);
-			
+
 			$this->db->query("INSERT INTO phpgw_sms_featcommand (uid,command_code,command_exec,command_type,command_descr) "
 				. "VALUES ($insert_values)",__LINE__,__FILE__);
 

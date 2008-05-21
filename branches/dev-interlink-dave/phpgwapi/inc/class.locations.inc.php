@@ -4,9 +4,9 @@
 	* @author Dan Kuykendall <seek3r@phpgroupware.org>
 	* @author Dave Hall <skwashd@phpgroupware.org>
 	* @copyright Copyright (C) 2000-2008 Free Software Foundation, Inc. http://www.fsf.org/
-	* @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License Version 3 or later
-	* @package phpgwapi
-	* @subpackage accounts
+	* @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License v3 or later
+	* @package phpgroupware
+	* @subpackage phpgwapi
 	* @version $Id: class.acl.inc.php 682 2008-02-01 12:19:55Z dave $
 	*/
 
@@ -28,12 +28,8 @@
 	/**
 	* phpGroupWare API - Locations
 	*
-	* This can manage rights to 'run' applications, and limit certain features within an application.
-	* It is also used for granting a user "membership" to a group, or making a user have the security 
-	* equivilance of another user. It is also used for granting a user or group rights to various records,
-	* such as todo or calendar items of another user.
-	* @package phpgwapi
-	* @subpackage accounts
+	* @package phpgroupware
+	* @subpackage phpgwapi
 	* @internal syntax: CreateObject('phpgwapi.acl',int account_id);
 	* @internal example: $acl = createObject('phpgwapi.acl');  // user id is the current user
 	* @internal example: $acl = createObject('phpgwapi.acl',10);  // 10 is the user id
@@ -41,61 +37,52 @@
 	class phpgwapi_locations
 	{
 		/**
-		* Database connection
 		* @var object Database connection
 		*/
-		private $db;
+		protected $_db;
 
 		/**
-		* @var string like ???
+		* @var string $join syntax for database joins
 		*/
-		private $like = 'LIKE';
+		protected $_join = 'JOIN';
 
 		/**
-		* @var string $join ???
-		*/
-		private $join = 'JOIN';
-
-		/**
-		* ACL constructor for setting account id
+		* Constructor
 		*
-		* Sets the ID for $account_id. Can be used to change a current instances id as well.
-		* Some functions are specific to this account, and others are generic.
-		* @param integer $account_id Account id
+		* @return null
 		*/
-		public function __construct($account_id = 0)
-		{	
-			$this->db =& $GLOBALS['phpgw']->db;
-
-			$this->like =& $this->db->like;
-			$this->join =& $this->db->join;
+		public function __construct()
+		{
+			$this->_db =& $GLOBALS['phpgw']->db;
+			$this->_join =& $this->_db->join;
 		}
 
 		/**
-		* Get list of xmlrpc or soap functions
-		*
-		* @param string|array $_type Type of methods to list. Could be xmlrpc or soap
-		* @return array Array with xmlrpc or soap functions. Might also be empty.
-		* This handles introspection or discovery by the logged in client,
-		* in which case the input might be an array.  The server always calls
-		* this function to fill the server dispatch map using a string.
-		*/
+		 * Get list of xmlrpc or soap functions
+		 *
+		 * @param string $_type Type of methods to list. Could be xmlrpc or soap
+		 *
+		 * @return array Array with xmlrpc or soap functions. Might also be empty.
+		 */
 		public function list_methods($_type='xmlrpc')
 		{
-			// not (yet) implemented
 			// TODO implement me
+			return array();
 		}
 
 		/**
 		 * Add a location
-		 * 
-		 * @param string $location the name of the location
-		 * @param string $description the description of the location - seen by users
-		 * @param string $appname the name of the application for the location
+		 *
+		 * @param string  $location    the name of the location
+		 * @param string  $descr       the description of the location - seen by users
+		 * @param string  $appname     the name of the application for the location
+		 * @param boolean $allow_grant allow grants on the location
+		 * @param string  $custom_tbl  table associated with location
+		 *
 		 * @return int the new location id
 		 */
-		 public function add($location, $descr, $appname = '', $allow_grant = true, $custom_tbl = '')
-		 {
+		public function add($location, $descr, $appname, $allow_grant = true, $custom_tbl = null)
+		{
 		 	if ( $appname === '' )
 		 	{
 		 		$appname = $GLOBALS['phpgw']['flags']['currentapp'];
@@ -103,113 +90,143 @@
 
 			$app = $GLOBALS['phpgw']->applications->name2id($appname);
 
-		 	$location = $this->db->db_addslashes($location);
-			$descr = $this->db->db_addslashes($descr);
+		 	$location = $this->_db->db_addslashes($location);
+			$descr = $this->_db->db_addslashes($descr);
 		 	$allow_grant = (int) $allow_grant;
 
-		 	$this->db->query('SELECT location_id FROM phpgw_locations'
+		 	$this->_db->query('SELECT location_id FROM phpgw_locations'
 		 			. " WHERE app_id = {$app} AND name = '{$location}'", __LINE__, __FILE__);
 
-		 	if ( $this->db->next_record() )
+		 	if ( $this->_db->next_record() )
 			{
-				return $this->db->f('location_id'); // already exists so just return the id
+				return $this->_db->f('location_id'); // already exists so just return the id
 		 	}
 
-		 	if ( $custom_tbl === '' )
+		 	if ( is_null($custom_tbl) )
 		 	{
 		 		$sql = 'INSERT INTO phpgw_locations (app_id, name, descr, allow_grant)'
 		 			. " VALUES ({$app}, '{$location}', '{$descr}', {$allow_grant})";
 		 	}
 		 	else
 		 	{
-		 		$custom_tbl = $this->db->db_addslashes($custom_tbl);
+		 		$custom_tbl = $this->_db->db_addslashes($custom_tbl);
 		 		$sql = 'INSERT INTO phpgw_locations (app_id, name, descr, allow_grant, allow_c_attrib, c_attrib_table)'
 		 			. " VALUES ({$app}, '{$location}', '{$descr}', {$allow_grant}, 1, '{$custom_tbl}')";
 		 	}
-			$this->db->query($sql, __LINE__, __FILE__);
-			
-			return $this->db->last_insert_id('phpgw_locations', 'location_id');
-		 }
+			$this->_db->query($sql, __LINE__, __FILE__);
+
+			return $this->_db->last_insert_id('phpgw_locations', 'location_id');
+		}
 
 		/**
-		* Deletes an ACL and all associated grants/masks for that location
-		*
-		* @param string $appname the application name
-		* @param string $location the location
-		* @param bool $remove_table remove the associate custom attributes table if it exists
-		* @return bool was the location found and deleted?
-		*/
-		public function delete($appnane, $location, $drop_table = true)
+		 * Deletes an ACL and all associated grants/masks for that location
+		 *
+		 * @param string  $appname    the application name
+		 * @param string  $location   the location
+		 * @param boolean $drop_table remove the associated custom attributes table if it exists
+		 *
+		 * @return boolean was the location found and deleted?
+		 */
+		public function delete($appname, $location, $drop_table = true)
 		{
 			$app = $GLOBALS['phpgw']->applications->name2id($appname);
-			$location = $this->db->db_addslashes($location);
+			$location = $this->_db->db_addslashes($location);
 
-			$this->db->query('SELECT c_attrib_table FROM phpgw_locations'
-				. " WHERE app_id = {$app} AND name = '{$location}'", __LINE__, __FILE__);
-			if ( !$this->db->next_record() )
+			$sql = 'SELECT c_attrib_table FROM phpgw_locations'
+				. " WHERE app_id = {$app} AND name = '{$location}'";
+			$this->_db->query($sql, __LINE__, __FILE__);
+			if ( !$this->_db->next_record() )
 			{
 				return false; //invalid location
 			}
 
-			$tbl = $this->db->f('c_attrib_table');
-			
-			$oProc = createObject('phpgwapi.schema_proc',$GLOBALS['phpgw_info']['server']['db_type']);
-			$oProc->m_odb =& $this->db;
-			$Proc->m_odb->Halt_On_Error = 'report';
+			$tbl = $this->_db->f('c_attrib_table');
 
-			$this->db->transaction_begin();
+			$this->_db->transaction_begin();
 
 			if ( $drop_table )
 			{
+				$oProc = createObject('phpgwapi.schema_proc',
+							$GLOBALS['phpgw_info']['server']['db_type']);
+
+				$oProc->m_odb =& $this->_db;
+				$Proc->m_odb->Halt_On_Error = 'report';
+
 				$oProc->DropTable($tbl);
 			}
 
-			$this->db->query('DELETE FROM phpgw_locations'
-				. " WHERE app_id = {$app}"
-					. " AND name = '{$location}'", __LINE__, __FILE__);
+			$sql = 'DELETE FROM phpgw_locations'
+				. " WHERE app_id = {$app} AND name = '{$location}'";
+			$this->_db->query($sql, __LINE__, __FILE__);
 
 			$this->delete_repository($appname, $location);
 
-			$this->db->transaction_commit();
+			$this->_db->transaction_commit();
 
 			return true;
 		}
 
 		/**
-		 * Update the description of a location
-		 * 
-		 * @param string $location location within application
-		 * @param string $description the description of the location - seen by users
-		 * @param string $appname the name of the application for the location
+		 * Get the ID of a location
+		 *
+		 * @param string $appname  the name of the module being looked up
+		 * @param string $location the location within the module to look up
+		 *
+		 * @return integer the location id - 0 = not found
 		 */
-		public function update_description($location, $description, $appname = '')
+		public function get_id($appname, $location)
 		{
-		 	if ( $appname === '' )
-		 	{
-		 		$appname = $GLOBALS['phpgw']['flags']['currentapp'];
-		 	}
+			$appname  = $this->_db->db_addslashes($appname);
+			$location = $this->_db->db_addslashes($location);
 
-		 	$location = $this->db->db_addslashes($location);
-			$description = $this->db->db_addslashes($description);
-		 	$appname = $this->db->db_addslashes($appname);
+			$sql = 'SELECT location_id '
+					. ' FROM phpgw_locations '
+					. " {$this->_join} phpgw_applications ON phpgw_applications.app_id = phpgw_locations.app_id"
+					. " WHERE phpgw_applications.app_name = '{$appname}'"
+						. " AND phpgw_locations.name = '{$location}'";
 
-		 	$this->db->query('UPDATE phpgw_locations, phpgw_applications'
-		 			. " SET descr = '{$description}'"
-		 			. ' WHERE phpgw_locations.app_id = phpgw_applications.app_id '
-						. " AND phpgw_applications.appname = '{$appname}'"
-						. " AND phpgw_locations.name = '{$location}'", __LINE__, __FILE__);
-			return $this->db->rows_affected() == 1;
+			$this->_db->query($sql, __LINE__, __FILE__);
+			if ( $this->_db->next_record() )
+			{
+				return (int) $this->_db->f('location_id');
+			}
+			return 0;
 		}
 
 		/**
-		* This does something
+		 * Update the description of a location
+		 *
+		 * @param string $location location within application
+		 * @param string $descr    the description of the location - seen by users
+		 * @param string $appname  the name of the application for the location
+		 *
+		 * @return boolean was the record updated?
+		 */
+		public function update_description($location, $descr, $appname)
+		{
+		 	$location	= $this->_db->db_addslashes($location);
+			$descr		= $this->_db->db_addslashes($description);
+		 	$appname	= $this->_db->db_addslashes($appname);
+
+		 	$this->_db->query('UPDATE phpgw_locations, phpgw_applications'
+		 			. " SET descr = '{$descr}'"
+		 			. ' WHERE phpgw_locations.app_id = phpgw_applications.app_id '
+						. " AND phpgw_applications.appname = '{$appname}'"
+						. " AND phpgw_locations.name = '{$location}'", __LINE__, __FILE__);
+			return $this->_db->rows_affected() == 1;
+		}
+
+		/**
+		* This does something - ask sigurd he wrote the code
 		*
-		* @param ??? $apps ???
-		* @return ???
+		* @param something $apps     a paramater
+		* @param string?   $location something - ask sigurd
+		*
+		* @return null - should really be a boolean? skwashd may08
 		*/
 		public function verify($apps, $location = '.')
 		{
-			$location = $this->db->db_addslashes($location);
+			$location = $this->_db->db_addslashes($location);
 
 			if ( !is_array($apps) )
 			{
@@ -218,21 +235,24 @@
 
 			foreach ( $apps as $appname => $values )
 			{
-				$appname = $this->db->db_addslashes($appname);
+				$appname = $this->_db->db_addslashes($appname);
 				$sql = 'SELECT phpgw_applications.app_name'
 					. ' FROM phpgw_applications'
-					. " {$this->join} phpgw_locations ON phpgw_applications.app_id = phpgw_locations.app_id"
+					. " {$this->_join} phpgw_locations ON phpgw_applications.app_id = phpgw_locations.app_id"
 					. " WHERE phpgw_applications.app_name = '{$appname}'"
 						. " AND phpgw_locations.name = '{$location}'";
-				$this->db->query($sql ,__LINE__,__FILE__);
 
-				if ($this->db->num_rows()==0)
+				$this->_db->query($sql, __LINE__, __FILE__);
+
+				if ( !$this->_db->next_record() )
 				{
-					$top = (int) $value['top_grant'];
+					$top = (int) $values['top_grant'];
 					$app_id = $GLOBALS['phpgw']->applications->name2id($appname);
+
 					$sql = 'INSERT INTO phpgw_locations (app_id, name, descr, allow_grant)'
 						. " VALUES ({$app_id}, '{$location}', 'Top', {$top})";
-					$this->db->query($sql ,__LINE__,__FILE__);
+
+					$this->_db->query($sql, __LINE__, __FILE__);
 				}
 			}
 		}

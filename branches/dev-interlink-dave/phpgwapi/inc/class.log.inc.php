@@ -12,13 +12,13 @@
 
 	/**
 	* Log
-	* 
+	*
 	* @package phpgwapi
 	* @subpackage application
 	*/
 	class log
 	{
-		
+
 		/***************************\
 		*	Instance Variables...   *
 		\***************************/
@@ -48,8 +48,8 @@
 			'D' => 6
 		);
 
-		// these are used by the admin appliation when showing the log file. 
-				
+		// these are used by the admin appliation when showing the log file.
+
 		var $log_level_names = array
 		(
 			'F' => 'fatal',
@@ -59,7 +59,15 @@
 			'I' => 'info',
 			'D' => 'debug'
 		);
-		
+
+		/**
+		 * Constructor
+		 */
+		/*
+		public function __construct()
+		{}
+		*/
+
 		function checkprefs()
 		{
 			//validate defaults
@@ -70,27 +78,27 @@
 				$GLOBALS['phpgw_info']['server']['log_levels']['user'] = array();
 			}
 		}
-		
+
 		function get_level_name($level)
 		{
 			return $this->log_level_names[$level];
 		}
-		
-		function is_level($level) 
+
+		function is_level($level)
 		{
 			$this->checkprefs();
 			if ( $this->log_level_table[$GLOBALS['phpgw_info']['server']['log_levels']['global_level']] >= $this->log_level_table[$level] )
 			{
 				return true;
 			}
-			
+
 			if ( isset($GLOBALS['phpgw_info']['flags']['currentapp'])
 				 && @array_key_exists( $GLOBALS['phpgw_info']['flags']['currentapp'] , $GLOBALS['phpgw_info']['server']['log_levels']['module'])
 				 && $this->log_level_table[$GLOBALS['phpgw_info']['server']['log_levels']['module'][$GLOBALS['phpgw_info']['flags']['currentapp']]] >= $this->log_level_table[$level] )
 			{
 					return true;
 			}
-			
+
 			if ( isset($GLOBALS['phpgw_info']['user']['account_lid'])
 				 && @array_key_exists($GLOBALS['phpgw_info']['user']['account_lid'], $GLOBALS['phpgw_info']['server']['log_levels']['user'])
 				 && $this->log_level_table[$GLOBALS['phpgw_info']['server']['log_levels']['user'][$GLOBALS['phpgw_info']['user']['account_lid']]] >= $this->log_level_table[$level] )
@@ -100,8 +108,8 @@
 
 			return false;
 		}
-		
-		  
+
+
 		function log_if_level($level, $parms)
 		{
 			if ( $this->is_level($level) )
@@ -110,7 +118,7 @@
 				$err = createObject('phpgwapi.log_message',$parms);
 				$this->write_error_to_db($err);
  				$this->handle_fatal_error($err);              // this is here instead of in fatal() because I still support
- 				                                              // the old methods. 
+ 				                                              // the old methods.
  				return true;
 			}
 			else
@@ -119,18 +127,15 @@
 			}
 		}
 
-		function log()
-		{}
-
 		function make_parms($arg_array)
 		{
-			if ( count($arg_array) == 0 ) 
+			if ( count($arg_array) == 0 )
 			{
 				$parms['text'] = 'No message passed to logging function!';
 			}
-			else 
+			else
 			{
-				// if they've passed in an array of parms, 
+				// if they've passed in an array of parms,
 				// just return it.
 				if ( is_array($arg_array[0])  )
 				{
@@ -162,7 +167,7 @@
 			$arg_array = func_get_args();
 			return $this->log_if_level('I',  $this->make_parms($arg_array));
 		}
-		
+
 		function notice()
 		{
 			$arg_array = func_get_args();
@@ -229,8 +234,8 @@
 
 		// I pulled this from the old code, where it's used to display a fatal error and determinate processing..
 		// Do I still want to do this?  If so, do I want to translate the error message like it used to?
-		// 
-		function handle_fatal_error($err) 
+		//
+		function handle_fatal_error($err)
 		{
 			if ($err->severity == 'F')
 			{
@@ -243,8 +248,8 @@
 					unset($msg_array[0]);
 					if ( isset($GLOBALS['phpgw_info']['user']['apps']['admin']) )
 					{
-						$trace = '<h2>' .lang('back trace') . "</h2>\n" 
-									. '<p>' . lang('Please include the following output when you report this incident on our bug tracker - %1', 
+						$trace = '<h2>' .lang('back trace') . "</h2>\n"
+									. '<p>' . lang('Please include the following output when you report this incident on our bug tracker - %1',
 											'<a href="https://savannah.gnu.org/bugs/?group=phpgroupware" target="_blank">https://savannah.gnu.org/bugs/?group=phpgroupware</a>') . "</p>\n"
 									. '<pre>' . implode("\n", $msg_array) . '</pre>';
 					}
@@ -263,7 +268,7 @@
 			}
 		}
 
-		
+
 		// write() left in for backward compatibility
 		function write($parms)
 		{
@@ -290,6 +295,4 @@
 		{
 			return true;
 		}
-
-
 	}

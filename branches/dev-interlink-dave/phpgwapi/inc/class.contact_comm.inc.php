@@ -25,7 +25,7 @@
 	* @package phpgwapi
 	* @subpackage contacts
 	*/
-	class contact_comm extends sql_entity
+	class contact_comm extends phpgwapi_sql_entity
 	{
 		var $map = array('key_comm_id'		=> array('select'	=> '',
 								 'criteria' 	=> '',
@@ -266,4 +266,3 @@
 			$this->_add_criteria($this->index_criteria($element));
 		}
 	}
-?>

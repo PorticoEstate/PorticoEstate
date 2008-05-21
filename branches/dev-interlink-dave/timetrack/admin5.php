@@ -15,8 +15,8 @@
    * to use acl's instead, which might just be assignable on a user's
    * main account editing page.
    */
- 
-  
+
+
   $GLOBALS['phpgw_info']["flags"]["enable_nextmatchs_class"] = "True";
   $GLOBALS['phpgw_info']["flags"]["currentapp"] = "timetrack";
   include("../header.inc.php");
@@ -24,7 +24,7 @@
     // --------------------------------------------------------------------------------
     // From original "setup_groups.inc.php"
     // Setup the manage_jobs acl
-    // 
+    //
     echo "Creating TTrack_Managers group and manage_jobs ACL's...<br>";
 	$n_group = "TTrack_Managers";
 	$account_expires = -1;
@@ -48,7 +48,7 @@
 		$acl = CreateObject('phpgwapi.acl',$mgrgrpid);
 		$acl->read_repository();
 		$acl->add("timetrack", "manage_jobs", 1);
-		$acl->save_repository();
+		$acl->save_repository('timetrack');
 	}
 
    	// Setup the payroll acl
@@ -74,7 +74,7 @@
 		$acl = CreateObject('phpgwapi.acl',$paygrpid);
 		$acl->read_repository();
 		$acl->add("timetrack", "manage_payroll", 1);
-		$acl->save_repository();
+		$acl->save_repository('timetrack');
 	}
 
     // --------------------------------------------------------------------------------
@@ -104,7 +104,7 @@
 		$acl->delete("timetrack", "run", 1);
 		$acl->add("timetrack", "run", 1);
           echo "Timetrack run acl assigned<br>";
-		$acl->save_repository();
+		$acl->save_repository('timetrack');
           $id = $entry['account_id'];
           $lid = $entry['account_lid'];
           // To save processing time, I decided to move the add profiles code here
@@ -114,7 +114,7 @@
           $GLOBALS['phpgw']->db->query("SELECT * from phpgw_ttrack_emplyprof WHERE id='$id'");
           if($GLOBALS['phpgw']->db->num_rows() == 0)
 	    {
-           $sql = "INSERT into phpgw_ttrack_emplyprof " 
+           $sql = "INSERT into phpgw_ttrack_emplyprof "
              . "(id, lid, location_id) VALUES ($id, '$lid', 1)";
            echo "Employee Profile added.<br>";
            //echo "sql = $sql";
@@ -148,7 +148,7 @@
      $entries = $contacts->read($start,$offset,$qfields,$query,$filter,$sort,$order);
      $entry_num = count($entries);
      echo "Number of org_names found is $entry_num<br>";
-   
+
      for ($i=0; $i<$entry_num; $i++)
      {
        $cname = $entries[$i]['org_name'];
@@ -183,10 +183,5 @@
        . "supposed to be the default according to the docs. Finally, not all<br>"
        . "current SQL statements have been tested to be compatible with PostgreSQL,<br>"
        . "so please report any problems to the Timetrack maintainer.";
-
-
-    // --------------------------------------------------------------------------------
-
-
 
   $GLOBALS['phpgw']->common->phpgw_footer();

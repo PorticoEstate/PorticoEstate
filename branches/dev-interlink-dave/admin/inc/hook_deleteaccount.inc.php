@@ -29,12 +29,5 @@
 			$data = $account->read();
 			$account_lid = $data['account_lid'];
 			$GLOBALS['phpgw']->mapping->delete_mapping(array('account_lid' => $account_lid));
-		}											
-		
-		$GLOBALS['phpgw']->accounts->delete($account_id);
-		$GLOBALS['phpgw']->db->lock(Array('phpgw_acl'));
-		$GLOBALS['phpgw']->db->query("DELETE FROM phpgw_acl WHERE acl_location='$account_id'"
-			. " OR acl_account = {$account_id}", __LINE__, __FILE__);
-		$GLOBALS['phpgw']->db->unlock();
+		}
 	}
-?>

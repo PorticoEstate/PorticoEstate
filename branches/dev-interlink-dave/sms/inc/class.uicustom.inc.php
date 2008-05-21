@@ -25,7 +25,7 @@
 			'edit'			=> True,
 			'edit_yes'		=> True,
 			'delete'		=> True,
-			
+
 			);
 
 
@@ -46,7 +46,7 @@
 			$this->sort				= $this->bo->sort;
 			$this->order				= $this->bo->order;
 			$this->allrows				= $this->bo->allrows;
-			
+
 			$this->db 				= clone($GLOBALS['phpgw']->db);
 			$this->db2 				= clone($GLOBALS['phpgw']->db);
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] = 'sms::custom';
@@ -61,15 +61,15 @@
 				$this->bocommon->no_access();
 				return;
 			}
-			
-			
+
+
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('SMS').' - '.lang('List/Edit/Delete SMS customs');
 			$GLOBALS['phpgw']->common->phpgw_header();
 
 			echo parse_navbar();
 
 			$err	= urldecode(phpgw::get_var('err'));
-	
+
 			if ($err)
 			{
 			    $content = "<p><font color=red>$err</font><p>";
@@ -90,7 +90,7 @@
 			}
 */
 			$sql = "SELECT * FROM phpgw_sms_featcustom $query_user_only ORDER BY custom_code";
-			$this->db->query($sql,__LINE__,__FILE__);	
+			$this->db->query($sql,__LINE__,__FILE__);
 			while ($this->db->next_record())
 			{
 				$owner = $GLOBALS['phpgw']->accounts->id2name($this->db->f('uid'));
@@ -107,7 +107,7 @@
 
 				$done_data = array(
 				'menuaction'	=> 'sms.uisms.index');
-				
+
 				$done_url = $GLOBALS['phpgw']->link('/index.php',$done_data);
 
 				$content .= "
@@ -116,19 +116,19 @@
 				    <p>
 				";
 
-			echo $content;	
+			echo $content;
 		}
 
 		function add()
-		{		
+		{
 			if(!$this->acl->check($this->acl_location, PHPGW_ACL_ADD))
 			{
 				$GLOBALS['phpgw_info']['flags']['xslt_app'] = True;
 				$this->bocommon->no_access();
 				return;
 			}
-			
-			
+
+
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('SMS').' - '.lang('Add SMS custom');
 			$GLOBALS['phpgw']->common->phpgw_header();
 
@@ -147,7 +147,7 @@
 				'menuaction'	=> 'sms.uicustom.add_yes',
 				'autoreply_id' => $autoreply_id
 				);
-				
+
 			$add_url = $GLOBALS['phpgw']->link('/index.php',$add_data);
 
 			$content .= "
@@ -157,7 +157,7 @@
 			    <p>Pass these parameter to custom URL field:
 			    <p>##SMSDATETIME## replaced by SMS incoming date/time
 			    <p>##SMSSENDER## replaced by sender number
-			    <p>##CUSTOMCODE## replaced by custom code 
+			    <p>##CUSTOMCODE## replaced by custom code
 			    <p>##CUSTOMPARAM## replaced by custom parameter passed to server from SMS
 			    <p>SMS custom URL: <input type=text size=60 maxlength=200 name=custom_url value=\"$custom_url\">
 			    <p><input type=submit class=button value=Add>
@@ -205,7 +205,7 @@
 					$new_uid = $this->db->get_last_insert_id(phpgw_sms_featcustom,'custom_id');
 
 					$this->db->transaction_commit();
-					
+
 					if ($new_uid)
 					{
 			    	    $error_string = "SMS custom code `$custom_code` has been added";
@@ -235,14 +235,14 @@
 
 
 		function edit()
-		{	
+		{
 			if(!$this->acl->check($this->acl_location, PHPGW_ACL_EDIT))
 			{
 				$GLOBALS['phpgw_info']['flags']['xslt_app'] = True;
 				$this->bocommon->no_access();
 				return;
 			}
-		
+
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('SMS').' - '.lang('Edit SMS custom');
 			$GLOBALS['phpgw']->common->phpgw_header();
 
@@ -269,7 +269,7 @@
 				'custom_id' => $custom_id,
 				'custom_code' => $custom_code,
 				);
-				
+
 			$add_url = $GLOBALS['phpgw']->link('/index.php',$add_data);
 
 			$custom_url = stripslashes($this->db->f('custom_url'));
@@ -284,7 +284,7 @@
 			    <p>Pass these parameter to custom URL field:
 			    <p>##SMSDATETIME## replaced by SMS incoming date/time
 			    <p>##SMSSENDER## replaced by sender number
-			    <p>##CUSTOMCODE## replaced by custom code 
+			    <p>##CUSTOMCODE## replaced by custom code
 			    <p>##CUSTOMPARAM## replaced by custom parameter passed to server from SMS
 			    <p>SMS custom URL: <input type=text size=60 name=custom_url value=\"$custom_url\">
 			    <p><input type=submit class=button value=Save>
@@ -391,12 +391,12 @@
 					else
 					{
 						$error_string = "Fail to delete SMS custom code `$custom_code`";
-					
+
 					}
 
 	    			$this->db->transaction_commit();
 				}
-					
+
 				$link_data['err'] = urlencode($error_string);
 
 				$GLOBALS['phpgw']->redirect_link('/index.php',$link_data);

@@ -25,7 +25,7 @@
 	* @package phpgwapi
 	* @subpackage contacts
 	*/
-	class contact_note extends sql_entity
+	class contact_note extends phpgwapi_sql_entity
 	{
 		var $map = array('key_note_id'		=> array('select'	=> '',
 								 'criteria' 	=> '',
@@ -116,4 +116,3 @@
 			$this->set_elinks('note_type', 'phpgwapi.contact_note_type','note_type_id');
 		}
 	}
-?>

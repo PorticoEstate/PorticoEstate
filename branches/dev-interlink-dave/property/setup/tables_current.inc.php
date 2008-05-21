@@ -1897,7 +1897,7 @@
 				'year' => array('type' => 'int', 'precision' => 4,'nullable' => False),
 				'month' => array('type' => 'int', 'precision' => 4,'nullable' => False),
 				'b_account_id' => array('type' => 'varchar','precision' => 4,'nullable' => False),
-				'percent' => array('type' => 'int','precision' => 4,'default' => '0','nullable' => True),
+				'per_cent' => array('type' => 'int','precision' => 4,'default' => '0','nullable' => True), //'percent' is reserved for mssql
 				'user_id' => array('type' => 'int', 'precision' => 4,'nullable' => True),
 				'entry_date' => array('type' => 'int', 'precision' => 4,'nullable' => True),
 				'remark' => array('type' => 'text','nullable' => True)

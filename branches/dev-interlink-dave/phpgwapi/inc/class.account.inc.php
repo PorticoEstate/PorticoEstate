@@ -2,7 +2,7 @@
 
 	/**
 	 * Account data objects
-	 * 
+	 *
 	 * @author Dave Hall <skwashd@phpgroupware.org>
 	 * @copyright Copyright (C) 2008 Free Software Foundation, Inc. http://www.fsf.org/
 	 * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License v3 or later
@@ -29,12 +29,46 @@
 	/**
 	 * Abstract account data object, used for storing account data
 	 *
+	 * @property		integer	$id the account id
+	 * @property		string	$lid the account login id
+	 * @property		string	$firstname the first name of the account
+	 * @property		string	$lastname the lastname of the account
+	 * @property		string	$passwd the password for the account
+	 * @property-read	string	$passwd_hash the account's hashed password
+	 * @property		integer	$last_login the unix timestamp of when the user last logged in
+	 * @property		string	$last_login_from the IP address which the user last logged in from
+	 * @property		integer	$last_passwd_change the unix timestamp of when the user last changed their password
+	 * @property		boolean	$enabled is the account currently enabled?
+	 * @property		integer	$expires unix timestamp of when the account is due to expire
+	 * @property		integer	$person_id the contact id for the account - FIXME rename to contact_id - skwashd apr08
+	 * @property		integer $quota the amount of storage for the user in Mb
+	 *
 	 * @package phpgroupware
 	 * @subpackage phpgwapi
 	 * @category accounts
 	 */
 	abstract class phpgwapi_account
 	{
+		/**
+		 * User object class name
+		 */
+		const CLASS_TYPE_USER = 'phpgwapi_user';
+
+		/**
+		 * Group object class name
+		 */
+		const CLASS_TYPE_GROUP = 'phpgwapi_group';
+
+		/**
+		 * Group Type account
+		 */
+		const TYPE_GROUP = 'g';
+
+		/**
+		 * User Type account
+		 */
+		const TYPE_USER = 'u';
+
 		/**
 		 * @var array $_data the account data
 		 */
@@ -49,16 +83,27 @@
 			'last_login'		=> 0,
 			'last_login_from'	=> '0.0.0.0',
 			'last_passwd_change'=> 0,
-			'enabled'			=> true,
+			'enabled'			=> false,
 			'expires'			=> 0,
 			'person_id'			=> 0,
 			'quota'				=> 0
 		);
 
 		/**
-		 * @var string the hash of initial data, used for tracking changes
+		 * @var string $_hash the hash of initial data, used for tracking changes
 		 */
-		protected $hash = '';
+		protected $_hash = '';
+
+		/**
+		 * Initialise the values of the object - this should only be called from phpgwapi_accounts
+		 *
+		 * @param array $arr the values to initialise the values of the object with
+		 *
+		 * @return void
+		 *
+		 * @internal doesn't validate input or throw Exceptions
+		 */
+		abstract public function init($arr);
 
 		/**
 		 * Check to see if the class data has changed since it was loaded
@@ -67,13 +112,28 @@
 		 */
 		public function is_dirty()
 		{
-			return $this->hash == $this->_generate_hash();
+			return $this->_hash != $this->_generate_hash();
 		}
+
+		/**
+		 * Convert object to an array - for backwards compatiability
+		 *
+		 * @return array the object as an array
+		 */
+		public function toArray()
+		{
+			return $this->_data;
+		}
+
 
 		/**
 		 * Magic getter function, for getting values from $_data
 		 *
 		 * @param string $name the name of the value to lookup
+		 *
+		 * @return string|integer the property sought
+		 *
+		 * @throws Exception on invalid property requested
 		 */
 		abstract public function __get($name);
 
@@ -81,6 +141,8 @@
 		 * Magic isset for checking if a value of $_data is set or not
 		 *
 		 * @param string $name the name of the value to set
+		 *
+		 * @return boolean is the property set?
 		 */
 		public function __isset($name)
 		{
@@ -90,8 +152,10 @@
 		/**
 		 * Magic setter function, for setting values in $_data
 		 *
-		 * @param string $name the name of the value to set
-		 * @param string|int the value to be assigned
+		 * @param string         $name  the name of the value to set
+		 * @param string|integer $value the value to be assigned
+		 *
+		 * @return boolean was the property set?
 		 */
 		abstract public function __set($name, $value);
 
@@ -115,9 +179,11 @@
 		/**
 		 * Check that a firstname is valid
 		 *
-		 * @throws Exception when name is empty
 		 * @param string $name the name to validate
+		 *
 		 * @return bool is the name valid?
+		 *
+		 * @throws Exception when name is empty
 		 */
 		protected function _validate_firstname($name)
 		{
@@ -130,8 +196,9 @@
 		/**
 		 * Make sure a contact exists
 		 *
-		 * @param int $id the contact id to lookup
-		 * @param string $type the contact type to lookup
+		 * @param integer $id   the contact id to lookup
+		 * @param string  $type the contact type to lookup
+		 *
 		 * @return bool does the contact id exist?
 		 */
 		protected function _validate_contact_id($id, $type)
@@ -140,7 +207,7 @@
 			switch ( $type )
 			{
 				case 'org':
-					return !!count($contacts->get_principal_org_data($id));
+					return !!count($contacts->get_principal_organizations_data($id));
 
 				case 'person':
 				default: // just in case?
@@ -158,6 +225,41 @@
 	 */
 	class phpgwapi_group extends phpgwapi_account
 	{
+		/**
+		 * Initialise the values of the object - this should only be called from phpgwapi_accounts
+		 *
+		 * @param array $arr the values to initialise the values of the object with
+		 *
+		 * @return void
+		 *
+		 * @internal doesn't validate input or throw Exceptions
+		 */
+		public function init($arr)
+		{
+			foreach ( $arr as $key => $val )
+			{
+				switch ( $key )
+				{
+					case 'id':
+					case 'lid':
+					case 'firstname':
+					case 'passwd_hash':
+					case 'expires':
+					case 'enabled':
+					case 'person_id':
+						$this->_data[$key] = $val;
+					// we ignore the rest
+				}
+			}
+			$this->_data['lastname'] = 'Group';
+			$this->_hash = $this->_generate_hash();
+		}
+
+		/**
+		 * Constructor
+		 *
+		 * @return void
+		 */
 		public function __construct()
 		{
 			$this->_data['lastname'] = 'Group';
@@ -167,6 +269,10 @@
 		 * Magic getter function, for getting values from $_data
 		 *
 		 * @param string $name the name of the value to lookup
+		 *
+		 * @return string|integer the property sought
+		 *
+		 * @throws Exception on invalid property requested
 		 */
 		public function __get($name)
 		{
@@ -180,15 +286,17 @@
 				case 'person_id':
 					return $this->_data[$name];
 				default:
-					throw new Exception("Unknown value: $name");
+					throw new Exception(lang('Unknown value: %1', $name));
 			}
 		}
 
 		/**
 		 * Magic setter function, for setting values in $_data
 		 *
-		 * @param string $name the name of the value to set
-		 * @param string|int the value to be assigned
+		 * @param string         $name  the name of the value to set
+		 * @param string|integer $value the value to be assigned
+		 *
+		 * @return boolean was the property set?
 		 */
 		public function __set($name, $value)
 		{
@@ -206,7 +314,7 @@
 						$value = !!$value;
 
 				case 'person_id':
-					$this->_validate_person_id($id, 'org');
+					$this->_validate_contact_id($value, 'org');
 					break;
 			}
 			$this->_data[$name] = $value;
@@ -225,10 +333,12 @@
 		/**
 		 * Validate a group name
 		 *
-		 * @throws Exception when group name is invalid
-		 * @param string $username the group name to validate
+		 * @param string  $group  the group name to validate
 		 * @param boolean $lookup check if the account already exists
+		 *
 		 * @return boolean is the group name valid?
+		 *
+		 * @throws Exception when group name is invalid
 		 */
 		private function _validate_groupname($group, $lookup = true)
 		{
@@ -237,7 +347,7 @@
 				throw new Exception('Group name is too short');
 			}
 
-			if ( $lookup && $GLOBALS['phpgw']->accounts->search(array('lid' => $group, 'type' => 'g')) )
+			if ( $lookup && $GLOBALS['phpgw']->accounts->name2id($group) )
 			{
 				throw new Exception('Group name already in use');
 			}
@@ -264,20 +374,53 @@
 		/**
 		 * Initialise the values of the object - this should only be called from phpgwapi_accounts
 		 *
-		 * @internal FIXME this needs to work properly
+		 * @param array $arr the values to initialise the values of the object with
+		 *
+		 * @return void
+		 *
+		 * @internal doesn't validate input or throw Exceptions
 		 */
 		public function init($arr)
 		{
 			foreach ( $arr as $key => $val )
 			{
-				$this->_data[$key] = $val;
+				switch ( $key )
+				{
+					case 'id':
+					case 'lid':
+					case 'firstname':
+					case 'lastname':
+					case 'passwd':
+					case 'passwd_hash':
+					case 'last_login':
+					case 'last_login_from':
+					case 'last_passwd_change':
+					case 'enabled':
+					case 'expires':
+					case 'enabled':
+					case 'person_id':
+					case 'quota':
+						$this->_data[$key] = $val;
+				}
 			}
+			$this->_hash = $this->_generate_hash();
+		}
+
+		/**
+		 * Has the user account expired?
+		 *
+		 * @return boolean has the account expired?
+		 */
+		public function is_expired()
+		{
+			$expires = $this->data['expires'];
+			return $expires <> -1 && $expires < time();
 		}
 
 		/**
 		 * Convert object to an array - for backwards compatiability
 		 *
-		 * return array the object as an array
+		 * @return array the object as an array
 		 */
 		public function toArray()
 		{
@@ -289,8 +432,13 @@
 		/**
 		 * Magic getter function, for getting values from $_data
 		 *
-		 * @todo handle LDAP extended attributes 
 		 * @param string $name the name of the value to lookup
+		 *
+		 * @return string|integer the property sought
+		 *
+		 * @throws Exception on invalid property requested
+		 *
+		 * @todo handle LDAP extended attributes
 		 */
 		public function __get($name)
 		{
@@ -300,31 +448,36 @@
 				case 'lid':
 				case 'firstname':
 				case 'lastname':
-				//case 'passwd':
+				case 'passwd':
+				case 'passwd_hash':
 				case 'last_login':
 				case 'last_login_from':
 				case 'last_passwd_change':
 				case 'enabled':
-				case 'expired':
+				case 'expires':
 				case 'person_id':
 				case 'quota':
 					return $this->_data[$name];
 				default:
-					throw new Exception("Unknown value: {$name}");
+					throw new Exception(lang('Unknown value: %1', $name));
 			}
 		}
-	
+
 		/**
 		 * Magic setter function, for setting values in $_data
 		 *
-		 * @todo handle LDAP extended attributes 
-		 * @param string $name the name of the value to set
-		 * @param string|int the value to be assigned
+		 * @param string         $name  the name of the value to set
+		 * @param string|integer $value the value to be assigned
+		 *
+		 * @return boolean was the property set?
 		 */
 		public function __set($name, $value)
 		{
 			switch($name)
 			{
+				case 'id':
+					break;
+
 				case 'lid':
 					$this->_validate_username($value);
 					break;
@@ -337,13 +490,13 @@
 					$this->_validate_lastname($value);
 					break;
 
-				case 'password':
+				case 'passwd':
 					$this->_validate_password($value);
-					$this->_data['password_hash'] = ExecMethod('phpgwapi.auth.create_hash', $value);
+					$this->_data['passwd_hash'] = ExecMethod('phpgwapi.auth.create_hash', $value);
 					$this->_data['last_passwd_change'] = time();
 					break;
 
-				case 'password_hash':
+				case 'passwd_hash':
 					$this->_data['password'] = null; // make it invalid
 					break;
 
@@ -361,24 +514,29 @@
 					break;
 
 				case 'person_id':
-					$this->_validate_person_id($value, 'person');
+					$this->_validate_contact_id($value, 'person');
 					break;
 
 				case 'quota':
 					$this->_validate_quota($value);
 					break;
 
-				case 'acl':
-					// just let it through
-					break;
+				case 'dn':
+				case 'homedirectory':
+				case 'loginshell':
+				case 'mail':
+					return $this->_set_ldap_extended($name, $value);
 
 				default:
 					$class = get_class($this);
-					// trigger notice here to allow the execution to continue, we just won't set anything
-					trigger_error("Attempted to set {$class}::{$name} to $value, {$class}::{$name} is unknown", E_USER_NOTICE);
+					// trigger notice here & allow execution to continue, we just won't set anything
+					$varname = "{$class}::{$name}";
+					trigger_error("Attempted to set {$varname} to $value, {$varname} is unknown",
+									E_USER_NOTICE);
 					return false;
 			}
 			$this->_data[$name] = $value;
+			return true;
 		}
 
 		/**
@@ -388,7 +546,13 @@
 		 */
 		public function __toString()
 		{
-			switch($GLOBALS['phpgw_info']['user']['preferences']['common']['account_display'])
+			$display = 'firstname';
+			if ( isset($GLOBALS['phpgw_info']['user']['preferences']['common']['account_display']) )
+			{
+				$display = $GLOBALS['phpgw_info']['user']['preferences']['common']['account_display'];
+			}
+
+			switch ( $display )
 			{
 				case 'lastname':
 					return "{$this->_data['lastname']}, {$this->_data['firstname']}";
@@ -399,11 +563,45 @@
 		}
 
 		/**
+		 * Set the extended LDAP attributes
+		 *
+		 * @param string $name  the name of the value to set
+		 * @param string $value the value to be assigned
+		 *
+		 * @return boolean was the property valid and set?
+		 */
+		protected function _set_ldap_extended($name, $value)
+		{
+			// only used by ldap
+			if ( $GLOBALS['phpgw_info']['server']['account_repository'] != 'ldap' )
+			{
+				return false;
+			}
+			switch($name)
+			{
+				case 'dn':
+				case 'homedirectory':
+				case 'loginshell':
+				case 'mail':
+					$this->data['ldap_extended'][$name] = $value;
+					return true;
+			}
+			$name = htmlentities($name, ENT_QUOTES, 'UTF-8');
+			$value = htmlentities($value, ENT_QUOTES, 'UTF-8');
+			trigger_error("Attempted to set ldap extended attribute '{$name}' to '{$value}',"
+					. " {$name} is not a supported attribute", E_USER_NOTICE);
+			return false;
+
+		}
+
+		/**
 		 * Check that the account expiry time stamp is valid
 		 *
+		 * @param integer $exp the account expiry expresses as a unix timestamp
+		 *
+		 * @return boolean is the expiry valid?
+		 *
 		 * @throws Exception when expiry timestamp is invalid
-		 * @param int $exp the account expiry expresses as a unix timestamp
-		 * @return bool is the expiry valid?
 		 */
 		protected function _validate_expires($exp)
 		{
@@ -418,9 +616,11 @@
 		/**
 		 * Check that a lastname is valid
 		 *
-		 * @throws Exception when name is empty
 		 * @param string $name the name to validate
-		 * @return bool is the name valid?
+		 *
+		 * @return boolean is the name valid?
+		 *
+		 * @throws Exception when name is empty
 		 */
 		protected function _validate_lastname($name)
 		{
@@ -430,14 +630,17 @@
 		/**
 		 * Check that a password is valid and secure
 		 *
-		 * @throws Exception when password is invalid/insecure
 		 * @param string $passwd the password to check
-		 * @return bool is the password valid and secure?
+		 *
+		 * @return boolean is the password valid and secure?
+		 *
+		 * @throws Exception when password is invalid/insecure
 		 */
 		protected function _validate_password($passwd)
 		{
-			if ( function_exists('crack_check')
-				&& $dict_loc = ini_get('crack.default_dictionary') )
+			$dict_loc = ini_get('crack.default_dictionary');
+
+			if ( function_exists('crack_check') && $dict_loc )
 			{
 				$dict = crack_opendict($dict_loc);
 				if ( !crack_check($passwd) )
@@ -448,19 +651,20 @@
 			}
 			else
 			{
-				if ( strlen($passwd) >= 8 )
+				$len = strlen($passwd); 
+				if ( $len <= 8 )
 				{
-					throw new Exception('Password must be at least 8 characters long');
+					throw new Exception('Password must be at least 8 characters long, not %1', $len);
 				}
 
 				$m = array();
-				if ( preg_match_all('/[a-z]/', $passwd, $m) <= 2 )
+				if ( preg_match_all('/[a-z]/', $passwd, $m) < 2 )
 				{
 					throw new Exception('Password must contain at least 2 lower case characters');
 				}
 
 				$m = array();
-				if ( preg_match_all('/[A-Z]/', $passwd, $m) <= 2 )
+				if ( preg_match_all('/[A-Z]/', $passwd, $m) < 2 )
 				{
 					throw new Exception('Password must contain at least 2 upper case characters');
 				}
@@ -482,9 +686,11 @@
 		/**
 		 * Check if the specified quota is a valid value
 		 *
-		 * @throws Exception if quota is invalid
-		 * @param int $quota the users quota in Kb
+		 * @param integer $quota the users quota in Kb
+		 *
 		 * @return boolean is the quota valid?
+		 *
+		 * @throws Exception if quota is invalid
 		 */
 		private function _validate_quota($quota)
 		{
@@ -513,10 +719,12 @@
 		/**
 		 * Validate a username
 		 *
-		 * @throws Exception when username is invalid
-		 * @param string $username the username to validate
-		 * @param boolean $lookup check if the account already exists
+		 * @param string  $username the username to validate
+		 * @param boolean $lookup   check if the account already exists
+		 *
 		 * @return boolean is the username valid?
+		 *
+		 * @throws Exception when username is invalid
 		 */
 		private function _validate_username($username, $lookup = true)
 		{
@@ -525,9 +733,13 @@
 				throw new Exception('Username is too short');
 			}
 
-			if ( $lookup && $GLOBALS['phpgw']->accounts->search(array('lid' => $username, 'type' => 'u')) )
+			if ( $lookup )
 			{
-				throw new Exception('Username already in use');
+				$id = $GLOBALS['phpgw']->accounts->name2id($username);
+				if ( $id && $id <> $this->id )
+				{
+					throw new Exception('Username already in use');
+				}
 			}
 
 			phpgw::import_class('phpgwapi.globally_denied');
@@ -537,6 +749,4 @@
 			}
 			return true;
 		}
-
 	}
-

@@ -25,7 +25,7 @@
 	* @package phpgwapi
 	* @subpackage contacts
 	*/
-	class contact_comm_type extends sql_entity
+	class contact_comm_type extends phpgwapi_sql_entity
 	{
 		var $map = array('comm_type_id'=> array('select'	=> '',
 							'criteria' 	=> '',
@@ -76,4 +76,3 @@
 			$this->set_ilinks('comm_type_id', 'phpgwapi.contact_comm_descr','comm_type');
 		}
 	}
-?>

@@ -25,7 +25,7 @@
 	* @package phpgwapi
 	* @subpackage contacts
 	*/
-	class contact_person extends sql_entity
+	class contact_person extends phpgwapi_sql_entity
 	{
 		var $map = array('person_id'		=> array('select'	=> '',
 								 'criteria' 	=> '',
@@ -322,10 +322,8 @@
 		function full_name()
 		{
 
-			$this->add_field('per_full_name', sql::concat_null(array($this->real_field('per_first_name'), sql::string(' '),
-										 $this->real_field('per_middle_name'), sql::string(' '),
+			$this->add_field('per_full_name', phpgwapi_sql::concat_null(array($this->real_field('per_first_name'), phpgwapi_sql::string(' '),
+										 $this->real_field('per_middle_name'), phpgwapi_sql::string(' '),
 										 $this->real_field('per_last_name'))));
 		}
-
 	}
-?>

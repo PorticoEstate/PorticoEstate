@@ -24,11 +24,11 @@
 		'enable_contacts_class'   => true,
 		'enable_nextmatchs_class' => true
 	);
-	
+
 	/**
 	* Include phpgroupware header
 	*/
-	include_once('header.inc.php');
+	require_once 'header.inc.php';
 
 	// check if forward parameter is set
 	if ( isset($_GET['phpgw_forward']) && is_array($_GET['phpgw_forward']) )
@@ -53,7 +53,7 @@
 		$GLOBALS['phpgw_info']['user']['preferences']['common']['default_app'] = $GLOBALS['phpgw_info']['server']['force_default_app'];
 	}
 
-	if (isset($_GET['cd']) && $_GET['cd']=='yes' 
+	if (isset($_GET['cd']) && $_GET['cd']=='yes'
 		&& isset($GLOBALS['phpgw_info']['user']['preferences']['common']['default_app'])
 		&& $GLOBALS['phpgw_info']['user']['preferences']['common']['default_app']
 		&& $GLOBALS['phpgw_info']['user']['apps'][$GLOBALS['phpgw_info']['user']['preferences']['common']['default_app']])
@@ -102,7 +102,7 @@
 			$_versionfile = $GLOBALS['phpgw']->common->get_app_dir($_app_name) . '/setup/setup.inc.php';
 			if(file_exists($_versionfile))
 			{
-				include($_versionfile);
+				require_once $_versionfile;
 				$_file_version = $setup_info[$_app_name]['version'];
 				$_app_title    = $GLOBALS['phpgw_info']['apps'][$_app_name]['title'];
 				unset($setup_info);
@@ -211,6 +211,4 @@ HTML;
 		}
 		$GLOBALS['phpgw']->preferences->save_repository();
 	}
-
 	$GLOBALS['phpgw']->common->phpgw_footer();
-?>

@@ -44,7 +44,7 @@
 				'newdesign' => array
 				(
 					'text'	=> 'Newdesign',
-					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => "newdesign.ui{$start_page}.index") ),
+					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => "newdesign.ui{$start_page}.datatable") ),
 					'image'	=> array('newdesign', 'navbar'),
 					'order'	=> 35,
 					'group'	=> 'office'
@@ -102,25 +102,60 @@
 					'image'	=> array('newdesign', 'preferences')
 				);
 			}
+			$location_children = array
+			(
+				'location_loc_1' => array
+				(
+					'text' => 'Eiendom',
+					'url'	=>  $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'newdesign.uinewdesign.location','output'=>'html', 'type_id' => 1 )),
+				),
+				'location_loc_2' => array
+				(
+					'text' => 'Bygg',
+					'url'	=>  $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'newdesign.uinewdesign.location','output'=>'html', 'type_id' => 2 )),
+				),
+				'location_loc_3' => array
+				(
+					'text' => 'Inngang',
+					'url'	=>  $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'newdesign.uinewdesign.location','output'=>'html', 'type_id' => 3 )),
+				),
+				'location_loc_4' => array
+				(
+					'text' => 'Leieobjekt',
+					'url'	=>  $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'newdesign.uinewdesign.location','output'=>'html', 'type_id' => 4 )),
+				),
+				'location_loc_4_1' => array
+				(
+					'text' => 'Leieboer',
+					'url'	=>  $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'newdesign.uinewdesign.location','output'=>'html', 'type_id' => 4, 'lookup_tenant' => 1 )),
+				)
+
+			);
 
 			$menus['navigation'] = array
 			(
+				'datatable'	=> array
+				(
+					'text'	=> 'DataTable',
+					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'newdesign.uinewdesign.datatable','output'=>'html')),
+					'image' => array('newdesign', 'table')
+				),
 				'form'	=> array
 				(
-					'text'	=> 'Form',
-					'url'	=>  $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'newdesign.uinewdesign.index','output'=>'html'))
+					'text'	=> 'Property',
+					'url'	=>  $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'newdesign.uinewdesign.index','output'=>'html')),
+					'image' => array('property', 'navbar')
 				),
-				'grid'	=> array
+				'location'	=> array
 				(
-					'text'	=> 'Grid',
-					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'newdesign.uinewdesign.grid','output'=>'html'))
-				),
-				'project'	=> array
-				(
-					'text'	=> 'Project',
-					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'newdesign.uinewdesign.project','output'=>'html'))
+					'text'	=> 'Location',
+					'url'	=>  $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'newdesign.uinewdesign.location','output'=>'html')),
+					'image' => array('property', 'location'),
+					'children' => $location_children
 				)
 			);
+
+
 			return $menus;
 		}
 

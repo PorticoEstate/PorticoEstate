@@ -140,7 +140,7 @@
 		public function getInstalledLanguages()
 		{
 			$GLOBALS['phpgw']->db->query('select distinct lang from phpgw_lang');
-			while ($GLOBALS['phpgw']->db->next_record()) 
+			while ($GLOBALS['phpgw']->db->next_record())
 			{
 				$installedLanguages[$GLOBALS['phpgw']->db->f('lang')] = $GLOBALS['phpgw']->db->f('lang');
 			}
@@ -457,7 +457,7 @@ HTML;
 						);
 					}
 				}
-				
+
 				$this->output['app_row_icon'][] = array
 				(
 					'layout'	=> $GLOBALS['phpgw_info']['user']['preferences']['common']['template_set'],
@@ -473,44 +473,42 @@ HTML;
 		* Grab the owner name
 		*
 		* @param integer $accountid Account id
+		*
 		* @return string Users fullname
 		*/
-		public function grab_owner_name($accountid = '')
+		public function grab_owner_name($accountid = null)
 		{
-			return (string) $GLOBALS['phpgw']->get($accountid);
+			return (string) $GLOBALS['phpgw']->accounts->get($accountid);
 		}
 
 		/**
 		* Create tabs
 		*
-		* @param array $tabs With ($id,$tab) pairs
+		* @param array   $tabs      With ($id,$tab) pairs
 		* @param integer $selection array key of selected tab
-		* @param boolean $lang When true use translation otherwise use given label
-		* @return string HTML output string
+		* @param boolean $lang      Translate label?
+		*
+		* @return string html snippet for creating tabs in a modern browser
 		*/
 		public function create_tabs($tabs, $selection, $lang = false)
 		{
+			phpgw::import_class('phpgwapi.yui');
+			if ( $lang )
+			{
+				foreach ( $tabs as &$tab )
+				{
+					$tab = lang($tab);
+				}
+			}
+
+			$html = phpgwapi_yui::tabview_generate($tabs, $selection);
 			$output = <<<HTML
 			<div class="yui-navset">
-				<ul class="yui-nav">
-
-HTML;
-			foreach($tabs as $id => $tab)
-			{
-				$selected = $id == $selection ? ' class="selected"' : '';
-				$label = $lang ? lang($tab['label']) : $tab['label'];
-				$output .= <<<HTML
-					<li{$selected}><a href="{$tab['link']}"><em>{$label}</em></a></li>
-
-HTML;
-			}
-			$output .= <<<HTML
-				</ul>
+				{$html}
 			</div>
 
 HTML;
 			return $output;
-
 		}
 
 		/**
@@ -563,10 +561,10 @@ HTML;
 			{
 				$appname = 'phpgwapi';
 			}
- 
+
 			$incdir         = PHPGW_INCLUDE_ROOT . '/' . $appname . '/inc';
 			$incdir_default = PHPGW_SERVER_ROOT . '/' . $appname . '/inc';
- 
+
 			if (@is_dir ($incdir))
 			{
 				return $incdir;
@@ -584,7 +582,7 @@ HTML;
 		/**
 		* List themes available
 		*
-		* Themes can either be css files like in HEAD (if the template has a css-directory) or ordinary .14 themes-files
+		* Themes are CSS files stored under the template directory
 		* @return array List with available themes
 		*/
 		public static function list_themes()
@@ -627,7 +625,7 @@ HTML;
 
 			$dirname = PHPGW_SERVER_ROOT . '/phpgwapi/templates';
 
-			$dir = new DirectoryIterator();
+			$dir = new DirectoryIterator($dirname);
 			foreach ( $dir as $file )
 			{
 				$entry = (string) $file;
@@ -863,7 +861,7 @@ HTML;
 		/**
 		* Find an individual image
 		*
-		* @param string $module the module the image is for
+		* @param string $module the module the image is from
 		* @param string $image the image to search for
 		* @param string $ext the filename extension of the image - should usually be an empty string
 		* @param bool $use_lang use a translated verison of the image
@@ -892,7 +890,7 @@ HTML;
 
 			foreach ( $image as $img )
 			{
-				$image_found = self::find_image($module, $img.$ext); 
+				$image_found = self::find_image($module, $img.$ext);
 				if ( $image_found )
 				{
 					return $image_found;
@@ -916,7 +914,7 @@ HTML;
 			{
 				return $with_extension;
 			}
-			
+
 			$without_extension = $this->image($appname,$image);
 			if ( $without_extension )
 			{
@@ -987,7 +985,7 @@ HTML;
 					$GLOBALS['phpgw']->xslttpl->pparse();
 				}
 
-				if ( !isset($GLOBALS['phpgw_info']['flags']['nofooter']) 
+				if ( !isset($GLOBALS['phpgw_info']['flags']['nofooter'])
 					|| !$GLOBALS['phpgw_info']['flags']['nofooter'] )
 				{
 					require_once PHPGW_API_INC . '/footer.inc.php';
@@ -1024,7 +1022,7 @@ HTML;
 			{
 				list($app,$class,$method) = explode('.',$GLOBALS['phpgw_info']['menuaction']);
 				if ( isset($GLOBALS[$class]->public_functions)
-					&& is_array($GLOBALS[$class]->public_functions) 
+					&& is_array($GLOBALS[$class]->public_functions)
 					&& isset($GLOBALS[$class]->public_functions['css']) )
 				{
 					$app_css .= $GLOBALS[$class]->css();
@@ -1035,7 +1033,7 @@ HTML;
 			{
 				$app_css .= $GLOBALS['phpgw_info']['flags']['css'] . "\n";
 			}
-			
+
 			$all_css .= "\n<!-- NOTE: This will not be supported in the future -->\n\t\t<style type=\"text/css\">\n\t\t{$app_css}\n\t\t</style>\n";
 			return $all_css;
 		}
@@ -1048,12 +1046,12 @@ HTML;
 		{
 			return $this->get_javascript();
 		}
-		
+
 		/**
 		* Include JavaScript in template header
 		*
 		* The method is included here to make it easier to change the js support
-		* in phpgw. One change then all templates will support it (as long as they 
+		* in phpgw. One change then all templates will support it (as long as they
 		* include a call to this method).
 		*
 		* @author Dave Hall skwashd at phpgroupware.org
@@ -1066,26 +1064,26 @@ HTML;
 			{
 				$js .= $GLOBALS['phpgw']->js->get_script_links();
 			}
-			
+
 			if ( isset($GLOBALS['phpgw_info']['menuaction']) )
 			{
 				list($app, $class, $method) = explode('.',$GLOBALS['phpgw_info']['menuaction']);
-				if ( isset($GLOBALS[$class]->public_functions) 
-					&& is_array($GLOBALS[$class]->public_functions) 
+				if ( isset($GLOBALS[$class]->public_functions)
+					&& is_array($GLOBALS[$class]->public_functions)
 					&& isset($GLOBALS[$class]->public_functions['java_script'])
 					&& $GLOBALS[$class]->public_functions['java_script'] )
 				{
 					$js .= $GLOBALS[$class]->java_script();
 				}
 			}
-			
+
 			if (isset($GLOBALS['phpgw_info']['flags']['java_script']))
 			{
 				$js .= $GLOBALS['phpgw_info']['flags']['java_script'] . "\n";
 			}
 			return $js;
 		}
-		
+
 		/**
 		* Get window.on* events from javascript class
 		*
@@ -1110,7 +1108,7 @@ HTML;
 		* @param string $data hexidecimal data as a string
 		* @return string binary value of $data;
 		*/
-		public function hex2bin($data)
+		public static function hex2bin($data)
 		{
 			$len = strlen($data);
 			return pack('H' . $len, $data);
@@ -1193,7 +1191,7 @@ HTML;
 
 			//  + (date('I') == 1?3600:0)
 			$t += phpgwapi_datetime::user_timezone();
-			
+
 			if (! $format)
 			{
 				$format = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'] . ' - ';
@@ -1236,7 +1234,7 @@ HTML;
 			{
 				return (implode(' ',$dlarr));
 			}
-		} 
+		}
 
 		/**
 		* Format the time takes settings from user preferences
@@ -1309,32 +1307,32 @@ HTML;
 				case 32:	$s .= lang('Group has been deleted');	break;
 				case 33:	$s .= lang('Group has been updated');	break;
 				case 34:	$s .= lang('Account has been deleted') . '<p>'
-						. lang('Error deleting %1 %2 directory',lang('users'),' '.lang('private').' ') 
+						. lang('Error deleting %1 %2 directory',lang('users'),' '.lang('private').' ')
 						. ',<br />' . lang('Please %1 by hand',lang('delete')) . '<br /><br />'
 						. lang('To correct this error for the future you will need to properly set the')
 						. '<br />' . lang('permissions to the files/users directory')
 						. '<br />' . lang('On *nix systems please type: %1','chmod 770 '
-						. $GLOBALS['phpgw_info']['server']['files_dir'] . '/users/'); 
+						. $GLOBALS['phpgw_info']['server']['files_dir'] . '/users/');
 					break;
 				case 35:	$s .= lang('Account has been updated') . '<p>'
 						. lang('Error renaming %1 %2 directory',lang('users'),
-						' '.lang('private').' ') 
+						' '.lang('private').' ')
 						. ',<br />' . lang('Please %1 by hand',
 						lang('rename')) . '<br /><br />'
 						. lang('To correct this error for the future you will need to properly set the')
 						. '<br>' . lang('permissions to the files/users directory')
 						. '<br>' . lang('On *nix systems please type: %1','chmod 770 '
-						. $GLOBALS['phpgw_info']['server']['files_dir'] . '/users/'); 
+						. $GLOBALS['phpgw_info']['server']['files_dir'] . '/users/');
 					break;
 				case 36:	$s .= lang('Account has been created') . '<p>'
 						. lang('Error creating %1 %2 directory',lang('users'),
-						' '.lang('private').' ') 
+						' '.lang('private').' ')
 						. ',<br />' . lang('Please %1 by hand',
 						lang('create')) . '<br /><br />'
 						. lang('To correct this error for the future you will need to properly set the')
 						. '<br />' . lang('permissions to the files/users directory')
 						. '<br />' . lang('On *nix systems please type: %1','chmod 770 '
-						. $GLOBALS['phpgw_info']['server']['files_dir'] . '/users/'); 
+						. $GLOBALS['phpgw_info']['server']['files_dir'] . '/users/');
 					break;
 				case 37:	$s .= lang('Group has been added') . '<p>'
 						. lang('Error creating %1 %2 directory',lang('groups'),' ')
@@ -1343,7 +1341,7 @@ HTML;
 						. lang('To correct this error for the future you will need to properly set the')
 						. '<br />' . lang('permissions to the files/users directory')
 						. '<br />' . lang('On *nix systems please type: %1','chmod 770 '
-						. $GLOBALS['phpgw_info']['server']['files_dir'] . '/groups/'); 
+						. $GLOBALS['phpgw_info']['server']['files_dir'] . '/groups/');
 					break;
 				case 38:	$s .= lang('Group has been deleted') . '<p>'
 						. lang('Error deleting %1 %2 directory',lang('groups'),' ')
@@ -1352,7 +1350,7 @@ HTML;
 						. lang('To correct this error for the future you will need to properly set the')
 						. '<br />' . lang('permissions to the files/users directory')
 						. '<br />' . lang('On *nix systems please type: %1','chmod 770 '
-						. $GLOBALS['phpgw_info']['server']['files_dir'] . '/groups/'); 
+						. $GLOBALS['phpgw_info']['server']['files_dir'] . '/groups/');
 					break;
 				case 39:	$s .= lang('Group has been updated') . '<p>'
 						. lang('Error renaming %1 %2 directory',lang('groups'),' ')
@@ -1361,7 +1359,7 @@ HTML;
 						. lang('To correct this error for the future you will need to properly set the')
 						. '<br />' . lang('permissions to the files/users directory')
 						. '<br />' . lang('On *nix systems please type: %1','chmod 770 '
-						. $GLOBALS['phpgw_info']['server']['files_dir'] . '/groups/'); 
+						. $GLOBALS['phpgw_info']['server']['files_dir'] . '/groups/');
 					break;
 				case 40: $s .= lang('You have not entered a title').'.';
 					break;
@@ -1379,11 +1377,11 @@ HTML;
 		/**
 		* Process error message
 		*
-		* @param string $error Error message 
+		* @param string $error Error message
 		* @param integer $line Line number of error
 		* @param string $file Filename in which the error occured
 		*/
-		public function phpgw_error($error,$line = '', $file = '') 
+		public function phpgw_error($error,$line = '', $file = '')
 		{
 			echo '<p><strong>phpGroupWare internal error:</strong><p>'.$error;
 			if ($line)
@@ -1513,7 +1511,7 @@ HTML;
 		}
 
 		/**
-		* Stops capturing all output and uses it in the XSLT temaplte engine by stuffing it 
+		* Stops capturing all output and uses it in the XSLT temaplte engine by stuffing it
 		* into an xml node called "body_data"
 		*
 		* @internal Note: need to be run BEFORE exit is called, as buffers get flushed automatically before
@@ -1624,7 +1622,7 @@ HTML;
 		* @param array $data
 		* @returns array for use with msgbox
 		*/
-		
+
 		public function msgbox_data($receipt)
 		{
 			$msgbox_data_error=array();

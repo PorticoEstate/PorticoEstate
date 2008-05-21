@@ -27,13 +27,13 @@
 		'name'	=> 'Sigurd Nes',
 		'email'	=> 'sigurdne@online.no'
 	);
-	
-	$setup_info['sms']['tables'] = array(	
+
+	$setup_info['sms']['tables'] = array(
 		'phpgw_sms_config_type',
 		'phpgw_sms_config_attrib',
 		'phpgw_sms_config_choice',
 		'phpgw_sms_config_value',
-		'phpgw_sms_featautoreply',		
+		'phpgw_sms_featautoreply',
 		'phpgw_sms_featautoreply_log',
 		'phpgw_sms_featautoreply_scenario',
 		'phpgw_sms_featboard',

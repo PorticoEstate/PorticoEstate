@@ -19,6 +19,8 @@
 			'mainscreen'	=> True
 		);
 
+		var $menu = array();
+
 		public function __construct()
 		{
 			$menuaction = phpgw::get_var('menuaction', 'location');
@@ -27,12 +29,38 @@
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] = 'admin';
 		}
 
+		function get_menu()
+		{
+			$menu_brutto = execMethod('phpgwapi.menu.get', 'admin');
+
+			foreach($menu_brutto as $app => $vals)
+			{
+				$this->get_sub_menu($vals,$app);
+			}
+
+			return $menu;
+		}
+
+		function get_sub_menu($children = array(),$app)
+		{
+			foreach($children as $key => $vals)
+			{
+				if(isset($vals['children']))
+				{
+					$this->get_sub_menu($vals['children'],$app);
+				}
+				else
+				{
+					$this->menu[$app][] =  $vals;
+				}
+			}
+		}
+
 		public function mainscreen()
 		{
-			$menu = execMethod('phpgwapi.menu.get', 'admin');
-			// this is any ugly hack cos the XSLT template engine sucks
+			$this->get_menu();
 			$html = '';
-			foreach ( $menu as $module => $entries )
+			foreach ( $this->menu as $module => $entries )
 			{
 				$html .= <<<HTML
 				<h2>$module</h2>

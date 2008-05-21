@@ -9,21 +9,19 @@
 	* @subpackage hooks
 	* @version $Id$
 	*/
-	
+
+	$account_id = phpgw::get_var('account_id', 'int');
+	$new_owner = phpgw::get_var('new_owner', 'int');
+
 	// Delete all records for a user
 	$db =& $GLOBALS['phpgw']->db;
-	$db->lock('phpgw_todo');
 
-	$new_owner = intval(get_var('new_owner',Array('POST')));
-	$account_id = intval(get_var('account_id',Array('POST')));
-	if($new_owner==0)
+	if ( !$new_owner )
 	{
-		$db->query('DELETE FROM phpgw_todo WHERE todo_owner=' . (int) $_POST['account_id'], __LINE__, __FILE__);
+		$db->query("DELETE FROM phpgw_todo WHERE todo_owner = {$account_id}", __LINE__, __FILE__);
 	}
 	else
 	{
-		$db->query('UPDATE phpgw_todo SET todo_owner=' . (int) $_POST['new_owner']
-			. ' WHERE todo_owner=' . (int) $_POST['account_id'], __LINE__, __FILE__);
+		$db->query("UPDATE phpgw_todo SET todo_owner = {$new_owner}"
+			. " WHERE todo_owner = {$account_id}", __LINE__, __FILE__);
 	}
-	$db->unlock();
-?>
