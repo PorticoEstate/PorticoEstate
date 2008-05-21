@@ -81,6 +81,7 @@
 
 			$this->cats					= CreateObject('phpgwapi.categories');
 			$this->cats->app_name		= "property{$this->location}";
+			$this->dateformat 			= $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
 		}
 
 		public function save_sessiondata($data)
@@ -98,7 +99,7 @@
 			$this->order		= isset($data['order']) ? $data['order'] : '';
 			$this->start		= isset($data['start']) ? $data['start'] : '';
 			$this->query		= isset($data['query']) ? $data['query'] : '';
-	//		$this->location		= isset($data['location']) ? $data['location'] : '';
+			$this->location		= isset($data['location']) ? $data['location'] : '';
 			$this->allrows		= isset($data['allrows']) ? $data['allrows'] : '';
 		}
 
@@ -107,11 +108,42 @@
 			return $this->acl_location;
 		}
 
+		/**
+		* Read list of responsibility types
+		*
+		* @return array of types
+		*/
+
 		public function read_type()
 		{
+			$categories = $this->cats->return_array('', 0, false);
+			$filter = array();
+			if($categories)
+			{
+				foreach($categories as $cat)
+				{
+					$filter[] = $cat['id'];
+				}
+			}
+			else
+			{
+				$filter[] = 0;
+			}
+
 			$values = $this->so->read_type(array('start' => $this->start, 'query' => $this->query, 'sort' => $this->sort,
-												'order' => $this->order, 'location' => $this->location, 'allrows'=>$this->allrows));
+												'order' => $this->order, 'location' => $this->location, 'allrows'=>$this->allrows,
+												'filter' => $filter));
 			$this->total_records = $this->so->total_records;
+			
+			foreach($values as & $value)
+			{
+				$category = $this->cats->return_single($value['cat_id']);
+				$value['category']		= $category[0]['name'];
+				$value['app_name']		= $category[0]['app_name'];
+				$value['created_by']	= $GLOBALS['phpgw']->accounts->id2name($value['created_by']);
+				$value['created_on']	= $GLOBALS['phpgw']->common->show_date($value['created_on'],$this->dateformat);
+			
+			}
 
 			return $values;
 		}
@@ -168,8 +200,22 @@
 
 		public function read_single_type($id)
 		{
-	//		return $this->so->read_single_type($id);
+			$values = $this->so->read_single_type($id);
+			$values['entry_date'] = $GLOBALS['phpgw']->common->show_date($values['created_on'],$this->dateformat);
+			return $values;
 		}
 
+		/**
+		* Delete single responsibility type
+		*
+		* @param integer $id  ID of responsibility type
+		*
+		* @return void
+		*/
+
+		function delete_type($id)
+		{
+			$this->so->delete_type($id);
+		}
 	}
 ?>

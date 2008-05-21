@@ -57,19 +57,27 @@
 			$this->left_join		=& $this->db->left_join;
 		}
 
+		/**
+		* Read type
+		*
+		* @param array $values  array that Includes the fields: 'start', 'query', 'sort', 'order', 'allrows', 'filter' and 'location'
+		*
+		* @return array Responsibility types
+		*/
+
 		public function read_type($data)
 		{
 			if(is_array($data))
 			{
-				$start		= isset($data['start']) && $data['start'] ? $data['start'] : 0;
-				$query		= isset($data['query']) ? $data['query'] : '';
-				$sort		= isset($data['sort']) && $data['sort'] ? $data['sort'] : 'DESC';
-				$order		= isset($data['order']) ? $data['order'] : '';
-				$allrows	= isset($data['allrows']) ? $data['allrows'] : '';
-				$cat_id		= isset($data['cat_id']) && $data['cat_id'] ? $data['cat_id'] : 0;
+				$start		= isset($data['start']) && $data['start'] ? (int)$data['start'] : 0;
+				$query		= isset($data['query']) ? $this->db->db_addslashes($data['query']) : '';
+				$sort		= isset($data['sort']) && $data['sort'] ? $this->db->db_addslashes($data['sort']) : 'DESC';
+				$order		= isset($data['order']) ? $this->db->db_addslashes($data['order']) : '';
+				$allrows	= isset($data['allrows']) ? !!$data['allrows'] : '';
+				$filter		= $data['filter'] ? $data['filter'] : '';
+				$location	= isset($data['location']) ? $data['location'] : '';
+				
 			}
-
-	//		$grants			= $GLOBALS['phpgw']->acl->get_grants('property', $this->acl_location);
 
 			if ($order)
 			{
@@ -82,12 +90,12 @@
 
 			$where= 'WHERE';
 			$filtermethod = '';
-			if ($cat_id > 0)
+
+			if(is_array($filter) && $location)
 			{
-				$filtermethod .= " $where cat_id=" . (int)$cat_id;
+				$filtermethod .= " $where cat_id IN (" . implode(',', $filter) . ')';
 				$where = 'AND';
 			}
-
 			$querymethod = '';
 			if($query)
 			{
@@ -96,7 +104,6 @@
 
 			$sql = "SELECT * FROM fm_responsibility $filtermethod $querymethod";
 
-//echo $sql;
 			$this->db->query($sql,__LINE__,__FILE__);
 			$this->total_records = $this->db->num_rows();
 
@@ -124,7 +131,7 @@
 					'created_on'	=> $this->db->f('created_on'),
 				);
 			}
-//_debug_array($values);
+
 			return $values;
 		}
 
@@ -170,5 +177,68 @@
 			}
 
 			return $receipt;
+		}
+
+
+		public function edit_type($values)
+		{
+			$receipt = array();
+			$value_set['name']		= $this->db->db_addslashes($values['name']);
+			$value_set['descr']		= $this->db->db_addslashes($values['descr']);
+			$value_set['cat_id']	= (int)$values['cat_id'];
+			$value_set['active']	= isset($values['active']) ? !!$values['active'] : '';
+
+			$value_set	= $this->db->validate_update($value_set);
+
+			$this->db->transaction_begin();
+
+			$this->db->query("UPDATE fm_responsibility set $value_set WHERE id = " . (int)$values['id'],__LINE__,__FILE__);
+
+			$receipt['id']= $values['id'];
+			if($this->db->transaction_commit())
+			{
+				$receipt['message'][]=array('msg'=>lang('responsibility type has been edited'));
+			}
+			else
+			{
+				$receipt['error'][]=array('msg'=>lang('changes not saved'));
+			}
+			return $receipt;
+		}
+
+		/**
+		* Read single responsibility type
+		*
+		* @param integer $id  ID of responsibility type
+		*
+		* @return array Responsibility type
+		*/
+
+		public function read_single_type($id)
+		{
+			$sql = 'SELECT * FROM fm_responsibility WHERE id= ' . (int)$id;
+
+			$this->db->query($sql,__LINE__,__FILE__);
+
+			$values = array();
+
+			$this->db->next_record();
+			$values = array
+			(
+				'id'			=> $this->db->f('id'),
+				'name'			=> $this->db->f('name', true),
+				'descr'			=> $this->db->f('descr', true),
+				'active'		=> $this->db->f('active'),
+				'cat_id'		=> $this->db->f('cat_id'),
+				'created_by'	=> $this->db->f('created_by'),
+				'created_on'	=> $this->db->f('created_on'),
+			);
+
+			return $values;
+		}
+
+		function delete_type($id)
+		{
+			$this->db->query('DELETE FROM fm_responsibility WHERE id='  . (int) $id, __LINE__, __FILE__);
 		}
 	}

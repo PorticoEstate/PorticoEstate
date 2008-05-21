@@ -102,7 +102,8 @@
 			'contact' 		=> true,
 			'edit_type' 	=> true,
 			'edit_contact' 	=> true,
-			'no_access'		=> true
+			'no_access'		=> true,
+			'delete_type'	=> true
 		);
 
 		public function __construct()
@@ -172,35 +173,56 @@
 
 			$responsible_info = $this->bo->read_type();
 
-			$lang_select_responsible_text		= '';
-			$text_select					= '';
-
-			if(isset($responsible_info) && is_array($responsible_info))
+			$content = array();
+			foreach ( $responsible_info as $entry )
 			{
-				foreach ( $responsible_info as $entry )
+  				$link_edit					= '';
+				$lang_edit_demo_text		= '';
+				$text_edit					= '';
+				if ($this->acl_edit)
 				{
-					if ( $this->acl_edit)
-					{
-						$lang_select_responsible_text		= lang('select responsible') . ': ' . $responsible;
-					}
-
-					$content[] = array
-					(
-						'user'							=> $entry['user'],
-						'supervisor'					=> $entry['parent'],
-						'location'						=> $entry['location'],
-						'action_type'					=> $entry['action_type'],
-						'lang_select_responsible_text'	=> $lang_select_responsible_text,
-					);
+					$link_edit				= $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'property.uiresponsible.edit_type', 'id'=> $entry['id'], 'location' => str_replace('property', '', $entry['app_name'])));
+					$lang_edit_text			= lang('edit type');
+					$text_edit				= lang('edit');
 				}
+
+				$link_delete				= '';
+				$text_delete				= '';
+				$lang_delete_demo_text		= '';
+				if ($this->acl_delete)
+				{
+					$link_delete			= $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'property.uiresponsible.delete_type', 'id'=> $entry['id']));
+					$text_delete			= lang('delete');
+					$lang_delete_text		= lang('delete type');
+				}
+
+				$content[] = array
+				(
+					'name'					=> $entry['name'],
+					'descr'					=> $entry['descr'],
+					'active'				=> $entry['active'] == 1 ? 'X' : '',
+					'created_by'			=> $entry['created_by'],
+					'created_on'			=> $entry['created_on'],
+					'category'				=> $entry['category'],
+					'app_name'				=> $entry['app_name'],
+					'link_contacts'			=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'property.uiresponsible.contact', 'type_id'=> $entry['id'])),
+					'text_contacts'			=> lang('contacts'),
+					'lang_contacts_text'	=> lang('list of contacts for this responsibility type'),
+					'link_edit'				=> $link_edit,
+					'text_edit'				=> $text_edit,
+					'lang_edit_text'		=> $lang_edit_text,
+					'link_delete'			=> $link_delete,
+					'text_delete'			=> $text_delete,
+					'lang_delete_text'		=> $lang_delete_text
+				);
 			}
 
 			$table_header[] = array
 			(
-				'sort_location'	=> $this->nextmatchs->show_sort_order(array
+				'sort_name'	=> $this->nextmatchs->show_sort_order(array
 				(
 					'sort'	=> $this->sort,
-					'var'	=> 'location',
+					'var'	=> 'name',
 					'order'	=> $this->order,
 					'extra'	=> array
 					(
@@ -209,11 +231,14 @@
 						'location'		=> $this->location
 					)
 				)),
-				'lang_user'			=> lang('user'),
-				'lang_location'		=> lang('location'),
-				'lang_action'		=> lang('action'),
-				'lang_supervisor'	=> lang('supervisor'),
-				'lang_select'		=> (isset($this->acl_edit)?lang('select'):''),
+				'lang_name'			=> lang('name'),
+				'lang_descr'		=> lang('descr'),
+				'lang_created_by'	=> lang('supervisor'),
+				'lang_app_name'		=> lang('location'),
+				'lang_active'		=> lang('active'),
+				'lang_contacts'		=> lang('contacts'),
+				'lang_edit'			=> $this->acl_edit ? lang('edit') : '',
+				'lang_delete'		=> $this->acl_delete ? lang('delete') : '',
 			);
 
 			if(!$this->allrows)
@@ -264,6 +289,7 @@
 				'num_records'							=> ($responsible_info?count($responsible_info):0),
 				'all_records'							=> ($responsible_info?count($responsible_info):0),
 				'select_action'							=> $GLOBALS['phpgw']->link('/index.php',$link_data),
+				'link_url'								=> $GLOBALS['phpgw']->link('/index.php',$link_data),
 				'img_path'								=> $GLOBALS['phpgw']->common->get_image_path('phpgwapi','default'),
 				'lang_searchfield_statustext'			=> lang('Enter the search string. To show all entries, empty this field and press the SUBMIT button again'),
 				'lang_searchbutton_statustext'			=> lang('Submit the search string'),
@@ -271,7 +297,7 @@
 				'lang_search'							=> lang('search'),
 				'table_header_type'						=> $table_header,
 				'table_add'								=> $table_add,
-				'values_type'							=> (isset($content)?$content:''),
+				'values_type'							=> $content,
 				'lang_no_location'						=> lang('No location'),
 				'lang_location_statustext'				=> lang('Select submodule'),
 				'select_name_location'					=> 'location',
@@ -394,8 +420,7 @@
 
 				'lang_category'					=> lang('category'),
 				'lang_no_cat'					=> lang('no category'),
-				'cat_select'					=> $this->cats->formatted_xslt_list(array('select_name' => 'values[cat_id]','selected' => (isset($values['cat_id'])?$values['cat_id']:''))),
-
+				'cat_select'					=> $this->cats->formatted_xslt_list(array('select_name' => 'values[cat_id]','selected' => isset($values['cat_id'])?$values['cat_id']:'')),
 			);
 
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('responsible matrix') . "::{$function_msg}";
@@ -411,6 +436,7 @@
 				return;
 			}
 
+			$type_id		= phpgw::get_var('type_id', 'int');
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] .= '::contact';
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('responsible', 'nextmatchs','search_field'));
@@ -560,5 +586,47 @@
 
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('responsible matrix') . ":: {$function_msg}";
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('no_access' => $data));
+		}
+
+		public function delete_type()
+		{
+			if(!$this->acl_delete)
+			{
+				$this->no_access();
+				return;
+			}
+
+			$id	= get_var('id',array('POST','GET'));
+			$confirm	= get_var('confirm',array('POST'));
+
+			$link_data = array
+			(
+				'menuaction' => 'property.uiresponsible.index'
+			);
+
+			if ( phpgw::get_var('confirm', 'bool', 'POST') )
+			{
+				$this->bo->delete_type($id);
+				$GLOBALS['phpgw']->redirect_link('/index.php',$link_data);
+			}
+
+			$GLOBALS['phpgw']->xslttpl->add_file(array('app_delete'));
+
+			$data = array
+			(
+				'done_action'			=> $GLOBALS['phpgw']->link('/index.php',$link_data),
+				'delete_action'			=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'property.uiresponsible.delete_type', 'id'=> $id)),
+				'lang_confirm_msg'		=> lang('do you really want to delete this entry'),
+				'lang_yes'				=> lang('yes'),
+				'lang_yes_statustext'	=> lang('Delete the entry'),
+				'lang_no_statustext'	=> lang('Back to the list'),
+				'lang_no'				=> lang('no')
+			);
+
+			$function_msg	= lang('delete');
+
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('responsible matrix') . "::{$function_msg}";
+
+			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('delete' => $data));
 		}
 	}

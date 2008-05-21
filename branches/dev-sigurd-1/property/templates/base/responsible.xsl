@@ -47,7 +47,7 @@
 		<table width="100%" cellpadding="2" cellspacing="2" align="center">
 			<xsl:apply-templates select="table_header_type"/>
 			<xsl:choose>
-				<xsl:when test="values != ''">
+				<xsl:when test="values_type != ''">
 					<xsl:apply-templates select="values_type"/>
 				</xsl:when>
 			</xsl:choose>
@@ -56,33 +56,40 @@
 	</xsl:template>
 
 	<xsl:template match="table_header_type">
-		<xsl:variable name="sort_location"><xsl:value-of select="sort_location"/></xsl:variable>
+		<xsl:variable name="sort_name"><xsl:value-of select="sort_name"/></xsl:variable>
 		<tr class="th">
 			<td class="th_text" width="10%" align="left">
-				<a href="{$sort_location}"><xsl:value-of select="lang_location"/></a>
+				<a href="{$sort_name}"><xsl:value-of select="lang_name"/></a>
+			</td>
+			<td class="th_text" width="30%" align="center">
+				<xsl:value-of select="lang_descr"/>
 			</td>
 			<td class="th_text" width="5%" align="center">
-				<xsl:value-of select="lang_action"/>
+				<xsl:value-of select="lang_created_by"/>
 			</td>
 			<td class="th_text" width="5%" align="center">
-				<xsl:value-of select="lang_user"/>
+				<xsl:value-of select="lang_app_name"/>
+			</td>
+			<td class="th_text" width="1%" align="center">
+				<xsl:value-of select="lang_active"/>
 			</td>
 			<td class="th_text" width="5%" align="center">
-				<xsl:value-of select="lang_supervisor"/>
+				<xsl:value-of select="lang_contacts"/>
 			</td>
 			<td class="th_text" width="5%" align="center">
-				<xsl:value-of select="lang_select"/>
+				<xsl:value-of select="lang_edit"/>
+			</td>
+			<td class="th_text" width="5%" align="center">
+				<xsl:value-of select="lang_delete"/>
 			</td>
 		</tr>
 	</xsl:template>
+
 
 	<xsl:template match="values_type">
 			<tr>
 				<xsl:attribute name="class">
 					<xsl:choose>
-						<xsl:when test="@class">
-							<xsl:value-of select="@class"/>
-						</xsl:when>
 						<xsl:when test="position() mod 2 = 0">
 							<xsl:text>row_off</xsl:text>
 						</xsl:when>
@@ -92,22 +99,37 @@
 					</xsl:choose>
 				</xsl:attribute>
 				<td align="left">
-					<xsl:value-of select="location"/>
+					<xsl:value-of select="name"/>
 				</td>
 				<td align="left">
-					<xsl:value-of select="action"/>
+					<xsl:value-of select="descr"/>
 				</td>
 				<td align="left">
-					<xsl:value-of select="user"/>
+					<xsl:value-of select="created_by"/>
 				</td>
 				<td align="left">
-					<xsl:value-of select="supervisor"/>
+					<xsl:value-of select="app_name"/>
+				</td>
+				<td align="center">
+					<xsl:value-of select="active"/>
+				</td>
+				<td align="center" title="{lang_contacts_text}" style="cursor:help">
+					<xsl:variable name="link_contacts"><xsl:value-of select="link_contacts"/></xsl:variable>
+					<a href="{link_contacts}"><xsl:value-of select="text_contacts"/></a>
 				</td>
 				<xsl:choose>
-					<xsl:when test="lang_select_responsible_text != ''">
-						<td align="center" title="{lang_select_responsible_text}" style="cursor:help">
-							<input type="checkbox" name="values[]" value="{}" >
-							</input>
+					<xsl:when test="link_edit != ''">
+						<td align="center" title="{lang_edit_text}" style="cursor:help">
+							<xsl:variable name="link_edit"><xsl:value-of select="link_edit"/></xsl:variable>
+							<a href="{link_edit}"><xsl:value-of select="text_edit"/></a>
+						</td>
+					</xsl:when>
+				</xsl:choose>
+				<xsl:choose>
+					<xsl:when test="link_delete != ''">
+						<td align="center" title="{lang_delete_text}" style="cursor:help">
+							<xsl:variable name="link_delete"><xsl:value-of select="link_delete"/></xsl:variable>
+							<a href="{link_delete}"><xsl:value-of select="text_delete"/></a>
 						</td>
 					</xsl:when>
 				</xsl:choose>
