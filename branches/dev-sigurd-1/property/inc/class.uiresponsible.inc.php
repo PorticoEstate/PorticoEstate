@@ -709,10 +709,6 @@
 			$jscal->add_listener('values_active_from');
 			$jscal->add_listener('values_active_to');
 
-/*priority integer,
-  active_from integer,
-  active_to 
-*/
 			$data = array
 			(
 				'value_entry_date'				=> isset($values['entry_date']) ? $values['entry_date'] : '',
