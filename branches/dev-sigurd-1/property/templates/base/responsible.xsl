@@ -149,10 +149,14 @@
 				</xsl:when>
 			</xsl:choose>
 			<tr>
-				<td align="left">
-					<xsl:call-template name="filter_location"/>
+				<td class="th_text" align="left">
+					<xsl:value-of select="location_name"/>
 				</td>
-
+			</tr>
+			<tr>
+				<td align="left">
+					<xsl:call-template name="categories"/>
+				</td>
 				<td align="right">
 					<xsl:call-template name="search_field"/>
 				</td>
@@ -175,22 +179,31 @@
 	</xsl:template>
 
 	<xsl:template match="table_header_contact">
-		<xsl:variable name="sort_location"><xsl:value-of select="sort_location"/></xsl:variable>
+		<xsl:variable name="sort_name"><xsl:value-of select="sort_name"/></xsl:variable>
 		<tr class="th">
 			<td class="th_text" width="10%" align="left">
-				<a href="{$sort_location}"><xsl:value-of select="lang_location"/></a>
+				<a href="{$sort_name}"><xsl:value-of select="lang_name"/></a>
+			</td>
+			<td class="th_text" width="30%" align="center">
+				<xsl:value-of select="lang_descr"/>
 			</td>
 			<td class="th_text" width="5%" align="center">
-				<xsl:value-of select="lang_action"/>
+				<xsl:value-of select="lang_created_by"/>
 			</td>
 			<td class="th_text" width="5%" align="center">
-				<xsl:value-of select="lang_user"/>
+				<xsl:value-of select="lang_app_name"/>
+			</td>
+			<td class="th_text" width="1%" align="center">
+				<xsl:value-of select="lang_active"/>
 			</td>
 			<td class="th_text" width="5%" align="center">
-				<xsl:value-of select="lang_supervisor"/>
+				<xsl:value-of select="lang_contacts"/>
 			</td>
 			<td class="th_text" width="5%" align="center">
-				<xsl:value-of select="lang_select"/>
+				<xsl:value-of select="lang_edit"/>
+			</td>
+			<td class="th_text" width="5%" align="center">
+				<xsl:value-of select="lang_delete"/>
 			</td>
 		</tr>
 	</xsl:template>
@@ -199,9 +212,6 @@
 			<tr>
 				<xsl:attribute name="class">
 					<xsl:choose>
-						<xsl:when test="@class">
-							<xsl:value-of select="@class"/>
-						</xsl:when>
 						<xsl:when test="position() mod 2 = 0">
 							<xsl:text>row_off</xsl:text>
 						</xsl:when>
@@ -211,22 +221,37 @@
 					</xsl:choose>
 				</xsl:attribute>
 				<td align="left">
-					<xsl:value-of select="location"/>
+					<xsl:value-of select="name"/>
 				</td>
 				<td align="left">
-					<xsl:value-of select="action"/>
+					<xsl:value-of select="descr"/>
 				</td>
 				<td align="left">
-					<xsl:value-of select="user"/>
+					<xsl:value-of select="created_by"/>
 				</td>
 				<td align="left">
-					<xsl:value-of select="supervisor"/>
+					<xsl:value-of select="app_name"/>
+				</td>
+				<td align="center">
+					<xsl:value-of select="active"/>
+				</td>
+				<td align="center" title="{lang_contacts_text}" style="cursor:help">
+					<xsl:variable name="link_contacts"><xsl:value-of select="link_contacts"/></xsl:variable>
+					<a href="{link_contacts}"><xsl:value-of select="text_contacts"/></a>
 				</td>
 				<xsl:choose>
-					<xsl:when test="lang_select_responsible_text != ''">
-						<td align="center" title="{lang_select_responsible_text}" style="cursor:help">
-							<input type="checkbox" name="values[]" value="{}" >
-							</input>
+					<xsl:when test="link_edit != ''">
+						<td align="center" title="{lang_edit_text}" style="cursor:help">
+							<xsl:variable name="link_edit"><xsl:value-of select="link_edit"/></xsl:variable>
+							<a href="{link_edit}"><xsl:value-of select="text_edit"/></a>
+						</td>
+					</xsl:when>
+				</xsl:choose>
+				<xsl:choose>
+					<xsl:when test="link_delete != ''">
+						<td align="center" title="{lang_delete_text}" style="cursor:help">
+							<xsl:variable name="link_delete"><xsl:value-of select="link_delete"/></xsl:variable>
+							<a href="{link_delete}"><xsl:value-of select="text_delete"/></a>
 						</td>
 					</xsl:when>
 				</xsl:choose>
@@ -250,6 +275,22 @@
 					</input>
 				</form>
 			</td>
+			<xsl:choose>
+				<xsl:when test="cancel_action != ''">
+					<td height="50">
+						<form method="post" action="{cancel_action}">
+							<input type="submit" name="add" value="{lang_cancel}">
+								<xsl:attribute name="title">
+									<xsl:value-of select="lang_cancel_statustext"/>
+								</xsl:attribute>
+								<xsl:attribute name="style">
+									<xsl:text>cursor:help</xsl:text>
+								</xsl:attribute>
+							</input>
+						</form>
+					</td>
+				</xsl:when>
+			</xsl:choose>
 		</tr>
 	</xsl:template>
 	
@@ -269,8 +310,8 @@
 				</xsl:when>
 			</xsl:choose>
 			<xsl:choose>
-				<xsl:when test="value_id != ''">
-				<tr>
+			<xsl:when test="value_id != ''">
+			<tr>
 				<td valign="top" width="30%">
 						<xsl:value-of select="lang_id"/>
 					</td>
@@ -296,6 +337,192 @@
 					<xsl:call-template name="categories"/>
 				</td>
 			</tr>
+			<tr>
+				<td valign="top" width="10%"  title="{lang_name_status_text}" style="cursor:help">
+					<xsl:value-of select="lang_name"/>
+				</td>
+				<td>
+					<input type="text" size="60" name="values[name]" value="{value_name}" onMouseout="window.status='';return true;">
+					</input>
+				</td>
+			</tr>
+			<tr>
+				<td valign="top"  title="{lang_descr_status_text}" style="cursor:help">
+					<xsl:value-of select="lang_descr"/>
+				</td>
+				<td>
+					<textarea cols="60" rows="10" name="values[descr]" wrap="virtual" onMouseout="window.status='';return true;">
+						<xsl:value-of select="value_descr"/>		
+					</textarea>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<xsl:value-of select="lang_active"/>
+				</td>
+				<td>
+					<xsl:choose>
+						<xsl:when test="value_active = '1'">
+							<input type="checkbox" name="values[active]" value="1" checked="checked" onMouseout="window.status='';return true;">
+								<xsl:attribute name="title">
+									<xsl:value-of select="lang_active_on_statustext"/>
+								</xsl:attribute>
+								<xsl:attribute name="style">
+									<xsl:text>cursor:help</xsl:text>
+								</xsl:attribute>
+							</input>
+						</xsl:when>
+						<xsl:otherwise>
+							<input type="checkbox" name="values[active]" value="1" onMouseout="window.status='';return true;">
+								<xsl:attribute name="title">
+									<xsl:value-of select="lang_active_off_statustext"/>
+								</xsl:attribute>
+								<xsl:attribute name="style">
+									<xsl:text>cursor:help</xsl:text>
+								</xsl:attribute>
+							</input>
+						</xsl:otherwise>
+					</xsl:choose>
+				</td>
+			</tr>
+			<tr height="50">
+				<td colspan = "2" align = "center">
+					<table>
+						<tr>
+							<td valign="bottom">
+								<xsl:variable name="lang_save"><xsl:value-of select="lang_save"/></xsl:variable>
+								<input type="submit" name="values[save]" value="{$lang_save}" onMouseout="window.status='';return true;">
+									<xsl:attribute name="title">
+										<xsl:value-of select="lang_save_status_text"/>
+									</xsl:attribute>
+									<xsl:attribute name="style">
+										<xsl:text>cursor:help</xsl:text>
+									</xsl:attribute>
+								</input>
+							</td>
+							<td valign="bottom">
+								<xsl:variable name="lang_apply"><xsl:value-of select="lang_apply"/></xsl:variable>
+								<input type="submit" name="values[apply]" value="{$lang_apply}" onMouseout="window.status='';return true;">
+									<xsl:attribute name="title">
+										<xsl:value-of select="lang_apply_status_text"/>
+									</xsl:attribute>
+									<xsl:attribute name="style">
+										<xsl:text>cursor:help</xsl:text>
+									</xsl:attribute>
+								</input>
+							</td>
+							<td align="left" valign="bottom">
+								<xsl:variable name="lang_cancel"><xsl:value-of select="lang_cancel"/></xsl:variable>
+								<input type="submit" name="values[cancel]" value="{$lang_cancel}" onMouseout="window.status='';return true;">
+									<xsl:attribute name="title">
+										<xsl:value-of select="lang_cancel_status_text"/>
+									</xsl:attribute>
+									<xsl:attribute name="style">
+										<xsl:text>cursor:help</xsl:text>
+									</xsl:attribute>
+								</input>
+							</td>
+						</tr>
+					</table>
+				</td>
+			</tr>
+		</table>
+		</form>
+		</div>
+	</xsl:template>
+
+<!-- add / edit contact-->
+	<xsl:template match="edit_contact">
+		<div align="left">
+		<xsl:variable name="form_action"><xsl:value-of select="form_action"/></xsl:variable>
+		<form method="post" action="{$form_action}" name='form'>
+		<table cellpadding="2" cellspacing="2" width="80%" align="center">
+			<xsl:choose>
+				<xsl:when test="msgbox_data != ''">
+					<tr>
+						<td align="left" colspan="3">
+							<xsl:call-template name="msgbox"/>
+						</td>
+					</tr>
+				</xsl:when>
+			</xsl:choose>
+			<tr>
+				<td>
+					<xsl:value-of select="lang_location"/>
+				</td>
+				<td>
+					<xsl:value-of select="value_location_name"/>
+				</td>
+			</tr>
+			<xsl:choose>
+			<xsl:when test="value_id != ''">
+			<tr>
+				<td valign="top" width="30%">
+						<xsl:value-of select="lang_id"/>
+					</td>
+					<td align="left">
+						<xsl:value-of select="value_id"/>
+					</td>
+				</tr>
+				<tr>
+					<td valign="top">
+						<xsl:value-of select="lang_entry_date"/>
+					</td>
+					<td>
+						<xsl:value-of select="value_entry_date"/>
+					</td>
+				</tr>
+				</xsl:when>
+			</xsl:choose>	
+			<tr>
+				<td>
+					<xsl:value-of select="lang_category"/>
+				</td>
+				<td>
+					<xsl:call-template name="categories"/>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<xsl:value-of select="lang_contact"/>
+				</td>
+				<td>
+					<xsl:variable name="contact_name"><xsl:value-of select="name"/><xsl:text>_name</xsl:text></xsl:variable>
+					<xsl:variable name="lookup_function"><xsl:text>lookup_</xsl:text><xsl:value-of select="name"/><xsl:text>();</xsl:text></xsl:variable>
+					<input type="text" name="{name}" value="{value}" onClick="{$lookup_function}" readonly="readonly" size="5" onMouseout="window.status='';return true;" >
+						<xsl:choose>
+							<xsl:when test="disabled!=''">
+								<xsl:attribute name="disabled">
+									<xsl:text> disabled</xsl:text>
+								</xsl:attribute>
+							</xsl:when>
+						</xsl:choose>
+						<xsl:attribute name="title">
+							<xsl:value-of select="lang_cancel_status_text"/>
+						</xsl:attribute>
+						<xsl:attribute name="style">
+							<xsl:text>cursor:help</xsl:text>
+						</xsl:attribute>
+					</input>
+					<input  size="30" type="text" name="{$contact_name}" value="{contact_name}"  onClick="{$lookup_function}" readonly="readonly"> 
+						<xsl:choose>
+							<xsl:when test="disabled!=''">
+								<xsl:attribute name="disabled">
+									<xsl:text> disabled</xsl:text>
+								</xsl:attribute>
+							</xsl:when>
+						</xsl:choose>
+						<xsl:attribute name="title">
+							<xsl:value-of select="lang_cancel_status_text"/>
+						</xsl:attribute>
+						<xsl:attribute name="style">
+							<xsl:text>cursor:help</xsl:text>
+						</xsl:attribute>
+					</input>
+				</td>
+			</tr>
+
+			<xsl:call-template name="location_form"/>
 			<tr>
 				<td valign="top" width="10%"  title="{lang_name_status_text}" style="cursor:help">
 					<xsl:value-of select="lang_name"/>

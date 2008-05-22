@@ -37,10 +37,12 @@
 
 	class property_boresponsible
 	{
-		private $use_session;
+		protected $use_session;
 		public $start;
 		public $location;
 		public $query;
+		public $total_records = 0;
+		public $cat_id;
 
 		public function __construct($session = false)
 		{
@@ -78,6 +80,11 @@
 			{
 				$this->allrows = phpgw::get_var('allrows');
 			}
+			if(array_key_exists('cat_id',$_POST) || array_key_exists('cat_id',$_GET))
+			{
+				$this->cat_id = phpgw::get_var('cat_id');
+			}
+
 
 			$this->cats					= CreateObject('phpgwapi.categories');
 			$this->cats->app_name		= "property{$this->location}";
@@ -95,6 +102,7 @@
 		private function read_sessiondata()
 		{
 			$data = $GLOBALS['phpgw']->session->appsession('session_data', 'responsible');
+			$this->cat_id		= isset($data['cat_id']) ? $data['cat_id'] : '';
 			$this->sort			= isset($data['sort']) ? $data['sort'] : '';
 			$this->order		= isset($data['order']) ? $data['order'] : '';
 			$this->start		= isset($data['start']) ? $data['start'] : '';
@@ -147,6 +155,26 @@
 
 			return $values;
 		}
+
+		/**
+		* Read list of contacts given responsibilities within locations
+		*
+		* @return array of contacts_responsibilities
+		*/
+
+		public function read_contact()
+		{
+
+$values=array();
+//			$values = $this->so->read_contact(array('start' => $this->start, 'query' => $this->query, 'sort' => $this->sort,
+//												'order' => $this->order, 'location' => $this->location, 'allrows'=>$this->allrows,
+//												'filter' => $filter));
+			$this->total_records = $this->so->total_records;
+			
+
+			return $values;
+		}
+
 
 		/**
 		* Save responsibility type
