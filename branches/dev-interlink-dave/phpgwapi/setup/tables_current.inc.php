@@ -40,7 +40,7 @@
 				'acl_account' => array('type' => 'int', 'precision' => 4),
 				'acl_rights' => array('type' => 'int', 'precision' => 4),
 				'acl_grantor' => array('type' => 'int', 'precision' => 4, 'nullable' => true),
-				'acl_type' => array('type' => 'int', 'precision' => 2, 'nullable' => true, 'default' => '0')
+				'acl_type' => array('type' => 'int', 'precision' => 2, 'nullable' => true, 'default' => '0'),
 				'location_id' => array('type' => 'int', 'precision' => 4),
 			),
 			'pk' => array(),
@@ -271,7 +271,7 @@
 				'history_status' => array('type' => 'char','precision' => 2,'nullable' => False),
 				'history_new_value' => array('type' => 'text','nullable' => False),
 				'history_timestamp' => array('type' => 'timestamp','nullable' => False),
-				'history_old_value' => array('type' => 'text','nullable' => False)
+				'history_old_value' => array('type' => 'text','nullable' => False),
 				'location_id'	=> array('type' => 'int', 'precision' => 4, 'nullable' => true)
 			),
 			'pk' => array('history_id'),

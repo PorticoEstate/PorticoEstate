@@ -608,7 +608,7 @@
 					}
 					if ( file_exists("{$appdir}tables_update.inc.php") )
 					{
-						require_once("$appdir}tables_update.inc.php");
+						require_once("{$appdir}tables_update.inc.php");
 
 						if ( isset($test) && is_array($test) && count($test) )
 						{
