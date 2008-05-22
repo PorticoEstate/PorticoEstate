@@ -2506,13 +2506,17 @@
 					'responsibility_id' => array('type' => 'int', 'precision' => 4,'nullable' => False),
 					'contact_id' => array('type' => 'int', 'precision' => 4,'nullable' => True),
 					'location_code' => array('type' => 'varchar', 'precision' => 20,'nullable' => True),
+					'p_num' => array('type' => 'varchar', 'precision' => 15,'nullable' => True),
+					'p_entity_id' => array('type' => 'int', 'precision' => 4,'nullable' => True,'default' => '0'),
+					'p_cat_id' => array('type' => 'int', 'precision' => 4,'nullable' => True,'default' => '0'),
 					'priority' => array('type' => 'int', 'precision' => 4,'nullable' => True),
 					'active_from' => array('type' => 'int', 'precision' => 4,'nullable' => True),
 					'active_to' => array('type' => 'int', 'precision' => 4,'nullable' => True),
 					'created_on' => array('type' => 'int', 'precision' => 4,'nullable' => False),
 					'created_by' => array('type' => 'int', 'precision' => 4,'nullable' => False),
 					'expired_at' => array('type' => 'int', 'precision' => 4,'nullable' => True),
-					'expired_by' => array('type' => 'int', 'precision' => 4,'nullable' => True)
+					'expired_by' => array('type' => 'int', 'precision' => 4,'nullable' => True),
+					'remark' => array('type' => 'text','nullable' => True),
 				),
 				'pk' => array('rc_id'),
 				'fk' => array(

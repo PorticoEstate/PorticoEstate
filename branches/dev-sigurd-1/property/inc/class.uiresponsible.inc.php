@@ -596,8 +596,10 @@
 				return;
 			}
 
-			$id		= phpgw::get_var('id', 'int');
-			$values	= phpgw::get_var('values', 'string', 'POST');
+			$id				= phpgw::get_var('id', 'int');
+			$values			= phpgw::get_var('values', 'string', 'POST');
+			$contact_id		= phpgw::get_var('contact_id', 'int');
+			$contact_name	= phpgw::get_var('contact_name', 'string');			
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('responsible'));
 
@@ -623,6 +625,14 @@
 					if($id)
 					{
 						$values['id']=$id;
+					}
+					if($contact_id)
+					{
+						$values['contact_id']=$contact_id;
+					}
+					if($contact_name)
+					{
+						$values['contact_name']=$contact_name;
 					}
 
 					if(!isset($receipt['error']) || !$receipt['error'])
@@ -667,7 +677,6 @@
 						'entity_data'	=> $values['p']
 						));
 
-
 			$link_data = array
 			(
 				'menuaction'	=> 'property.uiresponsible.edit_contact',
@@ -677,16 +686,41 @@
 
 			$msgbox_data = (isset($receipt)?$GLOBALS['phpgw']->common->msgbox_data($receipt):'');
 
+			$lookup_link		= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uilookup.addressbook', 'column'=> 'contact'));
+
+			$lookup_function = "\n"
+				. '<script type="text/javascript">' ."\n"
+				. '//<[CDATA[' ."\n"
+				. 'function lookup_contact()' ."\r\n"
+				. '{'."\r\n"
+				. 'Window1=window.open('."'" . $lookup_link ."'" .',"Search","width=800,height=700,toolbar=no,scrollbars=yes,resizable=yes");' . "\r\n"
+				. '}'."\r\n"
+				. '//]]' ."\n"
+				. "</script>\n";
+
+			if(!isset($GLOBALS['phpgw_info']['flags']['java_script']))
+			{
+				$GLOBALS['phpgw_info']['flags']['java_script'] = '';
+			}
+
+			$GLOBALS['phpgw_info']['flags']['java_script'] .= $lookup_function;				
+
+			$jscal = CreateObject('phpgwapi.jscalendar');
+			$jscal->add_listener('values_active_from');
+			$jscal->add_listener('values_active_to');
+
+/*priority integer,
+  active_from integer,
+  active_to 
+*/
 			$data = array
 			(
 				'value_entry_date'				=> isset($values['entry_date']) ? $values['entry_date'] : '',
 				'value_name'					=> isset($values['name']) ? $values['name'] : '',
-				'value_descr'					=> isset($values['descr']) ? $values['descr'] : '',
-				'value_active'					=> isset($values['active']) ? $values['active'] : '',
+				'value_remark'					=> isset($values['remark']) ? $values['remark'] : '',
 
 				'lang_entry_date'				=> lang('Entry date'),
-				'lang_name'						=> lang('name'),
-				'lang_descr'					=> lang('descr'),
+				'lang_remark'					=> lang('remark'),
 				'lang_contact'					=> lang('contact'),
 				
 				'msgbox_data'					=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
@@ -695,9 +729,6 @@
 				'lang_save'						=> lang('save'),
 				'lang_cancel'					=> lang('cancel'),
 				'value_id'						=> $id,
-				'lang_active'					=> lang('active'),
-				'lang_active_on_statustext'		=> lang('set this item inactive'),
-				'lang_active_off_statustext'	=> lang('set this item active'),
 				'lang_cancel_status_text'		=> lang('Back to the list'),
 				'lang_save_status_text'			=> lang('Save the responsible type'),
 				'lang_apply'					=> lang('apply'),
@@ -709,6 +740,16 @@
 				'lang_location'					=> lang('location'),
 				'value_location_name'			=> "property{$this->location}", //FIXME once interlink is settled , use some AJAX magic for select cats based on location
 				'location_data'					=> $location_data,
+				'value_contact_name'			=> $contact_name,
+				'lang_active_from'				=> lang('active from'),
+				'lang_active_to'				=> lang('active to'),
+				'value_active_from'				=> isset($values['active_from']) ? $values['active_from'] : '',
+				'value_active_to'				=> isset($values['active_to']) ? $values['active_to'] : '',
+				'img_cal'						=> $GLOBALS['phpgw']->common->image('phpgwapi','cal'),
+				'lang_datetitle'				=> lang('Select date'),
+				'lang_active_from_statustext'	=> lang('Select the start date for this responsibility'),
+				'lang_active_to_statustext'		=> lang('Select the closing date for this responsibility'),
+
 			);
 
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('responsible matrix') . "::{$function_msg}";

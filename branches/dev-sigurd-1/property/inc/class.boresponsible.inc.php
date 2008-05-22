@@ -234,6 +234,27 @@ $values=array();
 		}
 
 		/**
+		* Read single contact for responsibility type at physical location
+		*
+		* @param integer $id  ID of responsibility type
+		*
+		* @return array holding data of contact for responsibility type
+		*/
+
+		public function read_single_contact($id)
+		{
+			$values 				= $this->so->read_single_contact($id);
+			$values['entry_date']	= $GLOBALS['phpgw']->common->show_date($values['created_on'],$this->dateformat);
+			$contacts				= CreateObject('phpgwapi.contacts');
+			$contact_data			= $contacts->read_single_entry($values['contact_id'],array('n_given'=>'n_given','n_family'=>'n_family','email'=>'email'));
+			$values['contact_name'] = "{$contact_data[0]['n_family']}, {$contact_data[0]['n_given']}";
+			$values['active_from']	= $GLOBALS['phpgw']->common->show_date($values['active_from'],$this->dateformat);
+			$values['active_to']	= $GLOBALS['phpgw']->common->show_date($values['active_to'],$this->dateformat);
+
+			return $values;
+		}
+
+		/**
 		* Delete single responsibility type
 		*
 		* @param integer $id  ID of responsibility type

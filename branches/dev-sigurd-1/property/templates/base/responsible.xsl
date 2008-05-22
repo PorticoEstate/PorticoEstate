@@ -487,16 +487,7 @@
 					<xsl:value-of select="lang_contact"/>
 				</td>
 				<td>
-					<xsl:variable name="contact_name"><xsl:value-of select="name"/><xsl:text>_name</xsl:text></xsl:variable>
-					<xsl:variable name="lookup_function"><xsl:text>lookup_</xsl:text><xsl:value-of select="name"/><xsl:text>();</xsl:text></xsl:variable>
-					<input type="text" name="{name}" value="{value}" onClick="{$lookup_function}" readonly="readonly" size="5" onMouseout="window.status='';return true;" >
-						<xsl:choose>
-							<xsl:when test="disabled!=''">
-								<xsl:attribute name="disabled">
-									<xsl:text> disabled</xsl:text>
-								</xsl:attribute>
-							</xsl:when>
-						</xsl:choose>
+					<input type="text" name="contact_id" value="{contact_id}" onClick="lookup_contact()" readonly="readonly" size="5" onMouseout="window.status='';return true;" >
 						<xsl:attribute name="title">
 							<xsl:value-of select="lang_cancel_status_text"/>
 						</xsl:attribute>
@@ -504,14 +495,7 @@
 							<xsl:text>cursor:help</xsl:text>
 						</xsl:attribute>
 					</input>
-					<input  size="30" type="text" name="{$contact_name}" value="{contact_name}"  onClick="{$lookup_function}" readonly="readonly"> 
-						<xsl:choose>
-							<xsl:when test="disabled!=''">
-								<xsl:attribute name="disabled">
-									<xsl:text> disabled</xsl:text>
-								</xsl:attribute>
-							</xsl:when>
-						</xsl:choose>
+					<input  size="30" type="text" name="contact_name" value="{value_contact_name}"  onClick="lookup_contact()" readonly="readonly"> 
 						<xsl:attribute name="title">
 							<xsl:value-of select="lang_cancel_status_text"/>
 						</xsl:attribute>
@@ -523,52 +507,49 @@
 			</tr>
 
 			<xsl:call-template name="location_form"/>
+
 			<tr>
-				<td valign="top" width="10%"  title="{lang_name_status_text}" style="cursor:help">
-					<xsl:value-of select="lang_name"/>
+				<td>
+					<xsl:value-of select="lang_active_from"/>
 				</td>
 				<td>
-					<input type="text" size="60" name="values[name]" value="{value_name}" onMouseout="window.status='';return true;">
+					<input type="text" id="values_active_from" name="values[active_from]" size="10" value="{value_active_from}" readonly="readonly" onMouseout="window.status='';return true;" >
+						<xsl:attribute name="title">
+							<xsl:value-of select="lang_active_from_statustext"/>
+						</xsl:attribute>
+						<xsl:attribute name="style">
+							<xsl:text>cursor:help</xsl:text>
+						</xsl:attribute>
 					</input>
+					<img id="values_active_from-trigger" src="{img_cal}" alt="{lang_datetitle}" title="{lang_datetitle}" style="cursor:pointer; cursor:hand;" />
 				</td>
 			</tr>
 			<tr>
-				<td valign="top"  title="{lang_descr_status_text}" style="cursor:help">
-					<xsl:value-of select="lang_descr"/>
+				<td>
+					<xsl:value-of select="lang_active_to"/>
 				</td>
 				<td>
-					<textarea cols="60" rows="10" name="values[descr]" wrap="virtual" onMouseout="window.status='';return true;">
-						<xsl:value-of select="value_descr"/>		
+					<input type="text" id="values_active_to" name="values[active_to]" size="10" value="{value_active_to}" readonly="readonly" onMouseout="window.status='';return true;" >
+						<xsl:attribute name="title">
+							<xsl:value-of select="lang_active_to_statustext"/>
+						</xsl:attribute>
+						<xsl:attribute name="style">
+							<xsl:text>cursor:help</xsl:text>
+						</xsl:attribute>
+					</input>
+					<img id="values_active_to-trigger" src="{img_cal}" alt="{lang_datetitle}" title="{lang_datetitle}" style="cursor:pointer; cursor:hand;" />
+				</td>
+			</tr>
+
+
+			<tr>
+				<td valign="top"  title="{lang_remark_status_text}" style="cursor:help">
+					<xsl:value-of select="lang_remark"/>
+				</td>
+				<td>
+					<textarea cols="60" rows="10" name="values[remark]" wrap="virtual" onMouseout="window.status='';return true;">
+						<xsl:value-of select="value_remark"/>		
 					</textarea>
-				</td>
-			</tr>
-			<tr>
-				<td>
-					<xsl:value-of select="lang_active"/>
-				</td>
-				<td>
-					<xsl:choose>
-						<xsl:when test="value_active = '1'">
-							<input type="checkbox" name="values[active]" value="1" checked="checked" onMouseout="window.status='';return true;">
-								<xsl:attribute name="title">
-									<xsl:value-of select="lang_active_on_statustext"/>
-								</xsl:attribute>
-								<xsl:attribute name="style">
-									<xsl:text>cursor:help</xsl:text>
-								</xsl:attribute>
-							</input>
-						</xsl:when>
-						<xsl:otherwise>
-							<input type="checkbox" name="values[active]" value="1" onMouseout="window.status='';return true;">
-								<xsl:attribute name="title">
-									<xsl:value-of select="lang_active_off_statustext"/>
-								</xsl:attribute>
-								<xsl:attribute name="style">
-									<xsl:text>cursor:help</xsl:text>
-								</xsl:attribute>
-							</input>
-						</xsl:otherwise>
-					</xsl:choose>
 				</td>
 			</tr>
 			<tr height="50">
