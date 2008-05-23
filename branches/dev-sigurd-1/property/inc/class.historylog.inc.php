@@ -98,7 +98,7 @@
 
 			$this->appname = $appname;
 
-			$this->db      = clone($GLOBALS['phpgw']->db);
+			$this->db      = CreateObject('property.db');
 		}
 
 		function delete($record_id,$attrib_id='')

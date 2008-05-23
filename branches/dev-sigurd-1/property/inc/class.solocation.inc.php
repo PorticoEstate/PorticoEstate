@@ -43,7 +43,7 @@
 			$this->soadmin_location	= CreateObject('property.soadmin_location');
 			$this->bocommon			= CreateObject('property.bocommon');
 			$this->db           	= $this->bocommon->new_db();
-			$this->db2           	= $this->bocommon->new_db();
+			$this->db2           	= $this->bocommon->new_db($this->db);
 			$this->socommon			= CreateObject('property.socommon');
 
 			$this->join			= $this->bocommon->join;

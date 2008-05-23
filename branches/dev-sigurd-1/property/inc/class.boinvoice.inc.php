@@ -34,12 +34,8 @@
 
 	class property_boinvoice
 	{
-		var $db = '';
-
 		function property_boinvoice($session=false)
 		{
-			$this->db		= $GLOBALS['phpgw']->db;
-		//	$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->so		= CreateObject('property.soinvoice',true);
 			$this->bocommon		= CreateObject('property.bocommon');
 			$this->account_id	= $GLOBALS['phpgw_info']['user']['account_id'];

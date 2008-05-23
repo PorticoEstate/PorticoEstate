@@ -47,22 +47,14 @@
 
 		function property_socommon($currentapp='')
 		{
-			if($currentapp)
-			{
-			//	$this->currentapp	= $currentapp;
-			}
-			else
-			{
-			//	$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
-			}
 
 			if(is_object($GLOBALS['phpgw']->db))
 			{
-				$this->db =& $GLOBALS['phpgw']->db;
+				$this->db = CreateObject('property.db');
 			}
-			else
+			else // for setup
 			{
-				$this->db = CreateObject('phpgwapi.db');
+				$this->db = CreateObject('property.db');
 
 				if(isset($GLOBALS['phpgw_info']['server']['db_name']) && $GLOBALS['phpgw_info']['server']['db_name'])
 				{
@@ -392,15 +384,15 @@
 			return $next_id;
 		}
 
-		function new_db()
+		function new_db($db ='' )
 		{
-			if(is_object($GLOBALS['phpgw']->db))
+			if(is_object($db))
 			{
-				$db = clone($GLOBALS['phpgw']->db);
+				$db = clone($db);
 			}
 			else
 			{
-				$db = CreateObject('phpgwapi.db');
+				$db = CreateObject('property.db');
 				if(isset($GLOBALS['phpgw_info']['server']['db_name']) && $GLOBALS['phpgw_info']['server']['db_name'])
 				{
 					$db->Host = $GLOBALS['phpgw_info']['server']['db_host'];

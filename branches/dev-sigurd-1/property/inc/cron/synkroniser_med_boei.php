@@ -40,14 +40,14 @@
 		{
 		//	$this->currentapp		= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->bocommon			= CreateObject('property.bocommon');
-			$this->db     			= & $GLOBALS['phpgw']->db;
+			$this->db           	= $this->bocommon->new_db();
 			$this->join				= $this->db->join;
 			$this->like				= $this->db->like;
 			$this->left_join 		= " LEFT JOIN ";
 
 			if(isset($this->db->adodb) && $this->db->adodb)
 			{
-				$this->db_boei           	= CreateObject('phpgwapi.db',false,$GLOBALS['external_db']['boei']['db_type']);
+				$this->db_boei           	= CreateObject('property.db',false,$GLOBALS['external_db']['boei']['db_type']);
 				$this->db_boei->Host     	= $GLOBALS['external_db']['boei']['db_host'];
 				$this->db_boei->Type     	= $GLOBALS['external_db']['boei']['db_type'];
 				$this->db_boei->Database 	= $GLOBALS['external_db']['boei']['db_name'];

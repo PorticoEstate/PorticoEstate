@@ -37,11 +37,10 @@
 
 		function property_soproject()
 		{
-		//	$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->account		= $GLOBALS['phpgw_info']['user']['account_id'];
 			$this->bocommon		= CreateObject('property.bocommon');
-			$this->db =& $GLOBALS['phpgw']->db;
-			$this->db2 = clone($this->db);
+			$this->db           	= $this->bocommon->new_db();
+			$this->db2           	= $this->bocommon->new_db($this->db);
 
 			$this->like =& $this->db->like;
 			$this->join =& $this->db->join;

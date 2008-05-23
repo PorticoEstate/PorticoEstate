@@ -67,18 +67,9 @@
 			)
 		);
 
-		function property_bocommon($currentapp='')
+		function property_bocommon()
 		{
-			if($currentapp)
-			{
-			//	$this->currentapp	= $currentapp;
-			}
-			else
-			{
-			//	$this->currentapp	= 'property';
-			}
-
-			$this->socommon			= CreateObject('property.socommon','property');
+			$this->socommon			= CreateObject('property.socommon');
 			$this->account		= $GLOBALS['phpgw_info']['user']['account_id'];
 
 			if (!isset($GLOBALS['phpgw']->asyncservice))
@@ -1507,9 +1498,9 @@
 			return (isset($link)?$link:'');
 		}
 
-		function new_db()
+		function new_db($db ='')
 		{
-			return $this->socommon->new_db();
+			return $this->socommon->new_db($db);
 		}
 
 		function get_max_location_level()

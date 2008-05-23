@@ -37,7 +37,7 @@
 		function property_soadmin_location()
 		{
 			$this->account		= $GLOBALS['phpgw_info']['user']['account_id'];
-			$this->bocommon		= CreateObject('property.bocommon','property');
+			$this->bocommon		= CreateObject('property.bocommon');
 			$this->db           	= $this->bocommon->new_db();
 
 			$this->join		= $this->bocommon->join;

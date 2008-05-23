@@ -40,8 +40,6 @@
 		{
 		//	$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->bocommon		= CreateObject('property.bocommon');
-			$this->db           	= $this->bocommon->new_db();
-			$this->db2           	= $this->bocommon->new_db();
 			$this->account_id 	= $GLOBALS['phpgw_info']['user']['account_id'];
 
 			$this->acl 		= CreateObject('phpgwapi.acl');
@@ -49,6 +47,9 @@
 			$this->join		= $this->bocommon->join;
 			$this->left_join	= $this->bocommon->left_join;
 			$this->like		= $this->bocommon->like;
+			$this->db           	= $this->bocommon->new_db();
+			$this->db2           	= $this->bocommon->new_db($this->db);
+
 		}
 
 		function read_invoice($data)

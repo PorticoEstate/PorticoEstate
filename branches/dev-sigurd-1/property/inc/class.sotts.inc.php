@@ -189,7 +189,7 @@
 				$this->db->query($sql . $ordermethod,__LINE__,__FILE__);
 			}
 
-			$db2           	= $this->bocommon->new_db();
+			$db2           	= $this->bocommon->new_db($this->db);
 
 			$tickets = array();
 			$i = 0;
