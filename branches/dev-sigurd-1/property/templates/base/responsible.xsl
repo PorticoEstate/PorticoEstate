@@ -51,7 +51,11 @@
 					<xsl:apply-templates select="values_type"/>
 				</xsl:when>
 			</xsl:choose>
-			<xsl:apply-templates select="table_add"/>
+			<xsl:choose>
+				<xsl:when test="table_add != ''">
+					<xsl:apply-templates select="table_add"/>
+				</xsl:when>
+			</xsl:choose>
 		</table>
 	</xsl:template>
 
@@ -474,12 +478,28 @@
 				</tr>
 				</xsl:when>
 			</xsl:choose>	
+
 			<tr>
 				<td>
-					<xsl:value-of select="lang_category"/>
+					<xsl:value-of select="lang_responsibility"/>
 				</td>
 				<td>
-					<xsl:call-template name="categories"/>
+					<input type="text" name="responsibility_id" value="{value_responsibility_id}" onClick="lookup_responsibility()" readonly="readonly" size="5" onMouseout="window.status='';return true;" >
+						<xsl:attribute name="title">
+							<xsl:value-of select="lang_responsibility_status_text"/>
+						</xsl:attribute>
+						<xsl:attribute name="style">
+							<xsl:text>cursor:help</xsl:text>
+						</xsl:attribute>
+					</input>
+					<input  size="30" type="text" name="responsibility_name" value="{value_responsibility_name}"  onClick="lookup_responsibility()" readonly="readonly"> 
+						<xsl:attribute name="title">
+							<xsl:value-of select="lang_responsibility_status_text"/>
+						</xsl:attribute>
+						<xsl:attribute name="style">
+							<xsl:text>cursor:help</xsl:text>
+						</xsl:attribute>
+					</input>
 				</td>
 			</tr>
 			<tr>
@@ -487,9 +507,9 @@
 					<xsl:value-of select="lang_contact"/>
 				</td>
 				<td>
-					<input type="text" name="contact_id" value="{contact_id}" onClick="lookup_contact()" readonly="readonly" size="5" onMouseout="window.status='';return true;" >
+					<input type="text" name="contact_id" value="{value_contact_id}" onClick="lookup_contact()" readonly="readonly" size="5" onMouseout="window.status='';return true;" >
 						<xsl:attribute name="title">
-							<xsl:value-of select="lang_cancel_status_text"/>
+							<xsl:value-of select="lang_contact_status_text"/>
 						</xsl:attribute>
 						<xsl:attribute name="style">
 							<xsl:text>cursor:help</xsl:text>
@@ -497,7 +517,7 @@
 					</input>
 					<input  size="30" type="text" name="contact_name" value="{value_contact_name}"  onClick="lookup_contact()" readonly="readonly"> 
 						<xsl:attribute name="title">
-							<xsl:value-of select="lang_cancel_status_text"/>
+							<xsl:value-of select="lang_contact_status_text"/>
 						</xsl:attribute>
 						<xsl:attribute name="style">
 							<xsl:text>cursor:help</xsl:text>

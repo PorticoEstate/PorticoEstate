@@ -158,7 +158,15 @@
 				return;
 			}
 
-			$GLOBALS['phpgw_info']['flags']['menu_selection'] .= '::responsible';
+			if($lookup = phpgw::get_var('amp;lookup', 'bool') || $lookup = phpgw::get_var('lookup', 'bool'))//FIXME
+			{
+				$GLOBALS['phpgw_info']['flags']['noframework']	= true;
+				$GLOBALS['phpgw_info']['flags']['headonly']		= true;
+			}
+			else
+			{
+				$GLOBALS['phpgw_info']['flags']['menu_selection'] .= '::responsible';			
+			}
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('responsible', 'nextmatchs','search_field'));
 
@@ -249,6 +257,7 @@
 				'query'			=> $this->query,
 		//		'appname'		=> $appname,
 				'location'		=> $this->location,
+				'lookup'		=> $lookup
 
 			);
 
@@ -258,12 +267,16 @@
 				'location'		=> $this->location
 			);
 
-			$table_add[] = array
-			(
-				'lang_add'				=> lang('add'),
-				'lang_add_statustext'	=> lang('add type'),
-				'add_action'			=> $GLOBALS['phpgw']->link('/index.php', $link_add_action)
-			);
+			$table_add = array();
+			if(!$lookup)
+			{
+				$table_add[] = array
+				(
+					'lang_add'				=> lang('add'),
+					'lang_add_statustext'	=> lang('add type'),
+					'add_action'			=> $GLOBALS['phpgw']->link('/index.php', $link_add_action)
+				);
+			}
 
 			$receipt = $GLOBALS['phpgw']->session->appsession('session_data','responsible_receipt');
 			$msgbox_data = $GLOBALS['phpgw']->common->msgbox_data($receipt);
@@ -596,10 +609,12 @@
 				return;
 			}
 
-			$id				= phpgw::get_var('id', 'int');
-			$values			= phpgw::get_var('values', 'string', 'POST');
-			$contact_id		= phpgw::get_var('contact_id', 'int');
-			$contact_name	= phpgw::get_var('contact_name', 'string');			
+			$id						= phpgw::get_var('id', 'int');
+			$values					= phpgw::get_var('values', 'string', 'POST');
+			$contact_id				= phpgw::get_var('contact_id', 'int');
+			$contact_name			= phpgw::get_var('contact_name', 'string');			
+			$responsibility_id		= phpgw::get_var('responsibility_id', 'int');
+			$responsibility_name	= phpgw::get_var('responsibility_name', 'string');			
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('responsible'));
 
@@ -633,6 +648,15 @@
 					if($contact_name)
 					{
 						$values['contact_name']=$contact_name;
+					}
+
+					if($responsibility_id)
+					{
+						$values['responsibility_id']=$responsibility_id;
+					}
+					if($contact_name)
+					{
+						$values['responsibility_name']=$responsibility_name;
 					}
 
 					if(!isset($receipt['error']) || !$receipt['error'])
@@ -686,14 +710,19 @@
 
 			$msgbox_data = (isset($receipt)?$GLOBALS['phpgw']->common->msgbox_data($receipt):'');
 
-			$lookup_link		= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uilookup.addressbook', 'column'=> 'contact'));
+			$lookup_link_contact		= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uilookup.addressbook', 'column'=> 'contact'));
+			$lookup_link_responsibility	= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiresponsible.index', 'location' => $this->location, 'lookup' => true));
 
 			$lookup_function = "\n"
 				. '<script type="text/javascript">' ."\n"
 				. '//<[CDATA[' ."\n"
 				. 'function lookup_contact()' ."\r\n"
 				. '{'."\r\n"
-				. 'Window1=window.open('."'" . $lookup_link ."'" .',"Search","width=800,height=700,toolbar=no,scrollbars=yes,resizable=yes");' . "\r\n"
+				. 'Window1=window.open('."'" . $lookup_link_contact ."'" .',"Search","width=800,height=700,toolbar=no,scrollbars=yes,resizable=yes");' . "\r\n"
+				. '}'."\r\n"
+				. 'function lookup_responsibility()' ."\r\n"
+				. '{'."\r\n"
+				. 'Window1=window.open('."'" . $lookup_link_responsibility ."'" .',"Search","width=800,height=700,toolbar=no,scrollbars=yes,resizable=yes");' . "\r\n"
 				. '}'."\r\n"
 				. '//]]' ."\n"
 				. "</script>\n";
@@ -714,11 +743,19 @@
 				'value_entry_date'				=> isset($values['entry_date']) ? $values['entry_date'] : '',
 				'value_name'					=> isset($values['name']) ? $values['name'] : '',
 				'value_remark'					=> isset($values['remark']) ? $values['remark'] : '',
-
 				'lang_entry_date'				=> lang('Entry date'),
 				'lang_remark'					=> lang('remark'),
+
+				'lang_responsibility'				=> lang('responsibility'),
+				'lang_responsibility_status_text'	=> lang('click to select responsibility'),
+				'value_responsibility_id'			=> isset($values['responsibility_id']) ? $values['responsibility_id'] : '',
+				'value_responsibility_name'			=> isset($values['responsibility_name']) ? $values['responsibility_name'] : '',
+
 				'lang_contact'					=> lang('contact'),
-				
+				'lang_contact_status_text'		=> lang('click to select contact'),
+				'value_contact_id'				=> isset($values['contact_id']) ? $values['contact_id'] : '',
+				'value_contact_name'			=> isset($values['contact_name']) ? $values['contact_name'] : '',
+
 				'msgbox_data'					=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
 				'form_action'					=> $GLOBALS['phpgw']->link('/index.php',$link_data),
 				'lang_id'						=> lang('ID'),
@@ -730,13 +767,13 @@
 				'lang_apply'					=> lang('apply'),
 				'lang_apply_status_text'		=> lang('Apply the values'),
 
-				'lang_category'					=> lang('category'),
-				'lang_no_cat'					=> lang('no category'),
-				'cat_select'					=> $this->cats->formatted_xslt_list(array('select_name' => 'values[cat_id]','selected' => isset($values['cat_id'])?$values['cat_id']:'')),
+			//	'lang_category'					=> lang('category'),
+			//	'lang_no_cat'					=> lang('no category'),
+			//	'cat_select'					=> $this->cats->formatted_xslt_list(array('select_name' => 'values[cat_id]','selected' => isset($values['cat_id'])?$values['cat_id']:'')),
 				'lang_location'					=> lang('location'),
 				'value_location_name'			=> "property{$this->location}", //FIXME once interlink is settled , use some AJAX magic for select cats based on location
 				'location_data'					=> $location_data,
-				'value_contact_name'			=> $contact_name,
+
 				'lang_active_from'				=> lang('active from'),
 				'lang_active_to'				=> lang('active to'),
 				'value_active_from'				=> isset($values['active_from']) ? $values['active_from'] : '',

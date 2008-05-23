@@ -2502,7 +2502,7 @@
 		$GLOBALS['phpgw_setup']->oProc->CreateTable(
 			'fm_responsibility_contact', array(
 				'fd' => array(
-					'rc_id' => array('type' => 'auto','precision' => '4','nullable' => False),
+					'id' => array('type' => 'auto','precision' => '4','nullable' => False),
 					'responsibility_id' => array('type' => 'int', 'precision' => 4,'nullable' => False),
 					'contact_id' => array('type' => 'int', 'precision' => 4,'nullable' => True),
 					'location_code' => array('type' => 'varchar', 'precision' => 20,'nullable' => True),
@@ -2518,7 +2518,7 @@
 					'expired_by' => array('type' => 'int', 'precision' => 4,'nullable' => True),
 					'remark' => array('type' => 'text','nullable' => True),
 				),
-				'pk' => array('rc_id'),
+				'pk' => array('id'),
 				'fk' => array(
 					'fm_responsibility' => array('responsibility_id' => 'id'),
 					'phpgw_contact' => array('contact_id' => 'contact_id')
