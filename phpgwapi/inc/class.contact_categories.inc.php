@@ -12,11 +12,12 @@
 	/**
 	* Use SQL criteria
 	*/
-	include_once(PHPGW_API_INC . '/class.sql_criteria.inc.php');
+	phpgw::import_class('phpgwapi.sql_criteria');
+
 	/**
 	* Use SQL entity
 	*/
-	include_once(PHPGW_API_INC . '/class.sql_entity.inc.php');
+	phpgw::import_class('phpgwapi.sql_entity');
 
 	/**
 	* Query statements for "categories" table
@@ -24,7 +25,7 @@
 	* @package phpgwapi
 	* @subpackage contacts
 	*/
-	class contact_categories extends sql_entity
+	class contact_categories extends phpgwapi_sql_entity
 	{
 		var $map = array('key_cat_id'		=> array('select'	=> '',
 								 'criteria' 	=> '',
@@ -65,4 +66,3 @@
 			$this->set_elinks('key_cat_id', 'phpgwapi.contact_categories','parent_id');
 		}
 	}
-?>

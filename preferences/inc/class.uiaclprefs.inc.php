@@ -1,63 +1,84 @@
 <?php
 	/**
-	* Preferences - User interface for ACL preferences
-	*
-	* @copyright Copyright (C) 2000-2005 Free Software Foundation, Inc. http://www.fsf.org/
-	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
-	* @package preferences
-	* @version $Id$
-	*/
+	 * Preferences - User interface for ACL preferences
+	 *
+	 * @author Dave Hall <skwashd@phpgroupware.org>
+	 * @author Others <unknown>
+	 * @copyright Copyright (C) 200-2008 Free Software Foundation, Inc. http://www.fsf.org/
+	 * @license http://www.gnu.org/licenses/gpl.html GNU General Public License
+	 * @package phpgroupware
+	 * @subpackage preferences
+	 * @version $Id$
+	 */
 
+	/*
+	   This program is free software: you can redistribute it and/or modify
+	   it under the terms of the GNU General Public License as published by
+	   the Free Software Foundation, either version 3 of the License, or
+	   (at your option) any later version.
+
+	   This program is distributed in the hope that it will be useful,
+	   but WITHOUT ANY WARRANTY; without even the implied warranty of
+	   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	   GNU General Public License for more details.
+
+	   You should have received a copy of the GNU General Public License
+	   along with this program.  If not, see <http://www.gnu.org/licenses/>.
+	 */
 
 	/**
 	 * User interface for ACL preferences
-	 * 
-	 * @package preferences
+	 *
+	 * @package phpgroupware
+	 * @subpackage preferences
 	 */
-	class uiaclprefs
+	class preferences_uiaclprefs
 	{
 		/**
-		 * 
+		 *
 		 * @var unknown
 		 */
 		var $acl;
 
 		/**
-		 * 
+		 *
 		 * @var object
 		 */
 		var $template;
 
 		/**
-		 * 
+		 *
 		 * @var array
 		 */
-		var $public_functions = array('index' => True);
+		var $public_functions = array('index' => true);
 
 		/**
 		 * Constructor
 		 */
-		function uiaclprefs()
+		public function __construct()
 		{
 			$GLOBALS['phpgw']->nextmatchs = CreateObject('phpgwapi.nextmatchs');
+			$this->template =& $GLOBALS['phpgw']->template;
 		}
 
 		/**
-		 * 
+		 * Render index form for ACLs
+		 *
+		 * @return null
 		 */
 		function index()
 		{
-			$acl_app	= get_var('acl_app',array('POST','GET'));
-			$start		= get_var('start',array('POST','GET'));
-			$query		= get_var('query',array('POST','GET'));
-			$s_groups	= get_var('s_groups',array('POST','GET'));
-			$s_users	= get_var('s_users',array('POST','GET'));
-			$owner		= get_var('owner',array('POST','GET'));
+			$acl_app	= phpgw::get_var('acl_app', 'string');
+			$start		= phpgw::get_var('start', 'int');
+			$query		= phpgw::get_var('query', 'string');
+			$s_groups	= phpgw::get_var('s_groups', 'int');
+			$s_users	= phpgw::get_var('s_users', 'int');
+			$owner		= phpgw::get_var('owner', 'int');
 
 			if (! $acl_app)
 			{
 				$acl_app            = 'preferences';
-				$acl_app_not_passed = True;
+				$acl_app_not_passed = true;
 			}
 			else
 			{
@@ -68,7 +89,7 @@
 
 			if ($acl_app_not_passed)
 			{
-				if(is_object($GLOBALS['phpgw']->log))
+				if ( is_object($GLOBALS['phpgw']->log) )
 				{
 					$GLOBALS['phpgw']->log->message(array(
 						'text' => 'F-BadmenuactionVariable, failed to pass acl_app.',
@@ -79,156 +100,115 @@
 				}
 			}
 
-			if ($GLOBALS['phpgw_info']['server']['deny_user_grants_access'] && !isset($GLOBALS['phpgw_info']['user']['apps']['admin']))
+			if ( $GLOBALS['phpgw_info']['server']['deny_user_grants_access']
+					&& !isset($GLOBALS['phpgw_info']['user']['apps']['admin']) )
 			{
 				echo '<center><b>' . lang('Access not permitted') . '</b></center>';
-				$GLOBALS['phpgw']->common->phpgw_exit(True);
+				$GLOBALS['phpgw']->common->phpgw_exit(true);
 			}
-
-			/*
-			if(isset($save_my_owner) && $GLOBALS['phpgw_info']['user']['apps']['admin'])
-			{
-				$owner = $save_my_owner;
-				unset($save_my_owner);
-			}
-			elseif(@isset($save_my_owner))
-			{
-				echo '<center>'.lang('You do not have permission to set ACL\'s in this mode!').'</center>';
-				$GLOBALS['phpgw']->common->phpgw_footer();
-			}
-			*/
 
 			if((!isset($owner) || empty($owner)) || !$GLOBALS['phpgw_info']['user']['apps']['admin'])
 			{
 				$owner = $GLOBALS['phpgw_info']['user']['account_id'];
 			}
 
-			$acct			= CreateObject('phpgwapi.accounts',$owner);
+			$acct			= createObject('phpgwapi.accounts', $owner);
 			$groups			= $acct->get_list('groups');
 			$users			= $acct->get_list('accounts');
 			$owner_name		= $acct->id2name($owner);		// get owner name for title
-			if($is_group	= $acct->get_type($owner) == 'g')
+			$is_group		= $acct->get_type($owner);
+
+			if ( $is_group == 'g' )
 			{
-				$owner_name = lang('Group').' ('.$owner_name.')';
+				$owner_name = lang('Group (%1)', $owner_name);
 			}
 			unset($acct);
-			$this->acl = CreateObject('phpgwapi.acl',intval($owner));
+
+			$this->acl = createObject('phpgwapi.acl', (int) $owner);
 			$this->acl->read_repository();
 
-			if ($_POST['submit'])
+			$errors = '';
+
+			if ( phpgw::get_var('submit', 'bool', 'POST') )
 			{
 				$processed = $_POST['processed'];
-				$to_remove = unserialize(urldecode($processed));
+				$to_remove = unserialize($processed);
 
-				for($i=0; $i < count($to_remove); ++$i)
+				foreach ( $to_remove as $entry )
 				{
-					$this->acl->delete($GLOBALS['phpgw_info']['flags']['currentapp'],$to_remove[$i]);
+					$this->acl->delete($acl_app, (int) $entry);
 				}
 
 				/* Group records */
-				$group_variable = $_POST['g_'.$GLOBALS['phpgw_info']['flags']['currentapp']];
+				$group_variable = phpgw::get_var("g_{$acl_app}", 'string', 'POST');
 
-				if (!$group_variable)
+				if ( !$group_variable )
 				{
 					$group_variable = array();
 				}
-				@reset($group_variable);
-				$totalacl = array();
-				while(list($rowinfo,$perm) = each($group_variable))
-				{
-					list($group_id,$rights) = split('_',$rowinfo);
-					$totalacl[$group_id] += $rights;
-				}
-				@reset($totalacl);
-				while(list($group_id,$rights) = @each($totalacl))
-				{
-					if($is_group)
-					{
-						/* Don't allow group-grants to grant private */
-						$rights &= ~PHPGW_ACL_PRIVATE;
-					}
 
-					$this->acl->add($GLOBALS['phpgw_info']['flags']['currentapp'],$group_id,$rights);
+				$totalacl = array();
+				foreach ( $group_variable as $rowinfo )
+				{
+					list($group_id, $rights) = explode('_', $rowinfo, 2);
+					$totalacl[(int) $group_id] += (int) $rights;
 				}
 
 				/* User records */
-				$user_variable = $_POST['u_'.$GLOBALS['phpgw_info']['flags']['currentapp']];
+				$user_variable = phpgw::get_var("u_{$acl_app}", 'string', 'POST');
 
 				if (!$user_variable)
 				{
 					$user_variable = array();
 				}
-				@reset($user_variable);
-				$totalacl = array();
-				while(list($rowinfo,$perm) = each($user_variable))
+
+				foreach ( $user_variable as $rowinfo )
 				{
-					list($user_id,$rights) = split('_',$rowinfo);
-					$totalacl[$user_id] += $rights;
+					list($user_id, $rights) = explode('_', $rowinfo, 2);
+					$totalacl[(int) $user_id] += (int) $rights;
 				}
-				@reset($totalacl);
-				while(list($user_id,$rights) = @each($totalacl))
+
+				// Update all the ACLs at once
+				foreach ( $totalacl as $id => $rights )
 				{
-					if($is_group)
+					if ( $is_group )
 					{
 						/* Don't allow group-grants to grant private */
 						$rights &= ~ PHPGW_ACL_PRIVATE;
 					}
 
-					$this->acl->add($GLOBALS['phpgw_info']['flags']['currentapp'],$user_id,$rights);
+					$this->acl->add($acl_app, $id, $rights);
 				}
-				$this->acl->save_repository();
+				if ( $this->acl->save_repository('preferences') )
+				{
+					$errors = lang('Grants have been updated');
+				}
+				else
+				{
+					$errors = lang('ERROR: Grants have not been updated');
+				}
 			}
 
 			$processed = Array();
 
 			$total = 0;
 
-			if(!isset($start))
+			$maxm = $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
+
+			$totalentries = count($groups) + count($users);
+			if ( $totalentries < $maxm )
 			{
-				$start = 0;
+				$maxm = $totalentries;
 			}
 
-			if(!$start)
-			{
-				$s_groups = 0;
-				$s_users = 0;
-			}
-
-			if(!isset($s_groups))
-			{
-				$s_groups = 0;
-			}
-
-			if(!isset($s_users))
-			{
-				$s_users = 0;
-			}
-
-			if(!isset($query))
-			{
-				$query = "";
-			}
-
-			if(!isset($maxm))
-			{
-				$maxm = $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
-			}
-
-			if(!isset($totalentries))
-			{
-				$totalentries = count($groups) + count($users);
-				if($totalentries < $maxm)
-				{
-					$maxm = $totalentries;
-				}
-			}
-
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('%1 - Preferences',$GLOBALS['phpgw_info']['apps'][$acl_app]['title']).' - '.lang('acl').': '.$owner_name;
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('%1 - Preferences', lang($acl_app))
+														. ' - ' . lang('acl') . ": {$owner_name}";
 			$GLOBALS['phpgw']->common->phpgw_header();
 			echo parse_navbar();
 
-			$this->template = CreateObject('phpgwapi.Template',$GLOBALS['phpgw']->common->get_tpl_dir($acl_app));
-			$templates = Array (
+			$this->template->set_root($GLOBALS['phpgw']->common->get_tpl_dir($acl_app));
+			$templates = array
+			(
 				'preferences' => 'preference_acl.tpl',
 				'row_colspan' => 'preference_colspan.tpl',
 				'acl_row'     => 'preference_acl_row.tpl'
@@ -236,74 +216,79 @@
 
 			$this->template->set_file($templates);
 
-			if ($_POST['submit'])
-			{
-				$this->template->set_var('errors',lang('ACL grants have been updated'));
-			}
+			$common_hidden_vars = <<<HTML
+				<input type="hidden" name="s_groups" value="{$s_groups}">
+				<input type="hidden" name="s_users" value="{$s_users}">
+				<input type="hidden" name="maxm" value="{$maxm}">
+				<input type="hidden" name="totalentries" value="{$totalentries}">
+				<input type="hidden" name="start" value="{$start}">
+				<input type="hidden" name="query" value="{$query}">
+				<input type="hidden" name="owner" value="{$owner}">
+				<input type="hidden" name="acl_app" value="{$acl_app}">
 
-			$common_hidden_vars =
-				'     <input type="hidden" name="s_groups" value="' . $s_groups . '" />' . "\n"
-				. '     <input type="hidden" name="s_users" value="' . $s_users . '" />' . "\n"
-				. '     <input type="hidden" name="maxm" value="' . $maxm . '" />' . "\n"
-				. '     <input type="hidden" name="totalentries" value="' . $totalentries.  '" />' . "\n"
-				. '     <input type="hidden" name="start" value="' . $start . '" />' . "\n"
-				. '     <input type="hidden" name="query" value="' . $query . '" />' . "\n"
-				. '     <input type="hidden" name="owner" value="' . $owner . '" />' . "\n"
-				. '     <input type="hidden" name="acl_app" value="' . $acl_app . '" />' . "\n";
+HTML;
 
-			$var = Array(
-				'errors'      => '',
-				'title'       => '<br />',
-				'action_url'  => $GLOBALS['phpgw']->link('/index.php','menuaction=preferences.uiaclprefs.index&acl_app=' . $acl_app),
-				'bg_color'    => $GLOBALS['phpgw_info']['theme']['th_bg'],
-				'submit_lang' => lang('Save'),
-				'common_hidden_vars_form' => $common_hidden_vars
+			$var = array
+			(
+				'errors'					=> $errors,
+				'title'						=> '<br>',
+				'action_url'				=> $GLOBALS['phpgw']->link('/index.php', array
+												(
+													'menuaction'	=> 'preferences.uiaclprefs.index'
+													'acl_app'		=> $acl_app
+												)),
+				'submit_lang'				=> lang('Save'),
+				'common_hidden_vars_form'	=> $common_hidden_vars,
+				'common_hidden_vars'		=> $common_hidden_vars
 			);
 
 			$this->template->set_var($var);
 
-			if(isset($query_result) && $query_result)
+			/* This is never set so code will never execute - skwashd may08
+			if ( isset($query_result)
+				&& $query_result )
 			{
-				$common_hidden_vars .= '<input type="hidden" name="query_result" value="' . $query_result. '" />' . "\n";
+				$common_hidden_vars .= "<input type=\"hidden\" name=\"query_result\" value=\"{$query_result}\">\n";
 			}
-
-			$this->template->set_var('common_hidden_vars',$common_hidden_vars);
+			*/
 
 			$vars = $this->template->get_undefined('row_colspan');
-			while (list(,$var) = each($vars))
+			foreach ( $vars as $var )
 			{
-				if (ereg('lang_',$var))
+				if ( preg_match('/lang_/', $var))
 				{
-					$value = ereg_replace('lang_','',$var);
-					$value = ereg_replace('_',' ',$value);
+					$value = preg_replace('/lang_/', '', $var);
+					$value = preg_replace('/_/', ' ', $value);
 
-					$this->template->set_var($var,lang($value));
+					$this->template->set_var($var, lang($value));
 				}
 			}
 
-			if (intval($s_groups) != count($groups))
+			$g_count = count($groups);
+			if ( (int) $s_groups != $g_count )
 			{
-				$this->template->set_var('string',lang('Groups'));
-				$this->template->parse('row','row_colspan',True);
+				$this->template->set_var('string', lang('Groups'));
+				$this->template->parse('row', 'row_colspan', true);
 
 				reset($groups);
-				for($k=$start; $k < count($groups); ++$k)
+				for ( $k = $start; $k < $g_count; ++$k )
 				{
 					$group = $groups[$k];
-					$go = True;
+					$go = true;
 
 					if($query)
 					{
-						if(!strpos(' '.$group['account_lid'].' ',$query))
+						if ( !strpos(" {$group['account_lid']} ", $query) )
 						{
-							$go = False;
+							$go = false;
 						}
 					}
 
 					if($go)
 					{
 						$tr_color = $GLOBALS['phpgw']->nextmatchs->alternate_row_color($tr_color);
-						$this->display_row($tr_color,'g_',$group['account_id'],$group['account_lid'],$is_group);
+						$this->display_row($tr_color, 'g_', $group['account_id'],
+											$group['account_lid'], $is_group);
 						++$s_groups;
 						$processed[] = $group['account_id'];
 						++$total;
@@ -319,35 +304,32 @@
 			{
 				if($users)
 				{
-					$this->template->set_var('string',ucfirst(lang('Users')));
-					$this->template->parse('row','row_colspan',True);
+					$this->template->set_var('string', lang('Users'));
+					$this->template->parse('row', 'row_colspan', true);
 					$tr_color = $GLOBALS['phpgw']->nextmatchs->alternate_row_color($tr_color);
-					for($k=$s_users; ($k < $totalentries) || ($k == count($users)); ++$k)
+					$u_count = count($users);
+					for ( $k = $s_users; ($k < $totalentries || $k == $u_count); ++$k )
 					{
 						$user = $users[$k];
-						//echo '<br />acctid: '.$user['account_id'];
-						if ($user['account_id'])
-						{
-							$go = True;
-						}
-						else
-						{
-							$go = False;
-						}
+						//echo '<br>acctid: '.$user['account_id'];
+						$go = !!$user['account_id'];
 						if($query)
 						{
-							$name = ' '.$user['account_firstname'].' '.$user['account_lastname'].' '.$user['account_lid'].' ';
-							if(!strpos($name,$query))
+							$name = " {$user['account_firstname']} {$user['account_lastname']}"
+									. " {$user['account_lid']} ";
+							if ( !strpos($name, $query) )
 							{
-								$go = False;
+								$go = false;
 							}
 						}
 
-						if($go && $user['account_id'] != $owner)	// Need to be $owner not $GLOBALS['phpgw_info']['user']['account_id']
+						// Need to be $owner not $GLOBALS['phpgw_info']['user']['account_id']
+						if ( $go && $user['account_id'] != $owner )
 						{
 							// or the admin can't get special grants from a group
 							$tr_color = $GLOBALS['phpgw']->nextmatchs->alternate_row_color($tr_color);
-							$this->display_row($tr_color,'u_',$user['account_id'],$GLOBALS['phpgw']->common->display_fullname($user['account_lid'],$user['account_firstname'],$user['account_lastname']),$is_group);
+							$this->display_row($tr_color, 'u_', $user['account_id'],
+												$GLOBALS['phpgw']->accounts->get($user['account_id']), $is_group);
 							++$s_users;
 							$processed[] = $user['account_id'];
 							++$total;
@@ -360,28 +342,37 @@
 				}
 			}
 
-			$extra_parms = 'menuaction=preferences.uiaclprefs.index'
-				. '&acl_app=' . $acl_app
-				. '&s_users='.$s_users.'&s_groups='.$s_groups
-				. '&maxm=' . $maxm . '&totalentries=' . $totalentries
-				. '&total=' . ($start + $total) . '&owner='.$owner;
+			$extra_parms = array
+			(
+				'menuaction'	=> 'preferences.uiaclprefs.index',
+				'acl_app'		=> $acl_app,
+				's_users'		=> $s_users,
+				's_groups'		=> $s_groups,
+				'maxm'			=> $maxm,
+				'totalentries'	=> $totalentries,
+				'total'			=> ($start + $total),
+				'owner'			=> $owner
+			);
 
-			$var = Array(
-				'nml'          => $GLOBALS['phpgw']->nextmatchs->left('/index.php',$start,$totalentries,$extra_parms),
-				'nmr'          => $GLOBALS['phpgw']->nextmatchs->right('/index.php',$start,$totalentries,$extra_parms),
-				'search_value' => (isset($query) && $query?$query:''),
+			$var = array
+			(
+				'nml'          => $GLOBALS['phpgw']->nextmatchs->left('/index.php',
+									$start, $totalentries, $extra_parms),
+				'nmr'          => $GLOBALS['phpgw']->nextmatchs->right('/index.php',
+									$start, $totalentries, $extra_parms),
+				'search_value' => $query,
 				'search'       => lang('search'),
-				'processed'    => urlencode(serialize($processed))
+				'processed'    => htmlspecialchars(serialize($processed), ENT_QUOTES, 'utf-8');
 			);
 
 			$this->template->set_var($var);
 
-			$this->template->pfp('out','preferences');
+			$this->template->pfp('out', 'preferences');
 		}
 
 		/**
-		 * 
-		 * 
+		 *
+		 *
 		 * @param $label
 		 * @param $id
 		 * @param $acl
@@ -389,7 +380,7 @@
 		 * @param $right
 		 * @param boolean $is_group
 		 */
-		function check_acl($label,$id,$acl,$rights,$right,$is_group=False)
+		function check_acl($label,$id,$acl,$rights,$right,$is_group=false)
 		{
 			$this->template->set_var($acl,$label.$GLOBALS['phpgw_info']['flags']['currentapp'].'['.$id.'_'.$right.']');
 			$rights_set = (($rights & $right)?' checked':'');
@@ -402,8 +393,8 @@
 		}
 
 		/**
-		 * 
-		 * 
+		 *
+		 *
 		 * @param $bg_color
 		 * @param $label
 		 * @param $id
@@ -417,25 +408,24 @@
 			$rights = $this->acl->get_rights($id,$GLOBALS['phpgw_info']['flags']['currentapp']);
 			// vv This is new
 			$grantors = $this->acl->get_ids_for_location($id,$rights,$GLOBALS['phpgw_info']['flags']['currentapp']);
-			$is_group_set = False;
+			$is_group_set = false;
 			while(@$grantors && list($key,$grantor) = each($grantors))
 			{
 				if($GLOBALS['phpgw']->accounts->get_type($grantor) == 'g')
 				{
-					$is_group_set = True;
+					$is_group_set = true;
 				}
 			}
 
-			$this->check_acl($label,$id,'read',$rights,PHPGW_ACL_READ,($is_group_set && ($rights & PHPGW_ACL_READ) && !$is_group?$is_group_set:False));
-			$this->check_acl($label,$id,'add',$rights,PHPGW_ACL_ADD,($is_group_set && ($rights & PHPGW_ACL_ADD && !$is_group)?$is_group_set:False));
-			$this->check_acl($label,$id,'edit',$rights,PHPGW_ACL_EDIT,($is_group_set && ($rights & PHPGW_ACL_EDIT && !$is_group)?$is_group_set:False));
-			$this->check_acl($label,$id,'delete',$rights,PHPGW_ACL_DELETE,($is_group_set && ($rights & PHPGW_ACL_DELETE && !$is_group)?$is_group_set:False));
+			$this->check_acl($label,$id,'read',$rights,PHPGW_ACL_READ,($is_group_set && ($rights & PHPGW_ACL_READ) && !$is_group?$is_group_set:false));
+			$this->check_acl($label,$id,'add',$rights,PHPGW_ACL_ADD,($is_group_set && ($rights & PHPGW_ACL_ADD && !$is_group)?$is_group_set:false));
+			$this->check_acl($label,$id,'edit',$rights,PHPGW_ACL_EDIT,($is_group_set && ($rights & PHPGW_ACL_EDIT && !$is_group)?$is_group_set:false));
+			$this->check_acl($label,$id,'delete',$rights,PHPGW_ACL_DELETE,($is_group_set && ($rights & PHPGW_ACL_DELETE && !$is_group)?$is_group_set:false));
 			$this->check_acl($label,$id,'private',$rights,PHPGW_ACL_PRIVATE,$is_group);
 
-			$this->check_acl($label,$id,'custom_1',$rights,PHPGW_ACL_CUSTOM_1,($is_group_set && ($rights & PHPGW_ACL_CUSTOM_1) && !$is_group?$is_group_set:False));
-			$this->check_acl($label,$id,'custom_2',$rights,PHPGW_ACL_CUSTOM_2,($is_group_set && ($rights & PHPGW_ACL_CUSTOM_2) && !$is_group?$is_group_set:False));
-			$this->check_acl($label,$id,'custom_3',$rights,PHPGW_ACL_CUSTOM_3,($is_group_set && ($rights & PHPGW_ACL_CUSTOM_3) && !$is_group?$is_group_set:False));
-			$this->template->parse('row','acl_row',True);
+			$this->check_acl($label,$id,'custom_1',$rights,PHPGW_ACL_CUSTOM_1,($is_group_set && ($rights & PHPGW_ACL_CUSTOM_1) && !$is_group?$is_group_set:false));
+			$this->check_acl($label,$id,'custom_2',$rights,PHPGW_ACL_CUSTOM_2,($is_group_set && ($rights & PHPGW_ACL_CUSTOM_2) && !$is_group?$is_group_set:false));
+			$this->check_acl($label,$id,'custom_3',$rights,PHPGW_ACL_CUSTOM_3,($is_group_set && ($rights & PHPGW_ACL_CUSTOM_3) && !$is_group?$is_group_set:false));
+			$this->template->parse('row','acl_row',true);
 		}
 	}
-?>

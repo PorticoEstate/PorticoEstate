@@ -2529,8 +2529,7 @@
 					{
 						continue;
 					}
-					$GLOBALS['phpgw']->accounts->get_account_name($userid,$lid,$details['to-firstname'],$details['to-lastname']);
-					$details['to-fullname'] = $GLOBALS['phpgw']->common->display_fullname('',$details['to-firstname'],$details['to-lastname']);
+					$details['to-fullname'] = (string) $GLOBALS['phpgw']->accounts->get($userid);
 
 					$to = $preferences->email_address($userid);
 					if (empty($to) || $to[0] == '@' || $to[0] == '$')	// we have no valid email-address
@@ -3147,17 +3146,17 @@
 		{
 			$fields = array ('contact_id', 'org_name');
 
-			$criteria_search[] = sql_criteria::token_begin('org_name', $lookup);
+			$criteria_search[] = phpgwapi_sql_criteria::token_begin('org_name', $lookup);
 
-			$criteria[] = sql_criteria::_append_or($criteria_search);
+			$criteria[] = phpgwapi_sql_criteria::_append_or($criteria_search);
 			$criteria[] = $this->contacts->criteria_for_index($GLOBALS['phpgw_info']['user']['account_id']);
 
 			if ( $cat_id )
 			{
-				$criteria[] = sql_criteria::_equal('cat_id', phpgw::get_var('cat_id', 'int', 'bool') );
+				$criteria[] = phpgwapi_sql_criteria::_equal('cat_id', phpgw::get_var('cat_id', 'int', 'bool') );
 			}
 
-			$criteria_token = sql_criteria::_append_and($criteria);
+			$criteria_token = phpgwapi_sql_criteria::_append_and($criteria);
 			return $this->contacts->get_orgs($fields, 0, 0, 'org_name', 'ASC', '', $criteria_token);
 		}
 
@@ -3174,18 +3173,18 @@
 			//echo "lookup == $lookup and user_id == {$GLOBALS['phpgw_info']['user']['account_id']}";
 			$fields = array ('contact_id', 'per_first_name', 'per_last_name');
 
-			$criteria_search[] = sql_criteria::token_begin('per_first_name', $lookup);
-			$criteria_search[] = sql_criteria::token_begin('per_last_name', $lookup);
+			$criteria_search[] = phpgwapi_sql_criteria::token_begin('per_first_name', $lookup);
+			$criteria_search[] = phpgwapi_sql_criteria::token_begin('per_last_name', $lookup);
 
-			$criteria[] = sql_criteria::_append_or($criteria_search);
+			$criteria[] = phpgwapi_sql_criteria::_append_or($criteria_search);
 			$criteria[] = $this->contacts->criteria_for_index((int) $GLOBALS['phpgw_info']['user']['account_id']);
 
 			if ( $cat_id )
 			{
-				$criteria[] = sql_criteria::_equal('cat_id', phpgw::get_var('cat_id', 'int', 'bool') );
+				$criteria[] = phpgwapi_sql_criteria::_equal('cat_id', phpgw::get_var('cat_id', 'int', 'bool') );
 			}
 
-			$criteria_token = sql_criteria::_append_and($criteria);
+			$criteria_token = phpgwapi_sql_criteria::_append_and($criteria);
 			return $this->contacts->get_persons($fields, 0, 0, 'per_first_name, per_last_name', 'ASC', '', $criteria_token);
 		}
 
@@ -3259,4 +3258,3 @@
 			return $cat_colors;
 		}
 	}
-?>

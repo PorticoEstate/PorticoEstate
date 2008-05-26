@@ -27,6 +27,8 @@
 	* @version $Id$
 	*/
 
+	// FIXME this should be changed significantly - it duplicates a lot of login code, most of which has been improved
+
 	$phpgw_info = array();
 
 	$GLOBALS['phpgw_info']['flags'] = array
@@ -227,7 +229,7 @@
 		unset($sslattributes);
 	}
 
-	if (isset($_POST['passwd_type']) && (isset($_POST['submitit']) || isset($_POST['submit_x']) || isset($_POST['submit_y']) ) )
+	if ( (isset($_POST['submitit']) || isset($_POST['submit_x']) || isset($_POST['submit_y']) ) )
 	{
 		if ( $_SERVER['REQUEST_METHOD'] != 'POST' &&
 		   !isset($_SERVER['PHP_AUTH_USER']) &&
@@ -260,8 +262,6 @@
 			$login = $db->f('account_lid');
 			$passwd = $db->f('account_pwd');
 
-			$_POST['passwd_type'] = 'md5';
-
 			if ( isset($GLOBALS['phpgw_info']['server']['usecookies']) && $GLOBALS['phpgw_info']['server']['usecookies'] )
 			{
 				$GLOBALS['phpgw']->session->phpgw_setcookie('last_usertype', phpgw::get_var('loginusertype') ,time()+1209600); /* For 2 weeks */
@@ -274,7 +274,7 @@
 			$login .= '@' . phpgw::get_var('logindomain', 'string', 'POST');
 		}
 
-		$GLOBALS['sessionid'] = $GLOBALS['phpgw']->session->create($login,$passwd,phpgw::get_var('passwd_type', 'string', 'POST'));
+		$GLOBALS['sessionid'] = $GLOBALS['phpgw']->session->create($login, $passwd);
 
 		$GLOBALS['phpgw']->session->appsession('tenant_id','property',$tenant_id);
 
@@ -304,16 +304,6 @@
 		$extra_vars['cd'] = 'yes';
 
 		$GLOBALS['phpgw']->hooks->process('login');
-
-		if( isset($GLOBALS['phpgw_info']['server']['shm_lang'])
-			&& $GLOBALS['phpgw_info']['server']['shm_lang']
-			&& function_exists('sem_get'))
-		{
-			if(!$GLOBALS['phpgw']->shm->get_value('lang_en'))
-			{
-				$GLOBALS['phpgw']->translation->populate_shm();
-			}
-		}
 
 		$GLOBALS['phpgw']->redirect_link('/home.php', $extra_vars);
 		exit;

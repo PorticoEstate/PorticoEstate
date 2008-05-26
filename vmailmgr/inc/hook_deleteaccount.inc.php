@@ -11,7 +11,7 @@
   \**************************************************************************/
 
 	/* $Id$ */
-	
+
 	// Delete matching vmailmgr user account
 	if ( (int) $GLOBALS['hook_values']['account_id'] == 0)
 	{
@@ -21,6 +21,4 @@
 	{
 		$account_lid = $GLOBALS['phpgw']->accounts->id2lid($GLOBALS['hook_values']['account_id']);
 	}
-	$GLOBALS['phpgw']->vmailmgr = CreateObject('vmailmgr.vmailmgr');
-	$returnvals = $GLOBALS['phpgw']->vmailmgr->vdeluser($account_lid)
-?>
+	CreateObject('vmailmgr.vmailmgr')->vdeluser($account_lid);

@@ -27,10 +27,6 @@ class ui_tools
 			'nonavbar'		=> true,
 		);
 
-		if (!isset ($GLOBALS['phpgw']->js) || !is_object($GLOBALS['phpgw']->js))
-		{
-			$GLOBALS['phpgw']->js = createObject('phpgwapi.javascript');
-		}
 		$GLOBALS['phpgw']->js->validate_file('yahoo', 'YAHOO');
 		$GLOBALS['phpgw']->js->validate_file('yahoo', 'log');
 		$GLOBALS['phpgw']->js->validate_file('yahoo', 'color');

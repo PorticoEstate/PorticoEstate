@@ -1,105 +1,166 @@
 <?php
-	/**************************************************************************\
-	* phpGroupWare - Administration                                            *
-	* http://www.phpgroupware.org                                              *
-	* --------------------------------------------                             *
-	*  This program is free software; you can redistribute it and/or modify it *
-	*  under the terms of the GNU General Public License as published by the   *
-	*  Free Software Foundation; either version 2 of the License, or (at your  *
-	*  option) any later version.                                              *
-	\**************************************************************************/
-	/* $Id$ */
+	/**
+	 * phpGroupWare - Administration - ACL manager logic
+	 *
+	 * @author Dave Hall <skwashd@phpgroupware.org>
+	 * @author Others <unknown>
+	 * @copyright Copyright (C) 2007-2008 Free Software Foundation, Inc. http://www.fsf.org/
+	 * @license http://www.fsf.org/licenses/gpl.html GNU General Public License
+	 * @package phpgroupware
+	 * @subpackage admin
+	 * @version $Id$
+	 */
 
-	class boaclmanager
+	/*
+	   This program is free software: you can redistribute it and/or modify
+	   it under the terms of the GNU General Public License as published by
+	   the Free Software Foundation, either version 3 of the License, or
+	   (at your option) any later version.
+
+	   This program is distributed in the hope that it will be useful,
+	   but WITHOUT ANY WARRANTY; without even the implied warranty of
+	   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	   GNU General Public License for more details.
+
+	   You should have received a copy of the GNU General Public License
+	   along with this program.  If not, see <http://www.gnu.org/licenses/>.
+	 */
+
+	/*
+	 * phpGroupWare - Administration - ACL manager logic
+	 *
+	 * @package phpgroupware
+	 * @subpackage admin
+	 */
+
+	class admin_boaclmanager
 	{
-		var $public_functions = array
+		/**
+		 * Publicly available methods of the class
+		 */
+		public $public_functions = array
 		(
-			'submit' => True
+			'submit' => true
 		);
 
-		function boaclmanager()
+		/**
+		 * Constructor
+		 *
+		 * @return void
+		 */
+		public function __construct()
 		{
-			//$this->ui = createobject('admin.uiaclmanager');
+			//i do nothing!
 		}
 
-		function submit()
+		/**
+		 * Handle the form submission
+		 *
+		 * @return void
+		 */
+		public function submit()
 		{
-			if ($GLOBALS['cancel'])
+			if ( phpgw::get_var('cancel', 'bool') )
 			{
-				//$this->ui->list_apps();
-				return False;
+				return false;
 			}
 
-			$location = base64_decode($GLOBALS['location']);
+			$app = phpgw::get_var('acl_app', 'string');
+			$account_id = phpgw::get_var('account_id', 'int');
+			$location = phpgw::get_var('location', 'string');
 
 			$total_rights = 0;
-			while (is_array($GLOBALS['acl_rights']) && list(,$rights) = each($GLOBALS['acl_rights']))
+			$acl_rights = phpgw::get_var('acl_rights', 'int');
+			if ( !is_array($acl_rights) )
+			{
+				return;
+			}
+
+			foreach ( $acl_rights as $rights )
 			{
 				$total_rights += $rights;
 			}
 
-			$GLOBALS['phpgw']->acl->add_repository($GLOBALS['acl_app'], $location, $GLOBALS['account_id'], $total_rights);
-
-			//$this->ui->list_apps();
+			$GLOBALS['phpgw']->acl->add_repository($acl_app, $location, $account_id, $total_rights);
 		}
 
-		function get_addressmaster_ids()
+		/**
+		 * Get the list of "addressmasters" ids
+		 *
+		 * @return array list of addressmaster id
+		 */
+		public function get_addressmaster_ids()
 		{
-			return $GLOBALS['phpgw']->acl->get_ids_for_location('addressmaster',7,'addressbook');
+			return $GLOBALS['phpgw']->acl->get_ids_for_location('addressmaster', 7, 'addressbook');
 		}
 
-		function list_addressmasters()
+		/**
+		 * Get a list of users who are address masters
+		 *
+		 * @return array list of addressmasters
+		 */
+		public function list_addressmasters()
 		{
 			$admins = $this->get_addressmaster_ids();
 			//_debug_array($admins);
 
 			$data = array();
-			for ( $i = count($admins) - 1; $i >= 0; --$i)
+			foreach ( $admins as $admin )
 			{
-				$acc_name = $GLOBALS['phpgw']->accounts->get_account_data($admins[$i]);
+				$acct = $GLOBALS['phpgw']->accounts->get($admin);
 
-				if ( isset($admins[$i]) )
+				if ( is_object($acct) )
 				{
 					$data[] = array
 					(
-						'account_id'	=> $admins[$i],
-						'lid'			=> $acc_name[$admins[$i]]['lid'],
-						'firstname'		=> $acc_name[$admins[$i]]['firstname'],
-						'lastname'		=> $acc_name[$admins[$i]]['lastname']
+						'account_id'	=> $acct->id,
+						'lid'			=> $acct->lid,
+						'firstname'		=> $acct->firstname,
+						'lastname'		=> $acct->lastname
 					);
 				}
 			}
-
- 			$this->total = count($data);
 			return $data;
 		}
 
-		function check_values($users = 0, $groups = 0)
+		/**
+		 * Check the the values for the addressmasters are valid
+		 *
+		 * @param array $users  list of users to check
+		 * @param array $groups list of groups to check
+		 *
+		 * @return array empty array if ok or list of errors if invalid
+		 */
+		public function check_values($users = array(), $groups = array())
 		{
 			$errors = array();
 			if ( !count($users) && !count($groups) )
 			{
 				$errors[] = lang('please choose at least one addressmaster');
 			}
-			if ( count($errors) )
-			{
-				return $errors;
-			}
+			return $errors;
 		}
 
-		function edit_addressmasters($master,$group = 0)
+		/**
+		 * Update the list of addressmasters
+		 *
+		 * @param array $masters list of users who are addressmasters
+		 * @param array $groups  list of groups who are addressmasters
+		 *
+		 * @return void
+		 */
+		public function edit_addressmasters($masters, $groups = array())
 		{
-			$GLOBALS['phpgw']->acl->delete_repository('addressbook','addressmaster',False);
+			$GLOBALS['phpgw']->acl->delete_repository('addressbook', 'addressmaster', false);
 
-			for($i=0;$i<count($master);$i++)
+			foreach ( $masters as $master )
 			{
-				$GLOBALS['phpgw']->acl->add_repository('addressbook', 'addressmaster',$master[$i],7);
+				$GLOBALS['phpgw']->acl->add_repository('addressbook', 'addressmaster', $master, 7);
 			}
 
-			for($i=0;$i<count($group);$i++)
+			foreach ( $groups as $group )
 			{
-				$GLOBALS['phpgw']->acl->add_repository('addressbook', 'addressmaster',$group[$i],7);
+				$GLOBALS['phpgw']->acl->add_repository('addressbook', 'addressmaster', $group, 7);
 			}
 		}
 	}
-?>

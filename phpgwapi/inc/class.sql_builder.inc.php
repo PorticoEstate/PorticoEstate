@@ -57,7 +57,7 @@
 		/**
 		* Instance a entity if this not exist
 		*
-		* @param string $field  The field name 
+		* @param string $field  The field name
 		* @return string The class which was instanced.
 		*/
 		function get_entity($field)
@@ -65,7 +65,7 @@
 			$ent = $this->ent_name($field);
 			$this->ldebug('get_entity', array('Field' => $field,
 					  'Entity Name' => $ent));
-			if( (!isset($this->entities[$ent]) || !is_object($this->entities[$ent]) ) 
+			if( (!isset($this->entities[$ent]) || !is_object($this->entities[$ent]) )
 				&& !empty($ent))
 			{
 				$this->ldebug('get_entity', "Try to instantiate $ent because $field", 'msg');
@@ -74,7 +74,7 @@
 			}
 			return $ent;
 		}
-		
+
 		/**
 		* @param string $field The field name for search in $this->map for a class8
 		* @return integer The distance of the class that have that field defined.
@@ -351,7 +351,7 @@
 				$fields = '';
 				if ($lcriteria && !$this->_criteria_built)
 				{
-					$this->all_criteria = sql_criteria::append_and(array($lcriteria, $this->all_criteria));
+					$this->all_criteria = phpgwapi_sql_criteria::append_and(array($lcriteria, $this->all_criteria));
 				}
 			}
 			$from = $this->get_join();
@@ -416,7 +416,7 @@
 			else
 			{
 				$this->external_criteria_value[1] = $criteria;
-				return sql_criteria::criteria($this->external_criteria_value);
+				return phpgwapi_sql_criteria::criteria($this->external_criteria_value);
 			}
 		}
 
@@ -482,7 +482,7 @@
 						  array('Path' => $path),
 						  'dump');
 			$prev_entity = key($path);
-			$prev_data = current($path);			
+			$prev_data = current($path);
 			$from = $prev_data['identity'];
 			array_shift($path);
 			// repeat in all $path
@@ -544,7 +544,7 @@
 		}
 
 		function get_link($entity, $test_entity)
-		{			
+		{
 			$this->ldebug('get_link', array('entity' => $entity, 'test_entity' => $test_entity));
 			if ($entity_link = $this->entities[$entity]->get_ilink($test_entity))
 			{
@@ -612,7 +612,7 @@
 
 		/**
 		* Cast value for datatype
-		* 
+		*
 		* @param mixed $value Which we go to cast
 		* @param string $field field name to know the datatype
 		* @param boolean $permanent decide if we want to preserv the instance of the entity in $entities array
@@ -627,7 +627,7 @@
 
 		/**
 		* Instance an entity for permant usage of for remove at instant
-		* 
+		*
 		* $permanent don't have any effect if entity already exist in $entities array.
 		* @param mixed $value Which we go to cast
 		* @param string $field field name to know the datatype
@@ -658,7 +658,7 @@
 		/**
 		* Get the class name of field
 		*
-		* @param string $field The field name 
+		* @param string $field The field name
 		* @return string with class name.
 		*/
 		function ent_name($field)
@@ -719,7 +719,7 @@
 				}
 				if(is_array($right))
 				{
-					if ($operator != 'in') 
+					if ($operator != 'in')
 					{
 						$right = $this->builder_criteria($right, $operation);
 					}
@@ -734,11 +734,11 @@
 				if ($operator == 'append_and' || $operator == 'append_or')
 				{
 					$param = array($left, $right);
-					$local_criteria = sql_criteria::operate($operator,$param);					
+					$local_criteria = phpgwapi_sql_criteria::operate($operator,$param);
 				}
 				else
 				{
-					$local_criteria = sql_criteria::operate($operator,$left,$right);
+					$local_criteria = phpgwapi_sql_criteria::operate($operator,$left,$right);
 				}
 				break;
 			default:
@@ -747,7 +747,7 @@
 				{
 					$criterias[] = $this->builder_criteria($criteria, $operation);
 				}
-				$local_criteria = sql_criteria::operate($operator,$criterias);
+				$local_criteria = phpgwapi_sql_criteria::operate($operator,$criterias);
 			}
 			return $local_criteria;
 		}
@@ -762,7 +762,7 @@
 
 		/**
 		* Set the criteria to correspoding class
-		* 
+		*
 		* @param Array $data with many criterias (how could I support that)
 		*/
 		function criteria($data)
@@ -918,7 +918,7 @@
 				$this->raise_error();
 				return;
 			}
-			
+
 			if ($value != '')
 			{
 				// Waiting for array_combine in php5
@@ -948,7 +948,7 @@
 			$ent = $this->get_entity($data);
 			$this->entities[$ent]->add_insert($data, $value);
 		}
-		
+
 		function many_inserts($multiple_data = array())
 		{
 			if(empty($multiple_data))
@@ -961,7 +961,7 @@
 				$this->insert_indexed($key, $insert_array);
 			}
 		}
-		
+
 		function insert_indexed($key, $data)
 		{
 			foreach($data as $field => $data)
@@ -1102,7 +1102,7 @@
 			* 1-1.
 			*/
 			if ( isset($this->map[$data][PHPGW_SQL_CHILD_FIELDS])
-				&& is_array($this->map[$data][PHPGW_SQL_CHILD_FIELDS]) 
+				&& is_array($this->map[$data][PHPGW_SQL_CHILD_FIELDS])
 				&& count($this->map[$data][PHPGW_SQL_CHILD_FIELDS]) > 0 )
 			{
 				foreach($this->map[$data][PHPGW_SQL_CHILD_FIELDS] as $child)
@@ -1123,7 +1123,7 @@
 			{
 				$this->raise_error($data);
 			}
-			if( isset($this->map[$data][PHPGW_SQL_CHANGE_DISTANCE]) 
+			if( isset($this->map[$data][PHPGW_SQL_CHANGE_DISTANCE])
 				&& (int) $this->map[$data][PHPGW_SQL_CHANGE_DISTANCE] != 0)
 			{
 				$this->distance[$ent] = $this->map[$data][PHPGW_SQL_CHANGE_DISTANCE];
@@ -1186,7 +1186,7 @@
 
 		/**
 		* Must raise errors for this class.
-		* 
+		*
 		* @param $data From where error happens
 		*/
 		function raise_error($data = '')
@@ -1249,4 +1249,3 @@
 			echo $output;
 		}
 	}
-?>

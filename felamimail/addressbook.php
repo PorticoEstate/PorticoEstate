@@ -110,20 +110,20 @@
 
 	if($query)
 	{
-		$criteria_search[] = sql_criteria::token_begin('per_first_name', $query);
-		$criteria_search[] = sql_criteria::token_begin('per_last_name', $query);
-		$criteria_search[] = sql_criteria::token_has('email', $query);	
-		$criteria[] = sql_criteria::_append_or($criteria_search);
+		$criteria_search[] = phpgwapi_sql_criteria::token_begin('per_first_name', $query);
+		$criteria_search[] = phpgwapi_sql_criteria::token_begin('per_last_name', $query);
+		$criteria_search[] = phpgwapi_sql_criteria::token_has('email', $query);	
+		$criteria[] = phpgwapi_sql_criteria::_append_or($criteria_search);
 	}
 
 	$criteria[] = $d->criteria_for_index((int) $GLOBALS['phpgw_info']['user']['account_id']);
 
 	if ($cat_id)
 	{
-		$criteria[] = sql_criteria::_equal('cat_id', $cat_id);
+		$criteria[] = phpgwapi_sql_criteria::_equal('cat_id', $cat_id);
 	}
 
-	$criteria_token = sql_criteria::_append_and($criteria);
+	$criteria_token = phpgwapi_sql_criteria::_append_and($criteria);
 	$entries = $d->get_persons($fields, 0, 0, 'per_first_name, per_last_name', 'ASC', '', $criteria_token);
 
 	//------------------------------------------- nextmatch --------------------------------------------
@@ -185,4 +185,3 @@
 	$t->p('out');
 
 	$phpgw->common->phpgw_exit();
-?>

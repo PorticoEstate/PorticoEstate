@@ -39,10 +39,14 @@
 	}
 
 	/*  If we included the header.inc.php, but it is somehow broken, cover ourselves... */
-	if ( !defined('PHPGW_SERVER_ROOT') && !defined('PHPGW_INCLUDE_ROOT') )
+	if ( !defined('PHPGW_SERVER_ROOT') )
 	{
 		define('PHPGW_SERVER_ROOT', realpath('..') );
-		define('PHPGW_INCLUDE_ROOT', realpath('..') );
+	}
+
+	if ( !defined('PHPGW_INCLUDE_ROOT') )
+	{
+		define('PHPGW_INCLUDE_ROOT', PHPGW_SERVER_ROOT);
 	}
 
 	if ( is_dir(PHPGW_INCLUDE_ROOT . '/phpgwapi') && is_dir(PHPGW_INCLUDE_ROOT . '/phpgwapi/inc')
@@ -59,23 +63,29 @@
 			. ' target="_blank">download phpGroupWare</a> and try again');
 	}
 
+	// Make sure we have an install id - I don't like this, but it works :( skwashd mar2008
+	if ( !isset($GLOBALS['phpgw_info']['server']['install_id']) )
+	{
+		$GLOBALS['phpgw_info']['server']['install_id'] = sha1($_SERVER['HTTP_HOST']);
+	}
+
 	/**
-	* Translate a phrase
-	*
-	* @param string $key phrase to translate (note: %n are replaces with $mn)
-	* @param string $m1 substitution string
-	* @param string $m1 substitution string
-	* @param string $m2 substitution string
-	* @param string $m3 substitution string
-	* @param string $m4 substitution string
-	* @param string $m5 substitution string
-	* @param string $m6 substitution string
-	* @param string $m7 substitution string
-	* @param string $m8 substitution string
-	* @param string $m9 substitution string
-	* @param string $m10 substitution string
-	* @returns string translated phrase
-	*/
+	 * Translate a phrase
+	 *
+	 * @param string $key phrase to translate (note: %n are replaces with $mn)
+	 * @param string $m1 substitution string
+	 * @param string $m1 substitution string
+	 * @param string $m2 substitution string
+	 * @param string $m3 substitution string
+	 * @param string $m4 substitution string
+	 * @param string $m5 substitution string
+	 * @param string $m6 substitution string
+	 * @param string $m7 substitution string
+	 * @param string $m8 substitution string
+	 * @param string $m9 substitution string
+	 * @param string $m10 substitution string
+	 * @returns string translated phrase
+	 */
 	function lang($key,$m1='',$m2='',$m3='',$m4='',$m5='',$m6='',$m7='',$m8='',$m9='',$m10='')
 	{
 		if(is_array($m1))
@@ -246,6 +256,7 @@
 				break;
 			case E_NOTICE:
 			case E_USER_NOTICE:
+			case E_STRICT:
 				$log_args['severity'] = 'N';
 				$log->notice($log_args);
 				echo "\n<br>" . lang('ERROR Notice: %1 in %2 at line %3', $error_msg, $error_file, $error_line) . "<br>\n"; //this will be commented in the final version
@@ -330,4 +341,3 @@
 	$GLOBALS['phpgw_info']['server']['app_images'] = 'templates/base/images';
 
 	$GLOBALS['phpgw_setup'] = CreateObject('phpgwapi.setup', True, True);
-?>

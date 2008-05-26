@@ -26,11 +26,6 @@
 		public $userlang = 'en';
 
 		/**
-		* @var bool $loaded_from_shm was the lang data loaded from shared memory?
-		*/
-		private $loaded_from_shm;
-
-		/**
 		* @var array $lang the translated strings - speeds look up
 		*/
 		private $lang = array();
@@ -52,12 +47,14 @@
 		*/
 		public function __construct($reset = false)
 		{
-			if ( $GLOBALS['phpgw']->shm->is_enabled()
-				&& isset($GLOBALS['phpgw_info']['server']['shm_lang']) && $GLOBALS['phpgw_info']['server']['shm_lang'] )
+			$lang = 'en';
+			if ( isset($GLOBALS['phpgw_info']['user']['preferences']['common']['lang']) )
 			{
-				$this->set_userlang($GLOBALS['phpgw_info']['user']['preferences']['common']['lang']);
-				$this->reset_lang($reset);
+				$lang = $GLOBALS['phpgw_info']['user']['preferences']['common']['lang'];
 			}
+
+			$this->set_userlang($lang);
+			$this->reset_lang($reset);
 		}
 
 		/**
@@ -65,16 +62,13 @@
 		*/
 		protected function reset_lang()
 		{
-			$this->loaded_from_shm = false;
-			if ( $GLOBALS['phpgw']->shm->is_enabled() 
-				&& $this->lang = $GLOBALS['phpgw']->shm->get_value("lang_{$this->userlang}") )
+			$lang = $GLOBALS['phpgw']->cache->system_get('phpgwapi', "lang_{$this->userlang}");
+			if ( is_array($lang) )
 			{
-				$this->loaded_from_shm = true;
+				$this->lang = $lang;
+				return;
 			}
-			else
-			{
-				$this->lang = array();
-			}
+			$this->lang = array();
 		}
 
 		/**
@@ -136,9 +130,9 @@
 		/**
 		* Populate shared memory with the available translation strings
 		*/
-		public function populate_shm()
+		public function populate_cache()
 		{
-			$sql = "SELECT * from phpgw_lang ORDER BY app_name desc";
+			$sql = "SELECT * from phpgw_lang ORDER BY app_name DESC";
 			$GLOBALS['phpgw']->db->query($sql,__LINE__,__FILE__);
 			while ($GLOBALS['phpgw']->db->next_record())
 			{
@@ -150,7 +144,7 @@
 			{
 				foreach($language as $lang)
 				{
-					$GLOBALS['phpgw']->shm->store_value("lang_{$lang}", $lang_set[$lang]);
+					$GLOBALS['phpgw']->cache->system_set('phpgwapi', "lang_{$lang}", $lang_set[$lang]);
 				}
 			}
 		}
@@ -173,8 +167,8 @@
 
 			$lookup_key = strtolower(trim(substr($key, 0, self::MAX_MESSAGE_ID_LENGTH)));
 
-			if ( !is_array($this->lang) 
-				|| (!isset($this->lang[$lookup_key]) && !$this->loaded_from_shm) )
+			if ( !is_array($this->lang)
+				|| !isset($this->lang[$lookup_key]) )
 			{
 				$applist = "'common', 'all'";
 				$order = ' ORDER BY app_name ASC';
@@ -274,7 +268,7 @@
 			{
 				$GLOBALS['phpgw_info']['server']['lang_ctimes'] = array();
 			}
-			
+
 			if (!isset($GLOBALS['phpgw_info']['server']) && $upgrademethod != 'dumpold')
 			{
 				$GLOBALS['phpgw']->db->query("select * from phpgw_config WHERE config_app='phpgwapi' AND config_name='lang_ctimes'",__LINE__,__FILE__);
@@ -283,7 +277,7 @@
 					$GLOBALS['phpgw_info']['server']['lang_ctimes'] = unserialize($GLOBALS['phpgw']->db->f('config_value', true));
 				}
 			}
-			
+
 			if (count($lang_selected))
 			{
 				if ($upgrademethod == 'dumpold')
@@ -304,10 +298,7 @@
 					}
 
 					//echo '<br />Working on: ' . $lang;
-					if ( $GLOBALS['phpgw']->shm->is_enabled() )
-					{
-						$GLOBALS['phpgw']->shm->delete_key('lang_' . $lang);
-					}
+					$GLOBALS['phpgw']->cache->system_clear('phpgwapi', "lang_{$lang}");
 
 					if ($upgrademethod == 'addonlynew')
 					{
@@ -348,7 +339,7 @@
 							$message_id = $GLOBALS['phpgw']->db->db_addslashes(strtolower(trim(substr($line['message_id'], 0, self::MAX_MESSAGE_ID_LENGTH))));
 							$app_name = $GLOBALS['phpgw']->db->db_addslashes(trim($line['app_name']));
 							$content = $GLOBALS['phpgw']->db->db_addslashes(trim($line['content']));
-							
+
 							$raw[$app_name][$message_id] = $content;
 						}
 						$GLOBALS['phpgw_info']['server']['lang_ctimes'][$lang][$app['name']] = filectime($appfile);
@@ -378,7 +369,7 @@
 						}
 					}
 				}
-				
+
 				$GLOBALS['phpgw']->db->query("DELETE from phpgw_config WHERE config_app='phpgwapi' AND config_name='lang_ctimes'",__LINE__,__FILE__);
 				$GLOBALS['phpgw']->db->query("INSERT INTO phpgw_config(config_app,config_name,config_value) VALUES ('phpgwapi','lang_ctimes','".
 					$GLOBALS['phpgw']->db->db_addslashes(serialize($GLOBALS['phpgw_info']['server']['lang_ctimes']))."')",__LINE__,__FILE__);
@@ -388,4 +379,3 @@
 			return $error;
 		}
 	}
-

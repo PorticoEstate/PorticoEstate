@@ -30,7 +30,7 @@
 				<xsl:apply-templates select="new_owner_list"/>
 			</xsl:when>
 			<xsl:when test="delete">
-				<xsl:call-template name="app_delete"/>
+				<xsl:call-template name="confirm_delete"/>
 			</xsl:when>
 			<xsl:when test="addressmaster_list">
 				<xsl:call-template name="addressmaster"/>
@@ -119,8 +119,7 @@
 			</table>
 		</form>
 	</xsl:template>
-	
+
 	<xsl:template match="accountlist">
 		<option value="{account_id}"><xsl:value-of select="account_name"/></option>
 	</xsl:template>
-	

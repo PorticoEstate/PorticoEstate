@@ -16,23 +16,22 @@
 	* @subpackage database
 	* @ignore
 	*/
-	class sql extends sql_
+	class phpgwapi_sql extends phpgwapi_sql_
 	{
-		function sql_()
+		public static function sql_()
 		{
 		}
 
-		function concat($elements)
+		public static function concat($elements)
 		{
 			$str =  implode(', ', $elements);
 			return ($str) ? 'concat('.$str.')' : '';
 
 		}
 
-		function concat_null($elements)
+		public static function concat_null($elements)
 		{
-			$str =  implode(', ', sql::safe_null($elements));
+			$str =  implode(', ', self::safe_null($elements));
 			return ($str) ? 'concat('.$str.')' : '';
 		}
 	}
-?>

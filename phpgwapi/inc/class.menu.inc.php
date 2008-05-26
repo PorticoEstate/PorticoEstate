@@ -5,8 +5,8 @@
 	 * @author Dave Hall <skwashd@phpgroupware.org>
 	 * @copyright Copyright (C) 2007-2008 Free Software Foundation, Inc. http://www.fsf.org/
 	 * @license http://www.fsf.org/licenses/gpl.html GNU General Public License
-	 * @package phpgwapi
-	 * @subpackage utitlity
+	 * @package phpgroupware
+	 * @subpackage phpgwapi
 	 * @version $Id$
 	 */
 
@@ -28,34 +28,38 @@
 	/*
 	 * phpGroupWare menu handler class
 	 *
-	 * @package phpgwapi
-	 * @subpackage utitlity
+	 * @package phpgroupware
+	 * @subpackage phpgwapi
 	 */
 	class phpgwapi_menu
 	{
 		/**
 		* Clear the user's menu so it can be regenerated cleanly
+		*
+		* @return void
 		*/
 		public function clear()
 		{
-			$GLOBALS['phpgw']->session->appsession('phpgwapi', 'menu', null);
+			phpgwapi_cache::session_clear('phpgwapi', 'menu');
 		}
 
 		/**
 		* Get the menu structure and return it
 		*
 		* @param string $mtype the type of menu sought - default all returned
+		*
 		* @return array menu structure
 		*/
 		public function get($mtype = null)
 		{
-			//$menu = $GLOBALS['phpgw']->session->appsession('phpgwapi', 'menu');
+			//$menu = phpgwapi_cache::session_get('phpgwapi', 'menu');
 			$menu = null;
 			if ( !$menu )
 			{
 				$menu = self::load();
-				$GLOBALS['phpgw']->session->appsession('phpgwapi', 'menu', $menu);
+				phpgwapi_cache::session_set('phpgwapi', 'menu', $menu);
 			}
+
 			if ( !is_null($mtype) && isset($menu[$mtype]) )
 			{
 				return $menu[$mtype];
@@ -67,15 +71,17 @@
 		* Get categories available for the current user
 		*
 		* @param string $module the module the categories are sought for
+		*
 		* @return array menu class compatiable array of categories
 		*/
 		public static function get_categories($module)
 		{
 			$catobj = createObject('phpgwapi.categories', $GLOBALS['phpgw_info']['user']['account_id'], $module);
 			$cats = $catobj->return_sorted_array(0, false, '', 'ASC', 'cat_main, cat_level, cat_name', true);
-			//echo "module: $module <pre>" . print_r($cats, true) . '</pre>';
+
+			return $cats;
 		}
-		
+
 		/**
 		* Load the menu structure from all available applications
 		*
@@ -115,7 +121,8 @@
 							$menus['navigation']['admin'][$app] = array
 							(
 								'text'	=> $GLOBALS['phpgw']->translation->translate($app, array(), true),
-								'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.uiconfig.index', 'appname' => $app)),
+								'url'	=> $GLOBALS['phpgw']->link('/index.php',
+											array('menuaction' => 'admin.uiconfig.index', 'appname' => $app)),
 								'image'	=> $raw_menu['navbar'][$app]['image'],
 								'children'	=> $menu
 							);

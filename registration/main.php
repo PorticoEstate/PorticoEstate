@@ -165,14 +165,14 @@
 
 	if (! $sessionid)
 	{
-		$sessionid = $phpgw->session->create($config['anonymous_user'] . '@' . $domain,$config['anonymous_pass'],'text');
+		$sessionid = $phpgw->session->create($config['anonymous_user'] . '@' . $domain,$config['anonymous_pass']);
 	}
 	else
 	{
 		if (! $phpgw->session->verify())
 		{
 			// Lets hope this works
-			$sessionid = $phpgw->session->create($config['anonymous_user'] . '@' . $domain,$config['anonymous_pass'],'text');
+			$sessionid = $phpgw->session->create($config['anonymous_user'] . '@' . $domain,$config['anonymous_pass']);
 		}
 	}
 

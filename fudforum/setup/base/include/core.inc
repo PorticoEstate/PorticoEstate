@@ -156,7 +156,7 @@ function fud_phpgw($t='index', $plain=0)
 
 	/* anon user handling */
 	if ($GLOBALS['ANON_NICK'] && !$GLOBALS['phpgw']->session->verify()) {
-		$sessionid = $GLOBALS['phpgw']->session->create($GLOBALS['ANON_NICK'], $GLOBALS['ANON_PASS'], 'text');
+		$sessionid = $GLOBALS['phpgw']->session->create($GLOBALS['ANON_NICK'], $GLOBALS['ANON_PASS']);
 		/* still no session, failed to create session for anon user */
 		if (!$sessionid) {
 			echo "<p>Can't create session for user '".$GLOBALS['ANON_NICK']."' !!!</p>\n";

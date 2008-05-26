@@ -42,10 +42,6 @@
 		{
 			$this->base_url = $GLOBALS['phpgw_info']['server']['webserver_url'];
 			$this->rte = '';
-			if(!is_object($GLOBALS['phpgw']->js))
-			{
-				$GLOBALS['phpgw']->js = createObject('phpgwapi.javascript');
-			}
 			$this->_init_head();
 		}
 

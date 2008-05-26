@@ -50,7 +50,7 @@
 
 		if (! $GLOBALS['phpgw']->session->verify())
 		{
-			$GLOBALS['sessionid'] = $GLOBALS['phpgw']->session->create($anonymous_user,$anonymous_passwd, 'text');
+			$GLOBALS['sessionid'] = $GLOBALS['phpgw']->session->create($anonymous_user,$anonymous_passwd);
 			if (!$GLOBALS['sessionid'])
 			{
 				die(lang('NO ANONYMOUS USER ACCOUNTS INSTALLED.  NOTIFY THE ADMINISTRATOR.'));

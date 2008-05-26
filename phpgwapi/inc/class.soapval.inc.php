@@ -11,14 +11,7 @@
 	*/
 
 /* Please see class.base_nusoap.inc.php for more information */
-
-if (@!$GLOBALS['phpgw_info']['flags']['included_classes']['nusoap_base'])
-{
-	require_once(PHPGW_API_INC."/class.nusoap_base.inc.php");
-	$GLOBALS['phpgw_info']['flags']['included_classes']['nusoap_base'] = True;
-}
-
-
+	phpgw::import_class('phpgwapi.nusoap_base');
 
 /**
 * For creating serializable abstractions of native PHP types.  This class

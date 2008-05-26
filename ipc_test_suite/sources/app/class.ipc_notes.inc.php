@@ -13,25 +13,23 @@
 	* Fassade of the notes application.
 	* @package notes
 	*/
-	class ipc_notes extends ipc_
+	class notes_ipc_notes extends phpgwapi_ipc_
 	{
 		/**
 		* @var object $bo application storage object
-		* @access private
 		*/
-		var $bo;
+		protected $bo;
 
 		/**
 		* @var array $map contains for each mime type the mapping keys
-		* @access private
 		*/
-		var $map;
+		protected $map;
 
 
 		/**
 		* Constructor
 		*/
-		function ipc_notes()
+		public function __construct()
 		{
 			$this->bo =& CreateObject('notes.bonotes');
 

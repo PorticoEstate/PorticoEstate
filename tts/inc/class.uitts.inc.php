@@ -149,10 +149,6 @@
 		 */
 		function index()
 		{
-			if ( !isset($GLOBALS['phpgw']->js) || !is_object($GLOBALS['phpgw']->js) )
-			{
-				$GLOBALS['phpgw']->js = createObject('phpgwapi.javascript');
-			}
 			$js =& $GLOBALS['phpgw']->js;
 			$js->validate_file('core', 'base');
 			$js->validate_file('sortabletable', 'sortabletable');
@@ -264,10 +260,6 @@
 					$this->bo->update($_POST['ticket_id'], $_POST);
 				}
 
-				if ( !isset($GLOBALS['phpgw']->js) || !is_object($GLOBALS['phpgw']->js) )
-				{
-					$GLOBALS['phpgw']->js = createObject('phpgwapi.javascript');
-				}
 				$js =& $GLOBALS['phpgw']->js;
 				$js->validate_file('tabs', 'tabs');
 				$js->validate_file('base', 'view', 'tts');
@@ -408,10 +400,7 @@
 
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
 			$GLOBALS['phpgw']->xslttpl->add_file('search');
-			if ( !isset($GLOBALS['phpgw']->js) || !is_object($GLOBALS['phpgw']->js) )
-			{
-				$GLOBALS['phpgw']->js = createObject('phpgwapi.javascript');
-			}
+
 			$js =& $GLOBALS['phpgw']->js;
 			$js->validate_file('base', 'search', 'tts');
 			$js->validate_file('json', 'json');

@@ -11,18 +11,20 @@
   \**************************************************************************/
 	/* $Id$ */
 
+	$account_id = phpgw::get_var('account_id', 'int');
+	$new_owner = phpgw::get_var('new_owner', 'int');
+
 	// Delete all records for a user
-	if ( (int)$_POST['new_owner'] == 0)
+	if ( !$new_owner )
 	{
-		ExecMethod('calendar.bocalendar.delete_calendar', $_POST['account_id']);
+		ExecMethod('calendar.bocalendar.delete_calendar', $account_id);
 	}
 	else
 	{
 		ExecMethod('calendar.bocalendar.change_owner',
 			array
 			(
-				'old_owner'	=> $_POST['account_id'],
-				'new_owner'	=> $_POST['new_owner']
+				'old_owner'	=> $account_id,
+				'new_owner'	=> $new_owner
 			));
 	}
-?>

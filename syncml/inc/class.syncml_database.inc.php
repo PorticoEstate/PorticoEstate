@@ -3,16 +3,17 @@
 	 * phpGroupWare (http://phpgroupware.org/)
 	 * SyncML interface
 	 *
-	 * @author    Johan Gunnarsson <johang@phpgroupware.org>
-	 * @copyright Copyright (c) 2007 Free Software Foundation, Inc.
-	 * @license   GNU General Public License 3 or later
-	 * @package   syncml
-	 * @version   $Id$
+	 * @author		Johan Gunnarsson <johang@phpgroupware.org>
+	 * @copyright	Copyright (c) 2007 Free Software Foundation, Inc.
+	 * @license		GNU General Public License 3 or later
+	 * @package		phpgroupware
+	 * @subpackage	syncml
+	 * @version		$Id$
 	 */
 
-	require_once 'inc/class.somappings.inc.php';
+	phpgw::import_class('syncml.somappings');
 
-	require_once 'inc/class.sochannel.inc.php';
+	phpgw::import_class('syncml.sochannel');
 
 	/**
 	 * Represents a SyncML database. This class wraps calls to the IPC classes
@@ -526,4 +527,3 @@
 			}
 		}
 	}
-?>

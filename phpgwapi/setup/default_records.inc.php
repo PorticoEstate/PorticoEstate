@@ -292,5 +292,22 @@
 			. ",'website'" 
 			.  ")");
 	}
+
+	//Make sure the session defaults are properly set
+	$values = array
+	(
+		'max_access_log_age'	=> 90,
+		'block_time'			=> 30,
+		'num_unsuccessful_id'	=> 3,
+		'num_unsuccessful_ip'	=> 3,
+		'install_id'			=> sha1(uniqid(rand(), true)),
+		'max_history'			=> 20
+	);
+	foreach ( $lookups as $name => $val )
+	{
+		$sql = "INSERT INTO phpgw_config VALUES('phpgwapi', '{$name}', '{$val}')";
+		$GLOBALS['phpgw_setup']->m_odb->query($sql, __LINE__, __FILE__);
+	}
+
 	//force users to config their install - was dropped sometime ago - adding it again - skwashd
 	$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_config VALUES('phpgwapi', 'freshinstall', '1')");

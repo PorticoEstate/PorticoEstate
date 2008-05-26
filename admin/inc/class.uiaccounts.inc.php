@@ -1,84 +1,128 @@
 <?php
-	/**************************************************************************\
-	* phpGroupWare - account administration                                    *
-	* http://www.phpgroupware.org                                              *
-	* Written by coreteam <phpgroupware-developers@gnu.org>                    *
-	* -----------------------------------------------------                    *
-	*  This program is free software; you can redistribute it and/or modify it *
-	*  under the terms of the GNU General Public License as published by the   *
-	*  Free Software Foundation; either version 2 of the License, or (at your  *
-	*  option) any later version.                                              *
-	\**************************************************************************/
-	/* $Id$ */
+	/**
+	* phpGroupWare Administration - Accounts User Interface
+	*
+	* @author coreteam <phpgroupware-developers@gnu.org>
+	* @author Dave Hall <skwashd@phpgroupware.org>
+	* @copyright Copyright (C) 2000-2008 Free Software Foundation, Inc. http://www.fsf.org/
+	* @license http://www.gnu.org/licenses/ GNU General Public License v3 or later
+	* @package phpgroupware
+	* @subpackage admin
+	* @version $Id$
+	*/
 
+	/*
+	   This program is free software: you can redistribute it and/or modify
+	   it under the terms of the GNU General Public License as published by
+	   the Free Software Foundation, either version 3 of the License, or
+	   (at your option) any later version.
+
+	   This program is distributed in the hope that it will be useful,
+	   but WITHOUT ANY WARRANTY; without even the implied warranty of
+	   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	   GNU General Public License for more details.
+
+	   You should have received a copy of the GNU General Public License
+	   along with this program.  If not, see <http://www.gnu.org/licenses/>.
+	 */
+
+	phpgw::import_class('phpgwapi.yui');
+
+	/**
+	* phpGroupWare Administration - Accounts User Interface
+	*
+	* @author coreteam <phpgroupware-developers@gnu.org>
+	* @author Dave Hall <skwashd@phpgroupware.org>
+	* @copyright Copyright (C) 2000-2008 Free Software Foundation, Inc. http://www.fsf.org/
+	* @license http://www.gnu.org/licenses/ GNU General Public License v3 or later
+	* @package phpgroupware
+	* @subpackage admin
+	* @category accounts
+	*/
 	class admin_uiaccounts
 	{
+		/**
+		 * @var array $public_functions Publicly available methods
+		 */
 		public $public_functions = array
 		(
-			'list_groups'	=> True,
-			'list_users'	=> True,
-			'delete_group'	=> True,
-			'delete_user'	=> True,
-			'edit_user'		=> True,
-			'edit_group'	=> True,
-			'view_user'		=> True,
-			'group_manager'	=> True
+			'list_groups'	=> true,
+			'list_users'	=> true,
+			'delete_group'	=> true,
+			'delete_user'	=> true,
+			'edit_user'		=> true,
+			'edit_group'	=> true,
+			'view_user'		=> true,
 		);
 
-		private $bo;
-		private $nextmatchs;
+		/**
+		 * @var object $_bo the logic object
+		 */
+		protected $_bo;
 
+		/**
+		 * @var object $_nextmatches pager object
+		 */
+		protected $_nextmatches;
+
+		/**
+		 * @var boolean $_ldap_extended Use LDAP extended attributes
+		 */
+		protected $_ldap_extended = false;
+
+		/**
+		 * Constructor
+		 *
+		 * @return null
+		 */
 		public function __construct()
 		{
-			$GLOBALS['phpgw_info']['flags']['xslt_app'] = True;
+			$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] = 'admin::admin';
 
-			$this->bo = createObject('admin.boaccounts');
-			$this->nextmatchs =createObject('phpgwapi.nextmatchs');
+			$this->_bo = createObject('admin.boaccounts');
+			$this->_nextmatches =createObject('phpgwapi.nextmatchs');
 
-			@set_time_limit(300);
+			$this->_ldap_extended = $GLOBALS['phpgw_info']['server']['account_repository'] == 'ldap'
+				&& isset($GLOBALS['phpgw_info']['server']['ldap_extra_attributes'])
+				&& $GLOBALS['phpgw_info']['server']['ldap_extra_attributes'];
 		}
 
-		function row_action($action,$type,$account_id)
-		{
-			return '<a href="'.$GLOBALS['phpgw']->link('/index.php',Array(
-				'menuaction' => 'admin.uiaccounts.'.$action.'_'.$type,
-				'account_id' => $account_id
-			)).'"> '.lang($action).' </a>';
-		}
-
-		function list_groups()
+		/**
+		 * Render a list of groups
+		 *
+		 * @return null
+		 */
+		public function list_groups()
 		{
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] .= '::groups';
-			
-			if ( phpgw::get_var('done', 'bool', 'POST') || $GLOBALS['phpgw']->acl->check('group_access', PHPGW_ACL_READ,'admin'))
+
+			if ( phpgw::get_var('done', 'bool', 'POST')
+				|| $GLOBALS['phpgw']->acl->check('group_access', PHPGW_ACL_READ, 'admin'))
 			{
-				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'admin.uimainscreen.mainscreen'));
+				$GLOBALS['phpgw']->redirect_link('/index.php',
+						array('menuaction' => 'admin.uimainscreen.mainscreen'));
 			}
 
 			if ( phpgw::get_var('add', 'bool', 'POST') )
 			{
-				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'admin.uiaccounts.edit_group', 'account_id' => 0) );
+				$GLOBALS['phpgw']->redirect_link('/index.php',
+						array('menuaction' => 'admin.uiaccounts.edit_group', 'account_id' => 0));
 			}
 
 			$start = phpgw::get_var('start', 'int');
-
 			$order = phpgw::get_var('order', 'string', 'GET', 'account_lid');
-			
 			$sort = phpgw::get_var('sort', 'string', 'GET', 'ASC');
-			
 			$total = 0;
-
 			$query = phpgw::get_var('query', 'string', 'POST');
-
 			$GLOBALS['cd'] = phpgw::get_var('cd', 'int', 'GET');
-
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('administration') . ': ' . lang('list groups');
-
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('administration')
+															. ': ' . lang('list groups');
 			$GLOBALS['phpgw']->xslttpl->add_file('groups');
 
-			$account_info = $GLOBALS['phpgw']->accounts->get_list('groups',$start,$sort, $order, $query, $total);
-			//echo '<pre>' . print_r($account_info, true) . '</pre>';
+			$account_info = $GLOBALS['phpgw']->accounts->get_list('groups', $start, $sort,
+																	$order, $query, $total);
+
 			$total = $GLOBALS['phpgw']->accounts->total;
 
 			$link_data = array
@@ -88,7 +132,7 @@
 
 			$group_header = array
 			(
-				'sort_name'				=> $this->nextmatchs->show_sort_order(array
+				'sort_name'				=> $this->_nextmatches->show_sort_order(array
 											(
 												'sort'	=> $sort,
 												'var'	=> 'account_lid',
@@ -101,28 +145,64 @@
 				'lang_sort_statustext'	=> lang('sort the entries')
 			);
 
+			$edit_rights = $this->_bo->check_rights('edit');
+			$lang_edit = lang('edit');
+			if ( $edit_rights )
+			{
+				$edit_args = array
+				(
+					'menuaction' => 'admin.uiaccounts.edit_group',
+					'account_id' => '#ID'
+				);
+
+				$url_edit = $GLOBALS['phpgw']->link('/index.php', $edit_args);
+			}
+
+			$delete_rights = $this->_bo->check_rights('delete');
+			$lang_delete = lang('delete');
+			if ( $delete_rights )
+			{
+				$del_args = array
+				(
+					'menuaction' => 'admin.uiaccounts.delete_group',
+					'account_id' => '#ID'
+				);
+
+				$url_delete = $GLOBALS['phpgw']->link('/index.php', $del_args);
+			}
+
+			$edit_url = '';
+			$delete_url = '';
 			foreach ( $account_info as $account )
 			{
+				if ( $edit_rights )
+				{
+					$edit_url = preg_replace('/%23ID/', $account->id, $url_edit);
+				}
+
+				if ( $delete_rights )
+				{
+					$delete_url = preg_replace('/%23ID/', $account->id, $url_delete);
+				}
+
 				$group_data[] = Array
 				(
-					'edit_url'					=> ($this->bo->check_rights('edit')?$GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.uiaccounts.edit_group', 'account_id'=> $account['account_id'])):''),
-					'lang_edit'					=> ($this->bo->check_rights('edit')?lang('edit'):''),
-					'lang_edit_statustext'		=> ($this->bo->check_rights('edit')?lang('edit this group'):''),
-					'group_name'				=> (!$account['account_lid']?'':$account['account_lid']),
-					'delete_url'				=> ($this->bo->check_rights('delete')?$GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.uiaccounts.delete_group', 'account_id' =>$account['account_id'])):''),
-					'lang_delete_statustext'	=> ($this->bo->check_rights('delete')?lang('delete this group'):''),
-					'lang_delete'				=> ($this->bo->check_rights('delete')?lang('delete'):'')
+					'edit_url'					=> $edit_url,
+					'lang_edit'					=> $lang_edit,
+					'group_name'				=> $account->lid ? $account->lid : '',
+					'delete_url'				=> $delete_url,
+					'lang_delete'				=> $lang_delete
 				);
 			}
 
 			$group_add = array
 			(
-				'lang_add'				=> lang('add'),
-				'lang_add_statustext'	=> lang('add a group'),
-				'action_url'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction' => 'admin.uiaccounts.list_groups')),
-				'lang_done'				=> lang('done'),
-				'lang_done_statustext'	=> lang('return to admin mainscreen'),
-				'add_access'			=> ($this->bo->check_rights('add')?'yes':''),
+				'lang_add'			=> lang('add'),
+				'add_url'			=> $GLOBALS['phpgw']->link('/index.php',
+										array('menuaction' => 'admin.uiaccounts.edit_group')),
+				'done_url'			=> $GLOBALS['phpgw']->link('/admin/index.php'),
+				'lang_done'			=> lang('done'),
+				'add_access'		=> (int) $this->_bo->check_rights('add')
 			);
 
 			$nm = array
@@ -135,42 +215,48 @@
 
 			$data = array
 			(
-				'nm_data'		=> $this->nextmatchs->xslt_nm($nm),
-				'search_data'	=> $this->nextmatchs->xslt_search(array('query' => $query,'link_data' => $link_data)),
+				'nm_data'		=> $this->_nextmatches->xslt_nm($nm),
+				'search_data'	=> $this->_nextmatches->xslt_search(array('query' => $query, 'link_data' => $link_data)),
 				'group_header'	=> $group_header,
 				'group_data'	=> $group_data,
 				'group_add'		=> $group_add,
-				'search_access'	=> ($this->bo->check_rights('search')?'yes':'')
+				'search_access'	=> $this->_bo->check_rights('search')
 			);
-			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('group_list' => $data));
+			$GLOBALS['phpgw']->xslttpl->set_var('phpgw', array('group_list' => $data));
 		}
 
-		function list_users($param_cd = '')
+		/**
+		 * Render a list of user accounts
+		 *
+		 * @param integer $cd error number
+		 *
+		 * @return null
+		 */
+		public function list_users($cd = 0)
 		{
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] .= '::users';
 
-			if ( phpgw::get_var('done', 'bool', 'POST') 
-				|| $GLOBALS['phpgw']->acl->check('account_access',1,'admin') )
+			if ( phpgw::get_var('done', 'bool', 'POST')
+				|| $GLOBALS['phpgw']->acl->check('account_access', phpgwapi_acl::READ, 'admin') )
 			{
-				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction' => 'admin.uimainscreen.mainscreen'));
+				$GLOBALS['phpgw']->redirect_link('/index.php',
+						array('menuaction' => 'admin.uimainscreen.mainscreen'));
 			}
 
 			if ( phpgw::get_var('add', 'bool', 'POST') )
 			{
-				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'admin.uiaccounts.edit_user'));
+				$GLOBALS['phpgw']->redirect_link('/index.php',
+						array('menuaction' => 'admin.uiaccounts.edit_user'));
 			}
 
-			if($param_cd)
-			{
-				$cd = $param_cd;
-			}
+			$query	= phpgw::get_var('query', 'string', 'POST');
+			$start	= phpgw::get_var('start', 'int');
+			$order	= phpgw::get_var('order', 'string', 'GET', 'account_lid');
+			$sort	= phpgw::get_var('sort', 'string', 'GET', 'ASC');
 
 			//this is a work around hack for the ugly nextmatch code
-			$query = $GLOBALS['query'] = phpgw::get_var('query', 'string', 'POST');
-			$start = phpgw::get_var('start', 'int');
-			$order = phpgw::get_var('order', 'string', 'GET', 'account_lid');
-			$sort = phpgw::get_var('sort', 'string', 'GET', 'ASC');
-			
+			$GLOBALS['query'] = $query;
+
 			$total = 0;
 
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('administration') . ': ' . lang('list users');
@@ -185,9 +271,17 @@
 				'menuaction' => 'admin.uiaccounts.list_users'
 			);
 
+			$lang = array
+			(
+				'delete'	=> lang('delete'),
+				'edit'		=> lang('edit'),
+				'status'	=> lang('status'),
+				'view'		=> lang('view')
+			);
+
 			$user_header = array
 			(
-				'sort_lid'				=> $this->nextmatchs->show_sort_order(array
+				'sort_lid'				=> $this->_nextmatches->show_sort_order(array
 											(
 												'sort'	=> $sort,
 												'var'	=> 'account_lid',
@@ -195,7 +289,7 @@
 												'extra'	=> $link_data
 											)),
 				'lang_lid'				=> lang('loginid'),
-				'sort_lastname'			=> $this->nextmatchs->show_sort_order(array
+				'sort_lastname'			=> $this->_nextmatches->show_sort_order(array
 											(
 												'sort'	=> $sort,
 												'var'	=> 'account_lastname',
@@ -203,7 +297,7 @@
 												'extra'	=> $link_data
 											)),
 				'lang_lastname'				=> lang('Lastname'),
-				'sort_firstname'			=> $this->nextmatchs->show_sort_order(array
+				'sort_firstname'			=> $this->_nextmatches->show_sort_order(array
 											(
 												'sort'	=> $sort,
 												'var'	=> 'account_firstname',
@@ -211,55 +305,124 @@
 												'extra'	=> $link_data
 											)),
 				'lang_firstname'		=> lang('firstname'),
-				'sort_status'			=> $this->nextmatchs->show_sort_order(array
+				'sort_status'			=> $this->_nextmatches->show_sort_order(array
 											(
 												'sort'	=> $sort,
 												'var'	=> 'account_status',
 												'order'	=> $order,
 												'extra'	=> $link_data
 											)),
-				'lang_status'			=> lang('status'),
-				'lang_view'				=> lang('view'),
-				'lang_edit'				=> lang('edit'),
-				'lang_delete'			=> lang('delete'),
-				'lang_sort_statustext'	=> lang('sort the entries')
+				'lang_status'			=> $lang['status'],
+				'lang_view'				=> $lang['view'],
+				'lang_edit'				=> $lang['edit'],
+				'lang_delete'			=> $lang['delete']
 			);
+
+			$status_data = array
+			(
+				'img_disabled'	=> $GLOBALS['phpgw']->common->image('phpgwapi', 'disabled', '.png'),
+				'img_enabled'	=> $GLOBALS['phpgw']->common->image('phpgwapi', 'enabled', '.png'),
+				'lang_disabled'	=> lang('disabled'),
+				'lang_enabled'	=> lang('enabled')
+			);
+
+			$lang_view	= '';
+			$view_url	= '';
+			$view_rights = $this->_bo->check_rights('view', 'account_access');
+			if ( $view_rights )
+			{
+				$view_args = array
+				(
+					'menuaction' => 'admin.uiaccounts.view_user',
+					'account_id' => '#ID'
+				);
+				$url_view	= $GLOBALS['phpgw']->link('/index.php', $view_args);
+				$lang_view	= $lang['view'];
+				unset($view_args);
+			}
+
+			$edit_url	= '';
+			$lang_edit	= '';
+			$edit_rights = $this->_bo->check_rights('edit', 'account_access');
+			if ( $edit_rights )
+			{
+				$edit_args = array
+				(
+					'menuaction' => 'admin.uiaccounts.edit_user',
+					'account_id' => '#ID'
+				);
+				$url_edit	= $GLOBALS['phpgw']->link('/index.php', $edit_args);
+				$lang_edit	= $lang['edit'];
+				unset($edit_args);
+			}
+
+			$delete_url		= '';
+			$lang_delete	= '';
+			$delete_rights	= $this->_bo->check_rights('delete', 'account_access');
+			if ( $delete_rights )
+			{
+				$delete_args = array
+				(
+					'menuaction' => 'admin.uiaccounts.delete_user',
+					'account_id' => '#ID'
+				);
+				$url_delete		= $GLOBALS['phpgw']->link('/index.php', $delete_args);
+				$lang_delete	= $lang['delete'];
+				unset($delete_args);
+			}
 
 			$user_data = array();
 			foreach ( $account_info as $account )
 			{
+				if ( $view_rights )
+				{
+					$view_url = preg_replace('/%23ID/', $account->id, $url_view);
+				}
+
+				if ( $edit_rights )
+				{
+					$edit_url = preg_replace('/%23ID/', $account->id, $url_edit);
+				}
+
+				if ( $delete_rights )
+				{
+					$delete_url = preg_replace('/%23ID/', $account->id, $url_delete);
+				}
+
 				$user_data[] = Array
 				(
-					'view_url'					=> $this->bo->check_rights('view','account_access')
-													? $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.uiaccounts.view_user', 'account_id' => $account['account_id']) )
-													: '',
-					'lang_view'					=> ($this->bo->check_rights('view','account_access')?lang('view'):''),
-					'lang_view_statustext'		=> ($this->bo->check_rights('view','account_access')?lang('view this user'):''),
-					'edit_url'					=> $this->bo->check_rights('edit','account_access')
-													? $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.uiaccounts.edit_user', 'account_id' => $account['account_id']) )
-													: '',
-					'lang_edit'					=> ($this->bo->check_rights('edit','account_access')?lang('edit'):''),
-					'lang_edit_statustext'		=> ($this->bo->check_rights('edit','account_access')?lang('edit this user'):''),
-					'lid'						=> (!$account['account_lid']?'':$account['account_lid']),
-					'firstname'					=> (!$account['account_firstname']?'':$account['account_firstname']),
-					'lastname'					=> (!$account['account_lastname']?'':$account['account_lastname']),
-					'status'					=> (!$account['account_status']?'':$account['account_status']),
-					'delete_url'				=> $this->bo->check_rights('delete','account_access')
-													?$GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.uiaccounts.delete_user', 'account_id' => $account['account_id']) )
-													: '',
-					'lang_delete_statustext'	=> ($this->bo->check_rights('delete','account_access')?lang('delete this user'):''),
-					'lang_delete'				=> ($this->bo->check_rights('delete','account_access')?lang('delete'):'')
+					'lid'						=> $account->lid,
+					'firstname'					=> $account->firstname,
+					'lastname'					=> $account->lastname,
+
+					'status'					=> $account->enabled,
+					'status_img'				=> $account->enabled
+													? $status_data['img_enabled']
+													: $status_data['img_disabled'],
+					'status_text'				=> $account->enabled
+													? $status_data['lang_enabled']
+													: $status_data['lang_disabled'],
+
+					'view_url'					=> $view_url,
+					'lang_view'					=> $lang_view,
+
+					'edit_url'					=> $edit_url,
+					'lang_edit'					=> $lang_edit,
+
+					'delete_url'				=> $delete_url,
+					'lang_delete'				=> $lang_delete
 				);
 			}
 
 			$user_add = array
 			(
-				'lang_add'				=> lang('add'),
-				'lang_add_statustext'	=> lang('add a user'),
-				'action_url'			=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.uiaccounts.list_users')),
-				'lang_done'				=> lang('done'),
-				'lang_done_statustext'	=> lang('return to admin mainscreen'),
-				'add_access'			=> ($this->bo->check_rights('add','account_access')?'yes':''),
+				'add_access'	=> $this->_bo->check_rights('add', 'account_access'),
+				'lang_add'		=> lang('add'),
+				'lang_done'		=> lang('done'),
+				'url_add'		=> $GLOBALS['phpgw']->link('/index.php',
+										array('menuaction' => 'admin.uiaccounts.edit_user')),
+				'url_done'		=> 	$GLOBALS['phpgw']->link('/index.php',
+										array('menuaction' => 'admin.uimainscreen.mainscreen'))
 			);
 
 			$nm = array
@@ -272,90 +435,100 @@
 
 			$data = array
 			(
-				'nm_data'		=> $this->nextmatchs->xslt_nm($nm),
-				'search_data'	=> $this->nextmatchs->xslt_search(array('query' => $query,'link_data' => $link_data)),
+				'nm_data'		=> $this->_nextmatches->xslt_nm($nm),
+				'search_data'	=> $this->_nextmatches->xslt_search(array('query' => $query, 'link_data' => $link_data)),
 				'user_header'	=> $user_header,
 				'user_data'		=> $user_data,
 				'user_add'		=> $user_add,
-				'search_access'	=> ($this->bo->check_rights('search','account_access')?'yes':'')
+				'search_access'	=> $this->_bo->check_rights('search', 'account_access')
 			);
-			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('account_list' => $data));
+			$GLOBALS['phpgw']->xslttpl->set_var('phpgw', array('account_list' => $data));
 		}
 
-		function edit_group()
+		/**
+		 * Render form for editting a group account
+		 *
+		 * @return null
+		 */
+		public function edit_group()
 		{
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] .= '::groups';
 
 			$account_apps	= array();
 			$account_id		= phpgw::get_var('account_id', 'int');
 			$error_list		= array();
-			$values			= phpgw::get_var('values', 'string', 'POST', array());
 
-			if ( (isset($values['cancel']) && $values['cancel'])
-				|| !$account_id && $GLOBALS['phpgw']->acl->check('group_access', PHPGW_ACL_EDIT, 'admin')
-				|| $account_id && $GLOBALS['phpgw']->acl->check('group_access', PHPGW_ACL_PRIVATE, 'admin') )
+			if ( phpgw::get_var('cancel', 'bool', 'POST')
+				|| ( !$account_id
+					&& $GLOBALS['phpgw']->acl->check('group_access', phpgwapi_acl::EDIT, 'admin') )
+				|| ( $account_id
+					&& $GLOBALS['phpgw']->acl->check('group_access', phpgwapi_acl::PRIV, 'admin') ) )
 			{
-				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'admin.uiaccounts.list_groups'));
+				$GLOBALS['phpgw']->redirect_link('/index.php',
+						array('menuaction' => 'admin.uiaccounts.list_groups'));
 			}
 
-			//echo 'POST variables<pre>' . print_r($values, true) . '</pre>';
-			if ( isset($values['save']) && $values['save'] )
+			if ( phpgw::get_var('save', 'bool', 'POST') )
 			{
+				$values			= phpgw::get_var('values', 'string', 'POST', array());
 				$account_apps	= phpgw::get_var('account_apps', 'bool', 'POST');
 				$account_user	= phpgw::get_var('account_user', 'int', 'POST');
-				$group_manager	= phpgw::get_var('group_manager', 'int', 'POST');
-				
-				$error = $this->bo->validate_group($values);
 
-				if ( is_array($error) )
+				$values['account_user'] = array();
+				if (is_array($account_user))
 				{
-					$error_list = array('msgbox_text' => $GLOBALS['phpgw']->common->error_list($error));
+					$values['account_user'] = $account_user;
 				}
-				else
-				{
-					if (is_array($account_user))
-					{
-						$values['account_user'] = $account_user;
-					}
 
-					if (is_array($account_apps))
-					{
-						$values['account_apps'] = $account_apps;
-					}
-					else
-					{
-						$values['account_apps'] = array();
-					}
-					
-					if ( $group_manager )
-					{
-						$values['group_manager'] = $group_manager;
-					}
-					$account_id = $this->bo->edit_group($values);
+				$values['account_apps'] = array();
+				if ( is_array($account_apps) && count($account_apps) )
+				{
+					$values['account_apps'] = $account_apps;
 				}
+
+				//FIXME exception/error handling needed here!
+
+				$account_id = $this->_bo->save_group($values);
+				if ( $account_id )
+				{
+					$GLOBALS['phpgw']->redirect_link('/index.php', array
+					(
+						'menuaction' => 'admin.uiaccounts.view_group',
+						'account_id' => $account_id
+					));
+				}
+
+				$error_list = array('msgbox_text' => $GLOBALS['phpgw']->common->error_list($error));
 			}
-			
-			if ( !isset($GLOBALS['phpgw']->js) || !is_object($GLOBALS['phpgw']->js) )
-			{
-				$GLOBALS['phpgw']->js = createObject('phpgwapi.javascript');
-			}
+
 			$js =& $GLOBALS['phpgw']->js;
 			$js->validate_file('base', 'groups', 'admin');
 
-			$group = createObject('phpgwapi.accounts', $account_id, 'g');
-			$group->read_repository();
-			$group->member($account_id);
-			$group_members = $group->get_members();
-			$group_apps = $this->bo->load_group_apps($account_id);
-			
-			$group_manager = $GLOBALS['phpgw']->acl->get_ids_for_location($account_id, PHPGW_ACL_GROUP_MANAGERS, 'phpgw_group');
+			$accounts =& $GLOBALS['phpgw']->accounts;
 
-			if ( !is_array($group_members) )
+			$group = $accounts->get($account_id);
+			if ( !$account_id && !is_object($group) )
 			{
-				$group_members = array();
+				$group = new phpgwapi_group();
 			}
 
-			// this information should be provided by the app itself - thats why we have hooks
+			$group_members = $accounts->member($account_id);
+
+			$account_list = $accounts->get_list('accounts');
+
+			$members = array();
+			$user_list = array();
+			foreach ( $account_list as $id => $user )
+			{
+				$user_list[$id] = array
+				(
+					'account_id'	=> $id,
+					'account_name'	=> (string) $user,
+ 					'selected'		=> (int) isset($group_members[$id])
+				);
+			}
+
+			//FIXME this needs to be provided by the app itself - thats why we have hooks
 			$apps_with_acl = array
 			(
 				'addressbook'	=> array('top_grant' => true),
@@ -363,66 +536,20 @@
 				'calendar'		=> array('top_grant' => true),
 				'filemanager'	=> array('top_grant' => true),
 				'hrm'			=> array('top_grant' => true),
-				'img'			=> array('top_grant' => true),
 				'infolog'		=> array('top_grant' => true),
-				'inv'			=> array('top_grant' => true),
-				'netsaint'		=> array('top_grant' => true),
 				'notes'			=> array('top_grant' => true),
-				'phonelog'		=> array('top_grant' => true),
-				'phpwebhosting'	=> array('top_grant' => true),
 				'projects'		=> array('top_grant' => true),
 				'property'		=> array('top_grant' => true),
 				'sms'			=> array('top_grant' => true),
 				'todo'			=> array('top_grant' => true),
 				'tts'			=> array('top_grant' => true),
 			);
+			$GLOBALS['phpgw']->locations->verify($apps_with_acl);
 
-			$GLOBALS['phpgw']->acl->verify_location($apps_with_acl);
-			
-			$accounts =& $GLOBALS['phpgw']->accounts;
-			$account_list = $accounts->get_list('accounts');
-			$account_num = count($account_list);
-			
-			$members = array();
-			$user_list = array();
-			$i = 0;
-			foreach ( $account_list as $key => $entry )
-			{
-				$user_list[$i] = array
-				(
-					'account_id'   => $entry['account_id'],
-					'account_name' => $GLOBALS['phpgw']->common->display_fullname($entry['account_lid'],
-																				  $entry['account_firstname'],
-																				  $entry['account_lastname']
-																				 ),
- 					'selected'		=> in_array((int) $entry['account_id'], $group_members) ? ' selected' : ''
-				);
-				if ( in_array( (int)$entry['account_id'], $group_members) )
-				{
-					$user_list[$i]['selected'] = 'selected';
-					$members[$entry['account_id']] = $user_list[$i]['account_name'];
-				}
-				else
-				{
-					$user_list[$i]['selected'] = '';
-				} 
-				++$i;
-			}
-
-			$manager_list = array();
-			foreach ( $members as $id => $username )
-			{
-				$manager_list[] = array
-				(
-					'account_id'	=> $id,
-					'account_name'	=> $username,
-					'selected' 		=> isset($group_manager[0]) && $id == $group_manager[0] ? 'selected' : ''
-				);
-			}
-			
+			$group_apps = $this->_bo->load_group_apps($account_id);
 			$apps = array_keys($GLOBALS['phpgw_info']['apps']);
 			asort($apps);
-			
+
 			$img_acl = $GLOBALS['phpgw']->common->image('admin', 'share', '.png', false);
 			$img_acl_grey = $GLOBALS['phpgw']->common->image('admin', 'share-grey', '.png', false);
 			$lang_acl = lang('Set general permissions');
@@ -430,12 +557,38 @@
 			$img_grants_grey = $GLOBALS['phpgw']->common->image('admin', 'dot-grey', '.png', false);
 			$lang_grants = lang('grant access');
 
+			$url_acl = $GLOBALS['phpgw']->link('/index.php', array
+			(
+				'menuaction'		=> 'preferences.uiadmin_acl.list_acl',
+				'acl_app'			=> '##APP##',
+				'cat_id'			=> 'groups',
+				'module'			=> '.'
+			));
+
+			$url_grant = $GLOBALS['phpgw']->link('/index.php', array
+			(
+				'menuaction'		=> 'preferences.uiadmin_acl.aclprefs',
+				'acl_app'			=> '##APP##',
+				'cat_id'			=> 'groups',
+				'module'			=> '.',
+				'granting_group'	=> $account_id
+			));
 
 			foreach ( $apps as $app )
 			{
-				if ($GLOBALS['phpgw_info']['apps'][$app]['enabled'] && $GLOBALS['phpgw_info']['apps'][$app]['status'] != 3)
+				if ($GLOBALS['phpgw_info']['apps'][$app]['enabled']
+						&& $GLOBALS['phpgw_info']['apps'][$app]['status'] != 3)
 				{
 					$grants_enabled = isset($apps_with_acl[$app]) && $account_id;
+
+					$acl_url = '';
+					$grant_url = '';
+					if ( $grants_enabled )
+					{
+						$acl_url = preg_replace('/##APP##/', $app, $url_acl);
+						$grant_url = preg_replace('/##APP##/', $app, $url_acl);
+					}
+
 					$app_list[] = array
 					(
 						'elmid'			=> "admin_applist_$app",
@@ -443,36 +596,43 @@
 						'app_title'		=> lang($app),
 						'checkbox_name'	=> "account_apps[{$app}]",
 						'checked'       => isset($group_apps[$app]),
-						'acl_url'       => $grants_enabled
-											? $GLOBALS['phpgw']->link('/index.php',array('menuaction'	=> 'preferences.uiadmin_acl.list_acl',
-																						'acl_app'		=> $app,
-																						'cat_id'=>'groups',
-																						'module'=>'.')) : '',
+						'acl_url'       => $acl_url,
 						'acl_img'		=> $grants_enabled ? $img_grants : $img_grants_grey,
 						'acl_img_name'	=> $lang_acl,
 						'grant_img'		=> $grants_enabled ? $img_acl : $img_acl_grey,
 						'grant_img_name'=> $lang_grants,
-						'grant_url'		=> $grants_enabled
-											? $GLOBALS['phpgw']->link('/index.php',array('menuaction'	=> 'preferences.uiadmin_acl.aclprefs',
-																						'acl_app'		=> $app,
-																						'cat_id'=>'groups',
-																						'module'=>'.',
-																						'granting_group'=>$account_id)) : ''
+						'grant_url'		=> $grant_url
 					);
 				}
 			}
-			
-			$GLOBALS['phpgw']->xslttpl->add_file('msgbox', PHPGW_TEMPLATE_DIR, 3); // no point in wasting loops
+
+			$tabs = array
+			(
+				'data'	=> array('label' => lang('group data'), 'link' => '#group'),
+				'apps'	=> array('label' => lang('applications'), 'link' => '#apps')
+			);
+			phpgwapi_yui::tabview_setup('group_edit_tabview');
+
+			// this is in the api, so lets not waste loops looking for it the app tpl dirs
+			$GLOBALS['phpgw']->xslttpl->add_file('msgbox', PHPGW_TEMPLATE_DIR, 3);
 			$GLOBALS['phpgw']->xslttpl->add_file('groups');
-			$GLOBALS['phpgw_info']['flags']['app_header'] =  $account_id > 0 ? lang('edit group') : lang('add group');
+
+			$GLOBALS['phpgw_info']['flags']['app_header'] =  lang('edit group');
+			if ( $account_id )
+			{
+				$GLOBALS['phpgw_info']['flags']['app_header'] = lang('add group');
+			}
+
 			$data = array
 			(
+				'page_title'		=> $account_id ? lang('edit group') : lang('add group'),
 				'account_id'		=> $account_id,
-				'app_list'			=> $app_list,				
-				'edit_url'			=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.uiaccounts.edit_group',
-																					'account_id' => $account_id
-																				   )),
-				'group_manager'		=> $manager_list,
+				'app_list'			=> $app_list,
+				'edit_url'			=> $GLOBALS['phpgw']->link('/index.php', array
+										(
+											'menuaction' => 'admin.uiaccounts.edit_group',
+											'account_id' => $account_id
+										)),
 				'guser_list'		=> $user_list,
 				'img_close'			=> $GLOBALS['phpgw']->common->image('phpgwapi', 'stock_close', '.png', false),
 				'img_save'			=> $GLOBALS['phpgw']->common->image('phpgwapi', 'stock_save', '.png', false),
@@ -482,149 +642,200 @@
 				'lang_cancel'		=> lang('cancel'),
 				'lang_close'		=> lang('close'),
 				'lang_grant'		=> lang('grant'),
-				'lang_group_manager'=> lang('group manager'),
 				'lang_include_user'	=> lang('members'),
-				'lang_permissions'	=> lang('applications'),				
+				'lang_permissions'	=> lang('applications'),
 				'lang_save'			=> lang('save'),
 				'msgbox_data'		=> $error_list,
 				'select_size'		=> 5,
 				'value_account_name'=> $group->lid,
+				'tabs'				=> phpgwapi_yui::tabview_generate($tabs, 'data')
 			);
 
-			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('group_edit' => $data));
+			$GLOBALS['phpgw']->xslttpl->set_var('phpgw', array('group_edit' => $data));
 		}
 
-		function edit_user()
+		/**
+		 * Render a form for editing a user account
+		 *
+		 * @return bool was the account edited?
+		 */
+		public function edit_user()
 		{
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] .= '::users';
 
-			$cd                            = phpgw::get_var('cd', 'int', 'GET');
-			$account_id                    = phpgw::get_var('account_id', 'int');
-			$values                        = phpgw::get_var('values', 'string', 'POST');
-			$values['old_loginid']         = phpgw::get_var('old_loginid', 'string', 'GET');
-			$values['account_groups']      = phpgw::get_var('account_groups', 'int', 'POST');
-			$values['account_permissions'] = phpgw::get_var('account_permissions', 'bool', 'POST');
+			if ( phpgw::get_var('save', 'bool', 'POST') )
+			{
+				$this->_user_save();
+				return true;
+			}
+
+			if ( phpgw::get_var('cancel', 'bool', 'POST') )
+			{
+				$GLOBALS['phpgw']->redirect_link('/index.php',
+						array('menuaction' => 'admin.uiaccounts.list_users'));
+				return true;
+			}
+
+			$account_id = phpgw::get_var('account_id', 'int');
+			if ( $account_id )
+			{
+				$user = $GLOBALS['phpgw']->accounts->get($account_id);
+			}
+			else
+			{
+				$user = new phpgwapi_user();
+			}
+
+			$this->_user_form($user);
+		}
+
+		/**
+		 * Save a user account
+		 *
+		 * @return null
+		 */
+		public function _user_save()
+		{
+			$values							= phpgw::get_var('values', 'string', 'POST');
+			$values['old_loginid']			= phpgw::get_var('old_loginid', 'string', 'POST');
+			$values['account_groups']		= (array) phpgw::get_var('account_groups', 'int', 'POST');
+			$values['account_permissions']	= phpgw::get_var('account_permissions', 'bool', 'POST');
 			//FIXME Caeies fix waiting for JSCAL
-			$values['account_expires_year']= phpgw::get_var('account_expires_year', 'int', 'POST');
-			$values['account_expires_month']= phpgw::get_var('account_expires_month', 'string', 'POST'); // we use string here to allow for MMM
-			$values['account_expires_day'] = phpgw::get_var('account_expires_day', 'int', 'POST');
+			$values['account_expires_year']	= phpgw::get_var('account_expires_year', 'int', 'POST');
+			// we use string here to allow for MMM formatted months
+			$values['account_expires_month']= phpgw::get_var('account_expires_month', 'string', 'POST');
+			$values['account_expires_day']	= phpgw::get_var('account_expires_day', 'int', 'POST');
 
-			if ( (isset($values['cancel']) && $values['cancel']) 
-				|| !$account_id && $GLOBALS['phpgw']->acl->check('account_access', PHPGW_ACL_EDIT, 'admin') 
-				|| $account_id && $GLOBALS['phpgw']->acl->check('account_access', PHPGW_ACL_PRIVATE, 'admin') )
+			$errors = array();
+			try
 			{
-				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'admin.uiaccounts.list_users'));
+				$account_id = $this->_bo->save_user($values);
 			}
-			$error_list = array();
-			if (isset($values['save']) && $values['save'])
+			catch ( Exception $e )
 			{
-				$error = $this->bo->validate_user($values);
-
-				if (is_array($error))
+				$errors[] = $e->getMessage();
+				$user = new phpgwapi_user;
+				foreach ( $values as $key => $value )
 				{
-					$error_list = array('msgbox_text' => $GLOBALS['phpgw']->common->error_list($error));
-				}
-				else
-				{
-					if ($account_id)
+					try
 					{
-						$values['account_id'] = $account_id;
+						$user->$key = $value;
 					}
-					$this->bo->save_user($values);
-					$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'admin.uiaccounts.list_users'));
+					catch ( Exception $e )
+					{
+						$errors[] = $e->getMessage();
+					}
 				}
+				$this->_user_form($user, $errors);
+				return;
 			}
+			$GLOBALS['phpgw']->redirect_link('/index.php',
+					array('menuaction' => 'admin.uiaccounts.view_user', 'account_id' => $account_id));
+		}
+
+		/**
+		 * Generate a user edit form
+		 *
+		 * @param object $user   the user account object to be edited
+		 * @param array  $errors any error messages that should be shown to the user
+		 *
+		 * @return null
+		 */
+		protected function _user_form($user, $errors = array())
+		{
+			$account_id = $user->id;
+			$user_data = $user->toArray();
+			$account = createObject('phpgwapi.accounts', $account_id, 'u');
 
 			$sbox = CreateObject('phpgwapi.sbox');
 
-			/* XXX Caeies And ?
-			if ($GLOBALS['phpgw_info']['server']['ldap_extra_attributes'] && ($GLOBALS['phpgw_info']['server']['account_repository'] == 'ldap'))
-			{
-			}
-			 */
-			//XXX Caeies Where does that comes from ???
-			//print_debug('Type : '.gettype($_userData).'<br>_userData(size) = "'.$_userData.'"('.strlen($_userData).')');
-
 			$GLOBALS['phpgw']->xslttpl->add_file('users');
-			$GLOBALS['phpgw']->xslttpl->add_file('msgbox', PHPGW_TEMPLATE_DIR, 3); // no point in wasting loops
+			// no point in wasting loops
+			$GLOBALS['phpgw']->xslttpl->add_file('msgbox', PHPGW_TEMPLATE_DIR, 3);
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('administration') . ': ' . ($account_id?lang('edit user account'):lang('add user account'));
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('administration') . ': ';
+			if ( $account_id )
+			{
+				$GLOBALS['phpgw_info']['flags']['app_header'] .= lang('edit user account');
+			}
+			else
+			{
+				$GLOBALS['phpgw_info']['flags']['app_header'] .= lang('add user account');
+			}
 
 			$acl = createObject('phpgwapi.acl', $account_id);
-			if ($account_id)
+			if ( $account_id )
 			{
-				$user_info = array
-				(
-					'account_name' => $GLOBALS['phpgw']->accounts->id2name($account_id),
-					'account_user' => $this->bo->load_group_users($account_id),
-					'account_apps' => $this->bo->load_group_apps($account_id)
-				);
-			}
-
-			if($account_id)
-			{
-				$account = createObject('phpgwapi.accounts',intval($account_id),'u');
-				$userData = $account->read_repository();
-				$userGroups = $account->membership($account_id);
-				$userData['anonymous'] = $acl->check('anonymous', 1, 'phpgwapi');
-				$userData['changepassword'] = $acl->check('changepassword', 0xFFFF, 'preferences');
-				
+				$user_data = $user->toArray();
+				$user_groups = $account->membership($account_id);
+				$user_data['anonymous'] = $acl->check('anonymous', 1, 'phpgwapi');
+				$user_data['changepassword'] = $acl->check('changepassword', 0xFFFF, 'preferences');
 			}
 			else
 			{
-				$account = createObject('phpgwapi.accounts');
-				$userData = Array();
-				$userData['status'] = 'A';
-				$userData['anonymous'] = false;
-				$userData['changepassword'] = true;
-				$userGroups = Array();
+				$user_data['status'] = 'A';
+				$user_data['anonymous'] = false;
+				$user_data['changepassword'] = true;
+				$user_groups = Array();
 			}
-			$allGroups = $account->get_list('groups');
 
-			if ($userData['expires'] == -1) //switch to js cal - skwashd
+			if ( !$user_data['expires'] )
 			{
-				$userData['account_expires_month'] = 0;
-				$userData['account_expires_day']   = 0;
-				$userData['account_expires_year']  = 0;
+				// we assume this is a sane value
+				$user_data['expires'] = time() + $GLOBALS['phpgw_info']['server']['auto_create_expire'];
+			}
+
+			if ($user_data['expires'] == -1) //switch to js cal - skwashd
+			{
+				$user_data['account_expires_month'] = 0;
+				$user_data['account_expires_day']   = 0;
+				$user_data['account_expires_year']  = 0;
 			}
 			else
 			{
-				$time_var = time() + $GLOBALS['phpgw_info']['server']['auto_create_expire']; // we assume this is sane
-				$userData['account_expires_month'] = date('m',$userData['expires'] > 0 ? $userData['expires'] : $time_var);
-				$userData['account_expires_day']   = date('d',$userData['expires'] > 0 ? $userData['expires'] : $time_var);
-				$userData['account_expires_year']  = date('Y',$userData['expires'] > 0 ? $userData['expires'] : $time_var);
+				$user_data['account_expires_month'] = date('m', $user_data['expires']);
+				$user_data['account_expires_day']   = date('d', $user_data['expires']);
+				$user_data['account_expires_year']  = date('Y', $user_data['expires']);
 			}
 
 			$homedirectory = '';
 			$loginshell = '';
 			$lang_homedir  = '';
 			$lang_shell = '';
-			if (isset($GLOBALS['phpgw_info']['server']['ldap_extra_attributes']) && !empty($GLOBALS['phpgw_info']['server']['ldap_extra_attributes']))
+			if ( $this->_ldap_extended )
 			{
+				$server =& $GLOBALS['phpgw_info']['server'];
+				if ( !$account_id )
+				{
+					$user_data['homedirectory'] = "{$server['ldap_account_home']}/{$account_lid}";
+					$user_data['loginshell'] = $server['ldap_account_shell'];
+				}
+
 				$lang_homedir	= lang('home directory');
 				$lang_shell		= lang('login shell');
-				$homedirectory = '<input name="homedirectory" value="'
-					. ($account_id ? $userData['homedirectory'] : "{$GLOBALS['phpgw_info']['server']['ldap_account_home']}/{$account_lid}")
-					. '">';
-				$loginshell = '<input name="loginshell" value="'
-					. ($account_id?$userData['loginshell']:$GLOBALS['phpgw_info']['server']['ldap_account_shell'])
-					. '">';
+				$homedirectory = "<input name=\"homedirectory\" value=\"{$user_data['homedirectory']}\">";
+				$loginshell = "<input name=\"loginshell\" value=\"{$user_data['loginshell']}\">";
 			}
-			
-			$add_masters	= $GLOBALS['phpgw']->acl->get_ids_for_location('addressmaster',7,'addressbook');
-			$add_users	= $GLOBALS['phpgw']->accounts->return_members($add_masters);
-			$masters	= $add_users['users'];
 
-			if (is_array($masters) && in_array($GLOBALS['phpgw_info']['user']['account_id'],$masters))
+			$add_masters	= $GLOBALS['phpgw']->acl->get_ids_for_location('addressmaster', 7, 'addressbook');
+			$add_users		= $GLOBALS['phpgw']->accounts->return_members($add_masters);
+			$masters		= $add_users['users'];
+
+			if ( is_array($masters)
+				&& in_array($GLOBALS['phpgw_info']['user']['account_id'], $masters) )
 			{
-				if($userData['person_id'])
+				if ( $user_data['person_id'] )
 				{
 					$url_contacts_text = lang('Edit entry');
 					$url_contacts =   $GLOBALS['phpgw']->link('/index.php', array
 					(
 						'menuaction'    => 'addressbook.uiaddressbook.edit_person',
-						'ab_id'         => $userData['person_id'],
-						'referer'       => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.uiaccounts.edit_user', 'account_id' =>  $account_id) )  
+						'ab_id'         => $user_data['person_id'],
+						'referer'       => $GLOBALS['phpgw']->link('/index.php', array
+											(
+												'menuaction' => 'admin.uiaccounts.edit_user',
+												'account_id' =>  $account_id
+											))
 					));
 				}
 				else
@@ -640,106 +851,95 @@
 				(
 					'menuaction'    => 'admin.uiaclmanager.edit_addressmasters',
 					'account_id'    => $GLOBALS['phpgw_info']['user']['account_id'],
-					'referer'       => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.uiaccounts.edit_user', 'account_id' =>  $account_id) )
+					'referer'       => $GLOBALS['phpgw']->link('/index.php', array
+										(
+											'menuaction' => 'admin.uiaccounts.edit_user',
+											'account_id' =>  $account_id
+										))
 				));
 			}
-			
-			$_y = $sbox->getyears('account_expires_year',$userData['account_expires_year'],date('Y'),date('Y')+10);
-			$_m = $sbox->getmonthtext('account_expires_month',$userData['account_expires_month']);
-			$_d = $sbox->getdays('account_expires_day',$userData['account_expires_day']);
-			
 
-		/*	$account_file_space = '';
-			if (!$userData['file_space'])
+			$_y = $sbox->getyears('account_expires_year',
+									$user_data['account_expires_year'], date('Y'), date('Y')+10);
+
+			$_m = $sbox->getmonthtext('account_expires_month', $user_data['account_expires_month']);
+			$_d = $sbox->getdays('account_expires_day', $user_data['account_expires_day']);
+
+			$group_list = array();
+
+			$all_groups = $account->get_list('groups');
+			foreach ( $all_groups as $group )
 			{
-				$userData['file_space'] = $GLOBALS['phpgw_info']['server']['vfs_default_account_size_number'] . "-" . $GLOBALS['phpgw_info']['server']['vfs_default_account_size_type'];
-			}
-			$file_space_array = explode ('-', $userData['file_space']);
-			$account_file_space_number = $file_space_array[0];
-			$account_file_space_type = $file_space_array[1];
-			$account_file_space_type_selected[$account_file_space_type] = ' selected';
-
-			$account_file_space = '<input type=text name="account_file_space_number" value="' . trim($account_file_space_number) . '" size="7">';
-			$account_file_space_select ='<select name="account_file_space_type">';
-			$account_file_space_types = array ('gb', 'mb', 'kb', 'b');
-			while (list ($num, $type) = each ($account_file_space_types))
-			
-			{
-				$account_file_space_select .= '<option value="'.$type.'"' . $account_file_space_type_selected[$type] . '>' . strtoupper ($type) . '</option>';
-			}
-			$account_file_space_select .= '</select>';
-
-			$var = Array(
-				'lang_file_space'    => 'File space',
-				'account_file_space' => $account_file_space,
-				'account_file_space_select' => $account_file_space_select
-			);
-			$t->set_var($var);
-		*/
-
-			reset($allGroups);
-			while (list($key,$value) = each($allGroups)) 
-			{
-				$group_list[] = array
+				$group_list[$group->id] = array
 				(
-					'account_id'		=> $value['account_id'],
-					'account_lid'		=> $value['account_lid']
+					'account_id'	=> $group->id,
+					'account_lid'	=> (string) $group
 				);
 			}
 
-			for ($i=0;$i<count($userGroups);$i++)
+			$group_ids = array_keys($group_list);
+			foreach ( $user_groups as $group )
 			{
-				for($j=0;$j<count($group_list);$j++)
-				{
-					if ($userGroups[$i]['account_id'] == $group_list[$j]['account_id'])
-					{
-						$group_list[$j]['selected'] = 'yes';
-					}
-				}
+				$group_list[$group->id]['selected'] = in_array($group->id, $group_ids);
 			}
+			unset($group_ids);
 
 			/* create list of available apps */
-			$i = 0;
-			$apps = createObject('phpgwapi.applications',$account_id);
+			$apps = createObject('phpgwapi.applications', $account_id);
 			$db_perms = $apps->read_account_specific();
 
 			$available_apps = $GLOBALS['phpgw_info']['apps'];
-			@asort($available_apps);
-			foreach ( $available_apps as $key => $application ) 
+			asort($available_apps);
+			foreach ( $available_apps as $key => $application )
 			{
-				if ($application['enabled'] && $application['status'] != 3) 
+				if ($application['enabled'] && $application['status'] != 3)
 				{
-					$perm_display[$i]['appName']        = $key;
-					$perm_display[$i]['translatedName'] = lang($perm_display[$i]['appName']);
-					$i++;
+					$perm_display[] = array
+					(
+						'app_name'			=> $key,
+						'translated_name'	=> lang($key)
+					);
 				}
 			}
+			asort($perm_display);
 
-			/* create apps output */
-			$appRightsOutput = '';
-			//@reset($perm_display);
-			for ($i=0;$i<count($perm_display);$i++) 
+			foreach ( $perm_display as $perm )
 			{
+				$checked = false;
+				if ( ( isset($user_data['account_permissions'][$perm['app_name']])
+						&& $user_data['account_permissions'][$perm['app_name']] )
+					|| ( isset($db_perms[$perm['app_name']]) && $db_perms[$perm['app_name']] ) )
+				{
+					$checked = true;
+				}
+
 				$app_list[] = array
 				(
-					'app_title'		=> $perm_display[$i]['translatedName'],
-					'checkbox_name'	=> 'account_permissions[' . $perm_display[$i]['appName'] . ']',
-					'checked'		=> (isset($userData['account_permissions']) && $userData['account_permissions'][$perm_display[$i]['appName']]) 
-										|| (isset($db_perms[$perm_display[$i]['appName']]) && $db_perms[$perm_display[$i]['appName']])
+					'app_title'		=> $perm['translated_name'],
+					'checkbox_name'	=> "account_permissions[{$perm['app_name']}]",
+					'checked'		=> $checked
 				);
 			}
+
+			$tabs = array
+			(
+				'data'	=> array('label' => lang('user data'), 'link' => '#user'),
+				'apps'	=> array('label' => lang('applications'), 'link' => '#apps')
+			);
+			phpgwapi_yui::tabview_setup('account_edit_tabview');
 
 			$page_params['menuaction'] = 'admin.uiaccounts.edit_user';
 			if($account_id)
 			{
 				$page_params['account_id']  = $account_id;
-				$page_params['old_loginid'] = rawurlencode($userData['account_lid']);
+				$page_params['old_loginid'] = rawurlencode($user_data['lid']);
 			}
 
 			$data = array
 			(
-				'msgbox_data'			=> $error_list,
-				'edit_url'				=> $GLOBALS['phpgw']->link('/index.php',$page_params),
+				'page_title'			=> $account_id ? lang('edit user') : lang('add user'),
+				'msgbox_data'			=> array('msgbox_text' => $GLOBALS['phpgw']->common->error_list($errors)),
+				'edit_url'				=> $GLOBALS['phpgw']->link('/index.php', $page_params),
 				'lang_lid'				=> lang('loginid'),
 				'lang_account_active'	=> lang('account active'),
 				'lang_anonymous'		=> lang('Anonymous User (not shown in list sessions)'),
@@ -755,200 +955,216 @@
 				'lang_quota'			=> lang('quota'),
 				'lang_save'				=> lang('save'),
 				'lang_cancel'			=> lang('cancel'),
-				'select_expires'		=> $GLOBALS['phpgw']->common->dateformatorder($_y,$_m,$_d,True),
+				'select_expires'		=> $GLOBALS['phpgw']->common->dateformatorder($_y, $_m, $_d, true),
 				'lang_never'			=> lang('Never'),
-				'account_lid'			=> $userData['account_lid'],
+				'account_id'			=> $account_id,
+				'account_lid'			=> $user_data['lid'],
+				'old_loginid'			=> $account_id ? $GLOBALS['phpgw']->accounts->id2lid($account_id) : '',
 				'lang_homedir'			=> $lang_homedir,
 				'lang_shell'			=> $lang_shell,
 				'homedirectory'			=> $homedirectory,
 				'loginshell'			=> $loginshell,
-				'account_status'		=> ($userData['status']?'yes':''),
-				'account_firstname'		=> $userData['account_firstname'],
-				'account_lastname'		=> $userData['account_lastname'],
+				'account_status'		=> (int) $user_data['enabled'],
+				'account_firstname'		=> $user_data['firstname'],
+				'account_lastname'		=> $user_data['lastname'],
 				'account_passwd'		=> '',
 				'account_passwd_2'		=> '',
-				'account_quota'			=> $userData['quota'],
-				'anonymous'				=> (int) $userData['anonymous'],
-				'changepassword'		=> (int) $userData['changepassword'],
-				'expires_never'			=> (($userData['expires'] == -1)?'yes':''),
+				'account_quota'			=> $user_data['quota'],
+				'anonymous'				=> (int) $user_data['anonymous'],
+				'changepassword'		=> (int) $user_data['changepassword'],
+				'expires_never'			=> $user_data['expires'] == -1,
 				'group_list'			=> $group_list,
 				'app_list'				=> $app_list,
 				'url_contacts'			=> $url_contacts,
-				'url_contacts_text'		=> $url_contacts_text
+				'url_contacts_text'		=> $url_contacts_text,
+				'tabs'					=> phpgwapi_yui::tabview_generate($tabs, 'data')
 			);
 
-			/* create the menu on the left, if needed
-			$menuClass = CreateObject('admin.uimenuclass');
-			This is now using ExecMethod()
-			$t->set_var('rows',ExecMethod('admin.uimenuclass.createHTMLCode','edit_user')); */
-			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('account_edit' => $data));
+			/*
+				create the menu on the left, if needed
+				$menuClass = CreateObject('admin.uimenuclass');
+				This is now using ExecMethod()
+				$t->set_var('rows',ExecMethod('admin.uimenuclass.createHTMLCode','edit_user'));
+			*/
+			$GLOBALS['phpgw']->xslttpl->set_var('phpgw', array('account_edit' => $data));
 		}
 
-		function view_user()
+		/**
+		 * Render a form for viewing a user account
+		 *
+		 * @return null
+		 */
+		public function view_user()
 		{
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] .= '::users';
 
 			$account_id = phpgw::get_var('account_id', 'int', 'GET');
-			if ( $GLOBALS['phpgw']->acl->check('account_access', 8, 'admin') || !$account_id )
+			if ( $GLOBALS['phpgw']->acl->check('account_access', phpgwapi_acl::DELETE, 'admin')
+					|| !$account_id )
 			{
-				$this->list_users();
-				return false;
+				$GLOBALS['phpgw']->redirect_link('/index.php',
+						array('menuaction' => 'admin.uiaccounts.list_users'));
 			}
 
-			$account = createObject('phpgwapi.accounts', $account_id,'u');
-			$userData = $account->read_repository();
-			
-			if ($userData['status'])
+			$user_data = $GLOBALS['phpgw']->accounts->get($account_id)->toArray();
+
+			$lang_never = lang('never');
+
+			if ($user_data['enabled'])
 			{
-				$userData['account_status'] = lang('Enabled');
+				$user_data['account_status'] = lang('Enabled');
 			}
 			else
 			{
-				$userData['account_status'] = lang('Disabled');
+				$user_data['account_status'] = lang('Disabled');
 			}
-			
-			if ($userData['lastlogin'])
+
+			$user_data['account_lastlogin'] = $lang_never;
+			if ( $user_data['last_login'] )
 			{
-				$userData['account_lastlogin'] = $GLOBALS['phpgw']->common->show_date($userData['lastlogin']);
+				$user_data['account_lastlogin'] = lang('%1 from %2',
+						$GLOBALS['phpgw']->common->show_date($user_data['last_login']), $user_data['last_login_from']);
 			}
-			else
+
+			$user['account_lastpasswd_change'] = $lang_never;
+			if ( $user_data['last_passwd_change'] )
 			{
-				$userData['account_lastlogin'] = lang('Never');
+				$user['account_lastpasswd_change'] = $GLOBALS['phpgw']->common->show_date($user_data['last_passwd_change']);
 			}
-			
-			if ( (int) $userData['expires'] <> -1)
+
+			$user_data['input_expires'] = $lang_never;
+			if ( $user_data['expires'] <> -1 )
 			{
-				$userData['input_expires'] = $GLOBALS['phpgw']->common->show_date($userData['expires']);
+				$user_data['input_expires'] = $GLOBALS['phpgw']->common->show_date($user_data['expires']);
 			}
-			else
-			{
-				$userData['input_expires'] = lang('Never');
-			}
+
 			// Find out which groups they are members of
-			$usergroups = $account->membership($account_id);
-			while (list(,$group) = each($usergroups))
+			$usergroups = $GLOBALS['phpgw']->accounts->membership($account_id);
+			foreach ( $usergroups as $group )
 			{
-				$userData['groups'][] = $group['account_name'];
+				$user_data['groups'][$group->id] = (string) $group;
 			}
 
 			//Permissions
-			$availableApps = $GLOBALS['phpgw_info']['apps'];
+			$available_apps = $GLOBALS['phpgw_info']['apps'];
 			$apps  = CreateObject('phpgwapi.applications', $account_id);
 			$perms = array_keys($apps->read_account_specific());
-			if(is_array($availableApps) && count($availableApps))
+			if ( is_array($available_apps) && count($available_apps) )
 			{
-				asort($availableApps);
-				$i = 0;
-				while ($application = each($availableApps)) 
+				$img_disabled = $GLOBALS['phpgw']->common->image('phpgwapi', 'stock_no', '.png', false);
+				$img_enabled = $GLOBALS['phpgw']->common->image('phpgwapi', 'stock_yes', '.png', false);
+				$lang_disabled = lang('disabled');
+				$lang_enabled = lang('enabled');
+				foreach ( $available_apps as $app )
 				{
-					if ($application[1]['enabled'] && $application[1]['status'] != 2) 
+					if ( !$app['enabled'] || $app['status'] == 2 )
 					{
-						$userData['permissions'][$i]['name'] = lang($application[1]['name']);
-						if(in_array($application[1]['name'], $perms))
-						{
-							$userData['permissions'][$i]['enabled'] = true;
-						}
+						continue;
 					}
-					$i++;
+					$enabled = in_array($app['name'], $perms);
+					$user_data['permissions'][] = array
+					(
+						'name'	=> lang($app['name']),
+						'img'	=> $enabled ? $img_enabled : $img_disabled,
+						'alt'	=> $enabled ? $lang_enabled : $lang_disabled
+					);
 				}
 			}
 
 			// Labels
-			$userData['l_action']		= lang('View user account');
-			$userData['l_loginid']		= lang('LoginID');
-			$userData['l_status']		= lang('Account status');
-			$userData['l_password']		= lang('Password');
-			$userData['l_lastname']		= lang('Last Name');
-			$userData['l_groups']		= lang('Groups');
-			$userData['l_firstname']	= lang('First Name');
-			$userData['l_pwchange']		= lang('Last password change');
-			$userData['l_lastlogin']	= lang('Last login');
-			$userData['l_lastloginfrom']= lang('Last login from');
-			$userData['l_expires']		= lang('Expires');
-			$userData['l_back']			= lang('Back');
-			$userData['l_user']			= lang('user');
-			$userData['l_applications']	= lang('applications');
+			$user_data['l_action']			= lang('View user account');
+			$user_data['l_loginid']			= lang('LoginID');
+			$user_data['l_status']			= lang('Account status');
+			$user_data['l_password']		= lang('Password');
+			$user_data['l_lastname']		= lang('Last Name');
+			$user_data['l_groups']			= lang('Groups');
+			$user_data['l_firstname']		= lang('First Name');
+			$user_data['l_pwchange']		= lang('Last password change');
+			$user_data['l_lastlogin']		= lang('Last login');
+			$user_data['l_expires']			= lang('Expires');
+			$user_data['l_back']			= lang('Back');
+			$user_data['l_user']			= lang('user');
+			$user_data['l_applications']	= lang('applications');
 
 			// Interactions
-			$userData['i_back']			= $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.uiaccounts.list_users'));
-			
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('account "%1" properties', $userData['account_lid']);
+			$user_data['i_back']			= $GLOBALS['phpgw']->link('/index.php',
+												array('menuaction' => 'admin.uiaccounts.list_users'));
+
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('account "%1" properties', $user_data['lid']);
 			$GLOBALS['phpgw']->xslttpl->add_file('users');
-			$GLOBALS['phpgw']->xslttpl->set_var('phpgw', array('account_view' => $userData));
+			$GLOBALS['phpgw']->xslttpl->set_var('phpgw', array('account_view' => $user_data));
 		}
 
-		function delete_group()
+		/**
+		 * Render a confirmation form for deleting a group or deletes the group
+		 *
+		 * @return null
+		 */
+		public function delete_group()
 		{
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] .= '::groups';
 
 			$account_id = phpgw::get_var('account_id', 'int');
 
-			if ( phpgw::get_var('cancel', 'bool', 'POST') || $GLOBALS['phpgw']->acl->check('group_access',32,'admin'))
+			if ( phpgw::get_var('cancel', 'bool', 'POST')
+				|| $GLOBALS['phpgw']->acl->check('group_access', phpgwapi_acl::GROUP_MANAGERS, 'admin') )
 			{
-				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'admin.uiaccounts.list_groups'));
+				$GLOBALS['phpgw']->redirect_link('/index.php',
+						array('menuaction' => 'admin.uiaccounts.list_groups'));
+			}
+
+			$group = $GLOBALS['phpgw']->accounts->get($account_id);
+			if ( !is_object($group) )
+			{
+				// FIXME add proper error handling here
+				die('Invalid Group');
 			}
 
 			if ($account_id && phpgw::get_var('confirm', 'bool', 'POST') )
 			{
-				$this->bo->delete_group($account_id);
-				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'admin.uiaccounts.list_groups'));
+				$this->_bo->delete_group($account_id);
+				$GLOBALS['phpgw']->redirect_link('/index.php',
+						array('menuaction' => 'admin.uiaccounts.list_groups'));
 			}
 
-			$GLOBALS['phpgw']->xslttpl->set_root(PHPGW_APP_TPL);			
-			$GLOBALS['phpgw']->xslttpl->add_file('app_delete');
+			$GLOBALS['phpgw']->xslttpl->set_root(PHPGW_APP_TPL);
+			$GLOBALS['phpgw']->xslttpl->add_file('confirm_delete');
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('administration') . ': ' . lang('delete group');
 
 			$data = array
 			(
-				'delete_action'				=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.uiaccounts.delete_group', 'account_id' => $account_id)),
-				'lang_yes'					=> lang('delete'),
-				'lang_no'					=> lang('cancel'),
-				'lang_delete_statustext'	=> lang('delete the group'),
-				'lang_cancel_statustext'	=> lang('Leave the group untouched and return back to the list'),
-				'lang_delete_msg'			=> lang('are you sure you want to delete this group ?')
+				'form_action'				=> $GLOBALS['phpgw']->link('/index.php', array
+												(
+													'menuaction' => 'admin.uiaccounts.delete_group',
+													'account_id' => $account_id
+												)),
+				'lang_yes'					=> lang('yes'),
+				'lang_no'					=> lang('no'),
+				'lang_confirm_msg'			=> lang('are you sure you want to delete group "%1"?', $group->lid)
 			);
-			// avoid another call to phpgw::link
-			$data['cancel_action'] = $data['delete_action'];
 
-			$old_group_list = $GLOBALS['phpgw']->acl->get_ids_for_location(intval($account_id),1,'phpgw_group');
-
-			if($old_group_list)
-			{
-				$group_name = $GLOBALS['phpgw']->accounts->id2name($account_id);
-
-				$user_list = '';
-				while (list(,$id) = each($old_group_list))
-				{
-					$data['user_list'][] = array
-					(
-						'user_url'					=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.uiaccounts.edit_user', 'account_id' => $id)),
-						'user_name'					=> $GLOBALS['phpgw']->common->grab_owner_name($id),
-						'lang_user_url_statustext'	=> lang('edit user')
-					);
-				}
-
-				$data['lang_confirm_msg']			= lang('the users bellow are still members of group %1',$group_name) . '. '
-													. lang('they must be removed before you can continue');
-				$data['lang_remove_user']			= lang('Remove all users from this group ?');
-			}
-
-			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('delete' => $data));
+			$GLOBALS['phpgw']->xslttpl->set_var('phpgw', array('delete' => $data));
 		}
 
-		function delete_user()
+		/**
+		 * Render a confirmation form for deleting a user or deletes the user account
+		 *
+		 * @return bool was the account deleted?
+		 */
+		public function delete_user()
 		{
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] .= '::users';
 
-			if ( $GLOBALS['phpgw']->acl->check('account_access',32,'admin') 
+			if ( $GLOBALS['phpgw']->acl->check('account_access', phpgwapi_acl::GROUP_MANAGERS, 'admin')
 				|| $GLOBALS['phpgw_info']['user']['account_id'] == phpgw::get_var('account_id', 'int', 'GET') )
 			{
 				$this->list_users();
-				return False;
+				return false;
 			}
 
 			if ( phpgw::get_var('deleteAccount', 'bool') )
 			{
-				if ( !$this->bo->delete_user(phpgw::get_var('account_id', 'int'), phpgw::get_var('account', 'int') ) )
+				if ( !$this->_bo->delete_user(phpgw::get_var('account_id', 'int'), phpgw::get_var('account', 'int')) )
 				{
 					//TODO Make this nicer
 					echo 'Failed to delete user';
@@ -961,7 +1177,7 @@
 			else
 			{
 				$GLOBALS['phpgw_info']['flags']['app_header'] = lang('administration');
-				
+
 				//Add list entry to delete all references to this account (user)
 				$alist = array();
 				$alist[0] = array
@@ -977,7 +1193,7 @@
 				$account_id = phpgw::get_var('account_id', 'int');
 				foreach ( $accounts_list as $account )
 				{
-					if((int)$account['account_id'] != $account_id )
+					if ( (int) $account['account_id'] != $account_id )
 					{
 						$alist[] = array
 						(
@@ -988,108 +1204,42 @@
 				}
 				unset($accounts);
 				unset($accounts_list);
+
+				$lang_newowner = lang('Who would you like to transfer ALL records owned by the deleted user to?');
 				$data = array
 				(
 					'account_id'		=> $account_id,
 					'accountlist'		=> $alist,
-					'form_action'		=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.uiaccounts.delete_user') ),
-					'lang_new_owner'	=> lang('Who would you like to transfer ALL records owned by the deleted user to?'),
+					'form_action'		=> $GLOBALS['phpgw']->link('/index.php',
+											array('menuaction' => 'admin.uiaccounts.delete_user')),
+					'lang_new_owner'	=> $new_owner,
 					'l_cancel'			=> lang('cancel'),
 					'l_delete'			=> lang('delete')
 				);
-				$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('new_owner_list' => $data));
+				$GLOBALS['phpgw']->xslttpl->set_var('phpgw', array('new_owner_list' => $data));
 			}
 		}
 
-		function group_manager($cd='',$account_id='')
+		/**
+		 * Create a link for handling various account actions
+		 *
+		 * @param string  $action     the action to be performed
+		 * @param string  $type       the type of account to use
+		 * @param integer $account_id the account to be used
+		 *
+		 * @return string HTML href fragment with label
+		 *
+		 * @internal this seems to be unsused
+		 */
+		protected function _row_action($action, $type, $account_id)
 		{
-			$GLOBALS['phpgw_info']['flags']['menu_selection'] .= '::users';
+			$lang_action = lang($action);
+			$url = $GLOBALS['phpgw']->link('/index.php', array
+			(
+				'menuaction' => "admin.uiaccounts.{$action}_{$type}",
+				'account_id' => $account_id
+			));
 
-			if ($GLOBALS['phpgw']->acl->check('group_access',16,'admin'))
-			{
-				$this->list_groups();
-				return False;
-			}
-
-			$cdid = (int) $cd;
-			$cd = phpgw::get_var('cd', 'int', 'GET', $cdid);
-
-			$accountid = (int) $account_id;
-			$account_id = phpgw::get_var('account_id', 'int', 'GET', $accountid);
-			
-			// todo
-			// not needed if i use the same file for new groups too
-			if (! $account_id)
-			{
-				$this->list_groups();
-			}
-			else
-			{
-				$group_info = Array(
-					'account_id'   => $account_id,
-					'account_name' => $GLOBALS['phpgw']->accounts->id2name($account_id),
-					'account_user' => $GLOBALS['phpgw']->accounts->member($account_id),
-					'account_managers' => $this->bo->load_group_managers($account_id)
-				);
-
-				$this->edit_group_managers($group_info);
-			}
+			return "<a href=\"{$url}\">{$lang_action}</a>";
 		}
-
-		function edit_group_managers($group_info,$_errors='')
-		{
-			$GLOBALS['phpgw_info']['flags']['menu_selection'] .= '::users';
-
-			if ($GLOBALS['phpgw']->acl->check('group_access',16,'admin'))
-			{
-				$this->list_groups();
-				return False;
-			}
-
-			$accounts = createObject('phpgwapi.accounts',$group_info['account_id'],'u');
-			$account_list = $accounts->member($group_info['account_id']);
-			$user_list = '';
-			while (list($key,$entry) = each($account_list))
-			{
-				$user_list .= '<option value="' . $entry['account_id'] . '"'
-					. $group_info['account_managers'][intval($entry['account_id'])] . '>'
-					. $GLOBALS['phpgw']->common->grab_owner_name($entry['account_id'])
-					. '</option>'."\n";
-			}
-
-			unset($GLOBALS['phpgw_info']['flags']['noheader']);
-			unset($GLOBALS['phpgw_info']['flags']['nonavbar']);
-			$GLOBALS['phpgw']->common->phpgw_header();
-
-			$t = createObject('phpgwapi.Template',PHPGW_APP_TPL);
-			$t->set_unknowns('remove');
-
-			$t->set_file(
-				Array(
-					'manager'	=>'group_manager.tpl'
-				)
-			);
-
-			$t->set_block('manager','form','form');
-			$t->set_block('manager','link_row','link_row');
-
-			$var['th_bg'] = $GLOBALS['phpgw_info']['user']['theme']['th_bg'];
-			$var['lang_group'] = lang('Group');
-			$var['group_name'] = $group_info['account_name'];
-			$var['tr_color1'] = $GLOBALS['phpgw_info']['user']['theme']['row_on'];
-			$var['form_action'] = $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.boaccounts.set_group_managers'));
-			$var['hidden'] = '<input type="hidden" name="account_id" value="'.$group_info['account_id'].'">';
-			$var['lang_select_managers'] = lang('Select Group Managers');
-			$var['group_members'] = '<select name="managers[]" size="'.(count($account_list)<5?count($account_list):5).'" multiple>'.$user_list.'</select>';
-			$var['form_buttons'] = '<tr align="center"><td colspan="2"><input type="submit" name="submit" value="'.lang('Submit').'">&nbsp;&nbsp;'
-				. '<input type="submit" name="cancel" value="'.lang('Cancel').'"><td></tr>';
-			$t->set_var($var);
-
-			// create the menu on the left, if needed
-			$t->set_var('rows',ExecMethod('admin.uimenuclass.createHTMLCode','edit_group'));
-
-			$t->pfp('out','form');
-		}
-
 	}
-?>

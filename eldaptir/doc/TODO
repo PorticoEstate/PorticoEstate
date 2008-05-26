@@ -1,4 +1,0 @@
-Actually make the schema app do more than store/retreive schema.
-It should be parsing this information correctly then replacing
-the class vars for objectclass and attribute types.
-

@@ -47,13 +47,13 @@
 
 		var $public_functions = array
 		(
-			'columns'	=> true,
+			'columns'		=> true,
 			'download'  	=> true,
-			'index'  	=> true,
-			'view'   	=> true,
-			'edit'   	=> true,
-			'delete' 	=> true,
-			'view_file'	=> true,
+			'index'			=> true,
+			'view'			=> true,
+			'edit'			=> true,
+			'delete'		=> true,
+			'view_file'		=> true,
 			'attrib_history'=> true,
 			'attrib_help'	=> true,
 			'print_pdf'		=> true
@@ -1643,4 +1643,3 @@
 			$pdf->print_pdf($document,$entity['name'] . '_' . str_replace(' ','_',$GLOBALS['phpgw']->accounts->id2name($this->account)));
 		}
 	}
-

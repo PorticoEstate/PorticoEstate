@@ -23,18 +23,17 @@
 		along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	*/
 
+	$account_id = phpgw::get_var('account_id', 'int');
+	$new_owner = phpgw::get_var('new_owner', 'int');
+
 	// Delete all records for a user
 	$db =& $GLOBALS['phpgw']->db;
-	$db->lock(array('phpgw_notes'));
-
-	if ( (int) $_POST['new_owner'] == 0 )
+	if ( !$new_owner )
 	{
-		$db->query('DELETE FROM phpgw_notes WHERE note_owner='. (int) $_POST['account_id'], __LINE__, __FILE__);
+		$db->query("DELETE FROM phpgw_notes WHERE note_owner = {$account_id}", __LINE__, __FILE__);
 	}
 	else
 	{
-		$db->query('UPDATE phpgw_notes SET note_owner=' . (int) $_POST['new_owner']
-			. ' WHERE note_owner=' . (int) $_POST['account_id'], __LINE__, __FILE__);
+		$db->query("UPDATE phpgw_notes SET note_owner= {$new_owner}"
+			. " WHERE note_owner = {$account_id}", __LINE__, __FILE__);
 	}
-	$db->unlock();
-?>

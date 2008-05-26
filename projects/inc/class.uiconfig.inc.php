@@ -544,8 +544,7 @@
 
 			$GLOBALS['phpgw']->template->set_var('location_select', $location_select);
 
-			$GLOBALS['phpgw']->accounts->get_account_name($values['account_id'], $lid, $fname, $lname);
-			$fullname = $GLOBALS['phpgw']->common->display_fullname($lid, $fname, $lname);
+			$fullname = (string) $GLOBALS['phpgw']->accounts->get($values['account_id']);
 			$GLOBALS['phpgw']->template->set_var('employee', $fullname);
 			$GLOBALS['phpgw']->template->set_var('account_id', $values['account_id']);
 			$GLOBALS['phpgw']->template->set_var('sdate_select',$jscal->input('sdate[str]',$values['sdate']));

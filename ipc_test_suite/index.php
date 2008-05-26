@@ -8,12 +8,13 @@
 	* @version $Id$
 	*/
 
-$GLOBALS['phpgw_info']['flags'] = array(
-	'currentapp' => 'ipc_test_suite',
-	'nonavbar'   => True,
-	'noheader'   => True
-);
-include('../header.inc.php');
-$obj = createobject('ipc_test_suite.ipc_test_suite_ui');
-$obj->init();
-?>
+	$GLOBALS['phpgw_info']['flags'] = array
+	(
+		'currentapp' => 'ipc_test_suite',
+		'nonavbar'   => True,
+		'noheader'   => True
+	);
+	require_once '../header.inc.php';
+
+	$obj = createobject('ipc_test_suite.ipc_test_suite_ui');
+	$obj->init();

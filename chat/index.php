@@ -15,7 +15,6 @@
 	/* Is this really needed, eh? */
 	$GLOBALS['phpgw_info']['flags'] = array(
 		'currentapp'              => 'chat',
-		'navbar_target'           => '_top',
 		'enable_nextmatchs_class' => True,
 		'noheader'                => True
 	);

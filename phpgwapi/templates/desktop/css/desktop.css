@@ -257,3 +257,23 @@ th.tablast
 	background-color: #D3DCE3;
 	color: #000000;
 }
+
+ol.source
+{
+	background-color: #ccc;
+	border: 1px solid #ccc;
+	height: 300px;
+	list-style-type: decimal;
+	overflow: auto;
+	padding-left: 4em;
+}
+
+ol.source li
+{
+	background-color: #fff;
+	border-bottom: #eee;
+	display: list-item;
+	font-family: monospace;
+	list-style-type: decimal;
+	white-space: pre;
+}

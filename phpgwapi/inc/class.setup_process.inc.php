@@ -273,7 +273,7 @@
 					&& file_exists("{$appdir}tables_current.inc.php") )
 				{
 					if($DEBUG) { echo '<br>process->current(): Including: ' . $appdir.'tables_current.inc.php'; }
-					include_once("{$appdir}tables_current.inc.php");
+					require_once "{$appdir}tables_current.inc.php";
 					$ret = $this->post_process($phpgw_baseline,$DEBUG);
 					if($ret)
 					{
@@ -361,7 +361,7 @@
 					}
 					$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
 					$oProc = &$GLOBALS['phpgw_setup']->oProc;	// to be compatible with old apps
-					include_once($appdir.'default_records.inc.php');
+					require_once $appdir.'default_records.inc.php';
 					$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit();
 				}
 				/* $setup_info[$key]['status'] = 'C'; */
@@ -469,7 +469,7 @@
 						echo '<br>process->test_data(): Including baseline test data for ' . $appname . "\n";
 					}
 					$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
-					include_once($appdir.'test_data.inc.php');
+					require_once $appdir.'test_data.inc.php';
 					$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit();
 				}
 			}
@@ -505,7 +505,7 @@
 					{
 						echo '<br>process->baseline(): Including baseline tables for ' . $appname . "\n";
 					}
-					include_once($appdir.'tables_baseline.inc.php');
+					require_once "{$appdir}tables_baseline.inc.php";
 					$GLOBALS['phpgw_setup']->oProc->GenerateScripts($phpgw_baseline, $DEBUG);
 					$this->post_process($phpgw_baseline,$DEBUG);
 
@@ -593,7 +593,7 @@
 						{
 							echo '<br>process->baseline(): Including baseline tables for ' . $appname . "\n";
 						}
-						include_once($appdir.'tables_baseline.inc.php');
+						require_once "{$appdir}tables_baseline.inc.php";
 						$GLOBALS['phpgw_setup']->oProc->m_aTables = $phpgw_baseline;
 						/* $GLOBALS['phpgw_setup']->oProc->GenerateScripts($phpgw_baseline, $DEBUG); */
 					}
@@ -607,9 +607,9 @@
 						break;
 						*/
 					}
-					if ( file_exists($appdir . 'tables_update.inc.php') )
+					if ( file_exists("{$appdir}tables_update.inc.php") )
 					{
-						include_once($appdir . 'tables_update.inc.php');
+						require_once("{$appdir}tables_update.inc.php");
 
 						if ( isset($test) && is_array($test) && count($test) )
 						{

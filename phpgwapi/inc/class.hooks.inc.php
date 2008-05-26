@@ -33,9 +33,9 @@
 	class phpgwapi_hooks
 	{
 		var $found_hooks = Array();
-		var $db = null;
+		protected $db = null;
 
-		function __construct($db = null)
+		public function __construct($db = null)
 		{
 			$this->db = !is_null($db) ? $db : $GLOBALS['phpgw']->db;	// this is to allow setup to set the db
 			$this->read();
@@ -70,7 +70,7 @@
 		 * 	False if no hook exists, True if old hook exists \
 		 * 	and whatever the new methode-hook returns (can be True or False too!).
 		 */
-		function process($args, $order = '', $no_permission_check = False)
+		public function process($args, $order = '', $no_permission_check = False)
 		{
 			//echo "<p>hooks::process("; print_r($args); echo ")</p>\n";
 			if ($order == '')
@@ -133,7 +133,7 @@
 		 * $no_permission_check should *ONLY* be used when it *HAS* to be. (jengo)
 		 * @return False if no hook exists, True if an old hook exist and whatever the new method-hook returns
 		 */
-		function single($args, $appname = '', $no_permission_check = False,$try_unregistered = False)
+		public function single($args, $appname = '', $no_permission_check = False,$try_unregistered = False)
 		{
 			//echo "<p>hooks::single("; print_r($args); echo ",'$appname','$no_permission_check','$try_unregistered')</p>\n";
 			if (is_array($args))
@@ -185,7 +185,7 @@
 		/**
 		 * loop through the applications and count the hooks
 		 */
-		function count($location)
+		public function count($location)
 		{
 			$count = 0;
 			foreach($GLOBALS['phpgw_info']['user']['apps'] as $appname => $data)
@@ -204,7 +204,7 @@
 		 * @param $appname	Application 'name' 
 		 * @param $hooks array with hooks to register, eg $setup_info[$app]['hooks'] or not used for only deregister the hooks
 		 */
-		function register_hooks($appname,$hooks='')
+		public function register_hooks($appname,$hooks='')
 		{
 			if(!$appname)
 			{
@@ -241,7 +241,7 @@
 		 * Register the hooks of all applications (used by admin)
 		*
 		 */
-		function register_all_hooks()
+		public function register_all_hooks()
 		{
 			$app_list = array_keys($GLOBALS['phpgw_info']['apps']);
 			$app_list[] = 'phpgwapi';
@@ -261,4 +261,3 @@
 			}
 		}
 	}
-?>

@@ -1,114 +1,406 @@
 <?php
 	/**
 	* View and manipulate account records using SQL
+	*
+	* @author Dave Hall <skwashd@phpgroupware.org>
 	* @author Joseph Engo <jengo@phpgroupware.org>
 	* @author Dan Kuykendall <seek3r@phpgroupware.org>
 	* @author Bettina Gille <ceb@phpgroupware.org>
-	* @copyright Copyright (C) 2000-2004 Free Software Foundation, Inc. http://www.fsf.org/
-	* @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License
-	* @package phpgwapi
-	* @subpackage accounts
+	* @copyright Copyright (C) 2000-2008 Free Software Foundation, Inc. http://www.fsf.org/
+	* @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License v3 or later
+	* @package phpgroupware
+	* @subpackage phpgwapi
 	* @version $Id$
 	*/
+
+	/*
+	   This program is free software: you can redistribute it and/or modify
+	   it under the terms of the GNU Lesser General Public License as published by
+	   the Free Software Foundation, either version 3 of the License, or
+	   (at your option) any later version.
+
+	   This program is distributed in the hope that it will be useful,
+	   but WITHOUT ANY WARRANTY; without even the implied warranty of
+	   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	   GNU General Public License for more details.
+
+	   You should have received a copy of the GNU Lesser General Public License
+	   along with this program.  If not, see <http://www.gnu.org/licenses/>.
+	 */
 
 	/**
 	* View and manipulate handling user and group account records using SQL
 	*
-	* @package phpgwapi
-	* @subpackage accounts
+	* @package phpgroupware
+	* @subpackage phpgwapi
+	* @category accounts
 	*/
-	class accounts_sql extends accounts_
+	class phpgwapi_accounts_sql extends phpgwapi_accounts_
 	{
-		function __construct($account_id = null, $account_type = null)
+		/**
+		* Constructor
+		*
+		* @param integer $account_id   Account id defaults to current account id
+		* @param string  $account_type Account type 'u': account; 'g' : group; defaults to current account type
+		*
+		* @return void
+		*/
+		public function __construct($account_id = null, $account_type = null)
 		{
 			parent::__construct($account_id, $account_type);
 		}
 
-		function list_methods($_type='xmlrpc')
-		{
-			if (is_array($_type))
-			{
-				$_type = $_type['type'] ? $_type['type'] : $_type[0];
-			}
-
-			switch($_type)
-			{
-				case 'xmlrpc':
-					$xml_functions = array(
-						'get_list' => array(
-							'function'  => 'get_list',
-							'signature' => array(array(xmlrpcStruct)),
-							'docstring' => lang('Returns a full list of accounts on the system.  Warning: This is return can be quite large')
-						),
-						'list_methods' => array(
-							'function'  => 'list_methods',
-							'signature' => array(array(xmlrpcStruct,xmlrpcString)),
-							'docstring' => lang('Read this list of methods.')
-						)
-					);
-					return $xml_functions;
-					break;
- 				case 'soap':
-					return $this->soap_functions;
-					break;
-				default:
-					return array();
-					break;
-			}
-		}
-
 		/**
-		* Read account information from database
+		* Add an account to a group entry
 		*
-		* @return array Array with the following information: userid, account_id, account_lid, firstname, lastname, account_firstname, account_lastname, fullname, lastlogin, lastloginfrom, lastpasswd_change, status, expires, person_id
+		* @param integer $account_id Account id
+		* @param integer $group_id   Group id
+		*
+		* @return boolean true on success otherwise false
 		*/
-		function read_repository()
+		public function add_user2group($account_id, $group_id)
 		{
-			$this->db->query('SELECT * FROM phpgw_accounts WHERE account_id=' . intval($this->account_id),__LINE__,__FILE__);
-			$this->db->next_record();
+			$account_id = (int) $account_id;
+			$group_id = (int) $group_id;
+			$read = phpgwapi_acl::READ;
 
-			$this->account_id 		= $this->data['account_id']	= $this->db->f('account_id');
-			$this->lid			= $this->data['userid']		= $this->data['account_lid'] = $this->db->f('account_lid');
-			$this->firstname		= $this->data['firstname']	= $this->data['account_firstname'] = $this->db->f('account_firstname');
-			$this->lastname			= $this->data['lastname']	= $this->data['account_lastname'] = $this->db->f('account_lastname');
-			$this->data['fullname']		= "{$this->firstname} {$this->lastname}";
-			$this->data['lastlogin']			= $this->db->f('account_lastlogin');
-			$this->data['lastloginfrom']		= $this->db->f('account_lastloginfrom');
-			$this->data['lastpasswd_change']	= $this->db->f('account_lastpwd_change');
-			$this->status			= $this->data['status']		= $this->db->f('account_status');
-			$this->expired			= $this->data['expires']	= $this->db->f('account_expires');
-			$this->person_id		= $this->data['person_id']	= $this->db->f('person_id');
-			$this->quota 			= $this->data['quota']		= $this->db->f('account_quota');
-			return $this->data;
+			if ( !$account_id || !$group_id )
+			{
+				return false;
+			}
+
+			$sql = 'INSERT INTO phpgw_group_map'
+				. " VALUES({$group_id}, {$account_id}, {$read})";
+
+			return !!$this->db->query($sql, __LINE__, __FILE__);
 		}
 
 		/**
-		* Save/update account information to/in database
+		 * Create a new group account  - this only creates the acccount
+		 *
+		 * For creating a fully working user, use self::create()
+		 *
+		 * @param object $account the phpgwapi_user object for the new account
+		 *
+		 * @return integer the new user id
+		 *
+		 * @see self::create
+		 */
+		public function create_group_account($account)
+		{
+			$id = (int) $account->id;
+			if ( !$id || $this->exists($id) )
+			{
+				$id = $this->_get_nextid();
+			}
+
+			$data = array
+			(
+				'account_id'		=> $id,
+				'account_lid'		=> "'" . $this->db->db_addslashes($account->lid) . "'",
+				'account_type'		=> "'" . phpgwapi_account::TYPE_GROUP . "'",
+				'account_firstname'	=> "'" . $this->db->db_addslashes($account->firstname) ."'",
+				'account_lastname'	=> "'" . $this->db->db_addslashes($account->lastname) . "'",
+				'person_id'			=> (int) $account->person_id
+			);
+
+			$this->db->query('INSERT INTO phpgw_accounts (' . implode(', ', array_keys($data)) . ') '.
+							'VALUES (' . implode(', ', $data) . ')', __LINE__, __FILE__);
+
+			$account->id = $this->db->get_last_insert_id('phpgw_accounts', 'account_id');
+			return $account->id;
+		}
+
+
+		/**
+		 * Create a new user account  - this only creates the acccount
+		 *
+		 * For creating a fully working user, use self::create()
+		 *
+		 * @param object $account the phpgwapi_user object for the new account
+		 *
+		 * @return integer the new user id
+		 *
+		 * @see self::create
+		 */
+		public function create_user_account($account)
+		{
+			$fields = array
+			(
+				'account_lid',
+				'account_type',
+				'account_firstname',
+				'account_lastname',
+				'account_pwd',
+				'account_status',
+				'account_expires',
+				'person_id',
+				'account_quota',
+				'account_id'
+			);
+
+			$data = array
+			(
+				'lid'		=> "'" . $this->db->db_addslashes($account->lid) . "'",
+				'type'		=> "'" . phpgwapi_account::TYPE_USER . "'",
+				'firstname'	=> "'" . $this->db->db_addslashes($account->firstname) ."'",
+				'lastname'	=> "'" . $this->db->db_addslashes($account->lastname) . "'",
+				'password'	=> "'" . $this->db->db_addslashes($account->passwd_hash) . "'",
+				'status'	=> "'" . $account->enabled ? "'A'" : "'I'", // FIXME this really has to become a bool
+				'expires'	=> (int) $account->expires,
+				'person_id'	=> (int) $account->person_id,
+				'quota'		=> (int) $account->quota,
+			);
+
+			if ( (int) $account->id 
+				&& !$this->exists($account->id) )
+			{
+				$data['id'] = (int) $account->id;
+			}
+			else
+			{
+				$data['id'] = $this->_get_nextid();
+			}
+
+			$this->db->query('INSERT INTO phpgw_accounts (' . implode(', ', $fields) . ') '.
+							'VALUES (' . implode(', ', $data) . ')', __LINE__, __FILE__);
+
+			$account->id = $this->db->get_last_insert_id('phpgw_accounts', 'account_id');
+
+			$this->account = $account;
+
+			return $account->id;
+		}
+
+		/**
+		 * Delete an account
+		 *
+		 * @param integer $account_id the account to delete
+		 *
+		 * @return boolean was the account deleted?
+		 */
+		public function delete($account_id)
+		{
+			$account_id = (int) $account_id;
+
+			//TODO decide if we should silently allow deletion of non existent accounts
+			$acct = $this->get($account_id);
+			if ( !is_object($acct) )
+			{
+				return false;
+			}
+
+			$this->db->transaction_begin();
+
+
+			$deleted = !!$this->db->query("DELETE FROM phpgw_accounts WHERE account_id={$account_id}");
+			if ( $deleted )
+			{
+				// Delete all ACLs
+				$GLOBALS['phpgw']->acl->delete_repository('%%', '%%', $account_id);
+
+				if ( get_class($acct) == phpgwapi_account::CLASS_TYPE_GROUP )
+				{
+					$sql = 'DELETE FROM phpgw_group_map'
+						. " WHERE group_id = {$account_id}";
+				}
+				else
+				{
+					$GLOBALS['phpgw']->hooks->process('deleteaccount');
+					$sql = 'DELETE FROM phpgw_group_map'
+						. " WHERE account_id = {$account_id}";
+				}
+
+				// The cached object is needed for the hooks
+				phpgwapi_cache::system_clear('phpgwapi', "account_{$account_id}");
+
+				// delete the group mappings
+				if ( !!$this->db->query($sql) )
+				{
+					$this->db->transaction_commit();
+					return true;
+				}
+			}
+			$this->db->transaction_abort();
+			return false;
+		}
+
+		/**
+		* Delete an account from a group
+		*
+		* @param integer $account_id Account id
+		* @param integer $group_id   Group id
+		*
+		* @return boolean true on success otherwise false
 		*/
-		function save_repository()
+		public function delete_account4group($account_id, $group_id)
 		{
-			$this->db->query("UPDATE phpgw_accounts SET account_firstname='" . $this->data['account_firstname']
-							. "', account_lastname='" . $this->data['account_lastname'] . "', account_status='"
-							. $this->data['status'] . "', account_expires=" . $this->data['expires']
-							. ($this->data['account_lid']?", account_lid='".$this->data['account_lid']."'":'')
-							. (isset($this->data['person_id']) && $this->data['person_id'] ?', person_id=' . $this->data['person_id']:'')
-							. ', account_quota=' . intval($this->data['quota'])
-							. ' WHERE account_id=' . intval($this->data['account_id']),__LINE__,__FILE__);
+			$account_id = (int) $account_id;
+			$group_id = (int) $group_id;
+
+			if ( !$account_id || !$group_id )
+			{
+				return false;
+			}
+
+			$sql = 'DELETE FROM phpgw_group_map'
+				. " WHERE group_id = {$group_id} AND account_id = {$account_id}";
+
+			return !!$this->db->query($sql, __LINE__, __FILE__);
 		}
 
-		function delete($accountid = '')
+		/**
+		 * Does the user account exist?
+		 *
+		 * @param integer|string $account_lid the accound login or id to check
+		 *
+		 * @return boolean does the account exist or not?
+		 */
+		public function exists($account_lid)
 		{
-			$account_id = get_account_id($accountid);
+			static $by_id;
+			static $by_lid;
 
-			/* Do this last since we are depending upon this record to get the account_lid above */
-			$tables_array = Array('phpgw_accounts');
-			$this->db->lock($tables_array);
-			$this->db->query('DELETE FROM phpgw_accounts WHERE account_id=' . $account_id);
-			$this->db->unlock();
-			return true;
+			$sql = 'SELECT count(account_id) FROM phpgw_accounts WHERE ';
+			if ( is_int($account_lid) )
+			{
+				if(@isset($by_id[$account_lid]) && $by_id[$account_lid] != '')
+				{
+					return $by_id[$account_lid];
+				}
+				$sql .= 'account_id=' . intval($account_lid);
+			}
+			else
+			{
+				if(@isset($by_lid[$account_lid]) && $by_lid[$account_lid] != '')
+				{
+					return $by_lid[$account_lid];
+				}
+				$sql .= "account_lid = '" . $this->db->db_addslashes($account_lid) . "'";
+			}
+
+			$this->db->query($sql, __LINE__, __FILE__);
+			$this->db->next_record();
+			$ret_val = $this->db->f(0) > 0;
+			if(is_int($account_lid))
+			{
+				$by_id[$account_lid] = $ret_val;
+				$by_lid[$this->id2name($account_lid)] = $ret_val;
+			}
+			else
+			{
+				$by_lid[$account_lid] = $ret_val;
+				$by_id[$this->name2id($account_lid)] = $ret_val;
+			}
+			return $ret_val;
 		}
 
-		function get_list($_type='both',$start = -1,$sort = '', $order = '', $query = '', $offset = -1)
+		/**
+		 * Fetch an account
+		 *
+		 * @param integer $id        the account id to fetch
+		 * @param boolean $use_cache read the record from the cache, should (just about) always be true
+		 *
+		 * @return object the account as a phpgw_account derived object
+		 */
+		public function get($id, $use_cache = true)
+		{
+			$id = (int) $id;
+			$account = null;
+
+			if ( $use_cache )
+			{
+				$account = phpgwapi_cache::system_get('phpgwapi', "account_{$id}");
+				if ( is_object($account) )
+				{
+					return $account;
+				}
+			}
+
+			$this->db->query("SELECT * FROM phpgw_accounts WHERE account_id = {$id}", __LINE__, __FILE__);
+			if ( $this->db->next_record() )
+			{
+				$record = array
+				(
+					'id'				=> $this->db->f('account_id'),
+					'lid'				=> $this->db->f('account_lid'),
+					'passwd_hash'		=> $this->db->f('account_pwd', true),
+					'firstname'			=> $this->db->f('account_firstname', true),
+					'lastname'			=> $this->db->f('account_lastname', true),
+					'last_login'		=> $this->db->f('account_lastlogin'),
+					'last_login_from'	=> $this->db->f('account_lastloginfrom'),
+					'last_passwd_change'=> $this->db->f('account_lastpwd_change'),
+					'enabled'			=> $this->db->f('account_status') == 'A',
+					'expires'			=> $this->db->f('account_expires'),
+					'person_id'			=> $this->db->f('person_id'),
+					'quota'				=> $this->db->f('account_quota')
+				);
+
+				if ( $this->db->f('account_type') == 'g' )
+				{
+					$account = new phpgwapi_group();
+				}
+				else
+				{
+					$account = new phpgwapi_user();
+				}
+				$account->init($record);
+
+				phpgwapi_cache::system_set('phpgwapi', "account_{$id}", $account);
+			}
+			return $account;
+		}
+
+		/**
+		 * Get a list of accounts which have contacts linked to them
+		 *
+		 * @return array account_id => contact_id mappings
+		 */
+		public function get_account_with_contact()
+		{
+			$accounts = array();
+
+			$sql = 'SELECT account_id, person_id FROM phpgw_accounts '
+				. 'WHERE person_id IS NOT NULL OR person_id != 0';
+			$this->db->query($sql, __LINE__, __FILE__);
+			while ($this->db->next_record())
+			{
+				$accounts[$this->db->f('account_id')] = $this->db->f('person_id');
+			}
+			return $accounts;
+		}
+
+		/**
+		 * Get a list of accounts which don't have contacts associated with them
+		 *
+		 * @return array list of account_ids without contacts
+		 */
+		public function get_account_without_contact()
+		{
+			$sql = 'SELECT account_id FROM phpgw_accounts '
+				. 'WHERE person_id IS NULL OR person_id = 0';
+			$this->db->query($sql, __LINE__, __FILE__);
+			while ($this->db->next_record())
+			{
+				$accounts[] = $this->db->f('account_id');
+			}
+			return $accounts;
+		}
+
+		/**
+		 * Get a list of accounts based on a search criteria
+		 *
+		 * @param string  $_type  type of accounts sought
+		 * @param integer $start  the position to start at in the result set
+		 * @param string  $sort   the direction to sort - valid values "ASC" or "DESC"
+		 * @param string  $order  the field to sort on
+		 * @param string  $query  the search criteria - matches firstname, lastname and lid
+		 * @param integer $offset the number of records to return
+		 *
+		 * @return array list of accounts that match criteria
+		 */
+		public function get_list($_type='both', $start = -1, $sort = '',
+								$order = '', $query = '', $offset = -1)
 		{
 			// For XML-RPC
 /*			if (is_array($_type))
@@ -124,9 +416,9 @@
 			$start = (isset($start) ? (int) $start : 0 );
 			$offset = (isset($offset) ? (int) $offset : 0 );
 
-			if (! $sort)
+			if ( $sort != 'DESC' )
 			{
-				$sort = "DESC";
+				$sort = 'ASC';
 			}
 
 			if ($order)
@@ -138,6 +430,7 @@
 				$orderclause = "ORDER BY account_lid ASC";
 			}
 
+			$whereclause = '';
 			switch($_type)
 			{
 				case 'accounts':
@@ -146,8 +439,6 @@
 				case 'groups':
 					$whereclause = "WHERE account_type = 'g'";
 					break;
-				default:
-					$whereclause = '';
 			}
 
 			if ($query)
@@ -169,152 +460,298 @@
 			$sql = "SELECT * FROM phpgw_accounts $whereclause $orderclause";
 			if ($offset == -1 && $start == -1)
 			{
-				$this->db->query($sql,__LINE__,__FILE__);
-			} 
-			elseif ($start != -1)
+				$this->db->query($sql, __LINE__, __FILE__);
+			}
+			else if ( $start != -1 )
 			{
-				$this->db->limit_query($sql, $start,__LINE__,__FILE__);
+				$this->db->limit_query($sql, $start, __LINE__, __FILE__);
 			}
 			else
 			{
-				$this->db->limit_query($sql, $start,__LINE__,__FILE__, $offset);
+				$this->db->limit_query($sql, $start, __LINE__, __FILE__, $offset);
 			}
 
 			$accounts = array();
 			while ($this->db->next_record())
 			{
-				//echo '<pre>' . print_r($this->db->Record, true) . '</pre>';
-				$accounts[] = array
-						(
-							'account_id'		=> $this->db->f('account_id'),
-							'account_lid'		=> $this->db->f('account_lid'),
-							'account_type'		=> $this->db->f('account_type'),
-							'account_firstname'	=> $this->db->f('account_firstname'),
-							'account_lastname'	=> $this->db->f('account_lastname'),
-							'account_status'	=> $this->db->f('account_status'),
-							'account_expires'	=> $this->db->f('account_expires'),
-							'person_id'		=> $this->db->f('person_id')
-						);
+				$record = array
+				(
+					'id'			=> $this->db->f('account_id'),
+					'lid'			=> $this->db->f('account_lid'),
+					'passwd_hash'	=> $this->db->f('account_pwd'),
+					'firstname'		=> $this->db->f('account_firstname'),
+					'lastname'		=> $this->db->f('account_lastname'),
+					'lastlogin'		=> $this->db->f('account_lastlogin'),
+					'lastloginfrom'	=> $this->db->f('account_lastloginfrom'),
+					'lastpasswd_change'		=> $this->db->f('account_lastpwd_change'),
+					'enabled'		=> $this->db->f('account_status') == 'A',
+					'expires'		=> $this->db->f('account_expires'),
+					'person_id'		=> $this->db->f('person_id'),
+					'quota'			=> $this->db->f('account_quota')
+				);
+
+				$id = $record['id'];
+
+				$accounts[$id] = new phpgwapi_user();
+				$accounts[$id]->init($record);
 			}
+
 			$this->db->query("SELECT count(account_id) FROM phpgw_accounts $whereclause");
 			$this->db->next_record();
 			$this->total = $this->db->f(0);
 
 			return $accounts;
 		}
-		
-		function name2id($account_lid)
-		{
-			static $name_list;
-
-			if (! $account_lid)
-			{
-				return False;
-			}
-
-			if ( isset($name_list[$account_lid])
-				&& $name_list[$account_lid] != '')
-			{
-				return $name_list[$account_lid];
-			}
-
-			$account_lid = $this->db->db_addslashes($account_lid);
-
-			$this->db->query('SELECT account_id FROM phpgw_accounts '
-				. " WHERE account_lid='" . $account_lid . "'",__LINE__,__FILE__);
-			if($this->db->num_rows())
-			{
-				$this->db->next_record();
-				$name_list[$account_lid] = intval($this->db->f('account_id'));
-			}
-			else
-			{
-				$name_list[$account_lid] = False;
-			}
-			return $name_list[$account_lid];
-		}
 
 		/**
-		* Convert an id into its corresponding account login or group name
+		* Get a list of member account ids for a group
 		*
-		* @param integer $id Account or group id
-		* @return string account login id or the group - empty string means not found
+		* @param integer $group_id the group to get members from
+		*
+		* @return arrray list of members of the current group
 		*/
-		function id2lid($account_id)
+		public function get_members($group_id = null)
 		{
-			static $lid_list;
-
-			$account_id = (int)$account_id;
-
-			if (! $account_id)
+			if ( is_null($group_id) )
 			{
-				return '';
+				$group_id = $this->account_id;
 			}
+			$group_id = get_account_id($group_id);
 
-			if( isset($lid_list[$account_id]) ) 
-			{
-				return $lid_list[$account_id];
-			}
+			$sql = 'SELECT phpgw_accounts.account_id'
+				. ' FROM phpgw_accounts, phpgw_group_map'
+				. ' WHERE phpgw_accounts.account_id = phpgw_group_map.group_id'
+					. " AND phpgw_group_map.group_id = {$this->account_id}";
 
-			$this->db->query("SELECT account_lid FROM phpgw_accounts WHERE account_id={$account_id}",__LINE__,__FILE__);
-			if($this->db->num_rows())
+			$this->db->query($sql, __LINE__, __FILE__);
+
+			$members = array();
+			while ($this->db->next_record())
 			{
-				$this->db->next_record();
-				$lid_list[$account_id] = $this->db->f('account_lid');
+				$members[] =  $this->db->f('account_id');
 			}
-			else
-			{
-				$lid_list[$account_id] = '';
-			}
-			return $lid_list[$account_id];
+			return $members;
 		}
 
 		/**
 		* Convert an id into its corresponding account or group name
 		*
 		* @param integer $id Account or group id
-		* @param bool $only_lid only return the account_lid for the user, should not be used when output is displayed to other users
+		*
 		* @return string Name of the account or the group when found othwerwise empty string
 		*/
-		function id2name($account_id)
+		public function id2name($id)
 		{
 			static $id_list;
 
-			$account_id = (int) $account_id;
+			$id = (int) $id;
 
-			if (! $account_id)
+			if ( !$id)
 			{
 				return '';
 			}
 
-			if( isset($id_list[$account_id]) ) 
+			if( isset($id_list[$id]) )
 			{
-				return $id_list[$account_id];
+				return $id_list[$id];
 			}
 
-			$this->db->query("SELECT account_lid, account_firstname, account_lastname FROM phpgw_accounts WHERE account_id={$account_id}", __LINE__, __FILE__);
-			if($this->db->next_record())
+			$acct = $this->get($id);
+
+			if ( is_object($acct) )
 			{
-				$id_list[$account_id] = $GLOBALS['phpgw']->common->display_fullname($this->db->f('account_lid'), $this->db->f('account_firstname'), $this->db->f('account_lastname') );
+				$id_list[$id] = (string) $acct;
 			}
 			else
 			{
-				$id_list[$account_id] = '';
+				$id_list[$id] = '';
 			}
-			return $id_list[$account_id];
+
+			return $id_list[$id];
+		}
+
+		/**
+		* Get a list of members of the group
+		*
+		* @param integer $group_id the group to check
+		*
+		* @return array list of members
+		*/
+		public function member($group_id = 0)
+		{
+			$group_id = get_account_id($group_id);
+
+			if ( isset($this->members[$group_id]) )
+			{
+				return $this->members[$group_id];
+			}
+
+			$this->members[$group_id] = array();
+
+			$sql = 'SELECT account_id'
+				. ' FROM phpgw_group_map'
+				. " WHERE group_id = {$group_id}";
+
+			$this->db->query($sql, __LINE__, __FILE__);
+
+			while ( $this->db->next_record() )
+			{
+				$id = $this->db->f('account_id');
+				$this->members[$group_id][$id] = array
+				(
+					'account_id'	=> $id
+				);
+			}
+
+			foreach ( $this->members[$group_id] as $id => &$acct )
+			{
+				$acct['account_name'] = (string) $this->get($id);
+			}
+			return $this->members[$group_id];
+		}
+
+		/**
+		* Get a list of groups the user is a member of
+		*
+		* @param integer $account_id the user account to lookup
+		*
+		* @return array the groups the user is a member of
+		*
+		* @internal return structure array(array('account_id' => id, 'account_name' => group name))
+		*/
+		public function membership($account_id = 0)
+		{
+			$account_id = get_account_id($account_id);
+
+			if ( isset($this->memberships[$account_id])
+				&& is_array($this->memberships[$account_id]) )
+			{
+				return $this->memberships[$account_id];
+			}
+
+			$this->memberships[$account_id] = array();
+
+			$sql = 'SELECT group_id'
+				. ' FROM phpgw_group_map'
+				. " WHERE phpgw_group_map.account_id = {$account_id}";
+			$this->db->query($sql, __LINE__, __FILE__);
+
+			$ids = array();
+			while ( $this->db->next_record() )
+			{
+				$ids[] = $this->db->f('group_id');
+			}
+
+			$memberships = array();
+			foreach ( $ids as $id )
+			{
+				$memberships[$id] = $this->get($id);
+			}
+
+			$this->memberships[$account_id] = $memberships;
+			return $this->memberships[$account_id];
+		}
+
+		/**
+		 * Convert an account login id to an account id
+		 *
+		 * @param string $account_lid the login id to look up
+		 *
+		 * @return integer the account id - 0 if not found
+		 */
+		public function name2id($account_lid)
+		{
+			static $name_list;
+
+			if ( !$account_lid )
+			{
+				return 0;
+			}
+
+			if ( isset($name_list[$account_lid]) )
+			{
+				return $name_list[$account_lid];
+			}
+
+			$name_list[$account_lid] = 0;
+			$account_lid = $this->db->db_addslashes($account_lid);
+
+			$this->db->query('SELECT account_id FROM phpgw_accounts '
+				. " WHERE account_lid='{$account_lid}'", __LINE__, __FILE__);
+
+			if ( $this->db->next_record() )
+			{
+				$name_list[$account_lid] = (int) $this->db->f('account_id');
+			}
+
+			return $name_list[$account_lid];
+		}
+
+		/**
+		* Read account information from database
+		*
+		* @return object phpgwapi_account derived object containing account data
+		*/
+		public function read_repository()
+		{
+			$this->account = $this->get($this->account_id, false);
+			return $this->account;
+		}
+
+		/**
+		* Save/update account information to database
+		*
+		* @return void
+		*/
+		public function save_repository()
+		{
+			if ( !$this->account->is_dirty() )
+			{
+				return true; // nothing to do here
+			}
+
+			$data = array
+			(
+				'id'		=> (int) $this->account->id,
+				'lid'		=> $this->db->db_addslashes($this->account->lid),
+				'firstname'	=> $this->db->db_addslashes($this->account->firstname),
+				'lastname'	=> $this->db->db_addslashes($this->account->lastname),
+				'passwd'	=> $this->db->db_addslashes($this->account->passwd_hash),
+				'status'	=> $this->account->enabled ? 'A' : 'I', // this really has to become a bool
+				'expires'	=> (int) $this->account->expires,
+				'person_id'	=> (int) $this->account->person_id,
+				'quota'		=> (int) $this->account->quota
+			);
+
+			$sql = 'UPDATE phpgw_accounts'
+					. " SET account_lid = '{$data['lid']}', "
+						. " account_firstname = '{$data['firstname']}', "
+						. " account_lastname = '{$data['lastname']}', "
+						. " account_pwd = '{$data['passwd']}', "
+						. " account_status = '{$data['status']}', "
+						. " account_expires = {$data['expires']}, "
+						. " person_id = {$data['person_id']}, "
+						. " account_quota = {$data['quota']}"
+					. " WHERE account_id = {$data['id']}";
+
+			$this->_cache_account($this->account);
+
+			return $this->db->query($sql, __LINE__, __FILE__);
 		}
 
 		/**
 		* Match a contact ID with an account id
 		*
-		* @param int $person_id the contact person ID
-		* @param int account id - 0 if not found
+		* @param integer $person_id the contact person ID
+		*
+		* @return integer account id - 0 if not found
 		*/
-		function search_person($person_id)
+		public function search_person($person_id)
 		{
 			static $person_list;
 
-			if (! $person_id)
+			$person_id = (int) $person_id;
+			if ( !$person_id)
 			{
 				return 0;
 			}
@@ -324,229 +761,15 @@
 				return $person_list[$person_id];
 			}
 
-			$this->db->query('SELECT account_id FROM phpgw_accounts WHERE person_id=' . (int) $person_id ,__LINE__,__FILE__);
-			if($this->db->num_rows())
+			$person_list[$person_id] = 0;
+
+			$sql ="SELECT account_id FROM phpgw_accounts WHERE person_id = {$person_id}";
+			$this->db->query($sql, __LINE__, __FILE__);
+			if ( $this->db->next_record() )
 			{
-				$this->db->next_record();
 				$person_list[$person_id] = $this->db->f('account_id');
 			}
-			else
-			{
-				$person_list[$person_id] = 0;
-			}
+
 			return $person_list[$person_id];
 		}
-
-		function get_type($accountid)
-		{
-			static $account_type;
-			$account_id = get_account_id($accountid);
-			
-			if (isset($this->account_type) && $account_id == $this->account_id)
-			{
-				return $this->account_type;
-			}
-
-			if(@isset($account_type[$account_id]) && @$account_type[$account_id])
-			{
-				return $account_type[$account_id];
-			}
-			elseif($account_id == '')
-			{
-				return False;
-			}
-			$this->db->Halt_On_Error = 'no';
-			$this->db->query('SELECT account_type FROM phpgw_accounts WHERE account_id=' .intval($account_id), __LINE__,__FILE__);
-			if ($this->db->num_rows())
-			{
-				$this->db->next_record();
-				$account_type[$account_id] = $this->db->f('account_type');
-			}
-			else
-			{
-				$account_type[$account_id] = False;
-			}
-			$this->db->Halt_On_Error = 'yes';
-			return $account_type[$account_id];
-		}
-
-		function exists($account_lid) // imho this should take $id, $lid as args
-		{
-			static $by_id, $by_lid;
-
-			$sql = 'SELECT count(account_id) FROM phpgw_accounts WHERE ';
-			if(is_integer($account_lid))
-			{
-				if(@isset($by_id[$account_lid]) && $by_id[$account_lid] != '')
-				{
-					return $by_id[$account_lid];
-				}
-				$sql .= 'account_id=' . intval($account_lid);
-			}
-			else
-			{
-				if(@isset($by_lid[$account_lid]) && $by_lid[$account_lid] != '')
-				{
-					return $by_lid[$account_lid];
-				}
-				$sql .= "account_lid = '" . $this->db->db_addslashes($account_lid) . "'";
-			}
-
-			$this->db->query($sql,__LINE__,__FILE__);
-			$this->db->next_record();
-			$ret_val = $this->db->f(0) > 0;
-			if(is_integer($account_lid))
-			{
-				$by_id[$account_lid] = $ret_val;
-				$by_lid[$this->id2name($account_lid)] = $ret_val;
-			}
-			else
-			{
-				$by_lid[$account_lid] = $ret_val;
-				$by_id[$this->name2id($account_lid)] = $ret_val;
-			}
-			return $ret_val;
-		}
-
-		function set_data($data)
-		{
-			parent::set_data($data);
-			if(!isset($this->person_id) || $this->person_id == '' )
-			{
-				// is there a reason to write 'NULL' into database?
-				// this could make trouble in different database systems
-				$this->person_id = 'NULL';
-			}
-			return true;
-		}
-			
-		function create($account_info, $default_prefs = true)
-		{
-			$this->set_data($account_info, $default_prefs);
-			$this->db->transaction_begin();
-			
-			$person_id = 0;
-			if ( $account_info['account_type'] == 'u' )
-			{
-				// FIXME this should use the contacts classes via this->save_contact_for_account
-				$values= array
-				(
-					-3,
-					'public',
-					1,
-				);
-
-				$values	= $this->db->validate_insert($values);
-
-				$this->db->query("INSERT INTO phpgw_contact (owner,access,contact_type_id) "
-					. "VALUES ($values)",__LINE__,__FILE__);
-				$person_id = $this->db->get_last_insert_id('phpgw_contact','contact_id');
-
-				$ts = time();
-				$values= array
-				(
-					$person_id,
-					$this->db->db_addslashes($this->firstname),
-					$this->db->db_addslashes($this->lastname),
-					((isset($this->status) && $this->status == 'A') ? 'Y':'N'),
-					$ts,
-					-3,
-					$ts,
-					-3	
-				);
-
-				$values	= $this->db->validate_insert($values);
-
-				$this->db->query("INSERT INTO phpgw_contact_person (person_id,first_name,last_name,active,created_on,created_by,modified_on,modified_by) "
-					. "VALUES ($values)",__LINE__,__FILE__);
-			}
-
-
-			$fields = array
-			(
-				'account_lid',
-				'account_type',
-				'account_pwd',
-				'account_firstname',
-				'account_lastname',
-				'account_status',
-				'account_expires',
-				'person_id',
-				'account_quota'
-			);
-			$values = array
-			(
-				"'".$this->db->db_addslashes($this->lid)."'",
-				"'".$this->db->db_addslashes($account_info['account_type'])."'",
-				"'".md5($this->password)."'",
-				"'".$this->db->db_addslashes($this->firstname)."'",
-				"'".$this->db->db_addslashes($this->lastname)."'",
-				"'".$this->db->db_addslashes($this->status)."'",
-				(int) $this->expires,
-				(int) $person_id,
-				(int) $this->quota
-			);
-			if((int)$this->account_id && !$this->exists((int)$this->account_id))
-			{
-				$fields[] = 'account_id';
-				$values[] = (int)$this->account_id;
-			}
-			$this->db->query('INSERT INTO phpgw_accounts ('.implode($fields, ',').') '.
-							'VALUES ('.implode($values, ',').')',  __LINE__, __FILE__);
-
-			$account_info['account_id'] = $this->db->get_last_insert_id('phpgw_accounts','account_id');
-			$this->db->transaction_commit();
-			return parent::create($account_info, $default_prefs);
-		}
-
-		function get_account_name($accountid,&$lid,&$fname,&$lname)
-		{
-			static $account_name;
-			
-			$account_id = get_account_id($accountid);
-			if(isset($account_name[$account_id]))
-			{
-				$lid = $account_name[$account_id]['lid'];
-				$fname = $account_name[$account_id]['fname'];
-				$lname = $account_name[$account_id]['lname'];
-				return;
-			}
-			$db =& $GLOBALS['phpgw']->db;
-			$db->query('select account_lid,account_firstname,account_lastname from phpgw_accounts where account_id=' . intval($account_id),__LINE__,__FILE__);
-			$db->next_record();
-			$account_name[$account_id]['lid']   = $db->f('account_lid');
-			$account_name[$account_id]['fname'] = $db->f('account_firstname');
-			$account_name[$account_id]['lname'] = $db->f('account_lastname');
-			$lid   = $account_name[$account_id]['lid'];
-			$fname = $account_name[$account_id]['fname'];
-			$lname = $account_name[$account_id]['lname'];
-			return;
-		}
-
-		function get_account_with_contact()
-		{
-			$accounts = array();
-			
-			$sql = 'SELECT account_id, person_id FROM phpgw_accounts '
-				. 'WHERE person_id IS NOT NULL OR person_id != 0';
-			$this->db->query($sql,__LINE__,__FILE__);
-			while ($this->db->next_record())
-			{
-				$accounts[$this->db->f('account_id')] = $this->db->f('person_id');
-			}
-			return $accounts;
-		}
-
-		function get_account_without_contact()
-		{
-			$sql = 'SELECT account_id FROM phpgw_accounts '
-				. "WHERE account_type = 'u' AND (person_id IS NULL OR person_id = '0')";
-			$this->db->query($sql,__LINE__,__FILE__);
-			while ($this->db->next_record())
-			{
-				$accounts[] = $this->db->f('account_id');
-			}
-			return $accounts;
-		}
 	}
-?>

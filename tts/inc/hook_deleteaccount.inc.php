@@ -10,18 +10,14 @@
 	* @version $Id$
 	*/
 
-	$GLOBALS['phpgw']->db->query("UPDATE phpgw_tts_tickets SET ticket_owner = " 
-		. intval($GLOBALS['HTTP_POST_VARS']['new_owner'])
-		. " WHERE ticket_owner=" . intval($GLOBALS['HTTP_POST_VARS']['account_id']) 
-		);
+	$account_id = phpgw::get_var('account_id', 'int');
+	$new_owner = phpgw::get_var('new_owner', 'int');
 
-	$GLOBALS['phpgw']->db->query("UPDATE phpgw_tts_tickets SET ticket_assignedto = "
-		. intval($GLOBALS['HTTP_POST_VARS']['new_owner'])
-		. " WHERE ticket_assignedto=" . intval($GLOBALS['HTTP_POST_VARS']['account_id'])
-	);
+	$GLOBALS['phpgw']->db->query("UPDATE phpgw_tts_tickets SET ticket_owner = {new_owner}"
+		. " WHERE ticket_owner = {$account_id}", __LINE__, __FILE__);
 
-	$GLOBALS['phpgw']->db->query("UPDATE phpgw_tts_views SET view_account_id = "
-		. intval($GLOBALS['HTTP_POST_VARS']['new_owner'])
-		. " WHERE view_account_id=" . intval($GLOBALS['HTTP_POST_VARS']['account_id'])
-	);
-?>
+	$GLOBALS['phpgw']->db->query("UPDATE phpgw_tts_tickets SET ticket_assignedto = {new_owner}"
+		. " WHERE ticket_owner = {$account_id}", __LINE__, __FILE__);
+
+	$GLOBALS['phpgw']->db->query("UPDATE phpgw_tts_views SET ticket_views = {new_owner}"
+		. " WHERE ticket_owner = {$account_id}", __LINE__, __FILE__);

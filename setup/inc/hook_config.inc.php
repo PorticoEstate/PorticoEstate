@@ -2,62 +2,121 @@
 	/**
 	* Setup - configuration hook
 	*
-	* cConfiguration hook
+	* @author Dave Hall <skwashd@phpgroupware.org>
 	* @author Mark Peters <skeeter@phpgroupware.org>
-	* @copyright Copyright (C) 2000-2002,2005 Free Software Foundation, Inc. http://www.fsf.org/
+	* @copyright Copyright (C) 2000-2008 Free Software Foundation, Inc. http://www.fsf.org/
 	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
-	* @package setup
+	* @package phpgroupware
+	* @subpackage setup
+	* @caegory hooks
 	* @version $Id$
 	*/
 
+	/*
+	   This program is free software: you can redistribute it and/or modify
+	   it under the terms of the GNU General Public License as published by
+	   the Free Software Foundation, either version 3 of the License, or
+	   (at your option) any later version.
+
+	   This program is distributed in the hope that it will be useful,
+	   but WITHOUT ANY WARRANTY; without even the implied warranty of
+	   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	   GNU General Public License for more details.
+
+	   You should have received a copy of the GNU General Public License
+	   along with this program.  If not, see <http://www.gnu.org/licenses/>.
+	 */
+
 	/**
-	* Get selectbox for supported encryption algorithms selectbox
-	*
-	* @param $config
-	* @return string HTML code for encryption algorithm selection
-	*/
+	 * Get a list of possible domains to be used for a session cookies
+	 *
+	 * @param array $config the current configuration values
+	 * @return string HTML snippet with the available domain options
+	 */
+	function cookie_domain($config)
+	{
+		$current_domain = '';
+		if ( isset($config['cookie_domain']) )
+		{
+			$current_domain = $config['cookie_domain'];
+		}
+
+		$available = array();
+		$domain_parts = explode('.', $_SERVER['HTTP_HOST']);
+
+		foreach ( $domain_parts as $cnt => $part )
+		{
+			$str = '.' . implode('.', $domain_parts);
+			$available[$str] = $str;
+			unset($domain_parts[$cnt]);
+		}
+
+		// give the user a sane default
+		$available[''] = lang('request fqdn');
+
+		$available = array_reverse($available, true);
+
+		$out = '';
+		foreach ( $available as $key => $domain )
+		{
+			$sel = '';
+			if ( $key == $current_domain )
+			{
+				$sel = ' selected';
+			}
+			$out .= "<option value=\"{$key}\">{$domain}</option>\n";
+		}
+		return $out;
+	}
+
+	/**
+	 * Get selectbox for supported encryption algorithms selectbox
+	 *
+	 * @param $config
+	 * @return string HTML code for encryption algorithm selection
+	 */
 	function encryptalgo($config)
 	{
-		if(@function_exists('mcrypt_list_algorithms'))
+		if ( function_exists('mcrypt_list_algorithms') )
 		{
 			$listed = array();
 			if(!isset($config['mcrypt_algo']))
 			{
-				$config['mcrypt_algo'] = 'tripledes';  /* MCRYPT_TRIPLEDES */
+				$config['mcrypt_algo'] = MCRYPT_TRIPLEDES; 
 			}
-			$algos = @mcrypt_list_algorithms();
+			$algos = mcrypt_list_algorithms();
 			$found = False;
 
 			$out = '';
-			while(list($key,$value) = each($algos))
+			foreach ( $algos as $algo )
 			{
 				$found = True;
 				/* Only show each once - seems this is a problem in some installs */
-				if(!in_array($value,$listed))
+				if ( in_array($algo, $listed) )
 				{
-					if($config['mcrypt_algo'] == $value)
-					{
-						$selected = ' selected="selected"';
-					}
-					else
-					{
-						$selected = '';
-					}
-					$descr = strtoupper($value);
-
-					$out .= '<option value="' . $value . '"' . $selected . '>' . $descr . '</option>' . "\n";
-					$listed[] = $value;
+					continue;
 				}
+
+				$selected = '';
+				if ( $config['mcrypt_algo'] == $algo )
+				{
+					$selected = ' selected';
+				}
+
+				$descr = strtoupper($algo);
+
+				$out .= "<option value=\"{$algo}\"{$selected}>{$descr}</option>\n";
+				$listed[] = $algo;
 			}
 			if(!$found)
 			{
 				/* Something is wrong with their mcrypt install or php.ini */
-				$out = '<option value="">' . lang('no algorithms available') . '</option>' . "\n";;
+				$out = '<option value="">' . lang('no algorithms available') . '</option>' . "\n";
 			}
 		}
 		else
 		{
-			$out = '<option value="tripledes">TRIPLEDES</option>' . "\n";;
+			$out = '<option value="tripledes">TRIPLEDES</option>' . "\n";
 		}
 		return $out;
 	}
@@ -70,36 +129,36 @@
 	*/
 	function encryptmode($config)
 	{
-		if(@function_exists('mcrypt_list_modes'))
+		if ( function_exists('mcrypt_list_modes') )
 		{
 			$listed = array();
-			if(!isset($config['mcrypt_mode']))
+			if ( !isset($config['mcrypt_mode']) )
 			{
 				$config['mcrypt_mode'] = 'cbc'; /* MCRYPT_MODE_CBC */
 			}
-			$modes = @mcrypt_list_modes();
+			$modes = mcrypt_list_modes();
 			$found = False;
 
 			$out = '';
-			while(list($key,$value) = each($modes))
+			foreach ( $modes as $mode )
 			{
 				$found = True;
 				/* Only show each once - seems this is a problem in some installs */
-				if(!in_array($value,$listed))
+				if ( in_array($mode, $listed) )
 				{
-					if($config['mcrypt_mode'] == $value)
-					{
-						$selected = ' selected="selected"';
-					}
-					else
-					{
-						$selected = '';
-					}
-					$descr = strtoupper($value);
-
-					$out .= '<option value="' . $value . '"' . $selected . '>' . $descr . '</option>' . "\n";
-					$listed[] = $value;
+					continue;
 				}
+
+				$selected = '';
+				if ( $config['mcrypt_mode'] == $mode )
+				{
+					$selected = ' selected';
+				}
+
+				$descr = strtoupper($mode);
+
+				$out .= "<option value=\"{$mode}\"{$selected}>{$descr}</option>\n";
+				$listed[] = $mode;
 			}
 			if(!$found)
 			{
@@ -123,23 +182,34 @@
 	*/
 	function passwdhashes($config)
 	{
-		$hashes = array('des', 'md5');
-		if ( function_exists('mhash') )
+		$hashes = array
+		(
+			'SSHA'	=> lang('Salted SHA1 - strong encryption'),
+			'SMD5'	=> lang('Salted MD5'),
+			'SHA'	=> lang('SHA1'),
+			'MD5'	=> lang('MD5 - Vulnerable to dictionary attack'),
+			'CRYPT'	=> lang('Crypt - Weak encryption')
+		);
+
+		if ( !isset($config['encryption_type']) )
 		{
-			$hashes[] = 'sha';
+			$config['encryption_type'] = 'SSHA';
 		}
+		$enc_type = $config['encryption_type'];
 
 		$out = '';
-		foreach ( $hashes as $hash )
+		foreach ( $hashes as $hash => $label)
 		{
 			$selected = '';
-			if ( isset($config['ldap_encryption_type']) && $config['ldap_encryption_type'] == $hash)
+			if ( $enc_type == $hash)
 			{
-				$selected = ' selected="selected"';
+				$selected = ' selected';
 			}
 
-			$out .= '<option value="' . $hash . '"' . $selected . '>' . strtoupper($hash) . "</option>\n";
+			$out .=  <<<HTML
+				<option value="{$hash}"{$selected}>{$label}</option>";
+
+HTML;
 		}
 		return $out;
 	}
-?>

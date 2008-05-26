@@ -260,7 +260,7 @@
 		* @param string $orderby The field which you want order
 		* @param string $sort ASC | DESC depending what you want
 		* @param mixed $criteria All criterias what you want
-		* @param mixed $criteria_token same like $criteria but builded<br />with sql_criteria class, more powerfull
+		* @param mixed $criteria_token same like $criteria but builded<br />with phpgwapi_sql_criteria class, more powerfull
 		* @return array with records
 		*/
 		function get_persons($fields, $start='', $limit='', $orderby='', $sort='', $criteria='', $token_criteria='')
@@ -369,7 +369,7 @@
 		* @param string $orderby The field which you want order
 		* @param string $sort ASC | DESC depending what you want
 		* @param array $criteria All criterias what you want
-		* @param mixed $criteria_token same like $criteria but builded<br />with sql_criteria class, more powerfull
+		* @param mixed $criteria_token same like $criteria but builded<br />with phpgwapi_sql_criteria class, more powerfull
 		* @return array with records
 		*/
 		function get_orgs($fields, $start='', $limit='', $orderby='', $sort='', $criteria='', $token_criteria='')
@@ -967,4 +967,3 @@
 			$this->negative_responses=$negative_apps;			
 		}
 	}
-?>

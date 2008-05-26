@@ -101,10 +101,6 @@
 
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] .= '::job_type';
 
-			if ( !isset($GLOBALS['phpgw']->js) || !is_object($GLOBALS['phpgw']->js) )
-			{
-				$GLOBALS['phpgw']->js = createObject('phpgwapi.javascript');
-			}
 			$GLOBALS['phpgw']->js->validate_file('base', 'check', 'hrm');
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('job','nextmatchs','menu',
@@ -255,8 +251,9 @@
 				$this->bocommon->no_access();
 				return;
 			}
-			$GLOBALS['phpgw_info']['flags'][noheader] = true;
-			$GLOBALS['phpgw_info']['flags'][nofooter] = true;
+
+			$GLOBALS['phpgw_info']['flags']['noheader'] = true;
+			$GLOBALS['phpgw_info']['flags']['nofooter'] = true;
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = false;
 
 			$pdf	= CreateObject('phpgwapi.pdf');

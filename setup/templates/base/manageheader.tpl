@@ -43,10 +43,6 @@
     </td>
   </tr>
   <tr>
-    <td><b>{lang_mcryptversion}</b><br><input type="text" name="setting[mcrypt_version]" value="{mcrypt}"></td>
-    <td>{lang_mcryptversiondescr}</td>
-  </tr>
-  <tr>
     <td><b>{lang_mcryptiv}</b><br><input type="text" name="setting[mcrypt_iv]" value="{mcrypt_iv}" size="30"></td>
     <td>{lang_mcryptivdescr}</td>
   </tr>

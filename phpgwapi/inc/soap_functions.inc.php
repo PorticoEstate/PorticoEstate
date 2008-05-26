@@ -86,7 +86,7 @@
 			{
 				$user = $username;
 			}
-			$sessionid = $GLOBALS['phpgw']->session->create($user,$password,'text');
+			$sessionid = $GLOBALS['phpgw']->session->create($user,$password);
 			$kp3 = $GLOBALS['phpgw']->session->kp3;
 			$domain = $GLOBALS['phpgw']->session->account_domain;
 		}

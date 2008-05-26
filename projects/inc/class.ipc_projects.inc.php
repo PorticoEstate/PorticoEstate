@@ -13,19 +13,19 @@
 	* Fassade of the projects application.
 	* @package projects
 	*/
-	class ipc_projects extends ipc_
+	class projects_ipc_projects extends phpgwapi_ipc_
 	{
 		/**
 		* @var object $bo application storage object
 		* @access private
 		*/
-		var $boprojects;
+		protected $boprojects;
 
 
 		/**
 		* Constructor
 		*/
-		function ipc_projects()
+		public function __construct()
 		{
 			$this->boprojects =& CreateObject('projects.boprojects');
 		}

@@ -4,34 +4,33 @@
 	* @author Dirk Schaller <dschaller@probusiness.de>
 	* @copyright Copyright (C) 2003-2004 Free Software Foundation, Inc. http://www.fsf.org/
 	* @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License
-	* @package phpgwapi
-	* @subpackage communication
+	* @package phpgroupware
+	* @subpackage bookmarks
 	* @version $Id$
 	*/
 
 	/**
 	* Fassade of the bookmarks application.
-	* @package  bookmarks
+	* @package phpgroupware
+	* @subpackage  bookmarks
 	*/
-	class ipc_bookmarks extends ipc_
+	class bookmarks_ipc_bookmarks extends phpgwapi_ipc_
 	{
 		/**
 		* @var object $bo application storage object
-		* @access private
 		*/
-		var $bo;
+		protected $bo;
 	
 		/**
 		* @var array $map contains for each mime type the mapping keys
-		* @access private
 		*/
-		var $map;
+		protected $map;
 	
 		
 		/**
 		* Constructor
 		*/
-		function ipc_bookmarks()
+		function bookmarks_ipc_bookmarks()
 		{
 			$this->bo =& CreateObject('bookmarks.bo');
 

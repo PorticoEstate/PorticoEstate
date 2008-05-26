@@ -13,25 +13,23 @@
 	* Fassade of the todo application.
 	* @package  todo
 	*/
-	class ipc_todo extends ipc_
+	class todo_ipc_todo extends phpgwapi_ipc_
 	{
 		/**
 		* @var object $bo application storage object
-		* @access private
 		*/
-		var $bo;
+		protected $bo;
 
 		/**
 		* @var array $map contains for each mime type the mapping keys
-		* @access private
 		*/
-		var $map;
+		protected $map;
 
 
 		/**
 		* Constructor
 		*/
-		function ipc_todo()
+		public function __construct()
 		{
 			$this->bo =& CreateObject('todo.bo');
 

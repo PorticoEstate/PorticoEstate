@@ -8,10 +8,10 @@
 		'nocachecontrol'         => True
 	);
 
-	require '../../header.inc.php';
-	require '../inc/class.somappings.inc.php';
+	require_once '../../header.inc.php';
+	phpgw::import_class('syncml.somappings');
 
-	var_dump($GLOBALS['phpgw']->session->create('demo', md5('guest'), 'md5'));
+	var_dump($GLOBALS['phpgw']->session->create('demo', 'guest');
 
 	$ipc_manager = CreateObject('phpgwapi.ipc_manager');
 
@@ -19,4 +19,3 @@
 	$ipc_addressbook = $ipc_manager->getipc('addressbook');
 
 	$somappings = new syncml_somappings();
-?>

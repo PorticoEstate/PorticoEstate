@@ -1,66 +1,122 @@
 <?php
-	/**************************************************************************\
-	* phpGroupWare - Administration                                            *
-	* http://www.phpgroupware.org                                              *
-	* Written by coreteam <phpgroupware-developers@gnu.org>                    *
-	* --------------------------------------------                             *
-	*  This program is free software; you can redistribute it and/or modify it *
-	*  under the terms of the GNU General Public License as published by the   *
-	*  Free Software Foundation; either version 2 of the License, or (at your  *
-	*  option) any later version.                                              *
-	\**************************************************************************/
-	/* $Id$ */
+	/**
+	 * phpGroupWare Administration Misc Page Renderers
+	 *
+	 * @author Dave Hall <skwashd@phpgroupware.org>
+	 * @author coreteam <phpgroupware-developers@gnu.org>
+	 * @author Various Others <unknown>
+	 * @copyright Copyright (C) 2003-2008 Free Software Foundation, Inc. http://www.fsf.org/
+	 * @license http://www.gnu.org/licenses/gpl.html GNU General Public License
+	 * @package phpgroupware
+	 * @subpackage phpgwapi
+	 * @category gui
+	 * @version $Id$
+	 */
 
+	/*
+	   This program is free software: you can redistribute it and/or modify
+	   it under the terms of the GNU General Public License as published by
+	   the Free Software Foundation, either version 3 of the License, or
+	   (at your option) any later version.
+
+	   This program is distributed in the hope that it will be useful,
+	   but WITHOUT ANY WARRANTY; without even the implied warranty of
+	   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	   GNU General Public License for more details.
+
+	   You should have received a copy of the GNU General Public License
+	   along with this program.  If not, see <http://www.gnu.org/licenses/>.
+	 */
+
+	/**
+	 *  Miscellaneous Admin Pages renderer 
+	 *
+	 * @author Dave Hall <skwashd@phpgroupware.org>
+	 * @author coreteam <phpgroupware-developers@gnu.org>
+	 * @author Various Others <unknown>
+	 * @copyright Copyright (C) 2003-2008 Free Software Foundation, Inc. http://www.fsf.org/
+	 * @license http://www.gnu.org/licenses/gpl.html GNU General Public License
+	 * @package phpgroupware
+	 * @subpackage phpgwapi
+	 */
 	class admin_uimainscreen
 	{
-		var $public_functions = array
+		/**
+		 * @var array $public_functions the publicly callable methods
+		 */
+		public $public_functions = array
 		(
-			'index'		=> True,
-			'mainscreen'	=> True
+			'index'			=> true,
+			'mainscreen'	=> true
 		);
 
-		var $menu = array();
-
+		/**
+		 * Constucttor
+		 */
 		public function __construct()
 		{
 			$menuaction = phpgw::get_var('menuaction', 'location');
-			$GLOBALS['phpgw_info']['flags']['xslt_app'] = false; //$menuaction == 'admin.uimainscreen.mainscreen';
+			$GLOBALS['phpgw_info']['flags']['xslt_app'] = false;
 			$GLOBALS['phpgw']->nextmatchs = CreateObject('phpgwapi.nextmatchs');
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] = 'admin';
 		}
 
-		function get_menu()
+		/**
+		 * Get the admin menu
+		 *
+		 * @return array a flat menu list for use in admin
+		 */
+		protected static function _get_menu()
 		{
-			$menu_brutto = execMethod('phpgwapi.menu.get', 'admin');
+			$flat_menu = array();
 
-			foreach($menu_brutto as $app => $vals)
+			$menu = execMethod('phpgwapi.menu.get', 'admin');
+			foreach ( $menu as $app => $items )
 			{
-				$this->get_sub_menu($vals,$app);
+				if ( !is_array($items) )
+				{
+					continue;
+				}
+
+				self::_get_sub_menu($flat_menu, $app, $items);
 			}
 
-			return $menu;
+			return $flat_menu;
 		}
 
-		function get_sub_menu($children = array(),$app)
+		/**
+		 * Get sub items from a menu in a flat structure
+		 *
+		 * @param array  &$menu the menu structure to append the items to
+		 * @param string $app   the application the is for
+		 * @param array  $items the menu items to add to the flat structure
+		 */
+		protected static function _get_sub_menu(&$menu, $app, $items)
 		{
-			foreach($children as $key => $vals)
+			foreach ( $items as $item )
 			{
-				if(isset($vals['children']))
+				if ( !isset($item['children']) )
 				{
-					$this->get_sub_menu($vals['children'],$app);
+					$menu[$app][] =  $item;
 				}
 				else
 				{
-					$this->menu[$app][] =  $vals;
+					self::_get_sub_menu($menu, $app, $item['children']);
 				}
 			}
 		}
 
+		/**
+		 * Render the admin menu
+		 *
+		 * @return void
+		 */
 		public function mainscreen()
 		{
-			$this->get_menu();
 			$html = '';
-			foreach ( $this->menu as $module => $entries )
+
+			$menu = self::_get_menu();
+			foreach ( $menu as $module => $entries )
 			{
 				$html .= <<<HTML
 				<h2>$module</h2>
@@ -84,6 +140,11 @@ HTML;
 			echo $html;
 		}
 
+		/**
+		 * Render the welcome screen editor
+		 *
+		 * @return void
+		 */
 		public function index()
 		{
 			if ( phpgw::get_var('cancel', 'bool', 'POST') )

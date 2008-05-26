@@ -352,10 +352,10 @@
 				{
 					/* NOTE: we assume here ldap doesn't delete accounts */
 					$link_make_accts = $GLOBALS['phpgw_setup']->html->make_href_link_simple(
-						'<br />',
-						'setup_demo.php',
-						lang('Click Here'),
-						lang('to setup an admin account and (optionally) 3 demo accounts.')
+						'<br>',
+						'accounts.php',
+						lang('Setup an Admininstrator account'),
+						lang('and optional demo accounts.')
 					);
 				}
 				else
@@ -367,10 +367,10 @@
 			{
 				$btn_config_ldap = '';
 				/* detect whether anything will be deleted before alerting */
-				$phpgw_setup->db->query("select config_value FROM phpgw_config WHERE config_name='account_repository'");
+				$phpgw_setup->db->query("SELECT config_value FROM phpgw_config WHERE config_name = 'account_repository'");
 				$phpgw_setup->db->next_record();
 				$account_repository = $phpgw_setup->db->f(0);
-				$account_creation_notice = lang('to setup an admin account and (optionally) 3 demo accounts.');
+				$account_creation_notice = lang('and optional demo accounts.');
 				if ($account_repository == 'sql')
 				{
 					$phpgw_setup->db->query("select count(*) from phpgw_accounts");
@@ -383,9 +383,9 @@
 				}
 
  				$link_make_accts = $GLOBALS['phpgw_setup']->html->make_href_link_simple(
- 					'<br />',
- 					'setup_demo.php',
- 					lang('Click Here'),
+ 					'<br>',
+ 					'accounts.php',
+ 					lang('Setup an Admininstrator account'),
 					$account_creation_notice
  				);
 			}
@@ -483,4 +483,3 @@
 	);
 	$setup_tpl->pparse('out','T_setup_main');
 	$GLOBALS['phpgw_setup']->html->show_footer();
-?>

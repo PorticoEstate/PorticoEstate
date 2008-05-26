@@ -348,17 +348,17 @@
 			{
 				foreach ($fields as $field)
 				{
-                    if (preg_match('/.* AS (.*)/', $field, $matches)) {
+                    if (preg_match('/.* AS (.*)/', $field, $matches))
+					{
                         $modified_field = $matches[1];
-                    } else {
+                    }
+					else
+					{
                         $modified_field = $field;
                     }
 					$articles[$i][$modified_field] = $this->db->f($modified_field);
 				}
 				$articles[$i]['art_id'] = $this->db->f('art_id');
-				$username = $GLOBALS['phpgw']->accounts->get_account_name($articles[$i]['user_id'], $lid, $fname, $lname);
-				$articles[$i]['username'] = $fname . ' ' . $lname;
-				//$articles[$i]['files'] = unserialize($articles[$i]['files']);
 				$articles[$i]['total_votes'] = $articles[$i]['votes_1'] + $articles[$i]['votes_2'] + $articles[$i]['votes_3'] + $articles[$i]['votes_4'] + $articles[$i]['votes_5'];
 				if ($articles[$i]['total_votes'])
 				{
@@ -368,6 +368,12 @@
 				{
 					$articles[$i]['average_votes'] = 0;	// avoid division by zero
 				}
+			}
+
+			foreach ( $articles as &$a )
+			{
+				$a['username'] = (string) $GLOBALS['phpgw']->accounts->get($a['user_id']);
+
 			}
 			return $articles;
 		}
@@ -463,9 +469,12 @@
 				{
 					$questions[$i][$field] = $this->db->f($field);
 				}
-				$username = $GLOBALS['phpgw']->accounts->get_account_name($questions[$i]['user_id'], $lid, $fname, $lname);
-				$questions[$i]['username'] = $fname . ' ' . $lname;
 			}
+			foreach ( $questions as &$q )
+			{
+				$q['username'] = (string) $GLOBALS['phpgw']->accounts->get($q['user_id']);
+			}
+
 			return $questions;
 		}
 
@@ -730,15 +739,16 @@
 		* Returns article's comments
 		*
 		* @author	Alejandro Pedraza
-		* @param	int		$art_id		article id
-		* @param	int		$limit		Number of comments to return
+		* @param	integer	$id			article id
+		* @param	integer	$limit		Number of comments to return
 		* @return	array				Comments
 		*/
-		function get_comments($art_id, $limit)
+		function get_comments($id, $limit)
 		{
+			$id = (int) $id;
 			$fields = array('comment_id', 'user_id', 'comment', 'entered', 'art_id', 'published');
 			$fields_str = implode(", ", $fields);
-			$sql = "SELECT " . $fields_str . " FROM phpgw_kb_comment WHERE art_id=$art_id ORDER BY entered DESC";
+			$sql = "SELECT " . $fields_str . " FROM phpgw_kb_comment WHERE art_id={$id} ORDER BY entered DESC";
 			$this->db->query($sql, __LINE__, __FILE__);
 			$this->num_comments = $this->db->num_rows();
 			if ($limit)
@@ -752,8 +762,10 @@
 				{
 					$comments[$i][$field] = $this->db->f($field);
 				}
-				$GLOBALS['phpgw']->accounts->get_account_name($comments[$i]['user_id'], $lid, $fname, $lname);
-				$comments[$i]['username'] = $fname . ' ' . $lname;
+			}
+			foreach ( $comments as &$c )
+			{
+				$c['username'] = (string) $GLOBALS['phpgw']->accounts->get($c['user_id']); 
 			}
 			return $comments;
 		}
@@ -763,12 +775,13 @@
 		*
 		* @author	Alejandro Pedraza
 		* @access	public
-		* @param	int		$art_id		article id
+		* @param	integer	$id		article id
 		* @return	void
 		*/
-		function delete_comments($art_id)
+		function delete_comments($id)
 		{
-			$sql = "DELETE FROM phpgw_kb_comment WHERE art_id=$art_id";
+			$id = (int) $id;
+			$sql = "DELETE FROM phpgw_kb_comment WHERE art_id = {$id}";
 			$this->db->query($sql, __LINE__, __FILE__);
 		}
 

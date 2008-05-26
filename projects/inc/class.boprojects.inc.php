@@ -548,15 +548,15 @@
 					$role_name = $this->soprojects->return_value('role',$project_id,$emps[$i]);
 				}
 
-				$GLOBALS['phpgw']->accounts->get_account_name($emps[$i],$lid,$fname,$lname);
+				$user = $GLOBALS['phpgw']->accounts->get($emps[$i]);
 
 				$empl[] = array
 				(
-					'account_id'		=> $emps[$i],
-					'account_lid'		=> $lid,
-					'account_firstname'	=> $fname,
-					'account_lastname'	=> $lname,
-					'account_fullname'	=> $GLOBALS['phpgw']->common->display_fullname($lid,$fname,$lname),
+					'account_id'		=> $user->id,
+					'account_lid'		=> $user->lid,
+					'account_firstname'	=> $user->firstname,
+					'account_lastname'	=> $user->lastname,
+					'account_fullname'	=> (string) $user,
 					'role_name'			=> isset($role_name)?$role_name:''
 				);
 			}
@@ -3295,12 +3295,7 @@ used_subs=used_sum-used_item
 						continue;
 					}
 
-					$employee_lid = '';
-					$employee_pname = '';
-					$employee_lname = '';
-
-					$accounts->get_account_name($employee_id, $employee_lid, $employee_pname, $employee_lname);
-					$fullname = $employee_pname.' '.$employee_lname;
+					$fullname = (string) $accounts->get($employee_id);
 
 					$employee_email = $prefs->email_address($employee_id);
 
@@ -3478,14 +3473,13 @@ used_subs=used_sum-used_item
 			//echo '<pre>';
 			//print_r($acl_projectmembers);
 
-			while( list($employee_id, $employee_projects) = each($acl_projectmembers) )
+			foreach ( $acl_prohectmembers as $employee_id => $employee_projects )
 			{
 				$prefs = CreateObject('phpgwapi.preferences', $employee_id);
 				$prefs->read_repository();
 
 				$employee_lid = $employee_pname = $employee_lname = '';
-				$accounts->get_account_name($employee_id, $employee_lid, $employee_pname, $employee_lname);
-				$fullname = $employee_pname . ' ' . $employee_lname;
+				$fullname = (string) $accounts->get($employee_id);
 
 				$employee_email = $prefs->email_address($employee_id);
 

@@ -3,7 +3,6 @@
 <div align=center>
 <form name="search" action="{action_search}" method="get">
 <input name="menuaction" type="hidden" value="{menuaction}">
-<input name="kp3" type="hidden" value="{kp3}">
 <input name="sessionid" type="hidden" value="{sessionid}">
 <input name="click_history" type="hidden" value="{click_history}">
 <input name="{search_query_field}" type="text" size="50" value="{search_query_value}"> <input name="{do_search_command}" type="submit" value="{do_search_value}">

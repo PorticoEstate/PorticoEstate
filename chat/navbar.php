@@ -12,9 +12,9 @@
 
 	/* $Id$ */
 
-	$phpgw_info['flags'] = array(
+	$phpgw_info['flags'] = array
+	(
 		'currentapp'    => 'chat', 
-		'navbar_target' => '_top'
 	);
 	include('../header.inc.php');
 ?>

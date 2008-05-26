@@ -1498,8 +1498,9 @@
 				$GLOBALS['phpgw']->template->fp('mainhandle','main',true);
 */
 				$values['coordinator']		= isset($values['coordinator']) ? $values['coordinator'] : $GLOBALS['phpgw_info']['user']['account_id']; // $parent['coordinator'];
-				$GLOBALS['phpgw']->accounts->get_account_name($values['coordinator'],$lid,$fname,$lname);
-				$values['coordinatorout']	= isset($values['coordinatorout']) ? $values['coordinatorout'] : $GLOBALS['phpgw']->common->display_fullname($lid,$fname,$lname); // $parent['coordinatorout'];
+				$coordinator				= $GLOBALS['phpgw']->accounts->get($values['coordinator']);
+
+				$values['coordinatorout']	= isset($values['coordinatorout']) ? $values['coordinatorout'] : (string) $coordinator;
 				$values['salesmanager']		= isset($values['salesmanager'])?$values['salesmanager']:$parent['salesmanager'];
 				$values['parent']					= isset($values['parent'])?$values['parent']:$parent['project_id'];
 				$values['customer']				= isset($values['customer'])?$values['customer']:$parent['customer'];
@@ -1695,8 +1696,7 @@
 						$GLOBALS['phpgw']->template->set_var('accountid',$values['coordinator']);
 						if(!$values['coordinatorout'])
 						{
-							$GLOBALS['phpgw']->accounts->get_account_name($values['coordinator'],$lid,$fname,$lname);
-							$values['coordinatorout'] = $GLOBALS['phpgw']->common->display_fullname($lid,$fname,$lname);
+							$values['coordinatorout'] = (string) $GLOBALS['phpgw']->accounts->get($values['coordinator']);
 						}
 						$GLOBALS['phpgw']->template->set_var('accountname',$values['coordinatorout']);
 					}
@@ -1704,8 +1704,7 @@
 					{
 						$values['coordinator'] = $GLOBALS['phpgw_info']['user']['account_id'];
 						$GLOBALS['phpgw']->template->set_var('accountid', $values['coordinator']);
-						$GLOBALS['phpgw']->accounts->get_account_name($values['coordinator'],$lid,$fname,$lname);
-						$values['coordinatorout'] = $GLOBALS['phpgw']->common->display_fullname($lid,$fname,$lname);
+						$values['coordinatorout'] = (string) $GLOBALS['phpgw']->accounts->get($values['coordinator']);
 						$GLOBALS['phpgw']->template->set_var('accountname',$values['coordinatorout']);
 					}
 
@@ -1716,8 +1715,7 @@
 						$GLOBALS['phpgw']->template->set_var('salesmanagerid',$values['salesmanager']);
 						if(!$values['salesmanagerout'])
 						{
-							$GLOBALS['phpgw']->accounts->get_account_name($values['salesmanager'],$slid,$sfname,$slname);
-							$values['salesmanagerout'] = $GLOBALS['phpgw']->common->display_fullname($slid,$sfname,$slname);
+							$values['salesmanagerout'] = (string) $GLOBALS['phpgw']->accounts->get($values['salesmanager']);
 						}
 
 						$GLOBALS['phpgw']->template->set_var('salesmanagername', $values['salesmanagerout']);
@@ -1741,10 +1739,12 @@
 						{
 							$account_id = $values['employees'][$i];
 							if(!$account_id)
+							{
 								continue;
-							$GLOBALS['phpgw']->accounts->get_account_name($account_id,$lid,$fname,$lname);
-							$fullname = $GLOBALS['phpgw']->common->display_fullname($lid,$fname,$lname);
-							$employee_list .= '<option value="'.$account_id.'" SELECTED>'.$fullname.'</option>' . "\n";
+							}
+							
+							$fullname = (string) $GLOBALS['phpgw']->accounts->get($account_id);
+							$employee_list .= '<option value="'.$account_id.'" selected>'.$fullname.'</option>' . "\n";
 						}
 						$GLOBALS['phpgw']->template->set_var('employee_list',$employee_list);
 					}
@@ -2094,9 +2094,7 @@
 				}
 				else
 				{
-					$GLOBALS['phpgw']->accounts->get_account_name($emp['account_id'],$lid,$fname,$lname);
-					$fullname = $GLOBALS['phpgw']->common->display_fullname($lid,$fname,$lname);
-					$emp['emp_name'] = $fullname;
+					$emp['emp_name'] = (string) $GLOBALS['phpgw']->accounts->get($emp['account_id']);
 					$emp['events'] = '';
 					$emp['role_name'] = '';
 				}
@@ -3361,24 +3359,37 @@
 			{
 				if($i == 0) // head
 				{
-					$output .= '<thead>';
-					$output .= '<tr>';
-					$output .= '<td style="padding-left: 5px; background-color: #d3dce3; border-bottom: 2px solid #808080">';
-					$output .= lang('Projects');
-					$output .= '</td>';
+					$lang_projects = lang('projects');
+					$output .= <<<HTML
+				<thead>
+					<tr>
+						<td style="padding-left: 5px; background-color: #d3dce3; border-bottom: 2px solid #808080">
+							{$lang_projects}
+						</td>
+
+HTML;
+
 					foreach($matrix[0]['employee'] as $key => $value)
 					{
+						$empname = (string) $GLOBALS['phpgw']->accounts->get($key);
 						$allemployees[] = $key;
-						$output .= '<td style="background-color: #d3dce3; font-weight: bold; height: 30px; padding-left: 5px; padding-right: 5px; border-bottom: 2px solid #808080; vertical-align: bottom">';
-						$GLOBALS['phpgw']->accounts->get_account_name($key, $lid,$fname,$lname);
-						$output .= $GLOBALS['phpgw']->common->display_fullname($lid, $fname, $lname);
-						$output .= '</td>';
+						$output .= <<<HTML
+							<td style="background-color: #d3dce3; font-weight: bold; height: 30px; padding-left: 5px; padding-right: 5px; border-bottom: 2px solid #808080; vertical-align: bottom">
+								{$empname}
+							</td>
+
+HTML;
 					}
-					$output .= '<td style="font-weight: bold; background-color: #d3dce3; border-bottom: 2px solid #808080">';
-					$output .= lang('Total');
-					$output .= '</td>';
-					$output .= '</tr>';
-					$output .= '</thead>';
+
+					$lang_total = lang('total');
+					$output .= <<<HTML
+						<td style="font-weight: bold; background-color: #d3dce3; border-bottom: 2px solid #808080">
+							{$lang_total}
+						</td>
+					</tr>
+				</thead>
+
+HTML;
 				}
 
 				$output .= '<tbody>';

@@ -12,11 +12,12 @@
 	/**
 	* Use SQL criteria
 	*/
-	include_once(PHPGW_API_INC . '/class.sql_criteria.inc.php');
+	phpgw::import_class('phpgwapi.sql_criteria');
+
 	/**
 	* Use SQL entity
 	*/
-	include_once(PHPGW_API_INC . '/class.sql_entity.inc.php');
+	phpgw::import_class('phpgwapi.sql_entity');
 
 	/**
 	* Query statements for "org_person" table
@@ -24,7 +25,7 @@
 	* @package phpgwapi
 	* @subpackage contacts
 	*/
-	class contact_org_person extends sql_entity
+	class contact_org_person extends phpgwapi_sql_entity
 	{
 		var $map = array('my_org_id'	=> array('select'	=> '',
 							 'criteria' 	=> '',
@@ -107,7 +108,7 @@
 		function criteria_my_org_id($element)
 		{
 			$field = $this->put_alias($element['real_field']);
-			$new_criteria = sql_criteria::equal($field, $element['value']);
+			$new_criteria = phpgwapi_sql_criteria::equal($field, $element['value']);
 			$this->_add_criteria($new_criteria);
 			$this->relink_person();
 		}
@@ -115,7 +116,7 @@
 		function criteria_my_person_id($element)
 		{
 			$field = $this->put_alias($element['real_field']);
-			$new_criteria = sql_criteria::equal($field, $element['value']);
+			$new_criteria = phpgwapi_sql_criteria::equal($field, $element['value']);
 			$this->_add_criteria($new_criteria);
 			$this->relink_org();
 		}
@@ -133,10 +134,9 @@
 		function criteria_my_preferred($element)
 		{
 			$field = $this->put_alias($element['real_field']);
-			$criteria = sql_criteria::or_(sql_criteria::equal($field, sql::string($element['value'])),
-							  sql_criteria::is_null($field));
+			$criteria = phpgwapi_sql_criteria::or_(phpgwapi_sql_criteria::equal($field, phpgwapi_sql::string($element['value'])),
+							  phpgwapi_sql_criteria::is_null($field));
 			$this->_add_criteria($criteria);
 			return $criteria;
 		}
 	}
-?>
