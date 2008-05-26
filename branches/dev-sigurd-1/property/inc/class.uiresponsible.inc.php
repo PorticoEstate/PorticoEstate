@@ -158,7 +158,7 @@
 				return;
 			}
 
-			if($lookup = phpgw::get_var('amp;lookup', 'bool') || $lookup = phpgw::get_var('lookup', 'bool'))//FIXME
+			if($lookup = phpgw::get_var('lookup', 'bool'))
 			{
 				$GLOBALS['phpgw_info']['flags']['noframework']	= true;
 				$GLOBALS['phpgw_info']['flags']['headonly']		= true;
@@ -611,7 +611,7 @@
 
 			$id						= phpgw::get_var('id', 'int');
 			$values					= phpgw::get_var('values', 'string', 'POST');
-			$contact_id				= phpgw::get_var('contact_id', 'int');
+			$contact_id				= phpgw::get_var('contact', 'int');
 			$contact_name			= phpgw::get_var('contact_name', 'string');			
 			$responsibility_id		= phpgw::get_var('responsibility_id', 'int');
 			$responsibility_name	= phpgw::get_var('responsibility_name', 'string');			
@@ -710,19 +710,23 @@
 
 			$msgbox_data = (isset($receipt)?$GLOBALS['phpgw']->common->msgbox_data($receipt):'');
 
-			$lookup_link_contact		= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uilookup.addressbook', 'column'=> 'contact'));
-			$lookup_link_responsibility	= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiresponsible.index', 'location' => $this->location, 'lookup' => true));
+			$lookup_link_contact		= "menuaction:'property.uilookup.addressbook', column:'contact'";
+			$lookup_link_responsibility	= "menuaction:'property.uiresponsible.index', location:'" . $this->location . "', lookup:1";
 
 			$lookup_function = "\n"
 				. '<script type="text/javascript">' ."\n"
 				. '//<[CDATA[' ."\n"
 				. 'function lookup_contact()' ."\r\n"
-				. '{'."\r\n"
-				. 'Window1=window.open('."'" . $lookup_link_contact ."'" .',"Search","width=800,height=700,toolbar=no,scrollbars=yes,resizable=yes");' . "\r\n"
+				. "{\r\n"
+				. ' var oArgs = {' . $lookup_link_contact . "};\n"
+				. " var strURL = phpGWLink('index.php', oArgs);\n"
+				. ' Window1=window.open(strURL,"Search","width=800,height=700,toolbar=no,scrollbars=yes,resizable=yes");' . "\r\n"
 				. '}'."\r\n"
 				. 'function lookup_responsibility()' ."\r\n"
-				. '{'."\r\n"
-				. 'Window1=window.open('."'" . $lookup_link_responsibility ."'" .',"Search","width=800,height=700,toolbar=no,scrollbars=yes,resizable=yes");' . "\r\n"
+				. "{\r\n"
+				. ' var oArgs = {' . $lookup_link_responsibility . "};\n"
+				. " var strURL = phpGWLink('index.php', oArgs);\n"
+				. ' Window1=window.open(strURL,"Search","width=800,height=700,toolbar=no,scrollbars=yes,resizable=yes");' . "\r\n"
 				. '}'."\r\n"
 				. '//]]' ."\n"
 				. "</script>\n";

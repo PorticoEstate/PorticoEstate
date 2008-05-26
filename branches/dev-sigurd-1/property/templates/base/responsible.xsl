@@ -507,7 +507,7 @@
 					<xsl:value-of select="lang_contact"/>
 				</td>
 				<td>
-					<input type="text" name="contact_id" value="{value_contact_id}" onClick="lookup_contact()" readonly="readonly" size="5" onMouseout="window.status='';return true;" >
+					<input type="text" name="contact" value="{value_contact_id}" onClick="lookup_contact()" readonly="readonly" size="5" onMouseout="window.status='';return true;" >
 						<xsl:attribute name="title">
 							<xsl:value-of select="lang_contact_status_text"/>
 						</xsl:attribute>
