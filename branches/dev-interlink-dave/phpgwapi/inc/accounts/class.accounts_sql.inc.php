@@ -2,10 +2,10 @@
 	/**
 	* View and manipulate account records using SQL
 	*
+	* @author Dave Hall <skwashd@phpgroupware.org>
 	* @author Joseph Engo <jengo@phpgroupware.org>
 	* @author Dan Kuykendall <seek3r@phpgroupware.org>
 	* @author Bettina Gille <ceb@phpgroupware.org>
-	* @author Dave Hall <skwashd@phpgroupware.org>
 	* @copyright Copyright (C) 2000-2008 Free Software Foundation, Inc. http://www.fsf.org/
 	* @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License v3 or later
 	* @package phpgroupware

@@ -284,8 +284,6 @@ HTML;
 	$GLOBALS['phpgw'] = createObject('phpgwapi.phpgw');
 
 	magic_quotes_runtime(false);
-	// Fix time zone warning notice
-	date_default_timezone_set('UTC');
 
 // Can't use this yet - errorlog hasn't been created.
 //	print_debug('sane environment','messageonly','api');
