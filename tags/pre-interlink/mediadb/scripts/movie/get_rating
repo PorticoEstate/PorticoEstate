@@ -1,0 +1,3 @@
+#!/bin/tcsh -f
+
+grep "Certification" details | sed -f sed_rating

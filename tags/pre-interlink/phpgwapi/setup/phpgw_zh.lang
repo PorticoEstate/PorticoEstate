@@ -1,0 +1,408 @@
+access	common	zh	存取权限
+access not permitted	common	zh	存取遭拒
+acl	common	zh	控管权限
+active	common	zh	启用
+add	common	zh	新增
+add category	common	zh	新增分类
+add %1 category for	common	zh	新增 %1 子分类给
+admin	common	zh	系统管理
+administration	common	zh	系统管理
+afghanistan	common	zh	AFGHANISTAN
+albania	common	zh	ALBANIA
+algeria	common	zh	ALGERIA
+all	common	zh	所有
+american samoa	common	zh	AMERICAN SAMOA
+andorra	common	zh	ANDORRA
+angola	common	zh	ANGOLA
+anguilla	common	zh	ANGUILLA
+antarctica	common	zh	ANTARCTICA
+antigua and barbuda	common	zh	ANTIGUA AND BARBUDA
+april	common	zh	四月
+are you sure you want to delete this entry ?	common	zh	您确定要删除此笔资料？
+argentina	common	zh	ARGENTINA
+armenia	common	zh	ARMENIA
+aruba	common	zh	ARUBA
+august	common	zh	八月
+australia	common	zh	AUSTRALIA
+austria	common	zh	AUSTRIA
+autosave default category	common	zh	自动储存预设分类目录
+azerbaijan	common	zh	AZERBAIJAN
+bad login or password	login	zh	错误的使用者代码或密码
+bahamas	common	zh	BAHAMAS
+bahrain	common	zh	BAHRAIN
+bangladesh	common	zh	BANGLADESH
+barbados	common	zh	BARBADOS
+belarus	common	zh	BELARUS
+belgium	common	zh	BELGIUM
+belize	common	zh	BELIZE
+benin	common	zh	BENIN
+bermuda	common	zh	BERMUDA
+bhutan	common	zh	BHUTAN
+bolivia	common	zh	BOLIVIA
+bosnia and herzegovina	common	zh	BOSNIA AND HERZEGOVINA
+botswana	common	zh	BOTSWANA
+bouvet island	common	zh	BOUVET ISLAND
+brazil	common	zh	BRAZIL
+british indian ocean territory	common	zh	BRITISH INDIAN OCEAN TERRITORY
+brunei darussalam	common	zh	BRUNEI DARUSSALAM
+bulgaria	common	zh	BULGARIA
+burkina faso	common	zh	BURKINA FASO
+burundi	common	zh	BURUNDI
+cambodia	common	zh	CAMBODIA
+cameroon	common	zh	CAMEROON
+canada	common	zh	CANADA
+cancel	common	zh	取消
+cape verde	common	zh	CAPE VERDE
+categories	common	zh	Categories
+categories for	common	zh	categories for
+category	common	zh	Category
+category %1 has been added !	common	zh	已新增分类 %1 ！
+category %1 has been updated !	common	zh	已更新分类 %1 ！
+cayman islands	common	zh	CAYMAN ISLANDS
+central african republic	common	zh	CENTRAL AFRICAN REPUBLIC
+chad	common	zh	CHAD
+change	common	zh	更换
+charset	common	zh	gb18030
+chile	common	zh	CHILE
+china	common	zh	CHINA
+choose the parent category	common	zh	选择上一层分类
+christmas island	common	zh	CHRISTMAS ISLAND
+clear	common	zh	清除
+clear form	common	zh	清除表单
+cocos (keeling) islands	common	zh	COCOS (KEELING) ISLANDS
+colombia	common	zh	COLOMBIA
+comoros	common	zh	COMOROS
+congo	common	zh	CONGO
+congo, the democratic republic of the	common	zh	CONGO, THE DEMOCRATIC REPUBLIC OF THE
+cook islands	common	zh	COOK ISLANDS
+copy	common	zh	复制
+costa rica	common	zh	COSTA RICA
+cote d ivoire	common	zh	COTE D IVOIRE
+create	common	zh	建立
+created by	common	zh	建立者
+croatia	common	zh	CROATIA
+cuba	common	zh	CUBA
+currency	common	zh	Currency
+current users	common	zh	Current users
+cyprus	common	zh	CYPRUS
+czech republic	common	zh	CZECH REPUBLIC
+date	common	zh	日期
+date due	common	zh	到期日期
+december	common	zh	十二月
+default category	common	zh	预设分类
+delete	common	zh	移除
+denmark	common	zh	DENMARK
+description	common	zh	说明
+disabled	common	zh	停用
+djibouti	common	zh	DJIBOUTI
+do you also want to delete all subcategories ?	common	zh	您确定要删除所有的子分类？
+dominica	common	zh	DOMINICA
+dominican republic	common	zh	DOMINICAN REPUBLIC
+done	common	zh	完成
+east timor	common	zh	EAST TIMOR
+ecuador	common	zh	ECUADOR
+edit	common	zh	编辑
+edit categories	common	zh	编辑分类
+edit category	common	zh	编辑分类
+edit %1 category for	common	zh	编辑分类 %1 给
+egypt	common	zh	EGYPT
+el salvador	common	zh	EL SALVADOR
+email	common	zh	E-Mail
+e-mail	common	zh	E-Mail
+enabled	common	zh	启用
+end date	common	zh	结束日期
+end time	common	zh	结束时间
+entry has been deleted sucessfully	common	zh	资料已成功移除
+entry updated sucessfully	common	zh	资料已成功更新
+equatorial guinea	common	zh	EQUATORIAL GUINEA
+eritrea	common	zh	ERITREA
+error	common	zh	错误
+error creating %1 %2 directory	common	zh	无法建立目录 %1 %2
+error deleting %1 %2 directory	common	zh	无法移除目录 %1 %2
+error renaming %1 %2 directory	common	zh	无法更名目录 %1 %2
+estonia	common	zh	ESTONIA
+ethiopia	common	zh	ETHIOPIA
+falkland islands (malvinas)	common	zh	FALKLAND ISLANDS (MALVINAS)
+faroe islands	common	zh	FAROE ISLANDS
+february	common	zh	二月
+fields	common	zh	栏位
+fiji	common	zh	FIJI
+files	common	zh	档案
+filter	common	zh	筛选
+finland	common	zh	FINLAND
+first name	common	zh	名
+firstname	common	zh	名
+france	common	zh	FRANCE
+french guiana	common	zh	FRENCH GUIANA
+french polynesia	common	zh	FRENCH POLYNESIA
+french southern territories	common	zh	FRENCH SOUTHERN TERRITORIES
+friday	common	zh	星期五
+ftp	common	zh	FTP
+gabon	common	zh	GABON
+gambia	common	zh	GAMBIA
+georgia	common	zh	GEORGIA
+germany	common	zh	GERMANY
+ghana	common	zh	GHANA
+gibraltar	common	zh	GIBRALTAR
+global	common	zh	全区
+global public	common	zh	全区共用
+grant access	common	zh	存取权限开放
+greece	common	zh	GREECE
+greenland	common	zh	GREENLAND
+grenada	common	zh	GRENADA
+group	common	zh	群组
+group access	common	zh	群组存取
+group public	common	zh	群组共用
+groups	common	zh	群组
+guadeloupe	common	zh	GUADELOUPE
+guam	common	zh	GUAM
+guatemala	common	zh	GUATEMALA
+guinea	common	zh	GUINEA
+guinea-bissau	common	zh	GUINEA-BISSAU
+guyana	common	zh	GUYANA
+haiti	common	zh	HAITI
+heard island and mcdonald islands	common	zh	HEARD ISLAND AND MCDONALD ISLANDS
+help	common	zh	协助
+holy see (vatican city state)	common	zh	HOLY SEE (VATICAN CITY STATE)
+home	common	zh	住家
+honduras	common	zh	HONDURAS
+hong kong	common	zh	HONG KONG
+hungary	common	zh	HUNGARY
+iceland	common	zh	ICELAND
+india	common	zh	INDIA
+indonesia	common	zh	INDONESIA
+iran, islamic republic of	common	zh	IRAN, ISLAMIC REPUBLIC OF
+iraq	common	zh	IRAQ
+ireland	common	zh	IRELAND
+israel	common	zh	ISRAEL
+it has been more then %1 days since you changed your password	common	zh	距离您上次更改密码已经 %1 天了
+it is recommended that you run setup to upgrade your tables to the current version	common	zh	建议您执行设定程式将资料表升级至目前的版本。
+italy	common	zh	ITALY
+jamaica	common	zh	JAMAICA
+january	common	zh	一月
+japan	common	zh	JAPAN
+jordan	common	zh	JORDAN
+july	common	zh	七月
+june	common	zh	六月
+kazakstan	common	zh	KAZAKSTAN
+kenya	common	zh	KENYA
+kiribati	common	zh	KIRIBATI
+korea, democratic peoples republic of	common	zh	KOREA, DEMOCRATIC PEOPLES REPUBLIC OF
+korea, republic of	common	zh	KOREA, REPUBLIC OF
+kuwait	common	zh	KUWAIT
+kyrgyzstan	common	zh	KYRGYZSTAN
+lao peoples democratic republic	common	zh	LAO PEOPLES DEMOCRATIC REPUBLIC
+last name	common	zh	姓
+lastname	common	zh	姓
+latvia	common	zh	LATVIA
+lebanon	common	zh	LEBANON
+lesotho	common	zh	LESOTHO
+liberia	common	zh	LIBERIA
+libyan arab jamahiriya	common	zh	LIBYAN ARAB JAMAHIRIYA
+liechtenstein	common	zh	LIECHTENSTEIN
+lithuania	common	zh	LITHUANIA
+login	common	zh	登入
+logout	common	zh	登出
+luxembourg	common	zh	LUXEMBOURG
+macau	common	zh	MACAU
+macedonia, the former yugoslav republic of	common	zh	MACEDONIA, THE FORMER YUGOSLAV REPUBLIC OF
+madagascar	common	zh	MADAGASCAR
+main category	common	zh	主要分类
+main screen	common	zh	主画面
+malawi	common	zh	MALAWI
+malaysia	common	zh	MALAYSIA
+maldives	common	zh	MALDIVES
+mali	common	zh	MALI
+malta	common	zh	MALTA
+manual	common	zh	手动
+march	common	zh	叁月
+marshall islands	common	zh	MARSHALL ISLANDS
+martinique	common	zh	MARTINIQUE
+mauritania	common	zh	MAURITANIA
+mauritius	common	zh	MAURITIUS
+may	common	zh	五月
+mayotte	common	zh	MAYOTTE
+medium	common	zh	中等
+message	common	zh	讯息
+mexico	common	zh	MEXICO
+micronesia, federated states of	common	zh	MICRONESIA, FEDERATED STATES OF
+moldova, republic of	common	zh	MOLDOVA, REPUBLIC OF
+monaco	common	zh	MONACO
+monday	common	zh	星期一
+mongolia	common	zh	MONGOLIA
+montserrat	common	zh	MONTSERRAT
+morocco	common	zh	MOROCCO
+mozambique	common	zh	MOZAMBIQUE
+myanmar	common	zh	MYANMAR
+name	common	zh	名称
+namibia	common	zh	NAMIBIA
+nauru	common	zh	NAURU
+nepal	common	zh	NEPAL
+netherlands	common	zh	NETHERLANDS
+netherlands antilles	common	zh	NETHERLANDS ANTILLES
+new caledonia	common	zh	NEW CALEDONIA
+new entry added sucessfully	common	zh	成功新增资料
+new main category	common	zh	新的主要分类
+new zealand	common	zh	NEW ZEALAND
+next	common	zh	下一个
+nicaragua	common	zh	NICARAGUA
+niger	common	zh	NIGER
+nigeria	common	zh	NIGERIA
+niue	common	zh	NIUE
+no	common	zh	否
+no subject	common	zh	无主题
+none	common	zh	无
+norfolk island	common	zh	NORFOLK ISLAND
+northern mariana islands	common	zh	NORTHERN MARIANA ISLANDS
+norway	common	zh	NORWAY
+note	common	zh	备注
+notes	common	zh	备忘
+november	common	zh	十一月
+october	common	zh	十月
+ok	common	zh	OK
+oman	common	zh	OMAN
+only yours	common	zh	属於您的资料
+open notify window	common	zh	开启警示视窗
+other	common	zh	其它
+overview	common	zh	总览
+owner	common	zh	拥有者
+pakistan	common	zh	PAKISTAN
+palau	common	zh	PALAU
+palestinian territory, occupied	common	zh	PALESTINIAN TERRITORY, OCCUPIED
+panama	common	zh	PANAMA
+papua new guinea	common	zh	PAPUA NEW GUINEA
+paraguay	common	zh	PARAGUAY
+parent category	common	zh	上一层分类
+password	common	zh	密码
+password has been updated	common	zh	已成功更新密码
+personal	common	zh	个人
+peru	common	zh	PERU
+philippines	common	zh	PHILIPPINES
+pitcairn	common	zh	PITCAIRN
+please enter a name	common	zh	请输入名称！
+please run setup to become current	common	zh	请执行设定程式以到目前的
+please set your preferences for this application	common	zh	请设定这个应用程式的个人喜好设定
+poland	common	zh	POLAND
+portugal	common	zh	PORTUGAL
+powered by phpgroupware version %1	common	zh	此软体为 &lt;a href=&quot;http://www.phpgroupware.org&quot;&gt;phpGroupWare&lt;/a&gt; %1 版，中文化版本由&lt;a href=&quot;http://www.dottech.com.tw&quot;&gt;达科数位&lt;/a&gt;提供。
+preferences	common	zh	喜好设定
+print	common	zh	列印
+priority	common	zh	优先权
+private	common	zh	私人
+public	common	zh	共用
+puerto rico	common	zh	PUERTO RICO
+qatar	common	zh	QATAR
+read	common	zh	读取
+rename	common	zh	更名
+reunion	common	zh	REUNION
+romania	common	zh	ROMANIA
+russian federation	common	zh	RUSSIAN FEDERATION
+rwanda	common	zh	RWANDA
+saint helena	common	zh	SAINT HELENA
+saint kitts and nevis	common	zh	SAINT KITTS AND NEVIS
+saint lucia	common	zh	SAINT LUCIA
+saint pierre and miquelon	common	zh	SAINT PIERRE AND MIQUELON
+saint vincent and the grenadines	common	zh	SAINT VINCENT AND THE GRENADINES
+samoa	common	zh	SAMOA
+san marino	common	zh	SAN MARINO
+sao tome and principe	common	zh	SAO TOME AND PRINCIPE
+saturday	common	zh	星期六
+saudi arabia	common	zh	SAUDI ARABIA
+save	common	zh	储存
+search	common	zh	搜寻
+select category	common	zh	选择分类
+senegal	common	zh	SENEGAL
+september	common	zh	九月
+session has been killed	common	zh	连线已被中断
+seychelles	common	zh	SEYCHELLES
+show all	common	zh	显示全部
+showing %1	common	zh	显示 %1
+showing %1 - %2 of %3	common	zh	显示 %1 - %2 之 %3
+sierra leone	common	zh	SIERRA LEONE
+singapore	common	zh	SINGAPORE
+slovakia	common	zh	SLOVAKIA
+slovenia	common	zh	SLOVENIA
+solomon islands	common	zh	SOLOMON ISLANDS
+somalia	common	zh	SOMALIA
+sorry, your login has expired	login	zh	抱歉，您的帐号已经过期
+south africa	common	zh	SOUTH AFRICA
+south georgia and the south sandwich islands	common	zh	SOUTH GEORGIA AND THE SOUTH SANDWICH ISLANDS
+spain	common	zh	SPAIN
+sri lanka	common	zh	SRI LANKA
+start date	common	zh	开始日期
+start time	common	zh	开始时间
+status	common	zh	状态
+subject	common	zh	主题
+submit	common	zh	送出
+sudan	common	zh	SUDAN
+sunday	common	zh	星期日
+suriname	common	zh	SURINAME
+svalbard and jan mayen	common	zh	SVALBARD AND JAN MAYEN
+swaziland	common	zh	SWAZILAND
+sweden	common	zh	SWEDEN
+switzerland	common	zh	SWITZERLAND
+syrian arab republic	common	zh	SYRIAN ARAB REPUBLIC
+taiwan, province of china	common	zh	TAIWAN, PROVINCE OF CHINA
+tajikistan	common	zh	TAJIKISTAN
+tanzania, united republic of	common	zh	TANZANIA, UNITED REPUBLIC OF
+thailand	common	zh	THAILAND
+the api is current	common	zh	应用程式介面是最新的
+the api requires an upgrade	common	zh	应用程式介面需要升级
+the following applications require upgrades	common	zh	下列应用程式需要升级
+this application is current	common	zh	这个应用程式是最新的
+this application requires an upgrade	common	zh	这个应用程式需要升级
+this name has been used already	common	zh	这个名字已被使用！
+thursday	common	zh	星期四
+time	common	zh	时间
+time zone	common	zh	时区
+time zone offset	common	zh	时区时差
+title	common	zh	标题
+togo	common	zh	TOGO
+tokelau	common	zh	TOKELAU
+tonga	common	zh	TONGA
+total	common	zh	总计
+trinidad and tobago	common	zh	TRINIDAD AND TOBAGO
+tuesday	common	zh	星期二
+tunisia	common	zh	TUNISIA
+turkey	common	zh	TURKEY
+turkmenistan	common	zh	TURKMENISTAN
+turks and caicos islands	common	zh	TURKS AND CAICOS ISLANDS
+tuvalu	common	zh	TUVALU
+uganda	common	zh	UGANDA
+ukraine	common	zh	UKRAINE
+united arab emirates	common	zh	UNITED ARAB EMIRATES
+united kingdom	common	zh	UNITED KINGDOM
+united states	common	zh	UNITED STATES
+united states minor outlying islands	common	zh	UNITED STATES MINOR OUTLYING ISLANDS
+update	common	zh	更新
+url	common	zh	网址
+uruguay	common	zh	URUGUAY
+user	common	zh	使用者
+username	common	zh	使用者名称
+users	common	zh	使用者
+uzbekistan	common	zh	UZBEKISTAN
+vanuatu	common	zh	VANUATU
+venezuela	common	zh	VENEZUELA
+viet nam	common	zh	VIET NAM
+view	common	zh	检视
+virgin islands, british	common	zh	VIRGIN ISLANDS, BRITISH
+virgin islands, u.s.	common	zh	VIRGIN ISLANDS, U.S.
+wallis and futuna	common	zh	WALLIS AND FUTUNA
+wednesday	common	zh	星期叁
+western sahara	common	zh	WESTERN SAHARA
+which groups	common	zh	哪个群组
+written by:	common	zh	作者：
+yemen	common	zh	YEMEN
+yes	common	zh	是
+you are running a newer version of phpGroupWare than your database is setup for	common	zh	您现在所使用的 phpGroupWare 版本比您的资料库设定的版本还新。
+you have been successfully logged out	login	zh	您已经成功登出。
+you have selected an invalid date	common	zh	您选择了不合法的日期！
+you have selected an invalid main category	common	zh	您选择了错误的分类！
+your search returned 1 match	common	zh	搜寻到 1 笔资料
+your search returned %1 matchs	common	zh	搜寻到 %1 笔资料
+your session could not be verified.	login	zh	您的连线不合法。
+your settings have been updated	common	zh	您的设定已经更新。
+yugoslavia	common	zh	YUGOSLAVIA
+zambia	common	zh	ZAMBIA
+zimbabwe	common	zh	ZIMBABWE
+

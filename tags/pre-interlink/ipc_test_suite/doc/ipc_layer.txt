@@ -1,0 +1,122 @@
+IPC Layer Documentation
+#######################
+$Id: ipc_layer.txt 14153 2003-12-23 16:23:57Z uid65887 $
+
+Classes and methods
+^^^^^^^^^^^^^^^^^^^
+
+Layer 1 (applications):
+-----------------------
+  class ipc_"appName" (implemented for each application)
+  + addData(data, type) : id
+  + getData(id, type) : data
+  + removeData(id) : boolean
+  + replaceData(id, data, type) : boolean
+  + existsData(id) : boolean
+  (methods above are the implementation of the abstract methods)
+  + ... (other ipc methods, everything you like)
+
+Layer 2 (API):
+--------------
+  class ipc_manager
+  + getIPC(appName) : object
+  + execIPC(ipcAppMethod, ipcAppMethodParams) : mixed
+  + destroyIPC(appName) : boolean
+  - _checkIPCApp($appName) : boolean
+  - _createIPCAppClassName($appName) : string
+
+  class ipc_
+  <abstract>
+  + addData(data, type) : id
+  + getData(id, type) : data
+  + removeData(id) : boolean
+  + replaceData(id, data, type) : boolean
+  + existData(id) : boolean
+  (methods above call die(), they must be implemented in the ipc_"appName" class)
+
+
+ Layer 1  |              Layer 2           |   Layer 1
+          |                                |
+          |                      ipc_      |
+          |                       .        |
+          |                      /_\       |
+          |                       |        |
+          |                       |        |
+  app_1  -|->  ipc_manager --> ipc_app_2  -|->  app_2
+          |                                |
+
+(physicaly the ipc_app_2 class belongs to the app_2 and is located in the inc-directory of app_2)
+
+The ipc_manager handles the application call (check if the called app2 is available and if acl rights are okay) and create the ipc_app_2 object. This object contains the ipc methods for add/get/... data from app_2.
+
+The type parameter of the ipc methods specifies the mime type of the passed data or result data. That's because only the application knows her database structures and data records. So the application transforms the data result to the applied mime type format. For example we want export an calendar entry as vCal. For do this the addressbook app has to provide an ipc getData method which "implements" the database queries (use the storage object) and the db result transformation to a vCal. On the other hand there is also the need for import transformations.
+
+It's possible to transfer any type of data over the ipc layer.
+The only need is to implement the data convertion betwenn the application data structures and the supported mime type.
+
+Each application implements her own ipc_<app> class. This class is derived from the abstract ipc_ class of the api.
+An applicaion ipc class should contain a set of methods for import and export data in useful mime type formats. I thinks it is clear that the applications can use the api if there is a solution for converting the data to another mime type. Each application developer can decide which import/export mime types his application supports.
+
+The most relevant mime type for all applications should be:
+application/x-phpgw-<app>
+text/csv
+text/xml
+text/plain
+text/html
+
+The application/x-phpgw-<app> mime type is a representation (as an array) of the internal application data structure.
+
+Some special mime types:
+addressbook: vCard
+calendar:    vCal, iCal
+email:       text/mail
+
+
+IPC Layer - How to
+^^^^^^^^^^^^^^^^^^
+
+Now take a look at a pseudo implemation for discussion (no error handling, not optimised):
+
+in app_1:
+---------
+$ipc_manager = CreateObject('phpgwapi.ipc_manager');
+$ipc_app_2 = $ipc_manager->getIPC('app_2');
+$result = $ipc_app_2->getData(123, 'application/x-phpgw-<app_2>');
+
+
+in app_2:
+---------
+class ipc_app_2 extends ipc_
+function getData($id, $type)
+{
+  // 1: read record from database
+  $so = CreateObject('<app_2>.so_<app_2>');
+  $result = $so->get...($id);
+
+  // 2: convert data to passed mime type
+  switch ($type)
+  {
+    case 'application/phpgw-<app2>':   // transfer result to application data structure
+      ...
+      return $converted_result;
+    break;
+    case 'text/xml':                   // convert result to xml
+      ...
+      return $converted_result;
+    break;
+    case 'text/csv':                   // convert result to csv
+      ...
+      return $converted_result;
+    break;
+    case '...':             // convert result to ...
+      ...
+      return $converted_result;
+    break;
+    default:
+      return false;
+    break;
+  }
+}
+
+
+The interprocess communication layer provides the oppertunaty to access an application. But the layer doesn't know anything about the data which will be "send" over this layer. Only the application knows her internal data representation and can provide the data in certain mime types. The called application delivers the data in the applied mime type.
