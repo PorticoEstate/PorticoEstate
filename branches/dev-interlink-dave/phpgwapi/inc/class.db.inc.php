@@ -12,14 +12,14 @@
 	* @version $Id$
 	*/
 
-	if (empty($GLOBALS['phpgw_info']['server']['db_type']))
+	if ( empty($GLOBALS['phpgw_info']['server']['db_type']) )
 	{
 		$GLOBALS['phpgw_info']['server']['db_type'] = 'mysql';
 	}
 	/**
 	* Include concrete database implementation
 	*/
-	require_once(PHPGW_API_INC . '/adodb/adodb.inc.php');
+	require_once PHPGW_API_INC . '/adodb/adodb.inc.php';
 
 	/**
 	* Database abstraction class to allow phpGroupWare to use multiple database backends
@@ -517,7 +517,10 @@
 		}
 		
 		/**
-		 * Prepare the VALUES component of an INSERT sql statement
+		 * Prepare the VALUES component of an INSERT sql statement by guessing data types
+		 *
+		 * It is not a good idea to rely on the data types determined by this method if 
+		 * you are inserting numeric data into varchar/text fields, such as street numbers
 		 * 
 		 * @param array $value_set array of values to insert into the database
 		 * @return string the prepared sql, empty string for invalid input
@@ -532,20 +535,20 @@
 			$insert_value = array();
 			foreach ( $values as $value )
 			{
-				if ( is_numeric($value) )
+				if($value || $value === 0)
 				{
-					if ( !$value )
+					if ( is_numeric($value) )
 					{
-						$insert_value[] = 'NULL';
+						$insert_value[]	= "$value";
 					}
 					else
 					{
-						$insert_value[] = $value;
+						$insert_value[]	= "'$value'";
 					}
 				}
 				else
 				{
-					$insert_value[]	= "'$value'";
+					$insert_value[]	= 'NULL';
 				}
 			}
 			return implode(",", $insert_value);
@@ -931,4 +934,3 @@
 		}  
 
 	}
-?>

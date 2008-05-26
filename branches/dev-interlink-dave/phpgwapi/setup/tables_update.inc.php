@@ -1960,7 +1960,7 @@
 		$GLOBALS['phpgw_setup']->oProc->query('SELECT phpgw_history_log.history_appname, phpgw_applications.app_id'
 			. ' FROM phpgw_history_log'
 			. " {$GLOBALS['phpgw_setup']->oProc->m_odb->join} phpgw_applications ON phpgw_history_log.history_appname = phpgw_applications.app_name"
-			. ' GROUP BY history_appname'
+			. ' GROUP BY history_appname, phpgw_applications.app_id'
 			, __LINE__, __FILE__);
 		while ( $GLOBALS['phpgw_setup']->oProc->next_record() )
 		{
