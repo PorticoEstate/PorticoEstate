@@ -1605,6 +1605,7 @@
 			{
 				$this->_account_lid = $m[1];
 				$this->_account_domain = $m[2];
+				return;
 			}
 
 			$this->_account_lid = $login;

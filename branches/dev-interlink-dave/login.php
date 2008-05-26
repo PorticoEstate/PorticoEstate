@@ -11,8 +11,7 @@
 	* @version $Id$
 	*/
 
-	chdir('phpgwapi/inc/sso');
-   	include_once('include_login.inc.php');
+	require_once 'phpgwapi/inc/sso/include_login.inc.php';
 
 	$partial_url = 'login.php';
 	$phpgw_url_for_sso = 'phpgwapi/inc/sso/login_server.php';
@@ -113,9 +112,10 @@
 			$GLOBALS['phpgw']->redirect_link('/'.$partial_url, array('cd' => '5'));
 		}
 
-		if (strstr($login,'@') === false && isset($_POST['logindomain']))
+		$logindomain = phpgw::get_var('logindomain', 'string', 'POST');
+		if ( strstr($login,'@') === false && $logindomain )
 		{
-			$login .= '@' . $_POST['logindomain'];
+			$login .= "@{$logindomain}";
 		}
 
 		$GLOBALS['sessionid'] = $GLOBALS['phpgw']->session->create($login, $passwd);
@@ -127,7 +127,7 @@
 			{
 				$cd_array['cd'] = $GLOBALS['phpgw']->session->cd_reason;
 			}
-			$GLOBALS['phpgw']->redirect_link('/'.$partial_url, $cd_array);
+			$GLOBALS['phpgw']->redirect_link("/{$partial_url}", $cd_array);
 			exit;
 		}
 
