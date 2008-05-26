@@ -241,4 +241,159 @@
 		{
 			$this->db->query('DELETE FROM fm_responsibility WHERE id='  . (int) $id, __LINE__, __FILE__);
 		}
+
+
+		/**
+		* Add responsibility contact
+		*
+		* @param array $values  values to be stored/edited
+		*
+		* @return array $receip with result on the action(failed/success)
+		*/
+
+		public function add_contact($values)
+		{
+			$receipt = array();
+			$values['remark'] = $this->db->db_addslashes($values['remark']);
+
+			$insert_values = array
+			(
+				(int)$values['responsibility_id'],
+				(int)$values['contact_id'],
+				implode('-', $values['location']),
+				$values['active_from'],
+				$values['active_to'],
+				isset($values['extra']['p_num']) ? $values['extra']['p_num'] : '',
+				isset($values['extra']['p_entity_id']) ? $values['extra']['p_entity_id'] : '',
+				isset($values['extra']['p_cat_id']) ? $values['extra']['p_cat_id'] : '',
+				$values['remark'],
+				$this->account,
+				time()
+			);
+
+			$insert_values	= $this->db->validate_insert($insert_values);
+
+			$this->db->transaction_begin();
+
+			$this->db->query("INSERT INTO fm_responsibility_contact (responsibility_id, contact_id,"
+				." location_code, active_from, active_to, p_num, p_entity_id, p_cat_id, remark, created_by, created_on) "
+				. "VALUES ($insert_values)",__LINE__,__FILE__);
+
+			if($this->db->transaction_commit())
+			{
+				$receipt['message'][]=array('msg'=>lang('Responsibility contact has been saved'));
+				$receipt['id']= $this->db->get_last_insert_id('fm_responsibility_contact', 'id');
+			}
+			else
+			{
+				$receipt['error'][]=array('msg'=>lang('Not saved'));
+			}
+
+			return $receipt;
+		}
+
+		/**
+		* Edit responsibility contact
+		*
+		* @param array $values  values to be stored/edited
+		*
+		* @return array $receip with result on the action(failed/success)
+		*/
+
+		public function edit_contact($values)
+		{
+			$receipt = array();
+
+			$orig = $this->read_single_contact($values['id']);
+
+			if(implode('-', $values['location']) != $orig['location_code']
+				|| $values['active_from'] != $orig['active_from']
+				|| $values['active_to'] != $orig['active_to']
+				|| $values['p_num'] != $orig['p_num']
+				|| $values['remark'] != $orig['remark']
+				|| !$orig['expired_on'])
+			{
+				$receipt = $this->add_contact($values);
+				
+				if(!isset($receipt['error']))
+				{
+					unset($receipt['message']);
+
+					$value_set['expired_by']	= $this->account;
+					$value_set['expired_on']	= time();
+				}
+
+				$value_set	= $this->db->validate_update($value_set);
+
+				$this->db->transaction_begin();
+
+				$this->db->query("UPDATE fm_responsibility_contact set $value_set WHERE id = " . (int)$values['id'],__LINE__,__FILE__);
+
+				if($this->db->transaction_commit())
+				{
+					$receipt['message'][]=array('msg'=>lang('Responsibility contact has been changed'));
+				}
+				else
+				{
+					$receipt['error'][]=array('msg'=>lang('Not saved'));
+				}
+
+			}
+			else
+			{
+				$receipt['id']= $values['id'];
+				$receipt['message'][]=array('msg'=>lang('Nothing changed'));
+			}
+
+			return $receipt;
+		}
+
+
+
+		/**
+		* Read single responsibility contact
+		*
+		* @param integer $id  ID of responsibility_contact
+		*
+		* @return array Responsibility contact
+		*/
+
+		public function read_single_contact($id)
+		{
+			$sql = 'SELECT * FROM fm_responsibility_contact WHERE id= ' . (int)$id;
+
+			$this->db->query($sql,__LINE__,__FILE__);
+
+			$values = array();
+
+			$this->db->next_record();
+			$values = array
+			(
+				'id'				=> $this->db->f('id'),
+				'responsibility_id'	=> $this->db->f('responsibility_id'),
+				'contact_id'		=> $this->db->f('contact_id'),
+				'location_code'		=> $this->db->f('location_code'),
+				'p_num'				=> $this->db->f('p_num'),
+				'p_entity_id'		=> $this->db->f('p_entity_id'),
+				'p_cat_id'			=> $this->db->f('p_cat_id'),
+				'remark'			=> $this->db->f('remark', true),
+				'active_from'		=> $this->db->f('active_from'),
+				'active_to'			=> $this->db->f('active_to'),
+				'created_by'		=> $this->db->f('created_by'),
+				'created_on'		=> $this->db->f('created_on'),
+				'expired_by'		=> $this->db->f('expired_by'),
+				'expired_on'		=> $this->db->f('expired_on'),
+				'priority'			=> $this->db->f('priority'), // FIXME - evaluate the need for this one
+			);
+
+			return $values;
+		}
+
+		function delete_contact($id)
+		{
+			$this->db->query('DELETE FROM fm_responsibility_contact WHERE id='  . (int) $id, __LINE__, __FILE__);
+		}
+
+
+
 	}

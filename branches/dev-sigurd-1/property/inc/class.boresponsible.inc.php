@@ -207,6 +207,16 @@ $values=array();
 
 		public function save_contact($values)
 		{
+			phpgw::import_class('phpgwapi.datetime');
+
+			if(isset($values['active_from']))
+			{ 
+				$values['active_from'] = phpgwapi_datetime::date_to_timestamp($values['active_from']);
+			}
+			if(isset($values['active_to']))
+			{ 
+				$values['active_to'] = phpgwapi_datetime::date_to_timestamp($values['active_to']);
+			}
 			if (isset($values['id']) && $values['id'])
 			{
 				$receipt = $this->so->edit_contact($values);

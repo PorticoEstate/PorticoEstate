@@ -137,9 +137,25 @@
 						</td>
 					</xsl:when>
 				</xsl:choose>
+				<xsl:choose>
+					<xsl:when test="lang_select != ''">
+						<form>			
+							<td class="small_text" valign="top">
+								<input type="hidden" name="" value="{id}"></input>
+								<input type="hidden" name="" value="{name}"></input>
+								<input type="button" name="select" value="{lang_select}" onClick="Exchange_values(this.form);" onMouseout="window.status='';return true;">
+									<xsl:attribute name="onMouseover">
+										<xsl:text>window.status='</xsl:text>
+											<xsl:value-of select="lang_select_statustext"/>
+										<xsl:text>'; return true;</xsl:text>
+									</xsl:attribute>
+								</input>
+							</td>
+						</form>
+					</xsl:when>
+				</xsl:choose>
 			</tr>
 	</xsl:template>
-
 
 	<xsl:template match="list_contact">
 		<table width="100%" cellpadding="2" cellspacing="2" align="center">

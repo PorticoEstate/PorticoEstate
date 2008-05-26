@@ -176,9 +176,9 @@
 			foreach ( $responsible_info as $entry )
 			{
   				$link_edit					= '';
-				$lang_edit_demo_text		= '';
+				$lang_edit_text		= '';
 				$text_edit					= '';
-				if ($this->acl_edit)
+				if ($this->acl_edit && !$lookup)
 				{
 					$link_edit				= $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'property.uiresponsible.edit_type', 'id'=> $entry['id'], 'location' => str_replace('property', '', $entry['app_name'])));
 					$lang_edit_text			= lang('edit type');
@@ -187,16 +187,35 @@
 
 				$link_delete				= '';
 				$text_delete				= '';
-				$lang_delete_demo_text		= '';
-				if ($this->acl_delete)
+				$lang_delete_text		= '';
+				if ($this->acl_delete && !$lookup)
 				{
 					$link_delete			= $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'property.uiresponsible.delete_type', 'id'=> $entry['id']));
 					$text_delete			= lang('delete');
 					$lang_delete_text		= lang('delete type');
 				}
 
+				$link_contacts				= '';
+				$text_contacts				= '';
+				$lang_contacts_text			= '';
+				$link_select				= '';
+				$text_select				= '';
+				$lang_select_text			= '';
+				if (!$lookup)
+				{
+					$link_contacts			= $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'property.uiresponsible.contact', 'type_id'=> $entry['id']));
+					$text_contacts			= lang('contacts');
+					$lang_contacts_text		= lang('list of contacts for this responsibility type');
+				}
+				else
+				{
+					$lang_select			= lang('select');
+					$lang_select_text		= lang('select responsibility type for this contact');
+				}
+
 				$content[] = array
 				(
+					'id'					=> $entry['id'],
 					'name'					=> $entry['name'],
 					'descr'					=> $entry['descr'],
 					'active'				=> $entry['active'] == 1 ? 'X' : '',
@@ -204,15 +223,17 @@
 					'created_on'			=> $entry['created_on'],
 					'category'				=> $entry['category'],
 					'app_name'				=> $entry['app_name'],
-					'link_contacts'			=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'property.uiresponsible.contact', 'type_id'=> $entry['id'])),
-					'text_contacts'			=> lang('contacts'),
-					'lang_contacts_text'	=> lang('list of contacts for this responsibility type'),
+					'link_contacts'			=> $link_contacts,
+					'text_contacts'			=> $text_contacts,
+					'lang_contacts_text'	=> $lang_contacts_text,
 					'link_edit'				=> $link_edit,
 					'text_edit'				=> $text_edit,
 					'lang_edit_text'		=> $lang_edit_text,
 					'link_delete'			=> $link_delete,
 					'text_delete'			=> $text_delete,
-					'lang_delete_text'		=> $lang_delete_text
+					'lang_delete_text'		=> $lang_delete_text,
+					'lang_select'			=> $lang_select,
+					'lang_select_text'		=> $lang_select_text
 				);
 			}
 
@@ -235,9 +256,10 @@
 				'lang_created_by'	=> lang('supervisor'),
 				'lang_app_name'		=> lang('location'),
 				'lang_active'		=> lang('active'),
-				'lang_contacts'		=> lang('contacts'),
-				'lang_edit'			=> $this->acl_edit ? lang('edit') : '',
-				'lang_delete'		=> $this->acl_delete ? lang('delete') : '',
+				'lang_contacts'		=> !$lookup ? lang('contacts') : '',
+				'lang_edit'			=> $this->acl_edit && !$lookup ? lang('edit') : '',
+				'lang_delete'		=> $this->acl_delete && !$lookup ? lang('delete') : '',
+				'lang_select'		=> $lookup ? lang('select') : ''
 			);
 
 			if(!$this->allrows)
@@ -276,6 +298,25 @@
 					'lang_add_statustext'	=> lang('add type'),
 					'add_action'			=> $GLOBALS['phpgw']->link('/index.php', $link_add_action)
 				);
+			}
+			else
+			{
+				if(!isset($GLOBALS['phpgw_info']['flags']['java_script']))
+				{
+					$GLOBALS['phpgw_info']['flags']['java_script'] = '';
+				}
+
+				$GLOBALS['phpgw_info']['flags']['java_script'] .= "\n"
+					. '<script type="text/javascript">' ."\n"
+					. "//<[CDATA[\n"
+					. 'function Exchange_values(thisform)' ."\r\n"
+					. "{\r\n"
+					. "opener.document.form.responsibility_id.value = thisform.elements[0].value;\r\n"
+					. "opener.document.form.responsibility_name.value = thisform.elements[1].value;\r\n"
+					. "window.close()\r\n"
+					. "}\r\n"
+					. "//]]\n"
+					. "</script>\n";
 			}
 
 			$receipt = $GLOBALS['phpgw']->session->appsession('session_data','responsible_receipt');
@@ -615,6 +656,8 @@
 			$contact_name			= phpgw::get_var('contact_name', 'string');			
 			$responsibility_id		= phpgw::get_var('responsibility_id', 'int');
 			$responsibility_name	= phpgw::get_var('responsibility_name', 'string');			
+			$bolocation				= CreateObject('property.bolocation');
+			$bocommon				= CreateObject('property.bocommon');
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('responsible'));
 
@@ -628,14 +671,18 @@
 
 				if ((isset($values['save']) && $values['save']) || (isset($values['apply']) && $values['apply']))
 				{
-					if(!$values['cat_id'] || $values['cat_id'] == 'none')
+					$insert_record = $GLOBALS['phpgw']->session->appsession('insert_record','property');
+					$insert_record_entity = $GLOBALS['phpgw']->session->appsession('insert_record_entity','property');
+
+					if(isset($insert_record_entity) && is_array($insert_record_entity))
 					{
-						$receipt['error'][]=array('msg'=>lang('Please select a category!'));
+						for ($j=0;$j<count($insert_record_entity);$j++)
+						{
+							$insert_record['extra'][$insert_record_entity[$j]]	= $insert_record_entity[$j];
+						}
 					}
-					if(!$values['name'])
-					{
-						$receipt['error'][]=array('msg'=>lang('Please enter a name !'));
-					}
+
+					$values = $bocommon->collect_locationdata($values,$insert_record);
 
 					if($id)
 					{
@@ -645,6 +692,7 @@
 					{
 						$values['contact_id']=$contact_id;
 					}
+
 					if($contact_name)
 					{
 						$values['contact_name']=$contact_name;
@@ -654,20 +702,57 @@
 					{
 						$values['responsibility_id']=$responsibility_id;
 					}
+	
+	
 					if($contact_name)
 					{
 						$values['responsibility_name']=$responsibility_name;
 					}
 
+					if(!isset($values['responsibility_id']))
+					{
+						$receipt['error'][]=array('msg'=>lang('Please select a responsibility!'));
+					}
+
+					if(!isset($values['contact_id']))
+					{
+						$receipt['error'][]=array('msg'=>lang('Please select a contact!'));
+					}
+
+					if(!isset($values['location']['loc1']))
+					{
+						$receipt['error'][]=array('msg'=>lang('Please select a location!'));
+					}
+
+					if($GLOBALS['phpgw']->session->is_repost())
+					{
+						$receipt['error'][]=array('msg'=>lang('Hmm... looks like a repost!'));
+					}
+
 					if(!isset($receipt['error']) || !$receipt['error'])
 					{
-						$receipt = $this->bo->save_type($values);
+						$receipt = $this->bo->save_contact($values);
 						$id = $receipt['id'];
 
 						if (isset($values['save']) && $values['save'])
 						{
 							$GLOBALS['phpgw']->session->appsession('session_data','responsible_contact_receipt',$receipt);
 							$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction'=> 'property.uiresponsible.contact','location' => $this->location));
+						}
+					}
+					else
+					{
+						if(isset($values['location']) && $values['location'])
+						{
+							$location_code=implode("-", $values['location']);
+							$values['location_data'] = $bolocation->read_single($location_code,(isset($values['extra'])?$values['extra']:false));
+						}
+						if(isset($values['extra']['p_num']) && $values['extra']['p_num'])
+						{
+							$values['p'][$values['extra']['p_entity_id']]['p_num']=$values['extra']['p_num'];
+							$values['p'][$values['extra']['p_entity_id']]['p_entity_id']=$values['extra']['p_entity_id'];
+							$values['p'][$values['extra']['p_entity_id']]['p_cat_id']=$values['extra']['p_cat_id'];
+							$values['p'][$values['extra']['p_entity_id']]['p_cat_name']=phpgw::get_var('entity_cat_name_'.$values['extra']['p_entity_id'], 'string', 'POST');
 						}
 					}
 				}
@@ -681,15 +766,12 @@
 			if ($id)
 			{
 				$function_msg = lang('edit responsible type');
-				$values = $this->bo->read_single_type($id);
+				$values = $this->bo->read_single_contact($id);
 			}
 			else
 			{
 				$function_msg = lang('add responsible type');
 			}
-
-			$bolocation	= CreateObject('property.bolocation');
-			$bocommon	= CreateObject('property.bocommon');
 
 			$location_data = $bolocation->initiate_ui_location(array(
 						'values'	=> $values['location_data'],
@@ -771,9 +853,6 @@
 				'lang_apply'					=> lang('apply'),
 				'lang_apply_status_text'		=> lang('Apply the values'),
 
-			//	'lang_category'					=> lang('category'),
-			//	'lang_no_cat'					=> lang('no category'),
-			//	'cat_select'					=> $this->cats->formatted_xslt_list(array('select_name' => 'values[cat_id]','selected' => isset($values['cat_id'])?$values['cat_id']:'')),
 				'lang_location'					=> lang('location'),
 				'value_location_name'			=> "property{$this->location}", //FIXME once interlink is settled , use some AJAX magic for select cats based on location
 				'location_data'					=> $location_data,
