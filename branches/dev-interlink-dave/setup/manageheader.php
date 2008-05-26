@@ -130,7 +130,8 @@
 	$action = phpgw::get_var('action', 'string', 'POST');
 	if ( is_array($action) )
 	{
-		$action = array_shift(array_keys($action));
+		$action_keys = array_keys($action); 
+		$action = array_shift($action_keys);
 	}
 	switch($action)
 	{
