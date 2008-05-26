@@ -29,8 +29,8 @@
 
 		var $public_functions = array
 		(
-			'select_part_of_town'	=> True,
-			'menu'	=> True,
+			'select_part_of_town'	=> true,
+			'menu'	=> true,
 		);
 
 		var $soap_functions = array(
@@ -102,7 +102,7 @@
 			{
 				foreach($receipt['error'] as $errors)
 				{
-					$msgbox_data_error += array($errors['msg']=> False);
+					$msgbox_data_error += array($errors['msg']=> false);
 				}
 			}
 
@@ -112,7 +112,7 @@
 			{
 				foreach($receipt['message'] as $messages)
 				{
-					$msgbox_data_message += array($messages['msg']=> True);
+					$msgbox_data_message += array($messages['msg']=> true);
 				}
 			}
 

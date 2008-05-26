@@ -27,11 +27,11 @@
 
 		var $public_functions = array
 		(
-			'read'			=> True,
-			'read_single'		=> True,
-			'save'			=> True,
-			'delete'		=> True,
-			'check_perms'		=> True
+			'read'			=> true,
+			'read_single'		=> true,
+			'save'			=> true,
+			'delete'		=> true,
+			'check_perms'		=> true
 		);
 
 		var $soap_functions = array(
@@ -53,7 +53,7 @@
 			)
 		);
 
-		function sms_boconfig($session=False)
+		function sms_boconfig($session=false)
 		{
 		//	$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->so 		= CreateObject('sms.soconfig');
@@ -62,7 +62,7 @@
 			if ($session)
 			{
 				$this->read_sessiondata();
-				$this->use_session = True;
+				$this->use_session = true;
 			}
 
 			$start	= phpgw::get_var('start', 'int', 'REQUEST', 0);

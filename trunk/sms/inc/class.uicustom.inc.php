@@ -19,12 +19,12 @@
 	class sms_uicustom
 	{
 		var $public_functions = array(
-			'index'			=> True,
-			'add'			=> True,
-			'add_yes'		=> True,
-			'edit'			=> True,
-			'edit_yes'		=> True,
-			'delete'		=> True,
+			'index'			=> true,
+			'add'			=> true,
+			'add_yes'		=> true,
+			'edit'			=> true,
+			'edit_yes'		=> true,
+			'delete'		=> true,
 
 			);
 
@@ -57,7 +57,7 @@
 
 			if(!$this->acl->check($this->acl_location, PHPGW_ACL_READ))
 			{
-				$GLOBALS['phpgw_info']['flags']['xslt_app'] = True;
+				$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
 				$this->bocommon->no_access();
 				return;
 			}
@@ -123,7 +123,7 @@
 		{
 			if(!$this->acl->check($this->acl_location, PHPGW_ACL_ADD))
 			{
-				$GLOBALS['phpgw_info']['flags']['xslt_app'] = True;
+				$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
 				$this->bocommon->no_access();
 				return;
 			}
@@ -180,7 +180,7 @@
 		{
 			if(!$this->acl->check($this->acl_location, PHPGW_ACL_ADD))
 			{
-				$GLOBALS['phpgw_info']['flags']['xslt_app'] = True;
+				$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
 				$this->bocommon->no_access();
 				return;
 			}
@@ -238,7 +238,7 @@
 		{
 			if(!$this->acl->check($this->acl_location, PHPGW_ACL_EDIT))
 			{
-				$GLOBALS['phpgw_info']['flags']['xslt_app'] = True;
+				$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
 				$this->bocommon->no_access();
 				return;
 			}
@@ -307,7 +307,7 @@
 		{
 			if(!$this->acl->check($this->acl_location, PHPGW_ACL_EDIT))
 			{
-				$GLOBALS['phpgw_info']['flags']['xslt_app'] = True;
+				$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
 				$this->bocommon->no_access();
 				return;
 			}
@@ -354,7 +354,7 @@
 
 		function delete()
 		{
-			$GLOBALS['phpgw_info']['flags']['xslt_app'] = True;
+			$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
 			if(!$this->acl->check($this->acl_location, PHPGW_ACL_DELETE))
 			{
 				$this->bocommon->no_access();
@@ -421,4 +421,4 @@
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('delete' => $data));
 		}
 	}
-?>
+

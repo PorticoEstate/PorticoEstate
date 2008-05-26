@@ -22,7 +22,7 @@
 
 		var $public_functions = array
 		(
-			'links'	=> True,
+			'links'	=> true,
 		);
 
 		function sms_menu($sub='')
