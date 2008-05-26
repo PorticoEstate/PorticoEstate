@@ -696,7 +696,7 @@
 			$from_email =	$GLOBALS['phpgw_info']['user']['preferences']['property']['email'];
 
 			if($this->config->config_data['wo_status_sms'])
-			{		
+			{
 				$config_sms	= CreateObject('sms.soconfig');
 				if(is_object($config_sms))
 				{
@@ -711,10 +711,10 @@
 					$sms_data['lang_example'] = lang('Example');
 
 			//		_debug_array($sms_data);
-			
+
 				}
 			}
-			
+
 			$email_data = array
 			(
 				'location_data'					=> $location_data,
@@ -822,14 +822,14 @@
 				$headers .= "MIME-Version: 1.0\r\n";
 				$subject = lang('Workorder').": ".$workorder_id;
 
-
+				$attachment_log = '';
 				if (isset($GLOBALS['phpgw_info']['server']['smtp_server']) && $GLOBALS['phpgw_info']['server']['smtp_server'])
 				{
-
 					if(isset($values['file_action']) && is_array($values['file_action']))
 					{
 						$bofiles	= CreateObject('property.bofiles');
 						$attachments = $bofiles->get_attachments("/workorder/{$workorder_id}/", $values);
+						$attachment_log = lang('attachments') . ': ' . implode(', ',$values['file_action']);
 					}
 
 					if (!is_object($GLOBALS['phpgw']->send))
@@ -846,8 +846,12 @@
 				if ($rcpt)
 				{
 					$historylog	= CreateObject('property.historylog','workorder');
-					$historylog->add('M',$workorder_id,$to_email);
+					$historylog->add('M',$workorder_id,"{$to_email} {$attachment_log}");
 					$receipt['message'][]=array('msg'=>lang('Workorder is sent by email!'));
+					if($attachment_log)
+					{
+						$receipt['message'][]=array('msg' => $attachment_log);
+					}
 				}
 				else
 				{

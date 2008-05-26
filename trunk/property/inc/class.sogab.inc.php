@@ -43,7 +43,7 @@
 			$this->account		= $GLOBALS['phpgw_info']['user']['account_id'];
 			$this->bocommon		= CreateObject('property.bocommon');
 			$this->db           	= $this->bocommon->new_db();
-			$this->db2           	= $this->bocommon->new_db();
+			$this->db2           	= $this->bocommon->new_db($this->db);
 			$this->join			= $this->bocommon->join;
 			$this->like			= $this->bocommon->like;
 
@@ -73,7 +73,7 @@
 				$allrows 	= (isset($data['allrows'])?$data['allrows']:'');
 				$address 	= (isset($data['address'])?$data['address']:'');
 				$check_payments = (isset($data['check_payments'])?$data['check_payments']:'');
-				
+
 			}
 
 			if ($order)
@@ -87,7 +87,7 @@
 
 			$where = 'WHERE';
 			$filtermethod = '';
-			
+
 			if ($cat_id > 0)
 			{
 				$filtermethod .= " $where fm_gab_location.category='$cat_id' ";
@@ -147,11 +147,11 @@
 
 			if($check_payments)
 			{
-				$sql = "SELECT gab_id,count(gab_id) as hits, loc" . $j . "_name as address ,fm_gab_location.loc1 as location_code, fm_gab_location.owner as owner FROM fm_gab_location $joinmethod $filtermethod GROUP BY gab_id,fm_gab_location.loc1,loc" . $j . "_name,owner ";			
+				$sql = "SELECT gab_id,count(gab_id) as hits, loc" . $j . "_name as address ,fm_gab_location.loc1 as location_code, fm_gab_location.owner as owner FROM fm_gab_location $joinmethod $filtermethod GROUP BY gab_id,fm_gab_location.loc1,loc" . $j . "_name,owner ";
 			}
 			else
 			{
-				$sql = "SELECT gab_id,count(gab_id) as hits, loc" . $j . "_name as address ,fm_gab_location.location_code, fm_gab_location.owner as owner FROM fm_gab_location $joinmethod $filtermethod GROUP BY gab_id,fm_gab_location.location_code,loc" . $j . "_name,owner ";			
+				$sql = "SELECT gab_id,count(gab_id) as hits, loc" . $j . "_name as address ,fm_gab_location.location_code, fm_gab_location.owner as owner FROM fm_gab_location $joinmethod $filtermethod GROUP BY gab_id,fm_gab_location.location_code,loc" . $j . "_name,owner ";
 			}
 
 			$this->db2->query($sql,__LINE__,__FILE__);
@@ -178,7 +178,7 @@
 					'owner'			=> $this->db->f('owner')
 					);
 			}
-			
+
 			if($check_payments)
 			{
 				if($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'])
@@ -189,7 +189,7 @@
 				{
 					$dateformat = 'd-m-Y';
 				}
-				
+
 				for ($i=0;$i<count($gab_list);$i++)
 				{
 					$sql = "SELECT * FROM fm_ecobilagoverf WHERE item_id = '" . $gab_list[$i]['gab_id'] . "'";
@@ -207,12 +207,12 @@
 						$gab_list[$i]['payment'][date($dateformat,strtotime($this->db->f('forfallsdato')))] = $this->db->f('belop');
 						$payment_date[strtotime($this->db->f('forfallsdato'))] = date($dateformat,strtotime($this->db->f('forfallsdato')));
 					}
-					
+
 				}
 
 				$this->payment_date=$payment_date;
 			}
-			
+
 			return $gab_list;
 		}
 
@@ -244,7 +244,7 @@
 			$cols_return[] = 'gab_id';
 			$cols_return[] = 'owner';
 			$cols_return[] = 'address';
-			
+
 			$sql	= $this->bocommon->generate_sql(array('entity_table'=>$entity_table,'cols'=>$cols,'cols_return'=>$cols_return,
 							'uicols'=>$uicols,'joinmethod'=>$joinmethod,'paranthesis'=>$paranthesis,'query'=>$query));
 

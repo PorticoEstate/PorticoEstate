@@ -39,7 +39,7 @@
 			$this->account		= $GLOBALS['phpgw_info']['user']['account_id'];
 			$this->bocommon		= CreateObject('property.bocommon');
 			$this->db           	= $this->bocommon->new_db();
-			$this->db2           	= $this->bocommon->new_db();
+			$this->db2           	= $this->bocommon->new_db($this->db);
 
 			$this->join		= $this->bocommon->join;
 			$this->like		= $this->bocommon->like;
@@ -123,7 +123,7 @@
 			$receipt['message'][] = array('msg' => lang('ID is updated'));
 			return $receipt;
 		}
-		
+
 		function get_accounts_at_location($appname = '', $location ='', $grantor=0 ,$type ='')
 		{
 			if (!$appname)
@@ -131,7 +131,7 @@
 				settype($appname,'string');
 				$appname = $GLOBALS['phpgw_info']['flags']['currentapp'];
 			}
-			
+
 			if($grantor > 0)
 			{
 				$filter_grants = ' AND acl_grantor IS NOT NULL';

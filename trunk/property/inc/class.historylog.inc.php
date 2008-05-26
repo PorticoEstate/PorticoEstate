@@ -67,7 +67,7 @@
 			{
 				$selector = $appname;
 			}
-			
+
 			switch($selector)
 			{
 				case 'request':
@@ -98,7 +98,7 @@
 
 			$this->appname = $appname;
 
-			$this->db      = clone($GLOBALS['phpgw']->db);
+			$this->db      = CreateObject('phpgwapi.db');
 		}
 
 		function delete($record_id,$attrib_id='')
@@ -203,7 +203,7 @@
 					'datetime'   => $this->db->from_timestamp($this->db->f('history_timestamp'))
 				);
 			}
-			
+
 			if(isset ($return_values))
 			{
 				return $return_values;

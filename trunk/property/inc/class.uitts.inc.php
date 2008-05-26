@@ -60,21 +60,18 @@
 
 			$this->account				= $GLOBALS['phpgw_info']['user']['account_id'];
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
-		//	$this->currentapp			= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->nextmatchs			= CreateObject('phpgwapi.nextmatchs');
-
 			$this->bo					= CreateObject('property.botts',true);
-			$this->bocommon				= CreateObject('property.bocommon');
-
-		//	$this->acl 					= CreateObject('phpgwapi.acl');
+			$this->bocommon 			= & $this->bo->bocommon;
+			$this->cats					= & $this->bo->cats;
 			$this->acl 					= & $GLOBALS['phpgw']->acl;
 			$this->acl_location			= '.ticket';
-			$this->acl_read 			= $this->acl->check('.ticket',1);
-			$this->acl_add 				= $this->acl->check('.ticket',2);
-			$this->acl_edit 			= $this->acl->check('.ticket',4);
-			$this->acl_delete 			= $this->acl->check('.ticket',8);
-			$this->acl_manage 			= $this->acl->check('.ticket',16);
-			$this->bo->acl_location			= $this->acl_location;
+			$this->acl_read 			= $this->acl->check('.ticket',PHPGW_ACL_READ);
+			$this->acl_add 				= $this->acl->check('.ticket',PHPGW_ACL_ADD);
+			$this->acl_edit 			= $this->acl->check('.ticket',PHPGW_ACL_EDIT);
+			$this->acl_delete 			= $this->acl->check('.ticket',PHPGW_ACL_DELETE);
+			$this->acl_manage 			= $this->acl->check('.ticket',PHPGW_ACL_PRIVATE); // manage
+			$this->bo->acl_location		= $this->acl_location;
 
 			$this->start				= $this->bo->start;
 			$this->query				= $this->bo->query;
@@ -263,81 +260,90 @@
 
 //_debug_array($uicols);
 //_debug_array($ticket_list);
-			while (is_array($ticket_list) && list(,$ticket) = each($ticket_list))
+			if(is_array($ticket_list))
 			{
-				if($ticket['subject'])
-				{
-					$first= $ticket['subject'];
-				}
-				else
-				{
-					$first= $ticket['category'];
-				}
-
-				switch ($ticket['status'])
-				{
-					case 'X':
-						$bgcolor = '#5EFB6E';
-						$status = lang('Closed');
-						$text_edit_status = lang('Open');
-						$new_status = 'O';
-					break;
-					case 'I':
-						$bgcolor = '#FF9933';
-						$status = lang('In progress');
-						$text_edit_status = lang('Close');
-						$new_status = 'X';
-					break;
-					default :
-						$bgcolor = $bgcolor_array[$ticket['priority']];
-						$status = lang('Open');
-						$text_edit_status = lang('Close');
-						$new_status = 'X';
-					break;
-				}
-
-				$link_status_data = array
+				$status['X'] = array
 				(
-					'menuaction'			=> 'property.uitts.index',
-							'id'			=> $ticket['id'],
-							'edit_status'	=> true,
-							'new_status'	=> $new_status,
-							'second_display'=> true,
-							'sort'			=> $this->sort,
-							'order'			=> $this->order,
-							'cat_id'		=> $this->cat_id,
-							'filter'		=> $this->filter,
-							'user_filter'	=> $this->user_filter,
-							'query'			=> $this->query,
-							'district_id'	=> $this->district_id,
-							'allrows'		=> $this->allrows
+					'bgcolor'			=> '#5EFB6E',
+					'status'			=> lang('closed'),
+					'text_edit_status'	=> lang('Open'),
+					'new_status' 		=> 'O',
 				);
 
-				$content[] = array
-				(
-					'id'					=> $ticket['id'],
-					'bgcolor'				=> $bgcolor,
-					'new_ticket'			=> (isset($ticket['new_ticket'])?$ticket['new_ticket']:''),
-					'priostr'				=> $ticket['priority'],
-					'first'					=> $first,
-					'location_code'			=> $ticket['location_code'],
-					'address'				=> $ticket['address'],
-					'date'					=> $ticket['timestampopened'],
-					'finnish_date'			=> $ticket['finnish_date'],
-					'delay'					=> (isset($ticket['delay'])?$ticket['delay']:''),
-					'user'					=> $ticket['user'],
-					'assignedto'			=> $ticket['assignedto'],
-					'child_date'			=> $ticket['child_date'],
-					'link_view'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uitts.view', 'id'=> $ticket['id'])),
-					'lang_view_statustext'	=> lang('view the ticket'),
-					'text_view'				=> lang('view'),
-					'status'				=> $status,
-					'link_edit_status'		=> $GLOBALS['phpgw']->link('/index.php',$link_status_data),
-					'lang_edit_status'		=> lang('Edit status'),
-					'text_edit_status'		=> $text_edit_status,
-				);
+				$custom_status	= $this->bo->get_custom_status();
+
+				foreach($custom_status as $custom)
+				{
+					$status["C{$custom['id']}"] = array
+					(
+						'bgcolor'			=> $custom['color'] ? $custom['color'] : '',
+						'status'			=> $custom['name'],
+						'text_edit_status'	=> lang('close'),
+						'new_status'		=> 'X'
+					);
+				}
+
+				foreach($ticket_list as $ticket)
+				{
+					switch ($ticket['status'])
+					{
+						case 'O':
+							$bgcolor = $bgcolor_array[$ticket['priority']];
+							$status_text = lang('Open');
+							$text_edit_status = lang('Close');
+							$new_status = 'X';
+						break;
+						default :
+							$bgcolor	 		= $status[$ticket['status']]['bgcolor'];
+							$status_text		= $status[$ticket['status']]['status'];
+							$text_edit_status	= $status[$ticket['status']]['text_edit_status'];
+							$new_status			= $status[$ticket['status']]['new_status'];
+						break;
+					}
+
+					$link_status_data = array
+					(
+						'menuaction'		=> 'property.uitts.index',
+						'id'				=> $ticket['id'],
+						'edit_status'		=> true,
+						'new_status'		=> $new_status,
+						'second_display'	=> true,
+						'sort'				=> $this->sort,
+						'order'				=> $this->order,
+						'cat_id'			=> $this->cat_id,
+						'filter'			=> $this->filter,
+						'user_filter'		=> $this->user_filter,
+						'query'				=> $this->query,
+						'district_id'		=> $this->district_id,
+						'allrows'			=> $this->allrows
+					);
+
+					$content[] = array
+					(
+						'id'					=> $ticket['id'],
+						'bgcolor'				=> $bgcolor,
+						'new_ticket'			=> (isset($ticket['new_ticket'])?$ticket['new_ticket']:''),
+						'priostr'				=> $ticket['priority'],
+						'subject'				=> $ticket['subject'],
+						'location_code'			=> $ticket['location_code'],
+						'address'				=> $ticket['address'],
+						'date'					=> $ticket['timestampopened'],
+						'finnish_date'			=> $ticket['finnish_date'],
+						'delay'					=> (isset($ticket['delay'])?$ticket['delay']:''),
+						'user'					=> $ticket['user'],
+						'assignedto'			=> $ticket['assignedto'],
+						'child_date'			=> $ticket['child_date'],
+						'link_view'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uitts.view', 'id'=> $ticket['id'])),
+						'lang_view_statustext'	=> lang('view the ticket'),
+						'text_view'				=> lang('view'),
+						'status'				=> $status_text,
+						'link_edit_status'		=> $GLOBALS['phpgw']->link('/index.php',$link_status_data),
+						'lang_edit_status'		=> lang('Edit status'),
+						'text_edit_status'		=> $text_edit_status,
+					);
+				}
 			}
-
+//_debug_array($content);
 			$table_header[] = array
 			(
 				'sort_priority'	=> $this->nextmatchs->show_sort_order(array
@@ -534,20 +540,26 @@
 				'start'		=> $this->start
 			);
 
+			$cat_select = '';
+			$cat_filter = '';
 			$pref_group_filters = '';
 			if(isset($GLOBALS['phpgw_info']['user']['preferences']['property']['group_filters']))
 			{
 				$pref_group_filters = true;
 				$group_filters = 'select';
 				$GLOBALS['phpgw']->xslttpl->add_file(array('search_field_grouped'));
+				$cat_select	= $this->cats->formatted_xslt_list(array('select_name' => 'values[cat_id]','selected' => $this->cat_id));
 			}
 			else
 			{
 				$group_filters = 'filter';
 				$GLOBALS['phpgw']->xslttpl->add_file(array('search_field'));
+				$cat_filter = $this->cats->formatted_xslt_list(array('select_name' => 'cat_id','selected' => $this->cat_id,'globals' => True,'link_data' => $link_data));
 			}
 
 			$GLOBALS['phpgw']->js->validate_file('overlib','overlib','property');
+
+
 
 			$data = array
 			(
@@ -574,14 +586,13 @@
 				'all_records'					=> $this->bo->total_records,
 				'link_url'						=> $GLOBALS['phpgw']->link('/index.php',$link_data),
 				'img_path'						=> $GLOBALS['phpgw']->common->get_image_path('phpgwapi','default'),
-				'lang_no_cat'					=> lang('no category'),
-				'lang_cat_statustext'			=> lang('Select the category the ticket belongs to. To do not use a category select NO CATEGORY'),
-				'select_name'					=> 'cat_id',
-				'cat_list'						=> $this->bocommon->select_category_list(array('format'=>$group_filters,'selected' => $this->cat_id,'type' =>'ticket','order'=>'descr')),
+
+				'cat_select'					=> $cat_select,
+				'cat_filter'					=> $cat_filter,
 
 				'select_action'					=> $GLOBALS['phpgw']->link('/index.php',$link_data),
 				'filter_name'					=> 'filter',
-				'filter_list'					=> $this->bo->filter(array('format' => $group_filters, 'filter'=> $this->filter,'default' => 'open')),
+				'filter_list'					=> $this->bo->filter(array('format' => $group_filters, 'filter'=> $this->filter,'default' => 'O')),
 				'lang_show_all'					=> lang('Open'),
 				'lang_filter_statustext'		=> lang('Select the filter. To show all entries select SHOW ALL'),
 				'lang_searchfield_statustext'	=> lang('Enter the search string. To show all entries, empty this field and press the SUBMIT button again'),
@@ -663,15 +674,6 @@
 //_debug_array($ticket_list);
 			while (is_array($ticket_list) && list(,$ticket) = each($ticket_list))
 			{
-				if($ticket['subject'])
-				{
-					$first= $ticket['subject'];
-				}
-				else
-				{
-					$first= $ticket['category'];
-				}
-
 				if ($ticket['status']=='O')
 				{
 					$status = lang('Open');
@@ -687,7 +689,7 @@
 					'bgcolor'				=> $bgcolor[$ticket['priority']],
 					'new_ticket'			=> (isset($ticket['new_ticket'])?$ticket['new_ticket']:''),
 					'priostr'				=> str_repeat("||", $ticket['priority']),
-					'first'					=> $first,
+					'subject'				=> $ticket['subject'],
 					'location_code'			=> $ticket['location_code'],
 					'address'				=> $ticket['address'],
 					'date'					=> $ticket['timestampopened'],
@@ -1165,37 +1167,10 @@
 				$this->cat_id = $values['cat_id'];
 			}
 
-			$dateformat = strtolower($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']);
-			$sep = '/';
-			$dlarr[strpos($dateformat,'y')] = 'yyyy';
-			$dlarr[strpos($dateformat,'m')] = 'MM';
-			$dlarr[strpos($dateformat,'d')] = 'DD';
-			ksort($dlarr);
-
-			$dateformat= (implode($sep,$dlarr));
-
-			switch(substr($dateformat,0,1))
-			{
-				case 'M':
-					$dateformat_validate= "javascript:vDateType='1'";
-					$onKeyUp	= "DateFormat(this,this.value,event,false,'1')";
-					$onBlur		= "DateFormat(this,this.value,event,true,'1')";
-					break;
-				case 'y':
-					$dateformat_validate="javascript:vDateType='2'";
-					$onKeyUp	= "DateFormat(this,this.value,event,false,'2')";
-					$onBlur		= "DateFormat(this,this.value,event,true,'2')";
-					break;
-				case 'D':
-					$dateformat_validate="javascript:vDateType='3'";
-					$onKeyUp	= "DateFormat(this,this.value,event,false,'3')";
-					$onBlur		= "DateFormat(this,this.value,event,true,'3')";
-					break;
-			}
-
 			$msgbox_data = (isset($receipt)?$this->bocommon->msgbox_data($receipt):'');
 
-			$GLOBALS['phpgw']->js->validate_file('dateformat','dateformat','property');
+			$jscal = CreateObject('phpgwapi.jscalendar');
+			$jscal->add_listener('values_finnish_date');
 
 			$data = array
 			(
@@ -1203,10 +1178,6 @@
 				'value_origin_type'				=> (isset($origin)?$origin:''),
 				'value_origin_id'				=> (isset($origin_id)?$origin_id:''),
 
-				'lang_dateformat' 			=> strtolower($dateformat),
-				'dateformat_validate'			=> $dateformat_validate,
-				'onKeyUp'				=> $onKeyUp,
-				'onBlur'				=> $onBlur,
 				'msgbox_data'				=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
 				'location_data'				=> $location_data,
 				'lang_assign_to'			=> lang('Assign to'),
@@ -1240,16 +1211,17 @@
 
 				'lang_finnish_date'			=> lang('finnish date'),
 				'value_finnish_date'			=> (isset($values['finnish_date'])?$values['finnish_date']:''),
+				'img_cal'					=> $GLOBALS['phpgw']->common->image('phpgwapi','cal'),
+				'lang_datetitle'			=> lang('Select date'),
+				'lang_finnish_date_statustext'		=> lang('Select the estimated date for closing the task'),
 
 				'lang_done_statustext'			=> lang('Back to the ticket list'),
 				'lang_save_statustext'			=> lang('Save the ticket'),
 				'lang_no_cat'				=> lang('no category'),
-				'lang_cat_statustext'			=> lang('Select the category the selection belongs to. To do not use a category select NO CATEGORY'),
-				'select_name'				=> 'values[cat_id]',
 				'lang_town_statustext'			=> lang('Select the part of town the building belongs to. To do not use a part of town -  select NO PART OF TOWN'),
 				'lang_part_of_town'			=> lang('Part of town'),
 				'lang_no_part_of_town'			=> lang('No part of town'),
-				'cat_list'				=> $this->bocommon->select_category_list(array('format'=>'select','selected' => $this->cat_id,'type' =>'ticket','order'=>'descr')),
+				'cat_select'				=> $this->cats->formatted_xslt_list(array('select_name' => 'values[cat_id]','selected' => $this->cat_id)),
 
 				'mailnotification'			=> (isset($this->bo->config->config_data['mailnotification'])?$this->bo->config->config_data['mailnotification']:''),
 				'lang_mailnotification'			=> lang('Send e-mail'),
@@ -1475,13 +1447,10 @@
 				'lang_done_statustext'				=> lang('Back to the ticket list'),
 				'lang_save_statustext'				=> lang('Save the ticket'),
 				'lang_no_cat'						=> lang('no category'),
-				'lang_cat_statustext'				=> lang('Select the category the selection belongs to. To do not use a category select NO CATEGORY'),
-				'select_name'						=> 'values[cat_id]',
 				'lang_town_statustext'				=> lang('Select the part of town the building belongs to. To do not use a part of town -  select NO PART OF TOWN'),
 				'lang_part_of_town'					=> lang('Part of town'),
 				'lang_no_part_of_town'				=> lang('No part of town'),
-				'cat_list'							=> $this->bocommon->select_category_list(array('format'=>'select','selected' => $this->cat_id,'type' =>'ticket','order'=>'descr')),
-
+				'cat_select'						=> $this->cats->formatted_xslt_list(array('select_name' => 'values[cat_id]','selected' => $this->cat_id)),
 				'mailnotification'					=> (isset($this->bo->config->config_data['mailnotification'])?$this->bo->config->config_data['mailnotification']:''),
 				'lang_mailnotification'				=> lang('Send e-mail'),
 				'lang_mailnotification_statustext'	=> lang('Choose to send mailnotification'),
@@ -1679,33 +1648,6 @@
 			}
 
 //_debug_array($link_entity);
-			$dateformat = strtolower($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']);
-			$sep = '/';
-			$dlarr[strpos($dateformat,'y')] = 'yyyy';
-			$dlarr[strpos($dateformat,'m')] = 'MM';
-			$dlarr[strpos($dateformat,'d')] = 'DD';
-			ksort($dlarr);
-
-			$dateformat= (implode($sep,$dlarr));
-
-			switch(substr($dateformat,0,1))
-			{
-				case 'M':
-					$dateformat_validate= "javascript:vDateType='1'";
-					$onKeyUp	= "DateFormat(this,this.value,event,false,'1')";
-					$onBlur		= "DateFormat(this,this.value,event,true,'1')";
-					break;
-				case 'y':
-					$dateformat_validate="javascript:vDateType='2'";
-					$onKeyUp	= "DateFormat(this,this.value,event,false,'2')";
-					$onBlur		= "DateFormat(this,this.value,event,true,'2')";
-					break;
-				case 'D':
-					$dateformat_validate="javascript:vDateType='3'";
-					$onKeyUp	= "DateFormat(this,this.value,event,false,'3')";
-					$onBlur		= "DateFormat(this,this.value,event,true,'3')";
-					break;
-			}
 
 			$msgbox_data = $this->bocommon->msgbox_data($receipt);
 
@@ -1762,37 +1704,27 @@
 				}
 			}
 
-			$GLOBALS['phpgw']->js->validate_file('dateformat','dateformat','property');
-
 			$link_file_data = array
 			(
 				'menuaction'	=> 'property.uitts.view_file',
 				'id'		=> $id
 			);
 
+			$jscal = CreateObject('phpgwapi.jscalendar');
+			$jscal->add_listener('values_finnish_date');
+
 			$data = array
 			(
 				'value_origin'				=> (isset($ticket['origin'])?$ticket['origin']:''),
 				'value_destination'			=> (isset($ticket['destination'])?$ticket['destination']:''),
-				'lang_dateformat' 			=> strtolower($dateformat),
-				'dateformat_validate'		=> $dateformat_validate,
-				'onKeyUp'					=> $onKeyUp,
-				'onBlur'					=> $onBlur,
 				'lang_finnish_date'			=> lang('finnish date'),
 				'value_finnish_date'		=> $ticket['finnish_date'],
+				'img_cal'					=> $GLOBALS['phpgw']->common->image('phpgwapi','cal'),
+				'lang_datetitle'			=> lang('Select date'),
+				'lang_finnish_date_statustext'		=> lang('Select the estimated date for closing the task'),
 
 				'link_entity'				=> $link_entity,
 				'msgbox_data'				=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
-
-			//	'lang_request'				=> lang('Request'),
-			//	'lang_request_statustext'		=> lang('Link to the request originatet from this ticket'),
-			//	'link_request'				=> $GLOBALS['phpgw']->link('/index.php',$request_lookup_data),
-			//	'value_request_id'			=> $ticket['request_id'],
-
-			//	'lang_project'				=> lang('Project'),
-			//	'lang_project_statustext'		=> lang('Link to the project originatet from this ticket'),
-			//	'link_project'				=> $GLOBALS['phpgw']->link('/index.php',$project_lookup_data),
-			//	'value_project_id'			=> $ticket['project_id'],
 
 				'location_data'				=> $location_data,
 				'lang_location_code'			=> lang('Location Code'),
@@ -1822,10 +1754,7 @@
 				'priority_list'				=> $this->bo->get_priority_list($ticket['priority']),
 
 				'lang_no_cat'				=> lang('no category'),
-				'lang_cat_statustext'			=> lang('Select the category the building belongs to. To do not use a category select NO CATEGORY'),
-				'select_name'				=> 'values[cat_id]',
-				'cat_list'					=> $this->bocommon->select_category_list(array('format'=>'select','selected' => $this->cat_id,'type' =>'ticket','order'=>'descr')),
-
+				'cat_select'				=> $this->cats->formatted_xslt_list(array('select_name' => 'values[cat_id]','selected' => $this->cat_id)),
 				'lang_category'				=> lang('category'),
 				'value_category_name'			=> $ticket['category_name'],
 
@@ -2080,10 +2009,7 @@
 				'priority_list'					=> $this->bo->get_priority_list($ticket['priority']),
 
 				'lang_no_cat'					=> lang('no category'),
-				'lang_cat_statustext'			=> lang('Select the category the building belongs to. To do not use a category select NO CATEGORY'),
-				'select_name'					=> 'values[cat_id]',
-				'cat_list'						=> $this->bocommon->select_category_list(array('format'=>'select','selected' => $this->cat_id,'type' =>'ticket','order'=>'descr')),
-
+				'cat_select'				=> $this->cats->formatted_xslt_list(array('select_name' => 'values[cat_id]','selected' => $this->cat_id)),
 				'lang_category'					=> lang('category'),
 				'value_category_name'			=> $ticket['category_name'],
 

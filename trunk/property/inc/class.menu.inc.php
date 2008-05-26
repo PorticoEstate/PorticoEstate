@@ -83,7 +83,7 @@
 							'url'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiadmin_entity.category', 'entity_id'=> $entry['id'])),
 							'text'	=> $entry['name']
 						);
-			
+
 						$cat_list = $entity->read_category(array('allrows'=>true,'entity_id'=>$entry['id']));
 
 						foreach($cat_list as $category)
@@ -137,7 +137,7 @@
 					(
 						'text'	=> lang('Vendor Attributes'),
 						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.ui_custom.list_attribute', 'appname' => 'property', 'location' => '.vendor', 'menu_selection' => 'admin::property::vendor::vendor_attribs') )
-					)		
+					)
 				);
 				$admin_children_owner = array
 				(
@@ -243,7 +243,7 @@
 					(
 						'url'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uicategory.index', 'type' => 'location', 'type_id' => $location['id'], 'menu_selection' => "admin::property::location::location::category_{$location['id']}") ),
 						'text'	=> $location['name'] . ' ' . lang('categories'),
-					);	
+					);
 				}
 
 				$admin_children_location = array
@@ -276,6 +276,19 @@
 					)
 				);
 
+				$responsible_matrix_children = array
+				(
+					'responsible'	=> array
+					(
+						'text'	=> lang('responsible type'),
+						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiresponsible.index') )
+					),
+					'contact'	=> array
+					(
+						'text'	=> lang('contact'),
+						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiresponsible.contact') )
+					)
+				);
 
 				$menus['admin'] = array
 				(
@@ -301,15 +314,10 @@
 						'text'	=> lang('Update the not active category for locations'),
 						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uilocation.update_cat') )
 					),
-					'request_cats'	=> array
+					'project_cats'	=> array
 					(
-						'text'	=> lang('Request Categories'),
-						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uicategory.index', 'type' => 'request', 'menu_selection' => 'admin::property::request_cats') )
-					),
-					'workorder_cats'	=> array
-					(
-						'text'	=> lang('Workorder Categories'),
-						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uicategory.index', 'type' => 'wo', 'menu_selection' => 'admin::property::workorder_cats') )
+						'text'	=> lang('project categories'),
+						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.uicategories.index', 'appname' => 'property.project', 'global_cats' => 'true', 'menu_selection' => 'admin::property::project_cats') )
 					),
 					'workorder_detail'	=> array
 					(
@@ -319,7 +327,7 @@
 					'ticket_cats'	=> array
 					(
 						'text'	=> lang('Ticket Categories'),
-						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uicategory.index', 'type' => 'ticket', 'menu_selection' => 'admin::property::ticket_cats') )
+						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.uicategories.index', 'appname' => 'property.ticket', 'global_cats' => 'true', 'menu_selection' => 'admin::property::ticket_cats') )
 					),
 					'tenant'	=> array
 					(
@@ -436,6 +444,12 @@
 						'text'	=> lang('Migrate to alternative db'),
 						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uimigrate.index') )
 					),
+					'responsible_matrix'	=> array
+					(
+						'text'		=> lang('responsible matrix'),
+						'url'		=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiresponsible.index') ),
+						'children'	=> $responsible_matrix_children
+					)
 				);
 			}
 
@@ -737,18 +751,18 @@
 
 			if ( $acl->check('.document', PHPGW_ACL_READ, 'property') )
 			{
-				$laws_url = "{$GLOBALS['phpgw_info']['server']['webserver_url']}/redirect.php?go=". urlencode('http://www.regelhjelp.no/'); 
+				$laws_url = "{$GLOBALS['phpgw_info']['server']['webserver_url']}/redirect.php?go=". urlencode('http://www.regelhjelp.no/');
 				$menus['navigation']['documentation'] = array
 				(
 					'url'		=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uidocument.index')),
 					'text'		=> lang('Documentation'),
 					'children'	=> array
 					(
-						'legislation'   => array 
-						( 
-								'text'  => $GLOBALS['phpgw']->translation->translate('laws and regulations', array(), true), 
-								// degrade gracefully hack 
-								'url'   => $laws_url . '" onclick="window.open(\'' . $laws_url . '\'); return false;', 
+						'legislation'   => array
+						(
+								'text'  => $GLOBALS['phpgw']->translation->translate('laws and regulations', array(), true),
+								// degrade gracefully hack
+								'url'   => $laws_url . '" onclick="window.open(\'' . $laws_url . '\'); return false;',
 						),
 						'location'	=> array
 						(
@@ -794,7 +808,7 @@
 							'text'	=> $entry['name']
 						);
 					}
-					
+
 					$cat_list = $entity->read_category(array('allrows'=>true,'entity_id'=>$entry['id']));
 
 					foreach($cat_list as $category)

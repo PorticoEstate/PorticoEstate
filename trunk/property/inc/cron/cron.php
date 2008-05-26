@@ -85,4 +85,4 @@
 		$GLOBALS['phpgw']->session->destroy($GLOBALS['phpgw']->session->sessionid, true);
 	}
 
-	$GLOBALS['phpgw']->common->phpgw_exit();	
+	$GLOBALS['phpgw']->common->phpgw_exit();

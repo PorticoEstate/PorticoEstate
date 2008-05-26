@@ -41,7 +41,7 @@
 			$this->account		= $GLOBALS['phpgw_info']['user']['account_id'];
 			$this->bocommon		= CreateObject('property.bocommon');
 			$this->db           	= $this->bocommon->new_db();
-			$this->db2           	= $this->bocommon->new_db();
+			$this->db2           	= $this->bocommon->new_db($this->db);
 
 			$this->join		= $this->bocommon->join;
 			$this->like		= $this->bocommon->like;
@@ -164,7 +164,7 @@
 			$table = $this->select_table($type);
 
 			$standard['descr'] = $this->db->db_addslashes($standard['descr']);
-			
+
 			$this->db->transaction_begin();
 
 			$this->db->query("INSERT INTO $table (id, descr) "

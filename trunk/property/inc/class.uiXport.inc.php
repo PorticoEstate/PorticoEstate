@@ -302,7 +302,7 @@
 				'value_debug'					=> $download,
 
 				'lang_import'					=> lang('Import'),
-				'lang_import_statustext'			=> lang('Klick this button to start the import'),
+				'lang_import_statustext'			=> lang('click this button to start the import'),
 
 				'lang_invoice_date'				=> lang('invoice date'),
 				'lang_payment_date'				=> lang('Payment date'),
@@ -321,9 +321,9 @@
 				'lang_num_days_statustext'			=> lang('Enter the payment date or the payment delay'),
 				'lang_payment_date_statustext'			=> lang('Enter the payment date or the payment delay'),
 				'lang_file_statustext'				=> lang('Select the file to import from'),
-				'lang_vendor_statustext'			=> lang('Select the vendor by klicking the button'),
-				'lang_vendor_name_statustext'			=> lang('Select the vendor by klicking the button'),
-				'lang_select_vendor_statustext'			=> lang('Select the vendor by klicking this button'),
+				'lang_vendor_statustext'			=> lang('Select the vendor by clicking the button'),
+				'lang_vendor_name_statustext'			=> lang('Select the vendor by clicking the button'),
+				'lang_select_vendor_statustext'			=> lang('Select the vendor by clicking this button'),
 
 
 				'value_invoice_date'				=> $invoice_date,

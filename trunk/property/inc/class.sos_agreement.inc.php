@@ -42,7 +42,7 @@
 			$this->account	= $GLOBALS['phpgw_info']['user']['account_id'];
 			$this->bocommon		= CreateObject('property.bocommon');
 			$this->db           	= $this->bocommon->new_db();
-			$this->db2           	= $this->bocommon->new_db();
+			$this->db2           	= $this->bocommon->new_db($this->db);
 
 			$this->join			= $this->bocommon->join;
 			$this->left_join	= $this->bocommon->left_join;
@@ -261,7 +261,7 @@
 			}
 
 			$this->uicols	= $uicols;
-			
+
 			if(!$s_agreement_id > 0 && $detail)
 			{
 				return;
@@ -332,7 +332,7 @@
 				$filtermethod .= " $where $entity_table.member_of $this->like '%,$member_id,%' ";
 				$where= 'AND';
 			}
-	
+
 /*			if ($status)
 			{
 				$filtermethod .= " $where $entity_table.status='$status' ";
@@ -398,7 +398,7 @@
 				if(isset($cols_return_extra) && is_array($cols_return_extra))
 				{
 					foreach ($cols_return_extra as $return_extra)
-					{ 
+					{
 						$value='';
 						$value=$this->db->f($return_extra['name']);
 
@@ -893,7 +893,7 @@
 					}
 
 					if($entry['history'] == 1)
-					{						
+					{
 						$this->db->query("SELECT " . $entry['name'] . " from $table WHERE agreement_id= " . $values['s_agreement_id'] . " AND id=" . $values['id'],__LINE__,__FILE__);
 						$this->db->next_record();
 						$old_value = $this->db->f($entry['name']);
@@ -1025,7 +1025,7 @@
 			$sql = "SELECT id FROM $choice_table WHERE $attribute_filter AND value = '$value' AND attrib_id = $id";
 			$this->db->query($sql,__LINE__,__FILE__);
 			$this->db->next_record();
-			return $this->db->f('id');					
+			return $this->db->f('id');
 		}
 
 		function request_next_id()

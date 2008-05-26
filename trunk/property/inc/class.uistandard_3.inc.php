@@ -210,7 +210,7 @@
 				}
 
 				$receipt = $this->bo->save($values,$action,$type);
-				
+
 				$id = $receipt['id'];
 			}
 

@@ -93,12 +93,12 @@
 		function index()
 		{
 			$output	= phpgw::get_var('output');
-			
+
 			if(!$output)
 			{
 				$output = 'html';
 			}
-			
+
 			if(!$this->acl_read)
 			{
 				$this->no_access();
@@ -263,7 +263,7 @@
 			$function_msg= lang('list ifc values');
 
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property'). ': ' . $function_msg;
-			
+
 			if($output == 'wml')
 			{
 				$GLOBALS['phpgw']->xslttpl->set_output('wml');
@@ -283,7 +283,7 @@
 			}
 
 			$bolocation		= CreateObject('property.bolocation');
-			
+
 			$GLOBALS['phpgw']->xslttpl->add_file(array('ifc'));
 			$values		= phpgw::get_var('values');
 
@@ -300,7 +300,7 @@
 					{
 						$ifcfile = phpgw::get_var('tsvfile');
 					}
-				
+
 					if(!isset($receipt['error']) || !$receipt['error'])
 					{
 					//	$values['ifc_id']	= $ifc_id;
@@ -323,7 +323,7 @@
 					}
 					$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uiifc.index'));
 				}
-			}				
+			}
 
 			$location_data=$bolocation->initiate_ui_location(array(
 						'values'	=> (isset($values['location_data'])?$values['location_data']:''),
@@ -349,7 +349,7 @@
 				'import_url'					=> $GLOBALS['phpgw']->link('/index.php',$link_data),
 				'location_data'					=> $location_data,
 				'lang_file'						=> lang('file'),
-				'lang_file_statustext'			=> lang('choose file to import'),				
+				'lang_file_statustext'			=> lang('choose file to import'),
 
 				'lang_save'						=> lang('save'),
 				'lang_cancel'					=> lang('cancel'),
@@ -378,7 +378,7 @@
 			}
 
 			$output	= phpgw::get_var('output');
-			
+
 			if(!$output)
 			{
 				$output = 'html';

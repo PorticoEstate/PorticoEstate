@@ -87,7 +87,7 @@
 			$GLOBALS['phpgw_setup']->oProc	= $oProc;
 
 			$tables = $GLOBALS['phpgw']->db->table_names();
-			
+
 			/* Work out the order of how the tables can be created
 			*/
 			foreach($tables as $tablename)
@@ -108,7 +108,7 @@
 				@eval($fd_temp);
 				$table_def[$table]['fd'] = $fd;
 				$table_def[$table]['pk'] = $tableinfo[1];
-				$table_def[$table]['fk'] = $tableinfo[2];		
+				$table_def[$table]['fk'] = $tableinfo[2];
 				$table_def[$table]['ix'] = $tableinfo[3];
 				$table_def[$table]['uc'] = $tableinfo[4];
 			}
@@ -131,7 +131,7 @@
 
 				$filename = $domain . '_' . $GLOBALS['phpgw_domain'][$domain]['db_name'] . '_' . $GLOBALS['phpgw_domain'][$domain]['db_type'] . '.sql';
 
-				$script = $this->oProc->GenerateScripts($table_def, false, true);
+				$script = $this->GenerateScripts($table_def, false, true);
 				if($download_script)
 				{
 					$this->download_script($script, $filename);
@@ -152,5 +152,78 @@
 		}
 
 
+		/**
+		* Generate Script for db-schema
+		*
+		* @param array	$aTables 		array holding schema definition for the database
+		* @param bool	$bOutputHTML	print to browser - or not
+		* @param bool	$return_script  return sql-sqript - or not
+		*
+		* @return string sql-script for generate database for chosen db-platform.
+		*/
+
+		function GenerateScripts($aTables, $bOutputHTML=false, $return_script=false)
+		{
+			if (!is_array($aTables))
+			{
+				return false;
+			}
+			$this->oProc->m_aTables = $aTables;
+
+			$sAllTableSQL = '';
+			foreach ($this->oProc->m_aTables as $sTableName => $aTableDef)
+			{
+				$sSequenceSQL = '';
+				$sTriggerSQL = '';
+				$this->oProc->m_oTranslator->indexes_sql = array();
+				if($this->oProc->_GetTableSQL($sTableName, $aTableDef, $sTableSQL, $sSequenceSQL, $sTriggerSQL))
+				{
+					$sTableSQL = "CREATE TABLE $sTableName (\n$sTableSQL\n)"
+						. $this->oProc->m_oTranslator->m_sStatementTerminator;
+					if($sSequenceSQL != '')
+					{
+						$sAllTableSQL .= $sSequenceSQL . "\n";
+					}
+
+					if($sTriggerSQL != '')
+					{
+						$sAllTableSQL .= $sTriggerSQL . "\n";
+					}
+
+					$sAllTableSQL .= $sTableSQL . "\n\n";
+
+					// postgres and mssql
+					if(isset($this->oProc->m_oTranslator->indexes_sql) && is_array($this->oProc->m_oTranslator->indexes_sql) && count($this->oProc->m_oTranslator->indexes_sql)>0)
+					{
+						foreach($this->oProc->m_oTranslator->indexes_sql as $key => $sIndexSQL)
+						{
+							$ix_name = $key.'_'.$sTableName.'_idx';
+							$IndexSQL = str_replace(array('__index_name__','__table_name__'), array($ix_name,$sTableName), $sIndexSQL);
+							$sAllTableSQL .= $IndexSQL . "\n\n";
+						}
+					}
+				}
+				else
+				{
+					if($bOutputHTML)
+					{
+						print('<br>Failed generating script for <b>' . $sTableName . '</b><br>');
+						echo '<pre style="text-align: left;">'.$sTableName.' = '; print_r($aTableDef); echo "</pre>\n";
+					}
+
+					return false;
+				}
+			}
+
+			if($bOutputHTML)
+			{
+				print('<pre>' . $sAllTableSQL . '</pre><br><br>');
+			}
+
+			if($return_script)
+			{
+				return $sAllTableSQL;
+			}
+		}
 	}
 

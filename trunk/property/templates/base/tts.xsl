@@ -43,7 +43,7 @@
 					<xsl:variable name="select_action"><xsl:value-of select="select_action"/></xsl:variable>
 					<form method="post" name="search" action="{$select_action}">
 						<td>
-							<xsl:call-template name="cat_select"/>
+							<xsl:call-template name="categories"/>
 						</td>
 						<td>
 							<xsl:call-template name="select_district"/>
@@ -61,7 +61,7 @@
 				</xsl:when>
 				<xsl:otherwise>
 					<td>
-						<xsl:call-template name="cat_filter"/>
+						<xsl:call-template name="categories"/>
 					</td>
 					<td>
 						<xsl:call-template name="filter_district"/>
@@ -166,7 +166,7 @@
 					<a href="{$link_view}" onMouseover="window.status='{$lang_view_statustext}';return true;" onMouseout="window.status='';return true;"><xsl:value-of select="id"/></a>
 				</td>
 				<td class="small_text" align="left">
-					<xsl:value-of select="first"/>
+					<xsl:value-of select="subject"/>
 				</td>
 				<td class="small_text" align="left">
 					<xsl:value-of select="location_code"/>
@@ -174,10 +174,10 @@
 				<td class="small_text" align="left">
 					<xsl:value-of select="address"/>
 				</td>
-				<td class="small_text" align="center">
+				<td class="small_text" align="left">
 					<xsl:value-of select="user"/>
 				</td>
-				<td class="small_text" align="center">
+				<td class="small_text" align="left">
 					<xsl:value-of select="assignedto"/>
 				</td>
 				<td class="small_text" align="center">
@@ -346,7 +346,7 @@
 					<a href="{$link_view}" onMouseover="window.status='{$lang_view_statustext}';return true;" onMouseout="window.status='';return true;"><xsl:value-of select="id"/></a>
 				</td>
 				<td class="small_text" align="left">
-					<xsl:value-of select="first"/>
+					<xsl:value-of select="subject"/>
 				</td>
 				<td class="small_text" align="left">
 					<xsl:value-of select="location_code"/>
@@ -492,7 +492,7 @@
 					<xsl:value-of select="lang_category"/>
 				</td>
 				<td>
-					<xsl:call-template name="cat_select"/>
+					<xsl:call-template name="categories"/>
 				</td>
 			</tr>
 			<tr>
@@ -500,14 +500,15 @@
 					<xsl:value-of select="lang_finnish_date"/>
 				</td>
 				<td>
-					<input type="text" name="values[finnish_date]" value="{value_finnish_date}" onFocus="{dateformat_validate}" onKeyUp="{onKeyUp}" onBlur="{onBlur}" size="12" maxlength="10"  onMouseout="window.status='';return true;" >
-						<xsl:attribute name="onMouseover">
-							<xsl:text>window.status='</xsl:text>
-								<xsl:value-of select="statustext"/>
-							<xsl:text>';return true;</xsl:text>
+					<input type="text" id="values_finnish_date" name="values[finnish_date]" size="10" value="{value_finnish_date}" readonly="readonly" onMouseout="window.status='';return true;" >
+						<xsl:attribute name="title">
+							<xsl:value-of select="lang_finnish_date_statustext"/>
+						</xsl:attribute>
+						<xsl:attribute name="style">
+							<xsl:text>cursor:help</xsl:text>
 						</xsl:attribute>
 					</input>
-					[<xsl:value-of select="lang_dateformat"/>]
+					<img id="values_finnish_date-trigger" src="{img_cal}" alt="{lang_datetitle}" title="{lang_datetitle}" style="cursor:pointer; cursor:hand;" />
 				</td>
 			</tr>
 
@@ -632,7 +633,7 @@
 					<xsl:value-of select="lang_category"/>
 				</td>
 				<td>
-					<xsl:call-template name="cat_select"/>
+					<xsl:call-template name="categories"/>
 				</td>
 			</tr>
 
@@ -1047,7 +1048,7 @@
 					<xsl:value-of select="lang_category"/>
 				</td>
 				<td>
-					<xsl:call-template name="cat_select"/>
+					<xsl:call-template name="categories"/>
 				</td>
 			</tr>
 			<tr>
@@ -1055,14 +1056,15 @@
 					<xsl:value-of select="lang_finnish_date"/>
 				</td>
 				<td>
-					<input type="text" name="values[finnish_date]" value="{value_finnish_date}" onFocus="{dateformat_validate}" onKeyUp="{onKeyUp}" onBlur="{onBlur}" size="12" maxlength="10"  onMouseout="window.status='';return true;" >
-						<xsl:attribute name="onMouseover">
-							<xsl:text>window.status='</xsl:text>
-								<xsl:value-of select="statustext"/>
-							<xsl:text>';return true;</xsl:text>
+					<input type="text" id="values_finnish_date" name="values[finnish_date]" size="10" value="{value_finnish_date}" readonly="readonly" onMouseout="window.status='';return true;" >
+						<xsl:attribute name="title">
+							<xsl:value-of select="lang_finnish_date_statustext"/>
+						</xsl:attribute>
+						<xsl:attribute name="style">
+							<xsl:text>cursor:help</xsl:text>
 						</xsl:attribute>
 					</input>
-					[<xsl:value-of select="lang_dateformat"/>]
+					<img id="values_finnish_date-trigger" src="{img_cal}" alt="{lang_datetitle}" title="{lang_datetitle}" style="cursor:pointer; cursor:hand;" />
 				</td>
 			</tr>
 			<tr>
@@ -1380,7 +1382,7 @@
 					<xsl:value-of select="lang_category"/>
 				</td>
 				<td>
-					<xsl:call-template name="cat_select"/>
+					<xsl:call-template name="categories"/>
 				</td>
 			</tr>
 -->

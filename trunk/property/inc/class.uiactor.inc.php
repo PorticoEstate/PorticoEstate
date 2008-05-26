@@ -79,7 +79,7 @@
 			$this->acl_edit			= $this->acl->check($this->acl_location,4);
 			$this->acl_delete		= $this->acl->check($this->acl_location,8);
 			$this->acl_manage		= $this->acl->check($this->acl_location,16);
-			
+
 			$this->start			= $this->bo->start;
 			$this->query			= $this->bo->query;
 			$this->sort				= $this->bo->sort;
@@ -101,7 +101,7 @@
 
 			if (phpgw::get_var('admin', 'bool'))
 			{
-				$GLOBALS['phpgw_info']['flags']['menu_selection'] = "admin::property::{$this->role}";			
+				$GLOBALS['phpgw_info']['flags']['menu_selection'] = "admin::property::{$this->role}";
 			}
 			else
 			{

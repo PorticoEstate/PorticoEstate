@@ -22,13 +22,12 @@
 	</xsl:template>
 
 	<xsl:template match="cat_list">
-	<xsl:variable name="id"><xsl:value-of select="id"/></xsl:variable>
 		<xsl:choose>
 			<xsl:when test="selected='selected'">
-				<option value="{$id}" selected="selected"><xsl:value-of disable-output-escaping="yes" select="name"/></option>
+				<option value="{id}{cat_id}" selected="selected"><xsl:value-of disable-output-escaping="yes" select="name"/></option>
 			</xsl:when>
 			<xsl:otherwise>
-				<option value="{$id}"><xsl:value-of disable-output-escaping="yes" select="name"/></option>
+				<option value="{id}{cat_id}"><xsl:value-of disable-output-escaping="yes" select="name"/></option>
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:template>

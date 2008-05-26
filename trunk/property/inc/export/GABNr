@@ -36,15 +36,12 @@
 	{
 		function export_conv()
 		{
-
-			$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
-			$this->soXport 		= CreateObject($this->currentapp.'.soXport');	
+			$this->soXport 		= CreateObject('property.soXport');	
 			$this->config 		= CreateObject('phpgwapi.config','property');
-			$this->socommon 	= CreateObject($this->currentapp.'.socommon');
-			$this->solocation 	= CreateObject($this->currentapp.'.solocation');
+			$this->socommon 	= CreateObject('property.socommon');
+			$this->solocation 	= CreateObject('property.solocation');
 			$this->config->read_repository();
 			
-	//		$this->db = $GLOBALS['phpgw']->db;
 			$this->db    = $this->socommon->new_db();
 
 			$this->join			= $this->socommon->join;

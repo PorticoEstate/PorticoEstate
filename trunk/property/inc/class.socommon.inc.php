@@ -38,29 +38,21 @@
 		 * @var string $join the sql syntax to use for JOIN
 		 */
 		 var $join = ' INNER JOIN ';
-		 
+
 		/**
 		 * @var string $like the sql syntax to use for a case insensitive LIKE
 		 */
 		 var $like = 'LIKE';
 
 
-		function property_socommon($currentapp='')
+		function property_socommon()
 		{
-			if($currentapp)
-			{
-			//	$this->currentapp	= $currentapp;
-			}
-			else
-			{
-			//	$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];			
-			}
 
 			if(is_object($GLOBALS['phpgw']->db))
 			{
-				$this->db =& $GLOBALS['phpgw']->db;
+				$this->db = CreateObject('phpgwapi.db');
 			}
-			else
+			else // for setup
 			{
 				$this->db = CreateObject('phpgwapi.db');
 
@@ -234,7 +226,7 @@
 			{
 
 				$sql = 'SELECT * FROM phpgw_accounts where account_id in ('. implode(',',$in_list) . ') order by account_lastname';
-				$this->db->query($sql,__LINE__,__FILE__);			
+				$this->db->query($sql,__LINE__,__FILE__);
 				while ($this->db->next_record())
 				{
 					$employees[] = Array(
@@ -321,7 +313,7 @@
 
 		/**
 		* Finds the next ID for a record at a table
-		* 
+		*
 		* @param string $table tablename in question
 		* @param array $key conditions
 		* @return int the next id
@@ -392,11 +384,11 @@
 			return $next_id;
 		}
 
-		function new_db()
+		function new_db($db ='' )
 		{
-			if(is_object($GLOBALS['phpgw']->db))
+			if(is_object($db))
 			{
-				$db = clone($GLOBALS['phpgw']->db);
+				$db = clone($db);
 			}
 			else
 			{

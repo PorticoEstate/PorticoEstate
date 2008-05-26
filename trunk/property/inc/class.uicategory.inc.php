@@ -206,7 +206,7 @@
 			$values			= phpgw::get_var('values');
 
 			$GLOBALS['phpgw_info']['apps']['manual']['section'] = 'category.edit.' . $type;
-			
+
 			$GLOBALS['phpgw']->xslttpl->add_file(array('category'));
 
 			if ($values['save'])

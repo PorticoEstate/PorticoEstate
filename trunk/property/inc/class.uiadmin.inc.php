@@ -235,7 +235,7 @@
 			}
 
 			$msgbox_data = (isset($receipt)?$this->bocommon->msgbox_data($receipt):'');
-	
+
 			$num_records = 0;
 			if(isset($user_list) && is_array($user_list))
 			{
@@ -245,7 +245,7 @@
 			{
 				$num_records = $num_records + count($group_list);
 			}
-			
+
 			$data = array
 			(
 				'msgbox_data'					=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),

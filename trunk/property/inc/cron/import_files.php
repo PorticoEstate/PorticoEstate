@@ -40,8 +40,8 @@
 		{
 		//	$this->currentapp		= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->bocommon			= CreateObject('property.bocommon');
-			$this->db     			= & $GLOBALS['phpgw']->db;
-			$this->db2				= clone($this->db);
+			$this->db				= $this->bocommon->new_db();
+			$this->db2				= $this->bocommon->new_db($this->db);
 			$this->soadmin_location	= CreateObject('property.soadmin_location');
 
 			$this->join				= $this->db->join;
@@ -155,13 +155,13 @@
 			$filename = 'Vakthendelser.xls';
 			//require_once  PHPGW_APP_INC . SEP . 'excelreader' . SEP . 'reader.php';
 			$data = CreateObject('phpgwapi.excelreader');
-			
+
 			$data->setOutputEncoding('CP1251');
 			$data->read(PHPGW_API_INC . "/excelreader/test/{$filename}");
 
-			for ($i = 1; $i <= $data->sheets[0]['numRows']; $i++) 
+			for ($i = 1; $i <= $data->sheets[0]['numRows']; $i++)
 			{
-				for ($j = 1; $j <= $data->sheets[0]['numCols']; $j++) 
+				for ($j = 1; $j <= $data->sheets[0]['numCols']; $j++)
 				{
 					echo "\"".$data->sheets[0]['cells'][$i][$j]."\",";
 				}
@@ -169,5 +169,5 @@
 			}
 		}
 	}
-	
+
 

@@ -40,7 +40,7 @@
 			$this->account		= $GLOBALS['phpgw_info']['user']['account_id'];
 			$this->bocommon	= CreateObject('property.bocommon');
 			$this->db           	= $this->bocommon->new_db();
-			$this->db2           	= $this->bocommon->new_db();
+			$this->db2           	= $this->bocommon->new_db($this->db);
 			$this->account		= $GLOBALS['phpgw_info']['user']['account_id'];
 
 			$this->join		= $this->bocommon->join;
@@ -302,7 +302,7 @@
 			}
 
 			$this->db->transaction_commit();
-			
+
 			return $receipt;
 		}
 
@@ -317,7 +317,7 @@
 				'budget_cost'	=> $budget['budget_cost'],
 				'distribute_year' => serialize($budget['distribute_year'])
 				);
-			
+
 			$value_set	= $this->bocommon->validate_db_update($value_set);
 
 			$this->db->transaction_begin();
@@ -329,7 +329,7 @@
 				$budget['distribute'][0] = $budget['budget_id'];
 				$this->distribute($budget);
 			}
-			
+
 			$receipt['budget_id']= $budget['budget_id'];
 			$receipt['message'][] = array('msg'=>lang('budget %1 has been edited',$budget['budget_id']));
 			return $receipt;
@@ -401,7 +401,7 @@
 		function edit($budget)
 		{
 			$budget['remark'] = $this->db->db_addslashes($budget['remark']);
-			
+
 			$this->db->transaction_begin();
 
 			$value_set=array(
@@ -418,7 +418,7 @@
 			$this->db->query("UPDATE fm_budget set $value_set WHERE id=" . intval($budget['budget_id']),__LINE__,__FILE__);
 
 			$this->db->transaction_commit();
-			
+
 			$receipt['budget_id']= $budget['budget_id'];
 			$receipt['message'][] = array('msg'=>lang('budget %1 has been edited',$budget['budget_id']));
 			return $receipt;
@@ -527,7 +527,7 @@
 
 			$sql = "select budget_cost,b_group,district_id from fm_budget_basis where year='$year' AND revision = '$revision' $filtermethod GROUP BY budget_cost,b_group,district_id";
 			$this->db->query($sql,__LINE__,__FILE__);
-	
+
 			$budget_cost = array();
 			while ($this->db->next_record())
 			{
@@ -572,8 +572,8 @@
 				. " WHERE (fakturadato > '$start_date1' AND fakturadato < '$end_date' $filtermethod)"
 				. " OR (fakturadato > '$start_date2' AND fakturadato < '$end_date' AND periode < 3 $filtermethod)"
 				. " GROUP BY b_group, district_id";
-				
-//_debug_array($sql);				
+
+//_debug_array($sql);
 			$this->db->query($sql,__LINE__,__FILE__);
 
 			while ($this->db->next_record())
@@ -583,7 +583,7 @@
 				$district[$this->db->f('district_id')] = true;
 			}
 
-			
+
 			if (is_array($group_info))
 			{
 				if ($order == 'b_group')
@@ -595,7 +595,7 @@
 							break;
 						case 'DESC':
 							krsort($group_info);
-							break;					
+							break;
 						default:
 							ksort($group_info);
 					}
@@ -605,12 +605,12 @@
 					ksort($group_info);
 				}
 
-				ksort($district);			
+				ksort($district);
 				$group_info = array_keys($group_info);
 				$district = array_keys($district);
 
 				foreach($group_info as $b_group)
-				{	
+				{
 					foreach($district as $district_id)
 					{
 						if( (isset($actual_cost[$b_group][$district_id]) && $actual_cost[$b_group][$district_id])
@@ -626,7 +626,7 @@
 								'hits'			=> isset($hits[$b_group][$district_id])?$hits[$b_group][$district_id]:0,
 							);
 						}
-					}		
+					}
 				}
 			}
 
@@ -654,7 +654,7 @@
 		function get_revision_list($year='',$basis = '')
 		{
 			$table = $basis?'fm_budget_basis':'fm_budget';
-			
+
 			if(!$year)
 			{
 				$year = date("Y");
@@ -662,7 +662,7 @@
 			$sql = "SELECT revision FROM $table where year =" . (int)$year . " GROUP BY revision";
 			$this->db->query($sql,__LINE__,__FILE__);
 
-			
+
 			$i = 1;
 			while ($this->db->next_record())
 			{
@@ -736,7 +736,7 @@
 			{
 				$sql = "SELECT category as grouping FROM fm_budget $this->join fm_b_account ON fm_budget.b_account_id = fm_b_account.id WHERE year =". (int)$year . "  group by category";
 			}
-			
+
 			$this->db->query($sql,__LINE__,__FILE__);
 
 			while ($this->db->next_record())
@@ -792,9 +792,9 @@
 				{
 					$b_account[] = $this->db->f('id');
 				}
-				
+
 			}
-			
+
 			$this->db->query("DELETE FROM fm_budget WHERE year ='" . $basis['year'] . "'  AND b_account_id in ('" . implode("','",$b_account) . "') AND revision = '" . $basis['revision'] . "' AND district_id='" . $basis['district_id'] . "'" ,__LINE__,__FILE__);
 			$this->db->query('DELETE FROM fm_budget_basis WHERE id=' . intval($basis_id),__LINE__,__FILE__);
 			$this->db->transaction_commit();
@@ -818,12 +818,12 @@
 					$basis['b_group']		= $this->db->f('b_group');
 					$basis['budget_cost']		= $this->db->f('budget_cost');
 				}
-				
+
 				$sql = "SELECT SUM(amount) as group_sum FROM fm_budget_cost $this->join fm_b_account ON fm_budget_cost.b_account_id = fm_b_account.id WHERE fm_b_account.category = '" . $basis['b_group'] . "' AND $year_condition";
 				$this->db->query($sql,__LINE__,__FILE__);
 				$this->db->next_record();
 				$group_sum = $this->db->f('group_sum');
-				
+
 				$sql = "SELECT SUM(amount) as account_sum, b_account_id FROM fm_budget_cost $this->join fm_b_account ON fm_budget_cost.b_account_id = fm_b_account.id WHERE fm_b_account.category = '" . $basis['b_group'] . "' AND $year_condition group by b_account_id";
 				$this->db->query($sql,__LINE__,__FILE__);
 
@@ -833,11 +833,11 @@
 						'b_account_id'	=> $this->db->f('b_account_id'),
 						'account_sum'	=> round(($this->db->f('account_sum')/$group_sum) * $basis['budget_cost'],-3),
 					);
-					
+
 					$test_sum = $test_sum + round(($this->db->f('account_sum')/$group_sum) * $basis['budget_cost'],-3);
 				}
-				
-				
+
+
 				$this->db->query("SELECT id FROM fm_b_account where category=" . (int)$basis['b_group'],__LINE__,__FILE__);
 				while ($this->db->next_record())
 				{
@@ -848,16 +848,16 @@
 					. " AND district_id = " . (int)$basis['district_id']
 					. " AND revision = " . (int)$basis['revision']
 					. " AND b_account_id in ('" . implode("','",$b_account) . "')";
-					
+
 				$this->db->query($sql,__LINE__,__FILE__);
-				
+
 				if(is_array($budget))
 				{
 					foreach ($budget as $entry)
 					{
 						if(abs($entry['account_sum'])>0)
 						{
-						
+
 							$this->db->query("INSERT INTO fm_budget (id, year, b_account_id, district_id,revision,user_id,entry_date,budget_cost) VALUES ("
 							. $this->bocommon->next_id('fm_budget') . ","
 							. $basis['year'] . ",'"
@@ -869,27 +869,27 @@
 							. $entry['account_sum'] . ")",__LINE__,__FILE__);
 						}
 					}
-					
+
 					if($test_sum != $basis['budget_cost'])
 					{
 						$diff_sum = $basis['budget_cost'] - $test_sum;
 						$sql = "SELECT max(budget_cost) as budget_cost FROM fm_budget WHERE year = " . (int)$basis['year']
 						 . " AND district_id = " . (int)$basis['district_id']
 						 . " AND revision = " . (int)$basis['revision'];
-						 
+
 						 $this->db->query($sql,__LINE__,__FILE__);
 						 $this->db->next_record();
 						 $max_budget_cost = $this->db->f('budget_cost');
-						
+
 						$sql = "SELECT id FROM fm_budget WHERE year = " . (int)$basis['year']
 						 . " AND district_id = " . (int)$basis['district_id']
 						 . " AND revision = " . (int)$basis['revision']
 						 . " AND budget_cost = $max_budget_cost";
-						 
+
 						 $this->db->query($sql,__LINE__,__FILE__);
 						 $this->db->next_record();
-						 
-						 $this->db->query("UPDATE fm_budget set budget_cost = budget_cost + $diff_sum WHERE id = " . (int)$this->db->f('id') ,__LINE__,__FILE__);	
+
+						 $this->db->query("UPDATE fm_budget set budget_cost = budget_cost + $diff_sum WHERE id = " . (int)$this->db->f('id') ,__LINE__,__FILE__);
 					}
 				}
 			}

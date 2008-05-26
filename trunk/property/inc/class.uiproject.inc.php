@@ -65,10 +65,12 @@
 			$this->nextmatchs		= CreateObject('phpgwapi.nextmatchs');
 			$this->account			= $GLOBALS['phpgw_info']['user']['account_id'];
 
-			$this->bo			= CreateObject('property.boproject',true);
+			$this->bo				= CreateObject('property.boproject',true);
 			$this->bocommon			= CreateObject('property.bocommon');
+			$this->cats				= & $this->bo->cats;
 
-			$this->acl 			= CreateObject('phpgwapi.acl');
+	//		$this->acl 			= CreateObject('phpgwapi.acl');
+			$this->acl 				= & $GLOBALS['phpgw']->acl;
 			$this->acl_location		= '.project';
 			$this->acl_read 		= $this->acl->check('.project',1);
 			$this->acl_add 			= $this->acl->check('.project',2);
@@ -401,9 +403,9 @@
 				'link_url'			=> $GLOBALS['phpgw']->link('/index.php',$link_data),
 				'img_path'			=> $GLOBALS['phpgw']->common->get_image_path('phpgwapi','default'),
 				'lang_no_cat'			=> lang('no category'),
-				'lang_cat_statustext'		=> lang('Select the category the project belongs to. To do not use a category select NO CATEGORY'),
-				'select_name'			=> 'cat_id',
-				'cat_list'			=> $this->bocommon->select_category_list(array('format'=>'filter','selected' => $this->cat_id,'type' =>'project','order'=>'descr')),
+
+				'cat_filter'			=> $this->cats->formatted_xslt_list(array('select_name' => 'cat_id','selected' => $this->cat_id,'globals' => True,'link_data' => $link_data)),
+
 				'district_list'			=> $this->bocommon->select_district_list('filter',$this->district_id),
 				'lang_no_district'		=> lang('no district'),
 				'lang_district_statustext'	=> lang('Select the district the selection belongs to. To do not use a district select NO DISTRICT'),
@@ -1024,11 +1026,8 @@
 				'lang_done_statustext'				=> lang('Back to the list'),
 				'lang_save_statustext'				=> lang('Save the project'),
 				'lang_no_cat'					=> lang('Select category'),
-				'lang_cat_statustext'				=> lang('Select the category the project belongs to. To do not use a category select NO CATEGORY'),
-				'select_name'					=> 'values[cat_id]',
 				'value_cat_id'					=> (isset($values['cat_id'])?$values['cat_id']:''),
-				'cat_list'					=> $this->bocommon->select_category_list(array('format'=>'select','selected' => $values['cat_id'],'type' =>'project','order'=>'descr')),
-
+				'cat_select'				=> $this->cats->formatted_xslt_list(array('select_name' => 'values[cat_id]','selected' => $this->cat_id)),
 				'lang_workorder_id'				=> lang('Workorder ID'),
 				'sum_workorder_budget'				=> (isset($values['sum_workorder_budget'])?$values['sum_workorder_budget']:''),
 				'sum_workorder_calculation'			=> (isset($values['sum_workorder_calculation'])?$values['sum_workorder_calculation']:''),
@@ -1226,6 +1225,8 @@
 				}
 			}
 
+			$categories = $this->cats->formatted_xslt_list(array('selected' => $this->cat_id));
+
 			$data = array
 			(
 				'msgbox_data'				=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
@@ -1287,8 +1288,8 @@
 				'value_descr'				=> $values['descr'],
 				'lang_done_statustext'			=> lang('Back to the list'),
 				'select_name'				=> 'values[cat_id]',
-				'cat_list'				=> $this->bocommon->select_category_list(array('format'=>'select','selected' => $values['cat_id'],'type' =>'project','order'=>'descr')),
 
+				'cat_list'					=> $categories['cat_list'],
 				'lang_workorder_id'			=> lang('Workorder ID'),
 				'sum_workorder_budget'			=> $values['sum_workorder_budget'],
 				'sum_workorder_calculation'		=> $values['sum_workorder_calculation'],

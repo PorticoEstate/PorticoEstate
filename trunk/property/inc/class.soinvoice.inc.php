@@ -40,8 +40,6 @@
 		{
 		//	$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->bocommon		= CreateObject('property.bocommon');
-			$this->db           	= $this->bocommon->new_db();
-			$this->db2           	= $this->bocommon->new_db();
 			$this->account_id 	= $GLOBALS['phpgw_info']['user']['account_id'];
 
 			$this->acl 		= CreateObject('phpgwapi.acl');
@@ -49,6 +47,9 @@
 			$this->join		= $this->bocommon->join;
 			$this->left_join	= $this->bocommon->left_join;
 			$this->like		= $this->bocommon->like;
+			$this->db           	= $this->bocommon->new_db();
+			$this->db2           	= $this->bocommon->new_db($this->db);
+
 		}
 
 		function read_invoice($data)
@@ -77,7 +78,7 @@
 				$allrows 		= (isset($data['allrows'])?$data['allrows']:'');
 				$voucher_id 		= (isset($data['voucher_id'])?$data['voucher_id']:'');
 				$b_account_class	= (isset($data['b_account_class'])?$data['b_account_class']:'');
-				$district_id 		= (isset($data['district_id'])?$data['district_id']:'');			
+				$district_id 		= (isset($data['district_id'])?$data['district_id']:'');
 			}
 			$join_tables	= '';
 			$filtermethod	= '';
@@ -135,7 +136,7 @@
 				$filtermethod .= " $where  pmwrkord_code ='$workorder_id' ";
 				$where= 'AND';
 			}
-			
+
 
 			if ($voucher_id)
 			{
@@ -175,19 +176,19 @@
 	 				$emonth = $dateparts[$m];
 	 				$eyear = $dateparts[$y];
 
-					$start_date = date($this->bocommon->dateformat,mktime(2,0,0,$smonth,$sday,$syear));				
+					$start_date = date($this->bocommon->dateformat,mktime(2,0,0,$smonth,$sday,$syear));
 					if ($syear == $eyear)
 					{
 						$end_date = date($this->bocommon->dateformat,mktime(2,0,0,12,31,$eyear));
 						$filtermethod .= " $where (fakturadato >'$start_date' AND fakturadato < '$end_date'"
-								. " AND periode >" . ($smonth -1) . " AND periode <" . ($emonth+1) . ')';						
+								. " AND periode >" . ($smonth -1) . " AND periode <" . ($emonth+1) . ')';
 					}
 
 					$end_date = date($this->bocommon->dateformat,mktime(2,0,0,$emonth,$eday,$eyear));
 
 
 		/*			$filtermethod .= " $where (fakturadato >'$start_date' AND fakturadato < '$end_date'";
-		
+
 					if($smonth < 3)
 					{
 						$filtermethod .= " AND periode = 1)";
@@ -196,7 +197,7 @@
 					{
 						$filtermethod .= ")";
 					}
-		*/	
+		*/
 				}
 			}
 			else
@@ -944,7 +945,7 @@
 
 		function read_single_voucher($bilagsnr)
 		{
-			$sql = "SELECT * from fm_ecobilag WHERE bilagsnr ='$bilagsnr'";		
+			$sql = "SELECT * from fm_ecobilag WHERE bilagsnr ='$bilagsnr'";
 			$this->db->query($sql,__LINE__,__FILE__);
 
 			while ($this->db->next_record())

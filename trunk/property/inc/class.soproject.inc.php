@@ -37,11 +37,10 @@
 
 		function property_soproject()
 		{
-		//	$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->account		= $GLOBALS['phpgw_info']['user']['account_id'];
 			$this->bocommon		= CreateObject('property.bocommon');
-			$this->db =& $GLOBALS['phpgw']->db;
-			$this->db2 = clone($this->db);
+			$this->db           	= $this->bocommon->new_db();
+			$this->db2           	= $this->bocommon->new_db($this->db);
 
 			$this->like =& $this->db->like;
 			$this->join =& $this->db->join;
@@ -49,14 +48,6 @@
 
 			$this->acl 		= CreateObject('phpgwapi.acl');
 			$this->grants	= $this->acl->get_grants('property','.project');
-		}
-
-
-		function read_single_project_category($id='')
-		{
-			$this->db->query("SELECT descr FROM fm_workorder_category where id='$id' ");
-			$this->db->next_record();
-			return $this->db->f('descr');
 		}
 
 		function select_status_list()
@@ -827,7 +818,7 @@
 				}
 
 			}
-			
+
 			if ($old_category != $project['cat_id'])
 			{
 				$historylog->add('T',$project['project_id'],$project['cat_id']);

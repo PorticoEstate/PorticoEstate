@@ -41,7 +41,7 @@
 			$this->account		= $GLOBALS['phpgw_info']['user']['account_id'];
 			$this->bocommon		= CreateObject('property.bocommon');
 			$this->db           	= $this->bocommon->new_db();
-			$this->db2           	= $this->bocommon->new_db();
+			$this->db2           	= $this->bocommon->new_db($this->db);
 			$this->socommon		= CreateObject('property.socommon');
 
 			$this->join			= $this->bocommon->join;
@@ -155,7 +155,7 @@
 			$this->db->transaction_commit();
 			$receipt['id'] = $standard['id'];
 			$receipt['message'][] = array('msg' => lang('standard has been saved'));
-			
+
 			return $receipt;
 		}
 
@@ -171,7 +171,7 @@
 							. "' WHERE id='" . $standard['id']. "'",__LINE__,__FILE__);
 
 			$this->db->transaction_commit();
-			
+
 			$receipt['id'] = $standard['id'];
 			$receipt['message'][] = array('msg' =>lang('standard has been edited'));
 			return $receipt;

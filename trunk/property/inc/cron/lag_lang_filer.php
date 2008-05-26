@@ -42,7 +42,7 @@
 			$this->bocommon		= CreateObject('property.bocommon');
 			$this->db 		= $this->bocommon->new_db();
 		}
-		
+
 		function pre_run($data='')
 		{
 			if($data['enabled']==1)

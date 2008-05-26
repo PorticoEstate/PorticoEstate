@@ -57,6 +57,8 @@
 			$this->bocommon 	= CreateObject('property.bocommon');
 			$this->solocation 	= CreateObject('property.solocation');
 			$this->historylog	= CreateObject('property.historylog','request');
+			$this->cats					= CreateObject('phpgwapi.categories');
+			$this->cats->app_name		= 'property.project';
 
 			if ($session)
 			{
@@ -394,7 +396,8 @@
 				}
 				else if ($value['status'] == 'T' || $value['status'] == 'TO')
 				{
-					$record_history[$i]['value_new_value']	= $this->so->read_single_request_category($value['new_value']);
+					$category 								= $this->cats->return_single($value['new_value']);
+					$record_history[$i]['value_new_value']	= $category[0]['name'];
 				}
 				else if ($value['status'] != 'O' && $value['new_value'])
 				{
