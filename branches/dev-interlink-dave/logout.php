@@ -25,8 +25,7 @@
 	*/
 	include_once('header.inc.php');
 
-	$sessionid = phpgw::get_var('sessionid');
-	$kp3       = phpgw::get_var('kp3');
+	$sessionid = phpgw::get_var('phpgwsessid');
 
 	$verified = $GLOBALS['phpgw']->session->verify();
 	if ($verified)
@@ -46,7 +45,7 @@
 			$dh->close();
 		}
 		$GLOBALS['phpgw']->hooks->process('logout');
-		$GLOBALS['phpgw']->session->destroy($sessionid,$kp3);
+		$GLOBALS['phpgw']->session->destroy($sessionid);
 	}
 	else
 	{
@@ -59,12 +58,12 @@
 			));
 		}
 	}
-	$GLOBALS['phpgw']->session->phpgw_setcookie('sessionid');
-	$GLOBALS['phpgw']->session->phpgw_setcookie('kp3');
-	$GLOBALS['phpgw']->session->phpgw_setcookie('domain');
-	if($GLOBALS['phpgw_info']['server']['sessions_type'] == 'php')
+
+	if ( isset($GLOBALS['phpgw_info']['server']['usecookies'])
+		&& $GLOBALS['phpgw_info']['server']['usecookies'] )
 	{
-		$GLOBALS['phpgw']->session->phpgw_setcookie(PHPGW_PHPSESSID);
+		$GLOBALS['phpgw']->session->phpgw_setcookie('phpgwsessid');
+		$GLOBALS['phpgw']->session->phpgw_setcookie('domain');
 	}
 
-	$GLOBALS['phpgw']->redirect($GLOBALS['phpgw_info']['server']['webserver_url'].'/login.php?cd=1');
+	$GLOBALS['phpgw']->redirect_link('/login.php', array('cd' => 1));
