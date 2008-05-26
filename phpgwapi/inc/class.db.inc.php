@@ -130,7 +130,9 @@
 		*/
 		public function __clone()
 		{
-			$this->new_adodb();
+			//FIXME will be reenabled when cloning is sorted in property
+	//		$this->new_adodb();
+			$this->adodb = clone($this->adodb);
 		}
 
 		/**
@@ -154,7 +156,8 @@
 		*/
 		public function __destruct()
 		{
-			$this->disconnect();
+			//FIXME will be reenabled when cloning is sorted in property
+	//		$this->disconnect();
 		}
 
 		/**
