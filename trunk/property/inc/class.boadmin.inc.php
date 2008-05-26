@@ -3,32 +3,31 @@
 	* phpGroupWare - property: a Facilities Management System.
 	*
 	* @author Sigurd Nes <sigurdne@online.no>
-	* @copyright Copyright (C) 2003,2004,2005,2006,2007 Free Software Foundation, Inc. http://www.fsf.org/
-	* This file is part of phpGroupWare.
-	*
-	* phpGroupWare is free software; you can redistribute it and/or modify
-	* it under the terms of the GNU General Public License as published by
-	* the Free Software Foundation; either version 2 of the License, or
-	* (at your option) any later version.
-	*
-	* phpGroupWare is distributed in the hope that it will be useful,
-	* but WITHOUT ANY WARRANTY; without even the implied warranty of
-	* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-	* GNU General Public License for more details.
-	*
-	* You should have received a copy of the GNU General Public License
-	* along with phpGroupWare; if not, write to the Free Software
-	* Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
-	*
-	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
+	* @copyright Copyright (C) 2003,2004,2005,2006,2007,2008 Free Software Foundation, Inc. http://www.fsf.org/
+	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License v3 or later
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/bbb_/ekstern/
 	* @package property
 	* @subpackage admin
  	* @version $Id$
 	*/
 
+	/*
+	   This program is free software: you can redistribute it and/or modify
+	   it under the terms of the GNU General Public License as published by
+	   the Free Software Foundation, either version 3 of the License, or
+	   (at your option) any later version.
+
+	   This program is distributed in the hope that it will be useful,
+	   but WITHOUT ANY WARRANTY; without even the implied warranty of
+	   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	   GNU General Public License for more details.
+
+	   You should have received a copy of the GNU General Public License
+	   along with this program.  If not, see <http://www.gnu.org/licenses/>.
+	 */
+
 	/**
-	 * Description
+	 * FIXME I need a proper description
 	 * @package property
 	 */
 
@@ -205,7 +204,7 @@
 			$categories[0]['name']	= lang('Groups');
 			$categories[1]['id']	= 'accounts';
 			$categories[1]['name']	= lang('Users');
-			
+
 			return $this->bocommon->select_list($selected,$categories);
 		}
 
@@ -236,7 +235,7 @@
 
 				$this->acl->account_id = $user_id;
 				$this->acl->read_repository();
-				$this->acl->delete($this->acl_app, $this->location, $grantor, $type);			
+				$this->acl->delete($this->acl_app, $this->location, $grantor, $type);
 				$this->acl->add($this->acl_app, $this->location, $rights, $grantor, $type);
 				$this->acl->save_repository($this->acl_app, $this->location);
 			}
@@ -344,7 +343,7 @@
 				$this->start = -1;
 				$offset = -1;
 			}
-			
+
 			$allusers = $GLOBALS['phpgw']->accounts->get_list($type, $this->start,$this->sort, $this->order, $this->query, $offset);
 
 			if ( isset($allusers) && is_array($allusers))
@@ -356,21 +355,21 @@
 					$user_list[$j]['account_lid'] 			= $account['account_lid'];
 					$user_list[$j]['account_firstname'] 	= $account['account_firstname'];
 					$user_list[$j]['account_lastname'] 		= $account['account_lastname'];
-					
+
 					if($this->location == '.invoice')
 					{
 						$user_list[$j]['initials']			= $this->so->get_initials($account['account_id']);
 					}
-										
+
 					$this->acl->account_id=$account['account_id'];
 
 					$this->acl->read_repository();
 
 					$count_right=count($right);
-					
+
 					for ( $i = 0; $i < $count_right; ++$i )
 					{
-						if($this->acl->check_brutto($this->location, $right[$i],$this->acl_app,$grantor,0,$check_account_type))
+						if($this->acl->check_rights($this->location, $right[$i],$this->acl_app,$grantor,0,$check_account_type))
 						{
 							if($this->acl->account_type == 'g')
 							{
@@ -382,7 +381,7 @@
 							}
 							$user_list[$j]['result'][$right[$i]] = 'checked';
 						}
-						if($this->acl->check_brutto($this->location, $right[$i],$this->acl_app,$grantor,1,$check_account_type))
+						if($this->acl->check_rights($this->location, $right[$i],$this->acl_app,$grantor,1,$check_account_type))
 						{
 							if($this->acl->account_type == 'g')
 							{
@@ -416,4 +415,3 @@
 
 		}
 	}
-

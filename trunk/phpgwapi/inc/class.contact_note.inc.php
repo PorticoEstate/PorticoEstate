@@ -12,11 +12,12 @@
 	/**
 	* Use SQL criteria
 	*/
-	include_once(PHPGW_API_INC . '/class.sql_criteria.inc.php');
+	phpgw::import_class('phpgwapi.sql_criteria');
+
 	/**
 	* Use SQL entity
 	*/
-	include_once(PHPGW_API_INC . '/class.sql_entity.inc.php');
+	phpgw::import_class('phpgwapi.sql_entity');
 
 	/**
 	* Query statements for "note" table
@@ -24,7 +25,7 @@
 	* @package phpgwapi
 	* @subpackage contacts
 	*/
-	class contact_note extends sql_entity
+	class contact_note extends phpgwapi_sql_entity
 	{
 		var $map = array('key_note_id'		=> array('select'	=> '',
 								 'criteria' 	=> '',
@@ -115,4 +116,3 @@
 			$this->set_elinks('note_type', 'phpgwapi.contact_note_type','note_type_id');
 		}
 	}
-?>

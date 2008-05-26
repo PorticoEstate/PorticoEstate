@@ -12,7 +12,7 @@
 
 	/**
 	 * Preferences class for setting application preferences
-	 * 
+	 *
 	 * @package phpgwapi
 	 * @subpackage application
 	 * @internal the prefs are read into 4 arrays:
@@ -24,15 +24,15 @@
 	class preferences
 	{
 		/**
-		 * @var account_id 
+		 * @var account_id
 		 */
 		var $account_id;
 		/**
-		 * @var account_type 
+		 * @var account_type
 		 */
 		var $account_type;
 		/**
-		 * @var data effectiv user prefs, used by all apps 
+		 * @var data effectiv user prefs, used by all apps
 		 */
 		var $data = array();
 
@@ -42,19 +42,19 @@
 		var $debug = false;
 
 		/**
-		 * @var user set user prefs for saveing (no defaults/forced prefs merged) 
+		 * @var user set user prefs for saveing (no defaults/forced prefs merged)
 		 */
 		var $user = array();
 		/**
-		 * @var default default prefs 
+		 * @var default default prefs
 		 */
 		var $default = array();
 		/**
-		 * @var forced forced prefs 
+		 * @var forced forced prefs
 		 */
 		var $forced = array();
 		/**
-		 * @var db 
+		 * @var db
 		 */
 		var $db;
 
@@ -156,28 +156,32 @@
 				$GLOBALS['phpgw']->translation->userlang = $GLOBALS['phpgw_info']['user']['preferences']['common']['lang'];
 			}
 			// we cant use phpgw_info/user/fullname, as it's not set when we run
-			$GLOBALS['phpgw']->accounts->get_account_name($this->account_id,$lid,$fname,$lname);
+			$user = $GLOBALS['phpgw']->accounts->get($this->account_id);
 
-			$this->values = array(	// standard notify replacements
-					'fullname'  => $GLOBALS['phpgw']->common->display_fullname('',$fname,$lname),
-					'firstname' => $fname,
-					'lastname'  => $lname,
-					'domain'    => $GLOBALS['phpgw_info']['server']['mail_suffix'],
-					'email'     => $this->email_address($this->account_id),
-					'date'      => $GLOBALS['phpgw']->common->show_date('',$GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'])
-					);
+			// standard notify replacements
+			$this->values = array
+			(
+				'fullname'  => (string) $user,
+				'firstname' => $user->firstname,
+				'lastname'  => $user->lastname,
+				'domain'    => $GLOBALS['phpgw_info']['server']['mail_suffix'],
+				'email'     => $this->email_address($this->account_id),
+				'date'      => $GLOBALS['phpgw']->common->show_date('',$GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'])
+			);
 			// do this first, as it might be already contain some substitues
 			//
 			$this->values['email'] = $this->parse_notify($this->values['email']);
 
-			$this->vars = array(	// langs have to be in common !!!
-					'fullname'  => lang('name of the user, eg. %1',$this->values['fullname']),
-					'firstname' => lang('first name of the user, eg. %1',$this->values['firstname']),
-					'lastname'  => lang('last name of the user, eg. %1',$this->values['lastname']),
-					'domain'    => lang('domain name for mail-address, eg. %1',$this->values['domain']),
-					'email'     => lang('email-address of the user, eg. %1',$this->values['email']),
-					'date'      => lang('todays date, eg. %1',$this->values['date'])
-					);
+			// langs have to be in common !!!
+			$this->vars = array
+			(
+				'fullname'  => lang('name of the user, eg. %1',$this->values['fullname']),
+				'firstname' => lang('first name of the user, eg. %1',$this->values['firstname']),
+				'lastname'  => lang('last name of the user, eg. %1',$this->values['lastname']),
+				'domain'    => lang('domain name for mail-address, eg. %1',$this->values['domain']),
+				'email'     => lang('email-address of the user, eg. %1',$this->values['email']),
+				'date'      => lang('todays date, eg. %1',$this->values['date'])
+			);
 			// do the substituetion in the effective prefs (data)
 			//
 			foreach($this->data as $app => $data)
@@ -222,7 +226,7 @@
 				}
 				else
 				{
-					$arr[$key] = stripslashes($value);	
+					$arr[$key] = stripslashes($value);
 				}
 			}
 		}
@@ -327,7 +331,7 @@
 				echo "user<pre>";    print_r($this->user); echo "</pre>\n";
 				echo "forced<pre>";  print_r($this->forced); echo "</pre>\n";
 				echo "default<pre>"; print_r($this->default); echo "</pre>\n";
-				echo "effectiv<pre>";print_r($this->data); echo "</pre>\n"; 
+				echo "effectiv<pre>";print_r($this->data); echo "</pre>\n";
 			}
 			return $this->data;
 		}
@@ -552,7 +556,7 @@
 		 * save the the preferences to the repository
 		 *
 		 * @param $update_session_info old param, seems not to be used
-		 * @param $type which prefs to update: user/default/forced 
+		 * @param $type which prefs to update: user/default/forced
 		 * the user prefs for saveing are in $this->user not in $this->data, which are the effectiv prefs only
 		 */
 		function save_repository($update_session_info = False,$type='user')
@@ -651,7 +655,7 @@
 		/**
 		 * update the preferences array
 		 *
-		 * 
+		 *
 		 * @param $data array of preferences
 		 */
 		function update_data($data)
@@ -697,37 +701,37 @@
 				$preferences_update = True;
 			}
 			/* This takes care of new users who dont have proper default prefs setup */
-			if (!isset($GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs']) || 
+			if (!isset($GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs']) ||
 					!$GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'])
 			{
 				$this->add('common','maxmatchs',15);
 				$preferences_update = True;
 			}
-			if (!isset($GLOBALS['phpgw_info']['user']['preferences']['common']['theme']) || 
+			if (!isset($GLOBALS['phpgw_info']['user']['preferences']['common']['theme']) ||
 					!$GLOBALS['phpgw_info']['user']['preferences']['common']['theme'])
 			{
 				$this->add('common','theme','default');
 				$preferences_update = True;
 			}
-			if (!isset($GLOBALS['phpgw_info']['user']['preferences']['common']['template_set']) || 
+			if (!isset($GLOBALS['phpgw_info']['user']['preferences']['common']['template_set']) ||
 					!$GLOBALS['phpgw_info']['user']['preferences']['common']['template_set'])
 			{
 				$this->add('common','template_set','verdilak');
 				$preferences_update = True;
 			}
-			if (!isset($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']) || 
+			if (!isset($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']) ||
 					!$GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'])
 			{
 				$this->add('common','dateformat','d-M-Y');
 				$preferences_update = True;
 			}
-			if (!isset($GLOBALS['phpgw_info']['user']['preferences']['common']['timeformat']) || 
+			if (!isset($GLOBALS['phpgw_info']['user']['preferences']['common']['timeformat']) ||
 					!$GLOBALS['phpgw_info']['user']['preferences']['common']['timeformat'])
 			{
 				$this->add('common','timeformat',12);
 				$preferences_update = True;
 			}
-			if (!isset($GLOBALS['phpgw_info']['user']['preferences']['common']['lang']) || 
+			if (!isset($GLOBALS['phpgw_info']['user']['preferences']['common']['lang']) ||
 					!$GLOBALS['phpgw_info']['user']['preferences']['common']['lang'])
 			{
 				$this->add('common','lang',$GLOBALS['phpgw']->common->getPreferredLanguage());
@@ -752,8 +756,8 @@
 		 * mail server of type pop3, pop3s, imap, imaps users value from
 		 * $GLOBALS['phpgw_info']['user']['preferences']['email']['mail_port'].
 		 * if that value is not set, it generates a default port for the given $server_type.
-		 * Someday, this *MAY* be 
-		 * (a) a se4rver wide admin setting, or 
+		 * Someday, this *MAY* be
+		 * (a) a se4rver wide admin setting, or
 		 * (b)user custom preference
 		 * Until then, simply set the port number based on the mail_server_type, thereof
 		 * ONLY call this function AFTER ['email']['mail_server_type'] has been set.
@@ -798,7 +802,7 @@
 						$port_number = 993;
 						break;
 					case 'imap':
-						// IMAP normal connection, No SSL 
+						// IMAP normal connection, No SSL
 					default:
 						// UNKNOWN SERVER in Preferences, return a
 						// default value that is likely to work
@@ -839,8 +843,8 @@
 		/**
 		 * returns the custom email-address (if set) or generates a default one
 		 *
-		 * This will generate the appropriate email address used as the "From:" 
-		 email address when the user sends email, the localpert * part. The "personal" 
+		 * This will generate the appropriate email address used as the "From:"
+		 email address when the user sends email, the localpert * part. The "personal"
 		 part is generated elsewhere.
 		 In the absence of a custom ['email']['address'], this function should be used to set it.
 		 * @param $accountid - as determined in and/or passed to "create_email_preferences"
@@ -876,9 +880,9 @@
 		 * 	$GLOBALS['phpgw_info']['user']['preferences'] = $GLOBALS['phpgw']->preferences->create_email_preferences();
 		 * which fills an array based at:
 		 * 	$GLOBALS['phpgw_info']['user']['preferences']['email'][prefs_are_elements_here]
-		 * Reading the raw preference DB data and comparing to the email preference schema defined in 
-		 * /email/class.bopreferences.inc.php (see discussion there and below) to create default preference values 
-		 * for the  in the ['email'][] pref data array in cases where the user has not supplied 
+		 * Reading the raw preference DB data and comparing to the email preference schema defined in
+		 * /email/class.bopreferences.inc.php (see discussion there and below) to create default preference values
+		 * for the  in the ['email'][] pref data array in cases where the user has not supplied
 		 * a preference value for any particular preference item available to the user.
 		 * @access Public
 		 */
@@ -967,7 +971,7 @@
 			// the user does not directly manipulate this pref for the default email account
 			if ((string)$acctnum == '0')
 			{
-				$prefs['email']['fullname'] = $GLOBALS['phpgw_info']['user']['fullname'];
+				$prefs['email']['fullname'] = (string) $GLOBALS['phpgw']->accounts->get($account_id);
 			}
 
 
@@ -1007,11 +1011,11 @@
 
 			// --- make the schema-based pref data for this user ---
 			// user defined values and/or user specified custom email prefs are read from the
-			// prefs DB with mininal manipulation of the data. Currently the only change to 
+			// prefs DB with mininal manipulation of the data. Currently the only change to
 			// users raw data is related to reversing the encoding of "database un-friendly" chars
-			// which itself may become unnecessary if and when the database handlers can reliably 
+			// which itself may become unnecessary if and when the database handlers can reliably
 			// take care of this for us. Of course, password data requires special decoding,
-			// but the password in the array [email][paswd] should be left in encrypted form 
+			// but the password in the array [email][paswd] should be left in encrypted form
 			// and only decrypted seperately when used to login in to an email server.
 
 			// --- generating a default value if necessary ---
@@ -1042,7 +1046,7 @@
 
 				// --- is there a value in the DB for this preference item ---
 				// if the prefs DB has no value for this defined available preference, we must make one.
-				// This occurs if (a) this is user's first login, or (b) this is a custom pref which the user 
+				// This occurs if (a) this is user's first login, or (b) this is a custom pref which the user
 				// has not overriden, do a default (non-custom) value is needed.
 				if (!isset($prefs['email'][$this_avail_pref['id']]))
 				{
@@ -1082,7 +1086,7 @@
 						}
 						else
 						{
-							// opposite of boolean not_set  = string "True" which simply sets a 
+							// opposite of boolean not_set  = string "True" which simply sets a
 							// value it exists in the users session [email][] preference array
 							$prefs['email'][$this_avail_pref['id']] = 'True';
 						}
@@ -1106,7 +1110,7 @@
 					// INIT_NO_FILL
 					elseif ($set_proc[0] == 'init_no_fill')
 					{
-						// we have an available preference item that we may NOT fill with a default 
+						// we have an available preference item that we may NOT fill with a default
 						// value. Only the user may supply a value for this pref item.
 						print_debug('* handle "init_no_fill" set_proc:', serialize($set_proc),'api');
 						// we are FORBADE from filling this at this time!
@@ -1114,7 +1118,7 @@
 					// varEVAL
 					elseif ($set_proc[0] == 'varEVAL')
 					{
-						// similar to "function" but used for array references, the string in $set_proc[1] 
+						// similar to "function" but used for array references, the string in $set_proc[1]
 						// represents code which typically is an array referencing a system/api property
 						print_debug('* handle "GLOBALS" set_proc:', serialize($set_proc),'api');
 						$evaled = '';
@@ -1140,8 +1144,8 @@
 					/// here until the next OFFICIAL submit email prefs function, where it
 					// will again get this preparation before being written to the database.
 
-					// NOTE: if database de-fanging is eventually handled deeper in the 
-					// preferences class, then the following code would become depreciated 
+					// NOTE: if database de-fanging is eventually handled deeper in the
+					// preferences class, then the following code would become depreciated
 					// and should be removed in that case.
 					if (($this_avail_pref['type'] == 'user_string') &&
 							(stristr($this_avail_pref['write_props'], 'no_db_defang') == False))
@@ -1155,7 +1159,7 @@
 			}
 			// users preferences are now established to known structured values...
 
-			// SANITY CHECK 
+			// SANITY CHECK
 			// ---  [email][use_trash_folder]  ---
 			// ---  [email][use_sent_folder]  ---
 			// is it possible to use Trash and Sent folders - i.e. using IMAP server
@@ -1196,7 +1200,7 @@
 		{
 		$prefs['email']['userid'] = $this->sub_default_userid($accountid);
 		}
-		// ---  address  --- 
+		// ---  address  ---
 		if (!isset($prefs['email']['address']))
 		{
 		$prefs['email']['address'] = $this->email_address($accountid);
@@ -1286,7 +1290,7 @@
 	//	$prefs['email']['font_size_offset'] = 'normal';
 	//}
 
-	// SANITY CHECK 
+	// SANITY CHECK
 	// ---  use_trash_folder  ---
 	// ---  use_sent_folder  ---
 	// is it possible to use Trash and Sent folders - i.e. using IMAP server
@@ -1315,4 +1319,3 @@
 	return $prefs;
 	*/
 	} /* end of preferences class */
-?>

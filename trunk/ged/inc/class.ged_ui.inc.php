@@ -395,6 +395,7 @@ class ged_ui
 		exec ( "cd ".$GLOBALS['phpgw_info']['server']['temp_dir']."; ".zip_bin." -r ".$theversion_sterile_file_name.".zip ".$theversion_sterile_file_name, $retval);
 		
 
+		// FIXME the browser class handles (almost?) all of this for you
 		if ($this->browser->is_ie())
 		{
 			ini_set('zlib.output_compression', 'Off');
@@ -1815,24 +1816,25 @@ class ged_ui
 	// Search
 	function search()
 	{
-		$search_query=get_var('search_query', array('GET', 'POST'));
-		$search=get_var('search', array('GET', 'POST'));
+		$search_query=get_var('search_query', 'string', 'GET');
+		$search = phpgw::get_var('search', 'string', 'GET');
 
 		$this->set_template_defaults();
 		$this->display_app_header();
 		
-		$link_data=null;
-		$link_data['menuaction']='ged.ged_ui.search';
-		$link_data['kp3']=$GLOBALS['phpgw_info']['user']['kp3'];
-		$link_data['sessionid']=$GLOBALS['sessionid'];
-		$link_data['click_history']=$_GET['click_history'];
-		$search_url=$GLOBALS['phpgw_info']['server']['webserver_url'];
-		
-		$this->t->set_var('menuaction', $link_data['menuaction']);
-		$this->t->set_var('kp3', $link_data['kp3']);
-		$this->t->set_var('sessionid', $link_data['sessionid']);
-		$this->t->set_var('click_history', $link_data['click_history']);
-		$this->t->set_var('action_search', $search_url);
+		// we do this as the form is a get request
+		// TODO add a method to sessions class to make this consistent
+		$link_data = array
+		(
+			'menuaction'	=> 'ged.ged_ui.search',
+			'sessionid'		=> $GLOBALS['sessionid'],
+			'click_history'	=> phpgw::get_var('click_history', 'string', 'GET'),
+			'search_url'	=> $GLOBALS['phpgw_info']['server']['webserver_url']
+		);
+		foreach ( $link_data as $key => $val )
+		{
+			$this->t->set_var($key, $val);
+		};
 		
 		// Search
 		$results_query= $this->ged_dm->search($search_query);
@@ -1916,19 +1918,19 @@ class ged_ui
 		$this->t->set_block('ged_projects', 'accepted_block', 'accepted_block_handle');
 		$this->t->set_block('ged_projects', 'refused_block', 'refused_block_handle');
 
-		$link_data=null;
-		$link_data['menuaction']='ged.ged_ui.stats';
-		$link_data['kp3']=$GLOBALS['phpgw_info']['user']['kp3'];
-		$link_data['sessionid']=$GLOBALS['sessionid'];
-		$link_data['click_history']=$_GET['click_history'];
-		$filter_url=$GLOBALS['phpgw_info']['server']['webserver_url'];
-		
-		$this->t->set_var('menuaction', $link_data['menuaction']);
-		$this->t->set_var('kp3', $link_data['kp3']);
-		$this->t->set_var('sessionid', $link_data['sessionid']);
-		$this->t->set_var('click_history', $link_data['click_history']);
-		$this->t->set_var('action_filter', $filter_url);
-		
+		$link_data = array
+		(
+			'menuaction'	=> 'ged.ged_ui.stats',
+			'sessionid'		=> $GLOBALS['sessionid'],
+			'click_history'	=> phpgw::get_var('click_history', 'string', 'GET'),
+			'search_url'	=> $GLOBALS['phpgw_info']['server']['webserver_url']
+			'action_filter'	=> $GLOBALS['phpgw_info']['server']['webserver_url']
+		);
+		foreach ( $link_data as $key => $val )
+		{
+			$this->t->set_var($key, $val);
+		};
+
 		$this->t->set_var('jscal_start', $jscal->input('date_start', $datetime_start));
 		$this->t->set_var('jscal_end', $jscal->input('date_end', $datetime_end));
 

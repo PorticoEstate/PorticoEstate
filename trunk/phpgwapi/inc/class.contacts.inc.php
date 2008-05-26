@@ -11,9 +11,9 @@
 	/**
 	* Include SQL handler
 	*/
-	include(PHPGW_API_INC . '/class.contacts_sql.inc.php');
+	phpgw::import_class('phpgwapi.contacts_sql');
+
 	/**
 	* Include shared methods
 	*/
-	include(PHPGW_API_INC . '/class.contacts_shared.inc.php');
-?>
+	phpgw::import_class('phpgwapi.contacts_shared');

@@ -4,7 +4,7 @@
 	* @author Joseph Engo <jengo@phpgroupware.org>
 	* @author Bettina Gille <ceb@phpgroupware.org>
 	* @author Dave Hall skwashd phpgroupware.org
-	* @copyright Copyright (C) 2000-2006 Free Software Foundation, Inc. http://www.fsf.org/
+	* @copyright Copyright (C) 2000-2008 Free Software Foundation, Inc. http://www.fsf.org/
 	* @license http://www.fsf.org/licenses/lgpl.html GNU Lesser General Public License
 	* @package phpgwapi
 	* @subpackage gui
@@ -16,15 +16,15 @@
 	* @see nextmatchs_xslt
 	* @todo make a generic abstract base class which both classes extend, not this wacky relationship
 	*/
-	include_once(PHPGW_API_INC . '/class.nextmatchs_xslt.inc.php');
+	phpgw::import_class('phpgwapi.nextmatchs_xslt');
 
 	/**
 	* Handles limiting number of rows displayed
-	* 
+	*
 	* @package phpgwapi
 	* @subpackage gui
 	*/
-	class nextmatchs extends nextmatchs_xslt
+	class phpgwapi_nextmatchs extends phpgwapi_nextmatchs_xslt
 	{
 		/**
 		* @var int $maxmatches the maximum number of records to return
@@ -56,12 +56,18 @@
 		*
 		* @param bool $website ???
 		*/
-		function nextmatchs($website = False)
+		public function __construct($website = false)
 		{
-			if(!$website)
+			if ( !$website )
 			{
-				$this->template = createObject('phpgwapi.Template',PHPGW_TEMPLATE_DIR);
-				$this->template->set_file(array(
+				if ( !isset($GLOBALS['phpgw']->template)
+					|| is_object($GLOBALS['phpgw']->template) )
+				{
+					$GLOBALS['phpgw']->template = createObject('phpgwapi.Template', PHPGW_TEMPLATE_DIR);
+				}
+				$this->template =& $GLOBALS['phpgw']->template;
+				$this->template->set_file(array
+				(
 					'_nextmatchs' => 'nextmatchs.tpl'
 				));
 				$this->template->set_block('_nextmatchs','nextmatchs');
@@ -76,13 +82,13 @@
 			}
 
 			$this->maxmatches = 15;
-			if(isset($GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs']) &&
-				intval($GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs']) > 0)
+			if ( isset($GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs']) &&
+				(int) $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] > 0 )
 			{
 				$this->maxmatches =& $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
 			}
 
-			if(isset($GLOBALS['phpgw_info']['menuaction']))
+			if ( isset($GLOBALS['phpgw_info']['menuaction']) )
 			{
 				$this->action = $GLOBALS['phpgw_info']['menuaction'];
 			}
@@ -92,8 +98,10 @@
 		 * Fetch commonly-used REQUEST vars
 		 *
 		 * This calls get_var() from functions.inc.php
+		 *
+		 * @return array the variables fetched (filter, qfield, start, order, sort)
 		 */
-		function get_var()
+		protected function _get_var()
 		{
 			return array
 			(
@@ -103,29 +111,6 @@
 				phpgw::get_var('order'),
 				phpgw::get_var('sort')
 			);
-		}
-
-		/**
-		 * Create a button icon
-		 *
-		 * @deprecated
-		 * @internal use CSS instead
-		 *
-		 * @param string $align the alignment of the icon
-		 * @param string $img_src the url to the image
-		 * @param string $label the alt text for the image
-		 */
-		function set_icon($align, $img, $label)
-		{
-			$var = array
-			(
-				'align'  => $align,
-				'img'    => $GLOBALS['phpgw']->common->image('phpgwapi',$img),
-				'label'  => lang($label),
-				'border' => 0
-			);
-			$this->template->set_var($var);
-			return $this->template->fp('out','link');
 		}
 
 		/**
@@ -154,33 +139,6 @@
 		}
 
 		/**
-		 * Create a single image button form
-		 *
-		 * @param string $img_src the url of the image
-		 * @param string $label the alt text for the image
-		 * @param string $link the url for the link
-		 * @param array $extravars the extra args for the url
-		 */
-		function set_link($align,$img,$link,$alt,$extravars)
-		{
-			$hidden = '';
-
-			$var = array
-			(
-				'align'     => $align,
-				'action'    => strlen($this->action) ? $this->page($extravars) : $GLOBALS['phpgw']->link($link, $extravars),
-				'form_name' => $img,
-				'hidden'    => $hidden,
-				'img'       => $GLOBALS['phpgw']->common->image('phpgwapi',$img),
-				'label'     => $alt,
-				'border'    => 0,
-				'start'     => $extravars['start']
-			);
-			$this->template->set_var($var);
-			return $this->template->fp('out','form');
-		}
-
-		/**
 		 * ?
 		*
 		 * @param $sn ?
@@ -195,7 +153,7 @@
 		 */
 		function show_tpl($sn,$localstart,$total,$extra, $twidth, $bgtheme,$search_obj=0,$filter_obj=1,$showsearch=1,$yours=0,$cat_id=0,$cat_field='fcat_id')
 		{
-			list($filter,$qfield,$start,$order,$sort) = $this->get_var();
+			list($filter,$qfield,$start,$order,$sort) = $this->_get_var();
 
 			$start = $localstart;
 
@@ -203,7 +161,7 @@
 
 			$extravars = Array();
 			$extravars = $this->split_extras($extravars,$extra);
-			
+
 			$var = array
 			(
 				'form_action'   => $this->action ? $this->page($extra) : $GLOBALS['phpgw']->link($sn, $extra),
@@ -263,7 +221,7 @@
 			{
 				$extravars = array();
 			}
-			
+
 			if ( is_string($extradata) && strlen($extradata) )
 			{
 				if ( !is_array($extravars) )
@@ -286,7 +244,7 @@
 					}
 				}
 			}
-			
+
 			if ( is_array($extravars) && isset($extravars['menuaction']) )
 			{
 				$this->action = $extravars['menuaction'];
@@ -318,9 +276,9 @@
 		 */
 		function left($scriptname,$start,$total,$extradata = '')
 		{
-			list($filter,$qfield,,$order,$sort) = $this->get_var();
+			list($filter,$qfield,,$order,$sort) = $this->_get_var();
 
-			$query = isset($_REQUEST['query']) ? urlencode(stripslashes($_REQUEST['query'])) : '';
+			$query = phpgw::get_var('query');
 			$extravars = array
 			(
 				'order'   => $order,
@@ -330,18 +288,18 @@
 				'query'   => $query
 			);
 
-			$extravars = $this->split_extras($extravars,$extradata);
+			$extravars = $this->split_extras($extravars, $extradata);
 			$ret_str = '';
 
 			if (($start != 0) &&
 				($start > $this->maxmatches))
 			{
 				$extravars['start'] = 0;
-				$ret_str .= $this->set_link('left','first',$scriptname,lang('First page'),$extravars);
+				$ret_str .= $this->_set_link('left','first',$scriptname,lang('First page'),$extravars);
 			}
 			else
 			{
-				$ret_str .= $this->set_icon('left','first-grey',lang('First page'));
+				$ret_str .= $this->_set_icon('left','first-grey',lang('First page'));
 			}
 
 			if ($start != 0)
@@ -355,11 +313,11 @@
 				{
 					$extravars['start'] = ($start - $this->maxmatches);
 				}
-				$ret_str .= $this->set_link('left','left',$scriptname,lang('Previous page'),$extravars);
+				$ret_str .= $this->_set_link('left','left',$scriptname,lang('Previous page'),$extravars);
 			}
 			else
 			{
-				$ret_str .= $this->set_icon('left','left-grey',lang('Previous page'));
+				$ret_str .= $this->_set_icon('left','left-grey',lang('Previous page'));
 			}
 			return $ret_str;
 		} /* left() */
@@ -374,7 +332,7 @@
 		 */
 		function right($scriptname,$start,$total,$extradata = '')
 		{
-			list($filter,$qfield,,$order,$sort) = $this->get_var();
+			list($filter,$qfield,,$order,$sort) = $this->_get_var();
 
 			$query = isset($_REQUEST['query']) ? urlencode(stripslashes($_REQUEST['query'])) : '';
 			$extravars = Array(
@@ -393,22 +351,22 @@
 				($total > $start + $this->maxmatches))
 			{
 				$extravars['start'] = ($start + $this->maxmatches);
-				$ret_str .= $this->set_link('right','right',$scriptname,lang('Next page'),$extravars);
+				$ret_str .= $this->_set_link('right','right',$scriptname,lang('Next page'),$extravars);
 			}
 			else
 			{
-				$ret_str .= $this->set_icon('right','right-grey',lang('Next page'));
+				$ret_str .= $this->_set_icon('right','right-grey',lang('Next page'));
 			}
 
 			if (($start != $total - $this->maxmatches) &&
 				(($total - $this->maxmatches) > ($start + $this->maxmatches)))
 			{
 				$extravars['start'] = ($total - $this->maxmatches);
-				$ret_str .= $this->set_link('right','last',$scriptname,lang('Last page'),$extravars);
+				$ret_str .= $this->_set_link('right','last',$scriptname,lang('Last page'),$extravars);
 			}
 			else
 			{
-				$ret_str .= $this->set_icon('right','last-grey',lang('Last page'));
+				$ret_str .= $this->_set_icon('right','last-grey',lang('Last page'));
 			}
 			return $ret_str;
 		} /* right() */
@@ -420,7 +378,7 @@
 		 */
 		function search_filter($search_obj=0,$filter_obj=1,$yours=0,$link='',$extra='')
 		{
-			list($filter,$qfield,$start,$order,$sort) = $this->get_var();
+			list($filter,$qfield,$start,$order,$sort) = $this->_get_var();
 
 			$start = $localstart;
 			$var = array(
@@ -446,7 +404,7 @@
 		 */
 		function cats_search_filter($search_obj=0,$filter_obj=1,$yours=0,$cat_id=0,$cat_field='fcat_id',$link='',$extra='')
 		{
-			list($filter,$qfield,$start,$order,$sort) = $this->get_var();
+			list($filter,$qfield,$start,$order,$sort) = $this->_get_var();
 
 			$start = $localstart;
 			$cats  = createObject('phpgwapi.categories');
@@ -738,8 +696,8 @@
 		}
 
 		/**
-		* 
-		* 
+		*
+		*
 		* @param object $tpl reference to template class
 		*/
 		public static function template_alternate_row_class(&$tpl, $classname = null)
@@ -776,7 +734,7 @@
 
 			$query = isset($_REQUEST['query']) ? urlencode(stripslashes($_REQUEST['query'])) : '';
 
-			list($filter,$qfield,$start,$NULL1,$NULL) = $this->get_var();
+			list($filter,$qfield,$start,$NULL1,$NULL) = $this->_get_var();
 
 			if(($order == $var) && ($sort == 'ASC'))
 			{
@@ -847,7 +805,7 @@
 		 * @param int $default_order users preference for ordering list items (force this when a new [different] sorting is requested)
 		 * @param string $order the current order (will be flipped if old_sort = new_sort)
 		 * @param string $program the name of the script to call
-		 * @param string $text the text label for the link 
+		 * @param string $text the text label for the link
 		 * @param array $extra: any extra values to be append to the URL get args
 		 */
 		function show_sort_order_imap($old_sort, $new_sort, $default_order, $order, $program, $text, $extra = array() )
@@ -890,9 +848,9 @@
 		 * same code as left and right (as of Dec 07, 2001) except all combined into one function
 		 *
 		 * @param feed_vars : array with these elements: <br>
-		 * 	start 
-		 * 	total 
-		 * 	cmd_prefix 
+		 * 	start
+		 * 	total
+		 * 	cmd_prefix
 		 * 	cmd_suffix
 		 * @return array, combination of functions left and right above, with these elements:
 		 * 	first_page
@@ -923,11 +881,11 @@
 				($feed_vars['start'] > $this->maxmatches))
 			{
 				$out_vars['start'] = 0;
-				$return_array['first_page'] = $this->set_link_imap('left','first',lang('First page'),$out_vars);
+				$return_array['first_page'] = $this->_set_link_imap('left','first',lang('First page'),$out_vars);
 			}
 			else
 			{
-				$return_array['first_page'] = $this->set_icon_imap('left','first-grey',lang('First page'));
+				$return_array['first_page'] = $this->_set_icon_imap('left','first-grey',lang('First page'));
 			}
 			// previous page
 			if($feed_vars['start'] != 0)
@@ -941,11 +899,11 @@
 				{
 					$out_vars['start'] = ($feed_vars['start'] - $this->maxmatches);
 				}
-				$return_array['prev_page'] = $this->set_link_imap('left','left',lang('Previous page'),$out_vars);
+				$return_array['prev_page'] = $this->_set_link_imap('left','left',lang('Previous page'),$out_vars);
 			}
 			else
 			{
-				$return_array['prev_page'] = $this->set_icon_imap('left','left-grey',lang('Previous page'));
+				$return_array['prev_page'] = $this->_set_icon_imap('left','left-grey',lang('Previous page'));
 			}
 
 			// re-initialize the out_vars
@@ -956,46 +914,127 @@
 				($feed_vars['total'] > $feed_vars['start'] + $this->maxmatches))
 			{
 				$out_vars['start'] = ($feed_vars['start'] + $this->maxmatches);
-				$return_array['next_page'] = $this->set_link_imap('right','right',lang('Next page'),$out_vars);
+				$return_array['next_page'] = $this->_set_link_imap('right','right',lang('Next page'),$out_vars);
 			}
 			else
 			{
-				$return_array['next_page'] = $this->set_icon_imap('right','right-grey',lang('Next page'));
+				$return_array['next_page'] = $this->_set_icon_imap('right','right-grey',lang('Next page'));
 			}
 			// last page
 			if(($feed_vars['start'] != $feed_vars['total'] - $this->maxmatches) &&
 				(($feed_vars['total'] - $this->maxmatches) > ($feed_vars['start'] + $this->maxmatches)))
 			{
 				$out_vars['start'] = ($feed_vars['total'] - $this->maxmatches);
-				$return_array['last_page'] = $this->set_link_imap('right','last',lang('Last page'),$out_vars);
+				$return_array['last_page'] = $this->_set_link_imap('right','last',lang('Last page'),$out_vars);
 			}
 			else
 			{
-				$return_array['last_page'] = $this->set_icon_imap('right','last-grey',lang('Last page'));
+				$return_array['last_page'] = $this->_set_icon_imap('right','last-grey',lang('Last page'));
 			}
 			return $return_array;
 		}
 
 		/**
-		 * ?
-		*
-		 * @param $img_src ?
-		 * @param $label ?
-		 * @param $link ?
-		 * @param $extravars ?
+		 * Create a button icon
+		 *
+		 * @param string $align the alignment of the icon
+		 * @param string $img   the url to the image
+		 * @param string $label the alt text for the image
+		 *
+		 * @return string html icon snippet
+		 *
+		 * @todo FIXME use CSS instead
 		 */
-		function set_link_imap($align,$img,$alt_text,$out_vars)
+		protected function _set_icon($align, $img, $label)
 		{
-			$img_full = $GLOBALS['phpgw']->common->image('phpgwapi',$img);
-			$image_part = '<img src="'.$img_full.'" border="0" alt="'.$alt_text.'" width="12" height="12">';
-			return '<a href="'.$out_vars['common_uri'].'&start='.$out_vars['start'].'">'.$image_part.'</a>';
+			$var = array
+			(
+				'align'  => $align,
+				'img'    => $GLOBALS['phpgw']->common->image('phpgwapi', $img),
+				'label'  => lang($label),
+			);
+
+			$this->template->set_var($var);
+			return $this->template->fp('out', 'link');
 		}
 
-		function set_icon_imap($align,$img,$alt_text)
+		/**
+		 * I do something with imap and icons
+		 *
+		 * @param ??? $align    ?
+		 * @param ??? $img      ?
+		 * @param ??? $alt_text ?
+		 *
+		 * @return string html
+		 */
+		protected function _set_icon_imap($align, $img, $alt_text)
 		{
-			$img_full = $GLOBALS['phpgw']->common->image('phpgwapi',$img);
-			return '<img src="'.$img_full.'" border="0" width="12" height="12" alt="'.$alt_text.'">'."\r\n";
+			$img_full = $GLOBALS['phpgw']->common->image('phpgwapi', $img);
+
+			return "<img src=\"{$img_full}\" alt=\"{$alt_text}\">\n";
 		}
 
-	} // End of nextmatchs class
-?>
+		/**
+		 * Create a single image button form
+		 *
+		 * @param string $align     the alignment of the link
+		 * @param string $img       the url of the image
+		 * @param string $link      the url for the link
+		 * @param string $alt       the alt text for the image
+		 * @param array  $extravars the extra args for the url
+		 *
+		 * @return string html snippet for a nextmatch button "link"
+		 */
+		protected function _set_link($align, $img, $link, $alt, $extravars)
+		{
+			$hidden = '';
+
+			$action = '';
+			if ( strlen($this->action) )
+			{
+				$action = $this->page($extravars);
+			}
+			else
+			{
+				$action = $GLOBALS['phpgw']->link($link, $extravars);
+			}
+
+			$var = array
+			(
+				'align'     => $align,
+				'action'    => $action,
+				'form_name' => $img,
+				'hidden'    => $hidden,
+				'img'       => $GLOBALS['phpgw']->common->image('phpgwapi', $img),
+				'label'     => $alt,
+				'start'     => $extravars['start']
+			);
+
+			$this->template->set_var($var);
+			return $this->template->fp('out', 'form');
+		}
+
+		/**
+		 * I do something with imap and links
+		 *
+		 * @param ??? $align    ?
+		 * @param ??? $img      ?
+		 * @param ??? $alt_text ?
+		 * @param ??? $out_vars ?
+		 *
+		 * @return string html
+		 */
+		protected function _set_link_imap($align, $img, $alt_text, $out_vars)
+		{
+			$img_full = $GLOBALS['phpgw']->common->image('phpgwapi', $img);
+
+			$image_part = '';
+
+			return <<<HTML
+				<a href="{$out_vars['common_uri']}&amp;start={$out_vars['start']}">
+					<img src="{$img_full}" alt="{$alt_text}">
+				</a>
+
+HTML;
+		}
+	}

@@ -230,6 +230,10 @@
 						}
 						switch (gettype($val))
 						{
+							case 'object':
+								// caste just to be safe
+								$val = (string) $val;
+								// fall through
 							case 'string':
 							case 'integer':
 							case 'double':
@@ -251,15 +255,10 @@
 								$node->add_node($subnode);
 								break;
 							case 'array':
-							case 'object':
-								if ( is_object($val) )
-								{
-									$val = get_object_vars($val);
-								}
 								list($first_key) = each($val); reset($val);
 								if($new_index && is_int($first_key))
 								{
-									while (list ($subkey, $subval) = each ($val))
+									foreach ( $val as $subkey => $subval )
 									{
 										$node->add_node($this->import_var($nextkey, $subval));
 									}
@@ -270,32 +269,21 @@
 									$node->add_node($subnode);
 								}
 								break;
-							/* This is no longer needed as we convert object properties to an array above
-							case 'object':
-								$subnode = new xmltool('node', $nextkey,$this->indentstring);
-								$subnode->set_value('PHP_SERIALIZED_OBJECT&:'.serialize($val));
-								$node->add_node($subnode);
-								break;
-							*/
 							case 'resource':
-								echo 'Halt: Cannot package PHP resource pointers into XML<br>';
-								exit;
+								die('Halt: Cannot package PHP resource pointers into XML<br>');
 							default:
-								echo 'Halt: Invalid or unknown data type<br>';
-								exit;
+								die('Halt: Invalid or unknown data type<br>');
 						}
 
 					}
 					break;
 				case 'object':
-					$node->set_value('PHP_SERIALIZED_OBJECT&:'.serialize($value));
+					$node->set_value( (string) $value);
 					break;
 				case 'resource':
-					echo 'Halt: Cannot package PHP resource pointers into XML<br>';
-					exit;
+					die('Halt: Cannot package PHP resource pointers into XML<br>');
 				default:
-					echo 'Halt: Invalid or unknown data type<br>';
-					exit;
+					die('Halt: Invalid or unknown data type<br>');
 			}
 	
 			if($is_root)

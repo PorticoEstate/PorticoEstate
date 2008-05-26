@@ -26,10 +26,6 @@
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = True;
 			$GLOBALS['phpgw']->xslttpl->add_file('widgets');
 
-			if(!is_object($GLOBALS['phpgw']->js))
-			{
-				$GLOBALS['phpgw']->js = createObject('phpgwapi.javascript');
-			}
 			$GLOBALS['phpgw']->js->validate_file('core','popup');
 			$this->bofilemanager = CreateObject('filemanager.bofilemanager');
 		}

@@ -20,34 +20,33 @@
 	* @subpackage database
 	* @ignore
 	*/
-	class sql extends sql_
+	class phpgwapi_sql extends phpgwapi_sql_
 	{
-		function sql_()
+		public static function sql_()
 		{
 		}
 
-		function concat($elements)
+		public static function concat($elements)
 		{
 			$str = implode(' || ', $elements);
 			return ($str)? '('.$str.')' : '';
 		}
 
-		function concat_null($elements)
+		public static function concat_null($elements)
 		{
-			$str = implode(' || ', sql::safe_null($elements));
+			$str = implode(' || ', self::safe_null($elements));
 			return ($str)? '('.$str.')' : '';
 		}
-		function has($field, $value)
+		public static function has($field, $value)
 		{
-			return sql_criteria::upper($field).' ILIKE '."'%$value%'";
+			return phpgwapi_sql_criteria::upper($field).' ILIKE '."'%$value%'";
 		}
-		function begin_with($field, $value)
+		public static function begin_with($field, $value)
 		{
-			return sql_criteria::upper($field).' ILIKE '."'$value%'";
+			return phpgwapi_sql_criteria::upper($field).' ILIKE '."'$value%'";
 		}
-		function end_with($field, $value)
+		public static function end_with($field, $value)
 		{
-			return sql_criteria::upper($field).' ILIKE '."'%$value'";
+			return phpgwapi_sql_criteria::upper($field).' ILIKE '."'%$value'";
 		}
 	}
-?>

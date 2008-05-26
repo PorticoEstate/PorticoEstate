@@ -73,6 +73,7 @@ continue	setup	en	Continue
 could not open header.inc.php for writing!	setup	en	Could not open header.inc.php for writing!
 country selection	setup	en	Country Selection
 create	setup	en	Create
+create accounts	en	Create Accounts
 create database	setup	en	Create Database
 create demo accounts	setup	en	Create demo accounts
 create one now	setup	en	Create one now
@@ -216,7 +217,7 @@ no mysql support found. disabling	setup	en	No MySQL support found. Disabling
 no odbc/sapdb support found. disabling	setup	en	No ODBC/SAPDB support found. Disabling
 no oracle-db support found. disabling	setup	en	No Oracle-DB support found. Disabling
 no postgres-db support found. disabling	setup	en	No Postgres-DB support found. Disabling
-no xml support found. disabling	setup	en	No XML support found. Disabling
+no xsl support found.	setup	en	No XSL support found.
 not complete	setup	en	not complete
 not completed	setup	en	Not Completed
 not ready for this stage yet	setup	en	Not ready for this stage yet
@@ -354,7 +355,7 @@ warning!	setup	en	Warning!
 warning: all your passwords (database, phpgroupware admin,...)<br> will be shown in plain text after you log in for header administration.	setup	en	Warning: All your passwords (database, phpGroupWare admin,...)<br> will be shown in plain text after you log in for header administration.
 we can proceed	setup	en	We can proceed
 we will automatically update your tables/records to %1	setup	en	We will automatically update your tables/records to %1
-what type of sessions management do you want to use (php4 session management may perform better)?	setup	en	What type of sessions management do you want to use (PHP4 session management may perform better)?
+what type of sessions management do you want to use (php session management usually performs better)?	setup	en	What type of sessions management do you want to use (PHP session management usually performs better)?
 which database type do you want to use with phpgroupware?	setup	en	Which database type do you want to use with phpGroupWare?
 would you like phpgroupware to cache the phpgw info array ?	setup	en	Would you like phpGroupWare to cache the phpgw info array ?
 would you like phpgroupware to check for a new version<br>when admins login ?	setup	en	Would you like phpGroupWare to check for a new version<br>when admins login ?
@@ -363,9 +364,8 @@ write config	setup	en	Write config
 yes	setup	en	Yes
 you appear to be running a pre-beta version of phpgroupware.<br>these versions are no longer supported, and there is no upgrade path for them in setup.<br> you may wish to first upgrade to 0.9.10 (the last version to support pre-beta upgrades) <br>and then upgrade from there with the current version.	setup	en	You appear to be running a pre-beta version of phpGroupWare.<br>These versions are no longer supported, and there is no upgrade path for them in setup.<br> You may wish to first upgrade to 0.9.10 (the last version to support pre-beta upgrades) <br>and then upgrade from there with the current version.
 you appear to be running version %1 of phpgroupware	setup	en	You appear to be running version %1 of phpGroupWare
-you appear to be using php earlier than 4.1.0. phpgroupware now requires 4.1.0 or later	setup	en	You appear to be using PHP earlier than 4.1.0. phpGroupWare now requires 4.1.0 or later
-you appear to be using php3. disabling php4 sessions support	setup	en	You appear to be using PHP3. Disabling PHP4 sessions support
-you appear to be using php4. enabling php4 sessions support	setup	en	You appear to be using PHP4. Enabling PHP4 sessions support
+you appear to be using php %1+	setup	en	You appear to be using PHP %1+
+you appear to be using php %1, phpgroupware requires version 5.2.0 or later	setup	en	You appear to be using PHP %1, phpGroupWare requires version 5.2.0 or later
 you appear to have imap support enabled	setup	en	You appear to have IMAP support enabled
 you appear to have microsoft sql server support enabled	setup	en	You appear to have Microsoft SQL Server support enabled
 you appear to have mysql support enabled	setup	en	You appear to have MySQL support enabled
@@ -373,7 +373,7 @@ you appear to have odbc/sapdb support enabled	setup	en	You appear to have ODBC/S
 you appear to have oracle support enabled	setup	en	You appear to have Oracle support enabled
 you appear to have oracle v8 (oci) support enabled	setup	en	You appear to have Oracle V8 (OCI) support enabled
 you appear to have postgres-db support enabled	setup	en	You appear to have Postgres-DB support enabled
-you appear to have xml support enabled	setup	en	You appear to have XML support enabled
+you appear to have xml/xslt support enabled	setup	en	You appear to have XML/XSLT support enabled
 you are ready for this stage, but this stage is not yet written.<br>	setup	en	You are ready for this stage, but this stage is not yet written.<br>
 you didn't enter a config password for domain %1	setup	en	You didn't enter a config password for domain %1
 you didn't enter a header admin password	setup	en	You didn't enter a header admin password
@@ -390,7 +390,7 @@ your database is not working!	setup	en	Your Database is not working!
 your database is working, but you dont have any applications installed	setup	en	Your database is working, but you dont have any applications installed
 your header admin password is not set. please set it now!	setup	en	Your header admin password is NOT set. Please set it now!
 your header.inc.php needs upgrading.	setup	en	Your header.inc.php needs upgrading.
-your header.inc.php needs upgrading.<br><blink><b class="msg">warning!</b></blink><br><b>make backups!</b>	setup	en	Your header.inc.php needs upgrading.<br><blink><b class="msg">WARNING!</b></blink><br><b>MAKE BACKUPS!</b>
+<p class="msg">your header.inc.php needs upgrading.<br>warning! make backups!</p>	setup	en	<p class="msg">Your header.inc.php needs upgrading.<br>WARNING! MAKE BACKUPS!</p>
 your tables are current	setup	en	Your tables are current
 your tables may be altered and you may lose data	setup	en	Your tables may be altered and you may lose data.
 your tables will be dropped and you will lose data	setup	en	Your tables will be dropped and you will lose data !!

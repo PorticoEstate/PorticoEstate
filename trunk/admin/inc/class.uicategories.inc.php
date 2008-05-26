@@ -263,7 +263,7 @@
 				'search_data'	=> $this->nextmatchs->xslt_search(array('query' => $this->query,'link_data' => $link_data)),
 				'cat_header'	=> $cat_header,
 				'cat_data'		=> $content,
-				'cat_add'		=> $cat_add 
+				'cat_add'		=> $cat_add
 			);
 
 			$this->save_sessiondata();
@@ -402,7 +402,7 @@
 				$GLOBALS['phpgw']->redirect_link('/index.php', $link_data);
 			}
 
-			if ( phpgw::get_var('confirm', bool) )
+			if ( phpgw::get_var('confirm', 'bool') )
 			{
 				$subs = phpgw::get_var('subs');
 				if ( $subs )
@@ -430,7 +430,7 @@
 				}
 			}
 
-			$GLOBALS['phpgw']->xslttpl->add_file(array('app_delete'));
+			$GLOBALS['phpgw']->xslttpl->add_file(array('confirm_delete'));
 
 			$GLOBALS['phpgw_info']['flags']['app_header'] = ( $appname ? lang($appname) . ' ' : '' ) . lang('global categories') . ': ' . lang('delete category');
 
@@ -477,14 +477,18 @@
 				}
 			}
 
-			$link_data['menuaction']	= 'admin.uicategories.delete';
-			$link_data['cat_id']		= $this->cat_id;
+			$link_data = array
+			(
+				'menuaction'	=> 'admin.uicategories.delete',
+				'cat_id'		=> $this->cat_id,
+				// FIXME this hack won't be merged!
+				'menu_selection' => $GLOBALS['phpgw_info']['flags']['menu_selection']
+			);
 			$link_data['menu_selection'] = $GLOBALS['phpgw_info']['flags']['menu_selection'];
 
 			$data = array
 			(
-				'delete_action'			=> $GLOBALS['phpgw']->link('/index.php', $link_data),
-				'done_action'			=> $GLOBALS['phpgw']->link('/index.php', $link_data),
+				'form_action'			=> $GLOBALS['phpgw']->link('/index.php', $link_data),
 				'show_done'				=> $show_done,
 				'msgbox_data'			=> $msgbox_error,
 				'lang_delete'			=> lang('delete'),

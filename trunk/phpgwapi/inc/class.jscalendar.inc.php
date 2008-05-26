@@ -27,10 +27,6 @@ class jscalendar
 	 */
 	function jscalendar($do_header=True)
 	{
-		if(!is_object($GLOBALS['phpgw']->js))
-		{
-			$GLOBALS['phpgw']->js = createObject('phpgwapi.javascript');
-		}
 		$GLOBALS['phpgw']->js->validate_file('jscalendar', 'calendar_stripped');
 		$this->phpgw_js_url = $GLOBALS['phpgw_info']['server']['webserver_url'].'/phpgwapi/js';
 		$this->dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];

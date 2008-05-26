@@ -37,7 +37,7 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
 // OF THE POSSIBILITY OF SUCH DAMAGE.
 
-	include_once(PHPGW_API_INC . '/xml_functions.inc.php');
+	require_once PHPGW_API_INC . '/xml_functions.inc.php';
 
 	/**
 	* XMLRPC client

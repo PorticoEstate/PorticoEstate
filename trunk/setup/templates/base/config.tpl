@@ -34,38 +34,22 @@
     <td><input name="newsettings[webserver_url]" value="{value_webserver_url}" size="40"></td>
    </tr>
 
-   <tr class="row_on">
-    <td>{lang_Image_type_selection_order}:</td>
-    <td>
-     <select name="newsettings[image_type]">
-      <option value="">GIF->JPG->PNG</option>
-      <option value="1"{selected_image_type_1}>PNG->JPG->GIF</option>
-      <option value="2"{selected_image_type_2}>PNG->JPG</option>
-     </select>
-    </td>
-   </tr>
-<!--
-   <tr class="row_off">
-    <td>{lang_read_translations_from}:</td>
-    <td>
-     <select name="newsettings[translation_system]">
-      <option value="sql"{selected_translation_system_sql}>SQL</option>
-      <option value="file"{selected_translation_system_file}>{lang_file}</option>
-     </select>
-    </td>
-   </tr>
--->
-   <tr class="row_off">
-    <td colspan="2">&nbsp;<option type="hidden" name newsettings[translation_system] value="sql"></td>
-   </tr>
-
    <tr class="th">
     <td colspan="2">&nbsp;<b>{lang_Host_information}</b></td>
    </tr>
 
-   <tr class="row_off">
+   <tr class="row_on">
     <td>{lang_Enter_the_hostname_of_the_machine_on_which_this_server_is_running}:</td>
     <td><input name="newsettings[hostname]" value="{value_hostname}"></td>
+   </tr>
+
+   <tr class="row_off">
+     <td>{lang_cookie_domain_for_sessions_-_if_unsure_use_request_fqdn}</td>
+	 <td>
+	   <select name="newsettings[cookie_domain]">
+         {hook_cookie_domain}
+	   </select>
+	 </td>
    </tr>
 
    <tr class="row_on">
@@ -219,6 +203,15 @@
    </tr>
 
    <tr class="row_on">
+    <td>{lang_password_encryption_type}:</td>
+    <td>
+     <select name="newsettings[encryption_type]">
+{hook_passwdhashes}
+     </select>
+    </td>
+   </tr>
+
+   <tr class="row_on">
     <td colspan="2">&nbsp;</td>
    </tr>
 
@@ -272,15 +265,6 @@
    </tr>
 
    <tr class="row_on">
-    <td>{lang_LDAP_encryption_type}:</td>
-    <td>
-     <select name="newsettings[ldap_encryption_type]">
-{hook_passwdhashes}
-     </select>
-    </td>
-   </tr>
-
-   <tr class="row_off">
     <td colspan="2">&nbsp;</td>
    </tr>
 

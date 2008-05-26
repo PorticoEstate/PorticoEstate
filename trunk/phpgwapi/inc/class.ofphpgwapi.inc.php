@@ -1,189 +1,180 @@
 <?php
 	/**
-	* Object Factory
-	*
-	* @author Dirk Schaller <dschaller@probusiness.de>
-	* @copyright Copyright (C) 2003 Free Software Foundation, Inc. http://www.fsf.org/
-	* @license http://www.fsf.org/licenses/gpl.html GNU General Public License
-	* @package phpgwapi
-	* @subpackage application
-	* @version $Id$
-	*/
+	 * Object Factory
+	 *
+	 * @author Dirk Schaller <dschaller@probusiness.de>
+	 * @author Dave Hall <skwashd@phpgroupware.org>
+	 * @author mdean
+	 * @author milosch
+	 * @author (thanks to jengo and ralf)
+	 * @copyright Copyright (C) 2003-2008 Free Software Foundation, Inc. http://www.fsf.org/
+	 * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License v3 or later
+	 * @package phpgroupware
+	 * @subpackage phpgwapi
+	 * @version $Id$
+	 */
+
+	/*
+	   This program is free software: you can redistribute it and/or modify
+	   it under the terms of the GNU Lesser General Public License as published by
+	   the Free Software Foundation, either version 3 of the License, or
+	   (at your option) any later version.
+
+	   This program is distributed in the hope that it will be useful,
+	   but WITHOUT ANY WARRANTY; without even the implied warranty of
+	   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	   GNU General Public License for more details.
+
+	   You should have received a copy of the GNU Lesser General Public License
+	   along with this program.  If not, see <http://www.gnu.org/licenses/>.
+	 */
 
 	/**
-	* Object factory for phpgwapi
-	* 
-	* @package phpgwapi
-	* @subpackage application
+	* Object factory
+	*
+	* @package phpgroupware
+	* @subpackage phpgwapi
 	*/
-	class ofphpgwapi extends object_factory
+	class phpgwapi_ofphpgwapi extends phpgwapi_object_factory
 	{
 		/**
-		  * Load a class and include the class file if not done so already.
+		 * Instantiate a class
 		 *
-		  * @author mdean
-		  * @author milosch
-		  * @author (thanks to jengo and ralf)
-		  * This function is used to create an instance of a class, and if the class file has not been included it will do so. 
-		  * $GLOBALS['phpgw']->acl = createObject('phpgwapi.acl');
-		  * @param $classname name of class
-		  * @param $p1-$p16 class parameters (all optional)
+		 * @param string $class name of class
+		 * @param mixed  $p1    paramater for constructor of class (optional)
+		 * @param mixed  $p2    paramater for constructor of class (optional)
+		 * @param mixed  $p3    paramater for constructor of class (optional)
+		 * @param mixed  $p4    paramater for constructor of class (optional)
+		 * @param mixed  $p5    paramater for constructor of class (optional)
+		 * @param mixed  $p6    paramater for constructor of class (optional)
+		 * @param mixed  $p7    paramater for constructor of class (optional)
+		 * @param mixed  $p8    paramater for constructor of class (optional)
+		 * @param mixed  $p9    paramater for constructor of class (optional)
+		 * @param mixed  $p10   paramater for constructor of class (optional)
+		 * @param mixed  $p11   paramater for constructor of class (optional)
+		 * @param mixed  $p12   paramater for constructor of class (optional)
+		 * @param mixed  $p13   paramater for constructor of class (optional)
+		 * @param mixed  $p14   paramater for constructor of class (optional)
+		 * @param mixed  $p15   paramater for constructor of class (optional)
+		 * @param mixed  $p16   paramater for constructor of class (optional)
+		 *
+		 * @return object the instantiated class
 		 */
-		function CreateObject($class,
+		public static function createObject($class,
 			$p1='_UNDEF_',$p2='_UNDEF_',$p3='_UNDEF_',$p4='_UNDEF_',
 			$p5='_UNDEF_',$p6='_UNDEF_',$p7='_UNDEF_',$p8='_UNDEF_',
 			$p9='_UNDEF_',$p10='_UNDEF_',$p11='_UNDEF_',$p12='_UNDEF_',
 			$p13='_UNDEF_',$p14='_UNDEF_',$p15='_UNDEF_',$p16='_UNDEF_')
 		{
-			list($appname,$classname) = explode('.', $class, 2);
-			switch($classname)
+			list($appname, $classname) = explode('.', $class, 2);
+			switch ( $classname )
 			{
 				case 'auth':
-					return ofphpgwapi::CreateAuthObject();
-				break;
-				
+					return self::_create_auth_object();
+
 				case 'accounts':
 					$account_id   = ($p1 != '_UNDEF_')? $p1 : null;
 					$account_type = ($p2 != '_UNDEF_')? $p2 : null;
-					return ofphpgwapi::CreateAccountObject($account_id, $account_type);
-				break;
+					return self::_create_account_object($account_id, $account_type);
 
-				case 'sessions':
-					return ofphpgwapi::CreateSessionObject();
-				break;
-				
 				case 'mapping':
 					$auth_info = ($p1 != '_UNDEF_')? $p1 : null;
-					return ofphpgwapi::CreateMappingObject($auth_info);
-				break;
+					return self::_create_mapping_object($auth_info);
 
 				default:
-					return parent::CreateObject($class,$p1,$p2,$p3,$p4,$p5,$p6,$p7,$p8,$p9,$p10,$p11,$p12,$p13,$p14,$p15,$p16); 
+					return parent::createObject($class, $p1, $p2, $p3, $p4, $p5, $p6, $p7, $p8,
+												$p9, $p10, $p11, $p12, $p13, $p14, $p15, $p16);
 			}
 		}
 
-		function CreateAuthObject()
+		/**
+		 * Create a new authentication object
+		 *
+		 * @return object new authentication object
+		 */
+		protected static function _create_auth_object()
 		{
-			include_once(PHPGW_API_INC . '/auth/class.auth_.inc.php');
-			
-			switch($GLOBALS['phpgw_info']['server']['auth_type'])
+			include_once PHPGW_API_INC . '/auth/class.auth_.inc.php';
+
+			$auth_type = $GLOBALS['phpgw_info']['server']['auth_type'];
+			switch ( $auth_type )
 			{
-				case 'http':
-				include_once(PHPGW_API_INC . '/auth/class.auth_http.inc.php');
-				return new Auth_http();
-				break;
-				
-				case 'ldap':
-				include_once(PHPGW_API_INC . '/auth/class.auth_ldap.inc.php');
-				return new Auth_ldap();
-				break;
-
-				case 'mail':
-				include_once(PHPGW_API_INC . '/auth/class.auth_mail.inc.php');
-				return new Auth_mail();
-				break;
-
-				case 'nis':
-				include_once(PHPGW_API_INC . '/auth/class.auth_nis.inc.php');
-				return new Auth_nis();
-				break;
-
-				case 'ntlm':
-				include_once(PHPGW_API_INC . '/auth/class.auth_ntlm.inc.php');
-				return new Auth_ntlm();
-				break;
-
 				case 'sqlssl':
-				include_once(PHPGW_API_INC . '/auth/class.auth_sqlssl.inc.php');
-				return new Auth_sqlssl();
-				break;
-
-				case 'exchange':
-				include_once(PHPGW_API_INC . '/auth/class.auth_exchange.inc.php');
-				return new Auth_exchange();
-				break;
+					include_once PHPGW_API_INC . '/auth/class.auth_sql.inc.php';
+					// fall through
 
 				case 'ads':
-				include_once(PHPGW_API_INC . '/auth/class.auth_ads.inc.php');
-				return new Auth_ads();
-				break;
-
+				case 'exchange':
+				case 'http':
+				case 'ldap':
+				case 'mail':
+				// case 'nis': - doesn't currently work AFAIK - skwashd may08
+				case 'ntlm':
 				case 'remoteuser':
-				include_once(PHPGW_API_INC . '/auth/class.auth_remoteuser.inc.php');
-				return new Auth_remoteuser();
-				break;
+				case 'sql':
+					$class = "auth_{$auth_type}";
+					include_once PHPGW_API_INC . "/auth/class.{$class}.inc.php";
+
+					$class = "phpgwapi_{$class}";
+					return new $class();
 
 				default:
-				include_once(PHPGW_API_INC . '/auth/class.auth_sql.inc.php');
-				return new Auth_sql();
+					include_once PHPGW_API_INC . '/auth/class.auth_sql.inc.php';
+					return new phpgwapi_auth_sql();
 			}
 		}
-		
-		function CreateAccountObject($account_id, $account_type)
+
+		/**
+		 * Create a new account object
+		 *
+		 * @param integer $account_id   the user account to use
+		 * @param string  $account_type the type of account - group or user
+		 *
+		 * @return object account object
+		 */
+		protected static function _create_account_object($account_id, $account_type)
 		{
-			include_once(PHPGW_API_INC.'/accounts/class.accounts_.inc.php');
-			
-			switch($GLOBALS['phpgw_info']['server']['account_repository'])
+			include_once PHPGW_API_INC . "/accounts/class.accounts_.inc.php";
+
+			$acct_type = strtolower($GLOBALS['phpgw_info']['server']['account_repository']);
+			switch ( $acct_type )
 			{
-				case 'ldap':
-				include_once(PHPGW_API_INC . '/accounts/class.accounts_ldap.inc.php');
-				return new Accounts_LDAP($account_id, $account_type);
-				break;
-				
 				case 'sqlldap':
-				include_once(PHPGW_API_INC . '/accounts/class.accounts_SQLLDAP.inc.php');
-				return new Accounts_SQLLDAP($account_id, $account_type);
-				break;
+					include_once PHPGW_API_INC . "/accounts/class.accounts_sql.inc.php";
+					//fall through
+
+				case 'ldap':
+					include_once PHPGW_API_INC . "/aaccounts/class.accounts_ldap.inc.php";
+					break;
 
 				default:
-				include_once(PHPGW_API_INC . '/accounts/class.accounts_sql.inc.php');
-				return new Accounts_sql($account_id, $account_type);
+					$acct_type = 'sql';
 			}
+			include_once PHPGW_API_INC . "/accounts/class.accounts_{$acct_type}.inc.php";
+			$acct_type = "phpgwapi_accounts_{$acct_type}";
+			return new $acct_type($account_id, $account_type);
 		}
 
 		/**
 		* Create a new mapping object
+		*
+		* @param string $auth_info the authentication system being used
+		*
+		* @return object new account mapping object
 		*/
-		
-		function CreateMappingObject($auth_info)
+		protected static function _create_mapping_object($auth_info)
 		{
-			include_once(PHPGW_API_INC.'/mapping/class.mapping_.inc.php');
+			include_once PHPGW_API_INC.'/mapping/class.mapping_.inc.php';
 
-			switch($GLOBALS['phpgw_info']['server']['account_repository'])
+			switch ( $GLOBALS['phpgw_info']['server']['account_repository'] )
 			{
 				case 'ldap':
-				include_once(PHPGW_API_INC. '/mapping/class.mapping_ldap.inc.php');
-				return new mapping_ldap($auth_info);
-
-				case 'sql':
-				include_once(PHPGW_API_INC. '/mapping/class.mapping_sql.inc.php');
-				return new mapping_sql($auth_info);
+					include_once PHPGW_API_INC. '/mapping/class.mapping_ldap.inc.php';
+					return new mapping_ldap($auth_info);
 
 				default:
-				die('Unknow mapping requested !');
+					include_once PHPGW_API_INC. '/mapping/class.mapping_sql.inc.php';
+					return new mapping_sql($auth_info);
 			}
 		}
-
-		/**
-		* Create a new session object
-		*/
-		function CreateSessionObject()
-		{
-			include_once(PHPGW_API_INC.'/sessions/class.sessions.inc.php');
-			
-			switch($GLOBALS['phpgw_info']['server']['sessions_type'])
-			{
-				case 'db':
-					include_once(PHPGW_API_INC . '/sessions/class.sessions_db.inc.php');
-					return new sessions_db();
-				
-				case 'php':
-				case 'php4': //legacy, should be dropped
-				default:
-					include_once(PHPGW_API_INC . '/sessions/class.sessions_php.inc.php');
-					return new sessions_php();
-			}
-		}
-		
 	}
-?>

@@ -12,11 +12,12 @@
 	/**
 	* Use SQL criteria
 	*/
-	include_once(PHPGW_API_INC . '/class.sql_criteria.inc.php');
+	phpgw::import_class('phpgwapi.sql_criteria');
+
 	/**
 	* Use SQL entity
 	*/
-	include_once(PHPGW_API_INC . '/class.sql_entity.inc.php');
+	phpgw::import_class('phpgwapi.sql_entity');
 
 	/**
 	* Query statements for "org" table
@@ -24,7 +25,7 @@
 	* @package phpgwapi
 	* @subpackage contacts
 	*/
-	class contact_org extends sql_entity
+	class contact_org extends phpgwapi_sql_entity
 	{
 		var $map = array('org_id'	=> array('select'	=> '',
 							 'criteria' 	=> '',
@@ -139,11 +140,11 @@
 			$field = $this->put_alias($element['real_field']);
 			if(is_array($element['value']))
 			{
-				$this->_add_criteria(sql_criteria::in($field, $element['value']));
+				$this->_add_criteria(phpgwapi_sql_criteria::in($field, $element['value']));
 			}
 			else
 			{
-				$this->_add_criteria(sql_criteria::equal($field, $element['value']));
+				$this->_add_criteria(phpgwapi_sql_criteria::equal($field, $element['value']));
 			}
 		}
 
@@ -151,6 +152,4 @@
 		{
 			$this->add_field('count_orgs', 'count(org_id)');
 		}
-
 	}
-?>

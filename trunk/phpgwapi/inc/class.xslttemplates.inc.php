@@ -264,7 +264,7 @@ XSLT;
 
 					case 'html':
 					default:
- 						$this->xsldata .= '<xsl:output method="html" version="1.0" encoding="utf-8" indent="yes" omit-xml-declaration="yes" standalone="yes" doctype-system="http://www.w3.org/TR/html4/strict.dtd" doctype-public="-//W3C//DTD HTML 4.01//EN" media-type="text/html"/>' . "\n";
+ 						$this->xsldata .= '<xsl:output method="html" version="4.01" encoding="utf-8" indent="yes" omit-xml-declaration="yes" standalone="yes" doctype-system="http://www.w3.org/TR/html4/loose.dtd" doctype-public="-//W3C//DTD HTML 4.01//EN" media-type="text/html"/>' . "\n";
 				}
 				
 				$this->xsldata .= <<<XSLT
@@ -316,13 +316,10 @@ XSLT;
 			$lines = explode("\n", $xml);
 			unset($xml);
 
-			echo "<ol>\n";
-			$i = 1;
+			echo "<ol class=\"source\">\n";
 			foreach ( $lines as $line )
 			{
-				$row = ($i % 2) ? 'row_on' : 'row_off';
-				echo "<li class=\"{$row}\" style=\"white-space: pre;\">" . htmlentities($line) . "</li>\n";
-				++$i;
+				echo "<li>" . htmlentities($line) . "</li>\n";
 			}
 			echo "</ol>\n";
 		}

@@ -29,20 +29,14 @@
 		 * @access public
 		 */	
 		var $debug = 0;		// This will turn on debugging information.
-		var $crypto;
-		var $categories;
-		var $common;
 		var $contacts;
-		var $datetime;
-		var $hooks;
-		var $js;
-		var $network;
 		var $nextmatchs;
 		var $preferences;
+
+		// FIXME find all instances and change to sessions then we can drop this
 		var $session;
 		var $send;
 		var $template;
-		//var $translation;
 		var $utilities;
 		var $vfs;
 		var $calendar;
@@ -50,7 +44,6 @@
 		var $addressbook;
 		var $todo;
 		var $xslttpl;
-		//var $shm = null;
 		var $mapping;
 
 		/**

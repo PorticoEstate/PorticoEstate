@@ -13,7 +13,7 @@
 	* Include parent class
 	* @see sbox
 	*/
-	include(PHPGW_API_INC . '/class.sbox.inc.php');
+	phpgw::import_class('phpgwapi.sbox');
 
 	/**
 	* Class for creating select boxes for addresse, projects, array items, ...
@@ -23,4 +23,9 @@
 	*/
 	class phpgwapi_sbox2 extends phpgwapi_sbox
 	{
+		public function __construct()
+		{
+			trigger_error('phpgwapi_sbox2 is no longer used, please port your code to phpgw_sbox', E_USER_NOTICE);
+			parent::__construct();
+		}
 	}

@@ -15,7 +15,7 @@
 	* @package phpgwapi
 	* @subpackage gui
 	*/
-	class nextmatchs_xslt
+	class phpgwapi_nextmatchs_xslt
 	{
 		var $maxmatches;
 		var $action;

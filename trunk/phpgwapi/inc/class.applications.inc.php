@@ -11,6 +11,21 @@
 	* @version $Id$
 	*/
 
+	/*
+		This program is free software: you can redistribute it and/or modify
+		it under the terms of the GNU Lesser General Public License as published by
+		the Free Software Foundation, either version 3 of the License, or
+		(at your option) any later version.
+
+		This program is distributed in the hope that it will be useful,
+		but WITHOUT ANY WARRANTY; without even the implied warranty of
+		MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+		GNU Lesser General Public License for more details.
+
+		You should have received a copy of the GNU Lesser General Public License
+		along with this program.  If not, see <http://www.gnu.org/licenses/>.
+	 */
+
 	/**
 	* Class for managing and installing applications
 	*
@@ -19,9 +34,24 @@
 	*/
 	class phpgwapi_applications
 	{
+		/**
+		* @var int $account_id the current users' account id
+		*/
 		private $account_id;
+
+		/**
+		* @var array data about the applications installed
+		*/
 		private $data = array();
+
+		/**
+		* @var object $db Local reference to the global database object
+		*/
 		private $db;
+
+		/**
+		* @var array $public_function the methods of the class available via menuaction calls
+		*/
 		public $public_functions = array
 		(
 			'list_methods' => True,
@@ -51,12 +81,12 @@
 		* Get available xmlrpc or soap methods
 		*
 		* @param string|array $_type Type of methods to list: 'xmlrpc' or 'soap'
-		* @return array Array touple (might be empty) with the following fields in the keys value array: function, signature, docstring
+		* @return array array touple (might be empty) with the following fields in the keys value array: function, signature, docstring
 		* This handles introspection or discovery by the logged in client,
 		* in which case the input might be an array.  The server always calls
 		* this function to fill the server dispatch map using a string.
 		*/
-		function list_methods($_type = 'xmlrpc')
+		public function list_methods($_type = 'xmlrpc')
 		{
 			if (is_array($_type))
 			{
@@ -97,17 +127,17 @@
 		/**
 		* Read application repository from ACLs
 		*
-		* @return array|boolean Array with list of available applications or false
+		* @return array|boolean array with list of available applications or false
 		* @access private
 		*/
-		function read_repository()
+		public function read_repository()
 		{
 			if (!isset($GLOBALS['phpgw_info']['apps']) ||
 				!is_array($GLOBALS['phpgw_info']['apps']))
 			{
 				$this->read_installed_apps();
 			}
-			$this->data = Array();
+			$this->data = array();
 			if ( $this->account_id == False )
 			{
 				return array();
@@ -116,9 +146,7 @@
 			$apps = $GLOBALS['phpgw']->acl->get_user_applications($this->account_id);
 			foreach ( $GLOBALS['phpgw_info']['apps'] as $app )
 			{
-				//$check = $GLOBALS['phpgw']->acl->check('run',1,$app[0]);
-				$check = isset($apps[$app['name']]) ? $apps[$app['name']] : False;
-				if ($check)
+				if ( isset($apps[$app['name']]) )
 				{
 					$this->data[$app['name']] = array
 					(
@@ -138,9 +166,9 @@
 		* 
 		* @return array List with applications for the user
 		*/
-		function read()
+		public function read()
 		{
-			if (count($this->data) == 0)
+			if ( !count($this->data) )
 			{
 				$this->read_repository();
 			}
@@ -150,10 +178,10 @@
 		/**
 		* Add an application to a user profile
 		*
-		* @param string|array $apps Array or string containing application names to add for a user
+		* @param string|array $apps array or string containing application names to add for a user
 		* @return array List with applications for the user
 		*/	
-		function add($apps)
+		public function add($apps)
 		{
 			if(is_array($apps))
 			{
@@ -189,7 +217,7 @@
 		* @param string $appname Application name
 		* @return array List with applications for the user
 		*/
-		function delete($appname)
+		public function delete($appname)
 		{
 			if($this->data[$appname])
 			{
@@ -204,7 +232,7 @@
 		* @param array $data Update the list of applications
 		* @return array List with applications for the user
 		*/
-		function update_data($data)
+		public function update_data($data)
 		{
 			$this->data = $data;
 			return $this->data;
@@ -215,7 +243,7 @@
 		*
 		* @return array List with applications for the user
 		*/
-		function save_repository()
+		public function save_repository()
 		{
 			$num_rows = $GLOBALS['phpgw']->acl->delete_repository("%%", 'run', $this->account_id);
 
@@ -239,20 +267,25 @@
 		// These are the non-standard $account_id specific functions
 
 
-		function app_perms()
+		public function app_perms()
 		{
 			if (count($this->data) == 0)
 			{
 				$this->read_repository();
 			}
-			while (list ($key) = each ($this->data))
+			foreach ( array_keys($this->data) as $key )
 			{
 				$app[] = $this->data[$key]['name'];
 			}
 			return $app;
 		}
 
-		function read_account_specific()
+		/**
+		* Get the list of installed application available for the current user
+		*
+		* 
+		*/
+		public function read_account_specific()
 		{
 			if (!is_array($GLOBALS['phpgw_info']['apps']))
 			{
@@ -281,16 +314,16 @@
 			return $this->data;
 		}
 
-
-		// These are the generic functions. Not specific to $account_id
-
+		/*
+		 * These are the generic functions. Not specific to $account_id
+		 */
 
 		/**
 		* Populate array with a list of installed apps
 		*/
-		function read_installed_apps()
+		public function read_installed_apps()
 		{
-			$apps = (array) $this->db->adodb->GetAssoc('select * from phpgw_applications where app_enabled != 0 order by app_order asc');
+			$apps = (array) $this->db->adodb->GetAssoc('SELECT * FROM phpgw_applications WHERE app_enabled != 0 ORDER BY app_order ASC');
 			foreach($apps as $key => $value)
 			{
 				$GLOBALS['phpgw_info']['apps'][$value['app_name']] = array
@@ -300,7 +333,6 @@
 					'enabled' => true,
 					'status'  => $value['app_enabled'],
 					'id'      => (int) $value['app_id'],
-					'order'   => (int) $value['app_order'],
 					'version' => $value['app_version']
 				);
 			}
@@ -313,7 +345,7 @@
 		* @return boolean True when the application is available otherwise false
 		* @see read_installed_apps()
 		*/
-		function is_system_enabled($appname)
+		public function is_system_enabled($appname)
 		{
 			if(!is_array($GLOBALS['phpgw_info']['apps']))
 			{
@@ -322,29 +354,45 @@
 			return isset($GLOBALS['phpgw_info']['apps'][$appname]) && $GLOBALS['phpgw_info']['apps'][$appname]['enabled'];
 		}
 
-		function id2name($id)
+		/**
+		* Get the application name associated with the application id
+		*
+		* @param int $id the application id to look up
+		* @return string the application name - empty string if invalid
+		*/
+		public function id2name($id)
 		{
-			$id = (int) $id;
-			foreach ( $GLOBALS['phpgw_info']['apps'] as $appname => $app )
+			static $names = array();
+
+			if ( !isset($names[$id]) )
 			{
-				if( $app['id'] == $id )
+				$names[$id] = '';
+				$id = (int) $id;
+				foreach ( $GLOBALS['phpgw_info']['apps'] as $appname => $app )
 				{
-					return $appname;
+					if( $app['id'] == $id )
+					{
+						$names[$id] = $appname;
+					}
 				}
 			}
-			return '';
+			return $names[$id];
 		}
 		
-		function name2id($appname)
+		/**
+		* Convert an application name to an id
+		*
+		* @param string $appname the application to lookup
+		* @return int the application id - 0 if invalid
+		*/
+		public function name2id($appname)
 		{
-			if ( is_array($GLOBALS['phpgw_info']['apps'][$appname]) )
+			if ( isset($GLOBALS['phpgw_info']['apps'][$appname]) 
+				&& is_array($GLOBALS['phpgw_info']['apps'][$appname]) )
 			{
 				return $GLOBALS['phpgw_info']['apps'][$appname]['id'];
 			}
-			else
-			{
-				return 0;
-			}
+			return 0;
 		}
 	}
 ?>

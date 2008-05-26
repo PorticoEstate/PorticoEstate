@@ -32,10 +32,6 @@
 
 		function uiindex()
 		{
-			if(!isset($GLOBALS['phpgw']->js) || !is_object($GLOBALS['phpgw']->js))
-			{
-				$GLOBALS['phpgw']->js = CreateObject('phpgwapi.javascript');
-			}
 			$GLOBALS['phpgw']->js->validate_file('core','base','phpgwapi');
 			
 			$folder = phpgw::get_var('folder');

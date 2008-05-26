@@ -14,35 +14,35 @@
 	* Include SQL Builder
 	* @see sql_builder
 	*/
-	include_once(PHPGW_API_INC . '/class.sql_builder.inc.php');
-	
+	phpgw::import_class('phpgwapi.sql_builder');
+
 	/**
 	* Include SQL criteria
-	* @see sql_criteria
+	* @see phpgwapi_sql_criteria
 	*/
-	include_once(PHPGW_API_INC . '/class.sql_criteria.inc.php');
-	
+	phpgw::import_class('phpgwapi.sql_criteria');
+
 	/**
 	* Include SQL entity
 	* @see sql_entity
 	*/
-	include_once(PHPGW_API_INC . '/class.sql_entity.inc.php');
+	phpgw::import_class('phpgwapi.sql_entity');
 
 	/**
 	* All categories
 	*/
 	define('PHPGW_CONTACTS_CATEGORIES_ALL', -3);
-	
+
 	/**
 	* All records
 	*/
 	define('PHPGW_CONTACTS_ALL', 1);
-	
+
 	/**
 	* Only current user's records
 	*/
 	define('PHPGW_CONTACTS_MINE', 2);
-	
+
 	/**
 	* Only current user's private records
 	*/
@@ -103,11 +103,11 @@
 							'per_prefix'		=> 'prefix',
 							'per_suffix'		=> 'suffix',
 							'per_birthday'		=> 'birthday',
-							'per_pubkey'		=> 'public key', 
-							'per_title'		=> 'title', 
-							'per_department'	=> 'department', 
-							'per_sound'		=> 'sound', 
-							'per_active'		=> 'active',					
+							'per_pubkey'		=> 'public key',
+							'per_title'		=> 'title',
+							'per_department'	=> 'department',
+							'per_sound'		=> 'sound',
+							'per_active'		=> 'active',
 					//		'per_name'		=> 'full name',
 					//		'sel_cat_id'		=> 'categories',
 							'org_name'		=> 'company name',
@@ -608,7 +608,7 @@
 		/**
 		* @var bool $trans is internal for transaction
 		* @access private
-		*/ 
+		*/
 		var $trans = False;
 
 		function contacts_($session=True)
@@ -645,7 +645,7 @@
 		function read_sessiondata()
 		{
 			$data = $GLOBALS['phpgw']->session->appsession('session_data','phpgwapi');
-			
+
 			if (!is_array($data) )
 			{
 				$data = array();
@@ -1086,7 +1086,7 @@
 		function update_single_extra_field($id, $name, $value)
 		{
 			$other = createObject('phpgwapi.contact_others');
-			$criteria = sql_criteria::token_and(sql_criteria::_equal('other_name', $name), sql_criteria::_equal('contact_id', $id));
+			$criteria = phpgwapi_sql_criteria::token_and(phpgwapi_sql_criteria::_equal('other_name', $name), phpgwapi_sql_criteria::_equal('contact_id', $id));
 			$other->update($id, array('other_value' => $value), $criteria);
 		}
 
@@ -1100,7 +1100,7 @@
 		* @param string $orderby The field which you want order
 		* @param string $sort ASC | DESC depending what you want
 		* @param mixed $criteria All criterias what you want
-		* @param mixed $criteria_token same like $criteria but builded<br>with sql_criteria class, more powerfull
+		* @param mixed $criteria_token same like $criteria but builded<br>with phpgwapi_sql_criteria class, more powerfull
 		* @return array Array person with records
 		*/
 		function get_persons($fields, $limit='', $ofset='', $orderby='', $sort='', $criteria='', $criteria_token='')
@@ -1124,7 +1124,7 @@
 				}
 				else
 				{
-					$criteria_token = sql_criteria::token_and(sql_criteria::_equal('contact_type', $this->search_contact_type($this->_contact_person)), $criteria_token);
+					$criteria_token = phpgwapi_sql_criteria::token_and(phpgwapi_sql_criteria::_equal('contact_type', $this->search_contact_type($this->_contact_person)), $criteria_token);
 					$this->criteria_token($criteria_token);
 				}
 			}
@@ -1231,7 +1231,7 @@
 		* @param string $orderby The field which you want order
 		* @param string $sort ASC | DESC depending what you want
 		* @param array $criteria All criterias what you want
-		* @param mixed $criteria_token same like $criteria but builded<br>with sql_criteria class, more powerfull
+		* @param mixed $criteria_token same like $criteria but builded<br>with phpgwapi_sql_criteria class, more powerfull
 		* @return array Array with organization with records
 		*/
 		function get_orgs($fields, $limit='', $ofset='', $orderby='', $sort='', $criteria='', $criteria_token='')
@@ -1257,7 +1257,7 @@
 				}
 				else
 				{
-					$criteria_token = sql_criteria::token_and(sql_criteria::_equal('contact_type', $this->search_contact_type($this->_contact_org)), $criteria_token);
+					$criteria_token = phpgwapi_sql_criteria::token_and(phpgwapi_sql_criteria::_equal('contact_type', $this->search_contact_type($this->_contact_org)), $criteria_token);
 					$this->criteria_token($criteria_token);
 				}
 			}
@@ -1283,7 +1283,7 @@
 			{
 				$orgs[] = $this->db->resultSet->fetchRow();
 			}
-			
+
 			return $orgs;
 		}
 
@@ -1316,14 +1316,14 @@
 		* @return array Asociative array with id and all data that we requested
 		*/
 		function get_people_by_organizations($organizations_id, $criteria='', $action=PHPGW_SQL_RUN_SQL)
-		{			
+		{
 			$data = array('my_person_id',
 					'per_first_name',
 					'per_last_name',
 					'my_addr_id',
 					'my_preferred');
 			$this->request($data);
-			
+
 			$this->criteria(array('my_org_id' => $organizations_id));
 			$this->criteria($criteria);
 			return $this->get_query($action, __LINE__, __FILE__);
@@ -1397,9 +1397,9 @@
 			{
 				$this->criteria($criteria);
 			}
-			
+
 			$locations = array();
-			
+
 			$entries = $this->get_records(__LINE__, __FILE__);
 			if ( is_array($entries) && count($entries) )
 			{
@@ -1655,7 +1655,7 @@
 			}
 
 			$this->request('person_id');
-			// sql::in() is better than make a select by each account
+			// phpgwapi_sql::in() is better than make a select by each account
 			$this->criteria(array('person_id' => $people));
 			return $this->get_query($action, __LINE__, __FILE__);
 		}
@@ -1717,7 +1717,7 @@
 		{
 			$sql = 'SELECT cat2.cat_id FROM phpgw_categories as cat '
 				.'INNER JOIN phpgw_categories as cat2 ON cat.cat_id=cat2.cat_parent '
-				.'WHERE '.sql::in('cat.cat_id', $cat_id);
+				.'WHERE ' . phpgwapi_sql::in('cat.cat_id', $cat_id);
 
 			$this->db->query($sql, __LINE__, __FILE__);
 			while ($this->db->next_record())
@@ -1783,7 +1783,7 @@
 			$contact_name = $this->get_records_by_field($field_name, __LINE__, __FILE__);
 			return $contact_name[0];
 		}
-		
+
 		function get_name_of_person_id($person_id)
 		{
 			$this->request(array('per_full_name'));
@@ -1886,7 +1886,7 @@
 		* This function try to be a comprensive way to get data from contacts
 		* convert the contacts database output on a multidimensional array
 		* @param integer|array $contact_id
-		* @param mixed $optional_criteria criteria built with sql_criteria
+		* @param mixed $optional_criteria criteria built with phpgwapi_sql_criteria
 		* @param integer $line where this function is called, usefull for debug
 		* @param integer $file where this function is called, usefull for debug
 		* @return array All the data of contact (contacts).
@@ -1901,7 +1901,7 @@
 					// this is an error
 					return ;
 				}
-				$this->criteria_token(sql_criteria::_equal('contact_id', $contact_id));
+				$this->criteria_token(phpgwapi_sql_criteria::_equal('contact_id', $contact_id));
 			}
 			else
 			{
@@ -2108,7 +2108,7 @@
 			{
 				$principal['owner'] = $GLOBALS['phpgw_info']['user']['account_id'];
 			}
-			return $contact->update($principal, sql_criteria::_equal('contact_id',sql::integer($cid)), $action);
+			return $contact->update($principal, phpgwapi_sql_criteria::_equal('contact_id', phpgwapi_sql::integer($cid)), $action);
 		}
 
 		/**
@@ -2130,7 +2130,7 @@
 			{
 				$data['per_modby'] = $this->get_user_id();
 			}
-			return $person->update($data, sql_criteria::_equal('person_id',sql::integer($id)), $action);
+			return $person->update($data, phpgwapi_sql_criteria::_equal('person_id', phpgwapi_sql::integer($id)), $action);
 		}
 
 		/**
@@ -2152,13 +2152,13 @@
 			{
 				$data['org_modby'] = $this->get_user_id();
 			}
-			return $org->update($data, sql_criteria::_equal('org_id',sql::integer($id)), $action);
+			return $org->update($data, phpgwapi_sql_criteria::_equal('org_id', phpgwapi_sql::integer($id)), $action);
 		}
 
 
 		/**
 		* Allow edit location information of an contact
-		* 
+		*
 		* @param integer $id Contact location Id that want to be edited.
 		* @param array $data Information for contact
 		* @param integer $action PHPGW_SQL_RETURN_SQL | PHPGW_SQL_RUN_SQL depending what we want
@@ -2175,12 +2175,12 @@
 			{
 				$data['addr_modby'] = $this->get_user_id();
 			}
-			return $loc->update($data, sql_criteria::_equal('contact_addr_id',sql::integer($id)), $action);
+			return $loc->update($data, phpgwapi_sql_criteria::_equal('contact_addr_id', phpgwapi_sql::integer($id)), $action);
 		}
 
 		/**
 		* Allow edit all location information of an contact
-		* 
+		*
 		* @param integer $contact_id Contact Id that want to be edited.
 		* @param array $data Information for contact
 		* @param integer $action PHPGW_SQL_RETURN_SQL | PHPGW_SQL_RUN_SQL depending what we want
@@ -2197,12 +2197,12 @@
 			{
 				$data['addr_modby'] = $this->get_user_id();
 			}
-			return $loc->update($data, sql_criteria::_equal('contact_id',sql::integer($contact_id)), $action);
+			return $loc->update($data, phpgwapi_sql_criteria::_equal('contact_id', phpgwapi_sql::integer($contact_id)), $action);
 		}
 
 		/**
 		* Allow edit communication information of an contact
-		* 
+		*
 		* @param integer $id Contact comm Id that want to be edited.
 		* @param array $data Information for contact
 		* @param integer $action PHPGW_SQL_RETURN_SQL | PHPGW_SQL_RUN_SQL depending what we want
@@ -2219,12 +2219,12 @@
 			{
 				$data['comm_modby'] = $this->get_user_id();
 			}
-			return $comm->update($data, sql_criteria::_equal('comm_id',sql::integer($id)), $action);
+			return $comm->update($data, phpgwapi_sql_criteria::_equal('comm_id', phpgwapi_sql::integer($id)), $action);
 		}
 
 		/**
 		* Allow edit other information of an contact
-		* 
+		*
 		* @param integer $id Contact other Id that want to be edited.
 		* @param array $data Information for contact
 		* @param integer $action PHPGW_SQL_RETURN_SQL | PHPGW_SQL_RUN_SQL depending what we want
@@ -2233,7 +2233,7 @@
 		function edit_other($id, $data, $action=PHPGW_SQL_RETURN_SQL)
 		{
 			$comm = createObject('phpgwapi.contact_others');
-			return $comm->update($data, sql_criteria::_equal('other_id',sql::integer($id)), $action);
+			return $comm->update($data, phpgwapi_sql_criteria::_equal('other_id', phpgwapi_sql::integer($id)), $action);
 		}
 
 		/**
@@ -2247,7 +2247,7 @@
 		function edit_comms_by_contact($id, $data, $action=PHPGW_SQL_RETURN_SQL)
 		{
 			$comm = createObject('phpgwapi.contact_comm');
-			return $comm->update($data, sql_criteria::_equal('contact_id',sql::integer($id)), $action);
+			return $comm->update($data, phpgwapi_sql_criteria::_equal('contact_id', phpgwapi_sql::integer($id)), $action);
 		}
 
 		/**
@@ -2265,16 +2265,16 @@
 			$relation = createObject('phpgwapi.contact_org_person');
 			if($org_id && $person_id)
 			{
-				$criteria = sql_criteria::and_(sql_criteria::equal('org_id',sql::integer($org_id)),
-								 sql_criteria::equal('person_id',sql::integer($person_id)));
+				$criteria = phpgwapi_sql_criteria::and_(phpgwapi_sql_criteria::equal('org_id', phpgwapi_sql::integer($org_id)),
+								 phpgwapi_sql_criteria::equal('person_id', phpgwapi_sql::integer($person_id)));
 			}
 			elseif($org_id)
 			{
-				$criteria = sql_criteria::equal('org_id',sql::integer($org_id));
+				$criteria = phpgwapi_sql_criteria::equal('org_id', phpgwapi_sql::integer($org_id));
 			}
 			elseif($person_id)
 			{
-				$criteria = sql_criteria::equal('person_id',sql::integer($person_id));
+				$criteria = phpgwapi_sql_criteria::equal('person_id', phpgwapi_sql::integer($person_id));
 			}
 
 			return $relation->update($data, $criteria, $action);
@@ -2295,7 +2295,7 @@
 			}
 			$contact = createObject('phpgwapi.contact_central');
 			return $contact->update(array('owner' => $new_owner),
-						sql_criteria::_equal('owner',sql::integer($old_owner)),
+						phpgwapi_sql_criteria::_equal('owner', phpgwapi_sql::integer($old_owner)),
 						PHPGW_SQL_RUN_SQL);
 		}
 
@@ -2314,7 +2314,7 @@
 			}
 			$contact = createObject('phpgwapi.contact_others');
 			return $contact->update(array('contact_owner' => $new_owner),
-						sql_criteria::_equal('contact_owner',sql::integer($old_owner)),
+						phpgwapi_sql_criteria::_equal('contact_owner', phpgwapi_sql::integer($old_owner)),
 						PHPGW_SQL_RUN_SQL);
 		}
 
@@ -2331,8 +2331,8 @@
 		function edit_other_by_owner($id, $new_data, $old_data, $field_data, $action=PHPGW_SQL_RUN_SQL)
 		{
 			$other = createObject('phpgwapi.contact_others');
-			$criteria = sql_criteria::append_and(array(sql_criteria::equal('contact_owner', sql::integer($id)),
-								 sql_criteria::equal($field_data, sql::string($old_data))));
+			$criteria = phpgwapi_sql_criteria::append_and(array(phpgwapi_sql_criteria::equal('contact_owner', phpgwapi_sql::integer($id)),
+								 phpgwapi_sql_criteria::equal($field_data, phpgwapi_sql::string($old_data))));
 			return $other->update(array($field_data => $new_data), $criteria, $action);
 		}
 
@@ -2348,7 +2348,7 @@
 		{
 			$contact = createObject('phpgwapi.contact_central');
 			$principal['cat_id'] = $this->get_categories($categories);
-			return $contact->update($principal, sql_criteria::_equal('contact_id',sql::integer($cid)), $action);
+			return $contact->update($principal, phpgwapi_sql_criteria::_equal('contact_id', phpgwapi_sql::integer($cid)), $action);
 		}
 
 
@@ -2369,7 +2369,29 @@
 		function add_contact($type, $principal=array(), $comms=array(), $locations=array(), $categories=array(), $others=array(), $contact_relations=array(), $notes=array())
 		{
 			$this->contact = createObject('phpgwapi.contact_central');
-			$owner = isset($principal['owner']) && $principal['owner'] ? $principal['owner'] : $GLOBALS['phpgw_info']['user']['account_id'];
+
+			// addressmaster is a sane default
+			$owner = -3;
+			if ( isset($principal['owner']) 
+					&& $principal['owner'] )
+			{
+				$owner = (int) $principal['owner'];
+			}
+			else if ( isset($GLOBALS['phpgw_info']['user']['account_id']) )
+			{
+				$owner = (int) $GLOBALS['phpgw_info']['user']['account_id'];
+			}
+
+			if ( !isset($principal['preferred_org']) )
+			{
+				$principal['preferred_org'] = '';
+			}
+
+			if ( !isset($principal['preferred_address']) )
+			{
+				$principal['preferred_address'] = '';
+			}
+
 			$this->lock_table($this->contact->table);
 
 			$this->contact->insert(array
@@ -2395,7 +2417,7 @@
 					break;
 			}
 
-			if(is_array($comms))
+			if ( is_array($comms) && count($comms) )
 			{
 				foreach($comms as $comm)
 				{
@@ -2403,7 +2425,7 @@
 					$this->unlock_table();
 				}
 			}
-			if(is_array($locations))
+			if ( is_array($locations) && count($locations) )
 			{
 				foreach($locations as $location)
 				{
@@ -2412,7 +2434,7 @@
 				}
 			}
 
-			if(is_array($others))
+			if ( is_array($others) && count($others) )
 			{
 				foreach($others as $other)
 				{
@@ -2420,7 +2442,7 @@
 					$this->unlock_table();
 				}
 			}
-			if(is_array($notes))
+			if ( is_array($notes) && count($notes) )
 			{
 				foreach($notes as $note)
 				{
@@ -2507,6 +2529,7 @@
 				return;
 			}
 
+			$sql = array();
 			foreach($people as $person)
 			{
 				$orgs = $this->has_preferred_org($person);
@@ -2742,7 +2765,7 @@
 				}
 				foreach ($entity_keys as $key)
 				{
-					$return_value = $this->_delete(sql_criteria::_equal($key, $cid), PHPGW_SQL_RUN_SQL);
+					$return_value = $this->_delete(phpgwapi_sql_criteria::_equal($key, $cid), PHPGW_SQL_RUN_SQL);
 				}
 				if($transaction)
 				{
@@ -2796,8 +2819,8 @@
 				{
 					$this->transaction_begin();
 				}
-				$return_value[] = $this->_delete(sql_criteria::_equal('contact_id', $cid), $action);
-				$return_value[] = $this->_delete(sql_criteria::_equal($type.'_id', $cid), $action);
+				$return_value[] = $this->_delete(phpgwapi_sql_criteria::_equal('contact_id', $cid), $action);
+				$return_value[] = $this->_delete(phpgwapi_sql_criteria::_equal($type.'_id', $cid), $action);
 				if ($action == PHPGW_SQL_RUN_SQL)
 				{
 					$this->transaction_end();
@@ -2815,7 +2838,7 @@
 		*/
 		function delete_orgs_by_person($cid, $action=PHPGW_SQL_RUN_SQL)
 		{
-			return $this->_delete(sql_criteria::_equal('my_person_id', $cid), $action);
+			return $this->_delete(phpgwapi_sql_criteria::_equal('my_person_id', $cid), $action);
 		}
 
 		/**
@@ -2827,7 +2850,7 @@
 		*/
 		function delete_people_by_org($cid, $action=PHPGW_SQL_RUN_SQL)
 		{
-			return $this->_delete(sql_criteria::_equal('my_org_id', $cid), $action);
+			return $this->_delete(phpgwapi_sql_criteria::_equal('my_org_id', $cid), $action);
 		}
 
 		/**
@@ -2842,8 +2865,8 @@
 		{
 			$relations = createObject('phpgwapi.contact_org_person');
 			$this->lock_table($relations->table);
-			$criteria = $relations->entity_criteria(sql_criteria::token_and(sql_criteria::_equal('my_org_id', $org_id),
-											sql_criteria::_equal('my_person_id', $person_id)));
+			$criteria = $relations->entity_criteria(phpgwapi_sql_criteria::token_and(phpgwapi_sql_criteria::_equal('my_org_id', $org_id),
+											phpgwapi_sql_criteria::_equal('my_person_id', $person_id)));
 			$sql = $relations->delete($criteria, $action);
 			$this->unlock_table();
 			return $sql;
@@ -2858,7 +2881,7 @@
 		*/
 		function delete_locations($cid, $action=PHPGW_SQL_RETURN_SQL)
 		{
-			return $this->_delete(sql_criteria::_equal('addr_contact_id',$cid), $action);
+			return $this->_delete(phpgwapi_sql_criteria::_equal('addr_contact_id',$cid), $action);
 		}
 
 		/**
@@ -2870,7 +2893,7 @@
 		*/
 		function delete_comms($cid, $action=PHPGW_SQL_RETURN_SQL)
 		{
-			return $this->_delete(sql_criteria::_equal('comm_contact_id',$cid), $action);
+			return $this->_delete(phpgwapi_sql_criteria::_equal('comm_contact_id',$cid), $action);
 		}
 
 		/**
@@ -2882,7 +2905,7 @@
 		*/
 		function delete_others($cid, $action=PHPGW_SQL_RETURN_SQL)
 		{
-			return $this->_delete(sql_criteria::_equal('other_contact_id',$cid), $action);
+			return $this->_delete(phpgwapi_sql_criteria::_equal('other_contact_id',$cid), $action);
 		}
 
 		/**
@@ -2894,7 +2917,7 @@
 		*/
 		function delete_notes($cid, $action=PHPGW_SQL_RETURN_SQL)
 		{
-			return $this->_delete(sql_criteria::_equal('note_contact_id',$cid), $action);
+			return $this->_delete(phpgwapi_sql_criteria::_equal('note_contact_id',$cid), $action);
 		}
 
 		/**
@@ -2906,7 +2929,7 @@
 		*/
 		function delete_specified_comm($id, $action=PHPGW_SQL_RETURN_SQL)
 		{
-			return $this->_delete(sql_criteria::_equal('key_comm_id',$id), $action);
+			return $this->_delete(phpgwapi_sql_criteria::_equal('key_comm_id',$id), $action);
 		}
 
 		/**
@@ -2918,7 +2941,7 @@
 		*/
 		function delete_specified_location($id, $action=PHPGW_SQL_RETURN_SQL)
 		{
-			return $this->_delete(sql_criteria::_equal('key_addr_id',$id), $action);
+			return $this->_delete(phpgwapi_sql_criteria::_equal('key_addr_id',$id), $action);
 		}
 
 		/**
@@ -2930,7 +2953,7 @@
 		*/
 		function delete_specified_other($id, $action=PHPGW_SQL_RETURN_SQL)
 		{
-			return $this->_delete(sql_criteria::_equal('key_other_id',$id), $action);
+			return $this->_delete(phpgwapi_sql_criteria::_equal('key_other_id',$id), $action);
 		}
 
 		/**
@@ -2942,7 +2965,7 @@
 		*/
 		function delete_specified_note($id, $action=PHPGW_SQL_RETURN_SQL)
 		{
-			return $this->_delete(sql_criteria::_equal('key_note_id',$id), $action);
+			return $this->_delete(phpgwapi_sql_criteria::_equal('key_note_id',$id), $action);
 		}
 
 		/**
@@ -3099,7 +3122,7 @@
 			$this->request('cat_id');
 			$this->criteria(array('contact_id' => $person_id));
 			$cats = $this->get_records_by_field('cat_id', __LINE__, __FILE__);
-			
+
 			if($cats[0])
 			{
 				$cats_array = explode(',', $cats[0]);
@@ -3198,15 +3221,15 @@
 					}
 					else
 					{
-						$elements[] = sql_criteria::in($field, $value);
+						$elements[] = phpgwapi_sql_criteria::in($field, $value);
 					}
 				}
 				else
 				{
-					$elements[] = sql_criteria::token_has($field, $value);
+					$elements[] = phpgwapi_sql_criteria::token_has($field, $value);
 				}
 			}
-			return sql_criteria::_append_or($elements);
+			return phpgwapi_sql_criteria::_append_or($elements);
 		}
 
 		/**
@@ -3234,20 +3257,20 @@
 					{
 						if (count($value) == 1)
 						{
-							$elements[] = sql_criteria::_equal($field, current($value));
+							$elements[] = phpgwapi_sql_criteria::_equal($field, current($value));
 						}
 						else
 						{
-							$elements[] = sql_criteria::_in($field, $value);
+							$elements[] = phpgwapi_sql_criteria::_in($field, $value);
 						}
 					}
 				}
 				else
 				{
-					$elements[] = sql_criteria::_equal($field, $value);
+					$elements[] = phpgwapi_sql_criteria::_equal($field, $value);
 				}
 			}
-			return sql_criteria::_append_and($elements);
+			return phpgwapi_sql_criteria::_append_and($elements);
 		}
 
 		/**
@@ -3401,7 +3424,7 @@
 			$this->request('my_person_id');
 			$this->criteria(array('my_org_id' => $org_id,
 						 'my_person_id' => $person_id));
-			
+
 			$contact = $this->get_records(__LINE__, __FILE__);
 			if($contact[0]['my_org_id']==0)
 			{
@@ -3410,9 +3433,9 @@
 			else
 			{
 				return TRUE;
-			}			
+			}
 		}
-		
+
 
 		/**
 		* Decide if contacts are user or not, and retrieve its data.
@@ -3546,17 +3569,17 @@
 			switch($access)
 			{
 				case PHPGW_CONTACTS_MINE:
-					$criteria = sql_criteria::_equal('owner', $owner);
+					$criteria = phpgwapi_sql_criteria::_equal('owner', $owner);
 					break;
 				case PHPGW_CONTACTS_PRIVATE:
-					$criteria = sql_criteria::token_and(sql_criteria::_equal('access', 'private'),
-									sql_criteria::_equal('owner', $owner));
+					$criteria = phpgwapi_sql_criteria::token_and(phpgwapi_sql_criteria::_equal('access', 'private'),
+									phpgwapi_sql_criteria::_equal('owner', $owner));
 					break;
 				case PHPGW_CONTACTS_ALL:
 				default:
-					$criteria = sql_criteria::token_or(sql_criteria::token_and(sql_criteria::_equal('access', 'public'),
-														sql_criteria::_in('owner', $this->get_contacts_shared($owner, PHPGW_ACL_READ))),
-														sql_criteria::_equal('owner', $owner));
+					$criteria = phpgwapi_sql_criteria::token_or(phpgwapi_sql_criteria::token_and(phpgwapi_sql_criteria::_equal('access', 'public'),
+														phpgwapi_sql_criteria::_in('owner', $this->get_contacts_shared($owner, PHPGW_ACL_READ))),
+														phpgwapi_sql_criteria::_equal('owner', $owner));
 			}
 			if($categories != PHPGW_CONTACTS_CATEGORIES_ALL)
 			{
@@ -3570,11 +3593,11 @@
 				{
 					foreach($categories_array as $cat_id)
 					{
-						$search_categories[] = sql_criteria::token_or(sql_criteria::_equal('sel_cat_id', $cat_id),
-											sql_criteria::token_has('sel_cat_id', ','.$cat_id.','));
+						$search_categories[] = phpgwapi_sql_criteria::token_or(phpgwapi_sql_criteria::_equal('sel_cat_id', $cat_id),
+											phpgwapi_sql_criteria::token_has('sel_cat_id', ','.$cat_id.','));
 					}
-					$categories_criteria = sql_criteria::_append_or($search_categories);
-					$criteria = sql_criteria::token_and($criteria, $categories_criteria);
+					$categories_criteria = phpgwapi_sql_criteria::_append_or($search_categories);
+					$criteria = phpgwapi_sql_criteria::token_and($criteria, $categories_criteria);
 				}
 			}
 
@@ -3586,9 +3609,9 @@
 
 			if($search_count <= 0 && $show_count > 0)
 			{
-				$addr_preferred_criteria = sql_criteria::token_or(sql_criteria::_equal('addr_pref_val', 'Y'),
-										sql_criteria::_is_null('key_addr_id'));
-				$criteria = sql_criteria::token_and($criteria, $addr_preferred_criteria);
+				$addr_preferred_criteria = phpgwapi_sql_criteria::token_or(phpgwapi_sql_criteria::_equal('addr_pref_val', 'Y'),
+										phpgwapi_sql_criteria::_is_null('key_addr_id'));
+				$criteria = phpgwapi_sql_criteria::token_and($criteria, $addr_preferred_criteria);
 			}
 
 			if( isset($search_fields['comm_media'])
@@ -3612,10 +3635,10 @@
 			{
 				foreach($search_fields as $field)
 				{
-					$search_array[] = sql_criteria::token_has($field, $pattern);
+					$search_array[] = phpgwapi_sql_criteria::token_has($field, $pattern);
 				}
 
-				$criteria = sql_criteria::token_and($criteria, sql_criteria::_append_or($search_array));
+				$criteria = phpgwapi_sql_criteria::token_and($criteria, phpgwapi_sql_criteria::_append_or($search_array));
 			}
 
 			if( $pattern
@@ -3625,10 +3648,10 @@
 			{
 				foreach($search_fields_comms as $field)
 				{
-					$search_array_comm[] = sql_criteria::token_and(sql_criteria::token_has('comm_data', $pattern),
-											 sql_criteria::_equal('comm_descr', $this->search_comm_descr($field)));
+					$search_array_comm[] = phpgwapi_sql_criteria::token_and(phpgwapi_sql_criteria::token_has('comm_data', $pattern),
+											 phpgwapi_sql_criteria::_equal('comm_descr', $this->search_comm_descr($field)));
 				}
-				$criteria = sql_criteria::token_and($criteria, sql_criteria::_append_or($search_array_comm));
+				$criteria = phpgwapi_sql_criteria::token_and($criteria, phpgwapi_sql_criteria::_append_or($search_array_comm));
 			}
 			return $criteria;
 		}
@@ -3649,9 +3672,9 @@
 
 				foreach($search_fields as $field)
 				{
-					$search_array[] = sql_criteria::token_has($field, $pattern);
+					$search_array[] = phpgwapi_sql_criteria::token_has($field, $pattern);
 				}
-				$criteria = sql_criteria::_append_or($search_array);
+				$criteria = phpgwapi_sql_criteria::_append_or($search_array);
 			}
 
 			$this->request('contact_id');
@@ -3857,11 +3880,11 @@
 		function copy_people_by_organizations($organization_id, $new_organization_id)
 		{
 			$records = $this->get_people_by_organizations($organization_id);
-			
+
 			if(is_array($records))
 			{
 				foreach($records as $data)
-				{					
+				{
 					if(!$this->exist_org_person_relation($new_organization_id, $data['my_person_id']))
 					{
 						$this->relations = createObject('phpgwapi.contact_org_person');
@@ -3911,19 +3934,19 @@
 		*/
 		function display_name($field)
 		{
-			if ( isset($this->contact_fields['showable']) 
+			if ( isset($this->contact_fields['showable'])
 				&& isset($this->contact_fields['showable'][$field]) )
 			{
 				return lang($this->contact_fields['showable'][$field]);
 			}
 
-			if ( isset($this->contact_fields['retreivable']) 
+			if ( isset($this->contact_fields['retreivable'])
 				&& isset($this->contact_fields['retreivable'][$field]) )
 			{
 				return lang($this->contact_fields['retrievable'][$field]);
 			}
 
-			if ( isset($this->contact_fields['catalogs']) 
+			if ( isset($this->contact_fields['catalogs'])
 				&& isset($this->contact_fields['catalogs'][$field]) )
 			{
 				return lang($this->contact_fields['catalogs'][$field]);
@@ -4049,12 +4072,12 @@
 
 		function is_contact($account_id)
 		{
-			$account = $GLOBALS['phpgw']->accounts->get_account_data($account_id);
-			if(empty($account[$account_id]['person_id']))
+			$account = $GLOBALS['phpgw']->accounts->get($account_id);
+			if ( !is_object($account) )
 			{
-				return False;
+				return 0;
 			}
-			return $account[$account_id]['person_id'];
+			return $account->person_id;
 		}
 
 		/**
@@ -4094,7 +4117,7 @@
 
 		function get_mkdate()
 		{
-			$date = mktime();
+			$date = time();
 			return $date;
 		}
 
@@ -4466,7 +4489,7 @@
 				$cid = $contact['contact_id'];
 				$ret = array();
 				$ret['contact_id'] = $cid;
-				
+
 				$this->edit_contact($cid, $contact, PHPGW_SQL_RUN_SQL);
 				if ($GLOBALS['phpgw']->db->adodb->ErrorMsg())
 					$ret['edit_contact'] = false;
@@ -4485,7 +4508,7 @@
 				{
 					$ret_comm = array();
 					$ret['comm'] =& $ret_comm;
-				
+
 					$old_comms_media = $this->get_comm_contact_data($cid);
 					if(is_array($old_comms_media) && (count($old_comms_media) > 0))
 					{
@@ -4494,7 +4517,7 @@
 							$key_comm_id = $old_comm['key_comm_id'];
 							$ret_comm['key_comm_id'][] = $key_comm_id;
 							$is_edited = false;
-							
+
 							reset($comm_media);
 							while(list($key,$comm) = each($comm_media))
 							{
@@ -4512,7 +4535,7 @@
 									break;
 								}
 							}
-	
+
 							// if old entry was not set by new data (edited), delete them
 							if($is_edited == false)
 							{
@@ -4562,7 +4585,7 @@
 						else
 							$ret_loc['add_location'][] = true;
 					}
-				}					
+				}
 
 				// todo: updare $contact['relations'] ???
 
@@ -4593,7 +4616,7 @@
 						else
 							$ret_other['add_other'][] = true;
 					}
-				}					
+				}
 
 				return $ret;
 			}
@@ -4603,4 +4626,3 @@
 			}
 		}
 	}
-?>

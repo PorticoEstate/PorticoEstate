@@ -12,11 +12,12 @@
 	/**
 	* Use SQL criteria
 	*/
-	include_once(PHPGW_API_INC . '/class.sql_criteria.inc.php');
+	phpgw::import_class('phpgwapi.sql_criteria');
+
 	/**
 	* Use SQL entity
 	*/
-	include_once(PHPGW_API_INC . '/class.sql_entity.inc.php');
+	phpgw::import_class('phpgwapi.sql_entity');
 
 	/**
 	* Query statements for "comm_descr" table
@@ -24,7 +25,7 @@
 	* @package phpgwapi
 	* @subpackage contacts
 	*/
-	class contact_comm_descr extends sql_entity
+	class contact_comm_descr extends phpgwapi_sql_entity
 	{
 		var $map = array('comm_descr_id'	=> array('select'	=> '',
 								 'criteria' 	=> '',
@@ -84,11 +85,10 @@
 			
 			foreach($element['value'] as $value)
 			{
-				$data[] = sql_criteria::equal($field, sql::string($value));
+				$data[] = phpgwapi_sql_criteria::equal($field, sql::string($value));
 			}
 
-			$criteria = sql_criteria::append_or($data);
+			$criteria = phpgwapi_sql_criteria::append_or($data);
 			$this->_add_criteria($criteria);
 		}
 	}
-?>

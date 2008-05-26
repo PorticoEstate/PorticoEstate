@@ -11,7 +11,7 @@
 	/**
 	* include the base class for the application test classes
 	*/
-	include_once('class.ipc_test_suite.inc.php');
+	phpgw::import_class('ipc_test_suite', 'ipc_test_suite');
 
 	/**
 	* IPC test class for the notes application

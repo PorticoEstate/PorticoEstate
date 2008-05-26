@@ -41,7 +41,7 @@ else
 		$login  = AnonymousUser;
 		$passwd = AnonymousPasswd;
 
-		$sessionid = $GLOBALS['phpgw']->session->create($login,$passwd,'text');
+		$sessionid = $GLOBALS['phpgw']->session->create($login,$passwd);
 	}
 	if (!$sessionid) {
 		echo "<p>Can't create session for user '".AnonymousUser."' !!!</p>\n";

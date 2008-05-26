@@ -3,8 +3,8 @@
 	* phpGroupWare - HRM: a  human resource competence management system.
 	*
 	* @author Sigurd Nes <sigurdne@online.no>
-	* @copyright Copyright (C) 2003-2005 Free Software Foundation, Inc. http://www.fsf.org/
-	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
+	* @copyright Copyright (C) 2003-2008 Free Software Foundation, Inc. http://www.fsf.org/
+	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License v3 or later
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/bbb_/ekstern/
 	* @package hrm
 	* @subpackage admin
@@ -230,23 +230,22 @@
 
 		function set_permission2($values,$r_processed, $grantor = false, $type = false)
 		{
-			@reset($values);
 			$totalacl = array();
-			while(list($rowinfo,$perm) = each($values))
+			foreach ( $values as $rowinfo => $perm )
 			{
-				list($user_id,$rights) = split('_',$rowinfo);
+				list($user_id, $rights) = split('_', $rowinfo);
 				$totalacl[$user_id] += $rights;
 			}
-			@reset($totalacl);
-			while(list($user_id,$rights) = @each($totalacl))
-			{
-				$user_checked[]=$user_id;
 
-				$this->acl->account_id=$user_id;
+			foreach ( $totalacl as $user_id => $rights )
+			{
+				$user_checked[] = $user_id;
+
+				$this->acl->account_id = $user_id;
 				$this->acl->read_repository();
-				$this->acl->delete($appname = $this->acl_app, $this->location,$grantor,$type);
-				$this->acl->add($appname = $this->acl_app, $this->location, $rights,$grantor,$type);
-				$this->acl->save_repository();
+				$this->acl->delete($this->acl_app, $this->location,$grantor,$type);
+				$this->acl->add($this->acl_app, $this->location, $rights,$grantor,$type);
+				$this->acl->save_repository($this->acl_app, $this->location);
 			}
 
 			if(is_array($r_processed) && is_array($user_checked))
@@ -259,12 +258,12 @@
 			}
 			if(is_array($user_delete) && count($user_delete)>0)
 			{
-				while(list(,$user_id) = each($user_delete))
+				foreach ( $user_delete as$user_id )
 				{
-					$this->acl->account_id=$user_id;
+					$this->acl->account_id = $user_id;
 					$this->acl->read_repository();
-					$this->acl->delete($appname = $this->acl_app, $this->location,$grantor,$type);
-					$this->acl->save_repository();
+					$this->acl->delete($this->acl_app, $this->location, $grantor, $type);
+					$this->acl->save_repository($this->acl_app, $this->location);
 				}
 			}
 		}
@@ -353,7 +352,7 @@
 					$count_right=count($right);
 					for ($i=0;$i<$count_right;$i++)
 					{
-						if($this->acl->check_brutto($this->location, $right[$i],$this->acl_app,$grantor,0,$check_account_type))
+						if($this->acl->check_rights($this->location, $right[$i],$this->acl_app,$grantor,0,$check_account_type))
 						{
 							if($this->acl->account_type == 'g')
 							{
@@ -365,7 +364,7 @@
 							}
 							$user_list[$j]['result'][$right[$i]] = 'checked';
 						}
-						if($this->acl->check_brutto($this->location, $right[$i],$this->acl_app,$grantor,1,$check_account_type))
+						if($this->acl->check_rights($this->location, $right[$i],$this->acl_app,$grantor,1,$check_account_type))
 						{
 							if($this->acl->account_type == 'g')
 							{

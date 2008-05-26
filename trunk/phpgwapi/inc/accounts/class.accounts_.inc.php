@@ -1,254 +1,524 @@
 <?php
 	/**
 	* Shared functions for other account repository managers and loader
+	*
 	* @author Joseph Engo <jengo@phpgroupware.org>
 	* @author Bettina Gille <ceb@phpgroupware.org>
 	* @author Philipp Kamps <pkamps@probusiness.de>
-	* @copyright Copyright (C) 2000-2004 Free Software Foundation, Inc. http://www.fsf.org/
-	* @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License
-	* @package phpgwapi
-	* @subpackage accounts
+	* @author Dave Hall <skwashd@phpgroupware.org>
+	* @copyright Copyright (C) 2000-2008 Free Software Foundation, Inc. http://www.fsf.org/
+	* @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License v3 or later
+	* @package phpgroupware
+	* @subpackage phpgwapi
 	* @version $Id$
 	*/
-	if (empty($GLOBALS['phpgw_info']['server']['account_repository']))
-	{
-		if (!empty($GLOBALS['phpgw_info']['server']['auth_type']))
-		{
-			$GLOBALS['phpgw_info']['server']['account_repository'] = $GLOBALS['phpgw_info']['server']['auth_type'];
-		}
-		else
-		{
-			$GLOBALS['phpgw_info']['server']['account_repository'] = 'sql';
-		}
-	}
-	/**
-	* Include child class
-	*/
 
-	/**
-	* @ignore 
-	* @global array list of banned user account names
-	*/
-	$GLOBALS['phpgw_info']['server']['global_denied_users'] = array
-	(
-		'adm'			=> true,
-		'alias'			=> true,
-		'amanda'		=> true,
-		'apache'		=> true,
-		'avahi'			=> true,
-		'backup'		=> true,
-		'backup'		=> true,
-		'beagleindex'	=> true,
-		'bin'			=> true,
-		'cupsys'		=> true,
-		'cvs'			=> true,
-		'cyrus'			=> true,
-		'daemon'		=> true,
-		'dhcp'			=> true,
-		'dnsmasq'		=> true,
-		'fetchmail'		=> true,
-		'ftp'			=> true,
-		'games'			=> true,
-		'gdm'			=> true,
-		'gnats'			=> true,
-		'gopher'		=> true,
-		'haldaemon'		=> true,
-		'hal'			=> true,
-		'halt'			=> true,
-		'hplip'			=> true,
-		'ident'			=> true,
-		'irc'			=> true,
-		'klog'			=> true,
-		'ldap'			=> true,
-		'list'			=> true,
-		'lp'			=> true,
-		'mailnull'		=> true,
-		'mail'			=> true,
-		'messagebus'	=> true,
-		'mysql'			=> true,
-		'named'			=> true,
-		'news'			=> true,
-		'nobody'		=> true,
-		'nscd'			=> true,
-		'operator'		=> true,
-		'oracle'		=> true,
-		'pgsql'			=> true,
-		'postfix'		=> true,
-		'postgres'		=> true,
-		'proxy'			=> true,
-		'pvm'			=> true,
-		'qmaild'		=> true,
-		'qmaillog'		=> true,
-		'qmaill'		=> true,
-		'qmailp'		=> true,
-		'qmailq'		=> true,
-		'qmailr'		=> true,
-		'qmails'		=> true,
-		'root'			=> true,
-		'rpc'			=> true,
-		'rpcuser'		=> true,
-		'sabayon-admin'	=> true,
-		'saned'			=> true,
-		'shutdown'		=> true,
-		'squid'			=> true,
-		'sshd'			=> true,
-		'sweep'			=> true,
-		'sync'			=> true,
-		'syslog'		=> true,
-		'sys'			=> true,
-		'uucp'			=> true,
-		'web'			=> true,
-		'www-data'		=> true,
-		'xfs'			=> true
-	);
+	/*
+	   This program is free software: you can redistribute it and/or modify
+	   it under the terms of the GNU Lesser General Public License as published by
+	   the Free Software Foundation, either version 3 of the License, or
+	   (at your option) any later version.
 
-	/**
-	* @ignore 
-	* @global array list of banned user group names
-	*/
-	$GLOBALS['phpgw_info']['server']['global_denied_groups'] = array
-	(
-		'admin'			=> true,
-		'adm'			=> true,
-		'audio'			=> true,
-		'avahi'			=> true,
-		'backup'		=> true,
-		'bin'			=> true,
-		'cdrom'			=> true,
-		'console'		=> true,
-		'crontab'		=> true,
-		'cvs'			=> true,
-		'daemon'		=> true,
-		'dba'			=> true,
-		'dhcp'			=> true,
-		'dialout'		=> true,
-		'dip'			=> true,
-		'dirmngr'		=> true,
-		'disk'			=> true,
-		'dnstools'		=> true,
-		'fax'			=> true,
-		'floppy'		=> true,
-		'ftp'			=> true,
-		'games'			=> true,
-		'gdm'			=> true,
-		'gnats'			=> true,
-		'haldaemon'		=> true,
-		'hal'			=> true,
-		'irc'			=> true,
-		'klog'			=> true,
-		'kmem'			=> true,
-		'ldap'			=> true,
-		'list'			=> true,
-		'lpadmin'		=> true,
-		'lp'			=> true,
-		'lp'			=> true,
-		'mail'			=> true,
-		'man'			=> true,
-		'messagebus'	=> true,
-		'mysql'			=> true,
-		'named'			=> true,
-		'news'			=> true,
-		'nobody'		=> true,
-		'nofiles'		=> true,
-		'nogroup'		=> true,
-		'oinstall'		=> true,
-		'operator'		=> true,
-		'oracle'		=> true,
-		'plugdev'		=> true,
-		'popusers'		=> true,
-		'postdrop'		=> true,
-		'postfix'		=> true,
-		'postgres'		=> true,
-		'pppusers'		=> true,
-		'proxy'			=> true,
-		'qmail'			=> true,
-		'root'			=> true,
-		'sabayon-admin'	=> true,
-		'saned'			=> true,
-		'sasl'			=> true,
-		'scanner'		=> true,
-		'shadow'		=> true,
-		'slipusers'		=> true,
-		'slocate'		=> true,
-		'src'			=> true,
-		'ssh'			=> true,
-		'ssl-cert'		=> true,
-		'staff'			=> true,
-		'sudo'			=> true,
-		'sweep'			=> true,
-		'syslog'		=> true,
-		'sys'			=> true,
-		'tape'			=> true,
-		'tty'			=> true,
-		'users'			=> true,
-		'utmp'			=> true,
-		'uucp'			=> true,
-		'video'			=> true,
-		'voice'			=> true,
-		'web'			=> true,
-		'wheel'			=> true,
-		'www-data'		=> true,
-		'xfs'			=> true,
-	);
+	   This program is distributed in the hope that it will be useful,
+	   but WITHOUT ANY WARRANTY; without even the implied warranty of
+	   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	   GNU General Public License for more details.
+
+	   You should have received a copy of the GNU Lesser General Public License
+	   along with this program.  If not, see <http://www.gnu.org/licenses/>.
+	 */
+
+	/*
+	 * Import account data objects
+	 */
+	phpgw::import_class('phpgwapi.account');
 
 	/**
 	* Class for handling user and group accounts
 	*
-	* @package phpgwapi
-	* @subpackage accounts
+	* @package phpgroupware
+	* @subpackage phpgwapi
+	* @category accounts
 	*/
-	abstract class accounts_
+	abstract class phpgwapi_accounts_
 	{
-		var $account_id;
-		var $account_lid;
-		var $lid;
-		var $firstname;
-		var $lastname;
-		var $password;
-		var $status;
-		var $expires;
-		var $person_id;
 		/**
-		* @var int the user's quota in Mb - i think
-		*/
-		var $quota = 0; //sane default
-		var $data;
-		var $db;
-		var $memberships = array();
-		var $members = array();
-		var $total;
-		var $xmlrpc_methods = array();
+		 * @var object $account the currently selected user object
+		 */
+		protected $account;
 
 		/**
-		* Standard constructor for setting account_id
+		 * @var integer $account_id track the current account_id - which may not match the this->account->id
+		 */
+		protected $account_id = 0;
+
+		/**
+		 * @var object $db reference to the global database object
+		 */
+		protected $db;
+
+		/**
+		 * @var array $memberships groups users are members of
+		 */
+		protected $memberships = array();
+
+		/**
+		 * @var array $members groups users are members of
+		 */
+		protected $members = array();
+
+		/**
+		 * @var integer $total the number of records found in previous search
+		 */
+		public $total;
+
+		/**
+		 * @var array $xmlrpc_methods the methods of the class available via xmlrpc
+		 */
+		public $xmlrpc_methods = array();
+
+		/**
+		* Constructor
 		*
-		* This constructor sets the account id, if string is set, converts to id
-		* @param integer $account_id Account id defaults to current account id
-		* @param string $account_type Account type 'u': account; 'g' : group; defaults to current account type
-		* @internal I might move this to the accounts_shared if it stays around
+		* @param integer $account_id   Account id defaults to current account id
+		* @param string  $account_type Account type 'u': account; 'g' : group; defaults to current account type
+		*
+		* @return void
 		*/
-		function __construct($account_id = null, $account_type = null)
+		public function __construct($account_id = null, $account_type = null)
 		{
 			$this->db =& $GLOBALS['phpgw']->db;
 			$this->like = $this->db->like;
-			
-			// FIXME move me to a proper instance variable
-			$this->xmlrpc_methods[] = array(
-				'name'        => 'get_list',
-				'description' => 'Returns a list of accounts and/or groups'
-			);
-			$this->xmlrpc_methods[] = array(
-				'name'        => 'name2id',
-				'description' => 'Cross reference account_lid with account_id'
-			);
-			$this->xmlrpc_methods[] = array(
-				'name'        => 'id2name',
-				'description' => 'Cross reference account_id with account_lid'
-			);
 
 			$this->set_account($account_id, $account_type);
 		}
 
+		/**
+		* Add an account to a group entry
+		*
+		* @param integer $account_id Account id
+		* @param integer $group_id   Group id
+		*
+		* @return boolean true on success otherwise false
+		*/
+		abstract public function add_user2group($account_id, $group_id);
+
+		/**
+		 * Create a new user account  - this only creates the acccount
+		 *
+		 * For creating a fully working user, use self::create()
+		 *
+		 * @param object $account the phpgwapi_user object for the new account
+		 *
+		 * @return integer the new user id
+		 *
+		 * @see self::create
+		 */
+		abstract public function create_user_account($account);
+
+		/**
+		 * Delete an account
+		 *
+		 * @param integer $account_id the account to delete
+		 *
+		 * @return boolean was the account deleted?
+		 */
+		abstract public function delete($account_id);
+
+		/**
+		* Delete an account from a group
+		*
+		* @param integer $account_id The account to delete from the group
+		* @param integer $group_id   The group to delete the account from
+		*
+		* @return boolean true on success otherwise false
+		*/
+		abstract public function delete_account4group($account_id, $group_id);
+
+		/**
+		 * Does the user account exist?
+		 *
+		 * @param integer|string $account_lid the accound login or id to check
+		 *
+		 * @return boolean does the account exist or not?
+		 */
+		abstract public function exists($account_lid);
+
+		/**
+		 * Fetch an account
+		 *
+		 * @param integer $id the account id to fetch
+		 *
+		 * @return object the account as a phpgw_account derived object
+		 */
+		abstract public function get($id);
+
+		/**
+		* Get a list of member account ids for a group
+		*
+		* @param integer $group_id the group to get members from
+		*
+		* @return arrray list of members of the current group
+		*/
+		abstract public function get_members($group_id = null);
+
+		/**
+		* Get a list of groups the user is a member of
+		*
+		* @param integer $account_id the user account to lookup
+		*
+		* @return array the groups the user is a member of
+		*
+		* @internal return structure array(array('account_id' => id, 'account_name' => group name))
+		*/
+		abstract public function membership($account_id = 0);
+
+		/**
+		* Get a list of members of the group
+		*
+		* @param integer $group_id the group to check
+		*
+		* @return array list of members
+		*/
+		abstract public function member($group_id = 0);
+
+		/**
+		 * Get a list of accounts which have contacts linked to them
+		 *
+		 * @return array account_id => contact_id mappings
+		 */
+		abstract public function get_account_with_contact();
+
+		/**
+		 * Get a list of accounts which don't have contacts associated with them
+		 *
+		 * @return array list of account_ids without contacts
+		 */
+		abstract public function get_account_without_contact();
+
+		/**
+		 * Get a list of accounts based on a search criteria
+		 *
+		 * @param string  $_type  type of accounts sought
+		 * @param integer $start  the position to start at in the result set
+		 * @param string  $sort   the direction to sort - valid values "ASC" or "DESC"
+		 * @param string  $order  the field to sort on
+		 * @param string  $query  the search criteria - matches firstname, lastname and lid
+		 * @param integer $offset the number of records to return
+		 *
+		 * @return array list of accounts that match criteria
+		 */
+		abstract public function get_list($_type='both', $start = -1, $sort = '',
+											$order = '', $query = '', $offset = -1);
+
+		/**
+		 * Convert an account login id to an account id
+		 *
+		 * @param string $account_lid the login id to look up
+		 *
+		 * @return integer the account id - 0 if not found
+		 */
+		abstract public function name2id($account_lid);
+
+		/**
+		 * Read the currently selected account from the storage repository
+		 *
+		 * @return void
+		 */
+		abstract public function read_repository();
+
+		/**
+		 * Save/update account information to database
+		 *
+		 * @return void
+		 */
+		abstract public function save_repository();
+
+		/**
+		 * Match a contact ID with an account id
+		 *
+		 * @param integer $person_id the contact person ID
+		 *
+		 * @return integer account id - 0 if not found
+		 */
+		abstract public function search_person($person_id);
+
+		/**
+		* Create a non existing but authorized user
+		*
+		* @param string  $accountname    User name
+		* @param string  $passwd         User password
+		* @param integer $expiredate     Expire date of this account. '-1' for never.
+		* @param string  $account_status Status for new user. 'A' for active user.
+		*
+		* @return integer Account id
+		*/
+		public function auto_add($accountname, $passwd, $expiredate = 0, $account_status = 'A')
+		{
+			if ($expiredate)
+			{
+				$expires = (int) $expiry;
+			}
+			else if ( isset($GLOBALS['phpgw_info']['server']['auto_create_expire']) )
+			{
+				if ( $GLOBALS['phpgw_info']['server']['auto_create_expire'] == 'never' )
+				{
+					$expires = -1;
+				}
+				else
+				{
+					$expires = time() + $GLOBALS['phpgw_info']['server']['auto_create_expire'];
+				}
+			}
+			else
+			{
+				$expires = time() + (60 * 60 * 24 * 7); // 1 week - sane default
+			}
+
+			$acct_info = array
+			(
+				'account_lid'       => $accountname,
+				'account_type'      => 'u',
+				'account_passwd'    => $passwd,
+				'account_firstname' => '',
+				'account_lastname'  => '',
+				'account_status'    => $account_status == 'A',
+				'account_expires'   => $expires
+			);
+
+			$group = array
+			(
+				$this->name2id($GLOBALS['phpgw_info']['server']['default_group_lid'])
+			);
+
+			$account = $this->create($acct_info, $group);
+			return $account->id;
+		}
+
+		/**
+		 * Create a account account
+		 *
+		 * @param object $account the new account object
+		 * @param array  $group   group information
+		 *	- memberships for users / members for groups
+		 * @param array  $acls    list of access controls to set for the user
+		 * @param array  $modules the list of modules to enable for the user
+		 *
+		 * @return integer the new account id
+		 */
+		public function create($account, $group, $acls = array(), $modules = array())
+		{
+			$this->db->transaction_begin();
+
+			try
+			{
+
+				$class = get_class($account);
+				switch( $class )
+				{
+					case phpgwapi_account::CLASS_TYPE_USER:
+						$this->_create_user($account, $group);
+						break;
+
+					case phpgwapi_account::CLASS_TYPE_GROUP:
+						$this->_create_group($account, $group);
+						break;
+
+					default:
+						throw new Exception("Invalid account type: {$class}");
+				}
+				$this->_cache_account($account);
+
+				if ( !$account->id )
+				{
+					throw new Exception('Failed to create account');
+				}
+
+				$aclobj =& $GLOBALS['phpgw']->acl;
+				$aclobj->set_account_id($account->id);
+				foreach ( $acls as $acl )
+				{
+					$aclobj->add($acl['appname'], $acl['location'], $acl['rights']);
+					$aclobj->save_repository($acl['appname']);
+				}
+
+				foreach ( $modules as $module )
+				{
+					$aclobj->add($module, 'run', phpgwapi_acl::READ);
+					$aclobj->save_repository($module);
+				}
+
+			}
+			catch (Exception $e)
+			{
+				$this->db->transaction_abort();
+				// throw it again so it can be caught higher up
+				throw $e;
+			}
+
+			$this->db->transaction_commit();
+			return $account->id;
+		}
+
+		/**
+		 * Check which type of account the user id is
+		 *
+		 * @param integer $account_id the account id to look up
+		 *
+		 * @return string 'u' = user, 'g' = group
+		 *
+		 * @throws Exception invalid account id
+		 */
+		public function get_type($account_id)
+		{
+			if ( !is_numeric($account_id) )
+			{
+				$account_id = $this->name2id($account_id);
+				trigger_error('Invalid account id specified in call to accounts::get_type', E_USER_NOTICE);
+			}
+
+			$account = $this->get($account_id);
+			if ( !is_object($account) )
+			{
+				throw new Exception('Invalid account id specified');
+			}
+
+			switch ( get_class($account) )
+			{
+				case phpgwapi_account::CLASS_TYPE_USER:
+					return phpgwapi_account::TYPE_USER;
+
+				case phpgwapi_account::CLASS_TYPE_GROUP:
+					return phpgwapi_account::TYPE_GROUP;
+
+				default:
+					throw new Exception('Invalid account type');
+			}
+		}
+
+		/**
+		 * Convert an account id to an account login id
+		 *
+		 * Generally self::id2name should be used as this exposes login information,
+		 * which is a potential security risk
+		 *
+		 * @param integer $account_id the account_id to convert to login id
+		 *
+		 * @return string the account login id - empty if not found
+		 */
+		public function id2lid($account_id)
+		{
+			$acct = $this->get($account_id);
+			if ( is_object($acct) )
+			{
+				return $acct->lid;
+			}
+			return '';
+		}
+
+		/**
+		 * Convert an id into its corresponding account or group name
+		 *
+		 * @param integer $account_id Account or group id
+		 *
+		 * @return string Name of the account or the group when found othwerwise empty string
+		 */
+		public function id2name($account_id)
+		{
+			return (string) $this->get($account_id);
+		}
+
+		/**
+		 * Is the current account expired?
+		 *
+		 * @return boolean has the account expired?
+		 */
+		public function is_expired()
+		{
+			return $this->account->is_expired();
+		}
+
+		/**
+		 * Read the currently selected account
+		 *
+		 * @return object the account
+		 */
+		public function read()
+		{
+			if ( !is_object($this->account)
+				|| $this->account->id <> !$this->account_id )
+			{
+				$this->read_repository();
+			}
+			return $this->account;
+		}
+
+		/**
+		* Get an array of users and groups seperated, including all members of groups
+		*
+		* @param array $app_users Array with user/group names
+		*
+		* @return array 'users' contains the user names for the given group or application
+		*/
+		public function return_members($app_users = array() )
+		{
+			$users = array();
+			$groups = array();
+
+			if ( !is_array($app_users) )
+			{
+				return array
+				(
+					'groups'	=> array(),
+					'users'		=> array()
+				);
+			}
+
+			foreach ( $app_users as $app_user )
+			{
+				try
+				{
+					$type = $GLOBALS['phpgw']->accounts->get_type($app_user);
+				}
+				catch ( Exception $e )
+				{
+					// we ignore invalid accounts, this avoid problems with old crud
+				}
+
+				if ( $type == phpgwapi_account::TYPE_GROUP )
+				{
+					$groups[$app_user] = true;
+
+					$members = $this->get_members($app_user);
+					if ( is_array($members) )
+					{
+						foreach ( $members as $member )
+						{
+							$users[$member] = true;
+						}
+					}
+				}
+				else
+				{
+					$users[$app_user] = true;
+				}
+			}
+
+			return array
+			(
+				'groups'	=> array_keys($groups),
+				'users'		=> array_keys($users)
+			);
+		}
+
+		/**
+		 * Set the account id of the class
+		 *
+		 * @param integer $account_id   the id of the user/group
+		 * @param string  $account_type the type of account - 'user'/'group'
+		 *
+		 * @return void
+		 */
 		public function set_account($account_id = null, $account_type = null)
 		{
 			if ( !is_null($account_id) )
@@ -262,198 +532,296 @@
 			}
 		}
 
-		function sync_accounts_contacts()
+		/**
+		 * Set data for the current account
+		 *
+		 * @param array $data the user data
+		 *
+		 * @return boolean was the data set properly
+		 */
+		public function set_data($data)
+		{
+			$this->account = new phpgwapi_user();
+			try
+			{
+				$this->account->init($data);
+			}
+			catch ( Exception $e )
+			{
+				throw $e;
+			}
+			return true;
+		}
+
+		/**
+		 * Synchronises accounts with contacts
+		 *
+		 * @return void
+		 */
+		public function sync_accounts_contacts()
 		{
 			$accounts = $this->get_account_without_contact();
 
-			if(is_array($accounts))
+			if ( !is_array($accounts) )
 			{
-				$contacts = createObject('phpgwapi.contacts');
-				
-				foreach($accounts as $account)
+				return;
+			}
+			$contacts = createObject('phpgwapi.contacts');
+
+			foreach($accounts as $account)
+			{
+				if ( $account )
 				{
-					//$this->get_account_name($account,$lid,$fname,$lname);
-					if($account)
-					{
-						$this->account_id = $account;
-						$user_account = $this->read_repository();
-						$principal = array('per_prefix'     => $user_account['account_lid'],
-								   'per_first_name' => $user_account['firstname'],
-								   'per_last_name'  => $user_account['lastname'],
-								   'access'	    => 'public',
-								   'owner'	    => $GLOBALS['phpgw_info']['server']['addressmaster']);
-						$contact_type = $contacts->search_contact_type('Persons');
-						$user_account['person_id'] = $contacts->add_contact($contact_type, $principal);
-						$this->update_data($user_account);
-						$this->save_repository();
-					}
+					$this->account_id = $account;
+					$user = $this->read_repository();
+					$principal = array
+					(
+						'per_prefix'		=> '',
+						'per_first_name'	=> $user->firstname,
+						'per_last_name'		=> $user->lastname,
+						'access'			=> 'public',
+						'owner'				=> $GLOBALS['phpgw_info']['server']['addressmaster']
+					);
+					$contact_type = $contacts->search_contact_type('Persons');
+					$user->person_id = $contacts->add_contact($contact_type, $principal);
+					$this->update_data($user_account);
+					$this->save_repository();
 				}
 			}
 		}
 
-		function save_contact_for_account($userData)
+		/**
+		 * Update the data for a group
+		 *
+		 * @param object $group   the phpgwapi_account_group object to use for the update
+		 * @param array  $users   the list of users who belong in the group
+		 * @param array  $modules the list of modules the group shall have access to
+		 *
+		 * @return integer the group id
+		 */
+		public function update_group($group, $users, $modules = null)
 		{
-			
-			$owner = $GLOBALS['phpgw_info']['server']['addressmaster'];
-			$contacts = createObject('phpgwapi.contacts');
-			$type = $contacts->search_contact_type('Persons');
+			$this->account = $group;
+			$this->save_respository();
 
-			$comms=(is_array($userData['extra_contact']['comms'])) ? $userData['extra_contact']['comms'] : false;
-			$principal=(is_array($userData['extra_contact']['principal'])) ? $userData['extra_contact']['principal'] : false;
-			$locations=(is_array($userData['extra_contact']['locations'])) ? $userData['extra_contact']['locations'] : false;
-			$categories=(is_array($userData['extra_contact']['categories'])) ? $userData['extra_contact']['categories'] : false;
-			$others=(is_array($userData['extra_contact']['others'])) ? $userData['extra_contact']['others'] : false;
-			$notes=(is_array($userData['extra_contact']['notes'])) ? $userData['extra_contact']['notes'] : false;
-			$relationship=(is_array($userData['extra_contact']['relationship'])) ? $userData['extra_contact']['relationship'] : false;
-
-			$principal['owner'] = $owner;
-			$principal['access']= 'public';
-			$principal['per_prefix'] = $userData['account_lid'];
-			$principal['per_first_name'] = $userData['account_firstname'];
-			$principal['per_last_name'] = $userData['account_lastname'];
-
-			if(isset($userData['domain']))
+			// handle group memberships
+			$old_users = array_keys($this->members($group->id));
+			$new_users = array_keys($users);
+			$drop_users = array_diff($old_users, $new_users);
+			if ( is_array($drop_users) && count($drop_users) )
 			{
-				$domain=$userData['domain'];
+				foreach ( $drop_user as $user )
+				{
+					$this->delete_account4group($user, $group->id);
+				}
+			}
+			unset($old_users, $users, $drop_users);
+
+			foreach ( $new_users as $user )
+			{
+				$this->add_user2group($user, $group->id);
+			}
+
+			// module permissions
+			if ( is_array($modules) )
+			{
+				$apps = CreateObject('phpgwapi.applications', $group->id);
+				$data = array(); //remove all existing rights
+				foreach ( array_keys($modules) as $app_name )
+				{
+					if ( $app_status )
+					{
+						$data[] = $app_name;
+					}
+				}
+				$apps->update_data($data);
+				$apps->save_repository();
+			}
+
+			// Things that have to change because of new group name
+			// FIXME this needs to be changed to work with all VFS backends
+			if($old_group->account_lid != $new_group->account_lid)
+			{
+				$basedir = "{$GLOBALS['phpgw_info']['server']['files_dir']}/groups/";
+				@rename($basedir . $old_group->account_lid, $basedir . $new_group->account_lid);
+			}
+
+			return $group->id;
+		}
+
+		/**
+		 * Update an existing user account record
+		 *
+		 * @param object $user        the phpgw_account object to store
+		 * @param array  $groups      the groups the user should be a member of
+		 * @param array  $permissions ACLs to set for the user
+		 * @param array  $modules     the modules the user has access to
+		 *
+		 * @return void
+		 */
+		public function update_user($user, $groups, $permissions = null, $modules = null)
+		{
+			$this->set_account($user->id);
+			$this->account = $user;
+			$this->save_repository();
+
+			$this->_cache_account($user);
+
+			// handle groups
+			$old_groups = array_keys($this->membership($user->id));
+			$new_groups = array_keys($groups);
+			$drop_groups = array_diff($old_groups, $new_groups);
+			if ( is_array($drop_groups) && count($drop_groups) )
+			{
+				foreach ( $drop_groups as $group )
+				{
+					$this->delete_account4group($user->id, $group);
+				}
+			}
+			unset($old_groups, $groups, $drop_groups);
+
+			foreach ( $new_groups as $group )
+			{
+				$this->add_user2group($user->id, $group);
+			}
+
+			//FIXME need permissions here
+
+			// application permissions
+			if ( is_array($modules) )
+			{
+				$apps = CreateObject('phpgwapi.applications', $user->id);
+				$data = array(); //remove all existing rights
+				foreach ( array_keys($modules) as $app_name )
+				{
+					if ( $app_status )
+					{
+						$data[] = $app_name;
+					}
+				}
+				$apps->update_data($data);
+				$apps->save_repository();
+			}
+
+			return true;
+		}
+
+		/**
+		 * Update the account data
+		 *
+		 * @param array $data the account data to use
+		 *
+		 * @return object the account
+		 *
+		 * @internal does not write it to the storage backend
+		 */
+		public function update_data($data)
+		{
+			if ( $data['account_type'] == 'g' )
+			{
+				$account = new phpgwapi_group();
 			}
 			else
 			{
-				$domain=$GLOBALS['phpgw_info']['server']['mail_server'];
+				$account = new phpgwapi_user();
 			}
-
-
-			if($domain)//Attempts to grab domain succeded
-			{
-				$comm['comm_descr'] = $contacts->search_comm_descr('work email');
-				$comm['comm_data'] = $userData['account_lid'].'@'.$domain;
-				$comm['comm_preferred']='Y';
-				$comms = array($comm);
-			}
-			else
-			{
-				$comms='';
-			}
-
-			if ($userData['person_id'] && $contacts->exist_contact($userData['person_id']))
-			{
-				$contacts->edit_person($userData['person_id'], $principal);
-				$person_id = $userData['person_id'];
-			}
-			else
-			{
-				$person_id = $contacts->add_contact($type, $principal,$comms,$locations,$categories,$others,$relationship,$notes);
-			}
-			$this->account_contact_id = $person_id;
-			return $person_id;
-		}
-		
-		function is_expired()
-		{
-			if ($this->data['expires'] != -1 && $this->data['expires'] < time())
-			{
-				return true;
-			}
-			else
-			{
-				return False;
-			}
+			$account->init($data);
+			$this->account = $account;
+			return $this->account;
 		}
 
-		function read()
+		/**
+		 * Cache an account object in the system cache
+		 *
+		 * @param object $account phpgw_account object to cache
+		 *
+		 * @return void
+		 */
+		protected function _cache_account($account)
 		{
-			if (count($this->data) == 0)
-			{
-				$this->read_repository();
-			}
-
-			reset($this->data);
-			return $this->data;
+			phpgwapi_cache::system_set('phpgwapi', "account_{$account->id}", $account);
 		}
 
-		function update_data($data)
+		/**
+		 * Handle the group specific parts of account creation
+		 *
+		 * @param object $group   the phpgwapi_group to be stored
+		 * @param array  $members the users which are members of the group
+		 *
+		 * @return integer the id of the newly created group
+		 */
+		protected function _create_group($group, $members)
 		{
-			reset($data);
-			$this->data = Array();
-			$this->data = $data;
-
-			reset($this->data);
-			return $this->data;
-		}
-
-		function membership($accountid = '')
-		{
-			$account_id = get_account_id($accountid);
-
-			$security_equals = Array();
-			$security_equals = $GLOBALS['phpgw']->acl->get_location_list_for_id('phpgw_group', 1, $account_id);
-
-			if ( !$security_equals )
+			$this->_save_contact_for_group($group);
+			if ( !$this->create_group_account($group) )
 			{
 				return false;
 			}
 
-			$this->memberships = array();
-
-			for ($idx=0; $idx<count($security_equals); $idx++)
+			foreach ( $members as $member )
 			{
-				$groups = intval($security_equals[$idx]);
-				$this->memberships[] = Array('account_id' => $groups, 'account_name' => $this->id2name($groups));
+				$this->add_user2Group($member, $group->id);
 			}
-
-			return $this->memberships;
-		}
-
-		function member($accountid = '')
-		{
-			$account_id = get_account_id($accountid);
-
-			$security_equals = Array();
-			$acl = createObject('phpgwapi.acl');
-			$security_equals = $acl->get_ids_for_location($account_id, 1, 'phpgw_group');
-			unset($acl);
-
-			if ($security_equals == False)
-			{
-				return False;
-			}
-
-			for ($idx=0; $idx<count($security_equals); $idx++)
-			{
-				$name = $this->id2name(intval($security_equals[$idx]));
-				$this->members[] = Array('account_id' => intval($security_equals[$idx]), 'account_name' => $name);
-			}
-
-			return $this->members;
+			return $group->id;
 		}
 
 		/**
-		* Get a list of members of the current group
-		*
-		* @return arrray list of members of the current group
-		*/
-		function get_members()
+		 * Handle the user specific parts of account creation
+		 *
+		 * @param object $user   the phpgwapi_user object to be stored
+		 * @param array  $groups the groups the user is to be a member of
+		 *
+		 * @return integer the id of the new user account
+		 */
+		protected function _create_user($user, $groups)
 		{
-			$members = array();
-			$sql = "SELECT acl_account FROM phpgw_acl WHERE acl_appname = 'phpgw_group' and acl_location ='" . (int) $this->account_id . "'";
-			$this->db->query($sql,__LINE__,__FILE__);
-			while ($this->db->next_record())
+			$this->_save_contact_for_user($user);
+			if ( !$this->create_user_account($user) )
 			{
-				$members[] =  $this->db->f('acl_account');
+				return false;
 			}
-			return $members;
-		}
 
+			foreach ( $groups as $group )
+			{
+				$this->add_user2Group($user->id, $group);
+			}
+
+			// preferences - this is ugly - but the def_pref hook is ugly too
+			$GLOBALS['hook_values'] = array
+			(
+				'account_id'	=> $user->id,
+				'account_lid'	=> $user->lid,
+				'new_passwd'	=> $user->passwd
+			);
+			$GLOBALS['pref'] = CreateObject('phpgwapi.preferences', $user->id);
+			$GLOBALS['phpgw']->hooks->process('addaccount');
+			$GLOBALS['phpgw']->hooks->process('add_def_pref');
+			$GLOBALS['pref']->save_repository(false);
+
+			return $user->id;
+		}
 
 		/**
 		* Find the next available account_id
 		*
 		* @param string $account_type Account type 'u' : user; 'g' : group
+		*
 		* @return integer New account id
 		*/
-		function get_nextid($account_type='u')
+		protected function _get_nextid($account_type='u')
 		{
-			$min = $GLOBALS['phpgw_info']['server']['account_min_id'] ? $GLOBALS['phpgw_info']['server']['account_min_id'] : 0;
-			$max = $GLOBALS['phpgw_info']['server']['account_max_id'] ? $GLOBALS['phpgw_info']['server']['account_max_id'] : 0;
+			$min = 0;
+			if ( $GLOBALS['phpgw_info']['server']['account_min_id'] )
+			{
+				$min = $GLOBALS['phpgw_info']['server']['account_min_id'];
+			}
+
+
+			$max = 2147483647;
+			if ( $GLOBALS['phpgw_info']['server']['account_max_id'] )
+			{
+				$max = $GLOBALS['phpgw_info']['server']['account_max_id'];
+			}
 
 			if ($account_type == 'g')
 			{
@@ -463,560 +831,112 @@
 			{
 				$type = 'accounts';
 			}
-			$nextid = intval($GLOBALS['phpgw']->common->last_id($type,$min,$max));
+			$nextid = (int) $GLOBALS['phpgw']->common->last_id($type, $min, $max);
 
 			/* Loop until we find a free id */
 			$free = 0;
-			while (!$free)
+			while ( !$free )
 			{
 				$account_lid = '';
 				//echo '<br />calling search for id: '.$nextid;
-				if ($this->exists($nextid))
+				if ( $this->exists($nextid) )
 				{
-					$nextid = intval($GLOBALS['phpgw']->common->next_id($type,$min,$max));
+					$nextid = (int) $GLOBALS['phpgw']->common->next_id($type, $min, $max);
 				}
 				else
 				{
-					$account_lid = $this->id2name($nextid);
-					/* echo '<br />calling search for lid: '.$account_lid . '(from account_id=' . $nextid . ')'; */
-					if ($this->exists($account_lid))
-					{
-						$nextid = intval($GLOBALS['phpgw']->common->next_id($type,$min,$max));
-					}
-					else
-					{
-						$free = true;
-					}
+					$free = true;
 				}
 			}
-			if	($GLOBALS['phpgw_info']['server']['account_max_id'] &&
-				($nextid > $GLOBALS['phpgw_info']['server']['account_max_id']))
+			if	( $GLOBALS['phpgw_info']['server']['account_max_id'] &&
+				$GLOBALS['phpgw_info']['server']['account_max_id'] < $nextid )
 			{
-				return False;
+				return false;
 			}
 			/* echo '<br />using'.$nextid;exit; */
 			return $nextid;
 		}
 
 		/**
-		* Get an array of users and groups seperated, including all members of groups, which i.e. have acl access for an application
-		*
-		* @param array|integer $app_users Array with user/group names
-		* @return array 'users' contains the user names for the given group or application
-		*/
-		function return_members($app_users = 0)
+		 * Save the contact details for the associated group
+		 *
+		 * @param object &$group phpgwapi_account_group object with information about the group.
+		 *
+		 * @return boolean was the contact created/edited?
+		 */
+		protected function _save_contact_for_group(&$group)
 		{
-			$members = array();
-			for ($i = 0;$i<count($app_users);$i++)
+			if ( !isset($GLOBALS['phpgw_info']['server']['addressmaster']) )
 			{
-				$type = $GLOBALS['phpgw']->accounts->get_type($app_users[$i]);
-				if($type == 'g')
-				{
-					$add_users['groups'][] = $app_users[$i];
-					$memb = $GLOBALS['phpgw']->acl->get_ids_for_location($app_users[$i],1,'phpgw_group');
-
-					if(is_array($memb))
-					{
-						$members[] = $memb;
-					}
-				}
-				else
-				{
-					$add_users['users'][] = $app_users[$i];
-				}
+				$GLOBALS['phpgw_info']['server']['addressmaster'] = -3;
 			}
-
-			if ( !isset($addusers['users']) || !is_array($add_users['users']))
-			{
-				$add_users['users'] = array();
-			}
-
-			$i = count($add_users['users']);
-
-			while(is_array($members) && (list(,$mem) = each($members)))
-			{
-				for($j=0;$j<count($mem);$j++)
-				{
-					if(!in_array($mem[$j],$add_users['users']))
-					{
-						$add_users['users'][$i] = $mem[$j];
-						$i++;
-					}
-				}
-			}
-			return $add_users;
-		}
-
-		function accounts_popup($app)
-		{
-			$group_id = phpgw::get_var('group_id', 'int');
-
-			$query = phpgw::get_var('query', 'string', 'POST');
-			$start = phpgw::get_var('start', 'int', 'POST');
-			$order = phpgw::get_var('order', 'string', 'POST', 'account_lid');
-			$sort = phpgw::get_var('sort', 'string', 'POST', 'ASC');
-
-			$this->nextmatchs = createObject('phpgwapi.nextmatchs');
-
-			$GLOBALS['phpgw']->template->set_root(PHPGW_TEMPLATE_DIR);
-
-			$GLOBALS['phpgw']->template->set_file(array('accounts_list_t' => 'accounts_popup.tpl'));
-			$GLOBALS['phpgw']->template->set_block('accounts_list_t','group_select','select');
-			$GLOBALS['phpgw']->template->set_block('accounts_list_t','group_other','other');
-			$GLOBALS['phpgw']->template->set_block('accounts_list_t','group_all','all');
-
-			$GLOBALS['phpgw']->template->set_block('accounts_list_t','withperm_intro','withperm');
-			//$GLOBALS['phpgw']->template->set_block('accounts_list_t','other_intro','iother');
-			$GLOBALS['phpgw']->template->set_block('accounts_list_t','withoutperm_intro','withoutperm');
-
-
-			$GLOBALS['phpgw']->template->set_block('accounts_list_t','accounts_list','list');
-
-
-			$GLOBALS['phpgw']->template->set_var('title', isset($GLOBALS['phpgw_info']['site_title']) ? $GLOBALS['phpgw_info']['site_title'] : '');
-			$GLOBALS['phpgw']->template->set_var('charset', 'urf-8');
-			$GLOBALS['phpgw']->template->set_var('lang_search',lang('search'));
-			$GLOBALS['phpgw']->template->set_var('lang_groups',lang('user groups'));
-			$GLOBALS['phpgw']->template->set_var('lang_accounts',lang('user accounts'));
-
-			$GLOBALS['phpgw']->template->set_var('img',$GLOBALS['phpgw']->common->image('phpgwapi','select'));
-			$GLOBALS['phpgw']->template->set_var('lang_select_user',lang('Select user'));
-			$GLOBALS['phpgw']->template->set_var('lang_select_group',lang('Select group'));
-			$GLOBALS['phpgw']->template->set_var('css_file', "{$GLOBALS['phpgw_info']['server']['webserver_url']}/phpgwapi/templates/idots/css/idots.css");
-
-			switch($app)
-			{
-				case 'admin':
-					$action = 'admin.uiaccounts.accounts_popup';
-					$GLOBALS['phpgw']->template->set_var('select_name',"account_user[]']");
-					$GLOBALS['phpgw']->template->set_var('js_function','ExchangeAccountSelect');
-					$GLOBALS['phpgw']->template->set_var('lang_perm',lang('group name'));
-					$GLOBALS['phpgw']->template->fp('withperm','withperm_intro',true);
-					break;
-				case 'admin_acl':
-					$action = 'admin.uiaclmanager.accounts_popup';
-					$app = 'addressbook';
-					$GLOBALS['phpgw']->template->set_var('select_name',"account_addressmaster[]']");
-					$GLOBALS['phpgw']->template->set_var('js_function','ExchangeAccountSelect');
-					$GLOBALS['phpgw']->template->fp('withperm','withperm_intro',true);
-					$GLOBALS['phpgw']->template->fp('withoutperm','withoutperm_intro',true);
-					break;
-				case 'projects':
-					$action = 'projects.uiprojects.accounts_popup';
-					$GLOBALS['phpgw']->template->set_var('select_name',"values[coordinator]']");
-					$GLOBALS['phpgw']->template->set_var('js_function','ExchangeAccountText');
-					$GLOBALS['phpgw']->template->fp('withperm','withperm_intro',true);
-					$GLOBALS['phpgw']->template->fp('withoutperm','withoutperm_intro',true);
-					break;
-				case 'e_projects':
-					$action = 'projects.uiprojects.e_accounts_popup';
-					$app = 'projects';
-					$GLOBALS['phpgw']->template->set_var('select_name',"employees[]']");
-					$GLOBALS['phpgw']->template->set_var('js_function','ExchangeAccountSelect');
-					$GLOBALS['phpgw']->template->fp('withperm','withperm_intro',true);
-					$GLOBALS['phpgw']->template->fp('withoutperm','withoutperm_intro',true);
-					break;
-			}
-
-			$GLOBALS['phpgw']->template->set_var('lang_perm',lang('Groups with permission for %1',lang($app)));
-			$GLOBALS['phpgw']->template->set_var('lang_nonperm',lang('Groups without permission for %1',lang($app)));
-
-			$link_data = array
+			$primary = array
 			(
-				'menuaction'	=> $action,
-				'group_id'		=> $group_id
+				'owner'		=> $GLOBALS['phpgw_info']['server']['addressmaster'],
+				'access'	=> 'public',
+				'org_name'	=> (string) $group
 			);
 
-			$app_groups = array();
+			$contacts = createObject('phpgwapi.contacts');
 
-			if ($app != 'admin')
+			// does the user already exist in the addressbook?
+			if ( $group->person_id && $group->exist_contact($group->person_id) )
 			{
-				$user_groups = $this->membership($this->account_id);
-				$aclusers = $GLOBALS['phpgw']->acl->get_ids_for_location('run', 1, $app);
-				$acl_users = $this->return_members($aclusers);
-				$app_user	= $acl_users['users'];
-				$app_groups	= $acl_users['groups'];
-				/*
-				$app_groups	= $this->get_list('groups');
-				$app_user	= $this->get_list('accounts');
-				*/
-
-			}
-			else
-			{
-				$all_groups	= $this->get_list('groups');
-				$all_user	= $this->get_list('accounts');
-
-				while(is_array($all_groups) && (list(,$agroup) = each($all_groups)))
-				{
-					$user_groups[] = array
-					(
-						'account_id'	=> $agroup['account_id'],
-						'account_name'	=> $agroup['account_firstname']
-					);
-				}
-
-				$i = 0;
-				for($j=0;$j<count($user_groups); ++$j)
-				{
-					$app_groups[$i] = $user_groups[$j]['account_id'];
-					++$i;
-				}
-
-				for($j=0;$j<count($all_user);$j++)
-				{
-					$app_user[$i] = $all_user[$j]['account_id'];
-					++$i;
-				}
+				return !!$contacts->edit_org($group->person_id, $primary);
 			}
 
-			while ( isset($user_groups) && is_array($user_groups) && (list(,$group) = each($user_groups)) )
+			$type = $contacts->search_contact_type('Organizations');
+
+			$group->person_id = $contacts->add_contact($type, $primary);
+			return !!$group->person_id;
+		}
+
+		/**
+		 * Save the contact details for the associated user
+		 *
+		 * @param object &$user phpgwapi_account_user object with information about the user.
+		 *
+		 * @return boolean was the contact created/edited?
+		 */
+		protected function _save_contact_for_user(&$user)
+		{
+			$primary = array
+			(
+				'owner'				=> $GLOBALS['phpgw_info']['server']['addressmaster'],
+				'access'			=> 'public',
+				'per_first_name'	=> $user->firstname,
+				'per_last_name'		=> $user->lastname,
+			);
+
+			$contacts = createObject('phpgwapi.contacts');
+
+			// does the user already exist in the addressbook?
+			if ( $user->person_id && $contacts->exist_contact($user->person_id) )
 			{
-				$i = 0;
-				if (in_array($group['account_id'], $app_groups))
-				{
-					$GLOBALS['phpgw']->template->set_var('tr_class', $this->nextmatchs->alternate_row_class(++$i%2));
-					//$link_data['group_id'] = $group['account_id'];
-					$GLOBALS['phpgw']->template->set_var('link_user_group', $GLOBALS['phpgw']->link('/index.php', array('menuaction' => $action, 'group_id' => (int)$group['account_id']) ) );
-					$GLOBALS['phpgw']->template->set_var('name_user_group', $group['account_name']);
-					$GLOBALS['phpgw']->template->set_var('account_display', $GLOBALS['phpgw']->common->grab_owner_name($group['account_id']));
-					$GLOBALS['phpgw']->template->set_var('accountid', $group['account_id']);
-					switch($app)
-					{
-						case 'addressbook':
-						default:
-							$GLOBALS['phpgw']->template->fp('other','group_other',true);
-					}
-				}
-				else
-				{
-					if ($app != 'admin')
-					{
-						$GLOBALS['phpgw']->template->set_var('link_all_group', $GLOBALS['phpgw']->link('/index.php', array('menuaction' => $action, 'group_id' => (int)$group['account_id']) ) );
-						$GLOBALS['phpgw']->template->set_var('name_all_group', $group['account_name']);
-						$GLOBALS['phpgw']->template->set_var('accountid', $group['account_id']);
-						$GLOBALS['phpgw']->template->fp('all', 'group_all', true);
-					}
-				}
+				return !!$contacts->edit_person($user->person_id, $primary);
 			}
 
-			if ( !$query )
+			$type = $contacts->search_contact_type('Persons');
+
+			$comms = array();
+			$domain = '';
+			if ( isset($GLOBALS['phpgw_info']['server']['mail_server']) )
 			{
-				$val_users = array();
-				if (isset($group_id) && !empty($group_id))
-				{
-					//echo 'GROUP_ID: ' . $group_id;
-					$users = $GLOBALS['phpgw']->acl->get_ids_for_location($group_id,1,'phpgw_group');
-
-					for ($i=0;$i<count($users); ++$i)
-					{
-						if (in_array($users[$i],$app_user))
-						{
-							$GLOBALS['phpgw']->accounts->account_id = $users[$i];
-							$GLOBALS['phpgw']->accounts->read_repository();
-
-							switch ($order)
-							{
-								case 'account_firstname':
-									$id = $GLOBALS['phpgw']->accounts->data['firstname'];
-									break;
-								case 'account_lastname':
-									$id = $GLOBALS['phpgw']->accounts->data['lastname'];
-									break;
-								case 'account_lid':
-								default:
-									$id = $GLOBALS['phpgw']->accounts->data['account_lid'];
-									break;
-							}
-							$id .= $GLOBALS['phpgw']->accounts->data['lastname'];	// default sort-order
-							$id .= $GLOBALS['phpgw']->accounts->data['firstname'];
-							$id .= $GLOBALS['phpgw']->accounts->data['account_id'];	// make our index unique
-
-							$val_users[$id] = array
-							(
-								'account_id'		=> $GLOBALS['phpgw']->accounts->data['account_id'],
-								'account_firstname'	=> $GLOBALS['phpgw']->accounts->data['firstname'],
-								'account_lastname'	=> $GLOBALS['phpgw']->accounts->data['lastname']
-							);
-						}
-					}
-
-					if (is_array($val_users))
-					{
-						if ($sort != 'DESC')
-						{
-							ksort($val_users);
-						}
-						else
-						{
-							krsort($val_users);
-						}
-					}
-					$val_users = array_values($val_users);	// get a numeric index
-				}
-				$total = count($val_users);
-			}
-			else
-			{
-				switch($app)
-				{
-					case 'calendar':	$select = 'both'; break;
-					default:			$select = 'accounts'; break;
-				}
-				$entries	= $this->get_list($select, $start, $sort, $order, $query);
-				$total		= $this->total;
-				for ($i=0;$i<count($entries);$i++)
-				{
-					if (in_array($entries[$i]['account_id'],$app_user))
-					{
-						$val_users[] = array
-						(
-							'account_id'		=> $entries[$i]['account_id'],
-							'account_firstname'	=> $entries[$i]['account_firstname'],
-							'account_lastname'	=> $entries[$i]['account_lastname']
-						);
-					}
-				}
+				$domain = $GLOBALS['phpgw_info']['server']['mail_server'];
 			}
 
-// --------------------------------- nextmatch ---------------------------
-
-			$left = $this->nextmatchs->left('/index.php',$start,$total,$link_data);
-			$right = $this->nextmatchs->right('/index.php',$start,$total,$link_data);
-			$GLOBALS['phpgw']->template->set_var('left',$left);
-			$GLOBALS['phpgw']->template->set_var('right',$right);
-
-			$GLOBALS['phpgw']->template->set_var('lang_showing',$this->nextmatchs->show_hits($total,$start));
-
-// -------------------------- end nextmatch ------------------------------------
-
-			$GLOBALS['phpgw']->template->set_var('search_action',$GLOBALS['phpgw']->link('/index.php',$link_data));
-			$GLOBALS['phpgw']->template->set_var('search_list',$this->nextmatchs->search(array('query' => $query, 'search_obj' => 1)));
-
-// ---------------- list header variable template-declarations --------------------------
-
-// -------------- list header variable template-declaration ------------------------
-			$GLOBALS['phpgw']->template->set_var('sort_lid',$this->nextmatchs->show_sort_order($sort,'account_lid',$order,'/index.php',lang('LoginID'),$link_data));
-			$GLOBALS['phpgw']->template->set_var('sort_firstname',$this->nextmatchs->show_sort_order($sort,'account_firstname',$order,'/index.php',lang('Firstname'),$link_data));
-			$GLOBALS['phpgw']->template->set_var('sort_lastname',$this->nextmatchs->show_sort_order($sort,'account_lastname',$order,'/index.php',lang('Lastname'),$link_data));
-
-// ------------------------- end header declaration --------------------------------
-			$stop = $start + $this->nextmatchs->maxmatches;
-			for ($i=$start;$i<count($val_users)&&$i<$stop;$i++)
+			if ( $domain )
 			{
-				$GLOBALS['phpgw']->template->set_var('tr_class', $this->nextmatchs->alternate_row_class($i%2));
-				
-				$firstname = $val_users[$i]['account_firstname'];
-				if (!$firstname)
-				{
-					$firstname = '&nbsp;';
-				}
-				
-				$lastname = $val_users[$i]['account_lastname'];
-				if (!$lastname)
-				{
-					$lastname = '&nbsp;';
-				}
-
-// ---------------- template declaration for list records -------------------------- 
-
-				$GLOBALS['phpgw']->template->set_var(array
+				$comm = array
 				(
-					'firstname'			=> $firstname,
-					'lastname'			=> $lastname,
-					'accountid'			=> $val_users[$i]['account_id'],
-					'account_display'	=> $GLOBALS['phpgw']->common->grab_owner_name($val_users[$i]['account_id'])
-				));
-
-				$GLOBALS['phpgw']->template->fp('list','accounts_list',true);
+					'comm_descr'		=> $contacts->search_comm_descr('work email'),
+					'comm_data'			=> "{$user->lid}@{$domain}",
+					'comm_preferred'	=> 'Y'
+				);
+				$comms = array($comm);
 			}
 
-			$GLOBALS['phpgw']->template->set_var('start', $start);
-			$GLOBALS['phpgw']->template->set_var('sort', $sort);
-			$GLOBALS['phpgw']->template->set_var('order', $order);
-			$GLOBALS['phpgw']->template->set_var('query', $query);
-			$GLOBALS['phpgw']->template->set_var('group_id', $group_id);
-
-			$GLOBALS['phpgw']->template->set_var('lang_done',lang('done'));
-			$GLOBALS['phpgw']->template->pfp('out','accounts_list_t',true);
-			$GLOBALS['phpgw']->common->phpgw_exit();
+			$user->person_id = $contacts->add_contact($type, $primary, $comms);
+			return !!$user->person_id;
 		}
-		
-		/**
-		* Add an account to a group entry by adding the account name to the memberuid attribute
-		*
-		* @param integer $accountID Account id
-		* @param integer $groupID Group id
-		* @return boolean true on success otherwise false
-		* @internal Required for LDAP support
-		*/
-		function add_account2Group($groupID)
-		{
-			return true;
-		}
-		
-		/**
-		* Delete an account for a group entry by removing the account name from the memberuid attribute
-		*
-		* @param integer $accountID Account id
-		* @param integer $groupID Group id
-		* @return boolean true on success otherwise false
-		* @internal Required for LDAP support
-		*/
-		function delete_account4Group($groupID)
-		{
-			return true;
-		}
-		
-		function create($data, $default_prefs = true)
-		{
-			if($data['account_id'] && is_object($GLOBALS['phpgw']->preferences) && $default_prefs)
-			{
-				$GLOBALS['phpgw']->preferences->create_defaults($data['account_id']);
-			}
-			return $data['account_id'];
-		}
-		
-		function set_data($data)
-		{
-			$this->account_id		= isset($data['account_id']) ? (int)$data['account_id'] : $this->account_id;
-			$this->lid				= isset($data['account_lid']) ? $data['account_lid'] : $this->lid;
-			$this->firstname		= isset($data['account_firstname']) ? $data['account_firstname'] : $this->firstname;
-			$this->lastname			= isset($data['account_lastname']) ? $data['account_lastname'] : $this->lastname;
-			$this->password			= isset($data['account_passwd']) ? $data['account_passwd'] : $this->password;
-			$data['account_status']	= !isset($data['account_status']) ? $data['status'] : $data['account_status'];
-			$this->status			= isset($data['account_status']) ? $data['account_status'] : $this->status;
-			$data['account_expires']= !isset($data['account_expires']) ? $data['expires'] : $data['account_expires'];
-			$this->expires			= isset($data['account_expires']) ? $data['account_expires'] : $this->expires;
-			$this->person_id		= isset($data['person_id']) ? $data['person_id'] : $this->person_id;
-			$this->quota			= isset($data['quota']) ? (int)$data['quota'] : $this->quota;
-			return true;
-		}
-		
-		function get_account_data($account_id)
-		{
-			$this->account_id = $account_id; // what is this good for? (get is not set)
-			$this->read_repository();
-
-			$data[$this->data['account_id']]['lid']       = $this->data['account_lid'];
-			$data[$this->data['account_id']]['firstname'] = $this->data['firstname'];
-			$data[$this->data['account_id']]['lastname']  = $this->data['lastname'];
-			$data[$this->data['account_id']]['fullname']  = $this->data['fullname'];
-			
-			// type or account_type, this is the question
-			if ( isset($this->data['account_type']) && strlen($this->data['account_type']) )
-			{
-				$data[$this->data['account_id']]['type'] =  $this->data['account_type'];
-			}
-			else if ( isset($this->data['type']) )
-			{
-				$data[$this->data['account_id']]['type'] = $this->data['type'];
-			}
-			else
-			{
-				$data[$this->data['account_id']]['type'] = 'u';
-			}
-			$data[$this->data['account_id']]['person_id'] = $this->data['person_id'];
-			return $data;
-		}
-
-		/**
-		* Create a non existing but authorized user 
-		*
-		* @param string $accountname User name
-		* @param string $passwd User password
-		* @param boolean $default_prefs Default preferences for this new user
-		* @param boolean $default_acls Acls (modules) for this new user
-		* @param integer $expiredate Expire date of this account. '-1' for never. Defaults to 'in 30 days'
-		* @param char $account_status Status for new user. 'A' for active user.
-		* @return integer Account id 
-		*/
-		function auto_add($accountname, $passwd, $default_prefs = false, $default_acls = false, $expiredate = 0, $account_status = 'A')
-		{
-			if ($expiredate)
-			{
-				$expires = mktime(2,0,0,date('n',$expiredate), intval(date('d',$expiredate)), date('Y',$expiredate));
-			}
-			else
-			{
-				if($GLOBALS['phpgw_info']['server']['auto_create_expire'])
-				{
-					if($GLOBALS['phpgw_info']['server']['auto_create_expire'] == 'never')
-					{
-						$expires = -1;
-					}
-					else
-					{
-						$expiredate = time() + $GLOBALS['phpgw_info']['server']['auto_create_expire'];
-						$expires   = mktime(2,0,0,date('n',$expiredate), intval(date('d',$expiredate)), date('Y',$expiredate));
-					}
-				}
-				else
-				{
-					/* expire in 30 days by default */
-					$expiredate = time() + ( ( 60 * 60 ) * (30 * 24) );
-					$expires   = mktime(2,0,0,date('n',$expiredate), intval(date('d',$expiredate)), date('Y',$expiredate));
-				}
-			}
-
-			$acct_info = array(
-				'account_lid'       => $accountname,
-				'account_type'      => 'u',
-				'account_passwd'    => $passwd,
-				'account_firstname' => '',
-				'account_lastname'  => '',
-				'account_status'    => $account_status,
-				'account_expires'   => $expires,
-				'person_id'         => 'NULL'
-			);
-
-			$this->db->transaction_begin();
-			$this->create($acct_info, $default_prefs);
-			$accountid = $this->name2id($accountname); //slow - a create should set the new accountid
-
-			// this should be done via the acl class not direct db calls
-			if ($default_acls == false)
-			{
-				$default_group_lid = intval($GLOBALS['phpgw_info']['server']['default_group_lid']);
-				$default_group_id  = $this->name2id($default_group_lid);
-				$defaultgroupid = $default_group_id ? $default_group_id : $this->name2id('Default');
-				if ($defaultgroupid)
-				{
-					$this->db->query('INSERT INTO phpgw_acl (acl_appname, acl_location, acl_account, acl_rights)'
-						. "VALUES('phpgw_group', " . $defaultgroupid . ', ' 
-						.	intval($accountid) . ', 1'
-						. ')',__LINE__,__FILE__);
-					$this->db->query('INSERT INTO phpgw_acl (acl_appname, acl_location, acl_account, acl_rights)'
-						. "VALUES('preferences' , 'changepassword', " 
-						.	intval($accountid) . ', 1'
-						. ')',__LINE__,__FILE__);
-				}
-				else
-				{
-					// If they don't have a default group, they need some sort of permissions.
-					// This generally doesn't / shouldn't happen, but will (jengo)
-					$this->db->query("insert into phpgw_acl (acl_appname, acl_location, acl_account, acl_rights) values('preferences', 'changepassword', " . $accountid . ', 1)',__LINE__,__FILE__);
-
-					$apps = Array(
-						'addressbook',
-						'calendar',
-						'email',
-						'notes',
-						'todo',
-						'phpwebhosting',
-						'manual'
-					);
-
-					@reset($apps);
-					while(list($key,$app) = each($apps))
-					{
-						$this->db->query("INSERT INTO phpgw_acl (acl_appname, acl_location, acl_account, acl_rights) VALUES ('" . $app . "', 'run', " . intval($accountid) . ', 1)',__LINE__,__FILE__);
-					}
-				}
-			}
-			$this->db->transaction_commit();
-			return $accountid;
-		}
-		
 	}
-?>

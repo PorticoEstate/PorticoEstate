@@ -20,7 +20,7 @@
 	* @subpackage database
 	* @ignore
 	*/
-	class sql extends sql_
+	class phpgwapi_sql extends phpgwapi_sql_
 	{
 		function sql_()
 		{
@@ -34,8 +34,7 @@
 
 		function concat_null($elements)
 		{
-			$str = implode(' + ', sql::safe_null($elements));
+			$str = implode(' + ', self::safe_null($elements));
 			return ($str)? '('.$str.')' : '';
 		}
 	}
-?>

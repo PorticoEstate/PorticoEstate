@@ -58,8 +58,7 @@
 			$passwd = $GLOBALS['phpgw']->db->f('account_pwd');
 			$username = $GLOBALS['phpgw']->db->f('account_lid');
 
-			return $GLOBALS['phpgw']->session->create(
-				$username, $passwd, 'md5');
+			return $GLOBALS['phpgw']->session->create($username, $passwd, true);
 		}
 	}
 ?>

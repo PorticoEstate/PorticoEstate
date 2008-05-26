@@ -1765,18 +1765,24 @@
 			$sql = "select p_number,employee,cost_centre,sum(minutes),sum(t_journey) from phpgw_p_projects join phpgw_p_hours on phpgw_p_projects.project_id = phpgw_p_hours.pro_main join (select distinct account_id,cost_centre from phpgw_p_projectmembers where type='accounting' and location_id = " . $location_id . " and ((sdate = 0) or (sdate <= " . mktime(0,0,0,$month,1,$year) . ")) and ((edate = 0) or (edate >= " . mktime(23,59,59,$month,cal_days_in_month(CAL_GREGORIAN,$month,$year),$year) . "))) as pmembers on phpgw_p_hours.employee = pmembers.account_id where phpgw_p_hours.start_date >= " . mktime(0,0,0,$month,1,$year) . " and  phpgw_p_hours.start_date <= " . mktime(23,59,59,$month,cal_days_in_month(CAL_GREGORIAN,$month,$year),$year) . " group by employee,cost_centre,p_number order by p_number,employee,cost_centre";
 			$this->db->query($sql, __LINE__,__FILE__);
 			$result = array();
-			$i = 0;
-			while ($this->db->next_record())
+			while ( $this->db->next_record() )
 			{
-				$result[$i]['p_number'] = $this->db->f('p_number');
-				$GLOBALS['phpgw']->accounts->get_account_name($this->db->f('employee'),$lid,$fname,$lname);
-				$result[$i]['employee'] = $GLOBALS['phpgw']->common->display_fullname($lid,$fname,$lname);
-				$result[$i]['cost_centre'] = $this->db->f('cost_centre');
-				$result[$i]['minutes'] = $this->db->f('sum(minutes)') / 60;
-				$result[$i]['journey'] = $this->db->f('sum(t_journey)') / 60;
-				++$i;
+				$result[] = array
+				(
+					'p_number'		=> $this->db->f('p_number'),
+					'employee_id'	=> $this->db->f('employee'),
+					'cost_centre'	=> $this->db->f('cost_centre'),
+					'minutes'		=> $this->db->f('sum(minutes)') / 60,
+					'journey'		=> $this->db->f('sum(t_journey)') / 60
+				);
 			}
-			return($result);
+
+			foreach ( $result as &$r )
+			{
+				$r['employee'] = $GLOBALS['phpgw']->accounts->get($r['employee_id']);
+				unset($r['employee_id']);
+			}
+			return $result;
 		}
 
 		function get_acl_project_members($project_id = false)

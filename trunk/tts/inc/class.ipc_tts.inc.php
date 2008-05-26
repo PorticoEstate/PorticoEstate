@@ -18,17 +18,19 @@
 	* Fassade of the todo application.
 	* @package tts
 	*/
-	class ipc_tts extends ipc_ {
+	class tts_ipc_tts extends phpgwapi_ipc_
+	{
 		/**
 		* @var object $bo application storage object
 		* @access private
 		*/
-		var $bo;
+		protected $bo;
 
 		/**
 		* Constructor
 		*/
-		function ipc_tts() {
+		public function __construct()
+		{
 			$this->bo =& CreateObject('tts.botts');
 		}
 
@@ -41,12 +43,15 @@
 		* @param string $timestamp the timestamp is used to set in db instead of current time
 		* @return integer id of the added data
 		*/
-		function addData($data, $type, $version = '', $timestamp=null) {
+		function addData($data, $type, $version = '', $timestamp=null)
+		{
 			$decdata = $this->_importData($data, $type, $version);
-			if (! $decdata) {
+			if (! $decdata)
+			{
 				return false;
 			}
-			if (! is_null($timestamp)) {
+			if (! is_null($timestamp))
+			{
 				$decdata['lastmod'] = $timestamp;
 			}
 			error_log("ipc_tts:addData: ".print_r($decdata, true));
@@ -58,7 +63,8 @@
 		* @param integer $id id to check
 		* @return boolean true if the data with id exist, otherwise false
 		*/
-		function existData($id) {
+		function existData($id)
+		{
 			return $this->bo->exists($id);
 		}
 
@@ -69,7 +75,8 @@
 		* @param string $version specifies the mime type version of the returned data
 		* @return mixed data from application, the datatype depends on the passed mime type, false if no data exists for the passed id
 		*/
-		function getData($id, $type, $version = '') {
+		function getData($id, $type, $version = '')
+		{
 			$data = $this->bo->retrieve($id);
 			error_log("ipc_tts:getData: ".print_r($data, true));
 			$encdata = $this->_exportData($data, $type, $version);
@@ -84,7 +91,8 @@
 		* @param string $restriction restrict the result for a special use of the id list. The possible restrictions are 'syncable' or 'searchable'. When using 'syncable' only person ids will be returned in the result. 'searchable' returns all ids for both persons and orgs without check the owner. Otherwise no restriction will be used and the result contains all ids for both persons and orgs from the owner.
 		* @return array list of data id's
 		*/
-		function getIdList($lastmod = -1, $restriction = '') {
+		function getIdList($lastmod = -1, $restriction = '')
+		{
 			// we don't use restrictions here. Afair only persons can be owner of a tts-entry
 			return $this->bo->getIDList($lastmod);
 		}
@@ -94,7 +102,8 @@
 		* @param integer $id id of data to remove from the application
 		* @return boolean true if the data is removed, otherwise false
 		*/
-		function removeData($id) {
+		function removeData($id)
+		{
 			return $this->bo->delete($id);
 		}
 
@@ -107,7 +116,8 @@
 		* @param string $timestamp the timestamp is used to set in db instead of current time
 		* @return boolean true if the data is replaced, otherwise false
 		*/
-		function replaceData($id, $data, $type, $version = '', $timestamp=null) {
+		function replaceData($id, $data, $type, $version = '', $timestamp=null)
+		{
 			$decdata = $this->_importData($data, $type, $version);
 			if (! $decdata) {
 				return false;
@@ -122,9 +132,11 @@
 		/**
 		 * @access private
 		 */
-		function _importData($data, $type, $version) {
+		function _importData($data, $type, $version)
+		{
 			$decdata = null;
-			switch ($type) {
+			switch ($type)
+			{
 				case "x-phpgroupware/tts-serialized-appl-data-array":
 					$decdata = unserialize(base64_decode($data));
 					break;
@@ -137,9 +149,11 @@
 		/**
 		 * @access private
 		 */
-		function _exportData($data, $type, $version) {
+		function _exportData($data, $type, $version)
+		{
 			$encdata = null;
-			switch ($type) {
+			switch ($type)
+			{
 				case "x-phpgroupware/tts-serialized-appl-data-array":
 					$encdata = base64_encode(serialize($data));
 					break;
@@ -150,4 +164,3 @@
 		}
 
 	}
-?>

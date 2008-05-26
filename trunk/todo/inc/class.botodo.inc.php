@@ -192,7 +192,7 @@
 
 		function cached_accounts($account_id)
 		{
-			return $GLOBALS['phpgw']->accounts->get_account_data($account_id);
+			return $GLOBALS['phpgw']->accounts->get($account_id);
 		}
 
 		function employee_list($type)

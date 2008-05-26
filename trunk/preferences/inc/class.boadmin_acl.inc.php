@@ -3,8 +3,8 @@
 	* phpGroupWare - HRM: a  human resource competence management system.
 	*
 	* @author Sigurd Nes <sigurdne@online.no>
-	* @copyright Copyright (C) 2003-2005 Free Software Foundation, Inc. http://www.fsf.org/
-	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
+	* @copyright Copyright (C) 2003-2008 Free Software Foundation, Inc. http://www.fsf.org/
+	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License v3 or later
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/bbb_/ekstern/
 	* @package hrm
 	* @subpackage admin
@@ -165,7 +165,7 @@
 					'descr'		=> "{$loc_id} [{$loc_descr}]",
 					'selected'	=> $sel_loc
 				);
-				
+
 				if ($location_list[$i]['selected'] != 'selected')
 				{
 					unset($location_list[$i]['selected']);
@@ -191,7 +191,7 @@
 			$categories[0]['name']	= lang('Groups');
 			$categories[1]['id']	= 'accounts';
 			$categories[1]['name']	= lang('Users');
-			
+
 			foreach ( $categories as $row => $category )
 			{
 				if ($category['id']==$selected)
@@ -258,7 +258,7 @@
 			}
 
 			$users_at_location = $this->acl->get_accounts_at_location($this->acl_app, $this->location, $grantor ,$type);
-			
+
 			if(is_array($user_delete) && count($user_delete)>0)
 			{
 				while(list(,$user_id) = each($user_delete))
@@ -305,7 +305,7 @@
 			$this->set_permission2($values['right'], $process, $grantor, 0);
 			$this->set_permission2($values['mask'], $process, $grantor, 1);
 			$receipt['message'][] = array('msg' => lang('permissions are updated!'));
-			
+
 			// this feature will probably move into the api as standard
 			if($this->acl_app == 'property')
 			{
@@ -349,7 +349,7 @@
 				$this->start = -1;
 				$offset = -1;
 			}
-			
+
 			$allusers = $GLOBALS['phpgw']->accounts->get_list($type, $this->start,$this->sort, $this->order, $this->query, $offset);
 
 			if ( isset($allusers) && is_array($allusers))
@@ -369,7 +369,7 @@
 					$count_right=count($right);
 					for ( $i = 0; $i < $count_right; ++$i )
 					{
-						if($this->acl->check_brutto($this->location, $right[$i],$this->acl_app,$grantor,0,$check_account_type))
+						if($this->acl->check_rights($this->location, $right[$i],$this->acl_app,$grantor,0,$check_account_type))
 						{
 							if($this->acl->account_type == 'g')
 							{
@@ -381,7 +381,7 @@
 							}
 							$user_list[$j]['result'][$right[$i]] = 'checked';
 						}
-						if($this->acl->check_brutto($this->location, $right[$i],$this->acl_app,$grantor,1,$check_account_type))
+						if($this->acl->check_rights($this->location, $right[$i],$this->acl_app,$grantor,1,$check_account_type))
 						{
 							if($this->acl->account_type == 'g')
 							{
@@ -445,4 +445,3 @@
 			return $group_list;
 		}
 	}
-?>

@@ -1,21 +1,39 @@
 <?php
 	/**
-	* Template navigation bar
-	* @copyright Copyright (C) 2003-2005 Free Software Foundation, Inc. http://www.fsf.org/
+	* phpGroupWare Idots Template - Navigation Bar
+	*
+	* @author Dave Hall <skwashd@phpgroupware.org>
+	* @author Various Others <unknown>
+	* @copyright Copyright (C) 2003-2008 Free Software Foundation, Inc. http://www.fsf.org/
 	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
-	* @package phpgwapi
-	* @subpackage gui
+	* @package phpgroupware
+	* @subpackage phpgwapi
+	* @category gui
 	* @version $Id$
 	*/
 
+	/*
+		This program is free software: you can redistribute it and/or modify
+		it under the terms of the GNU General Public License as published by
+		the Free Software Foundation, either version 3 of the License, or
+		(at your option) any later version.
+
+		This program is distributed in the hope that it will be useful,
+		but WITHOUT ANY WARRANTY; without even the implied warranty of
+		MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+		GNU General Public License for more details.
+
+		You should have received a copy of the GNU General Public License
+		along with this program.  If not, see <http://www.gnu.org/licenses/>.
+	*/
 
 	/**
-	* Parse navigation var
+	* Parse navigation bar
 	*
 	* @param boolean $force
 	* @ignore
 	*/
-	function parse_navbar($force = False)
+	function parse_navbar($force = false)
 	{
 		$GLOBALS['phpgw']->template->set_root(PHPGW_TEMPLATE_DIR);
 
@@ -36,11 +54,17 @@
 		prepare_navbar($navbar);
 
 		$navigation = execMethod('phpgwapi.menu.get', 'navigation');
-		$sidecontent = isset($GLOBALS['phpgw_info']['user']['preferences']['common']['sidecontent']) && $GLOBALS['phpgw_info']['user']['preferences']['common']['sidecontent'] ? $GLOBALS['phpgw_info']['user']['preferences']['common']['sidecontent'] : 'sidebox';
-
-		foreach($navbar as $app => $app_data)
+		$sidecontent = 'sidebox';
+		if ( isset($GLOBALS['phpgw_info']['user']['preferences']['common']['sidecontent']) 
+			&& $GLOBALS['phpgw_info']['user']['preferences']['common']['sidecontent'] )
 		{
-			if (($app != 'home' && $app != 'preferences' && $app != 'about' && $app != 'logout')
+			$sidecontent = $GLOBALS['phpgw_info']['user']['preferences']['common']['sidecontent'];
+		}
+
+		$excluded = array('home', 'preferences', 'about', 'logout');
+		foreach ( $navbar as $app => $app_data )
+		{
+			if ( !in_array($app, $excluded)
 				|| ($sidecontent != 'sidebox' && $sidecontent != 'jsmenu'))
 			{
 				$item = array
@@ -104,16 +128,20 @@
 		$GLOBALS['phpgw']->template->set_var($var);
 		$GLOBALS['phpgw']->template->pfp('out','navbar_header');
 
-		if($sidecontent == 'sidebox' || $sidecontent == 'jsmenu')
+		if ( $sidecontent == 'sidebox' || $sidecontent == 'jsmenu' )
 		{
 			$menu_title = lang('General Menu');
 
 			$menu['home'] = $navbar['home'];
-			if ( isset($navbar['preferences']))
+			if ( isset($navbar['preferences']) )
 			{
 				$menu['preferences'] = $navbar['preferences'];
 			}
-			$menu['about'] = array ('text' => lang('About'), 'url' => $GLOBALS['phpgw']->link('/about.php', array('app' => $GLOBALS['phpgw_info']['flags']['currentapp']) ));
+			$menu['about'] = array
+			(
+				'text' => lang('About'),
+				'url' => $GLOBALS['phpgw']->link('/about.php', array('app' => $GLOBALS['phpgw_info']['flags']['currentapp']))
+			);
 			$menu['logout'] = $navbar['logout'];
 
 			display_sidebox($menu_title, $menu);
@@ -125,7 +153,8 @@
 			display_sidebox($navbar[$GLOBALS['phpgw_info']['flags']['currentapp']]['text'], $navigation[$GLOBALS['phpgw_info']['flags']['currentapp']]);
 		}
 
-		if ( $GLOBALS['phpgw_info']['flags']['currentapp'] != 'preferences' )
+		if ( isset($navbar['preferences']) 
+			&& $GLOBALS['phpgw_info']['flags']['currentapp'] != 'preferences' )
 		{
 			$prefs = execMethod('phpgwapi.menu.get', 'preferences');
 			if ( isset($prefs[$GLOBALS['phpgw_info']['flags']['currentapp']]) )

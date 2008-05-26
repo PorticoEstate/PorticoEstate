@@ -19,7 +19,7 @@
 	* Using with Single Sign-On(Shibbolelt, CAS, ...)
 	*/
 	
-	include_once('include_login.inc.php');
+	require_once 'include_login.inc.php';
 
 	if(!isset($GLOBALS['phpgw_info']['server']['mapping']) || $GLOBALS['phpgw_info']['server']['mapping'] == 'id')
 	{
@@ -80,4 +80,3 @@
 		$variables['additional_url'] = $GLOBALS['phpgw']->link('/phpgwapi/inc/sso/create_account.php');
 	}
 	$uilogin->phpgw_display_login($variables);
-?>

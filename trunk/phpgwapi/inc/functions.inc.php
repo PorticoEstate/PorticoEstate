@@ -10,8 +10,8 @@
 	* @subpackage utilities
 	* @version $Id$
 	*/
-	
-	
+
+
 	if (!function_exists('filter_var')) // ext/filter was added in 5.2.0
 	{
 		die('<p class="msg">'
@@ -19,7 +19,7 @@
 			. '</p></body></html>');
 	}
 
-	include_once(PHPGW_API_INC.'/common_functions.inc.php');
+	require_once PHPGW_API_INC.'/common_functions.inc.php';
 
 	/**
 	* Translate a string to a user's prefer language - convience method
@@ -52,7 +52,7 @@
 		{
 			$str = $key;
 			for ( $i = 10; $i > 0; --$i )
-			{	
+			{
 				$var = "m{$i}";
 				$str = preg_replace("/(%$i)+/", $$var, $str);
 			}
@@ -64,7 +64,7 @@
 	/**
 	* cleans up a backtrace array and converts it to a string
 	*
-	* @internal this is such an ugly piece of code due to a reference to the error context 
+	* @internal this is such an ugly piece of code due to a reference to the error context
 	* being in the backtrace and the error context can not be edited - see php.net/set_error_handler
 	* @param array $bt php backtrace
 	* @return string the formatted backtrace, empty if the user is not an admin
@@ -76,86 +76,77 @@
 			return '';
 		}
 
-		$trace = array();
-		$trace[0] = array();
-
-		if ( isset($bt[0]['function']) )
-		{
-			$trace[0]['function'] = $bt[0]['function'];
-		}
-
-		if ( isset($bt[0]['args']) && is_array($bt[0]['args']) && count($bt[0]['args']) )
-		{
-			$trace[0]['args'] = array($bt[0]['args'][0], $bt[0]['args'][1], $bt[0]['args'][2],  $bt[0]['args'][3], '***error_handler_content_data***');
-		}
-
-		if ( isset($bt[0]['file']) )
-		{
-			$trace[0]['file'] = $bt[0]['file'];
-		}
-
-		if ( isset($bt[0]['line']) )
-		{
-			$trace[0]['line'] = $bt[0]['line'];
-		}
+		// we don't need the call to the error handler
 		unset($bt[0]);
+		$bt = array_reverse($bt);
 
-		foreach ( $bt as $num => $entry )
+		$trace = '';
+		$i = 0;
+		foreach ( $bt as $entry )
 		{
-			if ( isset($entry['file']) )
-			{
-				$trace[$num]['file'] = '/path/to/phpgroupware' . substr($entry['file'], strlen(PHPGW_SERVER_ROOT) );
-			}
-
-			if ( isset($entry['line']) )
-			{
-				$trace[$num]['line'] = $entry['line'];
-			}
-
-			if ( isset($entry['line']) )
-			{
-				$trace[$num]['line'] = $entry['line'];
-			}
+			$line = "#{$i}\t";
 
 			if ( isset($entry['type']) && isset($entry['class']) )
 			{
-				$trace[$num]['function'] = "{$entry['class']}{$entry['type']}{$entry['function']}";
+				$line .= "{$entry['class']}{$entry['type']}{$entry['function']}";
 			}
 			else
 			{
-				$trace[$num]['function'] = $entry['function'];
+				$line .= $entry['function'];
 			}
+
+			$line .= '(';
 
 			if ( isset($entry['args']) && is_array($entry['args']) && count($entry['args']) )
 			{
+				$args_count = count($entry['args']);
 				foreach ( $entry['args'] as $anum => $arg )
 				{
-					if ( is_array($arg) )
+					if ( is_array($arg) || is_object($arg) )
 					{
-						$trace[$num]['args'][$anum] = print_r($arg, true);
+						$line .= 'serialized_value = ' . serialize($arg);
 						continue;
 					}
 
 					// Drop passwords from backtrace
-					if ( !is_object($arg) 
-						&& ($arg == $GLOBALS['phpgw_info']['server']['header_admin_password']
+					if ( $arg == $GLOBALS['phpgw_info']['server']['header_admin_password']
 						|| (isset($GLOBALS['phpgw_info']['server']['db_pass']) && $arg == $GLOBALS['phpgw_info']['server']['db_pass'])
 						|| (isset($GLOBALS['phpgw_info']['user']['passwd']) && $arg == $GLOBALS['phpgw_info']['user']['passwd'] ) )
-					)
 					{
-						$trace[$num]['args'][$anum] = '***PASSWORD***';
+						$line .= '***REMOVED_FOR_SECURITY***';
 					}
 					else
 					{
-						$trace[$num]['args'][$anum] = $arg;
+						$line .= $arg;
+					}
+
+					if ( ($anum + 1) != $args_count )
+					{
+						$line .= ', ';
 					}
 				}
 			}
+
+			$file = 'unknown';
+			if ( isset($entry['file']) )
+			{
+				$file = '/path/to/phpgroupware' . substr($entry['file'], strlen(PHPGW_SERVER_ROOT) );
+			}
+
+			if ( isset($entry['line']) )
+			{
+				$file .= ":{$entry['line']}";
+			}
 			else
 			{
-				$trace[$num]['args'] = 'NONE';
+				$file .= ':?';
 			}
+
+			$line .= ") [$file]";
+			$trace .= "$line\n";
+			++$i;
 		}
+
 		return print_r($trace, true);
 	}
 
@@ -173,11 +164,11 @@
 	* phpGroupWare generic error handler
 	*
 	* @link http://php.net/set_error_handler
-	* 
+	*
 	*/
 	function phpgw_handle_error($error_level, $error_msg, $error_file, $error_line, $error_context = array())
 	{
-		if ( error_reporting() == 0 ) // 0 == @function() so we ignore it, as the dev requested 
+		if ( error_reporting() == 0 ) // 0 == @function() so we ignore it, as the dev requested
 		{
 			return true;
 		}
@@ -187,7 +178,6 @@
 		{
 			$GLOBALS['phpgw']->log = createObject('phpgwapi.log');
 		}
-
 		$log =& $GLOBALS['phpgw']->log;
 
 		$error_file = str_replace(PHPGW_SERVER_ROOT, '/path/to/phpgroupware', $error_file);
@@ -207,6 +197,7 @@
 			case E_ERROR:
 				$log_args['severity'] = 'F'; //all "ERRORS" should be fatal
 				$log->fatal($log_args);
+				die( '<pre>' . phpgw_parse_backtrace($bt) . '</pre>');
 				break;
 			case E_WARNING:
 			case E_USER_WARNING:
@@ -224,16 +215,40 @@
 				break;
 			case E_NOTICE:
 			case E_USER_NOTICE:
+			//case E_STRICT:
 				$log_args['severity'] = 'N';
 				$log->notice($log_args);
-				if(isset($GLOBALS['phpgw_info']['server']['log_levels']['global_level']) && $GLOBALS['phpgw_info']['server']['log_levels']['global_level'] == 'N')
-				{
-					echo "\n<br>" . lang('ERROR Notice: %1 in %2 at line %3', $error_msg, $error_file, $error_line) . "<br>\n"; //this will be commented in the final version
-				}
+				echo "\n<br>" . lang('ERROR Notice: %1 in %2 at line %3', $error_msg, $error_file, $error_line) . "<br>\n"; //this will be commented in the final version
+				echo '<pre>' . phpgw_parse_backtrace($bt) . '<pre>';
 			//No default, we just ignore it, for now
 		}
 	}
 	set_error_handler('phpgw_handle_error');
+
+	/**
+	 * Last resort exception handler
+	 *
+	 * @param object $e the Exception that was thrown
+	 */
+	function phpgw_handle_exception(Exception $e)
+	{
+		$msg = $e->getMessage();
+		$help = lang('Please contact your administrator for assistance');
+		$trace = $e->getTraceAsString();
+		echo <<<HTML
+			<h1>Uncaught Exception: {$msg}</h1>
+			<p>{$help}</p>
+			<h2>Backtrace:</h2>
+			<pre>
+{$trace}
+			</pre>
+
+HTML;
+		// all exceptions that make it this far are fatal
+		exit;
+	}
+
+	set_exception_handler('phpgw_handle_exception');
 
 	function clean_vars($vars, $safe_redirect = True)
 	{
@@ -241,7 +256,7 @@
 		{
 			return $GLOBALS['data_cleaner']->clean($vars, $safe_redirect);
 		}
-		
+
 		foreach ( $vars as $key => $val )
 		{
 			$vars[$key] = clean_vars($val, $safe_redirect);
@@ -252,29 +267,31 @@
 	/* Make sure the header.inc.php is current. */
 	if ($GLOBALS['phpgw_info']['server']['versions']['header'] < $GLOBALS['phpgw_info']['server']['versions']['current_header'])
 	{
-		$setup_dir = ereg_replace($_SERVER['PHP_SELF'],'index.php','setup/');
-		echo '<center><b>You need to port your settings to the new header.inc.php version. <a href="' . $setup_dir . '">Run setup now!</a></b></center>';
-		exit;
+		$setup_dir = preg_replace("/{$_SERVER['PHP_SELF']}/", 'index.php', 'setup/');
+		$msg = lang('You need to port your settings to the new header.inc.php version. <a href="%1">Run setup now!</a>',  $setup_dir);
+		die("<div class=\"error\">{$msg}</div>");
 	}
 
 	/* Make sure the developer is following the rules. */
 	if (!isset($GLOBALS['phpgw_info']['flags']['currentapp']))
 	{
-		/* This object does not exist yet. */
-	/*	$GLOBALS['phpgw']->log->write(array('text'=>'W-MissingFlags, currentapp flag not set'));*/
-
 		echo '<b>!!! YOU DO NOT HAVE YOUR $GLOBALS[\'phpgw_info\'][\'flags\'][\'currentapp\'] SET !!!';
 		echo '<br>!!! PLEASE CORRECT THIS SITUATION !!!</b>';
+		exit;
 	}
 
+	 /* Load main class */
+	$GLOBALS['phpgw'] = createObject('phpgwapi.phpgw');
+
 	magic_quotes_runtime(false);
+
 // Can't use this yet - errorlog hasn't been created.
 //	print_debug('sane environment','messageonly','api');
 
 	/****************************************************************************\
 	* Multi-Domain support                                                       *
 	\****************************************************************************/
-	
+
 	/* make them fix their header */
 	if (!isset($GLOBALS['phpgw_domain']))
 	{
@@ -326,8 +343,6 @@
 	 /****************************************************************************\
 	 * These lines load up the API, fill up the $phpgw_info array, etc            *
 	 \****************************************************************************/
-	 /* Load main class */
-	$GLOBALS['phpgw'] = createObject('phpgwapi.phpgw');
 	 /************************************************************************\
 	 * Load up the main instance of the db class.                             *
 	 \************************************************************************/
@@ -335,7 +350,7 @@
 	$GLOBALS['phpgw']->db->Debug         = $GLOBALS['phpgw']->debug ? 1 : 0;
 	$GLOBALS['phpgw']->db->Halt_On_Error = 'no';
 	$GLOBALS['phpgw']->adodb             =& $GLOBALS['phpgw']->db->adodb; //Reference
-	
+
 	@$GLOBALS['phpgw']->adodb->connect($GLOBALS['phpgw_info']['server']['db_host'],
 									   $GLOBALS['phpgw_info']['server']['db_user'],
 									   $GLOBALS['phpgw_info']['server']['db_pass'],
@@ -370,6 +385,7 @@
 		$GLOBALS['phpgw_info']['server']['cache_phpgw_info'] = stripslashes($GLOBALS['phpgw']->db->f('config_value'));
 	}
 
+	/*
 	$cache_query = "SELECT content from phpgw_app_sessions WHERE"
 		." sessionid = '0' AND loginid = '0' and app = 'phpgwapi' AND location = 'config'";
 
@@ -385,12 +401,15 @@
 	}
 	else
 	{
+	*/
 		$c = createObject('phpgwapi.config','phpgwapi');
 		$c->read_repository();
 		foreach ($c->config_data as $k => $v)
 		{
 			$GLOBALS['phpgw_info']['server'][$k] = $v;
 		}
+
+/*
 
 
 		if(isset($GLOBALS['phpgw_info']['server']['cache_phpgw_info'])
@@ -403,13 +422,14 @@
 	}
 	unset($cache_query);
 	unset($server_info_cache);
+*/
 
 	// In the case we use a fall back (mode Half remote_user)
 	if(isset($GLOBALS['phpgw_remote_user']) && !empty($GLOBALS['phpgw_remote_user']))
 	{
 		$GLOBALS['phpgw_info']['server']['auth_type'] = $GLOBALS['phpgw_remote_user'];
 	}
-	
+
 	// Remove this and I will make sure that you lose important parts of your anatomy - skwashd
 	$GLOBALS['RAW_REQUEST'] = $_REQUEST; // if you really need the raw value
 	$to_cleans = array('_GET', '_POST', '_COOKIE', '_REQUEST');
@@ -434,8 +454,6 @@
 	$GLOBALS['phpgw']->log			= createObject('phpgwapi.log');
 	include_once(PHPGW_API_INC . '/log_functions.inc.php');
 	$GLOBALS['phpgw']->translation	= createObject('phpgwapi.translation');
-	$GLOBALS['phpgw']->common		= createObject('phpgwapi.common');
-	$GLOBALS['phpgw']->hooks		= createObject('phpgwapi.hooks');
 	$GLOBALS['phpgw']->auth			= createObject('phpgwapi.auth');
 	$GLOBALS['phpgw']->accounts		= createObject('phpgwapi.accounts');
 	$GLOBALS['phpgw']->acl			= createObject('phpgwapi.acl');
@@ -518,14 +536,14 @@
 			{
 				$redirect_data[$key] = phpgw::clean_value($value);
 			}
-			
+
 			$sessid = phpgw::get_var('sessionid', 'string', 'GET');
 			if ( $sessid )
 			{
 				$redirect_data['sessionid'] = $sessid;
 				$redirect_data['kp3'] = phpgw::get_var('kp3', 'string', 'GET');
 			}
-			
+
 			$GLOBALS['phpgw']->session->phpgw_setcookie('redirect', false, 0);
 			$GLOBALS['phpgw']->redirect_link('/index.php', $redirect_data);
 			unset($redirect);
@@ -583,16 +601,6 @@
 		}
 
 		/*************************************************************************\
-		* If they are using frames, we need to set some variables                 *
-		\*************************************************************************/
-		if ( ( (isset($GLOBALS['phpgw_info']['user']['preferences']['common']['useframes']) && $GLOBALS['phpgw_info']['user']['preferences']['common']['useframes']) 
-			&& ( isset($GLOBALS['phpgw_info']['server']['useframes']) && $GLOBALS['phpgw_info']['server']['useframes'] == 'allowed') ) 
-			|| ( isset($GLOBALS['phpgw_info']['server']['useframes']) && $GLOBALS['phpgw_info']['server']['useframes'] == 'always') )
-		{
-			$GLOBALS['phpgw_info']['flags']['navbar_target'] = 'phpgw_body';
-		}
-
-		/*************************************************************************\
 		* Verify that the users session is still active otherwise kick them out   *
 		\*************************************************************************/
 		if ($GLOBALS['phpgw_info']['flags']['currentapp'] != 'home' && $GLOBALS['phpgw_info']['flags']['currentapp'] != 'about')
@@ -613,7 +621,7 @@ HTML;
 
 	//  Already called from sessions::verify
 	//	$GLOBALS['phpgw']->applications->read_installed_apps();	// to get translated app-titles
-		
+
 		/*************************************************************************\
 		* Load the header unless the developer turns it off                       *
 		\*************************************************************************/
@@ -632,12 +640,10 @@ HTML;
 		{
 			include_once(PHPGW_APP_INC . '/functions.inc.php');
 		}
-		if (!@$GLOBALS['phpgw_info']['flags']['noheader'] && 
+		if (!@$GLOBALS['phpgw_info']['flags']['noheader'] &&
 			!@$GLOBALS['phpgw_info']['flags']['noappheader'] &&
 			file_exists(PHPGW_APP_INC . '/header.inc.php') && !isset($GLOBALS['phpgw_info']['menuaction']))
 		{
 			include_once(PHPGW_APP_INC . '/header.inc.php');
 		}
 	}
-
-	//error_reporting(E_ERROR | E_WARNING | E_PARSE);

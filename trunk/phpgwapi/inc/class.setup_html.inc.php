@@ -58,6 +58,11 @@
 			{
 				foreach($setting as $k => $v)
 				{
+					if ( $k == 'server_root' 
+						&& substr(PHP_OS, 0, 3) == 'WIN' )
+					{
+						$v = preg_replace('/\\/', '/', $v);
+					}
 					$var[strtoupper($k)] = $v;
 				}
 			}
@@ -221,32 +226,21 @@
 			$GLOBALS['setup_tpl']->pparse('out','T_login_main');
 		}
 
+		/**
+		 * Get a list of available template sets
+		 *
+		 * @internal this doesn't appear to be called from anywhere - and duplicated code from phpgwapi_common
+		 */
 		function get_template_list()
 		{
-			$d = dir(PHPGW_SERVER_ROOT . '/phpgwapi/templates');
-
-			while($entry = $d->read())
-			{
-				if ($entry != 'CVS' && $entry != '.' && $entry != '..')
-				{
-					$list[$entry]['name'] = $entry;
-					$f = PHPGW_SERVER_ROOT . '/phpgwapi/templates/' . $entry . '/details.inc.php';
-					if (file_exists ($f))
-					{
-						include($f);
-						$list[$entry]['title'] = 'Use ' . $GLOBALS['phpgw_info']['template'][$entry]['title'] . 'interface';
-					}
-					else
-					{
-						$list[$entry]['title'] = $entry;
-					}
-				}
-			}
-			$d->close();
-			reset ($list);
-			return $list;
+			return $GLOBALS['phpgw']->common->template_list();
 		}
 
+		/**
+		 * Get a list of available old style themes
+		 *
+		 * @todo FIXME This is broken - themes aren't done this way any more
+		 */
 		function list_themes()
 		{
 			$dh = dir(PHPGW_SERVER_ROOT . '/phpgwapi/themes');
@@ -262,4 +256,3 @@
 			return $list;
 		}
 	}
-?>

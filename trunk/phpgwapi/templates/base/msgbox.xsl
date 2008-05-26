@@ -1,7 +1,9 @@
 <!-- $Id: msgbox.xsl 16444 2006-02-22 10:10:26Z skwashd $ -->
 
 	<xsl:template name="msgbox">
-		<xsl:apply-templates select="msgbox_data"/>
+		<xsl:if test="msgbox_data/msgbox_text != ''">
+			<xsl:apply-templates select="msgbox_data"/>
+		</xsl:if>
 	</xsl:template>
 
 	<xsl:template match="msgbox_data">

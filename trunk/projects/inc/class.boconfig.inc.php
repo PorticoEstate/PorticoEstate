@@ -89,18 +89,16 @@
 				$emps = array_unique($emps);
 				for($i=0;$i<count($emps);$i++)
 				{
-					$GLOBALS['phpgw']->accounts->get_account_name($emps[$i],$lid,$fname,$lname);
-					$fullname = $GLOBALS['phpgw']->common->display_fullname($lid,$fname,$lname);
+					$user = $GLOBALS['phpgw']->accounts->get($emps[$i]);
 
 					$empl[] = array
 					(
 						'account_id'		=> $emps[$i],
-						'account_lid'		=> $lid,
-						'account_firstname'	=> $fname,
-						'account_lastname'	=> $lname,
-						'account_fullname'	=> $fullname
+						'account_lid'		=> $user->lid,
+						'account_firstname'	=> $user->firstname,
+						'account_lastname'	=> $user->lastname,
+						'account_fullname'	=> (string) $user
 					);
-					$lid = $fname = $lname = $fullname = '';
 				}
 			}
 

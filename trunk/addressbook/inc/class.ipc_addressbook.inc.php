@@ -2,33 +2,34 @@
 	/**
 	* IPC Layer
 	*
-	* @author      Dirk Schaller <dschaller@probusiness.de>
-	* @copyright   Copyright (C) 2003 Free Software Foundation http://www.fsf.org/
-	* @license     http://www.fsf.org/licenses/gpl.html GNU General Public License
-	* @package     phpgwapi
-	* @subpackage  ipc
-	* @version     $Id$
+	* @author		Dirk Schaller <dschaller@probusiness.de>
+	* @copyright	Copyright (C) 2003 Free Software Foundation http://www.fsf.org/
+	* @license		http://www.fsf.org/licenses/gpl.html GNU General Public License
+	* @package		phpgroupware
+	* @subpackage	phpgwapi
+	* @version		$Id$
 	*/
 
 
 	/**
 	* Fassade of the adressbook application.
 	*
-	* @package  notes
+	* @package phpgroupware
+	* @subpackage phpgwapi
+	* @category  ipc
 	*/
-	class ipc_addressbook extends ipc_
+	class phpgwapi_ipc_addressbook extends phpgwapi_ipc_
 	{
 		/**
 		* @var     object   $contacts  phpgwapi contacts object
 		* @access  private
 		*/
-		var $contacts;
+		protected $contacts;
 
 		/**
 		* @var     object   $vcard  import/export vcard object
-		* @access  private
 		*/
-		var $vcard;
+		protected $vcard;
 	
 
 		/**

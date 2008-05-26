@@ -12,7 +12,7 @@
 	// Basic information about this app
 	$setup_info['phpgwapi']['name']      = 'phpgwapi';
 	$setup_info['phpgwapi']['title']     = 'phpgwapi';
-	$setup_info['phpgwapi']['version']   = '0.9.17.512';
+	$setup_info['phpgwapi']['version']   = '0.9.17.516';
 	$setup_info['phpgwapi']['versions']['current_header'] = '1.28';
 	$setup_info['phpgwapi']['enable']    = 3;
 	$setup_info['phpgwapi']['app_order'] = 1;
@@ -20,49 +20,48 @@
 	// The tables this app creates
 	$setup_info['phpgwapi']['tables'] = array
 	(
-		'phpgw_config',
-		'phpgw_applications',
-		'phpgw_acl',
-		'phpgw_acl_location',
-		'phpgw_accounts',
-		'phpgw_preferences',
-		'phpgw_sessions',
-		'phpgw_app_sessions',
 		'phpgw_access_log',
-		'phpgw_hooks',
-		'phpgw_languages',
-		'phpgw_lang',
-		'phpgw_nextid',
-		'phpgw_categories',
-		'phpgw_addressbook',
-		'phpgw_addressbook_extra',
-		'phpgw_log',
-		'phpgw_interserv',
-		'phpgw_vfs',
-		'phpgw_history_log',
+		'phpgw_accounts',
+		'phpgw_acl',
+		'phpgw_applications',
+		'phpgw_app_sessions',
 		'phpgw_async',
+		'phpgw_categories',
+		'phpgw_config',
 		'phpgw_contact',
-		'phpgw_contact_person',
-		'phpgw_contact_org',
-		'phpgw_contact_org_person',
 		'phpgw_contact_addr',
-		'phpgw_contact_note',
-		'phpgw_contact_others',
+		'phpgw_contact_addr_type',
 		'phpgw_contact_comm',
 		'phpgw_contact_comm_descr',
 		'phpgw_contact_comm_type',
-		'phpgw_contact_types',
-		'phpgw_contact_addr_type',
+		'phpgw_contact_note',
 		'phpgw_contact_note_type',
+		'phpgw_contact_org',
+		'phpgw_contact_org_person',
+		'phpgw_contact_others',
+		'phpgw_contact_person',
+		'phpgw_contact_types',
 		'phpgw_cust_attribute',
 		'phpgw_cust_choice',
 		'phpgw_cust_function',
+		'phpgw_group_map',
+		'phpgw_history_log',
+		'phpgw_hooks',
+		'phpgw_interserv',
+		'phpgw_lang',
+		'phpgw_languages',
+		'phpgw_locations',
+		'phpgw_log',
+		'phpgw_mail_handler',
 		'phpgw_mapping',
-		'phpgw_mail_handler'
+		'phpgw_nextid',
+		'phpgw_preferences',
+		'phpgw_sessions',
+		'phpgw_vfs'
 	);
 
 	// Basic information about this app
-	$setup_info['notifywindow']['name']		= 'notifywindow';
+	$setup_info['notifywindow']['name']			= 'notifywindow';
 	$setup_info['notifywindow']['title']		= 'Notify Window';
 	$setup_info['notifywindow']['version']		= '0.9.13.002';
 	$setup_info['notifywindow']['enable']		= 2;

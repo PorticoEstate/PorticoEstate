@@ -1200,10 +1200,7 @@
 
 			while (is_array($employees) && (list($no_use,$account_id) = each($employees)))
 			{
-				$GLOBALS['phpgw']->accounts->get_account_name($account_id,$lid,$fname,$lname);
-				if(!$fname && !$lname)
-				continue;
-				$employees_list[$account_id] = $GLOBALS['phpgw']->common->display_fullname($lid,$fname,$lname);
+				$employees_list[$account_id] = (string) $GLOBALS['phpgw']->accounts->get($account_id);
 			}
 
 			if(count($employees_list))
@@ -1229,8 +1226,12 @@
 		{
 			// show only current user
 			$account_id = $GLOBALS['phpgw_info']['user']['account_id'];
-			$GLOBALS['phpgw']->accounts->get_account_name($account_id,$lid,$fname,$lname);
-			$select_employee_list = '<input type="hidden" name="values[employee]" value="'.$account_id.'">'. $GLOBALS['phpgw']->common->display_fullname($lid,$fname,$lname);
+			$employee_name = (string) $GLOBALS['phpgw']->accounts->get($account_id);
+			$select_employee_list = <<<HTML
+				<input type="hidden" name="values[employee]" value="{$account_id}">
+				{$employee_name}
+			
+HTML;
 		}
 
 		$GLOBALS['phpgw']->template->set_var('select_employee_list', $select_employee_list);

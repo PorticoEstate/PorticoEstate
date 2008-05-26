@@ -49,7 +49,7 @@
 	* the main frame its data is here by sending a call by the onLoad event (which is
 	* called just after we finish passing our data.
 	*/
-	class uijsaddressbook
+	class phpgwapi_uijsaddressbook
 	{
 		var $public_functions=array ('show' => True,
 						 'show_mainframe' => True,

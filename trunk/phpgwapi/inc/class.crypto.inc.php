@@ -197,7 +197,7 @@
 					echo '<br>' . time() . ' crypto->decrypt() decrypted data: ---->>>>' . $data;
 				}
 				$test = stripslashes($data);
-				if(@unserialize($test))
+				if( $test )
 				{
 					if($this->debug)
 					{
@@ -239,4 +239,3 @@
 			}
 		}
 	} // class crypto
-?>

@@ -13,14 +13,15 @@
 
 	/**
 	* Require the phpgw class
+	* @internal the phpgw class is a special case
 	*/
-	require_once(PHPGW_INCLUDE_ROOT . '/phpgwapi/inc/class.phpgw.inc.php');
+	require_once PHPGW_INCLUDE_ROOT . '/phpgwapi/inc/class.phpgw.inc.php';
 
 	/**
-	* Include object factory base class once		
+	* Include object factory base class once
 	*/
-	include_once(PHPGW_SERVER_ROOT.'/phpgwapi/inc/class.object_factory.inc.php');
-	
+	phpgw::import_class('phpgwapi.object_factory');
+
 	/*
 	 * Direct functions which are not part of the API classes because they are required to be available at the lowest level.
 	 *
@@ -30,7 +31,7 @@
 	 * Allows for array and direct function params as well as sanatization.
 	 *
 	 * This function is used to validate param data as well as offer flexible function usage.
-	 * 
+	 *
 	 * @example
 	 * <code>
 	 *		function somefunc()
@@ -45,21 +46,21 @@
 	 *			// Full name: joe hick bob<br>
 	 *		}
 	 *	</code>
-	 *	
+	 *
 	 *	Using this it is possible to use the function in any of the following ways
 	 *	somefunc('jack','city','brown');
 	 *	or
 	 *	somefunc(array('fname'=>'jack','mname'=>'city','lname'=>'brown'));
 	 *	or
 	 *	somefunc(array('lname'=>'brown','fname'=>'jack','mname'=>'city'));
-	 *	
+	 *
 	 *	For the last one, when using named params in an array you dont have to follow any order
 	 *	All three would result in - Full name: jack city brown<br>
-	 *	
+	 *
 	 *	When you use this method of handling params you can secure your functions as well offer
 	 *	flexibility needed for both normal use and web services use.
 	 *	If you have params that are required just set the default as ##REQUIRED##
-	 *	Users of your functions can also use ##DEFAULT## to use your default value for a param 
+	 *	Users of your functions can also use ##DEFAULT## to use your default value for a param
 	 *	when using the standard format like this:
 	 *	somefunc('jack','##DEFAULT##','brown');
 	 *	This would result in - Full name: jack hick brown<br>
@@ -85,7 +86,7 @@
 			{
 				$required[$expected[$i]['name']] = True;
 			}
-			$types[$expected[$i]['name']] = $expected[$i]['type']; 
+			$types[$expected[$i]['name']] = $expected[$i]['type'];
 		}
 
 		/* Make sure they passed at least one param */
@@ -116,7 +117,7 @@
 			{
 				for ($i = 0; $i < $num; $i++)
 				{
-					$types[$expected[$i]['name']] = $expected[$i]['type']; 
+					$types[$expected[$i]['name']] = $expected[$i]['type'];
 				}
 				while(list($key,$val) = each($recieved[0]))
 				{
@@ -151,7 +152,7 @@
 	 * retrieve a value from either a POST, GET, COOKIE, SERVER or from a class variable.
 	 *
 	 * @author skeeter
-	 * This function is used to retrieve a value from a user defined order of methods. 
+	 * This function is used to retrieve a value from a user defined order of methods.
 	 * $this->id = get_var('id',array('POST','GET','COOKIE','GLOBAL','DEFAULT'));
 	 * @param $variable name
 	 * @param $method ordered array of methods to search for supplied variable
@@ -199,7 +200,7 @@
 	{
 		if ( is_file(PHPGW_INCLUDE_ROOT . "/{$module}/{$includes_path}class.{$class_name}.inc.php") )
 		{
-			return include_once(PHPGW_INCLUDE_ROOT . "/{$module}/{$includes_path}class.{$class_name}.inc.php");
+			return require_once(PHPGW_INCLUDE_ROOT . "/{$module}/{$includes_path}class.{$class_name}.inc.php");
 		}
 		//trigger_error(lang('Unable to locate file: %1', "{$module}/{$includes_path}class.{$class_name}.inc.php"), E_USER_ERROR);
 		return false;
@@ -215,30 +216,31 @@
 	 * @param $classname name of class
 	 * @param $p1-$p16 class parameters (all optional)
 	 */
-	function CreateObject($class,
+	function createObject($class,
 			$p1='_UNDEF_',$p2='_UNDEF_',$p3='_UNDEF_',$p4='_UNDEF_',
 			$p5='_UNDEF_',$p6='_UNDEF_',$p7='_UNDEF_',$p8='_UNDEF_',
 			$p9='_UNDEF_',$p10='_UNDEF_',$p11='_UNDEF_',$p12='_UNDEF_',
 			$p13='_UNDEF_',$p14='_UNDEF_',$p15='_UNDEF_',$p16='_UNDEF_')
 	{
 
-		list($appname,$classname) = explode('.', $class, 2);
+		list($appname, $classname) = explode('.', $class, 2);
 
-		$of_classname = 'of'.$appname;
+		$of_classname = "of{$appname}";
 
 		// include module object factory class
-		if (!include_class($appname, $of_classname))
+		if ( !include_class($appname, $of_classname) )
 		{
 			// fail to load module object factory -> use old CreateObject in base class
-			$of_class = new object_factory();
+			$of_classname = 'phpgwapi_object_factory';
 		}
 		else
 		{
-			$of_class = new $of_classname;
+			$of_classname = "{$appname}_{$of_classname}";
 		}
 
 		// because $of_classname::CreateObject() is not allowed, we use call_user_func
-		return $of_class->createObject($class, $p1,$p2,$p3,$p4,$p5,$p6,$p7,$p8,$p9,$p10,$p11,$p12,$p13,$p14,$p15,$p16);
+		return call_user_func("{$of_classname}::createObject", $class, $p1, $p2, $p3, $p4, $p5,
+								$p6, $p7, $p8, $p9, $p10, $p11, $p12, $p13, $p14, $p15, $p16);
 	}
 
 	/**
@@ -259,27 +261,27 @@
 		if ($partscount == 2)
 		{
 			list($appname,$classname,$functionname) = explode(".", $method);
-			$unique_class = "{$appname}-{$classname}";
-			if ( !isset($GLOBALS[$unique_class]) || !is_object($GLOBALS[$unique_class]) )
+			$unique_class = "{$appname}_{$classname}";
+			if ( !isset($GLOBALS['phpgw_classes'][$unique_class]) || !is_object($GLOBALS['phpgw_classes'][$unique_class]) )
 			{
 				if ($classparams != '_UNDEF_' && ($classparams || $classparams != 'True'))
 				{
-					$GLOBALS[$unique_class] = createObject($appname.'.'.$classname, $classparams);
+					$GLOBALS['phpgw_classes'][$unique_class] = createObject("{$appname}.{$classname}", $classparams);
 				}
 				else
 				{
-					$GLOBALS[$unique_class] = createObject($appname.'.'.$classname);
+					$GLOBALS['phpgw_classes'][$unique_class] = createObject("{$appname}.{$classname}");
 				}
 			}
 
-			if ( (is_array($functionparams) || is_object($functionparams) || $functionparams != '_UNDEF_') 
+			if ( (is_array($functionparams) || is_object($functionparams) || $functionparams != '_UNDEF_')
 				&& ($functionparams || $functionparams != 'True'))
 			{
-				return $GLOBALS[$unique_class]->$functionname($functionparams);
+				return $GLOBALS['phpgw_classes'][$unique_class]->$functionname($functionparams);
 			}
 			else
 			{
-				return $GLOBALS[$unique_class]->$functionname();
+				return $GLOBALS['phpgw_classes'][$unique_class]->$functionname();
 			}
 		}
 		/* if the $method includes a parent class (multi-dimensional) then we have to work from it */
@@ -297,7 +299,7 @@
 			unset ($GLOBALS['methodparts'][$partscount]);
 			reset ($GLOBALS['methodparts']);
 			$firstparent = 'True';
-			while (list ($key, $val) = each ($GLOBALS['methodparts']))
+			foreach ( $GLOBALS['methodparts'] as $key => $val )
 			{
 				if ($firstparent == 'True')
 				{
@@ -311,7 +313,8 @@
 			}
 			unset($GLOBALS['methodparts']);
 
-			if (! @is_object($$parentobject->$classname) )
+			if ( !isset($$parentobject->$classname)
+				|| !is_object($$parentobject->$classname) )
 			{
 				if ($classparams != '_UNDEF_' && ($classparams || $classparams != 'True'))
 				{
@@ -347,15 +350,15 @@
 	 * @param $account_id either a name or an id
 	 * @param $default_id either a name or an id
 	 */
-	function get_account_id($account_id = '', $default_id = '')
+	function get_account_id($account_id = '', $default_id = null)
 	{
 		if ( gettype($account_id) == 'integer' && $account_id <> 0 )
 		{
 			return $account_id;
 		}
-		elseif ( !$account_id )
+		else if ( !$account_id )
 		{
-			if ($default_id == '')
+			if ( $default_id == null )
 			{
 				return isset($GLOBALS['phpgw_info']['user']['account_id']) ? $GLOBALS['phpgw_info']['user']['account_id'] : 0;
 			}
@@ -365,11 +368,11 @@
 			}
 			return (int)$default_id;
 		}
-		elseif (is_string($account_id))
+		else if (is_string($account_id))
 		{
-			if($GLOBALS['phpgw']->accounts->exists(intval($account_id)) == True)
+			if ( $GLOBALS['phpgw']->accounts->exists((int) $account_id) )
 			{
-				return intval($account_id);
+				return (int) $account_id;
 			}
 			else
 			{
@@ -592,4 +595,3 @@
 		}
 		return $tables;
 	}
-?>

@@ -22,8 +22,6 @@
 	chdir('../../../');
 	
 	//Now do the right work :)
-	include_once('login.php');
+	require_once 'login.php';
 
 	$GLOBALS['phpgw']->common->phpgw_exit();
-
-?>

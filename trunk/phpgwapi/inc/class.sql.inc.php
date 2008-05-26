@@ -98,11 +98,13 @@
 	* @package phpgwapi
 	* @subpackage database
 	*/
-	abstract class sql_
+	abstract class phpgwapi_sql_
 	{
-		function sql_()
+		/*
+		public function __construct()
 		{
 		}
+		*/
 
 		/*************************************************************\
 		* Usefull low level functions to create queries logically   *
@@ -113,9 +115,10 @@
 		*
 		* @param string $left The left operand of the staement
 		* @param string $right The right operand of the statement
+		*
 		* @return string with an equal criteria formated.
 		*/
-		function equal($field, $value)
+		public static function equal($field, $value)
 		{
 			return $field.' = '.$value;
 		}
@@ -125,9 +128,10 @@
 		*
 		* @param string $left Left operand.
 		* @param string $right Right operand.
+		*
 		* @return string with criteria.
 		*/
-		function not_equal($field, $value)
+		public static function not_equal($field, $value)
 		{
 			return $field.' <> '.$value;
 		}
@@ -137,9 +141,10 @@
 		*
 		* @param string $left The left operand of the staement
   		* @param string $right The right operand of the statement
+		*
 		* @return string with an greater than criteria formated.
 		*/
-		function greater($field, $value)
+		public static function greater($field, $value)
 		{
 			return $field.' > '.$value;
 		}
@@ -149,9 +154,10 @@
 		*
 		* @param string $left The left operand of the staement
 		* @param string $right The right operand of the statement
+		*
 		* @return string with an less than criteria formated.
 		*/
-		function less($field, $value)
+		public static function less($field, $value)
 		{
 			return $field.' < '.$value;
 		}
@@ -161,9 +167,10 @@
 		*
 		* @param string $left The left operand of the staement
   		* @param string $right The right operand of the statement
+		*
 		* @return string with an greater-equal than criteria formated.
 		*/
-		function greater_equal($field, $value)
+		public static function greater_equal($field, $value)
 		{
 			return $field.' >= '.$value;
 		}
@@ -173,9 +180,10 @@
 		*
 		* @param string $left The left operand of the staement
 		* @param string $right The right operand of the statement
+		*
 		* @return string with an less-equal than criteria formated.
 		*/
-		function less_equal($field, $value)
+		public static function less_equal($field, $value)
 		{
 			return $field.' <= '.$value;
 		}
@@ -185,11 +193,12 @@
 		*
 		* @param string $field For search in.
 		* @param string $value That will search.
+		*
 		* @return string that use LIKE to search in field.
 		*/
-		function has($field, $value)
+		public static function has($field, $value)
 		{
-			return sql_criteria::upper($field).' LIKE '."'%$value%'";
+			return phpgwapi_sql_criteria::upper($field).' LIKE '."'%$value%'";
 		}
 
 		/**
@@ -197,11 +206,12 @@
 		*
 		* @param string $field For search in.
 		* @param string $value That will search.
+		*
 		* @return string that use LIKE to search in field.
 		*/
-		function begin_with($field, $value)
+		public static function begin_with($field, $value)
 		{
-			return sql_criteria::upper($field).' LIKE '."'$value%'";
+			return phpgwapi_sql_criteria::upper($field).' LIKE '."'$value%'";
 		}
 
 		/**
@@ -209,22 +219,25 @@
 		*
 		* @param string $field For search in.
 		* @param string $value That will search.
+		*
 		* @return string that use LIKE to search in field.
 		*/
-		function end_with($field, $value)
+		public static function end_with($field, $value)
 		{
-			return sql_criteria::upper($field).' LIKE '."'%$value'";
+			return phpgwapi_sql_criteria::upper($field).' LIKE '."'%$value'";
 		}
 
 		/**
 		* Generate an AND conjuction for sql criterias.
 		*
 		* Always return with brackets. I have more confidence in DBMS speed than the code that I will need to analize it in php.
+		*
 		* @param string $left Left operand.
 		* @param string $right Right operand.
+		*
 		* @return string with (right) and (left)
 		*/
-		function and_($left, $right)
+		public static function and_($left, $right)
 		{
 			return '('.$left.' AND '.$right.')';
 		}
@@ -234,9 +247,10 @@
 		*
 		* @param string $left Left operand.
 		* @param string $right Right operand.
+		*
 		* @return string with (right) or (left)
 		*/
-		function or_($left, $right)
+		public static function or_($left, $right)
 		{
 			return ' ('.$left.' OR '.$right.') ';
 		}
@@ -245,9 +259,10 @@
 		* Generate a is null critieria for sql.
 		*
 		* @param string $data A field.
+		*
 		* @return string with criteria.
 		*/
-		function is_null($data)
+		public static function is_null($data)
 		{
 			return $data.' IS NULL';
 		}
@@ -256,19 +271,20 @@
 		* Generate a is not null critieria for sql.
 		*
 		* @param string $data A field.
+		*
 		* @return string with criteria.
 		*/		
-		function not_null($data)
+		public static function not_null($data)
 		{
 			return $data.' IS NOT NULL';
 		}
 
-		function upper($value)
+		public static function upper($value)
 		{
 			return 'UPPER('.$value.')';
 		}
 
-		function lower($value)
+		public static function lower($value)
 		{
 			return 'LOWER('.$value.')';
 		}
@@ -278,9 +294,10 @@
 		*
 		* @param string $field String with the field which you can filter.
 		* @param string $values Array with posible values
+		*
 		* @return string with criteria.
 		*/
-		function in($field, $values, $type='integer')
+		public static function in($field, $values, $type='integer')
 		{
 			// This must be changed by anything
 			if ( is_array($values) && count($values) > 1)
@@ -300,11 +317,11 @@
 				if (is_array($values))
 				{
 					//this never gets executed!
-					return sql::equal($field, sql::$type(current($values)));
+					return phpgwapi_sql::equal($field, phpgwapi_sql::$type(current($values)));
 				}
 				else
 				{
-					return sql::equal($field, sql::$type($values));
+					return phpgwapi_sql::equal($field, phpgwapi_sql::$type($values));
 				}	
 			}
 		}
@@ -316,7 +333,7 @@
 		* @param string $and Array with the list of operators for and.
 		* @return string with many and conjuntions at same level.
 		*/
-		function append_and($clause)
+		public static function append_and($clause)
 		{
 			if(is_array($clause))
 			{
@@ -337,7 +354,7 @@
 		* @return string with many or conjuntions at same level.
 		* @see append_and
 		*/
-		function append_or($clause)
+		public static function append_or($clause)
 		{
 			if(is_array($clause))
 			{
@@ -356,24 +373,25 @@
 
 		/**
 		* @param str string the value that will be casted for sql type
+		*
 		* @return string ready for using for a value with CHARACTER sql type
 		*/
-		function string($str)
+		public static function string($str)
 		{
 			$str = $GLOBALS['phpgw']->db->db_addslashes($str);
 			return "'$str'";
 		}
 
-		function character($str)
+		public static function character($str)
 		{
-			return sql::string($str);
+			return phpgwapi_sql::string($str);
 		}
 
 		/**
 		* @param integer string the value that will be casted for sql type
 		* @return string ready for using for a value with INTEGER sql type		
 		*/
-		function integer($integer)
+		public static function integer($integer)
 		{
 			return (int) $integer;
 		}
@@ -381,28 +399,29 @@
 		/**
 		* Generate a string with date
 		*/
-		function date_($date, $format=False)
+		public static function date_($date, $format=False)
 		{
 			switch(gettype($date))
 			{
-			case 'integer':
-				return sql::int_date2str($date, $format);
-			default:
-				return sql::str_date2int($date, $format);
+				case 'integer':
+					return phpgwapi_sql::int_date2str($date, $format);
+
+				default:
+					return phpgwapi_sql::str_date2int($date, $format);
 			}
 		}
 
 		/**
 		* return a string with time
 		*/
-		function time_($time, $format=False)
+		public static function time_($time, $format=False)
 		{
 			switch(gettype($time))
 			{
 			case 'integer':
-				return sql::int_time2str($time, $format);
+				return phpgwapi_sql::int_time2str($time, $format);
 			default:
-				return sql::str_time2int($time, $format);
+				return phpgwapi_sql::str_time2int($time, $format);
 			}
 		}
 
@@ -410,27 +429,27 @@
 		* Data types conversion                                      *
 		\*************************************************************/
 
-		function int_date2str($int, $format=False)
+		public static function int_date2str($int, $format=False)
 		{
 			$format = $format ? $format : $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
 			return date($format, intval($int));
 		}
 
-		function int_time2str($int, $format=False)
+		public static function int_time2str($int, $format=False)
 		{
 			$format = $format ? $format : $GLOBALS['phpgw_info']['user']['preferences']['common']['timeformat'];
 			return date($format, intval($int));
 		}
 		//note this is not 100% reliable, but close enough
-		function str_date2int($date, $format=False)
+		public static function str_date2int($date, $format=False)
 		{
 			$format = $format ? $format : $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
 			return date($format, intval(strtotime($date)));
 		}
 
-		function str_time2int($time)
+		public static function str_time2int($time)
 		{
-			return intval(sql::str_date2int($time));
+			return (int) phpgwapi_sql::str_date2int($time);
 		}
 
 		/*************************************************************\
@@ -440,7 +459,7 @@
 		/**
 		* Return a NULL value
 		*/
-		function null()
+		public static function null()
 		{
 			return ' NULL ';
 		}
@@ -453,7 +472,7 @@
 		* @param array $elements array with the elemnts that want to concatenate
 		* @return string with $elements concatenated
 		*/
-		function concat($elements)
+		public static function concat($elements)
 		{
 		}
 
@@ -464,7 +483,7 @@
 		* @param array $elements array with the elemnts that want to concatenate
 		* @return string with $elements concatenated
 		*/
-		function concat_null($elements)
+		public static function concat_null($elements)
 		{
 		}
 
@@ -475,7 +494,7 @@
 		* string. use it in SELECT development.
 		* @param string $value Field or expresion to make safe.
 		*/
-		function safe_null($value)
+		public static function safe_null($value)
 		{
 			if(empty($value) || !is_array($value))
 			{

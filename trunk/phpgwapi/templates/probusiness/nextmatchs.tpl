@@ -20,12 +20,14 @@
 
 <!-- BEGIN form -->
 <form method="post" action="{action}" name="{form_name}">
-  <td width="2%" align="{align}" valign="top">
-    {hidden}
-    <table border="0" cellspacing="0" cellpadding="0">
-      <tr><td align="{align}"><input type="image" src="{img}" border="{border}" alt="{label}" name="start" value="{start}" /></td></tr>
-    </table>
-  </td>
+	<td width="2%" align="{align}" valign="top">
+		{hidden}
+		<table border="0" cellspacing="0" cellpadding="0">
+			<tr>
+				<td align="{align}"><input type="image" src="{img}" alt="{label}" name="start" value="{start}"></td>
+			</tr>
+		</table>
+	</td>
 </form>
 <!-- END form -->
 
@@ -38,7 +40,7 @@
       <table border="0" cellspacing="0" cellpadding="0">
         <tr>
         	<td align="{align}">
-        		<img src="{img}" border="{border}" alt="{label}" />
+        		<img src="{img}" alt="{label}" />
         	</td>
         </tr>
       </table>
@@ -100,4 +102,3 @@
   </table>
 </form>
 <!-- END cats_search_filter -->
-

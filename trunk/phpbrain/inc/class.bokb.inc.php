@@ -507,8 +507,7 @@
 			for ($i = 0; $i<sizeof($history); $i++)
 			{
 				$history[$i]['datetime'] = $GLOBALS['phpgw']->common->show_date($history[$i]['datetime'], $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']);
-				$GLOBALS['phpgw']->accounts->get_account_name($history[$i]['owner'], $lid, $fname, $lname);
-				$history[$i]['owner'] = $fname . ' ' . $lname;
+				$history[$i]['owner'] = (string) $GLOBALS['phpgw']->accounts->get($history[$i]['owner']);
 
 				switch ($history[$i]['status'])
 				{
@@ -791,11 +790,8 @@
 			$this->article_owner = $article['user_id'];
 			if (!$this->check_permission($this->read_right | $this->publish_right)) $this->die_peacefully('You have not the proper permissions to do that');
 
-			$GLOBALS['phpgw']->accounts->get_account_name($article['user_id'], $lid, $fname, $lname);
-			$article['username'] = $fname . ' ' . $lname;
-			$fname = ''; $lname = '';
-			$GLOBALS['phpgw']->accounts->get_account_name($article['modified_user_id'], $lid, $fname, $lname);
-			$article['modified_username'] = $fname . ' ' .$lname;
+			$article['username'] = (string) $GLOBALS['phpgw']->accounts->get($article['user_id']);
+			$article['modified_username'] = (string) $GLOBALS['phpgw']->accounts->get($article['modified_user_id']);;
 
 			// register article view if it has been published (one hit per session)
 			if (!$data = $GLOBALS['phpgw']->session->appsession('views', 'phpbrain')) $data = array();
@@ -1248,8 +1244,7 @@
 		function get_question($q_id)
 		{
 			$question = $this->so->get_question($q_id);
-			$username = $GLOBALS['phpgw']->accounts->get_account_name($question['user_id'], $lid, $fname, $lname);
-			$question['username'] = $fname . ' ' . $lname;
+			$question['username'] = (string) $GLOBALS['phpgw']->accounts->get($question['user_id']);
 			$question['creation'] = $GLOBALS['phpgw']->common->show_date($question['creation'], $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']);
 			return $question;
 		}

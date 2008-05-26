@@ -42,12 +42,12 @@
 	/**
 	* SQL Generator ENTITY - helps to construct queries statements
 	*
-	* This class provide common methods to create transaction sql queries. 
+	* This class provide common methods to create transaction sql queries.
 	* Isolates an entity.
 	* @package phpgwapi
 	* @subpackage database
 	*/
-	class sql_entity
+	class phpgwapi_sql_entity
 	{
 		/* List of fields to mantain in each query, it morph if select,
 		 *  if insert, if update.
@@ -122,7 +122,7 @@
 		{
 			return array_keys($this->map);
 		}
-		
+
 		/**
 		* Determines whether if operation must be changed or not.
 		*
@@ -223,7 +223,7 @@
 		{
 			$this->field_list[$alias] = $field;
 		}
-		
+
 		/**
 		* Add the field to list
 		*
@@ -234,7 +234,7 @@
 		{
 			$this->add_field($element['field'],
 					$this->put_alias($element['real_field']));
-			$this->ldebug('_add_field', 
+			$this->ldebug('_add_field',
 					  array('Field_list' => $this->field_list),
 					  'dump');
 		}
@@ -283,7 +283,7 @@
 		}
 
 		/**
-		* @return array (field, identity, alias, criteria) for: 
+		* @return array (field, identity, alias, criteria) for:
 		* SELECT <field> FROM <identity> WHERE <criteria> and <alias> for the on construction depending on identity
 		*/
 		function get_select()
@@ -326,12 +326,12 @@
 			$field = (($this->operation == 'select') ?
 				  $this->put_alias($element['real_field']) :
 				  $element['real_field']);
-			$this->ldebug('default_criteria', 
+			$this->ldebug('default_criteria',
 					  array('Field' => $field));
 
-			$new_criteria = sql_criteria::has($field,
+			$new_criteria = phpgwapi_sql_criteria::has($field,
 							  $element['value']);
-			$this->ldebug('default_criteria', 
+			$this->ldebug('default_criteria',
 					  array('New Criteria' => $new_criteria));
 			$this->_add_criteria($new_criteria);
 		}
@@ -347,9 +347,9 @@
 			$this->ldebug('_add_criteria',
 					  array('New Criteria' => $new_criteria,
 						'All Criteria Prev' => $this->criteria));
-			$this->criteria = sql_criteria::append_and(array($new_criteria,
+			$this->criteria = phpgwapi_sql_criteria::append_and(array($new_criteria,
 									 $this->criteria));
-			$this->ldebug('_add_criteria', 
+			$this->ldebug('_add_criteria',
 					  array('All Criteria Post' => $this->criteria));
 		}
 
@@ -367,23 +367,23 @@
 				if(count($element['value']) == 1)
 				{
 					$value = $this->cast(current($element['value']), $element['field']);
-					return sql_criteria::equal($field, $value);
+					return phpgwapi_sql_criteria::equal($field, $value);
 				}
 				elseif(count($element['value']) > 1)
 				{
-					return sql_criteria::in($field, $element['value'], $this->get_datatype($field));
+					return phpgwapi_sql_criteria::in($field, $element['value'], $this->get_datatype($field));
 				}
 			}
 			else
 			{
 				$value = $this->cast($element['value'], $element['field']);
-				return sql_criteria::equal($field, $value);
+				return phpgwapi_sql_criteria::equal($field, $value);
 			}
 		}
 
 		/**
 		* Analize a criteria created by tokens and create a string that represent it, useful for any kind of operation that use criteria I guess.
-		* 
+		*
 		* @param $token_criteria array Array with all the criteria in tokens, generated with sql_criteria
 		* @return string Criteria string (All that goes in WHERE clause)
 		* @see sql_criteria
@@ -409,7 +409,7 @@
 					$operator = array_pop($token_criteria);
 					$left = array_shift($token_criteria);
 					$right = array_shift($token_criteria);
-					
+
 					if(is_array($left) && $operator != 'in')
 					{
 						$left = $this->entity_criteria($left);
@@ -422,11 +422,11 @@
 					{
 						$right = $this->entity_criteria($right);
 					}
-					$local_criteria = sql_criteria::operate($operator,$left,$right);
+					$local_criteria = phpgwapi_sql_criteria::operate($operator,$left,$right);
 					break;
 				default:
 					$operator = array_pop($token_criteria);
-					$local_criteria = sql_criteria::operate($operator,$token_criteria);
+					$local_criteria = phpgwapi_sql_criteria::operate($operator,$token_criteria);
 			}
 			return $local_criteria;
 		}
@@ -481,8 +481,8 @@
 				$field = $this->real_field($link['lfield']);
 				$fields_to_prototype[$field] = '{'.$link['lfield'].'}';
 			}
-			
-			foreach ($this->inserts as $index => $insert) 
+
+			foreach ($this->inserts as $index => $insert)
 			{
 				// First element, the only one than don't begin with `,'
 				$false_field = key($this->inserts[$index]['data']);
@@ -523,7 +523,7 @@
 
 		/**
 		* Get the insert sql statement for one entry
-		* 
+		*
 		* @param int $index with the index of data which we want to insert
 		* @return string Corresponding sql insert.
 		*/
@@ -546,7 +546,7 @@
 
 		/**
 		* Get the right value for the datatype of the false field
-		* 
+		*
 		* @param mixed $data value that want to cast.
 		* @param string $false_field Field for search datatype
 		* @return string Corresponding string with sql for datatype
@@ -556,10 +556,10 @@
 			if(is_array($data))
 			{
 				return $this->index_criteria($data);
-			
+
 			}
 			$type = $this->get_datatype($false_field);
-			return $data === sql::null() ? sql::null() : sql::$type($data);
+			return $data === phpgwapi_sql::null() ? phpgwapi_sql::null() : phpgwapi_sql::$type($data);
 		}
 
 		/**
@@ -588,7 +588,7 @@
 		{
 			return $this->inserts[$index]['fields'];
 		}
-		
+
 		function get_insert_values($index)
 		{
 			return $this->inserts[$index]['values'];
@@ -645,9 +645,9 @@
 		function set_criteria($criteria)
 		{
 			$this->criteria = $criteria;
-			
+
 		}
-		
+
 		/**
 		* Genarete the update string
 		*
@@ -682,8 +682,21 @@
 		*/
 		function set_update_data($element)
 		{
-			$value = ($element['value'] || $element['value'] == 0) ? $this->cast($element['value'], $element['field']) : sql::null();
-			$this->values .= (($this->values)?', ':'').$element['real_field'].' = '.$value;
+			if ( $element['value'] || $element['value'] == 0 )
+			{
+				$value = $this->cast($element['value'], $element['field']);
+			}
+			else
+			{
+				phpgwapi_sql::null();
+			}
+
+			if ( $this->values )
+			{
+				$this->values .= ', ';
+			}
+
+			$this->values .= "{$element['real_field']} = {$value}";
 		}
 
 		/**
@@ -708,7 +721,7 @@
 			if($criteria)
 			{
 				$sql = 'DELETE FROM '.$this->table.' WHERE '.$criteria;
-				
+
 				$this->set_criteria('');
 				switch($action)
 				{
@@ -741,7 +754,7 @@
 		* @param string $fl with local field
 		* @param string $t with table
 		* @param string $ff with foreign field
-		* @param int $key_type PHPGW_SQL_LAZY_KEY if want that this link be joined via OUTER (LEFT o RIGHT); PHPGW_SQL_REQUIRED_KEY 
+		* @param int $key_type PHPGW_SQL_LAZY_KEY if want that this link be joined via OUTER (LEFT o RIGHT); PHPGW_SQL_REQUIRED_KEY
 		* if want that be joined with INNER LINK. This is the setting by default, and could be changed per query execution.
 		*/
 		function set_ilinks($fl,$t,$ff,$key_type = PHPGW_SQL_LAZY_KEY)
@@ -826,7 +839,7 @@
 			}
 			return ;
 		}
-		
+
 		/**
 		* Set an array with all imported or exported links
 		*
@@ -962,7 +975,7 @@
 		{
 			return $this->get_alias().'.'.$this->real_field($field);
 		}
-		
+
 
 		function get_datatype($field)
 		{
@@ -981,7 +994,7 @@
 			// this is an error :/ not $field in map
 			return;
 		}
-		
+
 		function make_pair($field, $value)
 		{
 			return array('field' => $field,
@@ -1006,24 +1019,24 @@
 
 		}
 		function add_update($value, $field)
-		{			
+		{
 			$this->add_element('update',$this->make_pair($field,
 									 $value));
 		}
 
 		function add_delete($field, $value)
 		{
-			$this->add_element('delete',$this->make_pair($field, 
+			$this->add_element('delete',$this->make_pair($field,
 									 $value));
 		}
 
 		function add_insert($field, $value, $idx = 0)
 		{
 			$this->insert_index = $idx;
-			$this->add_element('insert',$this->make_pair($field, 
+			$this->add_element('insert',$this->make_pair($field,
 									  $value));
 		}
-		
+
 		/**
 		* Must raise errors for this class, don't know if phpgw have anything already, if yes, net call it
 		*
@@ -1036,12 +1049,12 @@
 		/**
 		* Get the field name which correspond to sort
 		*
-		* @param strngi $field The field 
+		* @param strngi $field The field
 		* @return The alias and real name for field.
 		*/
 		function get_order($field)
 		{
-			if($this->map[$field]['sort']) 
+			if($this->map[$field]['sort'])
 			{
 				return $this->alias.'.'.$this->map[$field]['sort'];
 			}
@@ -1056,7 +1069,7 @@
 // 			{
 				return;
 // 			}
-			
+
 			$classname = '<strong>Class: '.get_class($this)."<br>Function: $myfoo<br></strong>";
 
 			switch($type)
@@ -1097,4 +1110,3 @@
 			echo $output;
 		}
 	}
-?>

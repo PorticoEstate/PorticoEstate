@@ -12,11 +12,12 @@
 	/**
 	* Use SQL criteria
 	*/
-	include_once(PHPGW_API_INC . '/class.sql_criteria.inc.php');
+	phpgw::import_class('phpgwapi.sql_criteria');
+
 	/**
 	* Use SQL entity
 	*/
-	include_once(PHPGW_API_INC . '/class.sql_entity.inc.php');
+	phpgw::import_class('phpgwapi.sql_entity');
 
 	/**
 	* Query statements for "addr" table
@@ -24,7 +25,7 @@
 	* @package phpgwapi
 	* @subpackage contacts
 	*/
-	class contact_addr extends sql_entity
+	class contact_addr extends phpgwapi_sql_entity
 	{
 		var $map = array('key_addr_id'		=> array('select'	=> '',
 								 'criteria' 	=> '',
@@ -265,7 +266,7 @@
 		*/
 		function select_addr_address($element)
 		{
-			$this->field_list['addr_address'] = sql::concat_null(array($this->put_alias('add1'), $this->put_alias('add2'), $this->put_alias('add3')));
+			$this->field_list['addr_address'] = phpgwapi_sql::concat_null(array($this->put_alias('add1'), $this->put_alias('add2'), $this->put_alias('add3')));
 		}
 
 		/**
@@ -277,7 +278,7 @@
 		function select_adr_one_street($element)
 		{
 			$this->set_primary_address($element);
-			$this->field_list['adr_one_street']=sql::concat_null(array($this->put_alias('add1'), $this->put_alias('add2'), $this->put_alias('add3')));
+			$this->field_list['adr_one_street'] = phpgwapi_sql::concat_null(array($this->put_alias('add1'), $this->put_alias('add2'), $this->put_alias('add3')));
 
 		}
 
@@ -302,7 +303,7 @@
 		function select_adr_two_street($element)
 		{
 			$this->set_secondary_address($element);
-			$this->field_list['adr_one_street']=sql_criteria::concat_null(array($this->put_alias('add1'), $this->put_alias('add2'), $this->put_alias('add3')));
+			$this->field_list['adr_one_street'] = phpgwapi_sql_criteria::concat_null(array($this->put_alias('add1'), $this->put_alias('add2'), $this->put_alias('add3')));
 		}
 
 		/**
@@ -314,7 +315,7 @@
 		function select_secondary($element)
 		{
 				$this->set_secondary_address($element);
-				$this->field_list[$element['field']] = $this->put_alias(sql::string($element['real_field']));
+				$this->field_list[$element['field']] = $this->put_alias(phpgwapi_sql::string($element['real_field']));
 		}
 
 		/**
@@ -327,8 +328,8 @@
 		function criteria_adr_one_street($element)
 		{
 			$this->set_primary_address($element);
-			$criteria=sql_criteria::or_(sql_criteria::has($this->put_alias('add1'),$element['value']),
-							sql_criteria::has($this->put_alias('add2'),$element['value']));
+			$criteria = phpgwapi_sql_criteria::or_(phpgwapi_sql_criteria::has($this->put_alias('add1'),$element['value']),
+							phpgwapi_sql_criteria::has($this->put_alias('add2'),$element['value']));
 			$this->_add_criteria($criteria);
 		}
 
@@ -336,12 +337,12 @@
 		* Get primary address from database
 		*
 		* @param mixed $element
-		* @internal Generic criteria builder for adr_one type fields. They need an extra precedence and then are a LIKE clause which is given by sql_criteria::has(). So, if the user asks for adr_one_country, the resulting query will be tablename.country = %%value%%
+		* @internal Generic criteria builder for adr_one type fields. They need an extra precedence and then are a LIKE clause which is given by phpgwapi_sql_criteria::has(). So, if the user asks for adr_one_country, the resulting query will be tablename.country = %%value%%
 		*/
 		function criteria_primary($element)
 		{
 			$this->set_primary_address($element);
-			$criteria=sql_criteria::has($this->put_alias($element['real_field']),sql::string($element['value']));
+			$criteria = phpgwapi_sql_criteria::has($this->put_alias($element['real_field']), phpgwapi_sql::string($element['value']));
 			$this->add_criteria($criteria);
 		}
 
@@ -354,8 +355,8 @@
 		function criteria_adr_two_street($element)
 		{
 			$this->set_secondary_address($element);
-			$criteria=sql_criteria::or_(sql_criteria::has($this->put_alias('add1'),sql::string($element['value'])),
-							sql_criteria::has($this->put_alias('add2'),sql::string($element['value'])));
+			$criteria = phpgwapi_sql_criteria::or_(phpgwapi_sql_criteria::has($this->put_alias('add1'), phpgwapi_sql::string($element['value'])),
+							phpgwapi_sql_criteria::has($this->put_alias('add2'), phpgwapi_sql::string($element['value'])));
 			$this->_add_criteria($criteria);
 
 		}
@@ -363,7 +364,7 @@
 		function criteria_secondary($element)
 		{
 			$this->set_secondary_address($element);
-			$criteria=sql_criteria::has($this->put_alias($element['real_field']),sql::string($element['value']));
+			$criteria = phpgwapi_sql_criteria::has($this->put_alias($element['real_field']), phpgwapi_sql::string($element['value']));
 			$this->_add_criteria($criteria);
 		}
 
@@ -371,7 +372,7 @@
 		{
 			if($this->primary_set != 'primary')
 			{
-				$criteria=sql_criteria::equal($this->put_alias('precedence'),'1');
+				$criteria = phpgwapi_sql_criteria::equal($this->put_alias('precedence'),'1');
 				$this->_add_criteria($criteria);
 				$this->primary_set='primary';
 			}
@@ -382,7 +383,7 @@
 		{
 			if($this->secondary_set != 'secondary')
 			{
-				$criteria=sql_criteria::equal($this->put_alias('precedence'),'2');
+				$criteria = phpgwapi_sql_criteria::equal($this->put_alias('precedence'),'2');
 				$this->_add_criteria($criteria);
 				$this->secondary_set='secondary';
 			}
@@ -392,8 +393,8 @@
 		function criteria_addr_pref_val($element)
 		{
 			$field = $this->put_alias($element['real_field']);
-			$criteria = sql_criteria::or_(sql_criteria::equal($field, sql::string($element['value'])),
-							  sql_criteria::is_null($field));
+			$criteria = phpgwapi_sql_criteria::or_(phpgwapi_sql_criteria::equal($field, phpgwapi_sql::string($element['value'])),
+							  phpgwapi_sql_criteria::is_null($field));
 			$this->_add_criteria($criteria);
 			return $criteria;
 		}
@@ -403,12 +404,11 @@
 			$field = $this->put_alias($element['real_field']);
 			if(is_array($element['value']))
 			{
-				$this->_add_criteria(sql_criteria::in($field, $element['value']));
+				$this->_add_criteria(phpgwapi_sql_criteria::in($field, $element['value']));
 			}
 			else
 			{
-				$this->_add_criteria(sql_criteria::equal($field, $element['value']));
+				$this->_add_criteria(phpgwapi_sql_criteria::equal($field, $element['value']));
 			}
 		}
 	}
-?>

@@ -28,15 +28,15 @@
 		public function __construct()
 		{
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] = 'admin::admin';
-			$this->bo =& CreateObject('admin.boapplications');
-			$this->nextmatchs =& CreateObject('phpgwapi.nextmatchs');
+			$this->bo = createObject('admin.boapplications');
+			$this->nextmatchs = createObject('phpgwapi.nextmatchs', false);
 		}
 
-		function get_list()
+		public function get_list()
 		{
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] .= '::apps';
 			$GLOBALS['phpgw']->common->phpgw_header(true);
-			
+
 			$GLOBALS['phpgw']->template->set_root(PHPGW_APP_TPL);
 			$GLOBALS['phpgw']->template->set_file(array('applications' => 'applications.tpl'));
 			$GLOBALS['phpgw']->template->set_block('applications','list','list');
@@ -65,11 +65,11 @@
 			{
 				$limit = $start + $offset;
 			}
-			elseif ($start && !$offset)
+			else if ($start && !$offset)
 			{
 				$limit = $start;
 			}
-			elseif(!$start && !$offset)
+			else if(!$start && !$offset)
 			{
 				$limit = $total;
 			}
@@ -86,9 +86,10 @@
 
 			$i = 0;
 			$applications = array();
-			while(list($app,$data) = @each($apps))
+			foreach ( $apps as $app => $data )
 			{
-				if($i >= $start && $i<= $limit)
+				if ( $i >= $start
+					&& $i<= $limit )
 				{
 					$applications[$app] = $data;
 				}
@@ -136,15 +137,15 @@
 
 				if ($app['status']==1)
 				{
-					$status = lang('Yes');
+					$status = lang('yes');
 				}
 				else if ($app['status']==2)
 				{
-					$status = lang('Hidden');
+					$status = lang('hidden');
 				}
 				else
 				{
-					$status = '<b>' . lang('No') . '</b>';
+					$status = '<b>' . lang('no') . '</b>';
 				}
 				$GLOBALS['phpgw']->template->set_var('status',$status);
 
@@ -278,7 +279,7 @@
 						$error[$totalerrors++] = lang('That application name already exists.');
 					}
 				}
- 
+
 				if (! $totalerrors)
 				{
 					$this->bo->save(array(
@@ -356,7 +357,7 @@
 			$GLOBALS['phpgw']->template->set_var('yes','<a href="' . $GLOBALS['phpgw']->link('/index.php',array('menuaction'=>'admin.uiapplications.delete','app_name'=> urlencode($app_name), 'confirm'=>'True')) . '">' . lang('Yes') . '</a>');
 			$GLOBALS['phpgw']->template->pparse('out','body');
 		}
-		
+
 		function register_all_hooks()
 		{
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] .= '::hooks';
@@ -376,4 +377,3 @@
 HTML;
 		}
 	}
-?>

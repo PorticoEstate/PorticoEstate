@@ -2,119 +2,190 @@
 	/**
 	* Access Control List - Security scheme based on ACL design
 	* @author Dan Kuykendall <seek3r@phpgroupware.org>
-	* @copyright Copyright (C) 2000-2004 Free Software Foundation, Inc. http://www.fsf.org/
-	* @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License
+	* @author Dave Hall <skwashd@phpgroupware.org>
+	* @copyright Copyright (C) 2000-2008 Free Software Foundation, Inc. http://www.fsf.org/
+	* @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License v3 or later
 	* @package phpgwapi
 	* @subpackage accounts
 	* @version $Id$
 	*/
 
+	/*
+		This program is free software: you can redistribute it and/or modify
+		it under the terms of the GNU Lesser General Public License as published by
+		the Free Software Foundation, either version 3 of the License, or
+		(at your option) any later version.
+
+		This program is distributed in the hope that it will be useful,
+		but WITHOUT ANY WARRANTY; without even the implied warranty of
+		MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+		GNU Lesser General Public License for more details.
+
+		You should have received a copy of the GNU Lesser General Public License
+		along with this program.  If not, see <http://www.gnu.org/licenses/>.
+	 */
+
 	/**
 	* Access Control List - Security scheme based on ACL design
 	*
-	* This can manage rights to 'run' applications, and limit certain features within an application.
-	* It is also used for granting a user "membership" to a group, or making a user have the security 
-	* equivilance of another user. It is also used for granting a user or group rights to various records,
-	* such as todo or calendar items of another user.
+	* This can manage rights to 'run' applications, and limit certain features
+	* within an application.  It is also used for granting a user or group rights
+	* to various records, such as todo or calendar items of another user.
 	* @package phpgwapi
 	* @subpackage accounts
 	* @internal syntax: CreateObject('phpgwapi.acl',int account_id);
-	* @internal example: $acl = createObject('phpgwapi.acl',5);  // 5 is the user id
+	* @internal example: $acl = createObject('phpgwapi.acl');  // user id is the current user
 	* @internal example: $acl = createObject('phpgwapi.acl',10);  // 10 is the user id
 	*/
-	class acl
+	class phpgwapi_acl
 	{
 		/**
 		* Account id
-		* @var integer Account id
+		* @var integer $account_id Account id
 		*/
-		var $account_id;
-		/**
-		* Account type
-		* @var string Account type
-		*/
-		var $account_type;
-		/**
-		* Array with ACL records
-		* @var array Array with ACL records
-		*/
-		var $data = array();
-		/**
-		* Database connection
-		* @var object Database connection
-		*/
-		var $db;
+		protected $account_id;
 
 		/**
-		* @var object $db2 cloned database object
+		* Account type
+		* @var string $account_type Account type
 		*/
-		var $bb2;
+		protected $account_type;
+
+		/**
+		 * Data cache
+		 * @var object $cache data cache object
+		 */
+		protected $cache;
+
+		/**
+		* Array with ACL records
+		* @var array $data Array with ACL records
+		*/
+		protected $data = array();
+
+		/**
+		* Database connection
+		* @var object $db Database connection
+		*/
+		protected $db;
 
 		/**
 		* @var string like ???
 		*/
-		var $like = 'LIKE';
+		protected $like = 'LIKE';
 
 		/**
 		* @var string $join ???
 		*/
-		var $join = 'JOIN';
+		protected $join = 'JOIN';
 
 		/**
-		* @var bool $load_from_shm  ACL data loaded from shared memory
+		* Read rights
 		*/
-		var $load_from_shm = false;
+        const READ = 1;
+
+		/**
+		* Add rights
+		*/
+		const ADD = 2;
+
+		/**
+		* Edit rights
+		*/
+		const EDIT = 4;
+
+		/**
+		* Delete rights
+		*/
+		const DELETE = 8;
+
+		/**
+		* Private rights
+		*
+		* @internal "private" is a reserved word
+		*/
+		const PRIV = 16;
+
+		/**
+		* Group Manager Rights
+		*/
+		const GROUP_MANAGERS = 32;
+
+		/**
+		* Custom 1 rights
+		*
+		* This is used for creating module specific rights, the module should
+		* define its own constants which reference this value
+		*/
+		const CUSTOM_1 = 64;
+
+		/**
+		* Custom 2 rights
+		*
+		* This is used for creating module specific rights, the module should
+		* define its own constants which reference this value
+		*/
+		const CUSTOM_2 = 128;
+
+		/**
+		* Custom 3 rights
+		*
+		* This is used for creating module specific rights, the module should
+		* define its own constants which reference this value
+		*/
+		const CUSTOM_3 = 256;
 
 		/**
 		* ACL constructor for setting account id
 		*
 		* Sets the ID for $account_id. Can be used to change a current instances id as well.
 		* Some functions are specific to this account, and others are generic.
+		*
 		* @param integer $account_id Account id
 		*/
-		function acl($account_id = 0)
-		{	
+		public function __construct($account_id = 0)
+		{
 			$this->db =& $GLOBALS['phpgw']->db;
-			$this->db2 = clone($this->db);
 
 			$this->like =& $this->db->like;
 			$this->join =& $this->db->join;
-			
-			if (!($this->account_id = intval($account_id)))
+			$this->cache =& $GLOBALS['phpgw']->cache;
+
+			$this->set_account_id($account_id);
+		}
+
+		/**
+		 * Set the account id used for lookups
+		 *
+		 * @param integer $account_id the account id to use - 0 = current user
+		 * @param boolean $read_repo  call self::read_repository
+		 *					- prevents infinite loops when called from read_repo
+		 *
+		 * @return null
+		 */
+		public function set_account_id($account_id = 0, $read_repo = true)
+		{
+			$this->account_id = (int) $account_id;
+
+			if ( !$this->account_id )
 			{
 				$this->account_id = get_account_id($account_id);
 			}
 
-			if ( !isset($GLOBALS['phpgw']->shm) || !is_object($GLOBALS['phpgw']->shm) )
+			if ( $read_repo )
 			{
-				$GLOBALS['phpgw']->shm = createObject('phpgwapi.shm');
+				$this->_read_repository();
 			}
 		}
 
 		/**
-		* Checks whether the system is set to utilise shared memory
-		* @return bool ACL data loaded from shared memory
-		*/
-		function load_from_shm()
-		{
-			if ((isset($GLOBALS['phpgw_info']['server']['shm_lang']) 
-				&& $GLOBALS['phpgw_info']['server']['shm_lang'])
-				&& function_exists('sem_get'))
-			{
-				return true;
-			}
-		}
-		
-		/**
 		* Get list of xmlrpc or soap functions
 		*
 		* @param string|array $_type Type of methods to list. Could be xmlrpc or soap
+		*
 		* @return array Array with xmlrpc or soap functions. Might also be empty.
-		* This handles introspection or discovery by the logged in client,
-		* in which case the input might be an array.  The server always calls
-		* this function to fill the server dispatch map using a string.
 		*/
-		function list_methods($_type='xmlrpc')
+		public function list_methods($_type='xmlrpc')
 		{
 			if (is_array($_type))
 			{
@@ -127,18 +198,20 @@
 				$xml_functions = array(
 						'read_repository' => array(
 							'function'  => 'read_repository',
-							'signature' => array(array(xmlrpcStruct)),
+							'signature' => array(array($GLOBALS['xmlrpcStruct'])),
 							'docstring' => lang('FIXME!')
 						),
 						'get_rights' => array(
 							'function'  => 'get_rights',
-							'signature' => array(array(xmlrpcStruct,xmlrpcStruct)),
+							'signature' => array(array($GLOBALS['xmlrpcStruct'],
+											$GLOBALS['xmlrpcStruct'])),
 							'docstring' => lang('FIXME!')
 
 						),
 						'list_methods' => array(
 							'function'  => 'list_methods',
-							'signature' => array(array(xmlrpcStruct,xmlrpcString)),
+							'signature' => array(array($GLOBALS['xmlrpcStruct'],
+											$GLOBALS['xmlrpcString'])),
 							'docstring' => lang('Read this list of methods.')
 						)
 					);
@@ -148,147 +221,99 @@
 				default:
 					return array();
 			}
- 		}
+		}
 
-
-		// These are the standard $account_id specific functions
-
+		/*
+		 * These are the standard $account_id specific functions
+		 */
 
 		/**
-		* Reads ACL records from database and return array along with storing it
-		*
-		* @param string $account_type the type of accounts sought accounts|groups
-		* @return array Array with ACL records
-		* @access private
-		*/
-		function read_repository($account_type = 'both')
+		 * Reads ACL records from database and return array along with storing it
+		 *
+		 * @param string $account_type the type of accounts sought accounts|groups
+		 *
+		 * @return array Array with ACL records
+		 */
+		protected function _read_repository($account_type = 'both')
 		{
-			/*
-			For some reason, calling this via XML-RPC doesn't call the constructor.
-			Here is yet another work around(tm) (jengo)
-			*/
-			if (! $this->account_id)
+			if ( !$this->account_id )
 			{
-				$this->acl();
+				$this->set_account_id($this->account_id, false);
 			}
-			if ($this->load_from_shm())
+
+			$data = $this->cache->system_get('phpgwapi', "acl_data_{$this->account_id}");
+			if ( !is_null($data) )
 			{
-				if(!($this->data[$this->account_id] = $GLOBALS['phpgw']->shm->get_value($GLOBALS['phpgw_info']['user']['domain'] . 'acl_data_' . $account_type . '_' . $this->account_id)))
-				{
-					$this->_read_repository($account_type);
-				}
+				$this->data[$this->account_id] = $data;
+				return; // nothing more to do
 			}
-			else
+
+			switch( $GLOBALS['phpgw_info']['server']['account_repository'] )
 			{
-				if(!($this->data[$this->account_id] = $GLOBALS['phpgw']->session->phpgw_cache($GLOBALS['phpgw_info']['user']['domain'] . 'acl_data_' . $account_type . '_' . $this->account_id, 'acl_data'))) // get value
-				{
-					$this->_read_repository($account_type);
-				}
-			}			
+				case 'ldap':
+					$this->_read_repository_ldap($account_type);
+
+				default:
+					$this->_read_repository_sql($account_type);
+			}
 		}
 
-		function _read_repository($account_type = 'both')
-		{
-			if ( $GLOBALS['phpgw_info']['server']['account_repository'] == 'ldap' )
-			{
-				return $this->_read_repository_ldap($account_type);
-			}
-			else
-			{
-				return $this->_read_repository_sql($account_type);
-			}
-		}
 		/**
 		* Get acl records
 		*
 		* @return array Array with ACL records
 		*/
-		function read()
+		public function read()
 		{
 			if (count($this->data[$this->account_id]) == 0)
 			{
-				$this->read_repository();
+				$this->_read_repository();
 			}
-			reset ($this->data[$this->account_id]);
 			return $this->data;
 		}
 
 		/**
 		* Add ACL record
 		*
-		* @param string|boolean $appname Application name. Default: false derives value from $GLOBALS['phpgw_info']['flags']['currentapp']
-		* @param string $location Application location
-		* @param integer $rights Access rights in bitmask form
+		* @param string  $appname  Application name.
+		* @param string  $location Application location
+		* @param integer $rights   Access rights in bitmask form
+		* @param boolean $grantor  NFI ask sigurd he added this wihtout documenting it
+		* @param boolean $type     NFI ask sigurd he added this wihtout documenting it
+		*
 		* @return array Array with ACL records
 		*/
-		function add($appname = '', $location, $rights, $grantor = False, $type = False)
+		public function add($appname, $location, $rights, $grantor = false, $type = false)
 		{
-			if ($appname == '')
-			{
-				$appname = $GLOBALS['phpgw_info']['flags']['currentapp'];
-			}
-			if(!is_array($this->data[$this->account_id]))
+			if ( !is_array($this->data[$this->account_id]) )
 			{
 				$this->data[$this->account_id] = array();
 			}
-			$this->data[$this->account_id][] = array('appname' => $appname, 'location' => $location, 'account' => $this->account_id, 'rights' => $rights, 'grantor' => $grantor, 'type' => $type);
-			reset($this->data[$this->account_id]);
+
+			$this->data[$this->account_id][] = array
+			(
+				'appname'	=> $appname,
+				'location'	=> $location,
+				'account'	=> $this->account_id,
+				'rights'	=> $rights,
+				'grantor'	=> $grantor,
+				'type'		=> $type
+			);
 			return $this->data;
 		}
-		
-		/**
-		 * Add an ACL location
-		 * 
-		 * @param string $location the name of the location
-		 * @param string $description the description of the location - seen by users
-		 * @param string $appname the name of the application for the location
-		 * @return bool was the location added?
-		 */
-		 function add_location($location, $descr, $appname = '', $allow_grant = true, $custom_tbl = '')
-		 {
-		 	if ( $appname === '' )
-		 	{
-		 		$appname = $GLOBALS['phpgw']['flags']['currentapp'];
-		 	}
-
-		 	$location = $this->db->db_addslashes($location);
-			$descr = $this->db->db_addslashes($descr);
-		 	$appname = $this->db->db_addslashes($appname);
-		 	$allow_grant = (int) $allow_grant;
-
-		 	$this->db->query('SELECT COUNT(id) AS cnt_id FROM phpgw_acl_location'
-		 			. " WHERE appname = '{$appname}' AND id = '{$location}'",
-		 		 __LINE__, __FILE__);
-		 	if ( $this->db->next_record() && (int)$this->db->next_record() > 0 )
-		 	{
-		 		return false; //already exists - so bail out
-		 	}
-		 	if ( $custom_tbl === '' )
-		 	{
-		 		$sql = 'INSERT INTO phpgw_acl_location (appname, id, descr, allow_grant)'
-		 			. " VALUES ('{$appname}', '{$location}', '{$descr}', {$allow_grant})";
-		 	}
-		 	else
-		 	{
-		 		$custom_tbl = $this->db->db_addslashes($custom_tbl);
-		 		$sql = 'INSERT INTO phpgw_acl_location (appname, id, descr, allow_grant, allow_c_attrib, c_attrib_table)'
-		 			. " VALUES ('{$appname}', '{$location}', '{$descr}', {$allow_grant}, 1, '{$custom_tbl}')";
-		 	}
-			$this->db->query($sql, __LINE__, __FILE__);
-			
-			return true;//bad but lets assume it works :)
-		 }
 
 		/**
 		* Delete ACL records
 		*
-		* @param string $appname Application name, empty string is translated to $GLOBALS['phpgw_info']['flags']['currentapp']
-		* @param string $location Application location
-		* @param integer $grantor account_id of the user that has granted access to his/hers records. No value means that this is a ordinary ACL - record
-		* @param integer $type mask or right (1 means mask , 0 means right)
+		* @param string  $appname  Application name
+		* @param string  $location Application location
+		* @param integer $grantor  account_id of the user that has granted access to their records.
+		*						0 means that this is a ordinary ACL - record
+		* @param integer $type     mask or right (1 means mask , 0 means right)
+		*
 		* @return array Array with ACL records
 		*/
-		function delete($appname = '', $location, $grantor = 0, $type = 0)
+		public function delete($appname, $location, $grantor = 0, $type = 0)
 		{
 			if ($appname == '')
 			{
@@ -314,192 +339,184 @@
 		}
 
 		/**
-		* Deletes an ACL and all associated grants/masks for that location
-		*
-		* @param string $appname the application name
-		* @param string $location the location
-		* @param bool $remove_table remove the associate custom attributes table if it exists
-		* @return bool was the location found and deleted?
-		*/
-		function delete_location($appnane, $location, $remove_table = false)
-		{
-			$appname = $this->db->db_addslashes($appname);
-			$location = $this->db->db_addslashes($location);
-
-			$sql = 'SELECT c_attrib_table FROM phpgw_acl_location'
-				. " WHERE appname = '{$appname}'"
-				. " AND id = '{$location}'";
-
-			$this->db->query($sql, __LINE__, __FILE__);
-			if ( !$this->db->next_record() )
-			{
-				return false; //invalid location
-			}
-
-			$tbl = $this->db->f('c_attrib_table');
-			
-			$oProc = createObject('phpgwapi.schema_proc',$GLOBALS['phpgw_info']['server']['db_type']);
-			$oProc->m_odb =& $this->db;
-			$Proc->m_odb->Halt_On_Error = 'report';
-
-			$this->db->transaction_begin();
-
-			if ( $remove_table )
-			{
-				$GLOBALS['phpgw']->oProc->DropTable($tbl);
-			}
-
-			$this->db->query('DELETE FROM phpgw_acl_location'
-				. " WHERE appname = '{$appname}'"
-				. " AND id = '{$location}'", __LINE__, __FILE__);
-
-			$this->delete_repository($appname, $location);
-
-			$this->db->transaction_commit();
-
-			return true;
-		}
-
-		/**
 		* Save repository in database
 		*
-		* @param string $appname Application name (default empty string is converted to false $GLOBALS['phpgw_info']['flags']['currentapp'])
-		* @param string $location location within application 
+		* @param string $appname  Application name
+		* @param string $location location within application
+		*
 		* @return array Array with ACL records
+		*
+		* @interal FIXME CodeSniffer bitches a lot about this code - it really needs to be reworked
 		*/
-		function save_repository($appname = '', $location='')
+		public function save_repository($appname, $location = null)
 		{
 			if ($appname == '')
 			{
 				$appname = $GLOBALS['phpgw_info']['flags']['currentapp'];
 			}
-			
-			$location_filter = ($location?" AND acl_location $this->like '" . $location . "%'":'');
+			$appname = $this->db->db_addslashes($appname);
+
+			$location_filter = '';
+			if ( $location !== null )
+			{
+				$location = $this->db->db_addslashes($location);
+				$location_filter = " AND phpgw_locations.name {$this->like} '{$location}%'";
+			}
 
 			$this->db->transaction_begin();
 
-			$sql = 'DELETE FROM phpgw_acl WHERE acl_account = '. (int) $this->account_id . " AND acl_appname = '$appname'" . $location_filter;
-			$this->db->query($sql ,__LINE__,__FILE__);
+			$sql = 'DELETE FROM phpgw_acl'
+				. ' USING phpgw_acl, phpgw_applications, phpgw_locations'
+				. " WHERE phpgw_locations.app_id = phpgw_applications.app_id"
+					. " AND phpgw_applications.app_name = '$appname'"
+					. " AND phpgw_acl.acl_account = {$this->account_id} {$location_filter}";
+			$this->db->query($sql, __LINE__, __FILE__);
 
 			$inherit_data = array();
-			if(isset($this->data[$this->account_id]) && is_array($this->data[$this->account_id]))
+			if ( isset($this->data[$this->account_id])
+				&& is_array($this->data[$this->account_id]) )
 			{
-				reset ($this->data[$this->account_id]);			
+				$data =& $this->data[$this->account_id];
 
-				if($location)
+				if ( $location )
 				{
-		//			while(list($idx,$value) = each($this->data[$this->account_id]))
-					foreach($this->data[$this->account_id] as $idx => $value)
+					foreach ( $data as $idx => $value )
 					{
-						if ( is_array($this->data[$this->account_id][$idx]) && count($this->data[$this->account_id][$idx]) && strpos($this->data[$this->account_id][$idx]['location'],$location)===0)
+						if ( is_array($value) && count($value)
+							&& strpos($value['location'], $location) === 0 )
 						{
-							$sql = "SELECT id as location FROM phpgw_acl_location WHERE id $this->like '" . $location . "%' AND appname='" . $this->data[$this->account_id][$idx]['appname'] . "' AND id != '" . $location . "'";
-							$this->db->query($sql,__LINE__,__FILE__);
+							$sql = 'SELECT phpgw_locations.name'
+								. ' FROM phpgw_locations, phpgw_applications'
+								. ' WHERE phpgw_locations.app_id = phpgw_applications.app_id'
+									. " AND phpgw_locations.name {$this->like} '{$location}%'"
+									. " AND phpgw_locations.name != '{$location}'"
+									. " AND phpgw_applications.appname='{$value['appname']}'";
+
+							$this->db->query($sql, __LINE__, __FILE__);
 							while($this->db->next_record())
 							{
+								$acct_type = '';
+								if ( isset($value['account_type']) )
+								{
+									$acct_type = $value['account_type'];
+								}
+
 								$inherit_data[] = array
 								(
-									'appname'		=> $this->data[$this->account_id][$idx]['appname'],
-									'location'		=> $this->db->f('location'),
+									'appname'		=> $value['appname'],
+									'location'		=> $this->db->f('name'),
 									'account'		=> $this->account_id,
-									'rights'		=> $this->data[$this->account_id][$idx]['rights'],
-									'grantor'		=> $this->data[$this->account_id][$idx]['grantor'],
-									'type'			=> $this->data[$this->account_id][$idx]['type'],
-									'account_type'		=> (isset($this->data[$this->account_id][$idx]['account_type'])?$this->data[$this->account_id][$idx]['account_type']:''),		
+									'rights'		=> $value['rights'],
+									'grantor'		=> $value['grantor'],
+									'type'			=> $value['type'],
+									'account_type'	=> $acct_type
 								);
 							}
 						}
 					}
 				}
 
-				reset ($this->data[$this->account_id]);
-				if(count($inherit_data)>0)
+				if ( count($inherit_data) )
 				{
-					$this->data[$this->account_id] = array_merge($this->data[$this->account_id], $inherit_data);
+					$data = array_merge($data, $inherit_data);
 				}
-			
-				array_unique($this->data[$this->account_id]);
 
-			//	while(list($idx,$value) = each($this->data[$this->account_id]))
-				foreach ($this->data[$this->account_id] as $idx => $value)
+				array_unique($data);
+
+				foreach ($data as $idx => $value)
 				{
-					if ( isset($this->data[$this->account_id][$idx]['account'])
-						&& $this->data[$this->account_id][$idx]['account'] == $this->account_id
-						&& (($this->data[$this->account_id][$idx]['appname'] == $appname
-						&& strpos($this->data[$this->account_id][$idx]['location'],$location)===0)
-						|| (!$location && $this->data[$this->account_id][$idx]['location']=='run')))
+					if ( isset($value['account'])
+						&& $value['account'] == $this->account_id
+						&& ( ($value['appname'] == $appname
+								&& strpos($value['location'], $location) === 0 )
+							|| ( !$location && $value['location'] == 'run') ) )
 					{
-						$sql = 'INSERT INTO phpgw_acl (acl_appname, acl_location, acl_account, acl_rights,acl_grantor,acl_type)';
-						$sql .= " VALUES('".$this->data[$this->account_id][$idx]['appname']."', '"
-							. $this->data[$this->account_id][$idx]['location']."', "
-							.$this->account_id.', '
-							. intval($this->data[$this->account_id][$idx]['rights']) . ', '
-							. ($this->data[$this->account_id][$idx]['grantor']?$this->data[$this->account_id][$idx]['grantor']:'NULL')  . ', '
-							. intval($this->data[$this->account_id][$idx]['type'])
-							.')';
+						$loc = (int) $GLOBALS['phpgw']->locations->get_id($value['appname'], $value['location']);
+						$rights = (int) $value['rights'];
+						$type = (int) $value['type'];
 
-						$this->db->query($sql ,__LINE__,__FILE__);
+						$grantor = 'NULL';
+						if ( $value['grantor'] )
+						{
+							$grantor = (int) $value['grantor'];
+						}
+
+						$sql = 'INSERT INTO phpgw_acl (location_id, acl_account, acl_rights, acl_grantor, acl_type)'
+							. " VALUES({$loc}, {$this->account_id}, {$rights}, {$grantor}, {$type})";
+
+						$this->db->query($sql, __LINE__, __FILE__);
 					}
 				}
 			}
 			/*remove duplicates*/
+			$sql = 'SELECT phpgw_acl.*'
+				. ' FROM phpgw_acl '
+					. " {$this->join} phpgw_locations ON phpgw_acl.location_id = phpgw_locations.location_id"
+					. " {$this->join} phpgw_applications ON  phpgw_locations.app_id = phpgw_applications.app_id"
+				. " WHERE acl_account = {$this->account_id}"
+					. " AND phpgw_applications.app_name = '{$appname}' {$location_filter}"
+				. " GROUP BY phpgw_acl.location_id, acl_account, acl_rights, acl_grantor, acl_type";
 
-			$sql = "SELECT * FROM phpgw_acl WHERE acl_account='" . $this->account_id . "' AND acl_appname = '$appname'" . $location_filter . " GROUP BY acl_appname, acl_location, acl_account, acl_rights,acl_grantor,acl_type";
-			$this->db->query($sql,__LINE__,__FILE__);
+			$this->db->query($sql, __LINE__, __FILE__);
 			while($this->db->next_record())
 			{
-				$unique_data[]= array(
-					'appname' => $this->db->f('acl_appname'),
-					'location' => $this->db->f('acl_location'),
-					'account' => $this->account_id,
-					'rights' => $this->db->f('acl_rights'),
-					'grantor' => $this->db->f('acl_grantor'),
-					'type' => $this->db->f('acl_type')
-					);
+				$unique_data[]= array
+				(
+					'location'	=> $this->db->f('location_id'),
+					'account'	=> $this->account_id,
+					'rights'	=> $this->db->f('acl_rights'),
+					'grantor'	=> $this->db->f('acl_grantor'),
+					'type'		=> (int) $this->db->f('acl_type')
+				);
 			}
 
-			if(isset($unique_data) && is_array($unique_data))
+			if ( isset($unique_data) && is_array($unique_data) )
 			{
-				$sql = "DELETE FROM phpgw_acl where acl_account = '" . intval($this->account_id) . "' AND acl_appname = '$appname'" . $location_filter;
-				$this->db->query($sql ,__LINE__,__FILE__);
+				$sql = 'DELETE FROM phpgw_acl'
+					. ' USING phpgw_acl, phpgw_applications, phpgw_locations'
+					. " WHERE phpgw_locations.app_id = phpgw_applications.app_id"
+						. " AND phpgw_applications.app_name = '$appname'"
+						. " AND phpgw_acl.acl_account = {$this->account_id} {$location_filter}";
+				$this->db->query($sql, __LINE__, __FILE__);
 
-		//		while(list($idx,$value) = each($unique_data))
-				foreach($unique_data as $idx => $value)
+				foreach ( $unique_data as $idx => $value )
 				{
-					$sql = 'insert into phpgw_acl (acl_appname, acl_location, acl_account, acl_rights,acl_grantor,acl_type)';
-					$sql .= " values('".$unique_data[$idx]['appname']."', '"
-						. $unique_data[$idx]['location']."', "
-						.$this->account_id.', '
-						. intval($unique_data[$idx]['rights']) . ', '
-						. ($unique_data[$idx]['grantor']?$unique_data[$idx]['grantor']:'NULL')  . ', '
-						. intval($unique_data[$idx]['type'])
-						.')';
+					$grantor = 'NULL';
+					if ( $value['grantor'] )
+					{
+						$grantor = (int) $value['grantor'];
+					}
 
-					$this->db->query($sql ,__LINE__,__FILE__);
+					$sql = 'INSERT INTO phpgw_acl (location_id, acl_account, acl_rights, acl_grantor, acl_type)'
+						. " VALUES({$value['location']}, {$value['account']},"
+							. "{$value['rights']}, {$grantor}, {$value['type']})";
+					$this->db->query($sql, __LINE__, __FILE__);
 				}
 			}
 
 			$this->db->transaction_commit();
 
 			$this->delete_cache($this->account_id);
-
-//			return $unique_data;
 		}
 
 		// These are the non-standard $account_id specific functions
 
-
 		/**
 		* Get rights from the repository not specific to this object
 		*
-		* @param string $location location within application
-		* @param string|boolean $appname Application name, defaults to false which means $GLOBALS['phpgw_info']['flags']['currentapp']
-		* @param integer $grantor account_id of the user that has granted access to his/hers records. No value means that this is a ordinary ACL - record
-		* @param integer $type mask or right (1 means mask , 0 means right)
-		* @param string|array $account_type used to disiguish between checkpattern:"accounts","groups" and "both" - the normal behaviour is ("both") to first check for rights given to groups - and then to override by rights/mask given to users (accounts)
+		* @param string  $location     location within application
+		* @param string  $appname      Application name
+		* @param integer $grantor      account_id of the user that has granted access to their records
+		*					No value means that this is a ordinary ACL - record
+		* @param integer $type         mask or right (1 means mask , 0 means right)
+		* @param string  $account_type used to disiguish between checkpattern
+		*						"accounts","groups" and "both" - the normal behaviour is ("both")
+		*						to first check for rights given to groups -
+		*						and then to override by rights/mask given to users (accounts)
+		*
 		* @return integer Access rights in bitmask form
 		*/
-		function get_rights($location,$appname = '', $grantor = False, $type = False, $account_type = False)
+		public function get_rights($location, $appname = '', $grantor = null, $type = false, $account_type = 'both')
 		{
 			// For XML-RPC, change this once its working correctly for passing parameters (jengo)
 			if (is_array($location))
@@ -507,106 +524,95 @@
 				$a			= $location;
 				$location	= $a['location'];
 				$appname	= $a['appname'];
-				$grantor  = $a['grantor'];
-				$type  	  = $a['type'];
+				$grantor	= $a['grantor'];
+				$type		= $a['type'];
 			}
 
-			if (!isset($this->data[$this->account_id]) || count($this->data[$this->account_id]) == 0)
+			if ( !isset($this->data[$this->account_id])
+				|| count($this->data[$this->account_id]) == 0)
 			{
-				if($this->load_from_shm())
+				$this->data[$this->account_id] = array();
+				$cached = $GLOBALS['phpgw']->cache->system_get('phpgwapi',
+																"acl_data_{$this->account_id}");
+				if ( is_array($cached) && count($cached) )
 				{
-					if(!$this->data[$this->account_id] = $GLOBALS['phpgw']->shm->get_value($GLOBALS['phpgw_info']['user']['domain'] . 'acl_data_' . $account_type . '_' . $this->account_id))
-					{
-						$this->data[$this->account_id] = array();
-						$this->_read_repository($account_type);
-						if(count($this->data[$this->account_id])>0)
-						{
-							$GLOBALS['phpgw']->shm->store_value($GLOBALS['phpgw_info']['user']['domain'] . 'acl_data_' . $account_type . '_' . $this->account_id,$this->data[$this->account_id]);
-						}
-					}
+					$this->data[$this->account_id] = $cached;
 				}
-				else if(!$this->data[$this->account_id] = $GLOBALS['phpgw']->session->phpgw_cache($GLOBALS['phpgw_info']['user']['domain'] . 'acl_data_' . $account_type . '_' . $this->account_id, 'acl_data')) // get value
+				else
 				{
-					$this->data[$this->account_id] = array();
 					$this->_read_repository($account_type);
-					if(count($this->data[$this->account_id])>0)
-					{
-						$GLOBALS['phpgw']->session->phpgw_cache($GLOBALS['phpgw_info']['user']['domain'] . 'acl_data_' . $account_type . '_' . $this->account_id,'acl_data', $this->data[$this->account_id]); //store value
-					}
+					$GLOBALS['phpgw']->cache->system_set('phpgwapi',
+														"acl_data_{$this->account_id}",
+														$this->data[$this->account_id]);
 				}
 			}
-			if(isset($this->data[$this->account_id]) && is_array($this->data[$this->account_id]))
+
+			if ( !$appname )
 			{
-				reset ($this->data[$this->account_id]);
-			}
-			if ($appname == False)
-			{
-				settype($appname,'string');
+				trigger_error('phpgwapi_acl::get_rights() called with empty appname argument'
+						. ' - check your calls to phpgwapi_acl::check()', E_USER_NOTICE);
 				$appname = $GLOBALS['phpgw_info']['flags']['currentapp'];
 			}
+
+
 			$count = (isset($this->data[$this->account_id])?count($this->data[$this->account_id]):0);
 			if ($count == 0 && $GLOBALS['phpgw_info']['server']['acl_default'] != 'deny')
 			{
-//				return True;
+//				return true;
 			}
 			$rights = 0;
 
-/*			if(isset($this->data[$this->account_id]))
-			{
-				reset ($this->data[$this->account_id]);
-			}
-*/
 			if(isset($this->data[$this->account_id]) && is_array($this->data[$this->account_id]))
 			{
-//				while(list($idx,$value) = each($this->data[$this->account_id]))
-				foreach($this->data[$this->account_id] as $idx => $value)
+				foreach ( $this->data[$this->account_id] as $values )
 				{
-					if ($this->data[$this->account_id][$idx]['appname'] == $appname)
+					if ( $values['appname'] == $appname
+						&& ( $values['location'] == $location
+							// FIXME this should probably be . not everywhere - skwashd jan08
+							|| $values['location'] == 'everywhere')
+						&& $values['type'] == $type
+						&& (!$grantor || ( $grantor && $values['grantor'] ) ) )
 					{
-						if ($this->data[$this->account_id][$idx]['location'] == $location || $this->data[$this->account_id][$idx]['location'] == 'everywhere')
+						if ( $values['grantor'] == $grantor)
 						{
-							if ($this->data[$this->account_id][$idx]['type'] == $type)
+							if ( $values['rights'] == 0 )
 							{
-								if($grantor || $this->data[$this->account_id][$idx]['grantor'])
-								{
-									if ($this->data[$this->account_id][$idx]['grantor'] == $grantor)
-									{
-										if ($this->data[$this->account_id][$idx]['rights'] == 0)
-										{
-											return False;
-										}
-										$rights |= $this->data[$this->account_id][$idx]['rights'];
-										$this->account_type = $this->data[$this->account_id][$idx]['account_type'];
-									}
-								}
-								else
-								{
-									if ($this->data[$this->account_id][$idx]['rights'] == 0)
-									{
-										return False;
-									}
-									$rights |= $this->data[$this->account_id][$idx]['rights'];
-									$this->account_type = $this->data[$this->account_id][$idx]['account_type'];
-								}
+								return false;
 							}
+							$rights |= $values['rights'];
+							$this->account_type = $values['account_type'];
 						}
 					}
+					/*
+					else
+					{
+						if ( $rights ['rights'] == 0)
+						{
+							return false;
+						}
+						$rights |= $values['rights'];
+						$this->account_type = $values['account_type'];
+					}
+					*/
 				}
 			}
 			return $rights;
 		}
+
 		/**
 		* Check required rights (not specific to this object)
 		*
-		* @param string $location location within application
+		* @param string  $location location within application
 		* @param integer $required Required right (bitmask) to check against
-		* @param string $appname Application name (default empty string is converted to false $GLOBALS['phpgw_info']['flags']['currentapp'])
-		* @return boolean True when $required bitmap matched otherwise false
+		* @param string  $appname  Application name
+		*						if empty $GLOBALS['phpgw_info']['flags']['currentapp'] is used
+		*
+		* @return boolean true when $required bitmap matched otherwise false
 		*/
-		function check($location, $required, $appname = '')
+		public function check($location, $required, $appname = '')
 		{
-			$rights = $this->check_brutto($location, $required, $appname, false, $type=0);
-			$mask = $this->check_brutto($location, $required, $appname, false, $type=1);
+			$rights = $this->check_rights($location, $required, $appname, false, 0);
+			$mask = $this->check_rights($location, $required, $appname, false, 1);
 
 			if ( $mask > 0 && $rights > 0 )
 			{
@@ -616,47 +622,52 @@
 		}
 
 		/**
-		* Check  required rights
+		* Check required rights
 		*
-		* @param string $location location within application
-		* @param integer $required Required right (bitmask) to check against
-		* @param string|boolean $appname Application name, defaults to false which means $GLOBALS['phpgw_info']['flags']['currentapp']
-		* @param integer $grantor useraccount to check against
-		* @param integer $type mask or right (1 means mask , 0 means right) to check against
-		* @param array $account_type to check for righst given by groups and accounts separately
-		* @return boolean True when $required bitmap matched otherwise false
+		* @param string  $location     location within application
+		* @param integer $required     Required right (bitmask) to check against
+		* @param string  $appname      Application name - default $GLOBALS['phpgw_info']['flags']['currentapp']
+		* @param integer $grantor      useraccount to check against
+		* @param integer $type         mask or right (1 means mask , 0 means right) to check against
+		* @param string  $account_type to check for righst given by groups and accounts separately
+		*
+		* @return boolean true when $required bitmap matched otherwise false
 		*/
-		function check_brutto($location, $required, $appname = False,$grantor=False,$type=false,$account_type='')
+		public function check_rights($location, $required, $appname = '',
+									$grantor=false, $type=false, $account_type='')
 		{
-			if(is_array($account_type)) //This is only for setting new rights / grants
+			//This is only for setting new rights / grants
+			if ( is_array($account_type) )
 			{
 				$continue = true;
-				while ($continue && list(,$entry) = each($account_type))
-				{				
-					$this->data[$this->account_id]=array();
-					$rights = $this->get_rights($location,$appname,$grantor,$type,$entry);
+				foreach ( $account_type as $entry )
+				{
+					$this->data[$this->account_id] = array();
+					$rights = $this->get_rights($location, $appname, $grantor, $type, $entry);
 
-					if(!!($rights & $required)>0)
+					if ( !!($rights & $required) )
 					{
-						$continue = False;
+						break;
 					}
 				}
 			}
 			else
 			{
-				$rights = $this->get_rights($location,$appname,$grantor,$type,'both');
+				$rights = $this->get_rights($location, $appname, $grantor, $type, 'both');
 			}
 			return !!($rights & $required);
 		}
-		
+
 		/**
-		* Get specific rights
+		* Get specific rights - yes really who woulda thunk it
 		*
 		* @param string $location location within application
-		* @param string $appname Application name (default empty string is converted to false $GLOBALS['phpgw_info']['flags']['currentapp'])
+		* @param string $appname  Application name
+		*				Empty string shouldn't be used here - deprecated behaviour!
+		*
 		* @return integer Access rights in bitmask form
 		*/
-		function get_specific_rights($location, $appname = '')
+		public function get_specific_rights($location, $appname = '')
 		{
 			if ($appname == '')
 			{
@@ -666,22 +677,22 @@
 			$count = count($this->data[$this->account_id]);
 			if ($count == 0 && $GLOBALS['phpgw_info']['server']['acl_default'] != 'deny')
 			{
-				return True;
+				return true;
 			}
 			$rights = 0;
-			
+
 			if ( is_array($this->data[$this->account_id]) && count($this->data[$this->account_id]) )
 			{
 				foreach ( $this->data[$this->account_id] as $value )
 				{
-					if ($value['appname'] == $appname &&
-						($value['location'] == $location ||
-						$value['location'] == 'everywhere') &&
-						$value['account'] == $this->account_id)
+					if ($value['appname'] == $appname
+						&& ($value['location'] == $location
+							|| $value['location'] == 'everywhere')
+						&& $value['account'] == $this->account_id)
 					{
 						if ($value['rights'] == 0)
 						{
-							return False;
+							return false;
 						}
 						$rights |= $value['rights'];
 					}
@@ -693,28 +704,31 @@
 		/**
 		* Check specific rights
 		*
-		* @param string $location location within application
+		* @param string  $location location within application
 		* @param integer $required Required rights as bitmap
-		* @param string $appname Application name (default empty string is converted to false $GLOBALS['phpgw_info']['flags']['currentapp'])
-		* @return boolean True when $required bitmap matched otherwise false
+		* @param string  $appname  Application name
+		*				Empty string shouldn't be used here - deprecated behaviour!
+		*
+		* @return boolean true when $required bitmap matched otherwise false
 		*/
-		function check_specific($location, $required, $appname = '')
+		public function check_specific($location, $required, $appname = '')
 		{
-			$rights = $this->get_specific_rights($location,$appname);
+			$rights = $this->get_specific_rights($location, $appname);
 			return !!($rights & $required);
 		}
-		
+
 		/**
 		* Get location list for an application with specific access rights
 		*
-		* @param $app Application name
+		* @param string  $app      Application name
 		* @param integer $required Required rights as bitmap
+		*
 		* @return array list of locations or empty array for none
 		*/
-		function get_location_list($app, $required)
+		public function get_location_list($app, $required)
 		{
 			$acct_ids = array(0, $this->account_id);// group 0 covers all users
-			
+
 			$equalto = $GLOBALS['phpgw']->accounts->membership($this->account_id);
 			if (is_array($equalto) && count($equalto) > 0)
 			{
@@ -725,27 +739,25 @@
 			}
 
 			$locations = array();
-			$sql = "SELECT acl_location, acl_rights FROM phpgw_acl WHERE acl_appname = '$app' AND acl_account IN(" . implode(',', $acct_ids) . ')'; 
-			$this->db->query($sql ,__LINE__,__FILE__);
+			$ids = implode(',', $acct_ids);
+			$sql = 'SELECT phpgw_locations.name, phpgw_acl.acl_rights'
+				. ' FROM phpgw_locations'
+				. " {$this->join} phpgw_acl ON phpgw_locations.location_id = phpgw_acl.location_id"
+				. " {$this->join} phpgw_applications ON phpgw_locations.app_id = phpgw_applications.app_id"
+				. " WHERE applications.name = '{$app}' AND acl_account IN($ids)";
+			$this->db->query($sql, __LINE__, __FILE__);
+
 			$rights = 0;
-			if ($this->db->num_rows() == 0 )
-			{
-				return $locations;
-			}
 			while ($this->db->next_record())
 			{
 				if ($this->db->f('acl_rights') == 0)
 				{
-					return False;
+					return false;
 				}
 				$rights |= $this->db->f('acl_rights');
-				if (!!($rights & $required) == True)
+				if (!!($rights & $required) == true)
 				{
 					$locations[] = $this->db->f('acl_location');
-				}
-				else
-				{
-//					return False; //Sigurd: I think this is wrong
 				}
 			}
 			return $locations;
@@ -754,35 +766,40 @@
 
 		// These are the generic functions. Not specific to $account_id
 
-
 		/**
 		* Add repository information for an application
 		*
-		* @param string $app Application name
-		* @param string $location location within application
+		* @param string  $app        Application name
+		* @param string  $location   location within application
 		* @param integer $account_id Account id
-		* @param integer $rights Access rights in bitmap form
+		* @param integer $rights     Access rights in bitmap form
+		*
 		* @return boolean Always true, which seems pretty pointless really doesn't it
 		*/
-		function add_repository($app, $location, $account_id, $rights)
+		public function add_repository($app, $location, $account_id, $rights)
 		{
 			$this->delete_repository($app, $location, $account_id);
 
 			$inherit_location = array();
 			$inherit_location[] = $location; // in case the location is not found in the location table
 
-			$sql = "SELECT id as location FROM phpgw_acl_location WHERE id $this->like '".$location."%' AND appname='" . $app . "' AND id != '" .$location . "'";
-			$this->db->query($sql,__LINE__,__FILE__);
+			$sql = 'SELECT phpgw_locations.location_id'
+				. ' FROM phpgw_acl_location'
+				. " {$this->join} phpgw_applications ON phpgw_locations.app_id = phpgw_applications.app_id"
+				. " WHERE phpgw_locations.name {$this->like} '{$location}%'"
+					. " AND phpgw_applications.appname='$app'"
+					. " AND phpgw_locations.name != '$location'";
+			$this->db->query($sql, __LINE__, __FILE__);
 			while($this->db->next_record())
 			{
-				$inherit_location[] = $this->db->f('location');	
+				$inherit_location[] = $this->db->f('location_id');
 			}
 
 			foreach($inherit_location as $acl_location)
 			{
-				$sql = 'insert into phpgw_acl (acl_appname, acl_location, acl_account, acl_rights,acl_grantor,acl_type)';
-				$sql .= " values ('" . $app . "','" . $acl_location . "','" . $account_id . "','" . intval($rights) . "', NULL ,'0')";
-				$this->db->query($sql ,__LINE__,__FILE__);
+				$sql = 'INSERT INTO phpgw_acl (location_id, acl_account, acl_rights, acl_grantor, acl_type)'
+					. " VALUES ({$acl_location}, {$account_id}, {$rights}, NULL , 0)";
+				$this->db->query($sql, __LINE__, __FILE__);
 			}
 
 			$this->delete_cache($account_id);
@@ -793,49 +810,67 @@
 		/**
 		* Delete repository information for an application
 		*
-		* @param string $app Application name
-		* @param string $location location within application
-		* @param integer $account_id Account id - 0 = current user
-		* @return integer Number of deleted entries
+		* @param string  $app       Application name
+		* @param string  $location  location within application
+		* @param integer $accountid Account id - 0 = current user
+		*
+		* @return bool were the entries deleted?
 		*/
-		function delete_repository($app, $location, $accountid = 0)
+		public function delete_repository($app, $location, $accountid = 0)
 		{
 			static $cache_accountid;
-			
+
 			$account_sel = '';
 
-			$accountid = intval($accountid);
-			if ($accountid > 0)
+			$accountid = (int) $accountid;
+			if ($accountid )
 			{
-				if(isset($cache_accountid[$accountid]) && $cache_accountid[$accountid])
+				if ( isset($cache_accountid[$accountid])
+					&& $cache_accountid[$accountid] )
 				{
 					$account_id = $cache_accountid[$accountid];
 				}
 				else
 				{
-					$account_id = get_account_id($accountid,$this->account_id);
+					$account_id = get_account_id($accountid, $this->account_id);
 					$cache_accountid[$accountid] = $account_id;
 				}
-				$account_sel = ' AND acl_account = ' . $account_id;
+				$account_sel = " AND acl_account = {$account_id}";
 			}
 
-			$sql = "DELETE FROM phpgw_acl WHERE acl_appname LIKE '{$app}' AND acl_location LIKE '{$location}' $account_sel";
-			$this->db->query($sql ,__LINE__,__FILE__);
+			$app = $this->db->db_addslashes($app);
 
-			$this->delete_cache($account_id);
-			
-			return $this->db->num_rows();
+			// this slows things down but makes the code easier to read & this isn't a common operation
+			$sub = 'SELECT location_id FROM phpgw_locations'
+				. " {$this->join} phpgw_applications ON phpgw_locations.app_id = phpgw_applications.app_id"
+				. " WHERE phpgw_applications.app_name {$this->like} '{$app}'"
+					. " AND phpgw_locations.name {$this->like} '{$location}'";
+
+			$sql = 'DELETE FROM phpgw_acl '
+				. " WHERE location_id IN ({$sub}) $account_sel";
+			$this->db->query($sql, __LINE__, __FILE__);
+
+			$ret = !!$this->db->num_rows();
+
+			if ( $ret )
+			{
+				$this->delete_cache($account_id);
+			}
+
+			return $ret;
 		}
-			
+
 		/**
 		* Get application list for an account id
 		*
-		* @param string $location location within application
-		* @param integer $required Access rights as bitmap
-		* @param integer $account_id Account id defaults to 0 which is translated to $GLOBALS['phpgw_info']['user']['account_id']
-		* @return boolean|array Array with list of applications or false
+		* @param string  $location  location within application
+		* @param integer $required  Access rights as bitmap
+		* @param integer $accountid Account id
+		*				if 0, value of $GLOBALS['phpgw_info']['user']['account_id'] is used
+		*
+		* @return array list of applications or false
 		*/
-		function get_app_list_for_id($location, $required, $accountid = 0 )
+		public function get_app_list_for_id($location, $required, $accountid = 0 )
 		{
 			static $cache_accountid;
 
@@ -845,29 +880,27 @@
 			}
 			else
 			{
-				$account_id = get_account_id($accountid,$this->account_id);
+				$account_id = get_account_id($accountid, $this->account_id);
 				$cache_accountid[$accountid] = $account_id;
 			}
-			$sql  = 'SELECT acl_appname, acl_rights from phpgw_acl ';
-			$sql .= "WHERE acl_location = '" . $this->db->db_addslashes($location) . "' ";
-			$sql .= 'AND acl_account = ' . intval($account_id);
-//			die("acl::get_app_list_for_id $sql == {$sql}");
-			$this->db->query($sql ,__LINE__,__FILE__);
+
+			$location = $this->db->db_addslashes($location);
 			$rights = 0;
-			if ($this->db->num_rows() == 0 )
-			{
-				return false;
-			}
+			$apps = array();
+
+			$sql = 'SELECT phpgw_applications.app_name, phpgw_acl.acl_rights FROM phpgw_acl'
+				. " {$this->join} phpgw_locations ON phpgw_acl.location_id = phpgw_locations.location_id"
+				. " {$this->join} phpgw_applications ON phpgw_locations.app_id = phpgw_applications.app_id"
+				. " WHERE phpgw_locations.name = '{$location}'"
+					. " AND acl_account = {$account_id}";
+			$this->db->query($sql, __LINE__, __FILE__);
+
 			while ($this->db->next_record())
 			{
-				if ($this->db->f('acl_rights') == 0)
-				{
-					return false;
-				}
 				$rights |= $this->db->f('acl_rights');
-				if (!!($rights & $required) == true)
+				if ( $rights & $required )
 				{
-					$apps[] = $this->db->f('acl_appname');
+					$apps[] = $this->db->f('app_name');
 				}
 			}
 			return $apps;
@@ -876,12 +909,14 @@
 		/**
 		* Get location list for id
 		*
-		* @param string $app Application name
-		* @param integer $required Required access rights in bitmap form
-		* @param integer $account_id Account id defaults to 0 which translates to $GLOBALS['phpgw_info']['user']['account_id']
-		* @return array|boolean Array with location list or false
+		* @param string  $app       Application name
+		* @param integer $required  Required access rights in bitmap form
+		* @param integer $accountid Account id
+		*				if 0, value of $GLOBALS['phpgw_info']['user']['account_id'] is used
+		*
+		* @return array location list
 		*/
-		function get_location_list_for_id($app, $required, $accountid = 0)
+		public function get_location_list_for_id($app, $required, $accountid = 0)
 		{
 			static $cache_accountid;
 
@@ -891,25 +926,27 @@
 			}
 			else
 			{
-				$account_id = get_account_id($accountid,$this->account_id);
+				$account_id = get_account_id($accountid, $this->account_id);
 				$cache_accountid[$accountid] = $account_id;
 			}
-			$sql  = 'SELECT acl_location, acl_rights ';
-			$sql .= "FROM phpgw_acl where acl_appname = '" . $this->db->db_addslashes($app) . "' ";
-			$sql .= 'AND acl_account =' . intval($account_id);
-			$this->db->query($sql ,__LINE__,__FILE__);
-		
+
+			$app = $this->db->db_addslashes($app);
 			$rights = 0;
-			if ($this->db->num_rows() == 0 )
-			{
-				return false;
-			}
+			$locations = array();
+
+			$sql = 'SELECT phpgw_locations.name, phpgw_acl.acl_rights FROM phpgw_acl'
+				. " {$this->join} phpgw_locations ON phpgw_acl.location_id = phpgw_locations.location_id"
+				. " {$this->join} phpgw_applications ON phpgw_locations.app_id = phpgw_applications.app_id"
+				. " WHERE phpgw_applications.app_name = '{$app}'"
+					. " AND acl_account = {$account_id}";
+
+			$this->db->query($sql, __LINE__, __FILE__);
 			while ($this->db->next_record())
 			{
 				if ($this->db->f('acl_rights'))
 				{
 					$rights |= $this->db->f('acl_rights');
-					if ( !!($rights & $required) )
+					if ( $rights & $required )
 					{
 						$locations[] = $this->db->f('acl_location');
 					}
@@ -919,29 +956,41 @@
 		}
 
 		/**
-		* Get ids for location
+		* Get ids for location - which does what exactly?
 		*
-		* @param string $location location within application
+		* @param string  $location location within application
 		* @param integer $required Required access rights in bitmap format
-		* @param string $app Application name, defaults to empty string which translates to $GLOBALS['phpgw_info']['flags']['currentapp']
-		* @return array Array with account ids
+		* @param string  $app      Application name
+		*				if empty string, the value of $GLOBALS['phpgw_info']['flags']['currentapp'] is used
+		*
+		* @return array list of account ids
 		*/
-		function get_ids_for_location($location, $required, $app = '')
+		public function get_ids_for_location($location, $required, $app = '')
 		{
-			if ($app == '')
+			$accounts = array();
+
+			if ( !$app )
 			{
 				$app = $GLOBALS['phpgw_info']['flags']['currentapp'];
 			}
-			$sql = "SELECT acl_account, acl_rights FROM phpgw_acl WHERE acl_appname = '$app' AND acl_location = '$location'";
-			$this->db2->query($sql ,__LINE__,__FILE__);
-			$accounts = array();
-			while ($this->db2->next_record())
+
+			$app = $this->db->db_addslashes($app);
+			$location = $this->db->db_addslashes($location);
+
+			$sql = 'SELECT phpgw_acl.acl_account, phpgw_acl.acl_rights FROM phpgw_acl'
+				. " {$this->join} phpgw_locations ON phpgw_acl.location_id = phpgw_locations.location_id"
+				. " {$this->join} phpgw_applications ON phpgw_locations.app_id = phpgw_applications.app_id"
+				. " WHERE phpgw_applications.app_name = '{$app}'"
+					. " AND phpgw_locations.name = '{$location}'";
+
+			$this->db->query($sql, __LINE__, __FILE__);
+			while ($this->db->next_record())
 			{
 				$rights = 0;
-				$rights |= $this->db2->f('acl_rights');
-				if (!!($rights & $required) == True)
+				$rights |= (int) $this->db->f('acl_rights');
+				if ( $rights & $required )
 				{
-					$accounts[] = intval($this->db2->f('acl_account'));
+					$accounts[] = (int) $this->db->f('acl_account');
 				}
 			}
 			return $accounts;
@@ -950,10 +999,12 @@
 		/**
 		* Get a list of applications a user has rights to
 		*
-		* @param integer $account_id Account id, defaults to 0 which in translated to $GLOBALS['phpgw_info']['user']['account_id']
-		* @return array|boolean Associativ array containing list of application rights in bitmap form or false
+		* @param integer $accountid Account id,
+		*				if 0, value of $GLOBALS['phpgw_info']['user']['account_id'] is used
+		*
+		* @return array List of application rights in bitmap form
 		*/
-		function get_user_applications($accountid = 0)
+		public function get_user_applications($accountid = 0)
 		{
 			static $cache_accountid;
 
@@ -963,63 +1014,58 @@
 			}
 			else
 			{
-				$account_id = get_account_id($accountid,$this->account_id);
+				$account_id = get_account_id($accountid, $this->account_id);
 				$cache_accountid[$accountid] = $account_id;
 			}
 
-			$memberships = $GLOBALS['phpgw']->accounts->membership($account_id);
-			$sql = "select acl_appname, acl_rights from phpgw_acl where acl_location = 'run' and "
-				. 'acl_account in ';
-			$sql .= '('.$account_id;
-			while($groups = @each($memberships))
-			{
-				$group = each($groups);
-				$sql .= ','.$group[1]['account_id'];
-			}
-			$sql .= ')';
+			$id = array_keys($GLOBALS['phpgw']->accounts->membership($account_id));
+			$id[] = $account_id;
+			$ids = implode(',', $id);
+
+			$sql = 'SELECT phpgw_applications.app_name, phpgw_acl.acl_rights'
+				. ' FROM phpgw_applications'
+				. " {$this->db->join} phpgw_locations ON phpgw_locations.app_id = phpgw_applications.app_id"
+				. " {$this->db->join} phpgw_acl ON phpgw_locations.location_id = phpgw_acl.location_id"
+				. " WHERE phpgw_locations.name = 'run'"
+					. " AND phpgw_acl.acl_account IN ({$ids})";
 			$this->db->query($sql, __LINE__, __FILE__);
 
-			if ($this->db->num_rows() == 0)
-			{
-				return false;
-			}
+			$apps = array();
 			while ($this->db->next_record())
 			{
-				if(isset($apps[$this->db->f('acl_appname')]))
+				$appname = $this->db->f('app_name');
+				if ( !isset($apps[$appname]) )
 				{
-					$rights = $apps[$this->db->f('acl_appname')];
+					$apps[$appname] = 0;
 				}
-				else
-				{
-					$rights = 0;
-					$apps[$this->db->f('acl_appname')] = 0;
-				}
-				$rights |= $this->db->f('acl_rights');
-				$apps[$this->db->f('acl_appname')] |= $rights;
+				$apps[$appname] |= $this->db->f('acl_rights');
 			}
 			return $apps;
 		}
 
 		/**
-		* Get a list of users that has grants rights to their records at a location within an application
+		* Get a list of users that have grants rights to their records at a location within an app
+		*
+		* @param string $app      Application name
+		*				if emptry string, value of $GLOBALS['phpgw_info']['flags']['currentapp'] is used
 		* @param string $location location within application
-		* @param string $app Application name, defaults to empty string which translates to $GLOBALS['phpgw_info']['flags']['currentapp']
+		*
 		* @return array Array with account ids and corresponding rights
 		*/
-		function get_grants($app='',$location='')
+		public function get_grants($app = '', $location = '')
 		{
-			$grant_rights = $this->get_grants_type($app,$location,0);
-			$grant_mask = $this->get_grants_type($app,$location,1);
-			if(is_array($grant_mask))
+			$grant_rights	= $this->get_grants_type($app, $location, 0);
+			$grant_mask		= $this->get_grants_type($app, $location, 1);
+			if ( is_array($grant_mask) )
 			{
-				while($grant_mask && (list($user_id,$mask) = each($grant_mask)))
+				foreach ( $grant_mask as $user_id => $mask )
 				{
-					if($grant_rights[$user_id])
+					if ( $grant_rights[$user_id] )
 					{
 						$grant_rights[$user_id] &= (~ $mask);
-						if($grant_rights[$user_id]<=0)
+						if ( $grant_rights[$user_id] <= 0 )
 						{
-							unset ($grant_rights[$user_id]);
+							unset($grant_rights[$user_id]);
 						}
 					}
 				}
@@ -1029,15 +1075,18 @@
 		/**
 		* Get application specific account based granted rights list
 		*
-		* @param string $app Application name, defaults to $GLOBALS['phpgw_info']['flags']['currentapp']
-		* @param string $location location within application
-		* @param integer $type mask or right (1 means mask , 0 means right) to check against
+		* @param string  $app      Application name
+		*				if emptry string, value of $GLOBALS['phpgw_info']['flags']['currentapp'] is used
+		* @param string  $location location within application
+		* @param integer $type     mask or right (1 means mask , 0 means right) to check against
+		*
 		* @return array Associative array with granted access rights for accounts
 		*/
-		function get_grants_type($app='',$location='',$type = '')
+		public function get_grants_type($app = '', $location = '', $type = '')
 		{
+			//TODO finish porting this code - still needs some work - but doesn't look like it is called from anywhere
 			$grants = array();
-			
+
 			if (!$app)
 			{
 				$app = $GLOBALS['phpgw_info']['flags']['currentapp'];
@@ -1047,76 +1096,83 @@
 			if ($location)
 			{
 				$location = $this->db->db_addslashes($location);
-				$at_location = " AND acl_location = '$location'";
+				$at_location = " AND phpgw_locations.name = '$location'";
 			}
 
-			$acct_ids = array($this->account_id);
-			
-			$myaccounts = createObject('phpgwapi.accounts');
-			$my_memberships = $myaccounts->membership($this->account_id);
-			unset($myaccounts);
-			if(is_array($my_memberships))
-			{
-				foreach ( $my_memberships as $key => $group )
-				{
-					$acct_ids[] = $group['account_id'];
-				}
-			}
-			
-			$sql = "SELECT acl_account,acl_grantor, acl_rights FROM phpgw_acl WHERE acl_appname = '$app' $at_location AND acl_grantor IS NOT NULL AND acl_type = $type AND "
-				. 'acl_account IN (' . implode(',', $acct_ids) . ')';
+
+			$accts =& $GLOBALS['phpgw']->accounts;
+			$acct_ids = array_keys($accts->membership($this->account_id));
+			$acct_ids[] = $this->account_id;
+
+			$rights = 0;
+			$accounts = array();
+
+			$ids = implode(',', $acct_ids);
+			$sql = 'SELECT acl_account, acl_grantor, acl_rights'
+				. ' FROM phpgw_acl'
+				. " {$this->db->join} phpgw_locations ON phpgw_acl.location_id = phpgw_locations.location_id"
+				. " {$this->db->join} phpgw_applications ON phpgw_applications.app_id = phpgw_locations.app_id"
+				. " WHERE phpgw_applications.app_name = '$app' $at_location"
+					. " AND acl_grantor IS NOT NULL AND acl_type = $type"
+					. " AND acl_account IN ($ids)";
 
 			$this->db->query($sql, __LINE__, __FILE__);
-			$rights = 0;
-			$accounts = Array();
-			if ($this->db->num_rows() == 0 && $type==0)
+			if ( $this->db->num_rows() == 0 && $type == 0 )
 			{
-				$grants[$GLOBALS['phpgw_info']['user']['account_id']] = 31;
-				return $grants;
+				return array($GLOBALS['phpgw_info']['user']['account_id'] => 31);
 			}
 
+			$records = array();
 			while ($this->db->next_record())
 			{
-				$grantor = $this->db->f('acl_grantor');
-				$rights = $this->db->f('acl_rights');
-				if(!isset($accounts[$grantor]))// cache the group-members for performance 
+				$records[] = array
+				(
+					'acl_account'	=> $this->db->f('account'),
+					'acl_grantor'	=> $this->db->f('grantor'),
+					'acl_rights'	=> $this->db->f('rights')
+				);
+			}
+
+			// we do this so we don't have to use multiple db objects and other hacks
+			foreach ($records as $record )
+			{
+				$grantor = $record['grantor'];
+				$rights = $record['rights'];
+
+				if ( !isset($accounts[$grantor]) )
 				{
-					$is_group[$grantor] = false;
-					// if $grantor is a group, get its members
-					$members = $this->get_ids_for_location($grantor,1,'phpgw_group');
-					if(!$members)
+					$is_group[$grantor] = $accts->get_type($grantor);
+					if ( $is_group[$grantor] == 'g' )
 					{
 						$accounts[$grantor] = array($grantor);
 					}
 					else
 					{
-						$accounts[$grantor] = $members;
-						$is_group[$grantor] = True;
+						$accounts[$grantor] = $GLOBALS['phpgw']->accounts->get_members($grantor);
 					}
 				}
-				if($is_group[$grantor])
+				if ( $is_group[$grantor] )
 				{
 					// Don't allow to override private!
 					$rights &= (~ PHPGW_ACL_PRIVATE);
-					if(!isset($grants[$grantor]))
+					if ( !isset($grants[$grantor]) )
 					{
 						$grants[$grantor] = 0;
 					}
 					$grants[$grantor] |= $rights;
-					if(!!($rights & PHPGW_ACL_READ))
+					if ( !!($rights & PHPGW_ACL_READ) )
 					{
 						$grants[$grantor] |= PHPGW_ACL_READ;
 					}
 				}
-				while(list($nul,$grantors) = each($accounts[$grantor]))
+				foreach ( $accounts[$grantor] as $grantors )
 				{
-					if(!isset($grants[$grantors]))
+					if ( !isset($grants[$grantors]) )
 					{
 						$grants[$grantors] = 0;
 					}
 					$grants[$grantors] |= $rights;
 				}
-				reset($accounts[$grantor]);
 			}
 
 			if ( $type == 0 )
@@ -1133,61 +1189,44 @@
 
 			return $grants;
 		}
-		
+
 		/**
 		 * Update the description of a location
-		 * 
-		 * @param string $location location within application
+		 *
+		 * @param string $location    location within application
 		 * @param string $description the description of the location - seen by users
-		 * @param string $appname the name of the application for the location
+		 * @param string $appname     the name of the application for the location
+		 *
+		 * @return null
 		 */
-		function update_location_description($location, $description, $appname = '')
+		public function update_location_description($location, $description, $appname = '')
 		{
-		 	if ( $appname === '' )
+		 	if ( !$appname )
 		 	{
 		 		$appname = $GLOBALS['phpgw']['flags']['currentapp'];
 		 	}
 
 		 	$location = $this->db->db_addslashes($location);
 			$description = $this->db->db_addslashes($description);
-		 	$appname = $this->db->db_addslashes($appname);
+		 	$appid = $GLOBALS['phpgw']->applications->name2id($appname);
 
-		 	$this->db->query('UPDATE phpgw_acl_location'
+		 	$this->db->query('UPDATE phpgw_locations'
 		 			. " SET descr = '{$description}'"
-		 			. " WHERE appname = '{$appname}' AND id = '{$location}'",
+		 			. " WHERE app_id = '{$appid}' AND name = '{$location}'",
 		 		 __LINE__, __FILE__);
 			return true;
 		}
 
 		/**
-		* This does something
-		*
-		* @param ??? $apps_wtih_acl ???
-		* @return ???
-		*/
-		function verify_location($apps_with_acl)
-		{
-			while($apps_with_acl && (list($appname,$value) = each($apps_with_acl)))
-			{
-				$sql = "SELECT appname from phpgw_acl_location WHERE appname = '$appname' AND id = '.'";
-				$this->db->query($sql ,__LINE__,__FILE__);
-
-				if ($this->db->num_rows()==0)
-				{
-					$sql = "INSERT into phpgw_acl_location (appname,id,descr,allow_grant) VALUES ('$appname','.','Top','" . intval($value['top_grant']) . "')";
-					$this->db->query($sql ,__LINE__,__FILE__);
-				}
-			}
-		}
-
-		/**
-		* Reads ACL records from database for LDAP accounts and return array and caches the data for future look ups
+		* Reads ACL records from database for LDAP accounts
 		*
 		* @param string $account_type the type of accounts sought accounts|groups
+		*
 		* @return array Array with ACL records
-		* @access private
+		*
+		* @internal data is cached for future look ups
 		*/
-		function _read_repository_ldap($account_type)
+		protected function _read_repository_ldap($account_type)
 		{
 			$this->data[$this->account_id] = array();
 
@@ -1204,11 +1243,11 @@
 				{
 					foreach ( $groups as $key => $value )
 					{
-							if ( !$value )
-							{
-								continue;
-							}
-							$account_list[] = $value;
+						if ( !$value )
+						{
+							continue;
+						}
+						$account_list[] = $value;
 					}
 				}
 			}
@@ -1217,22 +1256,22 @@
 			{
 				return array();
 			}
-			
+
 			$sql = 'SELECT * FROM phpgw_acl WHERE acl_account in (' . implode(',', $account_list) . ')';
-			
-			$this->db->query($sql ,__LINE__,__FILE__);
-			
+
+			$this->db->query($sql, __LINE__, __FILE__);
+
 			while ( $this->db->next_record() )
 			{
 				$this->data[$this->account_id][] = array
 				(
-					'appname'	=> $this->db->f('acl_appname'),
-					'location'	=> $this->db->f('acl_location'), 
-					'account'	=> $this->db->f('acl_account'),
-					'rights'	=> $this->db->f('acl_rights'),
-					'grantor'	=> $this->db->f('acl_grantor'),
-					'type'		=> $this->db->f('acl_type'),
-					'account_type' =>  $GLOBALS['phpgw']->accounts->get_type($this->db->f('account_type'))
+					'appname'		=> $this->db->f('acl_appname'),
+					'location'		=> $this->db->f('acl_location'),
+					'account'		=> $this->db->f('acl_account'),
+					'rights'		=> $this->db->f('acl_rights'),
+					'grantor'		=> $this->db->f('acl_grantor'),
+					'type'			=> $this->db->f('acl_type'),
+					'account_type'	=> $GLOBALS['phpgw']->accounts->get_type($this->db->f('account_type'))
 				);
 			}
 			return $this->data;
@@ -1242,29 +1281,24 @@
 		* Reads ACL records from database for SQL accounts and return array and caches the data for future look ups
 		*
 		* @param string $account_type the type of accounts sought accounts|groups
+		*
 		* @return array Array with ACL records
-		* @access private
 		*/
-		function _read_repository_sql($account_type)
+		protected function _read_repository_sql($account_type)
 		{
 			$this->data[$this->account_id] = array();
 
+			$account_list = array();
 			if(!$account_type || $account_type == 'accounts' || $account_type == 'both')
 			{
-				$account_list[] = $this->account_id;
-				$account_list[] = 0;
+				$account_list = array($this->account_id, 0);
 			}
 
 			if($account_type == 'groups' || $account_type == 'both')
 			{
-				$groups = $this->get_location_list_for_id('phpgw_group', 1, $this->account_id);
-				if ( is_array($groups) && count($groups) )
-				{
-					foreach ( $groups as $key => $value )
-					{
-							$account_list[] = $value;
-					}
-				}
+				$groups = array_keys(createObject('phpgwapi.accounts')->membership($this->account_id));
+				$account_list = array_merge($account_list, array_keys($groups));
+				unset($groups);
 			}
 
 			if(!isset($account_list) || !is_array($account_list))
@@ -1272,46 +1306,54 @@
 				return array();
 			}
 
-			$sql = 'SELECT * FROM phpgw_acl '
+			$ids = implode(',', $account_list);
+			$sql = 'SELECT phpgw_applications.app_name, phpgw_locations.name,'
+					. ' phpgw_acl.acl_account, phpgw_acl.acl_grantor,'
+					. ' phpgw_acl.acl_rights, phpgw_acl.acl_type, phpgw_accounts.account_type'
+				. ' FROM phpgw_acl'
+				. " {$this->db->join} phpgw_locations ON phpgw_acl.location_id = phpgw_locations.location_id"
+				. " {$this->db->join} phpgw_applications ON phpgw_applications.app_id = phpgw_locations.app_id"
 				. "{$this->join} phpgw_accounts ON phpgw_acl.acl_account = phpgw_accounts.account_id "
-				. 'WHERE acl_account in (' . implode(',', $account_list) . ')';
-			
-			$this->db->query($sql ,__LINE__,__FILE__);
-			
+				. " WHERE acl_account IN ($ids)";
+
+			$this->db->query($sql, __LINE__, __FILE__);
+
 			while ( $this->db->next_record() )
 			{
 				$this->data[$this->account_id][] = array
 				(
-					'appname'	=> $this->db->Record['acl_appname'],// $this->db->f('acl_appname'),
-					'location'	=> $this->db->Record['acl_location'],// $this->db->f('acl_location'), 
-					'account'	=> $this->db->Record['acl_account'],// $this->db->f('acl_account'),
-					'rights'	=> $this->db->Record['acl_rights'],// $this->db->f('acl_rights'),
-					'grantor'	=> $this->db->Record['acl_grantor'],// $this->db->f('acl_grantor'),
-					'type'		=> $this->db->Record['acl_type'],// $this->db->f('acl_type'),
-					'account_type' => $this->db->Record['account_type'] // $this->db->f('account_type')
+					'appname'		=> $this->db->f('app_name'),
+					'location'		=> $this->db->f('name'),
+					'account'		=> $this->db->f('acl_account'),
+					'rights'		=> $this->db->f('acl_rights'),
+					'grantor'		=> $this->db->f('acl_grantor'),
+					'type'			=> $this->db->f('acl_type'),
+					'account_type'	=> $this->db->f('account_type')
 				);
 			}
 			return $this->data;
 		}
 
 		/**
-		* Reads ACL accounts from database and return array with accounts that have rights - this is used to minimize workload when adding/removing acl-data
+		* Reads ACL accounts from database and return array with accounts that have rights
 		*
-		* @param string $appname Application name, defaults to $GLOBALS['phpgw_info']['flags']['currentapp']
-		* @param string $location location within Application name
-		* @param integer $grantor : check if this is grants or ordinary rights/mask
-		* @param integer $type mask or right (1 means mask , 0 means right) to check against
+		* @param string  $appname  Application name
+		*		if empty string the value of $GLOBALS['phpgw_info']['flags']['currentapp'] is used
+		* @param string  $location location within Application name
+		* @param integer $grantor  check if this is grants or ordinary rights/mask
+		* @param integer $type     mask or right (1 means mask , 0 means right) to check against
+		*
 		* @return array Array with accounts
 		*/
-		function get_accounts_at_location($appname = '', $location ='', $grantor=0 ,$type ='')
+		public function get_accounts_at_location($appname = '', $location = '',
+												$grantor = 0 ,$type = '')
 		{
 			$acl_accounts = array();
-			if (!$appname)
+			if ( !$appname )
 			{
-				settype($appname,'string');
 				$appname = $GLOBALS['phpgw_info']['flags']['currentapp'];
 			}
-			
+
 			if($grantor > 0)
 			{
 				$filter_grants = ' AND acl_grantor IS NOT NULL';
@@ -1320,8 +1362,12 @@
 			{
 				$filter_grants = ' AND acl_grantor IS NULL';
 			}
-			$sql = "SELECT acl_account from phpgw_acl WHERE acl_appname = '$appname' AND acl_location $this->like '$location%' $filter_grants AND acl_type = '$type' GROUP BY acl_account";
-			$this->db->query($sql,__LINE__,__FILE__);
+			$sql = 'SELECT acl_account FROM phpgw_acl'
+				. " WHERE acl_appname = '{$appname}'"
+					. " AND acl_location {$this->like} '{$location}%' {$filter_grants}"
+					. " AND acl_type = '{$type}'"
+				. ' GROUP BY acl_account';
+			$this->db->query($sql, __LINE__, __FILE__);
 
 			while ($this->db->next_record())
 			{
@@ -1334,68 +1380,12 @@
 		/**
 		* Delete ACL information from cache
 		*
-		* @param integer $account_id
-		*/
-		function delete_cache($account_id)
-		{
-			if($this->load_from_shm())
-			{
-				$this->clear_shm($account_id);
-			}
-			else
-			{
-				$this->clear_cache($account_id);
-			}	
-		}
-
-		/**
-		* Delete ACL information from shared memory
+		* @param integer $account_id the account to delete data from the cache for
 		*
-		* @param integer $account_id
+		* @return null
 		*/
-		function clear_shm($account_id)
+		private function delete_cache($account_id)
 		{
-			$GLOBALS['phpgw']->shm->delete_key($GLOBALS['phpgw_info']['user']['domain'] . 'acl_data_groups_' . $account_id);
-			$GLOBALS['phpgw']->shm->delete_key($GLOBALS['phpgw_info']['user']['domain'] . 'acl_data_accounts_' . $account_id);
-			$GLOBALS['phpgw']->shm->delete_key($GLOBALS['phpgw_info']['user']['domain'] . 'acl_data_both_' . $account_id);
-
-			$members = $this->get_ids_for_location($account_id, 1, 'phpgw_group');
-
-			if (is_array($members) && count($members) > 0)
-			{
-				foreach ( $members as $account_id )
-				{
-					$GLOBALS['phpgw']->shm->delete_key($GLOBALS['phpgw_info']['user']['domain'] . 'acl_data_groups_' . $account_id);
-					$GLOBALS['phpgw']->shm->delete_key($GLOBALS['phpgw_info']['user']['domain'] . 'acl_data_accounts_' . $account_id);
-					$GLOBALS['phpgw']->shm->delete_key($GLOBALS['phpgw_info']['user']['domain'] . 'acl_data_both_' . $account_id);
-				}
-			}
-		}
-
-		/**
-		* Delete ACL information from phpgw_cache
-		*
-		* @param integer $account_id
-		*/
-		function clear_cache($account_id)
-		{
-
-			$GLOBALS['phpgw']->session->phpgw_cache($GLOBALS['phpgw_info']['user']['domain'] . 'acl_data_groups_' . $account_id, 'acl_data', '##DELETE##');
-			$GLOBALS['phpgw']->session->phpgw_cache($GLOBALS['phpgw_info']['user']['domain'] . 'acl_data_accounts_' . $account_id, 'acl_data', '##DELETE##');
-			$GLOBALS['phpgw']->session->phpgw_cache($GLOBALS['phpgw_info']['user']['domain'] . 'acl_data_both_' . $account_id, 'acl_data', '##DELETE##');
-
-			$members = $this->get_ids_for_location($account_id, 1, 'phpgw_group');
-
-			if (is_array($members) && count($members) > 0)
-			{
-				foreach ( $members as $account_id )
-				{
-					$GLOBALS['phpgw']->session->phpgw_cache($GLOBALS['phpgw_info']['user']['domain'] . 'acl_data_groups_' . $account_id, 'acl_data', '##DELETE##');
-					$GLOBALS['phpgw']->session->phpgw_cache($GLOBALS['phpgw_info']['user']['domain'] . 'acl_data_accounts_' . $account_id, 'acl_data', '##DELETE##');
-					$GLOBALS['phpgw']->session->phpgw_cache($GLOBALS['phpgw_info']['user']['domain'] . 'acl_data_both_' . $account_id, 'acl_data', '##DELETE##');
-				}
-			}
-
-//			$this->db->query("DELETE FROM phpgw_app_sessions WHERE loginid = '-1' AND app='acl_data'",__LINE__,__FILE__);
+			$this->cache->system_clear('phpgwapi', "acl_data_{$account_id}");
 		}
 	}

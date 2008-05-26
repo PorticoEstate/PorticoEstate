@@ -11,8 +11,7 @@
 	* @version $Id$
 	*/
 
-	chdir('phpgwapi/inc/sso');
-   	include_once('include_login.inc.php');
+	require_once 'phpgwapi/inc/sso/include_login.inc.php';
 
 	$partial_url = 'login.php';
 	$phpgw_url_for_sso = 'phpgwapi/inc/sso/login_server.php';
@@ -50,7 +49,6 @@
 		{
 			$_POST['submitit'] = true;
 		}
-		$_POST['passwd_type'] = 'text';
 	}
 	else
 	{
@@ -103,7 +101,7 @@
 		unset($sslattributes);
 	}
 
-	if (isset($_POST['passwd_type']) && (isset($_POST['submitit']) || isset($_POST['submit_x']) || isset($_POST['submit_y']) ) )
+	if ( (isset($_POST['submitit']) || isset($_POST['submit_x']) || isset($_POST['submit_y']) ) )
 	{
 		if ( $_SERVER['REQUEST_METHOD'] != 'POST' &&
 		   !isset($_SERVER['PHP_AUTH_USER']) &&
@@ -114,13 +112,13 @@
 			$GLOBALS['phpgw']->redirect_link('/'.$partial_url, array('cd' => '5'));
 		}
 
-		if (strstr($login,'@') === false && isset($_POST['logindomain']))
+		$logindomain = phpgw::get_var('logindomain', 'string', 'POST');
+		if ( strstr($login,'@') === false && $logindomain )
 		{
-			$login .= '@' . $_POST['logindomain'];
+			$login .= "@{$logindomain}";
 		}
 
-		$passwd_type = $_POST['passwd_type'] == 'md5' ? 'md5' : 'text';
-		$GLOBALS['sessionid'] = $GLOBALS['phpgw']->session->create($login, $passwd, $passwd_type);
+		$GLOBALS['sessionid'] = $GLOBALS['phpgw']->session->create($login, $passwd);
 
 		if (! isset($GLOBALS['sessionid']) || ! $GLOBALS['sessionid'])
 		{
@@ -129,7 +127,7 @@
 			{
 				$cd_array['cd'] = $GLOBALS['phpgw']->session->cd_reason;
 			}
-			$GLOBALS['phpgw']->redirect_link('/'.$partial_url, $cd_array);
+			$GLOBALS['phpgw']->redirect_link("/{$partial_url}", $cd_array);
 			exit;
 		}
 
@@ -152,19 +150,8 @@
 		$extra_vars['cd'] = 'yes';
 		
 		$GLOBALS['phpgw']->hooks->process('login');
-
-		if( isset($GLOBALS['phpgw_info']['server']['shm_lang']) 
-			&& $GLOBALS['phpgw_info']['server']['shm_lang'] 
-			&& function_exists('sem_get'))
-		{
-			if(!$GLOBALS['phpgw']->shm->get_value('lang_en'))
-			{
-				$GLOBALS['phpgw']->translation->populate_shm();
-			}
-		}
-
+		$GLOBALS['phpgw']->translation->populate_cache();
 		$GLOBALS['phpgw']->redirect_link('/home.php', $extra_vars);
-		exit;
 	}
 
 	//Build vars :

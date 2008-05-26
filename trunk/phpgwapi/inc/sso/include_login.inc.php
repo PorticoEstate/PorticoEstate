@@ -16,29 +16,25 @@
 	 */
 	$GLOBALS['phpgw_info'] = array();
 	
-	$GLOBALS['phpgw_info']['flags'] = array(
+	$GLOBALS['phpgw_info']['flags'] = array
+	(
 		'disable_template_class' => true,
 		'login'                  => true,
 		'currentapp'             => 'login',
 		'noheader'               => true
 	);
-	if(file_exists('../../../header.inc.php'))
-	{
 
-		/**
-		* Include phpgroupware header
-		*/
-		include_once('../../../header.inc.php');
-		if(!is_object($GLOBALS['phpgw']->session))
-		{
-			$GLOBALS['phpgw']->session = createObject('phpgwapi.sessions');
-		}
-	}
-	else
+	$header = basename(realpath(__FILE__) . '/../../../header.inc.php');
+	if ( !file_exists($header) )
 	{
 		Header('Location: setup/index.php');
 		exit;
 	}
+
+	/**
+	* Include phpgroupware header
+	*/
+	require_once $header;
 
 	$GLOBALS['phpgw_info']['server']['template_set'] = $GLOBALS['phpgw_info']['login_template_set'];
 	$GLOBALS['phpgw_info']['server']['template_dir'] = PHPGW_SERVER_ROOT
@@ -54,13 +50,20 @@
 	{
 		$phpgw_url_for_sso = '/phpgwapi/inc/sso/login_server.php';
 	}
-	$phpgw_map_location = isset($_SERVER['HTTP_SHIB_ORIGIN_SITE']) ? $_SERVER['HTTP_SHIB_ORIGIN_SITE'] : 'local';
-	$phpgw_map_authtype = isset($_SERVER['HTTP_SHIB_ORIGIN_SITE']) ? 'shibboleth':'remoteuser';
-								 
-	//Create the mapping if necessary :
-	if(isset($GLOBALS['phpgw_info']['server']['mapping']) && !empty($GLOBALS['phpgw_info']['server']['mapping']))
+
+	$phpgw_map_location = 'local';
+	$phpgw_map_authtype = 'remoteuser';
+	if ( isset($_SERVER['HTTP_SHIB_ORIGIN_SITE']) )
 	{
-		if(!is_object($GLOBALS['phpgw']->mapping))
+		$phpgw_map_location = $_SERVER['HTTP_SHIB_ORIGIN_SITE'];
+		$phpgw_map_authtype = 'shibboleth';
+	}
+
+	//Create the mapping if necessary :
+	if(isset($GLOBALS['phpgw_info']['server']['mapping']) 
+		&& !empty($GLOBALS['phpgw_info']['server']['mapping']))
+	{
+		if ( !is_object($GLOBALS['phpgw']->mapping) )
 		{
 			$GLOBALS['phpgw']->mapping = CreateObject('phpgwapi.mapping', array('auth_type'=> $phpgw_map_authtype, 'location' => $phpgw_map_location));
 		}
@@ -439,4 +442,3 @@
 			$this->tmpl->pfp('loginout','login_form');
 		}
 	}
-?>

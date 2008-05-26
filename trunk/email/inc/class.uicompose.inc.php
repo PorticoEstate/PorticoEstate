@@ -98,13 +98,6 @@
 			$this->tpl->set_var('widget_toolbar',$this->widgets->get_toolbar());
 			
 
-			//FIX this
- 		/*	if(!isset($GLOBALS['phpgw']->js) || !is_object($GLOBALS['phpgw']->js))
-			{
-				$GLOBALS['phpgw']->js = CreateObject('phpgwapi.javascript');
-			}
-			$GLOBALS['phpgw']->js->validate_file('core','base','phpgwapi');
-		*/
 			// fill template vars
 			$tpl_vars = Array(
 				'webserver_url'		=> $GLOBALS['phpgw_info']['server']['webserver_url'],

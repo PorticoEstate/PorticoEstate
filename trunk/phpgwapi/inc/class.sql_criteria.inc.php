@@ -16,7 +16,7 @@
 	/**
 	* Include SQL class
 	*/
-	include(PHPGW_API_INC . '/class.sql.inc.php');
+	phpgw::import_class('phpgwapi.sql');
 
 	/**
 	* SQL Generator Criteria - help to create criterias for common queries
@@ -26,11 +26,13 @@
 	* @package phpgwapi
 	* @subpackage database
 	*/
-	class sql_criteria extends sql
+	class phpgwapi_sql_criteria extends phpgwapi_sql
 	{
-		function sql_criteria()
+		/*
+		public function __construct()
 		{
 		}
+		*/
 
 		/************************************************************* \
 		* Usefull low level functions to create queries logically   *
@@ -43,7 +45,7 @@
 		* @param string $right The right operand of the statement
 		* @return array with an equal criteria tokenized.
 		*/
-		function _equal($left,$right)
+		public static function _equal($left,$right)
 		{
 			return array($left,$right,'equal');
 		}
@@ -55,7 +57,7 @@
 		* @param mixed $right Right operand.
 		* @return array token list with elements for `not equal' operation.
 		*/
-		function _not_equal($left, $right)
+		public static function _not_equal($left, $right)
 		{
 			return array($left,$right,'not_equal');
 		}
@@ -67,7 +69,7 @@
   		* @param mixed $right The right operand of the statement
 		* @return array token list with elements for `greater' operation.
 		*/
-		function _greater($left,$right)
+		public static function _greater($left,$right)
 		{
 			return array($left,$right,'greater');
 		}
@@ -79,7 +81,7 @@
 		* @param mixed $right The right operand of the statement
 		* @return array with `less than' operation tokenized.
 		*/
-		function _less($left,$right)
+		public static function _less($left,$right)
 		{
 			return array($left,$right,'less');
 		}
@@ -91,7 +93,7 @@
   		* @param mixed $right The right operand of the statement
 		* @return array token list with elements for `greater or equal than ' operation.
 		*/
-		function _greater_equal($left,$right)
+		public static function _greater_equal($left,$right)
 		{
 			return array($left,$right,'greater_equal');
 		}
@@ -103,7 +105,7 @@
   		* @param mixed $right The right operand of the statement
 		* @return array token list with elements for `less than or equal than ' operation.
 		*/
-		function _less_equal($left,$right)
+		public static function _less_equal($left,$right)
 		{
 			return array($left,$right,'less_equal');
 		}
@@ -116,7 +118,7 @@
 		* @param mixed $value That will search.
 		* @return array token list of has criteria
 		*/
-		function token_has($field,$value)
+		public static function token_has($field,$value)
 		{
 			return array($field,$value,'has');
 		}
@@ -131,7 +133,7 @@
 		* @return array token list of begin_with criteria
 		* @see _has
 		*/
-		function token_begin($field,$value)
+		public static function token_begin($field,$value)
 		{
 			return array($field,$value,'begin_with');
 		}
@@ -146,7 +148,7 @@
 		* @return array token list of end_with criteria
 		* @see _has
 		*/
-		function token_end($field,$value) 
+		public static function token_end($field,$value) 
 		{
 			return array($field,$value,'end_with');
 		}
@@ -159,7 +161,7 @@
 		* @return array token list for and_ operand
 		* @see and_
 		*/
-		function token_and($left,$right = '')
+		public static function token_and($left,$right = '')
 		{
 			return array($left,$right,'and_');
 		}
@@ -172,7 +174,7 @@
 		* @return array token list for or_ operand
 		* @see or_
 		*/
-		function token_or($left,$right = '')
+		public static function token_or($left,$right = '')
 		{
 			return array($left,$right,'or_');
 		}
@@ -183,7 +185,7 @@
 		* @param mixed $data A field name
 		* @return array with tokens.
 		*/
-		function _is_null($data)
+		public static function _is_null($data)
 		{
 			return array($data,'is_null');
 		}
@@ -194,7 +196,7 @@
 		* @param string $data A field name.
 		* @return array with tokens.
 		*/
-		function _not_null($data)
+		public static function _not_null($data)
 		{
 			return array($data,'not_null');
 		}
@@ -205,7 +207,7 @@
 		* @param string $data
 		* @return array with tokens.
 		*/
-		function _upper($value)
+		public static function _upper($value)
 		{
 			return array($value,'upper');
 		}
@@ -216,7 +218,7 @@
 		* @param string $data
 		* @return array with tokens.
 		*/
-		function _lower($value)
+		public static function _lower($value)
 		{
 			return array($value,'lower');
 		}
@@ -228,7 +230,7 @@
 		* @param values $values Array with posible values
 		* @return string token for IN.
 		*/
-		function _in($field, $values)
+		public static function _in($field, $values)
 		{
 			return array($field, $values,'in');
 		}
@@ -240,7 +242,7 @@
 		* @param mixed $clause tokens with conjuctions.
 		* @return string with many and conjuntions at same level.
 		*/
-		function _append_and($clause)
+		public static function _append_and($clause)
 		{
 			array_push($clause, 'append_and');
 			return $clause;
@@ -253,7 +255,7 @@
 		* @param mixed $clause tokens with conjuctions.
 		* @return string with many and conjuntions at same level.
 		*/
-		function _append_or($clause)
+		public static function _append_or($clause)
 		{
 			array_push($clause, 'append_or');
 			return $clause;
@@ -268,15 +270,15 @@
 		* @param string $optional_operand optional operand to pass to function, some operation need it.
 		* @return string with and operation created.
 		*/
-		function operate($operator, $operand, $optional_operand = '')
+		public static function operate($operator, $operand, $optional_operand = '')
 		{
 			if (is_array($operand) || $optional_operand == '' || $optional_operand == FALSE)
 			{
-				return sql::$operator($operand);
+				return phpgwapi_sql::$operator($operand);
 			}
 			else
 			{
-				return sql::$operator($operand, $optional_operand);
+				return phpgwapi_sql::$operator($operand, $optional_operand);
 			}
 		}
 
@@ -286,28 +288,26 @@
 		* @param array $tokens array Multidimensional array created with calls to sql_criteria class methods
 		* @return string Return a criteria string based on tokens
 		*/
-		function criteria($tokens)
+		public static function criteria($tokens)
 		{
 			$operator = array_pop($tokens);
 			if($operator == 'append_or' || $operator == 'append_and')
 			{
-				return sql_criteria::$operator($tokens);
+				return self::$operator($tokens);
 			}
 			$operand_left = array_shift($tokens);
 			// Recursivity if array
-			$operand_left = (is_array($operand_left))? sql_criteria::criteria($operand_left) : $operand_left;
+			$operand_left = (is_array($operand_left))? self::criteria($operand_left) : $operand_left;
 			if(count($tokens) > 0)
 			{
 				$operand_right = array_shift($tokens);
 				// Recursivity if array too
-				$operand_right = (is_array($operand_right))? sql_criteria::criteria($operand_right) : $operand_right;
+				$operand_right = (is_array($operand_right))? self::criteria($operand_right) : $operand_right;
 			}
 			else
 			{
-				$operand_right = sql::null();
+				$operand_right = phpgwapi_sql::null();
 			}
-			return sql_criteria::$operator($operand_left, $operand_right);
+			return self::$operator($operand_left, $operand_right);
 		}
 	}
-
-?>
