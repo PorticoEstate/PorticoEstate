@@ -218,8 +218,11 @@
 			//case E_STRICT:
 				$log_args['severity'] = 'N';
 				$log->notice($log_args);
-				echo "\n<br>" . lang('ERROR Notice: %1 in %2 at line %3', $error_msg, $error_file, $error_line) . "<br>\n"; //this will be commented in the final version
-				echo '<pre>' . phpgw_parse_backtrace($bt) . '<pre>';
+				if(isset($GLOBALS['phpgw_info']['server']['log_levels']['global_level']) && $GLOBALS['phpgw_info']['server']['log_levels']['global_level'] == 'N')
+				{
+					echo "\n<br>" . lang('ERROR Notice: %1 in %2 at line %3', $error_msg, $error_file, $error_line) . "<br>\n"; //this will be commented in the final version
+					echo '<pre>' . phpgw_parse_backtrace($bt) . '<pre>';
+				}
 			//No default, we just ignore it, for now
 		}
 	}
