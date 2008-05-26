@@ -92,9 +92,10 @@
 		public static function read($id)
 		{
 			$id = $GLOBALS['phpgw']->db->db_addslashes($id);
-			$sql = "SELECT data FROM phpgw_sessions WHERE session_id = {$id}";
+			$sql = "SELECT data FROM phpgw_sessions WHERE session_id = '{$id}'";
 
-			if ( isset($GLOBALS['phpgw_info']['server']['sessions_checkip']) && $GLOBALS['phpgw_info']['server']['sessions_checkip'] )
+			if ( isset($GLOBALS['phpgw_info']['server']['sessions_checkip'])
+				&& $GLOBALS['phpgw_info']['server']['sessions_checkip'] )
 			{
 				$ip = phpgw::get_var('REMOTE_ADDR', 'ip', 'SERVER', '0.0.0.0');
 				$sql .= " AND ip = '{$ip}'";
