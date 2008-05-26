@@ -42,7 +42,7 @@
 			$this->account	= $GLOBALS['phpgw_info']['user']['account_id'];
 			$this->bocommon		= CreateObject('property.bocommon');
 			$this->db           	= $this->bocommon->new_db();
-			$this->db2           	= $this->bocommon->new_db();
+			$this->db2           	= $this->bocommon->new_db($this->db);
 
 			$this->join			= $this->bocommon->join;
 			$this->left_join	= $this->bocommon->left_join;
@@ -81,7 +81,7 @@
 				$r_agreement_id	= (isset($data['r_agreement_id'])?$data['r_agreement_id']:'');
 				$detail			= (isset($data['detail'])?$data['detail']:'');
 				$loc1			= (isset($data['loc1'])?$data['loc1']:'');
-				
+
 			}
 
 			$choice_table = 'phpgw_cust_choice';
@@ -102,8 +102,8 @@
 				{
 					$paranthesis .='(';
 					$joinmethod .= " $this->join fm_r_agreement_item ON ( $entity_table.id =fm_r_agreement_item.agreement_id))";
-					
-				
+
+
 					$cols .= ",location_code";
 				}
 `*/
@@ -332,12 +332,12 @@
 				while ($this->db->next_record())
 				{
 					$filter_id[]			= $this->db->f('agreement_id');
-	
+
 				}
 
 				if(is_array($filter_id))
 				{
-					$filtermethod .= " $where $entity_table.id in (" . implode(',', $filter_id)  .")";	
+					$filtermethod .= " $where $entity_table.id in (" . implode(',', $filter_id)  .")";
 					$where= 'AND';
 				}
 			}
@@ -593,9 +593,9 @@
 			$this->db->query("SELECT first_name,last_name FROM fm_tenant WHERE id = $id");
 			$this->db->next_record();
 			return stripslashes($this->db->f('first_name')) . ' ' . stripslashes($this->db->f('last_name'));
-		
+
 		}
-		
+
 		function read_single($r_agreement_id, $values = array())
 		{
 			$table = 'fm_r_agreement';
@@ -651,7 +651,7 @@
 				$values['cost']					= $this->db->f('cost');
 				$values['tenant_id']			= $this->db->f('tenant_id');
 				$values['rental_type_id']		= $this->db->f('rental_type_id');
-					
+
 				if ( isset($values['attributes']) && is_array($values['attributes']) )
 				{
 					foreach ( $values['attributes'] as &$attr )
@@ -746,7 +746,7 @@
 			$vals[] = $values['location_code'];
 			$cols[] = 'rental_type_id';
 			$vals[] = $values['rental_type_id'];
-			
+
 /*			while (is_array($values['location']) && list($input_name,$value) = each($values['location']))
 			{
 				if($value)
@@ -821,7 +821,7 @@
 			else
 			{
 				$start_date	= $values['start_date'];
-			
+
 			}
 
 			if ($values['end_date'])
@@ -949,8 +949,8 @@
 			$value_set['cost']	= $values['cost'];
 			$value_set['address']	= $address;
 			$value_set['rental_type_id']	= $values['rental_type_id'];
-			
-			
+
+
 			if($value_set)
 			{
 				$value_set	= ',' . $this->bocommon->validate_db_update($value_set);
@@ -980,7 +980,7 @@
 				$this->db->query("SELECT tenant_id,to_date from fm_r_agreement_item_history WHERE agreement_id=" . intval($values['agreement_id']) . ' AND item_id=' . intval($item_id) . ' AND id=' . intval($values['id'][$item_id]));
 
 				$this->db->next_record();
-				
+
 				if(!$values['tenant_id'])
 				{
 					$values['tenant_id'] = $this->db->f('tenant_id');
@@ -989,7 +989,7 @@
 				if ($values['start_date'])
 				{
 					$start_date = $values['start_date'];
-					if($start_date < $this->db->f('to_date')) 
+					if($start_date < $this->db->f('to_date'))
 					{
 						$start_date = $this->db->f('to_date') + (3600 * 24);
 					}
@@ -998,7 +998,7 @@
 				{
 					$start_date	= $this->db->f('to_date') + (3600 * 24);
 				}
-	
+
 				if ($values['end_date'])
 				{
 					$end_date = $values['end_date'];
@@ -1148,7 +1148,7 @@
 			if ($values['start_date'])
 			{
 				$start_date = $values['start_date'];
-				if($start_date < $this->db->f('to_date')) 
+				if($start_date < $this->db->f('to_date'))
 				{
 					$start_date = $this->db->f('to_date') + (3600 * 24);
 				}
@@ -1172,7 +1172,7 @@
 				. "VALUES (" . $values['r_agreement_id'] . "," . $values['c_id'] . "," . $id .",1," . $this->floatval($values['budget_cost']) . "," . $start_date . "," . $end_date
 				. "," . $this->account . "," . $this->floatval($values['override_fraction']) .")",__LINE__,__FILE__);
 
-			
+
 			$this->db->query("UPDATE fm_r_agreement_c_history set current_record = NULL WHERE agreement_id =" . $values['r_agreement_id'] . 'AND c_id=' . $values['c_id'] . 'AND id=' . ($id-1),__LINE__,__FILE__);
 			$receipt['r_agreement_id']= $values['r_agreement_id'];
 			$receipt['c_id']= $values['c_id'];
@@ -1192,7 +1192,7 @@
 			. " ON ( fm_r_agreement_common.agreement_id =fm_r_agreement_c_history.agreement_id "
 			. " AND fm_r_agreement_common.id =fm_r_agreement_c_history.c_id)"
 			. " WHERE  fm_r_agreement_common.agreement_id = $agreement_id AND current_record = 1 ORDER BY fm_r_agreement_c_history.c_id ASC";
-		
+
 			$this->db->query($sql,__LINE__,__FILE__);
 
 			$this->total_records = $this->db->num_rows();
@@ -1237,7 +1237,7 @@
 				);
 			}
 			return $common;
-		}	
+		}
 
 		function read_common_history($data)
 		{
@@ -1246,7 +1246,7 @@
 				$r_agreement_id	= (isset($data['r_agreement_id'])?$data['r_agreement_id']:0);
 				$c_id	= (isset($data['c_id'])?$data['c_id']:0);
 			}
-			
+
 			$table = 'fm_r_agreement_common';
 //echo $sql;
 			$sql ="SELECT b_account,budget_cost, actual_cost,fm_r_agreement_c_history.id,from_date,"
@@ -1255,7 +1255,7 @@
 			. " ON ( fm_r_agreement_common.agreement_id =fm_r_agreement_c_history.agreement_id "
 			. " AND fm_r_agreement_common.id =fm_r_agreement_c_history.c_id)"
 			. " WHERE  fm_r_agreement_common.agreement_id = $r_agreement_id AND c_id=$c_id ORDER BY fm_r_agreement_c_history.c_id ASC";
-		
+
 			$this->db->query($sql,__LINE__,__FILE__);
 
 			$this->total_records = $this->db->num_rows();

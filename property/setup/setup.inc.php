@@ -12,7 +12,7 @@
 	*/
 
 	$setup_info['property']['name']		= 'property';
-	$setup_info['property']['version']	= '0.9.17.543';
+	$setup_info['property']['version']	= '0.9.17.544';
 	$setup_info['property']['app_order']	= 8;
 	$setup_info['property']['enable']	= 1;
 	$setup_info['property']['app_group']	= 'office';
@@ -97,7 +97,6 @@
 		'fm_b_account',
 		'fm_b_account_category',
 		'fm_workorder',
-		'fm_workorder_category',
 		'fm_workorder_history',
 		'fm_workorder_status',
 		'fm_activities',
@@ -114,7 +113,6 @@
 		'fm_request_condition_type',
 		'fm_request_condition',
 		'fm_request_status',
-		'fm_request_category',
 		'fm_request_history',
 		'fm_template',
 		'fm_template_hours',
@@ -123,8 +121,8 @@
 		'fm_project',
 		'fm_projectbranch',
 		'fm_project_history',
+		'fm_tts_status',
 		'fm_tts_tickets',
-		'fm_tts_category',
 		'fm_tts_history',
 		'fm_tts_views',
 		'fm_ecoart',
@@ -182,6 +180,8 @@
 		'fm_budget',
 		'fm_budget_period',
 		'fm_budget_cost',
+		'fm_responsibility',
+		'fm_responsibility_contact'
 	);
 
 	/* The hooks this app includes, needed for hooks registration */

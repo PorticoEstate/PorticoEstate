@@ -369,10 +369,10 @@
 				'table_add'						=> $table_add,
 
 				'tenant_link'					=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uilookup.tenant')),
-				'lang_select_tenant_statustext'	=> lang('Select the customer by klicking this link'),
+				'lang_select_tenant_statustext'	=> lang('Select the customer by clicking this link'),
 				'lang_tenant'					=> lang('customer'),
 				'property_link'					=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uilocation.index', 'lookup'=>1, 'type_id'=>1, 'lookup_name'=>0)),
-				'lang_select_property_statustext'=> lang('Select the property by klicking this link'),
+				'lang_select_property_statustext'=> lang('Select the property by clicking this link'),
 				'lang_property_statustext'		=> lang('Search by property'),
 				'lang_property'					=> lang('property'),
 				'customer_id'					=> $this->customer_id,
@@ -1523,7 +1523,7 @@
 				'files'								=> $r_agreement['files'],
 				'lang_files'						=> lang('files'),
 				'lang_filename'						=> lang('Filename'),
-				'lang_view_file_statustext'			=> lang('Klick to view file'),
+				'lang_view_file_statustext'			=> lang('click to view file'),
 
 				'edit_url'							=> $GLOBALS['phpgw']->link('/index.php',$link_data),
 				'lang_id'							=> lang('ID'),

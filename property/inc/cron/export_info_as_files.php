@@ -40,8 +40,8 @@
 		{
 		//	$this->currentapp		= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->bocommon			= CreateObject('property.bocommon');
-			$this->db     			= & $GLOBALS['phpgw']->db;
-			$this->db2				= clone($this->db);
+			$this->db				= $this->bocommon->new_db();
+			$this->db2				= $this->bocommon->new_db($this->db);
 			$this->soadmin_location	= CreateObject('property.soadmin_location');
 
 			$this->join				= $this->db->join;
@@ -165,7 +165,7 @@
 			$name = array('num', 'location_code', 'address', 'status', 'garanti_faser', 'servicefrekvens',
 			'service_firma', 'tlf_service', 'tlf_heishus', 'alarmtype', 'merknad_telefon', 'nhk_nummer',
 			'fabrikasjons_nr', 'heis_type', 'alarm_til', 'service_kontrakt', 'merknad');
-			
+
 			$filename= 'HEISER';
 			$sql = "SELECT * from fm_entity_1_1";
 
@@ -192,7 +192,7 @@
 		{
 			$descr = array('ID', 'Objekt', 'Bygg', 'Inngang', 'addresse', 'adresserbart', 'service_firma', 'Leverandør kontakt', 'vakttelefon', 'merknad_bbb', 'type anlegg', 'sprinkelanlegg', 'securitnet nr', 'tidsforsinkelse', 'Telenor tlf 1', 'Telenor tlf 12', 'BBB vakt 24 T');
 			$name = array('num', 'loc1', 'loc2', 'loc3', 'address', 'adreserbart', 'service_firma', 'lev_kontakt', 'vakttelefon', 'merknad_bbb', 'type_anlegg', 'sprinkel', 'securitnet_nr', 'tidsforsinkelse', 'telenor_1', 'telenor_2', 'vakt_24_bbb');
-			
+
 			$filename= 'BRANNALARMER';
 			$sql = "SELECT * from fm_entity_1_2";
 
@@ -203,7 +203,7 @@
 		{
 			$descr = array('ID', 'Objekt', 'Bygg', 'addresse', 'status', 'Anleggs type', 'Aggregat type', 'Filtertype', 'Antall filte', 'Plassering', 'Merknad');
 			$name = array('num', 'loc1', 'loc2', 'address', 'status', 'v_type', 'aggr_type', 'filtertype', 'f_antall', 'plassering', 'merknad');
-			
+
 			$filename= 'VENTILASJON';
 			$sql = "SELECT * from fm_entity_1_7";
 
@@ -214,7 +214,7 @@
 		{
 			$descr = array('ID', 'Objekt', 'Bygg', 'addresse', 'antall leiligh. PT', 'leverandør', 'kontakt person', 'kotakt tlf (bbb)', 'kotakt tlf (beboer)', 'Kunde nr leverandør', 'Kunde nr PT', 'Nett nr Post/tele', 'merknad');
 			$name = array('num', 'loc1', 'loc2', 'address', 'ant_leil_pt', 'leverandor', 'kontakt_person', 'k_tlf_bbb', 'k_tlf_beboer', 'kunde_nr_lev', 'kunde_nr_pt', 'nett_nr_pt', 'merknad');
-			
+
 			$filename= 'KABEL-TV';
 			$sql = "SELECT * from fm_entity_1_3";
 
@@ -225,7 +225,7 @@
 		{
 			$descr = array('ID', 'Objekt', 'Bygg', 'Inngang', 'addresse', 'status', 'eier', 'type anlegg', 'Drift start', 'Leverandør', 'Telefon nr', 'Kontakt person', 'service avtale', 'plassering av sentral', 'merknad');
 			$name = array('num', 'loc1', 'loc2', 'loc3', 'address', 'status', 'eier', 'type', 'dr_start', 'org_name', 'lev_tlf', 'kont_person', 'service_avtale', 'plassering', 'merknad');
-			
+
 			$filename= 'SPRINKLER';
 			$sql = "SELECT fm_entity_1_9.* , fm_vendor.org_name from fm_entity_1_9 left join fm_vendor on fm_entity_1_9.leverandor = fm_vendor.id ";
 
@@ -237,7 +237,7 @@
 		{
 			$descr = array('ID', 'Objekt', 'Bygg', 'addresse', 'status', 'beskrivelse', 'merknad');
 			$name = array('num', 'loc1', 'loc2', 'address', 'status', 'beskrivelse', 'merknad');
-			
+
 			$filename= 'ROYKVENTILASJON';
 			$sql = "SELECT * from fm_entity_1_8";
 
@@ -248,7 +248,7 @@
 		{
 			$descr = array('Objekt', 'Bygg','Inngang','Leieobjekt','Flyttenr','Reskontronr', 'Objekt Navn', 'Etternavn', 'Fornavn', 'Kontakt tlf','Gatenavn','GateNr','Etasje','Antall Rom','Boareal','Ferdigdato','klargjøringsstatus');
 			$name = array('loc1', 'loc2', 'loc3','loc4','flyttenr','reskontronr','loc1_name', 'last_name', 'first_name', 'contact_phone','street_name','street_number','etasje','antallrom','boareal','finnish_date','klargj_st');
-		
+
 			$filename= 'LEIETAKER';
 			$sql = "SELECT fm_location4.location_code,fm_location4.loc1,fm_location4.loc2,fm_location4.loc3,fm_location4.loc4,fm_location4.flyttenr,"
 			. " (fm_location4.loc1 || '.' || fm_location4.loc4 || '.' || fm_location4.flyttenr)as reskontronr, fm_location1.loc1_name,fm_tenant.id as tenant_id,fm_tenant.last_name,fm_tenant.first_name,fm_tenant.contact_phone,fm_streetaddress.descr as street_name,street_number,fm_location4.street_id,fm_location4.etasje,fm_location4.antallrom,fm_location4.boareal,"
@@ -261,14 +261,14 @@
 		{
 			$descr = array('ID', 'Objekt', 'Bygg', 'Addresse','System Nr');
 			$name = array('num', 'loc1', 'loc2', 'address', 'system_nr');
-			
+
 			$filename= 'NOEKLER';
 			$sql = "SELECT * from fm_entity_1_6";
 
 			$this->export_to_file($name,$descr,$filename, $sql);
 		}
 
-		
+
 		function export_as_excel($name,$descr,$filename, $sql)
 		{
 			$workbook	= CreateObject('phpgwapi.excel', "{$this->saveto}/{$filename}.xls");
@@ -276,26 +276,26 @@
 			$worksheet1 =& $workbook->add_worksheet('First One');
 
 			$this->db->query($sql,__LINE__,__FILE__);
-			
+
 			for ($i=0;$i<count($descr);$i++)
 			{
 				$worksheet1->write_string(0, $i, $this->bocommon->utf2ascii($descr[$i]));
 			}
 
 			$worksheet1->write_string(0, $i, lang('date'));
-			
+
 			$line =1;
 			while ($this->db->next_record())
 			{
 				for ($i=0;$i<count($name);$i++)
 				{
-					$worksheet1->write($line,$i, $this->bocommon->utf2ascii($this->db->f($name[$i])));					
+					$worksheet1->write($line,$i, $this->bocommon->utf2ascii($this->db->f($name[$i])));
 				}
 				$worksheet1->write($line,$i, $GLOBALS['phpgw']->common->show_date(time(),$this->dateformat));
 				$line++;
 			}
-			
-			
+
+
 			$workbook->close();
 		}
 
@@ -303,12 +303,12 @@
 		{
 
 			$fp = fopen("{$this->saveto}/{$filename}.txt",'wb');
-			
+
 		    $descr[] = 'Dato';
 		    fputcsv($fp, $descr, ';');
 
 			$this->db->query($sql,__LINE__,__FILE__);
-						
+
 			$j=0;
 			while ($this->db->next_record())
 			{
@@ -325,9 +325,9 @@
 			    fputcsv($fp, $line, ';');
 			}
 
-			fclose($fp);			
+			fclose($fp);
 		}
-		
+
 		function export_as_xml($name,$descr,$filename, $sql)
 		{
 		    $descr[] = 'Dato';
@@ -355,9 +355,9 @@
 			fwrite($fp,$xml);
 			fclose($fp);
 		}
-		
-/*		
-		function arrayToXML($a) 
+
+/*
+		function arrayToXML($a)
 		{
 			$xml = '';
 
@@ -367,7 +367,7 @@
 			return $xml;
 		}
 */
-		
+
 	}
-	
+
 

@@ -93,15 +93,17 @@
 	}
 	create_select_box('Default Priority TTS','prioritydefault',$priority,'The default priority for tickets in the Helpdesk-submodule');
 
-	$socategory = CreateObject('property.socategory');
+	$cats		= CreateObject('phpgwapi.categories');
+	$cats->app_name = 'property.ticket';
 
-	$category_tts= $socategory->select_category_list(array('type'=>'ticket'));
+	$cat_data	= $cats->formatted_xslt_list(array('globals' => true, 'link_data' =>array()));
+	$cat_list = $cat_data['cat_list'];
 
-	if (is_array($category_tts))
+	if (is_array($cat_list))
 	{
-		foreach ( $category_tts as $entry )
+		foreach ( $cat_list as $entry )
 		{
-			$_categories_tts[$entry['id']] = $entry['name'];
+			$_categories_tts[$entry['cat_id']] = $entry['name'];
 		}
 	}
 
@@ -138,7 +140,6 @@
 	$socommon= CreateObject('property.socommon');
 
 	$status_list= $soworkorder->select_status_list();
-	$category_list= $socategory->select_category_list(array('type'=>'wo'));
 
 	$district_list= $socommon->select_district_list();
 
@@ -149,13 +150,20 @@
 			$_status[$entry['id']] = $entry['name'];
 		}
 	}
-	if ($category_list)
+
+	$cats->app_name = 'property.project';
+
+	$cat_data	= $cats->formatted_xslt_list(array('globals' => true, 'link_data' =>array()));
+	$cat_list = $cat_data['cat_list'];
+
+	if (is_array($cat_list))
 	{
-		foreach ( $category_list as $entry )
+		foreach ( $cat_list as $entry )
 		{
-			$_categories[$entry['id']] = $entry['name'];
+			$_categories_project[$entry['cat_id']] = $entry['name'];
 		}
 	}
+
 	if ($district_list)
 	{
 		foreach ( $district_list as $entry )
@@ -167,7 +175,7 @@
 	unset($soworkorder);
 	unset($socommon);
 	create_select_box('Default project status','project_status',$_status,'The default status for your projects and workorders');
-	create_select_box('Default project categories','project_category',$_categories,'The default category for your projects and workorders');
+	create_select_box('Default project categories','project_category',$_categories_project,'The default category for your projects and workorders');
 	create_select_box('Default district-filter','default_district',$_districts,'Your default district-filter ');
 
 	create_input_box('Your Cellphone','cellphone');
@@ -183,7 +191,6 @@
 	$GLOBALS['phpgw']->preferences->add("email","address",$email_property);
 	$GLOBALS['phpgw']->preferences->save_repository();
 
-	$cats		= CreateObject('phpgwapi.categories');
 	$cats->app_name = 'fm_vendor';
 	$cat_data	= $cats->formatted_xslt_list(array('globals' => true, 'link_data' =>array()));
 	$cat_list = $cat_data['cat_list'];
@@ -199,6 +206,6 @@
 	create_select_box('Default vendor type','default_vendor_category',$_categories_vendor,'which agreement');
 	create_input_box('With of textarea','textareacols','With of textarea in forms');
 	create_input_box('Height of textarea','textarearows','Height of textarea in forms');
-	
+
 	create_select_box('show horisontal menues','horisontal_menus',array('no' => 'No','yes' => 'Yes'),'Horisontal menues are shown in top of page');
 	create_select_box('Tabel export format','export_format',array('excel' => 'Excel','csv' => 'CSV'),'Choose which format to export from the system for tables');

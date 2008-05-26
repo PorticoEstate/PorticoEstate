@@ -55,6 +55,8 @@
 		//	$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->so 			= CreateObject('property.soworkorder');
 			$this->bocommon 	= CreateObject('property.bocommon');
+			$this->cats					= CreateObject('phpgwapi.categories');
+			$this->cats->app_name		= 'property.project';
 
 			if ($session)
 			{
@@ -75,7 +77,7 @@
 			$end_date	= phpgw::get_var('end_date');
 			$b_group	= phpgw::get_var('b_group');
 			$paid	= phpgw::get_var('paid', 'bool');
-			
+
 			if ($start)
 			{
 				$this->start=$start;
@@ -358,7 +360,8 @@
 				}
 				else if ($value['status'] == 'T' || $value['status'] == 'TO')
 				{
-					$record_history[$i]['value_new_value']	= $this->so->read_single_project_category($value['new_value']);
+					$category 								= $this->cats->return_single($value['new_value']);
+					$record_history[$i]['value_new_value']	= $category[0]['name'];
 				}
 				else if ($value['status'] != 'O' && $value['new_value'])
 				{

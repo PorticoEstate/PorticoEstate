@@ -53,7 +53,7 @@
 		function property_uistandard_2()
 		{
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
-			
+
 			$type	= phpgw::get_var('type');
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] = phpgw::get_var('menu_selection');
 

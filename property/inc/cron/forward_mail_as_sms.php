@@ -13,7 +13,7 @@
 
 	/**
 	 * Description
-	 * usage: 
+	 * usage:
 	 * @package property
 	 */
 

@@ -535,24 +535,24 @@ key deliver location	property	fr	Endroit pour la livraison de la clé
 key fetch location	property	fr	Endroit pour la récupération de la clé
 Key responsible	property	fr	Responsable clé
 KID nr	property	fr	KID no
-Klick this button to start the import	property	fr	Cliquez sur ce bouton pour démarrer l'import
-Klick this link to edit the period	property	fr	Cliquez sur ce lien pour modifier la période
-Klick this link to enter the list of sub-invoices	property	fr	Cliquez sur ce lien pour entrer la liste des sous-factures
-klick this link to select	property	fr	Cliquez sur ce lien pour sélectionner
-Klick this link to select apartment	property	fr	Cliquez sur ce lien pour sélectionner l'appartement
-Klick this link to select budget account	property	fr	Cliquez sur ce lien pour sélectionner le compte budget
-Klick this link to select building	property	fr	Cliquez sur ce lien pour sélectionner l'immeuble
-Klick this link to select entrance	property	fr	Cliquez sur ce lien pour sélectionner l'entrée
-Klick this link to select equipment	property	fr	Cliquez sur ce lien pour sélectionner l'équipement
-klick this link to select owner from the addressbook	property	fr	Cliquez sur ce lien pour sélectionner le propriétaire depuis le carnet d'adresses
-Klick this link to select property	property	fr	Cliquez sur ce lien pour sélectionner la propriété
-Klick this link to select tenant	property	fr	Cliquez sur ce lien pour sélectionner le locataire
-Klick this link to select vendor	property	fr	Cliquez sur ce lien pour sélectionner le vendeur
-Klick this link to view the remark	property	fr	Cliquez sur ce lien pour voir la remarque
-Klick this to generate a request with this information	property	fr	Cliquez ceci pour générer une requête avec cette information
-Klick this to generate an order with this information	property	fr	Cliquez ceci pour générer un ordre avec cette information
-klick this to start a report	property	fr	Cliquez ceci pour démarrer un rapport
-klick to view file	property	fr	Cliquez pour visualiser le fichier
+click this button to start the import	property	fr	Cliquez sur ce bouton pour démarrer l'import
+click this link to edit the period	property	fr	Cliquez sur ce lien pour modifier la période
+click this link to enter the list of sub-invoices	property	fr	Cliquez sur ce lien pour entrer la liste des sous-factures
+click this link to select	property	fr	Cliquez sur ce lien pour sélectionner
+click this link to select apartment	property	fr	Cliquez sur ce lien pour sélectionner l'appartement
+click this link to select budget account	property	fr	Cliquez sur ce lien pour sélectionner le compte budget
+click this link to select building	property	fr	Cliquez sur ce lien pour sélectionner l'immeuble
+click this link to select entrance	property	fr	Cliquez sur ce lien pour sélectionner l'entrée
+click this link to select equipment	property	fr	Cliquez sur ce lien pour sélectionner l'équipement
+click this link to select owner from the addressbook	property	fr	Cliquez sur ce lien pour sélectionner le propriétaire depuis le carnet d'adresses
+click this link to select property	property	fr	Cliquez sur ce lien pour sélectionner la propriété
+click this link to select tenant	property	fr	Cliquez sur ce lien pour sélectionner le locataire
+click this link to select vendor	property	fr	Cliquez sur ce lien pour sélectionner le vendeur
+click this link to view the remark	property	fr	Cliquez sur ce lien pour voir la remarque
+click this to generate a request with this information	property	fr	Cliquez ceci pour générer une requête avec cette information
+click this to generate an order with this information	property	fr	Cliquez ceci pour générer un ordre avec cette information
+click this to start a report	property	fr	Cliquez ceci pour démarrer un rapport
+click to view file	property	fr	Cliquez pour visualiser le fichier
 kommune nr	property	fr	No de commune
 Kreditnota	property	fr	Nota crédit
 Labour cost	property	fr	Coût du travail
@@ -927,7 +927,7 @@ Select the part of town the building belongs to. To do not use a part of town - 
 Select the part of town the investment belongs to. To do not use a part of town -  select NO PART OF TOWN	property	fr	Choisir la partie de ville à laquelle l'investissement appartient. Pour ne pas utiliser de partie de ville - choisir AUCUNE PARTIE DE VILLE
 Select the part of town the property belongs to. To do not use a part of town -  select NO PART OF TOWN	property	fr	Choisir la partie de ville à laquelle la propriété appartient. Pour ne pas utiliser de partie de ville - choisir AUCUNE PARTIE DE VILLE
 Select the priority the selection belongs to.	property	fr	Choisir la priorité à laquelle la sélection appartient.
-Select the property by klicking this link	property	fr	Choisir la propriété en cliquant sur ce lien
+Select the property by clicking this link	property	fr	Choisir la propriété en cliquant sur ce lien
 Select the status the agreement belongs to. To do not use a category select NO STATUS	property	fr	Choisir le statut auquel l'agrément appartient. Pour ne pas utiliser de catégorie choisir PAS DE STATUT
 Select the status the document belongs to. To do not use a category select NO STATUS	property	fr	Choisir le statu auquel le document appartient. Pour ne pas utiliser de catégorie choisir PAS DE STATUT
 Select the street name	property	fr	Choisir le nom de la rue
@@ -944,9 +944,9 @@ Select the user the request belongs to. To do not use a category select NO USER	
 Select the user the selection belongs to. To do not use a user select NO USER	property	fr	Choisir l'utilisateur auquel la sélection appartient. Pour ne pas utiliser de catégorie choisir PAS D'UTILISATEUR
 Select the user the template belongs to. To do not use a category select NO USER	property	fr	Choisir l'utilisateur auquel le gabarit appartient. Pour ne pas utiliser de catégorie choisir PAS D'UTILISATEUR
 Select the user the workorder belongs to. To do not use a category select NO USER	property	fr	Choisir l'utilisateur auquel l'ordre de travail appartient. Pour ne pas utiliser de catégorie choisir PAS D'UTILISATEUR
-Select the vendor by klicking the button	property	fr	Choisir le vendeur en cliquant sur le bouton
-Select the vendor by klicking this button	property	fr	Choisir le vendeur en cliquant sur ce bouton
-Select the vendor by klicking this link	property	fr	Choisir le vendeur en cliquant sur ce lien
+Select the vendor by clicking the button	property	fr	Choisir le vendeur en cliquant sur le bouton
+Select the vendor by clicking this button	property	fr	Choisir le vendeur en cliquant sur ce bouton
+Select the vendor by clicking this link	property	fr	Choisir le vendeur en cliquant sur ce lien
 Select this budget account	property	fr	Choisir ce compte de budget
 Select this ns3420 - code	property	fr	Choisir ce code ns3420
 Select this street	property	fr	Choisir cette rue

@@ -95,7 +95,7 @@
 			$start_date	= phpgw::get_var('start_date');
 			$end_date	= phpgw::get_var('end_date');
 			$allrows	= phpgw::get_var('allrows', 'bool');
-		
+
 
 			$this->soadmin_entity 	= CreateObject('property.soadmin_entity',$entity_id,$cat_id);
 			$this->so 		= CreateObject('property.soentity',$entity_id,$cat_id);

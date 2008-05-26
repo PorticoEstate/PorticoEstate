@@ -2385,7 +2385,6 @@
 
 		$change = array
 		(
-			'/home/entity'				=> '/property/entity',
 			'/home/document'			=> '/property/document',
 			'/home/fmticket'			=> '/property/fmticket',
 			'/home/request'				=> '/property/request',
@@ -2395,6 +2394,13 @@
 			'/home/agreement'			=> '/property/agreement'
 		);
 
+		$GLOBALS['phpgw_setup']->oProc->query("SELECT * FROM fm_entity_category");
+		while ($GLOBALS['phpgw_setup']->oProc->next_record())
+		{
+			$entity = "entity_{$GLOBALS['phpgw_setup']->oProc->f('entity_id')}_{$GLOBALS['phpgw_setup']->oProc->f('id')}";
+			$change["/home/{$entity}"] = "/property/{$entity}";
+		}
+
 		$GLOBALS['phpgw_setup']->oProc->query("SELECT config_value FROM phpgw_config WHERE config_app = 'phpgwapi' AND config_name = 'files_dir'");
 		$GLOBALS['phpgw_setup']->oProc->next_record();
 		$files_dir = $GLOBALS['phpgw_setup']->oProc->f('config_value');
@@ -2403,8 +2409,11 @@
 
 		foreach($change as $change_from => $change_to)
 		{
-			@rename($files_dir . $change_from[$i], $files_dir . $change_to[$i]);
+			@rename($files_dir . $change_from, $files_dir . $change_to);
 		}
+
+		$change_from = array_keys($change); 
+        $change_to = array_values($change); 
 
 		$GLOBALS['phpgw_setup']->oProc->query("SELECT * FROM phpgw_vfs WHERE app = 'property'");
 		while ($GLOBALS['phpgw_setup']->oProc->next_record())
@@ -2423,6 +2432,136 @@
 		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
 		{
 			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.543';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}
+
+	/**
+	* Update property version from 0.9.17.543 to 0.9.17.544
+	* FIXME: Figure out the correct conversion of categories that comply with interlink
+ 	*/
+
+	$test[] = '0.9.17.543';
+	function property_upgrade0_9_17_543()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw']->db = $GLOBALS['phpgw_setup']->oProc->m_odb;
+		$GLOBALS['phpgw']->acl = CreateObject('phpgwapi.acl');
+		$GLOBALS['phpgw']->hooks = CreateObject('phpgwapi.hooks', $GLOBALS['phpgw_setup']->oProc->m_odb);
+		$cats = CreateObject('phpgwapi.categories', -1, 'property.ticket');
+
+		$GLOBALS['phpgw_setup']->oProc->query("SELECT * FROM fm_tts_category");
+		while ($GLOBALS['phpgw_setup']->oProc->next_record())
+		{
+			$categories[$GLOBALS['phpgw_setup']->oProc->f('id')]=array(
+				'name'	=> $GLOBALS['phpgw_setup']->oProc->f('descr', true),
+				'descr'	=> $GLOBALS['phpgw_setup']->oProc->f('descr', true),
+				'parent' => 'none',
+				'old_parent' => 0,
+				'access' => 'public'
+			);
+		}
+
+		foreach ($categories as $old => $values)
+		{
+			$cat_id = $cats->add($values);
+			$GLOBALS['phpgw_setup']->oProc->query("UPDATE fm_tts_tickets SET cat_id = $cat_id WHERE cat_id = $old");		
+		}
+
+		$cats->set_appname('property.project');
+
+		$GLOBALS['phpgw_setup']->oProc->query("SELECT * FROM fm_workorder_category");
+		while ($GLOBALS['phpgw_setup']->oProc->next_record())
+		{
+			$categories[$GLOBALS['phpgw_setup']->oProc->f('id')]=array(
+				'name'	=> $GLOBALS['phpgw_setup']->oProc->f('descr', true),
+				'descr'	=> $GLOBALS['phpgw_setup']->oProc->f('descr', true),
+				'parent' => 'none',
+				'old_parent' => 0,
+				'access' => 'public'
+			);
+		}
+
+		foreach ($categories as $old => $values)
+		{
+			$cat_id = $cats->add($values);
+			$GLOBALS['phpgw_setup']->oProc->query("UPDATE fm_project SET category = $cat_id WHERE category = $old");
+			$GLOBALS['phpgw_setup']->oProc->query("UPDATE fm_request SET category = $cat_id WHERE category = $old");		
+		}
+
+		$GLOBALS['phpgw_setup']->oProc->DropTable('fm_tts_category');
+		$GLOBALS['phpgw_setup']->oProc->DropTable('fm_workorder_category');
+		$GLOBALS['phpgw_setup']->oProc->DropTable('fm_request_category');
+
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('fm_tts_tickets','status',array('type' => 'varchar','precision' => '2','nullable' => False));
+
+		$GLOBALS['phpgw_setup']->oProc->CreateTable(
+			'fm_responsibility', array(
+				'fd' => array(
+					'id' => array('type' => 'auto','precision' => '4','nullable' => False),
+					'name' => array('type' => 'varchar', 'precision' => 50,'nullable' => False),
+					'descr' => array('type' => 'varchar', 'precision' => 255,'nullable' => True),
+					'active' => array('type' => 'int','precision' => 2,'nullable' => True),
+					'cat_id' => array('type' => 'int','precision' => 4,'nullable' => False),
+					'created_on' => array('type' => 'int', 'precision' => 4,'nullable' => False),
+					'created_by' => array('type' => 'int', 'precision' => 4,'nullable' => False),
+				),
+				'pk' => array('id'),
+				'fk' => array(
+					'phpgw_categories' => array('cat_id' => 'cat_id')
+				),
+				'ix' => array(),
+				'uc' => array()
+			)
+		);
+
+		$GLOBALS['phpgw_setup']->oProc->CreateTable(
+			'fm_responsibility_contact', array(
+				'fd' => array(
+					'id' => array('type' => 'auto','precision' => '4','nullable' => False),
+					'responsibility_id' => array('type' => 'int', 'precision' => 4,'nullable' => False),
+					'contact_id' => array('type' => 'int', 'precision' => 4,'nullable' => True),
+					'location_code' => array('type' => 'varchar', 'precision' => 20,'nullable' => True),
+					'p_num' => array('type' => 'varchar', 'precision' => 15,'nullable' => True),
+					'p_entity_id' => array('type' => 'int', 'precision' => 4,'nullable' => True,'default' => '0'),
+					'p_cat_id' => array('type' => 'int', 'precision' => 4,'nullable' => True,'default' => '0'),
+					'priority' => array('type' => 'int', 'precision' => 4,'nullable' => True),
+					'active_from' => array('type' => 'int', 'precision' => 4,'nullable' => True),
+					'active_to' => array('type' => 'int', 'precision' => 4,'nullable' => True),
+					'created_on' => array('type' => 'int', 'precision' => 4,'nullable' => False),
+					'created_by' => array('type' => 'int', 'precision' => 4,'nullable' => False),
+					'expired_at' => array('type' => 'int', 'precision' => 4,'nullable' => True),
+					'expired_by' => array('type' => 'int', 'precision' => 4,'nullable' => True),
+					'remark' => array('type' => 'text','nullable' => True),
+				),
+				'pk' => array('id'),
+				'fk' => array(
+					'fm_responsibility' => array('responsibility_id' => 'id'),
+					'phpgw_contact' => array('contact_id' => 'contact_id')
+				),
+				'ix' => array('location_code'),
+				'uc' => array()
+			)
+		);
+
+		$GLOBALS['phpgw_setup']->oProc->CreateTable(
+			'fm_tts_status', array(
+				'fd' => array(
+					'id' => array('type' => 'auto','precision' => '4','nullable' => False),
+					'name' => array('type' => 'varchar','precision' => '50','nullable' => False),
+					'color' => array('type' => 'varchar','precision' => '10','nullable' => True)
+				),
+				'pk' => array('id'),
+				'fk' => array(),
+				'ix' => array(),
+				'uc' => array()
+			)
+		);
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.544';
 			return $GLOBALS['setup_info']['property']['currentver'];
 		}
 	}

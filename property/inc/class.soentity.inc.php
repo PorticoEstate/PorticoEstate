@@ -47,7 +47,7 @@
 			$this->account		= $GLOBALS['phpgw_info']['user']['account_id'];
 			$this->bocommon		= CreateObject('property.bocommon');
 			$this->db           = $this->bocommon->new_db();
-			$this->db2          = $this->bocommon->new_db();
+			$this->db2           	= $this->bocommon->new_db($this->db);
 
 			$this->join			= $this->bocommon->join;
 			$this->left_join	= $this->bocommon->left_join;
@@ -210,7 +210,7 @@
 						'datatype'	=> $this->db->f('datatype'),
 						'attrib_id'	=> $this->db->f('id')
 					);
-	
+
 					$i++;
 				}
 
@@ -392,7 +392,7 @@
 						else if($cols_return_extra[$i]['datatype']=='CH' && $value)
 						{
 							$ch= unserialize($value);
-	
+
 							if (isset($ch) AND is_array($ch))
 							{
 								for ($k=0;$k<count($ch);$k++)
@@ -754,7 +754,7 @@
 					}
 
 					if($entry['history'] == 1)
-					{						
+					{
 						$this->db->query("select " . $entry['name'] . " from $table WHERE id=" . $values['id'],__LINE__,__FILE__);
 						$this->db->next_record();
 						$old_value = $this->db->f($entry['name']);
@@ -799,7 +799,7 @@
 		}
 
 		function read_attrib_help($data)
-		{	
+		{
 			$entity_id = (isset($data['entity_id'])?$data['entity_id']:'');
 			$cat_id = (isset($data['cat_id'])?$data['cat_id']:'');
 			$attrib_id = (isset($data['attrib_id'])?$data['attrib_id']:'');

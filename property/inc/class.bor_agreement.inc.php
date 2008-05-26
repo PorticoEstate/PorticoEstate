@@ -89,7 +89,7 @@
 				$cat_id	= phpgw::get_var('cat_id', 'int');
 				$customer_id	= phpgw::get_var('tenant_id', 'int');
 				$member_id	= phpgw::get_var('member_id', 'int');
-				$loc1	= phpgw::get_var('loc1');	
+				$loc1	= phpgw::get_var('loc1');
 			}
 
 
@@ -271,7 +271,7 @@
 		{
 
 			$values['attributes'] = $this->custom->get_attribs('property', '.r_agreement', 0, '', 'ASC', 'attrib_sort', true, true);
-			
+
 			if(isset($data['r_agreement_id']) && $data['r_agreement_id'])
 			{
 				$values = $this->so->read_single($data['r_agreement_id'], $values);
@@ -307,7 +307,7 @@
 		function read_single_item($data)
 		{
 			$values['attributes'] = $this->custom->get_attribs('property', '.r_agreement.detail', 0, '', 'ASC', 'attrib_sort', true, true);
-			
+
 			if(isset($data['r_agreement_id']) && $data['r_agreement_id'] && isset($data['id']) && $data['id'])
 			{
 				$values = $this->so->read_single_item($data, $values);
@@ -367,7 +367,7 @@
 			{
 				$values['start_date']	= $this->bocommon->date_to_timestamp($values['start_date']);
 			}
-			
+
 			if($values['start_date'])
 			{
 				$values['end_date']	= $this->bocommon->date_to_timestamp($values['end_date']);
@@ -409,7 +409,7 @@
 			{
 				$values['start_date']	= $this->bocommon->date_to_timestamp($values['start_date']);
 			}
-			
+
 			if($values['start_date'])
 			{
 				$values['end_date']	= $this->bocommon->date_to_timestamp($values['end_date']);
@@ -478,7 +478,7 @@
 			$input_list[2]['name'] = lang('Building common');
 			$input_list[3]['id'] = 4;
 			$input_list[3]['name'] = lang('Shared use');
-			
+
 			$rental_type_list= $this->bocommon->select_list($selected,$input_list);
 
 			return $rental_type_list;
@@ -538,7 +538,7 @@
 			{
 				$values['start_date']	= $this->bocommon->date_to_timestamp($values['start_date']);
 			}
-			
+
 			if($values['start_date'])
 			{
 				$values['end_date']	= $this->bocommon->date_to_timestamp($values['end_date']);

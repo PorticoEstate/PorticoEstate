@@ -40,7 +40,7 @@
 		var $sort;
 		var $order;
 		var $cat_id;
-		var $district_id;		
+		var $district_id;
 		var $year;
 		var $grouping;
 		var $revision;
@@ -311,7 +311,7 @@
 			$revision_list = $this->so->get_revision_list($year,$basis);
 			return $this->bocommon->select_list($selected,$revision_list);
 		}
-		
+
 		function get_year_filter_list($selected ='',$basis = '')
 		{
 			if(!isset($_GET['year']))

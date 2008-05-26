@@ -40,8 +40,8 @@
 		{
 		//	$this->currentapp		= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->bocommon			= CreateObject('property.bocommon');
-			$this->db     			= & $GLOBALS['phpgw']->db;
-			$this->db2				= clone($this->db);
+			$this->db				= $this->bocommon->new_db();
+			$this->db2				= $this->bocommon->new_db($this->db);
 
 			$this->join				= $this->db->join;
 			$this->like				= $this->db->like;
@@ -138,7 +138,7 @@
 		}
 
 		function update_location4()
-		{		
+		{
 			$fieldname = 'googlemap';
 			$area = "Bergen";
 			$sql = "SELECT fm_location4.location_code,fm_location4.loc1,fm_location4.loc2,fm_location4.loc3,fm_location4.loc4,"
@@ -155,5 +155,5 @@
 			}
 		}
 	}
-	
+
 

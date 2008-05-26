@@ -157,7 +157,7 @@
 		{
 			_debug_array($ifcfile);
 
-/*			$xmltool		= CreateObject('phpgwapi.xmltool');			
+/*			$xmltool		= CreateObject('phpgwapi.xmltool');
 			$xmldata = file_get_contents($ifcfile);
 			$xmltool->import_xml($xmldata);
 			$xml = $xmltool->export_var();
@@ -194,7 +194,7 @@ _debug_array('hei');
 		function read2()
 		{
 			$custom_attributes = $this->custom->get_attribs('property', $this->acl_location, 0, '', 'ASC', 'attrib_sort', true, true);
-			
+
 			$ifc_info = $this->so->read2(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
 											'cat_id'=>$this->cat_id,'allrows'=>$this->allrows,'filter'=>$this->filter,
 											'custom_attributes'=>$custom_attributes));
@@ -206,14 +206,14 @@ _debug_array('hei');
 		function read_single($id='')
 		{
 			$values['attributes'] = $this->custom->get_attribs('property', $this->acl_location, 0, '', 'ASC', 'attrib_sort', true, true);
-			
+
 			if($id)
 			{
 				$values = $this->so->read_single($id,$values);
 			}
-			
+
 			$values = $this->custom->prepare_attributes($values,$appname='property', $location=$this->acl_location);
-			
+
 			$dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
 			if(isset($values['entry_date']) && $values['entry_date'])
 			{
@@ -242,7 +242,7 @@ _debug_array('hei');
 					{
 						$values_attribute[$i]['value'] = str_replace(",",".",$values_attribute[$i]['value']);
 					}
-	
+
 					if($values_attribute[$i]['datatype']=='D' && $values_attribute[$i]['value'])
 					{
 						$values_attribute[$i]['value'] = date($this->dateformat,$this->date_to_timestamp($values_attribute[$i]['value']));
@@ -322,7 +322,7 @@ _debug_array('hei');
 		* Preserve attribute values from post in case of an error
 		*
 		* @param array $values_attribute attribute definition and values from posting
-		* @param array $values value set with 
+		* @param array $values value set with
 		* @return array Array with attribute definition and values
 		*/
 		function preserve_attribute_values($values='',$values_attribute='')

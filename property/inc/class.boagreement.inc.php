@@ -236,14 +236,14 @@
 		function read_single($data)
 		{
 			$values['attributes'] = $this->custom->get_attribs('property', '.agreement', 0, '', 'ASC', 'attrib_sort', true, true);
-			
+
 			if(isset($data['agreement_id']) && $data['agreement_id'])
 			{
 				$values = $this->so->read_single($data['agreement_id'], $values);
 			}
-			
+
 			$values = $this->custom->prepare_attributes($values, 'property', '.agreement');
-			
+
 			$dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
 			if(isset($values['entry_date']) && $values['entry_date'])
 			{
@@ -354,7 +354,7 @@
 		{
 			$this->so->delete($agreement_id);
 		}
-	
+
 		function column_list($selected='',$allrows='')
 		{
 			if(!$selected)
@@ -408,7 +408,7 @@
 
 			return $this->bocommon->select_list($selected,$status_entries);
 		}
-		
+
 		function get_activity_descr($id)
 		{
 			return $this->so->get_activity_descr($id);

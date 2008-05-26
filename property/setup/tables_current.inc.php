@@ -474,16 +474,6 @@
 			'ix' => array(),
 			'uc' => array()
 		),
-		'fm_workorder_category' => array(
-			'fd' => array(
-				'id' => array('type' => 'int','precision' => '4','nullable' => False),
-				'descr' => array('type' => 'varchar','precision' => '50','nullable' => True)
-			),
-			'pk' => array('id'),
-			'fk' => array(),
-			'ix' => array(),
-			'uc' => array()
-		),
 		'fm_workorder_status' => array(
 			'fd' => array(
 				'id' => array('type' => 'varchar','precision' => '20','nullable' => False),
@@ -765,16 +755,6 @@
 			'ix' => array(),
 			'uc' => array()
 		),
-		'fm_request_category' => array(
-			'fd' => array(
-				'id' => array('type' => 'int','precision' => '4','nullable' => False),
-				'descr' => array('type' => 'varchar','precision' => '50','nullable' => True)
-			),
-			'pk' => array('id'),
-			'fk' => array(),
-			'ix' => array(),
-			'uc' => array()
-		),
 		'fm_ns3420' => array(
 			'fd' => array(
 				'id' => array('type' => 'varchar','precision' => '20','nullable' => False),
@@ -793,6 +773,17 @@
 			'ix' => array(),
 			'uc' => array()
 		),
+		'fm_tts_status' => array(
+			'fd' => array(
+				'id' => array('type' => 'auto','nullable' => False),
+				'name' => array('type' => 'varchar','precision' => '50','nullable' => False),
+				'color' => array('type' => 'varchar','precision' => '10','nullable' => True)
+			),
+			'pk' => array('id'),
+			'ix' => array(),
+			'ix' => array(),
+			'uc' => array()
+		),
 		'fm_tts_tickets' => array(
 			'fd' => array(
 				'id' => array('type' => 'auto','nullable' => False),
@@ -804,7 +795,7 @@
 				'cat_id' => array('type' => 'int','precision' => '4','nullable' => True),
 				'billable_hours' => array('type' => 'decimal','precision' => '8','scale' => '2','nullable' => True),
 				'billable_rate' => array('type' => 'decimal','precision' => '8','scale' => '2','nullable' => True),
-				'status' => array('type' => 'char','precision' => '1','nullable' => False),
+				'status' => array('type' => 'varchar','precision' => '2','nullable' => False),
 				'details' => array('type' => 'text','nullable' => False),
 				'location_code' => array('type' => 'varchar','precision' => '50','nullable' => True),
 				'p_num' => array('type' => 'varchar','precision' => '15','nullable' => True),
@@ -836,16 +827,6 @@
 			'pk' => array(),
 			'ix' => array(),
 			'fk' => array(),
-			'uc' => array()
-		),
-		'fm_tts_category' => array(
-			'fd' => array(
-				'id' => array('type' => 'int','precision' => '4','nullable' => False),
-				'descr' => array('type' => 'varchar','precision' => '255','nullable' => False)
-			),
-			'pk' => array('id'),
-			'fk' => array(),
-			'ix' => array(),
 			'uc' => array()
 		),
 		'fm_ecoart' => array(
@@ -1919,5 +1900,48 @@
 			'fk' => array(),
 			'ix' => array(),
 			'uc' => array('year','month','b_account_id')
-		)
+		),
+		'fm_responsibility' => array(
+			'fd' => array(
+				'id' => array('type' => 'auto','precision' => '4','nullable' => False),
+				'name' => array('type' => 'varchar', 'precision' => 50,'nullable' => False),
+				'descr' => array('type' => 'varchar', 'precision' => 255,'nullable' => True),
+				'active' => array('type' => 'int','precision' => 2,'nullable' => True),
+				'cat_id' => array('type' => 'int','precision' => 4,'nullable' => False),
+				'created_on' => array('type' => 'int', 'precision' => 4,'nullable' => False),
+				'created_by' => array('type' => 'int', 'precision' => 4,'nullable' => False),
+			),
+			'pk' => array('id'),
+			'fk' => array(
+				'phpgw_categories' => array('cat_id' => 'cat_id')
+			),
+			'ix' => array(),
+			'uc' => array()
+		),
+		'fm_responsibility_contact' => array(
+			'fd' => array(
+				'id' => array('type' => 'auto','precision' => '4','nullable' => False),
+				'responsibility_id' => array('type' => 'int', 'precision' => 4,'nullable' => False),
+				'contact_id' => array('type' => 'int', 'precision' => 4,'nullable' => True),
+				'location_code' => array('type' => 'varchar', 'precision' => 20,'nullable' => True),
+				'p_num' => array('type' => 'varchar', 'precision' => 15,'nullable' => True),
+				'p_entity_id' => array('type' => 'int', 'precision' => 4,'nullable' => True,'default' => '0'),
+				'p_cat_id' => array('type' => 'int', 'precision' => 4,'nullable' => True,'default' => '0'),
+				'priority' => array('type' => 'int', 'precision' => 4,'nullable' => True),
+				'active_from' => array('type' => 'int', 'precision' => 4,'nullable' => True),
+				'active_to' => array('type' => 'int', 'precision' => 4,'nullable' => True),
+				'created_at' => array('type' => 'int', 'precision' => 4,'nullable' => False),
+				'created_by' => array('type' => 'int', 'precision' => 4,'nullable' => False),
+				'expired_on' => array('type' => 'int', 'precision' => 4,'nullable' => True),
+				'expired_by' => array('type' => 'int', 'precision' => 4,'nullable' => True),
+				'remark' => array('type' => 'text','nullable' => True),
+			),
+			'pk' => array('id'),
+			'fk' => array(
+				'fm_responsibility' => array('responsibility_id' => 'id'),
+				'phpgw_contact' => array('contact_id' => 'contact_id')
+			),
+			'ix' => array('location_code'),
+			'uc' => array()
+ 		)
 	);

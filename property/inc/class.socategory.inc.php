@@ -40,7 +40,7 @@
 			$this->account	= $GLOBALS['phpgw_info']['user']['account_id'];
 			$this->bocommon		= CreateObject('property.bocommon');
 			$this->db           	= $this->bocommon->new_db();
-			$this->db2           	= $this->bocommon->new_db();
+			$this->db2           	= $this->bocommon->new_db($this->db);
 
 			$this->join			= $this->bocommon->join;
 			$this->like			= $this->bocommon->like;
@@ -139,18 +139,6 @@
 				case 'tender_chapter':
 					$table='fm_chapter';
 					break;
-				case 'ticket':
-					$table='fm_tts_category';
-					break;
-				case 'request':
-					$table='fm_workorder_category';
-					break;
-				case 'project':
-					$table='fm_workorder_category';
-					break;
-				case 'wo':
-					$table='fm_workorder_category';
-					break;
 				case 'location':
 					$table='fm_location' . $type_id . '_category';
 					break;
@@ -226,7 +214,7 @@
 		{
 			$table = $this->select_table($data['type'],$data['type_id']);
 			$order		= isset($data['order']) && $data['order'] == 'id' ? 'id' :'descr';
-			
+
 			$this->db->query("SELECT id, descr FROM $table ORDER BY $order");
 
 			while ($this->db->next_record())

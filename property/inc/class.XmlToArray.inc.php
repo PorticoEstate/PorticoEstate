@@ -1,7 +1,7 @@
 <?php
 	/**
 	* XmlToArray
-	* @author Rasmus Andersson {@link http://rasmusandersson.se/} 
+	* @author Rasmus Andersson {@link http://rasmusandersson.se/}
 	* @author Eric Rosebrock http://www.phpfreaks.com
 	* @author Sigurd Nes <sigurdne@online.no>
 	* @copyright Copyright (C) 2002,2003,2004,2005,2006,2007 Free Software Foundation, Inc. http://www.fsf.org/
@@ -75,32 +75,32 @@
 	* @subpackage xml
 	*/
 
-	class XmlToArray 
+	class XmlToArray
 	{
 		/**
 		 * @var string
 		 * @access private
 		 */
 		var $_encoding = 'ISO-8859-1';
-		
+
 		/**
 		 * @var bool
 		 * @access private
 		 */
 		var $_strip_linebreaks = false;
-		
+
 		/**
 		 * @var bool
 		 * @access private
 		 */
 		var $_includesRoot = false;
-		
+
 		/**
 		 * @var string|null
 		 * @access private
 		 */
 		var $_valueModifier = NULL;
-		
+
 		/**
 		 * Is set automaticaly by parse() if the data matches _seems_utf8()
 		 * then runs utf8_decode() on all values.
@@ -109,14 +109,14 @@
 		 * @access private
 		 */
 		var $_decodeUtf8 = false;
-		
+
 		/**
 		 * @var bool
 		 * @access private
 		 */
 		var $_automaticUtf8Decoding = true;
-		
-		
+
+
 		/**
 		 * Contains the error trace
 		 *
@@ -124,29 +124,29 @@
 		 * @access private
 		 */
 		var $_error_trace = array();
-		
+
 		/**
 		 * @var float
 		 * @access private
 		 */
 		var $_error_start_timer = 0.0;
-		
-		
+
+
 		/**
 		 * @var bool
 		 * @access private
 		 */
 		var $_include_empty_values = false;
-		
+
 		/** @access private*/
 		var $_lower_case_tags = false;
-		
-		
+
+
 		/**
 		* @var bool
 		*/
 		var $get_attributes = false;
-	
+
 		/**
 		 * Create an instance of this class as an object and set some options.
 		 *
@@ -157,7 +157,7 @@
 		 * @return  object  XmlToArray instance
 		 */
 		function XmlToArray ( $encoding = NULL, $stripLinebreaks = NULL, $includeRootElement = NULL,
-							   $automaticUtf8Decoding = NULL, $includeEmptyValues = NULL ) 
+							   $automaticUtf8Decoding = NULL, $includeEmptyValues = NULL )
 		{
 			if( is_string($encoding) )
 			{
@@ -179,12 +179,12 @@
 			{
 				$this->setIncludesEmptyValues( $includeEmptyValues );
 			}
-			
+
 			list($usec, $sec) = explode(" ", microtime());
 			$this->_error_start_timer = (float)$usec + (float)$sec;
 		}
-		
-		
+
+
 		/**
 		 * Supported encodings are "ISO-8859-1", which is also the default
 		 * if no encoding is specified, "UTF-8" and "US-ASCII". Can take any encoding
@@ -192,117 +192,117 @@
 		 *
 		 * @param  string  $enc
 		 */
-		function setEncoding ( $enc ) 
+		function setEncoding ( $enc )
 		{
 			$enc = strtoupper($enc);
-			if( $enc != 'ISO-8859-1' && $enc != 'UTF-8' && $enc != 'US-ASCII' ) 
+			if( $enc != 'ISO-8859-1' && $enc != 'UTF-8' && $enc != 'US-ASCII' )
 			{
 				$this->_logError( 'setEncoding', 'Unsupported encoding specified. Using default/current.' );
 				return;
 			}
 			$this->_encoding = $enc;
 		}
-		
-		
+
+
 		/**
 		 * @return string
 		 */
-		function encoding () 
+		function encoding ()
 		{
 			return $this->_encoding;
 		}
-		
-		
+
+
 		/**
 		 * @param bool $b
 		 */
-		function setStripsLinebreaks ( $b ) 
+		function setStripsLinebreaks ( $b )
 		{
 			$this->_strip_linebreaks = $b;
 		}
-		
-		
+
+
 		/**
 		 * @return bool
 		 */
-		function stripsLinebreaks () 
+		function stripsLinebreaks ()
 		{
 			return $this->_strip_linebreaks;
 		}
-		
-		
+
+
 		/**
 		 * @param int $i  CASE_LOWER or CASE_UPPER
 		 */
-		function setTagCase ( $i ) 
+		function setTagCase ( $i )
 		{
 			$this->_lower_case_tags = ($i == CASE_LOWER);
 		}
-		
-		
+
+
 		/**
 		 * Has the side effect to only include the first root element if set to false.
 		 * This shouldn't be any problem, since well-formed xml only has one root element.
 		 *
 		 * @param bool $b
 		 */
-		function setIncludesRoot ( $b ) 
+		function setIncludesRoot ( $b )
 		{
 			$this->_includesRoot = $b;
 		}
-		
-		
+
+
 		/**
 		 * @return bool
 		 */
-		function includesRoot () 
+		function includesRoot ()
 		{
 			return $this->_includesRoot;
 		}
-		
-		
+
+
 		/**
 		 * Enable on or disable automatic utf8 decoding. Uses seems_utf8() to guess if the
 		 * document contains any utf8 encoded chars. Decoding will only be done on values.
 		 *
 		 * @param bool $b
 		 */
-		function setDecodesUTF8Automaticly ( $b ) 
+		function setDecodesUTF8Automaticly ( $b )
 		{
 			$this->_automaticUtf8Decoding = $b;
 		}
-		
-		
+
+
 		/**
 		 * @return bool
 		 */
-		function decodesUTF8Automaticly () 
+		function decodesUTF8Automaticly ()
 		{
 			return $this->_automaticUtf8Decoding;
 		}
-		
-		
+
+
 		/**
 		 * Enable on or disable automatic utf8 decoding. Uses seems_utf8() to guess if the
 		 * document contains any utf8 encoded chars. Decoding will only be done on values.
 		 *
 		 * @param bool $b
 		 */
-		function setIncludesEmptyValues ( $b ) 
+		function setIncludesEmptyValues ( $b )
 		{
 			$this->_include_empty_values = $b;
 		}
-		
-		
+
+
 		/**
 		 * @return bool
 		 */
-		function includesEmptyValues () 
+		function includesEmptyValues ()
 		{
 			return $this->_include_empty_values;
 		}
-		
-		
+
+
 		/**
 		 * Register a function wich will be called with one argument (string $value) for
 		 * each value parsed. This way, you can manipulate the values in a quick way.
@@ -310,7 +310,7 @@
 		 * Disabled by default.
 		 *
 		 * <b>Example</b><code>
-		 * function myValueModifier( $value ) 
+		 * function myValueModifier( $value )
 		 * {
 		 *	return strtoupper($value);
 		 * }
@@ -324,16 +324,16 @@
 		 *									   or array(&$object, 'function')
 		 * @return  bool  Success?
 		 */
-		function setValueModifier ( $function ) 
+		function setValueModifier ( $function )
 		{
-			if( is_string($function) ) 
+			if( is_string($function) )
 			{
-				if( function_exists( $function ) ) 
+				if( function_exists( $function ) )
 				{
 					$this->_valueModifier = $function;
 					return true;
-				} 
-				else 
+				}
+				else
 				{
 					$this->_logError( 'setValueModifier', 'Registered value modifier function can not be found.' );
 					return false;
@@ -343,58 +343,58 @@
 			{
 				$this->_valueModifier = $function;
 			}
-			else 
+			else
 			{
 				$this->_logError( 'setValueModifier', 'Parameter of unsupported type. Should be string or array.' );
 				return false;
 			}
 			return true;
 		}
-		
-		
+
+
 		/**
 		 * @return string
 		 */
-		function valueModifier () 
+		function valueModifier ()
 		{
 			return $this->_valueModifier;
 		}
-		
-		
+
+
 		/**
 		 * Parse a file and return the structure
 		 *
 		 * @param string $file
 		 * @return array
 		 */
-		function parseFile ( $file ) 
+		function parseFile ( $file )
 		{
-			if (!file_exists($file)) 
+			if (!file_exists($file))
 			{
 				$this->_logError( 'parseFile', 'The file "'.$file.'" can not be found!' );
 				return array();
 			}
 			return $this->parse( file_get_contents( $file ) );
 		}
-		
-		
+
+
 		/**
 		 * @access private
 		 */
-		function _logError( $function, $msg ) 
+		function _logError( $function, $msg )
 		{
 			list($usec, $sec) = explode(" ", microtime());
 			$time = ((float)$usec + (float)$sec) - $this->_error_start_timer;
 			$this->_error_trace[] = array( $function, $msg, $time );
 		}
-		
-		
+
+
 		/**
 		 * Get the current error traceback
 		 *
 		 * @return string|NULL  NULL is returned if no errors.
 		 */
-		function errors () 
+		function errors ()
 		{
 			if( count($this->_error_trace) == 0 ) return NULL;
 			$s = '';
@@ -405,15 +405,15 @@
 			}
 			return $s;
 		}
-		
-		
+
+
 		/**
 		 * Calls a user-set value-modifier function if it exists.
 		 * Also strips linebreaks if that option is turned on.
 		 *
 		 * @access private
 		 */
-		function _onValue ( $value ) 
+		function _onValue ( $value )
 		{
 			if( $this->_strip_linebreaks )
 			{
@@ -429,14 +429,14 @@
 			}
 			return $value;
 		}
-		
-		
+
+
 		/**
 		 * Calls _onValue() on all attribute values
 		 *
 		 * @access private
 		 */
-		function _onAttributes ( $attr ) 
+		function _onAttributes ( $attr )
 		{
 			foreach( $attr as $k => $v )
 			{
@@ -444,25 +444,25 @@
 			}
 			return $attr;
 		}
-		
-		
+
+
 		/**
 		 * Parse a string containing xml and return the structure
 		 *
 		 * @param string $data
 		 * @return array
 		 */
-		function parse ( $data ) 
+		function parse ( $data )
 		{
 			$data = trim($data);
 			$err = false;
-			
-			if( $data == '' ) 
+
+			if( $data == '' )
 			{
 				$this->_logError( 'parse', 'Empty data' );
 				return array();
 			}
-			
+
 			if( $this->_automaticUtf8Decoding )
 			{
 				if($this->_seems_utf8( $data ))
@@ -470,13 +470,13 @@
 					$this->_decodeUtf8 = true;
 				}
 			}
-			
+
 			$parser = xml_parser_create( $this->_encoding );
 			xml_parser_set_option($parser, XML_OPTION_CASE_FOLDING, 0);
 			xml_parser_set_option( $parser, XML_OPTION_SKIP_WHITE, 0);
 			xml_parse_into_struct( $parser, $data, $vals, $index ) or $err = true;
-			
-			if( $err ) 
+
+			if( $err )
 			{
 				$this->_logError( 'parse', 'XML parser failed: '
 					.ucfirst(xml_error_string(xml_get_error_code($parser))) );
@@ -484,12 +484,12 @@
 				return;
 			}
 			xml_parser_free( $parser );
-			
+
 			$tree = array();
 			$i = 0;
-			
+
 			$tagname = ( $this->_lower_case_tags ) ? strtolower($vals[$i]['tag']) : $vals[$i]['tag'];
-			if (isset($vals[$i]['attributes'])) 
+			if (isset($vals[$i]['attributes']))
 			{
 			   if($this->get_attributes)
 			   {
@@ -501,21 +501,21 @@
 				{
 					$tree[$tagname][] = $this->_getChildren($vals, $i);
 				}
-			} 
+			}
 			else
 			{
 				$tree[$tagname][] = $this->_getChildren($vals, $i);
 			}
-			
-			if ( !$this->_includesRoot ) 
+
+			if ( !$this->_includesRoot )
 			{
 				$keys = array_keys($tree);
 				$tree = $tree[$keys[0]][0];
 			}
 			return $tree;
 		}
-		
-		
+
+
 		/**
 		 * @access private
 		 * @return mixed
@@ -531,7 +531,7 @@
 				}
 				while (++$i < count($vals))
 				{
-					switch ($vals[$i]['type']) 
+					switch ($vals[$i]['type'])
 					{
 						case 'cdata':
 							if (isset($children['#']))
@@ -549,17 +549,17 @@
 								}
 							}
 							break;
-					
+
 						case 'complete':
 							$tagname = ( $this->_lower_case_tags ) ? strtolower($vals[$i]['tag']) : $vals[$i]['tag'];
-							if (isset($vals[$i]['attributes'])) 
+							if (isset($vals[$i]['attributes']))
 							{
 								if($this->get_attributes)
 		   						{
 									$children[$tagname][]['@'] = $vals[$i]['attributes'];
 		 							$index = count($children[$tagname])-1;
 								}
-							
+
 								if (isset($vals[$i]['value']))
 								{
 									if($this->get_attributes)
@@ -588,7 +588,7 @@
 								}
 							}
 							break;
-				
+
 						case 'open':
 							$tagname = ( $this->_lower_case_tags ) ? strtolower($vals[$i]['tag']) : $vals[$i]['tag'];
 							if (isset($vals[$i]['attributes']))
@@ -610,21 +610,21 @@
 								$children[$tagname][] = $this->_getChildren($vals, $i);
 							}
 							break;
-				
+
 						case 'close':
 						return $children;
 					}//switch
 				}//while
 			}
 		}
-		
-		
+
+
 		/**
 		 * @access private
 		 */
 		function _seems_utf8($Str)
 		{
-			for ($i=0; $i<strlen($Str); $i++) 
+			for ($i=0; $i<strlen($Str); $i++)
 			{
 				if (ord($Str[$i]) < 0x80) continue; # 0bbbbbbb
 				elseif ((ord($Str[$i]) & 0xE0) == 0xC0) $n=1; # 110bbbbb
@@ -643,4 +643,4 @@
 			}
 			return true;
 		}
-	} 
+	}

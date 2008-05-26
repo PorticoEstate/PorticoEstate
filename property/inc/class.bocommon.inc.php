@@ -67,18 +67,9 @@
 			)
 		);
 
-		function property_bocommon($currentapp='')
+		function property_bocommon()
 		{
-			if($currentapp)
-			{
-			//	$this->currentapp	= $currentapp;
-			}
-			else
-			{
-			//	$this->currentapp	= 'property';
-			}
-
-			$this->socommon			= CreateObject('property.socommon','property');
+			$this->socommon			= CreateObject('property.socommon');
 			$this->account		= $GLOBALS['phpgw_info']['user']['account_id'];
 
 			if (!isset($GLOBALS['phpgw']->asyncservice))
@@ -564,7 +555,7 @@
 
 			$vendor['vendor_link']			= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uilookup.vendor'));
 			$vendor['lang_vendor']			= lang('Vendor');
-			$vendor['lang_select_vendor_help']	= lang('Klick this link to select vendor');
+			$vendor['lang_select_vendor_help']	= lang('click this link to select vendor');
 			$vendor['lang_vendor_name']		= lang('Vendor Name');
 
 //_debug_array($vendor);
@@ -588,13 +579,13 @@
 			$tenant['tenant_link']				= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uilookup.tenant'));
 			if($data['role']=='customer')
 			{
-				$tenant['lang_select_tenant_help']		= lang('Klick this link to select customer');
+				$tenant['lang_select_tenant_help']		= lang('click this link to select customer');
 				$tenant['lang_tenant']				= lang('Customer');
 
 			}
 			else
 			{
-				$tenant['lang_select_tenant_help']		= lang('Klick this link to select tenant');
+				$tenant['lang_select_tenant_help']		= lang('click this link to select tenant');
 				$tenant['lang_tenant']				= lang('Tenant');
 			}
 
@@ -642,7 +633,7 @@
 			$b_account['value_b_account_id']		= $data['b_account_id'];
 			$b_account['value_b_account_name']		= $data['b_account_name'];
 			$b_account['b_account_link']			= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uilookup.b_account'));
-			$b_account['lang_select_b_account_help']	= lang('Klick this link to select budget account');
+			$b_account['lang_select_b_account_help']	= lang('click this link to select budget account');
 			$b_account['lang_b_account']			= lang('Budget account');
 			if($data['b_account_id'] && !$data['b_account_name'])
 			{
@@ -1502,9 +1493,9 @@
 			return (isset($link)?$link:'');
 		}
 
-		function new_db()
+		function new_db($db ='')
 		{
-			return $this->socommon->new_db();
+			return $this->socommon->new_db($db);
 		}
 
 		function get_max_location_level()
@@ -1700,3 +1691,4 @@
 		}
 
 	}
+

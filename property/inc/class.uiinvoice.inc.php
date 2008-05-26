@@ -245,10 +245,10 @@
 					$content[$i]['lang_payment_date'] 	= lang('Payment Date');
 					$content[$i]['link_sub'] 			= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiinvoice.list_sub', 'user_lid'=> $this->user_lid, 'query'=> $this->query));
 					$content[$i]['lang_sub'] 			= lang('Voucher ID');
-					$content[$i]['lang_sub_help'] 		= lang('Klick this link to enter the list of sub-invoices');
+					$content[$i]['lang_sub_help'] 		= lang('click this link to enter the list of sub-invoices');
 					$content[$i]['link_period'] 		= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiinvoice.edit_period'));
 					$content[$i]['lang_period'] 		= lang('Period');
-					$content[$i]['lang_period_help'] 	= lang('Klick this link to edit the period');
+					$content[$i]['lang_period_help'] 	= lang('click this link to edit the period');
 
 					if($this->acl_delete && !$paid)
 					{
@@ -466,10 +466,10 @@
 				$data['workorder_id']					= $workorder_id;
 
 				$data['addressbook_link']				= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uilookup.vendor'));
-				$data['lang_select_vendor_statustext']	= lang('Select the vendor by klicking this link');
+				$data['lang_select_vendor_statustext']	= lang('Select the vendor by clicking this link');
 				$data['lang_vendor']					= lang('Vendor');
 				$data['property_link']					= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uilocation.index', 'lookup'=> 1, 'type_id'=> 1, 'lookup_name'=> 0));
-				$data['lang_select_property_statustext']= lang('Select the property by klicking this link');
+				$data['lang_select_property_statustext']= lang('Select the property by clicking this link');
 				$data['lang_property_statustext']		= lang('Search by property');
 				$data['lang_property']					= lang('property');
 				$data['loc1']							= $loc1;
@@ -554,7 +554,7 @@
 					$content[$i]['tax_code_list']			= $this->bo->tax_code_list($content[$i]['tax_code']);
 					$content[$i]['lang_remark'] 			= lang('Remark');
 					$content[$i]['link_remark'] 			= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiinvoice.remark'));
-					$content[$i]['lang_remark_help'] 		= lang('Klick this link to view the remark');
+					$content[$i]['lang_remark_help'] 		= lang('click this link to view the remark');
 					$content[$i]['link_order'] 				= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiinvoice.view_order'));
 					$content[$i]['link_claim'] 				= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uitenant_claim.check'));
 					$i++;
@@ -935,7 +935,7 @@
 			$data['workorder_id']				= $workorder_id;
 
 			$data['addressbook_link']			= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uilookup.vendor'));
-			$data['lang_select_vendor_statustext']		= lang('Select the vendor by klicking this link');
+			$data['lang_select_vendor_statustext']		= lang('Select the vendor by clicking this link');
 			$data['lang_vendor']				= lang('Vendor');
 
 			$bolocation					= CreateObject('property.bolocation');
@@ -943,7 +943,7 @@
 
 			$data['property_link']				= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uilocation.index', 'lookup'=> 1, 'type_id'=> 1, 'lookup_name'=> 0));
 
-			$data['lang_select_property_statustext']	= lang('Select the property by klicking this link');
+			$data['lang_select_property_statustext']	= lang('Select the property by clicking this link');
 			$data['lang_property_statustext']		= lang('Search by property');
 
 			$data['lang_property']				= lang('property');
@@ -1231,7 +1231,7 @@
 				'tsvfilename'						=> '',
 
 				'lang_add'							=> lang('add'),
-				'lang_add_statustext'				=> lang('Klick this button to add a invoice'),
+				'lang_add_statustext'				=> lang('click this button to add a invoice'),
 
 				'lang_invoice_date'					=> lang('invoice date'),
 				'lang_payment_date'					=> lang('Payment date'),
@@ -1249,9 +1249,9 @@
 				'lang_invoice_date_statustext'		=> lang('Enter the invoice date'),
 				'lang_num_days_statustext'			=> lang('Enter the payment date or the payment delay'),
 				'lang_payment_date_statustext'		=> lang('Enter the payment date or the payment delay'),
-				'lang_vendor_statustext'			=> lang('Select the vendor by klicking the button'),
-				'lang_vendor_name_statustext'		=> lang('Select the vendor by klicking the button'),
-				'lang_select_vendor_statustext'		=> lang('Select the vendor by klicking this button'),
+				'lang_vendor_statustext'			=> lang('Select the vendor by clicking the button'),
+				'lang_vendor_name_statustext'		=> lang('Select the vendor by clicking the button'),
+				'lang_select_vendor_statustext'		=> lang('Select the vendor by clicking this button'),
 
 				'value_invoice_date'				=> isset($values['invoice_date'])?$values['invoice_date']:'',
 				'value_payment_date'				=> isset($values['payment_date'])?$values['payment_date']:'',

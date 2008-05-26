@@ -55,7 +55,7 @@
 		//	$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->bocommon		= CreateObject('property.bocommon');
 			$this->bofiles		= CreateObject('property.bofiles');
-			$this->db     		= clone($GLOBALS['phpgw']->db);
+			$this->db           = $this->bocommon->new_db();
 
 		}
 

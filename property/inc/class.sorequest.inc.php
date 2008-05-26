@@ -42,7 +42,7 @@
 			$this->historylog	= CreateObject('property.historylog','request');
 			$this->bocommon		= CreateObject('property.bocommon');
 			$this->db           	= $this->bocommon->new_db();
-			$this->db2           	= $this->bocommon->new_db();
+			$this->db2           	= $this->bocommon->new_db($this->db);
 			$this->join			= $this->bocommon->join;
 			$this->like			= $this->bocommon->like;
 		}
@@ -115,17 +115,9 @@
 					$score = $this->db->f('score');
 					$this->db->query("UPDATE fm_request SET score = $score WHERE id = $id",__LINE__,__FILE__);
 				}
-				
+
 				$this->db->query("UPDATE fm_request SET score = score +10000 WHERE id = $id AND authorities_demands = 1",__LINE__,__FILE__);
 			}
-		}
-
-
-		function read_single_request_category($id='')
-		{
-			$this->db->query("SELECT descr FROM fm_workorder_category where id='$id' ");
-			$this->db->next_record();
-			return $this->db->f('descr');
 		}
 
 		function select_status_list()

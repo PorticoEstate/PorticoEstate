@@ -20,7 +20,7 @@
 		<table width="100%"  cellpadding="2" cellspacing="2" align="center">
 			<tr>
 				<td>
-					<xsl:call-template name="cat_filter"/>
+					<xsl:call-template name="categories"/>
 				</td>
 				<td align="left">
 					<xsl:call-template name="status_filter"/>
@@ -334,7 +334,7 @@
 					<xsl:value-of select="lang_category"/>
 				</td>
 				<td>
-					<xsl:call-template name="cat_select"/>
+					<xsl:call-template name="categories"/>
 				</td>
 			</tr>
 			<tr>

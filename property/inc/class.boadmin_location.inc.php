@@ -265,7 +265,7 @@
 
 			return $this->bocommon->select_list($selected,$nullable);
 		}
-		
+
 		function get_list_info($type_id='',$selected='')
 		{
 			if($type_id)
@@ -277,9 +277,9 @@
 					$location[$i] = $location_types[$i];
 					unset($location[$i]['list_info']);
 					if(isset($selected[($i+1)]) && $selected[($i+1)])
-					{	
+					{
 						$location[$i]['selected'] = 'selected';
-					}				
+					}
 				}
 				return $location;
 			}

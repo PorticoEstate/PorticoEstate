@@ -333,7 +333,7 @@
 				{
 					$times = $GLOBALS['phpgw']->common->show_date($alarm['times']);
 				}
-				
+
 				if(is_array($alarm['data']))
 				{
 					while (is_array($alarm['data']) && list($key,$value) = each($alarm['data']))
@@ -348,7 +348,7 @@
 				}
 
 				$id = explode(':', $id);
-				
+
 				if($id[0] == 's_agreement' || $id[0] == 'agreement')
 				{
 					$link_edit			= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.ui' .$id[0] .'.edit', 'id'=> $id[1]));
@@ -356,7 +356,7 @@
 					$text_edit			= lang('edit');
 
 				}
-				
+
 				$content[] = array
 				(
 					'id'				=> $alarm['id'],

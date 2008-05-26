@@ -47,7 +47,7 @@
 			$this->bocommon		= CreateObject('property.bocommon');
 			$this->soinvoice	= CreateObject('property.soinvoice',true);
 			$this->db           	= $this->bocommon->new_db();
-			$this->db2           	= $this->bocommon->new_db();
+			$this->db2           	= $this->bocommon->new_db($this->db);
 			$this->join		= $this->bocommon->join;
 			$this->left_join	= $this->bocommon->left_join;
 			$this->datetimeformat	= $this->bocommon->datetimeformat;
@@ -217,7 +217,7 @@
 						$fields['bilagsnr']  = $this->soinvoice->next_bilagsnr();
 						$this->bilagsnr = $fields['bilagsnr'];
 					}
-					
+
 					$values= array(
 						$fields['project_id'],
 						$fields['kostra_id'],

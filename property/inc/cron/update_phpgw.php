@@ -13,7 +13,7 @@
 
 	/**
 	 * Description
-	 * usage: 
+	 * usage:
 	 * @package property
 	 */
 
@@ -98,7 +98,7 @@
 		function execute($cron='')
 		{
 			$this->perform_update_db();
-			
+
 			if(isset($this->receipt) && $this->receipt)
 			{
 				$this->cron_log($this->receipt,$cron);
@@ -130,8 +130,8 @@
 		{
 			$GLOBALS['phpgw_setup'] = CreateObject('phpgwapi.setup', true, true);
 			$setup_info = $GLOBALS['phpgw_setup']->detection->get_versions();
-			$GLOBALS['phpgw_setup']->db = clone($GLOBALS['phpgw']->db);
-			$GLOBALS['phpgw_info']['setup']['stage']['db'] = $GLOBALS['phpgw_setup']->detection->check_db();	
+			$GLOBALS['phpgw_setup']->db = CreateObject('phpgwapi.db');
+			$GLOBALS['phpgw_info']['setup']['stage']['db'] = $GLOBALS['phpgw_setup']->detection->check_db();
 			$setup_info = $GLOBALS['phpgw_setup']->detection->get_db_versions($setup_info);
 			$setup_info = $GLOBALS['phpgw_setup']->detection->compare_versions($setup_info);
 			$setup_info = $GLOBALS['phpgw_setup']->detection->check_depends($setup_info);

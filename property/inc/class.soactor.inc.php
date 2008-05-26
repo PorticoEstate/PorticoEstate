@@ -42,7 +42,7 @@
 			$this->account		= $GLOBALS['phpgw_info']['user']['account_id'];
 			$this->bocommon		= CreateObject('property.bocommon');
 			$this->db			= $this->bocommon->new_db();
-			$this->db2			= $this->bocommon->new_db();
+			$this->db2			= $this->bocommon->new_db($this->db);
 
 			$this->join			= $this->bocommon->join;
 			$this->left_join	= $this->bocommon->left_join;
@@ -400,7 +400,7 @@
 							{
 								$entry['value'] = $this->db->db_addslashes($entry['value']);
 							}
-						
+
 							if($entry['datatype'] == 'pwd' && $entry['value'] && $entry['value2'])
 							{
 								if($entry['value'] == $entry['value2'])
@@ -436,7 +436,7 @@
 
 			$cols[]	= 'owner_id';
 			$vals[]	= $this->account;
-			
+
 			if($cols)
 			{
 				$cols	= "," . implode(",", $cols);
