@@ -767,10 +767,10 @@
 			if(!isset($this->role) || !$this->role)
 			{
 				$this->role=array(
-					'is_janitor' 				=> $this->acl->check('.invoice',32),
-					'is_supervisor' 			=> $this->acl->check('.invoice',64),
-					'is_budget_responsible' 	=> $this->acl->check('.invoice',128),
-					'is_transfer' 				=> $this->acl->check('.invoice',16)
+					'is_janitor' 				=> $this->acl->check('.invoice', 32, 'property'),
+					'is_supervisor' 			=> $this->acl->check('.invoice', 64, 'property'),
+					'is_budget_responsible' 	=> $this->acl->check('.invoice', 128, 'property'),
+					'is_transfer' 				=> $this->acl->check('.invoice', 16, 'property')
 					);
 			}
 			return $this->role;

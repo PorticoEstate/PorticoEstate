@@ -63,10 +63,10 @@
 
 			$this->acl 			= CreateObject('phpgwapi.acl');
 			$this->acl_location		= '.b_account';
-			$this->acl_read 		= $this->acl->check('.b_account',1);
-			$this->acl_add 			= $this->acl->check('.b_account',2);
-			$this->acl_edit 		= $this->acl->check('.b_account',4);
-			$this->acl_delete 		= $this->acl->check('.b_account',8);
+			$this->acl_read 		= $this->acl->check('.b_account', PHPGW_ACL_READ, 'property');
+			$this->acl_add 			= $this->acl->check('.b_account', PHPGW_ACL_ADD, 'property');
+			$this->acl_edit 		= $this->acl->check('.b_account', PHPGW_ACL_EDIT, 'property');
+			$this->acl_delete 		= $this->acl->check('.b_account', PHPGW_ACL_DELETE, 'property');
 
 			$this->start			= $this->bo->start;
 			$this->query			= $this->bo->query;

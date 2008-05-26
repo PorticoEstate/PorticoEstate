@@ -167,7 +167,7 @@
 			foreach ($active_accounts as $entry)
 			{
 				$acl->account_id = $entry['acl_account'];
-				if($acl->check($acl_location,$right))
+				if($acl->check($acl_location, $right, 'property'))
 				{
 					if($entry['account_type']=='g')
 					{
@@ -205,7 +205,7 @@
 				{
 					$acl->account_id = $account_id;
 					$i=0;
-					if(!$acl->check($acl_location,$right))
+					if(!$acl->check($acl_location,$right, 'property'))
 					{
 						unset($accounts[$account_id]);
 					}
