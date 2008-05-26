@@ -19,4 +19,4 @@
 			);
 		display_section($appname,$appname,$file);
 		}
-?>
+

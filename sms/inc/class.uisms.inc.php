@@ -28,17 +28,17 @@
 
 		var $public_functions = array
 		(
-			'index'  => True,
-			'outbox'   => True,
-			'send'   => True,
-			'send_group'=> True,
-			'delete_in' => True,
-			'delete_out' => True
+			'index'  => true,
+			'outbox'   => true,
+			'send'   => true,
+			'send_group'=> true,
+			'delete_in' => true,
+			'delete_out' => true
 		);
 
 		function sms_uisms()
 		{
-			$GLOBALS['phpgw_info']['flags']['xslt_app'] = True;
+			$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
 		//	$this->currentapp			= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->nextmatchs			= CreateObject('phpgwapi.nextmatchs');
 			$this->account				= $GLOBALS['phpgw_info']['user']['account_id'];
@@ -47,7 +47,7 @@
 			$this->config				= CreateObject('sms.soconfig');
 			$this->config->read_repository();
 			$this->gateway_number			= $this->config->config_data['common']['gateway_number'];
-			$this->bo				= CreateObject('sms.bosms',False);
+			$this->bo				= CreateObject('sms.bosms',false);
 			$this->acl				= CreateObject('phpgwapi.acl');
 			$this->grants 				= $this->bo->grants;
 			$this->start				= $this->bo->start;
@@ -215,7 +215,7 @@
 			(
 				'msgbox_data'					=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
 				'menu'							=> execMethod('sms.menu.links'),
-				'allow_allrows'					=> True,
+				'allow_allrows'					=> true,
 				'allrows'					=> $this->allrows,
 				'start_record'					=> $this->start,
 				'record_limit'					=> $record_limit,
@@ -356,7 +356,7 @@
 			(
 				'msgbox_data'					=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
 				'menu'							=> execMethod('sms.menu.links'),
-				'allow_allrows'					=> True,
+				'allow_allrows'					=> true,
 				'allrows'					=> $this->allrows,
 				'start_record'					=> $this->start,
 				'record_limit'					=> $record_limit,
