@@ -515,13 +515,13 @@
 			}
 
 			$acl 	= CreateObject('phpgwapi.acl',$user_id);
-			if($acl->check('.invoice',32) && !$acl->check('.invoice',64)):
+			if($acl->check('.invoice', 32, 'property') && !$acl->check('.invoice', 64, 'property')):
 			{
 				$values['janitor']	= $GLOBALS['phpgw']->accounts->id2name($user_id);
 				$values['oppsynsmannid']	= $values['janitor'];
 			}
-	//		elseif((!$acl->check('.invoice',32) && $acl->check('.invoice',64)) || ($acl->check('.invoice',32) && $acl->check('.invoice',64))):
-			elseif($acl->check('.invoice',64)):
+	//		elseif((!$acl->check('.invoice', 32, 'property') && $acl->check('.invoice', 64, 'property')) || ($acl->check('.invoice', 32, 'property') && $acl->check('.invoice', 64, 'property'))):
+			elseif($acl->check('.invoice', 64, 'property')):
 			{
 				$values['supervisor']	= $GLOBALS['phpgw']->accounts->id2name($user_id);
 				$values['saksbehandlerid']	= $values['supervisor'];

@@ -70,10 +70,10 @@
 			$this->cats					= & $this->bo->cats;
 			$this->acl 				= CreateObject('phpgwapi.acl');
 			$this->acl_location			= '.project';
-			$this->acl_read 			= $this->acl->check('.project',1);
-			$this->acl_add 				= $this->acl->check('.project',2);
-			$this->acl_edit 			= $this->acl->check('.project',4);
-			$this->acl_delete 			= $this->acl->check('.project',8);
+			$this->acl_read 			= $this->acl->check('.project', PHPGW_ACL_READ, 'property');
+			$this->acl_add 				= $this->acl->check('.project', PHPGW_ACL_ADD, 'property');
+			$this->acl_edit 			= $this->acl->check('.project', PHPGW_ACL_EDIT, 'property');
+			$this->acl_delete 			= $this->acl->check('.project', PHPGW_ACL_DELETE, 'property');
 
 			$this->start				= $this->bo->start;
 			$this->query				= $this->bo->query;

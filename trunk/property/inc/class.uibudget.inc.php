@@ -101,16 +101,16 @@
 		function index()
 		{
 			$acl_location	= '.budget';
-			$acl_read 	= $this->acl->check($acl_location,1);
+			$acl_read 	= $this->acl->check($acl_location, PHPGW_ACL_READ, 'property');
 
 			if(!$acl_read)
 			{
 				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=>1, 'acl_location'=> $acl_location));
 			}
 
-			$acl_add 	= $this->acl->check($acl_location,2);
-			$acl_edit 	= $this->acl->check($acl_location,4);
-			$acl_delete 	= $this->acl->check($acl_location,8);
+			$acl_add 	= $this->acl->check($acl_location, PHPGW_ACL_ADD, 'property');
+			$acl_edit 	= $this->acl->check($acl_location, PHPGW_ACL_EDIT, 'property');
+			$acl_delete 	= $this->acl->check($acl_location, PHPGW_ACL_DELETE, 'property');
 			$revision_list	= $this->bo->get_revision_filter_list($this->revision); // reset year
 			$this->year	= $this->bo->year;
 			$this->revision = $this->bo->revision;
@@ -306,16 +306,16 @@
 		function basis()
 		{
 			$acl_location	= '.budget';
-			$acl_read 	= $this->acl->check($acl_location,1);
+			$acl_read 	= $this->acl->check($acl_location, PHPGW_ACL_READ, 'property');
 
 			if(!$acl_read)
 			{
 				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=>1, 'acl_location'=> $acl_location));
 			}
 
-			$acl_add 	= $this->acl->check($acl_location,2);
-			$acl_edit 	= $this->acl->check($acl_location,4);
-			$acl_delete 	= $this->acl->check($acl_location,8);
+			$acl_add 	= $this->acl->check($acl_location, PHPGW_ACL_ADD, 'property');
+			$acl_edit 	= $this->acl->check($acl_location, PHPGW_ACL_EDIT, 'property');
+			$acl_delete 	= $this->acl->check($acl_location, PHPGW_ACL_DELETE, 'property');
 			$revision_list	= $this->bo->get_revision_filter_list($this->revision,$basis=true); // reset year
 			$this->year	= $this->bo->year;
 			$this->revision = $this->bo->revision;
@@ -510,16 +510,16 @@
 		function obligations()
 		{
 			$acl_location	= '.budget.obligations';
-			$acl_read 	= $this->acl->check($acl_location,1);
+			$acl_read 	= $this->acl->check($acl_location, PHPGW_ACL_READ, 'property');
 
 			if(!$acl_read)
 			{
 				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=>1, 'acl_location'=> $acl_location));
 			}
 
-			$acl_add 	= $this->acl->check($acl_location,2);
-			$acl_edit 	= $this->acl->check($acl_location,4);
-			$acl_delete 	= $this->acl->check($acl_location,8);
+			$acl_add 	= $this->acl->check($acl_location, PHPGW_ACL_ADD, 'property');
+			$acl_edit 	= $this->acl->check($acl_location, PHPGW_ACL_EDIT, 'property');
+			$acl_delete 	= $this->acl->check($acl_location, PHPGW_ACL_DELETE, 'property');
 
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] .= '::obligations';
 
@@ -679,8 +679,8 @@
 		function edit()
 		{
 			$acl_location	= '.budget';
-			$acl_add 	= $this->acl->check($acl_location,2);
-			$acl_edit 	= $this->acl->check($acl_location,4);
+			$acl_add 	= $this->acl->check($acl_location, PHPGW_ACL_ADD, 'property');
+			$acl_edit 	= $this->acl->check($acl_location, PHPGW_ACL_EDIT, 'property');
 
 			if(!$acl_add && !$acl_edit)
 			{
@@ -810,8 +810,8 @@
 		{
 
 			$acl_location	= '.budget';
-			$acl_add 	= $this->acl->check($acl_location,2);
-			$acl_edit 	= $this->acl->check($acl_location,4);
+			$acl_add 	= $this->acl->check($acl_location, PHPGW_ACL_ADD, 'property');
+			$acl_edit 	= $this->acl->check($acl_location, PHPGW_ACL_EDIT, 'property');
 
 			if(!$acl_add && !$acl_edit)
 			{

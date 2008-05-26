@@ -66,11 +66,11 @@
 			$this->cats					= & $this->bo->cats;
 			$this->acl 					= & $GLOBALS['phpgw']->acl;
 			$this->acl_location			= '.ticket';
-			$this->acl_read 			= $this->acl->check('.ticket',PHPGW_ACL_READ);
-			$this->acl_add 				= $this->acl->check('.ticket',PHPGW_ACL_ADD);
-			$this->acl_edit 			= $this->acl->check('.ticket',PHPGW_ACL_EDIT);
-			$this->acl_delete 			= $this->acl->check('.ticket',PHPGW_ACL_DELETE);
-			$this->acl_manage 			= $this->acl->check('.ticket',PHPGW_ACL_PRIVATE); // manage
+			$this->acl_read 			= $this->acl->check('.ticket', PHPGW_ACL_READ, 'property');
+			$this->acl_add 				= $this->acl->check('.ticket', PHPGW_ACL_ADD, 'property');
+			$this->acl_edit 			= $this->acl->check('.ticket', PHPGW_ACL_EDIT, 'property');
+			$this->acl_delete 			= $this->acl->check('.ticket', PHPGW_ACL_DELETE, 'property');
+			$this->acl_manage 			= $this->acl->check('.ticket', PHPGW_ACL_PRIVATE, 'property'); // manage
 			$this->bo->acl_location		= $this->acl_location;
 
 			$this->start				= $this->bo->start;
@@ -107,7 +107,7 @@
 
 		function download2()
 		{
-			if(!$this->acl->check('.ticket.external',1))
+			if(!$this->acl->check('.ticket.external', PHPGW_ACL_READ, 'property'))
 			{
 				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=> 1, 'acl_location'=> '.ticket.external'));
 			}
@@ -626,7 +626,7 @@
 
 		function index2()
 		{
-			if(!$this->acl->check('.ticket.external',1))
+			if(!$this->acl->check('.ticket.external', PHPGW_ACL_READ, 'property'))
 			{
 				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=> 1, 'acl_location'=> '.ticket.external'));
 			}
@@ -1242,7 +1242,7 @@
 
 		function add2()
 		{
-			if(!$this->acl->check('.ticket.external',2))
+			if(!$this->acl->check('.ticket.external', PHPGW_ACL_ADD, 'property'))
 			{
 				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=> 1, 'acl_location'=> '.ticket.external'));
 			}
@@ -1825,7 +1825,7 @@
 
 		function view2()
 		{
-			if(!$this->acl->check('.ticket.external',1))
+			if(!$this->acl->check('.ticket.external', PHPGW_ACL_READ, 'property'))
 			{
 				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=> 1, 'acl_location'=> '.ticket.external'));
 			}
@@ -1840,7 +1840,7 @@
 
 			if(isset($values['save']))
 			{
-				if(!$this->acl->check('.ticket.external',2))
+				if(!$this->acl->check('.ticket.external', PHPGW_ACL_ADD, 'property'))
 				{
 					$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=>4, 'acl_location'=> '.ticket.external'));
 				}

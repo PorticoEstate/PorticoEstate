@@ -509,7 +509,7 @@
 					'text'	=>	lang('Summary')
 				);
 
-/*				if ( $acl->check('.location',16) )
+/*				if ( $acl->check('.location', 16, 'property') )
 				{
 					$children['type'] = array
 					(
@@ -696,7 +696,7 @@
 			if ( $acl->check('.agreement', PHPGW_ACL_READ, 'property') )
 			{
 				$admin_menu = array();
-				if ( $acl->check('.agreement',16) )
+				if ( $acl->check('.agreement', 16, 'property') )
 				{
 					$admin_menu = array
 					(
