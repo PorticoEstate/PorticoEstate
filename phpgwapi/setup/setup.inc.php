@@ -47,6 +47,7 @@
 		'phpgw_group_map',
 		'phpgw_history_log',
 		'phpgw_hooks',
+		'phpgw_interlink',
 		'phpgw_interserv',
 		'phpgw_lang',
 		'phpgw_languages',
