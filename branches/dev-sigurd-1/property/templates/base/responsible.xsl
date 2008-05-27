@@ -68,6 +68,9 @@
 			<td class="th_text" width="30%" align="center">
 				<xsl:value-of select="lang_descr"/>
 			</td>
+			<td class="th_text" width="10%" align="center">
+				<xsl:value-of select="lang_category"/>
+			</td>
 			<td class="th_text" width="5%" align="center">
 				<xsl:value-of select="lang_created_by"/>
 			</td>
@@ -107,6 +110,9 @@
 				</td>
 				<td align="left">
 					<xsl:value-of select="descr"/>
+				</td>
+				<td align="left">
+					<xsl:value-of select="category"/>
 				</td>
 				<td align="left">
 					<xsl:value-of select="created_by"/>

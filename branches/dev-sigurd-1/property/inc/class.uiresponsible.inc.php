@@ -198,8 +198,7 @@
 				$link_contacts				= '';
 				$text_contacts				= '';
 				$lang_contacts_text			= '';
-				$link_select				= '';
-				$text_select				= '';
+				$lang_select				= '';
 				$lang_select_text			= '';
 				if (!$lookup)
 				{
@@ -253,6 +252,7 @@
 				)),
 				'lang_name'			=> lang('name'),
 				'lang_descr'		=> lang('descr'),
+				'lang_category'		=> lang('category'),
 				'lang_created_by'	=> lang('supervisor'),
 				'lang_app_name'		=> lang('location'),
 				'lang_active'		=> lang('active'),
@@ -820,7 +820,7 @@
 						'tenant'	=> false,
 						'lookup_type'	=> 'form',
 						'lookup_entity'	=> $bocommon->get_lookup_entity('project'),
-						'entity_data'	=> $values['p']
+						'entity_data'	=> isset($values['p']) ? $values['p'] : ''
 						));
 
 			$link_data = array

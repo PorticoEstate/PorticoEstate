@@ -43,6 +43,7 @@
 		public $query;
 		public $total_records = 0;
 		public $cat_id;
+		public $allrows;
 
 		public function __construct($session = false)
 		{

@@ -483,14 +483,17 @@
 
 		public function get_responsible($values = array())
 		{
-			if(!isset($values['location_code']) || !$values['location_code'])
+			$location_code = implode('-',$values['location']);
+
+			if(!isset($values['location']) || !is_array($values['location']))
 			{
 				return 0;
 			}
 
 			//FIXME:$item_filter = something
+			$item_filter = '';
 
-			$sql = "SELECT contact_id FROM fm_responsibility_contact WHERE location_code = {$values['location_code']} {$item_filter}"
+			$sql = "SELECT contact_id FROM fm_responsibility_contact WHERE location_code = '{$location_code}' {$item_filter}"
 			 . 'AND active_from < ' . time() . ' AND active_to > ' . time() . ' AND expired_on IS NULL';
 
 			$this->db->query($sql,__LINE__,__FILE__);
