@@ -218,7 +218,7 @@
 
 		function read_single_category($entity_id,$cat_id)
 		{
-			$sql = "SELECT * FROM fm_entity_category where entity_id=$entity_id AND id=$cat_id";
+			$sql = 'SELECT * FROM fm_entity_category where entity_id =' . (int)$entity_id . ' AND id = ' . (int)$cat_id;
 
 			$this->db->query($sql,__LINE__,__FILE__);
 
@@ -241,7 +241,7 @@
 
 		function read_category_name($entity_id,$cat_id)
 		{
-			$sql = "SELECT * FROM fm_entity_category where entity_id=$entity_id AND id=$cat_id";
+			$sql = 'SELECT * FROM fm_entity_category where entity_id =' . (int)$entity_id . ' AND id = ' . (int)$cat_id;
 			$this->db->query($sql,__LINE__,__FILE__);
 			$this->db->next_record();
 			return $this->db->f('name');

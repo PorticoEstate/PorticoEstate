@@ -101,14 +101,22 @@
 
 		private function read_sessiondata()
 		{
-			$data = $GLOBALS['phpgw']->session->appsession('session_data', 'responsible');
+			$referer = parse_url(phpgw::get_var('HTTP_REFERER', 'string', 'SERVER') );
+			parse_str($referer['query'], $referer_out);
+			$self = parse_url(phpgw::get_var('QUERY_STRING', 'string', 'SERVER') );
+			parse_str($self['path'], $self_out);
+
+			if(isset($referer_out['menuaction']) && isset($self_out['menuaction']) && $referer_out['menuaction'] == $self_out['menuaction'])
+			{
+				$data = $GLOBALS['phpgw']->session->appsession('session_data', 'responsible');
+			}
+
 			$this->cat_id		= isset($data['cat_id']) ? $data['cat_id'] : '';
 			$this->sort			= isset($data['sort']) ? $data['sort'] : '';
 			$this->order		= isset($data['order']) ? $data['order'] : '';
 			$this->start		= isset($data['start']) ? $data['start'] : '';
 			$this->query		= isset($data['query']) ? $data['query'] : '';
 			$this->location		= isset($data['location']) ? $data['location'] : '';
-			$this->allrows		= isset($data['allrows']) ? $data['allrows'] : '';
 		}
 
 		public function get_acl_location()
@@ -164,14 +172,35 @@
 
 		public function read_contact()
 		{
+			$values = $this->so->read_contact(array('start' => $this->start, 'query' => $this->query, 'sort' => $this->sort,
+												'order' => $this->order, 'allrows'=>$this->allrows));
 
-$values=array();
-//			$values = $this->so->read_contact(array('start' => $this->start, 'query' => $this->query, 'sort' => $this->sort,
-//												'order' => $this->order, 'location' => $this->location, 'allrows'=>$this->allrows,
-//												'filter' => $filter));
 			$this->total_records = $this->so->total_records;
-			
+			$soadmin_entity	= CreateObject('property.soadmin_entity');
+			$solocation 	= CreateObject('property.solocation');
+			$bocontact		= CreateObject('addressbook.boaddressbook');
 
+			foreach($values as & $value)
+			{
+				$contact				= $bocontact->get_principal_persons_data($value['contact_id']);
+				$value['contact_name']	= $contact['per_full_name'];
+				$value['created_by']	= $GLOBALS['phpgw']->accounts->id2name($value['created_by']);
+				$value['created_on']	= $GLOBALS['phpgw']->common->show_date($value['created_on'],$this->dateformat);
+				if(isset($value['expired_on']) && $value['expired_on'])
+				{
+					$value['expired_by']	= $GLOBALS['phpgw']->accounts->id2name($value['expired_by']);
+					$value['expired_on']	= $GLOBALS['phpgw']->common->show_date($value['expired_on'],$this->dateformat);				
+				}
+				$value['active_from']	= $GLOBALS['phpgw']->common->show_date($value['active_from'],$this->dateformat);
+				$value['active_to']	= $GLOBALS['phpgw']->common->show_date($value['active_to'],$this->dateformat);
+				if(isset($value['p_cat_id']) && $value['p_cat_id'])
+				{
+					$value['p_cat_name'] = $soadmin_entity->read_category_name($value['p_entity_id'],$value['p_cat_id']);
+					$value['item'] = "{$value['p_cat_name']}::{$value['p_num']}";
+				}
+				$value['location_data']=$solocation->read_single($value['location_code']);
+			
+			}
 			return $values;
 		}
 
@@ -261,6 +290,19 @@ $values=array();
 			$values['active_from']	= $GLOBALS['phpgw']->common->show_date($values['active_from'],$this->dateformat);
 			$values['active_to']	= $GLOBALS['phpgw']->common->show_date($values['active_to'],$this->dateformat);
 
+			$solocation 	= CreateObject('property.solocation');
+			$values['location_data'] = $solocation->read_single($values['location_code']);
+			
+			if($values['p_num'])
+			{
+				$soadmin_entity	= CreateObject('property.soadmin_entity');
+
+				$values['p'][$values['p_entity_id']]['p_num']=$values['p_num'];
+				$values['p'][$values['p_entity_id']]['p_entity_id']=$values['p_entity_id'];
+				$values['p'][$values['p_entity_id']]['p_cat_id']=$values['p_cat_id'];
+				$values['p'][$values['p_entity_id']]['p_cat_name'] = $soadmin_entity->read_category_name($values['p_entity_id'],$values['p_cat_id']);
+			}
+
 			return $values;
 		}
 
@@ -272,9 +314,26 @@ $values=array();
 		* @return void
 		*/
 
-		function delete_type($id)
+		public function delete_type($id)
 		{
 			$this->so->delete_type($id);
+		}
+
+		/**
+		* Get the responsibility for a particular category conserning a given location or item
+		*
+		* @param array $array  containing cat_id, location_code and optional item-information
+		*
+		* @return user_id
+		*/
+
+		public function get_responsible($values = array())
+		{
+			$contact_id 	= $this->so->get_responsible($values);
+		// FIXME: $user_id can probably be fetched from the contacts
+		//	$bocontact		= CreateObject('addressbook.boaddressbook');
+		//	$contact		= $bocontact->get_principal_persons_data($contact_id);
+			return $this->so->get_contact_user_id($contact_id);
 		}
 	}
 ?>

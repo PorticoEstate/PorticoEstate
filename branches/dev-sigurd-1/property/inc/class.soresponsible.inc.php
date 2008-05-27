@@ -244,6 +244,85 @@
 
 
 		/**
+		* Read responsibility type contact
+		*
+		* @param array $values  array that Includes the fields: 'start', 'query', 'sort', 'order', 'allrows', 'filter' and 'location'
+		*
+		* @return array Responsibility type contacts
+		*/
+
+		public function read_contact($data)
+		{
+			if(is_array($data))
+			{
+				$start		= isset($data['start']) && $data['start'] ? (int)$data['start'] : 0;
+				$query		= isset($data['query']) ? $this->db->db_addslashes($data['query']) : '';
+				$sort		= isset($data['sort']) && $data['sort'] ? $this->db->db_addslashes($data['sort']) : 'DESC';
+				$order		= isset($data['order']) ? $this->db->db_addslashes($data['order']) : '';
+				$allrows	= isset($data['allrows']) ? !!$data['allrows'] : '';
+			}
+
+			if ($order)
+			{
+				$ordermethod = " order by $order $sort";
+			}
+			else
+			{
+				$ordermethod = ' order by responsibility_id DESC';
+			}
+
+			$filtermethod = ' WHERE expired_on IS NULL';
+			$where = 'AND';
+
+			$querymethod = '';
+			if($query)
+			{
+				$querymethod = "$where (remark $this->like '%$query%')";
+			}
+
+			$sql = "SELECT * FROM fm_responsibility_contact $filtermethod $querymethod";
+
+			$this->db->query($sql,__LINE__,__FILE__);
+			$this->total_records = $this->db->num_rows();
+
+			if(!$allrows)
+			{
+				$this->db->limit_query($sql . $ordermethod, $start,__LINE__,__FILE__);
+			}
+			else
+			{
+				$this->db->query($sql . $ordermethod,__LINE__,__FILE__);
+			}
+
+			$values = array();
+
+			while ($this->db->next_record())
+			{
+				$values[] = array
+				(
+					'id'				=> $this->db->f('id'),
+					'responsibility_id'	=> $this->db->f('responsibility_id'),
+					'contact_id'		=> $this->db->f('contact_id'),
+					'location_code'		=> $this->db->f('location_code'),
+					'priority'			=> $this->db->f('priority'),
+					'active_from'		=> $this->db->f('active_from'),
+					'active_to'			=> $this->db->f('active_to'),
+					'created_on'		=> $this->db->f('created_on'),
+					'created_by'		=> $this->db->f('created_by'),
+					'expired_on'		=> $this->db->f('expired_on'), // historical records
+					'expired_by'		=> $this->db->f('expired_by'),
+					'p_num'				=> $this->db->f('p_num', true),
+					'p_entity_id'		=> $this->db->f('p_entity_id'),
+					'p_cat_id'			=> $this->db->f('p_cat_id'),
+					'remark'			=> $this->db->f('remark', true),
+				);
+			}
+
+ 		return $values;
+		}
+
+
+		/**
 		* Add responsibility contact
 		*
 		* @param array $values  values to be stored/edited
@@ -394,6 +473,46 @@
 			$this->db->query('DELETE FROM fm_responsibility_contact WHERE id='  . (int) $id, __LINE__, __FILE__);
 		}
 
+		/**
+		* Get the responsibility for a particular category conserning a given location or item
+		*
+		* @param array $array  containing cat_id, location_code and optional item-information
+		*
+		* @return contact_id
+		*/
 
+		public function get_responsible($values = array())
+		{
+			if(!isset($values['location_code']) || !$values['location_code'])
+			{
+				return 0;
+			}
 
+			//FIXME:$item_filter = something
+
+			$sql = "SELECT contact_id FROM fm_responsibility_contact WHERE location_code = {$values['location_code']} {$item_filter}"
+			 . 'AND active_from < ' . time() . ' AND active_to > ' . time() . ' AND expired_on IS NULL';
+
+			$this->db->query($sql,__LINE__,__FILE__);
+
+			$this->db->next_record();
+
+			return $this->db->f('contact_id');
+		}
+
+		/**
+		* Get the user_id for a particular contact
+		*
+		* @param integer $contact_id
+		*
+		* @return user_id
+		*/
+
+		public function get_contact_user_id($person_id)
+		{
+			$sql = 'SELECT account_id FROM phpgw_accounts WHERE person_id =' . (int)$person_id;
+			$this->db->query($sql,__LINE__,__FILE__);
+			$this->db->next_record();
+			return $this->db->f('account_id');
+		}
 	}
