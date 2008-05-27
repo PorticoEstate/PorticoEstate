@@ -93,7 +93,7 @@
 		function index()
 		{
 
-			if(!$this->acl->check('.job', PHPGW_ACL_READ))
+			if(!$this->acl->check('.job', PHPGW_ACL_READ, 'hrm'))
 			{
 				$this->bocommon->no_access();
 				return;
@@ -249,8 +249,8 @@
 		}
 
 		function print_pdf()
-		{
-			if(!$this->acl->check('.job', PHPGW_ACL_READ))
+                                                                  {
+			if(!$this->acl->check('.job', PHPGW_ACL_READ, 'hrm'))
 			{
 				$this->bocommon->no_access();
 				return;
@@ -350,7 +350,7 @@
 
 		function qualification()
 		{
-			if(!$this->acl->check('.job', PHPGW_ACL_READ))
+			if(!$this->acl->check('.job', PHPGW_ACL_READ, 'hrm'))
 			{
 				$this->bocommon->no_access();
 				return;
@@ -503,7 +503,7 @@
 
 		function task()
 		{
-			if(!$this->acl->check('.job', PHPGW_ACL_READ))
+			if(!$this->acl->check('.job', PHPGW_ACL_READ, 'hrm'))
 			{
 				$this->bocommon->no_access();
 				return;
@@ -658,7 +658,7 @@
 
 			if(!$id)
 			{
-				if(!$this->acl->check('.job', PHPGW_ACL_ADD))
+				if(!$this->acl->check('.job', PHPGW_ACL_ADD, 'hrm'))
 				{
 					$this->bocommon->no_access();
 					return;
@@ -666,7 +666,7 @@
 			}
 			else
 			{
-				if(!$this->acl->check('.job', PHPGW_ACL_EDIT))
+				if(!$this->acl->check('.job', PHPGW_ACL_EDIT, 'hrm'))
 				{
 					$this->bocommon->no_access();
 					return;
@@ -780,7 +780,7 @@
 			$job_id		= phpgw::get_var('job_id', 'int');
 			$parent_id	= phpgw::get_var('parent_id', 'int');
 
-			if(!$this->acl->check('.job', PHPGW_ACL_READ))
+			if(!$this->acl->check('.job', PHPGW_ACL_READ, 'hrm'))
 			{
 				$this->bocommon->no_access();
 				return;
@@ -843,7 +843,7 @@
 
 		function lookup_qualification()
 		{
-			if(!$this->acl->check('.job', PHPGW_ACL_ADD))
+			if(!$this->acl->check('.job', PHPGW_ACL_ADD, 'hrm'))
 			{
 				$this->bocommon->no_access();
 				return;
@@ -863,7 +863,7 @@
 
 			$dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
 
-			if($this->acl->check('.job', PHPGW_ACL_EDIT))
+			if($this->acl->check('.job', PHPGW_ACL_EDIT, 'hrm'))
 			{
 				$allowed_edit = true;
 			}
@@ -1123,7 +1123,7 @@
 
 			if(!$id)
 			{
-				if(!$this->acl->check('.job', PHPGW_ACL_ADD))
+				if(!$this->acl->check('.job', PHPGW_ACL_ADD, 'hrm'))
 				{
 					$this->bocommon->no_access();
 					return;
@@ -1131,7 +1131,7 @@
 			}
 			else
 			{
-				if(!$this->acl->check('.job', PHPGW_ACL_EDIT))
+				if(!$this->acl->check('.job', PHPGW_ACL_EDIT, 'hrm'))
 				{
 					$this->bocommon->no_access();
 					return;
@@ -1248,7 +1248,7 @@
 			$id		= phpgw::get_var('id', 'int');
 			$parent_id	= phpgw::get_var('parent_id', 'int');
 
-			if(!$this->acl->check('.job', PHPGW_ACL_READ))
+			if(!$this->acl->check('.job', PHPGW_ACL_READ, 'hrm'))
 			{
 				$this->bocommon->no_access();
 				return;
@@ -1321,7 +1321,7 @@
 
 			if(!$quali_id)
 			{
-				if(!$this->acl->check('.job', PHPGW_ACL_ADD))
+				if(!$this->acl->check('.job', PHPGW_ACL_ADD, 'hrm'))
 				{
 					$this->bocommon->no_access();
 					return;
@@ -1329,7 +1329,7 @@
 			}
 			else
 			{
-				if(!$this->acl->check('.job', PHPGW_ACL_EDIT))
+				if(!$this->acl->check('.job', PHPGW_ACL_EDIT, 'hrm'))
 				{
 					$this->bocommon->no_access();
 					return;
@@ -1485,7 +1485,7 @@
 			$quali_id	= phpgw::get_var('quali_id', 'int');
 			$job_id	= phpgw::get_var('job_id', 'int');
 
-			if(!$this->acl->check('.job', PHPGW_ACL_READ))
+			if(!$this->acl->check('.job', PHPGW_ACL_READ, 'hrm'))
 			{
 				$this->bocommon->no_access();
 				return;
@@ -1556,7 +1556,7 @@
 
 		function delete_job()
 		{
-			if(!$this->acl->check('.job', PHPGW_ACL_DELETE))
+			if(!$this->acl->check('.job', PHPGW_ACL_DELETE, 'hrm'))
 			{
 				$this->bocommon->no_access();
 				return;
@@ -1599,7 +1599,7 @@
 
 		function delete_task()
 		{
-			if(!$this->acl->check('.job', PHPGW_ACL_DELETE))
+			if(!$this->acl->check('.job', PHPGW_ACL_DELETE, 'hrm'))
 			{
 				$this->bocommon->no_access();
 				return;
@@ -1645,7 +1645,7 @@
 
 		function delete_qualification()
 		{
-			if(!$this->acl->check('.job', PHPGW_ACL_DELETE))
+			if(!$this->acl->check('.job', PHPGW_ACL_DELETE, 'hrm'))
 			{
 				$this->bocommon->no_access();
 				return;
@@ -1691,7 +1691,7 @@
 
 		function reset_job_type_hierarchy()
 		{
-			if(!$this->acl->check('.job', PHPGW_ACL_DELETE))
+			if(!$this->acl->check('.job', PHPGW_ACL_DELETE, 'hrm'))
 			{
 				$this->bocommon->no_access();
 				return;

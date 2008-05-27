@@ -81,7 +81,7 @@
 
 			$this->bo->acl_location = $acl_location;
 
-			if(!$this->acl->check($acl_location, PHPGW_ACL_READ))
+			if(!$this->acl->check($acl_location, PHPGW_ACL_READ, 'sms'))
 			{
 				$this->bocommon->no_access();
 				return;
@@ -89,7 +89,7 @@
 
 			$sms_info = $this->bo->read_inbox();
 
-			if($this->acl->check($acl_location, PHPGW_ACL_ADD))
+			if($this->acl->check($acl_location, PHPGW_ACL_ADD, 'sms'))
 			{
 				$add_right 				= true;
 				$text_answer			= lang('answer');
@@ -196,7 +196,7 @@
 
 
 
-			if($this->acl->check($acl_location, PHPGW_ACL_ADD))
+			if($this->acl->check($acl_location, PHPGW_ACL_ADD, 'sms'))
 			{
 				$table_add[] = array
 				(
@@ -251,7 +251,7 @@
 
 			$this->bo->acl_location = $acl_location;
 
-			if(!$this->acl->check($acl_location, PHPGW_ACL_READ))
+			if(!$this->acl->check($acl_location, PHPGW_ACL_READ, 'sms'))
 			{
 				$this->bocommon->no_access();
 				return;
@@ -336,7 +336,7 @@
 			);
 
 
-			if($this->acl->check($acl_location, PHPGW_ACL_ADD))
+			if($this->acl->check($acl_location, PHPGW_ACL_ADD, 'sms'))
 			{
 				$table_add[] = array
 				(
@@ -387,7 +387,7 @@
 		{
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] .= '::outbox';
 			$acl_location = '.outbox';
-			if(!$this->acl->check($acl_location, PHPGW_ACL_ADD))
+			if(!$this->acl->check($acl_location, PHPGW_ACL_ADD, 'sms'))
 			{
 				$this->bocommon->no_access();
 				return;
@@ -545,7 +545,7 @@
 		{
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] .= '::inbox';
 			$acl_location = '.inbox';
-			if(!$this->acl->check($acl_location, PHPGW_ACL_DELETE))
+			if(!$this->acl->check($acl_location, PHPGW_ACL_DELETE, 'sms'))
 			{
 				$this->bocommon->no_access();
 				return;
@@ -590,7 +590,7 @@
 		{
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] .= '::outbox';
 			$acl_location = '.outbox';
-			if(!$this->acl->check($acl_location, PHPGW_ACL_DELETE))
+			if(!$this->acl->check($acl_location, PHPGW_ACL_DELETE, 'sms'))
 			{
 				$this->bocommon->no_access();
 				return;

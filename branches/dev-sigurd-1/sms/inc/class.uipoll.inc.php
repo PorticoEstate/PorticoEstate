@@ -72,7 +72,7 @@
 		{
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
 
-			if(!$this->acl->check($this->acl_location, PHPGW_ACL_READ))
+			if(!$this->acl->check($this->acl_location, PHPGW_ACL_READ, 'sms'))
 			{
 				$this->bocommon->no_access();
 				return;
@@ -169,7 +169,7 @@
 				'query'		=> $this->query
 			);
 
-//			if($this->acl->check($this->acl_location, PHPGW_ACL_ADD))
+//			if($this->acl->check($this->acl_location, PHPGW_ACL_ADD, 'sms'))
 			{
 				$table_add[] = array
 				(
@@ -212,7 +212,7 @@
 
 		function add()
 		{
-			if(!$this->acl->check($this->acl_location, PHPGW_ACL_READ))
+			if(!$this->acl->check($this->acl_location, PHPGW_ACL_READ, 'sms'))
 			{
 				$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
 				$this->bocommon->no_access();
@@ -264,7 +264,7 @@
 
 		function add_yes()
 		{
-			if(!$this->acl->check($this->acl_location, PHPGW_ACL_READ))
+			if(!$this->acl->check($this->acl_location, PHPGW_ACL_READ, 'sms'))
 			{
 				$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
 				$this->bocommon->no_access();
@@ -319,7 +319,7 @@
 
 		function add_choice()
 		{
-			if(!$this->acl->check($this->acl_location, PHPGW_ACL_READ))
+			if(!$this->acl->check($this->acl_location, PHPGW_ACL_READ, 'sms'))
 			{
 				$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
 				$this->bocommon->no_access();
@@ -378,7 +378,7 @@
 
 		function status()
 		{
-			if(!$this->acl->check($this->acl_location, PHPGW_ACL_READ))
+			if(!$this->acl->check($this->acl_location, PHPGW_ACL_READ, 'sms'))
 			{
 				$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
 				$this->bocommon->no_access();
@@ -413,7 +413,7 @@
 
 		function edit()
 		{
-			if(!$this->acl->check($this->acl_location, PHPGW_ACL_READ))
+			if(!$this->acl->check($this->acl_location, PHPGW_ACL_READ, 'sms'))
 			{
 				$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
 				$this->bocommon->no_access();
@@ -544,7 +544,7 @@
 
 		function edit_yes()
 		{
-			if(!$this->acl->check($this->acl_location, PHPGW_ACL_READ))
+			if(!$this->acl->check($this->acl_location, PHPGW_ACL_READ, 'sms'))
 			{
 				$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
 				$this->bocommon->no_access();
@@ -589,7 +589,7 @@
 
 		function view()
 		{
-			if(!$this->acl->check($this->acl_location, PHPGW_ACL_READ))
+			if(!$this->acl->check($this->acl_location, PHPGW_ACL_READ, 'sms'))
 			{
 				$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
 				$this->bocommon->no_access();
@@ -693,7 +693,7 @@
 		function delete()
 		{
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
-			if(!$this->acl->check($this->acl_location, PHPGW_ACL_READ))
+			if(!$this->acl->check($this->acl_location, PHPGW_ACL_READ, 'sms'))
 			{
 				$this->bocommon->no_access();
 				return;
@@ -765,7 +765,7 @@
 		function delete_choice()
 		{
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
-			if(!$this->acl->check($this->acl_location, PHPGW_ACL_READ))
+			if(!$this->acl->check($this->acl_location, PHPGW_ACL_READ, 'sms'))
 			{
 				$this->bocommon->no_access();
 				return;

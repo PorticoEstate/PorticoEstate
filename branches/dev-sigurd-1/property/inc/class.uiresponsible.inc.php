@@ -114,10 +114,10 @@
 			$this->nextmatchs			= CreateObject('phpgwapi.nextmatchs');
 			$this->acl 					= & $GLOBALS['phpgw']->acl;
 			$this->acl_location 		= $this->bo->get_acl_location();
-			$this->acl_read 			= $this->acl->check($this->acl_location, PHPGW_ACL_READ);
-			$this->acl_add 				= $this->acl->check($this->acl_location, PHPGW_ACL_ADD);
-			$this->acl_edit 			= $this->acl->check($this->acl_location, PHPGW_ACL_EDIT);
-			$this->acl_delete 			= $this->acl->check($this->acl_location, PHPGW_ACL_DELETE);
+			$this->acl_read 			= $this->acl->check($this->acl_location, PHPGW_ACL_READ, 'property');
+			$this->acl_add 				= $this->acl->check($this->acl_location, PHPGW_ACL_ADD, 'property');
+			$this->acl_edit 			= $this->acl->check($this->acl_location, PHPGW_ACL_EDIT, 'property');
+			$this->acl_delete 			= $this->acl->check($this->acl_location, PHPGW_ACL_DELETE, 'property');
 			$this->bolocation			= CreateObject('preferences.boadmin_acl');
 			$this->bolocation->acl_app 	= 'property';
 			$this->location				= $this->bo->location;
@@ -165,7 +165,7 @@
 			}
 			else
 			{
-				$GLOBALS['phpgw_info']['flags']['menu_selection'] .= '::responsible';			
+				$GLOBALS['phpgw_info']['flags']['menu_selection'] .= '::responsible';
 			}
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('responsible', 'nextmatchs','search_field'));
@@ -653,9 +653,9 @@
 			$id						= phpgw::get_var('id', 'int');
 			$values					= phpgw::get_var('values', 'string', 'POST');
 			$contact_id				= phpgw::get_var('contact', 'int');
-			$contact_name			= phpgw::get_var('contact_name', 'string');			
+			$contact_name			= phpgw::get_var('contact_name', 'string');
 			$responsibility_id		= phpgw::get_var('responsibility_id', 'int');
-			$responsibility_name	= phpgw::get_var('responsibility_name', 'string');			
+			$responsibility_name	= phpgw::get_var('responsibility_name', 'string');
 			$bolocation				= CreateObject('property.bolocation');
 			$bocommon				= CreateObject('property.bocommon');
 
@@ -702,8 +702,8 @@
 					{
 						$values['responsibility_id']=$responsibility_id;
 					}
-	
-	
+
+
 					if($contact_name)
 					{
 						$values['responsibility_name']=$responsibility_name;
@@ -818,7 +818,7 @@
 				$GLOBALS['phpgw_info']['flags']['java_script'] = '';
 			}
 
-			$GLOBALS['phpgw_info']['flags']['java_script'] .= $lookup_function;				
+			$GLOBALS['phpgw_info']['flags']['java_script'] .= $lookup_function;
 
 			$jscal = CreateObject('phpgwapi.jscalendar');
 			$jscal->add_listener('values_active_from');

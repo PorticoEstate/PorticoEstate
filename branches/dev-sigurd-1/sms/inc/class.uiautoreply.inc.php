@@ -68,7 +68,7 @@
 		function index()
 		{
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
-			if(!$this->acl->check($this->acl_location, PHPGW_ACL_READ))
+			if(!$this->acl->check($this->acl_location, PHPGW_ACL_READ, 'sms'))
 			{
 
 				$this->bocommon->no_access();
@@ -154,7 +154,7 @@
 				'query'		=> $this->query
 			);
 
-//			if($this->acl->check($this->acl_location, PHPGW_ACL_ADD))
+//			if($this->acl->check($this->acl_location, PHPGW_ACL_ADD, 'sms'))
 			{
 				$table_add[] = array
 				(
@@ -198,7 +198,7 @@
 		function add()
 		{
 		
-			if(!$this->acl->check($this->acl_location, PHPGW_ACL_ADD))
+			if(!$this->acl->check($this->acl_location, PHPGW_ACL_ADD, 'sms'))
 			{
 				$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
 				$this->bocommon->no_access();
@@ -253,7 +253,7 @@
 		function add_yes()
 		{
 		
-			if(!$this->acl->check($this->acl_location, PHPGW_ACL_ADD))
+			if(!$this->acl->check($this->acl_location, PHPGW_ACL_ADD, 'sms'))
 			{
 				$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
 				$this->bocommon->no_access();
@@ -311,7 +311,7 @@
 		function add_scenario()
 		{
 		
-			if(!$this->acl->check($this->acl_location, PHPGW_ACL_ADD))
+			if(!$this->acl->check($this->acl_location, PHPGW_ACL_ADD, 'sms'))
 			{
 				$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
 				$this->bocommon->no_access();
@@ -385,7 +385,7 @@
 		function add_scenario_yes()
 		{
 		
-			if(!$this->acl->check($this->acl_location, PHPGW_ACL_ADD))
+			if(!$this->acl->check($this->acl_location, PHPGW_ACL_ADD, 'sms'))
 			{
 				$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
 				$this->bocommon->no_access();
@@ -459,7 +459,7 @@
 		function edit_scenario()
 		{
 		
-			if(!$this->acl->check($this->acl_location, PHPGW_ACL_EDIT))
+			if(!$this->acl->check($this->acl_location, PHPGW_ACL_EDIT, 'sms'))
 			{
 				$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
 				$this->bocommon->no_access();
@@ -541,7 +541,7 @@
 		function edit_scenario_yes()
 		{
 		
-			if(!$this->acl->check($this->acl_location, PHPGW_ACL_EDIT))
+			if(!$this->acl->check($this->acl_location, PHPGW_ACL_EDIT, 'sms'))
 			{
 				$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
 				$this->bocommon->no_access();
@@ -614,7 +614,7 @@
 
 		function manage()
 		{		
-			if(!$this->acl->check($this->acl_location, 16))
+			if(!$this->acl->check($this->acl_location, 16, 'sms'))
 			{
 				$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
 				$this->bocommon->no_access();
@@ -704,7 +704,7 @@
 		function delete()
 		{
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
-			if(!$this->acl->check($this->acl_location, PHPGW_ACL_DELETE))
+			if(!$this->acl->check($this->acl_location, PHPGW_ACL_DELETE, 'sms'))
 			{
 				$this->bocommon->no_access();
 				return;
@@ -777,7 +777,7 @@
 		function delete_scenario()
 		{
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
-			if(!$this->acl->check($this->acl_location, PHPGW_ACL_DELETE))
+			if(!$this->acl->check($this->acl_location, PHPGW_ACL_DELETE, 'sms'))
 			{
 				$this->bocommon->no_access();
 				return;

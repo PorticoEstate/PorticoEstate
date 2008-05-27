@@ -65,7 +65,7 @@
 		{
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
 
-			if(!$this->acl->check($this->acl_location, PHPGW_ACL_READ))
+			if(!$this->acl->check($this->acl_location, PHPGW_ACL_READ, 'sms'))
 			{
 				$this->bocommon->no_access();
 				return;
@@ -152,7 +152,7 @@
 				'query'		=> $this->query
 			);
 
-//			if($this->acl->check($this->acl_location, PHPGW_ACL_ADD))
+//			if($this->acl->check($this->acl_location, PHPGW_ACL_ADD, 'sms'))
 			{
 				$table_add[] = array
 				(
@@ -200,7 +200,7 @@
 			$command_id	= phpgw::get_var('command_id', 'int');
 			if($command_id)
 			{
-				if(!$this->acl->check($this->acl_location, PHPGW_ACL_EDIT))
+				if(!$this->acl->check($this->acl_location, PHPGW_ACL_EDIT, 'sms'))
 				{
 					$this->bocommon->no_access();
 					return;
@@ -208,7 +208,7 @@
 			}
 			else
 			{
-				if(!$this->acl->check($this->acl_location, PHPGW_ACL_ADD))
+				if(!$this->acl->check($this->acl_location, PHPGW_ACL_ADD, 'sms'))
 				{
 					$this->bocommon->no_access();
 					return;
@@ -365,7 +365,7 @@
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] .= '::log';
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
 
-			if(!$this->acl->check($this->acl_location, PHPGW_ACL_READ))
+			if(!$this->acl->check($this->acl_location, PHPGW_ACL_READ, 'sms'))
 			{
 				$this->bocommon->no_access();
 				return;
@@ -506,7 +506,7 @@
 		function delete()
 		{
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
-			if(!$this->acl->check($this->acl_location, PHPGW_ACL_DELETE))
+			if(!$this->acl->check($this->acl_location, PHPGW_ACL_DELETE, 'sms'))
 			{
 				$this->bocommon->no_access();
 				return;

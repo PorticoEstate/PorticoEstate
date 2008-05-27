@@ -140,10 +140,10 @@
 			$this->bo				= CreateObject('demo.bodemo',true);
 			$this->acl 				=& $GLOBALS['phpgw']->acl;
 			$this->acl_location 	= $this->bo->get_acl_location();
-			$this->acl_read 		= $this->acl->check($this->acl_location, PHPGW_ACL_READ);
-			$this->acl_add 			= $this->acl->check($this->acl_location, PHPGW_ACL_ADD);
-			$this->acl_edit 		= $this->acl->check($this->acl_location, PHPGW_ACL_EDIT);
-			$this->acl_delete 		= $this->acl->check($this->acl_location, PHPGW_ACL_DELETE);
+			$this->acl_read 		= $this->acl->check($this->acl_location, PHPGW_ACL_READ, 'demo');
+			$this->acl_add 			= $this->acl->check($this->acl_location, PHPGW_ACL_ADD, 'demo');
+			$this->acl_edit 		= $this->acl->check($this->acl_location, PHPGW_ACL_EDIT, 'demo');
+			$this->acl_delete 		= $this->acl->check($this->acl_location, PHPGW_ACL_DELETE, 'demo');
 
 			$this->start			= $this->bo->start;
 			$this->query			= $this->bo->query;
