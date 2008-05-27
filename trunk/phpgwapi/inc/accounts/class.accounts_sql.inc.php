@@ -101,7 +101,7 @@
 				'account_type'		=> "'" . phpgwapi_account::TYPE_GROUP . "'",
 				'account_firstname'	=> "'" . $this->db->db_addslashes($account->firstname) ."'",
 				'account_lastname'	=> "'" . $this->db->db_addslashes($account->lastname) . "'",
-				'account_expired'	=> -1,
+				'account_expires'	=> -1,
 				'person_id'			=> (int) $account->person_id
 			);
 
