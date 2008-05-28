@@ -47,6 +47,11 @@
 		*/
 		public $total_records = 0;
 
+		/**
+		* Constructor
+		*
+		*/
+
 		function __construct()
 		{
 			$this->account			=& $GLOBALS['phpgw_info']['user']['account_id'];
@@ -60,7 +65,7 @@
 		/**
 		* Read type
 		*
-		* @param array $values  array that Includes the fields: 'start', 'query', 'sort', 'order', 'allrows', 'filter' and 'location'
+		* @param array $data array that Includes the fields: 'start', 'query', 'sort', 'order', 'allrows', 'filter' and 'location'
 		*
 		* @return array Responsibility types
 		*/
@@ -138,7 +143,7 @@
 		/**
 		* Add responsibility type
 		*
-		* @param array $values  values to be stored/edited and referencing ID if editing
+		* @param array $values values to be stored/edited and referencing ID if editing
 		*
 		* @return array $receip with result on the action(failed/success)
 		*/
@@ -179,6 +184,13 @@
 			return $receipt;
 		}
 
+		/**
+		* Edit responsibility type
+		*
+		* @param array $values values to be stored/edited and referencing ID if editing
+		*
+		* @return array $receip with result on the action(failed/success)
+		*/
 
 		public function edit_type($values)
 		{
@@ -209,7 +221,7 @@
 		/**
 		* Read single responsibility type
 		*
-		* @param integer $id  ID of responsibility type
+		* @param integer $id ID of responsibility type
 		*
 		* @return array Responsibility type
 		*/
@@ -237,6 +249,14 @@
 			return $values;
 		}
 
+		/**
+		* Delete responsibility type
+		*
+		* @param integer $id ID of responsibility type
+		*
+		* @return void
+		*/
+
 		function delete_type($id)
 		{
 			$this->db->query('DELETE FROM fm_responsibility WHERE id='  . (int) $id, __LINE__, __FILE__);
@@ -246,7 +266,7 @@
 		/**
 		* Read responsibility type contact
 		*
-		* @param array $values  array that Includes the fields: 'start', 'query', 'sort', 'order', 'allrows', 'filter' and 'location'
+		* @param array $data array that Includes the fields: 'start', 'query', 'sort', 'order', 'allrows' and 'type_id'
 		*
 		* @return array Responsibility type contacts
 		*/
@@ -330,7 +350,7 @@
 		/**
 		* Add responsibility contact
 		*
-		* @param array $values  values to be stored/edited
+		* @param array $values values to be stored/edited
 		*
 		* @return array $receip with result on the action(failed/success)
 		*/
@@ -360,8 +380,8 @@
 			$this->db->transaction_begin();
 
 			$this->db->query("INSERT INTO fm_responsibility_contact (responsibility_id, contact_id,"
-				." location_code, active_from, active_to, p_num, p_entity_id, p_cat_id, remark, created_by, created_on) "
-				. "VALUES ($insert_values)", __LINE__, __FILE__);
+				." location_code, active_from, active_to, p_num, p_entity_id, p_cat_id, remark, created_by, created_on)"
+				." VALUES ($insert_values)", __LINE__, __FILE__);
 
 			if($this->db->transaction_commit())
 			{
@@ -379,7 +399,7 @@
 		/**
 		* Edit responsibility contact
 		*
-		* @param array $values  values to be stored/edited
+		* @param array $values values to be stored/edited
 		*
 		* @return array $receip with result on the action(failed/success)
 		*/
@@ -436,7 +456,7 @@
 		/**
 		* Read single responsibility contact
 		*
-		* @param integer $id  ID of responsibility_contact
+		* @param integer $id ID of responsibility_contact
 		*
 		* @return array Responsibility contact
 		*/
@@ -472,6 +492,14 @@
 			return $values;
 		}
 
+		/**
+		* Delete responsibility type contact
+		*
+		* @param integer $id ID of responsibility type
+		*
+		* @return void
+		*/
+
 		function delete_contact($id)
 		{
 			$this->db->query('DELETE FROM fm_responsibility_contact WHERE id='  . (int) $id, __LINE__, __FILE__);
@@ -480,7 +508,7 @@
 		/**
 		* Get the responsibility for a particular category conserning a given location or item
 		*
-		* @param array $array  containing cat_id, location_code and optional item-information
+		* @param array $values containing cat_id, location_code and optional item-information
 		*
 		* @return contact_id
 		*/
@@ -497,7 +525,8 @@
 			//FIXME:$item_filter = something
 			$item_filter = '';
 
-			$sql = "SELECT contact_id FROM fm_responsibility_contact WHERE location_code = '{$location_code}' {$item_filter}"
+			$sql = "SELECT contact_id FROM fm_responsibility_contact"
+			 . " WHERE location_code = '{$location_code}' {$item_filter}"
 			 . 'AND active_from < ' . time() . ' AND active_to > ' . time() . ' AND expired_on IS NULL';
 
 			$this->db->query($sql, __LINE__, __FILE__);
@@ -510,7 +539,7 @@
 		/**
 		* Get the user_id for a particular contact
 		*
-		* @param integer $contact_id
+		* @param integer $person_id the ID of the given contact
 		*
 		* @return user_id
 		*/
