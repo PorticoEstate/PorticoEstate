@@ -148,11 +148,6 @@
 	$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_languages (lang_id, lang_name, available) VALUES ('zt','Chinese (Traditional)','Yes')");
 	$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_languages (lang_id, lang_name, available) VALUES ('zu','Zulu','No')");
 
-	$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_config (config_app, config_name, config_value) VALUES ('phpgwapi','sessions_checkip','True')");
-
-	$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_config (config_app, config_name, config_value) VALUES ('phpgwapi','log_levels', '" . serialize(array( 'global_level' => 'N', 'module' => array(), 'user' => array())) ."')");
-	$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_config (config_app, config_name, config_value) VALUES ('phpgwapi','addressmaster','-3')");
-
 	$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_interserv(server_name,server_host,server_url,trust_level,trust_rel,server_mode) VALUES ('phpGW cvsdemo',NULL,'http://www.phpgroupware.org/cvsdemo/xmlrpc.php',99,0,'xmlrpc')");
 
 	$GLOBALS['phpgw_setup']->oProc->query ("INSERT INTO phpgw_vfs (owner_id, createdby_id, modifiedby_id, created, modified, size, mime_type, deleteable, comment, app, directory, name, link_directory, link_name) VALUES (0,0,0,'1970-01-01',NULL,NULL,'Directory','Y',NULL,NULL,'/','', NULL, NULL)");
@@ -293,7 +288,7 @@
 			.  ")");
 	}
 
-	//Make sure the session defaults are properly set
+	// Sane defaults for the API
 	$values = array
 	(
 		'max_access_log_age'	=> 90,
@@ -301,13 +296,15 @@
 		'num_unsuccessful_id'	=> 3,
 		'num_unsuccessful_ip'	=> 3,
 		'install_id'			=> sha1(uniqid(rand(), true)),
-		'max_history'			=> 20
+		'max_history'			=> 20,
+		'sessions_checkip'		=> 'True',
+		'addressmaster'			=> -3,
+		'log_levels'			=> serialize(array('global_level' => 'N', 'module' => array(), 'user' => array())),
+		'freshinstall'			=> 1
 	);
-	foreach ( $lookups as $name => $val )
+
+	foreach ( $values as $name => $val )
 	{
 		$sql = "INSERT INTO phpgw_config VALUES('phpgwapi', '{$name}', '{$val}')";
 		$GLOBALS['phpgw_setup']->m_odb->query($sql, __LINE__, __FILE__);
 	}
-
-	//force users to config their install - was dropped sometime ago - adding it again - skwashd
-	$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_config VALUES('phpgwapi', 'freshinstall', '1')");
