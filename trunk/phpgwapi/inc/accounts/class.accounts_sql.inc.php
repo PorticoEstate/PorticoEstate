@@ -98,7 +98,7 @@
 			(
 				'account_id'		=> $id,
 				'account_lid'		=> "'" . $this->db->db_addslashes($account->lid) . "'",
-				'account_pwd'		=> '',
+				'account_pwd'		=> "''",
 				'account_firstname'	=> "'" . $this->db->db_addslashes($account->firstname) ."'",
 				'account_lastname'	=> "'" . $this->db->db_addslashes($account->lastname) . "'",
 				'account_expires'	=> -1,
