@@ -40,7 +40,6 @@
 			$this->account	= $GLOBALS['phpgw_info']['user']['account_id'];
 			$this->bocommon		= CreateObject('property.bocommon');
 			$this->db           	= $this->bocommon->new_db();
-			$this->db2           	= $this->bocommon->new_db($this->db);
 
 			$this->join			= $this->bocommon->join;
 			$this->like			= $this->bocommon->like;
@@ -133,8 +132,8 @@
 
 			$sql = "SELECT phpgw_async.id,phpgw_async.next,phpgw_async.times,phpgw_async.method,phpgw_async.data,account_lid FROM phpgw_async $this->join phpgw_accounts on phpgw_async.account_id=phpgw_accounts.account_id $filtermethod $querymethod";
 
-			$this->db2->query($sql,__LINE__,__FILE__);
-			$this->total_records = $this->db2->num_rows();
+			$this->db->query($sql,__LINE__,__FILE__);
+			$this->total_records = $this->db->num_rows();
 
 			if(!$allrows)
 			{

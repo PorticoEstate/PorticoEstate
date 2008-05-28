@@ -40,7 +40,6 @@
 			$this->account		= $GLOBALS['phpgw_info']['user']['account_id'];
 			$this->bocommon	= CreateObject('property.bocommon');
 			$this->db           	= $this->bocommon->new_db();
-			$this->db2           	= $this->bocommon->new_db($this->db);
 			$this->account		= $GLOBALS['phpgw_info']['user']['account_id'];
 
 			$this->join		= $this->bocommon->join;
@@ -112,8 +111,8 @@
 
 			$sql = "SELECT fm_budget.*, descr,category FROM fm_budget $this->join fm_b_account ON fm_budget.b_account_id = fm_b_account.id $filtermethod $querymethod";
 
-			$this->db2->query($sql,__LINE__,__FILE__);
-			$this->total_records = $this->db2->num_rows();
+			$this->db->query($sql,__LINE__,__FILE__);
+			$this->total_records = $this->db->num_rows();
 
 			if(!$allrows)
 			{
@@ -207,8 +206,8 @@
 
 			$sql = "SELECT * FROM fm_budget_basis $filtermethod $querymethod";
 
-			$this->db2->query($sql,__LINE__,__FILE__);
-			$this->total_records = $this->db2->num_rows();
+			$this->db->query($sql,__LINE__,__FILE__);
+			$this->total_records = $this->db->num_rows();
 
 			if(!$allrows)
 			{

@@ -41,7 +41,6 @@
 			$this->account		= $GLOBALS['phpgw_info']['user']['account_id'];
 			$this->bocommon		= CreateObject('property.bocommon');
 			$this->db           = $this->bocommon->new_db();
-			$this->db2           	= $this->bocommon->new_db($this->db);
 			$this->historylog	= CreateObject('property.historylog','document');
 			$this->vfs 			= CreateObject('phpgwapi.vfs');
 			$this->rootdir 		= $this->vfs->basedir;
@@ -237,8 +236,8 @@
 
 //echo $sql;
 
-			$this->db2->query($sql,__LINE__,__FILE__);
-			$this->total_records = $this->db2->num_rows();
+			$this->db->query($sql,__LINE__,__FILE__);
+			$this->total_records = $this->db->num_rows();
 			$this->db->limit_query($sql . $ordermethod,$start,__LINE__,__FILE__);
 
 			$document_list = array();
@@ -327,8 +326,8 @@
 			. " $this->join fm_document_category on fm_document.category = fm_document_category.id"
 			. " WHERE  $filtermethod $querymethod";
 
-			$this->db2->query($sql,__LINE__,__FILE__);
-			$this->total_records = $this->db2->num_rows();
+			$this->db->query($sql,__LINE__,__FILE__);
+			$this->total_records = $this->db->num_rows();
 			$this->db->limit_query($sql . $ordermethod,$start,__LINE__,__FILE__);
 
 			while ($this->db->next_record())

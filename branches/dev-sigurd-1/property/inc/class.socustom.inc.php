@@ -40,7 +40,6 @@
 			$this->account	= $GLOBALS['phpgw_info']['user']['account_id'];
 			$this->bocommon		= CreateObject('property.bocommon');
 			$this->db           	= $this->bocommon->new_db();
-			$this->db2           	= $this->bocommon->new_db($this->db);
 			$this->account		= $GLOBALS['phpgw_info']['user']['account_id'];
 
 			$this->join			= $this->bocommon->join;
@@ -88,8 +87,8 @@
 
 			$sql = "SELECT * FROM fm_custom $filtermethod $querymethod";
 
-			$this->db2->query($sql,__LINE__,__FILE__);
-			$this->total_records = $this->db2->num_rows();
+			$this->db->query($sql,__LINE__,__FILE__);
+			$this->total_records = $this->db->num_rows();
 
 			if(!$allrows)
 			{
@@ -308,8 +307,8 @@
 			$uicols = $this->read_cols($custom_id);
 			$this->uicols = $uicols;
 
-			$this->db2->query($sql,__LINE__,__FILE__);
-			$this->total_records = $this->db2->num_rows();
+			$this->db->query($sql,__LINE__,__FILE__);
+			$this->total_records = $this->db->num_rows();
 
 			if(!$allrows)
 			{

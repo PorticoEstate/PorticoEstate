@@ -42,7 +42,6 @@
 			$this->account		= $GLOBALS['phpgw_info']['user']['account_id'];
 			$this->bocommon		= CreateObject('property.bocommon');
 			$this->db           = $this->bocommon->new_db();
-			$this->db2           = $this->bocommon->new_db($this->db);
 
 			$this->join			= $this->bocommon->join;
 			$this->left_join	= $this->bocommon->left_join;
@@ -281,8 +280,8 @@
 			$sql .= " $filtermethod $querymethod";
 //echo $sql;
 
-			$this->db2->query($sql,__LINE__,__FILE__);
-			$this->total_records = $this->db2->num_rows();
+			$this->db->query($sql,__LINE__,__FILE__);
+			$this->total_records = $this->db->num_rows();
 			if(!$allrows)
 			{
 				$this->db->limit_query($sql . $ordermethod,$start,__LINE__,__FILE__);
@@ -298,6 +297,7 @@
 
 			$contacts		= CreateObject('phpgwapi.contacts');
 			$agreement_list = array();
+			$db2           = $this->bocommon->new_db($this->db);
 
 			while ($this->db->next_record())
 			{
@@ -317,9 +317,9 @@
 						if(($cols_return_extra[$i]['datatype']=='R' || $cols_return_extra[$i]['datatype']=='LB') && $value)
 						{
 							$sql="SELECT value FROM $choice_table WHERE $attribute_filter AND attrib_id=" .$cols_return_extra[$i]['attrib_id']. "  AND id=" . $value;
-							$this->db2->query($sql);
-							$this->db2->next_record();
-							$agreement_list[$j][$cols_return_extra[$i]['name']] = $this->db2->f('value');
+							$db2->query($sql);
+							$db2->next_record();
+							$agreement_list[$j][$cols_return_extra[$i]['name']] = $db2->f('value');
 						}
 						else if($cols_return_extra[$i]['datatype']=='AB' && $value)
 						{
@@ -329,9 +329,9 @@
 						else if($cols_return_extra[$i]['datatype']=='VENDOR' && $value)
 						{
 							$sql="SELECT org_name FROM fm_vendor where id=$value";
-							$this->db2->query($sql);
-							$this->db2->next_record();
-							$agreement_list[$j][$cols_return_extra[$i]['name']] = $this->db2->f('org_name');
+							$db2->query($sql);
+							$db2->next_record();
+							$agreement_list[$j][$cols_return_extra[$i]['name']] = $db2->f('org_name');
 
 						}
 						else if($cols_return_extra[$i]['datatype']=='CH' && $value)
@@ -343,10 +343,10 @@
 								for ($k=0;$k<count($ch);$k++)
 								{
 									$sql="SELECT value FROM $choice_table WHERE $attribute_filter AND attrib_id=" .$cols_return_extra[$i]['attrib_id']. "  AND id=" . $ch[$k];
-									$this->db2->query($sql);
-									while ($this->db2->next_record())
+									$db2->query($sql);
+									while ($db2->next_record())
 									{
-										$ch_value[]=$this->db2->f('value');
+										$ch_value[]=$db2->f('value');
 									}
 								}
 								$agreement_list[$j][$cols_return_extra[$i]['name']] = @implode(",", $ch_value);
@@ -471,8 +471,8 @@
 			$sql .= " $filtermethod";
 //echo $sql;
 
-			$this->db2->query($sql,__LINE__,__FILE__);
-			$this->total_records = $this->db2->num_rows();
+			$this->db->query($sql,__LINE__,__FILE__);
+			$this->total_records = $this->db->num_rows();
 			if(!$allrows)
 			{
 				$this->db->limit_query($sql . $ordermethod,$start,__LINE__,__FILE__);
@@ -587,8 +587,8 @@
 			$sql .= " $filtermethod";
 //echo $sql;
 
-			$this->db2->query($sql,__LINE__,__FILE__);
-			$this->total_records = $this->db2->num_rows();
+			$this->db->query($sql,__LINE__,__FILE__);
+			$this->total_records = $this->db->num_rows();
 			if(!$allrows)
 			{
 				$this->db->limit_query($sql . $ordermethod,$start,__LINE__,__FILE__);
