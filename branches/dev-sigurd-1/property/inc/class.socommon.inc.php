@@ -50,11 +50,11 @@
 
 			if(is_object($GLOBALS['phpgw']->db))
 			{
-				$this->db = CreateObject('property.db');
+				$this->db = CreateObject('phpgwapi.db');
 			}
 			else // for setup
 			{
-				$this->db = CreateObject('property.db');
+				$this->db = CreateObject('phpgwapi.db');
 
 				if(isset($GLOBALS['phpgw_info']['server']['db_name']) && $GLOBALS['phpgw_info']['server']['db_name'])
 				{
@@ -392,7 +392,7 @@
 			}
 			else
 			{
-				$db = CreateObject('property.db');
+				$db = CreateObject('phpgwapi.db');
 				if(isset($GLOBALS['phpgw_info']['server']['db_name']) && $GLOBALS['phpgw_info']['server']['db_name'])
 				{
 					$db->Host = $GLOBALS['phpgw_info']['server']['db_host'];

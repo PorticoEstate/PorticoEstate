@@ -47,7 +47,7 @@
 
 			if(isset($this->db->adodb) && $this->db->adodb)
 			{
-				$this->db_boei           	= CreateObject('property.db',false,$GLOBALS['external_db']['boei']['db_type']);
+				$this->db_boei           	= CreateObject('phpgwapi.db',false,$GLOBALS['external_db']['boei']['db_type']);
 				$this->db_boei->Host     	= $GLOBALS['external_db']['boei']['db_host'];
 				$this->db_boei->Type     	= $GLOBALS['external_db']['boei']['db_type'];
 				$this->db_boei->Database 	= $GLOBALS['external_db']['boei']['db_name'];

@@ -98,7 +98,7 @@
 
 			$this->appname = $appname;
 
-			$this->db      = CreateObject('property.db');
+			$this->db      = CreateObject('phpgwapi.db');
 		}
 
 		function delete($record_id,$attrib_id='')

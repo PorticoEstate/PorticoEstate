@@ -130,7 +130,7 @@
 		{
 			$GLOBALS['phpgw_setup'] = CreateObject('phpgwapi.setup', true, true);
 			$setup_info = $GLOBALS['phpgw_setup']->detection->get_versions();
-			$GLOBALS['phpgw_setup']->db = CreateObject('property.db');
+			$GLOBALS['phpgw_setup']->db = CreateObject('phpgwapi.db');
 			$GLOBALS['phpgw_info']['setup']['stage']['db'] = $GLOBALS['phpgw_setup']->detection->check_db();
 			$setup_info = $GLOBALS['phpgw_setup']->detection->get_db_versions($setup_info);
 			$setup_info = $GLOBALS['phpgw_setup']->detection->compare_versions($setup_info);
