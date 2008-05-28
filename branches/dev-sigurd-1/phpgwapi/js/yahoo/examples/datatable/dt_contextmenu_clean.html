@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
 <title>Context Menu Integration</title>
 
 <style type="text/css">
@@ -20,13 +20,21 @@ body {
 <link rel="stylesheet" type="text/css" href="../../build/menu/assets/skins/sam/menu.css" />
 <link rel="stylesheet" type="text/css" href="../../build/datatable/assets/skins/sam/datatable.css" />
 <script type="text/javascript" src="../../build/yahoo-dom-event/yahoo-dom-event.js"></script>
-<script type="text/javascript" src="../../build/container/container_core.js"></script>
-<script type="text/javascript" src="../../build/menu/menu.js"></script>
-<script type="text/javascript" src="../../build/element/element-beta.js"></script>
-<script type="text/javascript" src="../../build/datasource/datasource-beta.js"></script>
-<script type="text/javascript" src="../../build/datatable/datatable-beta.js"></script>
+<script type="text/javascript" src="../../build/container/container_core-min.js"></script>
+<script type="text/javascript" src="../../build/menu/menu-min.js"></script>
+<script type="text/javascript" src="../../build/element/element-beta-min.js"></script>
+<script type="text/javascript" src="../../build/datasource/datasource-beta-min.js"></script>
+<script type="text/javascript" src="../../build/datatable/datatable-beta-min.js"></script>
 
-<!--there is no custom header content for this example-->
+
+<!--begin custom header content for this example-->
+<style type="text/css">
+div.yuimenu .bd {
+    zoom: normal;
+}
+</style>
+
+<!--end custom header content for this example-->
 
 </head>
 
@@ -74,9 +82,10 @@ YAHOO.util.Event.addListener(window, "load", function() {
                 if(elRow) {
                     switch(task.index) {
                         case 0:     // Delete row upon confirmation
+                            var oRecord = p_myDataTable.getRecord(elRow);
                             if(confirm("Are you sure you want to delete SKU " +
-                                    elRow.cells[0].innerHTML + " (" +
-                                    elRow.cells[2].innerHTML + ")?")) {
+                                    oRecord.getData("SKU") + " (" +
+                                    oRecord.getData("Description") + ")?")) {
                                 p_myDataTable.deleteRow(elRow);
                             }
                     }
