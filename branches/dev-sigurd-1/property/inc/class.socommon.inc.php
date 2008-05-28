@@ -45,7 +45,7 @@
 		 var $like = 'LIKE';
 
 
-		function property_socommon($currentapp='')
+		function property_socommon()
 		{
 
 			if(is_object($GLOBALS['phpgw']->db))
