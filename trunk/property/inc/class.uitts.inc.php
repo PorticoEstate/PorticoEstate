@@ -1052,16 +1052,6 @@
 
 				$values = $this->bocommon->collect_locationdata($values,$insert_record);
 
-/*				if(!$values['subject'])
-				{
-					$receipt['error'][]=array('msg'=>lang('Please type a subject for this ticket !'));
-				}
-
-*/				if(!$values['assignedto'] && !$values['group_id'])
-				{
-					$receipt['error'][]=array('msg'=>lang('Please select a person or a group to handle the ticket !'));
-				}
-
 				if(!$values['cat_id'])
 				{
 					$receipt['error'][]=array('msg'=>lang('Please select a category !'));
@@ -1075,6 +1065,15 @@
 				if((!isset($values['location']['loc1']) || !$values['location']['loc1']) && (!isset($values['extra']['p_num']) || !$values['extra']['p_num']))
 				{
 					$receipt['error'][]=array('msg'=>lang('Please select a location - or an entity!'));
+				}
+
+				if(!$values['assignedto'] && !$values['group_id'])
+				{
+					$boresponsible = CreateObject('property.boresponsible');
+					if(!$values['assignedto']=	$boresponsible->get_responsible($values))
+					{
+						$receipt['error'][]=array('msg'=>lang('Please select a person or a group to handle the ticket !'));
+					}
 				}
 
 				if(!isset($receipt['error']))

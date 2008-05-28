@@ -47,6 +47,11 @@
 		*/
 		public $total_records = 0;
 
+		/**
+		* Constructor
+		*
+		*/
+
 		function __construct()
 		{
 			$this->account			=& $GLOBALS['phpgw_info']['user']['account_id'];
@@ -60,7 +65,7 @@
 		/**
 		* Read type
 		*
-		* @param array $values  array that Includes the fields: 'start', 'query', 'sort', 'order', 'allrows', 'filter' and 'location'
+		* @param array $data array that Includes the fields: 'start', 'query', 'sort', 'order', 'allrows', 'filter' and 'location'
 		*
 		* @return array Responsibility types
 		*/
@@ -69,7 +74,7 @@
 		{
 			if(is_array($data))
 			{
-				$start		= isset($data['start']) && $data['start'] ? (int)$data['start'] : 0;
+				$start		= isset($data['start']) && $data['start'] ? (int) $data['start'] : 0;
 				$query		= isset($data['query']) ? $this->db->db_addslashes($data['query']) : '';
 				$sort		= isset($data['sort']) && $data['sort'] ? $this->db->db_addslashes($data['sort']) : 'DESC';
 				$order		= isset($data['order']) ? $this->db->db_addslashes($data['order']) : '';
@@ -104,16 +109,16 @@
 
 			$sql = "SELECT * FROM fm_responsibility $filtermethod $querymethod";
 
-			$this->db->query($sql,__LINE__,__FILE__);
+			$this->db->query($sql, __LINE__, __FILE__);
 			$this->total_records = $this->db->num_rows();
 
 			if(!$allrows)
 			{
-				$this->db->limit_query($sql . $ordermethod, $start,__LINE__,__FILE__);
+				$this->db->limit_query($sql . $ordermethod, $start, __LINE__, __FILE__);
 			}
 			else
 			{
-				$this->db->query($sql . $ordermethod,__LINE__,__FILE__);
+				$this->db->query($sql . $ordermethod, __LINE__, __FILE__);
 			}
 
 			$values = array();
@@ -138,7 +143,7 @@
 		/**
 		* Add responsibility type
 		*
-		* @param array $values  values to be stored/edited and referencing ID if editing
+		* @param array $values values to be stored/edited and referencing ID if editing
 		*
 		* @return array $receip with result on the action(failed/success)
 		*/
@@ -153,7 +158,7 @@
 			(
 				$values['name'],
 				$values['descr'],
-				(int)$values['cat_id'],
+				(int) $values['cat_id'],
 				isset($values['active']) ? !!$values['active'] : '',
 				$this->account,
 				time()
@@ -164,7 +169,7 @@
 			$this->db->transaction_begin();
 
 			$this->db->query("INSERT INTO fm_responsibility (name, descr, cat_id, active, created_by, created_on) "
-				. "VALUES ($insert_values)",__LINE__,__FILE__);
+				. "VALUES ($insert_values)", __LINE__, __FILE__);
 
 			if($this->db->transaction_commit())
 			{
@@ -179,20 +184,27 @@
 			return $receipt;
 		}
 
+		/**
+		* Edit responsibility type
+		*
+		* @param array $values values to be stored/edited and referencing ID if editing
+		*
+		* @return array $receip with result on the action(failed/success)
+		*/
 
 		public function edit_type($values)
 		{
 			$receipt = array();
 			$value_set['name']		= $this->db->db_addslashes($values['name']);
 			$value_set['descr']		= $this->db->db_addslashes($values['descr']);
-			$value_set['cat_id']	= (int)$values['cat_id'];
+			$value_set['cat_id']	= (int) $values['cat_id'];
 			$value_set['active']	= isset($values['active']) ? !!$values['active'] : '';
 
 			$value_set	= $this->db->validate_update($value_set);
 
 			$this->db->transaction_begin();
 
-			$this->db->query("UPDATE fm_responsibility set $value_set WHERE id = " . (int)$values['id'],__LINE__,__FILE__);
+			$this->db->query("UPDATE fm_responsibility set $value_set WHERE id = " . (int) $values['id'], __LINE__, __FILE__);
 
 			$receipt['id']= $values['id'];
 			if($this->db->transaction_commit())
@@ -209,16 +221,16 @@
 		/**
 		* Read single responsibility type
 		*
-		* @param integer $id  ID of responsibility type
+		* @param integer $id ID of responsibility type
 		*
 		* @return array Responsibility type
 		*/
 
 		public function read_single_type($id)
 		{
-			$sql = 'SELECT * FROM fm_responsibility WHERE id= ' . (int)$id;
+			$sql = 'SELECT * FROM fm_responsibility WHERE id= ' . (int) $id;
 
-			$this->db->query($sql,__LINE__,__FILE__);
+			$this->db->query($sql, __LINE__, __FILE__);
 
 			$values = array();
 
@@ -237,6 +249,14 @@
 			return $values;
 		}
 
+		/**
+		* Delete responsibility type
+		*
+		* @param integer $id ID of responsibility type
+		*
+		* @return void
+		*/
+
 		function delete_type($id)
 		{
 			$this->db->query('DELETE FROM fm_responsibility WHERE id='  . (int) $id, __LINE__, __FILE__);
@@ -244,9 +264,93 @@
 
 
 		/**
+		* Read responsibility type contact
+		*
+		* @param array $data array that Includes the fields: 'start', 'query', 'sort', 'order', 'allrows' and 'type_id'
+		*
+		* @return array Responsibility type contacts
+		*/
+
+		public function read_contact($data)
+		{
+			if(is_array($data))
+			{
+				$start		= isset($data['start']) && $data['start'] ? (int) $data['start'] : 0;
+				$query		= isset($data['query']) ? $this->db->db_addslashes($data['query']) : '';
+				$sort		= isset($data['sort']) && $data['sort'] ? $this->db->db_addslashes($data['sort']) : 'DESC';
+				$order		= isset($data['order']) ? $this->db->db_addslashes($data['order']) : '';
+				$allrows	= isset($data['allrows']) ? !!$data['allrows'] : '';
+				$type_id		= isset($data['type_id']) && $data['type_id'] ? (int) $data['type_id'] : 0;
+			}
+
+			if ($order)
+			{
+				$ordermethod = " order by $order $sort";
+			}
+			else
+			{
+				$ordermethod = ' order by responsibility_id DESC';
+			}
+
+			$filtermethod = ' WHERE expired_on IS NULL';
+			$where = 'AND';
+
+			if($type_id > 0)
+			{
+				$filtermethod .= " $where responsibility_id = $type_id";
+			}
+			$querymethod = '';
+			if($query)
+			{
+				$querymethod = "$where (remark $this->like '%$query%')";
+			}
+
+			$sql = "SELECT * FROM fm_responsibility_contact $filtermethod $querymethod";
+
+			$this->db->query($sql, __LINE__, __FILE__);
+			$this->total_records = $this->db->num_rows();
+
+			if(!$allrows)
+			{
+				$this->db->limit_query($sql . $ordermethod, $start, __LINE__, __FILE__);
+			}
+			else
+			{
+				$this->db->query($sql . $ordermethod, __LINE__, __FILE__);
+			}
+
+			$values = array();
+
+			while ($this->db->next_record())
+			{
+				$values[] = array
+				(
+					'id'				=> $this->db->f('id'),
+					'responsibility_id'	=> $this->db->f('responsibility_id'),
+					'contact_id'		=> $this->db->f('contact_id'),
+					'location_code'		=> $this->db->f('location_code'),
+					'priority'			=> $this->db->f('priority'),
+					'active_from'		=> $this->db->f('active_from'),
+					'active_to'			=> $this->db->f('active_to'),
+					'created_on'		=> $this->db->f('created_on'),
+					'created_by'		=> $this->db->f('created_by'),
+					'expired_on'		=> $this->db->f('expired_on'), // historical records
+					'expired_by'		=> $this->db->f('expired_by'),
+					'p_num'				=> $this->db->f('p_num', true),
+					'p_entity_id'		=> $this->db->f('p_entity_id'),
+					'p_cat_id'			=> $this->db->f('p_cat_id'),
+					'remark'			=> $this->db->f('remark', true),
+				);
+			}
+
+ 		return $values;
+		}
+
+
+		/**
 		* Add responsibility contact
 		*
-		* @param array $values  values to be stored/edited
+		* @param array $values values to be stored/edited
 		*
 		* @return array $receip with result on the action(failed/success)
 		*/
@@ -258,8 +362,8 @@
 
 			$insert_values = array
 			(
-				(int)$values['responsibility_id'],
-				(int)$values['contact_id'],
+				(int) $values['responsibility_id'],
+				(int) $values['contact_id'],
 				implode('-', $values['location']),
 				$values['active_from'],
 				$values['active_to'],
@@ -276,8 +380,8 @@
 			$this->db->transaction_begin();
 
 			$this->db->query("INSERT INTO fm_responsibility_contact (responsibility_id, contact_id,"
-				." location_code, active_from, active_to, p_num, p_entity_id, p_cat_id, remark, created_by, created_on) "
-				. "VALUES ($insert_values)",__LINE__,__FILE__);
+				." location_code, active_from, active_to, p_num, p_entity_id, p_cat_id, remark, created_by, created_on)"
+				." VALUES ($insert_values)", __LINE__, __FILE__);
 
 			if($this->db->transaction_commit())
 			{
@@ -295,7 +399,7 @@
 		/**
 		* Edit responsibility contact
 		*
-		* @param array $values  values to be stored/edited
+		* @param array $values values to be stored/edited
 		*
 		* @return array $receip with result on the action(failed/success)
 		*/
@@ -309,9 +413,8 @@
 			if(implode('-', $values['location']) != $orig['location_code']
 				|| $values['active_from'] != $orig['active_from']
 				|| $values['active_to'] != $orig['active_to']
-				|| $values['p_num'] != $orig['p_num']
-				|| $values['remark'] != $orig['remark']
-				|| !$orig['expired_on'])
+				|| $values['extra']['p_num'] != $orig['p_num']
+				|| $values['remark'] != $orig['remark'])
 			{
 				$receipt = $this->add_contact($values);
 				
@@ -327,7 +430,7 @@
 
 				$this->db->transaction_begin();
 
-				$this->db->query("UPDATE fm_responsibility_contact set $value_set WHERE id = " . (int)$values['id'],__LINE__,__FILE__);
+				$this->db->query("UPDATE fm_responsibility_contact set $value_set WHERE id = " . (int) $values['id'], __LINE__, __FILE__);
 
 				if($this->db->transaction_commit())
 				{
@@ -353,16 +456,16 @@
 		/**
 		* Read single responsibility contact
 		*
-		* @param integer $id  ID of responsibility_contact
+		* @param integer $id ID of responsibility_contact
 		*
 		* @return array Responsibility contact
 		*/
 
 		public function read_single_contact($id)
 		{
-			$sql = 'SELECT * FROM fm_responsibility_contact WHERE id= ' . (int)$id;
+			$sql = 'SELECT * FROM fm_responsibility_contact WHERE id= ' . (int) $id;
 
-			$this->db->query($sql,__LINE__,__FILE__);
+			$this->db->query($sql, __LINE__, __FILE__);
 
 			$values = array();
 
@@ -389,11 +492,63 @@
 			return $values;
 		}
 
+		/**
+		* Delete responsibility type contact
+		*
+		* @param integer $id ID of responsibility type
+		*
+		* @return void
+		*/
+
 		function delete_contact($id)
 		{
 			$this->db->query('DELETE FROM fm_responsibility_contact WHERE id='  . (int) $id, __LINE__, __FILE__);
 		}
 
+		/**
+		* Get the responsibility for a particular category conserning a given location or item
+		*
+		* @param array $values containing cat_id, location_code and optional item-information
+		*
+		* @return contact_id
+		*/
 
+		public function get_responsible($values = array())
+		{
+			$location_code = implode('-', $values['location']);
 
+			if(!isset($values['location']) || !is_array($values['location']))
+			{
+				return 0;
+			}
+
+			//FIXME:$item_filter = something
+			$item_filter = '';
+
+			$sql = "SELECT contact_id FROM fm_responsibility_contact"
+			 . " WHERE location_code = '{$location_code}' {$item_filter}"
+			 . 'AND active_from < ' . time() . ' AND active_to > ' . time() . ' AND expired_on IS NULL';
+
+			$this->db->query($sql, __LINE__, __FILE__);
+
+			$this->db->next_record();
+
+			return $this->db->f('contact_id');
+		}
+
+		/**
+		* Get the user_id for a particular contact
+		*
+		* @param integer $person_id the ID of the given contact
+		*
+		* @return user_id
+		*/
+
+		public function get_contact_user_id($person_id)
+		{
+			$sql = 'SELECT account_id FROM phpgw_accounts WHERE person_id =' . (int) $person_id;
+			$this->db->query($sql, __LINE__, __FILE__);
+			$this->db->next_record();
+			return $this->db->f('account_id');
+		}
 	}
