@@ -98,10 +98,11 @@
 			(
 				'account_id'		=> $id,
 				'account_lid'		=> "'" . $this->db->db_addslashes($account->lid) . "'",
-				'account_type'		=> "'" . phpgwapi_account::TYPE_GROUP . "'",
+				'account_pwd'		=> '',
 				'account_firstname'	=> "'" . $this->db->db_addslashes($account->firstname) ."'",
 				'account_lastname'	=> "'" . $this->db->db_addslashes($account->lastname) . "'",
 				'account_expires'	=> -1,
+				'account_type'		=> "'" . phpgwapi_account::TYPE_GROUP . "'",
 				'person_id'			=> (int) $account->person_id
 			);
 
