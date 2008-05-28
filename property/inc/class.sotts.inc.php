@@ -422,6 +422,7 @@
 				$vals	= ",'" . implode("','", $vals) . "'";
 			}
 
+			$address = '';
 			if(isset($ticket['street_name']) && $ticket['street_name'])
 			{
 				$address[]= $ticket['street_name'];

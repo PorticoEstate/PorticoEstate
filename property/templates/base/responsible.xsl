@@ -68,6 +68,9 @@
 			<td class="th_text" width="30%" align="center">
 				<xsl:value-of select="lang_descr"/>
 			</td>
+			<td class="th_text" width="10%" align="center">
+				<xsl:value-of select="lang_category"/>
+			</td>
 			<td class="th_text" width="5%" align="center">
 				<xsl:value-of select="lang_created_by"/>
 			</td>
@@ -107,6 +110,9 @@
 				</td>
 				<td align="left">
 					<xsl:value-of select="descr"/>
+				</td>
+				<td align="left">
+					<xsl:value-of select="category"/>
 				</td>
 				<td align="left">
 					<xsl:value-of select="created_by"/>
@@ -171,12 +177,13 @@
 			<tr>
 				<td class="th_text" align="left">
 					<xsl:value-of select="location_name"/>
+					<xsl:text>::</xsl:text>
+					<xsl:value-of select="category_name"/>
+					<xsl:text>::</xsl:text>
+					<xsl:value-of select="type_name"/>
 				</td>
 			</tr>
 			<tr>
-				<td align="left">
-					<xsl:call-template name="categories"/>
-				</td>
 				<td align="right">
 					<xsl:call-template name="search_field"/>
 				</td>
@@ -190,7 +197,7 @@
 		<table width="100%" cellpadding="2" cellspacing="2" align="center">
 			<xsl:apply-templates select="table_header_contact"/>
 			<xsl:choose>
-				<xsl:when test="values != ''">
+				<xsl:when test="values_contact != ''">
 					<xsl:apply-templates select="values_contact"/>
 				</xsl:when>
 			</xsl:choose>
@@ -199,32 +206,42 @@
 	</xsl:template>
 
 	<xsl:template match="table_header_contact">
-		<xsl:variable name="sort_name"><xsl:value-of select="sort_name"/></xsl:variable>
+		<xsl:variable name="sort_location"><xsl:value-of select="sort_location"/></xsl:variable>
+		<xsl:variable name="sort_active_from"><xsl:value-of select="sort_active_from"/></xsl:variable>
+		<xsl:variable name="sort_active_to"><xsl:value-of select="sort_active_to"/></xsl:variable>
 		<tr class="th">
-			<td class="th_text" width="10%" align="left">
-				<a href="{$sort_name}"><xsl:value-of select="lang_name"/></a>
+			<td class="th_text" width="20%" align="center">
+				<xsl:value-of select="lang_contact"/>
 			</td>
-			<td class="th_text" width="30%" align="center">
-				<xsl:value-of select="lang_descr"/>
+			<td class="th_text" width="10%" align="left">
+				<a href="{$sort_location}"><xsl:value-of select="lang_location"/></a>
+			</td>
+			<td class="th_text" width="5%" align="center">
+				<xsl:value-of select="lang_item"/>
+			</td>
+			<td class="th_text" width="5%" align="left">
+				<a href="{$sort_active_from}"><xsl:value-of select="lang_active_from"/></a>
+			</td>
+			<td class="th_text" width="5%" align="left">
+				<a href="{$sort_active_to}"><xsl:value-of select="lang_active_to"/></a>
+			</td>
+			<td class="th_text" width="5%" align="center">
+				<xsl:value-of select="lang_created_on"/>
 			</td>
 			<td class="th_text" width="5%" align="center">
 				<xsl:value-of select="lang_created_by"/>
 			</td>
-			<td class="th_text" width="5%" align="center">
-				<xsl:value-of select="lang_app_name"/>
-			</td>
-			<td class="th_text" width="1%" align="center">
-				<xsl:value-of select="lang_active"/>
-			</td>
-			<td class="th_text" width="5%" align="center">
-				<xsl:value-of select="lang_contacts"/>
+			<td class="th_text" width="40%" align="left">
+				<xsl:value-of select="lang_remark"/>
 			</td>
 			<td class="th_text" width="5%" align="center">
 				<xsl:value-of select="lang_edit"/>
 			</td>
+<!--
 			<td class="th_text" width="5%" align="center">
 				<xsl:value-of select="lang_delete"/>
 			</td>
+-->
 		</tr>
 	</xsl:template>
 
@@ -241,23 +258,28 @@
 					</xsl:choose>
 				</xsl:attribute>
 				<td align="left">
-					<xsl:value-of select="name"/>
+					<xsl:value-of select="contact_name"/>
 				</td>
 				<td align="left">
-					<xsl:value-of select="descr"/>
+					<xsl:value-of select="location_code"/>
+				</td>
+				<td align="left">
+					<xsl:value-of select="item"/>
+				</td>
+				<td align="left">
+					<xsl:value-of select="active_from"/>
+				</td>
+				<td align="left">
+					<xsl:value-of select="active_to"/>
+				</td>
+				<td align="left">
+					<xsl:value-of select="created_on"/>
 				</td>
 				<td align="left">
 					<xsl:value-of select="created_by"/>
 				</td>
 				<td align="left">
-					<xsl:value-of select="app_name"/>
-				</td>
-				<td align="center">
-					<xsl:value-of select="active"/>
-				</td>
-				<td align="center" title="{lang_contacts_text}" style="cursor:help">
-					<xsl:variable name="link_contacts"><xsl:value-of select="link_contacts"/></xsl:variable>
-					<a href="{link_contacts}"><xsl:value-of select="text_contacts"/></a>
+					<xsl:value-of select="remark"/>
 				</td>
 				<xsl:choose>
 					<xsl:when test="link_edit != ''">
@@ -277,6 +299,7 @@
 				</xsl:choose>
 			</tr>
 	</xsl:template>
+
 
 
 	<xsl:template match="table_add">
