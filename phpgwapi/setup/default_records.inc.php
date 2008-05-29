@@ -306,5 +306,5 @@
 	foreach ( $values as $name => $val )
 	{
 		$sql = "INSERT INTO phpgw_config VALUES('phpgwapi', '{$name}', '{$val}')";
-		$GLOBALS['phpgw_setup']->m_odb->query($sql, __LINE__, __FILE__);
+		$GLOBALS['phpgw_setup']->oProc->query($sql, __LINE__, __FILE__);
 	}
