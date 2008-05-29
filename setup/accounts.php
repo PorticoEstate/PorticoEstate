@@ -179,6 +179,7 @@
 		$GLOBALS['phpgw_info']['server']['account_repository']		= 'sql';
 		$GLOBALS['phpgw_info']['server']['auth_type']				= 'sql';
 		$GLOBALS['phpgw_info']['server']['encryption_type']			= 'ssha';
+		$GLOBALS['phpgw_info']['server']['encryption_type']			= '2HIGH';
 		$GLOBALS['phpgw_info']['server']['account_min_id']			= 1000;
 		$GLOBALS['phpgw_info']['server']['account_max_id']			= 65535;
 		$GLOBALS['phpgw_info']['server']['group_min_id']			= 500;
@@ -189,7 +190,8 @@
 				. " WHERE config_name LIKE 'ldap%' OR config_name LIKE '%_id'"
 					. " OR config_name = 'account_repository'"
 					. " OR config_name = 'auth_type'"
-					. " OR config_name = 'encryption_type'";
+					. " OR config_name = 'encryption_type'"
+					. " OR config_name = 'password_level'";
 
 		$GLOBALS['phpgw_setup']->db->query($sql, __LINE__, __FILE__);
 		while ( $GLOBALS['phpgw_setup']->db->next_record() )

@@ -694,9 +694,9 @@
 		protected function _validate_password_8CHAR($passwd)
 		{
 			$len = strlen($passwd); 
-			if ( $len <= 8 )
+			if ( $len < 8 )
 			{
-				throw new Exception('Password must be at least 8 characters long, not %1', $len);
+				throw new Exception(lang('Password must be at least 8 characters long, not %1'), $len);
 			}
 		}
 
@@ -712,7 +712,7 @@
 			$m = array();
 			if ( preg_match_all('/[A-Z]/', $passwd, $m) < 2 )
 			{
-				throw new Exception('Password must contain at least 2 upper case characters');
+				throw new Exception(lang('Password must contain at least 2 upper case characters'));
 			}
 		}
 		/**
@@ -727,7 +727,7 @@
 			$m = array();
 			if ( preg_match_all('/[a-z]/', $passwd, $m) < 2 )
 			{
-				throw new Exception('Password must contain at least 2 lower case characters');
+				throw new Exception(lang('Password must contain at least 2 lower case characters'));
 			}
 		}
 		/**
@@ -742,7 +742,7 @@
 			$m = array();
 			if ( !preg_match_all('/[0-9]/', $passwd, $m) )
 			{
-				throw new Exception('Password must contain at least 1 number');
+				throw new Exception(lang('Password must contain at least 1 number'));
 			}
 		}
 		/**
@@ -757,7 +757,7 @@
 			$m = array();
 			if ( !preg_match_all('/\W/', $passwd, $m)  )
 			{
-				throw new Exception('Password must contain at least 1 non alphanumeric character');
+				throw new Exception(lang('Password must contain at least 1 non alphanumeric character'));
 			}
 		}
 
