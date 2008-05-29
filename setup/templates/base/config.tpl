@@ -212,6 +212,15 @@
    </tr>
 
    <tr class="row_on">
+    <td>{lang_password_password_level}:</td>
+    <td>
+     <select name="newsettings[password_level]">
+{hook_passwdlevels}
+     </select>
+    </td>
+   </tr>
+
+   <tr class="row_on">
     <td colspan="2">&nbsp;</td>
    </tr>
 
