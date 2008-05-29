@@ -651,116 +651,37 @@
 			}
 			else
 			{
-				switch ( $GLOBALS['phpgw_info']['server']['password_level'] )
+				$len = strlen($passwd); 
+				if ( $len <= 8 )
 				{
-					case '8CHAR':
-						$this->_validate_password_8CHAR($passwd);
-						break;
-					case '2HIGH':
-						$this->_validate_password_8CHAR($passwd);
-						$this->_validate_password_2HIGH($passwd);
-						break;
-					case '2LOW':
-						$this->_validate_password_8CHAR($passwd);
-						$this->_validate_password_2HIGH($passwd);
-						$this->_validate_password_2LOW($passwd);
-						break;
-					case '2LOW':
-						$this->_validate_password_8CHAR($passwd);
-						$this->_validate_password_2HIGH($passwd);
-						$this->_validate_password_2LOW($passwd);
-						$this->_validate_password_1NUM($passwd);
-						break;
-					case 'NONALPHA':
-						$this->_validate_password_8CHAR($passwd);
-						$this->_validate_password_2HIGH($passwd);
-						$this->_validate_password_2LOW($passwd);
-						$this->_validate_password_1NUM($passwd);
-						$this->_validate_password_NONALPHA($passwd);
-						break;
-					default:
-						//nothing
+					throw new Exception('Password must be at least 8 characters long, not %1', $len);
+				}
+
+				$m = array();
+				if ( preg_match_all('/[a-z]/', $passwd, $m) < 2 )
+				{
+					throw new Exception('Password must contain at least 2 lower case characters');
+				}
+
+				$m = array();
+				if ( preg_match_all('/[A-Z]/', $passwd, $m) < 2 )
+				{
+					throw new Exception('Password must contain at least 2 upper case characters');
+				}
+
+				$m = array();
+				if ( !preg_match_all('/[0-9]/', $passwd, $m) )
+				{
+					throw new Exception('Password must contain at least 1 number');
+				}
+
+				$m = array();
+				if ( !preg_match_all('/\W/', $passwd, $m)  )
+				{
+					throw new Exception('Password must contain at least 1 non alphanumeric character');
 				}
 			}
 		}
-
-		/**
-		 * Check that a password is at least 8 characters long
-		 *
-		 * @param string $passwd the password to check
-		 *
-		 * @throws Exception when password is invalid/insecure
-		 */
-		protected function _validate_password_8CHAR($passwd)
-		{
-			$len = strlen($passwd); 
-			if ( $len < 8 )
-			{
-				throw new Exception(lang('Password must be at least 8 characters long, not %1'), $len);
-			}
-		}
-
-		/**
-		 * Check that a password contain at least 2 upper case characters
-		 *
-		 * @param string $passwd the password to check
-		 *
-		 * @throws Exception when password is invalid/insecure
-		 */
-		protected function _validate_password_2HIGH($passwd)
-		{
-			$m = array();
-			if ( preg_match_all('/[A-Z]/', $passwd, $m) < 2 )
-			{
-				throw new Exception(lang('Password must contain at least 2 upper case characters'));
-			}
-		}
-		/**
-		 * Check that a password contain at least 2 lower case characters
-		 *
-		 * @param string $passwd the password to check
-		 *
-		 * @throws Exception when password is invalid/insecure
-		 */
-		protected function _validate_password_2LOW($passwd)
-		{
-			$m = array();
-			if ( preg_match_all('/[a-z]/', $passwd, $m) < 2 )
-			{
-				throw new Exception(lang('Password must contain at least 2 lower case characters'));
-			}
-		}
-		/**
-		 * Check that a password contain at least 1 number
-		 *
-		 * @param string $passwd the password to check
-		 *
-		 * @throws Exception when password is invalid/insecure
-		 */
-		protected function _validate_password_1NUM($passwd)
-		{
-			$m = array();
-			if ( !preg_match_all('/[0-9]/', $passwd, $m) )
-			{
-				throw new Exception(lang('Password must contain at least 1 number'));
-			}
-		}
-		/**
-		 * Check that a password contain at least 1 non alphanumeric character
-		 *
-		 * @param string $passwd the password to check
-		 *
-		 * @throws Exception when password is invalid/insecure
-		 */
-		protected function _validate_password_NONALPHA($passwd)
-		{
-			$m = array();
-			if ( !preg_match_all('/\W/', $passwd, $m)  )
-			{
-				throw new Exception(lang('Password must contain at least 1 non alphanumeric character'));
-			}
-		}
-
 
 		/**
 		 * Check if the specified quota is a valid value
