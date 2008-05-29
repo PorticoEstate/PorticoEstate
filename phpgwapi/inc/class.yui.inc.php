@@ -126,6 +126,14 @@
 					$load = array('container_core', 'menu');
 					break;
 
+                case 'resize': 
+					$load = array('dragdrop', 'element-beta', 'resize-beta'); 
+					break; 
+
+				case 'layout': 
+					$load = array('dragdrop', 'element-beta', 'resize-beta', 'layout-beta'); 
+					break; 
+
 				case 'slider':
 					$load = array('dragdrop', 'animation', 'slider');
 					break;

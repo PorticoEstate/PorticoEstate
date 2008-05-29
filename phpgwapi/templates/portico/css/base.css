@@ -52,7 +52,89 @@ h4
   margin: 1.33em 0;
 }
 /* End headings fix */
+/*
+div#border-layout div.layout-east {
+	position: absolute;
+	right: 0px;
+	width: 200px;
+	top: 32px;
+	bottom: 32px;
+}
+div#border-layout div.layout-center {
+	position: absolute;
+	left: 200px;
+	right: 200px;
+	top: 32px;
+	bottom: 32px;
+}
+*/
+/* CSS rules for YUI Layout Manager */
 
+/* Hide header if we are using YUI */
+div#layout-doc div.header {
+	display: none;
+}
+
+/* Give the header a blue background */
+.yui-skin-sam .yui-layout .yui-layout-hd {
+	border: none;
+}
+
+/* Set the background color */
+.yui-skin-sam .yui-layout {
+/*	background: #fff; */
+}
+
+/* Style the body */
+.yui-skin-sam .yui-layout .yui-layout-unit div.yui-layout-bd {
+    border: 1px solid #808080;
+    border-bottom: none;
+    border-top: none;
+    *border-bottom-width: 0;
+    *border-top-width: 0;
+
+    background-color: #fff;
+}
+
+/* Style the text in the header */
+.yui-skin-sam .yui-layout .yui-layout-unit div.yui-layout-hd h2 {
+	font-size: 100%;
+	margin: 0px 8px;
+}
+
+/* CSS rules for north / south panel */
+
+div#layout-doc div.layout-north, div#layout-doc div.layout-south {
+	background: #000;
+	color: #fff;
+	float: left;
+	width: 100%;
+	height: 100%;
+}
+
+div#layout-doc div.layout-north h2 {
+	font-size: 100%;
+	line-height: 32px;
+	margin: 0px;
+	float: left;
+	margin-left: 8px;
+}
+
+div#layout-doc div.layout-north div.button-bar, div#layout-doc div.layout-south div.button-bar {
+	float: right;
+	line-height: 32px;
+}
+
+div#layout-doc div.layout-north div.button-bar a {
+	display: block;
+	float: left;
+	background-repeat: no-repeat;
+	background-position: left center;
+	padding: 0px 16px 0px 20px;
+	color: #fff;
+}
+
+/*
 div.header h2
 {
 	font-size: 1em;
@@ -264,7 +346,7 @@ div.panel div.body div.toolbar input
 {
 	padding: 0;
 }
-
+*/
 div.treeview
 {
 	margin: 0.2em;
@@ -294,6 +376,7 @@ div.treeview
 	margin-left: 19px;
 	background-position: left center;
 	background-repeat: no-repeat;
+	display: inline-block;
 }
 
 #navbar a.parent
