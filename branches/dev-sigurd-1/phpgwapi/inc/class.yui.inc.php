@@ -37,7 +37,7 @@
 	{
 		$GLOBALS['phpgw']->js = createObject('phpgwapi.javascript');
 	}
-	
+
 	class phpgwapi_yui
 	{
 		/**
@@ -129,6 +129,14 @@
 
 				case 'menu':
 					$load = array('container_core', 'menu'); // and containter??
+					break;
+
+				case 'resize':
+					$load = array('dragdrop', 'element-beta', 'resize-beta');
+					break;
+
+				case 'layout':
+					$load = array('dragdrop', 'element-beta', 'resize-beta', 'layout-beta');
 					break;
 
 				case 'slider':
