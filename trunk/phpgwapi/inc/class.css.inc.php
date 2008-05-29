@@ -79,9 +79,10 @@
 								foreach($files as $file => $ignored)
 								{
 
-									$links .= '<link rel="stylesheet" type="text/css" href="'
-								 	. $GLOBALS['phpgw_info']['server']['webserver_url']
-								 	. "/{$app}/templates/{$tpl}/css/{$file}.css\" />\n";									
+									$links .= <<<HTML
+					<link rel="stylesheet" type="text/css" href="{$GLOBALS['phpgw_info']['server']['webserver_url']}/{$app}/templates/{$tpl}/css/{$file}.css">
+
+HTML;
 								}
 							}
 						}
@@ -93,7 +94,10 @@
 			{
 				foreach($this->external_files as $file)
 				{					
-					$links .=  "<link href=\"{$GLOBALS['phpgw_info']['server']['webserver_url']}/{$file}\" type=\"text/css\"  rel=\"stylesheet\">\n";
+					$links .= <<<HTML
+					<link href="{$GLOBALS['phpgw_info']['server']['webserver_url']}/{$file}" type="text/css"  rel="stylesheet">
+
+HTML;
 				}
 			}
 			
