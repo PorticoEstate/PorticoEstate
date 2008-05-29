@@ -30,8 +30,7 @@
 	$theme_styles = array
 	(
 		'/phpgwapi/js/yahoo/reset-fonts-grids/reset-fonts-grids.css',
-		'/phpgwapi/js/yahoo/build/menu/assets/skins/sam/menu.css',
-		'/phpgwapi/js/yahoo/build/tabview/assets/skins/sam/tabview.css',
+		'/phpgwapi/js/yahoo/tabview/assets/skins/sam/tabview.css',
 		'/phpgwapi/templates/idots/css/base.css',
 		"/phpgwapi/templates/idots/css/{$GLOBALS['phpgw_info']['user']['preferences']['common']['theme']}.css",
 		"/{$app}/templates/base/css/base.css",

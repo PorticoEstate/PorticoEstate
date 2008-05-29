@@ -199,6 +199,10 @@ HTML;
 		 */
 		public static function tabview_setup($id)
 		{
-			$GLOBALS['phpgw']->js->add_event('load', "var tabs_{$id} = new YAHOO.widget.TabView('{$id}');");
+			$css = 'phpgwapi/js/yahoo/tabview/assets/skins/sam/tabview.css';
+			$GLOBALS['phpgw']->css->add_external_file($css);
+
+			$js = "var tabs_{$id} = new YAHOO.widget.TabView('{$id}');";
+			$GLOBALS['phpgw']->js->add_event('load', $js);
 		}
 	}
