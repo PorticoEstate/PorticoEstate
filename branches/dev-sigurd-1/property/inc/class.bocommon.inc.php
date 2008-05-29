@@ -78,6 +78,11 @@
 			}
 			$this->async = &$GLOBALS['phpgw']->asyncservice;
 
+			if(!isset($GLOBALS['phpgw']->js) || !is_object($GLOBALS['phpgw']->js)) 
+			{ 
+				$GLOBALS['phpgw']->js = CreateObject('phpgwapi.javascript'); 
+			} 
+
 			$this->join		= $this->socommon->join;
 			$this->left_join	= $this->socommon->left_join;
 			$this->like		= $this->socommon->like;
