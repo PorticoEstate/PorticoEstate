@@ -22,7 +22,8 @@
 			'edit_user'		=> True,
 			'edit_group'	=> True,
 			'view_user'		=> True,
-			'group_manager'	=> True
+			'group_manager'	=> True,
+			'sync_accounts_contacts' => True
 		);
 
 		private $bo;
@@ -1089,6 +1090,18 @@
 			$t->set_var('rows',ExecMethod('admin.uimenuclass.createHTMLCode','edit_group'));
 
 			$t->pfp('out','form');
+		}
+
+		/**
+		* Generates contacts from users
+		*
+		* @return void
+		*/
+
+		function sync_accounts_contacts()
+		{
+			$GLOBALS['phpgw']->accounts->sync_accounts_contacts();
+			$GLOBALS['phpgw']->redirect_link('/admin/index.php');
 		}
 
 	}
