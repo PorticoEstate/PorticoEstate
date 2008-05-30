@@ -52,8 +52,11 @@
 		*/
 		public function get($mtype = null)
 		{
+			static $menu = null;
+
+			$menu = null; 
 			//$menu = phpgwapi_cache::session_get('phpgwapi', 'menu');
-			$menu = null;
+
 			if ( !$menu )
 			{
 				$menu = self::load();
