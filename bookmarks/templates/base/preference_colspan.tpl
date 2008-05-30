@@ -1,4 +1,4 @@
-  <tr bgcolor="{bg_color}">
+  <tr class="th">
     <td>{string}</td>
     <td align="center" width="8%">{lang_read}</td>
     <td align="center" width="8%">{lang_edit}</td>

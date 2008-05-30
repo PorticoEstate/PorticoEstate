@@ -345,8 +345,8 @@
 				foreach ( $modules as $module )
 				{
 					$aclobj->add($module, 'run', phpgwapi_acl::READ);
-					$aclobj->save_repository($module);
 				}
+				$aclobj->save_repository();
 
 			}
 			catch (Exception $e)

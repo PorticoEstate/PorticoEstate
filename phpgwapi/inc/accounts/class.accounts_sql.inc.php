@@ -109,7 +109,7 @@
 			$this->db->query('INSERT INTO phpgw_accounts (' . implode(', ', array_keys($data)) . ') '.
 							'VALUES (' . implode(', ', $data) . ')', __LINE__, __FILE__);
 
-			$account->id = $this->db->get_last_insert_id('phpgw_accounts', 'account_id');
+			$account->id = $id;
 			return $account->id;
 		}
 
@@ -167,7 +167,7 @@
 			$this->db->query('INSERT INTO phpgw_accounts (' . implode(', ', $fields) . ') '.
 							'VALUES (' . implode(', ', $data) . ')', __LINE__, __FILE__);
 
-			$account->id = $this->db->get_last_insert_id('phpgw_accounts', 'account_id');
+			$account->id = $data['id'];
 
 			$this->account = $account;
 
@@ -644,13 +644,12 @@
 				$ids[] = $this->db->f('group_id');
 			}
 
-			$memberships = array();
+			$this->memberships[$account_id] = array();
 			foreach ( $ids as $id )
 			{
-				$memberships[$id] = $this->get($id);
+				$this->memberships[$account_id][$id] = $this->get($id);
 			}
 
-			$this->memberships[$account_id] = $memberships;
 			return $this->memberships[$account_id];
 		}
 
