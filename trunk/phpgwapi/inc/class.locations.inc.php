@@ -37,14 +37,19 @@
 	class phpgwapi_locations
 	{
 		/**
-		* @var object Database connection
+		* @var object $_db Database connection
 		*/
 		protected $_db;
 
 		/**
-		* @var string $join syntax for database joins
+		* @var string $_join syntax for database joins
 		*/
 		protected $_join = 'JOIN';
+
+		/**
+		* @var string $_like syntax for like clause in queries
+		*/
+		protected $_like = 'LIKE';
 
 		/**
 		* Constructor
@@ -55,6 +60,7 @@
 		{
 			$this->_db =& $GLOBALS['phpgw']->db;
 			$this->_join =& $this->_db->join;
+			$this->_like =& $this->_db->like;
 		}
 
 		/**
@@ -115,7 +121,7 @@
 		 	}
 			$this->_db->query($sql, __LINE__, __FILE__);
 
-			return $this->_db->last_insert_id('phpgw_locations', 'location_id');
+			return $this->_db->get_last_insert_id('phpgw_locations', 'location_id');
 		}
 
 		/**
@@ -176,6 +182,15 @@
 		 */
 		public function get_id($appname, $location)
 		{
+			static $map = array();
+
+			if ( isset($map[$appname][$location]) )
+			{
+				return $map[$appname][$location];
+			}
+
+			$map[$appname][$location] = 0;
+
 			$appname  = $this->_db->db_addslashes($appname);
 			$location = $this->_db->db_addslashes($location);
 
@@ -188,9 +203,48 @@
 			$this->_db->query($sql, __LINE__, __FILE__);
 			if ( $this->_db->next_record() )
 			{
-				return (int) $this->_db->f('location_id');
+				$map[$appname][$location] = $this->_db->f('location_id');
 			}
-			return 0;
+			return $map[$appname][$location];
+		}
+
+		/**
+		 * Get a list of sub locations for a give location
+		 *
+		 * @param string $appname  the name of the module being looked up
+		 * @param string $location the location within the module to look up
+		 *
+		 * @return array map of locations (id => namne)
+		 */
+		public function get_subs($appname, $location)
+		{
+			static $map = array();
+
+			if ( isset($map[$appname][$location]) )
+			{
+				return $map[$appname][$location];
+			}
+
+			$map[$appname][$location] = array();
+
+			$entries =& $map[$appname][$location]; 
+			$appname  = $this->_db->db_addslashes($appname);
+			$location = $this->_db->db_addslashes($location);
+
+			$sql = 'SELECT phpgw_locations.location_id, phpgw_locations.name'
+				. ' FROM phpgw_locations, phpgw_applications'
+				. ' WHERE phpgw_locations.app_id = phpgw_applications.app_id'
+					. " AND phpgw_locations.name {$this->_like} '{$location}%'"
+					. " AND phpgw_locations.name != '{$location}'"
+					. " AND phpgw_applications.app_name='{$appname}'";
+
+			$this->_db->query($sql, __LINE__, __FILE__);
+
+			if ( $this->_db->next_record() )
+			{
+				$entries[$this->_db->f('location_id')] = $this->_db->f('name', true);
+			}
+			return $entries;
 		}
 
 		/**
