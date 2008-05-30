@@ -52,8 +52,9 @@
 	}
 	else
 	{
-		$login = isset($_POST['login']) ? $_POST['login'] : '';
-		$passwd = isset($_POST['passwd']) ? $_POST['passwd'] : '';
+		$login = phpgw::get_var('login', 'string', 'POST');
+		// remove entities to stop mangling
+		$passwd = html_entity_decode(phpgw::get_var('passwd', 'string', 'POST'));
 	}
 	if ($GLOBALS['phpgw_info']['server']['auth_type'] == 'http' && isset($_SERVER['PHP_AUTH_USER']))
 	{
