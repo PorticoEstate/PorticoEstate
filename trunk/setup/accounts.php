@@ -203,8 +203,9 @@
 		$GLOBALS['phpgw']->accounts = CreateObject('phpgwapi.accounts');
 
 		/* Posted admin data */
-		$passwd			= phpgw::get_var('passwd', 'string', 'POST');
-		$passwd2		= phpgw::get_var('passwd2', 'string', 'POST');
+		// We need to reverse the entities or the password can be mangled
+		$passwd			= html_entity_decode(phpgw::get_var('passwd', 'string', 'POST'));
+		$passwd2		= html_entity_decode(phpgw::get_var('passwd2', 'string', 'POST'));
 		$username		= phpgw::get_var('username', 'string', 'POST');
 		$fname			= phpgw::get_var('fname', 'string', 'POST');
 		$lname			= phpgw::get_var('lname', 'string', 'POST');
