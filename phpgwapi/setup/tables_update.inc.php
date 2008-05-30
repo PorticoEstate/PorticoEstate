@@ -1785,6 +1785,14 @@
 	{
 		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
 
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('phpgw_accounts', 'account_pwd', array
+		(
+			'type'		=> 'varchar',
+			'precision' => '40',
+			'nullable'	=> false,
+			'default'	=> ''
+		));
+
 		// Convert the SQL accounts hashes to the new format
 		$accounts = array();
 		$sql = 'SELECT account_id, account_pwd FROM phpgw_accounts';
