@@ -362,6 +362,7 @@
 				);
 				$this->clear_session_cache();
 			}
+			$GLOBALS['phpgw']->locations->add('run', "Automatically added on install - run {$appname}", $appname, false);
 		}
 
 		/**
