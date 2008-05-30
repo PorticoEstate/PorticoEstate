@@ -1930,7 +1930,7 @@
 				'priority' => array('type' => 'int', 'precision' => 4,'nullable' => True),
 				'active_from' => array('type' => 'int', 'precision' => 4,'nullable' => True),
 				'active_to' => array('type' => 'int', 'precision' => 4,'nullable' => True),
-				'created_at' => array('type' => 'int', 'precision' => 4,'nullable' => False),
+				'created_on' => array('type' => 'int', 'precision' => 4,'nullable' => False),
 				'created_by' => array('type' => 'int', 'precision' => 4,'nullable' => False),
 				'expired_on' => array('type' => 'int', 'precision' => 4,'nullable' => True),
 				'expired_by' => array('type' => 'int', 'precision' => 4,'nullable' => True),
