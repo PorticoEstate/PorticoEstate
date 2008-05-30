@@ -191,6 +191,28 @@
 
 		function phpgw_display_login($variables)
 		{
+			
+			$lang = array
+			(
+				'domain'	=> lang('domain'),
+				'username'	=> lang('username'),
+				'password'	=> lang('password')
+			);
+
+			$text_len = 0;
+			foreach($lang as $key => $text)
+			{
+				if($text_len < strlen($text))
+				{
+					$text_len = strlen($text);
+				}
+			}
+
+			foreach($lang as $key => & $text)
+			{
+				$text = str_repeat('&nbsp;', ($text_len-strlen($text))) . $text;
+			}
+		
 			$this->tmpl->set_file(array('login_form'  => 'login.tpl'));
 			$this->tmpl->set_var('charset', lang('charset'));
 			$this->tmpl->set_block('login_form', 'domain_option', 'domain_options');
@@ -234,7 +256,7 @@
 				$this->tmpl->set_var(
 						array(
 							'domain_from_hosts'	=> '',
-							'lang_domain'		=> lang('domain')
+							'lang_domain'		=> $lang['domain']
 						)
 					);
 			}
@@ -379,8 +401,8 @@
 			$this->tmpl->set_var('cd', $this->check_logoutcode($cd) );
 			$this->tmpl->set_var('last_loginid', $last_loginid);
 
-			$this->tmpl->set_var('lang_username', lang('username'));
-			$this->tmpl->set_var('lang_password', lang('password'));
+			$this->tmpl->set_var('lang_username', $lang['username']);
+			$this->tmpl->set_var('lang_password', $lang['password']);
 			if(isset($variables['lang_login']))
 			{
 				$this->tmpl->set_var('lang_login', $variables['lang_login']);
