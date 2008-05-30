@@ -1,5 +1,5 @@
 <!-- $Id: preference_acl_row.tpl 17937 2007-02-10 16:11:37Z sigurdne $ -->
-   <tr class="{row_color}">
+   <tr class="{row_class}">
     <td>{user}</td>
     <td align="center"><input type="checkbox" name="{read}" value="Y"{read_selected}></td>
     <td align="center"><input type="checkbox" name="{add}" value="Y"{add_selected}></td>

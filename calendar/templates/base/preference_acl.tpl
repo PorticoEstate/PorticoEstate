@@ -5,7 +5,7 @@
   {nml}
   <td width="40%">
    <div align="center">
-    <form method="POST" action="{action_url}">
+    <form method="post" action="{action_url}">
 {common_hidden_vars}
      <input type="text" name="query" value="{search_value}">
      <input type="submit" name="search" value="{search}">
@@ -15,7 +15,7 @@
   {nmr}
  </tr>
 </table>
-<form method="POST" action="{action_url}">
+<form method="post" action="{action_url}">
  <table border="0" align="center" width="50%" cols="4">
 {row}
  </table>
