@@ -197,12 +197,13 @@
 			if (isset($this->event['participants'][intval($GLOBALS['phpgw_info']['user']['person_id'])]))
 			{
 				$time = phpgw::get_var('time', 'int', 'POST');
-				$this->template->set_var(Array(
+				$this->template->set_var(array
+				(
 					'hidden_vars'   => $this->html->input_hidden('cal_id',$this->bo->cal_id),
 					'input_text'    => lang('Email reminder'),
-					'input_days'    => $this->html->select('time[days]', isset($time['days']) ? $time['days'] : 0), range(0,31), True).' '.lang('days'),
-					'input_hours'   => $this->html->select('time[hours]', isset($time['hours']) ? $time['hours'] : 0),range(0,24),True).' '.lang('hours'),
-					'input_minutes' => $this->html->select('time[mins]', isset($time['mins']) ? $time['mins'] : 0), range(0,60),True).' '.lang('minutes').' '.lang('before the event'),
+					'input_days'    => $this->html->select('time[days]', isset($time['days']) && $time['days'] ? $time['days'] : 0, range(0,31), True).' '.lang('days'),
+					'input_hours'   => $this->html->select('time[hours]', isset($time['hours']) && $time['hours'] ? $time['hours'] : 0, range(0,24),True).' '.lang('hours'),
+					'input_minutes' => $this->html->select('time[mins]', isset($time['mins']) && $time['mins'] ? $time['mins'] : 0, range(0,60),True).' '.lang('minutes').' '.lang('before the event'),
 					'input_owner'   => $this->html->select('owner',$GLOBALS['phpgw_info']['user']['account_id'],$this->bo->participants($this->event,True),True),
 					'input_add'     => $this->html->submit_button('add','Add Alarm')
 				));
