@@ -14,13 +14,14 @@
 	{
 		function insert_channel($database_id, $device_uri)
 		{
+				syncml_logger::get_instance()->log("insert_channel($database_id,$device_uri)");
+				syncml_logger::get_instance()->log("insert_channel :" .sprintf('
+						                INSERT INTO phpgw_syncml_channels(database_id, device_uri, last_merge) VALUES(\'%d\', \'%s\', 0)', $database_id, $device_uri));
 			$GLOBALS['phpgw']->db->query(sprintf('
-				INSERT phpgw_syncml_channels(
-					database_id, device_uri)
-				VALUES(
-					\'%d\', \'%s\')',
+				INSERT INTO phpgw_syncml_channels(database_id, device_uri, last_merge) VALUES( \'%d\', \'%s\', 0)',
 				$database_id, $device_uri),
 				__LINE__, __FILE__);
+				syncml_logger::get_instance()->log('insert_channel done');
 
 			return $GLOBALS['phpgw']->db->get_last_insert_id(
 				'phpgw_syncml_channel', 'channel_id');

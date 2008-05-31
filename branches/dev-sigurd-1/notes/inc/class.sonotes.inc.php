@@ -134,7 +134,7 @@
 				(
 					'note_id'	=> $this->db->f('note_id'),
 					'owner_id'	=> $this->db->f('note_owner'),
-					'owner'		=> $GLOBALS['phpgw']->accounts->id2name($this->db->f('note_owner')),
+					'owner'		=> $this->db->f('note_owner'),
 					'access'	=> $this->db->f('note_access'),
 					'date'		=> $GLOBALS['phpgw']->common->show_date($this->db->f('note_date')),
 					'cat_id'	=> $this->db->f('note_category'),
@@ -192,4 +192,3 @@
 			return $this->db->affected_rows() > 0;
 		}
 	}
-?>

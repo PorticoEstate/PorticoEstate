@@ -62,7 +62,7 @@
 					break;
 				case SYNCML_ALERT_NEXTMESSAGE:
 					break;
-				case SYNCML_ALERT_ENDOFDATA:
+				case SYNCML_ALERT_NOENDOFDATA:
 					break;
 			}
 		}
@@ -72,14 +72,16 @@
 			$sodatabase = new syncml_sodatabase();
 			$sochannel = new syncml_sochannel();
 
+			syncml_logger::get_instance()->log_data("_process_sync_init item", $this->item[0]);
 			$database = $sodatabase->get_database_by_uri(
 				$this->item[0]['target']['locuri']);
 
 			$database_id = $database['database_id'];
 			$owner_id = $database['account_id'];
-
+			syncml_logger::get_instance()->log("_process_sync_init user $database_id $owner_id ");
 			$status = $this->validate_database(
 				$database_id, $owner_id, $session->account_id);
+			syncml_logger::get_instance()->log("_process_sync_init status $status ");
 
 			if(!$status)
 			{
@@ -90,6 +92,7 @@
 
 				$status = $this->validate_channel($device_last);
 			}
+			syncml_logger::get_instance()->log_data("_process_sync_init status", $status);
 
 			$response->add_status_with_anchor(
 				$this->cmdid, $session->msgid, 'Alert',
@@ -101,11 +104,14 @@
 			if($status[0] == SYNCML_STATUS_OK ||
 				$status[0] == SYNCML_STATUS_REFRESHREQUIRED)
 			{
+			syncml_logger::get_instance()->log_data("_process_sync_init ok channel ", $channel_id);
 				if(!$channel_id)
 				{
 					$channel_id = $sochannel->insert_channel(
 						$database_id, $session->get_var('device_uri'));
 				}
+
+			syncml_logger::get_instance()->log_data("_process_sync_init channel ", $channel_id);
 
 				$database = new syncml_database($channel_id);
 				$database->merge_changes();

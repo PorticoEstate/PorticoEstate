@@ -290,10 +290,24 @@ class ged_ui
 
 	}
 	
+	// wrapper to use new phpgw::get_var if it exists
+	// and old get_var otherwise
+	function get_var($varname,$method=null,$default=null)
+	{
+		if ( is_callable(array('phpgw', 'get_var')))
+		{
+			return phpgw::get_var($varname,$method,$default);
+		}
+		else
+		{
+			return get_var($varname,$method, $default);
+		}
+	}
+	
 	// TODO acl here
 	function view()
 	{
-		$version_id=get_var('version_id',array('GET','POST'));
+		$version_id=$this->get_var('version_id',array('GET','POST'));
 
 		$version=$this->ged_dm->get_version_info($version_id);
     
@@ -326,7 +340,7 @@ class ged_ui
 	// TODO acl here
 	function download()
 	{
-		$version_id=get_var('version_id',array('GET','POST'));
+		$version_id=$this->get_var('version_id',array('GET','POST'));
 
 		$version=$this->ged_dm->get_version_info($version_id);
 
@@ -359,8 +373,8 @@ class ged_ui
 	// TODO acl here
 	function package_download()
 	{
-		$element_id=get_var('element_id',array('GET','POST'));
-		$version_id=get_var('version_id',array('GET','POST'));
+		$element_id=$this->get_var('element_id',array('GET','POST'));
+		$version_id=$this->get_var('version_id',array('GET','POST'));
 		
 		if ( $version_id != '' )
 			$theversion=$this->ged_dm->get_version_info($version_id);
@@ -832,7 +846,7 @@ class ged_ui
 				
 				$file_version=null;
 
-					$file_version=$this->ged_dm->get_last_version($file['element_id']);
+				$file_version=$this->ged_dm->get_last_version($file['element_id']);
 				
 				$this->t->set_var('tr_class', $tr_class);
 
@@ -906,8 +920,8 @@ class ged_ui
 		if ( $this->debug('browse') )
 			print ( "browse: entering<br>\n");
 
-		$focused_id=(int)get_var('focused_id',array('GET','POST'));
-		$focused_version_id=(int)get_var('version_id',array('GET','POST'));
+		$focused_id=(int)$this->get_var('focused_id',array('GET','POST'));
+		$focused_version_id=(int)$this->get_var('version_id',array('GET','POST'));
 
 		if ($focused_id=="" || ! $this->ged_dm->can_read($focused_id))
 			$focused_id=0;
@@ -963,14 +977,14 @@ class ged_ui
 				{
 					$focused_version=$this->ged_dm->get_version_info($focused_version_id);
 					
-					if ( isset($this->ged_dm->acl[$focused_element['element_id']]['statuses']) && is_array($this->ged_dm->acl[$focused_element['element_id']]['statuses']))
-				{
+					if ( isset($this->ged_dm->acl[$focused_element['element_id']]['statuses']) && is_array($this->ged_dm->acl[$focused_element['element_id']]['statuses']) && ! empty($this->ged_dm->acl[$focused_element['element_id']]['statuses']))
+					{
 						if ( ! in_array($focused_version['status'], $this->ged_dm->acl[$focused_element['element_id']]['statuses']));
-				{
-					$focused_version=$last_version;
+						{
+							$focused_version=$last_version;
 							$focused_version_id=$focused_version['version_id'];
 						}
-				}
+					}
 				
 				}
 				else
@@ -1105,7 +1119,7 @@ class ged_ui
 	// New status management : at first status=working
 	function add_file()
 	{
-		$parent_id=get_var('parent_id',array('GET','POST'));
+		$parent_id=$this->get_var('parent_id',array('GET','POST'));
 		
 		$link_data=null;
 		$link_data['menuaction']='ged.ged_ui.browse';
@@ -1120,14 +1134,14 @@ class ged_ui
 			$GLOBALS['phpgw']->redirect_link('/index.php', $link_data);
 		}
 		
-		$add_file=get_var('add_file',array('GET','POST'));
-		$name=addslashes(get_var('name',array('GET','POST')));
-		$referenceq=addslashes(get_var('referenceq',array('GET','POST')));
-		$major=addslashes(get_var('major',array('GET','POST')));
-		$minor=addslashes(get_var('minor',array('GET','POST')));
-		$description=addslashes(get_var('description', array('GET', 'POST')));
-		$doc_type=addslashes(get_var('document_type', array('GET', 'POST')));
-		$validity_period=get_var('validity_period', array('GET', 'POST'));
+		$add_file=$this->get_var('add_file',array('GET','POST'));
+		$name=addslashes($this->get_var('name',array('GET','POST')));
+		$referenceq=addslashes($this->get_var('referenceq',array('GET','POST')));
+		$major=addslashes($this->get_var('major',array('GET','POST')));
+		$minor=addslashes($this->get_var('minor',array('GET','POST')));
+		$description=addslashes($this->get_var('description', array('GET', 'POST')));
+		$doc_type=addslashes($this->get_var('document_type', array('GET', 'POST')));
+		$validity_period=$this->get_var('validity_period', array('GET', 'POST'));
 
 		$this->set_template_defaults();
 
@@ -1234,8 +1248,8 @@ class ged_ui
 	function delete_file()
 	{
 		
-		$element_id=get_var('element_id', array('GET', 'POST'));
-		$delete_file=get_var('delete_file', array('GET', 'POST'));
+		$element_id=$this->get_var('element_id', array('GET', 'POST'));
+		$delete_file=$this->get_var('delete_file', array('GET', 'POST'));
 
 		// Contr�le des droits	
 		if ( ! $this->ged_dm->can_write($element_id) || $element_id==0 )
@@ -1278,7 +1292,7 @@ class ged_ui
 
 	function add_folder()
 	{
-		$parent_id=get_var('parent_id', array('GET', 'POST'));
+		$parent_id=$this->get_var('parent_id', array('GET', 'POST'));
 		
 		$link_data=null;
 		$link_data['menuaction']='ged.ged_ui.browse';
@@ -1289,11 +1303,11 @@ class ged_ui
 				$GLOBALS['phpgw']->redirect_link('/index.php', $link_data);
 		}
 
-		$add_folder=get_var('add_folder', array('GET', 'POST'));
-		$name=addslashes(get_var('name', array('GET', 'POST')));
-		$description=addslashes(get_var('description', array('GET', 'POST')));
-		$referenceq=addslashes(get_var('referenceq', array('GET', 'POST')));
-		$project_name=addslashes(get_var('project_name', array('GET', 'POST')));
+		$add_folder=$this->get_var('add_folder', array('GET', 'POST'));
+		$name=addslashes($this->get_var('name', array('GET', 'POST')));
+		$description=addslashes($this->get_var('description', array('GET', 'POST')));
+		$referenceq=addslashes($this->get_var('referenceq', array('GET', 'POST')));
+		$project_name=addslashes($this->get_var('project_name', array('GET', 'POST')));
 
 		$this->set_template_defaults();
 
@@ -1368,7 +1382,7 @@ class ged_ui
 	function update_folder()
 	{
 		
-		$element_id=get_var('element_id', array('GET', 'POST'));
+		$element_id=$this->get_var('element_id', array('GET', 'POST'));
 		
 		$link_data=null;
 		$link_data['menuaction']='ged.ged_ui.browse';
@@ -1379,12 +1393,12 @@ class ged_ui
 				$GLOBALS['phpgw']->redirect_link('/index.php', $link_data);
 		}
 
-		$update_folder=get_var('update_folder', array('GET', 'POST'));
+		$update_folder=$this->get_var('update_folder', array('GET', 'POST'));
 		
-		$folder_name=get_var('folder_name', array('GET', 'POST'));
-		$folder_description=get_var('folder_description', array('GET', 'POST'));
-		$folder_reference=get_var('folder_reference', array('GET', 'POST'));
-		$project_name=get_var('project_name', array('GET', 'POST'));
+		$folder_name=$this->get_var('folder_name', array('GET', 'POST'));
+		$folder_description=$this->get_var('folder_description', array('GET', 'POST'));
+		$folder_reference=$this->get_var('folder_reference', array('GET', 'POST'));
+		$project_name=$this->get_var('project_name', array('GET', 'POST'));
 
 		$this->set_template_defaults();
 		
@@ -1467,8 +1481,8 @@ class ged_ui
 	// TODO : Afficher quelques details... nom etc.
 	function delete_folder()
 	{
-		$element_id=get_var('element_id', array('GET', 'POST'));
-		$delete_folder=get_var('delete_folder', array('GET', 'POST'));
+		$element_id=$this->get_var('element_id', array('GET', 'POST'));
+		$delete_folder=$this->get_var('delete_folder', array('GET', 'POST'));
 
 		// Contr�le des droits	
 		if ( ! $this->ged_dm->can_write($element_id) || $element_id==0 )
@@ -1512,8 +1526,8 @@ class ged_ui
 	
 	function change_acl ()
 	{
-		$element_id=get_var('element_id', array('GET', 'POST'));
-		$update_acl=get_var('update_acl', array('POST'));
+		$element_id=$this->get_var('element_id', array('GET', 'POST'));
+		$update_acl=$this->get_var('update_acl', array('POST'));
 		$statuses=$this->flows->get_app_statuses('ged');
 		
 		//DEBUG
@@ -1531,7 +1545,7 @@ class ged_ui
 			//DEBUG
 			//_debug_array( $_POST );
 			$newacl=null;
-			$newacl=get_var('newacl', array('POST'));
+			$newacl=$this->get_var('newacl', array('POST'));
 			
 			if ( $newacl['account_id'] !="" && ( $newacl['read']=='on' || $newacl['write']=='on' || $newacl['delete']=='on' || $newacl['changeacl']=='on') )
 			{
@@ -1576,7 +1590,7 @@ class ged_ui
 			}
 			
 			$acl=null;
-			$acl=get_var('acl', array('POST'));
+			$acl=$this->get_var('acl', array('POST'));
 			
 			//DEBUG
 			//_debug_array($acl);
@@ -1781,9 +1795,9 @@ class ged_ui
 	// (removed all the previous hardcoded flow functions)
 	function flow_do()
 	{
-		$transition=get_var('transition', array('POST', 'GET'));
-		$element_id=get_var('element_id', array('POST', 'GET'));
-		$version_id=get_var('version_id', array('POST', 'GET'));
+		$transition=$this->get_var('transition', array('POST', 'GET'));
+		$element_id=$this->get_var('element_id', array('POST', 'GET'));
+		$version_id=$this->get_var('version_id', array('POST', 'GET'));
 		
 		$element=$this->ged_dm->get_element_info($element_id);
 		$version=$this->ged_dm->get_version_info($version_id);
@@ -1815,8 +1829,8 @@ class ged_ui
 	// Search
 	function search()
 	{
-		$search_query=get_var('search_query', array('GET', 'POST'));
-		$search=get_var('search', array('GET', 'POST'));
+		$search_query=$this->get_var('search_query', array('GET', 'POST'));
+		$search=$this->get_var('search', array('GET', 'POST'));
 
 		$this->set_template_defaults();
 		$this->display_app_header();
@@ -2057,7 +2071,7 @@ class ged_ui
 
 	function chrono()
 	{
-		$project_root=get_var('project_root',array('GET'));
+		$project_root=$this->get_var('project_root',array('GET'));
 		
 		$this->set_template_defaults();
 		$this->display_app_header();
@@ -2118,3 +2132,4 @@ class ged_ui
 }
 
 ?>
+

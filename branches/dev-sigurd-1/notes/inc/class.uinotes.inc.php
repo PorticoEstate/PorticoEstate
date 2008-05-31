@@ -188,8 +188,8 @@
 
 		function edit()
 		{
-			$note_id	= get_var('note_id',array('POST','GET'));
-			$values		= get_var('values',array('POST'));
+			$note_id	= phpgw::get_var('note_id', 'int');
+			$values		= phpgw::get_var('values', 'string');
 
 			if (is_array($values))
 			{
@@ -252,9 +252,9 @@
 
 		function delete()
 		{
-			$note_id	= get_var('note_id',array('POST','GET'));
-			$delete		= get_var('delete',array('POST'));
-			$cancel		= get_var('cancel',array('POST'));
+			$note_id	= phpgw::get_var('note_id', 'int');
+			$delete		= phpgw::get_var('delete', 'bool');
+			$cancel		= phpgw::get_var('cancel', 'bool');
 
 			$link_data = array
 			(
@@ -294,8 +294,8 @@
 
 		function view()
 		{
-			$note_id	= get_var('note_id',array('GET'));
-			$action		= get_var('action',array('GET'));
+			$note_id	= phpgw::get_var('note_id', 'int');
+			$action		= phpgw::get_var('action', 'string');
 
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('notes') . ': ' . lang('view note');
 
@@ -318,4 +318,3 @@
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('view' => $data));
 		}
 	}
-?>

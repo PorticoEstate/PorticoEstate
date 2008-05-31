@@ -100,13 +100,14 @@ class jscalendar
 	{
 		if ($datestr === '')
 		{
-			return False;
+			return time();
 		}
-		$fields = split('[./-]',$datestr);
-		foreach(split('[./-]',$this->dateformat) as $n => $field)
+		$pat = '/[\.\/\-]/';
+		$fields = preg_split($pat, $datestr);
+		foreach ( preg_split($pat, $this->dateformat) as $n => $field)
 		{
-			$date[$field] = intval($fields[$n]);
-			if($field == 'M')
+			$date[$field] = (int) $fields[$n];
+			if ( $field == 'M')
 			{
 				for($i=1; $i <=12; $i++)
 				{
@@ -117,7 +118,8 @@ class jscalendar
 				}
 			}
 		}
-		$ret = array(
+		$ret = array
+		(
 			$year  => $date['Y'],
 			$month => $date['m'],
 			$day   => $date['d']
@@ -184,4 +186,4 @@ class jscalendar
 		$GLOBALS['phpgw']->js->add_event('load', "Calendar.setup({inputField : '$id', button : '{$id}-trigger'});");
 	}
 }
-?>
+

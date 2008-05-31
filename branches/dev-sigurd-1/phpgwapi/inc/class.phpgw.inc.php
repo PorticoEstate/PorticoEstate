@@ -144,7 +144,14 @@
 			return $this->session->link($url, $extravars, $redirect);
 		}
 
-		function redirect_link($url = '',$extravars=array())
+		/**
+		 * Redirect to another URL
+		 *
+		 * @param string $string The url the link is for
+		 * @param string $extravars	Extra params to be passed to the url
+		 * @return null
+		 */
+		function redirect_link($url = '',$extravars = array())
 		{
 			$this->redirect($this->session->link($url, $extravars, true));
 		}
@@ -154,15 +161,13 @@
 		*
 		* Stop session theft for "GET" based sessions
 		*
-		* @access public
 		* @param string $url the target url
-		* @returns string safe redirect url
-		* @author Dave Hall
+		* @return string the processed URL for a safe redirection
 		*/
 		public static function safe_redirect($url)
 		{
-			return $GLOBALS['phpgw_info']['server']['webserver_url']
-				. '/redirect.php?go=' . urlencode($url);
+			$url = urlencode($url);
+			return "{$GLOBALS['phpgw_info']['server']['webserver_url']}/redirect.php?go={$url}";
 		}
 		
 		/**

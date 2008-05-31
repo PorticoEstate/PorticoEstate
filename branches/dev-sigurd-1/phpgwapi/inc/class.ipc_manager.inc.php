@@ -167,7 +167,8 @@ class ipc_manager
 	function _checkIPCApp($appName)
 	{
 		// 1: check if app is available
-		if (isset($GLOBALS['phpgw']->applications->data[$appName]) == false)
+		$data = $GLOBALS['phpgw']->applications->read();
+		if (isset($data[$appName]) == false)
 		{
 			return false;
 		}
@@ -195,4 +196,3 @@ class ipc_manager
 	}
 
 }
-?>

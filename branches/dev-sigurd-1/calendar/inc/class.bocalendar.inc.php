@@ -139,6 +139,8 @@
 		var $save_owner;
 		var $return_to;
 
+		protected $_jscal;
+
 		public function __construct($session = false)
 		{
 			$this->cat = CreateObject('phpgwapi.categories');
@@ -513,14 +515,14 @@
 
 			$this->filter = $data['filter'];
 			$this->cat_id = $data['cat_id'];
-			$this->sortby = (isset($data['sortby']) && $data['sortby']? $data['sortby']:'');
-			$this->owner  = intval($data['owner']);
-			$this->save_owner = (isset($data['save_owner'])?intval($data['save_owner']):0)	;
-			$this->year   = intval($data['year']);
-			$this->month  = intval($data['month']);
-			$this->day    = intval($data['day']);
-			$this->num_months = (isset($data['num_months'])?intval($data['num_months']):0);
-			$this->return_to = (isset($data['return_to'])?$data['return_to']:'');
+			$this->sortby = isset($data['sortby']) && $data['sortby'] ? $data['sortby']:'';
+			$this->owner  = (int) $data['owner'];
+			$this->save_owner = isset($data['save_owner']) ? (int) $data['save_owner'] : 0;
+			$this->year   = (int) $data['year'];
+			$this->month  = (int) $data['month'];
+			$this->day    = (int) $data['day'];
+			$this->num_months = isset($data['num_months']) ? (int) $data['num_months'] : 0;
+			$this->return_to = isset($data['return_to']) ? $data['return_to'] : array();
 		}
 
 		function read_entry($id = 0)
@@ -692,21 +694,24 @@
 		{
 			$l_cal = isset($params['cal']) && $params['cal'] ? $params['cal'] : phpgw::get_var('cal', 'string', 'POST');
 			$l_participants = isset($params['participants']) ? $params['participants'] : phpgw::get_var('participants', 'string', 'POST');
-			$l_categories = $params['categories'] ? $params['categories'] : phpgw::get_var('categories', 'strint', 'POST');
-			$l_start = isset($params['start']) && $params['start'] ? $params['start'] : phpgw::get_var('start', 'int', 'POST');
-			$l_end = isset($params['end']) && $params['end'] ? $params['end'] : phpgw::get_var('end', 'int', 'POST');
+			$l_categories = isset($params['categories']) ? $params['categories'] : phpgw::get_var('categories', 'string', 'POST');
+			$l_start = isset($params['start']) && $params['start'] ? $params['start'] : phpgw::get_var('start', 'string', 'POST');
+			$l_end = isset($params['end']) && $params['end'] ? $params['end'] : phpgw::get_var('end', 'string', 'POST');
 			$l_recur_enddate = isset($params['recur_enddate']) && $params['recur_enddate'] ? $params['recur_enddate'] : phpgw::get_var('recur_enddate', 'string', 'POST'); // probbaly can be bool
-			$l_recur_exception = explode (',', $_POST['recur_exception']);
+			$l_recur_exception = explode(',', phpgw::get_var('recur_exception', 'string', 'POST') );
 
 			$send_to_ui = true;
 			if($this->debug)
 			{
 				$send_to_ui = true;
 			}
+
+			/* no idea what is meant to happen here and triggers a lot of notices
 			if($p_cal || $p_participants || $p_start || $p_end || $p_recur_enddata)
 			{
 				$send_to_ui = false;
 			}
+			*/
 			
 			print_debug('ID',$l_cal['id']);
 
@@ -773,7 +778,8 @@
 					$this->so->add_attribute('id',$l_cal['id']);
 				}
 
-				if($l_cal['rpt_use_end'] != 'y')
+				if ( !isset($l_cal['rpt_use_end'])
+					|| $l_cal['rpt_use_end'] != 'y')
 				{
 					$l_recur_enddate['year'] = 0;
 					$l_recur_enddate['month'] = 0;
@@ -781,7 +787,7 @@
 				}
 				elseif (isset($l_recur_enddate['str']))
 				{
-					$l_recur_enddate = $this->jscal->input2date($l_recur_enddate['str'],False,'mday');
+					$l_recur_enddate = $this->_jscal->input2date($l_recur_enddate['str'],False,'mday');
 				}
 
 				switch(intval($l_cal['recur_type']))
@@ -837,11 +843,11 @@
 						}
 						else
 						{
-							if (($accept_type = substr($parts[$i],-1,1)) == '0' || intval($accept_type) > 0)
+							if (($accept_type = substr($participant, -1, 1)) == '0' || intval($accept_type) > 0)
 							{
 								$accept_type = 'U';
 							}
-							$this->so->add_attribute('participants', $accept_type, intval($participant));
+							$this->so->add_attribute('participants', $accept_type, (int) $participant);
 						}
 					}
 				}
@@ -901,7 +907,7 @@
 					);
 				}
 
-				$event[recur_exception] = $l_recur_exception;
+				$event['recur_exception'] = $l_recur_exception;
 
 				$this->store_to_appsession($event);
 				$datetime_check = $this->validate_update($event);
@@ -917,11 +923,12 @@
 					$GLOBALS['phpgw']->common->phpgw_exit(True);
 				}
 
-				if($event['id'])
+				if ( isset($event['id']) )
 				{
 					$event_ids[] = $event['id'];
 				}
-				if($event['reference'])
+
+				if ( isset($event['reference']) )
 				{
 					$event_ids[] = $event['reference'];
 				}
@@ -955,12 +962,11 @@
 			}
 			else
 			{
-				if(!$event['id'])
+				if ( !isset($event['id']) )
 				{
 					$this->so->cal->event = $event;
 					$this->so->add_entry($event);
 					$this->send_update(MSG_ADDED,$event['participants'],'',$this->get_cached_event());
-					print_debug('New Event ID',$event['id']);
 				}
 				else
 				{
@@ -1073,11 +1079,11 @@
 		{
 			if (isset($time_param['str']))
 			{
-				if (!is_object($this->jscal))
+				if (!is_object($this->_jscal))
 				{
-					$this->jscal = CreateObject('phpgwapi.jscalendar');
+					$this->_jscal = CreateObject('phpgwapi.jscalendar');
 				}
-				$time_param += $this->jscal->input2date($time_param['str'],False,'mday');
+				$time_param += $this->_jscal->input2date($time_param['str'],False,'mday');
 				unset($time_param['str']);
 			}
 			if ($this->prefs['common']['timeformat'] == '12')
@@ -2392,6 +2398,7 @@
 		 */
 		function send_update($msg_type,$to_notify,$old_event,$new_event=False,$user=False)
 		{
+			$returncode = true;
 			//echo "<p>bocalendar::send_update(type=$msg_type,to_notify="; print_r($to_notify); echo ", old_event="; print_r($old_event); echo ", new_event="; print_r($new_event); echo ", user=$user)</p>\n";
 			if (!is_array($to_notify))
 			{
@@ -2601,8 +2608,9 @@
 			}
 			unset($send);
 		
-			if((is_int($this->user) && $this->user != $temp_user['account_id']) ||
-				(is_string($this->user) && $this->user != $temp_user['account_lid']))
+			if( isset($this->user) 
+				&& ( (is_int($this->user) && $this->user != $temp_user['account_id'])
+				|| (is_string($this->user) && $this->user != $temp_user['account_lid'])) )
 			{
 				$GLOBALS['phpgw_info']['user'] = $temp_user;
 			}
@@ -2879,7 +2887,7 @@
 		 */
 		function event2array($event)
 		{
-			$user_timezone = phpgw_datetime::user_timezone();
+			$user_timezone = phpgwapi_datetime::user_timezone();
 
 			if ( !is_object($GLOBALS['phpgw']->contacts) )
 			{
@@ -2899,6 +2907,7 @@
 			);
 
 			$cats = array();
+			$cat_string[] = '';
 			$this->cat->categories($this->owner,'calendar');
 			if(strpos($event['category'],','))
 			{
@@ -2910,6 +2919,11 @@
 			}
 			foreach($cats as $cat_id)
 			{
+				if ( !$cat_id )
+				{
+					continue;
+				}
+
 				list($cat) = $this->cat->return_single($cat_id);
 				$cat_string[] = $cat['name'];
 			}
@@ -2933,12 +2947,19 @@
 				'data'	=> $GLOBALS['phpgw']->common->show_date($this->maketime($event['end']) - $user_timezone)
 			);
 
-			$pri = array(
+			$pri = array
+			(
 				1	=> lang('Low'),
 				2	=> lang('Normal'),
 		  		3	=> lang('High')
 			);
-			$var['priority'] = array(
+			if ( !$event['priority'] )
+			{
+				$event['priority'] = 1;
+			}
+
+			$var['priority'] = array
+			(
 				'field'	=> lang('Priority'),
 				'data'	=> $pri[$event['priority']]
 			);
@@ -2948,17 +2969,19 @@
 				'data'	=> $GLOBALS['phpgw']->contacts->get_name_of_person_id($event['owner'])
 			);
 
-			$var['updated'] = array(
+			$var['updated'] = array
+			(
 				'field'	=> lang('Updated'),
 				'data'	=> $GLOBALS['phpgw']->common->show_date($this->maketime($event['modtime']) - $user_timezone)
 			);
 
-			$var['access'] = array(
+			$var['access'] = array
+			(
 				'field'	=> lang('Access'),
 				'data'	=> $event['public'] ? lang('Public') : lang('Privat')
 			);
 
-			if(@isset($event['groups'][0]))
+			if ( isset($event['groups'][0]) )
 			{
 				$cal_grps = '';
 				for($i=0;$i<count($event['groups']);$i++)
@@ -2970,7 +2993,8 @@
 					}
 				}
 
-				$var['groups'] = array(
+				$var['groups'] = array
+				(
 					'field'	=> lang('Groups'),
 					'data'	=> $cal_grps
 				);
@@ -3259,4 +3283,4 @@
 			return $cat_colors;
 		}
 	}
-?>
+

@@ -43,6 +43,20 @@ class ged_admin
 		}
 		$GLOBALS['phpgw']->css->validate_file('default','ged');
 	}
+
+	// wrapper to use new phpgw::$this->get_var if it exists
+	// and old $this->get_var otherwise
+	function get_var($varname,$method=null,$default=null)
+	{
+		if ( is_callable(array('phpgw', 'get_var')))
+		{
+			return phpgw::get_var($varname,$method,$default);
+		}
+		else
+		{
+			return get_var($varname,$method, $default);
+		}
+	}
 	
 	function display_app_header()
 	{
@@ -52,8 +66,8 @@ class ged_admin
 
 	function types()
 	{
-		$action=get_var('action',array('POST'));
-		$doc_types=get_var('doc_types',array('POST'));
+		$action=$this->get_var('action',array('POST'));
+		$doc_types=$this->get_var('doc_types',array('POST'));
 		
 		if (  $action==lang("add"))
 		{
@@ -234,9 +248,9 @@ class ged_admin
 	function places()
 	{
 		//$project_root_id=1;
-		$project_root_id=get_var('project_root',array('GET'));
-		$action=get_var('action',array('POST'));
-		$places=get_var('places',array('POST'));
+		$project_root_id=$this->get_var('project_root',array('GET'));
+		$action=$this->get_var('action',array('POST'));
+		$places=$this->get_var('places',array('POST'));
 		
 		if (  $action==lang("add"))
 		{

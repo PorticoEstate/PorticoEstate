@@ -17,7 +17,7 @@
 	* @package phpgwapi
 	* @subpackage database
 	*/
-	class schema_proc_mysql
+	class phpgwapi_schema_proc_mysql
 	{
 		var $m_sStatementTerminator;
 		/* Following added to convert sql to array */
@@ -27,7 +27,7 @@
 		var $ix = array();
 		var $uc = array();
 
-		function schema_proc_mysql()
+		function __construct()
 		{
 			$this->m_sStatementTerminator = ';';
 			/* The use of a temp_db is to allow this process to be run from other than setup*/
@@ -51,19 +51,6 @@
 				$temp_db->Database = $phpgw_domain[$ConfigDomain]['db_name'];
 				$temp_db->User     = $phpgw_domain[$ConfigDomain]['db_user'];
 				$temp_db->Password = $phpgw_domain[$ConfigDomain]['db_pass'];
-			}
-
-			$temp_db->query("SELECT version() as version",__LINE__,__FILE__);
-			$temp_db->next_record();
-			$version = $temp_db->f('version');
-			$parts   = explode('.',$version);
-			if($parts[0] == 5 || ($parts[0] == 4 && $parts[1] == 1))
-			{
-				$this->now_statement =  "now()";
-			}
-			else
-			{
-				$this->now_statement =  "'now()'";				
 			}
 		}
 
@@ -150,7 +137,7 @@
 			{
 				case 'current_date':
 				case 'current_timestamp':
-					return $this->now_statement;
+					return 'now()';
 
 			}
 			return "'" . $sDefault . "'";
@@ -253,9 +240,9 @@
 			}
 		}
 
-	   	// foreign key supports needs MySQL 3.23.44 and up with InnoDB or MySQL 5.1
-	   	// or other versions the syntax is parsed in table create commands
-	   	// see chapter 1.8.4.5
+		// foreign key supports needs MySQL 3.23.44 and up with InnoDB or MySQL 5.1
+		// or other versions the syntax is parsed in table create commands
+		// see chapter 1.8.4.5
 
 		function GetFKSQL($reftable, $sFields)
 		{
@@ -438,4 +425,3 @@
 			return false;
 		}
 	}
-?>
