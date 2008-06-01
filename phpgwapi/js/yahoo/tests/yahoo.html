@@ -25,7 +25,7 @@ var YAHOO_config = {
 <script type="text/javascript" src="../build/dom/dom.js"></script>
 <script type="text/javascript" src="../build/event/event.js"></script>
 <script type="text/javascript" src="../build/logger/logger.js"></script>
-<script type="text/javascript" src="../build/yuitest/yuitest.js"></script>
+<script type="text/javascript" src="../build/yuitest/yuitest-beta.js"></script>
 
 </head>
 <body>
@@ -211,10 +211,7 @@ are output in the logger to the right. <br />View the source to see how it's don
         },
 
         test_dump: function() {
-            Assert.areEqual("0", YAHOO.lang.dump(0));
-            Assert.areEqual("null", YAHOO.lang.dump(null));
-            Assert.areEqual("false", YAHOO.lang.dump(false));
-            // Other types tested in substitute
+            // tested via substitute
         },
 
         test_substitute: function() {
