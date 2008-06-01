@@ -9,7 +9,7 @@
 // ADOdb  - Database Abstraction Library for PHP                         //
 //          http://adodb.sourceforge.net/                                //
 //                                                                       //
-// Copyright (C) 2000-2007 John Lim (jlim\@natsoft.com.my)               //
+// Copyright (C) 2000-2008 John Lim (jlim\@natsoft.com.my)               //
 //          All rights reserved.                                         //
 //          Released under both BSD license and LGPL library license.    //
 //          Whenever there is any discrepancy between the two licenses,  //
@@ -126,6 +126,7 @@ class ADODB_mssql_n extends ADODB_mssql {
                 $result = str_replace($literals, array_keys($literals), $result);
             }
         }
+
 
     /// Analyse literals to prepend the N char to them if their contents aren't numeric
         if (!empty($literals)) {

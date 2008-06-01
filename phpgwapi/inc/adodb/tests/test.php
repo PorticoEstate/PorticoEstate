@@ -1,6 +1,6 @@
 <?php
 /* 
-V4.80 8 Mar 2006  (c) 2000-2007 John Lim (jlim#natsoft.com.my). All rights reserved.
+V4.80 8 Mar 2006  (c) 2000-2008 John Lim (jlim#natsoft.com.my). All rights reserved.
   Released under both BSD license and Lesser GPL library license. 
   Whenever there is any discrepancy between the two licenses, 
   the BSD license will take precedence. 
@@ -10,7 +10,7 @@ V4.80 8 Mar 2006  (c) 2000-2007 John Lim (jlim#natsoft.com.my). All rights reser
 */
 
 
-if (!defined('E_STRICT')) define('E_STRICT',E_NOTICE);
+if (!defined('E_STRICT')) define('E_STRICT',0);
 error_reporting(E_ALL|E_STRICT);
 
 $ADODB_FLUSH = true;
@@ -1213,7 +1213,7 @@ END Adodb;
 	
 	echo "<p> GenID test: ";
 	for ($i=1; $i <= 10; $i++) 
-		echo  "($i: ",$val = $db->GenID($db->databaseType.'abcseq6' ,5), ") ";
+		echo  "($i: ",$val = $db->GenID($db->databaseType.'abcseq7' ,5), ") ";
 	if ($val == 0) Err("GenID not supported");
 	
 	if ($val) {
@@ -1709,11 +1709,7 @@ foreach($_GET as $k=>$v)  {
 	//global $$k;
 	$$k = $v;
 }	
-if (strpos(PHP_VERSION,'5') === 0) {
-	//$testaccess=1;
-	//$testmssql = 1;
-	//$testsqlite=1;
-}
+
 ?>
 <html>
 <title>ADODB Testing</title>
@@ -1733,14 +1729,15 @@ Test <a href=test4.php>GetInsertSQL/GetUpdateSQL</a> &nbsp;
 
 include_once('../adodb-time.inc.php');
 if (isset($_GET['time'])) adodb_date_test();
+flush();
 
-include('./testdatabases.inc.php');
+include_once('./testdatabases.inc.php');
 
 echo "<br>vers=",ADOConnection::Version();
 
 
 
 ?>
-<p><i>ADODB Database Library  (c) 2000-2007 John Lim. All rights reserved. Released under BSD and LGPL, PHP <?php echo PHP_VERSION ?>.</i></p>
+<p><i>ADODB Database Library  (c) 2000-2008 John Lim. All rights reserved. Released under BSD and LGPL, PHP <?php echo PHP_VERSION ?>.</i></p>
 </body>
 </html>

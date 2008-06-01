@@ -74,7 +74,7 @@
 	var_dump($person2);
 	
 	$activeArr = $db->GetActiveRecordsClass($class = "Person",$table = "persons","id=".$db->Param(0),array(2));
-	$person2 =& $activeArr[0];
+	$person2 = $activeArr[0];
 	echo "<p>Name (should be John): ",$person->name_first, " <br> Class (should be Person): ",get_class($person2);	
 	
 
