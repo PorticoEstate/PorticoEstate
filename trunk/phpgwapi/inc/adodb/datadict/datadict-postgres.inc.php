@@ -1,7 +1,7 @@
 <?php
 
 /**
-  V4.96 24 Sept 2007  (c) 2000-2007 John Lim (jlim#natsoft.com.my). All rights reserved.
+  V5.04a 25 Mar 2008   (c) 2000-2008 John Lim (jlim#natsoft.com.my). All rights reserved.
   Released under both BSD license and Lesser GPL library license. 
   Whenever there is any discrepancy between the two licenses, 
   the BSD license will take precedence.
@@ -150,6 +150,12 @@ class ADODB2_postgres extends ADODB_DataDict {
 		}
 		return $sql;
 	}
+
+
+	function DropIndexSQL ($idxname, $tabname = NULL)
+	{
+	   return array(sprintf($this->dropIndex, $this->TableName($idxname), $this->TableName($tabname)));
+	}
 	
 	/**
 	 * Change the definition of one column
@@ -162,7 +168,8 @@ class ADODB2_postgres extends ADODB_DataDict {
 	 * @param array/ $tableoptions options for the new table see CreateTableSQL, default ''
 	 * @return array with SQL strings
 	 */
-	/*function AlterColumnSQL($tabname, $flds, $tableflds='',$tableoptions='')
+	 /*
+	function AlterColumnSQL($tabname, $flds, $tableflds='',$tableoptions='')
 	{
 		if (!$tableflds) {
 			if ($this->debug) ADOConnection::outp("AlterColumnSQL needs a complete table-definiton for PostgreSQL");
