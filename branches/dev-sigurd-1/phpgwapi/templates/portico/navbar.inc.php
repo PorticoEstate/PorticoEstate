@@ -6,7 +6,7 @@
 
 		$var = array
 		(
-			'about_url'		=> $GLOBALS['phpgw']->link('/about.php', array('appname' => $GLOBALS['phpgw_info']['flags']['currentapp']) ),
+			'about_url'		=> $GLOBALS['phpgw']->link('/about.php', array('app' => $GLOBALS['phpgw_info']['flags']['currentapp']) ),
 			'about_text'	=> lang('about'),
 			'logout_url'	=> $GLOBALS['phpgw']->link('/logout.php'),
 			'logout_text'	=> lang('logout'),
