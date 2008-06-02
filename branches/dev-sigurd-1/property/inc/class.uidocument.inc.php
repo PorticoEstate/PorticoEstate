@@ -424,11 +424,11 @@
 
 			if($this->cat_id)
 			{
-				$directory = $this->fakebase. '/' . 'document' . '/' . $location['loc1'] . '/' . $entity['name'] . '/' . $category['name'] . '/' . $p_num;
+				$directory = "property/document/{$location['loc1']}/{$entity['name']}/{$category['name']}/{$p_num}";
 			}
 			else
 			{
-				$directory = $this->fakebase. '/' . 'document' . '/' . $location['loc1'];
+				$directory = "property/document/{$location['loc1']}";
 			}
 
 			while (is_array($document_list) && list(,$document) = each($document_list))
