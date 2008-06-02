@@ -80,6 +80,7 @@
 			$this->dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
 			$this->cats					= CreateObject('phpgwapi.categories');
 			$this->cats->app_name		= 'property.ticket';
+			$this->cats->supress_info	= true;
 
 			if ($session)
 			{

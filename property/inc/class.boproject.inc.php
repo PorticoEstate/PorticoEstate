@@ -58,6 +58,7 @@
 			$this->solocation = CreateObject('property.solocation');
 			$this->cats					= CreateObject('phpgwapi.categories');
 			$this->cats->app_name		= 'property.project';
+			$this->cats->supress_info	= true;
 
 			if ($session)
 			{
