@@ -32,11 +32,11 @@
 	phpgwapi_yui::load_widget('dragdrop');
 	phpgwapi_yui::load_widget('element');
 	phpgwapi_yui::load_widget('container');
-	phpgwapi_yui::load_widget('menu');
 	phpgwapi_yui::load_widget('button');
 	phpgwapi_yui::load_widget('connection');
 	phpgwapi_yui::load_widget('resize');
 	phpgwapi_yui::load_widget('layout');
+
 
 	foreach ( $stylesheets as $stylesheet )
 	{
@@ -70,6 +70,14 @@
 		phpgwapi_template_portico::store_local('navbar_config', $navbar_config);
 	}
 
+	if(!isset($GLOBALS['phpgw_info']['flags']['noframework']))
+	{
+		phpgwapi_yui::load_widget('menu');	
+		$_border_layout_config	= json_encode(execMethod('phpgwapi.template_portico.retrieve_local', 'border_layout_config'));
+		$_navbar_config			= json_encode($navbar_config);
+
+	}
+
 	$app = lang($app);
 	$tpl_vars = array
 	(
@@ -80,8 +88,8 @@
 		'str_base_url'	=> $GLOBALS['phpgw']->link('/', array(), true),
 		'webserver_url'	=> $GLOBALS['phpgw_info']['server']['webserver_url'],
 		'win_on_events'	=> $GLOBALS['phpgw']->common->get_on_events(),
-		'border_layout_config' => json_encode(execMethod('phpgwapi.template_portico.retrieve_local', 'border_layout_config')),
-		'navbar_config' => json_encode($navbar_config)
+		'border_layout_config' => $_border_layout_config,
+		'navbar_config' => $_navbar_config
 	);
 
 	$GLOBALS['phpgw']->template->set_var($tpl_vars);
