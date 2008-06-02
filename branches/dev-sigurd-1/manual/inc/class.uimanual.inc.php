@@ -68,6 +68,7 @@
 
 		function help()
 		{
+			$GLOBALS['phpgw_info']['flags']['noframework'] = true;
 			$odt2xhtml	= CreateObject('manual.odt2xhtml');
 			$app = phpgw::get_var('app', 'string', 'GET');
 			$section = phpgw::get_var('section', 'string', 'GET');
@@ -132,7 +133,7 @@ HTML;
 			$t->set_root(PHPGW_APP_TPL);
 
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = false;
-			$GLOBALS['phpgw_info']['flags']['nofooter'] = True;
+			$GLOBALS['phpgw_info']['flags']['nofooter'] = true;
 
 			$appname	= phpgw::get_var('appname');
 			$location 	= phpgw::get_var('location');
