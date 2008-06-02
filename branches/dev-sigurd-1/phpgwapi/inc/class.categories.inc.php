@@ -27,6 +27,11 @@
 		var $grants;
 
 		/**
+		* @var bool $supress_info supress the [' . lang('Global') . '&nbsp;' . lang($this->app_name) . ']'
+		*/
+		var $supress_info = false;
+
+		/**
 		* Constructor
 		*
 		* @param integer $accountid Account id
@@ -498,7 +503,7 @@
 					{
 						$s .= '&nbsp;[' . lang('Global') . ']';
 					}
-					if ($cat['owner'] == '-1')
+					if ($cat['owner'] == '-1' && !$this->supress_info)
 					{
 						$s .= '&nbsp;[' . lang('Global') . '&nbsp;' . lang($this->app_name) . ']';
 					}
@@ -610,7 +615,7 @@
 				{
 					$name .= ' [' . lang('Global') . ']';
 				}
-				if ($cat['owner'] == '-1')
+				if ($cat['owner'] == '-1' && !$this->supress_info)
 				{
 					$name .= ' [' . lang('Global') . ' ' . lang($this->app_name) . ']';
 				}

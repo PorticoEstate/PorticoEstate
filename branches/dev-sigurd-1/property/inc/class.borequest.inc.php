@@ -59,6 +59,7 @@
 			$this->historylog	= CreateObject('property.historylog','request');
 			$this->cats					= CreateObject('phpgwapi.categories');
 			$this->cats->app_name		= 'property.project';
+			$this->cats->supress_info	= true;
 
 			if ($session)
 			{
