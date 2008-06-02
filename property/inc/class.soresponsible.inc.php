@@ -463,7 +463,10 @@
 
 		public function read_single_contact($id)
 		{
-			$sql = 'SELECT * FROM fm_responsibility_contact WHERE id= ' . (int) $id;
+			$sql = "SELECT fm_responsibility_contact.*,  fm_responsibility.name as responsibility_name"
+			. " FROM fm_responsibility_contact"
+			. " $this->join fm_responsibility ON fm_responsibility_contact.responsibility_id = fm_responsibility.id" 
+			. ' WHERE fm_responsibility_contact.id='  . (int) $id;
 
 			$this->db->query($sql, __LINE__, __FILE__);
 
@@ -474,6 +477,7 @@
 			(
 				'id'				=> $this->db->f('id'),
 				'responsibility_id'	=> $this->db->f('responsibility_id'),
+				'responsibility_name'=> $this->db->f('responsibility_name'),
 				'contact_id'		=> $this->db->f('contact_id'),
 				'location_code'		=> $this->db->f('location_code'),
 				'p_num'				=> $this->db->f('p_num'),
