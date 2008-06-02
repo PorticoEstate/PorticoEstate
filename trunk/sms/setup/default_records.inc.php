@@ -17,16 +17,21 @@
 	 * @package property
 	 */
 
+	
+//	$app_id = $GLOBALS['phpgw']->applications->name2id('sms'); // does not work
+	$GLOBALS['phpgw_setup']->oProc->query("SELECT app_id FROM phpgw_applications WHERE app_name = 'sms'");
+	$GLOBALS['phpgw_setup']->oProc->next_record();
+	$app_id = $GLOBALS['phpgw_setup']->oProc->f('app_id');
 
-	$GLOBALS['phpgw_setup']->oProc->query("DELETE from phpgw_acl_location WHERE appname ='sms'");
-	$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_acl_location (appname,id, descr) VALUES ('sms', '.', 'Top')");
-	$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_acl_location (appname,id, descr, allow_grant) VALUES ('sms', '.inbox', 'InBox',1)");
-	$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_acl_location (appname,id, descr, allow_grant) VALUES ('sms', '.outbox', 'OutBox',1)");
-	$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_acl_location (appname,id, descr) VALUES ('sms', '.autoreply', 'Autoreply')");
-	$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_acl_location (appname,id, descr) VALUES ('sms', '.board', 'Board')");
-	$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_acl_location (appname,id, descr) VALUES ('sms', '.command', 'Command')");
-	$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_acl_location (appname,id, descr) VALUES ('sms', '.custom', 'Custom')");
-	$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_acl_location (appname,id, descr) VALUES ('sms', '.poll', 'Poll')");
+	$GLOBALS['phpgw_setup']->oProc->query("DELETE FROM phpgw_locations where app_id = {$app_id}");
+	$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_locations (app_id, name, descr) VALUES ({$app_id}, '.', 'Top')");
+	$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_locations (app_id, name, descr, allow_grant) VALUES ({$app_id}, '.inbox', 'InBox',1)");
+	$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_locations (app_id, name, descr, allow_grant) VALUES ({$app_id}, '.outbox', 'OutBox',1)");
+	$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_locations (app_id, name, descr) VALUES ({$app_id}, '.autoreply', 'Autoreply')");
+	$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_locations (app_id, name, descr) VALUES ({$app_id}, '.board', 'Board')");
+	$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_locations (app_id, name, descr) VALUES ({$app_id}, '.command', 'Command')");
+	$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_locations (app_id, name, descr) VALUES ({$app_id}, '.custom', 'Custom')");
+	$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_locations (app_id, name, descr) VALUES ({$app_id}, '.poll', 'Poll')");
 
 // -- start config
 
