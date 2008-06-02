@@ -68,6 +68,7 @@
 
 		function help()
 		{
+			$GLOBALS['phpgw_info']['flags']['noframework'] = true;
 			$odt2xhtml	= CreateObject('manual.odt2xhtml');
 			$app = phpgw::get_var('app', 'string', 'GET');
 			$section = phpgw::get_var('section', 'string', 'GET');
