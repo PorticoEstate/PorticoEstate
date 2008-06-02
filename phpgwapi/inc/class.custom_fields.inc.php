@@ -891,9 +891,10 @@
 			$dirname = PHPGW_SERVER_ROOT . "/{$appname}/inc/custom"; 
 			$myfilearray = array();
 			$dir_handle = dir($dirname);
+
 			if ($dir_handle)
 			{
-				while ( ($file = $dir_handle->read($dir_handle)) !== false )
+				while (false !== ($file = $dir_handle->read())) 
 				{
 					if ((substr($file, 0, 1) != '.') && is_file("{$dirname}/{$file}") )
 					{
