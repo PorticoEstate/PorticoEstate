@@ -1315,9 +1315,9 @@
 
 		function select_nullable($selected='')
 		{
-			$nullable[0]['id']= 'true';
+			$nullable[0]['id']= 'True';
 			$nullable[0]['name']= lang('true');
-			$nullable[1]['id']= 'false';
+			$nullable[1]['id']= 'False';
 			$nullable[1]['name']= lang('false');
 
 			return $this->select_list($selected,$nullable);
