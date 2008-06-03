@@ -31,7 +31,7 @@
 	$GLOBALS['phpgw']->template->set_block('pref', 'link_row');
 	$GLOBALS['phpgw']->template->set_block('pref', 'spacer_row');
 
-	if ( !$GLOBALS['phpgw']->acl->check('run', 1, 'admin') )
+	if ( !$GLOBALS['phpgw']->acl->check('run', 1, 'preferences') )
 	{
 		die(lang('You do not have access to preferences'));
 	}
