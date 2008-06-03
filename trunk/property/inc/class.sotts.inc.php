@@ -133,7 +133,7 @@
 
 			if ($cat_id > 0)
 			{
-				$filtermethod .= " $where phpgw_categories.cat_id=" . (int)$cat_id;
+				$filtermethod .= " $where cat_id=" . (int)$cat_id;
 				$where = 'AND';
 			}
 
