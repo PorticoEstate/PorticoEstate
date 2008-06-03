@@ -61,6 +61,12 @@
 		'phpgw_vfs'
 	);
 
+	$setup_info['phpgwapi']['hooks'] = array
+	(
+		'menu'  => 'phpgwapi.menu_apps.get_menu'
+	);
+
+
 	// Basic information about this app
 	$setup_info['notifywindow']['name']			= 'notifywindow';
 	$setup_info['notifywindow']['title']		= 'Notify Window';

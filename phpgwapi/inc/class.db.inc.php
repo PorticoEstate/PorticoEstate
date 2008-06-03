@@ -792,9 +792,11 @@
 			{
 				$this->connect();
 			}
-			if(!($return = $this->adodb->MetaTables('TABLES')))
+
+			$return = $this->adodb->MetaTables('TABLES');
+			if ( !$return )
 			{
-				$return = array();
+				return array();
 			}
 			return $return;
 		}

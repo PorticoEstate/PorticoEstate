@@ -91,7 +91,7 @@
 			$id = (int) $account->id;
 			if ( !$id || $this->exists($id) )
 			{
-				$id = $this->_get_nextid();
+				$id = $this->_get_nextid('g');
 			}
 
 			$data = array
