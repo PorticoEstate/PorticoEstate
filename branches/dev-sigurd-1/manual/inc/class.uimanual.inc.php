@@ -75,10 +75,8 @@
 
 			if(!$section)
 			{
-				$referer = parse_url(phpgw::get_var('HTTP_REFERER', 'string', 'SERVER') );
-				parse_str($referer['query']);
-
-				if(isset($menuaction) && $menuaction)
+				$menuaction = phpgw::get_var('referer');
+				if($menuaction)
 				{
 					list($app_from_referer, $class, $method) = explode('.',$menuaction);
 					if ( strpos($class, 'ui') === 0 )
