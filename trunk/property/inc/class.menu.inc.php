@@ -276,20 +276,6 @@
 					)
 				);
 
-				$responsible_matrix_children = array
-				(
-					'responsible'	=> array
-					(
-						'text'	=> lang('responsible type'),
-						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiresponsible.index') )
-					),
-					'contact'	=> array
-					(
-						'text'	=> lang('contact'),
-						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiresponsible.contact') )
-					)
-				);
-
 				$menus['admin'] = array
 				(
 					'index'	=> array
@@ -448,7 +434,6 @@
 					(
 						'text'		=> lang('responsible matrix'),
 						'url'		=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiresponsible.index') ),
-						'children'	=> $responsible_matrix_children
 					)
 				);
 			}

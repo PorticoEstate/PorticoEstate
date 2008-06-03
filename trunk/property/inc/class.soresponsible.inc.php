@@ -259,7 +259,10 @@
 
 		function delete_type($id)
 		{
+			$this->db->transaction_begin();
+			$this->db->query('DELETE FROM fm_responsibility_contact WHERE responsibility_id='  . (int) $id, __LINE__, __FILE__);
 			$this->db->query('DELETE FROM fm_responsibility WHERE id='  . (int) $id, __LINE__, __FILE__);
+			$this->db->transaction_commit();
 		}
 
 
