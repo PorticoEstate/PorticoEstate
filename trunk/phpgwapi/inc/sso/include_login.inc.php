@@ -333,7 +333,7 @@
 				reset($GLOBALS['phpgw_domain']);
 				list($default_domain) = each($GLOBALS['phpgw_domain']);
 
-				if ($_COOKIE['last_domain'] != $default_domain && !empty($_COOKIE['last_domain']))
+				if ($_COOKIE['last_domain'] != $default_domain && !empty($_COOKIE['last_domain']) && !$GLOBALS['phpgw_info']['server']['show_domain_selectbox'])
 				{
 					$last_loginid .= '@' . $_COOKIE['last_domain'];
 				}
