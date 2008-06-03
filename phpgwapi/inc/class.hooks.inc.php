@@ -210,17 +210,17 @@
 			{
 				return False;
 			}
+
 			$db_appname = $this->db->db_addslashes($appname);
 			$this->db->query("DELETE FROM phpgw_hooks WHERE hook_appname='$db_appname'",__LINE__,__FILE__);
 
-			if (!is_array($hooks))	// only deregister
+			if ( !is_array($hooks) )	// only deregister
 			{
 				return True;
 			}
-			//echo "<p>ADDING hooks for: $appname</p>";
-			foreach($hooks as $key => $hook)
+			foreach ( $hooks as $key => $hook )
 			{
-				if (!is_numeric($key))	// new method based hook
+				if ( !is_numeric($key) )	// new method based hook
 				{
 					$location = $key;
 					$filename = $hook;
@@ -252,7 +252,7 @@
 				if ( file_exists($f) )
 				{
 					//DO NOT USE include_once here it breaks API hooks - skwashd dec07
-					include($f);
+					include $f;
 					if ( isset($setup_info[$appname]['hooks']) )
 					{
 						$this->register_hooks($appname, $setup_info[$appname]['hooks']);

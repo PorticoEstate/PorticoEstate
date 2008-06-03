@@ -344,8 +344,6 @@
 		* @param string $ignored This parameter is also ignored it is only for backwards compatibility
 		*
 		* @return array Array with ACL records
-		*
-		* @interal FIXME CodeSniffer bitches a lot about this code - it really needs to be reworked
 		*/
 		public function save_repository($unused = null, $ignored = null)
 		{
@@ -372,6 +370,7 @@
 			foreach ( $this->_data[$acct_id] as $entry )
 			{
 				$loc = $locations->get_id($entry['appname'], $entry['location']);
+				echo "{$entry['appname']}.{$entry['location']} == {$loc}<br>";
 				if ( $entry['grantor'] == '' )
 				{
 					$entry['grantor'] = 'NULL';

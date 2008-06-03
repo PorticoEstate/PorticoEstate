@@ -387,6 +387,12 @@
 		*/
 		public function name2id($appname)
 		{
+			if ( !isset($GLOBALS['phpgw_info']['apps'])
+				|| !is_array($GLOBALS['phpgw_info']['apps']) )
+			{
+				$this->read_installed_apps();
+			}
+
 			if ( isset($GLOBALS['phpgw_info']['apps'][$appname]) 
 				&& is_array($GLOBALS['phpgw_info']['apps'][$appname]) )
 			{
