@@ -70,6 +70,8 @@
 		phpgwapi_template_portico::store_local('navbar_config', $navbar_config);
 	}
 
+	$_border_layout_config	= '';
+	$_navbar_config			= '';
 	if(!isset($GLOBALS['phpgw_info']['flags']['noframework']))
 	{
 		phpgwapi_yui::load_widget('menu');	
