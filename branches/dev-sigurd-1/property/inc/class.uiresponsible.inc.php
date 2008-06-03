@@ -175,10 +175,6 @@
 				$GLOBALS['phpgw_info']['flags']['noframework']	= true;
 				$GLOBALS['phpgw_info']['flags']['headonly']		= true;
 			}
-			else
-			{
-				$GLOBALS['phpgw_info']['flags']['menu_selection'] .= '::responsible';
-			}
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('responsible', 'nextmatchs','search_field'));
 
@@ -522,7 +518,6 @@
 			}
 
 			$type_id		= phpgw::get_var('type_id', 'int');
-			$GLOBALS['phpgw_info']['flags']['menu_selection'] .= '::contact';
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('responsible', 'nextmatchs','search_field'));
 
