@@ -327,19 +327,19 @@
 					default:
 						throw new Exception("Invalid account type: {$class}");
 				}
-				$this->_cache_account($account);
 
 				if ( !$account->id )
 				{
 					throw new Exception('Failed to create account');
 				}
 
+				$this->_cache_account($account);
+
 				$aclobj =& $GLOBALS['phpgw']->acl;
 				$aclobj->set_account_id($account->id);
 				foreach ( $acls as $acl )
 				{
 					$aclobj->add($acl['appname'], $acl['location'], $acl['rights']);
-					$aclobj->save_repository($acl['appname']);
 				}
 
 				foreach ( $modules as $module )
@@ -831,10 +831,11 @@
 			{
 				$type = 'accounts';
 			}
+
 			$nextid = (int) $GLOBALS['phpgw']->common->last_id($type, $min, $max);
 
 			/* Loop until we find a free id */
-			$free = 0;
+			$free = false;
 			while ( !$free )
 			{
 				$account_lid = '';
@@ -845,9 +846,10 @@
 				}
 				else
 				{
-					$free = true;
+					break;
 				}
 			}
+
 			if	( $GLOBALS['phpgw_info']['server']['account_max_id'] &&
 				$GLOBALS['phpgw_info']['server']['account_max_id'] < $nextid )
 			{

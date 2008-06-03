@@ -1466,36 +1466,33 @@ HTML;
 			}
 
 			$GLOBALS['phpgw']->db->query("SELECT id FROM phpgw_nextid WHERE appname='".$appname."'",__LINE__,__FILE__);
-			while( $GLOBALS['phpgw']->db->next_record() )
+			if ( $GLOBALS['phpgw']->db->next_record() )
 			{
 				$id = $GLOBALS['phpgw']->db->f('id');
 			}
 
-			if (empty($id) || !$id)
+			if ( empty($id) )
 			{
-				if($min)
+				$id = 1;
+				if ( $min )
 				{
 					$id = $min;
 				}
-				else
-				{
-					$id = 1;
-				}
-				$GLOBALS['phpgw']->db->query("INSERT INTO phpgw_nextid (appname,id) VALUES ('".$appname."',".$id.")",__LINE__,__FILE__);
+
+				$GLOBALS['phpgw']->db->query("INSERT INTO phpgw_nextid (appname,id) VALUES ('{$appname}', {$id})", __LINE__, __FILE__);
+				return $id;
 			}
-			elseif($id<$min)
+			else if ( $id < $min )
 			{
 				$id = $min;
-				$GLOBALS['phpgw']->db->query("UPDATE phpgw_nextid SET id=".$id." WHERE appname='".$appname."'",__LINE__,__FILE__);
+				$GLOBALS['phpgw']->db->query("UPDATE phpgw_nextid SET id = {$id} WHERE appname='{$appname}'", __LINE__, __FILE__);
+				return $id;
 			}
-			elseif ($max && ($id > $max))
+			else if ( $max && ($id > $max) )
 			{
-				return False;
+				return 0;
 			}
-			else
-			{
-				return intval($id);
-			}
+			return (int) $id;
 		}
 
 		/**

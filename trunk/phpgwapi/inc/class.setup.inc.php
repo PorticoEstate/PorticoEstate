@@ -64,6 +64,7 @@
 			$GLOBALS['phpgw_info']['server']['db_user'] = $GLOBALS['phpgw_domain'][$ConfigDomain]['db_user'];
 			$GLOBALS['phpgw_info']['server']['db_pass'] = $GLOBALS['phpgw_domain'][$ConfigDomain]['db_pass'];
 			$this->db	  = createObject('phpgwapi.db');
+			$GLOBALS['phpgw']->db =& $this->db;
 
 			$GLOBALS['ConfigDomain'] = $ConfigDomain;
 		}
@@ -362,6 +363,8 @@
 				);
 				$this->clear_session_cache();
 			}
+			// hack to make phpgwapi_applications::name2id to work properly
+			unset($GLOBALS['phpgw_info']['apps']);
 			$GLOBALS['phpgw']->locations->add('run', "Automatically added on install - run {$appname}", $appname, false);
 		}
 
