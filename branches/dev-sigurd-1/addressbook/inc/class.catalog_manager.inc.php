@@ -58,6 +58,7 @@
 		*/
 		function main_form($catalog_name, $entry, $title)
 		{
+			$this->template->set_root(PHPGW_APP_TPL);
 			$this->template->set_file(array('form' => 'form.tpl'));
 			$this->template->set_var('principal_tabs_inc', '');
 			$this->template->set_var('action', $GLOBALS['phpgw']->link('/index.php',
