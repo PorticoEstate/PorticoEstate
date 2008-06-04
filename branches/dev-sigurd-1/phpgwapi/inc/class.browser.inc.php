@@ -258,11 +258,11 @@
 			}
 			if($fn)
 			{
-				if($this->get_agent() == 'IE') // && browser_get_version() == "5.5")
+				if($this->get_agent() == 'IE' && $this->BROWSER_VER == '5.5')
 				{
 					$attachment = '';
 				}
-				elseif( ($this->get_agent() != 'IE') && ($mime != 'text/plain') )
+				else if( $mime != 'text/plain' )
 				{
 					$attachment = ' attachment;';
 				}
