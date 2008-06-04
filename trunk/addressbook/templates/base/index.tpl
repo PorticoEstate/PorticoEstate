@@ -1,5 +1,6 @@
 <!-- BEGIN addressbook_header -->
-{principal_tabs_inc}
+{tabs}
+<!--{principal_tabs_inc}-->
 
 {lang_showing}
 <br />{searchreturn}
