@@ -528,13 +528,28 @@
 			{
 				return 0;
 			}
-
-			//FIXME:$item_filter = something
+			
 			$item_filter = '';
+			if(isset($values['extra']) && is_array($values['extra']))
+			{
+				$item_filter =   " AND p_num = '{$values['extra']['p_num']}'"
+								.' AND p_entity_id =' . (int) $values['extra']['p_entity_id']
+								.' AND p_cat_id =' . (int) $values['extra']['p_cat_id'];
+
+				$location_filter = "location_code = '{$location_code}'";
+				$ordermethod = '';
+			}
+			else // FIXME: allow hierarchically assignment - start testing at bottom level 
+			{
+				$location_filter = "location_code $this->like '$location_code%'";
+				$ordermethod = ' ORDER by location_code.id ASC';
+			}
 
 			$sql = "SELECT contact_id FROM fm_responsibility_contact"
-			 . " WHERE location_code = '{$location_code}' {$item_filter}"
-			 . 'AND active_from < ' . time() . ' AND active_to > ' . time() . ' AND expired_on IS NULL';
+			 . " $this->join fm_responsibility ON fm_responsibility_contact.responsibility_id = fm_responsibility.id"
+			 . " WHERE {$location_filter} {$item_filter}"
+			 . ' AND cat_id =' . (int) $values['cat_id']
+			 . ' AND active = 1 AND active_from < ' . time() . ' AND active_to > ' . time() . ' AND expired_on IS NULL';
 
 			$this->db->query($sql, __LINE__, __FILE__);
 
