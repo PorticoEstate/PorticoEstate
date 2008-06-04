@@ -11,8 +11,8 @@
 			$this->_constructor();
 
 			$this->bo = CreateObject('addressbook.bocatalog_contact_comm_descr');
-			
-			$this->form_action = 'menuaction=addressbook.uicatalog_contact_comm_descr.view';
+
+			$this->form_action = array('menuaction' => 'addressbook.uicatalog_contact_comm_descr.view');
 			$this->catalog_name = 'comm_descr';
 			$this->headers = array('Type', 'Description', 'Edit', 'Delete');
 			$this->array_name = 'comm_descr_array';
@@ -21,14 +21,14 @@
 			$this->catalog_button_name = 'comm_descr_add_row';
 			$this->key_edit_name = 'comm_descr_id';
 			$this->num_cols = 2;
-			
+
 			$this->form_fields = array(1 => array('Type', $this->get_column_data(
 								      array('type' => 'combo',
-									    'name' => 'entry[comm_type]', 
+									    'name' => 'entry[comm_type]',
 									    'value'=> $this->get_options()))),
 						   2 => array('Description', $this->get_column_data(
 								      array('type' => 'text',
-									    'name' => 'entry[comm_description]', 
+									    'name' => 'entry[comm_description]',
 									    'value'=> ''))));
 
 			$this->objs_data = array('value'=> array('type' => 'data',
@@ -64,19 +64,19 @@
 		{
 			$this->comm_descr_array = $this->bo->select_catalog();
 		}
-		
+
 		function insert($fields)
 		{
 			$this->bo->insert($fields);
 			$this->modify = True;
 		}
-		
+
 		function delete($key)
 		{
 			$this->bo->delete($key);
 			$this->modify = True;
 		}
-		
+
 		function update($key, $fields)
 		{
 			$this->bo->update($key, $fields);
@@ -94,11 +94,11 @@
 			$entry['comm_description'] = $record[0]['comm_description'];
 			$this->form_fields = array(1 => array('Type', $this->get_column_data(
 								      array('type' => 'combo',
-									    'name' => 'entry[comm_type]', 
+									    'name' => 'entry[comm_type]',
 									    'value'=> $this->get_options($entry['comm_type'])))),
 						   2 => array('Description', $this->get_column_data(
 								      array('type' => 'text',
-									    'name' => 'entry[comm_description]', 
+									    'name' => 'entry[comm_description]',
 									    'value'=> $entry['comm_description']))));
 		}
 
@@ -109,13 +109,13 @@
 			{
 				if ($option['comm_type_id'] == $selected)
 				{
-					$options .= '<option value="'.$option['comm_type_id'].'" selected>' 
+					$options .= '<option value="'.$option['comm_type_id'].'" selected>'
 						. $option['comm_type_description'] . '</option>';
 
 				}
 				else
 				{
-					$options .= '<option value="'.$option['comm_type_id'].'">' 
+					$options .= '<option value="'.$option['comm_type_id'].'">'
 						. $option['comm_type_description'] . '</option>';
 				}
 			}

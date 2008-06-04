@@ -31,7 +31,7 @@
 		var $title;
 		var $catalog_button_name;
 		var $num_cols;
-		
+
 		function catalog_manager()
 		{
 		}
@@ -41,7 +41,7 @@
 			$this->template = &$GLOBALS['phpgw']->template;
 			$this->nextmatchs = CreateObject('phpgwapi.nextmatchs');
 		}
-		
+
 		function create_window($catalog_name, $entry, $title)
 		{
 			//start to draw the add window
@@ -53,8 +53,8 @@
 		/**
 		* Start to draw the html screens
 		*
-		* @param 
-		* @return 
+		* @param
+		* @return
 		*/
 		function main_form($catalog_name, $entry, $title)
 		{
@@ -72,28 +72,28 @@
 		function current_body($catalog_name, $entry, $title)
 		{
 			$this->form_start();
-			
+
 			$this->template->set_var('lang_general_data', $title);
 
 			$this->template->set_var('current_id_name', $this->key_edit_name);
 			$this->template->set_var('current_id', $this->key_edit_id);
 
 			$this->set_form_fields($this->form_fields);
-			
+
 			$this->select_catalog();
-			
-			$this->template->set_var('detail_fields', $this->get_detail_form($catalog_name, $this->headers, 
-											 $this->array_name, $this->objs_data, 
+
+			$this->template->set_var('detail_fields', $this->get_detail_form($catalog_name, $this->headers,
+											 $this->array_name, $this->objs_data,
 											 $this->index));
-			
+
 			$this->form_end();
-			
+
 			return $this->template->fp('out', 'tab_body_general_data');
 		}
 
 		/**
 		* Draw the detail form, this form is as show in comms, addr and othes windows
-		*	     
+		*
 		* @param string $tab The name which identify the section
 		* @param array $headers Array with all headers which you want to show in the form
 		* @param string $array_name The array name from you want to show data
@@ -103,7 +103,7 @@
 		* @return string All the detail form html code in the template
 		*/
 		function get_detail_form($catalog_name, $headers, $array_name, $objs_data, $idx, $button=True)
-                {
+		{
                         $this->template->set_file(array('detail_data'   => 'body_detail.tpl'));
                         $this->template->set_block('detail_data','detail_body','detail_body');
                         $this->template->set_block('detail_data','input_detail_row','input_detail_row');
@@ -121,9 +121,9 @@
 				$this->template->set_var('caption_detail', '');
 				$this->template->set_var('add_button', '');
 			}
-			
-                        $this->template->set_var('row_bgc', $GLOBALS['phpgw_info']['theme']['th_bg']);
- 			$tr_color = $GLOBALS['phpgw_info']['theme']['row_on'];
+
+			$this->template->set_var('row_class', 'th');
+ 			$row_class = 'row_on';
 
 			$cols='';
 			foreach($headers as $head)
@@ -140,21 +140,21 @@
                         {
                                 foreach($this->$array_name as $k => $v)
 				{
-					$id = $v[$idx];	
+					$id = $v[$idx];
 					$this->array_value = $v;
 
-					$tr_color = $this->nextmatchs->alternate_row_color($tr_color);
-					$this->template->set_var('row_bgc', $tr_color);
-					
-					$cols='';			
+					$row_class = $this->nextmatchs->alternate_row_class($row_class);
+					$this->template->set_var('row_class', $row_class);
+
+					$cols='';
 					reset($objs_data);
 					foreach($objs_data as $type => $properties)
 					{
 						$cols .= '<td>' . $this->get_column_data($properties) . '</td>';
 					}
-					
+
 					$this->template->set_var('input_cols', $cols);
-					
+
 					$this->template->fp('input_detail', 'input_detail_data', True);
 					$this->template->fp('detail_body_set', 'input_detail_row');
                                 }
@@ -171,7 +171,7 @@
 		/**
 		* This function initialize the template for draw the tabs windows
 		*
-		* @param 
+		* @param
 		* @return
 		*/
 		function form_start()
@@ -184,7 +184,7 @@
 		/**
 		* This function end the template for draw the tabs windows
 		*
-		* @param 
+		* @param
 		* @return
 		*/
 		function form_end()
@@ -198,16 +198,16 @@
 
 		function set_form_fields($form_fields)
 		{
- 			$tr_color = $GLOBALS['phpgw_info']['theme']['row_on'];
-
+ 		//	$tr_color = $GLOBALS['phpgw_info']['theme']['row_on'];
+			$row_class = 'row_on';
 			ksort($form_fields, SORT_NUMERIC);
 			$last_element = count($form_fields);
 			$cols='';
 			$count=1;
-			
+
 			foreach($form_fields as $key => $row)
 			{
-				$tr_color = $this->nextmatchs->alternate_row_color($tr_color);
+				$row_class = $this->nextmatchs->alternate_row_class($row_class);
 				$cols = $cols . '<td>'.$row[0].'</td>'.'<td>'.$row[1].'</td>';;
 				if($count == $this->num_cols || $key==$last_element)
 				{
@@ -219,7 +219,7 @@
 				$count ++;
 			}
 		}
-		
+
 		function set_row_input($field_name, $input_name, $input_value, $col)
 		{
 			if ($col==1)
@@ -251,7 +251,7 @@
 		}
 
 		function get_column_data($properties=array())
-		{			
+		{
 			switch($properties['type'])
 			{
 			case 'data':
@@ -274,13 +274,18 @@
 				$column_data = '<input type="text" name="'.$name.'" value="'.$value.'">';
 				break;
 			case 'radio':
-				if($this->array_value[$properties['field']]=='Y'){$checked='checked';}				
-				$column_data = '<input type="radio" name="' . $properties['name'] 
+				if($this->array_value[$properties['field']]=='Y'){$checked='checked';}
+				$column_data = '<input type="radio" name="' . $properties['name']
 					.'" value="' . $this->array_value[$properties['value']] . '"'. $checked . '>';
 				break;
 			case 'link':
-				$link = $GLOBALS['phpgw']->link('/index.php', $this->form_action)
-					. '&'. $properties['action'] . '=' . $this->array_value[$properties['key']] . $properties['extra'];
+				if (isset($properties['extra']) && $properties['extra'])// Sigurd: not sure where the 'extra' comes from
+				{
+					echo '$properties[extra] should be a part of the link</br>';
+					_debug_array($properties['extra']);
+				}
+				$link = $GLOBALS['phpgw']->link('/index.php', array_merge($this->form_action,
+					array($properties['action'] => $this->array_value[$properties['key']])));
 				$column_data = '<a href="'.$link.'">'.$properties['mode'].'</a>';
 				break;
 			case 'combo':
