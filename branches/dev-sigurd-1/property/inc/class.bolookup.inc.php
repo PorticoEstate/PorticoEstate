@@ -34,47 +34,18 @@
 
 	class property_bolookup
 	{
-		var $start;
-		var $query;
-		var $filter;
-		var $sort;
-		var $order;
-		var $cat_id;
-
-		var $public_functions = array
-		(
-			'read'				=> true,
-			'read_single'		=> true,
-			'save'				=> true,
-			'delete'			=> true,
-			'check_perms'		=> true
-		);
-
-		var $soap_functions = array(
-			'list' => array(
-				'in'  => array('int','int','struct','string','int'),
-				'out' => array('array')
-			),
-			'read' => array(
-				'in'  => array('int','struct'),
-				'out' => array('array')
-			),
-			'save' => array(
-				'in'  => array('int','struct'),
-				'out' => array()
-			),
-			'delete' => array(
-				'in'  => array('int','struct'),
-				'out' => array()
-			)
-		);
+		public $start;
+		public $query;
+		public $filter;
+		public $sort;
+		public $order;
+		public $cat_id;
+		public $total_records = 0;
 
 		function property_bolookup($session=false)
 		{
-		//	$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->so 		= CreateObject('property.solookup');
 			$this->solocation = CreateObject('property.solocation');
-
 
 			if ($session)
 			{
@@ -149,12 +120,14 @@
 		}
 
 
+		/**
+		* Read list of contacts from the addressbook
+		*
+		* @return array of contacts
+		*/
+
 		function read_addressbook()
 		{
-//			$contact = $this->so->read_addressbook(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
-//											'filter' => $this->filter,'cat_id' => $this->cat_id));
-//			$this->total_records = $this->so->total_records;
-
 
 			if($GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] &&
 				$GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] > 0)
@@ -175,15 +148,22 @@
 		    $fields['owner'] = 'owner';
 		    $fields['contact_id'] = 'contact_id';
 
+			if($this->cat_id && $this->cat_id != 0)
+			{
+				$category_filter = $this->cat_id;
+			}
+			else
+			{
+				$category_filter = -3;
+			}
 
 			$addressbook	= CreateObject('addressbook.boaddressbook');
 
-			$criteria = $addressbook->criteria_contacts(1, -3, 'person', $this->query, $fields_search);
+			$criteria = $addressbook->criteria_contacts(1, $category_filter, 'person', $this->query, $fields_search);
+			$this->total_records = $addressbook->get_count_persons($criteria);
 
-//_debug_array($criteria);
 			$entries = $addressbook->get_persons($fields, $this->limit, $this->start, $this->order, $this->sort, '', $criteria);
 
-//_debug_array($entries);
 			return $entries;
 		}
 
