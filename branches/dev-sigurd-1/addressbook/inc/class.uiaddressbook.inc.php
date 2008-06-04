@@ -199,6 +199,30 @@ class uiaddressbook
 			$this->section = $this->tab_main_persons;
 		}
 
+		$tabs = array();
+		$tabs[] = array(
+			'label' => lang('persons'),
+			'link'  => $GLOBALS['phpgw']->link('/index.php',array('menuaction' => 'addressbook.uiaddressbook.index', 'section' => $this->tab_main_persons))
+		);
+		$tabs[] = array(
+			'label' => lang('Organizations'),
+			'link'  => $GLOBALS['phpgw']->link('/index.php',array('menuaction' => 'addressbook.uiaddressbook.index', 'section' => $this->tab_main_organizations))
+		);
+
+		switch($this->section)
+		{
+			case 'Persons':
+				$selected = 0;
+				break;
+			case 'Organizations':
+				$selected = 1;
+				break;
+			default:
+				$selected = 0;
+		}
+
+		$GLOBALS['phpgw']->template->set_var('tabs', $GLOBALS['phpgw']->common->create_tabs($tabs, $selected));
+
 		switch ($this->filter)
 		{
 			case 'yours':
