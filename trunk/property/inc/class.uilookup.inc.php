@@ -100,6 +100,7 @@
 
 			$this->cats		= CreateObject('phpgwapi.categories');
 			$this->cats->app_name = 'addressbook';
+			$this->cats->supress_info	= true;
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('lookup',
 										'nextmatchs',
