@@ -18,10 +18,7 @@
 	 */
 
 	
-//	$app_id = $GLOBALS['phpgw']->applications->name2id('sms'); // does not work
-	$GLOBALS['phpgw_setup']->oProc->query("SELECT app_id FROM phpgw_applications WHERE app_name = 'sms'");
-	$GLOBALS['phpgw_setup']->oProc->next_record();
-	$app_id = $GLOBALS['phpgw_setup']->oProc->f('app_id');
+	$app_id = $GLOBALS['phpgw']->applications->name2id('sms');
 
 	$GLOBALS['phpgw_setup']->oProc->query("DELETE FROM phpgw_locations where app_id = {$app_id}");
 	$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_locations (app_id, name, descr) VALUES ({$app_id}, '.', 'Top')");
