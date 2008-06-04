@@ -17,10 +17,13 @@
 	 * @package demo
 	 */
 
-	$GLOBALS['phpgw_setup']->oProc->query("DELETE FROM phpgw_acl_location WHERE appname = 'demo'");
-	$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_acl_location (appname,id, descr) VALUES ('demo', '.', 'Top')");
-	$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_acl_location (appname,id, descr, allow_grant,allow_c_attrib,c_attrib_table) VALUES ('demo', '.demo_location', 'Demo location',1,1,'phpgw_demo_table')");
-	$GLOBALS['phpgw_setup']->oProc->query("SELECT max(account_id) as account_id from phpgw_accounts WHERE account_type = 'u'");
+	$app_id = $GLOBALS['phpgw']->applications->name2id('hrm');
+
+	$GLOBALS['phpgw_setup']->oProc->query("DELETE FROM phpgw_locations where app_id = {$app_id}");
+
+	$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_locations (app_id, name, descr) VALUES ({$app_id}, '.', 'Top')");
+	$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_locations (app_id, name, descr, allow_grant,allow_c_attrib,c_attrib_table) VALUES ({$app_id}, '.demo_location', 'Demo location',1,1,'phpgw_demo_table')");
+/*	$GLOBALS['phpgw_setup']->oProc->query("SELECT max(account_id) as account_id from phpgw_accounts WHERE account_type = 'u'");
 	$GLOBALS['phpgw_setup']->oProc->next_record();
 	$account_id = $GLOBALS['phpgw_setup']->oProc->f('account_id');
 
@@ -34,3 +37,4 @@
 	$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_acl (acl_appname,acl_location, acl_account,acl_rights, acl_grantor) VALUES ('demo','.demo_location', '$account_id', '15', NULL)");
 	$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_acl (acl_appname,acl_location, acl_account,acl_rights, acl_grantor) VALUES ('demo','.demo_location', '$account_id', '15', '$account_id')");
 	unset($account_id);
+*/

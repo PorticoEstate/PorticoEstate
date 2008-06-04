@@ -17,10 +17,7 @@
 	 * @package property
 	 */
 
-//	$app_id = $GLOBALS['phpgw']->applications->name2id('property'); // does not work
-$GLOBALS['phpgw_setup']->oProc->query("SELECT app_id FROM phpgw_applications WHERE app_name = 'property'");
-$GLOBALS['phpgw_setup']->oProc->next_record();
-$app_id = $GLOBALS['phpgw_setup']->oProc->f('app_id');
+$app_id = $GLOBALS['phpgw']->applications->name2id('property');
 
 $GLOBALS['phpgw_setup']->oProc->query("DELETE FROM phpgw_cust_attribute WHERE appname='property'");
 $GLOBALS['phpgw_setup']->oProc->query("DELETE FROM phpgw_cust_choice WHERE appname='property'");
