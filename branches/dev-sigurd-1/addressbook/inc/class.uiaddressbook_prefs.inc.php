@@ -573,6 +573,7 @@ class uiaddressbook_prefs
 						
 				}
 		}
+		$this->template->set_root(PHPGW_APP_TPL);
 		$this->template->set_file(
 					array(
 					'addressbook_preferences_t' =>'preferences.tpl',
