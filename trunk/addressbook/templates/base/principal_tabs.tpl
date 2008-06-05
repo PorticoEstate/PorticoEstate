@@ -1,8 +1,10 @@
 <!-- BEGIN principal_tab -->
-	<ul id="contacts_tabs" class="tabs">
+<div class="yui-navset">
+	<ul id="contacts_tabs" class="yui-nav">
 		{principal_buttons}
 		<li class="tablast">&nbsp;</li>
 	</ul>
+</div>
 <!-- END principal_tab -->
 
 <!-- BEGIN principal_button -->
