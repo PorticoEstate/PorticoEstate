@@ -89,7 +89,6 @@
 			if(!$this->contacts->check_edit($ab_id))
 			{
 				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'addressbook.uiaddressbook.index'));
-				$GLOBALS['phpgw']->common->phpgw_exit();
 			}
 			
 			// First, make sure they have permission to this entry
