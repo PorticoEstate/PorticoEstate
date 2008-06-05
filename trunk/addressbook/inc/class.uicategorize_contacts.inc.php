@@ -46,15 +46,9 @@
 			case 'save':
 				$persons = $this->lists->get_resul_list();
 				$this->save_categories_by_person($this->selected_cat, $persons);
-				Header('Location: '
-				       . $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'addressbook.uicategorize_contacts.index')));
-				$GLOBALS['phpgw']->common->phpgw_exit();
-				break;
+				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'addressbook.uicategorize_contacts.index', 'all_cats' => $this->selected_cat));
 			case 'cancel':
-				Header('Location: '
-				       . $GLOBALS['phpgw']->link('/index.php',array('menuaction' => 'addressbook.uiaddressbook.index', 'section' => 'Persons')));
-				$GLOBALS['phpgw']->common->phpgw_exit();
-				break;
+				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction' => 'addressbook.uiaddressbook.index', 'section' => 'Persons'));
 			}
 			$this->draw_form();
 		}
