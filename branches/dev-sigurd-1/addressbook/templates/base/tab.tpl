@@ -1,10 +1,14 @@
 <!-- BEGIN tab -->
-<ul id="contacts_section_tabs" class="tabs">
-	{buttons}
-	<li class="tablast"></li>
-</ul>
+<div class="yui-navset">
+	<ul id="contacts_section_tabs" class="yui-nav">
+		{buttons}
+		<!--<li class="tablast"></li>-->
+	</ul>
+</div>
 <!-- END tab -->
 
 <!-- BEGIN button -->
-	<li><input class="{tab_css}" type="submit" name="{tab_name}" value="{tab_caption}"></li>
+	<li class="{tab_css}"><input type="submit" name="{tab_name}" value="{tab_caption}"></li>
 <!-- END button -->
+
+
