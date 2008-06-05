@@ -37,7 +37,7 @@
 		}
 
 		$phpgw->config->save_repository(True);
-		Header('Location: ' . $phpgw->link('/admin/index.php'));
+		$phpgw->redirect_link('/admin/index.php');
 	}
 
 	$phpgw->common->phpgw_header();

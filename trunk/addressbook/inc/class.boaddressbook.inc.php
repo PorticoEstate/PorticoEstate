@@ -762,8 +762,7 @@
 				/* Delete the temp file. */
 				unlink($filename);
 				unlink($filename . '.info');
-				Header('Location: ' . $GLOBALS['phpgw']->link('/index.php',array('menuaction' => 'addressbook.uiaddressbook.view_person', 'ab_id' => $ab_id)));
-				exit();
+				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction' => 'addressbook.uiaddressbook.view_person', 'ab_id' => $ab_id));
 			}
 		}
 
@@ -824,7 +823,7 @@
 
 			$GLOBALS['phpgw']->preferences->save_repository(True);
 			/* _debug_array($prefs);exit; */
-			Header('Location: ' . $GLOBALS['phpgw']->link('/preferences/index.php'));
+			$GLOBALS['phpgw']->redirect_link('/preferences/index.php');
 		}
 
 		//used
