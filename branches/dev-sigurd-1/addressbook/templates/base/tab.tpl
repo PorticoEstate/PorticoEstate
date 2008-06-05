@@ -2,7 +2,6 @@
 <div class="yui-navset">
 	<ul id="contacts_section_tabs" class="yui-nav">
 		{buttons}
-		<!--<li class="tablast"></li>-->
 	</ul>
 </div>
 <!-- END tab -->
