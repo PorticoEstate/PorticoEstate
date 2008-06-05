@@ -3284,14 +3284,12 @@ class calendar_boicalendar
 	{
 		if( ! is_array($_FILES['uploadedfile']) || $_FILES['uploadedfile']['tmp_name'] == '' /*|| $_FILES['uploadedfile']['tmp_name'] = 'none'*/)
 		{
-			Header('Location: ' . $GLOBALS['phpgw']->link('/index.php',
+			$GLOBALS['phpgw']->redirect_link('/index.php',
 						array(
 							'menuaction'	=> 'calendar.uiicalendar.import',
 							'action'	=> 'GetFile'
 						     )
-						)
-			      );
-			$GLOBALS['phpgw']->common->phpgw_exit();
+			      		);
 		}
 		$uploaddir = "{$GLOBALS['phpgw_info']['server']['temp_dir']}/";
 
@@ -3303,14 +3301,12 @@ class calendar_boicalendar
 		$filename = $uploaddir . $newfilename;
 		if ( !move_uploaded_file($_FILES['uploadedfile']['tmp_name'], $filename) )
 		{
-			Header('Location: ' . $GLOBALS['phpgw']->link('/index.php',
+			$GLOBALS['phpgw']->redirect_link('/index.php',
 						array(
 							'menuaction'    => 'calendar.uiicalendar.import',
 							'action'    => 'GetFile'
 						     )
-						)
-			      );
-			$GLOBALS['phpgw']->common->phpgw_exit();
+						);
 		}
 		//			$ftp = fopen($uploaddir . $newfilename . '.info','wb');
 		//			fputs($ftp,$uploadedfile_type."\n".$uploadedfile_name."\n");
@@ -3334,14 +3330,12 @@ class calendar_boicalendar
 			if($isReturn)
 				return false;
 
-			Header('Location: ' . $GLOBALS['phpgw']->link('/index.php',
+			$GLOBALS['phpgw']->redirect_link('/index.php',
 						array(
 							'menuaction'	=> 'calendar.uiicalendar.import',
 							'action'	=> 'GetFile'
 						     )
-						)
-			      );
-			$GLOBALS['phpgw']->common->phpgw_exit();				
+						);
 		}
 
 		if( !isset($GLOBALS['uicalendar']) || !is_object($GLOBALS['uicalendar']) )
@@ -3902,14 +3896,12 @@ class calendar_boicalendar
 				return false;
 		}
 
-		Header('Location: '.$GLOBALS['phpgw']->link('/index.php',
+		$GLOBALS['phpgw']->redirect_link('/index.php',
 					array(
 						'menuaction'	=> 'calendar.uicalendar.view',
 						'cal_id'	=> $event['id']
 					     )
-					)
-		      );
-		$GLOBALS['phpgw']->common->phpgw_exit();
+					);
 	}
 
 	
