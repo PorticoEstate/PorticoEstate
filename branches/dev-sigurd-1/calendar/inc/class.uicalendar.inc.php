@@ -793,6 +793,7 @@
 
 				if(!$this->bo->check_perms(PHPGW_ACL_EDIT,$event))
 				{
+					//FIXME
 					Header('Location: '.$this->page('view', array('cal_id' => $cal_id), true) );
 					$GLOBALS['phpgw']->common->phpgw_exit();
 				}
@@ -824,6 +825,7 @@
 			$cal_id = phpgw::get_var('cal_id', 'int', 'POST');
 			if( !$cal_id )
 			{
+				//FIXME
 				Header('Location: ' . $this->index());
 				$GLOBALS['phpgw']->common->phpgw_exit();
 			}
@@ -981,6 +983,7 @@
 			}			
 			else
 			{
+				//FIXME
 				Header('Location: ' . $this->page('', ($cd ? array('cd' => $cd) : array()), true) );
 			}
 			$GLOBALS['phpgw']->common->phpgw_exit();	
@@ -1047,6 +1050,7 @@
 		{
 			if ( phpgw::get_var('cal_id', 'int', 'GET') )
 			{
+				//FIXME
 				Header('Location: '.$this->page('', array('date' => sprintf('%04d%02d%02d', $this->bo->year, $this->bo->month, $this->bo->day) ), true) );
 				$GLOBALS['phpgw']->common->phpgw_exit();
 			}
@@ -1083,6 +1087,7 @@
 			}
 			else
 			{
+				//FIXME
 				Header('Location: ' . $this->page('', array('date' => $date, 'cd' => ($cd ? $cd : '0')), true));
 			}
 			$GLOBALS['phpgw']->common->phpgw_exit();
@@ -1206,6 +1211,7 @@
 			}
 			else
 			{
+				//FIXME
 				Header('Location: ' . $this->page('','', true)); 
 			}
 			$GLOBALS['phpgw']->common->phpgw_exit();

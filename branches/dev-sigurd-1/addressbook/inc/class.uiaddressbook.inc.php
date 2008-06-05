@@ -1789,7 +1789,7 @@ class uiaddressbook
 	{
 		if ($tab == $current_tab)
 		{
-			return 'activetab';
+			return 'selected';
 		}
 		return '';
 	}

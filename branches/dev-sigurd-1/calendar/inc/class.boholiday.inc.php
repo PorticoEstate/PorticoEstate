@@ -419,7 +419,7 @@
 		{
 			if(!@$GLOBALS['phpgw_info']['user']['apps']['admin'])
 			{
-				Header('Location: ' . $GLOBALS['phpgw']->link('/index.php'));
+				$GLOBALS['phpgw']->redirect_link('/index.php');
 			}
 		}
 		

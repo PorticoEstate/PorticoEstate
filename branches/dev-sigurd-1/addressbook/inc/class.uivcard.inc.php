@@ -83,13 +83,12 @@
 
 			if(!$ab_id)
 			{
-				Header('Location: ' . $GLOBALS['phpgw']->link('/addressbook/index.php'));
-				$GLOBALS['phpgw']->common->phpgw_exit();
+				$GLOBALS['phpgw']->redirect_link('/addressbook/index.php');
 			}
 
 			if(!$this->contacts->check_edit($ab_id))
 			{
-				Header("Location: " . $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'addressbook.uiaddressbook.index')));
+				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'addressbook.uiaddressbook.index'));
 				$GLOBALS['phpgw']->common->phpgw_exit();
 			}
 			
@@ -194,11 +193,11 @@
 				if($lastname == '')
 				{
 					/* Run away here. */
-					Header('Location: ' . $GLOBALS['phpgw']->link('/index.php',"menuaction=addressbook.uivcard.out&nolname=1&ab_id=$ab_id"));
+					$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction' => 'addressbook.uivcard.out', 'nolname' => 1, 'ab_id' => $ab_id));
 				}
 				if($firstname == '')
 				{
-					Header('Location: ' . $GLOBALS['phpgw']->link('/index.php',"menuaction=addressbook.uivcard.out&nofname=1&ab_id=$ab_id"));
+					$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction' => 'addressbook.uivcard.out', 'nofname' => 1, 'ab_id' =>$ab_id));
 				}
 
 				if ($email)
