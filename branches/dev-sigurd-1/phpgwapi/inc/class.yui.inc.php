@@ -170,4 +170,51 @@
 
 			return "phpgroupware.{$widget}" . ++self::$counter;
 		}
+
+		/**
+		* Create a tabs "bar"
+		*
+		* @param array   $tabs      list of tabs as an array($id => $tab)
+		* @param integer $selection array key of selected tab
+		*
+		* @return string HTML output string
+		*/
+		public static function tabview_generate($tabs, $selection)
+		{
+			self::load_widget('tabview');
+			$output = <<<HTML
+				<ul class="yui-nav">
+
+HTML;
+			foreach($tabs as $id => $tab)
+			{
+				$selected = $id == $selection ? ' class="selected"' : '';
+				$label = $tab['label'];
+				$output .= <<<HTML
+					<li{$selected}><a href="{$tab['link']}"><em>{$label}</em></a></li>
+
+HTML;
+			}
+			$output .= <<<HTML
+				</ul>
+
+HTML;
+			return $output;
+		}
+
+		/**
+		 * Add the events required for tabs to work
+		 *
+		 * @param string $id html element id for the widget
+		 *
+		 * @return void
+		 */
+		public static function tabview_setup($id)
+		{
+			$css = 'phpgwapi/js/yahoo/tabview/assets/skins/sam/tabview.css';
+			$GLOBALS['phpgw']->css->add_external_file($css);
+
+			$js = "var tabs_{$id} = new YAHOO.widget.TabView('{$id}');";
+			$GLOBALS['phpgw']->js->add_event('load', $js);
+		}
 	}

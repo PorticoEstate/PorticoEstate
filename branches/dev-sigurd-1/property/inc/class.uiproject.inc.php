@@ -27,6 +27,8 @@
  	* @version $Id$
 	*/
 
+	phpgw::import_class('phpgwapi.yui');
+
 	/**
 	 * Description
 	 * @package property
@@ -919,21 +921,20 @@
 				}
 			}
 
-			$GLOBALS['phpgw']->js->validate_file('tabs', 'tabs');
+			$tabs = array
+			(
+				'general'		=> array('label' => lang('general'), 'link' => '#general'),
+				'location'		=> array('label' => lang('location'), 'link' => '#location'),
+				'coordination'	=> array('label' => lang('coordination'), 'link' => '#coordination'),
+				'budget'		=> array('label' => lang('Time and budget'), 'link' => '#budget'),
+				'extra'			=> array('label' => lang('extra'), 'link' => '#extra')
+			);
 
-			if(!is_object($GLOBALS['phpgw']->css))
-			{
-				$GLOBALS['phpgw']->css = createObject('phpgwapi.css');
-			}
-			$GLOBALS['phpgw']->css->validate_file('tabs','phpgwapi');
+			phpgwapi_yui::tabview_setup('project_edit_tabview');
 
 			$data = array
 			(
-				'lang_general' 					=> lang('General'),
-				'lang_location' 				=> lang('location'),
-				'lang_coordination' 			=> lang('Coordination'),
-				'lang_time_and_budget' 			=> lang('Time and budget'),
-				'lang_extra' 					=> lang('Extra'),
+				'tabs'							=> phpgwapi_yui::tabview_generate($tabs, 'general'),
 
 				'msgbox_data'					=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
 
