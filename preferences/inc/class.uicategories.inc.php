@@ -171,6 +171,7 @@
 			$GLOBALS['phpgw_info']['flags']['app_header'] = $GLOBALS['phpgw_info']['apps'][$cats_app]['title'].
 				'&nbsp;'.lang('categories for').':&nbsp;'.$this->user;
 			$GLOBALS['phpgw']->common->phpgw_header(true);
+			$GLOBALS['phpgw']->template->set_root(PHPGW_APP_TPL);
 			$GLOBALS['phpgw']->template->set_file('cat_list_t', 'listcats.tpl');
 			$GLOBALS['phpgw']->template->set_block('cat_list_t','data_column','column');
 			$GLOBALS['phpgw']->template->set_block('cat_list_t','cat_list','list');
@@ -357,6 +358,7 @@
 			$cat_data        = isset($_POST['cat_data']) ? $_POST['cat_data'] : array();
 			$cat_access      = isset($_POST['cat_access']) ? $_POST['cat_access'] : 'private';
 
+			$GLOBALS['phpgw']->template->set_root(PHPGW_APP_TPL);
 			$GLOBALS['phpgw']->template->set_file(array('form' => 'category_form.tpl'));
 			$GLOBALS['phpgw']->template->set_block('form','data_row','row');
 			$GLOBALS['phpgw']->template->set_block('form','add','addhandle');
@@ -473,6 +475,7 @@
 			$cat_access			= $_POST['cat_access'];
 			$old_parent			= $_POST['old_parent'];
 
+			$GLOBALS['phpgw']->template->set_root(PHPGW_APP_TPL);
 			$GLOBALS['phpgw']->template->set_file(array('form' => 'category_form.tpl'));
 			$GLOBALS['phpgw']->template->set_block('form','data_row','row');
 			$GLOBALS['phpgw']->template->set_block('form','add','addhandle');
