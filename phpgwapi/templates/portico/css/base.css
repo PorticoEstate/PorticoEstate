@@ -533,3 +533,11 @@ div.error, div.warn
 	padding: 2px;
 	text-align: center;
 }
+
+.yui-nav input {padding:0.35em 0.75em;}
+.yui-nav input {margin:0 0.16em -1px 0;}
+.yui-nav .selected input {border-color:#243356;}
+.yui-nav .selected input {background:#2647a0 url(../../../../assets/skins/sam/sprite.png) repeat-x left -1400px;color:#fff;}
+.yui-nav .selected input:hover {background:#2647a0 url(../../../../assets/skins/sam/sprite.png) repeat-x left -1400px;color:#fff;}
+.yui-nav input {background:#fff url(../../../../assets/skins/sam/sprite.png) repeat-x;border:solid #a3a3a3;border-width:0 1px;color:#000;position:relative;text-decoration:none;}
+.yui-nav input:hover, .yui-nav input:focus{background:#bfdaff url(../../../../assets/skins/sam/sprite.png) repeat-x left -1300px;outline:0;}
