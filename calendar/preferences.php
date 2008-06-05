@@ -88,8 +88,7 @@
 
 		$phpgw->preferences->save_repository(True);
      
-		Header('Location: '.$phpgw->link('/preferences/index.php'));
-		$phpgw->common->phpgw_exit();
+		$phpgw->redirect_link('/preferences/index.php');
 	}
 
 	function display_item($field,$data)
