@@ -44,8 +44,8 @@
 	{
 		$tpl->set_var('cols',7);
 	}
-
-	$today = date('Ymd',$GLOBALS['phpgw']->datetime->users_localtime);
+	phpgw::import_class('phpgwapi.datetime');
+	$today = date('Ymd',phpgwapi_datetime::user_localtime());
 
 	$col_width = 12;
 
@@ -225,4 +225,3 @@
 	$tpl->set_var('str','<td align="right" valign="bottom">'.$button.'</td>');
 	$tpl->parse('header_column','head_col',True);
 	echo $tpl->parse('row','head_table',True);
-?>

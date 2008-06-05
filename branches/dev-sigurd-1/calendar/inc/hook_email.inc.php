@@ -30,12 +30,13 @@
 
 		$cal = CreateObject('calendar.uicalendar');
 		//echo "Event ID: $calendar_id<br />\n";
+		phpgw::import_class('phpgwapi.datetime');
 
 		if ($event = $cal->bo->read_entry($calendar_id))
 		{
 			echo $cal->timematrix(
 				Array(
-					'date'		=> $GLOBALS['phpgw']->datetime->localdates(mktime(0,0,0,$event['start']['month'],$event['start']['mday'],$event['start']['year']) - $phpgw->calendar->tz_offset),
+					'date'		=> phpgwapi_datetime::localdates(mktime(0,0,0,$event['start']['month'],$event['start']['mday'],$event['start']['year']) - $phpgw->calendar->tz_offset),
 					'starttime'	=> $cal->bo->splittime('000000',False),
 					'endtime'	=> 0,
 					'participants'	=> $event['participants'])
@@ -51,4 +52,3 @@
 		}
 		unset($cal); unset($event);
 	}
-?>

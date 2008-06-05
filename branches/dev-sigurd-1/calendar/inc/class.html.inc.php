@@ -23,13 +23,14 @@ class calendar_html
 	function __construct()
 	{
 		//This should really be handled in API browser class - not the html class
-		if ( preg_match('/compatible; ([a-z_]+)[/ ]+([0-9.]+)/i', phpgw::get_var('HTTP_USER_AGENT', 'string', 'SERVER'), $parts))
+		//Sigurd: Does not look like this is used
+/*		if ( preg_match('/compatible; ([a-z_]+)[/ ]+([0-9.]+)/i', phpgw::get_var('HTTP_USER_AGENT', 'string', 'SERVER'), $parts))
 		{
 			preg_match('/^([a-z_]+)/([0-9.]+)/i', phpgw::get_var('HTTP_USER_AGENT', 'string', 'SERVER'), $parts);
 		}
 		list(,$this->user_agent,$this->ua_version) = $parts;
 		$this->user_agent = strtolower($this->user_agent);
-		
+*/		
 		//echo "<p>HTTP_USER_AGENT='{$_SERVER['HTTP_USER_AGENT']}', UserAgent: '{$this->user_agent}', Version: '{$this->ua_version}'</p>\n";
 	}
 
