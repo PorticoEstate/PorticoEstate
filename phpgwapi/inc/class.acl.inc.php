@@ -370,7 +370,7 @@
 			foreach ( $this->_data[$acct_id] as $entry )
 			{
 				$loc = $locations->get_id($entry['appname'], $entry['location']);
-				echo "{$entry['appname']}.{$entry['location']} == {$loc}<br>";
+
 				if ( $entry['grantor'] == '' )
 				{
 					$entry['grantor'] = 'NULL';
@@ -387,7 +387,6 @@
 					FIXME The inheritence model is broken
 					this shouldn't be done here, it should be handled in the check
 				*/
-
 				$subs = $locations->get_subs($entry['appname'], $entry['location']);
 				foreach ( array_keys($subs) as $sub )
 				{
@@ -687,25 +686,25 @@
 		{
 			$this->delete_repository($app, $location, $account_id);
 
+			// FIXME another example of the broken inherentence model
 			$inherit_location = array();
-			$inherit_location[] = $location; // in case the location is not found in the location table
 
 			$sql = 'SELECT phpgw_locations.location_id'
-				. ' FROM phpgw_acl_location'
+				. ' FROM phpgw_locations'
 				. " {$this->_join} phpgw_applications ON phpgw_locations.app_id = phpgw_applications.app_id"
 				. " WHERE phpgw_locations.name {$this->_like} '{$location}%'"
-					. " AND phpgw_applications.appname='$app'"
-					. " AND phpgw_locations.name != '$location'";
+					. " AND phpgw_applications.app_name='$app'";
+
 			$this->_db->query($sql, __LINE__, __FILE__);
-			while($this->_db->next_record())
+			while ( $this->_db->next_record() )
 			{
 				$inherit_location[] = $this->_db->f('location_id');
 			}
 
-			foreach($inherit_location as $acl_location)
+			foreach ( $inherit_location as $acl_location )
 			{
 				$sql = 'INSERT INTO phpgw_acl (location_id, acl_account, acl_rights, acl_grantor, acl_type)'
-					. " VALUES ({$acl_location}, {$account_id}, {$rights}, NULL , 0)";
+					. " VALUES ('{$acl_location}', {$account_id}, {$rights}, NULL , 0)";
 				$this->_db->query($sql, __LINE__, __FILE__);
 			}
 

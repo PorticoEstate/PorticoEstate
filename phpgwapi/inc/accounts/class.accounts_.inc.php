@@ -602,11 +602,11 @@
 		public function update_group($group, $users, $modules = null)
 		{
 			$this->account = $group;
-			$this->save_respository();
+			$this->save_repository();
 
 			// handle group memberships
-			$old_users = array_keys($this->members($group->id));
-			$new_users = array_keys($users);
+			$old_users = array_keys($this->member($group->id));
+			$new_users = $users;
 			$drop_users = array_diff($old_users, $new_users);
 			if ( is_array($drop_users) && count($drop_users) )
 			{
@@ -625,25 +625,16 @@
 			// module permissions
 			if ( is_array($modules) )
 			{
-				$apps = CreateObject('phpgwapi.applications', $group->id);
-				$data = array(); //remove all existing rights
-				foreach ( array_keys($modules) as $app_name )
-				{
-					if ( $app_status )
-					{
-						$data[] = $app_name;
-					}
-				}
-				$apps->update_data($data);
+				$apps = createObject('phpgwapi.applications', $group->id);
+				$apps->update_data(array_keys($modules));
 				$apps->save_repository();
 			}
 
-			// Things that have to change because of new group name
-			// FIXME this needs to be changed to work with all VFS backends
-			if($old_group->account_lid != $new_group->account_lid)
+			// FIXME This is broken and only supports localFS VFS
+			if ( $group->old_loginid != $group->lid )
 			{
 				$basedir = "{$GLOBALS['phpgw_info']['server']['files_dir']}/groups/";
-				@rename($basedir . $old_group->account_lid, $basedir . $new_group->account_lid);
+				@rename("{$basedir}{$group->old_loginid}", "{$basedir}/{$group->lid}");
 			}
 
 			return $group->id;
@@ -669,8 +660,9 @@
 
 			// handle groups
 			$old_groups = array_keys($this->membership($user->id));
-			$new_groups = array_keys($groups);
+			$new_groups = $groups;
 			$drop_groups = array_diff($old_groups, $new_groups);
+
 			if ( is_array($drop_groups) && count($drop_groups) )
 			{
 				foreach ( $drop_groups as $group )
@@ -690,16 +682,8 @@
 			// application permissions
 			if ( is_array($modules) )
 			{
-				$apps = CreateObject('phpgwapi.applications', $user->id);
-				$data = array(); //remove all existing rights
-				foreach ( array_keys($modules) as $app_name )
-				{
-					if ( $app_status )
-					{
-						$data[] = $app_name;
-					}
-				}
-				$apps->update_data($data);
+				$apps = createObject('phpgwapi.applications', $user->id);
+				$apps->update_data(array_keys($modules));
 				$apps->save_repository();
 			}
 

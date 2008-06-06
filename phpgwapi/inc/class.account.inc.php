@@ -42,6 +42,7 @@
 	 * @property		integer	$expires unix timestamp of when the account is due to expire
 	 * @property		integer	$person_id the contact id for the account - FIXME rename to contact_id - skwashd apr08
 	 * @property		integer $quota the amount of storage for the user in Mb
+	 * @property-read	string	$old_loginid the account's hashed password
 	 *
 	 * @package phpgroupware
 	 * @subpackage phpgwapi
@@ -86,7 +87,8 @@
 			'enabled'			=> false,
 			'expires'			=> 0,
 			'person_id'			=> 0,
-			'quota'				=> 0
+			'quota'				=> 0,
+			'old_loginid'		=> ''
 		);
 
 		/**
@@ -247,6 +249,8 @@
 					case 'expires':
 					case 'enabled':
 					case 'person_id':
+					case 'quota':
+					case 'old_loginid':
 						$this->_data[$key] = $val;
 					// we ignore the rest
 				}
@@ -280,11 +284,16 @@
 			{
 				case 'id':
 				case 'lid':
+				case 'passwd_hash':
 				case 'firstname':
 				case 'lastname':
+				case 'expires':
 				case 'enabled':
 				case 'person_id':
+				case 'quota':
+				case 'old_loginid':
 					return $this->_data[$name];
+
 				default:
 					throw new Exception(lang('Unknown value: %1', $name));
 			}
@@ -347,7 +356,8 @@
 				throw new Exception('Group name is too short');
 			}
 
-			if ( $lookup && $GLOBALS['phpgw']->accounts->name2id($group) )
+			if ( $lookup && 
+				$this->_data['id'] != $GLOBALS['phpgw']->accounts->name2id($group) )
 			{
 				throw new Exception('Group name already in use');
 			}
@@ -386,8 +396,10 @@
 			{
 				switch ( $key )
 				{
-					case 'id':
 					case 'lid':
+						$this->_data['old_loginid'] = $val;
+
+					case 'id':
 					case 'firstname':
 					case 'lastname':
 					case 'passwd':
@@ -457,6 +469,7 @@
 				case 'expires':
 				case 'person_id':
 				case 'quota':
+				case 'old_loginid':
 					return $this->_data[$name];
 				default:
 					throw new Exception(lang('Unknown value: %1', $name));
@@ -480,6 +493,7 @@
 
 				case 'lid':
 					$this->_validate_username($value);
+					$this->_data['old_loginid'] = $value;
 					break;
 
 				case 'firstname':
@@ -736,7 +750,7 @@
 			if ( $lookup )
 			{
 				$id = $GLOBALS['phpgw']->accounts->name2id($username);
-				if ( $id && $id <> $this->id )
+				if ( $id && $id <> $this->_data['id'] )
 				{
 					throw new Exception('Username already in use');
 				}

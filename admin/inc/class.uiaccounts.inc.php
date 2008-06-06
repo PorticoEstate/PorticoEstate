@@ -207,7 +207,7 @@
 
 			$nm = array
 			(
-				'start'	=> $start,
+				'start'			=> $start,
  				'num_records'	=> count($account_info),
  				'all_records'	=> $total,
 				'link_data'		=> $link_data
@@ -487,6 +487,7 @@
 				}
 
 				//FIXME exception/error handling needed here!
+				$error = array();
 
 				$account_id = $this->_bo->save_group($values);
 				if ( $account_id )
@@ -546,7 +547,7 @@
 			);
 			$GLOBALS['phpgw']->locations->verify($apps_with_acl);
 
-			$group_apps = $this->_bo->load_group_apps($account_id);
+			$group_apps = $this->_bo->load_apps($account_id);
 			$apps = array_keys($GLOBALS['phpgw_info']['apps']);
 			asort($apps);
 
@@ -697,7 +698,6 @@
 		public function _user_save()
 		{
 			$values							= phpgw::get_var('values', 'string', 'POST');
-			$values['old_loginid']			= phpgw::get_var('old_loginid', 'string', 'POST');
 			$values['account_groups']		= (array) phpgw::get_var('account_groups', 'int', 'POST');
 			$values['account_permissions']	= phpgw::get_var('account_permissions', 'bool', 'POST');
 			//FIXME Caeies fix waiting for JSCAL
@@ -713,10 +713,29 @@
 			}
 			catch ( Exception $e )
 			{
+				$ignored = array
+				(
+					'passwd',
+					'passwd_2',
+					'changepassword',
+					'expires_never',
+					'account_expires',
+					'account_expires_year',
+					'account_expires_month',
+					'account_expires_day',
+					'account_permissions',
+					'account_groups'
+				);
+
 				$errors[] = $e->getMessage();
 				$user = new phpgwapi_user;
 				foreach ( $values as $key => $value )
 				{
+					if ( in_array($key, $ignored) )
+					{
+						continue;
+					}
+
 					try
 					{
 						$user->$key = $value;
@@ -753,30 +772,28 @@
 			// no point in wasting loops
 			$GLOBALS['phpgw']->xslttpl->add_file('msgbox', PHPGW_TEMPLATE_DIR, 3);
 
+			$acl = createObject('phpgwapi.acl', $account_id);
+			
+			$user_data['status'] = 'A';
+			$user_data['anonymous'] = false;
+			$user_data['changepassword'] = true;
+			$user_data['account_permissions'] = array();
+
+			$user_groups = array();
+
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('administration') . ': ';
 			if ( $account_id )
 			{
+				$user_data['anonymous'] = $acl->check('anonymous', 1, 'phpgwapi');
+				$user_data['changepassword'] = $acl->check('changepassword', 0xFFFF, 'preferences');
+				$user_data['account_permissions'] = $this->_bo->load_apps($account_id);
+				$user_groups = $account->membership($account_id);
+
 				$GLOBALS['phpgw_info']['flags']['app_header'] .= lang('edit user account');
 			}
 			else
 			{
 				$GLOBALS['phpgw_info']['flags']['app_header'] .= lang('add user account');
-			}
-
-			$acl = createObject('phpgwapi.acl', $account_id);
-			if ( $account_id )
-			{
-				$user_data = $user->toArray();
-				$user_groups = $account->membership($account_id);
-				$user_data['anonymous'] = $acl->check('anonymous', 1, 'phpgwapi');
-				$user_data['changepassword'] = $acl->check('changepassword', 0xFFFF, 'preferences');
-			}
-			else
-			{
-				$user_data['status'] = 'A';
-				$user_data['anonymous'] = false;
-				$user_data['changepassword'] = true;
-				$user_groups = Array();
 			}
 
 			if ( !$user_data['expires'] )
@@ -928,18 +945,13 @@
 			);
 			phpgwapi_yui::tabview_setup('account_edit_tabview');
 
-			$page_params['menuaction'] = 'admin.uiaccounts.edit_user';
-			if($account_id)
-			{
-				$page_params['account_id']  = $account_id;
-				$page_params['old_loginid'] = rawurlencode($user_data['lid']);
-			}
 
 			$data = array
 			(
 				'page_title'			=> $account_id ? lang('edit user') : lang('add user'),
 				'msgbox_data'			=> array('msgbox_text' => $GLOBALS['phpgw']->common->error_list($errors)),
-				'edit_url'				=> $GLOBALS['phpgw']->link('/index.php', $page_params),
+				'edit_url'				=> $GLOBALS['phpgw']->link('/index.php',
+												array('menuaction' => 'admin.uiaccounts.edit_user')),
 				'lang_lid'				=> lang('loginid'),
 				'lang_account_active'	=> lang('account active'),
 				'lang_anonymous'		=> lang('Anonymous User (not shown in list sessions)'),
@@ -959,12 +971,11 @@
 				'lang_never'			=> lang('Never'),
 				'account_id'			=> $account_id,
 				'account_lid'			=> $user_data['lid'],
-				'old_loginid'			=> $account_id ? $GLOBALS['phpgw']->accounts->id2lid($account_id) : '',
 				'lang_homedir'			=> $lang_homedir,
 				'lang_shell'			=> $lang_shell,
 				'homedirectory'			=> $homedirectory,
 				'loginshell'			=> $loginshell,
-				'account_status'		=> (int) $user_data['enabled'],
+				'account_enabled'		=> (int) $user_data['enabled'],
 				'account_firstname'		=> $user_data['firstname'],
 				'account_lastname'		=> $user_data['lastname'],
 				'account_passwd'		=> '',
@@ -1009,14 +1020,16 @@
 			$user_data = $GLOBALS['phpgw']->accounts->get($account_id)->toArray();
 
 			$lang_never = lang('never');
+			$lang_disabled = lang('disabled');
+			$lang_enabled = lang('enabled');
 
 			if ($user_data['enabled'])
 			{
-				$user_data['account_status'] = lang('Enabled');
+				$user_data['account_status'] = $lang_enabled;
 			}
 			else
 			{
-				$user_data['account_status'] = lang('Disabled');
+				$user_data['account_status'] = $lang_disabled;
 			}
 
 			$user_data['account_lastlogin'] = $lang_never;
@@ -1053,11 +1066,11 @@
 			{
 				$img_disabled = $GLOBALS['phpgw']->common->image('phpgwapi', 'stock_no', '.png', false);
 				$img_enabled = $GLOBALS['phpgw']->common->image('phpgwapi', 'stock_yes', '.png', false);
-				$lang_disabled = lang('disabled');
-				$lang_enabled = lang('enabled');
+
+				sort($available_apps);
 				foreach ( $available_apps as $app )
 				{
-					if ( !$app['enabled'] || $app['status'] == 2 )
+					if ( !$app['enabled'] || $app['status'] > 2 )
 					{
 						continue;
 					}
