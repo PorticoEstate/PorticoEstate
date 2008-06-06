@@ -167,6 +167,7 @@
 		{
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] .= '::apps';
 
+			$GLOBALS['phpgw']->template->set_root(PHPGW_APP_TPL);
 			$GLOBALS['phpgw']->template->set_file(array('application' => 'application_form.tpl'));
 			$GLOBALS['phpgw']->template->set_block('application','form','form');
 			$GLOBALS['phpgw']->template->set_block('application','row','row');
@@ -253,6 +254,7 @@
 
 			$app_name = phpgw::get_var('app_name', 'string', 'GET');
 
+			$GLOBALS['phpgw']->template->set_root(PHPGW_APP_TPL);
 			$GLOBALS['phpgw']->template->set_file(array('application' => 'application_form.tpl'));
 			$GLOBALS['phpgw']->template->set_block('application','form','form');
 			$GLOBALS['phpgw']->template->set_block('application','row','row');
