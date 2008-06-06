@@ -342,6 +342,7 @@
 				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'admin.uiapplications.get_list') );
 			}
 
+			$GLOBALS['phpgw']->template->set_root(PHPGW_APP_TPL);
 			$GLOBALS['phpgw']->template->set_file(array('body' => 'delete_common.tpl'));
 
 			if ( phpgw::get_var('confirm', 'bool') )
