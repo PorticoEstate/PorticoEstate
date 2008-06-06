@@ -258,7 +258,7 @@
 				{
 					continue;
 				}
-				$GLOBALS['phpgw']->acl->add_repository($app, 'run', $this->account_id, 1);
+				$GLOBALS['phpgw']->acl->add_repository($app, 'run', $this->account_id, phpgwapi_acl::READ);
 			}
 			return $this->data;
 		}

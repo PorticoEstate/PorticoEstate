@@ -155,10 +155,11 @@
 				<form method="post" action="{edit_url}">
 					<div class="yui-content">
 						<div id="user">
+							<input type="hidden" name="values[id]" value="{account_id}" />
 							<ul id="admin_account_form">
 								<li>
-									<input type="checkbox" name="values[status]" value="1" class="check">
-										<xsl:if test="account_status = 1">
+									<input type="checkbox" name="values[enabled]" value="1" class="check">
+										<xsl:if test="account_enabled = 1">
 											<xsl:attribute name="checked" value="checked" />
 										</xsl:if>
 									</input>
@@ -251,8 +252,6 @@
 						<input type="submit" name="save" value="{lang_save}"/>
 						<input type="submit" name="cancel" value="{lang_cancel}"/>
 					</div>
-					<input type="hidden" name="values[id]" value="{account_id}" />
-					<input type="hidden" name="old_loginid" value="{old_loginid}" />
 				</form>
 			</div>
 		</div>

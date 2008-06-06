@@ -423,6 +423,13 @@
 						{
 								return $filtered;
 						}
+
+						// make the default sane
+						if ( !$default )
+						{
+							$default = '0.0.0.0';
+						}
+
 						return (string) $default;
 
 					case 'location':
@@ -447,7 +454,7 @@
 						$value = filter_var($value, FILTER_UNSAFE_RAW);
 						break;
 					
-					case 'html': // this needs its own handler
+					case 'html':
 					case 'string':
 					default:
 						$value = htmlspecialchars(filter_var($value, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES));

@@ -69,6 +69,17 @@
 				return false;
 			}
 
+			// Check if it already exists
+			$sql = 'SELECT group_id FROM phpgw_group_map'
+				. " WHERE	group_id = {$group_id}"
+					. " AND account_id = {$account_id}";
+
+			$this->db->query($sql, __LINE__, __FILE__);
+			if ( $this->db->next_record() )
+			{
+				return true;
+			}
+
 			$sql = 'INSERT INTO phpgw_group_map'
 				. " VALUES({$group_id}, {$account_id}, {$read})";
 
@@ -724,6 +735,13 @@
 				'quota'		=> (int) $this->account->quota
 			);
 
+			$where_lid = '';
+			if ( $this->account->lid != $this->account->old_loginid )
+			{
+				$lid = $this->db->db_addslashes($this->account->old_loginid);
+				$where_lid = " AND account_lid = '{$lid}'";
+			}
+
 			$sql = 'UPDATE phpgw_accounts'
 					. " SET account_lid = '{$data['lid']}', "
 						. " account_firstname = '{$data['firstname']}', "
@@ -733,7 +751,8 @@
 						. " account_expires = {$data['expires']}, "
 						. " person_id = {$data['person_id']}, "
 						. " account_quota = {$data['quota']}"
-					. " WHERE account_id = {$data['id']}";
+					. " WHERE account_id = {$data['id']}"
+						. $where_lid;
 
 			$this->_cache_account($this->account);
 

@@ -80,7 +80,7 @@
 		unset($bt[0]);
 		$bt = array_reverse($bt);
 
-		$trace = '';
+		$trace = '&nbsp;';
 		$i = 0;
 		foreach ( $bt as $entry )
 		{
@@ -197,32 +197,34 @@
 			case E_ERROR:
 				$log_args['severity'] = 'F'; //all "ERRORS" should be fatal
 				$log->fatal($log_args);
-				die( '<pre>' . phpgw_parse_backtrace($bt) . '</pre>');
-				break;
+				echo '<p class="msg">' . lang('ERROR: %1 in %2 at line %3', $error_msg, $error_file, $error_line) . "</p>\n";
+				die('<pre>' . phpgw_parse_backtrace($bt) . "</pre>\n");
+
 			case E_WARNING:
 			case E_USER_WARNING:
 				$log_args['severity'] = 'W';
 				$log->warn($log_args);
-				echo "\n<br>" . lang('ERROR Warning: %1 in %2 at line %3', $error_msg, $error_file, $error_line) . "<br>\n";
+				echo '<p class="msg">' . lang('Warning: %1 in %2 at line %3', $error_msg, $error_file, $error_line) . "</p>\n";
+				echo '<pre>' . phpgw_parse_backtrace($bt) . "</pre>\n";
 				break;
+
 			case PHPGW_E_INFO:
 				$log_args['severity'] = 'I';
 				$log->info($log_args);
 				break;
+
 			case PHPGW_E_DEBUG:
 				$log_args['severity'] = 'D';
 				$log->info($log_args);
 				break;
+
 			case E_NOTICE:
 			case E_USER_NOTICE:
 			//case E_STRICT:
 				$log_args['severity'] = 'N';
 				$log->notice($log_args);
-				if(isset($GLOBALS['phpgw_info']['server']['log_levels']['global_level']) && $GLOBALS['phpgw_info']['server']['log_levels']['global_level'] == 'N')
-				{
-					echo "\n<br>" . lang('ERROR Notice: %1 in %2 at line %3', $error_msg, $error_file, $error_line) . "<br>\n"; //this will be commented in the final version
-					echo '<pre>' . phpgw_parse_backtrace($bt) . '<pre>';
-				}
+				//echo '<p>' . lang('Notice: %1 in %2 at line %3', $error_msg, $error_file, $error_line) . "</p>\n";
+				//echo '<pre>' . phpgw_parse_backtrace($bt) . "</pre>\n";
 			//No default, we just ignore it, for now
 		}
 	}

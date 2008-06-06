@@ -49,12 +49,6 @@
 			)
 		);
 
-		/*
-		function __construct()
-		{
-		}
-		*/
-
 		/**
 		 * List methods available via RPC
 		 *
@@ -221,6 +215,16 @@
 				throw new Exception(lang('no permission to add users'));
 			}
 
+	
+			if ( $values['id'] )
+			{
+				$user = $GLOBALS['phpgw']->accounts->get($values['id']);
+			}
+			else
+			{
+				$user = new phpgwapi_user();
+			}
+			
 			if ( isset($values['expires_never']) && $values['expires_never'] )
 			{
 				$values['expires'] = -1;
@@ -243,7 +247,7 @@
 				$values['account_expires'] = $values['expires'];
 			}
 
-			if ( !$values['old_loginid'] && !$values['account_passwd'] )
+			if ( !$user->old_loginid && !$values['passwd'] )
 			{
 				throw new Exception('You must enter a password');
 			}
@@ -253,9 +257,9 @@
 				throw new Exception(lang('You must enter a loginid'));
 			}
 
-			if ($values['old_loginid'] != $values['account_lid'])
+			if ( $user->old_loginid != $values['lid'] )
 			{
-				if ($GLOBALS['phpgw']->accounts->exists($values['account_lid']))
+				if ($GLOBALS['phpgw']->accounts->exists($values['lid']))
 				{
 					throw new Exception(lang('That loginid has already been taken'));
 				}
@@ -279,15 +283,17 @@
 			(
 				'id'				=> (int) $values['id'],
 				'lid'				=> $values['lid'],
-				'old_loginid'		=> $values['old_loginid'],
 				'firstname'			=> $values['firstname'],
 				'lastname'			=> $values['lastname'],
-				'passwd'			=> $values['passwd'],
-				'status'			=> $values['status'] ? 'A' : 'I',
-				'groups'			=> $values['groups'],
+				'enabled'			=> $values['enabled'],
 				'expires'			=> $values['expires'],
 				'quota'				=> $values['quota']
 			);
+
+			if ( $values['passwd'] )
+			{
+				$user_data['passwd'] = $values['passwd'];
+			}
 
 			if ( false /* ldap extended attribs here */ )
 			{
@@ -297,16 +303,9 @@
 
 			$groups = $values['account_groups'];
 			$acls = array();
-			$apps = $values['permissions'];
+			$apps = $values['account_permissions'];
+			unset($values['account_groups'], $values['account_permissions']);
 
-			if ( $user_data['id'] )
-			{
-				$user = $GLOBALS['phpgw']->accounts->get($user_data['id']);
-			}
-			else
-			{
-				$user = new phpgwapi_user();
-			}
 
 			try
 			{
@@ -334,7 +333,7 @@
 			}
 			else
 			{
-				if ( $GLOBALS['phpgw']->accounts->create($user, $groups, $acls, $apps) )
+				return $GLOBALS['phpgw']->accounts->create($user, $groups, $acls, $apps);
 				{
 					return $user->id;
 				}
@@ -423,16 +422,16 @@
 		 *
 		 * @return array list of applications the group has access to
 		 */
-		function load_group_apps($account_id)
+		function load_apps($account_id)
 		{
 			$account_id = (int) $account_id;
 			$account_apps = array();
 			if ( $account_id )
 			{
-				$group_apps = createObject('phpgwapi.applications', $account_id)
+				$apps = createObject('phpgwapi.applications', $account_id)
 								->read_account_specific();
 
-				foreach ( $group_apps as $app )
+				foreach ( $apps as $app )
 				{
 					$account_apps[$app['name']] = true;
 				}

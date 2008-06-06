@@ -98,10 +98,11 @@
 
 							<div id="group">
 								<h2><xsl:value-of select="lang_group" /></h2>
+								<input type="hidden" name="values[account_id]" value="{account_id}"/>
 								<ul id="admin_account_form">
 									<li>
 										<label for="account_name"><xsl:value-of select="lang_account_name" /></label>
-										<input name="values[account_name]" value="{value_account_name}" /><br class="eol" />
+										<input name="values[account_name]" value="{value_account_name}" id="account_name" /><br class="eol" />
 									</li>
 									<li>
 										<label for="account_user"><xsl:value-of select="lang_include_user" /></label>
@@ -124,21 +125,9 @@
 					<input type="submit" name="save" value="{lang_save}" />
 					<input type="submit" name="cancel" value="{lang_cancel}" />
 				</div>
-				<input type="hidden" name="values[account_id]" value="{account_id}"/>
 			</form>
 		</div>
 	</xsl:template>
-
-	<!-- This isn't used atm
-	<xsl:template match="group_manager">
-		<option value="{account_id}">
-			<xsl:if test="selected != ''">
-				<xsl:attribute name="selected" value="selected" />
-			</xsl:if>
-			<xsl:value-of select="account_name" />
-		</option>
-	</xsl:template>
-	-->
 
 	<xsl:template match="guser_list">
 		<option value="{account_id}">
