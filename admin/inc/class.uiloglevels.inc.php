@@ -104,13 +104,14 @@
 			$apps_with_logging = $GLOBALS['phpgw_info']['server']['log_levels']['module'];
 			$sorted_apps = array();
 			$app_add_list = array();
-			foreach ($GLOBALS['phpgw_info']['apps'] as $app => $app_data)
+			foreach ( $GLOBALS['phpgw_info']['apps'] as $app => $app_data )
 			{
 				$sorted_apps[$app] = $app_data['title']; 
-			}	
+			}
+
+			asort($sorted_apps);
 			
 			$add_options = '';
-			asort($sorted_apps);
 			$tr_class = 'row_on';
 		    foreach ( $sorted_apps as $app => $title) 
 		    {
@@ -137,7 +138,7 @@
 		    	}
 		    	else 
 		    	{
-					$add_options = $add_options . '<option value="' . $app . '">' . $title . '</option>';
+					$add_options .= "<option value=\"{$app}\">{$title}</option>\n";
 		    	}
 		    }	
 				
@@ -168,21 +169,24 @@
 			$add_options = '';
 			$tr_class = 'row_on';
 			$accounts = $GLOBALS['phpgw']->accounts->get_list('accounts');
-			foreach($accounts as $account)
+			foreach ( $accounts as $account )
 			{
-				$account_lid = $account['account_lid'];
+				$account_lid = $account->lid;
+				$name = (string) $account;
 		    	if ( isset($GLOBALS['phpgw_info']['server']['log_levels']['user'][$account_lid]) ) 
 		    	{
 					$var = array
 					(
 						'tr_class' 		=> $tr_class,
-						'module_name'   => $account_lid,
+						'module_name'   => (string) $account,
 						'module_option' => $this->create_select_box('user', $account_lid, $GLOBALS['phpgw_info']['server']['log_levels']['user'][$account_lid]),
 						'remove_url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.uiloglevels.edit_log_levels', 'level_type' => 'user', 'level_key' => $account_lid) ),
 						'lang_remove'   => lang('remove')
 					);
+
 					$this->template->set_var($var);
-					$this->template->fp('user_list','module',True);
+					$this->template->fp('user_list', 'module', true);
+
 					if ($tr_class == 'row_on')
 					{
 						$tr_class = 'row_off';
@@ -194,7 +198,7 @@
 		    	}
 		    	else 
 		    	{
-					$add_options .= '<option value="' . $account_lid . '">' . $account_lid . '</option>';
+					$add_options .= "<option value=\"{$account_lid}\">{$name}</option>\n";
 		    	}
 		    }	
 				
