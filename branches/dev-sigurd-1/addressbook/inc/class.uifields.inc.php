@@ -42,6 +42,7 @@
 				$GLOBALS['phpgw']->common->phpgw_exit();
 			}
 
+			$GLOBALS['phpgw']->template->set_root(PHPGW_APP_TPL);
 			$GLOBALS['phpgw']->template->set_file(array
 			(
 				'field_list_t' => 'listfields.tpl',
@@ -142,6 +143,7 @@
 				$GLOBALS['phpgw']->common->phpgw_exit();
 			}
 
+			$GLOBALS['phpgw']->template->set_root(PHPGW_APP_TPL);
 			$GLOBALS['phpgw']->template->set_file(array('form' => 'field_form.tpl'));
 			$GLOBALS['phpgw']->template->set_block('form','add','addhandle');
 			$GLOBALS['phpgw']->template->set_block('form','edit','edithandle');
@@ -241,6 +243,7 @@
 				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'addressbook.uifields.index', 'sort' => $sort, 'query' => $query, 'start' => $start) );
 			}
 
+			$GLOBALS['phpgw']->template->set_root(PHPGW_APP_TPL);
 			$GLOBALS['phpgw']->template->set_file(array('form' => 'field_form.tpl'));
 			$GLOBALS['phpgw']->template->set_block('form','add','addhandle');
 			$GLOBALS['phpgw']->template->set_block('form','edit','edithandle');
@@ -374,6 +377,7 @@
 					. '<input type="hidden" name="start" value="' . $start .'">' . "\n"
 					. '<input type="hidden" name="field" value="' . $field .'">' . "\n";
 
+				$GLOBALS['phpgw']->template->set_root(PHPGW_APP_TPL);
 				$GLOBALS['phpgw']->template->set_file(array('field_delete' => 'delete_common.tpl'));
 				$GLOBALS['phpgw']->template->set_var('messages',lang('Are you sure you want to delete this field?'));
 
@@ -593,4 +597,3 @@
 			}
 		}
 	}
-?>
