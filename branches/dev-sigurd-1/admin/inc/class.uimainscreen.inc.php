@@ -93,6 +93,7 @@ HTML;
 
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] .= '::admin::mainscreen';
 
+			$GLOBALS['phpgw']->template->set_root(PHPGW_APP_TPL);
 			$GLOBALS['phpgw']->template->set_file(array('message' => 'mainscreen_message.tpl'));
 			$GLOBALS['phpgw']->template->set_block('message','form','form');
 			$GLOBALS['phpgw']->template->set_block('message','row','row');

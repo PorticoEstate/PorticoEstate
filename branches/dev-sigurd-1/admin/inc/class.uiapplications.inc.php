@@ -166,6 +166,7 @@
 		{
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] .= '::apps';
 
+			$GLOBALS['phpgw']->template->set_root(PHPGW_APP_TPL);
 			$GLOBALS['phpgw']->template->set_file(array('application' => 'application_form.tpl'));
 			$GLOBALS['phpgw']->template->set_block('application','form','form');
 			$GLOBALS['phpgw']->template->set_block('application','row','row');
@@ -252,6 +253,7 @@
 
 			$app_name = phpgw::get_var('app_name', 'string', 'GET');
 
+			$GLOBALS['phpgw']->template->set_root(PHPGW_APP_TPL);
 			$GLOBALS['phpgw']->template->set_file(array('application' => 'application_form.tpl'));
 			$GLOBALS['phpgw']->template->set_block('application','form','form');
 			$GLOBALS['phpgw']->template->set_block('application','row','row');
@@ -339,6 +341,7 @@
 				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'admin.uiapplications.get_list') );
 			}
 
+			$GLOBALS['phpgw']->template->set_root(PHPGW_APP_TPL);
 			$GLOBALS['phpgw']->template->set_file(array('body' => 'delete_common.tpl'));
 
 			if ( phpgw::get_var('confirm', 'bool') )
