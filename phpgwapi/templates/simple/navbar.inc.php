@@ -37,13 +37,14 @@
 
 		// Maybe we should create a common function in the phpgw_accounts_shared.inc.php file
 		// to get rid of duplicate code.
-		if ($GLOBALS['phpgw_info']['user']['lastpasswd_change'] == 0)
+		if ( !isset($GLOBALS['phpgw_info']['user']['lastpasswd_change'])
+			|| $GLOBALS['phpgw_info']['user']['lastpasswd_change'] == 0)
 		{
 			$api_messages = lang('You are required to change your password during your first login')
 				. '<br> Click this image on the navbar: <img src="'
 				. $GLOBALS['phpgw']->common->image('preferences', 'navbar').'">';
 		}
-		elseif ($GLOBALS['phpgw_info']['user']['lastpasswd_change'] < time() - (86400*30))
+		else if ($GLOBALS['phpgw_info']['user']['lastpasswd_change'] < time() - (86400*30))
 		{
 			$api_messages = lang('it has been more then %1 days since you changed your password',30);
 		}
