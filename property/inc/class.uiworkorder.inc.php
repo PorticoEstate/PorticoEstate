@@ -27,6 +27,8 @@
  	* @version $Id$
 	*/
 
+	phpgw::import_class('phpgwapi.yui');
+
 	/**
 	 * Description
 	 * @package property
@@ -866,14 +868,6 @@
 				$msgbox_data = '';
 			}
 
-			$GLOBALS['phpgw']->js->validate_file('tabs', 'tabs');
-
-			if(!is_object($GLOBALS['phpgw']->css))
-			{
-				$GLOBALS['phpgw']->css = createObject('phpgwapi.css');
-			}
-			$GLOBALS['phpgw']->css->validate_file('tabs','phpgwapi');
-
 			$link_file_data = array
 			(
 				'menuaction'	=> 'property.uiworkorder.view_file',
@@ -882,14 +876,22 @@
 
 			$categories = $this->cats->formatted_xslt_list(array('selected' => $project['cat_id']));
 
+			$tabs = array
+			(
+				'project'		=> array('label' => lang('Project info'), 'link' => '#project'),
+				'general'		=> array('label' => lang('general'), 'link' => '#general'),
+				'coordination'	=> array('label' => lang('coordination'), 'link' => '#coordination'),
+				'budget'		=> array('label' => lang('Time and budget'), 'link' => '#budget'),
+				'extra'			=> array('label' => lang('extra'), 'link' => '#extra'),
+				'documents'		=> array('label' => lang('documents'), 'link' => '#documents'),
+				'history'		=> array('label' => lang('history'), 'link' => '#history')
+			);
+
+			phpgwapi_yui::tabview_setup('workorder_edit_tabview');
+
 			$data = array
 			(
-				'lang_project_info'				=> lang('Project info'),
-				'lang_general' 					=> lang('General'),
-				'lang_coordination' 			=> lang('Coordination'),
-				'lang_time_and_budget' 			=> lang('Time and budget'),
-				'lang_extra' 					=> lang('Extra'),
-				'lang_documents' 				=> lang('documents'),
+				'tabs'							=> phpgwapi_yui::tabview_generate($tabs, 'project'),
 
 				'msgbox_data'				=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
 				'calculate_action'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiwo_hour.index')),

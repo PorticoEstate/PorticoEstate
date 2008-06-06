@@ -358,91 +358,12 @@
 			<tr>
 				<td>
 
-<div align="center">
-<table class="tabletab">
-  <tr>
-    <th id="tab1" class="activetab" valign="top" onclick="javascript:tab.display(1);">
-      <table class="basic">
-        <tr>
-          <td id="starttab"></td>
-          <td>
-            <a href="#" tabindex="0" accesskey="1" onfocus="tab.display(1);" onclick="tab.display(1); return(false);"><xsl:value-of select="lang_project_info"/></a>
-          </td>
-          <td id="tweentab_r"></td>
-        </tr>
-      </table>
-    </th>
-    <th id="tab2" class="activetab" onclick="javascript:tab.display(2);">
-      <table>
-        <tr>
-          <td id="tweentab_l"></td>
-          <td>
-            <a href="#" tabindex="0" accesskey="2" onfocus="tab.display(2);" onclick="tab.display(2); return(false);"><xsl:value-of select="lang_general"/></a>
-          </td>
-          <td id="tweentab_r"></td>
-        </tr>
-      </table>
-    </th>
-    <th id="tab3" class="activetab" onclick="javascript:tab.display(3);">
-      <table>
-        <tr>
-          <td id="tweentab_l"></td>
-          <td>
-            <a href="#" tabindex="0" accesskey="3" onfocus="tab.display(3);" onclick="tab.display(3); return(false);"><xsl:value-of select="lang_time_and_budget"/></a>
-          </td>
-          <td id="tweentab_r"></td>
-        </tr>
-      </table>
-    </th>
-    <th id="tab4" class="activetab" onclick="javascript:tab.display(4);">
-      <table>
-        <tr>
-          <td id="tweentab_l"></td>
-          <td>
-            <a href="#" tabindex="0" accesskey="4" onfocus="tab.display(4);" onclick="tab.display(4); return(false);"><xsl:value-of select="lang_coordination"/></a>
-          </td>
-          <td id="tweentab_r"></td>
-        </tr>
-      </table>
-    </th>
-    <th id="tab5" class="activetab" onclick="javascript:tab.display(5);">
-      <table>
-        <tr>
-          <td id="tweentab_l"></td>
-          <td>
-            <a href="#" tabindex="0" accesskey="5" onfocus="tab.display(5);" onclick="tab.display(5); return(false);"><xsl:value-of select="lang_extra"/></a>
-          </td>
-          <td id="tweentab_r"></td>
-        </tr>
-      </table>
-    </th>
-    <th id="tab6" class="activetab" onclick="javascript:tab.display(6);">
-      <table>
-        <tr>
-          <td id="tweentab_l"></td>
-          <td>
-            <a href="#" tabindex="0" accesskey="6" onfocus="tab.display(6);" onclick="tab.display(6); return(false);"><xsl:value-of select="lang_documents"/></a>
-          </td>
-          <td id="tweentab_r"></td>
-        </tr>
-      </table>
-    </th>
-    <th id="tab7" class="activetab" onclick="javascript:tab.display(7);">
-      <table>
-        <tr>
-          <td id="tweentab_l"></td>
-          <td>
-            <a href="#" tabindex="0" accesskey="7" onfocus="tab.display(7);" onclick="tab.display(7); return(false);"><xsl:value-of select="lang_history"/></a>
-          </td>
-          <td id="tweentab_r"></td>
-        </tr>
-      </table>
-    </th>
-  </tr>
-</table>
-</div>
+				<div class="yui-navset" id="workorder_edit_tabview">
+					<xsl:value-of disable-output-escaping="yes" select="tabs" />
+					<div class="yui-content">
 
-<div id="tabcontent1" class="activetab">
+
+<div id="project">
 <table class="contenttab" align="left">
 			<xsl:choose>
 				<xsl:when test="value_project_id!=''">
@@ -562,7 +483,7 @@
 </table>
 </div>
 
-<div id="tabcontent2" class="activetab">
+<div id="general">
 <table class="contenttab" align="left">
 			<xsl:choose>
 				<xsl:when test="value_workorder_id!=''">
@@ -649,7 +570,7 @@
 </table>
 </div>
 
-<div id="tabcontent3" class="activetab">
+<div id="budget">
 <table class="contenttab" align="left">
 			<tr>
 				<td valign="top">
@@ -782,7 +703,7 @@
 </table>
 </div>
 
-<div id="tabcontent4" class="activetab">
+<div id="coordination">
 <table class="contenttab" align="left">
 			<tr>
 				<td>
@@ -825,7 +746,7 @@
 </table>
 </div>
 
-<div id="tabcontent5" class="activetab">
+<div id="extra">
 <table class="contenttab" align="left">
 			<tr>
 			<xsl:choose>
@@ -881,7 +802,7 @@
 </table>
 </div>
 
-<div id="tabcontent6" class="activetab">
+<div id="documents">
 <table class="contenttab" align="left">
 	<xsl:choose>
 		<xsl:when test="files!=''">
@@ -893,7 +814,7 @@
 </table>
 
 </div>
-<div id="tabcontent7" class="activetab">
+<div id="history">
 
 		<hr noshade="noshade" width="100%" align="center" size="1"/>
 		<table width="80%" cellpadding="2" cellspacing="2" align="center">
@@ -916,6 +837,8 @@
 				</xsl:otherwise>
 			</xsl:choose>
 		</table>
+</div>
+</div>
 </div>
 				</td>
 			</tr>
