@@ -143,11 +143,11 @@
 
 			$this->_phpgw_set_cookie_params();
 
-			$use_cookies = true;
-			if ( !isset($GLOBALS['phpgw_info']['server']['usecookies'])
-				|| !$GLOBALS['phpgw_info']['server']['usecookies'] )
+			$use_cookies = false;
+			if ( isset($GLOBALS['phpgw_info']['server']['usecookies'])
+				&& $GLOBALS['phpgw_info']['server']['usecookies'] == 'True' )
 			{
-				$use_cookies = false;
+				$use_cookies = true;
 			}
 			//respect the config option for cookies
 			ini_set('session.use_cookies', $use_cookies);
@@ -164,6 +164,7 @@
 		 * @param mixed  $data   the data to store - use ##NOTHING## to retreive data
 		 *
 		 * @return mixed the data - even if storing
+		 *
 		 * @deprecated see phpgwapi_cache::session_set/session_get
 		 */
 		public function appsession($id = 'default', $module = '', $data = '##NOTHING##')
@@ -890,7 +891,9 @@
 			{
 				session_id($sessionid);
 			}
+
 			session_start();
+
 			if ( isset($_SESSION['phpgw_session']) && is_array($_SESSION['phpgw_session']) )
 			{
 				return $_SESSION['phpgw_session'];

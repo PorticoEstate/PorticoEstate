@@ -97,7 +97,7 @@
 			if ( isset($GLOBALS['phpgw_info']['server']['sessions_checkip'])
 				&& $GLOBALS['phpgw_info']['server']['sessions_checkip'] )
 			{
-				$ip = phpgw::get_var('REMOTE_ADDR', 'ip', 'SERVER', '0.0.0.0');
+				$ip = phpgw::get_var('REMOTE_ADDR', 'ip', 'SERVER');
 				$sql .= " AND ip = '{$ip}'";
 			}
 
@@ -119,7 +119,7 @@
 		public static function write($id, $data)
 		{
 			$id = $GLOBALS['phpgw']->db->db_addslashes($id);
-			$data = $GLOBALS['phpgw']->crypto->encrypt($GLOBALS['phpgw']->db->db_addslashes($data));
+			$data = $GLOBALS['phpgw']->db->db_addslashes($GLOBALS['phpgw']->crypto->encrypt($data));
 			$ts = time();
 
 			// need to do it this way - REPLACE INTO would make a more elegant solution 
@@ -132,11 +132,12 @@
 			}
 			else
 			{
-				$ip = phpgw::get_var('REMOTE_ADDR', 'ip', 'SERVER', '0.0.0.0');
+				$ip = phpgw::get_var('REMOTE_ADDR', 'ip', 'SERVER');
 				$sql = "INSERT INTO phpgw_sessions VALUES('{$id}', '{$ip}', '{$data}', {$ts})";
 			}
 
-			return !!$GLOBALS['phpgw']->db->query($sql, __LINE__, __FILE__);
+			$ret = $GLOBALS['phpgw']->db->query($sql, __LINE__, __FILE__);
+			return $ret;
 		}
 	}
 
