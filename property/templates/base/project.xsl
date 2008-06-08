@@ -86,7 +86,6 @@
 <!-- add / edit -->
 
 	<xsl:template match="edit">
-		<div align="left">
 		<table cellpadding="2" cellspacing="2" align="center">
 			<xsl:choose>
 				<xsl:when test="msgbox_data != ''">
@@ -114,11 +113,10 @@
 						</td>
 				</xsl:when>
 			</xsl:choose>
+		</table>
 
 			<form method="post" name="form" action="{form_action}">
-			<tr>
-				<td>
-				<div class="yui-navset" id="project_edit_tabview">
+				<div class="yui-navset" id="project_tabview">
 					<xsl:value-of disable-output-escaping="yes" select="tabs" />
 					<div class="yui-content">
 <div id="general">
@@ -326,7 +324,7 @@
 </table>
 </div>
 
-<div id="coordination">
+<div id="budget">
 	<table class="contenttab" align="left">
 			<tr>
 				<td valign="top">
@@ -456,7 +454,7 @@
 </table>
 </div>
 
-<div id="budget">
+<div id="coordination">
 	<table class="contenttab" align="left">
 			<tr>
 				<td>
@@ -583,43 +581,10 @@
 			</tr>
 	</table>
 </div>
-</div>
-</div>
-		</td>
-	</tr>
-			<tr height="50">
-				<td>
-					<xsl:variable name="lang_save"><xsl:value-of select="lang_save"/></xsl:variable>
-					<input type="submit" name="values[save]" value="{$lang_save}" onMouseout="window.status='';return true;">
-						<xsl:attribute name="onMouseover">
-							<xsl:text>window.status='</xsl:text>
-								<xsl:value-of select="lang_save_statustext"/>
-							<xsl:text>'; return true;</xsl:text>
-						</xsl:attribute>
-					</input>
-				</td>
-			</tr>
 
-			</form>
-			<tr>
-				<td>
-					<xsl:variable name="done_action"><xsl:value-of select="done_action"/></xsl:variable>
-					<xsl:variable name="lang_done"><xsl:value-of select="lang_done"/></xsl:variable>
-					<form method="post" action="{$done_action}">
-						<input type="submit" name="done" value="{$lang_done}" onMouseout="window.status='';return true;">
-							<xsl:attribute name="onMouseover">
-								<xsl:text>window.status='</xsl:text>
-									<xsl:value-of select="lang_done_statustext"/>
-								<xsl:text>'; return true;</xsl:text>
-							</xsl:attribute>
-						</input>
-					</form>
-				</td>
-			</tr>
-		</table>
-
+<div id="history">
 		<hr noshade="noshade" width="100%" align="center" size="1"/>
-		<table class="contenttab" width="80%" cellpadding="2" cellspacing="2" align="center">
+		<table width="80%" cellpadding="2" cellspacing="2" align="center">
 			<xsl:choose>
 				<xsl:when test="record_history=''">
 					<tr>
@@ -639,10 +604,41 @@
 				</xsl:otherwise>
 			</xsl:choose>
 		</table>
-
-
-		</div>
-		<hr noshade="noshade" width="100%" align="center" size="1"/>
+</div>
+</div>
+</div>
+		<table>
+			<tr height="50">
+				<td>
+					<xsl:variable name="lang_save"><xsl:value-of select="lang_save"/></xsl:variable>
+					<input type="submit" name="values[save]" value="{$lang_save}" onMouseout="window.status='';return true;">
+						<xsl:attribute name="onMouseover">
+							<xsl:text>window.status='</xsl:text>
+								<xsl:value-of select="lang_save_statustext"/>
+							<xsl:text>'; return true;</xsl:text>
+						</xsl:attribute>
+					</input>
+				</td>
+			</tr>
+		</table>
+		</form>
+		<table>
+			<tr>
+				<td>
+					<xsl:variable name="done_action"><xsl:value-of select="done_action"/></xsl:variable>
+					<xsl:variable name="lang_done"><xsl:value-of select="lang_done"/></xsl:variable>
+					<form method="post" action="{$done_action}">
+						<input type="submit" name="done" value="{$lang_done}" onMouseout="window.status='';return true;">
+							<xsl:attribute name="onMouseover">
+								<xsl:text>window.status='</xsl:text>
+									<xsl:value-of select="lang_done_statustext"/>
+								<xsl:text>'; return true;</xsl:text>
+							</xsl:attribute>
+						</input>
+					</form>
+				</td>
+			</tr>
+		</table>
 
 	</xsl:template>
 
@@ -802,17 +798,11 @@
 <!-- view -->
 
 	<xsl:template match="view">
-		<div align="left">
-		<table cellpadding="2" cellspacing="2" width="80%" align="center">
-			<xsl:choose>
-				<xsl:when test="msgbox_data != ''">
-					<tr>
-						<td align="left" colspan="3">
-							<xsl:call-template name="msgbox"/>
-						</td>
-					</tr>
-				</xsl:when>
-			</xsl:choose>
+		<div class="yui-navset" id="project_tabview">
+			<xsl:value-of disable-output-escaping="yes" select="tabs" />
+			<div class="yui-content">
+<div id="general">
+		<table cellpadding="2" cellspacing="2" align="center">
 			<tr>
 				<td>
 					<xsl:value-of select="lang_project_id"/>
@@ -867,6 +857,11 @@
 					</xsl:choose>
 				</xsl:for-each>
 			</tr>
+</table>
+</div>
+
+<div id="location">
+<table class="contenttab" align="left">
 			<xsl:call-template name="location_view"/>
 
 			<xsl:choose>
@@ -890,6 +885,11 @@
 					<xsl:value-of select="value_power_meter"/>
 				</td>
 			</tr>
+</table>
+</div>
+
+<div id="budget">
+	<table class="contenttab" align="left">
 			<tr>
 				<td valign="top">
 					<xsl:value-of select="lang_budget"/>
@@ -974,7 +974,11 @@
 					<xsl:text> </xsl:text> [ <xsl:value-of select="currency"/> ]
 				</td>
 			</tr>
+</table>
+</div>
 
+<div id="coordination">
+	<table class="contenttab" align="left">
 			<tr>
 				<td>
 					<xsl:value-of select="lang_coordinator"/>
@@ -1081,34 +1085,15 @@
 					</xsl:for-each>
 				</td>
 			</tr>
-			<tr height="50">
-				<td>
-					<xsl:variable name="done_action"><xsl:value-of select="done_action"/></xsl:variable>
-					<xsl:variable name="lang_done"><xsl:value-of select="lang_done"/></xsl:variable>
-					<form method="post" action="{$done_action}">
-					<input type="submit" class="forms" name="done" value="{$lang_done}" onMouseout="window.status='';return true;">
-						<xsl:attribute name="onMouseover">
-							<xsl:text>window.status='</xsl:text>
-								<xsl:value-of select="lang_done_statustext"/>
-							<xsl:text>'; return true;</xsl:text>
-						</xsl:attribute>
-					</input>
+</table>
+</div>
 
-					</form>
-					<xsl:variable name="edit_action"><xsl:value-of select="edit_action"/></xsl:variable>
-					<xsl:variable name="lang_edit"><xsl:value-of select="lang_edit"/></xsl:variable>
-					<form method="post" action="{$edit_action}">
-					<input type="submit" class="forms" name="edit" value="{$lang_edit}" onMouseout="window.status='';return true;">
-						<xsl:attribute name="onMouseover">
-							<xsl:text>window.status='</xsl:text>
-								<xsl:value-of select="lang_edit_statustext"/>
-							<xsl:text>'; return true;</xsl:text>
-						</xsl:attribute>
-					</input>
-					</form>
-				</td>
-			</tr>
-		</table>
+<div id="extra">
+	<table class="contenttab" align="left">
+</table>
+</div>
+
+<div id="history">
 		<hr noshade="noshade" width="100%" align="center" size="1"/>
 		<table width="80%" cellpadding="2" cellspacing="2" align="center">
 			<xsl:choose>
@@ -1130,6 +1115,38 @@
 				</xsl:otherwise>
 			</xsl:choose>
 		</table>
-		</div>
 		<hr noshade="noshade" width="100%" align="center" size="1"/>
+</div>
+</div>
+</div>
+		<table>
+			<tr height="50">
+				<td>
+					<xsl:variable name="done_action"><xsl:value-of select="done_action"/></xsl:variable>
+					<xsl:variable name="lang_done"><xsl:value-of select="lang_done"/></xsl:variable>
+					<form method="post" action="{$done_action}">
+					<input type="submit" class="forms" name="done" value="{$lang_done}" onMouseout="window.status='';return true;">
+						<xsl:attribute name="onMouseover">
+							<xsl:text>window.status='</xsl:text>
+								<xsl:value-of select="lang_done_statustext"/>
+							<xsl:text>'; return true;</xsl:text>
+						</xsl:attribute>
+					</input>
+					</form>
+				<td>
+				</td>
+					<xsl:variable name="edit_action"><xsl:value-of select="edit_action"/></xsl:variable>
+					<xsl:variable name="lang_edit"><xsl:value-of select="lang_edit"/></xsl:variable>
+					<form method="post" action="{$edit_action}">
+					<input type="submit" class="forms" name="edit" value="{$lang_edit}" onMouseout="window.status='';return true;">
+						<xsl:attribute name="onMouseover">
+							<xsl:text>window.status='</xsl:text>
+								<xsl:value-of select="lang_edit_statustext"/>
+							<xsl:text>'; return true;</xsl:text>
+						</xsl:attribute>
+					</input>
+					</form>
+				</td>
+			</tr>
+		</table>
 	</xsl:template>
