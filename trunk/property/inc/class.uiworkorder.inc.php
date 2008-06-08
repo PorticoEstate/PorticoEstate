@@ -876,23 +876,9 @@
 
 			$categories = $this->cats->formatted_xslt_list(array('selected' => $project['cat_id']));
 
-			$tabs = array
-			(
-				'project'		=> array('label' => lang('Project info'), 'link' => '#project'),
-				'general'		=> array('label' => lang('general'), 'link' => '#general'),
-				'coordination'	=> array('label' => lang('coordination'), 'link' => '#coordination'),
-				'budget'		=> array('label' => lang('Time and budget'), 'link' => '#budget'),
-				'extra'			=> array('label' => lang('extra'), 'link' => '#extra'),
-				'documents'		=> array('label' => lang('documents'), 'link' => '#documents'),
-				'history'		=> array('label' => lang('history'), 'link' => '#history')
-			);
-
-			phpgwapi_yui::tabview_setup('workorder_edit_tabview');
-
 			$data = array
 			(
-				'tabs'							=> phpgwapi_yui::tabview_generate($tabs, 'project'),
-
+				'tabs'							=> self::_generate_tabs(),
 				'msgbox_data'				=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
 				'calculate_action'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiwo_hour.index')),
 				'lang_calculate'			=> lang('Calculate Workorder'),
@@ -1205,6 +1191,7 @@
 
 			$data = array
 			(
+				'tabs'							=> self::_generate_tabs(),
 				'project_link'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiproject.view')),
 				'table_header_workorder_budget'		=> $table_header_workorder_budget,
 				'lang_no_workorders'			=> lang('No workorder budget'),
@@ -1314,14 +1301,32 @@
 				'files'							=> $values['files'],
 				'lang_files'					=> lang('files'),
 				'lang_filename'					=> lang('Filename'),
-				'lang_view_file_statustext'		=> lang('click to view file')
+				'lang_view_file_statustext'		=> lang('click to view file'),
+				'lang_remark'				=> lang('remark'),
+				'value_remark'				=> (isset($values['remark'])?$values['remark']:'')
 			);
 
 			$appname					= lang('Workorder');
 
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('view' => $data));
-		//	$GLOBALS['phpgw']->xslttpl->pp();
+		}
+		
+		protected function _generate_tabs()
+		{
+			$tabs = array
+			(
+				'project'		=> array('label' => lang('Project info'), 'link' => '#project'),
+				'general'		=> array('label' => lang('general'), 'link' => '#general'),
+				'budget'		=> array('label' => lang('Time and budget'), 'link' => '#budget'),
+				'coordination'	=> array('label' => lang('coordination'), 'link' => '#coordination'),
+				'extra'			=> array('label' => lang('extra'), 'link' => '#extra'),
+				'documents'		=> array('label' => lang('documents'), 'link' => '#documents'),
+				'history'		=> array('label' => lang('history'), 'link' => '#history')
+			);
+
+			phpgwapi_yui::tabview_setup('workorder_tabview');
+
+			return phpgwapi_yui::tabview_generate($tabs, 'project');
 		}
 	}
-
