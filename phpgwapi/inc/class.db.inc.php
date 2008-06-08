@@ -449,7 +449,7 @@
 
 					if ($params[0] < 8 || ($params[0] == 8 && $params[1] ==0))
 					{
-						$oid = pg_getlastoid($this->adodb->_queryID);
+						$oid = pg_getlastoid($this->adodb->_resultid);
 						if ($oid == -1)
 						{
 							return -1;

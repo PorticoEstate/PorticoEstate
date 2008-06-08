@@ -1,11 +1,11 @@
 <?php
 	/**
-	* Notes
-	* @author Mark Peters <skeeter@phpgroupware.org>
+	* Notes Preferences
+	* @author Bettina Gille [ceb@phpgroupware.org]
 	* @copyright Copyright (C) 2000-2002,2005 Free Software Foundation, Inc. http://www.fsf.org/
 	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
 	* @package notes
-	* @version $Id$
+	* @version $Id: hook_preferences.inc.php 18394 2008-02-02 10:34:41Z skwashd $
 	*/
 
 	/*
@@ -23,18 +23,14 @@
 		along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	*/
 
-	// Delete all records for a user
-	$db =& $GLOBALS['phpgw']->db;
-	$db->lock(array('phpgw_notes'));
-
-	if ( (int) $_POST['new_owner'] == 0 )
 	{
-		$db->query('DELETE FROM phpgw_notes WHERE note_owner='. (int) $_POST['account_id'], __LINE__, __FILE__);
+// Only Modify the $file and $title variables.....
+		$file = Array
+		(
+			'Grant Access'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=>'preferences.uiadmin_acl.aclprefs','acl_app'=>$appname)),
+			'Edit categories' => $GLOBALS['phpgw']->link('/index.php',array('menuaction'=>'preferences.uicategories.index','cats_app'=>'notes','cats_level'=>true,'global_cats'=>true))
+		);
+// Do not modify below this line
+		display_section($appname,$file);
 	}
-	else
-	{
-		$db->query('UPDATE phpgw_notes SET note_owner=' . (int) $_POST['new_owner']
-			. ' WHERE note_owner=' . (int) $_POST['account_id'], __LINE__, __FILE__);
-	}
-	$db->unlock();
 ?>

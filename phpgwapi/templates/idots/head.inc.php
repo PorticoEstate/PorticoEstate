@@ -1,10 +1,11 @@
 <?php
 	/**
-	* Template header
-	* @copyright Copyright (C) 2003-2007 Free Software Foundation, Inc. http://www.fsf.org/
+	* phpGroupWare - idots template - header
+	*
+	* @copyright Copyright (C) 2003-2008 Free Software Foundation, Inc. http://www.fsf.org/
 	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
-	* @package phpgwapi
-	* @subpackage gui
+	* @package phpgroupware
+	* @subpackage phpgwapi
 	* @version $Id: head.inc.php,v 1.4 2004/12/30 06:47:34 skwashd Exp 
 	*/
 	
@@ -30,7 +31,9 @@
 	$theme_styles = array
 	(
 		'/phpgwapi/js/yahoo/reset-fonts-grids/reset-fonts-grids.css',
+		'/phpgwapi/js/yahoo/menu/assets/skins/sam/menu.css',
 		'/phpgwapi/js/yahoo/tabview/assets/skins/sam/tabview.css',
+		'/phpgwapi/templates/base/css/base.css',
 		'/phpgwapi/templates/idots/css/base.css',
 		"/phpgwapi/templates/idots/css/{$GLOBALS['phpgw_info']['user']['preferences']['common']['theme']}.css",
 		"/{$app}/templates/base/css/base.css",
@@ -43,7 +46,7 @@
 
 		if( file_exists( PHPGW_SERVER_ROOT . $style ) )
 		{
-			$GLOBALS['phpgw']->template->set_var('theme_style', "{$GLOBALS['phpgw_info']['server']['webserver_url']}$style");
+				$GLOBALS['phpgw']->template->set_var('theme_style', "{$GLOBALS['phpgw_info']['server']['webserver_url']}$style");
 			$GLOBALS['phpgw']->template->parse('theme_stylesheets', 'theme_stylesheet', true);
 		}
 	}
@@ -62,4 +65,3 @@
 	));
 
 	$GLOBALS['phpgw']->template->pfp('out','head');
-?>

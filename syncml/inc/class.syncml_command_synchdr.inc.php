@@ -89,6 +89,8 @@
 				case 'SyncML/1.1':
 					break;
 				default:
+					syncml_logger::get_instance()->log(
+						"bad verproto: " . $this->verproto);
 					$this->handle_failure(
 						SYNCML_STATUS_PROTOCOLVERSIONNOTSUPPORTED,
 						$response, $session);
@@ -102,6 +104,8 @@
 					$response->set_syncml_namespace_version($this->verdtd);
 					break;
 				default:
+					syncml_logger::get_instance()->log(
+						"bad verdtd: " . $this->verdtd);
 					$this->handle_failure(
 						SYNCML_STATUS_DTDCOLVERSIONNOTSUPPORTED,
 						$response, $session);
@@ -129,6 +133,8 @@
 			}
 			else
 			{
+				syncml_logger::get_instance()->log("failed to verify session");
+
 				$tmp = $this->process_cred($session);
 
 				// tmp is session string on success and
@@ -136,11 +142,15 @@
 
 				if(is_string($tmp))
 				{
+					syncml_logger::get_instance()->log(
+						"credentials was OK");
 					$sosession->set_session_mapping($id, $tmp);
 					$this->handle_success($response, $session);
 				}
 				else
 				{
+					syncml_logger::get_instance()->log(
+						"bad credentials");
 					$this->handle_failure($tmp, $response, $session);
 				}
 			}
@@ -155,6 +165,9 @@
 
 			$session->session_data = $GLOBALS['phpgw']->session->appsession(
 				'session_data', 'syncml');
+
+			syncml_logger::get_instance()->log_data(
+				"loaded session data", $session->session_data);
 
 			$this->add_authentication_status(
 				SYNCML_STATUS_AUTHENTICATIONACCEPTED, $response, $session);

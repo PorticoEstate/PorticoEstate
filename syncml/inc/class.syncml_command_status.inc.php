@@ -44,14 +44,16 @@
 
 			$channel_id = $session->get_channel_id_from_cmd(
 				$this->cmdref, $this->msgref);
-			
-			switch($this->data)
-			{
-				case SYNCML_STATUS_OK:
-					// insert a temp mapping so we don't send this item
-					// again if client caches the MAP commands
-					$somappings->insert_mapping(
-						$channel_id,  NULL, $this->sourceref, 0);
+
+			if(!is_null($channel_id)) {
+				switch($this->data)
+				{
+					case SYNCML_STATUS_OK:
+						// insert a temp mapping so we don't send this item
+						// again if client caches the MAP commands
+						$somappings->insert_mapping(
+							$channel_id,  NULL, $this->sourceref, 0);
+				}
 			}
 		}
 
@@ -61,9 +63,11 @@
 
 			$channel_id = $session->get_channel_id_from_cmd(
 				$this->cmdref, $this->msgref);
-
-			$somappings->delete_mapping(
-				$channel_id, $this->targetref, NULL, NULL);
+			
+			if(!is_null($channel_id)) {
+				$somappings->delete_mapping(
+					$channel_id, $this->targetref, NULL, NULL);
+			}
 		}
 
 		function process_replace(&$response, &$session)
@@ -73,17 +77,19 @@
 			$channel_id = $session->get_channel_id_from_cmd(
 				$this->cmdref, $this->msgref);
 
-			switch($this->data)
-			{
-				case SYNCML_STATUS_OK:
-					$somappings->update_mapping(
-						$channel_id, $this->targetref, NULL, 0);
-					break;
-				case SYNCML_STATUS_ITEMADDED:
-					// delete mapping now -- it will come back in MAP
-					$somappings->delete_mapping(
-						$channel_id, $this->targetref, NULL, NULL);
-					break;
+			if(!is_null($channel_id)) {
+				switch($this->data)
+				{
+					case SYNCML_STATUS_OK:
+						$somappings->update_mapping(
+							$channel_id, $this->targetref, NULL, 0);
+						break;
+					case SYNCML_STATUS_ITEMADDED:
+						// delete mapping now -- it will come back in MAP
+						$somappings->delete_mapping(
+							$channel_id, $this->targetref, NULL, NULL);
+						break;
+				}
 			}
 		}
 	}

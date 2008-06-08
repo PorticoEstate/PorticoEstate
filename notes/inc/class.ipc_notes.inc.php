@@ -32,14 +32,14 @@
  * @package notes
  * @subpackage ipc
  */
-class notes_ipc_notes extends phpgwapi_ipc_
+class ipc_notes extends ipc_
 {
 	/**
 	 * Constructor
 	 *
 	 * @access public
 	 */
-	public function __construct()
+	function ipc_notes()
 	{
 		$this->bonotes = CreateObject('notes.bonotes');
 	}

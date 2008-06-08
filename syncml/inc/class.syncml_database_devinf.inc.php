@@ -114,7 +114,7 @@
 				'<DevInf xmlns="syncml:devinf">' .
 					'<VerDTD>1.0</VerDTD>' .
 					'<DevID>485749KR</DevID>' .
-					'<DevTyp>Server</DevTyp>' .
+					'<DevTyp>server</DevTyp>' .
 				'</DevInf>';
 		}
 
@@ -124,7 +124,7 @@
 				'<DevInf xmlns="syncml:devinf">' .
 					'<VerDTD>1.1</VerDTD>' .
 					'<DevID>485749KR</DevID>' .
-					'<DevTyp>Server</DevTyp>' .
+					'<DevTyp>server</DevTyp>' .
 					'<SupportLargeObjs/>' .
 				'</DevInf>';
 		}

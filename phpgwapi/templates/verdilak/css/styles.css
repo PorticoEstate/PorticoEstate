@@ -1,35 +1,20 @@
-
-#app_header 
+body, p, td, th, table, input, form, option
 {
-	text-align: center;
-	font-weight: bold;
-	background-color: #80BBFF;
-	padding:5px
-}
-
-body,p,td,th,table,input,form,option
-{
-	font-family: Verdana,Arial,Helvetica,sans-serif;
-	font-size: 10pt;
-	font-style: normal;
-	font-weight: normal;
-	line-height: normal;
-	text-decoration: none;
-	letter-spacing: 0em;
-	word-spacing: 0em;
+	color: #000;
+	font-family: "Liberation Sans", Verdana, sans-serif;
+	font-size: 1em;
 }
 
 body
 {
-	margin-right: 0em;
-	margin-left: 0em;
-	margin-top: 0em;
-	margin-bottom: 0em;
+	background-color: #fff;
+	margin: 0;
+	padding: 0;
 }
 
 img, input[type=image]
 {
-	border: 0px;
+	border: 0;
 }
 
 table
@@ -39,7 +24,7 @@ table
 
 td.alarm
 {
-	color: #FF0000;
+	color: #f00;
 }
 
 a:link,a:visited,a:active,a:hover
@@ -99,16 +84,6 @@ table.login
 	padding-top: 5px;
 }
 
-body,p,td,th,table,input,form,option
-{
-	color: #000000;
-}
-
-body
-{
-	background-color: #FFFFFF;
-}
-
 a:link,a:visited,a:active
 {
 	color: mediumblue;
@@ -116,54 +91,54 @@ a:link,a:visited,a:active
 
 a:hover
 {
-	color: #cc0000;
+	color: #c00;
 }
 
 .navbar,.th,.app_header
 {
-	background-color: #80BBFF;
+	background-color: #80bbff;
 }
 
 .login,.portal,.about
 {
-	background-color: #80BBFF;
-	border-color: #000000;
+	background-color: #80bbff;
+	border-color: #000;
 }
 
 .portal_text,.info
 {
-	color: #FFFFFF;
+	color: #fff;
 }
 
 .row_on,.th_bright
 {
-	background-color: #CCEEFF;
+	background-color: #cef;
 }
 
 .msgbox
 {
-	background-color: #FFFFFF;
+	background-color: #ffffff;
 }
 
 .row_off
 {
-	background-color: #DDF0FF;
+	background-color: #ddf0ff;
 }
 
 .cal_today
 {
-	background-color: #FFFFCC;
+	background-color: #ffc;
 }
 
 .cal_dayview
 {
-	background-color: #C0C0C0;
+	background-color: #c0c0c0;
 }
 
 .email_folder
 {
-	background-color: #7090FF;
-	color: #FFFFFF;
+	background-color: #7090ff;
+	color: #fff;
 }
 
 a.info,.info
@@ -171,159 +146,79 @@ a.info,.info
 	font-weight: bold;
 }
 
-/* Used by tabs */
-ul.tabs
-{
-	background-image: url('../images/tabs-bg.png');
-	height: 32px;
-	list-style: none;
-	margin: 0px;
-	padding: 0px;
-}
-
-ul.tabs li
-{
-	display: block;
-	float: left;
-	height: 32px;
-	margin: 0px;
-	padding: 0px;
-	width: 150px;
-}
-
-ul.tabs li a, ul.tabs li input
-{
-	background-image: url('../images/tab-r.png');
-	background-color: transparent;
-	background-repeat: no-repeat;
-	border: 0px;
-	color: #000;
-	display: block;
-	height: 32px;
-	overflow: hidden;
-	padding-top: 7px;
-	text-decoration: none;
-	white-space: nowrap; 
-	width: 150px;
-}
-
-ul.tabs li.tablast
-{
-	background-color: transparent;
-	background-image: url('../images/tab-last.png');
-	background-repeat: no-repeat;
-}
-
-ul.tabs li.activetab
-{
-	background-color: transparent;
-	background-image: url('../images/tab-active-bg.png');
-	height: 32px;
-}
-
-ul.tabs li.activetab a
-{
-	background-image: url('../images/tab-active-r.png');
-	background-position: top right;
-}
- 
-ul.tabs li
-{
-	background-image: url('../images/tab-bg.png');
-	color:#069;
-	height: 32px;
-	text-align: center;
-	white-space: nowrap;
-}
-
   /*
    * Sidebox menu style
    */
  
- .horbar	{
+.horbar
+{
 	color: #212020;
-	background-color: #ECE9D8;
-	border: 1px solid #FFFFFF;
+	background-color: #ece9d8;
+	border: 1px solid #fff;
 }
 
-.horbaritem	{
+.horbaritem
+{
 	float: left;
 	white-space: nowrap;
-	font-family: luxi sans, verdana, geneva, arial, helvetica, sans-serif;
+	font-family: "Liberation Sans", verdana, sans-serif;
 	font-size: 14px;
 }
 
-.horbaritem a	{
+.horbaritem a
+{
 	display: block;
 	text-decoration: none;
 }
 
-.horbaritem a:link	{
-	color: #000000;
+.horbaritem a:link, .item a
+{
+	color: #000;
 }
 
-.horbaritem a:visited	{
-	color: #000000;
-}
-
-.horbaritem a:hover	{
-	color: #ffffff;
+.horbaritem a:hover, .horbaritem a:active, 
+	.item a:hover, .item a:active
+{
+	color: #fff;
 	background-color: #808080;
 }
 
-.horbaritem a:active	{
-	color: #ff0000;
-}
-
-.verbar	{
+.verbar
+{
 	color: black;
 	background-color: #dcdad5;
 	border: 2px outset #cecac1;
 }
 
-.submenu	{
+.submenu
+{
 	position: absolute;
 	left: 0;
 	top: 0;
 	visibility: hidden;
 }
 
-.subframe	{
+.subframe
+{
 	position: relative;
 	display: block;
 	background-color: #dcdad5;
 	border: 2px solid #cecac1;
 }
 
-.item	{
+.item
+{
 	position: relative;
 	text-align: left;
 	white-space: nowrap;
-	font-family: luxi sans, verdana, geneva, arial, helvetica, sans-serif;
 	font-size: 14px;
 }
 
-.item a	{
+.item a
+{
 	position: relative;
 	display: block;
 	text-decoration: none;
-}
-
-.item a:link	{
-	color: #000000;
-}
-
-.item a:visited	{
-	color: #000000;
-}
-
-.item a:hover	{
-	color: #ffffff;
-	background-color: #808080;
-}
-
-.item a:active	{
-	color: #ff0000;
 }
 
 .item .fwdarr	{
@@ -333,32 +228,79 @@ ul.tabs li
 	right: 7px;
 }
 
-TR.passed
+tr.passed
 {
 	background-color: #d5d7d7;
 }
 
-TR.notpassed
+tr.notpassed
 {
 	background-color: #bd6767;
 }
 
-ol.source
+#head_banner, #head_banner tr, #head_banner td
 {
-	background-color: #ccc;
-	border: 1px solid #ccc;
-	height: 300px;
-	list-style-type: decimal;
-	overflow: auto;
-	padding-left: 4em;
+	border: 0;
+	border-collapse: collapse;
+	margin: 0;
+	padding: 0;
 }
 
-ol.source li
+#head_banner
 {
-	background-color: #fff;
-	border-bottom: #eee;
-	display: list-item;
-	font-family: monospace;
-	list-style-type: decimal;
-	white-space: pre;
+	background: #3f4c6b url(../images/greybar.jpg) repeat-x scroll bottom left;
+	height: 45px;
+}
+
+#head_banner #phpgw_logo
+{
+	text-align: left;
+	width: 100%;
+}
+
+#top_nav
+{
+	text-align: right;
+	vertical-align: bottom;
+	white-space: nowrap;
+}
+
+#app_header
+{
+	background-color: #ccc;
+	border-bottom: 1px solid #000;
+	font-weight: bold;
+	padding: 0.5em;
+	text-align: center;
+}
+
+#navbar
+{
+	background: #ccc url(../images/navbar_filler.jpg) top left repeat-y;
+	text-align: left;
+}
+
+#phpgw_body
+{
+	padding: 2em;
+	text-align: left;
+}
+
+#phpgw_footer
+{
+	background: #3f4c6b scroll top left repeat;
+	font-size: small;
+	padding: 0.5em 0;
+}
+
+#phpgw_footer li
+{
+	color: #fff;
+	display: inline;
+	margin-left: 5em;
+}
+
+#phpgw_footer a
+{
+	color: #ddd;
 }

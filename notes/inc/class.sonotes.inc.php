@@ -61,16 +61,16 @@
 
 			if ($order)
 			{
-				$ordermethod = " order by $order $sort";
+				$ordermethod = " ORDER BY $order $sort";
 			}
 			else
 			{
-				$ordermethod = ' order by note_date DESC';
+				$ordermethod = ' ORDER BY note_date DESC';
 			}
 
 			if ($filter == 'none')
 			{
-				$filtermethod = ' ( note_owner=' . $this->account;
+				$filtermethod = ' ( note_owner = ' . $this->account;
 				if (is_array($this->grants))
 				{
 					$grants = $this->grants;
@@ -130,11 +130,12 @@
 			while ($this->db->next_record())
 			{
 				$ngrants = $this->grants[$this->db->f('note_owner')];
-				$notes[$this->db->f('note_id')] = array
+				$id = $this->db->f('note_id');
+				$notes[$id] = array
 				(
-					'note_id'	=> $this->db->f('note_id'),
+					'note_id'	=> $id,
 					'owner_id'	=> $this->db->f('note_owner'),
-					'owner'		=> $GLOBALS['phpgw']->accounts->id2name($this->db->f('note_owner')),
+					'owner'		=> $this->db->f('note_owner'),
 					'access'	=> $this->db->f('note_access'),
 					'date'		=> $GLOBALS['phpgw']->common->show_date($this->db->f('note_date')),
 					'cat_id'	=> $this->db->f('note_category'),
@@ -147,7 +148,7 @@
 
 		function read_single($note_id)
 		{
-			$this->db->query('select * from phpgw_notes where note_id=' . intval($note_id),__LINE__,__FILE__);
+			$this->db->query('SELECT * FROM phpgw_notes WHERE note_id=' . intval($note_id),__LINE__,__FILE__);
 
 			$note = array();
 			if ($this->db->next_record())
@@ -192,4 +193,3 @@
 			return $this->db->affected_rows() > 0;
 		}
 	}
-?>

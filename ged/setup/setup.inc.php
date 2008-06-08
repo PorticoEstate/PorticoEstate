@@ -38,6 +38,7 @@
 	$setup_info['ged']['hooks'][]='settings';
 	$setup_info['ged']['hooks'][]='home';
 //	$setup_info['ged']['hooks'][]='sidebox_menu';
+		$setup_info['ged']['hooks']['menu']	= 'ged.menu.get_menu';
 
 // Tables in database
 

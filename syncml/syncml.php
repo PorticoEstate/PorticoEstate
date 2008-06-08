@@ -26,6 +26,8 @@
 
 	require('../header.inc.php');
 
+	require_once 'inc/class.syncml_logger.inc.php';
+
 	require_once 'inc/class.xml_parser.inc.php';
 	require_once 'inc/class.xml_offset_mapper.inc.php';
 
@@ -35,8 +37,9 @@
 	require_once 'inc/class.syncml_response.inc.php';
 	require_once 'inc/class.syncml_message.inc.php';
 
+	$file_date = gettimeofday(true);
 	// this is a ugly, ugly hack
-	$GLOBALS['phpgw']->db->query('TRUNCATE phpgw_access_log');
+	//$GLOBALS['phpgw']->db->query('TRUNCATE phpgw_access_log');
 
 	if(!isset($_SERVER['CONTENT_TYPE']) ||
 		$_SERVER['REQUEST_METHOD'] != 'POST')
@@ -46,6 +49,7 @@
 
 	$post_input = implode("\r\n", file('php://input'));
 
+	file_put_contents('/tmp/'.$file_date.'-a.xml', $post_input);
 	switch($_SERVER['CONTENT_TYPE'])
 	{
 		case 'application/vnd.syncml+wbxml':
@@ -61,7 +65,6 @@
 	$message = new syncml_message();
 
 	// the header
-
 
 	$header = $parser->parse($post_input,
 		new xml_offset_mapper(array('SYNCML', 'SYNCHDR')));
@@ -82,6 +85,7 @@
 	$message->execute($response);
 
 	$response->print_response();
+	file_put_contents('/tmp/'.$file_date.'-b.xml', ob_get_contents()."\n");
 
 	if($_SERVER['CONTENT_TYPE'] == 'application/vnd.syncml+wbxml')
 	{
@@ -104,4 +108,3 @@
 	header('Content-Length: ' . ob_get_length());
 
 	ob_end_flush();
-?>

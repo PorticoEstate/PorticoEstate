@@ -16,12 +16,13 @@
 	*
 	* @param string $name
 	* @param string $data
+	*
 	* @return string XML string
 	*/
 	function var2xml($name, $data)
 	{
-		$doc = new xmltool('root','','');
-		return $doc->import_var($name,$data,True,True);
+		$doc = new xmltool();
+		return $doc->import_var($name, $data, true, true);
 	}
 
 	/**
@@ -34,19 +35,21 @@
 	{
 		/* for root nodes */
 		var $xmlversion = '1.0';
-		var $doctype = Array();
+		var $doctype = array();
+
 		/* shared */
 		var $node_type = '';
 		var $name = '';
 		var $data_type;
 		var $data;
+
 		/* for nodes */
-		var $attributes = Array();
-		var $comments = Array();
+		var $attributes = array();
+		var $comments = array();
 		var $indentstring = "\t";
-		
+
 		/* start the class as either a root or a node */
-		function xmltool ($node_type = 'root', $name='',$indentstring="\t")
+		public function __construct($node_type = 'root', $name='', $indentstring="\t")
 		{
 			$this->node_type = $node_type;
 			$this->indentstring = $indentstring;
@@ -63,27 +66,25 @@
 				}
 			}
 		}
-		
-		function set_version ($version = '1.0')
+
+		public function set_version($version = '1.0')
 		{
 			$this->xmlversion = $version;
-			return True;
+			return true;
 		}
 
-		function set_doctype ($name, $uri = '')
+		public function set_doctype($name, $uri = '')
 		{
-			if ($this->node_type == 'root')
+			if ( $this->node_type == 'root' )
 			{
 				$this->doctype[$name] = $uri;
-				return True;
+				return true;
 			}
-			else
-			{
-				return False;
-			}
+
+			return false;
 		}
 
-		function add_node ($node_object, $name = '')
+		public function add_node($node_object, $name = '')
 		{
 			switch ($this->node_type)
 			{
@@ -97,6 +98,7 @@
 						$this->data = $this->import_var($name, $node_object);
 					}
 					break;
+
 				case 'node':
 					if(!is_array($this->data))
 					{
@@ -118,12 +120,11 @@
 					{
 						$this->data[$name] = $this->import_var($name, $node_object);
 					}
-					return True;
-					break;
+					return true;
 			}
 		}
 
-		function get_node ($name = '')	// what is that function doing: NOTHING !!!
+		public function get_node($name = '')	// what is that public function doing: NOTHING !!!
 		{
 			switch	($this->data_type)
 			{
@@ -134,55 +135,52 @@
 				case 'object':
 					break;
 			}
-		
+
 		}
 
-		function set_value ($string)
+		public function set_value($string)
 		{
 			$this->data = $string;
 			$this->data_type = 'value';
-			return True;
+			return true;
 		}
-		
-		function get_value ()
+
+		public function get_value()
 		{
-			if($this->data_type == 'value')
+			if ( $this->data_type == 'value' )
 			{
 				return $this->data;
 			}
-			else
-			{
-				return False;
-			}
+
+			return false;
 		}
 
-		function set_attribute ($name, $value = '')
+		public function set_attribute($name, $value = '')
 		{
 			$this->attributes[$name] = $value;
-			return True;
+			return true;
 		}
 
-		function get_attribute ($name)
+		public function get_attribute($name)
 		{
 			return $this->attributes[$name];
 		}
 
-		function get_attributes ()
+		public function get_attributes()
 		{
 			return $this->attributes;
 		}
 
-		function add_comment ($comment)
+		public function add_comment($comment)
 		{
 			$this->comments[] = $comment;
-			return True;
+			return true;
 		}
 
-		function import_var($name, $value,$is_root=False,$export_xml=False)
+		public function import_var($name, $value, $is_root = false, $export_xml = false)
 		{
-			//echo "<p>import_var: this->indentstring='$this->indentstring'</p>\n";
-			$node = new xmltool('node',$name,$this->indentstring);
-			switch (gettype($value))
+			$node = new xmltool('node', $name, $this->indentstring);
+			switch ( gettype($value) )
 			{
 				case 'string':
 				case 'integer':
@@ -190,8 +188,9 @@
 				case 'NULL':
 					$node->set_value($value);
 					break;
+
 				case 'boolean':
-					if($value == True)
+					if($value == true)
 					{
 						$node->set_value('1');
 					}
@@ -200,23 +199,22 @@
 						$node->set_value('0');
 					}
 					break;
+
 				case 'array':
-					$new_index = False;
-					while (list ($idxkey, $idxval) = each ($value))
+					$new_index = false;
+					foreach ( $value as $val )
 					{
-						if(is_array($idxval))
+						if ( is_array($val) && count($val) )
 						{
-							while (list ($k, $i) = each ($idxval))
+							list($first_key) = array_keys($val);
+							if ( is_int($first_key) )
 							{
-								if (is_int($k))
-								{
-									$new_index = True;
-								}
+								$new_index = true;
+								break;
 							}
 						}
 					}
-					reset($value);
-					while (list ($key, $val) = each ($value))
+					foreach ( $value as $key => $val )
 					{
 						if($new_index)
 						{
@@ -228,37 +226,28 @@
 							$keyname = $key;
 							$nextkey = $key;
 						}
-						switch (gettype($val))
+						switch ( strtolower(gettype($val)) )
 						{
-							case 'object':
-								// caste just to be safe
-								$val = (string) $val;
-								// fall through
 							case 'string':
 							case 'integer':
 							case 'double':
-							case 'NULL':
+							case 'null':
 								$subnode = new xmltool('node', $nextkey,$this->indentstring);
 								$subnode->set_value($val);
 								$node->add_node($subnode);
 								break;
+
 							case 'boolean':
 								$subnode = new xmltool('node', $nextkey,$this->indentstring);
-								if($val == True)
-								{
-									$subnode->set_value('1');
-								}
-								else
-								{
-									$subnode->set_value('0');
-								}
+								$subnode->set_value((int) $val);
 								$node->add_node($subnode);
 								break;
+
 							case 'array':
-								list($first_key) = each($val); reset($val);
+								list($first_key) = each($val);
 								if($new_index && is_int($first_key))
 								{
-									foreach ( $val as $subkey => $subval )
+									foreach ( $val as $subval )
 									{
 										$node->add_node($this->import_var($nextkey, $subval));
 									}
@@ -269,23 +258,33 @@
 									$node->add_node($subnode);
 								}
 								break;
+							case 'object':
+								$subnode = new xmltool('node', $nextkey,$this->indentstring);
+								$subnode->set_value((string) $val);
+								$node->add_node($subnode);
+								break;
+
 							case 'resource':
-								die('Halt: Cannot package PHP resource pointers into XML<br>');
+								trigger_error('Cannot package PHP resource pointers into XML', E_USER_ERROR);
+
 							default:
-								die('Halt: Invalid or unknown data type<br>');
+								trigger_error('Invalid or unknown data type', E_USER_ERROR);
 						}
 
 					}
 					break;
+
 				case 'object':
-					$node->set_value( (string) $value);
+					$subnode->set_value((string) $value);
 					break;
+
 				case 'resource':
-					die('Halt: Cannot package PHP resource pointers into XML<br>');
+					trigger_error('Cannot package PHP resource pointers into XML', E_USER_ERROR);
+
 				default:
-					die('Halt: Invalid or unknown data type<br>');
+					trigger_error('Invalid or unknown data type', E_USER_ERROR);
 			}
-	
+
 			if($is_root)
 			{
 				$this->add_node($node);
@@ -294,19 +293,15 @@
 					$xml = $this->export_xml();
 					return $xml;
 				}
-				else
-				{
-					return True;
-				}
+
+				return true;
 			}
-			else
-			{
-				$this->add_node($node);
-				return $node;
-			}
+
+			$this->add_node($node);
+			return $node;
 		}
 
-		function export_var()
+		public function export_var()
 		{
 			if($this->node_type == 'root')
 			{
@@ -314,52 +309,49 @@
 			}
 
 			if($this->data_type != 'node')
-			{	
-				$found_at = strstr($this->data,'PHP_SERIALIZED_OBJECT&:');
-				if($found_at != False)
+			{
+				if ( preg_match('/PHP_SERIALIZED_OBJECT&:/', $this->data) )
 				{
-					return unserialize(str_replace ('PHP_SERIALIZED_OBJECT&:', '', $this->data));
+					return unserialize(preg_replace('/PHP_SERIALIZED_OBJECT&:/', '', $this->data));
 				}
+
 				return $this->data;
 			}
 			else
 			{
-				$new_index = False;
-				reset($this->data);
-				while(list($key,$val) = each($this->data))
+				$new_index = false;
+				foreach ( $this->data as $key => $val )
 				{
 					if(!isset($found_keys[$val->name]))
 					{
-						$found_keys[$val->name] = True;
+						$found_keys[$val->name] = true;
 					}
 					else
 					{
-						$new_index = True;
+						$new_index = true;
 					}
 				}
 
 				if($new_index)
 				{
-					reset($this->data);
-					while(list($key,$val) = each($this->data))
+					foreach ( $this->data as $val )
 					{
-
 						$return_array[$val->name][] = $val->export_var();
-					}				
+					}
 				}
 				else
 				{
-					reset($this->data);
-					while(list($key,$val) = each($this->data))
+					foreach ( $this->data as $val )
 					{
 						$return_array[$val->name] = $val->export_var();
 					}
 				}
+
 				return $return_array;
 			}
 		}
 
-		function export_struct()
+		public function export_struct()
 		{
 			if($this->node_type == 'root')
 			{
@@ -369,31 +361,29 @@
 			$retval['tag'] = $this->name;
 			$retval['attributes'] = $this->attributes;
 			if($this->data_type != 'node')
-			{	
-				$found_at = strstr($this->data,'PHP_SERIALIZED_OBJECT&:');
-				if($found_at != False)
+			{
+				if ( preg_match('/PHP_SERIALIZED_OBJECT&:/', $this->data) )
 				{
-					$retval['value'] = unserialize(str_replace ('PHP_SERIALIZED_OBJECT&:', '', $this->data));
+					$retval['value'] = unserialize(preg_replace('/PHP_SERIALIZED_OBJECT&:/', '', $this->data));
 				}
 				else
 				{
 					$retval['value'] = $this->data;
 				}
+
 				return $retval;
 			}
-			else
+
+			foreach ( $this->data as $val )
 			{
-				reset($this->data);
-				while(list($key,$val) = each($this->data))
-				{
-					$retval['children'][] = $val->export_struct();
-				}				
-				return $retval;
+				$retval['children'][] = $val->export_struct();
 			}
+
+			return $retval;
 		}
 
-		
-		function import_xml_children($data, &$i, $parent_node)
+
+		public function import_xml_children($data, &$i, $parent_node)
 		{
 			while (++$i < count($data))
 			{
@@ -404,83 +394,90 @@
 						$node = new xmltool('node',$data[$i]['tag'],$this->indentstring);
 						if(is_array($data[$i]['attributes']) && count($data[$i]['attributes']) > 0)
 						{
-							while(list($k,$v)=each($data[$i]['attributes']))
+							foreach ( $data[$i]['attributes'] as $k => $v )
 							{
-								$node->set_attribute($k,$v);
+								$node->set_attribute($k, $v);
 							}
 						}
 						$node->set_value($data[$i]['value']);
 						$parent_node->add_node($node);
 						break;
+
 					case 'open':
 						$node = new xmltool('node',$data[$i]['tag'],$this->indentstring);
 						if(is_array($data[$i]['attributes']) && count($data[$i]['attributes']) > 0)
 						{
-							while(list($k,$v)=each($data[$i]['attributes']))
+							foreach ( $data[$i]['attributes'] as $k => $v )
 							{
-								$node->set_attribute($k,$v);
+								$node->set_attribute($k, $v);
 							}
 						}
-						
+
 						$node = $this->import_xml_children($data, $i, $node);
 						$parent_node->add_node($node);
 						break;
+
 					case 'close':
 						return $parent_node;
 				}
 			}
 		}
-		
-		function import_xml($xmldata) 
+
+		public function import_xml($xmldata)
 		{
 			$parser = xml_parser_create();
 			xml_parser_set_option($parser, XML_OPTION_CASE_FOLDING, 0);
 			xml_parser_set_option($parser, XML_OPTION_SKIP_WHITE,   1);
 			xml_parse_into_struct($parser, $xmldata, $vals, $index);
 			xml_parser_free($parser);
-			unset($index);	
+			unset($index);
 			$node = new xmltool('node',$vals[0]['tag'],$this->indentstring);
-			if(isset($vals[0]['attributes']))
+			if ( isset($vals[0]['attributes']) )
 			{
-				while(list($key,$value) = each($vals[0]['attributes']))
+				foreach ( $vals[0]['attributes'] as $key => $value )
 				{
 					$node->set_attribute($key, $value);
 				}
 			}
-			switch ($vals[0]['type'])
+
+			switch ( $vals[0]['type'] )
 			{
 				case 'complete':
 					$node->set_value($vals[0]['value']);
 					break;
+
 				case 'cdata':
 					$node->set_value($vals[0]['value']);
 					break;
+
 				case 'open':
-					$node = $this->import_xml_children($vals, $i = 0, $node);
+					$node = $this->import_xml_children($vals, 0, $node);
 					break;
+
 				case 'closed':
 					exit;
 			}
 			$this->add_node($node);
 		}
 
-		function export_xml($indent = 1)
+		public function export_xml($indent = 1)
 		{
 			$type_error = false;
 			if ($this->node_type == 'root')
 			{
-				$result = '<?xml version="'.$this->xmlversion.'" encoding="UTF-8"?>'."\n";
-				if(count($this->doctype) == 1)
+				$result = "<?xml version=\"{$this->xmlversion}\" encoding=\"UTF-8\"?>\n";
+
+				if ( count($this->doctype) == 1 )
 				{
-					list($doctype_name,$doctype_uri) = each($this->doctype);
-					$result .= '<!DOCTYPE '.$doctype_name.' SYSTEM "'.$doctype_uri.'">'."\n";
+					list($doctype_name, $doctype_uri) = each($this->doctype);
+					$result .= "<!DOCTYPE {$doctype_name} SYSTEM \"{$doctype_uri}\">\n";
 				}
-				if(count($this->comments) > 0 )
+
+				if ( is_array($this->comments) )
 				{
-					//reset($this->comments);
-					while(list($key,$val) = each ($this->comments))
+					foreach ( $this->comments as $key => $val )
 					{
-						$result .= "<!-- $val -->\n";
+						$result .= "<!-- {$val} -->\n";
 					}
 				}
 				if(is_object($this->data))
@@ -488,29 +485,28 @@
 					$indent = 0;
 					$result .= $this->data->export_xml($indent);
 				}
+
 				return $result;
 			}
 			else /* For node objects */
 			{
 				$indentstring = '';
-				for ($i = 0; $i < $indent; $i++)
-				{
-					$indentstring .= $this->indentstring;
-				}
+				str_pad($indentstring, $indent, $this->indentstring);
 
 				$result = $indentstring.'<'.$this->name;
-				if( is_array($this->attributes) && count($this->attributes) > 0 )
+				if ( is_array($this->attributes) )
 				{
 					foreach ( $this->attributes as $key => $val )
 					{
-						$result .= ' '.$key.'="'.htmlspecialchars($val).'"';
+						$val = htmlspecialchars($val, ENT_QUOTES, 'UTF-8');
+						$result .= " {$key}=\"{$val}\"";
 					}
 				}
 
 				$endtag_indent = $indentstring;
-				if (empty($this->data_type))
+				if ( empty($this->data_type) )
 				{
-					$result .= '/>'."\n";
+					$result .= " />\n";
 				}
 				else
 				{
@@ -521,39 +517,39 @@
 						case 'value':
 							if(is_array($this->data))
 							{
-								$type_error = True;
+								$type_error = true;
 								break;
 							}
-							
-							/*if(preg_match("(&|<)", $this->data))	// this is unnecessary with htmlspecialchars($this->data)
+
+							//TODO Work out how to solve this properly - this is done this way to stop W3C compliant links breaking
+							$this->data = html_entity_decode($this->data);
+							if ( strlen($this->data) > 30 && !empty($this->indentstring) )
 							{
-								$result .= '<![CDATA['.$this->data.']]>';
-								$endtag_indent = '';		
-							}
-							else*/if(strlen($this->data) > 30 && !empty($this->indentstring))
-							{
-								$result .= "\n".$indentstring.$this->indentstring.htmlspecialchars($this->data)."\n";
+								$this->data = htmlspecialchars($this->data, ENT_QUOTES, 'UTF-8');
+								$result .= "{$this->data}";
+								//XXX Caeies : OUCH Is see no way to add data INTO the note for indenting ... WTF ?
+								//XXX Yes this kill me because I got more than 30 chars in URL for images ... I let you test what a long_url_to_img%0A do in that case ...
+								//$result .= "\n{$indentstring}{$this->indentstring}{$this->data}\n";
 								$endtag_indent = $indentstring;
 							}
 							else
 							{
-								//TODO Work out how to solve this properly - this is done this way to stop W3C compliant links breaking
-								$this->data = html_entity_decode($this->data);
-								$result .= htmlspecialchars($this->data);
+								$result .= htmlspecialchars($this->data, ENT_QUOTES, 'UTF-8');
 								$endtag_indent = '';
 							}
 							break;
+
 						case 'node':
 							$result .= "\n";
 							if(!is_array($this->data))
 							{
-								$type_error = True;
+								$type_error = true;
 								break;
 							}
-				
-							$subindent = $indent+1;
-							reset($this->data);
-							while(list($key,$val) = each ($this->data))
+
+							$subindent = $indent + 1;
+
+							foreach ( $this->data as $key => $val )
 							{
 								if(is_object($val))
 								{
@@ -561,30 +557,30 @@
 								}
 							}
 							break;
+
 						default:
 						if($this->data != '')
 						{
-							echo 'Invalid or unset data type ('.$this->data_type.'). This should not be possible if using the class as intended<br>';
+							echo "Invalid or unset data type '{$this->data_type}'. This should not be possible if using the class as intended<br>\n";
 						}
 					}
 
 					if ($type_error)
 					{
-						echo 'Invalid data type. Tagged as '.$this->data_type.' but data is '.gettype($this->data).'<br>';
+						echo "Invalid data type. Tagged as '{$this->data_type}' but data is '" . gettype($this->data) . "'<br>\n";
 					}
 
-					$result .= $endtag_indent.'</'.$this->name.'>';
+					$result .= "{$endtag_indent}</{$this->name}>";
 					if($indent != 0)
 					{
 						$result .= "\n";
 					}
 				}
-				if(count($this->comments) > 0 )
+				if ( is_array($this->comments) )
 				{
-					reset($this->comments);
-					while(list($key,$val) = each ($this->comments))
+					foreach ( $this->comments as $key => $val )
 					{
-						$result .= $endtag_indent."<!-- $val -->\n";
+						$result .= "{$endtag_indent}<!-- {$val} -->\n";
 					}
 				}
 				return $result;
@@ -601,7 +597,7 @@
 	*/
 	class xmlnode extends xmltool
 	{
-		function xmlnode($name)
+		public function xmlnode($name)
 		{
 			$this->xmltool('node',$name);
 		}
@@ -616,16 +612,14 @@
 	*/
 	class xmldoc extends xmltool
 	{
-		function xmldoc($version = '1.0')
+		public function xmldoc($version = '1.0')
 		{
 			$this->xmltool('root');
 			$this->set_version($version);
 		}
 
-		function add_root($root_node)
+		public function add_root($root_node)
 		{
 			return $this->add_node($root_node);
 		}
 	}
-
-?>

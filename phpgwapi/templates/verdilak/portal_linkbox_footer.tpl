@@ -1,4 +1,4 @@
-<!-- $Id: portal_linkbox_footer.tpl 15563 2004-12-30 07:22:21Z skwashd $ -->
+<!-- $Id: portal_linkbox_footer.tpl 18363 2007-11-30 13:25:06Z sigurdne $ -->
 <!-- BEGIN portal_listbox_footer -->
       </ul>
      </td>

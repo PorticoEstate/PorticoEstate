@@ -1,7 +1,7 @@
 body, div, input, p, select, textarea
 {
-	font-family: Verdana, Arial, Helvetica, sans-serif;
-	font-size: 11px;
+	font-family: "Liberation Sans", Verdana, sans-serif;
+	font-size: 1em;
 }
 
 a
@@ -19,35 +19,9 @@ img
 	border: 0px;
 }
 
-label, input[type=text], input[type=password], input[type=checkbox], input[type=radio], select, textarea
-{
-	margin-bottom: 8px;
-}
-
-label, input[type=text], input[type=password], select, textarea
-{
-	display: block;
-	float: left;
-	margin-bottom: 8px;
-	width: 250px;
-}
-
-label
-{
-	text-align: right;
-	width: 150px;
-	padding-right: 10px;
-	font-weight: bold;
-}
-
 textarea
 {
 	white-space: normal;
-}
-
-br
-{
-	clear: left;
 }
 
 thead
@@ -86,7 +60,7 @@ ol.source
 ol.source li
 {
 	background-color: #fff;
-	border-bottom: #eee;
+	border-bottom: 1px dashed #eee;
 	display: list-item;
 	font-family: monospace;
 	list-style-type: decimal;

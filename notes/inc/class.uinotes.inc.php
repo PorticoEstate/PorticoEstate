@@ -29,31 +29,36 @@
 	*
 	* @package notes
 	*/
-	class uinotes
+	class notes_uinotes
 	{
-		var $grants;
-		var $cat_id;
-		var $start;
-		var $query;
-		var $sort;
-		var $order;
-		var $filter;
+		protected $grants;
+		protected $cat_id;
+		protected $start;
+		protected $query;
+		protected $sort;
+		protected $order;
+		protected $filter;
 
-		var $public_functions = array
+		public $public_functions = array
 		(
-			'index'  => True,
-			'view'   => True,
-			'edit'   => True,
-			'delete' => True
+			'index'  => true,
+			'view'   => true,
+			'edit'   => true,
+			'delete' => true
 		);
 
-		function uinotes()
+		/**
+		 * Constructor
+		 *
+		 * @return void
+		 */
+		public function __construct()
 		{
 			$GLOBALS['phpgw_info']['flags'] = array
 			(
-				'xslt_app'	=> True,
-				'noheader'	=> True,
-				'nonavbar'	=> True,
+				'xslt_app'	=> true,
+				'noheader'	=> true,
+				'nonavbar'	=> true,
 				'currentapp'	=> 'notes'
 			);
 
@@ -63,7 +68,7 @@
 
 			$this->grants		= $GLOBALS['phpgw']->acl->get_grants('notes');
 			$this->grants[$this->account] = PHPGW_ACL_READ + PHPGW_ACL_ADD + PHPGW_ACL_EDIT + PHPGW_ACL_DELETE;
-			$this->bonotes		= CreateObject('notes.bonotes',True);
+			$this->bonotes		= CreateObject('notes.bonotes',true);
 
 			$this->start		= $this->bonotes->start;
 			$this->query		= $this->bonotes->query;
@@ -73,7 +78,7 @@
 			$this->cat_id		= $this->bonotes->cat_id;
 		}
 
-		function save_sessiondata()
+		protected function save_sessiondata()
 		{
 			$data = array
 			(
@@ -87,7 +92,7 @@
 			$this->bonotes->save_sessiondata($data);
 		}
 
-		function index()
+		public function index()
 		{
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('notes') . ': ' . lang('list notes');
 
@@ -98,10 +103,15 @@
 				'menuaction' => 'notes.uinotes.index'
 			);
 			$content = array();
-			while (is_array($notes_list) && list(,$note) = each($notes_list))
+			foreach ( $notes_list as $note )
 			{
-				$words = explode(' ', $note['content'], 4);
-				$first = implode(' ', array_slice($words, 0, 3)) . ' ... ';
+				$words = explode(' ', phpgw::strip_html($note['content']), 10);
+				$first = implode(' ', $words);
+				if ( count($words) > 10 )
+				{
+					$first .= ' ...';
+				}
+				unset($words);
 
 				$content[] = array
 				(
@@ -174,7 +184,7 @@
 			$data = array
 			(
 				'nm_data'				=> $this->nextmatchs->xslt_nm($nm),
-				'cat_filter'			=> $this->cats->formatted_xslt_list(array('select_name' => 'cat_id','selected' => $this->cat_id,'globals' => True,'link_data' => $link_data)),
+				'cat_filter'			=> $this->cats->formatted_xslt_list(array('select_name' => 'cat_id','selected' => $this->cat_id,'globals' => true,'link_data' => $link_data)),
 				'filter_data'			=> $this->nextmatchs->xslt_filter(array('filter' => $this->filter,'link_data' => $link_data)),
 				'search_data'			=> $this->nextmatchs->xslt_search(array('query' => $this->query,'link_data' => $link_data)),
 				'table_header'			=> $table_header,
@@ -186,75 +196,110 @@
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('list' => $data));
 		}
 
-		function edit()
+		public function edit()
 		{
-			$note_id	= get_var('note_id',array('POST','GET'));
-			$values		= get_var('values',array('POST'));
+			$note_id	= phpgw::get_var('note_id', 'int');
+			$values		= phpgw::get_var('values', 'string', 'POST');
+			$save		= phpgw::get_var('save', 'bool', 'POST');
+			$cancel		= phpgw::get_var('cancel', 'bool', 'POST');
+			$apply		= phpgw::get_var('apply', 'bool', 'POST');
+			$action		= '';
 
-			if (is_array($values))
+			if ( $save || $cancel || $apply )
 			{
-				if (isset($values['save']) && $values['save'])
+				if ( $cancel )
 				{
-					$values['note_id']	= $note_id;
-					$note_id = $this->bonotes->save($values);
-					$this->cat_id = ($values['cat_id']?$values['cat_id']:$this->cat_id);
-					$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'notes.uinotes.index'));
+					$GLOBALS['phpgw']->redirect_link('/index.php',
+							array('menuaction' => 'notes.uinotes.index'));
 				}
-				elseif(isset($values['cancel']) && $values['cancel'])
+
+				$values['note_id'] = $note_id;
+				$values['content'] = phpgw::get_var('note_content', 'html', 'POST');
+				if ( $values['cat_id'] )
 				{
-					$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'notes.uinotes.index'));
+					$this->cat_id = (int) $values['cat_id'];
 				}
-				else
+				$note_id = $this->bonotes->save($values);
+
+				if ( $save )
 				{
-					$values['note_id']	= $note_id;
-					$note_id			= $this->bonotes->save($values);
-					$action				= 'apply';
+					$GLOBALS['phpgw']->redirect_link('/index.php',
+							array('menuaction' => 'notes.uinotes.index'));
 				}
+
+				// Must be a reply request
+				$action	= 'apply';
+				$GLOBALS['phpgw']->redirect_link('/index.php', 
+							array('menuaction' => 'notes.uinotes.edit', 'node_id' => $note_id));
 			}
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('notes') . ': ' . ($note_id?lang('edit note'):lang('add note'));
-
-			if ($note_id)
+			if ( $note_id )
 			{
+				$lang_title = lang('edit note');
 				$note = $this->bonotes->read_single($note_id);
 				$this->cat_id = ($note['cat_id']?$note['cat_id']:$this->cat_id);
 			}
+			else
+			{
+				$lang_title = lang('add note');
+				$note = array
+				(
+					'content'	=> '',
+					'access'	=> '',
+					'cat_id'	=> $this->cat_id
+				);
+			}
 
-			$link_data = array
+			$note['content'] = phpgw::clean_html($note['content']);
+
+			$edit_url = $GLOBALS['phpgw']->link('/index.php', array
 			(
 				'menuaction'	=> 'notes.uinotes.edit',
 				'note_id'		=> $note_id
-			);
+			));
 
+			$msg_box = '';
+			if ( $action == 'apply' )
+			{
+				$msg_box = $GLOBALS['phpgw']->common->msgbox('note has been saved', true);
+			}
+
+			$cats = $this->cats->formatted_xslt_list(array
+					(
+						'select_name'	=> 'values[cat_id]',
+						'selected'		=> $note['cat_id']
+					));
+ 
 			$data = array
 			(
-				'msgbox_data'					=> ((isset($action) && $action=='apply')?$GLOBALS['phpgw']->common->msgbox('note has been saved',True):''),
-				'edit_url'						=> $GLOBALS['phpgw']->link('/index.php',$link_data),
+				'msgbox_data'					=> $msg_box,
+				'edit_url'						=> $edit_url,
 				'lang_content'					=> lang('content'),
 				'lang_category'					=> lang('category'),
 				'lang_access'					=> lang('private'),
 				'lang_save'						=> lang('save'),
 				'lang_cancel'					=> lang('cancel'),
 				'lang_apply'					=> lang('apply'),
-				'value_content'					=> isset($note['content']) ? $note['content'] : '',
-				'value_access'					=> isset($note['access']) ? $note['access'] : '',
-				'lang_content_statustext'		=> lang('Enter the content of the note'),
-				'lang_apply_statustext'			=> lang('Apply the values'),
-				'lang_cancel_statustext'		=> lang('Leave the note untouched and return back to the list'),
-				'lang_save_statustext'			=> lang('Save the note and return back to the list'),
-				'lang_access_off_statustext'	=> lang('The note is public. If the note should be private, check this box'),
-				'lang_access_on_statustext'		=> lang('The note is private. If the note should be public, uncheck this box'),
+				'value_content'					=> $note['content'],
+				'value_access'					=> $note['access'],
 				'lang_no_cat'					=> lang('no category'),
-				'cat_select'					=> $this->cats->formatted_xslt_list(array('select_name' => 'values[cat_id]','selected' => isset($note['cat_id']) ? $note['cat_id'] : ''))
+				'cat_select'					=> $cats
 			);
+
+			$GLOBALS['phpgw']->richtext->replace_element('note_content');
+			$GLOBALS['phpgw']->richtext->generate_script();
+
+			$GLOBALS['phpgw']->xslttpl->add_file('msgbox');
+
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('notes') . ': ' . $lang_title;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('edit' => $data));
 		}
 
-		function delete()
+		public function delete()
 		{
-			$note_id	= get_var('note_id',array('POST','GET'));
-			$delete		= get_var('delete',array('POST'));
-			$cancel		= get_var('cancel',array('POST'));
+			$note_id	= phpgw::get_var('note_id', 'int');
+			$delete		= phpgw::get_var('delete', 'bool', 'POST');
+			$cancel		= phpgw::get_var('cancel', 'bool', 'POST');
 
 			$link_data = array
 			(
@@ -292,30 +337,35 @@
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('delete' => $data));
 		}
 
-		function view()
+		public function view()
 		{
-			$note_id	= get_var('note_id',array('GET'));
-			$action		= get_var('action',array('GET'));
+			$note_id	= phpgw::get_var('note_id', 'int', 'GET');
+			$action		= phpgw::get_var('action', 'string', 'GET');
 
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('notes') . ': ' . lang('view note');
 
 			$note = $this->bonotes->read_single($note_id);
+			$note['content'] = phpgw::clean_html($note['content']);
+
+			$cat = lang('unfiled');
+			if ( $note['cat_id'] )
+			{
+				$cat = lang('filed under: %1', $this->cats->id2name($note['cat_id']));
+			}
+
+			$date = $GLOBALS['phpgw']->common->show_date($note['date']);
+			$done = $GLOBALS['phpgw']->link('/index.php', 
+						array('menuaction' => 'notes.uinotes.index'));
 
 			$data = array
 			(
-				'done_action'		=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'notes.uinotes.index')),
-				'lang_content'		=> lang('content'),
-				'lang_category'		=> lang('category'),
-				'lang_access'		=> lang('access'),
-				'lang_time_created'	=> lang('time created'),
+				'done_action'		=> $done,
+				'lang_category'		=> $cat,
+				'lang_created'		=> lang('created at %1', $date),
 				'lang_done'			=> lang('done'),
-				'value_content'		=> $note['content'],
-				'value_access'		=> lang(ucfirst($note['access'])),
-				'value_cat'			=> $this->cats->id2name($note['cat_id']),
-				'value_date'		=> $GLOBALS['phpgw']->common->show_date($note['date'])
+				'value_content'		=> $note['content']
 			);
 
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('view' => $data));
 		}
 	}
-?>

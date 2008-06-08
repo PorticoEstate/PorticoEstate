@@ -8,10 +8,14 @@
 	* @copyright Copyright (C) 2001-2005 Free Software Foundation, Inc. http://www.fsf.org/
 	* @license http://www.gnu.org/licenses/lgpl.html GNU Lessser General Public License
 	* @package email
-	* @version $Id: class.mail_dcom_base_sock.inc.php 15946 2005-05-11 19:15:34Z powerstat $
+	* @version $Id$
 	* @internal Based on AngleMail http://www.anglemail.org/
 	*/
 
+	/**
+	 * Import the the network class which we extend
+	 */
+	phpgw::import_class('phpgwapi.network');
 
 	/**
 	 * Set status->messages to the number of messages in the mailbox
@@ -1366,4 +1370,3 @@
 			return $file;
 		}
 	}
-?>

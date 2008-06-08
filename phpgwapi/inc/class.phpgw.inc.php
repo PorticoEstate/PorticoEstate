@@ -1,16 +1,16 @@
 <?php
 	/**
-	 * Parent class. Has a few functions but is more importantly used as a parent class for everything else.
-	 * 
-	 * @author Dave Hall <skwashd@phpgroupware.org>
-	 * @author Dan Kuykendall <seek3r@phpgroupware.org>
-	 * @author Joseph Engo <jengo@phpgroupware.org>
-	 * @copyright Copyright (C) 2000-2008 Free Software Foundation, Inc. http://www.fsf.org/
-	 * @license http://www.fsf.org/licenses/lgpl.html GNU Lesser General Public License
-	 * @package phpgroupware
-	 * @subpackage phpgwapi
-	 * @version $Id$
-	 */
+	* Global ugliness class
+	* 
+	* @author Dave Hall <skwashd@phpgroupware.org>
+	* @author Dan Kuykendall <seek3r@phpgroupware.org>
+	* @author Joseph Engo <jengo@phpgroupware.org>
+	* @copyright Copyright (C) 2000-2008 Free Software Foundation, Inc. http://www.fsf.org/
+	* @license http://www.fsf.org/licenses/lgpl.html GNU Lesser General Public License
+	* @package phpgroupware
+	* @subpackage phpgwapi
+	* @version $Id$
+	*/
 
 	/*
 	   This program is free software: you can redistribute it and/or modify
@@ -28,40 +28,43 @@
 	 */
 
 	/**
-	 * Parent class. Has a few functions but is more importantly used as a parent class for everything else.
-	 *
-	 * @package phpgroupware
-	 * @subpackage phpgwapi
-	 */
+	* Global ugliness class
+	*
+	* Here lives all the code which makes the API tick and makes any serious 
+	* refactoring almost impossible
+	*
+	* @package phpgroupware
+	* @subpackage phpgwapi
+	*/
 	class phpgw
 	{
-		var $accounts;
-		var $adodb;
-		var $acl;
-		var $auth;
-		var $db; 
+		public $accounts;
+		public $adodb;
+		public $acl;
+		public $auth;
+		public $db; 
 		/**
 		 * Turn on debug mode. Will output additional data for debugging purposes.
 		 * @var	string	$debug
 		 * @access public
 		 */	
-		var $debug = 0;		// This will turn on debugging information.
-		var $contacts;
-		var $nextmatchs;
-		var $preferences;
+		public $debug = 0;		// This will turn on debugging information.
+		public $contacts;
+		public $nextmatchs;
+		public $preferences;
 
 		// FIXME find all instances and change to sessions then we can drop this
-		var $session;
-		var $send;
-		var $template;
-		var $utilities;
-		var $vfs;
-		var $calendar;
-		var $msg;
-		var $addressbook;
-		var $todo;
-		var $xslttpl;
-		var $mapping;
+		public $session;
+		public $send;
+		public $template;
+		public $utilities;
+		public $vfs;
+		public $calendar;
+		public $msg;
+		public $addressbook;
+		public $todo;
+		public $xslttpl;
+		public $mapping;
 
 		/**
 		* @var array $instance_vars holds most of the public instance variable, so they are only instatiated when needed
@@ -117,23 +120,46 @@
 			return isset($this->instance_vars[$var]) && is_object($this->instance_vars[$var]);
 		}
 
-
-		/**************************************************************************\
-		* Core functions                                                           *
-		\**************************************************************************/
-
 		/**
 		 * Strips out html chars
 		 *
 		 * Used as a shortcut for stripping out html special chars. 
 		 *
-		 * @access public
 		 * @param $s string The string to have its html special chars stripped out.
 		 * @return string The string with html special characters removed
 		 */
-		function strip_html($s)
+		public static function strip_html($s)
 		{
-			return htmlspecialchars(stripslashes($s));
+			$s = htmlspecialchars(strip_tags($s), ENT_QUOTES, 'UTF-8');
+			return $s;
+		}
+
+		/**
+		 * Clean the inputted HTML to make sure it is free of any nasties
+		 *
+		 * @param string $html     the HTML to clean
+		 * @param string $base_url the base URL for all links - currently not used
+		 *
+		 * @return string the cleaned html
+		 *
+		 * @internal uses HTMLPurifier a whitelist based html sanitiser and tidier
+		 */
+		public static function clean_html($html, $base_url = '')
+		{
+			if ( !$base_url )
+			{
+				$base_url = $GLOBALS['phpgw_info']['server']['webserver_url'];
+			}
+
+			require_once PHPGW_INCLUDE_ROOT . '/phpgwapi/inc/htmlpurifier/HTMLPurifier.auto.php';
+
+		    $config = HTMLPurifier_Config::createDefault();
+			$config->set('HTML', 'Doctype', 'HTML 4.01 Transitional');
+			$purifier = new HTMLPurifier($config);
+
+			$clean_html = $purifier->purify($html);
+
+			return $clean_html;
 		}
 
 		/**
@@ -149,14 +175,21 @@
 		 * @return string The full url after processing
 		 * @see	session->link()
 		 */
-		function link($url = '', $extravars = array(), $redirect = false)
+		public function link($url = '', $extravars = array(), $redirect = false)
 		{
 			return $this->session->link($url, $extravars, $redirect);
 		}
 
-		function redirect_link($url = '',$extravars=array())
+		/**
+		 * Redirect to another URL
+		 *
+		 * @param string $string The url the link is for
+		 * @param string $extravars	Extra params to be passed to the url
+		 * @return null
+		 */
+		public function redirect_link($url = '', $extravars=array())
 		{
-			$this->redirect($this->session->link($url, $extravars, true));
+			self::redirect($this->session->link($url, $extravars, true));
 		}
 
 		/**
@@ -186,7 +219,7 @@
 		* @see session->is_repost()
 		* @author Dave Hall
 		*/
-		function is_repost($display_error = False)
+		public function is_repost($display_error = False)
 		{
 			return $this->session->is_repost($display_error);
 		}
@@ -199,15 +232,16 @@
 		 * @access public
 		 * @param string The url ro redirect to
 		 */
-		function redirect($url = '')
+		public static function redirect($url = '')
 		{
 			$iis = strpos($_SERVER['SERVER_SOFTWARE'], 'IIS', 0) !== false;
 			
 			if ( !$url )
 			{
-				$url = $_SERVER['PHP_SELF'];
+				$url = self::get_var('PHP_SELF', 'string', 'SERVER');
 			}
-			if ( $iis )
+
+			if ( $iis || headers_sent() )
 			{
 				echo "<html>\n<head>\n<title>Redirecting to $url</title>";
 				echo "\n<meta http-equiv=\"refresh\ content=\"0; URL=$url\">";
@@ -218,7 +252,7 @@
 			}
 			else
 			{
-				Header('Location: ' . $url);
+				header('Location: ' . $url);
 				exit;
 			}
 		}
@@ -240,7 +274,7 @@
 		* @param string $m10 substitution string
 		* @returns string translated phrase
 		*/
-		function lang($key,$m1='',$m2='',$m3='',$m4='',$m5='',$m6='',$m7='',$m8='',$m9='',$m10='')
+		public function lang($key,$m1='',$m2='',$m3='',$m4='',$m5='',$m6='',$m7='',$m8='',$m9='',$m10='')
 		{
 			if(is_array($m1))
 			{
@@ -362,6 +396,12 @@
 
 				switch ( $value_type )
 				{
+					case 'string':
+					default:
+						$value = filter_var($value, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+						$value = htmlspecialchars($value, ENT_COMPAT, 'UTF-8');
+						break;
+
 					case 'bool':
 						if ( preg_match('/^[false|0|no]$/', $value) )
 						{
@@ -371,7 +411,6 @@
 
 					case 'float':
 					case 'double':
-					case 'real':
 						if ( (float) $value == $value )
 						{
 								return (float) $value;
@@ -379,7 +418,6 @@
 						return (float) $default;
 					
 					case 'int':
-					case 'integer':
 					case 'number':
 						if ( (int) $value == $value )
 						{
@@ -455,9 +493,8 @@
 						break;
 					
 					case 'html':
-					case 'string':
-					default:
-						$value = htmlspecialchars(filter_var($value, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES));
+						$value = self::clean_html($value);
+						break;
 				}
 				return $value;
 			}

@@ -24,7 +24,7 @@
 				DELETE FROM phpgw_syncml_sessions
 				WHERE
 					session_dla < %d',
-				time() - 10),
+				time() - SYNCML_SESSION_LIFETIME),
 				__LINE__, __FILE__);
 		}
 
@@ -114,7 +114,7 @@
 		function set_session_mapping($header, $phpgw_sid)
 		{
 			$syncml_hash = $this->generate_session_hash($header);
-
+			syncml_logger::get_instance()->log("set_session_mapping : header = '".print_r($header, true)."' phpgw_sid = $phpgw_sid syncml_hash=$syncml_hash");
 			$GLOBALS['phpgw']->db->query(sprintf("
 				DELETE FROM phpgw_syncml_sessions
 				WHERE
@@ -124,8 +124,8 @@
 
 			$GLOBALS['phpgw']->db->query(sprintf("
 				INSERT INTO phpgw_syncml_sessions(
-					syncml_hash, phpgw_sid, session_dla)
-				VALUES('%s', '%s', '%d')",
+					syncml_hash, phpgw_sid, session_dla, next_nonce)
+				VALUES('%s', '%s', '%d', '')",
 				$GLOBALS["phpgw"]->db->db_addslashes($syncml_hash),
 				$GLOBALS["phpgw"]->db->db_addslashes($phpgw_sid),
 				time()),
@@ -138,6 +138,7 @@
 		function set_next_nonce($header, $next_nonce)
 		{
 			$syncml_hash = $this->generate_session_hash($header);
+			syncml_logger::get_instance()->log("set_next_nonce : header = '".print_r($header, true)."' next_nonce = $next_nonce syncml_hash=$syncml_hash");
 
 			$GLOBALS['phpgw']->db->query(sprintf('
 				UPDATE phpgw_syncml_sessions

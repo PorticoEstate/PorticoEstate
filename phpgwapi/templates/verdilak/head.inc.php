@@ -20,38 +20,33 @@
 
 	$app = $GLOBALS['phpgw_info']['flags']['currentapp'];
 
-	$theme_styles[] = "{$GLOBALS['phpgw_info']['server']['webserver_url']}/phpgwapi/templates/verdilak/css/base.css";
-	if(isset($GLOBALS['phpgw_info']['user']['preferences']['common']['theme']) && file_exists(PHPGW_SERVER_ROOT . '/phpgwapi/templates/verdilak/css/' . $GLOBALS['phpgw_info']['user']['preferences']['common']['theme'] . '.css'))
+	if ( !is_readable("/phpgwapi/templates/idsociety/css/{$GLOBALS['phpgw_info']['user']['preferences']['common']['theme']}.css") )
 	{
-		$theme_styles[] = "{$GLOBALS['phpgw_info']['server']['webserver_url']}/phpgwapi/templates/verdilak/css/{$GLOBALS['phpgw_info']['user']['preferences']['common']['theme']}.css";
-	}
-	else
-	{
-		$theme_styles[] = "{$GLOBALS['phpgw_info']['server']['webserver_url']}/phpgwapi/templates/verdilak/css/styles.css";
-		$GLOBALS['phpgw_info']['user']['preferences']['common']['theme'] = 'verdilak';
+		$GLOBALS['phpgw_info']['user']['preferences']['common']['theme'] = 'styles';
 	}
 
-	if(file_exists(PHPGW_SERVER_ROOT . "/{$app}/templates/base/css/base.css"))
-	{
-		$theme_styles[] = "{$GLOBALS['phpgw_info']['server']['webserver_url']}/{$app}/templates/base/css/base.css";
-	}
-
-	if(file_exists(PHPGW_SERVER_ROOT . "/{$app}/templates/verdilak/css/base.css"))
-	{
-		$theme_styles[] = "{$GLOBALS['phpgw_info']['server']['webserver_url']}/{$app}/templates/verdilak/css/base.css";
-	}
-
-	if(file_exists(PHPGW_SERVER_ROOT . "/{$app}/templates/verdilak/css/{$GLOBALS['phpgw_info']['user']['preferences']['common']['theme']}.css"))
-	{
-		$theme_styles[] = "{$GLOBALS['phpgw_info']['server']['webserver_url']}/{$app}/templates/verdilak/css/{$GLOBALS['phpgw_info']['user']['preferences']['common']['theme']}.css";
-	}
+	$theme_styles = array
+	(
+		'/phpgwapi/js/yahoo/reset-fonts-grids/reset-fonts-grids.css',
+		'/phpgwapi/js/yahoo/tabview/assets/skins/sam/tabview.css',
+		'/phpgwapi/templates/base/css/base.css',
+		'/phpgwapi/templates/verdilak/css/base.css',
+		"/phpgwapi/templates/verdilak/css/{$GLOBALS['phpgw_info']['user']['preferences']['common']['theme']}.css",
+		"/{$app}/templates/base/css/base.css",
+		"/{$app}/templates/verdilak/css/base.css",
+		"/{$app}/templates/verdilak/css/{$GLOBALS['phpgw_info']['user']['preferences']['common']['theme']}.css"
+	);
 
 	foreach ( $theme_styles as $style )
 	{
-		$GLOBALS['phpgw']->template->set_var('theme_style', $style);
-		$GLOBALS['phpgw']->template->parse('theme_stylesheets', 'theme_stylesheet', true);
+
+		if( file_exists( PHPGW_SERVER_ROOT . $style ) )
+		{
+				$GLOBALS['phpgw']->template->set_var('theme_style', "{$GLOBALS['phpgw_info']['server']['webserver_url']}$style");
+			$GLOBALS['phpgw']->template->parse('theme_stylesheets', 'theme_stylesheet', true);
+		}
 	}
-	
+
 	$app = $app ? ' ['.(isset($GLOBALS['phpgw_info']['apps'][$app]) ? $GLOBALS['phpgw_info']['apps'][$app]['title'] : lang($app)).']':'';
 
 	$GLOBALS['phpgw']->template->set_var(array
@@ -67,5 +62,3 @@
 	));
 
 	$GLOBALS['phpgw']->template->pfp('out','head');
-?>
-

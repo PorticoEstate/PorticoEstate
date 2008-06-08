@@ -1,7 +1,7 @@
 body, div, input, p, select, textarea
 {
 	color: #069;
-	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-family: "Liberation Sans", Verdana, sans-serif;
 	font-size: 11px;
 }
 
@@ -109,22 +109,3 @@ h4
 }
 /* End headings fix */
 
-ol.source
-{
-	background-color: #ccc;
-	border: 1px solid #ccc;
-	height: 300px;
-	list-style-type: decimal;
-	overflow: auto;
-	padding-left: 4em;
-}
-
-ol.source li
-{
-	background-color: #fff;
-	border-bottom: #eee;
-	display: list-item;
-	font-family: monospace;
-	list-style-type: decimal;
-	white-space: pre;
-}

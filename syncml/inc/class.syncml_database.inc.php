@@ -130,6 +130,7 @@
 		 */
 		function merge_changes($except_list = array())
 		{
+				syncml_logger::get_instance()->log_data("merge_changes : ipc set  ", is_object($this->ipc)? 'true' : 'false');
 			if(!$this->ipc)
 			{
 				return 0;
@@ -138,17 +139,22 @@
 			$sochannel = new syncml_sochannel();
 
 			list(, , , $last_merge) = $sochannel->get_channel($this->channel_id);
+			syncml_logger::get_instance()->log_data("merge_changes last_merge : ", $last_merge);
 
 			$changed_guids = array_diff(
 				$this->ipc->getIdList($last_merge), $except_list);
+			syncml_logger::get_instance()->log_data("merge_changes changed_guids : ", $changed_guids);
 
 			foreach($changed_guids as $guid)
 			{
+			syncml_logger::get_instance()->log_data("merge_changes guid : ", $guid);
 				$this->somappings->update_mapping(
 					$this->channel_id, NULL, $guid, 1);
+			syncml_logger::get_instance()->log_data("merge_changes update_mapping done  for guids : ", $guid);
 			}
 
 			$sochannel->update_last_merge($this->channel_id);
+			syncml_logger::get_instance()->log("merge_changes update_last_merge done for ".$this->channel_id);
 		}
 
 		/**
