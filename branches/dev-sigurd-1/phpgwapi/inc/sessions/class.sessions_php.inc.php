@@ -60,7 +60,7 @@
 		*/
 		function set_cookie_params($domain)
 		{
-			session_set_cookie_params(0,'/',$domain);
+			session_set_cookie_params(0, $GLOBALS['phpgw_info']['server']['webserver_url'], $domain);
 		}
 
 		function register_session($login,$user_ip,$now,$session_flags)

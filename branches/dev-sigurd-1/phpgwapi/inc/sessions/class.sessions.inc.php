@@ -469,7 +469,7 @@
 			{
 				$this->phpgw_set_cookiedomain();
 			}
-			setcookie($cookiename,$cookievalue,$cookietime,'/',$this->cookie_domain); 
+			setcookie($cookiename, $cookievalue, $cookietime, $GLOBALS['phpgw_info']['server']['webserver_url'], $this->cookie_domain); 
 		}
 
 		/**
