@@ -836,7 +836,7 @@
 		public function phpgw_setcookie($cookiename, $cookievalue='', $cookietime=0)
 		{
 			$secure = phpgw::get_var('HTTPS', 'bool', 'SERVER');
-			setcookie($cookiename, $cookievalue, $cookietime, '/',
+			setcookie($cookiename, $cookievalue, $cookietime, $GLOBALS['phpgw_info']['server']['webserver_url'],
 					$this->_cookie_domain, $secure, true);
 		}
 
@@ -1559,7 +1559,7 @@
 			}
 
 			$secure = phpgw::get_var('HTTPS', 'bool', 'SERVER');
-			session_set_cookie_params(0, '/', $this->_cookie_domain, $secure, true);
+			session_set_cookie_params(0, $GLOBALS['phpgw_info']['server']['webserver_url'], $this->_cookie_domain, $secure, true);
 			return $this->_cookie_domain;
 		}
 
