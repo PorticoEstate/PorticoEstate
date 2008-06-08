@@ -921,20 +921,9 @@
 				}
 			}
 
-			$tabs = array
-			(
-				'general'		=> array('label' => lang('general'), 'link' => '#general'),
-				'location'		=> array('label' => lang('location'), 'link' => '#location'),
-				'coordination'	=> array('label' => lang('coordination'), 'link' => '#coordination'),
-				'budget'		=> array('label' => lang('Time and budget'), 'link' => '#budget'),
-				'extra'			=> array('label' => lang('extra'), 'link' => '#extra')
-			);
-
-			phpgwapi_yui::tabview_setup('project_edit_tabview');
-
 			$data = array
 			(
-				'tabs'							=> phpgwapi_yui::tabview_generate($tabs, 'general'),
+				'tabs'							=> self::_generate_tabs(),
 
 				'msgbox_data'					=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
 
@@ -1230,6 +1219,8 @@
 
 			$data = array
 			(
+				'tabs'							=> self::_generate_tabs(),
+
 				'msgbox_data'				=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
 
 				'value_origin'				=> $values['origin'],
@@ -1331,7 +1322,23 @@
 			$appname		= lang('project');
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('view' => $data));
-		//	$GLOBALS['phpgw']->xslttpl->pp();
+
+		}
+
+		protected function _generate_tabs()
+		{
+			$tabs = array
+			(
+				'general'		=> array('label' => lang('general'), 'link' => '#general'),
+				'location'		=> array('label' => lang('location'), 'link' => '#location'),
+				'budget'		=> array('label' => lang('Time and budget'), 'link' => '#budget'),
+				'coordination'	=> array('label' => lang('coordination'), 'link' => '#coordination'),
+				'extra'			=> array('label' => lang('extra'), 'link' => '#extra'),
+				'history'		=> array('label' => lang('history'), 'link' => '#history')
+			);
+
+			phpgwapi_yui::tabview_setup('project_tabview');
+
+			return  phpgwapi_yui::tabview_generate($tabs, 'general');
 		}
 	}
-
