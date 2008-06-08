@@ -175,11 +175,11 @@
 				}
 			}
 
-			if($GLOBALS['phpgw_info']['server']['smtpAuth'] == 'yes')
+			if ( $GLOBALS['phpgw_info']['server']['smtp_auth'] == 'True' )
 			{
 				$smtp->SMTPAuth	= true;
-				$smtp->Username	= $GLOBALS['phpgw_info']['server']['smtpUser'];
-				$smtp->Password	= $GLOBALS['phpgw_info']['server']['smtpPassword'];
+				$smtp->Username	= $GLOBALS['phpgw_info']['server']['smtp_user'];
+				$smtp->Password	= $GLOBALS['phpgw_info']['server']['smtp_password'];
 			}
 
 			// set a higher timeout for big messages
@@ -498,3 +498,4 @@
 			return True;
 		}
 	} /* end of class */
+

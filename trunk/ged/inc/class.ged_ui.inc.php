@@ -1,21 +1,22 @@
 <?php
-	/**************************************************************************
-	* phpGroupWare - ged
-	* http://www.phpgroupware.org
-	* Written by Pascal Vilarem <pascal.vilarem@steria.org>
-	*
-	* --------------------------------------------------------------------------
-	*  This program is free software; you can redistribute it and/or modify it
-	*  under the terms of the GNU General Public License as published by the
-	*  Free Software Foundation; either version 2 of the License, or (at your
-	*  option) any later version
-	***************************************************************************/
+/**************************************************************************
+* phpGroupWare - ged
+* http://www.phpgroupware.org
+*
+* --------------------------------------------------------------------------
+*  This program is free software; you can redistribute it and/or modify it
+*  under the terms of the GNU General Public License as published by the
+*  Free Software Foundation; either version 2 of the License, or (at your
+*  option) any later version
+***************************************************************************/
 
 $GLOBALS['debug']["ged.ged_ui"]=false;
 
 // define zip command fullpath instead of hard coding it
 // later it will be possible todefine it using an admin form
 define ( "zip_bin", "/usr/bin/zip");
+
+include_once ( 'ged_common_functions.inc.php');
 
 class ged_ui
 {
@@ -30,24 +31,27 @@ class ged_ui
 		'browse'=>true, 
 		'add_file'=>true, 
 		'add_folder'=>true, 
-		'update_folder'=>true, 
+		'update_folder'=>true,
+		'move_folder' => true,
 		'delete_folder'=>true, 
 		'download'=>true, 
 		'package_download' => true, 
-		'view'=>true, 
+		'view'=>true,
+		'move_file'=>true,
 		'delete_file'=>true, 
 		'change_acl'=>true, 
 		'search' => true, 
 		'stats'=> true, 
 		'chrono' => true,
+		'dico' => true,
 		'flow_do' => true
 	);
 
 	var $icons;
 
 	/* TODO document my code in English :P */
-	/* Constructor method called when ged_ui object is created */
 
+	/* Constructor method called when ged_ui object is created */
 	function ged_ui()
 	{
 		//$this->theme = $GLOBALS['phpgw_info']['theme'];
@@ -62,7 +66,6 @@ class ged_ui
 		//$this->users=$this->acct->get_list('accounts');
 		//_debug_array($this->users);
 		
-		
 		$this->ged_dm=CreateObject('ged.ged_dm', True);
 		$this->categories=CreateObject('phpgwapi.categories');
 		$this->browser=CreateObject('phpgwapi.browser');
@@ -74,7 +77,6 @@ class ged_ui
 			$GLOBALS['phpgw']->css = createObject('phpgwapi.css');
 		}
 		$GLOBALS['phpgw']->css->validate_file('default','ged');
-		
 		
 		//TODO Move this to a function, maybe an api mime class ?
 		$this->icons["txt"]="txt";
@@ -214,6 +216,7 @@ class ged_ui
 		$this->t->set_var('lang_update_file', lang('Update file'));
 		$this->t->set_var('lang_update_folder', lang('Update folder'));
 		$this->t->set_var('lang_confirm_deletion', lang('Confirm deletion'));
+		$this->t->set_var('lang_confirm_move', lang('Confirm move'));
 
 		$this->t->set_var('lang_informations', 'Informations');
 		$this->t->set_var('lang_versions', 'Versions');
@@ -244,6 +247,8 @@ class ged_ui
 		$this->t->set_var('select_active_class', 'select-one_focused');
 
 		$this->t->set_var('reference_color', 'red');
+		
+		$this->t->set_var('lang_export_csv', lang('Export CSV'));
 		
 		$this->t->set_var('image_download-48', $GLOBALS['phpgw']->common->image('ged', 'download-48'));
 		$this->t->set_var('image_download-32', $GLOBALS['phpgw']->common->image('ged', 'download-32'));
@@ -290,10 +295,17 @@ class ged_ui
 
 	}
 	
+	// wrapper to use new phpgw::get_var if it exists
+	// and old get_var otherwise
+	function get_var($varname,$method=null,$default=null)
+	{
+		return ged_get_var($varname,$method, $default);
+	}
+	
 	// TODO acl here
 	function view()
 	{
-		$version_id=get_var('version_id',array('GET','POST'));
+		$version_id=$this->get_var('version_id',array('GET','POST'));
 
 		$version=$this->ged_dm->get_version_info($version_id);
     
@@ -326,7 +338,7 @@ class ged_ui
 	// TODO acl here
 	function download()
 	{
-		$version_id=get_var('version_id',array('GET','POST'));
+		$version_id=$this->get_var('version_id',array('GET','POST'));
 
 		$version=$this->ged_dm->get_version_info($version_id);
 
@@ -359,8 +371,8 @@ class ged_ui
 	// TODO acl here
 	function package_download()
 	{
-		$element_id=get_var('element_id',array('GET','POST'));
-		$version_id=get_var('version_id',array('GET','POST'));
+		$element_id=$this->get_var('element_id',array('GET','POST'));
+		$version_id=$this->get_var('version_id',array('GET','POST'));
 		
 		if ( $version_id != '' )
 			$theversion=$this->ged_dm->get_version_info($version_id);
@@ -833,7 +845,7 @@ class ged_ui
 				
 				$file_version=null;
 
-					$file_version=$this->ged_dm->get_last_version($file['element_id']);
+				$file_version=$this->ged_dm->get_last_version($file['element_id']);
 				
 				$this->t->set_var('tr_class', $tr_class);
 
@@ -907,8 +919,8 @@ class ged_ui
 		if ( $this->debug('browse') )
 			print ( "browse: entering<br>\n");
 
-		$focused_id=(int)get_var('focused_id',array('GET','POST'));
-		$focused_version_id=(int)get_var('version_id',array('GET','POST'));
+		$focused_id=(int)$this->get_var('focused_id',array('GET','POST'));
+		$focused_version_id=(int)$this->get_var('version_id',array('GET','POST'));
 
 		if ($focused_id=="" || ! $this->ged_dm->can_read($focused_id))
 			$focused_id=0;
@@ -964,14 +976,14 @@ class ged_ui
 				{
 					$focused_version=$this->ged_dm->get_version_info($focused_version_id);
 					
-					if ( isset($this->ged_dm->acl[$focused_element['element_id']]['statuses']) && is_array($this->ged_dm->acl[$focused_element['element_id']]['statuses']))
-				{
+					if ( isset($this->ged_dm->acl[$focused_element['element_id']]['statuses']) && is_array($this->ged_dm->acl[$focused_element['element_id']]['statuses']) && ! empty($this->ged_dm->acl[$focused_element['element_id']]['statuses']))
+					{
 						if ( ! in_array($focused_version['status'], $this->ged_dm->acl[$focused_element['element_id']]['statuses']));
-				{
-					$focused_version=$last_version;
+						{
+							$focused_version=$last_version;
 							$focused_version_id=$focused_version['version_id'];
 						}
-				}
+					}
 				
 				}
 				else
@@ -1028,6 +1040,14 @@ class ged_ui
 					$link_data['element_id']=$focused_id;
 					$delete_file_url=$GLOBALS['phpgw']->link('/index.php', $link_data);
 					$this->t->set_var('delete_file', "<a href=\"".$delete_file_url."\">".lang('Delete file')."</a>");
+					
+					$link_data=array
+					(
+						'menuaction' => 'ged.ged_ui.move_file',
+						'element_id' => $focused_id
+					);
+					$delete_file_url=$GLOBALS['phpgw']->link('/index.php', $link_data);
+					$this->t->set_var('move_file', "<a href=\"".$delete_file_url."\">".lang('move file')."</a>");		
 				}
 				
 				break;
@@ -1078,6 +1098,14 @@ class ged_ui
 					$link_data['element_id']=$focused_id;
 					$delete_folder_url=$GLOBALS['phpgw']->link('/index.php', $link_data);
 					$this->t->set_var('delete_folder', "<a href=\"".$delete_folder_url."\">".lang('Delete folder')."</a>");
+
+					$link_data=array
+					(
+						'menuaction' => 'ged.ged_ui.move_folder',
+						'element_id' => $focused_id
+					);
+					$delete_file_url=$GLOBALS['phpgw']->link('/index.php', $link_data);
+					$this->t->set_var('move_folder', "<a href=\"".$delete_file_url."\">".lang('move folder')."</a>");		
 				}
 					
 				break;
@@ -1087,14 +1115,19 @@ class ged_ui
 				break;
 		}
 		
-		if ( isset ($focused_element['project_root']) && $focused_element['project_root'] != 0 && $this->ged_dm->can_change_acl($focused_element['project_root']))
+		if ( isset ($focused_element['project_root']) && $focused_element['project_root'] != 0 && $this->ged_dm->can_write($focused_element['project_root']))
 		{
 			$link_data=null;
 			$link_data['menuaction']='ged.ged_ui.chrono';
 			$link_data['project_root']=$focused_element['project_root'];
 			$delete_folder_url=$GLOBALS['phpgw']->link('/index.php', $link_data);
-			$this->t->set_var('chrono', "<a href=\"".$delete_folder_url."\">".lang('Display chrono')."</a>");
-
+			$this->t->set_var('chrono', "<a href=\"".$delete_folder_url."\">".lang('Chrono')."</a>");
+			
+			$link_data=null;
+			$link_data['menuaction']='ged.ged_ui.dico';
+			$link_data['project_root']=$focused_element['project_root'];
+			$delete_folder_url=$GLOBALS['phpgw']->link('/index.php', $link_data);
+			$this->t->set_var('dico', "<a href=\"".$delete_folder_url."\">".lang('Dico')."</a>");
 		}
 
 		$this->display_app_header();
@@ -1106,7 +1139,7 @@ class ged_ui
 	// New status management : at first status=working
 	function add_file()
 	{
-		$parent_id=get_var('parent_id',array('GET','POST'));
+		$parent_id=$this->get_var('parent_id',array('GET','POST'));
 		
 		$link_data=null;
 		$link_data['menuaction']='ged.ged_ui.browse';
@@ -1121,14 +1154,14 @@ class ged_ui
 			$GLOBALS['phpgw']->redirect_link('/index.php', $link_data);
 		}
 		
-		$add_file=get_var('add_file',array('GET','POST'));
-		$name=addslashes(get_var('name',array('GET','POST')));
-		$referenceq=addslashes(get_var('referenceq',array('GET','POST')));
-		$major=addslashes(get_var('major',array('GET','POST')));
-		$minor=addslashes(get_var('minor',array('GET','POST')));
-		$description=addslashes(get_var('description', array('GET', 'POST')));
-		$doc_type=addslashes(get_var('document_type', array('GET', 'POST')));
-		$validity_period=get_var('validity_period', array('GET', 'POST'));
+		$add_file=$this->get_var('add_file',array('GET','POST'));
+		$name=addslashes($this->get_var('name',array('GET','POST')));
+		$referenceq=addslashes($this->get_var('referenceq',array('GET','POST')));
+		$major=addslashes($this->get_var('major',array('GET','POST')));
+		$minor=addslashes($this->get_var('minor',array('GET','POST')));
+		$description=addslashes($this->get_var('description', array('GET', 'POST')));
+		$doc_type=addslashes($this->get_var('document_type', array('GET', 'POST')));
+		$validity_period=$this->get_var('validity_period', array('GET', 'POST'));
 
 		$this->set_template_defaults();
 
@@ -1231,12 +1264,17 @@ class ged_ui
 		$this->t->pfp('out', 'add_file_tpl');
 
 	}
-
+	
+	function move_file()
+	{
+		$this->move_element();
+	}
+	
 	function delete_file()
 	{
 		
-		$element_id=get_var('element_id', array('GET', 'POST'));
-		$delete_file=get_var('delete_file', array('GET', 'POST'));
+		$element_id=$this->get_var('element_id', array('GET', 'POST'));
+		$delete_file=$this->get_var('delete_file', array('GET', 'POST'));
 
 		// Contr�le des droits	
 		if ( ! $this->ged_dm->can_write($element_id) || $element_id==0 )
@@ -1279,7 +1317,7 @@ class ged_ui
 
 	function add_folder()
 	{
-		$parent_id=get_var('parent_id', array('GET', 'POST'));
+		$parent_id=$this->get_var('parent_id', array('GET', 'POST'));
 		
 		$link_data=null;
 		$link_data['menuaction']='ged.ged_ui.browse';
@@ -1290,11 +1328,11 @@ class ged_ui
 				$GLOBALS['phpgw']->redirect_link('/index.php', $link_data);
 		}
 
-		$add_folder=get_var('add_folder', array('GET', 'POST'));
-		$name=addslashes(get_var('name', array('GET', 'POST')));
-		$description=addslashes(get_var('description', array('GET', 'POST')));
-		$referenceq=addslashes(get_var('referenceq', array('GET', 'POST')));
-		$project_name=addslashes(get_var('project_name', array('GET', 'POST')));
+		$add_folder=$this->get_var('add_folder', array('GET', 'POST'));
+		$name=addslashes($this->get_var('name', array('GET', 'POST')));
+		$description=addslashes($this->get_var('description', array('GET', 'POST')));
+		$referenceq=addslashes($this->get_var('referenceq', array('GET', 'POST')));
+		$project_name=addslashes($this->get_var('project_name', array('GET', 'POST')));
 
 		$this->set_template_defaults();
 
@@ -1369,7 +1407,7 @@ class ged_ui
 	function update_folder()
 	{
 		
-		$element_id=get_var('element_id', array('GET', 'POST'));
+		$element_id=$this->get_var('element_id', array('GET', 'POST'));
 		
 		$link_data=null;
 		$link_data['menuaction']='ged.ged_ui.browse';
@@ -1380,12 +1418,12 @@ class ged_ui
 				$GLOBALS['phpgw']->redirect_link('/index.php', $link_data);
 		}
 
-		$update_folder=get_var('update_folder', array('GET', 'POST'));
+		$update_folder=$this->get_var('update_folder', array('GET', 'POST'));
 		
-		$folder_name=get_var('folder_name', array('GET', 'POST'));
-		$folder_description=get_var('folder_description', array('GET', 'POST'));
-		$folder_reference=get_var('folder_reference', array('GET', 'POST'));
-		$project_name=get_var('project_name', array('GET', 'POST'));
+		$folder_name=$this->get_var('folder_name', array('GET', 'POST'));
+		$folder_description=$this->get_var('folder_description', array('GET', 'POST'));
+		$folder_reference=$this->get_var('folder_reference', array('GET', 'POST'));
+		$project_name=$this->get_var('project_name', array('GET', 'POST'));
 
 		$this->set_template_defaults();
 		
@@ -1464,12 +1502,140 @@ class ged_ui
 
 	}
 	
+	function move_folder()
+	{
+		$this->move_element();
+	}
+
+	function gen_subfolder_select ( $element_id, $field_name, $selected_element_id='', $get_root=false, $recursion_level=0)
+	{	
+		if ( isset( $this->cached_gen_subfolders[$element_id]))
+		{
+			$my_sub_folders=$this->cached_gen_subfolders[$element_id];
+		}
+		else
+		{
+			$my_sub_folders=$this->ged_dm->list_sub_folders($element_id,'writable');
+			$this->cached_gen_subfolder[$element_id]=$my_sub_folders;
+		}	
+
+		if ( $recursion_level == 0)
+		{
+			$select_sub_folders_html="<select name=\"".$field_name."\">\n";
+		}
+		else
+		{
+			$select_sub_folders_html="";
+		}
+		
+		if ( $get_root )
+		{
+			$element_info=$this->ged_dm->get_element_info($element_id);
+
+			$selected="";
+			if ( $element_id == $selected_element_id)
+			{
+				$selected="selected ";
+			}
+			$project_style="style=\"font-weight:bold;\"";
+			
+			$select_sub_folders_html.="<option ".$project_style." value=\"".$element_id."\" $selected>".$element_info['name']."</option>\n";
+			$recursion_level=1;
+		}
+		
+		$indent=str_repeat("&nbsp;", $recursion_level*4)."-";
+		
+		foreach ( $my_sub_folders as $my_sub_folder )
+		{
+			$selected="";
+			if ( $my_sub_folder['element_id'] == $selected_element_id)
+			{
+				$selected="selected ";
+			}
+			
+			$project_style="";
+			if ( $my_sub_folder['element_id'] == $my_sub_folder['project_root'])
+			{
+				$project_style="style=\"font-weight:bold;\"";
+			}
+			
+			$select_sub_folders_html.="<option ".$project_style." value=\"".$my_sub_folder['element_id']."\" $selected>".$indent.$my_sub_folder['name']."</option>\n";
+			
+			$select_sub_folders_html.=$this->gen_subfolder_select ( $my_sub_folder['element_id'], $field_name, $selected_element_id, false, $recursion_level+1);
+		}
+		
+		if ( $recursion_level == 0)
+		{
+			$select_sub_folders_html.="</select>\n";
+		}	
+					
+		return ( $select_sub_folders_html );		
+	}
+
+	function move_element()
+	{
+		$element_id=$this->get_var('element_id', array('GET', 'POST'));
+		$move=$this->get_var('move', array('GET', 'POST'));
+		$destination=$this->get_var('destination', array('GET', 'POST'));
+		
+		$element_info=$this->ged_dm->get_element_info($element_id);
+		$parent_id=$element_info['parent_id'];
+		$project_root_id=$element_info['project_root'];
+
+		// Access control	
+		if ( ! $this->ged_dm->can_delete($element_id) || $element_id==0 )
+		{
+			$link_data=array
+			(
+				'menuaction' => 'ged.ged_ui.browse',
+				'focused_id' => $element_id
+			);
+			$GLOBALS['phpgw']->redirect_link('/index.php', $link_data);
+		}
+		
+		// Confirmation and action
+		if ($move==lang('Confirm move') )
+		{
+			$parent_id=$this->ged_dm->move_element($element_id,$destination);
+
+			$link_data=array
+			(
+				'menuaction' => 'ged.ged_ui.browse',
+				'focused_id' => $element_id
+			);
+			$GLOBALS['phpgw']->redirect_link('/index.php', $link_data);
+		}
+		
+		// Display form
+				
+		$this->set_template_defaults();
+		$this->display_app_header();
+
+		$this->t->set_file(array('move_element_tpl'=>'move_element.tpl'));
+
+		$this->t->set_var('element_name', $element_info['name']);
+		$this->t->set_var('element_type', lang($element_info['type']));
+		$this->t->set_var('element_id_value', $element_id);
+		$this->t->set_var('confirm_move_field', 'move');
+		$this->t->set_var('confirm_move_value', lang('Confirm move'));
+		
+		// TODO : Select box of possible destinations
+		if ( $this->ged_dm->admin )
+		{
+			$project_root_id=0;
+		}
+		$this->t->set_var('select', $this->gen_subfolder_select($project_root_id,"destination", $destination, true));
+
+		$this->t->pfp('out', 'move_element_tpl');
+		
+	}
+
 	// DONE : gerer la confirmation 
 	// TODO : Afficher quelques details... nom etc.
 	function delete_folder()
 	{
-		$element_id=get_var('element_id', array('GET', 'POST'));
-		$delete_folder=get_var('delete_folder', array('GET', 'POST'));
+		$element_id=$this->get_var('element_id', array('GET', 'POST'));
+		$delete_folder=$this->get_var('delete_folder', array('GET', 'POST'));
 
 		// Contr�le des droits	
 		if ( ! $this->ged_dm->can_write($element_id) || $element_id==0 )
@@ -1513,8 +1679,8 @@ class ged_ui
 	
 	function change_acl ()
 	{
-		$element_id=get_var('element_id', array('GET', 'POST'));
-		$update_acl=get_var('update_acl', array('POST'));
+		$element_id=$this->get_var('element_id', array('GET', 'POST'));
+		$update_acl=$this->get_var('update_acl', array('POST'));
 		$statuses=$this->flows->get_app_statuses('ged');
 		
 		//DEBUG
@@ -1532,7 +1698,7 @@ class ged_ui
 			//DEBUG
 			//_debug_array( $_POST );
 			$newacl=null;
-			$newacl=get_var('newacl', array('POST'));
+			$newacl=$this->get_var('newacl', array('POST'));
 			
 			if ( $newacl['account_id'] !="" && ( $newacl['read']=='on' || $newacl['write']=='on' || $newacl['delete']=='on' || $newacl['changeacl']=='on') )
 			{
@@ -1577,7 +1743,7 @@ class ged_ui
 			}
 			
 			$acl=null;
-			$acl=get_var('acl', array('POST'));
+			$acl=$this->get_var('acl', array('POST'));
 			
 			//DEBUG
 			//_debug_array($acl);
@@ -1782,9 +1948,9 @@ class ged_ui
 	// (removed all the previous hardcoded flow functions)
 	function flow_do()
 	{
-		$transition=get_var('transition', array('POST', 'GET'));
-		$element_id=get_var('element_id', array('POST', 'GET'));
-		$version_id=get_var('version_id', array('POST', 'GET'));
+		$transition=$this->get_var('transition', array('POST', 'GET'));
+		$element_id=$this->get_var('element_id', array('POST', 'GET'));
+		$version_id=$this->get_var('version_id', array('POST', 'GET'));
 		
 		$element=$this->ged_dm->get_element_info($element_id);
 		$version=$this->ged_dm->get_version_info($version_id);
@@ -1816,25 +1982,24 @@ class ged_ui
 	// Search
 	function search()
 	{
-		$search_query=get_var('search_query', 'string', 'GET');
-		$search = phpgw::get_var('search', 'string', 'GET');
+		$search_query=$this->get_var('search_query', array('GET', 'POST'));
+		$search=$this->get_var('search', array('GET', 'POST'));
 
 		$this->set_template_defaults();
 		$this->display_app_header();
 		
-		// we do this as the form is a get request
-		// TODO add a method to sessions class to make this consistent
-		$link_data = array
-		(
-			'menuaction'	=> 'ged.ged_ui.search',
-			'sessionid'		=> $GLOBALS['sessionid'],
-			'click_history'	=> phpgw::get_var('click_history', 'string', 'GET'),
-			'search_url'	=> $GLOBALS['phpgw_info']['server']['webserver_url']
-		);
-		foreach ( $link_data as $key => $val )
-		{
-			$this->t->set_var($key, $val);
-		};
+		$link_data=null;
+		$link_data['menuaction']='ged.ged_ui.search';
+		$link_data['kp3']=$GLOBALS['phpgw_info']['user']['kp3'];
+		$link_data['sessionid']=$GLOBALS['sessionid'];
+		$link_data['click_history']=$_GET['click_history'];
+		$search_url=$GLOBALS['phpgw_info']['server']['webserver_url'];
+		
+		$this->t->set_var('menuaction', $link_data['menuaction']);
+		$this->t->set_var('kp3', $link_data['kp3']);
+		$this->t->set_var('sessionid', $link_data['sessionid']);
+		$this->t->set_var('click_history', $link_data['click_history']);
+		$this->t->set_var('action_search', $search_url);
 		
 		// Search
 		$results_query= $this->ged_dm->search($search_query);
@@ -1923,7 +2088,7 @@ class ged_ui
 			'menuaction'	=> 'ged.ged_ui.stats',
 			'sessionid'		=> $GLOBALS['sessionid'],
 			'click_history'	=> phpgw::get_var('click_history', 'string', 'GET'),
-			'search_url'	=> $GLOBALS['phpgw_info']['server']['webserver_url']
+			'search_url'	=> $GLOBALS['phpgw_info']['server']['webserver_url'],
 			'action_filter'	=> $GLOBALS['phpgw_info']['server']['webserver_url']
 		);
 		foreach ( $link_data as $key => $val )
@@ -2059,64 +2224,306 @@ class ged_ui
 
 	function chrono()
 	{
-		$project_root=get_var('project_root',array('GET'));
-		
-		$this->set_template_defaults();
-		$this->display_app_header();
-		$this->t->set_file(array('chrono_tpl'=>'chrono.tpl'));
-		$this->t->set_block('chrono_tpl', 'type_block', 'type_block_handle');
-		$this->t->set_block('type_block', 'chrono_block', 'chrono_block_handle');
-		
-		// DONE : use the project name instead of root id
-		$this->t->set_var('lang_chrono_title', lang('Chronos for project')." ".$this->ged_dm->get_project_name($project_root));
+		$project_root=$this->get_var('project_root',array('GET'));
+		$mode=$this->get_var('mode', array('GET', 'POST'));
 		
 		$chronos=null;
 		$chronos=$this->ged_dm->list_chronos($project_root);
 		
-		if ( isset($chronos))
+		if ( !is_null($mode) && $mode == "csv")
 		{
-			foreach ( $chronos as $type_id => $type_chronos)
+			if ($this->browser->is_ie())
 			{
-				$this->t->set_var('chrono_block_handle', "");
+				ini_set('zlib.output_compression', 'Off');
+				header('Pragma: private');
+				header('Cache-control: private, must-revalidate');
+				header("Content-Type: application/force-download");
+				header('Content-Disposition: attachment; filename="chrono.csv"', false);
+				//$download_size=filesize($version['file_full_path']);
+				//header('Content-Length: '.$download_size, false);
+				//readfile($version['file_full_path']);
 				
-				//DONE : Use the detailed label of type 
-				$this->t->set_var('doc_type', $type_id);
-				$row_class="row_off";
-				foreach ( $type_chronos as $chrono)
+				$fp = fopen('php://output', 'w');
+				
+				foreach ($chronos as $chrono_type)
 				{
-					// DONE : set up the needed template variables
-					$this->t->set_var('name', $chrono['name']);
-					$this->t->set_var('date', $GLOBALS['phpgw']->common->show_date($chrono['date']));
-					$this->t->set_var('author', $GLOBALS['phpgw']->common->grab_owner_name($chrono['creator_id']));
-					$this->t->set_var('description', $chrono['description']);
-					$this->t->set_var('version_label', $chrono['version_label']);
-					$this->t->set_var('reference', $chrono['reference']);
-					$this->t->set_var('no', $chrono['no']);
-	
-					$this->t->set_var('status_image', $GLOBALS['phpgw']->common->image('ged', $chrono['status']."-16"));
-			
-					$link_data=null;
-					$link_data['menuaction']='ged.ged_ui.browse';
-					$link_data['focused_id']=$chrono['element_id'];
-					$link_data['version_id']=$chrono['version_id'];
-					$this->t->set_var('browse_link', $GLOBALS['phpgw']->link('/index.php', $link_data));
-	
-					
-					if ( $row_class=="row_on")
-						$row_class="row_off";
-					else
-						$row_class="row_on";
+					foreach($chrono_type as $chrono)
+					{
+						$link_data=array
+						(
+							'menuaction' => 'ged.ged_ui.browse',
+							'focused_id' => $chrono['element_id'],
+							'version_id' => $chrono['version_id']
+						);
+						$url=$GLOBALS['phpgw']->link('/index.php', $link_data, true);
 						
-					$this->t->set_var('row_class', $row_class);
-					
-					$this->t->fp('chrono_block_handle', 'chrono_block', True);
+						$row=array 
+						(
+							$chrono['reference'],
+							$chrono['name'],
+							$chrono['version_label'],
+							$GLOBALS['phpgw']->common->grab_owner_name($chrono['creator_id']),
+							$chrono['status'],
+							$GLOBALS['phpgw']->common->show_date($chrono['date']),
+							$url
+						);
+						
+						fputcsv($fp, $row, ";", "\"");
+					}
 				}
-				$this->t->fp('type_block_handle', 'type_block', True);
+				fclose($fp);
+			}
+			else
+			{
+				header('Expires: '.gmdate('D, d M Y H:i:s') . ' GMT'); 
+				header('Last-Modified: '.gmdate('D, d M Y H:i:s') . ' GMT', false); 
+				header('Cache-Control: must-revalidate', false);
+				header("Content-type: text/csv", false);
+				header('Content-Disposition: attachment; filename="chrono.csv"', false);
+				//$download_size=filesize($version['file_full_path']);
+				//header('Content-Length: '.$download_size, false);
+				//readfile($version['file_full_path']);
+				
+				$fp = fopen('php://output', 'w');
+				
+				foreach ($chronos as $chrono_type)
+				{
+					foreach($chrono_type as $chrono)
+					{
+						$link_data=array
+						(
+							'menuaction' => 'ged.ged_ui.browse',
+							'focused_id' => $chrono['element_id'],
+							'version_id' => $chrono['version_id']
+						);
+						$url=$GLOBALS['phpgw']->link('/index.php', $link_data, true);
+						
+						$row=array 
+						(
+							$chrono['reference'],
+							$chrono['name'],
+							$chrono['version_label'],
+							$GLOBALS['phpgw']->common->grab_owner_name($chrono['creator_id']),
+							$chrono['status'],
+							$GLOBALS['phpgw']->common->show_date($chrono['date']),
+							$url
+						);
+						
+						fputcsv($fp, $row, ";", "\"");
+					}
+				}
+				fclose($fp);
 			}
 		}
-		$this->t->pfp('out', 'chrono_tpl');
+		else
+		{
+			$this->set_template_defaults();
+			$this->display_app_header();
+			$this->t->set_file(array('chrono_tpl'=>'chrono.tpl'));
+			$this->t->set_block('chrono_tpl', 'type_block', 'type_block_handle');
+			$this->t->set_block('type_block', 'chrono_block', 'chrono_block_handle');
+			
+			// DONE : use the project name instead of root id
+			$this->t->set_var('lang_chrono_title', lang('Chronos for project')." ".$this->ged_dm->get_project_name($project_root));
+
+			$link_data=null;
+			$link_data['menuaction']='ged.ged_ui.chrono';
+			$link_data['project_root']=$project_root;
+			$link_data['mode']="csv";
+			$this->t->set_var('export_csv_link', $GLOBALS['phpgw']->link('/index.php', $link_data));
+			
+			if ( isset($chronos))
+			{
+				foreach ( $chronos as $type_id => $type_chronos)
+				{
+					$this->t->set_var('chrono_block_handle', "");
+					
+					//DONE : Use the detailed label of type 
+					$this->t->set_var('doc_type', $type_id);
+					$row_class="row_off";
+					foreach ( $type_chronos as $chrono)
+					{
+						// DONE : set up the needed template variables
+						$this->t->set_var('name', $chrono['name']);
+						$this->t->set_var('date', $GLOBALS['phpgw']->common->show_date($chrono['date']));
+						$this->t->set_var('author', $GLOBALS['phpgw']->common->grab_owner_name($chrono['creator_id']));
+						$this->t->set_var('description', $chrono['description']);
+						$this->t->set_var('version_label', $chrono['version_label']);
+						$this->t->set_var('reference', $chrono['reference']);
+						$this->t->set_var('no', $chrono['no']);
+		
+						$this->t->set_var('status_image', $GLOBALS['phpgw']->common->image('ged', $chrono['status']."-16"));
+				
+						$link_data=null;
+						$link_data['menuaction']='ged.ged_ui.browse';
+						$link_data['focused_id']=$chrono['element_id'];
+						$link_data['version_id']=$chrono['version_id'];
+						$this->t->set_var('browse_link', $GLOBALS['phpgw']->link('/index.php', $link_data));
+		
+						
+						if ( $row_class=="row_on")
+							$row_class="row_off";
+						else
+							$row_class="row_on";
+							
+						$this->t->set_var('row_class', $row_class);
+						
+						$this->t->fp('chrono_block_handle', 'chrono_block', True);
+					}
+					$this->t->fp('type_block_handle', 'type_block', True);
+				}
+			}
+			$this->t->pfp('out', 'chrono_tpl');
+		}
 	}
 	
-}
+	function dico()
+	{
+		$project_root=$this->get_var('project_root',array('GET'));
+		$mode=$this->get_var('mode', array('GET', 'POST'));
+		
+		$all_versions=null;
+		$all_versions=$this->ged_dm->list_all_versions($project_root);
+		
+		if ( !is_null($mode) && $mode == "csv")
+		{
+			if ($this->browser->is_ie())
+			{
+				ini_set('zlib.output_compression', 'Off');
+				header('Pragma: private');
+				header('Cache-control: private, must-revalidate');
+				header("Content-Type: application/force-download");
+				header('Content-Disposition: attachment; filename="dico.csv"', false);
 
-?>
+				$fp = fopen('php://output', 'w');
+				
+				foreach ($all_versions as $version_type)
+				{
+					foreach($version_type as $version)
+					{
+						$link_data=array
+						(
+							'menuaction' => 'ged.ged_ui.browse',
+							'focused_id' => $version['element_id'],
+							'version_id' => $version['version_id']
+						);
+						$url=$GLOBALS['phpgw']->link('/index.php', $link_data, true);
+						
+						$row=array 
+						(
+							$version['reference'],
+							$version['name'],
+							$version['version_label'],
+							$GLOBALS['phpgw']->common->grab_owner_name($version['creator_id']),
+							$version['status'],
+							$GLOBALS['phpgw']->common->show_date($version['date']),
+							$url
+						);
+						
+						fputcsv($fp, $row, ";", "\"");
+					}
+				}
+				
+				fclose($fp);
+			}
+			else
+			{
+				header('Expires: '.gmdate('D, d M Y H:i:s') . ' GMT'); 
+				header('Last-Modified: '.gmdate('D, d M Y H:i:s') . ' GMT', false); 
+				header('Cache-Control: must-revalidate', false);
+				header("Content-type: text/csv", false);
+				header('Content-Disposition: attachment; filename="dico.csv"', false);
+
+				$fp = fopen('php://output', 'w');
+				
+				foreach ($all_versions as $version_type)
+				{
+					foreach($version_type as $version)
+					{
+						$link_data=array
+						(
+							'menuaction' => 'ged.ged_ui.browse',
+							'focused_id' => $version['element_id'],
+							'version_id' => $version['version_id']
+						);
+						$url=$GLOBALS['phpgw']->link('/index.php', $link_data, true);
+						
+						$row=array 
+						(
+							$version['reference'],
+							$version['name'],
+							$version['version_label'],
+							$GLOBALS['phpgw']->common->grab_owner_name($version['creator_id']),
+							$version['status'],
+							$GLOBALS['phpgw']->common->show_date($version['date']),
+							$url
+						);
+						
+						fputcsv($fp, $row, ";", "\"");
+					}
+				}
+				fclose($fp);
+			}
+		}
+		else
+		{
+			$this->set_template_defaults();
+			$this->display_app_header();
+			$this->t->set_file(array('chrono_tpl'=>'chrono.tpl'));
+			$this->t->set_block('chrono_tpl', 'type_block', 'type_block_handle');
+			$this->t->set_block('type_block', 'chrono_block', 'chrono_block_handle');
+			
+			// DONE : use the project name instead of root id
+			$this->t->set_var('lang_chrono_title', lang('Documents list for project')." ".$this->ged_dm->get_project_name($project_root));
+			
+			$link_data=null;
+			$link_data['menuaction']='ged.ged_ui.dico';
+			$link_data['project_root']=$project_root;
+			$link_data['mode']="csv";
+			$this->t->set_var('export_csv_link', $GLOBALS['phpgw']->link('/index.php', $link_data));
+			
+			if ( isset($all_versions))
+			{
+				foreach ( $all_versions as $type_id => $type_version)
+				{
+					$this->t->set_var('chrono_block_handle', "");
+					
+					//DONE : Use the detailed label of type 
+					$this->t->set_var('doc_type', $type_id);
+					$row_class="row_off";
+					foreach ( $type_version as $version)
+					{
+						// DONE : set up the needed template variables
+						$this->t->set_var('name', $version['name']);
+						$this->t->set_var('date', $GLOBALS['phpgw']->common->show_date($version['date']));
+						$this->t->set_var('author', $GLOBALS['phpgw']->common->grab_owner_name($version['creator_id']));
+						$this->t->set_var('description', $version['description']);
+						$this->t->set_var('version_label', $version['version_label']);
+						$this->t->set_var('reference', $version['reference']);
+						$this->t->set_var('no', $version['no']);
+		
+						$this->t->set_var('status_image', $GLOBALS['phpgw']->common->image('ged', $version['status']."-16"));
+				
+						$link_data=null;
+						$link_data['menuaction']='ged.ged_ui.browse';
+						$link_data['focused_id']=$version['element_id'];
+						$link_data['version_id']=$version['version_id'];
+						$this->t->set_var('browse_link', $GLOBALS['phpgw']->link('/index.php', $link_data));
+		
+						
+						if ( $row_class=="row_on")
+							$row_class="row_off";
+						else
+							$row_class="row_on";
+							
+						$this->t->set_var('row_class', $row_class);
+						
+						$this->t->fp('chrono_block_handle', 'chrono_block', True);
+					}
+					$this->t->fp('type_block_handle', 'type_block', True);
+				}
+			}
+			$this->t->pfp('out', 'chrono_tpl');
+		}
+	}
+}

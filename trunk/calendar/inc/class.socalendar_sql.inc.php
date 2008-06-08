@@ -82,19 +82,18 @@ class calendar_socalendar_ extends calendar_socalendar__
     
 	function delete_calendar($calendar='')
 	{
-		$this->stream->query('SELECT cal_id FROM phpgw_cal WHERE owner='.intval($calendar),__LINE__,__FILE__);
-		if($this->stream->num_rows())
+		$calendar = (int) $calendar;
+		//TODO transaction needed here 
+		$this->stream->query("SELECT cal_id FROM phpgw_cal WHERE owner = {$calendar}",__LINE__,__FILE__);
+		while($this->stream->next_record())
 		{
-			while($this->stream->next_record())
-			{
-				$this->delete_event(intval($this->stream->f('cal_id')));
-			}
-			$this->expunge();
+			$this->delete_event( (int) $this->stream->f('cal_id'));
 		}
+		$this->expunge();
 		$this->stream->lock(array('phpgw_cal_user'));
-		$this->stream->query('DELETE FROM phpgw_cal_user WHERE cal_login='.intval($calendar),__LINE__,__FILE__);
+		$this->stream->query("DELETE FROM phpgw_cal_user WHERE cal_login = {$calendar}",__LINE__,__FILE__);
 		$this->stream->unlock();
-			
+		// end transaction
 		return $calendar;
 	}
 
@@ -225,12 +224,12 @@ class calendar_socalendar_ extends calendar_socalendar__
 			// Use http://www.php.net/manual/en/function.mcal-fetch-event.php as the reference
 			$this->add_attribute('owner',intval($this->stream->f('owner')));
 			$this->add_attribute('id',intval($this->stream->f('cal_id')));
-			$this->add_attribute('uid', "phpgw://{$_SERVER['SERVER_NAME']}/calendar/" . intval($this->stream->f('cal_id')));
-			$this->set_class(intval($this->stream->f('is_public')));
+			$this->add_attribute('uid', "phpgw://{$_SERVER['SERVER_NAME']}/calendar/" . (int) $this->stream->f('cal_id'));
+			$this->set_class( !!$this->stream->f('is_public'));
 			$this->set_category($this->stream->f('category'));
-			$this->set_title(stripslashes($GLOBALS['phpgw']->strip_html($this->stream->f('title'))));
-			$this->set_description(stripslashes($GLOBALS['phpgw']->strip_html($this->stream->f('description'))));
-			$this->add_attribute('location',stripslashes($GLOBALS['phpgw']->strip_html($this->stream->f('location'))));
+			$this->set_title($GLOBALS['phpgw']->strip_html($this->stream->f('title', true)));
+			$this->set_description($GLOBALS['phpgw']->strip_html($this->stream->f('description', true)));
+			$this->add_attribute('location',$GLOBALS['phpgw']->strip_html($this->stream->f('location', true)));
 			$this->add_attribute('reference',intval($this->stream->f('reference')));
 			
 			// This is the preferred method once everything is normalized...
@@ -244,7 +243,7 @@ class calendar_socalendar_ extends calendar_socalendar__
 			$datetime = phpgwapi_datetime::localdates($this->stream->f('mdatetime'));
 			$this->set_date('modtime',$datetime['year'],$datetime['month'],$datetime['day'],$datetime['hour'],$datetime['minute'],$datetime['second']);
 
-			$datetime = phpgw_datetime::localdates($this->stream->f('edatetime'));
+			$datetime = phpgwapi_datetime::localdates($this->stream->f('edatetime'));
 			$this->set_end($datetime['year'],$datetime['month'],$datetime['day'],$datetime['hour'],$datetime['minute'],$datetime['second']);
 
 		//Legacy Support
@@ -630,7 +629,8 @@ class calendar_socalendar_ extends calendar_socalendar__
 // OLD-ALARM			'phpgw_cal_alarm'
 		);
 		$this->stream->lock($locks);
-		if($event['id'] == 0)
+		if ( !isset($event['id'])
+			|| !$event['id'] )
 		{
 			$this->stream->query('INSERT INTO phpgw_cal(title, owner, priority, is_public, category) '
 				. "VALUES('".$this->stream->db_addslashes($event['title'])
@@ -666,7 +666,7 @@ class calendar_socalendar_ extends calendar_socalendar__
 				. "title='".$this->stream->db_addslashes($event['title'])."', "
 				. "description='".$this->stream->db_addslashes($event['description'])."', "
 				. "location='".$this->stream->db_addslashes($event['location'])."', "
-				. ($event['groups']?"groups='".(count($event['groups'])>1?implode(',',$event['groups']):','.$event['groups'][0].',')."', ":'')
+				. (isset($event['groups']) ? "groups='".(count($event['groups']) > 1 ? implode(',',$event['groups']) : ','.$event['groups'][0].',')."', ":'')
 				. 'reference='.$event['reference'].' '
 				. 'WHERE cal_id='.$event['id'];
 		
@@ -758,7 +758,8 @@ class calendar_socalendar_ extends calendar_socalendar__
 
 		$this->stream->unlock();
 
-		if (is_array($event['alarm']))
+		if ( isset($event['alarm'])
+			&& is_array($event['alarm']) )
 		{
 			foreach ($event['alarm'] as $alarm)	// this are all new alarms
 			{
@@ -885,18 +886,5 @@ class calendar_socalendar_ extends calendar_socalendar__
 		}
 		return $this->get_event_ids($repeats,$user_where.$wheremod.$extra.$order_by);
 	}
-
-/* OLD-ALARM
-	function add_alarm($eventid,$alarm,$owner)
-	{
-		$this->stream->query('INSERT INTO phpgw_cal_alarm(cal_id,cal_owner,cal_time,cal_text,alarm_enabled) VALUES('.$eventid.','.$owner.','.$alarm['time'].",'".$alarm['text']."',1)",__LINE__,__FILE__);
-		$this->stream->query('SELECT LAST_INSERT_ID()');
-		$this->stream->next_record();
-		return($this->stream->f(0));
-	}
-	function delete_alarm($alarmid)
-	{
-		$this->stream->query('DELETE FROM phpgw_cal_alarm WHERE alarm_id='.$alarmid,__LINE__,__FILE__);
-	}
-*/
 }
+

@@ -8,8 +8,10 @@
 	* @copyright Copyright (C) 2003-2005 Free Software Foundation, Inc. http://www.fsf.org/
 	* @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License
 	* @package email
-	* @version $Id: class.mail_dcom_imap.inc.php 15944 2005-05-11 18:52:07Z powerstat $
+	* @version $Id$
 	*/
+
+	phpgw::import_class('email.mail_dcom_base');
 
 
 	/**
@@ -17,7 +19,7 @@
 	*
 	* @package email
 	*/	
-	class mail_dcom extends mail_dcom_base
+	class email_mail_dcom extends mail_dcom_base
 	{
 		function append($stream, $folder, $message, $flags=0)
 		{
@@ -381,33 +383,4 @@
 			// failed to find $flag
 			return false;
 		}
-
-		/*
-		function get_flag($stream,$msg_num,$flag)
-		{
-			// Call my new rfc_get_flag() function.
-			// It should replace get_flag() as soon as it's 
-			// accepted into cvs phpGW
-			return $this->rfc_get_flag ($stream, $msg_num, $flag);
-
-			$header = imap_fetchheader($stream,$msg_num);
-			$header = explode("\n",$header);
-			$flag = strtolower($flag);
-			for ($i=0;$i<count($header);$i++)
-			{
-				$pos = strpos($header[$i],':');
-				if (is_int($pos) && $pos)
-				{
-					$keyword = trim(substr($header[$i],0,$pos));
-					$content = trim(substr($header[$i],$pos+1));
-					if (strtolower($keyword) == $flag)
-					{
-						return $content;
-					}
-				}
-			}
-			return false;
-		}
-		*/
 	}
-?>

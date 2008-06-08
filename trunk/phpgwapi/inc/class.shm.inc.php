@@ -67,7 +67,8 @@
 	*/
 
 	//This makes sure there is something set for temp
-	if ( !isset($GLOBALS['phpgw_info']['server']['temp_dir']) )
+	if ( !isset($GLOBALS['phpgw_info']['server']['temp_dir'])  
+			|| !is_dir($GLOBALS['phpgw_info']['server']['temp_dir']) )
 	{
 		if ( substr(PHP_OS, 3) == 'WIN' )
 		{
@@ -460,3 +461,4 @@
 			return function_exists('sem_get');
 		}
 	}
+

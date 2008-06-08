@@ -6,11 +6,11 @@
 <td colspan="4"><h2>{doc_type}</h2></td>
 </tr>
 <tr class="row_off">
-<td>No</td><td>reference</td><td>version</td><td>name</td><td>author</td><td>date</td><td>description</td>
+<td>No</td><td>reference</td><td>version</td><td>name</td><td>author</td><td>date</td>
 </tr>
 <!-- BEGIN chrono_block -->
 <tr class="{row_class}">
-<td>{no}<td><a href="{browse_link}">{reference}</a></td><td><a href="{browse_link}">{version_label} <img src="{status_image}" /></a></td><td><a href="{browse_link}">{name}</a></td><td>{author}</td><td>{date}</td><td>{description}</td>
+<td>{no}<td><a href="{browse_link}" title="{description}">{reference}</a></td><td><a href="{browse_link}">{version_label} <img src="{status_image}" /></a></td><td><a href="{browse_link}">{name}</a></td><td>{author}</td><td>{date}</td>
 </tr>
 <!-- END chrono_block -->
 <tr>
@@ -18,3 +18,4 @@
 </tr>
 <!-- END type_block -->
 </table>
+<a href="{export_csv_link}" >{lang_export_csv}</a>

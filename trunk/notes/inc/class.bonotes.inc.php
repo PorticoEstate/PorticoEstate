@@ -86,14 +86,15 @@
 				$this->read_sessiondata();
 				$this->use_session = True;
 
-				$start		= get_var('start',array('POST','GET'));
-				$query		= get_var('query',array('POST','GET'));
-				$sort		= get_var('sort',array('POST','GET'));
-				$order		= get_var('order',array('POST','GET'));
-				$filter		= get_var('filter',array('POST','GET'));
-				$_cat_id	= get_var('cat_id',array('POST','GET'));
+				//XXX Caeies : start could use the 'all' value, perhaps think on using -1 ?
+				$start		= phpgw::get_var('start');
+				$query		= phpgw::get_var('query', 'string');
+				$sort		= phpgw::get_var('sort', 'string');
+				$order		= phpgw::get_var('order', 'string');
+				$filter		= phpgw::get_var('filter', 'string');
+				$_cat_id	= phpgw::get_var('cat_id', 'int');
 
-				$this->start = (isset($start)?$start:0);
+				$this->start = $start;
 
 				if($this->start == 'all')
 				{
@@ -240,6 +241,12 @@
 				'lastmod'	=> $lastmod
 			));
 			$this->total_records = $this->sonotes->total_records;
+
+			foreach ( $notes as &$note )
+			{
+				$note['owner'] = $GLOBALS['phpgw']->accounts->id2name($note['owner']);
+			}
+
 			return $notes;
 		}
 

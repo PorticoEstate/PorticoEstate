@@ -17,8 +17,6 @@
 	*/
 	function parse_navbar($force = False)
 	{
-		$GLOBALS['phpgw_info']['theme']['navbar_bg']   = '#80CCFF';
-		$GLOBALS['phpgw_info']['theme']['navbar_text'] = '#FFFFFF';
 
 		$tpl = createobject('phpgwapi.Template',PHPGW_TEMPLATE_DIR);
 
@@ -27,12 +25,9 @@
 		$tpl->set_block('navbartpl','navbar');
 
 		$var['img_root'] = $GLOBALS['phpgw_info']['server']['webserver_url'] . '/phpgwapi/templates/verdilak/images';
-		$var['table_bg_color'] = $GLOBALS['phpgw_info']['theme']['navbar_bg'];
-		$var['navbar_text'] = $GLOBALS['phpgw_info']['theme']['navbar_text'];
 		$applications = '';
 		$exclude = array('home', 'preferences', 'about', 'logout');
 		$navbar = execMethod('phpgwapi.menu.get', 'navbar');
-
 		prepare_navbar($navbar);
 		foreach ( $navbar as $app => $app_data )
 		{
@@ -49,29 +44,23 @@
 
 HTML;
 		}
+
 		$var['applications'] = $applications;
+		$var['logo'] = 'logo.png';
 
-		if (isset($GLOBALS['phpgw_info']['theme']['special_logo']))
-		{
-			$var['logo'] = $GLOBALS['phpgw_info']['theme']['special_logo'];
-		}
-		else
-		{
-			$var['logo'] = 'logo.png';
-		}
-
-		$var['home_url'] 		= $GLOBALS['phpgw']->link('/home.php');
-		$var['home_text']		= lang('home');
-		$var['about_url']		= $GLOBALS['phpgw']->link('/about.php', array('appname' => $GLOBALS['phpgw_info']['flags']['currentapp']) );
-		$var['about_text']		= lang('about');
-		$var['logout_url']		= $GLOBALS['phpgw']->link('/logout.php');
-		$var['logout_text']		= lang('logout');
+		$var['home_url']                = $GLOBALS['phpgw']->link('/home.php');
+		$var['home_text']               = lang('home');
+		$var['about_url']               = $GLOBALS['phpgw']->link('/about.php', array('appname' => $GLOBALS['phpgw_info']['flags']['currentapp']) );
+		$var['about_text']              = lang('about');
+		$var['logout_url']              = $GLOBALS['phpgw']->link('/logout.php');
+		$var['logout_text']             = lang('logout');
 
 		if ( isset($navbar['preferences']) )
 		{
 			$var['preferences_url'] = $navbar['preferences']['url'];
 			$var['preferences_text'] = $navbar['preferences']['text'];
 		}
+
 
 		if ($GLOBALS['phpgw_info']['flags']['currentapp'] == 'home')
 		{
@@ -119,15 +108,6 @@ HTML;
 		{
 			$api_messages = lang('it has been more then %1 days since you changed your password',30);
 		}
- 
-		// get sidebox content and parse it as a menu
-		// it's just a hack. You need to enable the folders module to get an ouput
-		if (isset($GLOBALS['phpgw_info']['user']['apps']['folders']['enabled']) && $GLOBALS['phpgw_info']['user']['apps']['folders']['enabled'] == true )
-		{
-			$GLOBALS['phpgw']->hooks->single('sidebox_menu',$GLOBALS['phpgw_info']['flags']['currentapp']);
-			$var['sideboxcontent'] = parseMenu();
-		}
-
 
 		// This is gonna change
 		if (isset($cd))
@@ -137,7 +117,6 @@ HTML;
 		if (isset($GLOBALS['phpgw_info']['flags']['app_header']))
 		{
 			$var['current_app_header'] = $GLOBALS['phpgw_info']['flags']['app_header'];
-			$var['th_bg'] = $GLOBALS['phpgw_info']['theme']['th_bg'];
 		}
 		else
 		{
@@ -155,11 +134,14 @@ HTML;
 			$tpl->set_var('preferences_icon','');
 		}
 		$tpl->pfp('out','navbar');
+
 		// If the application has a header include, we now include it
-		if (!@$GLOBALS['phpgw_info']['flags']['noappheader'] && @isset($GLOBALS['HTTP_GET_VARS']['menuaction']))
+		$menuaction = phpgw::get_var('menuaction', 'string', 'GET');
+		if ( !isset($GLOBALS['phpgw_info']['flags']['noappheader'])
+			&& $menuaction )
 		{
-			list($app,$class,$method) = explode('.',$GLOBALS['HTTP_GET_VARS']['menuaction']);
-			if (is_array($GLOBALS[$class]->public_functions) && isset($GLOBALS[$class]->public_functions['header']))
+			list($app,$class,$method) = explode('.', $menuaction);
+			if ( is_array($GLOBALS[$class]->public_functions ) && isset($GLOBALS[$class]->public_functions['header']))
 			{
 				$GLOBALS[$class]->header();
 			}
@@ -183,7 +165,6 @@ HTML;
 		);
 		$var = Array(
 			'img_root'		=> $GLOBALS['phpgw_info']['server']['webserver_url'] . '/phpgwapi/templates/verdilak/images',
-			'table_bg_color'	=> (isset($GLOBALS['phpgw_info']['theme']['navbar_bg'])?$GLOBALS['phpgw_info']['theme']['navbar_bg']:''),
 			'version'		=> $GLOBALS['phpgw_info']['server']['versions']['phpgwapi']
 		);
 		if (isset($GLOBALS['phpgw_info']['navbar']['admin']) && isset($GLOBALS['phpgw_info']['user']['preferences']['common']['show_currentusers']))

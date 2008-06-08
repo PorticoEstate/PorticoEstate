@@ -58,9 +58,18 @@
 			return $this->account_id;
 		}
 
+		/**
+		 * Returns ID of a channel that a previously sent command corresponded
+		 * to.
+		 *
+		 * @param int Command ID of previously sent command.
+		 * @return mixed NULL if command ID wasn't recognized, integer command
+		 *               ID on success.
+		 */
 		function get_channel_id_from_cmd($cmdid)
 		{
-			if(!isset($this->session_data['sent_commands'][$cmdid]))
+			if(!is_array($this->session_data) &&
+				!isset($this->session_data['sent_commands'][$cmdid]))
 			{
 				return NULL;
 			}
@@ -244,6 +253,9 @@
 		 */
 		 function commit()
 		 {
+			syncml_logger::get_instance()->log_data(
+				"saved session data", $this->session_data);
+
 			$GLOBALS['phpgw']->session->appsession(
 				'session_data', 'syncml', $this->session_data);
 

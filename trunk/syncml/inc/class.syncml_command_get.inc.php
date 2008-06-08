@@ -84,9 +84,7 @@
 					$response->add_status(
 						$this->cmdid, $session->msgid, 'Get',
 						NULL, NULL,
-						SYNCML_STATUS_OK, array(
-							'trg_uri' => $item['target']['locuri']
-						)
+						SYNCML_STATUS_OK
 					);
 
 					$response->add_result(

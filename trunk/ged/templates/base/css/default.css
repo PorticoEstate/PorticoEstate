@@ -69,6 +69,10 @@ font-size: 11pt;
 float: left;
 }
 
+#ged_tree a {
+  font-size: 9pt;
+}
+
 #ged_info {
 float: right;
 width: 400px;

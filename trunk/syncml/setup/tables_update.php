@@ -12,7 +12,7 @@
 
 	$test[] = '0.9.17.001';
 
-	function syncml_upgrade0.9.17.001()
+	function syncml_upgrade0_9_17_001()
 	{
 		$GLOBALS['phpgw_setup']->oProc->RenameTable(
 			'phpgw_syncml_channel', 'phpgw_syncml_channels'
@@ -41,7 +41,7 @@
 
 	$test[] = '0.9.17.002';
 
-	function syncml_upgrade0.9.17.002()
+	function syncml_upgrade0_9_17_002()
 	{
 		$GLOBALS['phpgw_setup']->oProc->AddColumn(
 			'phpgw_syncml_sessions', 'next_nonce', array(
@@ -51,4 +51,3 @@
 		$GLOBALS['setup_info']['syncml']['currentver'] = '0.9.17.003';
 		return $GLOBALS['setup_info']['syncml']['currentver'];
 	}
-?>

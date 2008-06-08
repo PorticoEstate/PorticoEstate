@@ -45,18 +45,18 @@
 #	</VirtualHost>
 #
 
-<IfModule mod_php4.c>
+<IfModule mod_php5.c>
 	# This bit is not needed here if you have changed your php.ini
 	# as recommened in php-configuration.txt
-	php_flag display_errors off
-	php_flag file_uploads on
-	php_flag log_errors on
-	php_flag register_globals off
-	php_value max_execution_time 90
-	php_value memory_limit 20M
-	php_value open_basedir "<$path/to/phpgroupware>:<$/path/to/phpgw_vfs>:<$temp>"
-	php_value session.save_path <$temp>
-	php_value upload_max_filesize 5M
+	php_admin_flag display_errors off
+	php_admin_flag file_uploads on
+	php_admin_flag log_errors on
+	php_admin_flag register_globals off
+	php_admin_value max_execution_time 90
+	php_admin_value memory_limit 20M
+	php_admin_value open_basedir "<$path/to/phpgroupware>:<$/path/to/phpgw_vfs>:<$temp>"
+	php_admin_value session.save_path <$temp>
+	php_admin_value upload_max_filesize 5M
 </IfModule>
 
 <Files ~ "\.inc*">
@@ -79,11 +79,12 @@
 				distributed under the terms of the <a href="http://www.gnu.org/copyleft/fdl.html" 
 				target="_blank">GNU Free Documentation License</a><br />
 				<b>Source:</b> $Source$<br />
-				<b>Version:</b> $Revision: 15578 $<br />
-				<b>Last Modified:</b> $Date: 2004-12-30 22:15:08 +1100 (Thu, 30 Dec 2004) $ by $Name$
+				<b>Version:</b> $Revision$<br />
+				<b>Last Modified:</b> $Date$ by $Name$
 			</div>
 		</div>
 	</body>
 </html>
+
 
 

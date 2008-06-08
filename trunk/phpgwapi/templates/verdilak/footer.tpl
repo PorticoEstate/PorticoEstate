@@ -8,11 +8,11 @@
   </tr>
 </table>
 
-<table border="0" cellspacing="0" cellpadding="0" width="100%" class="{table_bg_color}">
- <tr>
-  <td background="{img_root}/bg_filler.png"><font color=white>{user_info}</font>&nbsp;</td>
-  <td background="{img_root}/bg_filler.png" align="center">{current_users}</td>
-  <td background="{img_root}/bg_filler.png" align="right"><font color=white>{powered_by}</font></td>
- </tr>
-</table>
+<div id="phpgw_footer">
+	<ul>
+		<li>{user_info}</li>
+		<li>{current_users}</li>
+		<li>{powered_by}</li>
+	</ul>
+</div>
 <!-- END footer -->

@@ -130,10 +130,16 @@
 		 */
 		function update_mapping($ch_id, $luid, $guid, $flag)
 		{
+				syncml_logger::get_instance()->log("update_mapping($ch_id, $luid, $guid, $flag)");
+				syncml_logger::get_instance()->log(" update_mapping :". '
+				UPDATE phpgw_syncml_mappings SET dirty = \'' . intval($flag) . '\' WHERE ' .
+					(!is_null($ch_id) ?
+						'channel_id = \'' . $ch_id . '\' AND ' : '') .
+					(!is_null($luid) ? 'luid = \'' . $luid . '\' AND ' : '') .
+					(!is_null($guid) ? 'guid = \'' . $guid . '\' AND ' : '') .
+					'1 = 1');
 			$GLOBALS['phpgw']->db->query('
-				UPDATE phpgw_syncml_mappings m
-				SET m.dirty = \'' . intval($flag) . '\'
-				WHERE ' .
+				UPDATE phpgw_syncml_mappings SET dirty = \'' . intval($flag) . '\' WHERE ' .
 					(!is_null($ch_id) ?
 						'channel_id = \'' . $ch_id . '\' AND ' : '') .
 					(!is_null($luid) ? 'luid = \'' . $luid . '\' AND ' : '') .

@@ -1,11 +1,12 @@
 <?php
 	/**
 	* Notes
-	* @author Mark Peters <skeeter@phpgroupware.org>
-	* @copyright Copyright (C) 2000-2002,2005 Free Software Foundation, Inc. http://www.fsf.org/
+	* @author Joseph Engo <jengo@phpgroupware.org>
+	* @copyright Copyright (C) 2000-2005 Free Software Foundation, Inc. http://www.fsf.org/
 	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
 	* @package notes
-	* @version $Id$
+	* @version $Id: hook_admin.inc.php 18394 2008-02-02 10:34:41Z skwashd $
+	* @internal $Source$
 	*/
 
 	/*
@@ -23,18 +24,11 @@
 		along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	*/
 
-	// Delete all records for a user
-	$db =& $GLOBALS['phpgw']->db;
-	$db->lock(array('phpgw_notes'));
-
-	if ( (int) $_POST['new_owner'] == 0 )
 	{
-		$db->query('DELETE FROM phpgw_notes WHERE note_owner='. (int) $_POST['account_id'], __LINE__, __FILE__);
+		$file = array
+		(
+			'Global Categories' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.uicategories.index', 'appname' => 'notes', 'global_cats' => 'true') )
+		);
+		$GLOBALS['phpgw']->common->display_mainscreen($appname,$file);
 	}
-	else
-	{
-		$db->query('UPDATE phpgw_notes SET note_owner=' . (int) $_POST['new_owner']
-			. ' WHERE note_owner=' . (int) $_POST['account_id'], __LINE__, __FILE__);
-	}
-	$db->unlock();
 ?>

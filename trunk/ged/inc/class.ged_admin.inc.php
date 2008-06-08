@@ -11,6 +11,8 @@
 	*  option) any later version
 	***************************************************************************/
 
+include_once ( 'ged_common_functions.inc.php');
+
 class ged_admin
 {
 	
@@ -43,6 +45,13 @@ class ged_admin
 		}
 		$GLOBALS['phpgw']->css->validate_file('default','ged');
 	}
+
+	// wrapper to use new phpgw::get_var if it exists
+	// and old get_var otherwise
+	function get_var($varname,$method=null,$default=null)
+	{
+		return ged_get_var($varname,$method, $default);
+	}
 	
 	function display_app_header()
 	{
@@ -52,8 +61,8 @@ class ged_admin
 
 	function types()
 	{
-		$action=get_var('action',array('POST'));
-		$doc_types=get_var('doc_types',array('POST'));
+		$action=$this->get_var('action',array('POST'));
+		$doc_types=$this->get_var('doc_types',array('POST'));
 		
 		if (  $action==lang("add"))
 		{
@@ -213,17 +222,17 @@ class ged_admin
 		
 		if ( ! empty($my_unplaced_types))
 		{
-		foreach ( $my_unplaced_types as $my_unplaced_type )
-		{
-			$chrono_flag=$style="";
-			if ( $my_unplaced_type['type_chrono']==1)
+			foreach ( $my_unplaced_types as $my_unplaced_type )
 			{
-				$chrono_flag=" [C]";
-				$style="style=\"font-weight: bold;\"";
+				$chrono_flag=$style="";
+				if ( $my_unplaced_type['type_chrono']==1)
+				{
+					$chrono_flag=" [C]";
+					$style="style=\"font-weight: bold;\"";
+				}
+	
+				$select_unplaced_types_html.="<option ".$style." value=\"".$my_unplaced_type['type_id']."\" >".$my_unplaced_type['type_desc'].$chrono_flag."</option>\n";
 			}
-
-			$select_unplaced_types_html.="<option ".$style." value=\"".$my_unplaced_type['type_id']."\" >".$my_unplaced_type['type_desc'].$chrono_flag."</option>\n";
-		}
 		}
 		
 		$select_unplaced_types_html.="</select>\n";
@@ -234,9 +243,9 @@ class ged_admin
 	function places()
 	{
 		//$project_root_id=1;
-		$project_root_id=get_var('project_root',array('GET'));
-		$action=get_var('action',array('POST'));
-		$places=get_var('places',array('POST'));
+		$project_root_id=$this->get_var('project_root',array('GET'));
+		$action=$this->get_var('action',array('POST'));
+		$places=$this->get_var('places',array('POST'));
 		
 		if (  $action==lang("add"))
 		{

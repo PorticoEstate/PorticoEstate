@@ -376,7 +376,7 @@
 		$GLOBALS['phpgw_setup']->oProc->query ("INSERT INTO `phpgw_flows_transitions_custom_values` VALUES (8, 17, 'update_mode', 'new')" );
 		$GLOBALS['phpgw_setup']->oProc->query ("INSERT INTO `phpgw_flows_transitions_custom_values` VALUES (9, 18, 'update_mode', 'new')" );
 		$GLOBALS['phpgw_setup']->oProc->query ("INSERT INTO `phpgw_flows_transitions_custom_values` VALUES (10, 21, 'update_mode', 'update')" );	
-		
+			
 		// ged default flow : triggers
 		
 		$GLOBALS['phpgw_setup']->oProc->query ("INSERT INTO `phpgw_flows_triggers` VALUES (1,5,'ged','flow_client','apply_transition_to_previous_versions_matching_status','a:1:{s:10:\"transition\";i:11;}')" );
@@ -387,7 +387,7 @@
 		$GLOBALS['phpgw_setup']->oProc->query ("INSERT INTO `phpgw_flows_triggers` VALUES (6,20, 'ged', 'flows', 'remove_role', 'a:1:{s:10:\"transition\";i:20;}')" );
 		$GLOBALS['phpgw_setup']->oProc->query ("INSERT INTO `phpgw_flows_triggers` VALUES (7,19, 'ged', 'flows', 'grant_role', 'a:1:{s:10:\"transition\";i:21;}')" );
 		$GLOBALS['phpgw_setup']->oProc->query ("INSERT INTO `phpgw_flows_triggers` VALUES (8,20, 'ged', 'flows', 'remove_role', 'a:1:{s:10:\"transition\";i:21;}')" );
-		
+
 		// ged default flow : conditions
 
 		$GLOBALS['phpgw_setup']->oProc->query ("INSERT INTO `phpgw_flows_conditions` (`condition_id`, `transition`, `app`, `class`, `method`, `context`) VALUES (1, 17, 'ged', 'flow_client', 'is_last_version', '')");

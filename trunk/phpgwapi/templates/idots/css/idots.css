@@ -3,7 +3,7 @@
    Originally written by Pim Snel
    Currently Maintained by Dave Hall
 
-   $Id: idots.css 18358 2007-11-27 04:43:37Z skwashd $
+   $Id: idots.css 18558 2008-06-01 01:08:37Z skwashd $
 */
 
 #articlecontent 
@@ -11,7 +11,7 @@
 	background-color: #efefef;
 	color: #069;
 	font-size: 12px;
-	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-family: "Liberation Sans", Verdana, sans-serif;
 	min-height: 600px;
 	padding: 10px; 
 }
@@ -22,7 +22,7 @@ h1.articletitle
 	background-repeat: repeat-x; 
 	color: #000;
 	height: 21px;
-	font-family: Verdana, Arial, Helvetica, sans-serif; 
+	font-family: "Liberation Sans", Verdana, sans-serif; 
 	font-weight: bold; 
 	font-size: 12px; 
 	margin: 0px;
@@ -74,7 +74,7 @@ h1.articletitle
 {
 	background-color: #fff;
 	color: #069; 
-	font-family: Arial, Helvetica, sans-serif;
+	font-family: sans-serif;
 	font-size: 12px;
 	height: 20px;
 	margin: 5px;
@@ -172,7 +172,7 @@ h1.articletitle
 	background-image: url(../images/boxbg.png);
 	background-repeat: repeat-x;
 	color: #000;
-	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-family: "Liberation Sans", Verdana, sans-serif;
 	font-weight: bold;
 	font-size: 12px;						
 }
@@ -194,7 +194,7 @@ h1.articletitle
 ul.sideboxcontent
 {
 	background-color: #efefef;
-	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-family: "Liberation Sans", Verdana, sans-serif;
 	font-size: 12px;
 	margin: 0px;
 	padding: 5px;
@@ -212,7 +212,7 @@ ul.sideboxcontent li
 	background-image: url(../images/boxbg.png);
 	background-position: center 50%;
 	color: #000;
-	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-family: "Liberation Sans", Verdana, sans-serif;
 	font-size: 12px; 
 	font-weight: bold;
 	height: 24px;
@@ -276,7 +276,7 @@ a:active, a:hover
 
 body, div, form, input, li, p, select, td, textarea  
 {
-	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-family: "Liberation Sans", Verdana, sans-serif;
 	font-size: 12px;
 }
 
