@@ -43,18 +43,18 @@
 			$location = phpgw::get_var('location');
 			$data = phpgw::get_var('data', 'raw');
 
-			if( $location == null )
+			if( $location == '' )
 			{
-				header("HTTP/1.0 406 Not Acceptable");
-				return "Missing location parameter";
+				header('HTTP/1.0 406 Not Acceptable');
+				return 'Missing location parameter';
 			}
 
 			$json = json_decode($data, true);
 
 			if( $json == null )
 			{
-				header("HTTP/1.0 406 Not Acceptable");
-				return "Invalid JSON data parameter";
+				header('HTTP/1.0 406 Not Acceptable');
+				return 'Invalid JSON data parameter';
 			}
 
 			$GLOBALS['phpgw']->session->appsession("template_portico_$location", 'phpgwapi', $json);
@@ -74,18 +74,18 @@
 		{
 			$location = phpgw::get_var('location');
 
-			if( $location == null )
+			if( $location == '' )
 			{
-				header("HTTP/1.0 406 Not Acceptable");
-				return "Missing location parameter";
+				header('HTTP/1.0 406 Not Acceptable');
+				return 'Missing location parameter';
 			}
 
 			$data = self::retrieve_local($location);
 
 			if ( $data == null )
 			{
-				header("HTTP/1.0 404 Not Found");
-				return "No data found on that location";
+				header('HTTP/1.0 404 Not Found');
+				return 'No data found on that location';
 			}
 
 			return $data;
@@ -104,7 +104,7 @@
 		 */
 		public static function retrieve_local($location)
 		{
-			return $GLOBALS['phpgw']->session->appsession("template_portico_{$location}", 'phpgwapi');
+			return (array) $GLOBALS['phpgw']->session->appsession("template_portico_{$location}", 'phpgwapi');
 		}
 
 		/******************************************************************************
