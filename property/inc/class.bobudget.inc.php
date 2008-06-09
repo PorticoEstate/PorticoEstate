@@ -60,6 +60,9 @@
 		//	$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->so 		= CreateObject('property.sobudget');
 			$this->bocommon 	= CreateObject('property.bocommon');
+			$this->cats					= CreateObject('phpgwapi.categories');
+			$this->cats->app_name		= 'property.project';
+			$this->cats->supress_info	= true;
 
 			if ($session)
 			{

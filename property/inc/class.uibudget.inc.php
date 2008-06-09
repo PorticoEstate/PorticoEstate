@@ -64,8 +64,10 @@
 			$this->nextmatchs	= CreateObject('phpgwapi.nextmatchs');
 			$this->account		= $GLOBALS['phpgw_info']['user']['account_id'];
 
-			$this->bo		= CreateObject('property.bobudget',true);
-			$this->bocommon		= CreateObject('property.bocommon');
+			$this->bo			= CreateObject('property.bobudget',true);
+			$this->bocommon		= & $this->bo->bocommon;
+			$this->cats			= & $this->bo->cats;
+
 
 			$this->start		= $this->bo->start;
 			$this->query		= $this->bo->query;
@@ -664,10 +666,8 @@
 				'lang_no_year'						=> lang('no year'),
 				'lang_year_statustext'				=> lang('Select the year the selection belongs to'),
 
-				'cat_list'			=> $this->bocommon->select_category_list(array('format'=>'filter','selected' => $this->cat_id,'type' =>'project','order'=>'descr')),
 				'lang_no_cat'						=> lang('no category'),
-				'lang_cat_statustext'				=> lang('Select the category the project belongs to. To do not use a category select NO CATEGORY'),
-				'select_name'						=> 'cat_id'
+				'cat_filter'						=> $this->cats->formatted_xslt_list(array('select_name' => 'cat_id','selected' => $this->cat_id,'globals' => True,'link_data' => $link_data)),
 			);
 
 			$this->save_sessiondata();
