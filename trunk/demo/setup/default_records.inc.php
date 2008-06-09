@@ -21,6 +21,7 @@
 
 	$GLOBALS['phpgw_setup']->oProc->query("DELETE FROM phpgw_locations where app_id = {$app_id}");
 
+	$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_locations (app_id, name, descr, allow_grant) VALUES ({$app_id}, 'run', 'Run - Demo', 0)");
 	$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_locations (app_id, name, descr) VALUES ({$app_id}, '.', 'Top')");
 	$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_locations (app_id, name, descr, allow_grant,allow_c_attrib,c_attrib_table) VALUES ({$app_id}, '.demo_location', 'Demo location',1,1,'phpgw_demo_table')");
 /*	$GLOBALS['phpgw_setup']->oProc->query("SELECT max(account_id) as account_id from phpgw_accounts WHERE account_type = 'u'");
