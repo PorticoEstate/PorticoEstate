@@ -224,7 +224,7 @@ HTML;
 		$levels = array
 		(
 			'8CHAR'	=> lang('at least 8 characters long'),
-			'2HIGH'	=> lang('..and at least 2 upper case characters'),
+			'2UPPER'	=> lang('..and at least 2 upper case characters'),
 			'2LOW'	=> lang('..and at least 2 lower case characters'),
 			'1NUM'	=> lang('..and contain at least 1 number'),
 			'NONALPHA'	=> lang('..and at least 1 non alphanumeric character')
@@ -232,7 +232,7 @@ HTML;
 
 		if ( !isset($config['password_level']) )
 		{
-			$config['password_level'] = '2HIGH';
+			$config['password_level'] = 'NONALPHA';
 		}
 		$enc_type = $config['password_level'];
 
