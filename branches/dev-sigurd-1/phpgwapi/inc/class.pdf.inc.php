@@ -40,74 +40,80 @@
 	*/
 	class pdf__
 	{
+ 
 		/**
 		* Output a pdf
 		*
 		* @param string $document the pdf document as a string
 		* @param string $document_name the name to save the document as
 		*/
-		function print_pdf($document = '',$document_name = 'document')
+		function print_pdf($document = '', $document_name = 'document')
 		{	
 			$browser = createObject('phpgwapi.browser');
 
 			if($browser->BROWSER_AGENT != 'IE')
 			{
-				$size=strlen($document);
-				$browser->content_header($document_name .'.pdf','application/pdf',$size);
+				$size = strlen($document);
+				$browser->content_header($document_name .'.pdf','application/pdf', $size);
 				echo $document;
 			}
 			else
 			{
- 				$dir = PHPGW_API_INC  . '/pdf/pdf_files';
-  
  				//save the file
- 				if (!file_exists($dir))
+				$dir = PHPGW_API_INC  . '/pdf/pdf_files';
+ 				if ( !is_dir($dir) )
  				{
- 					die('Directory for temporary pdf-files is missing - pleace notify the Administrator');
+ 					die(lang('Directory for temporary pdf-files is missing - pleace notify the Administrator'));
  				}
 
- 				$fname = tempnam("{$dir}/PDF_") . '.pdf';
- 
- 				if(!$fp = @fopen($fname,'wb'))
+ 				if ( !is_writeable($dir) )
  				{
-  					die('Directory for temporary pdf-files is not writeable to the webserver - pleace notify the Administrator');				
+  					die(lang('Directory for temporary pdf-files is not writeable by the webserver - pleace notify the Administrator'));
  				}
- 				
-				fwrite($fp,$document);
-				fclose($fp);
+
+ 				$fname = tempnam($dir, 'PDF_') . '.pdf';
+				file_put_contents($fname, $document, LOCK_EX);
 
   				//TODO consider using phpgw::redirect_link() ?
 				$fname = 'phpgwapi/inc/pdf/pdf_files/'. basename($fname);
- 				echo '<html>
- 				<head>
- 				<SCRIPT LANGUAGE="JavaScript"><!-- 
- 				function go_now ()   { window.location.href = "'.$fname.'"; }
- 				//--></SCRIPT>
- 				</head>
-	 			<body onLoad="go_now()"; >
- 				<a href="'.$fname.'">click here</a> if you are not re-directed.
- 				</body>
- 				</html>
- 				';
+ 				echo <<<HTML
+		<html>
+			<head>
+				<script language="javascript">
+				<!--
+					function go_now()
+					{
+						window.location.href = "{$fname}";
+					}
+				//-->
+				</script>
+			</head>
+			<body onload="go_now()";>
+				<a href="$fname">click here</a> if you are not re-directed.
+			</body>
+		</html>
 
- 				// also have a look through the directory, and remove the files that are older than a week
- 				if ($d = @opendir($dir))
- 				{
- 					while (($file = readdir($d)) !== false)
- 					{
-			 			if (substr($file,0,4)=="PDF_")
-			 			{
- 							// then check to see if this one is too old
- 							$ftime = filemtime("{$dir}/{$file}");
- 							if (time()-$ftime > 3600*1) // one hour
- 							{
- 								unlink("{$dir}/{$file}");
- 							}
- 						}
- 					}  
- 					closedir($d);
- 				}
- 			}
+HTML;
+
+				$this->_clear_cache($dir);
+			}
+		}
+
+		/**
+		 * Remove files that are older than a day
+		 */
+		protected function _clear_cache($dir)
+		{
+			$min_ctime = 60 * 60;
+			$dir = new DirectoryIterator($dir);
+			foreach ( $dir as $file )
+			{
+				if ( preg_match('/^PDF_/', $file)
+					&& $file->getCTime() < $min_ctime )
+				{
+					unlink($file);
+				}
+			}
 		}
 	}
 
@@ -115,11 +121,11 @@
 	* Include the pdf class
 	* @see pdf_
 	*/
-	include (PHPGW_API_INC . '/pdf/class.pdf.php');
+	require_once PHPGW_API_INC . '/pdf/class.pdf.php';
 
 	/**
 	* Include the ezpdf class
 	* @see @pdf
 	*/
-	include (PHPGW_API_INC . '/pdf/class.ezpdf.php');
+	require_once PHPGW_API_INC . '/pdf/class.ezpdf.php';
 
