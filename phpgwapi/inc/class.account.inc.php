@@ -665,35 +665,101 @@
 			}
 			else
 			{
-				$len = strlen($passwd); 
-				if ( $len < 8 )
+				switch ( $GLOBALS['phpgw_info']['server']['password_level'] )
 				{
-					throw new Exception(lang('Password must be at least 8 characters long, not %1', $len));
+					default:
+					case 'NONALPHA':
+						self::_validate_password_level_nonalpha($passwd);
+						// fall through
+					case '1NUM':
+						self::_validate_password_level_1num($passwd);
+						// fall through
+					case '2LOW':
+						self::_validate_password_level_2low($passwd);
+						// fall through
+					case '2UPPER':
+						self::_validate_password_level_2upper($passwd);
+						// fall through
+					case '8CHAR':
+						self::_validate_password_level_8char($passwd);
 				}
+			}
+		}
 
-				$m = array();
-				if ( preg_match_all('/[a-z]/', $passwd, $m) < 2 )
-				{
-					throw new Exception(lang('Password must contain at least 2 lower case characters'));
-				}
+		/**
+		 * Check that a password is at least 8 characters long
+		 *
+		 * @param string $passwd the password to check
+		 *
+		 * @throws Exception when password is shorter than 8 characters long
+		 */
+		protected static function _validate_password_level_8char($passwd)
+		{
+			$len = strlen($passwd); 
+			if ( $len < 8 )
+			{
+				throw new Exception(lang('Password must be at least 8 characters long, not %1', $len));
+			}
+		}
 
-				$m = array();
-				if ( preg_match_all('/[A-Z]/', $passwd, $m) < 2 )
-				{
-					throw new Exception(lang('Password must contain at least 2 upper case characters'));
-				}
-
-				$m = array();
-				if ( !preg_match_all('/[0-9]/', $passwd, $m) )
-				{
-					throw new Exception(lang('Password must contain at least 1 number'));
-				}
-
-				$m = array();
-				if ( !preg_match_all('/\W/', $passwd, $m)  )
-				{
-					throw new Exception(lang('Password must contain at least 1 non alphanumeric character'));
-				}
+		/**
+		 * Check that a password contain at least 2 upper case characters
+		 *
+		 * @param string $passwd the password to check
+		 *
+		 * @throws Exception when password do not contain at least 2 upper case characters
+		 */
+		protected static function _validate_password_level_2upper($passwd)
+		{
+			$m = array();
+			if ( preg_match_all('/[A-Z]/', $passwd, $m) < 2 )
+			{
+				throw new Exception(lang('Password must contain at least 2 upper case characters'));
+			}
+		}
+		/**
+		 * Check that a password contain at least 2 lower case characters
+		 *
+		 * @param string $passwd the password to check
+		 *
+		 * @throws Exception when password do not contain at least 2 lower case characters
+		 */
+		protected static function _validate_password_level_2low($passwd)
+		{
+			$m = array();
+			if ( preg_match_all('/[a-z]/', $passwd, $m) < 2 )
+			{
+				throw new Exception(lang('Password must contain at least 2 lower case characters'));
+			}
+		}
+		/**
+		 * Check that a password contain at least 1 number
+		 *
+		 * @param string $passwd the password to check
+		 *
+		 * @throws Exception when password is invalid/insecure do not contain at least 1 number
+		 */
+		protected static function _validate_password_level_1num($passwd)
+		{
+			$m = array();
+			if ( !preg_match_all('/[0-9]/', $passwd, $m) )
+			{
+				throw new Exception(lang('Password must contain at least 1 number'));
+			}
+		}
+		/**
+		 * Check that a password contain at least 1 non alphanumeric character
+		 *
+		 * @param string $passwd the password to check
+		 *
+		 * @throws Exception when password do not contain at least 1 non alphanumeric character
+		 */
+		protected static function _validate_password_level_nonalpha($passwd)
+		{
+			$m = array();
+			if ( !preg_match_all('/\W/', $passwd, $m)  )
+			{
+				throw new Exception(lang('Password must contain at least 1 non alphanumeric character'));
 			}
 		}
 
