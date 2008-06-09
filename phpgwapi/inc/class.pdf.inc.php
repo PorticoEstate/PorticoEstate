@@ -40,12 +40,6 @@
 	*/
 	class pdf__
 	{
-		protected $dir = '';
-
-		public function __construct()
-		{
-			$this->_dir = PHPGW_API_INC  . '/pdf/pdf_files';
-		}
  
 		/**
 		* Output a pdf
@@ -66,17 +60,18 @@
 			else
 			{
  				//save the file
- 				if ( !is_dir($this->_dir) )
+				$dir = PHPGW_API_INC  . '/pdf/pdf_files';
+ 				if ( !is_dir($dir) )
  				{
  					die(lang('Directory for temporary pdf-files is missing - pleace notify the Administrator'));
  				}
 
- 				if ( !is_writeable($this->_dir) )
+ 				if ( !is_writeable($dir) )
  				{
   					die(lang('Directory for temporary pdf-files is not writeable by the webserver - pleace notify the Administrator'));
  				}
 
- 				$fname = tempnam($this->_dir, 'PDF_') . '.pdf';
+ 				$fname = tempnam($dir, 'PDF_') . '.pdf';
 				file_put_contents($fname, $document, LOCK_EX);
 
   				//TODO consider using phpgw::redirect_link() ?
@@ -84,7 +79,7 @@
  				echo <<<HTML
 		<html>
 			<head>
-				<script type="application/javascript">
+				<script language="javascript">
 				<!--
 					function go_now()
 					{
@@ -94,23 +89,23 @@
 				</script>
 			</head>
 			<body onload="go_now()";>
-				<a href="'.$fname.'">click here</a> if you are not re-directed.
+				<a href="$fname">click here</a> if you are not re-directed.
 			</body>
 		</html>
 
 HTML;
 
-				$this->_clear_cache();
+				$this->_clear_cache($dir);
 			}
 		}
 
 		/**
 		 * Remove files that are older than a day
 		 */
-		protected function _clear_cache()
+		protected function _clear_cache($dir)
 		{
 			$min_ctime = 60 * 60;
-			$dir = new DirectoryIterator($this->_dir);
+			$dir = new DirectoryIterator($dir);
 			foreach ( $dir as $file )
 			{
 				if ( preg_match('/^PDF_/', $file)
@@ -133,3 +128,4 @@ HTML;
 	* @see @pdf
 	*/
 	require_once PHPGW_API_INC . '/pdf/class.ezpdf.php';
+
