@@ -5,8 +5,8 @@
 	 * @author Dave Hall
 	 * @copyright Copyright (C) 2007,2008 Free Software Foundation, Inc. http://www.fsf.org/
 	 * @license http://www.fsf.org/licenses/gpl.html GNU General Public License
-	 * @package phpgwapi
-	 * @subpackage gui
+	 * @package phpgroupware
+	 * @subpackage phpgwapi
 	 * @version $Id$
 	 */
 
@@ -25,12 +25,12 @@
 	   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	 */
 
-
 	/**
 	 * phpGroupWare YUI wrapper class
 	 *
-	 * @package phpgwapi
-	 * @subpackage gui
+	 * @package phpgroupware
+	 * @subpackage phpgwapi
+	 * @category gui
 	 */
 
 	if ( !isset($GLOBALS['phpgw']->js) && !is_object($GLOBALS['phpgw']->js) )
@@ -48,53 +48,52 @@
 		/**
 		* Load all the dependencies for a YUI widget
 		*
-		* @internal this does not render the widget it only includes the header js files
 		* @param string $widget the name of the widget to load, such as autocomplete
-		* @param bool use the minimised versions of the files
+		*
 		* @return string yahoo namespace for widget - empty string on failure
+		*
+		* @internal this does not render the widget it only includes the header js files
 		*/
 		public static function load_widget($widget)
 		{
-			$min = ''; // '-min'; //disabled for now
-
 			$load = array();
 			switch ( $widget )
 			{
 				case 'animation':
-					$load = array('animation');
+					$load = array('animation-min');
 					break;
 
 				case 'autocomplete':
-					$load = array('autocomplete', 'connection');
+					$load = array('autocomplete-min', 'connection-min');
 					break;
 
 				case 'button':
-					$load = array('button', 'element-beta');
+					$load = array('button-min', 'element-beta-min');
 					break;
 
 				case 'calendar':
-					$load = array('calendar');
+					$load = array('calendar-min');
 					break;
 
 				case 'colorpicker':
 				case 'colourpicker': // be nice to the speakers of H.M. English :)
-					$load = array('colorpicker');
+					$load = array('colorpicker-min');
 					break;
 
 				case 'container':
-					$load = array('container', 'dragdrop');
+					$load = array('container-min', 'dragdrop-min');
 					break;
 
 				case 'connection':
-					$load = array('connection');
+					$load = array('connection-min');
 					break;
 
 				case 'datasource':
-					$load = array('datasource-beta', 'connection');
+					$load = array('datasource-beta-min', 'connection-min');
 					break;
 
 				case 'datatable':
-					$load = array('datatable-beta', 'datasource-beta');
+					$load = array('datatable-beta-min', 'datasource-beta-min');
 					break;
 
 				case 'dom':
@@ -102,15 +101,15 @@
 					break;
 
 				case 'dragdrop':
-					$load = array('dragdrop');
+					$load = array('dragdrop-min');
 					break;
 
 				case 'editor':
-					$load = array('editor-beta', 'menu', 'element-beta', 'button', 'animation', 'dragdrop');
+					$load = array('editor-beta-min', 'menu-min', 'element-beta-min', 'button-min', 'animation-min', 'dragdrop-min');
 					break;
 
 				case 'element':
-					$load = array('element-beta');
+					$load = array('element-beta-min');
 					break;
 
 				case 'event':
@@ -120,39 +119,40 @@
 				// not including history - as it isn't needed - need to handle the not included/used types somewhere
 
 				case 'imageloader':
-					$load = array('imageloader');
+					$load = array('imageloader-min');
 					break;
 
 				case 'logger':
-					$load = array('dragdrop', 'logger');
+					$load = array('dragdrop-min', 'logger-min');
 					break;
 
 				case 'menu':
-					$load = array('container_core', 'menu'); // and containter??
+					$load = array('container_core-min', 'menu-min');
 					break;
 
-				case 'resize':
-					$load = array('dragdrop', 'element-beta', 'resize-beta');
-					break;
+                case 'resize': 
+					$load = array('dragdrop-min', 'element-beta-min', 'resize-beta-min'); 
+					break; 
 
-				case 'layout':
-					$load = array('dragdrop', 'element-beta', 'resize-beta', 'layout-beta');
-					break;
+				case 'layout': 
+					$load = array('dragdrop-min', 'element-beta-min', 'resize-beta-min', 'layout-beta-min'); 
+					break; 
 
 				case 'slider':
-					$load = array('dragdrop', 'animation', 'slider');
+					$load = array('dragdrop-min', 'animation-min', 'slider-min');
 					break;
 
 				case 'tabview':
-					$load = array('element-beta', 'tabview');
+					$load = array('element-beta-min', 'tabview-min');
 					break;
 
 				case 'treeview':
-					$load = array('treeview');
+					$load = array('treeview-min');
 					break;
 
 				default:
-					trigger_error(lang("Unsupported YUI widget '%1' supplied to phpgwapi_yui::load_widget()", $widget), E_USER_WARNING);
+					$err = "Unsupported YUI widget '%1' supplied to phpgwapi_yui::load_widget()";
+					trigger_error(lang($err, $widget), E_USER_WARNING);
 					return '';
 			}
 
@@ -160,14 +160,14 @@
 			$GLOBALS['phpgw']->js->validate_file('yahoo', 'yahoo-dom-event');
 			foreach ( $load as $script )
 			{
-				$test = $GLOBALS['phpgw']->js->validate_file('yahoo', "{$script}{$min}");
+				$test = $GLOBALS['phpgw']->js->validate_file('yahoo', "{$script}");
 				if ( !$test || !$ok )
 				{
-					trigger_error(lang("Unable to load YUI script '%1' when attempting to load widget: '%2'", "{$script}{$min}", $widget), E_USER_WARNING);
+					$err = "Unable to load YUI script '%1' when attempting to load widget: '%2'";
+					trigger_error(lang($err, $script, $widget), E_USER_WARNING);
 					return '';
 				}
 			}
-
 			return "phpgroupware.{$widget}" . ++self::$counter;
 		}
 
