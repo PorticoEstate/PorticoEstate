@@ -119,6 +119,16 @@
 			$login .= "@{$logindomain}";
 		}
 
+		if ( isset($GLOBALS['phpgw_info']['server']['usecookies'])
+			&& $GLOBALS['phpgw_info']['server']['usecookies'] )
+		{
+			if(isset($_COOKIE['domain']) && $_COOKIE['domain'] != $logindomain)
+			{
+				$GLOBALS['phpgw']->redirect_link("/{$partial_url}", array('cd' =>22)); // already within a session
+				exit;
+			}
+		}
+
 		$GLOBALS['sessionid'] = $GLOBALS['phpgw']->session->create($login, $passwd);
 
 		if (! isset($GLOBALS['sessionid']) || ! $GLOBALS['sessionid'])
