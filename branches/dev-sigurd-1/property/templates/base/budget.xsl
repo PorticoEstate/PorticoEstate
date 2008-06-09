@@ -792,7 +792,7 @@
 					<xsl:call-template name="filter_district"/>
 				</td>
 				<td>
-					<xsl:call-template name="cat_filter"/>
+					<xsl:call-template name="categories"/>
 				</td>
 				<td align="left">
 					<xsl:call-template name="filter_grouping"/>
