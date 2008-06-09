@@ -118,6 +118,8 @@
 					return lang('Cannot find the mapping ! (please advice your adminstrator)');
 				case 21:
 					return lang('you had inactive mapping to %1 account', phpgw::get_var('phpgw_account', 'string', 'GET', ''));
+				case 22:
+					return lang('you seem to have an active session elsewhere for the domain "%1", please log out from this one or delete your cookies from your browser', phpgw::get_var('domain', 'string', 'COOKIE'));
 				case 99:
 					return lang('Blocked, too many attempts');
 				case 10:
