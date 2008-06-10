@@ -61,8 +61,6 @@
 			$this->granting_group	= $this->bo->granting_group;
 			$this->allrows			= $this->bo->allrows;
 
-			// Add top location if used for first time
-			$GLOBALS['phpgw']->acl->verify_location(array($this->acl_app => array('top_grant' =>True)));
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] = "admin::{$this->acl_app}::acl";
 		}
 

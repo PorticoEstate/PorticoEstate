@@ -241,8 +241,8 @@
 			{
 				$user_checked[] = $user_id;
 
-				$this->acl->account_id = $user_id;
-				$this->acl->read_repository();
+				$this->acl->_account_id = $user_id;
+				$this->acl->_read_repository();
 				$this->acl->delete($this->acl_app, $this->location, $grantor, $type);
 				$this->acl->add($this->acl_app, $this->location, $rights, $grantor, $type);
 				$this->acl->save_repository($this->acl_app, $this->location);
@@ -265,8 +265,8 @@
 				{
 					if(isset($users_at_location[$user_id]) && $users_at_location[$user_id])
 					{
-						$this->acl->account_id = $user_id;
-						$this->acl->read_repository();
+						$this->acl->_account_id = $user_id;
+						$this->acl->_read_repository();
 						$this->acl->delete($this->acl_app, $this->location, $grantor, $type);
 						$this->acl->save_repository($this->acl_app, $this->location);
 					}
@@ -357,21 +357,21 @@
 				$j=0;
 				foreach($allusers as $account)
 				{
-					$user_list[$j]['account_id'] 		= $account['account_id'];
-					$user_list[$j]['account_lid'] 		= $account['account_lid'];
-					$user_list[$j]['account_firstname'] 	= $account['account_firstname'];
-					$user_list[$j]['account_lastname'] 	= $account['account_lastname'];
+					$user_list[$j]['account_id'] 		= $account->id;
+					$user_list[$j]['account_lid'] 		= $account->lid;
+					$user_list[$j]['account_firstname'] = $account->firstname;
+					$user_list[$j]['account_lastname'] 	= $account->lastname;
 
-					$this->acl->account_id=$account['account_id'];
+					$this->acl->_account_id=$account->id;
 
-					$this->acl->read_repository();
+					$this->acl->_read_repository();
 
 					$count_right=count($right);
 					for ( $i = 0; $i < $count_right; ++$i )
 					{
 						if($this->acl->check_rights($this->location, $right[$i],$this->acl_app,$grantor,0,$check_account_type))
 						{
-							if($this->acl->account_type == 'g')
+							if($this->acl->_account_type == 'g')
 							{
 								$user_list[$j]['right'][$right[$i]] = 'from_group';
 							}
@@ -383,7 +383,7 @@
 						}
 						if($this->acl->check_rights($this->location, $right[$i],$this->acl_app,$grantor,1,$check_account_type))
 						{
-							if($this->acl->account_type == 'g')
+							if($this->acl->_account_type == 'g')
 							{
 								$user_list[$j]['mask'][$right[$i]] = 'from_group';
 							}
@@ -419,16 +419,16 @@
 			$accounts 	= CreateObject('phpgwapi.accounts');
 			$groups = $accounts->get_list('groups', $start, $sort, $order, $query,$offset);
 			unset($accounts);
-			if (isSet($groups) AND is_array($groups))
+			if (isset($groups) AND is_object($groups))
 			{
 				foreach($groups as $group)
 				{
-					if ($group['account_id']==$selected)
+					if ($group->id==$selected)
 					{
 						$group_list[] = array
 						(
-							'id'	=> $group['account_id'],
-							'name'		=> $group['account_firstname'],
+							'id'		=> $group->id,
+							'name'		=> $group->firstname,
 							'selected'	=> 'selected'
 						);
 					}
@@ -436,8 +436,8 @@
 					{
 						$group_list[] = array
 						(
-							'id'	=> $group['account_id'],
-							'name'		=> $group['account_firstname'],
+							'id'		=> $group->id,
+							'name'		=> $group->firstname,
 						);
 					}
 				}

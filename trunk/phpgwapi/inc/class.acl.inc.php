@@ -43,7 +43,7 @@
 		* Account id
 		* @var integer $_account_id Account id
 		*/
-		protected $_account_id;
+		public $_account_id;
 
 		/**
 		* Account type
@@ -277,8 +277,8 @@
 		* @param string  $appname  Application name.
 		* @param string  $location Application location
 		* @param integer $rights   Access rights in bitmask form
-		* @param boolean $grantor  NFI ask sigurd he added this wihtout documenting it
-		* @param boolean $type     NFI ask sigurd he added this wihtout documenting it
+		* @param boolean $grantor  ID of user that grants right to others
+		* @param boolean $type     Mask (1) or Right (0): Mask revoke rights
 		*
 		* @return array Array with ACL records
 		*/

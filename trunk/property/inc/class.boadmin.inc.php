@@ -233,7 +233,7 @@
 			{
 				$user_checked[] = $user_id;
 
-				$this->acl->account_id = $user_id;
+				$this->acl->_account_id = $user_id;
 				$this->acl->_read_repository();
 				$this->acl->delete($this->acl_app, $this->location, $grantor, $type);
 				$this->acl->add($this->acl_app, $this->location, $rights, $grantor, $type);
@@ -253,12 +253,13 @@
 
 			if(is_array($user_delete) && count($user_delete)>0)
 			{
-				while(list(,$user_id) = each($user_delete))
+				foreach ($user_delete as $user_id)
+			//	while(list(,$user_id) = each($user_delete))
 				{
 					if(isset($users_at_location[$user_id]) && $users_at_location[$user_id])
 					{
-						$this->acl->account_id = $user_id;
-						$this->acl->read_repository();
+						$this->acl->_account_id = $user_id;
+						$this->acl->_read_repository();
 						$this->acl->delete($this->acl_app, $this->location, $grantor, $type);
 						$this->acl->save_repository($this->acl_app, $this->location);
 					}
@@ -361,7 +362,7 @@
 						$user_list[$j]['initials']			= $this->so->get_initials($account->id);
 					}
 
-					$this->acl->account_id=$account->id;
+					$this->acl->_account_id=$account->id;
 
 					$this->acl->_read_repository();
 
@@ -371,7 +372,7 @@
 					{
 						if($this->acl->check_rights($this->location, $right[$i],$this->acl_app,$grantor,0,$check_account_type))
 						{
-							if($this->acl->account_type == 'g')
+							if($this->acl->_account_type == 'g')
 							{
 								$user_list[$j]['right'][$right[$i]] = 'from_group';
 							}
@@ -383,7 +384,7 @@
 						}
 						if($this->acl->check_rights($this->location, $right[$i],$this->acl_app,$grantor,1,$check_account_type))
 						{
-							if($this->acl->account_type == 'g')
+							if($this->acl->_account_type == 'g')
 							{
 								$user_list[$j]['mask'][$right[$i]] = 'from_group';
 							}
