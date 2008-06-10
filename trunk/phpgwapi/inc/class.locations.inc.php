@@ -240,7 +240,7 @@
 
 			$this->_db->query($sql, __LINE__, __FILE__);
 
-			if ( $this->_db->next_record() )
+			while ( $this->_db->next_record() )
 			{
 				$entries[$this->_db->f('location_id')] = $this->_db->f('name', true);
 			}
