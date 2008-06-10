@@ -13,36 +13,18 @@
 
 	class admin_uiaccess_history
 	{
-		private $template;
 		public $public_functions = array
 		(
 			'list_history' => True
 		);
 
-		public function __construct()
+		public function list_history()
 		{
-			$GLOBALS['phpgw_info']['flags']['menu_selection'] = 'admin::admin::access_log';
-
 			if ($GLOBALS['phpgw']->acl->check('access_log_access',1,'admin'))
 			{
 				$GLOBALS['phpgw']->redirect_link('/index.php');
 			}
-			
-			$this->template   =& $GLOBALS['phpgw']->template;
-			$this->template->set_file
-			(
-				array
-				(
-					'accesslog' => 'accesslog.tpl'
-				)
-			);
-			$this->template->set_block('accesslog','list');
-			$this->template->set_block('accesslog','row');
-			$this->template->set_block('accesslog','row_empty');
-		}
 
-		public function list_history()
-		{
 			$bo         = createobject('admin.boaccess_history');
 			$nextmatches = createobject('phpgwapi.nextmatchs');
 
@@ -52,7 +34,16 @@
 			$order		= phpgw::get_var('order', 'int', 'POST', 0);
 			
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('Admin').' - '.lang('View access log');
+			$GLOBALS['phpgw_info']['flags']['menu_selection'] = 'admin::admin::access_log';
+
 			$GLOBALS['phpgw']->common->phpgw_header(true);
+
+			$t   =& $GLOBALS['phpgw']->template;
+			$t->set_root(PHPGW_APP_TPL);
+			$t->set_file('accesslog', 'accesslog.tpl');
+			$t->set_block('accesslog','list');
+			$t->set_block('accesslog','row');
+			$t->set_block('accesslog','row_empty');
 
 			$total_records = $bo->total($account_id);
 
@@ -83,14 +74,14 @@
 				$var['lang_last_x_logins'] = lang('Last %1 logins',$total_records);
 			}
 
-			$this->template->set_var($var);
+			$t->set_var($var);
 
 			$records = $bo->list_history($account_id, $start, $order, $sort);
 			if ( is_array($records) )
 			{
 				foreach ( $records as &$record )
 				{
-					$nextmatches->template_alternate_row_class($this->template);
+					$nextmatches->template_alternate_row_class($t);
 
 					$var = array
 					(
@@ -100,16 +91,16 @@
 						'row_lo'      => $record['account_id'] ? $record['lo'] : '<b>' . lang($record['sessionid']) . '</b>',
 						'row_total'   => ($record['lo'] ? $record['total'] : '&nbsp;')
 					);
-					$this->template->set_var($var);
-					$this->template->fp('rows_access','row', true);
+					$t->set_var($var);
+					$t->fp('rows_access','row', true);
 				}
 			}
 
 			if (! $total_records && $account_id)
 			{
-				$nextmatches->template_alternate_row_class($this->template);
-				$this->template->set_var('row_message',lang('No login history exists for this user'));
-				$this->template->fp('rows_access','row_empty', true);
+				$nextmatches->template_alternate_row_class($t);
+				$t->set_var('row_message',lang('No login history exists for this user'));
+				$t->fp('rows_access','row_empty', true);
 			}
 
 			$loggedout = $bo->return_logged_out($account_id);
@@ -127,6 +118,7 @@
 			(
 				'footer_total' => lang('Total records') . ': ' . $total_records
 			);
+
 			if ($account_id)
 			{
 				$var['lang_percent'] = lang('Percent this user has logged out') . ': ' . $percent . '%';
@@ -137,10 +129,9 @@
 			}
 
 			// create the menu on the left, if needed
-			$menuClass = CreateObject('admin.uimenuclass');
-			$var['rows'] = $menuClass->createHTMLCode('view_account');
+			$var['rows'] = createObject('admin.uimenuclass')->createHTMLCode('view_account');
 
-			$this->template->set_var($var);
-			$this->template->pfp('out','list');
+			$t->set_var($var);
+			$t->pfp('out','list');
 		}
 	}

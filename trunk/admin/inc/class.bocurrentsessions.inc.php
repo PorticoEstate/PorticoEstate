@@ -16,8 +16,9 @@
 	{
 		var $ui;
 		var $so;
-		var $public_functions = array(
-			'kill' => True
+		var $public_functions = array
+		(
+			'kill' => true
 		);
 
 		function total()
@@ -25,33 +26,44 @@
 			return $GLOBALS['phpgw']->session->total();
 		}
 
-		function list_sessions($start,$order,$sort)
+		function list_sessions($start, $order, $sort)
 		{
-			$values = $GLOBALS['phpgw']->session->list_sessions($start,$sort,$order);
 
-			while (list(,$value) = @each($values))
+			$view_ip = false;
+			if ( !$GLOBALS['phpgw']->acl->check('current_sessions_access', phpgwapi_acl::EDIT, 'admin') )
 			{
-				if (ereg('@',$value['session_lid']))
+				$view_ip = true;
+			}
+
+			$view_action = false;
+			if ( !$GLOBALS['phpgw']->acl->check('current_sessions_access', phpgwapi_acl::ADD, 'admin') )
+			{
+				$view_action = true;
+			}
+
+			$values = $GLOBALS['phpgw']->session->list_sessions($start, $sort, $order);
+			foreach ( $values as &$value )
+			{
+				if ( preg_match('/^(.*)@(.*)$/', $value['lid'], $m) )
 				{
-					$t = split('@',$value['session_lid']);
-					$session_lid = $t[0];
-				}
-				else
-				{
-					$session_lid = $value['session_lid'];
+					$value['lid'] = $m[1];
 				}
 
-				$_values[] = array(
-					'session_id'        => $value['session_id'],
-					'session_lid'       => $session_lid,
-					'session_ip'        => $value['session_ip'],
-					'session_logintime' => $GLOBALS['phpgw']->common->show_date($value['session_logintime']),
-					'session_action'    => $value['session_action'],
-					'session_dla'       => $value['session_dla'],
-					'session_idle'      => gmdate('G:i:s',(time() - $value['session_dla']))
-				);
+				if ( !$view_action )
+				{
+					$value['action'] = ' -- ';
+				}
+
+				if ( !$view_ip )
+				{
+					$value['ip'] = ' -- ';
+				}
+				
+				$value['idle'] = gmdate('G:i:s', time() - $value['dla']);
+				$value['logintime'] = $GLOBALS['phpgw']->common->show_date($value['logints']);
 			}
-			return $_values;
+			
+			return $values;
 		}
 
 		function kill()

@@ -1,14 +1,32 @@
 <?php
-	include('class.catalog_manager.inc.php');
+  /**************************************************************************\
+  * phpGroupWare - catalog_manager                                           *
+  * http://www.phpgroupware.org                                              *
+  * This program is part of the GNU project, see http://www.gnu.org/         *
+  *                                                                          *
+  * Copyright 2003 Free Software Foundation, Inc.                            *
+  *                                                                          *
+  * Originally Written by Jonathan Alberto Rivera Gomez - jarg at co.com.mx  *
+  * Current Maintained by Jonathan Alberto Rivera Gomez - jarg at co.com.mx  *
+  * --------------------------------------------                             *
+  * Development of this application was funded by http://www.sogrp.com       *
+  * --------------------------------------------                             *
+  *  This program is Free Software; you can redistribute it and/or modify it *
+  *  under the terms of the GNU General Public License as published by the   *
+  *  Free Software Foundation; either version 2 of the License, or (at your  *
+  *  option) any later version.                                              *
+  \**************************************************************************/
 
-	class uicatalog_contact_comm_type extends catalog_manager
+	phpgw::import_class('addressbook.catalog_manager');
+
+	class addressbook_uicatalog_contact_comm_type extends addressbook_catalog_manager
 	{
 		var $public_functions = array('view' => True);
 		var $modify = False;
 
-		function uicatalog_contact_comm_type()
+		function __construct()
 		{
-			$this->_constructor();
+			parent::__construct();
 
 			$this->bo = CreateObject('addressbook.bocatalog_contact_comm_type');
 
@@ -85,10 +103,19 @@
 
 			$record = $this->bo->get_record($key);
 			$this->entry['comm_type_description'] = $record[0]['comm_type_description'];
-			$this->form_fields = array(1 => array('Type', $this->get_column_data(
-								      array('type' => 'text',
-									    'name' => 'entry[comm_type_description]',
-									    'value'=> $this->entry['comm_type_description']))));
+			$fields = array
+			(
+				1	=> array
+				(
+					'Type', 
+					$this->get_column_data(array
+					(
+						'type' => 'text',
+						'name' => 'entry[comm_type_description]',
+						'value'=> $this->entry['comm_type_description']
+					))
+				)
+			);
+			$this->form_fields = $fields;
 		}
 	}
-?>

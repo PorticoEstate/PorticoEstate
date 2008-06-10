@@ -1,14 +1,33 @@
 <?php
-	include('class.catalog_manager.inc.php');
+  /**************************************************************************\
+  * phpGroupWare - catalog_manager                                           *
+  * http://www.phpgroupware.org                                              *
+  * This program is part of the GNU project, see http://www.gnu.org/         *
+  *                                                                          *
+  * Copyright 2003,2008 Free Software Foundation, Inc.                       *
+  *                                                                          *
+  * Originally Written by Jonathan Alberto Rivera Gomez - jarg at co.com.mx  *
+  * Current Maintained by Jonathan Alberto Rivera Gomez - jarg at co.com.mx  *
+  * Written by Dave Hall <skwashd@phpgroupware.org>							 *
+  * --------------------------------------------                             *
+  * Development of this application was funded by http://www.sogrp.com       *
+  * --------------------------------------------                             *
+  *  This program is Free Software; you can redistribute it and/or modify it *
+  *  under the terms of the GNU General Public License as published by the   *
+  *  Free Software Foundation; either version 2 of the License, or (at your  *
+  *  option) any later version.                                              *
+  \**************************************************************************/
 
-	class uicatalog_contact_comm_descr extends catalog_manager
+	phpgw::import_class('addressbook.catalog_manager');
+
+	class addressbook_uicatalog_contact_comm_descr extends addressbook_catalog_manager
 	{
 		var $public_functions = array('view' => True);
 		var $modify = False;
 
-		function uicatalog_contact_comm_descr()
+		function __construct()
 		{
-			$this->_constructor();
+			parent::__construct();
 
 			$this->bo = CreateObject('addressbook.bocatalog_contact_comm_descr');
 
@@ -105,6 +124,7 @@
 		function get_options($selected='')
 		{
 			$this->comm_type_array = $this->bo->select_catalog_types();
+			$options = '';
 			foreach($this->comm_type_array as $option)
 			{
 				if ($option['comm_type_id'] == $selected)
@@ -122,4 +142,3 @@
 			return $options;
 		}
 	}
-?>

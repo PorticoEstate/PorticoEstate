@@ -71,14 +71,14 @@
 					'_nextmatchs' => 'nextmatchs.tpl'
 				));
 				$this->template->set_block('_nextmatchs','nextmatchs');
-				$this->template->set_block('_nextmatchs','filter');
-				$this->template->set_block('_nextmatchs','form');
-				$this->template->set_block('_nextmatchs','icon');
-				$this->template->set_block('_nextmatchs','link');
-				$this->template->set_block('_nextmatchs','search');
-				$this->template->set_block('_nextmatchs','cats');
-				$this->template->set_block('_nextmatchs','search_filter');
-				$this->template->set_block('_nextmatchs','cats_search_filter');
+				$this->template->set_block('_nextmatchs','nm_filter');
+				$this->template->set_block('_nextmatchs','nm_form');
+				$this->template->set_block('_nextmatchs','nm_icon');
+				$this->template->set_block('_nextmatchs','nm_link');
+				$this->template->set_block('_nextmatchs','nm_search');
+				$this->template->set_block('_nextmatchs','nm_cats');
+				$this->template->set_block('_nextmatchs','nm_search_filter');
+				$this->template->set_block('_nextmatchs','nm_cats_search_filter');
 			}
 
 			$this->maxmatches = 15;
@@ -175,7 +175,7 @@
 				'start_value'   => $start,
 				'order_value'   => $order,
 				'sort_value'    => $sort,
-				'query_value'   => urlencode($query), //FIXME this was the global
+				'query_value'   => phpgw::get_var('query'),
 				'table_width'   => $twidth,
 				'left'          => $this->left($sn,$start,$total,$extra),
 				'search'        => ($showsearch?$this->search($search_obj):''),
@@ -183,8 +183,8 @@
 				'right'         => $this->right($sn,$start,$total,$extra)
 			);
 			$this->template->set_var($var);
-			$this->template->parse('cats','cats');
-			$this->template->parse('cats_search_filter_data','cats_search_filter');
+			$this->template->parse('nm_cats', 'nm_cats');
+			$this->template->parse('nm_cats_search_filter_data', 'nm_cats_search_filter');
 			return $this->template->fp('out','nextmatchs');
 		}
 
@@ -394,7 +394,7 @@
 				'filter'       => ($filter_obj?$this->filter($filter_obj,$yours):'')
 			);
 			$this->template->set_var($var);
-			return $this->template->fp('out','search_filter');
+			return $this->template->fp('out','nm_search_filter');
 		}
 
 		/**
@@ -426,7 +426,7 @@
 				'filter'        => ($filter_obj?$this->filter($filter_obj,$yours):'')
 			);
 			$this->template->set_var($var);
-			return $this->template->fp('out','cats_search_filter');
+			return $this->template->fp('out','nm_cats_search_filter');
 		}
 
 		/**
@@ -455,7 +455,7 @@
 			}
 
 			$this->template->set_var($var);
-			return $this->template->fp('out','search');
+			return $this->template->fp('out','nm_search');
 		} /* search() */
 
 		/**
@@ -583,7 +583,7 @@
 				$this->template->set_var('lang_filter',lang('Filter'));
 			}
 
-			return $this->template->fp('out','filter');
+			return $this->template->fp('out','nm_filter');
 		} /* filter() */
 
 		/* replacement for function filter */
@@ -642,7 +642,7 @@
 			$this->template->set_var('select',$str);
 			$this->template->set_var('lang_filter',lang('Filter'));
 
-			return $this->template->fp('out','filter');
+			return $this->template->fp('out','nm_filter');
 		} /* filter() */
 
 		/**
@@ -955,7 +955,7 @@
 			);
 
 			$this->template->set_var($var);
-			return $this->template->fp('out', 'link');
+			return $this->template->fp('out', 'nm_link');
 		}
 
 		/**
@@ -1011,7 +1011,7 @@
 			);
 
 			$this->template->set_var($var);
-			return $this->template->fp('out', 'form');
+			return $this->template->fp('out', 'nm_form');
 		}
 
 		/**
