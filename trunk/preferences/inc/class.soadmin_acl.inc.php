@@ -1,6 +1,6 @@
 <?php
 	/**
-	* Inter module data linking manager for phpGroupWare
+	* Finding acl-locations for phpGroupWare
 	*
 	* @author Sigurd Nes <sigurdne@online.no>
 	* @copyright Copyright (C) 2003 -2008 Free Software Foundation, Inc. http://www.fsf.org/
