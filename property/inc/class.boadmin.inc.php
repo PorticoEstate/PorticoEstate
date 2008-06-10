@@ -254,7 +254,6 @@
 			if(is_array($user_delete) && count($user_delete)>0)
 			{
 				foreach ($user_delete as $user_id)
-			//	while(list(,$user_id) = each($user_delete))
 				{
 					if(isset($users_at_location[$user_id]) && $users_at_location[$user_id])
 					{
