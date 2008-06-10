@@ -474,24 +474,28 @@
 					$children["loc_{$location['id']}"] = array
 					(
 						'url'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uilocation.index', 'type_id' => $location['id'])),
-						'text'	=> $location['name']
+						'text'	=> $location['name'],
+						'image'	=> array('property', 'location_' . $location['id'])
 					);
 				}
 
 				$children['tenant'] = array
 				(
 					'url'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uilocation.index', 'lookup_tenant' => 1, 'type_id' => $soadmin_location->read_config_single('tenant_id'))),
-					'text'	=> lang('Tenant')
+					'text'	=> lang('Tenant'),
+					'image'	=> array('property', 'location_tenant')
 				);
 				$children['gabnr'] = array
 				(
 					'url'	=>	$GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uigab.index')),
-					'text'	=> lang('gabnr')
+					'text'	=> lang('gabnr'),
+					'image'	=> array('property', 'location_gabnr')
 				);
 				$children['summary'] = array
 				(
 					'url'	=>	$GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uilocation.summary')),
-					'text'	=>	lang('Summary')
+					'text'	=>	lang('Summary'),
+					'image'	=> array('property', 'location_summary')
 				);
 
 /*				if ( $acl->check('.location', 16, 'property') )
@@ -529,7 +533,8 @@
 						'import'	=> array
 						(
 							'url'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiifc.import')),
-							'text'	=> lang('import')
+							'text'	=> lang('import'),
+							'image'		=> array('property', 'ifc_import'),
 						)
 					)
 				);
@@ -540,7 +545,8 @@
 				$menus['navigation']['helpdesk'] = array
 				(
 					'url'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uitts.index')),
-					'text'	=> lang('Helpdesk')
+					'text'	=> lang('Helpdesk'),
+					'image'		=> array('property', 'helpdesk')
 				);
 			}
 
@@ -550,32 +556,38 @@
 				(
 					'url'		=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiproject.index')),
 					'text'		=> lang('Project'),
+					'image'		=> array('property', 'project'),
 					'children'	=> array
 					(
 						'project'	=> array
 						(
 							'url'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiproject.index')),
-							'text'	=> lang('Project')
+							'text'	=> lang('Project'),
+							'image'		=> array('property', 'project')
 						),
 						'workorder'	=> array
 						(
 							'url'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiworkorder.index')),
-							'text'	=> lang('Workorder')
+							'text'	=> lang('Workorder'),
+							'image'		=> array('property', 'project_workorder')
 						),
 						'request'	=> array
 						(
 							'url'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uirequest.index')),
-							'text'	=> lang('Request')
+							'text'	=> lang('Request'),
+							'image'		=> array('property', 'project_request')
 						),
 						'template'	=> array
 						(
 							'url'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uitemplate.index')),
-							'text'	=> lang('template')
+							'text'	=> lang('template'),
+							'image'		=> array('property', 'project_template')
 						),
 						'claim'		=> array
 						(
 							'url'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uitenant_claim.index')),
-							'text'	=> lang('Tenant claim')
+							'text'	=> lang('Tenant claim'),
+							'image'		=> array('property', 'project_tenant_claim')
 						)
 					)
 				);
@@ -657,6 +669,7 @@
 				(
 					'url'		=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uibudget.index')),
 					'text'		=> lang('Budget'),
+					'image'		=> array('property', 'budget'),
 					'children'	=> array
 					(
 						'basis'		=> array
@@ -707,6 +720,7 @@
 				(
 					'url'		=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiagreement.index')),
 					'text'		=> lang('Agreement'),
+					'image'		=> array('property', 'agreement'),
 					'children'	=> array
 					(
 						'pricebook'	=> array
@@ -741,6 +755,7 @@
 				(
 					'url'		=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uidocument.index')),
 					'text'		=> lang('Documentation'),
+					'image'		=> array('property', 'documentation'),
 					'children'	=> array
 					(
 						'legislation'   => array
@@ -778,6 +793,7 @@
 				(
 					'url'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uicustom.index')),
 					'text'	=> lang('Custom'),
+					'image'		=> array('property', 'custom')
 				);
 			}
 
@@ -790,7 +806,8 @@
 						$menus['navigation']["entity_{$entry['id']}"] = array
 						(
 							'url'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uientity.index', 'entity_id'=> $entry['id'])),
-							'text'	=> $entry['name']
+							'text'	=> $entry['name'],
+							'image'		=> array( 'property', 'entity_' . $entry['id'] )
 						);
 					}
 
