@@ -81,7 +81,8 @@
 						$admin_children_entity["entity_{$entry['id']}"] = array
 						(
 							'url'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiadmin_entity.category', 'entity_id'=> $entry['id'])),
-							'text'	=> $entry['name']
+							'text'	=> $entry['name'],
+							'image'		=> array( 'property', 'entity_' . $entry['id'] )
 						);
 
 						$cat_list = $entity->read_category(array('allrows'=>true,'entity_id'=>$entry['id']));
@@ -293,7 +294,9 @@
 					(
 						'text'	=> lang('Admin Location'),
 						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiadmin_location.index') ),
+						'image'		=> array( 'property', 'location' ),
 						'children' => $admin_children_location
+
 					),
 					'inactive_cats'	=> array
 					(
@@ -319,6 +322,7 @@
 					(
 						'text'	=> lang('Tenant'),
 						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiactor.index', 'role' => 'tenant', 'admin' => true) ),
+						'image'		=> array( 'property', 'location_tenant' ),
 						'children'	=> $admin_children_tenant
 					),
 					'owner'	=> array
@@ -382,6 +386,7 @@
 					(
 						'text'	=> lang('Agreement'),
 						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uistandard_2.index', 'type' => 'agreement_status') ),
+						'image'		=> array( 'property', 'agreement' ),
 						'children'	=> $admin_children_agreement
 					),
 					'document_status'	=> array
