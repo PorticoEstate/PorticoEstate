@@ -1288,38 +1288,6 @@
 			return $acl_accounts;
 		}
 
-
-		function get_accounts_at_location_($appname = '', $location ='', $grantor=0 ,$type ='')
-		{
-			if (!$appname)
-			{
-				settype($appname,'string');
-				$appname = $GLOBALS['phpgw_info']['flags']['currentapp'];
-			}
-
-			if($grantor > 0)
-			{
-				$filter_grants = ' AND acl_grantor IS NOT NULL';
-			}
-			else
-			{
-				$filter_grants = ' AND acl_grantor IS NULL';
-			}
-
-			$sql = "SELECT acl_account from phpgw_acl WHERE acl_appname = '$appname' AND acl_location $this->like '$location%' $filter_grants AND acl_type = '$type' GROUP BY acl_account";
-			$this->db->query($sql,__LINE__,__FILE__);
-
-			$acl_accounts = array();
-			while ($this->db->next_record())
-			{
-				$acl_accounts[$this->db->f('acl_account')] = true;
-			}
-
-			return $acl_accounts;
-		}
-
-
-
 		/**
 		* Delete ACL information from cache
 		*
