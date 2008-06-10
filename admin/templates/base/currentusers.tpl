@@ -1,5 +1,4 @@
 <!-- BEGIN list -->
-<br>
 <table border="0" width="95%" align="center">
  <tr>
    {left_next_matchs}
@@ -16,20 +15,17 @@
   <td>{sort_idle}</td>
   <td>{lang_kill}</td>
  </tr>
-
- {rows}
-
+<!-- BEGIN rows -->
+ <tr class="{tr_class}">
+  <td>{lid}</td>
+  <td>{ip}</td>
+  <td>{logintime}</td>
+  <td>{action}</td>
+  <td>{idle}</td>
+  <td>{kill}</td>
+ </tr>
+<!-- END rows -->
 </table>
-<br>
 <!-- END list -->
 
-<!-- BEGIN row -->
- <tr class="{tr_class}">
-  <td>{row_loginid}</td>
-  <td>{row_ip}</td>
-  <td>{row_logintime}</td>
-  <td>{row_action}</td>
-  <td>{row_idle}</td>
-  <td>{row_kill}</td>
- </tr>
-<!-- END row -->
+

@@ -44,8 +44,8 @@
 		<td>{row_line}</td>
 	</tr>
 	<tr class="{tr_class}">
-	    <td></td>
-		<td colspan="5">{row_message}</td>
+	    <td>&nbsp;</td>
+		<td colspan="5"><pre>{row_message}</pre></td>
 	</tr>
 <!-- END row -->
 

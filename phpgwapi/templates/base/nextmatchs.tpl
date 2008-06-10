@@ -10,17 +10,17 @@
 <!-- END nextmatchs -->
 
 
-<!-- BEGIN filter -->
+<!-- BEGIN nm_filter -->
        <td>
 {select}
         <noscript>
          <input type="submit" value="{lang_filter}">
         </noscript>
        </td>
-<!-- END filter -->
+<!-- END nm_filter -->
 
 
-<!-- BEGIN form -->
+<!-- BEGIN nm_form -->
 <td width="2%" align="{align}" valign="top">
 	<form method="POST" action="{action}" name="{form_name}">
 	{hidden}
@@ -33,15 +33,15 @@
 	</table>
 </form>
 </td>
-<!-- END form -->
+<!-- END nm_form -->
 
 
-<!-- BEGIN icon -->
+<!-- BEGIN nm_icon -->
 <td width="2%" align="{align}">&nbsp;{_link}</td>
-<!-- END icon -->
+<!-- END nm_icon -->
 
 
-<!-- BEGIN link -->
+<!-- BEGIN nm_link -->
 <td width="2%" align="{align}" valign="top">
 	<table border="0" cellspacing="0" cellpadding="0">
 	<tr>
@@ -51,14 +51,14 @@
 	</tr>
 	</table>
 </td>
-<!-- END link -->
+<!-- END nm_link -->
 
 
-<!-- BEGIN search -->
+<!-- BEGIN nm_search -->
         <input type="text" name="query" value="{query_value}">&nbsp;{searchby}<input type="submit" name="Search" value="{lang_search}">
-<!-- END search -->
+<!-- END nm_search -->
 
-<!-- BEGIN cats -->
+<!-- BEGIN nm_cats -->
        <td>
         {lang_category}&nbsp;&nbsp;<select name="{cat_field}" onChange="this.form.submit();">
          <option value="0">{lang_all}</option>
@@ -66,9 +66,9 @@
         </select>
         <noscript><input type="submit" name="cats" value="{lang_select}"></noscript>
        </td>
-<!-- END cats -->
+<!-- END nm_cats -->
 
-<!-- BEGIN search_filter -->
+<!-- BEGIN nm_search_filter -->
     <form method="POST" action="{form_action}" name="filter">
      <table border="0" bgcolor="{th_bg}" cellspacing="0" cellpadding="0">
       <input type="hidden" name="filter" value="{filter_value}">
@@ -84,9 +84,9 @@
       </tr>
      </table>
     </form>
-<!-- END search_filter -->
+<!-- END nm_search_filter -->
 
-<!-- BEGIN cats_search_filter -->
+<!-- BEGIN nm_cats_search_filter -->
     <form method="POST" action="{form_action}" name="filter">
      <table border="0" bgcolor="{th_bg}" cellspacing="0" cellpadding="0">
       <input type="hidden" name="filter" value="{filter_value}">
@@ -104,4 +104,4 @@
       </tr>
      </table>
     </form>
-<!-- END cats_search_filter -->
+<!-- END nm_cats_search_filter -->

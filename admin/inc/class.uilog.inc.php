@@ -13,7 +13,6 @@
 
 	class admin_uilog
 	{
-		private $template;
 		public $public_functions = array
 		(
 			'list_log'	=> true,
@@ -27,8 +26,6 @@
 				$GLOBALS['phpgw']->redirect_link('/index.php');
 			}
 			
-			$this->template   =& $GLOBALS['phpgw']->template;
-
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] = 'admin::admin::error_log';
 		}
 
@@ -36,24 +33,15 @@
 		{
 			if ($GLOBALS['phpgw']->acl->check('error_log_access',1,'admin'))
 			{
-				$GLOBALS['phpgw']->redirect_link('/index.php');
+				$GLOBALS['phpgw']->redirect_link('/admin/index.php');
 			}
 			
 			$account_id		= phpgw::get_var('account_id', 'int');
-			$start			= phpgw::get_var('start', 'int', 'POST', 0);
-			$sort			= phpgw::get_var('sort', 'int', 'POST',0);
-			$order			= phpgw::get_var('order', 'int', 'POST',0);
+			$start			= phpgw::get_var('start', 'int', 'POST');
+			$sort			= phpgw::get_var('sort', 'int', 'POST');
+			$order			= phpgw::get_var('order', 'int', 'POST');
 			
-			$this->template->set_file(array
-			(
-				'errorlog'		=> 'errorlog_view.tpl',
-				'form_button'	=> 'form_button_script.tpl'
-			));
-
-			$this->template->set_block('errorlog','list');
-			$this->template->set_block('errorlog','row');
-			$this->template->set_block('errorlog','row_empty');
-			
+		
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('Admin').' - '.lang('View error log');
 			if ( $account_id )
 			{
@@ -65,6 +53,19 @@
 			$bo = createObject('admin.bolog');
 			$nextmatches = createObject('phpgwapi.nextmatchs');
 
+			$t   =& $GLOBALS['phpgw']->template;
+			$t->set_root(PHPGW_APP_TPL);
+
+			$t->set_file(array
+			(
+				'errorlog'		=> 'errorlog_view.tpl',
+				'form_button'	=> 'form_button_script.tpl'
+			));
+
+			$t->set_block('errorlog','list');
+			$t->set_block('errorlog','row');
+			$t->set_block('errorlog','row_empty');
+	
 			$total_records = $bo->total($account_id);
 
 			$var = array
@@ -82,26 +83,25 @@
 				'lang_total'       => lang('Total')
 			);
 
-			$this->template->set_var($var);
+			$t->set_var($var);
 
-			$records = $bo->list_log($account_id,$start,$order,$sort);
+			$records = $bo->list_log($account_id, $start, $order, $sort);
 			if ( !is_array($records) || !count($records) )
 			{
-				$this->template->set_var(array
+				$t->set_var(array
 				(
 					'row_message'	=> lang('No error log records exist for this user'),
 					'tr_class'		=> 'row_on'
 				));
-				$this->template->fp('rows_access','row_empty',True);
+				$t->fp('rows_access', 'row_empty', true);
 			}
 			else
 			{
 				$tr_class = '';
 				foreach ( $records as $record )
 				{
-
 					$tr_class = $nextmatches->alternate_row_class($tr_class);
-					$this->template->set_var(array
+					$t->set_var(array
 					(
 						'row_date' 		=> $record['log_date'],
 						'row_loginid'   => $record['log_account_lid'],
@@ -112,7 +112,7 @@
 						'row_message'   => $record['log_msg'],
 						'tr_class'		=> $tr_class
 					));
-					$this->template->fp('rows_access','row',True);
+					$t->parse('rows_access', 'row', true);
 				}
 			}
 
@@ -120,32 +120,34 @@
 			{
 				if ( $account_id ) 
 				{
-					$var = Array(
-						'submit_button' => lang('Submit'),
+					$var = array
+					(
+						'submit_button'			=> lang('Submit'),
 						'action_url_button'     => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.uilog.purge_log', 'account_id' => $account_id)),
-						'action_text_button'    => ' '.lang('Delete all log records for ').$GLOBALS['phpgw']->common->grab_owner_name($account_id),
+						'action_text_button'    => ' '.lang('Delete all log records for %1', $GLOBALS['phpgw']->common->grab_owner_name($account_id)),
 						'action_confirm_button' => '',
 						'action_extra_field'    => ''
 					);
 				}
 				else 
 				{
-					$var = Array(
-						'submit_button' => lang('Submit'),
+					$var = array
+					(
+						'submit_button'			=> lang('Submit'),
 						'action_url_button'     => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.uilog.purge_log') ),
 						'action_text_button'    => ' '.lang('Delete all log records'),
 						'action_confirm_button' => '',
 						'action_extra_field'    => ''
 					);
 				}
-				$this->template->set_var($var);
-				$var['purge_log_button'] = $this->template->fp('button', 'form_button', True);
-				$this->template->set_var($var);
+				$var['purge_log_button'] = $t->fp('button', 'form_button', true);
+				$t->set_var($var);
 			}
 
 			if ( $account_id ) 
 			{
-				$var = array('footer_total' => lang('Total records for %1 : %2', $GLOBALS['phpgw']->common->grab_owner_name($account_id), $total_records) );
+				$account_name = $GLOBALS['phpgw']->common->grab_owner_name($account_id);
+				$var = array('footer_total' => lang('Total records for %1 : %2', $account_name, $total_records) );
 			}
 			else
 			{
@@ -153,11 +155,10 @@
 			}
 
 			// create the menu on the left, if needed
-			$menuClass = CreateObject('admin.uimenuclass');
-			$var['rows'] = $menuClass->createHTMLCode('view_account');
+			//$var['rows'] = createObject('admin.uimenuclass')->createHTMLCode('view_account');
 
-			$this->template->set_var($var);
-			$this->template->pfp('out','list');
+			//$t->set_var($var);
+			$t->pfp('out', 'list');
 		}
 		
 		public function purge_log()

@@ -26,15 +26,14 @@
 
 		public function __construct()
 		{
-			$this->bo         = createobject('admin.bocurrentsessions');
-
-			$this->template   =& $GLOBALS['phpgw']->template;
+			$this->bo = createobject('admin.bocurrentsessions');
 		}
 
 		private function header()
 		{
 			$GLOBALS['phpgw']->common->phpgw_header(true);
-			// header sets the tpl dir to the api/tpl dir - so we reset it
+
+			$this->template =& $GLOBALS['phpgw']->template;
 			$this->template->set_root(PHPGW_APP_TPL);
 		}
 
@@ -59,114 +58,85 @@
 				$this->store_location($info);
 			}
 
-			if ((isset($_GET['start']) && $_GET['start']) || ( isset($_GET['sort']) && $_GET['sort']) || ( isset($_GET['order']) && $_GET['order']))
+			$vars = array
+			(
+				'start'	=> 'int',
+				'sort'	=> 'string',
+				'order'	=> 'string'
+			);
+			foreach ( $vars as $var => $type )
 			{
-				if ($_GET['start'] == 0 || $_GET['start'] && $_GET['start'] != $info['start'])
+				$val = phpgw::get_var($var, $type, 'GET');
+				if ( $val )
 				{
-					$info['start'] = $_GET['start'];
+					$info[$var] = $val;
 				}
-
-				if ($_GET['sort'] && $_GET['sort'] != $info['sort'])
-				{
-					$info['sort'] = $_GET['sort'];
-				}
-
-				if ($_GET['order'] && $_GET['order'] != $info['order'])
-				{
-					$info['order'] = $_GET['order'];
-				}
-
-				$this->store_location($info);
 			}
+
+			$this->store_location($info);
 
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('Admin').' - '.lang('List of current users');
-			$this->header();
 
-			$this->template->set_file('current','currentusers.tpl');
-			$this->template->set_block('current','list','list');
-			$this->template->set_block('current','row','row');
-
-			if (! $GLOBALS['phpgw']->acl->check('current_sessions_access',4,'admin'))
+			$can_kill = false;
+			$lang_kill = '';
+			if ( !$GLOBALS['phpgw']->acl->check('current_sessions_access', phpgwapi_acl::DELETE, 'admin') )
 			{
-				$can_view_ip = True;
-			}
-
-			if (! $GLOBALS['phpgw']->acl->check('current_sessions_access',2,'admin'))
-			{
-				$can_view_action = True;
+				$can_kill = true;
+				$lang_kill = lang('kill');
 			}
 
 			$total = $this->bo->total();
-
 			$nextmatchs = createobject('phpgwapi.nextmatchs');
 
-			$this->template->set_var('left_next_matchs',$nextmatchs->left('/admin/currentusers.php',$info['start'],$total));
-			$this->template->set_var('right_next_matchs',$nextmatchs->right('/admin/currentusers.php',$info['start'],$total));
+			$header = array
+			(
+				'left_next_matchs'	=> $nextmatchs->left('/admin/currentusers.php', $info['start'], $total),
+				'right_next_matchs' => $nextmatchs->right('/admin/currentusers.php',$info['start'],$total), 
+				'sort_loginid'		=> $nextmatchs->show_sort_order($info['sort'], 'lid', $info['order'], '/admin/currentusers.php', lang('LoginID')),
+				'sort_ip'			=> $nextmatchs->show_sort_order($info['sort'], 'ip', $info['order'], '/admin/currentusers.php',lang('IP')),
+				'sort_login_time'	=> $nextmatchs->show_sort_order($info['sort'], 'logints', $info['order'], '/admin/currentusers.php', lang('Login Time')),
+				'sort_action'		=> $nextmatchs->show_sort_order($info['sort'], 'action', $info['order'], '/admin/currentusers.php', lang('Action')),
+				'sort_idle'			=> $nextmatchs->show_sort_order($info['sort'], 'dla', $info['order'], '/admin/currentusers.php', lang('idle')),
+				'lang_kill'			=> $lang_kill
+			);
 
-			$this->template->set_var('sort_loginid',$nextmatchs->show_sort_order($info['sort'],'session_lid',$info['order'],
-				'/admin/currentusers.php',lang('LoginID')));
-			$this->template->set_var('sort_ip',$nextmatchs->show_sort_order($info['sort'],'session_ip',$info['order'],
-				'/admin/currentusers.php',lang('IP')));
-			$this->template->set_var('sort_login_time',$nextmatchs->show_sort_order($info['sort'],'session_logintime',$info['order'],
-				'/admin/currentusers.php',lang('Login Time')));
-			$this->template->set_var('sort_action',$nextmatchs->show_sort_order($info['sort'],'session_action',$info['order'],
-				'/admin/currentusers.php',lang('Action')));
-			$this->template->set_var('sort_idle',$nextmatchs->show_sort_order($info['sort'],'session_dla',$info['order'],
-				'/admin/currentusers.php',lang('idle')));
-			$this->template->set_var('lang_kill',lang('Kill'));
+			$this->header();
+			$this->template->set_file('current', 'currentusers.tpl');
+			$this->template->set_block('current', 'rows', 'row');
+			$this->template->set_block('current', 'list', 'list');
 
-			$values = $this->bo->list_sessions($info['start'],$info['order'],$info['sort']);
+			$this->template->set_var($header);
 
-			while (list(,$value) = @each($values))
+			$tr_class = '';
+
+			$values = $this->bo->list_sessions($info['start'], $info['order'] ,$info['sort']);
+			foreach ( $values as $value )
 			{
-				$nextmatchs->template_alternate_row_class($this->template);
+				$tr_class = $nextmatchs->alternate_row_class($tr_class);
+				$value['tr_class'] = $tr_class;
+				$value['kill'] = '&nbsp;';
 
-				$this->template->set_var('row_loginid',$value['session_lid']);
-
-				if ($can_view_ip)
+				if ( $can_kill && $value['id'] != $GLOBALS['phpgw_info']['user']['sessionid'] )
 				{
-					$this->template->set_var('row_ip',$value['session_ip']);
-				}
-				else
-				{
-					$this->template->set_var('row_ip','&nbsp; -- &nbsp;');
-				}
-
-				$this->template->set_var('row_logintime',$value['session_logintime']);
-				$this->template->set_var('row_idle',$value['session_idle']);
-
-				if ($value['session_action'] && $can_view_action)
-				{
-					$this->template->set_var('row_action',$GLOBALS['phpgw']->strip_html($value['session_action']));
-				}
-				elseif(! $can_view_action)
-				{
-					$this->template->set_var('row_action','&nbsp; -- &nbsp;');
-				}
-				else
-				{
-					$this->template->set_var('row_action','&nbsp;');
+					$kill_url = $GLOBALS['phpgw']->link('/index.php', array
+					(
+						'menuaction'	=> 'admin.uicurrentsessions.kill',
+						'ksession'		=> $value['session_id'],
+						'kill'			=> 'true'
+					));
+					$value['kill'] = "<a href=\"{$kill_url}\">{$lang_kill}</a>";
 				}
 
-				if ($value['session_id'] != $GLOBALS['phpgw_info']['user']['sessionid'] && ! $GLOBALS['phpgw']->acl->check('current_sessions_access',8,'admin'))
-				{
-					$this->template->set_var('row_kill','<a href="' . $GLOBALS['phpgw']->link('/index.php',array('menuaction'=>'admin.uicurrentsessions.kill',
-						'ksession'=> $value['session_id'], 'kill'=>'true')) . '">' . lang('Kill').'</a>');
-				}
-				else
-				{
-					$this->template->set_var('row_kill','&nbsp;');
-				}
-
-				$this->template->parse('rows','row',True);
+				$this->template->set_var($value);
+				$this->template->parse('row', 'rows', true);
 			}
 
-			$this->template->pfp('out','list');
+			$this->template->pfp('out', 'list');
 		}
 
 		public function kill()
 		{
-			if ($GLOBALS['phpgw']->acl->check('current_sessions_access',8,'admin'))
+			if ($GLOBALS['phpgw']->acl->check('current_sessions_access', phpgwapi_acl::DELETE, 'admin'))
 			{
 				$this->list_sessions();
 				return False;
