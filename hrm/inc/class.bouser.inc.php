@@ -242,7 +242,7 @@
 				'email_home' => 'email_home',
 			);
 
-			$fields = $contacts->are_users($account_info['person_id'], $qcols);
+			$fields = $contacts->are_users($account_info->person_id, $qcols);
 
 			$this->boaddressbook  = CreateObject('addressbook.boaddressbook');
 			$comms = $this->boaddressbook->get_comm_contact_data($fields[0]['contact_id']);
@@ -255,7 +255,7 @@
 				$fields[0]['email_home'] = $comms[$fields[0]['contact_id']]['home email'];
 			}
 
-			if(!$account_info['person_id'])
+			if(!$account_info->person_id)
 			{
 				$sfields = rawurlencode(serialize($fields[0]));
 				$contact_link   = $GLOBALS['phpgw']->link('/index.php',

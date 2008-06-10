@@ -53,14 +53,20 @@
 			}
 			$accounts =& $GLOBALS['phpgw']->accounts;
 
-			$account_info = $accounts->get_list('accounts', $start, $sort, $order, $query);
+			$list = $accounts->get_list('accounts', $start, $sort, $order, $query);
 			$this->total_records = $accounts->total;
 
-			foreach ( $account_info as &$account )
+			$account_info = array();
+			foreach ( $list as $entry )
 			{
-				$account['grants'] = isset($this->grants[$account->id]) ? $this->grants[$account->id] : 0;
+				$account_info[] = array
+				(
+					'grants'			=> isset($this->grants[$entry->id]) ? $this->grants[$entry->id] : 0,
+					'account_firstname'	=> $entry->firstname,
+					'account_lastname'	=> $entry->lastname,
+					'account_id'		=> $entry->id
+				);
 			}
-
 			return $account_info;
 		}
 
