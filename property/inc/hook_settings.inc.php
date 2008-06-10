@@ -57,7 +57,7 @@
 	$group_list = $acc->get_list('groups');
 	foreach ( $group_list as $entry )
 	{
-		$_groups[$entry['account_id']] = $entry['account_lid'];
+		$_groups[$entry->id] = $entry->lid;
 	}
 	create_select_box('Default group TTS','groupdefault',$_groups,'The default group to assign a ticket in Helpdesk-submodule');
 
@@ -65,9 +65,9 @@
 
 	foreach ( $account_list as $entry )
 	{
-		if($entry['account_status'] == 'A')
+		if($entry->enabled == 1)
 		{
-			$_accounts[$entry['account_id']] = $entry['account_firstname'] . ' ' . $entry['account_lastname'];
+			$_accounts[$entry->id] = $entry->firstname . ' ' . $entry->lastname;
 		}
 	}
 	create_select_box('Default assign to TTS','assigntodefault',$_accounts,'The default user to assign a ticket in Helpdesk-submodule');

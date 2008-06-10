@@ -283,8 +283,11 @@
 			$accounts 	= CreateObject('phpgwapi.accounts');
 			$users = $accounts->get_list('accounts', $start, $sort, $order, $query,$offset);
 			unset($accounts);
-			if (is_array($users_extra) && is_array($users))
+			if (is_array($users_extra) && is_object($users))
 			{
+
+echo 'FIXME';
+_debug_array($users);
 				$users = $users_extra + $users;
 			}
 
