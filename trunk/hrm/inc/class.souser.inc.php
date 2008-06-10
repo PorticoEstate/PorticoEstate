@@ -58,7 +58,7 @@
 
 			foreach ( $account_info as &$account )
 			{
-				$account['grants'] = isset($this->grants[$account['account_id']]) ? $this->grants[$account['account_id']] : 0;
+				$account['grants'] = isset($this->grants[$account->id]) ? $this->grants[$account->id] : 0;
 			}
 
 			return $account_info;

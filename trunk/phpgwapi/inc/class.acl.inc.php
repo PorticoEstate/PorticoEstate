@@ -49,7 +49,7 @@
 		* Account type
 		* @var string $_account_type Account type
 		*/
-		protected $account_type;
+		public $_account_type;
 
 		/**
 		 * Data cache
@@ -232,7 +232,7 @@
 		 *
 		 * @return array Array with ACL records
 		 */
-		protected function _read_repository($account_type = 'both')
+		public function _read_repository($account_type = 'both')
 		{
 			if ( !$this->_account_id )
 			{
@@ -1272,8 +1272,10 @@
 				$filter_grants = ' AND acl_grantor IS NULL';
 			}
 			$sql = 'SELECT acl_account FROM phpgw_acl'
-				. " WHERE acl_appname = '{$appname}'"
-					. " AND acl_location {$this->_like} '{$location}%' {$filter_grants}"
+				. " $this->_join phpgw_locations ON phpgw_acl.location_id = phpgw_locations.location_id"
+				. " $this->_join phpgw_applications ON phpgw_locations.app_id = phpgw_applications.app_id"
+				. " WHERE app_name = '{$appname}'"
+					. " AND phpgw_locations.name {$this->_like} '{$location}%' {$filter_grants}"
 					. " AND acl_type = '{$type}'"
 				. ' GROUP BY acl_account';
 			$this->_db->query($sql, __LINE__, __FILE__);
@@ -1285,6 +1287,38 @@
 
 			return $acl_accounts;
 		}
+
+
+		function get_accounts_at_location_($appname = '', $location ='', $grantor=0 ,$type ='')
+		{
+			if (!$appname)
+			{
+				settype($appname,'string');
+				$appname = $GLOBALS['phpgw_info']['flags']['currentapp'];
+			}
+
+			if($grantor > 0)
+			{
+				$filter_grants = ' AND acl_grantor IS NOT NULL';
+			}
+			else
+			{
+				$filter_grants = ' AND acl_grantor IS NULL';
+			}
+
+			$sql = "SELECT acl_account from phpgw_acl WHERE acl_appname = '$appname' AND acl_location $this->like '$location%' $filter_grants AND acl_type = '$type' GROUP BY acl_account";
+			$this->db->query($sql,__LINE__,__FILE__);
+
+			$acl_accounts = array();
+			while ($this->db->next_record())
+			{
+				$acl_accounts[$this->db->f('acl_account')] = true;
+			}
+
+			return $acl_accounts;
+		}
+
+
 
 		/**
 		* Delete ACL information from cache

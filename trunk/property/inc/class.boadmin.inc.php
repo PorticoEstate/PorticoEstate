@@ -234,7 +234,7 @@
 				$user_checked[] = $user_id;
 
 				$this->acl->account_id = $user_id;
-				$this->acl->read_repository();
+				$this->acl->_read_repository();
 				$this->acl->delete($this->acl_app, $this->location, $grantor, $type);
 				$this->acl->add($this->acl_app, $this->location, $rights, $grantor, $type);
 				$this->acl->save_repository($this->acl_app, $this->location);
@@ -249,7 +249,7 @@
 				$user_delete = $r_processed;
 			}
 
-			$users_at_location = $this->so->get_accounts_at_location($this->acl_app, $this->location, $grantor ,$type);
+			$users_at_location = $this->acl->get_accounts_at_location($this->acl_app, $this->location, $grantor ,$type);
 
 			if(is_array($user_delete) && count($user_delete)>0)
 			{
@@ -351,19 +351,19 @@
 				$j=0;
 				foreach($allusers as $account)
 				{
-					$user_list[$j]['account_id'] 			= $account['account_id'];
-					$user_list[$j]['account_lid'] 			= $account['account_lid'];
-					$user_list[$j]['account_firstname'] 	= $account['account_firstname'];
-					$user_list[$j]['account_lastname'] 		= $account['account_lastname'];
+					$user_list[$j]['account_id'] 			= $account->id;
+					$user_list[$j]['account_lid'] 			= $account->lid;
+					$user_list[$j]['account_firstname'] 	= $account->firstname;
+					$user_list[$j]['account_lastname'] 		= $account->lastname;
 
 					if($this->location == '.invoice')
 					{
-						$user_list[$j]['initials']			= $this->so->get_initials($account['account_id']);
+						$user_list[$j]['initials']			= $this->so->get_initials($account->id);
 					}
 
-					$this->acl->account_id=$account['account_id'];
+					$this->acl->account_id=$account->id;
 
-					$this->acl->read_repository();
+					$this->acl->_read_repository();
 
 					$count_right=count($right);
 

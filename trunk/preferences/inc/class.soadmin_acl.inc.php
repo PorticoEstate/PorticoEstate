@@ -1,28 +1,62 @@
 <?php
 	/**
-	* phpGroupWare - HRM: a  human resource competence management system.
+	* Inter module data linking manager for phpGroupWare
 	*
 	* @author Sigurd Nes <sigurdne@online.no>
-	* @copyright Copyright (C) 2003-2005 Free Software Foundation, Inc. http://www.fsf.org/
-	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
-	* @internal Development of this application was funded by http://www.bergen.kommune.no/bbb_/ekstern/
-	* @package hrm
-	* @subpackage admin
- 	* @version $Id$
+	* @copyright Copyright (C) 2003 -2008 Free Software Foundation, Inc. http://www.fsf.org/
+	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License Version 3 or later
+	* @version $Id$
+	* @package phpgwapi
+	* @subpackage utility
 	*/
 
-	/**
-	 * Description
-	 * @package hrm
+	/*
+		This program is free software: you can redistribute it and/or modify
+		it under the terms of the GNU General Public License as published by
+		the Free Software Foundation, either version 3 of the License, or
+		(at your option) any later version.
+
+		This program is distributed in the hope that it will be useful,
+		but WITHOUT ANY WARRANTY; without even the implied warranty of
+		MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+		GNU General Public License for more details.
+
+		You should have received a copy of the GNU General Public License
+		along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	 */
+
+	/**
+	* Finding acl-locations
+	* @todo move this into acl
+	*
+	* @package phpgwapi
+	* @subpackage utility
+	*/
 
 	class soadmin_acl
 	{
-		function soadmin_acl()
+		/**
+		* Constructor
+		*
+		* @return void
+		*/
+
+		function __construct()
 		{
 			$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
-			$this->db =& $GLOBALS['phpgw']->db;
+			$this->_db =& $GLOBALS['phpgw']->db;
+			$this->_join =& $this->_db->join;
 		}
+
+		/**
+		* Find locations within an application
+		*
+		* @param bool   $grant          Used for finding locations where users can grant rights to others
+		* @param string $appname        Name of application in question
+		* @param bool   $allow_c_attrib Used for finding locations where custom attributes can be applied
+		*
+		* @return array Array locations
+		*/
 
 		function select_location($grant = false, $appname = '', $allow_c_attrib = false)
 		{
@@ -32,9 +66,9 @@
 			{
 				$appname = $this->currentapp;
 			}
-			$appname = $this->db->db_addslashes($appname);
+			$appname = $this->_db->db_addslashes($appname);
 			
-			$filter = " WHERE appname='{$appname}'";
+			$filter = " WHERE app_name='{$appname}' AND phpgw_locations.name != 'run'";
 			
 			if($allow_c_attrib)
 			{
@@ -45,13 +79,18 @@
 			{
 				$filter .= ' AND allow_grant = 1';
 			}
-			$this->db->query("SELECT id, descr FROM phpgw_acl_location $filter ORDER BY id");
+
+			$sql = "SELECT location_id, phpgw_locations.name, phpgw_locations.descr FROM phpgw_locations"
+				. " $this->_join phpgw_applications ON phpgw_locations.app_id = phpgw_applications.app_id"
+				. " $filter ORDER BY location_id";
+
+			$this->_db->query($sql, __LINE__, __FILE__);
 			
-			while ($this->db->next_record())
+			$location = array();
+			while ($this->_db->next_record())
 			{
-				$location[$this->db->f('id')] = $this->db->f('descr', true);
+				$location[$this->_db->f('name')] = $this->_db->f('descr', true);
 			}
 			return $location;
 		}
 	}
-?>

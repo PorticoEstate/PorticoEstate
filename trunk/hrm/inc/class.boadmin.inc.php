@@ -335,17 +335,17 @@
 
 			$allusers = $GLOBALS['phpgw']->accounts->get_list($type, $this->start,$this->sort, $this->order, $this->query, $offset);
 
-			if (isSet($allusers) AND is_array($allusers))
+			if (isset($allusers) AND is_object($allusers))
 			{
 				$j=0;
 				foreach($allusers as $account)
 				{
-					$user_list[$j]['account_id'] 		= $account['account_id'];
-					$user_list[$j]['account_lid'] 		= $account['account_lid'];
-					$user_list[$j]['account_firstname'] 	= $account['account_firstname'];
-					$user_list[$j]['account_lastname'] 	= $account['account_lastname'];
+					$user_list[$j]['account_id'] 		= $account->id;
+					$user_list[$j]['account_lid'] 		= $account->lid;
+					$user_list[$j]['account_firstname']	= $account->firstname;
+					$user_list[$j]['account_lastname'] 	= $account->lastname;
 
-					$this->acl->account_id=$account['account_id'];
+					$this->acl->account_id=$account->id;
 
 					$this->acl->read_repository();
 
@@ -354,7 +354,7 @@
 					{
 						if($this->acl->check_rights($this->location, $right[$i],$this->acl_app,$grantor,0,$check_account_type))
 						{
-							if($this->acl->account_type == 'g')
+							if($this->acl->_account_type == 'g')
 							{
 								$user_list[$j]['right'][$right[$i]] = 'from_group';
 							}
@@ -366,7 +366,7 @@
 						}
 						if($this->acl->check_rights($this->location, $right[$i],$this->acl_app,$grantor,1,$check_account_type))
 						{
-							if($this->acl->account_type == 'g')
+							if($this->acl->_account_type == 'g')
 							{
 								$user_list[$j]['mask'][$right[$i]] = 'from_group';
 							}
