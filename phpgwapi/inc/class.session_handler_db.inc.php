@@ -74,6 +74,47 @@
 		}
 
 		/**
+		 * Get a list of currently logged in sessions
+		 *
+		 * @return array list of sessions
+		 */
+		public static function get_list()
+		{
+			// clean out the dead sessions
+			self::gc(ini_get('session.gc_maxlifetime'));
+			
+			$values = array();
+
+			$sql = 'SELECT session_id, ip, data FROM phpgw_sessions';
+
+			$GLOBALS['phpgw']->db->query($sql, __LINE__, __FILE__);
+			while ($GLOBALS['phpgw']->db->next_record())
+			{
+				$data = $GLOBALS['phpgw']->crypto->decrypt($GLOBALS['phpgw']->db->f('data', true));
+
+				// skip invalid or anonymous sessions
+				if ( !isset($data['phpgw_session'])
+					|| !isset($data['phpgw_session']['session_flags'])
+					|| $data['phpgw_session']['session_flags'] == 'A' )
+				{
+					continue;
+				}
+
+				$values[$GLOBALS['phpgw']->db->f('session_id', true)] = array
+				(
+					'id'		=> $GLOBALS['phpgw']->db->f('id', true),
+					'lid'		=> $data['phpgw_session']['session_lid'],
+					'ip'		=> $GLOBALS['phpgw']->db->f('ip', true),
+					'action'	=> $data['phpgw_session']['session_action'],
+					'dla'		=> $data['phpgw_session']['session_dla'],
+					'logints'	=> $data['phpgw_session']['session_logintime']
+				);
+			}
+			return $values;
+		}
+
+
+		/**
 		 * Open connection to session handler backend
 		 *
 		 * @internal does nothing for us
@@ -122,7 +163,6 @@
 			$data = $GLOBALS['phpgw']->db->db_addslashes($GLOBALS['phpgw']->crypto->encrypt($data));
 			$ts = time();
 
-			// need to do it this way - REPLACE INTO would make a more elegant solution 
 			$GLOBALS['phpgw']->db->query("SELECT session_id FROM phpgw_sessions WHERE session_id = '{$id}'", __LINE__, __FILE__);
 			if ( $GLOBALS['phpgw']->db->next_record() )
 			{

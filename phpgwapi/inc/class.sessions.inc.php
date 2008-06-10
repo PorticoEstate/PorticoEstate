@@ -523,10 +523,12 @@
 		*/
 		public function link($url, $extravars = array(), $redirect=false)
 		{
-			$term = '&amp;'; //W3C Compliant in markup
+			//W3C Compliant in markup	
+			$term = '&amp;'; 
 			if ( $redirect )
 			{
-				$term = '&'; // RFC Compliant for Header('Location: ...
+				// RFC Compliant for Header('Location: ...
+				$term = '&'; 
 			}
 
 			/* first we process the $url to build the full scriptname */
@@ -650,96 +652,49 @@
 		 */
 		public function list_sessions($start, $order, $sort, $all_no_sort = false)
 		{
-			// FIXME this now only works with php sessions :(
-			return array();
+			// We cache the data for 5mins system wide as this is an expensive operation
+			$last_updated = phpgwapi_cache::system_get('phpgwapi', 'session_list_saved');
 
-			/*
-
-			$session_cache = $this->appsession('php4_session_cache','phpgwapi');
-
-			$values = array();
-			$maxmatchs = $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
-			$dir = @opendir($path = ini_get('session.save_path'));
-			while ($dir && $file = readdir($dir))
+			if ( is_null($last_updated) 
+				|| $last_updated < 60 * 5 )
 			{
-				if (substr($file,0,5) != 'sess_')
+				$data = array();
+				switch ( $GLOBALS['phpgw_info']['server']['sessions_type'] )
 				{
-					continue;
+					case 'db':
+						$data = phpgwapi_session_handler_db::get_list();
+						break;
+
+					case 'php':
+					default:
+						$data = self::_get_list();
 				}
-				if (isset($session_cache[$file]))	// use copy from cache
-				{
-					$session = $session_cache[$file];
-
-					if ($session['session_flags'] == 'A' || !$session['session_id'] ||
-						$session['session_install_id'] != $GLOBALS['phpgw_info']['server']['install_id'])
-					{
-						continue;	// no anonymous sessions or other domains or installations
-					}
-					if (!$all_no_sort)	// we need the up-to-date data --> unset and reread it
-					{
-						unset($session_cache[$file]);
-					}
-				}
-				if ( !isset($session_cache[$file]) && is_readable($file) )	// not in cache, read and cache it
-				{
-					$fd = fopen ($path . '/' . $file,'r');
-					$fs = filesize ($path . '/' . $file);
-
-					// handle filesize 0 because php recently warns if fread is used on 0byte files
-					if ($fs > 0)
-					{
-						$session = fread ($fd, filesize ($path . '/' . $file));
-					}
-					else
-					{
-						$session = '';
-					}
-					fclose ($fd);
-
-					if (substr($session,0,14) != 'phpgw_session|')
-					{
-						continue;
-					}
-					$session = unserialize(substr($session,14));
-					unset($session['phpgw_app_sessions']);	// not needed, saves memory
-					$session_cache[$file] = $session;
-				}
-
-				if ($session['session_flags'] == 'A' || !$session['session_id'] ||
-					$session['session_install_id'] != $GLOBALS['phpgw_info']['server']['install_id'])
-				{
-					continue;	// no anonymous sessions or other domains or installations
-				}
-				//echo "file='$file'=<pre>"; print_r($session); echo "</pre>";
-
-				$session['php_session_file'] = $path . '/' . $file;
-				$values[$session['session_id']] = $session;
+				phpgwapi_cache::system_set('phpgwapi', 'session_list', $data);
+				phpgwapi_cache::system_set('phpgwapi', 'session_list_saved', time());
 			}
-			@closedir($dir);
-
-			if (!$all_no_sort)
+			else
 			{
-				$GLOBALS['phpgw']->session->sort_by = $sort;
-				$GLOBALS['phpgw']->session->sort_order = $order;
-
-				uasort($values, array('self', 'session_sort'));
-
-				$i = 0;
-				$start = intval($start);
-				foreach($values as $id => $data)
-				{
-					if ($i < $start || $i > $start+$maxmatchs)
-					{
-						unset($values[$id]);
-					}
-					++$i;
-				}
-				reset($values);
+				$data = phpgwapi_cache::system_get('phpgwapi', 'session_list');
 			}
-			$this->appsession('php4_session_cache', 'phpgwapi', $session_cache);
 
-			return $values;
-			*/
+			if ( $all_no_sort )
+			{
+				return $data;
+			}
+
+			$GLOBALS['phpgw']->session->sort_by = $sort;
+			$GLOBALS['phpgw']->session->sort_order = $order;
+
+			uasort($data, array('self', 'session_sort'));
+
+			$maxmatches = 25;
+			if ( isset($GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'])
+				&& (int) $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] )
+			{
+				$maxmatches = (int) $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
+			}
+
+			return array_slice($data, $start, $maxmatches);
 		}
 
 		/**
@@ -1063,8 +1018,6 @@
 		public function update_dla()
 		{
 			session_id($this->_sessionid);
-			//FIXME remove the @ and wrap this in an if block
-			@session_start();
 
 			if ( isset($GLOBALS['phpgw_info']['menuaction']) )
 			{
@@ -1290,7 +1243,6 @@
 					$GLOBALS['phpgw']->crypto->cleanup();
 					unset($GLOBALS['phpgw']->crypto);
 				}
-				//echo 'DEBUG: Sessions: account_id is empty!<br>'."\n";
 				return false;
 			}
 			return true;
@@ -1307,140 +1259,72 @@
 		{
 			// this is currently broken and unused
 			return false;
+		}
+
+		/**
+		 * Get a list of currently logged in sessions
+		 *
+		 * @return array list of sessions
+		 */
+		protected function _get_list()
+		{
+			$values = array();
+
 			/*
+			   Yes recursive - from the manual
+			   There is an optional N argument to this [session.save_path] that determines 
+			   the number of directory levels your session files will be spread around in.
+			 */
+			$path = session_save_path();
 
-			$GLOBALS['phpgw']->interserver = createObject('phpgwapi.interserver');
-			$this->_sessionid = $sessionid;
-
-			$session = $this->read_session($this->_sessionid);
-			$this->_session_flags = $session['session_flags'];
-
-			list($this->_account_lid, $this->_account_domain) = explode('@', $session['session_lid']);
-
-			if ($this->_account_domain == '')
+			// debian/ubuntu set the perms to /var/lib/php5 and so the sessions can't be read
+			if ( !is_readable($path) )
 			{
-				$this->_account_domain = $GLOBALS['phpgw_info']['server']['default_domain'];
+				// FIXME we really should throw an exception here
+				$values[] = array
+				(
+					'id'		=> 'Unable to read sessions',
+					'lid'		=> 'invalid',
+					'ip'		=> '0.0.0.0',
+					'action'	=> 'Access denied by underlying filesystem',
+					'dla'		=> 0,
+					'logints'	=> 0
+				);
+				return $values;
 			}
 
-			$phpgw_info_flags = $GLOBALS['phpgw_info']['flags'];
-
-			$GLOBALS['phpgw_info']['flags'] = $phpgw_info_flags;
-
-			$this->update_dla();
-			$this->_account_id = $GLOBALS['phpgw']->interserver->name2id($this->_account_lid);
-
-			if (!$this->_account_id)
+			$dir = new RecursiveDirectoryIterator();
+			foreach ( $dir as $filename )
 			{
-				return false;
-			}
-
-			$GLOBALS['phpgw_info']['user']['account_id'] = $this->_account_id;
-
-			$use_cache = false;
-			if ( isset($GLOBALS['phpgw_info']['server']['cache_phpgw_info']) )
-			{
-				$use_cache = !!$GLOBALS['phpgw_info']['server']['cache_phpgw_info'];
-			}
-
-			$this->read_repositories($use_cache);
-
-			// init the crypto object before appsession call below
-			$this->_key = md5($this->_sessionid . $GLOBALS['phpgw_info']['server']['encryptkey']);
-			$this->_iv  = $GLOBALS['phpgw_info']['server']['mcrypt_iv'];
-			$GLOBALS['phpgw']->crypto->init(array($this->_key, $this->_iv));
-
-			$GLOBALS['phpgw_info']['user']  = $this->_data;
-			$GLOBALS['phpgw_info']['hooks'] = $this->hooks;
-
-			$GLOBALS['phpgw_info']['user']['session_ip'] = $session['session_ip'];
-			$GLOBALS['phpgw_info']['user']['passwd'] = base64_decode($this->appsession('password', 'phpgwapi'));
-
-			if ($userid_array[1] != $GLOBALS['phpgw_info']['user']['domain'])
-			{
-				if(is_object($GLOBALS['phpgw']->log))
+				// only try php session files
+				if ( !preg_match('/^sess_([a-f0-9]+)$/', $filename) )
 				{
-					$GLOBALS['phpgw']->log->message(array(
-						'text' => 'W-VerifySession, the domains %1 and %2 don\t match',
-						'p1'   => $userid_array[1],
-						'p2'   => $GLOBALS['phpgw_info']['user']['domain'],
-						'line' => __LINE__,
-						'file' => __FILE__
-					));
-					$GLOBALS['phpgw']->log->commit();
+					continue;
 				}
 
-				if(is_object($GLOBALS['phpgw']->crypto))
+				$data = unserialize(file_get_contents($filename));
+
+				// skip invalid or anonymous sessions
+				if ( !isset($data['phpgw_session'])
+					|| $data['phpgw_session']['session_install_id'] != $this->_install_id
+					|| !isset($data['phpgw_session']['session_flags'])
+					|| $data['phpgw_session']['session_flags'] == 'A' )
 				{
-					$GLOBALS['phpgw']->crypto->cleanup();
-					unset($GLOBALS['phpgw']->crypto);
-				}
-				return false;
-			}
-
-			$verify_ip = false;
-			if ( isset($GLOBALS['phpgw_info']['server']['sessions_checkip']) )
-			{
-				$verify_ip = !!$GLOBALS['phpgw_info']['server']['sessions_checkip'];
-			}
-
-			if ( $verify_ip )
-			{
-				if ( PHP_OS != 'Windows'
-					&& ( !$GLOBALS['phpgw_info']['user']['session_ip']
-						|| $GLOBALS['phpgw_info']['user']['session_ip'] != $this->_get_user_ip()) )
-				{
-					if(is_object($GLOBALS['phpgw']->log))
-					{
-						// This needs some better wording
-						$GLOBALS['phpgw']->log->message(array(
-							'text' => 'W-VerifySession, IP %1 doesn\'t match IP %2 in session table',
-							'p1'   => $this->_get_user_ip(),
-							'p2'   => $GLOBALS['phpgw_info']['user']['session_ip'],
-							'line' => __LINE__,
-							'file' => __FILE__
-						));
-						$GLOBALS['phpgw']->log->commit();
-					}
-
-					if(is_object($GLOBALS['phpgw']->crypto))
-					{
-						$GLOBALS['phpgw']->crypto->cleanup();
-						unset($GLOBALS['phpgw']->crypto);
-					}
-					return false;
-				}
-			}
-
-			$GLOBALS['phpgw']->acl->acl($this->_account_id);
-			$GLOBALS['phpgw']->accounts->set_account($this->_account_id);
-			$GLOBALS['phpgw']->preferences->set_account_id($this->_account_id);
-			$GLOBALS['phpgw']->applications->applications($this->_account_id);
-
-			if (! $this->_account_lid)
-			{
-				if(is_object($GLOBALS['phpgw']->log))
-				{
-					// This needs some better wording
-					$GLOBALS['phpgw']->log->message(array(
-						'text' => 'W-VerifySession, account_id is empty',
-						'line' => __LINE__,
-						'file' => __FILE__
-					));
-					$GLOBALS['phpgw']->log->commit();
+					continue;
 				}
 
-				if(is_object($GLOBALS['phpgw']->crypto))
-				{
-					$GLOBALS['phpgw']->crypto->cleanup();
-					unset($GLOBALS['phpgw']->crypto);
-				}
-				return false;
+				$values[$data['phpgw_session']['session_id']] = array
+				(
+					'id'		=> $data['phpgw_session']['session_id'],
+					'lid'		=> $data['phpgw_session']['session_lid'],
+					'ip'		=> $data['phpgw_session']['session_ip'],
+					'action'	=> $data['phpgw_session']['session_action'],
+					'dla'		=> $data['phpgw_session']['session_dla'],
+					'logints'	=> $data['phpgw_session']['session_logintime']
+				);
 			}
-			else
-			{
-				return true;
-			}
-			*/
+			return $values;
+
 		}
 
 		/**
@@ -1585,8 +1469,6 @@
 			$this->_data['account_lid'] = $this->_account_lid;
 			$this->_data['userid']      = $this->_account_lid;
 			$this->_data['passwd']      = $this->_passwd;
-
-			//echo '<pre>' . print_r($this->_data, true) . '</pre>';
 
 			if ( $write_cache )
 			{
