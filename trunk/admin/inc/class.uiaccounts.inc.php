@@ -561,7 +561,7 @@
 			$url_acl = $GLOBALS['phpgw']->link('/index.php', array
 			(
 				'menuaction'		=> 'preferences.uiadmin_acl.list_acl',
-				'acl_app'			=> '##APP##',
+				'acl_app'			=> 'miss',
 				'cat_id'			=> 'groups',
 				'module'			=> '.'
 			));
@@ -569,7 +569,7 @@
 			$url_grant = $GLOBALS['phpgw']->link('/index.php', array
 			(
 				'menuaction'		=> 'preferences.uiadmin_acl.aclprefs',
-				'acl_app'			=> '##APP##',
+				'acl_app'			=> 'miss',
 				'cat_id'			=> 'groups',
 				'module'			=> '.',
 				'granting_group'	=> $account_id
@@ -577,6 +577,7 @@
 
 			foreach ( $apps as $app )
 			{
+
 				if ($GLOBALS['phpgw_info']['apps'][$app]['enabled']
 						&& $GLOBALS['phpgw_info']['apps'][$app]['status'] != 3)
 				{
@@ -586,8 +587,8 @@
 					$grant_url = '';
 					if ( $grants_enabled )
 					{
-						$acl_url = preg_replace('/##APP##/', $app, $url_acl);
-						$grant_url = preg_replace('/##APP##/', $app, $url_acl);
+						$acl_url = preg_replace('/miss/', $app, $url_acl);
+						$grant_url = preg_replace('/miss/', $app, $url_grant);
 					}
 
 					$app_list[] = array
