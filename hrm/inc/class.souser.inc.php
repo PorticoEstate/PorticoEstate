@@ -47,10 +47,6 @@
 				$allrows	= isset($data['allrows']) && $data['allrows'] ? $data['allrows'] : false;
 			}
 
-			if ( !isset($GLOBALS['phpgw']->accounts) || !is_object($GLOBALS['phpgw']->accounts) )
-			{
-				$GLOBALS['phpgw']->accounts = createObject('phpgwapi.accounts');
-			}
 			$accounts =& $GLOBALS['phpgw']->accounts;
 
 			$list = $accounts->get_list('accounts', $start, $sort, $order, $query);

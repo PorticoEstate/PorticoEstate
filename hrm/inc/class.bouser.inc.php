@@ -225,7 +225,8 @@
 
 		function get_user_data($user_id)
 		{
-			$account = CreateObject('phpgwapi.accounts',$user_id,'u');
+			$account =& $GLOBALS['phpgw']->accounts;
+			$account->set_account($user_id, 'u');
 			$account_info = $account->read_repository();
 			$membership = $account->membership($user_id);
 			$contacts = CreateObject('phpgwapi.contacts');

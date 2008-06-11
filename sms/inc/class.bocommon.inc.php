@@ -249,7 +249,7 @@
 			{
 				foreach($extra as $extra_user)
 				{
-					$users_extra[]=array
+					$all_users[]=array
 					(
 						'account_id' => $extra_user,
 						'account_firstname' => lang($extra_user)
@@ -257,45 +257,46 @@
 				}
 			}
 
-			$accounts 	= CreateObject('phpgwapi.accounts');
+			$accounts = & $GLOBALS['phpgw']->accounts;
 			$users = $accounts->get_list('accounts', $start, $sort, $order, $query,$offset);
 			unset($accounts);
-			if (is_array($users_extra) && is_object($users))
-			{
-echo 'FIXME';
-_debug_array($users);
-
-				$users = $users_extra + $users;
-			}
-
-			if (isSet($users) AND is_array($users))
+			if (isset($all_users) && is_array($all_users) && is_array($users))
 			{
 				foreach($users as $user)
 				{
-					$sel_user = '';
-					if ($user['account_id']==$selected)
-					{
-						$sel_user = 'selected';
-					}
-
-					$user_list[] = array
+					$all_users[] = array
 					(
-						'user_id'	=> $user['account_id'],
-						'name'		=> $user['account_lastname'].' '.$user['account_firstname'],
-						'selected'	=> $sel_user
+						'user_id'	=> $user->id,
+						'name'		=> $user->__toString(),
 					);
 				}
 			}
 
-			$user_count= count($user_list);
-			for ($i=0;$i<$user_count;$i++)
+			if (count($all_users)>0)
 			{
-				if ($user_list[$i]['selected'] != 'selected')
+				foreach($all_users as $user)
 				{
-					unset($user_list[$i]['selected']);
+					$sel_user = '';
+					if ($user['user_id'] == $selected)
+					{
+						$user_list[] = array
+						(
+							'user_id'	=> $user['user_id'],
+							'name'		=> $user['name'],
+							'selected'	=> 'selected'
+						);
+					}
+					else
+					{
+						$user_list[] = array
+						(
+							'user_id'	=> $user['user_id'],
+							'name'		=> $user['name'],
+						);
+					
+					}
 				}
 			}
-
 //_debug_array($user_list);
 			return $user_list;
 		}
@@ -312,23 +313,24 @@ _debug_array($users);
 					break;
 			}
 
-			$accounts 	= CreateObject('phpgwapi.accounts');
+			$accounts	= & $GLOBALS['phpgw']->accounts;
+
 			$users = $accounts->get_list('groups', $start, $sort, $order, $query,$offset);
 			unset($accounts);
-			if (isSet($users) AND is_array($users))
+			if (isset($users) AND is_array($users))
 			{
 				foreach($users as $user)
 				{
 					$sel_user = '';
-					if ($user['account_id']==$selected)
+					if ($user->id == $selected)
 					{
 						$sel_user = 'selected';
 					}
 
 					$user_list[] = array
 					(
-						'id'	=> $user['account_id'],
-						'name'		=> $user['account_firstname'],
+						'id'	=> $user->id,
+						'name'		=> $user->firstname,
 						'selected'	=> $sel_user
 					);
 				}

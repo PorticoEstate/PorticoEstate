@@ -53,7 +53,7 @@
 
 	create_select_box('show quick link for changing status for tickets','tts_status_link',$yes_and_no,'Enables to set status wihout entering the ticket');
 
-	$acc = CreateObject('phpgwapi.accounts');
+	$acc = & $GLOBALS['phpgw']->accounts;
 	$group_list = $acc->get_list('groups');
 	foreach ( $group_list as $entry )
 	{
