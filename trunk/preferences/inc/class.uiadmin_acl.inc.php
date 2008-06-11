@@ -270,7 +270,7 @@
 
 			$appname			= lang('preferences');
 			$function_msg		= lang('set grants');
-			$owner_name 		= $GLOBALS['phpgw']->accounts->id2name($GLOBALS['phpgw']->accounts->account_id);		// get owner name for title
+			$owner_name 		= $GLOBALS['phpgw']->accounts->id2name($this->account);		// get owner name for title
 
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('admin') . ' - ' . $this->acl_app . ': ' . $function_msg . ': ' . $owner_name;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('list_permission' => $data));

@@ -233,8 +233,7 @@
 			{
 				$user_checked[] = $user_id;
 
-				$this->acl->_account_id = $user_id;
-				$this->acl->_read_repository();
+				$this->acl->set_account_id($user_id, true);
 				$this->acl->delete($this->acl_app, $this->location, $grantor, $type);
 				$this->acl->add($this->acl_app, $this->location, $rights, $grantor, $type);
 				$this->acl->save_repository($this->acl_app, $this->location);
@@ -257,8 +256,7 @@
 				{
 					if(isset($users_at_location[$user_id]) && $users_at_location[$user_id])
 					{
-						$this->acl->_account_id = $user_id;
-						$this->acl->_read_repository();
+						$this->acl->set_account_id($user_id, true);
 						$this->acl->delete($this->acl_app, $this->location, $grantor, $type);
 						$this->acl->save_repository($this->acl_app, $this->location);
 					}
@@ -361,9 +359,7 @@
 						$user_list[$j]['initials']			= $this->so->get_initials($account->id);
 					}
 
-					$this->acl->_account_id=$account->id;
-
-					$this->acl->_read_repository();
+					$this->acl->set_account_id($account->id, true);
 
 					$count_right=count($right);
 
@@ -371,7 +367,7 @@
 					{
 						if($this->acl->check_rights($this->location, $right[$i],$this->acl_app,$grantor,0,$check_account_type))
 						{
-							if($this->acl->_account_type == 'g')
+							if($this->acl->account_type == 'g')
 							{
 								$user_list[$j]['right'][$right[$i]] = 'from_group';
 							}
@@ -383,7 +379,7 @@
 						}
 						if($this->acl->check_rights($this->location, $right[$i],$this->acl_app,$grantor,1,$check_account_type))
 						{
-							if($this->acl->_account_type == 'g')
+							if($this->acl->account_type == 'g')
 							{
 								$user_list[$j]['mask'][$right[$i]] = 'from_group';
 							}
