@@ -50,7 +50,6 @@
 		 */	
 		public $debug = 0;		// This will turn on debugging information.
 		public $contacts;
-		public $nextmatchs;
 		public $preferences;
 
 		// FIXME find all instances and change to sessions then we can drop this
