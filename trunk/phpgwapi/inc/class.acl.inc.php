@@ -43,20 +43,14 @@
 		* Account id
 		* @var integer $_account_id Account id
 		*/
-		public $_account_id;
+		protected $_account_id;
 
 		/**
 		* Account type
 		* @var string $_account_type Account type
 		*/
-		public $_account_type;
 
-		/**
-		 * Data cache
-		 * @var object $_cache data cache object
-		 */
-		protected $cache;
-
+		protected $_account_type;
 		/**
 		* @var array $_data Array with ACL records
 		*/
@@ -147,7 +141,6 @@
 
 			$this->_like =& $this->_db->like;
 			$this->_join =& $this->_db->join;
-			$this->cache =& $GLOBALS['phpgw']->cache;
 
 			$this->set_account_id($account_id);
 		}
@@ -226,45 +219,13 @@
 		 */
 
 		/**
-		 * Reads ACL records from database and return array along with storing it
-		 *
-		 * @param string $account_type the type of accounts sought accounts|groups
-		 *
-		 * @return array Array with ACL records
-		 */
-		public function _read_repository($account_type = 'both')
-		{
-			if ( !$this->_account_id )
-			{
-				$this->set_account_id($this->_account_id, false);
-			}
-
-			$data = $this->cache->system_get('phpgwapi', "acl_data_{$this->_account_id}");
-			if ( !is_null($data) )
-			{
-				$this->_data[$this->_account_id] = $data;
-				return; // nothing more to do
-			}
-
-			switch( $GLOBALS['phpgw_info']['server']['account_repository'] )
-			{
-				case 'ldap':
-					$this->_read_repository_ldap($account_type);
-					break;
-
-				default:
-					$this->_read_repository_sql($account_type);
-			}
-		}
-
-		/**
 		* Get acl records
 		*
 		* @return array Array with ACL records
 		*/
 		public function read()
 		{
-			if (count($this->_data[$this->_account_id]) == 0)
+			if ( count($this->_data[$this->_account_id]) == 0 )
 			{
 				$this->_read_repository();
 			}
@@ -415,12 +376,10 @@
 
 			$this->_db->transaction_commit();
 
-			$this->delete_cache($this->_account_id);
+			$this->_delete_cache($this->_account_id);
 
 			return $this->_data[$this->_account_id];
 		}
-
-		// These are the non-standard $account_id specific functions
 
 		/**
 		* Get rights from the repository not specific to this object
@@ -453,7 +412,7 @@
 				|| count($this->_data[$this->_account_id]) == 0)
 			{
 				$this->_data[$this->_account_id] = array();
-				$cached = $GLOBALS['phpgw']->cache->system_get('phpgwapi',
+				$cached = phpgwapi_cache::system_get('phpgwapi',
 																"acl_data_{$this->_account_id}");
 				if ( is_array($cached) && count($cached) )
 				{
@@ -462,9 +421,9 @@
 				else
 				{
 					$this->_read_repository($account_type);
-					$GLOBALS['phpgw']->cache->system_set('phpgwapi',
-														"acl_data_{$this->_account_id}",
-														$this->_data[$this->_account_id]);
+					phpgwapi_cache::system_set('phpgwapi',
+										"acl_data_{$this->_account_id}",
+										$this->_data[$this->_account_id]);
 				}
 			}
 
@@ -708,7 +667,7 @@
 				$this->_db->query($sql, __LINE__, __FILE__);
 			}
 
-			$this->delete_cache($account_id);
+			$this->_delete_cache($account_id);
 
 			return true;
 		}
@@ -760,7 +719,7 @@
 
 			if ( $ret )
 			{
-				$this->delete_cache($account_id);
+				$this->_delete_cache($account_id);
 			}
 
 			return $ret;
@@ -1127,6 +1086,94 @@
 		}
 
 		/**
+		* Reads ACL accounts from database and return array with accounts that have rights
+		*
+		* @param string  $appname  Application name
+		*		if empty string the value of $GLOBALS['phpgw_info']['flags']['currentapp'] is used
+		* @param string  $location location within Application name
+		* @param integer $grantor  check if this is grants or ordinary rights/mask
+		* @param integer $type     mask or right (1 means mask , 0 means right) to check against
+		*
+		* @return array Array with accounts
+		*/
+		public function get_accounts_at_location($appname = '', $location = '',
+												$grantor = 0 ,$type = '')
+		{
+			$acl_accounts = array();
+			if ( !$appname )
+			{
+				$appname = $GLOBALS['phpgw_info']['flags']['currentapp'];
+			}
+
+			$filter_grants = ' AND acl_grantor IS NULL';
+			if($grantor > 0)
+			{
+				$filter_grants = ' AND acl_grantor IS NOT NULL';
+			}
+
+			$sql = 'SELECT acl_account FROM phpgw_acl'
+					. " $this->_join phpgw_locations ON phpgw_acl.location_id = phpgw_locations.location_id"
+					. " $this->_join phpgw_applications ON phpgw_locations.app_id = phpgw_applications.app_id"
+				. " WHERE app_name = '{$appname}'"
+					. " AND phpgw_locations.name {$this->_like} '{$location}%' {$filter_grants}"
+					. " AND acl_type = '{$type}'"
+				. ' GROUP BY acl_account';
+			$this->_db->query($sql, __LINE__, __FILE__);
+
+			while ($this->_db->next_record())
+			{
+				$acl_accounts[$this->_db->f('acl_account')] = true;
+			}
+
+			return $acl_accounts;
+		}
+
+		/**
+		* Delete ACL information from cache
+		*
+		* @param integer $account_id the account to delete data from the cache for
+		*
+		* @return null
+		*/
+		protected function _delete_cache($account_id)
+		{
+			phpgwapi_cache::system_clear('phpgwapi', "acl_data_{$account_id}");
+		}
+
+		/**
+		 * Reads ACL records from database and return array along with storing it
+		 *
+		 * @param string $account_type the type of accounts sought accounts|groups
+		 *
+		 * @return array Array with ACL records
+		 */
+		protected function _read_repository($account_type = 'both')
+		{
+			if ( !$this->_account_id )
+			{
+				$this->set_account_id($this->_account_id, false);
+			}
+
+			$data = phpgwapi_cache::system_get('phpgwapi', "acl_data_{$this->_account_id}");
+			if ( !is_null($data) )
+			{
+				$this->_data[$this->_account_id] = $data;
+				return; // nothing more to do
+			}
+
+			switch( $GLOBALS['phpgw_info']['server']['account_repository'] )
+			{
+				case 'ldap':
+					$this->_read_repository_ldap($account_type);
+					break;
+
+				default:
+					$this->_read_repository_sql($account_type);
+			}
+			$data = phpgwapi_cache::system_set('phpgwapi', "acl_data_{$this->_account_id}", $this->_data);
+		}
+
+		/**
 		* Reads ACL records from database for LDAP accounts
 		*
 		* @param string $account_type the type of accounts sought accounts|groups
@@ -1220,9 +1267,9 @@
 					. ' phpgw_acl.acl_account, phpgw_acl.acl_grantor,'
 					. ' phpgw_acl.acl_rights, phpgw_acl.acl_type, phpgw_accounts.account_type'
 				. ' FROM phpgw_acl'
-				. " {$this->_join} phpgw_locations ON phpgw_acl.location_id = phpgw_locations.location_id"
-				. " {$this->_join} phpgw_applications ON phpgw_applications.app_id = phpgw_locations.app_id"
-				. "{$this->_join} phpgw_accounts ON phpgw_acl.acl_account = phpgw_accounts.account_id "
+					. " {$this->_join} phpgw_locations ON phpgw_acl.location_id = phpgw_locations.location_id"
+					. " {$this->_join} phpgw_applications ON phpgw_applications.app_id = phpgw_locations.app_id"
+					. "{$this->_join} phpgw_accounts ON phpgw_acl.acl_account = phpgw_accounts.account_id "
 				. " WHERE acl_account IN ($ids)";
 
 			$this->_db->query($sql, __LINE__, __FILE__);
@@ -1241,62 +1288,5 @@
 				);
 			}
 			return $this->_data;
-		}
-
-		/**
-		* Reads ACL accounts from database and return array with accounts that have rights
-		*
-		* @param string  $appname  Application name
-		*		if empty string the value of $GLOBALS['phpgw_info']['flags']['currentapp'] is used
-		* @param string  $location location within Application name
-		* @param integer $grantor  check if this is grants or ordinary rights/mask
-		* @param integer $type     mask or right (1 means mask , 0 means right) to check against
-		*
-		* @return array Array with accounts
-		*/
-		public function get_accounts_at_location($appname = '', $location = '',
-												$grantor = 0 ,$type = '')
-		{
-			$acl_accounts = array();
-			if ( !$appname )
-			{
-				$appname = $GLOBALS['phpgw_info']['flags']['currentapp'];
-			}
-
-			if($grantor > 0)
-			{
-				$filter_grants = ' AND acl_grantor IS NOT NULL';
-			}
-			else
-			{
-				$filter_grants = ' AND acl_grantor IS NULL';
-			}
-			$sql = 'SELECT acl_account FROM phpgw_acl'
-				. " $this->_join phpgw_locations ON phpgw_acl.location_id = phpgw_locations.location_id"
-				. " $this->_join phpgw_applications ON phpgw_locations.app_id = phpgw_applications.app_id"
-				. " WHERE app_name = '{$appname}'"
-					. " AND phpgw_locations.name {$this->_like} '{$location}%' {$filter_grants}"
-					. " AND acl_type = '{$type}'"
-				. ' GROUP BY acl_account';
-			$this->_db->query($sql, __LINE__, __FILE__);
-
-			while ($this->_db->next_record())
-			{
-				$acl_accounts[$this->_db->f('acl_account')] = true;
-			}
-
-			return $acl_accounts;
-		}
-
-		/**
-		* Delete ACL information from cache
-		*
-		* @param integer $account_id the account to delete data from the cache for
-		*
-		* @return null
-		*/
-		private function delete_cache($account_id)
-		{
-			$this->cache->system_clear('phpgwapi', "acl_data_{$account_id}");
 		}
 	}
