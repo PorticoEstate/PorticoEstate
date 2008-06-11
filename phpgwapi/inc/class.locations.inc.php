@@ -92,7 +92,7 @@
 		{
 		 	if ( $appname === '' )
 		 	{
-		 		$appname = $GLOBALS['phpgw']['flags']['currentapp'];
+		 		$appname = $GLOBALS['phpgw_info']['flags']['currentapp'];
 		 	}
 
 			$app = $GLOBALS['phpgw']->applications->name2id($appname);
