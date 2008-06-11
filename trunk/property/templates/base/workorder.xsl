@@ -812,7 +812,7 @@
 <div id="history">
 
 		<hr noshade="noshade" width="100%" align="center" size="1"/>
-		<table width="80%" cellpadding="2" cellspacing="2" align="center">
+		<table width="80%" cellpadding="2" cellspacing="2" align="left">
 			<xsl:choose>
 				<xsl:when test="record_history=''">
 					<tr>
@@ -1276,7 +1276,7 @@
 <div id="history">
 
 		<hr noshade="noshade" width="100%" align="center" size="1"/>
-		<table width="80%" cellpadding="2" cellspacing="2" align="center">
+		<table width="80%" cellpadding="2" cellspacing="2" align="left">
 			<xsl:choose>
 				<xsl:when test="record_history=''">
 					<tr>
