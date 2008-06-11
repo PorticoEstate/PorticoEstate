@@ -993,9 +993,9 @@
 			{
 				$records[] = array
 				(
-					'acl_account'	=> $this->_db->f('account'),
-					'acl_grantor'	=> $this->_db->f('grantor'),
-					'acl_rights'	=> $this->_db->f('rights')
+					'account'	=> $this->_db->f('acl_account'),
+					'grantor'	=> $this->_db->f('acl_grantor'),
+					'rights'	=> $this->_db->f('acl_rights')
 				);
 			}
 
