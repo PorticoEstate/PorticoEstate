@@ -3810,7 +3810,7 @@ HTML;
 			$hourformat = substr($this->bo->users_timeformat,0,1);
 			
 			// $sb = CreateObject('phpgwapi.sbox');
-			$sb = CreateObject('phpgwapi.sbox2');
+			$sb = CreateObject('phpgwapi.sbox');
 			$jscal = CreateObject('phpgwapi.jscalendar');
 
 			unset($GLOBALS['phpgw_info']['flags']['noheader']);
@@ -4280,7 +4280,7 @@ HTML;
 			$p->set_block('T_edit_partlist_blocks','B_delete_btn','V_delete_btn');
 			
 			global $query_addr;
-			$sb = CreateObject('phpgwapi.sbox2');
+			$sb = CreateObject('phpgwapi.sbox');
 			$addy = $sb->getAddress('addr','',$query_addr);
 
 			$add_ext  = $addy['doSearchFkt'];
