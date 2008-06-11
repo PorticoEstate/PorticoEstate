@@ -34,8 +34,6 @@
 		function boadmin_acl($session='')
 		{
 			$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
-			$this->so 		= CreateObject('preferences.soadmin_acl');
-	//		$this->catbo = createobject('phpgwapi.categories');
 
 			$this->acl 		= $GLOBALS['phpgw']->acl;
 			$this->right		= array(1,2,4,8,16);
@@ -148,7 +146,7 @@
 
 			$location_list = array();
 
-			$locations = $this->so->select_location($grant, $this->acl_app, $allow_c_attrib);
+			$locations = $GLOBALS['phpgw']->locations->get_locations($grant, $this->acl_app, $allow_c_attrib);
 
 			$i = 0;
 			foreach ( $locations as $loc_id => $loc_descr )
