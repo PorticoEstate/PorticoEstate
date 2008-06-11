@@ -147,46 +147,6 @@
 			}
 		}
 
-		function select_location($format='',$selected='',$grant='')
-		{
-			switch($format)
-			{
-				case 'select':
-					$GLOBALS['phpgw']->xslttpl->add_file(array('select_location'));
-					break;
-				case 'filter':
-					$GLOBALS['phpgw']->xslttpl->add_file(array('filter_location'));
-					break;
-			}
-
-			$locations= $this->so->select_location($grant);
-
-			while (is_array($locations) && list(,$loc) = each($locations))
-			{
-				$sel_loc = '';
-				if ($loc['id']==$selected)
-				{
-					$sel_loc = 'selected';
-				}
-
-				$location_list[] = array
-				(
-					'id'		=> $loc['id'],
-					'descr'		=> $loc['id'] . ' [' . $loc['descr'] . ']',
-					'selected'	=> $sel_loc
-				);
-			}
-
-			for ($i=0;$i<count($location_list);$i++)
-			{
-				if ($location_list[$i]['selected'] != 'selected')
-				{
-					unset($location_list[$i]['selected']);
-				}
-			}
-
-			return $location_list;
-		}
 
 		function select_category_list($format='',$selected='')
 		{
