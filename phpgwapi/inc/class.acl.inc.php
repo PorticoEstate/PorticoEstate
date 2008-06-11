@@ -47,10 +47,10 @@
 
 		/**
 		* Account type
-		* @var string $_account_type Account type
+		* @var string $account_type Account type
 		*/
+		public $account_type;
 
-		protected $_account_type;
 		/**
 		* @var array $_data Array with ACL records
 		*/
@@ -456,7 +456,7 @@
 								return false;
 							}
 							$rights |= $values['rights'];
-							$this->_account_type = $values['account_type'];
+							$this->account_type = $values['account_type'];
 						}
 					}
 				}
