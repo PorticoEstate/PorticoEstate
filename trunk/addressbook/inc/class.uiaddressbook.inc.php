@@ -2933,6 +2933,7 @@ class uiaddressbook
 			}
 		}
 
+		$this->template->set_root(PHPGW_APP_TPL);
 		$this->template->set_file(array('view_t' => 'view.tpl'));
 		$this->template->set_block('view_t','view_header','view_header');
 		$this->template->set_block('view_t','view_row','view_row');

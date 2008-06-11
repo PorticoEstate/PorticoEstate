@@ -1109,6 +1109,7 @@
 			$now['raw'] += phpgwapi_datetime::user_timezone();
 
 			$p = $GLOBALS['phpgw']->template;
+			$p->set_root(PHPGW_APP_TPL);
 			$p->set_file('day_t', 'day.tpl');
 
 			$p->set_block('day_t','day','day');
