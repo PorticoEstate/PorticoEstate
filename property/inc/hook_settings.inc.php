@@ -67,7 +67,7 @@
 	{
 		if($entry->enabled == true)
 		{
-			$_accounts[$entry->id] = $entry->firstname . ' ' . $entry->lastname;
+			$_accounts[$entry->id] = $entry->__toString();
 		}
 	}
 	create_select_box('Default assign to TTS','assigntodefault',$_accounts,'The default user to assign a ticket in Helpdesk-submodule');
