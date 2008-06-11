@@ -68,26 +68,6 @@
 			}
 		}
 
-		function select_location($grant='')
-		{
-			$filter = '';
-			if($grant)
-			{
-				$filter = ' AND allow_grant=1';
-			}
-			$this->db->query("SELECT * FROM phpgw_acl_location WHERE appname = 'property' $filter ORDER BY id ");
-
-				$i = 0;
-				while ($this->db->next_record())
-				{
-					$location[$i]['id']		= $this->db->f('id');
-					$location[$i]['descr']		= stripslashes($this->db->f('descr'));
-					$i++;
-				}
-
-				return $location;
-		}
-
 
 		function read_fm_id()
 		{
