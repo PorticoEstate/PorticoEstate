@@ -1849,6 +1849,22 @@
 
 		$GLOBALS['phpgw_setup']->oProc->m_odb->query("DELETE FROM phpgw_acl WHERE acl_appname = 'phpgw_group'", __LINE__, __FILE__);
 
+		$apps = array();
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query('SELECT app_name FROM phpgw_applications', __LINE__, __FILE__);
+		while ( $GLOBALS['phpgw_setup']->oProc->next_record() )
+		{
+			$apps[] = $GLOBALS['phpgw_setup']->oProc->m_odb->f('app_name', true);
+		}
+
+		foreach ( $apps as $app )
+		{
+			$sql = 'INSERT INTO phpgw_acl_location(appname, id, descr)'
+				. " VALUES ('{$app}', 'run', 'app run rights automagically created location during 0.9.17.514 migration')";
+			
+			$GLOBALS['phpgw_setup']->oProc->m_odb->query($sql, __LINE__, __FILE__);
+		}
+		unset($apps);
+
 		$location = array();
 
 		// First get all the current locations
@@ -1886,8 +1902,6 @@
 		}
 
 
-//-- phpgw_locations : new table due to change in pk - renamed as it isn't just ACLs
-
 		$GLOBALS['phpgw_setup']->oProc->CreateTable('phpgw_locations', array
 		(
 			'fd' => array
@@ -1912,8 +1926,6 @@
 		}
 		
 		unset($location);
-
-//-------------------
 
 		$GLOBALS['phpgw_setup']->oProc->AddColumn('phpgw_acl', 'location_id', array
 		(
@@ -2012,11 +2024,6 @@
 			'uc' => array()
 		));
 
-// TODO:
-//# phpgw_cust_attribute
-//# phpgw_cust_choice
-//# phpgw_cust_function 
-
 		// Sessions changes
 		$GLOBALS['phpgw_setup']->oProc->DropTable('phpgw_app_sessions'); // no longer needed
 		$GLOBALS['phpgw_setup']->oProc->DropTable('phpgw_sessions');
@@ -2034,7 +2041,6 @@
 			'uc' => array()
 		));
 
-		//Make sure the session defaults are properly set
 		$lookups = array
 		(
 			'max_access_log_age'	=> 90,
@@ -2066,3 +2072,191 @@
 			return $GLOBALS['setup_info']['phpgwapi']['currentver'];
 		}
 	}
+
+	$test[] = '0.9.17.516';
+	/**
+	* Upgrade the phpgw_cust* tables to use the new location code
+	*
+	* @return string the new version number
+	*/
+	function phpgwapi_upgrade0_9_17_516()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+		$db =& $GLOBALS['phpgw_setup']->oProc->m_odb;
+
+		$attribs = array();
+
+		$sql = 'SELECT * FROM phpgw_cust_attribute';
+		$db->query($sql, __LINE__, __FILE__);
+		while ( $db->next_record() )
+		{
+			$attribs[] = array
+			(
+				'appname'		=> $db->f('appname', true),
+				'location'		=> $db->f('location', true),
+				'id'			=> $db->f('id'),
+				'column_name'	=> $db->f('column_name', true),
+				'input_text'	=> $db->f('input_text', true),
+				'statustext'	=> $db->f('statustext', true),
+				'datatype'		=> $db->f('datatype', true),
+				'search'		=> $db->f('search'),
+				'history'		=> $db->f('history'),
+				'list'			=> $db->f('list'),
+				'attrib_sort'	=> $db->f('attrib_sort'),
+				'size'			=> $db->f('size'),
+				'precision_'	=> $db->f('precision'),
+				'scale'			=> $db->f('scale'),
+				'default_value'	=> $db->f('default_value', true),
+				'nullable'		=> $db->f('nullable'),
+				'disabled'		=> $db->f('disabled'),
+				'lookup_form'	=> $db->f('lookup_form', true),
+				'custom'		=> $db->f('custom', true),
+				'helpmsg'		=> $db->f('helpmsg', true)
+			);
+		}
+
+		// New PK so drop the table
+		$GLOBALS['phpgw_setup']->oProc->DropTable('phpgw_cust_attribute');
+		$GLOBALS['phpgw_setup']->oProc->CreateTable('phpgw_cust_attribute', array
+		(
+			'fd' => array
+			(
+				'location_id' => array('type' => 'int','precision' => 2,'nullable' => false),
+				'id' => array('type' => 'int','precision' => 2,'nullable' => false),
+				'column_name' => array('type' => 'varchar','precision' => 20,'nullable' => false),
+				'input_text' => array('type' => 'varchar','precision' => 50,'nullable' => false),
+				'statustext' => array('type' => 'varchar','precision' => '150','nullable' => false),
+				'datatype' => array('type' => 'varchar','precision' => '10','nullable' => false),
+				'search' => array('type' => 'int','precision' => 2,'nullable' => true),
+				'history' => array('type' => 'int','precision' => 2,'nullable' => true),
+				'list' => array('type' => 'int','precision' => 4,'nullable' => true),
+				'attrib_sort' => array('type' => 'int','precision' => 4,'nullable' => true),
+				'size' => array('type' => 'int','precision' => 4,'nullable' => true),
+				'precision_' => array('type' => 'int','precision' => 4,'nullable' => true),
+				'scale' => array('type' => 'int','precision' => 4,'nullable' => true),
+				'default_value' => array('type' => 'varchar','precision' => 20,'nullable' => true),
+				'nullable' => array('type' => 'varchar','precision' => 5,'nullable' => true),
+				'disabled' => array('type' => 'int','precision' => 2,'nullable' => true),
+				'lookup_form' => array('type' => 'int','precision' => 2,'nullable' => true),
+				'custom' => array('type' => 'int','precision' => 2,'nullable' => true,'default' => 1),
+				'helpmsg' => array('type' => 'text','nullable' => true)
+			),
+			'pk' => array('location_id', 'id'),
+			'fk' => array(),
+			'ix' => array(),
+			'uc' => array()
+		));
+
+		foreach ( $attribs as $attrib )
+		{
+			$attrib['location_id'] = $GLOBALS['phpgw']->locations->get_id($attrib['appname'], $attrib['location']);
+			unset($attrib['appname'], $attrib['location']);
+
+			$sql = 'INSERT INTO phpgw_cust_attribute(' . implode(',',array_keys($attrib)) . ') '
+				 . ' VALUES (' . $db->validate_insert($attrib) . ')';
+			$db->query($sql, __LINE__, __FILE__);
+		}
+		
+		unset($attribs);
+
+		$choices = array();
+
+		$sql = 'SELECT * FROM phpgw_cust_choice';
+		$db->query($sql, __LINE__, __FILE__);
+		while ( $db->next_record() )
+		{
+			$choices[] = array
+			(
+				'appname'		=> $db->f('appname', true),
+				'location'		=> $db->f('location', true),
+				'attrib_id'		=> $db->f('attrib_id'),
+				'id'			=> $db->f('id'),
+				'value'			=> $db->f('value', true)
+			);
+		}
+
+		// New PK so drop the table
+		$GLOBALS['phpgw_setup']->oProc->DropTable('phpgw_cust_choice');
+		$GLOBALS['phpgw_setup']->oProc->CreateTable('phpgw_cust_choice', array
+		(
+			'fd' => array
+			(
+				'location_id' => array('type' => 'int','precision' => 4,'nullable' => false),
+				'attrib_id' => array('type' => 'int','precision' => 4,'nullable' => false),
+				'id' => array('type' => 'int','precision' => 4,'nullable' => false),
+				'value' => array('type' => 'text','nullable' => false)
+			),
+			'pk' => array('location_id', 'attrib_id', 'id'),
+			'fk' => array(),
+			'ix' => array(),
+			'uc' => array()
+		));
+
+		foreach ( $choices as $choice )
+		{
+			$choice['location_id'] = $GLOBALS['phpgw']->locations->get_id($choice['appname'], $choice['location']);
+			unset($choice['appname'], $choice['location']);
+
+			$sql = 'INSERT INTO phpgw_cust_choice(' . implode(',',array_keys($choice)) . ') '
+				 . ' VALUES (' . $db->validate_insert($choice) . ')';
+			$db->query($sql, __LINE__, __FILE__);
+		}
+
+		unset($choices);
+
+		$functions = array();
+
+		$sql = 'SELECT * FROM phpgw_cust_function';
+		$db->query($sql, __LINE__, __FILE__);
+		while ( $db->next_record() )
+		{
+			$functions[] = array
+			(
+				'appname'		=> $db->f('appname', true),
+				'location'		=> $db->f('location', true),
+				'id'			=> $db->f('id'),
+				'descr'			=> $db->f('descr', true),
+				'file_name'		=> $db->f('file_name', true),
+				'active'		=> $db->f('active'),
+				'custom_sort'	=> $db->f('custom_sort')
+			);
+		}
+
+		// New PK so drop the table
+		$GLOBALS['phpgw_setup']->oProc->DropTable('phpgw_cust_function');
+		$GLOBALS['phpgw_setup']->oProc->CreateTable('phpgw_cust_function', array
+		(
+			'fd' => array
+			(
+				'location_id' => array('type' => 'int','precision' => 4,'nullable' => false),
+				'id' => array('type' => 'int','precision' => 4,'nullable' => false),
+				'descr' => array('type' => 'text','nullable' => true),
+				'file_name ' => array('type' => 'varchar','precision' => 50,'nullable' => false),
+				'active' => array('type' => 'int','precision' => 2,'nullable' => true),
+				'custom_sort' => array('type' => 'int','precision' => 4,'nullable' => true)
+			),
+			'pk' => array('location_id', 'id'),
+			'fk' => array(),
+			'ix' => array(),
+			'uc' => array()
+		));
+
+		foreach ( $functions as $cfunc )
+		{
+			$cfunc['location_id'] = $GLOBALS['phpgw']->locations->get_id($cfunc['appname'], $cfunc['location']);
+			unset($cfunc['appname'], $cfunc['location']);
+
+			$sql = 'INSERT INTO phpgw_cust_function(' . implode(',', array_keys($cfunc)) . ') '
+				 . ' VALUES (' . $db->validate_insert($cfunc) . ')';
+			$db->query($sql, __LINE__, __FILE__);
+		}
+
+		unset($functions);
+
+		if ( $GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit() )
+		{
+			$GLOBALS['setup_info']['phpgwapi']['currentver'] = '0.9.17.517';
+			return $GLOBALS['setup_info']['phpgwapi']['currentver'];
+		}
+	}
+

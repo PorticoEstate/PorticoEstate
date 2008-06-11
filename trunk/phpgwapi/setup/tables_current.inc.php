@@ -505,62 +505,68 @@
 			'ix' => array(),
 			'uc' => array()
 		),
-		'phpgw_cust_attribute' => array(
-			'fd' => array(
-				'appname' => array('type' => 'varchar','precision' => 20,'nullable' => False),
-				'location' => array('type' => 'varchar','precision' => 30,'nullable' => False),
-				'id' => array('type' => 'int','precision' => 4,'nullable' => False),
-				'column_name' => array('type' => 'varchar','precision' => 20,'nullable' => False),
-				'input_text' => array('type' => 'varchar','precision' => 50,'nullable' => False),
-				'statustext' => array('type' => 'varchar','precision' => '150','nullable' => False),
-				'datatype' => array('type' => 'varchar','precision' => '10','nullable' => False),
-				'search' => array('type' => 'int','precision' => 2,'nullable' => True),
-				'history' => array('type' => 'int','precision' => 2,'nullable' => True),
-				'list' => array('type' => 'int','precision' => 4,'nullable' => True),
-				'attrib_sort' => array('type' => 'int','precision' => 4,'nullable' => True),
-				'size' => array('type' => 'int','precision' => 4,'nullable' => True),
-				'precision_' => array('type' => 'int','precision' => 4,'nullable' => True),
-				'scale' => array('type' => 'int','precision' => 4,'nullable' => True),
-				'default_value' => array('type' => 'varchar','precision' => 20,'nullable' => True),
-				'nullable' => array('type' => 'varchar','precision' => 5,'nullable' => True),
-				'disabled' => array('type' => 'int','precision' => 2,'nullable' => True),
-				'lookup_form' => array('type' => 'int','precision' => 2,'nullable' => True),
-				'custom' => array('type' => 'int','precision' => 2,'nullable' => True,'default' => 1),
-				'helpmsg' => array('type' => 'text','nullable' => True)
+		'phpgw_cust_attribute' => array
+		(
+			'fd' => array
+			(
+				'location_id' => array('type' => 'int','precision' => 2,'nullable' => false),
+				'id' => array('type' => 'int','precision' => 2,'nullable' => false),
+				'column_name' => array('type' => 'varchar','precision' => 20,'nullable' => false),
+				'input_text' => array('type' => 'varchar','precision' => 50,'nullable' => false),
+				'statustext' => array('type' => 'varchar','precision' => '150','nullable' => false),
+				'datatype' => array('type' => 'varchar','precision' => '10','nullable' => false),
+				'search' => array('type' => 'int','precision' => 2,'nullable' => true),
+				'history' => array('type' => 'int','precision' => 2,'nullable' => true),
+				'list' => array('type' => 'int','precision' => 4,'nullable' => true),
+				'attrib_sort' => array('type' => 'int','precision' => 4,'nullable' => true),
+				'size' => array('type' => 'int','precision' => 4,'nullable' => true),
+				'precision_' => array('type' => 'int','precision' => 4,'nullable' => true),
+				'scale' => array('type' => 'int','precision' => 4,'nullable' => true),
+				'default_value' => array('type' => 'varchar','precision' => 20,'nullable' => true),
+				'nullable' => array('type' => 'varchar','precision' => 5,'nullable' => true),
+				'disabled' => array('type' => 'int','precision' => 2,'nullable' => true),
+				'lookup_form' => array('type' => 'int','precision' => 2,'nullable' => true),
+				'custom' => array('type' => 'int','precision' => 2,'nullable' => true,'default' => 1),
+				'helpmsg' => array('type' => 'text','nullable' => true)
 			),
-			'pk' => array('appname','location','id'),
+			'pk' => array('location_id', 'id'),
 			'fk' => array(),
 			'ix' => array(),
 			'uc' => array()
 		),
-		'phpgw_cust_choice' => array(
-			'fd' => array(
-				'appname' => array('type' => 'varchar','precision' => 20,'nullable' => False),
-				'location' => array('type' => 'varchar','precision' => 30,'nullable' => False),
-				'attrib_id' => array('type' => 'int','precision' => 4,'nullable' => False),
-				'id' => array('type' => 'int','precision' => 4,'nullable' => False),
-				'value' => array('type' => 'text','nullable' => False)
+
+		'phpgw_cust_choice' => array
+		(
+			'fd' => array
+			(
+				'location_id' => array('type' => 'int','precision' => 4,'nullable' => false),
+				'attrib_id' => array('type' => 'int','precision' => 4,'nullable' => false),
+				'id' => array('type' => 'int','precision' => 4,'nullable' => false),
+				'value' => array('type' => 'text','nullable' => false)
 			),
-			'pk' => array('appname','location','attrib_id','id'),
+			'pk' => array('location_id', 'attrib_id', 'id'),
 			'fk' => array(),
 			'ix' => array(),
 			'uc' => array()
 		),
-		'phpgw_cust_function' => array(
-			'fd' => array(
-				'appname' => array('type' => 'varchar','precision' => 20,'nullable' => False),
-				'location' => array('type' => 'varchar','precision' => 30,'nullable' => False),
-				'id' => array('type' => 'int','precision' => 4,'nullable' => False),
-				'descr' => array('type' => 'text','nullable' => True),
-				'file_name ' => array('type' => 'varchar','precision' => 50,'nullable' => False),
-				'active' => array('type' => 'int','precision' => 2,'nullable' => True),
-				'custom_sort' => array('type' => 'int','precision' => 4,'nullable' => True)
+
+		'phpgw_cust_function' => array
+		(
+			'fd' => array
+			(
+				'location_id' => array('type' => 'int','precision' => 4,'nullable' => false),
+				'id' => array('type' => 'int','precision' => 4,'nullable' => false),
+				'descr' => array('type' => 'text','nullable' => true),
+				'file_name ' => array('type' => 'varchar','precision' => 50,'nullable' => false),
+				'active' => array('type' => 'int','precision' => 2,'nullable' => true),
+				'custom_sort' => array('type' => 'int','precision' => 4,'nullable' => true)
 			),
-			'pk' => array('appname','location','id'),
+			'pk' => array('location_id', 'id'),
 			'fk' => array(),
 			'ix' => array(),
 			'uc' => array()
 		),
+
 		'phpgw_mapping' => array(
 			'fd' => array(
 				'ext_user' => array('type' => 'varchar','precision' => 100,'nullable' => False),
