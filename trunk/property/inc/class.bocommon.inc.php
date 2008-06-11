@@ -411,7 +411,7 @@ _debug_array($users);
 
 			if(!$users = $this->socommon->fm_cache('acl_userlist_'. $right . '_' . $acl_location))
 			{
-				$users=$this->socommon->get_user_list_right($right,$acl_location);
+				$users = $GLOBALS['phpgw']->acl->get_user_list_right($right, $acl_location);
 				$this->socommon->fm_cache('acl_userlist_'. $right . '_' . $acl_location,$users);
 			}
 
@@ -477,7 +477,7 @@ _debug_array($users);
 
 			if(!$users = $this->socommon->fm_cache('acl_userlist_'. $right . '_' . $acl_location))
 			{
-				$users=$this->socommon->get_user_list_right($right,$acl_location);
+				$users = $GLOBALS['phpgw']->acl->get_user_list_right($right, $acl_location);
 				$this->socommon->fm_cache('acl_userlist_'. $right . '_' . $acl_location,$users);
 			}
 
