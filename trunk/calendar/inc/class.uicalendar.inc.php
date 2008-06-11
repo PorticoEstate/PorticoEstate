@@ -3739,6 +3739,7 @@ HTML;
 				$GLOBALS['phpgw']->common->phpgw_exit();
 			}
 			
+			$t->set_root(PHPGW_APP_TPL);
 			$t->set_file( array('popup' => 'contacts_popup.tpl') );
 			$t->set_block('popup', 'cat_option', 'cat_options');
 
