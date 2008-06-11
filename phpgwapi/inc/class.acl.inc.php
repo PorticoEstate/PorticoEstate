@@ -3,6 +3,7 @@
 	* Access Control List - Security scheme based on ACL design
 	* @author Dan Kuykendall <seek3r@phpgroupware.org>
 	* @author Dave Hall <skwashd@phpgroupware.org>
+	* @author Sigurd Nes <sigurdne@online.no>
 	* @copyright Copyright (C) 2000-2008 Free Software Foundation, Inc. http://www.fsf.org/
 	* @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License v3 or later
 	* @package phpgwapi
@@ -1288,5 +1289,117 @@
 				);
 			}
 			return $this->_data;
+		}
+
+		/**
+		* Reads ACL accounts from database and return array with accounts that have certain rights for a given location
+		*
+		* @param integer $required  Required access rights in bitmap form
+		* @param string  $location location within Application name
+		* @param string  $appname  Application name
+		*		if empty string the value of $GLOBALS['phpgw_info']['flags']['currentapp'] is used
+		*
+		* @return array Array with accounts
+		*/
+		function get_user_list_right($required, $location, $appname = '')
+		{
+			$myaccounts			= & $GLOBALS['phpgw']->accounts;
+			$active_accounts	= array();
+			$accounts			= array();
+			$users				= array();
+
+			if ( !$appname )
+			{
+		 		$appname = $GLOBALS['phpgw_info']['flags']['currentapp'];
+			}
+
+			$sql = "SELECT account_id, account_type FROM phpgw_accounts"
+				. " $this->_join phpgw_acl on phpgw_accounts.account_id = phpgw_acl.acl_account"
+				. " $this->_join phpgw_locations on phpgw_acl.location_id = phpgw_locations.location_id"
+				. " WHERE account_status = 'A' AND phpgw_locations.name = '{$location}'"
+				. " ORDER BY account_lastname ASC";
+
+			$this->_db->query($sql,__LINE__,__FILE__);
+
+			while ($this->_db->next_record())
+			{
+				$active_accounts[] = array
+				(
+					'account_id'	=> $this->_db->f('account_id'),
+					'account_type'	=> $this->_db->f('account_type'),
+				);
+			}
+
+			foreach ($active_accounts as $entry)
+			{
+				$this->_account_id = $entry['account_id'];
+
+				if($this->check($location, $required, $appname))
+				{
+					if($entry['account_type']=='g')
+					{
+						// Would be nice if inactive members could be filtered out from the result
+						$members = $myaccounts->member($entry['account_id']);
+
+						if (isset($members) AND is_array($members))
+						{
+							foreach($members as $user)
+							{
+								$accounts[$user['account_id']] = $user['account_id'];
+							}
+							unset($members);
+						}
+					}
+					else
+					{
+						$accounts[$entry['account_id']] = $entry['account_id'];
+					}
+				}
+			}
+
+			unset($active_accounts);
+			unset($myaccounts);
+
+			$sql = "SELECT account_id FROM phpgw_accounts WHERE account_status = 'I'";
+			$this->_db->query($sql,__LINE__,__FILE__);
+			while ($this->_db->next_record())
+			{
+				unset($accounts[$this->_db->f('account_id')]);
+			}
+
+			if (isset($accounts) AND is_array($accounts))
+			{
+				foreach($accounts as $account_id)
+				{
+					$this->_account_id = $account_id;
+
+					if(!$this->check($location,$required, 'property'))
+					{
+						unset($accounts[$account_id]);
+					}
+				}
+			}
+
+			$accounts = array_keys($accounts);
+
+			if(isset($accounts) && count($accounts) > 0)
+			{
+				$sql = 'SELECT * FROM phpgw_accounts where account_id in ('. implode(',',$accounts) . ') ORDER BY account_lastname';
+				$this->_db->query($sql,__LINE__,__FILE__);
+				while ($this->_db->next_record())
+				{
+					$users[] = array
+					(
+						'account_id'        => $this->_db->f('account_id'),
+						'account_lid'       => $this->_db->f('account_lid'),
+						'account_type'      => $this->_db->f('account_type'),
+						'account_firstname' => $this->_db->f('account_firstname'),
+						'account_lastname'  => $this->_db->f('account_lastname'),
+						'account_status'    => $this->_db->f('account_status'),
+						'account_expires'   => $this->_db->f('account_expires')
+					);
+				}
+			}
+			return $users;
 		}
 	}
