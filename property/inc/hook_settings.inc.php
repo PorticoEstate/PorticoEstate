@@ -65,7 +65,7 @@
 
 	foreach ( $account_list as $entry )
 	{
-		if($entry->enabled == 1)
+		if($entry->enabled == true)
 		{
 			$_accounts[$entry->id] = $entry->firstname . ' ' . $entry->lastname;
 		}
