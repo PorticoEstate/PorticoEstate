@@ -353,23 +353,24 @@ _debug_array($users);
 					break;
 			}
 
-			$accounts 	= CreateObject('phpgwapi.accounts');
+			$accounts	= & $GLOBALS['phpgw']->accounts;
+
 			$users = $accounts->get_list('groups', $start, $sort, $order, $query,$offset);
 			unset($accounts);
-			if (isSet($users) AND is_array($users))
+			if (isset($users) AND is_array($users))
 			{
 				foreach($users as $user)
 				{
 					$sel_user = '';
-					if ($user['account_id']==$selected)
+					if ($user->id == $selected)
 					{
 						$sel_user = 'selected';
 					}
 
 					$user_list[] = array
 					(
-						'id'	=> $user['account_id'],
-						'name'		=> $user['account_firstname'],
+						'id'	=> $user->id,
+						'name'		=> $user->firstname,
 						'selected'	=> $sel_user
 					);
 				}
