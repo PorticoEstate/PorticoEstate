@@ -83,7 +83,7 @@
 				'order'			=> $this->order,
 				'filter'		=> $this->filter,
 				'method_id'		=> $this->method_id,
-				'this->allrows'		=> $this->allrows
+				'allrows'		=> $this->allrows
 			);
 			$this->bo->save_sessiondata($data);
 		}
@@ -113,15 +113,17 @@
 			endif;
 
 			$list = $this->bo->read();
-//_debug_array($list);
 
-			while (is_array($list) && list(,$alarm) = each($list))
+			foreach ($list as $alarm)
 			{
+				$times	= '';
+				$data	= '';
+
 				if(is_array($alarm['times']))
 				{
-					while (is_array($alarm['times']) && list($key,$value) = each($alarm['times']))
+					foreach ($alarm['times'] as $key => $value)
 					{
-						$times .=$key . ' => ' .$value. ' ';
+						$times .= "{$key} => {$value} ";
 					}
 
 				}
@@ -131,39 +133,37 @@
 				}
 				if(is_array($alarm['data']))
 				{
-					while (is_array($alarm['data']) && list($key,$value) = each($alarm['data']))
+					foreach ($alarm['data']as $key => $value)
 					{
-						$data .=$key . ' => ' .$value . ' ';
+						$data .= "{$key} => {$value} ";
 					}
 
 				}
 
+				$link_edit				= '';
+				$lang_edit_statustext	= '';
+				$text_edit				= '';
+
 				if (substr($alarm['id'],0,8)=='fm_async')
 				{
-					$link_edit			= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uialarm.edit', 'async_id'=> urlencode($alarm['id'])));
-					$lang_edit_statustext		= lang('edit the alarm');
-					$text_edit			= lang('edit');
+					$link_edit				= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uialarm.edit', 'async_id'=> urlencode($alarm['id'])));
+					$lang_edit_statustext	= lang('edit the alarm');
+					$text_edit				= lang('edit');
 				}
 
 				$content[] = array
 				(
-					'id'				=> $alarm['id'],
-					'next_run'			=> $GLOBALS['phpgw']->common->show_date($alarm['next']),
-					'method'			=> $alarm['method'],
-					'times'				=> $times,
-					'data'				=> $data,
-					'enabled'			=> $alarm['enabled'],
-					'user'				=> $alarm['user'],
-					'link_edit'			=> $link_edit,
-					'lang_edit_statustext'		=> $lang_edit_statustext,
-					'text_edit'			=> $text_edit
+					'id'					=> $alarm['id'],
+					'next_run'				=> $GLOBALS['phpgw']->common->show_date($alarm['next']),
+					'method'				=> $alarm['method'],
+					'times'					=> $times,
+					'data'					=> $data,
+					'enabled'				=> $alarm['enabled'],
+					'user'					=> $alarm['user'],
+					'link_edit'				=> $link_edit,
+					'lang_edit_statustext'	=> $lang_edit_statustext,
+					'text_edit'				=> $text_edit
 				);
-				unset($alarm);
-				unset($data);
-				unset($times);
-				unset($link_edit);
-				unset($lang_edit_statustext);
-				unset($text_edit);
 			}
 
 			$table_header = array
@@ -395,7 +395,6 @@
 											'var'	=> 'account_lid',
 											'order'	=> $this->order,
 											'extra'	=> array('menuaction'	=> 'property.uialarm.list_alarm',
-																	'cat_id'	=> $this->cat_id,
 																	'query'		=> $this->query,
 																	'allrows'	=> $this->allrows)
 										)),
@@ -405,7 +404,6 @@
 											'var'	=> 'method',
 											'order'	=> $this->order,
 											'extra'	=> array('menuaction'	=> 'property.uialarm.list_alarm',
-																	'cat_id'	=> $this->cat_id,
 																	'query'		=> $this->query,
 																	'allrows'	=> $this->allrows)
 										)),
@@ -415,7 +413,6 @@
 											'var'	=> 'next',
 											'order'	=> $this->order,
 											'extra'	=> array('menuaction'	=> 'property.uialarm.list_alarm',
-																	'cat_id'	=> $this->cat_id,
 																	'query'		=> $this->query,
 																	'allrows'	=> $this->allrows)
 										)),
@@ -425,7 +422,6 @@
 											'var'	=> 'id',
 											'order'	=> $this->order,
 											'extra'	=> array('menuaction'	=> 'property.uialarm.list_alarm',
-																	'cat_id'	=> $this->cat_id,
 																	'query'		=> $this->query,
 																	'allrows'	=> $this->allrows)
 										))
@@ -451,7 +447,6 @@
 				'menuaction'	=> 'property.uialarm.list_alarm',
 				'sort'		=>$this->sort,
 				'order'		=>$this->order,
-				'cat_id'	=>$this->cat_id,
 				'filter'	=>$this->filter,
 				'query'		=>$this->query
 			);

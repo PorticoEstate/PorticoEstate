@@ -34,11 +34,8 @@
 
 	class property_boalarm
 	{
-
-		var $public_functions = array
-		(
-			'send_alarm' => true
-		);
+		public $allrows;
+		public $method_id;
 
 		function property_boalarm($session = '')
 		{
@@ -92,21 +89,13 @@
 			{
 				$this->order = $order;
 			}
-			if(isset($cat_id) && !empty($cat_id))
-			{
-				$this->cat_id = $cat_id;
-			}
-			else
-			{
-				unset($this->cat_id);
-			}
 			if(isset($method_id) && !empty($method_id))
 			{
 				$this->method_id = $method_id;
 			}
 			else
 			{
-				unset($this->method_id);
+				$this->method_id = 0;
 			}
 			if(isset($allrows))
 			{
@@ -150,7 +139,7 @@
 
 		function read()
 		{
-			$jobs = $this->so->read(array(id=>'%','start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
+			$jobs = $this->so->read(array('id'=>'%','start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
 											'filter' => $this->filter,'allrows'=>$this->allrows));
 			$this->total_records	= $this->so->total_records;
 			return $jobs;
