@@ -90,11 +90,6 @@
 		 */
 		public function add($location, $descr, $appname, $allow_grant = true, $custom_tbl = null)
 		{
-		 	if ( $appname === '' )
-		 	{
-		 		$appname = $GLOBALS['phpgw_info']['flags']['currentapp'];
-		 	}
-
 			$app = $GLOBALS['phpgw']->applications->name2id($appname);
 
 		 	$location = $this->_db->db_addslashes($location);
@@ -311,3 +306,4 @@
 				}
 			}
 		}
+	}
