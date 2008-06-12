@@ -140,7 +140,9 @@
 						'action_extra_field'    => ''
 					);
 				}
+				$t->set_var($var);
 				$var['purge_log_button'] = $t->fp('button', 'form_button', true);
+
 				$t->set_var($var);
 			}
 
