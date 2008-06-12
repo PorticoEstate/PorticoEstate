@@ -34,10 +34,11 @@
 
 	class property_boadmin_location
 	{
-		var $start;
-		var $query;
-		var $sort;
-		var $order;
+		public $start;
+		public $query;
+		public $sort;
+		public $order;
+		public $allrows;
 
 		var $public_functions = array
 		(
