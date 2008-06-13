@@ -52,28 +52,21 @@
 
 		function read($data)
 		{
+
 			if(is_array($data))
 			{
-				if ($data['start'])
-				{
-					$start=$data['start'];
-				}
-				else
-				{
-					$start=0;
-				}
-				$sort = (isset($data['sort'])?$data['sort']:'DESC');
-				$order = (isset($data['order'])?$data['order']:'');
-				$cat_id = (isset($data['cat_id'])?$data['cat_id']:0);
-				$loc1 = (isset($data['loc1'])?$data['loc1']:'');
-				$gaards_nr = (isset($data['gaards_nr'])?$data['gaards_nr']:'');
-				$bruksnr = (isset($data['bruksnr'])?$data['bruksnr']:'');
-				$feste_nr = (isset($data['feste_nr'])?$data['feste_nr']:'');
-				$seksjons_nr = (isset($data['seksjons_nr'])?$data['seksjons_nr']:'');
-				$allrows 	= (isset($data['allrows'])?$data['allrows']:'');
-				$address 	= (isset($data['address'])?$data['address']:'');
-				$check_payments = (isset($data['check_payments'])?$data['check_payments']:'');
-
+				$start			= isset($data['start']) && $data['start'] ? $data['start'] : '0';
+				$sort			= isset($data['sort']) && $data['sort'] ? $data['sort'] : 'DESC';
+				$order			= isset($data['order']) ? $data['order'] : '';
+				$cat_id 		= isset($data['cat_id']) && $data['cat_id'] ? $data['cat_id'] : 0;
+				$loc1 			= isset($data['loc1']) ? $data['loc1'] : '';
+				$gaards_nr		= isset($data['gaards_nr'])? (int)$data['gaards_nr'] : '';
+				$bruksnr		= isset($data['bruksnr']) ? (int)$data['bruksnr'] : '';
+				$feste_nr		= isset($data['feste_nr']) ? (int)$data['feste_nr'] : '';
+				$seksjons_nr	= isset($data['seksjons_nr'])? (int)$data['seksjons_nr'] : '';
+				$allrows		= isset($data['allrows']) ? $data['allrows'] : '';
+				$address		= isset($data['address']) ? $this->db->db_addslashes($data['address']) : '';
+				$check_payments	= isset($data['check_payments']) ? $data['check_payments'] : '';
 			}
 
 			if ($order)
@@ -107,22 +100,22 @@
 
 			if ($gaards_nr)
 			{
-				$filtermethod .= " $where SUBSTRING(gab_id,5,5) $this->like '%$gaards_nr%' ";
+				$filtermethod .= " $where SUBSTRING(gab_id,5,5) $this->like '%$gaards_nr' ";
 				$where = 'AND';
 			}
 			if ($bruksnr)
 			{
-				$filtermethod .= " $where SUBSTRING(gab_id,10,4) $this->like '%$bruksnr%' ";
+				$filtermethod .= " $where SUBSTRING(gab_id,10,4) $this->like '%$bruksnr' ";
 				$where = 'AND';
 			}
 			if ($feste_nr)
 			{
-				$filtermethod .= " $where SUBSTRING(gab_id,14,4) $this->like '%$feste_nr%' ";
+				$filtermethod .= " $where SUBSTRING(gab_id,14,4) $this->like '%$feste_nr' ";
 				$where = 'AND';
 			}
 			if ($seksjons_nr)
 			{
-				$filtermethod .= " $where SUBSTRING(gab_id,18,3) $this->like '%$seksjons_nr%' ";
+				$filtermethod .= " $where SUBSTRING(gab_id,18,3) $this->like '%$seksjons_nr' ";
 				$where = 'AND';
 			}
 
@@ -154,8 +147,8 @@
 				$sql = "SELECT gab_id,count(gab_id) as hits, loc" . $j . "_name as address ,fm_gab_location.location_code, fm_gab_location.owner as owner FROM fm_gab_location $joinmethod $filtermethod GROUP BY gab_id,fm_gab_location.location_code,loc" . $j . "_name,owner ";
 			}
 
-			$this->db2->query($sql,__LINE__,__FILE__);
-			$this->total_records = $this->db2->num_rows();
+			$this->db->query($sql,__LINE__,__FILE__);
+			$this->total_records = $this->db->num_rows();
 
 			if(!$allrows)
 			{
@@ -287,8 +280,8 @@
 			$this->cols_extra	= $this->bocommon->cols_extra;
 
 
-			$this->db2->query($sql,__LINE__,__FILE__);
-			$this->total_records = $this->db2->num_rows();
+			$this->db->query($sql,__LINE__,__FILE__);
+			$this->total_records = $this->db->num_rows();
 
 			if(!$allrows)
 			{
