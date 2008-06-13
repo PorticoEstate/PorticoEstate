@@ -306,4 +306,49 @@
 				}
 			}
 		}
+
+		/**
+		* Find locations within an application
+		*
+		* @param bool   $grant          Used for finding locations where users can grant rights to others
+		* @param string $appname        Name of application in question
+		* @param bool   $allow_c_attrib Used for finding locations where custom attributes can be applied
+		*
+		* @return array Array locations
+		*/
+
+		public function get_locations($grant = false, $appname = '', $allow_c_attrib = false)
+		{
+			if ( !$appname )
+			{
+		 		$appname = $GLOBALS['phpgw']['flags']['currentapp'];
+			}
+
+			$appname = $this->_db->db_addslashes($appname);
+			
+			$filter = " WHERE app_name='{$appname}' AND phpgw_locations.name != 'run'";
+			
+			if($allow_c_attrib)
+			{
+				$filter .= ' AND allow_c_attrib = 1';
+			}
+
+			if($grant)
+			{
+				$filter .= ' AND allow_grant = 1';
+			}
+
+			$sql = "SELECT location_id, phpgw_locations.name, phpgw_locations.descr FROM phpgw_locations"
+				. " $this->_join phpgw_applications ON phpgw_locations.app_id = phpgw_applications.app_id"
+				. " $filter ORDER BY location_id";
+
+			$this->_db->query($sql, __LINE__, __FILE__);
+			
+			$locations = array();
+			while ($this->_db->next_record())
+			{
+				$locations[$this->_db->f('name')] = $this->_db->f('descr', true);
+			}
+			return $locations;
+		}
 	}
