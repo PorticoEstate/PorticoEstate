@@ -123,17 +123,18 @@
 
 			$this->db->query($sql,__LINE__,__FILE__);
 
-			$status = '';
-			$i = 0;
+			$status = array();
 			while ($this->db->next_record())
 			{
-				$status[$i]['id']				= $this->db->f('id');
-				$status[$i]['name']				= stripslashes($this->db->f('value'));
-				$i++;
+				$status[] = array
+				(
+					'id'	=> $this->db->f('id'),
+					'name'	=> stripslashes($this->db->f('value'))
+				);
 			}
+
 			return $status;
 		}
-
 
 		function get_owner_type_list()
 		{
@@ -1261,10 +1262,10 @@
 			$table = 'fm_location' . $type_id . '_history';
 
 			$table_category = 'fm_location' . $type_id . '_category';
-
+			$location_id = $GLOBALS['phpgw']->locations->get_id('property', ".location.{$type_id}");
 			$choice_table = 'phpgw_cust_choice';
 			$attribute_table = 'phpgw_cust_attribute';
-			$attribute_filter = " appname = 'property' AND location = '.location." . $type_id . "'";
+			$attribute_filter = " location_id = {$location_id}";
 
 			$sql = "SELECT column_name,datatype,input_text,id as attrib_id FROM $attribute_table WHERE $attribute_filter";
 

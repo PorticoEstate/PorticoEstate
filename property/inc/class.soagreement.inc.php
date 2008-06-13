@@ -90,7 +90,8 @@
 
 			$entity_table = 'fm_agreement';
 			$category_table = 'fm_branch';
-			$attribute_filter = " appname = 'property' AND location = '.agreement'";
+			$location_id = $GLOBALS['phpgw']->locations->get_id('property', '.agreement'); 
+			$attribute_filter = " location_id = {$location_id}";
 			$paranthesis ='(';
 			$joinmethod = " $this->join $category_table ON ( $entity_table.category =$category_table.id)";
 			$joinmethod .= " $this->join  fm_vendor ON ( $entity_table.vendor_id =fm_vendor.id ))";

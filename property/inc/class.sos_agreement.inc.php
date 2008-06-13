@@ -88,7 +88,8 @@
 			{
 				$entity_table = 'fm_s_agreement';
 				$category_table = 'fm_s_agreement_category';
-				$attribute_filter = " appname = 'property' AND location = '.s_agreement'";
+				$location_id = $GLOBALS['phpgw']->locations->get_id('property', '.s_agreement'); 
+				$attribute_filter = " location_id = {$location_id}";
 
 				$paranthesis ='(';
 				$joinmethod = " $this->join $category_table ON ( $entity_table.category =$category_table.id))";
@@ -138,7 +139,8 @@
 			{
 				$allrows=true;
 				$entity_table = 'fm_s_agreement_detail';
-				$attribute_filter = " appname = 'property' AND location = '.s_agreement.detail'";
+				$location_id = $GLOBALS['phpgw']->locations->get_id('property', '.s_agreement.detail'); 
+				$attribute_filter = " location_id = {$location_id}";
 
 				$paranthesis .='(';
 				$joinmethod .= " $this->join  fm_s_agreement_pricing ON ( $entity_table.agreement_id =fm_s_agreement_pricing.agreement_id AND $entity_table.id =fm_s_agreement_pricing.item_id))";
@@ -1020,8 +1022,11 @@
 
 		function attrib_choise2id($id,$value = '')
 		{
+			$value = $this->db->db_addslashes($value);
 			$choice_table = 'phpgw_cust_choice';
-			$attribute_filter = " appname = 'property' AND location = '.s_agreement.detail'";
+			$location_id = $GLOBALS['phpgw']->locations->get_id('property', '.s_agreement.detail'); 
+			$attribute_filter = " location_id = {$location_id}";
+
 			$sql = "SELECT id FROM $choice_table WHERE $attribute_filter AND value = '$value' AND attrib_id = $id";
 			$this->db->query($sql,__LINE__,__FILE__);
 			$this->db->next_record();

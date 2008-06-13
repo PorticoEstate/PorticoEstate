@@ -69,7 +69,8 @@
 			$category_table = 'fm_' . $this->role . '_category';
 			$choice_table = 'phpgw_cust_choice';
 			$attribute_table = 'phpgw_cust_attribute';
-			$attribute_filter = " appname = 'property' AND location = '." . $this->role . "'";
+			$location_id = $GLOBALS['phpgw']->locations->get_id('property', ".{$this->role}");
+			$attribute_filter = " location_id = {$location_id}";
 
 			if(!$sql)
 			{
