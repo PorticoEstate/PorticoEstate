@@ -112,15 +112,14 @@
 			{
 				return;
 			}
+			$location_id = $GLOBALS['phpgw']->locations->get_id('property', ".location.{$type_id}");
 
-			$sql= "SELECT phpgw_cust_choice.id, phpgw_cust_choice.value FROM phpgw_cust_attribute $this->join phpgw_cust_choice ON "
-			. " phpgw_cust_attribute.appname= phpgw_cust_choice.appname AND "
-			. " phpgw_cust_attribute.location= phpgw_cust_choice.location AND "
-			. " phpgw_cust_attribute.id= phpgw_cust_choice.attrib_id "
-			. " WHERE phpgw_cust_attribute.column_name='status' "
-			. " AND phpgw_cust_choice.appname='property' "
-			. " AND phpgw_cust_choice.location='.location.$type_id' ORDER BY phpgw_cust_choice.id";
-
+			$sql= "SELECT phpgw_cust_choice.id, phpgw_cust_choice.value FROM phpgw_cust_attribute"
+			. " $this->join phpgw_cust_choice ON"
+			. " phpgw_cust_attribute.location_id= phpgw_cust_choice.location_id AND"
+			. " phpgw_cust_attribute.id= phpgw_cust_choice.attrib_id"
+			. " WHERE phpgw_cust_attribute.column_name='status'"
+			. " AND phpgw_cust_choice.location_id={$location_id} ORDER BY phpgw_cust_choice.id";
 
 			$this->db->query($sql,__LINE__,__FILE__);
 
@@ -208,10 +207,11 @@
 			}
 
 			$sql = $this->socommon->fm_cache('sql_'. $type_id . '_' . $lookup_tenant . '_' . $lookup);
+			$location_id = $GLOBALS['phpgw']->locations->get_id('property', ".location.{$type_id}");
 			$choice_table = 'phpgw_cust_choice';
 			$attribute_table = 'phpgw_cust_attribute';
-			$attribute_filter = " custom = 1 AND appname = 'property' AND location = '.location." . $type_id . "'";
-			$attribute_choice_filter = " appname = 'property' AND location = '.location." . $type_id . "'";
+			$attribute_filter = " custom = 1 AND location_id = {$location_id}";
+			$attribute_choice_filter = " location_id = {$location_id}";
 
 			if(!$sql)
 			{

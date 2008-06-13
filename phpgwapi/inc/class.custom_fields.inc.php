@@ -127,6 +127,7 @@
 		 * @param bool $doubled sometimes the attribute fits into a history-table as a double
 		 * @return int the the new custom field db pk
 		 */
+		//FIXME
 		function add_attrib($attrib, $attrib_table = '', $doubled = false)
 		{
 			$receipt = array();
@@ -270,14 +271,16 @@
 				$appname = $custom_function['appname'];
 			}
 
+			$location_id = $GLOBALS['phpgw']->locations->get_id($appname, $location);
+
 			$custom_function['descr'] = $this->db->db_addslashes($custom_function['descr']);
 
 			$this->db->transaction_begin();
-			$this->db->query("SELECT max(id) as maximum FROM phpgw_cust_function WHERE appname='$appname' AND location='$location'",__LINE__,__FILE__);
+			$this->db->query("SELECT max(id) as maximum FROM phpgw_cust_function WHERE location_id = {$location_id}",__LINE__,__FILE__);
 			$this->db->next_record();
 			$custom_function['id'] = $this->db->f('maximum')+1;
 
-			$sql = "SELECT max(custom_sort) as max_sort FROM phpgw_cust_function where appname='$appname' AND location='$location'";
+			$sql = "SELECT max(custom_sort) as max_sort FROM phpgw_cust_function WHERE location_id = {$location_id}";
 			$this->db->query($sql,__LINE__,__FILE__);
 			$this->db->next_record();
 			$custom_sort	= $this->db->f('max_sort')+1;
@@ -344,6 +347,9 @@
 			{
 				$attrib_table = $this->get_attrib_table($attrib['appname'],$attrib['location']);
 			}
+
+			$location_id = $GLOBALS['phpgw']->locations->get_id($attrib['appname'], $attrib['location']);
+
 			$choice_table = 'phpgw_cust_choice';
 
 			$attrib['column_name'] = $this->db->db_addslashes($attrib['column_name']);
@@ -362,7 +368,7 @@
 				$attrib['history'] = false;
 			}
 
-			$this->db->query("SELECT column_name, datatype,precision_ FROM phpgw_cust_attribute WHERE appname='" . $attrib['appname']. "' AND location='" . $attrib['location']. "' AND id='" . $attrib['id']. "'",__LINE__,__FILE__);
+			$this->db->query("SELECT column_name, datatype,precision_ FROM phpgw_cust_attribute WHERE location_id = {$location_id} AND id='" . $attrib['id']. "'",__LINE__,__FILE__);
 			$this->db->next_record();
 			$OldColumnName		= $this->db->f('column_name');
 			$OldDataType		= $this->db->f('datatype');
@@ -386,7 +392,7 @@
 
 			$value_set	= $this->db->validate_update($value_set);
 
-			$this->db->query("UPDATE phpgw_cust_attribute set $value_set WHERE appname='" . $attrib['appname']. "' AND location='" . $attrib['location']. "' AND id=" . $attrib['id'],__LINE__,__FILE__);
+			$this->db->query("UPDATE phpgw_cust_attribute set $value_set WHERE location_id = {$location_id} AND id=" . $attrib['id'],__LINE__,__FILE__);
 
 			$this->oProc->m_odb->transaction_begin();
 
@@ -398,7 +404,7 @@
 
 				$value_set	= $this->db->validate_update($value_set);
 
-				$this->db->query("UPDATE phpgw_cust_attribute set $value_set WHERE appname='" . $attrib['appname']. "' AND location='" . $attrib['location']. "' AND id=" . $attrib['id'],__LINE__,__FILE__);
+				$this->db->query("UPDATE phpgw_cust_attribute set $value_set WHERE location_id = {$location_id} AND id=" . $attrib['id'],__LINE__,__FILE__);
 
 				$this->oProc->RenameColumn($attrib_table, $OldColumnName, $attrib['column_name']);
 			}
@@ -407,7 +413,7 @@
 			{
 				if($attrib['column_info']['type']!='R' && $attrib['column_info']['type']!='CH' && $attrib['column_info']['type']!='LB')
 				{
-					$this->db->query("DELETE FROM $choice_table WHERE appname='" . $attrib['appname']. "' AND location='" . $attrib['location']. "' AND attrib_id=" . $attrib['id'],__LINE__,__FILE__);
+					$this->db->query("DELETE FROM $choice_table WHERE location_id = {$location_id} AND attrib_id=" . $attrib['id'],__LINE__,__FILE__);
 				}
 
 				if(!$attrib['column_info']['precision'])
@@ -434,7 +440,7 @@
 
 				$value_set	= $this->db->validate_update($value_set);
 
-				$this->db->query("UPDATE phpgw_cust_attribute set $value_set WHERE appname='" . $attrib['appname']. "' AND location='" . $attrib['location']. "' AND id=" . $attrib['id'],__LINE__,__FILE__);
+				$this->db->query("UPDATE phpgw_cust_attribute set $value_set WHERE location_id = {$location_id} AND id=" . (int)$attrib['id'],__LINE__,__FILE__);
 
 				$attrib['column_info']['type']  = $this->translate_datatype_insert($attrib['column_info']['type']);
 				$this->oProc->AlterColumn($attrib_table,$attrib['column_name'],$attrib['column_info']);			
@@ -462,7 +468,7 @@
 			{
 				for ($i=0;$i<count($attrib['delete_choice']);$i++)
 				{
-					$this->db->query("DELETE FROM $choice_table WHERE appname='" . $attrib['appname']. "' AND location='" . $attrib['location']. "' AND attrib_id=" . $attrib['id']  ." AND id=" . $attrib['delete_choice'][$i],__LINE__,__FILE__);
+					$this->db->query("DELETE FROM $choice_table WHERE location_id = {$location_id} AND attrib_id=" . (int)$attrib['id']  ." AND id=" . (int)$attrib['delete_choice'][$i],__LINE__,__FILE__);
 				}
 			}
 
@@ -489,6 +495,8 @@
 				$appname = $custom_function['appname'];
 			}
 
+			$location_id = $GLOBALS['phpgw']->locations->get_id($attrib['appname'], $attrib['location']);
+
 			$custom_function['descr'] = $this->db->db_addslashes($custom_function['descr']);
 
 			$this->db->transaction_begin();
@@ -501,7 +509,7 @@
 
 				$value_set	= $this->db->validate_update($value_set);
 
-				$this->db->query("UPDATE phpgw_cust_function set $value_set WHERE appname='$appname' AND location='$location' AND id=" . $custom_function['id'],__LINE__,__FILE__);
+				$this->db->query("UPDATE phpgw_cust_function set $value_set WHERE location_id = {$location_id} AND id=" . (int)$custom_function['id'],__LINE__,__FILE__);
 
 			$this->db->transaction_commit();
 
@@ -526,6 +534,8 @@
 			$appname	= $this->db->db_addslashes($appname);
 			$location	= $this->db->db_addslashes($location);
 
+			$location_id = $GLOBALS['phpgw']->locations->get_id($appname, $location);
+
 			if ( $allrows )
 			{
 				$this->allrows = $allrows;
@@ -547,7 +557,7 @@
 				$querymethod = " AND (phpgw_cust_attribute.column_name $this->like '%$query%' or phpgw_cust_attribute.input_text $this->like '%$query%')";
 			}
 
-			$sql = "FROM phpgw_cust_attribute WHERE appname='$appname' AND location = '$location' AND custom = 1 $querymethod $filtermethod";
+			$sql = "FROM phpgw_cust_attribute WHERE location_id = {$location_id} AND custom = 1 $querymethod $filtermethod";
 
 			$this->total_records = 0;
 			$this->db->query("SELECT COUNT(id) AS cnt_rec $sql",__LINE__,__FILE__);
@@ -619,11 +629,12 @@
 		*/
 		function get_attrib_single($appname, $location, $id, $inc_choices = true)
 		{
-			$appname = $this->db->db_addslashes($appname);
-			$location = $this->db->db_addslashes($location);
-			$id = (int) $id;
+			$appname		= $this->db->db_addslashes($appname);
+			$location		= $this->db->db_addslashes($location);
+			$location_id	= $GLOBALS['phpgw']->locations->get_id($appname, $location);
+			$id				= (int) $id;
 
-			$sql = "SELECT * FROM phpgw_cust_attribute where appname='$appname' AND location='$location' AND id=$id";
+			$sql = "SELECT * FROM phpgw_cust_attribute where location_id = {$location_id} AND id = {$id}";
 			$this->db->query($sql,__LINE__,__FILE__);
 
 			if ($this->db->next_record())
@@ -669,7 +680,11 @@
 		*/
 		function get_attrib_table($appname,$location)
 		{			
-			$sql = "SELECT c_attrib_table FROM phpgw_acl_location WHERE appname='$appname' AND id='$location'";
+			$appname		= $this->db->db_addslashes($appname);
+			$location		= $this->db->db_addslashes($location);
+			$location_id	= $GLOBALS['phpgw']->locations->get_id($appname, $location);
+
+			$sql = "SELECT c_attrib_table FROM phpgw_acl_location WHERE location_id = {$location_id}";
 			$this->db->query($sql,__LINE__,__FILE__);
 			if ( $this->db->next_record() )
 			{
@@ -700,6 +715,8 @@
 				return array();
 			}
 
+			$location_id	= $GLOBALS['phpgw']->locations->get_id($appname, $location);
+
 			$ordermethod = ' ORDER BY custom_sort ASC';
 			if ($order)
 			{
@@ -715,7 +732,7 @@
 				$querymethod = " AND file_name $this->like '%$query%' OR descr $this->like '%$query%'";
 			}
 
-			$sql = "SELECT * FROM $table WHERE appname='$appname' AND location='$location' $querymethod";
+			$sql = "SELECT * FROM {$table} WHERE location_id = {$location_id} {$querymethod}";
 
 			if(!$allrows)
 			{
@@ -746,11 +763,11 @@
 		
 		function read_attrib_choice($appname, $location, $attrib_id)
 		{
-			$appname = $this->db->db_addslashes($appname);
-			$location = $this->db->db_addslashes($location);
-			$ttrib_id = (int)$attrib_id;
-			
-			$sql = "SELECT * FROM phpgw_cust_choice WHERE appname='$appname' AND location='$location' AND attrib_id = $attrib_id";
+			$appname		= $this->db->db_addslashes($appname);
+			$location		= $this->db->db_addslashes($location);
+			$location_id	= $GLOBALS['phpgw']->locations->get_id($appname, $location);
+
+			$sql = "SELECT * FROM phpgw_cust_choice WHERE location_id = {$location_id} AND attrib_id =" . (int)$attrib_id;
 			$this->db->query($sql,__LINE__,__FILE__);
 
 			$choices = array();
@@ -769,9 +786,10 @@
 		{
 			$appname = $this->db->db_addslashes($appname);
 			$location = $this->db->db_addslashes($location);
-			$id = (int)$id;
 			
-			$sql = "SELECT * FROM phpgw_cust_function WHERE appname='$appname' AND location='$location' AND id = $id";
+			$location_id	= $GLOBALS['phpgw']->locations->get_id($appname, $location);
+
+			$sql = "SELECT * FROM phpgw_cust_function WHERE location_id = {$location_id} AND id =" . (int)$id;
 
 			$this->db->query($sql,__LINE__,__FILE__);
 
@@ -796,19 +814,20 @@
 		 */
 		function resort_attrib($id, $resort, $appname, $location)
 		{
-			$resort		= $resort == 'down' ? 'down' : 'up';
-			$appname 	= $this->db->db_addslashes($appname);
-			$location	= $this->db->db_addslashes($location);
-			$id			= (int) $id;
+			$resort			= $resort == 'down' ? 'down' : 'up';
+			$appname 		= $this->db->db_addslashes($appname);
+			$location		= $this->db->db_addslashes($location);
+			$location_id	= $GLOBALS['phpgw']->locations->get_id($appname, $location);
+			$id				= (int) $id;
 
 			$this->db->transaction_begin();
 
-			$sql = "SELECT attrib_sort FROM phpgw_cust_attribute where appname='$appname' AND location='$location' AND id=$id";
+			$sql = "SELECT attrib_sort FROM phpgw_cust_attribute WHERE location_id = {$location_id} AND id=$id";
 			$this->db->query($sql,__LINE__,__FILE__);
 			$this->db->next_record();
 			$attrib_sort	= $this->db->f('attrib_sort');
 
-			$sql = "SELECT max(attrib_sort) as max_sort FROM phpgw_cust_attribute where appname='$appname' AND location='$location'";
+			$sql = "SELECT max(attrib_sort) as max_sort FROM phpgw_cust_attribute WHERE location_id = {$location_id}";
 			$this->db->query($sql,__LINE__,__FILE__);
 			$this->db->next_record();
 			$max_sort	= $this->db->f('max_sort');
@@ -818,9 +837,9 @@
 				case 'down':
 					if($max_sort > $attrib_sort)
 					{
-						$sql = "UPDATE phpgw_cust_attribute set attrib_sort=$attrib_sort WHERE appname='$appname' AND location='$location' AND attrib_sort =" . ($attrib_sort+1);
+						$sql = "UPDATE phpgw_cust_attribute set attrib_sort=$attrib_sort WHERE location_id = {$location_id} AND attrib_sort =" . ($attrib_sort+1);
 						$this->db->query($sql,__LINE__,__FILE__);
-						$sql = "UPDATE phpgw_cust_attribute set attrib_sort=" . ($attrib_sort+1) ." WHERE appname='$appname' AND location='$location' AND id=$id";
+						$sql = "UPDATE phpgw_cust_attribute set attrib_sort=" . ($attrib_sort+1) ." WHERE location_id = {$location_id} AND id=$id";
 						$this->db->query($sql,__LINE__,__FILE__);
 					}
 					break;
@@ -828,9 +847,9 @@
 				case 'up':
 					if($attrib_sort>1)
 					{
-						$sql = "UPDATE phpgw_cust_attribute set attrib_sort=$attrib_sort WHERE appname='$appname' AND location='$location' AND attrib_sort =" . ($attrib_sort-1);
+						$sql = "UPDATE phpgw_cust_attribute set attrib_sort=$attrib_sort WHERE location_id = {$location_id} AND attrib_sort =" . ($attrib_sort-1);
 						$this->db->query($sql,__LINE__,__FILE__);
-						$sql = "UPDATE phpgw_cust_attribute set attrib_sort=" . ($attrib_sort-1) ." WHERE appname='$appname' AND location='$location' AND id=$id";
+						$sql = "UPDATE phpgw_cust_attribute set attrib_sort=" . ($attrib_sort-1) ." WHERE location_id = {$location_id} AND id=$id";
 						$this->db->query($sql,__LINE__,__FILE__);
 					}
 					break;
@@ -840,23 +859,24 @@
 
 		function resort_custom_function($id, $resort, $appname, $location)
 		{
-			$resort = $resort == 'down' ? 'down' : 'up';
-			$appname = $this->db->db_addslashes($appname);
-			$location = $this->db->db_addslashes($location);
-			$id = (int)$id;
+			$resort			= $resort == 'down' ? 'down' : 'up';
+			$id				= (int)$id;
 
 			if(!$location || !$appname)
 			{
 				return 	$receipt['error'][] = array('msg' => lang('location or appname is missing'));
 			}
+			$appname		= $this->db->db_addslashes($appname);
+			$location		= $this->db->db_addslashes($location);
+			$location_id	= $GLOBALS['phpgw']->locations->get_id($appname, $location);
 
 			$this->db->transaction_begin();
 			
-			$sql = "SELECT custom_sort FROM phpgw_cust_function WHERE appname='$appname' AND location='$location' AND id=$id";
+			$sql = "SELECT custom_sort FROM phpgw_cust_function WHERE location_id = {$location_id} AND id=$id";
 			$this->db->query($sql, __LINE__, __FILE__);
 			$this->db->next_record();
 			$custom_sort	= $this->db->f('custom_sort');
-			$sql = "SELECT MAX(custom_sort) AS max_sort FROM phpgw_cust_function WHERE appname='$appname' AND location='$location'";
+			$sql = "SELECT MAX(custom_sort) AS max_sort FROM phpgw_cust_function WHERE location_id = {$location_id}";
 			$this->db->query($sql, __LINE__, __FILE__);
 			$this->db->next_record();
 			$max_sort	= $this->db->f('max_sort');
@@ -866,9 +886,9 @@
 				case 'down':
 					if($max_sort > $custom_sort)
 					{
-						$sql = "UPDATE phpgw_cust_function set custom_sort=$custom_sort WHERE appname='$appname' AND location='$location' AND custom_sort =" . ($custom_sort+1);
+						$sql = "UPDATE phpgw_cust_function set custom_sort=$custom_sort WHERE location_id = {$location_id} AND custom_sort =" . ($custom_sort+1);
 						$this->db->query($sql,__LINE__,__FILE__);
-						$sql = "UPDATE phpgw_cust_function set custom_sort=" . ($custom_sort+1) ." WHERE appname='$appname' AND location='$location' AND id=$id";
+						$sql = "UPDATE phpgw_cust_function set custom_sort=" . ($custom_sort+1) ." WHERE location_id = {$location_id} AND id=$id";
 						$this->db->query($sql,__LINE__,__FILE__);
 					}
 					break;
@@ -876,7 +896,7 @@
 				case 'up':
 					if($custom_sort>1)
 					{
-						$sql = "UPDATE phpgw_cust_function set custom_sort=$custom_sort WHERE appname='$appname' AND location='$location' AND custom_sort =" . ($custom_sort-1);
+						$sql = "UPDATE phpgw_cust_function set custom_sort=$custom_sort WHERE location_id = {$location_id} AND custom_sort =" . ($custom_sort-1);
 						$this->db->query($sql,__LINE__,__FILE__);
 						$sql = "UPDATE phpgw_cust_function set custom_sort=" . ($custom_sort-1) ." WHERE location='$location' AND id=$id";
 						$this->db->query($sql,__LINE__,__FILE__);
@@ -989,11 +1009,14 @@
 		 */
 		function _delete_attrib($location,$appname,$attrib_id,$table = '',$doubled = false )
 		{
+			$appname		= $this->db->db_addslashes($appname);
+			$location		= $this->db->db_addslashes($location);
+			$location_id	= $GLOBALS['phpgw']->locations->get_id($appname, $location);
 			$this->_init_process();
 			$this->oProc->m_odb->transaction_begin();
 			$this->db->transaction_begin();
 
-			$sql = "SELECT * FROM phpgw_cust_attribute WHERE appname='$appname' AND location='$location' AND id=$attrib_id";
+			$sql = "SELECT * FROM phpgw_cust_attribute WHERE location_id = {$location_id} AND id =" . (int)$attrib_id;
 
 			$this->db->query($sql,__LINE__,__FILE__);
 			$this->db->next_record();
@@ -1006,25 +1029,25 @@
 
 			$this->oProc->DropColumn($table,false, $ColumnName);
 
-			$sql = "SELECT attrib_sort FROM phpgw_cust_attribute where appname='$appname' AND location='$location' AND id=$attrib_id";
+			$sql = "SELECT attrib_sort FROM phpgw_cust_attribute WHERE location_id = {$location_id} AND id =" . (int)$attrib_id;
 			$this->db->query($sql,__LINE__,__FILE__);
 			$this->db->next_record();
 			$attrib_sort	= $this->db->f('attrib_sort');
 
-			$sql = "SELECT max(attrib_sort) as max_sort FROM phpgw_cust_attribute where appname='$appname' AND location='$location'";
+			$sql = "SELECT max(attrib_sort) as max_sort FROM phpgw_cust_attribute WHERE location_id = {$location_id}";
 			$this->db->query($sql,__LINE__,__FILE__);
 			$this->db->next_record();
 			$max_sort	= $this->db->f('max_sort');
 
 			if($max_sort>$attrib_sort)
 			{
-				$sql = "UPDATE phpgw_cust_attribute set attrib_sort=attrib_sort-1 WHERE appname='$appname' AND location='$location' AND attrib_sort > $attrib_sort";
+				$sql = "UPDATE phpgw_cust_attribute set attrib_sort=attrib_sort-1 WHERE location_id = {$location_id} AND attrib_sort > $attrib_sort";
 				$this->db->query($sql,__LINE__,__FILE__);
 			}
 
 			if(!$doubled) // else: wait for it - another one is coming
 			{
-				$this->db->query("DELETE FROM phpgw_cust_attribute WHERE appname='$appname' AND location='$location' AND id = " . (int)$attrib_id,__LINE__,__FILE__);
+				$this->db->query("DELETE FROM phpgw_cust_attribute WHERE location_id = {$location_id} AND id = " . (int)$attrib_id,__LINE__,__FILE__);
 			}
 	//		$this->db->query("DELETE FROM history...
 			$this->db->transaction_commit();
@@ -1057,21 +1080,23 @@
 		
 		function _delete_custom_function($appname,$location,$custom_function_id)
 		{
+			$location_id	= $GLOBALS['phpgw']->locations->get_id($appname, $location);
+
 			$this->db->transaction_begin();
-			$sql = "SELECT custom_sort FROM phpgw_cust_function where appname='$appname' AND location='$location' AND id=$custom_function_id";
+			$sql = "SELECT custom_sort FROM phpgw_cust_function WHERE location_id = {$location_id} AND id=$custom_function_id";
 			$this->db->query($sql,__LINE__,__FILE__);
 			$this->db->next_record();
 			$custom_sort	= $this->db->f('custom_sort');
-			$sql2 = "SELECT max(custom_sort) as max_sort FROM phpgw_cust_function where appname='$appname' AND location='$location'";
+			$sql2 = "SELECT max(custom_sort) as max_sort FROM phpgw_cust_function WHERE location_id = {$location_id}";
 			$this->db->query($sql2,__LINE__,__FILE__);
 			$this->db->next_record();
 			$max_sort	= $this->db->f('max_sort');
 			if($max_sort>$custom_sort)
 			{
-				$sql = "UPDATE phpgw_cust_function set custom_sort=custom_sort-1 WHERE appname='$appname' AND location='$location' AND custom_sort > $custom_sort";
+				$sql = "UPDATE phpgw_cust_function set custom_sort=custom_sort-1 WHERE location_id = {$location_id} AND custom_sort > $custom_sort";
 				$this->db->query($sql,__LINE__,__FILE__);
 			}
-			$this->db->query("DELETE FROM phpgw_cust_function WHERE appname='$appname' AND location='$location' AND id=$custom_function_id",__LINE__,__FILE__);
+			$this->db->query("DELETE FROM phpgw_cust_function WHERE location_id = {$location_id} AND id=$custom_function_id",__LINE__,__FILE__);
 			$this->db->transaction_commit();
 		}
 		
