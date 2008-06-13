@@ -2446,7 +2446,14 @@
 	{
 		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
 
-		$GLOBALS['phpgw']->db = $GLOBALS['phpgw_setup']->oProc->m_odb;
+		// Need account_repository, accounts, acl and hooks to use categories
+		$GLOBALS['phpgw_setup']->oProc->query("SELECT config_value FROM phpgw_config WHERE config_app = 'phpgwapi' AND config_name = 'account_repository'");
+		$GLOBALS['phpgw_setup']->oProc->next_record();
+		$GLOBALS['phpgw_info']['server']['account_repository'] = $GLOBALS['phpgw_setup']->oProc->f('config_value');
+
+		$GLOBALS['phpgw']->accounts		= createObject('phpgwapi.accounts');
+
+		$GLOBALS['phpgw']->db = & $GLOBALS['phpgw_setup']->oProc->m_odb;
 		$GLOBALS['phpgw']->acl = CreateObject('phpgwapi.acl');
 		$GLOBALS['phpgw']->hooks = CreateObject('phpgwapi.hooks', $GLOBALS['phpgw_setup']->oProc->m_odb);
 		$cats = CreateObject('phpgwapi.categories', -1, 'property.ticket');
@@ -2558,6 +2565,10 @@
 				'uc' => array()
 			)
 		);
+
+		unset($GLOBALS['phpgw']->accounts);
+		unset($GLOBALS['phpgw']->acl);
+		unset($GLOBALS['phpgw']->hooks);
 
 		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
 		{
