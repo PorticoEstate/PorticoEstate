@@ -17,10 +17,31 @@
 	 * @package property
 	 */
 
-$app_id = $GLOBALS['phpgw']->applications->name2id('property');
+//$app_id = $GLOBALS['phpgw']->applications->name2id('property');
 
-$GLOBALS['phpgw_setup']->oProc->query("DELETE FROM phpgw_cust_attribute WHERE appname='property'");
-$GLOBALS['phpgw_setup']->oProc->query("DELETE FROM phpgw_cust_choice WHERE appname='property'");
+$GLOBALS['phpgw_setup']->oProc->query("SELECT app_id FROM phpgw_applications WHERE app_name = 'property'");
+$GLOBALS['phpgw_setup']->oProc->next_record();
+$app_id = $GLOBALS['phpgw_setup']->oProc->f('app_id');
+
+$GLOBALS['phpgw_setup']->oProc->query("SELECT location_id FROM phpgw_locations WHERE app_id = {$app_id} AND name != 'run'");
+
+$locations = array();
+while ($GLOBALS['phpgw_setup']->oProc->next_record())
+{
+	$locations[] = $GLOBALS['phpgw_setup']->oProc->f('location_id');
+}
+
+if(count($locations))
+{
+	$GLOBALS['phpgw_setup']->oProc->query('DELETE FROM phpgw_cust_choice WHERE location_id IN ('. implode (',',$locations) . ')');
+	$GLOBALS['phpgw_setup']->oProc->query('DELETE FROM phpgw_cust_attribute WHERE location_id IN ('. implode (',',$locations). ')');
+	$GLOBALS['phpgw_setup']->oProc->query('DELETE FROM phpgw_acl  WHERE location_id IN ('. implode (',',$locations) . ')');
+}
+
+$GLOBALS['phpgw_setup']->oProc->query("DELETE FROM phpgw_locations WHERE app_id = {$app_id} AND name != 'run'");
+
+
+unset($locations);
 
 #
 #fm_workorder_category
@@ -68,10 +89,11 @@ $GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_owner (id, abid, org_name,
 #
 #fm_owner_attribute
 #
+$location_id = $GLOBALS['phpgw']->locations->get_id('property', '.owner');
 
-$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_attribute (appname, location, id, list, column_name, input_text, statustext, size, datatype, attrib_sort, precision_, scale, default_value, nullable, search) VALUES ('property', '.owner', 1, 1, 'abid', 'Contact', 'Contakt person', NULL, 'AB', 1, 4, NULL, NULL, 'True', NULL)");
-$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_attribute (appname, location, id, list, column_name, input_text, statustext, size, datatype, attrib_sort, precision_, scale, default_value, nullable, search) VALUES ('property', '.owner', 2, 1, 'org_name', 'Name', 'The name of the owner', NULL, 'V', 2, 50, NULL, NULL, 'True', 1)");
-$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_attribute (appname, location, id, list, column_name, input_text, statustext, size, datatype, attrib_sort, precision_, scale, default_value, nullable, search) VALUES ('property', '.owner', 3, 1, 'remark', 'remark', 'remark', NULL, 'T', 3, NULL, NULL, NULL, 'True', NULL)");
+$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_attribute (location_id, id, list, column_name, input_text, statustext, size, datatype, attrib_sort, precision_, scale, default_value, nullable, search) VALUES ($location_id, 1, 1, 'abid', 'Contact', 'Contakt person', NULL, 'AB', 1, 4, NULL, NULL, 'True', NULL)");
+$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_attribute (location_id, id, list, column_name, input_text, statustext, size, datatype, attrib_sort, precision_, scale, default_value, nullable, search) VALUES ($location_id, 2, 1, 'org_name', 'Name', 'The name of the owner', NULL, 'V', 2, 50, NULL, NULL, 'True', 1)");
+$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_attribute (location_id, id, list, column_name, input_text, statustext, size, datatype, attrib_sort, precision_, scale, default_value, nullable, search) VALUES ($location_id, 3, 1, 'remark', 'remark', 'remark', NULL, 'T', 3, NULL, NULL, NULL, 'True', NULL)");
 
 #
 # Dumping data for table fm_location1_category
@@ -216,9 +238,6 @@ $GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_agreement_status (id, desc
 #
 #  phpgw_locations
 #
-//FIXME
-//$GLOBALS['phpgw_setup']->oProc->query("DELETE FROM phpgw_acl where acl_appname = 'property' AND acl_location !='run' ");
-$GLOBALS['phpgw_setup']->oProc->query("DELETE FROM phpgw_locations where app_id = {$app_id}");
 
 $GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_locations (app_id, name, descr, allow_grant) VALUES ({$app_id}, '.', 'Top', 1)");
 $GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_locations (app_id, name, descr) VALUES ({$app_id}, '.admin', 'Admin')");
@@ -296,21 +315,22 @@ $GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_tenant_category (id, descr
 #
 # Dumping data for table phpgw_cust_attribute
 #
+$location_id = $GLOBALS['phpgw']->locations->get_id('property', '.tenant');
 
-$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_attribute (appname, location, id, list, search, column_name, input_text, statustext, size, datatype, attrib_sort, precision_, scale, default_value, nullable) VALUES ('property', '.tenant', 1, 1, 1, 'first_name', 'First name', 'First name', NULL, 'V', 1, 50, NULL, NULL, 'True')");
-$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_attribute (appname, location, id, list, search, column_name, input_text, statustext, size, datatype, attrib_sort, precision_, scale, default_value, nullable) VALUES ('property', '.tenant', 2, 1, 1, 'last_name', 'Last name', 'Last name', NULL, 'V', 2, 50, NULL, NULL, 'True')");
-$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_attribute (appname, location, id, list, search, column_name, input_text, statustext, size, datatype, attrib_sort, precision_, scale, default_value, nullable) VALUES ('property', '.tenant', 3, 1, 1, 'contact_phone', 'contact phone', 'contact phone', NULL, 'V', 3, 20, NULL, NULL, 'True')");
-$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_attribute (appname, location, id, list, search, column_name, input_text, statustext, size, datatype, attrib_sort, precision_, scale, default_value, nullable) VALUES ('property', '.tenant', 4, NULL, NULL, 'phpgw_account_id', 'Mapped User', 'Mapped User', NULL, 'user', 4, 4, NULL, NULL, 'True')");
-$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_attribute (appname, location, id, list, search, column_name, input_text, statustext, size, datatype, attrib_sort, precision_, scale, default_value, nullable) VALUES ('property', '.tenant', 5, NULL, NULL, 'account_lid', 'User Name', 'User name for login', NULL, 'V', 5, 25, NULL, NULL, 'True')");
-$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_attribute (appname, location, id, list, search, column_name, input_text, statustext, size, datatype, attrib_sort, precision_, scale, default_value, nullable) VALUES ('property', '.tenant', 6, NULL, NULL, 'account_pwd', 'Password', 'Users Password', NULL, 'pwd', 6, 32, NULL, NULL, 'True')");
-$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_attribute (appname, location, id, list, search, column_name, input_text, statustext, size, datatype, attrib_sort, precision_, scale, default_value, nullable) VALUES ('property', '.tenant', 7, NULL, NULL, 'account_status', 'account status', 'account status', NULL, 'LB', 7, NULL, NULL, NULL, 'True')");
+$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_attribute (location_id, id, list, search, column_name, input_text, statustext, size, datatype, attrib_sort, precision_, scale, default_value, nullable) VALUES ($location_id, 1, 1, 1, 'first_name', 'First name', 'First name', NULL, 'V', 1, 50, NULL, NULL, 'True')");
+$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_attribute (location_id, id, list, search, column_name, input_text, statustext, size, datatype, attrib_sort, precision_, scale, default_value, nullable) VALUES ($location_id, 2, 1, 1, 'last_name', 'Last name', 'Last name', NULL, 'V', 2, 50, NULL, NULL, 'True')");
+$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_attribute (location_id, id, list, search, column_name, input_text, statustext, size, datatype, attrib_sort, precision_, scale, default_value, nullable) VALUES ($location_id, 3, 1, 1, 'contact_phone', 'contact phone', 'contact phone', NULL, 'V', 3, 20, NULL, NULL, 'True')");
+$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_attribute (location_id, id, list, search, column_name, input_text, statustext, size, datatype, attrib_sort, precision_, scale, default_value, nullable) VALUES ($location_id, 4, NULL, NULL, 'phpgw_account_id', 'Mapped User', 'Mapped User', NULL, 'user', 4, 4, NULL, NULL, 'True')");
+$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_attribute (location_id, id, list, search, column_name, input_text, statustext, size, datatype, attrib_sort, precision_, scale, default_value, nullable) VALUES ($location_id, 5, NULL, NULL, 'account_lid', 'User Name', 'User name for login', NULL, 'V', 5, 25, NULL, NULL, 'True')");
+$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_attribute (location_id, id, list, search, column_name, input_text, statustext, size, datatype, attrib_sort, precision_, scale, default_value, nullable) VALUES ($location_id, 6, NULL, NULL, 'account_pwd', 'Password', 'Users Password', NULL, 'pwd', 6, 32, NULL, NULL, 'True')");
+$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_attribute (location_id, id, list, search, column_name, input_text, statustext, size, datatype, attrib_sort, precision_, scale, default_value, nullable) VALUES ($location_id, 7, NULL, NULL, 'account_status', 'account status', 'account status', NULL, 'LB', 7, NULL, NULL, NULL, 'True')");
 
 #
 # Dumping data for table fm_tenant_choice
 #
 
-$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_choice (appname, location, attrib_id, id, value) VALUES ('property', '.tenant', 7, 1, 'Active')");
-$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_choice (appname, location, attrib_id, id, value) VALUES ('property', '.tenant', 7, 2, 'Banned')");
+$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_choice (location_id, attrib_id, id, value) VALUES ($location_id, 7, 1, 'Active')");
+$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_choice (location_id, attrib_id, id, value) VALUES ($location_id, 7, 2, 'Banned')");
 
 #
 # Dumping data for table fm_tenant
@@ -374,69 +394,73 @@ $GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_entity_category (entity_id
 #
 # Dumping data for table fm_entity_attribute
 #
-$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_attribute (appname, location, id, column_name, input_text, statustext, datatype, list, attrib_sort, size, precision_, scale, default_value, nullable) VALUES ('property', '.entity.1.1', 1, 'status', 'Status', 'Status', 'LB', NULL, 1, NULL, NULL, NULL, NULL, 'True')");
-$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_attribute (appname, location, id, column_name, input_text, statustext, datatype, list, attrib_sort, size, precision_, scale, default_value, nullable) VALUES ('property', '.entity.1.1', 2, 'category', 'Category', 'Category statustext', 'LB', NULL, 2, NULL, NULL, NULL, NULL, 'True')");
-$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_attribute (appname, location, id, column_name, input_text, statustext, datatype, list, attrib_sort, size, precision_, scale, default_value, nullable) VALUES ('property', '.entity.1.1', 3, 'ext_system_id', 'Ext system id', 'External system id', 'V', NULL, 3, NULL, 12, NULL, NULL, 'False')");
-$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_attribute (appname, location, id, column_name, input_text, statustext, datatype, list, attrib_sort, size, precision_, scale, default_value, nullable) VALUES ('property', '.entity.1.1', 4, 'ext_meter_id', 'Ext meter id', 'External meter id', 'V', NULL, 4, NULL, 12, NULL, NULL, 'False')");
-$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_attribute (appname, location, id, column_name, input_text, statustext, datatype, list, attrib_sort, size, precision_, scale, default_value, nullable) VALUES ('property', '.entity.1.1', 5, 'remark', 'Remark', 'Remark status text', 'T', NULL, 5, NULL, NULL, NULL, NULL, 'True')");
+$location_id = $GLOBALS['phpgw']->locations->get_id('property', '.entity.1.1');
+$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_attribute (location_id, id, column_name, input_text, statustext, datatype, list, attrib_sort, size, precision_, scale, default_value, nullable) VALUES ($location_id, 1, 'status', 'Status', 'Status', 'LB', NULL, 1, NULL, NULL, NULL, NULL, 'True')");
+$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_attribute (location_id, id, column_name, input_text, statustext, datatype, list, attrib_sort, size, precision_, scale, default_value, nullable) VALUES ($location_id, 2, 'category', 'Category', 'Category statustext', 'LB', NULL, 2, NULL, NULL, NULL, NULL, 'True')");
+$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_attribute (location_id, id, column_name, input_text, statustext, datatype, list, attrib_sort, size, precision_, scale, default_value, nullable) VALUES ($location_id, 3, 'ext_system_id', 'Ext system id', 'External system id', 'V', NULL, 3, NULL, 12, NULL, NULL, 'False')");
+$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_attribute (location_id, id, column_name, input_text, statustext, datatype, list, attrib_sort, size, precision_, scale, default_value, nullable) VALUES ($location_id, 4, 'ext_meter_id', 'Ext meter id', 'External meter id', 'V', NULL, 4, NULL, 12, NULL, NULL, 'False')");
+$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_attribute (location_id, id, column_name, input_text, statustext, datatype, list, attrib_sort, size, precision_, scale, default_value, nullable) VALUES ($location_id, 5, 'remark', 'Remark', 'Remark status text', 'T', NULL, 5, NULL, NULL, NULL, NULL, 'True')");
+$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_choice (location_id, attrib_id, id, value) VALUES ($location_id, 1, 1, 'status 1')");
+$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_choice (location_id, attrib_id, id, value) VALUES ($location_id, 1, 2, 'status 2')");
+$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_choice (location_id, attrib_id, id, value) VALUES ($location_id, 2, 1, 'Tenant power meter')");
+$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_choice (location_id, attrib_id, id, value) VALUES ($location_id, 2, 2, 'Joint power meter')");
 
-$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_attribute (appname, location, id, column_name, input_text, statustext, datatype, list, attrib_sort, size, precision_, scale, default_value, nullable) VALUES ('property', '.entity.1.2', 1, 'status', 'Status', 'Status', 'LB', NULL, 1, NULL, NULL, NULL, NULL, 'True')");
-$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_attribute (appname, location, id, column_name, input_text, statustext, datatype, list, attrib_sort, size, precision_, scale, default_value, nullable) VALUES ('property', '.entity.1.2', 2, 'attribute1', 'Attribute 1', 'Attribute 1 statustext', 'V', NULL, 2, NULL, 12, NULL, NULL, 'True')");
-$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_attribute (appname, location, id, column_name, input_text, statustext, datatype, list, attrib_sort, size, precision_, scale, default_value, nullable) VALUES ('property', '.entity.1.2', 3, 'attribute2', 'Attribute 2', 'Attribute 2 status text', 'D', NULL, 3, NULL, NULL, NULL, NULL, 'True')");
-$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_attribute (appname, location, id, column_name, input_text, statustext, datatype, list, attrib_sort, size, precision_, scale, default_value, nullable) VALUES ('property', '.entity.1.2', 4, 'attribute3', 'Attribute 3', 'Attribute 3 status text', 'R', NULL, 4, NULL, NULL, NULL, NULL, 'True')");
-$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_attribute (appname, location, id, column_name, input_text, statustext, datatype, list, attrib_sort, size, precision_, scale, default_value, nullable) VALUES ('property', '.entity.1.2', 5, 'attribute4', 'Attribute 4', 'Attribute 4 statustext', 'CH', NULL, 5, NULL, NULL, NULL, NULL, 'True')");
-$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_attribute (appname, location, id, column_name, input_text, statustext, datatype, list, attrib_sort, size, precision_, scale, default_value, nullable) VALUES ('property', '.entity.1.2', 6, 'attribute5', 'Attribute 5', 'Attribute 5 statustext', 'AB', NULL, 6, NULL, NULL, NULL, NULL, 'True')");
-$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_attribute (appname, location, id, column_name, input_text, statustext, datatype, list, attrib_sort, size, precision_, scale, default_value, nullable) VALUES ('property', '.entity.1.3', 1, 'status', 'Status', 'Status', 'LB', NULL, 1, NULL, NULL, NULL, NULL, 'True')");
-$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_attribute (appname, location, id, column_name, input_text, statustext, datatype, list, attrib_sort, size, precision_, scale, default_value, nullable) VALUES ('property', '.entity.1.3', 2, 'attribute1', 'Attribute 1', 'Attribute 1 statustext', 'V', NULL, 2, NULL, 12, NULL, NULL, 'True')");
-$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_attribute (appname, location, id, column_name, input_text, statustext, datatype, list, attrib_sort, size, precision_, scale, default_value, nullable) VALUES ('property', '.entity.1.3', 3, 'attribute2', 'Attribute 2', 'Attribute 2 status text', 'D', NULL, 3, NULL, NULL, NULL, NULL, 'True')");
-$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_attribute (appname, location, id, column_name, input_text, statustext, datatype, list, attrib_sort, size, precision_, scale, default_value, nullable) VALUES ('property', '.entity.1.3', 4, 'attribute3', 'Attribute 3', 'Attribute 3 status text', 'R', NULL, 4, NULL, NULL, NULL, NULL, 'True')");
-$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_attribute (appname, location, id, column_name, input_text, statustext, datatype, list, attrib_sort, size, precision_, scale, default_value, nullable) VALUES ('property', '.entity.1.3', 5, 'attribute4', 'Attribute 4', 'Attribute 4 statustext', 'CH', NULL, 5, NULL, NULL, NULL, NULL, 'True')");
-$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_attribute (appname, location, id, column_name, input_text, statustext, datatype, list, attrib_sort, size, precision_, scale, default_value, nullable) VALUES ('property', '.entity.1.3', 6, 'attribute5', 'Attribute 5', 'Attribute 5 statustext', 'AB', NULL, 6, NULL, NULL, NULL, NULL, 'True')");
-$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_attribute (appname, location, id, column_name, input_text, statustext, datatype, list, attrib_sort, size, precision_, scale, default_value, nullable) VALUES ('property', '.entity.2.1', 1, 'status', 'Status', 'Status', 'LB', NULL, 1, NULL, NULL, NULL, NULL, 'True')");
-$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_attribute (appname, location, id, column_name, input_text, statustext, datatype, list, attrib_sort, size, precision_, scale, default_value, nullable) VALUES ('property', '.entity.2.1', 2, 'attribute1', 'Attribute 1', 'Attribute 1 statustext', 'V', NULL, 2, NULL, 12, NULL, NULL, 'True')");
-$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_attribute (appname, location, id, column_name, input_text, statustext, datatype, list, attrib_sort, size, precision_, scale, default_value, nullable) VALUES ('property', '.entity.2.1', 3, 'attribute2', 'Attribute 2', 'Attribute 2 status text', 'D', NULL, 3, NULL, NULL, NULL, NULL, 'True')");
-$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_attribute (appname, location, id, column_name, input_text, statustext, datatype, list, attrib_sort, size, precision_, scale, default_value, nullable) VALUES ('property', '.entity.2.1', 4, 'attribute3', 'Attribute 3', 'Attribute 3 status text', 'R', NULL, 4, NULL, NULL, NULL, NULL, 'True')");
-$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_attribute (appname, location, id, column_name, input_text, statustext, datatype, list, attrib_sort, size, precision_, scale, default_value, nullable) VALUES ('property', '.entity.2.1', 5, 'attribute4', 'Attribute 4', 'Attribute 4 statustext', 'CH', NULL, 5, NULL, NULL, NULL, NULL, 'True')");
-$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_attribute (appname, location, id, column_name, input_text, statustext, datatype, list, attrib_sort, size, precision_, scale, default_value, nullable) VALUES ('property', '.entity.2.1', 6, 'attribute5', 'Attribute 5', 'Attribute 5 statustext', 'AB', NULL, 6, NULL, NULL, NULL, NULL, 'True')");
-$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_attribute (appname, location, id, column_name, input_text, statustext, datatype, list, attrib_sort, size, precision_, scale, default_value, nullable) VALUES ('property', '.entity.2.2', 1, 'status', 'Status', 'Status', 'LB', NULL, 1, NULL, NULL, NULL, NULL, 'True')");
-$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_attribute (appname, location, id, column_name, input_text, statustext, datatype, list, attrib_sort, size, precision_, scale, default_value, nullable) VALUES ('property', '.entity.2.2', 2, 'attribute1', 'Attribute 1', 'Attribute 1 statustext', 'V', NULL, 2, NULL, 12, NULL, NULL, 'True')");
-$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_attribute (appname, location, id, column_name, input_text, statustext, datatype, list, attrib_sort, size, precision_, scale, default_value, nullable) VALUES ('property', '.entity.2.2', 3, 'attribute2', 'Attribute 2', 'Attribute 2 status text', 'D', NULL, 3, NULL, NULL, NULL, NULL, 'True')");
-$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_attribute (appname, location, id, column_name, input_text, statustext, datatype, list, attrib_sort, size, precision_, scale, default_value, nullable) VALUES ('property', '.entity.2.2', 4, 'attribute3', 'Attribute 3', 'Attribute 3 status text', 'R', NULL, 4, NULL, NULL, NULL, NULL, 'True')");
-$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_attribute (appname, location, id, column_name, input_text, statustext, datatype, list, attrib_sort, size, precision_, scale, default_value, nullable) VALUES ('property', '.entity.2.2', 5, 'attribute4', 'Attribute 4', 'Attribute 4 statustext', 'CH', NULL, 5, NULL, NULL, NULL, NULL, 'True')");
-$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_attribute (appname, location, id, column_name, input_text, statustext, datatype, list, attrib_sort, size, precision_, scale, default_value, nullable) VALUES ('property', '.entity.2.2', 6, 'attribute5', 'Attribute 5', 'Attribute 5 statustext', 'AB', NULL, 6, NULL, NULL, NULL, NULL, 'True')");
+$location_id = $GLOBALS['phpgw']->locations->get_id('property', '.entity.1.2');
+$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_attribute (location_id, id, column_name, input_text, statustext, datatype, list, attrib_sort, size, precision_, scale, default_value, nullable) VALUES ($location_id, 1, 'status', 'Status', 'Status', 'LB', NULL, 1, NULL, NULL, NULL, NULL, 'True')");
+$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_attribute (location_id, id, column_name, input_text, statustext, datatype, list, attrib_sort, size, precision_, scale, default_value, nullable) VALUES ($location_id, 2, 'attribute1', 'Attribute 1', 'Attribute 1 statustext', 'V', NULL, 2, NULL, 12, NULL, NULL, 'True')");
+$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_attribute (location_id, id, column_name, input_text, statustext, datatype, list, attrib_sort, size, precision_, scale, default_value, nullable) VALUES ($location_id, 3, 'attribute2', 'Attribute 2', 'Attribute 2 status text', 'D', NULL, 3, NULL, NULL, NULL, NULL, 'True')");
+$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_attribute (location_id, id, column_name, input_text, statustext, datatype, list, attrib_sort, size, precision_, scale, default_value, nullable) VALUES ($location_id, 4, 'attribute3', 'Attribute 3', 'Attribute 3 status text', 'R', NULL, 4, NULL, NULL, NULL, NULL, 'True')");
+$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_attribute (location_id, id, column_name, input_text, statustext, datatype, list, attrib_sort, size, precision_, scale, default_value, nullable) VALUES ($location_id, 5, 'attribute4', 'Attribute 4', 'Attribute 4 statustext', 'CH', NULL, 5, NULL, NULL, NULL, NULL, 'True')");
+$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_attribute (location_id, id, column_name, input_text, statustext, datatype, list, attrib_sort, size, precision_, scale, default_value, nullable) VALUES ($location_id, 6, 'attribute5', 'Attribute 5', 'Attribute 5 statustext', 'AB', NULL, 6, NULL, NULL, NULL, NULL, 'True')");
+$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_choice (location_id, attrib_id, id, value) VALUES ($location_id, 1, 1, 'status 1')");
+$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_choice (location_id, attrib_id, id, value) VALUES ($location_id, 1, 2, 'status 2')");
+$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_choice (location_id, attrib_id, id, value) VALUES ($location_id, 4, 1, 'choice 1')");
+$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_choice (location_id, attrib_id, id, value) VALUES ($location_id, 4, 2, 'choice 2')");
+$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_choice (location_id, attrib_id, id, value) VALUES ($location_id, 5, 1, 'choice 1')");
+$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_choice (location_id, attrib_id, id, value) VALUES ($location_id, 5, 2, 'choice 2')");
 
-#
-# Dumping data for table fm_entity_choice
-#
+$location_id = $GLOBALS['phpgw']->locations->get_id('property', '.entity.1.3');
+$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_attribute (location_id, id, column_name, input_text, statustext, datatype, list, attrib_sort, size, precision_, scale, default_value, nullable) VALUES ($location_id, 1, 'status', 'Status', 'Status', 'LB', NULL, 1, NULL, NULL, NULL, NULL, 'True')");
+$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_attribute (location_id, id, column_name, input_text, statustext, datatype, list, attrib_sort, size, precision_, scale, default_value, nullable) VALUES ($location_id, 2, 'attribute1', 'Attribute 1', 'Attribute 1 statustext', 'V', NULL, 2, NULL, 12, NULL, NULL, 'True')");
+$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_attribute (location_id, id, column_name, input_text, statustext, datatype, list, attrib_sort, size, precision_, scale, default_value, nullable) VALUES ($location_id, 3, 'attribute2', 'Attribute 2', 'Attribute 2 status text', 'D', NULL, 3, NULL, NULL, NULL, NULL, 'True')");
+$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_attribute (location_id, id, column_name, input_text, statustext, datatype, list, attrib_sort, size, precision_, scale, default_value, nullable) VALUES ($location_id, 4, 'attribute3', 'Attribute 3', 'Attribute 3 status text', 'R', NULL, 4, NULL, NULL, NULL, NULL, 'True')");
+$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_attribute (location_id, id, column_name, input_text, statustext, datatype, list, attrib_sort, size, precision_, scale, default_value, nullable) VALUES ($location_id, 5, 'attribute4', 'Attribute 4', 'Attribute 4 statustext', 'CH', NULL, 5, NULL, NULL, NULL, NULL, 'True')");
+$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_attribute (location_id, id, column_name, input_text, statustext, datatype, list, attrib_sort, size, precision_, scale, default_value, nullable) VALUES ($location_id, 6, 'attribute5', 'Attribute 5', 'Attribute 5 statustext', 'AB', NULL, 6, NULL, NULL, NULL, NULL, 'True')");
+$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_choice (location_id, attrib_id, id, value) VALUES ($location_id, 1, 1, 'status 1')");
+$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_choice (location_id, attrib_id, id, value) VALUES ($location_id, 1, 2, 'status 2')");
+$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_choice (location_id, attrib_id, id, value) VALUES ($location_id, 4, 1, 'choice 1')");
+$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_choice (location_id, attrib_id, id, value) VALUES ($location_id, 4, 2, 'choice 2')");
+$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_choice (location_id, attrib_id, id, value) VALUES ($location_id, 5, 1, 'choice 1')");
+$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_choice (location_id, attrib_id, id, value) VALUES ($location_id, 5, 2, 'choice 2')");
 
-$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_choice (appname, location, attrib_id, id, value) VALUES ('property', '.entity.1.1', 1, 1, 'status 1')");
-$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_choice (appname, location, attrib_id, id, value) VALUES ('property', '.entity.1.1', 1, 2, 'status 2')");
-$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_choice (appname, location, attrib_id, id, value) VALUES ('property', '.entity.1.1', 2, 1, 'Tenant power meter')");
-$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_choice (appname, location, attrib_id, id, value) VALUES ('property', '.entity.1.1', 2, 2, 'Joint power meter')");
-$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_choice (appname, location, attrib_id, id, value) VALUES ('property', '.entity.1.2', 1, 1, 'status 1')");
-$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_choice (appname, location, attrib_id, id, value) VALUES ('property', '.entity.1.2', 1, 2, 'status 2')");
-$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_choice (appname, location, attrib_id, id, value) VALUES ('property', '.entity.1.2', 4, 1, 'choice 1')");
-$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_choice (appname, location, attrib_id, id, value) VALUES ('property', '.entity.1.2', 4, 2, 'choice 2')");
-$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_choice (appname, location, attrib_id, id, value) VALUES ('property', '.entity.1.2', 5, 1, 'choice 1')");
-$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_choice (appname, location, attrib_id, id, value) VALUES ('property', '.entity.1.2', 5, 2, 'choice 2')");
-$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_choice (appname, location, attrib_id, id, value) VALUES ('property', '.entity.1.3', 1, 1, 'status 1')");
-$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_choice (appname, location, attrib_id, id, value) VALUES ('property', '.entity.1.3', 1, 2, 'status 2')");
-$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_choice (appname, location, attrib_id, id, value) VALUES ('property', '.entity.1.3', 4, 1, 'choice 1')");
-$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_choice (appname, location, attrib_id, id, value) VALUES ('property', '.entity.1.3', 4, 2, 'choice 2')");
-$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_choice (appname, location, attrib_id, id, value) VALUES ('property', '.entity.1.3', 5, 1, 'choice 1')");
-$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_choice (appname, location, attrib_id, id, value) VALUES ('property', '.entity.1.3', 5, 2, 'choice 2')");
-$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_choice (appname, location, attrib_id, id, value) VALUES ('property', '.entity.2.1', 1, 1, 'status 1')");
-$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_choice (appname, location, attrib_id, id, value) VALUES ('property', '.entity.2.1', 1, 2, 'status 2')");
-$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_choice (appname, location, attrib_id, id, value) VALUES ('property', '.entity.2.1', 4, 1, 'choice 1')");
-$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_choice (appname, location, attrib_id, id, value) VALUES ('property', '.entity.2.1', 4, 2, 'choice 2')");
-$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_choice (appname, location, attrib_id, id, value) VALUES ('property', '.entity.2.1', 5, 1, 'choice 1')");
-$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_choice (appname, location, attrib_id, id, value) VALUES ('property', '.entity.2.1', 5, 2, 'choice 2')");
-$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_choice (appname, location, attrib_id, id, value) VALUES ('property', '.entity.2.2', 1, 1, 'status 1')");
-$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_choice (appname, location, attrib_id, id, value) VALUES ('property', '.entity.2.2', 1, 2, 'status 2')");
-$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_choice (appname, location, attrib_id, id, value) VALUES ('property', '.entity.2.2', 4, 1, 'choice 1')");
-$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_choice (appname, location, attrib_id, id, value) VALUES ('property', '.entity.2.2', 4, 2, 'choice 2')");
-$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_choice (appname, location, attrib_id, id, value) VALUES ('property', '.entity.2.2', 5, 1, 'choice 1')");
-$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_choice (appname, location, attrib_id, id, value) VALUES ('property', '.entity.2.2', 5, 2, 'choice 2')");
+$location_id = $GLOBALS['phpgw']->locations->get_id('property', '.entity.2.1');
+$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_attribute (location_id, id, column_name, input_text, statustext, datatype, list, attrib_sort, size, precision_, scale, default_value, nullable) VALUES ($location_id, 1, 'status', 'Status', 'Status', 'LB', NULL, 1, NULL, NULL, NULL, NULL, 'True')");
+$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_attribute (location_id, id, column_name, input_text, statustext, datatype, list, attrib_sort, size, precision_, scale, default_value, nullable) VALUES ($location_id, 2, 'attribute1', 'Attribute 1', 'Attribute 1 statustext', 'V', NULL, 2, NULL, 12, NULL, NULL, 'True')");
+$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_attribute (location_id, id, column_name, input_text, statustext, datatype, list, attrib_sort, size, precision_, scale, default_value, nullable) VALUES ($location_id, 3, 'attribute2', 'Attribute 2', 'Attribute 2 status text', 'D', NULL, 3, NULL, NULL, NULL, NULL, 'True')");
+$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_attribute (location_id, id, column_name, input_text, statustext, datatype, list, attrib_sort, size, precision_, scale, default_value, nullable) VALUES ($location_id, 4, 'attribute3', 'Attribute 3', 'Attribute 3 status text', 'R', NULL, 4, NULL, NULL, NULL, NULL, 'True')");
+$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_attribute (location_id, id, column_name, input_text, statustext, datatype, list, attrib_sort, size, precision_, scale, default_value, nullable) VALUES ($location_id, 5, 'attribute4', 'Attribute 4', 'Attribute 4 statustext', 'CH', NULL, 5, NULL, NULL, NULL, NULL, 'True')");
+$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_attribute (location_id, id, column_name, input_text, statustext, datatype, list, attrib_sort, size, precision_, scale, default_value, nullable) VALUES ($location_id, 6, 'attribute5', 'Attribute 5', 'Attribute 5 statustext', 'AB', NULL, 6, NULL, NULL, NULL, NULL, 'True')");
+$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_choice (location_id, attrib_id, id, value) VALUES ($location_id, 1, 1, 'status 1')");
+$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_choice (location_id, attrib_id, id, value) VALUES ($location_id, 1, 2, 'status 2')");
+$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_choice (location_id, attrib_id, id, value) VALUES ($location_id, 4, 1, 'choice 1')");
+$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_choice (location_id, attrib_id, id, value) VALUES ($location_id, 4, 2, 'choice 2')");
+$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_choice (location_id, attrib_id, id, value) VALUES ($location_id, 5, 1, 'choice 1')");
+$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_choice (location_id, attrib_id, id, value) VALUES ($location_id, 5, 2, 'choice 2')");
+
+$location_id = $GLOBALS['phpgw']->locations->get_id('property', '.entity.2.2');
+$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_attribute (location_id, id, column_name, input_text, statustext, datatype, list, attrib_sort, size, precision_, scale, default_value, nullable) VALUES ($location_id, 1, 'status', 'Status', 'Status', 'LB', NULL, 1, NULL, NULL, NULL, NULL, 'True')");
+$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_attribute (location_id, id, column_name, input_text, statustext, datatype, list, attrib_sort, size, precision_, scale, default_value, nullable) VALUES ($location_id, 2, 'attribute1', 'Attribute 1', 'Attribute 1 statustext', 'V', NULL, 2, NULL, 12, NULL, NULL, 'True')");
+$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_attribute (location_id, id, column_name, input_text, statustext, datatype, list, attrib_sort, size, precision_, scale, default_value, nullable) VALUES ($location_id, 3, 'attribute2', 'Attribute 2', 'Attribute 2 status text', 'D', NULL, 3, NULL, NULL, NULL, NULL, 'True')");
+$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_attribute (location_id, id, column_name, input_text, statustext, datatype, list, attrib_sort, size, precision_, scale, default_value, nullable) VALUES ($location_id, 4, 'attribute3', 'Attribute 3', 'Attribute 3 status text', 'R', NULL, 4, NULL, NULL, NULL, NULL, 'True')");
+$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_attribute (location_id, id, column_name, input_text, statustext, datatype, list, attrib_sort, size, precision_, scale, default_value, nullable) VALUES ($location_id, 5, 'attribute4', 'Attribute 4', 'Attribute 4 statustext', 'CH', NULL, 5, NULL, NULL, NULL, NULL, 'True')");
+$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_attribute (location_id, id, column_name, input_text, statustext, datatype, list, attrib_sort, size, precision_, scale, default_value, nullable) VALUES ($location_id, 6, 'attribute5', 'Attribute 5', 'Attribute 5 statustext', 'AB', NULL, 6, NULL, NULL, NULL, NULL, 'True')");
+$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_choice (location_id, attrib_id, id, value) VALUES ($location_id, 1, 1, 'status 1')");
+$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_choice (location_id, attrib_id, id, value) VALUES ($location_id, 1, 2, 'status 2')");
+$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_choice (location_id, attrib_id, id, value) VALUES ($location_id, 4, 1, 'choice 1')");
+$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_choice (location_id, attrib_id, id, value) VALUES ($location_id, 4, 2, 'choice 2')");
+$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_choice (location_id, attrib_id, id, value) VALUES ($location_id, 5, 1, 'choice 1')");
+$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_choice (location_id, attrib_id, id, value) VALUES ($location_id, 5, 2, 'choice 2')");
+
 
 #
 # Dumping data for table fm_entity_lookup
@@ -467,10 +491,10 @@ $GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_custom_cols (custom_id, id
 #
 # Dumping data for table fm_vendor_attribute
 #
-
-$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_attribute (appname, location, id, list, column_name, input_text, statustext, size, datatype, attrib_sort, precision_, scale, default_value, nullable, search) VALUES ('property', '.vendor', 1, 1, 'org_name', 'Name', 'The Name of the vendor', NULL, 'V', 1, 50, NULL, NULL, 'True', 1)");
-$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_attribute (appname, location, id, list, column_name, input_text, statustext, size, datatype, attrib_sort, precision_, scale, default_value, nullable, search) VALUES ('property', '.vendor', 2, 1, 'contact_phone', 'Contact phone', 'Contact phone', NULL, 'V', 2, 20, NULL, NULL, 'True', 1)");
-$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_attribute (appname, location, id, list, column_name, input_text, statustext, size, datatype, attrib_sort, precision_, scale, default_value, nullable, search) VALUES ('property', '.vendor', 3, 1, 'email', 'email', 'email', NULL, 'email', 3, 64, NULL, NULL, 'True', 1)");
+$location_id = $GLOBALS['phpgw']->locations->get_id('property', '.vendor');
+$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_attribute (location_id, id, list, column_name, input_text, statustext, size, datatype, attrib_sort, precision_, scale, default_value, nullable, search) VALUES ($location_id, 1, 1, 'org_name', 'Name', 'The Name of the vendor', NULL, 'V', 1, 50, NULL, NULL, 'True', 1)");
+$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_attribute (location_id, id, list, column_name, input_text, statustext, size, datatype, attrib_sort, precision_, scale, default_value, nullable, search) VALUES ($location_id, 2, 1, 'contact_phone', 'Contact phone', 'Contact phone', NULL, 'V', 2, 20, NULL, NULL, 'True', 1)");
+$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_attribute (location_id, id, list, column_name, input_text, statustext, size, datatype, attrib_sort, precision_, scale, default_value, nullable, search) VALUES ($location_id, 3, 1, 'email', 'email', 'email', NULL, 'email', 3, 64, NULL, NULL, 'True', 1)");
 
 
 $GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_vendor_category (id, descr) VALUES (1, 'kateogory 1')");
@@ -570,12 +594,13 @@ for ($location_type=1; $location_type<5; $location_type++)
 	$GLOBALS['phpgw_setup']->oProc->query("UPDATE fm_location_type set list_info = '" . 'a:3:{i:1;s:1:"1";i:2;s:1:"2";i:3;s:1:"3";}' ."' WHERE id = '3'");
 	$GLOBALS['phpgw_setup']->oProc->query("UPDATE fm_location_type set list_info = '" . 'a:1:{i:1;s:1:"1";}' ."' WHERE id = '4'");
 
+	$location_id = $GLOBALS['phpgw']->locations->get_id('property', ".location.{$location_type}");
+
 	for ($i=0;$i<count($default_attrib['id']);$i++)
 	{
-		$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_attribute (appname, location, id,column_name,datatype,precision_,input_text,statustext,nullable,custom)"
+		$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_attribute (location_id, id,column_name,datatype,precision_,input_text,statustext,nullable,custom)"
 			. " VALUES ("
-			. "'property',"
-			. "'.location.$location_type',"
+			. $location_id. ','
 			. $default_attrib['id'][$i] . ",'"
 			. $default_attrib['column_name'][$i] . "','"
 			. $default_attrib['type'][$i] . "',"
@@ -593,46 +618,44 @@ for ($location_type=1; $location_type<5; $location_type++)
 #
 # Dumping data for table fm_location_attrib
 #
-
-$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_attribute (appname, location, id, column_name, input_text, statustext, datatype, list, attrib_sort, size, precision_, scale, default_value, nullable,custom) VALUES ('property', '.location.1', 8, 'status', 'Status', 'Status', 'LB', NULL, 1, NULL, NULL, NULL, NULL, 'True', 1)");
-$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_attribute (appname, location, id, column_name, input_text, statustext, datatype, list, attrib_sort, size, precision_, scale, default_value, nullable,custom) VALUES ('property', '.location.1', 9, 'remark', 'Remark', 'Remark', 'T', NULL, 2, NULL, NULL, NULL, NULL, 'True', 1)");
-$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_attribute (appname, location, id, column_name, input_text, statustext, datatype, list, attrib_sort, size, precision_, scale, default_value, nullable,custom) VALUES ('property', '.location.1', 10, 'mva', 'mva', 'Status', 'I', NULL, 3, NULL, 4, NULL, NULL, 'True', 1)");
-$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_attribute (appname, location, id, column_name, input_text, statustext, datatype, list, attrib_sort, size, precision_, scale, default_value, nullable,custom) VALUES ('property', '.location.1', 11, 'kostra_id', 'kostra_id', 'kostra_id', 'I', NULL, 4, NULL, 4, NULL, NULL, 'True', 1)");
-$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_attribute (appname, location, id, column_name, input_text, statustext, datatype, list, attrib_sort, size, precision_, scale, default_value, nullable,custom) VALUES ('property', '.location.1', 12, 'part_of_town_id', 'part_of_town_id', 'part_of_town_id', 'I', NULL, NULL, NULL, 4, NULL, NULL, 'True', NULL)");
-$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_attribute (appname, location, id, column_name, input_text, statustext, datatype, list, attrib_sort, size, precision_, scale, default_value, nullable,custom) VALUES ('property', '.location.1', 13, 'owner_id', 'owner_id', 'owner_id', 'I', NULL, NULL, NULL, 4, NULL, NULL, 'True', NULL)");
-$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_attribute (appname, location, id, column_name, input_text, statustext, datatype, list, attrib_sort, size, precision_, scale, default_value, nullable,custom) VALUES ('property', '.location.1', 14, 'change_type', 'change_type', 'change_type', 'I', NULL, NULL, NULL, 4, NULL, NULL, 'True', NULL)");
-$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_attribute (appname, location, id, column_name, input_text, statustext, datatype, list, attrib_sort, precision_, scale, default_value, nullable,custom) VALUES ('property', '.location.1', 15, 'rental_area', 'Rental area', 'Rental area', 'N', NULL, 5, 20, 2, NULL, 'True', 1)");
-
-$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_attribute (appname, location, id, column_name, input_text, statustext, datatype, list, attrib_sort, size, precision_, scale, default_value, nullable,custom) VALUES ('property', '.location.2', 9, 'status', 'Status', 'Status', 'LB', NULL, 1, NULL, NULL, NULL, NULL, 'True', 1)");
-$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_attribute (appname, location, id, column_name, input_text, statustext, datatype, list, attrib_sort, size, precision_, scale, default_value, nullable,custom) VALUES ('property', '.location.2', 10, 'remark', 'Remark', 'Remark', 'T', NULL, 2, NULL, NULL, NULL, NULL, 'True', 1)");
-$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_attribute (appname, location, id, column_name, input_text, statustext, datatype, list, attrib_sort, size, precision_, scale, default_value, nullable,custom) VALUES ('property', '.location.2', 11, 'change_type', 'change_type', 'change_type', 'I', NULL, NULL, NULL, 4, NULL, NULL, 'True', NULL)");
-$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_attribute (appname, location, id, column_name, input_text, statustext, datatype, list, attrib_sort, precision_, scale, default_value, nullable,custom) VALUES ('property', '.location.2', 12, 'rental_area', 'Rental area', 'Rental area', 'N', NULL, 3, 20, 2, NULL, 'True', 1)");
-
-$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_attribute (appname, location, id, column_name, input_text, statustext, datatype, list, attrib_sort, size, precision_, scale, default_value, nullable,custom) VALUES ('property', '.location.3', 10, 'status', 'Status', 'Status', 'LB', NULL, 1, NULL, NULL, NULL, NULL, 'True', 1)");
-$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_attribute (appname, location, id, column_name, input_text, statustext, datatype, list, attrib_sort, size, precision_, scale, default_value, nullable,custom) VALUES ('property', '.location.3', 11, 'remark', 'Remark', 'Remark', 'T', NULL, 2, NULL, NULL, NULL, NULL, 'True', 1)");
-$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_attribute (appname, location, id, column_name, input_text, statustext, datatype, list, attrib_sort, size, precision_, scale, default_value, nullable,custom) VALUES ('property', '.location.3', 12, 'change_type', 'change_type', 'change_type', 'I', NULL, NULL, NULL, 4, NULL, NULL, 'True', NULL)");
-$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_attribute (appname, location, id, column_name, input_text, statustext, datatype, list, attrib_sort, precision_, scale, default_value, nullable,custom) VALUES ('property', '.location.3', 13, 'rental_area', 'Rental area', 'Rental area', 'N', NULL, 3, 20, 2, NULL, 'True', 1)");
-
-$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_attribute (appname, location, id, column_name, input_text, statustext, datatype, list, attrib_sort, size, precision_, scale, default_value, nullable,custom) VALUES ('property', '.location.4', 11, 'status', 'Status', 'Status', 'LB', NULL, 1, NULL, NULL, NULL, NULL, 'True', 1)");
-$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_attribute (appname, location, id, column_name, input_text, statustext, datatype, list, attrib_sort, size, precision_, scale, default_value, nullable,custom) VALUES ('property', '.location.4', 12, 'remark', 'Remark', 'Remark', 'T', NULL, 2, NULL, NULL, NULL, NULL, 'True', 1)");
-$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_attribute (appname, location, id, column_name, input_text, statustext, datatype, list, attrib_sort, size, precision_, scale, default_value, nullable,custom) VALUES ('property', '.location.4', 13, 'street_id', 'street_id', 'street_id', 'I', NULL, NULL, NULL, 4, NULL, NULL, 'True', NULL)");
-$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_attribute (appname, location, id, column_name, input_text, statustext, datatype, list, attrib_sort, size, precision_, scale, default_value, nullable,custom) VALUES ('property', '.location.4', 14, 'street_number', 'street_number', 'street_number', 'I', NULL, NULL, NULL, 4, NULL, NULL, 'True', NULL)");
-$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_attribute (appname, location, id, column_name, input_text, statustext, datatype, list, attrib_sort, size, precision_, scale, default_value, nullable,custom) VALUES ('property', '.location.4', 15, 'tenant_id', 'tenant_id', 'tenant_id', 'I', NULL, NULL, NULL, 4, NULL, NULL, 'True', NULL)");
-$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_attribute (appname, location, id, column_name, input_text, statustext, datatype, list, attrib_sort, size, precision_, scale, default_value, nullable,custom) VALUES ('property', '.location.4', 16, 'change_type', 'change_type', 'change_type', 'I', NULL, NULL, NULL, 4, NULL, NULL, 'True', NULL)");
-$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_attribute (appname, location, id, column_name, input_text, statustext, datatype, list, attrib_sort, precision_, scale, default_value, nullable,custom) VALUES ('property', '.location.4', 17, 'rental_area', 'Rental area', 'Rental area', 'N', NULL, 4, 20, 2, NULL, 'True', 1)");
-
-#
-# Dumping data for table fm_location_choice
-#
-
-$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_choice (appname, location, attrib_id, id, value) VALUES ('property', '.location.1', 8, 1, 'OK')");
-$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_choice (appname, location, attrib_id, id, value) VALUES ('property', '.location.1', 8, 2, 'Not OK')");
-$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_choice (appname, location, attrib_id, id, value) VALUES ('property', '.location.2', 9, 1, 'OK')");
-$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_choice (appname, location, attrib_id, id, value) VALUES ('property', '.location.2', 9, 2, 'Not OK')");
-$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_choice (appname, location, attrib_id, id, value) VALUES ('property', '.location.3', 10, 1, 'OK')");
-$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_choice (appname, location, attrib_id, id, value) VALUES ('property', '.location.3', 10, 2, 'Not OK')");
-$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_choice (appname, location, attrib_id, id, value) VALUES ('property', '.location.4', 11, 1, 'OK')");
-$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_choice (appname, location, attrib_id, id, value) VALUES ('property', '.location.4', 11, 2, 'Not OK')");
+$location_id = $GLOBALS['phpgw']->locations->get_id('property', '.location.1');
+$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_attribute (location_id, id, column_name, input_text, statustext, datatype, list, attrib_sort, size, precision_, scale, default_value, nullable,custom) VALUES ($location_id, 8, 'status', 'Status', 'Status', 'LB', NULL, 1, NULL, NULL, NULL, NULL, 'True', 1)");
+$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_attribute (location_id, id, column_name, input_text, statustext, datatype, list, attrib_sort, size, precision_, scale, default_value, nullable,custom) VALUES ($location_id, 9, 'remark', 'Remark', 'Remark', 'T', NULL, 2, NULL, NULL, NULL, NULL, 'True', 1)");
+$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_attribute (location_id, id, column_name, input_text, statustext, datatype, list, attrib_sort, size, precision_, scale, default_value, nullable,custom) VALUES ($location_id, 10, 'mva', 'mva', 'Status', 'I', NULL, 3, NULL, 4, NULL, NULL, 'True', 1)");
+$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_attribute (location_id, id, column_name, input_text, statustext, datatype, list, attrib_sort, size, precision_, scale, default_value, nullable,custom) VALUES ($location_id, 11, 'kostra_id', 'kostra_id', 'kostra_id', 'I', NULL, 4, NULL, 4, NULL, NULL, 'True', 1)");
+$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_attribute (location_id, id, column_name, input_text, statustext, datatype, list, attrib_sort, size, precision_, scale, default_value, nullable,custom) VALUES ($location_id, 12, 'part_of_town_id', 'part_of_town_id', 'part_of_town_id', 'I', NULL, NULL, NULL, 4, NULL, NULL, 'True', NULL)");
+$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_attribute (location_id, id, column_name, input_text, statustext, datatype, list, attrib_sort, size, precision_, scale, default_value, nullable,custom) VALUES ($location_id, 13, 'owner_id', 'owner_id', 'owner_id', 'I', NULL, NULL, NULL, 4, NULL, NULL, 'True', NULL)");
+$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_attribute (location_id, id, column_name, input_text, statustext, datatype, list, attrib_sort, size, precision_, scale, default_value, nullable,custom) VALUES ($location_id, 14, 'change_type', 'change_type', 'change_type', 'I', NULL, NULL, NULL, 4, NULL, NULL, 'True', NULL)");
+$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_attribute (location_id, id, column_name, input_text, statustext, datatype, list, attrib_sort, precision_, scale, default_value, nullable,custom) VALUES ($location_id, 15, 'rental_area', 'Rental area', 'Rental area', 'N', NULL, 5, 20, 2, NULL, 'True', 1)");
+$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_choice (location_id, attrib_id, id, value) VALUES ($location_id, 8, 1, 'OK')");
+$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_choice (location_id, attrib_id, id, value) VALUES ($location_id, 8, 2, 'Not OK')");
 
 
-?>
+$location_id = $GLOBALS['phpgw']->locations->get_id('property', '.location.2');
+$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_attribute (location_id, id, column_name, input_text, statustext, datatype, list, attrib_sort, size, precision_, scale, default_value, nullable,custom) VALUES ($location_id, 9, 'status', 'Status', 'Status', 'LB', NULL, 1, NULL, NULL, NULL, NULL, 'True', 1)");
+$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_attribute (location_id, id, column_name, input_text, statustext, datatype, list, attrib_sort, size, precision_, scale, default_value, nullable,custom) VALUES ($location_id, 10, 'remark', 'Remark', 'Remark', 'T', NULL, 2, NULL, NULL, NULL, NULL, 'True', 1)");
+$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_attribute (location_id, id, column_name, input_text, statustext, datatype, list, attrib_sort, size, precision_, scale, default_value, nullable,custom) VALUES ($location_id, 11, 'change_type', 'change_type', 'change_type', 'I', NULL, NULL, NULL, 4, NULL, NULL, 'True', NULL)");
+$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_attribute (location_id, id, column_name, input_text, statustext, datatype, list, attrib_sort, precision_, scale, default_value, nullable,custom) VALUES ($location_id, 12, 'rental_area', 'Rental area', 'Rental area', 'N', NULL, 3, 20, 2, NULL, 'True', 1)");
+$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_choice (location_id, attrib_id, id, value) VALUES ($location_id, 9, 1, 'OK')");
+$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_choice (location_id, attrib_id, id, value) VALUES ($location_id, 9, 2, 'Not OK')");
+
+$location_id = $GLOBALS['phpgw']->locations->get_id('property', '.location.3');
+$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_attribute (location_id, id, column_name, input_text, statustext, datatype, list, attrib_sort, size, precision_, scale, default_value, nullable,custom) VALUES ($location_id, 10, 'status', 'Status', 'Status', 'LB', NULL, 1, NULL, NULL, NULL, NULL, 'True', 1)");
+$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_attribute (location_id, id, column_name, input_text, statustext, datatype, list, attrib_sort, size, precision_, scale, default_value, nullable,custom) VALUES ($location_id, 11, 'remark', 'Remark', 'Remark', 'T', NULL, 2, NULL, NULL, NULL, NULL, 'True', 1)");
+$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_attribute (location_id, id, column_name, input_text, statustext, datatype, list, attrib_sort, size, precision_, scale, default_value, nullable,custom) VALUES ($location_id, 12, 'change_type', 'change_type', 'change_type', 'I', NULL, NULL, NULL, 4, NULL, NULL, 'True', NULL)");
+$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_attribute (location_id, id, column_name, input_text, statustext, datatype, list, attrib_sort, precision_, scale, default_value, nullable,custom) VALUES ($location_id, 13, 'rental_area', 'Rental area', 'Rental area', 'N', NULL, 3, 20, 2, NULL, 'True', 1)");
+$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_choice (location_id, attrib_id, id, value) VALUES ($location_id, 10, 1, 'OK')");
+$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_choice (location_id, attrib_id, id, value) VALUES ($location_id, 10, 2, 'Not OK')");
+
+
+$location_id = $GLOBALS['phpgw']->locations->get_id('property', '.location.4');
+$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_attribute (location_id, id, column_name, input_text, statustext, datatype, list, attrib_sort, size, precision_, scale, default_value, nullable,custom) VALUES ($location_id, 11, 'status', 'Status', 'Status', 'LB', NULL, 1, NULL, NULL, NULL, NULL, 'True', 1)");
+$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_attribute (location_id, id, column_name, input_text, statustext, datatype, list, attrib_sort, size, precision_, scale, default_value, nullable,custom) VALUES ($location_id, 12, 'remark', 'Remark', 'Remark', 'T', NULL, 2, NULL, NULL, NULL, NULL, 'True', 1)");
+$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_attribute (location_id, id, column_name, input_text, statustext, datatype, list, attrib_sort, size, precision_, scale, default_value, nullable,custom) VALUES ($location_id, 13, 'street_id', 'street_id', 'street_id', 'I', NULL, NULL, NULL, 4, NULL, NULL, 'True', NULL)");
+$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_attribute (location_id, id, column_name, input_text, statustext, datatype, list, attrib_sort, size, precision_, scale, default_value, nullable,custom) VALUES ($location_id, 14, 'street_number', 'street_number', 'street_number', 'I', NULL, NULL, NULL, 4, NULL, NULL, 'True', NULL)");
+$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_attribute (location_id, id, column_name, input_text, statustext, datatype, list, attrib_sort, size, precision_, scale, default_value, nullable,custom) VALUES ($location_id, 15, 'tenant_id', 'tenant_id', 'tenant_id', 'I', NULL, NULL, NULL, 4, NULL, NULL, 'True', NULL)");
+$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_attribute (location_id, id, column_name, input_text, statustext, datatype, list, attrib_sort, size, precision_, scale, default_value, nullable,custom) VALUES ($location_id, 16, 'change_type', 'change_type', 'change_type', 'I', NULL, NULL, NULL, 4, NULL, NULL, 'True', NULL)");
+$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_attribute (location_id, id, column_name, input_text, statustext, datatype, list, attrib_sort, precision_, scale, default_value, nullable,custom) VALUES ($location_id, 17, 'rental_area', 'Rental area', 'Rental area', 'N', NULL, 4, 20, 2, NULL, 'True', 1)");
+$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_choice (location_id, attrib_id, id, value) VALUES ($location_id, 11, 1, 'OK')");
+$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_choice (location_id, attrib_id, id, value) VALUES ($location_id, 11, 2, 'Not OK')");
+
