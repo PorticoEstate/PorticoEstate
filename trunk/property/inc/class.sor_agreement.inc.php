@@ -91,7 +91,8 @@
 			{
 				$entity_table = 'fm_r_agreement';
 				$category_table = 'fm_r_agreement_category';
-				$attribute_filter = " appname = 'property' AND location = '.r_agreement'";
+				$location_id = $GLOBALS['phpgw']->locations->get_id('property', '.r_agreement'); 
+				$attribute_filter = " location_id = {$location_id}";
 
 				$paranthesis .='(';
 				$joinmethod .= " $this->join $category_table ON ( $entity_table.category =$category_table.id))";
@@ -152,7 +153,8 @@
 			{
 				$allrows=true;
 				$entity_table = 'fm_r_agreement_item';
-				$attribute_filter = " appname = 'property' AND location = '.r_agreement.detail'";
+				$location_id = $GLOBALS['phpgw']->locations->get_id('property', '.r_agreement.detail'); 
+				$attribute_filter = " location_id = {$location_id}";
 
 				$paranthesis .='(';
 				$joinmethod .= " $this->join  fm_r_agreement_item_history ON ( $entity_table.agreement_id =fm_r_agreement_item_history.agreement_id AND $entity_table.id =fm_r_agreement_item_history.item_id))";

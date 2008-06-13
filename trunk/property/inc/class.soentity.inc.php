@@ -63,24 +63,25 @@
 				return;
 			}
 
-			$sql= "SELECT phpgw_cust_choice.id, phpgw_cust_choice.value FROM phpgw_cust_attribute $this->join phpgw_cust_choice ON "
-			. " phpgw_cust_attribute.appname= phpgw_cust_choice.appname AND "
-			. " phpgw_cust_attribute.location= phpgw_cust_choice.location AND "
-			. " phpgw_cust_attribute.id= phpgw_cust_choice.attrib_id "
-			. " WHERE phpgw_cust_attribute.column_name='status' "
-			. " AND phpgw_cust_choice.appname='property' "
-			. " AND phpgw_cust_choice.location='.entity.$entity_id.$cat_id' ORDER BY phpgw_cust_choice.id";
+			$location_id = $GLOBALS['phpgw']->locations->get_id('property', ".entity.{$entity_id}.{$cat_id}");
 
+			$sql= "SELECT phpgw_cust_choice.id, phpgw_cust_choice.value FROM phpgw_cust_attribute"
+			. " $this->join phpgw_cust_choice ON"
+			. " phpgw_cust_attribute.location_id= phpgw_cust_choice.location_id AND"
+			. " phpgw_cust_attribute.id= phpgw_cust_choice.attrib_id"
+			. " WHERE phpgw_cust_attribute.column_name='status'"
+			. " AND phpgw_cust_choice.location_id={$location_id} ORDER BY phpgw_cust_choice.id";
 
 			$this->db->query($sql,__LINE__,__FILE__);
 
-			$i = 0;
 			$status = array();
 			while ($this->db->next_record())
 			{
-				$status[$i]['id']				= $this->db->f('id');
-				$status[$i]['name']				= stripslashes($this->db->f('value'));
-				$i++;
+				$status[] = array
+				(
+					'id'	=> $this->db->f('id'),
+					'name'	=> stripslashes($this->db->f('value'))
+				);
 			}
 			return $status;
 		}
@@ -128,7 +129,8 @@
 			$entity_table = 'fm_entity_' . $entity_id . '_' . $cat_id;
 			$choice_table = 'phpgw_cust_choice';
 			$attribute_table = 'phpgw_cust_attribute';
-			$attribute_filter = " appname = 'property' AND location = '.entity." . $entity_id . '.' . $cat_id . "'";
+			$location_id = $GLOBALS['phpgw']->locations->get_id('property', ".entity.{$entity_id}.{$cat_id}");
+			$attribute_filter = " location_id = {$location_id}";
 
 			if(!$sql)
 			{
@@ -809,7 +811,9 @@
 				return;
 			}
 
-			$this->db->query("SELECT helpmsg FROM fphpgw_cust_attribute WHERE appname = 'property' AND location = '.entity." . $entity_id . '.' . $cat_id . ' AND id =' . (int)$attrib_id );
+			$location_id = $GLOBALS['phpgw']->locations->get_id('property', ".entity.{$entity_id}.{$cat_id}");
+
+			$this->db->query("SELECT helpmsg FROM fphpgw_cust_attribute WHERE location_id = {$location_id} AND id =" . (int)$attrib_id );
 
 			$this->db->next_record();
 //			$helpmsg = str_replace("\n","<br>",stripslashes($this->db->f('helpmsg')));
