@@ -343,7 +343,6 @@
 
 			$add_columns_in_tables=array('fm_project','fm_tts_tickets','fm_request','fm_document','fm_investment');
 
-			$this->oProc->m_odb->transaction_begin();
 			$this->db->transaction_begin();
 
 			if($this->oProc->CreateTable('fm_location'. $standard['id'],array('fd' => $fd,'pk' => $pk,'fk' => $fk,'ix' => $ix,'uc' => $uc))
@@ -379,11 +378,12 @@
 				$this->db->query("INSERT INTO fm_location_type (id,name, descr,pk,ix,uc) "
 					. "VALUES ($values_insert)",__LINE__,__FILE__);
 
+				$location_id = $GLOBALS['phpgw']->locations->add(".location.{$standard['id']}", $standard['name'], 'property', true, "fm_location{$standard['id']}");
+
 				for ($i=0;$i<count($default_attrib['id']);$i++)
 				{
 					$values_insert= array(
-						'property',
-						'.location.'.$standard['id'],
+						$location_id,
 						$default_attrib['id'][$i],
 						$default_attrib['column_name'][$i],
 						$default_attrib['type'][$i],
@@ -397,29 +397,23 @@
 
 					$values_insert	= $this->bocommon->validate_db_insert($values_insert);
 
-					$this->db->query("INSERT INTO phpgw_cust_attribute (appname,location,id,column_name,datatype,precision_,input_text,statustext,attrib_sort,custom,nullable) "
+					$this->db->query("INSERT INTO phpgw_cust_attribute (location_id,id,column_name,datatype,precision_,input_text,statustext,attrib_sort,custom,nullable) "
 						. "VALUES ($values_insert)",__LINE__,__FILE__);
 				}
 
 				$type_id=$standard['id'];
 
-				$this->db->query("INSERT INTO phpgw_cust_choice (appname,location,attrib_id,id,value) "
-					. "VALUES ('property','.location.$type_id',$status_id,1,'ok')",__LINE__,__FILE__);
-				$this->db->query("INSERT INTO phpgw_cust_choice (appname,location,attrib_id,id,value) "
-					. "VALUES ('property','.location.$type_id',$status_id,2,'Not Ok')",__LINE__,__FILE__);
+				$this->db->query("INSERT INTO phpgw_cust_choice (location_id,attrib_id,id,value) "
+					. "VALUES ($location_id,$status_id,1,'ok')",__LINE__,__FILE__);
+				$this->db->query("INSERT INTO phpgw_cust_choice (location_id,attrib_id,id,value) "
+					. "VALUES ($location_id,$status_id,2,'Not Ok')",__LINE__,__FILE__);
 				$this->db->query("INSERT INTO fm_location{$type_id}_category (id,descr) "
 					. "VALUES (1,'Category 1')",__LINE__,__FILE__);
 				$this->db->query("INSERT INTO fm_location{$type_id}_category (id,descr) "
 					. "VALUES (99,'Not active')",__LINE__,__FILE__);
 
-				$this->db->query("INSERT INTO phpgw_acl_location (appname, id, descr)"
-		 			. " VALUES ('" . 'property' ."','" . '.location.' . $standard['id'] ."', '" . $standard['name'] . "')");
-
-	//			$GLOBALS['phpgw']->acl->add_location('.location.' . $standard['id'], $standard['name'], 'property', $allow_grant = false, $custom_tbl = '');
-
 				$receipt['message'][] = array('msg' => lang('table %1 has been saved','fm_location'. $receipt['id']));
 				$this->db->transaction_commit();
-				$this->oProc->m_odb->transaction_commit();
 			}
 			else
 			{
@@ -486,10 +480,11 @@
 
 			$attrib_table 	= 'phpgw_cust_attribute';
 			$choice_table 	= 'phpgw_cust_choice';
+			$location_id	= $GLOBALS['phpgw']->locations->get_id('property', ".location.{$id}");
 
-			$this->db->query("DELETE FROM $attrib_table WHERE appname = 'property' AND location = '.location. " . $id . "'",__LINE__,__FILE__);
-			$this->db->query("DELETE FROM $choice_table WHERE appname = 'property' AND location = '.location. " . $id . "'",__LINE__,__FILE__);
-			$this->db->query("DELETE FROM $table WHERE id=" . (int)$id,__LINE__,__FILE__);
+			$this->db->query("DELETE FROM {$attrib_table} WHERE location_id = {$location_id}",__LINE__,__FILE__);
+			$this->db->query("DELETE FROM {$choice_table} WHERE location_id = {$location_id}",__LINE__,__FILE__);
+			$this->db->query("DELETE FROM {$table} WHERE id=" . (int)$id,__LINE__,__FILE__);
 
 			$this->db->transaction_commit();
 			$this->oProc->m_odb->transaction_commit();
@@ -515,6 +510,7 @@
 			$column_info['default']		= $this->db->f('default_value');
 			$column_info['nullable']	= $this->db->f('nullable');
 			$location_type				= $this->db->f('location_type');
+			$location_id 				= $GLOBALS['phpgw']->locations->get_id('property', ".location.{$location_type}");
 
 			$custom 	= createObject('phpgwapi.custom_fields');
 			$table_def = $custom->get_table_def('fm_location'.$location_type);
@@ -523,11 +519,11 @@
 //_debug_array($history_table_def);
 			if(!($location_type==$values[$column_name]))
 			{
-				$id = $this->bocommon->next_id('phpgw_cust_attribute',array('appname' => 'property', 'location' => '.location.' .$values[$column_name]));
+				$id = $this->bocommon->next_id('phpgw_cust_attribute',array('location_id' => $location_id));
 
 				$this->init_process();
 
-				$this->oProc->m_odb->transaction_begin();
+	//			$this->oProc->m_odb->transaction_begin();
 				$this->db->transaction_begin();
 				if($this->oProc->AddColumn('fm_location'.$values[$column_name],$column_name, $column_info) &&
 					$this->oProc->AddColumn('fm_location'.$values[$column_name] . '_history',$column_name, $column_info))
@@ -547,8 +543,7 @@
 						location_type = '". $values[$column_name]	. "' WHERE column_name='" . $column_name . "'",__LINE__,__FILE__);
 
 					$values= array(
-						'property',
-						'.location.' . $values[$column_name],
+						$location_id,
 						$id,
 						$column_name,
 						$column_name,
@@ -563,10 +558,11 @@
 
 					$values	= $this->bocommon->validate_db_insert($values);
 
-					$this->db->query("INSERT INTO phpgw_cust_attribute (appname,location,id,column_name, input_text, statustext,datatype,precision_,scale,default_value,nullable,custom) "
+					$this->db->query("INSERT INTO phpgw_cust_attribute (location_id,id,column_name, input_text, statustext,datatype,precision_,scale,default_value,nullable,custom) "
 						. "VALUES ($values)",__LINE__,__FILE__);
 
-					$this->db->query("DELETE from phpgw_cust_attribute WHERE appname = 'property' AND location = '.location.". $location_type . "' AND column_name = '" . $column_name . "'",__LINE__,__FILE__);
+					//FIXME: what??
+					$this->db->query("DELETE from phpgw_cust_attribute WHERE location_id = {$location_id} AND column_name = '{$column_name}'",__LINE__,__FILE__);
 
 					$ok = true;
 				}
@@ -574,7 +570,7 @@
 				if(isset($ok) && $ok)
 				{
 					$this->db->transaction_commit();
-					$this->oProc->m_odb->transaction_commit();
+//					$this->oProc->m_odb->transaction_commit();
 
 					$receipt['message'][] = array('msg'	=> lang('column %1 has been moved',$column_name));
 				}
