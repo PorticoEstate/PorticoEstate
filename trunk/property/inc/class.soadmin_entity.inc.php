@@ -268,19 +268,6 @@
 
 			$GLOBALS['phpgw']->locations->add('.entity.' . $entity['id'], $entity['name'], 'property', true);
 
-	/*		$values_acl_location= array(
-				'property',
-				'.entity.' . $entity['id'],
-				$entity['name'],
-				1
-				);
-
-			$values_acl_location	= $this->bocommon->validate_db_insert($values_acl_location);
-
-
-			$this->db->query("INSERT INTO phpgw_acl_location (appname,id,descr,allow_grant) "
-				. "VALUES ($values_acl_location)",__LINE__,__FILE__);
-	*/
 			$receipt['id']= $entity['id'];
 
 			$receipt['message'][] = array('msg'=> lang('entity has been added'));
@@ -344,18 +331,6 @@
 			$this->db->query("INSERT INTO fm_entity_category (entity_id,id,name, descr,prefix,lookup_tenant,tracking,location_level,fileupload,loc_link,start_project,start_ticket) "
 				. "VALUES ($values_insert)",__LINE__,__FILE__);
 
-	/*		$values_acl_location= array(
-				'property',
-				'.entity.' . $values['entity_id'] . '.' . $values['id'],
-				$values['name'],
-				1
-				);
-
-			$values_acl_location	= $this->bocommon->validate_db_insert($values_acl_location);
-
-			$this->db->query("INSERT INTO phpgw_acl_location (appname,id,descr,allow_grant) "
-				. "VALUES ($values_acl_location)",__LINE__,__FILE__);
-	*/
 			$location_id = $GLOBALS['phpgw']->locations->add(".entity.{$values['entity_id']}.{$values['id']}", $values['name'], 'property', true, "fm_entity_{$values['entity_id']}_{$values['id']}");
 
 			$receipt['id']= $values['id'];
@@ -439,16 +414,8 @@
 				$this->db->transaction_begin();
 
 				$this->db->query("UPDATE $table set $value_set WHERE id=" . $entity['id'],__LINE__,__FILE__);
-/*
-				$value_set_acl=array(
-					'descr'			=> $entity['name']
-					);
 
-				$value_set_acl	= $this->bocommon->validate_db_update($value_set_acl);
-				$this->db->query("UPDATE phpgw_locations set $value_set_acl WHERE appname = '" . 'property' . "' AND id='.entity." . $entity['id']. "'",__LINE__,__FILE__);
-*/
 				$GLOBALS['phpgw']->locations->update_description(".entity.{$entity['id']}", $entity['name'], 'property');
-
 
 				$this->db->query("DELETE FROM fm_entity_lookup WHERE type='lookup' AND entity_id=" . $entity['id'],__LINE__,__FILE__);
 				if (isset($entity['include_entity_for']) AND is_array($entity['include_entity_for']))
@@ -514,15 +481,7 @@
 				$value_set	= $this->bocommon->validate_db_update($value_set);
 
 				$this->db->query("UPDATE $table set $value_set WHERE entity_id=" . $entity['entity_id']. " AND id=" . $entity['id'],__LINE__,__FILE__);
-/*
-				$value_set_acl=array(
-					'descr'			=> $entity['name']
-					);
 
-				$value_set_acl	= $this->bocommon->validate_db_update($value_set_acl);
-
-				$this->db->query("UPDATE phpgw_acl_location set $value_set_acl WHERE appname = '" . 'property' . "' AND id='.entity." . $entity['entity_id']. "." . $entity['id']. "'",__LINE__,__FILE__);
-*/
 				$GLOBALS['phpgw']->locations->update_description(".entity.{$entity['entity_id']}.{$entity['id']}", $entity['name'], 'property');
 
 				$receipt['message'][] = array('msg'=> lang('entity has been edited'));
