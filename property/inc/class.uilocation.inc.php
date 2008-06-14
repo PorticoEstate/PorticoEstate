@@ -820,7 +820,8 @@
 
 			if(!$values)
 			{
-				$values['attributes'] = $this->bo->custom->get_attribs('property','.location.' . $this->type_id, 0, '', 'ASC', 'attrib_sort', true, true);
+				$values['attributes']	= $this->bo->custom->get_attribs('property',".location.{$this->type_id}", 0, '', 'ASC', 'attrib_sort', true, true);
+				$values					= $this->bo->custom->prepare_attributes($values, 'property',".location.{$this->type_id}");
 			}
 
 			if ($values['cat_id'] > 0)
