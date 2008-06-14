@@ -145,9 +145,7 @@
 			$querymethod = '';
 			if($query)
 			{
-				$query = preg_replace("/'/",'',$query);
-				$query = preg_replace('/"/','',$query);
-
+				$query = $this->db->db_addslashes($query);
 				$querymethod = " AND name $this->like '%$query%' or descr $this->like '%$query%'";
 			}
 
@@ -165,9 +163,10 @@
 				$this->db->query($sql . $ordermethod,__LINE__,__FILE__);
 			}
 
+			$category = array();
 			while ($this->db->next_record())
 			{
-				$standard[] = array
+				$category[] = array
 				(
 					'id'	=> $this->db->f('id'),
 					'name'	=> $this->db->f('name'),
@@ -175,7 +174,7 @@
 					'descr'	=> $this->db->f('descr')
 				);
 			}
-			return $standard;
+			return $category;
 		}
 
 		function read_single($id)
@@ -267,8 +266,9 @@
 			$this->db->query("INSERT INTO fm_entity (id,name, descr,location_form,documentation) "
 				. "VALUES ($values)",__LINE__,__FILE__);
 
+			$GLOBALS['phpgw']->locations->add('.entity.' . $entity['id'], $entity['name'], 'property', true);
 
-			$values_acl_location= array(
+	/*		$values_acl_location= array(
 				'property',
 				'.entity.' . $entity['id'],
 				$entity['name'],
@@ -277,9 +277,10 @@
 
 			$values_acl_location	= $this->bocommon->validate_db_insert($values_acl_location);
 
+
 			$this->db->query("INSERT INTO phpgw_acl_location (appname,id,descr,allow_grant) "
 				. "VALUES ($values_acl_location)",__LINE__,__FILE__);
-
+	*/
 			$receipt['id']= $entity['id'];
 
 			$receipt['message'][] = array('msg'=> lang('entity has been added'));
@@ -343,7 +344,7 @@
 			$this->db->query("INSERT INTO fm_entity_category (entity_id,id,name, descr,prefix,lookup_tenant,tracking,location_level,fileupload,loc_link,start_project,start_ticket) "
 				. "VALUES ($values_insert)",__LINE__,__FILE__);
 
-			$values_acl_location= array(
+	/*		$values_acl_location= array(
 				'property',
 				'.entity.' . $values['entity_id'] . '.' . $values['id'],
 				$values['name'],
@@ -354,6 +355,8 @@
 
 			$this->db->query("INSERT INTO phpgw_acl_location (appname,id,descr,allow_grant) "
 				. "VALUES ($values_acl_location)",__LINE__,__FILE__);
+	*/
+			$location_id = $GLOBALS['phpgw']->locations->add(".entity.{$values['entity_id']}.{$values['id']}", $values['name'], 'property', true, "fm_entity_{$values['entity_id']}_{$values['id']}");
 
 			$receipt['id']= $values['id'];
 
@@ -362,14 +365,13 @@
 			$fd = $this->get_default_column_def();
 
 			$pk[]= 'id';
-			$table			= 'fm_entity_'. $values['entity_id'] .'_'.$values['id'];
+			$table			= "fm_entity_{$values['entity_id']}_{$values['id']}";
 
 			if(($this->oProc->CreateTable($table,array('fd' => $fd,'pk' => $pk,'fk' => $fk,'ix' => array('location_code'),'uc' => array()))))
 			{
 
 				$values_insert= array(
-					$values['entity_id'],
-					$values['id'],
+					$location_id,
 					1,
 					'status',
 					'Status',
@@ -381,8 +383,9 @@
 
 				$values_insert	= $this->bocommon->validate_db_insert($values_insert);
 
-				$this->db->query("INSERT INTO fm_entity_attribute (entity_id,cat_id,id,column_name,input_text,statustext,datatype,attrib_sort,nullable) "
+				$this->db->query("INSERT INTO phpgw_cust_attribute (location_id,id,column_name,input_text,statustext,datatype,attrib_sort,nullable) "
 					. "VALUES ($values_insert)",__LINE__,__FILE__);
+
 
 				$receipt['message'][] = array('msg'	=> lang('table %1 has been saved',$table));
 				$this->db->transaction_commit();
@@ -436,14 +439,16 @@
 				$this->db->transaction_begin();
 
 				$this->db->query("UPDATE $table set $value_set WHERE id=" . $entity['id'],__LINE__,__FILE__);
-
+/*
 				$value_set_acl=array(
 					'descr'			=> $entity['name']
 					);
 
 				$value_set_acl	= $this->bocommon->validate_db_update($value_set_acl);
+				$this->db->query("UPDATE phpgw_locations set $value_set_acl WHERE appname = '" . 'property' . "' AND id='.entity." . $entity['id']. "'",__LINE__,__FILE__);
+*/
+				$GLOBALS['phpgw']->locations->update_description(".entity.{$entity['id']}", $entity['name'], 'property');
 
-				$this->db->query("UPDATE phpgw_acl_location set $value_set_acl WHERE appname = '" . 'property' . "' AND id='.entity." . $entity['id']. "'",__LINE__,__FILE__);
 
 				$this->db->query("DELETE FROM fm_entity_lookup WHERE type='lookup' AND entity_id=" . $entity['id'],__LINE__,__FILE__);
 				if (isset($entity['include_entity_for']) AND is_array($entity['include_entity_for']))
@@ -480,12 +485,13 @@
 
 		function edit_category($entity)
 		{
+			$receipt = array();
 			if (!$entity['name'])
 			{
 				$receipt['error'][] = array('msg'=>lang('Name not entered!'));
 			}
 
-			if (!$receipt['error'])
+			if (!isset($receipt['error']))
 			{
 				$table = 'fm_entity_category';
 
@@ -508,7 +514,7 @@
 				$value_set	= $this->bocommon->validate_db_update($value_set);
 
 				$this->db->query("UPDATE $table set $value_set WHERE entity_id=" . $entity['entity_id']. " AND id=" . $entity['id'],__LINE__,__FILE__);
-
+/*
 				$value_set_acl=array(
 					'descr'			=> $entity['name']
 					);
@@ -516,7 +522,8 @@
 				$value_set_acl	= $this->bocommon->validate_db_update($value_set_acl);
 
 				$this->db->query("UPDATE phpgw_acl_location set $value_set_acl WHERE appname = '" . 'property' . "' AND id='.entity." . $entity['entity_id']. "." . $entity['id']. "'",__LINE__,__FILE__);
-
+*/
+				$GLOBALS['phpgw']->locations->update_description(".entity.{$entity['entity_id']}.{$entity['id']}", $entity['name'], 'property');
 
 				$receipt['message'][] = array('msg'=> lang('entity has been edited'));
 			}
@@ -531,12 +538,19 @@
 		function delete_entity($id)
 		{
 			$category_list=$this->read_category(array('entity_id'=>$id));
-			$this->db->query("DELETE FROM fm_entity WHERE id=$id",__LINE__,__FILE__);
-			$this->db->query("DELETE FROM fm_entity_category WHERE entity_id=$id",__LINE__,__FILE__);
-			$this->db->query("DELETE FROM fm_entity_attribute WHERE entity_id=$id",__LINE__,__FILE__);
-			$this->db->query("DELETE FROM phpgw_cust_attribute WHERE appname='property' AND location " . $this->like . " '.entity." . $entity_id ."%'",__LINE__,__FILE__);
-			$this->db->query("DELETE FROM phpgw_acl_location WHERE appname = '" . 'property' . "' AND id " . $this->like ."'.entity." . $id ."%'",__LINE__,__FILE__);
-			$this->db->query("DELETE FROM phpgw_acl WHERE acl_appname = '" . 'property' . "' AND  acl_location $this->like '.entity." . $id ."%'",__LINE__,__FILE__);
+			$locations = array();
+			$locations[] = $GLOBALS['phpgw']->locations->get_id('property', ".entity.{$id}");
+			$subs = $GLOBALS['phpgw']->locations->get_subs('property', ".entity.{$id}");
+			if (is_array($subs) && count($subs))
+			{
+				$locations = array_merge($locations, array_keys($subs));
+			}
+
+			$this->db->query("DELETE FROM fm_entity WHERE id={$id}",__LINE__,__FILE__);
+			$this->db->query("DELETE FROM fm_entity_category WHERE entity_id={$id}",__LINE__,__FILE__);
+			$this->db->query('DELETE FROM phpgw_cust_attribute WHERE location_id IN (' . implode(',', $locations) . ')',__LINE__,__FILE__);
+			$this->db->query('DELETE FROM phpgw_locations WHERE location_id IN (' . implode(',', $locations) . ')',__LINE__,__FILE__);
+			$this->db->query('DELETE FROM phpgw_acl WHERE location_id IN (' . implode(',', $locations) . ')',__LINE__,__FILE__);
 			if (isset($category_list) AND is_array($category_list))
 			{
 				$this->init_process();
@@ -550,18 +564,27 @@
 		}
 
 		function delete_category($entity_id, $id)
-		{
+		{	
 			$this->init_process();
+
+			$this->db->transaction_begin();	
+
 			$this->oProc->DropTable('fm_entity_' . $entity_id . '_' . $id);
+
+			$location_id = $GLOBALS['phpgw']->locations->get_id('property', ".entity.{$entity_id}.{$id}");
+
 			$this->db->query("DELETE FROM fm_entity_category WHERE entity_id= $entity_id AND id= $id",__LINE__,__FILE__);
-			$this->db->query("DELETE FROM phpgw_cust_attribute WHERE appname='property' AND location='.entity." . $entity_id . "." . $id ."'",__LINE__,__FILE__);
-			$this->db->query("DELETE FROM phpgw_acl_location WHERE appname = '" . 'property' . "' AND id='.entity." . $entity_id . "." . $id ."'",__LINE__,__FILE__);
-			$this->db->query("DELETE FROM phpgw_acl WHERE acl_appname = '" . 'property' . "' AND  acl_location='.entity." . $entity_id . "." . $id ."'",__LINE__,__FILE__);
-			$this->db->query("DELETE FROM fm_entity_history WHERE history_appname = 'entity_" . $entity_id  . '_' . $id . "'",__LINE__,__FILE__);
+			$this->db->query("DELETE FROM phpgw_cust_attribute WHERE location_id = {$location_id}",__LINE__,__FILE__);
+			$this->db->query("DELETE FROM phpgw_locations WHERE location_id  = {$location_id}",__LINE__,__FILE__);
+			$this->db->query("DELETE FROM phpgw_acl WHERE  location_id  = {$location_id}",__LINE__,__FILE__);
+			$this->db->query("DELETE FROM fm_entity_history WHERE history_appname = 'entity_{$entity_id}_{$id}'",__LINE__,__FILE__);
+
+			$this->db->transaction_commit();
 		}
 
 		function get_table_def($entity_id,$cat_id)
 		{
+			$location_id = $GLOBALS['phpgw']->locations->get_id('property', ".entity.{$entity_id}.{$cat_id}");
 			$table = 'fm_entity_' . $entity_id . '_' . $cat_id;
 			$metadata = $this->db->metadata($table);
 
@@ -581,7 +604,7 @@
 
 			for ($i=0; $i<count($metadata); $i++)
 			{
-				$sql = "SELECT * FROM fm_entity_attribute WHERE entity_id = $entity_id AND cat_id=$cat_id AND column_name = '" . $metadata[$i]['name'] . "'";
+				$sql = "SELECT * FROM phpgw_cust_attribute WHERE location_id = {$location_id} AND column_name = '{$metadata[$i]['name']}'";
 
 				$this->db->query($sql,__LINE__,__FILE__);
 				while($this->db->next_record())
@@ -618,7 +641,7 @@
 
 		function delete_history($entity_id, $cat_id, $attrib_id)
 		{
-			$this->db->query("DELETE FROM fm_entity_history WHERE history_appname = 'entity_" . $entity_id  . '_' . $cat_id . "' AND history_entity_attrib_id = $attrib_id",__LINE__,__FILE__);
+			$this->db->query("DELETE FROM fm_entity_history WHERE history_appname = 'entity_" . $entity_id  . '_' . $cat_id . "' AND history_attrib_id = $attrib_id",__LINE__,__FILE__);
 		}
 
 		function init_process()
@@ -628,4 +651,3 @@
 			$this->oProc->m_odb->Halt_On_Error	= 'yes';
 		}
 	}
-

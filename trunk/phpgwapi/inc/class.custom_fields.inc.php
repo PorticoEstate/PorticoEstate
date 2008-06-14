@@ -131,6 +131,8 @@
 		function add_attrib($attrib, $attrib_table = '', $doubled = false)
 		{
 			$receipt = array();
+			$location_id = $GLOBALS['phpgw']->locations->get_id($attrib['appname'], $attrib['location']);
+
 			// Checkboxes are only present if ticked, so we declare them here to stop errors
 			$attrib['search'] = isset($attrib['search']) ? !!$attrib['search'] : false;
 			$attrib['list'] = isset($attrib['list']) ? !!$attrib['list'] : false;
@@ -142,7 +144,7 @@
 			$attrib['default'] =  isset($arrib['default']) ? $this->db->db_addslashes($attrib['default']) : '';
 			$attrib['helpmsg'] = $this->db->db_addslashes($attrib['helpmsg']);
 
-			$sql = "SELECT * FROM phpgw_cust_attribute where appname='{$attrib['appname']}' AND location='{$attrib['location']}' AND column_name = '{$attrib['column_name']}'";
+			$sql = "SELECT * FROM phpgw_cust_attribute WHERE location_id = {$location_id} AND column_name = '{$attrib['column_name']}'";
 			$this->db->query($sql,__LINE__,__FILE__);
 			if ( $this->db->next_record() && !$doubled)
 			{
@@ -156,7 +158,7 @@
 
 
 			$sql = 'SELECT MAX(attrib_sort) AS max_sort, MAX(id) AS current_id FROM phpgw_cust_attribute'
-					. " WHERE appname='{$attrib['appname']}' AND location='{$attrib['location']}'";
+					. " WHERE location_id = {$location_id}";
 			$this->db->query($sql,__LINE__,__FILE__);
 			$this->db->next_record();
 			$attrib_sort	= $this->db->f('max_sort')+1;
@@ -174,8 +176,7 @@
 
 			$values= array
 			(
-				$attrib['appname'],
-				$attrib['location'],
+				$location_id,
 				$attrib['id'],
 				$attrib['column_name'],
 				$attrib['input_text'],
@@ -201,7 +202,7 @@
 
 			if(!$doubled)
 			{
-				$this->db->query("INSERT INTO phpgw_cust_attribute (appname,location,id,column_name, input_text, statustext,search,list,history,disabled,helpmsg,attrib_sort, datatype,precision_,scale,default_value,nullable) "
+				$this->db->query("INSERT INTO phpgw_cust_attribute (location_id,id,column_name, input_text, statustext,search,list,history,disabled,helpmsg,attrib_sort, datatype,precision_,scale,default_value,nullable) "
 					. "VALUES ($values)",__LINE__,__FILE__);
 			}
 
@@ -245,7 +246,7 @@
 				}
 				else
 				{
-					$this->db->query("DELETE FROM phpgw_cust_attribute WHERE appname='" . $attrib['appname']. "' AND location='" . $attrib['id']. "' AND id='" . $receipt['id'] . "'",__LINE__,__FILE__);
+					$this->db->query("DELETE FROM phpgw_cust_attribute WHERE location_id = {$location_id} AND id='{$receipt['id']}'",__LINE__,__FILE__);
 					unset($receipt['id']);
 
 				}
@@ -448,11 +449,10 @@
 			
 			if(isset($attrib['new_choice']) && $attrib['new_choice'])
 			{
-				$choice_id = $this->next_id($choice_table ,array('appname'=>$attrib['appname'],'location'=>$attrib['location'],'attrib_id'=>$attrib['id']));
+				$choice_id = $this->next_id($choice_table ,array('location_id'=>$location_id, 'attrib_id'=>$attrib['id']));
 
 				$values= array(
-					$attrib['appname'],
-					$attrib['location'],
+					$location_id,
 					$attrib['id'],
 					$choice_id,
 					$attrib['new_choice']
@@ -460,7 +460,7 @@
 
 				$values	= $this->db->validate_insert($values);
 
-				$this->db->query("INSERT INTO $choice_table (appname,location,attrib_id,id,value) "
+				$this->db->query("INSERT INTO $choice_table (location_id,attrib_id,id,value) "
 				. "VALUES ($values)",__LINE__,__FILE__);
 			}
 
@@ -684,7 +684,7 @@
 			$location		= $this->db->db_addslashes($location);
 			$location_id	= $GLOBALS['phpgw']->locations->get_id($appname, $location);
 
-			$sql = "SELECT c_attrib_table FROM phpgw_acl_location WHERE location_id = {$location_id}";
+			$sql = "SELECT c_attrib_table FROM phpgw_locations WHERE location_id = {$location_id}";
 			$this->db->query($sql,__LINE__,__FILE__);
 			if ( $this->db->next_record() )
 			{

@@ -255,15 +255,14 @@
 		public function update_description($location, $descr, $appname)
 		{
 		 	$location	= $this->_db->db_addslashes($location);
-			$descr		= $this->_db->db_addslashes($description);
+			$descr		= $this->_db->db_addslashes($descr);
 		 	$appname	= $this->_db->db_addslashes($appname);
+		 	
+		 	$location_id = $this->get_id($appname, $location);
 
-		 	$this->_db->query('UPDATE phpgw_locations, phpgw_applications'
-		 			. " SET descr = '{$descr}'"
-		 			. ' WHERE phpgw_locations.app_id = phpgw_applications.app_id '
-						. " AND phpgw_applications.appname = '{$appname}'"
-						. " AND phpgw_locations.name = '{$location}'", __LINE__, __FILE__);
-			return $this->_db->rows_affected() == 1;
+		 	$this->_db->query("UPDATE phpgw_locations SET descr = '{$descr}'"
+					. " WHERE phpgw_locations.location_id = {$location_id}", __LINE__, __FILE__);
+			return $this->_db->affected_rows() == 1;
 		}
 
 		/**
@@ -340,7 +339,7 @@
 
 			$sql = "SELECT location_id, phpgw_locations.name, phpgw_locations.descr FROM phpgw_locations"
 				. " $this->_join phpgw_applications ON phpgw_locations.app_id = phpgw_applications.app_id"
-				. " $filter ORDER BY location_id";
+				. " $filter ORDER BY phpgw_locations.name";
 
 			$this->_db->query($sql, __LINE__, __FILE__);
 			
