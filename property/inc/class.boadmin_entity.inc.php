@@ -162,8 +162,8 @@
 
 			for ($i=1; $i<=$max_location_type; $i++)
 			{
-				$location[$i][id] = $i;
-				$location[$i][name] = $i . '-' . $location_types[($i-1)]['name'];
+				$location[$i]['id'] = $i;
+				$location[$i]['name'] = $i . '-' . $location_types[($i-1)]['name'];
 			}
 
 			return $this->bocommon->select_list($selected,$location);
