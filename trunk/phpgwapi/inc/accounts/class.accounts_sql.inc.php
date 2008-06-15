@@ -531,10 +531,9 @@
 			}
 			$group_id = get_account_id($group_id);
 
-			$sql = 'SELECT phpgw_accounts.account_id'
-				. ' FROM phpgw_accounts, phpgw_group_map'
-				. ' WHERE phpgw_accounts.account_id = phpgw_group_map.group_id'
-					. " AND phpgw_group_map.group_id = {$this->account_id}";
+			$sql = 'SELECT phpgw_group_map.account_id'
+				. " FROM phpgw_accounts $this->join phpgw_group_map ON phpgw_accounts.account_id = phpgw_group_map.group_id"
+				. " WHERE phpgw_group_map.group_id = {$group_id}";
 
 			$this->db->query($sql, __LINE__, __FILE__);
 

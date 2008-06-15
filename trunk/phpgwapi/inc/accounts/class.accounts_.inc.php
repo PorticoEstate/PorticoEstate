@@ -89,6 +89,7 @@
 		{
 			$this->db =& $GLOBALS['phpgw']->db;
 			$this->like = $this->db->like;
+			$this->join = $this->db->join;
 
 			$this->set_account($account_id, $account_type);
 		}
