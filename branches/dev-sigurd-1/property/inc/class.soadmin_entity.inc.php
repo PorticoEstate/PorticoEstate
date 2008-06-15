@@ -367,8 +367,8 @@
 			{
 
 				$values_insert= array(
-					$values['entity_id'],
-					$values['id'],
+					'property',
+					".entity.{$values['entity_id']}.{$values['id']}",
 					1,
 					'status',
 					'Status',
@@ -380,7 +380,7 @@
 
 				$values_insert	= $this->bocommon->validate_db_insert($values_insert);
 
-				$this->db->query("INSERT INTO fm_entity_attribute (entity_id,cat_id,id,column_name,input_text,statustext,datatype,attrib_sort,nullable) "
+				$this->db->query("INSERT INTO phpgw_cust_attribute (appname,location,id,column_name,input_text,statustext,datatype,attrib_sort,nullable) "
 					. "VALUES ($values_insert)",__LINE__,__FILE__);
 
 				$receipt['message'][] = array('msg'	=> lang('table %1 has been saved',$table));
@@ -532,10 +532,9 @@
 			$category_list=$this->read_category(array('entity_id'=>$id));
 			$this->db->query("DELETE FROM fm_entity WHERE id=$id",__LINE__,__FILE__);
 			$this->db->query("DELETE FROM fm_entity_category WHERE entity_id=$id",__LINE__,__FILE__);
-			$this->db->query("DELETE FROM fm_entity_attribute WHERE entity_id=$id",__LINE__,__FILE__);
-			$this->db->query("DELETE FROM phpgw_cust_attribute WHERE appname='property' AND location " . $this->like . " '.entity." . $entity_id ."%'",__LINE__,__FILE__);
-			$this->db->query("DELETE FROM phpgw_acl_location WHERE appname = '" . 'property' . "' AND id " . $this->like ."'.entity." . $id ."%'",__LINE__,__FILE__);
-			$this->db->query("DELETE FROM phpgw_acl WHERE acl_appname = '" . 'property' . "' AND  acl_location $this->like '.entity." . $id ."%'",__LINE__,__FILE__);
+			$this->db->query("DELETE FROM phpgw_cust_attribute WHERE appname='property' AND location {$this->like} '.entity.{$id}%'",__LINE__,__FILE__);
+			$this->db->query("DELETE FROM phpgw_acl_location WHERE appname = 'property' AND id {$this->like} '.entity.{$id}%'",__LINE__,__FILE__);
+			$this->db->query("DELETE FROM phpgw_acl WHERE acl_appname = 'property' AND  acl_location {$this->like} '.entity.{$id}%'",__LINE__,__FILE__);
 			if (isset($category_list) AND is_array($category_list))
 			{
 				$this->init_process();
@@ -578,9 +577,10 @@
 
 			$fd = $this->get_default_column_def();
 
+			$location =	".entity.{$values['entity_id']}.{$values['id']}";
 			for ($i=0; $i<count($metadata); $i++)
 			{
-				$sql = "SELECT * FROM fm_entity_attribute WHERE entity_id = $entity_id AND cat_id=$cat_id AND column_name = '" . $metadata[$i]['name'] . "'";
+				$sql = "SELECT * FROM phpgw_cust_attribute WHERE appname = 'property' AND location = '{$location}' AND column_name = '" . $metadata[$i]['name'] . "'";
 
 				$this->db->query($sql,__LINE__,__FILE__);
 				while($this->db->next_record())
