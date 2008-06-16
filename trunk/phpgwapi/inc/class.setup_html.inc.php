@@ -12,7 +12,7 @@
 
 	/**
 	* Setup html
-	* 
+	*
 	* @package phpgwapi
 	* @subpackage application
 	*/
@@ -58,10 +58,11 @@
 			{
 				foreach($setting as $k => $v)
 				{
-					if ( $k == 'server_root' 
+
+					if( in_array( $k, array( 'server_root', 'include_root' ) )
 						&& substr(PHP_OS, 0, 3) == 'WIN' )
 					{
-						$v = preg_replace('/\\/', '/', $v);
+						$v = str_replace( '\\', '/', $v );
 					}
 					$var[strtoupper($k)] = $v;
 				}
@@ -162,7 +163,7 @@
 				? $GLOBALS['phpgw_info']['setup']['ConfigLoginMSG'] : '&nbsp;');
 
 			$GLOBALS['setup_tpl']->set_var('HeaderLoginMSG',
-				@$GLOBALS['phpgw_info']['setup']['HeaderLoginMSG'] 
+				@$GLOBALS['phpgw_info']['setup']['HeaderLoginMSG']
 				? $GLOBALS['phpgw_info']['setup']['HeaderLoginMSG'] : '&nbsp;');
 
 			if ($GLOBALS['phpgw_info']['setup']['stage']['header'] == '10')

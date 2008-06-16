@@ -17,7 +17,7 @@
 		'currentapp'		=> 'setup',
 		'noapi' 			=> true
 	);
-	
+
 	/**
 	 * Include setup functions
 	 */
@@ -47,7 +47,7 @@
 			{
 				continue;
 			}
-			
+
 			if(!$_POST['settings'][$k]['config_pass'])
 			{
 				$errors .= '<br>' . lang("You didn't enter a config password for domain %1",$v);
@@ -87,7 +87,7 @@
 	$setup_tpl->set_block('T_login_stage_header','B_single_domain','V_single_domain');
 	$setup_tpl->set_block('T_setup_manage','manageheader','manageheader');
 	$setup_tpl->set_block('T_setup_manage','domain','domain');
-	
+
 	$setup_tpl->set_var('HeaderLoginWarning', lang('Warning: All your passwords (database, phpGroupWare admin,...)<br> will be shown in plain text after you log in for header administration.'));
 	$setup_tpl->set_var('lang_cookies_must_be_enabled', lang('<b>NOTE:</b> You must have cookies enabled to use setup and header admin!') );
 
@@ -130,7 +130,7 @@
 	$action = phpgw::get_var('action', 'string', 'POST');
 	if ( is_array($action) )
 	{
-		$action_keys = array_keys($action); 
+		$action_keys = array_keys($action);
 		$action = array_shift($action_keys);
 	}
 	switch($action)
@@ -176,6 +176,7 @@ HTML;
 		case 'write':
 			check_form_values();
 			$header_template = CreateObject('phpgwapi.Template','../');
+			$lang_continue = lang('continue');
 			if(is_writeable('../header.inc.php') || (!file_exists('../header.inc.php') && is_writeable('../')))
 			{
 				$newheader = $GLOBALS['phpgw_setup']->html->generate_header();
@@ -215,13 +216,13 @@ HTML;
 					. '</p></b><td></tr></table></body></html>';
 				die($detected);
 			}
-			
+
 			$phpver = '<li>' . lang('You appear to be using PHP %1+', 5.2) . "</li>\n";
 			$supported_sessions_type = array('php', 'db');
 
 			$detected .= '<table id="manageheader">' . "\n";
 
-			
+
 			if ( !isset($ConfigLang) || !$ConfigLang )
 			{
 				$_POST['ConfigLang'] = 'en';
@@ -352,9 +353,9 @@ HTML;
 				die($detected);
 
 			}
-			
+
 			$no_guess = false;
-			if ( is_file('../header.inc.php') 
+			if ( is_file('../header.inc.php')
 				&& is_readable('../header.inc.php'))
 			{
 				$detected .= '<li>' . lang('Found existing configuration file. Loading settings from the file...') . "</li>\n";
@@ -390,7 +391,7 @@ HTML;
 					{
 						$GLOBALS['phpgw_domain'] = array();
 					}
-					
+
 					foreach($GLOBALS['phpgw_domain'] as $key => $val)
 					{
 						$setup_tpl->set_var('lang_domain',lang('Domain'));
@@ -432,7 +433,7 @@ HTML;
 				if (defined('PHPGW_SERVER_ROOT'))
 				{
 					$GLOBALS['phpgw_info']['server']['server_root'] = PHPGW_SERVER_ROOT;
-					$GLOBALS['phpgw_info']['server']['include_root'] = PHPGW_INCLUDE_ROOT; 
+					$GLOBALS['phpgw_info']['server']['include_root'] = PHPGW_INCLUDE_ROOT;
 				}
 				else if ( !isset($GLOBALS['phpgw_info']['server']['include_root']) && $GLOBALS['phpgw_info']['server']['header_version'] <= 1.6)
 				{
@@ -496,14 +497,14 @@ HTML;
 
 			}
 
-			// now guessing better settings then the default ones 
+			// now guessing better settings then the default ones
 			if(!$no_guess)
 			{
 				$detected .= '<li>' . lang('Now guessing better values for defaults...') . "</li>\n";
 				$this_dir = dirname($_SERVER['SCRIPT_FILENAME']);
 				$updir    = realpath('../'); //str_replace('/setup','',$this_dir);
-				$GLOBALS['phpgw_info']['server']['server_root'] = $updir; 
-				$GLOBALS['phpgw_info']['server']['include_root'] = $updir; 
+				$GLOBALS['phpgw_info']['server']['server_root'] = $updir;
+				$GLOBALS['phpgw_info']['server']['include_root'] = $updir;
 			}
 
 			$detected .= "</ul>\n";
@@ -528,7 +529,7 @@ HTML;
 			foreach ( $supported_sessions_type as $stype )
 			{
 				$selected = '';
-				if( isset($GLOBALS['phpgw_info']['server']['sessions_type']) 
+				if( isset($GLOBALS['phpgw_info']['server']['sessions_type'])
 					&& $stype == $GLOBALS['phpgw_info']['server']['sessions_type'])
 				{
 					$selected = ' selected ';
