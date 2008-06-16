@@ -365,7 +365,7 @@
 								$uicols['descr'][]			= lang('street number');
 								$uicols['statustext'][]		= lang('street number');
 								$uicols['exchange'][]		= true;
-								$uicols['align'][] 			= 'right';
+								$uicols['align'][] 			= 'left';
 
 								$cols.= ',fm_location' . $config[$i]['location_type'] . '.' . $config[$i]['column_name'];
 								$cols_return[] 				= $config[$i]['column_name'];
@@ -439,7 +439,22 @@
 						'datatype'	=> $this->db->f('datatype'),
 						'attrib_id'	=> $this->db->f('id')
 					);
-
+					
+					//TODO: move alignment to ui
+					switch ($this->db->f('datatype'))
+					{
+						case 'V':
+						case 'C':
+						case 'N':
+							$uicols['align'][] 	= 'left';
+							break;
+						case 'D':
+						case 'I':
+							$uicols['align'][] 	= 'right';
+							break;
+						default:
+							$uicols['align'][] 	= 'center';
+					}
 					$i++;
 				}
 
