@@ -68,7 +68,6 @@
 			$this->soadmin_location		= CreateObject('property.soadmin_location');
 
 			$this->acl 					= & $GLOBALS['phpgw']->acl;
-		//	$this->acl 					= CreateObject('phpgwapi.acl');
 
 			$this->type_id				= $this->bo->type_id;
 
@@ -1450,11 +1449,26 @@
 
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('view' => $data));
-		//	$GLOBALS['phpgw']->xslttpl->pp();
 		}
+
+		/**
+		* Traverse the location hierarchy and set the parent to not active - where all children are not active.
+		*
+		* @return void
+		*/
 
 		function update_cat()
 		{
+			if(!$this->acl->check('.admin.location', PHPGW_ACL_EDIT, 'property'))
+			{
+				$GLOBALS['phpgw']->redirect_link('/index.php',array
+							(
+								'menuaction'	=> 'property.uilocation.stop',
+								'perm'			=> 2,
+								'acl_location'	=> '.admin.location'
+							));
+			}
+
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] = 'admin::property::inactive_cats';
 			$confirm	= phpgw::get_var('confirm', 'bool', 'POST');
 
