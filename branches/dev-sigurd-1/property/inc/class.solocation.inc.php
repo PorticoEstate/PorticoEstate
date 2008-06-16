@@ -519,6 +519,7 @@
 
 			if($query)
 			{
+				$query = $this->db->db_addslashes($query);
 				$query = str_replace(",",'.',$query);
 				if(stristr($query, '.'))
 				{
@@ -527,9 +528,6 @@
 				}
 				else
 				{
-					$query = preg_replace("/'/",'',$query);
-					$query = preg_replace('/"/','',$query);
-
 					$sub_query = '';
 
 					if($sub_query_tenant)
@@ -542,14 +540,20 @@
 						$sub_query .= "OR fm_streetaddress.descr $this->like '%$query%'";
 					}
 
-					$querymethod = " $where (fm_location" . ($type_id).".loc1 $this->like '%$query%' $sub_query OR fm_location" . ($type_id).".location_code $this->like '%$query%' OR loc" . ($type_id)."_name $this->like '%$query%')";
+					$query_name = '';
+					for ($i=1;$i<($type_id+1);$i++)
+					{
+						$query_name .= "OR loc{$i}_name $this->like '%$query%'";
+					}
+
+					$querymethod = " {$where} (fm_location{$type_id}.loc1 {$this->like} '%{$query}%' {$sub_query} OR fm_location{$type_id}.location_code {$this->like} '%{$query}%' {$query_name})";
 				}
 				$where= 'AND';
 			}
 
 			$sql .= "$filtermethod $querymethod";
 
-//echo $sql;
+//echo $sql; die();
 			$this->db2->query('SELECT count(*)' . substr($sql,strripos($sql,'from')),__LINE__,__FILE__);
 			$this->db2->next_record();
 			$this->total_records = $this->db2->f(0);
