@@ -187,7 +187,7 @@
 
 			if(!$file)
 			{
-				$file_name = urldecode(phpgw::get_var('file_name'));
+				$file_name = realpath(urldecode(phpgw::get_var('file_name')));
 				$id        = phpgw::get_var('id', 'int');
 				$file      = "{$this->fakebase}/{$type}/{$id}/{$file_name}";
 			}
