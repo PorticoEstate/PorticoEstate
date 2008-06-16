@@ -225,9 +225,9 @@
 			case E_NOTICE:
 			case E_USER_NOTICE:
 				$log_args['severity'] = 'N';
-				$log->notice($log_args);
 				if(isset($GLOBALS['phpgw_info']['server']['log_levels']['global_level']) && $GLOBALS['phpgw_info']['server']['log_levels']['global_level'] == 'N')
 				{
+					$log->notice($log_args);
 					echo "\n<br>" . lang('ERROR Notice: %1 in %2 at line %3', $error_msg, $error_file, $error_line) . "<br>\n"; //this will be commented in the final version
 				}
 			//No default, we just ignore it, for now
