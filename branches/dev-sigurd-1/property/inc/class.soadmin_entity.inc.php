@@ -346,12 +346,13 @@
 				'property',
 				'.entity.' . $values['entity_id'] . '.' . $values['id'],
 				$values['name'],
-				1
+				1,
+				"fm_entity_{$values['entity_id']}_{$values['id']}"
 				);
 
 			$values_acl_location	= $this->bocommon->validate_db_insert($values_acl_location);
 
-			$this->db->query("INSERT INTO phpgw_acl_location (appname,id,descr,allow_grant) "
+			$this->db->query("INSERT INTO phpgw_acl_location (appname,id,descr,allow_grant,c_attrib_table) "
 				. "VALUES ($values_acl_location)",__LINE__,__FILE__);
 
 			$receipt['id']= $values['id'];
