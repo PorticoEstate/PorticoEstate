@@ -94,7 +94,7 @@
  	* phpGroupWare offers 2 session management systems - php and db
  	* Unless you really know what you are doing use php here as it works better 99.5% of the time
   	*/
- 	$phpgw_info['server']['sessions_type'] = '{SESSIONS_TYPE}';
+ 	$GLOBALS['phpgw_info']['server']['sessions_type'] = '{SESSIONS_TYPE}';
 
 	/**
 	* @global string $phpgw_info['login_template_set']
