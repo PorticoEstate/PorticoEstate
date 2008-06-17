@@ -2577,3 +2577,19 @@
 		}
 	}
 
+	/**
+	* Update property version from 0.9.17.544 to 0.9.17.545
+ 	*/
+/*
+	$test[] = '0.9.17.544';
+	function property_upgrade0_9_17_544()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('fm_wo_hours','hours_descr',array('type' => 'text', 'nullable' => True));
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.545';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}
+*/

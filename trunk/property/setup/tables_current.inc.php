@@ -588,7 +588,7 @@
 				'grouping_id' => array('type' => 'int','precision' => '4','nullable' => True),
 				'grouping_descr' => array('type' => 'varchar','precision' => '50','nullable' => True),
 				'entry_date' => array('type' => 'int','precision' => '4','nullable' => False),
-				'hours_descr' => array('type' => 'varchar','precision' => '255','nullable' => True),
+				'hours_descr' => array('type' => 'text','nullable' => True),
 				'remark' => array('type' => 'text','nullable' => True),
 				'billperae' => array('type' => 'decimal','precision' => '20','scale' => '2','nullable' => True,'default' => '0.00'),
 				'vendor_id' => array('type' => 'int','precision' => '4','nullable' => True),
