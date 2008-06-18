@@ -180,27 +180,10 @@
 
 		function index()
 		{
-			if(!$this->acl_read)
-			{
-				$GLOBALS['phpgw']->redirect_link('/index.php',array(
-									'menuaction'=> 'property.uilocation.stop',
-									'perm'=>1,
-									'acl_location'=> $this->acl_location
-									)
-								);
-			}
-
-			$GLOBALS['phpgw']->xslttpl->add_file(array('location',
-										'nextmatchs',
-										'search_field'));
-
 			$type_id	= $this->type_id;
 			$lookup 	= $this->lookup;
 			$lookup_name 	= phpgw::get_var('lookup_name');
 			$lookup_tenant 	= phpgw::get_var('lookup_tenant', 'bool');
-
-			$GLOBALS['phpgw']->js->validate_file('overlib','overlib','property');
-			$GLOBALS['phpgw']->js->set_onload('document.search.query.focus();');
 
 			if(!$type_id)
 			{
@@ -219,6 +202,15 @@
 			{
 				$GLOBALS['phpgw_info']['flags']['menu_selection'] .= '::tenant';
 			}
+
+			if (!$this->acl_read)
+			{
+				$this->bocommon->no_access();
+				return;
+			}
+
+			$GLOBALS['phpgw']->js->validate_file('overlib','overlib','property');
+			$GLOBALS['phpgw']->js->set_onload('document.search.query.focus();');
 
 			$location_list = $this->bo->read(array('type_id'=>$type_id,'lookup_tenant'=>$lookup_tenant,'lookup'=>$lookup,'allrows'=>$this->allrows));
 
@@ -597,6 +589,10 @@
 				}
 			}
 
+			$GLOBALS['phpgw']->xslttpl->add_file(array('location',
+										'nextmatchs',
+										'search_field'));
+
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('list' => $data));
 		//	$GLOBALS['phpgw']->xslttpl->pp();
@@ -606,22 +602,34 @@
 
 		function edit()
 		{
-			if(!$this->acl_add && !$this->acl_edit)
-			{
-				$GLOBALS['phpgw']->redirect_link('/index.php',array(
-									'menuaction'=> 'property.uilocation.stop',
-									'perm'=>2,
-									'acl_location'=>$this->acl_location
-									)
-								);
-			}
-
 			$get_history 		= phpgw::get_var('get_history', 'bool', 'POST');
 			$change_type 		= phpgw::get_var('change_type', 'int', 'POST');
 			$lookup_tenant 		= phpgw::get_var('lookup_tenant', 'bool');
 			$location_code		= phpgw::get_var('location_code');
 			$values_attribute	= phpgw::get_var('values_attribute');
 			$location 			= explode('-',$location_code);
+
+			$type_id	 	= $this->type_id;
+
+			if($location_code)
+			{
+				$type_id = count($location);
+			}
+
+			if ( $type_id && !$lookup_tenant )
+			{
+				$GLOBALS['phpgw_info']['flags']['menu_selection'] .= "::loc_$type_id";
+			}
+			else
+			{
+				$GLOBALS['phpgw_info']['flags']['menu_selection'] .= '::tenant';
+			}
+
+			if(!$this->acl_add && !$this->acl_edit)
+			{
+				$this->bocommon->no_access();
+				return;
+			}
 
 			$insert_record = $GLOBALS['phpgw']->session->appsession('insert_record','property');
 			$GLOBALS['phpgw']->session->appsession('insert_record','property','');
@@ -662,21 +670,6 @@
 				}
 			}
 
-			$type_id	 	= $this->type_id;
-
-			if ( $type_id && !$lookup_tenant )
-			{
-				$GLOBALS['phpgw_info']['flags']['menu_selection'] .= "::loc_$type_id";
-			}
-			else
-			{
-				$GLOBALS['phpgw_info']['flags']['menu_selection'] .= '::tenant';
-			}
-
-			if($location_code)
-			{
-				$type_id = count($location);
-			}
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('location','attributes_form'));
 
@@ -1089,26 +1082,15 @@
 
 		function delete()
 		{
-			if(!$this->acl_delete)
-			{
-				$GLOBALS['phpgw']->redirect_link('/index.php',array(
-									'menuaction'	=> 'property.uilocation.stop',
-									'perm'			=> 8,
-									'acl_location'	=> $this->acl_location
-									)
-								);
-			}
-
 			$location_code	 	= phpgw::get_var('location_code', 'string', 'GET');
 			$type_id	 	= $this->type_id;
 
-			if ( $type_id && !$lookup_tenant )
+			$GLOBALS['phpgw_info']['flags']['menu_selection'] .= "::loc_$type_id";
+
+			if(!$this->acl_delete)
 			{
-				$GLOBALS['phpgw_info']['flags']['menu_selection'] .= "::loc_$type_id";
-			}
-			else
-			{
-				$GLOBALS['phpgw_info']['flags']['menu_selection'] .= '::tenant';
+				$this->bocommon->no_access();
+				return;
 			}
 
 			$confirm	= phpgw::get_var('confirm', 'bool', 'POST');
@@ -1148,16 +1130,6 @@
 
 		function view()
 		{
-			if(!$this->acl_read)
-			{
-				$GLOBALS['phpgw']->redirect_link('/index.php',array(
-									'menuaction'	=> 'property.uilocation.stop',
-									'perm'		=> 1,
-									'acl_location'	=> $this->acl_location
-									)
-								);
-			}
-
 			$get_history 		= phpgw::get_var('get_history', 'bool', 'POST');
 			$lookup_tenant		= phpgw::get_var('lookup_tenant', 'bool');
 			$location_code 		= phpgw::get_var('location_code');
@@ -1177,6 +1149,12 @@
 			else
 			{
 				$GLOBALS['phpgw_info']['flags']['menu_selection'] .= '::tenant';
+			}
+
+			if(!$this->acl_read)
+			{
+				$this->bocommon->no_access();
+				return;
 			}
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('location','attributes_view'));
@@ -1459,17 +1437,14 @@
 
 		function update_cat()
 		{
+			$GLOBALS['phpgw_info']['flags']['menu_selection'] = 'admin::property::inactive_cats';
+
 			if(!$this->acl->check('.admin.location', PHPGW_ACL_EDIT, 'property'))
 			{
-				$GLOBALS['phpgw']->redirect_link('/index.php',array
-							(
-								'menuaction'	=> 'property.uilocation.stop',
-								'perm'			=> 2,
-								'acl_location'	=> '.admin.location'
-							));
+				$this->bocommon->no_access();
+				return;
 			}
 
-			$GLOBALS['phpgw_info']['flags']['menu_selection'] = 'admin::property::inactive_cats';
 			$confirm	= phpgw::get_var('confirm', 'bool', 'POST');
 
 			$link_data = array
@@ -1547,6 +1522,13 @@
 		function summary()
 		{
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] .= '::summary';
+
+			if(!$this->acl_read)
+			{
+				$this->bocommon->no_access();
+				return;
+			}
+
 			$GLOBALS['phpgw']->xslttpl->add_file(array('location'));
 
 			$GLOBALS['phpgw']->js->validate_file('overlib','overlib','property');

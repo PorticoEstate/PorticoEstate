@@ -1695,5 +1695,27 @@
 			return $menu;
 		}
 
+
+		function no_access()
+		{
+			$GLOBALS['phpgw']->xslttpl->add_file(array('no_access','menu'));
+
+			$receipt['error'][]=array('msg'=>lang('NO ACCESS'));
+
+			$msgbox_data = $this->msgbox_data($receipt);
+
+			$data = array
+			(
+				'msgbox_data'	=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
+				'menu'			=> $this->get_menu(),
+			);
+
+			$appname	= lang('No access');
+
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname;
+			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('no_access' => $data));
+		}
+
+
 	}
 
