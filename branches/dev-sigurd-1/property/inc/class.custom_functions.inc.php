@@ -41,17 +41,14 @@
 			'index' => true
 		);
 
-		function property_custom_functions ()
+		function property_custom_functions()
 		{
 			$GLOBALS['phpgw_info']['flags']['noheader'] = true;
 			$GLOBALS['phpgw_info']['flags']['nonavbar'] = true;
 
-
 			$GLOBALS['phpgw_info']['flags']['currentapp']	=	'property';
 
-		//	$this->currentapp		= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->config		= CreateObject('phpgwapi.config','property');
-
 		}
 
 		/**
@@ -75,11 +72,8 @@
 				}
 			}
 
-			include_once(PHPGW_SERVER_ROOT.'/'.'property'.'/inc/cron/' . $data['function'] . '.php');
+			include_once(realpath(PHPGW_SERVER_ROOT . "/property/inc/cron/{$data['function']}.php"));
 			$custom = new $data['function'];
 			$custom->pre_run($data);
 		}
-
-
 	}
-
