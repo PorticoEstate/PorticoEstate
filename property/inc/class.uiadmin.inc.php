@@ -694,6 +694,16 @@
 					$GLOBALS['phpgw']->preferences->add('property',"tts_category",$values['default_tts_category'],'user');
 					$receipt['message'][] = array('msg' => lang('default ticket category is updated'));
 				}
+				if ($values['old_assigntodefault'] != $values['assigntodefault'])
+				{
+					$GLOBALS['phpgw']->preferences->add('property',"assigntodefault",$values['assigntodefault'],'user');
+					$receipt['message'][] = array('msg' => lang('default ticket assigned to is updated'));
+				}
+				if ($values['old_groupdefault'] != $values['groupdefault'])
+				{
+					$GLOBALS['phpgw']->preferences->add('property',"groupdefault",$values['groupdefault'],'user');
+					$receipt['message'][] = array('msg' => lang('default ticket group is updated'));
+				}
 				$GLOBALS['phpgw']->preferences->save_repository();
 			}
 
@@ -710,6 +720,33 @@
 			$cats->app_name = 'property.ticket';
 
 			$cat_data_tts	= $cats->formatted_xslt_list(array('selected' => $prefs['tts_category'],'globals' => true, 'link_data' =>array()));
+
+			$acc = & $GLOBALS['phpgw']->accounts;
+			$group_list = $acc->get_list('groups',-1,'ASC');
+			foreach ( $group_list as $entry )
+			{
+				$groups_tts[] = array
+				(
+					'id'	=> $entry->id,
+					'name'	=> $entry->lid,
+					'selected' => $entry->id == $prefs['groupdefault']
+				);
+			}
+
+			$account_list = $acc->get_list('accounts',-1,'ASC','account_lastname');
+
+			foreach ( $account_list as $entry )
+			{
+				if($entry->enabled == true)
+				{
+					$accounts_tts[] = array
+					(
+						'id'	=> $entry->id,
+						'name'	=> $entry->__toString(),
+						'selected' => $entry->id == $prefs['assigntodefault']
+					);
+				}
+			}
 
 			$msgbox_data = $this->bocommon->msgbox_data($receipt);
 
@@ -760,6 +797,14 @@
 				'lang_no_user'					=> lang('No user'),
 				'value_user_id'					=> $this->filter,
 				'user_list'						=> $this->bocommon->get_user_list('filter',$this->filter,$extra=false,$default=false,$start=-1,$sort='ASC',$order='account_lastname',$query='',$offset=-1),
+				'group_list_tts'				=> $groups_tts,
+				'account_list_tts'				=> $accounts_tts,
+				'lang_group_select'				=> lang('Default group TTS'),
+				'lang_account_select'			=> lang('Default assign to TTS'),
+				'value_old_assigntodefault'		=> $prefs['assigntodefault'],
+				'value_old_groupdefault'		=> $prefs['groupdefault'],
+				'lang_no_assigntodefault'		=> lang('no user'),
+				'lang_no_groupdefault'			=> lang('no group'),
 			);
 
 			$appname	= lang('User contact info');

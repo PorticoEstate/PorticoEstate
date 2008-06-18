@@ -936,6 +936,30 @@
 					</select>
 				</td>
 			</tr>
+			<tr>
+				<td valign="top">
+					<xsl:value-of select="lang_account_select"/>
+				</td>
+				<td align="left">
+					<input type="hidden" name="values[old_assigntodefault]" value="{value_old_assigntodefault}"></input>
+					<select name="values[assigntodefault]" class="forms">
+						<option value=""><xsl:value-of select="lang_no_assigntodefault"/></option>
+						<xsl:apply-templates select="account_list_tts"/>
+					</select>
+				</td>
+			</tr>
+			<tr>
+				<td valign="top">
+					<xsl:value-of select="lang_group_select"/>
+				</td>
+				<td align="left">
+					<input type="hidden" name="values[old_groupdefault]" value="{value_old_groupdefault}"></input>
+					<select name="values[groupdefault]" class="forms">
+						<option value=""><xsl:value-of select="lang_no_groupdefault"/></option>
+						<xsl:apply-templates select="group_list_tts"/>
+					</select>
+				</td>
+			</tr>
 			<tr height="50">
 				<td>
 					<xsl:variable name="lang_save"><xsl:value-of select="lang_save"/></xsl:variable>
@@ -1000,6 +1024,28 @@
 			</xsl:when>
 			<xsl:otherwise>
 				<option value="{cat_id}"><xsl:value-of disable-output-escaping="yes" select="name"/></option>
+			</xsl:otherwise>
+		</xsl:choose>
+	</xsl:template>
+
+	<xsl:template match="group_list_tts">
+		<xsl:choose>
+			<xsl:when test="selected='1'">
+				<option value="{id}" selected="selected"><xsl:value-of disable-output-escaping="yes" select="name"/></option>
+			</xsl:when>
+			<xsl:otherwise>
+				<option value="{id}"><xsl:value-of disable-output-escaping="yes" select="name"/></option>
+			</xsl:otherwise>
+		</xsl:choose>
+	</xsl:template>
+
+	<xsl:template match="account_list_tts">
+		<xsl:choose>
+			<xsl:when test="selected='1'">
+				<option value="{id}" selected="selected"><xsl:value-of disable-output-escaping="yes" select="name"/></option>
+			</xsl:when>
+			<xsl:otherwise>
+				<option value="{id}"><xsl:value-of disable-output-escaping="yes" select="name"/></option>
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:template>
