@@ -924,6 +924,18 @@
 					</select>
 				</td>
 			</tr>
+			<tr>
+				<td valign="top">
+					<xsl:value-of select="lang_default_tts_category"/>
+				</td>
+				<td align="left">
+					<input type="hidden" name="values[old_default_tts_category]" value="{value_old_default_tts_category}"></input>
+					<select name="values[default_tts_category]" class="forms" title="{lang_default_tts_category_statustext}" style="cursor:help">
+						<option value=""><xsl:value-of select="lang_no_cat"/></option>
+						<xsl:apply-templates select="tts_category"/>
+					</select>
+				</td>
+			</tr>
 			<tr height="50">
 				<td>
 					<xsl:variable name="lang_save"><xsl:value-of select="lang_save"/></xsl:variable>
@@ -977,6 +989,17 @@
 			</xsl:when>
 			<xsl:otherwise>
 				<option value="{$cat_id}"><xsl:value-of disable-output-escaping="yes" select="name"/></option>
+			</xsl:otherwise>
+		</xsl:choose>
+	</xsl:template>
+
+	<xsl:template match="tts_category">
+		<xsl:choose>
+			<xsl:when test="selected='selected'">
+				<option value="{cat_id}" selected="selected"><xsl:value-of disable-output-escaping="yes" select="name"/></option>
+			</xsl:when>
+			<xsl:otherwise>
+				<option value="{cat_id}"><xsl:value-of disable-output-escaping="yes" select="name"/></option>
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:template>
