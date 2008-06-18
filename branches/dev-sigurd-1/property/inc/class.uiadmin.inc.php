@@ -108,6 +108,12 @@
 
 		function aclprefs()
 		{
+			if (!isset($GLOBALS['phpgw_info']['user']['apps']['preferences']))
+			{
+				$this->bocommon->no_access();
+				return;
+			}
+
 			$GLOBALS['phpgw']->xslttpl->add_file(array('admin','nextmatchs',
 										'search_field'));
 
@@ -308,6 +314,13 @@
 		function list_acl()
 		{
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] .= '::permissions';
+
+			if (!isset($GLOBALS['phpgw_info']['user']['apps']['admin'])) //this one is different
+			{
+				$this->bocommon->no_access();
+				return;
+			}
+
 			$GLOBALS['phpgw']->xslttpl->add_file(array('admin','nextmatchs',
 										'search_field'));
 
@@ -570,6 +583,12 @@
 		{
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] .= '::id_control';
 
+			if (!$this->acl_edit)
+			{
+				$this->bocommon->no_access();
+				return;
+			}
+
 			$GLOBALS['phpgw']->xslttpl->add_file(array('admin'));
 
 			$values		= phpgw::get_var('values');
@@ -633,6 +652,12 @@
 		function contact_info()
 		{
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] .= '::user_contact';
+
+			if (!$this->acl_edit)
+			{
+				$this->bocommon->no_access();
+				return;
+			}
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('admin'));
 
