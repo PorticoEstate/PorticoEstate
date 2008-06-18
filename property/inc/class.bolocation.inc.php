@@ -102,7 +102,7 @@
 			$allrows				= phpgw::get_var('allrows', 'bool');
 
 			$this->start			= $start ? $start : 0;
-			$this->query			= isset($query) && $query ? $query : $this->query;
+			$this->query			= isset($query) ? $query : $this->query;
 			$this->filter			= isset($filter) && $filter ? $filter : '';
 			$this->sort				= isset($sort) && $sort ? $sort : '';
 			$this->order			= isset($order) && $order ? $order : '';
