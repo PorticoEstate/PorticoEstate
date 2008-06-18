@@ -52,6 +52,7 @@
 
 		function update_status($ticket,$id='')
 		{
+			$receipt = array();
 			// DB Content is fresher than http posted value.
 			$this->db->query("select * from fm_tts_tickets where id='$id'",__LINE__,__FILE__);
 			$this->db->next_record();
@@ -115,6 +116,7 @@
 
 		function update_ticket($ticket,$id='')
 		{
+			$receipt = array();
 			// DB Content is fresher than http posted value.
 			$this->db->query("select * from fm_tts_tickets where id='$id'",__LINE__,__FILE__);
 			$this->db->next_record();
@@ -296,19 +298,19 @@
 				$custom = createObject('phpgwapi.custom_fields');
 				$custom_functions = $custom->read_custom_function(array('appname'=>'property','location' => $this->acl_location,'allrows'=>true));
 
-				if (isSet($custom_functions) AND is_array($custom_functions))
+				if (isset($custom_functions) AND is_array($custom_functions))
 				{
 					foreach($custom_functions as $entry)
 					{
-						if (is_file(PHPGW_APP_INC . "/custom/{$entry['file_name']}") && $entry['active'])
+						$file = realpath(PHPGW_APP_INC . "/custom/{$entry['file_name']}");
+						if (is_file($file) && $entry['active'])
 						{
-							include_once(PHPGW_APP_INC . "/custom/{$entry['file_name']}");
+							include_once ($file);
 						}
 					}
 				}
-
 			}
-			return (isset($receipt)?$receipt:'');
+			return $receipt;
 		}
 	}
 
