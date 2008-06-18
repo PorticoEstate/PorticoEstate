@@ -108,7 +108,7 @@
 	}
 
 	unset($sotts);
-	create_select_box('Default TTS categories','tts_category',$_categories_tts,'The default category for TTS');
+	create_select_box('default ticket categories','tts_category',$_categories_tts,'The default category for TTS');
 
 	$yes_and_no = array(
 		'1' => 'Yes',

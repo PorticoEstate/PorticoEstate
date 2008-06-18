@@ -286,6 +286,8 @@
 				$selected = $default;
 			}
 
+			$all_users = array();
+
 			if (is_array($extra))
 			{
 				foreach($extra as $extra_user)
@@ -301,7 +303,7 @@
 			$accounts = & $GLOBALS['phpgw']->accounts;
 			$users = $accounts->get_list('accounts', $start, $sort, $order, $query,$offset);
 			unset($accounts);
-			if (isset($all_users) && is_array($all_users) && is_array($users))
+			if (is_array($users))
 			{
 				foreach($users as $user)
 				{

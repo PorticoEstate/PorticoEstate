@@ -689,6 +689,11 @@
 					$GLOBALS['phpgw']->preferences->add('property',"default_vendor_category",$values['default_vendor_category'],'user');
 					$receipt['message'][] = array('msg' => lang('default vendor category is updated'));
 				}
+				if ($values['old_default_tts_category'] != $values['default_tts_category'])
+				{
+					$GLOBALS['phpgw']->preferences->add('property',"tts_category",$values['default_tts_category'],'user');
+					$receipt['message'][] = array('msg' => lang('default ticket category is updated'));
+				}
 				$GLOBALS['phpgw']->preferences->save_repository();
 			}
 
@@ -701,6 +706,10 @@
 			$cats->app_name = 'fm_vendor';
 
 			$cat_data	= $cats->formatted_xslt_list(array('selected' => $prefs['default_vendor_category'],'globals' => true, 'link_data' =>array()));
+
+			$cats->app_name = 'property.ticket';
+
+			$cat_data_tts	= $cats->formatted_xslt_list(array('selected' => $prefs['tts_category'],'globals' => true, 'link_data' =>array()));
 
 			$msgbox_data = $this->bocommon->msgbox_data($receipt);
 
@@ -736,6 +745,11 @@
 				'lang_default_vendor_category'	=> lang('default vendor category'),
 				'value_old_default_vendor_category'	=> $prefs['default_vendor_category'],
 				'vendor_category'				=> $cat_data['cat_list'],
+
+				'lang_default_tts_category'		=> lang('default ticket categories'),
+				'value_old_default_tts_category'	=> $prefs['tts_category'],
+				'tts_category'					=> $cat_data_tts['cat_list'],
+
 				'select_user_name'				=> 'approval_from',
 				'lang_default_vendor_category_statustext'=> lang('Select default vendor category'),
 				'lang_no_cat'					=> lang('No category'),
