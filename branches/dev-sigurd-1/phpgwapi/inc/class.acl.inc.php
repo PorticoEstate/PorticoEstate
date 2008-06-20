@@ -727,7 +727,7 @@
 			$locations = array();
 			$sql = "SELECT acl_location, acl_rights FROM phpgw_acl WHERE acl_appname = '$app' AND acl_account IN(" . implode(',', $acct_ids) . ')'; 
 			$this->db->query($sql ,__LINE__,__FILE__);
-			$rights = 0;
+
 			if ($this->db->num_rows() == 0 )
 			{
 				return $locations;
@@ -738,19 +738,15 @@
 				{
 					return False;
 				}
-				$rights |= $this->db->f('acl_rights');
+				$rights = (int) $this->db->f('acl_rights');
+				
 				if (!!($rights & $required) == True)
 				{
 					$locations[] = $this->db->f('acl_location');
 				}
-				else
-				{
-//					return False; //Sigurd: I think this is wrong
-				}
 			}
-			return $locations;
+			return array_unique($locations);
 		}
-
 
 		// These are the generic functions. Not specific to $account_id
 
