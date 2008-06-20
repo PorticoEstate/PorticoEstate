@@ -47,7 +47,7 @@
 			$nextmatches = createobject('phpgwapi.nextmatchs');
 
 			$account_id	= phpgw::get_var('account_id', 'int', 'REQUEST');
-			$start		= phpgw::get_var('start', 'int', 'POST', 0);
+			$start		= phpgw::get_var('start', 'int', 'GET', 0);
 			$sort		= phpgw::get_var('sort', 'int', 'POST', 0);
 			$order		= phpgw::get_var('order', 'int', 'POST', 0);
 			
