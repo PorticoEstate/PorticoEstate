@@ -514,6 +514,7 @@
 
 		/**
 		* Get the responsibility for a particular category conserning a given location or item
+		* Locations are checked bottom up at the deepest level - before checkin on it's parent if it is a miss.
 		*
 		* @param array $values containing cat_id, location_code and optional item-information
 		*
@@ -522,7 +523,7 @@
 
 		public function get_responsible($values = array())
 		{
-			$location_code = implode('-', $values['location']);
+			$location_filter = array();
 
 			if(!isset($values['location']) || !is_array($values['location']))
 			{
@@ -532,30 +533,49 @@
 			$item_filter = '';
 			if(isset($values['extra']) && is_array($values['extra']))
 			{
-				$item_filter =   " AND p_num = '{$values['extra']['p_num']}'"
+				$location_code = implode('-', $values['location']);
+
+				$item_filter =   " WHERE p_num = '{$values['extra']['p_num']}'"
 								.' AND p_entity_id =' . (int) $values['extra']['p_entity_id']
 								.' AND p_cat_id =' . (int) $values['extra']['p_cat_id'];
 
-				$location_filter = "location_code = '{$location_code}'";
+				$location_filter[] = " AND location_code = '{$location_code}'";
 				$ordermethod = '';
 			}
-			else // FIXME: allow hierarchically assignment - start testing at bottom level 
+			else
 			{
-				$location_filter = "location_code $this->like '$location_code%'";
+				$location_code = '';
+				$location_array = array();
+				$where = ' WHERE';
+				foreach ($values['location'] as $location)
+				{
+					$location_array[]	= $location;
+					$location_code		= implode('-', $location_array);
+					$location_filter[]	= "{$where} location_code $this->like '$location_code%'";
+					$location_filter	= array_reverse($location_filter);
+					$where = ' AND';
+				}
+				
 				$ordermethod = ' ORDER by location_code.id ASC';
 			}
 
 			$sql = "SELECT contact_id FROM fm_responsibility_contact"
 			 . " $this->join fm_responsibility ON fm_responsibility_contact.responsibility_id = fm_responsibility.id"
-			 . " WHERE {$location_filter} {$item_filter}"
+			 . " {$item_filter}"
 			 . ' AND cat_id =' . (int) $values['cat_id']
 			 . ' AND active = 1 AND active_from < ' . time() . ' AND active_to > ' . time() . ' AND expired_on IS NULL';
 
-			$this->db->query($sql, __LINE__, __FILE__);
+			foreach ($location_filter as $filter_at_location)
+			{
+				$this->db->query($sql . $filter_at_location, __LINE__, __FILE__);
+				$this->db->next_record();
+				if($this->db->f('contact_id'))
+				{
+					return $this->db->f('contact_id');
+				}
+			}
 
-			$this->db->next_record();
-
-			return $this->db->f('contact_id');
+			return 0;
 		}
 
 		/**
