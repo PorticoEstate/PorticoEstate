@@ -599,7 +599,7 @@
 			{
 				foreach ( $equalto as $group )
 				{
-					$acct_ids[] = $group['account_id'];
+					$acct_ids[] = $group->id;
 				}
 			}
 
@@ -609,23 +609,22 @@
 				. ' FROM phpgw_locations'
 				. " {$this->_join} phpgw_acl ON phpgw_locations.location_id = phpgw_acl.location_id"
 				. " {$this->_join} phpgw_applications ON phpgw_locations.app_id = phpgw_applications.app_id"
-				. " WHERE applications.name = '{$app}' AND acl_account IN($ids)";
+				. " WHERE phpgw_applications.app_name = '{$app}' AND acl_account IN($ids)";
 			$this->_db->query($sql, __LINE__, __FILE__);
 
-			$rights = 0;
 			while ($this->_db->next_record())
 			{
 				if ($this->_db->f('acl_rights') == 0)
 				{
 					return false;
 				}
-				$rights |= $this->_db->f('acl_rights');
+				$rights = $this->_db->f('acl_rights');
 				if (!!($rights & $required) == true)
 				{
-					$locations[] = $this->_db->f('acl_location');
+					$locations[] = $this->_db->f('name');
 				}
 			}
-			return $locations;
+			return array_unique($locations);
 		}
 
 

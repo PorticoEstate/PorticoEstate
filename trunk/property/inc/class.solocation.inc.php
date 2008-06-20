@@ -60,42 +60,42 @@
 			while ($this->db->next_record())
 			{
 				$sql = "SELECT count(*) as hits FROM fm_entity_" . $this->db->f('entity_id') . "_" . $this->db->f('id') . " WHERE location_code $this->like '$location_code%'";
-				$this->db2->query($sql,__LINE__,__FILE__);
-				$this->db2->next_record();
-				if($this->db2->f('hits'))
+				$this->db->query($sql,__LINE__,__FILE__);
+				$this->db->next_record();
+				if($this->db->f('hits'))
 				{
 					$entity[] = array
 					(
 						'entity_id'	=> $this->db->f('entity_id'),
 						'cat_id'	=> $this->db->f('id'),
-						'name'		=> $this->db->f('name') . ' [' . $this->db2->f('hits') . ']',
+						'name'		=> $this->db->f('name') . ' [' . $this->db->f('hits') . ']',
 						'descr'		=> $this->db->f('descr')
 					);
 				}
 			}
 
 			$sql = "SELECT count(*) as hits FROM fm_tts_tickets WHERE location_code $this->like '$location_code%'";
-			$this->db2->query($sql,__LINE__,__FILE__);
-			$this->db2->next_record();
-			if($this->db2->f('hits'))
+			$this->db->query($sql,__LINE__,__FILE__);
+			$this->db->next_record();
+			if($this->db->f('hits'))
 			{
 				$entity[] = array
 				(
 					'entity_link'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uitts.index', 'query'=> $location_code)),
-					'name'		=> lang('Helpdesk') . ' [' . $this->db2->f('hits') . ']',
+					'name'		=> lang('Helpdesk') . ' [' . $this->db->f('hits') . ']',
 					'descr'		=> lang('Helpdesk')
 				);
 			}
 
 			$sql = "SELECT count(*) as hits FROM fm_document WHERE location_code $this->like '$location_code%'";
-			$this->db2->query($sql,__LINE__,__FILE__);
-			$this->db2->next_record();
-			if($this->db2->f('hits'))
+			$this->db->query($sql,__LINE__,__FILE__);
+			$this->db->next_record();
+			if($this->db->f('hits'))
 			{
 				$entity[] = array
 				(
 					'entity_link'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction' => 'property.uidocument.index','query'=> $location_code)),
-					'name'		=> lang('Documentation') . ' [' . $this->db2->f('hits') . ']',
+					'name'		=> lang('Documentation') . ' [' . $this->db->f('hits') . ']',
 					'descr'		=> lang('Documentation')
 				);
 			}
@@ -180,31 +180,38 @@
 		{
 			if(is_array($data))
 			{
-				if ($data['start'])
-				{
-					$start=$data['start'];
-				}
-				else
-				{
-					$start=0;
-				}
-				$filter	= (isset($data['filter'])?$data['filter']:0);
-				$query = (isset($data['query'])?$data['query']:'');
-				$sort = (isset($data['sort'])?$data['sort']:'DESC');
-				$order = (isset($data['order'])?$data['order']:'');
-				$cat_id = (isset($data['cat_id'])?$data['cat_id']:0);
-				$type_id = (isset($data['type_id'])?$data['type_id']:'');
-				$lookup_tenant = (isset($data['lookup_tenant'])?$data['lookup_tenant']:'');
-				$district_id = (isset($data['district_id'])?$data['district_id']:'');
-				$allrows = (isset($data['allrows'])?$data['allrows']:'');
-				$lookup = (isset($data['lookup'])?$data['lookup']:'');
-				$status = (isset($data['status'])?$data['status']:'');
-				$part_of_town_id = (isset($data['part_of_town_id'])?$data['part_of_town_id']:'');
+				$start				= isset($data['start']) && $data['start'] ? $data['start'] : 0;
+				$filter				= isset($data['filter']) && $data['filter'] ? $data['filter'] : 0;
+				$query				= isset($data['query']) ? $data['query'] : '';
+				$sort				= isset($data['sort']) && $data['sort'] ? $data['sort'] : 'DESC';
+				$order				= isset($data['order']) ? $data['order'] : '';
+				$cat_id				= isset($data['cat_id']) && $data['cat_id'] ? $data['cat_id']:0;
+				$type_id			= isset($data['type_id']) ? $data['type_id'] : '';
+				$lookup_tenant		= isset($data['lookup_tenant']) ? $data['lookup_tenant'] : '';
+				$district_id		= isset($data['district_id']) ? $data['district_id'] : '';
+				$allrows			= isset($data['allrows']) ? $data['allrows'] : '';
+				$lookup				= isset($data['lookup']) ? $data['lookup'] : '';
+				$status				= isset($data['status']) ? $data['status'] : '';
+				$part_of_town_id	= isset($data['part_of_town_id']) ? $data['part_of_town_id'] : '';
 			}
 
 			if (!$type_id)
 			{
 				return;
+			}
+
+			$access_list	= $GLOBALS['phpgw']->acl->get_location_list('property',PHPGW_ACL_READ);
+
+			$needle = ".location.1.";
+			$needle_len = strlen($needle);
+			$access_location = array();
+			foreach($access_list as $location)
+			{
+				if(strrpos($location,$needle ) === 0)
+				{
+					$target_len = strlen($location)- $needle_len;
+					$access_location[] = substr($location,-$target_len);
+				}
 			}
 
 			$sql = $this->socommon->fm_cache('sql_'. $type_id . '_' . $lookup_tenant . '_' . $lookup);
@@ -481,14 +488,17 @@
 				}
 			}
 
+			$filtermethod = " {$where} fm_location{$type_id}.loc1 in ('" . implode("','", $access_location) . "')";
+			$where= 'AND';
+
 			if ($cat_id > 0)
 			{
-				$filtermethod = " $where fm_location" . ($type_id). ".category=$cat_id ";
+				$filtermethod .= " $where fm_location" . ($type_id). ".category=$cat_id ";
 				$where= 'AND';
 			}
 			else
 			{
-				$filtermethod = " $where  (fm_location" . ($type_id). ".category !=99 OR fm_location" . ($type_id). ".category IS NULL)";
+				$filtermethod .= " $where  (fm_location" . ($type_id). ".category !=99 OR fm_location" . ($type_id). ".category IS NULL)";
 				$where= 'AND';
 			}
 
@@ -570,9 +580,9 @@
 			$sql .= "$filtermethod $querymethod";
 
 //echo $sql; die();
-			$this->db2->query('SELECT count(*)' . substr($sql,strripos($sql,'from')),__LINE__,__FILE__);
-			$this->db2->next_record();
-			$this->total_records = $this->db2->f(0);
+			$this->db->query('SELECT count(*)' . substr($sql,strripos($sql,'from')),__LINE__,__FILE__);
+			$this->db->next_record();
+			$this->total_records = $this->db->f(0);
 
 			if(!$allrows)
 			{
