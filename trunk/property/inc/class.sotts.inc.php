@@ -58,18 +58,18 @@
 		{
 			if(is_array($data))
 			{
-				$start	= (isset($data['start']) && $data['start'] ? $data['start']:0);
-				$filter	= (isset($data['filter']) && $data['filter'] ? $data['filter']:'O'); //O='Open'
-				$user_filter= (isset($data['user_filter'])?$data['user_filter']:'');
-				$query = (isset($data['query'])?$data['query']:'');
-				$sort = (isset($data['sort']) && $data['sort'] ? $data['sort']:'DESC');
-				$order = (isset($data['order'])?$data['order']:'');
-				$cat_id = (isset($data['cat_id']) && $data['cat_id'] ? $data['cat_id']:0);
-				$district_id = (isset($data['district_id']) && $data['district_id'] ? $data['district_id']:0);
-				$allrows = (isset($data['allrows'])?$data['allrows']:'');
-				$start_date = (isset($data['start_date'])?$data['start_date']:'');
-				$end_date = (isset($data['end_date'])?$data['end_date']:'');
-				$external = (isset($data['external'])?$data['external']:'');
+				$start			= isset($data['start']) && $data['start'] ? $data['start']:0;
+				$filter			= isset($data['filter']) && $data['filter'] ? $data['filter']:'O'; //O='Open'
+				$user_filter	= isset($data['user_filter'])?$data['user_filter']:'';
+				$query			= isset($data['query'])?$data['query']:'';
+				$sort			= isset($data['sort']) && $data['sort'] ? $data['sort']:'DESC';
+				$order			= isset($data['order'])?$data['order']:'';
+				$cat_id			= isset($data['cat_id']) && $data['cat_id'] ? $data['cat_id']:0;
+				$district_id	= isset($data['district_id']) && $data['district_id'] ? $data['district_id']:0;
+				$allrows		= isset($data['allrows'])?$data['allrows']:'';
+				$start_date		= isset($data['start_date'])?$data['start_date']:'';
+				$end_date		= isset($data['end_date'])?$data['end_date']:'';
+				$external		= isset($data['external'])?$data['external']:'';
 			}
 
 			$this->grants 	= $GLOBALS['phpgw']->session->appsession('grants_ticket','property');
@@ -164,6 +164,7 @@
 			$querymethod = '';
 			if($query)
 			{
+				$query = $this->db->db_addslashes($query);
 				$query = str_replace(",",'.',$query);
 				if(stristr($query, '.'))
 				{
@@ -172,8 +173,6 @@
 				}
 				else
 				{
-					$query = preg_replace("/'/",'',$query);
-					$query = preg_replace('/"/','',$query);
 					$querymethod = " $where (subject $this->like '%$query%' or address $this->like '%$query%' or fm_tts_tickets.location_code $this->like '%$query%')";
 				}
 			}

@@ -127,27 +127,20 @@
 
 			if(is_array($data))
 			{
-				if ($data['start'])
-				{
-					$start=$data['start'];
-				}
-				else
-				{
-					$start=0;
-				}
-				$filter	= $data['filter']?$data['filter']:'all';
-				$query = (isset($data['query'])?$data['query']:'');
-				$sort = (isset($data['sort'])?$data['sort']:'DESC');
-				$order = (isset($data['order'])?$data['order']:'');
-				$cat_id = (isset($data['cat_id'])?$data['cat_id']:0);
-				$status_id = (isset($data['status_id'])?$data['status_id']:0);
-				$search_vendor = (isset($data['search_vendor'])?$data['search_vendor']:'');
-				$start_date = (isset($data['start_date'])?$data['start_date']:'');
-				$end_date = (isset($data['end_date'])?$data['end_date']:'');
-				$allrows = (isset($data['allrows'])?$data['allrows']:'');
-				$wo_hour_cat_id = (isset($data['wo_hour_cat_id'])?$data['wo_hour_cat_id']:'');
-				$b_group = (isset($data['b_group'])?$data['b_group']:'');
-				$paid = (isset($data['paid'])?$data['paid']:'');
+				$start			= isset($data['start']) && $data['start'] ? $data['start'] : 0;
+				$filter			= $data['filter'] ? $data['filter'] : 'all';
+				$query			= isset($data['query']) ? $data['query'] : '';
+				$sort			= isset($data['sort']) && $data['sort'] ? $data['sort'] : 'DESC';
+				$order			= isset($data['order']) ? $data['order'] : '';
+				$cat_id			= isset($data['cat_id']) && $data['cat_id'] ? $data['cat_id'] : 0;
+				$status_id		= isset($data['status_id']) && $data['status_id'] ? $data['status_id'] : 0;
+				$search_vendor	= isset($data['search_vendor']) ? $data['search_vendor'] : '';
+				$start_date		= isset($data['start_date']) ? $data['start_date'] : '';
+				$end_date		= isset($data['end_date']) ? $data['end_date'] : '';
+				$allrows		= isset($data['allrows']) ? $data['allrows'] : '';
+				$wo_hour_cat_id	= isset($data['wo_hour_cat_id']) ? $data['wo_hour_cat_id'] : '';
+				$b_group		= isset($data['b_group']) ? $data['b_group'] : '';
+				$paid			= isset($data['paid']) ? $data['paid'] : '';
 			}
 
 
@@ -300,6 +293,14 @@
 
 			$filtermethod = '';
 
+			$GLOBALS['phpgw']->config->read_repository();
+			if(isset($GLOBALS['phpgw']->config->config_data['acl_at_location']) && $GLOBALS['phpgw']->config->config_data['acl_at_location'])
+			{
+				$access_location = $this->bocommon->get_location_list(PHPGW_ACL_READ);
+				$filtermethod = " WHERE fm_project.loc1 in ('" . implode("','", $access_location) . "')";
+				$where= 'AND';
+			}
+
 			if ($cat_id > 0)
 			{
 				$filtermethod .= " $where fm_project.category=$cat_id ";
@@ -362,6 +363,7 @@
 			$querymethod = '';
 			if($query)
 			{
+				$query = $this->db->db_addslashes($query);
 				$query = str_replace(",",'.',$query);
 				if(stristr($query, '.'))
 				{
@@ -370,9 +372,6 @@
 				}
 				else
 				{
-					$query = preg_replace("/'/",'',$query);
-					$query = preg_replace('/"/','',$query);
-
 					$querymethod = " $where (fm_workorder.title $this->like '%$query%' or fm_workorder.descr $this->like '%$query%' or fm_project.address $this->like '%$query%' or fm_project.location_code $this->like '%$query%' or fm_workorder.id =" . (int)$query . ')';
 				}
 				$where= 'AND';
