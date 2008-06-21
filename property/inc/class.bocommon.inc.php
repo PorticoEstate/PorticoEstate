@@ -1718,6 +1718,15 @@
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('no_access' => $data));
 		}
 
-
+		/**
+		* Get list of accessible physical locations for current user
+		*
+		* @param integer $required Right the user has to be granted at location
+		*
+		* @return array $access_location list of accessible physical locations
+		*/
+		public function get_location_list($required)
+		{
+			return $this->socommon->get_location_list($required);
+		}
 	}
-
