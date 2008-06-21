@@ -97,14 +97,7 @@
 		{
 			if(is_array($data))
 			{
-				if ($data['start'])
-				{
-					$start=$data['start'];
-				}
-				else
-				{
-					$start=0;
-				}
+				$start	= isset($data['start']) && $data['start'] ? $data['start'] : 0;
 				$filter	= $data['filter']?$data['filter']:'all';
 				$query = (isset($data['query'])?$data['query']:'');
 				$sort = (isset($data['sort'])?$data['sort']:'DESC');
@@ -233,6 +226,15 @@
 			$where= 'WHERE';
 
 			$filtermethod = '';
+
+			$GLOBALS['phpgw']->config->read_repository();
+			if(isset($GLOBALS['phpgw']->config->config_data['acl_at_location']) && $GLOBALS['phpgw']->config->config_data['acl_at_location'])
+			{
+				$access_location = $this->bocommon->get_location_list(PHPGW_ACL_READ);
+				$filtermethod = " WHERE fm_project.loc1 in ('" . implode("','", $access_location) . "')";
+				$where= 'AND';
+			}
+
 			if ($cat_id > 0)
 			{
 				$filtermethod .= " $where fm_project.category=$cat_id ";
@@ -283,6 +285,7 @@
 
 			if($query)
 			{
+				$query = $this->db->db_addslashes($query);
 				$query = str_replace(",",'.',$query);
 				if(stristr($query, '.'))
 				{
@@ -291,8 +294,6 @@
 				}
 				else
 				{
-					$query = preg_replace("/'/",'',$query);
-					$query = preg_replace('/"/','',$query);
 					$querymethod = " $where (fm_project.name $this->like '%$query%' or fm_project.address $this->like '%$query%' or fm_project.location_code $this->like '%$query%' or fm_project.id =" . (int)$query .')';
 				}
 			}

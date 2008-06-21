@@ -90,20 +90,20 @@
 		{
 			if(is_array($data))
 			{
-				$start	= (isset($data['start']) && $data['start'] ? $data['start']:0);
-				$filter	= $data['filter']?$data['filter']:'all';
-				$query = (isset($data['query'])?$data['query']:'');
-				$sort = (isset($data['sort'])?$data['sort']:'DESC');
-				$order = (isset($data['order'])?$data['order']:'');
-				$cat_id = (isset($data['cat_id'])?$data['cat_id']:0);
-				$district_id = (isset($data['district_id'])?$data['district_id']:0);
-				$lookup = (isset($data['lookup'])?$data['lookup']:'');
-				$allrows = (isset($data['allrows'])?$data['allrows']:'');
-				$entity_id = (isset($data['entity_id'])?$data['entity_id']:'');
-				$cat_id = (isset($data['cat_id'])?$data['cat_id']:'');
-				$status = (isset($data['status'])?$data['status']:'');
-				$start_date = (isset($data['start_date'])?$data['start_date']:'');
-				$end_date = (isset($data['end_date'])?$data['end_date']:'');
+				$start			= isset($data['start']) && $data['start'] ? $data['start'] : 0;
+				$filter			= isset($data['filter']) && $data['filter'] ? $data['filter'] : 'all';
+				$query			= isset($data['query']) ? $data['query'] : '';
+				$sort			= isset($data['sort']) && $data['sort'] ? $data['sort'] : 'DESC';
+				$order			= isset($data['order']) ? $data['order'] : '';
+				$cat_id			= isset($data['cat_id']) && $data['cat_id'] ? $data['cat_id'] : 0;
+				$district_id	= isset($data['district_id']) && $data['district_id'] ? $data['district_id'] : 0;
+				$lookup			= isset($data['lookup']) ? $data['lookup'] : '';
+				$allrows		= isset($data['allrows']) ? $data['allrows'] : '';
+				$entity_id		= isset($data['entity_id']) ? $data['entity_id'] : '';
+				$cat_id			= isset($data['cat_id']) ? $data['cat_id'] : '';
+				$status			= isset($data['status']) ? $data['status'] : '';
+				$start_date		= isset($data['start_date']) ? $data['start_date'] : '';
+				$end_date		= isset($data['end_date']) ? $data['end_date'] : '';
 			}
 
 			if(!$entity_id || !$cat_id)
@@ -244,6 +244,16 @@
 			$where= 'WHERE';
 			$filtermethod = '';
 
+			$GLOBALS['phpgw']->config->read_repository();
+			if(isset($GLOBALS['phpgw']->config->config_data['acl_at_location'])
+				&& $GLOBALS['phpgw']->config->config_data['acl_at_location']
+				&& $category['location_level'] > 0)
+			{
+				$access_location = $this->bocommon->get_location_list(PHPGW_ACL_READ);
+				$filtermethod = " WHERE {$entity_table}.loc1 in ('" . implode("','", $access_location) . "')";
+				$where= 'AND';
+			}
+
 			if ($filter=='all')
 			{
 				if (is_array($grants))
@@ -285,6 +295,7 @@
 			$querymethod = '';
 			if($query)
 			{
+				$query = $this->db->db_addslashes($query);
 				$query = str_replace(",",'.',$query);
 				if(stristr($query, '.'))
 				{
@@ -293,8 +304,6 @@
 				}
 				else
 				{
-					$query = preg_replace("/'/",'',$query);
-					$query = preg_replace('/"/','',$query);
 					$filtermethod .= " $where ( $entity_table.location_code $this->like '%$query%' OR $entity_table.num $this->like '%$query%' OR address $this->like '%$query%')";
 					$where= 'OR';
 
@@ -331,9 +340,9 @@
 			$sql .= " $filtermethod $querymethod";
 
 //echo $sql;
-			$this->db2->query('SELECT count(*)' . substr($sql,strripos($sql,'from')),__LINE__,__FILE__);
-			$this->db2->next_record();
-			$this->total_records = $this->db2->f(0);
+			$this->db->query('SELECT count(*)' . substr($sql,strripos($sql,'from')),__LINE__,__FILE__);
+			$this->db->next_record();
+			$this->total_records = $this->db->f(0);
 
 			if(!$allrows)
 			{

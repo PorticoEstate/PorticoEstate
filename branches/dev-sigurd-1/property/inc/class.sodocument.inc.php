@@ -91,21 +91,14 @@
 		{
 			if(is_array($data))
 			{
-				if ($data['start'])
-				{
-					$start=$data['start'];
-				}
-				else
-				{
-					$start=0;
-				}
-				$filter	= (isset($data['filter'])?$data['filter']:'');
-				$query = (isset($data['query'])?$data['query']:'');
-				$sort = (isset($data['sort'])?$data['sort']:'DESC');
-				$order = (isset($data['order'])?$data['order']:'');
-				$cat_id = (isset($data['cat_id'])?$data['cat_id']:0);
-				$entity_id = (isset($data['entity_id'])?$data['entity_id']:'');
-				$doc_type = (isset($data['doc_type'])?$data['doc_type']:0);
+				$start		= isset($data['start']) && $data['start'] ? $data['start'] : 0;
+				$filter		= isset($data['filter'])?$data['filter']:'';
+				$query		= isset($data['query'])?$data['query']:'';
+				$sort		= isset($data['sort']) && $data['sort'] ? $data['sort'] : 'DESC';
+				$order		= isset($data['order'])?$data['order']:'';
+				$cat_id		= isset($data['cat_id']) && $data['cat_id'] ? $data['cat_id']:0;
+				$entity_id	= isset($data['entity_id'])?$data['entity_id']:'';
+				$doc_type	= isset($data['doc_type']) && $data['doc_type'] ? $data['doc_type']:0;
 			}
 
 			$sql = $this->bocommon->fm_cache('sql_document_' . $entity_id);
@@ -200,6 +193,15 @@
 			$where= 'WHERE';
 
 			$filtermethod = '';
+
+			$GLOBALS['phpgw']->config->read_repository();
+			if(isset($GLOBALS['phpgw']->config->config_data['acl_at_location']) && $GLOBALS['phpgw']->config->config_data['acl_at_location'])
+			{
+				$access_location = $this->bocommon->get_location_list(PHPGW_ACL_READ);
+				$filtermethod = " WHERE fm_document.loc1 in ('" . implode("','", $access_location) . "')";
+				$where= 'AND';
+			}
+
 			if(!$entity_id)
 			{
 				$filtermethod .= " $where ( fm_document.p_num is NULL OR fm_document.p_num='') ";
@@ -226,9 +228,7 @@
 			$querymethod = '';
 			if($query)
 			{
-				$query = preg_replace("/'/",'',$query);
-				$query = preg_replace('/"/','',$query);
-
+				$query = $this->db->db_addslashes($query);
 				$querymethod = " $where (fm_document.address $this->like '%$query%' or fm_document.location_code $this->like '$query%')";
 			}
 
@@ -315,9 +315,7 @@
 
 			if($query)
 			{
-				$query = preg_replace("/'/",'',$query);
-				$query = preg_replace('/"/','',$query);
-
+				$query = $this->db->db_addslashes($query);
 				$querymethod = " AND fm_document.title $this->like '%$query%' OR fm_document.document_name"
 				. " $this->like '%$query%' OR fm_document.location_code $this->like '$location_code%'";
 			}
