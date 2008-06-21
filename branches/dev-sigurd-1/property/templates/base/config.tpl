@@ -148,6 +148,15 @@
      </select>
     </td>
    </tr>
+   <tr class="row_on">
+    <td>{lang_Use_ACL_for_accessing_location_based_information}.</td>
+    <td>
+     <select name="newsettings[acl_at_location]">
+      <option value="" {selected_acl_at_location_}>NO</option>
+      <option value="1" {selected_acl_at_location_1}>YES</option>
+     </select>
+    </td>
+   </tr>
 
 <!--
 groupnotification

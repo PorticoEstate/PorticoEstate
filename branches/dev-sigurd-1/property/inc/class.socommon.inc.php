@@ -441,5 +441,30 @@
 			}
 			return $members;
 		}
-	}
 
+		/**
+		* Get list of accessible physical locations for current user
+		*
+		* @param integer $required Right the user has to be granted at location
+		*
+		* @return array $access_location list of accessible physical locations
+		*/
+
+		public function get_location_list($required)
+		{
+			$access_list	= $GLOBALS['phpgw']->acl->get_location_list('property',$required);
+
+			$needle = ".location.1.";
+			$needle_len = strlen($needle);
+			$access_location = array();
+			foreach($access_list as $location)
+			{
+				if(strrpos($location,$needle ) === 0)
+				{
+					$target_len = strlen($location)- $needle_len;
+					$access_location[] = substr($location,-$target_len);
+				}
+			}
+			return $access_location;
+		}
+	}

@@ -200,20 +200,6 @@
 				return;
 			}
 
-			$access_list	= $GLOBALS['phpgw']->acl->get_location_list('property',PHPGW_ACL_READ);
-
-			$needle = ".location.1.";
-			$needle_len = strlen($needle);
-			$access_location = array();
-			foreach($access_list as $location)
-			{
-				if(strrpos($location,$needle ) === 0)
-				{
-					$target_len = strlen($location)- $needle_len;
-					$access_location[] = substr($location,-$target_len);
-				}
-			}
-
 			$sql = $this->socommon->fm_cache('sql_'. $type_id . '_' . $lookup_tenant . '_' . $lookup);
 			$choice_table = 'phpgw_cust_choice';
 			$attribute_table = 'phpgw_cust_attribute';
@@ -468,8 +454,6 @@
 
 			$this->uicols = $uicols;
 
-			$where= 'WHERE';
-
 			if ($order)
 			{
 				$ordermethod = " order by $order $sort";
@@ -487,8 +471,16 @@
 				}
 			}
 
-			$filtermethod = " {$where} fm_location{$type_id}.loc1 in ('" . implode("','", $access_location) . "')";
-			$where= 'AND';
+			$where= 'WHERE';
+
+			$filtermethod = '';
+			$GLOBALS['phpgw']->config->read_repository();
+			if(isset($GLOBALS['phpgw']->config->config_data['acl_at_location']) && $GLOBALS['phpgw']->config->config_data['acl_at_location'])
+			{
+				$access_location = $this->bocommon->get_location_list(PHPGW_ACL_READ);
+				$filtermethod = " WHERE fm_location{$type_id}.loc1 in ('" . implode("','", $access_location) . "')";
+				$where= 'AND';
+			}
 
 			if ($cat_id > 0)
 			{
