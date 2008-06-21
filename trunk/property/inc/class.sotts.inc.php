@@ -80,21 +80,6 @@
 				$GLOBALS['phpgw']->session->appsession('grants_ticket','property',$this->grants);
 			}
 
-
-			$access_list	= $GLOBALS['phpgw']->acl->get_location_list('property',PHPGW_ACL_READ);
-
-			$needle = ".location.1.";
-			$needle_len = strlen($needle);
-			$access_location = array();
-			foreach($access_list as $location)
-			{
-				if(strrpos($location,$needle ) === 0)
-				{
-					$target_len = strlen($location)- $needle_len;
-					$access_location[] = substr($location,-$target_len);
-				}
-			}
-
 			if ($order)
 			{
 				$ordermethod = " order by $order $sort";
@@ -106,8 +91,14 @@
 
 			$where= 'WHERE';
 
-			$filtermethod = " {$where} fm_tts_tickets.loc1 in ('" . implode("','", $access_location) . "')";
-			$where= 'AND';
+			$filtermethod = '';
+			$GLOBALS['phpgw']->config->read_repository();
+			if(isset($GLOBALS['phpgw']->config->config_data['acl_at_location']) && $GLOBALS['phpgw']->config->config_data['acl_at_location'])
+			{
+				$access_location = $this->bocommon->get_location_list(PHPGW_ACL_READ);
+				$filtermethod = " WHERE fm_tts_tickets.loc1 in ('" . implode("','", $access_location) . "')";
+				$where= 'AND';
+			}
 
 			if (is_array($this->grants))
 			{
@@ -118,9 +109,8 @@
 				}
 				reset($public_user_list);
 				$filtermethod .= " $where ( fm_tts_tickets.user_id IN(" . implode(',',$public_user_list) . "))";
+				$where= 'AND';
 			}
-
-			$where= 'AND';
 
 			if($tenant_id = $GLOBALS['phpgw']->session->appsession('tenant_id','property'))
 			{
