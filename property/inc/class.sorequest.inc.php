@@ -168,24 +168,17 @@
 		{
 			if(is_array($data))
 			{
-				if ($data['start'])
-				{
-					$start=$data['start'];
-				}
-				else
-				{
-					$start=0;
-				}
-				$filter	= (isset($data['filter'])?$data['filter']:'');
-				$query = (isset($data['query'])?$data['query']:'');
-				$sort = (isset($data['sort'])?$data['sort']:'DESC');
-				$order = (isset($data['order'])?$data['order']:'');
-				$cat_id = (isset($data['cat_id'])?$data['cat_id']:0);
-				$status_id = (isset($data['status_id'])?$data['status_id']:0);
-				$project_id = (isset($data['project_id'])?$data['project_id']:'');
-				$project_id = (isset($data['project_id'])?$data['project_id']:'');
-				$allrows = (isset($data['allrows'])?$data['allrows']:'');
-				$list_descr = (isset($data['list_descr'])?$data['list_descr']:'');
+				$start			= isset($data['start']) && $data['start'] ? $data['start'] : 0;
+				$filter			= isset($data['filter'])?$data['filter']:'';
+				$query			= isset($data['query'])?$data['query']:'';
+				$sort			= isset($data['sort']) && $data['sort'] ? $data['sort'] : 'DESC';
+				$order			= isset($data['order'])?$data['order']:'';
+				$cat_id			= isset($data['cat_id'])?$data['cat_id']:0;
+				$status_id		= isset($data['status_id']) && $data['status_id'] ? $data['status_id']:0;
+				$project_id		= isset($data['project_id'])?$data['project_id']:'';
+				$project_id		= isset($data['project_id'])?$data['project_id']:'';
+				$allrows		= isset($data['allrows'])?$data['allrows']:'';
+				$list_descr		= isset($data['list_descr'])?$data['list_descr']:'';
 			}
 
 			$entity_table = 'fm_request';
@@ -260,6 +253,16 @@
 			}
 
 			$where = 'WHERE';
+			$filtermethod = '';
+
+			$GLOBALS['phpgw']->config->read_repository();
+			if(isset($GLOBALS['phpgw']->config->config_data['acl_at_location']) && $GLOBALS['phpgw']->config->config_data['acl_at_location'])
+			{
+				$access_location = $this->bocommon->get_location_list(PHPGW_ACL_READ);
+				$filtermethod = " WHERE fm_request.loc1 in ('" . implode("','", $access_location) . "')";
+				$where= 'AND';
+			}
+
 			if ($cat_id > 0)
 			{
 				$filtermethod .= " $where fm_request.category='$cat_id' ";
@@ -286,9 +289,7 @@
 
 			if($query)
 			{
-				$query = preg_replace("/'/",'',$query);
-				$query = preg_replace('/"/','',$query);
-
+				$query = $this->db->db_addslashes($query);
 				$querymethod = " $where (fm_request.title $this->like '%$query%' or fm_request.address $this->like '%$query%' or fm_request.location_code $this->like '%$query%')";
 			}
 
