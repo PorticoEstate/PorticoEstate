@@ -269,6 +269,8 @@
 
 		function set_permission($values,$r_processed,$set_grant = false,$initials='')
 		{
+			$this->acl->enable_inheritance = phpgw::get_var('enable_inheritance', 'bool', 'POST');
+
 			if($initials)
 			{
 				$this->so->set_initials($initials);

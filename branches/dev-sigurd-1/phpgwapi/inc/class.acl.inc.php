@@ -66,6 +66,11 @@
 		var $load_from_shm = false;
 
 		/**
+		* @var bool $enable_inheritance determines whether rights are inherited down the hierarchy when saving permissions
+		*/
+		public $enable_inheritance = false;
+
+		/**
 		* ACL constructor for setting account id
 		*
 		* Sets the ID for $account_id. Can be used to change a current instances id as well.
@@ -374,7 +379,18 @@
 				$appname = $GLOBALS['phpgw_info']['flags']['currentapp'];
 			}
 			
-			$location_filter = ($location?" AND acl_location $this->like '" . $location . "%'":'');
+			$location_filter = '';
+			if( $location )
+			{
+				if ( $this->enable_inheritance )
+				{
+					$location_filter = " AND acl_location {$this->like} '{$location}%'";
+				}
+				else
+				{
+					$location_filter = " AND acl_location = '{$location}'";				
+				}
+			}
 
 			$this->db->transaction_begin();
 
@@ -386,9 +402,8 @@
 			{
 				reset ($this->data[$this->account_id]);			
 
-				if($location)
+				if($location && $this->enable_inheritance)
 				{
-		//			while(list($idx,$value) = each($this->data[$this->account_id]))
 					foreach($this->data[$this->account_id] as $idx => $value)
 					{
 						if ( is_array($this->data[$this->account_id][$idx]) && count($this->data[$this->account_id][$idx]) && strpos($this->data[$this->account_id][$idx]['location'],$location)===0)

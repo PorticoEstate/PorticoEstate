@@ -567,7 +567,9 @@
 				'lang_no_location'				=> lang('No location'),
 				'lang_location_statustext'		=> lang('Select submodule'),
 				'select_name_location'			=> 'module',
-				'location_list'					=> $this->bopreferences->select_location('filter',$this->location,false)
+				'location_list'					=> $this->bopreferences->select_location('filter',$this->location,false),
+				'lang_enable_inheritance'		=> lang('enable inheritance'),
+				'lang_enable_inheritance_statustext'		=> lang('rights are inherited down the hierarchy'),
 			);
 
 			$appname	= lang('permission');
