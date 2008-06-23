@@ -1,7 +1,8 @@
 <?php
 	/**
-	* phpGroupWare - property: a Facilities Management System.
+	* phpGroupWare - admin
 	*
+	* @author Dave Hall <dave.hall@skwashd.com>
 	* @author Sigurd Nes <sigurdne@online.no>
 	* @copyright Copyright (C) 2003-2005 Free Software Foundation, Inc. http://www.fsf.org/
 	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
@@ -16,7 +17,7 @@
 	 * @package property
 	 */
 
-	class bo_custom
+	class admin_bo_custom
 	{
 		var $start;
 		var $query;
@@ -54,10 +55,10 @@
 			)
 		);
 
-		function bo_custom($session=False)
+		public function __construct($session=False)
 		{
 			$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
-			$this->so 		= CreateObject('phpgwapi.custom_fields');
+			$this->so			= createObject('phpgwapi.custom_fields');
 
 			if ($session)
 			{
@@ -106,7 +107,7 @@
 
 			$this->start	= (isset($data['start'])?$data['start']:'');
 			$this->query	= (isset($data['query'])?$data['query']:'');
-		//	$this->filter	= $data['filter'];
+			//$this->filter	= $data['filter'];
 			$this->sort		= (isset($data['sort'])?$data['sort']:'');
 			$this->order	= (isset($data['order'])?$data['order']:'');
 			$this->location	= (isset($data['location'])?$data['location']:'');
@@ -114,17 +115,31 @@
 			$this->allrows	= (isset($data['allrows'])?$data['allrows']:'');
 		}
 
-		function delete($location='',$appname='',$attrib_id='',$custom_function_id='')
+		/**
+		 * Delete what ever data you feel like, we can just keep on adding conditions to the if block here for you
+		 *
+		 * @param string $location the location
+		 * @param string $appname the application name
+		 * @param int $attrib_id the db pk for the attribute to delete
+		 * @param int $attrib_id the db pk for the attribute to delete
+		 *
+		 * @return void
+		 */
+		public function delete($location = '', $appname = '', $attrib_id = 0, $custom_function_id = 0)
 		{
-			if($attrib_id && $location && $appname && !$custom_function_id):
+			if ( !$attrib_id || !$location )
 			{
-				$this->so->_delete_attrib($location,$appname,$attrib_id);
+				return;
 			}
-			elseif($custom_function_id && $appname && $location):
+				
+			if ( $attrib_id && !$custom_function_id )
 			{
-				$this->so->_delete_custom_function($appname,$location,$custom_function_id);
+				$this->so->delete($appname, $location, $attrib_id);
 			}
-			endif;
+			else if ( $custom_function_id )
+			{
+				$GLOBALS['phpgw']->custom_functions->delete($appname, $location, $custom_function_id);
+			}
 		}
 
 		function get_attribs($appname = '',$location = '', $allrows = null)
@@ -133,8 +148,9 @@
 			{
 				$this->allrows = $allrows;
 			}
+
 			$inc_choices = false;
-		 	$attribs = $this->so->get_attribs($appname, $location, $this->start, $this->query, $this->sort, $this->order, $this->allrows, $inc_choices);
+		 	$attribs = $this->so->find($appname, $location, $this->start, $this->query, $this->sort, $this->order, $this->allrows, $inc_choices);
 
 			foreach( $attribs as &$attrib )
 			{
@@ -148,123 +164,200 @@
 
 		function get_attrib_single($appname,$location,$id)
 		{
-			return $this->so->get_attrib_single($appname,$location,$id);
+			return $this->so->get($appname,$location,$id);
 		}
 
 		function resort_attrib($id,$resort)
 		{
-			$this->so->resort_attrib($id, $resort, $this->appname, $this->location);
+			$this->so->resort($id, $resort, $this->appname, $this->location);
 		}
 
 		function save_attrib($attrib)
 		{
 			if (isset($attrib['id']) && $attrib['id'])
 			{
-					$receipt = $this->so->edit_attrib($attrib);
+				if ( $this->so->edit($attrib) )
+				{
+					return array
+					(
+						'msg'	=> array('msg' => lang('Custom function has been created'))
+					);
+				}
+
+				return array('error' => lang('Unable to edit custom field'));
 			}
 			else
 			{
-				$receipt = $this->so->add_attrib($attrib);
+				$id = $this->so->add($attrib);
+				if ( !$id  )
+				{
+					return array('error' => lang('Unable to add field'));
+				}
+				else if ( $id == -1 )
+				{
+					$receipt['id'] = 0;
+					$receipt['error'] = array();
+					$receipt['error'][] = array('msg' => lang('field already exists, please choose another name'));
+					$receipt['error'][] = array('msg'	=> lang('Attribute has NOT been saved'));
+				}
+
+				return array
+				(
+					'id'	=> $id,
+					'msg'	=> array('msg' => lang('Custom function has been created'))
+				);
 			}
-			return $receipt;
 		}
 
-
-		function read_custom_function($appname='',$location='',$allrows='')
+		function read_custom_function($appname, $location, $allrows = false)
 		{
-			if($allrows)
+			if ( $allrows )
 			{
 				$this->allrows = $allrows;
 			}
 
-			$custom_function = $this->so->read_custom_function(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
-											'appname' => $appname,'location' => $location,'allrows'=>$this->allrows));
+			$criteria = array
+			(
+				'start'		=> $this->start,
+				'query'		=> $this->query,
+				'sort'		=> $this->sort,
+				'order'		=> $this->order,
+				'appname'	=> $appname,
+				'location'	=> $location,
+				'allrows'	=> $this->allrows
+			);
 
-			$this->total_records = $this->so->total_records;
+			$custom_function = $GLOBALS['phpgw']->custom_functions->find($criteria);
+
+			$this->total_records = $GLOBALS['phpgw']->custom_functions->total_records;
 
 			return $custom_function;
 		}
 
-		function resort_custom_function($id,$resort)
+		/**
+		 * Resort a list of custom functions
+		 *
+		 * @param integer $id the db key of the function
+		 * @param string  $resort the direction to resort the item (up/down)
+		 *
+		 * @return void
+		 */
+		public function resort_custom_function($id, $resort)
 		{
-			$this->so->resort_custom_function(array('resort'=>$resort,'appname' => $this->appname,'location' => $this->location,'id'=>$id));
+			$args = array
+			(
+				'resort'	=> $resort,
+				'appname'	=> $this->appname,
+				'location'	=> $this->location,
+				'id'		=> $id
+			);
+			$GLOBALS['phpgw']->custom_functions->resort($args);
 		}
 
-		function save_custom_function($custom_function,$action='')
+		/**
+		 * Sigurd knows what I do
+		 *
+		 * @param string $custom_function ????
+		 * @param string $action          ????
+		 */
+		public function save_custom_function($custom_function, $action = '')
 		{
-			if ($action=='edit')
-			{
-				if ($custom_function['id'] != '')
-				{
+			$cfuncs =& $GLOBALS['phpgw']->custom_functions;
 
-					$receipt = $this->so->edit_custom_function($custom_function);
+			if ( $action == 'edit' )
+			{
+				if ( $custom_function['id'] != '' )
+				{
+					if ( $cfuncs->edit_custom_function($custom_function) )
+					{
+						return array('msg' => lang('Custom function has been updated'));
+					}
 				}
+				return array('error' => lang('Unable to edit custom function'));
 			}
 			else
 			{
-				$receipt = $this->so->add_custom_function($custom_function);
+				$id = $cfuncs->add_custom_function($custom_function);
+				if ( $id )
+				{
+					return array('id' => $id);
+				}
+				return array('error' => lang('Unable to add custom function'));
 			}
-			return $receipt;
 		}
 
-		function select_custom_function($selected='', $appname)
+		/**
+		 * Create an XSLT select widget compatiable array containing custom functions
+		 *
+		 * @param string $selected the name of the currently selected file
+		 * @param string $appname  the name of the module requesting the list
+		 *
+		 * @return array list of custom functions
+		 */
+		public static function select_custom_function($selected, $appname)
 		{
+			// prevent path traversal
+			if ( preg_match('/\./', $appname) 
+			 || !is_dir(PHPGW_SERVER_ROOT . "/{$appname}/inc/custom") )
+			{
+				return array();
+			}
+
+			$raw_list = array();
+			$dir = new DirectoryIterator(PHPGW_SERVER_ROOT . "/{$appname}/inc/custom"); 
+			if ( is_object($dir) )
+			{
+				foreach ( $dir as $file )
+				{
+					if ( (substr($file, 0, 1) != '.')
+						&& is_file("{$dirname}/{$file}") )
+					{
+						$raw_list[] = $file;
+					}
+				}
+			}
+
+			if ( !count($raw_list) )
+			{
+				return array();
+			}
+
+			sort($raw_list);
+
 			$file_list = array();
-			$dir = PHPGW_SERVER_ROOT . "{$appname}/inc/custom";
-			if ( !is_dir($dir) )
+			foreach ( $raw_list as $file )
 			{
-				return $file_list;
-			}
+				$fname = 
 
-			$dir_handle = opendir($dir);
-			$myfilearray = '';
-			if ($dir_handle)
-			{
-				while ($file = readdir($dir_handle))
+				$rec = array
+				(
+					'id'		=> $file,
+					'name'		=> preg_replace('/_/', ' ', $file),
+				);
+				if ( $myfile == $selected )
 				{
-					if ((substr($file, 0, 1) != '.') && is_file("{$dir}/{$file}") )
-					{
-						$myfilearray[] = $file;
-					}
+					// FIXME this should be a binary integer - not a string
+					$rec['selected'] = 'selected';
 				}
-				closedir($dir_handle);
-				sort($myfilearray);
-			}
 
-			if(isset($myfilearray)&&is_array($myfilearray))
-			{
-				for ($i=0;$i<count($myfilearray);$i++)
-				{
-					$fname = ereg_replace('_',' ',$myfilearray[$i]);
-					$sel_file = '';
-					if ($myfilearray[$i]==$selected)
-					{
-						$sel_file = 'selected';
-					}
-
-					$file_list[] = array
-					(
-						'id'		=> $myfilearray[$i],
-						'name'		=> $fname,
-						'selected'	=> $sel_file
-					);
-				}
-			}
-
-			for ($i=0;$i<count($file_list);$i++)
-			{
-				if ($file_list[$i]['selected'] != 'selected')
-				{
-					unset($file_list[$i]['selected']);
-				}
+				$file_list[] = $rec;
 			}
 
 			return $file_list;
 		}
 
-		function read_single_custom_function($appname='',$location='',$id)
+		/**
+		 * Fetch a single custom function
+		 *
+		 * @param string  $appname  the module the function belongs to
+		 * @param string  $location the location the function is used
+		 * @param integer $id       the ID for the function
+		 *
+		 * @return array the function values - null if not found
+		 */
+		function read_single_custom_function($appname, $location, $id)
 		{
-			return $this->so->read_single_custom_function($appname,$location,$id);
+			return $GLOBALS['phpgw']->custom_functions->get($appname, $location, $id);
 		}
 
 		function select_datatype($selected='')
@@ -338,4 +431,3 @@
 			return $entry_list;
 		}
 	}
-?>

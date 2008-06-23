@@ -1,105 +1,96 @@
 <?php
 	/**
-	* phpGroupWare custom fields
-	*
-	* @author Sigurd Nes <sigurdne@online.no>
-	* @author Dave Hall dave.hall at skwashd.com
-	* @copyright Copyright (C) 2003-2006 Free Software Foundation http://www.fsf.org/
-	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
-	* @internal Development of this application was funded by http://www.bergen.kommune.no/bbb_/ekstern/
-	* @package phpgwapi
-	* @version $Id$
-	*/
+	 * phpGroupWare custom fields
+	 *
+	 * @author Sigurd Nes <sigurdne@online.no>
+	 * @author Dave Hall dave.hall at skwashd.com
+	 * @copyright Copyright (C) 2003-2006 Free Software Foundation http://www.fsf.org/
+	 * @license http://www.gnu.org/licenses/gpl.html GNU General Public License v3 or later
+	 * @internal Development of this application was funded by http://www.bergen.kommune.no/bbb_/ekstern/
+	 * @package phpgroupware
+	 * @subpackage phpgwapi
+	 * @version $Id$
+	 */
+
+	/*
+	   This program is free software: you can redistribute it and/or modify
+	   it under the terms of the GNU General Public License as published by
+	   the Free Software Foundation, either version 3 of the License, or
+	   (at your option) any later version.
+
+	   This program is distributed in the hope that it will be useful,
+	   but WITHOUT ANY WARRANTY; without even the implied warranty of
+	   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	   GNU Lesser General Public License for more details.
+
+	   You should have received a copy of the GNU General Public License
+	   along with this program.  If not, see <http://www.gnu.org/licenses/>.
+	 */
+
+	/*
+	 * Import the datetime class for date processing
+	 */
+	phpgw::import_class('phpgwapi.datetime');
 
 	/**
 	 * Custom Fields
-	 * @package phpgwapi
+	 *
+	 * @package phpgroupware
+	 * @subpackage phpgwapi
 	 */
-	phpgw::import_class('phpgwapi.datetime');
-	class custom_fields
+	class phpgwapi_custom_fields
 	{
-		/**
-		 * @var string $appname the name of the current application
-		 */
-		var $appname;
-		
-		/**
-		 * @var array $grants the various rights for this current location
-		 */
-		var $grants;
-		
-		/**
-		 * @var string $location the name of the current location
-		 */
-		var $location;
-
-
-		/**
-		 * @var array $public_functions the publicly available methods of this class
-		 * @internal TODO remove most of these as it is an api bo+so class 
-		 */
-		var $public_functions = array
-		(
-			'check_perms'		=> true,
-			'delete'			=> true,
-			'read'				=> true,
-			'read_single'		=> true,
-			'save'				=> true
-		);
-
-		/**
-		* @var int $total_records total number of records found
-		*/
-		var $total_records = 0;
-
-		var $soap_functions = array(
-			'list' => array(
-				'in'  => array('int','int','struct','string','int'),
-				'out' => array('array')
-			),
-			'read' => array(
-				'in'  => array('int','struct'),
-				'out' => array('array')
-			),
-			'save' => array(
-				'in'  => array('int','struct'),
-				'out' => array()
-			),
-			'delete' => array(
-				'in'  => array('int','struct'),
-				'out' => array()
-			)
-		);
-
 		/**
 		* @var array $datatype_text the translated end user field types
 		*/
-		var $datatype_text = array();
+		protected $datatype_text = array();
+
+		/**
+		 * @var string $_appname the name of the current application
+		 */
+		protected $_appname;
+
+		/**
+		 * @var object $_db reference to the global database object
+		 */
+		protected $_db;
+
+		/**
+		 * @var string $_join SQL JOIN statement
+		 */
+		protected $_join;
+
+		/**
+		 * @var string $_like SQL LIKE statement
+		 */
+		protected $_like;
+
+		/**
+		* @var int $_total_records total number of records found
+		*/
+		protected $_total_records = 0;
 
 		/**
 		 * Constructor
+		 *
+		 * @param string $appname the name of the module using the custom fields
+		 *
+		 * @return void
 		 */
-		function custom_fields($appname='', $location='')
+		public function __construct($appname = null)
 		{
-			$this->appname = $appname;
-			if ( strlen($this->appname) == 0 )
+			$this->_appname = $appname;
+			if ( is_null($this->_appname) )
 			{
-				$this->appname =& $GLOBALS['phpgw_info']['flags']['currentapp'];
+				$this->_appname =& $GLOBALS['phpgw_info']['flags']['currentapp'];
 			}
 			
-			$this->location = $location;
-		
-			$this->account			= $GLOBALS['phpgw_info']['user']['account_id'];
-			$this->db           	=& $GLOBALS['phpgw']->db; // clone to avoid conflict the db in lang-function
-			$this->join				= $this->db->join;
-			$this->like				= $this->db->like;
-			$this->dateformat 		= phpgwapi_db::date_format();
-			$this->datetimeformat 	= phpgwapi_db::datetime_format();
-
-			if($this->appname && $this->location)
-			{
-				$this->category_name	= $this->read_category_name($this->appname, $this->location);
-			}
+			$this->_db           	=& $GLOBALS['phpgw']->db;
+			$this->_join			=& $this->_db->join;
+			$this->_like			=& $this->_db->like;
+			$this->_dateformat 		= phpgwapi_db::date_format();
+			$this->_datetimeformat 	= phpgwapi_db::datetime_format();
+			$this->_db->Halt_On_Error = 'yes';
 
 			$this->datatype_text = array
 			(
@@ -117,6 +108,26 @@
 				'email'	=> lang('Email'),
 				'link'	=> lang('Link')
 			);
+
+			$this->_oProc			= createObject('phpgwapi.schema_proc', $GLOBALS['phpgw_info']['server']['db_type']);
+			$this->_oProc->m_odb	=& $this->_db;
+		}
+
+		/**
+		 * Magic get method
+		 *
+		 * @param string $varname the variable to fetch
+		 *
+		 * @return mixed the value of the variable sought - null if not found
+		 */
+		public function __get($varname)
+		{
+			if ( $varname == 'total_records' )
+			{
+				return $this->_total_records;
+			}
+
+			return null;
 		}
 
 		/**
@@ -125,499 +136,567 @@
 		 * @param array $attrib the field data
 		 * @param string $attrib_table where to append the attrib
 		 * @param bool $doubled sometimes the attribute fits into a history-table as a double
+		 *
 		 * @return int the the new custom field db pk
 		 */
-		//FIXME
-		function add_attrib($attrib, $attrib_table = '', $doubled = false)
+		public function add($attrib, $attrib_table = null, $doubled = false)
 		{
 			$receipt = array();
-			$location_id = $GLOBALS['phpgw']->locations->get_id($attrib['appname'], $attrib['location']);
 
-			// Checkboxes are only present if ticked, so we declare them here to stop errors
-			$attrib['search'] = isset($attrib['search']) ? !!$attrib['search'] : false;
-			$attrib['list'] = isset($attrib['list']) ? !!$attrib['list'] : false;
-			$attrib['history'] = isset($attrib['history']) ? !!$attrib['history'] : false;
+			$appname	= $attrib['appname'];
+			$location	= $attrib['location'];
 
-			$attrib['column_name'] = $this->db->db_addslashes(strtolower($attrib['column_name']));
-			$attrib['input_text'] = $this->db->db_addslashes($attrib['input_text']);
-			$attrib['statustext'] = $this->db->db_addslashes($attrib['statustext']);
-			$attrib['default'] =  isset($arrib['default']) ? $this->db->db_addslashes($attrib['default']) : '';
-			$attrib['helpmsg'] = $this->db->db_addslashes($attrib['helpmsg']);
-
-			$sql = "SELECT * FROM phpgw_cust_attribute WHERE location_id = {$location_id} AND column_name = '{$attrib['column_name']}'";
-			$this->db->query($sql,__LINE__,__FILE__);
-			if ( $this->db->next_record() && !$doubled)
+			// don't continue if the location is invalid
+			$location_id = $GLOBALS['phpgw']->locations->get_id($appname, $location);
+			if ( !$location_id )
 			{
-				$receipt['id'] = 0;
-				$receipt['error'] = array();
-				$receipt['error'][] = array('msg' => lang('field already exists, please choose another name'));
-				$receipt['error'][] = array('msg'	=> lang('Attribute has NOT been saved'));
-				return $receipt; //no point continuing
+				return 0;
 			}
 
-
-
-			$sql = 'SELECT MAX(attrib_sort) AS max_sort, MAX(id) AS current_id FROM phpgw_cust_attribute'
-					. " WHERE location_id = {$location_id}";
-			$this->db->query($sql,__LINE__,__FILE__);
-			$this->db->next_record();
-			$attrib_sort	= $this->db->f('max_sort')+1;
-			$attrib['id']	= $this->db->f('current_id')+1;		
-			
-			if($attrib['column_info']['type']=='R' || $attrib['column_info']['type']== 'CH' || $attrib['column_info']['type'] =='LB' || $attrib['column_info']['type'] =='AB' || $attrib['column_info']['type'] =='VENDOR')
-			{
-				if ( $attrib['history'] )
-				{
-					$receipt['error'][] = array('msg'	=> lang('History not allowed for this datatype'));
-				}
-
-				$attrib['history'] = false;
-			}
-
-			$values= array
+			$values = array
 			(
-				$location_id,
-				$attrib['id'],
-				$attrib['column_name'],
-				$attrib['input_text'],
-				$attrib['statustext'],
-				$attrib['search'],
-				$attrib['list'],
-				$attrib['history'],
-				$attrib['disabled'],
-				$attrib['helpmsg'],
-				$attrib_sort,
-				$attrib['column_info']['type'],
-				$attrib['column_info']['precision'],
-				$attrib['column_info']['scale'],
-				$attrib['column_info']['default'],
-				$attrib['column_info']['nullable']
+				'location_id'	=> $location_id,
+				'id'			=> 0,
+				'column_name'	=> $this->_db->db_addslashes(strtolower($attrib['column_name'])),
+				'input_text'	=> $this->_db->db_addslashes($attrib['input_text']),
+				'statustext'	=> $this->_db->db_addslashes($attrib['statustext']),
+				'search'		=> false,
+				'list'			=> false,
+				'history'		=> false,
+				'disabled'		=> false,
+				'helpmsg'		=> $this->_db->db_addslashes($attrib['helpmsg']),
+				'attrib_sort'	=> 0,
+				'datatype'		=> $this->_db->db_addslashes($attrib['column_info']['type']),
+				'precision_'	=> (int) $attrib['column_info']['precision'],
+				'scale'			=> (int) $attrib['column_info']['scale'],
+				'default_value'	=> '',
+				'nullable'		=> false
 			);
 
-			$values	= $this->db->validate_insert($values);
-
-			$this->_init_process();
-
-			$this->db->transaction_begin();
-
-			if(!$doubled)
+			if ( isset($attrib['search']) )
 			{
-				$this->db->query("INSERT INTO phpgw_cust_attribute (location_id,id,column_name, input_text, statustext,search,list,history,disabled,helpmsg,attrib_sort, datatype,precision_,scale,default_value,nullable) "
-					. "VALUES ($values)",__LINE__,__FILE__);
+				$values['search'] = !!$attrib['search'];
 			}
 
-			$receipt['id']= $attrib['id'];
-
-			if(!$attrib['column_info']['precision'])
+			if ( isset($attrib['list']) )
 			{
-				if($precision = $this->translate_datatype_precision($attrib['column_info']['type']))
+				$values['list'] = !!$attrib['list'];
+			}
+
+			if ( isset($attrib['history']) )
+			{
+				$values['history'] = !!$attrib['history'];
+			}
+
+			if ( isset($attrib['default']) )
+			{
+				$values['default_value'] = $this->_db->db_addslashes($attrib['column_info']['default']);
+			}
+
+			switch ( $values['datatype'] )
+			{
+				case 'R':
+				case 'CH':
+				case 'LB':
+				case 'AB':
+				case 'VENDOR':
+					if ( $attrib['history'] )
+					{
+						$receipt['error'][] = array('msg' => lang('History not allowed for this datatype'));
+					}
+					$values['history'] = false;
+					break;
+
+				default: // all is good
+			}
+
+			unset($attrib);
+
+			$this->_db->transaction_begin();
+
+			$sql = "SELECT id FROM phpgw_cust_attribute"
+				. " WHERE location_id = {$values['location_id']}"
+					. " AND column_name = '{$values['column_name']}'";
+			$this->_db->query($sql, __LINE__, __FILE__);
+			if ( $this->_db->next_record() && !$doubled)
+			{
+				return -1;
+			}
+
+			$sql = 'SELECT MAX(attrib_sort) AS max_sort, MAX(id) AS current_id'
+				. ' FROM phpgw_cust_attribute '
+				. " WHERE location_id ='{$values['location_id']}'";
+			$this->_db->query($sql, __LINE__, __FILE__);
+			$this->_db->next_record();
+			$values['attrib_sort']	= $this->_db->f('max_sort') + 1;
+			$values['id']	= $this->_db->f('current_id') + 1;		
+			
+			$cols = implode(', ', array_keys($values));
+			$vals = $this->_db->validate_insert($values);
+
+			if ( !$doubled )
+			{
+				$sql = "INSERT INTO phpgw_cust_attribute({$cols}) VALUES({$vals})";
+				$this->_db->query($sql, __LINE__, __FILE__);
+			}
+
+			unset($cols, $vals);
+
+			$receipt['id'] = $values['id'];
+
+			if ( !$values['precision_'] )
+			{
+				$precision = $this->_translate_datatype_precision($values['datatype']);
+				if ( $precision )
 				{
-					$attrib['column_info']['precision']=$precision;
+					$values['precision_'] = $precision;
 				}
 			}
 
-			$attrib['column_info']['type']  = $this->translate_datatype_insert($attrib['column_info']['type']);
+			$col_info = array
+			(
+				'type'		=> $this->_translate_datatype_insert($values['datatype']),
+				'precision'	=> (int) $values['precision_'],
+				'scale'		=> (int) $values['scale'],
+				'default'	=> $values['default_value'],
+				'nullable'	=> $values['nullable']
+			);
 
-			if(!$attrib['column_info']['default'])
+			if ( !$col_info['default'] )
 			{
-				unset($attrib['column_info']['default']);
+				unset($col_info['default']);
 			}
 
-			if(!$attrib_table)
+			if ( is_null($attrib_table) )
 			{
-				$attrib_table = $this->get_attrib_table($attrib['appname'],$attrib['location']);
+				$attrib_table = $GLOBALS['phpgw']->locations->get_attrib_table($appname, $location);
 			}
 
-			$this->oProc->m_odb->transaction_begin();
+			$this->_oProc->AddColumn($attrib_table, $values['column_name'], $col_info);
 
-			$this->oProc->AddColumn($attrib_table,$attrib['column_name'], $attrib['column_info']);
-
-			if($this->oProc->m_odb->transaction_commit())
+			if ( $this->_db->transaction_commit() )
 			{
-				$receipt['message'][] = array('msg'	=> lang('Attribute has been saved')	);
-				$this->db->transaction_commit();
-			}
-			else
-			{
-				$receipt['error'][] = array('msg'	=> lang('column could not be added')	);
-				if($this->db->Transaction)
-				{
-					$this->db->transaction_abort();
-				}
-				else
-				{
-					$this->db->query("DELETE FROM phpgw_cust_attribute WHERE location_id = {$location_id} AND id='{$receipt['id']}'",__LINE__,__FILE__);
-					unset($receipt['id']);
-
-				}
+				return $values['id'];
 			}
 
-			return $receipt;
+			return 0;
 		}
 
 		/**
-		 * Add a custom function
-		 * 
-		 * @internal get more info from sigud so this can be documented - skwashd Apr2006
+		 * Prepare an attribute value so it can be saved in the database
+		 *
+		 * @param array $values_attribute an attribute structure
+		 *
+		 * @return array the structure with the value prepared
+		 *
+		 * @internal the name of this method is misleading
 		 */
-		function add_custom_function($custom_function)
+		public function convert_attribute_save($values_attribute = null)
 		{
-			if(!$custom_function['location'] || !$custom_function['appname'])
+			if ( !is_array($values_attribute) )
 			{
-				return 	$receipt['error'][] = array('msg' => lang('location or appname is missing'));
-			}
-			else
-			{
-				$location = $custom_function['location'];
-				$appname = $custom_function['appname'];
+				return '';
 			}
 
-			$location_id = $GLOBALS['phpgw']->locations->get_id($appname, $location);
+			foreach ( $values_attribute as &$attrib )
+			{
+				if ( !$attrib['value'] )
+				{
+					continue;
+				}
 
-			$custom_function['descr'] = $this->db->db_addslashes($custom_function['descr']);
+				switch ( $attrib['datatype'] )
+				{
+					case 'CH':
+						$attrib['value'] = serialize($attrib['value']);
+						break;
 
-			$this->db->transaction_begin();
-			$this->db->query("SELECT max(id) as maximum FROM phpgw_cust_function WHERE location_id = {$location_id}",__LINE__,__FILE__);
-			$this->db->next_record();
-			$custom_function['id'] = $this->db->f('maximum')+1;
+					case 'R':
+						$attrib['value'] = $attrib['value'][0];
+						break;
 
-			$sql = "SELECT max(custom_sort) as max_sort FROM phpgw_cust_function WHERE location_id = {$location_id}";
-			$this->db->query($sql,__LINE__,__FILE__);
-			$this->db->next_record();
-			$custom_sort	= $this->db->f('max_sort')+1;
+					case 'N':
+						$attrib['value'] = str_replace(',', '.', $attrib['value']);
+						break;
 
-			$values= array
-			(
-				$appname,
-				$location,
-				$custom_function['id'],
-				$custom_function['custom_function_file'],
-				$custom_function['descr'],
-				$custom_function['active'],
-				$custom_sort
-			);
-
-			$values	= $this->db->validate_insert($values);
-
-			$this->db->query("INSERT INTO phpgw_cust_function (appname,location, id, file_name, descr, active, custom_sort) "
-				. "VALUES ($values)",__LINE__,__FILE__);
-
-			$receipt['id']= $custom_function['id'];
-
-			$this->db->transaction_commit();
-
-			return $receipt;
+					case 'D':
+						$ts = phpgwapi_datetime::date_to_timestamp($attrib['value']);
+						$attrib['value'] = date($this->_dateformat, $ts);
+						break;
+				}
+			}
+			return $values_attribute;
 		}
 
 		/**
 		 * Delete a custom attribute or custom function
 		 * 
-		 * @param string $location the location
-		 * @param string $appname the application name
-		 * @param int $attrib_id the db pk for the attribute to delete
-		 * @param int $function_id the db pk of the function to delete
+		 * @param string  $appname the application name
+		 * @param string  $location the location
+		 * @param integer $attrib_id the db pk for the attribute to delete
+		 *
+		 * @return boolean was the record deleted?
 		 */
-		function delete($location, $appname, $attrib_id=0,$function_id=0)
+		public function delete($appname, $location, $attrib_id)
 		{
-			if($attrib_id && $location && $appname && !$function_id):
+			$loc_id		= $GLOBALS['phpgw']->locations->get_id($appname, $location);
+			$table		= $GLOBALS['phpgw']->locations->get_attrib_table($appname, $location);
+			$attrib_id	= (int) $attrib_id;
+
+			$this->_db->transaction_begin();
+			$sql = "SELECT column_name FROM phpgw_cust_attribute"
+				. " WHERE location_id = {$loc_id} AND id = {$attrib_id}";
+			$this->_db->query($sql, __LINE__, __FILE__);
+			if ( !$this->_db->next_record() )
 			{
-				$this->_delete_attrib($location,$appname,$attrib_id);
+				$this->_db->transaction_abort();
+				return false;
 			}
-			elseif($function_id && $appname && $location):
+
+			$column_name = $this->_db->f('column_name');
+
+			$this->_oProc->DropColumn($table, false, $column_name);
+
+			$sql = "SELECT attrib_sort FROM phpgw_cust_attribute"
+				. " WHERE location_id = {$loc_id} AND id = {$attrib_id}";
+			$this->_db->query($sql,__LINE__,__FILE__);
+			$this->_db->next_record();
+			$attrib_sort	= $this->_db->f('attrib_sort');
+
+			$sql = "SELECT MAX(attrib_sort) AS max_sort"
+				. " FROM phpgw_cust_attribute WHERE location_id = {$loc_id}";
+			$this->_db->query($sql, __LINE__, __FILE__);
+			$this->_db->next_record();
+			$max_sort	= $this->_db->f('max_sort');
+			
+			if ( $max_sort > $attrib_sort )
 			{
-				$this->_delete_custom_function($appname,$location,$function_id);
+				$sql = "UPDATE phpgw_cust_attribute SET attrib_sort = attrib_sort - 1"
+					. " WHERE location_id = {$loc_id} AND attrib_sort > {$attrib_sort}";
+				$this->_db->query($sql, __LINE__, __FILE__);
 			}
-			endif;
+
+			return $this->_db->transaction_commit();
 		}
 
 		/**
 		 * Edit a custom field
 		 * 
-		 * @param array $attrib the field data
-		 * @param string $attrib_table where to edit the attrib
-		 * @return int the field db pk
+		 * @param array  $attrib       the field data
+		 * @param string $attrib_table which table the attribute is part of
+		 *
+		 * @return integer the database id of the attribute
 		 */
-		function edit_attrib($attrib, $attrib_table = '')
+		public function edit($attrib, $attrib_table = '')
 		{
-			// Checkboxes are only present if ticked, so we declare them here to stop errors
-			$attrib['search'] = isset($attrib['search']) ? !!$attrib['search'] : false;
-			$attrib['list'] = isset($attrib['list']) ? !!$attrib['list'] : false;
-			$attrib['history'] = isset($attrib['history']) ? !!$attrib['history'] : false;
-
 			if(!$attrib_table)
 			{
-				$attrib_table = $this->get_attrib_table($attrib['appname'],$attrib['location']);
+				$attrib_table = $GLOBALS['phpgw']->locations->get_attrib_table($attrib['appname'], $attrib['location']);
 			}
 
-			$location_id = $GLOBALS['phpgw']->locations->get_id($attrib['appname'], $attrib['location']);
-
-			$choice_table = 'phpgw_cust_choice';
-
-			$attrib['column_name'] = $this->db->db_addslashes($attrib['column_name']);
-			$attrib['input_text'] = $this->db->db_addslashes($attrib['input_text']);
-			$attrib['statustext'] = $this->db->db_addslashes($attrib['statustext']);
-			$attrib['helpmsg'] = $this->db->db_addslashes($attrib['helpmsg']);
-			$attrib['column_info']['default'] = $this->db->db_addslashes($attrib['column_info']['default']);
-
-			if($attrib['column_info']['type']=='R' || $attrib['column_info']['type']== 'CH' || $attrib['column_info']['type'] =='LB' || $attrib['column_info']['type'] =='AB' || $attrib['column_info']['type'] =='VENDOR')
-			{
-				if ($attrib['history'])
-				{
-					$receipt['error'][] = array('msg'	=> lang('History not allowed for this datatype'));
-				}
-				
-				$attrib['history'] = false;
-			}
-
-			$this->db->query("SELECT column_name, datatype,precision_ FROM phpgw_cust_attribute WHERE location_id = {$location_id} AND id='" . $attrib['id']. "'",__LINE__,__FILE__);
-			$this->db->next_record();
-			$OldColumnName		= $this->db->f('column_name');
-			$OldDataType		= $this->db->f('datatype');
-			$OldPrecision		= $this->db->f('precision_');			
-			
-			$table_def = $this->get_table_def($attrib_table);	
-
-			$this->db->transaction_begin();
-
-			$value_set = array
+			$values = array
 			(
-				'input_text'	=> $attrib['input_text'],
-				'statustext'	=> $attrib['statustext'],
-				'search'		=> isset($attrib['search']) ? $attrib['search'] : '',
-				'list'			=> isset($attrib['list']) ? $attrib['list'] : '',
-				'history'		=> isset($attrib['history']) ? $attrib['history'] : '',
-				'nullable'		=> $attrib['column_info']['nullable'] == 'False' ? 'False' : 'True',
-				'disabled'		=> isset($attrib['disabled']) ? $attrib['disabled'] : '',
-				'helpmsg'		=> $attrib['helpmsg'],
+				'location_id'	=> $GLOBALS['phpgw']->locations->get_id($attrib['appname'], $attrib['location']),
+				'id'			=> (int) $attrib['id'],
+				'column_name'	=> $this->_db->db_addslashes(strtolower($attrib['column_name'])),
+				'input_text'	=> $this->_db->db_addslashes($attrib['input_text']),
+				'statustext'	=> $this->_db->db_addslashes($attrib['statustext']),
+				'search'		=> false,
+				'list'			=> false,
+				'history'		=> false,
+				'disabled'		=> false,
+				'helpmsg'		=> $this->_db->db_addslashes($attrib['helpmsg']),
+				'attrib_sort'	=> 0,
+				'datatype'		=> $this->_db->db_addslashes($attrib['column_info']['type']),
+				'precision_'	=> (int) $attrib['column_info']['precision'],
+				'scale'			=> (int) $attrib['column_info']['scale'],
+				'default_value'	=> '',
+				'nullable'		=> false
 			);
 
-			$value_set	= $this->db->validate_update($value_set);
-
-			$this->db->query("UPDATE phpgw_cust_attribute set $value_set WHERE location_id = {$location_id} AND id=" . $attrib['id'],__LINE__,__FILE__);
-
-			$this->oProc->m_odb->transaction_begin();
-
-			$this->oProc->m_aTables = $table_def;
-
-			if($OldColumnName !=$attrib['column_name'])
+			$new_choice = '';
+			if ( isset($attrib['new_choice']) )
 			{
-				$value_set=array('column_name'	=> $attrib['column_name']);
-
-				$value_set	= $this->db->validate_update($value_set);
-
-				$this->db->query("UPDATE phpgw_cust_attribute set $value_set WHERE location_id = {$location_id} AND id=" . $attrib['id'],__LINE__,__FILE__);
-
-				$this->oProc->RenameColumn($attrib_table, $OldColumnName, $attrib['column_name']);
+				$new_choice = $attrib['new_choice'];
 			}
 
-			if (($OldDataType != $attrib['column_info']['type']) || ($OldPrecision != $attrib['column_info']['precision']) )
+			$delete_choice = array();
+			if ( isset($attrib['delete_choice']) 
+					&& is_array($attrib['delete_choice']) )
 			{
-				if($attrib['column_info']['type']!='R' && $attrib['column_info']['type']!='CH' && $attrib['column_info']['type']!='LB')
+				$delete_choice = $attrib['delete_choice'];
+			}
+
+			if ( isset($attrib['search']) )
+			{
+				$values['search'] = !!$attrib['search'];
+			}
+
+			if ( isset($attrib['list']) )
+			{
+				$values['list'] = !!$attrib['list'];
+			}
+
+			if ( isset($attrib['history']) )
+			{
+				$values['history'] = !!$attrib['history'];
+			}
+
+			if ( isset($attrib['default']) )
+			{
+				$values['default_value'] = $this->_db->db_addslashes($attrib['column_info']['default']);
+			}
+
+			switch ( $values['datatype'] )
+			{
+				case 'R':
+				case 'CH':
+				case 'LB':
+				case 'AB':
+				case 'VENDOR':
+					if ( $attrib['history'] )
+					{
+						$receipt['error'][] = array('msg'	=> lang('History not allowed for this datatype'));
+					}
+					$values['history'] = false;
+					break;
+
+				default: // all is good
+			}
+
+			unset($attrib);
+
+			$sql = "SELECT column_name, datatype, precision_ FROM phpgw_cust_attribute " 
+				. " WHERE location_id  = {$values['location_id']} AND id = {$values['id']}";
+			$this->_db->query($sql, __LINE__, __FILE__);
+			if ( !$this->_db->next_record() )
+			{
+				// doesn't exist so we can't edit it
+				return false;
+			}
+
+			$old_column_name	= $this->_db->f('column_name');
+			$old_data_type		= $this->_db->f('datatype');
+			$old_precision		= $this->_db->f('precision_');			
+			
+			$table_def = $this->_get_table_def($attrib_table);	
+
+			$this->_db->transaction_begin();
+
+			$this->_oProc->m_aTables = $table_def;
+
+			if ( $old_column_name != $values['column_name'] )
+			{
+				$this->_oProc->RenameColumn($attrib_table, $old_column_name, $values['column_name']);
+			}
+
+			if ( $old_data_type != $attrib['datatype']
+				|| $old_precision != $attrib['precision_'] )
+			{
+				switch ( $values['datatype'] )
 				{
-					$this->db->query("DELETE FROM $choice_table WHERE location_id = {$location_id} AND attrib_id=" . $attrib['id'],__LINE__,__FILE__);
+					default:
+						$sql = "DELETE FROM phpgw_cust_choice"
+							. " WHERE location_id = {$values['location_id']}"
+								. " AND attrib_id = {$values['id']}";
+						$this->_db->query($sql, __LINE__, __FILE__);
+						break;
+					case 'R':
+					case 'CH':
+					case 'LB':
+						//do nothing
 				}
 
-				if(!$attrib['column_info']['precision'])
+				if ( !$values['precision_'] )
 				{
-					if($precision = $this->translate_datatype_precision($attrib['column_info']['type']))
+					$precision = $this->_translate_datatype_precision($values['datatype']);
+					if ( $precision )
 					{
-						$attrib['column_info']['precision']=$precision;
+						$values['precision_'] = $precision;
 					}
 				}
 
-				if(!isset($attrib['column_info']['default']))
+				if ( !$values['default'] )
 				{
-					unset($attrib['column_info']['default']);
+					unset($values['default']);
 				}
 
-				$value_set=array(
-					'column_name'	=> $attrib['column_name'],
-					'datatype'		=> $attrib['column_info']['type'],
-					'precision_'	=> $attrib['column_info']['precision'],
-					'scale'			=> $attrib['column_info']['scale'],
-					'default_value'	=> $attrib['column_info']['default'],
-					'nullable'		=> $attrib['column_info']['nullable']
-					);
-
-				$value_set	= $this->db->validate_update($value_set);
-
-				$this->db->query("UPDATE phpgw_cust_attribute set $value_set WHERE location_id = {$location_id} AND id=" . (int)$attrib['id'],__LINE__,__FILE__);
-
-				$attrib['column_info']['type']  = $this->translate_datatype_insert($attrib['column_info']['type']);
-				$this->oProc->AlterColumn($attrib_table,$attrib['column_name'],$attrib['column_info']);			
-			}
-			
-			if(isset($attrib['new_choice']) && $attrib['new_choice'])
-			{
-				$choice_id = $this->next_id($choice_table ,array('location_id'=>$location_id, 'attrib_id'=>$attrib['id']));
-
-				$values= array(
-					$location_id,
-					$attrib['id'],
-					$choice_id,
-					$attrib['new_choice']
-					);
-
-				$values	= $this->db->validate_insert($values);
-
-				$this->db->query("INSERT INTO $choice_table (location_id,attrib_id,id,value) "
-				. "VALUES ($values)",__LINE__,__FILE__);
+				$col_info = array
+				(
+					'type'		=> $this->_translate_datatype_insert($values['datatype']),
+					'precision'	=> (int) $values['precision_'],
+					'scale'		=> (int) $values['scale'],
+					'default'	=> $values['default_value'],
+					'nullable'	=> $values['nullable']
+				);
+				
+				$this->_oProc->AlterColumn($attrib_table, $values['column_name'], $col_info['column_info']);
 			}
 
-			if(isset($attrib['delete_choice']) && is_array($attrib['delete_choice']))
+			$vals = $this->_db->validate_update($values);
+			$sql = 'UPDATE phpgw_cust_attribute'
+					. " SET {$vals}"
+					. " WHERE  location_id = {$values['location_id']}"
+						. " AND id = {$values['id']}";
+			$this->_db->query($sql ,__LINE__,__FILE__);
+
+			if ( $new_choice )
 			{
-				for ($i=0;$i<count($attrib['delete_choice']);$i++)
+				$choice_vals = array
+				(
+					'location_id'	=> $values['location_id'],
+					'attrib_id'		=> $values['id']
+				);
+				$choice_id = 
+
+				$choice_vals['id']		= $this->_next_id('phpgw_cust_choice', $choice_vals);
+				$choice_vals['value']	= $new_choice;
+
+				$cols = implode(',', array_keys($choice_vals));
+				$vals = $this->_db->validate_insert($choice_vals);
+
+				$sql = "INSERT INTO phpgw_cust_choice({$cols}) VALUES({$vals})";
+				$this->_db->query($sql, __LINE__, __FILE__);
+				unset($choice_vals);
+			}
+
+			if ( count($delete_choice) )
+			{
+				foreach ( $delete_choice as $choice )
 				{
-					$this->db->query("DELETE FROM $choice_table WHERE location_id = {$location_id} AND attrib_id=" . (int)$attrib['id']  ." AND id=" . (int)$attrib['delete_choice'][$i],__LINE__,__FILE__);
+					$choice = (int) $choice;
+					$sql = "DELETE FROM phpgw_cust_choice"
+						. " WHERE location_id = {$values['location_id']}"
+							. " AND attrib_id = {$choice}";
+					$this->_db->query($sql, __LINE__, __FILE__);
 				}
 			}
 
-			$this->db->transaction_commit();
-			$this->oProc->m_odb->transaction_commit();
-			$receipt['message'][] = array('msg'	=> lang('Attribute has been edited'));
-
-			return $receipt;
-		}
-
-
-		/**
-		* @internal TODO document me :)
-		*/
-		function edit_custom_function($custom_function)
-		{
-			if(!$custom_function['location'] || !$custom_function['appname'])
+			if ( $this->_db->transaction_commit() )
 			{
-				return 	$receipt['error'][] = array('msg' => lang('location or appname is missing'));
-			}
-			else
-			{
-				$location = $custom_function['location'];
-				$appname = $custom_function['appname'];
+				return $values['id'];
+				$receipt['message'][] = array('msg'	=> lang('Attribute has been edited'));
 			}
 
-			$location_id = $GLOBALS['phpgw']->locations->get_id($attrib['appname'], $attrib['location']);
-
-			$custom_function['descr'] = $this->db->db_addslashes($custom_function['descr']);
-
-			$this->db->transaction_begin();
-
-				$value_set=array(
-					'descr'		=> $custom_function['descr'],
-					'file_name'	=> $custom_function['custom_function_file'],
-					'active'	=> isset($custom_function['active'])?$custom_function['active']:''
-					);
-
-				$value_set	= $this->db->validate_update($value_set);
-
-				$this->db->query("UPDATE phpgw_cust_function set $value_set WHERE location_id = {$location_id} AND id=" . (int)$custom_function['id'],__LINE__,__FILE__);
-
-			$this->db->transaction_commit();
-
-			$receipt['message'][] = array('msg'	=> lang('Custom function has been edited'));
-
-			return $receipt;
+			return 0;
 		}
 
 		/**
 		 * Get a list of attributes
 		 * 
-		 * @param string $appname the name of the application
-		 * @param string $location the name of the location
+		 * @param string $appname      the name of the application
+		 * @param string $location     the name of the location
+		 * @param ?????? $start        ask sigurd
+		 * @param ?????? $query        ask sigurd
+		 * @param ?????? $sort         ask sigurd
+		 * @param ?????? $order        ask sigurd
+		 * @param ?????? $allrows      ask sigurd
+		 * @param ?????? $inc_choices  ask sigurd
+		 * @param ?????? $filtermethod THIS IS INSECURE - code that relies on this is broken by design
+		 *
+		 * @return ???? something
 		 */
-		function get_attribs($appname, $location, $start = 0, $query = '', $sort = 'ASC', $order = 'attrib_sort', $allrows = false, $inc_choices = false,$filtermethod='')
+		public function find($appname, $location, $start = 0, $query = '', $sort = 'ASC', 
+				$order = 'attrib_sort', $allrows = false, $inc_choices = false, $filtermethod = '')
 		{
-			$start		= (int) $start;
-			$query		= $this->db->db_addslashes($query);
-			$sort		= $sort == 'ASC' ? 'ASC' : 'DESC';
-			$order		= $this->db->db_addslashes($order);
-			$allrows	= !!$allrows;
-			$appname	= $this->db->db_addslashes($appname);
-			$location	= $this->db->db_addslashes($location);
+			$location_id	= $GLOBALS['phpgw']->locations->get_id($appname, $location);
+			$start			= (int) $start;
+			$query			= $this->_db->db_addslashes($query);
+			$order			= $this->_db->db_addslashes($order);
+			$allrows		= !!$allrows;
+			// Drop raw SQL
+			$filtermethod	= '';
 
-			$location_id = $GLOBALS['phpgw']->locations->get_id($appname, $location);
-
-			if ( $allrows )
+			$ordermethod = 'ORDER BY attrib_sort ASC';
+			if ( $order )
 			{
-				$this->allrows = $allrows;
-			}
+				$sort = 'ASC';
+				if ( $sort == 'DESC')
+				{
+					$sort = 'DESC';
+				}
 
-			if ( $order != '')
-			{
-				$ordermethod = " ORDER BY $order $sort";
-
-			}
-			else
-			{
-				$ordermethod = ' ORDER BY attrib_sort ASC';
+				$ordermethod = "ORDER BY {$order} {$sort}";
 			}
 
 			$querymethod = '';
 			if ( $query )
 			{
-				$querymethod = " AND (phpgw_cust_attribute.column_name $this->like '%$query%' or phpgw_cust_attribute.input_text $this->like '%$query%')";
+				$querymethod = "AND (phpgw_cust_attribute.column_name {$this->_like} '%{$query}%'"
+					. " OR phpgw_cust_attribute.input_text {$this->_like} '%{$query}%')";
 			}
 
-			$sql = "FROM phpgw_cust_attribute WHERE location_id = {$location_id} AND custom = 1 $querymethod $filtermethod";
+			$sql = "FROM phpgw_cust_attribute "
+				. " WHERE location_id = {$location_id}"
+					. " AND custom = 1 $querymethod $filtermethod";
 
-			$this->total_records = 0;
-			$this->db->query("SELECT COUNT(id) AS cnt_rec $sql",__LINE__,__FILE__);
-			if ( $this->db->next_record() )
+			$this->_total_records = 0;
+			$this->_db->query("SELECT COUNT(*) AS cnt_rec {$sql}",__LINE__,__FILE__);
+			if ( !$this->_db->next_record() )
 			{
-				$this->total_records = $this->db->f('cnt_rec');;
+				return array();
 			}
 
+			$this->_total_records = $this->_db->f('cnt_rec');
+
+			$sql = "SELECT * {$sql} {$ordermethod}";
+			$allrows = true; // db::limit_query is broken
 			if ( $allrows )
 			{
-				$this->db->query("SELECT * $sql" . $ordermethod, __LINE__, __FILE__);
+				$this->_db->query($sql, __LINE__, __FILE__);
 			}
 			else
 			{
-				$this->db->limit_query("SELECT * $sql" . $ordermethod,$start, __LINE__, __FILE__);
+				$this->_db->limit_query($sql, $start, __LINE__, __FILE__);
 			}
 
 			$attribs = array();
-			while ($this->db->next_record())
+			while ( $this->_db->next_record() )
 			{
-				$attribs[] = array
+				$id = $this->_db->f('id');
+				$attribs[$id] = array
 				(
-					'id'				=> $this->db->f('id'),
-					'attrib_id'			=> $this->db->f('id'), // FIXME: for now...
-					'entity_type'		=> $this->db->f('type_id'),
-					'attrib_sort'		=> (int) $this->db->f('attrib_sort'),
-					'list'				=> $this->db->f('list'),
-					'lookup_form'		=> $this->db->f('lookup_form'),
-					'entity_form'		=> $this->db->f('entity_form'),
-					'column_name'		=> $this->db->f('column_name'),
-					'name'				=> $this->db->f('column_name'),
-					'size'				=> $this->db->f('size'),
-					'statustext'		=> $this->db->f('statustext', true),
-					'input_text'		=> $this->db->f('input_text', true),
-					'type_name'			=> $this->db->f('type'),
-					'datatype'			=> $this->db->f('datatype'),
-					'search'			=> $this->db->f('search'),
-					'trans_datatype'	=> $this->translate_datatype($this->db->f('datatype')),
-					'nullable'			=> ($this->db->f('nullable') == 'True'),
-					'allow_null'		=> ($this->db->f('nullable') == 'True'), // FIXME: for now...
-					'history'			=> $this->db->f('history'),
-					'disabled'			=> $this->db->f('disabled'),
-					'helpmsg'			=> !!$this->db->f('helpmsg')
+					'id'				=> $id,
+					//'attrib_id'			=> $this->_db->f('id'), // FIXME
+					'entity_type'		=> $this->_db->f('type_id'),
+					'attrib_sort'		=> (int) $this->_db->f('attrib_sort'),
+					'list'				=> $this->_db->f('list'),
+					'lookup_form'		=> $this->_db->f('lookup_form'),
+					'entity_form'		=> $this->_db->f('entity_form'),
+					'column_name'		=> $this->_db->f('column_name'),
+					'name'				=> $this->_db->f('column_name'),
+					'size'				=> $this->_db->f('size'),
+					'statustext'		=> $this->_db->f('statustext', true),
+					'input_text'		=> $this->_db->f('input_text', true),
+					'type_name'			=> $this->_db->f('type'),
+					'datatype'			=> $this->_db->f('datatype'),
+					'search'			=> $this->_db->f('search'),
+					'trans_datatype'	=> $this->_translate_datatype($this->_db->f('datatype')),
+					'nullable'			=> ($this->_db->f('nullable') == 'True'),
+					//'allow_null'		=> ($this->_db->f('nullable') == 'True'), // FIXME
+					'history'			=> $this->_db->f('history'),
+					'disabled'			=> $this->_db->f('disabled'),
+					'helpmsg'			=> !!$this->_db->f('helpmsg')
 
 				);
 			}
 
-			if ( count($attribs) && $inc_choices )
+			if ( $inc_choices )
 			{
 				foreach ( $attribs as &$attrib )
 				{
-					if ( $attrib['datatype'] == 'R'
-						|| $attrib['datatype'] == 'CH'
-						|| $attrib['datatype'] =='LB')
+					switch ( $attrib['datatype'] )
 					{
-						$attrib['choice'] = $this->read_attrib_choice($appname, $location, $attrib['id']);
+						default:
+							// bail out nothing to do
+							break;
+						case 'R':
+						case 'CH':
+						case 'LB':
+							$attrib['choice'] = $this->_get_choices($location_id, $attrib['id']);
 					}
 				}
 			}
-
 
 			return $attribs;
 		}
@@ -625,185 +704,75 @@
 		/**
 		* Read a single attribute record
 		*
-		* @internal TODO document me
-		*/
-		function get_attrib_single($appname, $location, $id, $inc_choices = true)
-		{
-			$appname		= $this->db->db_addslashes($appname);
-			$location		= $this->db->db_addslashes($location);
-			$location_id	= $GLOBALS['phpgw']->locations->get_id($appname, $location);
-			$id				= (int) $id;
-
-			$sql = "SELECT * FROM phpgw_cust_attribute where location_id = {$location_id} AND id = {$id}";
-			$this->db->query($sql,__LINE__,__FILE__);
-
-			if ($this->db->next_record())
-			{
-				$attrib['id']						= $this->db->f('id');
-				$attrib['attrib_id']				= $this->db->f('id'); // for now...
-				$attrib['column_name']				= $this->db->f('column_name');
-				$attrib['input_text']				= $this->db->f('input_text', true);
-				$attrib['statustext']				= $this->db->f('statustext', true);
-				$attrib['column_info']['precision']	= $this->db->f('precision_');
-				$attrib['column_info']['scale']		= $this->db->f('scale');
-				$attrib['column_info']['default']	= $this->db->f('default_value');
-				$attrib['column_info']['nullable']	= $this->db->f('nullable');
-				$attrib['column_info']['type']		= $this->db->f('datatype');
-				$attrib['type_id']					= $this->db->f('type_id');
-				$attrib['type_name']				= $this->db->f('type_name');
-				$attrib['lookup_form']				= $this->db->f('lookup_form');
-				$attrib['list']						= $this->db->f('list');
-				$attrib['search']					= $this->db->f('search');
-				$attrib['history']					= $this->db->f('history');
-				$attrib['location']					= $this->db->f('location');
-				$attrib['nullable']					= ($this->db->f('nullable') == 'True');
-				$attrib['allow_null']				= ($this->db->f('nullable') == 'True'); // FIXME: for now...
-				$attrib['disabled']					= $this->db->f('disabled');
-				$attrib['helpmsg']					= stripslashes($this->db->f('helpmsg'));
-
-				if ( $inc_choices 
-					&& ( $this->db->f('datatype') == 'R' 
-						|| $this->db->f('datatype') == 'CH' 
-						|| $this->db->f('datatype') == 'LB' ) )
-				{
-					$attrib['choice'] = $this->read_attrib_choice($appname, $location, $id);
-				}
-				return $attrib;
-			}
-		}
-
-		/**
-		* Get the name of a table for a location
+		* @param string  $appname     the name of the module for the attribute
+		* @param string  $location    the name of the location of the attribute
+		* @param integer $id          the id of the attribute
+		* @param boolean $inc_choices include choices if a lookup field
 		*
-		* @internal document me
-		* @return string the name of the table
+		* @return array the attribute record
 		*/
-		function get_attrib_table($appname,$location)
-		{			
-			$appname		= $this->db->db_addslashes($appname);
-			$location		= $this->db->db_addslashes($location);
-			$location_id	= $GLOBALS['phpgw']->locations->get_id($appname, $location);
-
-			$sql = "SELECT c_attrib_table FROM phpgw_locations WHERE location_id = {$location_id}";
-			$this->db->query($sql,__LINE__,__FILE__);
-			if ( $this->db->next_record() )
-			{
-				return $this->db->f('c_attrib_table');
-			}
-			return '';
-		}
-
-		function read_custom_function($data = '')
+		public function get($appname, $location, $id, $inc_choices = true)
 		{
-			if(is_array($data))
+			$location_id = $GLOBALS['phpgw']->locations->get_id($appname, $location);
+			$id = (int) $id;
+
+			$sql = "SELECT phpgw_cust_attribute.* FROM phpgw_cust_attribute " 
+				. " WHERE location_id = {$location_id}"
+					. " AND phpgw_cust_attribute.id=$id";
+			$this->_db->query($sql, __LINE__, __FILE__);
+
+			if ( !$this->_db->next_record() )
 			{
-				$start = isset($data['start']) ? (int)$data['start'] : 0;
-				$query = isset($data['query']) ? $this->db->db_addslashes($data['query']) : '';
-				$sort = (isset($data['sort']) && $data['sort'] == 'ASC') ? 'ASC' : 'DESC';
-				$order = isset($data['order']) ? $this->db->db_addslashes($data['order']) : '';
-				$allrows = isset($data['allrows']) ? !!$data['allrows'] : false;
-				$appname = isset($data['appname']) ? $this->db->db_addslashes($data['appname']) : '';
-				$location = isset($data['location']) ? $this->db->db_addslashes($data['location']) : '';
-			}
-			else
-			{
-				return array();
+				return null;
 			}
 
-			if( $location == '' || $appname == '' )
+			$attrib = array
+			(
+				'id'			=> $this->_db->f('id'),
+				// FIXME this isn't needed -its duplicated data - someone needs to fix their broken code!
+				//'attrib_id'		=> $this->_db->f('id'),
+				'column_name'	=> $this->_db->f('column_name', true),
+				'input_text'	=> $this->_db->f('input_text', true),
+				'statustext'	=> $this->_db->f('statustext', true),
+				'type_id'		=> $this->_db->f('type_id'),
+				'type_name'		=> $this->_db->f('type_name'),
+				'lookup_form'	=> $this->_db->f('lookup_form'),
+				'list'			=> !!$this->_db->f('list'),
+				'search'		=> !!$this->_db->f('search'),
+				'history'		=> !!$this->_db->f('history'),
+				'location_id'	=> $this->_db->f('location_id'),
+				// FIXME this is broken it should be a small int and used as a bool
+				'nullable'		=> $this->_db->f('nullable') == 'True',
+				// FIXME this isn't needed -its duplicated data - someone needs to fix their broken code!
+				//'allow_null'	=> $this->_db->f('nullable') == 'True',
+				'disabled'		=> !!$this->_db->f('disabled'),
+				'helpmsg'		=> $this->_db->f('helpmsg', true),
+				'column_info'	=> array
+									(
+										'precision'	=> $this->_db->f('precision_'),
+										'scale'		=> $this->_db->f('scale'),
+										'default'	=> $this->_db->f('default_value', true),
+										// more duplicated values - great design
+										'nullable'	=> $this->_db->f('nullable'),
+										'type'		=> $this->_db->f('datatype')
+									)
+			);
+
+			if ( $inc_choices )
 			{
-				return array();
+				switch ( $this->_db->f('datatype') )
+				{
+					default:
+						// bail out quickly
+						break;
+					case 'R':
+					case 'CH':
+					case 'LB':
+						$attrib['choice'] = $this->_get_choices($location_id, $id);
+						break;
+				}
 			}
-
-			$location_id	= $GLOBALS['phpgw']->locations->get_id($appname, $location);
-
-			$ordermethod = ' ORDER BY custom_sort ASC';
-			if ($order)
-			{
-				$ordermethod = " ORDER BY $order $sort";
-
-			}
-
-			$table = 'phpgw_cust_function';
-
-			$querymethod = '';
-			if($query)
-			{
-				$querymethod = " AND file_name $this->like '%$query%' OR descr $this->like '%$query%'";
-			}
-
-			$sql = "SELECT * FROM {$table} WHERE location_id = {$location_id} {$querymethod}";
-
-			if(!$allrows)
-			{
-				$this->db->limit_query($sql . $ordermethod,$start,__LINE__,__FILE__);
-			}
-			else
-			{
-				$this->db->query($sql . $ordermethod,__LINE__,__FILE__);
-			}
-
-			$custom_function = '';
-			while ($this->db->next_record())
-			{
-				$custom_function[] = array
-				(
-					'id'		=> $this->db->f('id'),
-					'file_name'	=> $this->db->f('file_name'),
-					'sorting'	=> $this->db->f('custom_sort'),
-					'descr'		=> $this->db->f('descr'),
-					'active'	=> $this->db->f('active')
-				);
-			}
-			$this->db->query($sql,__LINE__,__FILE__);
-			$this->total_records = $this->db->num_rows();
-
-			return $custom_function;
-		}
-		
-		function read_attrib_choice($appname, $location, $attrib_id)
-		{
-			$appname		= $this->db->db_addslashes($appname);
-			$location		= $this->db->db_addslashes($location);
-			$location_id	= $GLOBALS['phpgw']->locations->get_id($appname, $location);
-
-			$sql = "SELECT * FROM phpgw_cust_choice WHERE location_id = {$location_id} AND attrib_id =" . (int)$attrib_id;
-			$this->db->query($sql,__LINE__,__FILE__);
-
-			$choices = array();
-			while ($this->db->next_record())
-			{
-				$choices[] = array
-				(
-					'id'	=> $this->db->f('id'),
-					'value'	=> $this->db->f('value', true)
-				);
-			}
-			return $choices;
-		}
-
-		function read_single_custom_function($appname, $location, $id)
-		{
-			$appname = $this->db->db_addslashes($appname);
-			$location = $this->db->db_addslashes($location);
-			
-			$location_id	= $GLOBALS['phpgw']->locations->get_id($appname, $location);
-
-			$sql = "SELECT * FROM phpgw_cust_function WHERE location_id = {$location_id} AND id =" . (int)$id;
-
-			$this->db->query($sql,__LINE__,__FILE__);
-
-			if ($this->db->next_record())
-			{
-				return array
-				(
-					'id'					=> (int)$this->db->f('id'),
-					'descr'					=> $this->db->f('descr', true),
-					'custom_function_file'	=> $this->db->f('file_name'),
-					'active'				=> !!$this->db->f('active')
-				);
-			}
-
+			return $attrib;
 		}
 
 		/**
@@ -812,254 +781,76 @@
 		 * @param int $id the attribute db pk
 		 * @param string $resort the direction to move the field [up|down]
 		 */
-		function resort_attrib($id, $resort, $appname, $location)
+		public function resort($id, $resort, $appname, $location)
 		{
-			$resort			= $resort == 'down' ? 'down' : 'up';
-			$appname 		= $this->db->db_addslashes($appname);
-			$location		= $this->db->db_addslashes($location);
-			$location_id	= $GLOBALS['phpgw']->locations->get_id($appname, $location);
-			$id				= (int) $id;
+			$id		= (int) $id;
 
-			$this->db->transaction_begin();
+			$resort	= 'up';
+			if ( $resort == 'down' )
+			{
+				$resort = 'down';
+			}
 
-			$sql = "SELECT attrib_sort FROM phpgw_cust_attribute WHERE location_id = {$location_id} AND id=$id";
-			$this->db->query($sql,__LINE__,__FILE__);
-			$this->db->next_record();
-			$attrib_sort	= $this->db->f('attrib_sort');
+			$location_id = $GLOBALS['phpgw']->locations->get_id($appname, $location);
 
-			$sql = "SELECT max(attrib_sort) as max_sort FROM phpgw_cust_attribute WHERE location_id = {$location_id}";
-			$this->db->query($sql,__LINE__,__FILE__);
-			$this->db->next_record();
-			$max_sort	= $this->db->f('max_sort');
+			$this->_db->transaction_begin();
 
+			$sql = "SELECT attrib_sort FROM phpgw_cust_attribute " 
+				. " WHERE location_id = {$location_id} AND id = {$id}";
+			$this->_db->query($sql, __LINE__, __FILE__);
+			$this->_db->next_record();
+			$attrib_sort	= $this->_db->f('attrib_sort');
+
+			$sql = "SELECT MAX(attrib_sort) AS max_sort FROM phpgw_cust_attribute " 
+				. " WHERE location_id = {$location_id}";
+			$this->_db->query($sql,__LINE__,__FILE__);
+			$this->_db->next_record();
+			$max_sort	= $this->_db->f('max_sort');
+
+			$update = true;
 			switch($resort)
 			{
 				case 'down':
 					if($max_sort > $attrib_sort)
 					{
-						$sql = "UPDATE phpgw_cust_attribute set attrib_sort=$attrib_sort WHERE location_id = {$location_id} AND attrib_sort =" . ($attrib_sort+1);
-						$this->db->query($sql,__LINE__,__FILE__);
-						$sql = "UPDATE phpgw_cust_attribute set attrib_sort=" . ($attrib_sort+1) ." WHERE location_id = {$location_id} AND id=$id";
-						$this->db->query($sql,__LINE__,__FILE__);
+						$new_sort = $attrib_sort + 1;
+						$update = true;
 					}
 					break;
-				default:
+
 				case 'up':
+				default:
 					if($attrib_sort>1)
 					{
-						$sql = "UPDATE phpgw_cust_attribute set attrib_sort=$attrib_sort WHERE location_id = {$location_id} AND attrib_sort =" . ($attrib_sort-1);
-						$this->db->query($sql,__LINE__,__FILE__);
-						$sql = "UPDATE phpgw_cust_attribute set attrib_sort=" . ($attrib_sort-1) ." WHERE location_id = {$location_id} AND id=$id";
-						$this->db->query($sql,__LINE__,__FILE__);
+						$new_sort = $attrib_sort - 1;
+						$update = true;
 					}
 					break;
 			}
-			$this->db->transaction_commit();
+
+			if ( !$update )
+			{
+				// nothing to do
+				return true;
+			}
+
+			$sql = "UPDATE phpgw_cust_attribute SET attrib_sort = {$attrib_sort}"
+				. "WHERE location_id = {$location_id} AND attrib_sort = {$new_sort}";
+			$this->_db->query($sql, __LINE__, __FILE__);
+
+			$sql = "UPDATE phpgw_cust_attribute SET attrib_sort = {$new_sort}"
+				. " WHERE location_id = {$location_id} AND id = {$id}";
+			$this->_db->query($sql, __LINE__, __FILE__);
+
+			return $this->_db->transaction_commit();
 		}
 
-		function resort_custom_function($id, $resort, $appname, $location)
+		protected function _get_table_def($table = '', $table_def = array())
 		{
-			$resort			= $resort == 'down' ? 'down' : 'up';
-			$id				= (int)$id;
-
-			if(!$location || !$appname)
+			if( !$GLOBALS['phpgw_setup']->_oProc 
+				|| !is_object($GLOBALS['phpgw_setup']->_oProc) )
 			{
-				return 	$receipt['error'][] = array('msg' => lang('location or appname is missing'));
-			}
-			$appname		= $this->db->db_addslashes($appname);
-			$location		= $this->db->db_addslashes($location);
-			$location_id	= $GLOBALS['phpgw']->locations->get_id($appname, $location);
-
-			$this->db->transaction_begin();
-			
-			$sql = "SELECT custom_sort FROM phpgw_cust_function WHERE location_id = {$location_id} AND id=$id";
-			$this->db->query($sql, __LINE__, __FILE__);
-			$this->db->next_record();
-			$custom_sort	= $this->db->f('custom_sort');
-			$sql = "SELECT MAX(custom_sort) AS max_sort FROM phpgw_cust_function WHERE location_id = {$location_id}";
-			$this->db->query($sql, __LINE__, __FILE__);
-			$this->db->next_record();
-			$max_sort	= $this->db->f('max_sort');
-
-			switch($resort)
-			{
-				case 'down':
-					if($max_sort > $custom_sort)
-					{
-						$sql = "UPDATE phpgw_cust_function set custom_sort=$custom_sort WHERE location_id = {$location_id} AND custom_sort =" . ($custom_sort+1);
-						$this->db->query($sql,__LINE__,__FILE__);
-						$sql = "UPDATE phpgw_cust_function set custom_sort=" . ($custom_sort+1) ." WHERE location_id = {$location_id} AND id=$id";
-						$this->db->query($sql,__LINE__,__FILE__);
-					}
-					break;
-				default:
-				case 'up':
-					if($custom_sort>1)
-					{
-						$sql = "UPDATE phpgw_cust_function set custom_sort=$custom_sort WHERE location_id = {$location_id} AND custom_sort =" . ($custom_sort-1);
-						$this->db->query($sql,__LINE__,__FILE__);
-						$sql = "UPDATE phpgw_cust_function set custom_sort=" . ($custom_sort-1) ." WHERE location='$location' AND id=$id";
-						$this->db->query($sql,__LINE__,__FILE__);
-					}
-					break;
-			}
-			$this->db->transaction_commit();
-		}
-
-		function select_custom_function($selected='', $appname)
-		{
-			$dirname = PHPGW_SERVER_ROOT . "/{$appname}/inc/custom"; 
-			$myfilearray = array();
-			$dir_handle = dir($dirname);
-
-			if ($dir_handle)
-			{
-				while (false !== ($file = $dir_handle->read())) 
-				{
-					if ((substr($file, 0, 1) != '.') && is_file("{$dirname}/{$file}") )
-					{
-						$myfilearray[] = $file;
-					}
-				}
-				$dir_handle->close();
-				sort($myfilearray);
-			}
-
-			$file_list = array();
-			foreach ( $myfilearray as $myfile )
-			{
-				$fname = preg_replace('/_/', ' ', $myfile);
-				$sel_file = '';
-				if ( $myfile == $selected )
-				{
-					$sel_file = 'selected';
-				}
-
-				$file_list[] = array
-				(
-					'id'		=> $myfile,
-					'name'		=> $fname,
-					'selected'	=> $sel_file
-				);
-			}
-
-			foreach ( $file_list as &$file )
-			{
-				if ( $file['selected'] != 'selected' )
-				{
-					unset($file['selected']);
-				}
-			}
-
-			return $file_list;
-		}
-		
-		function translate_datatype($datatype)
-		{
-			if ( isset($this->datatype_text[$datatype]) )
-			{
-				return $this->datatype_text[$datatype];
-			}
-			return '';
-		}
-
-		function translate_datatype_insert($datatype)
-		{
-			$datatype_text = array(
-				'V' => 'varchar',
-				'I' => 'int',
-				'C' => 'char',
-				'N' => 'decimal',
-				'D' => 'timestamp',
-				'T' => 'text',
-				'R' => 'int',
-				'CH' => 'text',
-				'LB' => 'int',
-				'AB' => 'int',
-				'VENDOR' => 'int',
-				'email' => 'varchar',
-				'link' => 'varchar'
-			);
-
-			return $datatype_text[$datatype];
-		}
-
-		function translate_datatype_precision($datatype)
-		{
-			$datatype_precision = array(
-				'I' => 4,
-				'R' => 4,
-				'LB' => 4,
-				'AB' => 4,
-				'VENDOR' => 4,
-				'email' => 64,
-				'link' => 255
-			);
-
-			return isset($datatype_precision[$datatype])?$datatype_precision[$datatype]:'';
-		}
-
-		/**
-		 * Delete a custom field/attribute
-		 * 
-		 * @param string $location within an application
-		 * @param string $appname where to delete the attrib
-		 * @param integer $attrib_id id of attrib to delete
-		 * @param bool $doubled sometimes the attribute fits into a history-table as a double
-		 */
-		function _delete_attrib($location,$appname,$attrib_id,$table = '',$doubled = false )
-		{
-			$appname		= $this->db->db_addslashes($appname);
-			$location		= $this->db->db_addslashes($location);
-			$location_id	= $GLOBALS['phpgw']->locations->get_id($appname, $location);
-			$this->_init_process();
-			$this->oProc->m_odb->transaction_begin();
-			$this->db->transaction_begin();
-
-			$sql = "SELECT * FROM phpgw_cust_attribute WHERE location_id = {$location_id} AND id =" . (int)$attrib_id;
-
-			$this->db->query($sql,__LINE__,__FILE__);
-			$this->db->next_record();
-
-			$ColumnName		= $this->db->f('column_name');
-			if(!$table)
-			{
-				$table = $this->get_attrib_table($appname,$location);
-			}
-
-			$this->oProc->DropColumn($table,false, $ColumnName);
-
-			$sql = "SELECT attrib_sort FROM phpgw_cust_attribute WHERE location_id = {$location_id} AND id =" . (int)$attrib_id;
-			$this->db->query($sql,__LINE__,__FILE__);
-			$this->db->next_record();
-			$attrib_sort	= $this->db->f('attrib_sort');
-
-			$sql = "SELECT max(attrib_sort) as max_sort FROM phpgw_cust_attribute WHERE location_id = {$location_id}";
-			$this->db->query($sql,__LINE__,__FILE__);
-			$this->db->next_record();
-			$max_sort	= $this->db->f('max_sort');
-
-			if($max_sort>$attrib_sort)
-			{
-				$sql = "UPDATE phpgw_cust_attribute set attrib_sort=attrib_sort-1 WHERE location_id = {$location_id} AND attrib_sort > $attrib_sort";
-				$this->db->query($sql,__LINE__,__FILE__);
-			}
-
-			if(!$doubled) // else: wait for it - another one is coming
-			{
-				$this->db->query("DELETE FROM phpgw_cust_attribute WHERE location_id = {$location_id} AND id = " . (int)$attrib_id,__LINE__,__FILE__);
-			}
-	//		$this->db->query("DELETE FROM history...
-			$this->db->transaction_commit();
-			$this->oProc->m_odb->transaction_commit();
-		}
-
-		function get_table_def($table = '', $table_def = array())
-		{
-			if(!isset($this->oProc) || !is_object($this->oProc))
-			{
-				$this->_init_process();
-				$GLOBALS['phpgw_setup']->oProc = $this->oProc;
+				$GLOBALS['phpgw_setup']->oProc =& $this->_oProc;
 			}
 
 			$setup = createobject('phpgwapi.setup_process');
@@ -1073,317 +864,157 @@
 			$table_def[$table]['fk'] = isset($table_def[$table]['fk']) && $table_def[$table]['fk'] ? $table_def[$table]['fk'] : $tableinfo[2];		
 			$table_def[$table]['ix'] = isset($table_def[$table]['ix']) && $table_def[$table]['ix'] ? $table_def[$table]['ix'] : $tableinfo[3];
 			$table_def[$table]['uc'] = isset($table_def[$table]['uc']) && $table_def[$table]['uc'] ? $table_def[$table]['uc'] : $tableinfo[4];
-			
-//	_debug_array($table_def);
+
 			return $table_def;
 		}
-		
-		function _delete_custom_function($appname,$location,$custom_function_id)
-		{
-			$location_id	= $GLOBALS['phpgw']->locations->get_id($appname, $location);
 
-			$this->db->transaction_begin();
-			$sql = "SELECT custom_sort FROM phpgw_cust_function WHERE location_id = {$location_id} AND id=$custom_function_id";
-			$this->db->query($sql,__LINE__,__FILE__);
-			$this->db->next_record();
-			$custom_sort	= $this->db->f('custom_sort');
-			$sql2 = "SELECT max(custom_sort) as max_sort FROM phpgw_cust_function WHERE location_id = {$location_id}";
-			$this->db->query($sql2,__LINE__,__FILE__);
-			$this->db->next_record();
-			$max_sort	= $this->db->f('max_sort');
-			if($max_sort>$custom_sort)
-			{
-				$sql = "UPDATE phpgw_cust_function set custom_sort=custom_sort-1 WHERE location_id = {$location_id} AND custom_sort > $custom_sort";
-				$this->db->query($sql,__LINE__,__FILE__);
-			}
-			$this->db->query("DELETE FROM phpgw_cust_function WHERE location_id = {$location_id} AND id=$custom_function_id",__LINE__,__FILE__);
-			$this->db->transaction_commit();
-		}
-		
-		function _init_process()
+		/**
+		 * Get the list of available choices for a lookup field
+		 *
+		 * @param integer $location_id the location for the attribute
+		 * @param integer $attrib_id   the field being looked up
+		 */
+		protected function _get_choices($location_id, $attrib_id)
 		{
-			$this->oProc 				= createObject('phpgwapi.schema_proc',$GLOBALS['phpgw_info']['server']['db_type']);
-			$this->oProc->m_odb			= clone($this->db); // nested transactions
-			$this->oProc->m_odb->Halt_On_Error	= 'yes';
+			$location_id	= (int) $location_id;
+			$ttrib_id		= (int) $attrib_id;
+			
+			$sql = "SELECT * FROM phpgw_cust_choice " 
+				. " WHERE phpgw_locations.id = {$location_id}"
+					. " attrib_id = {$attrib_id}"
+				. " ORDER BY value";
+			$this->_db->query($sql,__LINE__,__FILE__);
+
+			$choices = array();
+			while ( $this->_db->next_record() )
+			{
+				$id = $this->_db->f('id');
+				$choices[$id] = array
+				(
+					'id'	=> $id,
+					'value'	=> $this->_db->f('value', true)
+				);
+			}
+			return $choices;
 		}
-		
+
 		/**
 		 * Finds the next ID for a record at a table
 		 * 
 		 * @param string $table tablename in question
-		 * @param array $key conditions
+		 * @param array  $key   conditions for finding the next id
+		 *
 		 * @return int the next id
 		 */
-
-		function next_id($table='',$key='')
+		protected function _next_id($table = null, $key = null)
 		{
-			$where = '';
-			if(is_array($key))
+			if ( !$table )
 			{
-				while (is_array($key) && list($column,$value) = each($key))
+				return 0;
+			}
+
+			$next_id = 0;
+
+			$where = '';
+			if ( is_array($key) )
+			{
+				foreach ( $key as $col => $val )
 				{
-					if($value)
+					if ( $val )
 					{
-						$condition[] = $column . "='" . $value;
+						$val = $this->_db->db_addslashes($val);
+						$condition[] = "{$col} = '{$val}";
 					}
 				}
 
 				$where='WHERE ' . implode("' AND ", $condition) . "'";
 			}
 
-			$this->db->query("SELECT max(id) as maximum FROM $table $where",__LINE__,__FILE__);
-			$this->db->next_record();
-			$next_id = $this->db->f('maximum')+1;
+			$sql = "SELECT max(id) as maximum FROM {$table} {$where}";
+			$this->_db->query($sql, __LINE__, __FILE__);
+			if ( $this->_db->next_record() )
+			{
+				$next_id = $this->_db->f('maximum');
+			}
+
+			++$next_id;
 			return $next_id;
 		}
 
 		/**
-		 * Prepare custom attributes for ui
-		 * 
-		 * @param array $values values and definitions of custom attributes
-		 * @return array values and definitions of custom attributes prepared for ui
+		 * Convert a datatype to a human readable label
+		 *
+		 * @param string $datatype the dataype to convert
+		 *
+		 * @return string the user readable string
 		 */
-
-		function prepare_attributes($values='',$appname, $location,$view_only='')
+		protected function _translate_datatype($datatype)
 		{
-			$contacts		= CreateObject('phpgwapi.contacts');
-			$vendor 		= CreateObject('property.soactor');
-			$vendor->role	= 'vendor';
-
-			$dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
-
-			$input_type_array = array(
-				'R' => 'radio',
-				'CH' => 'checkbox',
-				'LB' => 'listbox'
-			);
-
-			$m=0;
-			for ($i=0;$i<count($values['attributes']);$i++)
+			if ( isset($this->datatype_text[$datatype]) )
 			{
-				$values['attributes'][$i]['datatype_text'] 	= $this->translate_datatype($values['attributes'][$i]['datatype']);
-				$values['attributes'][$i]['help_url']		= $values['attributes'][$i]['helpmsg'] ? $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'manual.uimanual.attrib_help', 'appname'=> $appname, 'location'=> $location, 'id' => $values['attributes'][$i]['id'])): '';
-				if($values['attributes'][$i]['datatype']=='D')
-				{
-					if(!$view_only)
-					{
-						if ( !isset($GLOBALS['phpgw']->jscal) || !is_object($GLOBALS['phpgw']->jscal) )
-						{
-							$GLOBALS['phpgw']->jscal = createObject('phpgwapi.jscalendar');
-						}
-
-						$GLOBALS['phpgw']->jscal->add_listener('values_attribute_' . $i);
-						$values['attributes'][$i]['img_cal']= $GLOBALS['phpgw']->common->image('phpgwapi','cal');
-						$values['attributes'][$i]['lang_datetitle']= lang('Select date');
-					}
-
-					if(isset($values['attributes'][$i]['value']) && $values['attributes'][$i]['value'])
-					{
-						$timestamp_date= mktime(0,0,0,date('m',strtotime($values['attributes'][$i]['value'])),date('d',strtotime($values['attributes'][$i]['value'])),date('y',strtotime($values['attributes'][$i]['value'])));
-						$values['attributes'][$i]['value']	= $GLOBALS['phpgw']->common->show_date($timestamp_date,$dateformat);
-					}
-				}
-				else if($values['attributes'][$i]['datatype']=='AB')
-				{
-					if($values['attributes'][$i]['value'])
-					{
-						$contact_data	= $contacts->read_single_entry($values['attributes'][$i]['value'],array('n_given'=>'n_given','n_family'=>'n_family','email'=>'email'));
-						$values['attributes'][$i]['contact_name']	= $contact_data[0]['n_family'] . ', ' . $contact_data[0]['n_given'];
-					}
-
-					$insert_record_values[]	= $values['attributes'][$i]['name'];
-					$lookup_link		= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uilookup.addressbook', 'column'=> $values['attributes'][$i]['name']));
-
-					$lookup_functions[$m]['name'] = 'lookup_'. $values['attributes'][$i]['name'] .'()';
-					$lookup_functions[$m]['action'] = 'Window1=window.open('."'" . $lookup_link ."'" .',"Search","width=800,height=700,toolbar=no,scrollbars=yes,resizable=yes");';
-					$m++;
-				}
-				else if($values['attributes'][$i]['datatype']=='VENDOR')
-				{
-					if($values['attributes'][$i]['value'])
-					{
-						$vendor_data	= $vendor->read_single($values['attributes'][$i]['value'],array('attributes' => array(0 => array('column_name' => 'org_name'))));
-
-						for ($n=0;$n<count($vendor_data['attributes']);$n++)
-						{
-							if($vendor_data['attributes'][$n]['column_name'] == 'org_name')
-							{
-								$values['attributes'][$i]['vendor_name']= $vendor_data['attributes'][$n]['value'];
-								$n =count($vendor_data['attributes']);
-							}
-						}
-					}
-
-					$insert_record_values[]	= $values['attributes'][$i]['name'];
-					$lookup_link		= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uilookup.vendor', 'column'=> $values['attributes'][$i]['name']));
-
-					$lookup_functions[$m]['name'] = 'lookup_'. $values['attributes'][$i]['name'] .'()';
-					$lookup_functions[$m]['action'] = 'Window1=window.open('."'" . $lookup_link ."'" .',"Search","width=800,height=700,toolbar=no,scrollbars=yes,resizable=yes");';
-					$m++;
-				}
-				else if($values['attributes'][$i]['datatype']=='user')
-				{
-					if($values['attributes'][$i]['value'])
-					{
-						$values['attributes'][$i]['user_name']= $GLOBALS['phpgw']->accounts->id2name($values['attributes'][$i]['value']);
-					}
-
-					$insert_record_values[]	= $values['attributes'][$i]['name'];
-					$lookup_link		= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->appname.'.uilookup.phpgw_user', 'column'=> $values['attributes'][$i]['name']));
-
-					$lookup_functions[$m]['name'] = 'lookup_'. $values['attributes'][$i]['name'] .'()';
-					$lookup_functions[$m]['action'] = 'Window1=window.open('."'" . $lookup_link ."'" .',"Search","width=800,height=700,toolbar=no,scrollbars=yes,resizable=yes");';
-					$m++;
-				}
-				else if($values['attributes'][$i]['datatype']=='R' || $values['attributes'][$i]['datatype']=='CH' || $values['attributes'][$i]['datatype']=='LB')
-				{
-					$values['attributes'][$i]['choice']	= $this->read_attrib_choice($appname, $location,$values['attributes'][$i]['id']);
-					$input_type=$input_type_array[$values['attributes'][$i]['datatype']];
-
-					if($values['attributes'][$i]['datatype']=='CH')
-					{
-						$values['attributes'][$i]['value']=unserialize($values['attributes'][$i]['value']);
-
-						if (isset($values['attributes'][$i]['choice']) AND is_array($values['attributes'][$i]['choice']))
-						{
-							foreach($values['attributes'][$i]['choice'] as &$choice)
-							{
-								$choice['input_type'] = $input_type;
-								if(isset($values['attributes'][$i]['value']) && is_array($values['attributes'][$i]['value']))
-								{
-									foreach ($values['attributes'][$i]['value'] as &$selected)
-									{
-										if($selected == $choice['id'])
-										{
-											$choice['checked'] = 'checked';
-										}
-									}
-								}
-							}
-						}
-					}
-					else
-					{
-						for ($j=0;$j<count($values['attributes'][$i]['choice']);$j++)
-						{
-							$values['attributes'][$i]['choice'][$j]['input_type']=$input_type;
-							if($values['attributes'][$i]['choice'][$j]['id']==$values['attributes'][$i]['value'])
-							{
-								$values['attributes'][$i]['choice'][$j]['checked']='checked';
-							}
-						}
-					}
-				}
-				else if (isset($entity['attributes'][$i]) && $entity['attributes'][$i]['datatype']!='I' && $entity['attributes'][$i]['value'])
-				{
-					$entity['attributes'][$i]['value'] = stripslashes($entity['attributes'][$i]['value']);
-				}
-
-				$values['attributes'][$i]['datatype_text'] = $this->translate_datatype($values['attributes'][$i]['datatype']);
-				$values['attributes'][$i]['counter']	= $i;
-//				$values['attributes'][$i]['type_id']	= $data['type_id'];
+				return $this->datatype_text[$datatype];
 			}
-
-			if(isset($lookup_functions) && is_array($lookup_functions))
-			{ 
-				for ($j=0;$j<count($lookup_functions);$j++)
-				{
-					$values['lookup_functions'] .= 'function ' . $lookup_functions[$j]['name'] ."\r\n";
-					$values['lookup_functions'] .= '{'."\r\n";
-					$values['lookup_functions'] .= $lookup_functions[$j]['action'] ."\r\n";
-					$values['lookup_functions'] .= '}'."\r\n";
-				}
-			}
-
-			if(isset($lookup_functions) && $lookup_functions)
-			{
-				$GLOBALS['phpgw']->session->appsession('insert_record_values' . $location,$appname,$insert_record_values);
-			}
-
-			return $values;
+			return '';
 		}
 
 		/**
-		* Preserve attribute values from post in case of an error
-		*
-		* @param array $values_attribute attribute definition and values from posting
-		* @param array $values value set with 
-		* @return array Array with attribute definition and values
-		*/
-		function preserve_attribute_values($values,$values_attribute)
+		 * Preapre a datatype for insert
+		 *
+		 * @param string $datatype the datatype being used
+		 *
+		 * @return string the converted datatype or empty string is invalid
+		 */
+		protected function _translate_datatype_insert($datatype)
 		{
-//_debug_array($values);
-//_debug_array($values_attribute);
-			foreach ( $values_attribute as $key => $attribute )
-			{	
-				for ($i=0;$i<count($values['attributes']);$i++)
-				{
-					if($values['attributes'][$i]['id'] == $attribute['attrib_id'])
-					{
-						if(isset($attribute['value']))
-						{
-							if(is_array($attribute['value']))
-							{
-								foreach($values['attributes'][$i]['choice'] as &$choice)
-								{
-									foreach ($attribute['value'] as &$selected)
-									{
-										if($selected == $choice['id'])
-										{
-											$choice['checked'] = 'checked';
-										}
-									}
-								}
-							}
-							else if(isset($values['attributes'][$i]['choice']) && is_array($values['attributes'][$i]['choice']))
-							{
+			$datatype_text = array
+			(
+				'V'			=> 'varchar',
+				'I'			=> 'int',
+				'C'			=> 'char',
+				'N'			=> 'decimal',
+				'D'			=> 'timestamp',
+				'T'			=> 'text',
+				'R'			=> 'int',
+				'CH'		=> 'text',
+				'LB'		=> 'int',
+				'AB'		=> 'int',
+				'VENDOR'	=> 'int',
+				'email'		=> 'varchar',
+				'link'		=> 'varchar'
+			);
 
-								foreach ($values['attributes'][$i]['choice'] as &$choice)
-								{
-									if($choice['id'] == $attribute['value'])
-									{
-										$choice['checked'] = 'checked';	
-									}
-								}
-							}
-							else
-							{
-								$values['attributes'][$i]['value'] = $attribute['value'];
-							}
-						}
-					}
-				}
+			if ( !isset($datatype_text[$datatype]) )
+			{
+				return '';
 			}
-			return $values;
+
+			return $datatype_text[$datatype];
 		}
 
-		function convert_attribute_save($values_attribute='')
+		/**
+		 * Get the precision for a datatype
+		 *
+		 * @param string $datatype the datatype to look up
+		 *
+		 * @return integer the precision - 0 for n/a or invalid
+		 */
+		protected function _translate_datatype_precision($datatype)
 		{
-			if(is_array($values_attribute))
-			{
-				foreach ( $values_attribute as &$attrib )
-				{
-					if ( $attrib['datatype'] == 'CH' && $attrib['value'] )
-					{
-						$attrib['value'] = serialize($attrib['value'] );
-					}
-					if ( $attrib['datatype'] == 'R' && $attrib['value'] )
-					{
-						$attrib['value'] = $attrib['value'][0];
-					}
+			$datatype_precision = array
+			(
+				'I'			=> 4,
+				'R'			=> 4,
+				'LB'		=> 4,
+				'AB'		=> 4,
+				'VENDOR'	=> 4,
+				'email'		=> 64,
+				'link'		=> 255
+			);
 
-					if ( $attrib['datatype'] == 'N' && $attrib['value'] )
-					{
-						$attrib['value'] = str_replace(',', '.', $attrib['value']);
-					}
-	
-					if ( $attrib['datatype'] == 'D' && $attrib['value'] )
-					{
-						$attrib['value'] = date($this->dateformat, phpgwapi_datetime::date_to_timestamp($attrib['value']));
-					}
-				}
+			if ( !isset($datatype_precision[$datatype]) )
+			{
+				return 0;
 			}
-			return $values_attribute;
+			$ret = $datatype_precision[$datatype];
 		}
 	}
-?>

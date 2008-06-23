@@ -118,16 +118,6 @@
 				);
 			}
 
-			if (! $GLOBALS['phpgw']->acl->check('custom_fields_access', phpgwapi_acl::READ, 'admin'))
-			{
-				$menus['admin']['list_functions'] = array
-				(
-					'text'	=> $GLOBALS['phpgw']->translation->translate('custom functions', array(), true),
-					'url'	=> $GLOBALS['phpgw']->link('/index.php',
-								array('menuaction' => 'admin.ui_custom.list_custom_function', 'appname' => 'tts'))
-				);
-			}
-
 			if ( !$GLOBALS['phpgw']->acl->check('mainscreen_message_access', phpgwapi_acl::READ, 'admin')
 				|| !$GLOBALS['phpgw']->acl->check('mainscreen_message_access', phpgwapi_acl::ADD, 'admin'))
 			{

@@ -31,9 +31,6 @@
 	*
 	* @package phpgroupware
 	* @subpackage phpgwapi
-	* @internal syntax: CreateObject('phpgwapi.acl',int account_id);
-	* @internal example: $acl = createObject('phpgwapi.acl');  // user id is the current user
-	* @internal example: $acl = createObject('phpgwapi.acl',10);  // 10 is the user id
 	*/
 	class phpgwapi_locations
 	{
@@ -71,7 +68,7 @@
 		 *
 		 * @return array Array with xmlrpc or soap functions. Might also be empty.
 		 */
-		public function list_methods($_type='xmlrpc')
+		public function list_methods($_type = 'xmlrpc')
 		{
 			// TODO implement me
 			return array();
@@ -114,7 +111,7 @@
 		 		$custom_tbl = $this->_db->db_addslashes($custom_tbl);
 		 		$sql = 'INSERT INTO phpgw_locations (app_id, name, descr, allow_grant, allow_c_attrib, c_attrib_table)'
 		 			. " VALUES ({$app}, '{$location}', '{$descr}', {$allow_grant}, 1, '{$custom_tbl}')";
-		 	}
+			}
 			$this->_db->query($sql, __LINE__, __FILE__);
 
 			return $this->_db->get_last_insert_id('phpgw_locations', 'location_id');
@@ -146,7 +143,8 @@
 
 			$this->_db->transaction_begin();
 
-			if ( $drop_table )
+			// if there is a table and the user wants it dropped we drop it
+			if ( $tbl && $drop_table )
 			{
 				$oProc = createObject('phpgwapi.schema_proc',
 							$GLOBALS['phpgw_info']['server']['db_type']);
@@ -161,11 +159,38 @@
 				. " WHERE app_id = {$app} AND name = '{$location}'";
 			$this->_db->query($sql, __LINE__, __FILE__);
 
-			$this->delete_repository($appname, $location);
+			$GLOBALS['phpgw']->acl->delete_repository($appname, $location);
 
 			$this->_db->transaction_commit();
 
 			return true;
+		}
+
+		/**
+		 * Get the custom attributes table name for a given location
+		 *
+		 * @param string $appname  the application name for the location
+		 * @param string $location the location name
+		 *
+		 * @return string the name of the table - not found returns an empty string
+		 */
+		public function get_attrib_table($appname, $location)
+		{
+			$appname  = $this->_db->db_addslashes($appname);
+			$location = $this->_db->db_addslashes($location);
+
+			$sql = 'SELECT c_attrib_table '
+					. ' FROM phpgw_locations '
+					. " {$this->_join} phpgw_applications ON phpgw_applications.app_id = phpgw_locations.app_id"
+					. " WHERE phpgw_applications.app_name = '{$appname}'"
+						. " AND phpgw_locations.name = '{$location}'";
+			$this->_db->query($sql, __LINE__, __FILE__);
+			if ( $this->_db->next_record() )
+			{
+				return $this->_db->f('c_attrib_table');
+			}
+
+			return '';
 		}
 
 		/**
@@ -202,6 +227,34 @@
 				$map[$appname][$location] = $this->_db->f('location_id');
 			}
 			return $map[$appname][$location];
+		}
+
+		/**
+		 * Get the name of a location - useful for testing
+		 *
+		 * @param integer $location_id the location id to look up
+		 *
+		 * @return array the location - empty if not found
+		 */
+		public function get_name($location_id)
+		{
+			$location_id = (int) $location_id;
+
+			$sql = 'SELECT phpgw_applications.app_name, phpgw_locations.name'
+					. ' FROM phpgw_locations '
+					. " {$this->_join} phpgw_applications ON phpgw_applications.app_id = phpgw_locations.app_id"
+					. " WHERE phpgw_locations.location_id = {$location_id}";
+			$this->_db->query($sql, __LINE__, __FILE__);
+			if ( $this->_db->next_record() )
+			{
+				return array
+				(
+					'appname'	=> $this->_db->f('app_name', true),
+					'location'	=> $this->_db->f('name', true)
+				);
+			}
+
+			return array();
 		}
 
 		/**
