@@ -672,11 +672,15 @@
 			$jscal->add_listener('values_termination_date');
 
 			if ($id)
-			{
-				$jscal->add_listener('values_date');
+			{		
 				$this->cat_id = ($r_agreement['cat_id']?$r_agreement['cat_id']:$this->cat_id);
 				$this->member_id = ($r_agreement['member_of']?$r_agreement['member_of']:$this->member_id);
 				$list = $this->bo->read_details($id);
+
+				if($list)
+				{
+					$jscal->add_listener('values_date');
+				}
 
 				$uicols		= $this->bo->uicols;
 				$list		= $this->list_content($list,$uicols);
