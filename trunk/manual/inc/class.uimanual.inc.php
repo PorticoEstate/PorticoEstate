@@ -137,16 +137,14 @@ HTML;
 			$location 	= phpgw::get_var('location');
 			$id			= phpgw::get_var('id', 'int');
 
-			$custom 	= createObject('phpgwapi.custom_fields');
-			
-			$attrib_data 	= $custom->get_attrib_single($appname, $location, $id);
+			$attrib_data 	= $GLOBALS['phpgw']->custom_fields->get($appname, $location, $id);
 
 			$function_msg	= lang('Help');
 
-			$t->set_file('help','help.tpl');
-			$t->set_var('title',lang('Help') . ' - "' . $attrib_data['input_text'] . '"');
-			$t->set_var('help_msg',$attrib_data['helpmsg'] );
-			$t->set_var('lang_close',lang('close') );
+			$t->set_file('help', 'help.tpl');
+			$t->set_var('title', lang('Help') . " - \"{$attrib_data['input_text']}\"");
+			$t->set_var('help_msg', $attrib_data['helpmsg'] );
+			$t->set_var('lang_close', lang('close'));
 											
 			$GLOBALS['phpgw']->common->phpgw_header();
 			$t->pfp('out','help');
