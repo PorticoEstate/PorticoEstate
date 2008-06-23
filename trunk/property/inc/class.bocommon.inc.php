@@ -542,7 +542,7 @@
 			{
 				$contacts	= CreateObject('property.soactor');
 				$contacts->role='vendor';
-				$custom 		= createObject('phpgwapi.custom_fields');
+				$custom 		= createObject('property.custom_fields');
 				$vendor_data['attributes'] = $custom->get_attribs('property','.vendor', 0, '', 'ASC', 'attrib_sort', true, true);
 
 				$vendor_data	= $contacts->read_single($data['vendor_id'],$vendor_data);
@@ -601,7 +601,7 @@
 			{
 				$tenant_object	= CreateObject('property.soactor');
 				$tenant_object->role = 'tenant';
-				$custom 		= createObject('phpgwapi.custom_fields');
+				$custom 		= createObject('property.custom_fields');
 				$tenant_data['attributes'] = $custom->get_attribs('property','.tenant', 0, '', 'ASC', 'attrib_sort', true, true);
 				$tenant_data	= $tenant_object->read_single($data['tenant_id'],$tenant_data);
 				if(is_array($tenant_data['attributes']))
@@ -1518,49 +1518,59 @@
 		/**
 		* Preserve attribute values from post in case of an error
 		*
-		* @param array $values_attribute attribute definition and values from posting
-		* @param array $values value set with
-		* @return array Array with attribute definition and values
+		* @param array $values value set with 
+		* @param array $values_attributes attribute definitions and values from posting
+		*
+		* @return array attribute definitions and values
 		*/
-		function preserve_attribute_values($values,$values_attribute)
+		public function preserve_attribute_values($values, $values_attributes)
 		{
-			foreach ( $values_attribute as $key => $attribute )
+			if ( !is_array($values_attributes ) )
 			{
-				for ($i=0;$i<count($values['attributes']);$i++)
-				{
-					if($values['attributes'][$i]['id'] == $attribute['attrib_id'])
-					{
-						if(isset($attribute['value']))
-						{
-							if(is_array($attribute['value']))
-							{
-								foreach($values['attributes'][$i]['choice'] as &$choice)
-								{
-									foreach ($attribute['value'] as &$selected)
-									{
-										if($selected == $choice['id'])
-										{
-											$choice['checked'] = 'checked';
-										}
-									}
-								}
-							}
-							else if(isset($values['attributes'][$i]['choice']) && is_array($values['attributes'][$i]['choice']))
-							{
+				return array();
+			}
 
-								foreach ($values['attributes'][$i]['choice'] as &$choice)
-								{
-									if($choice['id'] == $attribute['value'])
-									{
-										$choice['checked'] = 'checked';
-									}
-								}
-							}
-							else
+			foreach ( $values_attributes as $attribute )
+			{	
+				foreach ( $values['attributes'] as &$val_attrib )
+				{
+					if ( $val_attrib['id'] != $attribute['attrib_id'] )
+					{
+						continue;
+					}
+
+					if( !isset($attribute['value']) )
+					{
+						continue;
+					}
+
+					if ( is_array($attribute['value']) )
+					{
+						foreach ( $val_attrib['choice'] as &$choice )
+						{
+							foreach ( $attribute['value'] as $selected )
 							{
-								$values['attributes'][$i]['value'] = $attribute['value'];
+								if ( $selected == $choice['id'] )
+								{
+									$choice['checked'] = 'checked';
+								}
 							}
 						}
+					}
+					else if ( isset($val_attrib['choice'])
+						&& is_array($val_attrib['choice']) )
+					{
+						foreach ( $val_attrib['choice'] as &$choice)
+						{
+							if ( $choice['id'] == $attribute['value'] )
+							{
+								$choice['checked'] = 'checked';	
+							}
+						}
+					}
+					else
+					{
+						$val_attrib['value'] = $attribute['value'];
 					}
 				}
 			}

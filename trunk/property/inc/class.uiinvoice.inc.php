@@ -1358,8 +1358,8 @@
 				$contacts->role='vendor';
 				if($values[0]['vendor_id'])
 				{
-					$custom 					= createObject('phpgwapi.custom_fields');
-					$vendor_data['attributes']	= $custom->get_attribs('property','.vendor', 0, '', 'ASC', 'attrib_sort', true, true);
+					$custom 					= createObject('property.custom_fields');
+					$vendor_data['attributes']	= $custom->find('property','.vendor', 0, '', 'ASC', 'attrib_sort', true, true);
 					$vendor_data				= $contacts->read_single($values[0]['vendor_id'],$vendor_data);
 					if(is_array($vendor_data))
 					{

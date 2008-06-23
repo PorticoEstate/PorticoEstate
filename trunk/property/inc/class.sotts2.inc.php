@@ -295,17 +295,17 @@
 
 				$receipt['message'][]= array('msg' => lang('Ticket has been updated'));
 
-				$custom = createObject('phpgwapi.custom_fields');
-				$custom_functions = $custom->read_custom_function(array('appname'=>'property','location' => $this->acl_location,'allrows'=>true));
+				$custom_functions = $GLOBALS['phpgw']->custom_functions->find(array('appname'=>'property','location' => $this->acl_location,'allrows'=>true));
 
-				if (isset($custom_functions) AND is_array($custom_functions))
+				foreach($custom_functions as $entry)
 				{
-					foreach($custom_functions as $entry)
+					if ( $entry['active'] )
 					{
+						// this is insecure
 						$file = realpath(PHPGW_APP_INC . "/custom/{$entry['file_name']}");
-						if (is_file($file) && $entry['active'])
+						if ( $entry['active'] )
 						{
-							include_once ($file);
+							include_once $file;
 						}
 					}
 				}

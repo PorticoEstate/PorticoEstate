@@ -593,7 +593,7 @@
 				$receipt = $this->mail_ticket($receipt['id'],$fields_updated,$receipt,$ticket['location_code']);
 			}
 
-			$custom = createObject('phpgwapi.custom_fields');
+			$custom = createObject('property.custom_fields');
 			$custom_functions = $custom->read_custom_function(array('appname'=>'property','location' => $this->acl_location,'allrows'=>true));
 
 			if (isSet($custom_functions) AND is_array($custom_functions))
@@ -622,7 +622,7 @@
 			if($ticket['location_code'])
 			{
 				$solocation 		= CreateObject('property.solocation');
-				$custom = createObject('phpgwapi.custom_fields');
+				$custom = createObject('property.custom_fields');
 				$location_data 		= $solocation->read_single($ticket['location_code']);
 
 				$type_id=count(explode('-',$ticket['location_code']));

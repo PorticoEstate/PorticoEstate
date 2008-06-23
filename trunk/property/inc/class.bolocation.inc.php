@@ -78,7 +78,7 @@
 			$this->so 					= CreateObject('property.solocation');
 			$this->bocommon 			= CreateObject('property.bocommon');
 			$this->soadmin_location		= CreateObject('property.soadmin_location');
-			$this->custom 				= createObject('phpgwapi.custom_fields');
+			$this->custom 				= createObject('property.custom_fields');
 
 			$this->lookup    = phpgw::get_var('lookup', 'bool');
 
