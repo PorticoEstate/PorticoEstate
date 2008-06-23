@@ -261,7 +261,7 @@
 			$sum_workorder_calculation = 0;
 			$sum_workorder_actual_cost = 0;
 
-			$custom 		= createObject('phpgwapi.custom_fields');
+			$custom 		= createObject('property.custom_fields');
 			for ($i=0;$i<count($workorder_data);$i++)
 			{
 				$sum_workorder_budget= $sum_workorder_budget+$workorder_data[$i]['budget'];

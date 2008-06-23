@@ -258,7 +258,7 @@
 
 			if(isset($workorder['vendor_id']) && $workorder['vendor_id'])
 			{
-				$custom 		= createObject('phpgwapi.custom_fields');
+				$custom 		= createObject('property.custom_fields');
 				$vendor['attributes'] = $custom->get_attribs('property','.vendor', 0, '', 'ASC', 'attrib_sort', true, true);
 				$vendor			= $contacts->read_single($workorder['vendor_id'],$vendor);
 				foreach($vendor['attributes'] as $attribute)

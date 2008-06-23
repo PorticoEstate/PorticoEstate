@@ -512,7 +512,7 @@
 			$location_type				= $this->db->f('location_type');
 			$location_id 				= $GLOBALS['phpgw']->locations->get_id('property', ".location.{$location_type}");
 
-			$custom 	= createObject('phpgwapi.custom_fields');
+			$custom 	= createObject('property.custom_fields');
 			$table_def = $custom->get_table_def('fm_location'.$location_type);
 			$history_table_def = $custom->get_table_def('fm_location' . $location_type . '_history');
 //_debug_array($table_def);

@@ -74,7 +74,7 @@
 		{
 			$this->so 		= CreateObject('property.soadmin_entity');
 			$this->bocommon = CreateObject('property.bocommon');
-			$this->custom 	= createObject('phpgwapi.custom_fields');
+			$this->custom 	= createObject('property.custom_fields');
 
 			if ($session)
 			{
@@ -274,12 +274,12 @@
 			}
 			else if($attrib_id && $cat_id && $entity_id && !$custom_function_id)
 			{
-				$this->custom->_delete_attrib('.entity.' . $entity_id . '.' . $cat_id,'property',$attrib_id);
+				$this->custom->delete('.entity.' . $entity_id . '.' . $cat_id,'property',$attrib_id);
 				$this->so->delete_history($entity_id, $cat_id,$attrib_id);
 			}
 			else if($custom_function_id && $acl_location)
 			{
-				$this->custom->_delete_custom_function('property', $acl_location,$custom_function_id);
+				$GLOBALS['phpgw']->custom_functions->delete('property', $acl_location,$custom_function_id);
 			}
 		}
 
@@ -290,7 +290,7 @@
 				$this->allrows = $allrows;
 			}
 
-			$attrib = $this->custom->get_attribs('property', '.entity.' . $entity_id . '.' . $cat_id, $this->start, $this->query, $this->sort, $this->order, $this->allrows);
+			$attrib = $this->custom->find('property', '.entity.' . $entity_id . '.' . $cat_id, $this->start, $this->query, $this->sort, $this->order, $this->allrows);
 
 			$this->total_records = $this->custom->total_records;
 
@@ -299,12 +299,12 @@
 
 		function read_single_attrib($entity_id,$cat_id,$id)
 		{
-			return $this->custom->get_attrib_single('property', '.entity.' . $entity_id . '.' . $cat_id, $id, true);
+			return $this->custom->get('property', '.entity.' . $entity_id . '.' . $cat_id, $id, true);
 		}
 
 		function resort_attrib($id,$resort)
 		{
-			$this->custom->resort_attrib($id, $resort, 'property', '.entity.' . $this->entity_id . '.' . $this->cat_id);
+			$this->custom->resort($id, $resort, 'property', '.entity.' . $this->entity_id . '.' . $this->cat_id);
 		}
 
 		function save_attrib($attrib,$action='')
@@ -322,7 +322,15 @@
 			}
 			else
 			{
-				$receipt = $this->custom->add_attrib($attrib);
+				$id = $this->custom->add_attrib($attrib);
+				if ( $id )
+				{
+					$receipt['message'][] = array('msg' => lang('Attribute has been saved'));
+				}
+				else
+				{
+					$receipt['error'][] = array('msg' => lang('Column could not be added'));
+				}
 			}
 			return $receipt;
 		}

@@ -57,7 +57,7 @@
 		//	$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->so 		= CreateObject('property.soactor');
 			$this->bocommon 	= CreateObject('property.bocommon');
-			$this->custom 		= createObject('phpgwapi.custom_fields');
+			$this->custom 		= createObject('property.custom_fields');
 
 			if ($session)
 			{
@@ -170,12 +170,12 @@
 
 		function read_single($data)
 		{
-			$values['attributes'] = $this->custom->get_attribs('property','.' . $this->role, 0, '', 'ASC', 'attrib_sort', true, true);
+			$values['attributes'] = $this->custom->find('property','.' . $this->role, 0, '', 'ASC', 'attrib_sort', true, true);
 			if(isset($data['actor_id']) && $data['actor_id'])
 			{
 				$values = $this->so->read_single($data['actor_id'], $values);
 			}
-			$values = $this->custom->prepare_attributes($values, 'property','.' . $this->role, $data['view']);
+			$values = $this->custom->prepare($values, 'property','.' . $this->role, $data['view']);
 			return $values;
 		}
 
@@ -212,7 +212,7 @@
 			{
 				$selected=$GLOBALS['phpgw_info']['user']['preferences']['property']["actor_columns_" . $this->role];
 			}
-			$columns = $this->custom->get_attribs('property','.' . $this->role, 0, '','','',true);
+			$columns = $this->custom->find('property','.' . $this->role, 0, '','','',true);
 			$column_list=$this->bocommon->select_multi_list($selected,$columns);
 
 			return $column_list;
@@ -227,7 +227,7 @@
 		*/
 		function preserve_attribute_values($values,$values_attribute)
 		{
-			return $this->custom->preserve_attribute_values($values,$values_attribute);
+			return $this->bocommon->preserve_attribute_values($values,$values_attribute);
 		}
 	}
 

@@ -820,7 +820,7 @@
 				}
 			}
 
-			$custom 	= createObject('phpgwapi.custom_fields');
+			$custom 	= createObject('property.custom_fields');
 
 			$fm_location_cols = $custom->get_attribs('property', '.location.' . $type_id, 0, '', '', '', true);
 //_debug_array($fm_location_cols);

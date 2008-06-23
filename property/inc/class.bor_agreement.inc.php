@@ -57,7 +57,7 @@
 		//	$this->currentapp		= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->so = CreateObject('property.sor_agreement');
 			$this->bocommon = CreateObject('property.bocommon');
-			$this->custom 		= createObject('phpgwapi.custom_fields');
+			$this->custom 		= createObject('property.custom_fields');
 
 			if ($session)
 			{

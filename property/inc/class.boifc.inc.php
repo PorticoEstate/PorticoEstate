@@ -55,7 +55,8 @@
 		{
 		//	$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
 	//		$this->so 			= CreateObject('property.soifc');
-			$this->custom 		= createObject('phpgwapi.custom_fields');
+			$this->bocommon		= createObject('property.bocommon');
+			$this->custom 		= createObject('property.custom_fields');
 			$this->acl_location 	= '.ifc';
 
 			if ($session)
@@ -327,7 +328,7 @@ _debug_array('hei');
 		*/
 		function preserve_attribute_values($values='',$values_attribute='')
 		{
-			return $this->custom->preserve_attribute_values($values,$values_attribute);
+			return $this->bocommon->preserve_attribute_values($values,$values_attribute);
 		}
 
 		function date_array($date)
