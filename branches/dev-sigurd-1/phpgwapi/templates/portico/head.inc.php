@@ -28,15 +28,26 @@
 	$GLOBALS['phpgw']->template->set_unknowns('remove');
 	$GLOBALS['phpgw']->template->set_file('head', 'head.tpl');
 	$GLOBALS['phpgw']->template->set_block('head', 'stylesheet', 'stylesheets');
+	$GLOBALS['phpgw']->template->set_block('head', 'javascript', 'javascripts');
 
-	phpgwapi_yui::load_widget('dragdrop');
-	phpgwapi_yui::load_widget('element');
-	phpgwapi_yui::load_widget('container');
-	phpgwapi_yui::load_widget('button');
-	phpgwapi_yui::load_widget('connection');
-	phpgwapi_yui::load_widget('resize');
-	phpgwapi_yui::load_widget('layout');
+	$javascripts = array();
 
+	if(!isset($GLOBALS['phpgw_info']['flags']['noframework']))
+	{
+		phpgwapi_yui::load_widget('dragdrop');
+		phpgwapi_yui::load_widget('element');
+		phpgwapi_yui::load_widget('container');
+		phpgwapi_yui::load_widget('button');
+		phpgwapi_yui::load_widget('connection');
+		phpgwapi_yui::load_widget('resize');
+		phpgwapi_yui::load_widget('layout');
+
+		$javascripts = array
+		(
+			"/phpgwapi/js/json/json.js",
+			"/phpgwapi/templates/portico/js/base.js"
+		);
+	}
 
 	foreach ( $stylesheets as $stylesheet )
 	{
@@ -44,6 +55,15 @@
 		{
 			$GLOBALS['phpgw']->template->set_var( 'stylesheet_uri', $GLOBALS['phpgw_info']['server']['webserver_url'] . $stylesheet );
 			$GLOBALS['phpgw']->template->parse('stylesheets', 'stylesheet', true);
+		}
+	}
+
+	foreach ( $javascripts as $javascript )
+	{
+		if( file_exists( PHPGW_SERVER_ROOT . $javascript ) )
+		{
+			$GLOBALS['phpgw']->template->set_var( 'javascript_uri', $GLOBALS['phpgw_info']['server']['webserver_url'] . $javascript );
+			$GLOBALS['phpgw']->template->parse('javascripts', 'javascript', true);
 		}
 	}
 
@@ -69,16 +89,8 @@
 
 		phpgwapi_template_portico::store_local('navbar_config', $navbar_config);
 	}
-
-	$_border_layout_config	= '';
-	$_navbar_config			= '';
-	if(!isset($GLOBALS['phpgw_info']['flags']['noframework']))
-	{
-		phpgwapi_yui::load_widget('menu');	
-		$_border_layout_config	= json_encode(execMethod('phpgwapi.template_portico.retrieve_local', 'border_layout_config'));
-		$_navbar_config			= json_encode($navbar_config);
-
-	}
+	$_border_layout_config	= json_encode(execMethod('phpgwapi.template_portico.retrieve_local', 'border_layout_config'));
+	$_navbar_config			= json_encode($navbar_config);
 
 	$app = lang($app);
 	$tpl_vars = array
