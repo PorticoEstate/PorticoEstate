@@ -77,6 +77,7 @@
 		$destroy_session = true;
 	}
 
+	$GLOBALS['phpgw_info']['user']['apps']['admin'] = true;
 	$num = ExecMethod('property.custom_functions.index',$data);
 	// echo date('Y/m/d H:i:s ').$_GET['domain'].': '.($num ? "$num job(s) executed" : 'Nothing to execute')."\n";
 

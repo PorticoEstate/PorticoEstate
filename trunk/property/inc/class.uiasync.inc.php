@@ -102,7 +102,7 @@
 
 			$method_list = $this->bo->read();
 
-			while (is_array($method_list) && list(,$method) = each($method_list))
+			foreach ($method_list as $method)
 			{
 				$data_set = unserialize($method['data']);
 				$run_link_data = array();
@@ -110,7 +110,7 @@
 				$run_link_data['data'] 			= urlencode($method['data']);
 
 				$method_data=array();
-				while (is_array($data_set) && list($key,$value) = each($data_set))
+				foreach ($data_set as $key => $value)
 				{
 					$method_data[] = $key . '=' . $value;
 				}
