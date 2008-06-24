@@ -65,7 +65,7 @@ class TestCustomFields extends PHPUnit_Framework_TestCase
     protected function setUp()
     {
         // enable this for one run if it dies badly and you need to clean up
-        // $this->tearDown();
+        $this->tearDown();
 
         $GLOBALS['phpgw']->locations->add('.test', 'Custom Functions Unit Test',
                                         'phpgwapi', false, 'aaaa_test');
@@ -93,26 +93,27 @@ class TestCustomFields extends PHPUnit_Framework_TestCase
 
         $oProc->createTable('aaaa_test', $table_def);
 
+		$status = 'this value is ignored by modern browsers default configs';
         $field = array
         (
-            'appname'        => 'phpgwapi',
-            'location'        => '.test',
-            'column_name'    => 'test_entry',
+            'appname'       => 'phpgwapi',
+            'location'      => '.test',
+            'column_name'   => 'test_entry',
             'input_text'    => 'this is a test entry',
-            'statustext'    => 'this is tiny help text that shows up as a title="statustext" style="cursor:help"',
+            'statustext'    => $status,
             'search'        => true,
-            'list'            => true,
-            'history'        => true,
-            'disabled'        => false,
-            'helpmsg'        => 'i am helpful - i think',
-            'attrib_sort'    => 0,
-            'nullable'        => true,
-            'column_info'    => array
+            'list'          => true,
+            'history'       => true,
+            'disabled'      => false,
+            'helpmsg'       => 'i am helpful - i think',
+            'attrib_sort'   => 0,
+            'nullable'      => true,
+            'column_info'   => array
                                 (
-                                    'type'        => 'V',
-                                    'precision'    => 50,
-                                    'scale'        => '',
-                                    'default'    => ''
+                                    'type'      => 'V',
+                                    'precision' => 50,
+                                    'scale'     => '',
+                                    'default'   => ''
                                 )
         );
 
@@ -172,14 +173,15 @@ class TestCustomFields extends PHPUnit_Framework_TestCase
 
         $new_values = array
         (
-            'id'            => $this->fieldID,
-            'appname'        => $loc['appname'],
-            'location'        => $loc['location'],
-            'datatype'        => 'R',
-            'column_name'    => 'renamed_column',
-            'input_text'    => 'this was renamed by a unit test',
-            'search'        => false,
-            'new_choice'    => 'new_entry'
+            'id'           => $this->fieldID,
+            'appname'      => $loc['appname'],
+            'location'     => $loc['location'],
+            'datatype'     => 'R',
+            'column_name'  => 'renamed_column',
+            'input_text'   => 'this was renamed by a unit test',
+            'statustext'   => 'yes I really am useless',
+            'search'       => false,
+            'new_choice'   => 'new_entry'
         );
 
         $values = array_merge($old_field, $new_values);
