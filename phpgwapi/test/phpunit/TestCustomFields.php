@@ -99,7 +99,7 @@ class TestCustomFields extends PHPUnit_Framework_TestCase
             'location'        => '.test',
             'column_name'    => 'test_entry',
             'input_text'    => 'this is a test entry',
-            'statustext'    => 'this is useless information',
+            'statustext'    => 'this is tiny help text that shows up as a title="statustext" style="cursor:help"',
             'search'        => true,
             'list'            => true,
             'history'        => true,
