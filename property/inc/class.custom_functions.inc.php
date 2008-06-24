@@ -36,7 +36,6 @@
 
 	class property_custom_functions
 	{
-
 		var $public_functions = array(
 			'index' => true
 		);
@@ -45,10 +44,6 @@
 		{
 			$GLOBALS['phpgw_info']['flags']['noheader'] = true;
 			$GLOBALS['phpgw_info']['flags']['nonavbar'] = true;
-
-			$GLOBALS['phpgw_info']['flags']['currentapp']	=	'property';
-
-			$this->config		= CreateObject('phpgwapi.config','property');
 		}
 
 		/**
@@ -59,21 +54,35 @@
 
 		function index($data='')
 		{
+			if ( !isset($GLOBALS['phpgw_info']['user']['apps']['admin']))
+			{
+				return;
+			}
+
 			if(is_array($data))
 			{
 				$function = $data['function'];
 			}
 			else
 			{
-				$data = unserialize(urldecode(phpgw::get_var('data')));
+				$data = unserialize(urldecode($_GET['data']));
+				$data = phpgw::clean_value($data);
 				if(!isset($data['function']))
 				{
-					$data['function'] = phpgw::get_var('function');
+					$function = phpgw::get_var('function');
+				}
+				else
+				{
+					$function =$data['function'];
 				}
 			}
 
-			include_once(realpath(PHPGW_SERVER_ROOT . "/property/inc/cron/{$data['function']}.php"));
-			$custom = new $data['function'];
-			$custom->pre_run($data);
+			$file = realpath(PHPGW_SERVER_ROOT . "/property/inc/cron/{$function}.php");
+			if (is_file($file))
+			{
+				include_once($file);
+				$custom = new $function;
+				$custom->pre_run($data);
+			}
 		}
 	}
