@@ -276,22 +276,18 @@
 
 		function add_hour($values,$workorder_id)
 		{
-
-//_debug_array($values);
-
-			foreach($values['select'] as $n)
+			foreach($values['quantity'] as $n => $quantity)
 			{
-
-				if(!$values['quantity'][$n])
+				if(!$quantity)
 				{
-					$values['quantity'][$n]=1;
+					continue;
 				}
 
 				if ($values['wo_hour_cat'][$n] && !$values['cat_per_cent'][$n])
 				{
 					$values['cat_per_cent'][$n] = 100;
 				}
-				$values['quantity'][$n]		= str_replace(",",".",$values['quantity'][$n]);
+				$quantity		= str_replace(",",".",$quantity);
 
 				$cost=($values['total_cost'][$n]*$values['quantity'][$n]);
 
@@ -301,7 +297,7 @@
 					'hours_descr'		=> $values['descr'][$n],
 					'unit'			=> $values['unit'][$n],
 					'cost' 			=> $cost,
-					'quantity'		=> $values['quantity'][$n],
+					'quantity'		=> $quantity,
 					'billperae'		=> $values['total_cost'][$n],
 					'ns3420_id'		=> $values['ns3420_id'][$n],
 					'dim_d'			=> $values['dim_d'][$n],
@@ -310,7 +306,6 @@
 					'cat_per_cent'		=> $values['cat_per_cent'][$n]
 				);
 			}
-//_debug_array($hour);
 
 			if($hour)
 			{
