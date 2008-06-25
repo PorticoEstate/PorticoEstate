@@ -1048,7 +1048,7 @@
 
 		function delete()
 		{
-			if ( phpgw::get_var('cal_id', 'int', 'GET') )
+			if (!phpgw::get_var('cal_id', 'int', 'GET') )
 			{
 				//FIXME
 				Header('Location: '.$this->page('', array('date' => sprintf('%04d%02d%02d', $this->bo->year, $this->bo->month, $this->bo->day) ), true) );
@@ -2844,7 +2844,7 @@ HTML;
 			);
 			$p->set_var($var);
 
-			$date = sprintf("%04d%02d%02d",$this->bo->year,$this->bo->month,$this->bo->mday);
+			$date = sprintf("%04d%02d%02d",$this->bo->year,$this->bo->month,$this->bo->day);
 			$var = array(
 				'action_url_button'		=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'calendar.bocalendar.update', 'readsess' => 1)),
 				'action_text_button'	=> lang('Ignore Conflict'),
