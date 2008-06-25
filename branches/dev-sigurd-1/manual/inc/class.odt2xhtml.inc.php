@@ -22,14 +22,30 @@
 	{
 		public function oo_unzip($file, $path = false)
 		{
-			if(!function_exists('zip_open'))
-			{
-				throw new Exception('NO ZIP FUNCTIONS DETECTED. Do you have the PECL ZIP extensions loaded?');
-			}
 			if(!is_file($file))
 			{
 				throw new Exception('Can\'t find file: '.$file);
 			}
+
+			$archive = CreateObject('phpgwapi.pclzip', $file);
+			$dir = $GLOBALS['phpgw_info']['server']['temp_dir'];
+			$list = $archive->extract(PCLZIP_OPT_PATH, $dir);
+			
+			foreach ($list as $entry)
+			{
+				if ( $entry['stored_filename'] == 'content.xml' && is_readable($entry['filename']))
+				{
+					return $content = file_get_contents($entry['filename']);
+				}
+			}
+
+			throw new Exception("not a valid file: {$file}");
+
+			if(!function_exists('zip_open'))
+			{
+				throw new Exception('NO ZIP FUNCTIONS DETECTED. Do you have the PECL ZIP extensions loaded?');
+			}
+/*
 			if($zip = zip_open($file))
 			{
 				while ($zip_entry = zip_read($zip))
@@ -62,6 +78,7 @@
 					return $content;
 				}
 			}
+*/
 		}
 
 		public function oo_convert($xml)
