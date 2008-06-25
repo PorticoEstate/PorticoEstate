@@ -1169,7 +1169,7 @@
 				default:
 					$this->_read_repository_sql($account_type);
 			}
-			$data = phpgwapi_cache::system_set('phpgwapi', "acl_data_{$this->_account_id}", $this->_data);
+			$data = phpgwapi_cache::system_set('phpgwapi', "acl_data_{$this->_account_id}", $this->_data[$this->_account_id]);
 		}
 
 		/**
