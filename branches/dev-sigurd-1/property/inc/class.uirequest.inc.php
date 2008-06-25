@@ -538,6 +538,21 @@
 				$origin		= phpgw::get_var('origin');
 				$origin_id	= phpgw::get_var('origin_id', 'int');
 
+				//23.jun 08: This will be handled by the interlink code - just doing a quick hack for now...
+				if($origin == 'tts' && $origin_id && !$values['descr'])
+				{
+					$boticket= CreateObject('property.botts');
+					$ticket = $boticket->read_single($origin_id);
+					$values['descr'] = $ticket['details'];
+					$values['title'] = $ticket['subject'];
+					$ticket_notes = $boticket->read_additional_notes($origin_id);
+					$i = count($ticket_notes)-1;
+					if(isset($ticket_notes[$i]['value_note']) && $ticket_notes[$i]['value_note'])
+					{
+						$values['descr'] .= ": " . $ticket_notes[$i]['value_note'];
+					}
+				}
+
 				if($p_entity_id && $p_cat_id)
 				{
 					$boadmin_entity	= CreateObject('property.boadmin_entity');
