@@ -1059,12 +1059,11 @@
 					</input>
 				</td>
 				<td>
-					<xsl:variable name="lang_wo_hour_cat_statustext"><xsl:value-of select="lang_wo_hour_cat_statustext"/></xsl:variable>
-						<select name="values[wo_hour_cat][{counter}]" class="forms" onMouseover="window.status='{$lang_wo_hour_cat_statustext}'; return true;" onMouseout="window.status='';return true;">
+						<select name="values[wo_hour_cat][{counter}]" class="forms" title="{lang_wo_hour_cat_statustext}" style="cursor:help">
 							<option value=""><xsl:value-of select="//lang_no_wo_hour_cat"/></option>
 							<xsl:for-each select="//wo_hour_cat_list" >
 								<xsl:variable name="id"><xsl:value-of select="id"/></xsl:variable>
-								<option value="{$id}"><xsl:value-of disable-output-escaping="yes" select="name"/></option>
+								<option value="{$id}"><xsl:value-of select="name"/></option>
 							</xsl:for-each>
 					</select>
 				</td>
@@ -1342,9 +1341,6 @@
 					<xsl:value-of select="lang_quantity"/>
 				</td>
 				<td class="th_text" width="5%" align="center">
-					<xsl:value-of select="lang_select"/>
-				</td>
-				<td class="th_text" width="5%" align="center">
 					<xsl:value-of select="lang_category"/>
 				</td>
 				<td class="th_text" width="5%" align="center">
@@ -1409,27 +1405,12 @@
 				<td>
 					<input type="text" size="6" name="values[quantity][{counter}]"></input>
 				</td>
-				<td align="center">
-					<xsl:choose>
-						<xsl:when test="total_cost!=''">
-							<input type="checkbox" name="values[select][{counter}]" value="{counter}"  onMouseout="window.status='';return true;">
-								<xsl:attribute name="onMouseover">
-									<xsl:text>window.status='</xsl:text>
-										<xsl:value-of select="lang_select_statustext"/>
-									<xsl:text>'; return true;</xsl:text>
-								</xsl:attribute>
-							</input>
-						</xsl:when>
-					</xsl:choose>
-				</td>
-
 				<td>
-					<xsl:variable name="lang_wo_hour_cat_statustext"><xsl:value-of select="lang_wo_hour_cat_statustext"/></xsl:variable>
-						<select name="values[wo_hour_cat][{counter}]" class="forms" onMouseover="window.status='{$lang_wo_hour_cat_statustext}'; return true;" onMouseout="window.status='';return true;">
+						<select name="values[wo_hour_cat][{counter}]" class="forms" title="{lang_wo_hour_cat_statustext}" style="cursor:help">
 							<option value=""><xsl:value-of select="//lang_no_wo_hour_cat"/></option>
 							<xsl:for-each select="//wo_hour_cat_list" >
 								<xsl:variable name="id"><xsl:value-of select="id"/></xsl:variable>
-								<option value="{$id}"><xsl:value-of disable-output-escaping="yes" select="name"/></option>
+								<option value="{$id}"><xsl:value-of select="name"/></option>
 							</xsl:for-each>
 					</select>
 				</td>
