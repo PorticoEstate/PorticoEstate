@@ -1,43 +1,43 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet version="1.0" 
-	xmlns:office="urn:oasis:names:tc:opendocument:xmlns:office:1.0" 
-	xmlns:meta="urn:oasis:names:tc:opendocument:xmlns:meta:1.0" 
-	xmlns:config="urn:oasis:names:tc:opendocument:xmlns:config:1.0" 
-	xmlns:text="urn:oasis:names:tc:opendocument:xmlns:text:1.0" 
-	xmlns:table="urn:oasis:names:tc:opendocument:xmlns:table:1.0" 
-	xmlns:draw="urn:oasis:names:tc:opendocument:xmlns:drawing:1.0" 
-	xmlns:presentation="urn:oasis:names:tc:opendocument:xmlns:presentation:1.0" 
-	xmlns:dr3d="urn:oasis:names:tc:opendocument:xmlns:dr3d:1.0" 
-	xmlns:chart="urn:oasis:names:tc:opendocument:xmlns:chart:1.0" 
-	xmlns:form="urn:oasis:names:tc:opendocument:xmlns:form:1.0" 
-	xmlns:script="urn:oasis:names:tc:opendocument:xmlns:script:1.0" 
-	xmlns:style="urn:oasis:names:tc:opendocument:xmlns:style:1.0" 
-	xmlns:number="urn:oasis:names:tc:opendocument:xmlns:datastyle:1.0" 
-	xmlns:anim="urn:oasis:names:tc:opendocument:xmlns:animation:1.0" 
+	xmlns:office="http://openoffice.org/2000/office" 
+	xmlns:meta="http://openoffice.org/2000/meta" 
+	xmlns:text="http://openoffice.org/2000/text" 
+	xmlns:table="http://openoffice.org/2000/table" 
+	xmlns:draw="http://openoffice.org/2000/drawing" 
+	xmlns:presentation="http://openoffice.org/2000/presentation" 
+	xmlns:chart="http://openoffice.org/2000/chart" 
+	xmlns:form="http://openoffice.org/2000/form" 
+	xmlns:script="http://openoffice.org/2000/script" 
+	xmlns:style="http://openoffice.org/2000/style" 
 	xmlns:dc="http://purl.org/dc/elements/1.1/" 
 	xmlns:xlink="http://www.w3.org/1999/xlink" 
 	xmlns:math="http://www.w3.org/1998/Math/MathML" 
 	xmlns:xforms="http://www.w3.org/2002/xforms" 
-	xmlns:fo="urn:oasis:names:tc:opendocument:xmlns:xsl-fo-compatible:1.0" 
-	xmlns:svg="urn:oasis:names:tc:opendocument:xmlns:svg-compatible:1.0" 
-	xmlns:smil="urn:oasis:names:tc:opendocument:xmlns:smil-compatible:1.0" 
+	xmlns:fo="http://www.w3.org/1999/XSL/Format" 
+	xmlns:svg="http://www.w3.org/2000/svg" 
+	xmlns:smil="http://www.w3.org/TR/REC-smil" 
 	xmlns:ooo="http://openoffice.org/2004/office" 
 	xmlns:ooow="http://openoffice.org/2004/writer" 
 	xmlns:oooc="http://openoffice.org/2004/calc" 
 	xmlns:int="http://opendocumentfellowship.org/internal" 
 	xmlns="http://www.w3.org/1999/xhtml" 
 	xmlns:xsl="http://www.w3.org/1999/XSL/Transform" 
-	exclude-result-prefixes="office meta config text table draw presentation dr3d chart form script style number anim dc xlink math xforms fo svg smil ooo ooow oooc int #default">
+	exclude-result-prefixes="office meta text table draw presentation chart form script style dc xlink math xforms fo svg smil ooo ooow oooc int #default">
 	
 	<xsl:output 
 	method="xml" 
 	indent="yes" 
 	omit-xml-declaration="yes" 
 	encoding="UTF-8" 
-	standalone="no"
 	doctype-public="-//W3C//DTD XHTML 1.0 Strict//EN"
 	doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"
 	/>
+
+<!--
+100 dpi <=> x*38.37
+72 dpi <=> x*28.6264
+-->
 	
 	<xsl:variable name="lineBreak">
 		<xsl:text>
@@ -58,8 +58,8 @@
 	
 	<xsl:template match="office:document-content">
 		<body>
-			<xsl:comment> office:body/office:text </xsl:comment>
-			<xsl:apply-templates select="office:body/office:text"/>
+			<xsl:comment> office:body </xsl:comment>
+			<xsl:apply-templates select="office:body"/>
 			<xsl:comment> add-footnote-bodies </xsl:comment>
 			<xsl:call-template name="add-footnote-bodies"/>
 		</body>
@@ -245,15 +245,15 @@
 	<xsl:template match="text:table-of-content" mode="toc-styles">
 	<!-- Generate styles for the ToC -->
 		/* ToC styles start */
-		<xsl:apply-templates select="//text:h/@text:outline-level" mode="toc-styles"/>
+		<xsl:apply-templates select="//@text:outline-level" mode="toc-styles"/>
 		/* ToC styles end */
 	</xsl:template>
 
-	<xsl:template match="text:h/@text:outline-level" mode="toc-styles">
+	<xsl:template match="@text:outline-level" mode="toc-styles">
 	<xsl:text>.toc_outline_level_</xsl:text>
 	<xsl:value-of select="."/>
 	<xsl:text> { margin-left: </xsl:text>
-	<xsl:value-of select="round(.*0.5*28.6264)"/> <!-- modified : transform cm in px for 72 dpi -->
+	<xsl:value-of select="round(current()*0.5*28.6264)"/> <!-- modified : transform cm in px for 72 dpi -->
 	<xsl:text>px; }&#xa;</xsl:text>
 
 	<xsl:value-of select="$lineBreak"/>
@@ -331,21 +331,27 @@
 		    </xsl:call-template>
 		</xsl:if>
 
-		<xsl:apply-templates select="$node/style:paragraph-properties/@*" mode="styleattr"/>
-		<xsl:apply-templates select="$node/style:text-properties/@*" mode="styleattr"/>
+		<xsl:apply-templates select="$node/style:properties/@*" mode="styleattr"/>
+		<!--<xsl:apply-templates select="$node/style:text-properties/@*" mode="styleattr"/>
 		<xsl:apply-templates select="$node/style:table-cell-properties/@*" mode="styleattr"/>
 		<xsl:apply-templates select="$node/style:table-properties/@*" mode="styleattr"/>
 		<xsl:apply-templates select="$node/style:table-column-properties/@*" mode="styleattr"/>
-		<xsl:apply-templates select="$node/style:graphic-properties/@*" mode="styleattr"/>
+		<xsl:apply-templates select="$node/style:graphic-properties/@*" mode="styleattr"/>-->
 	</xsl:template>
 
 	<xsl:template match="@fo:border-left|@fo:border-right|@fo:border-top|@fo:border-bottom|@fo:border|@fo:margin-left|@fo:margin-right|@fo:margin-top|@fo:margin-bottom|@fo:margin|@fo:padding-left|@fo:padding-right|@fo:padding-top|@fo:padding-bottom|@fo:padding|@fo:text-align|@fo:text-indent|@fo:font-variant|@fo:font-family|@fo:color|@fo:background-color|@fo:font-size|@svg:font-family|@fo:font-style|@fo:font-weight|@fo:line-height|@style:width" mode="styleattr">
 		<xsl:call-template name="pass-through"/>
 	</xsl:template>
 
+	<xsl:template match="@style:text-background-color" mode="styleattr">
+		<xsl:text>background-color: </xsl:text>
+		<xsl:value-of select="."/><xsl:text>; </xsl:text>
+		<xsl:value-of select="$lineBreak"/>
+	</xsl:template>
+
 	<xsl:template match="@style:font-name" mode="styleattr">
 		<xsl:text>font-family: '</xsl:text>
-		<xsl:value-of select="."/><xsl:text>';</xsl:text>
+		<xsl:value-of select="."/><xsl:text>'; </xsl:text>
 		<xsl:value-of select="$lineBreak"/>
 	</xsl:template>
 
@@ -354,7 +360,7 @@
 	We can improve this when CSS3 is better supported.
 -->
 		<xsl:if test="not(.='none')">
-			<xsl:text>text-decoration: underline;</xsl:text>
+			<xsl:text>text-decoration: underline; </xsl:text>
 		</xsl:if>
 	</xsl:template>
 
@@ -365,7 +371,7 @@
 			<xsl:when test=".='end'"><xsl:text>right</xsl:text></xsl:when>
 			<xsl:otherwise><xsl:value-of select="."/></xsl:otherwise>
 		</xsl:choose>
-		<xsl:text>;</xsl:text>
+		<xsl:text>; </xsl:text>
 		<xsl:value-of select="$lineBreak"/>
 	</xsl:template>
 
@@ -373,15 +379,15 @@
 		<xsl:choose>
 	<!-- We can't support the others until we figure out pagination. -->
 			<xsl:when test=".='left'">
-   			/* Left alignment */
+   				/* Left alignment */
    				<xsl:text>margin-left: 0; margin-right: auto;</xsl:text>
 			</xsl:when>
 			<xsl:when test=".='right'">
-   			/* Right alignment */
+   				/* Right alignment */
    				<xsl:text>margin-left: auto; margin-right: 0;</xsl:text>
 			</xsl:when>
 			<xsl:when test=".='center'">
-   			/* Centered alignment */
+   				/* Centered alignment */
    				<xsl:text>margin: 0 auto;</xsl:text>
 			</xsl:when>
 		</xsl:choose>
@@ -389,7 +395,7 @@
 	</xsl:template>
 
 	<xsl:template match="@style:column-width" mode="styleattr">
-		<xsl:text>width: </xsl:text><xsl:value-of select="."/><xsl:text>;</xsl:text>
+		<xsl:text>width: </xsl:text><xsl:value-of select="."/><xsl:text>; </xsl:text>
 	</xsl:template>
 
 	<xsl:template match="@*" mode="styleattr">
@@ -409,7 +415,7 @@
 		<xsl:value-of select="../@style:name"/>
 		<xsl:text>_</xsl:text>
 		<xsl:value-of select="@text:level"/>
-		<xsl:text>{ list-style-type: </xsl:text>
+		<xsl:text> { list-style-type: </xsl:text>
 		<xsl:choose>
 			<xsl:when test="@text:level mod 3 = 1">disc</xsl:when>
 			<xsl:when test="@text:level mod 3 = 2">circle</xsl:when>
@@ -425,7 +431,7 @@
 		<xsl:value-of select="../@style:name"/>
 		<xsl:text>_</xsl:text>
 		<xsl:value-of select="@text:level"/>
-		<xsl:text>{ list-style-type: </xsl:text>
+		<xsl:text> { list-style-type: </xsl:text>
 		<xsl:choose>
 			<xsl:when test="@style:num-format='1'">decimal</xsl:when>
 			<xsl:when test="@style:num-format='I'">upper-roman</xsl:when>
@@ -455,9 +461,35 @@
 				</thead>
 			</xsl:if>
 			<xsl:if test="table:table-footer-rows/table:table-row">
-				<tfoot>
+				<thead>
 					<xsl:apply-templates select="table:table-footer-rows/table:table-row"/>
-				</tfoot>
+				</thead>
+			</xsl:if>
+			<tbody>
+				<xsl:apply-templates select="table:table-row"/>
+			</tbody>
+		</table>
+	</xsl:template>
+	
+	<xsl:template match="table:sub-table">
+		<table>
+			<xsl:if test="@table:style-name">
+				<xsl:attribute name="class">
+					<xsl:value-of select="@table:style-name"/>
+				</xsl:attribute>
+			</xsl:if>
+				<colgroup>
+					<xsl:apply-templates select="table:table-column"/>
+				</colgroup>
+			<xsl:if test="table:table-header-rows/table:table-row">
+				<thead>
+					<xsl:apply-templates select="table:table-header-rows/table:table-row"/>
+				</thead>
+			</xsl:if>
+			<xsl:if test="table:table-footer-rows/table:table-row">
+				<thead>
+					<xsl:apply-templates select="table:table-footer-rows/table:table-row"/>
+				</thead>
 			</xsl:if>
 			<tbody>
 				<xsl:apply-templates select="table:table-row"/>
@@ -675,28 +707,32 @@
 
 	<xsl:template match="office:change-info"/>
 	<xsl:param name="param_baseuri"/>
-	<xsl:template match="draw:frame">
+	<xsl:template match="draw:a">
 		<xsl:choose>
 			<!-- if parent text:h -->
 			<xsl:when test="ancestor::text:h">
 				<xsl:element name="span">
-					<xsl:attribute name="class">
-						<xsl:value-of select="translate(@draw:style-name,'.','_')"/>
-					</xsl:attribute>
-					<xsl:attribute name="style">
-					<!-- This border could be removed, but OOo does default to showing a border. 
-						<xsl:text> border: 1px solid #888;</xsl:text> -->
-						<xsl:if test="@svg:width">width: <xsl:value-of select="substring-before(@svg:width,'px')+2"/>px; </xsl:if>
-						<xsl:if test="@svg:height">height: <xsl:value-of select="substring-before(@svg:height,'px')+2"/>px; </xsl:if>
-					</xsl:attribute>
+					<xsl:if test="draw:image/@draw:style-name">
+						<xsl:attribute name="class">
+							<xsl:value-of select="translate(draw:image/@draw:style-name,'.','_')"/>
+						</xsl:attribute>
+					</xsl:if>
+					<xsl:if test="//svg:desc">
+						<xsl:attribute name="style">
+						<!-- This border could be removed, but OOo does default to showing a border. -->
+							<xsl:text>border: 1px solid #888; </xsl:text> 
+							<xsl:if test="draw:image/@svg:width">width: <xsl:value-of select="substring-before(draw:image/@svg:width,'px')"/>px; </xsl:if>
+							<xsl:if test="draw:image/@svg:height">height: <xsl:value-of select="substring-before(draw:image/@svg:height,'px')"/>px; </xsl:if>
+						</xsl:attribute>						
+					</xsl:if>
 					<xsl:choose>
-						<xsl:when test="ancestor::draw:a">
+						<xsl:when test="../draw:a">
 							<xsl:element name="a">
 								<xsl:attribute name="href">
-									<xsl:value-of select="../@xlink:href"/>
+									<xsl:value-of select="@xlink:href"/>
 								</xsl:attribute>
 								<xsl:attribute name="title">
-									<xsl:value-of select="../@office:name"/>
+									<xsl:value-of select="@office:name"/>
 								</xsl:attribute>
 								<xsl:apply-templates/>
 							</xsl:element>
@@ -705,54 +741,29 @@
 					</xsl:choose>
 				</xsl:element>
 			</xsl:when>
-			<!-- if parent is text:p -->
+			<!-- if parent is text p -->
 			<xsl:when test="ancestor::text:p">
 				<xsl:element name="div">
 					<xsl:attribute name="class">
-						<xsl:value-of select="translate(@draw:style-name,'.','_')"/>
+						<xsl:value-of select="translate(draw:image/@draw:style-name,'.','_')"/>
+					</xsl:attribute>
+					<xsl:attribute name="id">
+						<xsl:text>text-box</xsl:text>
 					</xsl:attribute>
 					<xsl:attribute name="style">
 					<!-- This border could be removed, but OOo does default to showing a border. -->
 						<xsl:text>border: 1px solid #888; </xsl:text>
-						<xsl:if test="@svg:width"><!-- div width modified -->
-							<xsl:text>width: </xsl:text>
-							<xsl:choose>
-								<xsl:when test="ancestor::draw:frame">
-									<xsl:value-of select="substring-before(@svg:width,'px')+2"/>
-								</xsl:when>
-								<xsl:when test="ancestor::text:p">
-									<xsl:value-of select="substring-before(@svg:width,'px')+4"/>
-								</xsl:when>
-								<xsl:otherwise>
-									<xsl:value-of select="substring-before(@svg:width,'px')"/>
-								</xsl:otherwise>
-							</xsl:choose>
-							<xsl:text>px; </xsl:text>
-						</xsl:if>
-						<xsl:if test="@svg:height"><!-- div height modified -->
-							<xsl:text>height: </xsl:text>
-							<xsl:choose>
-								<xsl:when test="ancestor::draw:frame">
-									<xsl:value-of select="substring-before(@svg:height,'px')+2"/>
-								</xsl:when>
-								<xsl:when test="ancestor::text:p">
-									<xsl:value-of select="substring-before(@svg:height,'px')+4"/>
-								</xsl:when>
-								<xsl:otherwise>
-									<xsl:value-of select="substring-before(@svg:height,'px')"/>
-								</xsl:otherwise>
-							</xsl:choose>
-							<xsl:text>px; </xsl:text>
-						</xsl:if>
+						<xsl:if test="draw:image/@svg:width">width: <xsl:value-of select="substring-before(draw:image/@svg:width,'px')"/>px; </xsl:if>
+						<xsl:if test="draw:image/@svg:height">height: <xsl:value-of select="substring-before(draw:image/@svg:height,'px')"/>px; </xsl:if>
 					</xsl:attribute>
 					<xsl:choose>
-						<xsl:when test="ancestor::draw:a">
+						<xsl:when test="../draw:a">
 							<xsl:element name="a">
 								<xsl:attribute name="href">
-									<xsl:value-of select="../@xlink:href"/>
+									<xsl:value-of select="@xlink:href"/>
 								</xsl:attribute>
 								<xsl:attribute name="title">
-									<xsl:value-of select="../@office:name"/>
+									<xsl:value-of select="@office:name"/>
 								</xsl:attribute>
 								<xsl:apply-templates/>
 							</xsl:element>
@@ -761,10 +772,11 @@
 					</xsl:choose>
 				</xsl:element>
 			</xsl:when>
+			<xsl:otherwise><xsl:apply-templates/></xsl:otherwise>
 		</xsl:choose>
 	</xsl:template>
 
-	<xsl:template match="draw:frame/draw:image">
+	<xsl:template match="draw:image">
 		<xsl:element name="img">
     	<!-- Default behaviour
     		<xsl:attribute name="style">
@@ -776,30 +788,28 @@
 			</xsl:attribute>
 		-->
 			<xsl:if test="not(../@text:anchor-type='character')">
-				<xsl:attribute name="style">display: block;</xsl:attribute>
+				<xsl:attribute name="style">display: block; </xsl:attribute>
 			</xsl:if>
 			
 			<xsl:attribute name="width">
-				<xsl:value-of select="substring-before(../@svg:width,'px')"/>
+				<xsl:value-of select="substring-before(@svg:width,'px')"/>
 			</xsl:attribute>
 			
 			<xsl:attribute name="height">
-				<xsl:value-of select="substring-before(../@svg:height,'px')"/>
+				<xsl:value-of select="substring-before(@svg:height,'px')"/>
 			</xsl:attribute>
 		
 			<xsl:attribute name="alt">
-				<!--<xsl:value-of select="../svg:desc"/>-->
-				<xsl:value-of select="../@draw:name"/>
+				<xsl:value-of select="@draw:name"/>
 			</xsl:attribute>
 			
 			<xsl:attribute name="src">
 				<xsl:value-of select="concat($param_baseuri,@xlink:href)"/>
-				<!--<xsl:value-of select="@xlink:href"/>-->
 			</xsl:attribute>
 			
-			<xsl:if test="../svg:desc">
+			<xsl:if test="//svg:desc">
 				<xsl:attribute name="longdesc">
-					<xsl:value-of select="../svg:desc"/>
+					<xsl:value-of select="//svg:desc"/>
 				</xsl:attribute>
 			</xsl:if>		
 		</xsl:element>
