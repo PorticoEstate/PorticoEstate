@@ -363,7 +363,7 @@
 			{
 				foreach ( $custom_functions as $entry )
 				{
-					// prevent path traversal - see it is pretty simple when you know what the problem is
+					// prevent path traversal
 					if ( preg_match('/\.\./', $entry['file_name']) )
 					{
 						continue;
