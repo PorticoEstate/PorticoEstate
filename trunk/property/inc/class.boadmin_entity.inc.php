@@ -42,6 +42,11 @@
 		var $cat_id;
 		var $entity_id;
 
+		/**
+		 * @var object $custom reference to custom fields object
+		 */
+		protected $custom;
+
 		var $public_functions = array
 		(
 			'read'				=> true,
@@ -50,7 +55,6 @@
 			'delete'			=> true,
 			'check_perms'		=> true
 		);
-
 		var $soap_functions = array(
 			'list' => array(
 				'in'  => array('int','int','struct','string','int'),
@@ -75,6 +79,7 @@
 			$this->so 		= CreateObject('property.soadmin_entity');
 			$this->bocommon = CreateObject('property.bocommon');
 			$this->custom 	= createObject('property.custom_fields');
+			$this->admin_custom 	= createObject('admin.bocustom');
 
 			if ($session)
 			{
@@ -307,32 +312,51 @@
 			$this->custom->resort($id, $resort, 'property', '.entity.' . $this->entity_id . '.' . $this->cat_id);
 		}
 
-		function save_attrib($attrib,$action='')
+		public function save_attrib($attrib, $action='')
 		{
 			$attrib['appname'] = 'property';
  			$attrib['location'] = '.entity.' . $attrib['entity_id'] . '.' . $attrib['cat_id'];
-
-			if ($action=='edit')
+			if ( $action=='edit' && $attrib['id'] )
 			{
-				if ($attrib['id'] != '')
+				if ( $this->custom->edit($attrib) )
 				{
-
-					$receipt = $this->custom->edit_attrib($attrib);
+					$this->custom->edit($attrib);
+					return array
+					(
+						'msg'	=> array('msg' => lang('Field has been updated'))
+					);
 				}
+
+				return array('error' => lang('Unable to update field'));
 			}
 			else
 			{
-				$id = $this->custom->add_attrib($attrib);
-				if ( $id )
+				$id = $this->custom->add($attrib);
+				if ( $id <= 0  )
 				{
-					$receipt['message'][] = array('msg' => lang('Attribute has been saved'));
+					$this->custom->add($attrib);
+
+					return array('error' => lang('Unable to add field'));
 				}
-				else
+				else if ( $id == -1 )
 				{
-					$receipt['error'][] = array('msg' => lang('Column could not be added'));
+					return array
+					(
+						'id'	=> 0,
+						'error'	=> array
+						(
+							array('msg' => lang('field already exists, please choose another name')),
+							array('msg' => lang('Attribute has NOT been saved'))
+						)
+					);
 				}
+
+				return array
+				(
+					'id'	=> $id,
+					'msg'	=> array('msg' => lang('Custom field has been created'))
+				);
 			}
-			return $receipt;
 		}
 
 		function read_custom_function($entity_id='',$cat_id='',$allrows='', $acl_location='')
@@ -347,7 +371,7 @@
 				$acl_location = '.entity.' . $entity_id . '.' . $cat_id;
 			}
 
-			$custom_function =$this->custom->read_custom_function(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
+			$custom_function =$this->custom->find(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
 											'appname'=>'property','location' => $acl_location,'allrows'=>$this->allrows));
 
 			$this->total_records = $this->custom->total_records;
@@ -358,7 +382,7 @@
 		function resort_custom_function($id,$resort)
 		{
 			$location = '.entity.' . $this->entity_id . '.' . $this->cat_id;
-			return $this->custom->resort_custom_function($id, $resort, 'property', $location);
+			return $this->custom->resort($id, $resort, 'property', $location);
 		}
 
 		function save_custom_function($custom_function,$action='')
@@ -374,19 +398,19 @@
 				if ($custom_function['id'] != '')
 				{
 
-					$receipt = $this->custom->edit_custom_function($custom_function);
+					$receipt = $this->custom->edit($custom_function);
 				}
 			}
 			else
 			{
-				$receipt = $this->custom->add_custom_function($custom_function);
+				$receipt = $GLOBALS['phpgw']->custom_functions->add($custom_function);
 			}
 			return $receipt;
 		}
 
 		function select_custom_function($selected='')
 		{
-			return $this->custom->select_custom_function($selected, 'property');
+			return $this->admin_custom->select_custom_function($selected, 'property');
 		}
 
 		function read_single_custom_function($entity_id='',$cat_id='',$id,$location='')
@@ -395,7 +419,7 @@
 			{
 				$location = '.entity.' . $entity_id . '.' . $cat_id;
 			}
-			return $this->custom->read_single_custom_function('property',$location,$id);
+			return $this->custom->get('property',$location,$id);
 		}
 	}
 

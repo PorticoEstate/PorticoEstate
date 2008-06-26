@@ -44,6 +44,11 @@
 		var $lookup;
 		var $use_session;
 
+		/**
+		* @var object $custom reference to custom fields object
+		*/
+		protected $custom;
+
 		var $public_functions = array
 		(
 			'read'		=> true,
@@ -174,7 +179,7 @@
 			{
 				$selected = isset($GLOBALS['phpgw_info']['user']['preferences']['property']['location_columns_' . $this->type_id . !!$this->lookup]) ? $GLOBALS['phpgw_info']['user']['preferences']['property']["location_columns_" . $this->type_id . !!$this->lookup]:'';
 			}
-			$columns = $this->custom->get_attribs('property','.location.' . $type_id, 0, '','','',true);
+			$columns = $this->custom->find('property','.location.' . $type_id, 0, '','','',true);
 			$column_list=$this->bocommon->select_multi_list($selected,$columns);
 			return $column_list;
 		}
@@ -270,7 +275,7 @@
 //_debug_array($location_types);
 //			$filtermethod = " OR (type_id < $lookup_type AND lookup_form=1)";
 			$filtermethod = " OR (lookup_form=1)";
-			$fm_location_cols = $this->custom->get_attribs('property', '.location.' . $data['type_id'], 0, '', '', '', true,$filtermethod);
+			$fm_location_cols = $this->custom->find('property', '.location.' . $data['type_id'], 0, '', '', '', true,$filtermethod);
 
 
 //_debug_array($fm_location_cols);
@@ -578,9 +583,9 @@
 				return;
 			}
 
-			$values['attributes'] = $this->custom->get_attribs('property','.location.' . $type_id, 0, '', 'ASC', 'attrib_sort', true, true);
+			$values['attributes'] = $this->custom->find('property','.location.' . $type_id, 0, '', 'ASC', 'attrib_sort', true, true);
 			$values = $this->so->read_single($location_code, $values);
-			$values = $this->custom->prepare_attributes($values, 'property','.location.' . $type_id, $extra['view']);
+			$values = $this->custom->prepare($values, 'property','.location.' . $type_id, $extra['view']);
 
 			if( isset($extra['tenant_id']) && $extra['tenant_id']!='lookup')
 			{
@@ -671,7 +676,7 @@
 			}
 
 			$acl_location = '.location.' . $type_id;
-			$custom_functions = $this->custom->read_custom_function(array('appname'=>'property','location' => $acl_location,'allrows'=>true));
+			$custom_functions = $this->custom->find(array('appname'=>'property','location' => $acl_location,'allrows'=>true));
 
 			if (isSet($custom_functions) AND is_array($custom_functions))
 			{

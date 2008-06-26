@@ -543,7 +543,7 @@
 				$contacts	= CreateObject('property.soactor');
 				$contacts->role='vendor';
 				$custom 		= createObject('property.custom_fields');
-				$vendor_data['attributes'] = $custom->get_attribs('property','.vendor', 0, '', 'ASC', 'attrib_sort', true, true);
+				$vendor_data['attributes'] = $custom->find('property','.vendor', 0, '', 'ASC', 'attrib_sort', true, true);
 
 				$vendor_data	= $contacts->read_single($data['vendor_id'],$vendor_data);
 				if(is_array($vendor_data))
@@ -602,7 +602,7 @@
 				$tenant_object	= CreateObject('property.soactor');
 				$tenant_object->role = 'tenant';
 				$custom 		= createObject('property.custom_fields');
-				$tenant_data['attributes'] = $custom->get_attribs('property','.tenant', 0, '', 'ASC', 'attrib_sort', true, true);
+				$tenant_data['attributes'] = $custom->find('property','.tenant', 0, '', 'ASC', 'attrib_sort', true, true);
 				$tenant_data	= $tenant_object->read_single($data['tenant_id'],$tenant_data);
 				if(is_array($tenant_data['attributes']))
 				{

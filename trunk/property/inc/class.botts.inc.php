@@ -593,8 +593,8 @@
 				$receipt = $this->mail_ticket($receipt['id'],$fields_updated,$receipt,$ticket['location_code']);
 			}
 
-			$custom = createObject('property.custom_fields');
-			$custom_functions = $custom->read_custom_function(array('appname'=>'property','location' => $this->acl_location,'allrows'=>true));
+			$custom = createObject('property.custom_functions');
+			$custom_functions = $custom->find(array('appname'=>'property','location' => $this->acl_location,'allrows'=>true));
 
 			if (isSet($custom_functions) AND is_array($custom_functions))
 			{
@@ -626,7 +626,7 @@
 				$location_data 		= $solocation->read_single($ticket['location_code']);
 
 				$type_id=count(explode('-',$ticket['location_code']));
-				$fm_location_cols = $custom->get_attribs('property','.location.' . $type_id, 0, '', 'ASC', 'attrib_sort', true, true);
+				$fm_location_cols = $custom->find('property','.location.' . $type_id, 0, '', 'ASC', 'attrib_sort', true, true);
 				$i=0;
 				if (isset($fm_location_cols) AND is_array($fm_location_cols))
 				{

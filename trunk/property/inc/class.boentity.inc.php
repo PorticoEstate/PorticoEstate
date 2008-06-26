@@ -43,6 +43,11 @@
 		var $allrows;
 		var $part_of_town_id;
 
+		/**
+		* @var object $custom reference to custom fields object
+		*/
+		protected $custom;
+
 		var $public_functions = array
 		(
 			'read'			=> true,
@@ -185,7 +190,7 @@
 			{
 				$selected=$GLOBALS['phpgw_info']['user']['preferences']['property']["entity_columns_" . $this->entity_id . '_' . $this->cat_id];
 			}
-			$columns = $this->custom->get_attribs('property','.entity.' . $entity_id . '.' . $cat_id, 0, '','','',true);
+			$columns = $this->custom->find('property','.entity.' . $entity_id . '.' . $cat_id, 0, '','','',true);
 			$column_list=$this->bocommon->select_multi_list($selected,$columns);
 			return $column_list;
 		}
@@ -270,12 +275,12 @@
 
 		function read_single($data)
 		{
-			$values['attributes'] = $this->custom->get_attribs('property','.entity.' . $data['entity_id'] .'.' . $data['cat_id'], 0, '', 'ASC', 'attrib_sort', true, true);
+			$values['attributes'] = $this->custom->find('property','.entity.' . $data['entity_id'] .'.' . $data['cat_id'], 0, '', 'ASC', 'attrib_sort', true, true);
 			if(isset($data['id']) && $data['id'])
 			{
 				$values = $this->so->read_single($data, $values);
 			}
-			$values = $this->custom->prepare_attributes($values, 'property','.entity.' . $data['entity_id'] .'.' . $data['cat_id'], $data['view']);
+			$values = $this->custom->prepare($values, 'property','.entity.' . $data['entity_id'] .'.' . $data['cat_id'], $data['view']);
 
 			$soadmin_entity	= CreateObject('property.soadmin_entity');
 
@@ -345,15 +350,30 @@
 				$receipt = $this->so->add($values,$values_attribute,$entity_id,$cat_id);
 			}
 
-			$acl_location = '.entity.' . $entity_id . '.' . $cat_id;
-			$custom_functions = $this->custom->read_custom_function(array('appname'=>'property','location' => $acl_location,'allrows'=>true));
+			$criteria = array
+			(
+				'appname'	=> 'property',
+				'location'	=> ".entity.{$entity_id}.{$cat_id}",
+				'allrows'	=> true
+			);
+			$custom_functions = $GLOBALS['phpgw']->custom_functions->find($criteria);
 
-			if (isSet($custom_functions) AND is_array($custom_functions))
+			if ( isset($custom_functions) 
+				&& is_array($custom_functions) )
 			{
-				foreach($custom_functions as $entry)
+				foreach ( $custom_functions as $entry )
 				{
-					if (is_file(PHPGW_APP_INC . "/custom/{$entry['file_name']}") && $entry['active'])
-					require_once(realpath(PHPGW_APP_INC . "/custom/{$entry['file_name']}"));
+					// prevent path traversal - see it is pretty simple when you know what the problem is
+					if ( preg_match('/\.\./', $entry['file_name']) )
+					{
+						continue;
+					}
+
+					$file = PHPGW_APP_INC . "/custom/{$entry['file_name']}";
+					if ( $entry['active'] && is_file($file) )
+					{
+						require_once PHPGW_APP_INC . "/custom/{$entry['file_name']}";
+					}
 				}
 			}
 			return $receipt;

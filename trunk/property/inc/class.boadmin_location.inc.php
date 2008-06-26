@@ -40,6 +40,11 @@
 		public $order;
 		public $allrows;
 
+		/**
+		* @var object $custom reference to custom fields object
+		*/
+		protected $custom;
+
 		var $public_functions = array
 		(
 			'read'				=> true,
@@ -184,8 +189,8 @@
 			}
 			else if($type_id && $id && $attrib)
 			{
-				$this->custom->_delete_attrib('.location.' . $type_id,'property',$id, 'fm_location' . $type_id, true);
-				$this->custom->_delete_attrib('.location.' . $type_id,'property',$id, 'fm_location' . $type_id . '_history');
+				$this->custom->delete('property',".location.{$type_id}",$id /*, 'fm_location' . $type_id */ );
+				$this->custom->delete('property',".location.{$type_id}",$id /*, 'fm_location' . $type_id . '_history'*/ );
 			}
 		}
 
@@ -196,7 +201,7 @@
 				$this->allrows = $allrows;
 			}
 
-			$attrib = $this->custom->get_attribs('property', '.location.' . $type_id, $this->start, $this->query, $this->sort, $this->order, $this->allrows);
+			$attrib = $this->custom->find('property', '.location.' . $type_id, $this->start, $this->query, $this->sort, $this->order, $this->allrows);
 
 			$this->total_records = $this->custom->total_records;
 
@@ -205,7 +210,7 @@
 
 		function read_single_attrib($type_id,$id)
 		{
-			return $this->custom->get_attrib_single('property', '.location.' . $type_id, $id, true);
+			return $this->custom->get('property', ".location.{$type_id}", $id, true);
 		}
 
 		function resort_attrib($data = array())
@@ -219,31 +224,57 @@
 				return;
 			}
 
-			$this->custom->resort_attrib($id, $resort, 'property', '.location.' . $type_id);
+			$this->custom->resort($id, $resort, 'property', '.location.' . $type_id);
 		}
 
-		function save_attrib($attrib,$action='')
+		public function save_attrib($attrib,$action='')
 		{
 			$attrib['appname'] = 'property';
  			$attrib['location'] = '.location.' . $attrib['type_id'];
  			$primary_table = 'fm_location' . $attrib['type_id'];
  			$history_table = $primary_table . '_history';
 
-			if ($action=='edit')
+			if ( $action=='edit' && $attrib['id'] )
 			{
-				if ($attrib['id'] != '')
+				if ( $this->custom->edit($attrib, $primary_table) )
 				{
-
-					$receipt = $this->custom->edit_attrib($attrib, $primary_table);
-					$this->custom->edit_attrib($attrib, $history_table);
+					$this->custom->edit($attrib, $history_table);
+					return array
+					(
+						'msg'	=> array('msg' => lang('Field has been updated'))
+					);
 				}
+
+				return array('error' => lang('Unable to update field'));
 			}
 			else
 			{
-				$receipt = $this->custom->add_attrib($attrib, $primary_table);
-				$this->custom->add_attrib($attrib, $history_table, true);
+				$id = $this->custom->add($attrib, $primary_table);
+				if ( $id <= 0  )
+				{
+					$this->custom->add($attrib, $history_table, true);
+
+					return array('error' => lang('Unable to add field'));
+				}
+				else if ( $id == -1 )
+				{
+					return array
+					(
+						'id'	=> 0,
+						'error'	=> array
+						(
+							array('msg' => lang('field already exists, please choose another name')),
+							array('msg' => lang('Attribute has NOT been saved'))
+						)
+					);
+				}
+
+				return array
+				(
+					'id'	=> $id,
+					'msg'	=> array('msg' => lang('Custom field has been created'))
+				);
 			}
-			return $receipt;
 		}
 
 		function save_config($values='',$column_name='')

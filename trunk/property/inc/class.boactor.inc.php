@@ -43,6 +43,11 @@
 		var $role;
 		var $member_id;
 
+		/**
+		 * @var object $custom reference to custom fields object
+		 */
+		protected $custom;
+
 		var $public_functions = array
 		(
 			'read'			=> true,
@@ -175,6 +180,7 @@
 			{
 				$values = $this->so->read_single($data['actor_id'], $values);
 			}
+
 			$values = $this->custom->prepare($values, 'property','.' . $this->role, $data['view']);
 			return $values;
 		}
