@@ -43,6 +43,11 @@
 		var $role;
 		var $member_id;
 
+		/**
+		* @var object $custom reference to custom fields object
+		*/
+		protected $custom;
+
 		var $public_functions = array
 		(
 			'read'				=> true,
@@ -235,14 +240,14 @@
 
 		function read_single($data)
 		{
-			$values['attributes'] = $this->custom->get_attribs('property', '.agreement', 0, '', 'ASC', 'attrib_sort', true, true);
+			$values['attributes'] = $this->custom->find('property', '.agreement', 0, '', 'ASC', 'attrib_sort', true, true);
 
 			if(isset($data['agreement_id']) && $data['agreement_id'])
 			{
 				$values = $this->so->read_single($data['agreement_id'], $values);
 			}
 
-			$values = $this->custom->prepare_attributes($values, 'property', '.agreement');
+			$values = $this->custom->prepare($values, 'property', '.agreement');
 
 			$dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
 			if(isset($values['entry_date']) && $values['entry_date'])
@@ -276,12 +281,12 @@
 
 		function read_single_item($data)
 		{
-			$values['attributes'] = $this->custom->get_attribs('property', '.agreement.detail', 0, '', 'ASC', 'attrib_sort', true, true);
+			$values['attributes'] = $this->custom->find('property', '.agreement.detail', 0, '', 'ASC', 'attrib_sort', true, true);
 			if(isset($data['agreement_id']) && $data['agreement_id'] && isset($data['id']) && $data['id'])
 			{
 				$values = $this->so->read_single_item($data, $values);
 			}
-			$values = $this->custom->prepare_attributes($values, 'property', '.agreement.detail');
+			$values = $this->custom->prepare($values, 'property', '.agreement.detail');
 			return $values;
 		}
 
@@ -362,7 +367,7 @@
 				$selected = isset($GLOBALS['phpgw_info']['user']['preferences']['property']["agreement_columns"])?$GLOBALS['phpgw_info']['user']['preferences']['property']["agreement_columns"]:'';
 			}
 
-			$columns = $this->custom->get_attribs('property','.agreement', 0, '','','',true);
+			$columns = $this->custom->find('property','.agreement', 0, '','','',true);
 
 			$column_list=$this->bocommon->select_multi_list($selected,$columns);
 

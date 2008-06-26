@@ -1570,8 +1570,8 @@
 				'values' 			=> $content,
 				'table_header'		=> $table_header,
 			);
-//_debug_array($data);
-			$attrib_data 	= $this->bo->custom->get_attrib_single('property', '.s_agreement.detail', $attrib_id);
+
+			$attrib_data 	= $this->bo->custom->get('property', '.s_agreement.detail', $attrib_id);
 			$appname	= $attrib_data['input_text'];
 
 			$function_msg	= lang('history');
@@ -1581,4 +1581,3 @@
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('attrib_history' => $data));
 		}
 	}
-

@@ -42,6 +42,11 @@
 		var $cat_id;
 		var $allrows;
 
+		/**
+		* @var object $custom reference to custom fields object
+		*/
+		protected $custom;
+
 		var $public_functions = array
 		(
 			'read'			=> true,
@@ -194,7 +199,7 @@ _debug_array('hei');
 		*/
 		function read2()
 		{
-			$custom_attributes = $this->custom->get_attribs('property', $this->acl_location, 0, '', 'ASC', 'attrib_sort', true, true);
+			$custom_attributes = $this->custom->find('property', $this->acl_location, 0, '', 'ASC', 'attrib_sort', true, true);
 
 			$ifc_info = $this->so->read2(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
 											'cat_id'=>$this->cat_id,'allrows'=>$this->allrows,'filter'=>$this->filter,
@@ -206,14 +211,14 @@ _debug_array('hei');
 
 		function read_single($id='')
 		{
-			$values['attributes'] = $this->custom->get_attribs('property', $this->acl_location, 0, '', 'ASC', 'attrib_sort', true, true);
+			$values['attributes'] = $this->custom->find('property', $this->acl_location, 0, '', 'ASC', 'attrib_sort', true, true);
 
 			if($id)
 			{
 				$values = $this->so->read_single($id,$values);
 			}
 
-			$values = $this->custom->prepare_attributes($values,$appname='property', $location=$this->acl_location);
+			$values = $this->custom->prepare($values,$appname='property', $location=$this->acl_location);
 
 			$dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
 			if(isset($values['entry_date']) && $values['entry_date'])
@@ -261,7 +266,7 @@ _debug_array('hei');
 				$receipt = $this->so->add($values,$values_attribute);
 			}
 
-			$custom_functions = $this->custom->read_custom_function(array('appname'=>'property','location' => $this->acl_location,'allrows'=>true));
+			$custom_functions = $this->custom->find(array('appname'=>'property','location' => $this->acl_location,'allrows'=>true));
 
 			if (isSet($custom_functions) AND is_array($custom_functions))
 			{

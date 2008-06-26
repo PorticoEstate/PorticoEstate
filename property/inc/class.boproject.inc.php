@@ -277,7 +277,7 @@
 
 				if(isset($workorder_data[$i]['vendor_id']) && $workorder_data[$i]['vendor_id'])
 				{
-					$vendor['attributes'] = $custom->get_attribs('property','.vendor', 0, '', 'ASC', 'attrib_sort', true, true);
+					$vendor['attributes'] = $custom->find('property','.vendor', 0, '', 'ASC', 'attrib_sort', true, true);
 
 					$vendor	= $contacts->read_single($workorder_data[$i]['vendor_id'], $vendor);
 					foreach($vendor['attributes'] as $attribute)

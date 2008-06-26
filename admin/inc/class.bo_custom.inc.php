@@ -180,7 +180,7 @@
 				{
 					return array
 					(
-						'msg'	=> array('msg' => lang('Custom function has been created'))
+						'msg'	=> array('msg' => lang('Custom field has been created'))
 					);
 				}
 
@@ -189,22 +189,27 @@
 			else
 			{
 				$id = $this->so->add($attrib);
-				if ( !$id  )
+				if ( $id <= 0  )
 				{
 					return array('error' => lang('Unable to add field'));
 				}
 				else if ( $id == -1 )
 				{
-					$receipt['id'] = 0;
-					$receipt['error'] = array();
-					$receipt['error'][] = array('msg' => lang('field already exists, please choose another name'));
-					$receipt['error'][] = array('msg'	=> lang('Attribute has NOT been saved'));
+					return array
+					(
+						'id'	=> 0,
+						'error'	=> array
+						(
+							array('msg' => lang('field already exists, please choose another name')),
+							array('msg' => lang('Attribute has NOT been saved'))
+						)
+					);
 				}
 
 				return array
 				(
 					'id'	=> $id,
-					'msg'	=> array('msg' => lang('Custom function has been created'))
+					'msg'	=> array('msg' => lang('Custom field has been created'))
 				);
 			}
 		}
