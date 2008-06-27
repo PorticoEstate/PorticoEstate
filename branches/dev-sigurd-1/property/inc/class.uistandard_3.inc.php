@@ -59,7 +59,7 @@
 			$this->bo				= CreateObject('property.bostandard_3',true);
 			$this->bocommon				= CreateObject('property.bocommon');
 
-			$this->acl 				= CreateObject('phpgwapi.acl');
+			$this->acl 					= & $GLOBALS['phpgw']->acl;
 			$this->acl_location			= '.admin';
 			$this->acl_read 			= $this->acl->check($this->acl_location, PHPGW_ACL_READ, 'property');
 			$this->acl_add 				= $this->acl->check($this->acl_location, PHPGW_ACL_ADD, 'property');

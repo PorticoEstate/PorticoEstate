@@ -60,7 +60,7 @@
 			$this->contacts			= CreateObject('property.soactor');
 			$this->contacts->role		= 'vendor';
 
-			$this->acl 			= CreateObject('phpgwapi.acl');
+			$this->acl 				= & $GLOBALS['phpgw']->acl;
 			$this->acl_location		= '.invoice';
 			$this->acl_read 		= $this->acl->check('.invoice', PHPGW_ACL_READ, 'property');
 			$this->acl_add 			= $this->acl->check('.invoice', PHPGW_ACL_ADD, 'property');

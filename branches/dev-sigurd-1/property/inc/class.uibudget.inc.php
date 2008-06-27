@@ -81,7 +81,7 @@
 			$this->grouping		= $this->bo->grouping;
 			$this->revision		= $this->bo->revision;
 
-			$this->acl 		= CreateObject('phpgwapi.acl');
+			$this->acl 			= & $GLOBALS['phpgw']->acl;
 
 		}
 

@@ -70,7 +70,7 @@
 			$this->cat_id		= $this->bo->cat_id;
 			$this->allrows		= $this->bo->allrows;
 
-			$this->acl 		= CreateObject('phpgwapi.acl');
+			$this->acl 			= & $GLOBALS['phpgw']->acl;
 			$this->acl_location	= '.custom';
 			$this->acl_read 	= $this->acl->check('.custom', PHPGW_ACL_READ, 'property');
 			$this->acl_add 		= $this->acl->check('.custom', PHPGW_ACL_ADD, 'property');
