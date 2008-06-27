@@ -51,7 +51,7 @@
 		//	$this->grants 		= $GLOBALS['phpgw']->session->appsession('grants_project','property');
 		//	if(!$this->grants)
 			{
-				$this->acl 		= CreateObject('phpgwapi.acl');
+				$this->acl 		= & $GLOBALS['phpgw']->acl;
 				$this->grants		= $this->acl->get_grants('property','.project');
 		//		$GLOBALS['phpgw']->session->appsession('grants_project','property',$this->grants);
 			}
