@@ -74,12 +74,11 @@
 			)
 		);
 
-		function property_boadmin_entity($session=false)
+		function __construct($session=false)
 		{
-			$this->so 		= CreateObject('property.soadmin_entity');
-			$this->bocommon = CreateObject('property.bocommon');
-			$this->custom 	= createObject('property.custom_fields');
-			$this->admin_custom 	= createObject('admin.bocustom');
+			$this->so			= CreateObject('property.soadmin_entity');
+			$this->bocommon		= CreateObject('property.bocommon');
+			$this->custom		= createObject('property.custom_fields');
 
 			if ($session)
 			{
@@ -410,7 +409,8 @@
 
 		function select_custom_function($selected='')
 		{
-			return $this->admin_custom->select_custom_function($selected, 'property');
+			$admin_custom = createObject('admin.bo_custom');
+			return $admin_custom->select_custom_function($selected, 'property');
 		}
 
 		function read_single_custom_function($entity_id='',$cat_id='',$id,$location='')
