@@ -46,7 +46,7 @@
 			$this->join =& $this->db->join;
 			$this->left_join = " LEFT JOIN ";
 
-			$this->acl 		= CreateObject('phpgwapi.acl');
+			$this->acl 		= & $GLOBALS['phpgw']->acl;
 			$this->grants	= $this->acl->get_grants('property','.project');
 		}
 

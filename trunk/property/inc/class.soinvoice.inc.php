@@ -42,7 +42,7 @@
 			$this->bocommon		= CreateObject('property.bocommon');
 			$this->account_id 	= $GLOBALS['phpgw_info']['user']['account_id'];
 
-			$this->acl 		= CreateObject('phpgwapi.acl');
+			$this->acl 		= & $GLOBALS['phpgw']->acl;
 
 			$this->join		= $this->bocommon->join;
 			$this->left_join	= $this->bocommon->left_join;
