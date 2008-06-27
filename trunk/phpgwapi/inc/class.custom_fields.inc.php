@@ -479,7 +479,7 @@
 			$old_data_type		= $this->_db->f('datatype');
 			$old_precision		= $this->_db->f('precision_');			
 			
-			$table_def = $this->_get_table_def($attrib_table);	
+			$table_def = $this->get_table_def($attrib_table);	
 
 			$this->_db->transaction_begin();
 
@@ -776,6 +776,37 @@
 		}
 
 		/**
+		 * Get the definition of a table
+		 *
+		 * @param string $table     the name of the table to look up
+		 * @param array  $table_def ask sigurd
+		 *
+		 * @return array the table structure
+		 */
+		public function get_table_def($table = '', $table_def = array())
+		{
+			if( !$GLOBALS['phpgw_setup']->_oProc 
+				|| !is_object($GLOBALS['phpgw_setup']->_oProc) )
+			{
+				$GLOBALS['phpgw_setup']->oProc =& $this->_oProc;
+			}
+
+			$setup = createobject('phpgwapi.setup_process');
+			$tableinfo = $setup->sql_to_array($table);
+
+			$fd = '$fd = array(' . str_replace("\t",'',$tableinfo[0]) .');';
+
+			eval($fd);
+			$table_def[$table]['fd'] = isset($table_def[$table]['fd']) && $table_def[$table]['fd'] ? $table_def[$table]['fd'] + $fd : $fd;
+			$table_def[$table]['pk'] = isset($table_def[$table]['pk']) && $table_def[$table]['pk'] ? $table_def[$table]['pk'] : $tableinfo[1];
+			$table_def[$table]['fk'] = isset($table_def[$table]['fk']) && $table_def[$table]['fk'] ? $table_def[$table]['fk'] : $tableinfo[2];		
+			$table_def[$table]['ix'] = isset($table_def[$table]['ix']) && $table_def[$table]['ix'] ? $table_def[$table]['ix'] : $tableinfo[3];
+			$table_def[$table]['uc'] = isset($table_def[$table]['uc']) && $table_def[$table]['uc'] ? $table_def[$table]['uc'] : $tableinfo[4];
+
+			return $table_def;
+		}
+
+		/**
 		 * Resort an attribute's position in relation to other attributes
 		 * 
 		 * @param int $id the attribute db pk
@@ -835,7 +866,7 @@
 			}
 
 			$sql = "UPDATE phpgw_cust_attribute SET attrib_sort = {$attrib_sort}"
-				. "WHERE location_id = {$location_id} AND attrib_sort = {$new_sort}";
+				. " WHERE location_id = {$location_id} AND attrib_sort = {$new_sort}";
 			$this->_db->query($sql, __LINE__, __FILE__);
 
 			$sql = "UPDATE phpgw_cust_attribute SET attrib_sort = {$new_sort}"
@@ -843,29 +874,6 @@
 			$this->_db->query($sql, __LINE__, __FILE__);
 
 			return $this->_db->transaction_commit();
-		}
-
-		protected function _get_table_def($table = '', $table_def = array())
-		{
-			if( !$GLOBALS['phpgw_setup']->_oProc 
-				|| !is_object($GLOBALS['phpgw_setup']->_oProc) )
-			{
-				$GLOBALS['phpgw_setup']->oProc =& $this->_oProc;
-			}
-
-			$setup = createobject('phpgwapi.setup_process');
-			$tableinfo = $setup->sql_to_array($table);
-
-			$fd = '$fd = array(' . str_replace("\t",'',$tableinfo[0]) .');';
-
-			eval($fd);
-			$table_def[$table]['fd'] = isset($table_def[$table]['fd']) && $table_def[$table]['fd'] ? $table_def[$table]['fd'] + $fd : $fd;
-			$table_def[$table]['pk'] = isset($table_def[$table]['pk']) && $table_def[$table]['pk'] ? $table_def[$table]['pk'] : $tableinfo[1];
-			$table_def[$table]['fk'] = isset($table_def[$table]['fk']) && $table_def[$table]['fk'] ? $table_def[$table]['fk'] : $tableinfo[2];		
-			$table_def[$table]['ix'] = isset($table_def[$table]['ix']) && $table_def[$table]['ix'] ? $table_def[$table]['ix'] : $tableinfo[3];
-			$table_def[$table]['uc'] = isset($table_def[$table]['uc']) && $table_def[$table]['uc'] ? $table_def[$table]['uc'] : $tableinfo[4];
-
-			return $table_def;
 		}
 
 		/**
@@ -880,8 +888,8 @@
 			$ttrib_id		= (int) $attrib_id;
 			
 			$sql = "SELECT * FROM phpgw_cust_choice " 
-				. " WHERE phpgw_locations.id = {$location_id}"
-					. " attrib_id = {$attrib_id}"
+				. " WHERE phpgw_location.id = {$location_id}"
+					. " AND attrib_id = {$attrib_id}"
 				. " ORDER BY value";
 			$this->_db->query($sql,__LINE__,__FILE__);
 
