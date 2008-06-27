@@ -3,6 +3,7 @@
 	* Access Control List - Security scheme based on ACL design
 	* @author Dan Kuykendall <seek3r@phpgroupware.org>
 	* @author Dave Hall <skwashd@phpgroupware.org>
+	* @author Sigurd Nes <sigurdne@online.no>
 	* @copyright Copyright (C) 2000-2008 Free Software Foundation, Inc. http://www.fsf.org/
 	* @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License v3 or later
 	* @package phpgwapi
