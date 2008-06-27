@@ -69,7 +69,6 @@
 		function help()
 		{
 			$GLOBALS['phpgw_info']['flags']['noframework'] = true;
-			$odt2xhtml	= CreateObject('manual.odt2xhtml');
 			$app = phpgw::get_var('app', 'string', 'GET');
 			$section = phpgw::get_var('section', 'string', 'GET');
 
@@ -110,7 +109,13 @@
 
 			if(is_file($odtfile))
 			{
-				echo $odt2xhtml->oo_convert($odt2xhtml->oo_unzip($odtfile));
+				$odt2xhtml	= CreateObject('manual.odt2xhtml',$odtfile);
+				$odt2xhtml->convert2xhtml();
+				$odt2xhtml->get_elements_html();
+				//$odt2xhtml->display_elements_html('css',0); 
+				//$odt2xhtml->display_elements_html('title',0); 
+				$odt2xhtml->display_elements_html('body',0); 
+				$odt2xhtml->delete_tmp();
 			}
 			else
 			{
