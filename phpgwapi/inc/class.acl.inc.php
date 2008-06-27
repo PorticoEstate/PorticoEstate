@@ -412,19 +412,7 @@
 				|| count($this->_data[$this->_account_id]) == 0)
 			{
 				$this->_data[$this->_account_id] = array();
-				$cached = phpgwapi_cache::system_get('phpgwapi',
-																"acl_data_{$this->_account_id}");
-				if ( is_array($cached) && count($cached) )
-				{
-					$this->_data[$this->_account_id] = $cached;
-				}
-				else
-				{
-					$this->_read_repository($account_type);
-					phpgwapi_cache::system_set('phpgwapi',
-										"acl_data_{$this->_account_id}",
-										$this->_data[$this->_account_id]);
-				}
+				$this->_read_repository($account_type);
 			}
 
 			if ( !$appname )
