@@ -42,7 +42,7 @@
 		{
 			$incoming_app = $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$GLOBALS['phpgw_info']['flags']['currentapp'] = 'property';
-			$acl = & $GLOBALS['phpgw']->acl;
+			$acl = CreateObject('phpgwapi.acl');
 			$menus = array();
 
 			$entity			= CreateObject('property.soadmin_entity');

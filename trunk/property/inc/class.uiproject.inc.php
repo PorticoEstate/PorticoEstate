@@ -71,6 +71,7 @@
 			$this->bocommon			= CreateObject('property.bocommon');
 			$this->cats				= & $this->bo->cats;
 
+	//		$this->acl 			= CreateObject('phpgwapi.acl');
 			$this->acl 				= & $GLOBALS['phpgw']->acl;
 			$this->acl_location		= '.project';
 			$this->acl_read 		= $this->acl->check('.project', PHPGW_ACL_READ, 'property');

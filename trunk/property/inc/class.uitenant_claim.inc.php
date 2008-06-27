@@ -62,7 +62,7 @@
 
 			$this->bo		= CreateObject('property.botenant_claim',true);
 			$this->bocommon		= CreateObject('property.bocommon');
-			$this->acl			= & $GLOBALS['phpgw']->acl;
+			$this->acl		= CreateObject('phpgwapi.acl');
 			$this->acl_location	= '.tenant_claim';
 
 			$this->acl_read 	= $this->acl->check($this->acl_location, PHPGW_ACL_READ, 'property');

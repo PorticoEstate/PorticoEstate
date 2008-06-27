@@ -116,7 +116,7 @@
 
 			if(!$grants)
 			{
-				$this->acl 	= & $GLOBALS['phpgw']->acl;
+				$this->acl 	= CreateObject('phpgwapi.acl');
 				$grants		= $this->acl->get_grants('property','.entity.' . $entity_id . '.' . $cat_id);
 				$GLOBALS['phpgw']->session->appsession('grants_entity_'.$entity_id.'_'.$cat_id,'property',$grants);
 			}

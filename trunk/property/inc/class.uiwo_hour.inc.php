@@ -76,7 +76,7 @@
 
 			$this->config->read_repository();
 
-			$this->acl 					= & $GLOBALS['phpgw']->acl;
+			$this->acl 				= CreateObject('phpgwapi.acl');
 			$this->acl_location			= '.project';
 			$this->acl_read 			= $this->acl->check('.project', PHPGW_ACL_READ, 'property');
 			$this->acl_add 				= $this->acl->check('.project', PHPGW_ACL_ADD, 'property');
