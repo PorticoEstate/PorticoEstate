@@ -73,7 +73,7 @@
 
 			$this->entity_id			= $this->bo->entity_id;
 			$this->cat_id				= $this->bo->cat_id;
-			$this->acl 					= & $GLOBALS['phpgw']->acl;
+			$this->acl 				= CreateObject('phpgwapi.acl');
 			if(!$this->cat_id)
 			{
 				$this->acl_location		= '.entity.' . $this->entity_id;

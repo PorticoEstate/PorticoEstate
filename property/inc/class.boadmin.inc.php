@@ -46,7 +46,7 @@
 		{
 		//	$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->so 			= CreateObject('property.soadmin');
-			$this->acl 			= & $GLOBALS['phpgw']->acl;
+			$this->acl 			= CreateObject('phpgwapi.acl');
 			$this->bocommon 	= CreateObject('property.bocommon');
 			$this->right		= array(1,2,4,8,16);
 

@@ -61,7 +61,7 @@
 			$this->bo			= CreateObject('property.bob_account',true);
 			$this->bocommon			= CreateObject('property.bocommon');
 
-			$this->acl 				= & $GLOBALS['phpgw']->acl;
+			$this->acl 			= CreateObject('phpgwapi.acl');
 			$this->acl_location		= '.b_account';
 			$this->acl_read 		= $this->acl->check('.b_account', PHPGW_ACL_READ, 'property');
 			$this->acl_add 			= $this->acl->check('.b_account', PHPGW_ACL_ADD, 'property');

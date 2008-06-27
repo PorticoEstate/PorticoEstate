@@ -71,7 +71,7 @@
 			$this->cats				= CreateObject('phpgwapi.categories');
 			$this->cats->app_name	= 'fm_' . $this->role;
 
-			$this->acl				= & $GLOBALS['phpgw']->acl;
+			$this->acl				= CreateObject('phpgwapi.acl');
 			$this->acl_location		= '.' . $this->role;
 
 			$this->acl_read 		= $this->acl->check($this->acl_location, PHPGW_ACL_READ, 'property');
