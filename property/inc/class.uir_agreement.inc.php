@@ -72,7 +72,7 @@
 			$this->cats				= CreateObject('phpgwapi.categories');
 			$this->cats->app_name	= 'fm_tenant';
 
-			$this->acl				= CreateObject('phpgwapi.acl');
+			$this->acl				= & $GLOBALS['phpgw']->acl;
 			$this->acl_location		= '.r_agreement';
 
 			$this->acl_read 		= $this->acl->check($this->acl_location, PHPGW_ACL_READ, 'property');

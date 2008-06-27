@@ -69,7 +69,7 @@
 			$this->config				= CreateObject('phpgwapi.config','property');
 			$this->boadmin_entity		= CreateObject('property.boadmin_entity');
 
-			$this->acl 					= CreateObject('phpgwapi.acl');
+			$this->acl 					= & $GLOBALS['phpgw']->acl;
 			$this->acl_location			= '.document';
 			$this->acl_read 			= $this->acl->check('.document', PHPGW_ACL_READ, 'property');
 			$this->acl_add 				= $this->acl->check('.document', PHPGW_ACL_ADD, 'property');
