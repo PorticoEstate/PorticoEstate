@@ -737,5 +737,32 @@
 		{
 			return $this->so->get_tenant_location($tenant_id);
 		}
-	}
 
+		/**
+		 * Get a list of attributes
+		 * 
+		 * @param string $location     the name of the location
+		 *
+		 * @return array holding custom fields at this location
+		 */
+
+		function find_attribute($location)
+		{
+				return $this->custom->find('property', $location, 0, '', 'ASC', 'attrib_sort', true, true);
+		}
+
+		/**
+		 * Prepare custom attributes for ui
+		 * 
+		 * @param array  $values    values and definitions of custom attributes
+		 * @param string $location  the name of the location
+		 * @param bool   $view_only if set - calendar listeners is not activated
+		 *
+		 * @return array values and definitions of custom attributes prepared for ui
+		 */
+
+		function prepare_attribute($values, $location, $view_only= false)
+		{
+			return $this->bo->custom->prepare($values, 'property', $location, $view_only);
+		}
+	}
