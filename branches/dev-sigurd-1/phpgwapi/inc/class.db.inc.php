@@ -522,7 +522,7 @@
 			$insert_value = array();
 			foreach ( $values as $value )
 			{
-				if($value || $value === 0)
+				if($value || (is_numeric($value) && $value == 0) )
 				{
 					if ( is_numeric($value) )
 					{
@@ -557,7 +557,7 @@
 			$value_entry = array();
 			foreach ( $value_set as $field => $value )
 			{
-				if($value || $value === 0)
+				if($value || (is_numeric($value) && $value == 0) )
 				{
 					if ( is_numeric($value) )
 					{
