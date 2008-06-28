@@ -456,21 +456,30 @@
 
 			if ($query)
 			{
-				$query = $this->db->db_addslashes($query);
 				if ($whereclause)
 				{
-					$whereclause .= ' AND ( ';
+					$whereclause .= ' AND (';
 				}
 				else
 				{
-					$whereclause = ' WHERE ( ';
+					$whereclause = ' WHERE (';
 				}
 
-				$whereclause .= " account_firstname $this->like '%$query%' OR account_lastname $this->like "
-					. "'%$query%' OR account_lid $this->like '%$query%' OR person_id =" . (int)$query . ')';
+				if(ctype_digit($query))
+				{
+					$whereclause .= 'person_id =' . (int)$query . ')';
+				}
+				else
+				{
+					$query = $this->db->db_addslashes($query);
+
+					$whereclause .= "account_firstname $this->like '%$query%' OR account_lastname $this->like "
+						. "'%$query%' OR account_lid $this->like '%$query%')";
+				}
 			}
 
 			$sql = "SELECT * FROM phpgw_accounts $whereclause $orderclause";
+
 			if ($offset == -1 && $start == -1)
 			{
 				$this->db->query($sql, __LINE__, __FILE__);
