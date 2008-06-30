@@ -1,3 +1,0 @@
-server.php and discuss.php are now disabled by default.
-Remove 'exit;' from the top of each to enable.
-

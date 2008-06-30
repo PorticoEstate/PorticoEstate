@@ -1,3 +1,0 @@
-DROP TABLE IF EXISTS phpgw_comic;
-DROP TABLE IF EXISTS phpgw_comic_admin;
-DROP TABLE IF EXISTS phpgw_comic_data;

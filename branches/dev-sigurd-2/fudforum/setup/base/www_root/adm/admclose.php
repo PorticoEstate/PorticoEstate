@@ -1,1 +1,0 @@
-</td></tr></table><?php $GLOBALS['phpgw']->common->phpgw_footer(); ?>

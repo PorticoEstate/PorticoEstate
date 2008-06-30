@@ -1,3 +1,0 @@
-#!/bin/tcsh -f
-
-grep "Sound Mix" details | sed -f sed_sound
