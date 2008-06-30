@@ -266,7 +266,7 @@
 
 
 			$ordermethod = ' ORDER BY custom_sort ASC';
-			if ( isset($data['order']) )
+			if ( isset($data['order']) && $data['order'] )
 			{
 				$data['sort'] = 'ASC';
 				if ( isset($data['sort']) && $data['sort'] == 'DESC' )
@@ -388,7 +388,7 @@
 				$resort = 'down';
 			}
 
-			$loccation_id = $GLOBALS['phpgw']->location->get_id($appname, $location);
+			$location_id = $GLOBALS['phpgw']->locations->get_id($appname, $location);
 
 			$this->_db->transaction_begin();
 			
