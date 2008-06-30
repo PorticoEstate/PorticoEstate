@@ -888,7 +888,7 @@
 			$ttrib_id		= (int) $attrib_id;
 			
 			$sql = "SELECT * FROM phpgw_cust_choice " 
-				. " WHERE phpgw_location.id = {$location_id}"
+				. " WHERE location_id = {$location_id}"
 					. " AND attrib_id = {$attrib_id}"
 				. " ORDER BY value";
 			$this->_db->query($sql,__LINE__,__FILE__);

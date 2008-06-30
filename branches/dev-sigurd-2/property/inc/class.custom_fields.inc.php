@@ -71,6 +71,7 @@
 			$contacts		= CreateObject('phpgwapi.contacts');
 			$vendor 		= CreateObject('property.soactor');
 			$vendor->role	= 'vendor';
+			$location_id	= $GLOBALS['phpgw']->locations->get_id($appname, $location);
 
 			$dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
 
@@ -160,7 +161,7 @@
 				}
 				else if($values['attributes'][$i]['datatype']=='R' || $values['attributes'][$i]['datatype']=='CH' || $values['attributes'][$i]['datatype']=='LB')
 				{
-					$values['attributes'][$i]['choice']	= $this->read_attrib_choice($appname, $location,$values['attributes'][$i]['id']);
+					$values['attributes'][$i]['choice']	= $this->_get_choices($appname, $location_id,$values['attributes'][$i]['id']);
 					$input_type=$input_type_array[$values['attributes'][$i]['datatype']];
 
 					if($values['attributes'][$i]['datatype']=='CH')
