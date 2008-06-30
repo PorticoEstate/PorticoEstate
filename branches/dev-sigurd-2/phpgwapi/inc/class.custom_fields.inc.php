@@ -163,6 +163,7 @@
 				'search'		=> false,
 				'list'			=> false,
 				'history'		=> false,
+				'lookup_form'	=> false,
 				'disabled'		=> false,
 				'helpmsg'		=> $this->_db->db_addslashes($attrib['helpmsg']),
 				'attrib_sort'	=> 0,
@@ -186,6 +187,16 @@
 			if ( isset($attrib['history']) )
 			{
 				$values['history'] = !!$attrib['history'];
+			}
+
+			if ( isset($attrib['lookup_form']) )
+			{
+				$values['lookup_form'] = !!$attrib['lookup_form'];
+			}
+
+			if ( isset($attrib['disabled']) )
+			{
+				$values['disabled'] = !!$attrib['disabled'];
 			}
 
 			if ( isset($attrib['default']) )
@@ -223,19 +234,20 @@
 				return -1;
 			}
 
-			$sql = 'SELECT MAX(attrib_sort) AS max_sort, MAX(id) AS current_id'
-				. ' FROM phpgw_cust_attribute '
-				. " WHERE location_id ='{$values['location_id']}'";
-			$this->_db->query($sql, __LINE__, __FILE__);
-			$this->_db->next_record();
-			$values['attrib_sort']	= $this->_db->f('max_sort') + 1;
-			$values['id']	= $this->_db->f('current_id') + 1;		
-			
-			$cols = implode(', ', array_keys($values));
-			$vals = $this->_db->validate_insert($values);
 
 			if ( !$doubled )
 			{
+				$sql = 'SELECT MAX(attrib_sort) AS max_sort, MAX(id) AS current_id'
+					. ' FROM phpgw_cust_attribute '
+					. " WHERE location_id ='{$values['location_id']}'";
+				$this->_db->query($sql, __LINE__, __FILE__);
+				$this->_db->next_record();
+				$values['attrib_sort']	= $this->_db->f('max_sort') + 1;
+				$values['id']	= $this->_db->f('current_id') + 1;		
+			
+				$cols = implode(', ', array_keys($values));
+				$vals = $this->_db->validate_insert($values);
+
 				$sql = "INSERT INTO phpgw_cust_attribute({$cols}) VALUES({$vals})";
 				$this->_db->query($sql, __LINE__, __FILE__);
 			}
@@ -329,19 +341,24 @@
 		}
 
 		/**
-		 * Delete a custom attribute or custom function
+		 * Delete a custom field/attribute
 		 * 
-		 * @param string  $appname the application name
-		 * @param string  $location the location
-		 * @param integer $attrib_id the db pk for the attribute to delete
+		 * @param string $location within an application
+		 * @param string $appname where to delete the attrib
+		 * @param integer $attrib_id id of attrib to delete
+		 * @param bool $doubled sometimes the attribute fits into a history-table as a double
 		 *
 		 * @return boolean was the record deleted?
 		 */
-		public function delete($appname, $location, $attrib_id)
+		public function delete($appname, $location, $attrib_id, $table = '',$doubled = false )
 		{
 			$loc_id		= $GLOBALS['phpgw']->locations->get_id($appname, $location);
-			$table		= $GLOBALS['phpgw']->locations->get_attrib_table($appname, $location);
 			$attrib_id	= (int) $attrib_id;
+
+			if(!$table)
+			{
+				$table	= $GLOBALS['phpgw']->locations->get_attrib_table($appname, $location);
+			}
 
 			$this->_db->transaction_begin();
 			$sql = "SELECT column_name FROM phpgw_cust_attribute"
@@ -357,25 +374,30 @@
 
 			$this->_oProc->DropColumn($table, false, $column_name);
 
-			$sql = "SELECT attrib_sort FROM phpgw_cust_attribute"
-				. " WHERE location_id = {$loc_id} AND id = {$attrib_id}";
-			$this->_db->query($sql,__LINE__,__FILE__);
-			$this->_db->next_record();
-			$attrib_sort	= $this->_db->f('attrib_sort');
-
-			$sql = "SELECT MAX(attrib_sort) AS max_sort"
-				. " FROM phpgw_cust_attribute WHERE location_id = {$loc_id}";
-			$this->_db->query($sql, __LINE__, __FILE__);
-			$this->_db->next_record();
-			$max_sort	= $this->_db->f('max_sort');
-			
-			if ( $max_sort > $attrib_sort )
+			if(!$doubled) // else: wait for it - another one is coming
 			{
-				$sql = "UPDATE phpgw_cust_attribute SET attrib_sort = attrib_sort - 1"
-					. " WHERE location_id = {$loc_id} AND attrib_sort > {$attrib_sort}";
-				$this->_db->query($sql, __LINE__, __FILE__);
-			}
+				$sql = "SELECT attrib_sort FROM phpgw_cust_attribute"
+					. " WHERE location_id = {$loc_id} AND id = {$attrib_id}";
+				$this->_db->query($sql,__LINE__,__FILE__);
+				$this->_db->next_record();
+				$attrib_sort	= $this->_db->f('attrib_sort');
 
+				$sql = "SELECT MAX(attrib_sort) AS max_sort"
+					. " FROM phpgw_cust_attribute WHERE location_id = {$loc_id}";
+				$this->_db->query($sql, __LINE__, __FILE__);
+				$this->_db->next_record();
+				$max_sort	= $this->_db->f('max_sort');
+			
+				if ( $max_sort > $attrib_sort )
+				{
+					$sql = "UPDATE phpgw_cust_attribute SET attrib_sort = attrib_sort - 1"
+						. " WHERE location_id = {$loc_id} AND attrib_sort > {$attrib_sort}";
+					$this->_db->query($sql, __LINE__, __FILE__);
+				}
+				$sql = "DELETE FROM phpgw_cust_attribute"
+						. " WHERE location_id = {$loc_id} AND id = {$attrib_id}";
+				$this->_db->query($sql, __LINE__,__FILE__);
+			}	
 			return $this->_db->transaction_commit();
 		}
 
@@ -394,10 +416,11 @@
 			$attrib['search'] = isset($attrib['search']) ? !!$attrib['search'] : false;
 			$attrib['list'] = isset($attrib['list']) ? !!$attrib['list'] : false;
 			$attrib['history'] = isset($attrib['history']) ? !!$attrib['history'] : false;
+			$attrib['lookup_form'] = isset($attrib['lookup_form']) ? !!$attrib['lookup_form'] : false;
 
 			if(!$attrib_table)
 			{
-				$attrib_table = $this->get_attrib_table($attrib['appname'],$attrib['location']);
+				$attrib_table = $GLOBALS['phpgw']->locations->get_attrib_table($attrib['appname'],$attrib['location']);
 			}
 
 			$location_id	= $GLOBALS['phpgw']->locations->get_id($attrib['appname'], $attrib['location']);
@@ -443,21 +466,25 @@
 
 			$this->_db->transaction_begin();
 
-			$value_set = array
-			(
-				'input_text'	=> $attrib['input_text'],
-				'statustext'	=> $attrib['statustext'],
-				'search'		=> isset($attrib['search']) ? $attrib['search'] : '',
-				'list'			=> isset($attrib['list']) ? $attrib['list'] : '',
-				'history'		=> isset($attrib['history']) ? $attrib['history'] : '',
-				'nullable'		=> $attrib['column_info']['nullable'] == 'False' ? 'False' : 'True',
-				'disabled'		=> isset($attrib['disabled']) ? $attrib['disabled'] : '',
-				'helpmsg'		=> $attrib['helpmsg'],
-			);
+			if( !$doubled )
+			{
+				$value_set = array
+				(
+					'input_text'	=> $attrib['input_text'],
+					'statustext'	=> $attrib['statustext'],
+					'search'		=> isset($attrib['search']) ? $attrib['search'] : '',
+					'list'			=> isset($attrib['list']) ? $attrib['list'] : '',
+					'history'		=> isset($attrib['history']) ? $attrib['history'] : '',
+					'nullable'		=> $attrib['column_info']['nullable'] == 'False' ? 'False' : 'True',
+					'disabled'		=> isset($attrib['disabled']) ? $attrib['disabled'] : '',
+					'helpmsg'		=> $attrib['helpmsg'],
+					'lookup_form'	=> isset($attrib['lookup_form']) ? $attrib['lookup_form'] : ''
+				);
 
-			$value_set	= $this->_db->validate_update($value_set);
+				$value_set	= $this->_db->validate_update($value_set);
 
-			$this->_db->query("UPDATE phpgw_cust_attribute set $value_set WHERE location_id = {$location_id} AND id=" . $attrib_id,__LINE__,__FILE__);
+				$this->_db->query("UPDATE phpgw_cust_attribute set $value_set WHERE location_id = {$location_id} AND id=" . $attrib_id,__LINE__,__FILE__);
+			}
 
 			$this->_oProc->m_aTables = $table_def;
 
@@ -465,9 +492,11 @@
 			{
 				$value_set=array('column_name'	=> $attrib['column_name']);
 
-				$value_set	= $this->_db->validate_update($value_set);
-
-				$this->_db->query("UPDATE phpgw_cust_attribute set $value_set WHERE location_id = {$location_id} AND id=" . $attrib_id,__LINE__,__FILE__);
+				if( !$doubled )
+				{
+					$value_set	= $this->_db->validate_update($value_set);
+					$this->_db->query("UPDATE phpgw_cust_attribute set $value_set WHERE location_id = {$location_id} AND id=" . $attrib_id,__LINE__,__FILE__);
+				}
 
 				$this->_oProc->RenameColumn($attrib_table, $OldColumnName, $attrib['column_name']);
 			}
@@ -475,18 +504,21 @@
 			if (($OldDataType != $attrib['column_info']['type'])
 				|| ($OldPrecision != $attrib['column_info']['precision']) )
 			{
-				switch ( $attrib['column_info']['type'] )
+				if( !$doubled )
 				{
-					default:
-						$sql = "DELETE FROM phpgw_cust_choice"
-						. " WHERE location_id = {$location_id}"
-						. " AND attrib_id = {$attrib_id}";
-						$this->_db->query($sql, __LINE__, __FILE__);
-						break;
-					case 'R':
-					case 'CH':
-					case 'LB':
-						//do nothing
+					switch ( $attrib['column_info']['type'] )
+					{
+						default:
+							$sql = "DELETE FROM phpgw_cust_choice"
+							. " WHERE location_id = {$location_id}"
+							. " AND attrib_id = {$attrib_id}";
+							$this->_db->query($sql, __LINE__, __FILE__);
+							break;
+						case 'R':
+						case 'CH':
+						case 'LB':
+							//do nothing
+					}
 				}
 
 				if(!$attrib['column_info']['precision'])
@@ -511,15 +543,18 @@
 					'nullable'		=> $attrib['column_info']['nullable']
 					);
 
-				$value_set	= $this->_db->validate_update($value_set);
+				if( !$doubled )
+				{
+					$value_set	= $this->_db->validate_update($value_set);
 
-				$sql = 'UPDATE phpgw_cust_attribute'
-						. " SET {$value_set}"
-						. " WHERE  location_id = {$location_id}"
-							. " AND id = {$attrib_id}";
-				$this->_db->query($sql ,__LINE__,__FILE__);
+					$sql = 'UPDATE phpgw_cust_attribute'
+							. " SET {$value_set}"
+							. " WHERE  location_id = {$location_id}"
+								. " AND id = {$attrib_id}";
+					$this->_db->query($sql ,__LINE__,__FILE__);
+				}
 
-				$attrib['column_info']['type']  = $this->translate_datatype_insert($attrib['column_info']['type']);
+				$attrib['column_info']['type']  = $this->_translate_datatype_insert($attrib['column_info']['type']);
 				$this->_oProc->AlterColumn($attrib_table,$attrib['column_name'],$attrib['column_info']);			
 			}
 			
@@ -555,10 +590,10 @@
 
 			if ( $this->_db->transaction_commit() )
 			{
-				$receipt['message'][] = array('msg'	=> lang('Attribute has been edited'));
+				return true;
 			}
 
-			return $receipt;
+			return false;
 		}
 
 
@@ -652,7 +687,7 @@
 					'type_name'			=> $this->_db->f('type'),
 					'datatype'			=> $this->_db->f('datatype'),
 					'search'			=> $this->_db->f('search'),
-					'trans_datatype'	=> $this->_translate_datatype($this->_db->f('datatype')),
+					'trans_datatype'	=> $this->translate_datatype($this->_db->f('datatype')),
 					'nullable'			=> ($this->_db->f('nullable') == 'True'),
 					//'allow_null'		=> ($this->_db->f('nullable') == 'True'), // FIXME
 					'history'			=> $this->_db->f('history'),
@@ -710,7 +745,7 @@
 			$attrib = array
 			(
 				'id'			=> $this->_db->f('id'),
-				// FIXME this isn't needed -its duplicated data - someone needs to fix their broken code!
+				// FIXME this isn't needed
 				//'attrib_id'		=> $this->_db->f('id'),
 				'column_name'	=> $this->_db->f('column_name', true),
 				'input_text'	=> $this->_db->f('input_text', true),
@@ -724,7 +759,7 @@
 				'location_id'	=> $this->_db->f('location_id'),
 				// FIXME this is broken it should be a small int and used as a bool
 				'nullable'		=> $this->_db->f('nullable') == 'True',
-				// FIXME this isn't needed -its duplicated data - someone needs to fix their broken code!
+				// FIXME this isn't needed
 				//'allow_null'	=> $this->_db->f('nullable') == 'True',
 				'disabled'		=> !!$this->_db->f('disabled'),
 				'helpmsg'		=> $this->_db->f('helpmsg', true),
@@ -733,7 +768,7 @@
 										'precision'	=> $this->_db->f('precision_'),
 										'scale'		=> $this->_db->f('scale'),
 										'default'	=> $this->_db->f('default_value', true),
-										// more duplicated values - great design
+										// more duplicated values
 										'nullable'	=> $this->_db->f('nullable'),
 										'type'		=> $this->_db->f('datatype')
 									)
@@ -880,10 +915,11 @@
 			$choices = array();
 			while ( $this->_db->next_record() )
 			{
-				$id = $this->_db->f('id');
-				$choices[$id] = array
+			//	$id = $this->_db->f('id');
+			//	$choices[$id] = array
+				$choices[] = array
 				(
-					'id'	=> $id,
+					'id'	=> $this->_db->f('id'),
 					'value'	=> $this->_db->f('value', true)
 				);
 			}
@@ -940,7 +976,7 @@
 		 *
 		 * @return string the user readable string
 		 */
-		protected function _translate_datatype($datatype)
+		public function translate_datatype($datatype)
 		{
 			if ( isset($this->datatype_text[$datatype]) )
 			{

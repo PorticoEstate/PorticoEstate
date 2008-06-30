@@ -279,7 +279,7 @@
 			}
 			else if($attrib_id && $cat_id && $entity_id && !$custom_function_id)
 			{
-				$this->custom->delete('.entity.' . $entity_id . '.' . $cat_id,'property',$attrib_id);
+				$this->custom->delete('property', ".entity.{$entity_id}.{$cat_id}", $attrib_id);
 				$this->so->delete_history($entity_id, $cat_id,$attrib_id);
 			}
 			else if($custom_function_id && $acl_location)

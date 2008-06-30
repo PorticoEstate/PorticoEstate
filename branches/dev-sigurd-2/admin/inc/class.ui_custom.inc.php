@@ -266,6 +266,10 @@
 				{
 					$receipt['error'][] = array('msg'=>lang('location not selected!'));
 				}
+				else
+				{
+					$location = $values['location'];
+				}
 
 				if (!$values['column_name'])
 				{
@@ -438,7 +442,7 @@
 				'lang_location_statustext'			=> lang('Select submodule'),
 				'select_name_location'				=> 'values[location]',
 
-				'location_list'						=> $this->bolocation->select_location('select',(isset($values['location'])?$values['location']:''),False,True),
+				'location_list'						=> $this->bolocation->select_location('select', $location, false, true),
 
 				'value_disabled'					=> isset($values['disabled']) ? $values['disabled'] : '',
 				'lang_disabled'						=> lang('disabled'),
@@ -447,7 +451,7 @@
 				'value_helpmsg'						=> isset($values['helpmsg']) ? $values['helpmsg'] : '',
 				'lang_helpmsg'						=> lang('help message'),
 				'lang_helpmsg_statustext'			=> lang('Enables help message for this attribute'),
-				'value_location'					=> isset($values['location']) ? $values['location'] : ''
+				'value_location'					=> $location
 			);
 //_debug_array($values);
 

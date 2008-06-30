@@ -675,8 +675,8 @@
 				}
 			}
 
-			$acl_location = '.location.' . $type_id;
-			$custom_functions = $this->custom->find(array('appname'=>'property','location' => $acl_location,'allrows'=>true));
+			$acl_location = ".location.{$type_id}";
+			$custom_functions = $this->custom->find('property', $acl_location, 0, '', '','',true);
 
 			if (isSet($custom_functions) AND is_array($custom_functions))
 			{

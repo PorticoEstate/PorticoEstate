@@ -189,8 +189,8 @@
 			}
 			else if($type_id && $id && $attrib)
 			{
-				$this->custom->delete('property',".location.{$type_id}",$id /*, 'fm_location' . $type_id */ );
-				$this->custom->delete('property',".location.{$type_id}_history",$id /*, 'fm_location' . $type_id . '_history'*/ );
+				$this->custom->delete('property',".location.{$type_id}", $id , "fm_location{$type_id}_history", true );
+				$this->custom->delete('property',".location.{$type_id}", $id , "fm_location{$type_id}" );
 			}
 		}
 
@@ -236,9 +236,9 @@
 
 			if ( $action=='edit' && $attrib['id'] )
 			{
-				if ( $this->custom->edit($attrib, $primary_table) )
+				if ( $this->custom->edit($attrib, $history_table, true) )
 				{
-					$this->custom->edit($attrib, $history_table, true);
+					$this->custom->edit($attrib, $primary_table);
 					return array
 					(
 						'msg'	=> array('msg' => lang('Field has been updated'))
@@ -250,10 +250,9 @@
 			else
 			{
 				$id = $this->custom->add($attrib, $primary_table);
+				$this->custom->add($attrib, $history_table, true);
 				if ( $id <= 0  )
 				{
-					$this->custom->add($attrib, $history_table, true);
-
 					return array('error' => lang('Unable to add field'));
 				}
 				else if ( $id == -1 )

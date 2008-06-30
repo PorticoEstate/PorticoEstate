@@ -83,11 +83,12 @@
 			);
 
 			$m=0;
-			for ($i=0;$i<count($values['attributes']);$i++)
+			$i=0;
+			foreach ($values['attributes'] as &$attributes)
 			{
-				$values['attributes'][$i]['datatype_text'] 	= $this->_translate_datatype($values['attributes'][$i]['datatype']);
-				$values['attributes'][$i]['help_url']		= $values['attributes'][$i]['helpmsg'] ? $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'manual.uimanual.attrib_help', 'appname'=> $appname, 'location'=> $location, 'id' => $values['attributes'][$i]['id'])): '';
-				if($values['attributes'][$i]['datatype']=='D')
+				$attributes['datatype_text'] 	= $this->translate_datatype($attributes['datatype']);
+				$attributes['help_url']		= $attributes['helpmsg'] ? $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'manual.uimanual.attrib_help', 'appname'=> $appname, 'location'=> $location, 'id' => $attributes['id'])): '';
+				if($attributes['datatype']=='D')
 				{
 					if(!$view_only)
 					{
@@ -97,85 +98,84 @@
 						}
 
 						$GLOBALS['phpgw']->jscal->add_listener('values_attribute_' . $i);
-						$values['attributes'][$i]['img_cal']= $GLOBALS['phpgw']->common->image('phpgwapi','cal');
-						$values['attributes'][$i]['lang_datetitle']= lang('Select date');
+						$attributes['img_cal']= $GLOBALS['phpgw']->common->image('phpgwapi','cal');
+						$attributes['lang_datetitle']= lang('Select date');
 					}
 
-					if(isset($values['attributes'][$i]['value']) && $values['attributes'][$i]['value'])
+					if(isset($attributes['value']) && $attributes['value'])
 					{
-						$timestamp_date= mktime(0,0,0,date('m',strtotime($values['attributes'][$i]['value'])),date('d',strtotime($values['attributes'][$i]['value'])),date('y',strtotime($values['attributes'][$i]['value'])));
-						$values['attributes'][$i]['value']	= $GLOBALS['phpgw']->common->show_date($timestamp_date,$dateformat);
+						$timestamp_date= mktime(0,0,0,date('m',strtotime($attributes['value'])),date('d',strtotime($attributes['value'])),date('y',strtotime($attributes['value'])));
+						$attributes['value']	= $GLOBALS['phpgw']->common->show_date($timestamp_date,$dateformat);
 					}
 				}
-				else if($values['attributes'][$i]['datatype']=='AB')
+				else if($attributes['datatype']=='AB')
 				{
-					if($values['attributes'][$i]['value'])
+					if($attributes['value'])
 					{
-						$contact_data	= $contacts->read_single_entry($values['attributes'][$i]['value'],array('n_given'=>'n_given','n_family'=>'n_family','email'=>'email'));
-						$values['attributes'][$i]['contact_name']	= $contact_data[0]['n_family'] . ', ' . $contact_data[0]['n_given'];
+						$contact_data	= $contacts->read_single_entry($attributes['value'],array('n_given'=>'n_given','n_family'=>'n_family','email'=>'email'));
+						$attributes['contact_name']	= $contact_data[0]['n_family'] . ', ' . $contact_data[0]['n_given'];
 					}
 
-					$insert_record_values[]	= $values['attributes'][$i]['name'];
-					$lookup_link		= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uilookup.addressbook', 'column'=> $values['attributes'][$i]['name']));
+					$insert_record_values[]	= $attributes['name'];
+					$lookup_link		= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uilookup.addressbook', 'column'=> $attributes['name']));
 
-					$lookup_functions[$m]['name'] = 'lookup_'. $values['attributes'][$i]['name'] .'()';
+					$lookup_functions[$m]['name'] = 'lookup_'. $attributes['name'] .'()';
 					$lookup_functions[$m]['action'] = 'Window1=window.open('."'" . $lookup_link ."'" .',"Search","width=800,height=700,toolbar=no,scrollbars=yes,resizable=yes");';
 					$m++;
 				}
-				else if($values['attributes'][$i]['datatype']=='VENDOR')
+				else if($attributes['datatype']=='VENDOR')
 				{
-					if($values['attributes'][$i]['value'])
+					if($attributes['value'])
 					{
-						$vendor_data	= $vendor->read_single($values['attributes'][$i]['value'],array('attributes' => array(0 => array('column_name' => 'org_name'))));
+						$vendor_data	= $vendor->read_single($attributes['value'],array('attributes' => array(0 => array('column_name' => 'org_name'))));
 
 						for ($n=0;$n<count($vendor_data['attributes']);$n++)
 						{
 							if($vendor_data['attributes'][$n]['column_name'] == 'org_name')
 							{
-								$values['attributes'][$i]['vendor_name']= $vendor_data['attributes'][$n]['value'];
+								$attributes['vendor_name']= $vendor_data['attributes'][$n]['value'];
 								$n =count($vendor_data['attributes']);
 							}
 						}
 					}
 
-					$insert_record_values[]	= $values['attributes'][$i]['name'];
-					$lookup_link		= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uilookup.vendor', 'column'=> $values['attributes'][$i]['name']));
+					$insert_record_values[]	= $attributes['name'];
+					$lookup_link		= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uilookup.vendor', 'column'=> $attributes['name']));
 
-					$lookup_functions[$m]['name'] = 'lookup_'. $values['attributes'][$i]['name'] .'()';
+					$lookup_functions[$m]['name'] = 'lookup_'. $attributes['name'] .'()';
 					$lookup_functions[$m]['action'] = 'Window1=window.open('."'" . $lookup_link ."'" .',"Search","width=800,height=700,toolbar=no,scrollbars=yes,resizable=yes");';
 					$m++;
 				}
-				else if($values['attributes'][$i]['datatype']=='user')
+				else if($attributes['datatype']=='user')
 				{
-					if($values['attributes'][$i]['value'])
+					if($attributes['value'])
 					{
-						$values['attributes'][$i]['user_name']= $GLOBALS['phpgw']->accounts->id2name($values['attributes'][$i]['value']);
+						$attributes['user_name']= $GLOBALS['phpgw']->accounts->id2name($attributes['value']);
 					}
 
-					$insert_record_values[]	= $values['attributes'][$i]['name'];
-					$lookup_link		= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->_appname.'.uilookup.phpgw_user', 'column'=> $values['attributes'][$i]['name']));
+					$insert_record_values[]	= $attributes['name'];
+					$lookup_link		= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->_appname.'.uilookup.phpgw_user', 'column'=> $attributes['name']));
 
-					$lookup_functions[$m]['name'] = 'lookup_'. $values['attributes'][$i]['name'] .'()';
+					$lookup_functions[$m]['name'] = 'lookup_'. $attributes['name'] .'()';
 					$lookup_functions[$m]['action'] = 'Window1=window.open('."'" . $lookup_link ."'" .',"Search","width=800,height=700,toolbar=no,scrollbars=yes,resizable=yes");';
 					$m++;
 				}
-				else if($values['attributes'][$i]['datatype']=='R' || $values['attributes'][$i]['datatype']=='CH' || $values['attributes'][$i]['datatype']=='LB')
+				else if($attributes['datatype']=='R' || $attributes['datatype']=='CH' || $attributes['datatype']=='LB')
 				{
-					$values['attributes'][$i]['choice']	= $this->_get_choices($appname, $location_id,$values['attributes'][$i]['id']);
-					$input_type=$input_type_array[$values['attributes'][$i]['datatype']];
+					$input_type=$input_type_array[$attributes['datatype']];
 
-					if($values['attributes'][$i]['datatype']=='CH')
+					if($attributes['datatype']=='CH')
 					{
-						$values['attributes'][$i]['value']=unserialize($values['attributes'][$i]['value']);
+						$attributes['value']=unserialize($attributes['value']);
 
-						if (isset($values['attributes'][$i]['choice']) AND is_array($values['attributes'][$i]['choice']))
+						if (isset($attributes['choice']) AND is_array($attributes['choice']))
 						{
-							foreach($values['attributes'][$i]['choice'] as &$choice)
+							foreach($attributes['choice'] as &$choice)
 							{
 								$choice['input_type'] = $input_type;
-								if(isset($values['attributes'][$i]['value']) && is_array($values['attributes'][$i]['value']))
+								if(isset($attributes['value']) && is_array($attributes['value']))
 								{
-									foreach ($values['attributes'][$i]['value'] as &$selected)
+									foreach ($attributes['value'] as &$selected)
 									{
 										if($selected == $choice['id'])
 										{
@@ -188,12 +188,12 @@
 					}
 					else
 					{
-						for ($j=0;$j<count($values['attributes'][$i]['choice']);$j++)
+						for ($j=0;$j<count($attributes['choice']);$j++)
 						{
-							$values['attributes'][$i]['choice'][$j]['input_type']=$input_type;
-							if($values['attributes'][$i]['choice'][$j]['id']==$values['attributes'][$i]['value'])
+							$attributes['choice'][$j]['input_type']=$input_type;
+							if($attributes['choice'][$j]['id']==$attributes['value'])
 							{
-								$values['attributes'][$i]['choice'][$j]['checked']='checked';
+								$attributes['choice'][$j]['checked']='checked';
 							}
 						}
 					}
@@ -203,9 +203,10 @@
 					$entity['attributes'][$i]['value'] = stripslashes($entity['attributes'][$i]['value']);
 				}
 
-				$values['attributes'][$i]['datatype_text'] = $this->_translate_datatype($values['attributes'][$i]['datatype']);
-				$values['attributes'][$i]['counter']	= $i;
-//				$values['attributes'][$i]['type_id']	= $data['type_id'];
+				$attributes['datatype_text'] = $this->translate_datatype($attributes['datatype']);
+				$attributes['counter']	= $i;
+				$i++;
+//				$attributes['type_id']	= $data['type_id'];
 			}
 
 			if(isset($lookup_functions) && is_array($lookup_functions))
