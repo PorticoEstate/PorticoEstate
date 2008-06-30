@@ -1,9 +1,0 @@
-before the public web site can be viewed, you must configure the various locations and preferences.  please go to the sitemgr setup page by following this link:	sitemgr-link	ja	Webサイトを公開する前に、数々の設定を行っておかなければなりません。<br>次のリンク先よりSiteMgrセットアップ･ページに進んでください。
-default website	sitemgr-link	ja	デフォルトのWebサイト
-display list	sitemgr-link	ja	サイト一覧
-note that you may get this message if your preferences are incorrect.  for example, if config.inc.php is not found in the directory that you specified.	sitemgr-link	ja	設定が正しくない場合にこのメッセージが表示される可能性があります。<br>(例）config.inc.phpが指定したディレクトリに存在しない場合等。
-sitemgr setup page	sitemgr-link	ja	SiteMgrセットアップページ
-sitemgr-link	common	ja	SiteMgrサイト
-this is the website that sitemgr-link will load when you click the application icon.	sitemgr-link	ja	ナビバーアイコンをクリックした時に表示するSiteMgrサイトのリンク先を指定します。
-you need to make sure the sitemgr-link app is in the phpgroupware directory.  if you made a symbolic link... it isn't working.	sitemgr-link	ja	phpGroupWareディレクトリにsitemgr-linkディレクトリがあるかどうか確認する必要があります。シンボリックリンクを作成しても動作しません。
-your administrator has not yet setup the web content manager for public viewing.  go bug your administrator to get their butt in gear.	sitemgr-link	ja	管理者が公開に向けたWebコンテンツ管理のセットアップを行っていません。管理者に不具合を報告してください。

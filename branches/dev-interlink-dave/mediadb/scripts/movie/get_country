@@ -1,3 +1,0 @@
-#!/bin/tcsh -f
-
-grep "Countries" details | sed -f sed_country

@@ -1,7 +1,0 @@
-$Id: CHANGELOG 5181 2001-05-28 19:38:40Z darw1n $
-
-
-2001-03-05:	Start of bookkeeping project as part of phpgroupware on sourceforge.
-2001-03-19:	Included statistics.
-2001-03-26:	Included reports.
-2001-05-06	Started a major rewrite. Until further notice, bookkeeping is unstable.
