@@ -816,10 +816,13 @@
 		{
 			$id		= (int) $id;
 
-			$resort	= 'up';
 			if ( $resort == 'down' )
 			{
 				$resort = 'down';
+			}
+			else
+			{
+				$resort	= 'up';
 			}
 
 			$location_id = $GLOBALS['phpgw']->locations->get_id($appname, $location);
@@ -838,7 +841,7 @@
 			$this->_db->next_record();
 			$max_sort	= $this->_db->f('max_sort');
 
-			$update = true;
+			$update = false;
 			switch($resort)
 			{
 				case 'down':
