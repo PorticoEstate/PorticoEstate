@@ -149,7 +149,7 @@
 		}
 
 		/**
-		 * Delete a custom attribute or custom function
+		 * Delete a function
 		 * 
 		 * @param string $appname the application name
 		 * @param string $location the location
@@ -252,7 +252,7 @@
 
 			$location_id = $GLOBALS['phpgw']->locations->get_id($data['appname'], $data['location']);
 
-			$start = 0;
+			$start = -1;
 			if ( isset($data['start']) )
 			{
 				$start = (int) $data['start'];
@@ -303,11 +303,11 @@
 
 			if ( true ) //$allrows )
 			{
-				$this->_db->query("SELECT * {$sql} {$ordermethod}", __LINE__, __FILE__);
+				$this->_db->query("SELECT * {$sql} {$ordermethod}");
 			}
 			else
 			{
-				$this->_db->limit_query("SELECT * {$sql} {$ordermethod}", $start, __LINE__, __FILE__);
+				$this->_db->limit_query("SELECT * {$sql} {$ordermethod}", $start);
 			}
 
 			while ( $this->_db->next_record() )

@@ -304,18 +304,11 @@
 
 			if ( !$this->resultSet && $this->Halt_On_Error == 'yes' )
 			{
-				if($file)
-				{
-					//trigger_error("$sql\n in File: $file\n on Line: $line\n". $this->adodb->ErrorMsg(), E_USER_ERROR);
-					trigger_error('Error: ' . $this->adodb->ErrorMsg() . "<br>SQL: $sql\n in File: $file\n on Line: $line\n", E_USER_ERROR);
-				}
-				else
-				{
-					trigger_error("$sql\n". $this->adodb->ErrorMsg(), E_USER_ERROR);
-				}
 				$this->transaction_abort();
+				trigger_error($this->adodb->ErrorMsg(), E_USER_ERROR);
 				exit;
 			}
+
 			$this->delayPointer = true;
 			return true;
 		}
@@ -343,20 +336,13 @@
 			}
 			
 			$this->resultSet = $this->adodb->SelectLimit($Query_String, $num_rows, $offset);
-			if(!$this->resultSet && $this->Halt_On_Error == 'yes')
+			if ( !$this->resultSet && $this->Halt_On_Error == 'yes' )
 			{
-				if($file)
-				{
-					//trigger_error("$sql\n in File: $file\n on Line: $line\n". $this->adodb->ErrorMsg(), E_USER_ERROR);
-					trigger_error('Error: ' . $this->adodb->ErrorMsg() . "<br>SQL: $sql\n in File: $file\n on Line: $line\n", E_USER_ERROR);
-				}
-				else
-				{
-					trigger_error("$sql\n". $this->adodb->ErrorMsg(), E_USER_ERROR);
-				}
 				$this->transaction_abort();
+				trigger_error($this->adodb->ErrorMsg(), E_USER_ERROR);
 				exit;
 			}
+
 			$this->delayPointer = true;
 			return true;
 		}

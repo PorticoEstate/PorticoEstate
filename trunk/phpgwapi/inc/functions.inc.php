@@ -195,10 +195,10 @@
 		{
 			case E_USER_ERROR:
 			case E_ERROR:
+				echo '<p class="msg">' . lang('ERROR: %1 in %2 at line %3', $error_msg, $error_file, $error_line) . "</p>\n";
+				echo '<pre>' . phpgw_parse_backtrace($bt) . "</pre>\n";
 				$log_args['severity'] = 'F'; //all "ERRORS" should be fatal
 				$log->fatal($log_args);
-				echo '<p class="msg">' . lang('ERROR: %1 in %2 at line %3', $error_msg, $error_file, $error_line) . "</p>\n";
-				die('<pre>' . phpgw_parse_backtrace($bt) . "</pre>\n");
 
 			case E_WARNING:
 			case E_USER_WARNING:
@@ -223,11 +223,8 @@
 			//case E_STRICT:
 				$log_args['severity'] = 'N';
 				$log->notice($log_args);
-				if(isset($GLOBALS['phpgw_info']['server']['log_levels']['global_level']) && $GLOBALS['phpgw_info']['server']['log_levels']['global_level'] == 'N')
-				{
-					echo '<p>' . lang('Notice: %1 in %2 at line %3', $error_msg, $error_file, $error_line) . "</p>\n";
-					echo '<pre>' . phpgw_parse_backtrace($bt) . "</pre>\n";
-				}
+				//echo '<p>' . lang('Notice: %1 in %2 at line %3', $error_msg, $error_file, $error_line) . "</p>\n";
+				//echo '<pre>' . phpgw_parse_backtrace($bt) . "</pre>\n";
 			//No default, we just ignore it, for now
 		}
 	}
@@ -613,22 +610,19 @@ HTML;
 		\*************************************************************************/
 		if ($GLOBALS['phpgw_info']['flags']['currentapp'] != 'home' && $GLOBALS['phpgw_info']['flags']['currentapp'] != 'about')
 		{
-			if (!$GLOBALS['phpgw']->acl->check('run', PHPGW_ACL_READ, $GLOBALS['phpgw_info']['flags']['currentapp']))
+			if ( !$GLOBALS['phpgw']->acl->check('run', phpgwapi_acl::READ, $GLOBALS['phpgw_info']['flags']['currentapp']))
 			{
 				$GLOBALS['phpgw']->common->phpgw_header(true);
 				$GLOBALS['phpgw']->log->write(array('text'=>'W-Permissions, Attempted to access %1','p1'=>$GLOBALS['phpgw_info']['flags']['currentapp']));
 
 				$lang_denied = lang('Access not permitted');
 				echo <<<HTML
-					<div class="error">$lang_denied</div>
+					<div class="error">{$lang_denied}</div>
 
 HTML;
-				$GLOBALS['phpgw']->common->phpgw_exit(True);
+				$GLOBALS['phpgw']->common->phpgw_exit(true);
 			}
 		}
-
-	//  Already called from sessions::verify
-	//	$GLOBALS['phpgw']->applications->read_installed_apps();	// to get translated app-titles
 
 		/*************************************************************************\
 		* Load the header unless the developer turns it off                       *
