@@ -14,6 +14,7 @@
 		<!-- BEGIN stylesheet -->
         	<link href="{stylesheet_uri}" type="text/css" rel="StyleSheet">
         <!-- END stylesheet -->
+
 		{css}
 
 		<script type="text/javascript">
@@ -29,12 +30,13 @@
 			var navbar_config = {navbar_config};
 		//-->
 		</script>
-
-		<script type="text/javascript" src="{webserver_url}/phpgwapi/templates/portico/js/border-layout.js"></script>
-		<script type="text/javascript" src="{webserver_url}/phpgwapi/templates/portico/js/navbar.js"></script>
-		<script type="text/javascript" src="{webserver_url}/phpgwapi/templates/portico/js/toolbar.js"></script>
-		<script type="text/javascript" src="{webserver_url}/phpgwapi/js/json/json.js"></script>
+		<!-- BEGIN javascript -->
+       		<script type="text/javascript" src="{javascript_uri}"></script>
+    	<!-- END javascript -->
 
 	</head>
 	<body class="yui-skin-sam">
+
+
+
 <!-- END head -->

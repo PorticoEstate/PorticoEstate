@@ -1,30 +1,243 @@
-html
-{
-	overflow:hidden; /* Hide scrollbars from IE */
+/*
+	Border-layout for CSS only layout
+*/
+
+body {
 	height: 100%;
+	background: #edf5ff;
 }
 
-#debug-navbar {
-	display: none;
-	position: absolute;
-	width: 1000px;
-	border: 2px solid #808080;
-	padding: 1em;
-	z-index: 100;
-	background: #fff;
-	right: 0px;
-	overflow: scroll;
-	font-size: 11px;
-	bottom: 0px;
-	top: 0px;
-}
-body
-{
+div#border-layout {
 	text-align: left;
-	height: 100%;
 }
 
-/* Reset headings which get reset by YUI! - based on firefox 2 html.css */
+div#border-layout div.layout-north,
+div#border-layout div.layout-south
+{
+
+	position: absolute;
+	left: 0;
+	height: 26px;
+	width: 100%;
+}
+
+div#border-layout div.layout-north
+{
+	top: 0;
+}
+
+div#border-layout div.layout-south
+{
+	bottom: 0;
+}
+
+div#border-layout div.layout-west,
+div#border-layout div.layout-east
+{
+	position: absolute;
+	top: 31px;
+	bottom: 31px;
+	width: 194px;
+}
+
+div#border-layout div.layout-west
+{
+	left: 5px;
+}
+
+div#border-layout div.layout-east
+{
+	right: 5px;
+}
+
+div#border-layout div.layout-center {
+	position: absolute;
+	top: 31px;
+	bottom: 31px;
+	left: 204px;
+	right: 204px;
+}
+
+div#border-layout div.header
+{
+	height: 23px;
+	border: 1px solid #808080;
+	border-bottom: none;
+	background: #3f6ad1;
+}
+div#border-layout div.header h2
+{
+	font-size: 1em;
+	margin: 0px 3px;
+	color: #fff;
+	font-weight: bold;
+	line-height: 22px;
+}
+
+div#border-layout div.layout-west div.body,
+div#border-layout div.layout-east div.body,
+div#border-layout div.layout-center div.body
+{
+	background: #fff;
+	position: absolute;
+	overflow: auto;
+	top: 23px;
+	bottom: 0em;
+	border: 1px solid #808080;
+	left: 0px;
+	right: 0px;
+}
+
+div#border-layout div.layout-center div.body
+{
+	background: #fff;
+}
+
+
+/*
+	Border-layout for JS layout
+*/
+.yui-skin-sam .yui-layout .yui-layout-unit-top div.yui-layout-bd,
+.yui-skin-sam .yui-layout .yui-layout-unit-bottom div.yui-layout-bd
+{
+	border: none;
+}
+
+.yui-skin-sam .yui-layout div.header
+{
+	display: none;
+}
+
+.yui-skin-sam .yui-layout div.yui-layout-unit div.yui-layout-bd
+{
+	background-color: #fff;
+}
+
+.yui-skin-sam .yui-layout div.yui-layout-unit div.yui-layout-hd h2
+{
+	font-size: 1em;
+	margin: 0;
+}
+
+/*
+	Border-layout common for CSS and JS layout
+*/
+
+div.layout-north div.body,
+div.layout-south div.body
+{
+	position: relative;
+	float: left;
+	width: 100%;
+	background: #000;
+	color: #fff;
+	line-height: 26px;
+}
+
+div.layout-north div.body h2
+{
+	font-size: 1em;
+	font-weight: bold;
+	margin: 0 5px;
+}
+
+div.layout-north div.body div.button-bar
+{
+	position: absolute;
+	right: 0px;
+	top: 0px;
+	line-height: 26px;
+}
+
+div.layout-north div.body div.button-bar a
+{
+	color: #fff;
+	text-decoration: none;
+	margin: 0 5px;
+	display: block;
+	float: left;
+}
+
+div.layout-south div.body div.button-bar
+{
+	float: right;
+	margin: 0 5px;
+}
+
+
+/*
+	Navbar layout
+*/
+
+ul#navbar
+{
+	/*background: #fff;*/
+}
+
+ul#navbar li
+{
+	display: block;
+	white-space: nowrap;
+}
+
+ul#navbar li a
+{
+	color: #000;
+	text-decoration: none;
+	background-repeat: no-repeat;
+	background-position: left center;
+	display: inline-block;
+	padding-left: 20px;
+	margin-left: 20px;
+	padding: 2px 0px 2px 20px;
+}
+
+#navbar a.parent
+{
+	margin-left: 0px;
+}
+
+ul#navbar li a.current span
+{
+	background: #3f6ad1;
+	color: #fff;
+}
+ul#navbar li li
+{
+	padding-left: 20px;
+}
+
+#navbar li.collapsed ul
+{
+	display: none;
+}
+
+#navbar img.collapsed
+{
+	background: url(../images/collapsed.png) no-repeat center center;
+}
+
+#navbar img.collapsed:hover
+{
+	background-image: url(../images/collapsed-hover.png);
+}
+
+#navbar img.expanded
+{
+
+	background: url(../images/expanded.png) no-repeat center center;
+}
+
+#navbar img.expanded:hover
+{
+	background-image: url(../images/expanded-hover.png);
+}
+
+
+/*
+	Reset headings which get reset by YUI! - based on firefox 2 html.css
+*/
+
 h1
 {
   font-size: 2em;
@@ -51,420 +264,39 @@ h4
   font-weight: bold;
   margin: 1.33em 0;
 }
-/* End headings fix */
-/*
-div#border-layout div.layout-east {
-	position: absolute;
-	right: 0px;
-	width: 200px;
-	top: 32px;
-	bottom: 32px;
-}
-div#border-layout div.layout-center {
-	position: absolute;
-	left: 200px;
-	right: 200px;
-	top: 32px;
-	bottom: 32px;
-}
-*/
-/* CSS rules for YUI Layout Manager */
 
-/* Hide header if we are using YUI */
-div#layout-doc div.header {
-	display: none;
-}
-
-/* Give the header a blue background */
-.yui-skin-sam .yui-layout .yui-layout-hd {
-	border: none;
-}
-
-/* Set the background color */
-.yui-skin-sam .yui-layout {
-/*	background: #fff; */
-}
-
-/* Style the body */
-.yui-skin-sam .yui-layout .yui-layout-unit div.yui-layout-bd {
-    border: 1px solid #808080;
-    border-bottom: none;
-    border-top: none;
-    *border-bottom-width: 0;
-    *border-top-width: 0;
-
-    background-color: #fff;
-}
-
-/* Style the text in the header */
-.yui-skin-sam .yui-layout .yui-layout-unit div.yui-layout-hd h2 {
-	font-size: 100%;
-	margin: 0px 8px;
-}
-
-/* CSS rules for north / south panel */
-
-div#layout-doc div.layout-north, div#layout-doc div.layout-south {
-	background: #000;
-	color: #fff;
-	float: left;
-	width: 100%;
-	height: 100%;
-}
-
-div#layout-doc div.layout-north h2 {
-	font-size: 100%;
-	line-height: 32px;
-	margin: 0px;
-	float: left;
-	margin-left: 8px;
-}
-
-div#layout-doc div.layout-north div.button-bar, div#layout-doc div.layout-south div.button-bar {
-	float: right;
-	line-height: 32px;
-}
-
-div#layout-doc div.layout-north div.button-bar a {
-	display: block;
-	float: left;
-	background-repeat: no-repeat;
-	background-position: left center;
-	padding: 0px 16px 0px 20px;
-	color: #fff;
+strong
+{
+	font-weight: bold;
 }
 
 /*
-div.header h2
-{
-	font-size: 1em;
-	margin: 0;
-}
-
-div.border-layout
-{
-	position: relative;
-	height: 100%;
-}
-
-div.border-layout div.layout-north
-{
-	position: absolute;
-	width: 100%;
-	height: 2em;
-}
-
-div.border-layout div.layout-west, div.border-layout div.layout-east
-{
-	position: absolute;
-	width: 200px;
-	top: 2em;
-	bottom: 2em;
-}
-
-div.border-layout div.layout-center
-{
-	z-index:0;
-	position: absolute;
-	left: 210px;
-	right: 210px;
-	top: 2em;
-	bottom: 2em;
-}
-
-div.border-layout div.layout-east
-{
-	right: 0px;
-}
-
-div.border-layout div.layout-south
-{
-	position: absolute;
-	width: 100%;
-	bottom: 0em;
-	height: 2em;
-}
-
-div.border-layout div.split-bar
-{
-	position: absolute;
-	z-index: 10;
-	width: 10px;
-	top: 2em;
-	bottom: 2em;
-	background: url(../images/ofm-split-bar-bg.png) center top repeat-y;
-	cursor: e-resize;
-}
-
-div.border-layout div.split-bar div.split-bar-handle
-{
-	position: absolute;
-	width: 100%;
-	left: 0px;
-	height: 6%;
-	top: 46%;
-	cursor: pointer;
-}
-
-div.border-layout div.split-bar div.split-bar-handle:hover
-{
-	background: #b3d4ff url(../images/ofm-split-bar-bg.png) center top repeat-y;
-}
-
-div.border-layout div.split-bar div.split-bar-handle div, div.border-layout div.split-bar div.split-bar-handle div
-{
-	width: 100%;
-	height: 100%;
-}
-
-div.border-layout div.split-bar-w-c div.split-bar-handle div, div.border-layout div.split-bar-c-e div.split-bar-handle div.minimized
-{
-	background: url(../images/ofm-split-bar-left.png) center center no-repeat;
-
-}
-
-div.border-layout div.split-bar-c-e div.split-bar-handle div, div.border-layout div.split-bar-w-c div.split-bar-handle div.minimized
-{
-	background: url(../images/ofm-split-bar-right.png) center center no-repeat;
-}
-
-div.border-layout div.split-bar-w-c
-{
-	left: 200px;
-}
-
-div.border-layout div.split-bar-c-e
-{
-	right: 200px;
-}
-
-div.panel
-{
-	height: 100%;
-	width: 100%;
-}
-
-div.panel div.header
-{
-	height: 2em;
-	background: #eee;
-	padding: 0em 0.6em;
-	overflow: hidden;
-}
-
-div.panel div.header h2
-{
-	float: left;
-	line-height: 2em;
-	font-weight: bold;
-
-}
-
-div.panel div.header h2.icon
-{
-	padding-left: 30px;
-	background: url(../images/phpgw-icon-logo.png) left center no-repeat;
-}
-
-div.panel div.header div.button-bar
-{
-	float: right;
-	font-weight: bold;
-	white-space: nowrap;
-}
-
-div.panel div.header div.button-bar a
-{
-	line-height: 2.5em;
-	text-decoration: none;
-	color: #666;
-	margin-left: 1em;
-	font-size: 85%;
-	padding: 0.1em 0em;
-}
-
-div.panel div.header div.button-bar a:hover
-{
-	color: #000;
-}
-
-div.panel div.header div.button-bar a.icon
-{
-	padding-left: 20px;
-	background-position: left center;
-	background-repeat: no-repeat;
-}
-
-div.panel div.body
-{
-	overflow: auto;
-	position: absolute;
-	top: 2em;
-	left: 0em;
-	right: 0em;
-	padding: 0.6em;
-	background: #fff;
-	bottom: 0em;
-	border-top: 1px solid #000;
-}
-
-div.panel div.body div.toolbar
-{
-	background: #c0c0c0;
-	border-top: 1px solid #eee;
-	border-bottom: 1px solid gray;
-	padding: 0.2em 0.4em;
-	position: relative;
-}
-
-.layout-center div.panel div.body table td
-{
-	border: 1px solid #c0c0c0;
-}
-
-div.panel div.body div.toolbar a
-{
-	font-size: 85%;
-	font-weight: bold;
-	color: #666;
-}
-
-div.panel div.body div.toolbar button
-{
-	font-size: 85%;
-	font-weight: bold;
-	color: #666;
-}
-
-
-div.panel div.body div.toolbar input
-{
-	vertical-align: middle;
-}
-
-.layout-west .panel .body
-{
-	padding: 0;
-}
+	Error Related CSS
 */
-div.treeview
+.error
 {
-	margin: 0.2em;
-	padding: 0.2em;
+	background-color: #fcc;
+	border: 1px solid #f00;
+	color: #f00;
 }
 
-#navbar ul
+.warn
 {
-	margin-left: 20px;
+	background-color: #ff8;
+	border: 1px solid #fc0;
+	color: #fc0;
 }
 
-#navbar li.collapsed ul
+div.error, div.warn
 {
-	display: none;
-}
-#navbar li
-{
-	white-space: nowrap;
-	padding: 0.2em 0em;
+	font-weight: bold;
+	padding: 2px;
+	text-align: center;
 }
 
-#navbar a
-{
-	color: #333;
-	text-decoration: none;
-	padding-left: 20px;
-	margin-left: 19px;
-	background-position: left center;
-	background-repeat: no-repeat;
-	display: inline-block;
-}
-
-#navbar a.parent
-{
-	margin-left: 0px;
-}
-
-#navbar ul li a.current span
-{
-	background: #add8e6;
-	padding: 0.2em;
-	color: #000;
-}
-
-#navbar img.collapsed
-{
-	background: url(../images/collapsed.png) no-repeat center center;
-}
-
-#navbar img.collapsed:hover
-{
-	background-image: url(../images/collapsed-hover.png);
-}
-
-#navbar img.expanded
-{
-
-	background: url(../images/expanded.png) no-repeat center center;
-}
-
-#navbar img.expanded:hover
-{
-	background-image: url(../images/expanded-hover.png);
-}
-#theme-gray
-{
-	height: 100%;
-}
-
-#theme-gray div.panel div.header
-{
-	background: #ddd url(../images/ofm-gard-top.png) top left repeat-x;
-}
-
-#theme-gray div.panel div.header h2
-{
-	color: #666;
-}
-
-#theme-gray div.border-layout div.split-bar
-{
-	background-color: #ddd;
-}
-
-#theme-gray div.panel div.body
-{
-	border-color: #d0d0d0;
-}
-
-#theme-gray div.layout-north div.panel div.header, #theme-gray div.layout-south div.panel div.header
-{
-	background-color: #000;
-}
-#theme-gray div.layout-north div.panel div.header a {
-	color: #aaa;
-}
-#theme-gray div.layout-north div.panel div.header a:hover {
-	color: #999;
-}
-
-#theme-gray div.layout-north div.panel div.header h2
-{
-	color: #ccc;
-}
-
-#theme-gray div.layout-south div.panel
-{
-	color: #999;
-}
-#theme-gray div.layout-south div.panel a
-{
-	margin: 0px;
-}
-
-#theme-gray div.layout-south div.panel a:hover
-{
-	color: #fff;
-}
+/*
+	Table styling
+*/
 
 .row_on
 {
@@ -490,54 +322,3 @@ thead, th, .th
 {
 	background: #ddd url(../images/ofm-gard-top.png) top left repeat-x;
 }
-
-.icon-about
-{
-	background-image: url(../images/icons/messagebox_info.png);
-}
-
-.icon-help
-{
-	background-image: url(../images/icons/help.png);
-}
-
-.icon-preferences
-{
-	background-image: url(../images/icons/identity.png);
-}
-
-
-.icon-logout
-{
-	background-image: url(../images/icons/lock.png);
-}
-
-/* Error Related CSS */
-.error
-{
-	background-color: #fcc;
-	border: 1px solid #f00;
-	color: #f00;
-}
-
-.warn
-{
-	background-color: #ff8;
-	border: 1px solid #fc0;
-	color: #fc0;
-}
-
-div.error, div.warn
-{
-	font-weight: bold;
-	padding: 2px;
-	text-align: center;
-}
-
-.yui-nav input {padding:0.35em 0.75em;}
-.yui-nav input {margin:0 0.16em -1px 0;}
-.yui-nav .selected input {border-color:#243356;}
-.yui-nav .selected input {background:#2647a0 url(../../../../assets/skins/sam/sprite.png) repeat-x left -1400px;color:#fff;}
-.yui-nav .selected input:hover {background:#2647a0 url(../../../../assets/skins/sam/sprite.png) repeat-x left -1400px;color:#fff;}
-.yui-nav input {background:#fff url(../../../../assets/skins/sam/sprite.png) repeat-x;border:solid #a3a3a3;border-width:0 1px;color:#000;position:relative;text-decoration:none;}
-.yui-nav input:hover, .yui-nav input:focus{background:#bfdaff url(../../../../assets/skins/sam/sprite.png) repeat-x left -1300px;outline:0;}
