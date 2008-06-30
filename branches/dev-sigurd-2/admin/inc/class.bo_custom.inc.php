@@ -309,17 +309,20 @@
 			}
 
 			$raw_list = array();
-			$dir = new DirectoryIterator(PHPGW_SERVER_ROOT . "/{$appname}/inc/custom"); 
-			if ( is_object($dir) )
+
+			$dir = PHPGW_SERVER_ROOT . "/{$appname}/inc/custom"; 
+			$dir_handle = opendir($dir);
+			if ($dir_handle)
 			{
-				foreach ( $dir as $file )
+				while ($file = readdir($dir_handle))
 				{
-					if ( (substr($file, 0, 1) != '.')
-						&& is_file("{$dirname}/{$file}") )
+					if ((substr($file, 0, 1) != '.') && is_file("{$dir}/{$file}") )
 					{
 						$raw_list[] = $file;
 					}
 				}
+				closedir($dir_handle);
+				sort($raw_list);
 			}
 
 			if ( !count($raw_list) )
@@ -339,7 +342,7 @@
 					'id'		=> $file,
 					'name'		=> preg_replace('/_/', ' ', $file),
 				);
-				if ( $myfile == $selected )
+				if ( $file == $selected )
 				{
 					// FIXME this should be a binary integer - not a string
 					$rec['selected'] = 'selected';
