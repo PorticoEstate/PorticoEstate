@@ -1,0 +1,74 @@
+action	tts	ca	Acció
+add new ticket	tts	ca	Afegir nou tiquet
+add ticket	tts	ca	Afegir tiquet
+additional notes	tts	ca	Notes adicionals
+admin options	admin	ca	Opcions d'administració
+assign to	tts	ca	Assignar a
+assigned from	tts	ca	Assignat per
+assigned to	tts	ca	Assignat a
+attachment	tts	ca	Adjunt
+attachment added	tts	ca	Adjunt afegit
+attachment changed	tts	ca	Adjunt canviat
+billable hours	tts	ca	Hores computables
+billable hours changed	tts	ca	Hores computables canviades
+billable hours rate	tts	ca	Tasa d'hores computables
+billable rate	tts	ca	Tasa computable
+billable rate changed	tts	ca	Tasa computable canviada
+category changed	tts	ca	Categoría canviada
+clear form	tts	ca	Netejar Formulari
+closed	tts	ca	Tancat
+create new ticket	tts	ca	Crear nou tiquet
+creates a new ticket, returns ticket_id	tts	ca	Crear un nou tiquet, retorna ticket_id
+creates a struct of tickets	tts	ca	Crear una estructura de tiquets
+date opened	tts	ca	Data d'alta
+deadline	tts	ca	Data límit
+deadline changed	tts	ca	Data límit canviada
+detail	tts	ca	Destall
+effort	tts	ca	Esforç
+effort changed	tts	ca	Esforç canviat
+force	tts	ca	Forçar
+group ownership changed	tts	ca	Pertanyença a grups canviada
+in progress	tts	ca	En Progrès
+latest note added	tts	ca	Última Nota Afegida
+new ticket	tts	ca	Nou Tiquet
+new value	tts	ca	Nou Valor
+no additional notes	tts	ca	Sense notes adicionals
+no notes for this ticket	tts	ca	Sense notes per aquest tiquet
+no tickets found	tts	ca	Sense tiquets trobats.
+not assigned	tts	ca	No Assignat
+old value	tts	ca	Valor Antic
+open	tts	ca	Obert
+open date	tts	ca	Data d'Alta
+opened	tts	ca	Obert
+opened by	tts	ca	Obert per
+original ticket details	tts	ca	Detalls del tiquet original
+platform	tts	ca	Plataforma
+platform changed	tts	ca	Plataforma canviada
+prio	tts	ca	Prio
+priority	tts	ca	Prioritat
+priority changed	tts	ca	Prioritat canviada
+re-assigned	tts	ca	Reassignat
+re-opened	tts	ca	Re-obert
+returns a struct of a tickets history	tts	ca	Retorna una estructura d'història de tiquets
+returns a struct of values of a single ticket	tts	ca	Retorna una estructura de valors d'un tiquet
+returns the additional notes attached to a ticket	tts	ca	Retorna les notes addicionals assignades a un ticket
+status/date closed	tts	ca	Estat/Data tancat
+subject changed	tts	ca	Assumpte canviat
+test	tts	ca	TEST
+ticket	tts	ca	Tiquet
+ticket has been updated	tts	ca	Tiquet actualitzat
+tickets found %1	tts	ca	Tiquets trobats %1
+tickets open %1	tts	ca	Tiquets oberts %1
+tickets total %1	tts	ca	Total de tiquets %1
+to go back to the tts index, click <a href= %1 >here</a>	tts	ca	Tornar a l'índex, click <a href="%1">aqui</a>
+total billable	tts	ca	Total computable
+trouble ticket system	common	ca	Sistema de Tiquets d'Incidències
+tts	common	ca	Sistema de Tiquets d'Incidències
+tts preferences	tts	ca	Sistema de Tiquets d'Incidències - preferències
+type	tts	ca	Tipus
+type changed	tts	ca	Tipus canviat
+updates ticket	tts	ca	Actualitza tiquet
+use email notification	tts	ca	Utilitzar notificació per email
+view all tickets	tts	ca	Veure tots els tiquets
+view job detail	tts	ca	Veure detall del treball
+view only open tickets	tts	ca	Veure només tiquets oberts

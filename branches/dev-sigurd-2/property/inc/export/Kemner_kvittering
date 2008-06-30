@@ -1,0 +1,249 @@
+<?php
+	/**
+	* phpGroupWare - property: a Facilities Management System.
+	*
+	* @author Sigurd Nes <sigurdne@online.no>
+	* @copyright Copyright (C) 2003,2004,2005,2006,2007 Free Software Foundation, Inc. http://www.fsf.org/
+	* This file is part of phpGroupWare.
+	*
+	* phpGroupWare is free software; you can redistribute it and/or modify
+	* it under the terms of the GNU General Public License as published by
+	* the Free Software Foundation; either version 2 of the License, or
+	* (at your option) any later version.
+	*
+	* phpGroupWare is distributed in the hope that it will be useful,
+	* but WITHOUT ANY WARRANTY; without even the implied warranty of
+	* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	* GNU General Public License for more details.
+	*
+	* You should have received a copy of the GNU General Public License
+	* along with phpGroupWare; if not, write to the Free Software
+	* Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+	*
+	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
+	* @internal Development of this application was funded by http://www.bergen.kommune.no/bbb_/ekstern/
+	* @package property
+	* @subpackage export
+ 	* @version $Id: Kemner_kvittering,v 1.6 2007/01/26 14:58:55 sigurdne Exp $
+	*/
+
+	/**
+	 * Description
+	 * @package property
+	 */
+
+	class export_conv
+	{
+		//var $fil_katalog='c:/temp'; //On windows use "//computername/share/filename" or "\\\\computername\share\filename" to check files on network shares.
+		function export_conv()
+		{
+
+			$this->soXport = CreateObject('property.soXport');	
+			$this->config = CreateObject('phpgwapi.config','property');
+			$this->config->read_repository();			
+			$this->socommon			= CreateObject('property.socommon');
+			$this->db    = $this->socommon->new_db();
+			$this->join			= $this->socommon->join;
+
+		}
+
+		function overfor($download)
+		{
+			//Generer batch ID
+			$batchid = $this->soXport->next_batchid();
+
+			//Velg ut alle perioder som har bilag som skal overføres
+
+			$periode = $this->select_periods_with_invoice_to_transfer();
+		
+
+			for ($i=0;$i<count($periode);$i++)
+			{
+				$receipt['message'][]= array('msg' => $this->OverforPeriode($batchid,$periode[$i],$download));
+			}
+
+
+			return $receipt;
+		}		
+
+		function select_periods_with_invoice_to_transfer()
+		{
+			$sql= "SELECT DISTINCT periode from fm_ecobilag where budsjettsigndato is not null and (saksigndato is not null or oppsynsigndato is not null) and utbetalingsigndato is not null ";
+			$this->db->query($sql,__LINE__,__FILE__);
+			while ($this->db->next_record())
+			{
+				$periode[]	= $this->db->f('periode');
+			}
+			return $periode;
+		}
+
+		function errorhandler($error_desr)
+		{
+			$meld = $error_desr;
+		
+			//Vis feilmelding
+			echo $meld;
+
+		}
+		
+		
+		function LagFilnavn ($batchid)
+		{	
+			$fil_katalog = $this->config->config_data['export_path'];
+			//Beregn løpenr
+			$StartLopeNr = ($batchid % 30) + 70;
+			$LopeNr = $StartLopeNr;
+		
+			do
+			{
+				//Konstruer filnavn
+				$Filnavn = $fil_katalog . '/kemner_kvitt'. sprintf("%2d",$LopeNr) . '10.TXT';
+		
+				//Sjekk om filen eksisterer
+				If (!file_exists($Filnavn))
+				{
+					return $Filnavn;
+				}
+		
+				//Genererer nytt løpenr
+				$batchid = $batchid + 1;
+				$LopeNr = ($batchid % 30) + 70;
+			}
+			while  ($LopeNr != $StartLopeNr);
+		
+			//Ingen løpenr er ledige, gi feilmelding
+			return False;
+		}
+		
+		function OverforPeriode($batchid,$periode,$download)
+		{
+//	echo 'periode :' . $periode . '<BR>';		
+			$BilagId = 'NULL';
+			$sum=0;
+			//Bestem filnavn
+			
+			$Filnavn = $this->LagFilnavn($batchid);
+			if (!$Filnavn)
+			{
+				$message='LagFilnavn'.lang('Alle løpenr for filnavn er i bruk!');
+				$this->errorhandler($message);
+				return $message;
+			}
+
+			//Test om filen kan opprettes og skrives til
+			if (@fopen($Filnavn, "wb"))
+			{
+				unlink($Filnavn);
+			}
+			else
+			{
+				$message='kan ikke lagre til fil: '. $Filnavn .'<br>';
+				return $message;
+			}
+			
+			//Velg ut alle hoved bilag som skal overføres
+		
+			$oRsBilag=$this->soXport->hoved_bilag($periode);
+									
+			$buffer = 'kidnr'. '	' .'belop'.'	'.'dato'."\r\n";
+
+		 	for ($k=0;$k<count($oRsBilag);$k++)
+			{				
+		
+		
+				//Bestem belops felt
+				if ($oRsBilag[$k]['splitt']==0)
+				{
+					//Bilaget er ikke splittet
+					if ($oRsBilag[$k]['godkjentbelop'] <> $oRsBilag[$k]['belop'])
+					{
+						$BelopFelt = 'godkjentbelop';			
+						//Logg til avviks tabell
+						if ($download=='on')
+						{
+//							$this->soXport->log_to_deviation_table($oRsBilag[$k]);
+						}
+					}
+					else
+					{
+						$BelopFelt = 'belop';
+					}
+				}
+				
+				//Bilaget er splittet
+				if ($oRsBilag[$k]['godkjentbelop'] == $oRsBilag[$k]['belop'])
+				{
+					$BelopFelt = 'godkjentbelop';
+				}
+				else
+				{
+					 //Ikke lovlig
+					$message = lang('Avvik mellom fakturabeløp og godkjent beløp på splittet faktura!');
+					$this->errorhandler($message);
+					return $message;
+				}
+		
+				//Formater beløp
+				if ($oRsBilag[$k]['artid'] == 1)
+				{
+					$Belop = sprintf("%01.2f", $oRsBilag[$k][$BelopFelt]);
+	//	echo 'Belop :' . $Belop . '<BR>';		
+				}
+				else
+				{
+					$Belop = sprintf("%01.2f", -$oRsBilag[$k][$BelopFelt]);
+		
+				}
+		
+				$Belop =$Belop *100; 
+		//		$Belop = substr($Belop,0,strlen($Belop) - 3) + substr($Belop, -2);
+		//echo 'Belop :' . $Belop . '<BR>';		
+		
+				//Skriv hovedbilag
+
+				$f1per		= $periode;//date(ym,strtotime($oRsBilag[$k]['fakturadato']));
+				$f1bilnr	= substr($oRsBilag[$k]['bilagsnr'],-6);
+				$f1bildat	= date(ymd,strtotime($oRsBilag[$k]['fakturadato']));
+				$f1bilart	= $oRsBilag[$k]['artid'];
+				$f1belop	= $Belop;							
+				$f1fordat	= date(ymd,strtotime($oRsBilag[$k]['forfallsdato']));
+				$f1tekst	= '';								
+				$f1iper		= substr($periode,2,2);//date(m,strtotime($oRsBilag[$k]['fakturadato']));
+				$f1dime		= $oRsBilag[$k]['spvend_code'];					
+        
+				$f3per		= $periode;//date(ym,strtotime($oRsBilag[$k]['fakturadato']));
+				$f3bilnr	= substr($oRsBilag[$k]['bilagsnr'],-6);
+				$f3rkonto	= $oRsBilag[$k]['spvend_code'];
+				$f3pnr		= substr($oRsBilag[$k]['bilagsnr'],-6);
+				$f3klasse	= $pmlabor_code;				
+				$f3bildat	= date(ymd,strtotime($oRsBilag[$k]['fakturadato']));
+				$f3bilart	= $oRsBilag[$k]['artid'];
+				$f3belopr	= $Belop;							
+				$f3fordat	= date(dmY,strtotime($oRsBilag[$k]['forfallsdato']));
+				$f3sakb		= $oRsBilag[$k]['saksbehandler'];
+				$f3idkode	= $oRsBilag[$k]['kidnr'];
+				$f3tekst	= '';
+ 		
+				$buffer .=substr($f3idkode,-20). '	' .sprintf("%010s",$f3belopr).'	'.substr($f3fordat,0,2).'.'.substr($f3fordat,2,2).'.'.substr($f3fordat,-4)."\r\n";
+				$sum = $sum + $Belop;
+				
+				$antall = $antall + 1;
+			}
+		
+			$buffer .= sprintf("%20s",'Sum:').'	'.sprintf("%010s",$sum);
+
+			if ($download=='on')
+			{
+				$message = 'Periode: '.$periode.' antall bilag/underbilag overført:'.$antall . ' , fil: ' . $Filnavn . '<br>';
+				$fp = fopen($Filnavn, "wb");
+				fwrite($fp,$buffer);
+				fclose($fp);
+			}
+			else
+			{
+				$message = $buffer;
+			}
+			return $message;
+		}
+	}
+?>
