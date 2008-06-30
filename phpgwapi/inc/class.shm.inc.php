@@ -274,6 +274,7 @@
 		{
 			$SHM_KEY = ftok(PHPGW_SHM_LOCK, 'R');
 			$shmid = @sem_get($SHM_KEY, 1024, 0644 | IPC_CREAT);
+			var_dump($shmid);
 			sem_acquire($shmid);
 			$hash_id = $this->hash($key);
 			$store_value = array();

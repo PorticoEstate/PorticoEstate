@@ -227,7 +227,7 @@
 		{
 			$key = self::_gen_key($module, $id);
 
-			if ( $GLOBALS['phpgw']->shm->is_enabled() )
+			if ( false ) //$GLOBALS['phpgw']->shm->is_enabled() )
 			{
 				return self::_shm_clear($key);
 			}
@@ -245,9 +245,9 @@
 		{
 			$key = self::_gen_key($module, $id);
 
-			if ( $GLOBALS['phpgw']->shm->is_enabled() )
+			if ( false ) // $GLOBALS['phpgw']->shm->is_enabled() )
 			{
-				$value = self::_shm_clear($key);
+				$value = self::_shm_get($key);
 			}
 			else
 			{
@@ -269,7 +269,7 @@
 			$key = self::_gen_key($module, $id);
 			$value = self::_value_prepare($value);
 
-			if ( $GLOBALS['phpgw']->shm->is_enabled() )
+			if ( false ) //$GLOBALS['phpgw']->shm->is_enabled() )
 			{
 				return self::_shm_set($key, $value);
 			}
