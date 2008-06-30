@@ -79,6 +79,7 @@
 			$this->so			= CreateObject('property.soadmin_entity');
 			$this->bocommon		= CreateObject('property.bocommon');
 			$this->custom		= createObject('property.custom_fields');
+			$this->custom_functions = & $GLOBALS['phpgw']->custom_functions;
 
 			if ($session)
 			{
@@ -283,7 +284,7 @@
 			}
 			else if($custom_function_id && $acl_location)
 			{
-				$GLOBALS['phpgw']->custom_functions->delete('property', $acl_location,$custom_function_id);
+				$this->custom_functions->delete('property', $acl_location,$custom_function_id);
 			}
 		}
 
@@ -370,18 +371,18 @@
 				$acl_location = '.entity.' . $entity_id . '.' . $cat_id;
 			}
 
-			$custom_function =$this->custom->find(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
+			$values = $this->custom_functions->find(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
 											'appname'=>'property','location' => $acl_location,'allrows'=>$this->allrows));
 
-			$this->total_records = $this->custom->total_records;
+			$this->total_records = $this->custom_functions->total_records;
 
-			return $custom_function;
+			return $values;
 		}
 
 		function resort_custom_function($id,$resort)
 		{
 			$location = '.entity.' . $this->entity_id . '.' . $this->cat_id;
-			return $this->custom->resort($id, $resort, 'property', $location);
+			return $this->custom_functions->resort($id, $resort, 'property', $location);
 		}
 
 		function save_custom_function($custom_function,$action='')
@@ -397,7 +398,7 @@
 				if ($custom_function['id'] != '')
 				{
 
-					$receipt = $this->custom->edit($custom_function);
+					$receipt = $this->custom_functions->edit($custom_function);
 				}
 			}
 			else
@@ -419,7 +420,7 @@
 			{
 				$location = '.entity.' . $entity_id . '.' . $cat_id;
 			}
-			return $this->custom->get('property',$location,$id);
+			return $this->custom_functions->get('property',$location,$id);
 		}
 	}
 

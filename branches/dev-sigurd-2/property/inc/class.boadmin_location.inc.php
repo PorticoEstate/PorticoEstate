@@ -190,7 +190,7 @@
 			else if($type_id && $id && $attrib)
 			{
 				$this->custom->delete('property',".location.{$type_id}",$id /*, 'fm_location' . $type_id */ );
-				$this->custom->delete('property',".location.{$type_id}",$id /*, 'fm_location' . $type_id . '_history'*/ );
+				$this->custom->delete('property',".location.{$type_id}_history",$id /*, 'fm_location' . $type_id . '_history'*/ );
 			}
 		}
 
@@ -238,7 +238,7 @@
 			{
 				if ( $this->custom->edit($attrib, $primary_table) )
 				{
-					$this->custom->edit($attrib, $history_table);
+					$this->custom->edit($attrib, $history_table, true);
 					return array
 					(
 						'msg'	=> array('msg' => lang('Field has been updated'))
