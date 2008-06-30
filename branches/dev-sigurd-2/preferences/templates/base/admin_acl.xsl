@@ -53,6 +53,13 @@
 		<table width="100%" cellpadding="2" cellspacing="2" align="center">
 		<xsl:variable name="form_action"><xsl:value-of select="form_action"/></xsl:variable>
 		<form method="post" action="{$form_action}">
+			<tr height="30">
+				<td valign="top" align="left">
+					<xsl:value-of select="lang_enable_inheritance"/>
+					<xsl:text>: </xsl:text>
+					<input type="checkbox" name="enable_inheritance" value="true" title="{lang_enable_inheritance_statustext}" style="cursor:help"></input>
+				</td>
+			</tr>
 			<tr class="th">
 				<xsl:choose>
 					<xsl:when test="values_groups!=''">

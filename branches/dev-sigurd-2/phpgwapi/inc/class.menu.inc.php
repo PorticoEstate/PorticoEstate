@@ -40,7 +40,8 @@
 		*/
 		public function clear()
 		{
-			phpgwapi_cache::session_clear('phpgwapi', 'menu');
+			$account_id = $GLOBALS['phpgw_info']['user']['account_id'];
+			phpgwapi_cache::user_clear('phpgwapi', 'menu', $account_id);
 		}
 
 		/**
@@ -52,15 +53,16 @@
 		*/
 		public function get($mtype = null)
 		{
-			static $menu = null;
+		//	static $menu = null;
 
-			$menu = null; 
-			//$menu = phpgwapi_cache::session_get('phpgwapi', 'menu');
+			//$menu = null; 
+			$account_id = $GLOBALS['phpgw_info']['user']['account_id'];
+			$menu = phpgwapi_cache::user_get('phpgwapi', 'menu', $account_id);
 
 			if ( !$menu )
 			{
 				$menu = self::load();
-				phpgwapi_cache::session_set('phpgwapi', 'menu', $menu);
+				phpgwapi_cache::user_set('phpgwapi', 'menu', $menu, $account_id);
 			}
 
 			if ( !is_null($mtype) && isset($menu[$mtype]) )

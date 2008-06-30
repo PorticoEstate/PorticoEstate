@@ -226,6 +226,8 @@
 
 		function set_permission($values,$r_processed,$set_grant = false,$initials='')
 		{
+			$this->acl->enable_inheritance = phpgw::get_var('enable_inheritance', 'bool', 'POST');
+
 			if($initials)
 			{
 				$this->so->set_initials($initials);
@@ -261,6 +263,7 @@
 			$cleared = $this->bocommon->reset_fm_cache_userlist();
 			$receipt['message'][] = array('msg' => lang('permissions are updated!'));
 			$receipt['message'][] = array('msg' => lang('%1 userlists cleared from cache',$cleared));
+			phpgwapi_cache::user_clear('phpgwapi', 'menu', -1);
 			return $receipt;
 		}
 

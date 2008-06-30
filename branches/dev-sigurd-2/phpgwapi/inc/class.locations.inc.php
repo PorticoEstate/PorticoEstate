@@ -85,13 +85,14 @@
 		 *
 		 * @return int the new location id
 		 */
-		public function add($location, $descr, $appname, $allow_grant = true, $custom_tbl = null)
+		public function add($location, $descr, $appname, $allow_grant = true, $custom_tbl = null, $c_function = false)
 		{
 			$app = $GLOBALS['phpgw']->applications->name2id($appname);
 
 		 	$location = $this->_db->db_addslashes($location);
 			$descr = $this->_db->db_addslashes($descr);
 		 	$allow_grant = (int) $allow_grant;
+		 	$c_function = (int) $c_function;
 
 		 	$this->_db->query('SELECT location_id FROM phpgw_locations'
 		 			. " WHERE app_id = {$app} AND name = '{$location}'", __LINE__, __FILE__);
@@ -103,14 +104,14 @@
 
 		 	if ( is_null($custom_tbl) )
 		 	{
-		 		$sql = 'INSERT INTO phpgw_locations (app_id, name, descr, allow_grant)'
-		 			. " VALUES ({$app}, '{$location}', '{$descr}', {$allow_grant})";
+		 		$sql = 'INSERT INTO phpgw_locations (app_id, name, descr, allow_grant,allow_c_function)'
+		 			. " VALUES ({$app}, '{$location}', '{$descr}', {$allow_grant}, {$c_function})";
 		 	}
 		 	else
 		 	{
 		 		$custom_tbl = $this->_db->db_addslashes($custom_tbl);
-		 		$sql = 'INSERT INTO phpgw_locations (app_id, name, descr, allow_grant, allow_c_attrib, c_attrib_table)'
-		 			. " VALUES ({$app}, '{$location}', '{$descr}', {$allow_grant}, 1, '{$custom_tbl}')";
+		 		$sql = 'INSERT INTO phpgw_locations (app_id, name, descr, allow_grant, allow_c_attrib, c_attrib_table, allow_c_function)'
+		 			. " VALUES ({$app}, '{$location}', '{$descr}', {$allow_grant}, 1, '{$custom_tbl}', $c_function)";
 			}
 			$this->_db->query($sql, __LINE__, __FILE__);
 
@@ -319,12 +320,13 @@
 		}
 
 		/**
-		* This does something - ask sigurd he wrote the code
+		* Check that top level location are present for installed apps
+		* If the location is missing - it will be inserted
 		*
-		* @param something $apps     a paramater
-		* @param string?   $location something - ask sigurd
+		* @param array    $apps apps to check
+		* @param string   $location the location name to check
 		*
-		* @return null - should really be a boolean? skwashd may08
+		* @return void
 		*/
 		public function verify($apps, $location = '.')
 		{
@@ -338,23 +340,23 @@
 			foreach ( $apps as $appname => $values )
 			{
 				$appname = $this->_db->db_addslashes($appname);
-				$sql = 'SELECT phpgw_applications.app_name'
-					. ' FROM phpgw_applications'
-					. " {$this->_join} phpgw_locations ON phpgw_applications.app_id = phpgw_locations.app_id"
-					. " WHERE phpgw_applications.app_name = '{$appname}'"
-						. " AND phpgw_locations.name = '{$location}'";
-
-				$this->_db->query($sql, __LINE__, __FILE__);
-
-				if ( !$this->_db->next_record() )
+				$app_id = $GLOBALS['phpgw']->applications->name2id($appname);
+				if( $app_id > 0 )
 				{
-					$top = (int) $values['top_grant'];
-					$app_id = $GLOBALS['phpgw']->applications->name2id($appname);
-
-					$sql = 'INSERT INTO phpgw_locations (app_id, name, descr, allow_grant)'
-						. " VALUES ({$app_id}, '{$location}', 'Top', {$top})";
+					$sql = 'SELECT name FROM phpgw_locations'
+						. " WHERE app_id = {$app_id} AND name = '{$location}'";
 
 					$this->_db->query($sql, __LINE__, __FILE__);
+
+					if ( !$this->_db->next_record() )
+					{
+						$top = (int) $values['top_grant'];
+
+						$sql = 'INSERT INTO phpgw_locations (app_id, name, descr, allow_grant)'
+							. " VALUES ({$app_id}, '{$location}', 'Top', {$top})";
+
+						$this->_db->query($sql, __LINE__, __FILE__);
+					}
 				}
 			}
 		}
@@ -369,7 +371,7 @@
 		* @return array Array locations
 		*/
 
-		public function get_locations($grant = false, $appname = '', $allow_c_attrib = false)
+		public function get_locations($grant = false, $appname = '', $allow_c_attrib = false, $c_function = false)
 		{
 			if ( !$appname )
 			{
@@ -388,6 +390,11 @@
 			if($grant)
 			{
 				$filter .= ' AND allow_grant = 1';
+			}
+
+			if($c_function)
+			{
+				$filter .= ' AND c_function = 1';
 			}
 
 			$sql = "SELECT location_id, phpgw_locations.name, phpgw_locations.descr FROM phpgw_locations"

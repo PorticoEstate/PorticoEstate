@@ -59,6 +59,8 @@
 		}
 	}
 
+	execMethod('phpgwapi.menu.clear');
+
 	if ( isset($GLOBALS['phpgw_info']['server']['usecookies'])
 		&& $GLOBALS['phpgw_info']['server']['usecookies'] )
 	{

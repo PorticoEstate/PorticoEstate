@@ -68,11 +68,11 @@
    </tr>
 
     <tr class="row_on">
-    <td>{lang_Would_you_like_phpGroupWare_to_cache_the_langfiles_in_shared_memory_?}:</td>
+    <td>{lang_Would_you_like_phpGroupWare_to_cache_data_in_shared_memory_?}:</td>
     <td>
-     <select name="newsettings[shm_lang]">
+     <select name="newsettings[shm_enable]">
       <option value="">{lang_No}</option>
-      <option value="True"{selected_shm_lang_True}>{lang_Yes}</option>
+      <option value="True"{selected_shm_enable_True}>{lang_Yes}</option>
      </select>
     </td>
    </tr>

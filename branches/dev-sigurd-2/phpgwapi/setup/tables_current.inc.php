@@ -94,6 +94,18 @@
 			'ix' => array('lastmodts'),
 			'uc' => array()
 		),
+		'phpgw_cache_user' => array(
+			'fd' => array(
+				'item_key' => array('type' => 'varchar','precision' => 100,'nullable' => false),
+				'user_id' => array('type' => 'int','precision' => 4,'nullable' => false),
+				'cache_data' => array('type' => 'text','nullable' => false),
+				'lastmodts' => array('type' => 'int','precision' => 4,'nullable' => false)
+			),
+			'pk' => array('item_key'),
+			'fk' => array(),
+			'ix' => array(),
+			'uc' => array()
+		),
 		'phpgw_access_log' => array(
 			'fd' => array(
 				'sessionid' => array('type' => 'char','precision' => '32','nullable' => False),
@@ -164,6 +176,7 @@
 				'descr' => array('type' => 'varchar','precision' => 100,'nullable' => False),
 				'allow_grant' => array('type' => 'int','precision' => 2,'nullable' => True),
 				'allow_c_attrib' => array('type' => 'int','precision' => 2,'nullable' => True),
+				'allow_c_function' => array('type' => 'int','precision' => 2,'nullable' => True),
 				'c_attrib_table' => array('type' => 'varchar','precision' => 25,'nullable' => True)
 			),
 			'pk' => array('location_id'),
@@ -595,4 +608,3 @@
 			'uc' => array()
 		)
 	);
-?>

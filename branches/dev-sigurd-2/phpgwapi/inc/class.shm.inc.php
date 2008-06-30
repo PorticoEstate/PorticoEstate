@@ -458,7 +458,12 @@
 		*/
 		public static function is_enabled()
 		{
-			return function_exists('sem_get');
+			if ( isset($GLOBALS['phpgw_info']['server']['shm_enable'])  
+				&& $GLOBALS['phpgw_info']['server']['shm_enable'] )
+			{
+				return function_exists('sem_get');
+			}
+
+			return false;
 		}
 	}
-

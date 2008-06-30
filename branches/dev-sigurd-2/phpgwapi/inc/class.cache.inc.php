@@ -247,7 +247,7 @@
 
 			if ( $GLOBALS['phpgw']->shm->is_enabled() )
 			{
-				$value = self::_shm_clear($key);
+				$value = self::_shm_get($key);
 			}
 			else
 			{
@@ -289,7 +289,7 @@
 			$key = $GLOBALS['phpgw']->db->db_addslashes(self::_gen_key($module, $id));
 			$uid = (int) $uid;
 
-			$sql = "DELETE FROM phpgw_cache WHERE item_key = '{$key}'";
+			$sql = "DELETE FROM phpgw_cache_user WHERE item_key = '{$key}'";
 
 			// this is a bit of a hack, but we need some way of clearing cache values of all users - i am open to suggestions
 			if ( $uid <> -1 )
@@ -318,7 +318,16 @@
 			$GLOBALS['phpgw']->db->query($sql, __LINE__, __FILE__);
 			if ( $GLOBALS['phpgw']->db->next_record() )
 			{
-				$ret = self::_value_return($GLOBALS['phpgw']->db-f('cache_data', true));
+				$ret = $GLOBALS['phpgw']->db->f('cache_data');
+				if(function_exists('gzcompress'))
+				{
+					$ret =  gzuncompress(base64_decode($ret));
+				}
+				else
+				{
+					$ret = stripslashes($ret);
+				}
+				$ret = self::_value_return($ret);
 			}
 			return $ret;
 		}
@@ -336,10 +345,19 @@
 		{
 			$key = $GLOBALS['phpgw']->db->db_addslashes(self::_gen_key($module, $id));
 			$uid = (int) $uid;
-			$value = $GLOBALS['phpgw']->db->db_addslashes(self::_value_prepare($value));
+			$value = self::_value_prepare($value);
+			if(function_exists('gzcompress'))
+			{
+				$value =  base64_encode(gzcompress($value, 9));
+			}
+			else
+			{
+				$value = $GLOBALS['phpgw']->db->db_addslashes($value);
+			}
+
 			$now = time();
 
-			$sql = "INSERT INTO phpgw_cache_user VALUES('{$key}', {$uid}, '{$value}', $now)";
+			$sql = "INSERT INTO phpgw_cache_user (item_key, user_id, cache_data, lastmodts) VALUES('{$key}', {$uid}, '{$value}', $now)";
 			return !!$GLOBALS['phpgw']->db->query($sql, __LINE__, __FILE__);
 		}
 	}

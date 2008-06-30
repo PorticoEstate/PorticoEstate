@@ -272,6 +272,7 @@
 
 		function set_permission($values,$r_processed,$set_grant = false)
 		{
+			$this->acl->enable_inheritance = phpgw::get_var('enable_inheritance', 'bool', 'POST');
 
 			$process = explode('_', $r_processed);
 
@@ -308,6 +309,8 @@
 				$cleared = execMethod('property.bocommon.reset_fm_cache_userlist');
 				$receipt['message'][] = array('msg' => lang('%1 userlists cleared from cache',$cleared));
 			}
+
+			phpgwapi_cache::user_clear('phpgwapi', 'menu', -1);
 
 			return $receipt;
 		}

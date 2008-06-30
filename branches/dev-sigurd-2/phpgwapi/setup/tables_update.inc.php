@@ -2260,3 +2260,40 @@
 		}
 	}
 
+	$test[] = '0.9.17.517';
+	/**
+	* Upgrade the phpgw_locations table to mark where custom functions can be applied
+	*
+	* @return string the new version number
+	*/
+	function phpgwapi_upgrade0_9_17_517()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('phpgw_locations','allow_c_function',array(
+			'type' => 'int',
+			'precision' => '2',
+			'nullable' => True
+		));
+
+		$GLOBALS['phpgw_setup']->oProc->CreateTable('phpgw_cache_user', array
+		(
+			'fd' => array
+			(
+				'item_key' => array('type' => 'varchar','precision' => 100,'nullable' => false),
+				'user_id' => array('type' => 'int','precision' => 4,'nullable' => false),
+				'cache_data' => array('type' => 'text','nullable' => false),
+				'lastmodts' => array('type' => 'int','precision' => 4,'nullable' => false)
+			),
+			'pk' => array('item_key'),
+			'fk' => array(),
+			'ix' => array(),
+			'uc' => array()
+		));
+
+		if ( $GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit() )
+		{
+			$GLOBALS['setup_info']['phpgwapi']['currentver'] = '0.9.17.518';
+			return $GLOBALS['setup_info']['phpgwapi']['currentver'];
+		}
+	}

@@ -1457,7 +1457,7 @@
 		protected function _setup_cache($write_cache = true)
 		{
 			$this->_data                = $GLOBALS['phpgw']->accounts->read_repository()->toArray();
-			$this->_data['acl']         = $GLOBALS['phpgw']->acl->read();
+//			$this->_data['acl']         = $GLOBALS['phpgw']->acl->read(); // This one is never used
 			$this->_data['preferences'] = $GLOBALS['phpgw']->preferences->read_repository();
 			$this->_data['apps']        = $GLOBALS['phpgw']->applications->read_repository();
 

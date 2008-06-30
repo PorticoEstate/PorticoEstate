@@ -193,6 +193,8 @@
 				$GLOBALS['phpgw']->accounts->update_group($new_group, $values['account_user'],
 														$values['account_apps']);
 			}
+
+			phpgwapi_cache::user_clear('phpgwapi', 'menu', -1);
 		}
 
 		/**
@@ -317,6 +319,11 @@
 			catch ( Exception $e )
 			{
 				throw $e;
+			}
+
+			if ( $user->id )
+			{
+				phpgwapi_cache::user_clear('phpgwapi', 'menu', $user->id);
 			}
 
 			if ( !$user->is_dirty() )

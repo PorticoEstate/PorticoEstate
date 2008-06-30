@@ -298,6 +298,8 @@
 				'select_group_name'				=> 'granting_group',
 				'lang_no_group'					=> lang('No granting group'),
 				'group_list'					=> $this->bocommon->get_group_list('filter',$this->granting_group,$start=-1,$sort='ASC',$order='account_firstname',$query='',$offset=-1),
+				'lang_enable_inheritance'       => lang('enable inheritance'), 
+                'lang_enable_inheritance_statustext'        => lang('rights are inherited down the hierarchy')
 			);
 
 			$appname	= lang('preferences');
@@ -567,7 +569,9 @@
 				'lang_no_location'				=> lang('No location'),
 				'lang_location_statustext'		=> lang('Select submodule'),
 				'select_name_location'			=> 'module',
-				'location_list'					=> $this->bopreferences->select_location('filter',$this->location,false)
+				'location_list'					=> $this->bopreferences->select_location('filter',$this->location,false),
+				'lang_enable_inheritance'       => lang('enable inheritance'), 
+                'lang_enable_inheritance_statustext'        => lang('rights are inherited down the hierarchy')
 			);
 
 			$appname	= lang('permission');
