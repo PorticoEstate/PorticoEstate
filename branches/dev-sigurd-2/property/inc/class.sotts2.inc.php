@@ -295,20 +295,14 @@
 
 				$receipt['message'][]= array('msg' => lang('Ticket has been updated'));
 
-				$custom_functions = $GLOBALS['phpgw']->custom_functions->find(array('appname'=>'property','location' => $this->acl_location,'allrows'=>true));
+				$criteria = array
+				(
+					'appname'	=> 'property',
+					'location'	=> $this->acl_location,
+					'allrows'	=> true
+				);
 
-				foreach($custom_functions as $entry)
-				{
-					if ( $entry['active'] )
-					{
-						// this is insecure
-						$file = realpath(PHPGW_APP_INC . "/custom/{$entry['file_name']}");
-						if ( $entry['active'] )
-						{
-							include_once $file;
-						}
-					}
-				}
+				$GLOBALS['phpgw']->custom_functions->run($criteria);
 			}
 			return $receipt;
 		}

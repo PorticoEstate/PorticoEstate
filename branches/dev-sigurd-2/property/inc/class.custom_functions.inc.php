@@ -76,11 +76,16 @@
 					$function =$data['function'];
 				}
 			}
+			// prevent path traversal
+			if ( preg_match('/\.\./', $function) )
+			{
+				return;
+			}
 
-			$file = realpath(PHPGW_SERVER_ROOT . "/property/inc/cron/{$function}.php");
+			$file = realpath(PHPGW_APP_INC . "/cron/{$function}.php"); // realpath overkill here?
 			if (is_file($file))
 			{
-				include_once($file);
+				require_once $file;
 				$custom = new $function;
 				$custom->pre_run($data);
 			}

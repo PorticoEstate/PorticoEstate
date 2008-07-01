@@ -593,19 +593,14 @@
 				$receipt = $this->mail_ticket($receipt['id'],$fields_updated,$receipt,$ticket['location_code']);
 			}
 
-			$custom = createObject('property.custom_functions');
-			$custom_functions = $custom->find(array('appname'=>'property','location' => $this->acl_location,'allrows'=>true));
+			$criteria = array
+			(
+				'appname'	=> 'property',
+				'location'	=> $this->acl_location,
+				'allrows'	=> true
+			);
 
-			if (isSet($custom_functions) AND is_array($custom_functions))
-			{
-				foreach($custom_functions as $entry)
-				{
-					if (is_file(PHPGW_APP_INC . "/custom/{$entry['file_name']}") && $entry['active'])
-					{
-						include_once(PHPGW_APP_INC . "/custom/{$entry['file_name']}");
-					}
-				}
-			}
+			$GLOBALS['phpgw']->custom_functions->run($criteria);
 
 			return $receipt;
 		}

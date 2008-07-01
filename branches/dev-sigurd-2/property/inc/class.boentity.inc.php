@@ -356,26 +356,9 @@
 				'location'	=> ".entity.{$entity_id}.{$cat_id}",
 				'allrows'	=> true
 			);
-			$custom_functions = $GLOBALS['phpgw']->custom_functions->find($criteria);
 
-			if ( isset($custom_functions) 
-				&& is_array($custom_functions) )
-			{
-				foreach ( $custom_functions as $entry )
-				{
-					// prevent path traversal
-					if ( preg_match('/\.\./', $entry['file_name']) )
-					{
-						continue;
-					}
+			$GLOBALS['phpgw']->custom_functions->run($criteria);
 
-					$file = PHPGW_APP_INC . "/custom/{$entry['file_name']}";
-					if ( $entry['active'] && is_file($file) )
-					{
-						require_once PHPGW_APP_INC . "/custom/{$entry['file_name']}";
-					}
-				}
-			}
 			return $receipt;
 		}
 

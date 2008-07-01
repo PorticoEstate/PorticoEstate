@@ -442,4 +442,31 @@
 
 			return $this->_db->transaction_commit();
 		}
+
+		/**
+		 * Run custom functions at location if it is activated
+		 *
+		 * @param array $criteria Example: array('appname' => 'property','location'	=> '.location.name','allrows'=> true)
+		 *
+		 * @return void
+		 */
+		public function run($criteria = array())
+		{
+			$custom_functions = $this->find($criteria);
+
+			foreach ( $custom_functions as $entry )
+			{
+				// prevent path traversal
+				if ( preg_match('/\.\./', $entry['file_name']) )
+				{
+					continue;
+				}
+
+				$file = PHPGW_APP_INC . "/custom/{$entry['file_name']}";
+				if ( $entry['active'] && is_file($file) )
+				{
+					require_once PHPGW_APP_INC . "/custom/{$entry['file_name']}";
+				}
+			}
+		}
 	}
