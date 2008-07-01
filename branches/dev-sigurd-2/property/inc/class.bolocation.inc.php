@@ -772,6 +772,6 @@
 
 		function prepare_attribute($values, $location, $view_only= false)
 		{
-			return $this->bo->custom->prepare($values, 'property', $location, $view_only);
+			return $this->custom->prepare($values, 'property', $location, $view_only);
 		}
 	}
