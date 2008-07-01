@@ -320,7 +320,6 @@
 			{
 				if ( $this->custom->edit($attrib) )
 				{
-					$this->custom->edit($attrib);
 					return array
 					(
 						'msg'	=> array('msg' => lang('Field has been updated'))
