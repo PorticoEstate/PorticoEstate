@@ -357,7 +357,22 @@
 				'allrows'	=> true
 			);
 
-			$GLOBALS['phpgw']->custom_functions->run($criteria);
+			$custom_functions = $GLOBALS['phpgw']->custom_functions->find($criteria);
+
+			foreach ( $custom_functions as $entry )
+			{
+				// prevent path traversal
+				if ( preg_match('/\.\./', $entry['file_name']) )
+				{
+					continue;
+				}
+
+				$file = PHPGW_APP_INC . "/custom/{$entry['file_name']}";
+				if ( $entry['active'] && is_file($file) )
+				{
+					require_once PHPGW_APP_INC . "/custom/{$entry['file_name']}";
+				}
+			}
 
 			return $receipt;
 		}
