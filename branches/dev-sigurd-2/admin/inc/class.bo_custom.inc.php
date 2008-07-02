@@ -301,54 +301,35 @@
 		 */
 		public static function select_custom_function($selected, $appname)
 		{
+			$dirname = PHPGW_SERVER_ROOT . "/{$appname}/inc/custom";
 			// prevent path traversal
 			if ( preg_match('/\./', $appname) 
-			 || !is_dir(PHPGW_SERVER_ROOT . "/{$appname}/inc/custom") )
+			 || !is_dir($dirname) )
 			{
 				return array();
 			}
 
-			$raw_list = array();
-
-			$dir = PHPGW_SERVER_ROOT . "/{$appname}/inc/custom"; 
-			$dir_handle = opendir($dir);
-			if ($dir_handle)
-			{
-				while ($file = readdir($dir_handle))
-				{
-					if ((substr($file, 0, 1) != '.') && is_file("{$dir}/{$file}") )
-					{
-						$raw_list[] = $file;
-					}
-				}
-				closedir($dir_handle);
-				sort($raw_list);
-			}
-
-			if ( !count($raw_list) )
-			{
-				return array();
-			}
-
-			sort($raw_list);
+			$find = array('/_/', '/\.php$/');
+			$replace = array(' ', '');
 
 			$file_list = array();
-			foreach ( $raw_list as $file )
+			$dir = new DirectoryIterator(PHPGW_SERVER_ROOT . "/{$appname}/inc/custom"); 
+			if ( is_object($dir) )
 			{
-				$fname = 
-
-				$rec = array
-				(
-					'id'		=> $file,
-					'name'		=> preg_replace('/_/', ' ', $file),
-				);
-				if ( $file == $selected )
+				foreach ( $dir as $file )
 				{
-					// FIXME this should be a binary integer - not a string
-					$rec['selected'] = 'selected';
-				}
+					if ( $file->isDot() || !$file->isFile() || !$file->isReadable() )
+					{
+						continue;
+					}
 
-				$file_list[] = $rec;
+					$file_list[] = array
+					(
+						'id'		=> (string) $file,
+						'name'		=> preg_replace($find, $replace, $file),
+						'selected'	=> (int) ($file == $selected)
+					);
+				}
 			}
 
 			return $file_list;
