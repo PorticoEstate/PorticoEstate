@@ -249,14 +249,7 @@
 		 */
 		public function resort_custom_function($id, $resort)
 		{
-			$args = array
-			(
-				'resort'	=> $resort,
-				'appname'	=> $this->appname,
-				'location'	=> $this->location,
-				'id'		=> $id
-			);
-			$GLOBALS['phpgw']->custom_functions->resort($args);
+			$GLOBALS['phpgw']->custom_functions->resort($id, $resort, $this->appname, $this->location);
 		}
 
 		/**
@@ -273,7 +266,7 @@
 			{
 				if ( $custom_function['id'] != '' )
 				{
-					if ( $cfuncs->edit_custom_function($custom_function) )
+					if ( $cfuncs->edit($custom_function) )
 					{
 						return array('msg' => lang('Custom function has been updated'));
 					}
@@ -282,7 +275,7 @@
 			}
 			else
 			{
-				$id = $cfuncs->add_custom_function($custom_function);
+				$id = $cfuncs->add($custom_function);
 				if ( $id )
 				{
 					return array('id' => $id);

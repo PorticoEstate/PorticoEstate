@@ -495,10 +495,42 @@
 						'descr'						=> $entry['descr'],
 						'sorting'					=> $entry['sorting'],
 						'active'					=> $entry['active']?'X':'',
-						'link_up'					=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'admin.ui_custom.list_custom_function', 'resort'=> 'up', 'appname'=> $appname, 'location'=> $location, 'id'=> $entry['id'], 'allrows'=> $this->allrows, 'menu_selection' => $GLOBALS['phpgw_info']['flags']['menu_selection'])),
-						'link_down'					=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'admin.ui_custom.list_custom_function', 'resort'=> 'up', 'appname'=> $appname, 'location'=> $location, 'id'=> $entry['id'], 'allrows'=> $this->allrows, 'menu_selection' => $GLOBALS['phpgw_info']['flags']['menu_selection'])),
-						'link_edit'					=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'admin.ui_custom.edit_custom_function', 'appname'=> $appname, 'location'=> $location, 'id'=> $entry['id'], 'menu_selection' => $GLOBALS['phpgw_info']['flags']['menu_selection'])),
-						'link_delete'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'admin.ui_custom.delete', 'appname'=> $appname, 'location'=> $location, 'custom_function_id'=> $entry['id'], 'menu_selection' => $GLOBALS['phpgw_info']['flags']['menu_selection'])),
+						'link_up'					=> $GLOBALS['phpgw']->link('/index.php',array
+														(
+															'menuaction'		=> 'admin.ui_custom.list_custom_function',
+															'resort'			=> 'up',
+															'appname'			=> $appname,
+															'location'			=> $location,
+															'id'				=> $entry['id'],
+															'allrows'			=> $this->allrows,
+															'menu_selection'	=> $GLOBALS['phpgw_info']['flags']['menu_selection']
+														)),
+						'link_down'					=> $GLOBALS['phpgw']->link('/index.php',array
+														(
+															'menuaction'		=> 'admin.ui_custom.list_custom_function',
+															'resort'			=> 'down',
+															'appname'			=> $appname,
+															'location'			=> $location,
+															'id'				=> $entry['id'],
+															'allrows'			=> $this->allrows,
+															'menu_selection'	=> $GLOBALS['phpgw_info']['flags']['menu_selection']
+														)),
+						'link_edit'					=> $GLOBALS['phpgw']->link('/index.php',array
+														(
+															'menuaction'		=> 'admin.ui_custom.edit_custom_function',
+															'appname'			=> $appname,
+															'location'			=> $location,
+															'id'				=> $entry['id'],
+															'menu_selection'	=> $GLOBALS['phpgw_info']['flags']['menu_selection']
+															)),
+						'link_delete'				=> $GLOBALS['phpgw']->link('/index.php',array
+														(
+															'menuaction'		=> 'admin.ui_custom.delete',
+															'appname'			=> $appname,
+															'location'			=> $location,
+															'custom_function_id'=> $entry['id'],
+															'menu_selection'	=> $GLOBALS['phpgw_info']['flags']['menu_selection']
+														)),
 						'lang_up_text'				=> lang('shift up'),
 						'lang_down_text'			=> lang('shift down'),
 						'lang_edit_text'			=> lang('edit the custom_function'),

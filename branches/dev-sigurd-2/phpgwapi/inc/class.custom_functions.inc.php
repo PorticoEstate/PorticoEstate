@@ -206,7 +206,6 @@
 		{
 			$id = (int) $custom_function['id'];
 
-			$custom_function['active'] = false;
 			if ( isset($custom_function['active']) ) 
 			{
 				$custom_function['active'] = !!$custom_function['active'];
@@ -382,10 +381,14 @@
 			}
 
 			$id		= (int)$id;
-			$resort	= 'up';
+
 			if ( $resort == 'down' )
 			{
 				$resort = 'down';
+			}
+			else
+			{
+				$resort	= 'up';
 			}
 
 			$location_id = $GLOBALS['phpgw']->locations->get_id($appname, $location);
