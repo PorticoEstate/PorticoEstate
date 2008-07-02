@@ -222,11 +222,11 @@ class odt2xhtml
 		switch($this->file['ext']) {
 			case 'odt' :
 			case 'ott' :
-				$this->file['xsl'] = PHPGW_APP_TPL . '/odt2xhtml.xsl';
+				$this->file['xsl'] = PHPGW_SERVER_ROOT . '/manual/templates/base/odt2xhtml.xsl';
 			break;
 			case 'sxw' :
 			case 'stw' :
-				$this->file['xsl'] = PHPGW_APP_TPL.'/sxw2xhtml.xsl';
+				$this->file['xsl'] =PHPGW_SERVER_ROOT . '/manual/templates/base/sxw2xhtml.xsl';
 			break;
 		}
 		
