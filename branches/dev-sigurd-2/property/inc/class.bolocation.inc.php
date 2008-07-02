@@ -757,7 +757,7 @@
 
 		function find_attribute($location)
 		{
-				return $this->custom->find('property', $location, 0, '', 'ASC', 'attrib_sort', true, true);
+			return $this->custom->find('property', $location, 0, '', 'ASC', 'attrib_sort', true, true);
 		}
 
 		/**
