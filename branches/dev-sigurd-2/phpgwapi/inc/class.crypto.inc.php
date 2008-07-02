@@ -219,7 +219,7 @@
 			}
 
 			$newdata = @unserialize($data);
-			if($newdata)
+			if(!is_null($newdata))
 			{
 				if($this->debug)
 				{
