@@ -649,8 +649,7 @@
 				</xsl:when>
 			</xsl:choose>
 			
-			<xsl:variable name="form_action"><xsl:value-of select="form_action"/></xsl:variable>
-			<form method="post" action="{$form_action}">
+			<form method="post" action="{form_action}">
 
 			<tr>
 				<td class="th_text" align="left">
@@ -701,8 +700,7 @@
 					<xsl:value-of select="lang_custom_function"/>
 				</td>
 				<td valign="top">
-					<xsl:variable name="lang_custom_function_statustext"><xsl:value-of select="lang_custom_function_statustext"/></xsl:variable>
-					<select name="values[custom_function_file]" class="forms" onMouseover="window.status='{$lang_custom_function_statustext}'; return true;" onMouseout="window.status='';return true;">
+					<select name="values[custom_function_file]" class="forms">
 						<option value=""><xsl:value-of select="lang_no_custom_function"/></option>
 						<xsl:apply-templates select="custom_function_list"/>
 					</select>
@@ -801,15 +799,12 @@
 <!-- custom_function_list -->	
 
 	<xsl:template match="custom_function_list">
-	<xsl:variable name="id"><xsl:value-of select="id"/></xsl:variable>
-		<xsl:choose>
-			<xsl:when test="selected='selected'">
-				<option value="{$id}" selected="selected"><xsl:value-of disable-output-escaping="yes" select="name"/></option>
-			</xsl:when>
-			<xsl:otherwise>
-				<option value="{$id}"><xsl:value-of disable-output-escaping="yes" select="name"/></option>
-			</xsl:otherwise>
-		</xsl:choose>
+		<option value="{id}">
+			<xsl:if test="selected = 1">
+				<xsl:attribute name="selected" value="selected" />
+			</xsl:if>
+			<xsl:value-of disable-output-escaping="yes" select="name"/>
+		</option>
 	</xsl:template>
 
 <!-- nullable_list -->	
