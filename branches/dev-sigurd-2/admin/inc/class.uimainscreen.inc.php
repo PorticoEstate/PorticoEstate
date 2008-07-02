@@ -101,6 +101,14 @@
 				}
 				else
 				{
+					if(isset($item['text']))
+					{
+						$menu[$app][] = array
+									(
+										'text' => $item['text'],
+										'url' => $item['url']
+									);
+					}
 					self::_get_sub_menu($menu, $app, $item['children']);
 				}
 			}
