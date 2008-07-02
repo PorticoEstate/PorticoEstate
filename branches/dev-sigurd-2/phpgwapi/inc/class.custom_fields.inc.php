@@ -896,6 +896,22 @@
 		}
 
 		/**
+		 * Convert a datatype to a human readable label
+		 *
+		 * @param string $datatype the dataype to convert
+		 *
+		 * @return string the user readable string
+		 */
+		public function translate_datatype($datatype)
+		{
+			if ( isset($this->datatype_text[$datatype]) )
+			{
+				return $this->datatype_text[$datatype];
+			}
+			return '';
+		}
+
+		/**
 		 * Get the list of available choices for a lookup field
 		 *
 		 * @param integer $location_id the location for the attribute
@@ -967,22 +983,6 @@
 
 			++$next_id;
 			return $next_id;
-		}
-
-		/**
-		 * Convert a datatype to a human readable label
-		 *
-		 * @param string $datatype the dataype to convert
-		 *
-		 * @return string the user readable string
-		 */
-		public function translate_datatype($datatype)
-		{
-			if ( isset($this->datatype_text[$datatype]) )
-			{
-				return $this->datatype_text[$datatype];
-			}
-			return '';
 		}
 
 		/**
