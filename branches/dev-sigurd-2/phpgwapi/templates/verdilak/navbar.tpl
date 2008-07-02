@@ -28,4 +28,4 @@
 					<td id="phpgw_body">
 <!-- END navbar -->
 
-<!-- BEGIN preferences --><a href="{preferences_link}"><img src="{preferences_img}" border="0" alt="Preferences"></a><!-- END preferences -->
+<!-- BEGIN preferences --><a href="{preferences_url}"><img src="{preferences_img}" border="0" alt="{preferences_text}"></a><!-- END preferences -->
