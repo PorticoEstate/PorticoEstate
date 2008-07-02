@@ -50,7 +50,7 @@
 
 	if( isset($_GET['go']) )
 	{
-		$_GET['go'] = html_entity_decode($_GET['go']);
+		$_GET['go'] = urldecode($_GET['go']);
 		?>
 			<h2><?php lang('external link'); ?></h2>
 			<p><?php lang('lang you are about to visit an external site'); ?><br />

@@ -755,7 +755,7 @@
 
 			if ( $acl->check('.document', PHPGW_ACL_READ, 'property') )
 			{
-				$laws_url = "{$GLOBALS['phpgw_info']['server']['webserver_url']}/redirect.php?go=". urlencode('http://www.regelhjelp.no/');
+				$laws_url = $GLOBALS['phpgw']->link('/redirect.php',array('go' => urlencode('http://www.regelhjelp.no/')));
 				$menus['navigation']['documentation'] = array
 				(
 					'url'		=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uidocument.index')),
