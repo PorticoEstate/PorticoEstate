@@ -5,9 +5,9 @@
 			<a href="http://www.phpgroupware.org" target="_new"><img src="{img_root}/{logo}" border="0" alt="phpGroupWare"></a>
 		</td>
 		<td id="top_nav"><a
-			href="{home_url}"><img src="{welcome_img}"alt="Welcome"></a>{preferences_icon}<a
-			href="{logout_url}"><img src="{logout_img}" alt="Logout"></a><a
-			href="{help_url}"><img src="{img_root}/help.png" alt="Help"></a>
+			href="{home_url}"><img src="{welcome_img}"alt="{home_text}"></a>{preferences_icon}<a
+			href="{logout_url}"><img src="{logout_img}" alt="{logout_text}"></a><a
+			href="{help_url}"><img src="{img_root}/help.png" alt="{help_text}"></a>
 		</td>
 	</tr>
 </table>

@@ -54,6 +54,20 @@ HTML;
 		$var['about_text']              = lang('about');
 		$var['logout_url']              = $GLOBALS['phpgw']->link('/logout.php');
 		$var['logout_text']             = lang('logout');
+		if ( isset($GLOBALS['phpgw_info']['user']['apps']['manual']) )
+		{
+			$var['help_url'] = "javascript:openwindow('"
+			 . $GLOBALS['phpgw']->link('/index.php', array
+			 (
+			 	'menuaction'=> 'manual.uimanual.help',
+			 	'app' => $GLOBALS['phpgw_info']['flags']['currentapp'],
+			 	'section' => isset($GLOBALS['phpgw_info']['apps']['manual']['section']) ? $GLOBALS['phpgw_info']['apps']['manual']['section'] : '',
+			 	'referer' => phpgw::get_var('menuaction')
+			 )) . "','700','600')";
+
+			$var['help_text'] = lang('help');
+			$var['help_icon'] = 'icon icon-help';
+		}
 
 		if ( isset($navbar['preferences']) )
 		{
