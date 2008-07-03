@@ -837,7 +837,7 @@
 			}
 
 			//create the db
-			$this->adodb->Execute("CREATE DATABASE {$this->Database}");
+			$this->adodb->Execute('CREATE DATABASE "' . $this->Database . '"');
 		
 			//Grant rights on the db
 			switch ($GLOBALS['phpgw_info']['server']['db_type'])
