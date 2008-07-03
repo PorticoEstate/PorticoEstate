@@ -2263,6 +2263,7 @@
 	$test[] = '0.9.17.517';
 	/**
 	* Upgrade the phpgw_locations table to mark where custom functions can be applied
+	* and add missing table for user cache.
 	*
 	* @return string the new version number
 	*/
