@@ -2287,7 +2287,7 @@
 			),
 			'pk' => array('item_key'),
 			'fk' => array(),
-			'ix' => array(),
+			'ix' => array('user_id', 'lastmodts'),
 			'uc' => array()
 		));
 
