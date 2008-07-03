@@ -1259,11 +1259,10 @@
 
 			$sql = 'SELECT phpgw_applications.app_id, phpgw_locations.location_id,'
 					. ' phpgw_acl.acl_account, phpgw_acl.acl_grantor,'
-					. ' phpgw_acl.acl_rights, phpgw_acl.acl_type, phpgw_accounts.account_type'
+					. ' phpgw_acl.acl_rights, phpgw_acl.acl_type'
 					. ' FROM phpgw_acl'
 					. " {$this->_join} phpgw_locations ON phpgw_acl.location_id = phpgw_locations.location_id"
 					. " {$this->_join} phpgw_applications ON phpgw_applications.app_id = phpgw_locations.app_id"
-					. " {$this->_join} phpgw_accounts ON phpgw_acl.acl_account = phpgw_accounts.account_id "
 					. ' WHERE acl_account in (' . implode(',', $account_list) . ')';
 
 			$this->_db->query($sql, __LINE__, __FILE__);
@@ -1276,7 +1275,7 @@
 					'rights'		=> $this->_db->f('acl_rights'),
 					'grantor'		=> $this->_db->f('acl_grantor'),
 					'type'			=> $this->_db->f('acl_type'),
-					'account_type'	=> $GLOBALS['phpgw']->accounts->get_type($this->_db->f('account_type'))
+					'account_type'	=> $GLOBALS['phpgw']->accounts->get_type($this->_db->f('acl_account'))
 				);
 			}
 			return $this->_data;
@@ -1362,21 +1361,28 @@
 			$appname = $this->_db->db_addslashes($appname);
 			$location = $this->_db->db_addslashes($location);
 
-			$sql = "SELECT account_id, account_type FROM phpgw_accounts"
-				. " $this->_join phpgw_acl on phpgw_accounts.account_id = phpgw_acl.acl_account"
-				. " $this->_join phpgw_locations on phpgw_acl.location_id = phpgw_locations.location_id"
-				. " WHERE account_status = 'A' AND phpgw_locations.name = '{$location}'"
-				. " ORDER BY account_lastname ASC";
-
-			$this->_db->query($sql,__LINE__,__FILE__);
-
-			while ($this->_db->next_record())
+			if( $GLOBALS['phpgw_info']['server']['account_repository'] == 'ldap' )
 			{
-				$active_accounts[] = array
-				(
-					'account_id'	=> $this->_db->f('account_id'),
-					'account_type'	=> $this->_db->f('account_type'),
-				);
+				$active_accounts = $GLOBALS['phpgw']->accounts->get_list('both', -1, 'ASC', 'account_lastname', $query = '', -1); // maybe $query could be used for filtering on active accounts?
+			}
+			else
+			{
+				$sql = "SELECT account_id, account_type FROM phpgw_accounts"
+					. " $this->_join phpgw_acl on phpgw_accounts.account_id = phpgw_acl.acl_account"
+					. " $this->_join phpgw_locations on phpgw_acl.location_id = phpgw_locations.location_id"
+					. " WHERE account_status = 'A' AND phpgw_locations.name = '{$location}'"
+					. " ORDER BY account_lastname ASC";
+
+				$this->_db->query($sql,__LINE__,__FILE__);
+
+				while ($this->_db->next_record())
+				{
+					$active_accounts[] = array
+					(
+						'account_id'	=> $this->_db->f('account_id'),
+						'account_type'	=> $this->_db->f('account_type'),
+					);
+				}
 			}
 
 			foreach ($active_accounts as $entry)
