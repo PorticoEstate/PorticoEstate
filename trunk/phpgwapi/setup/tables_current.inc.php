@@ -94,6 +94,18 @@
 			'ix' => array('lastmodts'),
 			'uc' => array()
 		),
+		'phpgw_cache_user' => array(
+			'fd' => array(
+				'item_key' => array('type' => 'varchar','precision' => 100,'nullable' => false),
+				'user_id' => array('type' => 'int','precision' => 4,'nullable' => false),
+				'cache_data' => array('type' => 'text','nullable' => false),
+				'lastmodts' => array('type' => 'int','precision' => 4,'nullable' => false)
+			),
+			'pk' => array('item_key'),
+			'fk' => array(),
+			'ix' => array('user_id', 'lastmodts'),
+			'uc' => array()
+		),
 		'phpgw_access_log' => array(
 			'fd' => array(
 				'sessionid' => array('type' => 'char','precision' => '32','nullable' => False),
@@ -595,4 +607,3 @@
 			'uc' => array()
 		)
 	);
-?>
