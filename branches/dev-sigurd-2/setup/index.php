@@ -255,7 +255,6 @@
 					catch (Exception $e)
 					{
 						$setup_tpl->set_var('lang_db_create_error',  $e->getMessage());
-					//	 echo 'Caught exception: ',  $e->getMessage(), "\n";
 					}
 					break;
 				case 'drop':
