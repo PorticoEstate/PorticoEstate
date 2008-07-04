@@ -71,16 +71,18 @@
 			$flat_menu = array();
 
 			$menu = execMethod('phpgwapi.menu.get', 'admin');
-			foreach ( $menu as $app => $items )
+			foreach ( $GLOBALS['phpgw_info']['user']['apps'] as $app => $app_info )
 			{
-				if ( !is_array($items) )
+				if(isset($menu[$app]))
 				{
-					continue;
+					if ( !is_array($menu[$app]) )
+					{
+						continue;
+					}
+					self::_get_sub_menu($flat_menu, $app, $menu[$app]);
 				}
-
-				self::_get_sub_menu($flat_menu, $app, $items);
 			}
-
+			
 			return $flat_menu;
 		}
 
@@ -105,8 +107,9 @@
 					{
 						$menu[$app][] = array
 									(
-										'text' => $item['text'],
-										'url' => $item['url']
+										'text' => "[ {$item['text']} ]",
+										'url' => $item['url'],
+										'class' => 'th'
 									);
 					}
 					self::_get_sub_menu($menu, $app, $item['children']);
@@ -134,9 +137,18 @@ HTML;
 				$i = 0;
 				foreach ( $entries as $entry )
 				{
-					$row = $i % 2 ? 'on' : 'off';
+					if(isset($entry['class']))
+					{
+						$class = $entry['class'];
+					}
+					else
+					{
+						$row = $i % 2 ? 'on' : 'off';
+						$class = "row_{$row}";
+					}
+
 					$html .= <<<HTML
-					<li class="row_{$row}"><a href="{$entry['url']}">{$entry['text']}</a></li>
+					<li class="{$class}"><a href="{$entry['url']}">{$entry['text']}</a></li>
 HTML;
 					++$i;
 				}
