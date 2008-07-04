@@ -836,8 +836,13 @@
 				return False;
 			}
 
+			if(!preg_match('/^[a-z0-9_]+$/i', $this->Database))
+			{
+				throw new Exception(lang('ERROR: the name %1 contains illegal charackter for cross platform db-support', $this->Database));
+			}
+
 			//create the db
-			$this->adodb->Execute('CREATE DATABASE "' . $this->Database . '"');
+			$this->adodb->Execute("CREATE DATABASE {$this->Database}");
 		
 			//Grant rights on the db
 			switch ($GLOBALS['phpgw_info']['server']['db_type'])

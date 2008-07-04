@@ -234,5 +234,6 @@
 		</tr>
 		</table>
 		<div class="feedback">{lang_cookies_must_be_enabled}</div>
+		<div class="feedback">{lang_db_create_error}</div>
 		<!-- end head.tpl -->
 

@@ -248,7 +248,15 @@
 			switch ($GLOBALS['phpgw_info']['setup']['currentver']['phpgwapi'])
 			{
 				case 'dbcreate':
-					$GLOBALS['phpgw_setup']->db->create_database($_POST['db_root'], $_POST['db_pass']);
+					try
+					{
+						$GLOBALS['phpgw_setup']->db->create_database($_POST['db_root'], $_POST['db_pass']);
+					}
+					catch (Exception $e)
+					{
+						$setup_tpl->set_var('lang_db_create_error',  $e->getMessage());
+					//	 echo 'Caught exception: ',  $e->getMessage(), "\n";
+					}
 					break;
 				case 'drop':
 					$setup_info = $GLOBALS['phpgw_setup']->detection->get_versions($setup_info);
