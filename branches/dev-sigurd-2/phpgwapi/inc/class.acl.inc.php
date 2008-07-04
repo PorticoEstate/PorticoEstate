@@ -71,6 +71,11 @@
 		* @var string $join database join statement syntax
 		*/
 		protected $_join = 'JOIN';
+		
+		/**
+		* @var array $_ldap_user Array with cached usertypes for ldap-users
+		*/
+		protected $_ldap_user = array();
 
 		/**
 		* @var bool $enable_inheritance determines whether rights are inherited down the hierarchy when saving permissions
@@ -1241,6 +1246,7 @@
 		*/
 		protected function _read_repository_ldap($account_type)
 		{
+			//FIXME - this funtion is not tested
 			$this->_data[$this->_account_id] = array();
 
 			if(!$account_type || $account_type == 'accounts' || $account_type == 'both')
@@ -1288,10 +1294,33 @@
 					'rights'		=> $this->_db->f('acl_rights'),
 					'grantor'		=> $this->_db->f('acl_grantor'),
 					'type'			=> $this->_db->f('acl_type'),
-					'account_type'	=> $GLOBALS['phpgw']->accounts->get_type($this->_db->f('acl_account'))
+					'account_type'	=> $this->_get_type_ldap($this->_db->f('acl_account'))
 				);
 			}
 			return $this->_data;
+		}
+
+		/**
+		* Get account_type for LDAP user and cache the result for performance
+		*
+		* @param integer $account_id Account id
+		*
+		* @return string account_type for ldap-user 'g' (group) or 'u' (user)
+		*/
+
+		protected function _get_type_ldap($account_id)
+		{
+			//FIXME - this is not tested
+			if(isset($this->_ldap_user[$account_id]))
+			{
+				$account_type = $this->_ldap_user[$account_id];
+			}
+			else
+			{
+				$account_type	= $GLOBALS['phpgw']->accounts->get_type($account_id);
+				$this->_ldap_user[$account_id] = $account_type;
+			}
+			return $account_type;
 		}
 
 		/**
