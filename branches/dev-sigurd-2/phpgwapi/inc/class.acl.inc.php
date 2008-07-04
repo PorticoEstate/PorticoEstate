@@ -73,11 +73,6 @@
 		protected $_join = 'JOIN';
 		
 		/**
-		* @var array $_ldap_user Array with cached usertypes for ldap-users
-		*/
-		protected $_ldap_user = array();
-
-		/**
 		* @var bool $enable_inheritance determines whether rights are inherited down the hierarchy when saving permissions
 		*/
 		public $enable_inheritance = false;
@@ -1311,14 +1306,16 @@
 		protected function _get_type_ldap($account_id)
 		{
 			//FIXME - this is not tested
-			if(isset($this->_ldap_user[$account_id]))
+			static $ldap_user = array();
+
+			if(isset($ldap_user[$account_id]))
 			{
-				$account_type = $this->_ldap_user[$account_id];
+				$account_type = $ldap_user[$account_id];
 			}
 			else
 			{
-				$account_type	= $GLOBALS['phpgw']->accounts->get_type($account_id);
-				$this->_ldap_user[$account_id] = $account_type;
+				$account_type			= $GLOBALS['phpgw']->accounts->get_type($account_id);
+				$ldap_user[$account_id]	= $account_type;
 			}
 			return $account_type;
 		}
