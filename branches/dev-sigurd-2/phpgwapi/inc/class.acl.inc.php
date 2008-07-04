@@ -1238,10 +1238,10 @@
 		* @return array Array with ACL records
 		*
 		* @internal data is cached for future look ups
+		* @todo FIXME - this is not tested - sigurd jul2008
 		*/
 		protected function _read_repository_ldap($account_type)
 		{
-			//FIXME - this funtion is not tested
 			$this->_data[$this->_account_id] = array();
 
 			if(!$account_type || $account_type == 'accounts' || $account_type == 'both')
@@ -1301,23 +1301,18 @@
 		* @param integer $account_id Account id
 		*
 		* @return string account_type for ldap-user 'g' (group) or 'u' (user)
+		* @todo FIXME - this is not tested - sigurd jul2008
 		*/
-
 		protected function _get_type_ldap($account_id)
 		{
-			//FIXME - this is not tested
 			static $ldap_user = array();
 
-			if(isset($ldap_user[$account_id]))
+			if( !isset($ldap_user[$account_id]) )
 			{
-				$account_type = $ldap_user[$account_id];
+				$ldap_user[$account_id] = $GLOBALS['phpgw']->accounts->get_type($account_id);
 			}
-			else
-			{
-				$account_type			= $GLOBALS['phpgw']->accounts->get_type($account_id);
-				$ldap_user[$account_id]	= $account_type;
-			}
-			return $account_type;
+
+			return $ldap_user[$account_id];
 		}
 
 		/**
