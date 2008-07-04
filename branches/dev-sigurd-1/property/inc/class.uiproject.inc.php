@@ -632,7 +632,21 @@
 				if(!$values['status'])
 				{
 					$receipt['error'][]=array('msg'=>lang('Please select a status !'));
+					$error_id=true;
 				}
+
+				if(isset($values['budget']) && $values['budget'] && !ctype_digit($values['budget']))
+				{
+					$receipt['error'][]=array('msg'=>lang('budget') . ': ' . lang('Please enter an integer !'));
+					$error_id=true;
+				}
+
+				if(isset($values['reserve']) && $values['reserve'] && !ctype_digit($values['reserve']))
+				{
+					$receipt['error'][]=array('msg'=>lang('reserve') . ': ' . lang('Please enter an integer !'));
+					$error_id=true;
+				}
+
 
 				if($id)
 				{
