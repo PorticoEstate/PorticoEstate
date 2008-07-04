@@ -278,7 +278,7 @@
 
 				if(!preg_match('/^[a-z0-9_]+$/i',$values['column_name']))
 				{
-					$receipt['error'][] = array('msg'=>lang('Column name %1 contains illegal charackter', $values['column_name']));
+					$receipt['error'][] = array('msg'=>lang('Column name %1 contains illegal character', $values['column_name']));
 				}
 
 				if (!$values['input_text'])
