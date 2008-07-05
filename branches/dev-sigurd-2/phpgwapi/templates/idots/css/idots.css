@@ -377,3 +377,46 @@ thead, tfoot, .th /* th shouldn't be used where possible */
 	margin: 0px;
 	padding: 0px;
 }
+/*
+	Navbar layout
+*/
+
+ul#navbar
+{
+	/*background: #fff;*/
+}
+
+ul#navbar li
+{
+	display: block;
+	white-space: nowrap;
+}
+
+ul#navbar li a
+{
+	color: #000;
+	text-decoration: none;
+	background-repeat: no-repeat;
+	background-position: left center;
+	display: inline-block;
+	padding-left: 20px;
+	margin-left: 20px;
+	padding: 2px 0px 2px 20px;
+}
+
+#navbar a.parent
+{
+	margin-left: 0px;
+}
+
+ul#navbar li a.current span
+{
+	background: #3f6ad1;
+	color: #fff;
+}
+
+ul#navbar li li
+{
+	padding-left: 20px;
+}
+

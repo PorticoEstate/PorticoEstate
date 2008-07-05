@@ -61,103 +61,98 @@
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] = 'admin';
 		}
 
-		/**
-		 * Get the admin menu
-		 *
-		 * @return array a flat menu list for use in admin
-		 */
-		protected static function _get_menu()
-		{
-			$flat_menu = array();
-
-			$menu = execMethod('phpgwapi.menu.get', 'admin');
-			foreach ( $GLOBALS['phpgw_info']['user']['apps'] as $app => $app_info )
-			{
-				if(isset($menu[$app]))
-				{
-					if ( !is_array($menu[$app]) )
-					{
-						continue;
-					}
-					self::_get_sub_menu($flat_menu, $app, $menu[$app]);
-				}
-			}
-			
-			return $flat_menu;
-		}
-
-		/**
-		 * Get sub items from a menu in a flat structure
-		 *
-		 * @param array  &$menu the menu structure to append the items to
-		 * @param string $app   the application the is for
-		 * @param array  $items the menu items to add to the flat structure
-		 */
-		protected static function _get_sub_menu(&$menu, $app, $items)
-		{
-			foreach ( $items as $item )
-			{
-				if ( !isset($item['children']) )
-				{
-					$menu[$app][] =  $item;
-				}
-				else
-				{
-					if(isset($item['text']))
-					{
-						$menu[$app][] = array
-									(
-										'text' => "[ {$item['text']} ]",
-										'url' => $item['url'],
-										'class' => 'th'
-									);
-					}
-					self::_get_sub_menu($menu, $app, $item['children']);
-				}
-			}
-		}
 
 		/**
 		 * Render the admin menu
 		 *
 		 * @return void
 		 */
-		public function mainscreen()
+		function mainscreen()
 		{
-			$html = '';
+			$navbar = execMethod('phpgwapi.menu.get', 'navbar');
+			$navigation = execMethod('phpgwapi.menu.get', 'admin');
 
-			$menu = self::_get_menu();
-			foreach ( $menu as $module => $entries )
+			$treemenu = '';
+			foreach ( $GLOBALS['phpgw_info']['user']['apps'] as $app => $app_info )
 			{
-				$html .= <<<HTML
-				<h2>$module</h2>
-				<ul>
-
-HTML;
-				$i = 0;
-				foreach ( $entries as $entry )
+				if(!in_array($app, array('logout', 'about', 'preferences')))
 				{
-					if(isset($entry['class']))
-					{
-						$class = $entry['class'];
-					}
-					else
-					{
-						$row = $i % 2 ? 'on' : 'off';
-						$class = "row_{$row}";
-					}
-
-					$html .= <<<HTML
-					<li class="{$class}"><a href="{$entry['url']}">{$entry['text']}</a></li>
-HTML;
-					++$i;
+					$submenu = isset($navigation[$app]) ? self::_render_submenu($app, $navigation[$app]) : '';
+					$treemenu .= self::_render_item($navbar[$app], "navbar::{$app}", $submenu);
 				}
-				$html .= <<<HTML
-				</ul>
-HTML;
 			}
+			$html = <<<HTML
+			<ul id="navbar">
+				{$treemenu}
+			</ul>
+
+HTML;
 			$GLOBALS['phpgw']->common->phpgw_header(true);
 			echo $html;
+		}
+
+		/**
+		 * Render items from a menu and append the children
+		 *
+		 * @param array  $item the menu item
+		 * @param string $id   identificator for current location
+		 * @param string  $children rendered sub menu
+		 */
+		protected static function _render_item($item, $id='', $children='')
+		{
+			//FIXME: not really used here -could be nice if pages are opened in an other target
+			$current_class = '';
+		/*	if ( $id == "navbar::{$GLOBALS['phpgw_info']['flags']['menu_selection']}" )
+			{
+				$current_class = 'current';
+			}
+		*/
+			$link_class =" class=\"{$current_class}\"";
+
+			if(isset($item['group'])) // at application
+			{
+				return <<<HTML
+				<li class="parent">
+					<span>{$item['text']}</span>
+				{$children}
+				</li>
+HTML;
+			}
+			else if (isset($item['url']))
+			{
+				return <<<HTML
+				<li>
+					<a href="{$item['url']}"{$link_class} id="{$id}">
+						<span>{$item['text']}</span>
+					</a>
+					{$children}
+				</li>
+HTML;
+			}
+		}
+
+		/**
+		 * Get sub items from a menu 
+		 *
+		 * @param string $parent  name of parent item
+		 * @param array  $menu the menu items to add to structure
+		 */
+		protected static function _render_submenu($parent, $menu)
+		{
+			$out = '';
+			foreach ( $menu as $key => $item )
+			{
+				$children = isset($item['children']) ? self::_render_submenu(	"{$parent}::{$key}", $item['children']) : '';
+				$out .= self::_render_item($item, "navbar::{$parent}::{$key}", $children);
+			}
+
+			$out = <<<HTML
+			<ul>
+				{$out}
+			</ul>
+
+HTML;
+			return $out;
 		}
 
 		/**
