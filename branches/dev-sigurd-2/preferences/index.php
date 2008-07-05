@@ -155,9 +155,12 @@
 	}
 
 	$menus = execMethod('phpgwapi.menu.get');
-	foreach ( $menus['preferences'] as $app => $menu )
+	foreach ( $GLOBALS['phpgw_info']['user']['apps'] as $app => $app_info )
 	{
-		display_section($menus['navbar'][$app], $menu);
+		if (isset($menus['preferences'][$app]))
+		{
+			display_section($menus['navbar'][$app], $menus['preferences'][$app]);
+		}
 	}
 
 	$GLOBALS['phpgw']->template->pfp('out', 'list');
