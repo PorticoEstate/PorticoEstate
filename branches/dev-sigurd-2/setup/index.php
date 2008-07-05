@@ -254,7 +254,7 @@
 					}
 					catch (Exception $e)
 					{
-						$setup_tpl->set_var('lang_db_create_error',  $e->getMessage());
+						$setup_tpl->set_var('status',$e->getMessage());
 					}
 					break;
 				case 'drop':

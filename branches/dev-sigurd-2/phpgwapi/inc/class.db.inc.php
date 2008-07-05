@@ -818,6 +818,7 @@
 		* @param string $adminname Name of database administrator user (optional)
 		* @param string $adminpasswd Password for the database administrator user (optional)
 		* @returns bool was the new db created?
+		* @throws Exception invalid db-name
 		*/
 		public function create_database($adminname = '', $adminpasswd = '')
 		{
@@ -836,7 +837,7 @@
 				return False;
 			}
 
-			if(!preg_match('/^[a-z0-9_]+$/i', $this->Database))
+			if( !preg_match('/^[a-z0-9_]+$/i', $this->Database) )
 			{
 				throw new Exception(lang('ERROR: the name %1 contains illegal charackter for cross platform db-support', $this->Database));
 			}
