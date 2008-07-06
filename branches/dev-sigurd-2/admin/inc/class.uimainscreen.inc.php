@@ -61,7 +61,6 @@
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] = 'admin';
 		}
 
-
 		/**
 		 * Render the admin menu
 		 *
@@ -69,90 +68,20 @@
 		 */
 		function mainscreen()
 		{
-			$navbar = execMethod('phpgwapi.menu.get', 'navbar');
-			$navigation = execMethod('phpgwapi.menu.get', 'admin');
+			$menu		= createObject('phpgwapi.menu');
+			$navbar		= $menu->get('navbar');
+			$navigation = $menu->get('admin');
 
 			$treemenu = '';
 			foreach ( $GLOBALS['phpgw_info']['user']['apps'] as $app => $app_info )
 			{
 				if(!in_array($app, array('logout', 'about', 'preferences')))
 				{
-					$submenu = isset($navigation[$app]) ? self::_render_submenu($app, $navigation[$app]) : '';
-					$treemenu .= self::_render_item($navbar[$app], "navbar::{$app}", $submenu);
+					$treemenu .= $menu->render_menu($app, $navigation[$app], $navbar[$app], true);
 				}
 			}
-			$html = <<<HTML
-			<ul id="menu">
-				{$treemenu}
-			</ul>
-
-HTML;
 			$GLOBALS['phpgw']->common->phpgw_header(true);
-			echo $html;
-		}
-
-		/**
-		 * Render items from a menu and append the children
-		 *
-		 * @param array  $item the menu item
-		 * @param string $id   identificator for current location
-		 * @param string  $children rendered sub menu
-		 */
-		protected static function _render_item($item, $id='', $children='')
-		{
-			//FIXME: not really used here -could be nice if pages are opened in an other target
-			$current_class = '';
-		/*	if ( $id == "navbar::{$GLOBALS['phpgw_info']['flags']['menu_selection']}" )
-			{
-				$current_class = 'current';
-			}
-		*/
-			$link_class =" class=\"{$current_class}\"";
-
-			if(isset($item['group'])) // at application
-			{
-				return <<<HTML
-				<li class="parent">
-					<span>{$item['text']}</span>
-				{$children}
-				</li>
-HTML;
-			}
-			else if (isset($item['url']))
-			{
-				return <<<HTML
-				<li>
-					<a href="{$item['url']}"{$link_class} id="{$id}">
-						<span>{$item['text']}</span>
-					</a>
-					{$children}
-				</li>
-HTML;
-			}
-		}
-
-		/**
-		 * Get sub items from a menu 
-		 *
-		 * @param string $parent  name of parent item
-		 * @param array  $menu the menu items to add to structure
-		 */
-		protected static function _render_submenu($parent, $menu)
-		{
-			$out = '';
-			foreach ( $menu as $key => $item )
-			{
-				$children = isset($item['children']) ? self::_render_submenu(	"{$parent}::{$key}", $item['children']) : '';
-				$out .= self::_render_item($item, "navbar::{$parent}::{$key}", $children);
-			}
-
-			$out = <<<HTML
-			<ul>
-				{$out}
-			</ul>
-
-HTML;
-			return $out;
+			echo $treemenu;
 		}
 
 		/**

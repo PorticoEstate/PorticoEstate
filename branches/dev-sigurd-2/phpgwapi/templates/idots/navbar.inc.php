@@ -41,6 +41,7 @@
 		$GLOBALS['phpgw']->template->set_block('navbar', 'navbar_item', 'navbar_items');
 		$GLOBALS['phpgw']->template->set_block('navbar','navbar_header','navbar_header');
 		$GLOBALS['phpgw']->template->set_block('navbar','extra_blocks_header','extra_block_header');
+		$GLOBALS['phpgw']->template->set_block('navbar','extra_blocks_menu','extra_blocks_menu');
 		$GLOBALS['phpgw']->template->set_block('navbar','extra_block_row','extra_block_row');
 		$GLOBALS['phpgw']->template->set_block('navbar','extra_blocks_footer','extra_blocks_footer');
 		$GLOBALS['phpgw']->template->set_block('navbar','navbar_footer','navbar_footer');
@@ -148,9 +149,19 @@
 		}
 
 		if ( isset($navigation[$GLOBALS['phpgw_info']['flags']['currentapp']])
-			&& $GLOBALS['phpgw_info']['flags']['currentapp'] != 'admin' )
+			&& $GLOBALS['phpgw_info']['flags']['currentapp'] != 'admin'
+			&& $GLOBALS['phpgw_info']['flags']['currentapp'] != 'preferences' )
 		{
-			display_sidebox($navbar[$GLOBALS['phpgw_info']['flags']['currentapp']]['text'], $navigation[$GLOBALS['phpgw_info']['flags']['currentapp']]);
+			$app = $GLOBALS['phpgw_info']['flags']['currentapp'];
+			$GLOBALS['phpgw']->template->set_var('lang_title', $navbar[$app]['text']);
+			$GLOBALS['phpgw']->template->pfp('out','extra_blocks_header');
+
+			$menu = createObject('phpgwapi.menu');
+			$app_menu = $menu->render_menu($app, $navigation[$app], $navbar[$app]);
+
+			$GLOBALS['phpgw']->template->set_var(array('app_menu'=> $app_menu));
+			$GLOBALS['phpgw']->template->pfp('out','extra_blocks_menu');
+			$GLOBALS['phpgw']->template->pfp('out', 'extra_blocks_footer');
 		}
 
 		if ( isset($navbar['preferences']) 
@@ -159,13 +170,13 @@
 			$prefs = execMethod('phpgwapi.menu.get', 'preferences');
 			if ( isset($prefs[$GLOBALS['phpgw_info']['flags']['currentapp']]) )
 			{
-				display_sidebox(lang('preferences'), $prefs[$GLOBALS['phpgw_info']['flags']['currentapp']]);
+//				display_sidebox(lang('preferences'), $prefs[$GLOBALS['phpgw_info']['flags']['currentapp']]);
 			}
 		}
 
 		if ( isset($navigation['admin'][$GLOBALS['phpgw_info']['flags']['currentapp']]['children']) )
 		{
-			display_sidebox(lang('administration'), $navigation['admin'][$GLOBALS['phpgw_info']['flags']['currentapp']]['children']);
+//			display_sidebox(lang('administration'), $navigation['admin'][$GLOBALS['phpgw_info']['flags']['currentapp']]['children']);
 		}
 
 		$GLOBALS['phpgw']->template->pparse('out', 'navbar_footer');

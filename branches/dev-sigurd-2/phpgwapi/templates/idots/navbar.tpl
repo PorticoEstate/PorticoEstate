@@ -44,4 +44,7 @@
 <!-- BEGIN extra_block_row -->
 				<li><a href="{item_link}">{lang_item}</a></li>
 <!-- END extra_block_row -->
+<!-- BEGIN extra_blocks_menu -->
+		{app_menu}
+<!-- END extra_blocks_menu -->
 

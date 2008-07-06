@@ -402,8 +402,8 @@ ul#menu li a
 	background-position: left center;
 	display: inline-block;
 	padding-left: 20px;
-	margin-left: 20px;
-	padding: 2px 0px 2px 20px;
+	margin-left: 0px;
+	padding: 2px 0px 2px 0px;
 }
 
 #menu a.parent
