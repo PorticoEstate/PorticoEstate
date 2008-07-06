@@ -249,15 +249,21 @@
 						array('menuaction' => 'admin.uiaccounts.edit_user'));
 			}
 
-			$query	= phpgw::get_var('query', 'string', 'POST');
-			$start	= phpgw::get_var('start', 'int');
-			$order	= phpgw::get_var('order', 'string', 'GET', 'account_lid');
-			$sort	= phpgw::get_var('sort', 'string', 'GET', 'ASC');
+			$query		= phpgw::get_var('query', 'string', 'POST');
+			$start		= phpgw::get_var('start', 'int');
+			$order		= phpgw::get_var('order', 'string', 'GET', 'account_lid');
+			$sort		= phpgw::get_var('sort', 'string', 'GET', 'ASC');
+			$allrows	= phpgw::get_var('allrows', 'bool');
 
 			//this is a work around hack for the ugly nextmatch code
 			$GLOBALS['query'] = $query;
 
 			$total = 0;
+			if( $allrows )
+			{
+				$start = -1;
+				$total = -1;
+			}
 
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('administration') . ': ' . lang('list users');
 
@@ -427,10 +433,12 @@
 
 			$nm = array
 			(
-				'start'			=> $start,
- 				'num_records'	=> count($account_info),
- 				'all_records'	=> $total,
-				'link_data'		=> $link_data
+				'start'				=> $start,
+ 				'num_records'		=> count($account_info),
+ 				'all_records'		=> $total,
+				'link_data'			=> $link_data,
+				'allow_all_rows'	=> true,
+				'allrows'			=> $allrows
 			);
 
 			$data = array

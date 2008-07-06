@@ -35,6 +35,7 @@
 	<xsl:variable name="title_next"><xsl:value-of select="title_next"/></xsl:variable>
 	<xsl:variable name="title_last"><xsl:value-of select="title_last"/></xsl:variable>
 	<xsl:variable name="title_all"><xsl:value-of select="title_all"/></xsl:variable>
+	<xsl:variable name="allrows"><xsl:value-of select="allrows"/></xsl:variable>
 
 	<table border="0" width="100%">
 		<tr>
@@ -159,20 +160,24 @@
 			</xsl:choose>
 
 			<xsl:choose>
-			<!--<xsl:when test="number($all_records) =1"> -->
-				<xsl:when test="allow_all_rows != ''">
-				<xsl:variable name="all"><xsl:value-of select="nextmatchs_url"/>&amp;start=all</xsl:variable>
-					<td width="25" align="right">
-						<a href="{$all}"><img src="{$all_img}" border="0" alt="{$title_all}" title="{$title_all}"/></a>
-					</td>
+				<xsl:when test="allow_all_rows = 1">
+					<xsl:choose>
+						<xsl:when test="allrows = 1">
+						<xsl:variable name="all"><xsl:value-of select="nextmatchs_url"/>&amp;start=0</xsl:variable>
+							<td width="25" align="right">
+								<a href="{$all}"><img src="{$all_img}" border="0" alt="{$title_all}" title="{$title_all}"/></a>
+							</td>
+						</xsl:when>
+						<xsl:otherwise>
+						<xsl:variable name="all"><xsl:value-of select="nextmatchs_url"/>&amp;allrows=1</xsl:variable>
+							<td width="25" align="right">
+								<a href="{$all}"><img src="{$all_img}" border="0" alt="{$title_all}" title="{$title_all}"/></a>
+							</td>
+						</xsl:otherwise>
+					</xsl:choose>
 				</xsl:when>
-			<!--	<xsl:otherwise>
-				<xsl:variable name="all"><xsl:value-of select="nextmatchs_url"/>&amp;allrows=1</xsl:variable>
-					<td width="25" align="right">
-						<a href="{$all}"><img src="{$all_img}" border="0"/></a>
-					</td>
-				</xsl:otherwise> -->
 			</xsl:choose>
+
 		</tr>
 	</table>
 </xsl:template>
