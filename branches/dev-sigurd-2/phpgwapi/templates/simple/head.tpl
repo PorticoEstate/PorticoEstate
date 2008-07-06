@@ -19,8 +19,8 @@
 			{win_on_events}
 			-->
 		</script>
-		{java_script}
+		{javascript}
 		<title>{website_title}</title>
 	</head>
-<body>
+	<body class="yui-skin-sam">
 <!-- END Head -->

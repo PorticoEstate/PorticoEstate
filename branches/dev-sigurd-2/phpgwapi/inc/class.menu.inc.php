@@ -213,6 +213,7 @@ HTML;
 		 *
 		 * @param string $parent  name of parent item
 		 * @param array  $menu the menu items to add to structure
+		 * @param bool   $show_appname show appname as top level
 		 */
 		protected static function _render_submenu($parent, $menu, $show_appname = false)
 		{
