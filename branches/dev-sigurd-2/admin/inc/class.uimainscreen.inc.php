@@ -82,7 +82,7 @@
 				}
 			}
 			$html = <<<HTML
-			<ul id="navbar">
+			<ul id="menu">
 				{$treemenu}
 			</ul>
 

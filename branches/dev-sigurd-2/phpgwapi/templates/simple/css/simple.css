@@ -109,3 +109,47 @@ ol.source li
 	list-style-type: decimal;
 	white-space: pre;
 }
+
+/*
+	Menu layout
+*/
+
+ul#menu
+{
+	/*background: #fff;*/
+}
+
+ul#menu li
+{
+	display: block;
+	white-space: nowrap;
+}
+
+ul#menu li a
+{
+	color: #000;
+	text-decoration: none;
+	background-repeat: no-repeat;
+	background-position: left center;
+	display: inline-block;
+	padding-left: 20px;
+	margin-left: 20px;
+	padding: 2px 0px 2px 20px;
+}
+
+#menu a.parent
+{
+	margin-left: 0px;
+}
+
+ul#menu li a.current span
+{
+	background: #3f6ad1;
+	color: #fff;
+}
+
+ul#menu li li
+{
+	padding-left: 20px;
+}
+
