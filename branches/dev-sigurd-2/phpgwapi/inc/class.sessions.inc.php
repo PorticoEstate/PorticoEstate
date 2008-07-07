@@ -1293,16 +1293,17 @@
 				return $values;
 			}
 
-			$dir = new RecursiveDirectoryIterator();
-			foreach ( $dir as $filename )
+			$dir = new RecursiveDirectoryIterator($path);
+			foreach ( $dir as $file )
 			{
+				$filename = $file->getFilename();
 				// only try php session files
 				if ( !preg_match('/^sess_([a-f0-9]+)$/', $filename) )
 				{
 					continue;
 				}
 
-				$data = unserialize(file_get_contents($filename));
+				$data = unserialize(file_get_contents("{$path}/{$filename}"));
 
 				// skip invalid or anonymous sessions
 				if ( !isset($data['phpgw_session'])
