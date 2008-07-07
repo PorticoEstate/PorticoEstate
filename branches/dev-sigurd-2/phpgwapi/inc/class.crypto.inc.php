@@ -219,7 +219,10 @@
 			}
 
 			$newdata = @unserialize($data);
-			if(!is_null($newdata))
+			// FIXME: data from db-sessions seems to differ from php-sessions
+			if($newdata
+				|| ($GLOBALS['phpgw_info']['server']['sessions_type'] == 'php'
+					&& !is_null($newdata)))
 			{
 				if($this->debug)
 				{
