@@ -653,7 +653,7 @@
 		public function list_sessions($start, $order, $sort, $all_no_sort = false)
 		{
 			// We cache the data for 5mins system wide as this is an expensive operation
-			$last_updated = phpgwapi_cache::system_get('phpgwapi', 'session_list_saved');
+			$last_updated = 0; //phpgwapi_cache::system_get('phpgwapi', 'session_list_saved');
 
 			if ( is_null($last_updated) 
 				|| $last_updated < 60 * 5 )
@@ -1303,11 +1303,20 @@
 					continue;
 				}
 
-				$data = unserialize(file_get_contents("{$path}/{$filename}"));
+				$rawdata = file_get_contents("{$path}/{$filename}");
+
+				//taken from http://no.php.net/manual/en/function.session-decode.php#79244
+				$vars = preg_split('/([a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff^|]*)\|/',
+				$rawdata, -1, PREG_SPLIT_NO_EMPTY | PREG_SPLIT_DELIM_CAPTURE);
+				$data = array();
+				for($i=0; $vars[$i]; $i++)
+				{
+					$data[$vars[$i++]]=unserialize($vars[$i]);
+				}
 
 				// skip invalid or anonymous sessions
 				if ( !isset($data['phpgw_session'])
-					|| $data['phpgw_session']['session_install_id'] != $this->_install_id
+					|| $data['phpgw_session']['session_install_id'] != $GLOBALS['phpgw_info']['server']['install_id']
 					|| !isset($data['phpgw_session']['session_flags'])
 					|| $data['phpgw_session']['session_flags'] == 'A' )
 				{
@@ -1325,7 +1334,6 @@
 				);
 			}
 			return $values;
-
 		}
 
 		/**
