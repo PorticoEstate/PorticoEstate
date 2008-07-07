@@ -1309,9 +1309,16 @@
 				$vars = preg_split('/([a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff^|]*)\|/',
 				$rawdata, -1, PREG_SPLIT_NO_EMPTY | PREG_SPLIT_DELIM_CAPTURE);
 				$data = array();
-				for($i=0; $vars[$i]; $i++)
+
+		/*		for($i=0; $vars[$i]; $i++)
 				{
 					$data[$vars[$i++]]=unserialize($vars[$i]);
+				}
+		*/
+				if(isset($vars[3]))
+				{
+					$data[$vars[0]]=unserialize($vars[1]);
+					$data[$vars[2]]=unserialize($vars[3]);
 				}
 
 				// skip invalid or anonymous sessions
