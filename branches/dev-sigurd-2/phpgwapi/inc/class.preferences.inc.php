@@ -262,30 +262,30 @@
 			{
 				$this->db->query('SELECT * FROM phpgw_preferences WHERE preference_owner IN (-1,-2,'.intval($this->account_id).')',__LINE__,__FILE__);
 
-						$this->forced = $this->default = $this->user = array();
-						while($this->db->next_record())
-						{
-						// The following ereg is required for PostgreSQL to work
-						$app = ereg_replace(' ','',$this->db->f('preference_app'));
-						$value = unserialize($this->db->f('preference_value'));
-						$this->unquote($value);
-						if (!is_array($value))
-						{
+				$this->forced = $this->default = $this->user = array();
+				while($this->db->next_record())
+				{
+					// The following ereg is required for PostgreSQL to work
+					$app = ereg_replace(' ','',$this->db->f('preference_app'));
+					$value = unserialize($this->db->f('preference_value'));
+					$this->unquote($value);
+					if (!is_array($value))
+					{
 						continue;
-						}
-						switch($this->db->f('preference_owner'))
-						{
+					}
+					switch($this->db->f('preference_owner'))
+					{
 						case -1:	// forced
-						$this->forced[$app] = $value;
-						break;
+							$this->forced[$app] = $value;
+							break;
 						case -2:	// default
-						$this->default[$app] = $value;
-						break;
+							$this->default[$app] = $value;
+							break;
 						default:	// user
-						$this->user[$app] = $value;
-						break;
-						}
-						}
+							$this->user[$app] = $value;
+							break;
+					}
+				}
 
 				if ($GLOBALS['phpgw']->acl->check('session_only_preferences',1,'preferences'))
 				{
