@@ -105,6 +105,20 @@
 						echo '<p><b>'.lang('Error: %1 not found or other error !!!',$async->crontab)."</b></p>\n";
 					}
 				}
+
+				if ( $asyncservice )
+				{
+					if (!isset($GLOBALS['phpgw_info']['server']['asyncservice'])
+						|| $asyncservice != $GLOBALS['phpgw_info']['server']['asyncservice'] )
+					{
+						$config = CreateObject('phpgwapi.config','phpgwapi');
+						$config->read_repository();
+						$config->value('asyncservice', $asyncservice);
+						$config->save_repository();
+						unset($config);
+						$GLOBALS['phpgw_info']['server']['asyncservice'] = $asyncservice;
+					}
+				}
 			}
 			else
 			{
@@ -117,16 +131,6 @@
 			$lr_date = $last_run['end'] ? $GLOBALS['phpgw']->common->show_date($last_run['end']) : lang('never');
 			echo '<p><b>'.lang('Async services last executed').'</b>: '.$lr_date.' ('.$last_run['run_by'].")</p>\n<hr>\n";
 
-			if ( !isset($GLOBALS['phpgw_info']['server']['asyncservice'])
-				|| $asyncservice != $GLOBALS['phpgw_info']['server']['asyncservice'] )
-			{
-				$config = CreateObject('phpgwapi.config','phpgwapi');
-				$config->read_repository();
-				$config->value('asyncservice', $asyncservice);
-				$config->save_repository();
-				unset($config);
-				$GLOBALS['phpgw_info']['server']['asyncservice'] = $asyncservice;
-			}
 			if (!$async->only_fallback)
 			{
 				$installed = $async->installed();
@@ -135,7 +139,7 @@
 					$async_use['cron'] = lang('crontab only (recomended)');
 				}
 			}
-			$async_use['']    = lang('fallback (after each pageview)');
+			$async_use['fallback']    = lang('fallback (after each pageview)');
 			$async_use['off'] = lang('disabled (not recomended)');
 			echo '<p><b>'.lang('Run Asynchronous services').'</b>'.
 				' <select name="asyncservice" onChange="this.form.submit();">';

@@ -286,7 +286,9 @@
 			if ( is_null($final_called) )
 			{
 				// call the asyncservice check_run function if it is not explicitly set to cron-only
-				if (!isset($GLOBALS['phpgw_info']['server']['asyncservice']) || !$GLOBALS['phpgw_info']['server']['asyncservice'] )
+				if ( !isset($GLOBALS['phpgw_info']['server']['asyncservice'])
+					|| !$GLOBALS['phpgw_info']['server']['asyncservice'] 
+					|| $GLOBALS['phpgw_info']['server']['asyncservice'] == 'fallback')
 				{
 					ExecMethod('phpgwapi.asyncservice.check_run', 'fallback');
 				}
