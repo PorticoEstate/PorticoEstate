@@ -10,24 +10,31 @@
  * @version $Id$
  */
 	
-	$app_css = $java_script = '';
-
 	// css file handling
+	$theme_styles = array();
 	$css_file = PHPGW_SERVER_ROOT . '/phpgwapi/templates/probusiness/css/'.$GLOBALS['phpgw_info']['user']['preferences']['common']['theme'].'.css';
 	if (file_exists($css_file))
 	{
-		$css_ref = $GLOBALS['phpgw_info']['server']['webserver_url'] . '/phpgwapi/templates/probusiness/css/'.$GLOBALS['phpgw_info']['user']['preferences']['common']['theme'].'.css';
+		$theme_styles[] = $GLOBALS['phpgw_info']['server']['webserver_url'] . '/phpgwapi/templates/probusiness/css/'.$GLOBALS['phpgw_info']['user']['preferences']['common']['theme'].'.css';
 	}
 	else
 	{
-		$css_ref = $GLOBALS['phpgw_info']['server']['webserver_url'] . '/phpgwapi/templates/probusiness/css/styles.css';
+		$theme_styles[] = $GLOBALS['phpgw_info']['server']['webserver_url'] . '/phpgwapi/templates/probusiness/css/styles.css';
 	}
+
+	$theme_styles[] = "{$GLOBALS['phpgw_info']['server']['webserver_url']}/phpgwapi/js/yahoo/tabview/assets/skins/sam/tabview.css";
 
 	$tpl = CreateObject('phpgwapi.Template',PHPGW_TEMPLATE_DIR);
 	$tpl->set_unknowns('remove');
 
-
 	$tpl->set_file(array('head' => 'head.tpl'));
+	$tpl->set_block('head', 'theme_stylesheet', 'theme_stylesheets');
+
+	foreach ( $theme_styles as $style )
+	{
+		$tpl->set_var('theme_style', $style);
+		$tpl->parse('theme_stylesheets', 'theme_stylesheet', true);
+	}
 
 	$app = $GLOBALS['phpgw_info']['flags']['currentapp'];
 	$app = $app ? ' ['.(isset($GLOBALS['phpgw_info']['apps'][$app]) ? $GLOBALS['phpgw_info']['apps'][$app]['title'] : lang($app)).']':'';
@@ -38,7 +45,6 @@
 		'img_shortcut'  => PHPGW_IMAGES_DIR . '/favicon.ico',
 		'font_family'   => (isset($GLOBALS['phpgw_info']['theme']['font'])?$GLOBALS['phpgw_info']['theme']['font']:''),
 		'website_title' => (isset($GLOBALS['phpgw_info']['server']['site_title'])?$GLOBALS['phpgw_info']['server']['site_title']:'') . $app,
-		'theme_css'     => $css_ref,
 		'css'           => $GLOBALS['phpgw']->common->get_css(),
 		'java_script'   => $GLOBALS['phpgw']->common->get_java_script(),
 		'api_root'      => $GLOBALS['phpgw_info']['server']['webserver_url'] . '/phpgwapi/templates/probusiness/',

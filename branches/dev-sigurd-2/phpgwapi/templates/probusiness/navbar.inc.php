@@ -54,6 +54,28 @@
 			prepare_navbar($navbar);
 			foreach ( $navbar as $app => $app_data )
 			{
+				if($app == 'logout') // insert manual before logout
+				{
+					if ( isset($GLOBALS['phpgw_info']['user']['apps']['manual']) )
+					{
+						$tpl->set_var(array
+						(
+							'url' => "javascript:openwindow('"
+								 . $GLOBALS['phpgw']->link('/index.php', array
+								 (
+								 	'menuaction'=> 'manual.uimanual.help',
+								 	'app' => $GLOBALS['phpgw_info']['flags']['currentapp'],
+								 	'section' => isset($GLOBALS['phpgw_info']['apps']['manual']['section']) ? $GLOBALS['phpgw_info']['apps']['manual']['section'] : '',
+								 	'referer' => phpgw::get_var('menuaction')
+								 )) . "','700','600')",
+
+							'text' => lang('help'),
+							'image' => $GLOBALS['phpgw']->common->image('manual', 'navbar')
+						));
+					}			
+					$tpl->parse('app_rows', 'app_row', true);
+				}
+
 				if ( $app == $GLOBALS['phpgw_info']['flags']['currentapp'] )
 				{
 					$app_data['class'] = ' class="selectedNavLink"';

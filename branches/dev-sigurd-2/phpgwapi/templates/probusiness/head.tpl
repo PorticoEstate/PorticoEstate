@@ -10,6 +10,9 @@
 		<link rel="ICON" href="{img_icon}" type="image/x-ico" />
 		<link rel="SHORTCUT ICON" href="{img_shortcut}" />
     	{css}
+		<!-- BEGIN theme_stylesheet -->
+		<link href="{theme_style}" type="text/css" rel="StyleSheet">
+		<!-- END theme_stylesheet -->
 		<script src="{api_root}js/tabs.js" language="JavaScript1.1" type="text/javascript"></script>
 		<script language="JavaScript" type="text/javascript" src="{phpgw_root}folders/phplayersmenu/libjs/layersmenu-browser_detection.js"></script>
 		<script language="JavaScript" type="text/javascript" src="{phpgw_root}folders/phplayersmenu/libjs/layersmenu-library.js"></script>
