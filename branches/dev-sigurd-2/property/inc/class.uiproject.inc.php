@@ -675,7 +675,9 @@
 						unset($values['project_id']);
 					}
 
-					if (isset($GLOBALS['phpgw_info']['server']['smtp_server']) && $GLOBALS['phpgw_info']['server']['smtp_server'])
+					if ( isset($GLOBALS['phpgw_info']['server']['smtp_server']) 
+						&& $GLOBALS['phpgw_info']['server']['smtp_server']
+						&& $config->config_data['mailnotification'] )
 					{
 						if (!is_object($GLOBALS['phpgw']->send))
 						{
@@ -746,11 +748,6 @@
 								}
 							}
 						}
-					}
-					else
-					{
-						$receipt['error'][]=array('msg'=>lang('SMTP server is not set! (admin section)'));
-						$bypass_error=true;
 					}
 				}
 
