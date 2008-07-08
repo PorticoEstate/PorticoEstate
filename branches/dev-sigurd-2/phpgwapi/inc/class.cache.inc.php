@@ -357,7 +357,18 @@
 
 			$now = time();
 
-			$sql = "INSERT INTO phpgw_cache_user (item_key, user_id, cache_data, lastmodts) VALUES('{$key}', {$uid}, '{$value}', $now)";
+			$GLOBALS['phpgw']->db->query("SELECT user_id FROM phpgw_cache_user WHERE item_key = '{$key}' AND user_id = {$uid}", __LINE__, __FILE__);
+			if ( $GLOBALS['phpgw']->db->next_record() )
+			{
+				$sql = 'UPDATE phpgw_cache_user'
+					. " SET cache_data = '{$value}', lastmodts = {$now}"
+					. " WHERE item_key = '{$key}' AND user_id = {$uid}";
+			}
+			else
+			{
+				$sql = "INSERT INTO phpgw_cache_user (item_key, user_id, cache_data, lastmodts) VALUES('{$key}', {$uid}, '{$value}', $now)";
+			}
+
 			return !!$GLOBALS['phpgw']->db->query($sql, __LINE__, __FILE__);
 		}
 	}
