@@ -1643,9 +1643,9 @@
 			$accounts = $GLOBALS['phpgw']->accounts->get_list();
 			foreach($accounts as $account_data)
 			{
-				if($account_data['person_id'])
+				if($account_data->person_id)
 				{
-					$people[] = $account_data['person_id'];
+					$people[] = $account_data->person_id;
 				}
 			}
 
@@ -3354,9 +3354,9 @@
 			$accounts = $GLOBALS['phpgw']->accounts->get_list();
 			foreach($accounts as $account_data)
 			{
-				if($account_data['person_id'] == $contact_id)
+				if($account_data->id == $contact_id)
 				{
-					$account_id = $account_data['account_id'];
+					$account_id = $account_data->id;
 					break;
 				}
 			}

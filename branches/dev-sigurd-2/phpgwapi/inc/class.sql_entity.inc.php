@@ -38,7 +38,6 @@
 	*/
 	define ('PHPGW_SQL_RETURN_SQL', 2);
 
-
 	/**
 	* SQL Generator ENTITY - helps to construct queries statements
 	*
@@ -623,7 +622,7 @@
 			}
 			else
 			{
-				$this->set_criteria(sql_criteria::criteria($criteria));
+				$this->set_criteria(phpgwapi_sql_criteria::criteria($criteria));
 			}
 
 			if(!empty($this->values))
