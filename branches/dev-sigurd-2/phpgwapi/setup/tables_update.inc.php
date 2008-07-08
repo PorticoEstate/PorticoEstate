@@ -1859,7 +1859,7 @@
 		foreach ( $apps as $app )
 		{
 			$sql = 'INSERT INTO phpgw_acl_location(appname, id, descr)'
-				. " VALUES ('{$app}', 'run', 'app run rights automagically created location during 0.9.17.514 migration')";
+				. " VALUES ('{$app}', 'run', 'app run rights created during 0.9.17.516 migration')";
 			
 			$GLOBALS['phpgw_setup']->oProc->m_odb->query($sql, __LINE__, __FILE__);
 		}
