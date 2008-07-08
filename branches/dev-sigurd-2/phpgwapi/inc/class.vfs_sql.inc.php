@@ -720,7 +720,7 @@
 				reset ($memberships);
 				while (list ($num, $group_array) = each ($memberships))
 				{
-					if ($owner_id == $group_array['account_id'])
+					if ($owner_id == $group_array->id)
 					{
 						$group_ok = 1;
 						break;
@@ -729,8 +729,7 @@
 			}
 
 			$acl = CreateObject ('phpgwapi.acl', $owner_id);
-			$acl->account_id = $owner_id;
-			$acl->read_repository ();
+			$acl->set_account_id($owner_id, true);
 
 			$rights = $acl->get_rights ($user_id);
 
@@ -740,7 +739,7 @@
 				reset ($memberships);
 				while (list ($num, $group_array) = each ($memberships))
 				{
-					$rights |= $acl->get_rights ($group_array['account_id']);
+					$rights |= $acl->get_rights ($group_array->id);
 				}
 			}
 
@@ -2512,4 +2511,3 @@
 			return ($rarray);
 		}
 	}
-?>
