@@ -2585,6 +2585,7 @@
 	function property_upgrade0_9_17_544()
 	{
 		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+		$GLOBALS['phpgw_setup']->oProc->query('DELETE FROM fm_cache');
 		$GLOBALS['phpgw_setup']->oProc->AlterColumn('fm_wo_hours','hours_descr',array('type' => 'text', 'nullable' => True));
 		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
 		{
