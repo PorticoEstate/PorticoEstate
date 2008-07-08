@@ -24,7 +24,7 @@
 		'noheader'               => true
 	);
 
-	$header = basename(realpath(__FILE__) . '/../../../header.inc.php');
+	$header = dirname(realpath(__FILE__)) . '/../../../header.inc.php';
 	if ( !file_exists($header) )
 	{
 		Header('Location: setup/index.php');
