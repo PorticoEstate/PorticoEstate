@@ -1,17 +1,11 @@
 <!-- BEGIN principal_tab -->
-<td>
-  <table>
-    <tr>
-      {principal_buttons}
-    </tr>
-  </table>
-</td>
+<div class="yui-navset">
+	<ul id="contacts_tabs" class="yui-nav">
+		{principal_buttons}
+	</ul>
+</div>
 <!-- END principal_tab -->
 
 <!-- BEGIN principal_button -->
-<td align="left">
-  <form action="{principal_action}" method="post">
-    <input class="{principal_class_css}" type="submit" name="{principal_name}" value="{principal_value}" />
-  </form>
-</td>
+		<li {principal_tab_css}><a href="{principal_action}">{principal_value}</a>
 <!-- END principal_button -->
