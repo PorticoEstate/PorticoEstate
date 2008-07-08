@@ -50,11 +50,6 @@
 	$forced  = phpgw::get_var('forced', 'string', 'POST');
 	$default = phpgw::get_var('default', 'string', 'POST');
 
-	if( isset($GLOBALS['phpgw_info']['server']['cache_phpgw_info']) )
-	{
-		$GLOBALS['phpgw']->preferences->read_repository();
-	}
-
 	$t =& $GLOBALS['phpgw']->template;
 	$t->set_root( $GLOBALS['phpgw']->common->get_tpl_dir('preferences') );
 	$t->set_file('preferences', 'preferences.tpl');

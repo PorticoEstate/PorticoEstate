@@ -695,7 +695,7 @@
 		function verify_basic_settings()
 		{
 			$preferences_update = False;
-			if (!is_array($GLOBALS['phpgw_info']['user']['preferences']))
+			if (!is_array($GLOBALS['phpgw_info']['user']['preferences']) || $GLOBALS['phpgw_info']['server']['cache_phpgw_info'])
 			{
 				$GLOBALS['phpgw_info']['user']['preferences'] = $this->read_repository();
 				$preferences_update = True;
