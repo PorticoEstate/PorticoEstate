@@ -30,6 +30,6 @@
 		</script>
 		{java_script}
 	</head>
-	<body>
+	<body class="yui-skin-sam">
 <!-- END Head -->
 
