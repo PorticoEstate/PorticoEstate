@@ -101,9 +101,9 @@
 				'cache_data' => array('type' => 'text','nullable' => false),
 				'lastmodts' => array('type' => 'int','precision' => 4,'nullable' => false)
 			),
-			'pk' => array('item_key'),
+			'pk' => array('item_key','user_id'),
 			'fk' => array(),
-			'ix' => array('user_id', 'lastmodts'),
+			'ix' => array('lastmodts'),
 			'uc' => array()
 		),
 		'phpgw_access_log' => array(
