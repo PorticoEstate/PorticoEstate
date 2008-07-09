@@ -1,7 +1,8 @@
 <!-- BEGIN addressbook_header -->
   <table class="basic" align="left">
     <tr>
-      {principal_tabs_inc}
+		{tabs}
+	<!--{principal_tabs_inc}-->
     </tr>
   </table>
   <br /><br /><br />
@@ -37,9 +38,17 @@
 
 <!-- BEGIN addressbook_footer -->
   </table>
-	<br />
-	<form action="{add_url}" method="post">
-		<input type="submit" name="Add" value="{lang_add}" />
-	</form>
+<table align="center">
+  <tr>
+	<td>
+     <form action="{add_url}"    method="post"><td width="16%"><input type="submit" name="Add" value="{lang_add}"></td></form>
+     <form action="{cat_cont_url}" method="post"><td width="16%"><input type="submit" name="Categorize" value="{lang_cat_cont}"></td></form>
+     <form action="{vcard_url}"  method="post"><td width="16%"><input type="submit" name="AddVcard" value="{lang_addvcard}"></td></form>
+     <form action="{import_url}" method="post"><td width="16%"><input type="submit" name="Import" value="{lang_import}"></td></form>
+     <form action="{import_alt_url}" method="post"><td width="16%"><input type="submit" name="Import" value="{lang_import_alt}"></td></form>
+     <form action="{export_url}" method="post"><td width="16%"><input type="submit" name="Export" value="{lang_export}"></td></form>
+    </td>
+   </tr>
+</table>
 <!-- END addressbook_footer -->
 
