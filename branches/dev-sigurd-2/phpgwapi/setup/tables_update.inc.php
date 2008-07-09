@@ -2298,3 +2298,38 @@
 			return $GLOBALS['setup_info']['phpgwapi']['currentver'];
 		}
 	}
+
+	$test[] = '0.9.17.518';
+	/**
+	* Replace the primary key of the phpgw_cache_user table
+	*
+	* @return string the new version number
+	*/
+	function phpgwapi_upgrade0_9_17_518()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		// New PK so drop the table
+		$GLOBALS['phpgw_setup']->oProc->DropTable('phpgw_cache_user');
+
+		$GLOBALS['phpgw_setup']->oProc->CreateTable('phpgw_cache_user', array
+		(
+			'fd' => array
+			(
+				'item_key' => array('type' => 'varchar','precision' => 100,'nullable' => false),
+				'user_id' => array('type' => 'int','precision' => 4,'nullable' => false),
+				'cache_data' => array('type' => 'text','nullable' => false),
+				'lastmodts' => array('type' => 'int','precision' => 4,'nullable' => false)
+			),
+			'pk' => array('item_key','user_id'),
+			'fk' => array(),
+			'ix' => array('lastmodts'),
+			'uc' => array()
+		));
+
+		if ( $GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit() )
+		{
+			$GLOBALS['setup_info']['phpgwapi']['currentver'] = '0.9.17.519';
+			return $GLOBALS['setup_info']['phpgwapi']['currentver'];
+		}
+	}
