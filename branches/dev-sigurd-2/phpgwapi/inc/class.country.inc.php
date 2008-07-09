@@ -158,7 +158,7 @@
 			'KR'	=> 'KOREA, REPUBLIC OF',
 			'KW'	=> 'KUWAIT',
 			'KG'	=> 'KYRGYZSTAN',
-			'AX'	=> 'ÅLAND ISLANDS',
+			'AX'	=> 'ALAND ISLANDS',
 			'LA'	=> 'LAO PEOPLE\'S DEMOCRATIC REPUBLIC',
 			'LV'	=> 'LATVIA',
 			'LB'	=> 'LEBANON',
