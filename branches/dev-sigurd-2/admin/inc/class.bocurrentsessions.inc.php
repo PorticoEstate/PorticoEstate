@@ -72,7 +72,7 @@
 				($GLOBALS['sessionid'] != $_GET['ksession']) &&
 				! $GLOBALS['phpgw']->acl->check('current_sessions_access',8,'admin'))
 			{
-				$GLOBALS['phpgw']->session->destroy($_GET['ksession'],0);
+				$GLOBALS['phpgw']->session->destroy($_GET['ksession']);
 			}
 			$this->ui = createobject('admin.uicurrentsessions');
 			$this->ui->list_sessions();

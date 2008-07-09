@@ -433,14 +433,18 @@
 				session_destroy();
 				$this->phpgw_setcookie(session_name());
 			}
-			else
+			else if ( $GLOBALS['phpgw_info']['server']['sessions_type'] == 'php' )
 			{
 				$sessions = $this->list_sessions(0, '', '', true);
 
 				if ( isset($sessions[$sessionid]) )
 				{
-					unlink($sessions[$sessionid]['php_session_file']);
+					unlink($sessions[$sessionid]['session_file']);
 				}
+			}
+			else
+			{
+				phpgwapi_session_handler_db::destroy($sessionid);
 			}
 
 			return true;
@@ -1332,12 +1336,13 @@
 
 				$values[$data['phpgw_session']['session_id']] = array
 				(
-					'id'		=> $data['phpgw_session']['session_id'],
-					'lid'		=> $data['phpgw_session']['session_lid'],
-					'ip'		=> $data['phpgw_session']['session_ip'],
-					'action'	=> $data['phpgw_session']['session_action'],
-					'dla'		=> $data['phpgw_session']['session_dla'],
-					'logints'	=> $data['phpgw_session']['session_logintime']
+					'id'				=> $data['phpgw_session']['session_id'],
+					'lid'				=> $data['phpgw_session']['session_lid'],
+					'ip'				=> $data['phpgw_session']['session_ip'],
+					'action'			=> $data['phpgw_session']['session_action'],
+					'dla'				=> $data['phpgw_session']['session_dla'],
+					'logints'			=> $data['phpgw_session']['session_logintime'],
+					'session_file'		=> "{$path}/{$filename}"
 				);
 			}
 			return $values;

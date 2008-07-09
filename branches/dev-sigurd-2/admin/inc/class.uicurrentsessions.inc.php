@@ -121,7 +121,7 @@
 					$kill_url = $GLOBALS['phpgw']->link('/index.php', array
 					(
 						'menuaction'	=> 'admin.uicurrentsessions.kill',
-						'ksession'		=> $value['session_id'],
+						'ksession'		=> $value['id'],
 						'kill'			=> 'true'
 					));
 					$value['kill'] = "<a href=\"{$kill_url}\">{$lang_kill}</a>";
