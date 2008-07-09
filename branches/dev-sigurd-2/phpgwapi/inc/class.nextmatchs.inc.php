@@ -183,8 +183,8 @@
 				'right'         => $this->right($sn,$start,$total,$extra)
 			);
 			$this->template->set_var($var);
-			$this->template->parse('nm_cats', 'nm_cats');
-			$this->template->parse('nm_cats_search_filter_data', 'nm_cats_search_filter');
+			$this->template->parse('cats', 'nm_cats');
+			$this->template->parse('cats_search_filter_data', 'nm_cats_search_filter');
 			return $this->template->fp('out','nextmatchs');
 		}
 
