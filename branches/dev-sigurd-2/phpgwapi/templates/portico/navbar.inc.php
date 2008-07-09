@@ -4,13 +4,15 @@
 	{
 		$navbar = execMethod('phpgwapi.menu.get', 'navbar');
 
+		$user = $GLOBALS['phpgw']->accounts->get( $GLOBALS['phpgw_info']['user']['id'] );
+
 		$var = array
 		(
 			'about_url'		=> $GLOBALS['phpgw']->link('/about.php', array('app' => $GLOBALS['phpgw_info']['flags']['currentapp']) ),
 			'about_text'	=> lang('about'),
 			'logout_url'	=> $GLOBALS['phpgw']->link('/logout.php'),
 			'logout_text'	=> lang('logout'),
-			'user_fullname' => $GLOBALS['phpgw']->common->display_fullname()
+			'user_fullname' => $user->__toString()
 		);
 
 		if ( isset($navbar['preferences']) )

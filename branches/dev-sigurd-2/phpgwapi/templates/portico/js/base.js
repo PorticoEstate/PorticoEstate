@@ -58,7 +58,8 @@ YAHOO.PORTICO.Store = function(location, data)
 
 YAHOO.PORTICO.NavBar = function()
 {
-	this.state = navbar_config || {};
+	this.state = navbar_config.length == 0 ? {} : navbar_config;
+
 	var self = this;
 
 	this.buildWidget = function()
@@ -138,8 +139,7 @@ YAHOO.PORTICO.NavBar = function()
 
 YAHOO.PORTICO.BorderLayout = function()
 {
-	this.config = border_layout_config || {};
-	this.layout = null;
+	this.config = border_layout_config.length == 0 ? {} : border_layout_config;
 
 	var self = this;
 
@@ -170,11 +170,11 @@ YAHOO.PORTICO.BorderLayout = function()
 			minWidth: 600,
 			minHeight: 400,
             units: [
-				{ position: 'top', body: layout['north'], height: 32 },
-				{ position: 'left', header: this.getHeader( layout['west'] ), body: layout['west'], width: this.config.unitLeftWidth, resize: true, scroll: true, gutter: "0px 5px 0px 5px", collapse: false, maxWidth: 300, minWidth: 6 },
-                { position: 'center', header: this.getHeader( layout['center'] ), body: layout['center'], scroll: true },
-                { position: 'right', header: this.getHeader( layout['east']  ), body: layout['east'], width: this.config.unitRightWidth, resize: true, scroll: true, gutter: "0px 5px 0px 5px", collapse: false, maxWidth: 300, minWidth: 6 },
-                { position: 'bottom', body: layout['south'], height: 32 }
+				{ position: 'top', body: layout['north'], height: 26 },
+				{ position: 'left', header: this.getHeader( layout['west'] ), body: layout['west'], width: this.config.unitLeftWidth, resize: true, scroll: true, gutter: "5px", collapse: false, maxWidth: 300, minWidth: 6 },
+                { position: 'center', header: this.getHeader( layout['center'] ), body: layout['center'], scroll: true, gutter: "5px 0px" },
+                { position: 'right', header: this.getHeader( layout['east']  ), body: layout['east'], width: this.config.unitRightWidth, resize: true, scroll: true, gutter: "5px", collapse: false, maxWidth: 300, minWidth: 6 },
+                { position: 'bottom', body: layout['south'], height: 26 }
             ]
         });
 
@@ -201,10 +201,21 @@ YAHOO.PORTICO.BorderLayout = function()
 
 	}
 
-	// Helper function to find DIV.header inside a layout unit and return text
+	// Helper function to find DIV.header inside a layout unit and return text of h2 element
 	this.getHeader = function( node )
 	{
-		return "Header";
+		var title="";
+
+		try
+		{
+			var div	= YAHOO.util.Dom.getElementsByClassName( 'header', 'div', node )[0];
+			var header = div.getElementsByTagName('h2')[0];
+			title = header.innerHTML;
+		}
+		catch (e)
+		{
+		}
+		return title;
 	};
 
 	// Call "constructor"
