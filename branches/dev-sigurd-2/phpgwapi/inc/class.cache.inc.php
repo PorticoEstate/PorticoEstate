@@ -343,8 +343,14 @@
 		 */
 		public static function user_set($module, $id, $value, $uid)
 		{
-			$key = $GLOBALS['phpgw']->db->db_addslashes(self::_gen_key($module, $id));
 			$uid = (int) $uid;
+
+			if ($uid == 0)
+			{
+				return false;
+			}
+
+			$key = $GLOBALS['phpgw']->db->db_addslashes(self::_gen_key($module, $id));
 			$value = self::_value_prepare($value);
 			if(function_exists('gzcompress'))
 			{
