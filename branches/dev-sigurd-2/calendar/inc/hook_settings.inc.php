@@ -132,7 +132,7 @@
 	{
 		foreach($groups as $group)
 		{
-			$options[$group['account_id']] = $GLOBALS['phpgw']->common->grab_owner_name($group['account_id']);
+			$options[$group->id] = $GLOBALS['phpgw']->common->grab_owner_name($group->id);
 		}
 	}
 	create_select_box('Preselected group for entering the planner','planner_start_with_group',$options,
