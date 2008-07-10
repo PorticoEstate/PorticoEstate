@@ -25,19 +25,28 @@
 		$GLOBALS['phpgw_info']['user']['preferences']['common']['theme'] = 'styles';
 	}
 
-	$theme_styles = array
-	(
-		'/phpgwapi/js/yahoo/reset-fonts-grids/reset-fonts-grids.css',
-		'/phpgwapi/js/yahoo/tabview/assets/skins/sam/tabview.css',
-		'/phpgwapi/templates/base/css/base.css',
-		'/phpgwapi/templates/verdilak/css/base.css',
-		"/phpgwapi/templates/verdilak/css/{$GLOBALS['phpgw_info']['user']['preferences']['common']['theme']}.css",
-		"/{$app}/templates/base/css/base.css",
-		"/{$app}/templates/verdilak/css/base.css",
-		"/{$app}/templates/verdilak/css/{$GLOBALS['phpgw_info']['user']['preferences']['common']['theme']}.css"
-	);
+	$stylesheets = array();
+	if( !isset($GLOBALS['phpgw_info']['flags']['noframework']) )
+	{
+		$stylesheets = array
+		(
+			"/phpgwapi/js/yahoo/reset-fonts-grids/reset-fonts-grids.css",
+			"/phpgwapi/js/yahoo/menu/assets/skins/sam/menu.css",
+			"/phpgwapi/js/yahoo/button/assets/skins/sam/button.css",
+			"/phpgwapi/js/yahoo/tabview/assets/skins/sam/tabview.css",
+			"/phpgwapi/js/yahoo/resize/assets/skins/sam/resize.css",
+			"/phpgwapi/js/yahoo/layout/assets/skins/sam/layout.css",
+		);
+	}
 
-	foreach ( $theme_styles as $style )
+	$stylesheets[] = '/phpgwapi/templates/base/css/base.css';
+	$stylesheets[] = '/phpgwapi/templates/verdilak/css/base.css';
+	$stylesheets[] = "/phpgwapi/templates/verdilak/css/{$GLOBALS['phpgw_info']['user']['preferences']['common']['theme']}.css";
+	$stylesheets[] = "/{$app}/templates/base/css/base.css";
+	$stylesheets[] = "/{$app}/templates/verdilak/css/base.css";
+	$stylesheets[] = "/{$app}/templates/verdilak/css/{$GLOBALS['phpgw_info']['user']['preferences']['common']['theme']}.css";
+
+	foreach ( $stylesheets as $style )
 	{
 
 		if( file_exists( PHPGW_SERVER_ROOT . $style ) )

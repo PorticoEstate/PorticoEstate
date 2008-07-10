@@ -28,22 +28,26 @@
 		$GLOBALS['phpgw_info']['user']['preferences']['common']['theme'] = 'idots';
 	}
 
-	$theme_styles = array
-	(
-		'/phpgwapi/js/yahoo/reset-fonts-grids/reset-fonts-grids.css',
-		'/phpgwapi/js/yahoo/menu/assets/skins/sam/menu.css',
-		'/phpgwapi/js/yahoo/tabview/assets/skins/sam/tabview.css',
-		'/phpgwapi/templates/base/css/base.css',
-		'/phpgwapi/templates/idots/css/base.css',
-		"/phpgwapi/templates/idots/css/{$GLOBALS['phpgw_info']['user']['preferences']['common']['theme']}.css",
-		"/{$app}/templates/base/css/base.css",
-		"/{$app}/templates/idots/css/base.css",
-		"/{$app}/templates/idots/css/{$GLOBALS['phpgw_info']['user']['preferences']['common']['theme']}.css"
-	);
-
-	foreach ( $theme_styles as $style )
+	$stylesheets = array();
+	if( !isset($GLOBALS['phpgw_info']['flags']['noframework']) )
 	{
+		$stylesheets = array
+		(
+			'/phpgwapi/js/yahoo/reset-fonts-grids/reset-fonts-grids.css',
+			'/phpgwapi/js/yahoo/menu/assets/skins/sam/menu.css',
+			'/phpgwapi/js/yahoo/tabview/assets/skins/sam/tabview.css',
+		);
+	}
 
+	$stylesheets[] = '/phpgwapi/templates/base/css/base.css';
+	$stylesheets[] = '/phpgwapi/templates/idots/css/base.css';
+	$stylesheets[] = "/phpgwapi/templates/idots/css/{$GLOBALS['phpgw_info']['user']['preferences']['common']['theme']}.css";
+	$stylesheets[] = "/{$app}/templates/base/css/base.css";
+	$stylesheets[] = "/{$app}/templates/idots/css/base.css";
+	$stylesheets[] = "/{$app}/templates/idots/css/{$GLOBALS['phpgw_info']['user']['preferences']['common']['theme']}.css";
+
+	foreach ( $stylesheets as $style )
+	{
 		if( file_exists( PHPGW_SERVER_ROOT . $style ) )
 		{
 				$GLOBALS['phpgw']->template->set_var('theme_style', "{$GLOBALS['phpgw_info']['server']['webserver_url']}$style");

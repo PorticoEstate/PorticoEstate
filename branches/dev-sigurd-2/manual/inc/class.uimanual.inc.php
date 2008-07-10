@@ -132,6 +132,7 @@ HTML;
 
 		function attrib_help()
 		{
+			$GLOBALS['phpgw_info']['flags']['noframework'] = true;
 			$t =& $GLOBALS['phpgw']->template;
 			$t->set_root(PHPGW_APP_TPL);
 

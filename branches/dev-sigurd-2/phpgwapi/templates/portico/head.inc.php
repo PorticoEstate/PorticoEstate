@@ -9,21 +9,6 @@
 
 	$app = $GLOBALS['phpgw_info']['flags']['currentapp'];
 
-	$stylesheets = array
-	(
-		"/phpgwapi/js/yahoo/reset-fonts-grids/reset-fonts-grids.css",
-		"/phpgwapi/js/yahoo/menu/assets/skins/sam/menu.css",
-		"/phpgwapi/js/yahoo/button/assets/skins/sam/button.css",
-		"/phpgwapi/js/yahoo/tabview/assets/skins/sam/tabview.css",
-		"/phpgwapi/js/yahoo/resize/assets/skins/sam/resize.css",
-		"/phpgwapi/js/yahoo/layout/assets/skins/sam/layout.css",
-		"/phpgwapi/templates/portico/css/base.css",
-		"/phpgwapi/templates/portico/css/{$GLOBALS['phpgw_info']['user']['preferences']['common']['theme']}.css",
-		"/{$app}/templates/base/css/base.css",
-		"/{$app}/templates/portico/css/base.css",
-		"/{$app}/templates/portico/css/{$GLOBALS['phpgw_info']['user']['preferences']['common']['theme']}.css"
-	);
-
 	$GLOBALS['phpgw']->template->set_root(PHPGW_TEMPLATE_DIR);
 	$GLOBALS['phpgw']->template->set_unknowns('remove');
 	$GLOBALS['phpgw']->template->set_file('head', 'head.tpl');
@@ -32,8 +17,19 @@
 
 	$javascripts = array();
 
-	if(!isset($GLOBALS['phpgw_info']['flags']['noframework']))
+	$stylesheets = array();
+	if( !isset($GLOBALS['phpgw_info']['flags']['noframework']) )
 	{
+		$stylesheets = array
+		(
+			"/phpgwapi/js/yahoo/reset-fonts-grids/reset-fonts-grids.css",
+			"/phpgwapi/js/yahoo/menu/assets/skins/sam/menu.css",
+			"/phpgwapi/js/yahoo/button/assets/skins/sam/button.css",
+			"/phpgwapi/js/yahoo/tabview/assets/skins/sam/tabview.css",
+			"/phpgwapi/js/yahoo/resize/assets/skins/sam/resize.css",
+			"/phpgwapi/js/yahoo/layout/assets/skins/sam/layout.css",
+		);
+
 		phpgwapi_yui::load_widget('dragdrop');
 		phpgwapi_yui::load_widget('element');
 		phpgwapi_yui::load_widget('container');
@@ -48,6 +44,12 @@
 			"/phpgwapi/templates/portico/js/base.js"
 		);
 	}
+
+	$stylesheets[] = "/phpgwapi/templates/portico/css/base.css";
+	$stylesheets[] = "/phpgwapi/templates/portico/css/{$GLOBALS['phpgw_info']['user']['preferences']['common']['theme']}.css";
+	$stylesheets[] = "/{$app}/templates/base/css/base.css";
+	$stylesheets[] = "/{$app}/templates/portico/css/base.css";
+	$stylesheets[] = "/{$app}/templates/portico/css/{$GLOBALS['phpgw_info']['user']['preferences']['common']['theme']}.css";
 
 	foreach ( $stylesheets as $stylesheet )
 	{
