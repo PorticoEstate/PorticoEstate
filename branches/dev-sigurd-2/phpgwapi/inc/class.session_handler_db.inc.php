@@ -170,12 +170,23 @@
 		 */
 		public static function write($id, $data)
 		{
-			$id = $GLOBALS['phpgw']->db->db_addslashes($id);
-			$data = $GLOBALS['phpgw']->db->db_addslashes($GLOBALS['phpgw']->crypto->encrypt($data));
-			$ts = time();
+			if( !is_object($GLOBALS['phpgw']->db) )
+			{
+				$db			= createObject('phpgwapi.db');
+				$crypto		= createObject('phpgwapi.crypto');
+			}
+			else
+			{
+				$db 	= & $GLOBALS['phpgw']->db;
+				$crypto = & $GLOBALS['phpgw']->crypto;
+			}
 
-			$GLOBALS['phpgw']->db->query("SELECT session_id FROM phpgw_sessions WHERE session_id = '{$id}'", __LINE__, __FILE__);
-			if ( $GLOBALS['phpgw']->db->next_record() )
+			$id   = $db->db_addslashes($id);
+			$data = $db->db_addslashes($crypto->encrypt($data));
+			$ts   = time();
+
+			$db->query("SELECT session_id FROM phpgw_sessions WHERE session_id = '{$id}'", __LINE__, __FILE__);
+			if ( $db->next_record() )
 			{
 				$sql = 'UPDATE phpgw_sessions'
 					. " SET data = '{$data}', lastmodts = {$ts}"
@@ -187,7 +198,7 @@
 				$sql = "INSERT INTO phpgw_sessions VALUES('{$id}', '{$ip}', '{$data}', {$ts})";
 			}
 
-			$ret = $GLOBALS['phpgw']->db->query($sql, __LINE__, __FILE__);
+			$ret = $db->query($sql, __LINE__, __FILE__);
 			return $ret;
 		}
 	}
