@@ -212,7 +212,12 @@
 		public static function session_set($module, $id, $data)
 		{
 			$key = self::_gen_key($module, $id);
-			$_SESSION['phpgw_cache'][$key] = self::_value_prepare($data);
+
+			if($data)
+			{
+				$data = self::_value_prepare($data);
+			}
+			$_SESSION['phpgw_cache'][$key] = $data;
 			return true;
 		}
 
