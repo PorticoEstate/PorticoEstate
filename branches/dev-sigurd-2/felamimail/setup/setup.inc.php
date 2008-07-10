@@ -35,11 +35,14 @@
 	);
 
 	/* The hooks this app includes, needed for hooks registration */
-	$setup_info['felamimail']['hooks'][] = 'manual';
-	$setup_info['felamimail']['hooks'][] = 'help';
-	$setup_info['felamimail']['hooks'][] = 'settings';
-	$setup_info['felamimail']['hooks'][] = 'home';
-	$setup_info['felamimail']['hooks'][] = 'felamimail.menu.get_menu';
+	$setup_info['felamimail']['hooks'] = array
+	(
+		'manual',
+		'help',
+		'settings',
+		'home',
+		'menu'	=> 'felamimail.menu.get_menu'
+	);
 
 	/* Dependacies for this app to work */
 	$setup_info['felamimail']['depends'][] = array(
