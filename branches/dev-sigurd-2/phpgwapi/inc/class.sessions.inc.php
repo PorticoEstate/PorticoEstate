@@ -1023,9 +1023,11 @@
 		{
 			session_id($this->_sessionid);
 
-			if ( isset($GLOBALS['phpgw_info']['menuaction']) )
+			$menuaction = phpgw::get_var('menuaction');
+
+			if ( $menuaction )
 			{
-				$action = $GLOBALS['phpgw_info']['menuaction'];
+				$action = $menuaction;
 			}
 			else
 			{
