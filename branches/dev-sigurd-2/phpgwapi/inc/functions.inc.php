@@ -506,13 +506,12 @@ HTML;
 				print_debug('User ID',$login_id,'app');
 				$GLOBALS['phpgw']->accounts->set_account($login_id);
 				$GLOBALS['phpgw']->preferences->set_account_id($login_id);
-			}
-
-			// cached menus contains old sessionid and has to be cleared when not using cookies
-			if ( !isset($GLOBALS['phpgw_info']['server']['usecookies']) )
-			{
-				$GLOBALS['phpgw_info']['user']['account_id'] = $login_id;
-				execMethod('phpgwapi.menu.clear');
+				// cached menus contains old sessionid and has to be cleared when not using cookies
+				if ( !isset($GLOBALS['phpgw_info']['server']['usecookies']) && $login_id)
+				{
+					$GLOBALS['phpgw_info']['user']['account_id'] = $login_id;
+					execMethod('phpgwapi.menu.clear');
+				}
 			}
 		}
 	/**************************************************************************\
