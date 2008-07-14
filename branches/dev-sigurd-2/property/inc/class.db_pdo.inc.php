@@ -1,0 +1,979 @@
+<?php
+	/**
+	* Database abstraction class
+	* @package phpgwapi
+	* @subpackage database
+	* @version $Id: class.db.inc.php 1376 2008-07-05 15:40:37Z sigurd $
+	*/
+
+	if ( empty($GLOBALS['phpgw_info']['server']['db_type']) )
+	{
+		$GLOBALS['phpgw_info']['server']['db_type'] = 'mysql';
+	}
+	/**
+	* Include concrete database implementation
+	*/
+
+	/**
+	* Database abstraction class to allow phpGroupWare to use multiple database backends
+	* 
+	* @package phpgwapi
+	* @subpackage database
+	*/
+	class property_db_pdo
+	{
+
+		/**
+		* @var object $db holds the db object
+		*/
+		var $db;
+
+		/**
+		* @var string $Host database hostname
+		*/
+		var $Host;
+		
+		/**
+		 * @var string $join the sql syntax to use for JOIN
+		 */
+		 var $join = ' INNER JOIN ';
+		 
+		/**
+		 * @var string $like the sql syntax to use for a case insensitive LIKE
+		 */
+		 var $like = 'LIKE';
+
+		/**
+		* @var string $Type RDBMS server ??
+		*/
+		var $Type;
+
+		/**
+		* @var string $Database name of database
+		*/
+		var $Database;
+
+		/**
+		* @var string $User name of user used to connect to database
+		*/
+		var $User;
+
+		/**
+		* @var string $Password password used to connect to database
+		*/
+		var $Password;
+
+		/**
+		* @var bool $debug enable debugging
+		*/
+		var $debug = false;
+
+		/**
+		* @var string $Halt_On_Error should connection and script be terminated on error?
+		*/
+		var $Halt_On_Error = 'yes'; // should be true or false
+
+		/**
+		* @var bool $auto_stripslashes automagically remove slashes from field values returned?
+		*/
+		var $auto_stripslashes = false;
+		
+		var $resultSet;
+		
+		/**
+		* Constructor
+		* @param string $query query to be executed (optional)
+		* @param string $db_type the database engine being used
+		*/
+		public function __construct($query = null, $db_type = null)
+		{
+			if ( is_null($db_type) )
+			{
+				$db_type = $this->Type ? $this->Type : $GLOBALS['phpgw_info']['server']['db_type'];
+			}
+
+			$this->Type = $db_type;
+
+			$this->Database = $GLOBALS['phpgw_info']['server']['db_name']; 
+			$this->Host = $GLOBALS['phpgw_info']['server']['db_host']; 
+			$this->User = $GLOBALS['phpgw_info']['server']['db_user']; 
+			$this->Password = $GLOBALS['phpgw_info']['server']['db_pass']; 
+
+			// We do it this way to allow it to be easily extended in the future
+			switch ( $this->Type )
+			{
+				case 'postgres':
+					$this->join = " JOIN ";
+					$this->like = "ILIKE";
+					break;
+				default:
+					//do nothing for now
+			}
+			
+			$this->connect();
+
+			if ( !is_null($query) )
+			{
+				$this->query($query);
+			}
+		}
+
+		/**
+		* Called when object is cloned
+		*/
+		public function __clone()
+		{
+
+		}
+
+
+		/**
+		* Destructor
+		*/
+		public function __destruct()
+		{
+
+		}
+
+		/**
+		* Get current connection id
+		* @return int current connection id
+		*/
+		function link_id()
+		{
+			if(!$this->adodb->isConnected())
+			{
+				$this->connect();
+			}
+			return $this->adodb->_connectionID;
+		}
+
+		/**
+		* Get current query id
+		* @return int id of current query
+		*/
+		public function query_id()
+		{
+			return $this->Query_ID;
+		}
+
+		/**
+		* Open a connection to a database
+		*
+		* @param string $Database name of database to use (optional)
+		* @param string $Host database host to connect to (optional)
+		* @param string $User name of database user (optional)
+		* @param string $Password password for database user (optional)
+		*/
+		public function connect($Database = null, $Host = null, $User = null, $Password = null)
+		{
+			if ( !is_null($Database) )
+			{
+				$this->Database = $Database;
+			}
+
+			if ( !is_null($Host) )
+			{
+				$this->Host = $Host;
+			}
+
+			if ( !is_null($User) )
+			{
+				$this->User = $User;
+			}
+
+			if ( !is_null($Password) )
+			{
+				$this->Password = $Password;
+			}
+			switch ( $this->Type )
+			{
+				case 'postgres':
+					$this->db = new PDO("pgsql:dbname={$this->Database};host={$this->Host}", $this->User, $this->Password);
+					break;
+				default:
+					//do nothing for now
+			}
+
+			if($this->Halt_On_Error == 'yes')
+			{
+				$this->db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+			}
+
+		//	return $this->db;
+		}
+
+		/**
+		* Close a connection to a database - only needed for persistent connections
+		*/
+		public function disconnect()
+		{
+			$this->db = null;
+		}
+
+		/**
+		* Escape strings before sending them to the database
+		*
+		* @param string $str the string to be escaped
+		* @return string escaped sting
+		*/
+		public function db_addslashes($str)
+		{
+			return addslashes($str);
+		}
+
+		/**
+		* Convert a unix timestamp to a rdms specific timestamp
+		*
+		* @param int unix timestamp
+		* @return string rdms specific timestamp
+		*/
+		public function to_timestamp($epoch)
+		{
+			trigger_error('Error: not working - use alterative', E_USER_ERROR);
+			return false;
+		}
+
+		/**
+		* Convert a rdms specific timestamp to a unix timestamp 
+		*
+		* @param string rdms specific timestamp
+		* @return int unix timestamp
+		*/
+		public function from_timestamp($timestamp)
+		{
+			trigger_error('Error: not working - use alterative', E_USER_ERROR);
+			return false;
+		}
+
+		/**
+		* Execute a query with limited result set
+		* @param integer $start Row to start from
+		* @deprecated
+		* @see limit_query()
+		*/
+		public function limit($start)
+		{
+			die('where is the sql string?');
+		}
+
+		/**
+		* Discard the current query result
+		*/
+		public function free()
+		{
+			unset($this->resultSet);
+			return true;
+		}
+
+		/**
+		* Execute a query
+		*
+		* @param string $sql the query to be executed
+		* @param mixed $line the line method was called from - use __LINE__
+		* @param string $file the file method was called from - use __FILE__
+		* @param bool $exec true for exec, false for query
+		* @return integer current query id if sucesful and null if fails
+		*/
+		public function query($sql, $line = '', $file = '', $exec = false)
+		{
+			if ( !$this->db )
+			{
+				$this->connect();
+			}
+
+			try
+			{
+				if($exec)
+				{
+					return $this->affected_rows = $this->db->exec($sql);
+				}
+				else
+				{
+					$this->resultSet = $this->db->query($sql);
+				}
+			}
+
+			catch(PDOException $e)
+			{
+				if ( $e && $this->Halt_On_Error == 'yes' )
+				{
+					if($file)
+					{
+						trigger_error('Error: ' . $e->getMessage() . "<br>SQL: $sql\n in File: $file\n on Line: $line\n", E_USER_ERROR);
+					}
+					else
+					{
+						trigger_error("$sql\n". $e->getMessage(), E_USER_ERROR);
+					}
+					$this->transaction_abort();
+					exit;
+				}
+			}
+
+			$this->delayPointer = true;
+			return true;
+		}
+
+		/**
+		* Execute a query with limited result set
+		*
+		* @param string $Query_String the query to be executed
+		* @param integer $offset row to start from
+		* @param integer $line the line method was called from - use __LINE__
+		* @param string $file the file method was called from - use __FILE__
+		* @param integer $num_rows number of rows to return (optional), if unset will use $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs']
+		* @return integer current query id if sucesful and null if fails
+		*/
+
+		function limit_query($Query_String, $offset, $line = '', $file = '', $num_rows = 0)
+		{
+			$offset		= intval($offset);
+			$num_rows	= intval($num_rows);
+
+			if ($num_rows == 0)
+			{
+				$maxmatches = $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
+				$num_rows = (isset($maxmatches)?intval($maxmatches):15);
+			}
+
+			if( $this->Type == 'mssql' )
+			{
+				$Query_String = str_replace('SELECT ', 'SELECT TOP ', $Query_String);
+				$Query_String = str_replace('SELECT TOP DISTINCT', 'SELECT DISTINCT TOP ', $Query_String);
+				$Query_String = str_replace('TOP ', 'TOP ' . ($offset + $num_rows) . ' ', $Query_String);
+
+			}
+			else
+			{
+				if ($offset == 0)
+				{
+					$Query_String .= ' LIMIT ' . $num_rows;
+				}
+				else
+				{
+					$Query_String .= ' LIMIT ' . $num_rows . ' OFFSET ' . $offset;
+				}
+			}
+
+			if ($this->Debug)
+			{
+				printf("Debug: limit_query = %s<br />offset=%d, num_rows=%d<br />\n", $Query_String, $offset, $num_rows);
+			}
+
+			try
+			{
+				$this->resultSet = $this->db->query($Query_String);
+			}
+
+			catch(PDOException $e)
+			{
+				if ( $e && $this->Halt_On_Error == 'yes' )
+				{
+					if($file)
+					{
+						trigger_error('Error: ' . $e->getMessage() . "<br>SQL: $sql\n in File: $file\n on Line: $line\n", E_USER_ERROR);
+					}
+					else
+					{
+						trigger_error("$sql\n". $e->getMessage(), E_USER_ERROR);
+					}
+					$this->transaction_abort();
+					exit;
+				}
+			}
+
+			$this->delayPointer = true;
+			return true;
+		}
+		
+		/**
+		* Move to the next row in the results set
+		*
+		* @return bool was another row found?
+		*/
+		public function next_record()
+		{
+			if($this->resultSet && count($this->resultSet))
+			{
+				if($this->delayPointer)
+				{
+					$this->delayPointer = false;
+					$this->Record =& $this->resultSet;
+					return true;
+				}
+	
+				if(!$this->resultSet->EOF)
+				{
+					$row = next($this->resultSet);
+					$this->Record =& $row;
+					return !!$row;
+				}
+			}
+			return false;
+		}
+
+		/**
+		* Move to position in result set
+		*
+		* @param int $pos required row (optional), default first row
+		* @return int 1 if sucessful or 0 if not found
+		*/
+		public function seek($pos = 0)
+		{
+			if($this->resultSet)
+			{
+				reset($this->resultSet);
+				for ($i=0; $i<$pos; $i++)
+				{
+					$row = next($this->resultSet);
+				}
+				return $row;
+			}
+			return false;
+		}
+
+		/**
+		* Begin transaction
+		*
+		* @return integer|boolean current transaction id
+		*/
+		public function transaction_begin()
+		{
+			return $this->db->beginTransaction();
+		}
+		
+		/**
+		* Complete the transaction
+		*
+		* @return boolean True if sucessful, False if fails
+		*/ 
+		public function transaction_commit()
+		{
+			return $this->db->commit();
+		}
+		
+		/**
+		* Rollback the current transaction
+		*
+		* @return boolean True if sucessful, False if fails
+		*/
+		public function transaction_abort()
+		{
+			return $this->db->rollBack();
+		}
+
+		/**
+		* Find the primary key of the last insertion on the current db connection
+		*
+		* @param string $table name of table the insert was performed on
+		* @param string $field the autoincrement primary key of the table
+		* @return integer the id, -1 if fails
+		*/
+		public function get_last_insert_id($table, $field)
+		{
+			
+			return $this->db->lastInsertId();
+			
+			switch ( $GLOBALS['phpgw_info']['server']['db_type'] )
+			{
+				case 'postgres':
+					$params = explode('.',$this->adodb->pgVersion);
+
+					if ($params[0] < 8 || ($params[0] == 8 && $params[1] ==0))
+					{
+						$oid = pg_getlastoid($this->adodb->_resultid);
+						if ($oid == -1)
+						{
+							return -1;
+						}
+
+						$result = @pg_Exec($this->adodb->_connectionID, "select $field from $table where oid=$oid");
+					}
+					else
+					{
+						$result = @pg_Exec($this->adodb->_connectionID, "select lastval()");
+					}
+	
+					if (!$result)
+					{
+						return -1;
+					}
+
+					$Record = @pg_fetch_array($result, 0);
+
+					@pg_freeresult($result);
+					if (!is_array($Record)) /* OID not found? */
+					{
+						return -1;
+					}
+					return $Record[0];
+					break;
+				case 'mssql':
+					/*  MSSQL uses a query to retrieve the last
+					 *  identity on the connection, so table and field are ignored here as well.
+					 */
+					if(!isset($table) || $table == '' || !isset($field) || $field == '')
+					{
+					return -1;
+					}
+					$result = @mssql_query("select @@identity", $this->adodb->_queryID);
+					if(!$result)
+					{
+						return -1;
+					}
+					return mssql_result($result, 0, 0);
+					break;
+				default:
+					return $this->db->lastInsertId();
+			}
+		}
+
+		/**
+		* Lock a table
+		*
+		* @param string $table name of table to lock
+		* @param string $mode type of lock required (optional), default write
+		* @return boolean True if sucessful, False if fails
+		*/
+		public function lock($table, $mode='write')
+		{
+			//$this->transaction_begin();
+		}
+		
+		
+		/**
+		* Unlock a table
+		*
+		* @return boolean True if sucessful, False if fails
+		*/
+		public function unlock()
+		{
+			//$this->db->commit();
+		}
+		
+		/**
+		 * Prepare the VALUES component of an INSERT sql statement by guessing data types
+		 *
+		 * It is not a good idea to rely on the data types determined by this method if 
+		 * you are inserting numeric data into varchar/text fields, such as street numbers
+		 * 
+		 * @param array $value_set array of values to insert into the database
+		 * @return string the prepared sql, empty string for invalid input
+		 */
+		public function validate_insert($values)
+		{
+			if ( !is_array($values) || !count($values) )
+			{
+				return '';
+			}
+			
+			$insert_value = array();
+			foreach ( $values as $value )
+			{
+				if($value || (is_numeric($value) && $value == 0) )
+				{
+					if ( is_numeric($value) )
+					{
+						$insert_value[]	= "$value";
+					}
+					else
+					{
+						$insert_value[]	= "'$value'";
+					}
+				}
+				else
+				{
+					$insert_value[]	= 'NULL';
+				}
+			}
+			return implode(",", $insert_value);
+		}
+
+		/**
+		 * Prepare the SET component of an UPDATE sql statement
+		 * 
+		 * @param array $value_set associative array of values to update the database with
+		 * @return string the prepared sql, empty string for invalid input
+		 */
+		public function validate_update($value_set)
+		{
+			if ( !is_array($value_set) || !count($value_set) )
+			{
+				return '';
+			}
+			
+			$value_entry = array();
+			foreach ( $value_set as $field => $value )
+			{
+				if($value || (is_numeric($value) && $value == 0) )
+				{
+					if ( is_numeric($value) )
+					{
+						$value_entry[]= "{$field}={$value}";
+					}
+					else
+					{
+						$value_entry[]= "{$field}='{$value}'";
+					}
+				}
+				else
+				{
+					$value_entry[]= "{$field}=NULL";
+				}
+			}
+			return implode(',', $value_entry);
+		}
+
+		/**
+		* Get the number of rows affected by last update
+		*
+		* @return integer number of rows
+		*/
+		public function affected_rows()
+		{
+			return $this->affected_rows;
+		}
+		
+		/**
+		* Number of rows in current result set
+		*
+		* @return integer number of rows
+		*/
+		public function num_rows()
+		{
+			if($this->resultSet)
+			{
+				return count($this->resultSet);
+			}
+			return 0;
+		}
+
+		/**
+		* Number of fields in current row
+		*
+		* @return integer number of fields
+		*/
+		public function num_fields()
+		{
+			if($this->resultSet)
+			{
+				return $this->resultSet->fieldCount();
+			}
+			return 0;
+		}
+
+		/**
+		* Short hand for num_rows()
+		* @return integer Number of rows
+		* @see num_rows()
+		*/
+		public function nf()
+		{
+			return $this->num_rows();
+		}
+
+		/**
+		* Short hand for print @see num_rows
+		*/
+		public function np()
+		{
+			print $this->num_rows();
+		}
+
+		/**
+		* Return the value of a filed
+		* 
+		* @param string $String name of field
+		* @param boolean $strip_slashes string escape chars from field(optional), default false
+		* @return string the field value
+		*/
+		public function f($name, $strip_slashes = False)
+		{
+			if($this->resultSet)
+			{
+				if( isset($this->Record[$name]) )
+				{
+					if ($strip_slashes || ($this->auto_stripslashes && ! $strip_slashes))
+					{
+						return stripslashes($this->Record[$name]);
+					}
+					else
+					{
+						return $this->Record[$name];
+					}
+				}
+				return '';
+			}
+		}
+
+		/**
+		* Print the value of a field
+		* 
+		* @param string $field name of field to print
+		* @param bool $strip_slashes string escape chars from field(optional), default false
+		*/
+		public function p($field, $strip_slashes = True)
+		{
+			//echo "depi: p";
+			print $this->f($field, $strip_slashes);
+		}
+
+		/**
+		* Get the id for the next sequence - not implemented!
+		*
+		* @param string $seq_name name of the sequence
+		* @return integer sequence id
+		*/
+		public function nextid($seq_name)
+		{
+			//echo "depi: nextid";
+		}
+
+		/**
+		* Get description of a table
+		*
+		* @param string $table name of table to describe
+		* @param boolean $full optional, default False summary information, True full information
+		* @return array Table meta data
+		*/  
+		public function metadata($table = '',$full = false)
+		{
+			if($this->debug)
+			{
+				//echo "depi: metadata";
+			}
+			
+			if(!$this->adodb->IsConnected())
+			{
+				$this->connect();
+			}
+			if(!($return =& $this->adodb->MetaColumns($table,$full)))
+			{
+				$return = array();
+			}
+			return $return;
+			
+			/*
+			 * Due to compatibility problems with Table we changed the behavior
+			 * of metadata();
+			 * depending on $full, metadata returns the following values:
+			 *
+			 * - full is false (default):
+			 * $result[]:
+			 *   [0]["table"]  table name
+			 *   [0]["name"]   field name
+			 *   [0]["type"]   field type
+			 *   [0]["len"]    field length
+			 *   [0]["flags"]  field flags
+			 *
+			 * - full is true
+			 * $result[]:
+			 *   ["num_fields"] number of metadata records
+			 *   [0]["table"]  table name
+			 *   [0]["name"]   field name
+			 *   [0]["type"]   field type
+			 *   [0]["len"]    field length
+			 *   [0]["flags"]  field flags
+			 *   ["meta"][field name]  index of field named "field name"
+			 *   The last one is used, if you have a field name, but no index.
+			 *   Test:  if (isset($result['meta']['myfield'])) { ...
+			 */
+		}
+
+		/**
+		* Returns an associate array of foreign keys, or false if not supported.
+		*
+		* @param string $table name of table to describe
+		* @param boolean $owner optional, default False. The optional schema or owner can be defined in $owner.
+		* @param boolean $upper optional, default False. If $upper is true, then the table names (array keys) are upper-cased.
+		* @return array Table meta data
+		*/  
+		public function MetaForeignKeys($table = '', $owner=false, $upper=false)
+		{
+			if(!$this->adodb->IsConnected())
+			{
+				$this->connect();
+			}
+			if(!($return =& $this->adodb->MetaForeignKeys($table, $owner, $upper)))
+			{
+				$return = array();
+			}
+			return $return;
+		}
+
+		/**
+		* Error handler
+		*
+		* @param string $msg error message
+		* @param int $line line of calling method/function (optional)
+		* @param string $file file of calling method/function (optional)
+		*/
+		public function halt($msg, $line = '', $file = '')
+		{
+			$this->adodb->RollbackTrans();
+		}
+		
+		/**
+		* Get a list of table names in the current database
+		*
+		* @return array list of the tables
+		*/
+		public function table_names()
+		{
+			if(!$this->adodb->IsConnected())
+			{
+				$this->connect();
+			}
+
+			$return = $this->adodb->MetaTables('TABLES');
+			if ( !$return )
+			{
+				return array();
+			}
+			return $return;
+		}
+
+		/**
+		* Return a list of indexes in current database
+		*
+		* @return array List of indexes
+		*/
+		public function index_names()
+		{
+			//echo "depi: index_names";
+			return array();
+		}
+		
+		/**
+		* Create a new database
+		*
+		* @param string $adminname Name of database administrator user (optional)
+		* @param string $adminpasswd Password for the database administrator user (optional)
+		* @returns bool was the new db created?
+		* @throws Exception invalid db-name
+		*/
+		public function create_database($adminname = '', $adminpasswd = '')
+		{
+			//THIS IS CALLED BY SETUP DON'T KILL IT!
+			if ( $this->db )
+			{
+				$this->db = null; //close the dead connection to be safe
+			}
+
+			$this->connect();
+			
+			if ( !$this->db )
+			{
+				echo 'Connection FAILED<br />';
+				return False;
+			}
+
+			if( !preg_match('/^[a-z0-9_]+$/i', $this->Database) )
+			{
+				throw new Exception(lang('ERROR: the name %1 contains illegal charackter for cross platform db-support', $this->Database));
+			}
+
+			//create the db
+			$this->db->exec("CREATE DATABASE {$this->Database}");
+		
+			//Grant rights on the db
+			switch ($GLOBALS['phpgw_info']['server']['db_type'])
+			{
+				case 'mysql':
+					$this->db->exec("GRANT ALL ON {$this->Database}.*"
+							. " TO {$this->User}@{$_SERVER['SERVER_NAME']}"
+							. " IDENTIFIED BY '{$this->Password}'");
+				default:
+					//do nothing
+			}
+			$this->db = null;
+			return True;
+		}
+		/**
+		* Get the correct date format for DATE field for a particular RDBMS
+		*
+		* @internal the string is compatiable with PHP's date()
+		* @return string the date format string
+		*/
+		public static function date_format()
+		{
+			static $date_format = null;
+			if ( is_null($date_format) )
+			{
+				switch($GLOBALS['phpgw_info']['server']['db_type'])
+				{
+					case 'mssql':
+						$date_format 		= 'M d Y';
+						break;
+					case 'mysql':
+					case 'pgsql':
+					case 'postgres':
+					default:
+						$date_format 		= 'Y-m-d';
+				}
+			}
+			return $date_format;
+	 	}
+	
+		/**
+		* Get the correct datetime format for DATETIME field for a particular RDBMS
+		*
+		* @internal the string is compatiable with PHP's date()
+		* @return string the date format string
+		*/
+		public static function datetime_format()
+		{
+			static $datetime_format = null;
+			if ( is_null($datetime_format) )
+			{
+				switch($GLOBALS['phpgw_info']['server']['db_type'])
+				{
+					case 'mssql':
+						$datetime_format 		= 'M d Y g:iA';
+						break;
+					case 'mysql':
+					case 'pgsql':
+					case 'postgres':
+					default:
+						$datetime_format 		= 'Y-m-d G:i:s';
+				}
+			}
+			return $datetime_format;
+	 	}
+				
+	 	/**
+		* Prepare SQL statement
+		*
+		* @param string $query SQL query
+		* @return integer|boolean Result identifier for query_prepared_statement() or FALSE
+		* @see query_prepared_statement()
+		*/
+		public function prepare_sql_statement($query)
+		{
+			//echo "depi";
+			if (($query == '') || (!$this->connect()))
+			{
+				return false;
+			}
+			return false;
+		}
+
+		/**
+		 * Execute prepared SQL statement
+		 *
+		 * @param resource $result_id Result identifier from prepare_sql_statement()
+		 * @param array $parameters_array Parameters for the prepared SQL statement
+		 * @return boolean TRUE on success or FALSE on failure
+		 * @see prepare_sql_statement()
+		 */
+		public function query_prepared_statement($result_id, $parameters_array)
+		{
+			if ((!$this->connect()) || (!$result_id))
+			{
+				return false;
+			}
+			return false;
+		}  
+
+	}
