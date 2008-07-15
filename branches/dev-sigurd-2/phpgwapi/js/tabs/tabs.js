@@ -14,7 +14,7 @@
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License along with self.library; if not, write to the Free Software
+ * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * Contact information:
@@ -41,278 +41,200 @@
  * @argument HTMLtabselectorID HTML ID prefix for a selectbox used to switch between the tabs
  * @argument HTMLtabradioID HTML ID prefix for radio button input fields used to switch between the tabs
  * @argument tabPageKey URL parameter name to use for setting/getting the actual tab
- * @argument callBack a callback function when the tab is changed - function must take 1 arg, the id of the new tab
  */
-function Tabs(nrTabs,activeCSSclass,inactiveCSSclass,HTMLtabID,HTMLtabcontentID,HTMLtabselectorID,HTMLtabradioID,tabPageKey, callBack)
-{
-	this.nrTabs		= nrTabs;
-	this.activeCSSclass	= activeCSSclass;
-	this.inactiveCSSclass	= inactiveCSSclass;
-	this.HTMLtabID		= HTMLtabID;
-	this.HTMLtabcontentID	= HTMLtabcontentID;
-	this.HTMLtabselectorID	= HTMLtabselectorID;
-	this.HTMLtabradioID	= HTMLtabradioID;
-	this.tabPageKey		= tabPageKey;
-	this.callBack		= callBack;
-	var self		= this;
-	
-	if (typeof(_tabs_prototype_called) == 'undefined')
-	{
-		_tabs_prototype_called		= true;
-		Tabs.prototype.setActive	= setActive;
-		Tabs.prototype.setInactive	= setInactive;
-		Tabs.prototype.isActive		= isActive;
-		Tabs.prototype.getActive	= getActive;
-		Tabs.prototype.disableAll	= disableAll;
-		Tabs.prototype.display		= display;
-		Tabs.prototype.changeToActive	= changeToActive;
-		Tabs.prototype.clicked		= clicked
-		Tabs.prototype.init		= init;
-		Tabs.prototype._replaceClass	= _replaceClass;
-	}
-	
-	/**
-	* Set tab as active
-	*
-	* @argument tabnr The tab number (1-nrTabs) of the tab that should be active
-	*/
-	function setActive(tabnr)
-	{
-		if ((tabnr > 0) && (tabnr <= self.nrTabs))
-		{
-			self._replaceClass( self.HTMLtabID + tabnr, self.inactiveCSSclass, self.activeCSSclass);
-			self._replaceClass( self.HTMLtabcontentID + tabnr, self.inactiveCSSclass, self.activeCSSclass);
-			if ( self.HTMLtabselectorID != null && self.HTMLtabselectorID != '' ) 
-			{
-				document.getElementById(self.HTMLtabselectorID).selectedIndex = tabnr-1;
-			}
-			if (  self.HTMLtabradioID != null && self.HTMLtabradioID != '' )
-			{
-				document.getElementById(self.HTMLtabradioID   + tabnr).checked = true;
-			}
-		}
-	}
-	
-	/**
-	* Set tab as inactive
-	*
-	* @argument tabnr The tab number (1-nrTabs) of the tab that should be inactive
-	*/
-	function setInactive(tabnr)
-	{
-		if ((tabnr > 0) && (tabnr <= self.nrTabs))
-		{
-			self._replaceClass( self.HTMLtabID + tabnr, self.activeCSSclass, self.inactiveCSSclass);
-			self._replaceClass( self.HTMLtabcontentID + tabnr, self.activeCSSclass, self.inactiveCSSclass);
-		}
-	}
-	
-	/**
-	* Test if tab is active
-	*
-	* @argument tabnr The tab number (1-nrTabs) of the tab that should be tested
-	* @returns boolean - true if tab is active, false otherwise
-	*/
-	function isActive(tabnr)
-	{
-		return(document.getElementById(self.HTMLtabID + tabnr).className.search(/self.activeCSSclass/) != -1);
-	}
-	
-	/**
-	* Get the active tab number
-	*
-	* @returns Tab (1-nrTabs) that is currently active or 0 if non is active.
-	*/
-	function getActive()
-	{
-		for (var i = 1; i <= self.nrTabs; ++i)
-		{
-			if (self.isActive(i))
-			{
-				return i;
-			}
-		}
-		return 0;
-	}
-	
-	/**
-	* Disable all tabs
-	*/
-	function disableAll()
-	{
-		for (var i = 1; i <= self.nrTabs; ++i)
-		{
-			self.setInactive(i);
-		}
-	}
-	
-	/**
-	* Disable all tabs and then display the tab number given
-	*
-	* @argument tabnr Tab number to display
-	*/
-	function display(tabnr)
-	{
-		self.disableAll(self.nrTabs);
-		self.setActive(tabnr);
-	}
-	
-	/**
-	* Loop over all tabs - switch off currently active tabs and display the new tab
-	*
-	* @argument tabnr Tab number to display
-	*/
-	function changeToActive(tabnr)
-	{
-		for (var i = 1; i <= self.nrTabs; ++i)
-		{
-			if (i == tabnr)
-			{
-				if (!self.isActive(i))
-				{
-					self.setActive(i);
-				}
-			}
-			else
-			{
-				if (self.isActive(i))
-				{
-					self.setInactive(i);
-				}
-			}
-		}
-	}
+function Tabs(nrTabs,activeCSSclass,inactiveCSSclass,HTMLtabID,HTMLtabcontentID,HTMLtabselectorID,HTMLtabradioID,tabPageKey)
+ {
+  this.nrTabs            = nrTabs;
+  this.activeCSSclass    = activeCSSclass;
+  this.inactiveCSSclass  = inactiveCSSclass;
+  this.HTMLtabID         = HTMLtabID;
+  this.HTMLtabcontentID  = HTMLtabcontentID;
+  this.HTMLtabselectorID = HTMLtabselectorID;
+  this.HTMLtabradioID    = HTMLtabradioID;
+  this.tabPageKey        = tabPageKey;
 
-	/**
-	* Handle click event
-	*
-	* @argument e click event
-	*/
-	function clicked(e)
-	{
-		if ( !e ) //Fix Broken IE
-		{
-			var e = window.event;
-		}
-		
-		if ( e.target )
-		{
-			var oTarget = e.target;
-		}
-		else if ( e.srcElement )
-		{
-			var oTarget = e.srcElement;
-		}
+  if (typeof(_tabs_prototype_called) == 'undefined')
+   {
+    _tabs_prototype_called        = true;
+    Tabs.prototype.setActive      = setActive;
+    Tabs.prototype.setInactive    = setInactive;
+    Tabs.prototype.isActive       = isActive;
+    Tabs.prototype.getActive      = getActive;
+    Tabs.prototype.disableAll     = disableAll;
+    Tabs.prototype.display        = display;
+    Tabs.prototype.changeToActive = changeToActive;
+    Tabs.prototype.init           = init;
+   }
 
-		if ( oTarget.id && oTarget.id.indexOf(self.HTMLtabID) == 0 )
-		{
-			self.display(oTarget.id.substring(self.HTMLtabID.length));
 
-			if ( window.event ) //Crappy IE
-			{
-				e.cancelBubble = true;
-			}
-			else //W3C :)
-			{
-				e.stopPropagation();
-			}
+  /**
+   * Set tab as active
+   *
+   * @argument tabnr The tab number (1-nrTabs) of the tab that should be active
+   */
+  function setActive(tabnr)
+   {
+    if ((tabnr > 0) && (tabnr <= this.nrTabs))
+     {
+      if(document.getElementById(this.HTMLtabID   + tabnr))
+        document.getElementById(this.HTMLtabID   + tabnr).className = this.activeCSSclass;
+      if(document.getElementById(this.HTMLtabcontentID + tabnr))
+        document.getElementById(this.HTMLtabcontentID + tabnr).className = this.activeCSSclass;
 
-			if ( self.callBack != null && self.callBack != '' )
-			{
-				self.callBack(oTarget);
-			}
-                }
-	}
-	
-	/**
-	* Get url parameter for first tab and display it.
-	*/
-	function init()
-	{
-		for ( i = 1; i <= self.nrTabs; ++i )
-		{
-			if ( document.getElementById )
-			{
-				var oTab = document.getElementById(self.HTMLtabID + i);
-				if( oTab.addEventListener )
-				{
-					oTab.addEventListener('click', self.clicked, true);
-				}
-				else if( oTab.attachEvent )
-				{
-					oTab.attachEvent('onclick', self.clicked);
-				}
-			}
-		}
-		
-		var tab = 0;
-		var url = document.URL;
-		var pos = url.indexOf("?");
-		if (pos > -1)
-		{
-			var urlparams = url.substr(pos + 1,url.length - (pos + 1));
-			var regexp = new RegExp('(^|&)' + self.tabPageKey + '=[0-9]{1,2}');
-			var urlparamstart = urlparams.search(regexp);
-			if (urlparamstart > -1)
-			{
-				urlparamstart = urlparamstart + ((urlparams[urlparamstart] == '&') ? 1 : 0);
-				var urlparam = urlparams.substr(urlparamstart,urlparams.length - urlparamstart);
-				pos = urlparam.indexOf("&");
-				if (pos > -1)
-				{
-					urlparam = urlparam.substr(0,pos);
-				}
-				pos = urlparam.indexOf("=");
-				if (pos > -1)
-				{
-					var urlparamvalue = urlparam.substr(pos + 1,urlparam.length - (pos + 1));
-					tab = urlparamvalue;
-				}
-			}
-			else
-			{
-				tab = 1;
-			}
-		}
-		else
-		{
-			tab = 1;
-		}
-		if ((tab <= 0) || (tab > self.nrTabs))
-		{
-			tab = 1;
-		}
-		self.display(tab);
-	}
+      if(document.getElementById(this.HTMLtabselectorID))
+        document.getElementById(this.HTMLtabselectorID).selectedIndex = tabnr-1;
+      if(document.getElementById(this.HTMLtabradioID   + tabnr))
+        document.getElementById(this.HTMLtabradioID   + tabnr).checked = true;
+     }
+   }
 
-	/**
-	* Replace a CSS class with another
-	*
-	* @param string strID document element ID to replace class on
-	* @param string strOldClass the old CSS class name to remove from ID
-	* @param string strNewClass the new CSS class name to add to ID
-	*/
-	function _replaceClass(strID, strOldClass, strNewClass)
-	{
-		//document.getElementsByTagName('body').item(0).appendChild( document.createTextNode('_replaceClass(' + strID + ', ' + strOldClass + ', ' + strNewClass + ') called') );
-		var oElm = document.getElementById(strID);
-		if( oElm.className != '')
-		{
-			var arClasses = oElm.className.split(' ');
-			var iCnt = arClasses.length;
-			for(i = 0; i < iCnt; ++i)
-			{
-				if ( arClasses[i] == strOldClass )
-				{
-					arClasses[i] = strNewClass;
-					break;
-				}
-			}
-			oElm.className = arClasses.join(' ');
-		}
-		else
-		{
-			oElm.className = strNewClass;
-		}
-	}
-}
+
+
+  /**
+   * Set tab as inactive
+   *
+   * @argument tabnr The tab number (1-nrTabs) of the tab that should be inactive
+   */
+  function setInactive(tabnr)
+   {
+    if ((tabnr > 0) && (tabnr <= this.nrTabs))
+     {
+      if(document.getElementById(this.HTMLtabID        + tabnr))
+        document.getElementById(this.HTMLtabID        + tabnr).className = this.inactiveCSSclass;
+      if(document.getElementById(this.HTMLtabcontentID + tabnr))
+        document.getElementById(this.HTMLtabcontentID + tabnr).className = this.inactiveCSSclass;
+     }
+   }
+
+
+  /**
+   * Test if tab is active
+   *
+   * @argument tabnr The tab number (1-nrTabs) of the tab that should be tested
+   * @returns boolean - true if tab is active, false otherwise
+   */
+  function isActive(tabnr)
+   {
+    return(document.getElementById(HTMLtabID + tabnr).className == this.activeCSSclass);
+   }
+
+
+  /**
+   * Get the active tab number
+   *
+   * @returns Tab (1-nrTabs) that is currently active or 0 if non is active.
+   */
+  function getActive()
+   {
+    for (i = 1; i <= this.nrTabs; ++i)
+     {
+      if (this.isActive(i))
+       {
+        return(i);
+       }
+     }
+    return(0);
+   }
+
+
+  /**
+   * Disable all tabs
+   */
+  function disableAll()
+   {
+    for (i = 1; i <= this.nrTabs; ++i)
+     {
+      this.setInactive(i);
+     }
+   }
+
+
+  /**
+   * Disable all tabs and then display the tab number given
+   *
+   * @argument tabnr Tab number to display
+   */
+  function display(tabnr)
+   {
+     for (i = 1; i <= this.nrTabs; ++i)
+     {
+      if (i == tabnr)
+       this.setActive(tabnr);
+      else
+       this.setInactive(i);
+     }
+   }
+
+
+  /**
+   * Loop over all tabs - switch off currently active tabs and display the new tab
+   *
+   * @argument tabnr Tab number to display
+   */
+  function changeToActive(tabnr)
+   {
+    for (i = 1; i <= this.nrTabs; ++i)
+     {
+      if (i == tabnr)
+       {
+        if (!this.isActive(i))
+         {
+          this.setActive(i);
+         }
+       }
+      else
+       {
+        if (this.isActive(i))
+         {
+          this.setInactive(i);
+         }
+       }
+     }
+   }
+
+
+  /**
+   * Determine active tab from url parameter or selector and display it.
+   */
+  function init()
+   {
+    var tab = 0;
+    // this line is not working in IE 6
+    //var regexp = new RegExp('(^|&)' + this.tabPageKey + '=[0-9]{1,2}');
+    var regexp = new RegExp(this.tabPageKey + '=[0-9]{1,2}');
+    var urlparams = window.location.search;
+    var urlparamstart = urlparams.search(regexp);
+
+    // getting the active tab from the tabPageKey (url/get-var) if set
+    if (this.tabPageKey && urlparamstart > -1)
+     {
+       urlparamstart = urlparamstart + ((urlparams[urlparamstart] == '&') ? 1 : 0);
+       var urlparam = urlparams.substr(urlparamstart,urlparams.length - urlparamstart);
+       var pos = urlparam.indexOf("&");
+       if (pos > -1)
+        {
+         urlparam = urlparam.substr(0,pos);
+        }
+       pos = urlparam.indexOf("=");
+       if (pos > -1)
+        {
+         var urlparamvalue = urlparam.substr(pos + 1,urlparam.length - (pos + 1));
+         tab = urlparamvalue;
+        }
+     }
+    else
+     {
+      // getting the active tab from the selector if set
+      // the check for != '' is needed for Konqueror
+      if(document.getElementById(this.HTMLtabselectorID) && this.HTMLtabselectorID != '')
+       tab = document.getElementById(this.HTMLtabselectorID).selectedIndex+1;
+      else
+       tab = 1;
+     }
+    if ((tab <= 0) || (tab > this.nrTabs))
+     {
+      tab = 1;
+     }
+    this.display(tab);
+   }
+ }
