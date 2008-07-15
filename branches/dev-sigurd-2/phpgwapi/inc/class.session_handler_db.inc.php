@@ -170,16 +170,8 @@
 		 */
 		public static function write($id, $data)
 		{
-			if( !is_object($GLOBALS['phpgw']->db) )
-			{
-				$db			= createObject('phpgwapi.db');
-				$crypto		= createObject('phpgwapi.crypto');
-			}
-			else
-			{
-				$db 	= & $GLOBALS['phpgw']->db;
-				$crypto = & $GLOBALS['phpgw']->crypto;
-			}
+			$db 	= & $GLOBALS['phpgw']->db;
+			$crypto = & $GLOBALS['phpgw']->crypto;
 
 			$id   = $db->db_addslashes($id);
 			$data = $db->db_addslashes($crypto->encrypt($data));

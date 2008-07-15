@@ -293,6 +293,7 @@
 					ExecMethod('phpgwapi.asyncservice.check_run', 'fallback');
 				}
 				$GLOBALS['phpgw']->db->disconnect();
+				$GLOBALS['phpgw']->session->commit_session();
 				$final_called = true;
 			}
 		}

@@ -1519,4 +1519,15 @@
 			$this->_account_lid = $login;
 			$this->_account_domain = $GLOBALS['phpgw_info']['server']['default_domain'];
 		}
+
+		/**
+		* commit the sessiondata to the session handler
+		*
+		* @return bool
+		*/
+		function commit_session()
+		{
+			session_write_close();
+			return true;
+		}
 	}
