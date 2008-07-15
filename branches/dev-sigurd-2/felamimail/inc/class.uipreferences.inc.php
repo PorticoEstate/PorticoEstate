@@ -84,8 +84,8 @@
 				case 'felamimail.uipreferences.listFolder':
 				case 'felamimail.uipreferences.addACL':
 					$GLOBALS['phpgw']->js->validate_file('tabs','tabs');
-					$GLOBALS['phpgw']->js->validate_file('dhtmlxtree','js/dhtmlXCommon');
-					$GLOBALS['phpgw']->js->validate_file('dhtmlxtree','js/dhtmlXTree');
+					$GLOBALS['phpgw']->js->validate_file('dhtmlxtree','js/dhtmlXCommon','felamimail');
+					$GLOBALS['phpgw']->js->validate_file('dhtmlxtree','js/dhtmlXTree','felamimail');
 					$GLOBALS['phpgw']->js->validate_file('jscode','listFolder','felamimail');
 					$GLOBALS['phpgw']->js->set_onload('javascript:initAll();');
 					break;

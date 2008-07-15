@@ -190,8 +190,8 @@
 		function display_app_header()
 		{
 			#$GLOBALS['phpgw']->js->validate_file('foldertree','foldertree');
-			$GLOBALS['phpgw']->js->validate_file('dhtmlxtree','js/dhtmlXCommon');
-			$GLOBALS['phpgw']->js->validate_file('dhtmlxtree','js/dhtmlXTree');
+			$GLOBALS['phpgw']->js->validate_file('dhtmlxtree','js/dhtmlXCommon', 'felamimail');
+			$GLOBALS['phpgw']->js->validate_file('dhtmlxtree','js/dhtmlXTree', 'felamimail');
 			$GLOBALS['phpgw']->js->validate_file('jscode','viewMainScreen','felamimail');
 			$GLOBALS['phpgw_info']['flags']['include_xajax'] = True;
 
