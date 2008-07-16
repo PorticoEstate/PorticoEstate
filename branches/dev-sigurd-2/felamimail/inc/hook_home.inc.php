@@ -57,7 +57,7 @@
 			$portalbox->data = $data;
 		}
 		
-		$this->displayCharset	= $GLOBALS['phpgw']->translation->charset();
+		$this->displayCharset	= 'utf-8';
 		$this->bofelamimail	=& CreateObject('felamimail.bofelamimail',$this->displayCharset);
 		
 		if(!$this->bofelamimail->openConnection()) {

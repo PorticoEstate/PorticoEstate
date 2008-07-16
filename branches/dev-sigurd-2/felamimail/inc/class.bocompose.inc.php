@@ -93,11 +93,11 @@
 				}
 				
 				$tmpFileName = $GLOBALS['phpgw_info']['server']['temp_dir'].
-					SEP.
+					'/'.
 					$GLOBALS['phpgw_info']['user']['account_id'].
 					$this->composeID.
 					basename($_formData['file']);
-				
+
 				if (is_uploaded_file($_formData['file']))
 				{
 					move_uploaded_file($_formData['file'],$tmpFileName);	// requirement for safe_mode!

@@ -71,7 +71,7 @@ class html
 		//echo "<p>HTTP_USER_AGENT='$_SERVER[HTTP_USER_AGENT]', UserAgent: 'self::$user_agent', Version: 'self::$ua_version', img_title: 'self::$prefered_img_title'</p>\n";
 
 		self::$charset = 'utf-8';
-		self::$api_js_url = $GLOBALS['phpgw_info']['server']['webserver_url'].'/phpgwapi/js';
+		self::$api_js_url = $GLOBALS['phpgw_info']['server']['webserver_url'].'/felamimail/js';
 	}
 
 	/**
@@ -428,11 +428,11 @@ class html
 	 */
 	static function htmlarea_availible()
 	{
-/*		require_once(PHPGW_INCLUDE_ROOT.'/phpgwapi/js/fckeditor/fckeditor.php');
+		require_once(PHPGW_INCLUDE_ROOT.'/felamimail/js/fckeditor/fckeditor.php');
 
 		// use FCKeditor's own check
 		return FCKeditor_IsCompatibleBrowser();
-*/
+
 		return false;
 	}
 
@@ -468,10 +468,10 @@ class html
 		{
 			return self::textarea($_name,$_content,'style="width: '.$_width.'; height: '.$_height.';"');
 		}
-		include_once(PHPGW_INCLUDE_ROOT."/phpgwapi/js/fckeditor/fckeditor.php");
+		include_once(PHPGW_INCLUDE_ROOT."/felamimail/js/fckeditor/fckeditor.php");
 
 		$oFCKeditor = new FCKeditor($_name) ;
-		$oFCKeditor->BasePath	= $GLOBALS['phpgw_info']['server']['webserver_url'].'/phpgwapi/js/fckeditor/' ;
+		$oFCKeditor->BasePath	= $GLOBALS['phpgw_info']['server']['webserver_url'].'/felamimail/js/fckeditor/' ;
 		$oFCKeditor->Config['CustomConfigurationsPath'] = $oFCKeditor->BasePath . 'fckeditor.egwconfig.js' ;
 		$oFCKeditor->Value	= $_content;
 		$oFCKeditor->Width	= str_replace('px','',$_width);	// FCK adds px if width contains no %
@@ -1110,7 +1110,7 @@ class html
 	{
 		if(is_null($folderImageDir))
 		{
-			$folderImageDir = $GLOBALS['phpgw_info']['server']['webserver_url'].'/phpgwapi/templates/default/images/';
+			$folderImageDir = $GLOBALS['phpgw_info']['server']['webserver_url'].'/felamimail/templates/default/images/';
 		}
 
 		$html = self::div("\n",'id="'.$tree.'"',$_divClass);
@@ -1118,9 +1118,9 @@ class html
 		static $tree_initialised=false;
 		if (!$tree_initialised)
 		{
-			$html .= '<link rel="STYLESHEET" type="text/css" href="'.$GLOBALS['phpgw_info']['server']['webserver_url'].'/phpgwapi/js/dhtmlxtree/css/dhtmlXTree.css" />'."\n";
-			$html .= "<script type='text/javascript' src='{$GLOBALS['phpgw_info']['server']['webserver_url']}/phpgwapi/js/dhtmlxtree/js/dhtmlXCommon.js'></script>\n";
-			$html .= "<script type='text/javascript' src='{$GLOBALS['phpgw_info']['server']['webserver_url']}/phpgwapi/js/dhtmlxtree/js/dhtmlXTree.js'></script>\n";
+			$html .= '<link rel="STYLESHEET" type="text/css" href="'.$GLOBALS['phpgw_info']['server']['webserver_url'].'/felamimail/js/dhtmlxtree/css/dhtmlXTree.css" />'."\n";
+			$html .= "<script type='text/javascript' src='{$GLOBALS['phpgw_info']['server']['webserver_url']}/felamimail/js/dhtmlxtree/js/dhtmlXCommon.js'></script>\n";
+			$html .= "<script type='text/javascript' src='{$GLOBALS['phpgw_info']['server']['webserver_url']}/felamimail/js/dhtmlxtree/js/dhtmlXTree.js'></script>\n";
 			$tree_initialised = true;
 		}
 		$html .= "<script type='text/javascript'>\n";

@@ -2362,7 +2362,7 @@
 		* @returns ISO-8859-1 encoded string
 		*/
 		function _encodeFolderName($_folderName) {
-			return $GLOBALS['phpgw']->translation->convert($_folderName, self::$displayCharset, 'ISO-8859-1');
+			return $this->botranslation->convert($_folderName, self::$displayCharset, 'ISO-8859-1');
 		}
 
 		/**
@@ -2372,7 +2372,7 @@
 		* @returns ISO-8859-1 encoded string
 		*/
 		function _decodeFolderName($_folderName) {
-			return $GLOBALS['phpgw']->translation->convert($_folderName, self::$displayCharset, 'ISO-8859-1');
+			return $this->botranslation->convert($_folderName, self::$displayCharset, 'ISO-8859-1');
 		}
 
 		/**

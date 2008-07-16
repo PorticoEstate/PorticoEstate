@@ -57,11 +57,12 @@
 			$this->template = $template;
 			$this->template->set_file(array("body" => 'uiwidgets.tpl'));
 			$this->charset = 'utf-8';
+			$this->translation = CreateObject('felamimail.translation');
 		}
 
 		function encodeFolderName($_folderName)
 		{
-			return $GLOBALS['phpgw']->translation->convert($_folderName, 'UTF7-IMAP', $this->charset);
+			return $this->translation->convert($_folderName, 'UTF7-IMAP', $this->charset);
 		}
 
 		/**
@@ -103,10 +104,10 @@
 				$allFolders[$key] = $obj;
 			}
 
-			$folderImageDir = $GLOBALS['phpgw_info']['server']['webserver_url'].'/phpgwapi/templates/default/images/';
+			$folderImageDir = $GLOBALS['phpgw_info']['server']['webserver_url'].'/felamimail/templates/base/images';
 
 			// careful! "d = new..." MUST be on a new line!!!
-			$folder_tree_new  = '<link rel="STYLESHEET" type="text/css" href="'.$GLOBALS['phpgw_info']['server']['webserver_url'].'/phpgwapi/js/dhtmlxtree/css/dhtmlXTree.css">';
+			$folder_tree_new  = '<link rel="STYLESHEET" type="text/css" href="'.$GLOBALS['phpgw_info']['server']['webserver_url'].'/felamimail/js/dhtmlxtree/css/dhtmlXTree.css">';
 			$folder_tree_new .= "<script type='text/javascript'>";
 			$folder_tree_new .= "tree=new dhtmlXTreeObject('$_divName','100%','100%',0);";
 			$folder_tree_new .= "tree.setImagePath('$folderImageDir/dhtmlxtree/');";
@@ -153,7 +154,7 @@
 				}
 
 				if($_useDisplayCharset == true) {
-					$folderName	= $GLOBALS['phpgw']->translation->convert($obj->folderName, 'UTF7-IMAP', $this->charset);
+					$folderName	= $this->translation->convert($obj->folderName, 'UTF7-IMAP', $this->charset);
 					$folderName	= @htmlspecialchars($folderName, ENT_QUOTES, $this->charset);
 				} else {
 					$folderName	= @htmlspecialchars($obj->folderName, ENT_QUOTES, $this->charset);

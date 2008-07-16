@@ -83,6 +83,11 @@
 			$this->dataRowColor[0] = $GLOBALS['phpgw_info']["theme"]["bg01"];
 			$this->dataRowColor[1] = $GLOBALS['phpgw_info']["theme"]["bg02"];
 			#print __LINE__ . ': ' . (microtime(true) - $this->timeCounter) . '<br>';
+			if ( !isset($GLOBALS['phpgw']->css) || !is_object($GLOBALS['phpgw']->css) )
+			{
+				$GLOBALS['phpgw']->css = createObject('phpgwapi.css');
+			}
+			$GLOBALS['phpgw']->css->validate_file('app', 'felamimail');
 		}
 
 		function addVcard()

@@ -124,7 +124,7 @@
 			
 			
 			if($this->fm_signatureid === NULL) {
-				$db->insert($this->tableName, $data, '', __LINE__, __FILE__);
+				$db->insert($this->tableName, $data, '', __LINE__, __FILE__, 'felamimail');
 				
 				$this->fm_signatureid = $db->get_last_insert_id($this->tableName,'fm_signatureid');
 
@@ -134,7 +134,7 @@
 					'fm_accountid'		=> $this->accountID,
 					'fm_signatureid'	=> $this->fm_signatureid,
 				);
-				$db->update($this->tableName, $data, $where, __LINE__, __FILE__);
+				$db->update($this->tableName, $data, $where, __LINE__, __FILE__, 'felamimail');
 				
 				return TRUE;
 			}

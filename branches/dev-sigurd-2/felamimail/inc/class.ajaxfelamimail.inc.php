@@ -44,6 +44,7 @@
 			}
 			
 			$this->icServer = $this->bofelamimail->mailPreferences->getIncomingServer($this->imapServerID);
+			$this->translation = CreateObject('felamimail.translation');
 		}
 		
 		function addACL($_accountName, $_aclData) 
@@ -71,7 +72,7 @@
 			$parentFolder = $this->_decodeEntityFolderName($_parentFolder);
 			$parentFolder = ($parentFolder == '--topfolder--' ? '' : $parentFolder);
 			
-			$newSubFolder = $GLOBALS['phpgw']->translation->convert($_newSubFolder, $this->charset, 'UTF7-IMAP');
+			$newSubFolder = $this->translation->convert($_newSubFolder, $this->charset, 'UTF7-IMAP');
 
 			if($this->_debug) error_log("ajaxfelamimail::addFolder($parentFolder, $newSubFolder)");
 
@@ -795,7 +796,7 @@
 		function renameFolder($_oldFolderName, $_parentFolder, $_folderName) 
 		{
 			$oldFolderName = $this->_decodeEntityFolderName($_oldFolderName);
-			$folderName = $GLOBALS['phpgw']->translation->convert($_folderName, $this->charset, 'UTF7-IMAP');
+			$folderName = $this->translation->convert($_folderName, $this->charset, 'UTF7-IMAP');
 			$parentFolder = $this->_decodeEntityFolderName($_parentFolder);
 			$parentFolder = ($_parentFolder == '--topfolder--' ? '' : $parentFolder);
 			if($this->_debug) error_log("ajaxfelamimail::renameFolder($oldFolderName, $parentFolder, $folderName)");
@@ -874,7 +875,7 @@
 					foreach(array($contact['email'],$contact['email_home']) as $email) {
 						if(!empty($email) && !isset($jsArray[$email])) {
 							$i++;
-							$str = $GLOBALS['phpgw']->translation->convert(trim($contact['n_fn'] ? $contact['n_fn'] : $contact['fn']).' <'.trim($email).'>',$this->charset,'utf-8');
+							$str = $this->translation->convert(trim($contact['n_fn'] ? $contact['n_fn'] : $contact['fn']).' <'.trim($email).'>',$this->charset,'utf-8');
 							$innerHTML .= '<div class="inactiveResultRow" onmousedown="keypressed(13,1)" onmouseover="selectSuggestion('.($i-1).')">'.
 								htmlentities($str, ENT_QUOTES, 'utf-8').'</div>';
 							$jsArray[$email] = addslashes($str);
@@ -1050,7 +1051,7 @@
 		
 		function _encodeDisplayFolderName($_folderName) 
 		{
-			$folderName = $GLOBALS['phpgw']->translation->convert($_folderName, 'UTF7-IMAP', $this->charset);
+			$folderName = $this->translation->convert($_folderName, 'UTF7-IMAP', $this->charset);
 			$folderName = htmlspecialchars($folderName, ENT_QUOTES, $this->charset);
 			
 			$search         = array('\\');

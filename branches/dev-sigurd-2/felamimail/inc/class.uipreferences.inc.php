@@ -14,6 +14,7 @@
 
 	/* $Id: class.uipreferences.inc.php 25608 2008-06-11 07:15:38Z leithoff $ */
 
+	phpgw::import_class('felamimail.html');	
 	require_once(PHPGW_INCLUDE_ROOT.'/felamimail/inc/class.felamimail_bosignatures.inc.php');
 
 	class uipreferences
@@ -34,7 +35,17 @@
 
 		function uipreferences()
 		{
-			$this->t = $GLOBALS['phpgw']->template;
+			require_once(PHPGW_SERVER_ROOT.'/felamimail/inc/xajax.inc.php');
+
+			$xajax =& new xajax($GLOBALS['phpgw']->link('/felamimail/xajax.php',false,true), 'xajax_', 'utf-8');
+			$xajax->waitCursorOff();
+			$xajax->registerFunction("doXMLHTTP");
+
+			$GLOBALS['phpgw_info']['flags']['java_script'] .= $xajax->getJavascript($GLOBALS['phpgw_info']['server']['webserver_url'] . '/felamimail/js/');
+
+			$GLOBALS['phpgw']->js->validate_file('jsapi', 'jsapi', 'felamimail');
+
+			$this->t = & $GLOBALS['phpgw']->template;
 			$this->charset = 'utf-8';
 
 			$this->bofelamimail	=& CreateObject('felamimail.bofelamimail',$this->charset);
@@ -45,12 +56,18 @@
 			
 			$this->rowColor[0] = $GLOBALS['phpgw_info']["theme"]["bg01"];
 			$this->rowColor[1] = $GLOBALS['phpgw_info']["theme"]["bg02"];
+			if ( !isset($GLOBALS['phpgw']->css) || !is_object($GLOBALS['phpgw']->css) )
+			{
+				$GLOBALS['phpgw']->css = createObject('phpgwapi.css');
+			}
+			$GLOBALS['phpgw']->css->validate_file('app', 'felamimail');
 		}
 		
 		function addACL()
 		{
 			$this->display_app_header(FALSE);
 
+			$this->t->set_root(PHPGW_APP_TPL);
 			$this->t->set_file(array("body" => "preferences_manage_folder.tpl"));
 			$this->t->set_block('body','main');
 			$this->t->set_block('body','add_acl');
@@ -83,7 +100,7 @@
 
 				case 'felamimail.uipreferences.listFolder':
 				case 'felamimail.uipreferences.addACL':
-					$GLOBALS['phpgw']->js->validate_file('tabs','tabs');
+					$GLOBALS['phpgw']->js->validate_file('tabs','tabs','felamimail');
 					$GLOBALS['phpgw']->js->validate_file('dhtmlxtree','js/dhtmlXCommon','felamimail');
 					$GLOBALS['phpgw']->js->validate_file('dhtmlxtree','js/dhtmlXTree','felamimail');
 					$GLOBALS['phpgw']->js->validate_file('jscode','listFolder','felamimail');
@@ -100,7 +117,7 @@
 		
 		function editForwardingAddress()
 		{
-			$bofelamimail	=& CreateObject('felamimail.bofelamimail',$GLOBALS['phpgw']->translation->charset());
+			$bofelamimail	=& CreateObject('felamimail.bofelamimail','utf-8');
 			$mailPrefs	= $bofelamimail->getMailPreferences();
 			$ogServer	= $mailPrefs->getOutgoingServer(0);
 			
@@ -120,6 +137,7 @@
 
 			$this->display_app_header(TRUE);
 
+			$this->t->set_root(PHPGW_APP_TPL);
 			$this->t->set_file(array("body" => "edit_forwarding_address.tpl"));
 			$this->t->set_block('body','main');
 
@@ -142,6 +160,7 @@
 		}
 		
 		function editSignature() {
+			$GLOBALS['phpgw_info']['flags']['noframework'] = true;
 			if(isset($_GET['signatureID'])) {
 				$signatureID = (int)$_GET['signatureID'];
 		
@@ -151,6 +170,7 @@
 			
 			$this->display_app_header(false);
 			
+			$this->t->set_root(PHPGW_APP_TPL);
 			$this->t->set_file(array('body' => 'preferences_edit_signature.tpl'));
 			$this->t->set_block('body','main');
 
@@ -167,13 +187,13 @@
 			
 				$this->t->set_var('signatureID', $signatureID);
 
-				$this->t->set_var('tinymce',$GLOBALS['phpgw']->html->fckEditorQuick(
+				$this->t->set_var('tinymce',html::fckEditorQuick(
 					'signature', 'simple', 
 					$signatureData->fm_signature, 
 					'150px')
 				);
 
-				$this->t->set_var('checkbox_isDefaultSignature',$GLOBALS['phpgw']->html->checkbox(
+				$this->t->set_var('checkbox_isDefaultSignature',html::checkbox(
 					'isDefaultSignature',
 					$signatureData->fm_defaultsignature,
 					'true',
@@ -181,9 +201,9 @@
 					)
 				);
 			} else {
-				$this->t->set_var('tinymce',$GLOBALS['phpgw']->html->fckEditorQuick('signature', 'simple', '', '150px'));
+				$this->t->set_var('tinymce',html::fckEditorQuick('signature', 'simple', '', '150px'));
 
-				$this->t->set_var('checkbox_isDefaultSignature',$GLOBALS['phpgw']->html->checkbox(
+				$this->t->set_var('checkbox_isDefaultSignature',html::checkbox(
 					'isDefaultSignature', false, 'true', 'id="isDefaultSignature"'
 				));
 
@@ -264,6 +284,7 @@
 			}
 			$this->display_app_header(TRUE);
 			
+			$this->t->set_root(PHPGW_APP_TPL);
 			$this->t->set_file(array("body" => "edit_account_data.tpl"));
 			$this->t->set_block('body','main');
 
@@ -354,7 +375,7 @@
 				$this->t->set_var('accountID','new');
 			}
 			$this->t->set_var('allowAccounts',($preferences->userDefinedAccounts ? 1 : 0));
-			$this->t->set_var('identity_selectbox', $GLOBALS['phpgw']->html->select('identity[signature]',$sigvalue,$allSignatures, true, "style='width: 250px;'"));
+			$this->t->set_var('identity_selectbox', html::select('identity[signature]',$sigvalue,$allSignatures, true, "style='width: 250px;'"));
 			
 			$linkData = array
 			(
@@ -440,6 +461,7 @@
 			
 			$this->display_app_header(TRUE);
 
+			$this->t->set_root(PHPGW_APP_TPL);
 			$this->t->set_file(array("body" => "preferences_manage_folder.tpl"));
 			$this->t->set_block('body','main');
 			#$this->t->set_block('body','select_row');
@@ -564,6 +586,7 @@
 		{
 			$this->display_app_header(TRUE);
 
+			$this->t->set_root(PHPGW_APP_TPL);
 			$this->t->set_file(array("body" => "preferences_list_signatures.tpl"));
 			$this->t->set_block('body','main');
 
@@ -620,6 +643,7 @@
 					$accountArray[]=$tempvar;
 				}
 			}
+			$this->t->set_root(PHPGW_APP_TPL);
 			$this->t->set_file(array("body" => "preferences_list_accounts.tpl"));
 			$this->t->set_block('body','main');
 

@@ -58,7 +58,7 @@
 			}
 			$this->scriptName = (!empty($GLOBALS['phpgw_info']['user']['preferences']['felamimail']['sieveScriptName'])) ? $GLOBALS['phpgw_info']['user']['preferences']['felamimail']['sieveScriptName'] : 'felamimail' ;
 
-			$this->displayCharset	= $GLOBALS['phpgw']->translation->charset();
+			$this->displayCharset	= 'utf-8';
 
 			$this->t 		=& CreateObject('phpgwapi.Template',PHPGW_APP_TPL);
  			$this->botranslation	=& CreateObject('phpgwapi.translation');
@@ -193,7 +193,7 @@
 			$vacation_str = '';
 			if (!is_array($_vacation))
 			{ 
-				return @htmlspecialchars($vacation_str, ENT_QUOTES, $GLOBALS['phpgw']->translation->charset()); 
+				return @htmlspecialchars($vacation_str, ENT_QUOTES, 'utf-8'); 
 			}
 			
 			$vacation_str .= lang('Respond');
@@ -213,7 +213,7 @@
 				$vacation_str .= ' ' . lang("every %1 days",$_vacation['days']);
 			}
 			$vacation_str .= ' ' . lang('with message "%1"',$_vacation['text']);
-			return @htmlspecialchars($vacation_str, ENT_QUOTES, $GLOBALS['phpgw']->translation->charset());
+			return @htmlspecialchars($vacation_str, ENT_QUOTES, 'utf-8');
 		}
 		
 		function checkRule($_vacation)
@@ -373,13 +373,13 @@
 				if($_ruleData['regexp']) 
 					$this->t->set_var('regexp_checked','checked');
 				$this->t->set_var('anyof_selected'.intval($_ruleData['anyof']),'selected');
-				$this->t->set_var('value_from',htmlspecialchars($_ruleData['from'], ENT_QUOTES, $GLOBALS['phpgw']->translation->charset()));
-				$this->t->set_var('value_to',htmlspecialchars($_ruleData['to'], ENT_QUOTES, $GLOBALS['phpgw']->translation->charset()));
-				$this->t->set_var('value_subject',htmlspecialchars($_ruleData['subject'], ENT_QUOTES, $GLOBALS['phpgw']->translation->charset()));
+				$this->t->set_var('value_from',htmlspecialchars($_ruleData['from'], ENT_QUOTES, 'utf-8'));
+				$this->t->set_var('value_to',htmlspecialchars($_ruleData['to'], ENT_QUOTES, 'utf-8'));
+				$this->t->set_var('value_subject',htmlspecialchars($_ruleData['subject'], ENT_QUOTES, 'utf-8'));
 				$this->t->set_var('gthan_selected'.intval($_ruleData['gthan']),'selected');
 				$this->t->set_var('value_size',$_ruleData['size']);
-				$this->t->set_var('value_field',htmlspecialchars($_ruleData['field'], ENT_QUOTES, $GLOBALS['phpgw']->translation->charset()));
-				$this->t->set_var('value_field_val',htmlspecialchars($_ruleData['field_val'], ENT_QUOTES, $GLOBALS['phpgw']->translation->charset()));
+				$this->t->set_var('value_field',htmlspecialchars($_ruleData['field'], ENT_QUOTES, 'utf-8'));
+				$this->t->set_var('value_field_val',htmlspecialchars($_ruleData['field_val'], ENT_QUOTES, 'utf-8'));
 				$this->t->set_var('checked_action_'.$_ruleData['action'],'checked');
 				$this->t->set_var('value_'.$_ruleData['action'],$_ruleData['action_arg']);
 				if($_ruleData['action'] == 'folder')
@@ -785,7 +785,7 @@
 						$this->t->set_var('ruleCSS','sieveRowInActive');
 					}
 					
-					$this->t->set_var('filter_text',htmlspecialchars($this->buildRule($rule),ENT_QUOTES,$GLOBALS['phpgw']->translation->charset()));
+					$this->t->set_var('filter_text',htmlspecialchars($this->buildRule($rule),ENT_QUOTES,'utf-8'));
 					$this->t->set_var('ruleID',$ruleID);
 
 					$linkData = array

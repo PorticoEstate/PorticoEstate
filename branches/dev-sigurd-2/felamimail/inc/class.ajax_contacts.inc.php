@@ -14,10 +14,12 @@
 
 	/* $Id: class.ajaxfelamimail.inc.php 21848 2006-06-15 21:50:59Z ralfbecker $ */
 
+	phpgw::import_class('phpgwapi.sql_criteria');
 	class ajax_contacts {
 		function ajax_contacts() {
 			$GLOBALS['phpgw']->session->commit_session();
-			$this->charset	= $GLOBALS['phpgw']->translation->charset();
+			$this->charset	= 'utf-8';
+			$this->translation = createObject('felamimail.translation');
 		}
 		
 		function searchAddress($_searchString) {
@@ -52,11 +54,17 @@
 				}
 			} else {
 				// < 1.3
-				$contacts = $GLOBALS['phpgw']->contacts->read(0,20,array(
-					'fn' => 1,
-					'email' => 1,
-					'email_home' => 1,
-				), $_searchString, 'tid=n', '', 'fn');
+
+				$d = CreateObject('phpgwapi.contacts');
+				$fields = array ('per_first_name', 'per_last_name', 'email', 'email_home');
+				$criteria_search[] = phpgwapi_sql_criteria::token_begin('per_first_name', $_searchString);
+				$criteria_search[] = phpgwapi_sql_criteria::token_begin('per_last_name', $_searchString);
+				$criteria_search[] = phpgwapi_sql_criteria::token_has('email', $_searchString);	
+				$criteria[] = phpgwapi_sql_criteria::_append_or($criteria_search);
+				$criteria[] = $d->criteria_for_index((int) $GLOBALS['phpgw_info']['user']['account_id']);
+				$criteria_token = phpgwapi_sql_criteria::_append_and($criteria);
+//FIXME	: the sql_builder/sql_criteria has issues.
+				$contacts = $d->get_persons($fields, 0, 0, 'per_last_name', 'ASC', '', $criteria_token);
 			}
 
 			$response =& new xajaxResponse();
@@ -72,7 +80,7 @@
 						$email = preg_replace("/(^.*<)([a-zA-Z0-9_\-]+@[a-zA-Z0-9_\-\.]+)(.*)/",'$2',$email);
 						if(!empty($email) && !isset($jsArray[$email])) {
 							$i++;
-							$str = $GLOBALS['phpgw']->translation->convert(trim($contact['n_fn'] ? $contact['n_fn'] : $contact['fn']) .' <'. trim($email) .'>', $this->charset, 'utf-8');
+							$str = $this->translation->convert(trim($contact['n_fn'] ? $contact['n_fn'] : $contact['fn']) .' <'. trim($email) .'>', $this->charset, 'utf-8');
 							#$innerHTML .= '<div class="inactiveResultRow" onclick="selectSuggestion('. $i .')">'.
 							$innerHTML .= '<div class="inactiveResultRow" onmousedown="keypressed(13,1)" onmouseover="selectSuggestion('.($i-1).')">'.
 								htmlentities($str, ENT_QUOTES, 'utf-8') .'</div>';

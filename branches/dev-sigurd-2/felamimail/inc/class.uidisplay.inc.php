@@ -28,6 +28,8 @@
 
 	/* $Id: class.uidisplay.inc.php 25705 2008-07-08 12:24:33Z leithoff $ */
 
+	phpgw::import_class('felamimail.html');
+
 	class uidisplay
 	{
 
@@ -56,6 +58,7 @@
 
 		function uidisplay()
 		{
+			$GLOBALS['phpgw_info']['flags']['noframework'] = true;
 			$GLOBALS['phpgw']->js->validate_file('jsapi', 'jsapi', 'felamimail');
 			/* Having this defined in just one spot could help when changes need
 			 * to be made to the pattern
@@ -112,6 +115,12 @@
 
 			$this->rowColor[0] = $GLOBALS['phpgw_info']["theme"]["bg01"];
 			$this->rowColor[1] = $GLOBALS['phpgw_info']["theme"]["bg02"];
+
+			if ( !isset($GLOBALS['phpgw']->css) || !is_object($GLOBALS['phpgw']->css) )
+			{
+				$GLOBALS['phpgw']->css = createObject('phpgwapi.css');
+			}
+			$GLOBALS['phpgw']->css->validate_file('app', 'felamimail');
 		}
 
 		/**
@@ -569,7 +578,7 @@
 				$this->t->set_var('name',lang('name'));
 				$this->t->set_var('type',lang('type'));
 				$this->t->set_var('size',lang('size'));
-				$this->t->set_var('url_img_save',$GLOBALS['phpgw']->html->image('felamimail','fileexport', lang('save')));
+				$this->t->set_var('url_img_save',html::image('felamimail','fileexport', lang('save')));
 				#$this->t->parse('attachment_rows','attachment_row_bold',True);
 
 				$detectedCharSet=$charset2use=$this->displayCharset;

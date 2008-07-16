@@ -41,6 +41,15 @@
 
 		function uicompose()
 		{
+			$GLOBALS['phpgw_info']['flags']['noframework'] = true;
+			require_once(PHPGW_SERVER_ROOT.'/felamimail/inc/xajax.inc.php');
+
+			$xajax =& new xajax($GLOBALS['phpgw']->link('/felamimail/xajax.php',false,true), 'xajax_', 'utf-8');
+			$xajax->waitCursorOff();
+			$xajax->registerFunction("doXMLHTTP");
+
+			$GLOBALS['phpgw_info']['flags']['java_script'] .= $xajax->getJavascript($GLOBALS['phpgw_info']['server']['webserver_url'] . '/felamimail/js/');
+
 			$GLOBALS['phpgw']->js->validate_file('jsapi', 'jsapi', 'felamimail');
 			$this->displayCharset	= 'utf-8';
 			if (!isset($_POST['composeid']) && !isset($_GET['composeid']))
@@ -67,6 +76,11 @@
 			$this->rowColor[0] = $GLOBALS['phpgw_info']["theme"]["bg01"];
 			$this->rowColor[1] = $GLOBALS['phpgw_info']["theme"]["bg02"];
 
+			if ( !isset($GLOBALS['phpgw']->css) || !is_object($GLOBALS['phpgw']->css) )
+			{
+				$GLOBALS['phpgw']->css = createObject('phpgwapi.css');
+			}
+			$GLOBALS['phpgw']->css->validate_file('app', 'felamimail');
 
 		}
 
@@ -195,30 +209,34 @@
 
 			$this->translate();
 
-			$this->t->set_var("link_addressbook",$GLOBALS['phpgw']->link('/index.php',array(
-				'menuaction' => 'addressbook.addressbook_ui.emailpopup',
-			)));
+	/*		$this->t->set_var("link_addressbook",$GLOBALS['phpgw']->link('/index.php',array(
+				'menuaction' => 'addressbook.addressbook_ui.emailpopup'
+			),true));
+*/
+			$this->t->set_var("link_addressbook",$GLOBALS['phpgw']->link('/felamimail/addressbook.php',false,true));
+
+	
 			$this->t->set_var("focusElement",$_focusElement);
 
 			$linkData = array
 			(
 				'menuaction'	=> 'felamimail.uicompose.selectFolder',
 			);
-			$this->t->set_var('folder_select_url',$GLOBALS['phpgw']->link('/index.php',$linkData));
+			$this->t->set_var('folder_select_url',$GLOBALS['phpgw']->link('/index.php',$linkData,true));
 
 			$linkData = array
 			(
 				'menuaction'	=> 'felamimail.uicompose.fileSelector',
 				'composeid'	=> $this->composeID
 			);
-			$this->t->set_var('file_selector_url',$GLOBALS['phpgw']->link('/index.php',$linkData));
+			$this->t->set_var('file_selector_url',$GLOBALS['phpgw']->link('/index.php',$linkData,true));
 
 			$linkData = array
 			(
 				'menuaction'	=> 'felamimail.uicompose.action',
 				'composeid'	=> $this->composeID
 			);
-			$this->t->set_var("link_action",$GLOBALS['phpgw']->link('/index.php',$linkData));
+			$this->t->set_var("link_action",$GLOBALS['phpgw']->link('/index.php',$linkData,true));
 			$this->t->set_var('folder_name',$this->bofelamimail->sessionData['mailbox']);
 			$this->t->set_var('compose_id',$this->composeID);
 
@@ -286,8 +304,8 @@
 
 			$this->t->set_var("subject",@htmlentities($sessionData['subject'],ENT_QUOTES,$this->displayCharset));
 			$this->t->set_var('addressbookImage',$GLOBALS['phpgw']->common->image('phpgwapi/templates/phpgw_website','users'));
-			$this->t->set_var('infologImage',html::image('felamimail','to_infolog',lang('Save as infolog'),'width="17px" height="17px" valign="middle"' ));
-			$this->t->set_var('lang_save_as_infolog',lang('Save as infolog'));
+	//		$this->t->set_var('infologImage',html::image('felamimail','to_infolog',lang('Save as infolog'),'width="17px" height="17px" valign="middle"' ));
+	//		$this->t->set_var('lang_save_as_infolog',lang('Save as infolog'));
 			$this->t->set_var('lang_no_recipient',lang('No recipient address given!'));
 			$this->t->set_var('lang_no_subject',lang('No subject given!'));
 			$this->t->pparse("out","header");
