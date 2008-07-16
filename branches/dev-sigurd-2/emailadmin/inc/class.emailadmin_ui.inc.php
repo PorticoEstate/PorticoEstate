@@ -585,7 +585,7 @@
 			#_debug_array($imapSettings);
 			
 			$this->boemailadmin->saveProfile($globalSettings, $smtpSettings, $imapSettings);
-
+			execMethod('phpgwapi.menu.clear');//new menu items depending on users rights to define own accounts
 			print "<script type=\"text/javascript\">opener.location.reload(); window.close();</script>";
 			$GLOBALS['phpgw']->common->egw_exit();
 			exit;

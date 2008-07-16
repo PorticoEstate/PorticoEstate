@@ -21,7 +21,7 @@
 	$setup_info['emailadmin']['author'] = 'Lars Kneschke';
 	$setup_info['emailadmin']['license']  = 'GPL';
 	$setup_info['emailadmin']['description'] =
-		'A central Mailserver management application for EGroupWare.';
+		'A central Mailserver management application for EGroupWare - ported to phpGroupWare';
 	$setup_info['emailadmin']['note'] =
 		'';
 	$setup_info['emailadmin']['maintainer'] = array(
@@ -40,29 +40,6 @@
 		'appname'  => 'phpgwapi',
 		'versions' => Array('0.9.17','0.9.18')
 	);
-	$setup_info['felamimail']['depends'][] = array(
-		'appname'  => 'egw-pear',
-		'versions' => Array('1.4.000','1.5')
-	);
-	// installation checks for felamimail
-	$setup_info['emailadmin']['check_install'] = array(
-		'' => array(
-			'func' => 'pear_check',
-			'from' => 'EMailAdmin',
-		),
-		'Auth_SASL' => array(
-			'func' => 'pear_check',
-			'from' => 'EMailAdmin',
-		),
-		'Net_IMAP' => array(
-			'func' => 'pear_check',
-			'from' => 'FeLaMiMail',
-		),
-		'imap' => array(
-			'func' => 'extension_check',
-			'from' => 'EMailAdmin',
-		),
-	);	
 
 
 
