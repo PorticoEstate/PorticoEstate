@@ -299,6 +299,7 @@
       		<xsl:apply-templates select="rows" />
     	</table>
   	</div>
+  	<xsl:call-template name="datatable-yui-definition" />
 </xsl:template>
 
 <!--
@@ -625,4 +626,24 @@
 	      	</tr>
     	</xsl:for-each>
   	</tbody>
+</xsl:template>
+
+<!--
+	Experimental support for YUI datatable
+ -->
+
+<xsl:template name="datatable-yui-definition">
+	<script>
+		var myColumnDefs = [
+			<xsl:for-each select="//datatable/headers/header">
+				{
+					key: "<xsl:value-of select="name"/>",
+					label: "<xsl:value-of select="text"/>",
+					resizeable:true,
+					sortable: <xsl:value-of select="phpgw:conditional(not(sortable = 0), 'true', 'false')"/>,
+					visible: <xsl:value-of select="phpgw:conditional(not(visible = 0), 'true', 'false')"/>
+				}<xsl:value-of select="phpgw:conditional(not(position() = last()), ',', '')"/>
+			</xsl:for-each>
+		];
+	</script>
 </xsl:template>

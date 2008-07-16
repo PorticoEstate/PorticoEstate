@@ -89,7 +89,7 @@
 					break;
 
 				case 'datatable':
-					$load = array('datatable-beta-min', 'datasource-beta-min');
+					$load = array('element-beta', 'datasource-beta', 'datatable-beta' );
 					break;
 
 				case 'dom':
@@ -126,13 +126,13 @@
 					$load = array('container_core-min', 'menu-min');
 					break;
 
-                case 'resize': 
-					$load = array('dragdrop-min', 'element-beta-min', 'resize-beta-min'); 
-					break; 
+                case 'resize':
+					$load = array('dragdrop-min', 'element-beta-min', 'resize-beta-min');
+					break;
 
-				case 'layout': 
-					$load = array('dragdrop-min', 'element-beta-min', 'resize-beta-min', 'layout-beta-min'); 
-					break; 
+				case 'layout':
+					$load = array('dragdrop-min', 'element-beta-min', 'resize-beta-min', 'layout-beta-min');
+					break;
 
 				case 'slider':
 					$load = array('dragdrop-min', 'animation-min', 'slider-min');

@@ -102,12 +102,13 @@
 					'image'	=> array('newdesign', 'preferences')
 				);
 			}
+			/*
 			$location_children = array
 			(
 				'location_loc_1' => array
 				(
-					'text' => 'Eiendom',
-					'url'	=>  $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'newdesign.uinewdesign.location','output'=>'html', 'type_id' => 1 )),
+					'text' => 'GAB',
+					'url'	=>  $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'newdesign.uinewdesign.gab','output'=>'html', 'type_id' => 1 )),
 				),
 				'location_loc_2' => array
 				(
@@ -131,15 +132,17 @@
 				)
 
 			);
-
+			*/
 			$menus['navigation'] = array
 			(
 				'datatable'	=> array
 				(
 					'text'	=> 'DataTable',
-					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'newdesign.uinewdesign.datatable','output'=>'html')),
+					'url'	=>  $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'newdesign.uinewdesign.gab','output'=>'html', 'type_id' => 1 )),
 					'image' => array('newdesign', 'table')
-				),
+				)
+				/*
+				,
 				'form'	=> array
 				(
 					'text'	=> 'Property',
@@ -153,6 +156,7 @@
 					'image' => array('property', 'location'),
 					'children' => $location_children
 				)
+				*/
 			);
 
 

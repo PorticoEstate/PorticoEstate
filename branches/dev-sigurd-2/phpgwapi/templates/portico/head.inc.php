@@ -71,7 +71,6 @@
 
 	// Construct navbar_config by taking into account the current selected menu
 	// The only problem with this loop is that leafnodes will be included
-
 	$navbar_config = execMethod('phpgwapi.template_portico.retrieve_local', 'navbar_config');
 
 	if( isset($GLOBALS['phpgw_info']['flags']['menu_selection']) )

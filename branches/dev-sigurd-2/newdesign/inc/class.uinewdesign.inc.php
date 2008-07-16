@@ -43,145 +43,323 @@
       'gab' => true
     );
 
-    function gab()
-	{
+        function gab() {
 
-	}
+    	$datatable = array();
+    	$datatable['config']['base_url'] = $GLOBALS['phpgw']->link('/index.php', array(
+			'menuaction'	=> 'newdesign.uinewdesign.gab'
+		));
 
-	function location()
-	{
-		$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/build/datatable/assets/datatable-core.css');
-      	$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/build/assets/skins/sam/datatable.css');
+		// Definition of headers
+		$datatable['headers']['header'] = array(
+			array(
+				'name'		=> 'gab_id',
+				'visible'	=> false
+			),
+			array(
+				'name'		=> 'gaards_nr',
+				'text'		=> lang('GardsNr'),
+				'format'	=> 'number',
+				'sortcolumn'=> 'gab_id'
+			),
+			array(
+				'name'		=> 'bruks_nr',
+				'text'		=> lang('BruksNr'),
+				'sortable'	=> false,
+				'format'	=> 'number'
+			),
+			array(
+				'name'		=> 'feste_nr',
+				'text'		=> lang('FesteNr'),
+				'sortable'	=> false,
+				'format'	=> 'number'
+			),
+			array(
+				'name'		=> 'seksjons_nr',
+				'text'		=> lang('SeksjonsNr'),
+				'sortable'	=> false,
+				'format'	=> 'number'
+			),
+			array(
+				'name'		=> 'owner',
+				'text'		=> lang('Eier'),
+				'sortable'	=> false,
+				'format'	=> 'bool'
+			),
+			array(
+				'name'		=> 'location_code',
+				'text'		=> lang('Lokalisering'),
+				'format'	=> 'number'
+			),
+			array(
+				'name'		=> 'address',
+				'text'		=> lang('Adresse'),
+				'sortable'	=> false
+			)
+		);
 
-      	$GLOBALS['phpgw']->js->validate_file( 'newdesign', 'location', $this->currentapp );
+		// Get rowdata based on query variables
+		$reset_query 		= phpgw::get_var('reset_query', 'bool');
 
-      	phpgwapi_yui::load_widget('element');
-      	phpgwapi_yui::load_widget('connection');
-      	phpgwapi_yui::load_widget('dragdrop');
-      	phpgwapi_yui::load_widget('calendar');
-		phpgwapi_yui::load_widget('datatable');
-
-      	$type_id 		= phpgw::get_var('type_id', 'int', 'REQUEST', 1);
-      	$lookup_tenant 	= phpgw::get_var('lookup_tenant', 'int', 'REQUEST', false);
-      	$lookup 		= false;
-      	$this->allrows 	= false;
-
-      	$this->bo 		= CreateObject('property.bolocation',True);
-      	$location_list 	= $this->bo->read(array('type_id'=>$type_id,'lookup_tenant'=>$lookup_tenant,'lookup'=>$lookup,'allrows'=>$this->allrows));
-		$uicols 		= $this->bo->uicols;
-
-		$output = phpgw::get_var('phpgw_return_as', 'string') ? phpgw::get_var('phpgw_return_as', 'string') : 'html';
-
-		if($output == "html")
+		if( !$reset_query )
 		{
-			$GLOBALS['phpgw_info']['flags']['menu_selection'] = 'newdesign::location::location_loc_' . $type_id;
-
-			if($lookup_tenant)
-			{
-				$GLOBALS['phpgw_info']['flags']['menu_selection'] .= "_${lookup_tenant}";
-			}
-
-			//var_dump($uicols);
-			$data = array();
-			$columnDefs = array();
-			for($i=0;$i<count($uicols['name']);$i++)
-			{
-				//$columnDefs['column'][$i]['input_type'] = $uicols['input_type'][$i];
-				$columnDefs['column'][$i]['name'] = $uicols['name'][$i];
-				$columnDefs['column'][$i]['descr'] = $uicols['descr'][$i];
-				//$columnDefs['column'][$i]['statustext'] = $uicols['statustext'][$i];
-				/* 'exchange', 'align', 'datatype' */
-			}
-
-			$data['locationDataTable']['datasrouce_url'] = $GLOBALS['phpgw']->link('/index.php', array(
-				'menuaction'		=> 'newdesign.uinewdesign.location',
-				'type_id'			=> $type_id,
-				'phpgw_return_as'	=> 'json',
-				'lookup_tenant'		=> $lookup_tenant
-			));
-
-			$data['locationDataTable']['type_id'] = $type_id;
-			$data['locationDataTable']['columns'] = $columnDefs;
-
-			// Get filter data for Category, District, Part of town and owner
-			$this->socommon 		= CreateObject('property.socommon', true);
-			$this->so 				= CreateObject('property.solocation');
-
-			$data['filter'] = array();
-			$i=0;
-			//$this->bocommon->select_category_list(array('format'=>'filter','selected' => $this->cat_id,'type' =>'location','type_id' =>$type_id,'order'=>'descr')),
-
-			$data['filter'][$i]['id'] = 'category';
-			$data['filter'][$i]['name'] = 'cat_id';
-			$data['filter'][$i]['title'] = 'Category';
-			$data['filter'][$i]['descr'] = lang('Select the category the location belongs to. To do not use a category select NO CATEGORY');
-			$data['filter'][$i]['selected'] = $this->bo->cat_id;
-			//$data['filter'][$i]['options'][] =
-
-			$socategory = CreateObject('property.socategory');
-			$categories = $socategory->select_category_list( array(
-				'type'=> 'location',
-				'type_id' => 1
-			));
-			$empty[] = array( 'id'	=>	'', "name"	=> lang('no category') );
-			$data['filter'][$i]['options'] = array_merge($empty, $categories);
-			unset($empty);
-
-			$i++;
-			$data['filter'][$i]['id'] = 'district';
-			$data['filter'][$i]['name'] = 'district_id';
-			$data['filter'][$i]['title'] = 'District';
-			$data['filter'][$i]['descr'] = lang('Select the district the selection belongs to. To do not use a district select NO DISTRICT');
-			$data['filter'][$i]['selected'] = $this->bo->district_id;
-			$empty[] = array( 'id'	=>	'', "name"	=> lang('no district') );
-			$data['filter'][$i]['options'] = array_merge($empty, $this->socommon->select_district_list());
-			unset($empty);
-
-			$i++;
-			$data['filter'][$i]['id'] = 'part_of_town';
-			$data['filter'][$i]['name'] = 'part_of_town_id';
-			$data['filter'][$i]['title'] = 'Part of town';
-			$data['filter'][$i]['descr'] = lang('Select the part of town the selection belongs to. To do not use a part of town select NO PART OF TOWN');
-			$data['filter'][$i]['selected'] = $this->bo->part_of_town_id;
-			$empty[] = array( 'id'	=>	'', "name"	=> lang('no part of town') );
-			$data['filter'][$i]['options'] = array_merge($empty, $this->socommon->select_part_of_town());
-			unset($empty);
-
-			$i++;
-			$data['filter'][$i]['id'] = 'owner';
-			$data['filter'][$i]['name'] = 'filter';
-			$data['filter'][$i]['title'] = 'Owner';
-			$data['filter'][$i]['descr'] = lang('Select the owner type. To show all entries select SHOW ALL');
-			$data['filter'][$i]['selected'] = $this->bo->filter;
-			$empty[] = array( 'id'	=>	'', "name"	=> lang('Show all') );
-			$data['filter'][$i]['options'] = array_merge($empty, $this->so->get_owner_type_list());
-			unset($empty);
-
-			$GLOBALS['phpgw']->xslttpl->add_file(array('location'));
-      		$GLOBALS['phpgw']->xslttpl->set_var('phpgw', $data);
-      		//var_dump ($GLOBALS['phpgw']->xslttpl->xml_parse());
+			$address 			= phpgw::get_var('address');
+			$check_payments 	= phpgw::get_var('check_payments', 'bool');
+			$location_code 		= phpgw::get_var('location_code');
+			$gaards_nr 			= phpgw::get_var('gaards_nr', 'int');
+			$bruksnr 			= phpgw::get_var('bruksnr', 'int');
+			$feste_nr 			= phpgw::get_var('feste_nr', 'int');
+			$seksjons_nr 		= phpgw::get_var('seksjons_nr', 'int');
 		}
-		else
+
+		//Actions / filters
+		$datatable['actions']['form'] = array(
+			array(
+				'action'	=> $GLOBALS['phpgw']->link('/index.php',
+					array(
+						'menuaction' => 'property.uilocation.edit',
+						'type_id' => '1'
+					)
+				),
+				'fields'	=> array(
+					'field' => array(
+						array(
+							'type' => 'submit',
+							'value' => lang('New')
+						)
+					)
+				)
+			),
+
+			array(
+				'fields'	=> array(
+					'field' => array(
+						array(
+							'id'	=> 'someid',
+							'name'	=> 'check_payments',
+							'text'	=> lang('Check payments'),
+							'type'	=> 'checkbox',
+							'value'	=> "1",
+							'checked' => $check_payments
+						),
+						array(
+							'name' 	=> 'address',
+							'text'	=> lang('Address'),
+							'value'	=> $address
+						),
+						array(
+							'name' 	=> 'location_code',
+							'text'	=> lang('Property ID'),
+							'value'	=> $location_code,
+							'size'	=> 4
+						),
+						array(
+							'name' 	=> 'gaards_nr',
+							'text'	=> lang('Gaards NR'),
+							'value'	=> $gaards_nr,
+							'size'	=> 4
+						),
+						array(
+							'name' 	=> 'bruksnr',
+							'text'	=> lang('Bruks NR'),
+							'value'	=> $bruksnr,
+							'size'	=> 4
+						),
+						array(
+							'name' 	=> 'feste_nr',
+							'text'	=> lang('Feste NR'),
+							'value'	=> $feste_nr,
+							'size'	=> 4
+						),
+						array(
+							'name' 	=> 'seksjons_nr',
+							'text'	=> lang('Seksjons NR'),
+							'value'	=> $seksjons_nr,
+							'size'	=> 4
+						),
+						array(
+							'name'	=> 'submit',
+							'value'	=> lang('Search'),
+							'type'	=> 'submit'
+						),
+						array(
+							'name'	=> 'reset_query',
+							'value'	=> lang('Clear'),
+							'type'	=> 'submit'
+						)
+					)
+				)
+			)
+		);
+
+		$this->bo = CreateObject('property.bogab',True);
+		$gab_rows = $this->bo->read( $location_code, $gaards_nr, $bruksnr, $feste_nr, $seksjons_nr, $address, $check_payments);
+
+		// Format bo rows for xml output
+		for($i=0; $i < count($gab_rows); $i++)
 		{
-			//recordsReturned should come from bo
-			//TODO: totalRecords should be int no mather what...
+			$row = $gab_rows[$i];
+			foreach($gab_rows[$i] as $key => $value)
+			{
+				if($key == 'gab_id')
+				{
+					$datatable['rows']['row'][$i]['column'][] = array(
+						'name' 	=> 'gaards_nr',
+						'value'	=> substr( $value, 4, 5 )
+					);
+					$datatable['rows']['row'][$i]['column'][] = array(
+						'name' 	=> 'bruks_nr',
+						'value'	=> substr( $value, 9, 4 )
+					);
+					$datatable['rows']['row'][$i]['column'][] = array(
+						'name' 	=> 'feste_nr',
+						'value'	=> substr( $value, 13, 4 )
+					);
+					$datatable['rows']['row'][$i]['column'][] = array(
+						'name' 	=> 'seksjons_nr',
+						'value'	=> substr( $value, 17, 3 )
+					);
+				}
+				else if($key == 'owner')
+				{
+					$value = lang($value);
+				}
 
-			$data = array(
-                'recordsReturned'	=>	count($location_list),
-                'totalRecords'		=>	(int)$this->bo->total_records,
-                'startIndex'		=> 	(int)$this->bo->start,
-                'sort'				=> 	$this->bo->order,
-      			'sort_dir'			=> 	$this->bo->sort,
-				'query'				=>  $this->bo->query,
-				'part_of_town_id'	=>	$this->bo->part_of_town_id,
-				'cat_id'			=>	$this->bo->cat_id,
-				'district_id'		=>	$this->bo->district_id,
-				'filter'			=>	$this->bo->filter,
-                'records'			=> 	$location_list
-      		);
-			return $data;
+				$datatable['rows']['row'][$i]['column'][] = array(
+					'name' 	=> $key,
+					'value' => $value
+				);
+			}
 		}
-	}
+
+		// Row actions
+		$datatable['rowactions']['action'][] = array(
+			'text' 			=> lang('Vis'),
+			'action'		=> $GLOBALS['phpgw']->link('/index.php',
+				array( 'menuaction' => 'property.uigab.list_detail' )
+			),
+			'parameters'	=> array
+			(
+				'parameter' => array(
+					array(
+						'name'	=> 'gab_id'
+					)
+				)
+			)
+		);
+
+		$datatable['rowactions']['action'][] = array(
+			'text' 			=> lang('Map'),
+			'action'		=> phpgw::safe_redirect('http://www.bergenskart.no/bergen/index.jsp?maptype=Eiendomskart'),
+			'parameters'	=> array(
+				'parameter' => array(
+					array(
+						'name'		=> 'gnr',
+						'source'	=> 'gaards_nr'
+					),
+					array(
+						'name'		=> 'bnr',
+						'source'	=> 'bruks_nr',
+					),
+					array(
+						'name'		=> 'fnr',
+						'source'	=> 'feste_nr',
+					)
+				)
+			)
+		);
+
+		$datatable['rowactions']['action'][] = array(
+			'text' 			=> lang('Gab'),
+			'action'		=> phpgw::safe_redirect('http://geodat01/gl_webgab/webgab.aspx?type=eiendom'),
+			'parameters'	=> array
+			(
+				'parameter' => array(
+					array(
+						'name'	=> 'Gnr',
+						'source'=> 'gaards_nr'
+					),
+					array(
+						'name'		=> 'Bnr',
+						'source'	=> 'bruks_nr'
+					),
+					array(
+						'name'		=> 'Fnr',
+						'source'	=> 'feste_nr'
+					),
+					array(
+						'name'		=> 'Snr',
+						'source'	=> 'seksjons_nr'
+					)
+				)
+			)
+		);
+
+		// Pagination and sort values
+		$datatable['pagination']['records_start'] 	= (int)$this->bo->start;
+		$datatable['pagination']['records_limit'] 	= $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
+		$datatable['pagination']['records_returned']= count($gab_rows);
+		$datatable['pagination']['records_total'] 	= $this->bo->total_records;
+
+		$datatable['pagination']['lang']['first'] 	= lang('First');
+		$datatable['pagination']['lang']['next'] 	= lang('Next');
+		$datatable['pagination']['lang']['previous']= lang('Previous');
+		$datatable['pagination']['lang']['last'] 	= lang('Last');
+		$datatable['pagination']['lang']['overview']= lang('Records $1 - $2 of $3');
+
+		$datatable['sorting']['order'] 	= phpgw::get_var('order', 'string'); // Column
+		$datatable['sorting']['sort'] 	= phpgw::get_var('sort', 'string'); // ASC / DESC
+
+
+    	if( phpgw::get_var('phpgw_return_as') == 'json' ) {
+    		$json = array(
+    			'recordsReturned' 	=> $datatable['pagination']['records_returned'],
+    			'totalRecords' 		=> $datatable['pagination']['records_total'],
+    			'recordStartIndex' 	=> $datatable['pagination']['records_start'],
+    			'sortKey'			=> $datatable['sorting']['order'],
+    			'sortDir'			=> $datatable['sorting']['sort'],
+    			'records'			=> array()
+    		);
+
+    		foreach( $datatable['rows']['row'] as $row )
+    		{
+    			$json_row = array();
+    			foreach( $row['column'] as $column)
+    			{
+    				$json_row[$column['name']] = $column['value'];
+    			}
+    			$json['records'][] = $json_row;
+    		}
+    		return $json;
+		}
+
+		// Prepare template variables and process XSLT
+		$template_vars = array();
+		$template_vars['datatable'] = $datatable;
+
+		$GLOBALS['phpgw']->xslttpl->add_file(array('datatable'));
+      	$GLOBALS['phpgw']->xslttpl->set_var('phpgw', $template_vars);
+
+      	if ( !isset($GLOBALS['phpgw']->css) || !is_object($GLOBALS['phpgw']->css) )
+      	{
+        	$GLOBALS['phpgw']->css = createObject('phpgwapi.css');
+      	}
+
+	  	$GLOBALS['phpgw']->css->validate_file('datatable');
+		$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/datatable/assets/skins/sam/datatable.css');
+
+		phpgwapi_yui::load_widget('dragdrop');
+	  	phpgwapi_yui::load_widget('datatable');
+
+      	//phpgwapi_yui::load_widget('tabview');
+
+	  	// Uncomment the following line to enable experimental YUI Datagrid version
+	  	//$GLOBALS['phpgw']->js->validate_file( 'newdesign', 'gabnr', $this->currentapp );
+
+      	//echo "<pre>";
+      	//echo $GLOBALS['phpgw']->xslttpl->xml_parse();
+    }
+
 
     function newdesign_uinewdesign()
     {
@@ -192,7 +370,8 @@
       $this->menu->sub		='newdesign';
       $this->acl 				= & $GLOBALS['phpgw']->acl;
       $this->acl_location 	= '.demo_location';
-      /*
+
+		/*
       $this->cats				= CreateObject('phpgwapi.categories');
       $this->nextmatchs		= CreateObject('phpgwapi.nextmatchs');
       $this->account			= $GLOBALS['phpgw_info']['user']['account_id'];
@@ -215,533 +394,5 @@
       $this->filter			= $this->bo->filter;
       */
     }
-	function property()
-	{
-		$GLOBALS['phpgw_info']['flags']['menu_selection'] = 'newdesign::property';
 
-		if ( !isset($GLOBALS['phpgw']->css) || !is_object($GLOBALS['phpgw']->css) )
-      	{
-        	$GLOBALS['phpgw']->css = createObject('phpgwapi.css');
-      	}
-
-      	$data=array();
-
-      	$loc1 = phpgw::get_var('loc1', 'string');
-
-      	$cmd = phpgw::get_var('cmd', 'string') ? phpgw::get_var('cmd', 'string') : 'view';
-
-      	if(!$loc1 && $cmd != 'new')
-      	{
-      		$data['error'] = "No location supplied";
-      	}
-		else {
-			$this->bocommon = CreateObject('property.bocommon');
-      		$this->db = $this->bocommon->new_db();
-
-			$query = "SELECT * FROM fm_location1 WHERE loc1 = '" . $loc1 . "'";
-
-			$this->db->query( $query );
-
-      		if( !$this->db->next_record() )
-      		{
-				$data['error'] = "Location: " . $loc1 . " not found";
-
-      		}
-      		else
-      		{
-      			$record = array();
-      			foreach ($this->db->resultSet->fields as $key => $value) {
-          			if(is_string($key)) {
-               			$record[$key] = $value;
-          			}
-        		}
-        		var_dump($record);
-        		/*
-        		 	property
-					name
-					category
-					part of town
-					owner
-					status
-					remark
-					mva
-					kostra_id
-					rental area
-        		 */
-        		$data['cmd']['form']=array
-        		(
-              		'field' => array
-              		(
-                		array
-                		(
-							'title' => 'Property',
-                			'value' => $record['location_code'],
-							'tooltip' => 'Please enter property code',
-							'required' => true
-                  			/*'error' => 'This field can not be empty!'	*/
-                		),
-                		array
-                		(
-                  			'title' => 'Name',
-                			'value' => $record['loc1_name'],
-                  			'name' => 'lastname',
-                  			'required' => true
-                  			//'tooltip' => 'Here you should input the tooltip'
-                		),
-                		array
-                		(
-                  			'title' => 'Category',
-                			'value' => $record['category'],
-                  			'name' => 'lastname',
-                  			'required' => true
-                  			//'tooltip' => 'Here you should input the tooltip'
-                		),
-                		array
-                		(
-                  			'title' => 'Part of town',
-                  			'name' => 'lastname',
-                			'required' => true
-                  			//'tooltip' => 'Here you should input the tooltip'
-                		),
-
-
-                	)
-                );
-      		}
-		}
-
-
-
-      	$output = "html";
-
-      	$this->menu->sub = $output;
-      	$links = $this->menu->links();
-
-      	$GLOBALS['phpgw']->xslttpl->add_file(array('property'));
-      	$GLOBALS['phpgw']->xslttpl->set_var('phpgw', $data);
-		var_dump ($GLOBALS['phpgw']->xslttpl->xml_parse());
-	}
-    function datatable()
-    {
-      $GLOBALS['phpgw_info']['flags']['menu_selection'] = 'newdesign::datatable';
-      if ( !isset($GLOBALS['phpgw']->css) || !is_object($GLOBALS['phpgw']->css) )
-      {
-        $GLOBALS['phpgw']->css = createObject('phpgwapi.css');
-      }
-
-      $GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/build/datatable/assets/datatable-core.css');
-      $GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/build/assets/skins/sam/datatable.css');
-
-      $GLOBALS['phpgw']->js->validate_file( 'newdesign', 'datatable', $this->currentapp );
-
-      phpgwapi_yui::load_widget('element');
-      phpgwapi_yui::load_widget('connection');
-      phpgwapi_yui::load_widget('dragdrop');
-      phpgwapi_yui::load_widget('calendar');
-      phpgwapi_yui::load_widget('datatable');
-
-      $output = "html";
-      $data=array();
-      $this->menu->sub = $output;
-      $links = $this->menu->links();
-
-      $GLOBALS['phpgw']->xslttpl->add_file(array('datatable'));
-      $GLOBALS['phpgw']->xslttpl->set_var('phpgw', $data);
-    }
-
-    function datatable_json()
-    {
-      $sort_dir = phpgw::get_var('sort_dir', 'string') ? phpgw::get_var('sort_dir', 'string') : 'asc';
-      $sort = phpgw::get_var('sort', 'string') ? phpgw::get_var('sort', 'string') : 'loc1';
-      $start_offset	= phpgw::get_var('start_offset', 'int') ? phpgw::get_var('start_offset', 'int') : 0;
-	  $limit_records = phpgw::get_var('limit_records', 'int') ? phpgw::get_var('limit_records', 'int') : 30;
-
-      $this->bocommon = CreateObject('property.bocommon');
-      $this->db = $this->bocommon->new_db();
-
-      $this->db->query( "SELECT count(loc1) as total_records FROM fm_location1");
-      if( $this->db->next_record() )
-      {
-        $total_records = (int)$this->db->resultSet->fields['total_records']-1;
-      }
-      else
-      {
-      	$total_records = 0;
-      }
-
-      $query = "SELECT loc1, loc1_name, fm_owner.org_name as owner_name, fm_location1.remark as remark,
-       			fm_part_of_town.name as town_name, fm_location1_category.descr as category_descr, user_id, status
-				FROM fm_location1
-				JOIN fm_owner ON fm_location1.owner_id=fm_owner.id
-				JOIN fm_part_of_town ON fm_location1.part_of_town_id=fm_part_of_town.part_of_town_id
-				JOIN fm_location1_category ON fm_location1.category=fm_location1_category.id
-				ORDER BY $sort $sort_dir";
-
-      $this->db->limit_query($query, $start_offset, '100', 'class.uinewdesign.inc.php', $limit_records);
-
-      $records = array();
-      while ($this->db->next_record()) {
-        $record=array();
-        foreach ($this->db->resultSet->fields as $key => $value) {
-          if(is_string($key)) {
-               $record[$key] = $value;
-          }
-        }
-        $records[] = $record;
-      }
-
-      $data = array(
-                'recordsReturned'	=> $this->db->num_rows(),
-                'totalRecords'		=> $total_records,
-                'startIndex'		=> $start_offset,
-                'sort'				=> $sort,
-      			'sort_dir'			=> $sort_dir,
-                'records'			=> $records
-      );
-
-      return $data;
-    }
-/**
-    * TODO document me
-    */
-    function index()
-    {
-      $GLOBALS['phpgw_info']['flags']['menu_selection'] = 'newdesign::form';
-      $output = "html";
-
-      if ( !isset($GLOBALS['phpgw']->css) || !is_object($GLOBALS['phpgw']->css) )
-      {
-        $GLOBALS['phpgw']->css = createObject('phpgwapi.css');
-      }
-
-	  $GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/build/assets/skins/sam/autocomplete.css');
-      $GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/build/assets/skins/sam/calendar.css');
-      $GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/build/assets/skins/sam/tabview.css');
-
-      phpgwapi_yui::load_widget('calendar');
-      phpgwapi_yui::load_widget('tabview');
-      phpgwapi_yui::load_widget('autocomplete');
-
-      $GLOBALS['phpgw']->js->validate_file( 'newdesign', 'form', $this->currentapp );
-
-
-      $data = array
-      (
-        'form' => array
-        (
-          'title' => 'New Property',
-          'action' => "testaction",
-          'fieldset' => array
-          (
-            array(
-              'field' => array
-              (
-                array
-                (
-                  'title' => 'Property',
-                  'accesskey' => 'P',
-                  'tooltip' => 'Please enter property code',
-                  'required' => true
-                  /*'error' => 'This field can not be empty!'*/
-                ),
-                array
-                (
-                  'title' => lang('Name'),
-                  'accesskey' => 'N',
-                  'name' => 'lastname',
-                  'tooltip' => 'Please enter property name'
-                ),
-                array
-                (
-                  'title' => lang('Category'),
-                  'accesskey' => 'C',
-                  'name' => 'username',
-                  'required' => true
-                ),
-                array
-                (
-                  'title' => 'Part of town',
-                  'accesskey' => 'a',
-                  'name' => 'password',
-                  'type' => 'password',
-                  'maxlength' => 8,
-                  'required' => true
-                ),
-                array
-                (
-                  'title' => 'Owner',
-                  'accesskey' => 'O',
-                  'required' => true
-                ),
-                array
-                (
-                	'title' => 'Remark',
-                	'accesskey' => 'R',
-                	'type' => 'textarea'
-                )
-              )
-            )
-            /*
-            array
-            (
-              'field' => array
-              (
-                array
-                (
-                  'title' => 'Birthday',
-                  'value' => '12/12/2007',
-                  'tooltip' => 'Enter your birthday',
-                  'type' => 'date',
-                  'required' => 'true'
-                ),
-                array
-                (
-                  'title' => 'Password',
-                  'password' => 'Password',
-                  'type' => 'password'
-                ),
-                array
-                (
-                  'title' => 'Readonly',
-                  'tooltip' => 'You can only read this one',
-                  'readonly' => true,
-                  'value' => 'This is readonly',
-                  'error' => 'This is readonly'
-                ),
-                array
-                (
-                  'title' => 'disabled',
-                  'disabled' => true,
-                  'value' => 'disabled'
-                ),
-                array
-                (
-                  'title' => 'Spam?',
-                  'type' => 'checkbox',
-                  'tooltip' => 'Do you want spam?',
-                  'value' => 'checked'
-                ),
-                array
-                (
-                  'title' => 'Textarea',
-                  'type' => 'textarea'
-                )
-              )
-            ),
-            array
-            (
-              'title' => 'Last one',
-              'field' => array
-              (
-                array
-                (
-                  'title' => lang('Another one')
-                )
-              )
-            )
-			*/
-          )
-        )
-      );
-
-      $this->menu->sub = $output;
-      $links = $this->menu->links();
-
-      $GLOBALS['phpgw']->xslttpl->add_file(array('common', 'form'));
-      $GLOBALS['phpgw']->xslttpl->set_var('phpgw', $data);
-      //$GLOBALS['phpgw']->xslttpl->set_xml("<test></test>");
-    }
-
-    function grid()
-    {
-      $GLOBALS['phpgw_info']['flags']['menu_selection'] = 'newdesign::grid';
-      if ( !isset($GLOBALS['phpgw']->css) || !is_object($GLOBALS['phpgw']->css) )
-      {
-        $GLOBALS['phpgw']->css = createObject('phpgwapi.css');
-      }
-
-      $GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/build/datatable/assets/datatable-core.css');
-      $GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/build/assets/skins/sam/datatable.css');
-
-      phpgwapi_yui::load_widget('element');
-      phpgwapi_yui::load_widget('connection');
-      phpgwapi_yui::load_widget('dragdrop');
-      phpgwapi_yui::load_widget('calendar');
-      phpgwapi_yui::load_widget('datatable');
-
-      $GLOBALS['phpgw']->js->validate_file( 'newdesign', 'grid', $this->currentapp );
-      //$GLOBALS['phpgw']->js->set_onload( 'init_grid();' );
-
-      $this->bocommon			= CreateObject('property.bocommon');
-      $this->db           	= $this->bocommon->new_db();
-      $this->db->query("SELECT fm_location2.location_code,fm_location2.loc1,fm_location2.loc2,fm_location1.loc1_name,fm_location2.loc2_name ,fm_location2.status,fm_location2.remark,fm_location2.rental_area FROM ((( fm_location2 JOIN fm_location1 ON (fm_location2.loc1 = fm_location1.loc1)) JOIN fm_owner ON ( fm_location1.owner_id=fm_owner.id)) JOIN fm_part_of_town ON ( fm_location1.part_of_town_id=fm_part_of_town.part_of_town_id)) WHERE (fm_location2.category !=99 OR fm_location2.category IS NULL) LIMIT 10");
-
-      $datatable = array();
-      $i=0;
-      while ($this->db->next_record()) {
-        foreach ($this->db->resultSet->fields as $key => $value) {
-          if(is_string($key)) {
-            if($i==0) {
-              $datatable['grid']['column_defs']['column'][] = array
-              (
-                'key' => $key,
-                'label' => $key,
-                'formater' => 'text',
-                'sortable' => true
-              );
-            }
-            $datatable['grid']['rows'][$i]['data'][] = $value;
-          }
-        }
-        $i++;
-      }
-      $GLOBALS['phpgw']->xslttpl->add_file(array('common', 'grid'));
-      $GLOBALS['phpgw']->xslttpl->set_var('phpgw', $datatable);
-    }
-    function project()
-    {
-      $GLOBALS['phpgw_info']['flags']['menu_selection'] = 'newdesign::project';
-      $output = "html";
-
-      if ( !isset($GLOBALS['phpgw']->css) || !is_object($GLOBALS['phpgw']->css) )
-      {
-        $GLOBALS['phpgw']->css = createObject('phpgwapi.css');
-      }
-
-      $GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/build/assets/skins/sam/calendar.css');
-      $GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/build/assets/skins/sam/tabview.css');
-
-      phpgwapi_yui::load_widget('calendar');
-      phpgwapi_yui::load_widget('tabview');
-      $GLOBALS['phpgw']->js->validate_file( 'newdesign', 'form', $this->currentapp );
-
-      $data = array
-      (
-        'form' => array
-        (
-          'title' => 'Add Project',
-          'action' => "testaction",
-          'tabbed' => true,
-          'fieldset' => array
-          (
-            array(
-              'title' => lang('General'),
-              'field' => array
-              (
-                array
-                (
-                  'title' => lang('Name'),
-                  'required' => true
-                ),
-                array
-                (
-                  'title' => lang('Description'),
-                  'type' => 'textarea',
-                  'cols' => 60
-                ),
-                array
-                (
-                  'title' => lang('Category'),
-                  //'type' => 'select',
-                  'required' => true,
-                  'datasource' => array
-                  (
-                  )
-                ),
-                array
-                (
-                  'title' => lang('Status'),
-                  //'type' => 'select',
-                  'required' => true,
-                  'datasource' => array
-                  (
-                  )
-                )
-              )
-            ),
-            array
-            (
-              'title' => lang('Location'),
-              'field' => array
-              (
-                array
-                (
-                  'title' => lang('Contact phone')
-                ),
-                array
-                (
-                  'title' => lang('Power meter')
-                )
-              )
-            ),
-            array
-            (
-              'title' => lang('Time and budget'),
-              'field' => array
-              (
-                array
-                (
-                  'title' => lang('Project start date'),
-                  'type' => 'date'
-                ),
-                array
-                (
-                  'title' => lang('Project end date'),
-                  'type' => 'date'
-                ),
-                array
-                (
-                  'title' => lang('Vendor'),
-                  'required' => true
-                ),
-
-                array
-                (
-                  'title' => lang('Budget account'),
-                  'required' => true
-                ),
-                array
-                (
-                  'title' => lang('Budget')
-                ),
-                array
-                (
-                  'title' => lang('Reserve')
-                ),
-                array
-                (
-                  'title' => lang('Sum'),
-                  'readonly' => true
-                )
-              )
-            ),
-            array
-            (
-              'title' => lang('Coordintaion')
-            ),
-            array
-            (
-              'title' => lang('Extra'),
-              'field' => array
-              (
-                'title' => lang('Remark'),
-                'type' => 'textarea',
-                'cols' => 60
-              )
-            ),
-            array
-            (
-              'title' => lang('History')
-            )
-          )
-        )
-      );
-
-      $this->menu->sub = $output;
-      $links = $this->menu->links();
-
-      $GLOBALS['phpgw']->xslttpl->add_file(array('common', 'form'));
-      $GLOBALS['phpgw']->xslttpl->set_var('phpgw', $data);
-
-    }
   }
