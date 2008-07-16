@@ -75,7 +75,7 @@
 			$treemenu = '';
 			foreach ( $GLOBALS['phpgw_info']['user']['apps'] as $app => $app_info )
 			{
-				if(!in_array($app, array('logout', 'about', 'preferences')))
+				if(!in_array($app, array('logout', 'about', 'preferences')) && isset($navbar[$app]))
 				{
 					$treemenu .= $menu->render_menu($app, $navigation[$app], $navbar[$app], true);
 				}
