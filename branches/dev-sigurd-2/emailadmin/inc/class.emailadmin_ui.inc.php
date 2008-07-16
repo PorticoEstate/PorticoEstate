@@ -84,6 +84,7 @@
 
 		function addProfile()
 		{
+			$GLOBALS['phpgw_info']['flags']['noframework'] = true;
 			$allGroups = self:: getAllGroups();
 			$allUsers = self::getAllUsers();
 			$applications = self::getAllApps();	
@@ -213,6 +214,7 @@
 		}
 
 		function editProfile($_profileID='') {
+			$GLOBALS['phpgw_info']['flags']['noframework'] = true;
 			$allGroups = self:: getAllGroups();
 			$allUsers = self::getAllUsers();
 			$applications = self::getAllApps();
