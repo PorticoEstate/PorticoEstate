@@ -85,6 +85,15 @@
 				);
 			}
 
+			if (! $GLOBALS['phpgw']->acl->check('sync_account', PHPGW_ACL_READ, 'admin'))
+			{
+				$menus['admin']['sync_account'] = array
+				(
+					'text'	=> $GLOBALS['phpgw']->translation->translate('Sync Account-Contact', array(), true),
+					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.uiaccounts.sync_accounts_contacts') )
+				);
+			}
+
 			if (! $GLOBALS['phpgw']->acl->check('applications_access', phpgwapi_acl::READ, 'admin'))
 			{
 				$menus['admin']['apps'] = array
