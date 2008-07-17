@@ -80,6 +80,8 @@
 		
 		var $resultSet;
 		
+		var $fetchmode = 'BOTH';
+		
 		/**
 		* Constructor
 		* @param string $query query to be executed (optional)
@@ -134,29 +136,7 @@
 		{
 
 		}
-
-		/**
-		* Get current connection id
-		* @return int current connection id
-		*/
-		function link_id()
-		{
-			if(!$this->adodb->isConnected())
-			{
-				$this->connect();
-			}
-			return $this->adodb->_connectionID;
-		}
-
-		/**
-		* Get current query id
-		* @return int id of current query
-		*/
-		public function query_id()
-		{
-			return $this->Query_ID;
-		}
-
+	
 		/**
 		* Open a connection to a database
 		*
@@ -290,7 +270,15 @@
 				}
 				else
 				{
-					$this->resultSet = $this->db->query($sql);
+					$stmt = $this->db->query($sql);
+					if($this->fetchmode == 'ASSOC')
+					{
+						$this->resultSet = $stmt->fetchAll(PDO::FETCH_ASSOC);
+					}
+					else
+					{
+						$this->resultSet = $stmt->fetchAll(PDO::FETCH_BOTH);
+					}
 				}
 			}
 
@@ -363,7 +351,8 @@
 
 			try
 			{
-				$this->resultSet = $this->db->query($Query_String);
+				$stmt = $this->db->query($Query_String);
+				$this->resultSet = $stmt->fetchAll(PDO::FETCH_BOTH);
 			}
 
 			catch(PDOException $e)
@@ -394,16 +383,16 @@
 		*/
 		public function next_record()
 		{
-			if($this->resultSet && count($this->resultSet))
+			if($this->resultSet && current($this->resultSet))
 			{
 				if($this->delayPointer)
 				{
 					$this->delayPointer = false;
-					$this->Record =& $this->resultSet;
+					$this->Record = current($this->resultSet);
 					return true;
 				}
 	
-				if(!$this->resultSet->EOF)
+		//		if($this->resultSet)
 				{
 					$row = next($this->resultSet);
 					$this->Record =& $row;
