@@ -23,7 +23,7 @@
 
 	   You should have received a copy of the GNU General Public License
 	   along with this program.  If not, see <http://www.gnu.org/licenses/>.
-	 */
+	*/
 
 	/**
 	 * Property - Item Groups Logic Class
@@ -31,9 +31,9 @@
 	 * @package phpgroupware
 	 * @subpackage property
 	 */
-
 	class property_bo_item_groups
 	{
+
 		protected $_so;
 
 		public function __construct()
@@ -55,5 +55,4 @@
 		public function save(property_item_group $item_group)
 		{
 		}
-
 	}

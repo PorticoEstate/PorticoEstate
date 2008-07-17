@@ -1,14 +1,14 @@
 <?php
 	/**
-	* Property - Attribute Value Data Class
-	*
-	* @author Dave Hall <skwashd@phpgroupware.org>
-	* @copyright (c) 2008 Dave Hall http://davehall.com.au
-	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License Version 3
-	* @version $Id$
-	* @package phpgroupware
-	* @subpackage property
-	*/
+	 * Property - Attribute Value Data Class
+	 *
+	 * @author Dave Hall <skwashd@phpgroupware.org>
+	 * @copyright (c) 2008 Dave Hall http://davehall.com.au
+	 * @license http://www.gnu.org/licenses/gpl.html GNU General Public License Version 3
+	 * @version $Id$
+	 * @package phpgroupware
+	 * @subpackage property
+	 */
 
 	/*
 		This program is free software: you can redistribute it and/or modify
@@ -23,16 +23,17 @@
 
 		You should have received a copy of the GNU General Public License
 		along with this program.  If not, see <http://www.gnu.org/licenses/>.
-	 */
+	*/
 
 	/**
-	* Property - Attribute Value Data Class
-	*
-	* @package phpgroupware
-	* @subpackage property
-	*/
+	 * Property - Attribute Value Data Class
+	 *
+	 * @package phpgroupware
+	 * @subpackage property
+	 */
 	class property_attribute_value
 	{
+
 		/**
 		 * @param property_attribute attribute object for value
 		 */

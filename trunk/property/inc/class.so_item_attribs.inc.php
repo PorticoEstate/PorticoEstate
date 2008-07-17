@@ -33,33 +33,121 @@
 	 */
 	class property_so_item_attribs
 	{
+
+		/**
+		 * @var phpgwapi_db $_db Reference to global database object
+		 */
 		protected $_db;
 
+		/**
+		 * Constructor
+		 *
+		 * @return void
+		 */
 		public function __construct()
 		{
+			$this->_db = & $GLOBALS['phpgw']->db;
 		}
 
-		public function add(property_attribute $item)
+		/**
+		 * Add a new attribute to the database
+		 *
+		 * @param property_attribute $attrib
+		 */
+		public function add(property_attribute $attrib)
 		{
+			// prepare object and store it in the database
 		}
 
+		/**
+		 * Disable an attribute in the database
+		 *
+		 * @param integer $attrib_id the attribute id
+		 *
+		 * @return bool was the attribute disabled
+		 */
 		public function disable($attrib_id)
 		{
+			$sql = 'UPDATE property_attributes SET is_active = 0'
+				. ' WHERE attrib_id = ' . (int) $attrib_id;
+
+			$this->_db->query($sql);
+
+			return $this->_db->affected_rows == 1;
 		}
 
+		/**
+		 * Edit an existing attribute
+		 *
+		 * @param property_attribute $attrib the new values for the attribute
+		 *
+		 * @return bool was the item updated?
+		 */
 		public function edit(property_attribute $attrib)
 		{
+			// prepare and store the new attribute values
 		}
 
+		/**
+		 * Find attributes in the database
+		 *
+		 * @param array $criteria the search criteria
+		 *
+		 * @return array list of property_attributes - empty array if none found
+		 */
 		public function find(array $criteria)
 		{
+			$attribs = array();
+
+			// process criteria
+
+			// execute query
+
+			return $attribs;
 		}
 
+		/**
+		 * Fetch and attribute from the database
+		 *
+		 * @param integer $attrib_id the attribute to fetch
+		 *
+		 * @return property_attribute
+		 */
 		public function get($attrib_id)
 		{
+			$attrib_id = (int) $attrib_id;
+
+			$sql = 'SELECT * FROM property_attributes'
+				. " WHERE attribute_id = {$attrib_id}";
+
+			$this->_db->query($sql);
+			if ( ! $this->_db->next_record() )
+			{
+				throw new InvalidAttributeException("Invalid attribute id: {$attrib_id}");
+			}
+
+			$record = array(); // record values here
+
+			$attrib = new property_attribute($record);
+
+			return $attrib;
 		}
 
-		protected function _diff(property_attribute $item)
+		/**
+		 * Compare the values of property_attribute object
+		 *
+		 * @param property_attribute $attrib the new object
+		 *
+		 * @return array the changed values
+		 */
+		protected function _diff(property_attribute $attrib)
 		{
+			$changes = array();
+
+			$old_attrib = $this->get($attrib->id);
+
+			// process changes
+
+			return $changes;
 		}
 	}

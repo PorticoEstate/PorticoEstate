@@ -33,34 +33,89 @@
 	 */
 	class property_ui_item_groups_admin
 	{
+		/**
+		 * @var $_bo item groups logic layer
+		 */
 		protected $_bo;
+
+		/**
+		 * @var $_nm next matches paging object
+		 */
 		protected $_nm;
+
+		/**
+		 * @var $_xslt reference to global XSLT template class
+		 */
 		protected $_xslt;
 
+		/**
+		 * Constructor
+		 *
+		 * @return void
+		 */
 		public function __construct()
 		{
+			$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
+
+			$this->_bo = createObject('property.bo_items');
+
+			$this->_nm = createObject('phpgwapi.phpgwapi.nextmatchs');
+
+			$this->_xslt =& $GLOBALS['phpgw']->xslttpl;
 		}
 
-		public function form()
-		{
-		}
-
-		public function delete()
-		{
-		}
-
-		public function show()
-		{
-		}
-
-		public function show_list()
-		{
-		}
-
+		/**
+		 * Assign catalog items to a group
+		 *
+		 * @return void
+		 */
 		public function assign()
 		{
 		}
 
+		/**
+		 * Delete an item group
+		 *
+		 * @return void
+		 */
+		public function delete()
+		{
+		}
+
+		/**
+		 * Render the add edit form
+		 *
+		 * @return void
+		 */
+		public function form()
+		{
+		}
+
+		/**
+		 * Display an item group record
+		 *
+		 * @return void
+		 */
+		public function show()
+		{
+		}
+
+		/**
+		 * Render a list of item groups
+		 *
+		 * @return void
+		 */
+		public function show_list()
+		{
+		}
+
+		/**
+		 * Prepare an item group before being displayed in a form
+		 *
+		 * @param
+		 *
+		 * @return void
+		 */
 		protected function _object_to_form(property_item_group $item_group)
 		{
 		}

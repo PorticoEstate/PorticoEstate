@@ -31,9 +31,9 @@
 	 * @package phpgroupware
 	 * @subpackage property
 	 */
-
 	class property_bo_item_catalogs
 	{
+
 		protected $_so;
 
 		public function __construct()

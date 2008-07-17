@@ -1,14 +1,14 @@
 <?php
 	/**
-	* Property - Item Data Class
-	*
-	* @author Dave Hall <skwashd@phpgroupware.org>
-	* @copyright (c) 2008 Dave Hall http://davehall.com.au
-	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License Version 3
-	* @version $Id$
-	* @package phpgroupware
-	* @subpackage property
-	*/
+	 * Property - Item Data Class
+	 *
+	 * @author Dave Hall <skwashd@phpgroupware.org>
+	 * @copyright (c) 2008 Dave Hall http://davehall.com.au
+	 * @license http://www.gnu.org/licenses/gpl.html GNU General Public License Version 3
+	 * @version $Id$
+	 * @package phpgroupware
+	 * @subpackage property
+	 */
 
 	/*
 		This program is free software: you can redistribute it and/or modify
@@ -26,13 +26,14 @@
 	 */
 
 	/**
-	* Property - Item Data Class
-	*
-	* @package phpgroupware
-	* @subpackage property
-	*/
+	 * Property - Item Data Class
+	 *
+	 * @package phpgroupware
+	 * @subpackage property
+	 */
 	class property_item
 	{
+
 		/**
 		 * @var array $attribute array of property_attribute_values for tem
 		 */
@@ -80,7 +81,6 @@
 				{
 					default:
 						throw new InvalidItemException("Invalid Key: {$key}");
-
 					case 'id':
 					case 'catalog_id':
 					case 'parent':
@@ -89,17 +89,15 @@
 							throw new InvalidItemException("Invalid value for {$key}: {$value}");
 						}
 						break;
-
 					case 'attributes':
 					case 'location':
 					case 'vendor':
-						//validation
+					//validation
 				}
-
 				$this->$key = $value;
 			}
 		}
-		
+
 		/**
 		 * Magic string casting handler
 		 *

@@ -31,39 +31,89 @@
 	 * @package phpgroupware
 	 * @subpackage property
 	 */
-
 	class property_ui_item_attribs_admin
 	{
+		/**
+		 * @var $_bo attributes logic layer
+		 */
 		protected $_bo;
 
-		protected $_xslt;
-
+		/**
+		 * @var $_nm next matches paging object
+		 */
 		protected $_nm;
 
+		/**
+		 * @var $_xslt reference to global XSLT template class
+		 */
+		protected $_xslt;
+
+		/**
+		 * Constructor
+		 *
+		 * @return void
+		 */
 		public function __construct()
 		{
+			$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
+
+			$this->_bo = createObject('property.bo_items');
+
+			$this->_nm = createObject('phpgwapi.phpgwapi.nextmatchs');
+
+			$this->_xslt =& $GLOBALS['phpgw']->xslttpl;
 		}
 
+		/**
+		 * Assign attributes to an item group
+		 */
 		public function assign()
 		{
 		}
 
-		public function form()
-		{
-		}
-
+		/**
+		 * Disable an attribute
+		 *
+		 * @return void
+		 */
 		public function disable()
 		{
 		}
 
+		/**
+		 * Render add/edit form
+		 *
+		 * @return void
+		 */
+		public function form()
+		{
+		}
+
+		/**
+		 * Display an attribute
+		 *
+		 * @return void
+		 */
 		public function show()
 		{
 		}
 
+		/**
+		 * Render list of attributes
+		 *
+		 * @return void
+		 */
 		public function show_list()
 		{
 		}
 
+		/**
+		 * Prepare attribute for rendered in a form
+		 *
+		 * @param property_attribute $attrib the attribute to convert
+		 *
+		 * @return void
+		 */
 		protected function _object_to_form(property_attribute $attrib)
 		{
 		}

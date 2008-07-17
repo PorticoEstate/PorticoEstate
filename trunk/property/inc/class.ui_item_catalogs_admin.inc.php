@@ -33,35 +33,81 @@
 	 */
 	class property_ui_item_catalogs_admin
 	{
+
+		/**
+		 * @var $_bo item catalogs business logic
+		 */
 		protected $_bo;
 
+		/**
+		 * @var $_nm next matches paging object
+		 */
 		protected $_nm;
 
+		/**
+		 * @var $_xslt reference to global XSLT template class
+		 */
 		protected $_xslt;
 
+		/**
+		 * Constructor
+		 *
+		 * @return void
+		 */
 		public function __construct()
 		{
+			$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
+
+			$this->_bo = createObject('property.bo_items');
+
+			$this->_nm = createObject('phpgwapi.phpgwapi.nextmatchs');
+
+			$this->_xslt =& $GLOBALS['phpgw']->xslttpl;
 		}
 
-		public function assign()
-		{
-		}
-
+		/**
+		 * Delete an item catalog
+		 *
+		 * @return void
+		 */
 		public function delete()
 		{
 		}
 
+		/**
+		 * Render an item catalog in a form
+		 *
+		 * @return void
+		 */
 		public function form()
 		{
 		}
 
+		/**
+		 * Display an item catalog
+		 *
+		 * @return void
+		 */
 		public function show()
 		{
 		}
 
+		/**
+		 * Render a list of item catalogs
+		 *
+		 * @return void
+		 */
 		public function show_list()
 		{
 		}
+
+		/**
+		 * Prepare an item group for being added to a form
+		 *
+		 * @param
+		 *
+		 * @return void
+		 */
 
 		protected function _object_to_form(property_item_catalog $item_catalog)
 		{

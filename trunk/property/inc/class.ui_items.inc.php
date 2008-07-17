@@ -31,29 +31,81 @@
 	 * @package phpgroupware
 	 * @subpackage property
 	 */
-
 	class property_ui_items
 	{
+
+		/**
+		 * @var $_bo items logic layer
+		 */
 		protected $_bo;
+
+		/**
+		 * @var $_nm next matches paging object
+		 */
 		protected $_nm;
+
+		/**
+		 * @var $_xslt reference to global XSLT template class
+		 */
 		protected $_xslt;
 
+		/**
+		 * Constructor
+		 *
+		 * @return void
+		 */
+		public function __construct()
+		{
+			$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
+
+			$this->_bo = createObject('property.bo_items');
+
+			$this->_nm = createObject('phpgwapi.phpgwapi.nextmatchs');
+
+			$this->_xslt =& $GLOBALS['phpgw']->xslttpl;
+		}
+
+		/**
+		 * Delete an item
+		 *
+		 * @return void
+		 */
 		public function delete()
 		{
 		}
 
+		/**
+		 * Render the add edit form
+		 *
+		 * @return void
+		 */
 		public function form()
 		{
 		}
 
+		/**
+		 * Display an item record
+		 *
+		 * @return void
+		 */
 		public function show()
 		{
 		}
 
+		/**
+		 * Render a list of items
+		 *
+		 * @return void
+		 */
 		public function show_list()
 		{
 		}
 
+		/**
+		 * Prepare an item for being displayed in a form
+		 *
+		 * @return void
+		 */
 		protected function _object_to_form(property_item $item)
 		{
 		}
