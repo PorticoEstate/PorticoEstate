@@ -9,7 +9,6 @@
 	 * @package phpgroupware
 	 * @subpackage property
 	 */
-
 	/*
 	   This program is free software: you can redistribute it and/or modify
 	   it under the terms of the GNU General Public License as published by
@@ -23,17 +22,16 @@
 
 	   You should have received a copy of the GNU General Public License
 	   along with this program.  If not, see <http://www.gnu.org/licenses/>.
-	 */
-
+		 */
 	/**
 	 * Property - Item Attributes Logic Class
 	 *
 	 * @package phpgroupware
 	 * @subpackage property
 	 */
-
 	class property_bo_item_attribs
 	{
+
 		protected $_so;
 
 		public function __construct()

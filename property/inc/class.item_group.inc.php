@@ -1,15 +1,14 @@
 <?php
 	/**
-	* Property - Item Groups Data Class
-	*
-	* @author Dave Hall <skwashd@phpgroupware.org>
-	* @copyright (c) 2008 Dave Hall http://davehall.com.au
-	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License Version 3
-	* @version $Id$
-	* @package phpgroupware
-	* @subpackage property
-	*/
-
+	 * Property - Item Groups Data Class
+	 *
+	 * @author Dave Hall <skwashd@phpgroupware.org>
+	 * @copyright (c) 2008 Dave Hall http://davehall.com.au
+	 * @license http://www.gnu.org/licenses/gpl.html GNU General Public License Version 3
+	 * @version $Id$
+	 * @package phpgroupware
+	 * @subpackage property
+	 */
 	/*
 		This program is free software: you can redistribute it and/or modify
 		it under the terms of the GNU General Public License as published by
@@ -24,16 +23,15 @@
 		You should have received a copy of the GNU General Public License
 		along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	 */
-
 	/**
-	* Property - Item Groups Data Class
-	*
-	* @package phpgroupware
-	* @subpackage property
-	*/
-
+	 * Property - Item Groups Data Class
+	 *
+	 * @package phpgroupware
+	 * @subpackage property
+	 */
 	class property_item_group
 	{
+
 		/**
 		 * @var integer $id item group identifier
 		 */
@@ -71,24 +69,21 @@
 				{
 					default:
 						throw new InvalidItemGroupException("Invalid key: {$key}");
-
 					case 'id':
 						if ( $value != (int) $value )
 						{
 							throw new InvalidItemGroupException("Invalid value for {$key}: {$value}");
 						}
 						break;
-
 					case 'name':
 					case 'nat_std_no':
 					case 'part_no':
-						//validation
+					//validation
 				}
-
 				$this->$key = $value;
 			}
 		}
-	
+
 		/**
 		 * Magic string caste handler
 		 *

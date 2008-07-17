@@ -36,17 +36,39 @@
 	 * @package phpgroupware
 	 * @subpackage property
 	 */
-	class property_ui_items_admin extends property_ui_items 
+	class property_ui_items_admin extends property_ui_items
 	{
+
+		/**
+		 * Constructor
+		 *
+		 * @return void
+		 */
 		public function __construct()
 		{
+			if ( $user != 'admin' )
+			{
+				// this needs to be implemented
+				execMethod('property.ui_common.denied');
+			}
+
 			parent::__construct();
 		}
 
+		/**
+		 * Import a list of items from a file
+		 *
+		 * @return void
+		 */
 		public function import()
 		{
 		}
 
+		/**
+		 * Purge history for item attributes changed more than X Ys in the past
+		 *
+		 * @return void
+		 */
 		public function purge_history()
 		{
 		}

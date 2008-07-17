@@ -1,14 +1,14 @@
 <?php
 	/**
-	* Property - Attribute Data Class
-	*
-	* @author Dave Hall <skwashd@phpgroupware.org>
-	* @copyright (c) 2008 Dave Hall http://davehall.com.au
-	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License Version 3
-	* @version $Id$
-	* @package phpgroupware
-	* @subpackage property
-	*/
+	 * Property - Attribute Data Class
+	 *
+	 * @author Dave Hall <skwashd@phpgroupware.org>
+	 * @copyright (c) 2008 Dave Hall http://davehall.com.au
+	 * @license http://www.gnu.org/licenses/gpl.html GNU General Public License Version 3
+	 * @version $Id$
+	 * @package phpgroupware
+	 * @subpackage property
+	 */
 
 	/*
 		This program is free software: you can redistribute it and/or modify
@@ -26,13 +26,14 @@
 	 */
 
 	/**
-	* Property - Attribute Data Class
-	*
-	* @package phpgroupware
-	* @subpackage property
-	*/
+	 * Property - Attribute Data Class
+	 *
+	 * @package phpgroupware
+	 * @subpackage property
+	 */
 	class property_attribute
 	{
+
 		/**
 		 * @var string $data_type the type of data stored by the attribute
 		 */
@@ -80,22 +81,19 @@
 				{
 					default:
 						throw new InvalidAttributeException("Invalid key: {$key}");
-
 					case 'id':
 						if ( $value != (int) $value )
 						{
 							throw new InvalidAttributeException("Invalid vvalue for {$key}: {$value}");
 						}
 						break;
-
 					case 'data_type':
 					case 'descr':
 					case 'display_name':
 					case 'name':
 					case 'unit':
-						//validation
+					//validation
 				}
-
 				$this->$key = $value;
 			}
 		}
@@ -109,4 +107,4 @@
 		{
 			return (string) $this->display_name;
 		}
-	}
+}
