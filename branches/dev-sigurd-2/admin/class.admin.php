@@ -25,7 +25,7 @@
 			$args->set('isadmin', False, 'bool');
 			$args = $args->get(func_get_args(),__LINE__,__FILE__);
 
-			if(isset($args['username'])
+			if(isset($args['username']))
 			{
 				$account_info['account_lid'] = $args['username'];
 				$account_info['account_passwd'] = $args['passwd'];
