@@ -352,7 +352,14 @@
 			try
 			{
 				$stmt = $this->db->query($Query_String);
-				$this->resultSet = $stmt->fetchAll(PDO::FETCH_BOTH);
+				if($this->fetchmode == 'ASSOC')
+				{
+					$this->resultSet = $stmt->fetchAll(PDO::FETCH_ASSOC);
+				}
+				else
+				{
+					$this->resultSet = $stmt->fetchAll(PDO::FETCH_BOTH);
+				}
 			}
 
 			catch(PDOException $e)
@@ -931,38 +938,64 @@
 			return $datetime_format;
 	 	}
 				
-	 	/**
-		* Prepare SQL statement
-		*
-		* @param string $query SQL query
-		* @return integer|boolean Result identifier for query_prepared_statement() or FALSE
-		* @see query_prepared_statement()
-		*/
-		public function prepare_sql_statement($query)
-		{
-			//echo "depi";
-			if (($query == '') || (!$this->connect()))
+
+		/**
+		 * Execute prepared SQL statement for insert
+		 *
+		 * @param string $sql_string 
+		 * @param array $valueset  values,id and datatypes for the insert 
+		 * @return boolean TRUE on success or FALSE on failure
+		 */
+
+		public function insert($sql_string, $valueset, $line = '', $file = '')
+		{		
+			try
 			{
-				return false;
+				$sth = $this->db->prepare($sql_string);
+				foreach($valueset as $fields)
+				{
+					foreach($fields as $field => $entry)
+					{
+						$sth->bindParam($field, $entry['value'], $entry['type']=='string' ? PDO::PARAM_STR : PDO::PARAM_INT);
+					}
+					$ret = $sth->execute();
+				}
 			}
-			return false;
+
+			catch(PDOException $e)
+			{
+				trigger_error('Error: ' . $e->getMessage() . "<br>SQL: $sql\n in File: $file\n on Line: $line\n", E_USER_ERROR);
+			}
+			return $ret;
 		}
 
 		/**
-		 * Execute prepared SQL statement
+		 * Execute prepared SQL statement for select
 		 *
-		 * @param resource $result_id Result identifier from prepare_sql_statement()
-		 * @param array $parameters_array Parameters for the prepared SQL statement
+		 * @param string $sql_string 
+		 * @param array $params conditions for the select 
 		 * @return boolean TRUE on success or FALSE on failure
-		 * @see prepare_sql_statement()
 		 */
-		public function query_prepared_statement($result_id, $parameters_array)
-		{
-			if ((!$this->connect()) || (!$result_id))
-			{
-				return false;
-			}
-			return false;
-		}  
 
+		public function select($sql_string, $params, $line = '', $file = '')
+		{		
+			try
+			{
+				$sth = $this->db->prepare($sql_string);
+				$sth->execute($params);
+				if($this->fetchmode == 'ASSOC')
+				{
+					$this->resultSet = $sth->fetchAll(PDO::FETCH_ASSOC);
+				}
+				else
+				{
+					$this->resultSet = $sth->fetchAll(PDO::FETCH_BOTH);
+				}
+			}
+			catch(PDOException $e)
+			{
+				trigger_error('Error: ' . $e->getMessage() . "<br>SQL: $sql\n in File: $file\n on Line: $line\n", E_USER_ERROR);
+			}
+			$this->delayPointer = true;
+		}
 	}
