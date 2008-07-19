@@ -501,70 +501,55 @@
 		}
 
 		/**
-		* Find the primary key of the last insertion on the current db connection
+		* Find the value of the last insertion on the current db connection
+		* To use this function safely in Postgresql you MUST wrap it in a beginTransaction() commit() block
 		*
 		* @param string $table name of table the insert was performed on
-		* @param string $field the autoincrement primary key of the table
+		* @param string $field not needed - kept for backward compatibility
 		* @return integer the id, -1 if fails
 		*/
-		public function get_last_insert_id($table, $field)
-		{
-			
-			return $this->db->lastInsertId();
-			
+		public function get_last_insert_id($table, $field = '')
+		{			
 			switch ( $GLOBALS['phpgw_info']['server']['db_type'] )
 			{
 				case 'postgres':
-					$params = explode('.',$this->adodb->pgVersion);
-
-					if ($params[0] < 8 || ($params[0] == 8 && $params[1] ==0))
-					{
-						$oid = pg_getlastoid($this->adodb->_resultid);
-						if ($oid == -1)
-						{
-							return -1;
-						}
-
-						$result = @pg_Exec($this->adodb->_connectionID, "select $field from $table where oid=$oid");
-					}
-					else
-					{
-						$result = @pg_Exec($this->adodb->_connectionID, "select lastval()");
-					}
-	
-					if (!$result)
-					{
-						return -1;
-					}
-
-					$Record = @pg_fetch_array($result, 0);
-
-					@pg_freeresult($result);
-					if (!is_array($Record)) /* OID not found? */
-					{
-						return -1;
-					}
-					return $Record[0];
+					$sequence = $this->_get_sequence_field_for_table($table);
+					$ret = $this->db->lastInsertId($sequence);
 					break;
 				case 'mssql':
-					/*  MSSQL uses a query to retrieve the last
-					 *  identity on the connection, so table and field are ignored here as well.
-					 */
-					if(!isset($table) || $table == '' || !isset($field) || $field == '')
-					{
-					return -1;
-					}
-					$result = @mssql_query("select @@identity", $this->adodb->_queryID);
-					if(!$result)
-					{
-						return -1;
-					}
-					return mssql_result($result, 0, 0);
+					$this->query("SELECT @@identity", __LINE__, __FILE__);
+					$this->next_record();
+					$ret = $this->f(0);
 					break;
 				default:
-					return $this->db->lastInsertId();
+					$ret = $this->db->lastInsertId();
 			}
+
+			if($ret)
+			{
+				return $ret;
+			}
+			return -1;
 		}
+
+		/**
+		* Find the name of sequense for postgres
+		*
+		* @param string $table name of table
+		* @return string name of the sequense, false if fails
+		*/
+		protected function _get_sequence_field_for_table($table)
+		{
+			$sql = "SELECT relname FROM pg_class WHERE NOT relname ~ 'pg_.*'"
+				. " AND relname LIKE '%$table%' AND relkind='S' ORDER BY relname";
+			$this->query($sql,__LINE__,__FILE__);
+			if ($this->next_record())
+			{
+				return $this->f('relname');
+			}
+			return false;
+		}
+
 
 		/**
 		* Lock a table
@@ -848,7 +833,7 @@
 		*/
 		public function halt($msg, $line = '', $file = '')
 		{
-			$this->adodb->RollbackTrans();
+			$this->db->rollBack();
 		}
 		
 		/**
