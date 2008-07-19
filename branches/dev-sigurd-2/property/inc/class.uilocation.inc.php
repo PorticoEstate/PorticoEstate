@@ -803,17 +803,15 @@
 					}
 				}
 			}
+
+			$values['attributes']	= $this->bo->find_attribute(".location.{$this->type_id}");
+			$values					= $this->bo->prepare_attribute($values, ".location.{$this->type_id}");
+
 			/* Preserve attribute values from post */
 			if(isset($receipt['error']) && (isset( $values_attribute) && is_array( $values_attribute)))
 			{
 				$values = $this->bocommon->preserve_attribute_values($values,$values_attribute);
 				unset($values['location_code']);
-			}
-
-			if(!$values)
-			{
-				$values['attributes']	= $this->bo->find_attribute(".location.{$this->type_id}");
-				$values					= $this->bo->prepare_attribute($values, ".location.{$this->type_id}");
 			}
 
 			if ($values['cat_id'] > 0)

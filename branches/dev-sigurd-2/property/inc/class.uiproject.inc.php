@@ -756,6 +756,7 @@
 					if(isset($values['location']) && is_array($values['location']))
 					{
 						$location_code=implode("-", $values['location']);
+						$values['extra']['view'] = true;
 						$values['location_data'] = $bolocation->read_single($location_code,$values['extra']);
 					}
 

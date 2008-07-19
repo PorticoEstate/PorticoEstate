@@ -793,6 +793,7 @@
 					if($values['location'])
 					{
 						$location_code=implode("-", $values['location']);
+						$values['extra']['view'] = true;
 						$values['location_data'] = $this->bolocation->read_single($location_code,$values['extra']);
 					}
 					if($values['extra']['p_num'])

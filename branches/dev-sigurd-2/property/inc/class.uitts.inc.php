@@ -1120,7 +1120,8 @@
 					if(isset($values['location']) && $values['location'])
 					{
 						$location_code=implode("-", $values['location']);
-						$values['location_data'] = $bolocation->read_single($location_code,(isset($values['extra'])?$values['extra']:false));
+						$values['extra']['view'] = true;
+						$values['location_data'] = $bolocation->read_single($location_code, $values['extra']);
 					}
 					if(isset($values['extra']['p_num']) && $values['extra']['p_num'])
 					{
