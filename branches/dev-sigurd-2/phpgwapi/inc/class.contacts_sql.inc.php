@@ -1144,19 +1144,12 @@
 			}
 
 			$this->total_records = $this->db->num_rows();
-			$persons = false;
+			$persons = array();
 
-		/*	while ($this->db->next_record())
+			while ($this->db->next_record())
 			{
-				$persons[] = $this->db->resultSet->fetchRow();
+				$persons[] = $this->db->Record;
 			}
-		*/
-
-			while (!$this->db->resultSet->EOF)
-			{
-				$persons[] = $this->db->resultSet->fetchRow();
-			}
-
 			return $persons;
 		}
 
