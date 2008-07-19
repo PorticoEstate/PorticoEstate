@@ -240,7 +240,12 @@
 		*/
 		public function db_addslashes($str)
 		{
-			return addslashes($str);
+			if ( is_null($str) )
+			{
+				return '';
+			}
+
+			return substr($this->db->quote($str), 1, -1);
 		}
 
 		/**
