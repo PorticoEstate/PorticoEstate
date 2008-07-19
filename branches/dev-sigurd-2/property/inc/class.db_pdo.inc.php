@@ -166,13 +166,15 @@
 			{
 				$this->Password = $Password;
 			}
+
+			$persistent = isset($GLOBALS['phpgw_info']['server']['db_persistent']) && $GLOBALS['phpgw_info']['server']['db_persistent'] ? true : false;
 			switch ( $this->Type )
 			{
 				case 'postgres':
-					$this->db = new PDO("pgsql:dbname={$this->Database};host={$this->Host}", $this->User, $this->Password);
+					$this->db = new PDO("pgsql:dbname={$this->Database};host={$this->Host}", $this->User, $this->Password, array(PDO::ATTR_PERSISTENT => $persistent));
 					break;
 				case 'mysql':
-					$this->db = new PDO("mysql:host={$this->Host};dbname={$this->Database}", $this->User, $this->Password);
+					$this->db = new PDO("mysql:host={$this->Host};dbname={$this->Database}", $this->User, $this->Password, array(PDO::ATTR_PERSISTENT => $persistent));
 					break;
 				case 'sybase':
 				case 'mssql':
@@ -180,7 +182,7 @@
 					* On Windows, you should use the PDO_ODBC  driver to connect to Microsoft SQL Server and Sybase databases,
 					* as the native Windows DB-LIB is ancient, thread un-safe and no longer supported by Microsoft.
 					*/
-					$this->db = new PDO("mssql:host={$this->Host},1433;dbname={$this->Database}", $this->User, $this->Password);
+					$this->db = new PDO("mssql:host={$this->Host},1433;dbname={$this->Database}", $this->User, $this->Password, array(PDO::ATTR_PERSISTENT => $persistent));
 					break;
 				case 'oracle':
 					$this->db = new PDO("OCI:dbname={$this->Database};charset=UTF-8", $this->User, $this->Password);
