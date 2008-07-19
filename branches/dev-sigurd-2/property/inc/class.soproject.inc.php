@@ -778,10 +778,10 @@
 
 			if (($old_status != $project['status']) || $project['confirm_status'])
 			{
-				$this->db2->query("SELECT id from fm_workorder WHERE project_id=" .  (int)$project['project_id'] ,__LINE__,__FILE__);
-				while ($this->db2->next_record())
+				$this->db->query("SELECT id from fm_workorder WHERE project_id=" .  (int)$project['project_id'] ,__LINE__,__FILE__);
+				while ($this->db->next_record())
 				{
-					$workorder[] = $this->db2->f('id');
+					$workorder[] = $this->db->f('id');
 				}
 
 				if (isset($workorder) AND is_array($workorder))
@@ -848,7 +848,7 @@
 		{
 			for ($i=0;$i<count($request_id);$i++)
 			{
-				$this->db2->query("update fm_request set project_id = NULL where id='". $request_id[$i] . "'",__LINE__,__FILE__);
+				$this->db->query("update fm_request set project_id = NULL where id='". $request_id[$i] . "'",__LINE__,__FILE__);
 				$this->db->query("DELETE FROM fm_origin WHERE destination ='project' AND origin_id='" . $request_id[$i] . "' AND origin='request'",__LINE__,__FILE__);
 				$receipt['message'][] = array('msg'=>lang('Request %1 has been deleted from project %2',$request_id[$i],$project_id));
 			}
@@ -894,7 +894,7 @@
 					$historylog_r->add('C',$request_id[$i],$coordinator);
 				}
 
-				$this->db2->query("update fm_request set status='$status',coordinator='$coordinator' where id='". $request_id[$i] . "'",__LINE__,__FILE__);
+				$this->db->query("update fm_request set status='$status',coordinator='$coordinator' where id='". $request_id[$i] . "'",__LINE__,__FILE__);
 			}
 		}
 
@@ -929,7 +929,7 @@
 						. $this->account . ","
 						. time() . ")",__LINE__,__FILE__);
 
-					$this->db2->query("update fm_request set project_id='$id' where id='". $add_request['request_id'][$i] . "'",__LINE__,__FILE__);
+					$this->db->query("update fm_request set project_id='$id' where id='". $add_request['request_id'][$i] . "'",__LINE__,__FILE__);
 
 					$receipt['message'][] = array('msg'=>lang('request %1 has been added',$add_request['request_id'][$i]));
 				}
@@ -966,7 +966,7 @@
 			for ($i=0;$i<count($request_id);$i++)
 			{
 
-				$this->db2->query("update fm_request set project_id = NULL where id='". $request_id[$i] . "'",__LINE__,__FILE__);
+				$this->db->query("update fm_request set project_id = NULL where id='". $request_id[$i] . "'",__LINE__,__FILE__);
 			}
 
 			$this->db->query("DELETE FROM fm_project WHERE id='" . $project_id . "'",__LINE__,__FILE__);
