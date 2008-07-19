@@ -102,7 +102,7 @@
 				$args_count = count($entry['args']);
 				foreach ( $entry['args'] as $anum => $arg )
 				{
-					if ( is_array($arg) || is_object($arg) )
+					if ( is_array($arg) )
 					{
 						$line .= 'serialized_value = ' . serialize($arg);
 						continue;
@@ -115,9 +115,13 @@
 					{
 						$line .= '***REMOVED_FOR_SECURITY***';
 					}
+					else if(is_object($arg))
+					{
+						continue;
+					}
 					else
 					{
-						$line .= $arg;
+						$line .= $arg;					
 					}
 
 					if ( ($anum + 1) != $args_count )
