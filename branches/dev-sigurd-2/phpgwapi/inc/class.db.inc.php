@@ -3,6 +3,7 @@
 	* Database abstraction class
 	* @author NetUSE AG Boris Erdmann, Kristian Koehntopp
    	* @author Dan Kuykendall, Dave Hall and others
+   	* @author Sigurd Nes
 	* @copyright Copyright (C) 1998-2000 NetUSE AG Boris Erdmann, Kristian Koehntopp
 	* @copyright Portions Copyright (C) 2001-2006 Free Software Foundation, Inc. http://www.fsf.org/
 	* @license http://www.fsf.org/licenses/lgpl.html GNU Lesser General Public License
@@ -16,10 +17,6 @@
 	{
 		$GLOBALS['phpgw_info']['server']['db_type'] = 'mysql';
 	}
-	/**
-	* Include concrete database implementation
-	*/
-	require_once PHPGW_API_INC . '/adodb/adodb.inc.php';
 
 	/**
 	* Database abstraction class to allow phpGroupWare to use multiple database backends
@@ -29,11 +26,15 @@
 	*/
 	class phpgwapi_db
 	{
-
 		/**
-		* @var object $adodb holds the ADOdb object
+		* @var object $adodb holds the legacy ADOdb object
 		*/
 		var $adodb;
+
+		/**
+		* @var object $db holds the db object
+		*/
+		var $db;
 
 		/**
 		* @var string $Host database hostname
@@ -87,6 +88,8 @@
 		
 		var $resultSet;
 		
+		var $fetchmode = 'BOTH';
+		
 		/**
 		* Constructor
 		* @param string $query query to be executed (optional)
@@ -117,7 +120,7 @@
 					//do nothing for now
 			}
 			
-			$this->new_adodb();
+			$this->connect();
 
 			if ( !is_null($query) )
 			{
@@ -130,58 +133,18 @@
 		*/
 		public function __clone()
 		{
-			//FIXME will be reenabled when cloning is sorted in property
-	//		$this->new_adodb();
-			$this->adodb = clone($this->adodb);
+
 		}
 
-		/**
-		* Create a new adodb object
-		*/
-		private function new_adodb()
-		{
-			$type = $this->Type;
-			if ( $type == 'mysql' )
-			{
-				$type = 'mysqlt';
-			}
-			$this->adodb = newADOConnection($this->Type);
-			$this->connect();
-			// FIXME would we should be able to just use ADODB_FETCH_ASSOC
-			$this->adodb->SetFetchMode(ADODB_FETCH_BOTH);
-		}
 
 		/**
 		* Destructor
 		*/
 		public function __destruct()
 		{
-			//FIXME will be reenabled when cloning is sorted in property
-	//		$this->disconnect();
-		}
 
-		/**
-		* Get current connection id
-		* @return int current connection id
-		*/
-		function link_id()
-		{
-			if(!$this->adodb->isConnected())
-			{
-				$this->connect();
-			}
-			return $this->adodb->_connectionID;
 		}
-
-		/**
-		* Get current query id
-		* @return int id of current query
-		*/
-		public function query_id()
-		{
-			return $this->Query_ID;
-		}
-
+	
 		/**
 		* Open a connection to a database
 		*
@@ -212,6 +175,72 @@
 				$this->Password = $Password;
 			}
 
+			$persistent = isset($GLOBALS['phpgw_info']['server']['db_persistent']) && $GLOBALS['phpgw_info']['server']['db_persistent'] ? true : false;
+			switch ( $this->Type )
+			{
+				case 'postgres':
+					$this->db = new PDO("pgsql:dbname={$this->Database};host={$this->Host}", $this->User, $this->Password, array(PDO::ATTR_PERSISTENT => $persistent));
+					break;
+				case 'mysql':
+					$this->db = new PDO("mysql:host={$this->Host};dbname={$this->Database}", $this->User, $this->Password, array(PDO::ATTR_PERSISTENT => $persistent));
+					break;
+				case 'sybase':
+				case 'mssql':
+					/*
+					* On Windows, you should use the PDO_ODBC  driver to connect to Microsoft SQL Server and Sybase databases,
+					* as the native Windows DB-LIB is ancient, thread un-safe and no longer supported by Microsoft.
+					*/
+					$this->db = new PDO("mssql:host={$this->Host},1433;dbname={$this->Database}", $this->User, $this->Password, array(PDO::ATTR_PERSISTENT => $persistent));
+					break;
+				case 'oracle':
+					$this->db = new PDO("OCI:dbname={$this->Database};charset=UTF-8", $this->User, $this->Password);
+					break;
+				case 'db2':
+					$port     = 50000; // configurable?
+					$this->db = new PDO("ibm:DRIVER={IBM DB2 ODBC DRIVER};DATABASE={$this->Database}; HOSTNAME={$this->Host};PORT=50000;PROTOCOL=TCPIP;", $this->User, $this->Password);
+					break;
+				case 'MSAccess':
+					$this->db = new PDO("odbc:Driver={Microsoft Access Driver (*.mdb)};Dbq=C:\accounts.mdb;Uid=Admin"); // FIXME: parameter for database location
+					break;
+				case 'dblib':
+					$port     = 10060; // configurable?
+					$this->db = new PDO("dblib:host={$this->Host}:{$port};dbname={$this->Database}", $this->User, $this->Password);
+					break;
+				case 'Firebird':
+					$this->db = new PDO("firebird:dbname=localhost:C:\Programs\Firebird\DATABASE.FDB", $this->User, $this->Password);// FIXME: parameter for database location
+					break;
+				case 'Informix':
+					//connect to an informix database cataloged as InformixDB in odbc.ini
+					$this->db = new PDO("informix:DSN=InformixDB", $this->User, $this->Password);
+					break;
+				case 'SQLite':
+					$this->db = new PDO("sqlite:/path/to/database.sdb"); // FIXME: parameter for database location
+					break;
+				case 'odbc':
+					$dsn = 'something';// FIXME
+					/*$dsn refers to the $dsn data source configured in the ODBC driver manager.*/
+					$this->db = new PDO("odbc:DSN={$dsn}", $this->User, $this->Password);
+				//	$this->db = new PDO("odbc:{$dsn}", $this->User, $this->Password);
+					break;
+				default:
+					//do nothing for now
+			}
+
+			if($this->Halt_On_Error == 'yes')
+			{
+				$this->db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+			}
+		}
+
+		/**
+		* Legacy supprt for quyering metadata from database
+		*
+		*/
+		protected function _connect_adodb()
+		{
+			require_once PHPGW_API_INC . '/adodb/adodb.inc.php';
+			$this->adodb = newADOConnection($this->Type);
+			$this->adodb->SetFetchMode(ADODB_FETCH_BOTH);
 			return @$this->adodb->connect($this->Host, $this->User, $this->Password, $this->Database);
 		}
 
@@ -220,7 +249,7 @@
 		*/
 		public function disconnect()
 		{
-			$this->adodb->close();
+			$this->db = null;
 		}
 
 		/**
@@ -236,11 +265,12 @@
 				return '';
 			}
 
-			if ( !is_object($this->adodb) )  //workaround
+			if ( !is_object($this->db) )  //workaround
 			{
 				return addslashes($str);
 			}
-			return substr($this->adodb->Quote($str), 1, -1);
+
+			return substr($this->db->quote($str), 1, -1);
 		}
 
 		/**
@@ -251,7 +281,8 @@
 		*/
 		public function to_timestamp($epoch)
 		{
-			return substr($this->adodb->DBTimeStamp($epoch), 1, -1);
+			trigger_error('Error: not working - use alterative', E_USER_ERROR);
+			return false;
 		}
 
 		/**
@@ -262,7 +293,8 @@
 		*/
 		public function from_timestamp($timestamp)
 		{
-			return $this->adodb->UnixTimeStamp($timestamp);
+			trigger_error('Error: not working - use alterative', E_USER_ERROR);
+			return false;
 		}
 
 		/**
@@ -291,31 +323,53 @@
 		* @param string $sql the query to be executed
 		* @param mixed $line the line method was called from - use __LINE__
 		* @param string $file the file method was called from - use __FILE__
+		* @param bool $exec true for exec, false for query
 		* @return integer current query id if sucesful and null if fails
 		*/
-		public function query($sql, $line = '', $file = '')
+		public function query($sql, $line = '', $file = '', $exec = false)
 		{
-			if ( !$this->adodb->isConnected() )
+			if ( !$this->db )
 			{
 				$this->connect();
 			}
 
-			$this->resultSet = $this->adodb->Execute($sql);
-
-			if ( !$this->resultSet && $this->Halt_On_Error == 'yes' )
+			try
 			{
-				if($file)
+				if($exec)
 				{
-					//trigger_error("$sql\n in File: $file\n on Line: $line\n". $this->adodb->ErrorMsg(), E_USER_ERROR);
-					trigger_error('Error: ' . $this->adodb->ErrorMsg() . "<br>SQL: $sql\n in File: $file\n on Line: $line\n", E_USER_ERROR);
+					return $this->affected_rows = $this->db->exec($sql);
 				}
 				else
 				{
-					trigger_error("$sql\n". $this->adodb->ErrorMsg(), E_USER_ERROR);
+					$stmt = $this->db->query($sql);
+					if($this->fetchmode == 'ASSOC')
+					{
+						$this->resultSet = $stmt->fetchAll(PDO::FETCH_ASSOC);
+					}
+					else
+					{
+						$this->resultSet = $stmt->fetchAll(PDO::FETCH_BOTH);
+					}
 				}
-				$this->transaction_abort();
-				exit;
 			}
+
+			catch(PDOException $e)
+			{
+				if ( $e && $this->Halt_On_Error == 'yes' )
+				{
+					if($file)
+					{
+						trigger_error('Error: ' . $e->getMessage() . "<br>SQL: $sql\n in File: $file\n on Line: $line\n", E_USER_ERROR);
+					}
+					else
+					{
+						trigger_error("$sql\n". $e->getMessage(), E_USER_ERROR);
+					}
+					$this->transaction_abort();
+					exit;
+				}
+			}
+
 			$this->delayPointer = true;
 			return true;
 		}
@@ -330,33 +384,72 @@
 		* @param integer $num_rows number of rows to return (optional), if unset will use $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs']
 		* @return integer current query id if sucesful and null if fails
 		*/
-		public function limit_query($Query_String, $offset = -1, $line = '', $file = '', $num_rows = -1)
+
+		function limit_query($Query_String, $offset, $line = '', $file = '', $num_rows = 0)
 		{
-			if ( (int) $num_rows <= 0 )
+			$offset		= intval($offset);
+			$num_rows	= intval($num_rows);
+
+			if ($num_rows == 0)
 			{
-				$num_rows = $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
+				$maxmatches = $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
+				$num_rows = (isset($maxmatches)?intval($maxmatches):15);
 			}
-			
-			if ( !$this->adodb->isConnected() )
+
+			if( $this->Type == 'mssql' )
 			{
-				$this->connect();
+				$Query_String = str_replace('SELECT ', 'SELECT TOP ', $Query_String);
+				$Query_String = str_replace('SELECT TOP DISTINCT', 'SELECT DISTINCT TOP ', $Query_String);
+				$Query_String = str_replace('TOP ', 'TOP ' . ($offset + $num_rows) . ' ', $Query_String);
+
 			}
-			
-			$this->resultSet = $this->adodb->SelectLimit($Query_String, $num_rows, $offset);
-			if(!$this->resultSet && $this->Halt_On_Error == 'yes')
+			else
 			{
-				if($file)
+				if ($offset == 0)
 				{
-					//trigger_error("$sql\n in File: $file\n on Line: $line\n". $this->adodb->ErrorMsg(), E_USER_ERROR);
-					trigger_error('Error: ' . $this->adodb->ErrorMsg() . "<br>SQL: $sql\n in File: $file\n on Line: $line\n", E_USER_ERROR);
+					$Query_String .= ' LIMIT ' . $num_rows;
 				}
 				else
 				{
-					trigger_error("$sql\n". $this->adodb->ErrorMsg(), E_USER_ERROR);
+					$Query_String .= ' LIMIT ' . $num_rows . ' OFFSET ' . $offset;
 				}
-				$this->transaction_abort();
-				exit;
 			}
+
+			if ($this->debug)
+			{
+				printf("Debug: limit_query = %s<br />offset=%d, num_rows=%d<br />\n", $Query_String, $offset, $num_rows);
+			}
+
+			try
+			{
+				$stmt = $this->db->query($Query_String);
+				if($this->fetchmode == 'ASSOC')
+				{
+					$this->resultSet = $stmt->fetchAll(PDO::FETCH_ASSOC);
+				}
+				else
+				{
+					$this->resultSet = $stmt->fetchAll(PDO::FETCH_BOTH);
+				}
+			}
+
+			catch(PDOException $e)
+			{
+				if ( $e && $this->Halt_On_Error == 'yes' )
+				{
+					if($file)
+					{
+						trigger_error('Error: ' . $e->getMessage() . "<br>SQL: $sql\n in File: $file\n on Line: $line\n", E_USER_ERROR);
+					}
+					else
+					{
+						trigger_error("$sql\n". $e->getMessage(), E_USER_ERROR);
+					}
+					$this->transaction_abort();
+					exit;
+				}
+			}
+
 			$this->delayPointer = true;
 			return true;
 		}
@@ -368,19 +461,19 @@
 		*/
 		public function next_record()
 		{
-			if($this->resultSet && $this->resultSet->RecordCount())
+			if($this->resultSet && current($this->resultSet))
 			{
 				if($this->delayPointer)
 				{
 					$this->delayPointer = false;
-					$this->Record =& $this->resultSet->fields;
+					$this->Record = current($this->resultSet);
 					return true;
 				}
 	
-				if(!$this->resultSet->EOF)
+		//		if($this->resultSet)
 				{
-					$row = $this->resultSet->MoveNext();
-					$this->Record =& $this->resultSet->fields;
+					$row = next($this->resultSet);
+					$this->Record =& $row;
 					return !!$row;
 				}
 			}
@@ -397,7 +490,12 @@
 		{
 			if($this->resultSet)
 			{
-				return $this->resultSet->Move($pos);
+				reset($this->resultSet);
+				for ($i=0; $i<$pos; $i++)
+				{
+					$row = next($this->resultSet);
+				}
+				return $row;
 			}
 			return false;
 		}
@@ -409,7 +507,7 @@
 		*/
 		public function transaction_begin()
 		{
-			return $this->adodb->StartTrans();
+			return $this->db->beginTransaction();
 		}
 		
 		/**
@@ -419,7 +517,7 @@
 		*/ 
 		public function transaction_commit()
 		{
-			return $this->adodb->CompleteTrans();
+			return $this->db->commit();
 		}
 		
 		/**
@@ -429,72 +527,59 @@
 		*/
 		public function transaction_abort()
 		{
-			$this->adodb->FailTrans();
-			return $this->adodb->HasFailedTrans();
+			return $this->db->rollBack();
 		}
 
 		/**
-		* Find the primary key of the last insertion on the current db connection
+		* Find the value of the last insertion on the current db connection
+		* To use this function safely in Postgresql you MUST wrap it in a beginTransaction() commit() block
 		*
 		* @param string $table name of table the insert was performed on
-		* @param string $field the autoincrement primary key of the table
+		* @param string $field not needed - kept for backward compatibility
 		* @return integer the id, -1 if fails
 		*/
-		public function get_last_insert_id($table, $field)
-		{
+		public function get_last_insert_id($table, $field = '')
+		{			
 			switch ( $GLOBALS['phpgw_info']['server']['db_type'] )
 			{
 				case 'postgres':
-					$params = explode('.',$this->adodb->pgVersion);
-
-					if ($params[0] < 8 || ($params[0] == 8 && $params[1] ==0))
-					{
-						$oid = pg_getlastoid($this->adodb->_resultid);
-						if ($oid == -1)
-						{
-							return -1;
-						}
-
-						$result = @pg_Exec($this->adodb->_connectionID, "select $field from $table where oid=$oid");
-					}
-					else
-					{
-						$result = @pg_Exec($this->adodb->_connectionID, "select lastval()");
-					}
-	
-					if (!$result)
-					{
-						return -1;
-					}
-
-					$Record = @pg_fetch_array($result, 0);
-
-					@pg_freeresult($result);
-					if (!is_array($Record)) /* OID not found? */
-					{
-						return -1;
-					}
-					return $Record[0];
+					$sequence = $this->_get_sequence_field_for_table($table);
+					$ret = $this->db->lastInsertId($sequence);
 					break;
 				case 'mssql':
-					/*  MSSQL uses a query to retrieve the last
-					 *  identity on the connection, so table and field are ignored here as well.
-					 */
-					if(!isset($table) || $table == '' || !isset($field) || $field == '')
-					{
-					return -1;
-					}
-					$result = @mssql_query("select @@identity", $this->adodb->_queryID);
-					if(!$result)
-					{
-						return -1;
-					}
-					return mssql_result($result, 0, 0);
+					$this->query("SELECT @@identity", __LINE__, __FILE__);
+					$this->next_record();
+					$ret = $this->f(0);
 					break;
 				default:
-					return $this->adodb->Insert_ID($table, $field);
+					$ret = $this->db->lastInsertId();
 			}
+
+			if($ret)
+			{
+				return $ret;
+			}
+			return -1;
 		}
+
+		/**
+		* Find the name of sequense for postgres
+		*
+		* @param string $table name of table
+		* @return string name of the sequense, false if fails
+		*/
+		protected function _get_sequence_field_for_table($table)
+		{
+			$sql = "SELECT relname FROM pg_class WHERE NOT relname ~ 'pg_.*'"
+				. " AND relname LIKE '%$table%' AND relkind='S' ORDER BY relname";
+			$this->query($sql,__LINE__,__FILE__);
+			if ($this->next_record())
+			{
+				return $this->f('relname');
+			}
+			return false;
+		}
+
 
 		/**
 		* Lock a table
@@ -505,7 +590,7 @@
 		*/
 		public function lock($table, $mode='write')
 		{
-			//$this->adodb->BeginTrans();
+			//$this->transaction_begin();
 		}
 		
 		
@@ -516,7 +601,7 @@
 		*/
 		public function unlock()
 		{
-			//$this->adodb->CommitTrans();
+			//$this->db->commit();
 		}
 		
 		/**
@@ -599,7 +684,7 @@
 		*/
 		public function affected_rows()
 		{
-			return $this->adodb->Affected_Rows();
+			return $this->affected_rows;
 		}
 		
 		/**
@@ -611,7 +696,7 @@
 		{
 			if($this->resultSet)
 			{
-				return $this->resultSet->RecordCount();
+				return count($this->resultSet);
 			}
 			return 0;
 		}
@@ -657,17 +742,17 @@
 		*/
 		public function f($name, $strip_slashes = False)
 		{
-			if($this->resultSet && get_class($this->resultSet) != 'adorecordset_empty')
+			if($this->resultSet)
 			{
-				if( isset($this->resultSet->fields[$name]) )
+				if( isset($this->Record[$name]) )
 				{
 					if ($strip_slashes || ($this->auto_stripslashes && ! $strip_slashes))
 					{
-						return stripslashes($this->resultSet->fields[$name]);
+						return stripslashes($this->Record[$name]);
 					}
 					else
 					{
-						return $this->resultSet->fields[$name];
+						return $this->Record[$name];
 					}
 				}
 				return '';
@@ -705,20 +790,16 @@
 		* @return array Table meta data
 		*/  
 		public function metadata($table = '',$full = false)
-		{
-			if($this->debug)
+		{			
+			if(!$this->adodb || !$this->adodb->IsConnected())
 			{
-				//echo "depi: metadata";
-			}
-			
-			if(!$this->adodb->IsConnected())
-			{
-				$this->connect();
+				$this->_connect_adodb();
 			}
 			if(!($return =& $this->adodb->MetaColumns($table,$full)))
 			{
 				$return = array();
 			}
+			$this->adodb->close();
 			return $return;
 			
 			/*
@@ -758,14 +839,15 @@
 		*/  
 		public function MetaForeignKeys($table = '', $owner=false, $upper=false)
 		{
-			if(!$this->adodb->IsConnected())
+			if(!$this->adodb || !$this->adodb->IsConnected())
 			{
-				$this->connect();
+				$this->_connect_adodb();
 			}
 			if(!($return =& $this->adodb->MetaForeignKeys($table, $owner, $upper)))
 			{
 				$return = array();
 			}
+			$this->adodb->close();
 			return $return;
 		}
 
@@ -778,7 +860,7 @@
 		*/
 		public function halt($msg, $line = '', $file = '')
 		{
-			$this->adodb->RollbackTrans();
+			$this->db->rollBack();
 		}
 		
 		/**
@@ -788,12 +870,13 @@
 		*/
 		public function table_names()
 		{
-			if(!$this->adodb->IsConnected())
+			if(!$this->adodb || !$this->adodb->IsConnected())
 			{
-				$this->connect();
+				$this->_connect_adodb();
 			}
 
 			$return = $this->adodb->MetaTables('TABLES');
+			$this->adodb->close();
 			if ( !$return )
 			{
 				return array();
@@ -823,15 +906,14 @@
 		public function create_database($adminname = '', $adminpasswd = '')
 		{
 			//THIS IS CALLED BY SETUP DON'T KILL IT!
-			if ( $this->adodb->IsConnected() )
+			if ( $this->db )
 			{
-				$this->adodb->Disconnect(); //close the dead connection to be safe
+				$this->db = null; //close the dead connection to be safe
 			}
 
-			$this->adodb = newADOConnection($GLOBALS['phpgw_info']['server']['db_type']);
-			$this->adodb->NConnect($this->Host, $adminname, $adminpasswd);
+			$this->connect();
 			
-			if ( !$this->adodb->IsConnected() )
+			if ( !$this->db )
 			{
 				echo 'Connection FAILED<br />';
 				return False;
@@ -843,19 +925,19 @@
 			}
 
 			//create the db
-			$this->adodb->Execute("CREATE DATABASE {$this->Database}");
+			$this->db->exec("CREATE DATABASE {$this->Database}");
 		
 			//Grant rights on the db
 			switch ($GLOBALS['phpgw_info']['server']['db_type'])
 			{
 				case 'mysql':
-					$this->adodb->Execute("GRANT ALL ON {$this->Database}.*"
+					$this->db->exec("GRANT ALL ON {$this->Database}.*"
 							. " TO {$this->User}@{$_SERVER['SERVER_NAME']}"
 							. " IDENTIFIED BY '{$this->Password}'");
 				default:
 					//do nothing
 			}
-			$this->adodb->Disconnect();
+			$this->db = null;
 			return True;
 		}
 		/**
@@ -910,38 +992,64 @@
 			return $datetime_format;
 	 	}
 				
-	 	/**
-		* Prepare SQL statement
-		*
-		* @param string $query SQL query
-		* @return integer|boolean Result identifier for query_prepared_statement() or FALSE
-		* @see query_prepared_statement()
-		*/
-		public function prepare_sql_statement($query)
-		{
-			//echo "depi";
-			if (($query == '') || (!$this->connect()))
+
+		/**
+		 * Execute prepared SQL statement for insert
+		 *
+		 * @param string $sql_string 
+		 * @param array $valueset  values,id and datatypes for the insert 
+		 * @return boolean TRUE on success or FALSE on failure
+		 */
+
+		public function insert($sql_string, $valueset, $line = '', $file = '')
+		{		
+			try
 			{
-				return false;
+				$sth = $this->db->prepare($sql_string);
+				foreach($valueset as $fields)
+				{
+					foreach($fields as $field => $entry)
+					{
+						$sth->bindParam($field, $entry['value'], $entry['type']=='string' ? PDO::PARAM_STR : PDO::PARAM_INT);
+					}
+					$ret = $sth->execute();
+				}
 			}
-			return false;
+
+			catch(PDOException $e)
+			{
+				trigger_error('Error: ' . $e->getMessage() . "<br>SQL: $sql\n in File: $file\n on Line: $line\n", E_USER_ERROR);
+			}
+			return $ret;
 		}
 
 		/**
-		 * Execute prepared SQL statement
+		 * Execute prepared SQL statement for select
 		 *
-		 * @param resource $result_id Result identifier from prepare_sql_statement()
-		 * @param array $parameters_array Parameters for the prepared SQL statement
+		 * @param string $sql_string 
+		 * @param array $params conditions for the select 
 		 * @return boolean TRUE on success or FALSE on failure
-		 * @see prepare_sql_statement()
 		 */
-		public function query_prepared_statement($result_id, $parameters_array)
-		{
-			if ((!$this->connect()) || (!$result_id))
-			{
-				return false;
-			}
-			return false;
-		}  
 
+		public function select($sql_string, $params, $line = '', $file = '')
+		{		
+			try
+			{
+				$sth = $this->db->prepare($sql_string);
+				$sth->execute($params);
+				if($this->fetchmode == 'ASSOC')
+				{
+					$this->resultSet = $sth->fetchAll(PDO::FETCH_ASSOC);
+				}
+				else
+				{
+					$this->resultSet = $sth->fetchAll(PDO::FETCH_BOTH);
+				}
+			}
+			catch(PDOException $e)
+			{
+				trigger_error('Error: ' . $e->getMessage() . "<br>SQL: $sql\n in File: $file\n on Line: $line\n", E_USER_ERROR);
+			}
+			$this->delayPointer = true;
+		}
 	}

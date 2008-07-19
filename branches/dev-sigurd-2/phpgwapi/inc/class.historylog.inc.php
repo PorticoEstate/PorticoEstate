@@ -53,7 +53,7 @@
 					. "history_appname,history_owner,history_status,history_new_value,history_old_value,history_timestamp) "
 					. "VALUES ('".(int)$record_id."','" . $this->appname . "','"
 					. $GLOBALS['phpgw_info']['user']['account_id'] . "','$status','"
-					. $this->db->db_addslashes($new_value) . "','" . $this->db->db_addslashes($old_value) . "','" . $this->db->to_timestamp(time())
+					. $this->db->db_addslashes($new_value) . "','" . $this->db->db_addslashes($old_value) . "','" . date($this->db->datetime_format())
 					. "')",__LINE__,__FILE__);
 			}
 		}

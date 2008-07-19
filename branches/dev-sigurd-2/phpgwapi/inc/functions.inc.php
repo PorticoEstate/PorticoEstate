@@ -357,17 +357,10 @@ HTML;
 	$GLOBALS['phpgw']->db                = createObject('phpgwapi.db');
 	$GLOBALS['phpgw']->db->Debug         = $GLOBALS['phpgw']->debug ? 1 : 0;
 	$GLOBALS['phpgw']->db->Halt_On_Error = 'no';
-	$GLOBALS['phpgw']->adodb             =& $GLOBALS['phpgw']->db->adodb; //Reference
 
-	@$GLOBALS['phpgw']->adodb->connect($GLOBALS['phpgw_info']['server']['db_host'],
-									   $GLOBALS['phpgw_info']['server']['db_user'],
-									   $GLOBALS['phpgw_info']['server']['db_pass'],
-									   $GLOBALS['phpgw_info']['server']['db_name']
-									  );
-	if(!$GLOBALS['phpgw']->adodb->ErrorNo())
+	if(is_object($GLOBALS['phpgw']->db))
 	{
-		$GLOBALS['phpgw']->adodb->query('select count(config_name) from phpgw_config');
-		if($GLOBALS['phpgw']->adodb->ErrorNo())
+		if(!$GLOBALS['phpgw']->db->query('select count(config_name) from phpgw_config',__LINE__,__FILE__))
 		{
 			$setup_dir = ereg_replace($_SERVER['PHP_SELF'],'index.php','setup/');
 			echo '<center><b>Fatal Error:</b> It appears that you have not created the database tables for '

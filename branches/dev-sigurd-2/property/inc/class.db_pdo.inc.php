@@ -781,13 +781,8 @@
 		* @return array Table meta data
 		*/  
 		public function metadata($table = '',$full = false)
-		{
-			if($this->debug)
-			{
-				//echo "depi: metadata";
-			}
-			
-			if(!$this->adodb->IsConnected())
+		{			
+			if(!$this->adodb || !$this->adodb->IsConnected())
 			{
 				$this->_connect_adodb();
 			}
@@ -835,7 +830,7 @@
 		*/  
 		public function MetaForeignKeys($table = '', $owner=false, $upper=false)
 		{
-			if(!$this->adodb->IsConnected())
+			if(!$this->adodb || !$this->adodb->IsConnected())
 			{
 				$this->_connect_adodb();
 			}
@@ -866,7 +861,7 @@
 		*/
 		public function table_names()
 		{
-			if(!$this->adodb->IsConnected())
+			if(!$this->adodb || !$this->adodb->IsConnected())
 			{
 				$this->_connect_adodb();
 			}

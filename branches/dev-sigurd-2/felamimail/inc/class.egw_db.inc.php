@@ -8,24 +8,24 @@
  * @subpackage db
  * @author Ralf Becker <RalfBecker-AT-outdoor-training.de>
  * @copyright (c) 2003-8 by Ralf Becker <RalfBecker-AT-outdoor-training.de>
- * @version $Id: class.egw_db.inc.php 25665 2008-06-27 09:44:48Z ralfbecker $
+ * @version $Id: class.egw_db.inc.php 25150 2008-03-22 12:32:24Z ralfbecker $
  */
 
 /**
  * Database abstraction library
  *
  * This allows eGroupWare to use multiple database backends via ADOdb or in future with PDO
- *
+ * 
  * You only need to clone the global database object $GLOBALS['phpgw']->db if:
  * - you use the old methods f(), next_record(), row(), num_fields(), num_rows()
  * - you access an application table (non phpgwapi) and you want to call set_app()
- *
+ * 
  * Otherwise you can simply use $GLOBALS['phpgw']->db or a reference to it.
- *
+ * 
  * Avoiding next_record() or row() can be done by looping with the recordset returned by query() or select():
- *
+ * 
  * a) foreach($db->query("SELECT * FROM $table",__LINE__,__FILE__) as $row)
- *
+ * 
  * b) foreach($db->select($api_table,'*',$where,__LINE__,__FILE__) as $row)
  *
  * c) foreach($db->select($table,'*',$where,__LINE__,__FILE__,false,'',$app) as $row)
@@ -46,14 +46,17 @@ if (!defined('PHP_SHLIB_PREFIX'))
 {
 	define('PHP_SHLIB_PREFIX',PHP_SHLIB_SUFFIX == 'dll' ? 'php_' : '');
 }
+if(empty($GLOBALS['phpgw_info']['server']['db_type']))
+{
+	$GLOBALS['phpgw_info']['server']['db_type'] = 'mysql';
+}
+include_once(PHPGW_API_INC.'/adodb/adodb.inc.php');
 
-require_once PHPGW_API_INC . '/class.db.inc.php';
-
-class egw_db extends phpgwapi_db
+class egw_db
 {
 	/**
 	 * Fetchmode to fetch only as associative array with $colname => $value pairs
-	 *
+	 * 
 	 * Use the FETCH_* constants to be compatible, if we replace ADOdb ...
 	 */
 	const FETCH_ASSOC = ADODB_FETCH_ASSOC;
@@ -165,88 +168,42 @@ class egw_db extends phpgwapi_db
 	var $Query_ID = 0;
 
 	/**
-	 * Can be used to transparently convert tablenames, eg. 'mytable' => 'otherdb.othertable'
-	 *
-	 * Can be set eg. at the *end* of header.inc.php.
-	 * Only works with new egw_db methods (select, insert, update, delete) not query!
-	 *
-	 * @var array
-	 */
-	static $tablealiases = array();
-
-	/**
-	 * db allows sub-queries, true for everything but mysql < 4.1
-	 *
-	 * use like: if ($db->capabilities[egw_db::CAPABILITY_SUB_QUERIES]) ...
-	 */
-	const CAPABILITY_SUB_QUERIES = 'sub_queries';
-	/**
-	 * db allows union queries, true for everything but mysql < 4.0
-	 */
-	const CAPABILITY_UNION = 'union';
-	/**
-	 * db allows an outer join, will be set eg. for postgres
-	 */
-	const CAPABILITY_OUTER_JOIN = 'outer_join';
-	/**
-	 * db is able to use DISTINCT on text or blob columns
-	 */
-	const CAPABILITY_DISTINCT_ON_TEXT =	'distinct_on_text';
-	/**
-	 * DB is able to use LIKE on text columns
-	 */
-	const CAPABILITY_LIKE_ON_TEXT =	'like_on_text';
-	/**
-	 * DB allows ORDER on text columns
-	 *
-	 * boolean or string for sprintf for a cast (eg. 'CAST(%s AS varchar)
-	 */
-	const CAPABILITY_ORDER_ON_TEXT = 'order_on_text';
-	/**
-	 * case of returned column- and table-names: upper, lower(pgSql), preserv(MySQL)
-	 */
-	const CAPABILITY_NAME_CASE = 'name_case';
-	/**
-	 * does DB supports a changeable client-encoding
-	 */
-	const CAPABILITY_CLIENT_ENCODING = 'client_encoding';
-	/**
-	 * case insensitiv like statement (in $db->capabilities[egw_db::CAPABILITY_CASE_INSENSITIV_LIKE]), default LIKE, ILIKE for postgres
-	 */
-	const CAPABILITY_CASE_INSENSITIV_LIKE = 'case_insensitive_like';
-	/**
-	 * DB requires varchar columns to be truncated to the max. size (eg. Postgres)
-	 */
-	const CAPABILITY_REQUIRE_TRUNCATE_VARCHAR = 'require_truncate_varchar';
-	/**
-	 * default capabilities will be changed by method set_capabilities($ado_driver,$db_version)
-	 *
-	 * should be used with the CAPABILITY_* constants as key
-	 *
-	 * @var array
+	 * @var array $capabilities, defaults will be changed be method set_capabilities($ado_driver,$db_version)
 	 */
 	var $capabilities = array(
-		self::CAPABILITY_SUB_QUERIES      => true,
-		self::CAPABILITY_UNION            => true,
-		self::CAPABILITY_OUTER_JOIN       => false,
-		self::CAPABILITY_DISTINCT_ON_TEXT => true,
-		self::CAPABILITY_LIKE_ON_TEXT     => true,
-		self::CAPABILITY_ORDER_ON_TEXT    => true,
-		self::CAPABILITY_NAME_CASE        => 'upper',
-		self::CAPABILITY_CLIENT_ENCODING  => false,
-		self::CAPABILITY_CASE_INSENSITIV_LIKE => 'LIKE',
-		self::CAPABILITY_REQUIRE_TRUNCATE_VARCHAR => false,
-	);
+		'sub_queries'      => true,		// will be set to false for mysql < 4.1
+		'union'            => true, 	// will be set to false for mysql < 4.0
+		'outer_join'       => false,	// does the DB has an outer join, will be set eg. for postgres
+		'distinct_on_text' => true,		// is the DB able to use DISTINCT with a text or blob column
+		'like_on_text'     => true,		// is the DB able to use LIKE with text columns
+		'name_case'        => 'upper',	// case of returned column- and table-names: upper, lower(pgSql), preserv(MySQL)
+		'client_encoding'  => false,	// db uses a changeable clientencoding
+		'case_insensitive_like' => 'LIKE',	// case insensitive version of like, eg. ILIKE for postgres
+		'require_truncate_varchar' => false,// DB requires varchar columns to be truncated to the max. size (eg. Postgres)
+		'order_on_text'    => true,		// is the DB able to order by a given text column, boolean or
+	);									// string for sprintf for a cast (eg. 'CAST(%s AS varchar)')
 
 	var $prepared_sql = array();	// sql is the index
 
 	/**
+	* Constructor
 	* @param string $query query to be executed (optional)
+	* @param string $db_type the database engine being used
 	*/
-
 	public function __construct($query = null, $db_type = null)
 	{
-		parent::__construct($query, $db_type);
+		if ( is_null($db_type) )
+		{
+			$db_type = $this->Type ? $this->Type : $GLOBALS['phpgw_info']['server']['db_type'];
+		}
+		$this->Type = $db_type;
+
+		$this->Database = $GLOBALS['phpgw_info']['server']['db_name']; 
+		$this->Host = $GLOBALS['phpgw_info']['server']['db_host']; 
+		$this->User = $GLOBALS['phpgw_info']['server']['db_user']; 
+		$this->Password = $GLOBALS['phpgw_info']['server']['db_pass']; 
+
+		$this->query($query);
 	}
 
 	/**
@@ -259,7 +216,7 @@ class egw_db extends phpgwapi_db
 
 	/**
 	 * Return the result-object of the last query
-	 *
+	 * 
 	 * @deprecated use the result-object returned by query() or select() direct, so you can use the global db-object and not a clone
 	 * @return ADORecordSet
 	 */
@@ -279,7 +236,7 @@ class egw_db extends phpgwapi_db
 	* @param string $Type type of database (optional)
 	* @return ADONewConnection
 	*/
-	function connect_($Database = NULL, $Host = NULL, $Port = NULL, $User = NULL, $Password = NULL,$Type = NULL)
+	function connect($Database = NULL, $Host = NULL, $Port = NULL, $User = NULL, $Password = NULL,$Type = NULL)
 	{
 		/* Handle defaults */
 		if (!is_null($Database) && $Database)
@@ -312,15 +269,11 @@ class egw_db extends phpgwapi_db
 		}
 		if (!$this->adodb)
 		{
-			foreach(array('Host','Database','User','Password') as $name)
-			{
-				$$name = $this->$name;
-			}
 			$this->setupType = $php_extension = $type = $this->Type;
 
 			switch($this->Type)	// convert to ADO db-type-names
 			{
-				case 'pgsql':
+				case 'postgres':
 					$type = 'postgres'; // name in ADOdb
 					// create our own pgsql connection-string, to allow unix domain soccets if !$Host
 					$Host = "dbname=$this->Database".($this->Host ? " host=$this->Host".($this->Port ? " port=$this->Port" : '') : '').
@@ -362,7 +315,7 @@ class egw_db extends phpgwapi_db
 					if ($this->Port) $Host .= ':'.$this->Port;
 					break;
 			}
-			if (!isset($GLOBALS['phpgw']->ADOdb) ||	// we have no connection so far
+			if (!is_object($this->ADOdb) ||	// we have no connection so far
 				(is_object($GLOBALS['phpgw']->db) &&	// we connect to a different db, then the global one
 					($this->Type != $GLOBALS['phpgw']->db->Type ||
 					$this->Database != $GLOBALS['phpgw']->db->Database ||
@@ -370,15 +323,9 @@ class egw_db extends phpgwapi_db
 					$this->Host != $GLOBALS['phpgw']->db->Host ||
 					$this->Port != $GLOBALS['phpgw']->db->Port)))
 			{
-/*				if (!extension_loaded($php_extension) && (!function_exists('dl') ||
-					!dl(PHP_SHLIB_PREFIX.$php_extension.'.'.PHP_SHLIB_SUFFIX)))
+				if (!is_object($this->ADOdb))	// use the global object to store the connection
 				{
-					$this->halt("Necessary php database support for $this->Type (".PHP_SHLIB_PREFIX.$php_extension.'.'.PHP_SHLIB_SUFFIX.") not loaded and can't be loaded, exiting !!!");
-					return null;	// in case error-reporting = 'no'
-				}
-*/				if (!isset($GLOBALS['phpgw']->ADOdb))	// use the global object to store the connection
-				{
-					$this->adodb =& $GLOBALS['phpgw']->ADOdb;
+					$this->adodb = &$this->ADOdb;
 				}
 				else
 				{
@@ -409,7 +356,7 @@ class egw_db extends phpgwapi_db
 				if ($this->Debug)
 				{
 					echo function_backtrace();
-					echo "<p>new ADOdb connection to $this->Type://$this->Host/$this->Database: Link_ID".($this->adodb === $GLOBALS['phpgw']->ADOdb ? '===' : '!==')."\$GLOBALS[phpgw]->ADOdb</p>";
+					echo "<p>new ADOdb connection to $this->Type://$this->Host/$this->Database: Link_ID".($this->adodb === $this->ADOdb ? '===' : '!==')."\$GLOBALS[phpgw]->ADOdb</p>";
 					//echo "<p>".print_r($this->adodb->ServerInfo(),true)."</p>\n";
 					_debug_array($this);
 					echo "\$GLOBALS[phpgw]->db="; _debug_array($GLOBALS[phpgw]->db);
@@ -426,7 +373,7 @@ class egw_db extends phpgwapi_db
 			}
 			else
 			{
-				$this->adodb =& $GLOBALS['phpgw']->ADOdb;
+				$this->adodb = &$this->ADOdb;
 			}
 		}
 		// next ADOdb version: if (!$this->adodb->isConnected()) $this->adodb->Connect();
@@ -436,16 +383,16 @@ class egw_db extends phpgwapi_db
 		{
 			foreach(get_included_files() as $file)
 			{
-				if (strpos($file,'adodb') !== false && !in_array($file,(array)$_SESSION['phpgw_required_files']))
+				if (strpos($file,'adodb') !== false && !in_array($file,(array)$_SESSION['egw_required_files']))
 				{
-					$_SESSION['phpgw_required_files'][] = $file;
+					$_SESSION['egw_required_files'][] = $file;
 				}
 			}
 		}
 		//echo "<p>".print_r($this->adodb->ServerInfo(),true)."</p>\n";
 		return $this->adodb;
 	}
-
+	
 	/**
 	 * Magic method to re-connect with the database, if the object get's restored from the session
 	 */
@@ -467,30 +414,30 @@ class egw_db extends phpgwapi_db
 			case 'mysql':
 			case 'mysqlt':
 			case 'mysqli':
-				$this->capabilities[self::CAPABILITY_SUB_QUERIES] = (float) $db_version >= 4.1;
-				$this->capabilities[self::CAPABILITY_UNION] = (float) $db_version >= 4.0;
-				$this->capabilities[self::CAPABILITY_NAME_CASE] = 'preserv';
-				$this->capabilities[self::CAPABILITY_CLIENT_ENCODING] = (float) $db_version >= 4.1;
+				$this->capabilities['sub_queries'] = (float) $db_version >= 4.1;
+				$this->capabilities['union'] = (float) $db_version >= 4.0;
+				$this->capabilities['name_case'] = 'preserv';
+				$this->capabilities['client_encoding'] = (float) $db_version >= 4.1;
 				break;
 
 			case 'postgres':
-				$this->capabilities[self::CAPABILITY_NAME_CASE] = 'lower';
-				$this->capabilities[self::CAPABILITY_CLIENT_ENCODING] = (float) $db_version >= 7.4;
-				$this->capabilities[self::CAPABILITY_OUTER_JOIN] = true;
-				$this->capabilities[self::CAPABILITY_CASE_INSENSITIV_LIKE] = 'ILIKE';
-				$this->capabilities[self::CAPABILITY_REQUIRE_TRUNCATE_VARCHAR] = true;
+				$this->capabilities['name_case'] = 'lower';
+				$this->capabilities['client_encoding'] = (float) $db_version >= 7.4;
+				$this->capabilities['outer_join'] = true;
+				$this->capabilities['case_insensitive_like'] = 'ILIKE';
+				$this->capabilities['require_truncate_varchar'] = true;
 				break;
 
 			case 'mssql':
-				$this->capabilities[self::CAPABILITY_DISTINCT_ON_TEXT] = false;
-				$this->capabilities[self::CAPABILITY_ORDER_ON_TEXT] = 'CAST (%s AS varchar)';
+				$this->capabilities['distinct_on_text'] = false;
+				$this->capabilities['order_on_text'] = 'CAST (%s AS varchar)';
 				break;
 
 			case 'maxdb':	// if Lim ever changes it to maxdb ;-)
 			case 'sapdb':
-				$this->capabilities[self::CAPABILITY_DISTINCT_ON_TEXT] = false;
-				$this->capabilities[self::CAPABILITY_LIKE_ON_TEXT] = $db_version >= 7.6;
-				$this->capabilities[self::CAPABILITY_ORDER_ON_TEXT] = false;
+				$this->capabilities['distinct_on_text'] = false;
+				$this->capabilities['like_on_text'] = $db_version >= 7.6;
+				$this->capabilities['order_on_text'] = false;
 				break;
 		}
 		//echo "db::set_capabilities('$adodb_driver',$db_version)"; _debug_array($this->capabilities);
@@ -503,7 +450,7 @@ class egw_db extends phpgwapi_db
 	{
 		if (!$this->privat_Link_ID)
 		{
-			unset($GLOBALS['phpgw']->ADOdb);
+			unset($this->ADOdb);
 		}
 		unset($this->adodb);
 		$this->adodb = 0;
@@ -573,7 +520,7 @@ class egw_db extends phpgwapi_db
 
 	/**
 	 * Discard the current query result
-	 *
+	 * 
 	 * @deprecated use the result-object returned by query() or select() direct, so you can use the global db-object and not a clone
 	 */
 	function free()
@@ -632,7 +579,7 @@ class egw_db extends phpgwapi_db
 
 		if ($this->query_log && ($f = @fopen($this->query_log,'a+')))
 		{
-			fwrite($f,'['.(isset($GLOBALS['phpgw_setup']) ? $GLOBALS['phpgw_setup']->ConfigDomain : $GLOBALS['phpgw_info']['user']['domain']).'] ');
+			fwrite($f,'['.(isset($GLOBALS['egw_setup']) ? $GLOBALS['egw_setup']->ConfigDomain : $GLOBALS['phpgw_info']['user']['domain']).'] ');
 			fwrite($f,date('Y-m-d H:i:s ').$Query_String.($inputarr ? "\n".print_r($inputarr,true) : '')."\n");
 			if (!$this->Query_ID)
 			{
@@ -693,7 +640,7 @@ class egw_db extends phpgwapi_db
 		{
 			return False;
 		}
-		if ($this->capabilities[self::CAPABILITY_NAME_CASE] == 'upper')	// maxdb, oracle, ...
+		if ($this->capabilities['name_case'] == 'upper')	// maxdb, oracle, ...
 		{
 			switch($fetch_mode)
 			{
@@ -787,6 +734,68 @@ class egw_db extends phpgwapi_db
 		return $this->adodb->FailTrans();
 	}
 
+	/**
+	* Find the primary key of the last insertion on the current db connection
+	*
+	* @param string $table name of table the insert was performed on
+	* @param string $field the autoincrement primary key of the table
+	* @return int the id, -1 if fails
+	*/
+		public function get_last_insert_id($table, $field)
+		{
+			switch ( $GLOBALS['phpgw_info']['server']['db_type'] )
+			{
+				case 'postgres':
+					$params = explode('.',$this->adodb->pgVersion);
+
+					if ($params[0] < 8 || ($params[0] == 8 && $params[1] ==0))
+					{
+						$oid = pg_getlastoid($this->adodb->_resultid);
+						if ($oid == -1)
+						{
+							return -1;
+						}
+
+						$result = @pg_Exec($this->adodb->_connectionID, "select $field from $table where oid=$oid");
+					}
+					else
+					{
+						$result = @pg_Exec($this->adodb->_connectionID, "select lastval()");
+					}
+	
+					if (!$result)
+					{
+						return -1;
+					}
+
+					$Record = @pg_fetch_array($result, 0);
+
+					@pg_freeresult($result);
+					if (!is_array($Record)) /* OID not found? */
+					{
+						return -1;
+					}
+					return $Record[0];
+					break;
+				case 'mssql':
+					/*  MSSQL uses a query to retrieve the last
+					 *  identity on the connection, so table and field are ignored here as well.
+					 */
+					if(!isset($table) || $table == '' || !isset($field) || $field == '')
+					{
+					return -1;
+					}
+					$result = @mssql_query("select @@identity", $this->adodb->_queryID);
+					if(!$result)
+					{
+						return -1;
+					}
+					return mssql_result($result, 0, 0);
+					break;
+				default:
+					return $this->adodb->Insert_ID($table, $field);
+			}
+		}
 
 	/**
 	* Lock a table
@@ -929,7 +938,7 @@ class egw_db extends phpgwapi_db
 		}
 		if ($this->Halt_On_Error == 'yes')
 		{
-			throw new Exception($msg.($this->Error?":\n".$this->Error:''),$this->Errno);
+			throw new exception($msg.($this->Error?":\n".$this->Error:''),$this->Errno);
 		}
 		$this->haltmsg($msg);
 
@@ -1041,7 +1050,7 @@ class egw_db extends phpgwapi_db
 		{
 			foreach($tables as $table)
 			{
-				if ($this->capabilities[self::CAPABILITY_NAME_CASE] == 'upper')
+				if ($this->capabilities['name_case'] == 'upper')
 				{
 					$table = strtolower($table);
 				}
@@ -1166,7 +1175,7 @@ class egw_db extends phpgwapi_db
 		}
 		return call_user_func_array(array(&$this->adodb,'concat'),$args);
 	}
-
+	
 	/**
 	 * Convert a unix timestamp stored as integer in the db into a db timestamp, like MySQL: FROM_UNIXTIME(ts)
 	 *
@@ -1198,7 +1207,7 @@ class egw_db extends phpgwapi_db
 	 * @param string $format format specifier like '%Y-%m-%d %H:%i:%s' or '%V%X' ('%v%x') weeknumber & year with Sunday (Monday) as first day
 	 * @return string SQL expression of type timestamp
 	 */
-	function date_format_($expr,$format)
+	function date_format($expr,$format)
 	{
 		switch($this->Type)
 		{
@@ -1286,8 +1295,8 @@ class egw_db extends phpgwapi_db
 		switch($type)
 		{
 			case 'int':
-			case 'auto':
-				// atm. (php5.2) php has only 32bit integers, it converts everything else to float.
+			case 'auto':	
+				// atm. (php5.2) php has only 32bit integers, it converts everything else to float. 
 				// Casting it to int gives a negative number instead of the big 64bit integer!
 				// There for we have to keep it as float by using round instead the int cast.
 				return is_float($value) ? round($value) : (int) $value;
@@ -1367,7 +1376,7 @@ class egw_db extends phpgwapi_db
 		if ($this->Debug) echo "<p>db::column_data_implode('$glue',".print_r($array,True).",'$use_key',".print_r($only,True).",<pre>".print_r($column_definitions,True)."</pre>\n";
 
 		// do we need to truncate varchars to their max length (INSERT and UPDATE on Postgres)
-		$truncate_varchar = $glue == ',' && $this->capabilities[self::CAPABILITY_REQUIRE_TRUNCATE_VARCHAR];
+		$truncate_varchar = $glue == ',' && $this->capabilities['require_truncate_varchar'];
 
 		$keys = $values = array();
 		foreach($array as $key => $data)
@@ -1384,7 +1393,7 @@ class egw_db extends phpgwapi_db
 				}
 				$column_type = is_array($column_definitions) ? @$column_definitions[$key]['type'] : False;
 				$not_null = is_array($column_definitions) && isset($column_definitions[$key]['nullable']) ? !$column_definitions[$key]['nullable'] : false;
-
+				
 				if ($truncate_varchar)
 				{
 					$maxlength = $column_definitions[$key]['type'] == 'varchar' ? $column_definitions[$key]['precision'] : null;
@@ -1437,7 +1446,7 @@ class egw_db extends phpgwapi_db
 	{
 		$this->column_definitions=$column_definitions;
 	}
-
+	
 	/**
 	 * Application name used by the API
 	 *
@@ -1463,7 +1472,7 @@ class egw_db extends phpgwapi_db
 		if ($this === $GLOBALS['phpgw']->db && $app != self::API_APPNAME)
 		{
 			// prevent that anyone switches the global db object to an other app
-			throw new phpgw_exception_wrong_parameter('You are not allowed to call set_app for $GLOBALS[phpgw]->db or a refence to it, you have to clone it!');
+			throw new egw_exception_wrong_parameter('You are not allowed to call set_app for $GLOBALS[egw]->db or a refence to it, you have to clone it!');
 		}
 		$this->app = $app;
 	}
@@ -1475,7 +1484,7 @@ class egw_db extends phpgwapi_db
 	*
 	* @author RalfBecker<at>outdoor-training.de
 	*
-	* @param bool/string $app name of the app or default False to use the app set by db::set_app or the current app,
+	* @param bool/string $app name of the app or default False to use the app set by db::set_app or the current app, 
 	*	true to search the already loaded table-definitions for $table
 	* @param bool/string $table if set return only defintions of that table, else return all defintions
 	* @return mixed array with table-defintions or False if file not found
@@ -1582,10 +1591,6 @@ class egw_db extends phpgwapi_db
 				}
 			}
 		}
-		if (self::$tablealiases && isset(self::$tablealiases[$table]))
-		{
-			$table = self::$tablealiases[$table];
-		}
 		$inputarr = false;
 		if ($use_prepared_statement && $this->adodb->_bindInputArray)	// eg. MaxDB
 		{
@@ -1662,10 +1667,6 @@ class egw_db extends phpgwapi_db
 		}
 		$where = $this->column_data_implode(' AND ',$where,True,true,$table_def['fd']);
 
-		if (self::$tablealiases && isset(self::$tablealiases[$table]))
-		{
-			$table = self::$tablealiases[$table];
-		}
 		if (count($data))
 		{
 			$inputarr = false;
@@ -1723,11 +1724,6 @@ class egw_db extends phpgwapi_db
 	function delete($table,$where,$line,$file,$app=False,$table_def=False)
 	{
 		if (!$table_def) $table_def = $this->get_table_definitions($app,$table);
-
-		if (self::$tablealiases && isset(self::$tablealiases[$table]))
-		{
-			$table = self::$tablealiases[$table];
-		}
 		$sql = "DELETE FROM $table WHERE ".
 			$this->column_data_implode(' AND ',$where,True,False,$table_def['fd']);
 
@@ -1818,10 +1814,6 @@ class egw_db extends phpgwapi_db
 		{
 			$where = $this->column_data_implode(' AND ',$where,True,False,$table_def['fd']);
 		}
-		if (self::$tablealiases && isset(self::$tablealiases[$table]))
-		{
-			$table = self::$tablealiases[$table];
-		}
 		$sql = "SELECT $cols FROM $table $join";
 
 		// if we have a where clause, we need to add it together with the WHERE statement, if thats not in the join
@@ -1882,7 +1874,7 @@ class egw_db extends phpgwapi_db
 
 		return $this->query($sql,$line,$file,$offset,$offset===False ? -1 : (int)$num_rows,false,$fetchmode);
 	}
-
+	
 	/**
 	 * Strip eg. a prefix from the keys of an array
 	 *

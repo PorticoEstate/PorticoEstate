@@ -215,7 +215,7 @@
 				return;
 			}
 			$db->query("insert into phpgw_log (log_date, log_app, log_account_id, log_account_lid, log_severity, log_file, log_line, log_msg) values "
-				. "('" . $db->to_timestamp(time()) . "'"
+				. "('" . date($db->datetime_format()) . "'"
 				. ",'" . $db->db_addslashes($GLOBALS['phpgw_info']['flags']['currentapp']) . "'"
 				. ","  . ( isset($GLOBALS['phpgw']->session->account_id) ? $GLOBALS['phpgw']->session->account_id : -1)
 				. ",'" . $db->db_addslashes(isset($GLOBALS['phpgw']->session->account_lid) ? $GLOBALS['phpgw']->session->account_lid : 'not authenticated') . "'"

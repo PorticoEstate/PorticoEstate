@@ -127,11 +127,11 @@
 
 			if($date)
 			{
-				$timestamp = $this->db->to_timestamp($date);
+				$timestamp = date($this->db->date_format(),$date);
 			}
 			else
 			{
-				$timestamp = $this->db->to_timestamp(time());
+				$timestamp = date($this->db->datetime_format());
 			}
 
 			$this->db->query("insert into $this->table (history_record_id,"

@@ -323,7 +323,11 @@
 		*/
 		public function read_installed_apps()
 		{
-			$apps = (array) $this->db->adodb->GetAssoc('SELECT * FROM phpgw_applications WHERE app_enabled != 0 ORDER BY app_order ASC');
+			$this->db->fetchmode = 'ASSOC';
+			$sql = 'SELECT * FROM phpgw_applications WHERE app_enabled != 0 ORDER BY app_order ASC';
+			$this->db->query($sql,__LINE__,__FILE__);
+			$apps = $this->db->resultSet;
+			$this->db->fetchmode = 'BOTH';
 			foreach($apps as $key => $value)
 			{
 				$GLOBALS['phpgw_info']['apps'][$value['app_name']] = array
