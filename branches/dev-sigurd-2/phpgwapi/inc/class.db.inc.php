@@ -281,8 +281,7 @@
 		*/
 		public function to_timestamp($epoch)
 		{
-			trigger_error('Error: not working - use alterative', E_USER_ERROR);
-			return false;
+			return date($this->datetime_format(), $epoch);
 		}
 
 		/**
