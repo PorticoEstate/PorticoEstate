@@ -171,6 +171,47 @@
 				case 'postgres':
 					$this->db = new PDO("pgsql:dbname={$this->Database};host={$this->Host}", $this->User, $this->Password);
 					break;
+				case 'mysql':
+					$this->db = new PDO("mysql:host={$this->Host};dbname={$this->Database}", $this->User, $this->Password);
+					break;
+				case 'sybase':
+				case 'mssql':
+					/*
+					* On Windows, you should use the PDO_ODBC  driver to connect to Microsoft SQL Server and Sybase databases,
+					* as the native Windows DB-LIB is ancient, thread un-safe and no longer supported by Microsoft.
+					*/
+					$this->db = new PDO("mssql:host={$this->Host},1433;dbname={$this->Database}", $this->User, $this->Password);
+					break;
+				case 'oracle':
+					$this->db = new PDO("OCI:dbname={$this->Database};charset=UTF-8", $this->User, $this->Password);
+					break;
+				case 'db2':
+					$port     = 50000; // configurable?
+					$this->db = new PDO("ibm:DRIVER={IBM DB2 ODBC DRIVER};DATABASE={$this->Database}; HOSTNAME={$this->Host};PORT=50000;PROTOCOL=TCPIP;", $this->User, $this->Password);
+					break;
+				case 'MSAccess':
+					$this->db = new PDO("odbc:Driver={Microsoft Access Driver (*.mdb)};Dbq=C:\accounts.mdb;Uid=Admin"); // FIXME: parameter for database location
+					break;
+				case 'dblib':
+					$port     = 10060; // configurable?
+					$this->db = new PDO("dblib:host={$this->Host}:{$port};dbname={$this->Database}", $this->User, $this->Password);
+					break;
+				case 'Firebird':
+					$this->db = new PDO("firebird:dbname=localhost:C:\Programs\Firebird\DATABASE.FDB", $this->User, $this->Password);// FIXME: parameter for database location
+					break;
+				case 'Informix':
+					//connect to an informix database cataloged as InformixDB in odbc.ini
+					$this->db = new PDO("informix:DSN=InformixDB", $this->User, $this->Password);
+					break;
+				case 'SQLite':
+					$this->db = new PDO("sqlite:/path/to/database.sdb"); // FIXME: parameter for database location
+					break;
+				case 'odbc':
+					$dsn = 'something';// FIXME
+					/*$dsn refers to the $dsn data source configured in the ODBC driver manager.*/
+					$this->db = new PDO("odbc:DSN={$dsn}", $this->User, $this->Password);
+				//	$this->db = new PDO("odbc:{$dsn}", $this->User, $this->Password);
+					break;
 				default:
 					//do nothing for now
 			}
