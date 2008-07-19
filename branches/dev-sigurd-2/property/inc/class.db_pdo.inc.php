@@ -22,6 +22,10 @@
 	*/
 	class property_db_pdo
 	{
+		/**
+		* @var object $adodb holds the legacy ADOdb object
+		*/
+		var $adodb;
 
 		/**
 		* @var object $db holds the db object
@@ -222,8 +226,18 @@
 			{
 				$this->db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 			}
+		}
 
-		//	return $this->db;
+		/**
+		* Legacy supprt for quyering metadata from database
+		*
+		*/
+		protected function _connect_adodb()
+		{
+			require_once PHPGW_API_INC . '/adodb/adodb.inc.php';
+			$this->adodb = newADOConnection($this->Type);
+			$this->adodb->SetFetchMode(ADODB_FETCH_BOTH);
+			return @$this->adodb->connect($this->Host, $this->User, $this->Password, $this->Database);
 		}
 
 		/**
@@ -775,12 +789,13 @@
 			
 			if(!$this->adodb->IsConnected())
 			{
-				$this->connect();
+				$this->_connect_adodb();
 			}
 			if(!($return =& $this->adodb->MetaColumns($table,$full)))
 			{
 				$return = array();
 			}
+			$this->adodb->close();
 			return $return;
 			
 			/*
@@ -822,12 +837,13 @@
 		{
 			if(!$this->adodb->IsConnected())
 			{
-				$this->connect();
+				$this->_connect_adodb();
 			}
 			if(!($return =& $this->adodb->MetaForeignKeys($table, $owner, $upper)))
 			{
 				$return = array();
 			}
+			$this->adodb->close();
 			return $return;
 		}
 
@@ -852,10 +868,11 @@
 		{
 			if(!$this->adodb->IsConnected())
 			{
-				$this->connect();
+				$this->_connect_adodb();
 			}
 
 			$return = $this->adodb->MetaTables('TABLES');
+			$this->adodb->close();
 			if ( !$return )
 			{
 				return array();
