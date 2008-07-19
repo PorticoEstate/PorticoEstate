@@ -616,7 +616,7 @@
 						}
 					}
 //-----------
-					if ($values['approval'] && $values['mail_address'])
+					if ($values['approval'] && $values['mail_address'] && $config->config_data['mailnotification'])
 					{
 						$coordinator_name=$GLOBALS['phpgw_info']['user']['fullname'];
 						$coordinator_email=$GLOBALS['phpgw_info']['user']['preferences']['property']['email'];
@@ -682,7 +682,7 @@
 					$GLOBALS['phpgw']->session->appsession('receipt','property',$receipt);
 					$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uiworkorder.view', 'id'=>$id));
 				}
-				if (isset($receipt['notice_owner']) AND is_array($receipt['notice_owner']))
+				if (isset($receipt['notice_owner']) AND is_array($receipt['notice_owner']) && $config->config_data['mailnotification'])
 				{
 					if($this->account!=$project['coordinator'] && $config->config_data['workorder_approval'])
 					{
