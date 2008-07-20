@@ -1069,7 +1069,7 @@
 				. " {$this->_join} phpgw_locations ON phpgw_acl.location_id = phpgw_locations.location_id"
 				. " {$this->_join} phpgw_applications ON phpgw_applications.app_id = phpgw_locations.app_id"
 				. " WHERE phpgw_applications.app_name = '$app' $at_location"
-					. " AND acl_grantor = -1 AND acl_type = $mask"
+					. " AND acl_grantor > 0 AND acl_type = $mask"
 					. " AND acl_account IN ($ids)";
 
 			$this->_db->query($sql, __LINE__, __FILE__);
