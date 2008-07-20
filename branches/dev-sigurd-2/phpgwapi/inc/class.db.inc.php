@@ -997,6 +997,7 @@
 		 *
 		 * @param string $sql_string 
 		 * @param array $valueset  values,id and datatypes for the insert 
+		 * Use type = PDO::PARAM_STR for strings and type = PDO::PARAM_INT for integers
 		 * @return boolean TRUE on success or FALSE on failure
 		 */
 
@@ -1009,7 +1010,7 @@
 				{
 					foreach($fields as $field => $entry)
 					{
-						$sth->bindParam($field, $entry['value'], $entry['type']=='string' ? PDO::PARAM_STR : PDO::PARAM_INT);
+						$sth->bindParam($field, $entry['value'], $entry['type']);
 					}
 					$ret = $sth->execute();
 				}

@@ -214,7 +214,7 @@
 			return $category_list;
 		}
 
-		function set_permission2($values,$r_processed, $grantor = 0, $type = 0)
+		function set_permission2($values,$r_processed, $grantor = -1, $type = 0)
 		{
 			if ( !is_array($values) )
 			{
@@ -286,7 +286,7 @@
 				$values['mask'] = array();
 			}
 
-			$grantor = 0;
+			$grantor = -1;
 			if($set_grant)
 			{
 				if($this->granting_group)
@@ -327,7 +327,7 @@
 				$check_account_type = array('groups','accounts');
 			}
 
-			$grantor = 0;
+			$grantor = -1;
 			if($get_grants)
 			{
 				if($this->granting_group)

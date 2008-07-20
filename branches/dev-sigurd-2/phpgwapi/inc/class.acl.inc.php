@@ -245,11 +245,12 @@
 		* @param string  $location Application location
 		* @param integer $rights   Access rights in bitmask form
 		* @param boolean $grantor  ID of user that grants right to others
+		*						   -1 means that this is a ordinary ACL - record
 		* @param boolean $mask     Mask (1) or Right (0): Mask revoke rights
 		*
 		* @return array Array with ACL records
 		*/
-		public function add($appname, $location, $rights, $grantor = false, $mask = 0)
+		public function add($appname, $location, $rights, $grantor = -1, $mask = 0)
 		{
 			$app_id = $GLOBALS['phpgw']->applications->name2id($appname);
 			$location_id	= $GLOBALS['phpgw']->locations->get_id($appname, $location);
@@ -275,12 +276,12 @@
 		* @param string  $appname  Application name
 		* @param string  $location Application location
 		* @param integer $grantor  account_id of the user that has granted access to their records.
-		*						0 means that this is a ordinary ACL - record
+		*						   -1 means that this is a ordinary ACL - record
 		* @param integer $mask     mask or right (1 means mask , 0 means right)
 		*
 		* @return array Array with ACL records
 		*/
-		public function delete($appname, $location, $grantor = 0, $mask = 0)
+		public function delete($appname, $location, $grantor = -1, $mask = 0)
 		{
 			if ($appname == '')
 			{
@@ -361,9 +362,9 @@
 					{
 						if ( $entry['grantor'] == '' )
 						{
-							$entry['grantor'] = 'NULL';
+							$entry['grantor'] = -1;
 						}
-
+					
 						if ( !isset($new_data[$location_id][$entry['grantor']][$entry['type']]) )
 						{
 							$new_data[$location_id][$entry['grantor']][$entry['type']] = 0;
@@ -391,18 +392,52 @@
 				}
 
 				// FIXME:This one is causing a lot of duplicates
+				// converted to stored prosedures
+				$sql = 'INSERT INTO phpgw_acl (acl_account, acl_rights, acl_grantor, acl_type, location_id)'
+								. ' VALUES(?, ?, ?, ?, ?)';
+				$valueset=array();
+
 				foreach ( $new_data as $loc_id => $grants )
 				{
 					foreach ( $grants as $grantor => $right_types )
 					{
 						foreach ( $right_types as $mask => $rights )
 						{
-							$sql = 'INSERT INTO phpgw_acl (acl_account, acl_rights, acl_grantor, acl_type, location_id)'
-								. " VALUES({$acct_id}, {$rights}, {$grantor}, {$mask}, {$loc_id})";
-							$this->_db->query($sql, __LINE__, __FILE__);
+							$valueset[] = array
+							(
+								1	=> array
+								(
+									'value'	=> $acct_id,
+									'type'	=> PDO::PARAM_INT
+								),
+								2	=> array
+								(
+									'value'	=> $rights,
+									'type'	=>	PDO::PARAM_INT
+								),
+								3	=> array
+								(
+									'value'	=> $grantor,
+									'type'	=> PDO::PARAM_INT
+								),
+								4	=> array
+								(
+									'value'	=> $mask,
+									'type'	=>	PDO::PARAM_INT
+								),
+								5	=> array
+								(
+									'value'	=> $loc_id,
+									'type'	=> PDO::PARAM_INT
+								),								
+							);
 						}
 					}
 				}
+
+				$this->_db->insert($sql, $valueset, __LINE__, __FILE__);
+				unset($sql);
+				unset($valueset);
 			}
 
 			/*remove duplicates*/
@@ -410,15 +445,36 @@
 			$sql = "SELECT * FROM phpgw_acl WHERE acl_account = {$acct_id}"
 			. ' GROUP BY acl_account, acl_rights, acl_grantor, acl_type, location_id';
 			$this->_db->query($sql,__LINE__,__FILE__);
+
 			while($this->_db->next_record())
 			{
 				$unique_data[]= array
 				(
-					'acl_account'	=> $this->_db->f('acl_account'),
-					'acl_rights'	=> $this->_db->f('acl_rights'),
-					'acl_grantor'	=> $this->_db->f('acl_grantor'),
-					'acl_type'		=> $this->_db->f('acl_type'),
-					'location_id'	=> $this->_db->f('location_id')
+					1	=> array
+					(
+						'value'	=> $this->_db->f('acl_account'),
+						'type'	=> PDO::PARAM_INT
+					),
+					2	=> array
+					(
+						'value'	=> $this->_db->f('acl_rights'),
+						'type'	=>	PDO::PARAM_INT
+					),
+					3	=> array
+					(
+						'value'	=> $this->_db->f('acl_grantor'),
+						'type'	=> PDO::PARAM_INT
+					),
+					4	=> array
+					(
+						'value'	=> $this->_db->f('acl_type'),
+						'type'	=>	PDO::PARAM_INT
+					),
+					5	=> array
+					(
+						'value'	=> $this->_db->f('location_id'),
+						'type'	=> PDO::PARAM_INT
+					),								
 				);
 			}
 
@@ -426,12 +482,13 @@
 					. " WHERE acl_account = {$acct_id}";
 			$this->_db->query($sql, __LINE__, __FILE__);
 
-			foreach($unique_data as $values)
-			{
-				$sql = 'INSERT INTO phpgw_acl (' . implode(',',array_keys($values)) . ') '
-					. 'VALUES(' . $this->_db->validate_insert(array_values($values)) . ')';
-				$this->_db->query($sql ,__LINE__,__FILE__);
-			}
+			$sql = 'INSERT INTO phpgw_acl (acl_account, acl_rights, acl_grantor, acl_type, location_id)'
+							. ' VALUES(?, ?, ?, ?, ?)';
+
+			$this->_db->insert($sql, $unique_data, __LINE__, __FILE__);
+
+			//FIXME: this one is temporary to avoid problems with the old acl_grantor being NULL
+			$this->_db->query('UPDATE phpgw_acl SET acl_grantor = -1 WHERE acl_grantor is NULL',__LINE__,__FILE__,true);
 
 			$this->_db->transaction_commit();
 
@@ -446,7 +503,7 @@
 		* @param string  $location     location within application
 		* @param string  $appname      Application name
 		* @param integer $grantor      account_id of the user that has granted access to their records
-		*					No value means that this is a ordinary ACL - record
+		*							  -1 means that this is a ordinary ACL - record
 		* @param integer $mask         mask or right (1 means mask , 0 means right)
 		* @param string  $account_type used to disiguish between checkpattern
 		*						"accounts","groups" and "both" - the normal behaviour is ("both")
@@ -455,7 +512,7 @@
 		*
 		* @return integer Access rights in bitmask form
 		*/
-		public function get_rights($location, $appname = '', $grantor = null, $mask = 0, $account_type = 'both')
+		public function get_rights($location, $appname = '', $grantor = -1, $mask = 0, $account_type = 'both')
 		{
 			// For XML-RPC, change this once its working correctly for passing parameters (jengo)
 			if (is_array($location))
@@ -488,21 +545,12 @@
 
 			if(isset($this->_data[$this->_account_id][$app_id][$location_id]) && is_array($this->_data[$this->_account_id][$app_id][$location_id]))
 			{
-
 				foreach ( $this->_data[$this->_account_id][$app_id][$location_id] as $values )
 				{
-					if ( $values['type'] == $mask
-						&& (!$grantor || ( $grantor && $values['grantor'] ) ) )
+					if ( $values['type'] == $mask && $values['rights'] > 0)
 					{
-						if ( $values['grantor'] == $grantor)
-						{
-							if ( $values['rights'] == 0 )
-							{
-								return false;
-							}
-							$rights |= $values['rights'];
-							$this->account_type = $values['account_type'];
-						}
+						$this->account_type = $values['account_type'];
+						$rights |= $values['rights'];
 					}
 				}
 			}
@@ -521,8 +569,8 @@
 		*/
 		public function check($location, $required, $appname = '')
 		{
-			$rights = $this->check_rights($location, $required, $appname, false, 0);
-			$mask = $this->check_rights($location, $required, $appname, false, 1);
+			$rights = $this->check_rights($location, $required, $appname, -1, 0);
+			$mask = $this->check_rights($location, $required, $appname, -1, 1);
 
 			if ( $mask > 0 && $rights > 0 )
 			{
@@ -544,7 +592,7 @@
 		* @return boolean true when $required bitmap matched otherwise false
 		*/
 		public function check_rights($location, $required, $appname = '',
-									$grantor=false, $mask=0, $account_type='')
+									$grantor = -1, $mask = 0, $account_type = '')
 		{
 			//This is only for setting new rights / grants
 			if ( is_array($account_type) )
@@ -553,7 +601,6 @@
 				{
 					$this->_data[$this->_account_id] = array();
 					$rights = $this->get_rights($location, $appname, $grantor, $mask, $entry);
-
 					if ( !!($rights & $required) )
 					{
 						break;
@@ -707,7 +754,7 @@
 			foreach ( $inherit_location as $acl_location )
 			{
 				$sql = 'INSERT INTO phpgw_acl (location_id, acl_account, acl_rights, acl_grantor, acl_type)'
-					. " VALUES ('{$acl_location}', {$account_id}, {$rights}, NULL , 0)";
+					. " VALUES ('{$acl_location}', {$account_id}, {$rights}, -1 , 0)";
 				$this->_db->query($sql, __LINE__, __FILE__);
 			}
 
@@ -1022,7 +1069,7 @@
 				. " {$this->_join} phpgw_locations ON phpgw_acl.location_id = phpgw_locations.location_id"
 				. " {$this->_join} phpgw_applications ON phpgw_applications.app_id = phpgw_locations.app_id"
 				. " WHERE phpgw_applications.app_name = '$app' $at_location"
-					. " AND acl_grantor IS NOT NULL AND acl_type = $mask"
+					. " AND acl_grantor = -1 AND acl_type = $mask"
 					. " AND acl_account IN ($ids)";
 
 			$this->_db->query($sql, __LINE__, __FILE__);
@@ -1048,42 +1095,45 @@
 				$grantor = $record['grantor'];
 				$rights = $record['rights'];
 
-				if ( !isset($accounts[$grantor]) )
+				if( $grantor > 0 )
 				{
-					$is_group[$grantor] = $accts->get_type($grantor) == phpgwapi_account::TYPE_GROUP;
-					if ( !$is_group[$grantor] )
+					if (!isset($accounts[$grantor]))
 					{
-						$accounts[$grantor] = array($grantor);
-					}
-					else
-					{
-						$accounts[$grantor] = $GLOBALS['phpgw']->accounts->get_members($grantor);
-					}
-				}
-
-				if ( $is_group[$grantor] )
-				{
-					// Don't allow to override private!
-					$rights &= (~ PHPGW_ACL_PRIVATE);
-					if ( !isset($grants[$grantor]) )
-					{
-						$grants[$grantor] = 0;
+						$is_group[$grantor] = $accts->get_type($grantor) == phpgwapi_account::TYPE_GROUP;
+						if ( !$is_group[$grantor] )
+						{
+							$accounts[$grantor] = array($grantor);
+						}
+						else
+						{
+							$accounts[$grantor] = $GLOBALS['phpgw']->accounts->get_members($grantor);
+						}
 					}
 
-					$grants[$grantor] |= $rights;
-					if ( !!($rights & self::READ) )
+					if ( $is_group[$grantor] )
 					{
-						$grants[$grantor] |= self::READ;
-					}
-				}
+						// Don't allow to override private!
+						$rights &= (~ PHPGW_ACL_PRIVATE);
+						if ( !isset($grants[$grantor]) )
+						{
+							$grants[$grantor] = 0;
+						}
 
-				foreach ( $accounts[$grantor] as $grantors )
-				{
-					if ( !isset($grants[$grantors]) )
-					{
-						$grants[$grantors] = 0;
+						$grants[$grantor] |= $rights;
+						if ( !!($rights & self::READ) )
+						{
+							$grants[$grantor] |= self::READ;
+						}
 					}
-					$grants[$grantors] |= $rights;
+
+					foreach ( $accounts[$grantor] as $grantors )
+					{
+						if ( !isset($grants[$grantors]) )
+						{
+							$grants[$grantors] = 0;
+						}
+						$grants[$grantors] |= $rights;
+					}
 				}
 			}
 
@@ -1136,12 +1186,13 @@
 		*		if empty string the value of $GLOBALS['phpgw_info']['flags']['currentapp'] is used
 		* @param string  $location location within Application name
 		* @param integer $grantor  check if this is grants or ordinary rights/mask
+		*						   -1 means that this is a ordinary ACL - record
 		* @param integer $mask     mask or right (1 means mask , 0 means right) to check against
 		*
 		* @return array Array with accounts
 		*/
 		public function get_accounts_at_location($appname = '', $location = '',
-												$grantor = 0 ,$mask = 0)
+												$grantor = -1 ,$mask = 0)
 		{
 			$acl_accounts = array();
 			if ( !$appname )
@@ -1149,10 +1200,10 @@
 				$appname = $GLOBALS['phpgw_info']['flags']['currentapp'];
 			}
 
-			$filter_grants = ' AND acl_grantor IS NULL';
+			$filter_grants = ' AND acl_grantor = -1';
 			if($grantor > 0)
 			{
-				$filter_grants = ' AND acl_grantor IS NOT NULL';
+				$filter_grants = ' AND acl_grantor > 0';
 			}
 
 			$sql = 'SELECT acl_account FROM phpgw_acl'
