@@ -2,7 +2,7 @@
 	/**
 	 * Property - Item Attributes Storage Class
 	 *
-	 * @author Dave Hall <skwashd@phpgroupware.org>
+	 * @author Dave Hall <dave.hall@skwashd.com>
 	 * @copyright (c) 2008 Dave Hall http://davehall.com.au
 	 * @license http://www.gnu.org/licenses/gpl.html GNU General Public License Version 3
 	 * @version $Id$
@@ -52,7 +52,9 @@
 		/**
 		 * Add a new attribute to the database
 		 *
-		 * @param property_attribute $attrib
+		 * @param property_attribute $attrib the attribute being saved
+		 *
+		 * @return integer the attribute primary key
 		 */
 		public function add(property_attribute $attrib)
 		{

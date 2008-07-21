@@ -2,7 +2,7 @@
 	/**
 	 * Property - Item Catalogs Storage Class
 	 *
-	 * @author Dave Hall <skwashd@phpgroupware.org>
+	 * @author Dave Hall <dave.hall@skwashd.com>
 	 * @copyright (c) 2008 Dave Hall http://davehall.com.au
 	 * @license http://www.gnu.org/licenses/gpl.html GNU General Public License Version 3
 	 * @version $Id$
@@ -73,7 +73,8 @@
 		{
 			$catalog_id = (int) $catalog_id;
 
-			$items = createObject('property.bo_items')->find('catalog_id' => $catalog_id);
+			$find = array('catalog_id' => $catalog_id);
+			$items = createObject('property.bo_items')->find($find);
 			if ( count($items) )
 			{
 				// items are still attached can't delete
