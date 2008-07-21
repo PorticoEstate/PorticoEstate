@@ -2,7 +2,7 @@
 	/**
 	 * Property - Item Groups Storage Data Class
 	 *
-	 * @author Dave Hall <skwashd@phpgroupware.org>
+	 * @author Dave Hall <dave.hall@skwashd.com>
 	 * @copyright (c) 2008 Dave Hall http://davehall.com.au
 	 * @license http://www.gnu.org/licenses/gpl.html GNU General Public License Version 3
 	 * @version $Id$
@@ -83,7 +83,9 @@
 		{
 			$group_id = (int) $group_id;
 
-			$catalogs = createObject('property.bo_item_catalogs')->find('group_id' => $group_id);
+			$lookup = array('group_id' => $group_id);
+
+			$catalogs = createObject('property.bo_item_catalogs')->find($lookup);
 
 			if ( count($catalogs) )
 			{
@@ -141,7 +143,7 @@
 		/**
 		 * Fetch a single item group record from the database
 		 *
-		 * @param integer $item_id the id of the item group to fetch
+		 * @param integer $group_id the id of the item group to fetch
 		 *
 		 * @return property_item_group the item sought
 		 *

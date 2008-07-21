@@ -2,7 +2,7 @@
 	/**
 	 * Property - Item Catalogues Admin UI Class
 	 *
-	 * @author Dave Hall <skwashd@phpgroupware.org>
+	 * @author Dave Hall <dave.hall@skwashd.com>
 	 * @copyright (c) 2008 Dave Hall http://davehall.com.au
 	 * @license http://www.gnu.org/licenses/gpl.html GNU General Public License Version 3
 	 * @version $Id$
@@ -104,7 +104,7 @@
 		/**
 		 * Prepare an item group for being added to a form
 		 *
-		 * @param
+		 * @param property_item_catalog $item_catalog the catalog to be displayed
 		 *
 		 * @return void
 		 */
