@@ -1,0 +1,59 @@
+Overview
+The current items system code has many flaws.  Every item type has its own table, which doesn't scale well.  Changing attributes for the items changes the structure of the database table.  It isn't possible to group items together.  The current item system doesn't provide any functionality to reference a national items database.
+
+The new items system solves these problems while providing a very flexible and powerful system for managing a heirarchy of items attached to buildings or building parts.
+
+Implementation
+The new items code replaces property_[bo|so|ui]custom code for handling items.  
+
+The implementation is object orientated.  Gone is the old array based approach to passing data around.
+
+As the functionality is similar for each data type, a similar class model has been used for each.  As the data objects and operation implementations are to be different separate classes are needed to be used.
+
+Storage Layer
+The storage layers return and expect data objects.  
+
+The storage layers are all very similar in design.  The common methods are as follows
+
+ * add - adds a record to the database
+ * delete - deletes a record from the database
+ * edit - edits a record in the database
+ * find - searches for records - also used for listing records
+ * get - fetch a single record from the database
+ * _diff - a protected method to find what has changed in a record - called by edit
+ 
+All storage operations use a reference to the global phpgwapi_db object instance.  There is no need to clone the object or create a new instance of it.
+
+Logic Layer
+The logic layers operate with objects
+
+The logic layers all follow the same implementation pattern.  The common methods are
+
+ * delete - delete a record
+ * find - search for a list of records - also used for listing and paging records
+ * get - fetch a single record
+ * save - save a record
+ 
+UI layer
+The UI layer will convert objects to arrays so they can be used by the XSL template engine.  The implemenation of the classes are again similar to each other.
+
+The common methods are
+
+ * form - render a form for editing/adding a record
+ * delete - confirm that the user wishes to delete a record then delete it
+ * show - show a single record to the user
+ * show_list - display a list of records to the user
+
+The user interface classes have the relevant logic layer class as an instance variable.  The global xslt object is referenced for convenience, cloning this object prevents output being rendered.
+
+Integration
+The existing items code in property_??custom is self contained and isn't used by other code.
+
+The existing XSL templates should probably be thrown out and new ones written as there is a lot of redundant and duplicated parts in the templates.
+
+Notes
+All code is stubbed or partially implemented.  There are extensive phpdocs and comments in the code to give guidance about how to complete the implementation.
+
+A sound knowledge of property and phpGroupWare will greatly assist in implementing this new functionality, especially given the refactoring of existing property code which is required.
+
+The conversion of existing data is outside the scope of this work and will need to be specified and implemented separately.
