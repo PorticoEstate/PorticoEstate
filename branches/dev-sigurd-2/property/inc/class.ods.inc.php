@@ -8,7 +8,7 @@
 	 * @package phpgroupware
 	 * @subpackage property
 	 * @category utilities
- 	 * @version $Id$
+ 	 * @version $Id: $
 	 */
 
 	/*
@@ -71,9 +71,8 @@
 			$uid = uniqid();
 			mkdir($tmp.'/'.$uid);
 			shell_exec('unzip '.escapeshellarg($path).' -d '.escapeshellarg($tmp.'/'.$uid));
-			$obj = new ods();
-			$obj->parse(file_get_contents($tmp.'/'.$uid.'/content.xml'));
-			return $obj;
+			$this->parse(file_get_contents($tmp.'/'.$uid.'/content.xml'));
+			return $this;
 		}
 
 		function saveOds($obj,$file)

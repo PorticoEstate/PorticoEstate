@@ -1490,7 +1490,7 @@
 			{
 				if($input_type[$k]!='hidden')
 				{
-					$object->addCell(1, 0, $m, $descr[$k], 'string'); //add a cell to sheet 1, row 0, cell 0, with value 1 and type float
+					$object->addCell(1, 0, $m, $descr[$k], 'string');
 					$m++;
 				}
 			}
@@ -1518,12 +1518,12 @@
 					$line++;
 					for ($i=0; $i<count($row); $i++)
 					{
-						$object->addCell(1, $line, $i, $row[$i], 'string'); //add a cell to sheet 1, row 0, cell 0, with value 1 and type float
+						$object->addCell(1, $line, $i, $row[$i], 'string');
 					}
 				}
 			}
 
-			$ods->saveOds($object,"/tmp/{$filename}"); //save the object to a ods file
+			$ods->saveOds($object,"/tmp/{$filename}");
 			
 			echo file_get_contents("/tmp/{$filename}");
 		}
