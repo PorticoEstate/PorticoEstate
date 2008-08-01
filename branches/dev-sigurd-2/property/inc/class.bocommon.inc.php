@@ -1349,6 +1349,9 @@
 				case 'excel':
 					$this->excel_out($list,$name,$descr,$input_type);
 					break;
+				case 'ods':
+					$this->ods_out($list,$name,$descr,$input_type);
+					break;
 			}
 		}
 
@@ -1462,6 +1465,67 @@
 				}
 			}
 			fclose($fp);
+		}
+		/**
+		* downloads data as ODS to the browser
+		*
+		* @param array $list array with data to export
+		* @param array $name array containing keys in $list
+		* @param array $descr array containing Names for the heading of the output for the coresponding keys in $list
+		* @param array $input_type array containing information whether fields are to be suppressed from the output
+		*/
+		function ods_out($list, $name, $descr, $input_type = array() )
+		{
+			$filename= str_replace(' ','_',$GLOBALS['phpgw_info']['user']['account_lid']).'.ods';
+			$browser = CreateObject('phpgwapi.browser');
+			$browser->content_header($filename, 'application/ods');
+
+			$count_uicols_name=count($name);
+
+			$ods = createObject('property.ods');
+			$object = $ods->newOds(); //create a new ods file
+
+			$m=0;
+			for ($k=0;$k<$count_uicols_name;$k++)
+			{
+				if($input_type[$k]!='hidden')
+				{
+					$object->addCell(1, 0, $m, $descr[$k], 'string'); //add a cell to sheet 1, row 0, cell 0, with value 1 and type float
+					$m++;
+				}
+			}
+
+			$j=0;
+			if (isset($list) AND is_array($list))
+			{
+				foreach($list as $entry)
+				{
+					$m=0;
+					for ($k=0;$k<$count_uicols_name;$k++)
+					{
+						if($input_type[$k]!='hidden')
+						{
+							$content[$j][$m]	= str_replace(array('&'), array('og'), $entry[$name[$k]]);//str_replace("\r\n"," ",$entry[$name[$k]]);
+							$m++;
+						}
+					}
+					$j++;
+				}
+
+				$line = 0;
+				foreach($content as $row)
+				{
+					$line++;
+					for ($i=0; $i<count($row); $i++)
+					{
+						$object->addCell(1, $line, $i, $row[$i], 'string'); //add a cell to sheet 1, row 0, cell 0, with value 1 and type float
+					}
+				}
+			}
+
+			$ods->saveOds($object,"/tmp/{$filename}"); //save the object to a ods file
+			
+			echo file_get_contents("/tmp/{$filename}");
 		}
 
 		function increment_id($name)
