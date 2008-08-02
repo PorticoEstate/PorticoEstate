@@ -1523,9 +1523,11 @@
 				}
 			}
 
-			$ods->saveOds($object,"/tmp/{$filename}");
+			$temp_dir = $GLOBALS['phpgw_info']['server']['temp_dir'];
+			$ods->saveOds($object,"{$temp_dir}/{$filename}");
 			
-			echo file_get_contents("/tmp/{$filename}");
+			echo file_get_contents("{$temp_dir}/{$filename}");
+			unlink("{$temp_dir}/{$filename}");
 		}
 
 		function increment_id($name)
