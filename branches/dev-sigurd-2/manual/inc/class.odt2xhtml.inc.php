@@ -391,6 +391,13 @@ class odt2xhtml
 			if(!empty($this->debug)) { echo 'Making Dir TMP '.$this->dir['odf_tmp'].': OK!<br/>'; }
 		}
 		
+		/*** making dir to receive file html ***/
+		if(!file_exists($this->dir['html']) && !is_dir($this->dir['html'])) 
+		{
+			mkdir($this->dir['html'], 0777);
+			if(!empty($this->debug)) { echo 'Making Dir HTML: OK!<br/>'; }
+		}
+
 		/*** making directory to receive file img ***/
 		if(!file_exists($this->dir['img']) and !is_dir($this->dir['img']))
 		{
@@ -414,13 +421,6 @@ class odt2xhtml
 		{
 			mkdir($this->dir['img_OOo'], 0777);
 			if(!empty($this->debug)) { echo 'Making Dir '.$this->dir['img_OOo'].': OK!<br/>'; }
-		}
-		
-		/*** making dir to receive file html ***/
-		if(!file_exists($this->dir['html']) && !is_dir($this->dir['html'])) 
-		{
-			mkdir($this->dir['html'], 0777);
-			if(!empty($this->debug)) { echo 'Making Dir HTML: OK!<br/>'; }
 		}
 		
 		if(!empty($this->debug)) { echo 'All dir are making: OK!<br/>'; }
