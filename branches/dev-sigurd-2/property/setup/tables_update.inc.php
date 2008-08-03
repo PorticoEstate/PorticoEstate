@@ -2632,7 +2632,7 @@
 
 		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
 		{
-			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.544';
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.545';
 			return $GLOBALS['setup_info']['property']['currentver'];
 		}
 	}
