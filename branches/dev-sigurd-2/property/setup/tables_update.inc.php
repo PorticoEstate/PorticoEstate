@@ -2579,18 +2579,60 @@
 
 	/**
 	* Update property version from 0.9.17.544 to 0.9.17.545
+	* Move interlink data from property to API
  	*/
-/*
+
 	$test[] = '0.9.17.544';
 	function property_upgrade0_9_17_544()
 	{
 		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
 		$GLOBALS['phpgw_setup']->oProc->query('DELETE FROM fm_cache');
 		$GLOBALS['phpgw_setup']->oProc->AlterColumn('fm_wo_hours','hours_descr',array('type' => 'text', 'nullable' => True));
+
+		$GLOBALS['phpgw']->locations->add('.project.workorder', 'Workorder', 'property', $allow_grant = true, $custom_tbl = null, $c_function = true);
+		$GLOBALS['phpgw_setup']->oProc->query('SELECT * FROM fm_origin');
+		while ($GLOBALS['phpgw_setup']->oProc->next_record())
+		{
+			$interlink[] = array
+			(
+				'origin'			=> $GLOBALS['phpgw_setup']->oProc->f('origin'),
+				'origin_id'			=> $GLOBALS['phpgw_setup']->oProc->f('origin_id'),
+				'destination'		=> $GLOBALS['phpgw_setup']->oProc->f('destination'),
+				'destination_id'	=> $GLOBALS['phpgw_setup']->oProc->f('destination_id'),
+				'user_id'			=> $GLOBALS['phpgw_setup']->oProc->f('user_id'),
+				'entry_date'		=> $GLOBALS['phpgw_setup']->oProc->f('entry_date')
+			);
+		}
+
+		foreach ($interlink as $entry)
+		{
+			if($entry['origin'] == 'workorder')
+			{
+				$entry['origin'] = 'project.workorder';
+			}
+			if($entry['destination'] == 'tenant_claim')
+			{
+				$entry['destination'] = 'tenant&claim';
+			}
+			
+			$location1_id = $GLOBALS['phpgw']->locations->get_id('property', '.' . str_replace('_', '.', $entry['origin']=='tts' ? 'ticket' : $entry['origin']));
+			$location2_id = $GLOBALS['phpgw']->locations->get_id('property', '.' . str_replace(array('_','&'), array('.','_'), $entry['destination']=='tts' ? 'ticket' : $entry['destination']));
+			$account_id = $entry['user_id'] ? $entry['user_id'] : -1;
+			$GLOBALS['phpgw_setup']->oProc->query('INSERT INTO phpgw_interlink (location1_id,location1_item_id,location2_id,location2_item_id,account_id,entry_date,is_private,start_date,end_date) '
+				.'VALUES('
+				.$location1_id . ','
+				.$entry['origin_id'] . ','
+				.$location2_id . ','
+				.$entry['destination_id'] . ','
+				.$account_id . ','
+				.$entry['entry_date'] . ',-1,-1,-1)');
+		}
+
+//		$GLOBALS['phpgw_setup']->oProc->DropTable('fm_origin');
+
 		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
 		{
-			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.545';
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.544';
 			return $GLOBALS['setup_info']['property']['currentver'];
 		}
 	}
-*/
