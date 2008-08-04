@@ -1551,7 +1551,7 @@
 				'p_entity_id'		=> $ticket['p_entity_id'],
 				'p_cat_id'		=> $ticket['p_cat_id'],
 				'tenant_id'		=> $ticket['tenant_id'],
-				'origin'		=> 'tts',
+				'origin'		=> '.ticket',
 				'origin_id'		=> $id
 			);
 
@@ -1565,7 +1565,7 @@
 				'p_entity_id'		=> $ticket['p_entity_id'],
 				'p_cat_id'		=> $ticket['p_cat_id'],
 				'tenant_id'		=> $ticket['tenant_id'],
-				'origin'		=> 'tts',
+				'origin'		=> '.ticket',
 				'origin_id'		=> $id
 			);
 
@@ -1639,7 +1639,7 @@
 						'p_entity_id'		=> $ticket['p_entity_id'],
 						'p_cat_id'		=> $ticket['p_cat_id'],
 						'tenant_id'		=> $ticket['tenant_id'],
-						'origin'		=> 'tts',
+						'origin'		=> '.ticket',
 						'origin_id'		=> $id
 					));
 					$link_entity[$i]['name']	= $entry['name'];
@@ -1650,59 +1650,6 @@
 //_debug_array($link_entity);
 
 			$msgbox_data = $this->bocommon->msgbox_data($receipt);
-
-			if (isset($ticket['origin']) AND is_array($ticket['origin']))
-			{
-				for ($i=0;$i<count($ticket['origin']);$i++)
-				{
-					$ticket['origin'][$i]['link']=$GLOBALS['phpgw']->link('/index.php',$ticket['origin'][$i]['link']);
-
-					if(substr($ticket['origin'][$i]['type'],0,6)=='entity')
-					{
-						$type		= explode("_",$ticket['origin'][$i]['type']);
-						$entity_id	= $type[1];
-						$cat_id		= $type[2];
-
-						if(!isset($boadmin_entity) || !is_object($boadmin_entity))
-						{
-							$boadmin_entity	= CreateObject('property.boadmin_entity');
-						}
-						$entity_category = $boadmin_entity->read_single_category($entity_id,$cat_id);
-						$ticket['origin'][$i]['descr'] = $entity_category['name'];
-					}
-					else
-					{
-						$ticket['origin'][$i]['descr']= lang($ticket['origin'][$i]['type']);
-					}
-				}
-			}
-
-
-			if (isset($ticket['destination']) AND is_array($ticket['destination']))
-			{
-				for ($i=0;$i<count($ticket['destination']);$i++)
-				{
-					$ticket['destination'][$i]['link']=$GLOBALS['phpgw']->link('/index.php',$ticket['destination'][$i]['link']);
-
-					if(substr($ticket['destination'][$i]['type'],0,6)=='entity')
-					{
-						$type		= explode("_",$ticket['destination'][$i]['type']);
-						$entity_id	= $type[1];
-						$cat_id		= $type[2];
-
-						if(!isset($boadmin_entity) || !is_object($boadmin_entity))
-						{
-							$boadmin_entity	= CreateObject('property.boadmin_entity');
-						}
-						$entity_category = $boadmin_entity->read_single_category($entity_id,$cat_id);
-						$ticket['destination'][$i]['descr'] = $entity_category['name'];
-					}
-					else
-					{
-						$ticket['destination'][$i]['descr']= lang($ticket['destination'][$i]['type']);
-					}
-				}
-			}
 
 			$link_file_data = array
 			(
@@ -1715,8 +1662,8 @@
 
 			$data = array
 			(
-				'value_origin'				=> (isset($ticket['origin'])?$ticket['origin']:''),
-				'value_destination'			=> (isset($ticket['destination'])?$ticket['destination']:''),
+				'value_origin'				=> $ticket['origin'],
+				'value_target'				=> $ticket['target'],
 				'lang_finnish_date'			=> lang('finnish date'),
 				'value_finnish_date'		=> $ticket['finnish_date'],
 				'img_cal'					=> $GLOBALS['phpgw']->common->image('phpgwapi','cal'),

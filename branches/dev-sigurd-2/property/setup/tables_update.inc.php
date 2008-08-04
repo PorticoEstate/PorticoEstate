@@ -2590,6 +2590,7 @@
 		$GLOBALS['phpgw_setup']->oProc->AlterColumn('fm_wo_hours','hours_descr',array('type' => 'text', 'nullable' => True));
 
 		$GLOBALS['phpgw']->locations->add('.project.workorder', 'Workorder', 'property', $allow_grant = true, $custom_tbl = null, $c_function = true);
+		$GLOBALS['phpgw']->locations->add('.project.request', 'Request', 'property', $allow_grant = true, $custom_tbl = null, $c_function = true);
 		$GLOBALS['phpgw_setup']->oProc->query('SELECT * FROM fm_origin');
 		while ($GLOBALS['phpgw_setup']->oProc->next_record())
 		{
@@ -2609,6 +2610,14 @@
 			if($entry['origin'] == 'workorder')
 			{
 				$entry['origin'] = 'project.workorder';
+			}
+			if($entry['origin'] == 'request')
+			{
+				$entry['origin'] = 'project.request';
+			}
+			if($entry['destination'] == 'request')
+			{
+				$entry['destination'] = 'project.request';
 			}
 			if($entry['destination'] == 'tenant_claim')
 			{

@@ -75,11 +75,14 @@
 			switch( $role )
 			{
 				case 'target':
-					$sql = "SELECT location1_id as linkend_location, location1_item_id as linkend_id FROM phpgw_interlink WHERE location2_id = {$location_id} AND location2_item_id = {$id} ORDER by location2_id DESC";
+					$sql = "SELECT location2_id as linkend_location, location2_item_id as linkend_id FROM phpgw_interlink WHERE location1_id = {$location_id} AND location1_item_id = {$id} ORDER by location1_id DESC";
 					break;
 				default:
-					$sql = "SELECT location2_id as linkend_location, location2_item_id as linkend_id FROM phpgw_interlink WHERE location1_id = {$location_id} AND location1_item_id = {$id} ORDER by location1_id DESC";
+					$sql = "SELECT location1_id as linkend_location, location1_item_id as linkend_id FROM phpgw_interlink WHERE location2_id = {$location_id} AND location2_item_id = {$id} ORDER by location2_id DESC";
 			}
+
+			$this->_db->query($sql,__LINE__,__FILE__);
+			$relation = array();
 
 			$last_type = false;
 			$i=-1;
@@ -90,17 +93,37 @@
 					$i++;
 				}
 				$relation[$i]['linkend_location']	= $this->_db->f('linkend_location');
-				$relation[$i]['id']					= $this->_db->f('linkend_id');
+				$relation[$i]['data'][] = array( 'id' => $this->_db->f('linkend_id'));
 
 				$last_type = $this->_db->f('linkend_location');
 			}
 
+			$boadmin_entity	= CreateObject('property.boadmin_entity');
 			foreach ($relation as &$entry)
 			{
 				$linkend_location = $GLOBALS['phpgw']->locations->get_name($entry['linkend_location']);
-				$entry['type'] = $linkend_location['name'];
-				$entry['link'] = $this->_get_relation_link($linkend_location, $entry['id']);
+				$entry['location'] = $linkend_location['location'];
+
+				if(substr($linkend_location['location'],0,6)=='entity')
+				{
+					$type		= explode(".",$ticket['target'][$i]['location']);
+					$entity_id	= $type[1];
+					$cat_id		= $type[2];
+
+					$entity_category = $boadmin_entity->read_single_category($entity_id,$cat_id);
+					$entry['descr'] = $entity_category['name'];
+				}
+				else
+				{
+					$entry['descr']= lang($linkend_location['location']);
+				}
+
+				foreach ($entry['data'] as &$data)
+				{
+					$data['link'] = $this->_get_relation_link($linkend_location, $data['id']);	
+				}
 			}
+			return $relation;
 		}
 		
 		/**
@@ -115,16 +138,20 @@
 		protected function _get_relation_link($linkend_location, $id)
 		{
 			$link = array();
-			$type = $linkend_location['name'];
-			if($type == '.tts')
+			$type = $linkend_location['location'];
+			if($type == '.ticket')
 			{
 				$link = array('menuaction' => 'property.uitts.view', 'id' => $id);
 			}
-			else if($type == 'request')
+			else if($type == '.project.workorder')
+			{
+				$link = array('menuaction' => 'property.uiworkorder.view', 'id' => $id);
+			}
+			else if($type == '.project.request')
 			{
 				$link = array('menuaction' => 'property.uirequest.view', 'id' => $id);
 			}
-			else if($type == 'project')
+			else if($type == '.project')
 			{
 				$link = array('menuaction' => 'property.uiproject.view', 'id' => $id);
 			}
@@ -141,6 +168,6 @@
 					'id'			=> $id
 				);
 			}
-			return $link;	
+			return $GLOBALS['phpgw']->link('/index.php',$link);	
 		}
 	}

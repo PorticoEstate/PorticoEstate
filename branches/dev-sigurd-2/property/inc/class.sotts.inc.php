@@ -331,53 +331,6 @@
 
 			}
 
-// ------------- get origin---------------
-			$sql = "SELECT * FROM fm_origin WHERE destination = 'tts' AND destination_id='$id' ORDER by origin DESC";
-
-			$this->db->query($sql,__LINE__,__FILE__);
-
-			$last_type = false;
-			$i=-1;
-			while ($this->db->next_record())
-			{
-				if($last_type != $this->db->f('origin'))
-				{
-					$i++;
-				}
-				$ticket['origin'][$i]['type'] = $this->db->f('origin');
-				$ticket['origin'][$i]['link'] = $this->bocommon->get_origin_link($this->db->f('origin'));
-				$ticket['origin'][$i]['data'][]= array(
-					'id'=> $this->db->f('origin_id'),
-					'type'=> $this->db->f('origin')
-					);
-
-				$last_type=$this->db->f('origin');
-			}
-//------------end get origin---------------
-//--- --------get destination
-
-			$sql = "SELECT * FROM fm_origin WHERE origin = 'tts' AND origin_id='$id' ORDER by destination DESC";
-
-			$this->db->query($sql,__LINE__,__FILE__);
-
-			$last_type = false;
-			$i=-1;
-			while ($this->db->next_record())
-			{
-				if($last_type != $this->db->f('destination'))
-				{
-					$i++;
-				}
-				$ticket['destination'][$i]['type'] = $this->db->f('destination');
-				$ticket['destination'][$i]['link'] = $this->bocommon->get_origin_link($this->db->f('destination'));
-				$ticket['destination'][$i]['data'][]= array(
-					'id'=> $this->db->f('destination_id'),
-					'type'=> $this->db->f('destination')
-					);
-
-				$last_type=$this->db->f('destination');
-			}
-//-------------
 			return $ticket;
 		}
 

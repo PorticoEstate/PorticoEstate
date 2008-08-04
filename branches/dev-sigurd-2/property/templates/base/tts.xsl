@@ -800,8 +800,7 @@
 					</input>
 				</td>
 			</tr>
-			<xsl:for-each select="value_origin" >
-				<xsl:variable name="link_origin_type"><xsl:value-of select="link"/></xsl:variable>
+			<xsl:for-each select="value_origin">
 				<tr>
 					<td valign ="top">
 						<xsl:value-of select="descr"/>
@@ -811,8 +810,7 @@
 							<xsl:for-each select="data">
 								<tr>
 									<td class="th_text"  align="left" >
-										<xsl:variable name="link_request"><xsl:value-of select="//link_request"/>&amp;id=<xsl:value-of select="id"/></xsl:variable>
-										<a href="{$link_origin_type}&amp;id={id}"  onMouseover="window.status='{//lang_origin_statustext}';return true;" onMouseout="window.status='';return true;"><xsl:value-of select="id"/></a>
+										<a href="{link}"  title="{//lang_target_statustext}" style ="cursor:help"><xsl:value-of select="id"/></a>
 										<xsl:text> </xsl:text>
 									</td>
 								</tr>
@@ -876,72 +874,19 @@
 				</td>
 			</tr>
 
-			<xsl:for-each select="value_destination" >
-				<xsl:variable name="link_destination_type"><xsl:value-of select="link"/></xsl:variable>
+			<xsl:for-each select="value_target" >
 				<tr>
 					<td class="th_text" valign ="top">
 						<xsl:value-of select="descr"/>
 					</td>
 						<td class="th_text"  align="left" >
 						<xsl:for-each select="data">
-							<a href="{$link_destination_type}&amp;id={id}"  onMouseover="window.status='{//lang_destination_statustext}';return true;" onMouseout="window.status='';return true;"><xsl:value-of select="id"/></a>
+							<a href="{link}"  title="{//lang_target_statustext}" style ="cursor:help"><xsl:value-of select="id"/></a>
 							<xsl:text> </xsl:text>
 						</xsl:for-each>
 					</td>
 				</tr>
 			</xsl:for-each>
-<!--
-			<xsl:for-each select="entity_origin_list" >
-			<tr>
-				<td class="th_text">
-					<xsl:value-of select="name"/>
-				</td>
-				<td class="th_text">
-					<xsl:for-each select="link_info" >
-						<xsl:variable name="link_entity_origin"><xsl:value-of select="link"/>&amp;id=<xsl:value-of select="id"/></xsl:variable>
-						<xsl:variable name="lang_entity_statustext"><xsl:value-of select="entry_date"/></xsl:variable>
-						<a href="{$link_entity_origin}" onMouseover="window.status='{$lang_entity_statustext}';return true;" onMouseout="window.status='';return true;"><xsl:value-of select="id"/></a>
-						<xsl:text> </xsl:text>
-					</xsl:for-each>
-				</td>
-			</tr>				
-			</xsl:for-each>
-			<xsl:choose>
-				<xsl:when test="value_request_id!=''">
-					<tr>
-						<td  class="th_text" align="left" valign="top">
-							<xsl:value-of select="//lang_request"/>
-						</td>
-						<td class="th_text"  align="left">
-							<xsl:for-each select="value_request_id" >
-									<xsl:variable name="link_request"><xsl:value-of select="//link_request"/>&amp;id=<xsl:value-of select="id"/></xsl:variable>
-									<xsl:variable name="lang_request_statustext"><xsl:value-of select="//lang_request_statustext"/>-<xsl:value-of select="entry_date"/></xsl:variable>
-									<a href="{$link_request}" onMouseover="window.status='{$request_statustext}';return true;" onMouseout="window.status='';return true;"><xsl:value-of select="id"/></a>
-									<xsl:text> </xsl:text>
-							</xsl:for-each>
-						</td>
-					</tr>
-				</xsl:when>
-			</xsl:choose>
-			<xsl:choose>
-				<xsl:when test="value_project_id!=''">
-					<tr>
-						<td class="th_text" align="left" valign="top">
-							<xsl:value-of select="//lang_project"/>
-						</td>
-						<td class="th_text"  align="left">
-							<xsl:for-each select="value_project_id" >
-									<xsl:variable name="link_project"><xsl:value-of select="//link_project"/>&amp;id=<xsl:value-of select="id"/></xsl:variable>
-									<xsl:variable name="project_statustext"><xsl:value-of select="//lang_project_statustext"/>-<xsl:value-of select="entry_date"/></xsl:variable>
-									<a href="{$link_project}" onMouseover="window.status='{$project_statustext}';return true;" onMouseout="window.status='';return true;"><xsl:value-of select="id"/></a>
-									<xsl:text> </xsl:text>
-							</xsl:for-each>
-						</td>
-					</tr>
-				</xsl:when>
-			</xsl:choose>
-		-->
-
 
 			<tr>
 				<td class="th_text" valign="top">

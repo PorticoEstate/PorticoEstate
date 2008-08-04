@@ -375,7 +375,10 @@
 			$ticket['user_lid'] = $GLOBALS['phpgw']->accounts->id2name($ticket['user_id']);
 			$ticket['group_lid'] = $GLOBALS['phpgw']->accounts->id2name($ticket['group_id']);
 
-
+			$interlink 	= CreateObject('property.interlink');
+			$ticket['origin'] = $interlink->get_relation('property', '.ticket', $id, 'origin');
+			$ticket['target'] = $interlink->get_relation('property', '.ticket', $id, 'target');
+//_debug_array($ticket);
 			if(isset($ticket['finnish_date2']) && $ticket['finnish_date2'])
 			{
 				$ticket['finnish_date']=$ticket['finnish_date2'];
