@@ -136,7 +136,7 @@
 			}
 			else
 			{
-				return lang($linkend_location['location']);
+				return lang($location);
 			}
 		}
 		/**

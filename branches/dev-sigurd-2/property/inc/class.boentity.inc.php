@@ -319,6 +319,9 @@
 				unset($values['files']);
 			}
 
+			$interlink 	= CreateObject('property.interlink');
+			$values['origin'] = $interlink->get_relation('property', ".entity.{$data['entity_id']}.{$data['cat_id']}", $data['id'], 'origin');
+			$values['target'] = $interlink->get_relation('property', ".entity.{$data['entity_id']}.{$data['cat_id']}", $data['id'], 'target');
 			return $values;
 		}
 

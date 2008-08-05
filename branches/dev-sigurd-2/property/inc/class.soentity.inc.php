@@ -484,54 +484,8 @@
 					}
 				}
 
-// ------------- get origin---------------
-				$sql = "SELECT * FROM fm_origin WHERE destination ='entity_" . $entity_id . '_' . $cat_id . "' AND destination_id = $id ORDER by origin DESC";
-				$this->db->query($sql,__LINE__,__FILE__);
-
-				$last_type = '';
-				$i=-1;
-				while ($this->db->next_record())
-				{
-					if($last_type != $this->db->f('origin'))
-					{
-						$i++;
-					}
-					$values['origin'][$i]['type'] = $this->db->f('origin');
-					$values['origin'][$i]['link'] = $this->bocommon->get_origin_link($this->db->f('origin'));
-					$values['origin'][$i]['data'][]= array(
-						'id'=> $this->db->f('origin_id'),
-						'type'=> $this->db->f('origin')
-						);
-
-					$last_type = $this->db->f('origin');
-				}
-// ------------- end get origin---------------
-// ------------- get destination---------------
-				$sql = "SELECT * FROM fm_origin WHERE origin ='entity_" . $entity_id . '_' . $cat_id . "' AND origin_id = $id ORDER by destination DESC";
-				$this->db->query($sql,__LINE__,__FILE__);
-
-				$last_type = '';
-				$i=-1;
-				while ($this->db->next_record())
-				{
-					if($last_type != $this->db->f('destination'))
-					{
-						$i++;
-					}
-					$values['destination'][$i]['type'] = $this->db->f('destination');
-					$values['destination'][$i]['link'] = $this->bocommon->get_origin_link($this->db->f('destination'));
-					$values['destination'][$i]['data'][]= array(
-						'id'=> $this->db->f('destination_id'),
-						'type'=> $this->db->f('destination')
-						);
-
-					$last_type=$this->db->f('destination');
-				}
-
-// ------------- end get destination---------------
 			return	$values;
 		}
-
 
 		function check_entity($entity_id,$cat_id,$num)
 		{
@@ -656,18 +610,21 @@
 				. time() . ","
 				. $this->account. " $vals)",__LINE__,__FILE__);
 
-			if (is_array($values['origin']))
+			if(isset($values['origin']) && is_array($values['origin']))
 			{
 				if($values['origin'][0]['data'][0]['id'])
 				{
-					$this->db->query("INSERT INTO fm_origin (origin,origin_id,destination,destination_id,user_id,entry_date) "
-						. "VALUES ('"
-						. $values['origin'][0]['type']. "',"
-						. $values['origin'][0]['data'][0]['id']. ","
-						. "'entity_" . $entity_id .'_' . $cat_id . "',"
-						. $values['id']. ","
-						. $this->account. ","
-						. time() . ")",__LINE__,__FILE__);
+					$location1_id	= $GLOBALS['phpgw']->locations->get_id('property', $values['origin'][0]['location']);
+					$location2_id	= $GLOBALS['phpgw']->locations->get_id('property', ".entity.{$entity_id}.{$cat_id}");			
+
+					$this->db->query('INSERT INTO phpgw_interlink (location1_id,location1_item_id,location2_id,location2_item_id,account_id,entry_date,is_private,start_date,end_date) '
+						. 'VALUES ('
+						. $location1_id . ','
+						. $values['origin'][0]['data'][0]['id']. ','
+						. $location2_id . ','
+						. $values['id'] . ','
+						. $this->account . ','
+						. time() . ',-1,-1,-1)',__LINE__,__FILE__);
 				}
 			}
 
@@ -802,10 +759,11 @@
 
 		function delete($entity_id,$cat_id,$id )
 		{
+			$location2_id	= $GLOBALS['phpgw']->locations->get_id('property', ".entity.{$entity_id}.{$cat_id}");			
 			$table='fm_entity_' . $entity_id .'_' . $cat_id;
 			$this->db->transaction_begin();
 			$this->db->query("DELETE FROM $table WHERE id=$id",__LINE__,__FILE__);
-			$this->db->query("DELETE FROM fm_origin WHERE destination ='entity_" . $entity_id . '_' . $cat_id . "' AND destination_id=$id",__LINE__,__FILE__);
+			$this->db->query("DELETE FROM phpgw_interlink WHERE location2_id ={$location2_id} AND location2_item_id = {$id}",__LINE__,__FILE__);
 			$this->db->transaction_commit();
 		}
 

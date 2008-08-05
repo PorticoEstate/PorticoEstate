@@ -236,15 +236,14 @@
 					<xsl:apply-templates select="table_apply"/>
 				</td>
 			</tr>
-			<xsl:call-template name="destination"/>
+			<xsl:call-template name="target"/>
 			<xsl:for-each select="origin_list" >
-				<xsl:variable name="link"><xsl:value-of select="link"/>&amp;id=<xsl:value-of select="id"/></xsl:variable>
 				<tr>
 					<td class="th_text">
 						<xsl:value-of select="name"/>
 					</td>
 					<td class="th_text">
-						<a href="{$link}"  onMouseover="window.status='{statustext}';return true;" onMouseout="window.status='';return true;"><xsl:value-of select="id"/></a>
+						<a href="{link}"  title="{//lang_origin_statustext}" style ="cursor:help"><xsl:value-of select="id"/></a>
 					</td>
 				</tr>
 			</xsl:for-each>
@@ -306,7 +305,6 @@
 						</td>
 					</tr>
 					<xsl:for-each select="value_origin" >
-						<xsl:variable name="link_origin_type"><xsl:value-of select="link"/></xsl:variable>
 						<tr>
 							<td class="th_text" valign ="top">
 								<xsl:value-of select="descr"/>
@@ -318,20 +316,7 @@
 							<tr>
 		
 							<td class="th_text"  align="left" >
-								<a href="{$link_origin_type}&amp;id={id}"  onMouseover="window.status='{//lang_origin_statustext}';return true;" onMouseout="window.status='';return true;"><xsl:value-of select="id"/></a>
-								<xsl:text> </xsl:text>
-		
-								<xsl:choose>
-									<xsl:when test="type ='request'">
-									<input type="checkbox" name="values[delete_request][]" value="{id}"  onMouseout="window.status='';return true;">
-										<xsl:attribute name="onMouseover">
-											<xsl:text>window.status='</xsl:text>
-												<xsl:value-of select="//lang_delete_request_statustext"/>
-											<xsl:text>'; return true;</xsl:text>
-										</xsl:attribute>
-									</input>
-									</xsl:when>
-								</xsl:choose>
+								<a href="{link}"  title="{//lang_origin_statustext}" style ="cursor:help"><xsl:value-of select="id"/></a>
 							</td>
 							</tr>
 							</xsl:for-each>
@@ -342,7 +327,6 @@
 				</xsl:when>
 				<xsl:otherwise>
 					<xsl:for-each select="value_origin" >
-						<xsl:variable name="link_origin_type"><xsl:value-of select="link"/></xsl:variable>
 						<tr>
 							<td class="th_text" valign ="top">
 								<xsl:value-of select="descr"/>
@@ -352,7 +336,7 @@
 									<xsl:for-each select="data">
 										<tr>
 											<td class="th_text"  align="left" >
-												<a href="{$link_origin_type}&amp;id={id}"  onMouseover="window.status='{//lang_origin_statustext}';return true;" onMouseout="window.status='';return true;"><xsl:value-of select="id"/></a>
+												<a href="{link}"  title="{//lang_origin_statustext}" style ="cursor:help"><xsl:value-of select="id"/></a>
 												<xsl:text> </xsl:text>
 											</td>
 										</tr>
@@ -492,7 +476,6 @@
 				</td>
 			</tr>
 			<xsl:for-each select="value_origin" >
-			<xsl:variable name="link_origin_type"><xsl:value-of select="link"/></xsl:variable>
 			<tr>
 				<td class="th_text" valign ="top">
 					<xsl:value-of select="descr"/>
@@ -502,7 +485,7 @@
 						<xsl:for-each select="data">
 							<tr>
 								<td class="th_text"  align="left" >
-									<a href="{$link_origin_type}&amp;id={id}"  onMouseover="window.status='{//lang_origin_statustext}';return true;" onMouseout="window.status='';return true;"><xsl:value-of select="id"/></a>
+									<a href="{link}"  title="{//lang_origin_statustext}" style ="cursor:help"><xsl:value-of select="id"/></a>
 									<xsl:text> </xsl:text>
 								</td>
 							</tr>
@@ -511,7 +494,7 @@
 				</td>
 			</tr>
 			</xsl:for-each>
-			<xsl:call-template name="destination"/>
+			<xsl:call-template name="target"/>
 			<tr>
 				<td class="th_text">
 					<xsl:value-of select="lang_entity"/>
@@ -622,21 +605,20 @@
 			</tr>
 	</xsl:template>
 
-	<xsl:template name="destination">
+	<xsl:template name="target">
 				<xsl:choose>
-				<xsl:when test="value_destination!=''">
-					<xsl:for-each select="value_destination" >
-						<xsl:variable name="link_destination_type"><xsl:value-of select="link"/></xsl:variable>
+				<xsl:when test="value_target!=''">
+					<xsl:for-each select="value_target" >
 						<tr>
 							<td class="th_text" valign ="top">
-								<xsl:value-of select="//lang_destination"/>
+								<xsl:value-of select="//lang_target"/>
 							</td>
 							<td>
 								<table>							
 									<xsl:for-each select="data">
 										<tr>
 											<td class="th_text"  align="left" >
-												<a href="{$link_destination_type}&amp;id={id}"  onMouseover="window.status='{//lang_destination_statustext}';return true;" onMouseout="window.status='';return true;"><xsl:value-of select="type"/><xsl:text> #</xsl:text> <xsl:value-of select="id"/></a>
+												<a href="{link}"  title="{//lang_target_statustext}" style ="cursor:help"><xsl:value-of select="type"/><xsl:text> #</xsl:text> <xsl:value-of select="id"/></a>
 												<xsl:text> </xsl:text>
 											</td>
 										</tr>
