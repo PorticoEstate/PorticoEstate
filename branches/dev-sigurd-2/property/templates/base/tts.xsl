@@ -403,7 +403,6 @@
 			<xsl:variable name="form_action"><xsl:value-of select="form_action"/></xsl:variable>
 			<form ENCTYPE="multipart/form-data" name="form" method="post" action="{$form_action}">
 				<xsl:for-each select="value_origin" >
-					<xsl:variable name="link_origin_type"><xsl:value-of select="link"/></xsl:variable>
 					<tr>
 						<td valign ="top">
 							<xsl:value-of select="descr"/>
@@ -414,7 +413,7 @@
 									<tr>
 										<td class="th_text"  align="left" >
 											<xsl:variable name="link_request"><xsl:value-of select="//link_request"/>&amp;id=<xsl:value-of select="id"/></xsl:variable>
-											<a href="{$link_origin_type}&amp;id={id}"  onMouseover="window.status='{//lang_origin_statustext}';return true;" onMouseout="window.status='';return true;"><xsl:value-of select="id"/></a>
+											<a href="{link}"  title="{//lang_origin_statustext}" style ="cursor:help"><xsl:value-of select="id"/></a>
 											<xsl:text> </xsl:text>
 										</td>
 									</tr>
@@ -1239,14 +1238,13 @@
 			</tr>
 
 			<xsl:for-each select="value_origin" >
-				<xsl:variable name="link_origin_type"><xsl:value-of select="link"/></xsl:variable>
 				<tr>
 					<td class="th_text" valign ="top">
 						<xsl:value-of select="descr"/>
 					</td>
 						<td class="th_text"  align="left" >
 						<xsl:for-each select="data">
-							<a href="{$link_origin_type}&amp;id={id}"  onMouseover="window.status='{//lang_origin_statustext}';return true;" onMouseout="window.status='';return true;"><xsl:value-of select="id"/></a>
+							<a href="{link}"  title="{//lang_origin_statustext}" style ="cursor:help"><xsl:value-of select="id"/></a>
 							<xsl:text> </xsl:text>
 						</xsl:for-each>
 					</td>

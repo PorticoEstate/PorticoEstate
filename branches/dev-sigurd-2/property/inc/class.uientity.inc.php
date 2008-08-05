@@ -880,7 +880,7 @@
 				'p_entity_id'		=> $values['p_entity_id'],
 				'p_cat_id'			=> $values['p_cat_id'],
 				'tenant_id'			=> $values['tenant_id'],
-				'origin'			=> 'entity_' . $this->entity_id . '_' . $this->cat_id,
+				'origin'			=> ".entity.{$this->entity_id}.{$this->cat_id}",
 				'origin_id'			=> $id
 			);
 
@@ -893,7 +893,7 @@
 				'p_entity_id'		=> $values['p_entity_id'],
 				'p_cat_id'			=> $values['p_cat_id'],
 				'tenant_id'			=> $values['tenant_id'],
-				'origin'			=> 'entity_' . $this->entity_id . '_' . $this->cat_id,
+				'origin'			=> ".entity.{$this->entity_id}.{$this->cat_id}",
 				'origin_id'			=> $id
 			);
 

@@ -51,6 +51,7 @@
 		{
 //			$this->_account			=& $GLOBALS['phpgw_info']['user']['account_id'];
 			$this->_db 				=& $GLOBALS['phpgw']->db;
+			$this->boadmin_entity	= CreateObject('property.boadmin_entity');
 
 //			$this->_like 			=& $this->db->like;
 //			$this->_join 			=& $this->db->join;
@@ -98,29 +99,16 @@
 				$last_type = $this->_db->f('linkend_location');
 			}
 
-			$boadmin_entity	= CreateObject('property.boadmin_entity');
 			foreach ($relation as &$entry)
 			{
 				$linkend_location = $GLOBALS['phpgw']->locations->get_name($entry['linkend_location']);
 				$entry['location'] = $linkend_location['location'];
 
-				if(substr($linkend_location['location'],0,6)=='entity')
-				{
-					$type		= explode(".",$ticket['target'][$i]['location']);
-					$entity_id	= $type[1];
-					$cat_id		= $type[2];
-
-					$entity_category = $boadmin_entity->read_single_category($entity_id,$cat_id);
-					$entry['descr'] = $entity_category['name'];
-				}
-				else
-				{
-					$entry['descr']= lang($linkend_location['location']);
-				}
+				$entry['descr']= $this->get_location_name($linkend_location['location']);
 
 				foreach ($entry['data'] as &$data)
 				{
-					$data['link'] = $this->_get_relation_link($linkend_location, $data['id']);
+					$data['link'] = $this->get_relation_link($linkend_location, $data['id']);
 				}
 			}
 			return $relation;
@@ -135,7 +123,32 @@
 		* @return string the linkt to the the related item
 		*/
 
-		protected function _get_relation_link($linkend_location, $id)
+		public function get_location_name($location)
+		{
+			if(substr($location,1,6)=='entity')
+			{
+				$type		= explode(".",$location);
+				$entity_id	= $type[2];
+				$cat_id		= $type[3];
+
+				$entity_category = $this->boadmin_entity->read_single_category($entity_id,$cat_id);
+				return $entity_category['name'];
+			}
+			else
+			{
+				return lang($linkend_location['location']);
+			}
+		}
+		/**
+		* Get relation of the interlink
+		*
+		* @param array   $linkend_location the location
+		* @param integer $id			   the id of the referenced item
+		*
+		* @return string the linkt to the the related item
+		*/
+
+		public function get_relation_link($linkend_location, $id)
 		{
 			$link = array();
 			$type = $linkend_location['location'];
@@ -211,7 +224,7 @@
 
 			foreach ( $date_info as &$entry )
 			{
-				$entry['link']=$this->_get_relation_link(array('location'=>$target_location), $entry['target_id']);
+				$entry['link']=$this->get_relation_link(array('location'=>$target_location), $entry['target_id']);
 				if($cat_id)
 				{
 					$entry['descr']=$soadmin_entity->read_category_name($entity_id,$cat_id);
