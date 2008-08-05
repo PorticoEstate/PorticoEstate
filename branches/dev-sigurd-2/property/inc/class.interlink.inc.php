@@ -120,7 +120,7 @@
 
 				foreach ($entry['data'] as &$data)
 				{
-					$data['link'] = $this->_get_relation_link($linkend_location, $data['id']);	
+					$data['link'] = $this->_get_relation_link($linkend_location, $data['id']);
 				}
 			}
 			return $relation;
@@ -132,7 +132,7 @@
 		* @param array   $linkend_location the location
 		* @param integer $id			   the id of the referenced item
 		*
-		* @return array the extravars part of the relation link
+		* @return string the linkt to the the related item
 		*/
 
 		protected function _get_relation_link($linkend_location, $id)
@@ -155,11 +155,11 @@
 			{
 				$link = array('menuaction' => 'property.uiproject.view', 'id' => $id);
 			}
-			else if( substr($type, 0, 6) == 'entity' )
+			else if( substr($type, 1, 6) == 'entity' )
 			{
 				$type		= explode('.',$type);
-				$entity_id	= $type[1];
-				$cat_id		= $type[2];
+				$entity_id	= $type[2];
+				$cat_id		= $type[3];
 				$link =	array
 				(
 					'menuaction'	=> 'property.uientity.view',
@@ -169,5 +169,58 @@
 				);
 			}
 			return $GLOBALS['phpgw']->link('/index.php',$link);	
+		}
+
+		/**
+		* Get entry date of the related item
+		*
+		* @param string  $appname  		  the application name for the location
+		* @param string  $origin_location the location name of the origin
+		* @param string  $target_location the location name of the target
+		* @param integer $id			  id of the referenced item (parent)
+		* @param integer $entity_id		  id of the entity type if the type is a entity
+		* @param integer $cat_id		  id of the entity_category type if the type is a entity
+		*
+		* @return array date_info and link to related items
+		*/
+
+		public function get_child_date($appname, $origin_location, $target_location, $id, $entity_id = '', $cat_id = '')
+		{
+			$dateformat 	= $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
+			if($cat_id)
+			{
+				$soadmin_entity	= CreateObject('property.soadmin_entity');
+			}
+
+			$location1_id	= $GLOBALS['phpgw']->locations->get_id($appname, $origin_location);
+			$location2_id	= $GLOBALS['phpgw']->locations->get_id($appname, $target_location);
+
+			$sql = "SELECT entry_date, location2_item_id FROM phpgw_interlink WHERE location1_item_id = {$id} AND location1_id = {$location1_id} AND location2_id = {$location2_id}";
+
+			$this->_db->query($sql,__LINE__,__FILE__);
+
+			$date_info = array();
+			while ($this->_db->next_record())
+			{
+				$date_info[] = array
+				(
+					'entry_date'	=> $GLOBALS['phpgw']->common->show_date($this->_db->f('entry_date'),$dateformat),
+					'target_id'		=> $this->_db->f('location2_item_id')
+				);
+			}
+
+			foreach ( $date_info as &$entry )
+			{
+				$entry['link']=$this->_get_relation_link(array('location'=>$target_location), $entry['target_id']);
+				if($cat_id)
+				{
+					$entry['descr']=$soadmin_entity->read_category_name($entity_id,$cat_id);
+				}
+				else
+				{
+					$entry['descr']=lang($target_location);
+				}
+			}
+			return array('date_info' => $date_info);
 		}
 	}

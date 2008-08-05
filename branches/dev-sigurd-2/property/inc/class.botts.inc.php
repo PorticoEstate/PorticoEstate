@@ -296,6 +296,7 @@
 
 		function read($start_date='',$end_date='', $external='')
 		{
+			$interlink 	= CreateObject('property.interlink');
 			$start_date	= $this->bocommon->date_to_timestamp($start_date);
 			$end_date	= $this->bocommon->date_to_timestamp($end_date);
 
@@ -311,7 +312,7 @@
 			}
 			else
 			{
-				$entity[0]['type']='project';
+				$entity[0]['type']='.project';
 				$this->uicols[]	= lang('project');
 			}
 
@@ -356,18 +357,16 @@
 				{
 					for ($j=0;$j<count($entity);$j++)
 					{
-						$ticket['child_date'][$j] = $this->so->get_child_date($ticket['id'],$entity[$j]['type'],(isset($entity[$j]['entity_id'])?$entity[$j]['entity_id']:''),(isset($entity[$j]['cat_id'])?$entity[$j]['cat_id']:''));
+						$ticket['child_date'][$j] = $interlink->get_child_date('property', '.ticket', $entity[$j]['type'], $ticket['id'], isset($entity[$j]['entity_id'])?$entity[$j]['entity_id']:'',isset($entity[$j]['cat_id'])?$entity[$j]['cat_id']:'');
 					}
 				}
 			}
-
 //_debug_array($tickets);
 			return $tickets;
 		}
 
 		function read_single($id)
 		{
-
 			$this->so->update_view($id);
 
 			$ticket = $this->so->read_single($id);

@@ -317,7 +317,7 @@
 						'district_id'		=> $this->district_id,
 						'allrows'			=> $this->allrows
 					);
-
+//_debug_array($ticket['child_date']);
 					$content[] = array
 					(
 						'id'					=> $ticket['id'],

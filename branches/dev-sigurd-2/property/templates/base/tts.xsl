@@ -183,15 +183,16 @@
 				<td class="small_text" align="center">
 					<a href="{$link_view}" onMouseover="window.status='{$lang_view_statustext}';return true;" onMouseout="window.status='';return true;"><xsl:value-of select="date"/></a>
 				</td>
+	
 				<xsl:for-each select="child_date" >
 					<td class="small_text">
 						<xsl:for-each select="date_info" >
-							<xsl:variable name="link"><xsl:value-of select="link"/></xsl:variable>
-							<a href="{$link}" onMouseover="window.status='';return true;" onMouseout="window.status='';return true;"><xsl:value-of select="entry_date"/></a>
+							<a href="{link}"><xsl:value-of select="entry_date"/></a>
 							<br/>
 						</xsl:for-each>
 					</td>
 				</xsl:for-each>
+
 				<td class="small_text" align="center">
 					<xsl:value-of select="finnish_date"/>
 				</td>

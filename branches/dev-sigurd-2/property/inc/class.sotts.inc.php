@@ -242,53 +242,16 @@
 			{
 				$entity[$i]['entity_id']=$this->db->f('entity_id');
 				$entity[$i]['cat_id']=$this->db->f('cat_id');
-				$entity[$i]['type']='entity';
+				$entity[$i]['type']=".entity.{$this->db->f('entity_id')}.{$this->db->f('cat_id')}";
 				$uicols[]	= $this->db->f('name');
 				$i++;
 			}
 
-			$entity[$i]['type']='project';
+			$entity[$i]['type']='.project';
 			$uicols[]	= lang('project');
 
 			$this->uicols	= $uicols;
 			return $entity;
-		}
-
-		function get_child_date($id,$type,$entity_id='',$cat_id='')
-		{
-			$table= 'fm_origin';
-			if($cat_id)
-			{
-				$and = " AND destination = 'entity_" . $entity_id . '_' . $cat_id . "'";
-			}
-			else
-			{
-				$and = " AND destination = '$type'";
-			}
-
-			$sql = "SELECT * FROM $table WHERE origin_id='$id' and origin ='tts' $and";
-
-			$this->db->query($sql,__LINE__,__FILE__);
-
-			$i=0;
-			$date_info = array();
-			while ($this->db->next_record())
-			{
-				$date_info['date_info'][$i]['entry_date']= $GLOBALS['phpgw']->common->show_date($this->db->f('entry_date'),$this->dateformat);
-				if($cat_id)
-				{
-					$date_info['date_info'][$i]['link']=$GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uientity.view','entity_id'=> $entity_id,'cat_id'=> $cat_id, 'id'=> $this->db->f('destination_id')));
-					$date_info['date_info'][$i]['descr']=$this->soadmin_entity->read_category_name($entity_id,$cat_id);
-				}
-				else
-				{
-					$date_info['date_info'][$i]['link']=$GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.ui' . $type . '.view','id'=> $this->db->f('destination_id')));
-					$date_info['date_info'][$i]['descr']=lang($type);
-				}
-				$i++;
-			}
-//_debug_array($date_info);
-			return $date_info;
 		}
 
 		function read_single($id)
