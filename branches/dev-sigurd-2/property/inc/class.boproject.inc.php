@@ -59,6 +59,7 @@
 			$this->cats					= CreateObject('phpgwapi.categories');
 			$this->cats->app_name		= 'property.project';
 			$this->cats->supress_info	= true;
+			$this->interlink 	= CreateObject('property.interlink');
 
 			if ($session)
 			{
@@ -222,20 +223,12 @@
 
 //			$cols_extra		= $this->so->cols_extra;
 
-			for ($i=0; $i<count($project); $i++)
+			foreach ($project as & $entry)
 			{
-				$project[$i]['start_date'] = $GLOBALS['phpgw']->common->show_date($project[$i]['start_date'],$dateformat);
-				$project[$i]['ticket_id'] = $this->so->get_ticket($project[$i]['project_id']);
-
-/*				$location_data=$this->solocation->read_single($project[$i]['location_code']);
-
-				for ($j=0;$j<count($cols_extra);$j++)
-				{
-					$project[$i][$cols_extra[$j]] = $location_data[$cols_extra[$j]];
-				}
-*/
+				$entry['start_date'] = $GLOBALS['phpgw']->common->show_date($entry['start_date'],$dateformat);
+				$ticket = $this->interlink->get_relation('property', '.project', $entry['project_id'], 'origin');
+				$entry['ticket_id'] = $ticket[0]['data'][0]['id'];
 			}
-
 //_debug_array($project);
 
 			return $project;
@@ -330,6 +323,8 @@
 				$project['p'][$project['p_entity_id']]['p_cat_name'] = $category['name'];
 			}
 
+			$project['origin'] = $this->interlink->get_relation('property', '.project', $project_id, 'origin');
+			$project['target'] = $this->interlink->get_relation('property', '.project', $project_id, 'target');
 
 //_debug_array($project);
 			return $project;

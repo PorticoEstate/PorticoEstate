@@ -614,17 +614,17 @@
 			{
 				if($values['origin'][0]['data'][0]['id'])
 				{
-					$location1_id	= $GLOBALS['phpgw']->locations->get_id('property', $values['origin'][0]['location']);
-					$location2_id	= $GLOBALS['phpgw']->locations->get_id('property', ".entity.{$entity_id}.{$cat_id}");			
-
-					$this->db->query('INSERT INTO phpgw_interlink (location1_id,location1_item_id,location2_id,location2_item_id,account_id,entry_date,is_private,start_date,end_date) '
-						. 'VALUES ('
-						. $location1_id . ','
-						. $values['origin'][0]['data'][0]['id']. ','
-						. $location2_id . ','
-						. $values['id'] . ','
-						. $this->account . ','
-						. time() . ',-1,-1,-1)',__LINE__,__FILE__);
+					$interlink_data = array
+					(
+						'location1_id'		=> $GLOBALS['phpgw']->locations->get_id('property', $values['origin'][0]['location']),
+						'location1_item_id' => $values['origin'][0]['data'][0]['id'],
+						'location2_id'		=> $GLOBALS['phpgw']->locations->get_id('property', ".entity.{$entity_id}.{$cat_id}"),
+						'location2_item_id' => $values['id'],
+						'account_id'		=> $this->account
+					);
+					
+					$interlink 	= CreateObject('property.interlink');
+					$interlink->add($interlink_data,$this->db);
 				}
 			}
 

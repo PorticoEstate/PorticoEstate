@@ -580,15 +580,17 @@
 				$origin_id	= $values['origin_id'];
 			}
 
+			$interlink 	= CreateObject('property.interlink');
+
 			if(isset($origin) && $origin)
 			{
 				unset($values['origin']);
 				unset($values['origin_id']);
-				$values['origin'][0]['type']= $origin;
-				$values['origin'][0]['link']=$this->bocommon->get_origin_link($origin);
+				$values['origin'][0]['location']= $origin;
+				$values['origin'][0]['descr']= $interlink->get_location_name($origin);
 				$values['origin'][0]['data'][]= array(
-					'id'=> $origin_id,
-					'type'=> $origin
+					'id'	=> $origin_id,
+					'link'	=> $interlink->get_relation_link(array('location' => $origin), $origin_id),
 					);
 			}
 
@@ -918,35 +920,6 @@
 			$jscal->add_listener('values_start_date');
 			$jscal->add_listener('values_end_date');
 
-			if (isset($values['origin']) AND is_array($values['origin']))
-			{
-				for ($i=0;$i<count($values['origin']);$i++)
-				{
-					$values['origin'][$i]['link']=$GLOBALS['phpgw']->link('/index.php',$values['origin'][$i]['link']);
-					if(substr($values['origin'][$i]['type'],0,6)=='entity')
-					{
-						$type		= explode("_",$values['origin'][$i]['type']);
-						$entity_id	= $type[1];
-						$cat_id		= $type[2];
-
-						if(!is_object($boadmin_entity))
-						{
-							$boadmin_entity	= CreateObject('property.boadmin_entity');
-						}
-						$entity_category = $boadmin_entity->read_single_category($entity_id,$cat_id);
-						$values['origin'][$i]['descr'] = $entity_category['name'];
-					}
-					else
-					{
-						$values['origin'][$i]['descr']= lang($values['origin'][$i]['type']);
-						if($values['origin'][$i]['type'] == 'request')
-						{
-							$selected_request = true;
-						}
-					}
-				}
-			}
-
 			$data = array
 			(
 				'tabs'							=> self::_generate_tabs(),
@@ -1215,31 +1188,6 @@
 
 //_debug_array($values);
 			$msgbox_data = $this->bocommon->msgbox_data($receipt);
-
-			if (isset($values['origin']) AND is_array($values['origin']))
-			{
-				for ($i=0;$i<count($values['origin']);$i++)
-				{
-					$values['origin'][$i]['link']=$GLOBALS['phpgw']->link('/index.php',$values['origin'][$i]['link']);
-					if(substr($values['origin'][$i]['type'],0,6)=='entity')
-					{
-						$type		= explode("_",$values['origin'][$i]['type']);
-						$entity_id	= $type[1];
-						$cat_id		= $type[2];
-
-						if(!is_object($boadmin_entity))
-						{
-							$boadmin_entity	= CreateObject('property.boadmin_entity');
-						}
-						$entity_category = $boadmin_entity->read_single_category($entity_id,$cat_id);
-						$values['origin'][$i]['descr'] = $entity_category['name'];
-					}
-					else
-					{
-						$values['origin'][$i]['descr']= lang($values['origin'][$i]['type']);
-					}
-				}
-			}
 
 			$categories = $this->cats->formatted_xslt_list(array('selected' => $this->cat_id));
 

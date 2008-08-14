@@ -343,6 +343,10 @@
 				unset($request['files']);
 			}
 
+			$interlink 	= CreateObject('property.interlink');
+			$request['origin'] = $interlink->get_relation('property', '.project.request', $request_id, 'origin');
+			$request['target'] = $interlink->get_relation('property', '.project.request', $request_id, 'target');
+
 			return $request;
 		}
 

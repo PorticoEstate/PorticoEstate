@@ -388,17 +388,17 @@
 			{
 				if($ticket['origin'][0]['data'][0]['id'])
 				{
-					$location1_id	= $GLOBALS['phpgw']->locations->get_id('property', $ticket['origin'][0]['location']);
-					$location2_id	= $GLOBALS['phpgw']->locations->get_id('property', '.ticket');			
-
-					$this->db->query('INSERT INTO phpgw_interlink (location1_id,location1_item_id,location2_id,location2_item_id,account_id,entry_date,is_private,start_date,end_date) '
-						. 'VALUES ('
-						. $location1_id . ','
-						. $ticket['origin'][0]['data'][0]['id']. ','
-						. $location2_id . ','
-						. $id . ","
-						. $this->account . ','
-						. time() . ',-1,-1,-1)',__LINE__,__FILE__);
+					$interlink_data = array
+					(
+						'location1_id'		=> $GLOBALS['phpgw']->locations->get_id('property', $ticket['origin'][0]['location']),
+						'location1_item_id' => $ticket['origin'][0]['data'][0]['id'],
+						'location2_id'		=> $GLOBALS['phpgw']->locations->get_id('property', '.ticket'),			
+						'location2_item_id' => $ticket['project_id'],
+						'account_id'		=> $this->account
+					);
+					
+					$interlink 	= CreateObject('property.interlink');
+					$interlink->add($interlink_data,$this->db);
 				}
 			}
 

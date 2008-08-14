@@ -113,9 +113,37 @@
 			}
 			return $relation;
 		}
+
+		/**
+		* Get specific target
+		*
+		* @param string  $appname  the application name for the location
+		* @param string  $location1 the location name of origin
+		* @param string  $location1 the location name of target
+		* @param integer $id       id of the referenced item
+		*
+		* @return array targets
+		*/
+
+		public function get_specific_targets($appname, $location1, $location2, $id)
+		{
+			$location1_id	= $GLOBALS['phpgw']->locations->get_id($appname, $location1);
+			$location2_id	= $GLOBALS['phpgw']->locations->get_id($appname, $location2);
+			$id = (int) $id;
+			$targets = array();
+
+			$sql = "SELECT location2_item_id FROM phpgw_interlink WHERE location1_id = {$location1_id} AND location2_id = {$location2_id} AND location1_item_id = {$id}";
+			$this->_db->query($sql,__LINE__,__FILE__);
+			while ($this->_db->next_record())
+			{
+				$targets[]= $this->_db->f('location2_item_id');
+			}
+			return $targets;
+		}
+
 		
 		/**
-		* Get relation of the interlink
+		* Get location name
 		*
 		* @param array   $linkend_location the location
 		* @param integer $id			   the id of the referenced item
@@ -235,5 +263,89 @@
 				}
 			}
 			return array('date_info' => $date_info);
+		}
+
+		/**
+		* Add link to item
+		*
+		* @param array  $data	link data
+		* @param object $db		db-object - used to keep the operation within the callers transaction
+		*
+		* @return bool true on success, false otherwise
+		*/
+
+		public function add($data, $db = '')
+		{
+			if(!$db)
+			{
+				$db = $this->_db;
+			}
+			$location1_id		= $data['location1_id'];
+			$location1_item_id	= $data['location1_item_id'];
+			$location2_id		= $data['location2_id'];
+			$location2_item_id	= $data['location2_item_id'];
+			$account_id			= $data['account_id'];
+			$entry_date			= time();
+			$is_private			= isset($data['is_private']) && $data['is_private'] ? $data['is_private'] : -1;
+			$start_date			= isset($data['start_date']) && $data['start_date'] ? $data['start_date'] : -1;
+			$end_date			= isset($data['end_date']) && $data['end_date'] ? $data['end_date'] : -1;
+			
+			$db->query('INSERT INTO phpgw_interlink (location1_id,location1_item_id,location2_id,location2_item_id,account_id,entry_date,is_private,start_date,end_date) '
+				. "VALUES ({$location1_id},{$location1_item_id},{$location2_id},{$location2_item_id},{$account_id},{$entry_date},{$is_private},{$start_date},{$end_date})",__LINE__,__FILE__);
+			
+		}
+
+		/**
+		* Delete link at origin
+		*
+		* @param string  $appname   the application name for the location
+		* @param string  $location1 the location name of origin
+		* @param string  $location1 the location name of target
+		* @param integer $id        id of the referenced item
+		* @param object $db			db-object - used to keep the operation within the callers transaction
+		*
+		* @return array interlink data
+		*/
+
+		public function delete_at_origin($appname, $location1, $location2, $id, $db = '')
+		{
+			if(!$db)
+			{
+				$db = $this->_db;
+			}
+
+			$location1_id	= $GLOBALS['phpgw']->locations->get_id($appname, $location1);
+			$location2_id	= $GLOBALS['phpgw']->locations->get_id($appname, $location2);
+			$id				= (int) $id;
+
+			$sql = "DELETE FROM phpgw_interlink WHERE location1_id = {$location1_id} AND location2_id = {$location2_id} AND location1_item_id = {$id}";
+
+			$db->query($sql,__LINE__,__FILE__);
+		}
+
+		/**
+		* Delete link at target
+		*
+		* @param string  $appname   the application name for the location
+		* @param string  $location  the location name of target
+		* @param integer $id        id of the referenced item
+		* @param object $db			db-object - used to keep the operation within the callers transaction
+		*
+		* @return array interlink data
+		*/
+
+		public function delete_at_target($appname, $location, $id, $db = '')
+		{
+			if(!$db)
+			{
+				$db = $this->_db;
+			}
+
+			$location_id = $GLOBALS['phpgw']->locations->get_id($appname, $location);
+			$id 		 = (int) $id;
+
+			$sql		 = "DELETE FROM phpgw_interlink WHERE location1_id = {$location_id} AND location1_item_id = {$id}";
+
+			$db->query($sql,__LINE__,__FILE__);
 		}
 	}

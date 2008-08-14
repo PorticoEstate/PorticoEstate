@@ -71,7 +71,7 @@
 			$this->config				= CreateObject('phpgwapi.config');
 
 			$this->acl 					= & $GLOBALS['phpgw']->acl;
-			$this->acl_location			= '.project';
+			$this->acl_location			= '.project.request';
 			$this->acl_read 			= $this->acl->check('.project', PHPGW_ACL_READ, 'property');
 			$this->acl_add 				= $this->acl->check('.project', PHPGW_ACL_ADD, 'property');
 			$this->acl_edit 			= $this->acl->check('.project', PHPGW_ACL_EDIT, 'property');
@@ -574,17 +574,21 @@
 				$origin_id	= $values['origin_id'];
 			}
 
-			if($origin)
+			$interlink 	= CreateObject('property.interlink');
+
+			if(isset($origin) && $origin)
 			{
 				unset($values['origin']);
 				unset($values['origin_id']);
-				$values['origin'][0]['type']= $origin;
-				$values['origin'][0]['link']=$this->bocommon->get_origin_link($origin);
+				$values['origin'][0]['location']= $origin;
+				$values['origin'][0]['descr']= $interlink->get_location_name($origin);
 				$values['origin'][0]['data'][]= array(
-					'id'=> $origin_id,
-					'type'=> $origin
+					'id'	=> $origin_id,
+					'link'	=> $interlink->get_relation_link(array('location' => $origin), $origin_id),
 					);
 			}
+
+
 
 //_debug_array($values);
 			$this->config->read_repository();
@@ -833,31 +837,6 @@
 				$values['files'][$i]['file_name']=urlencode($values['files'][$i]['name']);
 			}
 
-			if (isset($values['origin']) AND is_array($values['origin']))
-			{
-				for ($i=0;$i<count($values['origin']);$i++)
-				{
-					$values['origin'][$i]['link']=$GLOBALS['phpgw']->link('/index.php',$values['origin'][$i]['link']);
-					if(substr($values['origin'][$i]['type'],0,6)=='entity')
-					{
-						$type		= explode("_",$values['origin'][$i]['type']);
-						$entity_id	= $type[1];
-						$cat_id		= $type[2];
-
-						if(!is_object($boadmin_entity))
-						{
-							$boadmin_entity	= CreateObject('property.boadmin_entity');
-						}
-						$entity_category = $boadmin_entity->read_single_category($entity_id,$cat_id);
-						$values['origin'][$i]['descr'] = $entity_category['name'];
-					}
-					else
-					{
-						$values['origin'][$i]['descr']= lang($values['origin'][$i]['type']);
-					}
-				}
-			}
-
 			$data = array
 			(
 				'fileupload'				=> true,
@@ -874,6 +853,7 @@
 
 				'msgbox_data'				=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
 
+				'value_acl_location'		=> $this->acl_location,
 				'value_origin'				=> $values['origin'],
 				'value_origin_type'			=> $origin,
 				'value_origin_id'			=> $origin_id,
@@ -1108,17 +1088,6 @@
 				'lang_consequence'	=> lang('Consequence')
 			);
 
-
-
-			if($values['origin']== 'tts')
-			{
-				$origin_data = array
-				(
-					'menuaction'	=> 'property.uitts.view',
-					'id'		=> $values['origin_id']
-				);
-			}
-
 			if($values['project_id'])
 			{
 				$project_lookup_data = array
@@ -1141,31 +1110,6 @@
 			for ($i=0;$i<$j;$i++)
 			{
 				$values['files'][$i]['file_name']=urlencode($values['files'][$i]['name']);
-			}
-
-			if (isset($values['origin']) AND is_array($values['origin']))
-			{
-				for ($i=0;$i<count($values['origin']);$i++)
-				{
-					$values['origin'][$i]['link']=$GLOBALS['phpgw']->link('/index.php',$values['origin'][$i]['link']);
-					if(substr($values['origin'][$i]['type'],0,6)=='entity')
-					{
-						$type		= explode("_",$values['origin'][$i]['type']);
-						$entity_id	= $type[1];
-						$cat_id		= $type[2];
-
-						if(!is_object($boadmin_entity))
-						{
-							$boadmin_entity	= CreateObject('property.boadmin_entity');
-						}
-						$entity_category = $boadmin_entity->read_single_category($entity_id,$cat_id);
-						$values['origin'][$i]['descr'] = $entity_category['name'];
-					}
-					else
-					{
-						$values['origin'][$i]['descr']= lang($values['origin'][$i]['type']);
-					}
-				}
 			}
 
 			$categories = $this->cats->formatted_xslt_list(array('selected' => $values['cat_id']));

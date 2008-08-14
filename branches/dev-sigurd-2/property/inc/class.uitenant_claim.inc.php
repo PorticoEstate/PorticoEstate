@@ -484,6 +484,13 @@
 				'project_id' 	=> $values['project_id']
 			);
 
+			$cats				= CreateObject('phpgwapi.categories');
+			$cats->app_name		= 'property.project';
+			$cats->supress_info	= true;
+
+			$cat_list_project	= $cats->return_array('',0,false,'','','',false);
+			$cat_list_project	= $this->bocommon->select_list($project_values['cat_id'],$cat_list_project);
+
 			$msgbox_data = $this->bocommon->msgbox_data($receipt);
 
 			$data = array
@@ -549,10 +556,8 @@
 
 				'lang_select_workorder_statustext'	=> lang('Include the workorder to this claim'),
 
-				'cat_list_project'			=> $this->bocommon->select_category_list(array('format'=>'select','selected' => $project_values['cat_id'],'type' =>'project','order'=>'descr')),
-
+				'cat_list_project'					=> $cat_list_project,
 //------------------
-
 				'lang_status'				=> lang('Status'),
 				'lang_status_statustext'		=> lang('Select status'),
 				'status_list'				=> $this->bo->get_status_list(array('format' => 'select', 'selected' => $values['status'],'default' => 'open')),

@@ -45,6 +45,7 @@
 			$this->db2           	= $this->bocommon->new_db($this->db);
 			$this->join			= $this->bocommon->join;
 			$this->like			= $this->bocommon->like;
+			$this->interlink 	= CreateObject('property.interlink');
 		}
 
 		function read_priority_key()
@@ -366,47 +367,6 @@
 				$request['power_meter']	= $this->soproject->get_power_meter($this->db->f('location_code'));
 			}
 
-			$sql = "SELECT * FROM fm_origin WHERE destination = 'request' AND destination_id='$request_id' ORDER by origin DESC  ";
-
-			$this->db->query($sql,__LINE__,__FILE__);
-
-			$i=-1;
-			while ($this->db->next_record())
-			{
-				if($last_type != $this->db->f('origin'))
-				{
-					$i++;
-				}
-				$request['origin'][$i]['type'] = $this->db->f('origin');
-				$request['origin'][$i]['link'] = $this->bocommon->get_origin_link($this->db->f('origin'));
-				$request['origin'][$i]['data'][]= array(
-					'id'=> $this->db->f('origin_id'),
-					'type'=> $this->db->f('origin')
-					);
-
-				$last_type=$this->db->f('origin');
-			}
-
-			$sql = "SELECT * FROM fm_origin WHERE origin = 'request' AND origin_id='$request_id' ORDER by destination DESC  ";
-
-			$this->db->query($sql,__LINE__,__FILE__);
-
-			while ($this->db->next_record())
-			{
-				if($last_type != $this->db->f('destination'))
-				{
-					$i++;
-				}
-				$request['origin'][$i]['type'] = $this->db->f('destination');
-				$request['origin'][$i]['link'] = $this->bocommon->get_origin_link($this->db->f('destination'));
-				$request['origin'][$i]['data'][]= array(
-					'id'=> $this->db->f('destination_id'),
-					'type'=> $this->db->f('destination')
-					);
-
-				$last_type=$this->db->f('destination');
-			}
-
 			return $request;
 		}
 
@@ -533,16 +493,17 @@
 
 			if(is_array($request['origin']) && isset($request['origin'][0]['data'][0]['id']))
 			{
-				$this->db->query("INSERT INTO fm_origin (origin,origin_id,destination,destination_id,user_id,entry_date) "
-					. "VALUES ('"
-					. $request['origin'][0]['type']. "','"
-					. $request['origin'][0]['data'][0]['id']. "',"
-					. "'request',"
-					. $request['request_id']. ","
-					. $this->account . ","
-					. time() . ")",__LINE__,__FILE__);
+				$interlink_data = array
+				(
+					'location1_id'		=> $GLOBALS['phpgw']->locations->get_id('property', $request['origin'][0]['location']),
+					'location1_item_id' => $request['origin'][0]['data'][0]['id'],
+					'location2_id'		=> $GLOBALS['phpgw']->locations->get_id('property', '.project.request'),			
+					'location2_item_id' => $request['request_id'],
+					'account_id'		=> $this->account
+				);
+					
+				$this->interlink->add($interlink_data,$this->db);
 			}
-
 
 			if($this->db->transaction_commit())
 			{
@@ -673,11 +634,14 @@
 
 		function delete($request_id )
 		{
-			$this->db->query("DELETE FROM fm_request WHERE id='" . $request_id . "'",__LINE__,__FILE__);
-			$this->db->query("DELETE FROM fm_request_condition WHERE request_id='" . $request_id . "'",__LINE__,__FILE__);
-			$this->db->query("DELETE FROM fm_request_history  WHERE  history_record_id='" . $request_id   . "'",__LINE__,__FILE__);
-			$this->db->query("DELETE FROM fm_origin WHERE destination = 'request' AND destination_id='" . $request_id . "'",__LINE__,__FILE__);
-
+			$request_id = (int) $request_id;
+			$this->db->transaction_begin();
+			$this->db->query("DELETE FROM fm_request WHERE id = {$request_id}",__LINE__,__FILE__);
+			$this->db->query("DELETE FROM fm_request_condition WHERE request_id = {$request_id}",__LINE__,__FILE__);
+			$this->db->query("DELETE FROM fm_request_history  WHERE  history_record_id = {$request_id}",__LINE__,__FILE__);
+		//	$this->db->query("DELETE FROM fm_origin WHERE destination = 'request' AND destination_id='" . $request_id . "'",__LINE__,__FILE__);
+			$this->interlink->delete_at_target('property', '.project.request', $request_id, $this->db);
+			$this->db->transaction_commit();
 		}
 	}
 

@@ -41,6 +41,7 @@
 			$this->bocommon		= CreateObject('property.bocommon');
 			$this->db           	= $this->bocommon->new_db();
 			$this->db2           	= $this->bocommon->new_db($this->db);
+			$this->interlink 	= CreateObject('property.interlink');
 
 			$this->like =& $this->db->like;
 			$this->join =& $this->db->join;
@@ -398,38 +399,8 @@
 				$project['power_meter']	= $this->get_power_meter($this->db->f('location_code'));
 			}
 
-			$sql = "SELECT * FROM fm_origin WHERE destination = 'project' AND destination_id='$project_id' ORDER by origin DESC  ";
-
-			$this->db->query($sql,__LINE__,__FILE__);
-
-			$last_type = false;
-			$i=-1;
-			while ($this->db->next_record())
-			{
-				if($last_type != $this->db->f('origin'))
-				{
-					$i++;
-				}
-				$project['origin'][$i]['type'] = $this->db->f('origin');
-				$project['origin'][$i]['link'] = $this->bocommon->get_origin_link($this->db->f('origin'));
-				$project['origin'][$i]['data'][]= array(
-					'id'=> $this->db->f('origin_id'),
-					'type'=> $this->db->f('origin')
-					);
-
-				$last_type=$this->db->f('origin');
-			}
-
 //_debug_array($project);
 				return $project;
-		}
-
-		function get_ticket($project_id = '')
-		{
-			$sql = "SELECT * FROM fm_origin WHERE origin ='tts' AND destination = 'project' AND destination_id='$project_id' ORDER by origin DESC  ";
-			$this->db->query($sql,__LINE__,__FILE__);
-			$this->db->next_record();
-			return $this->db->f('origin_id');
 		}
 
 		function get_power_meter($location_code = '')
@@ -585,15 +556,17 @@
 			if(is_array($project['origin']))
 			{
 				if($project['origin'][0]['data'][0]['id'])
-				{
-					$this->db->query("INSERT INTO  fm_origin (origin,origin_id,destination,destination_id,user_id,entry_date) "
-						. "VALUES ('"
-						. $project['origin'][0]['type']. "','"
-						. $project['origin'][0]['data'][0]['id']. "',"
-						. "'project',"
-						. $project['project_id']. ","
-						. $this->account . ","
-						. time() . ")",__LINE__,__FILE__);
+				{					
+					$interlink_data = array
+					(
+						'location1_id'		=> $GLOBALS['phpgw']->locations->get_id('property', $project['origin'][0]['location']),
+						'location1_item_id' => $project['origin'][0]['data'][0]['id'],
+						'location2_id'		=> $GLOBALS['phpgw']->locations->get_id('property', '.project'),			
+						'location2_item_id' => $project['project_id'],
+						'account_id'		=> $this->account
+					);
+					
+					$this->interlink->add($interlink_data,$this->db);
 				}
 			}
 
@@ -844,13 +817,17 @@
 		}
 
 
-		function delete_request_from_project($request_id,$project_id)
+		function delete_request_from_project($request,$project_id)
 		{
-			for ($i=0;$i<count($request_id);$i++)
+			foreach ($request as $request_id)
 			{
-				$this->db->query("update fm_request set project_id = NULL where id='". $request_id[$i] . "'",__LINE__,__FILE__);
-				$this->db->query("DELETE FROM fm_origin WHERE destination ='project' AND origin_id='" . $request_id[$i] . "' AND origin='request'",__LINE__,__FILE__);
-				$receipt['message'][] = array('msg'=>lang('Request %1 has been deleted from project %2',$request_id[$i],$project_id));
+				$this->db->transaction_begin();
+				$this->db->query("UPDATE fm_request set project_id = NULL where id='{$request_id}'",__LINE__,__FILE__);
+				$this->interlink->delete_at_origin('property', '.project.request', '.project', $request_id, $this->db);
+				if(	$this->db->transaction_commit() )
+				{
+					$receipt['message'][] = array('msg'=>lang('Request %1 has been deleted from project %2',$request_id,$project_id));			
+				}
 			}
 			return $receipt;
 		}
@@ -860,18 +837,11 @@
 		{
 			$historylog_r	= CreateObject('property.historylog','request');
 
-			$sql = "SELECT origin_id FROM fm_origin WHERE destination ='project' AND destination_id='$project_id' and origin ='request'";
-//			$sql = "SELECT origin_id FROM fm_project_origin WHERE project_id='$project_id' and origin ='request'";
-			$this->db->query($sql,__LINE__,__FILE__);
+			$request = $this->interlink->get_specific_targets('property', '.project.request', '.project', $project_id);
 
-			while ($this->db->next_record())
+			foreach ($request as $request_id)
 			{
-				$request_id[]	= $this->db->f('origin_id');
-			}
-
-			for ($i=0;$i<count($request_id);$i++)
-			{
-				$this->db->query("SELECT status,category,coordinator FROM fm_request where id='" .$request_id[$i] ."'",__LINE__,__FILE__);
+				$this->db->query("SELECT status,category,coordinator FROM fm_request WHERE id='{$request_id}'",__LINE__,__FILE__);
 
 				$this->db->next_record();
 
@@ -881,55 +851,53 @@
 
 				if ($old_status != $status)
 				{
-					$historylog_r->add('S',$request_id[$i],$status);
+					$historylog_r->add('S',$request_id,$status);
 				}
 
 				if ((int)$old_category != (int)$category)
 				{
-					$historylog_r->add('T',$request_id[$i],$category);
+					$historylog_r->add('T',$request_id,$category);
 				}
 
 				if ((int)$old_coordinator != (int)$coordinator)
 				{
-					$historylog_r->add('C',$request_id[$i],$coordinator);
+					$historylog_r->add('C',$request_id,$coordinator);
 				}
 
-				$this->db->query("update fm_request set status='$status',coordinator='$coordinator' where id='". $request_id[$i] . "'",__LINE__,__FILE__);
+				$this->db->query("UPDATE fm_request SET status='{$status}',coordinator='{$coordinator}' WHERE id='{$request_id}'",__LINE__,__FILE__);
 			}
 		}
 
-
 		function check_request($request_id)
 		{
-			$sql = "SELECT destination_id FROM fm_origin WHERE destination ='project' AND origin_id='$request_id' and origin ='request'";
-			$this->db->query($sql,__LINE__,__FILE__);
+			$target = $this->interlink->get_specific_targets('property', '.project.request', '.project', $request_id);
 
-			$this->db->next_record();
-
-			if ( $this->db->f(0))
+			if ( $target)
 			{
-				return $this->db->f('destination_id');
+				return $target[0];
 			}
 		}
 
 		function add_request($add_request,$id)
 		{
-
 			for ($i=0;$i<count($add_request['request_id']);$i++)
 			{
 				$project_id=$this->check_request($add_request['request_id'][$i]);
 
 				if(!$project_id)
 				{
-					$this->db->query("INSERT INTO  fm_origin (origin,origin_id,destination,destination_id,user_id,entry_date) "
-						. "VALUES ('request','"
-						. $add_request['request_id'][$i]. "','"
-						. "project',"
-						. $id . ","
-						. $this->account . ","
-						. time() . ")",__LINE__,__FILE__);
+					$interlink_data = array
+					(
+						'location1_id'		=> $GLOBALS['phpgw']->locations->get_id('property', '.project.request'),
+						'location1_item_id' => $add_request['request_id'][$i],
+						'location2_id'		=> $GLOBALS['phpgw']->locations->get_id('property', '.project'),			
+						'location2_item_id' => $id,
+						'account_id'		=> $this->account
+					);
+					
+					$this->interlink->add($interlink_data);
 
-					$this->db->query("update fm_request set project_id='$id' where id='". $add_request['request_id'][$i] . "'",__LINE__,__FILE__);
+					$this->db->query("UPDATE fm_request SET project_id='$id' where id='". $add_request['request_id'][$i] . "'",__LINE__,__FILE__);
 
 					$receipt['message'][] = array('msg'=>lang('request %1 has been added',$add_request['request_id'][$i]));
 				}
@@ -945,13 +913,7 @@
 
 		function delete($project_id )
 		{
-			$sql = "SELECT origin_id FROM fm_origin WHERE destination ='project' AND destination_id='$project_id' and origin ='request'";
-			$this->db->query($sql,__LINE__,__FILE__);
-
-			while ($this->db->next_record())
-			{
-				$request_id[]	= $this->db->f('origin_id');
-			}
+			$request = $this->interlink->get_specific_targets('property', '.project.request', '.project', $project_id);
 
 			$sql = "SELECT id as workorder_id FROM fm_workorder WHERE project_id='$project_id'";
 			$this->db->query($sql,__LINE__,__FILE__);
@@ -963,16 +925,18 @@
 
 			$this->db->transaction_begin();
 
-			for ($i=0;$i<count($request_id);$i++)
+			foreach ($request as $request_id)
 			{
-
-				$this->db->query("update fm_request set project_id = NULL where id='". $request_id[$i] . "'",__LINE__,__FILE__);
+				$this->db->query("UPDATE fm_request set project_id = NULL where id='{$request_id}'",__LINE__,__FILE__);
 			}
 
 			$this->db->query("DELETE FROM fm_project WHERE id='" . $project_id . "'",__LINE__,__FILE__);
 			$this->db->query("DELETE FROM fm_project_history  WHERE  history_record_id='" . $project_id   . "'",__LINE__,__FILE__);
 			$this->db->query("DELETE FROM fm_projectbranch  WHERE  project_id='" . $project_id   . "'",__LINE__,__FILE__);
-			$this->db->query("DELETE FROM fm_origin WHERE destination ='project' AND destination_id ='" . $project_id . "'",__LINE__,__FILE__);
+//			$this->db->query("DELETE FROM fm_origin WHERE destination ='project' AND destination_id ='" . $project_id . "'",__LINE__,__FILE__);
+			$this->interlink->delete_at_origin('property', '.project.request', '.project', $project_id, $this->db);
+			$this->interlink->delete_at_target('property', '.project', $project_id, $this->db);
+
 			$this->db->query("DELETE FROM fm_workorder WHERE project_id='" . $project_id . "'",__LINE__,__FILE__);
 
 			for ($i=0;$i<count($workorder_id);$i++)
@@ -982,7 +946,5 @@
 			}
 
 			$this->db->transaction_commit();
-
 		}
 	}
-
