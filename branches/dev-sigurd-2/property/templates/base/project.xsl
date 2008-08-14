@@ -147,28 +147,17 @@
 					</tr>
 
 
-					<xsl:choose>
-						<xsl:when test="selected_request =''">
-							<tr>
-								<td valign="top">
-									<a href="{link_select_request}" title="{lang_select_request_statustext}" onMouseover="window.status='{lang_select_request_statustext}';return true;" onMouseout="window.status='';return true;"><xsl:value-of select="lang_select_request"/></a>
-								</td>
-							</tr>
-						</xsl:when>
-					</xsl:choose>
+					<tr>
+						<td valign="top">
+							<a href="{link_select_request}"  title="{lang_select_request_statustext}" style ="cursor:help"><xsl:value-of select="lang_select_request"/></a>
+						</td>
+					</tr>
 
 					<xsl:for-each select="value_origin" >
-						<xsl:variable name="link_origin_type"><xsl:value-of select="link"/></xsl:variable>
+						<xsl:variable name="origin_location"><xsl:value-of select="location"/></xsl:variable>
 						<tr>
 							<td valign ="top">
-								<xsl:choose>
-									<xsl:when test="type ='request'">
-										<a href="{//link_select_request}" onMouseover="window.status='{//lang_select_request_statustext}';return true;" onMouseout="window.status='';return true;"><xsl:value-of select="//lang_select_request"/></a>
-									</xsl:when>
-									<xsl:otherwise>
-											<xsl:value-of select="descr"/>
-									</xsl:otherwise>
-								</xsl:choose>
+								<xsl:value-of select="descr"/>
 							</td>
 							<td>
 							<table>
@@ -181,12 +170,13 @@
 								<xsl:text> </xsl:text>
 
 								<xsl:choose>
-									<xsl:when test="type ='request'">
+									<xsl:when test="$origin_location ='.project.request'">
 									<input type="checkbox" name="values[delete_request][]" value="{id}"  onMouseout="window.status='';return true;">
-										<xsl:attribute name="onMouseover">
-											<xsl:text>window.status='</xsl:text>
-												<xsl:value-of select="//lang_delete_request_statustext"/>
-											<xsl:text>'; return true;</xsl:text>
+										<xsl:attribute name="title">
+											<xsl:value-of select="//lang_delete_request_statustext"/>
+										</xsl:attribute>
+										<xsl:attribute name="style">
+											<xsl:text>cursor:help</xsl:text>
 										</xsl:attribute>
 									</input>
 									</xsl:when>

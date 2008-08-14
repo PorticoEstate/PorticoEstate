@@ -2637,7 +2637,7 @@
 				.$entry['entry_date'] . ',-1,-1,-1)');
 		}
 
-//		$GLOBALS['phpgw_setup']->oProc->DropTable('fm_origin');
+		$GLOBALS['phpgw_setup']->oProc->DropTable('fm_origin');
 
 		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
 		{

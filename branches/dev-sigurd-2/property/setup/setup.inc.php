@@ -167,7 +167,6 @@
 		'fm_s_agreement_history',
 		'fm_async_method',
 		'fm_cron_log',
-		'fm_origin',
 		'fm_tenant_claim',
 		'fm_tenant_claim_category',
 		'fm_r_agreement',

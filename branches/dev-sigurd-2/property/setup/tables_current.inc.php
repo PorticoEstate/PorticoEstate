@@ -1378,20 +1378,6 @@
 			'ix' => array(),
 			'uc' => array()
 		),
-		'fm_origin' => array(
-			'fd' => array(
-				'origin' => array('type' => 'varchar','precision' => '12','nullable' => False),
-				'origin_id' => array('type' => 'int','precision' => '4','nullable' => False),
-				'destination' => array('type' => 'varchar','precision' => '12','nullable' => False),
-				'destination_id' => array('type' => 'int','precision' => '4','nullable' => False),
-				'user_id' => array('type' => 'int','precision' => '4','nullable' => True),
-				'entry_date' => array('type' => 'int','precision' => '4','nullable' => True)
-			),
-			'pk' => array('origin','origin_id','destination','destination_id'),
-			'fk' => array(),
-			'ix' => array(),
-			'uc' => array()
-		),
 		'fm_entity_1_1' => array(
 			'fd' => array(
 				'id' => array('type' => 'auto','precision' => '4','nullable' => False),

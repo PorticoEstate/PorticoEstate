@@ -1657,3 +1657,8 @@ You have to select the Conversion for this import	property	en	You have to select
 You have to select type of invoice	property	en	You have to select type of invoice
 Your message could not be sent by mail!	property	en	Your message could not be sent by mail!
 Your message could not be sent!	property	en	Your message could not be sent!
+.project	property	en	Project
+.project.workorder	property	en	Workorder
+.project.request	property	en	Request
+.tenant_claim	property	en	Tenant claim
+.ticket	property	en	Ticket

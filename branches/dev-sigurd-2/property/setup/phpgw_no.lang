@@ -1626,3 +1626,8 @@ Your message could not be sent!	property	no	Din melding kunne ikke sendes
 Your message could not be sent by mail!	property	no	Din melding kunne ikke sendes med epost!
 obligations	property	no	forpliktelser
 contractual obligations	property	no	forpliktelser
+.project	property	no	Prosjekt
+.project.workorder	property	no	Arbeidsordre
+.project.request	property	no	Behov
+.tenant_claim	property	no	Leietaker krav
+.ticket	property	no	Melding

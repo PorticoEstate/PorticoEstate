@@ -226,11 +226,12 @@
 			foreach ($project as & $entry)
 			{
 				$entry['start_date'] = $GLOBALS['phpgw']->common->show_date($entry['start_date'],$dateformat);
-				$ticket = $this->interlink->get_relation('property', '.project', $entry['project_id'], 'origin');
-				$entry['ticket_id'] = $ticket[0]['data'][0]['id'];
+				$origin = $this->interlink->get_relation('property', '.project', $entry['project_id'], 'origin');
+				if($origin[0]['location'] == '.ticket')
+				{
+					$entry['ticket_id'] = $origin[0]['data'][0]['id'];
+				}
 			}
-//_debug_array($project);
-
 			return $project;
 		}
 

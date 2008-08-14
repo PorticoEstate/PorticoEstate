@@ -541,7 +541,7 @@
 				$origin_id			= phpgw::get_var('origin_id', 'int');
 
 				//23.jun 08: This will be handled by the interlink code - just doing a quick hack for now...
-				if($origin == 'tts' && $origin_id && !$values['descr'])
+				if($origin == '.ticket' && $origin_id && !$values['descr'])
 				{
 					$boticket= CreateObject('property.botts');
 					$ticket = $boticket->read_single($origin_id);
@@ -929,7 +929,7 @@
 				'value_origin'					=> isset($values['origin']) ? $values['origin'] : '',
 				'value_origin_type'				=> (isset($origin)?$origin:''),
 				'value_origin_id'				=> (isset($origin_id)?$origin_id:''),
-				'selected_request'				=> (isset($selected_request)?$selected_request:''),
+		//		'selected_request'				=> (isset($selected_request)?$selected_request:''),
 
 				'lang_select_request'				=> lang('Select request'),
 				'lang_select_request_statustext'		=> lang('Add request for this project'),

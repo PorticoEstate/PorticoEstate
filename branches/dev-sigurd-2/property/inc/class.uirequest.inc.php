@@ -854,6 +854,7 @@
 				'msgbox_data'				=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
 
 				'value_acl_location'		=> $this->acl_location,
+				'value_target'				=> $values['target'],
 				'value_origin'				=> $values['origin'],
 				'value_origin_type'			=> $origin,
 				'value_origin_id'			=> $origin_id,
@@ -1123,6 +1124,7 @@
 				'lang_filename'					=> lang('Filename'),
 				'lang_view_file_statustext'			=> lang('click to view file'),
 
+				'value_target'					=> $values['target'],
 				'value_origin'					=> $values['origin'],
 				'value_origin_type'				=> $origin,
 				'value_origin_id'				=> $origin_id,

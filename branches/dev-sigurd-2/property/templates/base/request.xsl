@@ -354,6 +354,20 @@
 					</xsl:for-each>
 				</xsl:otherwise>
 			</xsl:choose>
+			<xsl:for-each select="value_target" >
+				<tr>
+					<td class="th_text" valign ="top">
+						<xsl:value-of select="descr"/>
+					</td>
+						<td class="th_text"  align="left" >
+						<xsl:for-each select="data">
+							<a href="{link}"  title="{//lang_target_statustext}" style ="cursor:help"><xsl:value-of select="id"/></a>
+							<xsl:text> </xsl:text>
+						</xsl:for-each>
+					</td>
+				</tr>
+			</xsl:for-each>
+
 			<tr>
 				<td valign="top">
 					<xsl:value-of select="lang_title"/>
@@ -1079,6 +1093,20 @@
 				</td>
 			</tr>
 			</xsl:for-each>
+			<xsl:for-each select="value_target" >
+				<tr>
+					<td class="th_text" valign ="top">
+						<xsl:value-of select="descr"/>
+					</td>
+						<td class="th_text"  align="left" >
+						<xsl:for-each select="data">
+							<a href="{link}"  title="{//lang_target_statustext}" style ="cursor:help"><xsl:value-of select="id"/></a>
+							<xsl:text> </xsl:text>
+						</xsl:for-each>
+					</td>
+				</tr>
+			</xsl:for-each>
+
 			<tr>
 				<td>
 					<xsl:value-of select="lang_request_id"/>
