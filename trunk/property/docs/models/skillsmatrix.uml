@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<uml:Model xmi:version="2.1" xmlns:xmi="http://schema.omg.org/spec/XMI/2.1" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:uml="http://www.eclipse.org/uml2/2.1.0/UML" xmi:id="_EAyFMGqKEd2oR7hEGX-6lQ" name="skillsmatrix">
+  <packageImport xmi:id="_EAyFMWqKEd2oR7hEGX-6lQ">
+    <importedPackage xmi:type="uml:Model" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#_0"/>
+  </packageImport>
+  <packagedElement xmi:type="uml:Package" xmi:id="_OowwgGqKEd2oR7hEGX-6lQ" name="Property">
+    <packagedElement xmi:type="uml:Package" xmi:id="_RfMLEGqKEd2oR7hEGX-6lQ" name="SkillsMatrix">
+      <packagedElement xmi:type="uml:Class" xmi:id="_UTbNQGqKEd2oR7hEGX-6lQ" name="property_skill_level">
+        <ownedAttribute xmi:id="_cxipEGqKEd2oR7hEGX-6lQ" name="cert_skill_id" isUnique="false">
+          <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Integer"/>
+        </ownedAttribute>
+        <ownedAttribute xmi:id="_8W530GqLEd2oR7hEGX-6lQ" name="cert" type="_CeN-4GqNEd2oR7hEGX-6lQ" isUnique="false"/>
+        <ownedAttribute xmi:id="_-L1ZIGqLEd2oR7hEGX-6lQ" name="code" isUnique="false">
+          <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#String"/>
+        </ownedAttribute>
+        <ownedAttribute xmi:id="_-wj20GqLEd2oR7hEGX-6lQ" name="title" isUnique="false">
+          <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#String"/>
+        </ownedAttribute>
+        <ownedAttribute xmi:id="__MSJgGqLEd2oR7hEGX-6lQ" name="active" isUnique="false">
+          <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Boolean"/>
+        </ownedAttribute>
+        <ownedOperation xmi:id="_cogW8GqMEd2oR7hEGX-6lQ" name="__construct">
+          <ownedParameter xmi:id="_fIF-0GqMEd2oR7hEGX-6lQ" name="skill_level">
+            <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#_JpAR8GqKEd2oR7hEGX-6lQ"/>
+          </ownedParameter>
+        </ownedOperation>
+        <ownedOperation xmi:id="_o5xUQGqMEd2oR7hEGX-6lQ" name="__toString">
+          <ownedParameter xmi:id="_sQZR0GqMEd2oR7hEGX-6lQ" name="str" direction="return">
+            <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#String"/>
+          </ownedParameter>
+        </ownedOperation>
+      </packagedElement>
+      <packagedElement xmi:type="uml:Class" xmi:id="_CeN-4GqNEd2oR7hEGX-6lQ" name="property_certification">
+        <ownedAttribute xmi:id="_GiSRQGqNEd2oR7hEGX-6lQ" name="cert_id" isUnique="false">
+          <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Integer"/>
+        </ownedAttribute>
+        <ownedAttribute xmi:id="_HDVI0GqNEd2oR7hEGX-6lQ" name="qaulification_type" isUnique="false"/>
+        <ownedAttribute xmi:id="_LHapUGqNEd2oR7hEGX-6lQ" name="name" isUnique="false">
+          <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#String"/>
+        </ownedAttribute>
+        <ownedAttribute xmi:id="_OAvm4GqNEd2oR7hEGX-6lQ" name="active" isUnique="false">
+          <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Boolean"/>
+        </ownedAttribute>
+        <ownedAttribute xmi:id="_zfoNwGqOEd2oR7hEGX-6lQ" name="doc_required" isUnique="false">
+          <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Boolean"/>
+        </ownedAttribute>
+        <ownedOperation xmi:id="_4fYFQGqOEd2oR7hEGX-6lQ" name="__construct">
+          <ownedParameter xmi:id="_9sqpgGqOEd2oR7hEGX-6lQ" name="args">
+            <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#_JpAR8GqKEd2oR7hEGX-6lQ"/>
+          </ownedParameter>
+        </ownedOperation>
+        <ownedOperation xmi:id="_4prQwGqOEd2oR7hEGX-6lQ" name="__toString">
+          <ownedParameter xmi:id="_-SIHAGqOEd2oR7hEGX-6lQ" name="str" direction="return">
+            <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#String"/>
+          </ownedParameter>
+        </ownedOperation>
+      </packagedElement>
+      <packagedElement xmi:type="uml:Class" xmi:id="_UNekAGqPEd2oR7hEGX-6lQ" name="property_qualification">
+        <ownedAttribute xmi:id="_YeHucGq-Ed2oR7hEGX-6lQ" name="id" isUnique="false">
+          <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Integer"/>
+        </ownedAttribute>
+        <ownedAttribute xmi:id="_YrL6EGq-Ed2oR7hEGX-6lQ" name="parent" isUnique="false">
+          <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Integer"/>
+        </ownedAttribute>
+        <ownedAttribute xmi:id="_Y_q8UGq-Ed2oR7hEGX-6lQ" name="name" isUnique="false">
+          <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#String"/>
+        </ownedAttribute>
+        <ownedAttribute xmi:id="_ZEACsGq-Ed2oR7hEGX-6lQ" name="descr" isUnique="false">
+          <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#String"/>
+        </ownedAttribute>
+        <ownedAttribute xmi:id="_ZV2nsGq-Ed2oR7hEGX-6lQ" name="active" isUnique="false">
+          <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Boolean"/>
+        </ownedAttribute>
+        <ownedOperation xmi:id="_mQEbYGq-Ed2oR7hEGX-6lQ" name="__contruct">
+          <ownedParameter xmi:id="_oVDK4Gq-Ed2oR7hEGX-6lQ" name="args">
+            <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#String"/>
+          </ownedParameter>
+        </ownedOperation>
+        <ownedOperation xmi:id="_mefR4Gq-Ed2oR7hEGX-6lQ" name="__toString">
+          <ownedParameter xmi:id="_wk79cGq-Ed2oR7hEGX-6lQ" name="str" direction="return">
+            <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#String"/>
+          </ownedParameter>
+        </ownedOperation>
+      </packagedElement>
+    </packagedElement>
+  </packagedElement>
+  <profileApplication xmi:id="_EAyFMmqKEd2oR7hEGX-6lQ">
+    <eAnnotations xmi:id="_EAyFM2qKEd2oR7hEGX-6lQ" source="http://www.eclipse.org/uml2/2.0.0/UML">
+      <references xmi:type="ecore:EPackage" href="pathmap://UML_PROFILES/Standard.profile.uml#_yzU58YinEdqtvbnfB2L_5w"/>
+    </eAnnotations>
+    <appliedProfile href="pathmap://UML_PROFILES/Standard.profile.uml#_0"/>
+  </profileApplication>
+</uml:Model>
