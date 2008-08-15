@@ -32,6 +32,8 @@
 	 * @package property
 	 */
 
+  phpgw::import_class('phpgwapi.yui');
+
 	class property_uilocation
 	{
 		var $grants;
@@ -46,7 +48,7 @@
 
 		var $public_functions = array
 		(
-			'download'  	=> true,
+			'download'  => true,
 			'index'  	=> true,
 			'view'   	=> true,
 			'edit'   	=> true,
@@ -54,7 +56,8 @@
 			'update_cat'=> true,
 			'stop'		=> true,
 			'summary'	=> true,
-			'columns'	=> true
+			'columns'	=> true,
+			'index2'  	=> true
 		);
 
 		function property_uilocation()
@@ -600,6 +603,476 @@
 
 		}
 
+
+		function index2()
+		{
+			$type_id	= $this->type_id;
+			$lookup 	= $this->lookup;
+			$lookup_name 	= phpgw::get_var('lookup_name');
+			$lookup_tenant 	= phpgw::get_var('lookup_tenant', 'bool');
+
+			if(!$type_id)
+			{
+				$type_id = 1;
+			}
+			if($lookup)
+			{
+				$GLOBALS['phpgw_info']['flags']['noframework'] = true;
+			}
+
+			if ( $type_id && !$lookup_tenant )
+			{
+				$GLOBALS['phpgw_info']['flags']['menu_selection'] .= "::loc_$type_id";
+			}
+			else
+			{
+				$GLOBALS['phpgw_info']['flags']['menu_selection'] .= '::tenant';
+			}
+
+			if (!$this->acl_read)
+			{
+				$this->bocommon->no_access();
+				return;
+			}
+
+		$GLOBALS['phpgw']->css->validate_file('datatable');
+		$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/datatable/assets/skins/sam/datatable.css');
+
+		phpgwapi_yui::load_widget('dragdrop');
+	  	phpgwapi_yui::load_widget('datatable');
+	  	phpgwapi_yui::load_widget('menu');
+	  	phpgwapi_yui::load_widget('connection');
+
+			$GLOBALS['phpgw']->js->validate_file('overlib','overlib','property');
+			$GLOBALS['phpgw']->js->validate_file( 'newdesign', 'gabnr', 'property' );
+
+			$GLOBALS['phpgw']->js->set_onload('document.search.query.focus();');
+
+
+			$location_list = $this->bo->read(array('type_id'=>$type_id,'lookup_tenant'=>$lookup_tenant,'lookup'=>$lookup,'allrows'=>$this->allrows));
+
+			//echo $location_list;
+			$uicols = $this->bo->uicols;
+
+
+//_debug_array($location_list);
+//_debug_array($uicols);
+
+			$content = array();
+			$j=0;
+			if (isSet($location_list) && is_array($location_list))
+			{
+				foreach($location_list as $location)
+				{
+					for ($i=0;$i<count($uicols['name']);$i++)
+					{
+
+						if($uicols['input_type'][$i]!='hidden')
+						{
+							if(isset($location['query_location'][$uicols['name'][$i]]))
+							{
+								$content[$j]['row'][$i]['statustext']			= lang('search');
+								$content[$j]['row'][$i]['text']				= $location[$uicols['name'][$i]];
+								$content[$j]['row'][$i]['link']				= $GLOBALS['phpgw']->link('/index.php',array(
+																			'menuaction'	=> 'property.uilocation.index',
+																			'query' 	=> $location['query_location'][$uicols['name'][$i]],
+																			'lookup'	=> $lookup,
+																			'type_id'	=> $type_id,
+																			'lookup_tenant'	=> $lookup_tenant,
+																			'lookup_name'	=> $lookup_name
+																			)
+																		);
+							}
+							else
+							{
+								$content[$j]['row'][$i]['value'] 			= $location[$uicols['name'][$i]];
+								$content[$j]['row'][$i]['name'] 			= $uicols['name'][$i];
+								$content[$j]['row'][$i]['lookup'] 			= $lookup;
+								$content[$j]['row'][$i]['align'] 			= (isset($uicols['align'][$i])?$uicols['align'][$i]:'center');
+
+								if(isset($uicols['datatype']) && isset($uicols['datatype'][$i]) && $uicols['datatype'][$i]=='link' && $location[$uicols['name'][$i]])
+								{
+									$content[$j]['row'][$i]['text']		= lang('link');
+									$content[$j]['row'][$i]['link']		= $location[$uicols['name'][$i]];
+									$content[$j]['row'][$i]['target']	= '_blank';
+								}
+							}
+						}
+
+						$content[$j]['hidden'][$i]['value'] 			= $location[$uicols['name'][$i]];
+						$content[$j]['hidden'][$i]['name'] 				= $uicols['name'][$i];
+
+					}
+
+					if(!$lookup)
+					{
+						if($this->acl_read)
+						{
+							$content[$j]['row'][$i]['statustext']			= lang('view the location');
+							$content[$j]['row'][$i]['text']				= lang('view');
+							$content[$j]['row'][$i]['link']				= $GLOBALS['phpgw']->link('/index.php',array(
+																		'menuaction'=> 'property.uilocation.view',
+																		'location_code'=> $location['location_code'],
+																		'lookup_tenant'=>$lookup_tenant
+																		)
+																	);
+							$i++;
+						}
+
+						if($this->acl_edit)
+						{
+							$content[$j]['row'][$i]['statustext']			= lang('edit the location');
+							$content[$j]['row'][$i]['text']				= lang('edit');
+							$content[$j]['row'][$i]['link']				= $GLOBALS['phpgw']->link('/index.php',array(
+																		'menuaction'=> 'property.uilocation.edit',
+																		'location_code'=> $location['location_code'],
+																		'lookup_tenant'=>$lookup_tenant
+																		)
+																	);
+							$i++;
+						}
+
+						if($this->acl_delete)
+						{
+							$content[$j]['row'][$i]['statustext']			= lang('delete the location');
+							$content[$j]['row'][$i]['text']				= lang('delete');
+							$content[$j]['row'][$i]['link']				= $GLOBALS['phpgw']->link('/index.php',array(
+																		'menuaction'=> 'property.uilocation.delete',
+																		'location_code'=> $location['location_code'],
+																		'type_id'=> $type_id,
+																		'lookup_tenant'=>$lookup_tenant
+																		)
+																	);
+						}
+					}
+					$j++;
+				}
+			}
+//_debug_array($content);
+			$uicols_count	= count($uicols['descr']);
+			for ($i=0;$i<$uicols_count;$i++)
+			{
+				if($uicols['input_type'][$i]!='hidden')
+				{
+					$table_header[$i]['header'] 	= $uicols['descr'][$i];
+					$table_header[$i]['width'] 		= '5%';
+					$table_header[$i]['align'] 		= 'center';
+					if($uicols['name'][$i]=='loc1'):
+					{
+						$table_header[$i]['sort_link']	=true;
+						$table_header[$i]['sort'] 		= $this->nextmatchs->show_sort_order(array
+										(
+											'sort'	=> $this->sort,
+											'var'	=> 'fm_location1.loc1',
+											'order'	=> $this->order,
+											'extra'	=> array('menuaction' => 'property.uilocation.index',
+																	'type_id'		=> $type_id,
+																	'query'			=> $this->query,
+																	'district_id'		=> $this->district_id,
+																	'part_of_town_id'	=> $this->part_of_town_id,
+																	'lookup'		=> $lookup,
+																	'lookup_tenant'		=> $lookup_tenant,
+																	'lookup_name'		=> $lookup_name,
+																	'cat_id'		=> $this->cat_id,
+																	'status'		=> $this->status)
+										));
+					}
+					elseif($uicols['name'][$i]=='street_name'):
+					{
+						$table_header[$i]['sort_link']	=true;
+						$table_header[$i]['sort'] 		= $this->nextmatchs->show_sort_order(array
+										(
+											'sort'	=> $this->sort,
+											'var'	=> 'street_name',
+											'order'	=> $this->order,
+											'extra'	=> array('menuaction'	=> 'property.uilocation.index',
+																	'type_id'		=> $type_id,
+																	'query'			=> $this->query,
+																	'district_id'		=> $this->district_id,
+																	'part_of_town_id'	=> $this->part_of_town_id,
+																	'lookup'		=> $lookup,
+																	'lookup_tenant'		=> $lookup_tenant,
+																	'lookup_name'		=> $lookup_name,
+																	'cat_id'		=> $this->cat_id,
+																	'status'		=> $this->status)
+										));
+					}
+					elseif(isset($uicols['cols_return_extra'][$i]) && ($uicols['cols_return_extra'][$i]!='T' || $uicols['cols_return_extra'][$i]!='CH')):
+					{
+						$table_header[$i]['sort_link']	=true;
+						$table_header[$i]['sort'] 		= $this->nextmatchs->show_sort_order(array
+							(
+								'sort'	=> $this->sort,
+								'var'	=> $uicols['name'][$i],
+								'order'	=> $this->order,
+								'extra'	=> array('menuaction'	=> 'property.uilocation.index',
+																	'type_id'		=> $type_id,
+																	'query'			=> $this->query,
+																	'district_id'		=> $this->district_id,
+																	'part_of_town_id'	=> $this->part_of_town_id,
+																	'lookup'		=> $lookup,
+																	'lookup_tenant'		=> $lookup_tenant,
+																	'lookup_name'		=> $lookup_name,
+																	'cat_id'		=> $this->cat_id,
+																	'status'		=> $this->status)
+
+							));
+					}
+					endif;
+				}
+			}
+
+			if(!$lookup)
+			{
+				if($this->acl_read)
+				{
+					$table_header[$i]['width'] 			= '5%';
+					$table_header[$i]['align'] 			= 'center';
+					$table_header[$i]['header']			= lang('view');
+					$i++;
+				}
+				if($this->acl_edit)
+				{
+					$table_header[$i]['width'] 			= '5%';
+					$table_header[$i]['align'] 			= 'center';
+					$table_header[$i]['header']			= lang('edit');
+					$i++;
+				}
+				if($this->acl_delete)
+				{
+					$table_header[$i]['width'] 			= '5%';
+					$table_header[$i]['align'] 			= 'center';
+					$table_header[$i]['header']			= lang('delete');
+					$i++;
+				}
+			}
+			else
+			{
+				$table_header[$i]['width'] 			= '5%';
+				$table_header[$i]['align'] 			= 'center';
+				$table_header[$i]['header']			= lang('select');
+			}
+
+			if($this->acl_add)
+			{
+				$table_add[] = array
+				(
+					'lang_add'		=> lang('add'),
+					'lang_add_statustext'	=> lang('add a location'),
+					'add_action'		=> $GLOBALS['phpgw']->link('/index.php',array(
+													'menuaction'=> 'property.uilocation.edit',
+													'type_id'=>$type_id
+													)
+											  )
+				);
+			}
+
+			$link_data = array
+			(
+				'menuaction'		=> 'property.uilocation.index',
+				'sort'			=> $this->sort,
+				'order'			=> $this->order,
+				'cat_id'		=> $this->cat_id,
+				'district_id'		=> $this->district_id,
+				'part_of_town_id'	=> $this->part_of_town_id,
+				'filter'		=> $this->filter,
+				'query'			=> $this->query,
+				'lookup'		=> $lookup,
+				'lookup_tenant'		=> $lookup_tenant,
+				'lookup_name'		=> $lookup_name,
+				'type_id'		=> $type_id,
+				'status'		=> $this->status
+			);
+
+			$input_name		= $GLOBALS['phpgw']->session->appsession('lookup_fields','property');
+
+			$function_exchange_values = '';
+			if(is_array($input_name))
+			{
+				for ($k=0;$k<count($input_name);$k++)
+				{
+					$function_exchange_values .= "opener.document.form." . $input_name[$k] . ".value = '';" ."\r\n";
+				}
+			}
+
+			for ($i=0;$i<count($uicols['name']);$i++)
+			{
+				if(isset($uicols['exchange'][$i]) && $uicols['exchange'][$i])
+				{
+					$function_exchange_values .= 'opener.document.form.' . $uicols['name'][$i] .'.value = thisform.elements[' . $i . '].value;' ."\r\n";
+				}
+			}
+
+			$function_exchange_values .='window.close()';
+
+//_debug_array($input_name);
+			$link_download = array
+			(
+				'menuaction'		=> 'property.uilocation.download',
+				'sort'			=> $this->sort,
+				'order'			=> $this->order,
+				'cat_id'		=> $this->cat_id,
+				'district_id'		=> $this->district_id,
+				'part_of_town_id'	=> $this->part_of_town_id,
+				'filter'		=> $this->filter,
+				'query'			=> $this->query,
+				'lookup'		=> $lookup,
+				'lookup_tenant'		=> $lookup_tenant,
+				'lookup_name'		=> $lookup_name,
+				'type_id'		=> $type_id,
+				'status'		=> $this->status,
+				'start'			=> $this->start
+			);
+
+			$link_columns = array
+			(
+				'menuaction'	=> 'property.uilocation.columns',
+				'type_id'		=> $type_id,
+				'lookup'		=> $this->lookup
+			);
+
+			if(!$this->allrows)
+			{
+				$record_limit	= $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
+			}
+			else
+			{
+				$record_limit	= $this->bo->total_records;
+			}
+
+			if(isset($GLOBALS['phpgw_info']['user']['preferences']['property']['property_filter']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['property_filter'] == 'owner')
+			{
+				$owner_list = $this->bo->get_owner_list('filter', $this->filter);
+			}
+			else
+			{
+				$owner_list = $this->bo->get_owner_type_list('filter', $this->filter);
+			}
+
+			//_debug_array($owner_list);
+
+			$data = array
+			(
+				'menu'					=> $this->bocommon->get_menu(),
+				'colspan'				=> $uicols_count+1,
+				'lang_download'				=> 'download',
+				'link_download'				=> $GLOBALS['phpgw']->link('/index.php',$link_download),
+				'lang_download_help'			=> lang('Download table to your browser'),
+
+				'lang_columns'				=> lang('columns'),
+				'link_columns'				=> $GLOBALS['phpgw']->link('/index.php',$link_columns),
+				'lang_columns_help'			=> lang('Choose columns'),
+
+				'exchange_values'			=> 'Exchange_values(this.form);',
+				'function_exchange_values'		=> $function_exchange_values,
+				'lang_select'				=> lang('select'),
+				'lookup'				=> $lookup,
+				'lang_property_name'			=> lang('Property name'),
+				'allow_allrows'				=> true,
+				'allrows'				=> $this->allrows,
+				'start_record'				=> $this->start,
+				'record_limit'				=> $record_limit,
+				'num_records'				=> count($location_list),
+				'all_records'				=> $this->bo->total_records,
+				'link_url'				=> $GLOBALS['phpgw']->link('/index.php',$link_data),
+				'img_path'				=> $GLOBALS['phpgw']->common->get_image_path('phpgwapi','default'),
+
+				'lang_status_statustext'		=> lang('Select the status. To do not use a status select NO STATUS'),
+				'status_name'				=> 'status',
+				'lang_no_status'			=> lang('No status'),
+				'status_list'				=> $this->bo->select_status_list('filter',$this->status),
+
+				'part_of_town_list'				=> $this->bocommon->select_part_of_town('filter',$this->part_of_town_id,$this->district_id),
+				'lang_no_part_of_town'				=> lang('no part of town'),
+				'lang_town_statustext'				=> lang('Select the part of town the selection belongs to. To do not use a part of town select NO PART OF TOWN'),
+				'select_name_part_of_town'			=> 'part_of_town_id',
+
+				'district_list'					=> $this->bocommon->select_district_list('filter',$this->district_id),
+				'lang_no_district'				=> lang('no district'),
+				'lang_district_statustext'			=> lang('Select the district the selection belongs to. To do not use a district select NO DISTRICT'),
+				'select_district_name'				=> 'district_id',
+
+				'lang_no_cat'					=> lang('no category'),
+				'lang_cat_statustext'				=> lang('Select the category the location belongs to. To do not use a category select NO CATEGORY'),
+				'select_name'					=> 'cat_id',
+				'cat_list'					=> $this->bocommon->select_category_list(array('format'=>'filter','selected' => $this->cat_id,'type' =>'location','type_id' =>$type_id,'order'=>'descr')),
+				'select_action'					=> $GLOBALS['phpgw']->link('/index.php',$link_data),
+				'owner_name'					=> 'filter',
+				'owner_list'					=> $owner_list,
+				'lang_show_all'					=> lang('Show all'),
+				'lang_owner_statustext'				=> lang('Select the owner type. To show all entries select SHOW ALL'),
+				'lang_searchfield_statustext'			=> lang('Enter the search string. To show all entries, empty this field and press the SUBMIT button again'),
+				'lang_searchbutton_statustext'			=> lang('Submit the search string'),
+				'query'						=> $this->query,
+				'lang_search'					=> lang('search'),
+				'table_header'					=> $table_header,
+				'values'					=> $content,
+				'table_add'					=> $table_add
+			);
+
+			$appname						= lang('location');
+
+			if($lookup)
+			{
+				$lookup_list	= $GLOBALS['phpgw']->session->appsession('lookup_name','property');
+				$function_msg	= $lookup_list[$lookup_name];
+			}
+			else
+			{
+				if($lookup_tenant)
+				{
+					$function_msg	= lang('Tenant');
+				}
+				else
+				{
+					$function_msg					= $uicols['descr'][($type_id)];
+				}
+			}
+
+/***********************************/
+		if( phpgw::get_var('phpgw_return_as') == 'json' ) {
+
+    		$json = array(
+    			'recordsReturned' 	=> 3,
+    			'totalRecords' 		=> count($data["values"]),
+    			'recordStartIndex' 	=> 0,
+    			'sortKey'			=> null,
+    			'sortDir'			=> "asc",
+    			'records'			=> array()
+    		);
+
+
+    		for( $i=0;$i < count($data["values"]) ; $i++)
+    		{
+				$fields = $data["values"][$i]["hidden"];
+				//$row = $data["values"][$i]["row"];
+				$json_row = array();
+
+				foreach($fields as $row){
+    				$json_row[$row["name"]] = $row["value"];
+				}
+
+    			$json['records'][] = $json_row;
+    		}
+
+
+    		return $json;
+		}
+
+/*********************************************/
+
+
+			$GLOBALS['phpgw']->xslttpl->add_file(array('location',
+										'nextmatchs',
+										'search_field'));
+
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
+			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('list' => $data));
+		//	$GLOBALS['phpgw']->xslttpl->pp();
+			$this->save_sessiondata();
+
+		}
+
 		function edit()
 		{
 			$get_history 		= phpgw::get_var('get_history', 'bool', 'POST');
@@ -803,15 +1276,17 @@
 					}
 				}
 			}
-
-			$values['attributes']	= $this->bo->find_attribute(".location.{$this->type_id}");
-			$values					= $this->bo->prepare_attribute($values, ".location.{$this->type_id}");
-
 			/* Preserve attribute values from post */
 			if(isset($receipt['error']) && (isset( $values_attribute) && is_array( $values_attribute)))
 			{
 				$values = $this->bocommon->preserve_attribute_values($values,$values_attribute);
 				unset($values['location_code']);
+			}
+
+			if(!$values)
+			{
+				$values['attributes']	= $this->bo->find_attribute(".location.{$this->type_id}");
+				$values					= $this->bo->prepare_attribute($values, ".location.{$this->type_id}");
 			}
 
 			if ($values['cat_id'] > 0)
@@ -1425,6 +1900,8 @@
 
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('view' => $data));
+
+
 		}
 
 		/**
@@ -1529,7 +2006,26 @@
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('location'));
 
-			$GLOBALS['phpgw']->js->validate_file('overlib','overlib','property');
+			//$GLOBALS['phpgw']->js->validate_file('overlib','overlib','property');
+
+	/***********************************/
+		/// Enable for use Yahoo YUI
+		//$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/datatable/assets/skins/sam/datatable.css');
+
+		//$GLOBALS['phpgw']->css->add_external_file('equipo/templates/idots/css/table.css');
+
+	/*	phpgwapi_yui::load_widget('dragdrop');
+	  	phpgwapi_yui::load_widget('datatable');
+	  	phpgwapi_yui::load_widget('menu');
+	  	phpgwapi_yui::load_widget('connection');*/
+
+      	//phpgwapi_yui::load_widget('tabview');
+
+	  	// Uncomment the following line to enable experimental YUI Datagrid version
+	  //	$GLOBALS['phpgw']->js->validate_file( 'newdesign', 'gabnr', 'property' );
+
+	/***********************************/
+
 
 			$summary_list= $this->bo->read_summary();
 			$uicols	= $this->bo->uicols;
