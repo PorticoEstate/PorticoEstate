@@ -1,0 +1,23 @@
+.diffdeleted
+{
+   font-size: 11px;
+   background-color: #FF2000;
+}
+
+.diffadded
+{
+   font-size: 11px;
+   background-color: #15AA15;
+}
+
+.diff
+{
+   font-size: 11px;
+   background-color: #D0D0D0
+}
+
+.newpath
+{
+   font-size: 150%;
+   color: #DDA0DD
+}

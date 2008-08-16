@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+		<link rel="stylesheet" type="text/css" href="../styles/screen.css" media="screen" />
+		<link rel="stylesheet" type="text/css" href="../styles/print.css" media="print" />
+		<title>phpGroupWare - Installation &amp; Security HOWTO</title>
+	</head>
+	<body>
+		<div>
+			<div id="printheader">
+				<img src="../pics/logo.png" alt="phpGW logo" />
+				Installation &amp; Security HOWTO
+			</div>
+			<div id="top">
+				<img src="../pics/logo.png" 
+					alt="phpGroupWare" />
+				<div id="sitename"><a href="index.html">Installation &amp; Security HOWTO</a></div>
+			</div>
+			<div id="content">
+				<h2>Setup and configuration </h2>
+				<p>
+					Now open the setup app in a browser. It is required that you have cookies 
+					enabled on your browser to login to setup. Later on you will have the option
+					of not using cookies for your phpgw installation, but the setup process 
+					always requires cookies. In my case, since I installed to my home dir, 
+					it's <a href="#">http://server/~chris/phpgroupware/setup/</a>. Make sure 
+					it says support is enabled for your database. If it's not, then you have 
+					not installed/enabled support for your database in your php. Setup will try 
+					and guess some good defaults for your setup. You should verify each one, 
+					especially the database name and user. If you don't know what an item affects,
+					the default is fine. The "Admin Password" will be used to get back into this 
+					header manager, and the "Configuration Password" will be used to get into 
+					the other config options and to install applications. After writing your 
+					header you are logged out.
+				</p>
+				<p>
+					Next login to Setup/Config Admin with the password you defined in the Header. 
+					This stage of Setup has 4 basic steps, the status of each step can be a little 
+					misleading, but more on that later. You should have a message saying "Your 
+					database is working, but you don't have any applications installed" and an 
+					Install button. If not, then something is wrong with your database or the 
+					database user permissions.
+				</p>
+				<p>
+					Click Install and with any luck you will not get any errors. Errors at this 
+					stage will also typically be the fault of the database server in some way. 
+					If you need to fix something and try again it's recommended to drop any and 
+					all the tables from the database, but not the database itself. Once it's all 
+					ok, click the Recheck button. You will be told everything is done, but only 
+					defaults are in and not all defaults are good so lets check them.
+				</p>
+				<p>
+					In Step 2, edit the configuration. Do no yet create the Admin and demo 
+					accounts, we'll do that later. These are the options you need to check, 
+					the rest are optional or the defaults are fine or recommended.
+				</p>
+				<ul>
+					<li>You will need to set a tmp path, "/tmp" is usually good enough, but 
+						it can be anywhere that is writable by apache/IIS.</li>
+					<li>You need to set the full path to your files directory.</li>
+					<li>For the URL, it is recommended that you don't include the server 
+						name or <a href="#">http://</a> because some apps and some configurations 
+						have a problem with this, so for mine it's "/~chris/phpgroupware". 
+						Do not ever include the "index.php" or "login.php" in this URL!</li>
+					<li>Setup should fill in your servers host name for you, you can change it to 
+						your web sites name if you are using a vhost.</li>
+					<li>If you enabled mcrypt in the header, set your preferences for it.</li>
+					<li>Give your site a name to show in the title</li>
+					<li>If you plan on having AOL, or any Australian users access the site or 
+						your clients are behind a transparent proxy pool you will 
+						need to set "check ip address of all sessions:" to No. You will 
+						know you need this if they consistantly get "session could not 
+						be verifed" messages when their login works fine over the LAN.</li>
+				</ul>
+				<p>
+					In Step 3, only English/US translations are installed by default. Select 
+					any others you want and choose the "Only add new phrases" option and install.
+				</p>
+				<p>
+					In Step4 we install the applications. The way phpgw works, all sections 
+					such as the calendar and addressbook are separate applications. You can have 
+					as many or as few as you want installed and you can choose which users get 
+					access to what applications. By default, only the phpgwapi is installed. 
+					Some applications have dependencies and cannot be installed until those 
+					apps are installed. First we will install the apps that most everything 
+					depends on, admin, manual, and preferences. Check their boxes in the Install 
+					column and click Submit. Do not check everything at once, this will fail 
+					most of the time. You will get a status message for each part of the 
+					setup and a link at the bottom to Go Back to the list.
+				</p>
+				<p>
+					Because this is a basic setup HOWTO we are not going to install all the 
+					apps. You can come back into setup later and play with the rest on your own. 
+					Lets install addressbook, calendar, email, messenger, notes, phpsysinfo, 
+					filemanager, and todo. For a description of what each app is good for, 
+					see the list on 
+					<a href="http://apps.phpgroupware.org/">http://apps.phpgroupware.org/</a>. 
+					By now all the apps with dependency problems are ready for installation, but 
+					I'm going into them. Click Cancel to go back to the main setup screen.
+				</p>
+				<p>
+					Now we are ready to create the admin and demo accounts. Click where it 
+					says. Give your site admin a username, I'm going to use "admin", 
+					and a password. You can create the demo accounts if you want, they can 
+					always be deleted later. Submit it and logout of setup.
+				</p>
+			</div>
+			<div id="footer">
+				The most recent version of this document can be found 
+				at <a href="http://docs.phpgroupware.org/html/install/">docs.phpgroupware.org</a><br />
+				Copyright &copy; 2000-2004 <a href="http://www.fsf.org" target="_blank">Free Software 
+				Foundation Inc</a>,
+				distributed under the terms of the <a href="http://www.gnu.org/copyleft/fdl.html" 
+				target="_blank">GNU Free Documentation License</a><br />
+				<b>Source:</b> $Source$<br />
+				<b>Version:</b> $Revision: 15575 $<br />
+				<b>Last Modified:</b> $Date: 2004-12-30 21:46:22 +1100 (Thu, 30 Dec 2004) $ by $Name$
+			</div>
+		</div>
+	</body>
+</html>
+
+

@@ -1,0 +1,40 @@
+#################################3
+This program is pre-alpha, you can try if you like.
+But i warn you :)
+
+jpkh jpkh@vip.fi
+
+--
+
+Looks like I'm taking care of this thing now.
+
+tweaker tweaker@users.sourceforge.net
+
+## Updates 21/06/2001  ########################
+
+Looks like now i maintain it
+
+r0kawa sameon@time.net.my
+
+The userpage has fully change to template base
+
+
+-------------------------------------------------------
+TODO:
+- Admin can delete the message that not required
+- Changing the admin to fully template base
+OLD TODO:
+- admin pages
+- permissions for forum admins
+- selection for how many messages are shown in one page
+- make uncategorized forums show up in the forum list
+- email notification on replyed posting
+- number of new messages from "last login"
+
+
+Done: r0kawa
+- User page has fully change to the template base 
+OLD DONE:
+- admin can delete forums and categories
+- create ability to create forums without categories
+- lang section
