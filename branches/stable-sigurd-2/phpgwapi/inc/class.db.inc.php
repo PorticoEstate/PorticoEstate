@@ -144,6 +144,19 @@
 		{
 
 		}
+
+		/**
+		* Backward compatibility for get current connection id
+		* @return bool true
+		*/
+		function link_id()
+		{
+			if(!$this->db)
+			{
+				$this->connect();
+			}
+			return true;
+		}
 	
 		/**
 		* Open a connection to a database
