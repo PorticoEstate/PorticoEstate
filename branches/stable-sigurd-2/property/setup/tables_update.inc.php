@@ -2089,10 +2089,6 @@
 		foreach ($attrib as & $entry)
 		{
 			$entry['location_id'] = $GLOBALS['phpgw']->locations->get_id('property', $entry['location_id']);
-		}
-
-		foreach ($attrib as $entry)
-		{
 			$GLOBALS['phpgw_setup']->oProc->query('INSERT INTO phpgw_cust_attribute (' . implode(',',array_keys($entry)) . ') VALUES (' . $GLOBALS['phpgw_setup']->oProc->validate_insert(array_values($entry)) . ')');
 		}
 		
@@ -2165,10 +2161,6 @@
 		foreach ($choice as & $entry)
 		{
 			$entry['location_id'] = $GLOBALS['phpgw']->locations->get_id('property', $entry['location_id']);
-		}
-
-		foreach ($choice as $entry)
-		{
 			$GLOBALS['phpgw_setup']->oProc->query('INSERT INTO phpgw_cust_choice (' . implode(',',array_keys($entry)) . ') VALUES (' . $GLOBALS['phpgw_setup']->oProc->validate_insert(array_values($entry)) . ')');
 		}
 
@@ -2214,10 +2206,6 @@
 		foreach ($attrib as & $entry)
 		{
 			$entry['location_id'] = $GLOBALS['phpgw']->locations->get_id('property', $entry['location_id']);
-		}
-
-		foreach ($attrib as $entry)
-		{
 			$GLOBALS['phpgw_setup']->oProc->query('INSERT INTO phpgw_cust_attribute (' . implode(',',array_keys($entry)) . ') VALUES (' . $GLOBALS['phpgw_setup']->oProc->validate_insert(array_values($entry)) . ')');
 		}
 
@@ -2236,10 +2224,6 @@
 		foreach ($choice as & $entry)
 		{
 			$entry['location_id'] = $GLOBALS['phpgw']->locations->get_id('property', $entry['location_id']);
-		}
-
-		foreach ($choice as $entry)
-		{
 			$GLOBALS['phpgw_setup']->oProc->query('INSERT INTO phpgw_cust_choice (' . implode(',',array_keys($entry)) . ') VALUES (' . $GLOBALS['phpgw_setup']->oProc->validate_insert(array_values($entry)) . ')');
 		}
 
@@ -2287,10 +2271,6 @@
 		foreach ($custom as & $entry)
 		{
 			$entry['location_id'] = $GLOBALS['phpgw']->locations->get_id('property', $entry['location_id']);
-		}
-
-		foreach ($custom as $entry)
-		{
 			$GLOBALS['phpgw_setup']->oProc->query('INSERT INTO phpgw_cust_function (' . implode(',',array_keys($entry)) . ') VALUES (' . $GLOBALS['phpgw_setup']->oProc->validate_insert(array_values($entry)) . ')');
 		}
 
@@ -2328,10 +2308,6 @@
 		foreach ($attrib as & $entry)
 		{
 			$entry['location_id'] = $GLOBALS['phpgw']->locations->get_id('property', $entry['location_id']);
-		}
-
-		foreach ($attrib as $entry)
-		{
 			$GLOBALS['phpgw_setup']->oProc->query('INSERT INTO phpgw_cust_attribute (' . implode(',',array_keys($entry)) . ') VALUES (' . $GLOBALS['phpgw_setup']->oProc->validate_insert(array_values($entry)) . ')');
 		}
 
@@ -2350,10 +2326,6 @@
 		foreach ($choice as & $entry)
 		{
 			$entry['location_id'] = $GLOBALS['phpgw']->locations->get_id('property', $entry['location_id']);
-		}
-
-		foreach ($choice as $entry)
-		{
 			$GLOBALS['phpgw_setup']->oProc->query('INSERT INTO phpgw_cust_choice (' . implode(',',array_keys($entry)) . ') VALUES (' . $GLOBALS['phpgw_setup']->oProc->validate_insert(array_values($entry)) . ')');
 		}
 
