@@ -20,9 +20,7 @@
           <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Boolean"/>
         </ownedAttribute>
         <ownedOperation xmi:id="_cogW8GqMEd2oR7hEGX-6lQ" name="__construct">
-          <ownedParameter xmi:id="_fIF-0GqMEd2oR7hEGX-6lQ" name="skill_level">
-            <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#_JpAR8GqKEd2oR7hEGX-6lQ"/>
-          </ownedParameter>
+          <ownedParameter xmi:id="_fIF-0GqMEd2oR7hEGX-6lQ" name="skill_level" type="_UlZwEGzlEd2A2sBDVaQ0qA"/>
         </ownedOperation>
         <ownedOperation xmi:id="_o5xUQGqMEd2oR7hEGX-6lQ" name="__toString">
           <ownedParameter xmi:id="_sQZR0GqMEd2oR7hEGX-6lQ" name="str" direction="return">
@@ -34,7 +32,7 @@
         <ownedAttribute xmi:id="_GiSRQGqNEd2oR7hEGX-6lQ" name="cert_id" isUnique="false">
           <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Integer"/>
         </ownedAttribute>
-        <ownedAttribute xmi:id="_HDVI0GqNEd2oR7hEGX-6lQ" name="qaulification_type" isUnique="false"/>
+        <ownedAttribute xmi:id="_HDVI0GqNEd2oR7hEGX-6lQ" name="qaulification_type" type="_UNekAGqPEd2oR7hEGX-6lQ" isUnique="false"/>
         <ownedAttribute xmi:id="_LHapUGqNEd2oR7hEGX-6lQ" name="name" isUnique="false">
           <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#String"/>
         </ownedAttribute>
@@ -45,9 +43,7 @@
           <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Boolean"/>
         </ownedAttribute>
         <ownedOperation xmi:id="_4fYFQGqOEd2oR7hEGX-6lQ" name="__construct">
-          <ownedParameter xmi:id="_9sqpgGqOEd2oR7hEGX-6lQ" name="args">
-            <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#_JpAR8GqKEd2oR7hEGX-6lQ"/>
-          </ownedParameter>
+          <ownedParameter xmi:id="_9sqpgGqOEd2oR7hEGX-6lQ" name="args" type="_UlZwEGzlEd2A2sBDVaQ0qA"/>
         </ownedOperation>
         <ownedOperation xmi:id="_4prQwGqOEd2oR7hEGX-6lQ" name="__toString">
           <ownedParameter xmi:id="_-SIHAGqOEd2oR7hEGX-6lQ" name="str" direction="return">
@@ -72,9 +68,7 @@
           <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Boolean"/>
         </ownedAttribute>
         <ownedOperation xmi:id="_mQEbYGq-Ed2oR7hEGX-6lQ" name="__contruct">
-          <ownedParameter xmi:id="_oVDK4Gq-Ed2oR7hEGX-6lQ" name="args">
-            <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#String"/>
-          </ownedParameter>
+          <ownedParameter xmi:id="_oVDK4Gq-Ed2oR7hEGX-6lQ" name="args" type="_UlZwEGzlEd2A2sBDVaQ0qA"/>
         </ownedOperation>
         <ownedOperation xmi:id="_mefR4Gq-Ed2oR7hEGX-6lQ" name="__toString">
           <ownedParameter xmi:id="_wk79cGq-Ed2oR7hEGX-6lQ" name="str" direction="return">
@@ -82,8 +76,63 @@
           </ownedParameter>
         </ownedOperation>
       </packagedElement>
+      <packagedElement xmi:type="uml:Class" xmi:id="_jAbZwGzmEd2A2sBDVaQ0qA" name="property_contact_certification">
+        <ownedAttribute xmi:id="_nfGkgGzmEd2A2sBDVaQ0qA" name="ccert_id" isUnique="false">
+          <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Integer"/>
+        </ownedAttribute>
+        <ownedAttribute xmi:id="_nnOlwGzmEd2A2sBDVaQ0qA" name="contact_id" isUnique="false">
+          <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Integer"/>
+        </ownedAttribute>
+        <ownedAttribute xmi:id="_oBQ2YGzmEd2A2sBDVaQ0qA" name="skill" type="_UTbNQGqKEd2oR7hEGX-6lQ" isUnique="false"/>
+        <ownedAttribute xmi:id="_pmRsYGzmEd2A2sBDVaQ0qA" name="received" isUnique="false">
+          <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Integer"/>
+        </ownedAttribute>
+        <ownedAttribute xmi:id="_pof58GzmEd2A2sBDVaQ0qA" name="expires" isUnique="false">
+          <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Integer"/>
+        </ownedAttribute>
+        <ownedAttribute xmi:id="_lKyGkGzoEd2A2sBDVaQ0qA" name="something_in_norwegian" isUnique="false"/>
+        <ownedOperation xmi:id="_rbKfgGzoEd2A2sBDVaQ0qA" name="__construct">
+          <ownedParameter xmi:id="_ulr6wGzoEd2A2sBDVaQ0qA" name="args" type="_UlZwEGzlEd2A2sBDVaQ0qA"/>
+        </ownedOperation>
+        <ownedOperation xmi:id="_rxqT8GzoEd2A2sBDVaQ0qA" name="__toString">
+          <ownedParameter xmi:id="_zmW_UGzoEd2A2sBDVaQ0qA" name="str" direction="return">
+            <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#String"/>
+          </ownedParameter>
+        </ownedOperation>
+      </packagedElement>
+      <packagedElement xmi:type="uml:Class" xmi:id="_DGV7YGzpEd2A2sBDVaQ0qA" name="property_so_skills" clientDependency="__MBW4G0UEd2A2sBDVaQ0qA"/>
+      <packagedElement xmi:type="uml:Class" xmi:id="_ETRokGzpEd2A2sBDVaQ0qA" name="property_so_certifications" clientDependency="_JNoQoG0TEd2A2sBDVaQ0qA"/>
+      <packagedElement xmi:type="uml:Class" xmi:id="_Ftb5cGzpEd2A2sBDVaQ0qA" name="property_so_qualifications" clientDependency="_F-K1kG0UEd2A2sBDVaQ0qA"/>
+      <packagedElement xmi:type="uml:Class" xmi:id="__D5kMGzpEd2A2sBDVaQ0qA" name="property_bo_certifications" clientDependency="_LryVIG0TEd2A2sBDVaQ0qA">
+        <ownedAttribute xmi:id="_hDigYG0UEd2A2sBDVaQ0qA" name="so" type="_ETRokGzpEd2A2sBDVaQ0qA" isUnique="false"/>
+      </packagedElement>
+      <packagedElement xmi:type="uml:Class" xmi:id="_ACdeMGzqEd2A2sBDVaQ0qA" name="property_bo_qualifications" clientDependency="_PdfFIG0TEd2A2sBDVaQ0qA">
+        <ownedAttribute xmi:id="_whtUAG0TEd2A2sBDVaQ0qA" name="so" type="_Ftb5cGzpEd2A2sBDVaQ0qA" isUnique="false"/>
+      </packagedElement>
+      <packagedElement xmi:type="uml:Class" xmi:id="_A66JIGzqEd2A2sBDVaQ0qA" name="property_bo_skills" clientDependency="_TC6TsG0TEd2A2sBDVaQ0qA">
+        <ownedAttribute xmi:id="_ZYXZ4G0TEd2A2sBDVaQ0qA" name="so" type="_DGV7YGzpEd2A2sBDVaQ0qA" isUnique="false"/>
+      </packagedElement>
+      <packagedElement xmi:type="uml:Class" xmi:id="_brtK8G0SEd2A2sBDVaQ0qA" name="property_ui_certifications" clientDependency="_M2WDwG0TEd2A2sBDVaQ0qA">
+        <ownedAttribute xmi:id="_hUmbMG0UEd2A2sBDVaQ0qA" name="bo" type="__D5kMGzpEd2A2sBDVaQ0qA" isUnique="false"/>
+      </packagedElement>
+      <packagedElement xmi:type="uml:Class" xmi:id="_csBYcG0SEd2A2sBDVaQ0qA" name="property_ui_qualifications" clientDependency="_QwasoG0TEd2A2sBDVaQ0qA">
+        <ownedAttribute xmi:id="_wQlu0G0TEd2A2sBDVaQ0qA" name="bo" type="_ACdeMGzqEd2A2sBDVaQ0qA" isUnique="false"/>
+      </packagedElement>
+      <packagedElement xmi:type="uml:Class" xmi:id="_djVa8G0SEd2A2sBDVaQ0qA" name="class_ui_skills" clientDependency="_T_LusG0TEd2A2sBDVaQ0qA">
+        <ownedAttribute xmi:id="_ZF-pYG0TEd2A2sBDVaQ0qA" name="bo" type="_A66JIGzqEd2A2sBDVaQ0qA" isUnique="false"/>
+      </packagedElement>
+      <packagedElement xmi:type="uml:Dependency" xmi:id="_JNoQoG0TEd2A2sBDVaQ0qA" name="Fromproperty_so_certificationstoproperty_certification" supplier="_CeN-4GqNEd2oR7hEGX-6lQ" client="_ETRokGzpEd2A2sBDVaQ0qA"/>
+      <packagedElement xmi:type="uml:Dependency" xmi:id="_LryVIG0TEd2A2sBDVaQ0qA" name="Fromproperty_bo_certificationstoproperty_so_certifications" supplier="_ETRokGzpEd2A2sBDVaQ0qA" client="__D5kMGzpEd2A2sBDVaQ0qA"/>
+      <packagedElement xmi:type="uml:Dependency" xmi:id="_M2WDwG0TEd2A2sBDVaQ0qA" name="Fromproperty_ui_certificationstoproperty_bo_certifications" supplier="__D5kMGzpEd2A2sBDVaQ0qA" client="_brtK8G0SEd2A2sBDVaQ0qA"/>
+      <packagedElement xmi:type="uml:Dependency" xmi:id="_PdfFIG0TEd2A2sBDVaQ0qA" name="Fromproperty_bo_qualificationstoproperty_so_qualifications" supplier="_Ftb5cGzpEd2A2sBDVaQ0qA" client="_ACdeMGzqEd2A2sBDVaQ0qA"/>
+      <packagedElement xmi:type="uml:Dependency" xmi:id="_QwasoG0TEd2A2sBDVaQ0qA" name="Fromproperty_ui_qualificationstoproperty_bo_qualifications" supplier="_ACdeMGzqEd2A2sBDVaQ0qA" client="_csBYcG0SEd2A2sBDVaQ0qA"/>
+      <packagedElement xmi:type="uml:Dependency" xmi:id="_TC6TsG0TEd2A2sBDVaQ0qA" name="Fromproperty_bo_skillstoproperty_so_skills" supplier="_DGV7YGzpEd2A2sBDVaQ0qA" client="_A66JIGzqEd2A2sBDVaQ0qA"/>
+      <packagedElement xmi:type="uml:Dependency" xmi:id="_T_LusG0TEd2A2sBDVaQ0qA" name="Fromclass_ui_skillstoproperty_bo_skills" supplier="_A66JIGzqEd2A2sBDVaQ0qA" client="_djVa8G0SEd2A2sBDVaQ0qA"/>
+      <packagedElement xmi:type="uml:Dependency" xmi:id="_F-K1kG0UEd2A2sBDVaQ0qA" name="Fromproperty_so_qualificationstoproperty_qualification" supplier="_UNekAGqPEd2oR7hEGX-6lQ" client="_Ftb5cGzpEd2A2sBDVaQ0qA"/>
+      <packagedElement xmi:type="uml:Dependency" xmi:id="__MBW4G0UEd2A2sBDVaQ0qA" name="Fromproperty_so_skillstoproperty_skill_level" supplier="_UTbNQGqKEd2oR7hEGX-6lQ" client="_DGV7YGzpEd2A2sBDVaQ0qA"/>
     </packagedElement>
   </packagedElement>
+  <packagedElement xmi:type="uml:PrimitiveType" xmi:id="_UlZwEGzlEd2A2sBDVaQ0qA" name="array"/>
   <profileApplication xmi:id="_EAyFMmqKEd2oR7hEGX-6lQ">
     <eAnnotations xmi:id="_EAyFM2qKEd2oR7hEGX-6lQ" source="http://www.eclipse.org/uml2/2.0.0/UML">
       <references xmi:type="ecore:EPackage" href="pathmap://UML_PROFILES/Standard.profile.uml#_yzU58YinEdqtvbnfB2L_5w"/>
