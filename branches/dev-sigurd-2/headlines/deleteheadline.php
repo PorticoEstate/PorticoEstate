@@ -41,7 +41,7 @@
 		$GLOBALS['phpgw']->template->set_var('lang_yes',lang('Yes'));
 
 		$GLOBALS['phpgw']->template->set_var('link_no',$GLOBALS['phpgw']->link('/headlines/admin.php'));
-		$GLOBALS['phpgw']->template->set_var('link_yes',$GLOBALS['phpgw']->link('/headlines/deleteheadline.php', array('con' => $con, 'confirm' => 'true'));
+		$GLOBALS['phpgw']->template->set_var('link_yes',$GLOBALS['phpgw']->link('/headlines/deleteheadline.php', array('con' => $con, 'confirm' => 'true')));
 
 		$GLOBALS['phpgw']->template->pfp('out','delete_form');
 
@@ -77,6 +77,6 @@
 		}
 
 		$GLOBALS['phpgw']->db->transaction_commit();
-		$GLOBALS['phpgw']->redirect($GLOBALS['phpgw']->link('/headlines/admin.php', array('cd' => '16'));
+		$GLOBALS['phpgw']->redirect($GLOBALS['phpgw']->link('/headlines/admin.php', array('cd' => '16')));
 	}
 ?>

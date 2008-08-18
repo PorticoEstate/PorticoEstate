@@ -11,7 +11,7 @@
 	require_once '../../header.inc.php';
 	phpgw::import_class('syncml.somappings');
 
-	var_dump($GLOBALS['phpgw']->session->create('demo', 'guest');
+	var_dump($GLOBALS['phpgw']->session->create('demo', 'guest'));
 
 	$ipc_manager = CreateObject('phpgwapi.ipc_manager');
 

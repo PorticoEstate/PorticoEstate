@@ -8,7 +8,7 @@
 	 * @package phpgroupware
 	 * @subpackage phpgwapi
 	 * @category utilities
- 	 * @version $Id: class.botts.inc.php 836 2008-03-15 14:39:28Z sigurd $
+ 	 * @version $Id$
 	 */
 
 	/*

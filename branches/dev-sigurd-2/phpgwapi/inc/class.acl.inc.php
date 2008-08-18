@@ -1402,7 +1402,7 @@
 				. ' FROM phpgw_acl'
 					. " {$this->_join} phpgw_locations ON phpgw_acl.location_id = phpgw_locations.location_id"
 					. " {$this->_join} phpgw_applications ON phpgw_applications.app_id = phpgw_locations.app_id"
-					. "{$this->_join} phpgw_accounts ON phpgw_acl.acl_account = phpgw_accounts.account_id "
+					. " {$this->_join} phpgw_accounts ON phpgw_acl.acl_account = phpgw_accounts.account_id "
 				. " WHERE acl_account IN ($ids)";
 
 			$this->_db->query($sql, __LINE__, __FILE__);
