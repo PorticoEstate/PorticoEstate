@@ -612,7 +612,9 @@
 		function AddColumn($oProc, &$aTables, $sTableName, $sColumnName, &$aColumnDef)
 		{
 			$default = '';
-			$Ok = '';
+			$notnull = '';
+			$Ok 	 = '';
+
 			if (isset($aColumnDef['default']) && $aColumnDef['default'])	// pgsql cant add a colum with a default
 			{
 				$default = $aColumnDef['default'];
@@ -644,11 +646,15 @@
 
 				$query = "ALTER TABLE $sTableName ALTER COLUMN $sColumnName SET $defaultSQL;\n";
 
-				$query .= "UPDATE $sTableName SET $sColumnName='$default';\n";
-
 				$Ok = !!$oProc->m_odb->query($query, __LINE__, __FILE__);
 
-				if ($OK && $notnull)
+				if ( $Ok )
+				{
+					$query = "UPDATE $sTableName SET $sColumnName='$default';\n";
+					$Ok = !!$oProc->m_odb->query($query, __LINE__, __FILE__);
+				}
+
+				if ($Ok && $notnull)
 				{
 					// unfortunally this is pgSQL >= 7.3
 					//$query .= "ALTER TABLE $sTableName ALTER COLUMN $sColumnName SET NOT NULL;\n";
