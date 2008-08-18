@@ -233,7 +233,8 @@
 			);
 
 			// Begin transaction for acl, etc
-			$GLOBALS['phpgw_setup']->db->transaction_begin();
+			// FIXME: Conflicting transactions - there are transactions in phpgwapi_accounts_::create() and acl::save_repository()
+			//$GLOBALS['phpgw_setup']->db->transaction_begin();
 
 			// Now, clear out existing tables
 			$contacts_to_delete = $GLOBALS['phpgw']->accounts->get_account_with_contact();
@@ -277,7 +278,7 @@
 
 			$accountid = add_account($admin_acct, 'u', $groups, array('admin'));
 
-			$GLOBALS['phpgw_setup']->db->transaction_commit();
+			//$GLOBALS['phpgw_setup']->db->transaction_commit();
 
 			Header('Location: index.php');
 			exit;

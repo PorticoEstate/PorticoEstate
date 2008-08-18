@@ -309,7 +309,8 @@
 		 */
 		public function create($account, $group, $acls = array(), $modules = array())
 		{
-			$this->db->transaction_begin();
+		// FIXME: Conflicting transactions - there is a transaction in acl::save_repository()
+		//	$this->db->transaction_begin();
 
 			try
 			{
@@ -357,7 +358,7 @@
 				throw $e;
 			}
 
-			$this->db->transaction_commit();
+		//	$this->db->transaction_commit();
 			return $account->id;
 		}
 
