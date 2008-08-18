@@ -2553,6 +2553,7 @@
 
 		unset($GLOBALS['phpgw']->accounts);
 		unset($GLOBALS['phpgw']->acl);
+		$GLOBALS['phpgw']->hooks->register_all_hooks(); //get the menus
 		unset($GLOBALS['phpgw']->hooks);
 
 		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
