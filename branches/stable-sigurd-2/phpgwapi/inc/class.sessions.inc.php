@@ -1465,6 +1465,10 @@
 				$this->_cookie_domain = phpgw::get_var('HTTP_HOST', 'string', 'SERVER');
 			}
 
+			if($this->_cookie_domain == 'localhost')
+			{
+				$this->_cookie_domain = ''; // Sigurd august 08: somehow setcookie does not accept localhost as a valid domain.
+			}
 			$secure = phpgw::get_var('HTTPS', 'bool', 'SERVER');
 			session_set_cookie_params(0, parse_url($GLOBALS['phpgw_info']['server']['webserver_url'],PHP_URL_PATH), $this->_cookie_domain, $secure, true);
 			return $this->_cookie_domain;
