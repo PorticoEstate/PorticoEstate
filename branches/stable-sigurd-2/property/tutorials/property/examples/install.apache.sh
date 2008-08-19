@@ -41,16 +41,16 @@ PHP_PREFIX="/usr/local"
 #  * 
 #  * @var               string APACHE, APACHETAR
 #  */
-APACHETAR="httpd-2.2.8.tar.gz"
-APACHE="httpd-2.2.8"
+APACHETAR="httpd-2.2.9.tar.gz"
+APACHE="httpd-2.2.9"
 
 #/**
 #  * Name of the PHP tarball e.g php-5.2.tar.gz
 #  * 
 #  * @var               string PHP, PHPTAR
 #  */
-PHPTAR="php-5.2.5.tar.bz2"
-PHP="php-5.2.5"
+PHPTAR="php-5.2.6.tar.bz2"
+PHP="php-5.2.6"
 
 #/**
 #  * Name of the EACCELERATOR tarball e.g eaccelerator-0.9.5.tar.bz2
@@ -139,7 +139,10 @@ export LDFLAGS=-lstdc++ &&\
  --enable-shmop\
  --enable-sysvsem\
  --enable-sysvshm\
- --enable-calendar &&\
+ --enable-calendar\
+ --enable-pdo=shared\
+ --with-pdo-sqlite=shared\
+ --with-sqlite=shared &&\
 make &&\
 make install &&\
 cd ../$EACCELERATOR &&\
