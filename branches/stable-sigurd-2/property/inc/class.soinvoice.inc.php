@@ -38,47 +38,37 @@
 
 		function property_soinvoice()
 		{
-		//	$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->bocommon		= CreateObject('property.bocommon');
 			$this->account_id 	= $GLOBALS['phpgw_info']['user']['account_id'];
 
-			$this->acl 		= & $GLOBALS['phpgw']->acl;
+			$this->acl 			= & $GLOBALS['phpgw']->acl;
 
-			$this->join		= $this->bocommon->join;
+			$this->join			= $this->bocommon->join;
 			$this->left_join	= $this->bocommon->left_join;
-			$this->like		= $this->bocommon->like;
-			$this->db           	= $this->bocommon->new_db();
-			$this->db2           	= $this->bocommon->new_db($this->db);
-
+			$this->like			= $this->bocommon->like;
+			$this->db          	= $this->bocommon->new_db();
 		}
 
 		function read_invoice($data)
 		{
 			if(is_array($data))
 			{
-				if ($data['start'])
-				{
-					$start=$data['start'];
-				}
-				else
-				{
-					$start=0;
-				}
-				$query 			= (isset($data['query'])?$data['query']:'');
-				$sort 			= (isset($data['sort'])?$data['sort']:'DESC');
-				$order 			= (isset($data['order'])?$data['order']:'');
-				$cat_id 		= (isset($data['cat_id'])?$data['cat_id']:0);
-				$user_lid 		= (isset($data['user_lid'])?$data['user_lid']:'none');
-				$paid 			= (isset($data['paid'])?$data['paid']:'');
-				$start_date 		= (isset($data['start_date'])?$data['start_date']:'');
-				$end_date 		= (isset($data['end_date'])?$data['end_date']:'');
-				$vendor_id 		= (isset($data['vendor_id'])?$data['vendor_id']:'');
-				$loc1 			= (isset($data['loc1'])?$data['loc1']:'');
-				$workorder_id 		= (isset($data['workorder_id'])?$data['workorder_id']:'');
-				$allrows 		= (isset($data['allrows'])?$data['allrows']:'');
-				$voucher_id 		= (isset($data['voucher_id'])?$data['voucher_id']:'');
-				$b_account_class	= (isset($data['b_account_class'])?$data['b_account_class']:'');
-				$district_id 		= (isset($data['district_id'])?$data['district_id']:'');
+				$start			= isset($data['start']) && $data['start'] ? $data['start'] : 0;
+				$query 			= isset($data['query'])?$data['query']:'';
+				$sort 			= isset($data['sort']) && $data['sort'] ? $data['sort']:'DESC';
+				$order 			= isset($data['order'])?$data['order']:'';
+				$cat_id 		= isset($data['cat_id']) && $data['cat_id'] ? $data['cat_id']:0;
+				$user_lid 		= isset($data['user_lid']) && $data['user_lid']?$data['user_lid']:'none';
+				$paid 			= isset($data['paid'])?$data['paid']:'';
+				$start_date 	= isset($data['start_date'])?$data['start_date']:'';
+				$end_date 		= isset($data['end_date'])?$data['end_date']:'';
+				$vendor_id 		= isset($data['vendor_id'])?$data['vendor_id']:'';
+				$loc1 			= isset($data['loc1'])?$data['loc1']:'';
+				$workorder_id 	= isset($data['workorder_id'])?$data['workorder_id']:'';
+				$allrows 		= isset($data['allrows'])?$data['allrows']:'';
+				$voucher_id 	= isset($data['voucher_id'])?$data['voucher_id']:'';
+				$b_account_class= isset($data['b_account_class'])?$data['b_account_class']:'';
+				$district_id 	= isset($data['district_id'])?$data['district_id']:'';
 			}
 			$join_tables	= '';
 			$filtermethod	= '';
@@ -207,9 +197,7 @@
 
 			if($query)
 			{
-				$query = preg_replace("/'/",'',$query);
-				$query = preg_replace('/"/','',$query);
-
+				$query = $this->db->db_addslashes($query);
 				$querymethod = " $where ( spvend_code $this->like '%$query%' OR bilagsnr $this->like '%$query%' )";
 			}
 
@@ -218,8 +206,8 @@
 			$sql2 = "SELECT DISTINCT bilagsnr FROM  $table $join_tables $filtermethod $querymethod";
 
 //echo $sql;
-			$this->db2->query($sql2,__LINE__,__FILE__);
-			$this->total_records = $this->db2->num_rows();
+			$this->db->query($sql2,__LINE__,__FILE__);
+			$this->total_records = $this->db->num_rows();
 
 			if(!$allrows)
 			{
@@ -362,19 +350,12 @@
 		{
 			if(is_array($data))
 			{
-				if ($data['start'])
-				{
-					$start=$data['start'];
-				}
-				else
-				{
-					$start=0;
-				}
-				$filter	= (isset($data['filter'])?$data['filter']:'none');
-				$sort = (isset($data['sort'])?$data['sort']:'DESC');
-				$order = (isset($data['order'])?$data['order']:'');
-				$voucher_id = (isset($data['voucher_id'])?$data['voucher_id']:0);
-				$paid = (isset($data['paid'])?$data['paid']:'');
+				$start		= isset($data['start']) && $data['start'] ? $data['start'] : 0;
+				$filter		= isset($data['filter']) ? $data['filter'] : 'none';
+				$sort		= isset($data['sort']) ? $data['sort'] : 'DESC';
+				$order		= isset($data['order']) ? $data['order'] : '';
+				$voucher_id	= isset($data['voucher_id']) && $data['voucher_id'] ? $data['voucher_id'] : 0;
+				$paid		= isset($data['paid']) ? $data['paid'] : '';
 			}
 
 			if ($paid)
@@ -403,10 +384,10 @@
 
 			$sql = "SELECT $table.*,fm_workorder.status,fm_workorder.charge_tenant,org_name,fm_workorder.claim_issued FROM $table "
 			. " $this->left_join fm_workorder on fm_workorder.id = $table.pmwrkord_code  "
-			. " $this->join fm_vendor  on $table.spvend_code = fm_vendor.id  $filtermethod ";
+			. " $this->join fm_vendor ON $table.spvend_code = fm_vendor.id $filtermethod";
 
-			$this->db2->query($sql,__LINE__,__FILE__);
-			$this->total_records = $this->db2->num_rows();
+			$this->db->query($sql,__LINE__,__FILE__);
+			$this->total_records = $this->db->num_rows();
 			$this->db->query($sql . $ordermethod,$start,__LINE__,__FILE__);
 
 			$i = 0;
@@ -438,11 +419,9 @@
 				$invoice[$i]['charge_tenant']			= $this->db->f('charge_tenant');
 				$invoice[$i]['vendor']					= $this->db->f('org_name');
 				$i++;
-
 			}
 
 			return $invoice;
-
 		}
 
 
@@ -450,26 +429,19 @@
 		{
 			if(is_array($data))
 			{
-				if ($data['start'])
-				{
-					$start=$data['start'];
-				}
-				else
-				{
-					$start=0;
-				}
-				$filter			= (isset($data['filter'])?$data['filter']:'none');
-				$query 			= (isset($data['query'])?$data['query']:'');
-				$sort 			= (isset($data['sort'])?$data['sort']:'DESC');
-				$order 			= (isset($data['order'])?$data['order']:'');
-				$cat_id 		= (isset($data['cat_id'])?$data['cat_id']:0);
-				$start_date 	= (isset($data['start_date'])?$data['start_date']:'');
-				$end_date 		= (isset($data['end_date'])?$data['end_date']:'');
-				$vendor_id 		= (isset($data['vendor_id'])?$data['vendor_id']:'');
-				$loc1 	= (isset($data['loc1'])?$data['loc1']:'');
-				$district_id 	= (isset($data['district_id'])?$data['district_id']:'');
-				$workorder_id 	= (isset($data['workorder_id'])?$data['workorder_id']:0);
-				$b_account_class = (isset($data['b_account_class'])?$data['b_account_class']:'');
+				$start			= isset($data['start']) && $data['start'] ? $data['start'] : 0;
+				$filter			= isset($data['filter'])?$data['filter']:'none';
+				$query 			= isset($data['query'])?$data['query']:'';
+				$sort 			= isset($data['sort'])?$data['sort']:'DESC';
+				$order 			= isset($data['order'])?$data['order']:'';
+				$cat_id 		= isset($data['cat_id']) && $data['cat_id'] ? $data['cat_id']:0;
+				$start_date 	= isset($data['start_date'])?$data['start_date']:'';
+				$end_date 		= isset($data['end_date'])?$data['end_date']:'';
+				$vendor_id 		= isset($data['vendor_id'])?$data['vendor_id']:'';
+				$loc1 			= isset($data['loc1'])?$data['loc1']:'';
+				$district_id 	= isset($data['district_id'])?$data['district_id']:'';
+				$workorder_id 	= isset($data['workorder_id']) && $data['workorder_id'] ? $data['workorder_id']:0;
+				$b_account_class = isset($data['b_account_class'])?$data['b_account_class']:'';
 			}
 //_debug_array($data);
 
