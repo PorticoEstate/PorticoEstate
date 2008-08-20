@@ -1274,7 +1274,7 @@
 			$this->total_records = $this->db->num_rows();
 			while ($this->db->next_record())
 			{
-				$orgs[] = $this->db->resultSet->fetchRow();
+				$orgs[] = $this->db->Record;
 			}
 
 			return $orgs;
@@ -1907,7 +1907,7 @@
 
 			while ($this->db->next_record())
 			{
-				$record = $this->db->resultSet->fetchRow();
+				$record = $this->db->Record;
 				$contact['contact_id']		= $record['contact_id'];
 				$contact['access']		= $record['access'];
 				$contact['owner']		= $record['owner'];
@@ -3105,7 +3105,7 @@
 			$this->db->query($sql, __LINE__, __FILE__);
 			while ($this->db->next_record())
 			{
-				$orgs = &$this->db->resultSet->fetchRow();
+				$orgs = $this->db->Record;
 			}
 			return $orgs;
 		}
@@ -3150,7 +3150,7 @@
 			$this->db->query($this->get_sql(), __LINE__, __FILE__);
 			while ($this->db->next_record())
 			{
-				$cats[] = $this->db->resultSet->fetchRow();
+				$cats[] = $this->db->Record;
 			}
 
 			return $cats;
@@ -3450,7 +3450,7 @@
 			$this->db->query($query,__LINE__, __FILE__);
 			while($this->db->next_record())
 			{
-				$contact = $this->db->resultSet->fetchRow();
+				$contact = $this->db->Record;
 				$contact['account_id'] = $GLOBALS['phpgw']->accounts->search_person($contact['contact_id']);
 				$contacts[] = $contact;
 			}
