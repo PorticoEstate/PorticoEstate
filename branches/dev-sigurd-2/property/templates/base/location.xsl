@@ -22,7 +22,7 @@
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:template>
-	
+
 	<xsl:template match="list">
 		<xsl:choose>
 			<xsl:when test="//lookup=1">
@@ -37,12 +37,13 @@
 
 		<xsl:choose>
 			<xsl:when test="lookup=''">
-				<xsl:apply-templates select="menu"/> 
+				<xsl:apply-templates select="menu"/>
 			</xsl:when>
 		</xsl:choose>
 		<table width="100%" cellpadding="0" cellspacing="1" align="center">
 			<tr>
 				<td>
+					<!-- FILTER TABLE -->
 					<table>
 						<tr>
 							<td>
@@ -61,20 +62,29 @@
 									</td>
 								</xsl:when>
 							</xsl:choose>
-						</tr>
-					</table>
-				</td>
-			</tr>
-			<tr>
-				<td colspan="{colspan}" width="100%">
-					<table width="100%">
-						<tr>
+
 							<td align="left">
 								<xsl:call-template name="owner_filter"/>
 							</td>
-							<td align="right" colspan="{colspan}" width="100%">
+
+							<td align="left" >
 								<xsl:call-template name="search_field"/>
 							</td>
+							<td align="left" >
+							<div id="paging"></div>
+							</td>
+
+						</tr>
+					<!-- /FILTER TABLE -->
+					</table>
+				</td>
+			</tr>
+			<!-- <tr>
+				<td colspan="{colspan}" width="100%">
+					<table width="100%">
+						<tr>
+
+
 							<td valign ="top">
 								<table>
 									<tr>
@@ -108,16 +118,16 @@
 			<tr>
 				<td colspan="{colspan}" width="100%">
 					<xsl:call-template name="nextmatchs"/>
-					
+
 				</td>
-			</tr>
+			</tr>-->
 		</table>
-		<table width="100%" cellpadding="2" cellspacing="2" align="center">
+		<div class="datatable-container">
+		<table width="100%" class="datatable" cellpadding="2" cellspacing="2" align="center">
 			<tr class="th">
 				<xsl:choose>
 					<xsl:when test="//lookup=1">
 						<td>
-						<!-- make room for hidden fields -->
 						</td>
 					</xsl:when>
 				</xsl:choose>
@@ -128,7 +138,7 @@
 								<a href="{sort}" onMouseover="window.status='{header}';return true;" onMouseout="window.status='';return true;"><xsl:value-of select="header"/></a>
 							</xsl:when>
 							<xsl:otherwise>
-								<xsl:value-of select="header"/>					
+								<xsl:value-of select="header"/>
 							</xsl:otherwise>
 						</xsl:choose>
 					</td>
@@ -141,6 +151,8 @@
 					</xsl:when>
 				</xsl:choose>
 		</table>
+		</div>
+  		<xsl:call-template name="datatable-yui-definition" />
 		<xsl:choose>
 			<xsl:when test="lookup=1">
 				<table width="100%" cellpadding="2" cellspacing="2" align="center">
@@ -176,7 +188,7 @@
 					<xsl:when test="//lookup=1">
 						<td>
 							<xsl:for-each select="hidden" >
-								 <input type="hidden" name="{name}" value="{value}"></input> 
+								 <input type="hidden" name="{name}" value="{value}"></input>
 							</xsl:for-each>
 						</td>
 					</xsl:when>
@@ -190,7 +202,7 @@
 						</xsl:when>
 						<xsl:otherwise>
 							<td class="small_text" align="{align}">
-								<xsl:value-of select="value"/>					
+								<xsl:value-of select="value"/>
 							</td>
 						</xsl:otherwise>
 					</xsl:choose>
@@ -244,13 +256,13 @@
 				var oArgs = {<xsl:value-of select="street_link"/>};
 				var strURL = phpGWLink('index.php', oArgs);
 				Window1=window.open(strURL,"Search","width=800,height=700,toolbar=no,scrollbars=yes,resizable=yes");
-			}		
+			}
 			function tenant_lookup()
 			{
 				var oArgs = {<xsl:value-of select="tenant_link"/>};
 				var strURL = phpGWLink('index.php', oArgs);
 				Window1=window.open(strURL,"Search","width=800,height=700,toolbar=no,scrollbars=yes,resizable=yes");
-			}		
+			}
 		</script>
 
 		<script type="text/javascript">
@@ -259,7 +271,7 @@
 		</script>
 
 		<div align="left">
-		
+
 		<table cellpadding="2" cellspacing="2" width="80%" align="center">
 			<xsl:choose>
 				<xsl:when test="msgbox_data != ''">
@@ -302,7 +314,7 @@
 			<xsl:for-each select="additional_fields" >
 				<tr>
 					<td class="{class}" align="left" valign="top">
-						<xsl:value-of select="input_text"/>	
+						<xsl:value-of select="input_text"/>
 					</td>
 					<td align="left">
 						<xsl:choose>
@@ -313,7 +325,7 @@
 											<xsl:value-of select="statustext"/>
 										<xsl:text>'; return true;</xsl:text>
 									</xsl:attribute>
-									<xsl:value-of select="value"/>		
+									<xsl:value-of select="value"/>
 								</textarea>
 
 							</xsl:when>
@@ -324,8 +336,8 @@
 											<xsl:value-of select="descr"/>
 										<xsl:text>'; return true;</xsl:text>
 									</xsl:attribute>
-								</input>						
-								<xsl:text>[</xsl:text><xsl:value-of select="//lang_dateformat"/><xsl:text>]</xsl:text>			
+								</input>
+								<xsl:text>[</xsl:text><xsl:value-of select="//lang_dateformat"/><xsl:text>]</xsl:text>
 							</xsl:when>
 							<xsl:otherwise>
 								<input type="text" name="{input_name}" value="{value}" size="{size}" onMouseout="window.status='';return true;">
@@ -397,7 +409,7 @@
 
 			<tr>
 				<td colspan="2" width="50%" align="left">
-					<xsl:call-template name="attributes_form"/>							
+					<xsl:call-template name="attributes_form"/>
 				</td>
 			</tr>
 			<xsl:choose>
@@ -526,7 +538,7 @@
 	<xsl:template match="view">
 
 		<div align="left">
-		
+
 		<table cellpadding="2" cellspacing="2" width="80%" align="center">
 
 			<tr>
@@ -556,13 +568,13 @@
 			<xsl:for-each select="additional_fields" >
 				<tr>
 					<td class="{class}" align="left" valign="top">
-						<xsl:value-of select="input_text"/>	
+						<xsl:value-of select="input_text"/>
 					</td>
 					<td align="left">
 						<xsl:choose>
 							<xsl:when test="datatype ='text'">
 								<textarea cols="60" rows="4" name="{input_name}" readonly="readonly" wrap="virtual" onMouseout="window.status='';return true;">
-									<xsl:value-of select="value"/>		
+									<xsl:value-of select="value"/>
 								</textarea>
 
 							</xsl:when>
@@ -728,6 +740,8 @@
 			</xsl:when>
 		</xsl:choose>
 		</div>
+
+		<xsl:call-template name="datatable-yui-definition" />
 	</xsl:template>
 
 <!-- update_cat -->
@@ -778,7 +792,7 @@
 <!-- stop -->
 
 	<xsl:template match="stop">
-			<xsl:apply-templates select="menu"/> 
+			<xsl:apply-templates select="menu"/>
 			<table cellpadding="2" cellspacing="2" align="center">
 			<xsl:choose>
 				<xsl:when test="msgbox_data != ''">
@@ -794,7 +808,7 @@
 
 
 	<xsl:template match="entities_link">
-		<xsl:variable name="lang_entity_statustext"><xsl:value-of select="lang_entity_statustext"/></xsl:variable>		
+		<xsl:variable name="lang_entity_statustext"><xsl:value-of select="lang_entity_statustext"/></xsl:variable>
 		<xsl:variable name="entity_link"><xsl:value-of select="entity_link"/></xsl:variable>
 			<tr >
 				<td class="small_text" align="left">
@@ -805,7 +819,7 @@
 
 
 	<xsl:template match="summary">
-		<xsl:apply-templates select="menu"/> 
+		<xsl:apply-templates select="menu"/>
 		<table width="100%" cellpadding="2" cellspacing="2" align="center">
 			<tr>
 				<td>
@@ -834,7 +848,7 @@
 			<tr class="th">
 				<xsl:for-each select="table_header_summary" >
 					<td class="th_text" width="{with}" align="{align}">
-						<xsl:value-of select="header"/>					
+						<xsl:value-of select="header"/>
 					</td>
 				</xsl:for-each>
 			</tr>
@@ -843,7 +857,7 @@
 	</xsl:template>
 
 
-<!-- change_type_list -->	
+<!-- change_type_list -->
 
 	<xsl:template match="change_type_list">
 	<xsl:variable name="id"><xsl:value-of select="id"/></xsl:variable>
@@ -868,7 +882,7 @@
 								<a href="{sort}" onMouseover="window.status='{header}';return true;" onMouseout="window.status='';return true;"><xsl:value-of select="header"/></a>
 							</xsl:when>
 							<xsl:otherwise>
-								<xsl:value-of select="header"/>					
+								<xsl:value-of select="header"/>
 							</xsl:otherwise>
 						</xsl:choose>
 					</td>
@@ -901,7 +915,7 @@
 						</xsl:when>
 						<xsl:otherwise>
 							<td class="small_text" align="left">
-								<xsl:value-of select="value"/>					
+								<xsl:value-of select="value"/>
 							</td>
 						</xsl:otherwise>
 					</xsl:choose>
@@ -910,3 +924,35 @@
 		</xsl:for-each>
 	</xsl:template>
 
+	<func:function name="phpgw:conditional">
+	<xsl:param name="test"/>
+	<xsl:param name="true"/>
+	<xsl:param name="false"/>
+
+	<func:result>
+		<xsl:choose>
+			<xsl:when test="$test">
+	        	<xsl:value-of select="$true"/>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:value-of select="$false"/>
+			</xsl:otherwise>
+		</xsl:choose>
+  	</func:result>
+</func:function>
+
+	<xsl:template name="datatable-yui-definition">
+	<script>
+		var myColumnDefs = [
+			<xsl:for-each select="//table_header">
+				{
+					key: "<xsl:value-of select="name"/>",
+					label: "<xsl:value-of select="text" />",
+					resizeable:true,
+					sortable: <xsl:value-of select="phpgw:conditional(not(sortable = 0), 'true', 'false')"/>,
+					visible: <xsl:value-of select="phpgw:conditional(not(visible = 0), 'true', 'false')"/>
+				}<xsl:value-of select="phpgw:conditional(not(position() = last()), ',', '')"/>
+			</xsl:for-each>
+		];
+	</script>
+</xsl:template>
