@@ -143,7 +143,8 @@ export LDFLAGS=-lstdc++ &&\
  --enable-pdo=shared\
  --with-pdo-sqlite=shared\
  --with-sqlite=shared\
- --with-openssl &&\
+ --with-openssl\
+ --enable-mbstring &&\
 make &&\
 make install &&\
 cd ../$EACCELERATOR &&\
