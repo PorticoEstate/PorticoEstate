@@ -142,7 +142,8 @@ export LDFLAGS=-lstdc++ &&\
  --enable-calendar\
  --enable-pdo=shared\
  --with-pdo-sqlite=shared\
- --with-sqlite=shared &&\
+ --with-sqlite=shared\
+ --with-openssl &&\
 make &&\
 make install &&\
 cd ../$EACCELERATOR &&\
