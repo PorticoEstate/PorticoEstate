@@ -72,6 +72,7 @@
 		public function get_relation($appname, $location, $id, $role = 'origin')
 		{
 			$location_id	= $GLOBALS['phpgw']->locations->get_id($appname, $location);
+			$id				= (int) $id;
 
 			switch( $role )
 			{
