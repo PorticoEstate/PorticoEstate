@@ -353,14 +353,14 @@
 				}
 				else
 				{
-					$stmt = $this->db->query($sql);
+					$statement_object = $this->db->query($sql);
 					if($this->fetchmode == 'ASSOC')
 					{
-						$this->resultSet = $stmt->fetchAll(PDO::FETCH_ASSOC);
+						$this->resultSet = $statement_object->fetchAll(PDO::FETCH_ASSOC);
 					}
 					else
 					{
-						$this->resultSet = $stmt->fetchAll(PDO::FETCH_BOTH);
+						$this->resultSet = $statement_object->fetchAll(PDO::FETCH_BOTH);
 					}
 				}
 			}
@@ -434,14 +434,14 @@
 
 			try
 			{
-				$stmt = $this->db->query($Query_String);
+				$statement_object = $this->db->query($Query_String);
 				if($this->fetchmode == 'ASSOC')
 				{
-					$this->resultSet = $stmt->fetchAll(PDO::FETCH_ASSOC);
+					$this->resultSet = $statement_object->fetchAll(PDO::FETCH_ASSOC);
 				}
 				else
 				{
-					$this->resultSet = $stmt->fetchAll(PDO::FETCH_BOTH);
+					$this->resultSet = $statement_object->fetchAll(PDO::FETCH_BOTH);
 				}
 			}
 
@@ -482,12 +482,9 @@
 					return true;
 				}
 	
-		//		if($this->resultSet)
-				{
-					$row = next($this->resultSet);
-					$this->Record =& $row;
-					return !!$row;
-				}
+				$row = next($this->resultSet);
+				$this->Record =& $row;
+				return !!$row;
 			}
 			return false;
 		}
@@ -1018,14 +1015,14 @@
 		{		
 			try
 			{
-				$sth = $this->db->prepare($sql_string);
+				$statement_object = $this->db->prepare($sql_string);
 				foreach($valueset as $fields)
 				{
 					foreach($fields as $field => $entry)
 					{
-						$sth->bindParam($field, $entry['value'], $entry['type']);
+						$statement_object->bindParam($field, $entry['value'], $entry['type']);
 					}
-					$ret = $sth->execute();
+					$ret = $statement_object->execute();
 				}
 			}
 
@@ -1048,15 +1045,15 @@
 		{		
 			try
 			{
-				$sth = $this->db->prepare($sql_string);
-				$sth->execute($params);
+				$statement_object = $this->db->prepare($sql_string);
+				$statement_object->execute($params);
 				if($this->fetchmode == 'ASSOC')
 				{
-					$this->resultSet = $sth->fetchAll(PDO::FETCH_ASSOC);
+					$this->resultSet = $statement_object->fetchAll(PDO::FETCH_ASSOC);
 				}
 				else
 				{
-					$this->resultSet = $sth->fetchAll(PDO::FETCH_BOTH);
+					$this->resultSet = $statement_object->fetchAll(PDO::FETCH_BOTH);
 				}
 			}
 			catch(PDOException $e)
