@@ -846,13 +846,34 @@
 		* @param boolean $upper optional, default False. If $upper is true, then the table names (array keys) are upper-cased.
 		* @return array Table meta data
 		*/  
-		public function MetaForeignKeys($table = '', $owner=false, $upper=false)
+		public function MetaForeignKeys($table, $owner=false, $upper=false)
 		{
 			if(!$this->adodb || !$this->adodb->IsConnected())
 			{
 				$this->_connect_adodb();
 			}
-			if(!($return =& $this->adodb->MetaForeignKeys($table, $owner, $upper)))
+			if(!($return = $this->adodb->MetaForeignKeys($table, $owner, $upper)))
+			{
+				$return = array();
+			}
+			$this->adodb->close();
+			return $return;
+		}
+		/**
+		* Returns an associate array of foreign keys, or false if not supported.
+		*
+		* @param string $table name of table to describe
+		* @param boolean $primary optional, default False.
+		* @return array Index data
+		*/  
+
+		public function metaindexes($table, $primary = false)
+		{
+			if(!$this->adodb || !$this->adodb->IsConnected())
+			{
+				$this->_connect_adodb();
+			}
+			if(!($return = $this->adodb->MetaIndexes($table, $primary)))
 			{
 				$return = array();
 			}

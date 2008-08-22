@@ -397,10 +397,10 @@
 				$this->fk[] = $table . "' => array(" . implode(', ',$keystr)  . ')';
 			}
 
-			$MetaIndexes = $sdc->adodb->MetaIndexes($sTableName);
+			$metaindexes = $sdc->metaindexes($sTableName);
 
 			//FIXME: looks like unique is reported as index
-			foreach($MetaIndexes as $key => $index)
+			foreach($metaindexes as $key => $index)
 			{
 				if(count($index['columns']) > 1)
 				{
