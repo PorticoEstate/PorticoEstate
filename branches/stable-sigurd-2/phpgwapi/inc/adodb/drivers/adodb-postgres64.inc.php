@@ -1,6 +1,6 @@
 <?php
 /*
- V5.04a 25 Mar 2008   (c) 2000-2008 John Lim (jlim#natsoft.com.my). All rights reserved.
+ V5.05 11 July 2008   (c) 2000-2008 John Lim (jlim#natsoft.com). All rights reserved.
   Released under both BSD license and Lesser GPL library license. 
   Whenever there is any discrepancy between the two licenses, 
   the BSD license will take precedence.
@@ -237,10 +237,6 @@ select viewname,'V' from pg_views where viewname like $mask";
 	function qstr($s,$magic_quotes=false)
 	{
 		if (!$magic_quotes) {
-			// FIXME this is a hack until we get something better - skwashd feb08
-			return  "'".pg_escape_string($s)."'";
-			// end hack
-
 			if (ADODB_PHPVER >= 0x5200) {
 				return  "'".pg_escape_string($this->_connectionID,$s)."'";
 			} 
