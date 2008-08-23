@@ -122,22 +122,31 @@
 		* @param string  $location1 the location name of origin
 		* @param string  $location1 the location name of target
 		* @param integer $id       id of the referenced item
+		* @param integer $role     role of the referenced item ('origin' or 'target')
 		*
 		* @return array targets
 		*/
 
-		public function get_specific_targets($appname, $location1, $location2, $id)
+		public function get_specific_relation($appname, $location1, $location2, $id, $role = 'origin')
 		{
 			$location1_id	= $GLOBALS['phpgw']->locations->get_id($appname, $location1);
 			$location2_id	= $GLOBALS['phpgw']->locations->get_id($appname, $location2);
 			$id = (int) $id;
 			$targets = array();
 
-			$sql = "SELECT location2_item_id FROM phpgw_interlink WHERE location1_id = {$location1_id} AND location2_id = {$location2_id} AND location1_item_id = {$id}";
+			switch( $role )
+			{
+				case 'target':
+					$sql = "SELECT location2_item_id as item_id FROM phpgw_interlink WHERE location1_id = {$location1_id} AND location2_id = {$location2_id} AND location1_item_id = {$id}";
+					break;
+				default:
+					$sql = "SELECT location1_item_id as item_id FROM phpgw_interlink WHERE location1_id = {$location1_id} AND location2_id = {$location2_id} AND location2_item_id = {$id}";
+			}
+
 			$this->_db->query($sql,__LINE__,__FILE__);
 			while ($this->_db->next_record())
 			{
-				$targets[]= $this->_db->f('location2_item_id');
+				$targets[]= $this->_db->f('item_id');
 			}
 			return $targets;
 		}
@@ -325,7 +334,7 @@
 		}
 
 		/**
-		* Delete link at target
+		* Delete all relations based on a given start point (location1 and item1)
 		*
 		* @param string  $appname   the application name for the location
 		* @param string  $location  the location name of target
@@ -349,4 +358,32 @@
 
 			$db->query($sql,__LINE__,__FILE__);
 		}
+
+		/**
+		* Delete all relations based on a given end point (location2 and item2)
+		*
+		* @param string  $appname   the application name for the location
+		* @param string  $location  the location name of target
+		* @param integer $id        id of the referenced item
+		* @param object $db			db-object - used to keep the operation within the callers transaction
+		*
+		* @return array interlink data
+		*/
+
+		public function delete_from_target($appname, $location, $id, $db = '')
+		{
+			if(!$db)
+			{
+				$db = $this->_db;
+			}
+
+			$location_id = $GLOBALS['phpgw']->locations->get_id($appname, $location);
+			$id 		 = (int) $id;
+
+			$sql		 = "DELETE FROM phpgw_interlink WHERE location2_id = {$location_id} AND location2_item_id = {$id}";
+
+			$db->query($sql,__LINE__,__FILE__);
+		}
+
+
 	}

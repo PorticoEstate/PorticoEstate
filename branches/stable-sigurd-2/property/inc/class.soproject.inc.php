@@ -823,7 +823,7 @@
 			{
 				$this->db->query("UPDATE fm_request set project_id = NULL where id='{$request_id}'",__LINE__,__FILE__);
 				$this->interlink->delete_at_origin('property', '.project.request', '.project', $request_id, $this->db);
-				$receipt['message'][] = array('msg'=>lang('Request %1 has been deleted from project %2',$request_id,$project_id));			
+				$receipt['message'][] = array('msg'=>lang('Request %1 has been deleted from project %2',$request_id,$project_id));
 			}
 			return $receipt;
 		}
@@ -833,7 +833,7 @@
 		{
 			$historylog_r	= CreateObject('property.historylog','request');
 
-			$request = $this->interlink->get_specific_targets('property', '.project.request', '.project', $project_id);
+			$request = $this->interlink->get_specific_relation('property', '.project.request', '.project', $project_id, 'target');
 
 			foreach ($request as $request_id)
 			{

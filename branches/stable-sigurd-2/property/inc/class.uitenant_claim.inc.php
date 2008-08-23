@@ -749,6 +749,13 @@
 
 			$msgbox_data = $this->bocommon->msgbox_data($receipt);
 
+			$cats				= CreateObject('phpgwapi.categories');
+			$cats->app_name		= 'property.project';
+			$cats->supress_info	= true;
+
+			$cat_list_project	= $cats->return_array('',0,false,'','','',false);
+			$cat_list_project	= $this->bocommon->select_list($project_values['cat_id'],$cat_list_project);
+
 			$data = array
 			(
 				'table_header_workorder'		=> $table_header_workorder,
@@ -809,7 +816,7 @@
 
 				'b_account_data'			=> $b_account_data,
 
-				'cat_list_project'			=> $this->bocommon->select_category_list(array('format'=>'select','selected' => $project_values['cat_id'],'type' =>'project','order'=>'descr')),
+				'cat_list_project'			=> $cat_list_project,
 
 //------------------
 
@@ -842,7 +849,7 @@
 				'value_date'				=> $GLOBALS['phpgw']->common->show_date($tenant_claim['entry_date'])
 
 			);
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('Tenant claim') . ': ' . ($claim_id?lang('edit claim'):lang('add claim'));
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('Tenant claim') . '::' . lang('view claim');
 
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('view' => $data));
 		//	$GLOBALS['phpgw']->xslttpl->pp();
