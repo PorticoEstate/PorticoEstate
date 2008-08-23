@@ -163,7 +163,7 @@
 
 		function check_claim_workorder($workorder_id)
 		{
-			$claim = $this->interlink->get_specific_targets('property', '.project.workorder', '.tenant_claim', $workorder_id);
+			$claim = $this->interlink->get_specific_relation('property', '.project.workorder', '.tenant_claim', $workorder_id, 'origin');
 
 			if ( $claim)
 			{
@@ -191,7 +191,7 @@
 
 			}
 
-			$target = $this->interlink->get_specific_targets('property', '.tenant_claim', '.project.workorder', $id);
+			$target = $this->interlink->get_specific_relation('property', '.project.workorder', '.tenant_claim', $id, 'origin');
 
 			if ( $target)
 			{
@@ -233,10 +233,10 @@
 			{
 				$interlink_data = array
 				(
-					'location1_id'		=> $GLOBALS['phpgw']->locations->get_id('property', '.tenant_claim'),			
-					'location1_item_id' => $claim_id,
-					'location2_id'		=> $GLOBALS['phpgw']->locations->get_id('property', '.project.workorder'),
-					'location2_item_id' => $workorder_id,
+					'location1_id'		=> $GLOBALS['phpgw']->locations->get_id('property', '.project.workorder'),
+					'location1_item_id' => $workorder_id,
+					'location2_id'		=> $GLOBALS['phpgw']->locations->get_id('property', '.tenant_claim'),			
+					'location2_item_id' => $claim_id,
 					'account_id'		=> $this->account
 				);
 					
@@ -275,9 +275,7 @@
 
 			$claim_id = $claim['claim_id'];
 
-		//	$this->db->query("DELETE FROM fm_origin WHERE destination ='tenant_claim' AND destination_id=$claim_id",__LINE__,__FILE__);
-
-			$this->interlink->delete_at_target('property', '.tenant_claim', $claim_id, $this->db);
+			$this->interlink->delete_from_target('property', '.tenant_claim', $claim_id, $this->db);
 
 			$this->db->query("UPDATE fm_workorder set claim_issued = NULL WHERE project_id = {$claim['project_id']}" ,__LINE__,__FILE__);
 
@@ -285,10 +283,10 @@
 			{
 				$interlink_data = array
 				(
-					'location1_id'		=> $GLOBALS['phpgw']->locations->get_id('property', '.tenant_claim'),			
-					'location1_item_id' => $claim_id,
-					'location2_id'		=> $GLOBALS['phpgw']->locations->get_id('property', '.project.workorder'),
-					'location2_item_id' => $workorder_id,
+					'location1_id'		=> $GLOBALS['phpgw']->locations->get_id('property', '.project.workorder'),
+					'location1_item_id' => $workorder_id,
+					'location2_id'		=> $GLOBALS['phpgw']->locations->get_id('property', '.tenant_claim'),			
+					'location2_item_id' => $claim_id,
 					'account_id'		=> $this->account
 				);
 					
@@ -308,8 +306,7 @@
 		{
 			$this->db->transaction_begin();
 			$this->db->query('DELETE FROM fm_tenant_claim WHERE id=' . intval($id),__LINE__,__FILE__);
-			$this->interlink->delete_at_target('property', '.tenant_claim', $id, $this->db);
-	//		$this->db->query("DELETE FROM fm_origin WHERE destination ='tenant_claim' AND destination_id=$id",__LINE__,__FILE__);
+			$this->interlink->delete_from_target('property', '.tenant_claim', $id, $this->db);
 			$this->db->transaction_commit();
 
 		}
