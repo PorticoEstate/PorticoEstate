@@ -2631,3 +2631,92 @@
 			return $GLOBALS['setup_info']['property']['currentver'];
 		}
 	}
+	
+	/**
+	* Update property version from 0.9.17.545 to 0.9.17.546
+	* Add table for a common unified location-mapping for use with interlink
+ 	*/
+
+	$test[] = '0.9.17.545';
+	function property_upgrade0_9_17_545()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		//old table that may exist
+		if ($GLOBALS['phpgw_setup']->oProc->m_odb->metadata('fm_location'))
+		{
+			$GLOBALS['phpgw_setup']->oProc->DropTable('fm_location');		
+		}
+
+		$GLOBALS['phpgw_setup']->oProc->CreateTable(
+			'fm_locations', array(
+				'fd' => array(
+					'id' => array('type' => 'auto','precision' => '4','nullable' => False),
+					'level' => array('type' => 'int','precision' => '4','nullable' => False),
+					'location_code' => array('type' => 'varchar','precision' => '50','nullable' => False)
+				),
+				'pk' => array('id'),
+				'fk' => array(),
+				'ix' => array(),
+				'uc' => array('location_code')
+			)
+		);
+
+		$GLOBALS['phpgw_setup']->oProc->query('SELECT max(id) as levels FROM fm_location_type');
+		$GLOBALS['phpgw_setup']->oProc->next_record();
+		$levels =  $GLOBALS['phpgw_setup']->oProc->f('levels');
+
+		//perform an update on all location_codes on all levels to make sure they are consistent and unique
+		for ($level=1;$level<($levels+1);$level++)
+		{
+			$sql = "SELECT * from fm_location{$level}";
+			$GLOBALS['phpgw_setup']->oProc->query($sql,__LINE__,__FILE__);
+			$i = 0;
+			while($GLOBALS['phpgw_setup']->oProc->next_record())
+			{
+				$location_code = array();
+				$where = 'WHERE';
+				$locations[$i]['condition'] = '';
+				for ($j=1;$j<($level+1);$j++)
+				{
+					$loc = $GLOBALS['phpgw_setup']->oProc->f("loc{$j}");
+					$location_code[] = $loc;
+					$locations[$i]['condition'] .= "$where loc{$j}='{$loc}'";
+					$where = 'AND';
+				}
+				$locations[$i]['new_values']['location_code'] = implode('-', $location_code);
+				$i++;
+			}
+
+			foreach($locations as $location)
+			{
+				$sql = "UPDATE fm_location{$level} SET location_code = '{$location['new_values']['location_code']}' {$location['condition']}";
+				$GLOBALS['phpgw_setup']->oProc->query($sql,__LINE__,__FILE__);
+			}
+		}
+
+		$locations = array();
+		for ($i=1;$i<($levels+1);$i++)
+		{
+			$GLOBALS['phpgw_setup']->oProc->query("SELECT * from fm_location{$i}");
+			while($GLOBALS['phpgw_setup']->oProc->next_record())
+			{
+				$locations[] = array
+				(
+					'level' 		=> $i,
+					'location_code' => $GLOBALS['phpgw_setup']->oProc->f('location_code')
+				);
+			}
+		}
+		
+		foreach ($locations as $location)
+		{
+			$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_locations (level, location_code) VALUES ({$location['level']}, '{$location['location_code']}')");			
+		}
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.546';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}
