@@ -2645,7 +2645,7 @@
 		//old table that may exist
 		if ($GLOBALS['phpgw_setup']->oProc->m_odb->metadata('fm_location'))
 		{
-			$GLOBALS['phpgw_setup']->oProc->DropTable('fm_location');		
+			$GLOBALS['phpgw_setup']->oProc->DropTable('fm_location');
 		}
 
 		$GLOBALS['phpgw_setup']->oProc->CreateTable(
@@ -2711,7 +2711,7 @@
 		
 		foreach ($locations as $location)
 		{
-			$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_locations (level, location_code) VALUES ({$location['level']}, '{$location['location_code']}')");			
+			$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_locations (level, location_code) VALUES ({$location['level']}, '{$location['location_code']}')");
 		}
 
 		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())

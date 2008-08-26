@@ -980,6 +980,10 @@
 
 //echo $sql;
 			$this->db->query($sql,__LINE__,__FILE__);
+
+			$sql	= "INSERT INTO fm_locations (level, location_code) VALUES ({$type_id}, '{$location['location_code']}')";
+			$this->db->query($sql,__LINE__,__FILE__);
+
 			$this->db->transaction_commit();
 			$receipt['message'][] = array('msg'=>lang('Location %1 has been saved',$location['location_code']));
 			return $receipt;
@@ -1069,9 +1073,10 @@
 		{
 			$location_array = split('-',$location_code);
 			$type_id= count($location_array);
-
-			$this->db->query("DELETE FROM fm_location$type_id WHERE location_code='" . $location_code ."'",__LINE__,__FILE__);
-//			$this->db->query("DELETE FROM fm_location WHERE location_code='" . $location_code ."'",__LINE__,__FILE__);
+			$this->db->transaction_begin();
+			$this->db->query("DELETE FROM fm_location$type_id WHERE location_code='{$location_code}'",__LINE__,__FILE__);
+			$this->db->query("DELETE FROM fm_locations WHERE location_code='{$location_code}'",__LINE__,__FILE__);
+			$this->db->transaction_commit();
 		}
 
 		function update_cat()

@@ -58,6 +58,7 @@
 
 	$app = $app ? ' ['.(isset($GLOBALS['phpgw_info']['apps'][$app]) ? $GLOBALS['phpgw_info']['apps'][$app]['title'] : lang($app)).']':'';
 
+	$GLOBALS['phpgw']->js->validate_file('base', 'core');
 	$GLOBALS['phpgw']->template->set_var(array
 	(
 		'css'			=> $GLOBALS['phpgw']->common->get_css(),
