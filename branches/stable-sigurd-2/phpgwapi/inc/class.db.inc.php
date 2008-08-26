@@ -804,7 +804,7 @@
 			{
 				$this->_connect_adodb();
 			}
-			if(!($return =& $this->adodb->MetaColumns($table,$full)))
+			if(!($return = $this->adodb->MetaColumns($table,$full)))
 			{
 				$return = array();
 			}

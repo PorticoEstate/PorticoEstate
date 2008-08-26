@@ -154,7 +154,17 @@
 			'ix' => array(),
 			'uc' => array()
 		),
-
+		'fm_locations' => array(
+			'fd' => array(
+				'id' => array('type' => 'auto','precision' => '4','nullable' => False),
+				'level' => array('type' => 'int','precision' => '4','nullable' => False),
+				'location_code' => array('type' => 'varchar','precision' => '50','nullable' => False)
+			),
+			'pk' => array('id'),
+			'fk' => array(),
+			'ix' => array(),
+			'uc' => array('location_code')
+		),
 		'fm_location1_category' => array(
 			'fd' => array(
 				'id' => array('type' => 'int','precision' => '4','nullable' => False),
