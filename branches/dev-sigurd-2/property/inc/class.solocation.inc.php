@@ -100,6 +100,19 @@
 				);
 			}
 
+			$sql = "SELECT count(*) as hits FROM fm_request WHERE location_code $this->like '$location_code%'";
+			$this->db->query($sql,__LINE__,__FILE__);
+			$this->db->next_record();
+			if($this->db->f('hits'))
+			{
+				$entity[] = array
+				(
+					'entity_link'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction' => 'property.uirequest.index','query'=> $location_code)),
+					'name'		=> lang('request') . ' [' . $this->db->f('hits') . ']',
+					'descr'		=> lang('request')
+				);
+			}
+
 			if (isset($entity))
 			{
 				return $entity;
