@@ -10,7 +10,7 @@
   {lang_name} : 
 </td>
 <td>  
-  <input type="text" default_class="{input_default_class}"  focused_class="{input_active_class}" name="name" value="{new_name}" size="40" maxlength="40"/>
+  <input type="text" default_class="{input_default_class}"  focused_class="{input_active_class}" name="name" value="{new_name}" size="40" maxlength="255"/>
 </td>
 </tr>
 <tr>
@@ -18,7 +18,7 @@
   {lang_reference} : 
 </td>
 <td>  
-  <input type="text" default_class="{input_default_class}"  focused_class="{input_active_class}" name="{referenceq_field}" value="{new_reference}" size="40" maxlength="40"/>
+  <input type="text" default_class="{input_default_class}"  focused_class="{input_active_class}" name="{referenceq_field}" value="{new_reference}" size="40" maxlength="255"/>
 </td>
 </tr>
 <tr>
