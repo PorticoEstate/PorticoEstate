@@ -147,6 +147,7 @@ YAHOO.PORTICO.BorderLayout = function()
 	{
 		var DOM = YAHOO.util.Dom;
 		var layouts = Array( 'north', 'west', 'center', 'east', 'south' );
+		//var layouts = Array( 'north', 'west', 'center', 'south' );
 		var layout = Array();
 
 		// Collect layout units for border layout
@@ -173,7 +174,7 @@ YAHOO.PORTICO.BorderLayout = function()
 				{ position: 'top', body: layout['north'], height: 26 },
 				{ position: 'left', header: this.getHeader( layout['west'] ), body: layout['west'], width: this.config.unitLeftWidth, resize: true, scroll: true, gutter: "5px", collapse: false, maxWidth: 300, minWidth: 6 },
                 { position: 'center', header: this.getHeader( layout['center'] ), body: layout['center'], scroll: true, gutter: "5px 0px" },
-                { position: 'right', header: this.getHeader( layout['east']  ), body: layout['east'], width: this.config.unitRightWidth, resize: true, scroll: true, gutter: "5px", collapse: false, maxWidth: 300, minWidth: 6 },
+              //  { position: 'right', header: this.getHeader( layout['east']  ), body: layout['east'], width: this.config.unitRightWidth, resize: true, scroll: true, gutter: "5px", collapse: false, maxWidth: 300, minWidth: 6 },
                 { position: 'bottom', body: layout['south'], height: 26 }
             ]
         });

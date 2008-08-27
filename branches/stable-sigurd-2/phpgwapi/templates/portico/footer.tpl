@@ -1,6 +1,6 @@
 					</div>
 				</div>
-
+<!--
 				<div class="layout-east">
 					<div class="header">
 						<h2>Widgetpanel</h2>
@@ -10,7 +10,7 @@
 
 					</div>
 				</div>
-
+-->
 				<div class="layout-south">
 					<div class="body">
 						<div class="button-bar">
