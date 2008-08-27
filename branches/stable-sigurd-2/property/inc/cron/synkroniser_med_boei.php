@@ -244,8 +244,8 @@
 				}
 				$owner_utf[]= array (
 				 'id' 		=> $this->db_boei->f('id'),
-				 'org_name' 	=> $this->db->db_addslashes($this->bocommon->ascii2utf($this->db_boei->f('org_name'))),
-				 'remark' 	=> $this->db->db_addslashes($this->bocommon->ascii2utf($this->db_boei->f('org_name'))),
+				 'org_name' 	=> $this->db->db_addslashes(utf8_encode($this->db_boei->f('org_name'))),
+				 'remark' 	=> $this->db->db_addslashes(utf8_encode($this->db_boei->f('org_name'))),
 				 'category' 	=> $category,
 				 'entry_date'	=> time(),
 				 'owner_id'		=> 6
@@ -270,7 +270,7 @@
 				$sql2_latin = "INSERT INTO fm_owner (id,org_name,remark,category,entry_date,owner_id)"
 					. "VALUES (" . $this->bocommon->validate_db_insert($owner_latin[$i]) . ")";
 
-				$this->db->query($sql2_latin,__LINE__,__FILE__);
+				$this->db->query($sql2_utf,__LINE__,__FILE__);
 				$this->db_boei->query($sql2_latin,__LINE__,__FILE__);
 
 				$owner_msg[]=$owner_utf[$i]['org_name'];
@@ -316,13 +316,13 @@
 					. " VALUES (" . $gate[$i]['id'] . ", '". $gate[$i]['descr']. "')";
 
 				$sql2_utf = "INSERT INTO fm_streetaddress (id,descr)"
-					. " VALUES (" . $gate[$i]['id'] . ", '". $this->bocommon->ascii2utf($gate[$i]['descr']). "')";
+					. " VALUES (" . $gate[$i]['id'] . ", '". utf8_encode($gate[$i]['descr']). "')";
 
 				$this->db->query($sql,__LINE__,__FILE__);
 				$this->db_boei->query($sql,__LINE__,__FILE__);
-				$this->db->query($sql2_latin,__LINE__,__FILE__);
+				$this->db->query($sql2_utf,__LINE__,__FILE__);
 				$this->db_boei->query($sql2_latin,__LINE__,__FILE__);
-				$gate_msg[]=$this->bocommon->ascii2utf($gate[$i]['descr']);
+				$gate_msg[]=utf8_encode($gate[$i]['descr']);
 			}
 
 			$this->db->transaction_commit();
@@ -349,7 +349,7 @@
 				$objekt_utf[]= array (
 				 'location_code' 	=> $this->db_boei->f('objekt_id'),
 				 'loc1' 			=> $this->db_boei->f('objekt_id'),
-				 'loc1_name' 		=> $this->bocommon->ascii2utf($this->db_boei->f('navn')),
+				 'loc1_name' 		=> utf8_encode($this->db_boei->f('navn')),
 				 'part_of_town_id' 	=> $this->db_boei->f('bydel_id'),
 				 'owner_id' 		=> $this->db_boei->f('eier_id'),
 				 'kostra_id' 		=> $this->db_boei->f('tjenestested')
@@ -376,7 +376,7 @@
 				$sql2_latin = "INSERT INTO fm_location1 (location_code, loc1, loc1_name, part_of_town_id, owner_id, kostra_id) "
 					. "VALUES (" . $this->bocommon->validate_db_insert($objekt_latin[$i]) . ")";
 
-				$this->db->query($sql2_latin,__LINE__,__FILE__);
+				$this->db->query($sql2_utf,__LINE__,__FILE__);
 				$this->db_boei->query($sql2_latin,__LINE__,__FILE__);
 				$this->db->query("INSERT INTO fm_locations (level, location_code) VALUES (1, '{$objekt_utf[$i]['location_code']}')",__LINE__,__FILE__);
 
@@ -409,7 +409,7 @@
 				 'location_code' 	=> $this->db_boei->f('location_code'),
 				 'loc1' 			=> $this->db_boei->f('objekt_id'),
 				 'loc2' 			=> $this->db_boei->f('bygg_id'),
-				 'loc2_name' 		=> $this->bocommon->ascii2utf($this->db_boei->f('byggnavn')),
+				 'loc2_name' 		=> utf8_encode($this->db_boei->f('byggnavn')),
 				 );
 				$bygg_latin[]= array (
 				 'location_code' 	=> $this->db_boei->f('location_code'),
@@ -430,7 +430,7 @@
 				$sql2_latin = "INSERT INTO fm_location2 (location_code, loc1, loc2, loc2_name) "
 					. "VALUES (" . $this->bocommon->validate_db_insert($bygg_latin[$i]) . ")";
 
-				$this->db->query($sql2_latin,__LINE__,__FILE__);
+				$this->db->query($sql2_utf,__LINE__,__FILE__);
 				$this->db_boei->query($sql2_latin,__LINE__,__FILE__);
 				$this->db->query("INSERT INTO fm_locations (level, location_code) VALUES (2, '{$bygg_utf[$i]['location_code']}')",__LINE__,__FILE__);
 
@@ -468,7 +468,7 @@
 				 'loc1' 			=> $this->db_boei->f('objekt_id'),
 				 'loc2' 			=> $this->db_boei->f('bygg_id'),
 				 'loc3' 			=> $this->db_boei->f('seksjons_id'),
-				 'loc3_name' 		=> $this->bocommon->ascii2utf($this->db_boei->f('beskrivelse')),
+				 'loc3_name' 		=> utf8_encode($this->db_boei->f('beskrivelse')),
 				 'fellesareal' 	=> $this->db_boei->f('totalt_fellesareal')
 				 );
 				$seksjon_latin[]= array (
@@ -492,7 +492,7 @@
 				$sql2_latin = "INSERT INTO fm_location3 (location_code, loc1, loc2, loc3, loc3_name, fellesareal) "
 					. "VALUES (" . $this->bocommon->validate_db_insert($seksjon_latin[$i]) . ")";
 
-				$this->db->query($sql2_latin,__LINE__,__FILE__);
+				$this->db->query($sql2_utf,__LINE__,__FILE__);
 				$this->db_boei->query($sql2_latin,__LINE__,__FILE__);
 				$this->db->query("INSERT INTO fm_locations (level, location_code) VALUES (3, '{$seksjon_utf[$i]['location_code']}')",__LINE__,__FILE__);
 
@@ -536,8 +536,8 @@
 				 'loc3' 			=> $this->db_boei->f('seksjons_id'),
 				 'category' 		=> $this->db_boei->f('formaal_id'),
 				 'street_id'	 	=> $this->db_boei->f('gateadresse_id'),
-				 'street_number' 	=> $this->bocommon->ascii2utf($this->db_boei->f('gatenr')),
-				 'etasje' 			=> $this->bocommon->ascii2utf($this->db_boei->f('etasje')),
+				 'street_number' 	=> utf8_encode($this->db_boei->f('gatenr')),
+				 'etasje' 			=> utf8_encode($this->db_boei->f('etasje')),
 				 'antallrom'	 	=> $this->db_boei->f('antallrom'),
 				 'boareal' 			=> $this->db_boei->f('boareal'),
 				 'livslopsstd' 		=> $this->db_boei->f('livslopsstd'),
@@ -583,7 +583,7 @@
                       tenant_id, beregnet_boa, flyttenr)"
 					. "VALUES (" . $this->bocommon->validate_db_insert($leieobjekt_latin[$i]) . ")";
 
-				$this->db->query($sql2_latin,__LINE__,__FILE__);
+				$this->db->query($sql2_utf,__LINE__,__FILE__);
 				$this->db_boei->query($sql2_latin,__LINE__,__FILE__);
 				$this->db->query("INSERT INTO fm_locations (level, location_code) VALUES (4, '{$leieobjekt_utf[$i]['location_code']}')",__LINE__,__FILE__);
 
@@ -615,8 +615,8 @@
 			{
 				$leietaker_utf[]= array (
 				 'id' 				=> $this->db_boei->f('leietaker_id'),
-				 'first_name'		=> $this->db->db_addslashes($this->bocommon->ascii2utf($this->db_boei->f('fornavn'))),
-				 'last_name' 		=> $this->db->db_addslashes($this->bocommon->ascii2utf($this->db_boei->f('etternavn'))),
+				 'first_name'		=> $this->db->db_addslashes(utf8_encode($this->db_boei->f('fornavn'))),
+				 'last_name' 		=> $this->db->db_addslashes(utf8_encode($this->db_boei->f('etternavn'))),
 				 'category'			=> $this->db_boei->f('kjonn_juridisk') + 1,
 				 'status_eco'		=> $this->db_boei->f('namssakstatusokonomi_id'),
 				 'status_drift' 	=> $this->db_boei->f('namssakstatusdrift_id'),
@@ -648,7 +648,7 @@
 				$sql2_latin = "INSERT INTO fm_tenant (id, first_name, last_name, category, status_eco, status_drift,entry_date,owner_id)"
 					. "VALUES (" . $this->bocommon->validate_db_insert($leietaker_latin[$i]) . ")";
 
-				$this->db->query($sql2_latin,__LINE__,__FILE__);
+				$this->db->query($sql2_utf,__LINE__,__FILE__);
 				$this->db_boei->query($sql2_latin,__LINE__,__FILE__);
 
 				$leietaker_msg[]= '[' .$leietaker_utf[$i]['last_name'] . ', ' . $leietaker_utf[$i]['first_name'] . ']';
@@ -674,8 +674,8 @@
 			while ($this->db_boei->next_record())
 			{
 				$sql2_utf = " UPDATE  fm_tenant SET "
-				. " first_name		= '" . $this->db->db_addslashes($this->bocommon->ascii2utf($this->db_boei->f('fornavn'))) . "',"
-				. " last_name 		= '" . $this->db->db_addslashes($this->bocommon->ascii2utf($this->db_boei->f('etternavn'))) ."'"
+				. " first_name		= '" . $this->db->db_addslashes(utf8_encode($this->db_boei->f('fornavn'))) . "',"
+				. " last_name 		= '" . $this->db->db_addslashes(utf8_encode($this->db_boei->f('etternavn'))) ."'"
 				. " WHERE  id = " . (int)$this->db_boei->f('leietaker_id');
 
 				$sql2_latin = " UPDATE  fm_tenant SET "
@@ -683,7 +683,7 @@
 				. " last_name 		= '" . $this->db->db_addslashes($this->db_boei->f('etternavn')) ."'"
 				. " WHERE  id = " . (int)$this->db_boei->f('leietaker_id');
 
-				$this->db->query($sql2_latin,__LINE__,__FILE__);
+				$this->db->query($sql2_utf,__LINE__,__FILE__);
 				$this->db_boei2->query($sql2_latin,__LINE__,__FILE__);
 				$i++;
 			}
@@ -712,9 +712,9 @@
 				$sql2_utf = " UPDATE  fm_location4 SET "
 				. " tenant_id = '" . $this->db_boei->f('leietaker_id') . "',"
 				. " category = '" . $this->db_boei->f('formaal_id') . "',"
-				. " etasje = '" . $this->bocommon->ascii2utf($this->db_boei->f('etasje')) . "',"
+				. " etasje = '" . utf8_encode($this->db_boei->f('etasje')) . "',"
 				. " street_id = '" . $this->db_boei->f('gateadresse_id') . "',"
-				. " street_number = '" . $this->bocommon->ascii2utf($this->db_boei->f('gatenr')) . "',"
+				. " street_number = '" . utf8_encode($this->db_boei->f('gatenr')) . "',"
 				. " driftsstatus_id = '" . $this->db_boei->f('driftsstatus_id') . "',"
 				. " boareal = '" . $this->db_boei->f('boareal') . "',"
 				. " flyttenr = '" . $this->db_boei->f('flyttenr') . "',"
@@ -732,7 +732,7 @@
 				. " innflyttetdato = '" . date($this->bocommon->dateformat,strtotime($this->db_boei->f('innflyttetdato'))) . "'"
 				. " WHERE  loc1 = '" . $this->db_boei->f('objekt_id') . "'  AND  loc4= '" . $this->db_boei->f('leie_id') . "'";
 
-				$this->db->query($sql2_latin,__LINE__,__FILE__);
+				$this->db->query($sql2_utf,__LINE__,__FILE__);
 				$this->db_boei2->query($sql2_latin,__LINE__,__FILE__);
 				$i++;
 			}
@@ -763,7 +763,7 @@
 			while ($this->db_boei->next_record())
 			{
 				$sql2_utf = " UPDATE fm_location1 SET "
-				. " loc1_name = '" . $this->bocommon->ascii2utf($this->db_boei->f('navn')) . "',"
+				. " loc1_name = '" . utf8_encode($this->db_boei->f('navn')) . "',"
 				. " sum_boa = '" . $this->db_boei->f('sum_boa') . "',"
 				. " ant_leieobjekt = '" . $this->db_boei->f('ant_leieobjekt') . "',"
 				. " part_of_town_id = '" . $this->db_boei->f('bydel_id') . "',"
@@ -779,7 +779,7 @@
 				. " kostra_id = '" . $this->db_boei->f('tjenestested') . "'"
 				. " WHERE  loc1 = '" . $this->db_boei->f('objekt_id') . "'";
 
-				$this->db->query($sql2_latin,__LINE__,__FILE__);
+				$this->db->query($sql2_utf,__LINE__,__FILE__);
 				$this->db_boei2->query($sql2_latin,__LINE__,__FILE__);
 				$i++;
 			}
@@ -810,7 +810,7 @@
 			while ($this->db_boei->next_record())
 			{
 				$sql2_utf = " UPDATE fm_location2 SET "
-				. " loc2_name = '" . $this->bocommon->ascii2utf($this->db_boei->f('byggnavn')) . "',"
+				. " loc2_name = '" . utf8_encode($this->db_boei->f('byggnavn')) . "',"
 				. " sum_boa = '" . $this->db_boei->f('sum_boa') . "',"
 				. " ant_leieobjekt = '" . $this->db_boei->f('ant_leieobjekt') . "'"
 				. " WHERE  loc1 = '" . $this->db_boei->f('objekt_id') . "'  AND  loc2= '" . $this->db_boei->f('bygg_id') . "'";
@@ -820,7 +820,7 @@
 				. " ant_leieobjekt = '" . $this->db_boei->f('ant_leieobjekt') . "'"
 				. " WHERE  loc1 = '" . $this->db_boei->f('objekt_id') . "'  AND  loc2= '" . $this->db_boei->f('bygg_id') . "'";
 
-				$this->db->query($sql2_latin,__LINE__,__FILE__);
+				$this->db->query($sql2_utf,__LINE__,__FILE__);
 				$this->db_boei2->query($sql2_latin,__LINE__,__FILE__);
 				$i++;
 			}
@@ -853,7 +853,7 @@
 			while ($this->db_boei->next_record())
 			{
 				$sql2_utf = " UPDATE fm_location3 SET "
-				. " loc3_name = '" . $this->bocommon->ascii2utf($this->db_boei->f('beskrivelse')) . "',"
+				. " loc3_name = '" . utf8_encode($this->db_boei->f('beskrivelse')) . "',"
 				. " sum_boa = '" . $this->db_boei->f('sum_boa') . "',"
 				. " ant_leieobjekt = '" . $this->db_boei->f('ant_leieobjekt') . "'"
 				. " WHERE  loc1 = '" . $this->db_boei->f('objekt_id') . "'  AND  loc2= '" . $this->db_boei->f('bygg_id') . "'  AND  loc3= '" . $this->db_boei->f('seksjons_id') . "'";
@@ -863,7 +863,7 @@
 				. " ant_leieobjekt = '" . $this->db_boei->f('ant_leieobjekt') . "'"
 				. " WHERE  loc1 = '" . $this->db_boei->f('objekt_id') . "'  AND  loc2= '" . $this->db_boei->f('bygg_id') . "'  AND  loc3= '" . $this->db_boei->f('seksjons_id') . "'";
 
-				$this->db->query($sql2_latin,__LINE__,__FILE__);
+				$this->db->query($sql2_utf,__LINE__,__FILE__);
 				$this->db_boei2->query($sql2_latin,__LINE__,__FILE__);
 				$i++;
 			}
