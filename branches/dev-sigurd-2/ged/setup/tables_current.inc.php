@@ -97,7 +97,7 @@
 		),
 		'ged_versions' => array(
 			'fd' => array(
-				'url' => array('type' => 'varchar', 'precision' => 100,'nullable' => False),
+				'url' => array('type' => 'varchar', 'precision' => 100,'nullable' => true),
 				'size' => array('type' => 'int', 'precision' => 4,'nullable' => False,'default' => '0'),
 				'status' => array('type' => 'varchar', 'precision' => 100,'nullable' => False),
 				'creator_id' => array('type' => 'int', 'precision' => 4,'nullable' => False,'default' => '0'),
