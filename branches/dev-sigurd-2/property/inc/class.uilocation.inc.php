@@ -31,8 +31,7 @@
 	 * Description
 	 * @package property
 	 */
-
-  phpgw::import_class('phpgwapi.yui');
+	phpgw::import_class('phpgwapi.yui');
 
 	class property_uilocation
 	{
@@ -50,6 +49,7 @@
 		(
 			'download'  	=> true,
 			'index'  	=> true,
+			'index2'  	=> true,
 			'view'   	=> true,
 			'edit'   	=> true,
 			'delete' 	=> true,
@@ -68,7 +68,6 @@
 			$this->bo					= CreateObject('property.bolocation',true);
 			$this->bocommon				= CreateObject('property.bocommon');
 			$this->soadmin_location		= CreateObject('property.soadmin_location');
-
 			$this->acl 					= & $GLOBALS['phpgw']->acl;
 
 			$this->type_id				= $this->bo->type_id;
@@ -81,7 +80,7 @@
 
 			$this->start				= $this->bo->start;
 			$this->query				= $this->bo->query;
-			//$this->sort					= $this->bo->sort;
+			$this->sort					= $this->bo->sort;
 			$this->order				= $this->bo->order;
 			$this->filter				= $this->bo->filter;
 			$this->cat_id				= $this->bo->cat_id;
@@ -180,7 +179,7 @@
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('columns' => $data));
 		}
 
-		function index()
+		function index2()
 		{
 			$type_id	= $this->type_id;
 			$lookup 	= $this->lookup;
@@ -211,8 +210,30 @@
 				return;
 			}
 
-			$location_list = $this->bo->read(array('type_id'=>$type_id,'lookup_tenant'=>$lookup_tenant,'lookup'=>$lookup,'allrows'=>$this->allrows));
+			$GLOBALS['phpgw']->js->validate_file('overlib','overlib','property');
+			$GLOBALS['phpgw']->js->set_onload('document.search.query.focus();');
+
+			/*$location_list = $this->bo->read(array('type_id'=>$type_id,'lookup_tenant'=>$lookup_tenant,'lookup'=>$lookup,'allrows'=>$this->allrows));
+
 			$uicols = $this->bo->uicols;
+
+			//Se declara el array $Datatable
+			$datatable = array();
+			//Setea la llamada a la funcion Index de la clase uilocation.
+			$datatable['config']['base_url'] = $GLOBALS['phpgw']->link('/index.php', array('menuaction'	=> 'property.uilocation.index'));
+
+			// Definicion de cabeceras
+			$datatable['headers']['header'] = array(
+				array
+				(
+					'name'		=> 'location_code',
+					'visible'	=> false
+				)
+			);
+
+
+//_debug_array($location_list);
+//_debug_array($uicols);
 
 			$content = array();
 			$j=0;
@@ -227,7 +248,7 @@
 						{
 							if(isset($location['query_location'][$uicols['name'][$i]]))
 							{
-								$content[$j]['row'][$i]['statustext']		= lang('search');
+								$content[$j]['row'][$i]['statustext']			= lang('search');
 								$content[$j]['row'][$i]['text']				= $location[$uicols['name'][$i]];
 								$content[$j]['row'][$i]['link']				= $GLOBALS['phpgw']->link('/index.php',array(
 																			'menuaction'	=> 'property.uilocation.index',
@@ -257,7 +278,6 @@
 
 						$content[$j]['hidden'][$i]['value'] 			= $location[$uicols['name'][$i]];
 						$content[$j]['hidden'][$i]['name'] 				= $uicols['name'][$i];
-
 					}
 
 					if(!$lookup)
@@ -306,7 +326,6 @@
 			}
 //_debug_array($content);
 			$uicols_count	= count($uicols['descr']);
-			//echo($uicols_count);
 			for ($i=0;$i<$uicols_count;$i++)
 			{
 				if($uicols['input_type'][$i]!='hidden')
@@ -314,11 +333,9 @@
 					$table_header[$i]['header'] 	= $uicols['descr'][$i];
 					$table_header[$i]['width'] 		= '5%';
 					$table_header[$i]['align'] 		= 'center';
-					//link para sort de location_code
-					//echo($uicols['name'][1]);
 					if($uicols['name'][$i]=='loc1'):
 					{
-						$table_header[$i]['sort_link']	= true;
+						$table_header[$i]['sort_link']	=true;
 						$table_header[$i]['sort'] 		= $this->nextmatchs->show_sort_order(array
 										(
 											'sort'	=> $this->sort,
@@ -380,7 +397,7 @@
 					endif;
 				}
 			}
-			//cabeceras de las opciones view, edit, delete
+
 			if(!$lookup)
 			{
 				if($this->acl_read)
@@ -412,7 +429,6 @@
 				$table_header[$i]['header']			= lang('select');
 			}
 
-			// boton agregar nuevo registro
 			if($this->acl_add)
 			{
 				$table_add[] = array
@@ -509,7 +525,7 @@
 				$owner_list = $this->bo->get_owner_type_list('filter', $this->filter);
 			}
 
-			//_debug_array($owner_list);
+//_debug_array($owner_list);
 
 			$data = array
 			(
@@ -572,17 +588,6 @@
 
 			$appname						= lang('location');
 
-			$GLOBALS['phpgw']->css->validate_file('datatable');
-			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/datatable/assets/skins/sam/datatable.css');
-
-			phpgwapi_yui::load_widget('dragdrop');
-		  	phpgwapi_yui::load_widget('datatable');
-		  	phpgwapi_yui::load_widget('menu');
-		  	phpgwapi_yui::load_widget('connection');
-
-			$GLOBALS['phpgw']->js->validate_file('overlib','overlib','property');
-			$GLOBALS['phpgw']->js->validate_file('portico', 'gabnr', 'property' );
-
 			if($lookup)
 			{
 				$lookup_list	= $GLOBALS['phpgw']->session->appsession('lookup_name','property');
@@ -600,48 +605,311 @@
 				}
 			}
 
-/***********************************/
-		if( phpgw::get_var('phpgw_return_as') == 'json' ) {
-
-    		$json = array(
-    			'recordsReturned' 	=> 3,
-    			'totalRecords' 		=> count($data["values"]),
-    			'recordStartIndex' 	=> 0,
-    			'sortKey'			=> null,
-    			'sortDir'			=> "asc",
-    			'records'			=> array()
-    		);
-
-
-    		for( $i=0;$i < count($data["values"]) ; $i++)
-    		{
-				$fields = $data["values"][$i]["hidden"];
-				//$row = $data["values"][$i]["row"];
-				$json_row = array();
-
-				foreach($fields as $row){
-    				$json_row[$row["name"]] = $row["value"];
-				}
-
-    			$json['records'][] = $json_row;
-    		}
-
-
-    		return $json;
-    		//return $location_list;
-		}
-
-/*********************************************/
-
-
 			$GLOBALS['phpgw']->xslttpl->add_file(array('location', 'nextmatchs', 'search_field'));
 
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('list' => $data));
-		//	$GLOBALS['phpgw']->xslttpl->pp();
 			$this->save_sessiondata();
 
+			//Convierte los valores recogidos
+			if( phpgw::get_var('phpgw_return_as') == 'json' )
+			{
+	    		$json = array
+	    		(
+	    			'recordsReturned' 	=> $datatable['pagination']['records_returned'],
+	    			'totalRecords' 		=> $datatable['pagination']['records_total'],
+	    			'recordStartIndex' 	=> $datatable['pagination']['records_start'],
+	    			'sortKey'			=> $datatable['sorting']['order'],
+	    			'sortDir'			=> $datatable['sorting']['sort'],
+	    			'records'			=> array()
+	    		);
+
+	    		foreach( $datatable['rows']['row'] as $row )
+	    		{
+	    			$json_row = array();
+	    			foreach( $row['column'] as $column)
+	    			{
+	    				$json_row[$column['name']] = $column['value'];
+	    			}
+	    			$json['records'][] = $json_row;
+	    		}
+    			return $json;
+			}
+
+			// Prepare template variables and process XSLT
+			$template_vars = array();
+			$template_vars['datatable'] = $datatable;
+
+			//$GLOBALS['phpgw']->xslttpl->add_file(array('location'));
+	      	//$GLOBALS['phpgw']->xslttpl->set_var('phpgw', $template_vars);
+
+	      	if ( !isset($GLOBALS['phpgw']->css) || !is_object($GLOBALS['phpgw']->css) )
+	      	{
+	        	$GLOBALS['phpgw']->css = createObject('phpgwapi.css');
+	      	}
+
+		  	$GLOBALS['phpgw']->css->validate_file('datatable');
+			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/datatable/assets/skins/sam/datatable.css');
+
+			phpgwapi_yui::load_widget('dragdrop');
+		  	phpgwapi_yui::load_widget('datatable');
+
+			// Uncomment the following line to enable experimental YUI Datagrid version
+	  		$GLOBALS['phpgw']->js->validate_file( 'newdesign', 'gabnr', $this->currentapp );*/
+
+			$datatable = array();
+	    	$datatable['config']['base_url'] = $GLOBALS['phpgw']->link('/index.php', array('menuaction'	=> 'property.uilocation.index'));
+
+			// Definition of headers
+			$datatable['headers']['header'] = array
+			(
+				array(
+					'name'		=> 'location_code',
+					'visible'	=> false,
+					'text'		=> 'Location Code'
+				)
+			);
+
+			$reset_query 		= phpgw::get_var('reset_query', 'bool');
+
+			if( !$reset_query )
+			{
+				$location_code 		= phpgw::get_var('location_code');
+			}
+
+			$type_id	= $this->type_id;
+			$lookup 	= $this->lookup;
+			$lookup_name 	= phpgw::get_var('lookup_name');
+			$lookup_tenant 	= phpgw::get_var('lookup_tenant', 'bool');
+
+
+			$datatable['actions']['form'] = array
+			(
+				array(
+					'action'	=> $GLOBALS['phpgw']->link('/index.php',
+						array(
+							'menuaction' => 'property.uilocation.edit',
+							'type_id' => '1'
+						)
+					),
+					'fields'	=> array(
+						'field' => array(
+							array(
+								'type' => 'submit',
+								'value' => lang('New')
+							)
+						)
+					)
+				)
+			);
+
+
+			$location_list = $this->bo->read(array('type_id'=>$type_id,'lookup_tenant'=>$lookup_tenant,'lookup'=>$lookup,'allrows'=>$this->allrows));
+
+			for($i=0; $i < count($location_list); $i++)
+			{
+				$row = $location_list[$i];
+				foreach($location_list[$i] as $key => $value)
+				{
+					$datatable['rows']['row'][$i]['column'][] = array('name' => $key, 'value' => $value );
+				}
+			}
+
+			// Pagination and sort values
+			$datatable['pagination']['records_start'] 	= (int)$this->bo->start;
+			$datatable['pagination']['records_limit'] 	= $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
+			$datatable['pagination']['records_returned']= count($location_list);
+			$datatable['pagination']['records_total'] 	= $this->bo->total_records;
+
+			$datatable['pagination']['lang']['first'] 	= lang('First');
+			$datatable['pagination']['lang']['next'] 	= lang('Next');
+			$datatable['pagination']['lang']['previous']= lang('Previous');
+			$datatable['pagination']['lang']['last'] 	= lang('Last');
+			$datatable['pagination']['lang']['overview']= lang('Records $1 - $2 of $3');
+
+			$datatable['sorting']['order'] 	= phpgw::get_var('order', 'string'); // Column
+			$datatable['sorting']['sort'] 	= phpgw::get_var('sort', 'string'); // ASC / DESC
+
+			if( phpgw::get_var('phpgw_return_as') == 'json' )
+			{
+	    		$json = array
+	    		(
+	    			'recordsReturned' 	=> $datatable['pagination']['records_returned'],
+	    			'totalRecords' 		=> $datatable['pagination']['records_total'],
+	    			'recordStartIndex' 	=> $datatable['pagination']['records_start'],
+	    			'sortKey'			=> $datatable['sorting']['order'],
+	    			'sortDir'			=> $datatable['sorting']['sort'],
+	    			'records'			=> array()
+	    		);
+
+	    		foreach( $datatable['rows']['row'] as $row )
+	    		{
+	    			$json_row = array();
+	    			foreach( $row['column'] as $column)
+	    			{
+	    				$json_row[$column['name']] = $column['value'];
+	    			}
+	    			$json['records'][] = $json_row;
+	    		}
+	    		return $json;
+			}
+
+			// Prepare template variables and process XSLT
+			$template_vars = array();
+			$template_vars['datatable'] = $datatable;
+
+			$GLOBALS['phpgw']->xslttpl->add_file(array('datatable'));
+	      	$GLOBALS['phpgw']->xslttpl->set_var('phpgw', $template_vars);
+
+	      	if ( !isset($GLOBALS['phpgw']->css) || !is_object($GLOBALS['phpgw']->css) )
+	      	{
+	        	$GLOBALS['phpgw']->css = createObject('phpgwapi.css');
+	      	}
+
+		  	$GLOBALS['phpgw']->css->validate_file('datatable');
+			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/datatable/assets/skins/sam/datatable.css');
+
+			phpgwapi_yui::load_widget('dragdrop');
+		  	phpgwapi_yui::load_widget('datatable');
+
+		  	// Uncomment the following line to enable experimental YUI Datagrid version
+	  		$GLOBALS['phpgw']->js->validate_file( 'newdesign', 'gabnr', 'property' );
+
+
 		}
+
+		function index()
+		{
+
+			$type_id	= $this->type_id;
+			$lookup 	= $this->lookup;
+			$lookup_name 	= phpgw::get_var('lookup_name');
+			$lookup_tenant 	= phpgw::get_var('lookup_tenant', 'bool');
+
+			if(!$type_id)
+			{
+				$type_id = 1;
+			}
+			if($lookup)
+			{
+				$GLOBALS['phpgw_info']['flags']['noframework'] = true;
+			}
+
+			if ( $type_id && !$lookup_tenant )
+			{
+				$GLOBALS['phpgw_info']['flags']['menu_selection'] .= "::loc_$type_id";
+			}
+			else
+			{
+				$GLOBALS['phpgw_info']['flags']['menu_selection'] .= '::tenant';
+			}
+
+			if (!$this->acl_read)
+			{
+				$this->bocommon->no_access();
+				return;
+			}
+
+			$GLOBALS['phpgw']->js->validate_file('overlib','overlib','property');
+			$GLOBALS['phpgw']->js->set_onload('document.search.query.focus();');
+
+			$datatable = array();
+	    	$datatable['config']['base_url'] = $GLOBALS['phpgw']->link('/index.php', array('menuaction'	=> 'property.uilocation.index'));
+
+			// Definition of headers
+			$datatable['headers']['header'] = array
+			(
+				array(
+					'name'		=> 'location_code',
+					'visible'	=> false,
+					'text'		=> 'Location Code'
+				)
+			);
+
+			$reset_query 		= phpgw::get_var('reset_query', 'bool');
+
+			if( !$reset_query )
+			{
+				$location_code 		= phpgw::get_var('location_code');
+			}
+
+			$type_id	= $this->type_id;
+			$lookup 	= $this->lookup;
+			$lookup_name 	= phpgw::get_var('lookup_name');
+			$lookup_tenant 	= phpgw::get_var('lookup_tenant', 'bool');
+
+			$location_list = $this->bo->read(array('type_id'=>$type_id,'lookup_tenant'=>$lookup_tenant,'lookup'=>$lookup,'allrows'=>$this->allrows));
+
+			for($i=0; $i < count($location_list); $i++)
+			{
+				$row = $location_list[$i];
+				foreach($location_list[$i] as $key => $value)
+				{
+					$datatable['rows']['row'][$i]['column'][] = array('name' => $key, 'value' => $value );
+				}
+			}
+
+			// Pagination and sort values
+			$datatable['pagination']['records_start'] 	= (int)$this->bo->start;
+			$datatable['pagination']['records_limit'] 	= $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
+			$datatable['pagination']['records_returned']= count($location_list);
+			$datatable['pagination']['records_total'] 	= $this->bo->total_records;
+
+			$datatable['pagination']['lang']['first'] 	= lang('First');
+			$datatable['pagination']['lang']['next'] 	= lang('Next');
+			$datatable['pagination']['lang']['previous']= lang('Previous');
+			$datatable['pagination']['lang']['last'] 	= lang('Last');
+			$datatable['pagination']['lang']['overview']= lang('Records $1 - $2 of $3');
+
+			$datatable['sorting']['order'] 	= phpgw::get_var('order', 'string'); // Column
+			$datatable['sorting']['sort'] 	= phpgw::get_var('sort', 'string'); // ASC / DESC
+
+			if( phpgw::get_var('phpgw_return_as') == 'json' )
+			{
+	    		$json = array
+	    		(
+	    			'recordsReturned' 	=> $datatable['pagination']['records_returned'],
+	    			'totalRecords' 		=> $datatable['pagination']['records_total'],
+	    			'recordStartIndex' 	=> $datatable['pagination']['records_start'],
+	    			'sortKey'			=> $datatable['sorting']['order'],
+	    			'sortDir'			=> $datatable['sorting']['sort'],
+	    			'records'			=> array()
+	    		);
+
+	    		foreach( $datatable['rows']['row'] as $row )
+	    		{
+	    			$json_row = array();
+	    			foreach( $row['column'] as $column)
+	    			{
+	    				$json_row[$column['name']] = $column['value'];
+	    			}
+	    			$json['records'][] = $json_row;
+	    		}
+	    		return $json;
+			}
+
+			// Prepare template variables and process XSLT
+			$template_vars = array();
+			$template_vars['datatable'] = $datatable;
+
+			$GLOBALS['phpgw']->xslttpl->add_file(array('datatable'));
+	      	$GLOBALS['phpgw']->xslttpl->set_var('phpgw', $template_vars);
+
+	      	if ( !isset($GLOBALS['phpgw']->css) || !is_object($GLOBALS['phpgw']->css) )
+	      	{
+	        	$GLOBALS['phpgw']->css = createObject('phpgwapi.css');
+	      	}
+
+		  	$GLOBALS['phpgw']->css->validate_file('datatable');
+			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/datatable/assets/skins/sam/datatable.css');
+
+			phpgwapi_yui::load_widget('dragdrop');
+		  	phpgwapi_yui::load_widget('datatable');
+
+		  	// Uncomment the following line to enable experimental YUI Datagrid version
+	  		$GLOBALS['phpgw']->js->validate_file( 'newdesign', 'gabnr', 'property' );
+		}
+
 
 		function edit()
 		{
@@ -1470,8 +1738,6 @@
 
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('view' => $data));
-
-
 		}
 
 		/**
@@ -1576,26 +1842,7 @@
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('location'));
 
-			//$GLOBALS['phpgw']->js->validate_file('overlib','overlib','property');
-
-	/***********************************/
-		/// Enable for use Yahoo YUI
-		//$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/datatable/assets/skins/sam/datatable.css');
-
-		//$GLOBALS['phpgw']->css->add_external_file('equipo/templates/idots/css/table.css');
-
-	/*	phpgwapi_yui::load_widget('dragdrop');
-	  	phpgwapi_yui::load_widget('datatable');
-	  	phpgwapi_yui::load_widget('menu');
-	  	phpgwapi_yui::load_widget('connection');*/
-
-      	//phpgwapi_yui::load_widget('tabview');
-
-	  	// Uncomment the following line to enable experimental YUI Datagrid version
-	  //	$GLOBALS['phpgw']->js->validate_file( 'newdesign', 'gabnr', 'property' );
-
-	/***********************************/
-
+			$GLOBALS['phpgw']->js->validate_file('overlib','overlib','property');
 
 			$summary_list= $this->bo->read_summary();
 			$uicols	= $this->bo->uicols;
