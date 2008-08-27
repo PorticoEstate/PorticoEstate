@@ -2922,7 +2922,7 @@ class ged_dm
 	{
 		if ( $this->can_read($element_id))
 		{
-			$sql="SELECT ".$this->tables['history'].".*, ".$this->tables['versions'].".status finalstatus, ".$this->tables['versions'].".major, ".$this->tables['versions'].".minor FROM ".$this->tables['history']." INNER JOIN ".$this->tables['versions']." ";
+			$sql="SELECT ".$this->tables['history'].".*, ".$this->tables['versions'].".status as finalstatus, ".$this->tables['versions'].".major, ".$this->tables['versions'].".minor FROM ".$this->tables['history']." INNER JOIN ".$this->tables['versions']." ";
 			$sql.="ON ".$this->tables['history'].".version_id = ".$this->tables['versions'].".version_id ";
 			$sql.="WHERE ".$this->tables['history'].".element_id=".$element_id." ";
 			$sql.="ORDER BY ".$this->tables['history'].".logdate ASC";			
@@ -3020,8 +3020,8 @@ class ged_dm
   
   function get_stats ($start_date=null, $end_date=null, $status=null, $project_root_id=null)
   {
-		$sql="SELECT ged_history.*, ged_elements.name, ged_elements.reference, ged_elements.description descriptione, ";
-		$sql.="ged_versions.major, ged_versions.minor, ged_versions.description descriptionv ";
+		$sql="SELECT ged_history.*, ged_elements.name, ged_elements.reference, ged_elements.description as descriptione, ";
+		$sql.="ged_versions.major, ged_versions.minor, ged_versions.description as descriptionv ";
 		$sql.="FROM (ged_history JOIN ged_elements on ged_history.element_id = ged_elements.element_id) ";
 		$sql.="JOIN ged_versions on ged_history.version_id = ged_versions.version_id ";
 		$sql.="WHERE ged_history.logdate >= ".$start_date." AND ged_history.logdate <= ".$end_date." ";
@@ -3433,7 +3433,7 @@ class ged_dm
 		$out=null;
 		$db2 = clone($this->db);
 				
-		$sql="SELECT *, ged_elements.description edescription ";
+		$sql="SELECT *, ged_elements.description as edescription ";
 		$sql.="FROM ( ged_elements ";
 		$sql.="JOIN ged_doc_types ON ged_elements.project_root=".(int)$project_root_id." ";
 		$sql.="AND ged_elements.doc_type = ged_doc_types.type_id AND ged_doc_types.type_chrono=1) ";
@@ -3485,8 +3485,8 @@ class ged_dm
 	{
 		$out=null;
 		
-		$sql="SELECT *, ged_elements.description edescription, ged_versions.description vdescription, ";
-		$sql.="ged_versions.creation_date vcreation_date, ged_elements.creator_id ecreator_id ";
+		$sql="SELECT *, ged_elements.description as edescription, ged_versions.description as vdescription, ";
+		$sql.="ged_versions.creation_date as vcreation_date, ged_elements.creator_id as ecreator_id ";
 		$sql.="FROM ( ged_elements ";
 		$sql.="JOIN ged_versions ON ( ged_elements.element_id = ged_versions.element_id ";
 		$sql.="AND ged_elements.project_root=".(int)$project_root_id." ) ";

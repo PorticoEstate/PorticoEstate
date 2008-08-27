@@ -154,163 +154,163 @@ $oProc->query ("INSERT INTO ged_periods ( period, description) VALUES ( 15552000
 
 // ged default flow : flow
 
-$oProc->query ("INSERT INTO `phpgw_flows` VALUES (1,'ged','default')" );
+$oProc->query ("INSERT INTO phpgw_flows VALUES (1,'ged','default')" );
 
 // ged default flow : statuses
 
-$oProc->query ("INSERT INTO `phpgw_flows_statuses` VALUES ('working', 'ged', 'working')" );
-$oProc->query ("INSERT INTO `phpgw_flows_statuses` VALUES ('pending_for_technical_review', 'ged', 'pending for technical review')" );
-$oProc->query ("INSERT INTO `phpgw_flows_statuses` VALUES ('pending_for_quality_review', 'ged', 'pending for quality review')" );
-$oProc->query ("INSERT INTO `phpgw_flows_statuses` VALUES ('ready_for_delivery', 'ged', 'ready for delivery')" );
-$oProc->query ("INSERT INTO `phpgw_flows_statuses` VALUES ('pending_for_acceptation', 'ged', 'pending for final acceptation')" );
-$oProc->query ("INSERT INTO `phpgw_flows_statuses` VALUES ('current', 'ged', 'current')" );
-$oProc->query ("INSERT INTO `phpgw_flows_statuses` VALUES ('refused', 'ged', 'refused')" );
-$oProc->query ("INSERT INTO `phpgw_flows_statuses` VALUES ('obsolete', 'ged', 'obsolete')" );
-$oProc->query ("INSERT INTO `phpgw_flows_statuses` VALUES ('alert', 'ged', 'alert')" );
-$oProc->query ("INSERT INTO `phpgw_flows_statuses` VALUES ('working_locked', 'ged', 'working (locked)')" );
+$oProc->query ("INSERT INTO phpgw_flows_statuses VALUES ('working', 'ged', 'working')" );
+$oProc->query ("INSERT INTO phpgw_flows_statuses VALUES ('pending_for_technical_review', 'ged', 'pending for technical review')" );
+$oProc->query ("INSERT INTO phpgw_flows_statuses VALUES ('pending_for_quality_review', 'ged', 'pending for quality review')" );
+$oProc->query ("INSERT INTO phpgw_flows_statuses VALUES ('ready_for_delivery', 'ged', 'ready for delivery')" );
+$oProc->query ("INSERT INTO phpgw_flows_statuses VALUES ('pending_for_acceptation', 'ged', 'pending for final acceptation')" );
+$oProc->query ("INSERT INTO phpgw_flows_statuses VALUES ('current', 'ged', 'current')" );
+$oProc->query ("INSERT INTO phpgw_flows_statuses VALUES ('refused', 'ged', 'refused')" );
+$oProc->query ("INSERT INTO phpgw_flows_statuses VALUES ('obsolete', 'ged', 'obsolete')" );
+$oProc->query ("INSERT INTO phpgw_flows_statuses VALUES ('alert', 'ged', 'alert')" );
+$oProc->query ("INSERT INTO phpgw_flows_statuses VALUES ('working_locked', 'ged', 'working (locked)')" );
 
 // ged default flow : transitions
 
-$oProc->query ("INSERT INTO `phpgw_flows_transitions` VALUES (1,1,'working','pending_for_technical_review','submit file','set_status')" );
-$oProc->query ("INSERT INTO `phpgw_flows_transitions` VALUES (2,1,'pending_for_technical_review','pending_for_quality_review','approve file (technical)','set_status_with_review')" );
-$oProc->query ("INSERT INTO `phpgw_flows_transitions` VALUES (3,1,'pending_for_quality_review','ready_for_delivery','approve file (quality)','set_status_with_review')" );
-$oProc->query ("INSERT INTO `phpgw_flows_transitions` VALUES (4,1,'ready_for_delivery','pending_for_acceptation','deliver file','set_status')" );
-$oProc->query ("INSERT INTO `phpgw_flows_transitions` VALUES (5,1,'pending_for_acceptation','current','accept file (final)','set_status_with_review')" );
-$oProc->query ("INSERT INTO `phpgw_flows_transitions` VALUES (6,1,'pending_for_acceptation','refused','refuse file (final)','set_status_with_review')" );
-$oProc->query ("INSERT INTO `phpgw_flows_transitions` VALUES (7,1,'pending_for_technical_review','working','reject file (technical)','set_status_with_review')" );
-$oProc->query ("INSERT INTO `phpgw_flows_transitions` VALUES (8,1,'pending_for_quality_review','working','reject file (quality)','set_status_with_review')" );
-$oProc->query ("INSERT INTO `phpgw_flows_transitions` VALUES (9,1,'pending_for_technical_review','current','accept file (force)','set_status_with_review')" );
-$oProc->query ("INSERT INTO `phpgw_flows_transitions` VALUES (10,1,'pending_for_quality_review','current','accept file (force)','set_status_with_review')" );
-$oProc->query ("INSERT INTO `phpgw_flows_transitions` VALUES (11,1,'current','obsolete','obsolete','set_status')" );
-$oProc->query ("INSERT INTO `phpgw_flows_transitions` VALUES (12,1,'working','current','accept file (force)','set_status')" );
-$oProc->query ("INSERT INTO `phpgw_flows_transitions` VALUES (13,1,'current','alert','alert','set_status')" );
-$oProc->query ("INSERT INTO `phpgw_flows_transitions` VALUES (14,1,'alert','current','cancel alert','set_status')" );
-$oProc->query ("INSERT INTO `phpgw_flows_transitions` VALUES (15,1,'alert','obsolete','obsolete','set_status')" );
-$oProc->query ("INSERT INTO `phpgw_flows_transitions` VALUES (16, 1, 'working', 'working', 'update', 'update')" );
-$oProc->query ("INSERT INTO `phpgw_flows_transitions` VALUES (17, 1, 'current', 'current', 'update', 'update')" );
-$oProc->query ("INSERT INTO `phpgw_flows_transitions` VALUES (18, 1, 'refused', 'refused', 'update', 'update')" );
-$oProc->query ("INSERT INTO `phpgw_flows_transitions` VALUES (19, 1, 'working', 'working_locked', 'lock', 'set_status')" );
-$oProc->query ("INSERT INTO `phpgw_flows_transitions` VALUES (20, 1, 'working_locked', 'working', 'unlock', 'set_status')" );
-$oProc->query ("INSERT INTO `phpgw_flows_transitions` VALUES (21, 1, 'working_locked', 'working_locked', 'update', 'update')" );
-$oProc->query ("INSERT INTO `phpgw_flows_transitions` VALUES (22, 1, 'pending_for_acceptation', 'pending_for_acceptation', 'update', 'update')" );
+$oProc->query ("INSERT INTO phpgw_flows_transitions VALUES (1,1,'working','pending_for_technical_review','submit file','set_status')" );
+$oProc->query ("INSERT INTO phpgw_flows_transitions VALUES (2,1,'pending_for_technical_review','pending_for_quality_review','approve file (technical)','set_status_with_review')" );
+$oProc->query ("INSERT INTO phpgw_flows_transitions VALUES (3,1,'pending_for_quality_review','ready_for_delivery','approve file (quality)','set_status_with_review')" );
+$oProc->query ("INSERT INTO phpgw_flows_transitions VALUES (4,1,'ready_for_delivery','pending_for_acceptation','deliver file','set_status')" );
+$oProc->query ("INSERT INTO phpgw_flows_transitions VALUES (5,1,'pending_for_acceptation','current','accept file (final)','set_status_with_review')" );
+$oProc->query ("INSERT INTO phpgw_flows_transitions VALUES (6,1,'pending_for_acceptation','refused','refuse file (final)','set_status_with_review')" );
+$oProc->query ("INSERT INTO phpgw_flows_transitions VALUES (7,1,'pending_for_technical_review','working','reject file (technical)','set_status_with_review')" );
+$oProc->query ("INSERT INTO phpgw_flows_transitions VALUES (8,1,'pending_for_quality_review','working','reject file (quality)','set_status_with_review')" );
+$oProc->query ("INSERT INTO phpgw_flows_transitions VALUES (9,1,'pending_for_technical_review','current','accept file (force)','set_status_with_review')" );
+$oProc->query ("INSERT INTO phpgw_flows_transitions VALUES (10,1,'pending_for_quality_review','current','accept file (force)','set_status_with_review')" );
+$oProc->query ("INSERT INTO phpgw_flows_transitions VALUES (11,1,'current','obsolete','obsolete','set_status')" );
+$oProc->query ("INSERT INTO phpgw_flows_transitions VALUES (12,1,'working','current','accept file (force)','set_status')" );
+$oProc->query ("INSERT INTO phpgw_flows_transitions VALUES (13,1,'current','alert','alert','set_status')" );
+$oProc->query ("INSERT INTO phpgw_flows_transitions VALUES (14,1,'alert','current','cancel alert','set_status')" );
+$oProc->query ("INSERT INTO phpgw_flows_transitions VALUES (15,1,'alert','obsolete','obsolete','set_status')" );
+$oProc->query ("INSERT INTO phpgw_flows_transitions VALUES (16, 1, 'working', 'working', 'update', 'update')" );
+$oProc->query ("INSERT INTO phpgw_flows_transitions VALUES (17, 1, 'current', 'current', 'update', 'update')" );
+$oProc->query ("INSERT INTO phpgw_flows_transitions VALUES (18, 1, 'refused', 'refused', 'update', 'update')" );
+$oProc->query ("INSERT INTO phpgw_flows_transitions VALUES (19, 1, 'working', 'working_locked', 'lock', 'set_status')" );
+$oProc->query ("INSERT INTO phpgw_flows_transitions VALUES (20, 1, 'working_locked', 'working', 'unlock', 'set_status')" );
+$oProc->query ("INSERT INTO phpgw_flows_transitions VALUES (21, 1, 'working_locked', 'working_locked', 'update', 'update')" );
+$oProc->query ("INSERT INTO phpgw_flows_transitions VALUES (22, 1, 'pending_for_acceptation', 'pending_for_acceptation', 'update', 'update')" );
 
 
 // ged default flow : transitions custom values
 
-$oProc->query ("INSERT INTO `phpgw_flows_transitions_custom_values` VALUES (1,2,'review_file_type','fiche-relecture-interne')" );
-$oProc->query ("INSERT INTO `phpgw_flows_transitions_custom_values` VALUES (2,3,'review_file_type','fiche-relecture-interne')" );
-$oProc->query ("INSERT INTO `phpgw_flows_transitions_custom_values` VALUES (3,5,'review_file_type','fiche-relecture-externe')" );
-$oProc->query ("INSERT INTO `phpgw_flows_transitions_custom_values` VALUES (4,6,'review_file_type','fiche-relecture-externe')" );
-$oProc->query ("INSERT INTO `phpgw_flows_transitions_custom_values` VALUES (5,7,'review_file_type','fiche-relecture-interne')" );
-$oProc->query ("INSERT INTO `phpgw_flows_transitions_custom_values` VALUES (6,8,'review_file_type','fiche-relecture-interne')" );
-$oProc->query ("INSERT INTO `phpgw_flows_transitions_custom_values` VALUES (7, 16, 'update_mode', 'update')" );
-$oProc->query ("INSERT INTO `phpgw_flows_transitions_custom_values` VALUES (8, 17, 'update_mode', 'new')" );
-$oProc->query ("INSERT INTO `phpgw_flows_transitions_custom_values` VALUES (9, 18, 'update_mode', 'new')" );
-$oProc->query ("INSERT INTO `phpgw_flows_transitions_custom_values` VALUES (10, 21, 'update_mode', 'update')" );
-$oProc->query ("INSERT INTO `phpgw_flows_transitions_custom_values` VALUES (11, 22, 'update_mode', 'new')" );
+$oProc->query ("INSERT INTO phpgw_flows_transitions_custom_values VALUES (1,2,'review_file_type','fiche-relecture-interne')" );
+$oProc->query ("INSERT INTO phpgw_flows_transitions_custom_values VALUES (2,3,'review_file_type','fiche-relecture-interne')" );
+$oProc->query ("INSERT INTO phpgw_flows_transitions_custom_values VALUES (3,5,'review_file_type','fiche-relecture-externe')" );
+$oProc->query ("INSERT INTO phpgw_flows_transitions_custom_values VALUES (4,6,'review_file_type','fiche-relecture-externe')" );
+$oProc->query ("INSERT INTO phpgw_flows_transitions_custom_values VALUES (5,7,'review_file_type','fiche-relecture-interne')" );
+$oProc->query ("INSERT INTO phpgw_flows_transitions_custom_values VALUES (6,8,'review_file_type','fiche-relecture-interne')" );
+$oProc->query ("INSERT INTO phpgw_flows_transitions_custom_values VALUES (7, 16, 'update_mode', 'update')" );
+$oProc->query ("INSERT INTO phpgw_flows_transitions_custom_values VALUES (8, 17, 'update_mode', 'new')" );
+$oProc->query ("INSERT INTO phpgw_flows_transitions_custom_values VALUES (9, 18, 'update_mode', 'new')" );
+$oProc->query ("INSERT INTO phpgw_flows_transitions_custom_values VALUES (10, 21, 'update_mode', 'update')" );
+$oProc->query ("INSERT INTO phpgw_flows_transitions_custom_values VALUES (11, 22, 'update_mode', 'new')" );
 
 // ged default flow : triggers
 
-$oProc->query ("INSERT INTO `phpgw_flows_triggers` VALUES (1,5,'ged','flow_client','apply_transition_to_previous_versions_matching_status','a:1:{s:10:\"transition\";i:11;}')" );
-$oProc->query ("INSERT INTO `phpgw_flows_triggers` VALUES (2,11,'ged','flow_client','apply_transition_to_linking_versions_with_link_type','a:2:{s:10:\"transition\";i:13;s:9:\"link_type\";s:10:\"dependancy\";}')" );
-$oProc->query ("INSERT INTO `phpgw_flows_triggers` VALUES (3,4,'ged','flow_client','apply_transition_to_linked_versions_with_link_type','a:2:{s:10:\"transition\";i:4;s:9:\"link_type\";s:8:\"delivery\";}')" );
-$oProc->query ("INSERT INTO `phpgw_flows_triggers` VALUES (4,5,'ged','flow_client','apply_transition_to_previous_versions_matching_status','a:1:{s:10:\"transition\";i:15;}')" );
-$oProc->query ("INSERT INTO `phpgw_flows_triggers` VALUES (5,19, 'ged', 'flows', 'grant_role', 'a:1:{s:10:\"transition\";i:20;}')" );
-$oProc->query ("INSERT INTO `phpgw_flows_triggers` VALUES (6,20, 'ged', 'flows', 'remove_role', 'a:1:{s:10:\"transition\";i:20;}')" );
-$oProc->query ("INSERT INTO `phpgw_flows_triggers` VALUES (7,19, 'ged', 'flows', 'grant_role', 'a:1:{s:10:\"transition\";i:21;}')" );
-$oProc->query ("INSERT INTO `phpgw_flows_triggers` VALUES (8,20, 'ged', 'flows', 'remove_role', 'a:1:{s:10:\"transition\";i:21;}')" );
+$oProc->query ("INSERT INTO phpgw_flows_triggers VALUES (1,5,'ged','flow_client','apply_transition_to_previous_versions_matching_status','a:1:{s:10:\"transition\";i:11;}')" );
+$oProc->query ("INSERT INTO phpgw_flows_triggers VALUES (2,11,'ged','flow_client','apply_transition_to_linking_versions_with_link_type','a:2:{s:10:\"transition\";i:13;s:9:\"link_type\";s:10:\"dependancy\";}')" );
+$oProc->query ("INSERT INTO phpgw_flows_triggers VALUES (3,4,'ged','flow_client','apply_transition_to_linked_versions_with_link_type','a:2:{s:10:\"transition\";i:4;s:9:\"link_type\";s:8:\"delivery\";}')" );
+$oProc->query ("INSERT INTO phpgw_flows_triggers VALUES (4,5,'ged','flow_client','apply_transition_to_previous_versions_matching_status','a:1:{s:10:\"transition\";i:15;}')" );
+$oProc->query ("INSERT INTO phpgw_flows_triggers VALUES (5,19, 'ged', 'flows', 'grant_role', 'a:1:{s:10:\"transition\";i:20;}')" );
+$oProc->query ("INSERT INTO phpgw_flows_triggers VALUES (6,20, 'ged', 'flows', 'remove_role', 'a:1:{s:10:\"transition\";i:20;}')" );
+$oProc->query ("INSERT INTO phpgw_flows_triggers VALUES (7,19, 'ged', 'flows', 'grant_role', 'a:1:{s:10:\"transition\";i:21;}')" );
+$oProc->query ("INSERT INTO phpgw_flows_triggers VALUES (8,20, 'ged', 'flows', 'remove_role', 'a:1:{s:10:\"transition\";i:21;}')" );
 
 // ged default flow : conditions
 
-$oProc->query ("INSERT INTO `phpgw_flows_conditions` (`condition_id`, `transition`, `app`, `class`, `method`, `context`) VALUES (1, 17, 'ged', 'flow_client', 'is_last_version', '')");
-$oProc->query ("INSERT INTO `phpgw_flows_conditions` (`condition_id`, `transition`, `app`, `class`, `method`, `context`) VALUES (2, 18, 'ged', 'flow_client', 'is_last_version', '')");
-$oProc->query ("INSERT INTO `phpgw_flows_conditions` (`condition_id`, `transition`, `app`, `class`, `method`, `context`) VALUES (3, 22, 'ged', 'flow_client', 'is_last_version', '')");
+$oProc->query ("INSERT INTO phpgw_flows_conditions (condition_id, transition, app, class, method, context) VALUES (1, 17, 'ged', 'flow_client', 'is_last_version', '')");
+$oProc->query ("INSERT INTO phpgw_flows_conditions (condition_id, transition, app, class, method, context) VALUES (2, 18, 'ged', 'flow_client', 'is_last_version', '')");
+$oProc->query ("INSERT INTO phpgw_flows_conditions (condition_id, transition, app, class, method, context) VALUES (3, 22, 'ged', 'flow_client', 'is_last_version', '')");
 
 
 // ged default flow : admin roles
 
 $admins_uid=2;
 
-$oProc->query ("INSERT INTO `phpgw_flows_roles` VALUES (NULL,1,$admins_uid,NULL)" );
-$oProc->query ("INSERT INTO `phpgw_flows_roles` VALUES (NULL,2,$admins_uid,NULL)" );
-$oProc->query ("INSERT INTO `phpgw_flows_roles` VALUES (NULL,3,$admins_uid,NULL)" );
-$oProc->query ("INSERT INTO `phpgw_flows_roles` VALUES (NULL,4,$admins_uid,NULL)" );
-$oProc->query ("INSERT INTO `phpgw_flows_roles` VALUES (NULL,5,$admins_uid,NULL)" );
-$oProc->query ("INSERT INTO `phpgw_flows_roles` VALUES (NULL,6,$admins_uid,NULL)" );
-$oProc->query ("INSERT INTO `phpgw_flows_roles` VALUES (NULL,7,$admins_uid,NULL)" );
-$oProc->query ("INSERT INTO `phpgw_flows_roles` VALUES (NULL,8,$admins_uid,NULL)" );
-$oProc->query ("INSERT INTO `phpgw_flows_roles` VALUES (NULL,9,$admins_uid,NULL)" );
-$oProc->query ("INSERT INTO `phpgw_flows_roles` VALUES (NULL,10,$admins_uid,NULL)" );
-$oProc->query ("INSERT INTO `phpgw_flows_roles` VALUES (NULL,11,$admins_uid,NULL)" );
-$oProc->query ("INSERT INTO `phpgw_flows_roles` VALUES (NULL,12,$admins_uid,NULL)" );
-$oProc->query ("INSERT INTO `phpgw_flows_roles` VALUES (NULL,13,$admins_uid,NULL)" );
-$oProc->query ("INSERT INTO `phpgw_flows_roles` VALUES (NULL,14,$admins_uid,NULL)" );
-$oProc->query ("INSERT INTO `phpgw_flows_roles` VALUES (NULL,15,$admins_uid,NULL)" );
-$oProc->query ("INSERT INTO `phpgw_flows_roles` VALUES (NULL,16,$admins_uid,NULL)" );
-$oProc->query ("INSERT INTO `phpgw_flows_roles` VALUES (NULL,17,$admins_uid,NULL)" );
-$oProc->query ("INSERT INTO `phpgw_flows_roles` VALUES (NULL,18,$admins_uid,NULL)" );
-$oProc->query ("INSERT INTO `phpgw_flows_roles` VALUES (NULL,19,$admins_uid,NULL)" );
-$oProc->query ("INSERT INTO `phpgw_flows_roles` VALUES (NULL,21,$admins_uid,NULL)" );
-$oProc->query ("INSERT INTO `phpgw_flows_roles` VALUES (NULL,21,$admins_uid,NULL)" );
-$oProc->query ("INSERT INTO `phpgw_flows_roles` VALUES (NULL,22,$admins_uid,NULL)" );
+$oProc->query ("INSERT INTO phpgw_flows_roles (transition, account_id, context) VALUES (1,$admins_uid,NULL)" );
+$oProc->query ("INSERT INTO phpgw_flows_roles (transition, account_id, context) VALUES (2,$admins_uid,NULL)" );
+$oProc->query ("INSERT INTO phpgw_flows_roles (transition, account_id, context) VALUES (3,$admins_uid,NULL)" );
+$oProc->query ("INSERT INTO phpgw_flows_roles (transition, account_id, context) VALUES (4,$admins_uid,NULL)" );
+$oProc->query ("INSERT INTO phpgw_flows_roles (transition, account_id, context) VALUES (5,$admins_uid,NULL)" );
+$oProc->query ("INSERT INTO phpgw_flows_roles (transition, account_id, context) VALUES (6,$admins_uid,NULL)" );
+$oProc->query ("INSERT INTO phpgw_flows_roles (transition, account_id, context) VALUES (7,$admins_uid,NULL)" );
+$oProc->query ("INSERT INTO phpgw_flows_roles (transition, account_id, context) VALUES (8,$admins_uid,NULL)" );
+$oProc->query ("INSERT INTO phpgw_flows_roles (transition, account_id, context) VALUES (9,$admins_uid,NULL)" );
+$oProc->query ("INSERT INTO phpgw_flows_roles (transition, account_id, context) VALUES (10,$admins_uid,NULL)" );
+$oProc->query ("INSERT INTO phpgw_flows_roles (transition, account_id, context) VALUES (11,$admins_uid,NULL)" );
+$oProc->query ("INSERT INTO phpgw_flows_roles (transition, account_id, context) VALUES (12,$admins_uid,NULL)" );
+$oProc->query ("INSERT INTO phpgw_flows_roles (transition, account_id, context) VALUES (13,$admins_uid,NULL)" );
+$oProc->query ("INSERT INTO phpgw_flows_roles (transition, account_id, context) VALUES (14,$admins_uid,NULL)" );
+$oProc->query ("INSERT INTO phpgw_flows_roles (transition, account_id, context) VALUES (15,$admins_uid,NULL)" );
+$oProc->query ("INSERT INTO phpgw_flows_roles (transition, account_id, context) VALUES (16,$admins_uid,NULL)" );
+$oProc->query ("INSERT INTO phpgw_flows_roles (transition, account_id, context) VALUES (17,$admins_uid,NULL)" );
+$oProc->query ("INSERT INTO phpgw_flows_roles (transition, account_id, context) VALUES (18,$admins_uid,NULL)" );
+$oProc->query ("INSERT INTO phpgw_flows_roles (transition, account_id, context) VALUES (19,$admins_uid,NULL)" );
+$oProc->query ("INSERT INTO phpgw_flows_roles (transition, account_id, context) VALUES (21,$admins_uid,NULL)" );
+$oProc->query ("INSERT INTO phpgw_flows_roles (transition, account_id, context) VALUES (21,$admins_uid,NULL)" );
+$oProc->query ("INSERT INTO phpgw_flows_roles (transition, account_id, context) VALUES (22,$admins_uid,NULL)" );
 
 // ged default flow : managers roles
 
 $managers_uid=3;
 
-$oProc->query ("INSERT INTO `phpgw_flows_roles` VALUES (NULL,1,$managers_uid,NULL)" );
-$oProc->query ("INSERT INTO `phpgw_flows_roles` VALUES (NULL,2,$managers_uid,NULL)" );
-$oProc->query ("INSERT INTO `phpgw_flows_roles` VALUES (NULL,3,$managers_uid,NULL)" );
-$oProc->query ("INSERT INTO `phpgw_flows_roles` VALUES (NULL,4,$managers_uid,NULL)" );
-$oProc->query ("INSERT INTO `phpgw_flows_roles` VALUES (NULL,5,$managers_uid,NULL)" );
-$oProc->query ("INSERT INTO `phpgw_flows_roles` VALUES (NULL,6,$managers_uid,NULL)" );
-$oProc->query ("INSERT INTO `phpgw_flows_roles` VALUES (NULL,7,$managers_uid,NULL)" );
-$oProc->query ("INSERT INTO `phpgw_flows_roles` VALUES (NULL,8,$managers_uid,NULL)" );
-$oProc->query ("INSERT INTO `phpgw_flows_roles` VALUES (NULL,9,$managers_uid,NULL)" );
-$oProc->query ("INSERT INTO `phpgw_flows_roles` VALUES (NULL,10,$managers_uid,NULL)" );
-$oProc->query ("INSERT INTO `phpgw_flows_roles` VALUES (NULL,11,$managers_uid,NULL)" );
-$oProc->query ("INSERT INTO `phpgw_flows_roles` VALUES (NULL,12,$managers_uid,NULL)" );
-$oProc->query ("INSERT INTO `phpgw_flows_roles` VALUES (NULL,13,$managers_uid,NULL)" );
-$oProc->query ("INSERT INTO `phpgw_flows_roles` VALUES (NULL,14,$managers_uid,NULL)" );
-$oProc->query ("INSERT INTO `phpgw_flows_roles` VALUES (NULL,15,$managers_uid,NULL)" );
-$oProc->query ("INSERT INTO `phpgw_flows_roles` VALUES (NULL,16,$managers_uid,NULL)" );
-$oProc->query ("INSERT INTO `phpgw_flows_roles` VALUES (NULL,17,$managers_uid,NULL)" );
-$oProc->query ("INSERT INTO `phpgw_flows_roles` VALUES (NULL,18,$managers_uid,NULL)" );
-$oProc->query ("INSERT INTO `phpgw_flows_roles` VALUES (NULL,19,$managers_uid,NULL)" );
-$oProc->query ("INSERT INTO `phpgw_flows_roles` VALUES (NULL,20,$managers_uid,NULL)" );
-$oProc->query ("INSERT INTO `phpgw_flows_roles` VALUES (NULL,21,$managers_uid,NULL)" );
-$oProc->query ("INSERT INTO `phpgw_flows_roles` VALUES (NULL,22,$managers_uid,NULL)" );
+$oProc->query ("INSERT INTO phpgw_flows_roles (transition, account_id, context) VALUES (1,$managers_uid,NULL)" );
+$oProc->query ("INSERT INTO phpgw_flows_roles (transition, account_id, context) VALUES (2,$managers_uid,NULL)" );
+$oProc->query ("INSERT INTO phpgw_flows_roles (transition, account_id, context) VALUES (3,$managers_uid,NULL)" );
+$oProc->query ("INSERT INTO phpgw_flows_roles (transition, account_id, context) VALUES (4,$managers_uid,NULL)" );
+$oProc->query ("INSERT INTO phpgw_flows_roles (transition, account_id, context) VALUES (5,$managers_uid,NULL)" );
+$oProc->query ("INSERT INTO phpgw_flows_roles (transition, account_id, context) VALUES (6,$managers_uid,NULL)" );
+$oProc->query ("INSERT INTO phpgw_flows_roles (transition, account_id, context) VALUES (7,$managers_uid,NULL)" );
+$oProc->query ("INSERT INTO phpgw_flows_roles (transition, account_id, context) VALUES (8,$managers_uid,NULL)" );
+$oProc->query ("INSERT INTO phpgw_flows_roles (transition, account_id, context) VALUES (9,$managers_uid,NULL)" );
+$oProc->query ("INSERT INTO phpgw_flows_roles (transition, account_id, context) VALUES (10,$managers_uid,NULL)" );
+$oProc->query ("INSERT INTO phpgw_flows_roles (transition, account_id, context) VALUES (11,$managers_uid,NULL)" );
+$oProc->query ("INSERT INTO phpgw_flows_roles (transition, account_id, context) VALUES (12,$managers_uid,NULL)" );
+$oProc->query ("INSERT INTO phpgw_flows_roles (transition, account_id, context) VALUES (13,$managers_uid,NULL)" );
+$oProc->query ("INSERT INTO phpgw_flows_roles (transition, account_id, context) VALUES (14,$managers_uid,NULL)" );
+$oProc->query ("INSERT INTO phpgw_flows_roles (transition, account_id, context) VALUES (15,$managers_uid,NULL)" );
+$oProc->query ("INSERT INTO phpgw_flows_roles (transition, account_id, context) VALUES (16,$managers_uid,NULL)" );
+$oProc->query ("INSERT INTO phpgw_flows_roles (transition, account_id, context) VALUES (17,$managers_uid,NULL)" );
+$oProc->query ("INSERT INTO phpgw_flows_roles (transition, account_id, context) VALUES (18,$managers_uid,NULL)" );
+$oProc->query ("INSERT INTO phpgw_flows_roles (transition, account_id, context) VALUES (19,$managers_uid,NULL)" );
+$oProc->query ("INSERT INTO phpgw_flows_roles (transition, account_id, context) VALUES (20,$managers_uid,NULL)" );
+$oProc->query ("INSERT INTO phpgw_flows_roles (transition, account_id, context) VALUES (21,$managers_uid,NULL)" );
+$oProc->query ("INSERT INTO phpgw_flows_roles (transition, account_id, context) VALUES (22,$managers_uid,NULL)" );
 
 // ged default flow : team roles
 
 $teams_uid=4;
 
-$oProc->query ("INSERT INTO `phpgw_flows_roles` VALUES (NULL,1,$teams_uid,NULL)" );
-$oProc->query ("INSERT INTO `phpgw_flows_roles` VALUES (NULL,16,$teams_uid,NULL)" );
-$oProc->query ("INSERT INTO `phpgw_flows_roles` VALUES (NULL,17,$teams_uid,NULL)" );
-$oProc->query ("INSERT INTO `phpgw_flows_roles` VALUES (NULL,18,$teams_uid,NULL)" );
-$oProc->query ("INSERT INTO `phpgw_flows_roles` VALUES (NULL,19,$teams_uid,NULL)" );
-$oProc->query ("INSERT INTO `phpgw_flows_roles` VALUES (NULL,22,$teams_uid,NULL)" );
+$oProc->query ("INSERT INTO phpgw_flows_roles (transition, account_id, context) VALUES (1,$teams_uid,NULL)" );
+$oProc->query ("INSERT INTO phpgw_flows_roles (transition, account_id, context) VALUES (16,$teams_uid,NULL)" );
+$oProc->query ("INSERT INTO phpgw_flows_roles (transition, account_id, context) VALUES (17,$teams_uid,NULL)" );
+$oProc->query ("INSERT INTO phpgw_flows_roles (transition, account_id, context) VALUES (18,$teams_uid,NULL)" );
+$oProc->query ("INSERT INTO phpgw_flows_roles (transition, account_id, context) VALUES (19,$teams_uid,NULL)" );
+$oProc->query ("INSERT INTO phpgw_flows_roles (transition, account_id, context) VALUES (22,$teams_uid,NULL)" );
 
 
 // ged default flow : quality roles
 
 $quality_uid=5;
 
-$oProc->query ("INSERT INTO `phpgw_flows_roles` VALUES (NULL,1,$quality_uid,NULL)" );
-$oProc->query ("INSERT INTO `phpgw_flows_roles` VALUES (NULL,16,$quality_uid,NULL)" );
-$oProc->query ("INSERT INTO `phpgw_flows_roles` VALUES (NULL,17,$quality_uid,NULL)" );
-$oProc->query ("INSERT INTO `phpgw_flows_roles` VALUES (NULL,18,$quality_uid,NULL)" );
-$oProc->query ("INSERT INTO `phpgw_flows_roles` VALUES (NULL,19,$quality_uid,NULL)" );
-$oProc->query ("INSERT INTO `phpgw_flows_roles` VALUES (NULL,22,$quality_uid,NULL)" );
-$oProc->query ("INSERT INTO `phpgw_flows_roles` VALUES (NULL,3,$quality_uid,NULL)" );
-$oProc->query ("INSERT INTO `phpgw_flows_roles` VALUES (NULL,8,$quality_uid,NULL)" );
+$oProc->query ("INSERT INTO phpgw_flows_roles (transition, account_id, context) VALUES (1,$quality_uid,NULL)" );
+$oProc->query ("INSERT INTO phpgw_flows_roles (transition, account_id, context) VALUES (16,$quality_uid,NULL)" );
+$oProc->query ("INSERT INTO phpgw_flows_roles (transition, account_id, context) VALUES (17,$quality_uid,NULL)" );
+$oProc->query ("INSERT INTO phpgw_flows_roles (transition, account_id, context) VALUES (18,$quality_uid,NULL)" );
+$oProc->query ("INSERT INTO phpgw_flows_roles (transition, account_id, context) VALUES (19,$quality_uid,NULL)" );
+$oProc->query ("INSERT INTO phpgw_flows_roles (transition, account_id, context) VALUES (22,$quality_uid,NULL)" );
+$oProc->query ("INSERT INTO phpgw_flows_roles (transition, account_id, context) VALUES (3,$quality_uid,NULL)" );
+$oProc->query ("INSERT INTO phpgw_flows_roles (transition, account_id, context) VALUES (8,$quality_uid,NULL)" );
 
 // ged default flow : customer roles
 
 $customers_uid=6;
 
-$oProc->query ("INSERT INTO `phpgw_flows_roles` VALUES (NULL,5,$customers_uid,NULL)" );
-$oProc->query ("INSERT INTO `phpgw_flows_roles` VALUES (NULL,6,$customers_uid,NULL)" );
+$oProc->query ("INSERT INTO phpgw_flows_roles (transition, account_id, context) VALUES (5,$customers_uid,NULL)" );
+$oProc->query ("INSERT INTO phpgw_flows_roles (transition, account_id, context) VALUES (6,$customers_uid,NULL)" );
 
 ?>
