@@ -30,3 +30,4 @@
 	
 	$this->db->query("SELECT id FROM phpgw_cust_attribute WHERE column_name = '$target_field' AND location_id = $location_id",__LINE__,__FILE__);
 	$this->db->next_record();
+	$attrib_id = $this->db->f('id');
