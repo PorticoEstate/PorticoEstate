@@ -46,14 +46,15 @@
 
 	$id_field = 'location_code';
 	$target_field = 'kvittering';
+	$location_id = $GLOBALS['phpgw']->locations->get_id('property', '.s_agreement.detail');
 
 	if($agreement_id && isset($param[0]) && $param[0])
 	{
 		$location_code = implode('',$param);
 		$filter = "WHERE agreement_id = $agreement_id AND location_code ilike '" . $location_code . "%'" . $limit[$agreement_id];
 	}
-	
-	$this->db->query("SELECT id FROM fm_s_agreement_attribute WHERE column_name = '$target_field' AND attrib_detail=2",__LINE__,__FILE__);
+
+	$this->db->query("SELECT id FROM phpgw_cust_attribute WHERE column_name = '$target_field' AND location_id = $location_id",__LINE__,__FILE__);
 	$this->db->next_record();
 	$attrib_id = $this->db->f('id');
 	$receipt= 'Strøing: ';
