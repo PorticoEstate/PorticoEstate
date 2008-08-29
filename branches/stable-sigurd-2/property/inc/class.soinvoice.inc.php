@@ -197,10 +197,9 @@
 
 			if($query)
 			{
-				$query = $this->db->db_addslashes($query);
-				$querymethod = " $where ( spvend_code = " . (int) $query . " OR bilagsnr $this->like '%$query%' )";
+				$query = (int) $query;
+				$querymethod = " $where ( spvend_code = {$query} OR bilagsnr = {$query})";
 			}
-
 
 			$sql = "SELECT bilagsnr, count(bilagsnr) as invoice_count, sum(belop) as belop,spvend_code,fakturadato FROM  $table $join_tables $filtermethod $querymethod group by bilagsnr,spvend_code,fakturadato ";
 			$sql2 = "SELECT DISTINCT bilagsnr FROM  $table $join_tables $filtermethod $querymethod";
