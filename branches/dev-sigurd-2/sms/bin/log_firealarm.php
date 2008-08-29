@@ -20,10 +20,14 @@
 	$cat_id = 2;
 	$id_field ='securitnet_nr';
 	$dateformat= "Y-m-d"; //postgres
+	$target_field = 'last_alarm';
 
 	$entity_table = 'fm_entity_' . $entity_id .'_' . $cat_id;
 
-	$this->db->query("SELECT id FROM fm_entity_attribute where entity_id = '$entity_id' AND cat_id = '$cat_id' AND column_name = 'last_alarm'",__LINE__,__FILE__);
+	$location_id = $GLOBALS['phpgw']->locations->get_id('property', ".entity.{$entity_id}.{$cat_id}");
+
+	$this->db->query("SELECT id FROM phpgw_cust_attribute WHERE column_name = '$target_field' AND location_id = $location_id",__LINE__,__FILE__);
+
 	$this->db->next_record();
 	$attrib_id = $this->db->f('id');
 

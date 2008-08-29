@@ -580,7 +580,7 @@
 		protected function _get_sequence_field_for_table($table)
 		{
 			$sql = "SELECT relname FROM pg_class WHERE NOT relname ~ 'pg_.*'"
-				. " AND relname LIKE '%$table%' AND relkind='S' ORDER BY relname";
+				. " AND relname ILIKE '%$table%' AND relkind='S' ORDER BY relname";
 			$this->query($sql,__LINE__,__FILE__);
 			if ($this->next_record())
 			{
