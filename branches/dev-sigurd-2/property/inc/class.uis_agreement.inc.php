@@ -80,6 +80,7 @@
 			$this->acl_edit		= $this->acl->check($this->acl_location, PHPGW_ACL_EDIT, 'property');
 			$this->acl_delete	= $this->acl->check($this->acl_location, PHPGW_ACL_DELETE, 'property');
 			$this->acl_manage	= $this->acl->check($this->acl_location, 16, 'property');
+			$this->custom		= & $this->bo->custom;
 
 			$this->start		= $this->bo->start;
 			$this->query		= $this->bo->query;
@@ -1571,7 +1572,7 @@
 				'table_header'		=> $table_header,
 			);
 
-			$attrib_data 	= $this->bo->custom->get('property', '.s_agreement.detail', $attrib_id);
+			$attrib_data 	= $this->custom->get('property', '.s_agreement.detail', $attrib_id);
 			$appname	= $attrib_data['input_text'];
 
 			$function_msg	= lang('history');

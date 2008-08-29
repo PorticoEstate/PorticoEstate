@@ -902,21 +902,21 @@
 
 //_debug_array($values['origin']);
 
-			for ($i=0;$i<count($values['attributes']);$i++)
+			foreach ($values['attributes'] as & $attribute)
 			{
-				if($values['attributes'][$i]['history']==1)
+				if($attribute['history'] == true)
 				{
 					$link_history_data = array
 					(
 						'menuaction'	=> 'property.uientity.attrib_history',
 						'entity_id'	=> $this->entity_id,
 						'cat_id'	=> $this->cat_id,
-						'attrib_id'	=> $values['attributes'][$i]['attrib_id'],
+						'attrib_id'	=> $attribute['id'],
 						'id'		=> $id,
 						'edit'		=> true
 					);
 
-					$values['attributes'][$i]['link_history']=$GLOBALS['phpgw']->link('/index.php',$link_history_data);
+					$attribute['link_history'] = $GLOBALS['phpgw']->link('/index.php',$link_history_data);
 				}
 			}
 
