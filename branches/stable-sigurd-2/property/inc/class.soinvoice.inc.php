@@ -198,7 +198,7 @@
 			if($query)
 			{
 				$query = $this->db->db_addslashes($query);
-				$querymethod = " $where ( spvend_code $this->like '%$query%' OR bilagsnr $this->like '%$query%' )";
+				$querymethod = " $where ( spvend_code = " . (int) $query . " OR bilagsnr $this->like '%$query%' )";
 			}
 
 
