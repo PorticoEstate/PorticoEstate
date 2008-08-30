@@ -813,101 +813,7 @@
 			$GLOBALS['phpgw']->js->set_onload('document.search.query.focus();');
 
 			$datatable = array();
-	    	$datatable['config']['base_url'] = $GLOBALS['phpgw']->link('/index.php', array('menuaction'	=> 'property.uilocation.index'));
-
-			// Definition of headers
-			switch($type_id)
-			{
-				case 1:
-					$datatable['headers']['header'] = array
-					(
-						array(
-							'name'		=> 'location_code',
-							'visible'	=> true,
-							'text'		=> 'Location Code'
-						),
-						array(
-							'name'		=> 'loc1_name',
-							'visible'	=> true,
-							'text'		=> 'Location Name'
-						)
-					);
-					break;
-
-				case 2:
-					$datatable['headers']['header'] = array
-					(
-						array(
-							'name'		=> 'loc1',
-							'visible'	=> true,
-							'text'		=> 'Location Code'
-						),
-						array(
-							'name'		=> 'loc2',
-							'visible'	=> true,
-							'text'		=> 'Building Code'
-						),
-						array(
-							'name'		=> 'loc2_name',
-							'visible'	=> true,
-							'text'		=> 'Location Code'
-						)
-					);
-					break;
-
-				case 3:
-					$datatable['headers']['header'] = array
-					(
-						array(
-							'name'		=> 'loc1',
-							'visible'	=> true,
-							'text'		=> 'Location Code'
-						),
-						array(
-							'name'		=> 'loc3_name',
-							'visible'	=> true,
-							'text'		=> 'Location Name'
-						),
-						array(
-							'name'		=> 'loc3',
-							'visible'	=> true,
-							'text'		=> 'Location Code'
-						)
-					);
-					break;
-
-				case 4:
-					$datatable['headers']['header'] = array
-					(
-						array(
-							'name'		=> 'loc1',
-							'visible'	=> true,
-							'text'		=> 'Location Code'
-						),
-						array(
-							'name'		=> 'loc2',
-							'visible'	=> true,
-							'text'		=> 'Building'
-						),
-						array(
-							'name'		=> 'loc3',
-							'visible'	=> true,
-							'text'		=> 'Entrance'
-						),
-						array(
-							'name'		=> 'loc4',
-							'visible'	=> true,
-							'text'		=> 'Apartment'
-						),
-						array(
-							'name'		=> 'loc4_name',
-							'visible'	=> true,
-							'text'		=> 'Apartment Name'
-						)
-
-					);
-					break;
-			}
+	    	$datatable['config']['base_url'] = $GLOBALS['phpgw']->link('/index.php', array('menuaction'	=> 'property.uilocation.index', 'type_id' => $type_id));
 
 			$reset_query 		= phpgw::get_var('reset_query', 'bool');
 
@@ -925,13 +831,154 @@
 
 			$location_list = $this->bo->read(array('type_id'=>$type_id,'lookup_tenant'=>$lookup_tenant,'lookup'=>$lookup,'allrows'=>$this->allrows));
 
-			for($i=0; $i < count($location_list); $i++)
+			$uicols = $this->bo->uicols;
+//_debug_array($uicols);die();
+
+			$content = array();
+			$j=0;
+			if (isset($location_list) && is_array($location_list))
 			{
-				$row = $location_list[$i];
-				foreach($location_list[$i] as $key => $value)
+				foreach($location_list as $location)
 				{
-					$datatable['rows']['row'][$i]['column'][] = array('name' => $key, 'value' => $value );
+					for ($i=0;$i<count($uicols['name']);$i++)
+					{
+
+						if($uicols['input_type'][$i]!='hidden')
+						{
+							if(isset($location['query_location'][$uicols['name'][$i]]))
+							{
+								$datatable['rows']['row'][$j]['column'][$i]['name'] 			= $uicols['name'][$i];
+								$datatable['rows']['row'][$j]['column'][$i]['statustext']		= lang('search');
+								$datatable['rows']['row'][$j]['column'][$i]['value']			= $location[$uicols['name'][$i]];
+								$datatable['rows']['row'][$j]['column'][$i]['link']				= $GLOBALS['phpgw']->link('/index.php',array(
+																			'menuaction'	=> 'property.uilocation.index',
+																			'query' 		=> $location['query_location'][$uicols['name'][$i]],
+																			'lookup'		=> $lookup,
+																			'type_id'		=> $type_id,
+																			'lookup_tenant'	=> $lookup_tenant,
+																			'lookup_name'	=> $lookup_name
+																			)
+																		);
+							}
+							else
+							{
+								$datatable['rows']['row'][$j]['column'][$i]['value'] 			= $location[$uicols['name'][$i]];
+								$datatable['rows']['row'][$j]['column'][$i]['name'] 			= $uicols['name'][$i];
+								$datatable['rows']['row'][$j]['column'][$i]['lookup'] 			= $lookup;
+								$datatable['rows']['row'][$j]['column'][$i]['align'] 			= (isset($uicols['align'][$i])?$uicols['align'][$i]:'center');
+
+								if(isset($uicols['datatype']) && isset($uicols['datatype'][$i]) && $uicols['datatype'][$i]=='link' && $location[$uicols['name'][$i]])
+								{
+								//	$datatable['rows']['row'][$j]['column'][$i]['value']		= lang('link');
+									$datatable['rows']['row'][$j]['column'][$i]['link']		= $location[$uicols['name'][$i]];
+									$datatable['rows']['row'][$j]['column'][$i]['target']	= '_blank';
+								}
+							}
+						}
+						else
+						{
+								$datatable['rows']['row'][$j]['column'][$i]['name'] 			= $uicols['name'][$i];
+								$datatable['rows']['row'][$j]['column'][$i]['value']			= $location[$uicols['name'][$i]];						
+						}
+
+						$datatable['rows']['row'][$j]['hidden'][$i]['value'] 			= $location[$uicols['name'][$i]];
+						$datatable['rows']['row'][$j]['hidden'][$i]['name'] 			= $uicols['name'][$i];
+					}
+
+					$j++;
 				}
+			}
+
+			if(!$lookup)
+			{
+				$parameters = array
+				(
+					'parameter' => array
+					(
+						array
+						(
+							'name'		=> 'location_code',
+							'source'	=> 'location_code'
+						),
+					)
+				);
+
+				if($this->acl_read)
+				{
+					$datatable['rowactions']['action'][] = array(
+						'text' 			=> lang('view'),
+						'action'		=> $GLOBALS['phpgw']->link('/index.php',array
+										(
+											'menuaction'	=> 'property.uilocation.view',
+											'lookup_tenant'	=> $lookup_tenant
+										)),
+						'parameters'	=> $parameters
+					);
+				}
+				if($this->acl_edit)
+				{
+					$datatable['rowactions']['action'][] = array(
+						'text' 			=> lang('delete'),
+						'action'		=> $GLOBALS['phpgw']->link('/index.php',array
+										(
+											'menuaction'	=> 'property.uilocation.edit',
+											'lookup_tenant'	=> $lookup_tenant
+										)),
+						'parameters'	=> $parameters
+					);
+				}
+				if($this->acl_delete)
+				{
+					$datatable['rowactions']['action'][] = array(
+						'text' 			=> lang('delete'),
+						'action'		=> $GLOBALS['phpgw']->link('/index.php',array
+										(
+											'menuaction'	=> 'property.uilocation.delete',
+											'lookup_tenant'	=> $lookup_tenant
+										)),
+						'parameters'	=> $parameters
+					);
+				}
+				unset($parameters);
+			}
+
+			$uicols_count	= count($uicols['descr']);
+			for ($i=0;$i<$uicols_count;$i++)
+			{
+				if($uicols['input_type'][$i]!='hidden')
+				{
+					$datatable['headers']['header'][$i]['name'] 			= $uicols['name'][$i];
+					$datatable['headers']['header'][$i]['text'] 			= $uicols['descr'][$i];
+					$datatable['headers']['header'][$i]['visible'] 			= true;
+					$datatable['headers']['header'][$i]['format'] 			= ''; // translated from $uicols['datatype'][$i]
+					$datatable['headers']['header'][$i]['sortable']			= false;
+					if($uicols['name'][$i]=='loc1'):
+					{
+						$datatable['headers']['header'][$i]['sortable']		= true;
+						$datatable['headers']['header'][$i]['sort_field']	= 'fm_location1.loc1';
+					}
+					elseif($uicols['name'][$i]=='street_name'):
+					{
+						$datatable['headers']['header'][$i]['sortable']		= true;
+						$datatable['headers']['header'][$i]['sort_field'] 	= 'street_name';
+					}
+					elseif(isset($uicols['cols_return_extra'][$i]) && ($uicols['cols_return_extra'][$i]!='T' || $uicols['cols_return_extra'][$i]!='CH')):
+					{
+						$datatable['headers']['header'][$i]['sortable']		= true;
+						$datatable['headers']['header'][$i]['sort_field']	= $uicols['name'][$i];
+					}
+					endif;
+				}
+			}
+
+			if($lookup)
+			{
+				$datatable['headers']['header'][$i]['width'] 			= '5%';
+				$datatable['headers']['header'][$i]['align'] 			= 'center';
+				$datatable['headers']['header'][$i]['name']				= 'select_record';
+				$datatable['headers']['header'][$i]['text']				= lang('select');
+				$datatable['headers']['header'][$i]['format'] 			= 'form';
+				$datatable['headers']['header'][$i]['sortable']			= false;
 			}
 
 			// Pagination and sort values
@@ -948,6 +995,29 @@
 
 			$datatable['sorting']['order'] 	= phpgw::get_var('order', 'string'); // Column
 			$datatable['sorting']['sort'] 	= phpgw::get_var('sort', 'string'); // ASC / DESC
+
+
+
+			$datatable['actions']['form'] = array
+			(
+				array(
+					'action'	=> $GLOBALS['phpgw']->link('/index.php',
+						array(
+							'menuaction' => 'property.uilocation.edit',
+							'type_id' => $type_id
+						)
+					),
+					'fields'	=> array(
+						'field' => array(
+							array(
+								'type' => 'submit',
+								'value' => lang('New')
+							)
+						)
+					)
+				)
+			);
+
 
 			if( phpgw::get_var('phpgw_return_as') == 'json' )
 			{

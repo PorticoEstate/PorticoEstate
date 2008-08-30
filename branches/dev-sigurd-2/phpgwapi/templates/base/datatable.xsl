@@ -601,7 +601,14 @@
 	              			<xsl:value-of select="format"/>
 	            		</xsl:attribute>
 
-	            		<xsl:value-of select="../../rows/row[$row_pos]/column[name=$header_name]/value"/>
+						<xsl:choose>
+							<xsl:when test="../../rows/row[$row_pos]/column[name=$header_name]/link != ''">
+								<a href="{../../rows/row[$row_pos]/column[name=$header_name]/link}" target ="{../../rows/row[$row_pos]/column[name=$header_name]/target}"><xsl:value-of select="../../rows/row[$row_pos]/column[name=$header_name]/value"/></a>
+							</xsl:when>
+							<xsl:otherwise>
+	            				<xsl:value-of select="../../rows/row[$row_pos]/column[name=$header_name]/value"/>
+							</xsl:otherwise>
+						</xsl:choose>
 	          		</td>
 	        	</xsl:for-each>
 
