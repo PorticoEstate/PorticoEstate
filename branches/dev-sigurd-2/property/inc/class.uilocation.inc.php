@@ -49,7 +49,6 @@
 		(
 			'download'  	=> true,
 			'index'  	=> true,
-			'index2'  	=> true,
 			'view'   	=> true,
 			'edit'   	=> true,
 			'delete' 	=> true,
@@ -817,20 +816,106 @@
 	    	$datatable['config']['base_url'] = $GLOBALS['phpgw']->link('/index.php', array('menuaction'	=> 'property.uilocation.index'));
 
 			// Definition of headers
-			$datatable['headers']['header'] = array
-			(
-				array(
-					'name'		=> 'location_code',
-					'visible'	=> false,
-					'text'		=> 'Location Code'
-				)
-			);
+			switch($type_id)
+			{
+				case 1:
+					$datatable['headers']['header'] = array
+					(
+						array(
+							'name'		=> 'location_code',
+							'visible'	=> true,
+							'text'		=> 'Location Code'
+						),
+						array(
+							'name'		=> 'loc1_name',
+							'visible'	=> true,
+							'text'		=> 'Location Name'
+						)
+					);
+					break;
+
+				case 2:
+					$datatable['headers']['header'] = array
+					(
+						array(
+							'name'		=> 'loc1',
+							'visible'	=> true,
+							'text'		=> 'Location Code'
+						),
+						array(
+							'name'		=> 'loc2',
+							'visible'	=> true,
+							'text'		=> 'Building Code'
+						),
+						array(
+							'name'		=> 'loc2_name',
+							'visible'	=> true,
+							'text'		=> 'Location Code'
+						)
+					);
+					break;
+
+				case 3:
+					$datatable['headers']['header'] = array
+					(
+						array(
+							'name'		=> 'loc1',
+							'visible'	=> true,
+							'text'		=> 'Location Code'
+						),
+						array(
+							'name'		=> 'loc3_name',
+							'visible'	=> true,
+							'text'		=> 'Location Name'
+						),
+						array(
+							'name'		=> 'loc3',
+							'visible'	=> true,
+							'text'		=> 'Location Code'
+						)
+					);
+					break;
+
+				case 4:
+					$datatable['headers']['header'] = array
+					(
+						array(
+							'name'		=> 'loc1',
+							'visible'	=> true,
+							'text'		=> 'Location Code'
+						),
+						array(
+							'name'		=> 'loc2',
+							'visible'	=> true,
+							'text'		=> 'Building'
+						),
+						array(
+							'name'		=> 'loc3',
+							'visible'	=> true,
+							'text'		=> 'Entrance'
+						),
+						array(
+							'name'		=> 'loc4',
+							'visible'	=> true,
+							'text'		=> 'Apartment'
+						),
+						array(
+							'name'		=> 'loc4_name',
+							'visible'	=> true,
+							'text'		=> 'Apartment Name'
+						)
+
+					);
+					break;
+			}
 
 			$reset_query 		= phpgw::get_var('reset_query', 'bool');
 
 			if( !$reset_query )
 			{
 				$location_code 		= phpgw::get_var('location_code');
+				//$loc2				= phpgw::get_var('loc2');
+
 			}
 
 			$type_id	= $this->type_id;
@@ -855,10 +940,10 @@
 			$datatable['pagination']['records_returned']= count($location_list);
 			$datatable['pagination']['records_total'] 	= $this->bo->total_records;
 
-			$datatable['pagination']['lang']['first'] 	= lang('First');
-			$datatable['pagination']['lang']['next'] 	= lang('Next');
-			$datatable['pagination']['lang']['previous']= lang('Previous');
-			$datatable['pagination']['lang']['last'] 	= lang('Last');
+			$datatable['pagination']['lang']['first'] 	= 'First';
+			$datatable['pagination']['lang']['next'] 	= 'Next';
+			$datatable['pagination']['lang']['previous']= 'Previous';
+			$datatable['pagination']['lang']['last'] 	= 'Last';
 			$datatable['pagination']['lang']['overview']= lang('Records $1 - $2 of $3');
 
 			$datatable['sorting']['order'] 	= phpgw::get_var('order', 'string'); // Column
