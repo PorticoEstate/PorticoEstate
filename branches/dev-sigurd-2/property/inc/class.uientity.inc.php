@@ -1403,8 +1403,15 @@
 			}
 			else
 			{
-				echo 'Nothing';
-				return;
+				if($this->cat_id)
+				{
+					$values	= $this->bo->read_single(array('entity_id'=>$this->entity_id,'cat_id'=>$this->cat_id));
+				}
+				else
+				{
+					echo 'Nothing';
+					return;
+				}
 			}
 
 			if (isset($values['cat_id']) && $values['cat_id'])
@@ -1515,13 +1522,19 @@
 				{
 					if(isset($entry['choice']) && is_array($entry['choice']))
 					{
+						$values = array();
 						foreach($entry['choice'] as $choice)
 						{
 							if(isset($choice['checked']) && $choice['checked'])
 							{
-								$value = $choice['value'];
+								$values[] = "[*{$choice['value']}*]";
+							}
+							else
+							{
+								$values[] = $choice['value'];							
 							}
 						}
+						$value = implode(' , ',$values);
 					}
 					else
 					{
@@ -1534,6 +1547,23 @@
 						'sep'			=> '-',
 						'value'			=> $value
 					);
+
+					if ($entry['datatype'] == 'T' || $entry['datatype'] == 'V')
+					{
+						$content[] = array
+						(
+							'name'	=> '|',
+							'sep'	=> '',
+							'value'	=> ''
+						);
+						$content[] = array
+						(
+							'name'	=> '|',
+							'sep'	=> '',
+							'value'	=> ''
+						);
+					
+					}
 				}
 				$pdf->ezTable($content,'','',
 						array('xPos'=>50,'xOrientation'=>'right','width'=>500,0,'shaded'=>0,'fontSize' => 10,'showLines'=> 0,'titleFontSize' => 12,'outerLineThickness'=>2,'showHeadings'=>0
