@@ -815,6 +815,42 @@
 			return (isset($datatype_precision[$datatype])?$datatype_precision[$datatype]:'');
 		}
 
+		/**
+		 * Convert a datatype to a format to output
+		 *
+		 * @param string $datatype the dataype to convert
+		 *
+		 * @return string the format - incoming of translation is not found
+		 */
+		function translate_datatype_format($datatype)
+		{
+			$datatype_text = array(
+				'V' => 'varchar',
+				'I' => 'number',
+				'C' => 'char',
+				'N' => 'float',
+				'D' => 'date',
+				'T' => 'memo',
+				'R' => 'radio',
+				'CH' => 'checkbox',
+				'LB' => 'listbox',
+				'AB' => 'contact',
+				'VENDOR' => 'vendor',
+				'email' => 'email',
+				'link' => 'link',
+				'pwd' => 'password',
+				'user' => 'phpgw_user'
+			);
+
+
+			if ( isset($datatype_text[$datatype]) )
+			{
+				return $datatype_text[$datatype];
+			}
+			return $datatype;
+		}
+
+
 		function save_attributes($values_attribute,$type)
 		{
 

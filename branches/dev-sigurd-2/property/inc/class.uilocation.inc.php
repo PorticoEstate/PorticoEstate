@@ -813,7 +813,12 @@
 			$GLOBALS['phpgw']->js->set_onload('document.search.query.focus();');
 
 			$datatable = array();
-	    	$datatable['config']['base_url'] = $GLOBALS['phpgw']->link('/index.php', array('menuaction'	=> 'property.uilocation.index', 'type_id' => $type_id));
+	    	$datatable['config']['base_url'] = $GLOBALS['phpgw']->link('/index.php', array
+	    				(
+	    					'menuaction'	=> 'property.uilocation.index',
+	    					'type_id'		=> $type_id,
+	    					'query'			=> $this->query
+	    				));
 
 			$reset_query 		= phpgw::get_var('reset_query', 'bool');
 
@@ -950,7 +955,7 @@
 					$datatable['headers']['header'][$i]['name'] 			= $uicols['name'][$i];
 					$datatable['headers']['header'][$i]['text'] 			= $uicols['descr'][$i];
 					$datatable['headers']['header'][$i]['visible'] 			= true;
-					$datatable['headers']['header'][$i]['format'] 			= ''; // translated from $uicols['datatype'][$i]
+					$datatable['headers']['header'][$i]['format'] 			= $this->bocommon->translate_datatype_format($uicols['datatype'][$i]);
 					$datatable['headers']['header'][$i]['sortable']			= false;
 					if($uicols['name'][$i]=='loc1'):
 					{

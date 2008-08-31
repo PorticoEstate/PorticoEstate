@@ -602,7 +602,7 @@
 	            		</xsl:attribute>
 
 						<xsl:choose>
-							<xsl:when test="../../rows/row[$row_pos]/column[name=$header_name]/link != ''">
+							<xsl:when test="format= 'link'">
 								<a href="{../../rows/row[$row_pos]/column[name=$header_name]/link}" target ="{../../rows/row[$row_pos]/column[name=$header_name]/target}"><xsl:value-of select="../../rows/row[$row_pos]/column[name=$header_name]/value"/></a>
 							</xsl:when>
 							<xsl:otherwise>
