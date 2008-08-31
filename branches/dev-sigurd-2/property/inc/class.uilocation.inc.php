@@ -874,7 +874,7 @@
 
 								if(isset($uicols['datatype']) && isset($uicols['datatype'][$i]) && $uicols['datatype'][$i]=='link' && $location[$uicols['name'][$i]])
 								{
-								//	$datatable['rows']['row'][$j]['column'][$i]['value']		= lang('link');
+									$datatable['rows']['row'][$j]['column'][$i]['value']		= lang('link');
 									$datatable['rows']['row'][$j]['column'][$i]['link']		= $location[$uicols['name'][$i]];
 									$datatable['rows']['row'][$j]['column'][$i]['target']	= '_blank';
 								}
