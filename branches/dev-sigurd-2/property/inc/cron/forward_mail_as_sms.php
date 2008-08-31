@@ -23,7 +23,6 @@
 
 		function forward_mail_as_sms()
 		{
-		//	$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->bocommon		= CreateObject('property.bocommon');
 			$this->db     			= & $GLOBALS['phpgw']->db;
 		}
@@ -140,25 +139,31 @@
 			$pref = $GLOBALS['phpgw']->preferences->read_repository();
 			$GLOBALS['phpgw_info']['user']['preferences']['felamimail'] = isset($pref['felamimail']) ? $pref['felamimail'] : '';
 
+			$boPreferences  = CreateObject('felamimail.bopreferences');
+			$boPreferences->setProfileActive(true,2); //2 for selected user
 			$bofelamimail	= CreateObject('felamimail.bofelamimail');
+
 			$connectionStatus = $bofelamimail->openConnection();
-			$headers = $bofelamimail->getHeaders(0, $maxMessages = 15, $sort = 6);
+			$headers = $bofelamimail->getHeaders('INBOX', 1, $maxMessages = 15, $sort = 0, $_reverse = 1, $_filter = array('string' => '', 'type' => 'quick', 'status' => 'unseen'));
 
 			$j = 0;
-			foreach ($headers['header'] as $header)
+			if (isset($headers['header']) && is_array($headers['header']))
 			{
-				if($header['seen'] == 0)
+				foreach ($headers['header'] as $header)
 				{
-					$sms[$j]['message'] = $header['subject'];
-					$bodyParts = $bofelamimail->getMessageBody($header['uid']);
-					$sms[$j]['message'] .= "\n";
-					for($i=0; $i<count($bodyParts); $i++ )
+					if($header['seen'] == 0)
 					{
-						$sms[$j]['message'] .= $bodyParts[$i]['body'] . "\n";
-					}
+						$sms[$j]['message'] = utf8_encode($header['subject']);
+						$bodyParts = $bofelamimail->getMessageBody($header['uid']);
+						$sms[$j]['message'] .= "\n";
+						for($i=0; $i<count($bodyParts); $i++ )
+						{
+							$sms[$j]['message'] .= utf8_encode($bodyParts[$i]['body']) . "\n";
+						}
 
-					$sms[$j]['message'] = substr($sms[$j]['message'],0,160);
-					$j++;
+						$sms[$j]['message'] = substr($sms[$j]['message'],0,160);
+						$j++;
+					}
 				}
 			}
 			if($connectionStatus == 'true')
@@ -188,4 +193,3 @@
 			}
 		}
 	}
-
