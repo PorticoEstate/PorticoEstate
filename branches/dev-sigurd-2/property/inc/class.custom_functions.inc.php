@@ -82,7 +82,8 @@
 				return;
 			}
 
-			$file = realpath(PHPGW_APP_INC . "/cron/{$function}.php"); // realpath overkill here?
+			$file = PHPGW_SERVER_ROOT . "/property/inc/cron/{$function}.php";
+
 			if (is_file($file))
 			{
 				require_once $file;
