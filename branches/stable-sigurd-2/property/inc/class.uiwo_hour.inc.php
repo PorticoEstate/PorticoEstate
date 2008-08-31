@@ -602,13 +602,14 @@
 			$GLOBALS['phpgw']->xslttpl->add_file(array('wo_hour', 'files'));
 
 			$show_cost		= phpgw::get_var('show_cost', 'bool');
-			$show_details		= phpgw::get_var('show_details', 'bool');
-			$workorder_id		= phpgw::get_var('workorder_id', 'int');
+			$show_details	= phpgw::get_var('show_details', 'bool');
+			$workorder_id	= phpgw::get_var('workorder_id', 'int');
 			$to_email 		= phpgw::get_var('to_email', 'email');
-			$update_email		= phpgw::get_var('update_email', 'bool');
+			$update_email	= phpgw::get_var('update_email', 'bool');
 			$send_order		= phpgw::get_var('send_order', 'bool');
 			$no_email		= phpgw::get_var('no_email', 'bool');
-			$values	= phpgw::get_var('values');
+			$values			= phpgw::get_var('values');
+			$print			= phpgw::get_var('print', 'bool');
 
 			if($update_email)
 			{
@@ -676,18 +677,21 @@
 				);
 
 
-			$table_send[] = array
-			(
-				'lang_send_order'		=> lang('Send Order'),
-				'lang_send_order_statustext'	=> lang('Send this order by email')
-			);
+			if( !$print && !$no_email)
+			{
+				$table_send[] = array
+				(
+					'lang_send_order'		=> lang('Send Order'),
+					'lang_send_order_statustext'	=> lang('Send this order by email')
+				);
 
-			$table_done[] = array
-			(
-				'lang_done'			=> lang('Done'),
-				'lang_done_statustext'		=> lang('Back to calculation'),
-				'done_action'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiwo_hour.index', 'workorder_id'=> $workorder_id))
-			);
+				$table_done[] = array
+				(
+					'lang_done'			=> lang('Done'),
+					'lang_done_statustext'		=> lang('Back to calculation'),
+					'done_action'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiwo_hour.index', 'workorder_id'=> $workorder_id))
+				);
+			}
 
 			$dateformat				= $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
 			$date					= $GLOBALS['phpgw']->common->show_date(time(),$dateformat);
@@ -714,9 +718,10 @@
 
 				}
 			}
-
+			
 			$email_data = array
 			(
+				'org_name'						=> isset($this->config->config_data['org_name']) ? "{$this->config->config_data['org_name']}::" : '',
 				'location_data'					=> $location_data,
 				'lang_workorder'				=> lang('Workorder ID'),
 				'workorder_id'					=> $workorder_id,
@@ -787,10 +792,10 @@
 					$receipt['error'][]=array('msg'=>lang('No mailaddress is selected'));
 			}
 
-			if($to_email)
+			if($to_email || $print)
 			{
-				$this->create_html->add_file(array(PHPGW_SERVER_ROOT . '/' . 'property' . '/' . 'templates' . '/' . 'base' . '/' . 'wo_hour'));
-				$this->create_html->add_file(array(PHPGW_SERVER_ROOT . '/' . 'property' . '/' . 'templates' . '/' . 'base' . '/' . 'location_view'));
+				$this->create_html->add_file(array(PHPGW_SERVER_ROOT . '/property/templates/base/wo_hour'));
+				$this->create_html->add_file(array(PHPGW_SERVER_ROOT . '/property/templates/base/location_view'));
 
 				$this->create_html->set_var('phpgw',array('email_data' => $email_data));
 
@@ -809,7 +814,19 @@
 
 				$html =  $proc->transformToXML($xml);
 
-//				print $html;
+				if($print)
+				{
+					echo <<<HTML
+						<script language="Javascript1.2">
+						<!--
+							document.write("<form><input type=button "
+							+"value=\"Print Page\" onClick=\"window.print();\"></form>");
+						//-->
+						</script>
+HTML;
+					echo $html;
+					exit;
+				}
 
 				$headers = "Return-Path: <". $from_email .">\r\n";
 				$headers .= "From: " . $from_name . "<" . $from_email .">\r\n";
@@ -905,7 +922,18 @@
 				'lang_filename'					=> lang('Filename'),
 				'lang_file_action'				=> lang('attach file'),
 				'lang_view_file_statustext'		=> lang('click to view file'),
-				'lang_file_action_statustext'	=> lang('Check to attach file')
+				'lang_file_action_statustext'	=> lang('Check to attach file'),
+				'lang_print'					=> lang('print'),
+				'lang_print_statustext'			=> lang('open this page as printerfrendly'),
+				'print_action'					=> "javascript:openwindow('"
+												 . $GLOBALS['phpgw']->link('/index.php', array
+												 (
+												 	'menuaction'	=> 'property.uiwo_hour.view',
+												 	'workorder_id'	=> $workorder_id,
+												 	'show_cost'		=> $show_cost,
+												 	'show_details'	=> $show_details,
+												 	'print'			=> true
+												 )) . "','700','600')"
 			);
 
 //_debug_array($data);

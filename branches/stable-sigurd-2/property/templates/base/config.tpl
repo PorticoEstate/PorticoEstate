@@ -13,6 +13,10 @@
     <td colspan="2">&nbsp;<b>{lang_Workorder}/{lang_FM_settings}</b></font></td>
    </tr>
    <tr class="row_on">
+    <td>{lang_organisation}:</td>
+    <td><input name="newsettings[org_name]" value="{value_org_name}"></td>
+   </tr>
+   <tr class="row_on">
     <td>{lang_Path_to_Invoice_Export_file}: ({lang_mandatory})<br>
     {lang_On_windows_use}: "//computername/share" {lang_or} "\\\\computername\share"</td>
     <td><input name="newsettings[export_path]" value="{value_export_path}"></td>

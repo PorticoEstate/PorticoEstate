@@ -304,6 +304,14 @@
 							</tr>
 						</xsl:when>
 					</xsl:choose>
+					<tr>
+						<td class="th_text"  align="left">
+							<a href="{print_action}" title="{lang_print_statustext}" style="cursor:help"><xsl:value-of select="lang_print"/></a>
+						</td>
+						<td>
+						</td>
+					</tr>
+
 					<xsl:choose>
 						<xsl:when test="email_list !=''">
 							<tr>
@@ -403,13 +411,13 @@
 			</td>
 		</tr>
 		<xsl:choose>
-			<xsl:when test="no_email =''">
+			<xsl:when test="table_send !=''">
 				<tr><td><xsl:apply-templates select="table_send"/></td></tr>
 			</xsl:when>
 		</xsl:choose>
 		</form>
 		<xsl:choose>
-			<xsl:when test="no_email =''">
+			<xsl:when test="table_send !=''">
 				<tr><td><xsl:apply-templates select="table_done"/></td></tr>
 			</xsl:when>
 		</xsl:choose>
@@ -498,6 +506,7 @@
 					<xsl:value-of select="lang_from"/>
 				</td>
 				<td  align="left" colspan="2">
+					<xsl:value-of select="org_name"/>
 					<xsl:value-of select="lang_district"/>
 					<xsl:text> </xsl:text>
 					<xsl:value-of select="district"/>
