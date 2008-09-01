@@ -38,11 +38,9 @@
 
 		function property_solookup()
 		{
-		//	$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->account	= $GLOBALS['phpgw_info']['user']['account_id'];
 			$this->bocommon		= CreateObject('property.bocommon');
 			$this->db           	= $this->bocommon->new_db();
-			$this->db2           	= $this->bocommon->new_db($this->db);
 
 			$this->join			= $this->bocommon->join;
 			$this->like			= $this->bocommon->like;
@@ -52,19 +50,12 @@
 		{
 			if(is_array($data))
 			{
-				if ($data['start'])
-				{
-					$start=$data['start'];
-				}
-				else
-				{
-					$start=0;
-				}
-				$filter	= (isset($data['filter'])?$data['filter']:'none');
-				$query = (isset($data['query'])?$data['query']:'');
-				$sort = (isset($data['sort'])?$data['sort']:'DESC');
-				$order = (isset($data['order'])?$data['order']:'');
-				$cat_id = (isset($data['cat_id'])?$data['cat_id']:0);
+				$start	= isset($data['start']) && $data['start'] ? $data['start'] : 0;
+				$filter	= isset($data['filter'])?$data['filter']:'none';
+				$query  = isset($data['query'])?$data['query']:'';
+				$sort   = isset($data['sort']) && $data['sort'] ? $data['sort']:'DESC';
+				$order  = isset($data['order'])?$data['order']:'';
+				$cat_id = isset($data['cat_id'])?$data['cat_id']:0;
 			}
 
 
@@ -88,24 +79,24 @@
 
 			if($query)
 			{
-				$query = preg_replace("/'/",'',$query);
-				$query = preg_replace('/"/','',$query);
+				$query = $this->db->db_addslashes($query);
 
-				$querymethod = " $where (id $this->like '%$query%' or org_name $this->like '%$query%')";
+				$querymethod = " $where org_name $this->like '%$query%'";
 			}
 
 			$sql = "SELECT person_id,first_name,last_name FROM phpgw_contact_person $filtermethod $querymethod";
 
-			$this->db2->query($sql,__LINE__,__FILE__);
-			$this->total_records = $this->db2->num_rows();
+			$this->db->query($sql,__LINE__,__FILE__);
+			$this->total_records = $this->db->num_rows();
 			$this->db->limit_query($sql . $ordermethod,$start,__LINE__,__FILE__);
 
+			$contact = array();
 			while ($this->db->next_record())
 			{
 				$contact[] = array
 				(
 					'id'			=> $this->db->f('person_id'),
-					'contact_name'	=> $this->db->f('last_name') . ', ' . $this->db->f('first_name'),
+					'contact_name'	=> $this->db->f('last_name',true) . ', ' . $this->db->f('first_name',true),
 					);
 			}
 //_debug_array($vendor);
@@ -117,21 +108,13 @@
 		{
 			if(is_array($data))
 			{
-				if ($data['start'])
-				{
-					$start=$data['start'];
-				}
-				else
-				{
-					$start=0;
-				}
-				$filter	= (isset($data['filter'])?$data['filter']:'none');
-				$query = (isset($data['query'])?$data['query']:'');
-				$sort = (isset($data['sort'])?$data['sort']:'DESC');
-				$order = (isset($data['order'])?$data['order']:'');
-				$cat_id = (isset($data['cat_id'])?$data['cat_id']:0);
+				$start		= isset($data['start']) && $data['start'] ? $data['start'] : 0;
+				$filter		= isset($data['filter'])?$data['filter']:'none';
+				$query		= isset($data['query'])?$data['query']:'';
+				$sort		= isset($data['sort']) && $data['sort'] ? $data['sort']:'DESC';
+				$order		= isset($data['order'])?$data['order']:'';
+				$cat_id		= isset($data['cat_id'])?$data['cat_id']:0;
 			}
-
 
 			if ($order)
 			{
@@ -153,24 +136,24 @@
 
 			if($query)
 			{
-				$query = preg_replace("/'/",'',$query);
-				$query = preg_replace('/"/','',$query);
+				$query = $this->db->db_addslashes($query);
 
-				$querymethod = " $where (id $this->like '%$query%' or org_name $this->like '%$query%')";
+				$querymethod = " $where (id = ". (int)$query . "OR org_name $this->like '%$query%')";
 			}
 
 			$sql = "SELECT id,org_name FROM fm_vendor $filtermethod $querymethod";
 
-			$this->db2->query($sql,__LINE__,__FILE__);
-			$this->total_records = $this->db2->num_rows();
+			$this->db->query($sql,__LINE__,__FILE__);
+			$this->total_records = $this->db->num_rows();
 			$this->db->limit_query($sql . $ordermethod,$start,__LINE__,__FILE__);
 
+			$vendor = array();
 			while ($this->db->next_record())
 			{
 				$vendor[] = array
 				(
-					'id'	=> $this->db->f('id'),
-					'org_name'	=> $this->db->f('org_name'),
+					'id'		=> $this->db->f('id'),
+					'org_name'	=> $this->db->f('org_name',true),
 					);
 			}
 //_debug_array($vendor);
@@ -183,19 +166,12 @@
 		{
 			if(is_array($data))
 			{
-				if ($data['start'])
-				{
-					$start=$data['start'];
-				}
-				else
-				{
-					$start=0;
-				}
-				$filter	= (isset($data['filter'])?$data['filter']:'none');
-				$query = (isset($data['query'])?$data['query']:'');
-				$sort = (isset($data['sort'])?$data['sort']:'DESC');
-				$order = (isset($data['order'])?$data['order']:'');
-				$cat_id = (isset($data['cat_id'])?$data['cat_id']:0);
+				$start		= isset($data['start']) && $data['start'] ? $data['start'] : 0;
+				$filter		= isset($data['filter'])?$data['filter']:'none';
+				$query		= isset($data['query'])?$data['query']:'';
+				$sort		= isset($data['sort']) && $data['sort'] ? $data['sort']:'DESC';
+				$order		= isset($data['order'])?$data['order']:'';
+				$cat_id		= isset($data['cat_id'])?$data['cat_id']:0;
 			}
 
 			if ($order)
@@ -209,24 +185,24 @@
 
 			if($query)
 			{
-				$query = preg_replace("/'/",'',$query);
-				$query = preg_replace('/"/','',$query);
+				$query = $this->db->db_addslashes($query);
 
-				$querymethod = " where (id $this->like '%$query%' or descr $this->like '%$query%')";
+				$querymethod = " WHERE (id $this->like '%$query%' OR descr $this->like '%$query%')";
 			}
 
 			$sql = "SELECT * FROM fm_b_account $querymethod  ";
 
-			$this->db2->query($sql,__LINE__,__FILE__);
-			$this->total_records = $this->db2->num_rows();
+			$this->db->query($sql,__LINE__,__FILE__);
+			$this->total_records = $this->db->num_rows();
 			$this->db->limit_query($sql . $ordermethod,$start,__LINE__,__FILE__);
 
+			$b_account = array();
 			while ($this->db->next_record())
 			{
 				$b_account[] = array
 				(
 					'id'			=> $this->db->f('id'),
-					'descr'	=> $this->db->f('descr')
+					'descr'			=> $this->db->f('descr',true)
 					);
 			}
 
@@ -238,19 +214,12 @@
 		{
 			if(is_array($data))
 			{
-				if ($data['start'])
-				{
-					$start=$data['start'];
-				}
-				else
-				{
-					$start=0;
-				}
-				$filter	= (isset($data['filter'])?$data['filter']:'none');
-				$query = (isset($data['query'])?$data['query']:'');
-				$sort = (isset($data['sort'])?$data['sort']:'DESC');
-				$order = (isset($data['order'])?$data['order']:'');
-				$cat_id = (isset($data['cat_id'])?$data['cat_id']:0);
+				$start		= isset($data['start']) && $data['start'] ? $data['start'] : 0;
+				$filter		= isset($data['filter'])?$data['filter']:'none';
+				$query		= isset($data['query'])?$data['query']:'';
+				$sort		= isset($data['sort']) && $data['sort'] ? $data['sort']:'DESC';
+				$order		= isset($data['order'])?$data['order']:'';
+				$cat_id		= isset($data['cat_id'])?$data['cat_id']:0;
 			}
 
 			if ($order)
@@ -264,25 +233,25 @@
 
 			if($query)
 			{
-				$query = preg_replace("/'/",'',$query);
-				$query = preg_replace('/"/','',$query);
+				$query = $this->db->db_addslashes($query);
 
 				$querymethod = " where ( descr $this->like '%$query%')";
 			}
 
 			$sql = "SELECT * FROM fm_streetaddress $querymethod  ";
 
-			$this->db2->query($sql,__LINE__,__FILE__);
-			$this->total_records = $this->db2->num_rows();
+			$this->db->query($sql,__LINE__,__FILE__);
+			$this->total_records = $this->db->num_rows();
 			$this->db->limit_query($sql . $ordermethod,$start,__LINE__,__FILE__);
 
+			$street = array();
 			while ($this->db->next_record())
 			{
 				$street[] = array
 				(
-					'id'		=> $this->db->f('id'),
-					'street_name'	=> stripslashes($this->db->f('descr'))
-					);
+					'id'			=> $this->db->f('id'),
+					'street_name'	=> $this->db->f('descr',true)
+				);
 			}
 
 			return $street;
@@ -292,19 +261,12 @@
 		{
 			if(is_array($data))
 			{
-				if ($data['start'])
-				{
-					$start=$data['start'];
-				}
-				else
-				{
-					$start=0;
-				}
-				$filter	= (isset($data['filter'])?$data['filter']:'none');
-				$query = (isset($data['query'])?$data['query']:'');
-				$sort = (isset($data['sort'])?$data['sort']:'DESC');
-				$order = (isset($data['order'])?$data['order']:'');
-				$cat_id = (isset($data['cat_id'])?$data['cat_id']:0);
+				$start		= isset($data['start']) && $data['start'] ? $data['start'] : 0;
+				$filter		= isset($data['filter'])?$data['filter']:'none';
+				$query		= isset($data['query'])?$data['query']:'';
+				$sort		= isset($data['sort']) && $data['sort'] ? $data['sort']:'DESC';
+				$order		= isset($data['order'])?$data['order']:'';
+				$cat_id		= isset($data['cat_id'])?$data['cat_id']:0;
 			}
 
 			if ($order)
@@ -318,25 +280,25 @@
 
 			if($query)
 			{
-				$query = preg_replace("/'/",'',$query);
-				$query = preg_replace('/"/','',$query);
+				$query = $this->db->db_addslashes($query);
 
 				$querymethod = " where ( last_name $this->like '%$query%' or first_name $this->like '%$query%')";
 			}
 
 			$sql = "SELECT * FROM fm_tenant $querymethod  ";
 
-			$this->db2->query($sql,__LINE__,__FILE__);
-			$this->total_records = $this->db2->num_rows();
+			$this->db->query($sql,__LINE__,__FILE__);
+			$this->total_records = $this->db->num_rows();
 			$this->db->limit_query($sql . $ordermethod,$start,__LINE__,__FILE__);
 
+			$tenant = array();
 			while ($this->db->next_record())
 			{
 				$tenant[] = array
 				(
 					'id'			=> $this->db->f('id'),
-					'last_name'	=> $this->db->f('last_name'),
-					'first_name'	=> $this->db->f('first_name')
+					'last_name'		=> $this->db->f('last_name',true),
+					'first_name'	=> $this->db->f('first_name',true)
 					);
 			}
 
@@ -347,19 +309,12 @@
 		{
 			if(is_array($data))
 			{
-				if ($data['start'])
-				{
-					$start=$data['start'];
-				}
-				else
-				{
-					$start=0;
-				}
-				$filter	= (isset($data['filter'])?$data['filter']:'none');
-				$query = (isset($data['query'])?$data['query']:'');
-				$sort = (isset($data['sort'])?$data['sort']:'DESC');
-				$order = (isset($data['order'])?$data['order']:'');
-				$cat_id = (isset($data['cat_id'])?$data['cat_id']:0);
+				$start		= isset($data['start']) && $data['start'] ? $data['start'] : 0;
+				$filter		= isset($data['filter'])?$data['filter']:'none';
+				$query		= isset($data['query'])?$data['query']:'';
+				$sort		= isset($data['sort']) && $data['sort'] ? $data['sort']:'DESC';
+				$order		= isset($data['order'])?$data['order']:'';
+				$cat_id		= isset($data['cat_id'])?$data['cat_id']:0;
 			}
 
 			if ($order)
@@ -373,25 +328,25 @@
 
 			if($query)
 			{
-				$query = preg_replace("/'/",'',$query);
-				$query = preg_replace('/"/','',$query);
+				$query = $this->db->db_addslashes($query);
 
 				$querymethod = " where ( tekst1 $this->like '%$query%' or tekst2 $this->like '%$query%' or tekst3 $this->like '%$query%' or tekst4 $this->like '%$query%' or tekst5 $this->like '%$query%' or tekst6 $this->like '%$query%')";
 			}
 
 			$sql = "SELECT * FROM fm_ns3420  $querymethod  ";
 
-			$this->db2->query($sql,__LINE__,__FILE__);
-			$this->total_records = $this->db2->num_rows();
+			$this->db->query($sql,__LINE__,__FILE__);
+			$this->total_records = $this->db->num_rows();
 			$this->db->limit_query($sql . $ordermethod,$start,__LINE__,__FILE__);
 
+			$ns3420 = array();
 			while ($this->db->next_record())
 			{
 				$ns3420[] = array
 				(
 					'id'			=> $this->db->f('id'),
-					'ns3420_descr'	=> $this->db->f('tekst1') . ' ' .$this->db->f('tekst2') . ' ' .$this->db->f('tekst3') . ' ' .$this->db->f('tekst4') . ' ' .$this->db->f('tekst5') . ' ' .$this->db->f('tekst6')
-					);
+					'ns3420_descr'	=> $this->db->f('tekst1',true) . ' ' .$this->db->f('tekst2',true) . ' ' .$this->db->f('tekst3',true) . ' ' .$this->db->f('tekst4',true) . ' ' .$this->db->f('tekst5',true) . ' ' .$this->db->f('tekst6',true)
+				);
 			}
 
 			return $ns3420;
@@ -401,19 +356,12 @@
 		{
 			if(is_array($data))
 			{
-				if ($data['start'])
-				{
-					$start=$data['start'];
-				}
-				else
-				{
-					$start=0;
-				}
-				$filter	= (isset($data['filter'])?$data['filter']:'none');
-				$query = (isset($data['query'])?$data['query']:'');
-				$sort = (isset($data['sort'])?$data['sort']:'DESC');
-				$order = (isset($data['order'])?$data['order']:'');
-				$cat_id = (isset($data['cat_id'])?$data['cat_id']:0);
+				$start		= isset($data['start']) && $data['start'] ? $data['start'] : 0;
+				$filter		= isset($data['filter'])?$data['filter']:'none';
+				$query		= isset($data['query'])?$data['query']:'';
+				$sort		= isset($data['sort']) && $data['sort'] ? $data['sort']:'DESC';
+				$order		= isset($data['order'])?$data['order']:'';
+				$cat_id		= isset($data['cat_id'])?$data['cat_id']:0;
 			}
 
 			if ($order)
@@ -427,25 +375,25 @@
 
 			if($query)
 			{
-				$query = preg_replace("/'/",'',$query);
-				$query = preg_replace('/"/','',$query);
+				$query = $this->db->db_addslashes($query);
 
 				$querymethod = " AND ( account_lastname $this->like '%$query%' or account_firstname $this->like '%$query%')";
 			}
 
 			$sql = "SELECT * FROM phpgw_accounts WHERE account_status = 'A' AND account_type = 'u' $querymethod  ";
 
-			$this->db2->query($sql,__LINE__,__FILE__);
-			$this->total_records = $this->db2->num_rows();
+			$this->db->query($sql,__LINE__,__FILE__);
+			$this->total_records = $this->db->num_rows();
 			$this->db->limit_query($sql . $ordermethod,$start,__LINE__,__FILE__);
 
+			$phpgw_user = array();
 			while ($this->db->next_record())
 			{
 				$phpgw_user[] = array
 				(
 					'id'			=> $this->db->f('account_id'),
-					'last_name'		=> $this->db->f('account_lastname'),
-					'first_name'	=> $this->db->f('account_firstname')
+					'last_name'		=> $this->db->f('account_lastname',true),
+					'first_name'	=> $this->db->f('account_firstname',true)
 					);
 			}
 			return $phpgw_user;
