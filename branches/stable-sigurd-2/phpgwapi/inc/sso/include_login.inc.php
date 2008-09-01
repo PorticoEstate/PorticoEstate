@@ -119,7 +119,10 @@
 				case 21:
 					return lang('you had inactive mapping to %1 account', phpgw::get_var('phpgw_account', 'string', 'GET', ''));
 				case 22:
-					return lang('you seem to have an active session elsewhere for the domain "%1", please log out from this one or delete your cookies from your browser', phpgw::get_var('domain', 'string', 'COOKIE'));
+					$GLOBALS['phpgw']->session->phpgw_setcookie('sessionid');
+					$GLOBALS['phpgw']->session->phpgw_setcookie('kp3');
+					$GLOBALS['phpgw']->session->phpgw_setcookie('domain');
+					return lang('you seemed to have an active session elsewhere for the domain "%1", now set to expired - please try again', phpgw::get_var('domain', 'string', 'COOKIE'));
 				case 99:
 					return lang('Blocked, too many attempts');
 				case 10:
@@ -128,7 +131,7 @@
 					$GLOBALS['phpgw']->session->phpgw_setcookie('domain');
 
 					// fix for bug php4 expired sessions bug
-					if($GLOBALS['phpgw_info']['server']['sessions_type'] == 'php4')
+					if($GLOBALS['phpgw_info']['server']['sessions_type'] == 'php')
 					{
 						$GLOBALS['phpgw']->session->phpgw_setcookie(PHPGW_PHPSESSID);
 					}
