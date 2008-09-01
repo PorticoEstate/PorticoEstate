@@ -2667,6 +2667,7 @@
 		$levels =  $GLOBALS['phpgw_setup']->oProc->f('levels');
 
 		//perform an update on all location_codes on all levels to make sure they are consistent and unique
+		$locations = array();
 		for ($level=1;$level<($levels+1);$level++)
 		{
 			$sql = "SELECT * from fm_location{$level}";
@@ -2676,19 +2677,23 @@
 			{
 				$location_code = array();
 				$where = 'WHERE';
-				$locations[$i]['condition'] = '';
+				$locations[$level][$i]['condition'] = '';
 				for ($j=1;$j<($level+1);$j++)
 				{
 					$loc = $GLOBALS['phpgw_setup']->oProc->f("loc{$j}");
 					$location_code[] = $loc;
-					$locations[$i]['condition'] .= "$where loc{$j}='{$loc}'";
+					$locations[$level][$i]['condition'] .= "$where loc{$j}='{$loc}'";
 					$where = 'AND';
 				}
-				$locations[$i]['new_values']['location_code'] = implode('-', $location_code);
+				$locations[$level][$i]['new_values']['location_code'] = implode('-', $location_code);
 				$i++;
 			}
 
-			foreach($locations as $location)
+		}
+
+		foreach($locations as $level => $location_at_leve)
+		{
+			foreach($location_at_leve as $location )
 			{
 				$sql = "UPDATE fm_location{$level} SET location_code = '{$location['new_values']['location_code']}' {$location['condition']}";
 				$GLOBALS['phpgw_setup']->oProc->query($sql,__LINE__,__FILE__);
@@ -2708,11 +2713,13 @@
 				);
 			}
 		}
-		
+
 		foreach ($locations as $location)
 		{
 			$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_locations (level, location_code) VALUES ({$location['level']}, '{$location['location_code']}')");
 		}
+
+		$GLOBALS['phpgw_setup']->oProc->query("UPDATE phpgw_acl set acl_grantor = -1 WHERE acl_grantor IS NULL",__LINE__,__FILE__);
 
 		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
 		{
