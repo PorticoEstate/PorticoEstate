@@ -39,7 +39,7 @@
 			'fd' => array(
 				'acl_account' => array('type' => 'int', 'precision' => 4),
 				'acl_rights' => array('type' => 'int', 'precision' => 4),
-				'acl_grantor' => array('type' => 'int', 'precision' => 4, 'nullable' => true),
+				'acl_grantor' => array('type' => 'int', 'precision' => 4, 'nullable' => true 'default' => '-1'),
 				'acl_type' => array('type' => 'int', 'precision' => 2, 'nullable' => true, 'default' => '0'),
 				'location_id' => array('type' => 'int', 'precision' => 4),
 			),

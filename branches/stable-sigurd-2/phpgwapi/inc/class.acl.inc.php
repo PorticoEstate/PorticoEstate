@@ -547,7 +547,7 @@
 			{
 				foreach ( $this->_data[$this->_account_id][$app_id][$location_id] as $values )
 				{
-					if ( $values['type'] == $mask && $values['rights'] > 0)
+					if ( $values['type'] == $mask && $values['rights'] > 0 && $values['grantor'] ==$grantor)
 					{
 						$this->account_type = $values['account_type'];
 						$rights |= $values['rights'];
