@@ -1436,7 +1436,7 @@
 
 			$location_data=$bolocation->initiate_ui_location(array(
 						'values'	=> $values['location_data'],
-						'type_id'	=> count(explode('-',$values['location_data']['location_code'])),
+						'type_id'	=> $category['location_level'],
 						'no_link'	=> false, // disable lookup links for location type less than type_id
 						'lookup_type'	=> 'view',
 						'tenant'	=> $category['lookup_tenant'],
