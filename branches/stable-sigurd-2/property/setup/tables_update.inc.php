@@ -2720,6 +2720,7 @@
 		}
 
 		$GLOBALS['phpgw_setup']->oProc->query("UPDATE phpgw_acl set acl_grantor = -1 WHERE acl_grantor IS NULL",__LINE__,__FILE__);
+		$GLOBALS['phpgw_setup']->oProc->query("DELETE FROM phpgw_cache_user",__LINE__,__FILE__);
 
 		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
 		{
