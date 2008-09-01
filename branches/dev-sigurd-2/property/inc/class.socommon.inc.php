@@ -155,7 +155,7 @@
 
 		function reset_fm_cache_userlist()
 		{
-			$this->db->query("DELETE FROM fm_cache WHERE name $this->like 'acl_userlist_%'",__LINE__,__FILE__);
+			$this->db->query("DELETE FROM fm_cache WHERE name $this->like 'acl_userlist_%'",__LINE__,__FILE__, true);
 			return $this->db->affected_rows();
 		}
 

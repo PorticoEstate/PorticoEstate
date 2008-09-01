@@ -2714,6 +2714,8 @@
 			$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_locations (level, location_code) VALUES ({$location['level']}, '{$location['location_code']}')");
 		}
 
+		$GLOBALS['phpgw_setup']->oProc->query("UPDATE phpgw_acl set acl_grantor = -1 WHERE acl_grantor IS NULL",__LINE__,__FILE__);
+
 		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
 		{
 			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.546';
