@@ -397,7 +397,7 @@
 					}
 				}
 
-				$this->db->query("SELECT * FROM $attribute_table WHERE list=1 AND $attribute_filter");
+				$this->db->query("SELECT * FROM $attribute_table WHERE (list=1 OR lookup_form=1) AND $attribute_filter");
 				while ($this->db->next_record())
 				{
 					$cols .= ",fm_location" . ($type_id) .'.' . $this->db->f('column_name');
@@ -430,17 +430,35 @@
 					$user_column_filter = " OR ($attribute_filter AND id IN (" . implode(',',$user_columns) .'))';
 				}
 
-				$this->db->query("SELECT * FROM $attribute_table WHERE list=1 AND $attribute_filter $user_column_filter ORDER BY attrib_sort ASC");
+				$this->db->query("SELECT * FROM $attribute_table WHERE (list=1 OR lookup_form=1) AND $attribute_filter $user_column_filter ORDER BY attrib_sort ASC");
 
 				$i	= count($uicols['name']);
 				while ($this->db->next_record())
 				{
-					$uicols['input_type'][]		= 'text';
+					$input_type = 'text';
+					if($this->db->f('lookup_form') == 1 && $this->db->f('list') != 1)
+					{
+						$input_type = 'hidden';
+						$exchange	= true;
+					}
+					else if($this->db->f('lookup_form') == 1)
+					{
+						$exchange	= true;						
+					}
+					else
+					{
+						$input_type = 'text';
+						$exchange	= false;
+					}
+					
+					$uicols['input_type'][]		= $input_type;
 					$uicols['name'][]			= $this->db->f('column_name');
 					$uicols['descr'][]			= $this->db->f('input_text');
 					$uicols['statustext'][]		= $this->db->f('statustext');
 					$uicols['datatype'][$i]		= $this->db->f('datatype');
-					$cols_return_extra[]= array(
+					$uicols['exchange'][]		= $exchange;
+					$cols_return_extra[]= array
+					(
 						'name'	=> $this->db->f('column_name'),
 						'datatype'	=> $this->db->f('datatype'),
 						'attrib_id'	=> $this->db->f('id')
@@ -599,47 +617,46 @@
 			}
 
 			$j=0;
-			$cols_return_count	= count($cols_return);
 			$location_count 	= $type_id-1;
 			$contacts		= CreateObject('phpgwapi.contacts');
 			$location_list		= array();
 
 			while ($this->db->next_record())
 			{
-				for ($i=0;$i<$cols_return_count;$i++)
+				foreach ($cols_return as $col)
 				{
-					$location_list[$j][$cols_return[$i]] = stripslashes($this->db->f($cols_return[$i]));
+					$location_list[$j][$col] = $this->db->f($col,true);
 
 					$value = $this->db->f($cols_return[$i]);
 				}
 
 				if(isset($cols_return_extra) && is_array($cols_return_extra))
 				{
-					for ($i=0;$i<count($cols_return_extra);$i++)
+					foreach($cols_return_extra as $col_extra)
 					{
-						$value = $this->db->f($cols_return_extra[$i]['name'], true);
+						$value = $this->db->f($col_extra['name'], true);
 
-						if(($cols_return_extra[$i]['datatype']=='R' || $cols_return_extra[$i]['datatype']=='LB') && $value)
+						if(($col_extra['datatype']=='R' || $col_extra['datatype']=='LB') && $value)
 						{
-					//		$sql="SELECT value FROM fm_location_choice where type_id=$type_id AND attrib_id=" .$cols_return_extra[$i]['attrib_id']. "  AND id=" . $value;
-							$sql="SELECT value FROM $choice_table WHERE $attribute_choice_filter AND attrib_id=" .$cols_return_extra[$i]['attrib_id']. "  AND id=" . $value;
+					//		$sql="SELECT value FROM fm_location_choice where type_id=$type_id AND attrib_id=" .$col_extra['attrib_id']. "  AND id=" . $value;
+							$sql="SELECT value FROM $choice_table WHERE $attribute_choice_filter AND attrib_id=" .$col_extra['attrib_id']. "  AND id=" . $value;
 							$this->db2->query($sql);
 							$this->db2->next_record();
-							$location_list[$j][$cols_return_extra[$i]['name']] = $this->db2->f('value');
+							$location_list[$j][$col_extra['name']] = $this->db2->f('value');
 						}
-						else if($cols_return_extra[$i]['datatype']=='AB' && $value)
+						else if($col_extra['datatype']=='AB' && $value)
 						{
 							$contact_data	= $contacts->read_single_entry($value,array('n_given'=>'n_given','n_family'=>'n_family','email'=>'email'));
-							$location_list[$j][$cols_return_extra[$i]['name']]	= $contact_data[0]['n_family'] . ', ' . $contact_data[0]['n_given'];
+							$location_list[$j][$col_extra['name']]	= $contact_data[0]['n_family'] . ', ' . $contact_data[0]['n_given'];
 						}
-						else if($cols_return_extra[$i]['datatype']=='VENDOR' && $value)
+						else if($col_extra['datatype']=='VENDOR' && $value)
 						{
 							$sql="SELECT org_name FROM fm_vendor where id=$value";
 							$this->db2->query($sql);
 							$this->db2->next_record();
-							$location_list[$j][$cols_return_extra[$i]['name']] = $this->db2->f('org_name');
+							$location_list[$j][$col_extra['name']] = $this->db2->f('org_name');
 						}
-						else if($cols_return_extra[$i]['datatype']=='CH' && $value)
+						else if($col_extra['datatype']=='CH' && $value)
 						{
 							$ch= unserialize($value);
 
@@ -647,33 +664,33 @@
 							{
 								for ($k=0;$k<count($ch);$k++)
 								{
-			//						$sql="SELECT value FROM fm_location_choice where type_id=$type_id AND attrib_id=" .$cols_return_extra[$i]['attrib_id']. "  AND id=" . $ch[$k];
-									$sql="SELECT value FROM $choice_table WHERE $attribute_choice_filter AND attrib_id=" .$cols_return_extra[$i]['attrib_id']. "  AND id=" . $ch[$k];
+			//						$sql="SELECT value FROM fm_location_choice where type_id=$type_id AND attrib_id=" .$col_extra['attrib_id']. "  AND id=" . $ch[$k];
+									$sql="SELECT value FROM $choice_table WHERE $attribute_choice_filter AND attrib_id=" .$col_extra['attrib_id']. "  AND id=" . $ch[$k];
 									$this->db2->query($sql);
 									while ($this->db2->next_record())
 									{
 										$ch_value[]=$this->db2->f('value');
 									}
 								}
-								$location_list[$j][$cols_return_extra[$i]['name']] = @implode(",", $ch_value);
+								$location_list[$j][$col_extra['name']] = @implode(",", $ch_value);
 								unset($ch_value);
 							}
 						}
-						else if($cols_return_extra[$i]['datatype']=='D' && $value)
+						else if($col_extra['datatype']=='D' && $value)
 						{
-							$location_list[$j][$cols_return_extra[$i]['name']]=date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'],strtotime($value));
+							$location_list[$j][$col_extra['name']]=date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'],strtotime($value));
 						}
-						else if($cols_return_extra[$i]['datatype']=='timestamp' && $value)
+						else if($col_extra['datatype']=='timestamp' && $value)
 						{
-							$location_list[$j][$cols_return_extra[$i]['name']]=date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'],$value);
+							$location_list[$j][$col_extra['name']]=date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'],$value);
 						}
-						else if($cols_return_extra[$i]['datatype']=='link' && $value)
+						else if($col_extra['datatype']=='link' && $value)
 						{
-							$location_list[$j][$cols_return_extra[$i]['name']]= phpgw::safe_redirect($value);
+							$location_list[$j][$col_extra['name']]= phpgw::safe_redirect($value);
 						}
 						else
 						{
-							$location_list[$j][$cols_return_extra[$i]['name']] = $value;
+							$location_list[$j][$col_extra['name']] = $value;
 						}
 					}
 					unset($value);
@@ -838,24 +855,29 @@
 			$fm_location_cols = $custom->find('property', '.location.' . $type_id, 0, '', '', '', true);
 //_debug_array($fm_location_cols);
 
-			$location_cols_count	= count($fm_location_cols);
-
 			if($read_single)
 			{
 				$cols .= ",fm_location{$type_id}.*";
+				foreach ($fm_location_cols as $location_col)
+				{
+					if($location_col['lookup_form'] == 1)
+					{
+						$cols_return[] 			= $location_col['column_name'];
+					}
+				}
 			}
 			else
 			{
-				for ($i=0;$i<$location_cols_count;$i++)
+				foreach ($fm_location_cols as $location_col)
 				{
-					if($fm_location_cols[$i]['list']==1)
+					if($location_col['list'] == 1)
 					{
-						$cols .= ",fm_location" . ($type_id) .".".$fm_location_cols[$i]['column_name'];
-						$cols_return[] 			= $fm_location_cols[$i]['column_name'];
+						$cols .= ",fm_location" . ($type_id) .".".$location_col['column_name'];
+						$cols_return[] 			= $location_col['column_name'];
 						$uicols['input_type'][]		= 'text';
-						$uicols['name'][]		= $fm_location_cols[$i]['column_name'];
-						$uicols['descr'][]		= $fm_location_cols[$i]['input_text'];
-						$uicols['statustext'][]		= $fm_location_cols[$i]['statustext'];
+						$uicols['name'][]		= $location_col['column_name'];
+						$uicols['descr'][]		= $location_col['input_text'];
+						$uicols['statustext'][]		= $location_col['statustext'];
 					}
 				}
 			}
@@ -1387,9 +1409,9 @@
 					{
 						$location[$j][$attrib[$i]['column_name']]=date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'],strtotime($value));
 					}
-					else if($cols_return_extra[$i]['datatype']=='link' && $value)
+					else if($attrib[$i]['datatype']=='link' && $value)
 					{
-						$location_list[$j][$cols_return_extra[$i]['name']]= phpgw::safe_redirect($value);
+						$location_list[$j][$attrib[$i]['name']]= phpgw::safe_redirect($value);
 					}
 					else if($attrib[$i]['column_name']=='entry_date' && $value)
 					{
@@ -1397,7 +1419,7 @@
 					}
 					else
 					{
-						$location_list[$j][$cols_return_extra[$i]['name']] = $value;
+						$location_list[$j][$attrib[$i]['name']] = $value;
 					}
 
 					unset($value);
