@@ -275,8 +275,17 @@
 //_debug_array($location_types);
 //			$filtermethod = " OR (type_id < $lookup_type AND lookup_form=1)";
 			$filtermethod = " OR (lookup_form=1)";
-			$fm_location_cols = $this->custom->find('property', '.location.' . $data['type_id'], 0, '', '', '', true,$filtermethod);
-
+			$fm_location_cols = array();
+			for ($i=1;$i<($data['type_id']+1);$i++)
+			{
+				$fm_location_cols_temp = $this->custom->find('property', '.location.' . $i, 0, '', '', '', true,$filtermethod);
+				foreach ($fm_location_cols_temp as & $entry)
+				{
+					$entry['location_type']=$i;
+				}
+				$fm_location_cols = array_merge($fm_location_cols, $fm_location_cols_temp);
+			}
+			unset($fm_location_cols_temp);
 
 //_debug_array($fm_location_cols);
 
@@ -346,18 +355,17 @@
 			$location_cols_count =count($fm_location_cols);
 			for ($j=0;$j<$location_cols_count;$j++)
 			{
-				//FIXME: location_type is currently empty - should'nt be...
 				if((isset($fm_location_cols[$j]['location_type']) && $fm_location_cols[$j]['location_type'] <= $data['type_id']) && $fm_location_cols[$j]['lookup_form'])
 				{
 					$location['location'][$i]['input_type']				= 'text';
 					$location['location'][$i]['input_name']				= $fm_location_cols[$j]['column_name'];
-					$input_name[]							= $location['location'][$i]['input_name'];
-					$location['location'][$i]['size']				= 5;
-					$location['location'][$i]['lookup_function_call']		= 'lookup_loc' . $fm_location_cols[$j]['location_type'] . '()';
+					$input_name[]										= $location['location'][$i]['input_name'];
+					$location['location'][$i]['size']					= 5;
+					$location['location'][$i]['lookup_function_call']	= 'lookup_loc' . $fm_location_cols[$j]['location_type'] . '()';
 					$location['location'][$i]['lookup_link']			= true;
 					$location['location'][$i]['readonly']				= true;
-					$location['location'][$i]['name']				= $fm_location_cols[$j]['input_text'];
-					$location['location'][$i]['value']				= isset($data['values'][$fm_location_cols[$j]['column_name']]) ? $data['values'][$fm_location_cols[$j]['column_name']] : '';
+					$location['location'][$i]['name']					= $fm_location_cols[$j]['input_text'];
+					$location['location'][$i]['value']					= isset($data['values'][$fm_location_cols[$j]['column_name']]) ? $data['values'][$fm_location_cols[$j]['column_name']] : '';
 					$location['location'][$i]['statustext']				= lang('click this link to select') . ' ' . $location_types[($fm_location_cols[$j]['location_type']-1)]['name'];
 					$i++;
 
