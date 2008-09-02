@@ -305,8 +305,7 @@
 		*/
 		public function from_timestamp($timestamp)
 		{
-			trigger_error('Error: not working - use alterative', E_USER_ERROR);
-			return false;
+			return strtotime($timestamp);
 		}
 
 		/**
