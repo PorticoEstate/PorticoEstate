@@ -679,7 +679,7 @@
 
 					if ( isset($GLOBALS['phpgw_info']['server']['smtp_server']) 
 						&& $GLOBALS['phpgw_info']['server']['smtp_server']
-						&& $config->config_data['mailnotification'] )
+						&& $config->config_data['workorder_approval'] )
 					{
 						if (!is_object($GLOBALS['phpgw']->send))
 						{
@@ -717,7 +717,7 @@
 
 						if (isset($receipt['notice_owner']) AND is_array($receipt['notice_owner']))
 						{
-							if($this->account!=$values['coordinator'] && $config->config_data['workorder_approval'])
+							if($this->account!=$values['coordinator'] && $config->config_data['mailnotification'])
 							{
 								$prefs_coordinator = $this->bocommon->create_preferences('property',$values['coordinator']);
 								$to = $prefs_coordinator['email'];
