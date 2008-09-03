@@ -616,7 +616,7 @@
 						}
 					}
 //-----------
-					if ($values['approval'] && $values['mail_address'] && $config->config_data['mailnotification'])
+					if ($values['approval'] && $values['mail_address'] && $config->config_data['workorder_approval'])
 					{
 						$coordinator_name=$GLOBALS['phpgw_info']['user']['fullname'];
 						$coordinator_email=$GLOBALS['phpgw_info']['user']['preferences']['property']['email'];
