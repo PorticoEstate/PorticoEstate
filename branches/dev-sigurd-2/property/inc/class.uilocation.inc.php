@@ -856,7 +856,7 @@
 
 
 
-		$datatable['actions']['form'] = array(
+		/*$datatable['actions']['form'] = array(
 			array(
 				'fields'	=> array(
                                     'field' => array(
@@ -929,7 +929,7 @@
 			  )
 			);
 
-
+*/
 
 
 
@@ -1115,7 +1115,7 @@
 			$datatable['sorting']['sort'] 	= phpgw::get_var('sort', 'string'); // ASC / DESC
 
 
-/*
+
 			$datatable['actions']['form'] = array
 			(
 				array(
@@ -1130,13 +1130,18 @@
 							array(
 								'type' => 'submit',
 								'value' => lang('New')
-							)
+							),
+							array( //hidden type_id
+                                'type'	=> 'hidden',
+                            	'id'	=> 'type_id',
+                                'value'	=> $type_id
+                            )
 						)
 					)
 				)
 			);
 
-*/
+
 			//_debug_array($datatable);die;
 			if( phpgw::get_var('phpgw_return_as') == 'json' )
 			{
