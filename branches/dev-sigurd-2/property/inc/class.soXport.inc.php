@@ -47,7 +47,6 @@
 			$this->bocommon		= CreateObject('property.bocommon');
 			$this->soinvoice	= CreateObject('property.soinvoice',true);
 			$this->db           	= $this->bocommon->new_db();
-			$this->db2           	= $this->bocommon->new_db($this->db);
 			$this->join		= $this->bocommon->join;
 			$this->left_join	= $this->bocommon->left_join;
 			$this->datetimeformat	= $this->bocommon->datetimeformat;
@@ -62,7 +61,7 @@
 			{
 				return;
 			}
-			$sql = "select mva as tax_code from fm_location1 where loc1=" . substr($dima,0,4);
+			$sql = "select mva as tax_code from fm_location1 where loc1='" . substr($dima,0,4) . "'";
 			$this->db->query($sql);
 			$this->db->next_record();
 
@@ -117,7 +116,7 @@
 			{
 				return;
 			}
-			$sql = "select kostra_id from fm_location1 where loc1=" . substr($dima,0,4);
+			$sql = "select kostra_id from fm_location1 where loc1='" . substr($dima,0,4) . "'";
 			$this->db->query($sql);
 			$this->db->next_record();
 
