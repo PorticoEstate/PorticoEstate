@@ -55,7 +55,8 @@
 			'update_cat'=> true,
 			'stop'		=> true,
 			'summary'	=> true,
-			'columns'	=> true
+			'columns'	=> true,
+			'select2String' => true
 		);
 
 		function property_uilocation()
@@ -809,7 +810,7 @@
 				return;
 			}
 
-			$GLOBALS['phpgw']->js->validate_file('overlib','overlib','property');
+			//$GLOBALS['phpgw']->js->validate_file('overlib','overlib','property');
 			$GLOBALS['phpgw']->js->set_onload('document.search.query.focus();');
 
 			$datatable = array();
@@ -821,6 +822,118 @@
 	    				));
 
 			$reset_query 		= phpgw::get_var('reset_query', 'bool');
+
+
+
+			$values_cat_id  = $this->bocommon->select_category_list(array('format'=>'filter',
+                                                                        'selected' => $this->cat_id,
+                                                                        'type' =>'location',
+                                                                        'type_id' =>$type_id,
+                                                                        'order'=>'descr'));
+		$default_value = array ('id'=>'0','name'=>'!no category');
+		array_unshift ($values_cat_id,$default_value);
+		//_debug_array($values_cat_id);die;
+
+		$values_district_list  = $this->bocommon->select_district_list('filter',$this->district_id);
+		$default_value = array ('id'=>'0','name'=>'!no district');
+		array_unshift ($values_district_list,$default_value);
+
+        $values_part_of_town_list =  $this->bocommon->select_part_of_town('filter',$this->part_of_town_id,$this->district_id);
+ 		$default_value = array ('id'=>'0','name'=>'!no part of town');
+		array_unshift ($values_part_of_town_list,$default_value);
+
+        if(isset($GLOBALS['phpgw_info']['user']['preferences']['property']['property_filter']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['property_filter'] == 'owner')
+        {
+            $values_owner_list = $this->bo->get_owner_list('filter', $this->filter);
+        }
+        else
+        {
+            $values_owner_list = $this->bo->get_owner_type_list('filter', $this->filter);
+        }
+        $default_value = array ('id'=>'0','name'=>'!Show all');
+		array_unshift ($values_owner_list,$default_value);
+
+
+
+
+		$datatable['actions']['form'] = array(
+			array(
+				'fields'	=> array(
+                                    'field' => array(
+                                        array( //boton 	CATEGORY
+                                            'id' => 'btn_cat_id',
+                                            'name' => 'cat_id',
+                                            'value'	=> lang('Category'),
+                                            'type' => 'button'
+                                        ),
+                                        array( //hidden CATEGORY
+                                            'type' => 'hidden',
+                                            'name' 	=> 'values_cat_id',
+                                            'value'	=> $this->select2String($values_cat_id), //i.e.  id,value/id,vale/
+                                            'className' => "h_values_cat_id"
+                                        ),
+
+                                        array( //boton 	DISTINT
+                                            'id' => 'btn_district_id',
+                                            'name' => 'district_id',
+                                            'value'	=> lang('District'),
+                                            'type' => 'button',
+                                        ),
+                                        array( //hidden DISTINT
+                                            'type' => 'hidden',
+                                            'name' 	=> 'values_district_id',
+                                            'value'	=> $this->select2String($values_district_list),
+                                            'className' => "h_values_distint_id"
+                                        ),
+
+                                        array( //boton 	PART OF TOWN
+                                            'id' => 'btn_part_of_town_id',
+                                            'name' => 'part_of_town_id',
+                                            'value'	=> lang('Part of Town'),
+                                            'type' => 'button',
+                                        ),
+                                        array( //hidden PART OF TOWN
+                                            'type' => 'hidden',
+                                            'name' 	=> 'values_part_of_town_id',
+                                            'value'	=> $this->select2String($values_part_of_town_list),
+                                            'className' => "h_values_part_of_town_id"
+                                        ),
+                                        array( //boton 	FILTER
+                                            'id' => 'btn_owner_id',
+                                            'name' => 'owner_id',
+                                            'value'	=> lang('Filter'),
+                                            'type' => 'button',
+                                        ),
+                                        array( //hidden FILTER
+                                            'type' => 'hidden',
+                                            'name' 	=> 'values_owner_list',
+                                            'value'	=> $this->select2String($values_owner_list),
+                                            'className' => "h_values_owner_id"
+                                        ),
+                                        array( // TEXT IMPUT
+                                            'name' 	=> 'query',
+                                            'text'	=> '',
+                                            'className' => "search",
+                                            'value'	=> '',//$query,
+                                            'type' => 'text',
+                                            'size'	=> 58
+                                        ),
+                                        array( //boton 	SEARCH
+                                            'id' => 'btn_search',
+                                            'name' => 'search',
+                                            'value'	=> lang('Search'),
+                                            'type' => 'button',
+                                        )
+                                    )
+				)
+			  )
+			);
+
+
+
+
+
+
 
 			if( !$reset_query )
 			{
@@ -847,7 +960,6 @@
 				{
 					for ($i=0;$i<count($uicols['name']);$i++)
 					{
-
 						if($uicols['input_type'][$i]!='hidden')
 						{
 							if(isset($location['query_location'][$uicols['name'][$i]]))
@@ -868,6 +980,7 @@
 							else
 							{
 								$datatable['rows']['row'][$j]['column'][$i]['value'] 			= $location[$uicols['name'][$i]];
+								//$datatable['rows']['row'][$j]['column'][$i]['value'] 			= $i;
 								$datatable['rows']['row'][$j]['column'][$i]['name'] 			= $uicols['name'][$i];
 								$datatable['rows']['row'][$j]['column'][$i]['lookup'] 			= $lookup;
 								$datatable['rows']['row'][$j]['column'][$i]['align'] 			= (isset($uicols['align'][$i])?$uicols['align'][$i]:'center');
@@ -883,7 +996,7 @@
 						else
 						{
 								$datatable['rows']['row'][$j]['column'][$i]['name'] 			= $uicols['name'][$i];
-								$datatable['rows']['row'][$j]['column'][$i]['value']			= $location[$uicols['name'][$i]];						
+								$datatable['rows']['row'][$j]['column'][$i]['value']			= $location[$uicols['name'][$i]];
 						}
 
 						$datatable['rows']['row'][$j]['hidden'][$i]['value'] 			= $location[$uicols['name'][$i]];
@@ -955,7 +1068,7 @@
 					$datatable['headers']['header'][$i]['name'] 			= $uicols['name'][$i];
 					$datatable['headers']['header'][$i]['text'] 			= $uicols['descr'][$i];
 					$datatable['headers']['header'][$i]['visible'] 			= true;
-					$datatable['headers']['header'][$i]['format'] 			= $this->bocommon->translate_datatype_format($uicols['datatype'][$i]);
+					//$datatable['headers']['header'][$i]['format'] 			= $this->bocommon->translate_datatype_format($uicols['datatype'][$i]);
 					$datatable['headers']['header'][$i]['sortable']			= false;
 					if($uicols['name'][$i]=='loc1'):
 					{
@@ -1002,7 +1115,7 @@
 			$datatable['sorting']['sort'] 	= phpgw::get_var('sort', 'string'); // ASC / DESC
 
 
-
+/*
 			$datatable['actions']['form'] = array
 			(
 				array(
@@ -1023,7 +1136,8 @@
 				)
 			);
 
-
+*/
+			//_debug_array($datatable);die;
 			if( phpgw::get_var('phpgw_return_as') == 'json' )
 			{
 	    		$json = array
@@ -1067,7 +1181,7 @@
 		  	phpgwapi_yui::load_widget('datatable');
 
 		  	// Uncomment the following line to enable experimental YUI Datagrid version
-	  		$GLOBALS['phpgw']->js->validate_file( 'newdesign', 'gabnr', 'property' );
+	  		$GLOBALS['phpgw']->js->validate_file( 'newdesign', 'property', 'property' );
 		}
 
 
@@ -2097,5 +2211,21 @@
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('summary' => $data));
 		//	$GLOBALS['phpgw']->xslttpl->pp();
 		}
-	}
+
+
+		function select2String($array_values, $id = 'id', $name = 'name')
+         {
+             $str_array_values = "";
+             for($i = 0; $i < count($array_values); $i++){
+                foreach( $array_values[$i] as $key => $value ) {
+                    $str_array_values .= $value;
+                    if ($key == $id)
+                            $str_array_values .= "#";
+                    if ($key == $name)
+                            $str_array_values .= "/";
+                }
+             }
+             return $str_array_values;
+          }
+ }
 
