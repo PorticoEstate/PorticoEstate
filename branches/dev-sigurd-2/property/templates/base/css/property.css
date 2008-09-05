@@ -1,0 +1,53 @@
+
+#categorybutton button {
+    outline: none;
+}
+#categorybutton button em {
+    font-style: normal;
+    display: block;
+    text-align: left;
+    white-space: nowrap;
+	width: 7em;  /*  Restrict the width of the label to 10em. */
+	overflow: hidden; /* Hide the overflow if the text label exceeds 10em in width. */
+	text-overflow: ellipsis; /* IE and Safari support the ability to add ellipsis when the text label exceeds 10em in width.*/
+}
+
+
+#districtbutton button {
+    outline: none;
+}
+#districtbutton button em {
+    font-style: normal;
+    display: block;
+    text-align: left;
+    white-space: nowrap;
+	width: 7em;  /*  Restrict the width of the label to 10em. */
+	overflow: hidden; /* Hide the overflow if the text label exceeds 10em in width. */
+	text-overflow: ellipsis; /* IE and Safari support the ability to add ellipsis when the text label exceeds 10em in width.*/
+}
+
+#partOFTownbutton button {
+    outline: none;
+}
+#partOFTownbutton button em {
+    font-style: normal;
+    display: block;
+    text-align: left;
+    white-space: nowrap;
+	width: 7em;  /*  Restrict the width of the label to 10em. */
+	overflow: hidden; /* Hide the overflow if the text label exceeds 10em in width. */
+	text-overflow: ellipsis; /* IE and Safari support the ability to add ellipsis when the text label exceeds 10em in width.*/
+}
+
+#ownerIdbutton button {
+    outline: none;
+}
+#ownerIdbutton button em {
+    font-style: normal;
+    display: block;
+    text-align: left;
+    white-space: nowrap;
+	width: 7em;  /*  Restrict the width of the label to 10em. */
+	overflow: hidden; /* Hide the overflow if the text label exceeds 10em in width. */
+	text-overflow: ellipsis; /* IE and Safari support the ability to add ellipsis when the text label exceeds 10em in width.*/
+}
