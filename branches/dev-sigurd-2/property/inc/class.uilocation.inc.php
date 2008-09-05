@@ -810,8 +810,8 @@
 				return;
 			}
 
-			//$GLOBALS['phpgw']->js->validate_file('overlib','overlib','property');
-			$GLOBALS['phpgw']->js->set_onload('document.search.query.focus();');
+			$GLOBALS['phpgw']->js->validate_file('overlib','overlib','property');
+			//$GLOBALS['phpgw']->js->set_onload('document.query.focus();');
 
 			$datatable = array();
 	    	$datatable['config']['base_url'] = $GLOBALS['phpgw']->link('/index.php', array
@@ -830,33 +830,32 @@
                                                                         'type' =>'location',
                                                                         'type_id' =>$type_id,
                                                                         'order'=>'descr'));
-		$default_value = array ('id'=>'0','name'=>'!no category');
-		array_unshift ($values_cat_id,$default_value);
-		//_debug_array($values_cat_id);die;
+			$default_value = array ('id'=>'0','name'=>'!no category');
+			array_unshift ($values_cat_id,$default_value);
 
-		$values_district_list  = $this->bocommon->select_district_list('filter',$this->district_id);
-		$default_value = array ('id'=>'0','name'=>'!no district');
-		array_unshift ($values_district_list,$default_value);
+			$values_district_list  = $this->bocommon->select_district_list('filter',$this->district_id);
+			$default_value = array ('id'=>'0','name'=>'!no district');
+			array_unshift ($values_district_list,$default_value);
 
-        $values_part_of_town_list =  $this->bocommon->select_part_of_town('filter',$this->part_of_town_id,$this->district_id);
- 		$default_value = array ('id'=>'0','name'=>'!no part of town');
-		array_unshift ($values_part_of_town_list,$default_value);
+	        $values_part_of_town_list =  $this->bocommon->select_part_of_town('filter',$this->part_of_town_id,$this->district_id);
+	 		$default_value = array ('id'=>'0','name'=>'!no part of town');
+			array_unshift ($values_part_of_town_list,$default_value);
 
-        if(isset($GLOBALS['phpgw_info']['user']['preferences']['property']['property_filter']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['property_filter'] == 'owner')
-        {
-            $values_owner_list = $this->bo->get_owner_list('filter', $this->filter);
-        }
-        else
-        {
-            $values_owner_list = $this->bo->get_owner_type_list('filter', $this->filter);
-        }
-        $default_value = array ('id'=>'0','name'=>'!Show all');
-		array_unshift ($values_owner_list,$default_value);
-
+	        if(isset($GLOBALS['phpgw_info']['user']['preferences']['property']['property_filter']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['property_filter'] == 'owner')
+	        {
+	            $values_owner_list = $this->bo->get_owner_list('filter', $this->filter);
+	        }
+	        else
+	        {
+	            $values_owner_list = $this->bo->get_owner_type_list('filter', $this->filter);
+	        }
+	        $default_value = array ('id'=>'0','name'=>'!Show all');
+			array_unshift ($values_owner_list,$default_value);
 
 
 
-		/*$datatable['actions']['form'] = array(
+
+		$datatable['actions']['form'] = array(
 			array(
 				'fields'	=> array(
                                     'field' => array(
@@ -868,11 +867,9 @@
                                         ),
                                         array( //hidden CATEGORY
                                             'type' => 'hidden',
-                                            'name' 	=> 'values_cat_id',
-                                            'value'	=> $this->select2String($values_cat_id), //i.e.  id,value/id,vale/
-                                            'className' => "h_values_cat_id"
+                                            'id' => 'values_cat_id',
+                                            'value'	=> $this->select2String($values_cat_id) //i.e.  id,value/id,vale/
                                         ),
-
                                         array( //boton 	DISTINT
                                             'id' => 'btn_district_id',
                                             'name' => 'district_id',
@@ -881,11 +878,9 @@
                                         ),
                                         array( //hidden DISTINT
                                             'type' => 'hidden',
-                                            'name' 	=> 'values_district_id',
-                                            'value'	=> $this->select2String($values_district_list),
-                                            'className' => "h_values_distint_id"
+                                            'id' 	=> 'values_district_id',
+                                            'value'	=> $this->select2String($values_district_list)
                                         ),
-
                                         array( //boton 	PART OF TOWN
                                             'id' => 'btn_part_of_town_id',
                                             'name' => 'part_of_town_id',
@@ -894,9 +889,8 @@
                                         ),
                                         array( //hidden PART OF TOWN
                                             'type' => 'hidden',
-                                            'name' 	=> 'values_part_of_town_id',
-                                            'value'	=> $this->select2String($values_part_of_town_list),
-                                            'className' => "h_values_part_of_town_id"
+                                            'id' 	=> 'values_part_of_town_id',
+                                            'value'	=> $this->select2String($values_part_of_town_list)
                                         ),
                                         array( //boton 	FILTER
                                             'id' => 'btn_owner_id',
@@ -906,34 +900,31 @@
                                         ),
                                         array( //hidden FILTER
                                             'type' => 'hidden',
-                                            'name' 	=> 'values_owner_list',
-                                            'value'	=> $this->select2String($values_owner_list),
-                                            'className' => "h_values_owner_id"
+                                            'id' 	=> 'values_owner_list',
+                                            'value'	=> $this->select2String($values_owner_list)
                                         ),
                                         array( // TEXT IMPUT
                                             'name' 	=> 'query',
                                             'text'	=> '',
-                                            'className' => "search",
                                             'value'	=> '',//$query,
                                             'type' => 'text',
-                                            'size'	=> 58
+                                            'size'	=> 57
                                         ),
                                         array( //boton 	SEARCH
                                             'id' => 'btn_search',
                                             'name' => 'search',
                                             'value'	=> lang('Search'),
                                             'type' => 'button',
-                                        )
-                                    )
+                                        ),
+										array( //hidden type_id
+			                                'type'	=> 'hidden',
+			                            	'id'	=> 'type_id',
+			                                'value'	=> $type_id
+			                            )
+		                           )
 				)
 			  )
 			);
-
-*/
-
-
-
-
 
 			if( !$reset_query )
 			{
@@ -1115,34 +1106,31 @@
 			$datatable['sorting']['sort'] 	= phpgw::get_var('sort', 'string'); // ASC / DESC
 
 
+			$appname = lang('location');
 
-			$datatable['actions']['form'] = array
-			(
-				array(
-					'action'	=> $GLOBALS['phpgw']->link('/index.php',
-						array(
-							'menuaction' => 'property.uilocation.edit',
-							'type_id' => $type_id
-						)
-					),
-					'fields'	=> array(
-						'field' => array(
-							array(
-								'type' => 'submit',
-								'value' => lang('New')
-							),
-							array( //hidden type_id
-                                'type'	=> 'hidden',
-                            	'id'	=> 'type_id',
-                                'value'	=> $type_id
-                            )
-						)
-					)
-				)
-			);
+			phpgwapi_yui::load_widget('dragdrop');
+		  	phpgwapi_yui::load_widget('datatable');
+		  	phpgwapi_yui::load_widget('menu');
+		  	phpgwapi_yui::load_widget('connection');
 
 
-			//_debug_array($datatable);die;
+			if($lookup)
+			{
+				$lookup_list	= $GLOBALS['phpgw']->session->appsession('lookup_name','property');
+				$function_msg	= $lookup_list[$lookup_name];
+			}
+			else
+			{
+				if($lookup_tenant)
+				{
+					$function_msg	= lang('Tenant');
+				}
+				else
+				{
+					$function_msg					= $uicols['descr'][($type_id)];
+				}
+			}
+			//-- BEGIN--- JSON CODE ---
 			if( phpgw::get_var('phpgw_return_as') == 'json' )
 			{
 	    		$json = array
@@ -1166,11 +1154,12 @@
 	    		}
 	    		return $json;
 			}
+			//--- JSON CODE ---
+
 
 			// Prepare template variables and process XSLT
 			$template_vars = array();
 			$template_vars['datatable'] = $datatable;
-
 			$GLOBALS['phpgw']->xslttpl->add_file(array('datatable'));
 	      	$GLOBALS['phpgw']->xslttpl->set_var('phpgw', $template_vars);
 
@@ -1178,15 +1167,22 @@
 	      	{
 	        	$GLOBALS['phpgw']->css = createObject('phpgwapi.css');
 	      	}
-
+			// Prepare CSS Style
 		  	$GLOBALS['phpgw']->css->validate_file('datatable');
+		  	$GLOBALS['phpgw']->css->validate_file('property');
 			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/datatable/assets/skins/sam/datatable.css');
 
-			phpgwapi_yui::load_widget('dragdrop');
-		  	phpgwapi_yui::load_widget('datatable');
+			//Title of Page
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
 
-		  	// Uncomment the following line to enable experimental YUI Datagrid version
+		  	// Prepare YUI Library
 	  		$GLOBALS['phpgw']->js->validate_file( 'newdesign', 'property', 'property' );
+
+			$this->save_sessiondata();
+
+
+
+
 		}
 
 
