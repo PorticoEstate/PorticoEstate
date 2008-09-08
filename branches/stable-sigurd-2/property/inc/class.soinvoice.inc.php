@@ -612,7 +612,7 @@
 				{
 					$budget_account=$values['budget_account'][$n];
 
-					$GLOBALS['phpgw']->db->query("select count(*) from fm_b_account  where id =$budget_account");
+					$GLOBALS['phpgw']->db->query("select count(*) from fm_b_account  where id ='{$budget_account}'");
 					$GLOBALS['phpgw']->db->next_record();
 					if ($GLOBALS['phpgw']->db->f(0) == 0)
 					{
