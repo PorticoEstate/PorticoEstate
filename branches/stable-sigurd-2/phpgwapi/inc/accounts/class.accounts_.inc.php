@@ -353,7 +353,7 @@
 			}
 			catch (Exception $e)
 			{
-				$this->db->transaction_abort();
+		//		$this->db->transaction_abort();
 				// throw it again so it can be caught higher up
 				throw $e;
 			}
