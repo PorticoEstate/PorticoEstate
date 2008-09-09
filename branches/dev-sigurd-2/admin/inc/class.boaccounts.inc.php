@@ -292,7 +292,7 @@
 				'lid'				=> $values['lid'],
 				'firstname'			=> $values['firstname'],
 				'lastname'			=> $values['lastname'],
-				'enabled'			=> $values['enabled'],
+				'enabled'			=> isset($values['enabled']) ? $values['enabled'] : '',
 				'expires'			=> $values['expires'],
 				'quota'				=> $values['quota']
 			);
