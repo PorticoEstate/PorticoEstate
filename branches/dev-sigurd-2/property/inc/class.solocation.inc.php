@@ -630,8 +630,6 @@
 				foreach ($cols_return as $col)
 				{
 					$location_list[$j][$col] = $this->db->f($col,true);
-
-					$value = $this->db->f($cols_return[$i]);
 				}
 
 				if(isset($cols_return_extra) && is_array($cols_return_extra))
@@ -958,12 +956,11 @@
 //echo $sql;
 			$cols_return	= $this->cols_return;
 
-			$cols_return_count	= count($cols_return);
-
 			$this->db->next_record();
-			for ($i=0;$i<$cols_return_count;$i++)
+
+			foreach ($cols_return as $col)
 			{
-				$values[$cols_return[$i]] = stripslashes($this->db->f($cols_return[$i]));
+				$values[$col] = $this->db->f($col,true);
 			}
 
 			if ( isset($values['attributes']) && is_array($values['attributes']) )
