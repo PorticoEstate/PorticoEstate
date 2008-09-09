@@ -551,7 +551,7 @@
 			switch ( $GLOBALS['phpgw_info']['server']['db_type'] )
 			{
 				case 'postgres':
-					$sequence = $this->_get_sequence_field_for_table($table);
+					$sequence = $this->_get_sequence_field_for_table($table, $field);
 					$ret = $this->db->lastInsertId($sequence);
 					break;
 				case 'mssql':
@@ -576,10 +576,18 @@
 		* @param string $table name of table
 		* @return string name of the sequense, false if fails
 		*/
-		protected function _get_sequence_field_for_table($table)
+		protected function _get_sequence_field_for_table($table, $field ='')
 		{
+			//old naming of sequenses
 			$sql = "SELECT relname FROM pg_class WHERE NOT relname ~ 'pg_.*'"
-				. " AND relname ILIKE '%$table%' AND relkind='S' ORDER BY relname";
+				. " AND relname = '{$table}_{$field}_seq' AND relkind='S' ORDER BY relname";
+			$this->query($sql,__LINE__,__FILE__);
+			if ($this->next_record())
+			{
+				return $this->f('relname');
+			}
+			$sql = "SELECT relname FROM pg_class WHERE NOT relname ~ 'pg_.*'"
+				. " AND relname = 'seq_{$table}' AND relkind='S' ORDER BY relname";
 			$this->query($sql,__LINE__,__FILE__);
 			if ($this->next_record())
 			{
@@ -598,7 +606,7 @@
 		*/
 		public function lock($table, $mode='write')
 		{
-			//$this->transaction_begin();
+			$this->transaction_begin();
 		}
 		
 		
@@ -609,7 +617,7 @@
 		*/
 		public function unlock()
 		{
-			//$this->db->commit();
+			$this->transaction_commit();
 		}
 		
 		/**
