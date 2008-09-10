@@ -18,6 +18,83 @@ YAHOO.util.Event.addListener(window, "load", function() {
 		return MenuButtonMenu;
 	 }
 
+	 function onContextMenuBeforeShow(p_sType, p_aArgs)
+	{
+		var oTarget = this.contextEventTarget;
+
+	    if (this.getRoot() == this) {
+
+			if(oTarget.tagName != "TD")
+			{
+				oTarget = Dom.getAncestorByTagName(oTarget, "td");
+			}
+
+			//  oSelectedTR = oTarget.nodeName.toUpperCase() == "TR" ?
+			//	oTarget : Dom.getAncestorByTagName(oTarget, "TR");
+
+            oSelectedTR = Dom.getAncestorByTagName(oTarget, "tr");
+			oSelectedTR.style.backgroundColor  = 'blue' ;
+            oSelectedTR.style.color = "white";
+            Dom.addClass(oSelectedTR, prefixSelected);
+
+        }
+    }
+
+    function onContextMenuHide(p_sType, p_aArgs) {
+ 		if (this.getRoot() == this && oSelectedTR) {
+	 		oSelectedTR.style.backgroundColor  = "" ;
+	        oSelectedTR.style.color = "";
+            Dom.removeClass(oSelectedTR, prefixSelected);
+	    }
+ 	}
+
+	 YAHOO.example.ContextMenu = new function() {
+
+	    this.onContextMenuClick = function(p_sType, p_aArgs, p_myDataTable) {
+			var task = p_aArgs[1];
+            if(task) {
+                // Extract which TR element triggered the context menu
+                var elRow = p_myDataTable.getTrEl(this.contextEventTarget);
+                if(elRow) {
+                    switch(task.groupIndex) {
+                        case 0:     // View
+                            var oRecord = p_myDataTable.getRecord(elRow);
+							break;
+                        case 1:     // Edit
+                            var oRecord = p_myDataTable.getRecord(elRow);
+							break;
+                        case 2:     // Filter
+                            var oRecord = p_myDataTable.getRecord(elRow);
+							break;
+                        case 3:     // Delete row upon confirmation
+                            var oRecord = p_myDataTable.getRecord(elRow);
+                            if(confirm("Are you sure you want to delete ?")) {
+                                    ActionToPHP("deleteitem",[{variable:"id",value:oRecord.getData("gaards_nr")}]);
+	                                p_myDataTable.deleteRow(elRow);
+	                        } break;
+                    }
+                }
+            }
+        };
+ 	 };
+
+ 	 function GetMenuContext()
+	{
+		return [[
+            { text: "View"}],[
+            { text: "Edit"}],[
+            { text: "Filter" ,
+            			 submenu: { id: "applications", itemdata: [
+		                        {text:"Filter 1", onclick: { fn: onMenuItemClick, obj: 0 }},
+		                        {text:"Filter 2", onclick: { fn: onMenuItemClick, obj: 1 }},
+		                        {text:"Filter 3", onclick: { fn: onMenuItemClick, obj: 2 }},
+		                        {text:"Filter 4", onclick: { fn: onMenuItemClick, obj: 3 }}
+		                    ] }}],[
+            { text: "Delete"}],[
+            { text: "New"}]
+        ];
+	}
+
 	 function onMenuItemClick(p_sType, p_aArgs, p_oItem) {
 		//resset values
 	 	oMenuButtonCategory.set("label", ("<em>!no category</em>"));
@@ -98,6 +175,18 @@ YAHOO.util.Event.addListener(window, "load", function() {
 	        this.myDataTable = new YAHOO.widget.DataTable(container[0], myColumnDefs, this.myDataSource,
 	        	{initialRequest:"&1"}
 	        );
+
+	        this.myContextMenu = new YAHOO.widget.ContextMenu("mycontextmenu", {trigger:this.myDataTable.getTbodyEl()});
+			var _submenuT = new YAHOO.widget.ContextMenu("mycontextmenu", {trigger:this.myDataTable.getTbodyEl()});
+			oContextMenuItems =  this.myContextMenu;
+
+			this.myContextMenu.addItems(GetMenuContext(_submenuT));
+			this.myContextMenu.subscribe("beforeShow", onContextMenuBeforeShow);
+ 			this.myContextMenu.subscribe("hide", onContextMenuHide);
+        	//Render the ContextMenu instance to the parent container of the DataTable
+        	this.myContextMenu.render(container[0]);
+			this.myContextMenu.clickEvent.subscribe(this.onContextMenuClick, this.myDataTable);
+
 
     };
 });
