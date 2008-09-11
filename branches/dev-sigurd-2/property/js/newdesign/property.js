@@ -19,7 +19,7 @@ YAHOO.util.Event.addListener(window, "load", function() {
 	 }
 
 	 function onContextMenuBeforeShow(p_sType, p_aArgs)
-	{
+	 {
 		var oTarget = this.contextEventTarget;
 
 	    if (this.getRoot() == this) {
@@ -29,14 +29,11 @@ YAHOO.util.Event.addListener(window, "load", function() {
 				oTarget = Dom.getAncestorByTagName(oTarget, "td");
 			}
 
-			//  oSelectedTR = oTarget.nodeName.toUpperCase() == "TR" ?
-			//	oTarget : Dom.getAncestorByTagName(oTarget, "TR");
-
-            oSelectedTR = Dom.getAncestorByTagName(oTarget, "tr");
+			oSelectedTR = Dom.getAncestorByTagName(oTarget, "tr");
 			oSelectedTR.style.backgroundColor  = 'blue' ;
             oSelectedTR.style.color = "white";
-            Dom.addClass(oSelectedTR, prefixSelected);
-
+            YAHOO.util.Dom.addClass(oSelectedTR, prefixSelected);
+            //alert(YAHOO.util.Dom.get(oSelectedTR).className);
         }
     }
 
@@ -48,15 +45,19 @@ YAHOO.util.Event.addListener(window, "load", function() {
 	    }
  	}
 
-	 YAHOO.example.ContextMenu = new function() {
+	 //YAHOO.example.ContextMenu = new function() {
 
-	    this.onContextMenuClick = function(p_sType, p_aArgs, p_myDataTable) {
+	    function onContextMenuClick(p_sType, p_aArgs, p_myDataTable)
+	    {
 			var task = p_aArgs[1];
-            if(task) {
+            if(task)
+            {
                 // Extract which TR element triggered the context menu
                 var elRow = p_myDataTable.getTrEl(this.contextEventTarget);
-                if(elRow) {
-                    switch(task.groupIndex) {
+                if(elRow)
+                {
+                    switch(task.groupIndex)
+                    {
                         case 0:     // View
                             var oRecord = p_myDataTable.getRecord(elRow);
 							break;
@@ -68,15 +69,18 @@ YAHOO.util.Event.addListener(window, "load", function() {
 							break;
                         case 3:     // Delete row upon confirmation
                             var oRecord = p_myDataTable.getRecord(elRow);
-                            if(confirm("Are you sure you want to delete ?")) {
-                                    ActionToPHP("deleteitem",[{variable:"id",value:oRecord.getData("gaards_nr")}]);
-	                                p_myDataTable.deleteRow(elRow);
-	                        } break;
+                            if(confirm("Are you sure you want to delete ?"))
+                            {
+                            	//ActionToPHP("deleteitem",[{variable:"id",value:oRecord.getData("gaards_nr")}]);
+	                            //alert(oRecord.getData("location_code"));
+	                            p_myDataTable.deleteRow(elRow);
+	                        }
+	                        break;
                     }
                 }
             }
         };
- 	 };
+ 	 //};
 
  	 function GetMenuContext()
 	{
@@ -112,7 +116,7 @@ YAHOO.util.Event.addListener(window, "load", function() {
 	 	if(p_oItem[2]=='OwnerId')
 	 		oMenuButtonOwnerId.set("label", ("<em>" + p_oItem[1] + "</em>"));
 
-	 	//-----alert('valor = '+p_oItem[0]+' origen= '+p_oItem[2]);
+	 	alert('valor = '+p_oItem[0]+' origen= '+p_oItem[2]);
 
 	 	/*var ds = phpGWLink('index.php', {menuaction: "property.uilocation.index",
 									   address: arraySearch[0].value,
@@ -146,47 +150,44 @@ YAHOO.util.Event.addListener(window, "load", function() {
      var oMenuButtonOwnerId = new YAHOO.widget.Button("btn_owner_id", { type: "menu", label: "<em>!Show all</em>", id: "ownerIdbutton", menu: MenuButton4OwnerId});
 
 
-	YAHOO.example.EnhanceFromMarkup = new function() {
+	var table = YAHOO.util.Dom.getElementsByClassName  ( 'datatable' , 'table' );
+	var type_id = YAHOO.util.Dom.get( 'type_id' );
 
-			var table = YAHOO.util.Dom.getElementsByClassName  ( 'datatable' , 'table' );
-			var type_id = YAHOO.util.Dom.get( 'type_id' );
+	var ds = phpGWLink('index.php', {menuaction: "property.uilocation.index",type_id:type_id.value}, true);
+	//alert( ds );
+	this.myDataSource = new YAHOO.util.DataSource(ds);
+	this.myDataSource.responseType = YAHOO.util.DataSource.TYPE_JSON;
 
-			var ds = phpGWLink('index.php', {menuaction: "property.uilocation.index",type_id:type_id.value}, true);
-			//alert( ds );
-			this.myDataSource = new YAHOO.util.DataSource(ds);
-	        this.myDataSource.responseType = YAHOO.util.DataSource.TYPE_JSON;
+	// Compute fields from column definitions
+	//alert(myColumnDefs[2].key);
+	var fields = new Array();
+	for(var i=0; i < myColumnDefs.length;i++)
+	{
+		fields[i] = myColumnDefs[i].key;
+	}
 
-			// Compute fields from column definitions
-			//alert(myColumnDefs[2].key);
-			var fields = new Array();
-	        for(var i=0; i < myColumnDefs.length;i++) {
-	        	fields[i] = myColumnDefs[i].key;
-	        }
-			// When responseSchema.totalRecords is not indicated, the records
-	        // returned from the DataSource are assumed to represent the entire set
-	        this.myDataSource.responseSchema = {
-	            resultsList: "records",
-	            fields: fields
-	        };
+	// When responseSchema.totalRecords is not indicated, the records
+	// returned from the DataSource are assumed to represent the entire set
+	this.myDataSource.responseSchema =
+	{
+		resultsList: "records",
+	    fields: fields
+	};
 
-	        var container = YAHOO.util.Dom.getElementsByClassName( 'datatable-container' , 'div' );
+	var container = YAHOO.util.Dom.getElementsByClassName( 'datatable-container' , 'div' );
 
+	this.myDataTable = new YAHOO.widget.DataTable(container[0], myColumnDefs, this.myDataSource,
+	{initialRequest:"&1"}
+	);
 
-	        this.myDataTable = new YAHOO.widget.DataTable(container[0], myColumnDefs, this.myDataSource,
-	        	{initialRequest:"&1"}
-	        );
+	this.myContextMenu = new YAHOO.widget.ContextMenu("mycontextmenu", {trigger:this.myDataTable.getTbodyEl()});
+	var _submenuT = new YAHOO.widget.ContextMenu("mycontextmenu", {trigger:this.myDataTable.getTbodyEl()});
+	oContextMenuItems =  this.myContextMenu;
 
-	        this.myContextMenu = new YAHOO.widget.ContextMenu("mycontextmenu", {trigger:this.myDataTable.getTbodyEl()});
-			var _submenuT = new YAHOO.widget.ContextMenu("mycontextmenu", {trigger:this.myDataTable.getTbodyEl()});
-			oContextMenuItems =  this.myContextMenu;
-
-			this.myContextMenu.addItems(GetMenuContext(_submenuT));
-			this.myContextMenu.subscribe("beforeShow", onContextMenuBeforeShow);
- 			this.myContextMenu.subscribe("hide", onContextMenuHide);
-        	//Render the ContextMenu instance to the parent container of the DataTable
-        	this.myContextMenu.render(container[0]);
-			this.myContextMenu.clickEvent.subscribe(this.onContextMenuClick, this.myDataTable);
-
-
-    };
+	this.myContextMenu.addItems(GetMenuContext(_submenuT));
+	this.myContextMenu.subscribe("beforeShow", onContextMenuBeforeShow);
+ 	this.myContextMenu.subscribe("hide", onContextMenuHide);
+    //Render the ContextMenu instance to the parent container of the DataTable
+    this.myContextMenu.render(container[0]);
+	this.myContextMenu.subscribe("click", onContextMenuClick, this.myDataTable);
 });
