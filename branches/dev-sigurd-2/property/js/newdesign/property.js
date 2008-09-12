@@ -4,6 +4,29 @@ YAHOO.util.Event.addListener(window, "load", function() {
 	var myDataTableTemp ;
 	var prefixSelected = "mckahstvcx";
 
+	function ActionToPHP(task,argu)
+ 	{
+  		var callback = { success:success_handler, failure:failure_handler, timeout: 10000 };
+  		var sUrl = "property/js/newdesign/CRUDTable.php";
+  		var postData = "";
+		for(cont=0; cont < argu.length; cont++)
+  		{
+   			postData = "&"+argu[cont].variable + "=" + argu[cont].value ;
+  		}
+		postData = "task="+task+postData;
+  		var request = YAHOO.util.Connect.asyncRequest('POST', sUrl, callback,postData);
+	}
+
+	function success_handler(o)
+	{
+  		window.alert(o.responseText);
+ 	}
+
+ 	function failure_handler(o)
+ 	{
+  		window.alert('Server or your connection is death.');
+ 	}
+
 
 	function create_menu_list(stValues,source) {
 		var temp1 = new Array();
@@ -71,8 +94,7 @@ YAHOO.util.Event.addListener(window, "load", function() {
                             var oRecord = p_myDataTable.getRecord(elRow);
                             if(confirm("Are you sure you want to delete ?"))
                             {
-                            	//ActionToPHP("deleteitem",[{variable:"id",value:oRecord.getData("gaards_nr")}]);
-	                            //alert(oRecord.getData("location_code"));
+                            	ActionToPHP("deleteitem",[{variable:"id",value:oRecord.getData("loc1")}]);
 	                            p_myDataTable.deleteRow(elRow);
 	                        }
 	                        break;
