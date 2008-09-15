@@ -23,28 +23,55 @@
 			}
 
 			reset($values_attribute);
+			
+			$value_set['r_tverrfaglig'] = 0;
 
 			foreach($values_attribute as $entry)
 			{
+				$risk =  $entry['value'] * $sansynlighet;
 				switch($entry['name'])
 				{
 					case 'k_beboer':
-						$value_set['r_beboer']	= $entry['value'] * $sansynlighet;
+						$value_set['r_beboer']	= $risk;
+						if($risk > $value_set['r_tverrfaglig'])
+						{
+							$value_set['r_tverrfaglig'] = $risk;
+						}
 						break;
 					case 'k_miljo':
-						$value_set['r_miljo']	= $entry['value'] * $sansynlighet;
+						$value_set['r_miljo']	= $risk;
+						if($risk > $value_set['r_tverrfaglig'])
+						{
+							$value_set['r_tverrfaglig'] = $risk;
+						}
 						break;
 					case 'k_ok_verdier':
-						$value_set['r_ok_verdier']	= $entry['value'] * $sansynlighet;
+						$value_set['r_ok_verdier']	= $risk;
+						if($risk > $value_set['r_tverrfaglig'])
+						{
+							$value_set['r_tverrfaglig'] = $risk;
+						}
 						break;
 					case 'k_drift':
-						$value_set['r_drift']	= $entry['value'] * $sansynlighet;
+						$value_set['r_drift']	= $risk;
+						if($risk > $value_set['r_tverrfaglig'])
+						{
+							$value_set['r_tverrfaglig'] = $risk;
+						}
 						break;
 					case 'k_ansatte':
-						$value_set['r_ansatte']	= $entry['value'] * $sansynlighet;
+						$value_set['r_ansatte']	= $risk;
+						if($risk > $value_set['r_tverrfaglig'])
+						{
+							$value_set['r_tverrfaglig'] = $risk;
+						}
 						break;
 					case 'k_annet':
-						$value_set['r_annet']	= $entry['value'] * $sansynlighet;
+						$value_set['r_annet']	= $risk;
+						if($risk > $value_set['r_tverrfaglig'])
+						{
+							$value_set['r_tverrfaglig'] = $risk;
+						}
 						break;
 				}
 			}
@@ -53,7 +80,4 @@
 			$db->transaction_begin();
 			$db->query("UPDATE fm_entity_2_6 set $value_set WHERE id=" . $values['id'],__LINE__,__FILE__);
 			$db->transaction_commit();
-
 		}
-
-
