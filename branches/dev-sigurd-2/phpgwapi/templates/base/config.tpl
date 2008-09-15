@@ -15,7 +15,7 @@
    
    </tr>
    <tr bgcolor="{row_off}">
-    <td>{lang_Enter_the_full_path_for_temporary_files.<br>Examples:_/tmp,_C:\TEMP}:</td>
+    <td>{lang_Enter_the_full_path_for_temporary_files.<br>Examples:_/tmp,_C:/TEMP}:</td>
     <td><input name="newsettings[temp_dir]" value="{value_temp_dir}" size="40"></td>
    </tr>
 
