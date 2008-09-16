@@ -123,7 +123,12 @@
 		function read_sessiondata()
 		{
 			$referer = parse_url(phpgw::get_var('HTTP_REFERER', 'string', 'SERVER') );
-			parse_str($referer['query'],$referer_out);
+			//cramirez@ccfirst.com validation evita NOTICE  for JSON
+			$referer_out = array();
+			if(isset($referer['query']) && is_array($referer['query'])) {
+				parse_str($referer['query'],$referer_out);
+			}
+			$self_out = array();
 			$self = parse_url(phpgw::get_var('QUERY_STRING', 'string', 'SERVER') );
 			parse_str($self['path'],$self_out);
 
@@ -575,6 +580,7 @@
 											'lookup_tenant'=>$data['lookup_tenant'],'lookup'=>$data['lookup'],
 											'district_id'=>$this->district_id,'allrows'=>$data['allrows'],
 											'status'=>$this->status,'part_of_town_id'=>$this->part_of_town_id));
+
 			$this->total_records = $this->so->total_records;
 			$this->uicols = $this->so->uicols;
 
@@ -757,7 +763,7 @@
 
 		/**
 		 * Get a list of attributes
-		 * 
+		 *
 		 * @param string $location     the name of the location
 		 *
 		 * @return array holding custom fields at this location
@@ -770,7 +776,7 @@
 
 		/**
 		 * Prepare custom attributes for ui
-		 * 
+		 *
 		 * @param array  $values    values and definitions of custom attributes
 		 * @param string $location  the name of the location
 		 * @param bool   $view_only if set - calendar listeners is not activated
