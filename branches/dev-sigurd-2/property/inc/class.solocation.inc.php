@@ -531,7 +531,9 @@
 
 			if ($filter > 0)
 			{
-				if($GLOBALS['phpgw_info']['user']['preferences']['property']['property_filter'] == 'owner')
+				//cramirez.r@ccfirst.com 16/09/08 	validacion is added to avoid notice
+				if(isset($GLOBALS['phpgw_info']['user']['preferences']['property']['property_filter']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['property_filter'] == 'owner')
+				//if($GLOBALS['phpgw_info']['user']['preferences']['property']['property_filter'] == 'owner')
 				{
 					$filtermethod .= " $where fm_owner.id='$filter' ";
 				}
