@@ -1423,10 +1423,10 @@ Tax code	property	no	MVA kode
 template	property	no	Mal
 template %1 is added	property	no	mal %1 er lagt til
 Template ID	property	no	Mal ID
-Tenant	property	no	Leieboer
+Tenant	property	no	Leietaker
 Tenant claim	property	no	Leietaker krav
 Tenant claim is not issued for project in voucher %1	property	no	Krav mot leietaker er ikke registert for prosjekt i bilag %1
-Tenant phone	property	no	Leieboer tlf
+Tenant phone	property	no	Leietaker tlf
 termination date	property	no	oppsigelse dato
 test cron	property	no	Test cron
 Text	property	no	Tekst
