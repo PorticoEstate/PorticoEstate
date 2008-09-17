@@ -2333,3 +2333,37 @@
 			return $GLOBALS['setup_info']['phpgwapi']['currentver'];
 		}
 	}
+
+	function phpgwapi_upgrade0_9_17_519()
+	{
+		$tables = array
+		(
+			'phpgw_c_roles'	=> array(),
+			'phpgw_c_src_type'	=> array(),
+			'phpgw_c_calendars'	=> array(),
+			'phpgw_c_recur_ex'	=> array(),
+			'phpgw_c_parts'	=> array(),
+			'phpgw_c_events'	=> array(),
+			'phpgw_c_alarms'	=> array(),
+			'phpgw_c_a_methofs'	=> array(),
+			'phpgw_c_part_stati'	=> array(),
+			'phpgw_c_e_notes'	=> array(),
+			'phpgw_c_cats'	=> array(),
+			'phpgw_c_resources'	=> array(),
+			'phpgw_c_status'	=> array()
+		);
+
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		foreach ( $tables as $table => $def )
+		{
+			$GLOBALS['phpgw_setup']->oProc->CreateTable($table, $def);
+		}
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$ver =& $GLOBALS['setup_info']['phpgwapi']['currentver'];
+			$ver = '0.9.17.530';
+			return $var;
+		}
+	}
