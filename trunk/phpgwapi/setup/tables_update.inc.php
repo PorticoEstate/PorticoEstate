@@ -2338,19 +2338,218 @@
 	{
 		$tables = array
 		(
-			'phpgw_c_roles'	=> array(),
-			'phpgw_c_src_type'	=> array(),
-			'phpgw_c_calendars'	=> array(),
-			'phpgw_c_recur_ex'	=> array(),
-			'phpgw_c_parts'	=> array(),
-			'phpgw_c_events'	=> array(),
-			'phpgw_c_alarms'	=> array(),
-			'phpgw_c_a_methofs'	=> array(),
-			'phpgw_c_part_stati'	=> array(),
-			'phpgw_c_e_notes'	=> array(),
-			'phpgw_c_cats'	=> array(),
-			'phpgw_c_resources'	=> array(),
-			'phpgw_c_status'	=> array()
+			'phpgw_s_roles'	=> array
+			(
+				'fd' => array
+				(
+					'id' => array('type' => 'auto', 'precision' => 4, 'nullable' => false),
+					'role' => array('type' => 'varchar', 'precision' => 100, 'nullable' => false),
+					'ical_role' => array('type' => 'varchar', 'precison' => 10, 'nullable' => false),
+					'location' => array('type' => 'int', 'precision' => 4, 'nullable' => false)
+				),
+				'pk' => array('id'),
+				'fk' => array(),
+				'ix' => array(),
+				'uc' => array()
+			),
+
+			'phpgw_s_src_type'	=> array
+			(
+				'fd' => array
+				(
+					'id' => array('type' => 'auto', 'precision' => 4, 'nullable' => false),
+					'src_type' => array('type' => 'varchar', 'precision' => 25, 'nullable' => false),
+					'descr' => array('type' => 'text', 'nullable' => false),
+					'active' => array('type' => 'int', 'precision' => 2, 'nullable' => false)
+				),
+				'pk' => array('id'),
+				'fk' => array(),
+				'ix' => array(),
+				'uc' => array()
+			),
+
+			'phpgw_s_calendars'	=> array
+			(
+				'fd' => array
+				(
+					'id' => array('type' => 'auto', 'precision' => 4, 'nullable' => false),
+					'owner_id' => array('type' => 'int', 'precision' => 4, 'nullable' => false),
+					'location_id' => array('type' => 'int', 'precision' => 4, 'nullable' => false),
+					'as_todo' => array('type' => 'int', 'precision' => 4, 'nullable' => false),
+					'src_type_id' => array('type' => 'int', 'precision' => 4, 'nullable' => false),
+					'src_url' => array('type' => 'varchar', 'precision' => 100, 'nullable' => false),
+					'active' => array('type' => 'int', 'precision' => 2, 'nullable' => false)
+				),
+				'pk' => array('id'),
+				'fk' => array(),
+				'ix' => array(),
+				'uc' => array()
+			),
+
+			'phpgw_s_recur_ex'	=> array
+			(
+				'fd' => array
+				(
+					'id' => array('type' => 'auto', 'precision' => 4, 'nullable' => false),
+					'event_id' => array('type' => 'int', 'precision' => 4, 'nullable' => false),
+					'exception_date' => array('type' => 'int', 'precision' => 4, 'nullable' => false)
+				),
+				'pk' => array('id'),
+				'fk' => array(),
+				'ix' => array(),
+				'uc' => array()
+			),
+
+			'phpgw_s_parts'	=> array
+			(
+				'fd' => array
+				(
+					'id' => array('type' => 'auto', 'precision' => 4, 'nullable' => false),
+					'event_id' => array('type' => 'int', 'precision' => 4, 'nullable' => false),
+					'contact_id' => array('type' => 'int', 'precision' => 4, 'nullable' => false),
+					'status_id' => array('type' => 'int', 'precision' => 4, 'nullable' => false),
+					'role_id' => array('type' => 'int', 'precision' => 4, 'nullable' => false),
+					'comment' => array('type' => 'text', 'nullable' => false)
+				),
+				'pk' => array('id'),
+				'fk' => array(),
+				'ix' => array(),
+				'uc' => array()
+			),
+
+			'phpgw_s_events'	=> array
+			(
+				'fd' => array
+				(
+					'id' => array('type' => 'auto', 'precision' => 4, 'nullable' => false),
+					'seq' => array('type' => 'int', 'precision' => 4, 'nullable' => false),
+					'cal_id' => array('type' => 'int', 'precision' => 4, 'nullable' => false),
+					'summary' => array('type' => 'varchar', 'precision' => 200, 'nullable' => false),
+					'descr' => array('type' => 'text', 'nullable' => false),
+					'location' => array('type' => 'varchar', 'precision' => 225, 'nullable' => false),
+					'start' => array('type' => 'int', 'precision' => 4, 'nullable' => false),
+					'end' => array('type' => 'int', 'precision' => 4, 'nullable' => false),
+					'rinterval' => array('type' => 'int', 'precision' => 4, 'nullable' => false),
+					'rdays' => array('type' => 'int', 'precision' => 4, 'nullable' => false),
+					'rend' => array('type' => 'int', 'precision' => 4, 'nullable' => false),
+					'e_status_id' => array('type' => 'int', 'precision' => 4, 'nullable' => false),
+					'priority' => array('type' => 'int', 'precision' => 4, 'nullable' => false),
+					'access' => array('type' => 'int', 'precision' => 4, 'nullable' => false),
+					'completed' => array('type' => 'int', 'precision' => 4, 'nullable' => false),
+					'geo_long' => array('type' => 'int', 'float' => 4, 'nullable' => false),
+					'geo_lat' => array('type' => 'int', 'float' => 4, 'nullable' => false),
+					'transparent' => array('type' => 'int', 'precision' => 2, 'nullable' => false),
+					'role_id' => array('type' => 'int', 'precision' => 4, 'nullable' => false),
+					'uid' => array('type' => 'varchar', 'precision' => 100, 'nullable' => false)
+				),
+				'pk' => array('id'),
+				'fk' => array(),
+				'ix' => array(),
+				'uc' => array()
+			),
+
+			'phpgw_s_alarms'	=> array
+			(
+				'fd' => array
+				(
+					'id' => array('type' => 'auto', 'precision' => 4, 'nullable' => false),
+					'participant_id' => array('type' => 'int', 'precision' => 4, 'nullable' => false),
+					'time' => array('type' => 'int', 'precision' => 4, 'nullable' => false),
+					'method_id' => array('type' => 'int', 'precision' => 4, 'nullable' => false),
+					'method_data' => array('type' => 'text', 'nullable' => false)
+				),
+				'pk' => array('id'),
+				'fk' => array(),
+				'ix' => array(),
+				'uc' => array()
+			),
+
+			'phpgw_s_alarm_methofs'	=> array
+			(
+				'fd' => array
+				(
+					'id' => array('type' => 'auto', 'precision' => 4, 'nullable' => false),
+					'summary' => array('type' => 'varchar', 'precision' => 100, 'nullable' => false),
+					'method' => array('type' => 'varchar', 'precision' => 60, 'nullable' => false)
+				),
+				'pk' => array('id'),
+				'fk' => array(),
+				'ix' => array(),
+				'uc' => array()
+			),
+
+			'phpgw_s_part_stati'	=> array
+			(
+				'fd' => array
+				(
+					'id' => array('type' => 'auto', 'precision' => 4, 'nullable' => false),
+					'status' => array('type' => 'varchar', 'precision' => 25, 'nullable' => false),
+					's_type_id' => array('type' => 'int', 'precision' => 4, 'nullable' => false)
+				),
+				'pk' => array('id'),
+				'fk' => array(),
+				'ix' => array(),
+				'uc' => array()
+			),
+
+			'phpgw_s_event_notes'	=> array
+			(
+				'fd' => array
+				(
+					'id' => array('type' => 'auto', 'precision' => 4, 'nullable' => false),
+					'event_id' => array('type' => 'int', 'precision' => 4, 'nullable' => false),
+					'contact_id' => array('type' => 'int', 'precision' => 4, 'nullable' => false),
+					'note' => array('type' => 'text', 'nullable' => false),
+					'entered' => array('type' => 'int', 'precision' => 4, 'nullable' => false)
+				),
+				'pk' => array('id'),
+				'fk' => array(),
+				'ix' => array(),
+				'uc' => array()
+			),
+
+			'phpgw_s_cats'	=> array
+			(
+				'fd' => array
+				(
+					'event_id' => array('type' => 'int', 'precision' => 4, 'nullable' => false),
+					'cat_id' => array('type' => 'int', 'precision' => 4, 'nullable' => false)
+				),
+				'pk' => array('event_id', 'cat_id'),
+				'fk' => array(),
+				'ix' => array(),
+				'uc' => array()
+			),
+
+			'phpgw_s_resources'	=> array
+			(
+				'fd' => array
+				(
+					'event_id' => array('type' => 'int', 'precision' => 4, 'nullable' => false),
+					'resource_id' => array('type' => 'int', 'precision' => 4, 'nullable' => false)
+				),
+				'pk' => array('event_id', 'resource_id'),
+				'fk' => array(),
+				'ix' => array(),
+				'uc' => array()
+			),
+
+			'phpgw_s_status'	=> array
+			(
+				'fd' => array
+				(
+					'id' => array('type' => 'auto', 'precision' => 4, 'nullable' => false),
+					'status' => array('type' => 'varchar', 'precision' => 20, 'nullable' => false),
+					'descr' => array('type' => 'text', 'nullable' => false),
+					'color' => array('type' => 'varchar', 'precision' => 6, 'nullable' => false),
+					'complete' => array('type' => 'int', 'precision' => 2, 'nullable' => false),
+					'active' => array('type' => 'int', 'precision' => 2, 'nullable' => false)
+				),
+				'pk' => array('id'),
+				'fk' => array(),
+				'ix' => array(),
+				'uc' => array()
+			)
 		);
 
 		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
@@ -2360,7 +2559,7 @@
 			$GLOBALS['phpgw_setup']->oProc->CreateTable($table, $def);
 		}
 
-		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		if ( $GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit() )
 		{
 			$ver =& $GLOBALS['setup_info']['phpgwapi']['currentver'];
 			$ver = '0.9.17.530';
