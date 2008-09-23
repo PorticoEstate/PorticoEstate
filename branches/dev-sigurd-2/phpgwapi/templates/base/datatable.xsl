@@ -290,9 +290,13 @@
 	Entrypoint for this datatable. Renders pagination and datatable.
 -->
 <xsl:template match="datatable">
-	<div class="pagination-container">
-		<xsl:apply-templates select="pagination" />
-	</div>
+	  <!--    <div class="pagination-container">
+				<xsl:apply-templates select="pagination" />
+		  </div> -->
+	 <br/>
+	 <div id="paging"> </div>
+
+
   	<div class="datatable-container">
     	<table class="datatable">
       		<xsl:apply-templates select="headers" />
