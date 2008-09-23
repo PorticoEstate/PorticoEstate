@@ -535,10 +535,10 @@
 	    		$json = array
 	    		(
 	    			'recordsReturned' 	=> $datatable['pagination']['records_returned'],
-	    			'totalRecords' 		=> $datatable['pagination']['records_total'],
-	    			'recordStartIndex' 	=> $datatable['pagination']['records_start'],
-	    			'sortKey'			=> $datatable['sorting']['order'],
-	    			'sortDir'			=> $datatable['sorting']['sort'],
+    				'totalRecords' 		=> (int)$datatable['pagination']['records_total'],
+	    			'startIndex' 		=> $datatable['pagination']['records_start'],
+	    			'sort'				=> $datatable['sorting']['order'],
+	    			'dir'				=> $datatable['sorting']['sort'],
 	    			'records'			=> array()
 
 	    		);
@@ -594,13 +594,15 @@
 			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/datatable/assets/skins/sam/datatable.css');
 
 
+
+
 			//Title of Page
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
 
-		  	if( phpgw::get_var('phpgw_return_as') != 'json' ){
+
 		  		// Prepare YUI Library
 	  			$GLOBALS['phpgw']->js->validate_file( 'newdesign', 'property', 'property' );
-		  	}
+
 
 
 			$this->save_sessiondata();
