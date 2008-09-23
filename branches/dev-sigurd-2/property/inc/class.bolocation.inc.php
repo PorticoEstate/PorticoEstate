@@ -716,8 +716,14 @@
 			return $receipt;
 		}
 
-		function delete($location_code)
+		/*function delete2($location_code)
 		{
+			$this->so->delete($location_code);
+		}*/
+
+		function delete()
+		{
+			$location_code = phpgw::get_var('location_code','string','GET');
 			$this->so->delete($location_code);
 		}
 
