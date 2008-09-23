@@ -263,6 +263,7 @@
 						$uicols['statustext'][]		= $location_types[($i-1)]['name'] . ' ' . lang('name');
 						$uicols['exchange'][]		= true;
 						$uicols['align'][] 			= 'left';
+						$uicols['datatype'][]		= 'V';
 					}
 				}
 
@@ -300,6 +301,7 @@
 					$uicols['statustext'][]		= 'dummy';
 					$uicols['exchange'][]		= true;
 					$uicols['align'][] 			= '';
+					$uicols['datatype'][]		= '';
 
 					$cols.= ',fm_tenant.last_name';
 					$cols_return[] 				= 'last_name';
@@ -309,6 +311,7 @@
 					$uicols['statustext'][]		= lang('last name');
 					$uicols['exchange'][]		= true;
 					$uicols['align'][] 			= 'left';
+					$uicols['datatype'][]		= 'V';
 
 					$cols.= ',fm_tenant.first_name';
 					$cols_return[] 				= 'first_name';
@@ -318,6 +321,7 @@
 					$uicols['statustext'][]		= lang('first name');
 					$uicols['exchange'][]		= true;
 					$uicols['align'][] 			= 'left';
+					$uicols['datatype'][]		= 'V';
 
 					$cols.= ',fm_tenant.contact_phone';
 					$cols_return[] 				= 'contact_phone';
@@ -327,6 +331,7 @@
 					$uicols['statustext'][]		= lang('contact phone');
 					$uicols['exchange'][]		= true;
 					$uicols['align'][] 			= 'left';
+					$uicols['datatype'][]		= 'V';
 
 					$sub_query_tenant=1;
 					$this->socommon->fm_cache('sub_query_tenant_'. $type_id  . '_' . $lookup_tenant . '_' . $lookup,$sub_query_tenant);
@@ -367,6 +372,7 @@
 								$uicols['statustext'][]		= lang('street name');
 								$uicols['exchange'][]		= true;
 								$uicols['align'][] 			= 'left';
+								$uicols['datatype'][]		= 'V';
 
 								$cols.= ',street_number';
 								$cols_return[] 				= 'street_number';
@@ -376,6 +382,7 @@
 								$uicols['statustext'][]		= lang('street number');
 								$uicols['exchange'][]		= true;
 								$uicols['align'][] 			= 'left';
+								$uicols['datatype'][]		= 'V';
 
 								$cols.= ',fm_location' . $config[$i]['location_type'] . '.' . $config[$i]['column_name'];
 								$cols_return[] 				= $config[$i]['column_name'];
@@ -385,6 +392,7 @@
 								$uicols['statustext'][]		= lang($config[$i]['input_text']);
 								$uicols['exchange'][]		= true;
 								$uicols['align'][] 			= '';
+								$uicols['datatype'][]		= '';
 							}
 						}
 						else
