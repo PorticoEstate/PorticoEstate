@@ -300,7 +300,11 @@
     	</table>
   	</div>
   	<xsl:call-template name="datatable-yui-definition" />
+
+
 </xsl:template>
+
+
 
 <!--
 	Template
@@ -648,7 +652,8 @@
 					label: "<xsl:value-of select="text"/>",
 					resizeable:true,
 					sortable: <xsl:value-of select="phpgw:conditional(not(sortable = 0), 'true', 'false')"/>,
-					visible: <xsl:value-of select="phpgw:conditional(not(visible = 0), 'true', 'false')"/>
+					visible: <xsl:value-of select="phpgw:conditional(not(visible = 0), 'true', 'false')"/>,
+					format: "<xsl:value-of select="format"/>"
 				}<xsl:value-of select="phpgw:conditional(not(position() = last()), ',', '')"/>
 			</xsl:for-each>
 		];
