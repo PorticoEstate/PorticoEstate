@@ -259,6 +259,12 @@
 
 		$datatable['actions']['form'] = array(
 			array(
+				'action'	=> $GLOBALS['phpgw']->link('/index.php',
+						array(
+							'menuaction' => 'property.uilocation.edit',
+							'type_id' => $type_id
+						)
+					),
 				'fields'	=> array(
                                     'field' => array(
                                         array( //boton 	CATEGORY
@@ -322,24 +328,23 @@
 			                                'type'	=> 'hidden',
 			                            	'id'	=> 'type_id',
 			                                'value'	=> $type_id
+			                            ),
+										array(
+			                                'type'	=> 'submit',
+			                            	'id'	=> 'btn_new',
+			                                'value'	=> lang('new')
 			                            )
 		                           )
 				)
 			  )
 			);
 //_debug_array($datatable);die();
-			if( !$reset_query )
-			{
-				$location_code 		= phpgw::get_var('location_code');
-				//$loc2				= phpgw::get_var('loc2');
-
-			}
-
-
 			$location_list = $this->bo->read(array('type_id'=>$type_id,'lookup_tenant'=>$lookup_tenant,'lookup'=>$lookup,'allrows'=>$this->allrows));
+			//_debug_array($location_list);die();
 
 			$uicols = $this->bo->uicols;
-//_debug_array($uicols);die();
+			//_debug_array($uicols);die();
+			//echo $uicols['name'][0];die;
 
 			$content = array();
 			$j=0;
@@ -356,6 +361,7 @@
 								$datatable['rows']['row'][$j]['column'][$i]['name'] 			= $uicols['name'][$i];
 								$datatable['rows']['row'][$j]['column'][$i]['statustext']		= lang('search');
 								$datatable['rows']['row'][$j]['column'][$i]['value']			= $location[$uicols['name'][$i]];
+								$datatable['rows']['row'][$j]['column'][$i]['format'] 			= 'link';
 								$datatable['rows']['row'][$j]['column'][$i]['link']				= $GLOBALS['phpgw']->link('/index.php',array(
 																			'menuaction'	=> 'property.uilocation.index',
 																			'query' 		=> $location['query_location'][$uicols['name'][$i]],
@@ -395,6 +401,9 @@
 					$j++;
 				}
 			}
+//		_debug_array($datatable['rows']);die;
+
+			//_debug_array($datatable);die();
 
 			if(!$lookup)
 			{
@@ -457,7 +466,12 @@
 					$datatable['headers']['header'][$i]['name'] 			= $uicols['name'][$i];
 					$datatable['headers']['header'][$i]['text'] 			= $uicols['descr'][$i];
 					$datatable['headers']['header'][$i]['visible'] 			= true;
-					//$datatable['headers']['header'][$i]['format'] 			= $this->bocommon->translate_datatype_format($uicols['datatype'][$i]);
+					$datatable['headers']['header'][$i]['format'] 			= $this->bocommon->translate_datatype_format($uicols['datatype'][$i]);
+					if($uicols['datatype'][$i] == 'link')
+					{
+						$datatable['headers']['header'][$i]['formatter']	= 'deleteFormatter';
+						$datatable['headers']['header'][$i]['actions']	= 'deleteFormatter';
+					}
 					$datatable['headers']['header'][$i]['sortable']			= false;
 					if($uicols['name'][$i]=='loc1'):
 					{
@@ -476,8 +490,15 @@
 					}
 					endif;
 				}
+				else
+				{
+					$datatable['headers']['header'][$i]['name'] 			= $uicols['name'][$i];
+					$datatable['headers']['header'][$i]['text'] 			= $uicols['descr'][$i];
+					$datatable['headers']['header'][$i]['visible'] 			= false;
+					$datatable['headers']['header'][$i]['format'] 			= 'hidden';
+				}
 			}
-
+			//_debug_array($datatable);die;
 			if($lookup)
 			{
 				$datatable['headers']['header'][$i]['width'] 			= '5%';
@@ -511,7 +532,6 @@
 		  	phpgwapi_yui::load_widget('menu');
 		  	phpgwapi_yui::load_widget('connection');
 
-
 			if($lookup)
 			{
 				$lookup_list	= $GLOBALS['phpgw']->session->appsession('lookup_name','property');
@@ -528,6 +548,7 @@
 					$function_msg					= $uicols['descr'][($type_id)];
 				}
 			}
+			//_debug_array($datatable);die;
 			//-- BEGIN--- JSON CODE ---
 			if( phpgw::get_var('phpgw_return_as') == 'json' )
 			{
@@ -551,7 +572,16 @@
 		    			$json_row = array();
 		    			foreach( $row['column'] as $column)
 		    			{
-		    				$json_row[$column['name']] = $column['value'];
+
+		    				if(isset($column['format']) && $column['format']== "link")
+		    				{
+		    					$json_row[$column['name']] = "<a href='".$column['link']."'>" .$column['value']."</a>";
+		    				}
+		    				else
+		    				{
+		    				  $json_row[$column['name']] = $column['value'];
+		    				}
+
 		    			}
 		    			$json['records'][] = $json_row;
 	    			}
@@ -606,7 +636,6 @@
 
 
 			$this->save_sessiondata();
-
 
 
 
