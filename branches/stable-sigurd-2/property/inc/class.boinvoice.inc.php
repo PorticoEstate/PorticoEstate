@@ -56,15 +56,13 @@
 			$allrows		= phpgw::get_var('allrows', 'bool');
 			$b_account_class	= phpgw::get_var('b_account_class', 'int');
 			$district_id		= phpgw::get_var('district_id', 'int');
+			$b_account			= phpgw::get_var('b_account');
 
+			$this->start			= $start ? $start : 0;
 
-			if ($start)
+			if(array_key_exists('b_account',$_POST) || array_key_exists('b_account',$_GET) )
 			{
-				$this->start=$start;
-			}
-			else
-			{
-				$this->start=0;
+				$this->b_account = $b_account;
 			}
 
 			if(isset($district_id))
@@ -174,7 +172,7 @@
 											'user_lid' => $this->user_lid,'cat_id' => $this->cat_id,
 											'start_date'=>$start_date,'end_date'=>$end_date,'vendor_id'=>$vendor_id,
 											'loc1'=>$loc1,'workorder_id'=>$workorder_id,'b_account_class' =>$b_account_class,
-											'district_id' => $district_id ));
+											'district_id' => $district_id, 'b_account' => $this->b_account ));
 
 			$this->total_records = $this->so->total_records;
 

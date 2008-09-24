@@ -60,7 +60,6 @@
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] = 'property::budget';
 
-		//	$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->nextmatchs	= CreateObject('phpgwapi.nextmatchs');
 			$this->account		= $GLOBALS['phpgw_info']['user']['account_id'];
 
@@ -68,18 +67,18 @@
 			$this->bocommon		= & $this->bo->bocommon;
 			$this->cats			= & $this->bo->cats;
 
-
 			$this->start		= $this->bo->start;
 			$this->query		= $this->bo->query;
-			$this->sort		= $this->bo->sort;
+			$this->sort			= $this->bo->sort;
 			$this->order		= $this->bo->order;
 			$this->filter		= $this->bo->filter;
 			$this->cat_id		= $this->bo->cat_id;
 			$this->allrows		= $this->bo->allrows;
 			$this->district_id	= $this->bo->district_id;
-			$this->year		= $this->bo->year;
+			$this->year			= $this->bo->year;
 			$this->grouping		= $this->bo->grouping;
 			$this->revision		= $this->bo->revision;
+			$this->details		= $this->bo->details;
 
 			$this->acl 			= & $GLOBALS['phpgw']->acl;
 
@@ -535,25 +534,28 @@
 			$GLOBALS['phpgw']->session->appsession('session_data','budget_receipt','');
 
 			$list = $this->bo->read_obligations();
-			if (isset($list) AND is_array($list))
+			if ($list)
 			{
-				$start_date = $GLOBALS['phpgw']->common->show_date(mktime(0,0,0,1,1,date("Y")),$GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']);
-				$end_date = $GLOBALS['phpgw']->common->show_date(mktime(0,0,0,12,31,date("Y")),$GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']);
+				$details = $this->details ? false : true;
+				$start_date = $GLOBALS['phpgw']->common->show_date(mktime(0,0,0,1,1,$this->year),$GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']);
+				$end_date = $GLOBALS['phpgw']->common->show_date(mktime(0,0,0,12,31,$this->year),$GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']);
 				$sum = 0;
 				foreach($list as $entry)
 				{
+					$b_account = $this->details ? $entry['b_account'] : '';
 
 					$content[] = array
 					(
 						'budget_cost'			=> number_format($entry['budget_cost'], 0, ',', ' '),
-						'grouping'			=> $entry['grouping'],
+						'b_account'				=> $entry['b_account'],
+						'link_b_account'		=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uibudget.obligations', 'year'=> $this->year, 'grouping'=> $entry['grouping'],'details' => $details, 'b_account' =>$b_account,'district_id'	=>$entry['district_id'],'cat_id' => $this->cat_id)),
 						'district_id'			=> $entry['district_id'],
 						'obligation'			=> number_format($entry['obligation'], 0, ',', ' '),
-						'link_obligation'		=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiworkorder.index', 'filter'=>'all', 'paid'=>1, 'district_id'=> $entry['district_id'], 'b_group'=> $entry['grouping'])),
+						'link_obligation'		=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiworkorder.index', 'filter'=>'all', 'paid'=>1, 'district_id'=> $entry['district_id'], 'b_group'=> $entry['grouping'], 'b_account' =>$b_account, 'start_date'=> $start_date, 'end_date'=> $end_date)),
 						'actual_cost'			=> number_format($entry['actual_cost'], 0, ',', ' '),
-						'link_actual_cost'		=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiinvoice.consume', 'district_id'=> $entry['district_id'], 'b_account_class'=> $entry['grouping'], 'start_date'=> $start_date, 'end_date'=> $end_date, 'submit_search'=>true)),
-						'diff'				=> number_format($entry['budget_cost'] - $entry['actual_cost'] - $entry['obligation'], 0, ',', ' '),
-						'hits'				=> number_format($entry['hits'], 0, ',', ' '),
+						'link_actual_cost'		=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiinvoice.consume', 'district_id'=> $entry['district_id'], 'b_account_class'=> $entry['grouping'], 'b_account' =>$b_account,  'start_date'=> $start_date, 'end_date'=> $end_date, 'submit_search'=>true)),
+						'diff'					=> number_format($entry['budget_cost'] - $entry['actual_cost'] - $entry['obligation'], 0, ',', ' '),
+						'hits'					=> number_format($entry['hits'], 0, ',', ' '),
 
 					);
 					$sum_obligation = $sum_obligation + $entry['obligation'];
@@ -582,7 +584,7 @@
 				'sort_grouping'	=> $this->nextmatchs->show_sort_order(array
 										(
 											'sort'	=> $this->sort,
-											'var'	=> 'b_group',
+											'var'	=> 'b_account',
 											'order'	=> $this->order,
 											'extra'	=> array('menuaction'	=> 'property.uibudget.obligations',
 																'district_id'	=>$this->district_id,
@@ -606,13 +608,15 @@
 			$link_data = array
 			(
 				'menuaction'	=> 'property.uibudget.obligations',
-				'sort'		=>$this->sort,
-				'order'		=>$this->order,
-				'cat_id'	=>$this->cat_id,
-				'filter'	=>$this->filter,
-				'query'		=>$this->query,
-				'district_id'	=>$this->district_id,
-				'grouping'	=>$this->grouping
+				'sort'			=> $this->sort,
+				'order'			=> $this->order,
+				'cat_id'		=> $this->cat_id,
+				'filter'		=> $this->filter,
+				'query'			=> $this->query,
+				'district_id'	=> $this->district_id,
+				'grouping'		=> $this->grouping,
+				'year'			=> $this->year,
+				'details'		=> $this->details,
 			);
 
 			$this->allrows = true;

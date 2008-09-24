@@ -441,6 +441,7 @@
 				$district_id 	= isset($data['district_id'])?$data['district_id']:'';
 				$workorder_id 	= isset($data['workorder_id']) && $data['workorder_id'] ? $data['workorder_id']:0;
 				$b_account_class = isset($data['b_account_class'])?$data['b_account_class']:'';
+				$b_account		= isset($data['b_account']) ? $data['b_account'] : '';
 			}
 //_debug_array($data);
 
@@ -477,6 +478,16 @@
 				$select_account_class=',fm_b_account.category as b_account_class';
 				$group_account_class=', spbudact_code,fm_b_account.category';
 			}
+
+			if ($b_account)
+			{
+				$filtermethod .= " {$where} fm_b_account.id = '{$b_account}'";
+				$where= 'AND';
+				$select_account_class=',fm_b_account.id as b_account_class';
+				$group_account_class=', spbudact_code,fm_b_account.id';
+
+			}
+
 
 			if ($vendor_id)
 			{

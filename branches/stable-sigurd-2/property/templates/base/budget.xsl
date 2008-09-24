@@ -882,7 +882,7 @@
 					</xsl:choose>
 				</xsl:attribute>
 				<td>
-					<xsl:value-of select="grouping"/>
+					<a href="{link_b_account}" ><xsl:value-of select="b_account"/></a>
 				</td>
 
 				<td>
