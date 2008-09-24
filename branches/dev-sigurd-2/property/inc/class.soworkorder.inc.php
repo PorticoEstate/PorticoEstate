@@ -141,9 +141,11 @@
 				$wo_hour_cat_id	= isset($data['wo_hour_cat_id']) ? $data['wo_hour_cat_id'] : '';
 				$b_group		= isset($data['b_group']) ? $data['b_group'] : '';
 				$paid			= isset($data['paid']) ? $data['paid'] : '';
+				$b_account		= isset($data['b_account']) ? $data['b_account'] : '';
+				$district_id	= isset($data['district_id']) ? $data['district_id'] : '';
 			}
 
-
+_debug_array($data);
 			$sql = $this->bocommon->fm_cache('sql_workorder'.!!$search_vendor . '_' . !!$wo_hour_cat_id . '_' . !!$b_group);
 //echo $sql;
 			if(!$sql)
@@ -331,6 +333,18 @@
 			{
 				/* 0 => cancelled, 1 => obligation , 2 => paid */
 				$filtermethod .= " $where fm_workorder.paid = $paid AND vendor_id > 0";
+				$where= 'AND';
+			}
+
+			if ($b_account)
+			{
+				$filtermethod .= " {$where} fm_workorder.account_id = '{$b_account}'";
+				$where= 'AND';
+			}
+
+			if ($district_id)
+			{
+				$filtermethod .= " {$where} district_id = {$district_id}";
 				$where= 'AND';
 			}
 

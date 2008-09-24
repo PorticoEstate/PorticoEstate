@@ -63,11 +63,10 @@
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] = 'property::project::workorder';
 
-		//	$this->currentapp			= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->nextmatchs			= CreateObject('phpgwapi.nextmatchs');
 			$this->account				= $GLOBALS['phpgw_info']['user']['account_id'];
 
-			$this->bo				= CreateObject('property.boworkorder',true);
+			$this->bo					= CreateObject('property.boworkorder',true);
 			$this->bocommon				= CreateObject('property.bocommon');
 			$this->cats					= & $this->bo->cats;
 			$this->acl 					= & $GLOBALS['phpgw']->acl;
@@ -79,18 +78,19 @@
 
 			$this->start				= $this->bo->start;
 			$this->query				= $this->bo->query;
-			$this->sort				= $this->bo->sort;
+			$this->sort					= $this->bo->sort;
 			$this->order				= $this->bo->order;
 			$this->filter				= $this->bo->filter;
 			$this->cat_id				= $this->bo->cat_id;
 			$this->status_id			= $this->bo->status_id;
-			$this->search_vendor			= $this->bo->search_vendor;
-			$this->wo_hour_cat_id			= $this->bo->wo_hour_cat_id;
+			$this->search_vendor		= $this->bo->search_vendor;
+			$this->wo_hour_cat_id		= $this->bo->wo_hour_cat_id;
 			$this->start_date			= $this->bo->start_date;
 			$this->end_date				= $this->bo->end_date;
 			$this->b_group				= $this->bo->b_group;
-			$this->paid				= $this->bo->paid;
-
+			$this->paid					= $this->bo->paid;
+			$this->b_account			= $this->bo->b_account;
+			$this->district_id			= $this->bo->district_id;
 		}
 
 		function save_sessiondata()
@@ -103,13 +103,15 @@
 				'order'				=> $this->order,
 				'filter'			=> $this->filter,
 				'cat_id'			=> $this->cat_id,
-				'search_vendor'			=> $this->search_vendor,
+				'search_vendor'		=> $this->search_vendor,
 				'status_id'			=> $this->status_id,
-				'wo_hour_cat_id'		=> $this->wo_hour_cat_id,
-				'start_date'			=> $this->start_date,
+				'wo_hour_cat_id'	=> $this->wo_hour_cat_id,
+				'start_date'		=> $this->start_date,
 				'end_date'			=> $this->end_date,
 				'b_group'			=> $this->b_group,
 				'paid'				=> $this->paid,
+				'b_account'			=> $this->b_account,
+				'district_id'		=> $this->district_id,
 			);
 			$this->bo->save_sessiondata($data);
 		}
