@@ -649,6 +649,9 @@
 
 <xsl:template name="datatable-yui-definition">
 	<script>
+		var base_java_url = "<xsl:value-of select="//datatable/config/base_java_url"/>";
+
+
 		var myColumnDefs = [
 			<xsl:for-each select="//datatable/headers/header">
 				{
@@ -657,7 +660,8 @@
 					resizeable:true,
 					sortable: <xsl:value-of select="phpgw:conditional(not(sortable = 0), 'true', 'false')"/>,
 					visible: <xsl:value-of select="phpgw:conditional(not(visible = 0), 'true', 'false')"/>,
-					format: "<xsl:value-of select="format"/>"
+					format: "<xsl:value-of select="format"/>",
+					formatter: "<xsl:value-of select="formatter"/>"
 				}<xsl:value-of select="phpgw:conditional(not(position() = last()), ',', '')"/>
 			</xsl:for-each>
 		];
