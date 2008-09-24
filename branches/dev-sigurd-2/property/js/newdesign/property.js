@@ -166,12 +166,23 @@ this.filter_data = function(query)
          init_datatable();
    }
 
+   this.onDownloadClick = function()
+   {
+		ds_download = phpGWLink('index.php',download_values );
+		window.open(ds_download,'window');
+   }
+
 
   this.init_filter = function()
   {
     //create button
      oPushButton1 = new YAHOO.widget.Button("btn_search");
      oPushButton1.on("click", onSearchClick);
+
+     oBtnExport = new YAHOO.widget.Button("btn_export");
+     oBtnExport.on("click", onDownloadClick);
+
+
     //create select controls
     hd_CatId = document.getElementById('values_cat_id');
     MenuButton4CatId = create_menu_list (hd_CatId.value,'cat_id');
@@ -309,11 +320,23 @@ table = YAHOO.util.Dom.getElementsByClassName  ( 'datatable' , 'table' );
 
 
 eval("var path_values = {"+base_java_url+"}");
+eval("var download_values = {"+download_java_url+"}");
+
+ds_download = phpGWLink('index.php',download_values );
+
+
+
 var ds;
 
 	this.buildQuery = function(strQuery)
 	{
+
+
 		path_values.query = strQuery;
+
+		myContextMenu.destroy();
+		myDataTable.destroy();
+
 		init_datatable();
 	}
 
