@@ -1,3 +1,12 @@
+this.filter_data = function(query)
+{
+	strQuery = query;
+	buildQuery(strQuery);
+	document.getElementById('txt_query').value = strQuery;
+}
+
+
+
  YAHOO.util.Event.addListener(window, "load", function() {
      var Dom = YAHOO.util.Dom;
   var oSelectedTR;
@@ -10,6 +19,7 @@
    var MenuButton4CatId, MenuButton4PartOFTownId, MenuButton4DistId, MenuButton4OwnerId = new Array();
    var array_cat_id, array_district_id, array_part_of_town_id, array_owner_list = new Array();
    var oMenuButtonCategory, oMenuButtonPartOFTown, oMenuButtonDistrict, oMenuButtonOwnerId = null;
+   var oPushButton1 = null;
 
    var menu_values_district_id, menu_values_cat_id, menu_values_part_of_town_id, menu_values_owner_list = null;
 
@@ -134,7 +144,34 @@
     }
   }
 
-  function init_filter(){
+  this.onSearchClick = function()
+  {
+
+
+      //get values of all selected controls
+        path_values.cat_id = oMenuButtonCategory.get("value");
+        path_values.district_id = oMenuButtonDistrict.get("value");
+        path_values.part_of_town_id = oMenuButtonPartOFTown.get("value");
+        path_values.filter = oMenuButtonOwnerId.get("value");
+
+        path_values.query = document.getElementById('txt_query').value;
+
+
+
+
+            myContextMenu.destroy();
+            myDataTable.destroy();
+
+            //create DataSource & ContextMenu & DataTable
+         init_datatable();
+   }
+
+
+  this.init_filter = function()
+  {
+    //create button
+     oPushButton1 = new YAHOO.widget.Button("btn_search");
+     oPushButton1.on("click", onSearchClick);
     //create select controls
     hd_CatId = document.getElementById('values_cat_id');
     MenuButton4CatId = create_menu_list (hd_CatId.value,'cat_id');
@@ -185,8 +222,6 @@
    {
      window.alert('Server or your connection is death.');
    }
-
-
 
 
    function onContextMenuBeforeShow(p_sType, p_aArgs)
@@ -271,32 +306,34 @@ var flag = 0;
 //var myColumnDefs;
 var table, myDataSource,myDataTable, myContextMenu ;
 table = YAHOO.util.Dom.getElementsByClassName  ( 'datatable' , 'table' );
-var path_values = {menuaction: "property.uilocation.index",type_id:type_id.value,status:'',cat_id:'',district_id:'',part_of_town_id:'',filter:'',query:''};
+
+
+eval("var path_values = {"+base_java_url+"}");
 var ds;
 
+	this.buildQuery = function(strQuery)
+	{
+		path_values.query = strQuery;
+		init_datatable();
+	}
 
-
-	function init_datatable()
+	this.init_datatable = function()
 	{
 		ds = phpGWLink('index.php',path_values , true);
-			//alert( ds );
 
 			myDataSource = new YAHOO.util.DataSource(ds);
 			myDataSource.responseType = YAHOO.util.DataSource.TYPE_JSON;
 
    		// Compute fields from column definitions
+
+
+
 	   	var fields = new Array();
 	   	for(var i=0; i < myColumnDefs.length;i++)
    		{
-   			if(myColumnDefs[i].format == 'link')
-   			{
-	   			fields[i] = myColumnDefs[i].key;
-   			}
-   			else
-   			{
-   				fields[i] = myColumnDefs[i].key;
-   			}
+			fields[i] = myColumnDefs[i].key;
 	   	}
+
 
 	   // When responseSchema.totalRecords is not indicated, the records
 	   // returned from the DataSource are assumed to represent the entire set
@@ -350,22 +387,33 @@ var myTableConfig = {
    myContextMenu.subscribe("hide", onContextMenuHide);
    //Render the ContextMenu instance to the parent container of the DataTable
    myContextMenu.subscribe("click", onContextMenuClick, myDataTable);
-   myDataTable.subscribe("cellClickEvent",clickHandler,myDataTable);
    myContextMenu.render(container[0]);
 
+   var oColumn = myDataTable.getColumn(0);
 
-   //this.myDataTable.getSelectedColumns();
-	//this.myDataTable.hideColumn(0);
-	for(var i=0; i < myColumnDefs.length;i++)
+	// Hide Column
+	oColumn.className = "hide_field";
+
+   for(var i=0; i < myColumnDefs.length;i++)
 	        {
 	        	if( myColumnDefs[i].sortable )
-	        	YAHOO.util.Dom.getElementsByClassName( 'yui-dt-col-'+ myColumnDefs[i].key , 'div' )[0].style.backgroundColor  = '#D4DBE7';
+	        	{
+		        	YAHOO.util.Dom.getElementsByClassName( 'yui-dt-col-'+ myColumnDefs[i].key , 'div' )[0].style.backgroundColor  = '#D4DBE7';
+	        	}
+
+	        	if( !myColumnDefs[i].visible )
+	        	{
+		        	YAHOO.util.Dom.getElementsByClassName( 'yui-dt-col-'+ myColumnDefs[i].key , 'div' )[0].style.display = 'none';
+	        	}
+
 	        }
        }
 
 
+
+	YAHOO.widget.DataTable.Formatter.myCustom = this.myCustomFormatter;
+
   init_datatable();
   init_filter();
-
 
  });
