@@ -20,31 +20,30 @@
 	$stylesheets = array();
 	if( !isset($GLOBALS['phpgw_info']['flags']['noframework']) )
 	{
-		$stylesheets = array
-		(
-			"/phpgwapi/js/yahoo/reset-fonts-grids/reset-fonts-grids.css",
-			"/phpgwapi/js/yahoo/menu/assets/skins/sam/menu.css",
-			"/phpgwapi/js/yahoo/button/assets/skins/sam/button.css",
-			"/phpgwapi/js/yahoo/tabview/assets/skins/sam/tabview.css",
-			"/phpgwapi/js/yahoo/resize/assets/skins/sam/resize.css",
-			"/phpgwapi/js/yahoo/layout/assets/skins/sam/layout.css",
-		);
-
 		phpgwapi_yui::load_widget('dragdrop');
 		phpgwapi_yui::load_widget('element');
 		phpgwapi_yui::load_widget('container');
-		phpgwapi_yui::load_widget('button');
 		phpgwapi_yui::load_widget('connection');
 		phpgwapi_yui::load_widget('resize');
 		phpgwapi_yui::load_widget('layout');
-
 		$javascripts = array
 		(
 			"/phpgwapi/js/json/json.js",
 			"/phpgwapi/templates/portico/js/base.js"
+
 		);
 	}
 
+	phpgwapi_yui::load_widget('button');
+	$stylesheets = array
+		(
+			"/phpgwapi/js/yahoo/reset-fonts-grids/reset-fonts-grids.css",
+			"/phpgwapi/js/yahoo/tabview/assets/skins/sam/tabview.css",
+			"/phpgwapi/js/yahoo/resize/assets/skins/sam/resize.css",
+			"/phpgwapi/js/yahoo/layout/assets/skins/sam/layout.css",
+		);
+	$stylesheets[] = "/phpgwapi/js/yahoo/menu/assets/skins/sam/menu.css";
+	$stylesheets[] = "/phpgwapi/js/yahoo/button/assets/skins/sam/button.css";
 	$stylesheets[] = "/phpgwapi/templates/portico/css/base.css";
 	$stylesheets[] = "/phpgwapi/templates/portico/css/{$GLOBALS['phpgw_info']['user']['preferences']['common']['theme']}.css";
 	$stylesheets[] = "/{$app}/templates/base/css/base.css";
