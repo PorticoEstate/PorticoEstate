@@ -470,12 +470,17 @@
 					$uicols['statustext'][]		= $this->db->f('statustext');
 					$uicols['datatype'][$i]		= $this->db->f('datatype');
 					$uicols['exchange'][]		= $exchange;
-					$cols_return_extra[]= array
+					$custom = array
 					(
 						'name'	=> $this->db->f('column_name'),
 						'datatype'	=> $this->db->f('datatype'),
 						'attrib_id'	=> $this->db->f('id')
 					);
+					
+					$cols_return_extra[]		= $custom;
+					
+					$uicols['cols_return_extra'][$i]	= $custom;
+					unset($custom);
 
 					//TODO: move alignment to ui
 					switch ($this->db->f('datatype'))
