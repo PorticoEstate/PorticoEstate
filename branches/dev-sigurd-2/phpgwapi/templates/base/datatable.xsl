@@ -271,15 +271,23 @@
 			</label>
 		</xsl:if>
 
-		<input id="{$id}" type="{type}" name="{name}" value="{value}" class="{type}">
-			<xsl:if test="size">
-				<xsl:attribute name="size"><xsl:value-of select="size"/></xsl:attribute>
-			</xsl:if>
+		<xsl:choose>
+			<xsl:when test="type='link'">
+				<a href="#" onclick="{url}" ><xsl:value-of select="value"/></a>
+			</xsl:when>
+			<xsl:otherwise>
+				<input id="{$id}" type="{type}" name="{name}" value="{value}" class="{type}">
+					<xsl:if test="size">
+						<xsl:attribute name="size"><xsl:value-of select="size"/></xsl:attribute>
+					</xsl:if>
 
-			<xsl:if test="type = 'checkbox' and checked = '1'">
-				<xsl:attribute name="checked">checked</xsl:attribute>
-			</xsl:if>
-		</input>
+					<xsl:if test="type = 'checkbox' and checked = '1'">
+						<xsl:attribute name="checked">checked</xsl:attribute>
+					</xsl:if>
+				</input>
+			</xsl:otherwise>
+		</xsl:choose>
+
 	</div>
 </xsl:template>
 
@@ -651,6 +659,7 @@
 	<script>
 		var base_java_url = "<xsl:value-of select="//datatable/config/base_java_url"/>";
 
+		var download_java_url = "<xsl:value-of select="//datatable/config/download_java_url"/>";
 
 		var myColumnDefs = [
 			<xsl:for-each select="//datatable/headers/header">
