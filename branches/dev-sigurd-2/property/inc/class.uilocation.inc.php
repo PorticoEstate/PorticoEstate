@@ -218,14 +218,30 @@
 			$datatable = array();
 	    	$datatable['config']['base_url'] = $GLOBALS['phpgw']->link('/index.php', array
 	    				(
-	    					'menuaction'	=> 'property.uilocation.index',
-	    					'type_id'		=> $type_id,
-	    					'query'			=> $this->query
+	    					'menuaction'			=> 'property.uilocation.index',
+	    					'type_id'        		=> $type_id,
+							'query'            		=> $this->query,
+ 	                        'district_id'        	=> $this->district_id,
+ 	                        'part_of_town_id'    	=> $this->part_of_town_id,
+ 	                        'lookup'        		=> $lookup,
+ 	                        'lookup_tenant'        	=> $lookup_tenant,
+ 	                        'lookup_name'        	=> $lookup_name,
+ 	                        'cat_id'        		=> $this->cat_id,
+ 	                        'status'        		=> $this->status
+
 	    				));
 
-			$reset_query 		= phpgw::get_var('reset_query', 'bool');
-
-
+			$datatable['config']['base_java_url'] = "menuaction:'property.uilocation.index',"
+	    											."type_id:'{$type_id}',"
+	    											."query:'{$this->query}',"
+ 	                        						."district_id: '{$this->district_id}',"
+ 	                        						."part_of_town_id:'{$this->part_of_town_id}',"
+						 	                        ."lookup:'{$lookup}',"
+ 	                        						."lookup_tenant:'{$lookup_tenant}',"
+						 	                        ."lookup_name:'{$lookup_name}',"
+						 	                        ."cat_id:'{$this->cat_id}',"
+ 	                        						."status:'{$this->status}'";
+			//_debug_array($datatable);die;
 
 			$values_cat_id  = $this->bocommon->select_category_list(array('format'=>'filter',
                                                                         'selected' => $this->cat_id,
@@ -311,17 +327,18 @@
                                             'id' 	=> 'values_owner_list',
                                             'value'	=> $this->select2String($values_owner_list)
                                         ),
-                                        array( // TEXT IMPUT
-                                            'name' 	=> 'query',
-                                            'text'	=> '',
-                                            'value'	=> '',//$query,
+   										 array( // TEXT IMPUT
+                                            'name'     => 'query',
+                                            'id'     => 'txt_query',
+                                            'text'    => '',
+                                            'value'    => '',//$query,
                                             'type' => 'text',
-                                            'size'	=> 57
+                                            'size'    => 57
                                         ),
-                                        array( //boton 	SEARCH
+                                        array( //boton     SEARCH
                                             'id' => 'btn_search',
                                             'name' => 'search',
-                                            'value'	=> lang('Search'),
+                                            'value'    => lang('Search'),
                                             'type' => 'button',
                                         ),
 										array( //hidden type_id
@@ -362,15 +379,11 @@
 								$datatable['rows']['row'][$j]['column'][$i]['statustext']		= lang('search');
 								$datatable['rows']['row'][$j]['column'][$i]['value']			= $location[$uicols['name'][$i]];
 								$datatable['rows']['row'][$j]['column'][$i]['format'] 			= 'link';
-								$datatable['rows']['row'][$j]['column'][$i]['link']				= $GLOBALS['phpgw']->link('/index.php',array(
-																			'menuaction'	=> 'property.uilocation.index',
-																			'query' 		=> $location['query_location'][$uicols['name'][$i]],
-																			'lookup'		=> $lookup,
-																			'type_id'		=> $type_id,
-																			'lookup_tenant'	=> $lookup_tenant,
-																			'lookup_name'	=> $lookup_name
-																			)
-																		);
+								$datatable['rows']['row'][$j]['column'][$i]['java_link']		= true;
+								$datatable['rows']['row'][$j]['column'][$i]['link']				= $location['query_location'][$uicols['name'][$i]];
+								$uicols['formatter'][$i] = 'myCustom';
+
+
 							}
 							else
 							{
@@ -467,12 +480,8 @@
 					$datatable['headers']['header'][$i]['text'] 			= $uicols['descr'][$i];
 					$datatable['headers']['header'][$i]['visible'] 			= true;
 					$datatable['headers']['header'][$i]['format'] 			= $this->bocommon->translate_datatype_format($uicols['datatype'][$i]);
-					if($uicols['datatype'][$i] == 'link')
-					{
-						$datatable['headers']['header'][$i]['formatter']	= 'deleteFormatter';
-						$datatable['headers']['header'][$i]['actions']	= 'deleteFormatter';
-					}
 					$datatable['headers']['header'][$i]['sortable']			= false;
+					$datatable['headers']['header'][$i]['formatter']		= $uicols['formatter'][$i];
 					if($uicols['name'][$i]=='loc1'):
 					{
 						$datatable['headers']['header'][$i]['sortable']		= true;
@@ -495,6 +504,7 @@
 					$datatable['headers']['header'][$i]['name'] 			= $uicols['name'][$i];
 					$datatable['headers']['header'][$i]['text'] 			= $uicols['descr'][$i];
 					$datatable['headers']['header'][$i]['visible'] 			= false;
+					$datatable['headers']['header'][$i]['sortable']		= false;
 					$datatable['headers']['header'][$i]['format'] 			= 'hidden';
 				}
 			}
@@ -548,8 +558,14 @@
 					$function_msg					= $uicols['descr'][($type_id)];
 				}
 			}
+
+
 			//_debug_array($datatable);die;
 			//-- BEGIN--- JSON CODE ---
+
+	    	//_debug_array($json);die;
+
+
 			if( phpgw::get_var('phpgw_return_as') == 'json' )
 			{
     		//values for Pagination
@@ -573,11 +589,14 @@
 		    			foreach( $row['column'] as $column)
 		    			{
 
-		    				if(isset($column['format']) && $column['format']== "link")
+		    				if(isset($column['format']) && $column['format']== "link" && $column['java_link']==true)
 		    				{
-		    					$json_row[$column['name']] = "<a href='".$column['link']."'>" .$column['value']."</a>";
+		    					$json_row[$column['name']] = "<a href='#' id='".$column['link']."' onclick='javascript:filter_data(this.id);'>" .$column['value']."</a>";
 		    				}
-		    				else
+		    				elseif(isset($column['format']) && $column['format']== "link")
+		    				{
+		    				  $json_row[$column['name']] = "<a href='".$column['link']."'>" .$column['value']."</a>";
+		    				}else
 		    				{
 		    				  $json_row[$column['name']] = $column['value'];
 		    				}
@@ -606,7 +625,6 @@
 	    		return $json;
 			}
 			//--- JSON CODE ---
-
 
 			// Prepare template variables and process XSLT
 			$template_vars = array();
