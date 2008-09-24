@@ -116,7 +116,7 @@
 			$summary	= phpgw::get_var('summary', 'bool', 'GET');
 			$type_id	= phpgw::get_var('type_id', 'int', 'GET');
 			$lookup 	= phpgw::get_var('lookup', 'bool');
-			$lookup_name 	= phpgw::get_var('lookup_name');
+			//$lookup_name 	= phpgw::get_var('lookup_name');
 			$lookup_tenant 	= phpgw::get_var('lookup_tenant', 'bool');
 
 			if(!$summary)
@@ -241,6 +241,21 @@
 						 	                        ."lookup_name:'{$lookup_name}',"
 						 	                        ."cat_id:'{$this->cat_id}',"
  	                        						."status:'{$this->status}'";
+
+ 	        $datatable['config']['download_java_url'] = "menuaction:'property.uilocation.download',"
+	    											."sort:'{$this->sort}',"
+	    											."order:'{$this->order}',"
+	    											."type_id:'{$type_id}',"
+	    											."query:'{$this->query}',"
+ 	                        						."district_id: '{$this->district_id}',"
+ 	                        						."part_of_town_id:'{$this->part_of_town_id}',"
+ 	                        						."filter:'{$this->filter}',"
+ 	                        						."lookup:'{$lookup}',"
+ 	                        						."lookup_tenant:'{$lookup_tenant}',"
+						 	                        ."lookup_name:'{$lookup_name}',"
+						 	                        ."cat_id:'{$this->cat_id}',"
+ 	                        						."status:'{$this->status}'";
+
 			//_debug_array($datatable);die;
 
 			$values_cat_id  = $this->bocommon->select_category_list(array('format'=>'filter',
@@ -271,6 +286,25 @@
 			array_unshift ($values_owner_list,$default_value);
 
 
+			$link_download = array
+			(
+				'menuaction'		=> 'property.uilocation.download',
+				'sort'			=> $this->sort,
+				'order'			=> $this->order,
+				'cat_id'		=> $this->cat_id,
+				'district_id'		=> $this->district_id,
+				'part_of_town_id'	=> $this->part_of_town_id,
+				'filter'		=> $this->filter,
+				'query'			=> $this->query,
+				'lookup'		=> $lookup,
+				'lookup_tenant'		=> $lookup_tenant,
+				'lookup_name'		=> $lookup_name,
+				'type_id'		=> $type_id,
+				'status'		=> $this->status,
+				'start'			=> $this->start
+			);
+
+			//$download_table	= $GLOBALS['phpgw']->link('/index.php',$link_download);
 
 
 		$datatable['actions']['form'] = array(
@@ -350,11 +384,31 @@
 			                                'type'	=> 'submit',
 			                            	'id'	=> 'btn_new',
 			                                'value'	=> lang('new')
+			                            ),
+										array(
+			                                'type'	=> 'button',
+			                            	'id'	=> 'btn_export',
+			                                'value'	=> lang('export')
+			                            ),
+										array(
+			                                'type'	=> 'link',
+			                            	'id'	=> 'btn_columns',
+			                            	'url'	=> "Javascript:window.open('".$GLOBALS['phpgw']->link('/index.php',
+											array
+														(
+															'menuaction'	=> 'property.uilocation.columns',
+															'type_id'		=> $type_id,
+															'lookup'		=> $this->lookup
+														))."','','width=300,height=600')",
+			                                'value'	=> lang('columns')
 			                            )
 		                           )
 				)
 			  )
 			);
+
+
+
 //_debug_array($datatable);die();
 			$location_list = $this->bo->read(array('type_id'=>$type_id,'lookup_tenant'=>$lookup_tenant,'lookup'=>$lookup,'allrows'=>$this->allrows));
 			//_debug_array($location_list);die();
