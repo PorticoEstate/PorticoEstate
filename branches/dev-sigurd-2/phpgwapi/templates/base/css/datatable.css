@@ -193,3 +193,9 @@ div.datatable-container table.datatable th a.sorted-desc
  overflow: hidden; /* Hide the overflow if the text label exceeds 10em in width. */
  text-overflow: ellipsis; /* IE and Safari support the ability to add ellipsis when the text label exceeds 10em in width.*/
 }
+
+.hide_field
+{
+	overflow:hidden;
+	display:none;
+}
