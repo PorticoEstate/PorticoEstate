@@ -308,6 +308,7 @@
 					$cols_return[] 				= 'last_name';
 					$uicols['input_type'][]		= 'text';
 					$uicols['name'][]			= 'last_name';
+					$uicols['datatype'][]		= 'V';
 					$uicols['descr'][]			= lang('last name');
 					$uicols['statustext'][]		= lang('last name');
 					$uicols['exchange'][]		= true;
@@ -318,6 +319,7 @@
 					$cols_return[] 				= 'first_name';
 					$uicols['input_type'][]		= 'text';
 					$uicols['name'][]			= 'first_name';
+					$uicols['datatype'][]		= 'V';
 					$uicols['descr'][]			= lang('first name');
 					$uicols['statustext'][]		= lang('first name');
 					$uicols['exchange'][]		= true;
@@ -328,6 +330,7 @@
 					$cols_return[] 				= 'contact_phone';
 					$uicols['input_type'][]		= 'text';
 					$uicols['name'][]			= 'contact_phone';
+					$uicols['datatype'][]		= 'V';
 					$uicols['descr'][]			= lang('contact phone');
 					$uicols['statustext'][]		= lang('contact phone');
 					$uicols['exchange'][]		= true;
