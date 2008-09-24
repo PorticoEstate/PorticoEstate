@@ -206,6 +206,7 @@
 				$lookup				= isset($data['lookup']) ? $data['lookup'] : '';
 				$status				= isset($data['status']) ? $data['status'] : '';
 				$part_of_town_id	= isset($data['part_of_town_id']) ? $data['part_of_town_id'] : '';
+				$dry_run			= isset($data['dry_run']) ? $data['dry_run'] : '';
 			}
 
 			if (!$type_id)
@@ -248,7 +249,7 @@
 				}
 
 				$uicols['datatype'][$type_id] = 'I'; // correct the last one
-				
+
 				$list_info = $location_types[($type_id-1)]['list_info'];
 
 				for ($i=1; $i<($type_id+1); $i++)
@@ -455,14 +456,14 @@
 					}
 					else if($this->db->f('lookup_form') == 1)
 					{
-						$exchange	= true;						
+						$exchange	= true;
 					}
 					else
 					{
 						$input_type = 'text';
 						$exchange	= false;
 					}
-					
+
 					$uicols['input_type'][]		= $input_type;
 					$uicols['name'][]			= $this->db->f('column_name');
 					$uicols['descr'][]			= $this->db->f('input_text');
@@ -475,7 +476,7 @@
 						'datatype'	=> $this->db->f('datatype'),
 						'attrib_id'	=> $this->db->f('id')
 					);
-					
+
 					//TODO: move alignment to ui
 					switch ($this->db->f('datatype'))
 					{
@@ -617,22 +618,29 @@
 			$sql .= "$filtermethod $querymethod";
 
 //echo $sql; die();
-			$this->db->query('SELECT count(*)' . substr($sql,strripos($sql,'from')),__LINE__,__FILE__);
-			$this->db->next_record();
-			$this->total_records = $this->db->f(0);
+			//cramirez.r@ccfirst.com 23/07/08 avoid retrieve data in first time, only render definition for headers (var myColumnDefs)
+			if(!$dry_run)
+			{
+					$this->db->query('SELECT count(*)' . substr($sql,strripos($sql,'from')),__LINE__,__FILE__);
+					$this->db->next_record();
+					$this->total_records = $this->db->f(0);
 
-			if(!$allrows)
-			{
-				$this->db->limit_query($sql . $ordermethod,$start,__LINE__,__FILE__);
+					if(!$allrows)
+					{
+						$this->db->limit_query($sql . $ordermethod,$start,__LINE__,__FILE__);
+					}
+					else
+					{
+						$this->db->query($sql . $ordermethod,__LINE__,__FILE__);
+					}
+					$contacts		= CreateObject('phpgwapi.contacts');
+
 			}
-			else
-			{
-				$this->db->query($sql . $ordermethod,__LINE__,__FILE__);
-			}
+
 
 			$j=0;
 			$location_count 	= $type_id-1;
-			$contacts		= CreateObject('phpgwapi.contacts');
+			//$contacts		= CreateObject('phpgwapi.contacts');
 			$location_list		= array();
 
 			while ($this->db->next_record())
