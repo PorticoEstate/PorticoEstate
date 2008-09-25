@@ -327,10 +327,11 @@ ds_download = phpGWLink('index.php',download_values );
 
 
 var ds;
+var myPaginator = null
+var flag = 0;
 
 	this.buildQuery = function(strQuery)
 	{
-
 
 		path_values.query = strQuery;
 
@@ -373,30 +374,70 @@ var ds;
 			//--- OK INICIAL --this.myDataTable = new YAHOO.widget.DataTable(container[0], myColumnDefs, this.myDataSource,{initialRequest:"&1"});
 
 			/*************** BEGIN *************************************************** */
+
+
+
+
+
+
 			    var buildQueryString = function (state,dt) {
+			       alert("no me digas");
 			        path_values.start = state.pagination.recordOffset;
+
+					myContextMenu.destroy();
+	 				myDataTable.destroy();
+
 			        init_datatable();
-			        //this.myDataTable.paginator({containers:,rowsPerPage:,currentPage:2});
-					exit();
 
 
-			    };
+			        myPaginator_config.updateOnChange = true;
 
-			    var myPaginator = new YAHOO.widget.Paginator({
+			        myDataTable.subscribe("updateOnChangeChange", myPaginator.setPage(5));
+			        myPaginator. updateVisibility  ( );
+			        //myDataTable.paginator();
+
+					//var tmp = myPaginator.initialPage;
+					//myPaginator.render();
+					//exit();
+					};
+
+
+			    var myPaginator_config = {
 			        containers         : ['paging'],
-			        pageLinks          : 10,
+			        //updateOnChange	   : true,
+			        pageLinks          : 30,
 			        rowsPerPage        : 15, //MAXIMO el PHPGW me devuelve 15 valor configurado por preferencias
-					rowsPerPageOptions : [15,30,60],
+			        rowsPerPageOptions : [15,30,60],
 			        template           : "<strong>{CurrentPageReport}</strong> {PreviousPageLink} {PageLinks} {NextPageLink} {RowsPerPageDropdown}"
-			    });
+			    }
 
-var myTableConfig = {
-			        //initialRequest         : 'startIndex=0&results=25',
-			        initialRequest         : '&1',
+
+			   myPaginator = new YAHOO.widget.Paginator(myPaginator_config);
+
+			   //myPaginator.setPage(4);
+
+			   /*if(flag != 0)
+				{
+					//myPaginator.setAttributeConfig('4',{value: 4});
+					//myPaginator._configs.initialPage.value = 4;
+
+				}
+				flag ++;*/
+
+
+
+
+
+			  var myTableConfig = {
+			        initialRequest         : '&1', //'startIndex=0&results=25'
 			        generateRequest        : buildQueryString,
 			        paginationEventHandler : YAHOO.widget.DataTable.handleDataSourcePagination,
 			        paginator              : myPaginator
 			    };
+
+
+
+
 	     myDataTable = new YAHOO.widget.DataTable(container[0], myColumnDefs, myDataSource, myTableConfig);
 
 			/* *************************************************************************** */
@@ -410,6 +451,11 @@ var myTableConfig = {
    myContextMenu.subscribe("hide", onContextMenuHide);
    //Render the ContextMenu instance to the parent container of the DataTable
    myContextMenu.subscribe("click", onContextMenuClick, myDataTable);
+   //cramirez, fire call init_datatable again before click in column
+    myDataTable.subscribe("beforeSortedByChange",beforeSorted,myDataTable);
+
+
+
    myContextMenu.render(container[0]);
 
    var oColumn = myDataTable.getColumn(0);
@@ -432,6 +478,31 @@ var myTableConfig = {
 	        }
        }
 
+
+
+function beforeSorted(p_sType, p_aArgs, p_myDataTable)
+     {
+	 path_values.order = p_sType.newValue.column.source;
+	 path_values.start = 0;
+	 if(path_values.sort == 'ASC' || path_values.sort == '')
+	 {
+	 	path_values.sort = 'DESC';
+	 }
+	 else
+	 {
+	 	path_values.sort = 'ASC';
+	 }
+
+	 //destroy actual ContextMenu & DataTable
+     myContextMenu.destroy();
+	 myDataTable.destroy();
+	 //myPaginator.destroy();
+
+	 init_datatable();
+
+
+
+     }
 
 
 	YAHOO.widget.DataTable.Formatter.myCustom = this.myCustomFormatter;
