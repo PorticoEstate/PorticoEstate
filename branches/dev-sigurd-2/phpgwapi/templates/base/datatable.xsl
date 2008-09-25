@@ -301,6 +301,19 @@
 	  <!--    <div class="pagination-container">
 				<xsl:apply-templates select="pagination" />
 		  </div> -->
+
+		<xsl:choose>
+			<xsl:when test="//exchange_values!=''">
+				<script type="text/javascript">
+					//function Exchange_values(thisform)
+					function Exchange_values(data)
+					{
+						<xsl:value-of select="//exchange_values"/>
+					}
+				</script>
+			</xsl:when>
+		</xsl:choose>
+
 	 <br/>
 	 <div id="paging"> </div>
 
