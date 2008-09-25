@@ -579,7 +579,7 @@
 											'filter' => $this->filter,'cat_id' => $this->cat_id,'type_id' => $data['type_id'],
 											'lookup_tenant'=>$data['lookup_tenant'],'lookup'=>$data['lookup'],
 											'district_id'=>$this->district_id,'allrows'=>$data['allrows'],
-											'status'=>$this->status,'part_of_town_id'=>$this->part_of_town_id));
+											'status'=>$this->status,'part_of_town_id'=>$this->part_of_town_id,'dry_run'=>$data['dry_run']));
 
 			$this->total_records = $this->so->total_records;
 			$this->uicols = $this->so->uicols;
