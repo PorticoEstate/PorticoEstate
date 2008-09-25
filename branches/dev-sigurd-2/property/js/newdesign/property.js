@@ -24,6 +24,14 @@ this.filter_data = function(query)
    var menu_values_district_id, menu_values_cat_id, menu_values_part_of_town_id, menu_values_owner_list = null;
 
 
+
+
+
+
+
+
+
+
  /********************************************************************************
  * create a array whith values strValues (..#../..#). Necesary for selected nested
  */
@@ -381,7 +389,6 @@ var flag = 0;
 
 
 			    var buildQueryString = function (state,dt) {
-			       alert("no me digas");
 			        path_values.start = state.pagination.recordOffset;
 
 					myContextMenu.destroy();
@@ -447,14 +454,34 @@ var flag = 0;
    oContextMenuItems =  myContextMenu;
 
    myContextMenu.addItems(GetMenuContext(_submenuT));
+
+   myDataTable.subscribe("rowMouseoverEvent", myDataTable.onEventHighlightRow);
+   myDataTable.subscribe("rowMouseoutEvent", myDataTable.onEventUnhighlightRow);
+   /*myDataTable.subscribe("rowClickEvent",
+   function (oArgs)
+   {
+		var elTarget = oArgs.target;
+		var oRecord = this.getRecord(elTarget);
+		alert("id is:" + oRecord.size);
+	});*/
+
+   myDataTable.subscribe("rowClickEvent",
+   function (oArgs)
+   {
+		var elTarget = oArgs.target;
+		var oRecord = this.getRecord(elTarget);
+		Exchange_values(oRecord);
+   }
+   );
+
+
    myContextMenu.subscribe("beforeShow", onContextMenuBeforeShow);
    myContextMenu.subscribe("hide", onContextMenuHide);
    //Render the ContextMenu instance to the parent container of the DataTable
    myContextMenu.subscribe("click", onContextMenuClick, myDataTable);
+
    //cramirez, fire call init_datatable again before click in column
     myDataTable.subscribe("beforeSortedByChange",beforeSorted,myDataTable);
-
-
 
    myContextMenu.render(container[0]);
 
@@ -477,7 +504,6 @@ var flag = 0;
 
 	        }
        }
-
 
 
 function beforeSorted(p_sType, p_aArgs, p_myDataTable)
@@ -511,3 +537,10 @@ function beforeSorted(p_sType, p_aArgs, p_myDataTable)
   init_filter();
 
  });
+
+
+ this.muestra = function()
+   {
+   	var oColumn = myDataTable.getRow();
+   	alert(oColumn);
+   }
