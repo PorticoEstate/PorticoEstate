@@ -670,7 +670,7 @@
 					sortable: <xsl:value-of select="phpgw:conditional(not(sortable = 0), 'true', 'false')"/>,
 					visible: <xsl:value-of select="phpgw:conditional(not(visible = 0), 'true', 'false')"/>,
 					format: "<xsl:value-of select="format"/>",
-					formatter: "<xsl:value-of select="formatter"/>"
+					formatter: "<xsl:value-of select="formatter"/>",
                     source: "<xsl:value-of select="sort_field"/>"
 				}<xsl:value-of select="phpgw:conditional(not(position() = last()), ',', '')"/>
 			</xsl:for-each>
