@@ -476,6 +476,9 @@
 
 			//_debug_array($datatable);die();
 
+
+
+
 			if(!$lookup)
 			{
 				$parameters = array
@@ -576,7 +579,36 @@
 				$datatable['headers']['header'][$i]['text']				= lang('select');
 				$datatable['headers']['header'][$i]['format'] 			= 'form';
 				$datatable['headers']['header'][$i]['sortable']			= false;
+				$input_name		= $GLOBALS['phpgw']->session->appsession('lookup_fields','property');
+
+				$function_exchange_values = '';
+				if(is_array($input_name))
+				{
+					for ($k=0;$k<count($input_name);$k++)
+					{
+						$function_exchange_values .= "opener.document.form." . $input_name[$k] . ".value = '';" ."\r\n";
+					}
+				}
+
+				for ($i=0;$i<count($uicols['name']);$i++)
+				{
+					if(isset($uicols['exchange'][$i]) && $uicols['exchange'][$i])
+					{
+						//$function_exchange_values .= 'opener.document.form.' . $uicols['name'][$i] .'.value = thisform.elements[' . $i . '].value;' ."\r\n";
+						$function_exchange_values .= 'opener.document.form.' . $uicols['name'][$i] .'.value = data.getData("location_code");' ."\r\n";
+					}
+				}
+
+
+
+
+				$function_exchange_values .='window.close()';
+
+				$datatable['exchange_values'] = $function_exchange_values;
+				//_debug_array($datatable['exchange_values']);die;
 			}
+
+			//_debug_array($datatable['exchange_values']);die;
 
 			// Pagination and sort values
 			$datatable['pagination']['records_start'] 	= (int)$this->bo->start;
