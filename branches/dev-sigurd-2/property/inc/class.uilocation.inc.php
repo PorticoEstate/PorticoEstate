@@ -146,7 +146,7 @@
 			{
 				$GLOBALS['phpgw']->preferences->account_id=$this->account;
 				$GLOBALS['phpgw']->preferences->read_repository();
-				$GLOBALS['phpgw']->preferences->add('property',location_columns_ . $this->type_id . !!$this->lookup,$values['columns'],'user');
+				$GLOBALS['phpgw']->preferences->add('property','location_columns_' . $this->type_id . !!$this->lookup,$values['columns'],'user');
 				$GLOBALS['phpgw']->preferences->save_repository();
 
 				$receipt['message'][] = array('msg' => lang('columns is updated'));
@@ -408,14 +408,18 @@
 			);
 
 
+			$location_list = array();
+			if( phpgw::get_var('phpgw_return_as') != 'json')
+			{
+				$dry_run=true;
+				//$location_list = $this->bo->read(array('type_id'=>$type_id,'lookup_tenant'=>$lookup_tenant,'lookup'=>$lookup,'allrows'=>$this->allrows));
+			}
 
-//_debug_array($datatable);die();
-			$location_list = $this->bo->read(array('type_id'=>$type_id,'lookup_tenant'=>$lookup_tenant,'lookup'=>$lookup,'allrows'=>$this->allrows));
 			//_debug_array($location_list);die();
 
+			$location_list = $this->bo->read(array('type_id'=>$type_id,'lookup_tenant'=>$lookup_tenant,'lookup'=>$lookup,'allrows'=>$this->allrows,'dry_run' =>$dry_run));
+
 			$uicols = $this->bo->uicols;
-			//_debug_array($uicols);die();
-			//echo $uicols['name'][0];die;
 
 			$content = array();
 			$j=0;
@@ -524,7 +528,8 @@
 				}
 				unset($parameters);
 			}
-
+//_debug_array($uicols);die("2");
+//_debug_array($uicols['cols_return_extra']);die;
 			$uicols_count	= count($uicols['descr']);
 			for ($i=0;$i<$uicols_count;$i++)
 			{
