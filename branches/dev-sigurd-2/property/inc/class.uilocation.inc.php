@@ -595,7 +595,18 @@
 					if(isset($uicols['exchange'][$i]) && $uicols['exchange'][$i])
 					{
 						//$function_exchange_values .= 'opener.document.form.' . $uicols['name'][$i] .'.value = thisform.elements[' . $i . '].value;' ."\r\n";
-						$function_exchange_values .= 'opener.document.form.' . $uicols['name'][$i] .'.value = data.getData("location_code");' ."\r\n";
+						$function_valida .= "var pos = data.indexOf('</a>');"."\r\n";
+						$function_valida .= "if(pos==-1){"."\r\n";
+						$function_valida .= "return data;"."\r\n";
+						$function_valida .= "}else{"."\r\n";
+						$function_valida .= "pos = data.indexOf('>');"."\r\n";
+						$function_valida .= "var valor = data.slice(pos+1);"."\r\n";
+						$function_valida .= "pos = valor.indexOf('<');"."\r\n";
+						$function_valida .= "valor = valor.slice(0,pos);"."\r\n";
+						$function_valida .= "return valor;"."\r\n";
+						$function_valida .= "}"."\r\n";
+
+						$function_exchange_values .= 'opener.document.form.' . $uicols['name'][$i] .'.value = valida(data.getData("'.$uicols['name'][$i].'"));' ."\r\n";
 					}
 				}
 
@@ -605,6 +616,7 @@
 				$function_exchange_values .='window.close()';
 
 				$datatable['exchange_values'] = $function_exchange_values;
+				$datatable['valida'] = $function_valida;
 				//_debug_array($datatable['exchange_values']);die;
 			}
 
@@ -740,7 +752,7 @@
 
 
 		  		// Prepare YUI Library
-	  			$GLOBALS['phpgw']->js->validate_file( 'newdesign', 'property', 'property' );
+	  			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'property', 'property' );
 
 
 
