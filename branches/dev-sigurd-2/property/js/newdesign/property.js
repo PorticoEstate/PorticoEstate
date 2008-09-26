@@ -5,30 +5,21 @@ this.filter_data = function(query)
 	document.getElementById('txt_query').value = strQuery;
 }
 
+ /********************************************************************************
+ *
+ */
 
-
- YAHOO.util.Event.addListener(window, "load", function() {
-     var Dom = YAHOO.util.Dom;
-  var oSelectedTR;
-  var myDataTableTemp ;
- //********************ce**********************
-
-   var type_id = YAHOO.util.Dom.get( 'type_id' );
-
-   var hd_CatId, hd_DistId, hd_PartOFTownId, hd_OwnerId = null;
-   var MenuButton4CatId, MenuButton4PartOFTownId, MenuButton4DistId, MenuButton4OwnerId = new Array();
-   var array_cat_id, array_district_id, array_part_of_town_id, array_owner_list = new Array();
-   var oMenuButtonCategory, oMenuButtonPartOFTown, oMenuButtonDistrict, oMenuButtonOwnerId = null;
-   var oPushButton1 = null;
-
-   var menu_values_district_id, menu_values_cat_id, menu_values_part_of_town_id, menu_values_owner_list = null;
-
-
-
-
-
-
-
+YAHOO.util.Event.addListener(window, "load", function() {
+	var Dom = YAHOO.util.Dom;
+	var oSelectedTR;
+	var myDataTableTemp ;
+	var type_id = YAHOO.util.Dom.get( 'type_id' );
+	var hd_CatId, hd_DistId, hd_PartOFTownId, hd_OwnerId = null;
+	var MenuButton4CatId, MenuButton4PartOFTownId, MenuButton4DistId, MenuButton4OwnerId = new Array();
+	var array_cat_id, array_district_id, array_part_of_town_id, array_owner_list = new Array();
+	var oMenuButtonCategory, oMenuButtonPartOFTown, oMenuButtonDistrict, oMenuButtonOwnerId = null;
+	var oPushButton1 = null;
+	var menu_values_district_id, menu_values_cat_id, menu_values_part_of_town_id, menu_values_owner_list = null;
 
 
 
@@ -116,42 +107,30 @@ this.filter_data = function(query)
     path_values.part_of_town_id = oMenuButtonPartOFTown.get("value");
     path_values.filter = oMenuButtonOwnerId.get("value");
 
-	  //**********nota falta el filtro texto ************
+
 		//destroy actual ContextMenu & DataTable
 	    myContextMenu.destroy();
 		myDataTable.destroy();
 
 		//create DataSource & ContextMenu & DataTable
-     init_datatable();
+    	 init_datatable();
 
-    // Update select PART OF TOWN
-    var callback ={
-      success: function(o) {
-         eval("values = "+o.responseText);
-         var new_value = values.hidden.part_of_town_id[0].value;
-         var new_id = values.hidden.part_of_town_id[0].id;
-         MenuButton4PartOFTownId = create_menu_list (new_value,'part_of_town_id');
+     	// Update select PART OF TOWN
+         MenuButton4PartOFTownId = create_menu_list (values.hidden.part_of_town_id[0].value,'part_of_town_id');
+         oMenuButtonPartOFTown.getMenu().clearContent();
+         oMenuButtonPartOFTown.getMenu().itemData = MenuButton4PartOFTownId;
+	     oMenuButtonPartOFTown.set("value",values.hidden.part_of_town_id[0].id);
 
-       try{
-       oMenuButtonPartOFTown.getMenu().clearContent();
-       oMenuButtonPartOFTown.getMenu().itemData = MenuButton4PartOFTownId;
-       }
-       catch(c)
-       { alert(c);
-       }
-	      oMenuButtonPartOFTown.set("value",new_id);
-      },
-      failure: function(o) {window.alert('Server or your connection is death.');},
-      //cache:false
-    }
 
-    try{
-        YAHOO.util.Connect.asyncRequest('URL',ds, callback);
-    }catch(c) {
-        alert(c);
-    }
+
+
+
+
   }
 
+ /********************************************************************************
+ *
+ */
   this.onSearchClick = function()
   {
 
@@ -173,14 +152,18 @@ this.filter_data = function(query)
             //create DataSource & ContextMenu & DataTable
          init_datatable();
    }
-
+ /********************************************************************************
+ *
+ */
    this.onDownloadClick = function()
    {
 		ds_download = phpGWLink('index.php',download_values );
 		window.open(ds_download,'window');
    }
 
-
+ /********************************************************************************
+ *
+ */
   this.init_filter = function()
   {
     //create button
@@ -217,8 +200,9 @@ this.filter_data = function(query)
     oMenuButtonOwnerId = new YAHOO.widget.Button("btn_owner_id", menu_values_owner_list);
  }
 
-//*************************************************************** alejandro *******************************************************************
-
+ /********************************************************************************
+ *
+ */
   function ActionToPHP(task,argu)
  	{
   		var callback = { success:success_handler, failure:failure_handler, timeout: 10000 };
@@ -231,17 +215,23 @@ this.filter_data = function(query)
 		postData = "task="+task+postData;
   		var request = YAHOO.util.Connect.asyncRequest('POST', sUrl, callback,postData);
 	}
-
+ /********************************************************************************
+ *
+ */
   function success_handler(o)
   {
      window.alert(o.responseText);
    }
-
+ /********************************************************************************
+ *
+ */
    function failure_handler(o)
    {
      window.alert('Server or your connection is death.');
    }
-
+ /********************************************************************************
+ *
+ */
 
    function onContextMenuBeforeShow(p_sType, p_aArgs)
    {
@@ -262,7 +252,9 @@ this.filter_data = function(query)
 
          }
      }
-
+ /********************************************************************************
+ *
+ */
      function onContextMenuHide(p_sType, p_aArgs) {
     if (this.getRoot() == this && oSelectedTR) {
      oSelectedTR.style.backgroundColor  = "" ;
@@ -270,7 +262,9 @@ this.filter_data = function(query)
              Dom.removeClass(oSelectedTR, prefixSelected);
       }
    }
-
+ /********************************************************************************
+ *
+ */
      function onContextMenuClick(p_sType, p_aArgs, p_myDataTable)
      {
    var task = p_aArgs[1];
@@ -305,7 +299,9 @@ this.filter_data = function(query)
             }
         };
 
-
+ /********************************************************************************
+ *
+ */
     function GetMenuContext()
   {
    return [[
@@ -321,6 +317,9 @@ this.filter_data = function(query)
              { text: "New"}]
          ];
   }
+  /********************************************************************************
+ *
+ */
 var flag = 0;
 //var myColumnDefs;
 var table, myDataSource,myDataTable, myContextMenu ;
@@ -336,8 +335,13 @@ ds_download = phpGWLink('index.php',download_values );
 
 var ds;
 var myPaginator = null
-var flag = 0;
 
+
+var myrowsPerPage, ActualValueRowsPerPageDropdown, mytotalRows;
+
+ /********************************************************************************
+ *
+ */
 	this.buildQuery = function(strQuery)
 	{
 
@@ -349,9 +353,18 @@ var flag = 0;
 		init_datatable();
 	}
 
+//*******************************************************************************
+
+
+
+
+ /********************************************************************************
+ *
+ */
 	this.init_datatable = function()
 	{
 		ds = phpGWLink('index.php',path_values , true);
+
 
 			myDataSource = new YAHOO.util.DataSource(ds);
 			myDataSource.responseType = YAHOO.util.DataSource.TYPE_JSON;
@@ -379,47 +392,58 @@ var flag = 0;
 	   };
 			var container = YAHOO.util.Dom.getElementsByClassName( 'datatable-container' , 'div' );
 
-			//--- OK INICIAL --this.myDataTable = new YAHOO.widget.DataTable(container[0], myColumnDefs, this.myDataSource,{initialRequest:"&1"});
-
 			/*************** BEGIN *************************************************** */
+			  		var callback2 ={
+				      success: function(o) {
+				      			//eval('var values = '+o.responseText);
+				      },
+					  failure: function(o) {window.alert('Server or your connection is death.')}
+				    }
+				    try{
+				        //YAHOO.util.Connect.asyncRequest('URL',ds,callback2);
+				        var obj_ds = YAHOO.util.Connect.asyncRequest('URL',ds,callback2);
+						eval('var values ='+obj_ds.conn.responseText);
+				    }catch(c) {}
 
-
-
-
-
+				if(flag==0) {
+				myrowsPerPage = values.recordsReturned;
+				ActualValueRowsPerPageDropdown = values.recordsReturned;
+			    mytotalRows = values.totalRecords;
+			    }
+			    flag++;
 
 			    var buildQueryString = function (state,dt) {
 			        path_values.start = state.pagination.recordOffset;
+					//se usara para configurar el Dropdown
+					ActualValueRowsPerPageDropdown = state.pagination.rowsPerPage;
 
+					if(state.pagination.rowsPerPage==values.totalRecords)
+					{
+					path_values.allrows = 1
+					}
+					else
+					{
+					path_values.allrows = '';
+					}
 					myContextMenu.destroy();
 	 				myDataTable.destroy();
 
 			        init_datatable();
 
-
-			        myPaginator_config.updateOnChange = true;
-
-			        myDataTable.subscribe("updateOnChangeChange", myPaginator.setPage(5));
-			        myPaginator. updateVisibility  ( );
-			        //myDataTable.paginator();
-
-					//var tmp = myPaginator.initialPage;
-					//myPaginator.render();
-					//exit();
+					exit();
 					};
 
+			   myPaginator = new YAHOO.widget.Paginator({
+						        containers         : ['paging'],
+						        //updateOnChange	   : true,
+						        pageLinks          : 5,
+						        rowsPerPage        : ActualValueRowsPerPageDropdown, //MAXIMO el PHPGW me devuelve 15 valor configurado por preferencias
+						        rowsPerPageOptions : [myrowsPerPage,mytotalRows],
+						         //template          : " {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}ooo {RowsPerPageDropdown} records"
+						         template          : "{RowsPerPageDropdown}records&nbsp;&nbsp;<strong>Pages:</strong>{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}",
+						         pageReportTemplate : "Showing items {start} - {endIndex} of {totalRecords}"
+						    });
 
-			    var myPaginator_config = {
-			        containers         : ['paging'],
-			        //updateOnChange	   : true,
-			        pageLinks          : 30,
-			        rowsPerPage        : 15, //MAXIMO el PHPGW me devuelve 15 valor configurado por preferencias
-			        rowsPerPageOptions : [15,30,60],
-			        template           : "<strong>{CurrentPageReport}</strong> {PreviousPageLink} {PageLinks} {NextPageLink} {RowsPerPageDropdown}"
-			    }
-
-
-			   myPaginator = new YAHOO.widget.Paginator(myPaginator_config);
 
 			  var myTableConfig = {
 			        initialRequest         : '&1', //'startIndex=0&results=25'
@@ -462,7 +486,17 @@ var flag = 0;
    myContextMenu.subscribe("click", onContextMenuClick, myDataTable);
 
    //cramirez, fire call init_datatable again before click in column
-    myDataTable.subscribe("beforeSortedByChange",beforeSorted,myDataTable);
+    myDataTable.subscribe("beforeSortedByChange",beforeSorted);
+
+    //myPaginator.subscribe("beforeRowsPerPageChange",dummy);
+
+
+
+
+
+
+
+
 
    myContextMenu.render(container[0]);
 
@@ -486,8 +520,11 @@ var flag = 0;
 	        }
        }
 
+ /********************************************************************************
+ *
+ */
 
-function beforeSorted(p_sType, p_aArgs, p_myDataTable)
+this.beforeSorted = function(p_sType)
      {
 	 path_values.order = p_sType.newValue.column.source;
 	 path_values.start = 0;
@@ -507,10 +544,16 @@ function beforeSorted(p_sType, p_aArgs, p_myDataTable)
 
 	 init_datatable();
 
+    }
+   /********************************************************************************
+ *
+ */
+   this.dummy = function(p_sType)
+	{
+	 alert("hola");
+	}
 
-
-     }
-
+//----------------------------------------------------------------------------------------
 
 	YAHOO.widget.DataTable.Formatter.myCustom = this.myCustomFormatter;
 
@@ -519,7 +562,9 @@ function beforeSorted(p_sType, p_aArgs, p_myDataTable)
 
  });
 
-
+ /********************************************************************************
+ *
+ */
  this.muestra = function()
    {
    	var oColumn = myDataTable.getRow();
