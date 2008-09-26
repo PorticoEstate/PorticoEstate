@@ -421,20 +421,6 @@ var flag = 0;
 
 			   myPaginator = new YAHOO.widget.Paginator(myPaginator_config);
 
-			   //myPaginator.setPage(4);
-
-			   /*if(flag != 0)
-				{
-					//myPaginator.setAttributeConfig('4',{value: 4});
-					//myPaginator._configs.initialPage.value = 4;
-
-				}
-				flag ++;*/
-
-
-
-
-
 			  var myTableConfig = {
 			        initialRequest         : '&1', //'startIndex=0&results=25'
 			        generateRequest        : buildQueryString,
@@ -457,13 +443,6 @@ var flag = 0;
 
    myDataTable.subscribe("rowMouseoverEvent", myDataTable.onEventHighlightRow);
    myDataTable.subscribe("rowMouseoutEvent", myDataTable.onEventUnhighlightRow);
-   /*myDataTable.subscribe("rowClickEvent",
-   function (oArgs)
-   {
-		var elTarget = oArgs.target;
-		var oRecord = this.getRecord(elTarget);
-		alert("id is:" + oRecord.size);
-	});*/
 
    myDataTable.subscribe("rowClickEvent",
    function (oArgs)
@@ -473,6 +452,8 @@ var flag = 0;
 		Exchange_values(oRecord);
    }
    );
+
+
 
 
    myContextMenu.subscribe("beforeShow", onContextMenuBeforeShow);
