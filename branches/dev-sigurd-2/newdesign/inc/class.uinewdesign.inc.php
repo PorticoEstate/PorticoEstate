@@ -395,4 +395,156 @@
       */
     }
 
+/**
+    * TODO document me
+    */
+    function index()
+    {
+      $GLOBALS['phpgw_info']['flags']['menu_selection'] = 'newdesign::form';
+      $output = "html";
+
+      if ( !isset($GLOBALS['phpgw']->css) || !is_object($GLOBALS['phpgw']->css) )
+      {
+        $GLOBALS['phpgw']->css = createObject('phpgwapi.css');
+      }
+
+	  $GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/build/assets/skins/sam/autocomplete.css');
+      $GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/build/assets/skins/sam/calendar.css');
+      $GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/build/assets/skins/sam/tabview.css');
+
+      phpgwapi_yui::load_widget('calendar');
+      phpgwapi_yui::load_widget('tabview');
+      phpgwapi_yui::load_widget('autocomplete');
+
+      $GLOBALS['phpgw']->js->validate_file( 'newdesign', 'form', $this->currentapp );
+
+
+      $data = array
+      (
+        'form' => array
+        (
+          'title' => 'New Property',
+          'action' => "testaction",
+          'fieldset' => array
+          (
+            array(
+              'field' => array
+              (
+                array
+                (
+                  'title' => 'Property',
+                  'accesskey' => 'P',
+                  'tooltip' => 'Please enter property code',
+                  'required' => true
+                  /*'error' => 'This field can not be empty!'*/
+                ),
+                array
+                (
+                  'title' => lang('Name'),
+                  'accesskey' => 'N',
+                  'name' => 'lastname',
+                  'tooltip' => 'Please enter property name'
+                ),
+                array
+                (
+                  'title' => lang('Category'),
+                  'accesskey' => 'C',
+                  'name' => 'username',
+                  'required' => true
+                ),
+                array
+                (
+                  'title' => 'Part of town',
+                  'accesskey' => 'a',
+                  'name' => 'password',
+                  'type' => 'password',
+                  'maxlength' => 8,
+                  'required' => true
+                ),
+                array
+                (
+                  'title' => 'Owner',
+                  'accesskey' => 'O',
+                  'required' => true
+                ),
+                array
+                (
+                	'title' => 'Remark',
+                	'accesskey' => 'R',
+                	'type' => 'textarea'
+                )
+              )
+            )
+            /*
+            array
+            (
+              'field' => array
+              (
+                array
+                (
+                  'title' => 'Birthday',
+                  'value' => '12/12/2007',
+                  'tooltip' => 'Enter your birthday',
+                  'type' => 'date',
+                  'required' => 'true'
+                ),
+                array
+                (
+                  'title' => 'Password',
+                  'password' => 'Password',
+                  'type' => 'password'
+                ),
+                array
+                (
+                  'title' => 'Readonly',
+                  'tooltip' => 'You can only read this one',
+                  'readonly' => true,
+                  'value' => 'This is readonly',
+                  'error' => 'This is readonly'
+                ),
+                array
+                (
+                  'title' => 'disabled',
+                  'disabled' => true,
+                  'value' => 'disabled'
+                ),
+                array
+                (
+                  'title' => 'Spam?',
+                  'type' => 'checkbox',
+                  'tooltip' => 'Do you want spam?',
+                  'value' => 'checked'
+                ),
+                array
+                (
+                  'title' => 'Textarea',
+                  'type' => 'textarea'
+                )
+              )
+            ),
+            array
+            (
+              'title' => 'Last one',
+              'field' => array
+              (
+                array
+                (
+                  'title' => lang('Another one')
+                )
+              )
+            )
+			*/
+          )
+        )
+      );
+
+      $this->menu->sub = $output;
+      $links = $this->menu->links();
+
+      $GLOBALS['phpgw']->xslttpl->add_file(array('common', 'form'));
+      $GLOBALS['phpgw']->xslttpl->set_var('phpgw', $data);
+      //$GLOBALS['phpgw']->xslttpl->set_xml("<test></test>");
+    }
+
+
   }
