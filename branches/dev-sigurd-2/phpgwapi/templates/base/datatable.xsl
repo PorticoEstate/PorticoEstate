@@ -688,5 +688,6 @@
 				}<xsl:value-of select="phpgw:conditional(not(position() = last()), ',', '')"/>
 			</xsl:for-each>
 		];
+
 	</script>
 </xsl:template>
