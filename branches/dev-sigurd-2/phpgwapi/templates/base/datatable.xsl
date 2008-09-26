@@ -306,6 +306,11 @@
 			<xsl:when test="//exchange_values!=''">
 				<script type="text/javascript">
 					//function Exchange_values(thisform)
+					function valida(data)
+					{
+						<xsl:value-of select="//valida"/>
+					}
+
 					function Exchange_values(data)
 					{
 						<xsl:value-of select="//exchange_values"/>
