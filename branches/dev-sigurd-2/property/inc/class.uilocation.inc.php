@@ -367,7 +367,7 @@
                                             'text'    => '',
                                             'value'    => '',//$query,
                                             'type' => 'text',
-                                            'size'    => 57
+                                            'size'    => 25
                                         ),
                                         array( //boton     SEARCH
                                             'id' => 'btn_search',
@@ -676,7 +676,7 @@
 	    		(
 	    			'recordsReturned' 	=> $datatable['pagination']['records_returned'],
     				'totalRecords' 		=> (int)$datatable['pagination']['records_total'],
-	    			'startIndex' 		=> $datatable['pagination']['records_start'],
+	    			'start' 		=> $datatable['pagination']['records_start'],
 	    			'sort'				=> $datatable['sorting']['order'],
 	    			'dir'				=> $datatable['sorting']['sort'],
 	    			'records'			=> array()
