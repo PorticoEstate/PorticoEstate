@@ -141,15 +141,14 @@
 					'url'	=>  $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'newdesign.uinewdesign.gab','output'=>'html', 'type_id' => 1 )),
 					'image' => array('newdesign', 'table')
 				)
-				/*
-				,
+								,
 				'form'	=> array
 				(
-					'text'	=> 'Property',
+					'text'	=> 'Form',
 					'url'	=>  $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'newdesign.uinewdesign.index','output'=>'html')),
 					'image' => array('property', 'navbar')
 				),
-				'location'	=> array
+				/*'location'	=> array
 				(
 					'text'	=> 'Location',
 					'url'	=>  $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'newdesign.uinewdesign.location','output'=>'html')),
