@@ -395,129 +395,122 @@ var myrowsPerPage, ActualValueRowsPerPageDropdown, mytotalRows;
 			/*************** BEGIN *************************************************** */
 			  		var callback2 ={
 				      success: function(o) {
-				      			//eval('var values = '+o.responseText);
+												eval('var values ='+o.responseText);
+												if(flag==0) {
+													myrowsPerPage = values.recordsReturned;
+													ActualValueRowsPerPageDropdown = values.recordsReturned;
+												    mytotalRows = values.totalRecords;
+												    }
+												    flag++;
+
+												    var buildQueryString = function (state,dt) {
+												        path_values.start = state.pagination.recordOffset;
+														//se usara para configurar el Dropdown
+														ActualValueRowsPerPageDropdown = state.pagination.rowsPerPage;
+
+														if(state.pagination.rowsPerPage==values.totalRecords)
+														{
+														path_values.allrows = 1
+														}
+														else
+														{
+														path_values.allrows = '';
+														}
+														myContextMenu.destroy();
+										 				myDataTable.destroy();
+
+												        init_datatable();
+
+														exit();
+														};
+
+												   myPaginator = new YAHOO.widget.Paginator({
+															        containers         : ['paging'],
+															        //updateOnChange	   : true,
+															        pageLinks          : 5,
+															        rowsPerPage        : ActualValueRowsPerPageDropdown, //MAXIMO el PHPGW me devuelve 15 valor configurado por preferencias
+															        rowsPerPageOptions : [myrowsPerPage,mytotalRows],
+															         //template          : " {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}ooo {RowsPerPageDropdown} records"
+															         template          : "{RowsPerPageDropdown}records&nbsp;&nbsp;<strong>Pages:</strong>{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}",
+															         pageReportTemplate : "Showing items {start} - {endIndex} of {totalRecords}"
+															    });
+
+
+												  var myTableConfig = {
+												        initialRequest         : '&1', //'startIndex=0&results=25'
+												        generateRequest        : buildQueryString,
+												        paginationEventHandler : YAHOO.widget.DataTable.handleDataSourcePagination,
+												        paginator              : myPaginator
+												    };
+
+
+
+
+													     myDataTable = new YAHOO.widget.DataTable(container[0], myColumnDefs, myDataSource, myTableConfig);
+
+															/* *************************************************************************** */
+
+												   myContextMenu = new YAHOO.widget.ContextMenu("mycontextmenu", {trigger:myDataTable.getTbodyEl()});
+												   var _submenuT = new YAHOO.widget.ContextMenu("mycontextmenu", {trigger:myDataTable.getTbodyEl()});
+												   oContextMenuItems =  myContextMenu;
+
+												   myContextMenu.addItems(GetMenuContext(_submenuT));
+
+												   myDataTable.subscribe("rowMouseoverEvent", myDataTable.onEventHighlightRow);
+												   myDataTable.subscribe("rowMouseoutEvent", myDataTable.onEventUnhighlightRow);
+
+												   myDataTable.subscribe("rowClickEvent",
+												   function (oArgs)
+												   {
+														var elTarget = oArgs.target;
+														var oRecord = this.getRecord(elTarget);
+														Exchange_values(oRecord);
+												   }
+												   );
+
+
+
+
+													   myContextMenu.subscribe("beforeShow", onContextMenuBeforeShow);
+													   myContextMenu.subscribe("hide", onContextMenuHide);
+													   //Render the ContextMenu instance to the parent container of the DataTable
+													   myContextMenu.subscribe("click", onContextMenuClick, myDataTable);
+
+													   //cramirez, fire call init_datatable again before click in column
+													    myDataTable.subscribe("beforeSortedByChange",beforeSorted);
+
+													    //myPaginator.subscribe("beforeRowsPerPageChange",dummy);
+
+														   myContextMenu.render(container[0]);
+
+														   var oColumn = myDataTable.getColumn(0);
+
+															// Hide Column
+															oColumn.className = "hide_field";
+
+														   for(var i=0; i < myColumnDefs.length;i++)
+															        {
+															        	if( myColumnDefs[i].sortable )
+															        	{
+																        	YAHOO.util.Dom.getElementsByClassName( 'yui-dt-col-'+ myColumnDefs[i].key , 'div' )[0].style.backgroundColor  = '#D4DBE7';
+															        	}
+
+															        	if( !myColumnDefs[i].visible )
+															        	{
+																        	YAHOO.util.Dom.getElementsByClassName( 'yui-dt-col-'+ myColumnDefs[i].key , 'div' )[0].style.display = 'none';
+															        	}
+
+															        }
 				      },
 					  failure: function(o) {window.alert('Server or your connection is death.')}
 				    }
 				    try{
 				        //YAHOO.util.Connect.asyncRequest('URL',ds,callback2);
 				        var obj_ds = YAHOO.util.Connect.asyncRequest('URL',ds,callback2);
-						eval('var values ='+obj_ds.conn.responseText);
+
 				    }catch(c) {}
 
-				if(flag==0) {
-				myrowsPerPage = values.recordsReturned;
-				ActualValueRowsPerPageDropdown = values.recordsReturned;
-			    mytotalRows = values.totalRecords;
-			    }
-			    flag++;
 
-			    var buildQueryString = function (state,dt) {
-			        path_values.start = state.pagination.recordOffset;
-					//se usara para configurar el Dropdown
-					ActualValueRowsPerPageDropdown = state.pagination.rowsPerPage;
-
-					if(state.pagination.rowsPerPage==values.totalRecords)
-					{
-					path_values.allrows = 1
-					}
-					else
-					{
-					path_values.allrows = '';
-					}
-					myContextMenu.destroy();
-	 				myDataTable.destroy();
-
-			        init_datatable();
-
-					exit();
-					};
-
-			   myPaginator = new YAHOO.widget.Paginator({
-						        containers         : ['paging'],
-						        //updateOnChange	   : true,
-						        pageLinks          : 5,
-						        rowsPerPage        : ActualValueRowsPerPageDropdown, //MAXIMO el PHPGW me devuelve 15 valor configurado por preferencias
-						        rowsPerPageOptions : [myrowsPerPage,mytotalRows],
-						         //template          : " {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}ooo {RowsPerPageDropdown} records"
-						         template          : "{RowsPerPageDropdown}records&nbsp;&nbsp;<strong>Pages:</strong>{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}",
-						         pageReportTemplate : "Showing items {start} - {endIndex} of {totalRecords}"
-						    });
-
-
-			  var myTableConfig = {
-			        initialRequest         : '&1', //'startIndex=0&results=25'
-			        generateRequest        : buildQueryString,
-			        paginationEventHandler : YAHOO.widget.DataTable.handleDataSourcePagination,
-			        paginator              : myPaginator
-			    };
-
-
-
-
-	     myDataTable = new YAHOO.widget.DataTable(container[0], myColumnDefs, myDataSource, myTableConfig);
-
-			/* *************************************************************************** */
-
-   myContextMenu = new YAHOO.widget.ContextMenu("mycontextmenu", {trigger:myDataTable.getTbodyEl()});
-   var _submenuT = new YAHOO.widget.ContextMenu("mycontextmenu", {trigger:myDataTable.getTbodyEl()});
-   oContextMenuItems =  myContextMenu;
-
-   myContextMenu.addItems(GetMenuContext(_submenuT));
-
-   myDataTable.subscribe("rowMouseoverEvent", myDataTable.onEventHighlightRow);
-   myDataTable.subscribe("rowMouseoutEvent", myDataTable.onEventUnhighlightRow);
-
-   myDataTable.subscribe("rowClickEvent",
-   function (oArgs)
-   {
-		var elTarget = oArgs.target;
-		var oRecord = this.getRecord(elTarget);
-		Exchange_values(oRecord);
-   }
-   );
-
-
-
-
-   myContextMenu.subscribe("beforeShow", onContextMenuBeforeShow);
-   myContextMenu.subscribe("hide", onContextMenuHide);
-   //Render the ContextMenu instance to the parent container of the DataTable
-   myContextMenu.subscribe("click", onContextMenuClick, myDataTable);
-
-   //cramirez, fire call init_datatable again before click in column
-    myDataTable.subscribe("beforeSortedByChange",beforeSorted);
-
-    //myPaginator.subscribe("beforeRowsPerPageChange",dummy);
-
-
-
-
-
-
-
-
-
-   myContextMenu.render(container[0]);
-
-   var oColumn = myDataTable.getColumn(0);
-
-	// Hide Column
-	oColumn.className = "hide_field";
-
-   for(var i=0; i < myColumnDefs.length;i++)
-	        {
-	        	if( myColumnDefs[i].sortable )
-	        	{
-		        	YAHOO.util.Dom.getElementsByClassName( 'yui-dt-col-'+ myColumnDefs[i].key , 'div' )[0].style.backgroundColor  = '#D4DBE7';
-	        	}
-
-	        	if( !myColumnDefs[i].visible )
-	        	{
-		        	YAHOO.util.Dom.getElementsByClassName( 'yui-dt-col-'+ myColumnDefs[i].key , 'div' )[0].style.display = 'none';
-	        	}
-
-	        }
        }
 
  /********************************************************************************
