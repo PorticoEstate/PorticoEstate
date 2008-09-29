@@ -240,6 +240,7 @@
  	                        						."lookup_tenant:'{$lookup_tenant}',"
 						 	                        ."lookup_name:'{$lookup_name}',"
 						 	                        ."cat_id:'{$this->cat_id}',"
+						 	                        //."start:'{$this->start}',"
  	                        						."status:'{$this->status}'";
 
  	        $datatable['config']['download_java_url'] = "menuaction:'property.uilocation.download',"
