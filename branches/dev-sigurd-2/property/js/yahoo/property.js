@@ -71,41 +71,43 @@ YAHOO.util.Event.addListener(window, "load", function() {
  * p_oItem[2]:variable-name GET
  * p_oItem[3]:order option of the select
  */
-   function onMenuItemClick(p_sType, p_aArgs, p_oItem) {
-    //create objet URL whith filter-values empty
-    //path_values =  {menuaction: "property.uilocation.index", type_id: type_id.value, status:'', cat_id:'', district_id:'', part_of_town_id:'', filter:'', query:''};
+   function onMenuItemClick(p_sType, p_aArgs, p_oItem)
+   {
+	    if(p_oItem[2]=='cat_id')
+	    {
+		     //assign label to control selected
+		     oMenuButtonCategory.set("label", ("<em>" + p_oItem[1] + "</em>"));
+		     //use field ID for put the value selected
+		     oMenuButtonCategory.set("value", p_oItem[0]);
+		     //assign filter-values
+		     path_values.cat_id = p_oItem[0];
+	    }
+	    if(p_oItem[2]=='district_id'){
+		     oMenuButtonDistrict.set("label", ("<em>" + p_oItem[1] + "</em>"));
+		     oMenuButtonDistrict.set("value", p_oItem[0]);
+		     path_values.district_id = p_oItem[0];
+		     //set default-value for 'part_of_town'
+		     oMenuButtonPartOFTown.set("value", ("<em>" + array_part_of_town_id[0][0]+ "</em>"));
+		     oMenuButtonPartOFTown.set("label", array_part_of_town_id[0][1]);
 
-    if(p_oItem[2]=='cat_id')
-    {
-     //assign label to control selected
-     oMenuButtonCategory.set("label", ("<em>" + p_oItem[1] + "</em>"));
-     //use field ID for put the value selected
-     oMenuButtonCategory.set("value", p_oItem[0]);
-          //assign filter-values
-          path_values.cat_id = p_oItem[0];
-    }
-    if(p_oItem[2]=='district_id'){
-     oMenuButtonDistrict.set("label", ("<em>" + p_oItem[1] + "</em>"));
-     oMenuButtonDistrict.set("value", p_oItem[0]);
-     path_values.district_id = p_oItem[0];
-     }
-    if(p_oItem[2]=='part_of_town_id'){
-     oMenuButtonPartOFTown.set("label", ("<em>" + p_oItem[1] + "</em>"));
-     oMenuButtonPartOFTown.set("value", p_oItem[0]);
-     path_values.part_of_town_id = p_oItem[0];
-     }
-    if(p_oItem[2]=='filter'){
-     oMenuButtonOwnerId.set("label", ("<em>" + p_oItem[1] + "</em>"));
-     oMenuButtonOwnerId.set("value", p_oItem[0]);
-     path_values.filter = p_oItem[0];
+	     }
+	    if(p_oItem[2]=='part_of_town_id'){
+		     oMenuButtonPartOFTown.set("label", ("<em>" + p_oItem[1] + "</em>"));
+		     oMenuButtonPartOFTown.set("value", p_oItem[0]);
+		     path_values.part_of_town_id = p_oItem[0];
+	     }
+	    if(p_oItem[2]=='filter'){
+		     oMenuButtonOwnerId.set("label", ("<em>" + p_oItem[1] + "</em>"));
+		     oMenuButtonOwnerId.set("value", p_oItem[0]);
+		     path_values.filter = p_oItem[0];
 
-     }
+	     }
 
-  //get values of all selected controls
-    path_values.cat_id = oMenuButtonCategory.get("value");
-    path_values.district_id = oMenuButtonDistrict.get("value");
-    path_values.part_of_town_id = oMenuButtonPartOFTown.get("value");
-    path_values.filter = oMenuButtonOwnerId.get("value");
+	    //get values of all selected controls
+	    path_values.cat_id = oMenuButtonCategory.get("value");
+	    path_values.district_id = oMenuButtonDistrict.get("value");
+	    path_values.part_of_town_id = oMenuButtonPartOFTown.get("value");
+	    path_values.filter = oMenuButtonOwnerId.get("value");
 
 
 		//destroy actual ContextMenu & DataTable
@@ -113,18 +115,13 @@ YAHOO.util.Event.addListener(window, "load", function() {
 		myDataTable.destroy();
 
 		//create DataSource & ContextMenu & DataTable
-    	 init_datatable();
+	   	init_datatable();
 
-     	// Update select PART OF TOWN
-         MenuButton4PartOFTownId = create_menu_list (values.hidden.part_of_town_id[0].value,'part_of_town_id');
-         oMenuButtonPartOFTown.getMenu().clearContent();
-         oMenuButtonPartOFTown.getMenu().itemData = MenuButton4PartOFTownId;
-	     oMenuButtonPartOFTown.set("value",values.hidden.part_of_town_id[0].id);
-
-
-
-
-
+	   	//Update select PART OF TOWN
+	    MenuButton4PartOFTownId = create_menu_list (values.hidden.part_of_town_id[0].value,'part_of_town_id');
+	    oMenuButtonPartOFTown.getMenu().clearContent();
+	    oMenuButtonPartOFTown.getMenu().itemData = MenuButton4PartOFTownId;
+	    oMenuButtonPartOFTown.set("value",values.hidden.part_of_town_id[0].id);
 
   }
 
@@ -133,8 +130,6 @@ YAHOO.util.Event.addListener(window, "load", function() {
  */
   this.onSearchClick = function()
   {
-
-
       //get values of all selected controls
         path_values.cat_id = oMenuButtonCategory.get("value");
         path_values.district_id = oMenuButtonDistrict.get("value");
@@ -143,13 +138,10 @@ YAHOO.util.Event.addListener(window, "load", function() {
 
         path_values.query = document.getElementById('txt_query').value;
 
+         myContextMenu.destroy();
+         myDataTable.destroy();
 
-
-
-            myContextMenu.destroy();
-            myDataTable.destroy();
-
-            //create DataSource & ContextMenu & DataTable
+         //create DataSource & ContextMenu & DataTable
          init_datatable();
    }
  /********************************************************************************
@@ -248,8 +240,6 @@ YAHOO.util.Event.addListener(window, "load", function() {
     oSelectedTR.style.backgroundColor  = 'blue' ;
              oSelectedTR.style.color = "white";
              YAHOO.util.Dom.addClass(oSelectedTR, prefixSelected);
-             //alert(YAHOO.util.Dom.get(oSelectedTR).className);
-
          }
      }
  /********************************************************************************
@@ -307,12 +297,6 @@ YAHOO.util.Event.addListener(window, "load", function() {
    return [[
              { text: "View"}],[
              { text: "Edit"}],[
-                 /*submenu: { id: "applications", itemdata: [
-                           {text:"Filter 1", onclick: { fn: onMenuItemClick, obj: 0 }},
-                           {text:"Filter 2", onclick: { fn: onMenuItemClick, obj: 1 }},
-                           {text:"Filter 3", onclick: { fn: onMenuItemClick, obj: 2 }},
-                           {text:"Filter 4", onclick: { fn: onMenuItemClick, obj: 3 }}
-                       ] }}],[*/
              { text: "Delete"}],[
              { text: "New"}]
          ];
@@ -320,43 +304,26 @@ YAHOO.util.Event.addListener(window, "load", function() {
   /********************************************************************************
  *
  */
-var flag = 0;
-//var myColumnDefs;
-var table, myDataSource,myDataTable, myContextMenu ;
-table = YAHOO.util.Dom.getElementsByClassName  ( 'datatable' , 'table' );
-
-
-eval("var path_values = {"+base_java_url+"}");
-eval("var download_values = {"+download_java_url+"}");
-
-ds_download = phpGWLink('index.php',download_values );
-
-
-
-var ds;
-var myPaginator = null
-
-
-var myrowsPerPage, ActualValueRowsPerPageDropdown, mytotalRows;
+	var flag = 0;
+	var table, myDataSource,myDataTable, myContextMenu ;
+	table = YAHOO.util.Dom.getElementsByClassName  ( 'datatable' , 'table' );
+	eval("var path_values = {"+base_java_url+"}");
+	eval("var download_values = {"+download_java_url+"}");
+	ds_download = phpGWLink('index.php',download_values );
+	var ds;
+	var myPaginator = null
+	var myrowsPerPage, ActualValueRowsPerPageDropdown, mytotalRows;
 
  /********************************************************************************
  *
  */
 	this.buildQuery = function(strQuery)
 	{
-
 		path_values.query = strQuery;
-
 		myContextMenu.destroy();
 		myDataTable.destroy();
-
 		init_datatable();
 	}
-
-//*******************************************************************************
-
-
-
 
  /********************************************************************************
  *
@@ -364,15 +331,10 @@ var myrowsPerPage, ActualValueRowsPerPageDropdown, mytotalRows;
 	this.init_datatable = function()
 	{
 		ds = phpGWLink('index.php',path_values , true);
-
-
-			myDataSource = new YAHOO.util.DataSource(ds);
-			myDataSource.responseType = YAHOO.util.DataSource.TYPE_JSON;
+		myDataSource = new YAHOO.util.DataSource(ds);
+		myDataSource.responseType = YAHOO.util.DataSource.TYPE_JSON;
 
    		// Compute fields from column definitions
-
-
-
 	   	var fields = new Array();
 	   	for(var i=0; i < myColumnDefs.length;i++)
    		{
@@ -380,15 +342,14 @@ var myrowsPerPage, ActualValueRowsPerPageDropdown, mytotalRows;
 	   	}
 
 
-	   // When responseSchema.totalRecords is not indicated, the records
-	   // returned from the DataSource are assumed to represent the entire set
+	   // When responseSchema.totalRecords is not indicated, the records returned from the DataSource are assumed to represent the entire set
 	   myDataSource.responseSchema =
 	   {
 			resultsList: "records",
-			    fields: fields,
-			    metaFields : {
-            				  totalRecords: 'totalRecords' // The totalRecords meta field is a "magic" meta, and will be passed to the Paginator.
-        					 }
+			fields: fields,
+			metaFields : {
+            			  totalRecords: 'totalRecords' // The totalRecords meta field is a "magic" meta, and will be passed to the Paginator.
+        				 }
 	   };
 			var container = YAHOO.util.Dom.getElementsByClassName( 'datatable-container' , 'div' );
 
@@ -426,13 +387,11 @@ var myrowsPerPage, ActualValueRowsPerPageDropdown, mytotalRows;
 
 												   myPaginator = new YAHOO.widget.Paginator({
 															        containers         : ['paging'],
-															        //updateOnChange	   : true,
-															        pageLinks          : 5,
+															        pageLinks          : 10,
 															        rowsPerPage        : ActualValueRowsPerPageDropdown, //MAXIMO el PHPGW me devuelve 15 valor configurado por preferencias
 															        rowsPerPageOptions : [myrowsPerPage,mytotalRows],
-															         //template          : " {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}ooo {RowsPerPageDropdown} records"
-															         template          : "{RowsPerPageDropdown}records&nbsp;&nbsp;<strong>Pages:</strong>{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}",
-															         pageReportTemplate : "Showing items {start} - {endIndex} of {totalRecords}"
+															        template          : "{RowsPerPageDropdown}items per Page, {CurrentPageReport}<br>{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}",
+   														            pageReportTemplate : "Showing items {startIndex} - {endIndex} of {totalRecords}"
 															    });
 
 
@@ -443,17 +402,12 @@ var myrowsPerPage, ActualValueRowsPerPageDropdown, mytotalRows;
 												        paginator              : myPaginator
 												    };
 
+												   myDataTable = new YAHOO.widget.DataTable(container[0], myColumnDefs, myDataSource, myTableConfig);
 
-
-
-													     myDataTable = new YAHOO.widget.DataTable(container[0], myColumnDefs, myDataSource, myTableConfig);
-
-															/* *************************************************************************** */
+													/* *************************************************************************** */
 
 												   myContextMenu = new YAHOO.widget.ContextMenu("mycontextmenu", {trigger:myDataTable.getTbodyEl()});
 												   var _submenuT = new YAHOO.widget.ContextMenu("mycontextmenu", {trigger:myDataTable.getTbodyEl()});
-												   oContextMenuItems =  myContextMenu;
-
 												   myContextMenu.addItems(GetMenuContext(_submenuT));
 
 												   myDataTable.subscribe("rowMouseoverEvent", myDataTable.onEventHighlightRow);
@@ -479,36 +433,35 @@ var myrowsPerPage, ActualValueRowsPerPageDropdown, mytotalRows;
 													   //cramirez, fire call init_datatable again before click in column
 													    myDataTable.subscribe("beforeSortedByChange",beforeSorted);
 
-													    //myPaginator.subscribe("beforeRowsPerPageChange",dummy);
+													   myContextMenu.render(container[0]);
 
-														   myContextMenu.render(container[0]);
+													   var oColumn = myDataTable.getColumn(0);
 
-														   var oColumn = myDataTable.getColumn(0);
+														// Hide Column
+														oColumn.className = "hide_field";
 
-															// Hide Column
-															oColumn.className = "hide_field";
+													    for(var i=0; i < myColumnDefs.length;i++)
+														        {
+														        	if( myColumnDefs[i].sortable )
+														        	{
+															        	YAHOO.util.Dom.getElementsByClassName( 'yui-dt-col-'+ myColumnDefs[i].key , 'div' )[0].style.backgroundColor  = '#D4DBE7';
+														        	}
 
-														   for(var i=0; i < myColumnDefs.length;i++)
-															        {
-															        	if( myColumnDefs[i].sortable )
-															        	{
-																        	YAHOO.util.Dom.getElementsByClassName( 'yui-dt-col-'+ myColumnDefs[i].key , 'div' )[0].style.backgroundColor  = '#D4DBE7';
-															        	}
+														        	if( !myColumnDefs[i].visible )
+														        	{
+															        	YAHOO.util.Dom.getElementsByClassName( 'yui-dt-col-'+ myColumnDefs[i].key , 'div' )[0].style.display = 'none';
+														        	}
 
-															        	if( !myColumnDefs[i].visible )
-															        	{
-																        	YAHOO.util.Dom.getElementsByClassName( 'yui-dt-col-'+ myColumnDefs[i].key , 'div' )[0].style.display = 'none';
-															        	}
-
-															        }
+														        }
 				      },
 					  failure: function(o) {window.alert('Server or your connection is death.')}
 				    }
 				    try{
-				        //YAHOO.util.Connect.asyncRequest('URL',ds,callback2);
-				        var obj_ds = YAHOO.util.Connect.asyncRequest('URL',ds,callback2);
+				        YAHOO.util.Connect.asyncRequest('URL',ds,callback2);
 
-				    }catch(c) {}
+				    }catch(c) {
+				       alert(c);
+				    }
 
 
        }
@@ -519,37 +472,25 @@ var myrowsPerPage, ActualValueRowsPerPageDropdown, mytotalRows;
 
 this.beforeSorted = function(p_sType)
      {
-	 path_values.order = p_sType.newValue.column.source;
-	 path_values.start = 0;
-	 if(path_values.sort == 'ASC' || path_values.sort == '')
-	 {
-	 	path_values.sort = 'DESC';
-	 }
-	 else
-	 {
-	 	path_values.sort = 'ASC';
-	 }
-
-	 //destroy actual ContextMenu & DataTable
-     myContextMenu.destroy();
-	 myDataTable.destroy();
-	 //myPaginator.destroy();
-
-	 init_datatable();
+		 path_values.order = p_sType.newValue.column.source;
+		 path_values.start = 0;
+		 if(path_values.sort == 'ASC' || path_values.sort == '')
+		 {
+		 	path_values.sort = 'DESC';
+		 }
+		 else
+		 {
+		 	path_values.sort = 'ASC';
+		 }
+		 //destroy actual ContextMenu & DataTable
+	     myContextMenu.destroy();
+		 myDataTable.destroy();
+		 init_datatable();
 
     }
-   /********************************************************************************
- *
- */
-   this.dummy = function(p_sType)
-	{
-	 alert("hola");
-	}
-
 //----------------------------------------------------------------------------------------
 
-	YAHOO.widget.DataTable.Formatter.myCustom = this.myCustomFormatter;
-
+  YAHOO.widget.DataTable.Formatter.myCustom = this.myCustomFormatter;
   init_datatable();
   init_filter();
 
