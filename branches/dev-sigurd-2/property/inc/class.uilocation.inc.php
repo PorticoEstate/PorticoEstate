@@ -413,11 +413,11 @@
 			if( phpgw::get_var('phpgw_return_as') != 'json')
 			{
 				$dry_run=true;
-				//$location_list = $this->bo->read(array('type_id'=>$type_id,'lookup_tenant'=>$lookup_tenant,'lookup'=>$lookup,'allrows'=>$this->allrows));
+
 			}
 
 			//_debug_array($location_list);die();
-
+			//cramirez: $dry_run avoid to load all data the first time
 			$location_list = $this->bo->read(array('type_id'=>$type_id,'lookup_tenant'=>$lookup_tenant,'lookup'=>$lookup,'allrows'=>$this->allrows,'dry_run' =>$dry_run));
 
 			$uicols = $this->bo->uicols;
@@ -532,7 +532,7 @@
 				}
 				unset($parameters);
 			}
-//_debug_array($uicols);die("2");
+//_debug_array($GLOBALS['phpgw_info']);die("2");
 //_debug_array($uicols['cols_return_extra']);die;
 			$uicols_count	= count($uicols['descr']);
 			for ($i=0;$i<$uicols_count;$i++)
@@ -639,6 +639,7 @@
 			$datatable['sorting']['sort'] 	= phpgw::get_var('sort', 'string'); // ASC / DESC
 
 
+
 			$appname = lang('location');
 
 			phpgwapi_yui::load_widget('dragdrop');
@@ -677,10 +678,16 @@
 	    		(
 	    			'recordsReturned' 	=> $datatable['pagination']['records_returned'],
     				'totalRecords' 		=> (int)$datatable['pagination']['records_total'],
-	    			'start' 		=> $datatable['pagination']['records_start'],
-	    			'sort'				=> $datatable['sorting']['order'],
+	    			'startIndex' 		=> $datatable['pagination']['records_start'],
+	    			//'start' 		=> $datatable['pagination']['records_start'],
+
+	    			//
+					'sort'				=> $datatable['sorting']['order'],
+
 	    			'dir'				=> $datatable['sorting']['sort'],
-	    			'records'			=> array()
+	    			//'dir'				=> "asc",
+
+					'records'			=> array()
 
 	    		);
 
