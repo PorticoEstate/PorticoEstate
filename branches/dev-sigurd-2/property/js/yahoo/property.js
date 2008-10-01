@@ -1,5 +1,3 @@
-
-
  /********************************************************************************
  *
  */
@@ -17,13 +15,11 @@ YAHOO.util.Event.addListener(window, "load", function() {
 	var menu_values_district_id, menu_values_cat_id, menu_values_part_of_town_id, menu_values_owner_list = null;
 
  /********************************************************************************
- * create a array whith values strValues (..#../..#). Necesary for selected nested
+ *
  */
 this.filter_data = function(query)
 {
 	document.getElementById('txt_query').value = query;
-	//strQuery = query;
-	//buildQuery(query);
 	path_values.query = query;
 	execute_ds();
 }
@@ -141,14 +137,10 @@ this.filter_data = function(query)
         path_values.district_id = oMenuButtonDistrict.get("value");
         path_values.part_of_town_id = oMenuButtonPartOFTown.get("value");
         path_values.filter = oMenuButtonOwnerId.get("value");
+        path_values.start = 0;
+		path_values.query = document.getElementById('txt_query').value;
 
-        path_values.query = document.getElementById('txt_query').value;
-
-         /*myContextMenu.destroy();
-         myDataTable.destroy();
-		 init_datatable();*/
-
-		 execute_ds();
+		execute_ds();
 
    }
  /********************************************************************************
@@ -262,7 +254,7 @@ this.filter_data = function(query)
  /********************************************************************************
  *
  */
-     function onContextMenuClick(p_sType, p_aArgs, p_myDataTable)
+ function onContextMenuClick(p_sType, p_aArgs, p_myDataTable)
      {
    var task = p_aArgs[1];
             if(task)
@@ -275,27 +267,29 @@ this.filter_data = function(query)
                     {
                         case 0:     // View
                             var oRecord = p_myDataTable.getRecord(elRow);
-       						break;
+                            sUrl = java_view + "&location_code=" + oRecord.getData("location_code");
+                            window.open(sUrl,'_self');
+             break;
                         case 1:     // Edit
                             var oRecord = p_myDataTable.getRecord(elRow);
-       						break;
+                            sUrl = java_edit + "&location_code=" + oRecord.getData("location_code");
+                            window.open(sUrl,'_self');
+                            break;
                         case 2:     // Delete row upon confirmation
                             var oRecord = p_myDataTable.getRecord(elRow);
                             if(confirm("Are you sure you want to delete ?"))
                             {
-	                             alert(oRecord.getData("location_code"));return false;
-	                             ActionToPHP("deleteitem",[{variable:"id",value:oRecord.getData("location_code")}]);
-	                             p_myDataTable.deleteRow(elRow);
-                         	}
-                         	break;
+                              ActionToPHP("deleteitem",[{variable:"id",value:oRecord.getData("location_code")}]);
+                              p_myDataTable.deleteRow(elRow);
+                          }
+                          break;
                         case 3:     // Filter
                             var oRecord = p_myDataTable.getRecord(elRow);
-       						break;
+             break;
                     }
                 }
             }
         };
-
  /********************************************************************************
  *
  */
@@ -335,13 +329,19 @@ this.filter_data = function(query)
 *
 */
 	var buildQueryString = function (state,dt){
+		//this values can be update for combo box
 	    ActualValueRowsPerPageDropdown = state.pagination.rowsPerPage;
 
+		//
 		var url="&start=" + state.pagination.recordOffset;
 		if(state.pagination.rowsPerPage==values_ds.totalRecords)
 		{
 			url=url+"&allrows=1";
 		}
+
+		// ****** cambiar!! por el nombre generico que tomará el texto de busqueda
+		url=url+"&query="+document.getElementById('txt_query').value;
+		//*****actualizar tambien con los valores de los combos y del ordemiento de la columna actual*** !!!!!!
 
 		return url;
 	}
@@ -448,7 +448,13 @@ this.filter_data = function(query)
 					sDir = (this.get("sortedBy").dir === YAHOO.widget.DataTable.CLASS_ASC) ?
 							"desc" : "asc";
 				}
-				var newRequest = "&start=0&order="+oColumn.source+"&sort="+sDir;
+				var newRequest = "&start=0&order="+oColumn.source+"&sort="+sDir; //***********************
+				//añade otros valores seteados
+				// falta valores combos **!!!!
+				newRequest =  newRequest + "&query="+document.getElementById('txt_query').value;
+
+
+
 				// Create callback for data request
 				var oCallback3 = {
 					success: this.onDataReturnInitializeTable,
@@ -521,20 +527,20 @@ this.filter_data = function(query)
 
 this.update_datatable = function()
 	{
-
+				     //delete values of datatable
 				     var length = myDataTable.getRecordSet().getLength();
 				     myDataTable.deleteRows(0,length);
-				     var record = values_ds.records
-				     myDataTable.addRows(record);
+				     //obtain records of the last DS and add to datatable
+				     var record = values_ds.records;
+				     var newTotalRecords = values_ds.totalRecords;
+
 				     myPaginator.setPage(1,true);
+				     myDataTable.addRows(record);
+				     //update paginator with news values
+				     myPaginator.setTotalRecords(newTotalRecords,true);
+				     //myPaginator.updateOnChange=true;
+					 //myPaginator.setPage(1,true);
 				     myPaginator.updateOnChange=true;
-
-
-
-
-
-
-
 	}
 
 //----------------------------------------------------------------------------------------
