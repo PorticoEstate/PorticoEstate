@@ -675,6 +675,10 @@
 
 <xsl:template name="datatable-yui-definition">
 	<script>
+		var java_edit = "<xsl:value-of select="//datatable/config/java_edit"/>";
+
+  		var java_view = "<xsl:value-of select="//datatable/config/java_view"/>";
+
 		var base_java_url = "<xsl:value-of select="//datatable/config/base_java_url"/>";
 
 		var download_java_url = "<xsl:value-of select="//datatable/config/download_java_url"/>";
