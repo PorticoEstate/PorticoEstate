@@ -257,6 +257,20 @@
 						 	                        ."cat_id:'{$this->cat_id}',"
  	                        						."status:'{$this->status}'";
 
+ 	         //para entradas del edit y view
+ 	         $datatable['config']['java_edit'] = $GLOBALS['phpgw']->link('/index.php',array(
+								                  'menuaction'=> 'property.uilocation.edit',
+								                  'lookup_tenant'=>$lookup_tenant
+								                  )
+								                 );
+
+  			 $datatable['config']['java_view'] = $GLOBALS['phpgw']->link('/index.php',array(
+								                  'menuaction'=> 'property.uilocation.view',
+								                  'lookup_tenant'=>$lookup_tenant
+								                  )
+								                 );
+
+
 			//_debug_array($datatable);die;
 
 			$values_cat_id  = $this->bocommon->select_category_list(array('format'=>'filter',
