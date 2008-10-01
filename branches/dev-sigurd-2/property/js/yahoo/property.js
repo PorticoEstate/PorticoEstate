@@ -1,9 +1,4 @@
-this.filter_data = function(query)
-{
-	strQuery = query;
-	buildQuery(strQuery);
-	document.getElementById('txt_query').value = strQuery;
-}
+
 
  /********************************************************************************
  *
@@ -21,6 +16,17 @@ YAHOO.util.Event.addListener(window, "load", function() {
 	var oPushButton1 = null;
 	var menu_values_district_id, menu_values_cat_id, menu_values_part_of_town_id, menu_values_owner_list = null;
 
+ /********************************************************************************
+ * create a array whith values strValues (..#../..#). Necesary for selected nested
+ */
+this.filter_data = function(query)
+{
+	document.getElementById('txt_query').value = query;
+	//strQuery = query;
+	//buildQuery(query);
+	path_values.query = query;
+	execute_ds();
+}
 
 
  /********************************************************************************
@@ -118,10 +124,10 @@ YAHOO.util.Event.addListener(window, "load", function() {
 	   	init_datatable();
 
 	   	//Update select PART OF TOWN
-	    MenuButton4PartOFTownId = create_menu_list (values.hidden.part_of_town_id[0].value,'part_of_town_id');
+	    MenuButton4PartOFTownId = create_menu_list (values_ds.hidden.part_of_town_id[0].value,'part_of_town_id');
 	    oMenuButtonPartOFTown.getMenu().clearContent();
 	    oMenuButtonPartOFTown.getMenu().itemData = MenuButton4PartOFTownId;
-	    oMenuButtonPartOFTown.set("value",values.hidden.part_of_town_id[0].id);
+	    oMenuButtonPartOFTown.set("value",values_ds.hidden.part_of_town_id[0].id);
 
   }
 
@@ -138,11 +144,12 @@ YAHOO.util.Event.addListener(window, "load", function() {
 
         path_values.query = document.getElementById('txt_query').value;
 
-         myContextMenu.destroy();
+         /*myContextMenu.destroy();
          myDataTable.destroy();
+		 init_datatable();*/
 
-         //create DataSource & ContextMenu & DataTable
-         init_datatable();
+		 execute_ds();
+
    }
  /********************************************************************************
  *
@@ -313,17 +320,16 @@ YAHOO.util.Event.addListener(window, "load", function() {
 	var ds;
 	var myPaginator = null
 	var myrowsPerPage, ActualValueRowsPerPageDropdown, mytotalRows;
-	var values;
+	var values_ds;
 
  /********************************************************************************
  *
  */
 	this.buildQuery = function(strQuery)
 	{
-		path_values.query = strQuery;
-		myContextMenu.destroy();
-		myDataTable.destroy();
-		init_datatable();
+		//path_values.query = strQuery;
+		path_values.query = document.getElementById('txt_query').value;
+		execute_ds();
 	}
 /******************************************************************************
 *
@@ -332,7 +338,7 @@ YAHOO.util.Event.addListener(window, "load", function() {
 	    ActualValueRowsPerPageDropdown = state.pagination.rowsPerPage;
 
 		var url="&start=" + state.pagination.recordOffset;
-		if(state.pagination.rowsPerPage==values.totalRecords)
+		if(state.pagination.rowsPerPage==values_ds.totalRecords)
 		{
 			url=url+"&allrows=1";
 		}
@@ -353,12 +359,12 @@ YAHOO.util.Event.addListener(window, "load", function() {
 
 		var callback2 ={
 				    success: function(o) {
-						eval('values ='+o.responseText);
+						eval('values_ds ='+o.responseText);
 						if(flag==0){
 							init_datatable();
 						}
 						else{
-						 alert("2da vez");
+						 	update_datatable();
 						}
 		 			},
 		  			failure: function(o) {window.alert('Server or your connection is death.')},
@@ -405,9 +411,9 @@ YAHOO.util.Event.addListener(window, "load", function() {
 		//variables iniciales para la configuracion del "paginador", solo la primera vez se ejecuta
 		if(flag==0)
 		{
-			myrowsPerPage = values.recordsReturned;
-			ActualValueRowsPerPageDropdown = values.recordsReturned;
-			mytotalRows = values.totalRecords;
+			myrowsPerPage = values_ds.recordsReturned;
+			ActualValueRowsPerPageDropdown = values_ds.recordsReturned;
+			mytotalRows = values_ds.totalRecords;
 		}
 		flag++;
 
@@ -509,22 +515,33 @@ YAHOO.util.Event.addListener(window, "load", function() {
 				}
 
 }
+/****************************************************************************************
+*
+*/
 
+this.update_datatable = function()
+	{
+
+				     var length = myDataTable.getRecordSet().getLength();
+				     myDataTable.deleteRows(0,length);
+				     var record = values_ds.records
+				     myDataTable.addRows(record);
+				     myPaginator.setPage(1,true);
+				     myPaginator.updateOnChange=true;
+
+
+
+
+
+
+
+	}
 
 //----------------------------------------------------------------------------------------
 
   YAHOO.widget.DataTable.Formatter.myCustom = this.myCustomFormatter;
-  //init_datatable();
   this.execute_ds();
   init_filter();
 
  });
 
- /********************************************************************************
- *
- */
- this.muestra = function()
-   {
-   	var oColumn = myDataTable.getRow();
-   	alert(oColumn);
-   }
