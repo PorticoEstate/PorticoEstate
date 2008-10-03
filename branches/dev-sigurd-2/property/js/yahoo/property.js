@@ -1,11 +1,8 @@
- /********************************************************************************
- *
- */
 
-YAHOO.util.Event.addListener(window, "load", function() {
+YAHOO.util.Event.addListener(window, "load", function()
+{
 	var Dom = YAHOO.util.Dom;
 	var oSelectedTR;
-	var myDataTableTemp ;
 	var type_id = YAHOO.util.Dom.get( 'type_id' );
 	var oButtonSearch,oButtonExport = null;
 
@@ -13,22 +10,12 @@ YAHOO.util.Event.addListener(window, "load", function() {
 	var array_options = new Array();
 	var oMenuButton_0, oMenuButton_1, oMenuButton_2, oMenuButton_3;
 
-
-
 	//document.getElementById('txt_query').focus();
 	var flag = 0;
-	var table, myDataSource,myDataTable, myContextMenu ;
-	table = YAHOO.util.Dom.getElementsByClassName  ( 'datatable' , 'table' );
-	eval("var path_values = {"+base_java_url+"}");
+	var myDataSource,myDataTable, myContextMenu, myPaginator ;
 	var ds;
-	var myPaginator = null
-	var myrowsPerPage, ActualValueRowsPerPageDropdown, mytotalRows;
+	var myrowsPerPage,mytotalRows,ActualValueRowsPerPageDropdown;
 	var values_ds;
-
- /********************************************************************************
- *
- */
-
 
  /********************************************************************************
  *
@@ -44,7 +31,8 @@ this.filter_data = function(query)
  /********************************************************************************
  * create a array whith values strValues (..#../..#). Necesary for selected nested
  */
-  function create_array_values_list(stValues) {
+this.create_array_values_list = function(stValues)
+  {
    var temp1,temp2,temp3 = new Array();
 
    temp1 = stValues.split('/');
@@ -58,14 +46,15 @@ this.filter_data = function(query)
     }
    }
    return temp3;
-   }
+}
 
 
  /********************************************************************************
  * stValues:  values of select control, separate whit / and #
  * source: indicate the variable-name passed in the URL by GET
  */
-  function create_menu_list(stValues,source) {
+  this.create_menu_list = function(stValues,source)
+{
    var temp1, temp2, MenuButtonMenu = new Array();
    temp1 = stValues.split('/');
    for(i=0 ; i < temp1.length -1 ; i++ ) // -1 because the string has a '/' at last
@@ -89,7 +78,7 @@ this.filter_data = function(query)
  * p_oItem[2]:variable-name GET
  * p_oItem[3]:order option of the select
  */
-   function onMenuItemClick(p_sType, p_aArgs, p_oItem)
+   this.onMenuItemClick = function(p_sType, p_aArgs, p_oItem)
    {
 	    if(p_oItem[2]=='cat_id')
 	    {
@@ -121,17 +110,8 @@ this.filter_data = function(query)
 
 	     }
 
-	    //get values of all selected controls
-	    path_values.cat_id = oMenuButton_0.get("value");
-	    path_values.district_id = oMenuButton_1.get("value");
-	    path_values.part_of_town_id = oMenuButton_2.get("value");
-	    path_values.filter = oMenuButton_3.get("value");
-
-
-	    /*myContextMenu.destroy();
-		myDataTable.destroy();
-		init_datatable();*/
-		execute_ds();
+	    //los valores de 'path_values' ya estan actualizados no es necesario verificar
+	    execute_ds();
 
 	   	//Update select PART OF TOWN
 	    oMenuButton_2.getMenu().clearContent();
@@ -157,13 +137,13 @@ this.filter_data = function(query)
  */
    this.onDownloadClick = function()
    {
-		/* ***** corregir *****  !!!!!!
-		ds_download = phpGWLink('index.php',download_values );
+		//modify the "function download" in path_values
+		path_values.menuaction='property.uilocation.download';
+		ds_download = phpGWLink('index.php',path_values);
+		//return to "function index"
+		path_values.menuaction='property.uilocation.index';
 		window.open(ds_download,'window');
-		*/
    }
-
-
  /********************************************************************************
  *
  */
@@ -176,6 +156,8 @@ this.filter_data = function(query)
      oButtonExport = new YAHOO.widget.Button("btn_export");
      oButtonExport.on("click", onDownloadClick);
 
+	var oButtonNew = new YAHOO.widget.Button("btn_new");
+	//oButtonNew.on("click", onDownloadClick);
 
 	options_combo_box = values_combo_box[0];
 	//cat_id es el nombre del URL variable
@@ -211,9 +193,12 @@ this.filter_data = function(query)
  /********************************************************************************
  *
  */
-  function ActionToPHP(task,argu)
+   this.ActionToPHP = function(task,argu)
  	{
-  		var callback = { success:success_handler, failure:failure_handler, timeout: 10000 };
+  		var callback = { success:success_handler,
+  						 failure:failure_handler,
+  						 timeout: 10000
+  					    };
   		var sUrl = phpGWLink('index.php', {menuaction: "property.bolocation.delete",location_code:argu[0].value}, true);
   		var postData = "";
 		for(cont=0; cont < argu.length; cont++)
@@ -226,22 +211,21 @@ this.filter_data = function(query)
  /********************************************************************************
  *
  */
-  function success_handler(o)
+ this.success_handler = function(o)
   {
      window.alert(o.responseText);
    }
  /********************************************************************************
  *
  */
-   function failure_handler(o)
+  this.failure_handler = function(o)
    {
      window.alert('Server or your connection is death.');
    }
  /********************************************************************************
  *
  */
-
-   function onContextMenuBeforeShow(p_sType, p_aArgs)
+   this.onContextMenuBeforeShow = function(p_sType, p_aArgs)
    {
    var oTarget = this.contextEventTarget;
 
@@ -261,7 +245,8 @@ this.filter_data = function(query)
  /********************************************************************************
  *
  */
-     function onContextMenuHide(p_sType, p_aArgs) {
+ this.onContextMenuHide = function(p_sType, p_aArgs)
+ {
     if (this.getRoot() == this && oSelectedTR) {
      oSelectedTR.style.backgroundColor  = "" ;
           oSelectedTR.style.color = "";
@@ -271,8 +256,8 @@ this.filter_data = function(query)
  /********************************************************************************
  *
  */
- function onContextMenuClick(p_sType, p_aArgs, p_myDataTable)
-     {
+ this.onContextMenuClick = function(p_sType, p_aArgs, p_myDataTable)
+{
    var task = p_aArgs[1];
             if(task)
             {
@@ -310,7 +295,7 @@ this.filter_data = function(query)
  /********************************************************************************
  *
  */
-    function GetMenuContext()
+ this.GetMenuContext = function()
   {
    return [[
              { text: "View"}],[
@@ -335,7 +320,7 @@ this.filter_data = function(query)
 		//this values can be update for combo box
 	    ActualValueRowsPerPageDropdown = state.pagination.rowsPerPage;
 
-		//
+		//particular variables for Datasource
 		var url="&start=" + state.pagination.recordOffset;
 		if(state.pagination.rowsPerPage==values_ds.totalRecords)
 		{
@@ -431,11 +416,11 @@ this.filter_data = function(query)
 
 
 	  var myTableConfig = {
-			initialRequest         : '',//'&start=0&sort=loc1&dir=asc'
-			generateRequest      : buildQueryString,
+			initialRequest         : '',//la primera vez ya viene ordenado, por la columna respectiva y solo 15 registros
+			generateRequest        : buildQueryString,
 			paginationEventHandler : YAHOO.widget.DataTable.handleDataSourcePagination,
 			paginator              : myPaginator,
-			sortedBy: {key:"loc1", dir:YAHOO.widget.DataTable.CLASS_ASC}, // Set up initial column headers UI
+			sortedBy			   : {key:"loc1", dir:YAHOO.widget.DataTable.CLASS_ASC}, // arguments necesary for paginator
 
 		};
 
@@ -462,7 +447,7 @@ this.filter_data = function(query)
 					scope: this,
 					argument: {
 						sorting: {
-							key: oColumn.key,//oColumn.key,
+							key: oColumn.key,
 							dir: (sDir === "asc") ? YAHOO.widget.DataTable.CLASS_ASC : YAHOO.widget.DataTable.CLASS_DESC
 							}
 						}
@@ -479,26 +464,23 @@ this.filter_data = function(query)
 
 
 	   myContextMenu = new YAHOO.widget.ContextMenu("mycontextmenu", {trigger:myDataTable.getTbodyEl()});
-	   var _submenuT = new YAHOO.widget.ContextMenu("mycontextmenu", {trigger:myDataTable.getTbodyEl()});
-	   myContextMenu.addItems(GetMenuContext(_submenuT));
+	   myContextMenu.addItems(GetMenuContext());
 
 	   myDataTable.subscribe("rowMouseoverEvent", myDataTable.onEventHighlightRow);
 	   myDataTable.subscribe("rowMouseoutEvent", myDataTable.onEventUnhighlightRow);
 
-	   myDataTable.subscribe("rowClickEvent",
-	   function (oArgs)
-	   {
-			var elTarget = oArgs.target;
-			var oRecord = this.getRecord(elTarget);
-			Exchange_values(oRecord);
-	   }
+	   myDataTable.subscribe("rowClickEvent",function (oArgs)
+											   {
+													var elTarget = oArgs.target;
+													var oRecord = this.getRecord(elTarget);
+													Exchange_values(oRecord);
+											   }
 	   );
 
 	   myContextMenu.subscribe("beforeShow", onContextMenuBeforeShow);
 	   myContextMenu.subscribe("hide", onContextMenuHide);
 	   //Render the ContextMenu instance to the parent container of the DataTable
 	   myContextMenu.subscribe("click", onContextMenuClick, myDataTable);
-
 	   myContextMenu.render(container[0]);
 
 	   var oColumn = myDataTable.getColumn(0);
@@ -551,6 +533,7 @@ this.update_datatable = function()
 
 //----------------------------------------------------------------------------------------
 
+  eval("var path_values = {"+base_java_url+"}");
   YAHOO.widget.DataTable.Formatter.myCustom = this.myCustomFormatter;
   this.execute_ds();
   init_filter();
