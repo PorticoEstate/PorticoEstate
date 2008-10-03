@@ -682,8 +682,6 @@
 
 		var base_java_url = "<xsl:value-of select="//datatable/config/base_java_url"/>";
 
-		var download_java_url = "<xsl:value-of select="//datatable/config/download_java_url"/>";
-
 		var myColumnDefs = [
 			<xsl:for-each select="//datatable/headers/header">
 				{
