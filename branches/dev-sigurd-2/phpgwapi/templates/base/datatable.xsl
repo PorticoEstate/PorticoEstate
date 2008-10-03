@@ -325,8 +325,9 @@
 
   	<div class="datatable-container">
     	<table class="datatable">
-      		<xsl:apply-templates select="headers" />
+      		<!--  <xsl:apply-templates select="headers" />
       		<xsl:apply-templates select="rows" />
+      		 -->
     	</table>
   	</div>
   	<xsl:call-template name="datatable-yui-definition" />
@@ -693,10 +694,20 @@
 					visible: <xsl:value-of select="phpgw:conditional(not(visible = 0), 'true', 'false')"/>,
 					format: "<xsl:value-of select="format"/>",
 					formatter: "<xsl:value-of select="formatter"/>",
-                    source: "<xsl:value-of select="sort_field"/>"
+					source: "<xsl:value-of select="sort_field"/>"
 				}<xsl:value-of select="phpgw:conditional(not(position() = last()), ',', '')"/>
 			</xsl:for-each>
 		];
+
+		var values_combo_box = [
+			<xsl:for-each select="//datatable/actions/form/fields/hidden_value">
+				{
+					id: "<xsl:value-of select="id"/>",
+					value: "<xsl:value-of select="value"/>"
+				}<xsl:value-of select="phpgw:conditional(not(position() = last()), ',', '')"/>
+			</xsl:for-each>
+		];
+
 
 	</script>
 </xsl:template>
