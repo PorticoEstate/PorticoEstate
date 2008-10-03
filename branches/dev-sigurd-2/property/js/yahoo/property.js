@@ -7,12 +7,28 @@ YAHOO.util.Event.addListener(window, "load", function() {
 	var oSelectedTR;
 	var myDataTableTemp ;
 	var type_id = YAHOO.util.Dom.get( 'type_id' );
-	var hd_CatId, hd_DistId, hd_PartOFTownId, hd_OwnerId = null;
-	var MenuButton4CatId, MenuButton4PartOFTownId, MenuButton4DistId, MenuButton4OwnerId = new Array();
-	var array_cat_id, array_district_id, array_part_of_town_id, array_owner_list = new Array();
-	var oMenuButtonCategory, oMenuButtonPartOFTown, oMenuButtonDistrict, oMenuButtonOwnerId = null;
-	var oPushButton1 = null;
-	var menu_values_district_id, menu_values_cat_id, menu_values_part_of_town_id, menu_values_owner_list = null;
+	var oButtonSearch,oButtonExport = null;
+
+	var menuCB,optionsCB, options_combo_box;
+	var array_options = new Array();
+	var oMenuButton_0, oMenuButton_1, oMenuButton_2, oMenuButton_3;
+
+
+
+	//document.getElementById('txt_query').focus();
+	var flag = 0;
+	var table, myDataSource,myDataTable, myContextMenu ;
+	table = YAHOO.util.Dom.getElementsByClassName  ( 'datatable' , 'table' );
+	eval("var path_values = {"+base_java_url+"}");
+	var ds;
+	var myPaginator = null
+	var myrowsPerPage, ActualValueRowsPerPageDropdown, mytotalRows;
+	var values_ds;
+
+ /********************************************************************************
+ *
+ */
+
 
  /********************************************************************************
  *
@@ -78,52 +94,49 @@ this.filter_data = function(query)
 	    if(p_oItem[2]=='cat_id')
 	    {
 		     //assign label to control selected
-		     oMenuButtonCategory.set("label", ("<em>" + p_oItem[1] + "</em>"));
+		     oMenuButton_0.set("label", ("<em>" + p_oItem[1] + "</em>"));
 		     //use field ID for put the value selected
-		     oMenuButtonCategory.set("value", p_oItem[0]);
+		     oMenuButton_0.set("value", p_oItem[0]);
 		     //assign filter-values
 		     path_values.cat_id = p_oItem[0];
 	    }
 	    if(p_oItem[2]=='district_id'){
-		     oMenuButtonDistrict.set("label", ("<em>" + p_oItem[1] + "</em>"));
-		     oMenuButtonDistrict.set("value", p_oItem[0]);
+		     oMenuButton_1.set("label", ("<em>" + p_oItem[1] + "</em>"));
+		     oMenuButton_1.set("value", p_oItem[0]);
 		     path_values.district_id = p_oItem[0];
 		     //set default-value for 'part_of_town'
-		     oMenuButtonPartOFTown.set("value", ("<em>" + array_part_of_town_id[0][0]+ "</em>"));
-		     oMenuButtonPartOFTown.set("label", array_part_of_town_id[0][1]);
+		     oMenuButton_2.set("value", (array_options[2][0][0]));
+		     oMenuButton_2.set("label", ("<em>" + array_options[2][0][1]+"</em>"));
 
 	     }
 	    if(p_oItem[2]=='part_of_town_id'){
-		     oMenuButtonPartOFTown.set("label", ("<em>" + p_oItem[1] + "</em>"));
-		     oMenuButtonPartOFTown.set("value", p_oItem[0]);
+		     oMenuButton_2.set("label", ("<em>" + p_oItem[1] + "</em>"));
+		     oMenuButton_2.set("value", p_oItem[0]);
 		     path_values.part_of_town_id = p_oItem[0];
 	     }
 	    if(p_oItem[2]=='filter'){
-		     oMenuButtonOwnerId.set("label", ("<em>" + p_oItem[1] + "</em>"));
-		     oMenuButtonOwnerId.set("value", p_oItem[0]);
+		     oMenuButton_3.set("label", ("<em>" + p_oItem[1] + "</em>"));
+		     oMenuButton_3.set("value", p_oItem[0]);
 		     path_values.filter = p_oItem[0];
 
 	     }
 
 	    //get values of all selected controls
-	    path_values.cat_id = oMenuButtonCategory.get("value");
-	    path_values.district_id = oMenuButtonDistrict.get("value");
-	    path_values.part_of_town_id = oMenuButtonPartOFTown.get("value");
-	    path_values.filter = oMenuButtonOwnerId.get("value");
+	    path_values.cat_id = oMenuButton_0.get("value");
+	    path_values.district_id = oMenuButton_1.get("value");
+	    path_values.part_of_town_id = oMenuButton_2.get("value");
+	    path_values.filter = oMenuButton_3.get("value");
 
 
-		//destroy actual ContextMenu & DataTable
-	    myContextMenu.destroy();
+	    /*myContextMenu.destroy();
 		myDataTable.destroy();
-
-		//create DataSource & ContextMenu & DataTable
-	   	init_datatable();
+		init_datatable();*/
+		execute_ds();
 
 	   	//Update select PART OF TOWN
-	    MenuButton4PartOFTownId = create_menu_list (values_ds.hidden.part_of_town_id[0].value,'part_of_town_id');
-	    oMenuButtonPartOFTown.getMenu().clearContent();
-	    oMenuButtonPartOFTown.getMenu().itemData = MenuButton4PartOFTownId;
-	    oMenuButtonPartOFTown.set("value",values_ds.hidden.part_of_town_id[0].id);
+	    oMenuButton_2.getMenu().clearContent();
+	    oMenuButton_2.getMenu().itemData = create_menu_list (values_ds.hidden.dependent[0].value,'part_of_town_id');;
+	    oMenuButton_2.set("value",values_ds.hidden.dependent[0].id);
 
   }
 
@@ -132,13 +145,9 @@ this.filter_data = function(query)
  */
   this.onSearchClick = function()
   {
-      //get values of all selected controls
-        path_values.cat_id = oMenuButtonCategory.get("value");
-        path_values.district_id = oMenuButtonDistrict.get("value");
-        path_values.part_of_town_id = oMenuButtonPartOFTown.get("value");
-        path_values.filter = oMenuButtonOwnerId.get("value");
-        path_values.start = 0;
-		path_values.query = document.getElementById('txt_query').value;
+
+        //no es necesario actualizar los valores actuales de path_value. Este es global y siempre esta actualizado
+        path_values.query = document.getElementById('txt_query').value;
 
 		execute_ds();
 
@@ -148,9 +157,12 @@ this.filter_data = function(query)
  */
    this.onDownloadClick = function()
    {
+		/* ***** corregir *****  !!!!!!
 		ds_download = phpGWLink('index.php',download_values );
 		window.open(ds_download,'window');
+		*/
    }
+
 
  /********************************************************************************
  *
@@ -158,37 +170,42 @@ this.filter_data = function(query)
   this.init_filter = function()
   {
     //create button
-     oPushButton1 = new YAHOO.widget.Button("btn_search");
-     oPushButton1.on("click", onSearchClick);
+     oButtonSearch = new YAHOO.widget.Button("btn_search");
+     oButtonSearch.on("click", onSearchClick);
 
-     oBtnExport = new YAHOO.widget.Button("btn_export");
-     oBtnExport.on("click", onDownloadClick);
+     oButtonExport = new YAHOO.widget.Button("btn_export");
+     oButtonExport.on("click", onDownloadClick);
 
 
-    //create select controls
-    hd_CatId = document.getElementById('values_cat_id');
-    MenuButton4CatId = create_menu_list (hd_CatId.value,'cat_id');
-    array_cat_id = create_array_values_list(hd_CatId.value);
-    menu_values_cat_id = { type: "menu", label:"<em>"+ array_cat_id[0][1]+"</em>", id: "categorybutton", value:"", menu: MenuButton4CatId};
-    oMenuButtonCategory = new YAHOO.widget.Button("btn_cat_id", menu_values_cat_id);
+	options_combo_box = values_combo_box[0];
+	//cat_id es el nombre del URL variable
+    optionsCB = create_menu_list(options_combo_box.value,'cat_id');
+    array_options[0] = create_array_values_list(options_combo_box.value);
+    //id es for css style
+    menuCB = { type: "menu", label:"<em>"+ array_options[0][0][1]+"</em>", id: "categorybutton", value:"", menu: optionsCB};
+    //name for la button HTML
+    oMenuButton_0 = new YAHOO.widget.Button("btn_cat_id", menuCB);
 
-    hd_DistId = document.getElementById('values_district_id');
-       MenuButton4DistId = create_menu_list (hd_DistId.value,'district_id');
-       array_district_id = create_array_values_list(hd_DistId.value);
-       menu_values_district_id = { type: "menu", label:"<em>"+ array_district_id[0][1]+"</em>", id: "districtbutton",  value:"", menu: MenuButton4DistId};
-       oMenuButtonDistrict = new YAHOO.widget.Button("btn_district_id", menu_values_district_id);
 
-    hd_PartOFTownId = document.getElementById('values_part_of_town_id');
-    MenuButton4PartOFTownId = create_menu_list (hd_PartOFTownId.value,'part_of_town_id');
-    array_part_of_town_id = create_array_values_list(hd_PartOFTownId.value);
-    menu_values_part_of_town_id = { type: "menu", label: "<em>"+array_part_of_town_id[0][1]+"</em>", id: "partOFTownbutton",  value:"", menu: MenuButton4PartOFTownId};
-    oMenuButtonPartOFTown = new YAHOO.widget.Button("btn_part_of_town_id", menu_values_part_of_town_id);
+    options_combo_box = values_combo_box[1];
+	var optionsCB = create_menu_list(options_combo_box.value,'district_id');
+    array_options[1] = create_array_values_list(options_combo_box.value);
+    var menuCB = { type: "menu", label:"<em>"+ array_options[1][0][1]+"</em>", id: "districtbutton", value:"", menu: optionsCB};
+    oMenuButton_1 = new YAHOO.widget.Button("btn_district_id", menuCB);
 
-    hd_OwnerId = document.getElementById('values_owner_list');
-    MenuButton4OwnerId = create_menu_list (hd_OwnerId.value,'filter');
-    array_owner_list = create_array_values_list(hd_OwnerId.value);
-    menu_values_owner_list = { type: "menu", label: "<em>"+array_owner_list[0][1]+"</em>", id: "ownerIdbutton",  value:"", menu: MenuButton4OwnerId};
-    oMenuButtonOwnerId = new YAHOO.widget.Button("btn_owner_id", menu_values_owner_list);
+	options_combo_box = values_combo_box[2];
+	var optionsCB = create_menu_list(options_combo_box.value,'part_of_town_id');
+    array_options[2] = create_array_values_list(options_combo_box.value);
+    var menuCB = { type: "menu", label:"<em>"+ array_options[2][0][1]+"</em>", id: "partOFTownbutton", value:"", menu: optionsCB};
+    oMenuButton_2 = new YAHOO.widget.Button("btn_part_of_town_id", menuCB);
+
+	options_combo_box = values_combo_box[3];
+	var optionsCB = create_menu_list(options_combo_box.value,'filter');
+    array_options[3] = create_array_values_list(options_combo_box.value);
+    var menuCB = { type: "menu", label:"<em>"+ array_options[3][0][1]+"</em>", id: "ownerIdbutton", value:"", menu: optionsCB};
+    oMenuButton_3 = new YAHOO.widget.Button("btn_owner_id", menuCB);
+
+
  }
 
  /********************************************************************************
@@ -302,26 +319,12 @@ this.filter_data = function(query)
              { text: "New"}]
          ];
   }
-  /********************************************************************************
- *
- */
-	var flag = 0;
-	var table, myDataSource,myDataTable, myContextMenu ;
-	table = YAHOO.util.Dom.getElementsByClassName  ( 'datatable' , 'table' );
-	eval("var path_values = {"+base_java_url+"}");
-	eval("var download_values = {"+download_java_url+"}");
-	ds_download = phpGWLink('index.php',download_values );
-	var ds;
-	var myPaginator = null
-	var myrowsPerPage, ActualValueRowsPerPageDropdown, mytotalRows;
-	var values_ds;
 
  /********************************************************************************
  *
  */
 	this.buildQuery = function(strQuery)
 	{
-		//path_values.query = strQuery;
 		path_values.query = document.getElementById('txt_query').value;
 		execute_ds();
 	}
@@ -339,9 +342,8 @@ this.filter_data = function(query)
 			url=url+"&allrows=1";
 		}
 
-		// ****** cambiar!! por el nombre generico que tomará el texto de busqueda
-		url=url+"&query="+document.getElementById('txt_query').value;
-		//*****actualizar tambien con los valores de los combos y del ordemiento de la columna actual*** !!!!!!
+		//sea actualiza el liveDAta del Datasource con los actuales valores de los combos y txtboxs
+		myDataTable.getDataSource().liveData=ds;
 
 		return url;
 	}
@@ -429,7 +431,7 @@ this.filter_data = function(query)
 
 
 	  var myTableConfig = {
-			initialRequest         : '&start=0&sort=loc1&dir=asc',//sort=id&dir=asc&results=100
+			initialRequest         : '',//'&start=0&sort=loc1&dir=asc'
 			generateRequest      : buildQueryString,
 			paginationEventHandler : YAHOO.widget.DataTable.handleDataSourcePagination,
 			paginator              : myPaginator,
@@ -448,12 +450,10 @@ this.filter_data = function(query)
 					sDir = (this.get("sortedBy").dir === YAHOO.widget.DataTable.CLASS_ASC) ?
 							"desc" : "asc";
 				}
-				var newRequest = "&start=0&order="+oColumn.source+"&sort="+sDir; //***********************
-				//añade otros valores seteados
-				// falta valores combos **!!!!
-				newRequest =  newRequest + "&query="+document.getElementById('txt_query').value;
-
-
+				//URL-vars adicionales que se agregaran al actual ds
+				var addToRequest = "&start=0&order="+oColumn.source+"&sort="+sDir;
+				//sea actualiza el liveDAta del Datasource con los actuales valores de los combos y txtboxs
+				myDataTable.getDataSource().liveData=ds;
 
 				// Create callback for data request
 				var oCallback3 = {
@@ -468,7 +468,7 @@ this.filter_data = function(query)
 						}
 					}
 				try{
-					myDataTable.getDataSource().sendRequest(newRequest, oCallback3)}
+					myDataTable.getDataSource().sendRequest(addToRequest, oCallback3)}
 				catch(e){
 					alert(e);
 				}
@@ -529,17 +529,23 @@ this.update_datatable = function()
 	{
 				     //delete values of datatable
 				     var length = myDataTable.getRecordSet().getLength();
-				     myDataTable.deleteRows(0,length);
+				     if(length)
+				     {
+				     	myDataTable.deleteRows(0,length);
+				     }
+
 				     //obtain records of the last DS and add to datatable
 				     var record = values_ds.records;
 				     var newTotalRecords = values_ds.totalRecords;
 
 				     myPaginator.setPage(1,true);
-				     myDataTable.addRows(record);
+				     if(record.length)
+				     {
+				     	myDataTable.addRows(record);
+				     }
+
 				     //update paginator with news values
 				     myPaginator.setTotalRecords(newTotalRecords,true);
-				     //myPaginator.updateOnChange=true;
-					 //myPaginator.setPage(1,true);
 				     myPaginator.updateOnChange=true;
 	}
 
