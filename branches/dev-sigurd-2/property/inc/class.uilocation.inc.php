@@ -247,20 +247,6 @@
 						 	                        //."start:'{$this->start}',"
  	                        						."status:'{$this->status}'";
 
- 	        $datatable['config']['download_java_url'] = "menuaction:'property.uilocation.download',"
-	    											."sort:'{$this->sort}',"
-	    											."order:'{$this->order}',"
-	    											."type_id:'{$type_id}',"
-	    											."query:'{$this->query}',"
- 	                        						."district_id: '{$this->district_id}',"
- 	                        						."part_of_town_id:'{$this->part_of_town_id}',"
- 	                        						."filter:'{$this->filter}',"
- 	                        						."lookup:'{$lookup}',"
- 	                        						."lookup_tenant:'{$lookup_tenant}',"
-						 	                        ."lookup_name:'{$lookup_name}',"
-						 	                        ."cat_id:'{$this->cat_id}',"
- 	                        						."status:'{$this->status}'";
-
  	         //para opciones en el menu contextual (edit y view)
  	         $datatable['config']['java_edit'] = $GLOBALS['phpgw']->link('/index.php',array(
 								                  'menuaction'=> 'property.uilocation.edit',
@@ -361,15 +347,15 @@
 			   										 array( // TEXT IMPUT
 			                                            'name'     => 'query',
 			                                            'id'     => 'txt_query',
-			                                            'text'    => '',
+			                                            'text'    => '',//necesary for spacio next to  txtinput
 			                                            'value'    => '',//$query,
 			                                            'type' => 'text',
-			                                            'size'    => 25
+			                                            'size'    => 28
 			                                        ),
 			                                        array( //boton     SEARCH
 			                                            'id' => 'btn_search',
 			                                            'name' => 'search',
-			                                            'value'    => lang('Search'),
+			                                            'value'    => lang('search'),
 			                                            'type' => 'button',
 			                                        ),
 													array( //hidden type_id
@@ -380,12 +366,12 @@
 													array(
 						                                'type'	=> 'submit',
 						                            	'id'	=> 'btn_new',
-						                                'value'	=> lang('new')
+						                                'value'	=> lang('add')
 						                            ),
 													array(
 						                                'type'	=> 'button',
 						                            	'id'	=> 'btn_export',
-						                                'value'	=> lang('export')
+						                                'value'	=> lang('download')
 						                            ),
 						                            //for link "columns", next to Export button
 										          array(
