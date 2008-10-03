@@ -15,12 +15,14 @@ div.toolbar-container div.toolbar
 	border-left: 1px solid #fff;
 	border-right: 1px solid #bbb;
 	border-bottom: 1px solid #bbb;
+	width: 100%;
 }
 
 div.toolbar-container div.toolbar form
 {
 	float: left;
 	margin: 0.4em;
+	width: 100%;
 }
 
 div.toolbar-container div.toolbar form div.field
