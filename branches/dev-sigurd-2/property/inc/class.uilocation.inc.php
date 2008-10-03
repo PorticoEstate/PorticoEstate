@@ -213,9 +213,13 @@
 			}
 
 			$GLOBALS['phpgw']->js->validate_file('overlib','overlib','property');
-			//$GLOBALS['phpgw']->js->set_onload('document.query.focus();');
 
 			$datatable = array();
+			$values_combo_box = array();
+
+			if( phpgw::get_var('phpgw_return_as') != 'json' )
+			 {
+
 	    	$datatable['config']['base_url'] = $GLOBALS['phpgw']->link('/index.php', array
 	    				(
 	    					'menuaction'			=> 'property.uilocation.index',
@@ -257,7 +261,7 @@
 						 	                        ."cat_id:'{$this->cat_id}',"
  	                        						."status:'{$this->status}'";
 
- 	         //para entradas del edit y view
+ 	         //para opciones en el menu contextual (edit y view)
  	         $datatable['config']['java_edit'] = $GLOBALS['phpgw']->link('/index.php',array(
 								                  'menuaction'=> 'property.uilocation.edit',
 								                  'lookup_tenant'=>$lookup_tenant
@@ -271,34 +275,32 @@
 								                 );
 
 
-			//_debug_array($datatable);die;
+				$values_combo_box[0]  = $this->bocommon->select_category_list(array('format'=>'filter',
+	                                                                        'selected' => $this->cat_id,
+	                                                                        'type' =>'location',
+	                                                                        'type_id' =>$type_id,
+	                                                                        'order'=>'descr'));
+				$default_value = array ('id'=>'','name'=>'!no category');
+				array_unshift ($values_combo_box[0],$default_value);
 
-			$values_cat_id  = $this->bocommon->select_category_list(array('format'=>'filter',
-                                                                        'selected' => $this->cat_id,
-                                                                        'type' =>'location',
-                                                                        'type_id' =>$type_id,
-                                                                        'order'=>'descr'));
-			$default_value = array ('id'=>'','name'=>'!no category');
-			array_unshift ($values_cat_id,$default_value);
+				$values_combo_box[1]  = $this->bocommon->select_district_list('filter',$this->district_id);
+				$default_value = array ('id'=>'','name'=>'!no district');
+				array_unshift ($values_combo_box[1],$default_value);
 
-			$values_district_list  = $this->bocommon->select_district_list('filter',$this->district_id);
-			$default_value = array ('id'=>'','name'=>'!no district');
-			array_unshift ($values_district_list,$default_value);
+		        $values_combo_box[2] =  $this->bocommon->select_part_of_town('filter',$this->part_of_town_id,$this->district_id);
+		 		$default_value = array ('id'=>'','name'=>'!no part of town');
+				array_unshift ($values_combo_box[2],$default_value);
 
-	        $values_part_of_town_list =  $this->bocommon->select_part_of_town('filter',$this->part_of_town_id,$this->district_id);
-	 		$default_value = array ('id'=>'','name'=>'!no part of town');
-			array_unshift ($values_part_of_town_list,$default_value);
-
-			if(isset($GLOBALS['phpgw_info']['user']['preferences']['property']['property_filter']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['property_filter'] == 'owner')
-	        {
-	            $values_owner_list = $this->bo->get_owner_list('filter', $this->filter);
-	        }
-	        else
-	        {
-	            $values_owner_list = $this->bo->get_owner_type_list('filter', $this->filter);
-	        }
-	        $default_value = array ('id'=>'','name'=>'!Show all');
-			array_unshift ($values_owner_list,$default_value);
+				if(isset($GLOBALS['phpgw_info']['user']['preferences']['property']['property_filter']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['property_filter'] == 'owner')
+		        {
+		             $values_combo_box[3] = $this->bo->get_owner_list('filter', $this->filter);
+		        }
+		        else
+		        {
+		            $values_combo_box[3] = $this->bo->get_owner_type_list('filter', $this->filter);
+		        }
+		        $default_value = array ('id'=>'','name'=>'!Show all');
+				array_unshift ($values_combo_box[3],$default_value);
 
 
 			$link_download = array
@@ -332,105 +334,100 @@
 					),
 				'fields'	=> array(
                                     'field' => array(
-                                        array( //boton 	CATEGORY
-                                            'id' => 'btn_cat_id',
-                                            'name' => 'cat_id',
-                                            'value'	=> lang('Category'),
-                                            'type' => 'button'
-                                        ),
-                                        array( //hidden CATEGORY
-                                            'type' => 'hidden',
-                                            'id' => 'values_cat_id',
-                                            'value'	=> $this->select2String($values_cat_id) //i.e.  id,value/id,vale/
-                                        ),
-                                        array( //boton 	DISTINT
-                                            'id' => 'btn_district_id',
-                                            'name' => 'district_id',
-                                            'value'	=> lang('District'),
-                                            'type' => 'button',
-                                        ),
-                                        array( //hidden DISTINT
-                                            'type' => 'hidden',
-                                            'id' 	=> 'values_district_id',
-                                            'value'	=> $this->select2String($values_district_list)
-                                        ),
-                                        array( //boton 	PART OF TOWN
-                                            'id' => 'btn_part_of_town_id',
-                                            'name' => 'part_of_town_id',
-                                            'value'	=> lang('Part of Town'),
-                                            'type' => 'button',
-                                        ),
-                                        array( //hidden PART OF TOWN
-                                            'type' => 'hidden',
-                                            'id' 	=> 'values_part_of_town_id',
-                                            'value'	=> $this->select2String($values_part_of_town_list)
-                                        ),
-                                        array( //boton 	FILTER
-                                            'id' => 'btn_owner_id',
-                                            'name' => 'owner_id',
-                                            'value'	=> lang('Filter'),
-                                            'type' => 'button',
-                                        ),
-                                        array( //hidden FILTER
-                                            'type' => 'hidden',
-                                            'id' 	=> 'values_owner_list',
-                                            'value'	=> $this->select2String($values_owner_list)
-                                        ),
-   										 array( // TEXT IMPUT
-                                            'name'     => 'query',
-                                            'id'     => 'txt_query',
-                                            'text'    => '',
-                                            'value'    => '',//$query,
-                                            'type' => 'text',
-                                            'size'    => 25
-                                        ),
-                                        array( //boton     SEARCH
-                                            'id' => 'btn_search',
-                                            'name' => 'search',
-                                            'value'    => lang('Search'),
-                                            'type' => 'button',
-                                        ),
-										array( //hidden type_id
-			                                'type'	=> 'hidden',
-			                            	'id'	=> 'type_id',
-			                                'value'	=> $type_id
-			                            ),
-										array(
-			                                'type'	=> 'submit',
-			                            	'id'	=> 'btn_new',
-			                                'value'	=> lang('new')
-			                            ),
-										array(
-			                                'type'	=> 'button',
-			                            	'id'	=> 'btn_export',
-			                                'value'	=> lang('export')
-			                            ),
-										array(
-			                                'type'	=> 'link',
-			                            	'id'	=> 'btn_columns',
-			                            	'url'	=> "Javascript:window.open('".$GLOBALS['phpgw']->link('/index.php',
-											array
-														(
-															'menuaction'	=> 'property.uilocation.columns',
-															'type_id'		=> $type_id,
-															'lookup'		=> $this->lookup
-														))."','','width=300,height=600')",
-			                                'value'	=> lang('columns')
-			                            )
-		                           )
-				)
-			  )
-			);
-
-
-			$location_list = array();
-			if( phpgw::get_var('phpgw_return_as') != 'json')
-			{
+			                                        array( //boton 	CATEGORY
+			                                            'id' => 'btn_cat_id',
+			                                            'name' => 'cat_id',
+			                                            'value'	=> lang('Category'),
+			                                            'type' => 'button'
+			                                        ),
+			                                        array( //boton 	DISTINT
+			                                            'id' => 'btn_district_id',
+			                                            'name' => 'district_id',
+			                                            'value'	=> lang('District'),
+			                                            'type' => 'button',
+			                                        ),
+			                                        array( //boton 	PART OF TOWN
+			                                            'id' => 'btn_part_of_town_id',
+			                                            'name' => 'part_of_town_id',
+			                                            'value'	=> lang('Part of Town'),
+			                                            'type' => 'button',
+			                                        ),
+			                                        array( //boton 	FILTER
+			                                            'id' => 'btn_owner_id',
+			                                            'name' => 'owner_id',
+			                                            'value'	=> lang('Filter'),
+			                                            'type' => 'button',
+			                                        ),
+			   										 array( // TEXT IMPUT
+			                                            'name'     => 'query',
+			                                            'id'     => 'txt_query',
+			                                            'text'    => '',
+			                                            'value'    => '',//$query,
+			                                            'type' => 'text',
+			                                            'size'    => 25
+			                                        ),
+			                                        array( //boton     SEARCH
+			                                            'id' => 'btn_search',
+			                                            'name' => 'search',
+			                                            'value'    => lang('Search'),
+			                                            'type' => 'button',
+			                                        ),
+													array( //hidden type_id
+						                                'type'	=> 'hidden',
+						                            	'id'	=> 'type_id',
+						                                'value'	=> $type_id
+						                            ),
+													array(
+						                                'type'	=> 'submit',
+						                            	'id'	=> 'btn_new',
+						                                'value'	=> lang('new')
+						                            ),
+													array(
+						                                'type'	=> 'button',
+						                            	'id'	=> 'btn_export',
+						                                'value'	=> lang('export')
+						                            ),
+						                            //for link "columns", next to Export button
+										          array(
+						                                 'type' => 'link',
+						                                'id' => 'btn_columns',
+						                                'url' => "Javascript:window.open('".$GLOBALS['phpgw']->link('/index.php',
+																						           array
+																						              (
+																						               'menuaction' => 'property.uilocation.columns',
+																						               'type_id'  => $type_id,
+																						               'lookup'  => $this->lookup
+																						              ))."','','width=300,height=600')",
+																						                                   'value' => lang('columns')
+														)
+		                           				),
+		                       		'hidden_value' => array(
+					                                        array( //div values  combo_box_0
+							                                            'id' => 'values_combo_box_0',
+							                                            'value'	=> $this->select2String($values_combo_box[0]) //i.e.  id,value/id,vale/
+							                                      ),
+							                                array( //div values  combo_box_1
+							                                            'id' => 'values_combo_box_1',
+							                                            'value'	=> $this->select2String($values_combo_box[1])
+							                                      ),
+															 array( //div values  combo_box_2
+							                                            'id' => 'values_combo_box_2',
+							                                            'value'	=> $this->select2String($values_combo_box[2])
+							                                      ),
+							                                array( //div values  combo_box_3
+							                                            'id' => 'values_combo_box_3',
+							                                            'value'	=> $this->select2String($values_combo_box[3])
+							                                      )
+		                       								)
+												)
+										  )
+				);
+				//cramirez: $dry_run is use "$this->bo->read"
 				$dry_run=true;
 
-			}
+}
 
-			//_debug_array($location_list);die();
+			$location_list = array();
 			//cramirez: $dry_run avoid to load all data the first time
 			$location_list = $this->bo->read(array('type_id'=>$type_id,'lookup_tenant'=>$lookup_tenant,'lookup'=>$lookup,'allrows'=>$this->allrows,'dry_run' =>$dry_run));
 
@@ -546,8 +543,7 @@
 				}
 				unset($parameters);
 			}
-//_debug_array($GLOBALS['phpgw_info']);die("2");
-//_debug_array($uicols['cols_return_extra']);die;
+
 			$uicols_count	= count($uicols['descr']);
 			for ($i=0;$i<$uicols_count;$i++)
 			{
@@ -679,11 +675,7 @@
 			}
 
 
-			//_debug_array($datatable);die;
-			//-- BEGIN--- JSON CODE ---
-
-	    	//_debug_array($json);die;
-
+//-- BEGIN----------------------------- JSON CODE ------------------------------
 
 			if( phpgw::get_var('phpgw_return_as') == 'json' )
 			{
@@ -734,22 +726,18 @@
 
 				// values for control select
 				//cr@ccfirst.com 10/09/08 values passed for update select in YUI
-				$json['hidden']['cat_id'][] =          array ( 'id' => $this->cat_id,
-	                									  'value' => $datatable['actions']['form'][0]['fields']['field'][1]['value']
-	                                                     );
-				$json['hidden']['district_id'][] =     array ( 'id' => $this->district_id,
-	                                                      'value' => $datatable['actions']['form'][0]['fields']['field'][3]['value']
-	                                                     );
-				$json['hidden']['part_of_town_id'][] = array ( 'id' => $this->part_of_town_id,
-	                                                      'value' => $datatable['actions']['form'][0]['fields']['field'][5]['value']
-	                                                     );
-                $json['hidden']['filter'][] =          array ( 'id' => $this->filter,
-	                                                      'value' => $datatable['actions']['form'][0]['fields']['field'][7]['value']
-	                                                     );
+				$opt_cb_depend =  $this->bocommon->select_part_of_town('filter',$this->part_of_town_id,$this->district_id);
+		 		$default_value = array ('id'=>'','name'=>'!no part of town');
+				array_unshift ($opt_cb_depend,$default_value);
+
+				$json['hidden']['dependent'][] = array ( 'id' => $this->part_of_town_id,
+	                                                      'value' => $this->select2String($opt_cb_depend)
+														);
+
 
 	    		return $json;
 			}
-			//--- JSON CODE ---
+//-------------------- JSON CODE ----------------------
 
 			// Prepare template variables and process XSLT
 			$template_vars = array();
