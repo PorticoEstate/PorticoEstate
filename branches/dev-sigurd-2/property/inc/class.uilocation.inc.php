@@ -314,8 +314,14 @@
 			array(
 				'action'	=> $GLOBALS['phpgw']->link('/index.php',
 						array(
-							'menuaction' => 'property.uilocation.edit',
-							'type_id' => $type_id
+							'menuaction' 		=> 'property.uilocation.index',
+							'type_id' 			=> $type_id,
+							'district_id'       => $this->district_id,
+							'part_of_town_id'   => $this->part_of_town_id,
+							'lookup'        	=> $lookup,
+							'lookup_tenant'     => $lookup_tenant,
+							'lookup_name'       => $lookup_name,
+							'cat_id'        	=> $this->cat_id,
 						)
 					),
 				'fields'	=> array(
