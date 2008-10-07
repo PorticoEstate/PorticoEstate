@@ -144,6 +144,13 @@ this.create_array_values_list = function(stValues)
 		path_values.menuaction='property.uilocation.index';
 		window.open(ds_download,'window');
    }
+
+   this.onNewClick = function()
+   {
+		sUrl = java_edit;
+		window.open(sUrl,'_self');
+   }
+
  /********************************************************************************
  *
  */
@@ -157,7 +164,7 @@ this.create_array_values_list = function(stValues)
      oButtonExport.on("click", onDownloadClick);
 
 	var oButtonNew = new YAHOO.widget.Button("btn_new");
-	//oButtonNew.on("click", onDownloadClick);
+	oButtonNew.on("click", onNewClick);
 
 	options_combo_box = values_combo_box[0];
 	//cat_id es el nombre del URL variable
@@ -285,9 +292,11 @@ this.create_array_values_list = function(stValues)
                               p_myDataTable.deleteRow(elRow);
                           }
                           break;
-                        case 3:     // Filter
+                        case 3:     // New
                             var oRecord = p_myDataTable.getRecord(elRow);
-             break;
+                            sUrl = java_edit;
+                            window.open(sUrl,'_self');
+             				break;
                     }
                 }
             }

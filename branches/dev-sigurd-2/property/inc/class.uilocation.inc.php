@@ -250,7 +250,8 @@
  	         //para opciones en el menu contextual (edit y view)
  	         $datatable['config']['java_edit'] = $GLOBALS['phpgw']->link('/index.php',array(
 								                  'menuaction'=> 'property.uilocation.edit',
-								                  'lookup_tenant'=>$lookup_tenant
+								                  'lookup_tenant'=>$lookup_tenant,
+								                  'type_id'		=> $type_id
 								                  )
 								                 );
 
