@@ -201,13 +201,13 @@
 				$c_sms_to = str_replace("\"","",$array_sms_to[$i]);
 				$message = $this->db->db_addslashes($message);
 
-				$db_query = "INSERT INTO phpgw_sms_tblSMSOutgoing
+				$db_query = "INSERT INTO phpgw_sms_tblsmsoutgoing
 					(uid,p_gateway,p_src,p_dst,p_footer,p_msg,p_datetime,p_sms_type,unicode)
 					VALUES ('$uid','$gateway_module','$mobile_sender','$c_sms_to','$sms_sender','$message','$datetime_now','$sms_type','$unicode')";
 
 				$GLOBALS['phpgw']->db->transaction_begin();
 				$GLOBALS['phpgw']->db->query($db_query,__LINE__,__FILE__);
-				$smslog_id = $GLOBALS['phpgw']->db->get_last_insert_id('phpgw_sms_tblSMSOutgoing','smslog_id');
+				$smslog_id = $GLOBALS['phpgw']->db->get_last_insert_id('phpgw_sms_tblsmsoutgoing','smslog_id');
 				$GLOBALS['phpgw']->db->transaction_commit();
 
 				$gp_code = "PV";
@@ -270,7 +270,7 @@
 					$sms_to = str_replace("\"","",$sms_to);
 					$the_msg = "$sms_to\n$sms_msg";
 					$db_query1 = "
-					INSERT INTO phpgw_sms_tblSMSOutgoing
+					INSERT INTO phpgw_sms_tblsmsoutgoing
 					(uid,p_gateway,p_src,p_dst,p_footer,p_msg,p_datetime,p_gpid,p_sms_type)
 					VALUES ('$uid','$gateway_module','$mobile_sender','$sms_to','$sms_sender','$message','$datetime_now','$gpid','$sms_type')
 					";
@@ -335,7 +335,7 @@
 							$sms_to = str_replace("\"","",$sms_to);
 							$send_code = md5(mktime().$sms_to);
 							$db_query1 = "
-							INSERT INTO phpgw_sms_tblSMSOutgoing (uid,p_src,p_dst,p_footer,p_msg,p_datetime,p_gpid)
+							INSERT INTO phpgw_sms_tblsmsoutgoing (uid,p_src,p_dst,p_footer,p_msg,p_datetime,p_gpid)
 							VALUES ('$uid','$mobile_sender','$sms_to','$sms_sender','$message','$datetime_now','$gpid')";
 							$smslog_id = @dba_insert_id($db_query1);
 							$sms_id = "$gp_code.$uid.$smslog_id";
@@ -488,7 +488,7 @@
 		{
 			$datetime_now = $this->datetime_now();
 			$ok = false;
-			$db_query = "UPDATE phpgw_sms_tblSMSOutgoing SET p_update='$datetime_now',p_status='$p_status' WHERE smslog_id='$smslog_id' AND uid='$uid'";
+			$db_query = "UPDATE phpgw_sms_tblsmsoutgoing SET p_update='$datetime_now',p_status='$p_status' WHERE smslog_id='$smslog_id' AND uid='$uid'";
 			$this->db->transaction_begin();
 			$this->db->query($db_query,__LINE__,__FILE__);
 
@@ -820,6 +820,7 @@
 		// and sets the action
 		function setsmsincomingaction($sms_datetime,$sms_sender,$target_code,$message)
 		{
+			$message = utf8_encode($message);
 			$ok = false;
 			switch ($target_code)
 			{
