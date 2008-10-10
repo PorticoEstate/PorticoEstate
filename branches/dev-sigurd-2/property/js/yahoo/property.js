@@ -28,7 +28,7 @@ YAHOO.util.Event.addListener(window, "load", function()
 	//var oNormalButton_0, oNormalButton_1, oNormalButton_2;
 	var normalButtons = [
 	{order:0, name:'btn_search', funct:"onSearchClick"},
-	{order:1, name:'btn_new', funct:"onDownloadClick"},
+	{order:1, name:'btn_new', funct:"onNewClick"},
 	{order:2, name:'btn_export', funct:"onDownloadClick"}
 	]
 
@@ -56,6 +56,14 @@ this.filter_data = function(query)
 	execute_ds();
 }
 
+ /********************************************************************************
+ *
+ */
+   this.onNewClick = function()
+   {
+		sUrl = java_edit;
+		window.open(sUrl,'_self');
+   }
  /********************************************************************************
  *
  */
@@ -255,13 +263,13 @@ this.create_array_values_list = function(stValues)
                 var elRow = p_myDataTable.getTrEl(this.contextEventTarget);
                 if(elRow)
                 {
-                    switch(task.groupIndex)
+                    /*switch(task.groupIndex)
                     {
                         case 0:     // View
                             var oRecord = p_myDataTable.getRecord(elRow);
                             sUrl = java_view + "&location_code=" + oRecord.getData("location_code");
                             window.open(sUrl,'_self');
-             break;
+             				break;
                         case 1:     // Edit
                             var oRecord = p_myDataTable.getRecord(elRow);
                             sUrl = java_edit + "&location_code=" + oRecord.getData("location_code");
@@ -273,12 +281,22 @@ this.create_array_values_list = function(stValues)
                             {
                               ActionToPHP("deleteitem",[{variable:"id",value:oRecord.getData("location_code")}]);
                               p_myDataTable.deleteRow(elRow);
-                          }
-                          break;
+                          	}
+                         	 break;
                         case 3:     // Filter
                             var oRecord = p_myDataTable.getRecord(elRow);
-             break;
-                    }
+                              break;
+
+						}
+
+						//---sUrl = java_view + "&location_code=" + oRecord.getData("location_code");
+						*/
+
+                        var oRecord = p_myDataTable.getRecord(elRow);
+                        var url = values_ds.rights[task.groupIndex].action;
+                        var param_name = values_ds.rights[task.groupIndex].parameters.parameter[0].name;
+                        sUrl = url + "&"+param_name+"=" + oRecord.getData(param_name);
+						window.open(sUrl,'_self');
                 }
             }
         };
@@ -287,12 +305,17 @@ this.create_array_values_list = function(stValues)
  */
  this.GetMenuContext = function()
   {
-   return [[
-             { text: "View"}],[
-             { text: "Edit"}],[
-             { text: "Delete"}],[
-             { text: "New"}]
-         ];
+   /*return [  [{text: "View"}],
+			   [{text: "Edit"}],
+			   [{text: "Delete"}],
+			   [{text: "New"}]
+           ];*/
+   var opts = new Array();
+   for(var k =0; k < values_ds.rights.length; k ++)
+   {
+	opts[k]=[{text: values_ds.rights[k].text}];
+   }
+   return [opts];
   }
 
  /********************************************************************************
