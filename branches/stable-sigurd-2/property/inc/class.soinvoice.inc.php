@@ -103,7 +103,7 @@
 				$where= 'AND';
 			}
 
-			if ($district_id > 0)
+			if ($district_id > 0 && $paid)
 			{
 				$filtermethod .= " $where  district_id='$district_id' ";
 				$join_tables = " $this->join fm_location1 ON fm_ecobilagoverf.loc1 = fm_location1.loc1"
