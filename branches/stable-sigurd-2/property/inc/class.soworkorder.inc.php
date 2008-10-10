@@ -145,7 +145,6 @@
 				$district_id	= isset($data['district_id']) ? $data['district_id'] : '';
 			}
 
-_debug_array($data);
 			$sql = $this->bocommon->fm_cache('sql_workorder'.!!$search_vendor . '_' . !!$wo_hour_cat_id . '_' . !!$b_group);
 //echo $sql;
 			if(!$sql)
