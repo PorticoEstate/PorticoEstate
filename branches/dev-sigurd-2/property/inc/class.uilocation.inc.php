@@ -184,8 +184,11 @@
 		{
 
 			$type_id	= $this->type_id;
+			// $lookup use for pop-up
 			$lookup 	= $this->lookup;
+			// $lookup_name use in pop-up option "project"
 			$lookup_name 	= phpgw::get_var('lookup_name');
+			// use in option menu TENANT
 			$lookup_tenant 	= phpgw::get_var('lookup_tenant', 'bool');
 
 			if(!$type_id)
@@ -244,11 +247,10 @@
  	                        						."lookup_tenant:'{$lookup_tenant}',"
 						 	                        ."lookup_name:'{$lookup_name}',"
 						 	                        ."cat_id:'{$this->cat_id}',"
-						 	                        //."start:'{$this->start}',"
  	                        						."status:'{$this->status}'";
 
  	         //para opciones en el menu contextual (edit y view)
- 	         $datatable['config']['java_edit'] = $GLOBALS['phpgw']->link('/index.php',array(
+ 	         /*$datatable['config']['java_edit'] = $GLOBALS['phpgw']->link('/index.php',array(
 								                  'menuaction'=> 'property.uilocation.edit',
 								                  'lookup_tenant'=>$lookup_tenant,
 								                  'type_id'		=> $type_id
@@ -260,8 +262,8 @@
 								                  'lookup_tenant'=>$lookup_tenant
 								                  )
 								                 );
-
-
+			*/
+				 // $values_combo_box  se usará para escribir en el HTML, usando el XSLT
 				$values_combo_box[0]  = $this->bocommon->select_category_list(array('format'=>'filter',
 	                                                                        'selected' => $this->cat_id,
 	                                                                        'type' =>'location',
@@ -290,7 +292,7 @@
 				array_unshift ($values_combo_box[3],$default_value);
 
 
-			$link_download = array
+			/*$link_download = array
 			(
 				'menuaction'		=> 'property.uilocation.download',
 				'sort'			=> $this->sort,
@@ -306,7 +308,7 @@
 				'type_id'		=> $type_id,
 				'status'		=> $this->status,
 				'start'			=> $this->start
-			);
+			);*/
 
 			//$download_table	= $GLOBALS['phpgw']->link('/index.php',$link_download);
 
@@ -477,13 +479,7 @@
 					$j++;
 				}
 			}
-//		_debug_array($datatable['rows']);die;
-
-			//_debug_array($datatable);die();
-
-
-
-
+			// NO pop-up
 			if(!$lookup)
 			{
 				$parameters = array
@@ -513,7 +509,7 @@
 				if($this->acl_edit)
 				{
 					$datatable['rowactions']['action'][] = array(
-						'text' 			=> lang('delete'),
+						'text' 			=> lang('edit'),
 						'action'		=> $GLOBALS['phpgw']->link('/index.php',array
 										(
 											'menuaction'	=> 'property.uilocation.edit',
@@ -536,8 +532,9 @@
 				}
 				unset($parameters);
 			}
-
+			//$uicols_count indicates the number of columns to display in actuall option-menu. this variable was set in $this->bo->read()
 			$uicols_count	= count($uicols['descr']);
+
 			for ($i=0;$i<$uicols_count;$i++)
 			{
 				if($uicols['input_type'][$i]!='hidden')
@@ -574,7 +571,7 @@
 					$datatable['headers']['header'][$i]['format'] 			= 'hidden';
 				}
 			}
-			//_debug_array($datatable);die;
+			// for POP-UPs
 			if($lookup)
 			{
 				$datatable['headers']['header'][$i]['width'] 			= '5%';
@@ -614,29 +611,17 @@
 					}
 				}
 
-
-
-
 				$function_exchange_values .='window.close()';
 
 				$datatable['exchange_values'] = $function_exchange_values;
 				$datatable['valida'] = $function_valida;
-				//_debug_array($datatable['exchange_values']);die;
 			}
-
-			//_debug_array($datatable['exchange_values']);die;
 
 			// Pagination and sort values
 			$datatable['pagination']['records_start'] 	= (int)$this->bo->start;
 			$datatable['pagination']['records_limit'] 	= $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
 			$datatable['pagination']['records_returned']= count($location_list);
 			$datatable['pagination']['records_total'] 	= $this->bo->total_records;
-
-			$datatable['pagination']['lang']['first'] 	= 'First';
-			$datatable['pagination']['lang']['next'] 	= 'Next';
-			$datatable['pagination']['lang']['previous']= 'Previous';
-			$datatable['pagination']['lang']['last'] 	= 'Last';
-			$datatable['pagination']['lang']['overview']= lang('Records $1 - $2 of $3');
 
 			$datatable['sorting']['order'] 	= phpgw::get_var('order', 'string'); // Column
 			$datatable['sorting']['sort'] 	= phpgw::get_var('sort', 'string'); // ASC / DESC
@@ -678,18 +663,10 @@
 	    			'recordsReturned' 	=> $datatable['pagination']['records_returned'],
     				'totalRecords' 		=> (int)$datatable['pagination']['records_total'],
 	    			'startIndex' 		=> $datatable['pagination']['records_start'],
-	    			//'start' 		=> $datatable['pagination']['records_start'],
-
-	    			//
 					'sort'				=> $datatable['sorting']['order'],
-
 	    			'dir'				=> $datatable['sorting']['sort'],
-	    			//'dir'				=> "asc",
-
 					'records'			=> array()
-
 	    		);
-
 
 				// values for datatable
 	    		if(isset($datatable['rows']['row']) && is_array($datatable['rows']['row'])){
@@ -698,7 +675,6 @@
 		    			$json_row = array();
 		    			foreach( $row['column'] as $column)
 		    			{
-
 		    				if(isset($column['format']) && $column['format']== "link" && $column['java_link']==true)
 		    				{
 		    					$json_row[$column['name']] = "<a href='#' id='".$column['link']."' onclick='javascript:filter_data(this.id);'>" .$column['value']."</a>";
@@ -710,11 +686,9 @@
 		    				{
 		    				  $json_row[$column['name']] = $column['value'];
 		    				}
-
 		    			}
 		    			$json['records'][] = $json_row;
 	    			}
-
 	    		}
 
 				// values for control select
@@ -727,6 +701,11 @@
 	                                                      'value' => $this->select2String($opt_cb_depend)
 														);
 
+				// right in datatable
+				if(isset($datatable['rowactions']['action']) && is_array($datatable['rowactions']['action']))
+				{
+					$json ['rights'] = $datatable['rowactions']['action'];
+				}
 
 	    		return $json;
 			}
@@ -747,22 +726,13 @@
 		  	$GLOBALS['phpgw']->css->validate_file('property');
 			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/datatable/assets/skins/sam/datatable.css');
 
-
-
-
 			//Title of Page
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
-
 
 		  		// Prepare YUI Library
 	  			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'property', 'property' );
 
-
-
 			$this->save_sessiondata();
-
-
-
 		}
 
 
