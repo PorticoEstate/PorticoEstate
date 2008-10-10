@@ -252,6 +252,7 @@
 					}
 					else
 					{
+						$GLOBALS['phpgw_info']['flags']['noframework'] = true;
 						$this->debug_import($buffer,$invoice_common);
 						return;
 					}
