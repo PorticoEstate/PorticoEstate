@@ -80,6 +80,10 @@
 					$load = array('container-min', 'dragdrop-min');
 					break;
 
+				case 'utilities':
+					$load = array('container', 'container-min');
+					break;
+
 				case 'connection':
 					$load = array('connection-min');
 					break;
@@ -90,6 +94,10 @@
 
 				case 'datatable':
 					$load = array('element-beta', 'datasource-beta', 'datatable-beta' );
+					break;
+
+				case 'loader':
+					$load = array('yuiloader-beta');
 					break;
 
 				case 'dom':
