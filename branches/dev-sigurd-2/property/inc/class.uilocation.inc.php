@@ -530,6 +530,14 @@
 						'parameters'	=> $parameters
 					);
 				}
+
+				$datatable['rowactions']['action'][] = array(
+						'text' 			=> lang('add'),
+						'action'		=> $GLOBALS['phpgw']->link('/index.php',array
+										(
+											'menuaction'	=> 'property.uilocation.edit'
+										))
+				);
 				unset($parameters);
 			}
 			//$uicols_count indicates the number of columns to display in actuall option-menu. this variable was set in $this->bo->read()
@@ -617,6 +625,11 @@
 				$datatable['valida'] = $function_valida;
 			}
 
+			// path for property.js
+			$char_separate = "/";
+			$folder_root = array_reverse(explode($char_separate,dirname($_SERVER['SCRIPT_FILENAME'])));
+			$datatable['property_js'] = $char_separate.$folder_root[0]."/property/js/yahoo/property.js";
+
 			// Pagination and sort values
 			$datatable['pagination']['records_start'] 	= (int)$this->bo->start;
 			$datatable['pagination']['records_limit'] 	= $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
@@ -634,6 +647,8 @@
 		  	phpgwapi_yui::load_widget('datatable');
 		  	phpgwapi_yui::load_widget('menu');
 		  	phpgwapi_yui::load_widget('connection');
+		  	//// cramirez: necesary for include a partucular js
+		  	phpgwapi_yui::load_widget('loader');
 
 			if($lookup)
 			{
@@ -729,8 +744,9 @@
 			//Title of Page
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
 
-		  		// Prepare YUI Library
-	  			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'property', 'property' );
+	  		// Prepare YUI Library
+  			//$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'property', 'property' );
+  			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'location.index', 'property' );
 
 			$this->save_sessiondata();
 		}
