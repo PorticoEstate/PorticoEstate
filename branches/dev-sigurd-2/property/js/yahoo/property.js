@@ -1,6 +1,4 @@
 
-YAHOO.util.Event.addListener(window, "load", function()
-{
 	var oSelectedTR;
 	var menuCB,optionsCB, options_combo_box;
 	var array_options = new Array();
@@ -10,39 +8,19 @@ YAHOO.util.Event.addListener(window, "load", function()
 	var myDataSource,myDataTable, myContextMenu, myPaginator ;
 	var ds, values_ds;
 	var myrowsPerPage,mytotalRows,ActualValueRowsPerPageDropdown;
-
-	//------------------------------------------------------
 	var type_id = YAHOO.util.Dom.get('type_id');
-	var imput= "txt_query";
 
-	//define SelectButton
- 	var oMenuButton_0, oMenuButton_1, oMenuButton_2, oMenuButton_3;
- 	var selectsButtons = [
-	{order:0, var_URL:'cat_id',name:'btn_cat_id',style:'categorybutton',dependiente:''},
-	{order:1, var_URL:'district_id',name:'btn_district_id',style:'districtbutton',dependiente:2},
-	{order:2, var_URL:'part_of_town_id',name:'btn_part_of_town_id',style:'partOFTownbutton',dependiente:''},
-	{order:3, var_URL:'filter', name:'btn_owner_id',style:'ownerIdbutton',dependiente:''}
-	]
 
-	// define buttons
-	//var oNormalButton_0, oNormalButton_1, oNormalButton_2;
-	var normalButtons = [
-	{order:0, name:'btn_search', funct:"onSearchClick"},
-	{order:1, name:'btn_new', funct:"onNewClick"},
-	{order:2, name:'btn_export', funct:"onDownloadClick"}
-	]
-
-	//var oNormalButton_0;
-	var textImput = [
-	{order:0, name:'txt_query'}
-	]
 
  /********************************************************************************
  *
  */
-this.initial_focus = function(control)
+this.initial_focus = function()
 {
-	YAHOO.util.Dom.get(control).focus();
+	//if before doing ENTER,
+	YAHOO.util.Dom.get(textImput[0].name).value = path_values.query;
+	YAHOO.util.Dom.get(textImput[0].name).focus();
+
 }
 
  /********************************************************************************
@@ -50,8 +28,7 @@ this.initial_focus = function(control)
  */
 this.filter_data = function(query)
 {
-	//document.getElementById(imput).value = query;
-	YAHOO.util.Dom.get(imput).value = query;
+	YAHOO.util.Dom.get(textImput[0].name).value = query;
 	path_values.query = query;
 	execute_ds();
 }
@@ -61,7 +38,9 @@ this.filter_data = function(query)
  */
    this.onNewClick = function()
    {
-		sUrl = java_edit;
+		//NEW is always the last options in arrays RIGHTS
+		pos_opt = values_ds.rights.length-1;
+		sUrl = values_ds.rights[pos_opt].action;
 		window.open(sUrl,'_self');
    }
  /********************************************************************************
@@ -70,8 +49,7 @@ this.filter_data = function(query)
   this.onSearchClick = function()
   {
         //no es necesario actualizar los valores actuales de path_value. Este es global y siempre esta actualizado
-        //path_values.query = document.getElementById(imput).value;
-        path_values.query = YAHOO.util.Dom.get(imput).value;
+        path_values.query = YAHOO.util.Dom.get(textImput[0].name).value;
 
 		execute_ds();
 
@@ -161,9 +139,6 @@ this.create_array_values_list = function(stValues)
  /********************************************************************************
  *
  */
-
-
-
 
   this.init_filter = function()
   {
@@ -263,39 +238,19 @@ this.create_array_values_list = function(stValues)
                 var elRow = p_myDataTable.getTrEl(this.contextEventTarget);
                 if(elRow)
                 {
-                    /*switch(task.groupIndex)
-                    {
-                        case 0:     // View
-                            var oRecord = p_myDataTable.getRecord(elRow);
-                            sUrl = java_view + "&location_code=" + oRecord.getData("location_code");
-                            window.open(sUrl,'_self');
-             				break;
-                        case 1:     // Edit
-                            var oRecord = p_myDataTable.getRecord(elRow);
-                            sUrl = java_edit + "&location_code=" + oRecord.getData("location_code");
-                            window.open(sUrl,'_self');
-                            break;
-                        case 2:     // Delete row upon confirmation
-                            var oRecord = p_myDataTable.getRecord(elRow);
-                            if(confirm("Are you sure you want to delete ?"))
-                            {
-                              ActionToPHP("deleteitem",[{variable:"id",value:oRecord.getData("location_code")}]);
-                              p_myDataTable.deleteRow(elRow);
-                          	}
-                         	 break;
-                        case 3:     // Filter
-                            var oRecord = p_myDataTable.getRecord(elRow);
-                              break;
-
-						}
-
-						//---sUrl = java_view + "&location_code=" + oRecord.getData("location_code");
-						*/
-
                         var oRecord = p_myDataTable.getRecord(elRow);
                         var url = values_ds.rights[task.groupIndex].action;
-                        var param_name = values_ds.rights[task.groupIndex].parameters.parameter[0].name;
-                        sUrl = url + "&"+param_name+"=" + oRecord.getData(param_name);
+
+
+                        if(values_ds.rights[task.groupIndex].parameters!=null)
+                        {
+                            param_name = values_ds.rights[task.groupIndex].parameters.parameter[0].name;
+                        	sUrl = url + "&"+param_name+"=" + oRecord.getData(param_name);
+                        }
+                        else //for New
+                        {
+                        	sUrl = url;
+                        }
 						window.open(sUrl,'_self');
                 }
             }
@@ -305,11 +260,6 @@ this.create_array_values_list = function(stValues)
  */
  this.GetMenuContext = function()
   {
-   /*return [  [{text: "View"}],
-			   [{text: "Edit"}],
-			   [{text: "Delete"}],
-			   [{text: "New"}]
-           ];*/
    var opts = new Array();
    for(var k =0; k < values_ds.rights.length; k ++)
    {
@@ -323,8 +273,7 @@ this.create_array_values_list = function(stValues)
  */
 	this.buildQuery = function(strQuery)
 	{
-		//path_values.query = document.getElementById(imput).value;
-		path_values.query = YAHOO.util.Dom.get(imput).value;
+		path_values.query = YAHOO.util.Dom.get(textImput[0].name).value;
 
 		execute_ds();
 	}
@@ -365,6 +314,8 @@ this.create_array_values_list = function(stValues)
 						if(flag==0){
 							init_datatable();
 							init_filter();
+							initial_focus();
+							return;
 						}
 						else{
 						 	update_datatable();
@@ -380,12 +331,6 @@ this.create_array_values_list = function(stValues)
 		   alert(e_async);
 		}
 	}
-/********************************************************************************
- *
- */
-
-
-
 
 /********************************************************************************
  *
@@ -430,7 +375,7 @@ this.create_array_values_list = function(stValues)
 	   myPaginator = new YAHOO.widget.Paginator({
 						containers         : ['paging'],
 						pageLinks          : 10,
-						rowsPerPage        : ActualValueRowsPerPageDropdown, //MAXIMO el PHPGW me devuelve 15 valor configurado por preferencias
+						rowsPerPage        : values_ds.recordsReturned, //MAXIMO el PHPGW me devuelve 15 valor configurado por preferencias
 						rowsPerPageOptions : [myrowsPerPage,mytotalRows],
 						template          : "{RowsPerPageDropdown}items per Page, {CurrentPageReport}<br>{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}",
 						pageReportTemplate : "Showing items {startIndex} - {endIndex} of {totalRecords}"
@@ -459,6 +404,13 @@ this.create_array_values_list = function(stValues)
 					}
 					//URL-vars adicionales que se agregaran al actual ds
 					var addToRequest = "&start=0&order="+oColumn.source+"&sort="+sDir;
+
+					//
+					if(mytotalRows == ActualValueRowsPerPageDropdown)
+					{
+						addToRequest = addToRequest+"&allrows=1";
+					}
+
 					//sea actualiza el liveDAta del Datasource con los actuales valores de los combos y txtboxs
 					myDataTable.getDataSource().liveData=ds;
 
@@ -550,7 +502,12 @@ this.update_datatable = function()
 
      //update paginator with news values
      myPaginator.setTotalRecords(newTotalRecords,true);
-     myPaginator.updateOnChange=true;
+	//update globals variables for pagination
+	myrowsPerPage = values_ds.recordsReturned;
+	mytotalRows = values_ds.totalRecords;
+	//update combo box pagination
+	myPaginator.set('rowsPerPageOptions',[myrowsPerPage,mytotalRows]);
+	//myPaginator.updateOnChange=true;
 	}
 
 /****************************************************************************************
@@ -558,24 +515,24 @@ this.update_datatable = function()
 */
 
 this.update_filter = function()
-{
- if (flag_update_filter !='')
- {
- 		 var filter_tmp = eval("oMenuButton_"+flag_update_filter);
+	{
+	 if (flag_update_filter !='')
+	 	{
+	 		 var filter_tmp = eval("oMenuButton_"+flag_update_filter);
 
- 		filter_tmp.getMenu().clearContent();
-	    filter_tmp.getMenu().itemData = create_menu_list (values_ds.hidden.dependent[0].value,selectsButtons[flag_update_filter].order);
-	    filter_tmp.set("value",values_ds.hidden.dependent[0].id);
-	    flag_update_filter = '';
- }
-}
+	 		filter_tmp.getMenu().clearContent();
+		    filter_tmp.getMenu().itemData = create_menu_list (values_ds.hidden.dependent[0].value,selectsButtons[flag_update_filter].order);
+		    filter_tmp.set("value",values_ds.hidden.dependent[0].id);
+		    flag_update_filter = '';
+	 	}
+	}
 
 //----------------------------------------------------------------------------------------
 
-  this.initial_focus(imput);
-  eval("var path_values = {"+base_java_url+"}");
-  this.execute_ds();
+	eval("var path_values = "+base_java_url+"");
+	this.execute_ds();
 
 
- });
+
+
 
