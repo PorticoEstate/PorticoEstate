@@ -31,6 +31,7 @@
 	 * Description
 	 * @package property
 	 */
+	phpgw::import_class('phpgwapi.yui');
 
 	class property_uientity
 	{
@@ -49,14 +50,16 @@
 		(
 			'columns'		=> true,
 			'download'  	=> true,
-			'index'  		=> true,
+			'index_old'  		=> true,
 			'view'   		=> true,
 			'edit'   		=> true,
 			'delete' 		=> true,
 			'view_file'		=> true,
 			'attrib_history'=> true,
 			'attrib_help'	=> true,
-			'print_pdf'		=> true
+			'print_pdf'		=> true,
+			'select2String'		=> true,
+			'index'		=> true
 		);
 
 		function property_uientity()
@@ -214,7 +217,7 @@
 			$bofiles->view_file("{$this->category_dir}/{$loc1}");
 		}
 
-		function index()
+		function index_old()
 		{
 			if(!$this->acl_read && $this->cat_id)
 			{
@@ -510,6 +513,7 @@
 				$this->save_sessiondata();
 			}
 		}
+
 
 		function edit()
 		{
@@ -1531,7 +1535,7 @@
 							}
 							else
 							{
-								$values[] = $choice['value'];							
+								$values[] = $choice['value'];
 							}
 						}
 						$value = implode(' , ',$values);
@@ -1562,7 +1566,7 @@
 							'sep'	=> '',
 							'value'	=> ''
 						);
-					
+
 					}
 				}
 				$pdf->ezTable($content,'','',
@@ -1575,5 +1579,501 @@
 			$document = $pdf->ezOutput();
 			$pdf->print_pdf($document,$entity['name'] . '_' . str_replace(' ','_',$GLOBALS['phpgw']->accounts->id2name($this->account)));
 		}
+
+		function select2String($array_values, $id = 'id', $name = 'name')
+         {
+             $str_array_values = "";
+             for($i = 0; $i < count($array_values); $i++){
+                foreach( $array_values[$i] as $key => $value ) {
+
+                    if ($key == $id){
+                    	$str_array_values .= $value;
+                    	$str_array_values .= "#";
+                    }
+                    if ($key == $name){
+                    	 $str_array_values .= $value;
+                    	 $str_array_values .= "/";
+                    }
+                }
+             }
+             return $str_array_values;
+          }
+
+
+function index()
+{
+        //redirect if select menu options
+        if(!$this->entity_id || !$this->cat_id)
+        {
+              $GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uientity.index', 'entity_id'=>1, 'cat_id'=> 1));
+        }
+        //redirect if no rights
+        if(!$this->acl_read && $this->cat_id)
+        {
+              $GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=>1, 'acl_location'=> $this->acl_location));
+        }
+
+        //Guarda la actual posicion (entity_receipt_1_2) en la sesion
+        $receipt = $GLOBALS['phpgw']->session->appsession('session_data','entity_receipt_' . $this->entity_id . '_' . $this->cat_id);
+        $GLOBALS['phpgw']->session->appsession('session_data','entity_receipt_' . $this->entity_id . '_' . $this->cat_id,'');
+
+        //--busqueda de fechas---
+        $start_date 	= urldecode($this->start_date);
+        $end_date 	= urldecode($this->end_date);
+
+        //----------------- seteo en preferencias----group_filters-------------------------------
+        if(isset($GLOBALS['phpgw_info']['user']['preferences']['property']['group_filters']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['group_filters'])
+        {
+                $group_filters = 'select';
+                $GLOBALS['phpgw']->xslttpl->add_file(array('search_field_grouped'));
+        }
+        else
+        {
+                $group_filters = 'filter';
+                $GLOBALS['phpgw']->xslttpl->add_file(array('search_field'));
+        }
+
+
+
+        $datatable = array();
+        $values_combo_box = array();
+
+        if( phpgw::get_var('phpgw_return_as') != 'json' )
+        {
+                $datatable['config']['base_url'] = $GLOBALS['phpgw']->link('/index.php',
+                            array
+                            (
+                            'menuaction'	=> 'property.uientity.index',
+                            'entity_id'       => $this->entity_id,
+                            'cat_id'        	=> $this->cat_id,
+                            'district_id'       => $this->district_id,
+                            'status'        	=> $this->status,
+                            'filter'            => $this->filter,
+                            'query'            	=> $this->query,
+                            ));
+                $datatable['config']['base_java_url'] = "menuaction:'property.uientity.index',".
+                               "entity_id:'{$this->entity_id}',".
+                               "cat_id:'{$this->cat_id}',".
+                               "district_id:'{$this->district_id}',".
+                               "status:'{$this->status}',".
+                               "filter:'{$this->filter}',".
+                               "query:'{$this->query}'";
+
+                ////// ---- combo CATEGORY----------------------
+                $values_combo_box[0]  = $this->bo->select_category_list($group_filters,$this->cat_id);
+                $default_value = array ('id'=>'','name'=>'!no category');
+                array_unshift ($values_combo_box[0],$default_value);
+
+                //// ---- combo DISTRICT----------------------
+                if($this->cat_id)
+                {
+                    $category = $this->boadmin_entity->read_single_category($this->entity_id,$this->cat_id);
+                    //--llena el combo si tiene categoria
+                    if (isset($category['location_level']) && $category['location_level']>0)
+                    {
+                        $values_combo_box[1]	= $this->bocommon->select_district_list($group_filters,$this->district_id);
+                        $default_value = array ('id'=>'','name'=>'!no district');
+                        array_unshift ($values_combo_box[1],$default_value);
+                    }
+                }
+                //// ---- combo CATEGORY----------------------
+                $values_combo_box[2]  = $this->bo->select_status_list($group_filters,$this->status);
+                $default_value = array ('id'=>'','name'=>'!no status');
+                array_unshift ($values_combo_box[2],$default_value);
+
+                //// ---- combo USER----------------------
+                $values_combo_box[3]  = $this->bocommon->get_user_list_right2($group_filters,4,$this->filter,$this->acl_location,array('all'),$default='all');
+                $default_value = array ('user_id'=>'','name'=>'!no user');
+                array_unshift ($values_combo_box[3],$default_value); //_debug_array($values_combo_box[3]);die;
+
+                $datatable['actions']['form'] = array(
+                array(
+                        'action'  => $GLOBALS['phpgw']->link('/index.php',
+                                        array(
+                                                'menuaction'	=> 'property.uientity.index',
+                                                'entity_id'   => $this->entity_id,
+                                                'cat_id'        => $this->cat_id,
+                                                'district_id'   => $this->district_id,
+                                                'status'        => $this->status,
+                                                'filter'        => $this->filter,
+                                                'query'         => $this->query,
+                                              )),
+                        'fields'  => array(
+                              'field' => array(
+                                                array( //boton 	CATEGORY
+                                                    'id'   => 'btn_cat_id',
+                                                    'name' => 'cat_id',
+                                                    'value'=> lang('Category'),
+                                                    'type' => 'button'
+                                                ),
+                                                array( //boton 	DISTINT
+                                                    'id'   => 'btn_district_id',
+                                                    'name' => 'district_id',
+                                                    'value'=> lang('District'),
+                                                    'type' => 'button'
+                                                ),
+                                                array( //boton 	STATUS
+                                                    'id'   => 'btn_status_id',
+                                                    'name' => 'status_id',
+                                                    'value'=> lang('Status'),
+                                                    'type' => 'button'
+                                                ),
+                                                array( //boton 	USER
+                                                    'id'   => 'btn_user_id',
+                                                    'name' => 'user_id',
+                                                    'value'=> lang('User'),
+                                                    'type' => 'button'
+                                                ),
+                                                array( // TEXT IMPUT
+                                                    'name' => 'query',
+                                                    'id'   => 'txt_query',
+                                                    'text' => '',//necesary for spacio next to  txtinput
+                                                    'value'=> '',//$query,
+                                                    'type' => 'text',
+                                                    'size' => 28
+                                                ),
+                                                array( //boton     SEARCH
+                                                    'id'   => 'btn_search',
+                                                    'name' => 'search',
+                                                    'value'=> lang('search'),
+                                                    'type' => 'button',
+                                                ),
+                                                /*array( //hidden type_id
+                                                    'type'	=> 'hidden',
+                                                    'id'	=> 'type_id',
+                                                    'value'	=> $type_id
+                                                 ),*/
+                                                array(
+                                                    'type' => 'submit',
+                                                    'id'   => 'btn_new',
+                                                    'value'=> lang('add')
+                                                    ),
+                                                array(
+                                                    'type' => 'button',
+                                                    'id'   => 'btn_export',
+                                                    'value'=> lang('download')
+                                                    ),
+                                                array(//for link "columns", next to Export button
+                                                    'type'=> 'link',
+                                                    'id'  => 'btn_columns',
+                                                    'url' => "Javascript:window.open('".$GLOBALS['phpgw']->link('/index.php',
+                                                           array(
+                                                               'menuaction' => 'property.uientity.columns',
+                                                               'entity_id'  => $this->entity_id,
+                                                               'cat_id'     => $this->cat_id
+                                                              ))."','','width=300,height=600')",
+                                                     'value' => lang('columns')
+                                                    )),
+                              'hidden_value' => array(
+                                                    array(
+                                                        'id'   => 'values_combo_box_0',
+                                                        'value'=> $this->select2String($values_combo_box[0])
+                                                          ),
+                                                    array(
+                                                        'id'    => 'values_combo_box_1',
+                                                        'value' => $this->select2String($values_combo_box[1])
+                                                          ),
+                                                     array(
+                                                        'id' => 'values_combo_box_2',
+                                                        'value'	=> $this->select2String($values_combo_box[2])
+                                                          ),
+                                                     array(
+                                                        'id' => 'values_combo_box_3',
+                                                        'value'	=> $this->select2String($values_combo_box[3],"user_id")
+                                                          ))
+                         )));
+                //cramirez: $dry_run is use "$this->bo->read"
+                $dry_run=true;
+
+        }
+
+        $entity_list = array();
+        //cramirez: $dry_run avoid to load all data the first time
+        $entity_list = $this->bo->read(array('start_date'=>$start_date,'end_date'=>$end_date,'dry_run' =>$dry_run));
+
+        $uicols = $this->bo->uicols;
+
+        $content = array();
+        $j=0;
+        if (isset($entity_list) && is_array($entity_list))
+        {
+                foreach($entity_list as $entity_entry)
+                {
+                        for ($i=0;$i<count($uicols['name']);$i++)
+                        {
+                                if($uicols['input_type'][$i]!='hidden')
+                                {
+                                        if(isset($entity_entry['query_location'][$uicols['name'][$i]]))
+                                        {
+                                                $datatable['rows']['row'][$j]['column'][$i]['name'] 			= $uicols['name'][$i];
+                                                $datatable['rows']['row'][$j]['column'][$i]['statustext']		= lang('search');
+                                                $datatable['rows']['row'][$j]['column'][$i]['value']			= $entity_entry[$uicols['name'][$i]];
+                                                $datatable['rows']['row'][$j]['column'][$i]['format'] 			= 'link';
+                                                $datatable['rows']['row'][$j]['column'][$i]['java_link']		= true;
+                                                $datatable['rows']['row'][$j]['column'][$i]['link']			= $entity_entry['query_location'][$uicols['name'][$i]];
+                                                $uicols['formatter'][$i] = 'myCustom';
+
+
+                                        }
+                                        else
+                                        {
+                                                $datatable['rows']['row'][$j]['column'][$i]['value'] 			= $entity_entry[$uicols['name'][$i]];
+                                                //$datatable['rows']['row'][$j]['column'][$i]['value'] 			= $i;
+                                                $datatable['rows']['row'][$j]['column'][$i]['name'] 			= $uicols['name'][$i];
+                                                $datatable['rows']['row'][$j]['column'][$i]['lookup'] 			= $lookup;
+                                                $datatable['rows']['row'][$j]['column'][$i]['align'] 			= (isset($uicols['align'][$i])?$uicols['align'][$i]:'center');
+
+                                                if(isset($uicols['datatype']) && isset($uicols['datatype'][$i]) && $uicols['datatype'][$i]=='link' && $entity_entry[$uicols['name'][$i]])
+                                                {
+                                                        $datatable['rows']['row'][$j]['column'][$i]['value']		= lang('link');
+                                                        $datatable['rows']['row'][$j]['column'][$i]['link']		= $entity_entry[$uicols['name'][$i]];
+                                                        $datatable['rows']['row'][$j]['column'][$i]['target']           = '_blank';
+                                                }
+                                        }
+                                }
+                                else
+                                {
+                                                $datatable['rows']['row'][$j]['column'][$i]['name'] 			= $uicols['name'][$i];
+                                                $datatable['rows']['row'][$j]['column'][$i]['value']			= $entity_entry[$uicols['name'][$i]];
+                                }
+
+                                        $datatable['rows']['row'][$j]['hidden'][$i]['value']                            = $entity_entry[$uicols['name'][$i]];
+                                        $datatable['rows']['row'][$j]['hidden'][$i]['name']                             = $uicols['name'][$i];
+                        }
+
+                        $j++;
+                }
+        }
+        //_debug_array($datatable['rows']['row']);die;
+        // NO pop-up
+        if(1)
+        {
+                $parameters = array
+                (
+                        'parameter' => array
+                        (
+                                array
+                                (
+                                        'name'		=> 'location_code',
+                                        'source'	=> 'location_code'
+                                ),
+                        )
+                );
+
+                if($this->acl_read)
+                {
+                        $datatable['rowactions']['action'][] = array(
+                                'text' 			=> lang('view'),
+                                'action'		=> $GLOBALS['phpgw']->link('/index.php',array
+                                                                (
+                                                                        'menuaction'  => 'property.uientity.view',
+                                                                        'entity_id'   => $this->entity_id,
+                                                                        'cat_id'      => $this->cat_id,
+                                                                        'id'          => $entity_entry['id']
+                                                                )),
+                                'parameters'            => $parameters
+                        );
+                }
+                if($this->acl_edit)
+                {
+                        $datatable['rowactions']['action'][] = array(
+                                'text' 			=> lang('edit'),
+                                'action'		=> $GLOBALS['phpgw']->link('/index.php',array
+                                                                (
+                                                                        'menuaction'  => 'property.uientity.edit',
+                                                                        'entity_id'   => $this->entity_id,
+                                                                        'cat_id'      => $this->cat_id,
+                                                                        'id'          => $entity_entry['id']
+                                                                )),
+                                'parameters'            => $parameters
+                        );
+                }
+                if($this->acl_delete)
+                {
+                        $datatable['rowactions']['action'][] = array(
+                                'text' 			=> lang('delete'),
+                                'action'		=> $GLOBALS['phpgw']->link('/index.php',array
+                                                                (
+                                                                        'menuaction'  => 'property.uientity.delete',
+                                                                        'entity_id'   => $this->entity_id,
+                                                                        'cat_id'      => $this->cat_id,
+                                                                        'id'          => $entity_entry['id']
+                                                                )),
+                                'parameters'	=> $parameters
+                        );
+                }
+                if($this->acl_add)
+                {
+                        $datatable['rowactions']['action'][] = array(
+                                'text' 			=> lang('add'),
+                                'action'		=> $GLOBALS['phpgw']->link('/index.php',array
+                                                                (
+                                                                        'menuaction'  => 'property.uientity.edit',
+                                                                        'entity_id'   => $this->entity_id,
+                                                                        'cat_id'      => $this->cat_id
+                                                                ))
+                        );
+                }
+
+                unset($parameters);
+        }
+        //$uicols_count indicates the number of columns to display in actuall option-menu. this variable was set in $this->bo->read()
+        $uicols_count	= count($uicols['descr']);
+
+        for ($i=0;$i<$uicols_count;$i++)
+        {
+                if($uicols['input_type'][$i]!='hidden')
+                {
+                        $datatable['headers']['header'][$i]['name'] 			= $uicols['name'][$i];
+                        $datatable['headers']['header'][$i]['text'] 			= $uicols['descr'][$i];
+                        $datatable['headers']['header'][$i]['visible'] 			= true;
+                        $datatable['headers']['header'][$i]['format'] 			= $this->bocommon->translate_datatype_format($uicols['datatype'][$i]);
+                        $datatable['headers']['header'][$i]['sortable']			= false;
+                        $datatable['headers']['header'][$i]['formatter']		= $uicols['formatter'][$i];
+                        if($uicols['name'][$i]=='num'):
+                        {
+                                $datatable['headers']['header'][$i]['sortable']		= true;
+                                $datatable['headers']['header'][$i]['sort_field']	= 'fm_entity_'.$this->entity_id.'_'.$this->cat_id.'num';
+                        }
+                        /*elseif($uicols['name'][$i]=='street_name'):
+                        {
+                                $datatable['headers']['header'][$i]['sortable']		= true;
+                                $datatable['headers']['header'][$i]['sort_field'] 	= 'street_name';
+                        }*/
+                        elseif(isset($uicols['cols_return_extra'][$i]) && ($uicols['cols_return_extra'][$i]!='T' || $uicols['cols_return_extra'][$i]!='CH')):
+                        {
+                                $datatable['headers']['header'][$i]['sortable']		= true;
+                                $datatable['headers']['header'][$i]['sort_field']	= $uicols['name'][$i];
+                        }
+                        endif;
+                }
+                else
+                {
+                        $datatable['headers']['header'][$i]['name'] 			= $uicols['name'][$i];
+                        $datatable['headers']['header'][$i]['text'] 			= $uicols['descr'][$i];
+                        $datatable['headers']['header'][$i]['visible'] 			= false;
+                        $datatable['headers']['header'][$i]['sortable']                 = false;
+                        $datatable['headers']['header'][$i]['format'] 			= 'hidden';
+                }
+        }
+
+
+
+        // path for property.js
+        $char_separate = "/";
+        $folder_root = array_reverse(explode($char_separate,dirname($_SERVER['SCRIPT_FILENAME'])));
+        $datatable['property_js'] = $char_separate.$folder_root[0]."/property/js/yahoo/property.js";
+
+        // Pagination and sort values
+        $datatable['pagination']['records_start'] 	= (int)$this->bo->start;
+        $datatable['pagination']['records_limit'] 	= $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
+        $datatable['pagination']['records_returned']    = count($entity_list);
+        $datatable['pagination']['records_total'] 	= $this->bo->total_records;
+
+        $datatable['sorting']['order'] 	= phpgw::get_var('order', 'string'); // Column
+        $datatable['sorting']['sort'] 	= phpgw::get_var('sort', 'string'); // ASC / DESC
+
+        $appname = lang('entity');
+
+        phpgwapi_yui::load_widget('dragdrop');
+        phpgwapi_yui::load_widget('datatable');
+        phpgwapi_yui::load_widget('menu');
+        phpgwapi_yui::load_widget('connection');
+        //// cramirez: necesary for include a partucular js
+        phpgwapi_yui::load_widget('loader');
+
+
+
+
+//-- BEGIN----------------------------- JSON CODE ------------------------------
+
+        if( phpgw::get_var('phpgw_return_as') == 'json' )
+        {
+        //values for Pagination
+        $json = array
+        (
+                'recordsReturned' 	=> $datatable['pagination']['records_returned'],
+                'totalRecords' 		=> (int)$datatable['pagination']['records_total'],
+                'startIndex' 		=> $datatable['pagination']['records_start'],
+                'sort'			=> $datatable['sorting']['order'],
+                'dir'			=> $datatable['sorting']['sort'],
+                'records'		=> array()
+        );
+
+        // values for datatable
+        if(isset($datatable['rows']['row']) && is_array($datatable['rows']['row']))
+        {
+                foreach( $datatable['rows']['row'] as $row )
+                {
+                        $json_row = array();
+                        foreach( $row['column'] as $column)
+                        {
+                                if(isset($column['format']) && $column['format']== "link" && $column['java_link']==true)
+                                {
+                                        $json_row[$column['name']] = "<a href='#' id='".$column['link']."' onclick='javascript:filter_data(this.id);'>" .$column['value']."</a>";
+                                }
+                                elseif(isset($column['format']) && $column['format']== "link")
+                                {
+                                  $json_row[$column['name']] = "<a href='".$column['link']."'>" .$column['value']."</a>";
+                                }else
+                                {
+                                  $json_row[$column['name']] = $column['value'];
+                                }
+                        }
+                        $json['records'][] = $json_row;
+                }
+        }
+
+        // values for control select
+        //cr@ccfirst.com 10/09/08 values passed for update select in YUI
+        /*$opt_cb_depend =  $this->bocommon->select_part_of_town('filter',$this->part_of_town_id,$this->district_id);
+        $default_value = array ('id'=>'','name'=>'!no part of town');
+        array_unshift ($opt_cb_depend,$default_value);*/
+
+        //---no hay combos dependientes
+        $json['hidden']['dependent'][] = array ( );
+
+        // right in datatable
+        if(isset($datatable['rowactions']['action']) && is_array($datatable['rowactions']['action']))
+        {
+                $json ['rights'] = $datatable['rowactions']['action'];
+        }
+
+        return $json;
+        }
+//-------------------- JSON CODE ----------------------
+
+        // Prepare template variables and process XSLT
+        $template_vars = array();
+        $template_vars['datatable'] = $datatable;
+        $GLOBALS['phpgw']->xslttpl->add_file(array('datatable'));
+        $GLOBALS['phpgw']->xslttpl->set_var('phpgw', $template_vars);
+
+        if ( !isset($GLOBALS['phpgw']->css) || !is_object($GLOBALS['phpgw']->css) )
+        {
+                $GLOBALS['phpgw']->css = createObject('phpgwapi.css');
+        }
+        // Prepare CSS Style
+        $GLOBALS['phpgw']->css->validate_file('datatable');
+        $GLOBALS['phpgw']->css->add_external_file('property/templates/base/css/property.css');
+        $GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/datatable/assets/skins/sam/datatable.css');
+
+        //Title of Page
+        if($this->entity_id && $this->cat_id)
+        {
+            $entity       = $this->boadmin_entity->read_single($this->entity_id,false);
+            $appname      = $entity['name'];
+            $category     = $this->boadmin_entity->read_single_category($this->entity_id,$this->cat_id);
+            $function_msg = 'list ' . $category['name'];
+            $GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
+        }
+
+        // Prepare YUI Library
+        $GLOBALS['phpgw']->js->validate_file( 'yahoo', 'entity.index', 'property' );
+
+        $this->save_sessiondata();
+}
+
+
 	}
 
