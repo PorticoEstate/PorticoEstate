@@ -336,7 +336,7 @@
 							'user_id'	=> $user['user_id'],
 							'name'		=> $user['name'],
 						);
-					
+
 					}
 				}
 			}
@@ -501,7 +501,8 @@
 				{
 					$user_list[] = array
 					(
-						'user_id'	=> $user['account_id'],
+						//'user_id'	=> $user['account_id'],
+						'id'	=> $user['account_id'],
 						'name'		=> $name,
 						'selected'	=> 'selected'
 					);
@@ -510,7 +511,8 @@
 				{
 					$user_list[] = array
 					(
-						'user_id'	=> $user['account_id'],
+						//'user_id'	=> $user['account_id'],
+						'id'	=> $user['account_id'],
 						'name'		=> $name
 					);
 				}
@@ -1565,7 +1567,7 @@
 
 			$temp_dir = $GLOBALS['phpgw_info']['server']['temp_dir'];
 			$ods->saveOds($object,"{$temp_dir}/{$filename}");
-			
+
 			echo file_get_contents("{$temp_dir}/{$filename}");
 			unlink("{$temp_dir}/{$filename}");
 		}
@@ -1624,7 +1626,7 @@
 		/**
 		* Preserve attribute values from post in case of an error
 		*
-		* @param array $values value set with 
+		* @param array $values value set with
 		* @param array $values_attributes attribute definitions and values from posting
 		*
 		* @return array attribute definitions and values
@@ -1637,7 +1639,7 @@
 			}
 
 			foreach ( $values_attributes as $attribute )
-			{	
+			{
 				foreach ( $values['attributes'] as &$val_attrib )
 				{
 					if ( $val_attrib['id'] != $attribute['attrib_id'] )
@@ -1670,7 +1672,7 @@
 						{
 							if ( $choice['id'] == $attribute['value'] )
 							{
-								$choice['checked'] = 'checked';	
+								$choice['checked'] = 'checked';
 							}
 						}
 					}
