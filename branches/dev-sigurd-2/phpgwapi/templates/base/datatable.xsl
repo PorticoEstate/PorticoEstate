@@ -275,6 +275,9 @@
 			<xsl:when test="type='link'">
 				<a href="#" onclick="{url}" ><xsl:value-of select="value"/></a>
 			</xsl:when>
+			<xsl:when test="type='label_date'">
+    			<table><tbody><tr><td><span id="txt_start_date"></span></td></tr><tr><td><span id="txt_end_date"></span></td></tr></tbody></table>
+  			 </xsl:when>
 			<xsl:otherwise>
 				<input id="{$id}" type="{type}" name="{name}" value="{value}" class="{type}">
 					<xsl:if test="size">
