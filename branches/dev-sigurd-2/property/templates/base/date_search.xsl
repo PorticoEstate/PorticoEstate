@@ -3,19 +3,35 @@
 	<xsl:template name="app_data">
 		<xsl:apply-templates select="date_search"/>
 	</xsl:template>
-	
+
 	<xsl:template match="date_search">
 		<script LANGUAGE="JavaScript">
-			function ExchangeDate(thisform)
-			{
-				opener.document.search.start_date.value = thisform.elements[0].value;
-				opener.document.search.end_date.value = thisform.elements[1].value;
-				window.close()
-			}
-		</script>
+		function ExchangeDate(thisform)
+		   {
+		    //opener.document.search.start_date.value = thisform.elements[0].value;
+		    //opener.document.search.end_date.value = thisform.elements[1].value;
+
+		    //cramirez: modifying this seccion for use in datatable YUI
+		    if(thisform.elements[0].value)
+		    {
+		    opener.document.forms[0].start_date.value = thisform.elements[0].value;
+		    opener.document.forms[0].end_date.value = thisform.elements[1].value;
+		    opener.document.getElementById("txt_start_date").innerHTML = thisform.elements[0].value;
+		    opener.document.getElementById("txt_end_date").innerHTML = thisform.elements[1].value;
+		    }
+		    else
+		    {
+		    opener.document.forms[0].start_date.value = '';
+		    opener.document.forms[0].end_date.value = '';
+		    opener.document.getElementById("txt_start_date").innerHTML = '';
+		    opener.document.getElementById("txt_end_date").innerHTML = '';
+		    }
+		    window.close()
+		   }
+   </script>
 
 		<form method="post" name="form" action="">
-		
+
 		<table width="100%" cellpadding="2" cellspacing="2" align="center">
 			<tr>
 				<td valign="top">
