@@ -59,9 +59,19 @@ this.filter_data = function(query)
  */
    this.onDownloadClick = function()
    {
+
+		//store actual values
 		var actuall_funct = path_values.menuaction;
-		//modify the "function download" in path_values
-		path_values.menuaction='property.uilocation.download';
+		var donwload_func = path_values.menuaction;
+
+
+		// modify actual function for "download" in path_values
+		// for example: property.uilocation.index --> property.uilocation.download
+		tmp_array= donwload_func.split(".")
+		tmp_array[2]="download"; //set function DOWNLOAD
+		donwload_func = tmp_array.join('.');
+
+		path_values.menuaction=donwload_func;
 		ds_download = phpGWLink('index.php',path_values);
 		//return to "function index"
 		path_values.menuaction=actuall_funct;
@@ -99,8 +109,7 @@ this.create_array_values_list = function(stValues)
 		 var control = eval("oMenuButton_"+p_oItem[2]);
 	     control.set("label", ("<em>" + p_oItem[1] + "</em>"));
 	     control.set("value", p_oItem[0]);
-	     eval("path_values."+selectsButtons[p_oItem[2]].var_URL+"='"+p_oItem[0]+"'")
-
+	     eval("path_values."+selectsButtons[p_oItem[2]].var_URL+"='"+p_oItem[0]+"'");
 		// tiene dependiente asociado?
 	     if(selectsButtons[p_oItem[2]].dependiente!='')
 	     {
@@ -157,7 +166,7 @@ this.create_array_values_list = function(stValues)
 		 optionsCB = create_menu_list(options_combo_box.value,selectsButtons[i].order);
 	    array_options[selectsButtons[i].order] = create_array_values_list(options_combo_box.value);
 	    menuCB = { type: "menu", label:"<em>"+ array_options[selectsButtons[i].order][0][1]+"</em>", id: selectsButtons[i].style, value:"", menu: optionsCB};
-	    var tmp = new YAHOO.widget.Button(selectsButtons[i].name, menuCB)
+	    var tmp = new YAHOO.widget.Button(selectsButtons[i].name, menuCB);
 		eval("oMenuButton_"+selectsButtons[i].order+" = tmp");
 	}
 
@@ -304,31 +313,35 @@ this.create_array_values_list = function(stValues)
 		try{
 	 		ds = phpGWLink('index.php',path_values,true);
 	  	}catch(e){
-			alert(e);
+			//alert(e);
 		}
 
 
-		var callback2 ={
-				    success: function(o) {
+		var callback2 =
+		{
+				    success: function(o)
+				    {
 						eval('values_ds ='+o.responseText);
-						if(flag==0){
+						if(flag==0)
+						{
 							init_datatable();
 							init_filter();
 							initial_focus();
 							return;
 						}
-						else{
+						else
+						{
 						 	update_datatable();
 						 	update_filter();
 						}
-		 			},
+		 			}/*,
 		  			failure: function(o) {window.alert('Server or your connection is death.')},
-		  			timeout: 10000,
+		  			timeout: 10000*/
 		}
 		try{
 			YAHOO.util.Connect.asyncRequest('URL',ds,callback2);
 		}catch(e_async){
-		   alert(e_async);
+		   alert(e_async.message);
 		}
 	}
 
@@ -387,7 +400,7 @@ this.create_array_values_list = function(stValues)
 			generateRequest        : buildQueryString,
 			paginationEventHandler : YAHOO.widget.DataTable.handleDataSourcePagination,
 			paginator              : myPaginator,
-			sortedBy			   : {key:"anywhere", dir:YAHOO.widget.DataTable.CLASS_ASC}, // arguments necesary for paginator
+			sortedBy			   : {key:"anywhere", dir:YAHOO.widget.DataTable.CLASS_ASC} // arguments necesary for paginator
 
 		};
 
@@ -397,7 +410,7 @@ this.create_array_values_list = function(stValues)
 		// Override function for custom server-side sorting
 		myDataTable.sortColumn = function(oColumn) {
 
-					var sDir = "asc"
+					var sDir = "asc";
 					if(oColumn.key === this.get("sortedBy").key) {
 						sDir = (this.get("sortedBy").dir === YAHOO.widget.DataTable.CLASS_ASC) ?
 								"desc" : "asc";
@@ -425,7 +438,7 @@ this.create_array_values_list = function(stValues)
 								dir: (sDir === "asc") ? YAHOO.widget.DataTable.CLASS_ASC : YAHOO.widget.DataTable.CLASS_DESC
 								}
 							}
-						}
+						};
 					 try{
 						myDataTable.getDataSource().sendRequest(addToRequest, oCallback3)}
 					 catch(e){
@@ -457,10 +470,8 @@ this.create_array_values_list = function(stValues)
 	   myContextMenu.subscribe("click", onContextMenuClick, myDataTable);
 	   myContextMenu.render(container[0]);
 
-	   var oColumn = myDataTable.getColumn(0);
-
-		// Hide Column
-		oColumn.className = "hide_field";
+		// Hide Column in datatable. se aplica el estilo css
+		myDataTable.getColumn(config_values.column_hidden).className = "hide_field";
 
 		for(var i=0; i < myColumnDefs.length;i++)
 				{
@@ -528,6 +539,24 @@ this.update_filter = function()
 	}
 
 //----------------------------------------------------------------------------------------
+
+ this.onSearchClick = function()
+  {
+        //no es necesario actualizar los valores actuales de path_value. Este es global y siempre esta actualizado
+        path_values.query = YAHOO.util.Dom.get(textImput[0].name).value;
+
+        //si esta configurado que la busqueda sea por fechas
+        if(config_values.date_search != undefined && config_values.date_search != 0)
+        {
+	        path_values.start_date = YAHOO.util.Dom.get('start_date').value;
+	        path_values.end_date = YAHOO.util.Dom.get('end_date').value;
+        }
+
+		execute_ds();
+
+   }
+
+
 
 	eval("var path_values = "+base_java_url+"");
 	this.execute_ds();
