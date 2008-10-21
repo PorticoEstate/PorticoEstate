@@ -25,9 +25,9 @@
 
 	// define the hidden column in datatable
 	var config_values = {
-	column_hidden : 1
+	column_hidden : [1,8,9,10], //orden de la columna a ocultar en el datatable
+	date_search : 1 //if search has link "Data search"
 	}
-
 
 //----------------------------------------------------------
 	YAHOO.util.Event.addListener(window, "load", function()
