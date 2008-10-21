@@ -339,7 +339,7 @@ this.create_array_values_list = function(stValues)
 						}
 		 			},
 		  			failure: function(o) {window.alert('Server or your connection is death.')},
-		  			timeout: 10000,
+		  			timeout: 10000
 		}
 		try{
 			YAHOO.util.Connect.asyncRequest('URL',ds,callback2);
@@ -403,7 +403,7 @@ this.create_array_values_list = function(stValues)
 			generateRequest        : buildQueryString,
 			paginationEventHandler : YAHOO.widget.DataTable.handleDataSourcePagination,
 			paginator              : myPaginator,
-			sortedBy			   : {key:"anywhere", dir:YAHOO.widget.DataTable.CLASS_ASC}, // arguments necesary for paginator
+			sortedBy			   : {key:"anywhere", dir:YAHOO.widget.DataTable.CLASS_ASC} // arguments necesary for paginator
 
 		};
 
