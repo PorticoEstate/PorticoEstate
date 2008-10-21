@@ -188,8 +188,45 @@
 			}
 
 
+			$link_data = array
+			(
+				'menuaction'	=> 'property.uiproject.index',
+						'sort'			=>$this->sort,
+						'order'			=>$this->order,
+						'cat_id'		=>$this->cat_id,
+						'district_id'		=>$this->district_id,
+						'filter'		=>$this->filter,
+						'status_id'		=>$this->status_id,
+						'lookup'		=>$lookup,
+						'from'			=>$from,
+						'query'			=>$this->query,
+						'start_date'		=>$start_date,
+						'end_date'		=>$end_date,
+						'wo_hour_cat_id'	=>$this->wo_hour_cat_id,
+			);
 
 
+
+
+			$values_combo_box[0]  = $this->bocommon->select_district_list('filter',$this->district_id);
+			$default_value = array ('id'=>'','name'=>'!no category');
+			array_unshift ($values_combo_box[0],$default_value);
+
+
+			$values_combo_box[1]  = $this->bo->select_status_list('filter',$this->status_id);
+			$default_value = array ('id'=>'','name'=>'!no status');
+			array_unshift ($values_combo_box[1],$default_value);
+
+
+			$values_combo_box[2]  = $this->bocommon->select_category_list(array('format'=>'filter','selected' => $this->wo_hour_cat_id,'type' =>'wo_hours','order'=>'id'));
+			$default_value = array ('id'=>'','name'=>'!no hour category');
+			array_unshift ($values_combo_box[2],$default_value);
+
+			$values_combo_box[3]  = $this->bocommon->get_user_list_right2('filter',2,$this->filter,$this->acl_location);
+			$default_value = array ('id'=>'','name'=>'!no user');
+			array_unshift ($values_combo_box[3],$default_value);
+
+			//_debug_array($values_combo_box);die;
 
 
 			$datatable['actions']['form'] = array(
@@ -215,20 +252,41 @@
 			                                            'id' => 'btn_status_id',
 			                                            'name' => 'status_id',
 			                                            'value'	=> lang('Status'),
-			                                            'type' => 'button',
+			                                            'type' => 'button'
 			                                        ),
 			                                        array( //boton 	HOUR CATEGORY
 			                                            'id' => 'btn_hour_category_id',
-			                                            'name' => 'hour_category_id',
+			                                            'name' => 'wo_hour_cat_id',
 			                                            'value'	=> lang('Hour category'),
-			                                            'type' => 'button',
+			                                            'type' => 'button'
 			                                        ),
 			                                        array( //boton 	USER
 			                                            'id' => 'btn_user_id',
 			                                            'name' => 'user_id',
 			                                            'value'	=> lang('User'),
-			                                            'type' => 'button',
+			                                            'type' => 'button'
 			                                        ),
+			                                        array(//for link "Date search",
+                                                    'type'=> 'link',
+                                                    'id'  => 'btn_data_search',
+                                                    'url' => "Javascript:window.open('".$GLOBALS['phpgw']->link('/index.php',
+                                                           array(
+                                                               'menuaction' => 'property.uiproject.date_search'))."','','width=350,height=250')",
+                                                     'value' => lang('Date search')
+                                                    ),
+			                                        array( //hidden start_date
+                                                    'type' => 'hidden',
+                                                    'id' => 'start_date',
+                                                    'value' => $start_date
+                                                 ),
+                                                 array( //hidden end_date
+                                                    'type' => 'hidden',
+                                                    'id' => 'end_date',
+                                                    'value' => $end_date
+                                                 ),
+                                                 array(//for link "None",
+                                                 'type'=> 'label_date'
+                                                ),
 			   										 array( // TEXT INPUT
 			                                            'name'     => 'query',
 			                                            'id'     => 'txt_query',
@@ -295,6 +353,8 @@
 				$uicols	= $this->bo->uicols;
 				$count_uicols_name=count($uicols['name']);
 
+				//_debug_array($datatable);die;
+
 			$content = array();
 			$j = 0;
 			if (isSet($project_list) AND is_array($project_list))
@@ -353,6 +413,20 @@
 
 				if(!$lookup)
 					{
+
+						$parameters = array
+						(
+							'parameter' => array
+							(
+								array
+								(
+									'name'		=> 'location_code',
+									'source'	=> 'location_code'
+								),
+							)
+						);
+
+
 						if ($this->acl_read && $this->bocommon->check_perms($project_entry['grants'],PHPGW_ACL_READ))
 						{
 							/*$content[$j]['row'][]= array(
@@ -363,7 +437,8 @@
 							$datatable['rowactions']['action'][] = array(
 								'statustext' 			=> lang('view the project'),
 								'text'		=> lang('view'),
-								'link'		=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiproject.view', 'id'=> $project_entry['project_id']))
+								'link'		=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiproject.view', 'id'=> $project_entry['project_id'])),
+								'parameters'	=> $parameters
 							);
 						}
 						else
@@ -377,7 +452,8 @@
 							$datatable['rowactions']['action'][] = array(
 								'statustext' 			=> lang('edit the project'),
 								'text'		=> lang('edit'),
-								'link'		=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiproject.edit', 'id'=> $project_entry['project_id']))
+								'link'		=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiproject.edit', 'id'=> $project_entry['project_id'])),
+								'parameters'	=> $parameters
 							);
 
 							/*$content[$j]['row'][]= array(
@@ -397,7 +473,8 @@
 							$datatable['rowactions']['action'][] = array(
 								'statustext' 			=> lang('delete the project'),
 								'text'		=> lang('delete'),
-								'link'		=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiproject.delete', 'id'=> $project_entry['project_id']))
+								'link'		=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiproject.delete', 'id'=> $project_entry['project_id'])),
+								'parameters'	=> $parameters
 							);
 
 
@@ -420,6 +497,7 @@
 																	'menuaction'	=> 'property.uiproject.edit'
 																))
 										);
+						unset($parameters);
 			}
 
 			$count_uicols_descr = count($uicols['descr']);
@@ -427,17 +505,20 @@
 
 			for ($i=0;$i<$count_uicols_descr;$i++)
 			{
+
 				if($uicols['input_type'][$i]!='hidden')
 				{
 					$datatable['headers']['header'][$i]['name'] 			= $uicols['name'][$i];
 					$datatable['headers']['header'][$i]['text'] 			= $uicols['descr'][$i];
 					$datatable['headers']['header'][$i]['visible'] 			= true;
+					$datatable['headers']['header'][$i]['sortable']		= false;
 					//$table_header[$i]['header'] 	= $uicols['descr'][$i];
 					//$table_header[$i]['width'] 		= '5%';
 					//$table_header[$i]['align'] 		= 'center';
-					if($uicols['name'][$i]=='loc1')
+					if($uicols['name'][$i]=='loc1' || $uicols['name'][$i]=='project_id' || $uicols['name'][$i]=='address')
 					{
 						$datatable['headers']['header'][$i]['sortable']		= true;
+						$datatable['headers']['header'][$i]['sort_field']   = $uicols['name'][$i];
 						//$datatable['headers']['header'][$i]['sort_field']	= 'fm_location1.loc1';
 						//$table_header[$i]['sort_link']	=true;
 						/*$table_header[$i]['sort'] 		= $this->nextmatchs->show_sort_order(array
@@ -458,11 +539,12 @@
 																)
 										));*/
 					}
-					if($uicols['name'][$i]=='project_id')
+					/*if($uicols['name'][$i]=='project_id')
 					{
 						$datatable['headers']['header'][$i]['sortable']		= true;
-						//$table_header[$i]['sort_link']	=true;
-						/*$table_header[$i]['sort'] 		= $this->nextmatchs->show_sort_order(array
+						$datatable['headers']['header'][$i]['sort_field']   = $uicols['name'][$i];
+						$table_header[$i]['sort_link']	=true;
+						$table_header[$i]['sort'] 		= $this->nextmatchs->show_sort_order(array
 										(
 											'sort'	=> $this->sort,
 											'var'	=> 'project_id',
@@ -478,13 +560,13 @@
 																	'end_date'	=> $end_date,
 																	'wo_hour_cat_id'=> $this->wo_hour_cat_id
 																)
-										));*/
+										));
 					}
 					if($uicols['name'][$i]=='address')
 					{
 						$datatable['headers']['header'][$i]['sortable']		= true;
-						//$table_header[$i]['sort_link']	=true;
-						/*$table_header[$i]['sort'] 		= $this->nextmatchs->show_sort_order(array
+						$table_header[$i]['sort_link']	=true;
+						$table_header[$i]['sort'] 		= $this->nextmatchs->show_sort_order(array
 										(
 											'sort'	=> $this->sort,
 											'var'	=> 'address',
@@ -500,8 +582,9 @@
 																	'end_date'	=> $end_date,
 																	'wo_hour_cat_id'=> $this->wo_hour_cat_id
 																)
-										));*/
-					}
+										));
+					}*/
+
 				}
 			}
 
@@ -547,7 +630,7 @@
 				);
 			}
 
-			$link_data = array
+			/*$link_data = array
 			(
 				'menuaction'	=> 'property.uiproject.index',
 						'sort'			=>$this->sort,
@@ -562,7 +645,7 @@
 						'start_date'		=>$start_date,
 						'end_date'		=>$end_date,
 						'wo_hour_cat_id'	=>$this->wo_hour_cat_id,
-			);
+			);*/
 
 			$link_date_search = $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiproject.date_search'));
 
@@ -581,7 +664,7 @@
 						'start_date'		=>$start_date,
 						'end_date'		=>$end_date,
 						'start'			=>$this->start,
-						'wo_hour_cat_id'	=>$this->wo_hour_cat_id,
+						'wo_hour_cat_id'	=>$this->wo_hour_cat_id
 			);
 
 			//$GLOBALS['phpgw']->js->validate_file('overlib','overlib','property');
@@ -749,7 +832,7 @@
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
 
 			//$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('list_project' => $data));
-			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'location.index', 'property' );
+			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'project.index', 'property' );
 			//_debug_array($datatable);die;
 		//	$GLOBALS['phpgw']->xslttpl->pp();
 			$this->save_sessiondata();
