@@ -190,6 +190,7 @@
 			$lookup_name 	= phpgw::get_var('lookup_name');
 			// use in option menu TENANT
 			$lookup_tenant 	= phpgw::get_var('lookup_tenant', 'bool');
+			$dry_run=false;
 
 			if(!$type_id)
 			{
@@ -214,8 +215,6 @@
 				$this->bocommon->no_access();
 				return;
 			}
-
-			$GLOBALS['phpgw']->js->validate_file('overlib','overlib','property');
 
 			$datatable = array();
 			$values_combo_box = array();
@@ -249,21 +248,7 @@
 						 	                        ."cat_id:'{$this->cat_id}',"
  	                        						."status:'{$this->status}'";
 
- 	         //para opciones en el menu contextual (edit y view)
- 	         /*$datatable['config']['java_edit'] = $GLOBALS['phpgw']->link('/index.php',array(
-								                  'menuaction'=> 'property.uilocation.edit',
-								                  'lookup_tenant'=>$lookup_tenant,
-								                  'type_id'		=> $type_id
-								                  )
-								                 );
-
-  			 $datatable['config']['java_view'] = $GLOBALS['phpgw']->link('/index.php',array(
-								                  'menuaction'=> 'property.uilocation.view',
-								                  'lookup_tenant'=>$lookup_tenant
-								                  )
-								                 );
-			*/
-				 // $values_combo_box  se usará para escribir en el HTML, usando el XSLT
+				 // $values_combo_box  se usarï¿½ para escribir en el HTML, usando el XSLT
 				$values_combo_box[0]  = $this->bocommon->select_category_list(array('format'=>'filter',
 	                                                                        'selected' => $this->cat_id,
 	                                                                        'type' =>'location',
@@ -290,28 +275,6 @@
 		        }
 		        $default_value = array ('id'=>'','name'=>'!Show all');
 				array_unshift ($values_combo_box[3],$default_value);
-
-
-			/*$link_download = array
-			(
-				'menuaction'		=> 'property.uilocation.download',
-				'sort'			=> $this->sort,
-				'order'			=> $this->order,
-				'cat_id'		=> $this->cat_id,
-				'district_id'		=> $this->district_id,
-				'part_of_town_id'	=> $this->part_of_town_id,
-				'filter'		=> $this->filter,
-				'query'			=> $this->query,
-				'lookup'		=> $lookup,
-				'lookup_tenant'		=> $lookup_tenant,
-				'lookup_name'		=> $lookup_name,
-				'type_id'		=> $type_id,
-				'status'		=> $this->status,
-				'start'			=> $this->start
-			);*/
-
-			//$download_table	= $GLOBALS['phpgw']->link('/index.php',$link_download);
-
 
 		$datatable['actions']['form'] = array(
 			array(
@@ -384,7 +347,7 @@
 						                            ),
 						                            //for link "columns", next to Export button
 										          array(
-						                                 'type' => 'link',
+						                                'type' => 'link',
 						                                'id' => 'btn_columns',
 						                                'url' => "Javascript:window.open('".$GLOBALS['phpgw']->link('/index.php',
 																						           array
@@ -393,7 +356,7 @@
 																						               'type_id'  => $type_id,
 																						               'lookup'  => $this->lookup
 																						              ))."','','width=300,height=600')",
-																						                                   'value' => lang('columns')
+														'value' => lang('columns')
 														)
 		                           				),
 		                       		'hidden_value' => array(
@@ -552,7 +515,7 @@
 					$datatable['headers']['header'][$i]['visible'] 			= true;
 					$datatable['headers']['header'][$i]['format'] 			= $this->bocommon->translate_datatype_format($uicols['datatype'][$i]);
 					$datatable['headers']['header'][$i]['sortable']			= false;
-					$datatable['headers']['header'][$i]['formatter']		= $uicols['formatter'][$i];
+					$datatable['headers']['header'][$i]['formatter']		= (isset($uicols['formatter'][$i])? $uicols['formatter'][$i]:"");
 					if($uicols['name'][$i]=='loc1'):
 					{
 						$datatable['headers']['header'][$i]['sortable']		= true;
@@ -626,7 +589,9 @@
 			}
 
 			// path for property.js
-			$datatable['property_js'] =  $GLOBALS['phpgw_info']['server']['webserver_url']."/property/js/yahoo/property.js";
+			$char_separate = "/";
+			$folder_root = array_reverse(explode($char_separate,dirname($_SERVER['SCRIPT_FILENAME'])));
+			$datatable['property_js'] = $char_separate.$folder_root[0]."/property/js/yahoo/property.js";
 
 			// Pagination and sort values
 			$datatable['pagination']['records_start'] 	= (int)$this->bo->start;
@@ -736,14 +701,13 @@
 	      	}
 			// Prepare CSS Style
 		  	$GLOBALS['phpgw']->css->validate_file('datatable');
-		  	$GLOBALS['phpgw']->css->validate_file('property');
+		  	$GLOBALS['phpgw']->css->add_external_file('property/templates/base/css/property.css');
 			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/datatable/assets/skins/sam/datatable.css');
 
 			//Title of Page
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
 
 	  		// Prepare YUI Library
-  			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'property', 'property' );
   			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'location.index', 'property' );
 
 			$this->save_sessiondata();
