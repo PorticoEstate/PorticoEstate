@@ -240,9 +240,9 @@
 			$datatable['config']['base_java_url'] = "menuaction:'property.uilocation.index',"
 	    											."type_id:'{$type_id}',"
 	    											."query:'{$this->query}',"
- 	                        						."district_id: '{$this->district_id}',"
+ 	                        						."district_id:'{$this->district_id}',"
  	                        						."part_of_town_id:'{$this->part_of_town_id}',"
-						 	                        ."lookup:'{$lookup}',"
+													//."lookup:'{$lookup}',"
  	                        						."lookup_tenant:'{$lookup_tenant}',"
 						 	                        ."lookup_name:'{$lookup_name}',"
 						 	                        ."cat_id:'{$this->cat_id}',"
@@ -589,9 +589,7 @@
 			}
 
 			// path for property.js
-			$char_separate = "/";
-			$folder_root = array_reverse(explode($char_separate,dirname($_SERVER['SCRIPT_FILENAME'])));
-			$datatable['property_js'] = $char_separate.$folder_root[0]."/property/js/yahoo/property.js";
+			$datatable['property_js'] = $GLOBALS['phpgw_info']['server']['webserver_url']."/property/js/yahoo/property.js";
 
 			// Pagination and sort values
 			$datatable['pagination']['records_start'] 	= (int)$this->bo->start;

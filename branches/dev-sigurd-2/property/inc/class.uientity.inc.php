@@ -1675,9 +1675,7 @@ function index()
         }
 
         // path for property.js
-        $char_separate = "/";
-        $folder_root = array_reverse(explode($char_separate,dirname($_SERVER['SCRIPT_FILENAME'])));
-        $datatable['property_js'] = $char_separate.$folder_root[0]."/property/js/yahoo/property.js";
+		$datatable['property_js'] = $GLOBALS['phpgw_info']['server']['webserver_url']."/property/js/yahoo/property.js";
 
         // Pagination and sort values
         $datatable['pagination']['records_start'] 	= (int)$this->bo->start;
