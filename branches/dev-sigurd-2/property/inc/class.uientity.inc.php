@@ -152,6 +152,8 @@
 
 		function columns()
 		{
+		//cramirez: necesary for windows.open . Avoid error JS
+		phpgwapi_yui::load_widget('tabview');
 			$GLOBALS['phpgw']->xslttpl->add_file(array('columns'));
 
 			$GLOBALS['phpgw_info']['flags']['noframework'] = true;
@@ -1317,7 +1319,7 @@ function index()
               $GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=>1, 'acl_location'=> $this->acl_location));
         }
 
-        //Guarda la actual posicion (entity_receipt_1_2) en la sesion
+        //Guarda la actual posicion (x ejemplo entity_receipt_1_2) en la sesion
         $receipt = $GLOBALS['phpgw']->session->appsession('session_data','entity_receipt_' . $this->entity_id . '_' . $this->cat_id);
         $GLOBALS['phpgw']->session->appsession('session_data','entity_receipt_' . $this->entity_id . '_' . $this->cat_id,'');
 
@@ -1388,7 +1390,7 @@ function index()
                 //// ---- combo USER----------------------
                 $values_combo_box[3]  = $this->bocommon->get_user_list_right2($group_filters,4,$this->filter,$this->acl_location,array('all'),$default='all');
                 $default_value = array ('user_id'=>'','name'=>'!no user');
-                array_unshift ($values_combo_box[3],$default_value); //_debug_array($values_combo_box[3]);die;
+                array_unshift ($values_combo_box[3],$default_value);
 
                 $datatable['actions']['form'] = array(
                 array(
@@ -1433,7 +1435,7 @@ function index()
                                                     'id'  => 'btn_data_search',
                                                     'url' => "Javascript:window.open('".$GLOBALS['phpgw']->link('/index.php',
                                                            array(
-                                                               'menuaction' => 'property.uiproject.date_search'))."','','width=350,height=250')",
+                                                               'menuaction' => 'property.uiproject.date_search'))."','link','width=350,height=250')",
                                                      'value' => lang('Date search')
                                                     ),
 												array( //hidden start_date
@@ -1481,7 +1483,7 @@ function index()
                                                                'menuaction' => 'property.uientity.columns',
                                                                'entity_id'  => $this->entity_id,
                                                                'cat_id'     => $this->cat_id
-                                                              ))."','','width=300,height=600')",
+                                                              ))."','link','width=300,height=600')",
                                                      'value' => lang('columns')
                                                     )),
                               'hidden_value' => array(
@@ -1502,9 +1504,21 @@ function index()
                                                         'value'	=> $this->select2String($values_combo_box[3],"user_id")
                                                           ))
                          )));
+                      //Se suprime el filtro STATUS para las sgtes categorias y entity
+                      if(($this->entity_id == 1  &&  in_array($this->cat_id,array(4,5,10))) || ($this->entity_id == 2  &&  in_array($this->cat_id,array(4,5))))
+                      {
+                        array_splice($datatable['actions']['form'][0]['fields']['field'], 2, 1);
+                      }
+                      else if($this->entity_id == 2  &&  in_array($this->cat_id,array(6)))
+                      {
+						array_splice($datatable['actions']['form'][0]['fields']['field'], 1, 2);
+                      }
+
                 //cramirez: $dry_run is use "$this->bo->read"
                 $dry_run=true;
-
+                // sets for initial ordering
+                $this->sort = "ASC";
+				$this->order = "num";
         }
 
         $entity_list = array();
@@ -1567,14 +1581,15 @@ function index()
         // NO pop-up
         if(1)
         {
+                //indica que de la fila seleccionada escogera de la columna "id" el valor "id". Para agregarlo al URL
                 $parameters = array
                 (
                         'parameter' => array
                         (
                                 array
                                 (
-                                        'name'		=> 'location_code',
-                                        'source'	=> 'location_code'
+                                        'name'		=> 'id',
+                                        'source'	=> 'id'
                                 ),
                         )
                 );
@@ -1587,8 +1602,7 @@ function index()
                                                                 (
                                                                         'menuaction'  => 'property.uientity.view',
                                                                         'entity_id'   => $this->entity_id,
-                                                                        'cat_id'      => $this->cat_id,
-                                                                        'id'          => $entity_entry['id']
+                                                                        'cat_id'      => $this->cat_id
                                                                 )),
                                 'parameters'            => $parameters
                         );
@@ -1601,8 +1615,7 @@ function index()
                                                                 (
                                                                         'menuaction'  => 'property.uientity.edit',
                                                                         'entity_id'   => $this->entity_id,
-                                                                        'cat_id'      => $this->cat_id,
-                                                                        'id'          => $entity_entry['id']
+                                                                        'cat_id'      => $this->cat_id
                                                                 )),
                                 'parameters'            => $parameters
                         );
@@ -1615,8 +1628,7 @@ function index()
                                                                 (
                                                                         'menuaction'  => 'property.uientity.delete',
                                                                         'entity_id'   => $this->entity_id,
-                                                                        'cat_id'      => $this->cat_id,
-                                                                        'id'          => $entity_entry['id']
+                                                                        'cat_id'      => $this->cat_id
                                                                 )),
                                 'parameters'	=> $parameters
                         );
@@ -1636,6 +1648,8 @@ function index()
 
                 unset($parameters);
         }
+
+        //_debug_array($datatable['rowactions']['action']);
         //$uicols_count indicates the number of columns to display in actuall option-menu. this variable was set in $this->bo->read()
         $uicols_count	= count($uicols['descr']);
 
@@ -1675,7 +1689,10 @@ function index()
         }
 
         // path for property.js
-		$datatable['property_js'] = $GLOBALS['phpgw_info']['server']['webserver_url']."/property/js/yahoo/property.js";
+        $char_separate = "/";
+        $folder_root = array_reverse(explode($char_separate,dirname($_SERVER['SCRIPT_FILENAME'])));
+        //$datatable['property_js'] = $char_separate.$folder_root[0]."/property/js/yahoo/property.js";
+	$datatable['property_js'] = $GLOBALS['phpgw_info']['server']['webserver_url']."/property/js/yahoo/property.js";
 
         // Pagination and sort values
         $datatable['pagination']['records_start'] 	= (int)$this->bo->start;
@@ -1694,8 +1711,6 @@ function index()
         phpgwapi_yui::load_widget('connection');
         //// cramirez: necesary for include a partucular js
         phpgwapi_yui::load_widget('loader');
-
-
 
 
 //-- BEGIN----------------------------- JSON CODE ------------------------------
@@ -1737,11 +1752,7 @@ function index()
                 }
         }
 
-        // values for control select
-        //cr@ccfirst.com 10/09/08 values passed for update select in YUI
-        /*$opt_cb_depend =  $this->bocommon->select_part_of_town('filter',$this->part_of_town_id,$this->district_id);
-        $default_value = array ('id'=>'','name'=>'!no part of town');
-        array_unshift ($opt_cb_depend,$default_value);*/
+
 
         //---no hay combos dependientes
         $json['hidden']['dependent'][] = array ( );
@@ -1784,7 +1795,7 @@ function index()
         // Prepare YUI Library
         $GLOBALS['phpgw']->js->validate_file( 'yahoo', 'entity.index', 'property' );
 
-        //$this->save_sessiondata();
+        $this->save_sessiondata();
         //_debug_array($GLOBALS['phpgw_domain']['bergen_demo']); die;
 }
 
