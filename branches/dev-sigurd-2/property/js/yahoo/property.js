@@ -13,17 +13,6 @@
  /********************************************************************************
  *
  */
-this.initial_focus = function()
-{
-	//if before doing ENTER,
-	YAHOO.util.Dom.get(textImput[0].name).value = path_values.query;
-	YAHOO.util.Dom.get(textImput[0].name).focus();
-
-}
-
- /********************************************************************************
- *
- */
 this.filter_data = function(query)
 {
 	YAHOO.util.Dom.get(textImput[0].name).value = query;
@@ -39,6 +28,8 @@ this.filter_data = function(query)
 		//NEW is always the last options in arrays RIGHTS
 		pos_opt = values_ds.rights.length-1;
 		sUrl = values_ds.rights[pos_opt].action;
+		//Convert all HTML entities to their applicable characters
+        sUrl=html_entity_decode(sUrl);
 		window.open(sUrl,'_self');
    }
  /********************************************************************************
@@ -172,10 +163,15 @@ this.create_array_values_list = function(stValues)
 		options_combo_box = values_combo_box[selectsButtons[i].order];
 		 optionsCB = create_menu_list(options_combo_box.value,selectsButtons[i].order);
 	    array_options[selectsButtons[i].order] = create_array_values_list(options_combo_box.value);
+	    //cramirez: avoid assigning an object to hidden filter.
+	    if(array_options[selectsButtons[i].order].length > 0)
+	    {
 	    menuCB = { type: "menu", label:"<em>"+ array_options[selectsButtons[i].order][0][1]+"</em>", id: selectsButtons[i].style, value:"", menu: optionsCB};
 	    var tmp = new YAHOO.widget.Button(selectsButtons[i].name, menuCB)
 		eval("oMenuButton_"+selectsButtons[i].order+" = tmp");
 	}
+
+ }
 
  }
 
@@ -186,7 +182,8 @@ this.create_array_values_list = function(stValues)
  	{
   		var callback = { success:success_handler,
   						 failure:failure_handler,
-  						 timeout: 10000
+  						 timeout: 10000,
+  						 cache: false
   					    };
   		var sUrl = phpGWLink('index.php', {menuaction: "property.bolocation.delete",location_code:argu[0].value}, true);
   		var postData = "";
@@ -195,6 +192,7 @@ this.create_array_values_list = function(stValues)
    			postData = "&"+argu[cont].variable + "=" + argu[cont].value ;
   		}
 		postData = "task="+task+postData;
+		YAHOO.util.Connect._default_post_header = "application/x-www-form-urlencoded; charset=UTF-8";
   		var request = YAHOO.util.Connect.asyncRequest('POST', sUrl, callback,postData);
 	}
  /********************************************************************************
@@ -256,7 +254,7 @@ this.create_array_values_list = function(stValues)
                 {
                         var oRecord = p_myDataTable.getRecord(elRow);
                         var url = values_ds.rights[task.groupIndex].action;
-
+						var sUrl = "";
 
                         if(values_ds.rights[task.groupIndex].parameters!=null)
                         {
@@ -267,6 +265,8 @@ this.create_array_values_list = function(stValues)
                         {
                         	sUrl = url;
                         }
+                        //Convert all HTML entities to their applicable characters
+                        sUrl=html_entity_decode(sUrl);
 						window.open(sUrl,'_self');
                 }
             }
@@ -330,21 +330,24 @@ this.create_array_values_list = function(stValues)
 						if(flag==0){
 							init_datatable();
 							init_filter();
-							initial_focus();
+							init_particular_setting();
 							return;
 						}
 						else{
 						 	update_datatable();
 						 	update_filter();
 						}
+
 		 			},
 		  			failure: function(o) {window.alert('Server or your connection is death.')},
-		  			timeout: 10000
+		  			timeout: 10000,
+		  			cache: false
 		}
 		try{
+			YAHOO.util.Connect._default_post_header = "application/x-www-form-urlencoded; charset=UTF-8";
 			YAHOO.util.Connect.asyncRequest('URL',ds,callback2);
 		}catch(e_async){
-		   alert(e_async);
+		   alert(e_async.message);
 		}
 	}
 
@@ -546,6 +549,142 @@ this.update_filter = function()
 	 	}
 	}
 
+/****************************************************************************************
+*
+*/
+	this.html_entity_decode = function(string) {
+    // Convert all HTML entities to their applicable characters
+    //
+    // version: 810.1317
+    // discuss at: http://kevin.vanzonneveld.net/techblog/article/javascript_equivalent_for_phps_html_entity_decode
+
+    // +   original by: john (http://www.jd-tech.net)
+    // +      input by: ger
+    // +   improved by: Kevin van Zonneveld (http://kevin.vanzonneveld.net)
+    // +    revised by: Kevin van Zonneveld (http://kevin.vanzonneveld.net)
+    // +   bugfixed by: Onno Marsman
+    // %          note: table from http://www.the-art-of-web.com/html/character-codes/
+    // *     example 1: html_entity_decode('Kevin &amp; van Zonneveld');
+    // *     returns 1: 'Kevin & van Zonneveld'
+    var histogram = {}, histogram_r = {}, code = 0;
+    var entity = chr = '';
+
+    histogram['34'] = 'quot';
+    histogram['38'] = 'amp';
+    histogram['60'] = 'lt';
+    histogram['62'] = 'gt';
+    histogram['160'] = 'nbsp';
+    histogram['161'] = 'iexcl';
+    histogram['162'] = 'cent';
+    histogram['163'] = 'pound';
+    histogram['164'] = 'curren';
+    histogram['165'] = 'yen';
+    histogram['166'] = 'brvbar';
+    histogram['167'] = 'sect';
+    histogram['168'] = 'uml';
+    histogram['169'] = 'copy';
+    histogram['170'] = 'ordf';
+    histogram['171'] = 'laquo';
+    histogram['172'] = 'not';
+    histogram['173'] = 'shy';
+    histogram['174'] = 'reg';
+    histogram['175'] = 'macr';
+    histogram['176'] = 'deg';
+    histogram['177'] = 'plusmn';
+    histogram['178'] = 'sup2';
+    histogram['179'] = 'sup3';
+    histogram['180'] = 'acute';
+    histogram['181'] = 'micro';
+    histogram['182'] = 'para';
+    histogram['183'] = 'middot';
+    histogram['184'] = 'cedil';
+    histogram['185'] = 'sup1';
+    histogram['186'] = 'ordm';
+    histogram['187'] = 'raquo';
+    histogram['188'] = 'frac14';
+    histogram['189'] = 'frac12';
+    histogram['190'] = 'frac34';
+    histogram['191'] = 'iquest';
+    histogram['192'] = 'Agrave';
+    histogram['193'] = 'Aacute';
+    histogram['194'] = 'Acirc';
+    histogram['195'] = 'Atilde';
+    histogram['196'] = 'Auml';
+    histogram['197'] = 'Aring';
+    histogram['198'] = 'AElig';
+    histogram['199'] = 'Ccedil';
+    histogram['200'] = 'Egrave';
+    histogram['201'] = 'Eacute';
+    histogram['202'] = 'Ecirc';
+    histogram['203'] = 'Euml';
+    histogram['204'] = 'Igrave';
+    histogram['205'] = 'Iacute';
+    histogram['206'] = 'Icirc';
+    histogram['207'] = 'Iuml';
+    histogram['208'] = 'ETH';
+    histogram['209'] = 'Ntilde';
+    histogram['210'] = 'Ograve';
+    histogram['211'] = 'Oacute';
+    histogram['212'] = 'Ocirc';
+    histogram['213'] = 'Otilde';
+    histogram['214'] = 'Ouml';
+    histogram['215'] = 'times';
+    histogram['216'] = 'Oslash';
+    histogram['217'] = 'Ugrave';
+    histogram['218'] = 'Uacute';
+    histogram['219'] = 'Ucirc';
+    histogram['220'] = 'Uuml';
+    histogram['221'] = 'Yacute';
+    histogram['222'] = 'THORN';
+    histogram['223'] = 'szlig';
+    histogram['224'] = 'agrave';
+    histogram['225'] = 'aacute';
+    histogram['226'] = 'acirc';
+    histogram['227'] = 'atilde';
+    histogram['228'] = 'auml';
+    histogram['229'] = 'aring';
+    histogram['230'] = 'aelig';
+    histogram['231'] = 'ccedil';
+    histogram['232'] = 'egrave';
+    histogram['233'] = 'eacute';
+    histogram['234'] = 'ecirc';
+    histogram['235'] = 'euml';
+    histogram['236'] = 'igrave';
+    histogram['237'] = 'iacute';
+    histogram['238'] = 'icirc';
+    histogram['239'] = 'iuml';
+    histogram['240'] = 'eth';
+    histogram['241'] = 'ntilde';
+    histogram['242'] = 'ograve';
+    histogram['243'] = 'oacute';
+    histogram['244'] = 'ocirc';
+    histogram['245'] = 'otilde';
+    histogram['246'] = 'ouml';
+    histogram['247'] = 'divide';
+    histogram['248'] = 'oslash';
+    histogram['249'] = 'ugrave';
+    histogram['250'] = 'uacute';
+    histogram['251'] = 'ucirc';
+    histogram['252'] = 'uuml';
+    histogram['253'] = 'yacute';
+    histogram['254'] = 'thorn';
+    histogram['255'] = 'yuml';
+
+    // Reverse table. Cause for maintainability purposes, the histogram is
+    // identical to the one in htmlentities.
+    for (code in histogram) {
+        entity = histogram[code];
+        histogram_r[entity] = code;
+    }
+
+    return (string+'').replace(/(\&([a-zA-Z]+)\;)/g, function(full, m1, m2){
+        if (m2 in histogram_r) {
+            return String.fromCharCode(histogram_r[m2]);
+        } else {
+            return m2;
+        }
+    });
+}
 //----------------------------------------------------------------------------------------
 
 	eval("var path_values = "+base_java_url+"");
