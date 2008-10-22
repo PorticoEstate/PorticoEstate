@@ -95,7 +95,7 @@
 				case 'datatable':
 					$load = array('element-beta', 'datasource-beta', 'datatable-beta' );
 					break;
-
+				// cramirez: necesary for include a partucular js
 				case 'loader':
 					$load = array('yuiloader-beta');
 					break;
