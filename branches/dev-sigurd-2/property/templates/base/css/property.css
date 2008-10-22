@@ -20,7 +20,7 @@ span.yui-menu-button em {
     display: block;
     text-align: left;
     white-space: nowrap;
-	width: 7em;  /*  Restrict the width of the label to 10em. */
+	width: 6em;  /*  Restrict the width of the label to 10em. */
 	overflow: hidden; /* Hide the overflow if the text label exceeds 10em in width. */
 	text-overflow: ellipsis; /* IE and Safari support the ability to add ellipsis when the text label exceeds 10em in width.*/
 }
