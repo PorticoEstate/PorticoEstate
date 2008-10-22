@@ -29,6 +29,17 @@
 	date_search : 1 //if search has link "Data search"
 	}
 
+	this.init_particular_setting = function()
+	{
+		//Para este caso particular, el combo se seteaba con el valor de la categoria seleccionada en el menu.
+		oMenuButton_0.set("label", ("<em>" + array_options[0][path_values.cat_id][1] + "</em>"));
+		// seteo del focus
+		YAHOO.util.Dom.get(textImput[0].name).value = path_values.query;
+		YAHOO.util.Dom.get(textImput[0].name).focus();
+
+	}
+
+
 //----------------------------------------------------------
 	YAHOO.util.Event.addListener(window, "load", function()
 	{
@@ -44,6 +55,8 @@
 		//Insert JSON utility on the page
 
 	    loader.insert();
+
+
 	});
 
 
