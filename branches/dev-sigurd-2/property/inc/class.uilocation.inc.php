@@ -242,13 +242,13 @@
 	    											."query:'{$this->query}',"
  	                        						."district_id:'{$this->district_id}',"
  	                        						."part_of_town_id:'{$this->part_of_town_id}',"
-													//."lookup:'{$lookup}',"
+						 	                        ."lookup:'{$lookup}',"
  	                        						."lookup_tenant:'{$lookup_tenant}',"
 						 	                        ."lookup_name:'{$lookup_name}',"
 						 	                        ."cat_id:'{$this->cat_id}',"
  	                        						."status:'{$this->status}'";
 
-				 // $values_combo_box  se usarï¿½ para escribir en el HTML, usando el XSLT
+				 // $values_combo_box  se usará para escribir en el HTML, usando el XSLT
 				$values_combo_box[0]  = $this->bocommon->select_category_list(array('format'=>'filter',
 	                                                                        'selected' => $this->cat_id,
 	                                                                        'type' =>'location',
