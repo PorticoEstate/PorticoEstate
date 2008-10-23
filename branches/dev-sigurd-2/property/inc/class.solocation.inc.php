@@ -446,8 +446,7 @@
 					$user_column_filter = " OR ($attribute_filter AND id IN (" . implode(',',$user_columns) .'))';
 				}
 
-				$this->db->query("SELECT * FROM $attribute_table WHERE (list=1 OR lookup_form=1) AND $attribute_filter $user_column_filter ORDER BY attrib_sort ASC");
-
+				$this->db->query("SELECT DISTINCT * FROM $attribute_table WHERE (list=1 OR lookup_form=1) AND $attribute_filter $user_column_filter ORDER BY attrib_sort ASC");
 				$i	= count($uicols['name']);
 				while ($this->db->next_record())
 				{

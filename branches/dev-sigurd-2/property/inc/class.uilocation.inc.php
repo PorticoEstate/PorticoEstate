@@ -443,6 +443,7 @@
 				}
 			}
 			// NO pop-up
+			$datatable['rowactions']['action'] = array();
 			if(!$lookup)
 			{
 				$parameters = array
