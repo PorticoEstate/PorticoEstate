@@ -344,10 +344,11 @@ this.create_array_values_list = function(stValues)
 		  			cache: false
 		}
 		try{
-			YAHOO.util.Connect._default_post_header = "application/x-www-form-urlencoded; charset=UTF-8";
-			YAHOO.util.Connect.asyncRequest('URL',ds,callback2);
-		}catch(e_async){
-		   alert(e_async.message);
+			YAHOO.util.Connect.asyncRequest('POST',ds,callback2);
+
+		}catch(e_async)
+		{
+			alert(e_async);
 		}
 	}
 
