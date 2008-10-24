@@ -7,6 +7,8 @@
 	* @subpackage gui
 	* @version $Id$
 	*/
+	phpgw::import_class('phpgwapi.yui');
+	phpgwapi_yui::load_widget('button');
 	
 	if ( !isset($GLOBALS['phpgw_info']['server']['site_title']) )
 	{

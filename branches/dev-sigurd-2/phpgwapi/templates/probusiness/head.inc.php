@@ -10,6 +10,9 @@
  * @version $Id$
  */
 	
+	phpgw::import_class('phpgwapi.yui');
+	phpgwapi_yui::load_widget('button');
+
 	// css file handling
 	$theme_styles = array();
 	$css_file = PHPGW_SERVER_ROOT . '/phpgwapi/templates/probusiness/css/'.$GLOBALS['phpgw_info']['user']['preferences']['common']['theme'].'.css';
@@ -22,7 +25,12 @@
 		$theme_styles[] = $GLOBALS['phpgw_info']['server']['webserver_url'] . '/phpgwapi/templates/probusiness/css/styles.css';
 	}
 
+	$theme_styles[] = "{$GLOBALS['phpgw_info']['server']['webserver_url']}/phpgwapi/js/yahoo/menu/assets/skins/sam/menu.css";
+	$theme_styles[] = "{$GLOBALS['phpgw_info']['server']['webserver_url']}/phpgwapi/js/yahoo/button/assets/skins/sam/button.css";
 	$theme_styles[] = "{$GLOBALS['phpgw_info']['server']['webserver_url']}/phpgwapi/js/yahoo/tabview/assets/skins/sam/tabview.css";
+	$theme_styles[] = "{$GLOBALS['phpgw_info']['server']['webserver_url']}/phpgwapi/js/yahoo/resize/assets/skins/sam/resize.css";
+	$theme_styles[] = "{$GLOBALS['phpgw_info']['server']['webserver_url']}/phpgwapi/js/yahoo/layout/assets/skins/sam/layout.css";
+
 
 	$tpl = CreateObject('phpgwapi.Template',PHPGW_TEMPLATE_DIR);
 	$tpl->set_unknowns('remove');
