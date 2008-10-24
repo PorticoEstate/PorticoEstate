@@ -33,14 +33,15 @@
 		$stylesheets = array
 		(
 			"/phpgwapi/js/yahoo/reset-fonts-grids/reset-fonts-grids.css",
-			"/phpgwapi/js/yahoo/menu/assets/skins/sam/menu.css",
-			"/phpgwapi/js/yahoo/button/assets/skins/sam/button.css",
 			"/phpgwapi/js/yahoo/tabview/assets/skins/sam/tabview.css",
 			"/phpgwapi/js/yahoo/resize/assets/skins/sam/resize.css",
 			"/phpgwapi/js/yahoo/layout/assets/skins/sam/layout.css",
 		);
 	}
 
+
+	$stylesheets[] = '/phpgwapi/js/yahoo/menu/assets/skins/sam/menu.css';
+	$stylesheets[] = '/phpgwapi/js/yahoo/button/assets/skins/sam/button.css';
 	$stylesheets[] = '/phpgwapi/templates/base/css/base.css';
 	$stylesheets[] = '/phpgwapi/templates/verdilak/css/base.css';
 	$stylesheets[] = "/phpgwapi/templates/verdilak/css/{$GLOBALS['phpgw_info']['user']['preferences']['common']['theme']}.css";
