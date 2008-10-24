@@ -35,22 +35,29 @@ this.filter_data = function(query)
  /********************************************************************************
  *
  */
-  this.onSearchClick = function()
-  {
-        //no es necesario actualizar los valores actuales de path_value. Este es global y siempre esta actualizado
-        path_values.query = YAHOO.util.Dom.get(textImput[0].name).value;
+   this.onSearchClick = function()
+   {
+         //no es necesario actualizar los valores actuales de path_value. Este es global y siempre esta actualizado
+         if (YAHOO.util.Dom.inDocument("txt_query"))
+         {
+          path_values.query = YAHOO.util.Dom.get("txt_query").value;
+         }
+         if (YAHOO.util.Dom.inDocument("txt_search_vendor"))
+         {
+          path_values.search_vendor = YAHOO.util.Dom.get("txt_search_vendor").value;
+         }
 
-        //si esta configurado que la busqueda sea por fechas
-        if(config_values.date_search != undefined && config_values.date_search != 0)
-        {
-        path_values.start_date = YAHOO.util.Dom.get('start_date').value;
-        path_values.end_date = YAHOO.util.Dom.get('end_date').value;
-        }
+         //si esta configurado que la busqueda sea por fechas
+         if(config_values.date_search != undefined && config_values.date_search != 0)
+         {
+         path_values.start_date = YAHOO.util.Dom.get('start_date').value;
+         path_values.end_date = YAHOO.util.Dom.get('end_date').value;
+         }
 
 
-		execute_ds();
+   execute_ds();
 
-   }
+    }
  /********************************************************************************
  *
  */
@@ -259,7 +266,8 @@ this.create_array_values_list = function(stValues)
                         if(values_ds.rights[task.groupIndex].parameters!=null)
                         {
                             param_name = values_ds.rights[task.groupIndex].parameters.parameter[0].name;
-                        	sUrl = url + "&"+param_name+"=" + oRecord.getData(param_name);
+                            param_source = values_ds.rights[task.groupIndex].parameters.parameter[0].source;
+                        	sUrl = url + "&"+param_name+"=" + oRecord.getData(param_source);
                         }
                         else //for New
                         {
@@ -302,11 +310,11 @@ this.create_array_values_list = function(stValues)
 
 		//particular variables for Datasource
 		var url="&start=" + state.pagination.recordOffset;
+		
 		if(state.pagination.rowsPerPage==values_ds.totalRecords)
 		{
 			url=url+"&allrows=1";
 		}
-
 		//sea actualiza el liveDAta del Datasource con los actuales valores de los combos y txtboxs
 		myDataTable.getDataSource().liveData=ds;
 
@@ -327,6 +335,7 @@ this.create_array_values_list = function(stValues)
 		var callback2 ={
 				    success: function(o) {
 						eval('values_ds ='+o.responseText);
+						
 						if(flag==0){
 							init_datatable();
 							init_filter();
@@ -344,11 +353,10 @@ this.create_array_values_list = function(stValues)
 		  			cache: false
 		}
 		try{
-			YAHOO.util.Connect.asyncRequest('POST',ds,callback2);
-
-		}catch(e_async)
-		{
-			alert(e_async);
+			YAHOO.util.Connect._default_post_header = "application/x-www-form-urlencoded; charset=UTF-8";
+			YAHOO.util.Connect.asyncRequest('URL',ds,callback2);
+		}catch(e_async){
+		   alert(e_async.message);
 		}
 	}
 
@@ -401,7 +409,7 @@ this.create_array_values_list = function(stValues)
 						pageReportTemplate : "Showing items {startIndex} - {endIndex} of {totalRecords}"
 					});
 
-
+	   
 	  var myTableConfig = {
 			initialRequest         : '',//la primera vez ya viene ordenado, por la columna respectiva y solo 15 registros
 			generateRequest        : buildQueryString,
@@ -529,6 +537,7 @@ this.update_datatable = function()
 	myrowsPerPage = values_ds.recordsReturned;
 	mytotalRows = values_ds.totalRecords;
 	//update combo box pagination
+	
 	myPaginator.set('rowsPerPageOptions',[myrowsPerPage,mytotalRows]);
 	//myPaginator.updateOnChange=true;
 	}
