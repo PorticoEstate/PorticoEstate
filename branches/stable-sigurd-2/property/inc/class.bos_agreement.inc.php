@@ -236,10 +236,10 @@
 
 		function read_event($data)
 		{
-			$boalarm		= CreateObject('property.boalarm');
-			$event	= $this->so->read_single($data);
-			$event['alarm_date']=$event['termination_date'];
-			$event['alarm']	= $boalarm->read_alarms($type='s_agreement',$data['s_agreement_id']);
+			$boalarm			= CreateObject('property.boalarm');
+			$event				= $this->so->read_single($data['s_agreement_id']);
+			$event['alarm_date']= $event['termination_date'];
+			$event['alarm']		= $boalarm->read_alarms($type='s_agreement',$data['s_agreement_id']);
 			return $event;
 		}
 

@@ -105,10 +105,9 @@
 			{
 				$this->sort = $sort;
 			}
-			if(isset($order))
-			{
-				$this->order = $order;
-			}
+
+			$this->order	= isset($order) && $order ? $order : '';
+
 			if(isset($cat_id))
 			{
 				$this->cat_id = $cat_id;
@@ -232,7 +231,7 @@
 		function read_event($data)
 		{
 			$boalarm		= CreateObject('property.boalarm');
-			$event	= $this->so->read_single($data);
+			$event	= $this->so->read_single($data['agreement_id']);
 			$event['alarm_date']=$event['termination_date'];
 			$event['alarm']	= $boalarm->read_alarms($type='agreement',$data['agreement_id']);
 			return $event;
