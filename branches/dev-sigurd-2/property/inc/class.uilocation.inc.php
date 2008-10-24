@@ -220,9 +220,9 @@
 			$values_combo_box = array();
 
 			if( phpgw::get_var('phpgw_return_as') != 'json' )
-			 {
-
-	    	$datatable['config']['base_url'] = $GLOBALS['phpgw']->link('/index.php', array
+			{
+				$datatable['menu']					= $this->bocommon->get_menu();
+		    	$datatable['config']['base_url']	= $GLOBALS['phpgw']->link('/index.php', array
 	    				(
 	    					'menuaction'			=> 'property.uilocation.index',
 	    					'type_id'        		=> $type_id,

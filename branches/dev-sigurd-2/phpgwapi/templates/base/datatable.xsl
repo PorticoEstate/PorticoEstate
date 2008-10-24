@@ -91,6 +91,7 @@
 	Entrypoint for this tempalte
 -->
 <xsl:template match="phpgw">
+	<xsl:apply-templates select="datatable/menu" />
 	<div class="toolbar-container">
 		<div class="toolbar">
 			<xsl:apply-templates select="datatable/actions" />

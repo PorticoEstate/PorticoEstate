@@ -1342,6 +1342,7 @@
         // 	enters the first time
         if( phpgw::get_var('phpgw_return_as') != 'json' )
         {
+				$datatable['menu']					= $this->bocommon->get_menu();
                 $datatable['config']['base_java_url'] = "menuaction:'property.uientity.index',".
 								"entity_id:'{$this->entity_id}',".
 								"cat_id:'{$this->cat_id}',".
