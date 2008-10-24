@@ -143,6 +143,7 @@
 				$paid			= isset($data['paid']) ? $data['paid'] : '';
 				$b_account		= isset($data['b_account']) ? $data['b_account'] : '';
 				$district_id	= isset($data['district_id']) ? $data['district_id'] : '';
+				$dry_run		= isset($data['dry_run']) ? $data['dry_run'] : '';
 			}
 
 			$sql = $this->bocommon->fm_cache('sql_workorder'.!!$search_vendor . '_' . !!$wo_hour_cat_id . '_' . !!$b_group);
@@ -404,7 +405,7 @@
 			}
 
 			$sql .= " $filtermethod $querymethod $querymethod_vendor";
-//echo $sql;
+
 
 			if($GLOBALS['phpgw_info']['server']['db_type']=='postgres')
 			{
@@ -421,14 +422,19 @@
 			}
 
 			$sql .= " $group_method";
-
-			if(!$allrows)
+			
+			//cramirez.r@ccfirst.com 23/10/08 avoid retrieve data in first time, only render definition for headers (var myColumnDefs)
+		
+			if(!$dry_run)
 			{
-				$this->db->limit_query($sql . $ordermethod,$start,__LINE__,__FILE__);
-			}
-			else
-			{
-				$this->db->query($sql . $ordermethod,__LINE__,__FILE__);
+					if(!$allrows)
+					{
+						$this->db->limit_query($sql . $ordermethod,$start,__LINE__,__FILE__);
+					}
+					else
+					{
+						$this->db->query($sql . $ordermethod,__LINE__,__FILE__);
+					}
 			}
 
 			$count_cols_return=count($cols_return);
