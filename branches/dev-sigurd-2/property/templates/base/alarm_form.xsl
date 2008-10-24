@@ -199,17 +199,6 @@
 		</xsl:choose>
 	</xsl:template>
 
-<!-- user_list -->	
+<!-- user_list is loaded separately -->
 
-	<xsl:template match="user_list">
-	<xsl:variable name="user_id"><xsl:value-of select="user_id"/></xsl:variable>
-		<xsl:choose>
-			<xsl:when test="selected">
-				<option value="{$user_id}" selected="selected"><xsl:value-of disable-output-escaping="yes" select="name"/></option>
-			</xsl:when>
-			<xsl:otherwise>
-				<option value="{$user_id}"><xsl:value-of disable-output-escaping="yes" select="name"/></option>
-			</xsl:otherwise>
-		</xsl:choose>
-	</xsl:template>
 
