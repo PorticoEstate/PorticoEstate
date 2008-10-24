@@ -116,19 +116,19 @@
 			{
 				$this->order = $order;
 			}
-			if(array_key_exists('cat_id',$_POST))
+			if(array_key_exists('cat_id',$_POST) || array_key_exists('cat_id',$_GET))
 			{
 				$this->cat_id = $cat_id;
 			}
-			if(array_key_exists('status_id',$_POST))
+			if(array_key_exists('status_id',$_POST)  || array_key_exists('status_id',$_GET))
 			{
 				$this->status_id = $status_id;
 			}
-			if(array_key_exists('search_vendor',$_POST))
+			if(array_key_exists('search_vendor',$_POST)  || array_key_exists('search_vendor',$_GET))
 			{
 				$this->search_vendor = $search_vendor;
 			}
-			if(array_key_exists('wo_hour_cat_id',$_POST))
+			if(array_key_exists('wo_hour_cat_id',$_POST)  || array_key_exists('wo_hour_cat_id',$_GET))
 			{
 				$this->wo_hour_cat_id = $wo_hour_cat_id;
 			}
@@ -229,7 +229,7 @@
 			return $this->bocommon->select_list($selected,$key_location_entries);
 		}
 
-		function read($start_date='',$end_date='',$allrows='')
+		function read($start_date='',$end_date='',$allrows='',$dry_run='')
 		{
 			$start_date	= $this->bocommon->date_to_timestamp($start_date);
 			$end_date	= $this->bocommon->date_to_timestamp($end_date);
@@ -239,7 +239,8 @@
 											'search_vendor' => $this->search_vendor,'wo_hour_cat_id' => $this->wo_hour_cat_id,
 											'start_date'=>$start_date,'end_date'=>$end_date,'allrows'=>$allrows,
 											'b_group'=>$this->b_group,'paid'=>$this->paid,'b_account' => $this->b_account,
-											'district_id' => $this->district_id));
+											'district_id' => $this->district_id,'dry_run'=>$dry_run));
+			
 			$this->total_records = $this->so->total_records;
 
 			$dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
