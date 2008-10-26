@@ -157,6 +157,11 @@
 			if( phpgw::get_var('phpgw_return_as') != 'json' )
 			 {
 																						
+				if(!$lookup)
+				{
+					$datatable['menu']				= $this->bocommon->get_menu();
+				}
+
 	    		$datatable['config']['base_url'] = $GLOBALS['phpgw']->link('/index.php', array
 	    				(
 	    					'menuaction'			=> 'property.uiworkorder.index',
