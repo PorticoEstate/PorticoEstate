@@ -1284,25 +1284,6 @@
       $pdf->print_pdf($document,$entity['name'] . '_' . str_replace(' ','_',$GLOBALS['phpgw']->accounts->id2name($this->account)));
     }
 
-    function select2String($array_values, $id = 'id', $name = 'name')
-         {
-             $str_array_values = "";
-             for($i = 0; $i < count($array_values); $i++){
-                foreach( $array_values[$i] as $key => $value ) {
-
-                    if ($key == $id){
-                      $str_array_values .= $value;
-                      $str_array_values .= "#";
-                    }
-                    if ($key == $name){
-                       $str_array_values .= $value;
-                       $str_array_values .= "/";
-                    }
-                }
-             }
-             return $str_array_values;
-          }
-
 
 	function index()
 	{
@@ -1358,7 +1339,7 @@
                 $values_combo_box[0]  = $this->bo->select_category_list($group_filters,$this->cat_id);
                 if(count($values_combo_box[0]))
                 {
-                	$default_value = array ('id'=>'','name'=>'!no category');
+                	$default_value = array ('id'=>'','name'=> lang('no category'));
 	                array_unshift ($values_combo_box[0],$default_value);
 	                $arr_filter_hide[0] = 0;
                 }
@@ -1377,7 +1358,7 @@
                         $values_combo_box[1]	= $this->bocommon->select_district_list($group_filters,$this->district_id);
                         if(count($values_combo_box[1]))
 		                {
-		                	$default_value = array ('id'=>'','name'=>'!no district');
+		                	$default_value = array ('id'=>'','name'=>lang('no district'));
                         	array_unshift ($values_combo_box[1],$default_value);
 			                $arr_filter_hide[1] = 0;
 		                }
@@ -1397,7 +1378,7 @@
 
                 if(count($values_combo_box[2]))
                 {
-                	$default_value = array ('id'=>'','name'=>'!no status');
+                	$default_value = array ('id'=>'','name'=>lang('no status'));
                 	array_unshift ($values_combo_box[2],$default_value);
 	                $arr_filter_hide[2] = 0;
                 }
@@ -1412,7 +1393,7 @@
 
                 if(count($values_combo_box[3]))
                 {
-                	$default_value = array ('user_id'=>'','name'=>'!no user');
+                	$default_value = array ('user_id'=>'','name'=>lang('no user'));
                 	array_unshift ($values_combo_box[3],$default_value);
 	                $arr_filter_hide[3] = 0;
                 }
@@ -1519,19 +1500,19 @@
                               'hidden_value' => array(
                                                     array(
                                                         'id'   => 'values_combo_box_0',
-                                                        'value'=> $this->select2String($values_combo_box[0])
+                                                        'value'=> $this->bocommon->select2String($values_combo_box[0])
                                                           ),
                                                     array(
                                                         'id'    => 'values_combo_box_1',
-                                                        'value' => $this->select2String($values_combo_box[1])
+                                                        'value' => $this->bocommon->select2String($values_combo_box[1])
                                                           ),
                                                      array(
                                                         'id' => 'values_combo_box_2',
-                                                        'value'	=> $this->select2String($values_combo_box[2])
+                                                        'value'	=> $this->bocommon->select2String($values_combo_box[2])
                                                           ),
                                                      array(
                                                         'id' => 'values_combo_box_3',
-                                                        'value'	=> $this->select2String($values_combo_box[3],"user_id")
+                                                        'value'	=> $this->bocommon->select2String($values_combo_box[3],"user_id")
                                                           ))
                          )));
 

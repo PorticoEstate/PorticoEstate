@@ -1847,4 +1847,27 @@
 		{
 			return $this->socommon->get_location_list($required);
 		}
+
+
+		public function select2String($array_values, $id = 'id', $name = 'name')
+        {
+             $str_array_values = "";
+             for($i = 0; $i < count($array_values); $i++){
+                foreach( $array_values[$i] as $key => $value ) {
+
+                    if ($key == $id){
+                    	$str_array_values .= $value;
+                    	$str_array_values .= "#";
+                    }
+                    if ($key == $name){
+                    	 $str_array_values .= $value;
+                    	 $str_array_values .= "/";
+                    }
+                }
+             }
+             return $str_array_values;
+        }
+
+
+
 	}

@@ -172,24 +172,22 @@
 			);
 
 
-
-
-			$values_combo_box[0]  = $this->bocommon->select_district_list('filter',$this->district_id);
-			$default_value = array ('id'=>'','name'=>'!no category');
-			array_unshift ($values_combo_box[0],$default_value);
+			$values_combo_box[0] = $this->cats->formatted_xslt_list(array('format'=>'filter','selected' => $this->cat_id,'globals' => True));
+			$default_value = array ('cat_id'=>'','name'=> lang('no category'));
+			array_unshift ($values_combo_box[0]['cat_list'],$default_value);
 
 
 			$values_combo_box[1]  = $this->bo->select_status_list('filter',$this->status_id);
-			$default_value = array ('id'=>'','name'=>'!no status');
+			$default_value = array ('id'=>'','name'=>lang('no status'));
 			array_unshift ($values_combo_box[1],$default_value);
 
 
 			$values_combo_box[2]  = $this->bocommon->select_category_list(array('format'=>'filter','selected' => $this->wo_hour_cat_id,'type' =>'wo_hours','order'=>'id'));
-			$default_value = array ('id'=>'','name'=>'!no hour category');
+			$default_value = array ('id'=>'','name'=>lang('no hour category'));
 			array_unshift ($values_combo_box[2],$default_value);
 
 			$values_combo_box[3]  = $this->bocommon->get_user_list_right2('filter',2,$this->filter,$this->acl_location);
-			$default_value = array ('id'=>'','name'=>'!no user');
+			$default_value = array ('id'=>'','name'=>lang('no user'));
 			array_unshift ($values_combo_box[3],$default_value);
 
 			$datatable['actions']['form'] = array(
@@ -278,19 +276,19 @@
 		                       		'hidden_value' => array(
 					                                        array( //div values  combo_box_0
 							                                            'id' => 'values_combo_box_0',
-							                                            'value'	=> $this->select2String($values_combo_box[0]) //i.e.  id,value/id,vale/
+							                                            'value'	=> $this->bocommon->select2String($values_combo_box[0]['cat_list'], 'cat_id') //i.e.  id,value/id,vale/
 							                                      ),
 							                                array( //div values  combo_box_1
 							                                            'id' => 'values_combo_box_1',
-							                                            'value'	=> $this->select2String($values_combo_box[1])
+							                                            'value'	=> $this->bocommon->select2String($values_combo_box[1])
 							                                      ),
 															 array( //div values  combo_box_2
 							                                            'id' => 'values_combo_box_2',
-							                                            'value'	=> $this->select2String($values_combo_box[2])
+							                                            'value'	=> $this->bocommon->select2String($values_combo_box[2])
 							                                      ),
 							                                array( //div values  combo_box_3
 							                                            'id' => 'values_combo_box_3',
-							                                            'value'	=> $this->select2String($values_combo_box[3])
+							                                            'value'	=> $this->bocommon->select2String($values_combo_box[3])
 							                                      )
 		                       								)
 												)
@@ -554,7 +552,7 @@
 				array_unshift ($opt_cb_depend,$default_value);
 
 				$json['hidden']['dependent'][] = array ( 'id' => $this->part_of_town_id,
-	                                                      'value' => $this->select2String($opt_cb_depend)
+	                                                      'value' => $this->bocommon->select2String($opt_cb_depend)
 														);
 
 				// right in datatable
@@ -1460,22 +1458,4 @@
 			return  phpgwapi_yui::tabview_generate($tabs, 'general');
 		}
 
-		function select2String($array_values, $id = 'id', $name = 'name')
-         {
-             $str_array_values = "";
-             for($i = 0; $i < count($array_values); $i++){
-                foreach( $array_values[$i] as $key => $value ) {
-
-                    if ($key == $id){
-                    	$str_array_values .= $value;
-                    	$str_array_values .= "#";
-                    }
-                    if ($key == $name){
-                    	 $str_array_values .= $value;
-                    	 $str_array_values .= "/";
-                    }
-                }
-             }
-             return $str_array_values;
-          }
 	}

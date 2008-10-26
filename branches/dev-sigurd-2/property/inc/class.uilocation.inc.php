@@ -258,15 +258,15 @@
 	                                                                        'type' =>'location',
 	                                                                        'type_id' =>$type_id,
 	                                                                        'order'=>'descr'));
-				$default_value = array ('id'=>'','name'=>'!no category');
+				$default_value = array ('id'=>'','name'=>lang('no category'));
 				array_unshift ($values_combo_box[0],$default_value);
 
 				$values_combo_box[1]  = $this->bocommon->select_district_list('filter',$this->district_id);
-				$default_value = array ('id'=>'','name'=>'!no district');
+				$default_value = array ('id'=>'','name'=>lang('no district'));
 				array_unshift ($values_combo_box[1],$default_value);
 
 		        $values_combo_box[2] =  $this->bocommon->select_part_of_town('filter',$this->part_of_town_id,$this->district_id);
-		 		$default_value = array ('id'=>'','name'=>'!no part of town');
+		 		$default_value = array ('id'=>'','name'=>lang('no part of town'));
 				array_unshift ($values_combo_box[2],$default_value);
 
 				if(isset($GLOBALS['phpgw_info']['user']['preferences']['property']['property_filter']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['property_filter'] == 'owner')
@@ -277,7 +277,7 @@
 		        {
 		            $values_combo_box[3] = $this->bo->get_owner_type_list('filter', $this->filter);
 		        }
-		        $default_value = array ('id'=>'','name'=>'!Show all');
+		        $default_value = array ('id'=>'','name'=>lang('show all'));
 				array_unshift ($values_combo_box[3],$default_value);
 
 		$datatable['actions']['form'] = array(
@@ -366,19 +366,19 @@
 		                       		'hidden_value' => array(
 					                                        array( //div values  combo_box_0
 							                                            'id' => 'values_combo_box_0',
-							                                            'value'	=> $this->select2String($values_combo_box[0]) //i.e.  id,value/id,vale/
+							                                            'value'	=> $this->bocommon->select2String($values_combo_box[0]) //i.e.  id,value/id,vale/
 							                                      ),
 							                                array( //div values  combo_box_1
 							                                            'id' => 'values_combo_box_1',
-							                                            'value'	=> $this->select2String($values_combo_box[1])
+							                                            'value'	=> $this->bocommon->select2String($values_combo_box[1])
 							                                      ),
 															 array( //div values  combo_box_2
 							                                            'id' => 'values_combo_box_2',
-							                                            'value'	=> $this->select2String($values_combo_box[2])
+							                                            'value'	=> $this->bocommon->select2String($values_combo_box[2])
 							                                      ),
 							                                array( //div values  combo_box_3
 							                                            'id' => 'values_combo_box_3',
-							                                            'value'	=> $this->select2String($values_combo_box[3])
+							                                            'value'	=> $this->bocommon->select2String($values_combo_box[3])
 							                                      )
 		                       								)
 												)
@@ -679,7 +679,7 @@
 				array_unshift ($opt_cb_depend,$default_value);
 
 				$json['hidden']['dependent'][] = array ( 'id' => $this->part_of_town_id,
-	                                                      'value' => $this->select2String($opt_cb_depend)
+	                                                      'value' => $this->bocommon->select2String($opt_cb_depend)
 														);
 
 				// right in datatable
@@ -1743,25 +1743,5 @@
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('summary' => $data));
 		//	$GLOBALS['phpgw']->xslttpl->pp();
 		}
-
-
-		function select2String($array_values, $id = 'id', $name = 'name')
-         {
-             $str_array_values = "";
-             for($i = 0; $i < count($array_values); $i++){
-                foreach( $array_values[$i] as $key => $value ) {
-
-                    if ($key == $id){
-                    	$str_array_values .= $value;
-                    	$str_array_values .= "#";
-                    }
-                    if ($key == $name){
-                    	 $str_array_values .= $value;
-                    	 $str_array_values .= "/";
-                    }
-                }
-             }
-             return $str_array_values;
-          }
- }
+}
 
