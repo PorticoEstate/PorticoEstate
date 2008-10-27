@@ -52,11 +52,11 @@
 	{
 		$_GET['go'] = urldecode($_GET['go']);
 		?>
-			<h2><?php lang('external link'); ?></h2>
-			<p><?php lang('lang you are about to visit an external site'); ?><br />
-			<?php lang('vist:'); ?> <a href="<?php echo $_GET['go']; ?>" 
+			<h2><?php echo lang('external link'); ?></h2>
+			<p><?php echo lang('lang you are about to visit an external site'); ?><br />
+			<?php echo lang('vist:'); ?> <a href="<?php echo $_GET['go']; ?>" 
 				target="_blank"><?php echo $_GET['go']; ?></a></p>
-			<script language="JavaScript" type="text/javascript">window.location='<?php echo$_GET['go']; ?>';</script>
+			<script language="JavaScript" type="text/javascript">window.location="<?php echo$_GET['go']; ?>";</script>
 		<?php
 	        exit;
 	}
