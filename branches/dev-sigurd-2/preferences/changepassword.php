@@ -52,11 +52,25 @@
 		{
 			$errors[] = lang('The two passwords are not the same');
 		}
+		else
+		{
+			$account	= new phpgwapi_user();
+			try
+			{
+				$account->validate_password($n_passwd);
+			}
+			catch(Exception $e)
+			{
+				$errors[] = $e->getMessage();
+			//	trigger_error($e->getMessage(), E_USER_WARNING);
+			}
+		}
 
 		if (! $n_passwd)
 		{
 			$errors[] = lang('You must enter a password');
 		}
+
 
 		if (count($errors))
 		{

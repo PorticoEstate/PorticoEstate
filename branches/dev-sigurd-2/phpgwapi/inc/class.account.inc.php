@@ -505,7 +505,7 @@
 					break;
 
 				case 'passwd':
-					$this->_validate_password($value);
+					$this->validate_password($value);
 					$this->_data['passwd_hash'] = ExecMethod('phpgwapi.auth.create_hash', $value);
 					$this->_data['last_passwd_change'] = time();
 					break;
@@ -650,7 +650,7 @@
 		 *
 		 * @throws Exception when password is invalid/insecure
 		 */
-		protected function _validate_password($passwd)
+		public function validate_password($passwd)
 		{
 			$dict_loc = ini_get('crack.default_dictionary');
 
