@@ -502,7 +502,7 @@
 				{
 					$GLOBALS['phpgw']->redirect_link('/index.php', array
 					(
-						'menuaction' => 'admin.uiaccounts.view_group',
+						'menuaction' => 'admin.uiaccounts.edit_group',
 						'account_id' => $account_id
 					));
 				}
