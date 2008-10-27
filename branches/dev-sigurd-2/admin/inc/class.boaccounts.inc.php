@@ -200,6 +200,7 @@
 			{
 				phpgwapi_cache::user_clear('phpgwapi', 'menu', $entry['account_id']);
 			}
+			return $id;
 		}
 
 		/**

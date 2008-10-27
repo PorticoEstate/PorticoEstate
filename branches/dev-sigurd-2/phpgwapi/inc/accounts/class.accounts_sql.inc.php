@@ -114,6 +114,7 @@
 				'account_lastname'	=> "'" . $this->db->db_addslashes($account->lastname) . "'",
 				'account_expires'	=> -1,
 				'account_type'		=> "'" . phpgwapi_account::TYPE_GROUP . "'",
+				'account_status'	=> "'A'",
 				'person_id'			=> (int) $account->person_id
 			);
 
