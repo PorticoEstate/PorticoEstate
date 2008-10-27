@@ -92,7 +92,7 @@
 				}
 			}
 
-			$hash = $this->generate_hash($new_password);
+			$hash = $this->create_hash($new_passwd);
 			$hash_safe = $GLOBALS['phpgw']->db->db_addslashes($hash); // just to be safe :)
 			$now = time();
 
