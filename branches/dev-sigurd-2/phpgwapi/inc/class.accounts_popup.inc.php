@@ -44,9 +44,9 @@
 			$group_id = phpgw::get_var('group_id', 'int');
 
 			$query = phpgw::get_var('query', 'string', 'POST');
-			$start = phpgw::get_var('start', 'int', 'POST');
-			$order = phpgw::get_var('order', 'string', 'POST', 'account_lid');
-			$sort = phpgw::get_var('sort', 'string', 'POST', 'ASC');
+			$start = phpgw::get_var('start', 'int', 'GET');
+			$order = phpgw::get_var('order', 'string', 'GET', 'account_lid');
+			$sort = phpgw::get_var('sort', 'string', 'GET', 'ASC');
 
 			$nextmatches = createObject('phpgwapi.nextmatchs');
 
@@ -123,9 +123,9 @@
 
 			if ($app != 'admin')
 			{
-				$user_groups = $accounts->membership($this->account_id);
+				$user_groups = $GLOBALS['phpgw']->accounts->membership($this->account_id);
 				$aclusers = $GLOBALS['phpgw']->acl->get_ids_for_location('run', 1, $app);
-				$acl_users = $this->return_members($aclusers);
+				$acl_users = $GLOBALS['phpgw']->accounts->return_members($aclusers);
 				$app_user	= $acl_users['users'];
 				$app_groups	= $acl_users['groups'];
 				/*
@@ -136,43 +136,49 @@
 			}
 			else
 			{
-				$all_groups	= $this->get_list('groups');
-				$all_user	= $this->get_list('accounts');
+				$all_groups	= $GLOBALS['phpgw']->accounts->get_list('groups');
+				$all_user	= $GLOBALS['phpgw']->accounts->get_list('accounts');
 
 				while(is_array($all_groups) && (list(,$agroup) = each($all_groups)))
 				{
 					$user_groups[] = array
 					(
-						'account_id'	=> $agroup['account_id'],
-						'account_name'	=> $agroup['account_firstname']
+						'account_id'	=> $agroup->id,
+						'account_name'	=> $agroup->firstname
 					);
 				}
 
-				$i = 0;
-				for($j=0;$j<count($user_groups); ++$j)
+			//	$i = 0;
+			//	for($j=0;$j<count($user_groups); ++$j)
+				$app_groups = array();
+				foreach ($all_user as $group)
 				{
-					$app_groups[$i] = $user_groups[$j]['account_id'];
-					++$i;
+					$app_groups[] = $group->id;
+				//	++$i;
 				}
 
-				for($j=0;$j<count($all_user);$j++)
+				$app_user = array();
+				foreach ($all_user as $user)
+				//for($j=0;$j<count($all_user);$j++)
 				{
-					$app_user[$i] = $all_user[$j]['account_id'];
-					++$i;
+					$app_user[] = $user->id;
+				//	++$i;
 				}
+
+//_debug_array($user_groups);
 			}
 
 			while ( isset($user_groups) && is_array($user_groups) && (list(,$group) = each($user_groups)) )
 			{
 				$i = 0;
-				if (in_array($group['account_id'], $app_groups))
+				if (in_array($group->id, $app_groups))
 				{
 					$this->t->set_var('tr_class', $nextmatches->alternate_row_class(++$i%2));
 					//$link_data['group_id'] = $group['account_id'];
-					$this->t->set_var('link_user_group', $GLOBALS['phpgw']->link('/index.php', array('menuaction' => $action, 'group_id' => (int)$group['account_id']) ) );
-					$this->t->set_var('name_user_group', $group['account_name']);
-					$this->t->set_var('account_display', $GLOBALS['phpgw']->common->grab_owner_name($group['account_id']));
-					$this->t->set_var('accountid', $group['account_id']);
+					$this->t->set_var('link_user_group', $GLOBALS['phpgw']->link('/index.php', array('menuaction' => $action, 'group_id' => (int)$group->id) ) );
+					$this->t->set_var('name_user_group', $group->lid);
+					$this->t->set_var('account_display', $GLOBALS['phpgw']->common->grab_owner_name($group->id));
+					$this->t->set_var('accountid', $group->id);
 					switch($app)
 					{
 						case 'addressbook':
@@ -182,11 +188,12 @@
 				}
 				else
 				{
+//_debug_array($group['account_id']);
 					if ($app != 'admin')
 					{
-						$this->t->set_var('link_all_group', $GLOBALS['phpgw']->link('/index.php', array('menuaction' => $action, 'group_id' => (int)$group['account_id']) ) );
-						$this->t->set_var('name_all_group', $group['account_name']);
-						$this->t->set_var('accountid', $group['account_id']);
+						$this->t->set_var('link_all_group', $GLOBALS['phpgw']->link('/index.php', array('menuaction' => $action, 'group_id' => (int)$group->id) ) );
+						$this->t->set_var('name_all_group', $group->lid);
+						$this->t->set_var('accountid', $group->id);
 						$this->t->fp('all', 'group_all', true);
 					}
 				}
@@ -198,44 +205,44 @@
 				if (isset($group_id) && !empty($group_id))
 				{
 					//echo 'GROUP_ID: ' . $group_id;
-					$users = $this->get_members($group_id);
+					$users =  $GLOBALS['phpgw']->accounts->get_members($group_id);
 
 					for ($i=0;$i<count($users); ++$i)
 					{
 						if (in_array($users[$i],$app_user))
 						{
-							$GLOBALS['phpgw']->accounts->account_id = $users[$i];
-							$GLOBALS['phpgw']->accounts->read_repository();
+							$account = $GLOBALS['phpgw']->accounts->get($users[$i]);
 
 							switch ($order)
 							{
 								case 'account_firstname':
-									$id = $GLOBALS['phpgw']->accounts->data['firstname'];
+									$id = $account->firstname;
 									break;
 								case 'account_lastname':
-									$id = $GLOBALS['phpgw']->accounts->data['lastname'];
+									$id = $account->lastname;
 									break;
 								case 'account_lid':
 								default:
-									$id = $GLOBALS['phpgw']->accounts->data['account_lid'];
+									$id = $account->lid;
 									break;
 							}
-							$id .= $GLOBALS['phpgw']->accounts->data['lastname'];	// default sort-order
-							$id .= $GLOBALS['phpgw']->accounts->data['firstname'];
-							$id .= $GLOBALS['phpgw']->accounts->data['account_id'];	// make our index unique
+
+							$id .= $account->lastname;	// default sort-order
+							$id .= $account->firstname;
+							$id .= $account->id;	// make our index unique
 
 							$val_users[$id] = array
 							(
-								'account_id'		=> $GLOBALS['phpgw']->accounts->data['account_id'],
-								'account_firstname'	=> $GLOBALS['phpgw']->accounts->data['firstname'],
-								'account_lastname'	=> $GLOBALS['phpgw']->accounts->data['lastname']
+								'account_id'		=> $account->id,
+								'account_firstname'	=> $account->firstname,
+								'account_lastname'	=> $account->lastname
 							);
 						}
 					}
 
 					if (is_array($val_users))
 					{
-						if ($sort != 'DESC')
+						if ($sort == 'ASC')
 						{
 							ksort($val_users);
 						}
@@ -255,17 +262,17 @@
 					case 'calendar':	$select = 'both'; break;
 					default:			$select = 'accounts'; break;
 				}
-				$entries	= $this->get_list($select, $start, $sort, $order, $query);
+				$entries	=$GLOBALS['phpgw']->accounts->get_list($select, $start, $sort, $order, $query);
 				$total		= $this->total;
-				for ($i=0;$i<count($entries);$i++)
+				foreach ( $entries as $entry)
 				{
-					if (in_array($entries[$i]['account_id'],$app_user))
+					if (in_array($entry->id,$app_user))
 					{
 						$val_users[] = array
 						(
-							'account_id'		=> $entries[$i]['account_id'],
-							'account_firstname'	=> $entries[$i]['account_firstname'],
-							'account_lastname'	=> $entries[$i]['account_lastname']
+							'account_id'		=> $entry->id,
+							'account_firstname'	=> $entry->firstname,
+							'account_lastname'	=> $entry->lastname
 						);
 					}
 				}
