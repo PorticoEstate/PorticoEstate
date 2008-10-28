@@ -204,14 +204,6 @@
 									</input>
 									<label for="changepassword"><xsl:value-of select="lang_changepassword" class="check" /></label><br />
 								</li>
-
-								<li>
-									<label for="account_groups"><xsl:value-of select="lang_groups"/></label>
-									<select name="account_groups[]" id="account_groups" multiple="multiple">
-										<xsl:apply-templates select="group_list"/>
-									</select><br />
-								</li>
-
 								<li>
 									<input type="checkbox" name="values[anonymous]" value="1" class="check">
 										<xsl:if test="anonymous = 1">
@@ -241,6 +233,12 @@
 								</li>
 							</ul>
 						</div>
+						<div id="groups">
+							<h2><xsl:value-of select="lang_groups" /></h2>
+							<ul class="group_list">
+								<xsl:apply-templates select="group_list" />
+							</ul>
+						</div>
 						<div id="apps">
 							<h2><xsl:value-of select="lang_applications" /></h2>
 							<ul class="app_list">
@@ -258,16 +256,27 @@
 	</xsl:template>
 
 <!-- BEGIN group_list -->
-
 	<xsl:template match="group_list">
-		<option value="{account_id}">
-			<xsl:choose>
-				<xsl:when test="selected != ''">
-					<xsl:attribute name="selected" value="selected" />
-				</xsl:when>
-			</xsl:choose>
+		<li>
+			<xsl:attribute name="class">
+				<xsl:choose>
+					<xsl:when test="position() mod 2 = 0">
+						<xsl:text>row_off</xsl:text>
+					</xsl:when>
+					<xsl:otherwise>
+						<xsl:text>row_on</xsl:text>
+					</xsl:otherwise>
+				</xsl:choose>
+			</xsl:attribute>
+			<input type="checkbox" id="account_groups{account_id}" name="account_groups[]" value="{account_id}">
+				<xsl:choose>
+					<xsl:when test="selected != ''">
+						<xsl:attribute name="checked" value="checked" />
+					</xsl:when>
+				</xsl:choose>
+			</input>
 			<xsl:value-of select="account_lid"/>
-		</option>
+		</li>
 	</xsl:template>
 
 <!-- BEGIN app_list -->
