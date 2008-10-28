@@ -160,7 +160,7 @@
 				'firstname'	=> "'" . $this->db->db_addslashes($account->firstname) ."'",
 				'lastname'	=> "'" . $this->db->db_addslashes($account->lastname) . "'",
 				'password'	=> "'" . $this->db->db_addslashes($account->passwd_hash) . "'",
-				'status'	=> "'" . $account->enabled ? "'A'" : "'I'", // FIXME this really has to become a bool
+				'status'	=> $account->enabled ? "'A'" : "'I'", // FIXME this really has to become a bool
 				'expires'	=> (int) $account->expires,
 				'person_id'	=> (int) $account->person_id,
 				'quota'		=> (int) $account->quota,
