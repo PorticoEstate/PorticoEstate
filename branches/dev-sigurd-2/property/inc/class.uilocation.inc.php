@@ -220,31 +220,16 @@
 			$values_combo_box = array();
 
 			if( phpgw::get_var('phpgw_return_as') != 'json' )
-			{
+			 {
 				if(!$lookup)
 				{
 					$datatable['menu']				= $this->bocommon->get_menu();
 				}
 
-		    	$datatable['config']['base_url']	= $GLOBALS['phpgw']->link('/index.php', array
-	    				(
-	    					'menuaction'			=> 'property.uilocation.index',
-	    					'type_id'        		=> $type_id,
-							'query'            		=> $this->query,
- 	                        'district_id'        	=> $this->district_id,
- 	                        'part_of_town_id'    	=> $this->part_of_town_id,
- 	                        'lookup'        		=> $lookup,
- 	                        'lookup_tenant'        	=> $lookup_tenant,
- 	                        'lookup_name'        	=> $lookup_name,
- 	                        'cat_id'        		=> $this->cat_id,
- 	                        'status'        		=> $this->status
-
-	    				));
-
 			$datatable['config']['base_java_url'] = "menuaction:'property.uilocation.index',"
 	    											."type_id:'{$type_id}',"
 	    											."query:'{$this->query}',"
- 	                        						."district_id:'{$this->district_id}',"
+ 	                        						."district_id: '{$this->district_id}',"
  	                        						."part_of_town_id:'{$this->part_of_town_id}',"
 						 	                        ."lookup:'{$lookup}',"
  	                        						."lookup_tenant:'{$lookup_tenant}',"
@@ -491,6 +476,7 @@
 				{
 					$datatable['rowactions']['action'][] = array(
 						'text' 			=> lang('delete'),
+						'confirm_msg'	=> lang('do you really want to delete this entry'),
 						'action'		=> $GLOBALS['phpgw']->link('/index.php',array
 										(
 											'menuaction'	=> 'property.uilocation.delete',
@@ -606,8 +592,6 @@
 			$datatable['sorting']['order'] 	= phpgw::get_var('order', 'string'); // Column
 			$datatable['sorting']['sort'] 	= phpgw::get_var('sort', 'string'); // ASC / DESC
 
-
-
 			$appname = lang('location');
 
 			phpgwapi_yui::load_widget('dragdrop');
@@ -708,6 +692,7 @@
 		  	$GLOBALS['phpgw']->css->validate_file('datatable');
 		  	$GLOBALS['phpgw']->css->add_external_file('property/templates/base/css/property.css');
 			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/datatable/assets/skins/sam/datatable.css');
+			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/container/assets/skins/sam/container.css');
 
 			//Title of Page
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
@@ -1201,8 +1186,22 @@
 
 		function delete()
 		{
+
 			$location_code	 	= phpgw::get_var('location_code', 'string', 'GET');
 			$type_id	 	= $this->type_id;
+
+			//cramirez add JsonCod for Delete
+			if( phpgw::get_var('phpgw_return_as') == 'json' )
+			{
+	    		$this->bo->delete($location_code);
+	    		$json = array
+	    		(
+	    			'result' 			=> 1,
+    				'location_code' 	=> $location_code,
+	    			'type_id' 			=> $type_id
+				);
+				return $json ;
+			}
 
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] .= "::loc_$type_id";
 
@@ -1220,7 +1219,7 @@
 				'type_id'	=>$type_id
 			);
 
-			if (phpgw::get_var('confirm', 'bool', 'POST'))
+			if (phpgw::get_var('confirm', 'bool', 'GET'))
 			{
 				$this->bo->delete($location_code);
 				$GLOBALS['phpgw']->redirect_link('/index.php',$link_data);
@@ -1745,5 +1744,5 @@
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('summary' => $data));
 		//	$GLOBALS['phpgw']->xslttpl->pp();
 		}
-	}
+ }
 
