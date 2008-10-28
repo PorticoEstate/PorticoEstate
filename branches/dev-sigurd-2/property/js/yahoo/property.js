@@ -189,7 +189,7 @@ this.create_array_values_list = function(stValues)
  	{
   		var callback = { success: function(o){execute_ds()},
   						 failure: function(o){window.alert('Server or your connection is death.')},
-  						 timeout: 10000,
+  						 timeout: 10000
   						};
   		var request = YAHOO.util.Connect.asyncRequest('POST', sUrl, callback);
 
@@ -262,7 +262,7 @@ this.create_array_values_list = function(stValues)
 							confirm_msg = values_ds.rights[task.groupIndex].confirm_msg;
 							if(confirm(confirm_msg))
 							{
-								sUrl = sUrl + "&confirm=yes&phpgw_return_as=json"
+								sUrl = sUrl + "&confirm=yes&phpgw_return_as=json";
 								delete_record(sUrl);
 	                        }
 						}
@@ -448,7 +448,8 @@ this.create_array_values_list = function(stValues)
 							}
 						}
 					 try{
-						myDataTable.getDataSource().sendRequest(addToRequest, oCallback3)}
+						myDataTable.getDataSource().sendRequest(addToRequest, oCallback3);
+						}
 					 catch(e){
 						alert(e);
 					 }
