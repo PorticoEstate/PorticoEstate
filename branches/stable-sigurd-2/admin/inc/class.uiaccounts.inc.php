@@ -950,7 +950,7 @@
 			$tabs = array
 			(
 				'data'	=> array('label' => lang('user data'), 'link' => '#user'),
-				'greoups'	=> array('label' => lang('groups'), 'link' => '#groups'),
+				'groups'	=> array('label' => lang('groups'), 'link' => '#groups'),
 				'apps'	=> array('label' => lang('applications'), 'link' => '#apps')
 			);
 			phpgwapi_yui::tabview_setup('account_edit_tabview');
