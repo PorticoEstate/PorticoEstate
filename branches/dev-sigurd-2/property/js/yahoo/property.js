@@ -185,37 +185,16 @@ this.create_array_values_list = function(stValues)
  /********************************************************************************
  *
  */
-   this.ActionToPHP = function(task,argu)
+   this.delete_record = function(sUrl)
  	{
-  		var callback = { success:success_handler,
-  						 failure:failure_handler,
+  		var callback = { success: function(o){execute_ds()},
+  						 failure: function(o){window.alert('Server or your connection is death.')},
   						 timeout: 10000,
-  						 cache: false
-  					    };
-  		var sUrl = phpGWLink('index.php', {menuaction: "property.bolocation.delete",location_code:argu[0].value}, true);
-  		var postData = "";
-		for(cont=0; cont < argu.length; cont++)
-  		{
-   			postData = "&"+argu[cont].variable + "=" + argu[cont].value ;
-  		}
-		postData = "task="+task+postData;
-		YAHOO.util.Connect._default_post_header = "application/x-www-form-urlencoded; charset=UTF-8";
-  		var request = YAHOO.util.Connect.asyncRequest('POST', sUrl, callback,postData);
+  						};
+  		var request = YAHOO.util.Connect.asyncRequest('POST', sUrl, callback);
+
 	}
- /********************************************************************************
- *
- */
- this.success_handler = function(o)
-  {
-     window.alert(o.responseText);
-   }
- /********************************************************************************
- *
- */
-  this.failure_handler = function(o)
-   {
-     window.alert('Server or your connection is death.');
-   }
+
  /********************************************************************************
  *
  */
@@ -261,7 +240,8 @@ this.create_array_values_list = function(stValues)
                 {
                         var oRecord = p_myDataTable.getRecord(elRow);
                         var url = values_ds.rights[task.groupIndex].action;
-						var sUrl = "";
+
+                        var sUrl = "";
 
                         if(values_ds.rights[task.groupIndex].parameters!=null)
                         {
@@ -275,7 +255,21 @@ this.create_array_values_list = function(stValues)
                         }
                         //Convert all HTML entities to their applicable characters
                         sUrl=html_entity_decode(sUrl);
-						window.open(sUrl,'_self');
+
+						// look for the word "DELETE" in URL
+                        if(substr_count(sUrl,'delete')>0)
+						{
+							confirm_msg = values_ds.rights[task.groupIndex].confirm_msg;
+							if(confirm(confirm_msg))
+							{
+								sUrl = sUrl + "&confirm=yes&phpgw_return_as=json"
+								delete_record(sUrl);
+	                        }
+						}
+                        else
+                        {
+                        	window.open(sUrl,'_self');
+                        }
                 }
             }
         };
@@ -310,7 +304,7 @@ this.create_array_values_list = function(stValues)
 
 		//particular variables for Datasource
 		var url="&start=" + state.pagination.recordOffset;
-		
+
 		if(state.pagination.rowsPerPage==values_ds.totalRecords)
 		{
 			url=url+"&allrows=1";
@@ -335,7 +329,7 @@ this.create_array_values_list = function(stValues)
 		var callback2 ={
 				    success: function(o) {
 						eval('values_ds ='+o.responseText);
-						
+
 						if(flag==0){
 							init_datatable();
 							init_filter();
@@ -353,8 +347,7 @@ this.create_array_values_list = function(stValues)
 		  			cache: false
 		}
 		try{
-			YAHOO.util.Connect._default_post_header = "application/x-www-form-urlencoded; charset=UTF-8";
-			YAHOO.util.Connect.asyncRequest('URL',ds,callback2);
+			YAHOO.util.Connect.asyncRequest('POST',ds,callback2);
 		}catch(e_async){
 		   alert(e_async.message);
 		}
@@ -409,7 +402,7 @@ this.create_array_values_list = function(stValues)
 						pageReportTemplate : "Showing items {startIndex} - {endIndex} of {totalRecords}"
 					});
 
-	   
+
 	  var myTableConfig = {
 			initialRequest         : '',//la primera vez ya viene ordenado, por la columna respectiva y solo 15 registros
 			generateRequest        : buildQueryString,
@@ -537,7 +530,7 @@ this.update_datatable = function()
 	myrowsPerPage = values_ds.recordsReturned;
 	mytotalRows = values_ds.totalRecords;
 	//update combo box pagination
-	
+
 	myPaginator.set('rowsPerPageOptions',[myrowsPerPage,mytotalRows]);
 	//myPaginator.updateOnChange=true;
 	}
@@ -562,139 +555,152 @@ this.update_filter = function()
 /****************************************************************************************
 *
 */
-	this.html_entity_decode = function(string) {
-    // Convert all HTML entities to their applicable characters
-    //
-    // version: 810.1317
-    // discuss at: http://kevin.vanzonneveld.net/techblog/article/javascript_equivalent_for_phps_html_entity_decode
+	this.html_entity_decode = function(string)
+	{
+	    var histogram = {}, histogram_r = {}, code = 0;
+	    var entity = chr = '';
 
-    // +   original by: john (http://www.jd-tech.net)
-    // +      input by: ger
-    // +   improved by: Kevin van Zonneveld (http://kevin.vanzonneveld.net)
-    // +    revised by: Kevin van Zonneveld (http://kevin.vanzonneveld.net)
-    // +   bugfixed by: Onno Marsman
-    // %          note: table from http://www.the-art-of-web.com/html/character-codes/
-    // *     example 1: html_entity_decode('Kevin &amp; van Zonneveld');
-    // *     returns 1: 'Kevin & van Zonneveld'
-    var histogram = {}, histogram_r = {}, code = 0;
-    var entity = chr = '';
+	    histogram['34'] = 'quot';
+	    histogram['38'] = 'amp';
+	    histogram['60'] = 'lt';
+	    histogram['62'] = 'gt';
+	    histogram['160'] = 'nbsp';
+	    histogram['161'] = 'iexcl';
+	    histogram['162'] = 'cent';
+	    histogram['163'] = 'pound';
+	    histogram['164'] = 'curren';
+	    histogram['165'] = 'yen';
+	    histogram['166'] = 'brvbar';
+	    histogram['167'] = 'sect';
+	    histogram['168'] = 'uml';
+	    histogram['169'] = 'copy';
+	    histogram['170'] = 'ordf';
+	    histogram['171'] = 'laquo';
+	    histogram['172'] = 'not';
+	    histogram['173'] = 'shy';
+	    histogram['174'] = 'reg';
+	    histogram['175'] = 'macr';
+	    histogram['176'] = 'deg';
+	    histogram['177'] = 'plusmn';
+	    histogram['178'] = 'sup2';
+	    histogram['179'] = 'sup3';
+	    histogram['180'] = 'acute';
+	    histogram['181'] = 'micro';
+	    histogram['182'] = 'para';
+	    histogram['183'] = 'middot';
+	    histogram['184'] = 'cedil';
+	    histogram['185'] = 'sup1';
+	    histogram['186'] = 'ordm';
+	    histogram['187'] = 'raquo';
+	    histogram['188'] = 'frac14';
+	    histogram['189'] = 'frac12';
+	    histogram['190'] = 'frac34';
+	    histogram['191'] = 'iquest';
+	    histogram['192'] = 'Agrave';
+	    histogram['193'] = 'Aacute';
+	    histogram['194'] = 'Acirc';
+	    histogram['195'] = 'Atilde';
+	    histogram['196'] = 'Auml';
+	    histogram['197'] = 'Aring';
+	    histogram['198'] = 'AElig';
+	    histogram['199'] = 'Ccedil';
+	    histogram['200'] = 'Egrave';
+	    histogram['201'] = 'Eacute';
+	    histogram['202'] = 'Ecirc';
+	    histogram['203'] = 'Euml';
+	    histogram['204'] = 'Igrave';
+	    histogram['205'] = 'Iacute';
+	    histogram['206'] = 'Icirc';
+	    histogram['207'] = 'Iuml';
+	    histogram['208'] = 'ETH';
+	    histogram['209'] = 'Ntilde';
+	    histogram['210'] = 'Ograve';
+	    histogram['211'] = 'Oacute';
+	    histogram['212'] = 'Ocirc';
+	    histogram['213'] = 'Otilde';
+	    histogram['214'] = 'Ouml';
+	    histogram['215'] = 'times';
+	    histogram['216'] = 'Oslash';
+	    histogram['217'] = 'Ugrave';
+	    histogram['218'] = 'Uacute';
+	    histogram['219'] = 'Ucirc';
+	    histogram['220'] = 'Uuml';
+	    histogram['221'] = 'Yacute';
+	    histogram['222'] = 'THORN';
+	    histogram['223'] = 'szlig';
+	    histogram['224'] = 'agrave';
+	    histogram['225'] = 'aacute';
+	    histogram['226'] = 'acirc';
+	    histogram['227'] = 'atilde';
+	    histogram['228'] = 'auml';
+	    histogram['229'] = 'aring';
+	    histogram['230'] = 'aelig';
+	    histogram['231'] = 'ccedil';
+	    histogram['232'] = 'egrave';
+	    histogram['233'] = 'eacute';
+	    histogram['234'] = 'ecirc';
+	    histogram['235'] = 'euml';
+	    histogram['236'] = 'igrave';
+	    histogram['237'] = 'iacute';
+	    histogram['238'] = 'icirc';
+	    histogram['239'] = 'iuml';
+	    histogram['240'] = 'eth';
+	    histogram['241'] = 'ntilde';
+	    histogram['242'] = 'ograve';
+	    histogram['243'] = 'oacute';
+	    histogram['244'] = 'ocirc';
+	    histogram['245'] = 'otilde';
+	    histogram['246'] = 'ouml';
+	    histogram['247'] = 'divide';
+	    histogram['248'] = 'oslash';
+	    histogram['249'] = 'ugrave';
+	    histogram['250'] = 'uacute';
+	    histogram['251'] = 'ucirc';
+	    histogram['252'] = 'uuml';
+	    histogram['253'] = 'yacute';
+	    histogram['254'] = 'thorn';
+	    histogram['255'] = 'yuml';
 
-    histogram['34'] = 'quot';
-    histogram['38'] = 'amp';
-    histogram['60'] = 'lt';
-    histogram['62'] = 'gt';
-    histogram['160'] = 'nbsp';
-    histogram['161'] = 'iexcl';
-    histogram['162'] = 'cent';
-    histogram['163'] = 'pound';
-    histogram['164'] = 'curren';
-    histogram['165'] = 'yen';
-    histogram['166'] = 'brvbar';
-    histogram['167'] = 'sect';
-    histogram['168'] = 'uml';
-    histogram['169'] = 'copy';
-    histogram['170'] = 'ordf';
-    histogram['171'] = 'laquo';
-    histogram['172'] = 'not';
-    histogram['173'] = 'shy';
-    histogram['174'] = 'reg';
-    histogram['175'] = 'macr';
-    histogram['176'] = 'deg';
-    histogram['177'] = 'plusmn';
-    histogram['178'] = 'sup2';
-    histogram['179'] = 'sup3';
-    histogram['180'] = 'acute';
-    histogram['181'] = 'micro';
-    histogram['182'] = 'para';
-    histogram['183'] = 'middot';
-    histogram['184'] = 'cedil';
-    histogram['185'] = 'sup1';
-    histogram['186'] = 'ordm';
-    histogram['187'] = 'raquo';
-    histogram['188'] = 'frac14';
-    histogram['189'] = 'frac12';
-    histogram['190'] = 'frac34';
-    histogram['191'] = 'iquest';
-    histogram['192'] = 'Agrave';
-    histogram['193'] = 'Aacute';
-    histogram['194'] = 'Acirc';
-    histogram['195'] = 'Atilde';
-    histogram['196'] = 'Auml';
-    histogram['197'] = 'Aring';
-    histogram['198'] = 'AElig';
-    histogram['199'] = 'Ccedil';
-    histogram['200'] = 'Egrave';
-    histogram['201'] = 'Eacute';
-    histogram['202'] = 'Ecirc';
-    histogram['203'] = 'Euml';
-    histogram['204'] = 'Igrave';
-    histogram['205'] = 'Iacute';
-    histogram['206'] = 'Icirc';
-    histogram['207'] = 'Iuml';
-    histogram['208'] = 'ETH';
-    histogram['209'] = 'Ntilde';
-    histogram['210'] = 'Ograve';
-    histogram['211'] = 'Oacute';
-    histogram['212'] = 'Ocirc';
-    histogram['213'] = 'Otilde';
-    histogram['214'] = 'Ouml';
-    histogram['215'] = 'times';
-    histogram['216'] = 'Oslash';
-    histogram['217'] = 'Ugrave';
-    histogram['218'] = 'Uacute';
-    histogram['219'] = 'Ucirc';
-    histogram['220'] = 'Uuml';
-    histogram['221'] = 'Yacute';
-    histogram['222'] = 'THORN';
-    histogram['223'] = 'szlig';
-    histogram['224'] = 'agrave';
-    histogram['225'] = 'aacute';
-    histogram['226'] = 'acirc';
-    histogram['227'] = 'atilde';
-    histogram['228'] = 'auml';
-    histogram['229'] = 'aring';
-    histogram['230'] = 'aelig';
-    histogram['231'] = 'ccedil';
-    histogram['232'] = 'egrave';
-    histogram['233'] = 'eacute';
-    histogram['234'] = 'ecirc';
-    histogram['235'] = 'euml';
-    histogram['236'] = 'igrave';
-    histogram['237'] = 'iacute';
-    histogram['238'] = 'icirc';
-    histogram['239'] = 'iuml';
-    histogram['240'] = 'eth';
-    histogram['241'] = 'ntilde';
-    histogram['242'] = 'ograve';
-    histogram['243'] = 'oacute';
-    histogram['244'] = 'ocirc';
-    histogram['245'] = 'otilde';
-    histogram['246'] = 'ouml';
-    histogram['247'] = 'divide';
-    histogram['248'] = 'oslash';
-    histogram['249'] = 'ugrave';
-    histogram['250'] = 'uacute';
-    histogram['251'] = 'ucirc';
-    histogram['252'] = 'uuml';
-    histogram['253'] = 'yacute';
-    histogram['254'] = 'thorn';
-    histogram['255'] = 'yuml';
+	    // Reverse table. Cause for maintainability purposes, the histogram is
+	    // identical to the one in htmlentities.
+	    for (code in histogram) {
+	        entity = histogram[code];
+	        histogram_r[entity] = code;
+	    }
 
-    // Reverse table. Cause for maintainability purposes, the histogram is
-    // identical to the one in htmlentities.
-    for (code in histogram) {
-        entity = histogram[code];
-        histogram_r[entity] = code;
+	    return (string+'').replace(/(\&([a-zA-Z]+)\;)/g, function(full, m1, m2){
+	        if (m2 in histogram_r) {
+	            return String.fromCharCode(histogram_r[m2]);
+	        } else {
+	            return m2;
+	        }
+	    });
+}
+/****************************************************************************************
+*
+*/
+
+function substr_count( haystack, needle, offset, length )
+{
+    var pos = 0, cnt = 0;
+
+    haystack += '';
+    needle += '';
+    if(isNaN(offset)) offset = 0;
+    if(isNaN(length)) length = 0;
+    offset--;
+
+    while( (offset = haystack.indexOf(needle, offset+1)) != -1 ){
+        if(length > 0 && (offset+needle.length) > length){
+            return false;
+        } else{
+            cnt++;
+        }
     }
 
-    return (string+'').replace(/(\&([a-zA-Z]+)\;)/g, function(full, m1, m2){
-        if (m2 in histogram_r) {
-            return String.fromCharCode(histogram_r[m2]);
-        } else {
-            return m2;
-        }
-    });
+    return cnt;
 }
+
 //----------------------------------------------------------------------------------------
 
 	eval("var path_values = "+base_java_url+"");
