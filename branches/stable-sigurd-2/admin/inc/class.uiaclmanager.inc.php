@@ -326,7 +326,7 @@ HTML;
 		 */
 		public function accounts_popup()
 		{
-			return $GLOBALS['phpgw']->accounts_popup->accounts_popup('admin_acl');
+			return $GLOBALS['phpgw']->accounts_popup->render('admin_acl');
 		}
 
 		/**
@@ -346,7 +346,7 @@ HTML;
 
 			if ( phpgw::get_var('save', 'bool', 'POST') )
 			{
-				$account_addressmaster = phpgw::get_var('account_addressmaster', 'int', 'POST', array());
+				$account_addressmaster = phpgw::get_var('account_addressmaster', 'string', 'POST', array());
 				$group_addressmaster = phpgw::get_var('group_addressmaster', 'int', 'POST', array());
 
 				$error = $this->_boacl->check_values($account_addressmaster, $group_addressmaster);
