@@ -311,10 +311,8 @@
 		{
 		// FIXME: Conflicting transactions - there is a transaction in acl::save_repository()
 		//	$this->db->transaction_begin();
-
 			try
 			{
-
 				$class = get_class($account);
 				switch( $class )
 				{
@@ -344,11 +342,21 @@
 					$aclobj->add($acl['appname'], $acl['location'], $acl['rights']);
 				}
 
+/* // Didn't work...
 				foreach ( $modules as $module )
 				{
 					$aclobj->add($module, 'run', phpgwapi_acl::READ);
 				}
+*/
 				$aclobj->save_repository();
+
+				// application permissions
+				if ( $modules )
+				{
+					$apps = createObject('phpgwapi.applications', $account->id);
+					$apps->update_data(array_keys($modules));
+					$apps->save_repository();
+				}
 
 			}
 			catch (Exception $e)
@@ -652,7 +660,7 @@
 		 *
 		 * @return void
 		 */
-		public function update_user($user, $groups, $permissions = null, $modules = null)
+		public function update_user($user, $groups, $acls = array(), $modules = null)
 		{
 			$this->set_account($user->id);
 			$this->account = $user;
@@ -680,6 +688,17 @@
 			}
 
 			//FIXME need permissions here
+
+			$aclobj =& $GLOBALS['phpgw']->acl;
+			$aclobj->set_account_id($user->id);
+			$aclobj->delete_repository('preferences', 'changepassword', $user->id);
+			$aclobj->set_account_id($user->id); //reread the current repository
+			foreach ( $acls as $acl )
+			{
+				$aclobj->add($acl['appname'], $acl['location'], $acl['rights']);
+			}
+
+			$aclobj->save_repository();
 
 			// application permissions
 			if ( is_array($modules) )

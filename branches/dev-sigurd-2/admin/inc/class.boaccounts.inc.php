@@ -311,9 +311,18 @@
 
 			$groups = $values['account_groups'];
 			$acls = array();
+			if ( $values['changepassword'] )
+			{
+				$acls[] = array
+				(
+					'appname' 	=> 'preferences',
+					'location'	=> 'changepassword',
+					'rights'	=> 1
+				);
+			}
+			
 			$apps = $values['account_permissions'];
 			unset($values['account_groups'], $values['account_permissions']);
-
 
 			try
 			{
@@ -339,6 +348,7 @@
 
 			if ( $user->id )
 			{
+
 				if ( $GLOBALS['phpgw']->accounts->update_user($user, $groups, $acls, $apps) )
 				{
 					return $user->id;
@@ -386,7 +396,7 @@
 				$GLOBALS['phpgw']->redirect_link('index.php',
 						array('menuaction' => 'admin.uiaccounts.list_users'));
 			}
-			return $GLOBALS['phpgw']->accounts->delete($account_id);
+			return $GLOBALS['phpgw']->accounts->delete($id);
 		}
 
 

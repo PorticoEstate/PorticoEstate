@@ -758,7 +758,7 @@
 				return;
 			}
 			$GLOBALS['phpgw']->redirect_link('/index.php',
-					array('menuaction' => 'admin.uiaccounts.view_user', 'account_id' => $account_id));
+					array('menuaction' => 'admin.uiaccounts.edit_user', 'account_id' => $account_id));
 		}
 
 		/**
@@ -794,7 +794,7 @@
 			if ( $account_id )
 			{
 				$user_data['anonymous'] = $acl->check('anonymous', 1, 'phpgwapi');
-				$user_data['changepassword'] = $acl->check('changepassword', 0xFFFF, 'preferences');
+				$user_data['changepassword'] = $acl->check('changepassword', 1, 'preferences');
 				$user_data['account_permissions'] = $this->_bo->load_apps($account_id);
 				$user_groups = $account->membership($account_id);
 
@@ -1191,6 +1191,11 @@
 					//TODO Make this nicer
 					echo 'Failed to delete user';
 				}
+				else
+				{
+					$GLOBALS['phpgw']->redirect_link('/index.php',
+						array('menuaction' => 'admin.uiaccounts.list_users'));
+				}
 			}
 			if( phpgw::get_var('cancel', 'bool') )
 			{
@@ -1215,12 +1220,12 @@
 				$account_id = phpgw::get_var('account_id', 'int');
 				foreach ( $accounts_list as $account )
 				{
-					if ( (int) $account['account_id'] != $account_id )
+					if ( (int) $account->id != $account_id )
 					{
 						$alist[] = array
 						(
-						  'account_id'   => $account['account_id'],
-						  'account_name' => $accounts->id2name($account['account_id'])
+						  'account_id'   => $account->id,
+						  'account_name' => $accounts->id2name($account->id)
 						);
 					}
 				}
