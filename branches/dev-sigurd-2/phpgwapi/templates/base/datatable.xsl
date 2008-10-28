@@ -91,7 +91,6 @@
 	Entrypoint for this tempalte
 -->
 <xsl:template match="phpgw">
-	<xsl:apply-templates select="datatable/menu" />
 	<div class="toolbar-container">
 		<div class="toolbar">
 			<xsl:apply-templates select="datatable/actions" />
@@ -277,8 +276,8 @@
 				<a href="#" onclick="{url}" ><xsl:value-of select="value"/></a>
 			</xsl:when>
 			<xsl:when test="type='label_date'">
-    			<table><tbody><tr><td><span id="txt_start_date"></span></td></tr><tr><td><span id="txt_end_date"></span></td></tr></tbody></table>
-  			 </xsl:when>
+				<table><tbody><tr><td><span id="txt_start_date"></span></td></tr><tr><td><span id="txt_end_date"></span></td></tr></tbody></table>
+			</xsl:when>
 			<xsl:otherwise>
 				<input id="{$id}" type="{type}" name="{name}" value="{value}" class="{type}">
 					<xsl:if test="size">
@@ -697,7 +696,6 @@
 					sortable: <xsl:value-of select="phpgw:conditional(not(sortable = 0), 'true', 'false')"/>,
 					visible: <xsl:value-of select="phpgw:conditional(not(visible = 0), 'true', 'false')"/>,
 					format: "<xsl:value-of select="format"/>",
-					formatter: "<xsl:value-of select="formatter"/>",
 					source: "<xsl:value-of select="sort_field"/>"
 				}<xsl:value-of select="phpgw:conditional(not(position() = last()), ',', '')"/>
 			</xsl:for-each>
