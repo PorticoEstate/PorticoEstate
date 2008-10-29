@@ -6,8 +6,8 @@
  	var selectsButtons = [
 	{order:0, var_URL:'cat_id',name:'btn_cat_id',style:'categorybutton',dependiente:''},
 	{order:1, var_URL:'district_id',name:'btn_district_id',style:'districtbutton',dependiente:''},
-	{order:2, var_URL:'status',name:'btn_status_id',style:'partOFTownbutton',dependiente:''},
-	{order:3, var_URL:'filter', name:'btn_user_id',style:'ownerIdbutton',dependiente:''}
+	{order:2, var_URL:'status',name:'btn_status_id',style:'statusbutton',dependiente:''},
+	{order:3, var_URL:'filter', name:'btn_user_id',style:'userIdbutton',dependiente:''}
 	]
 
 	// define buttons

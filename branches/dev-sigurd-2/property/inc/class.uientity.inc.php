@@ -569,6 +569,7 @@
 			{
 				$datatable['rowactions']['action'][] = array(
 						'text' 			=> lang('delete'),
+						'confirm_msg'	=> lang('do you really want to delete this entry'),
 						'action'		=> $GLOBALS['phpgw']->link('/index.php',array
 														(
 																'menuaction'  => 'property.uientity.delete',
@@ -681,7 +682,7 @@
 							  $json_row[$column['name']] = "<a href='#' id='".$column['link']."' onclick='javascript:filter_data(this.id);'>" .$column['value']."</a>";
 						}
 						elseif(isset($column['format']) && $column['format']== "link")
-						{								  
+						{
 							$json_row[$column['name']] = "<a href='".$column['link']."' target='_blank'>" .$column['value']."</a>";
 						}
 						else
@@ -1281,12 +1282,26 @@
 
 		function delete()
 		{
+			$id = phpgw::get_var('id', 'int');
+
+			//cramirez add JsonCod for Delete
+			if( phpgw::get_var('phpgw_return_as') == 'json' )
+			{
+				$this->bo->delete($id);
+				$json = array
+				(
+					'result' 			=> 1,
+				);
+				return $json ;
+			}
+
+
 			if(!$this->acl_delete)
 			{
 				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=>8, 'acl_location'=> $this->acl_location));
 			}
 
-			$id = phpgw::get_var('id', 'int');
+
 			$confirm	= phpgw::get_var('confirm', 'bool', 'POST');
 
 			$link_data = array
@@ -1801,4 +1816,7 @@
 			$document = $pdf->ezOutput();
 			$pdf->print_pdf($document,$entity['name'] . '_' . str_replace(' ','_',$GLOBALS['phpgw']->accounts->id2name($this->account)));
 		}
+
+
 	}
+
