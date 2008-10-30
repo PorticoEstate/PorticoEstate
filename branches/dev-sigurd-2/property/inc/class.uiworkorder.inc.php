@@ -435,7 +435,7 @@
 						),
 					)
 				);
-				if($this->acl_read)
+				if($this->acl_read && $this->bocommon->check_perms($location['grants'],PHPGW_ACL_READ))
 				{
 					$datatable['rowactions']['action'][] = array(
 						'text' 			=> lang('view'),
@@ -446,7 +446,7 @@
 						'parameters'	=> $parameters
 					);
 				}
-				if($this->acl_edit)
+				if($this->acl_edit && $this->bocommon->check_perms($location['grants'],PHPGW_ACL_EDIT))
 				{
 					$datatable['rowactions']['action'][] = array(
 						'text' 			=> lang('edit'),
@@ -458,7 +458,7 @@
 					);
 					
 					$datatable['rowactions']['action'][] = array(
-						'text' 			=> lang('Calculate'),
+						'text' 			=> lang('calculate'),
 						'action'		=> $GLOBALS['phpgw']->link('/index.php',array
 										(
 											'menuaction'	=> 'property.uiwo_hour.index'
@@ -466,10 +466,11 @@
 						'parameters'	=> $parameters2
 					);
 				}
-				if($this->acl_delete)
+				if($this->acl_delete && $this->bocommon->check_perms($location['grants'],PHPGW_ACL_DELETE))
 				{
 					$datatable['rowactions']['action'][] = array(
 						'text' 			=> lang('delete'),
+						'confirm_msg'	=> lang('do you really want to delete this entry'),
 						'action'		=> $GLOBALS['phpgw']->link('/index.php',array
 										(
 											'menuaction'	=> 'property.uiworkorder.delete'
@@ -1221,11 +1222,25 @@
 
 		function delete()
 		{
+			
+			$id = phpgw::get_var('id', 'int');
+		
+			//cramirez add JsonCod for Delete
+			if( phpgw::get_var('phpgw_return_as') == 'json' )
+			{
+				$this->bo->delete($id);
+				$json = array
+				(
+					'result' 			=> 1,
+				);
+				return $json ;
+			}
+			
 			if(!$this->acl_delete)
 			{
 				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop','perm'=>8, 'acl_location'=> $this->acl_location));
 			}
-			$id = phpgw::get_var('id', 'int');
+			//$id = phpgw::get_var('id', 'int');
 			$confirm	= phpgw::get_var('confirm', 'bool', 'POST');
 
 			$link_data = array
