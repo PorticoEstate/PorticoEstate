@@ -180,6 +180,7 @@
 				$project_id		= isset($data['project_id'])?$data['project_id']:'';
 				$allrows		= isset($data['allrows'])?$data['allrows']:'';
 				$list_descr		= isset($data['list_descr'])?$data['list_descr']:'';
+				$dry_run		= isset($data['dry_run']) ? $data['dry_run'] : '';
 			}
 
 			$entity_table = 'fm_request';
@@ -304,15 +305,19 @@
 			$this->db2->query($sql,__LINE__,__FILE__);
 			$this->total_records = $this->db2->num_rows();
 
-			if(!$allrows)
+			//cramirez.r@ccfirst.com 23/10/08 avoid retrieve data in first time, only render definition for headers (var myColumnDefs)
+			if(!$dry_run)
 			{
-				$this->db->limit_query($sql . $ordermethod,$start,__LINE__,__FILE__);
+				if(!$allrows)
+				{
+					$this->db->limit_query($sql . $ordermethod,$start,__LINE__,__FILE__);
+				}
+				else
+				{
+					$this->db->query($sql . $ordermethod,__LINE__,__FILE__);
+				}
 			}
-			else
-			{
-				$this->db->query($sql . $ordermethod,__LINE__,__FILE__);
-			}
-
+			
 			$j=0;
 			while ($this->db->next_record())
 			{
