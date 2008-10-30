@@ -27,6 +27,8 @@
  	* @version $Id$
 	*/
 
+	phpgw::import_class('phpgwapi.yui');
+	
 	/**
 	 * Description
 	 * @package property
@@ -133,11 +135,12 @@
 			{
 				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=>1, 'acl_location'=> $this->acl_location));
 			}
-
-			$GLOBALS['phpgw']->xslttpl->add_file(array('request','table_header',
-										'nextmatchs',
-										'search_field'));
-
+																		
+			$dry_run = false;
+			
+			$datatable = array();
+			$values_combo_box = array();
+			
 			$project_id = phpgw::get_var('project_id', 'int'); // lookup for maintenance planning
 
 			if($project_id)
@@ -145,319 +148,408 @@
 				$lookup	= true;
 			}
 
-			$request_list = $this->bo->read(array('project_id' => 1,'allrows'=>$this->allrows));
+			if( phpgw::get_var('phpgw_return_as') != 'json' )
+			 {
+																						
+				if(!$lookup)
+				{
+					$datatable['menu']	= $this->bocommon->get_menu();
+				}
 
-//_debug_array($request_list);
+	    		$datatable['config']['base_url'] = $GLOBALS['phpgw']->link('/index.php', array
+	    				(
+	    					'menuaction'			=> 'property.uirequest.index',
+									'lookup'    => $lookup,
+									'cat_id'	=> $this->cat_id,
+									'filter'	=> $this->filter,
+									'status_id'	=> $this->status_id,
+									'project_id'	=> $project_id,
+									'query'		=> $this->query
+						
+	    				));
 
+				$datatable['config']['base_java_url'] = "menuaction:'property.uirequest.index',"
+	    										
+	    											."query:'{$this->query}',"
+						 	                        ."lookup:'{$lookup}',"
+													."project_id:'{$project_id}',"
+						 	                        ."filter:'{$this->filter}',"
+						 	                        ."status_id:'{$this->status_id}',"
+						 	                        ."cat_id:'{$this->cat_id}'";
+																	
+				$values_combo_box[0] = $this->cats->formatted_xslt_list(array('select_name' => 'cat_id','selected' => $this->cat_id,'globals' => True));
+				$default_value = array ('cat_id'=>'','name'=> lang('no category'));
+				array_unshift ($values_combo_box[0]['cat_list'],$default_value);
+
+				$values_combo_box[1]  = $this->boproject->select_status_list('filter',$this->status_id);
+				$default_value = array ('id'=>'','name'=> lang('no status'));
+				array_unshift ($values_combo_box[1],$default_value);
+
+				$values_combo_box[2]  = $this->bocommon->get_user_list('filter',$this->filter,$extra=false,$default=false,$start=-1,$sort='ASC',$order='account_lastname',$query='',$offset=-1);
+				$default_value = array ('user_id'=>'','name'=>lang('no user'));
+				array_unshift ($values_combo_box[2],$default_value);
+
+				$datatable['actions']['form'] = array(
+					array(
+						'action'	=> $GLOBALS['phpgw']->link('/index.php',
+								array(
+									'menuaction' 		=> 'property.uirequest.index',
+									'lookup'        		=> $lookup,
+									'cat_id'	=> $this->cat_id,
+									'filter'	=> $this->filter,
+									'status_id'	=> $this->status_id,
+									'project_id'	=> $project_id,
+									'query'		=> $this->query
+								)
+							),
+						'fields'	=> array(
+                                    	'field' => array(
+			                                        array( //boton 	CATEGORY
+			                                            'id' => 'btn_cat_id',
+			                                            'name' => 'cat_id',
+			                                            'value'	=> lang('Category'),
+			                                            'type' => 'button'
+			                                        ),
+			                                        array( //boton 	STATUS
+			                                            'id' => 'btn_status_id',
+			                                            'name' => 'status_id',
+			                                            'value'	=> lang('Status'),
+			                                            'type' => 'button',
+			                                        ),
+			                                        array( //boton 	FILTER
+			                                            'id' => 'btn_user_id',
+			                                            'name' => 'filter',
+			                                            'value'	=> lang('User'),
+			                                            'type' => 'button',
+			                                        ),	
+													array(
+										                'type'=> 'link',
+										                'id'  => 'btn_priority_key',
+										                'url' => "Javascript:window.open('".$GLOBALS['phpgw']->link('/index.php',
+										                       array(
+										                           'menuaction' => 'property.uirequest.priority_key'))."','','width=350,height=250')",
+										                 'value' => lang('Priority key')
+										            ),			                                        			                                      				                                      	                              			                            						                            				                            
+			   										array( // TEXT IMPUT
+			                                            'name'     => 'query',
+			                                            'id'     => 'txt_query',
+			                                            'text'    => '',//necesary for spacio next to  txtinput
+			                                            'value'    => '',//$query,
+			                                            'type' => 'text',
+			                                            'size'    => 28
+			                                        ),			                                        
+			                                        array( //boton     SEARCH
+			                                            'id' => 'btn_search',
+			                                            'name' => 'search',
+			                                            'value'    => lang('search'),
+			                                            'type' => 'button',
+			                                        ),			                                  
+													array(
+						                                'type'	=> 'submit',
+						                            	'id'	=> 'btn_new',
+						                                'value'	=> lang('add')
+						                            ),
+													array(
+						                                'type'	=> 'button',
+						                            	'id'	=> 'btn_export',
+						                                'value'	=> lang('download')
+						                            )					                           
+		                           				),
+		                       		'hidden_value' => array(
+					                                        array( //div values  combo_box_0
+							                                            'id' => 'values_combo_box_0',
+							                                            'value'	=> $this->bocommon->select2String($values_combo_box[0]['cat_list'], 'cat_id') //i.e.  id,value/id,vale/
+							                                      ),
+							                                array( //div values  combo_box_1
+							                                            'id' => 'values_combo_box_1',
+							                                            'value'	=> $this->bocommon->select2String($values_combo_box[1])
+							                                      ),
+															 array( //div values  combo_box_2
+							                                            'id' => 'values_combo_box_2',
+							                                            'value'	=> $this->bocommon->select2String($values_combo_box[2], 'user_id')
+							                                      )
+		                       								)
+												)
+										  )
+				);
+				
+				if(!$this->acl_manage)
+				{
+					unset($datatable['actions']['form'][0]['fields']['field'][3]);
+				} 			
+				$dry_run = true;
+			}
+		                         
+			$request_list = array();
+			$request_list = $this->bo->read(array('project_id' => 1,'allrows'=>$this->allrows,'dry_run' =>$dry_run));
 			$uicols	= $this->bo->uicols;
-//_debug_array($uicols);
 
 			$j=0;
-			while (is_array($request_list) && list(,$request_entry) = each($request_list))
+			if (isset($request_list) && is_array($request_list))
 			{
-				for ($k=0;$k<count($uicols['name']);$k++)
+				foreach($request_list as $request)
 				{
-					if($uicols['input_type'][$k]!='hidden')
+					for ($i=0;$i<count($uicols['name']);$i++)
 					{
-
-						if($request_entry['query_location'][$uicols['name'][$k]])
+						if($uicols['input_type'][$i]!='hidden')
 						{
-							$content[$j]['row'][$k]['statustext']		= lang('search');
-							$content[$j]['row'][$k]['text']			= $request_entry[$uicols['name'][$k]];
-							$content[$j]['row'][$k]['link']			= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uirequest.index', 'query'=> $request_entry['query_location'][$uicols['name'][$k]], 'project_id'=> $project_id));
+							if(isset($request['query_location'][$uicols['name'][$i]]))
+							{														
+								$datatable['rows']['row'][$j]['column'][$i]['name'] 			= $uicols['name'][$i];
+								$datatable['rows']['row'][$j]['column'][$i]['statustext']		= lang('search');
+								$datatable['rows']['row'][$j]['column'][$i]['value']			= $request[$uicols['name'][$i]];
+								$datatable['rows']['row'][$j]['column'][$i]['format'] 			= 'link';
+								$datatable['rows']['row'][$j]['column'][$i]['java_link']		= true;
+								$datatable['rows']['row'][$j]['column'][$i]['link']				= $request['query_location'][$uicols['name'][$i]];
+								$uicols['formatter'][$i] = 'myCustom';
+							}
+							else
+							{
+								$datatable['rows']['row'][$j]['column'][$i]['value'] 			= $request[$uicols['name'][$i]];
+								$datatable['rows']['row'][$j]['column'][$i]['name'] 			= $uicols['name'][$i];
+								$datatable['rows']['row'][$j]['column'][$i]['lookup'] 			= $lookup;
+								$datatable['rows']['row'][$j]['column'][$i]['align'] 			= (isset($uicols['align'][$i])?$uicols['align'][$i]:'center');
+								
+								if(isset($uicols['datatype']) && isset($uicols['datatype'][$i]) && $uicols['datatype'][$i]=='link' && $request[$uicols['name'][$i]])
+								{
+									$datatable['rows']['row'][$j]['column'][$i]['value']		= lang('link');
+									$datatable['rows']['row'][$j]['column'][$i]['link']		= $request[$uicols['name'][$i]];
+									$datatable['rows']['row'][$j]['column'][$i]['target']	= '_blank';
+								}
+							}
 						}
 						else
 						{
-							$content[$j]['row'][$k]['value'] 		= $request_entry[$uicols['name'][$k]];
-							$content[$j]['row'][$k]['name'] 		= $uicols['name'][$k];
+								$datatable['rows']['row'][$j]['column'][$i]['name'] 			= $uicols['name'][$i];
+								$datatable['rows']['row'][$j]['column'][$i]['value']			= $request[$uicols['name'][$i]];
 						}
 
+						$datatable['rows']['row'][$j]['hidden'][$i]['value'] 			= $request[$uicols['name'][$i]];
+						$datatable['rows']['row'][$j]['hidden'][$i]['name'] 			= $uicols['name'][$i];
 					}
 
-				}
-
-				if(!$lookup)
-				{
-					if($this->acl_read)
-					{
-						$content[$j]['row'][$k]['statustext']			= lang('view the request');
-						$content[$j]['row'][$k]['text']				= lang('view');
-						$content[$j]['row'][$k]['link']				= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uirequest.view', 'id'=> $request_entry['request_id']));
-						$k++;
-					}
-
-					if($this->acl_edit)
-					{
-						$content[$j]['row'][$k]['statustext']			= lang('edit the request');
-						$content[$j]['row'][$k]['text']				= lang('edit');
-						$content[$j]['row'][$k]['link']				= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uirequest.edit', 'id'=> $request_entry['request_id']));
-						$k++;
-					}
-
-					if($this->acl_delete)
-					{
-						$content[$j]['row'][$k]['statustext']			= lang('delete the request');
-						$content[$j]['row'][$k]['text']				= lang('delete');
-						$content[$j]['row'][$k]['link']				= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uirequest.delete', 'id'=> $request_entry['request_id']));
-						$k++;
-					}
-
-				}
-				else
-				{
-					if($this->acl_read)
-					{
-						$content[$j]['row'][$k]['statustext']			= lang('view the request');
-						$content[$j]['row'][$k]['text']				= lang('view');
-						$content[$j]['row'][$k]['target']			= '_blank';
-						$content[$j]['row'][$k]['link']				= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uirequest.view', 'id'=> $request_entry['request_id']));
-						$content[$j]['row'][$k]['request_id'] 			= $request_entry['request_id'];
-						$k++;
-					}
-
-				}
-
-				$j++;
-			}
-
-			for ($i=0;$i<count($uicols['descr']);$i++)
-			{
-				if($uicols['input_type'][$i]!='hidden')
-				{
-					$table_header[$i]['header'] 	= $uicols['descr'][$i];
-					$table_header[$i]['width'] 		= '5%';
-					$table_header[$i]['align'] 		= 'center';
-					if($uicols['name'][$i]=='loc1')
-					{
-						$table_header[$i]['sort_link']	=true;
-						$table_header[$i]['sort'] 		= $this->nextmatchs->show_sort_order(array
-										(
-											'sort'	=> $this->sort,
-											'var'	=> 'location_code',
-											'order'	=> $this->order,
-											'extra'	=> array('menuaction' => 'property.uirequest.index',
-																	'type_id'	=>$type_id,
-																	'query'		=>$this->query,
-																	'project_id'	=>$project_id,
-																	'district_id'	=> $this->district_id,
-																	'cat_id'	=>$this->cat_id)
-										));
-					}
-					if($uicols['name'][$i]=='request_id')
-					{
-						$table_header[$i]['sort_link']	=true;
-						$table_header[$i]['sort'] 		= $this->nextmatchs->show_sort_order(array
-										(
-											'sort'	=> $this->sort,
-											'var'	=> 'request_id',
-											'order'	=> $this->order,
-											'extra'	=> array('menuaction' => 'property.uirequest.index',
-																	'type_id'	=>$type_id,
-																	'query'		=>$this->query,
-																	'project_id'	=>$project_id,
-																	'district_id'	=> $this->district_id,
-																	'cat_id'	=>$this->cat_id)
-										));
-					}
-					if($uicols['name'][$i]=='score')
-					{
-						$table_header[$i]['sort_link']	=true;
-						$table_header[$i]['sort'] 		= $this->nextmatchs->show_sort_order(array
-										(
-											'sort'	=> $this->sort,
-											'var'	=> 'score',
-											'order'	=> $this->order,
-											'extra'	=> array('menuaction' => 'property.uirequest.index',
-																	'type_id'	=>$type_id,
-																	'query'		=>$this->query,
-																	'project_id'	=>$project_id,
-																	'district_id'	=> $this->district_id,
-																	'cat_id'	=>$this->cat_id)
-										));
-					}
-					if($uicols['name'][$i]=='budget')
-					{
-						$table_header[$i]['sort_link']	=true;
-						$table_header[$i]['sort'] 		= $this->nextmatchs->show_sort_order(array
-										(
-											'sort'	=> $this->sort,
-											'var'	=> 'budget',
-											'order'	=> $this->order,
-											'extra'	=> array('menuaction' => 'property.uirequest.index',
-																	'type_id'	=>$type_id,
-																	'query'		=>$this->query,
-																	'project_id'	=>$project_id,
-																	'district_id'	=> $this->district_id,
-																	'cat_id'	=>$this->cat_id)
-										));
-					}
-					if($uicols['name'][$i]=='address')
-					{
-						$table_header[$i]['sort_link']	=true;
-						$table_header[$i]['sort'] 		= $this->nextmatchs->show_sort_order(array
-										(
-											'sort'	=> $this->sort,
-											'var'	=> 'address',
-											'order'	=> $this->order,
-											'extra'	=> array('menuaction' => 'property.uirequest.index',
-																	'type_id'	=>$type_id,
-																	'query'		=>$this->query,
-																	'project_id'	=>$project_id,
-																	'district_id'	=> $this->district_id,
-																	'cat_id'	=>$this->cat_id)
-										));
-					}
+					$j++;
 				}
 			}
 
-			if($this->acl_read)
-			{
-				$table_header[$i]['width'] 			= '5%';
-				$table_header[$i]['align'] 			= 'center';
-				$table_header[$i]['header']			= lang('view');
-				$i++;
-			}
-
+			// NO pop-up
+			$datatable['rowactions']['action'] = array();
 			if(!$lookup)
 			{
+				$parameters = array
+				(
+					'parameter' => array
+					(
+						array
+						(
+							'name'		=> 'id',
+							'source'	=> 'request_id'
+						),
+					)
+				);
+
+				if($this->acl_read)
+				{
+					$datatable['rowactions']['action'][] = array(
+						'text' 			=> lang('view'),
+						'action'		=> $GLOBALS['phpgw']->link('/index.php',array
+										(
+											'menuaction'	=> 'property.uirequest.view'
+										)),
+						'parameters'	=> $parameters
+					);
+				}
 				if($this->acl_edit)
 				{
-					$table_header[$i]['width'] 		= '5%';
-					$table_header[$i]['align'] 		= 'center';
-					$table_header[$i]['header']		= lang('edit');
-					$i++;
+					$datatable['rowactions']['action'][] = array(
+						'text' 			=> lang('edit'),
+						'action'		=> $GLOBALS['phpgw']->link('/index.php',array
+										(
+											'menuaction'	=> 'property.uirequest.edit'
+										)),
+						'parameters'	=> $parameters
+					);
 				}
 				if($this->acl_delete)
 				{
-					$table_header[$i]['width'] 		= '5%';
-					$table_header[$i]['align'] 		= 'center';
-					$table_header[$i]['header']		= lang('delete');
-					$i++;
+					$datatable['rowactions']['action'][] = array(
+						'text' 			=> lang('delete'), 	
+						'confirm_msg'	=> lang('do you really want to delete this entry'),					
+						'action'		=> $GLOBALS['phpgw']->link('/index.php',array
+										(
+											'menuaction'	=> 'property.uirequest.delete'
+										)),
+						'parameters'	=> $parameters
+					);
+				}
+
+				$datatable['rowactions']['action'][] = array(
+						'text' 			=> lang('add'),
+						'action'		=> $GLOBALS['phpgw']->link('/index.php',array
+										(
+											'menuaction'	=> 'property.uirequest.edit'
+										))
+				);
+				unset($parameters);
+			}
+			else 
+			{			
+				
+				$parameters = array
+				(
+					'parameter' => array
+					(
+						array
+						(
+							'name'		=> 'id',
+							'source'	=> 'request_id'
+						),
+					)
+				);
+				
+				if($this->acl_read)
+				{
+					$datatable['rowactions']['action'][] = array(
+						'text' 			=> lang('view'),
+						'target' 			=> '_blank',
+						'action'		=> $GLOBALS['phpgw']->link('/index.php',array
+										(
+											'menuaction'	=> 'property.uirequest.view'
+										)),
+						'parameters'	=> $parameters
+					);
+				}
+			}			
+
+			$uicols_count	= count($uicols['descr']);
+
+			for ($i=0;$i<$uicols_count;$i++)
+			{
+				if($uicols['input_type'][$i]!='hidden')
+				{
+					$datatable['headers']['header'][$i]['name'] 			= $uicols['name'][$i];
+					$datatable['headers']['header'][$i]['text'] 			= $uicols['descr'][$i];
+					$datatable['headers']['header'][$i]['visible'] 			= true;
+					$datatable['headers']['header'][$i]['format'] 			= $this->bocommon->translate_datatype_format($uicols['datatype'][$i]);
+					$datatable['headers']['header'][$i]['sortable']			= false;
+					$datatable['headers']['header'][$i]['formatter']		= $uicols['formatter'][$i];
+					if($uicols['name'][$i]=='request_id' || $uicols['name'][$i]=='budget' ||  $uicols['name'][$i]=='score')
+					{
+						$datatable['headers']['header'][$i]['sortable']		= true;
+						$datatable['headers']['header'][$i]['sort_field']	= $uicols['name'][$i];
+					}
+					if($uicols['name'][$i]=='loc1')
+					{
+						$datatable['headers']['header'][$i]['sortable']		= true;
+						$datatable['headers']['header'][$i]['sort_field']	= "location_code";
+					}
+					
+				}
+				else
+				{
+					$datatable['headers']['header'][$i]['name'] 			= $uicols['name'][$i];
+					$datatable['headers']['header'][$i]['text'] 			= $uicols['descr'][$i];
+					$datatable['headers']['header'][$i]['visible'] 			= false;
+					$datatable['headers']['header'][$i]['sortable']		= false;
+					$datatable['headers']['header'][$i]['format'] 			= 'hidden';
 				}
 			}
-			else
-			{
-				$table_header[$i]['width'] 			= '5%';
-				$table_header[$i]['align'] 			= 'center';
-				$table_header[$i]['header']			= lang('select');
-			}
-
-//_debug_array($content);
-			if($this->acl_add)
-			{
-				$table_add[] = array
-				(
-					'lang_add'		=> lang('add'),
-					'lang_add_statustext'	=> lang('add a request'),
-					'add_action'		=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uirequest.edit'))
-				);
-			}
-
-			$link_data = array
-			(
-				'menuaction'	=> 'property.uirequest.index',
-						'sort'		=> $this->sort,
-						'order'		=> $this->order,
-						'cat_id'	=> $this->cat_id,
-						'district_id'	=> $this->district_id,
-						'filter'	=> $this->filter,
-						'status_id'	=> $this->status_id,
-						'project_id'	=> $project_id,
-						'query'		=> $this->query
-			);
 
 
-			$link_download = array
-			(
-				'menuaction'	=> 'property.uirequest.download',
-						'sort'		=> $this->sort,
-						'order'		=> $this->order,
-						'cat_id'	=> $this->cat_id,
-						'district_id'	=> $this->district_id,
-						'filter'	=> $this->filter,
-						'status_id'	=> $this->status_id,
-						'project_id'	=> $project_id,
-						'query'		=> $this->query
-			);
+			// path for property.js
+			$datatable['property_js'] =  $GLOBALS['phpgw_info']['server']['webserver_url']."/property/js/yahoo/property.js";
 
-			if($this->acl_manage)
-			{
-				$link_priority_key = $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uirequest.priority_key'));
-			}
+			// Pagination and sort values
+			$datatable['pagination']['records_start'] 	= (int)$this->bo->start;
+			$datatable['pagination']['records_limit'] 	= $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
+			$datatable['pagination']['records_returned'] = count($request_list);
+			$datatable['pagination']['records_total'] 	= $this->bo->total_records;
 
-			if(!$this->allrows)
-			{
-				$record_limit	= $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
-			}
-			else
-			{
-				$record_limit	= $this->bo->total_records;
-			}
-
-			$GLOBALS['phpgw']->js->validate_file('overlib','overlib','property');
-
-			$data = array
-			(
-				'menu'							=> $this->bocommon->get_menu(),
-				'lang_download'				=> 'download',
-				'link_download'				=> $GLOBALS['phpgw']->link('/index.php',$link_download),
-				'lang_download_help'			=> lang('Download table to your browser'),
-
-				'lang_priority_key'			=> lang('Priority key'),
-				'lang_priority_help'			=> lang('To alter the priority key'),
-				'link_priority_key'			=> $link_priority_key,
-				'lang_select'				=> lang('select'),
-
-				'lang_update_project'			=> lang('Update project'),
-				'lang_add_to_project_statustext'	=> lang('add selected request to project'),
-				'add_to_project_action'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiproject.edit', 'id'=> $project_id)),
-				'project_id'				=> $project_id,
-
-				'lookup'				=> $lookup,
-				'allow_allrows'				=> true,
-				'allrows'				=> $this->allrows,
-
-				'start_record'				=> $this->start,
-				'record_limit'				=> $record_limit,
-				'num_records'				=> count($request_list),
-				'all_records'				=> $this->bo->total_records,
-				'link_url'				=> $GLOBALS['phpgw']->link('/index.php',$link_data),
-				'img_path'				=> $GLOBALS['phpgw']->common->get_image_path('phpgwapi','default'),
-				'lang_no_cat'				=> lang('no category'),
-				'cat_filter'			=> $this->cats->formatted_xslt_list(array('select_name' => 'cat_id','selected' => $this->cat_id,'globals' => True,'link_data' => $link_data)),
-
-				'district_list'				=> $this->bocommon->select_district_list('filter',$this->district_id),
-				'lang_no_district'			=> lang('no district'),
-				'lang_district_statustext'		=> lang('Select the district the selection belongs to. To do not use a district select NO DISTRICT'),
-				'select_district_name'			=> 'district_id',
-				'select_action'				=> $GLOBALS['phpgw']->link('/index.php',$link_data),
-
-				'lang_status_statustext'		=> lang('Select the status the agreement belongs to. To do not use a category select NO STATUS'),
-				'status_name'				=> 'status_id',
-				'lang_no_status'			=> lang('No status'),
-				'status_list'				=> $this->boproject->select_status_list('filter',$this->status_id),
-
-				'lang_user_statustext'			=> lang('Select the user the request belongs to. To do not use a category select NO USER'),
-				'select_user_name'			=> 'filter',
-				'lang_no_user'				=> lang('No user'),
-				'user_list'				=> $this->bocommon->get_user_list('filter',$this->filter,$extra=false,$default=false,$start=-1,$sort='ASC',$order='account_lastname',$query='',$offset=-1),
-
-				'lang_searchfield_statustext'		=> lang('Enter the search string. To show all entries, empty this field and press the SUBMIT button again'),
-				'lang_searchbutton_statustext'		=> lang('Submit the search string'),
-				'query'					=> $this->query,
-				'lang_search'				=> lang('search'),
-				'table_header'				=> $table_header,
-				'values'				=> $content,
-				'table_add'				=> $table_add
-			);
+			$datatable['sorting']['order'] 	= phpgw::get_var('order', 'string'); // Column
+			$datatable['sorting']['sort'] 	= phpgw::get_var('sort', 'string'); // ASC / DESC
 
 			$appname					= lang('request');
-			$function_msg					= lang('list request');
+			$function_msg				= lang('list request');
 
+			phpgwapi_yui::load_widget('dragdrop');
+		  	phpgwapi_yui::load_widget('datatable');
+		  	phpgwapi_yui::load_widget('menu');
+		  	phpgwapi_yui::load_widget('connection');
+		  	phpgwapi_yui::load_widget('loader');
+
+
+//-- BEGIN----------------------------- JSON CODE ------------------------------
+
+			if( phpgw::get_var('phpgw_return_as') == 'json' )
+			{
+    		//values for Pagination
+	    		$json = array
+	    		(
+	    			'recordsReturned' 	=> $datatable['pagination']['records_returned'],
+    				'totalRecords' 		=> (int)$datatable['pagination']['records_total'],
+	    			'startIndex' 		=> $datatable['pagination']['records_start'],
+					'sort'				=> $datatable['sorting']['order'],
+	    			'dir'				=> $datatable['sorting']['sort'],
+					'records'			=> array()
+	    		);
+
+				// values for datatable
+	    		if(isset($datatable['rows']['row']) && is_array($datatable['rows']['row'])){
+	    			foreach( $datatable['rows']['row'] as $row )
+	    			{
+		    			$json_row = array();
+		    			foreach( $row['column'] as $column)
+		    			{
+		    				if(isset($column['format']) && $column['format']== "link" && $column['java_link']==true)
+		    				{
+		    					$json_row[$column['name']] = "<a href='#' id='".$column['link']."' onclick='javascript:filter_data(this.id);'>" .$column['value']."</a>";
+		    				}
+		    				elseif(isset($column['format']) && $column['format']== "link")
+		    				{
+		    				  $json_row[$column['name']] = "<a href='".$column['link']."'>" .$column['value']."</a>";
+		    				}else
+		    				{
+		    				  $json_row[$column['name']] = $column['value'];
+		    				}
+		    			}
+		    			 $json['records'][] = $json_row;
+	    			}
+	    		}
+
+				// right in datatable
+				if(isset($datatable['rowactions']['action']) && is_array($datatable['rowactions']['action']))
+				{
+					$json ['rights'] = $datatable['rowactions']['action'];
+				}
+
+	    		return $json;
+			}
+//-------------------- JSON CODE ----------------------
+
+
+			// Prepare template variables and process XSLT
+			$template_vars = array();
+			$template_vars['datatable'] = $datatable;
+			$GLOBALS['phpgw']->xslttpl->add_file(array('datatable'));
+	      	$GLOBALS['phpgw']->xslttpl->set_var('phpgw', $template_vars);
+
+	      	if ( !isset($GLOBALS['phpgw']->css) || !is_object($GLOBALS['phpgw']->css) )
+	      	{
+	        	$GLOBALS['phpgw']->css = createObject('phpgwapi.css');
+	      	}
+			// Prepare CSS Style
+		  	$GLOBALS['phpgw']->css->validate_file('datatable');
+		  	$GLOBALS['phpgw']->css->add_external_file('property/templates/base/css/property.css');
+			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/datatable/assets/skins/sam/datatable.css');
+
+			//Title of Page
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
-			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('list' => $data));
-		//	$GLOBALS['phpgw']->xslttpl->pp();
+
+	  		// Prepare YUI Library
+  			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'request.index', 'property' );
+  			
 			$this->save_sessiondata();
+							
 		}
 
 
@@ -973,12 +1065,25 @@
 
 		function delete()
 		{
+			$id = phpgw::get_var('id', 'int');
+		
+			//cramirez add JsonCod for Delete
+			if( phpgw::get_var('phpgw_return_as') == 'json' )
+			{
+				$this->bo->delete($id);
+				$json = array
+				(
+					'result' 			=> 1,
+				);
+				return $json ;
+			}			
+			
 			if(!$this->acl_delete)
 			{
 				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=>8, 'acl_location'=> $this->acl_location));
 			}
 
-			$id = phpgw::get_var('id', 'int');
+			//$id = phpgw::get_var('id', 'int');
 			$confirm	= phpgw::get_var('confirm', 'bool', 'POST');
 
 			$link_data = array
