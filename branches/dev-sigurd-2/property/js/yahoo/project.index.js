@@ -29,6 +29,15 @@
 	 date_search : 1 //if search has link "Data search"
 	 };
 
+	this.init_particular_setting = function()
+	{
+
+		// seteo del focus
+		YAHOO.util.Dom.get(textImput[0].name).value = path_values.query;
+		YAHOO.util.Dom.get(textImput[0].name).focus();
+
+	}
+
 
 //----------------------------------------------------------
 	YAHOO.util.Event.addListener(window, "load", function()
