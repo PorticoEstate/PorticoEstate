@@ -25,7 +25,7 @@
 
 		// define the hidden column in datatable
 		var config_values = {
-		column_hidden : [0]
+		column_hidden : [0,7]
 		}
 
 	this.init_particular_setting = function()
