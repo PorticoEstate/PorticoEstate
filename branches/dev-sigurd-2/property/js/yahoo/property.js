@@ -481,11 +481,11 @@ this.create_array_values_list = function(stValues)
 
 		// Hide Column in datatable. se aplica el estilo css
 		//myDataTable.getColumn(config_values.column_hidden).className = "hide_field";
-		for(var k=0; k < config_values.column_hidden.length; k++)
-		{
-			if (myDataTable.getColumn(config_values.column_hidden[k])!= null)
-			myDataTable.getColumn(config_values.column_hidden[k]).className = "hide_field";
-		}
+//		for(var k=0; k < config_values.column_hidden.length; k++)
+//		{
+//			if (myDataTable.getColumn(config_values.column_hidden[k])!= null)
+//			myDataTable.getColumn(config_values.column_hidden[k]).className = "hide_field";
+//		}
 
 		for(var i=0; i < myColumnDefs.length;i++)
 				{
@@ -497,6 +497,7 @@ this.create_array_values_list = function(stValues)
 					if( !myColumnDefs[i].visible )
 					{
 						YAHOO.util.Dom.getElementsByClassName( 'yui-dt-col-'+ myColumnDefs[i].key , 'div' )[0].style.display = 'none';
+						myDataTable.getColumn(i).className = "hide_field";
 					}
 
 				}
