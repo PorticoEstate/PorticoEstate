@@ -933,7 +933,7 @@ HTML;
 												 	'show_cost'		=> $show_cost,
 												 	'show_details'	=> $show_details,
 												 	'print'			=> true
-												 )) . "','700','600')"
+												 )) . "','1000','1200')"
 			);
 
 //_debug_array($data);
