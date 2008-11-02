@@ -5,7 +5,7 @@
 	 * @author Sigurd Nes <sigurdne@online.no>
 	 * @author Dave Hall dave.hall at skwashd.com
 	 * @copyright Copyright (C) 2003-2006 Free Software Foundation http://www.fsf.org/
-	 * @license http://www.gnu.org/licenses/gpl.html GNU General Public License v3 or later
+	 * @license http://www.gnu.org/licenses/gpl.html GNU General Public License v2 or later
 	 * @internal Development of this application was funded by http://www.bergen.kommune.no/bbb_/ekstern/
 	 * @package phpgroupware
 	 * @subpackage phpgwapi
@@ -15,7 +15,7 @@
 	/*
 	   This program is free software: you can redistribute it and/or modify
 	   it under the terms of the GNU General Public License as published by
-	   the Free Software Foundation, either version 3 of the License, or
+	   the Free Software Foundation, either version 2 of the License, or
 	   (at your option) any later version.
 
 	   This program is distributed in the hope that it will be useful,
