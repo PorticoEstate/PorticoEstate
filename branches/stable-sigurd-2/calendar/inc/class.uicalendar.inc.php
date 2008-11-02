@@ -3413,7 +3413,7 @@ HTML;
 					
 					$last_slot = $slot;
 					$last_slot_end = $slot_end;
-					$user_timezone = phpgwapi_datetime::user_timezone;
+					$user_timezone = phpgwapi_datetime::user_timezone();
 					print_debug('Time',$GLOBALS['phpgw']->common->show_date($this->bo->maketime($event['start']) - $user_timezone).' - '.$GLOBALS['phpgw']->common->show_date($this->bo->maketime($event['end']) - $user_timezone));
 					print_debug('Slot',$slot);
 				}
