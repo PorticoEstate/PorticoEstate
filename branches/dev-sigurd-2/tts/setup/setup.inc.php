@@ -22,15 +22,16 @@
 	$setup_info['tts']['tables']    = array('phpgw_tts_tickets','phpgw_tts_views','phpgw_tts_email_map');
 
 	/* The hooks this app includes, needed for hooks registration */
-	$setup_info['tts']['hooks'][] = 'admin';
+	//$setup_info['tts']['hooks'][] = 'admin';
 	$setup_info['tts']['hooks'][] = 'home';
 	$setup_info['tts']['hooks'][] = 'manual';
-	$setup_info['tts']['hooks'][] = 'preferences';
+	//$setup_info['tts']['hooks'][] = 'preferences';
 	$setup_info['tts']['hooks'][] = 'settings';
 	$setup_info['tts']['hooks'][] = 'deleteaccount';
 	$setup_info['tts']['hooks']['cat_add'] = 'tts.bo_hooks.cat_add';
 	$setup_info['tts']['hooks']['cat_delete'] = 'tts.bo_hooks.cat_delete';
 	$setup_info['tts']['hooks']['cat_edit'] = 'tts.bo_hooks.cat_edit';
+	$setup_info['tts']['hooks']['menu'] = 'tts.menu.get_menu';
 
 	/* Dependencies for this app to work */
 	$setup_info['tts']['depends'][] = array(

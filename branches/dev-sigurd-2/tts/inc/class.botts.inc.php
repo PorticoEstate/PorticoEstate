@@ -611,7 +611,7 @@
 				);
 			}
 
-			$cust_fields = $this->custom->get_attribs('tts', "C{$cat_id}", 0, '', 'ASC', 'attrib_sort', true, true);
+			$cust_fields = $this->custom->find('tts', "C{$cat_id}", 0, '', 'ASC', 'attrib_sort', true, true);
 			if ( is_array($cust_fields) && count($cust_fields) )
 			{
 				$i = count($fields);
@@ -1258,8 +1258,8 @@
 			{
 				$groups[] = array
 				(
-					'id' => $group['account_id'],
-					'value' => $GLOBALS['phpgw']->common->display_fullname($group['account_id'], $group['account_firstname'], $group['account_lastname'])
+					'id' => $group->id,
+					'value' => $GLOBALS['phpgw']->common->display_fullname($group->id, $group->firstname, $group->lastname)
 				);
 			}
 			return $groups;
@@ -1315,7 +1315,7 @@
 				$accounts = array();
 				foreach ( $GLOBALS['phpgw']->accounts->get_list() as $acct )
 				{
-					$accounts[] = array('id' => $acct['account_id'], 'value' => $GLOBALS['phpgw']->common->display_fullname($acct['account_lid'], $acct['account_firstname'], $acct['account_lastname']) );
+					$accounts[] = array('id' => $acct->id, 'value' => $GLOBALS['phpgw']->common->display_fullname($acct->lid, $acct->firstname, $acct->lastname) );
 				}
 				return $accounts;
 			}
