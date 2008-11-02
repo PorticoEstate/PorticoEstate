@@ -444,7 +444,7 @@
 														  ),
 													 array(
 														'id' => 'values_combo_box_3',
-														'value'	=> $this->bocommon->select2String($values_combo_box[3],"user_id")
+														'value'	=> '#' . $this->bocommon->select2String($values_combo_box[3],"id")
 														  ))
 						 )));
 
