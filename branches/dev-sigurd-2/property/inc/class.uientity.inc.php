@@ -325,7 +325,7 @@
 
 				if(count($values_combo_box[3]))
 				{
-					$default_value = array ('user_id'=>'','name'=>lang('no user'));
+					$default_value = array ('id'=>'','name'=>lang('no user'));
 					array_unshift ($values_combo_box[3],$default_value);
 					$arr_filter_hide[3] = 0;
 				}
@@ -444,7 +444,7 @@
 														  ),
 													 array(
 														'id' => 'values_combo_box_3',
-														'value'	=> '#' . $this->bocommon->select2String($values_combo_box[3],"id")
+														'value'	=> $this->bocommon->select2String($values_combo_box[3])
 														  ))
 						 )));
 
