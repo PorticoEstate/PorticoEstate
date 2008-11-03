@@ -795,7 +795,17 @@
 		public function phpgw_setcookie($cookiename, $cookievalue='', $cookietime=0)
 		{
 			$secure = phpgw::get_var('HTTPS', 'bool', 'SERVER');
-			setcookie($cookiename, $cookievalue, $cookietime, parse_url($GLOBALS['phpgw_info']['server']['webserver_url'],PHP_URL_PATH),
+
+			if( isset( $GLOBALS['phpgw_info']['server']['webserver_url'] ) )
+			{
+				$webserver_url = $GLOBALS['phpgw_info']['server']['webserver_url'] . '/';
+			}
+			else
+			{
+				$webserver_url = '/';
+			}
+
+			setcookie($cookiename, $cookievalue, $cookietime, parse_url($webserver_url, PHP_URL_PATH),
 					$this->_cookie_domain, $secure, true);
 		}
 
@@ -1470,7 +1480,17 @@
 				$this->_cookie_domain = ''; // Sigurd august 08: somehow setcookie does not accept localhost as a valid domain.
 			}
 			$secure = phpgw::get_var('HTTPS', 'bool', 'SERVER');
-			session_set_cookie_params(0, parse_url($GLOBALS['phpgw_info']['server']['webserver_url'],PHP_URL_PATH), $this->_cookie_domain, $secure, true);
+
+			if( isset( $GLOBALS['phpgw_info']['server']['webserver_url'] ) )
+			{
+				$webserver_url = $GLOBALS['phpgw_info']['server']['webserver_url'] . '/';
+			}
+			else
+			{
+				$webserver_url = '/';
+			}
+
+			session_set_cookie_params(0, parse_url($webserver_url, PHP_URL_PATH), $this->_cookie_domain, $secure, true);
 			return $this->_cookie_domain;
 		}
 
