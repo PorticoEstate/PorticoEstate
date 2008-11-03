@@ -266,6 +266,13 @@
 				'todo'
 			);
 
+			$acls[] = array
+			(
+				'appname'	=> 'preferences',
+				'location'	=> 'changepassword',
+				'rights'	=> 1
+			);
+			
 			$group = array('username' => 'default');
 			$defaultgroupid = add_account($group, 'g', array(), $modules);
 
@@ -276,7 +283,7 @@
 
 			$groups = array($defaultgroupid, $admingroupid);
 
-			$accountid = add_account($admin_acct, 'u', $groups, array('admin'));
+			$accountid = add_account($admin_acct, 'u', $groups, array('admin'), $acls);
 
 			//$GLOBALS['phpgw_setup']->db->transaction_commit();
 
