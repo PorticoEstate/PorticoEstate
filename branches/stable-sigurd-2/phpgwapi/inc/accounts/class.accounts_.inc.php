@@ -354,7 +354,7 @@
 				if ( $modules )
 				{
 					$apps = createObject('phpgwapi.applications', $account->id);
-					$apps->update_data(array_keys($modules));
+					$apps->update_data(array_values($modules));
 					$apps->save_repository();
 				}
 

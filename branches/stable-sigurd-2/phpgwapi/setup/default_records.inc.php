@@ -309,3 +309,5 @@
 		$sql = "INSERT INTO phpgw_config VALUES('phpgwapi', '{$name}', '{$val}')";
 		$GLOBALS['phpgw_setup']->oProc->query($sql, __LINE__, __FILE__);
 	}
+
+	$GLOBALS['phpgw']->locations->add('changepassword', 'allow user to change password', 'preferences', false);

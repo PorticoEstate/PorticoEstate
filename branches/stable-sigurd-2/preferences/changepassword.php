@@ -23,7 +23,7 @@
 	$n_passwd   = isset($_POST['n_passwd']) && $_POST['n_passwd'] ? $_POST['n_passwd'] : '';
 	$n_passwd_2 = isset($_POST['n_passwd_2']) && $_POST['n_passwd_2'] ? $_POST['n_passwd_2'] : '';
 
-	if (! $GLOBALS['phpgw']->acl->check('changepassword', 1) || (isset($_POST['cancel']) && $_POST['cancel']))
+	if (! $GLOBALS['phpgw']->acl->check('changepassword', 1, 'preferences') || (isset($_POST['cancel']) && $_POST['cancel']))
 	{
 		$GLOBALS['phpgw']->redirect_link('/preferences/index.php');
 		$GLOBALS['phpgw']->common->phpgw_exit();

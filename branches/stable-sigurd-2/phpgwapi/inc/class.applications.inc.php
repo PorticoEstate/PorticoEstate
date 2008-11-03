@@ -351,7 +351,7 @@
 		*/
 		public function is_system_enabled($appname)
 		{
-			if(!is_array($GLOBALS['phpgw_info']['apps']))
+			if( !isset($GLOBALS['phpgw_info']['apps']) || !is_array($GLOBALS['phpgw_info']['apps']))
 			{
 				$this->read_installed_apps();
 			}
