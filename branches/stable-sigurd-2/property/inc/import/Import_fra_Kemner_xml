@@ -83,7 +83,7 @@
 			$var_result = $this->xmltool->export_var();
 */
 			$xmlparse = CreateObject('property.XmlToArray');
-			$xmlparse->setEncoding('ISO-8859-1');
+			$xmlparse->setEncoding('UTF-8');
 			$var_result = $xmlparse->parseFile($tsvfile);
 
 			set_time_limit(300);
@@ -184,9 +184,9 @@
 					
 					//finn boei gateadresse for kontroll
 					$boei_gateadresse=$this->soXport->dima_to_address($gabinfo['dima']);
-					$buffer[$i]['boei_gateadresse'] = $boei_gateadresse;
+					$buffer[$i]['boei_gateadresse'] = utf8_encode($boei_gateadresse);
 
-					$referanse = $data[$i]['Header'][0]['ShipTo'][0]['AddressInfo'][0]['Address'];
+					$referanse = utf8_encode($data[$i]['Header'][0]['ShipTo'][0]['AddressInfo'][0]['Address']);
 	
 					$buffer[$i]['referanse'] = $referanse;                
 
@@ -235,7 +235,7 @@
 
 					}
 					
-					$buffer[$i]['merknad'] = $merknad;
+					$buffer[$i]['merknad'] = utf8_encode($merknad);
 					$buffer[$i]['splitt'] = $this->splitt;
 					$buffer[$i]['kildeid'] = $this->kildeid;
 					$buffer[$i]['spbudact_code'] = $this->spbudact_code;
