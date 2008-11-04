@@ -96,8 +96,11 @@
 		{
 			$menus = array();
 			$raw_menus = $GLOBALS['phpgw']->hooks->process('menu');
-			foreach ( $raw_menus as $app => $raw_menu )
+
+			foreach ( $GLOBALS['phpgw_info']['user']['apps'] as $app => $app_info )
+		//	foreach ( $raw_menus as $app => $raw_menu )
 			{
+				$raw_menu = $raw_menus[$app];
 				// Ignore invalid entries
 				if ( !is_array($raw_menu) )
 				{
