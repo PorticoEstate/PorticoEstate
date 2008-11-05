@@ -731,6 +731,12 @@
 		{
 			return $this->so->update_cat();
 		}
+
+		function update_location()
+		{
+			return $this->so->update_location();
+		}
+
 		function read_summary($data=array())
 		{
 			$summary = $this->so->read_summary(array('filter' => $this->filter,'type_id' => isset($data['type_id'])?$data['type_id']:'',

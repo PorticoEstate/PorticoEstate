@@ -56,7 +56,8 @@
 			'stop'		=> true,
 			'summary'	=> true,
 			'columns'	=> true,
-			'select2String' => true
+			'select2String' => true,
+			'update_location' => true
 		);
 
 		function property_uilocation()
@@ -1619,6 +1620,59 @@
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('update_cat' => $data));
 		//	$GLOBALS['phpgw']->xslttpl->pp();
+		}
+
+		/**
+		* Perform an update on all location_codes on all levels to make sure they are consistent and unique
+		*
+		* @return void
+		*/
+
+		function update_location()
+		{
+			$GLOBALS['phpgw_info']['flags']['menu_selection'] = 'admin::property::location::update_location';
+
+			if(!$this->acl->check('.admin.location', PHPGW_ACL_EDIT, 'property'))
+			{
+				$this->bocommon->no_access();
+				return;
+			}
+
+			$confirm	= phpgw::get_var('confirm', 'bool', 'POST');
+
+			if (phpgw::get_var('confirm', 'bool', 'POST'))
+			{
+				$receipt= $this->bo->update_location();
+				$lang_confirm_msg = lang('Do you really want to update the locations again');
+				$lang_yes			= lang('again');
+			}
+			else
+			{
+				$lang_confirm_msg 	= lang('Do you really want to update the locations');
+				$lang_yes			= lang('yes');
+			}
+
+			$GLOBALS['phpgw']->xslttpl->add_file(array('location'));
+
+			$msgbox_data = $this->bocommon->msgbox_data($receipt);
+
+			$data = array
+			(
+				'msgbox_data'				=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
+				'done_action'				=> $GLOBALS['phpgw']->link('/admin/index.php'),
+				'update_action'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uilocation.update_location')),
+				'message'					=> $receipt['message'],
+				'lang_confirm_msg'			=> $lang_confirm_msg,
+				'lang_yes'					=> $lang_yes,
+				'lang_yes_statustext'		=> lang('perform an update on all location_codes on all levels to make sure they are consistent and unique'),
+				'lang_no_statustext'		=> lang('Back to Admin'),
+				'lang_no'					=> lang('no')
+			);
+
+			$appname		= lang('location');
+			$function_msg	= lang('Update the locations');
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
+			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('update_cat' => $data));
 		}
 
 		function stop()

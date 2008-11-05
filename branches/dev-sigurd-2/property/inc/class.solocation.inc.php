@@ -1216,6 +1216,82 @@
 			return $receipt;
 		}
 
+
+		function update_location()
+		{
+			$this->db->transaction_begin();
+
+			$this->db->query('SELECT max(id) as levels FROM fm_location_type');
+			$this->db->next_record();
+			$levels =  $this->db->f('levels');
+
+			//perform an update on all location_codes on all levels to make sure they are consistent and unique
+			$locations = array();
+			for ($level=1;$level<($levels+1);$level++)
+			{
+				$sql = "SELECT * from fm_location{$level}";
+				$this->db->query($sql,__LINE__,__FILE__);
+				$i = 0;
+				while($this->db->next_record())
+				{
+					$location_code = array();
+					$where = 'WHERE';
+					$locations[$level][$i]['condition'] = '';
+					for ($j=1;$j<($level+1);$j++)
+					{
+						$loc = $this->db->f("loc{$j}");
+						$location_code[] = $loc;
+						$locations[$level][$i]['condition'] .= "$where loc{$j}='{$loc}'";
+						$where = 'AND';
+					}
+					$locations[$level][$i]['new_values']['location_code'] = implode('-', $location_code);
+					$i++;
+				}
+
+			}
+
+			foreach($locations as $level => $location_at_leve)
+			{
+				foreach($location_at_leve as $location )
+				{
+					$sql = "UPDATE fm_location{$level} SET location_code = '{$location['new_values']['location_code']}' {$location['condition']}";
+					$this->db->query($sql,__LINE__,__FILE__);
+				}
+			}
+
+			$locations = array();
+			for ($i=1;$i<($levels+1);$i++)
+			{
+				$this->db->query("SELECT fm_location{$i}.location_code from fm_location{$i} $this->left_join fm_locations ON fm_location{$i}.location_code = fm_locations.location_code WHERE fm_locations.location_code IS NULL");
+				while($this->db->next_record())
+				{
+					$locations[] = array
+					(
+						'level' 		=> $i,
+						'location_code' => $this->db->f('location_code')
+					);
+				}
+			}
+
+			$receipt = array();
+			foreach ($locations as $location)
+			{
+				$this->db->query("INSERT INTO fm_locations (level, location_code) VALUES ({$location['level']}, '{$location['location_code']}')");
+
+				$receipt['message'][]=array('msg'=>lang('location %1 added at level %2', $location['location_code'], $location['level']));
+			}
+
+			if( $this->db->transaction_commit() )
+			{
+				return $receipt;
+			}
+			else
+			{
+				return $receipt['error'][]=array('msg'=>lang('update failed'));
+			}
+		}
+
+
 		function read_summary($data='')
 		{
 			if(is_array($data))
