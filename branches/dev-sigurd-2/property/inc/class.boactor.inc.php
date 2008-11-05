@@ -155,10 +155,11 @@
 			return (!!($has & $needed) == true);
 		}
 
-		function read()
+		function read($dry_run='')
 		{
 			$actor = $this->so->read(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
-											'filter' => $this->filter,'cat_id' => $this->cat_id,'allrows'=>$this->allrows,'member_id'=>$this->member_id));
+											'filter' => $this->filter,'cat_id' => $this->cat_id,'allrows'=>$this->allrows,'member_id'=>$this->member_id,
+											'dry_run'=>$dry_run));
 			$this->total_records = $this->so->total_records;
 
 			$this->uicols	= $this->so->uicols;
