@@ -416,14 +416,7 @@
 		
 				if($BilagOverf[$i]['pmwrkord_code'])
 				{
-					if ($BilagOverf[$i]['artid']==1)
-					{
-						$Belop = sprintf("%01.2f", $BilagOverf[$i]['ordrebelop'])*100;
-					}
-					else
-					{
-						$Belop = sprintf("%01.2f", -$BilagOverf[$i]['ordrebelop'])*100;
-					}
+					$Belop = sprintf("%01.2f", $BilagOverf[$i]['ordrebelop'])*100;
 				
 					if ($BilagOverf[$i]['dimd'] % 2 == 0)
 					{
@@ -716,31 +709,12 @@
 					{
 						$Belop = abs($Belop);
 						$Belop = sprintf("%019s",$Belop);
-
-						if ($oRsUnderbilag[$i]['artid'] == 2)
-						{		
-							$Belop = '+' . $Belop;
-	
-						}
-						else
-						{
-							$Belop = '-' . $Belop;
-						}
-
+						$Belop = '-' . $Belop;
 					}
 					else
 					{					
 						$Belop = sprintf("%019s",$Belop);
-					
-						if ($oRsUnderbilag[$i]['artid'] == 2)
-						{		
-							$Belop = '-' . $Belop;
-
-						}
-						else
-						{
-							$Belop = '+' . $Belop;
-						}
+						$Belop = '+' . $Belop;
 					}
 					
 
@@ -872,30 +846,13 @@
 						if($Belop_motpost < 0)
 						{
 							$Belop_motpost = sprintf("%019s",abs($Belop_motpost));
-
-							if ($oRsUnderbilag[$i]['artid'] == 2)
-							{		
-								$Belop_motpost = '-' . $Belop_motpost;
-		
-							}
-							else
-							{
-								$Belop_motpost = '+' . $Belop_motpost;
-							}
+							$Belop_motpost = '+' . $Belop_motpost;
 						}
 						else
 						{
 							$Belop_motpost = sprintf("%019s",$Belop_motpost);
+							$Belop_motpost = '-' . $Belop_motpost;
 
-							if ($oRsUnderbilag[$i]['artid'] == 2)
-							{		
-								$Belop_motpost = '+' . $Belop_motpost;
-	
-							}
-							else
-							{
-								$Belop_motpost = '-' . $Belop_motpost;
-							}
 						}
 						
 						$Transtype	= 'AP';// verdi: GL, type: c2, plass: 17 - 18

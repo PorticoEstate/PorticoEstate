@@ -169,7 +169,13 @@
 					$value = str_replace('kr','',$value);
 					$value = str_replace(' ','',$value);
 					$value = str_replace(',','.',$value);
-					$godkjentbelop=$value;
+					
+					if( $invoice_common['art'] == 2 ) // kreditnota
+					{
+						$value = -1 * abs($value);
+					}
+					
+					$godkjentbelop = $value;
 				}
 				if($name=='pmwrkord_code')
 				{
