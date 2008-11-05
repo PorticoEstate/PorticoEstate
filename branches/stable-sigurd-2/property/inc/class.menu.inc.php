@@ -274,6 +274,11 @@
 					(
 						'url'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiadmin_location.config') ),
 						'text'	=> lang('Config')
+					),
+					'update_location' => array
+					(
+						'url'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uilocation.update_location') ),
+						'text'	=> lang('update location')
 					)
 				);
 
