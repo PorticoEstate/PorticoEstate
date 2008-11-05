@@ -130,7 +130,7 @@
 
 			if ($voucher_id)
 			{
-				$filtermethod .= " $where  bilagsnr $this->like '%$voucher_id%' ";
+				$filtermethod .= " $where  bilagsnr = " . (int)$voucher_id;
 				$where= 'AND';
 			}
 
