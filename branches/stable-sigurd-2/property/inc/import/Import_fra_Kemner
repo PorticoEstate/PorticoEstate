@@ -187,6 +187,12 @@
 						$fakturadato= date($this->dateformat,mktime(2,0,0,$forfall_month,$forfall_day,$forfall_year)-(86400*30));
 
 						$belop = intval(substr($data,32,17))/100;
+
+						if( $invoice_common['art'] == 2 ) // kreditnota
+						{
+							$belop = -1 * abs($belop);
+						}
+
 						$kidnr = substr($data, 54, 20);
 						$gid = $Gnr.'/'.$Bnr.'-'.$sekjonnr;
 			

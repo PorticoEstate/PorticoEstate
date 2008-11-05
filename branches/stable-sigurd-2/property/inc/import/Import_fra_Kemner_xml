@@ -129,6 +129,11 @@
 					}
 					
 					$belop 	= $data[$i]['Summary'][0]['TotalInclTax'];
+
+					if( $invoice_common['art'] == 2 ) // kreditnota
+					{
+						$belop = -1 * abs($belop);
+					}
 					$kidnr 	= $data[$i]['Header'][0]['PaymentInfo'][0]['BacsId'];
 
 					$gid = $Gnr.'/'.$Bnr.'-'.$sekjonnr;
