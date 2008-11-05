@@ -75,6 +75,13 @@
 			$querymethod	= '';
 //_debug_array($data);
 
+			$this->db->query("SELECT * FROM fm_ecoart");
+			$art_list = array();
+			while ($this->db->next_record())
+			{
+				$art_list[$this->db->f('id')] = $this->db->f('descr',true);
+			}
+
 			if ($order)
 			{
 				$ordermethod = " order by $order $sort";
@@ -312,7 +319,7 @@
 					$invoice[$i]['voucher_date'] 			= $GLOBALS['phpgw']->common->show_date($timestamp_voucher_date,$GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']);
 					$invoice[$i]['payment_date'] 			= $GLOBALS['phpgw']->common->show_date($timestamp_payment_date,$GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']);
 					$invoice[$i]['period']					= $this->db->f('periode');
-					$invoice[$i]['type']					= $this->db->f('artid');
+					$invoice[$i]['type']					= $art_list[$this->db->f('artid')];
 					$invoice[$i]['kidnr']					= $this->db->f('kidnr');
 					$invoice[$i]['kreditnota']				= $this->db->f('kreditnota');
 					$invoice[$i]['amount']					= $invoice_temp['amount'];
