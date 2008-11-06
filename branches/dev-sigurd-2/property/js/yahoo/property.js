@@ -18,11 +18,12 @@
   }
 
  /********************************************************************************
- *
+ * this is used, in respective PHP file.
+ * ...onclick='javascript:filter_data(this.id...)
  */
 this.filter_data = function(query)
 {
-	YAHOO.util.Dom.get(textImput[0].name).value = query;
+	YAHOO.util.Dom.get("txt_query").value = query;
 	path_values.query = query;
 	execute_ds();
 }
@@ -45,20 +46,16 @@ this.filter_data = function(query)
    this.onSearchClick = function()
    {
          //no es necesario actualizar los valores actuales de path_value. Este es global y siempre esta actualizado
-         if (YAHOO.util.Dom.inDocument("txt_query"))
-         {
-          path_values.query = YAHOO.util.Dom.get("txt_query").value;
-         }
-         if (YAHOO.util.Dom.inDocument("txt_search_vendor"))
-         {
-          path_values.search_vendor = YAHOO.util.Dom.get("txt_search_vendor").value;
-         }
+		for(i=0;i<textImput.length;i++)
+		{
+			 eval("path_values."+textImput[i].name+"='"+YAHOO.util.Dom.get(textImput[i].id).value+"'")
+		}
 
          //si esta configurado que la busqueda sea por fechas
          if(config_values.date_search != undefined && config_values.date_search != 0)
          {
-         path_values.start_date = YAHOO.util.Dom.get('start_date').value;
-         path_values.end_date = YAHOO.util.Dom.get('end_date').value;
+	         path_values.start_date = YAHOO.util.Dom.get('start_date').value;
+	         path_values.end_date = YAHOO.util.Dom.get('end_date').value;
          }
 
 
@@ -186,9 +183,9 @@ this.create_array_values_list = function(stValues)
 	    menuCB = { type: "menu", label:"<em>"+ array_options[selectsButtons[i].order][0][1]+"</em>", id: selectsButtons[i].style, value:"", menu: optionsCB};
 	    var tmp = new YAHOO.widget.Button(selectsButtons[i].name, menuCB)
 		eval("oMenuButton_"+selectsButtons[i].order+" = tmp");
-	}
+		}
 
- }
+ 	}
 
  }
 
