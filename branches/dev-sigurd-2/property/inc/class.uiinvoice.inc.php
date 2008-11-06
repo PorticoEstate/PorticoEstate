@@ -31,7 +31,7 @@
 	 * Description
 	 * @package property
 	 */
-
+	phpgw::import_class('phpgwapi.yui');
 	class property_uiinvoice
 	{
 		var $grants;
@@ -47,18 +47,18 @@
 
 		var $public_functions = array
 		(
-			'index'  	=> true,
+			'index'  		=> true,
 			'edit_period'	=> true,
-			'list_sub'	=> true,
-			'consume'	=> true,
-			'remark'	=> true,
-			'delete'	=> true,
-			'add'		=> true,
-			'debug'		=> true,
+			'list_sub'		=> true,
+			'consume'		=> true,
+			'remark'		=> true,
+			'delete'		=> true,
+			'add'			=> true,
+			'debug'			=> true,
 			'view_order'	=> true,
 			'download'		=> true,
 			'download_sub'	=> true,
-			'receipt'	=> true
+			'receipt'		=> true
 		);
 
 		function property_uiinvoice()
@@ -74,7 +74,7 @@
 
 			$this->start			= $this->bo->start;
 			$this->query			= $this->bo->query;
-			$this->sort			= $this->bo->sort;
+			$this->sort				= $this->bo->sort;
 			$this->order			= $this->bo->order;
 			$this->filter			= $this->bo->filter;
 			$this->cat_id			= $this->bo->cat_id;
@@ -188,17 +188,16 @@
 			}
 		}
 
+
+//------------------------------------------------------------------------------------------
 		function index()
 		{
+			//--validacion para permisos
 			if(!$this->acl_read)
 			{
 				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=>1, 'acl_location'=> $this->acl_location));
 			}
-
-			$GLOBALS['phpgw']->xslttpl->add_file(array('invoice',
-										'nextmatchs',
-										'search_field'));
-
+			//-- captura datos de URL
 			$paid 			= phpgw::get_var('paid', 'bool');
 			$start_date 	= phpgw::get_var('start_date');
 			$end_date 		= phpgw::get_var('end_date');
@@ -209,311 +208,597 @@
 			$voucher_id 	= phpgw::get_var('voucher_id', 'int');
 			$b_account_class= phpgw::get_var('b_account_class', 'int');
 
+			//-- ubica focus del menu derecho
 			if ( $paid )
 			{
 				$GLOBALS['phpgw_info']['flags']['menu_selection'] .= '::paid';
 			}
-
+			//-- captura datos de URL
 			$start_date=urldecode($start_date);
 			$end_date=urldecode($end_date);
 
+			//-- si end_date no existe
 			if(!$end_date)
 			{
+				//-- fecha actual
 				$end_date = $GLOBALS['phpgw']->common->show_date(mktime(0,0,0,date("m"),date("d"),date("Y")),$GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']);
-				$start_date = $end_date;
-			}
+				//$start_date = $end_date;
+				$start_date = "05/11/2007";
 
+			}
+			//-- edicion de registro
 			$values  = phpgw::get_var('values');
 			$receipt = array();
-
 			if(isset($values['save']) && $values['save'] && isset($values['counter']) && $values['counter'])
 			{
 				$receipt = $this->bo->update_invoice($values);
 			}
 
+
+			$datatable = array();
+			$values_combo_box = array();
+
+			if( phpgw::get_var('phpgw_return_as') != 'json' )
+			 {
+
+		    	$datatable['config']['base_url']	= $GLOBALS['phpgw']->link('/index.php', array
+							    				(
+													'menuaction'		=> 'property.uiinvoice.index',
+													'order'				=> $this->order,
+													'sort'				=> $this->sort,
+													'cat_id'			=> $this->cat_id,
+													'user_lid'			=> 'all',//'user_lid'			=> $this->user_lid,
+													'sub'				=> $this->sub,
+													'query'				=> $this->query,
+													'start'				=> $this->start,
+													'paid'				=> $paid,
+													'vendor_id'			=> $vendor_id,
+													'workorder_id'		=> $workorder_id,
+													'start_date'		=> $start_date,
+													'end_date'			=> $end_date,
+													'filter'			=> $this->filter,
+													'b_account_class'	=> $b_account_class,
+													'district_id'		=> $this->district_id
+												));
+
+
+				$datatable['config']['base_java_url'] = "menuaction:'property.uiinvoice.index',"
+	    											."order:'{$this->order}',"
+	    											."sort:'{$this->sort}',"
+ 	                        						."cat_id: '{$this->cat_id}',"
+ 	                        						."user_lid:'all',"//."user_lid:'{$this->user_lid}',"
+						 	                        //."sub:'{$this->sub}',"
+ 	                        						."query:'{$this->query}',"
+						 	                        ."start:'{$this->start}',"
+						 	                        ."paid:'{$paid}',"
+						 	                        ."vendor_id:'{$vendor_id}',"
+						 	                        ."workorder_id:'{$workorder_id}',"
+						 	                        ."start_date:'{$start_date}',"
+						 	                        ."end_date:'{$end_date}',"
+						 	                        ."filter:'{$this->filter}',"
+						 	                        ."b_account_class:'{$b_account_class}',"
+						 	                        ."district_id:'{$this->district_id}'";
+
+				 // sin el primer parametro, para no hacer diferencia entre filtro o selecte
+				$values_combo_box[0]  = $this->bo->select_category('',$this->cat_id);
+				$default_value = array ('id'=>'','name'=>lang('no category'));
+				array_unshift ($values_combo_box[0],$default_value);
+
+				$values_combo_box[1]  = $this->bo->get_invoice_user_list('select',$this->user_lid,array('all'),$default='all');
+				$default_value = array ();//$default_value = array ('lid'=>'','firstname'=>lang('no user'));
+				array_unshift ($values_combo_box[1],$default_value);
+
+				$values_combo_box[2]  = $this->bo->select_account_class($b_account_class);
+				$default_value = array ('id'=>'','name'=>lang('No account'));
+				array_unshift ($values_combo_box[2],$default_value);
+
+				if($paid)
+				{
+					$jscal = CreateObject('phpgwapi.jscalendar');
+					$jscal->add_listener('start_date');
+					$jscal->add_listener('end_date');
+				}
+
+
+				if (!$paid)
+				{
+				$field_invoice = array(
+	                                array( //boton 	CATEGORY
+	                                    'id' => 'btn_cat_id',
+	                                    'name' => 'cat_id',
+	                                    'value'	=> lang('Category'),
+	                                    'type' => 'button'
+	                                ),
+									array( //boton 	OWNER
+	                                    'id' => 'btn_filter',
+	                                    'name' => 'filter',
+	                                    'value'	=> lang('Filter'),
+	                                    'type' => 'button',
+	                                ),
+	                                array( // TEXT IMPUT
+	                                    'name'     => 'query',
+	                                    'id'     => 'txt_query',
+	                                    'text'    => '',//necesary for spacio next to  txtinput
+	                                    'value'    => $this->query,//$query,
+	                                    'type' => 'text',
+	                                    'size'    => 28
+	                                ),
+	                                array( //boton   SEARCH
+	                                    'id' => 'btn_search',
+	                                    'name' => 'search',
+	                                    'value'    => lang('search'),
+	                                    'type' => 'button',
+	                                ),
+									array( // boton ADD
+		                                'type'	=> 'submit',
+		                            	'id'	=> 'btn_new',
+		                                'value'	=> lang('add')
+		                            ),
+									array( // boton SAVE
+		                                'id'	=> 'btn_save',
+		                            	//'name' => 'save',
+		                                'value'	=> lang('save'),
+										'type'	=> 'button'
+		                            ),
+	                                array( // boton exportar
+		                                'type'	=> 'button',
+		                            	'id'	=> 'btn_export',
+		                                'value'	=> lang('download')
+		                            ),
+		                            array( //hidden paid
+		                                'type'	=> 'hidden',
+		                            	'id'	=> 'paid',
+		                                'value'	=> $paid
+		                            ));
+				}
+				else
+				{
+				$field_invoice = array(
+									array( // calendar1 start_date
+	                                    'type' => 'text',
+										'name'     => 'start_date',
+	                                    'id'     => 'start_date',
+	                                    'value'    => $start_date,
+	                                    'size'    => 7,
+	                                    'readonly' => 'readonly'
+	                                ),
+	                                array( // imag calendar1
+	                                    'type' => 'img',
+										'id'     => 'start_date-trigger',
+	                                    'src'    => $GLOBALS['phpgw']->common->image('phpgwapi','cal'),
+	                                    'alt'	=> lang('Select date')
+	                                ),
+									array( // calendar1 start_date
+	                                    'type' => 'text',
+										'name'     => 'end_date',
+	                                    'id'     => 'end_date',
+	                                    'value'    => $end_date,
+	                                    'size'    => 7,
+	                                    'readonly' => 'readonly'
+	                                ),
+	                                array( // imag calendar1
+	                                    'type' => 'img',
+										'id'     => 'end_date-trigger',
+	                                    'src'    => $GLOBALS['phpgw']->common->image('phpgwapi','cal'),
+	                                    'alt'	=> lang('Select date')
+	                                ),
+
+	                                array( // workorder box
+	                                    'name'     => 'txt_workorder',
+	                                    'id'     => 'workorder_id',
+	                                    'value'    => $workorder_id,
+	                                    'type' => 'text',
+	                                    'size'    => 10
+	                                ),
+	                                array( // workorder link
+		                                'type' => 'link',
+		                                'id' => 'lnk_workorder',
+		                                'url' => "",
+										'value' => lang('Workorder ID')
+									),
+									array( // Vendor box
+	                                    'name'     => 'txt_vendor',
+	                                    'id'     => 'vendor_id',
+	                                    'value'    => $vendor_id,
+	                                    'type' => 'text',
+	                                    'size'    => 10
+	                                ),
+	                                array( //vendor link
+		                                'type' => 'link',
+		                                'id' => 'lnk_vendor',
+		                                'url' => "Javascript:window.open('".$GLOBALS['phpgw']->link('/index.php',
+											           array
+											              (
+											               'menuaction' => 'property.uilookup.vendor',
+											               ))."','Search','width=800,height=700,toolbar=no,scrollbars=yes,resizable=yes')",
+										'value' => lang('Vendor')
+									),
+
+	                                array( // txt Facilities Management
+	                                    'name'     => 'txt_loc1',
+	                                    'id'     => 'loc1',
+	                                    'value'    => $loc1,
+	                                    'type' => 'text',
+	                                    'size'    => 8
+	                                ),
+	                                array(
+		                                'type' => 'link',
+		                                'id' => 'lnk_property',
+		                                'url' => "Javascript:window.open('".$GLOBALS['phpgw']->link('/index.php',
+											           array
+											              (
+											               'menuaction' => 'property.uilocation.index',
+											               'lookup'  	=> 1,
+											               'type_id'  	=> 1,
+															'lookup_name'  	=> 0,
+											               ))."','Search','width=800,height=700,toolbar=no,scrollbars=yes,resizable=yes')",
+										'value' => lang('property')
+									),
+	                                array( // Voucher box
+	                                    'name'     => 'txt_voucher',
+	                                    'id'     => 'voucher_id',
+	                                    'value'    => $voucher_id,
+	                                    'type' => 'text',
+	                                    'size'    => 8
+	                                ),
+	                                array( // Voucher link
+		                                'type' => 'link',
+		                                'id' => 'lnk_voucher',
+		                                'url' => "",
+										'value' => lang('Voucher ID')
+									),
+									array( //boton   SEARCH
+	                                    'id' => 'btn_search',
+	                                    'name' => 'search',
+	                                    'value'    => lang('search'),
+	                                    'type' => 'button'
+	                                ),
+	                                array( //boton 	CATEGORY
+	                                    'id' => 'btn_cat_id',
+	                                    'name' => 'cat_id',
+	                                    'value'	=> lang('Category'),
+	                                    'type' => 'button'
+	                                ),
+									array( //boton 	OWNER
+	                                    'id' => 'btn_user_lid',
+	                                    'name' => 'user_lid',
+	                                    'value'	=> user_lid,
+	                                    'type' => 'button'
+	                                ),
+	                               array( //boton 	ACCOUNT
+	                                    'id' => 'btn_b_account_class',
+	                                    'name' => 'b_account_class',
+	                                    'value'	=> lang('No account'),
+	                                    'type' => 'button'
+	                                ),
+		                            array( //hidden paid
+		                                'type'	=> 'hidden',
+		                            	'id'	=> 'paid',
+		                            	'name'	=> 'paid',
+		                                'value'	=> $paid
+		                            ));
+				}
+
+		$datatable['actions']['form'] = array(
+			array(
+				'action'	=> $GLOBALS['phpgw']->link('/index.php',
+						array(
+								'menuaction'		=> 'property.uiinvoice.index',
+								'order'				=> $this->order,
+								'sort'				=> $this->sort,
+								'cat_id'			=> $this->cat_id,
+								'user_lid'			=> $this->user_lid,
+								'sub'				=> $this->sub,
+								'query'				=> $this->query,
+								'start'				=> $this->start,
+								'paid'				=> $paid,
+								'vendor_id'			=> $vendor_id,
+								'workorder_id'		=> $workorder_id,
+								'start_date'		=> $start_date,
+								'end_date'			=> $end_date,
+								'filter'			=> $this->filter,
+								'b_account_class'	=> $b_account_class,
+								'district_id'		=> $this->district_id
+							)
+					),
+				'fields'	=> array(
+                                    'field' => $field_invoice,
+		                       		'hidden_value' => array(
+					                                        array( //div values  combo_box_0
+							                                            'id' => 'values_combo_box_0',
+							                                            'value'	=> $this->bocommon->select2String($values_combo_box[0]) //i.e.  id,value/id,vale/
+							                                      ),
+							                                array( //div values  combo_box_1
+							                                            'id' => 'values_combo_box_1',
+							                                            'value'	=> $this->bocommon->select2String($values_combo_box[1],'lid','firstname','lastname')
+							                                      ),
+						                                      array( //div values  combo_box_2
+						                                            'id' => 'values_combo_box_2',
+						                                            'value'	=> $this->bocommon->select2String($values_combo_box[2])
+						                                      		)
+				                                      		)
+									)
+				  )
+				);
+				//cramirez: $dry_run is use "$this->bo->read"
+				$dry_run=true;
+
+			} //-- of if( phpgw::get_var('phpgw_return_as') != 'json' )
+
+			$content = array();
 			$content = $this->bo->read_invoice($paid,$start_date,$end_date,$vendor_id,$loc1,$workorder_id,$voucher_id);
 
-			$sum = 0;
-			$i=0;
-			if(is_array($content))
+
+			$uicols = array (
+				'input_type'	=>	array(hidden,hidden,link,link,hidden,hidden,hidden,imput,varchar,link,hidden,varchar,varchar,link,imput,imput,varchar,varchar,varchar,imput),
+				'type'			=>	array('','',url,msg_box,'','','',text,'',msg_box,'','','',w_open,checkbox,radio,'','','',checkbox),
+
+
+				'col_name'		=>	array(counter,voucher_id,voucher_id_lnk,voucher_date_lnk,sign_orig ,num_days_orig,timestamp_voucher_date,num_days,amount_lnk,vendor_id_lnk,invoice_count,invoice_count_lnk,type_lnk,period,kreditnota,sign      ,janitor_lnk,supervisor_lnk,budget_responsible_lnk,transfer),
+				'name'			=>	array(counter,voucher_id,voucher_id    ,voucher_date    ,empty_fild,num_days     ,timestamp_voucher_date,num_days,amount    ,vendor_id    ,invoice_count,invoice_count    ,type    ,period,empty_fild,empty_fild,janitor    ,supervisor    ,budget_responsible    ,is_transfer),
+
+
+
+				'descr'			=>	array(dummy,dummy,lang('voucher'),lang('Voucher Date'),dummy,dummy,dummy,lang('Days'),lang('Sum'),lang('Vendor'),dummy,lang('Count'),lang('Type'),lang('Period'),lang('KreditNota'),lang('None'),lang('Janitor'),lang('Supervisor'),lang('Budget Responsible'),lang('Transfer')),
+				'align'			=> 	array(right,right,left,right,right,right,left,right,left,left,left,right,right,right)
+				);
+
+			//url to detail of voucher
+			$voucher_url 	= 	$GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiinvoice.list_sub','user_lid'=>all));
+
+			if($paid)
 			{
-				foreach($content as $extra)
+				 $voucher_url.="&paid=true";
+			}
+
+			$j=0;
+			//---- llena DATATABLE-ROWS con los valores del READ
+			if (isset($content) && is_array($content))
+			{
+				foreach($content as $invoices)
 				{
-
-					$sum								= $sum + $extra['amount'];
-					$content[$i]['amount'] 				= number_format($extra['amount'], 2, ',', ' ');
-					$content[$i]['lang_payment_date'] 	= lang('Payment Date');
-					$content[$i]['link_sub'] 			= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiinvoice.list_sub', 'user_lid'=> $this->user_lid, 'query'=> $this->query));
-					$content[$i]['lang_sub'] 			= lang('Voucher ID');
-					$content[$i]['lang_sub_help'] 		= lang('click this link to enter the list of sub-invoices');
-					$content[$i]['link_period'] 		= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiinvoice.edit_period'));
-					$content[$i]['lang_period'] 		= lang('Period');
-					$content[$i]['lang_period_help'] 	= lang('click this link to edit the period');
-
-					if($this->acl_delete && !$paid)
+					for ($i=0;$i<count($uicols['name']);$i++)
 					{
-						$content[$i]['link_delete']				= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiinvoice.delete', 'voucher_id'=> $extra['voucher_id']));
-						$content[$i]['lang_delete_statustext']	= lang('delete the voucher');
-						$content[$i]['text_delete']				= lang('delete');
+						$datatable['rows']['row'][$j]['column'][$i]['value'] 			= $invoices[$uicols['name'][$i]];
+						$datatable['rows']['row'][$j]['column'][$i]['name'] 			= $uicols['col_name'][$i];
+						$datatable['rows']['row'][$j]['column'][$i]['align'] 			= 'left';
+
+						if($uicols['input_type'][$i]!='hidden')
+						{
+								if($uicols['input_type'][$i]=='varchar' && $invoices[$uicols['name'][$i]])
+								{
+									$datatable['rows']['row'][$j]['column'][$i]['format'] 			= 'varchar';
+									//$datatable['rows']['row'][$j]['column'][$i]['align'] 			= (isset($uicols['align'][$i])?$uicols['align'][$i]:'center');
+								}
+								elseif($uicols['input_type'][$i]=='link' && $invoices[$uicols['name'][$i]])
+								{
+									$datatable['rows']['row'][$j]['column'][$i]['format'] 			= 'link';
+									$datatable['rows']['row'][$j]['column'][$i]['link']				= '#';
+									if($uicols['type'][$i]=='url')
+									{
+										$datatable['rows']['row'][$j]['column'][$i]['link']			= $voucher_url."&voucher_id=".$invoices[$uicols['name'][$i]];
+									}
+									$datatable['rows']['row'][$j]['column'][$i]['target']			= '';
+								}
+								else //for imput controls
+								{
+									$datatable['rows']['row'][$j]['column'][$i]['format'] 			= $uicols['input_type'][$i];
+									$datatable['rows']['row'][$j]['column'][$i]['type'] 			= $uicols['type'][$i];
+								}
+						}
+						else
+						{
+								$datatable['rows']['row'][$j]['column'][$i]['format'] 			= 'hidden';
+						}
 					}
-
-					$content[$i]['link_front']				= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiinvoice.receipt', 'voucher_id'=> $extra['voucher_id']));
-					$content[$i]['lang_front_statustext']	= lang('A printout version of the frontpage');
-					$content[$i]['text_front']				= 'F';
-
-					$i++;
+//die(_debug_array($invoices));
+					$j++;
 				}
 			}
 
-			$table_header[] = array
-			(
-				'sort_voucher'		=> $this->nextmatchs->show_sort_order(array
-												(
-													'sort'	=> $this->sort,
-													'var'	=> 'bilagsnr',
-													'order'	=> $this->order,
-													'extra'	=> array(
-															'menuaction' 		=> 'property.uiinvoice.index',
-															'cat_id'		=> $this->cat_id,
-															'sub'			=> $this->sub,
-															'paid'			=> $paid,
-															'vendor_id'		=> $vendor_id,
-															'user_lid'		=> $this->user_lid,
-															'b_account_class'	=> $b_account_class,
-															'district_id'		=> $this->district_id,
-															'start_date'		=> $start_date,
-															'end_date'		=> $end_date
-															)
-												)),
-				'lang_voucher'		=> lang('voucher'),
-				'sort_voucher_date'	=> $this->nextmatchs->show_sort_order(array
-												(
-													'sort'	=> $this->sort,
-													'var'	=> 'fakturadato',
-													'order'	=> $this->order,
-													'extra'	=> array('menuaction' => 'property.uiinvoice.index',
-																	'cat_id'		=> $this->cat_id,
-																	'sub'			=> $this->sub,
-																	'paid'			=> $paid,
-																	'vendor_id'		=> $vendor_id,
-																	'user_lid'		=> $this->user_lid,
-																	'b_account_class'	=> $b_account_class,
-																	'district_id'		=> $this->district_id,
-																	'start_date'		=> $start_date,
-																	'end_date'		=> $end_date
-																	)
-												)),
-				'lang_voucher_date'	=> lang('Voucher Date'),
-				'lang_days'		=> lang('Days'),
-				'lang_sum'		=> lang('Sum'),
-				'sort_vendor_id'	=> $this->nextmatchs->show_sort_order(array
-												(
-													'sort'	=> $this->sort,
-													'var'	=> 'spvend_code',
-													'order'	=> $this->order,
-													'extra'	=> array('menuaction' => 'property.uiinvoice.index',
-																	'cat_id'		=> $this->cat_id,
-																	'sub'			=> $this->sub,
-																	'paid'			=> $paid,
-																	'vendor_id'		=> $vendor_id,
-																	'user_lid'		=> $this->user_lid,
-																	'b_account_class'	=> $b_account_class,
-																	'district_id'		=> $this->district_id,
-																	'start_date'		=> $start_date,
-																	'end_date'		=> $end_date
-																	)
-												)),
-				'lang_vendor_id'			=> lang('Vendor'),
-				'lang_num_sub_invoice'		=> lang('Count'),
-				'lang_type'					=> lang('Type'),
-				'lang_period'				=> lang('Period'),
-				'lang_kredit'				=> lang('KreditNota'),
-				'lang_none'					=> lang('None'),
-				'lang_janitor'				=> lang('Janitor'),
-				'lang_supervisor'			=> lang('Supervisor'),
-				'lang_budget_responsible'	=> lang('Budget Responsible'),
-				'lang_transfer'				=> lang('Transfer'),
-				'lang_delete'				=> lang('delete'),
-				'lang_front'				=> 'F'
-			);
+			//die(_debug_array($datatable['rows']['row']));
 
-			$table_done[] = array
-			(
-				'lang_done'					=> lang('Done'),
-				'lang_done_statustext'		=> lang('Close this window')
-			);
+			//---- PERMISOS
+			$datatable['rowactions']['action'] = array();
 
-			$link_data = array
+			$parameters = array
 			(
-				'menuaction'		=> 'property.uiinvoice.index',
-				'order'				=> $this->order,
-				'sort'				=> $this->sort,
-				'cat_id'			=> $this->cat_id,
-				'user_lid'			=> $this->user_lid,
-				'sub'				=> $this->sub,
-				'query'				=> $this->query,
-				'start'				=> $this->start,
-				'paid'				=> $paid,
-				'vendor_id'			=> $vendor_id,
-				'workorder_id'		=> $workorder_id,
-				'start_date'		=> $start_date,
-				'end_date'			=> $end_date,
-				'filter'			=> $this->filter,
-				'b_account_class'	=> $b_account_class,
-				'district_id'		=> $this->district_id
-			);
-
-			if($this->acl_add)
-			{
-				$table_add[] = array
+				'parameter' => array
 				(
-					'lang_add'				=> lang('add'),
-					'lang_add_statustext'	=> lang('add an invoice'),
-					'add_action'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiinvoice.add'))
+					array
+					(
+						'name'		=> 'voucher_id',
+						'source'	=> 'voucher_id'
+					),
+				)
+			);
+
+			if($this->acl_delete)
+			{
+				$datatable['rowactions']['action'][] = array(
+					'text' 			=> lang('delete'),
+					'confirm_msg'	=> lang('do you really want to delete this entry'),
+					'action'		=> $GLOBALS['phpgw']->link('/index.php',array
+									(
+										'menuaction'	=> 'property.uiinvoice.delete',
+									)),
+					'parameters'	=> $parameters
 				);
 			}
 
-
-			if(!$this->allrows)
+			if($this->acl_add)
 			{
-				$record_limit	= $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
+				$datatable['rowactions']['action'][] = array(
+					'text' 			=> lang('add'),
+					'action'		=> $GLOBALS['phpgw']->link('/index.php',array
+									(
+										'menuaction'	=> 'property.uiinvoice.add'
+									))
+				);
 			}
-			else
+
+			$datatable['rowactions']['action'][] = array(
+					'text' 			=> lang('F'),
+					'action'		=> $GLOBALS['phpgw']->link('/index.php',array
+									(
+										'menuaction'	=> 'property.uiinvoice.receipt'
+									)),
+					'parameters'	=> $parameters
+				);
+
+			unset($parameters);
+
+			//--- CABECERAS DEL DATATABLE sirve para crear el MycolumnsDef
+			$uicols_count	= count($uicols['descr']);
+
+			for ($i=0;$i<$uicols_count;$i++)
 			{
-				$record_limit	= $this->bo->total_records;
+				$datatable['headers']['header'][$i]['name'] 			= $uicols['col_name'][$i];
+				$datatable['headers']['header'][$i]['text'] 			= $uicols['descr'][$i];
+
+				if($uicols['input_type'][$i]!='hidden')
+				{
+					//$datatable['headers']['header'][$i]['name'] 			= $uicols['name'][$i];
+					//$datatable['headers']['header'][$i]['text'] 			= $uicols['descr'][$i];
+					$datatable['headers']['header'][$i]['visible'] 			= true;
+					$datatable['headers']['header'][$i]['format'] 			= $this->bocommon->translate_datatype_format($uicols['datatype'][$i]);
+					$datatable['headers']['header'][$i]['sortable']			= false;
+
+					//-- ordemanientos particulares para cada columna
+					if($uicols['name'][$i]=='voucher_id'):
+					{
+						$datatable['headers']['header'][$i]['sortable']		= true;
+						$datatable['headers']['header'][$i]['sort_field']	= 'bilagsnr';
+					}
+					elseif($uicols['name'][$i]=='voucher_date'):
+					{
+						$datatable['headers']['header'][$i]['sortable']		= true;
+						$datatable['headers']['header'][$i]['sort_field'] 	= 'fakturadato';
+					}
+					elseif($uicols['name'][$i]=='vendor'):
+					{
+						$datatable['headers']['header'][$i]['sortable']		= true;
+						$datatable['headers']['header'][$i]['sort_field'] 	= 'spvend_code';
+					}
+					endif;
+				}
+				else
+				{
+					//$datatable['headers']['header'][$i]['name'] 			= $uicols['name'][$i];
+					//$datatable['headers']['header'][$i]['text'] 			= $uicols['descr'][$i];
+					$datatable['headers']['header'][$i]['visible'] 			= false;
+					$datatable['headers']['header'][$i]['sortable']			= false;
+					$datatable['headers']['header'][$i]['format'] 			= 'hidden';
+				}
 			}
 
-			$msgbox_data = $this->bocommon->msgbox_data($receipt);
+			// path for property.js
+			$datatable['property_js'] = $GLOBALS['phpgw_info']['server']['webserver_url']."/property/js/yahoo/property.js";
 
-			$link_download = array
-			(
-				'menuaction'		=> 'property.uiinvoice.download',
-				'order'				=> $this->order,
-				'sort'				=> $this->sort,
-				'cat_id'			=> $this->cat_id,
-				'user_lid'			=> $this->user_lid,
-				'sub'				=> $this->sub,
-				'query'				=> $this->query,
-				'start'				=> $this->start,
-				'paid'				=> $paid,
-				'vendor_id'			=> $vendor_id,
-				'workorder_id'		=> $workorder_id,
-				'start_date'		=> $start_date,
-				'end_date'			=> $end_date,
-				'filter'			=> $this->filter,
-				'allrows'			=> $this->allrows,
-				'b_account_class'	=> $b_account_class,
-				'district_id'		=> $this->district_id
-			);
+			// Pagination and sort values
+			$datatable['pagination']['records_start'] 	= (int)$this->bo->start;
+			$datatable['pagination']['records_limit'] 	= $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
+			$datatable['pagination']['records_returned']= count($content);
+			$datatable['pagination']['records_total'] 	= $this->bo->total_records;
 
-			$GLOBALS['phpgw']->js->validate_file('overlib','overlib','property');
-			$GLOBALS['phpgw']->js->validate_file('core','check','property');
+			$datatable['sorting']['order'] 	= phpgw::get_var('order', 'string'); // Column
+			$datatable['sorting']['sort'] 	= phpgw::get_var('sort', 'string'); // ASC / DESC
 
-			$data['menu']							= $this->bocommon->get_menu();
-			$data['lang_download']						= 'download';
-			$data['link_download']						= $GLOBALS['phpgw']->link('/index.php',$link_download);
-			$data['lang_download_help']				= lang('Download table to your browser');
+			$appname = lang('location');
 
-			$data['msgbox_data']					= $GLOBALS['phpgw']->common->msgbox($msgbox_data);
-			$data['sum']							= number_format($sum, 2, ',', '');
-			$data['allow_allrows']					= true;
-			$data['allrows']						= $this->allrows;
-			$data['start_record']					= $this->start;
-			$data['record_limit']					= $record_limit;
-			$data['num_records']					= count($content);
-			$data['all_records']					= $this->bo->total_records;
-			$data['link_url']						= $GLOBALS['phpgw']->link('/index.php',$link_data);
-			$data['img_path']						= $GLOBALS['phpgw']->common->get_image_path('phpgwapi','default');
-			$data['lang_no_cat']					= lang('no category');
-			$data['lang_cat_statustext']			= lang('Select the category the building belongs to. To do not use a category select NO CATEGORY');
-			$data['select_name']					= 'cat_id';
-			$data['select_action']					= $GLOBALS['phpgw']->link('/index.php',$link_data);
-			$data['lang_no_user']					= lang('None');
-			$data['lang_user_statustext']			= lang('Select the user the selection belongs to. To do not use a user select NO USER');
-			$data['select_user_name']				= 'user_lid';
-			$data['lang_searchfield_statustext']	= lang('Enter the search string. To show all entries, empty this field and press the SUBMIT button again');
-			$data['lang_searchbutton_statustext']	= lang('Submit the search string');
-			$data['lang_search']					= lang('search');
-			$data['query']							= $this->query;
-			$data['form_action']					= $GLOBALS['phpgw']->link('/index.php',$link_data);
+			phpgwapi_yui::load_widget('dragdrop');
+		  	phpgwapi_yui::load_widget('datatable');
+		  	phpgwapi_yui::load_widget('menu');
+		  	phpgwapi_yui::load_widget('connection');
+		  	//// cramirez: necesary for include a partucular js
+		  	phpgwapi_yui::load_widget('loader');
 
-//_debug_array($content);
+
+
+//-- BEGIN----------------------------- JSON CODE ------------------------------
+			if( phpgw::get_var('phpgw_return_as') == 'json' )
+			{
+    		//values for Pagination
+	    		$json = array
+	    		(
+	    			'recordsReturned' 	=> $datatable['pagination']['records_returned'],
+    				'totalRecords' 		=> (int)$datatable['pagination']['records_total'],
+	    			'startIndex' 		=> $datatable['pagination']['records_start'],
+					'sort'				=> $datatable['sorting']['order'],
+	    			'dir'				=> $datatable['sorting']['sort'],
+					'records'			=> array()
+	    		);
+
+				// values for datatable
+	    		if(isset($datatable['rows']['row']) && is_array($datatable['rows']['row'])){
+	    			foreach( $datatable['rows']['row'] as $row )
+	    			{
+		    			$json_row = array();
+		    			foreach( $row['column'] as $column)
+		    			{
+		    				//-- links a otros modulos
+		    				if(isset($column['format']) && $column['format']== "link")
+		    				{
+		    				  	$json_row[$column['name']] = "<a href='".$column['link']."' target='".$column['target']."'>".$column['value']."</a>";
+		    				}
+		    				elseif(isset($column['format']) && $column['format']== "imput")
+		    				{
+								$json_row[$column['name']] = " <input name='".$column['name']."' type='".$column['type']."' value='".$column['value']."' size='1'/>";
+		    				}
+		    				else
+		    				{
+		    				  $json_row[$column['name']] = $column['value'];
+		    				}
+		    			}
+		    			$json['records'][] = $json_row;
+	    			}
+	    		}
+
+				// right in datatable
+				if(isset($datatable['rowactions']['action']) && is_array($datatable['rowactions']['action']))
+				{
+					$json ['rights'] = $datatable['rowactions']['action'];
+				}
+
+	    		return $json;
+			}
+//-------------------- JSON CODE ----------------------
+			// Prepare template variables and process XSLT
+			$template_vars = array();
+			$template_vars['datatable'] = $datatable;
+			$GLOBALS['phpgw']->xslttpl->add_file(array('datatable'));
+	      	$GLOBALS['phpgw']->xslttpl->set_var('phpgw', $template_vars);
+
+	      	if ( !isset($GLOBALS['phpgw']->css) || !is_object($GLOBALS['phpgw']->css) )
+	      	{
+	        	$GLOBALS['phpgw']->css = createObject('phpgwapi.css');
+	      	}
+			// Prepare CSS Style
+		  	$GLOBALS['phpgw']->css->validate_file('datatable');
+		  	$GLOBALS['phpgw']->css->add_external_file('property/templates/base/css/property.css');
+			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/datatable/assets/skins/sam/datatable.css');
+			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/container/assets/skins/sam/container.css');
+
+			//Title of Page
 			$appname	= lang('invoice');
 			$function_msg	= lang('list voucher');
-
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
 
-			if (isset($paid) && $paid)
-			{
-				$jscal = CreateObject('phpgwapi.jscalendar');
-				$jscal->add_listener('start_date');
-				$jscal->add_listener('end_date');
 
-				$bolocation								= CreateObject('property.bolocation');
-				$data['user_list']						= $this->bo->get_invoice_user_list('select',$this->user_lid,array('all'),$default='all');
-				$location_data							= $bolocation->initiate_ui_location(array('type_id'=> 1));
+	  		// Prepare YUI Library
+	  		if ($paid)
+	  		{
+	  			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'invoice.paid.index', 'property' );
+	  		}
+  			else
+  			{
+  				$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'invoice.index', 'property' );
+  			}
 
-				$data['cat_list']						= $this->bo->select_category('select',$this->cat_id);
-				$data['start_date']						= $start_date;
-				$data['end_date']						= $end_date;
-				$data['vendor_id']						= $vendor_id;
 
-				$data['img_cal']						= $GLOBALS['phpgw']->common->image('phpgwapi','cal');
-				$data['lang_datetitle']					= lang('Select date');
-
-				$data['lang_workorder']					= lang('Workorder ID');
-				$data['lang_workorder_statustext']		= lang('enter the Workorder ID to search by workorder - at any date');
-				$data['workorder_id']					= $workorder_id;
-
-				$data['addressbook_link']				= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uilookup.vendor'));
-				$data['lang_select_vendor_statustext']	= lang('Select the vendor by clicking this link');
-				$data['lang_vendor']					= lang('Vendor');
-				$data['property_link']					= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uilocation.index', 'lookup'=> 1, 'type_id'=> 1, 'lookup_name'=> 0));
-				$data['lang_select_property_statustext']= lang('Select the property by clicking this link');
-				$data['lang_property_statustext']		= lang('Search by property');
-				$data['lang_property']					= lang('property');
-				$data['loc1']							= $loc1;
-				$data['lang_search']					= lang('Search');
-				$data['lang_search_statustext']			= lang('Search for paid invoices');
-
-				$data['table_header_list_voucher_paid']	= $table_header;
-				$data['values_list_voucher_paid']		= $content;
-
-				$data['lang_voucher_id_statustext']		= lang('Search for voucher id');
-				$data['lang_voucher_id']				= lang('Voucher ID');
-				$data['voucher_id']						= $voucher_id;
-
-				$data['account_class_list']				= $this->bo->select_account_class($b_account_class);
-				$data['lang_no_account_class']			= lang('No account');
-				$data['lang_account_class_statustext']	= lang('Select the account class the selection belongs to');
-				$data['select_account_class_name']		= 'b_account_class';
-
-				$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('list_voucher_paid' => $data));
-			}
-			else
-			{
-				$data['user_list']						= $this->bo->get_invoice_user_list('filter',$this->user_lid,array('all'),$default='none');
-				$data['cat_list']						= $this->bo->select_category('filter',$this->cat_id);
-				$data['table_done']						= $table_done;
-				$data['img_check']						= $GLOBALS['phpgw']->common->get_image_path('property').'/check.png';
-				$data['lang_save']						= lang('save');
-				$data['done_action']					= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiinvoice.index'));
-				$data['lang_done_statustext']			= lang('Back to the list');
-				$data['lang_save_statustext']			= lang('Save the voucher');
-				$data['lang_select_all']				= lang('Select All');
-				$data['message']						= isset($receipt['message'])?$receipt['message']:'';
-				$data['error']							= isset($receipt['error'])?$receipt['error']:'';
-				$data['table_header_list_voucher']		= $table_header;
-				$data['values_list_voucher']			= $content;
-				$data['acl_delete']						= $this->acl_delete;
-				$data['table_add_invoice']				= $table_add;
-
-				$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('list_voucher' => $data));
-			}
-			$this->save_sessiondata();
-
-		}
-
+			//$this->save_sessiondata();
+	}
+//----------------------------------------------------------------------------------------
 		function list_sub()
 		{
 			$GLOBALS['phpgw']->xslttpl->add_file(array('invoice',
