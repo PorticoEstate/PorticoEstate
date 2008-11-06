@@ -181,7 +181,7 @@
 				$default_value = array ('cat_id'=>'','name'=> lang('no category'));
 				array_unshift ($values_combo_box[0]['cat_list'],$default_value);
 
-				$values_combo_box[1]  = $this->boproject->select_status_list('filter',$this->status_id);
+				$values_combo_box[1]  = $this->bo->select_status_list('filter',$this->status_id);
 				$default_value = array ('id'=>'','name'=> lang('no status'));
 				array_unshift ($values_combo_box[1],$default_value);
 
@@ -1040,7 +1040,7 @@
 				'lang_no_user'				=> lang('Select coordinator'),
 				'user_list'				=> $this->bocommon->get_user_list_right2('select',4,$values['coordinator'],$this->acl_location),
 
-				'status_list'				=> $this->boproject->select_status_list('select',$values['status']),
+				'status_list'				=> $this->bo->select_status_list('select',$values['status']),
 				'status_name'				=> 'values[status]',
 				'lang_no_status'			=> lang('Select status'),
 				'lang_status'				=> lang('Status'),
@@ -1298,7 +1298,7 @@
 				'lang_no_user'					=> lang('Select coordinator'),
 				'user_list'					=> $this->bocommon->get_user_list('select',$values['coordinator'],$extra=false,$default=false,$start=-1,$sort='ASC',$order='account_lastname',$query='',$offset=-1),
 
-				'status_list'					=> $this->boproject->select_status_list('select',$values['status']),
+				'status_list'					=> $this->bo->select_status_list('select',$values['status']),
 				'lang_status'					=> lang('Status'),
 
 				'branch_list'					=> $this->boproject->select_branch_list($values['branch_id']),
