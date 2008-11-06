@@ -435,7 +435,7 @@
 				'lang_status_statustext'		=> lang('Select the status the agreement belongs to. To do not use a category select NO STATUS'),
 				'status_name'				=> 'status_id',
 				'lang_no_status'			=> lang('No status'),
-				'status_list'				=> $this->boproject->select_status_list('filter',$this->status_id),
+				'status_list'				=> $this->bo->select_status_list('filter',$this->status_id),
 
 				'lang_user_statustext'			=> lang('Select the user the request belongs to. To do not use a category select NO USER'),
 				'select_user_name'			=> 'filter',
@@ -936,7 +936,7 @@
 				'lang_no_user'				=> lang('Select coordinator'),
 				'user_list'				=> $this->bocommon->get_user_list_right2('select',4,$values['coordinator'],$this->acl_location),
 
-				'status_list'				=> $this->boproject->select_status_list('select',$values['status']),
+				'status_list'				=> $this->bo->select_status_list('select',$values['status']),
 				'status_name'				=> 'values[status]',
 				'lang_no_status'			=> lang('Select status'),
 				'lang_status'				=> lang('Status'),
@@ -1181,7 +1181,7 @@
 				'lang_no_user'					=> lang('Select coordinator'),
 				'user_list'					=> $this->bocommon->get_user_list('select',$values['coordinator'],$extra=false,$default=false,$start=-1,$sort='ASC',$order='account_lastname',$query='',$offset=-1),
 
-				'status_list'					=> $this->boproject->select_status_list('select',$values['status']),
+				'status_list'					=> $this->bo->select_status_list('select',$values['status']),
 				'lang_status'					=> lang('Status'),
 
 				'branch_list'					=> $this->boproject->select_branch_list($values['branch_id']),
