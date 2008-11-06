@@ -279,6 +279,9 @@
 			<xsl:when test="type='label_date'">
 				<table><tbody><tr><td><span id="txt_start_date"></span></td></tr><tr><td><span id="txt_end_date"></span></td></tr></tbody></table>
 			</xsl:when>
+			<xsl:when test="type='img'">
+				<img id="{id}" src="{src}" alt="{alt}" title="{alt}" style="cursor:pointer; cursor:hand;" />
+			</xsl:when>
 			<xsl:otherwise>
 				<input id="{$id}" type="{type}" name="{name}" value="{value}" class="{type}">
 					<xsl:if test="size">
@@ -287,6 +290,11 @@
 
 					<xsl:if test="type = 'checkbox' and checked = '1'">
 						<xsl:attribute name="checked">checked</xsl:attribute>
+					</xsl:if>
+
+					<xsl:if test="readonly">
+						<xsl:attribute name="readonly">'readonly'</xsl:attribute>
+						<xsl:attribute name="onMouseout">window.status='';return true;</xsl:attribute>
 					</xsl:if>
 				</input>
 			</xsl:otherwise>
