@@ -277,6 +277,11 @@
 				{
 					unset($datatable['actions']['form'][0]['fields']['field'][3]);
 				} 			
+				
+				if(!$this->acl_add)
+				{
+					unset($datatable['actions']['form'][0]['fields']['field'][6]);
+				} 					
 				$dry_run = true;
 			}
 		                         
@@ -383,13 +388,16 @@
 					);
 				}
 
-				$datatable['rowactions']['action'][] = array(
-						'text' 			=> lang('add'),
-						'action'		=> $GLOBALS['phpgw']->link('/index.php',array
-										(
-											'menuaction'	=> 'property.uirequest.edit'
-										))
-				);
+				if($this->acl_add) 
+				{
+					$datatable['rowactions']['action'][] = array(
+							'text' 			=> lang('add'),
+							'action'		=> $GLOBALS['phpgw']->link('/index.php',array
+											(
+												'menuaction'	=> 'property.uirequest.edit'
+											))
+					);
+				}
 				unset($parameters);
 			}
 			else 
@@ -559,6 +567,10 @@
 			{
 				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=>16, 'acl_location'=> $this->acl_location));
 			}
+			
+			//cramirez: necesary for windows.open . Avoid error JS
+   			phpgwapi_yui::load_widget('tabview');
+   						
 			$GLOBALS['phpgw']->xslttpl->add_file(array('request'));
 			$GLOBALS['phpgw_info']['flags'][noheader] = true;
 			$GLOBALS['phpgw_info']['flags'][nofooter] = true;
