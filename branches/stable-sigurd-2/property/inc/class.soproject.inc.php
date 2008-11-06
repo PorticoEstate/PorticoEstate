@@ -866,7 +866,7 @@
 
 		function check_request($request_id)
 		{
-			$target = $this->interlink->get_specific_targets('property', '.project.request', '.project', $request_id);
+			$target = $this->interlink->get_specific_relation('property', '.project.request', '.project', $request_id);
 
 			if ( $target)
 			{
@@ -909,7 +909,7 @@
 
 		function delete($project_id )
 		{
-			$request = $this->interlink->get_specific_targets('property', '.project.request', '.project', $project_id);
+			$request = $this->interlink->get_specific_relation('property', '.project.request', '.project', $project_id);
 
 			$sql = "SELECT id as workorder_id FROM fm_workorder WHERE project_id='$project_id'";
 			$this->db->query($sql,__LINE__,__FILE__);
