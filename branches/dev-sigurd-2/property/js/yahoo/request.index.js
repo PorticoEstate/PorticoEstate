@@ -17,10 +17,10 @@
 	{order:2, name:'btn_export', funct:"onDownloadClick"}
 	]
 
-	 // define Text buttons
-	 var textImput = [
-	 {var_URL:'query', name:'txt_query'}
-	 ]
+	// define Text buttons
+	var textImput = [
+	{order:0, name:'query',	id:'txt_query'}
+	]
 
 	// define the hidden column in datatable
 	var config_values = {
@@ -29,11 +29,10 @@
 
 	this.init_particular_setting = function()
 	{
-
-		// seteo del focus
-		YAHOO.util.Dom.get(textImput[0].name).value = path_values.query;
-		YAHOO.util.Dom.get(textImput[0].name).focus();
-
+		// necesary when do "enter" in search botton.
+		YAHOO.util.Dom.get(textImput[0].id).value = path_values.query;
+		// focus
+		YAHOO.util.Dom.get(textImput[0].id).focus();
 	}
 	
 //----------------------------------------------------------
