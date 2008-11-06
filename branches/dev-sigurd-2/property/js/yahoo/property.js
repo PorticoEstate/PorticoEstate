@@ -8,7 +8,14 @@
 	var myDataSource,myDataTable, myContextMenu, myPaginator ;
 	var ds, values_ds;
 	var myrowsPerPage,mytotalRows,ActualValueRowsPerPageDropdown;
-	var type_id = YAHOO.util.Dom.get('type_id');
+
+/********************************************************************************
+ *
+ */
+  this.onSave = function()
+  {
+	alert("onsave");
+  }
 
  /********************************************************************************
  *
@@ -159,16 +166,19 @@ this.create_array_values_list = function(stValues)
 	//create button
 	for(var p=0; p<normalButtons.length; p++)
 	{
-			var botton_tmp = new YAHOO.widget.Button(normalButtons[p].name);
-			botton_tmp.on("click", eval(normalButtons[p].funct));
-			eval("oNormalButton_"+p+" = botton_tmp");
+		if (YAHOO.util.Dom.inDocument(normalButtons[p].name))
+		{
+		var botton_tmp = new YAHOO.widget.Button(normalButtons[p].name);
+		botton_tmp.on("click", eval(normalButtons[p].funct));
+		eval("oNormalButton_"+p+" = botton_tmp");
+	}
 	}
 
 	//create filters
 	for(var i=0; i<selectsButtons.length; i++)
 	{
 		options_combo_box = values_combo_box[selectsButtons[i].order];
-		 optionsCB = create_menu_list(options_combo_box.value,selectsButtons[i].order);
+		optionsCB = create_menu_list(options_combo_box.value,selectsButtons[i].order);
 	    array_options[selectsButtons[i].order] = create_array_values_list(options_combo_box.value);
 	    //cramirez: avoid assigning an object to hidden filter.
 	    if(array_options[selectsButtons[i].order].length > 0)
@@ -408,12 +418,19 @@ this.create_array_values_list = function(stValues)
 			generateRequest        : buildQueryString,
 			paginationEventHandler : YAHOO.widget.DataTable.handleDataSourcePagination,
 			paginator              : myPaginator,
-			sortedBy			   : {key:"anywhere", dir:YAHOO.widget.DataTable.CLASS_ASC} // arguments necesary for paginator
+			sortedBy			   : {key:"anywhere", dir:YAHOO.widget.DataTable.CLASS_ASC},//,  arguments necesary for paginator
+			formatRow			   : myRowFormatter
+		};
 
+		var myRowFormatter = function(elTr, oRecord)
+		{
+		    //if (oRecord.getData('priority') == 10) {
+		        YAHOO.util.Dom.addClass(elTr, 'mark');
+		    //}
+		    return true;
 		};
 
 	   myDataTable = new YAHOO.widget.DataTable(container[0], myColumnDefs, myDataSource, myTableConfig);
-
 
 		// Override function for custom server-side sorting
 		myDataTable.sortColumn = function(oColumn) {
