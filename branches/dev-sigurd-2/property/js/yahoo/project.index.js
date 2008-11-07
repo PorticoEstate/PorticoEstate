@@ -20,7 +20,7 @@
 
 	// define Text buttons
 	var textImput = [
-	{order:0, name:'txt_query'}
+		{order:0, name:'query',id:'txt_query'}
 	];
 
 	// define the hidden column in datatable
@@ -33,8 +33,8 @@
 	{
 
 		// seteo del focus
-		YAHOO.util.Dom.get(textImput[0].name).value = path_values.query;
-		YAHOO.util.Dom.get(textImput[0].name).focus();
+		YAHOO.util.Dom.get(textImput[0].id).value = path_values.query;
+		YAHOO.util.Dom.get(textImput[0].id).focus();
 
 	}
 
