@@ -200,7 +200,7 @@
 			}
 
 			$type		= phpgw::get_var('type');
-			$id		= phpgw::get_var('id', 'int');
+			$id		= phpgw::get_var('id');
 			$values		= phpgw::get_var('values');
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('standard_2'));
@@ -281,7 +281,7 @@
 			}
 
 			$type	= phpgw::get_var('type');
-			$id		= phpgw::get_var('id', 'int');
+			$id		= phpgw::get_var('id');
 			$confirm		= phpgw::get_var('confirm', 'bool', 'POST');
 
 			$link_data = array
