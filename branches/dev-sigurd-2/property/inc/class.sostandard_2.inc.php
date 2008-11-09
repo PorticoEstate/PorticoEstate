@@ -196,7 +196,7 @@
 		{
 			$table = $this->select_table($type);
 			$this->db->transaction_begin();
-			$this->db->query("DELETE FROM $table WHERE id=" . (int)$id,__LINE__,__FILE__);
+			$this->db->query("DELETE FROM $table WHERE id='{$id}'",__LINE__,__FILE__);
 			$this->db->transaction_commit();
 		}
 	}
