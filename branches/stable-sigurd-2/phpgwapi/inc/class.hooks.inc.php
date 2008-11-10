@@ -243,6 +243,11 @@
 		 */
 		public function register_all_hooks()
 		{
+			if ( !isset($GLOBALS['phpgw_info']['apps']) || !is_array($GLOBALS['phpgw_info']['apps']) )
+			{
+				$GLOBALS['phpgw']->applications->read_installed_apps();
+			}
+
 			$app_list = array_keys($GLOBALS['phpgw_info']['apps']);
 			$app_list[] = 'phpgwapi';
 
