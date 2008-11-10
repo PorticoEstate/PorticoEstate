@@ -1829,7 +1829,7 @@
 		));
 
 		$rows = array();
-		$GLOBALS['phpgw_setup']->oProc->m_odb->query('SELECT acl_location, acl_account, acl_rights'
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query('SELECT DISTINCT acl_location, acl_account, acl_rights'
 			. " FROM phpgw_acl WHERE acl_appname = 'phpgw_group'", __LINE__, __FILE__);
 		while ( $GLOBALS['phpgw_setup']->oProc->m_odb->next_record() )
 		{
