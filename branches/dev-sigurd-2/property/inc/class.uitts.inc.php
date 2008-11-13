@@ -409,6 +409,7 @@
 				$ticket_list = $this->bo->read($start_date,$end_date);
 				//$uicols = $this->bo->uicols;
 				$uicols = array();
+				//$uicols['name'][0] = 'color';
 				$uicols['name'][0] = 'priority';
 				$uicols['name'][1] = 'new_ticket';
 				$uicols['name'][2] = 'id';
@@ -724,6 +725,11 @@
 					$datatable['headers']['header'][$i]['visible'] 			= true;
 					//$datatable['headers']['header'][$i]['format'] 			= $this->bocommon->translate_datatype_format($uicols['datatype'][$i]);
 					$datatable['headers']['header'][$i]['sortable']			= false;
+					if($uicols['name'][$i]=='priority' || $uicols['name'][$i]=='id' || $uicols['name'][$i]=='assignedto')
+					{
+						$datatable['headers']['header'][$i]['sortable']			= true;
+						$datatable['headers']['header'][$i]['sort_field']   = $uicols['name'][$i];
+					}
 					//$datatable['headers']['header'][$i]['formatter']		= (isset($uicols['formatter'][$i])? $uicols['formatter'][$i]:"");
 				}
 			}
@@ -928,6 +934,45 @@
 		    				{
 		    				  $json_row[$column['name']] = $column['value'];
 		    				}
+
+		    					if($column['name'] == 'priority')
+		    					{
+									switch($column['value'])
+									{
+										case 1:
+											$json_row[$column['name']] = "<div style='background-color:".$bgcolor_array[1].";height:100%;'>".$column['value']."</div>";
+											break;
+										case 2:
+											$json_row[$column['name']] = "<div style='background-color:".$bgcolor_array[2].";'>".$column['value']."</div>";
+											break;
+										case 3:
+											$json_row[$column['name']] = "<div style='background-color:".$bgcolor_array[3].";'>".$column['value']."</div>";
+											break;
+										case 4:
+											$json_row[$column['name']] = "<div style='background-color:".$bgcolor_array[4].";'>".$column['value']."</div>";
+											break;
+										case 5:
+											$json_row[$column['name']] = "<div style='background-color:".$bgcolor_array[5].";'>".$column['value']."</div>";
+											break;
+										case 6:
+											$json_row[$column['name']] = "<div style='background-color:".$bgcolor_array[6].";'>".$column['value']."</div>";
+											break;
+										case 7:
+											$json_row[$column['name']] = "<div style='background-color:".$bgcolor_array[7].";'>".$column['value']."</div>";
+											break;
+										case 8:
+											$json_row[$column['name']] = "<div style='background-color:".$bgcolor_array[8].";'>".$column['value']."</div>";
+											break;
+										case 9:
+											$json_row[$column['name']] = "<div style='background-color:".$bgcolor_array[9].";'>".$column['value']."</div>";
+											break;
+										case 10:
+											$json_row[$column['name']] = "<div style='background-color:".$bgcolor_array[10].";'>".$column['value']."</div>";
+											break;
+									}
+
+		    					}
+
 		    			}
 		    			$json['records'][] = $json_row;
 	    			}
@@ -970,6 +1015,7 @@
 
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
 
+			//$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'property', 'property' );
 			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'tts.index', 'property' );
 			$this->save_sessiondata();
 			//_debug_array($datatable);die;
