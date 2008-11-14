@@ -392,10 +392,10 @@
 							                                            'id' => 'values_combo_box_1',
 							                                            'value'	=> $this->bocommon->select2String($values_combo_box[1])
 							                                      ),
-															 /*array( //div values  combo_box_2
+															 array( //div values  combo_box_2
 							                                            'id' => 'values_combo_box_2',
 							                                            'value'	=> $this->bocommon->select2String($values_combo_box[2])
-							                                      ),*/
+							                                      ),
 							                                array( //div values  combo_box_3
 							                                            'id' => 'values_combo_box_3',
 							                                            'value'	=> $this->bocommon->select2String($values_combo_box[3])
@@ -725,12 +725,17 @@
 					$datatable['headers']['header'][$i]['visible'] 			= true;
 					//$datatable['headers']['header'][$i]['format'] 			= $this->bocommon->translate_datatype_format($uicols['datatype'][$i]);
 					$datatable['headers']['header'][$i]['sortable']			= false;
-					if($uicols['name'][$i]=='priority' || $uicols['name'][$i]=='id' || $uicols['name'][$i]=='assignedto')
+					if($uicols['name'][$i]=='priority' || $uicols['name'][$i]=='id' || $uicols['name'][$i]=='assignedto' || $uicols['name'][$i]=='finnish_date' || $uicols['name'][$i]=='user')
 					{
 						$datatable['headers']['header'][$i]['sortable']			= true;
 						$datatable['headers']['header'][$i]['sort_field']   = $uicols['name'][$i];
 					}
+					if($uicols['name'][$i]=='text_view' || $uicols['name'][$i]=='bgcolor')
+					{
+						$datatable['headers']['header'][$i]['visible'] 			= false;
+					}
 					//$datatable['headers']['header'][$i]['formatter']		= (isset($uicols['formatter'][$i])? $uicols['formatter'][$i]:"");
+					//_debug_array($datatable);die;
 				}
 			}
 
