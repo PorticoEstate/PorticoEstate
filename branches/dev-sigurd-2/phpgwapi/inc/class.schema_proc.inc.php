@@ -119,7 +119,7 @@
 			return True;
 		}
 
-		function ExecuteScripts($aTables, $bOutputHTML=False)
+		function ExecuteScripts($aTables, $bOutputHTML=false)
 		{
 			if(!is_array($aTables) || !IsSet($this->m_odb))
 			{
@@ -129,7 +129,7 @@
 			reset($aTables);
 			$this->m_aTables = $aTables;
 
-			while(list($sTableName, $aTableDef) = each($aTables))
+			foreach ($aTables as $sTableName => $aTableDef)
 			{
 				if($this->CreateTable($sTableName, $aTableDef))
 				{
@@ -162,7 +162,8 @@
 			$this->m_aTables = $aTables;
 
 			reset($this->m_aTables);
-			while(list($sTableName, $aTableDef) = each($this->m_aTables))
+
+			foreach ( $this->m_aTables as $sTableName => $aTableDef)
 			{
 				if($this->DropTable($sTableName))
 				{

@@ -225,7 +225,7 @@
 
 		function GetUCSQL($sFields)
 		{
-			return "UNIQUE($sFields)";
+			return "UNIQUE KEY ($sFields)";
 		}
 
 		function GetIXSQL($sFields, $sTableName = '')
@@ -236,7 +236,7 @@
 			}
 			else
 			{
-				return "INDEX ($sFields)";			
+				return "KEY ($sFields)";			
 			}
 		}
 
@@ -347,7 +347,7 @@
 
 		function DropTable($oProc, &$aTables, $sTableName)
 		{
-			return !!($oProc->m_odb->query("DROP TABLE " . $sTableName, __LINE__, __FILE__));
+			return !!($oProc->m_odb->query("DROP TABLE " . $sTableName, __LINE__, __FILE__, true));
 		}
 
 		function DropColumn($oProc, &$aTables, $sTableName, $aNewTableDef, $sColumnName, $bCopyData = true)
@@ -418,8 +418,8 @@
 					$oProc->m_odb->query($sSequenceSQL, __LINE__, __FILE__);
 				}
 
-				$query = "CREATE TABLE $sTableName ($sTableSQL)";
-				return !!($oProc->m_odb->query($query, __LINE__, __FILE__));
+				$query = "CREATE TABLE $sTableName ($sTableSQL) ENGINE=InnoDB DEFAULT CHARSET=utf8";
+				return !!($oProc->m_odb->query($query, __LINE__, __FILE__, true));
 			}
 
 			return false;
