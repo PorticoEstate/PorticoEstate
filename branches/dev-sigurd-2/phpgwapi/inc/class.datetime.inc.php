@@ -924,7 +924,7 @@
 		* @param int $dow ISO 8601 day of week number
 		* @return string local say of week name
 		*/
-		public static function nr2weekday($selected = 0)
+		public static function nr2weekday($dow = 0)
 		{
 			$dow_list = self::get_dow_fullnames();
 			if ( isset($dow_list[$dow]) )
