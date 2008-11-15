@@ -78,8 +78,9 @@
 			return $domain_info;
 		}
 
-		public function migrate($values,$download_script=true)
+		public function migrate($values,$download_script=false)
 		{
+//_debug_array($GLOBALS['phpgw_domain']);die();
 //			_debug_array($values);
 			$oProc							= createObject('phpgwapi.schema_proc',$GLOBALS['phpgw_info']['server']['db_type']);
 			$oProc->m_odb					= $GLOBALS['phpgw']->db;
@@ -112,15 +113,17 @@
 				$table_def[$table]['ix'] = $tableinfo[3];
 				$table_def[$table]['uc'] = $tableinfo[4];
 			}
+
 //_debug_array($table_def);
 //_debug_array($tables);
-
+			set_time_limit(0);
 			foreach ($values as $domain)
 			{
 				$this->oProc = createObject('phpgwapi.schema_proc',$GLOBALS['phpgw_domain'][$domain]['db_type']);
 				if(!$download_script)
 				{
-					$this->oProc->m_odb           = $GLOBALS['phpgw']->db;
+					$this->oProc->m_odb           = CreateObject('phpgwapi.db');//$GLOBALS['phpgw']->db;
+					$this->oProc->m_odb->Type     = $GLOBALS['phpgw_domain'][$domain]['db_type'];
 					$this->oProc->m_odb->Host     = $GLOBALS['phpgw_domain'][$domain]['db_host'];
 					$this->oProc->m_odb->Database = $GLOBALS['phpgw_domain'][$domain]['db_name'];
 					$this->oProc->m_odb->User     = $GLOBALS['phpgw_domain'][$domain]['db_user'];
@@ -129,16 +132,43 @@
 					$this->oProc->m_odb->connect();
 				}
 
-				$filename = $domain . '_' . $GLOBALS['phpgw_domain'][$domain]['db_name'] . '_' . $GLOBALS['phpgw_domain'][$domain]['db_type'] . '.sql';
-
-				$script = $this->GenerateScripts($table_def, false, true);
 				if($download_script)
 				{
+					$script = $this->GenerateScripts($table_def, false, true);
+					$filename = $domain . '_' . $GLOBALS['phpgw_domain'][$domain]['db_name'] . '_' . $GLOBALS['phpgw_domain'][$domain]['db_type'] . '.sql';
 					$this->download_script($script, $filename);
+				}
+				else
+				{
+					$this->oProc->ExecuteScripts($table_def, true);
+					$this->copy_data($table_def);
 				}
 			}
 		}
 
+		
+		function copy_data($table_def = array())
+		{
+			
+			//$table_def = array('fm_location1' => true);
+			$db = $GLOBALS['phpgw']->db;
+			$db->fetchmode = 'ASSOC';
+			foreach ($table_def as $table => $fd)
+			{
+				if($table=='fm_ecobilagoverf')
+				{
+					continue;
+				}
+				$db->query("SELECT * FROM {$table}");
+				foreach($db->resultSet as $row)
+				{
+					$insert_values = $db->validate_insert(array_values($row));
+					$insert_fields = implode(',', array_keys($row));
+					$this->oProc->m_odb->query("INSERT INTO {$table} ({$insert_fields}) VALUES ({$insert_values})");	
+				}
+			}
+		}
+		
 		private function download_script($script, $filename)
 		{
 			$GLOBALS['phpgw_info']['flags']['noheader'] = true;
