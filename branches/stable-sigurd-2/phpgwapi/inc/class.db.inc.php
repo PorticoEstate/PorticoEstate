@@ -339,16 +339,26 @@
 		*/
 		public function query($sql, $line = '', $file = '', $exec = false)
 		{
+
 			if ( !$this->db )
 			{
 				$this->connect();
+			}
+
+			if(!$exec)
+			{
+				if(preg_match('/(^INSERT INTO|^DELETE FROM|^CREATE TABLE|^DROP TABLE|^ALTER TABLE|^UPDATE)/i', $sql)) // need it for MySQL
+				{
+					$exec = true;
+				}
 			}
 
 			try
 			{
 				if($exec)
 				{
-					return $this->affected_rows = $this->db->exec($sql);
+					$this->affected_rows = $this->db->exec($sql);
+					return true;
 				}
 				else
 				{
@@ -643,12 +653,16 @@
 				{
 					if ( is_numeric($value) )
 					{
-						$insert_value[]	= "$value";
+						$insert_value[]	= $value;
 					}
 					else
 					{
-						$insert_value[]	= "'$value'";
+						$insert_value[]	= "'" . stripslashes($this->db_addslashes($value)) . "'";
 					}
+				}
+				else if (isset($value))
+				{
+					$insert_value[]	= "''";
 				}
 				else
 				{

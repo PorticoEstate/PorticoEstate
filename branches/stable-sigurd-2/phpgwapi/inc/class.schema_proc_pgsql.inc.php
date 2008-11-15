@@ -279,11 +279,11 @@
 
 				if ($sdb->f(5) == 'f')
 				{
-					$null = "'nullable' => True";
+					$null = "'nullable' => False";
 				}
 				else
 				{
-					$null = "'nullable' => False";
+					$null = "'nullable' => True";
 				}
 
 				if ($sdb->f(2) == 'numeric')

@@ -64,7 +64,7 @@
 			{
 				$sel = ' selected';
 			}
-			$out .= "<option value=\"{$key}\">{$domain}</option>\n";
+			$out .= "<option value=\"{$key}\"{$sel}>{$domain}</option>\n";
 		}
 		return $out;
 	}

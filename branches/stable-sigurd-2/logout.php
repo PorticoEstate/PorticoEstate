@@ -30,7 +30,7 @@
 	$verified = $GLOBALS['phpgw']->session->verify();
 	if ($verified)
 	{
-		if ( is_dir("{$GLOBALS['phpgw_info']['server']['temp_dir']}/{$sessionid}") )
+		if ( is_dir("{$GLOBALS['phpgw_info']['server']['temp_dir']}/{$sessionid}") && !empty($session_id) )
 		{
 			$dh = dir("{$GLOBALS['phpgw_info']['server']['temp_dir']}/{$sessionid}");
 			while ( ($file = $dh->read()) !== false )

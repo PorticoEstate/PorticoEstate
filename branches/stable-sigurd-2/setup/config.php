@@ -136,8 +136,6 @@
 				break;
 		}
 
-		print_debug('TZ_OFFSET', $newsettings['tz_offset']);
-
 		$GLOBALS['phpgw_setup']->db->transaction_begin();
 		
 		foreach( $newsettings as $setting => $value ) 
