@@ -359,7 +359,7 @@
 					. intval($setup_info[$appname]['app_order']) . ", "
 					. "'$tables', "
 					. "'{$setup_info[$appname]['version']}')"
-					,__LINE__,__FILE__
+					,__LINE__,__FILE__, true
 				);
 				$this->clear_session_cache();
 			}
