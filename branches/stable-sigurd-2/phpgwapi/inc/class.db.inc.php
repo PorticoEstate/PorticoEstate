@@ -653,11 +653,11 @@
 				{
 					if ( is_numeric($value) )
 					{
-						$insert_value[]	= $value;
+						$insert_value[]	= "'$value'";
 					}
 					else
 					{
-						$insert_value[]	= "'" . stripslashes($this->db_addslashes($value)) . "'";
+						$insert_value[]	= "'" . $this->db_addslashes(stripslashes($value)) . "'"; //in case slashes are already added.
 					}
 				}
 				else if (isset($value))
