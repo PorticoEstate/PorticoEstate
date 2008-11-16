@@ -155,7 +155,7 @@
 			$db->fetchmode = 'ASSOC';
 			foreach ($table_def as $table => $fd)
 			{
-				if($table=='fm_ecobilagoverf')
+				if($table=='fm_ecobilagoverf' || $table== 'phpgw_lang')
 				{
 					continue;
 				}
