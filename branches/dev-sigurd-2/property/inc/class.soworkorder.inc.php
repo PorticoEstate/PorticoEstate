@@ -425,16 +425,20 @@
 			
 			//cramirez.r@ccfirst.com 23/10/08 avoid retrieve data in first time, only render definition for headers (var myColumnDefs)
 		
-			if(!$dry_run)
+			if($dry_run)
 			{
-					if(!$allrows)
-					{
-						$this->db->limit_query($sql . $ordermethod,$start,__LINE__,__FILE__);
-					}
-					else
-					{
-						$this->db->query($sql . $ordermethod,__LINE__,__FILE__);
-					}
+				return array();
+			}
+			else
+			{
+				if(!$allrows)
+				{
+					$this->db->limit_query($sql . $ordermethod,$start,__LINE__,__FILE__);
+				}
+				else
+				{
+					$this->db->query($sql . $ordermethod,__LINE__,__FILE__);
+				}
 			}
 
 			$count_cols_return=count($cols_return);
