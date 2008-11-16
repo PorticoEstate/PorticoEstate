@@ -89,16 +89,6 @@
 
 			$tables = $GLOBALS['phpgw']->db->table_names();
 
-			/* Work out the order of how the tables can be created
-			*/
-			foreach($tables as $tablename)
-			{
-				$ForeignKeys = $GLOBALS['phpgw']->db->MetaForeignKeys($tablename);
-				foreach($ForeignKeys as $table => $keys)
-				{
-				}
-			}
-
 			$setup = createObject('phpgwapi.setup_process');
 
 			$table_def = array();
@@ -112,10 +102,21 @@
 				$table_def[$table]['fk'] = $tableinfo[2];
 				$table_def[$table]['ix'] = $tableinfo[3];
 				$table_def[$table]['uc'] = $tableinfo[4];
+				
+				/* Work out the order of how the tables can be created
+				*/
+				if($tableinfo[2])
+				{
+					foreach ($tableinfo[2] as $ref_set => $ref_fields)
+					{
+						$fk_temp = '$fk = array(' . $ref_fields .');';
+						@eval($fk_temp);
+						$fk_table = array_keys($fk);
+						$ForeignKeys[$table][] = $fk_table[0];
+					}
+				}
 			}
 
-//_debug_array($table_def);
-//_debug_array($tables);
 			set_time_limit(0);
 			foreach ($values as $domain)
 			{
