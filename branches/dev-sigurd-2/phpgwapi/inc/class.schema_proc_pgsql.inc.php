@@ -384,6 +384,7 @@
 				}
 			}
 
+/*
 			$ForeignKeys = $sdc->MetaForeignKeys($sTableName);
 
 			foreach($ForeignKeys as $table => $keys)
@@ -396,6 +397,59 @@
 				}
 				$this->fk[] = $table . "' => array(" . implode(', ',$keystr)  . ')';
 			}
+*/
+
+			$sql_f_keys = "SELECT
+				pc.conname,
+				pg_catalog.pg_get_constraintdef(pc.oid, true) AS consrc,
+				pc.contype,
+				CASE WHEN pc.contype='u' OR pc.contype='p' THEN (
+					SELECT
+						indisclustered
+					FROM
+						pg_catalog.pg_depend pd,
+						pg_catalog.pg_class pl,
+						pg_catalog.pg_index pi
+					WHERE
+						pd.refclassid=pc.tableoid
+						AND pd.refobjid=pc.oid
+						AND pd.objid=pl.oid
+						AND pl.oid=pi.indexrelid
+				) ELSE
+					NULL
+				END AS indisclustered
+			FROM
+				pg_catalog.pg_constraint pc
+			WHERE
+				pc.conrelid = (SELECT oid FROM pg_catalog.pg_class WHERE relname='$sTableName'
+					AND relnamespace = (SELECT oid FROM pg_catalog.pg_namespace
+					WHERE nspname='public'))
+			ORDER BY
+				1";
+
+			$oProc->m_odb->query($sql_f_keys, __LINE__, __FILE__);
+			while ($oProc->m_odb->next_record())
+			{
+				if($oProc->m_odb->f('contype') == 'f')
+				{
+					$f_temp = preg_split("/FOREIGN KEY|REFERENCES|[()]/",$oProc->m_odb->f('consrc'));
+					$f_temp_primary = explode(', ',$f_temp[2]);
+					$f_temp_foreign = explode(', ',$f_temp[5]);
+
+					$keystr = '';
+					for ($i=0;$i<count($f_temp_primary);$i++)
+					{
+						$keystr[] = "'" . $f_temp_primary[$i] . "' => '" . $f_temp_foreign[$i] . "'";
+					}				
+					
+					$this->fk[] = "'" . trim($f_temp[4]) . "' => array(" . implode(', ',$keystr)  . ')';
+				}
+			}
+			unset($keystr);
+			unset($f_temp);
+			unset($f_temp_primary);
+			unset($f_temp_foreign);
+
 
 			$metaindexes = $sdc->metaindexes($sTableName);
 

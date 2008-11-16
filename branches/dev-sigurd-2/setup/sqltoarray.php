@@ -105,7 +105,7 @@
 		}
 		elseif($fk && !empty($fk))
 		{
-			$GLOBALS['setup_tpl']->set_var('fks', "'" . $fk[0]);
+			$GLOBALS['setup_tpl']->set_var('fks', $fk[0]);
 		}
 		else
 		{
