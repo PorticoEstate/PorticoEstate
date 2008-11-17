@@ -257,8 +257,8 @@
 
 			$uicols=$this->bo->uicols;
 
-//_debug_array($uicols);
-//_debug_array($ticket_list);
+//_debug_array($uicols);die;
+//_debug_array($ticket_list);die;
 			if(is_array($ticket_list))
 			{
 				$status['X'] = array
@@ -620,6 +620,7 @@
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('list' => $data));
 		//	$GLOBALS['phpgw']->xslttpl->pp();
+			//_debug_array($data);die;
 			$this->save_sessiondata();
 		}
 
