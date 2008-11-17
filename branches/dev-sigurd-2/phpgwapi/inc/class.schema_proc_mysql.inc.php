@@ -63,6 +63,9 @@
 				case 'auto':
 					$sTranslated = 'int(11) auto_increment';
 					break;
+				case 'bool':
+					$sTranslated = 'bool';
+					break;
 				case 'blob':
 					$sTranslated = 'blob';
 					break;

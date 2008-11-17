@@ -88,6 +88,8 @@
 			$GLOBALS['phpgw_setup']->oProc	= $oProc;
 
 			$tables = $GLOBALS['phpgw']->db->table_names();
+			
+//			$tables = array('fm_entity_history');
 
 			$setup = createObject('phpgwapi.setup_process');
 
@@ -95,6 +97,8 @@
 			foreach($tables as $table)
 			{
 				$tableinfo = $setup->sql_to_array($table);
+//_debug_array($tableinfo);
+
 				$fd_temp = '$fd = array(' . str_replace("\t",'',$tableinfo[0]) .');';
 				@eval($fd_temp);
 				$table_def[$table]['fd'] = $fd;
@@ -102,7 +106,8 @@
 				$table_def[$table]['fk'] = $tableinfo[2];
 				$table_def[$table]['ix'] = $tableinfo[3];
 				$table_def[$table]['uc'] = $tableinfo[4];
-				
+//_debug_array($table_def);				
+//die();
 				/* Work out the order of how the tables can be created
 				*/
 				if($tableinfo[2])
