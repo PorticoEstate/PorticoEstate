@@ -26,6 +26,11 @@
 		public $userlang = 'en';
 
 		/**
+		* @var bool $lang_is_cached break off the function populate_cache
+		*/
+		public $lang_is_cached = false;
+
+		/**
 		* @var array $lang the translated strings - speeds look up
 		*/
 		private $lang = array();
@@ -66,6 +71,7 @@
 			if ( is_array($lang) )
 			{
 				$this->lang = $lang;
+				$this->lang_is_cached = true;
 				return;
 			}
 			$this->lang = array();
@@ -132,6 +138,10 @@
 		*/
 		public function populate_cache()
 		{
+			if($this->lang_is_cached)
+			{
+				return;
+			}
 			$sql = "SELECT * from phpgw_lang ORDER BY app_name DESC";
 			$GLOBALS['phpgw']->db->query($sql,__LINE__,__FILE__);
 			while ($GLOBALS['phpgw']->db->next_record())
