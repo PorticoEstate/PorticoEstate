@@ -202,8 +202,6 @@
 				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=> 1, 'acl_location'=> $this->acl_location));
 			}
 
-			$GLOBALS['phpgw']->js->set_onload('document.search.query.focus();');
-
 			if(phpgw::get_var('edit_status', 'bool', 'GET'))
 			{
 				if(!$this->acl_edit)
@@ -217,9 +215,6 @@
 				$receipt = $so2->update_status(array('status'=>$new_status),$id);
 				$GLOBALS['phpgw']->session->appsession('receipt','property',$receipt);
 			}
-
-			//$GLOBALS['phpgw']->xslttpl->add_file(array('tts', 'nextmatchs'));
-
 
 			$second_display = phpgw::get_var('second_display', 'bool');
 
@@ -253,7 +248,11 @@
 
 
 
-
+			$lookup 		= phpgw::get_var('lookup', 'bool');
+			$from 			= phpgw::get_var('from');
+			$start_date 		= urldecode(phpgw::get_var('start_date'));
+			$end_date 		= urldecode(phpgw::get_var('end_date'));
+			$allrows  = phpgw::get_var('allrows', 'bool');
 
 
 
@@ -270,16 +269,45 @@
  	                'status'        		=> $this->status
    				));
 
-   				$datatable['config']['base_java_url'] = "menuaction:'property.uitts.index',"
-	    											."type_id:'{$type_id}',"
+   				/*$datatable['config']['base_java_url'] = "menuaction:'property.uitts.index',"
 	    											."query:'{$this->query}',"
  	                        						."district_id: '{$this->district_id}',"
  	                        						."part_of_town_id:'{$this->part_of_town_id}',"
-						 	                        ."lookup:'{$lookup}',"
- 	                        						."lookup_tenant:'{$lookup_tenant}',"
-						 	                        ."lookup_name:'{$lookup_name}',"
-						 	                        ."cat_id:'{$this->cat_id}',"
-			                						."status:'{$this->status}'";
+ 	                        						."cat_id:'{$this->cat_id}',"
+			                						."status:'{$this->status}'";*/
+
+				$datatable['config']['base_java_url'] = "menuaction:'property.uitts.index',"
+	    											."second_display:1,"
+ 	                        						."sort: '',"
+ 	                        						."order: '',"
+ 	                        						."cat_id:'{$this->cat_id}',"
+			                						."filter: '',"
+ 	                        						."user_filter: '',"
+ 	                        						."query: '',"
+ 	                        						."district_id: '',"
+ 	                        						."start_date: '{$start_date}',"
+ 	                        						."end_date: '{$end_date}',"
+ 	                        						."allrows:0";
+
+
+			$link_data = array
+			(
+				'menuaction'	=> 'property.uitts.index',
+				'second_display'=> true,
+				'sort'		=> $this->sort,
+				'order'		=> $this->order,
+				'cat_id'	=> $this->cat_id,
+				'filter'	=> $this->filter,
+				'user_filter'	=> $this->user_filter,
+				'query'		=> $this->query,
+				'district_id'	=> $this->district_id,
+				'start_date'	=> $start_date,
+				'end_date'	=> $end_date,
+				'allrows'	=> $this->allrows
+			);
+
+
+			$group_filters = 'select';
 
 			$values_combo_box[0] = $this->cats->formatted_xslt_list(array('format'=>'filter','selected' => $this->cat_id,'globals' => True));
 			$default_value = array ('cat_id'=>'','name'=> lang('no category'));
@@ -289,9 +317,9 @@
 			$default_value = array ('id'=>'','name'=>lang('no district'));
 			array_unshift ($values_combo_box[1],$default_value);
 
-			/*$values_combo_box[2]  = $this->bocommon->select_category_list(array('format'=>'filter','selected' => $this->wo_hour_cat_id,'type' =>'wo_hours','order'=>'id'));
-			$default_value = array ('id'=>'','name'=>lang('no hour category'));
-			array_unshift ($values_combo_box[2],$default_value);*/
+			$values_combo_box[2]  = $this->bo->filter(array('format' => $group_filters, 'filter'=> $this->filter,'default' => 'O'));
+			$default_value = array ('id'=>'','name'=>lang('Open'));
+			array_unshift ($values_combo_box[2],$default_value);
 
 			$values_combo_box[3]  = $this->bocommon->get_user_list_right2('filter',2,$this->filter,$this->acl_location);
 			$default_value = array ('id'=>'','name'=>lang('no user'));
@@ -306,9 +334,12 @@
 				'action'	=> $GLOBALS['phpgw']->link('/index.php',
 						array(
 							'menuaction' 		=> 'property.uitts.index',
+							'second_display'       => $second_display,
 							'district_id'       => $this->district_id,
 							'part_of_town_id'   => $this->part_of_town_id,
-							'cat_id'        	=> $this->cat_id
+							'cat_id'        	=> $this->cat_id,
+							'status'			=> $this->status
+
 						)
 					),
 				'fields'	=> array(
@@ -342,7 +373,7 @@
                                                     'id'  => 'btn_data_search',
                                                     'url' => "Javascript:window.open('".$GLOBALS['phpgw']->link('/index.php',
                                                            array(
-                                                               'menuaction' => 'property.uitts.date_search'))."','','width=350,height=250')",
+                                                               'menuaction' => 'property.uiproject.date_search'))."','','width=350,height=250')",
                                                      'value' => lang('Date search')
                                                     ),
 			                                        array( //hidden start_date
@@ -417,7 +448,7 @@
 				$uicols['name'][4] = 'subject';
 				$uicols['name'][5] = 'location_code';
 				$uicols['name'][6] = 'address';
-				$uicols['name'][7] = 'date';
+				$uicols['name'][7] = 'timestampopened';
 				$uicols['name'][8] = 'finnish_date';
 				$uicols['name'][9] = 'delay';
 				$uicols['name'][10] = 'user';
@@ -428,13 +459,8 @@
 				$uicols['name'][15] = 'text_view';
 				$uicols['name'][16] = 'status';
 
-				//_debug_array($uicols);die;
-
 				$count_uicols_name = count($uicols['name']);
-				//_debug_array($count_uicols_name);die;
 
-//_debug_array($count_uicols_name);die;
-//_debug_array($ticket_list);die;
 			$j = 0;
 			$k = 0;
 			if(is_array($ticket_list))
@@ -534,6 +560,17 @@
 									$datatable['rows']['row'][$j]['column'][$k]['name']				= $uicols['name'][$k];
 									$datatable['rows']['row'][$j]['column'][$k]['value']			= $ticket[$uicols['name'][$k]];
 								}
+								if($uicols['name'][$k] == 'id' || $uicols['name'][$k] == 'timestampopened')
+								{
+									$datatable['rows']['row'][$j]['column'][$k]['format'] 			= 'link';
+									$datatable['rows']['row'][$j]['column'][$k]['link']		=	$GLOBALS['phpgw']->link('/index.php',array
+										(
+											'menuaction'	=> 'property.uitts.view',
+											'id'			=> $ticket['id']
+										));
+									$datatable['rows']['row'][$j]['column'][$k]['value']		= $ticket[$uicols['name'][$k]];
+									$datatable['rows']['row'][$j]['column'][$k]['target']	= '_blank';
+								}
 
 
 					}
@@ -562,18 +599,9 @@
 						'text_edit_status'		=> $text_edit_status,
 					);*/
 
-
-
-
-
 					$j++;
-
-
-
 				}
 			}
-
-
 							$datatable['rowactions']['action'][] = array(
 								'statustext' 			=> lang('view the project'),
 								'text'		=> lang('view'),
@@ -584,10 +612,13 @@
 										))
 							);
 
-
-			//_debug_array($datatable);die;
-
-//_debug_array($content);
+							$datatable['rowactions']['action'][] = array(
+												'text' 			=> lang('add'),
+												'action'		=> $GLOBALS['phpgw']->link('/index.php',array
+																(
+																	'menuaction'	=> 'property.uitts.add'
+																))
+										);
 
 			/*$table_header[] = array
 			(
@@ -723,19 +754,17 @@
 					$datatable['headers']['header'][$i]['name'] 			= $uicols['name'][$i];
 					$datatable['headers']['header'][$i]['text'] 			= $uicols['name'][$i];
 					$datatable['headers']['header'][$i]['visible'] 			= true;
-					//$datatable['headers']['header'][$i]['format'] 			= $this->bocommon->translate_datatype_format($uicols['datatype'][$i]);
 					$datatable['headers']['header'][$i]['sortable']			= false;
-					if($uicols['name'][$i]=='priority' || $uicols['name'][$i]=='id' || $uicols['name'][$i]=='assignedto' || $uicols['name'][$i]=='finnish_date' || $uicols['name'][$i]=='user')
+					if($uicols['name'][$i]=='priority' || $uicols['name'][$i]=='id' || $uicols['name'][$i]=='assignedto' || $uicols['name'][$i]=='finnish_date'|| $uicols['name'][$i]=='user')
 					{
 						$datatable['headers']['header'][$i]['sortable']			= true;
 						$datatable['headers']['header'][$i]['sort_field']   = $uicols['name'][$i];
 					}
-					if($uicols['name'][$i]=='text_view' || $uicols['name'][$i]=='bgcolor')
+					if($uicols['name'][$i]=='text_view' || $uicols['name'][$i]=='bgcolor' || $uicols['name'][$i]=='child_date' || $uicols['name'][$i]== 'link_view' || $uicols['name'][$i]=='lang_view_statustext')
 					{
 						$datatable['headers']['header'][$i]['visible'] 			= false;
+						$datatable['headers']['header'][$i]['format'] 			= 'hidden';
 					}
-					//$datatable['headers']['header'][$i]['formatter']		= (isset($uicols['formatter'][$i])? $uicols['formatter'][$i]:"");
-					//_debug_array($datatable);die;
 				}
 			}
 
@@ -829,8 +858,6 @@
 			}*/
 
 			//$GLOBALS['phpgw']->js->validate_file('overlib','overlib','property');
-
-
 
 			/*$data = array
 			(
@@ -1016,6 +1043,7 @@
 			// Prepare CSS Style
 		  	$GLOBALS['phpgw']->css->validate_file('datatable');
 		  	$GLOBALS['phpgw']->css->validate_file('property');
+		  	$GLOBALS['phpgw']->css->add_external_file('property/templates/base/css/property.css');
 			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/datatable/assets/skins/sam/datatable.css');
 
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
