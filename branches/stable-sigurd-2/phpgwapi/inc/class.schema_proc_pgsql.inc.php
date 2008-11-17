@@ -178,6 +178,7 @@
 				case 'date':
 					$sTranslated = "'type' => '$sType'";
 					break;
+				case 'bool':
 				case 'boolean':
 					$sTranslated = "'type' => 'bool'";
 					break;
@@ -329,7 +330,15 @@
 					}
 					else
 					{
-						$default = "'default' => '" . str_replace(array('::bpchar','::character varying','now()',"('now'::text)::timestamp(6) without time zone"),array('','','current_timestamp','current_timestamp'),$sdc->f(0));
+						if(preg_match('/(now()|::timestamp(6) without time zone$|::timestamp without time zone$)/i', $sdc->f(0)))
+						{
+							$default =  "'default' =>'current_timestamp'";
+						}
+						else
+						{
+							$default = "'default' => '" . str_replace(array('::bpchar','::character varying'),array('',''),$sdc->f(0));						
+						}
+						
 						// For db-functions - add an apos
 						if(substr($default,-1)!= "'")
 						{
