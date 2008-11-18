@@ -79,8 +79,8 @@
 			$this->query				= $this->bo->query;
 			$this->sort					= $this->bo->sort;
 			$this->order				= $this->bo->order;
-			$this->filter				= $this->bo->filter;
-			$this->user_filter			= $this->bo->user_filter;
+			$this->status_id				= $this->bo->status_id;
+			$this->user_id			= $this->bo->user_id;
 			$this->cat_id				= $this->bo->cat_id;
 			$this->district_id			= $this->bo->district_id;
 			$this->allrows				= $this->bo->allrows;
@@ -96,8 +96,8 @@
 				'query'		=> $this->query,
 				'sort'		=> $this->sort,
 				'order'		=> $this->order,
-				'filter'	=> $this->filter,
-				'user_filter'	=> $this->user_filter,
+				'filter'	=> $this->status_id,
+				'user_id'	=> $this->user_id,
 				'cat_id'	=> $this->cat_id,
 				'district_id'	=> $this->district_id,
 				'allrows'	=> $this->allrows,
@@ -231,8 +231,8 @@
 
 			if ($default_status && !$second_display)
 			{
-				$this->bo->filter	= $default_status;
-				$this->filter	= $default_status;
+				$this->bo->status_id	= $default_status;
+				$this->status_id	= $default_status;
 			}
 
 			$bgcolor_array[1]	= '#dadada';
@@ -278,16 +278,16 @@
 
 				$datatable['config']['base_java_url'] = "menuaction:'property.uitts.index',"
 	    											."second_display:1,"
- 	                        						."sort: '',"
- 	                        						."order: '',"
+ 	                        						."sort: '{$this->sort}',"
+ 	                        						."order: '{$this->order}',"
  	                        						."cat_id:'{$this->cat_id}',"
-			                						."filter: '',"
- 	                        						."user_filter: '',"
- 	                        						."query: '',"
- 	                        						."district_id: '',"
+			                						."status_id: '{$this->status_id}',"
+ 	                        						."user_id: '{$this->user_id}',"
+ 	                        						."query: '{$this->query}',"
+ 	                        						."district_id: '{$this->district_id}',"
  	                        						."start_date: '{$start_date}',"
  	                        						."end_date: '{$end_date}',"
- 	                        						."allrows:0";
+ 	                        						."allrows:'{$this->allrows}'";
 
 
 			$link_data = array
@@ -297,8 +297,8 @@
 				'sort'		=> $this->sort,
 				'order'		=> $this->order,
 				'cat_id'	=> $this->cat_id,
-				'filter'	=> $this->filter,
-				'user_filter'	=> $this->user_filter,
+				'status_id'	=> $this->status_id,
+				'user_id'	=> $this->user_id,
 				'query'		=> $this->query,
 				'district_id'	=> $this->district_id,
 				'start_date'	=> $start_date,
@@ -317,11 +317,11 @@
 			$default_value = array ('id'=>'','name'=>lang('no district'));
 			array_unshift ($values_combo_box[1],$default_value);
 
-			$values_combo_box[2]  = $this->bo->filter(array('format' => $group_filters, 'filter'=> $this->filter,'default' => 'O'));
+			$values_combo_box[2]  = $this->bo->filter(array('format' => $group_filters, 'filter'=> $this->status_id,'default' => 'O'));
 			$default_value = array ('id'=>'','name'=>lang('Open'));
 			array_unshift ($values_combo_box[2],$default_value);
 
-			$values_combo_box[3]  = $this->bocommon->get_user_list_right2('filter',2,$this->filter,$this->acl_location);
+			$values_combo_box[3]  = $this->bocommon->get_user_list_right2('filter',2,$this->status_id,$this->acl_location);
 			$default_value = array ('id'=>'','name'=>lang('no user'));
 			array_unshift ($values_combo_box[3],$default_value);
 
@@ -514,8 +514,8 @@
 						'sort'				=> $this->sort,
 						'order'				=> $this->order,
 						'cat_id'			=> $this->cat_id,
-						'filter'			=> $this->filter,
-						'user_filter'		=> $this->user_filter,
+						'filter'			=> $this->status_id,
+						'user_id'		=> $this->user_id,
 						'query'				=> $this->query,
 						'district_id'		=> $this->district_id,
 						'allrows'			=> $this->allrows
@@ -629,8 +629,8 @@
 											'order'	=> $this->order,
 											'extra'	=> array('menuaction' => 'property.uitts.index',
 																	'cat_id'	=>$this->cat_id,
-																	'filter'	=>$this->filter,
-																	'user_filter'	=>$this->user_filter,
+																	'filter'	=>$this->status_id,
+																	'user_id'	=>$this->user_id,
 																	'district_id'	=> $this->district_id,
 																	'query'		=>$this->query,
 																	'second_display'	=> true,
@@ -650,8 +650,8 @@
 											'order'	=> $this->order,
 											'extra'	=> array('menuaction' => 'property.uitts.index',
 																	'cat_id'	=>$this->cat_id,
-																	'filter'	=>$this->filter,
-																	'user_filter'	=>$this->user_filter,
+																	'filter'	=>$this->status_id,
+																	'user_id'	=>$this->user_id,
 																	'district_id'	=> $this->district_id,
 																	'query'		=>$this->query,
 																	'second_display'	=> true,
@@ -677,8 +677,8 @@
 											'order'	=> $this->order,
 											'extra'	=> array('menuaction' => 'property.uitts.index',
 																	'cat_id'	=>$this->cat_id,
-																	'filter'	=>$this->filter,
-																	'user_filter'	=>$this->user_filter,
+																	'filter'	=>$this->status_id,
+																	'user_id'	=>$this->user_id,
 																	'district_id'	=> $this->district_id,
 																	'query'		=>$this->query,
 																	'second_display'	=> true,
@@ -695,8 +695,8 @@
 											'order'	=> $this->order,
 											'extra'	=> array('menuaction'	=> 'property.uitts.index',
 																	'cat_id'	=>$this->cat_id,
-																	'filter'	=>$this->filter,
-																	'user_filter'	=>$this->user_filter,
+																	'filter'	=>$this->status_id,
+																	'user_id'	=>$this->user_id,
 																	'district_id'	=> $this->district_id,
 																	'query'		=>$this->query,
 																	'second_display'	=> true,
@@ -712,8 +712,8 @@
 											'order'	=> $this->order,
 											'extra' => array('menuaction'	=> 'property.uitts.index',
 																	'cat_id'	=>$this->cat_id,
-																	'filter'	=>$this->filter,
-																	'user_filter'	=>$this->user_filter,
+																	'filter'	=>$this->status_id,
+																	'user_id'	=>$this->user_id,
 																	'district_id'	=> $this->district_id,
 																	'query'		=>$this->query,
 																	'second_display'	=> true,
@@ -729,8 +729,8 @@
 											'order'	=> $this->order,
 											'extra'	=> array('menuaction'	=> 'property.uitts.index',
 																	'cat_id'	=> $this->cat_id,
-																	'filter'	=> $this->filter,
-																	'user_filter'	=> $this->user_filter,
+																	'filter'	=> $this->status_id,
+																	'user_id'	=> $this->user_id,
 																	'district_id'	=> $this->district_id,
 																	'query'		=> $this->query,
 																	'second_display'=> true,
@@ -789,8 +789,8 @@
 				'sort'		=> $this->sort,
 				'order'		=> $this->order,
 				'cat_id'	=> $this->cat_id,
-				'filter'	=> $this->filter,
-				'user_filter'	=> $this->user_filter,
+				'filter'	=> $this->status_id,
+				'user_id'	=> $this->user_id,
 				'query'		=> $this->query,
 				'district_id'	=> $this->district_id,
 				'start_date'	=> $start_date,
@@ -830,8 +830,8 @@
 				'sort'		=> $this->sort,
 				'order'		=> $this->order,
 				'cat_id'	=> $this->cat_id,
-				'filter'	=> $this->filter,
-				'user_filter'	=> $this->user_filter,
+				'filter'	=> $this->status_id,
+				'user_id'	=> $this->user_id,
 				'query'		=> $this->query,
 				'district_id'	=> $this->district_id,
 				'allrows'	=> $this->allrows,
@@ -890,7 +890,7 @@
 
 				'select_action'					=> $GLOBALS['phpgw']->link('/index.php',$link_data),
 				'filter_name'					=> 'filter',
-				'filter_list'					=> $this->bo->filter(array('format' => $group_filters, 'filter'=> $this->filter,'default' => 'O')),
+				'filter_list'					=> $this->bo->filter(array('format' => $group_filters, 'filter'=> $this->status_id,'default' => 'O')),
 				'lang_show_all'					=> lang('Open'),
 				'lang_filter_statustext'		=> lang('Select the filter. To show all entries select SHOW ALL'),
 				'lang_searchfield_statustext'	=> lang('Enter the search string. To show all entries, empty this field and press the SUBMIT button again'),
@@ -907,9 +907,9 @@
 				'select_district_name'			=> 'district_id',
 
 				'lang_user_statustext'			=> lang('Assigned to'),
-				'select_user_name'				=> 'user_filter',
+				'select_user_name'				=> 'user_id',
 				'lang_no_user'					=> lang('No user'),
-				'user_list'						=> $this->bocommon->get_user_list_right2($group_filters,4,$this->user_filter,$this->acl_location,'',$default=''),
+				'user_list'						=> $this->bocommon->get_user_list_right2($group_filters,4,$this->user_id,$this->acl_location,'',$default=''),
 				'allow_edit_status'				=> isset($GLOBALS['phpgw_info']['user']['preferences']['property']['tts_status_link']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['tts_status_link'] ? $GLOBALS['phpgw_info']['user']['preferences']['property']['tts_status_link']:''
 			);*/
 			//path for property.js
@@ -1086,8 +1086,8 @@
 
 			if ($default_status && !$second_display)
 			{
-				$this->bo->filter	= $default_status;
-				$this->filter	= $default_status;
+				$this->bo->status_id	= $default_status;
+				$this->status_id	= $default_status;
 			}
 
 			$bgcolor['1']	= '#dadada';
@@ -1149,8 +1149,8 @@
 											'order'	=> $this->order,
 											'extra'	=> array('menuaction' => 'property.uitts.index',
 																	'cat_id'	=>$this->cat_id,
-																	'filter'	=>$this->filter,
-																	'user_filter'	=>$this->user_filter,
+																	'filter'	=>$this->status_id,
+																	'user_id'	=>$this->user_id,
 																	'district_id'	=> $this->district_id,
 																	'query'		=>$this->query,
 																	'second_display'	=> true,
@@ -1170,8 +1170,8 @@
 											'order'	=> $this->order,
 											'extra'	=> array('menuaction' => 'property.uitts.index',
 																	'cat_id'	=>$this->cat_id,
-																	'filter'	=>$this->filter,
-																	'user_filter'	=>$this->user_filter,
+																	'filter'	=>$this->status_id,
+																	'user_id'	=>$this->user_id,
 																	'district_id'	=> $this->district_id,
 																	'query'		=>$this->query,
 																	'second_display'	=> true,
@@ -1197,8 +1197,8 @@
 											'order'	=> $this->order,
 											'extra'	=> array('menuaction' => 'property.uitts.index',
 																	'cat_id'	=>$this->cat_id,
-																	'filter'	=>$this->filter,
-																	'user_filter'	=>$this->user_filter,
+																	'filter'	=>$this->status_id,
+																	'user_id'	=>$this->user_id,
 																	'district_id'	=> $this->district_id,
 																	'query'		=>$this->query,
 																	'second_display'	=> true,
@@ -1215,8 +1215,8 @@
 											'order'	=> $this->order,
 											'extra'	=> array('menuaction'	=> 'property.uitts.index',
 																	'cat_id'	=>$this->cat_id,
-																	'filter'	=>$this->filter,
-																	'user_filter'	=>$this->user_filter,
+																	'filter'	=>$this->status_id,
+																	'user_id'	=>$this->user_id,
 																	'district_id'	=> $this->district_id,
 																	'query'		=>$this->query,
 																	'second_display'	=> true,
@@ -1232,8 +1232,8 @@
 											'order'	=> $this->order,
 											'extra' => array('menuaction'	=> 'property.uitts.index',
 																	'cat_id'	=>$this->cat_id,
-																	'filter'	=>$this->filter,
-																	'user_filter'	=>$this->user_filter,
+																	'filter'	=>$this->status_id,
+																	'user_id'	=>$this->user_id,
 																	'district_id'	=> $this->district_id,
 																	'query'		=>$this->query,
 																	'second_display'	=> true,
@@ -1249,8 +1249,8 @@
 											'order'	=> $this->order,
 											'extra'	=> array('menuaction'	=> 'property.uitts.index',
 																	'cat_id'	=> $this->cat_id,
-																	'filter'	=> $this->filter,
-																	'user_filter'	=> $this->user_filter,
+																	'filter'	=> $this->status_id,
+																	'user_id'	=> $this->user_id,
 																	'district_id'	=> $this->district_id,
 																	'query'		=> $this->query,
 																	'second_display'=> true,
@@ -1285,8 +1285,8 @@
 				'sort'				=> $this->sort,
 				'order'				=> $this->order,
 				'cat_id'			=> $this->cat_id,
-				'filter'			=> $this->filter,
-				'user_filter'		=> $this->user_filter,
+				'filter'			=> $this->status_id,
+				'user_id'		=> $this->user_id,
 				'query'				=> $this->query,
 				'district_id'		=> $this->district_id,
 				'start_date'		=> $start_date,
@@ -1324,8 +1324,8 @@
 				'sort'				=> $this->sort,
 				'order'				=> $this->order,
 				'cat_id'			=> $this->cat_id,
-				'filter'			=> $this->filter,
-				'user_filter'		=> $this->user_filter,
+				'filter'			=> $this->status_id,
+				'user_id'		=> $this->user_id,
 				'query'				=> $this->query,
 				'district_id'		=> $this->district_id,
 				'allrows'			=> $this->allrows,
@@ -1364,7 +1364,7 @@
 
 				'select_action'					=> $GLOBALS['phpgw']->link('/index.php',$link_data),
 				'filter_name'					=> 'filter',
-				'filter_list'					=> $this->bo->filter(array('format' => 'filter', 'filter'=> $this->filter,'default' => 'open')),
+				'filter_list'					=> $this->bo->filter(array('format' => 'filter', 'filter'=> $this->status_id,'default' => 'open')),
 				'lang_show_all'					=> lang('Open'),
 				'lang_filter_statustext'		=> lang('Select the filter. To show all entries select SHOW ALL'),
 				'lang_searchfield_statustext'	=> lang('Enter the search string. To show all entries, empty this field and press the SUBMIT button again'),
