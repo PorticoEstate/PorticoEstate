@@ -203,14 +203,14 @@
 			return $this->bocommon->select_list($selected,$key_location_entries);
 		}
 
-		function read($start_date='',$end_date='',$allrows='')
+		function read($data = array())
 		{
-			$start_date	= $this->bocommon->date_to_timestamp($start_date);
-			$end_date	= $this->bocommon->date_to_timestamp($end_date);
+			$start_date	= $this->bocommon->date_to_timestamp($data['start_date']);
+			$end_date	= $this->bocommon->date_to_timestamp($data['end_date']);
 
 			$project = $this->so->read(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
 											'filter' => $this->filter,'cat_id' => $this->cat_id,'status_id' => $this->status_id,'wo_hour_cat_id' => $this->wo_hour_cat_id,
-											'start_date'=>$start_date,'end_date'=>$end_date,'allrows'=>$allrows));
+											'start_date'=>$start_date,'end_date'=>$end_date,'allrows'=>$data['allrows'],'dry_run' => $data['dry_run']));
 			$this->total_records = $this->so->total_records;
 
 			$dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];

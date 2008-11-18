@@ -108,7 +108,7 @@
 		{
 			$start_date = urldecode(phpgw::get_var('start_date'));
 			$end_date 	= urldecode(phpgw::get_var('end_date'));
-			$list 		= $this->bo->read($start_date,$end_date,$allrows=true);
+			$list 		= $this->bo->read(array('start_date' => $start_date, 'end_date' => $end_date, 'allrows' => true));
 			$uicols	= $this->bo->uicols;
 			$this->bocommon->download($list,$uicols['name'],$uicols['descr'],$uicols['input_type']);
 		}
@@ -123,8 +123,9 @@
 
 			$lookup 		= phpgw::get_var('lookup', 'bool');
 			$from 			= phpgw::get_var('from');
-			$start_date 		= urldecode(phpgw::get_var('start_date'));
+			$start_date 	= urldecode(phpgw::get_var('start_date'));
 			$end_date 		= urldecode(phpgw::get_var('end_date'));
+			$dry_run		= false;
 
 			$datatable = array();
 
@@ -152,154 +153,151 @@
 						 	                        ."lookup_name:'{$lookup_name}',"
 						 	                        ."cat_id:'{$this->cat_id}',"
 			                						."status:'{$this->status}'";
-			}
 
-			$link_data = array
-			(
-				'menuaction'	=> 'property.uiproject.index',
-						'sort'			=>$this->sort,
-						'order'			=>$this->order,
-						'cat_id'		=>$this->cat_id,
-						'district_id'		=>$this->district_id,
-						'filter'		=>$this->filter,
-						'status_id'		=>$this->status_id,
-						'lookup'		=>$lookup,
-						'from'			=>$from,
-						'query'			=>$this->query,
-						'start_date'		=>$start_date,
-						'end_date'		=>$end_date,
-						'wo_hour_cat_id'	=>$this->wo_hour_cat_id,
-			);
+				$link_data = array
+				(
+					'menuaction'	=> 'property.uiproject.index',
+							'sort'			=>$this->sort,
+							'order'			=>$this->order,
+							'cat_id'		=>$this->cat_id,
+							'district_id'		=>$this->district_id,
+							'filter'		=>$this->filter,
+							'status_id'		=>$this->status_id,
+							'lookup'		=>$lookup,
+							'from'			=>$from,
+							'query'			=>$this->query,
+							'start_date'		=>$start_date,
+							'end_date'		=>$end_date,
+							'wo_hour_cat_id'	=>$this->wo_hour_cat_id,
+				);
 
+				$values_combo_box[0] = $this->cats->formatted_xslt_list(array('format'=>'filter','selected' => $this->cat_id,'globals' => True));
+				$default_value = array ('cat_id'=>'','name'=> lang('no category'));
+				array_unshift ($values_combo_box[0]['cat_list'],$default_value);
 
-			$values_combo_box[0] = $this->cats->formatted_xslt_list(array('format'=>'filter','selected' => $this->cat_id,'globals' => True));
-			$default_value = array ('cat_id'=>'','name'=> lang('no category'));
-			array_unshift ($values_combo_box[0]['cat_list'],$default_value);
+				$values_combo_box[1]  = $this->bo->select_status_list('filter',$this->status_id);
+				$default_value = array ('id'=>'','name'=>lang('no status'));
+				array_unshift ($values_combo_box[1],$default_value);
 
+				$values_combo_box[2]  = $this->bocommon->select_category_list(array('format'=>'filter','selected' => $this->wo_hour_cat_id,'type' =>'wo_hours','order'=>'id'));
+				$default_value = array ('id'=>'','name'=>lang('no hour category'));
+				array_unshift ($values_combo_box[2],$default_value);
 
-			$values_combo_box[1]  = $this->bo->select_status_list('filter',$this->status_id);
-			$default_value = array ('id'=>'','name'=>lang('no status'));
-			array_unshift ($values_combo_box[1],$default_value);
+				$values_combo_box[3]  = $this->bocommon->get_user_list_right2('filter',2,$this->filter,$this->acl_location);
+				$default_value = array ('id'=>'','name'=>lang('no user'));
+				array_unshift ($values_combo_box[3],$default_value);
 
-
-			$values_combo_box[2]  = $this->bocommon->select_category_list(array('format'=>'filter','selected' => $this->wo_hour_cat_id,'type' =>'wo_hours','order'=>'id'));
-			$default_value = array ('id'=>'','name'=>lang('no hour category'));
-			array_unshift ($values_combo_box[2],$default_value);
-
-			$values_combo_box[3]  = $this->bocommon->get_user_list_right2('filter',2,$this->filter,$this->acl_location);
-			$default_value = array ('id'=>'','name'=>lang('no user'));
-			array_unshift ($values_combo_box[3],$default_value);
-
-			$datatable['actions']['form'] = array(
-			array(
-				'action'	=> $GLOBALS['phpgw']->link('/index.php',
-						array(
-							'menuaction' 		=> 'property.uiproject.index',
-							'district_id'       => $this->district_id,
-							'part_of_town_id'   => $this->part_of_town_id,
-							'lookup'        	=> $lookup,
-							'cat_id'        	=> $this->cat_id,
-						)
-					),
-				'fields'	=> array(
-                                    'field' => array(
-			                                        array( //boton 	CATEGORY
-			                                            'id' => 'btn_cat_id',
-			                                            'name' => 'cat_id',
-			                                            'value'	=> lang('Category'),
-			                                            'type' => 'button'
-			                                        ),
-			                                        array( //boton 	STATUS
-			                                            'id' => 'btn_status_id',
-			                                            'name' => 'status_id',
-			                                            'value'	=> lang('Status'),
-			                                            'type' => 'button'
-			                                        ),
-			                                        array( //boton 	HOUR CATEGORY
-			                                            'id' => 'btn_hour_category_id',
-			                                            'name' => 'wo_hour_cat_id',
-			                                            'value'	=> lang('Hour category'),
-			                                            'type' => 'button'
-			                                        ),
-			                                        array( //boton 	USER
-			                                            'id' => 'btn_user_id',
-			                                            'name' => 'user_id',
-			                                            'value'	=> lang('User'),
-			                                            'type' => 'button'
-			                                        ),
-			                                        array(//for link "Date search",
-                                                    'type'=> 'link',
-                                                    'id'  => 'btn_data_search',
-                                                    'url' => "Javascript:window.open('".$GLOBALS['phpgw']->link('/index.php',
-                                                           array(
-                                                               'menuaction' => 'property.uiproject.date_search'))."','','width=350,height=250')",
-                                                     'value' => lang('Date search')
-                                                    ),
-			                                        array( //hidden start_date
-                                                    'type' => 'hidden',
-                                                    'id' => 'start_date',
-                                                    'value' => $start_date
-                                                 ),
-                                                 array( //hidden end_date
-                                                    'type' => 'hidden',
-                                                    'id' => 'end_date',
-                                                    'value' => $end_date
-                                                 ),
-                                                 array(//for link "None",
-                                                 'type'=> 'label_date'
-                                                ),
-			   										 array( // TEXT INPUT
-			                                            'name'     => 'query',
-			                                            'id'     => 'txt_query',
-			                                            'text'    => '',//necesary for spacio next to  txtinput
-			                                            'value'    => '',//$query,
-			                                            'type' => 'text',
-			                                            'size'    => 28
-			                                        ),
-			                                        array( //boton     SEARCH
-			                                            'id' => 'btn_search',
-			                                            'name' => 'search',
-			                                            'value'    => lang('search'),
-			                                            'type' => 'button',
-			                                        ),
-													array(
-						                                'type'	=> 'submit',
-						                            	'id'	=> 'btn_new',
-						                                'value'	=> lang('add')
-						                            ),
-													array(
-						                                'type'	=> 'button',
-						                            	'id'	=> 'btn_export',
-						                                'value'	=> lang('download')
-						                            )
-		                           				),
-		                       		'hidden_value' => array(
-					                                        array( //div values  combo_box_0
-							                                            'id' => 'values_combo_box_0',
-							                                            'value'	=> $this->bocommon->select2String($values_combo_box[0]['cat_list'], 'cat_id') //i.e.  id,value/id,vale/
-							                                      ),
-							                                array( //div values  combo_box_1
-							                                            'id' => 'values_combo_box_1',
-							                                            'value'	=> $this->bocommon->select2String($values_combo_box[1])
-							                                      ),
-															 array( //div values  combo_box_2
-							                                            'id' => 'values_combo_box_2',
-							                                            'value'	=> $this->bocommon->select2String($values_combo_box[2])
-							                                      ),
-							                                array( //div values  combo_box_3
-							                                            'id' => 'values_combo_box_3',
-							                                            'value'	=> $this->bocommon->select2String($values_combo_box[3])
-							                                      )
-		                       								)
-												)
-										  )
+				$datatable['actions']['form'] = array(
+				array(
+					'action'	=> $GLOBALS['phpgw']->link('/index.php',
+							array(
+								'menuaction' 		=> 'property.uiproject.index',
+								'district_id'       => $this->district_id,
+								'part_of_town_id'   => $this->part_of_town_id,
+								'lookup'        	=> $lookup,
+								'cat_id'        	=> $this->cat_id,
+							)
+						),
+					'fields'	=> array(
+	                                    'field' => array(
+				                                        array( //boton 	CATEGORY
+				                                            'id' => 'btn_cat_id',
+				                                            'name' => 'cat_id',
+				                                            'value'	=> lang('Category'),
+				                                            'type' => 'button'
+				                                        ),
+				                                        array( //boton 	STATUS
+				                                            'id' => 'btn_status_id',
+				                                            'name' => 'status_id',
+				                                            'value'	=> lang('Status'),
+				                                            'type' => 'button'
+				                                        ),
+				                                        array( //boton 	HOUR CATEGORY
+				                                            'id' => 'btn_hour_category_id',
+				                                            'name' => 'wo_hour_cat_id',
+				                                            'value'	=> lang('Hour category'),
+				                                            'type' => 'button'
+				                                        ),
+				                                        array( //boton 	USER
+				                                            'id' => 'btn_user_id',
+				                                            'name' => 'user_id',
+				                                            'value'	=> lang('User'),
+				                                            'type' => 'button'
+				                                        ),
+				                                        array(//for link "Date search",
+	                                                    'type'=> 'link',
+	                                                    'id'  => 'btn_data_search',
+	                                                    'url' => "Javascript:window.open('".$GLOBALS['phpgw']->link('/index.php',
+	                                                           array(
+	                                                               'menuaction' => 'property.uiproject.date_search'))."','','width=350,height=250')",
+	                                                     'value' => lang('Date search')
+	                                                    ),
+				                                        array( //hidden start_date
+	                                                    'type' => 'hidden',
+	                                                    'id' => 'start_date',
+	                                                    'value' => $start_date
+	                                                 ),
+	                                                 array( //hidden end_date
+	                                                    'type' => 'hidden',
+	                                                    'id' => 'end_date',
+	                                                    'value' => $end_date
+	                                                 ),
+	                                                 array(//for link "None",
+	                                                 'type'=> 'label_date'
+	                                                ),
+				   										 array( // TEXT INPUT
+				                                            'name'     => 'query',
+				                                            'id'     => 'txt_query',
+				                                            'text'    => '',//necesary for spacio next to  txtinput
+				                                            'value'    => '',//$query,
+				                                            'type' => 'text',
+				                                            'size'    => 28
+				                                        ),
+				                                        array( //boton     SEARCH
+				                                            'id' => 'btn_search',
+				                                            'name' => 'search',
+				                                            'value'    => lang('search'),
+				                                            'type' => 'button',
+				                                        ),
+														array(
+							                                'type'	=> 'submit',
+							                            	'id'	=> 'btn_new',
+							                                'value'	=> lang('add')
+							                            ),
+														array(
+							                                'type'	=> 'button',
+							                            	'id'	=> 'btn_export',
+							                                'value'	=> lang('download')
+							                            )
+			                           				),
+			                       		'hidden_value' => array(
+						                                        array( //div values  combo_box_0
+								                                            'id' => 'values_combo_box_0',
+								                                            'value'	=> $this->bocommon->select2String($values_combo_box[0]['cat_list'], 'cat_id') //i.e.  id,value/id,vale/
+								                                      ),
+								                                array( //div values  combo_box_1
+								                                            'id' => 'values_combo_box_1',
+								                                            'value'	=> $this->bocommon->select2String($values_combo_box[1])
+								                                      ),
+																 array( //div values  combo_box_2
+								                                            'id' => 'values_combo_box_2',
+								                                            'value'	=> $this->bocommon->select2String($values_combo_box[2])
+								                                      ),
+								                                array( //div values  combo_box_3
+								                                            'id' => 'values_combo_box_3',
+								                                            'value'	=> $this->bocommon->select2String($values_combo_box[3])
+								                                      )
+			                       								)
+										)
+					 )
 				);
 
 				$dry_run = true;
+			}
 
-				$project_list = $this->bo->read($start_date,$end_date);
-				$uicols	= $this->bo->uicols;
-				$count_uicols_name=count($uicols['name']);
+			$project_list = $this->bo->read(array('start_date' => $start_date, 'end_date' => $end_date, 'dry_run' => $dry_run));
+			$uicols	= $this->bo->uicols;
+			$count_uicols_name=count($uicols['name']);
 
 			$content = array();
 			$j = 0;

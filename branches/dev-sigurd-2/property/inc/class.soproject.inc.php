@@ -109,6 +109,7 @@
 				$end_date = (isset($data['end_date'])?$data['end_date']:'');
 				$allrows = (isset($data['allrows'])?$data['allrows']:'');
 				$wo_hour_cat_id = (isset($data['wo_hour_cat_id'])?$data['wo_hour_cat_id']:'');
+				$dry_run		= isset($data['dry_run']) ? $data['dry_run'] : '';
 			}
 
 			$sql = $this->bocommon->fm_cache('sql_project_' . !!$wo_hour_cat_id);
@@ -319,14 +320,21 @@
 				$this->total_records = $this->db->num_rows();
 			}
 
-			$sql .= " $group_method";
-			if(!$allrows)
+			if($dry_run)
 			{
-				$this->db->limit_query($sql . $ordermethod,$start,__LINE__,__FILE__);
+				return array();
 			}
 			else
 			{
-				$this->db->query($sql . $ordermethod,__LINE__,__FILE__);
+				$sql .= " $group_method";
+				if(!$allrows)
+				{
+					$this->db->limit_query($sql . $ordermethod,$start,__LINE__,__FILE__);
+				}
+				else
+				{
+					$this->db->query($sql . $ordermethod,__LINE__,__FILE__);
+				}
 			}
 
 			$project_list = array();

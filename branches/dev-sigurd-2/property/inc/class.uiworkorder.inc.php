@@ -120,7 +120,7 @@
 		{
 			$start_date 	= urldecode($this->start_date);
 			$end_date 		= urldecode($this->end_date);
-			$list 			= $this->bo->read($start_date,$end_date,$allrows=true);
+			$list 			= $this->bo->read(array('start_date' => $start_date, 'end_date' => $end_date, 'allrows' => true));
 			$uicols			= $this->bo->uicols;
 			$this->bocommon->download($list,$uicols['name'],$uicols['descr'],$uicols['input_type']);
 		}
@@ -342,38 +342,38 @@
 
 			}
 
-			$location_list = array();
-			$location_list = $this->bo->read($start_date,$end_date,$allrows,$dry_run);
+			$workorder_list = array();
 
+			$workorder_list = $this->bo->read(array('start_date' => $start_date, 'end_date' => $end_date, 'allrows' =>$allrows, 'dry_run' => $dry_run));
 			$uicols = $this->bo->uicols;
 
 			$content = array();
 			$j=0;
-			if (isset($location_list) && is_array($location_list))
+			if (isset($workorder_list) && is_array($workorder_list))
 			{
-				foreach($location_list as $location)
+				foreach($workorder_list as $workorder)
 				{
 					for ($i=0;$i<count($uicols['name']);$i++)
 					{
 						if($uicols['input_type'][$i]!='hidden')
 						{
-							if(isset($location['query_location'][$uicols['name'][$i]]))
+							if(isset($workorder['query_location'][$uicols['name'][$i]]))
 							{
 								
 							
 								$datatable['rows']['row'][$j]['column'][$i]['name'] 			= $uicols['name'][$i];
 								$datatable['rows']['row'][$j]['column'][$i]['statustext']		= lang('search');
-								$datatable['rows']['row'][$j]['column'][$i]['value']			= $location[$uicols['name'][$i]];
+								$datatable['rows']['row'][$j]['column'][$i]['value']			= $workorder[$uicols['name'][$i]];
 								$datatable['rows']['row'][$j]['column'][$i]['format'] 			= 'link';
 								$datatable['rows']['row'][$j]['column'][$i]['java_link']		= true;
-								$datatable['rows']['row'][$j]['column'][$i]['link']				= $location['query_location'][$uicols['name'][$i]];
+								$datatable['rows']['row'][$j]['column'][$i]['link']				= $workorder['query_location'][$uicols['name'][$i]];
 								$uicols['formatter'][$i] = 'myCustom';
 
 
 							}
 							else
 							{
-								$datatable['rows']['row'][$j]['column'][$i]['value'] 			= $location[$uicols['name'][$i]];
+								$datatable['rows']['row'][$j]['column'][$i]['value'] 			= $workorder[$uicols['name'][$i]];
 								//$datatable['rows']['row'][$j]['column'][$i]['value'] 			= $i;
 								$datatable['rows']['row'][$j]['column'][$i]['name'] 			= $uicols['name'][$i];
 								$datatable['rows']['row'][$j]['column'][$i]['lookup'] 			= $lookup;
@@ -381,16 +381,16 @@
 
 								if($uicols['name'][$i]=='vendor_id')
 								{
-									$datatable['rows']['row'][$j]['column'][$i]['statustext']		= $location['org_name'];
+									$datatable['rows']['row'][$j]['column'][$i]['statustext']		= $workorder['org_name'];
 									$datatable['rows']['row'][$j]['column'][$i]['overlib']		= true;
 									//$datatable['rows']['row'][$j]['column'][$i]['format'] 			= 'link';
-									$datatable['rows']['row'][$j]['column'][$i]['text']			= $location[$uicols['name'][$i]];
+									$datatable['rows']['row'][$j]['column'][$i]['text']			= $workorder[$uicols['name'][$i]];
 								}
 								
-								if(isset($uicols['datatype']) && isset($uicols['datatype'][$i]) && $uicols['datatype'][$i]=='link' && $location[$uicols['name'][$i]])
+								if(isset($uicols['datatype']) && isset($uicols['datatype'][$i]) && $uicols['datatype'][$i]=='link' && $workorder[$uicols['name'][$i]])
 								{
 									$datatable['rows']['row'][$j]['column'][$i]['value']		= lang('link');
-									$datatable['rows']['row'][$j]['column'][$i]['link']		= $location[$uicols['name'][$i]];
+									$datatable['rows']['row'][$j]['column'][$i]['link']		= $workorder[$uicols['name'][$i]];
 									$datatable['rows']['row'][$j]['column'][$i]['target']	= '_blank';
 								}
 							}
@@ -398,10 +398,10 @@
 						else
 						{
 								$datatable['rows']['row'][$j]['column'][$i]['name'] 			= $uicols['name'][$i];
-								$datatable['rows']['row'][$j]['column'][$i]['value']			= $location[$uicols['name'][$i]];
+								$datatable['rows']['row'][$j]['column'][$i]['value']			= $workorder[$uicols['name'][$i]];
 						}
 
-						$datatable['rows']['row'][$j]['hidden'][$i]['value'] 			= $location[$uicols['name'][$i]];
+						$datatable['rows']['row'][$j]['hidden'][$i]['value'] 			= $workorder[$uicols['name'][$i]];
 						$datatable['rows']['row'][$j]['hidden'][$i]['name'] 			= $uicols['name'][$i];
 					}
 
@@ -435,7 +435,7 @@
 						),
 					)
 				);
-				if($this->acl_read && $this->bocommon->check_perms($location['grants'],PHPGW_ACL_READ))
+				if($this->acl_read && $this->bocommon->check_perms($workorder['grants'],PHPGW_ACL_READ))
 				{
 					$datatable['rowactions']['action'][] = array(
 						'text' 			=> lang('view'),
@@ -446,7 +446,7 @@
 						'parameters'	=> $parameters
 					);
 				}
-				if($this->acl_edit && $this->bocommon->check_perms($location['grants'],PHPGW_ACL_EDIT))
+				if($this->acl_edit && $this->bocommon->check_perms($workorder['grants'],PHPGW_ACL_EDIT))
 				{
 					$datatable['rowactions']['action'][] = array(
 						'text' 			=> lang('edit'),
@@ -466,7 +466,7 @@
 						'parameters'	=> $parameters2
 					);
 				}
-				if($this->acl_delete && $this->bocommon->check_perms($location['grants'],PHPGW_ACL_DELETE))
+				if($this->acl_delete && $this->bocommon->check_perms($workorder['grants'],PHPGW_ACL_DELETE))
 				{
 					$datatable['rowactions']['action'][] = array(
 						'text' 			=> lang('delete'),
@@ -529,7 +529,7 @@
 			// Pagination and sort values
 			$datatable['pagination']['records_start'] 	= (int)$this->bo->start;
 			$datatable['pagination']['records_limit'] 	= $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
-			$datatable['pagination']['records_returned'] = count($location_list);
+			$datatable['pagination']['records_returned'] = count($workorder_list);
 			$datatable['pagination']['records_total'] 	= $this->bo->total_records;
 
 			$datatable['sorting']['order'] 	= phpgw::get_var('order', 'string'); // Column

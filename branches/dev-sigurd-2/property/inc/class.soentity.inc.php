@@ -105,6 +105,7 @@
 				$status			= isset($data['status']) ? $data['status'] : '';
 				$start_date		= isset($data['start_date']) ? $data['start_date'] : '';
 				$end_date		= isset($data['end_date']) ? $data['end_date'] : '';
+				$dry_run		= isset($data['dry_run']) ? $data['dry_run'] : '';
 			}
 
 			if(!$entity_id || !$cat_id)
@@ -346,13 +347,20 @@
 			$this->db->next_record();
 			$this->total_records = $this->db->f(0);
 
-			if(!$allrows)
+			if($dry_run)
 			{
-				$this->db->limit_query($sql . $ordermethod,$start,__LINE__,__FILE__);
+				return array();
 			}
 			else
 			{
-				$this->db->query($sql . $ordermethod,__LINE__,__FILE__);
+				if(!$allrows)
+				{
+					$this->db->limit_query($sql . $ordermethod,$start,__LINE__,__FILE__);
+				}
+				else
+				{
+					$this->db->query($sql . $ordermethod,__LINE__,__FILE__);
+				}
 			}
 
 			$j=0;

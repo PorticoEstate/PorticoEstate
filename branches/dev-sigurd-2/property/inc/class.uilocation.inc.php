@@ -242,7 +242,7 @@
 
 	    				));
 
-			$datatable['config']['base_java_url'] = "menuaction:'property.uilocation.index',"
+				$datatable['config']['base_java_url'] = "menuaction:'property.uilocation.index',"
 	    											."type_id:'{$type_id}',"
 	    											."query:'{$this->query}',"
  	                        						."district_id: '{$this->district_id}',"
@@ -281,21 +281,21 @@
 		        $default_value = array ('id'=>'','name'=>lang('show all'));
 				array_unshift ($values_combo_box[3],$default_value);
 
-		$datatable['actions']['form'] = array(
-			array(
-				'action'	=> $GLOBALS['phpgw']->link('/index.php',
-						array(
-							'menuaction' 		=> 'property.uilocation.index',
-							'type_id' 			=> $type_id,
-							'district_id'       => $this->district_id,
-							'part_of_town_id'   => $this->part_of_town_id,
-							'lookup'        	=> $lookup,
-							'lookup_tenant'     => $lookup_tenant,
-							'lookup_name'       => $lookup_name,
-							'cat_id'        	=> $this->cat_id,
-						)
-					),
-				'fields'	=> array(
+				$datatable['actions']['form'] = array(
+					array(
+						'action'	=> $GLOBALS['phpgw']->link('/index.php',
+								array(
+									'menuaction' 		=> 'property.uilocation.index',
+									'type_id' 			=> $type_id,
+									'district_id'       => $this->district_id,
+									'part_of_town_id'   => $this->part_of_town_id,
+									'lookup'        	=> $lookup,
+									'lookup_tenant'     => $lookup_tenant,
+									'lookup_name'       => $lookup_name,
+									'cat_id'        	=> $this->cat_id,
+									)
+						),
+						'fields'	=> array(
                                     'field' => array(
 			                                        array( //boton 	CATEGORY
 			                                            'id' => 'btn_cat_id',
@@ -388,7 +388,7 @@
 				//cramirez: $dry_run is use "$this->bo->read"
 				$dry_run=true;
 
-}
+			}
 
 			$location_list = array();
 			//cramirez: $dry_run avoid to load all data the first time

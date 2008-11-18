@@ -230,7 +230,7 @@
 			return $this->bocommon->select_list($selected,$status_entries);
 		}
 
-		function read($data='')
+		function read($data= array())
 		{
 			if(isset($this->allrows))
 			{
@@ -240,7 +240,7 @@
 			$entity = $this->so->read(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
 											'filter' => $this->filter,'cat_id' => $this->cat_id,'district_id' => $this->district_id,
 											'lookup'=>isset($data['lookup'])?$data['lookup']:'','allrows'=>isset($data['allrows'])?$data['allrows']:'','entity_id'=>$this->entity_id,'cat_id'=>$this->cat_id,'status'=>$this->status,
-											'start_date'=>$this->bocommon->date_to_timestamp($data['start_date']),'end_date'=>$this->bocommon->date_to_timestamp($data['end_date'])));
+											'start_date'=>$this->bocommon->date_to_timestamp($data['start_date']),'end_date'=>$this->bocommon->date_to_timestamp($data['end_date']),'dry_run'=>$data['dry_run']));
 
 			$this->total_records = $this->so->total_records;
 			$this->uicols	= $this->so->uicols;

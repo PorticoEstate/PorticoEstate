@@ -306,7 +306,11 @@
 			$this->total_records = $this->db2->num_rows();
 
 			//cramirez.r@ccfirst.com 23/10/08 avoid retrieve data in first time, only render definition for headers (var myColumnDefs)
-			if(!$dry_run)
+			if($dry_run)
+			{
+				return array();
+			}
+			else
 			{
 				if(!$allrows)
 				{

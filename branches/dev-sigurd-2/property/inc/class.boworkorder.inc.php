@@ -229,17 +229,18 @@
 			return $this->bocommon->select_list($selected,$key_location_entries);
 		}
 
-		function read($start_date='',$end_date='',$allrows='',$dry_run='')
+		function read($data = array())
 		{
-			$start_date	= $this->bocommon->date_to_timestamp($start_date);
-			$end_date	= $this->bocommon->date_to_timestamp($end_date);
+			$start_date	= $this->bocommon->date_to_timestamp($data['start_date']);
+			$end_date	= $this->bocommon->date_to_timestamp($data['end_date']);
 
+	
 			$workorder = $this->so->read(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
 											'filter' => $this->filter,'cat_id' => $this->cat_id,'status_id' => $this->status_id,
 											'search_vendor' => $this->search_vendor,'wo_hour_cat_id' => $this->wo_hour_cat_id,
-											'start_date'=>$start_date,'end_date'=>$end_date,'allrows'=>$allrows,
+											'start_date'=>$start_date,'end_date'=>$end_date,'allrows'=>$data['allrows'],
 											'b_group'=>$this->b_group,'paid'=>$this->paid,'b_account' => $this->b_account,
-											'district_id' => $this->district_id,'dry_run'=>$dry_run));
+											'district_id' => $this->district_id,'dry_run'=>$data['dry_run']));
 			
 			$this->total_records = $this->so->total_records;
 
