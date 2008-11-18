@@ -26,15 +26,24 @@
 
 	// define the hidden column in datatable
 	var config_values = {
-	 column_hidden : [4], //orden de la columna a ocultar en el datatable
+	 column_hidden : [], //orden de la columna a ocultar en el datatable
 	 date_search : 1 //if search has link "Data search"
 	 };
 
-	this.init_particular_setting = function()
+	this.particular_setting = function()
 	{
-		// necesary when do "enter" in search botton.
+		if(flag_particular_setting=='init')
+		{
+			//nothing
+		}
+		else if(flag_particular_setting=='update')
+		{
+			//nothing
+		}
+
+		//--focus for txt_query---
 		YAHOO.util.Dom.get(textImput[0].id).value = path_values.query;
-		//YAHOO.util.Dom.get(textImput[0].id).focus();
+		YAHOO.util.Dom.get(textImput[0].id).focus();
 	}
 
 
@@ -42,6 +51,7 @@
 
 //----------------------------------------------------------
 	YAHOO.util.Event.addListener(window, "load", function()
+	//YAHOO.util.Event.onDOMReady(function()
 	{
 		var loader = new YAHOO.util.YUILoader();
 		loader.addModule({
