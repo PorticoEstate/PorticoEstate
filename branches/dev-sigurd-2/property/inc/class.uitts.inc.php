@@ -751,6 +751,7 @@
 
 				if($uicols['input_type'][$i]!='hidden')
 				{
+					$datatable['headers']['header'][$i]['formatter'] = ($uicols['formatter'][$i]==''?  '""' : $uicols['formatter'][$i]);
 					$datatable['headers']['header'][$i]['name'] 			= $uicols['name'][$i];
 					$datatable['headers']['header'][$i]['text'] 			= $uicols['name'][$i];
 					$datatable['headers']['header'][$i]['visible'] 			= true;
@@ -760,6 +761,7 @@
 						$datatable['headers']['header'][$i]['sortable']			= true;
 						$datatable['headers']['header'][$i]['sort_field']   = $uicols['name'][$i];
 					}
+
 					if($uicols['name'][$i]=='text_view' || $uicols['name'][$i]=='bgcolor' || $uicols['name'][$i]=='child_date' || $uicols['name'][$i]== 'link_view' || $uicols['name'][$i]=='lang_view_statustext')
 					{
 						$datatable['headers']['header'][$i]['visible'] 			= false;
@@ -972,7 +974,7 @@
 									switch($column['value'])
 									{
 										case 1:
-											$json_row[$column['name']] = "<div style='background-color:".$bgcolor_array[1].";height:100%;'>".$column['value']."</div>";
+											$json_row[$column['name']] = "<div style='background-color:".$bgcolor_array[1].";'>".$column['value']."</div>";
 											break;
 										case 2:
 											$json_row[$column['name']] = "<div style='background-color:".$bgcolor_array[2].";'>".$column['value']."</div>";
@@ -1045,6 +1047,7 @@
 		  	$GLOBALS['phpgw']->css->validate_file('property');
 		  	$GLOBALS['phpgw']->css->add_external_file('property/templates/base/css/property.css');
 			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/datatable/assets/skins/sam/datatable.css');
+			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/datatable/assets/skins/sam/colored.css');
 
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
 
