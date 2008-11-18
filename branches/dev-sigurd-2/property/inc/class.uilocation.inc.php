@@ -516,6 +516,9 @@
 
 			for ($i=0;$i<$uicols_count;$i++)
 			{
+				//all colums should be have formatter
+				$datatable['headers']['header'][$i]['formatter'] = ($uicols['formatter'][$i]==''?  '""' : $uicols['formatter'][$i]);
+
 				if($uicols['input_type'][$i]!='hidden')
 				{
 					$datatable['headers']['header'][$i]['name'] 			= $uicols['name'][$i];
@@ -523,7 +526,7 @@
 					$datatable['headers']['header'][$i]['visible'] 			= true;
 					$datatable['headers']['header'][$i]['format'] 			= $this->bocommon->translate_datatype_format($uicols['datatype'][$i]);
 					$datatable['headers']['header'][$i]['sortable']			= false;
-					$datatable['headers']['header'][$i]['formatter']		= (isset($uicols['formatter'][$i])? $uicols['formatter'][$i]:"");
+					//$datatable['headers']['header'][$i]['formatter']		= (isset($uicols['formatter'][$i])? $uicols['formatter'][$i]:"");
 					if($uicols['name'][$i]=='loc1'):
 					{
 						$datatable['headers']['header'][$i]['sortable']		= true;
@@ -566,7 +569,7 @@
 				{
 					for ($k=0;$k<count($input_name);$k++)
 					{
-						$function_exchange_values .= "opener.document.form." . $input_name[$k] . ".value = '';" ."\r\n";
+						$function_exchange_values .= "opener.document.forms[0]." . $input_name[$k] . ".value = '';" ."\r\n";
 					}
 				}
 
@@ -586,7 +589,7 @@
 						$function_valida .= "return valor;"."\r\n";
 						$function_valida .= "}"."\r\n";
 
-						$function_exchange_values .= 'opener.document.form.' . $uicols['name'][$i] .'.value = valida(data.getData("'.$uicols['name'][$i].'"));' ."\r\n";
+						$function_exchange_values .= 'opener.document.forms[0].' . $uicols['name'][$i] .'.value = valida(data.getData("'.$uicols['name'][$i].'"));' ."\r\n";
 					}
 				}
 
@@ -616,6 +619,8 @@
 		  	phpgwapi_yui::load_widget('connection');
 		  	//// cramirez: necesary for include a partucular js
 		  	phpgwapi_yui::load_widget('loader');
+		  	//cramirez: necesary for use opener . Avoid error JS
+			phpgwapi_yui::load_widget('tabview');
 
 			if($lookup)
 			{

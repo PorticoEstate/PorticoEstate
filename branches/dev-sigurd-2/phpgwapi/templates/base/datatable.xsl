@@ -332,9 +332,8 @@
 		</xsl:choose>
 
 	 <br/>
-	 <div id="paging"> </div>
-
-
+	<div id="message"> </div>
+	<div id="paging"> </div>
   	<div class="datatable-container">
     	<table class="datatable">
       		<!--  <xsl:apply-templates select="headers" />
@@ -342,6 +341,7 @@
       		 -->
     	</table>
   	</div>
+  	<div id="footer"> </div>
   	<xsl:call-template name="datatable-yui-definition" />
 
 
@@ -688,10 +688,6 @@
 
 <xsl:template name="datatable-yui-definition">
 	<script>
-		<!-- var java_edit = "<xsl:value-of select="//datatable/config/java_edit"/>"; -->
-
-  		<!--  var java_view = "<xsl:value-of select="//datatable/config/java_view"/>"; -->
-
   		var property_js = "<xsl:value-of select="//datatable/property_js"/>";
 
 		var base_java_url = "{<xsl:value-of select="//datatable/config/base_java_url"/>}";
@@ -705,7 +701,9 @@
 					sortable: <xsl:value-of select="phpgw:conditional(not(sortable = 0), 'true', 'false')"/>,
 					visible: <xsl:value-of select="phpgw:conditional(not(visible = 0), 'true', 'false')"/>,
 					format: "<xsl:value-of select="format"/>",
-					source: "<xsl:value-of select="sort_field"/>"
+					formatter: <xsl:value-of select="formatter"/>,
+					source: "<xsl:value-of select="sort_field"/>",
+					className: "<xsl:value-of select="className"/>"
 				}<xsl:value-of select="phpgw:conditional(not(position() = last()), ',', '')"/>
 			</xsl:for-each>
 		];

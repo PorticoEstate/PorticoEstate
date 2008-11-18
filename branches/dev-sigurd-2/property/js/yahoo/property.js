@@ -1,4 +1,3 @@
-
 	var oSelectedTR;
 	var menuCB,optionsCB, options_combo_box;
 	var array_options = new Array();
@@ -9,13 +8,6 @@
 	var ds, values_ds;
 	var myrowsPerPage,mytotalRows,ActualValueRowsPerPageDropdown;
 
-/********************************************************************************
- *
- */
-  this.onSave = function()
-  {
-	alert("onsave");
-  }
 
  /********************************************************************************
  * this is used, in respective PHP file.
@@ -131,7 +123,6 @@ this.create_array_values_list = function(stValues)
 
 	    //los valores de 'path_values' ya estan actualizados no es necesario verificar
 	    execute_ds();
-
   }
 
 
@@ -168,7 +159,7 @@ this.create_array_values_list = function(stValues)
 		var botton_tmp = new YAHOO.widget.Button(normalButtons[p].name);
 		botton_tmp.on("click", eval(normalButtons[p].funct));
 		eval("oNormalButton_"+p+" = botton_tmp");
-	}
+		}
 	}
 
 	//create filters
@@ -336,17 +327,22 @@ this.create_array_values_list = function(stValues)
 		var callback2 ={
 				    success: function(o) {
 						eval('values_ds ='+o.responseText);
+						flag_particular_setting='';
 
-						if(flag==0){
+						if(flag==0)
+						{
 							init_datatable();
 							init_filter();
-							init_particular_setting();
-							return;
+							flag_particular_setting='init';
 						}
-						else{
-						 	update_datatable();
+						else
+						{
+							myPaginator.setRowsPerPage(values_ds.recordsReturned,true);
+							update_datatable();
 						 	update_filter();
+						 	flag_particular_setting='update';
 						}
+						particular_setting();
 
 		 			},
 		  			failure: function(o) {window.alert('Server or your connection is death.')},
@@ -375,7 +371,6 @@ this.create_array_values_list = function(stValues)
    		{
 			fields[i] = myColumnDefs[i].key;
 	   	}
-
 
 	   // When responseSchema.totalRecords is not indicated, the records returned from the DataSource are assumed to represent the entire set
 	   myDataSource.responseSchema =
@@ -415,17 +410,9 @@ this.create_array_values_list = function(stValues)
 			generateRequest        : buildQueryString,
 			paginationEventHandler : YAHOO.widget.DataTable.handleDataSourcePagination,
 			paginator              : myPaginator,
-			sortedBy			   : {key:"anywhere", dir:YAHOO.widget.DataTable.CLASS_ASC},//,  arguments necesary for paginator
-			formatRow			   : myRowFormatter
+			sortedBy	       : {key:"anywhere", dir:YAHOO.widget.DataTable.CLASS_ASC}//  arguments necesary for paginator
 		};
 
-		var myRowFormatter = function(elTr, oRecord)
-		{
-		    //if (oRecord.getData('priority') == 10) {
-		        YAHOO.util.Dom.addClass(elTr, 'mark');
-		    //}
-		    return true;
-		};
 
 	   myDataTable = new YAHOO.widget.DataTable(container[0], myColumnDefs, myDataSource, myTableConfig);
 
@@ -494,12 +481,13 @@ this.create_array_values_list = function(stValues)
 	   myContextMenu.render(container[0]);
 
 		// Hide Column in datatable. se aplica el estilo css
-		//myDataTable.getColumn(config_values.column_hidden).className = "hide_field";
-//		for(var k=0; k < config_values.column_hidden.length; k++)
-//		{
-//			if (myDataTable.getColumn(config_values.column_hidden[k])!= null)
-//			myDataTable.getColumn(config_values.column_hidden[k]).className = "hide_field";
-//		}
+		for(var k=0; k < config_values.column_hidden.length; k++)
+		{
+			if (myDataTable.getColumn(config_values.column_hidden[k])!= null)
+			myDataTable.getColumn(config_values.column_hidden[k]).className = "hide_field";
+		}
+
+
 
 		for(var i=0; i < myColumnDefs.length;i++)
 				{
@@ -513,7 +501,8 @@ this.create_array_values_list = function(stValues)
 						YAHOO.util.Dom.getElementsByClassName( 'yui-dt-col-'+ myColumnDefs[i].key , 'div' )[0].style.display = 'none';
 						myDataTable.getColumn(i).className = "hide_field";
 					}
-
+					//title columns alwyas center
+					YAHOO.util.Dom.getElementsByClassName( 'yui-dt-col-'+ myColumnDefs[i].key , 'div' )[0].style.textAlign = 'center';
 				}
 
 }
@@ -546,9 +535,7 @@ this.update_datatable = function()
 	myrowsPerPage = values_ds.recordsReturned;
 	mytotalRows = values_ds.totalRecords;
 	//update combo box pagination
-
 	myPaginator.set('rowsPerPageOptions',[myrowsPerPage,mytotalRows]);
-	//myPaginator.updateOnChange=true;
 	}
 
 /****************************************************************************************
@@ -721,8 +708,3 @@ function substr_count( haystack, needle, offset, length )
 
 	eval("var path_values = "+base_java_url+"");
 	this.execute_ds();
-
-
-
-
-
