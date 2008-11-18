@@ -8,6 +8,9 @@
 			<xsl:when test="list_attribute">
 				<xsl:apply-templates select="list_attribute"/>
 			</xsl:when>
+			<xsl:when test="list_attribute_group">
+				<xsl:apply-templates select="list_attribute_group"/>
+			</xsl:when>
 			<xsl:when test="edit_attrib">
 				<xsl:apply-templates select="edit_attrib"/>
 			</xsl:when>
@@ -167,6 +170,9 @@
 				<xsl:value-of select="lang_prefix"/>
 			</td>
 			<td class="th_text" width="5%" align="center">
+				<xsl:value-of select="lang_attribute_group"/>
+			</td>
+			<td class="th_text" width="5%" align="center">
 				<xsl:value-of select="lang_attribute"/>
 			</td>
 			<td class="th_text" width="5%" align="center">
@@ -212,6 +218,10 @@
 				</td>
 				<td align="left">
 					<xsl:value-of select="prefix"/>
+				</td>
+				<td align="center">
+					<xsl:variable name="link_attribute_group"><xsl:value-of select="link_attribute_group"/></xsl:variable>
+					<a href="{$link_attribute_group}" onMouseover="window.status='';return true;" onMouseout="window.status='';return true;"><xsl:value-of select="text_attribute_group"/></a>
 				</td>
 				<td align="center">
 					<xsl:variable name="link_attribute"><xsl:value-of select="link_attribute"/></xsl:variable>
@@ -857,6 +867,120 @@
 				</td>
 				<td align="center">
 					<xsl:value-of select="search"/>
+				</td>
+				<td align="center">
+					<xsl:variable name="link_edit"><xsl:value-of select="link_edit"/></xsl:variable>
+					<a href="{$link_edit}" onMouseover="window.status='{$lang_edit_text}';return true;" onMouseout="window.status='';return true;"><xsl:value-of select="text_edit"/></a>
+				</td>
+				<td align="center">
+					<xsl:variable name="link_delete"><xsl:value-of select="link_delete"/></xsl:variable>
+					<a href="{$link_delete}" onMouseover="window.status='{$lang_delete_text}';return true;" onMouseout="window.status='';return true;"><xsl:value-of select="text_delete"/></a>
+				</td>
+			</tr>
+	</xsl:template>
+
+
+<!-- list attribute_group -->
+
+	<xsl:template match="list_attribute_group">
+		
+		<table width="100%" cellpadding="2" cellspacing="2" align="center">
+			<tr>
+				<td align="right">
+					<xsl:call-template name="search_field"/>
+				</td>
+			</tr>
+			<tr>
+				<td class="th_text" align="left">
+					<xsl:value-of select="lang_entity"/>
+					<xsl:text>: </xsl:text>
+					<xsl:value-of select="entity_name"/>
+				</td>
+			</tr>
+			<tr>
+				<td class="th_text" align="left">
+					<xsl:value-of select="lang_category"/>
+					<xsl:text>: </xsl:text>
+					<xsl:value-of select="category_name"/>
+				</td>
+			</tr>
+			<tr>
+				<td colspan="3" width="100%">
+					<xsl:call-template name="nextmatchs"/>
+				</td>
+			</tr>
+		</table>
+		<table width="100%" cellpadding="2" cellspacing="2" align="center">
+				<xsl:apply-templates select="table_header_attrib_group"/>
+				<xsl:apply-templates select="values_attrib_group"/>
+				<xsl:apply-templates select="table_add"/>
+		</table>
+	</xsl:template>
+
+	<xsl:template match="table_header_attrib_group">
+		<xsl:variable name="sort_sorting"><xsl:value-of select="sort_sorting"/></xsl:variable>
+		<xsl:variable name="sort_name"><xsl:value-of select="sort_name"/></xsl:variable>
+		<tr class="th">
+			<td class="th_text" width="10%" align="left">
+				<a href="{$sort_name}"><xsl:value-of select="lang_name"/></a>
+			</td>
+			<td class="th_text" width="20%" align="left">
+				<xsl:value-of select="lang_descr"/>
+			</td>
+			<td class="th_text" width="5%" align="center">
+				<a href="{$sort_sorting}"><xsl:value-of select="lang_sorting"/></a>
+			</td>
+			<td class="th_text" width="5%" align="center">
+				<xsl:value-of select="lang_edit"/>
+			</td>
+			<td class="th_text" width="5%" align="center">
+				<xsl:value-of select="lang_delete"/>
+			</td>
+		</tr>
+	</xsl:template>
+
+	<xsl:template match="values_attrib_group"> 
+		<xsl:variable name="lang_up_text"><xsl:value-of select="lang_up_text"/></xsl:variable>
+		<xsl:variable name="lang_down_text"><xsl:value-of select="lang_down_text"/></xsl:variable>
+		<xsl:variable name="lang_edit_text"><xsl:value-of select="lang_edit_text"/></xsl:variable>
+		<xsl:variable name="lang_delete_text"><xsl:value-of select="lang_delete_text"/></xsl:variable>
+			<tr>
+				<xsl:attribute name="class">
+					<xsl:choose>
+						<xsl:when test="@class">
+							<xsl:value-of select="@class"/>
+						</xsl:when>
+						<xsl:when test="position() mod 2 = 0">
+							<xsl:text>row_off</xsl:text>
+						</xsl:when>
+						<xsl:otherwise>
+							<xsl:text>row_on</xsl:text>
+						</xsl:otherwise>
+					</xsl:choose>
+				</xsl:attribute>
+				<td align="left">
+					<xsl:value-of select="name"/>
+				</td>
+				<td>
+					<xsl:value-of select="descr"/>
+				</td>
+				<td>
+					<table align="left">
+						<tr>
+							<td>
+								<xsl:value-of select="sorting"/>
+							</td>
+
+							<td align="left">
+								<xsl:variable name="link_up"><xsl:value-of select="link_up"/></xsl:variable>
+								<a href="{$link_up}" onMouseover="window.status='{$lang_up_text}';return true;" onMouseout="window.status='';return true;"><xsl:value-of select="text_up"/></a>
+								<xsl:text> | </xsl:text>
+								<xsl:variable name="link_down"><xsl:value-of select="link_down"/></xsl:variable>
+								<a href="{$link_down}" onMouseover="window.status='{$lang_down_text}';return true;" onMouseout="window.status='';return true;"><xsl:value-of select="text_down"/></a>
+							</td>
+
+						</tr>
+					</table>
 				</td>
 				<td align="center">
 					<xsl:variable name="link_edit"><xsl:value-of select="link_edit"/></xsl:variable>

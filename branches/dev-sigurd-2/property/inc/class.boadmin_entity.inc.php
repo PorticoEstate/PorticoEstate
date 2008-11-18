@@ -290,6 +290,20 @@
 			}
 		}
 
+		function read_attrib_group($entity_id='',$cat_id='',$allrows='')
+		{
+			if($allrows)
+			{
+				$this->allrows = $allrows;
+			}
+
+			$attrib = $this->custom->find_group('property', '.entity.' . $entity_id . '.' . $cat_id, $this->start, $this->query, $this->sort, $this->order, $this->allrows);
+
+			$this->total_records = $this->custom->total_records;
+
+			return $attrib;
+		}
+
 		function read_attrib($entity_id='',$cat_id='',$allrows='')
 		{
 			if($allrows)
@@ -307,6 +321,11 @@
 		function read_single_attrib($entity_id,$cat_id,$id)
 		{
 			return $this->custom->get('property', '.entity.' . $entity_id . '.' . $cat_id, $id, true);
+		}
+
+		function resort_attrib_group($id,$resort)
+		{
+			$this->custom->resort_group($id, $resort, 'property', '.entity.' . $this->entity_id . '.' . $this->cat_id);
 		}
 
 		function resort_attrib($id,$resort)

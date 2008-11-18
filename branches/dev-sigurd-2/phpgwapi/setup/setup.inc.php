@@ -12,7 +12,7 @@
 	// Basic information about this app
 	$setup_info['phpgwapi']['name']      = 'phpgwapi';
 	$setup_info['phpgwapi']['title']     = 'phpgwapi';
-	$setup_info['phpgwapi']['version']   = '0.9.17.519';
+	$setup_info['phpgwapi']['version']   = '0.9.17.520';
 	$setup_info['phpgwapi']['versions']['current_header'] = '1.28';
 	$setup_info['phpgwapi']['enable']    = 3;
 	$setup_info['phpgwapi']['app_order'] = 1;
@@ -42,6 +42,7 @@
 		'phpgw_contact_others',
 		'phpgw_contact_person',
 		'phpgw_contact_types',
+		'phpgw_cust_attribute_group',
 		'phpgw_cust_attribute',
 		'phpgw_cust_choice',
 		'phpgw_cust_function',

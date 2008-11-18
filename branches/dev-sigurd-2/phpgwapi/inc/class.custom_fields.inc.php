@@ -656,7 +656,7 @@
 			$this->_total_records = $this->_db->f('cnt_rec');
 
 			$sql = "SELECT * {$sql} {$ordermethod}";
-			$allrows = true; // db::limit_query is broken
+
 			if ( $allrows )
 			{
 				$this->_db->query($sql, __LINE__, __FILE__);
@@ -715,6 +715,85 @@
 			}
 
 			return $attribs;
+		}
+		/**
+		 * Get a list of groups availlable for attributes within a location
+		 * 
+		 * @param string $appname      the name of the application
+		 * @param string $location     the name of the location
+		 * @param ?????? $start        ask sigurd
+		 * @param ?????? $query        ask sigurd
+		 * @param ?????? $sort         ask sigurd
+		 * @param ?????? $order        ask sigurd
+		 * @param ?????? $allrows      ask sigurd
+		 * @param ?????? $inc_choices  ask sigurd
+		 *
+		 * @return ???? something
+		 */
+		public function find_group($appname, $location, $start = 0, $query = '', $sort = 'ASC', 
+				$order = 'group_sort', $allrows = false, $inc_choices = false)
+		{
+			$location_id	= $GLOBALS['phpgw']->locations->get_id($appname, $location);
+			$start			= (int) $start;
+			$query			= $this->_db->db_addslashes($query);
+			$order			= $this->_db->db_addslashes($order);
+			$allrows		= !!$allrows;
+
+			$ordermethod = 'ORDER BY group_sort ASC';
+			if ( $order )
+			{
+				$sort = 'ASC';
+				if ( $sort == 'DESC')
+				{
+					$sort = 'DESC';
+				}
+
+				$ordermethod = "ORDER BY {$order} {$sort}";
+			}
+
+			$querymethod = '';
+			if ( $query )
+			{
+				$querymethod = "AND (phpgw_cust_attribute_group.name {$this->_like} '%{$query}%'";
+			}
+
+			$sql = "FROM phpgw_cust_attribute_group "
+				. " WHERE location_id = {$location_id} {$querymethod}";
+
+			$this->_total_records = 0;
+			$this->_db->query("SELECT COUNT(*) AS cnt_rec {$sql}",__LINE__,__FILE__);
+			if ( !$this->_db->next_record() )
+			{
+				return array();
+			}
+
+			$this->_total_records = $this->_db->f('cnt_rec');
+
+			$sql = "SELECT * {$sql} {$ordermethod}";
+
+			if ( $allrows )
+			{
+				$this->_db->query($sql, __LINE__, __FILE__);
+			}
+			else
+			{
+				$this->_db->limit_query($sql, $start, __LINE__, __FILE__);
+			}
+
+			$attrib_groups = array();
+			while ( $this->_db->next_record() )
+			{
+				$attrib_groups[] = array
+				(
+					'id'				=> $this->_db->f('id'),
+					'group_sort'		=> (int) $this->_db->f('group_sort'),
+					'name'				=> $this->_db->f('name', true),
+					'descr'				=> $this->_db->f('descr', true),
+					'remark'			=> $this->_db->f('remark', true)
+				);
+			}
+
+			return $attrib_groups;
 		}
 
 		/**
@@ -820,6 +899,79 @@
 			$table_def[$table]['uc'] = isset($table_def[$table]['uc']) && $table_def[$table]['uc'] ? $table_def[$table]['uc'] : $tableinfo[4];
 
 			return $table_def;
+		}
+
+		/**
+		 * Resort an attribute's position in relation to other attributes
+		 * 
+		 * @param int $id the attribute db pk
+		 * @param string $resort the direction to move the field [up|down]
+		 */
+		public function resort_group($id, $resort, $appname, $location)
+		{
+			$id		= (int) $id;
+
+			if ( $resort == 'down' )
+			{
+				$resort = 'down';
+			}
+			else
+			{
+				$resort	= 'up';
+			}
+
+			$location_id = $GLOBALS['phpgw']->locations->get_id($appname, $location);
+
+			$this->_db->transaction_begin();
+
+			$sql = "SELECT group_sort FROM phpgw_cust_attribute_group " 
+				. " WHERE location_id = {$location_id} AND id = {$id}";
+			$this->_db->query($sql, __LINE__, __FILE__);
+			$this->_db->next_record();
+			$attrib_sort	= $this->_db->f('group_sort');
+
+			$sql = "SELECT MAX(group_sort) AS max_sort FROM phpgw_cust_attribute_group " 
+				. " WHERE location_id = {$location_id}";
+			$this->_db->query($sql,__LINE__,__FILE__);
+			$this->_db->next_record();
+			$max_sort	= $this->_db->f('max_sort');
+
+			$update = false;
+			switch($resort)
+			{
+				case 'down':
+					if($max_sort > $attrib_sort)
+					{
+						$new_sort = $attrib_sort + 1;
+						$update = true;
+					}
+					break;
+
+				case 'up':
+				default:
+					if($attrib_sort>1)
+					{
+						$new_sort = $attrib_sort - 1;
+						$update = true;
+					}
+					break;
+			}
+
+			if ( !$update )
+			{
+				// nothing to do
+				return true;
+			}
+
+			$sql = "UPDATE phpgw_cust_attribute_group SET group_sort = {$attrib_sort}"
+				. " WHERE location_id = {$location_id} AND group_sort = {$new_sort}";
+			$this->_db->query($sql, __LINE__, __FILE__);
+
+			$sql = "UPDATE phpgw_cust_attribute_group SET group_sort = {$new_sort}"
+				. " WHERE location_id = {$location_id} AND id = {$id}";
+			$this->_db->query($sql, __LINE__, __FILE__);
+
+			return $this->_db->transaction_commit();
 		}
 
 		/**
