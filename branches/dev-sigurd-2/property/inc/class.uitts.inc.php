@@ -325,10 +325,6 @@
 			$default_value = array ('id'=>'','name'=>lang('no user'));
 			array_unshift ($values_combo_box[3],$default_value);
 
-
-			//_debug_array($values_combo_box);die;
-
-
 			$datatable['actions']['form'] = array(
 			array(
 				'action'	=> $GLOBALS['phpgw']->link('/index.php',
@@ -520,6 +516,9 @@
 						'district_id'		=> $this->district_id,
 						'allrows'			=> $this->allrows
 					);*/
+
+
+
 					for ($k=0;$k<$count_uicols_name;$k++)
 					{
 
@@ -572,7 +571,6 @@
 									$datatable['rows']['row'][$j]['column'][$k]['target']	= '_blank';
 								}
 
-
 					}
 
 					/*$content[] = array
@@ -602,15 +600,33 @@
 					$j++;
 				}
 			}
+
+						$parameters = array
+						(
+							'parameter' => array
+							(
+								array
+								(
+									'name'		=> 'id',
+									'source'	=> 'id'
+								),
+							)
+						);
+
+						if($this->acl_read)
+						{
 							$datatable['rowactions']['action'][] = array(
 								'statustext' 			=> lang('view the project'),
 								'text'		=> lang('view'),
 								'action'		=> $GLOBALS['phpgw']->link('/index.php',array
 										(
-											'menuaction'	=> 'property.uitts.view',
-											'id'			=> $ticket['id']
-										))
+											'menuaction'	=> 'property.uitts.view'
+										)),
+							'parameters'	=> $parameters
 							);
+
+						}
+
 
 							$datatable['rowactions']['action'][] = array(
 												'text' 			=> lang('add'),
@@ -619,6 +635,32 @@
 																	'menuaction'	=> 'property.uitts.add'
 																))
 										);
+
+
+						if(isset($GLOBALS['phpgw_info']['user']['preferences']['property']['tts_status_link']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['tts_status_link'])
+						{
+							$GLOBALS['phpgw_info']['user']['preferences']['property']['tts_status_link'];
+														$datatable['rowactions']['action'][] = array(
+																'text' 			=> lang('status'),
+																'action'		=> $GLOBALS['phpgw']->link('/index.php',array
+																(
+																	'menuaction'		=> 'property.uitts.index',
+																	'edit_status'		=> true,
+																	'new_status'		=> $new_status,
+																	'second_display'	=> true,
+																	'sort'				=> $this->sort,
+																	'order'				=> $this->order,
+																	'cat_id'			=> $this->cat_id,
+																	'filter'			=> $this->filter,
+																	'user_filter'		=> $this->user_filter,
+																	'query'				=> $this->query,
+																	'district_id'		=> $this->district_id,
+																	'allrows'			=> $this->allrows
+																)),
+																'parameters'	=> $parameters
+														);
+						}
+			unset($parameters);
 
 			/*$table_header[] = array
 			(
