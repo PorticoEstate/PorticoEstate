@@ -30,11 +30,19 @@
 	 date_search : 1 //if search has link "Data search"
 	 };
 
-	this.init_particular_setting = function()
+	this.particular_setting = function()
 	{
-		// necesary when do "enter" in search botton.
+		if(flag_particular_setting=='init')
+		{
+			//nothing
+		}
+		else if(flag_particular_setting=='update')
+		{
+			//nothing
+		}
+
+		//--focus for txt_query---
 		YAHOO.util.Dom.get(textImput[0].id).value = path_values.query;
-		// focus
 		YAHOO.util.Dom.get(textImput[0].id).focus();
 	}
 	

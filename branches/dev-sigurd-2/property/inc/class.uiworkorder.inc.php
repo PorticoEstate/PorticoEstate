@@ -493,6 +493,10 @@
 
 			for ($i=0;$i<$uicols_count;$i++)
 			{
+				
+				//all colums should be have formatter
+				$datatable['headers']['header'][$i]['formatter'] = ($uicols['formatter'][$i]==''?  '""' : $uicols['formatter'][$i]);
+				
 				if($uicols['input_type'][$i]!='hidden')
 				{
 					$datatable['headers']['header'][$i]['name'] 			= $uicols['name'][$i];
@@ -500,7 +504,7 @@
 					$datatable['headers']['header'][$i]['visible'] 			= true;
 					$datatable['headers']['header'][$i]['format'] 			= $this->bocommon->translate_datatype_format($uicols['datatype'][$i]);
 					$datatable['headers']['header'][$i]['sortable']			= false;
-					$datatable['headers']['header'][$i]['formatter']		= $uicols['formatter'][$i];
+					//$datatable['headers']['header'][$i]['formatter']		= $uicols['formatter'][$i];
 					if($uicols['name'][$i]=='project_id' || $uicols['name'][$i]=='workorder_id' ||  $uicols['name'][$i]=='address')
 					{
 						$datatable['headers']['header'][$i]['sortable']		= true;
