@@ -33,7 +33,7 @@ add a document	property	no	legg til dokument
 add a entity	property	no	Legg til en entitet
 add a entrance	property	no	legg til inngang
 add a equipment	property	no	legg til utstyr
-add a gab	property	no	Legg til GAB-info
+add a gab	property	no	Legg til GrunnEiendom
 add agreement	property	no	legg til avtale
 add agreement group	property	no	Legg til en avtalegruppe
 add a hour	property	no	legg til post
@@ -80,7 +80,7 @@ add equipment	property	no	legg til utstyr
 Add first value for this prizing	property	no	legg til første verdi for denne prisingen
 Add from prizebook	property	no	legg til fra prisbok
 Add from template	property	no	legg til fra mal
-Add gab	property	no	Legg til GAB-nr
+Add gab	property	no	Legg til GrunnEiendom
 Add hour	property	no	legg til post
 add investment	property	no	legg til investering
 Add invoice	property	no	Legg til faktura
@@ -377,7 +377,7 @@ delete the deviation	property	no	Slett avvik
 delete the entity	property	no	Slett entitet
 delete the entrance	property	no	slett inngang
 Delete the entry	property	no	slett post
-delete the gab	property	no	Slett GAB-info
+delete the gab	property	no	Slett GrunnEiendom
 delete the item	property	no	Slett post
 delete the last index	property	no	Slett siste index
 delete the location	property	no	Slett lokalisering
@@ -467,7 +467,7 @@ Edit document	property	no	rette dokument
 edit entity	property	no	Rette entitet
 edit entrance	property	no	rette inngang
 edit equipment	property	no	rette utstyr
-Edit gab	property	no	Rette GAB-informasjon
+Edit gab	property	no	Editer GrunnEiendom
 Edit hour	property	no	rette post
 Edit ID	property	no	rette ID
 edit info	property	no	Rette informasjon
@@ -501,7 +501,7 @@ edit the entity	property	no	Rette entitet
 Edit the entity	property	no	Rette entitet
 edit the entrance	property	no	rette inngang
 edit the equipment	property	no	rette utstyr
-edit the gab	property	no	Rette GAB-info
+edit the gab	property	no	Editer GrunnEiendom
 edit the location	property	no	Rette lokalisering
 edit the meter	property	no	rette måler
 edit the method	property	no	Rette metoden
@@ -687,9 +687,9 @@ From	property	no	Fra
 from date	property	no	Fra dato
 Funding	property	no	Finansiering
 gaards nr	property	no	GårdsNr
-gab	property	no	GAB
-GAB	property	no	GAB
-gabnr	property	no	GabNr
+gab	property	no	GrunnEiendom
+GAB	property	no	GrunnEiendom
+gabnr	property	no	GrunnEiendom
 General	property	no	Generelt
 General Address	property	no	Generell adresse
 General Info	property	no	generell informasjon
@@ -834,8 +834,8 @@ list entity custom function	property	no	List egendefinerte funskjoner for entite
 list entity type	property	no	List entitet-type
 list entrance	property	no	list inngang
 list equipment	property	no	list utstyr
-list gab	property	no	List GAB-info
-list gab detail	property	no	List GAB-detaljer
+list gab	property	no	List GrunnEiendom
+list gab detail	property	no	List GrunnEiendom-detaljer
 list hours	property	no	List timer
 list investment	property	no	List investeringer
 list invoice	property	no	List bilag
@@ -1146,7 +1146,7 @@ Save the document	property	no	lagre dokument
 Save the entity	property	no	Lagre entitet
 Save the entrance	property	no	lagre inngang
 Save the equipment	property	no	lagre utstyr
-Save the gab	property	no	Lagre GAB info
+Save the gab	property	no	Lagre GrunnEiendom
 Save the investment	property	no	lagre investering
 Save the location	property	no	Lagre lokalisering
 Save the meter	property	no	lagre måler
@@ -1541,9 +1541,9 @@ View/Edit the history	property	no	vis/oppdater historikk
 view edit the prize for this activity	property	no	vis/oppdater pris for denne aktiviteten
 view entrance	property	no	vis inngang
 view equipment	property	no	vis utstyr
-View gab	property	no	Vis GAB
-view gab detail	property	no	Vis GAB-detaljer
-View gab-info	property	no	Vis GAB info
+View gab	property	no	Vis GrunnEiendom
+view gab detail	property	no	Vis GrunnEiendom-detaljer
+View gab-info	property	no	Vis GrunnEiendom
 view information about the document	property	no	vis informasjon om dokumentet
 view investment	property	no	vis investering
 View map	property	no	Vis kart
@@ -1566,7 +1566,7 @@ view the document	property	no	vis dokument
 view the entity	property	no	Vis entiteten
 view the entrance	property	no	vis inngang
 view the equipment	property	no	vis utstyr
-view the gab	property	no	Vis GABinfo
+view the gab	property	no	Vis GrunnEiendom
 view the location	property	no	Vis lokalisering
 view the meter	property	no	vis måler
 view the method	property	no	Vis metoden

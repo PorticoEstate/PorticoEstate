@@ -53,6 +53,8 @@
 
 		function read_entity_to_link($location_code)
 		{
+			$entity = array();
+
 			$sql = "SELECT * FROM fm_entity_category where loc_link=1";
 
 			$this->db->query($sql,__LINE__,__FILE__);
@@ -113,10 +115,24 @@
 				);
 			}
 
+			$sql = "SELECT count(*) as hits FROM fm_gab_location WHERE location_code $this->like '$location_code%'";
+			$this->db->query($sql,__LINE__,__FILE__);
+			$this->db->next_record();
+			if($this->db->f('hits'))
+			{
+				$entity[] = array
+				(
+					'entity_link'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction' => 'property.uigab.index','location_code'=> $location_code)),
+					'name'		=> lang('gabnr') . ' [' . $this->db->f('hits') . ']',
+					'descr'		=> lang('gab info')
+				);
+			}
+
 			if (isset($entity))
 			{
 				return $entity;
 			}
+
 		}
 
 		function select_status_list($type_id)
