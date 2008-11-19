@@ -11,6 +11,9 @@
 			<xsl:when test="list_attribute_group">
 				<xsl:apply-templates select="list_attribute_group"/>
 			</xsl:when>
+			<xsl:when test="edit_attrib_group">
+				<xsl:apply-templates select="edit_attrib_group"/>
+			</xsl:when>
 			<xsl:when test="edit_attrib">
 				<xsl:apply-templates select="edit_attrib"/>
 			</xsl:when>
@@ -804,6 +807,9 @@
 			<td class="th_text" width="1%" align="left">
 				<xsl:value-of select="lang_datatype"/>
 			</td>
+			<td class="th_text" width="1%" align="left">
+				<xsl:value-of select="lang_attrib_group"/>
+			</td>
 			<td class="th_text" width="5%" align="center">
 				<a href="{$sort_sorting}"><xsl:value-of select="lang_sorting"/></a>
 			</td>
@@ -846,6 +852,9 @@
 				</td>
 				<td>
 					<xsl:value-of select="datatype"/>
+				</td>
+				<td>
+					<xsl:value-of select="attrib_group"/>
 				</td>
 				<td>
 					<table align="left">
@@ -994,6 +1003,128 @@
 	</xsl:template>
 
 
+<!-- add attribute group / edit attribute group -->
+
+	<xsl:template match="edit_attrib_group">
+		<div align="left">
+		
+		<table cellpadding="2" cellspacing="2" width="80%" align="center">
+			<xsl:choose>
+				<xsl:when test="msgbox_data != ''">
+					<tr>
+						<td align="left" colspan="3">
+							<xsl:call-template name="msgbox"/>
+						</td>
+					</tr>
+				</xsl:when>
+			</xsl:choose>
+			
+			<xsl:variable name="form_action"><xsl:value-of select="form_action"/></xsl:variable>
+			<form method="post" action="{$form_action}">
+
+			<tr>
+				<td class="th_text" align="left">
+					<xsl:value-of select="lang_entity"/>
+				</td>
+				<td class="th_text" align="left">
+					<xsl:value-of select="entity_name"/>
+				</td>
+			</tr>
+			<tr>
+				<td class="th_text" align="left">
+					<xsl:value-of select="lang_category"/>
+				</td>
+				<td class="th_text" align="left">
+					<xsl:value-of select="category_name"/>
+				</td>
+			</tr>
+			<xsl:choose>
+				<xsl:when test="value_id != ''">
+					<tr>
+						<td valign="top">
+							<xsl:value-of select="lang_id"/>
+						</td>
+						<td>
+							<xsl:value-of select="value_id"/>
+						</td>
+					</tr>
+				</xsl:when>
+			</xsl:choose>
+			<tr>
+				<td valign="top">
+					<xsl:value-of select="lang_group_name"/>
+				</td>
+				<td>
+					<input type="text" name="values[group_name]" value="{value_group_name}" maxlength="20" onMouseout="window.status='';return true;">
+						<xsl:attribute name="onMouseover">
+							<xsl:text>window.status='</xsl:text>
+								<xsl:value-of select="lang_group_name_statustext"/>
+							<xsl:text>'; return true;</xsl:text>
+						</xsl:attribute>
+					</input>
+				</td>
+			</tr>
+			<tr>
+				<td valign="top">
+					<xsl:value-of select="lang_descr"/>
+				</td>
+				<td>
+					<input type="text" name="values[descr]" value="{value_descr}" size ="60" maxlength="50" onMouseout="window.status='';return true;">
+						<xsl:attribute name="onMouseover">
+							<xsl:text>window.status='</xsl:text>
+								<xsl:value-of select="lang_descr_statustext"/>
+							<xsl:text>'; return true;</xsl:text>
+						</xsl:attribute>
+					</input>
+				</td>
+			</tr>
+			<tr>
+				<td valign="top">
+					<xsl:value-of select="lang_remark"/>
+				</td>
+				<td>
+					<textarea cols="60" rows="10" name="values[remark]" wrap="virtual" onMouseout="window.status='';return true;">
+						<xsl:attribute name="onMouseover">
+							<xsl:text>window.status='</xsl:text>
+								<xsl:value-of select="lang_remark_statustext"/>
+							<xsl:text>'; return true;</xsl:text>
+						</xsl:attribute>
+						<xsl:value-of select="value_remark"/>		
+					</textarea>
+				</td>
+			</tr>
+			<tr height="50">
+				<td>
+					<xsl:variable name="lang_save"><xsl:value-of select="lang_save"/></xsl:variable>
+					<input type="submit" name="values[save]" value="{$lang_save}" onMouseout="window.status='';return true;">
+						<xsl:attribute name="onMouseover">
+							<xsl:text>window.status='</xsl:text>
+								<xsl:value-of select="lang_save_attribtext"/>
+							<xsl:text>'; return true;</xsl:text>
+						</xsl:attribute>
+					</input>
+				</td>
+			</tr>
+
+			</form>
+			<tr>
+				<td>
+					<xsl:variable name="done_action"><xsl:value-of select="done_action"/></xsl:variable>
+					<xsl:variable name="lang_done"><xsl:value-of select="lang_done"/></xsl:variable>
+					<form method="post" action="{$done_action}">
+						<input type="submit" name="done" value="{$lang_done}" onMouseout="window.status='';return true;">
+							<xsl:attribute name="onMouseover">
+								<xsl:text>window.status='</xsl:text>
+									<xsl:value-of select="lang_done_attribtext"/>
+								<xsl:text>'; return true;</xsl:text>
+							</xsl:attribute>
+						</input>
+					</form>
+				</td>
+			</tr>
+		</table>
+		</div>
+	</xsl:template>
 <!-- add attribute / edit attribute -->
 
 	<xsl:template match="edit_attrib">
@@ -1082,6 +1213,17 @@
 						</xsl:attribute>
 						<xsl:value-of select="value_statustext"/>		
 					</textarea>
+				</td>
+			</tr>
+			<tr>
+				<td valign="top">
+					<xsl:value-of select="lang_group"/>
+				</td>
+				<td valign="top">
+					<xsl:variable name="lang_group_statustext"><xsl:value-of select="lang_group_statustext"/></xsl:variable>
+					<select name="values[group_id]" class="forms" onMouseover="window.status='{$lang_group_statustext}'; return true;" onMouseout="window.status='';return true;">
+						<xsl:apply-templates select="attrib_group_list"/>
+					</select>
 				</td>
 			</tr>
 			<tr>
@@ -1585,6 +1727,20 @@
 <!-- location_level_list -->	
 
 	<xsl:template match="location_level_list">
+	<xsl:variable name="id"><xsl:value-of select="id"/></xsl:variable>
+		<xsl:choose>
+			<xsl:when test="selected">
+				<option value="{$id}" selected="selected"><xsl:value-of disable-output-escaping="yes" select="name"/></option>
+			</xsl:when>
+			<xsl:otherwise>
+				<option value="{$id}"><xsl:value-of disable-output-escaping="yes" select="name"/></option>
+			</xsl:otherwise>
+		</xsl:choose>
+	</xsl:template>
+
+<!-- attrib_group_list -->	
+
+	<xsl:template match="attrib_group_list">
 	<xsl:variable name="id"><xsl:value-of select="id"/></xsl:variable>
 		<xsl:choose>
 			<xsl:when test="selected">

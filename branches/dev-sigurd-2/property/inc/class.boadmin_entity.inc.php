@@ -290,6 +290,21 @@
 			}
 		}
 
+		function get_attrib_group_list($entity_id,$cat_id, $selected)
+		{
+			$group_list = $this->read_attrib_group($entity_id, $cat_id, true);
+			
+			foreach($group_list as &$group)
+			{
+				if( $group['id'] ==  $selected )
+				{
+					$group['selected'] = true;
+				}
+			}
+//_debug_array($group_list);die();
+			return $group_list;
+		}
+
 		function read_attrib_group($entity_id='',$cat_id='',$allrows='')
 		{
 			if($allrows)
@@ -323,6 +338,11 @@
 			return $this->custom->get('property', '.entity.' . $entity_id . '.' . $cat_id, $id, true);
 		}
 
+		function read_single_attrib_group($entity_id,$cat_id,$id)
+		{
+			return $this->custom->get_group('property', '.entity.' . $entity_id . '.' . $cat_id, $id, true);
+		}
+
 		function resort_attrib_group($id,$resort)
 		{
 			$this->custom->resort_group($id, $resort, 'property', '.entity.' . $this->entity_id . '.' . $this->cat_id);
@@ -333,6 +353,49 @@
 			$this->custom->resort($id, $resort, 'property', '.entity.' . $this->entity_id . '.' . $this->cat_id);
 		}
 
+		public function save_attrib_group($group, $action='')
+		{
+			$group['appname'] = 'property';
+ 			$group['location'] = '.entity.' . $group['entity_id'] . '.' . $group['cat_id'];
+			if ( $action=='edit' && $group['id'] )
+			{
+				if ( $this->custom->edit_group($group) )
+				{
+					return array
+					(
+						'msg'	=> array('msg' => lang('group has been updated'))
+					);
+				}
+
+				return array('error' => lang('Unable to update group'));
+			}
+			else
+			{
+				$id = $this->custom->add_group($group);
+				if ( $id <= 0  )
+				{
+					return array('error' => lang('Unable to add group'));
+				}
+				else if ( $id == -1 )
+				{
+					return array
+					(
+						'id'	=> 0,
+						'error'	=> array
+						(
+							array('msg' => lang('group already exists, please choose another name')),
+							array('msg' => lang('Attribute group has NOT been saved'))
+						)
+					);
+				}
+
+				return array
+				(
+					'id'	=> $id,
+					'msg'	=> array('msg' => lang('group has been created'))
+				);
+			}
+		}
 		public function save_attrib($attrib, $action='')
 		{
 			$attrib['appname'] = 'property';
@@ -354,8 +417,6 @@
 				$id = $this->custom->add($attrib);
 				if ( $id <= 0  )
 				{
-					$this->custom->add($attrib);
-
 					return array('error' => lang('Unable to add field'));
 				}
 				else if ( $id == -1 )

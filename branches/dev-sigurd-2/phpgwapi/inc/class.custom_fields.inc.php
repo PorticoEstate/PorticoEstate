@@ -131,6 +131,76 @@
 		}
 
 		/**
+		 * Add a group for custom fields/attributes
+		 * 
+		 * @param array $attrib the field data
+		 *
+		 * @return int the the new custom field db pk
+		 */
+		public function add_group($group)
+		{
+			$receipt = array();
+
+			$appname	= $group['appname'];
+			$location	= $group['location'];
+
+			// don't continue if the location is invalid
+			$location_id = $GLOBALS['phpgw']->locations->get_id($appname, $location);
+			if ( !$location_id )
+			{
+				return 0;
+			}
+
+			$values = array
+			(
+				'location_id'	=> $location_id,
+				'id'			=> 0,
+				'name'	=> $this->_db->db_addslashes(strtolower($group['group_name'])),
+				'descr'	=> $this->_db->db_addslashes($group['descr']),
+				'remark'	=> $this->_db->db_addslashes($group['remark']),
+				'group_sort'	=> 0,
+			);
+
+
+			unset($group);
+
+			$this->_db->transaction_begin();
+
+			$sql = "SELECT id FROM phpgw_cust_attribute_group"
+				. " WHERE location_id = {$values['location_id']}"
+					. " AND name = '{$values['name']}'";
+			$this->_db->query($sql, __LINE__, __FILE__);
+			if ( $this->_db->next_record() )
+			{
+				return -1;
+			}
+
+			$sql = 'SELECT MAX(group_sort) AS max_sort, MAX(id) AS current_id'
+				. ' FROM phpgw_cust_attribute_group '
+				. " WHERE location_id ='{$values['location_id']}'";
+			$this->_db->query($sql, __LINE__, __FILE__);
+			$this->_db->next_record();
+			$values['group_sort']	= $this->_db->f('max_sort') + 1;
+			$values['id']	= $this->_db->f('current_id') + 1;		
+			
+			$cols = implode(', ', array_keys($values));
+			$vals = $this->_db->validate_insert($values);
+
+			$sql = "INSERT INTO phpgw_cust_attribute_group({$cols}) VALUES({$vals})";
+			$this->_db->query($sql, __LINE__, __FILE__);
+
+			unset($cols, $vals);
+
+			$receipt['id'] = $values['id'];
+
+			if ( $this->_db->transaction_commit() )
+			{
+				return $values['id'];
+			}
+
+			return 0;
+		}
+		/**
 		 * Add a custom field/attribute
 		 * 
 		 * @param array $attrib the field data
@@ -361,6 +431,7 @@
 			}
 
 			$this->_db->transaction_begin();
+
 			$sql = "SELECT column_name FROM phpgw_cust_attribute"
 				. " WHERE location_id = {$loc_id} AND id = {$attrib_id}";
 			$this->_db->query($sql, __LINE__, __FILE__);
@@ -376,14 +447,20 @@
 
 			if(!$doubled) // else: wait for it - another one is coming
 			{
-				$sql = "SELECT attrib_sort FROM phpgw_cust_attribute"
+				$sql = "SELECT group_id FROM phpgw_cust_attribute " 
 					. " WHERE location_id = {$loc_id} AND id = {$attrib_id}";
+				$this->_db->query($sql, __LINE__, __FILE__);
+				$this->_db->next_record();
+				$group_id	= $this->_db->f('group_id');
+
+				$sql = "SELECT attrib_sort FROM phpgw_cust_attribute"
+					. " WHERE location_id = {$loc_id} AND id = {$attrib_id} AND group_id = {$group_id}";
 				$this->_db->query($sql,__LINE__,__FILE__);
 				$this->_db->next_record();
 				$attrib_sort	= $this->_db->f('attrib_sort');
 
 				$sql = "SELECT MAX(attrib_sort) AS max_sort"
-					. " FROM phpgw_cust_attribute WHERE location_id = {$loc_id}";
+					. " FROM phpgw_cust_attribute WHERE location_id = {$loc_id} AND group_id = {$group_id}";
 				$this->_db->query($sql, __LINE__, __FILE__);
 				$this->_db->next_record();
 				$max_sort	= $this->_db->f('max_sort');
@@ -391,7 +468,7 @@
 				if ( $max_sort > $attrib_sort )
 				{
 					$sql = "UPDATE phpgw_cust_attribute SET attrib_sort = attrib_sort - 1"
-						. " WHERE location_id = {$loc_id} AND attrib_sort > {$attrib_sort}";
+						. " WHERE location_id = {$loc_id} AND attrib_sort > {$attrib_sort} AND group_id = {$group_id}";
 					$this->_db->query($sql, __LINE__, __FILE__);
 				}
 				$sql = "DELETE FROM phpgw_cust_attribute"
@@ -401,6 +478,39 @@
 			return $this->_db->transaction_commit();
 		}
 
+		/**
+		 * Edit a group for custom fields
+		 * 
+		 * @param array  $group  the field data
+		 *
+		 * @return integer the database id of the group
+		 */
+		function edit_group($group)
+		{
+
+			$location_id	= $GLOBALS['phpgw']->locations->get_id($group['appname'], $group['location']);
+			$group_id		= (int) $group['id'];
+
+			$this->_db->transaction_begin();
+
+			$value_set = array
+			(
+				'name'		=> $this->_db->db_addslashes($group['group_name']),
+				'descr'		=> $this->_db->db_addslashes($group['descr']),
+				'remark'	=> $this->_db->db_addslashes($group['remark'])
+			);
+
+			$value_set	= $this->_db->validate_update($value_set);
+
+			$this->_db->query("UPDATE phpgw_cust_attribute_group SET $value_set WHERE location_id = {$location_id} AND id=" . $group_id,__LINE__,__FILE__);
+
+			if ( $this->_db->transaction_commit() )
+			{
+				return $group_id;
+			}
+
+			return false;
+		}
 		/**
 		 * Edit a custom field
 		 * 
@@ -449,7 +559,7 @@
 				default: // all is good
 			}
 
-			$sql = "SELECT column_name, datatype, precision_ FROM phpgw_cust_attribute " 
+			$sql = "SELECT column_name, datatype, precision_, group_id FROM phpgw_cust_attribute " 
 				. " WHERE location_id  = {$location_id} AND id = {$attrib_id}";
 			$this->_db->query($sql, __LINE__, __FILE__);
 			if ( !$this->_db->next_record() )
@@ -460,8 +570,9 @@
 
 			$OldColumnName		= $this->_db->f('column_name');
 			$OldDataType		= $this->_db->f('datatype');
-			$OldPrecision		= $this->_db->f('precision_');			
-			
+			$OldPrecision		= $this->_db->f('precision_');
+			$OldGroup			= $this->_db->f('group_id');			
+
 			$table_def = $this->get_table_def($attrib_table);	
 
 			$this->_db->transaction_begin();
@@ -478,12 +589,45 @@
 					'nullable'		=> $attrib['column_info']['nullable'] == 'False' ? 'False' : 'True',
 					'disabled'		=> isset($attrib['disabled']) ? $attrib['disabled'] : '',
 					'helpmsg'		=> $attrib['helpmsg'],
-					'lookup_form'	=> isset($attrib['lookup_form']) ? $attrib['lookup_form'] : ''
+					'lookup_form'	=> isset($attrib['lookup_form']) ? $attrib['lookup_form'] : '',
+					'group_id'		=> $attrib['group_id']
 				);
+
+				if($OldGroup != $attrib['group_id'])
+				{
+					$sql = "SELECT MAX(attrib_sort) AS max_sort FROM phpgw_cust_attribute " 
+						. " WHERE location_id = {$location_id} AND group_id = {$attrib['group_id']}";
+					$this->_db->query($sql,__LINE__,__FILE__);
+					$this->_db->next_record();
+					$max_sort	= $this->_db->f('max_sort');
+					
+					$value_set['attrib_sort'] = $max_sort + 1;
+
+
+					$sql = "SELECT attrib_sort FROM phpgw_cust_attribute"
+						. " WHERE location_id = {$location_id} AND id = {$attrib_id} AND group_id = {$OldGroup}";
+					$this->_db->query($sql,__LINE__,__FILE__);
+					$this->_db->next_record();
+					$attrib_sort	= $this->_db->f('attrib_sort');
+
+					$sql = "SELECT MAX(attrib_sort) AS max_sort"
+						. " FROM phpgw_cust_attribute WHERE location_id = {$location_id} AND group_id = {$OldGroup}";
+					$this->_db->query($sql, __LINE__, __FILE__);
+					$this->_db->next_record();
+					$max_sort	= $this->_db->f('max_sort');
+			
+					if ( $max_sort > $attrib_sort )
+					{
+						$sql = "UPDATE phpgw_cust_attribute SET attrib_sort = attrib_sort - 1"
+							. " WHERE location_id = {$location_id} AND attrib_sort > {$attrib_sort} AND group_id = {$OldGroup}";
+						$this->_db->query($sql, __LINE__, __FILE__);
+					}
+				}
 
 				$value_set	= $this->_db->validate_update($value_set);
 
 				$this->_db->query("UPDATE phpgw_cust_attribute set $value_set WHERE location_id = {$location_id} AND id=" . $attrib_id,__LINE__,__FILE__);
+
 			}
 
 			$this->_oProc->m_aTables = $table_def;
@@ -675,6 +819,7 @@
 					'id'				=> $id,
 					//'attrib_id'			=> $this->_db->f('id'), // FIXME
 					'entity_type'		=> $this->_db->f('type_id'),
+					'group_id'			=> $this->_db->f('group_id'),					
 					'attrib_sort'		=> (int) $this->_db->f('attrib_sort'),
 					'list'				=> $this->_db->f('list'),
 					'lookup_form'		=> $this->_db->f('lookup_form'),
@@ -797,6 +942,40 @@
 		}
 
 		/**
+		* Read a single attribute group record
+		*
+		* @param string  $appname     the name of the module for the attribute
+		* @param string  $location    the name of the location of the attribute
+		* @param integer $id          the id of the attribute
+		*
+		* @return array the attribute record
+		*/
+		public function get_group($appname, $location, $id)
+		{
+			$location_id = $GLOBALS['phpgw']->locations->get_id($appname, $location);
+			$id = (int) $id;
+
+			$sql = "SELECT * FROM phpgw_cust_attribute_group "
+				. " WHERE location_id = {$location_id} AND id = {$id}";
+			$this->_db->query($sql, __LINE__, __FILE__);
+
+			if ( !$this->_db->next_record() )
+			{
+				return null;
+			}
+
+			$group = array
+			(
+				'id'			=> $this->_db->f('id'),
+				'group_name'	=> $this->_db->f('name', true),
+				'descr'			=> $this->_db->f('descr', true),
+				'remark'		=> $this->_db->f('remark', true),
+				'group_sort'	=> $this->_db->f('group_sort')
+			);
+
+			return $group;
+		}
+		/**
 		* Read a single attribute record
 		*
 		* @param string  $appname     the name of the module for the attribute
@@ -824,8 +1003,7 @@
 			$attrib = array
 			(
 				'id'			=> $this->_db->f('id'),
-				// FIXME this isn't needed
-				//'attrib_id'		=> $this->_db->f('id'),
+				'group_id'		=> $this->_db->f('group_id'),
 				'column_name'	=> $this->_db->f('column_name', true),
 				'input_text'	=> $this->_db->f('input_text', true),
 				'statustext'	=> $this->_db->f('statustext', true),
@@ -997,14 +1175,20 @@
 
 			$this->_db->transaction_begin();
 
-			$sql = "SELECT attrib_sort FROM phpgw_cust_attribute " 
+			$sql = "SELECT group_id FROM phpgw_cust_attribute " 
 				. " WHERE location_id = {$location_id} AND id = {$id}";
+			$this->_db->query($sql, __LINE__, __FILE__);
+			$this->_db->next_record();
+			$group_id	= $this->_db->f('group_id');
+
+			$sql = "SELECT attrib_sort FROM phpgw_cust_attribute " 
+				. " WHERE location_id = {$location_id} AND id = {$id} AND group_id = {$group_id}";
 			$this->_db->query($sql, __LINE__, __FILE__);
 			$this->_db->next_record();
 			$attrib_sort	= $this->_db->f('attrib_sort');
 
 			$sql = "SELECT MAX(attrib_sort) AS max_sort FROM phpgw_cust_attribute " 
-				. " WHERE location_id = {$location_id}";
+				. " WHERE location_id = {$location_id} AND group_id = {$group_id}";
 			$this->_db->query($sql,__LINE__,__FILE__);
 			$this->_db->next_record();
 			$max_sort	= $this->_db->f('max_sort');
@@ -1037,11 +1221,11 @@
 			}
 
 			$sql = "UPDATE phpgw_cust_attribute SET attrib_sort = {$attrib_sort}"
-				. " WHERE location_id = {$location_id} AND attrib_sort = {$new_sort}";
+				. " WHERE location_id = {$location_id} AND attrib_sort = {$new_sort} AND group_id = {$group_id}";
 			$this->_db->query($sql, __LINE__, __FILE__);
 
 			$sql = "UPDATE phpgw_cust_attribute SET attrib_sort = {$new_sort}"
-				. " WHERE location_id = {$location_id} AND id = {$id}";
+				. " WHERE location_id = {$location_id} AND id = {$id} AND group_id = {$group_id}";
 			$this->_db->query($sql, __LINE__, __FILE__);
 
 			return $this->_db->transaction_commit();
