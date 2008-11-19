@@ -68,17 +68,28 @@
 		var divs= YAHOO.util.Dom.getElementsByClassName('field');
 		var mydiv = divs[divs.length-1];
 		
-		mydiv.innerHTML = "";
+		//remove all child of mydiv
+		if ( mydiv.hasChildNodes() )
+	    while ( mydiv.childNodes.length >= 1 )
+	    {
+	        mydiv.removeChild( mydiv.firstChild );
+	    }
+		
 		// styles for dont show
 		mydiv.style.display = 'none';
 
 		//get all controls of datatable
 		valuesForPHP = YAHOO.util.Dom.getElementsByClassName('myValuesForPHP');
 		var myclone = null;
+		
 		//add all control to form
 		for(i=0;i<valuesForPHP.length;i++)
 		{
 			myclone = valuesForPHP[i].cloneNode(false);
+			if (myclone.checked == true) {
+				var b = new YAHOO.widget.Button('btn_update');
+				b.set("disabled", true);
+			}
 			mydiv.appendChild(myclone);
 		}
 		
@@ -94,7 +105,7 @@
 		formObject[0].action = sUrl; 
 		formObject[0].method = "post";
 		formObject[0].submit();
-        
+		
    }
 
 
