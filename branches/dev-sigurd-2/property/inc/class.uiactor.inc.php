@@ -253,32 +253,15 @@
 			                                            'name' => 'member_id',
 			                                            'value'	=> lang('Member'),
 			                                            'type' => 'button'
+			                                            //'style' => 'filter'
 			                                        ),
 			                                        array(
 			                                            'id' => 'btn_cat_id',
 			                                            'name' => 'cat_id',
 			                                            'value'	=> lang('Category'),
-			                                            'type' => 'button',
-			                                        ),		                                        			                                      				                                      	                              			                            						                            				                            
-			   										array( // TEXT IMPUT
-			                                            'name'     => 'query',
-			                                            'id'     => 'txt_query',
-			                                            'text'    => '',//necesary for spacio next to  txtinput
-			                                            'value'    => '',//$query,
-			                                            'type' => 'text',
-			                                            'size'    => 28
-			                                        ),			                                        
-			                                        array( //boton     SEARCH
-			                                            'id' => 'btn_search',
-			                                            'name' => 'search',
-			                                            'value'    => lang('search'),
-			                                            'type' => 'button',
-			                                        ),			                                  
-													array(
-						                                'type'	=> 'submit',
-						                            	'id'	=> 'btn_new',
-						                                'value'	=> lang('add')
-						                            ),
+			                                            'type' => 'button'
+			                                            //'style' => 'filter'
+			                                        ),
 													array(
 										                'type'=> 'link',
 										                'id'  => 'btn_columns',
@@ -288,7 +271,26 @@
 										                           'role'		=> $this->role
 										                           ))."','','width=350,height=370')",
 										                 'value' => lang('columns')
-										            )							                           				                           
+										            ),
+													array(
+						                                'type'	=> 'submit',
+						                            	'id'	=> 'btn_new',
+						                                'value'	=> lang('add')
+						                            ),
+			                                        array( //boton     SEARCH
+			                                            'id' => 'btn_search',
+			                                            'name' => 'search',
+			                                            'value'    => lang('search'),
+			                                            'type' => 'button',
+			                                        ),							                            										            				                                        		                                        			                                      				                                      	                              			                            						                            				                            
+			   										array( // TEXT IMPUT
+			                                            'name'     => 'query',
+			                                            'id'     => 'txt_query',
+			                                            'text'    => '',//necesary for spacio next to  txtinput
+			                                            'value'    => '',//$query,
+			                                            'type' => 'text',
+			                                            'size'    => 28
+			                                        )							                           				                           
 		                           				),
 		                       		'hidden_value' => array(
 					                                        array( //div values  combo_box_0
@@ -440,6 +442,10 @@
 
 			for ($i=0;$i<$uicols_count;$i++)
 			{
+				
+				//all colums should be have formatter
+				$datatable['headers']['header'][$i]['formatter'] = ($uicols['formatter'][$i]==''?  '""' : $uicols['formatter'][$i]);
+				
 				if($uicols['input_type'][$i]!='hidden')
 				{
 					$datatable['headers']['header'][$i]['name'] 			= $uicols['name'][$i];
@@ -447,7 +453,7 @@
 					$datatable['headers']['header'][$i]['visible'] 			= true;
 					$datatable['headers']['header'][$i]['format'] 			= $this->bocommon->translate_datatype_format($uicols['datatype'][$i]);
 					$datatable['headers']['header'][$i]['sortable']			= false;
-					$datatable['headers']['header'][$i]['formatter']		= $uicols['formatter'][$i];
+					//$datatable['headers']['header'][$i]['formatter']		= $uicols['formatter'][$i];
 					
 					if(isset($uicols['datatype'][$i]) && $uicols['datatype'][$i]!='T' && $uicols['datatype'][$i]!='CH') 
 					{
