@@ -384,11 +384,13 @@
 												array( //hidden start_date
 													'type'	=> 'hidden',
 													'id'	=> 'start_date',
+													'name'	=> 'start_date',
 													'value'	=> $start_date
 												 ),
 												 array( //hidden end_date
 													'type'	=> 'hidden',
 													'id'	=> 'end_date',
+													'name'	=> 'end_date',
 													'value'	=> $end_date
 												 ),
 												 array(//for link "None",
@@ -494,7 +496,7 @@
 								$datatable['rows']['row'][$j]['column'][$i]['format'] 			= 'link';
 								$datatable['rows']['row'][$j]['column'][$i]['java_link']		= true;
 								$datatable['rows']['row'][$j]['column'][$i]['link']			= $entity_entry['query_location'][$uicols['name'][$i]];
-								$uicols['formatter'][$i] = 'myCustom';
+								//$uicols['formatter'][$i] = 'myCustom';
 							}
 							else
 							{
@@ -600,6 +602,9 @@
 			//Columns Order
 			for ($i=0;$i<$uicols_count;$i++)
 			{
+				//all colums should be have formatter
+				$datatable['headers']['header'][$i]['formatter'] = ($uicols['formatter'][$i]==''?  '""' : $uicols['formatter'][$i]);
+
 				if($uicols['input_type'][$i]!='hidden')
 				{
 						$datatable['headers']['header'][$i]['name'] 			= $uicols['name'][$i];
@@ -607,7 +612,7 @@
 						$datatable['headers']['header'][$i]['visible'] 			= true;
 						$datatable['headers']['header'][$i]['format'] 			= $this->bocommon->translate_datatype_format($uicols['datatype'][$i]);
 						$datatable['headers']['header'][$i]['sortable']			= false;
-						$datatable['headers']['header'][$i]['formatter']		= $uicols['formatter'][$i];
+						//$datatable['headers']['header'][$i]['formatter']		= $uicols['formatter'][$i];
 						//according to stable bruch this columns is not SORTABLE'
 						$denied = array('merknad','account_lid');
 						//if not include
