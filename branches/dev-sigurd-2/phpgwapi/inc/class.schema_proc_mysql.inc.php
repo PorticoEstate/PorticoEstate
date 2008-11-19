@@ -194,6 +194,7 @@
 					$sTranslated = "'type' => 'float', 'precision' => $iPrecision";
 					break;
 				case 'datetime':
+				case 'timestamp':
 					$sTranslated = "'type' => 'timestamp'";
 					break;
 				case 'enum':
