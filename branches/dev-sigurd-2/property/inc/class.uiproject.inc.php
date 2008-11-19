@@ -360,7 +360,7 @@
 							(
 								array
 								(
-									'name'		=> 'project_id',
+									'name'		=> 'id',
 									'source'	=> 'project_id'
 								),
 							)
@@ -374,8 +374,8 @@
 								'text'		=> lang('view'),
 								'action'		=> $GLOBALS['phpgw']->link('/index.php',array
 										(
-											'menuaction'	=> 'property.uiproject.view',
-											'id'			=> $project_entry['project_id']
+											'menuaction'	=> 'property.uiproject.view'
+										
 										))
 							);
 						}
@@ -391,8 +391,8 @@
 								'text'		=> lang('edit'),
 								'action'		=> $GLOBALS['phpgw']->link('/index.php',array
 										(
-											'menuaction'	=> 'property.uiproject.edit',
-											'id'			=> $project_entry['project_id']
+											'menuaction'	=> 'property.uiproject.edit'
+										
 										)),
 								'parameters'	=> $parameters
 							);
