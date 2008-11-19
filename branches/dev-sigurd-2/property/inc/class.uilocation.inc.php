@@ -556,12 +556,15 @@
 			// for POP-UPs
 			if($lookup)
 			{
+				$i++;
 				$datatable['headers']['header'][$i]['width'] 			= '5%';
 				$datatable['headers']['header'][$i]['align'] 			= 'center';
 				$datatable['headers']['header'][$i]['name']				= 'select_record';
 				$datatable['headers']['header'][$i]['text']				= lang('select');
 				$datatable['headers']['header'][$i]['format'] 			= 'form';
 				$datatable['headers']['header'][$i]['sortable']			= false;
+				$datatable['headers']['header'][$i]['visible'] 			= true;
+				$datatable['headers']['header'][$i]['formatter']		= '""';
 				$input_name		= $GLOBALS['phpgw']->session->appsession('lookup_fields','property');
 
 				$function_exchange_values = '';

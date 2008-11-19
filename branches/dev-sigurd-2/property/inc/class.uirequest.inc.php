@@ -492,11 +492,15 @@
 			
 			if($lookup) 
 			{
-					$datatable['headers']['header'][$i + 1]['name'] 			= 'select';
-					$datatable['headers']['header'][$i + 1]['text'] 			= lang('select');
-					$datatable['headers']['header'][$i + 1]['visible'] 			= true;
-					$datatable['headers']['header'][$i + 1]['sortable']		= false;
-					$datatable['headers']['header'][$i + 1]['format'] 			= '';		
+				$i++;
+				$datatable['headers']['header'][$i]['name'] 			= 'select';
+				$datatable['headers']['header'][$i]['text'] 			= lang('select');
+				$datatable['headers']['header'][$i]['visible'] 			= true;
+				$datatable['headers']['header'][$i]['sortable']			= false;
+				$datatable['headers']['header'][$i]['format'] 			= '';		
+				$datatable['headers']['header'][$i]['sortable']			= false;
+				$datatable['headers']['header'][$i]['visible'] 			= true;
+				$datatable['headers']['header'][$i]['formatter']		= '""';
 			}
 
 			// path for property.js
