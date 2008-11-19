@@ -28,7 +28,7 @@
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:template>
-	
+
 	<xsl:template match="list_contact">
 		<script LANGUAGE="JavaScript">
 			function ExchangeContact(thisform)
@@ -39,7 +39,7 @@
 			}
 		</script>
 
-		
+
 		<table width="100%" cellpadding="2" cellspacing="2" align="center">
 			<tr>
 				<td>
@@ -69,7 +69,7 @@
 			</tr>
 		</table>
 				<xsl:apply-templates select="table_done"/>
-		
+
 	</xsl:template>
 
 	<xsl:template match="table_header_contact">
@@ -114,7 +114,7 @@
 				</td>
 				<xsl:choose>
 					<xsl:when test="id">
-						<form>			
+						<form>
 							<td class="small_text" valign="top">
 								<input type="hidden" name="hidden" value="{id}"></input>
 								<input type="hidden" name="hidden" value="{contact_name}"></input>
@@ -138,13 +138,18 @@
 		<script LANGUAGE="JavaScript">
 			function ExchangeVendor(thisform)
 			{
-				opener.document.form.<xsl:value-of select="contact_id"/>.value = thisform.elements[0].value;
-				opener.document.form.<xsl:value-of select="org_name"/>.value = thisform.elements[1].value;
+				/* opener.document.form.<xsl:value-of select="contact_id"/>.value = thisform.elements[0].value;
+				opener.document.form.<xsl:value-of select="org_name"/>.value = thisform.elements[1].value;*/
+
+				//cramirez: modifying this seccion for use in datatable YUI
+				opener.document.forms[0].<xsl:value-of select="contact_id"/>.value = thisform.elements[0].value;
+				opener.document.forms[0].<xsl:value-of select="org_name"/>.value = thisform.elements[1].value;
+
 				window.close()
 			}
 		</script>
 
-		
+
 		<table width="100%" cellpadding="2" cellspacing="2" align="center">
 			<tr>
 				<td>
@@ -174,7 +179,7 @@
 			</tr>
 		</table>
 				<xsl:apply-templates select="table_done"/>
-		
+
 	</xsl:template>
 
 	<xsl:template match="table_header_vendor">
@@ -219,7 +224,7 @@
 				</td>
 				<xsl:choose>
 					<xsl:when test="id">
-						<form>			
+						<form>
 							<td class="small_text" valign="top">
 								<input type="hidden" name="hidden" value="{id}"></input>
 								<input type="hidden" name="hidden" value="{vendor_name}"></input>
@@ -250,7 +255,7 @@
 			}
 		</script>
 
-		
+
 		<table width="100%" cellpadding="2" cellspacing="2" align="center">
 			<tr>
 				<td align="right">
@@ -274,7 +279,7 @@
 			</tr>
 		</table>
 				<xsl:apply-templates select="table_done"/>
-		
+
 	</xsl:template>
 
 	<xsl:template match="table_header_b_account">
@@ -319,7 +324,7 @@
 				</td>
 				<xsl:choose>
 					<xsl:when test="id">
-						<form>			
+						<form>
 							<td class="small_text" valign="top">
 								<input type="hidden" name="hidden" value="{id}"></input>
 								<input type="hidden" name="hidden" value="{b_account_name}"></input>
@@ -350,7 +355,7 @@
 			}
 		</script>
 
-		
+
 		<table width="100%" cellpadding="2" cellspacing="2" align="center">
 			<tr>
 				<td align="right">
@@ -374,7 +379,7 @@
 			</tr>
 		</table>
 				<xsl:apply-templates select="table_done"/>
-		
+
 	</xsl:template>
 
 	<xsl:template match="table_header_street">
@@ -419,7 +424,7 @@
 				</td>
 				<xsl:choose>
 					<xsl:when test="id">
-						<form>			
+						<form>
 							<td class="small_text" valign="top">
 								<input type="hidden" name="hidden" value="{id}"></input>
 								<input type="hidden" name="hidden" value="{street_name}"></input>
@@ -451,7 +456,7 @@
 			}
 		</script>
 
-		
+
 		<table width="100%" cellpadding="2" cellspacing="2" align="center">
 			<tr>
 				<td align="right">
@@ -475,7 +480,7 @@
 			</tr>
 		</table>
 				<xsl:apply-templates select="table_done"/>
-		
+
 	</xsl:template>
 
 	<xsl:template match="table_header_tenant_new">
@@ -527,7 +532,7 @@
 				</td>
 				<xsl:choose>
 					<xsl:when test="id">
-						<form>			
+						<form>
 							<td class="small_text" valign="top">
 								<input type="hidden" name="hidden" value="{id}"></input>
 								<input type="hidden" name="hidden" value="{last_name}"></input>
@@ -559,7 +564,7 @@
 			}
 		</script>
 
-		
+
 		<table width="100%" cellpadding="2" cellspacing="2" align="center">
 			<tr>
 				<td align="right">
@@ -583,7 +588,7 @@
 			</tr>
 		</table>
 				<xsl:apply-templates select="table_done"/>
-		
+
 	</xsl:template>
 
 	<xsl:template match="table_header_ns3420">
@@ -628,7 +633,7 @@
 				</td>
 				<xsl:choose>
 					<xsl:when test="id">
-						<form>			
+						<form>
 							<td class="small_text" valign="top">
 								<input type="hidden" name="hidden" value="{id}"></input>
 								<input type="hidden" name="hidden" value="{ns3420_descr}"></input>
@@ -658,7 +663,7 @@
 				</script>
 			</xsl:when>
 		</xsl:choose>
-		
+
 		<table width="95%" cellpadding="2" cellspacing="2" align="center">
 			<tr>
 				<td>
@@ -693,7 +698,7 @@
 								<a href="{sort}" onMouseover="window.status='{header}';return true;" onMouseout="window.status='';return true;"><xsl:value-of select="header"/></a>
 							</xsl:when>
 							<xsl:otherwise>
-								<xsl:value-of select="header"/>					
+								<xsl:value-of select="header"/>
 							</xsl:otherwise>
 						</xsl:choose>
 					</td>
@@ -703,7 +708,7 @@
 
 		</table>
 				<xsl:apply-templates select="table_done"/>
-		
+
 	</xsl:template>
 
 	<xsl:template name="list_values_entity">
@@ -727,7 +732,7 @@
 					<xsl:when test="//lookup=1">
 						<td>
 							<xsl:for-each select="hidden" >
-								 <input type="hidden" name="{name}" value="{value}"></input> 
+								 <input type="hidden" name="{name}" value="{value}"></input>
 							</xsl:for-each>
 						</td>
 					</xsl:when>
@@ -741,7 +746,7 @@
 						</xsl:when>
 						<xsl:otherwise>
 							<td class="small_text" align="left">
-								<xsl:value-of select="value"/>					
+								<xsl:value-of select="value"/>
 								<xsl:choose>
 									<xsl:when test="//lookup=1">
 										<xsl:if test="position() = last()">
@@ -754,7 +759,7 @@
 													</xsl:attribute>
 												</input>
 											</td>
-										
+
 										</xsl:if>
 									</xsl:when>
 								</xsl:choose>
@@ -800,7 +805,7 @@
 			}
 		</script>
 
-		
+
 		<table width="100%" cellpadding="2" cellspacing="2" align="center">
 			<tr>
 				<td align="right">
@@ -824,7 +829,7 @@
 			</tr>
 		</table>
 				<xsl:apply-templates select="table_done"/>
-		
+
 	</xsl:template>
 
 	<xsl:template match="table_header_phpgw_user">
@@ -877,7 +882,7 @@
 				</td>
 				<xsl:choose>
 					<xsl:when test="id">
-						<form>			
+						<form>
 							<td class="small_text" valign="top">
 								<input type="hidden" name="hidden" value="{id}"></input>
 								<input type="hidden" name="hidden" value="{$full_name}"></input>

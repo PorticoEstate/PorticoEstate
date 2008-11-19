@@ -31,6 +31,7 @@
 	 * Description
 	 * @package property
 	 */
+	phpgw::import_class('phpgwapi.yui');
 
 	class property_uilookup
 	{
@@ -225,6 +226,8 @@
 
 		function vendor()
 		{
+			//cramirez: necesary for windows.open . Avoid error JS
+			phpgwapi_yui::load_widget('tabview');
 
 			$this->cats		= CreateObject('phpgwapi.categories');
 			$this->cats->app_name = 'fm_vendor';
