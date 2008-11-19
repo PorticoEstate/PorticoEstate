@@ -233,7 +233,7 @@
 			   										array( // TEXT IMPUT
 			                                            'name'     => 'query',
 			                                            'id'     => 'txt_query',
-			                                            'text'    => '',//necesary for spacio next to  txtinput
+			                                            //'text'    => '',//necesary for spacio next to  txtinput
 			                                            'value'    => '',//$query,
 			                                            'type' => 'text',
 			                                            'size'    => 28
@@ -253,7 +253,18 @@
 						                                'type'	=> 'button',
 						                            	'id'	=> 'btn_export',
 						                                'value'	=> lang('download')
-						                            )					                           
+						                            ),
+													array(
+						                                'type'	=> 'button',
+						                            	'id'	=> 'btn_update',
+						                                'value'	=> lang('Update project')
+						                            ),
+						                            array( //hidden request
+							                                'type'	=> 'hidden',
+							                            	'id'	=> 'myValuesForUpdatePHP',
+							                            	'name'	=> 'myValuesForUpdatePHP',
+							                                'value'	=> ''
+							                            )						                           
 		                           				),
 		                       		'hidden_value' => array(
 					                                        array( //div values  combo_box_0
@@ -281,7 +292,12 @@
 				if(!$this->acl_add)
 				{
 					unset($datatable['actions']['form'][0]['fields']['field'][6]);
-				} 					
+				} 			
+				
+				if(!$project_id)
+				{
+					unset($datatable['actions']['form'][0]['fields']['field'][8]);
+				} 							
 				$dry_run = true;
 			}
 		                         
@@ -332,7 +348,14 @@
 						$datatable['rows']['row'][$j]['hidden'][$i]['value'] 			= $request[$uicols['name'][$i]];
 						$datatable['rows']['row'][$j]['hidden'][$i]['name'] 			= $uicols['name'][$i];
 					}
-
+					
+					if($lookup) 
+					{
+						$datatable['rows']['row'][$j]['column'][$i + 1]['name'] 			= 'select';
+						$datatable['rows']['row'][$j]['column'][$i + 1]['statustext']		= lang('select');
+						$datatable['rows']['row'][$j]['column'][$i + 1]['align'] 			= 'center';
+						$datatable['rows']['row'][$j]['column'][$i + 1]['value']			= '<input type="checkbox" name="add_request[request_id][]" id="add_request[request_id][]" value="'.$request['request_id'].'" class="myValuesForPHP"">';		
+					}
 					$j++;
 				}
 			}
@@ -433,6 +456,10 @@
 
 			for ($i=0;$i<$uicols_count;$i++)
 			{
+				
+				//all colums should be have formatter
+				$datatable['headers']['header'][$i]['formatter'] = ($uicols['formatter'][$i]==''?  '""' : $uicols['formatter'][$i]);
+				
 				if($uicols['input_type'][$i]!='hidden')
 				{
 					$datatable['headers']['header'][$i]['name'] 			= $uicols['name'][$i];
@@ -440,7 +467,7 @@
 					$datatable['headers']['header'][$i]['visible'] 			= true;
 					$datatable['headers']['header'][$i]['format'] 			= $this->bocommon->translate_datatype_format($uicols['datatype'][$i]);
 					$datatable['headers']['header'][$i]['sortable']			= false;
-					$datatable['headers']['header'][$i]['formatter']		= $uicols['formatter'][$i];
+					//$datatable['headers']['header'][$i]['formatter']		= $uicols['formatter'][$i];
 					if($uicols['name'][$i]=='request_id' || $uicols['name'][$i]=='budget' ||  $uicols['name'][$i]=='score')
 					{
 						$datatable['headers']['header'][$i]['sortable']		= true;
@@ -462,7 +489,15 @@
 					$datatable['headers']['header'][$i]['format'] 			= 'hidden';
 				}
 			}
-
+			
+			if($lookup) 
+			{
+					$datatable['headers']['header'][$i + 1]['name'] 			= 'select';
+					$datatable['headers']['header'][$i + 1]['text'] 			= lang('select');
+					$datatable['headers']['header'][$i + 1]['visible'] 			= true;
+					$datatable['headers']['header'][$i + 1]['sortable']		= false;
+					$datatable['headers']['header'][$i + 1]['format'] 			= '';		
+			}
 
 			// path for property.js
 			$datatable['property_js'] =  $GLOBALS['phpgw_info']['server']['webserver_url']."/property/js/yahoo/property.js";

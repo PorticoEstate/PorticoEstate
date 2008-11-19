@@ -14,7 +14,8 @@
 	var normalButtons = [
 	{order:0, name:'btn_search', funct:"onSearchClick"},
 	{order:1, name:'btn_new', funct:"onNewClick"},
-	{order:2, name:'btn_export', funct:"onDownloadClick"}
+	{order:2, name:'btn_export', funct:"onDownloadClick"},
+	{order:3, name:'btn_update', funct:"onUpdateProject"}
 	]
 
 	// define Text buttons
@@ -27,11 +28,19 @@
 	 column_hidden : [11,12,13]
 	 };
 
-	this.init_particular_setting = function()
+	this.particular_setting = function()
 	{
-		// necesary when do "enter" in search botton.
+		if(flag_particular_setting=='init')
+		{
+			//nothing
+		}
+		else if(flag_particular_setting=='update')
+		{
+			//nothing
+		}
+
+		//--focus for txt_query---
 		YAHOO.util.Dom.get(textImput[0].id).value = path_values.query;
-		// focus
 		YAHOO.util.Dom.get(textImput[0].id).focus();
 	}
 	
@@ -50,9 +59,43 @@
 		//Insert JSON utility on the page
 
 	    loader.insert();
+	    
 	});
 
+   this.onUpdateProject = function()
+   { 
+		//get the last div in th form
+		var divs= YAHOO.util.Dom.getElementsByClassName('field');
+		var mydiv = divs[divs.length-1];
+		
+		mydiv.innerHTML = "";
+		// styles for dont show
+		mydiv.style.display = 'none';
 
+		//get all controls of datatable
+		valuesForPHP = YAHOO.util.Dom.getElementsByClassName('myValuesForPHP');
+		var myclone = null;
+		//add all control to form
+		for(i=0;i<valuesForPHP.length;i++)
+		{
+			myclone = valuesForPHP[i].cloneNode(false);
+			mydiv.appendChild(myclone);
+		}
+		
+		var path_update = new Array();
+		path_update["menuaction"] = "property.uiproject.edit";
+		path_update["id"] = path_values.project_id;
+			
+		var sUrl = phpGWLink('index.php',path_update);	
+
+		formObject = document.getElementsByTagName('form');
+		YAHOO.util.Connect.setForm(formObject[0]);
+	
+		formObject[0].action = sUrl; 
+		formObject[0].method = "post";
+		formObject[0].submit();
+        
+   }
 
 
 
