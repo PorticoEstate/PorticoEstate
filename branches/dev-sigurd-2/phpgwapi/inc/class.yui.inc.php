@@ -89,15 +89,15 @@
 					break;
 
 				case 'datasource':
-					$load = array('datasource-beta-min', 'connection-min');
+					$load = array('datasource-min', 'connection-min');
 					break;
 
 				case 'datatable':
-					$load = array('element-beta', 'datasource-beta', 'datatable-beta' );
+					$load = array('element-beta', 'datasource-min', 'datatable-min' ,'paginator-min');
 					break;
 				// cramirez: necesary for include a partucular js
 				case 'loader':
-					$load = array('yuiloader-beta');
+					$load = array('yuiloader-min');
 					break;
 
 				case 'dom':
@@ -109,7 +109,7 @@
 					break;
 
 				case 'editor':
-					$load = array('editor-beta-min', 'menu-min', 'element-beta-min', 'button-min', 'animation-min', 'dragdrop-min');
+					$load = array('editor-min', 'menu-min', 'element-beta-min', 'button-min', 'animation-min', 'dragdrop-min');
 					break;
 
 				case 'element':
@@ -134,12 +134,16 @@
 					$load = array('container_core-min', 'menu-min');
 					break;
 
+				case 'paginator':
+					$load = array('paginator-min');
+					break;
+
                 case 'resize':
-					$load = array('dragdrop-min', 'element-beta-min', 'resize-beta-min');
+					$load = array('dragdrop-min', 'element-beta-min', 'resize-min');
 					break;
 
 				case 'layout':
-					$load = array('dragdrop-min', 'element-beta-min', 'resize-beta-min', 'layout-beta-min');
+					$load = array('dragdrop-min', 'element-beta-min', 'resize-min', 'layout-min');
 					break;
 
 				case 'slider':
