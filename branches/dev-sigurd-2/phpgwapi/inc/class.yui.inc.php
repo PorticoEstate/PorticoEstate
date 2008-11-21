@@ -52,52 +52,55 @@
 		*/
 		public static function load_widget($widget)
 		{
+			$min = '-min';
+	//		$min = '';
+
 			$load = array();
 			switch ( $widget )
 			{
 				case 'animation':
-					$load = array('animation-min');
+					$load = array("animation{$min}");
 					break;
 
 				case 'autocomplete':
-					$load = array('autocomplete-min', 'connection-min');
+					$load = array("autocomplete{$min}", "connection{$min}");
 					break;
 
 				case 'button':
-					$load = array('button-min', 'element-beta-min');
+					$load = array("button{$min}", "element-beta{$min}");
 					break;
 
 				case 'calendar':
-					$load = array('calendar-min');
+					$load = array("calendar{$min}");
 					break;
 
 				case 'colorpicker':
 				case 'colourpicker': // be nice to the speakers of H.M. English :)
-					$load = array('colorpicker-min');
+					$load = array("colorpicker{$min}");
 					break;
 
 				case 'container':
-					$load = array('container-min', 'dragdrop-min');
+					$load = array("container{$min}", "dragdrop{$min}");
 					break;
 
 				case 'utilities':
-					$load = array('container', 'container-min');
+					$load = array("container{$min}");
 					break;
 
 				case 'connection':
-					$load = array('connection-min');
+					$load = array("connection{$min}");
 					break;
 
 				case 'datasource':
-					$load = array('datasource-min', 'connection-min');
+					$load = array("datasource{$min}", "connection{$min}");
 					break;
 
 				case 'datatable':
-					$load = array('element-beta', 'datasource-min', 'datatable-min' ,'paginator-min');
+					$load = array('element-beta', "datasource{$min}", "datatable{$min}", "paginator{$min}");
 					break;
 				// cramirez: necesary for include a partucular js
 				case 'loader':
-					$load = array('yuiloader-min');
+					$load = array("yuiloader{$min}");
 					break;
 
 				case 'dom':
@@ -105,15 +108,15 @@
 					break;
 
 				case 'dragdrop':
-					$load = array('dragdrop-min');
+					$load = array("dragdrop{$min}");
 					break;
 
 				case 'editor':
-					$load = array('editor-min', 'menu-min', 'element-beta-min', 'button-min', 'animation-min', 'dragdrop-min');
+					$load = array("editor{$min}", "menu{$min}", "element-beta{$min}", "button{$min}", "animation{$min}", "dragdrop{$min}");
 					break;
 
 				case 'element':
-					$load = array('element-beta-min');
+					$load = array("element-beta{$min}");
 					break;
 
 				case 'event':
@@ -123,39 +126,39 @@
 				// not including history - as it isn't needed - need to handle the not included/used types somewhere
 
 				case 'imageloader':
-					$load = array('imageloader-min');
+					$load = array("imageloader{$min}");
 					break;
 
 				case 'logger':
-					$load = array('dragdrop-min', 'logger-min');
+					$load = array("dragdrop{$min}", "logger{$min}");
 					break;
 
 				case 'menu':
-					$load = array('container_core-min', 'menu-min');
+					$load = array("container_core{$min}", "menu{$min}");
 					break;
 
 				case 'paginator':
-					$load = array('paginator-min');
+					$load = array("paginator{$min}");
 					break;
 
                 case 'resize':
-					$load = array('dragdrop-min', 'element-beta-min', 'resize-min');
+					$load = array("dragdrop{$min}", "element-beta{$min}", "resize{$min}");
 					break;
 
 				case 'layout':
-					$load = array('dragdrop-min', 'element-beta-min', 'resize-min', 'layout-min');
+					$load = array("dragdrop{$min}", "element-beta{$min}", "resize{$min}", "layout{$min}");
 					break;
 
 				case 'slider':
-					$load = array('dragdrop-min', 'animation-min', 'slider-min');
+					$load = array("dragdrop{$min}", "animation{$min}", "slider{$min}");
 					break;
 
 				case 'tabview':
-					$load = array('element-beta-min', 'tabview-min');
+					$load = array("element-beta{$min}", "tabview{$min}");
 					break;
 
 				case 'treeview':
-					$load = array('treeview-min');
+					$load = array("treeview{$min}");
 					break;
 
 				default:
