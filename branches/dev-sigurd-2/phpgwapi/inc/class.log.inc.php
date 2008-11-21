@@ -217,8 +217,8 @@
 			$db->query("insert into phpgw_log (log_date, log_app, log_account_id, log_account_lid, log_severity, log_file, log_line, log_msg) values "
 				. "('" . date($db->datetime_format()) . "'"
 				. ",'" . $db->db_addslashes($GLOBALS['phpgw_info']['flags']['currentapp']) . "'"
-				. ","  . ( isset($GLOBALS['phpgw']->session->account_id) ? $GLOBALS['phpgw']->session->account_id : -1)
-				. ",'" . $db->db_addslashes(isset($GLOBALS['phpgw']->session->account_lid) ? $GLOBALS['phpgw']->session->account_lid : 'not authenticated') . "'"
+				. ","  . ( isset($GLOBALS['phpgw_info']['user']['id']) ? $GLOBALS['phpgw_info']['user']['id'] : -1)
+				. ",'" . $db->db_addslashes(isset($GLOBALS['phpgw_info']['user']['lid']) ? $GLOBALS['phpgw_info']['user']['lid'] : 'not authenticated') . "'"
 				. ",'" . $err->severity . "'"
 				. ",'" . $db->db_addslashes($err->fname) . "'"
 				. ","  . intval($err->line)
