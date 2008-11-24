@@ -26,7 +26,8 @@
 		// define the hidden column in datatable
 		var config_values = {
 		column_hidden : [0],
-		date_search : 0 //if search has link "Data search"
+		date_search : 0, //if search has link "Data search"
+		footer_datatable : 1
 		}
 
 		/********************************************************************************
@@ -153,7 +154,7 @@
 		/********************************************************************************
 		 * CLick option combobox PERIOD
 		 */
-	    function onPeriodDropDownItemClick(p_sType, p_aArgs, p_oItem)
+	    this.onPeriodDropDownItemClick = function(p_sType, p_aArgs, p_oItem)
 		{
 		   	 //Use a diferente id for voucher. This variables wil be empty in PARTICULAR_SETTING
 		   	 path_values.voucher_id_for_period = p_oItem.cfg.getProperty("onclick").idvoucher;
@@ -196,7 +197,19 @@
 
 			execute_ds();
 		}
-
+		/********************************************************************************
+		 *
+		 */
+	  	this.addFooterDatatable = function()
+	  	{
+	  		tmp_sum=0;
+	  		for(i=0;i<myDataTable.getRecordSet().getRecords(0).length;i++)
+	  		{
+	  			tmp_sum = myDataTable.getRecordSet().getRecords(0)[i].getData('amount_lnk')
+	  		}
+	  		//alert(tmp_sum);
+	  		 myDataTable.addRow({one:"one",two:"two",three:"three"});
+	  	}
 
 
 	//----------------------------------------------------------
