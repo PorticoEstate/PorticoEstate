@@ -14,7 +14,7 @@
 span.yui-menu-button  {
     outline: none;
 }
-
+/* use for combo box filter */
 span.yui-menu-button em {
     font-style: normal;
     display: block;
@@ -24,7 +24,16 @@ span.yui-menu-button em {
 	overflow: hidden; /* Hide the overflow if the text label exceeds 10em in width. */
 	text-overflow: ellipsis; /* IE and Safari support the ability to add ellipsis when the text label exceeds 10em in width.*/
 }
-
+/* use for combo box PERIOD in INVOICE */
+span.yui-menu-button en {
+    font-style: normal;
+    display: block;
+    text-align: left;
+    white-space: nowrap;
+	width: 1.5em;  /*  Restrict the width of the label to 10em. */
+	overflow: hidden; /* Hide the overflow if the text label exceeds 10em in width. */
+	text-overflow: ellipsis; /* IE and Safari support the ability to add ellipsis when the text label exceeds 10em in width.*/
+}
 
 .rightClasss {text-align: right;}
 .centerClasss {text-align: center;}

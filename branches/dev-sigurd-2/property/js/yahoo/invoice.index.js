@@ -29,16 +29,23 @@
 		date_search : 0 //if search has link "Data search"
 		}
 
+		/********************************************************************************
+		* reset empty values for update PERIOD
+		* Delete children od div MESSAGE
+		* Show Message
+		*/
 		this.particular_setting = function()
 		{
 			if(flag_particular_setting=='init')
 			{
-
-
 			}
 			else if(flag_particular_setting=='update')
 			{
-				//borrar hijos div
+				//reset empty values for update PERIOD
+			   	path_values.voucher_id_for_period = '';
+			   	path_values.period = '';
+
+				//Delete children od div MESSAGE
 				div_message= YAHOO.util.Dom.get("message");
 				if ( div_message.hasChildNodes() )
 				{
@@ -56,7 +63,6 @@
 				 	{
 				 		for(i=0; i<values_ds.message[0].message.length; i++)
 					 	{
-
 					 		oDiv=document.createElement("DIV");
 					 		txtNode = document.createTextNode(values_ds.message[0].message[i].msg);
 					 		oDiv.appendChild(txtNode);
@@ -104,16 +110,63 @@
 			YAHOO.util.Dom.get(textImput[0].id).value = path_values.query;
 			YAHOO.util.Dom.get(textImput[0].id).focus();
 		}
-
+		/********************************************************************************
+		* Format for column SUM
+		*/
 	    var myFormatDate = function(elCell, oRecord, oColumn, oData)
 	   	{
 	    	elCell.innerHTML = YAHOO.util.Number.format(oData, {decimalPlaces:2, decimalSeparator:",", thousandsSeparator:" "});
 	    }
+
+		/********************************************************************************
+		* Format column PERIOD
+		*/
+	    var myPeriodDropDown = function(elCell, oRecord, oColumn, oData)
+	   	{
+			tmp_count = oRecord._oData.counter_num;
+			voucher_id = oRecord._oData.voucher_id_num
+		    elCell.innerHTML = "<div id=\"divPeriodDropDown"+tmp_count+"\"></div>";
+
+   	    	var tmp_button = new YAHOO.widget.Button({
+                           type:"menu",
+                           id:"oPeriodDropDown"+tmp_count,
+                           label: "<en>" +oData+"</en>",
+                           value: oData,
+                           container: "divPeriodDropDown"+tmp_count,
+                           menu: [	{ text: "1", value: 1, onclick: { fn: onPeriodDropDownItemClick, idvoucher: voucher_id} },
+								    { text: "2", value: 2, onclick: { fn: onPeriodDropDownItemClick, idvoucher: voucher_id} },
+								    { text: "3", value: 3, onclick: { fn: onPeriodDropDownItemClick, idvoucher: voucher_id} },
+								    { text: "4", value: 4, onclick: { fn: onPeriodDropDownItemClick, idvoucher: voucher_id} },
+								    { text: "5", value: 5, onclick: { fn: onPeriodDropDownItemClick, idvoucher: voucher_id} },
+								    { text: "6", value: 6, onclick: { fn: onPeriodDropDownItemClick, idvoucher: voucher_id} },
+								    { text: "7", value: 7, onclick: { fn: onPeriodDropDownItemClick, idvoucher: voucher_id} },
+								    { text: "8", value: 8, onclick: { fn: onPeriodDropDownItemClick, idvoucher: voucher_id} },
+								    { text: "9", value: 9, onclick: { fn: onPeriodDropDownItemClick, idvoucher: voucher_id} },
+								    { text: "10", value: 10, onclick: { fn: onPeriodDropDownItemClick, idvoucher: voucher_id} },
+								    { text: "11", value: 11, onclick: { fn: onPeriodDropDownItemClick, idvoucher: voucher_id} },
+								    { text: "12", value: 12, onclick: { fn: onPeriodDropDownItemClick, idvoucher: voucher_id} }	]});
+		    //Define this variable in the window scope (GLOBAL)
+            eval("window.oPeriodDropDown"+tmp_count+" = tmp_button");
+
+	    }
+
+		/********************************************************************************
+		 * CLick option combobox PERIOD
+		 */
+	    function onPeriodDropDownItemClick(p_sType, p_aArgs, p_oItem)
+		{
+		   	 //Use a diferente id for voucher. This variables wil be empty in PARTICULAR_SETTING
+		   	 path_values.voucher_id_for_period = p_oItem.cfg.getProperty("onclick").idvoucher;
+		   	 path_values.period = p_oItem.cfg.getProperty('text');
+			//call index. update PERIOD is inside of INDEX
+		   	 execute_ds();
+		}
+
 		/********************************************************************************
 		 *
 		 */
-		  this.onSave = function()
-		  {
+	  	this.onSave = function()
+	  	{
 			//get the last div in th form
 			var divs= YAHOO.util.Dom.getElementsByClassName('field');
 			var mydiv = divs[divs.length-1];
@@ -142,8 +195,7 @@
 			YAHOO.util.Connect.setForm(formObject[0]);
 
 			execute_ds();
-
-		  }
+		}
 
 
 
@@ -162,6 +214,7 @@
 			//Insert JSON utility on the page
 
 		    loader.insert();
+
 		});
 
 

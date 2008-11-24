@@ -231,12 +231,15 @@
 			if( phpgw::get_var('phpgw_return_as') == 'json' && is_array($values) && isset($values))
 			 {
 			 	$receipt = $this->bo->update_invoice($values);
-			 	//die(_debug_array($values));
-			 	//return adentro;
-			 	//die(_debug_array($receipt));
+
 			 }
-
-
+			 // Edit Period
+			$period  = phpgw::get_var('period');
+			$voucher_id_for_period  = phpgw::get_var('voucher_id_for_period');
+			if( phpgw::get_var('phpgw_return_as') == 'json' &&  isset($period) &&  $period != '')
+			{
+				$receipt	= $this->bo->update_period($voucher_id_for_period,$period);
+			}
 
 			$datatable = array();
 			$values_combo_box = array();
@@ -567,20 +570,26 @@
 			$content = $this->bo->read_invoice($paid,$start_date,$end_date,$vendor_id,$loc1,$workorder_id,$voucher_id);
 			//die(_debug_array($content));
 			$uicols = array (
-				'input_type'	=>	array(hidden,hidden,hidden,link,link   ,hidden,hidden,hidden,$paid?varchar:input,varchar,link   ,hidden,varchar,varchar,$paid?varchar:link,$paid?hidden:input,$paid?hidden:input,special,special,special,special2),
-				'type'			=>	array(''	,number,''	  ,url ,msg_box,''    ,''    ,''    ,$paid?'':text		 ,''     ,msg_box,''    ,''     ,''     ,$paid?'':w_open   ,$paid?'':checkbox ,$paid?'':radio	 ,''     ,''     ,''     ,''  	 ),
+				'input_type'	=>	array(hidden,hidden,hidden,hidden,link,link   ,hidden,hidden,hidden,$paid?varchar:input,varchar,link   ,hidden,varchar,varchar,varchar,$paid?hidden:input,$paid?hidden:input,special,special,special,special2),
+				'type'			=>	array(number,''	   ,number,''	 ,url ,msg_box,''    ,''    ,''    ,$paid?'':text	   ,''     ,msg_box,''    ,''     ,''     ,''     ,$paid?'':checkbox ,$paid?'':radio	 ,''     ,''     ,''     ,''  	 ),
 
-				'col_name'		=>	array(counter,voucher_id_num,voucher_id,voucher_id_lnk,voucher_date_lnk,sign_orig ,num_days_orig,timestamp_voucher_date,num_days,amount_lnk,vendor_id_lnk,invoice_count,invoice_count_lnk,type_lnk,period,kreditnota,sign      ,janitor_lnk,supervisor_lnk,budget_responsible_lnk,transfer_lnk),
-				'name'			=>	array(counter,voucher_id    ,voucher_id,voucher_id    ,voucher_date    ,empty_fild,num_days     ,timestamp_voucher_date,num_days,amount    ,vendor_id    ,invoice_count,invoice_count    ,type    ,period,kreditnota,empty_fild,janitor    ,supervisor    ,budget_responsible    ,transfer_id),
+				'col_name'		=>	array(counter_num,counter,voucher_id_num,voucher_id,voucher_id_lnk,voucher_date_lnk,sign_orig ,num_days_orig,timestamp_voucher_date,num_days,amount_lnk,vendor_id_lnk,invoice_count,invoice_count_lnk,type_lnk,period,kreditnota,sign      ,janitor_lnk,supervisor_lnk,budget_responsible_lnk,transfer_lnk),
+				'name'			=>	array(counter,counter,voucher_id    ,voucher_id,voucher_id    ,voucher_date    ,empty_fild,num_days     ,timestamp_voucher_date,num_days,amount    ,vendor_id    ,invoice_count,invoice_count    ,type    ,period,kreditnota,empty_fild,janitor    ,supervisor    ,budget_responsible    ,transfer_id),
 
-				'formatter'		=>	array('','','','','','','','','',myFormatDate,'','','','','','','','','','',''),
+				'formatter'		=>	array('','','','','','','','','','',myFormatDate,'','','','',$paid?'':myPeriodDropDown,'','','','','',''),
+//				'editor'		=>	array('""','""','""','""','""','""','""','""','""','""','""','""','""','""','new YAHOO.widget.DropdownCellEditor({dropdownOptions:[{label:"Alabama", value:"AL"},{label:"Los angeles", value:"LA"}],disableBtns:true})','""','""','""','""','""','""'),
 
-				'descr'			=>	array(dummy,dummy,dummy,lang('voucher'),lang('Voucher Date'),dummy,dummy,dummy,lang('Days'),lang('Sum'),lang('Vendor'),dummy,lang('Count'),lang('Type'),lang('Period'),lang('KreditNota'),lang('None'),lang('Janitor'),lang('Supervisor'),lang('Budget Responsible'),lang('Transfer')),
-				'className'		=> 	array('','','','','centerClasss','','','','','rightClasss','rightClasss','','rightClasss','','rightClasss','centerClasss','centerClasss','','','','centerClasss')
+				'descr'			=>	array(dummy,dummy,dummy,dummy,lang('voucher'),lang('Voucher Date'),dummy,dummy,dummy,lang('Days'),lang('Sum'),lang('Vendor'),dummy,lang('Count'),lang('Type'),lang('Period'),lang('KreditNota'),lang('None'),lang('Janitor'),lang('Supervisor'),lang('Budget Responsible'),lang('Transfer')),
+				'className'		=> 	array('','','','','','centerClasss','','','','','rightClasss','rightClasss','','rightClasss','','comboClasss','centerClasss','centerClasss','','','','centerClasss')
 				);
 
 			//url to detail of voucher
 			$link_sub 	= 	$GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiinvoice.list_sub','user_lid'=>all));
+
+//			//url to edit period
+//			$link_edit_period_pre	="javascript:var%20w=window.open(\"";
+//			$link_edit_period		= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiinvoice.edit_period'));
+//			$link_edit_period_post	="\",\"\",\"width=150,height=150\")";
 
 			if($paid)
 			{
@@ -634,7 +643,12 @@
 									{
 										$datatable['rows']['row'][$j]['column'][$i]['link']			= $link_sub."&voucher_id=".$invoices[$uicols['name'][$i]];
 									}
+//									else if($uicols['type'][$i]=='w_open')
+//									{
+//										$datatable['rows']['row'][$j]['column'][$i]['link']			= $link_edit_period_pre.$link_edit_period."&period=".$invoices[$uicols['name'][$i]]."&voucher_id=".$invoices['voucher_id'].$link_edit_period_post;
+//									}
 									$datatable['rows']['row'][$j]['column'][$i]['target']			= '';
+
 								}
 
 								//--- special--
@@ -835,6 +849,7 @@
 				$datatable['headers']['header'][$i]['text'] 			= $uicols['descr'][$i];
 				$datatable['headers']['header'][$i]['formatter'] 		= ($uicols['formatter'][$i]=='' ?  '""' : $uicols['formatter'][$i]);
 				$datatable['headers']['header'][$i]['className']		= $uicols['className'][$i];
+				$datatable['headers']['header'][$i]['editor']			= $uicols['editor'][$i];
 
 				if($uicols['input_type'][$i]!='hidden')
 				{
@@ -919,7 +934,7 @@
 		    				//-- links a otros modulos
 		    				if($column['format']== "link")
 		    				{
-		    				  	$json_row[$column['name']] = "<a href='".$column['link']."' target='".$column['target']."'>".$column['value']."</a>";
+		    				  	$json_row[$column['name']] = "<a target='".$column['target']."' href='".$column['link']."' >".$column['value']."</a>";
 		    				}
 		    				elseif($column['format']== "input")
 		    				{
