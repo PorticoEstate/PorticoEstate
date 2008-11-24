@@ -807,7 +807,7 @@
 
 				if($location_code)
 				{
-					$values['location_data'] = $bolocation->read_single($location_code,array('tenant_id'=>$tenant_id,'p_num'=>$p_num));
+					$values['location_data'] = $bolocation->read_single($location_code,array('tenant_id'=>$tenant_id,'p_num'=>$p_num, 'view' => true));
 				}
 
 			}
@@ -843,7 +843,7 @@
 			}
 			else
 			{
-				$cat_list = $this->bo->select_category_list('select',$this->cat_id);
+				$cat_list = $this->bo->select_category_list('select');
 			}
 
 			if (isset($values['cancel']) && $values['cancel'])
@@ -1025,21 +1025,6 @@
 						));
 			}
 
-/*			if($category['lookup_vendor'])
-			{
-				$vendor_data=$this->bocommon->initiate_ui_vendorlookup(array(
-						'vendor_id'		=> $values['vendor_id'],
-						'vendor_name'	=> $values['vendor_name']));
-			}
-*/
-
-			$attributes_header[] 	= array(
-					'lang_name'	=> lang('Name'),
-					'lang_descr'	=> lang('Description'),
-					'lang_datatype'	=> lang('Datatype'),
-					'lang_value'	=> lang('Value')
-				);
-
 			if(isset($error_id) && $error_id)
 			{
 				unset($values['id']);
@@ -1053,34 +1038,6 @@
 				'entity_id'	=> $this->entity_id,
 				'cat_id'	=> $this->cat_id
 			);
-
-			$dateformat = strtolower($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']);
-			$sep = '/';
-			$dlarr[strpos($dateformat,'y')] = 'yyyy';
-			$dlarr[strpos($dateformat,'m')] = 'MM';
-			$dlarr[strpos($dateformat,'d')] = 'DD';
-			ksort($dlarr);
-
-			$dateformat= (implode($sep,$dlarr));
-
-			switch(substr($dateformat,0,1))
-			{
-				case 'M':
-					$dateformat_validate= "javascript:vDateType='1'";
-					$onKeyUp	= "DateFormat(this,this.value,event,false,'1')";
-					$onBlur		= "DateFormat(this,this.value,event,true,'1')";
-					break;
-				case 'y':
-					$dateformat_validate="javascript:vDateType='2'";
-					$onKeyUp	= "DateFormat(this,this.value,event,false,'2')";
-					$onBlur		= "DateFormat(this,this.value,event,true,'2')";
-					break;
-				case 'D':
-					$dateformat_validate="javascript:vDateType='3'";
-					$onKeyUp	= "DateFormat(this,this.value,event,false,'3')";
-					$onBlur		= "DateFormat(this,this.value,event,true,'3')";
-					break;
-			}
 
 			$msgbox_data = $this->bocommon->msgbox_data($receipt);
 
@@ -1134,26 +1091,7 @@
 
 //_debug_array($values['origin']);
 
-			foreach ($values['attributes'] as & $attribute)
-			{
-				if($attribute['history'] == true)
-				{
-					$link_history_data = array
-					(
-						'menuaction'	=> 'property.uientity.attrib_history',
-						'entity_id'	=> $this->entity_id,
-						'cat_id'	=> $this->cat_id,
-						'attrib_id'	=> $attribute['id'],
-						'id'		=> $id,
-						'edit'		=> true
-					);
-
-					$attribute['link_history'] = $GLOBALS['phpgw']->link('/index.php',$link_history_data);
-				}
-			}
-
 			$GLOBALS['phpgw']->js->validate_file('overlib','overlib','property');
-			$GLOBALS['phpgw']->js->validate_file('dateformat','dateformat','property');
 
 			$table_apply[] = array
 			(
@@ -1170,30 +1108,51 @@
 				'cat_id'	=> $this->cat_id
 			);
 
-			$tabs = array
-			(
-				'general'	=> array('label' => lang('general'), 'link' => '#general')
-			);
+			$tabs = array();
 
-			phpgwapi_yui::tabview_setup('entity_edit_tabview');
-
-
-			$location = ".entity.{$this->entity_id}.{$this->cat_id}";
-
-			$group_attributes = $this->bo->get_attribute_groups($location, $values['attributes']);
-			
-			foreach ($group_attributes as &$group)
+			if (isset($values['attributes']) && is_array($values['attributes']))
 			{
-				if(isset($group['attributes']))
+				foreach ($values['attributes'] as & $attribute)
 				{
-					$tabs[str_replace(' ', '_', $group['name'])] = array('label' => $group['name'], 'link' => '#' . str_replace(' ', '_', $group['name']));
-					$group['link'] = str_replace(' ', '_', $group['name']);
-				}
-			}
+					if($attribute['history'] == true)
+					{
+						$link_history_data = array
+						(
+							'menuaction'	=> 'property.uientity.attrib_history',
+							'entity_id'	=> $this->entity_id,
+							'cat_id'	=> $this->cat_id,
+							'attrib_id'	=> $attribute['id'],
+							'id'		=> $id,
+							'edit'		=> true
+						);
 
-			if($category['fileupload'] || (isset($values['files']) || $values['files']))
-			{
-				$tabs['files']	= array('label' => lang('files'), 'link' => '#files');
+						$attribute['link_history'] = $GLOBALS['phpgw']->link('/index.php',$link_history_data);
+					}
+				}
+
+				phpgwapi_yui::tabview_setup('entity_edit_tabview');
+				$tabs['general']	= array('label' => lang('general'), 'link' => '#general');
+
+				$location = ".entity.{$this->entity_id}.{$this->cat_id}";
+				$attributes_groups = $this->bo->get_attribute_groups($location, $values['attributes']);
+			
+				$attributes = array();
+				foreach ($attributes_groups as $group)
+				{
+					if(isset($group['attributes']))
+					{
+						$tabs[str_replace(' ', '_', $group['name'])] = array('label' => $group['name'], 'link' => '#' . str_replace(' ', '_', $group['name']));
+						$group['link'] = str_replace(' ', '_', $group['name']);
+						$attributes[] = $group;			
+					}
+				}
+				unset($attributes_groups);
+				unset($values['attributes']);
+
+				if($category['fileupload'] || (isset($values['files']) || $values['files']))
+				{
+					$tabs['files']	= array('label' => lang('files'), 'link' => '#files');
+				}
 			}
 
 			$data = array
@@ -1235,18 +1194,9 @@
 				'lang_category'					=> lang('category'),
 				'category_name'					=> $category['name'] . ' - ' . $category['descr'],
 				'msgbox_data'					=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
-				'lang_dateformat' 				=> lang(strtolower($dateformat)),
-				'dateformat_validate'			=> $dateformat_validate,
-				'onKeyUp'						=> $onKeyUp,
-				'onBlur'						=> $onBlur,
-				'lang_attributes'				=> lang('Attributes'),
-				'attributes_header'				=> $attributes_header,
-				'attributes_values'				=> $values['attributes'],
-				'group_attributes'				=> $group_attributes,
+				'attributes_group'				=> $attributes,
 				'lookup_functions'				=> isset($values['lookup_functions'])?$values['lookup_functions']:'',
-				'dateformat'					=> $dateformat,
 				'lang_none'						=> lang('None'),
-	//			'vendor_data'					=> isset($vendor_data)?$vendor_data:'',
 				'location_data'					=> $location_data,
 				'lookup_type'					=> $lookup_type,
 				'form_action'					=> $GLOBALS['phpgw']->link('/index.php',$link_data),
@@ -1269,10 +1219,9 @@
 			);
 
 			$appname	= $entity['name'];
-//_debug_array($attributes_values);
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('edit' => $data));
-		//	$GLOBALS['phpgw']->xslttpl->pp();
+
 		}
 
 		function attrib_help()

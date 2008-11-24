@@ -270,7 +270,12 @@
 			<xsl:value-of select="lookup_functions"/>
 		</script>
 
-		<div align="left">
+		<div class="yui-navset" id="location_edit_tabview">
+			<xsl:variable name="form_action"><xsl:value-of select="form_action"/></xsl:variable>
+			<form method="post" name="form" action="{$form_action}">
+			<xsl:value-of disable-output-escaping="yes" select="tabs" />
+			<div class="yui-content">		
+				<div id="general">
 
 		<table cellpadding="2" cellspacing="2" width="80%" align="center">
 			<xsl:choose>
@@ -282,8 +287,6 @@
 					</tr>
 				</xsl:when>
 			</xsl:choose>
-			<xsl:variable name="form_action"><xsl:value-of select="form_action"/></xsl:variable>
-			<form method="post" name="form" action="{$form_action}">
 
 			<xsl:choose>
 				<xsl:when test="change_type_list != ''">
@@ -407,11 +410,6 @@
 				</xsl:when>
 			</xsl:choose>
 
-			<tr>
-				<td colspan="2" width="50%" align="left">
-					<xsl:call-template name="attributes_form"/>
-				</td>
-			</tr>
 			<xsl:choose>
 				<xsl:when test="edit_street = 1">
 					<tr>
@@ -465,6 +463,13 @@
 				</xsl:when>
 			</xsl:choose>
 
+		</table>
+		</div>
+
+		<xsl:call-template name="attributes_values"/>
+
+			<table cellpadding="2" cellspacing="2" width="80%" align="center">
+
 			<tr height="50">
 				<td>
 					<xsl:variable name="lang_save"><xsl:value-of select="lang_save"/></xsl:variable>
@@ -491,8 +496,11 @@
 				</xsl:when>
 			</xsl:choose>
 			</tr>
+			</table>
+			</div>
 
 			</form>
+			<table>
 			<tr>
 				<td>
 					<xsl:variable name="done_action"><xsl:value-of select="done_action"/></xsl:variable>
@@ -519,6 +527,26 @@
 		</xsl:choose>
 		</div>
 	</xsl:template>
+
+
+
+
+<!--
+		<div class="yui-navset" id="entity_edit_tabview">
+			<xsl:variable name="form_action"><xsl:value-of select="form_action"/></xsl:variable>
+			<form method="post" name="form" action="{$form_action}">
+
+			<div class="yui-content">		
+				<div id="general">
+
+		<table cellpadding="2" cellspacing="2" width="80%" align="center">
+
+-->
+
+
+
+
+
 
 	<xsl:template match="owner_list">
 	<xsl:variable name="id"><xsl:value-of select="id"/></xsl:variable>

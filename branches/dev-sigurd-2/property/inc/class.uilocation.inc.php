@@ -1134,6 +1134,49 @@
 				}
 			}
 
+
+			$tabs = array();
+
+			if (isset($values['attributes']) && is_array($values['attributes']))
+			{
+				foreach ($values['attributes'] as & $attribute)
+				{
+					if($attribute['history'] == true)
+					{
+						$link_history_data = array // FIXME
+						(
+							'menuaction'	=> 'property.uilocation.attrib_history',
+							'entity_id'	=> $this->entity_id,
+							'cat_id'	=> $this->cat_id,
+							'attrib_id'	=> $attribute['id'],
+							'id'		=> $id,
+							'edit'		=> true
+						);
+
+						$attribute['link_history'] = $GLOBALS['phpgw']->link('/index.php',$link_history_data);
+					}
+				}
+
+				phpgwapi_yui::tabview_setup('location_edit_tabview');
+				$tabs['general']	= array('label' => lang('general'), 'link' => '#general');
+
+				$location = ".location.{$type_id}";
+				$attributes_groups = $this->bo->get_attribute_groups($location, $values['attributes']);
+			
+				$attributes = array();
+				foreach ($attributes_groups as $group)
+				{
+					if(isset($group['attributes']))
+					{
+						$tabs[str_replace(' ', '_', $group['name'])] = array('label' => $group['name'], 'link' => '#' . str_replace(' ', '_', $group['name']));
+						$group['link'] = str_replace(' ', '_', $group['name']);
+						$attributes[] = $group;			
+					}
+				}
+				unset($attributes_groups);
+				unset($values['attributes']);
+			}
+
 			$data = array
 			(
 				'lang_change_type'				=> lang('Change type'),
@@ -1162,7 +1205,8 @@
 				'lang_select_owner'				=> (isset($lang_select_owner)?$lang_select_owner:''),
 				'lang_owner_statustext'			=> (isset($lang_owner_statustext)?$lang_owner_statustext:''),
 				'additional_fields'				=> $additional_fields,
-				'attributes_values'				=> $values['attributes'],
+				'attributes_group'				=> $attributes,
+//				'attributes_values'				=> $values['attributes'],
 				'lookup_functions'				=> isset($values['lookup_functions'])?$values['lookup_functions']:'',
 				'lang_none'						=> lang('None'),
 
@@ -1198,7 +1242,8 @@
 				'select_name'					=> 'cat_id',
 				'cat_list'						=> $this->bocommon->select_category_list(array('format'=>'select','selected' => $values['cat_id'],'type' =>'location','type_id' =>$type_id,'order'=>'descr')),
 				'textareacols'					=> isset($GLOBALS['phpgw_info']['user']['preferences']['property']['textareacols']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['textareacols'] ? $GLOBALS['phpgw_info']['user']['preferences']['property']['textareacols'] : 40,
-				'textarearows'					=> isset($GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows'] ? $GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows'] : 6
+				'textarearows'					=> isset($GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows'] ? $GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows'] : 6,
+				'tabs'							=> phpgwapi_yui::tabview_generate($tabs, 'general')
 			);
 
 			$appname	= lang('location');

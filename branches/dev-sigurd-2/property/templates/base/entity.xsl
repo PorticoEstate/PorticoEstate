@@ -368,26 +368,8 @@
 
 		</table>
 		</div>
-
-		<xsl:for-each select="group_attributes" >
-			<div id="{link}">
-				<table cellpadding="2" cellspacing="2" width="80%" align="center">
-					<tr>
-						<td colspan="2" width="50%" align="left">
-							<xsl:apply-templates select="attributes_values"/>
-					<!--	<xsl:call-template name="attributes_form"/>	-->
-						</td>
-					</tr>
-				</table>
-			</div>
-		</xsl:for-each>
-
-	<!--		<tr>
-				<td colspan="2" width="50%" align="left">
-					<xsl:call-template name="attributes_form"/>							
-				</td>
-			</tr>
-	-->
+		
+		<xsl:call-template name="attributes_values"/>
 
 		<div id="files">
 		<table cellpadding="2" cellspacing="2" width="80%" align="center">
