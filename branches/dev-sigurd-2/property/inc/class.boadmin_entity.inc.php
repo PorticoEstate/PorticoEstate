@@ -103,39 +103,13 @@
 			$allrows	= phpgw::get_var('allrows', 'bool');
 			$entity_id	= phpgw::get_var('entity_id', 'int');
 
-			if ($start)
-			{
-				$this->start=$start;
-			}
-			else
-			{
-				$this->start=0;
-			}
-
-			if(isset($query))
-			{
-				$this->query = $query;
-			}
-			if(isset($sort))
-			{
-				$this->sort = $sort;
-			}
-			if(isset($order))
-			{
-				$this->order = $order;
-			}
-			if(isset($cat_id))
-			{
-				$this->cat_id = $cat_id;
-			}
-			if(isset($entity_id))
-			{
-				$this->entity_id = $entity_id;
-			}
-			if(isset($allrows))
-			{
-				$this->allrows = $allrows;
-			}
+			$this->start			= $start ? $start : 0;
+			$this->query			= isset($query) ? $query : $this->query;
+			$this->sort				= isset($sort) && $sort ? $sort : '';
+			$this->order			= isset($order) && $order ? $order : '';
+			$this->cat_id			= isset($cat_id) && $cat_id ? $cat_id : '';
+			$this->entity_id		= isset($entity_id) && $entity_id ? $entity_id : '';
+			$this->allrows			= isset($allrows) && $allrows ? $allrows : '';
 		}
 
 
@@ -269,17 +243,21 @@
 			return $receipt;
 		}
 
-		function delete($cat_id='',$entity_id='',$attrib_id='',$acl_location='',$custom_function_id='')
+		function delete($cat_id='',$entity_id='',$attrib_id='',$acl_location='',$custom_function_id='', $group_id ='')
 		{
-			if(!$attrib_id && !$cat_id && $entity_id && !$custom_function_id)
+			if(!$attrib_id && !$cat_id && $entity_id && !$custom_function_id  && !$group_id)
 			{
 				$this->so->delete_entity($entity_id);
 			}
-			else if(!$attrib_id && $cat_id && $entity_id && !$custom_function_id)
+			else if(!$attrib_id && $cat_id && $entity_id && !$custom_function_id  && !$group_id)
 			{
 				$this->so->delete_category($entity_id, $cat_id);
 			}
-			else if($attrib_id && $cat_id && $entity_id && !$custom_function_id)
+			else if($group_id && $cat_id && $entity_id && !$custom_function_id && !$attrib_id)
+			{
+				$this->custom->delete_group('property', ".entity.{$entity_id}.{$cat_id}", $group_id);
+			}
+			else if($attrib_id && $cat_id && $entity_id && !$custom_function_id  && !$group_id)
 			{
 				$this->custom->delete('property', ".entity.{$entity_id}.{$cat_id}", $attrib_id);
 				$this->so->delete_history($entity_id, $cat_id,$attrib_id);

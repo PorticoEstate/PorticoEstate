@@ -636,19 +636,23 @@
 			$entity_id		= phpgw::get_var('entity_id', 'int');
 			$cat_id			= phpgw::get_var('cat_id', 'int');
 			$attrib_id		= phpgw::get_var('attrib_id', 'int');
+			$group_id		= phpgw::get_var('group_id', 'int');
 			$acl_location		= phpgw::get_var('acl_location');
 			$custom_function_id	= phpgw::get_var('custom_function_id', 'int');
 			$confirm		= phpgw::get_var('confirm', 'bool', 'POST');
 
-			if($attrib_id):
+			if($group_id)
+			{
+				$function='list_attribute_group';
+			}
+			else if($attrib_id)
 			{
 				$function='list_attribute';
 			}
-			elseif($custom_function_id):
+			else if($custom_function_id)
 			{
 				$function='list_custom_function';
 			}
-			endif;
 
 			if (!$acl_location && $entity_id && $cat_id)
 			{
@@ -681,6 +685,7 @@
 				'menuaction'	=> 'property.uiadmin_entity.delete',
 				'cat_id'	=> $cat_id,
 				'entity_id'	=> $entity_id,
+				'group_id'	=> $group_id,
 				'attrib_id'	=> $attrib_id,
 				'acl_location'	=> $acl_location,
 				'custom_function_id' => $custom_function_id
@@ -688,7 +693,7 @@
 
 			if (phpgw::get_var('confirm', 'bool', 'POST'))
 			{
-				$this->bo->delete($cat_id,$entity_id,$attrib_id,$acl_location,$custom_function_id);
+				$this->bo->delete($cat_id,$entity_id,$attrib_id,$acl_location,$custom_function_id,$group_id);
 				$GLOBALS['phpgw']->redirect_link('/index.php',$link_data);
 			}
 
@@ -1319,6 +1324,7 @@
 
 				'lang_group'						=> lang('group'),
 				'lang_group_statustext'				=> lang('Select a group'),
+				'lang_no_group'					=> lang('no group'),
 				'attrib_group_list'					=> $this->bo->get_attrib_group_list($entity_id,$cat_id, $values['group_id']),
 
 				'lang_precision'					=> lang('Precision'),

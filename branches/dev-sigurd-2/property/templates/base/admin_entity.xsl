@@ -1222,6 +1222,7 @@
 				<td valign="top">
 					<xsl:variable name="lang_group_statustext"><xsl:value-of select="lang_group_statustext"/></xsl:variable>
 					<select name="values[group_id]" class="forms" onMouseover="window.status='{$lang_group_statustext}'; return true;" onMouseout="window.status='';return true;">
+						<option value=""><xsl:value-of select="lang_no_group"/></option>
 						<xsl:apply-templates select="attrib_group_list"/>
 					</select>
 				</td>
