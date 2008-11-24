@@ -529,25 +529,6 @@
 	</xsl:template>
 
 
-
-
-<!--
-		<div class="yui-navset" id="entity_edit_tabview">
-			<xsl:variable name="form_action"><xsl:value-of select="form_action"/></xsl:variable>
-			<form method="post" name="form" action="{$form_action}">
-
-			<div class="yui-content">		
-				<div id="general">
-
-		<table cellpadding="2" cellspacing="2" width="80%" align="center">
-
--->
-
-
-
-
-
-
 	<xsl:template match="owner_list">
 	<xsl:variable name="id"><xsl:value-of select="id"/></xsl:variable>
 		<xsl:choose>
