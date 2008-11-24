@@ -325,6 +325,36 @@
 			return $values;
 		}
 
+		function get_attribute_groups($location, $attributes = array())
+		{
+			$no_group = array
+			(
+				array
+				(
+					'id'	=> 0,
+					'name'	=> lang('attributes'),
+					'descr' => lang('attributes')
+				)
+			);
+			$groups = $this->custom->find_group('property', $location, 0, '', 'ASC', 'group_sort', true);
+			if($groups)
+			{
+				$groups = array_merge($no_group,$groups);
+			}
+			
+			foreach ($groups as &$group)
+			{
+				foreach ($attributes as $attribute)
+				{
+					if($attribute['group_id'] == $group['id'])
+					{
+						$group['attributes'][] = $attribute;
+					}
+				}
+			}
+			return $groups;
+		}
+
 		function save($values,$values_attribute,$action='',$entity_id,$cat_id)
 		{
 			while (is_array($values['location']) && list(,$value) = each($values['location']))

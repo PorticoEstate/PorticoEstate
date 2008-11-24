@@ -208,8 +208,13 @@
 			<xsl:value-of select="lookup_functions"/>
 		</script>
 
-		<div align="left">
-		
+		<div class="yui-navset" id="entity_edit_tabview">
+			<xsl:variable name="form_action"><xsl:value-of select="form_action"/></xsl:variable>
+			<form ENCTYPE="multipart/form-data" method="post" name="form" action="{$form_action}">
+			<xsl:value-of disable-output-escaping="yes" select="tabs" />
+			<div class="yui-content">		
+				<div id="general">
+
 		<table cellpadding="2" cellspacing="2" width="80%" align="center">
 			<xsl:choose>
 				<xsl:when test="msgbox_data != ''">
@@ -229,13 +234,14 @@
 					</tr>
 				</xsl:when>
 			</xsl:choose>
-			<xsl:variable name="form_action"><xsl:value-of select="form_action"/></xsl:variable>
-			<form ENCTYPE="multipart/form-data" method="post" name="form" action="{$form_action}">
 			<tr>
 				<td colspan = "2" align = "center">
 					<xsl:apply-templates select="table_apply"/>
 				</td>
 			</tr>
+		</table>
+
+		<table cellpadding="2" cellspacing="2" width="80%" align="center">
 			<xsl:call-template name="target"/>
 			<xsl:for-each select="origin_list" >
 				<tr>
@@ -360,6 +366,31 @@
 				</xsl:when>
 			</xsl:choose>
 
+		</table>
+		</div>
+
+		<xsl:for-each select="group_attributes" >
+			<div id="{link}">
+				<table cellpadding="2" cellspacing="2" width="80%" align="center">
+					<tr>
+						<td colspan="2" width="50%" align="left">
+							<xsl:apply-templates select="attributes_values"/>
+					<!--	<xsl:call-template name="attributes_form"/>	-->
+						</td>
+					</tr>
+				</table>
+			</div>
+		</xsl:for-each>
+
+	<!--		<tr>
+				<td colspan="2" width="50%" align="left">
+					<xsl:call-template name="attributes_form"/>							
+				</td>
+			</tr>
+	-->
+
+		<div id="files">
+		<table cellpadding="2" cellspacing="2" width="80%" align="center">
 			<xsl:choose>
 				<xsl:when test="files!=''">
 					<xsl:call-template name="file_list"/>
@@ -371,17 +402,16 @@
 					<xsl:call-template name="file_upload"/>
 				</xsl:when>
 			</xsl:choose>
-			<tr>
-				<td colspan="2" width="50%" align="left">
-					<xsl:call-template name="attributes_form"/>							
-				</td>
-			</tr>
+		</table>
+		</div>
+
+		<table cellpadding="2" cellspacing="2" width="80%" align="center">
 			<tr height="50">
 				<td colspan="2" align = "center">
 					<xsl:apply-templates select="table_apply"/>
 				</td>
 			</tr>
-			</form>
+
 			<xsl:choose>
 				<xsl:when test="start_project!=''">
 					<tr>
@@ -423,7 +453,8 @@
 
 		</table>
 		</div>
-
+		</form>
+		</div>
 	</xsl:template>
 
 

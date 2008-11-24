@@ -1170,6 +1170,32 @@
 				'cat_id'	=> $this->cat_id
 			);
 
+			$tabs = array
+			(
+				'general'	=> array('label' => lang('general'), 'link' => '#general')
+			);
+
+			phpgwapi_yui::tabview_setup('entity_edit_tabview');
+
+
+			$location = ".entity.{$this->entity_id}.{$this->cat_id}";
+
+			$group_attributes = $this->bo->get_attribute_groups($location, $values['attributes']);
+			
+			foreach ($group_attributes as &$group)
+			{
+				if(isset($group['attributes']))
+				{
+					$tabs[str_replace(' ', '_', $group['name'])] = array('label' => $group['name'], 'link' => '#' . str_replace(' ', '_', $group['name']));
+					$group['link'] = str_replace(' ', '_', $group['name']);
+				}
+			}
+
+			if($category['fileupload'] || (isset($values['files']) || $values['files']))
+			{
+				$tabs['files']	= array('label' => lang('files'), 'link' => '#files');
+			}
+
 			$data = array
 			(
 				'link_pdf'						=> $GLOBALS['phpgw']->link('/index.php',$pdf_data),
@@ -1216,6 +1242,7 @@
 				'lang_attributes'				=> lang('Attributes'),
 				'attributes_header'				=> $attributes_header,
 				'attributes_values'				=> $values['attributes'],
+				'group_attributes'				=> $group_attributes,
 				'lookup_functions'				=> isset($values['lookup_functions'])?$values['lookup_functions']:'',
 				'dateformat'					=> $dateformat,
 				'lang_none'						=> lang('None'),
@@ -1237,7 +1264,8 @@
 				'lang_date'						=> lang('date'),
 				'table_apply' 					=> $table_apply,
 				'textareacols'					=> isset($GLOBALS['phpgw_info']['user']['preferences']['property']['textareacols']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['textareacols'] ? $GLOBALS['phpgw_info']['user']['preferences']['property']['textareacols'] : 40,
-				'textarearows'					=> isset($GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows'] ? $GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows'] : 6
+				'textarearows'					=> isset($GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows'] ? $GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows'] : 6,
+				'tabs'							=> phpgwapi_yui::tabview_generate($tabs, 'general')
 			);
 
 			$appname	= $entity['name'];

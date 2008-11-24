@@ -871,12 +871,11 @@
 		 * @param ?????? $sort         ask sigurd
 		 * @param ?????? $order        ask sigurd
 		 * @param ?????? $allrows      ask sigurd
-		 * @param ?????? $inc_choices  ask sigurd
 		 *
 		 * @return ???? something
 		 */
 		public function find_group($appname, $location, $start = 0, $query = '', $sort = 'ASC', 
-				$order = 'group_sort', $allrows = false, $inc_choices = false)
+				$order = 'group_sort', $allrows = false)
 		{
 			$location_id	= $GLOBALS['phpgw']->locations->get_id($appname, $location);
 			$start			= (int) $start;
