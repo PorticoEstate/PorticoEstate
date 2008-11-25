@@ -11,6 +11,7 @@
 					<xsl:for-each select="attributes" >
 					<xsl:variable name="statustext"><xsl:value-of select="statustext"/></xsl:variable>
 						<tr>
+							<!--
 							<xsl:attribute name="class">
 								<xsl:choose>
 									<xsl:when test="@class">
@@ -24,6 +25,7 @@
 									</xsl:otherwise>
 								</xsl:choose>
 							</xsl:attribute>
+							-->
 							<td class="{class}" align="left" valign="top" title="{$statustext}" style="cursor:help">
 								<xsl:choose>
 									<xsl:when test="helpmsg=1">
