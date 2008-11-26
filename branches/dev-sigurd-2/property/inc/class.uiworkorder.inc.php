@@ -241,80 +241,81 @@
 			                                            'id' => 'btn_cat_id',
 			                                            'name' => 'cat_id',
 			                                            'value'	=> lang('Category'),
-			                                            'type' => 'button'
+			                                            'type' => 'button',
+			                                            'style' => 'filter'
 			                                        ),
 			                                        array( //boton 	STATUS
 			                                            'id' => 'btn_status_id',
 			                                            'name' => 'status_id',
 			                                            'value'	=> lang('Status'),
 			                                            'type' => 'button',
+			                                            'style' => 'filter'
 			                                        ),
 			                                        array( //boton 	HOUR CATEGORY
 			                                            'id' => 'btn_wo_hour_cat_id',
 			                                            'name' => 'wo_hour_cat_id',
 			                                            'value'	=> lang('Hour category'),
 			                                            'type' => 'button',
+			                                            'style' => 'filter'
 			                                        ),
 			                                        array( //boton 	FILTER
 			                                            'id' => 'btn_user_id',
 			                                            'name' => 'filter',
 			                                            'value'	=> lang('User'),
 			                                            'type' => 'button',
-			                                        ),
-			                                        
-			                                        array(
-                                                    'type'=> 'link',
-                                                    'id'  => 'btn_data_search',
-                                                    'url' => "Javascript:window.open('".$GLOBALS['phpgw']->link('/index.php',
-                                                           array(
-                                                               'menuaction' => 'property.uiproject.date_search'))."','','width=350,height=250')",
-                                                     'value' => lang('Date search')
-                                                    ),			                               
-			                                        array( //hidden type_id
-						                                'type'	=> 'hidden',
-						                            	'id'	=> 'start_date',
-						                                'value'	=> $start_date
-						                            ),
-			                                        array( //hidden type_id
-						                                'type'	=> 'hidden',
-						                            	'id'	=> 'end_date',
-						                                'value'	=> $end_date
-						                            ),	
-	                                                array(//for link "None",
-	                                                 'type'=> 'label_date'
-	                                                ),						                            						                            				                            
-			   										array( // TEXT IMPUT
-			                                            'name'     => 'search_vendor',
-			                                            'id'     => 'txt_search_vendor',
-			                                            'value'    => '',//$query,
-			                                            'type' => 'text',
-			                                            'size'    => 12
-			                                        ),
-			   										array( // TEXT IMPUT
-			                                            'name'     => 'query',
-			                                            'id'     => 'txt_query',
-			                                            'text'    => '',//necesary for spacio next to  txtinput
-			                                            'value'    => '',//$query,
-			                                            'type' => 'text',
-			                                            'size'    => 28
+			                                            'style' => 'filter'
 			                                        ),			                                        
+													array(
+						                                'type'	=> 'button',
+						                            	'id'	=> 'btn_export',
+						                                'value'	=> lang('download')
+						                            ),		                               
+													array(
+						                                'type'	=> 'submit',
+						                            	'id'	=> 'btn_new',
+						                                'value'	=> lang('add')
+						                            ),	                                        
 			                                        array( //boton     SEARCH
 			                                            'id' => 'btn_search',
 			                                            'name' => 'search',
 			                                            'value'    => lang('search'),
 			                                            'type' => 'button',
 			                                        ),
-													array(
-						                                'type'	=> 'submit',
-						                            	'id'	=> 'btn_new',
-						                                'value'	=> lang('add')
+			   										array( // TEXT IMPUT
+			                                            'name'     => 'query',
+			                                            'id'     => 'txt_query',
+			                                            'value'    => '',//$query,
+			                                            'type' => 'text',
+			                                            'size'    => 28
+			                                        ),	
+			   										array( // TEXT IMPUT
+			                                            'name'     => 'search_vendor',
+			                                            'id'     => 'txt_search_vendor',
+			                                            'value'    => '',
+			                                            'type' => 'text',
+			                                            'size'    => 12
+			                                        ),				                                        							                            
+			                                        array( 
+						                                'type'	=> 'hidden',
+						                            	'id'	=> 'start_date',
+						                                'value'	=> $start_date
 						                            ),
-													array(
-						                                'type'	=> 'button',
-						                            	'id'	=> 'btn_export',
-						                                'value'	=> lang('download')
-						                            )
-						                           
+			                                        array( 
+						                                'type'	=> 'hidden',
+						                            	'id'	=> 'end_date',
+						                                'value'	=> $end_date
+						                            ),	
+	                                                array(
+	                                                 	'type'=> 'label_date'
+	                                                ),						                            						                            				                            					                            
+			                                        array(
+	                                                    'type'=> 'link',
+	                                                    'id'  => 'btn_data_search',
+	                                                    'url' => "Javascript:window.open('".$GLOBALS['phpgw']->link('/index.php',
+	                                                           array(
+	                                                               'menuaction' => 'property.uiproject.date_search'))."','','width=350,height=250')",
+	                                                     'value' => lang('Date search')
+                                                    )		
 		                           				),
 		                       		'hidden_value' => array(
 					                                        array( //div values  combo_box_0
@@ -359,8 +360,7 @@
 						{
 							if(isset($workorder['query_location'][$uicols['name'][$i]]))
 							{
-								
-							
+															
 								$datatable['rows']['row'][$j]['column'][$i]['name'] 			= $uicols['name'][$i];
 								$datatable['rows']['row'][$j]['column'][$i]['statustext']		= lang('search');
 								$datatable['rows']['row'][$j]['column'][$i]['value']			= $workorder[$uicols['name'][$i]];
@@ -368,7 +368,6 @@
 								$datatable['rows']['row'][$j]['column'][$i]['java_link']		= true;
 								$datatable['rows']['row'][$j]['column'][$i]['link']				= $workorder['query_location'][$uicols['name'][$i]];
 								$uicols['formatter'][$i] = 'myCustom';
-
 
 							}
 							else

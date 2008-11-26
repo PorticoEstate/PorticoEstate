@@ -301,68 +301,72 @@
 			                                            'id' => 'btn_cat_id',
 			                                            'name' => 'cat_id',
 			                                            'value'	=> lang('Category'),
-			                                            'type' => 'button'
+			                                            'type' => 'button',
+			                                            'style' => 'filter'
 			                                        ),
 			                                        array( //boton 	DISTINT
 			                                            'id' => 'btn_district_id',
 			                                            'name' => 'district_id',
 			                                            'value'	=> lang('District'),
 			                                            'type' => 'button',
+			                                            'style' => 'filter'
 			                                        ),
 			                                        array( //boton 	PART OF TOWN
 			                                            'id' => 'btn_part_of_town_id',
 			                                            'name' => 'part_of_town_id',
 			                                            'value'	=> lang('Part of Town'),
 			                                            'type' => 'button',
+			                                            'style' => 'filter'
 			                                        ),
 			                                        array( //boton 	FILTER
 			                                            'id' => 'btn_owner_id',
 			                                            'name' => 'owner_id',
 			                                            'value'	=> lang('Filter'),
 			                                            'type' => 'button',
+			                                            'style' => 'filter'
 			                                        ),
-			   										 array( // TEXT IMPUT
-			                                            'name'     => 'query',
-			                                            'id'     => 'txt_query',
-			                                            'text'    => '',//necesary for spacio next to  txtinput
-			                                            'value'    => '',//$query,
-			                                            'type' => 'text',
-			                                            'size'    => 28
-			                                        ),
+						                            //for link "columns", next to Export button
+										           array(
+						                                'type' => 'link',
+						                                'id' => 'btn_columns',
+						                                'url' => "Javascript:window.open('".$GLOBALS['phpgw']->link('/index.php',
+																				           array
+																				              (
+																				               'menuaction' => 'property.uilocation.columns',
+																				               'type_id'  => $type_id,
+																				               'lookup'  => $this->lookup
+																				              ))."','','width=300,height=600')",
+														'value' => lang('columns')
+													),
+													array(
+						                                'type'	=> 'button',
+						                            	'id'	=> 'btn_export',
+						                                'value'	=> lang('download')
+						                            ),														
+													array(
+						                                'type'	=> 'submit',
+						                            	'id'	=> 'btn_new',
+						                                'value'	=> lang('add')
+						                            ),														
 			                                        array( //boton     SEARCH
 			                                            'id' => 'btn_search',
 			                                            'name' => 'search',
 			                                            'value'    => lang('search'),
 			                                            'type' => 'button',
-			                                        ),
+			                                        ),														
+			   										 array( // TEXT IMPUT
+			                                            'name'     => 'query',
+			                                            'id'     => 'txt_query',
+			                                            //'text'    => '',//necesary for spacio next to  txtinput
+			                                            'value'    => '',//$query,
+			                                            'type' => 'text',
+			                                            'size'    => 28
+			                                        ),	
 													array( //hidden type_id
 						                                'type'	=> 'hidden',
 						                            	'id'	=> 'type_id',
 						                                'value'	=> $type_id
-						                            ),
-													array(
-						                                'type'	=> 'submit',
-						                            	'id'	=> 'btn_new',
-						                                'value'	=> lang('add')
-						                            ),
-													array(
-						                                'type'	=> 'button',
-						                            	'id'	=> 'btn_export',
-						                                'value'	=> lang('download')
-						                            ),
-						                            //for link "columns", next to Export button
-										          array(
-						                                'type' => 'link',
-						                                'id' => 'btn_columns',
-						                                'url' => "Javascript:window.open('".$GLOBALS['phpgw']->link('/index.php',
-																						           array
-																						              (
-																						               'menuaction' => 'property.uilocation.columns',
-																						               'type_id'  => $type_id,
-																						               'lookup'  => $this->lookup
-																						              ))."','','width=300,height=600')",
-														'value' => lang('columns')
-														)
+						                            )	
 		                           				),
 		                       		'hidden_value' => array(
 					                                        array( //div values  combo_box_0

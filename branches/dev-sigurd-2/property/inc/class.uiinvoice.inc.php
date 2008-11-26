@@ -316,53 +316,16 @@
 	                                    'id' => 'btn_cat_id',
 	                                    'name' => 'cat_id',
 	                                    'value'	=> lang('Category'),
-	                                    'type' => 'button'
+	                                    'type' => 'button',
+	                                    'style' => 'filter'
 	                                ),
 	                                array( //boton 	OWNER
 	                                    'id' => 'btn_user_lid',
 	                                    'name' => 'user_lid',
 	                                    'value'	=> user_lid,
-	                                    'type' => 'button'
-	                                ),
-	                                array( // txtbox start_data hidden
-	                                    'name'     => 'start_date',
-	                                    'id'     => 'txt_start_date',
-	                                    'value'    => "",
-	                                    'type' => 'hidden',
-	                                    'size'    => 8
-	                                ),
-	                                array( // txtbox end_data hidden
-	                                    'name'     => 'end_date',
-	                                    'id'     => 'txt_end_date',
-	                                    'value'    => "",
-	                                    'type' => 'hidden',
-	                                    'size'    => 8
-	                                ),
-	                                array( // TEXT IMPUT
-	                                    'name'     => 'query',
-	                                    'id'     => 'txt_query',
-	                                    'text'    => '',//necesary for spacio next to  txtinput
-	                                    'value'    => $this->query,//$query,
-	                                    'type' => 'text',
-	                                    'size'    => 28
-	                                ),
-	                                array( //boton   SEARCH
-	                                    'id' => 'btn_search',
-	                                    'name' => 'search',
-	                                    'value'    => lang('search'),
 	                                    'type' => 'button',
-	                                ),
-									array( // boton ADD
-		                                'type'	=> 'submit',
-		                            	'id'	=> 'btn_new',
-		                                'value'	=> lang('add')
-		                            ),
-									array( // boton SAVE
-		                                'id'	=> 'btn_save',
-		                            	//'name' => 'save',
-		                                'value'	=> lang('save'),
-										'type'	=> 'button'
-		                            ),
+	                                    'style' => 'filter'
+	                                ),	                               	                       
 	                                array( // boton exportar
 		                                'type'	=> 'button',
 		                            	'id'	=> 'btn_export',
@@ -377,24 +340,71 @@
 		                                'type'	=> 'hidden',
 		                            	'id'	=> 'valuesForUpdatePHP',
 		                                'value'	=> ''
+		                            ),
+									array( // boton SAVE
+		                                'id'	=> 'btn_save',
+		                            	//'name' => 'save',
+		                                'value'	=> lang('save'),
+										'type'	=> 'button'
+		                            ),		                            
+									array( // boton ADD
+		                                'type'	=> 'submit',
+		                            	'id'	=> 'btn_new',
+		                                'value'	=> lang('add')
+		                            ),		                            
+	                                array( //boton   SEARCH
+	                                    'id' => 'btn_search',
+	                                    'name' => 'search',
+	                                    'value'    => lang('search'),
+	                                    'type' => 'button',
+	                                ),
+	                                array( // TEXT IMPUT
+	                                    'name'     => 'query',
+	                                    'id'     => 'txt_query',
+	                                    'value'    => $this->query,//$query,
+	                                    'type' => 'text',
+	                                    'size'    => 28
+	                                ),	
+	                                array( // txtbox end_data hidden
+	                                    'name'     => 'end_date',
+	                                    'id'     => 'txt_end_date',
+	                                    'value'    => "",
+	                                    'type' => 'hidden',
+	                                    'size'    => 8
+	                                ),	                                
+	                                array( // txtbox start_data hidden
+	                                    'name'     => 'start_date',
+	                                    'id'     => 'txt_start_date',
+	                                    'value'    => "",
+	                                    'type' => 'hidden',
+	                                    'size'    => 8
 		                            ));
 				}
 				else
 				{
 				$field_invoice = array(
+	                                array( // imag calendar1
+	                                    'type' => 'img',
+										'id'     => 'start_date-trigger',
+	                                    'src'    => $GLOBALS['phpgw']->common->image('phpgwapi','cal'),
+	                                    'alt'	=> lang('Select date'),
+	                                    'style' => 'filter'
+	                                ),				
 									array( // calendar1 start_date
 	                                    'type' => 'text',
 										'name'     => 'start_date',
 	                                    'id'     => 'start_date',
 	                                    'value'    => $start_date,
 	                                    'size'    => 7,
-	                                    'readonly' => 'readonly'
+	                                    'readonly' => 'readonly',
+	                                    'style' => 'filter'
 	                                ),
 	                                array( // imag calendar1
 	                                    'type' => 'img',
-										'id'     => 'start_date-trigger',
+										'id'     => 'end_date-trigger',
 	                                    'src'    => $GLOBALS['phpgw']->common->image('phpgwapi','cal'),
-	                                    'alt'	=> lang('Select date')
+	                                    'alt'	=> lang('Select date'),
+	                                    'style' => 'filter'
 	                                ),
 									array( // calendar1 start_date
 	                                    'type' => 'text',
@@ -402,41 +412,23 @@
 	                                    'id'     => 'end_date',
 	                                    'value'    => $end_date,
 	                                    'size'    => 7,
-	                                    'readonly' => 'readonly'
-	                                ),
-	                                array( // imag calendar1
-	                                    'type' => 'img',
-										'id'     => 'end_date-trigger',
-	                                    'src'    => $GLOBALS['phpgw']->common->image('phpgwapi','cal'),
-	                                    'alt'	=> lang('Select date')
-	                                ),
-
-	                                array( // workorder box
-	                                    'name'     => 'workorder_id',
-	                                    'id'     => 'txt_workorder',
-	                                    'value'    => $workorder_id,
-	                                    'type' => 'text',
-	                                    'size'    => 10
+	                                    'readonly' => 'readonly',
+	                                    'style' => 'filter'
 	                                ),
 	                                array( // workorder link
 		                                'type' => 'link',
 		                                'id' => 'lnk_workorder',
 		                                'url' => "",
-										'value' => lang('Workorder ID')
-									),
-									array( // Vendor box
-	                                    'name'     => 'vendor_id',
-	                                    'id'     => 'txt_vendor',
-	                                    'value'    => $vendor_id,
+										'value' => lang('Workorder ID'),
+										'style' => 'filter'
+									),	                                
+	                                array( // workorder box
+	                                    'name'     => 'workorder_id',
+	                                    'id'     => 'txt_workorder',
+	                                    'value'    => $workorder_id,
 	                                    'type' => 'text',
-	                                    'size'    => 10
-	                                ),
-	                                array( // Vendor box HIDDEN
-	                                    'name'     => 'vendor_name',
-	                                    'id'     => 'txt_vendor_name',
-	                                    'value'    => "",
-	                                    'type' => 'hidden',
-	                                    'size'    => 10
+	                                    'size'    => 10,
+	                                    'style' => 'filter'
 	                                ),
 	                                array( //vendor link
 		                                'type' => 'link',
@@ -446,22 +438,24 @@
 											              (
 											               'menuaction' => 'property.uilookup.vendor',
 											               ))."','Search','width=800,height=700,toolbar=no,scrollbars=yes,resizable=yes')",
-										'value' => lang('Vendor')
-									),
-
-	                                array( // txt Facilities Management
-	                                    'name'     => 'loc1',
-	                                    'id'     => 'txt_loc1',
-	                                    'value'    => $loc1,
-	                                    'type' => 'text',
-	                                    'size'    => 8
-	                                ),
-	                                array( // txt Facilities Management
-	                                    'name'     => 'loc1_name',
-	                                    'id'     => 'txt_loc1_name',
+										'value' => lang('Vendor'),
+										'style' => 'filter'
+									),	     
+	                                array( // Vendor box HIDDEN
+	                                    'name'     => 'vendor_name',
+	                                    'id'     => 'txt_vendor_name',
 	                                    'value'    => "",
 	                                    'type' => 'hidden',
-	                                    'size'    => 8
+	                                    'size'    => 10,
+	                                    'style' => 'filter'
+	                                ),									                           
+									array( // Vendor box
+	                                    'name'     => 'vendor_id',
+	                                    'id'     => 'txt_vendor',
+	                                    'value'    => $vendor_id,
+	                                    'type' => 'text',
+	                                    'size'    => 10,
+	                                    'style' => 'filter'
 	                                ),
 	                                array(
 		                                'type' => 'link',
@@ -474,50 +468,74 @@
 											               'type_id'  	=> 1,
 															'lookup_name'  	=> 0,
 											               ))."','Search','width=800,height=700,toolbar=no,scrollbars=yes,resizable=yes')",
-										'value' => lang('property')
+										'value' => lang('property'),
+										'style' => 'filter'
+									),
+	                                array( // txt Facilities Management
+	                                    'name'     => 'loc1_name',
+	                                    'id'     => 'txt_loc1_name',
+	                                    'value'    => "",
+	                                    'type' => 'hidden',
+	                                    'size'    => 8,
+	                                    'style' => 'filter'
+	                                ),
+	                                array( // txt Facilities Management
+	                                    'name'     => 'loc1',
+	                                    'id'     => 'txt_loc1',
+	                                    'value'    => $loc1,
+	                                    'type' => 'text',
+	                                    'size'    => 8,
+	                                    'style' => 'filter'
+	                                ),
+	                                array( // Voucher link
+		                                'type' => 'link',
+		                                'id' => 'lnk_voucher',
+		                                'url' => "",
+										'value' => lang('Voucher ID'),
+										'style' => 'filter'
 									),
 	                                array( // Voucher box
 	                                    'name'     => 'voucher_id',
 	                                    'id'     => 'txt_voucher',
 	                                    'value'    => $voucher_id,
 	                                    'type' => 'text',
-	                                    'size'    => 8
+	                                    'size'    => 8,
+	                                    'style' => 'filter'
 	                                ),
-	                                array( // Voucher link
-		                                'type' => 'link',
-		                                'id' => 'lnk_voucher',
-		                                'url' => "",
-										'value' => lang('Voucher ID')
-									),
 									array( //boton   SEARCH
 	                                    'id' => 'btn_search',
 	                                    'name' => 'search',
 	                                    'value'    => lang('search'),
-	                                    'type' => 'button'
+	                                    'type' => 'button',
+	                                    'style' => 'filter'
 	                                ),
 	                                array( //boton 	CATEGORY
 	                                    'id' => 'btn_cat_id',
 	                                    'name' => 'cat_id',
 	                                    'value'	=> lang('Category'),
-	                                    'type' => 'button'
+	                                    'type' => 'button',
+	                                    'style' => 'filter'
 	                                ),
 									array( //boton 	OWNER
 	                                    'id' => 'btn_user_lid',
 	                                    'name' => 'user_lid',
 	                                    'value'	=> user_lid,
-	                                    'type' => 'button'
+	                                    'type' => 'button',
+	                                    'style' => 'filter'
 	                                ),
-	                               array( //boton 	ACCOUNT
+	                                array( //boton 	ACCOUNT
 	                                    'id' => 'btn_b_account_class',
 	                                    'name' => 'b_account_class',
 	                                    'value'	=> lang('No account'),
-	                                    'type' => 'button'
+	                                    'type' => 'button',
+	                                    'style' => 'filter'
 	                                ),
 		                            array( //hidden paid
 		                                'type'	=> 'hidden',
 		                            	'id'	=> 'paid',
 		                            	'name'	=> 'paid',
-		                                'value'	=> $paid
+		                                'value'	=> $paid,
+		                                'style' => 'filter'
 		                            ));
 				}
 

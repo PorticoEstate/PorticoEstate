@@ -252,15 +252,15 @@
 			                                            'id' => 'btn_member_id',
 			                                            'name' => 'member_id',
 			                                            'value'	=> lang('Member'),
-			                                            'type' => 'button'
-			                                            //'style' => 'filter'
+			                                            'type' => 'button',
+			                                            'style' => 'filter'
 			                                        ),
 			                                        array(
 			                                            'id' => 'btn_cat_id',
 			                                            'name' => 'cat_id',
 			                                            'value'	=> lang('Category'),
-			                                            'type' => 'button'
-			                                            //'style' => 'filter'
+			                                            'type' => 'button',
+			                                            'style' => 'filter'
 			                                        ),
 													array(
 										                'type'=> 'link',
@@ -281,12 +281,11 @@
 			                                            'id' => 'btn_search',
 			                                            'name' => 'search',
 			                                            'value'    => lang('search'),
-			                                            'type' => 'button',
+			                                            'type' => 'button'
 			                                        ),							                            										            				                                        		                                        			                                      				                                      	                              			                            						                            				                            
 			   										array( // TEXT IMPUT
 			                                            'name'     => 'query',
 			                                            'id'     => 'txt_query',
-			                                            'text'    => '',//necesary for spacio next to  txtinput
 			                                            'value'    => '',//$query,
 			                                            'type' => 'text',
 			                                            'size'    => 28
@@ -313,8 +312,8 @@
 				
 				if(!$this->acl_add)
 				{
-					unset($datatable['actions']['form'][0]['fields']['field'][4]);
-				} 						
+					unset($datatable['actions']['form'][0]['fields']['field'][3]);
+				} 							
 				$dry_run = true;
 			}	
 

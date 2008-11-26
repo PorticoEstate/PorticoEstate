@@ -344,71 +344,74 @@
 			                                            'id' => 'btn_cat_id',
 			                                            'name' => 'cat_id',
 			                                            'value'	=> lang('Category'),
-			                                            'type' => 'button'
+			                                            'type' => 'button',
+			                                            'style' => 'filter'
 			                                        ),
 			                                        array( //boton 	STATUS
 			                                            'id' => 'btn_district_id',
 			                                            'name' => 'district_id',
 			                                            'value'	=> lang('District'),
-			                                            'type' => 'button'
+			                                            'type' => 'button',
+			                                            'style' => 'filter'
 			                                        ),
 			                                        array( //boton 	HOUR CATEGORY
 			                                            'id' => 'btn_status_id',
 			                                            'name' => 'status_id',
 			                                            'value'	=> lang('Status'),
-			                                            'type' => 'button'
+			                                            'type' => 'button',
+			                                            'style' => 'filter'
 			                                        ),
 			                                        array( //boton 	USER
 			                                            'id' => 'btn_user_id',
 			                                            'name' => 'user_id',
 			                                            'value'	=> lang('User'),
-			                                            'type' => 'button'
-			                                        ),
-			                                        array(//for link "Date search",
-                                                    'type'=> 'link',
-                                                    'id'  => 'btn_data_search',
-                                                    'url' => "Javascript:window.open('".$GLOBALS['phpgw']->link('/index.php',
-                                                           array(
-                                                               'menuaction' => 'property.uiproject.date_search'))."','','width=350,height=250')",
-                                                     'value' => lang('Date search')
-                                                    ),
-			                                        array( //hidden start_date
-                                                    'type' => 'hidden',
-                                                    'id' => 'start_date',
-                                                    'value' => $start_date
-                                                 ),
-                                                 array( //hidden end_date
-                                                    'type' => 'hidden',
-                                                    'id' => 'end_date',
-                                                    'value' => $end_date
-                                                 ),
-                                                 array(//for link "None",
-                                                 'type'=> 'label_date'
-                                                ),
-			   										 array( // TEXT INPUT
-			                                            'name'     => 'query',
-			                                            'id'     => 'txt_query',
-			                                            'text'    => '',//necesary for spacio next to  txtinput
-			                                            'value'    => '',//$query,
-			                                            'type' => 'text',
-			                                            'size'    => 28
-			                                        ),
-			                                        array( //boton     SEARCH
-			                                            'id' => 'btn_search',
-			                                            'name' => 'search',
-			                                            'value'    => lang('search'),
 			                                            'type' => 'button',
+			                                            'style' => 'filter'
 			                                        ),
+													array(
+						                                'type'	=> 'button',
+						                            	'id'	=> 'btn_export',
+						                                'value'	=> lang('download')
+						                            ),
 													array(
 						                                'type'	=> 'submit',
 						                            	'id'	=> 'btn_new',
 						                                'value'	=> lang('add')
 						                            ),
-													array(
-						                                'type'	=> 'button',
-						                            	'id'	=> 'btn_export',
-						                                'value'	=> lang('download')
-						                            )
+			                                        array( //boton     SEARCH
+			                                            'id' => 'btn_search',
+			                                            'name' => 'search',
+			                                            'value'    => lang('search'),
+			                                            'type' => 'button',
+			                                        ),						                            
+			   										array( // TEXT INPUT
+			                                            'name'     => 'query',
+			                                            'id'     => 'txt_query',
+			                                            'value'    => '',//$query,
+			                                            'type' => 'text',
+			                                            'size'    => 28
+			                                        ),
+			                                        array( //hidden start_date
+	                                                    'type' => 'hidden',
+	                                                    'id' => 'start_date',
+	                                                    'value' => $start_date
+                                                    ),
+	                                                array( //hidden end_date
+	                                                    'type' => 'hidden',
+	                                                    'id' => 'end_date',
+	                                                    'value' => $end_date
+	                                                ),
+	                                                array(//for link "None",
+	                                                 	'type'=> 'label_date'
+	                                                ),	
+			                                        array(//for link "Date search",
+		                                                'type'=> 'link',
+		                                                'id'  => 'btn_data_search',
+		                                                'url' => "Javascript:window.open('".$GLOBALS['phpgw']->link('/index.php',
+		                                                       array(
+		                                                           'menuaction' => 'property.uiproject.date_search'))."','','width=350,height=250')",
+		                                                 'value' => lang('Date search')
+	                                                )   
 		                           				),
 		                       		'hidden_value' => array(
 					                                        array( //div values  combo_box_0

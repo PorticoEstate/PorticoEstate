@@ -204,24 +204,61 @@
 							),
 						'fields'	=> array(
                                     	'field' => array(
-			                                        array( //boton 	CATEGORY
+		                                           array( //boton 	CATEGORY
 			                                            'id' => 'btn_cat_id',
 			                                            'name' => 'cat_id',
 			                                            'value'	=> lang('Category'),
-			                                            'type' => 'button'
+			                                            'type' => 'button',
+			                                            'style' => 'filter'
 			                                        ),
 			                                        array( //boton 	STATUS
 			                                            'id' => 'btn_status_id',
 			                                            'name' => 'status_id',
 			                                            'value'	=> lang('Status'),
 			                                            'type' => 'button',
+			                                            'style' => 'filter'
 			                                        ),
 			                                        array( //boton 	FILTER
 			                                            'id' => 'btn_user_id',
 			                                            'name' => 'filter',
 			                                            'value'	=> lang('User'),
 			                                            'type' => 'button',
-			                                        ),	
+			                                            'style' => 'filter'
+			                                        ),		                                        			                                      				                                      	                              			                            						                            				                            
+													array(
+						                                'type'	=> 'button',
+						                            	'id'	=> 'btn_export',
+						                                'value'	=> lang('download')
+						                            ),							                            
+													array(
+						                                'type'	=> 'button',
+						                            	'id'	=> 'btn_update',
+						                                'value'	=> lang('Update project')
+						                            ),									                            			                            			                                                                                		                                  
+													array(
+						                                'type'	=> 'submit',
+						                            	'id'	=> 'btn_new',
+						                                'value'	=> lang('add')
+						                            ),		
+			                                        array( //boton     SEARCH
+			                                            'id' => 'btn_search',
+			                                            'name' => 'search',
+			                                            'value'    => lang('search'),
+			                                            'type' => 'button',
+			                                        ),							                            		                                        			
+						                            array( //hidden request
+							                                'type'	=> 'hidden',
+							                            	'id'	=> 'myValuesForUpdatePHP',
+							                            	'name'	=> 'myValuesForUpdatePHP',
+							                                'value'	=> ''
+							                        ),			                                        
+			   										array( // TEXT IMPUT
+			                                            'name'     => 'query',
+			                                            'id'     => 'txt_query',
+			                                            'value'    => '',//$query,
+			                                            'type' => 'text',
+			                                            'size'    => 28
+			                                        ),			                                        
 													array(
 										                'type'=> 'link',
 										                'id'  => 'btn_priority_key',
@@ -229,42 +266,7 @@
 										                       array(
 										                           'menuaction' => 'property.uirequest.priority_key'))."','','width=350,height=250')",
 										                 'value' => lang('Priority key')
-										            ),			                                        			                                      				                                      	                              			                            						                            				                            
-			   										array( // TEXT IMPUT
-			                                            'name'     => 'query',
-			                                            'id'     => 'txt_query',
-			                                            //'text'    => '',//necesary for spacio next to  txtinput
-			                                            'value'    => '',//$query,
-			                                            'type' => 'text',
-			                                            'size'    => 28
-			                                        ),			                                        
-			                                        array( //boton     SEARCH
-			                                            'id' => 'btn_search',
-			                                            'name' => 'search',
-			                                            'value'    => lang('search'),
-			                                            'type' => 'button',
-			                                        ),			                                  
-													array(
-						                                'type'	=> 'submit',
-						                            	'id'	=> 'btn_new',
-						                                'value'	=> lang('add')
-						                            ),
-													array(
-						                                'type'	=> 'button',
-						                            	'id'	=> 'btn_export',
-						                                'value'	=> lang('download')
-						                            ),
-													array(
-						                                'type'	=> 'button',
-						                            	'id'	=> 'btn_update',
-						                                'value'	=> lang('Update project')
-						                            ),
-						                            array( //hidden request
-							                                'type'	=> 'hidden',
-							                            	'id'	=> 'myValuesForUpdatePHP',
-							                            	'name'	=> 'myValuesForUpdatePHP',
-							                                'value'	=> ''
-							                            )						                           
+										            )						                           
 		                           				),
 		                       		'hidden_value' => array(
 					                                        array( //div values  combo_box_0
@@ -286,17 +288,17 @@
 				
 				if(!$this->acl_manage)
 				{
-					unset($datatable['actions']['form'][0]['fields']['field'][3]);
+					unset($datatable['actions']['form'][0]['fields']['field'][9]);
 				} 			
 				
 				if(!$this->acl_add)
 				{
-					unset($datatable['actions']['form'][0]['fields']['field'][6]);
+					unset($datatable['actions']['form'][0]['fields']['field'][5]);
 				} 			
 				
 				if(!$project_id)
 				{
-					unset($datatable['actions']['form'][0]['fields']['field'][8]);
+					unset($datatable['actions']['form'][0]['fields']['field'][4]);
 				} 							
 				$dry_run = true;
 			}
