@@ -2347,7 +2347,8 @@
 		$GLOBALS['phpgw_setup']->oProc->AddColumn('phpgw_cust_attribute','group_id',array(
 			'type' => 'int',
 			'precision' => '2',
-			'nullable' => True
+			'nullable' => True,
+			'default'	=> 0
 		));
 
 		$GLOBALS['phpgw_setup']->oProc->CreateTable('phpgw_cust_attribute_group', array
