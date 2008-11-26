@@ -264,7 +264,13 @@
 -->
 <xsl:template match="field">
 	<xsl:variable name="id" select="phpgw:conditional(id, id, generate-id())"/>
-	<div class="field">
+	<xsl:variable name="align">
+		<xsl:choose>
+			<xsl:when test="style='filter'">float:left</xsl:when>
+			<xsl:otherwise>float:right</xsl:otherwise>
+		</xsl:choose>
+	</xsl:variable>			
+	<div style="{$align}" class="field">
 		<xsl:if test="text">
 			<label for="{$id}">
 				<xsl:value-of select="text"/>
