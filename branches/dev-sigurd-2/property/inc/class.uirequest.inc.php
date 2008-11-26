@@ -630,6 +630,12 @@
 
 			$msgbox_data = $this->bocommon->msgbox_data($receipt);
 
+			$function_exchange_values = '';
+			if ($receipt != '')
+			{
+				$function_exchange_values = "window.opener.execute_ds();";
+			}
+			
 			$data = array
 			(
 				'msgbox_data'				=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
@@ -638,6 +644,7 @@
 				'lang_priority_key_statustext'		=> lang('Weight for prioritising'),
 				'lang_save'				=> lang('save'),
 				'priority_key'				=> $priority_key,
+				'exchange_values'  		=> $function_exchange_values
 			);
 
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('priority_form' => $data));
