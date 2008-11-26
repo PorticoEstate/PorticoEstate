@@ -42,6 +42,14 @@
 		</table>
 		</div>
 		</form> 
+		<!-- to reload the table -->
+		<xsl:choose>
+			<xsl:when test="//exchange_values!=''">
+				<script type="text/javascript">
+					<xsl:value-of select="//exchange_values"/>
+				</script>
+			</xsl:when>
+		</xsl:choose>				
 	</xsl:template>
 
 	<xsl:template match="priority_key">
