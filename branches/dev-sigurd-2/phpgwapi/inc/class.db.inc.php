@@ -660,10 +660,6 @@
 						$insert_value[]	= "'" . $this->db_addslashes(stripslashes($value)) . "'"; //in case slashes are already added.
 					}
 				}
-				else if (isset($value))
-				{
-					$insert_value[]	= "''";
-				}
 				else
 				{
 					$insert_value[]	= 'NULL';
