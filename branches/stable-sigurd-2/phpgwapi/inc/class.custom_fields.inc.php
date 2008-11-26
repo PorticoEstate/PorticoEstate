@@ -171,7 +171,7 @@
 				'precision_'	=> (int) $attrib['column_info']['precision'],
 				'scale'			=> (int) $attrib['column_info']['scale'],
 				'default_value'	=> '',
-				'nullable'		=> false
+				'nullable'		=> $attrib['column_info']['nullable']
 			);
 
 			if ( isset($attrib['search']) )
