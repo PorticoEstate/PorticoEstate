@@ -21,7 +21,9 @@ div.toolbar-container div.toolbar
 div.toolbar-container div.toolbar form
 {
 	float: left;
-	margin: 0.4em;
+	margin-right:3em;
+	margin-bottom:0.4em;
+	margin-top:0.4em;
 	width: 100%;
 }
 
