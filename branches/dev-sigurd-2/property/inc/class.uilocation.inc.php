@@ -418,9 +418,6 @@
 								$datatable['rows']['row'][$j]['column'][$i]['format'] 			= 'link';
 								$datatable['rows']['row'][$j]['column'][$i]['java_link']		= true;
 								$datatable['rows']['row'][$j]['column'][$i]['link']				= $location['query_location'][$uicols['name'][$i]];
-								$uicols['formatter'][$i] = 'myCustom';
-
-
 							}
 							else
 							{

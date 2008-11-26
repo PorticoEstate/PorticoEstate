@@ -387,12 +387,12 @@
 															   'cat_id'	 => $this->cat_id
 															  ))."','link','width=300,height=600')",
 													 'value' => lang('columns')
-												),												
+												),
 												array(
 													'type' => 'button',
 													'id'   => 'btn_export',
 													'value'=> lang('download')
-													),	
+													),
 												array(
 													'type' => 'submit',
 													'id'   => 'btn_new',
@@ -403,7 +403,7 @@
 													'name' => 'search',
 													'value'=> lang('search'),
 													'type' => 'button',
-												),																																
+												),
 												array( // TEXT IMPUT
 													'name' => 'query',
 													'id'   => 'txt_query',
@@ -413,19 +413,19 @@
 												),
 												 array(//for link "None",
 												  'type'=> 'label_date'
-												 ),													
+												 ),
 												 array( //hidden end_date
 													'type'	=> 'hidden',
 													'id'	=> 'end_date',
 													'name'	=> 'end_date',
 													'value'	=> $end_date
-												 ),																	
+												 ),
 												array( //hidden start_date
 													'type'	=> 'hidden',
 													'id'	=> 'start_date',
 													'name'	=> 'start_date',
 													'value'	=> $start_date
-												 ),						
+												 ),
 												array(//for link "Date search",
 													'type'=> 'link',
 													'id'  => 'btn_data_search',
@@ -499,7 +499,6 @@
 								$datatable['rows']['row'][$j]['column'][$i]['format'] 			= 'link';
 								$datatable['rows']['row'][$j]['column'][$i]['java_link']		= true;
 								$datatable['rows']['row'][$j]['column'][$i]['link']			= $entity_entry['query_location'][$uicols['name'][$i]];
-								//$uicols['formatter'][$i] = 'myCustom';
 							}
 							else
 							{
@@ -1138,7 +1137,7 @@
 
 				$location = ".entity.{$this->entity_id}.{$this->cat_id}";
 				$attributes_groups = $this->bo->get_attribute_groups($location, $values['attributes']);
-			
+
 				$attributes = array();
 				foreach ($attributes_groups as $group)
 				{
@@ -1146,7 +1145,7 @@
 					{
 						$tabs[str_replace(' ', '_', $group['name'])] = array('label' => $group['name'], 'link' => '#' . str_replace(' ', '_', $group['name']));
 						$group['link'] = str_replace(' ', '_', $group['name']);
-						$attributes[] = $group;			
+						$attributes[] = $group;
 					}
 				}
 				unset($attributes_groups);
