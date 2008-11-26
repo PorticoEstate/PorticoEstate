@@ -2728,3 +2728,30 @@
 			return $GLOBALS['setup_info']['property']['currentver'];
 		}
 	}
+
+	/**
+	* Update property version from 0.9.17.546 to 0.9.17.547
+	* Udate missing information on table for custom fields for owner, tenant and vendor
+ 	*/
+
+	$test[] = '0.9.17.546';
+	function property_upgrade0_9_17_546()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+		
+		$location_id	= $GLOBALS['phpgw']->locations->get_id('property', '.owner');
+		$sql = "UPDATE phpgw_locations SET allow_c_attrib = 1, c_attrib_table = 'fm_owner' WHERE location_id = {$location_id}";
+		$GLOBALS['phpgw_setup']->oProc->query($sql,__LINE__,__FILE__);
+		$location_id	= $GLOBALS['phpgw']->locations->get_id('property', '.tenant');
+		$sql = "UPDATE phpgw_locations SET allow_c_attrib = 1, c_attrib_table = 'fm_tenant' WHERE location_id = {$location_id}";
+		$GLOBALS['phpgw_setup']->oProc->query($sql,__LINE__,__FILE__);
+		$location_id	= $GLOBALS['phpgw']->locations->get_id('property', '.vendor');
+		$sql = "UPDATE phpgw_locations SET allow_c_attrib = 1, c_attrib_table = 'fm_vendor' WHERE location_id = {$location_id}";
+		$GLOBALS['phpgw_setup']->oProc->query($sql,__LINE__,__FILE__);
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.547';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}	
