@@ -2,7 +2,7 @@
 Copyright (c) 2008, Yahoo! Inc. All rights reserved.
 Code licensed under the BSD License:
 http://developer.yahoo.net/yui/license.txt
-version: 2.6.0
+version: 2.5.2
 */
 (function() {
 
@@ -710,7 +710,6 @@ YAHOO.util.Bezier = new function() {
     
     ColorAnim.NAME = 'ColorAnim';
 
-    ColorAnim.DEFAULT_BGCOLOR = '#fff';
     // shorthand
     var Y = YAHOO.util;
     YAHOO.extend(ColorAnim, Y.Anim);
@@ -753,19 +752,19 @@ YAHOO.util.Bezier = new function() {
 
     proto.getAttribute = function(attr) {
         var el = this.getEl();
-        if (this.patterns.color.test(attr) ) {
+        if (  this.patterns.color.test(attr) ) {
             var val = YAHOO.util.Dom.getStyle(el, attr);
             
-            var that = this;
             if (this.patterns.transparent.test(val)) { // bgcolor default
-                var parent = YAHOO.util.Dom.getAncestorBy(el, function(node) {
-                    return !that.patterns.transparent.test(val);
-                });
-
-                if (parent) {
+                var parent = el.parentNode; // try and get from an ancestor
+                val = Y.Dom.getStyle(parent, attr);
+            
+                while (parent && this.patterns.transparent.test(val)) {
+                    parent = parent.parentNode;
                     val = Y.Dom.getStyle(parent, attr);
-                } else {
-                    val = ColorAnim.DEFAULT_BGCOLOR;
+                    if (parent.tagName.toUpperCase() == 'HTML') {
+                        val = '#fff';
+                    }
                 }
             }
         } else {
@@ -852,7 +851,7 @@ YAHOO.util.Easing = {
     },
     
     /**
-     * Begins slowly and accelerates towards end.
+     * Begins slowly and accelerates towards end. (quadratic)
      * @method easeIn
      * @param {Number} t Time value used to compute current value
      * @param {Number} b Starting value
@@ -865,7 +864,7 @@ YAHOO.util.Easing = {
     },
 
     /**
-     * Begins quickly and decelerates towards end.
+     * Begins quickly and decelerates towards end.  (quadratic)
      * @method easeOut
      * @param {Number} t Time value used to compute current value
      * @param {Number} b Starting value
@@ -878,7 +877,7 @@ YAHOO.util.Easing = {
     },
     
     /**
-     * Begins slowly and decelerates towards end.
+     * Begins slowly and decelerates towards end. (quadratic)
      * @method easeBoth
      * @param {Number} t Time value used to compute current value
      * @param {Number} b Starting value
@@ -895,7 +894,7 @@ YAHOO.util.Easing = {
     },
     
     /**
-     * Begins slowly and accelerates towards end.
+     * Begins slowly and accelerates towards end. (quartic)
      * @method easeInStrong
      * @param {Number} t Time value used to compute current value
      * @param {Number} b Starting value
@@ -908,7 +907,7 @@ YAHOO.util.Easing = {
     },
     
     /**
-     * Begins quickly and decelerates towards end.
+     * Begins quickly and decelerates towards end.  (quartic)
      * @method easeOutStrong
      * @param {Number} t Time value used to compute current value
      * @param {Number} b Starting value
@@ -921,7 +920,7 @@ YAHOO.util.Easing = {
     },
     
     /**
-     * Begins slowly and decelerates towards end.
+     * Begins slowly and decelerates towards end. (quartic)
      * @method easeBothStrong
      * @param {Number} t Time value used to compute current value
      * @param {Number} b Starting value
@@ -1382,4 +1381,4 @@ YAHOO.util.Easing = {
 
     Y.Scroll = Scroll;
 })();
-YAHOO.register("animation", YAHOO.util.Anim, {version: "2.6.0", build: "1321"});
+YAHOO.register("animation", YAHOO.util.Anim, {version: "2.5.2", build: "1076"});

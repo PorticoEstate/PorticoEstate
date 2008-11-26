@@ -2,7 +2,7 @@
 Copyright (c) 2008, Yahoo! Inc. All rights reserved.
 Code licensed under the BSD License:
 http://developer.yahoo.net/yui/license.txt
-version: 2.6.0
+version: 2.5.2
 */
 /**
  * The selector module provides helper methods allowing CSS3 Selectors to be used with DOM elements.
@@ -40,6 +40,7 @@ Selector.prototype = {
      * @type object
      */
     attrAliases: {
+        'for': 'htmlFor'
     },
 
     /**
@@ -265,18 +266,17 @@ var query = function(selector, root, firstOnly, deDupe) {
 
     // use id shortcut when possible
     if (id) {
-        node = Selector.document.getElementById(id);
-
-        if (node && (root.nodeName == '#document' || contains(node, root))) {
-            if ( rTestNode(node, null, idToken) ) {
-                if (idToken === token) {
-                    nodes = [node]; // simple selector
-                } else {
+        if (id === token.id) { // only one target
+            nodes = [Selector.document.getElementById(id)] || root;
+        } else { // reset root to id node if passes
+            node = Selector.document.getElementById(id);
+            if (root === Selector.document || contains(node, root)) {
+                if ( node && rTestNode(node, null, idToken) ) {
                     root = node; // start from here
                 }
+            } else {
+                return result;
             }
-        } else {
-            return result;
         }
     }
 
@@ -287,7 +287,6 @@ var query = function(selector, root, firstOnly, deDupe) {
     if (nodes.length) {
         result = rFilter(nodes, token, firstOnly, deDupe); 
     }
-
     clearParentCache();
     return result;
 };
@@ -353,7 +352,7 @@ var rTestNode = function(node, selector, token, deDupe) {
         var attribute;
         for (var i = 0, len = token.attributes.length; i < len; ++i) {
             attribute = node.getAttribute(token.attributes[i][0], 2);
-            if (attribute === null || attribute === undefined) {
+            if (attribute === undefined) {
                 return false;
             }
             if ( Selector.operators[token.attributes[i][1]] &&
@@ -427,7 +426,6 @@ var combinators = {
     '>': function(node, token) {
         return rTestNode(node.parentNode, null, token.previous);
     },
-
     '+': function(node, token) {
         var sib = node.previousSibling;
         while (sib && sib.nodeType !== 1) {
@@ -557,8 +555,7 @@ var getIdTokenIndex = function(tokens) {
 
 var patterns = {
     tag: /^((?:-?[_a-z]+[\w-]*)|\*)/i,
-    attributes: /^\[([a-z]+\w*)+([~\|\^\$\*!=]=?)?['"]?([^\]]*?)['"]?\]/i,
-    //attributes: /^\[([a-z]+\w*)+([~\|\^\$\*!=]=?)?['"]?([^'"\]]*)['"]?\]*/i,
+    attributes: /^\[([a-z]+\w*)+([~\|\^\$\*!=]=?)?['"]?([^'"\]]*)['"]?\]*/i,
     pseudos: /^:([-\w]+)(?:\(['"]?(.+)['"]?\))*/i,
     combinator: /^\s*([>+~]|\s)\s*/
 };
@@ -660,14 +657,12 @@ var replaceShorthand = function(selector) {
     return selector;
 };
 
+if (YAHOO.env.ua.ie) { // rewrite class for IE (others use getAttribute('class')
+    Selector.prototype.attrAliases['class'] = 'className';
+}
+
 Selector = new Selector();
 Selector.patterns = patterns;
 Y.Selector = Selector;
-
-if (YAHOO.env.ua.ie) { // rewrite class for IE (others use getAttribute('class')
-    Y.Selector.attrAliases['class'] = 'className';
-    Y.Selector.attrAliases['for'] = 'htmlFor';
-}
-
 })();
-YAHOO.register("selector", YAHOO.util.Selector, {version: "2.6.0", build: "1321"});
+YAHOO.register("selector", YAHOO.util.Selector, {version: "2.5.2", build: "1076"});

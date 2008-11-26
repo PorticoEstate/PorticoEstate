@@ -2,7 +2,7 @@
 Copyright (c) 2008, Yahoo! Inc. All rights reserved.
 Code licensed under the BSD License:
 http://developer.yahoo.net/yui/license.txt
-version: 2.6.0
+version: 2.5.2
 */
 /**
  * The YAHOO object is the single global object used by YUI Library.  It
@@ -552,8 +552,8 @@ return (o && (typeof o === 'object' || L.isFunction(o))) || false;
         if (overrides) {
             for (var i in overrides) {
                 if (L.hasOwnProperty(overrides, i)) {
-                    subc.prototype[i]=overrides[i];
-                }
+                subc.prototype[i]=overrides[i];
+            }
             }
 
             L._IEEnumFix(subc.prototype, overrides);
@@ -983,4 +983,4 @@ YAHOO.augment = L.augmentProto;
 YAHOO.extend = L.extend;
 
 })();
-YAHOO.register("yahoo", YAHOO, {version: "2.6.0", build: "1321"});
+YAHOO.register("yahoo", YAHOO, {version: "2.5.2", build: "1076"});

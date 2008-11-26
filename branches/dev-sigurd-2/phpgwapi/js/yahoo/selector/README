@@ -1,11 +1,8 @@
 YUI Library - Selector - Release Notes
 
-2.6.0
-  * now supporting cross-browser "for" attribute 
-  * gracefully handling non-existant IDs 
-
 2.5.2
-  * no change
+
+  * No changes.
 
 2.5.1
 

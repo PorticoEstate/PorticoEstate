@@ -2,7 +2,7 @@
 Copyright (c) 2008, Yahoo! Inc. All rights reserved.
 Code licensed under the BSD License:
 http://developer.yahoo.net/yui/license.txt
-version: 2.6.0
+version: 2.5.2
 */
 /**
  * The dom module provides helper methods for manipulating Dom elements.
@@ -12,7 +12,6 @@ version: 2.6.0
 
 (function() {
     var Y = YAHOO.util,     // internal shorthand
-        lang = YAHOO.lang,
         getStyle,           // for load time browser branching
         setStyle,           // ditto
         propertyCache = {}, // for faster hyphen converts
@@ -111,7 +110,7 @@ version: 2.6.0
         setStyle = function(el, property, val) {
             switch (property) {
                 case 'opacity':
-                    if ( lang.isString(el.style.filter) ) { // in case not appended
+                    if ( YAHOO.lang.isString(el.style.filter) ) { // in case not appended
                         el.style.filter = 'alpha(opacity=' + val * 100 + ')';
                         
                         if (!el.currentStyle || !el.currentStyle.hasLayout) {
@@ -151,28 +150,24 @@ version: 2.6.0
          * @return {HTMLElement | Array} A DOM reference to an HTML element or an array of HTMLElements.
          */
         get: function(el) {
-            if (el) {
-                if (el.nodeType || el.item) { // Node, or NodeList
-                    return el;
-                }
-
-                if (typeof el === 'string') { // id
-                    return document.getElementById(el);
-                }
-                
-                if ('length' in el) { // array-like 
-                    var c = [];
-                    for (var i = 0, len = el.length; i < len; ++i) {
-                        c[c.length] = Y.Dom.get(el[i]);
-                    }
-                    
-                    return c;
-                }
-
-                return el; // some other object, just pass it back
+            if (el && (el.nodeType || el.item)) { // Node, or NodeList
+                return el;
             }
 
-            return null;
+            if (YAHOO.lang.isString(el) || !el) { // id or null
+                return document.getElementById(el);
+            }
+            
+            if (el.length !== undefined) { // array-like 
+                var c = [];
+                for (var i = 0, len = el.length; i < len; ++i) {
+                    c[c.length] = Y.Dom.get(el[i]);
+                }
+                
+                return c;
+            }
+
+            return el; // some other object, just pass it back
         },
     
         /**
@@ -375,10 +370,6 @@ version: 2.6.0
         /**
          * Returns a array of HTMLElements with the given class.
          * For optimized performance, include a tag and/or root node when possible.
-         * Note: This method operates against a live collection, so modifying the 
-         * collection in the callback (removing/appending nodes, etc.) will have
-         * side effects.  Instead you should iterate the returned nodes array,
-         * as you would with the native "getElementsByTagName" method. 
          * @method getElementsByClassName
          * @param {String} className The class name to match against
          * @param {String} tag (optional) The tag name of the elements being collected
@@ -387,7 +378,6 @@ version: 2.6.0
          * @return {Array} An array of elements that have the given class name
          */
         getElementsByClassName: function(className, tag, root, apply) {
-            className = lang.trim(className);
             tag = tag || '*';
             root = (root) ? Y.Dom.get(root) : null || document; 
             if (!root) {
@@ -441,7 +431,7 @@ version: 2.6.0
                 }
                 
                 
-                el.className = lang.trim([el.className, className].join(' '));
+                el.className = YAHOO.lang.trim([el.className, className].join(' '));
                 return true;
             };
             
@@ -459,24 +449,19 @@ version: 2.6.0
             var re = getClassRegEx(className);
             
             var f = function(el) {
-                var ret = false,
-                    current = el.className;
-
-                if (className && current && this.hasClass(el, className)) {
-                    
-                    el.className = current.replace(re, ' ');
-                    if ( this.hasClass(el, className) ) { // in case of multiple adjacent
-                        this.removeClass(el, className);
-                    }
-
-                    el.className = lang.trim(el.className); // remove any trailing spaces
-                    if (el.className === '') { // remove class attribute if empty
-                        var attr = (el.hasAttribute) ? 'class' : 'className';
-                        el.removeAttribute(attr);
-                    }
-                    ret = true;
+                if (!className || !this.hasClass(el, className)) {
+                    return false; // not present
                 }                 
-                return ret;
+
+                
+                var c = el.className;
+                el.className = c.replace(re, ' ');
+                if ( this.hasClass(el, className) ) { // in case of multiple adjacent
+                    this.removeClass(el, className);
+                }
+
+                el.className = YAHOO.lang.trim(el.className); // remove any trailing spaces
+                return true;
             };
             
             return Y.Dom.batch(el, f, Y.Dom, true);
@@ -508,10 +493,10 @@ version: 2.6.0
                 el.className = el.className.replace(re, ' ' + newClassName + ' ');
 
                 if ( this.hasClass(el, oldClassName) ) { // in case of multiple adjacent
-                    this.removeClass(el, oldClassName);
+                    this.replaceClass(el, oldClassName, newClassName);
                 }
 
-                el.className = lang.trim(el.className); // remove any trailing spaces
+                el.className = YAHOO.lang.trim(el.className); // remove any trailing spaces
                 return true;
             };
             
@@ -557,18 +542,22 @@ version: 2.6.0
             haystack = Y.Dom.get(haystack);
             needle = Y.Dom.get(needle);
             
-            var ret = false;
-
-            if ( (haystack && needle) && (haystack.nodeType && needle.nodeType) ) {
-                if (haystack.contains && haystack !== needle) { // contains returns true when equal
-                    ret = haystack.contains(needle);
-                }
-                else if (haystack.compareDocumentPosition) { // gecko
-                    ret = !!(haystack.compareDocumentPosition(needle) & 16);
-                }
-            } else {
+            if (!haystack || !needle) {
+                return false;
             }
-            return ret;
+
+            if (haystack.contains && needle.nodeType && !isSafari) { // safari contains is broken
+                return haystack.contains(needle);
+            }
+            else if ( haystack.compareDocumentPosition && needle.nodeType ) {
+                return !!(haystack.compareDocumentPosition(needle) & 16);
+            } else if (needle.nodeType) {
+                // fallback to crawling up (safari)
+                return !!this.getAncestorBy(needle, function(el) {
+                    return el == haystack; 
+                }); 
+            }
+            return false;
         },
         
         /**
@@ -584,10 +573,6 @@ version: 2.6.0
         /**
          * Returns a array of HTMLElements that pass the test applied by supplied boolean method.
          * For optimized performance, include a tag and/or root node when possible.
-         * Note: This method operates against a live collection, so modifying the 
-         * collection in the callback (removing/appending nodes, etc.) will have
-         * side effects.  Instead you should iterate the returned nodes array,
-         * as you would with the native "getElementsByTagName" method. 
          * @method getElementsBy
          * @param {Function} method - A boolean method for testing elements which receives the element as its only argument.
          * @param {String} tag (optional) The tag name of the elements being collected
@@ -718,7 +703,7 @@ version: 2.6.0
          * @return {Object} HTMLElement or null if not found
          */
         getAncestorBy: function(node, method) {
-            while ( (node = node.parentNode) ) { // NOTE: assignment
+            while (node = node.parentNode) { // NOTE: assignment
                 if ( testElement(node, method) ) {
                     return node;
                 }
@@ -1002,12 +987,11 @@ version: 2.6.0
     var getXY = function() {
         if (document.documentElement.getBoundingClientRect) { // IE
             return function(el) {
-                var box = el.getBoundingClientRect(),
-                    round = Math.round;
+                var box = el.getBoundingClientRect();
 
                 var rootNode = el.ownerDocument;
-                return [round(box.left + Y.Dom.getDocumentScrollLeft(rootNode)), round(box.top +
-                        Y.Dom.getDocumentScrollTop(rootNode))];
+                return [box.left + Y.Dom.getDocumentScrollLeft(rootNode), box.top +
+                        Y.Dom.getDocumentScrollTop(rootNode)];
             };
         } else {
             return function(el) { // manually calculate by crawling up offsetParents
@@ -1041,8 +1025,13 @@ version: 2.6.0
                 while ( parentNode.tagName && !patterns.ROOT_TAG.test(parentNode.tagName) ) 
                 {
                     if (parentNode.scrollTop || parentNode.scrollLeft) {
-                        pos[0] -= parentNode.scrollLeft;
-                        pos[1] -= parentNode.scrollTop;
+                        // work around opera inline/table scrollLeft/Top bug (false reports offset as scroll)
+                        if (!patterns.OP_SCROLL.test(Y.Dom.getStyle(parentNode, 'display'))) { 
+                            if (!isOpera || Y.Dom.getStyle(parentNode, 'overflow') !== 'visible') { // opera inline-block misreports when visible
+                                pos[0] -= parentNode.scrollLeft;
+                                pos[1] -= parentNode.scrollTop;
+                            }
+                        }
                     }
                     
                     parentNode = parentNode.parentNode; 
@@ -1238,4 +1227,4 @@ YAHOO.util.Point = function(x, y) {
 
 YAHOO.util.Point.prototype = new YAHOO.util.Region();
 
-YAHOO.register("dom", YAHOO.util.Dom, {version: "2.6.0", build: "1321"});
+YAHOO.register("dom", YAHOO.util.Dom, {version: "2.5.2", build: "1076"});

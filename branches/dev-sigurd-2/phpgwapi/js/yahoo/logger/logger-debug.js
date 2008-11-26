@@ -2,7 +2,7 @@
 Copyright (c) 2008, Yahoo! Inc. All rights reserved.
 Code licensed under the BSD License:
 http://developer.yahoo.net/yui/license.txt
-version: 2.6.0
+version: 2.5.2
 */
 /****************************************************************************/
 /****************************************************************************/
@@ -59,9 +59,7 @@ YAHOO.widget.LogMsg = function(oConfigs) {
 
     if (oConfigs && (oConfigs.constructor == Object)) {
         for(var param in oConfigs) {
-            if (oConfigs.hasOwnProperty(param)) {
-                this[param] = oConfigs[param];
-            }
+            this[param] = oConfigs[param];
         }
     }
 };
@@ -121,7 +119,7 @@ YAHOO.widget.LogWriter.prototype.log = function(sMsg, sCategory) {
  * @return {String} The LogWriter source.
  */
 YAHOO.widget.LogWriter.prototype.getSource = function() {
-    return this._source;
+    return this._sSource;
 };
 
 /**
@@ -136,7 +134,7 @@ YAHOO.widget.LogWriter.prototype.setSource = function(sSource) {
         return;
     }
     else {
-        this._source = sSource;
+        this._sSource = sSource;
     }
 };
 
@@ -183,9 +181,7 @@ YAHOO.widget.LogReader = function(elContainer, oConfigs) {
     // Parse config vars here
     if (oConfigs && (oConfigs.constructor == Object)) {
         for(var param in oConfigs) {
-            if (oConfigs.hasOwnProperty(param)) {
-                this[param] = oConfigs[param];
-            }
+            this[param] = oConfigs[param];
         }
     }
 
@@ -252,7 +248,7 @@ YAHOO.lang.augmentObject(YAHOO.widget.LogReader, {
      * @static
      * @default "<span class='{category}'>{label}</span>{totalTime}ms (+{elapsedTime}) {localTime}:</p><p>{sourceAndDetail}</p><p>{message}</p>"
      */
-    VERBOSE_TEMPLATE : "<p><span class='{category}'>{label}</span> {totalTime}ms (+{elapsedTime}) {localTime}:</p><p>{sourceAndDetail}</p><p>{message}</p>",
+    VERBOSE_TEMPLATE : "<span class='{category}'>{label}</span>{totalTime}ms (+{elapsedTime}) {localTime}:</p><p>{sourceAndDetail}</p><p>{message}</p>",
 
     /**
      * Template used for innerHTML of compact entry output.
@@ -260,7 +256,7 @@ YAHOO.lang.augmentObject(YAHOO.widget.LogReader, {
      * @static
      * @default "<p><span class='{category}'>{label}</span>{totalTime}ms (+{elapsedTime}) {localTime}: {sourceAndDetail}: {message}</p>"
      */
-    BASIC_TEMPLATE : "<p><span class='{category}'>{label}</span> {totalTime}ms (+{elapsedTime}) {localTime}: {sourceAndDetail}: {message}</p>"
+    BASIC_TEMPLATE : "<p><span class='{category}'>{label}</span>{totalTime}ms (+{elapsedTime}) {localTime}: {sourceAndDetail}: {message}</p>"
 });
 
 /////////////////////////////////////////////////////////////////////////////
@@ -461,11 +457,9 @@ YAHOO.widget.LogReader.prototype = {
      */
     pause : function() {
         this.isPaused = true;
+        this._btnPause.value = "Resume";
         this._timeout = null;
         this.logReaderEnabled = false;
-        if (this._btnPause) {
-            this._btnPause.value = "Resume";
-        }
     },
 
     /**
@@ -476,11 +470,9 @@ YAHOO.widget.LogReader.prototype = {
      */
     resume : function() {
         this.isPaused = false;
+        this._btnPause.value = "Pause";
         this.logReaderEnabled = true;
         this._printBuffer();
-        if (this._btnPause) {
-            this._btnPause.value = "Pause";
-        }
     },
 
     /**
@@ -742,8 +734,7 @@ YAHOO.widget.LogReader.prototype = {
             msg.className += ' yui-log-verbose';
         }
 
-        // Bug 2061169: Workaround for YAHOO.lang.substitute()
-        msg.innerHTML = entryFormat.replace(/\{(\w+)\}/g, function (x, placeholder) { return (placeholder in info) ? info[placeholder] : ''; });
+        msg.innerHTML = YAHOO.lang.substitute(entryFormat, info);
 
         return msg;
     },
@@ -1994,11 +1985,6 @@ if(!YAHOO.widget.Logger) {
                 elapsedTime + "ms): " +
                 oEntry.source + ": ";
 
-            // for bug 1987607
-            if (YAHOO.env.ua.webkit) {
-                output += oEntry.msg;
-            }
-
             console.log(output, oEntry.msg);
         }
     };
@@ -2041,4 +2027,4 @@ if(!YAHOO.widget.Logger) {
 }
 
 
-YAHOO.register("logger", YAHOO.widget.Logger, {version: "2.6.0", build: "1321"});
+YAHOO.register("logger", YAHOO.widget.Logger, {version: "2.5.2", build: "1076"});

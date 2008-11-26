@@ -2,30 +2,25 @@
 Copyright (c) 2008, Yahoo! Inc. All rights reserved.
 Code licensed under the BSD License:
 http://developer.yahoo.net/yui/license.txt
-version: 2.6.0
+version: 2.5.2
 */
 /* foundational CSS */
-
-/* mask */
-.yui-skin-sam .yui-dt-mask {
-    position:absolute;
-    z-index:9500;
+.yui-dt {
+    border-bottom:1px solid transparent;
 }
 
-/* scrollable */
-.yui-dt-tmp {
-    position:absolute;
-    left:-9000px;
+.yui-dt-noop {
+    border-bottom:none;
 }
 
-.yui-dt-scrollable .yui-dt-bd {
-    overflow:auto;
+/* a11y headers */
+.yui-dt-hd {
+    display: none;
 }
+
 .yui-dt-scrollable .yui-dt-hd {
-    overflow:hidden;
-    position:relative; /* for ie overflow bug http://rowanw.com/bugs/overflow_relative.htm */
-} 
-
+    display: block;
+}
 .yui-dt-scrollable .yui-dt-bd thead tr,
 .yui-dt-scrollable .yui-dt-bd thead th {
     position:absolute;
@@ -49,7 +44,7 @@ version: 2.6.0
 .yui-dt-hd {
     zoom:1; 
 }
-th.yui-dt-resizeable .yui-dt-resizerliner {
+th.yui-dt-resizeable .yui-dt-liner {
     position:relative;
 }
 .yui-dt-resizer {
@@ -59,26 +54,32 @@ th.yui-dt-resizeable .yui-dt-resizerliner {
     height:100%;
     cursor:e-resize;
     cursor:col-resize;
-    background-color:#CCC;opacity:0;filter: alpha(opacity=0); /* Bug 1952811: IE transparency z-index */
+    background:url(transparent.gif); /* bug 1816011 */
 }
 .yui-dt-resizerproxy {
     visibility:hidden;
     position:absolute;
     z-index:9000;
+    background:url(transparent.gif); /* bug 1816011 */
 }
 
 /* hidden columns */
-th.yui-dt-hidden .yui-dt-liner, 
-td.yui-dt-hidden .yui-dt-liner,
-th.yui-dt-hidden .yui-dt-resizer {
-    /*TODO: document change from 2.5.2 to 2.6
+.yui-skin-sam th.yui-dt-hidden .yui-dt-liner, 
+.yui-skin-sam td.yui-dt-hidden .yui-dt-liner {
     margin:0;
     padding:0;
+    overflow:hidden;
     white-space:nowrap;
-    width:1px;
-    overflow:hidden;*/
-    display:none;
 }
+
+/* vertical and horizontal scrolling */
+.yui-dt-scrollable .yui-dt-bd {
+    overflow:auto;
+}
+.yui-dt-scrollable .yui-dt-hd {
+    overflow:hidden;
+    position:relative; /* for ie overflow bug http://rowanw.com/bugs/overflow_relative.htm */
+} 
 
 /* editing */
 .yui-dt-editor {
