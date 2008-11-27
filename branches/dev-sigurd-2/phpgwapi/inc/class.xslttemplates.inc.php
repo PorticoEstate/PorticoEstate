@@ -151,8 +151,8 @@
 			{
 				switch($time)
 				{
-					case 2:
-						$new_root = str_replace($GLOBALS['phpgw_info']['server']['template_set'],'base',$rootdir);
+					case 2:						
+						$new_root = PHPGW_SERVER_ROOT . str_replace($GLOBALS['phpgw_info']['server']['template_set'], 'base', substr($rootdir,strlen(PHPGW_SERVER_ROOT)));
 						$this->add_file($filename, $new_root, 3);
 						return true;
 					case 3:
