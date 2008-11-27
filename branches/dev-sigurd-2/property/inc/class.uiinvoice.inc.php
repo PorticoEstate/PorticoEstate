@@ -325,7 +325,7 @@
 	                                    'value'	=> user_lid,
 	                                    'type' => 'button',
 	                                    'style' => 'filter'
-	                                ),	                               	                       
+	                                ),
 	                                array( // boton exportar
 		                                'type'	=> 'button',
 		                            	'id'	=> 'btn_export',
@@ -346,12 +346,12 @@
 		                            	//'name' => 'save',
 		                                'value'	=> lang('save'),
 										'type'	=> 'button'
-		                            ),		                            
+		                            ),
 									array( // boton ADD
 		                                'type'	=> 'submit',
 		                            	'id'	=> 'btn_new',
 		                                'value'	=> lang('add')
-		                            ),		                            
+		                            ),
 	                                array( //boton   SEARCH
 	                                    'id' => 'btn_search',
 	                                    'name' => 'search',
@@ -364,14 +364,14 @@
 	                                    'value'    => $this->query,//$query,
 	                                    'type' => 'text',
 	                                    'size'    => 28
-	                                ),	
+	                                ),
 	                                array( // txtbox end_data hidden
 	                                    'name'     => 'end_date',
 	                                    'id'     => 'txt_end_date',
 	                                    'value'    => "",
 	                                    'type' => 'hidden',
 	                                    'size'    => 8
-	                                ),	                                
+	                                ),
 	                                array( // txtbox start_data hidden
 	                                    'name'     => 'start_date',
 	                                    'id'     => 'txt_start_date',
@@ -389,7 +389,7 @@
 	                                    'src'    => $GLOBALS['phpgw']->common->image('phpgwapi','cal'),
 	                                    'alt'	=> lang('Select date'),
 	                                    'style' => 'filter'
-	                                ),				
+	                                ),
 									array( // calendar1 start_date
 	                                    'type' => 'text',
 										'name'     => 'start_date',
@@ -421,7 +421,7 @@
 		                                'url' => "",
 										'value' => lang('Workorder ID'),
 										'style' => 'filter'
-									),	                                
+									),
 	                                array( // workorder box
 	                                    'name'     => 'workorder_id',
 	                                    'id'     => 'txt_workorder',
@@ -440,7 +440,7 @@
 											               ))."','Search','width=800,height=700,toolbar=no,scrollbars=yes,resizable=yes')",
 										'value' => lang('Vendor'),
 										'style' => 'filter'
-									),	     
+									),
 	                                array( // Vendor box HIDDEN
 	                                    'name'     => 'vendor_name',
 	                                    'id'     => 'txt_vendor_name',
@@ -448,7 +448,7 @@
 	                                    'type' => 'hidden',
 	                                    'size'    => 10,
 	                                    'style' => 'filter'
-	                                ),									                           
+	                                ),
 									array( // Vendor box
 	                                    'name'     => 'vendor_id',
 	                                    'id'     => 'txt_vendor',
@@ -923,7 +923,6 @@
 		  	phpgwapi_yui::load_widget('connection');
 		  	//// cramirez: necesary for include a partucular js
 		  	phpgwapi_yui::load_widget('loader');
-		  	//die(_debug_array($datatable['rows']['row'][7]));
 
 //-- BEGIN----------------------------- JSON CODE ------------------------------
 			if( phpgw::get_var('phpgw_return_as') == 'json' )
@@ -956,7 +955,16 @@
 		    				}
 		    				elseif($column['format']== "input")
 		    				{
-								$json_row[$column['name']] = " <input name='values[".$column['name']."][".$k."]' id='values[".$column['name']."][".$k."]' class='myValuesForPHP' type='".$column['type']."' value='".$column['value']."' ".$column['extra_param']."/>";
+								//this class was used for botton selectAll in Footer Datatable
+								if($column['name']=='sign')
+								{
+									$json_row[$column['name']] = " <input name='values[".$column['name']."][".$k."]' id='values[".$column['name']."][".$k."]' class='myValuesForPHP signClass' type='".$column['type']."' value='".$column['value']."' ".$column['extra_param']."/>";
+								}
+								else
+								{
+									$json_row[$column['name']] = " <input name='values[".$column['name']."][".$k."]' id='values[".$column['name']."][".$k."]' class='myValuesForPHP' type='".$column['type']."' value='".$column['value']."' ".$column['extra_param']."/>";
+								}
+
 		    				}
 		    				elseif($column['format']== "varchar")
 		    				{
@@ -965,15 +973,17 @@
 		    				elseif($column['format']== "janitor" || $column['format']== "supervisor" || $column['format']== "budget_responsible" || $column['format']== "transfer_id" )
 		    				{
 								$tmp_lnk = "";
+								//this class was used for botton selectAll in Footer Datatable
+								$class = $column['format']."Class";
 		    					if($column['type']!='')
 		    					{
 			    					if($column['name']=='')
 			    					{
-			    						$tmp_lnk = " <input name='".$column['name']."' type='".$column['type']."' value='".$column['value']."' ".$column['extra_param']."/>";
+			    						$tmp_lnk = " <input name='".$column['name']."' type='".$column['type']."' value='".$column['value']."' ".$column['extra_param']." class='".$class."' />";
 			    					}
 			    					else
 			    					{
-			    						$tmp_lnk = " <input name='values[".$column['name']."][".$k."]' id='values[".$column['name']."][".$k."]' class='myValuesForPHP' type='".$column['type']."' value='".$column['value']."' ".$column['extra_param']."/>";
+			    						$tmp_lnk = " <input name='values[".$column['name']."][".$k."]' id='values[".$column['name']."][".$k."]' class='myValuesForPHP ".$class."' type='".$column['type']."' value='".$column['value']."' ".$column['extra_param']."/>";
 			    					}
 		    					}
 
@@ -983,7 +993,6 @@
 	    						}
 		    					else
 	    						{
-	    							//$json_row[$column['for_json']]="";
 	    							$json_row[$column['for_json']]=$tmp_lnk;
 
 	    						}

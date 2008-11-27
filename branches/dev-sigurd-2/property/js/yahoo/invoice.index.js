@@ -29,7 +29,21 @@
 		date_search : 0, //if search has link "Data search"
 		footer_datatable : 1
 		}
+		/********************************************************************************
+		* Delete all message un DIV 'message'
+		*/
+		this.delete_message = function()
+		{
+			div_message= YAHOO.util.Dom.get("message");
+			if ( div_message.hasChildNodes() )
+			{
+				while ( div_message.childNodes.length >= 1 )
+			    {
+			        div_message.removeChild( div_message.firstChild );
+			    }
+			}
 
+		}
 		/********************************************************************************
 		* reset empty values for update PERIOD
 		* Delete children od div MESSAGE
@@ -39,6 +53,7 @@
 		{
 			if(flag_particular_setting=='init')
 			{
+
 			}
 			else if(flag_particular_setting=='update')
 			{
@@ -46,15 +61,10 @@
 			   	path_values.voucher_id_for_period = '';
 			   	path_values.period = '';
 
-				//Delete children od div MESSAGE
+				//Delete children of div MESSAGE
+				delete_message();
+
 				div_message= YAHOO.util.Dom.get("message");
-				if ( div_message.hasChildNodes() )
-				{
-					while ( div_message.childNodes.length >= 1 )
-				    {
-				        div_message.removeChild( div_message.firstChild );
-				    }
-				}
 
 				//if exist 'values_ds.message'
 				 if(window.values_ds.message)
@@ -92,21 +102,7 @@
 
 				 }
 			}
- 			/*
- 			//---sum total----
- 			div_footer = document.getElementById("footer");
-			// delete if exists chlid
-			if (YAHOO.util.Dom.inDocument("footer_datatable"))
-			{
-				div_footer.removeChild(div_footer.firstChild);
-			}
-			// add chil
-			div = document.createElement("div");
-			div.setAttribute("id", "footer_datatable");
-			sum_total = document.createTextNode(values_ds.sum_total);
-			div.appendChild(sum_total);
-			div_footer.appendChild(div);
-			*/
+
 			//--focus for txt_query---
 			YAHOO.util.Dom.get(textImput[0].id).value = path_values.query;
 			YAHOO.util.Dom.get(textImput[0].id).focus();
@@ -202,15 +198,121 @@
 		 */
 	  	this.addFooterDatatable = function()
 	  	{
-	  		tmp_sum=0;
-	  		for(i=0;i<myDataTable.getRecordSet().getRecords(0).length;i++)
-	  		{
-	  			tmp_sum = myDataTable.getRecordSet().getRecords(0)[i].getData('amount_lnk')
-	  		}
-	  		//alert(tmp_sum);
-	  		 myDataTable.addRow({one:"one",two:"two",three:"three"});
-	  	}
+			//Delete message of Update Records or Periods for datatable
+			delete_message();
 
+			//range actual of rows in datatable
+			begin	= myPaginator.getPageRecords()[0];
+			end		= myPaginator.getPageRecords()[1];
+
+	  		//get sumatory of column AMOUNT
+	  		var tmp_sum = 0;
+	  		for(i = begin; i <= end; i++)
+	  		{
+	  			tmp_sum = tmp_sum + parseFloat(myDataTable.getRecordSet().getRecords(0)[i].getData('amount_lnk'));
+	  		}
+
+	  		tmp_sum = YAHOO.util.Number.format(tmp_sum, {decimalPlaces:2, decimalSeparator:",", thousandsSeparator:" "});
+
+			//get Table
+  			tableYUI = document.getElementById('yui-dt0-bodytable');
+  			//DELETE Tfoot
+	  		tableYUI.deleteTFoot();
+  			//Create ROW
+  			newTR = document.createElement('tr');
+			//Space
+			newTD = document.createElement('td');
+			newTD.colSpan = 10;
+			newTD.style.borderTop="1px solid #000000";
+			newTD.appendChild(document.createTextNode(''));
+			newTR.appendChild(newTD.cloneNode(true));
+			//Sum
+			newTD = document.createElement('td');
+			newTD.colSpan = 1;
+			newTD.style.borderTop="1px solid #000000";
+			newTD.style.fontWeight = 'bolder';
+			newTD.style.textAlign = 'right';
+			newTD.style.paddingRight = '0.8em';
+			newTD.appendChild(document.createTextNode(tmp_sum));
+			newTR.appendChild(newTD.cloneNode(true));
+			//Space
+			newTD = document.createElement('td');
+			newTD.colSpan = 6;
+			newTD.style.borderTop="1px solid #000000";
+			newTD.appendChild(document.createTextNode(''));
+			newTR.appendChild(newTD.cloneNode(true));
+			//RowChecked
+			CreateRowChecked("signClass");
+			CreateRowChecked("janitorClass");
+			CreateRowChecked("supervisorClass");
+			CreateRowChecked("budget_responsibleClass");
+			CreateRowChecked("transfer_idClass");
+
+			//Add to Table
+			tableYUI.createTFoot().appendChild(newTR.cloneNode(true))
+
+	  	}
+		/********************************************************************************
+		 *
+		 */
+	  	check_all = function(myclass)
+	  	{
+			controls = YAHOO.util.Dom.getElementsByClassName(myclass);
+			for(i=0;i<controls.length;i++)
+			{
+				if(!controls[i].disabled)
+				{
+					//for class=transfer_idClass, they have to be interchanged
+					if(myclass=="transfer_idClass")
+					{
+						if(controls[i].checked)
+						{
+							controls[i].checked = false;
+						}
+						else
+						{
+							controls[i].checked = true;
+						}
+					}
+					//for the rest, always id checked
+					else
+					{
+						controls[i].checked = true;
+					}
+				}
+			}
+		}
+		/********************************************************************************
+		 *
+		 */
+		CreateRowChecked = function(Class)
+		{
+			newTD = document.createElement('td');
+			newTD.colSpan = 1;
+			newTD.style.borderTop="1px solid #000000";
+			//create the anchor node
+			myA=document.createElement("A");
+			url = "javascript:check_all(\""+Class+"\")";
+			myA.setAttribute("href",url);
+			//create the image node
+			url = "/pgwsvn/property/templates/portico/images/check.png";
+			myImg=document.createElement("IMG");
+			myImg.setAttribute("src",url);
+			myImg.setAttribute("width","16");
+			myImg.setAttribute("height","16");
+			myImg.setAttribute("border","0");
+			myImg.setAttribute("alt","Select All");
+			// Appends the image node to the anchor
+			myA.appendChild(myImg);
+			// Appends myA to mydiv
+			mydiv=document.createElement("div");
+			mydiv.setAttribute("align","center");
+			mydiv.appendChild(myA);
+			// Appends mydiv to newTD
+			newTD.appendChild(mydiv);
+			//Add TD to TR
+			newTR.appendChild(newTD.cloneNode(true));
+		}
 
 	//----------------------------------------------------------
 		YAHOO.util.Event.addListener(window, "load", function()

@@ -7,6 +7,7 @@
 	var myDataSource,myDataTable, myContextMenu, myPaginator ;
 	var ds, values_ds;
 	var myrowsPerPage,mytotalRows,ActualValueRowsPerPageDropdown;
+	var panel;
 
 
  /********************************************************************************
@@ -171,9 +172,9 @@ this.create_array_values_list = function(stValues)
 	    //cramirez: avoid assigning an object to hidden filter.
 	    if(array_options[selectsButtons[i].order].length > 0)
 	    {
-	    menuCB = { type: "menu", label:"<em>"+ array_options[selectsButtons[i].order][0][1]+"</em>", id: selectsButtons[i].style, value:"", menu: optionsCB};
-	    var tmp = new YAHOO.widget.Button(selectsButtons[i].name, menuCB)
-		eval("oMenuButton_"+selectsButtons[i].order+" = tmp");
+		    menuCB = { type: "menu", label:"<em>"+ array_options[selectsButtons[i].order][0][1]+"</em>", id: selectsButtons[i].style, value:"", menu: optionsCB};
+		    var tmp = new YAHOO.widget.Button(selectsButtons[i].name, menuCB)
+			eval("oMenuButton_"+selectsButtons[i].order+" = tmp");
 		}
 
  	}
@@ -317,15 +318,18 @@ this.create_array_values_list = function(stValues)
  */
 	this.execute_ds = function()
 	{
+		//panel.show();
 		try{
 	 		ds = phpGWLink('index.php',path_values,true);
 	  	}catch(e){
 			alert(e);
 		}
 
-
-		var callback2 ={
-				    success: function(o) {
+		var callback2 =
+		{
+				    success: function(o)
+				    {
+				    	//panel.hide();
 						eval('values_ds ='+o.responseText);
 						flag_particular_setting='';
 
@@ -396,21 +400,21 @@ this.create_array_values_list = function(stValues)
 
 
 	   myPaginator = new YAHOO.widget.Paginator({
-						containers         : ['paging'],
-						pageLinks          : 10,
-						rowsPerPage        : values_ds.recordsReturned, //MAXIMO el PHPGW me devuelve 15 valor configurado por preferencias
-						rowsPerPageOptions : [myrowsPerPage,mytotalRows],
-						template          : "{RowsPerPageDropdown}items per Page, {CurrentPageReport}<br>{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}",
-						pageReportTemplate : "Showing items {startIndex} - {endIndex} of {totalRecords}"
+						containers			: ['paging'],
+						pageLinks			: 10,
+						rowsPerPage			: values_ds.recordsReturned, //MAXIMO el PHPGW me devuelve 15 valor configurado por preferencias
+						rowsPerPageOptions	: [myrowsPerPage,mytotalRows],
+						template			: "{RowsPerPageDropdown}items per Page, {CurrentPageReport}<br>{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}",
+						pageReportTemplate	: "Showing items {startIndex} - {endIndex} of {totalRecords}"
 					});
 
 
 	  var myTableConfig = {
-			initialRequest         : '',//la primera vez ya viene ordenado, por la columna respectiva y solo 15 registros
-			generateRequest        : buildQueryString,
-			paginationEventHandler : YAHOO.widget.DataTable.handleDataSourcePagination,
-			paginator              : myPaginator,
-			sortedBy	       : {key:"anywhere", dir:YAHOO.widget.DataTable.CLASS_ASC}//  arguments necesary for paginator
+			initialRequest			: '',//la primera vez ya viene ordenado, por la columna respectiva y solo 15 registros
+			generateRequest			: buildQueryString,
+			paginationEventHandler	: YAHOO.widget.DataTable.handleDataSourcePagination,
+			paginator				: myPaginator,
+			sortedBy				: {key:"anywhere", dir:YAHOO.widget.DataTable.CLASS_ASC}//  arguments necesary for paginator
 		};
 
 
@@ -439,6 +443,7 @@ this.create_array_values_list = function(stValues)
 					// Create callback for data request
 					var oCallback3 = {
 						success: this.onDataReturnInitializeTable,
+						//success: this.onDataReturnAppendRows,
 						failure: this.onDataReturnInitializeTable,
 						scope: this,
 						argument: {
@@ -457,7 +462,7 @@ this.create_array_values_list = function(stValues)
 
 				      myPaginator.setPage(1,true);
 
-			        };
+	      };
 
 
 	   myContextMenu = new YAHOO.widget.ContextMenu("mycontextmenu", {trigger:myDataTable.getTbodyEl()});
@@ -465,6 +470,16 @@ this.create_array_values_list = function(stValues)
 
 	   myDataTable.subscribe("rowMouseoverEvent", myDataTable.onEventHighlightRow);
 	   myDataTable.subscribe("rowMouseoutEvent", myDataTable.onEventUnhighlightRow);
+
+
+      //if exist "config_values.footer_datatable" in <module>.index.js Render Footer Datatable. Using for shown Sumatory
+      if(config_values.footer_datatable)
+      {
+	   	//myDataTable.subscribe("postRenderEvent", function (){alert("postRenderEvent")});
+	   	myDataTable.subscribe("initEvent", addFooterDatatable);
+	   	myDataTable.subscribe("renderEvent", addFooterDatatable);
+      }
+
 
 	   myDataTable.subscribe("rowClickEvent",function (oArgs)
 											   {
@@ -484,7 +499,7 @@ this.create_array_values_list = function(stValues)
 		for(var k=0; k < config_values.column_hidden.length; k++)
 		{
 			if (myDataTable.getColumn(config_values.column_hidden[k])!= null)
-			myDataTable.getColumn(config_values.column_hidden[k]).className = "hide_field";
+				myDataTable.getColumn(config_values.column_hidden[k]).className = "hide_field";
 		}
 
 
