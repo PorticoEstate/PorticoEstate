@@ -941,6 +941,7 @@
 					if($values['location'])
 					{
 						$location_code=implode("-", $values['location']);
+						$values['extra']['view'] = true;
 						$values['location_data'] = $bolocation->read_single($location_code,$values['extra']);
 					}
 					if($values['extra']['p_num'])
@@ -1004,12 +1005,12 @@
 				$lookup_tenant=true;
 			}
 
-			if($bypass && $location_code)
+			if($location_code)
 			{
 				$category['location_level']= count(explode('-',$location_code));
 			}
 
-			if(!$category['location_level'])
+			if( $this->cat_id && ( !isset($category['location_level']) || !$category['location_level']) )
 			{
 				$category['location_level']= -1;
 			}
