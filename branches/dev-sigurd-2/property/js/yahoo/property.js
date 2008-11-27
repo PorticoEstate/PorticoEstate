@@ -7,7 +7,7 @@
 	var myDataSource,myDataTable, myContextMenu, myPaginator ;
 	var ds, values_ds;
 	var myrowsPerPage,mytotalRows,ActualValueRowsPerPageDropdown;
-	var panel;
+
 
 
  /********************************************************************************
@@ -318,7 +318,6 @@ this.create_array_values_list = function(stValues)
  */
 	this.execute_ds = function()
 	{
-		//panel.show();
 		try{
 	 		ds = phpGWLink('index.php',path_values,true);
 	  	}catch(e){
@@ -329,8 +328,7 @@ this.create_array_values_list = function(stValues)
 		{
 				    success: function(o)
 				    {
-				    	//panel.hide();
-						eval('values_ds ='+o.responseText);
+				    	eval('values_ds ='+o.responseText);
 						flag_particular_setting='';
 
 						if(flag==0)
