@@ -64,8 +64,25 @@
 			$this->module = $this->db->db_addslashes($module);
 		}
 
+
 		/**
 		 * Load the config values for the current module
+		 *
+		 * @return array the config values
+		 */
+
+		public function read()
+ 		{
+			if(!count($this->config_data))
+			{
+				$this->read_repository();
+			}
+			return $this->config_data;
+		}
+
+		/**
+		 * Load the config values for the current module
+		 * @todo change to protected
 		 *
 		 * @return array the config values
 		 */

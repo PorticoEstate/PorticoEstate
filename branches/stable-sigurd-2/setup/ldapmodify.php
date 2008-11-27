@@ -233,8 +233,7 @@
 						// these rights.  Instead, we maintain group membership here.
 						if($tmpid)
 						{
-							$acl->account_id = intval($tmpid);
-							$acl->read_repository();
+							$acl->set_account_id(intval($tmpid));
 
 							$acl->delete('phpgw_group',$thisacctid,1);
 							$acl->add('phpgw_group',$thisacctid,1);
@@ -248,8 +247,7 @@
 					}
 					// Now give this group some rights
 					$GLOBALS['phpgw_info']['user']['account_id'] = $thisacctid;
-					$acl->account_id = intval($thisacctid);
-					$acl->read_repository();
+					$acl->set_account_id(intval($thisacctid));
 					@reset($s_apps);
 					while (list($key,$app) = @each($s_apps))
 					{
@@ -336,8 +334,7 @@
 					Since the group has app rights, we don't need to give users
 					these rights.
 					*/
-					$acl->account_id = intval($thisacctid);
-					$acl->read_repository();
+					$acl->set_account_id(intval($thisacctid));
 
 					/*
 					However, if no groups were imported, we do need to give each user

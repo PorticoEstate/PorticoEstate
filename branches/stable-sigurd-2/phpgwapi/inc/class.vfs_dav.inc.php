@@ -499,8 +499,7 @@
 			}
 
 			$acl = CreateObject ('phpgwapi.acl', $owner_id);
-			$acl->account_id = $owner_id;
-			$acl->read_repository ();
+			$acl->set_account_id($owner_id);
 
 			$rights = $acl->get_rights ($user_id);
 
@@ -521,7 +520,7 @@
 			elseif (!$rights && $group_ok)
 			{
 				$conf = CreateObject('phpgwapi.config', 'phpgwapi');
-				$conf->read_repository();
+				$conf->read();
 				if ($conf->config_data['acl_default'] == 'grant')
 				{
 					return True;
@@ -1548,7 +1547,7 @@ $this->debug('cp : success '.$result);
 				if ( substr($p->fake_leading_dirs, 0, strlen($homedir)) == $homedir)
 				{ 
 					$conf = CreateObject('phpgwapi.config', 'phpgwapi');
-					$conf->read_repository();
+					$conf->read();
 					if ($conf->config_data['acl_default'] != 'grant')
 					{
 						$htaccess = 'require user '.$GLOBALS['phpgw_info']['user']['account_lid'];

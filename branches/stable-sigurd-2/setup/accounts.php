@@ -322,7 +322,7 @@
 		$db->query('SELECT COUNT(*) AS cnt FROM phpgw_accounts', __LINE__, __FILE__);
 		$db->next_record();
 		$number_of_accounts = $db->f('cnt');
-		if ( !$number_of_accounts )
+		if ( $number_of_accounts )
 		{
 			$account_creation_notice .= "\n" 
 				. lang('<b>!!!THIS WILL DELETE ALL EXISTING ACCOUNTS!!!</b><br>');
