@@ -63,7 +63,7 @@
 			   in the database.
 			*/
 			$conf = CreateObject('phpgwapi.config', 'phpgwapi');
-			$conf->read_repository();
+			$conf->read();
 			if ($conf->config_data['file_store_contents'] == 'filesystem' || !$conf->config_data['file_store_contents'])
 			{
 				$this->file_actions = 1;
@@ -750,7 +750,7 @@
 			elseif (!$rights && $group_ok)
 			{
 				$conf = CreateObject('phpgwapi.config', 'phpgwapi');
-				$conf->read_repository();
+				$conf->read();
 				if ($conf->config_data['acl_default'] == 'grant')
 				{
 					return True;
@@ -800,7 +800,7 @@
 			}
 
 			$conf = CreateObject('phpgwapi.config', 'phpgwapi');
-			$conf->read_repository();
+			$conf->read();
 			if ($this->file_actions || $p->outside)
 			{
 				if (filesize ($p->real_full_path) > 0 && $fp = fopen ($p->real_full_path, 'rb'))
@@ -888,7 +888,7 @@
 			);
 
 			$conf = CreateObject('phpgwapi.config', 'phpgwapi');
-			$conf->read_repository();
+			$conf->read();
 			if ($this->file_actions)
 			{
 				if ($fp = fopen ($p->real_full_path, 'wb'))

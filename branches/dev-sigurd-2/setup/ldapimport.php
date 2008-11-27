@@ -265,7 +265,7 @@
 							if($tmpid)
 							{
 								$GLOBALS['phpgw']->acl->acl($tmpid);
-								$GLOBALS['phpgw']->acl->read_repository();
+								$GLOBALS['phpgw']->acl->read();
 
 								$GLOBALS['phpgw']->acl->delete('phpgw_group',$thisacctid,1);
 								$GLOBALS['phpgw']->acl->add('phpgw_group',$thisacctid,1);
@@ -282,7 +282,7 @@
 								$pref = CreateObject('phpgwapi.preferences',$tmpid);
 								$pref->db = $GLOBALS['phpgw_setup']->db;
 								$pref->account_id = intval($tmpid);
-								$pref->read_repository();
+								$pref->read();
 								@reset($_POST['s_apps']);
 								while (list($key,$app) = each($_POST['s_apps']))
 								{
@@ -293,7 +293,7 @@
 						}
 						/* Now give this group some rights */
 						$GLOBALS['phpgw']->acl->acl($thisacctid);
-						$GLOBALS['phpgw']->acl->read_repository();
+						$GLOBALS['phpgw']->acl->read();
 						@reset($_POST['s_apps']);
 						while (list($key,$app) = each($_POST['s_apps']))
 						{
@@ -341,8 +341,7 @@
 
 				$acl = CreateObject('phpgwapi.acl',$defaultgroupid);
 				$acl->db = $GLOBALS['phpgw_setup']->db;
-				$acl->account_id = intval($defaultgroupid);
-				$acl->read_repository();
+				$acl->set_account_id(intval($defaultgroupid))
 				foreach ( $_POST['s_apps'] as $app )
 				{
 					$acl->delete($app,'run',1);
@@ -400,7 +399,7 @@
 					//  these rights.  Instead, we make the user a member of the Default group
 					//  below.
 					$GLOBALS['phpgw']->acl->acl($thisacctid);
-					$GLOBALS['phpgw']->acl->read_repository();
+					$GLOBALS['phpgw']->acl->read();
 
 					// Only give them admin if we asked for them to have it.
 					// This is typically an exception to apps for run rights

@@ -1503,10 +1503,10 @@
 		 */
 		protected function _setup_cache($write_cache = true)
 		{
-			$this->_data                = $GLOBALS['phpgw']->accounts->read_repository()->toArray();
+			$this->_data                = $GLOBALS['phpgw']->accounts->read()->toArray();
 //			$this->_data['acl']         = $GLOBALS['phpgw']->acl->read(); // This one is never used
-			$this->_data['preferences'] = $GLOBALS['phpgw']->preferences->read_repository();
-			$this->_data['apps']        = $GLOBALS['phpgw']->applications->read_repository();
+			$this->_data['preferences'] = $GLOBALS['phpgw']->preferences->read();
+			$this->_data['apps']        = $GLOBALS['phpgw']->applications->read();
 
 			$this->_data['domain']      = $this->_account_domain;
 			$this->_data['sessionid']   = $this->_sessionid;
