@@ -194,37 +194,40 @@
 				$this->db->query($sql . $ordermethod,__LINE__,__FILE__);
 			}
 
-			$db2           	= $this->bocommon->new_db($this->db);
-
 			$tickets = array();
-			$i = 0;
+
 			while ($this->db->next_record())
 			{
-				$tickets[$i]['id']				= $this->db->f('id');
-				$tickets[$i]['subject']			= $this->db->f('subject',true);
-				$tickets[$i]['location_code']	= $this->db->f('location_code');
-				$tickets[$i]['user_id']			= $this->db->f('user_id');
-				$tickets[$i]['address']			= $this->db->f('address',true);
-				$tickets[$i]['assignedto']		= $this->db->f('assignedto');
-				$tickets[$i]['status']			= $this->db->f('status');
-				$tickets[$i]['priority']		= $this->db->f('priority');
-				$tickets[$i]['cat_id']			= $this->db->f('cat_id');
-				$tickets[$i]['group_id']		= $this->db->f('group_id');
-				$tickets[$i]['entry_date']		= $this->db->f('entry_date');
-				$tickets[$i]['finnish_date']	= $this->db->f('finnish_date');
-				$tickets[$i]['finnish_date2']	= $this->db->f('finnish_date2');
-
-				$db2->query("select count(*) from fm_tts_views where id='" . (int)$this->db->f('id')
-					. "' and account_id='" . $GLOBALS['phpgw_info']['user']['account_id'] . "'",__LINE__,__FILE__);
-				$db2->next_record();
-
-				if (!$db2->f(0))
-				{
-					$tickets[$i]['new_ticket'] = true;
-				}
-
-				$i++;
+				$tickets[]= array
+				(
+					'id'				=> (int) $this->db->f('id'),
+					'subject'			=> $this->db->f('subject',true),
+					'location_code'		=> $this->db->f('location_code'),
+					'user_id'			=> $this->db->f('user_id'),
+					'address'			=> $this->db->f('address',true),
+					'assignedto'		=> $this->db->f('assignedto'),
+					'status'			=> $this->db->f('status'),
+					'priority'			=> $this->db->f('priority'),
+					'cat_id'			=> $this->db->f('cat_id'),
+					'group_id'			=> $this->db->f('group_id'),
+					'entry_date'		=> $this->db->f('entry_date'),
+					'finnish_date'		=> $this->db->f('finnish_date'),
+					'finnish_date2'		=> $this->db->f('finnish_date2')
+				);
 			}
+			
+			foreach ($tickets as &$ticket)
+			{
+				$this->db->query("SELECT count(*) FROM fm_tts_views where id={$ticket['id']}"
+					. " AND account_id='" . $GLOBALS['phpgw_info']['user']['account_id'] . "'",__LINE__,__FILE__);
+				$this->db->next_record();
+
+				if(! $this->db->f(0))
+				{
+					$ticket['new_ticket'] = true;
+				}
+			}
+
 			return $tickets;
 		}
 
@@ -267,12 +270,12 @@
 				$ticket['group_id']			= $this->db->f('group_id');
 				$ticket['status']			= $this->db->f('status');
 				$ticket['cat_id']			= $this->db->f('cat_id');
-				$ticket['subject']			= stripslashes($this->db->f('subject'));
+				$ticket['subject']			= $this->db->f('subject', true);
 				$ticket['priority']			= $this->db->f('priority');
-				$ticket['details']			= stripslashes($this->db->f('details'));
+				$ticket['details']			= $this->db->f('details', true);
 				$ticket['location_code']	= $this->db->f('location_code');
 				$ticket['contact_phone']	= $this->db->f('contact_phone');
-				$ticket['address']			= stripslashes($this->db->f('address'));
+				$ticket['address']			= $this->db->f('address', true);
 				$ticket['tenant_id']		= $this->db->f('tenant_id');
 				$ticket['p_num']			= $this->db->f('p_num');
 				$ticket['p_entity_id']		= $this->db->f('p_entity_id');
@@ -300,13 +303,14 @@
 		function update_view($id='')
 		{
 			// Have they viewed this ticket before ?
-			$this->db->query("select count(*) from fm_tts_views where id='$id' "
+			$id = (int) $id;
+			$this->db->query("SELECT count(*) FROM fm_tts_views where id={$id}"
 					. "and account_id='" . $GLOBALS['phpgw_info']['user']['account_id'] . "'",__LINE__,__FILE__);
 			$this->db->next_record();
 
 			if (! $this->db->f(0))
 			{
-				$this->db->query("insert into fm_tts_views (id,account_id,time) values ('$id','"
+				$this->db->query("INSERT INTO fm_tts_views (id,account_id,time) values ({$id},'"
 					. $GLOBALS['phpgw_info']['user']['account_id'] . "','" . time() . "')",__LINE__,__FILE__);
 			}
 		}
