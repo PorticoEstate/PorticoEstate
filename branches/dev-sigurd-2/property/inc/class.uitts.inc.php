@@ -202,6 +202,8 @@
 				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=> 1, 'acl_location'=> $this->acl_location));
 			}
 
+			$dry_run=false;
+
 			if(phpgw::get_var('edit_status', 'bool', 'GET'))
 			{
 				if(!$this->acl_edit)
@@ -257,6 +259,9 @@
 
 
 			$datatable = array();
+
+			if( phpgw::get_var('phpgw_return_as') != 'json' )
+			 {
 
 			$datatable['menu']					= $this->bocommon->get_menu();
 	    		$datatable['config']['base_url'] = $GLOBALS['phpgw']->link('/index.php', array
@@ -436,7 +441,8 @@
 				);
 
 				$dry_run = true;
-				$ticket_list = $this->bo->read($start_date,$end_date);
+				}
+				$ticket_list = $this->bo->read($start_date,$end_date,false,$dry_run);
 				//$uicols = $this->bo->uicols;
 				$uicols = array();
 				//$uicols['name'][0] = 'color';

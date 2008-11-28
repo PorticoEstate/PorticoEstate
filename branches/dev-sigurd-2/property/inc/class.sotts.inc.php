@@ -70,6 +70,7 @@
 				$start_date		= isset($data['start_date'])?$data['start_date']:'';
 				$end_date		= isset($data['end_date'])?$data['end_date']:'';
 				$external		= isset($data['external'])?$data['external']:'';
+				$dry_run		= isset($data['dry_run']) ? $data['dry_run'] : '';
 			}
 
 			$this->grants 	= $GLOBALS['phpgw']->session->appsession('grants_ticket','property');
@@ -82,11 +83,26 @@
 
 			if ($order)
 			{
-				$ordermethod = " order by $order $sort";
+				if( $order == 'assignedto' )
+				{
+					$order_join = "$this->join phpgw_accounts ON fm_tts_tickets.assignedto=phpgw_accounts.account_id";
+					$order = 'account_lastname';
+				}
+				else if( $order == 'user' )
+				{
+					$order_join = "$this->join phpgw_accounts ON fm_tts_tickets.user_id=phpgw_accounts.account_id";
+					$order = 'account_lastname';
+				}
+				else
+				{
+					$order_join = '';
+				}
+				
+				$ordermethod = " ORDER BY $order $sort";
 			}
 			else
 			{
-				$ordermethod = ' order by fm_tts_tickets.id DESC';
+				$ordermethod = ' ORDER BY fm_tts_tickets.id DESC';
 			}
 
 			$where= 'WHERE';
@@ -145,13 +161,13 @@
 
 			if ($user_id > 0)
 			{
-				$filtermethod .= " $where assignedto=$user_id";
+				$filtermethod .= " $where assignedto=" . (int)$user_id;
 				$where = 'AND';
 			}
 
 			if ($district_id > 0)
 			{
-				$filtermethod .= " $where  district_id='$district_id' ";
+				$filtermethod .= " $where  district_id=" .(int)$district_id;
 				$where = 'AND';
 			}
 
@@ -178,20 +194,28 @@
 			}
 
 			$sql = "SELECT fm_tts_tickets.* FROM fm_tts_tickets"
-			. " $this->join fm_location1 on fm_tts_tickets.loc1=fm_location1.loc1"
-			. " $this->join fm_part_of_town on fm_location1.part_of_town_id=fm_part_of_town.part_of_town_id $filtermethod $querymethod";
+			. " $this->join fm_location1 ON fm_tts_tickets.loc1=fm_location1.loc1"
+			. " $this->join fm_part_of_town ON fm_location1.part_of_town_id=fm_part_of_town.part_of_town_id"
+			. " $order_join"
+			. " $filtermethod $querymethod";
 
 //echo $sql;
-			$this->db->query($sql,__LINE__,__FILE__);
-			$this->total_records = $this->db->num_rows();
 
-			if(!$allrows)
+			if(!$dry_run)
 			{
-				$this->db->limit_query($sql . $ordermethod,$start,__LINE__,__FILE__);
-			}
-			else
-			{
-				$this->db->query($sql . $ordermethod,__LINE__,__FILE__);
+				$this->db->query('SELECT count(*) ' . substr($sql,strripos($sql,'from')),__LINE__,__FILE__);
+				$this->db->next_record();
+				$this->total_records = $this->db->f(0);
+				$this->db->fetchmode = 'ASSOC';
+				if(!$allrows)
+				{
+					$this->db->limit_query($sql . $ordermethod,$start,__LINE__,__FILE__);
+				}
+				else
+				{
+					$this->db->query($sql . $ordermethod,__LINE__,__FILE__);
+				}
+
 			}
 
 			$tickets = array();

@@ -260,7 +260,7 @@
 		}
 
 
-		function read($start_date='',$end_date='', $external='')
+		function read($start_date='',$end_date='', $external='',$dry_run = '')
 		{
 			$interlink 	= CreateObject('property.interlink');
 			$start_date	= $this->bocommon->date_to_timestamp($start_date);
@@ -269,7 +269,7 @@
 			$tickets = $this->so->read(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
 											'status_id' => $this->status_id,'cat_id' => $this->cat_id,'district_id' => $this->district_id,
 											'start_date'=>$start_date,'end_date'=>$end_date,
-											'allrows'=>$this->allrows,'user_id' => $this->user_id,'external'=>$external));
+											'allrows'=>$this->allrows,'user_id' => $this->user_id,'external'=>$external, 'dry_run' => $dry_run));
 			$this->total_records = $this->so->total_records;
 			if(!$external)
 			{
