@@ -32,7 +32,7 @@
 			$helpmsg = isset($params['helpmsg']) ? $params['helpmsg'] : false;
 
 			$this->config = CreateObject('phpgwapi.config','projects');
-			$this->config->read_repository();
+			$this->config->read();
 
 			if ($this->config->config_data)
 			{

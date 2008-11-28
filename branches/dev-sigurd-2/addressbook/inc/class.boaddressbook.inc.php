@@ -779,7 +779,7 @@
 		//used
 		function save_preferences($prefs,$other,$qfields,$fcat_id)
 		{
-			$GLOBALS['phpgw']->preferences->read_repository();
+			$GLOBALS['phpgw']->preferences->read();
 			if (is_array($prefs))
 			{
 				/* _debug_array($prefs);exit; */

@@ -1289,7 +1289,7 @@
 			//
 			if (! $this->bo->prefs['calendar']['planner_intervals_per_day'])
 			{
-				$GLOBALS['phpgw']->preferences->read_repository();
+				$GLOBALS['phpgw']->preferences->read();
 				$GLOBALS['phpgw']->preferences->add('calendar','planner_intervals_per_day',3);
 				$GLOBALS['phpgw']->preferences->save_repository();
 				$this->bo->prefs['calendar']['planner_intervals_per_day'] = 3;

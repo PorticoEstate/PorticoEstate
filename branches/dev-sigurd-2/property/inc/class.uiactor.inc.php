@@ -140,7 +140,7 @@
 			if ($values['save'])
 			{
 				$GLOBALS['phpgw']->preferences->account_id=$this->account;
-				$GLOBALS['phpgw']->preferences->read_repository();
+				$GLOBALS['phpgw']->preferences->read();
 				$GLOBALS['phpgw']->preferences->add('property','actor_columns_' .$this->role,$values['columns'],'user');
 				$GLOBALS['phpgw']->preferences->save_repository();
 

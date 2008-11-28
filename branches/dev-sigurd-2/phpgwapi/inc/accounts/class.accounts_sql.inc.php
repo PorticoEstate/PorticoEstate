@@ -713,7 +713,7 @@
 		*
 		* @return object phpgwapi_account derived object containing account data
 		*/
-		public function read_repository()
+		protected function read_repository()
 		{
 			$this->account = $this->get($this->account_id, false);
 			return $this->account;

@@ -112,7 +112,7 @@
 						|| $asyncservice != $GLOBALS['phpgw_info']['server']['asyncservice'] )
 					{
 						$config = CreateObject('phpgwapi.config','phpgwapi');
-						$config->read_repository();
+						$config->read();
 						$config->value('asyncservice', $asyncservice);
 						$config->save_repository();
 						unset($config);

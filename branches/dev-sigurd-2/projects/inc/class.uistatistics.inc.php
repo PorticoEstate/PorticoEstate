@@ -1398,7 +1398,7 @@ HTML;
 
 
         $prefs = CreateObject('phpgwapi.preferences', $values['employee']);
-		$prefs->read_repository();
+		$prefs->read();
 
 		$sbox = createobject('phpgwapi.sbox');
 		$holidays = CreateObject('phpgwapi.calendar_holidays');

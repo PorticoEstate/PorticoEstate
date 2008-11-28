@@ -162,7 +162,7 @@
 
 	function save_custom_field($old='',$new='')
 	{
-		$GLOBALS['phpgw']->preferences->read_repository($GLOBALS['phpgw_info']['user']['account_id']);
+		$GLOBALS['phpgw']->preferences->read($GLOBALS['phpgw_info']['user']['account_id']);
 		if ($old)
 		{
 			$GLOBALS['phpgw']->preferences->delete("addressbook","extra_".$old);

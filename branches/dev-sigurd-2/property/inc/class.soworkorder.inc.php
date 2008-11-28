@@ -295,7 +295,7 @@
 
 			$filtermethod = '';
 
-			$GLOBALS['phpgw']->config->read_repository();
+			$GLOBALS['phpgw']->config->read();
 			if(isset($GLOBALS['phpgw']->config->config_data['acl_at_location']) && $GLOBALS['phpgw']->config->config_data['acl_at_location'])
 			{
 				$access_location = $this->bocommon->get_location_list(PHPGW_ACL_READ);

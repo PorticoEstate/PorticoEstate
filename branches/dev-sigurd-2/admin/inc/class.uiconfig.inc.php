@@ -73,7 +73,7 @@
 			$t->set_block('config','body','body');
 
 			$c = CreateObject('phpgwapi.config',$config_appname);
-			$c->read_repository();
+			$c->read();
 
 			if ($c->config_data)
 			{

@@ -507,7 +507,7 @@
 			if ($values['save'])
 			{
 				$GLOBALS['phpgw']->preferences->account_id=$this->filter;
-				$GLOBALS['phpgw']->preferences->read_repository();
+				$GLOBALS['phpgw']->preferences->read();
 
 				if ($values['old_email'] != $values['email'])
 				{

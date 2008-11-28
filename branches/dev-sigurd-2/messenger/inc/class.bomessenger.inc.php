@@ -38,7 +38,7 @@
 			$users = array();
 
 			$config = createObject('phpgwapi.config', 'messenger');
-			$config->read_repository();
+			$config->read();
 
 			if ( !isset($GLOBALS['phpgw_info']['user']['apps']['admin']) 
 				&& isset($config->data['restrict_to_group'] )
@@ -129,7 +129,7 @@
 			}
 			
 			$acct = createobject('phpgwapi.accounts', $message['to']);
-			$acct->read_repository();
+			$acct->read();
 			if ($acct->is_expired() && $GLOBALS['phpgw']->accounts->name2id($message['to']))
 			{
 				$errors[] = lang("Sorry, %1's account is not currently active",$message['to']);
@@ -203,7 +203,7 @@
 				if ( !isset($cached[$message['from']]) || !$cached[$message['from']] )
 				{
 					$acct = createobject('phpgwapi.accounts',$message['from']);
-					$acct->read_repository();
+					$acct->read();
 					$cached[$message['from']]       = $message['from'];
 					$cached_names[$message['from']] = $GLOBALS['phpgw']->common->display_fullname($acct->data['account_lid'],$acct->data['firstname'],$acct->data['lastname']);
 				}
@@ -257,7 +257,7 @@
 			else
 			{
 				$acct = createobject('phpgwapi.accounts',$message['from']);
-				$acct->read_repository();
+				$acct->read();
 				$message['from'] = $GLOBALS['phpgw']->common->display_fullname($acct->data['account_lid'],$acct->data['firstname'],$acct->data['lastname']);
 			}
 
@@ -274,7 +274,7 @@
 			$message = $this->so->read_message($message_id);
 
 			$acct = createobject('phpgwapi.accounts',$message['from']);
-			$acct->read_repository();
+			$acct->read();
 
 			if (! $n_message['content'])
 			{

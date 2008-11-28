@@ -39,7 +39,7 @@ class calendar_holiday
 		if($owner_id != $phpgw_info['user']['account_id'])
 		{
 			$owner_pref = CreateObject('phpgwapi.preferences',$owner_id);
-			$owner_prefs = $owner_pref->read_repository();
+			$owner_prefs = $owner_pref->read();
 			if(isset($owner_prefs['calendar']['locale']) && $owner_prefs['common']['country'])
 			{
 				$this->users['owner'] = $owner_prefs['common']['country'];

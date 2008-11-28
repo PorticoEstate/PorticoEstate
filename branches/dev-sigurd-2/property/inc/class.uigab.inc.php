@@ -213,7 +213,7 @@
 
 			$config		= CreateObject('phpgwapi.config','property');
 
-			$config->read_repository();
+			$config->read();
 
 			$link_to_map = (isset($config->config_data['map_url'])?$config->config_data['map_url']:'');
 
@@ -804,7 +804,7 @@
 			$kommune_nr		= substr($gab_id,0,4);
 			if(!$kommune_nr > 0)
 			{
-				$this->config->read_repository();
+				$this->config->read();
 				$kommune_nr= $this->config->config_data['default_municipal'];
 			}
 

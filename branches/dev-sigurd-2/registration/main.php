@@ -160,7 +160,7 @@
 	$phpgw->translation   = createobject('phpgwapi.translation');
 
 	$c = createobject('phpgwapi.config','registration');
-	$c->read_repository();
+	$c->read();
 	$config = $c->config_data;
 
 	if (! $sessionid)

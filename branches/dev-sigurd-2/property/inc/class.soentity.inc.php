@@ -247,7 +247,7 @@
 			$where= 'WHERE';
 			$filtermethod = '';
 
-			$GLOBALS['phpgw']->config->read_repository();
+			$GLOBALS['phpgw']->config->read();
 			if(isset($GLOBALS['phpgw']->config->config_data['acl_at_location'])
 				&& $GLOBALS['phpgw']->config->config_data['acl_at_location']
 				&& $category['location_level'] > 0)

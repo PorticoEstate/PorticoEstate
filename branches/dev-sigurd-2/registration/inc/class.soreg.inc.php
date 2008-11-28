@@ -220,7 +220,7 @@
 			$contacts   = createobject('phpgwapi.contacts');
 
 			$GLOBALS['phpgw']->db->transaction_begin();
-			$accounts->read_repository();
+			$accounts->read();
 			$accounts->data['firstname'] = $fields['n_given'];
 			$accounts->data['lastname']  = $fields['n_family'];
 			$accounts->save_repository();
@@ -253,7 +253,7 @@
 
 			$GLOBALS['phpgw']->db->transaction_commit();
 
-			$accounts->read_repository();
+			$accounts->read();
 			if ($config['trial_accounts'])
 			{
 				$accounts->data['expires'] = time() + ((60 * 60) * ($config['days_until_trial_account_expires'] * 24));

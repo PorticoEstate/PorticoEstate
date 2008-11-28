@@ -38,7 +38,7 @@
 			$submit = get_var('submit',Array('POST'));
 			if($submit)
 			{
-				$GLOBALS['phpgw']->preferences->read_repository();
+				$GLOBALS['phpgw']->preferences->read();
 				$prefs = get_var('prefs',Array('POST'));
 				if($prefs['mainscreen_showevents'] == True)
 				{

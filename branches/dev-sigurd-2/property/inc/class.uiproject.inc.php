@@ -737,7 +737,7 @@
 					);
 			}
 
-			$config->read_repository();
+			$config->read();
 
 			$save='';
 			if (isset($values['save']))

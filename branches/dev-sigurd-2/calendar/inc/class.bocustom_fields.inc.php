@@ -38,7 +38,7 @@
 		public function __construct()
 		{
 			$this->config = CreateObject('phpgwapi.config','calendar');
-			$this->config->read_repository();
+			$this->config->read();
 
 			$this->fields = &$this->config->config_data['fields'];
 

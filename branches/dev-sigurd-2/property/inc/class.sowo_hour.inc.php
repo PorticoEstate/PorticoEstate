@@ -743,7 +743,7 @@
 			if($calculation > 0)
 			{
 				$config		= CreateObject('phpgwapi.config');
-				$config->read_repository();
+				$config->read();
 				$tax = 1+(($config->config_data['fm_tax'])/100);
 				$calculation = $calculation * $tax;
 

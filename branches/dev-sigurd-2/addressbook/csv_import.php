@@ -86,7 +86,7 @@
 			break;
 
 		case 'download':
-			$GLOBALS['phpgw']->preferences->read_repository();
+			$GLOBALS['phpgw']->preferences->read();
 			$defaults = $GLOBALS['phpgw_info']['user']['preferences']['addressbook']['cvs_import'];
 			if(!is_array($defaults))
 			{
@@ -113,7 +113,7 @@
 			$addr_names = $field_names + $comm_name + $loc_names;
 
 			$config = CreateObject('phpgwapi.config','addressbook');
-			$config->read_repository();
+			$config->read();
 			while(list($name,$descr) = @each($config->config_data['custom_fields']))
 			{
 				$addr_names[$name] = $descr;
@@ -241,7 +241,7 @@
 				}
 			}
 
-			$GLOBALS['phpgw']->preferences->read_repository();
+			$GLOBALS['phpgw']->preferences->read();
 			$GLOBALS['phpgw']->preferences->add('addressbook','cvs_import',$defaults);
 			$GLOBALS['phpgw']->preferences->save_repository(True);
 

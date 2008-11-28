@@ -23,7 +23,7 @@
 
 	include('../header.inc.php');
 
-	$phpgw->config->read_repository();
+	$phpgw->config->read();
 
 	if ($submit)
 	{

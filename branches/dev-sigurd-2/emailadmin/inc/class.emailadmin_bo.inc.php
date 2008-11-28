@@ -715,7 +715,7 @@
 				if (count($new_config))
 				{
 					$config = CreateObject('phpgwapi.config','phpgwapi');
-					$config->read_repository();
+					$config->read();
 					foreach($new_config as $name => $value)
 					{
 						$config->value($name, $value);

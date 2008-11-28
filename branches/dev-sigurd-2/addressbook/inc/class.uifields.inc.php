@@ -406,7 +406,7 @@
 			$i = 0;
 			$fields = array();
 
-			$this->config->read_repository();
+			$this->config->read();
 
 			$all_custom_fields = array();
 			if($apply=='person')
@@ -487,7 +487,7 @@
 		function save_custom_field($old='',$new='',$apply_for='')
 		{
 			$edit_contacts = False;
-			$this->config->read_repository();
+			$this->config->read();
 
 			switch($apply_for)
 			{

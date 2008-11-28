@@ -671,7 +671,7 @@
 			{
 				// this should use the contacts backend in the API - each account is already linked to a contact
 				$GLOBALS['phpgw']->preferences->account_id=$this->filter;
-				$GLOBALS['phpgw']->preferences->read_repository();
+				$GLOBALS['phpgw']->preferences->read();
 
 				if ($values['old_email'] != $values['email'])
 				{

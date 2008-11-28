@@ -129,7 +129,7 @@
 		{
 
 		//	$GLOBALS['phpgw']->preferences->account_id = $this->account;
-		//	$GLOBALS['phpgw']->preferences->read_repository();
+		//	$GLOBALS['phpgw']->preferences->read();
 			$mobile = $GLOBALS['phpgw_info']['user']['preferences']['sms']['cellphone'];
 			return $mobile;
 		}
@@ -407,7 +407,7 @@
 			//	$db_query = "SELECT uid,email,mobile FROM phpgw_sms_tblUser WHERE username='$target_user'";
 				$uid = $GLOBALS['phpgw']->accounts->name2id($target_user);
 			//	$GLOBALS['phpgw']->preferences->account_id = $uid;
-			//	$GLOBALS['phpgw']->preferences->read_repository();
+			//	$GLOBALS['phpgw']->preferences->read();
 				$mobile = $GLOBALS['phpgw_info']['user']['preferences']['sms']['cellphone'];
 				$email = $GLOBALS['phpgw_info']['user']['preferences']['email']['address'];
 

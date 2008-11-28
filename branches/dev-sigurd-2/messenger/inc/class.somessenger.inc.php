@@ -12,7 +12,7 @@
 
 	// Now we can use this again later if we need it
 	$GLOBALS['phpgw']->config  = CreateObject('phpgwapi.config', 'messenger');
-	$GLOBALS['phpgw']->config->read_repository();
+	$GLOBALS['phpgw']->config->read();
 
 	if ( !is_array($GLOBALS['phpgw']->config->config_data) 
 		|| !isset($GLOBALS['phpgw_info']['server']['smtp_server']) 

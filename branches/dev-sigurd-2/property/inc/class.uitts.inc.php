@@ -854,7 +854,7 @@
 			$receipt = $GLOBALS['phpgw']->session->appsession('receipt','property');
 			$GLOBALS['phpgw']->session->appsession('receipt','property','');
 
-			$GLOBALS['phpgw']->preferences->read_repository();
+			$GLOBALS['phpgw']->preferences->read();
 			$autorefresh ='';
 			if (isset($GLOBALS['phpgw_info']['user']['preferences']['property']['refreshinterval']))
 			{
@@ -1351,7 +1351,7 @@
 			$receipt = $GLOBALS['phpgw']->session->appsession('receipt','property');
 			$GLOBALS['phpgw']->session->appsession('receipt','property','');
 
-			$GLOBALS['phpgw']->preferences->read_repository();
+			$GLOBALS['phpgw']->preferences->read();
 			$autorefresh ='';
 			if (isset($GLOBALS['phpgw_info']['user']['preferences']['property']['refreshinterval']))
 			{

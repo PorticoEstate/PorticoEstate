@@ -99,7 +99,7 @@
 
 			if ($fields_updated)
 			{
-				$this->config->read_repository();
+				$this->config->read();
 
 				if (isset($this->config->config_data['mailnotification']) && $this->config->config_data['mailnotification'])
 				{
@@ -285,7 +285,7 @@
 
 			if (isset($fields_updated))
 			{
-				$this->config->read_repository();
+				$this->config->read();
 
 				if (isset($this->config->config_data['mailnotification']) && $ticket['send_mail'])
 				{

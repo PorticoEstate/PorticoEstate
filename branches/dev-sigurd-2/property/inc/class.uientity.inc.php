@@ -165,7 +165,7 @@
 			if (isset($values['save']) && $values['save'] && $this->cat_id)
 			{
 				$GLOBALS['phpgw']->preferences->account_id=$this->account;
-				$GLOBALS['phpgw']->preferences->read_repository();
+				$GLOBALS['phpgw']->preferences->read();
 				$GLOBALS['phpgw']->preferences->add('property',"entity_columns_" . $this->entity_id . '_' . $this->cat_id,$values['columns'],'user');
 				$GLOBALS['phpgw']->preferences->save_repository();
 
@@ -1053,7 +1053,7 @@
 				'entity_id'	=> $this->entity_id
 			);
 
-	//		$config->read_repository();
+	//		$config->read();
 	//		$link_to_files = $config->config_data['files_url'];
 
 			if(isset($values['files']) && is_array($values['files']))
@@ -1414,7 +1414,7 @@
 				'entity_id'	=> $this->entity_id
 			);
 
-		//	$config->read_repository();
+		//	$config->read();
 		//	$link_to_files = $config->config_data['files_url'];
 
 			if(isset($values['files']) && is_array($values['files']))

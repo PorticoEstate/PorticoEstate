@@ -368,7 +368,7 @@
 		{
 			$this->accounts = CreateObject('phpgwapi.accounts',$account_id);
 
-			$this->accounts->read_repository();
+			$this->accounts->read();
 
 			$cached_data[$this->accounts->data['account_id']]['account_id']		= $this->accounts->data['account_id'];
 			$cached_data[$this->accounts->data['account_id']]['account_lid']	= $this->accounts->data['account_lid'];
@@ -541,7 +541,7 @@
 					continue;
 
 				//$this->accounts = CreateObject('phpgwapi.accounts',$emps[$i]);
-				//$this->accounts->read_repository();
+				//$this->accounts->read();
 
 				if( $data['roles_included'] == true )
 				{
@@ -2530,13 +2530,13 @@ used_subs=used_sum-used_item
 					if( $send_alarm )
 					{
 						$prefs_co = CreateObject('phpgwapi.preferences',$co);
-						$prefs_co->read_repository();
+						$prefs_co->read();
 						$sender = $prefs_co->email_address($co);
 
 						unset($prefs_co);
 
 						$prefs = CreateObject('phpgwapi.preferences', $emp_events[$k]['account_id']);
-						$prefs->read_repository();
+						$prefs->read();
 
 						$msgtype = '"projects";';
 
@@ -3288,7 +3288,7 @@ used_subs=used_sum-used_item
 				while( list($employee_id, $employee_projects) = each($employees) )
 				{
 					$prefs = CreateObject('phpgwapi.preferences', $employee_id);
-					$prefs->read_repository();
+					$prefs->read();
 
 					if( (isset($prefs->data['projects']['send_status_mail']) ) && ($prefs->data['projects']['send_status_mail'] == false) )
 					{
@@ -3476,7 +3476,7 @@ used_subs=used_sum-used_item
 			foreach ( $acl_prohectmembers as $employee_id => $employee_projects )
 			{
 				$prefs = CreateObject('phpgwapi.preferences', $employee_id);
-				$prefs->read_repository();
+				$prefs->read();
 
 				$employee_lid = $employee_pname = $employee_lname = '';
 				$fullname = (string) $accounts->get($employee_id);

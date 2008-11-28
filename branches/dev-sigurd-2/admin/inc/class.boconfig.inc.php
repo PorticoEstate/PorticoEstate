@@ -85,7 +85,7 @@
 
 			$conf = CreateObject('phpgwapi.config', $data['appname']);
 
-			$conf->read_repository();
+			$conf->read();
 			reset($newsettings);
 			while(list($key,$val) = each($newsettings))
 			{

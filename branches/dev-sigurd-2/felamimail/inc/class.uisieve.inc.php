@@ -67,7 +67,7 @@
 			$this->mailPreferences  = $this->bopreferences->getPreferences();
 			
 			$config 		=& CreateObject('phpgwapi.config','felamimail');
-			$config->read_repository();
+			$config->read();
 			$this->felamimailConfig	= $config->config_data;
 			unset($config);
 			
@@ -583,7 +583,7 @@
 			// vacation text
 			if (empty($vacation['text'])) {
 				$config =& new config('felamimail');
-				$config = $config->read_repository();
+				$config = $config->read();
 				$vacation['text'] = $config['default_vacation_text'];
 			}
 			$this->t->set_var('vacation_text',$this->botranslation->convert($vacation['text'],'UTF-8'));

@@ -211,7 +211,7 @@
 		 *
 		 * @param $arr array to unquote (var-param!)
 		 */
-		function unquote(&$arr)
+		public function unquote(&$arr)
 		{
 			if (!is_array($arr))
 			{
@@ -237,7 +237,7 @@
 		 * the function ready all 3 prefs user/default/forced and merges them to the effective ones
 		 * private function should only be called from within this class
 		 */
-		function read_repository()
+		protected function read_repository()
 		{
 			if($GLOBALS['phpgw']->acl->check('session_only_preferences',1,'preferences') && strlen($GLOBALS['phpgw']->session->appsession('session_prefs','initiated')))
 			{
@@ -343,7 +343,7 @@
 		 * Example1: preferences->read();
 		 * @return $data array containing user preferences
 		 */
-		function read()
+		public function read()
 		{
 			if (count($this->data) == 0)
 			{
@@ -363,7 +363,7 @@
 		 * the effective prefs ($this->data) are updated to reflect the change
 		 * @return the new effective prefs (even when forced or default prefs are set !)
 		 */
-		function add($app_name,$var,$value = '##undef##',$type='user')
+		public function add($app_name,$var,$value = '##undef##',$type='user')
 		{
 			//echo "<p>add('$app_name','$var','$value')</p>\n";
 			if ($value == '##undef##')
@@ -409,7 +409,7 @@
 		 * the effektive prefs ($this->data) are updated to reflect the change
 		 * @return the new effective prefs (even when forced or default prefs are deleted!)
 		 */
-		function delete($app_name, $var = False,$type = 'user')
+		public function delete($app_name, $var = False,$type = 'user')
 		{
 			//echo "<p>delete('$app_name','$var')</p>\n";
 			$set_via = array(
@@ -472,7 +472,7 @@
 		 * @param $value value of the preference
 		 * the function works on user and data, to be able to save the pref and to have imediate effect
 		 */
-		function add_struct($app_name,$var,$value = '')
+		public function add_struct($app_name,$var,$value = '')
 		{
 			/* eval is slow and dangerous
 			   $code = '$this->data[$app_name]'.$var.' = $value;';
@@ -501,7 +501,7 @@
 		 * @param $var array keys separated by '/', eg. 'ex_accounts/1'
 		 * the function works on user and data, to be able to save the pref and to have imediate effect
 		 */
-		function delete_struct($app_name, $var = '')
+		public function delete_struct($app_name, $var = '')
 		{
 			/* eval is slow and dangerous
 			   $code_1 = '$this->data[$app_name]'.$var.' = "";';
@@ -532,7 +532,7 @@
 		 *
 		 * @param $arr array to unquote (var-param!)
 		 */
-		function quote(&$arr)
+		public function quote(&$arr)
 		{
 			if (!is_array($arr))
 			{
@@ -559,7 +559,7 @@
 		 * @param $type which prefs to update: user/default/forced
 		 * the user prefs for saveing are in $this->user not in $this->data, which are the effectiv prefs only
 		 */
-		function save_repository($update_session_info = False,$type='user')
+		public function save_repository($update_session_info = False,$type='user')
 		{
 			// Don't get the old values back from the cache on next load
 			$GLOBALS['phpgw']->session->clear_phpgw_info_cache();
@@ -633,7 +633,7 @@
 		 *
 		 * @param $account_id numerical id of account for which to create the prefs
 		 */
-		function create_defaults($account_id)
+		public function create_defaults($account_id)
 		{
 			return; // not longer needed, as the defaults are merged in on runtime
 			$this->db->query("select * from phpgw_preferences where preference_owner='-2'",__LINE__,__FILE__);
@@ -658,7 +658,7 @@
 		 *
 		 * @param $data array of preferences
 		 */
-		function update_data($data)
+		public function update_data($data)
 		{
 			if(is_array($data))
 			{
@@ -675,11 +675,11 @@
 		}
 
 		/* legacy support */
-		function change($app_name,$var,$value = "")
+		public function change($app_name,$var,$value = "")
 		{
 			return $this->add($app_name,$var,$value);
 		}
-		function commit($update_session_info = True)
+		public function commit($update_session_info = True)
 		{
 			//return $this->save_repository($update_session_info);
 		}
@@ -851,7 +851,7 @@
 		 * @param $accountid - as determined in and/or passed to "create_email_preferences"
 		 * @access public
 		 */
-		function email_address($account_id='')
+		public function email_address($account_id='')
 		{
 			if ( isset($this->data['email']['address']) )
 			{
@@ -887,7 +887,7 @@
 		 * a preference value for any particular preference item available to the user.
 		 * @access Public
 		 */
-		function create_email_preferences($accountid='', $acctnum=0)
+		public function create_email_preferences($accountid='', $acctnum=0)
 		{
 			print_debug('class.preferences: create_email_preferences: ENTERING<br>', 'messageonly','api');
 			// we may need function "html_quotes_decode" from the mail_msg class

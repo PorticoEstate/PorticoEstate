@@ -241,7 +241,7 @@
 			$contacts->role='vendor';
 
 			$config				= CreateObject('phpgwapi.config');
-			$config->read_repository();
+			$config->read();
 			$tax = 1+(isset($config->config_data['fm_tax'])?$config->config_data['fm_tax']:0)/100;
 
 			$project				= $this->so->read_single($project_id);

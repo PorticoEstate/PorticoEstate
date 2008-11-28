@@ -57,7 +57,7 @@ class ged_dm
 		
 		//$this->ged_config=$GLOBALS['ged_config'];
 		$config=CreateObject('phpgwapi.config','ged');
-		$config->read_repository();
+		$config->read();
 		$this->ged_config=$config->config_data;
 		//_debug_array($this->ged_config);
 		unset($config);

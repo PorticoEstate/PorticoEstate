@@ -28,7 +28,7 @@
 	}
 
 	$config = CreateObject('phpgwapi.config','felamimail');
-	$config->read_repository();
+	$config->read();
 	$felamimailConfig = $config->config_data;
 	unset($config);
 

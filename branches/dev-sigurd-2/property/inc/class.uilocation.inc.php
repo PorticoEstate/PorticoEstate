@@ -146,7 +146,7 @@
 			if (isset($values['save']) && $values['save'] && $this->type_id)
 			{
 				$GLOBALS['phpgw']->preferences->account_id=$this->account;
-				$GLOBALS['phpgw']->preferences->read_repository();
+				$GLOBALS['phpgw']->preferences->read();
 				$GLOBALS['phpgw']->preferences->add('property','location_columns_' . $this->type_id . !!$this->lookup,$values['columns'],'user');
 				$GLOBALS['phpgw']->preferences->save_repository();
 

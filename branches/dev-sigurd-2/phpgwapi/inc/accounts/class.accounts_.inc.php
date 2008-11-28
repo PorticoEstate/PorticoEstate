@@ -226,7 +226,7 @@
 		 *
 		 * @return void
 		 */
-		abstract public function read_repository();
+		abstract protected function read_repository();
 
 		/**
 		 * Save/update account information to database

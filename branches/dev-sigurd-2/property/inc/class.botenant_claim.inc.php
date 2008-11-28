@@ -221,7 +221,7 @@
 
 
 			$this->config = CreateObject('phpgwapi.config','property');
-			$this->config->read_repository();
+			$this->config->read();
 			$claim_notify_mails = $this->config->config_data['tenant_claim_notify_mails'];
 			if ($claim_notify_mails)
 			{

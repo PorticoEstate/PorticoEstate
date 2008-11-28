@@ -2530,7 +2530,7 @@
 					print_debug('UserID',$userid);
 
 					$preferences = CreateObject('phpgwapi.preferences',$userid);
-					$part_prefs = $preferences->read_repository();
+					$part_prefs = $preferences->read();
 
 					if (!$this->update_requested($userid,$part_prefs,$msg_type,$old_event,$new_event))
 					{

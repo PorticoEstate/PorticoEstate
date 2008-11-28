@@ -197,7 +197,7 @@
 
 		function select_rollback_file($selected='')
 		{
-			$this->config->read_repository();
+			$this->config->read();
 			$file_catalog = $this->config->config_data['export_path'];
 
 			$dir_handle = @opendir($file_catalog);

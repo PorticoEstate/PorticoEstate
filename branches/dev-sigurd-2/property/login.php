@@ -399,7 +399,7 @@
 		}
 		else
 		{
-			$GLOBALS['phpgw_info']['user']['preferences'] = $prefs->read_repository();
+			$GLOBALS['phpgw_info']['user']['preferences'] = $prefs->read();
 		}
 		#print 'LANG:' . $GLOBALS['phpgw_info']['user']['preferences']['common']['lang'] . '<br>';
 	}

@@ -37,7 +37,7 @@
 	if ( $_page=='index' || ($_page != 'day' && $_page != 'week' && $_page != 'month' && $_page != 'year' && $_page != 'planner'))
 	{
 		$_page = 'month';
-		$GLOBALS['phpgw']->preferences->read_repository();
+		$GLOBALS['phpgw']->preferences->read();
 		$GLOBALS['phpgw']->preferences->add('calendar','defaultcalendar','month');
 		$GLOBALS['phpgw']->preferences->save_repository();
 	}
@@ -45,7 +45,7 @@
 	if(!@file_exists(PHPGW_INCLUDE_ROOT.'/calendar/inc/hook_home_'.$_page.'.inc.php'))
 	{
 		$_page = 'month';
-		$GLOBALS['phpgw']->preferences->read_repository();
+		$GLOBALS['phpgw']->preferences->read();
 		$GLOBALS['phpgw']->preferences->add('calendar','defaultcalendar','month');
 		$GLOBALS['phpgw']->preferences->save_repository();
 	}

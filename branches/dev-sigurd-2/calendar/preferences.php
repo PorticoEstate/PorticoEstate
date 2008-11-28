@@ -26,7 +26,7 @@
 
 	if ( phpgw::get_var('submit', 'bool', 'POST') )
 	{
-		$phpgw->preferences->read_repository();
+		$phpgw->preferences->read();
 		$phpgw->preferences->add('calendar','weekdaystarts');
 		$phpgw->preferences->add('calendar','workdaystarts');
 		$phpgw->preferences->add('calendar','workdayends');

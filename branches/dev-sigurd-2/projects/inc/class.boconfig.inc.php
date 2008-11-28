@@ -57,7 +57,7 @@
 
 		function save_prefs($prefs)
 		{
-			$GLOBALS['phpgw']->preferences->read_repository();
+			$GLOBALS['phpgw']->preferences->read();
 
 			if(!is_array($prefs['cols']))
 			{
@@ -208,7 +208,7 @@
 				foreach($admins as $ad)
 				{
 					$accounts = CreateObject('phpgwapi.accounts',$ad['account_id']);
-					$accounts->read_repository();
+					$accounts->read();
 					$admin_data[] = array
 					(
 						'account_id'	=> $ad['account_id'],
@@ -482,7 +482,7 @@
 					break;
 				case 'save':
 					$config = CreateObject('phpgwapi.config','projects');
-					$config->read_repository();
+					$config->read();
 					$config->value('proid_help_msg',$params['proid_help_msg']);
 					$config->save_repository();					
 					break;
@@ -502,7 +502,7 @@
 			}
 
 			$config = CreateObject('phpgwapi.config','projects');
-			$config->read_repository();
+			$config->read();
 
 			switch($values['action'])
 			{
@@ -565,7 +565,7 @@
 				return false;
 			
 			$config = CreateObject('phpgwapi.config','projects');
-			$config->read_repository();
+			$config->read();
 
 			switch($values['action'])
 			{
@@ -646,7 +646,7 @@
 				return false;
 
 			$config = CreateObject('phpgwapi.config','projects');
-			$config->read_repository();
+			$config->read();
 
 			switch($values['action'])
 			{

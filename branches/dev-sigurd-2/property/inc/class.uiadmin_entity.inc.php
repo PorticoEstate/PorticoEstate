@@ -401,7 +401,7 @@
 					{
 						$id=$receipt['id'];
 					}
-					$config->read_repository();
+					$config->read();
 
 					if(!is_array($config->config_data['location_form']))
 					{

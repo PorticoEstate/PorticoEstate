@@ -743,7 +743,7 @@
 
 
 //_debug_array($values);
-			$this->config->read_repository();
+			$this->config->read();
 
 			if ($values['save'])
 			{
@@ -1269,7 +1269,7 @@
 				'id'		=>$id
 			);
 
-			$this->config->read_repository();
+			$this->config->read();
 			$link_to_files = $this->config->config_data['files_url'];
 
 			$j	= count($values['files']);

@@ -286,7 +286,7 @@
 			$workorder['b_account_name']	= $this->so->get_b_account_name($workorder['b_account_id']);
 
 			$config				= CreateObject('phpgwapi.config');
-			$config->read_repository();
+			$config->read();
 			$tax = 1+($config->config_data['fm_tax'])/100;
 			$workorder['calculation']	=number_format($workorder['calculation']*$tax, 2, ',', '');
 			$workorder['actual_cost']	=number_format(($workorder['act_mtrl_cost']+$workorder['act_vendor_cost']), 2, ',', '');

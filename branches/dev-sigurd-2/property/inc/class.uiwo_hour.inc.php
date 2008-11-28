@@ -74,7 +74,7 @@
 			$this->bocommon				= CreateObject('property.bocommon');
 			$this->config				= CreateObject('phpgwapi.config');
 
-			$this->config->read_repository();
+			$this->config->read();
 
 			$this->acl 					= & $GLOBALS['phpgw']->acl;
 			$this->acl_location			= '.project';

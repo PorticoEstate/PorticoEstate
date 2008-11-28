@@ -241,8 +241,7 @@
 			{
 				$user_checked[] = $user_id;
 
-				$this->acl->account_id = $user_id;
-				$this->acl->read_repository();
+				$this->acl->set_account_id($user_id);
 				$this->acl->delete($this->acl_app, $this->location,$grantor,$type);
 				$this->acl->add($this->acl_app, $this->location, $rights,$grantor,$type);
 				$this->acl->save_repository($this->acl_app, $this->location);
@@ -260,8 +259,7 @@
 			{
 				foreach ( $user_delete as$user_id )
 				{
-					$this->acl->account_id = $user_id;
-					$this->acl->read_repository();
+					$this->acl->set_account_id($user_id);
 					$this->acl->delete($this->acl_app, $this->location, $grantor, $type);
 					$this->acl->save_repository($this->acl_app, $this->location);
 				}
@@ -345,9 +343,7 @@
 					$user_list[$j]['account_firstname']	= $account->firstname;
 					$user_list[$j]['account_lastname'] 	= $account->lastname;
 
-					$this->acl->account_id=$account->id;
-
-					$this->acl->read_repository();
+					$this->acl->set_account_id($account->id);
 
 					$count_right=count($right);
 					for ($i=0;$i<$count_right;$i++)

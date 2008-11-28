@@ -229,7 +229,7 @@
 
 			$filtermethod = '';
 
-			$GLOBALS['phpgw']->config->read_repository();
+			$GLOBALS['phpgw']->config->read();
 			if(isset($GLOBALS['phpgw']->config->config_data['acl_at_location']) && $GLOBALS['phpgw']->config->config_data['acl_at_location'])
 			{
 				$access_location = $this->bocommon->get_location_list(PHPGW_ACL_READ);
@@ -367,7 +367,7 @@
 		function get_meter_table()
 		{
 			$config = CreateObject('phpgwapi.config','property');
-			$config->read_repository();
+			$config->read();
 			return isset($config->config_data['meter_table'])?$config->config_data['meter_table']:'';
 		}
 

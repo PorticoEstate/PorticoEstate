@@ -81,7 +81,7 @@
 			$this->cats->app_name		= 'property.ticket';
 			$this->cats->supress_info	= true;
 
-			$this->config->read_repository();
+			$this->config->read();
 
 			if ($session)
 			{
@@ -554,7 +554,7 @@
 
 			$receipt = $this->so->add($ticket);
 
-			$this->config->read_repository();
+			$this->config->read();
 
 			if (isset($this->config->config_data['mailnotification']) && $this->config->config_data['mailnotification'] && isset($ticket['send_mail']) && $ticket['send_mail'])
 			{

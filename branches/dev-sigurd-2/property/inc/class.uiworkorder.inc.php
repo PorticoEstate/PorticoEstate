@@ -650,7 +650,7 @@
 			$values['b_account_id']		= phpgw::get_var('b_account_id', 'int', 'POST');
 			$values['b_account_name']	= phpgw::get_var('b_account_name', 'string', 'POST');
 
-			$config->read_repository();
+			$config->read();
 
 			if (isset($values['save']))
 			{

@@ -1314,7 +1314,7 @@
 			return $this->memberships[$account_id];
 		}
 
-		public function read_repository()
+		protected function read_repository()
 		{
 			$this->account = $this->get($this->account_id);
 			return $this->account;

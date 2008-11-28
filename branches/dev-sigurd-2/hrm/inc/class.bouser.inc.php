@@ -227,7 +227,7 @@
 		{
 			$account =& $GLOBALS['phpgw']->accounts;
 			$account->set_account($user_id, 'u');
-			$account_info = $account->read_repository();
+			$account_info = $account->read();
 			$membership = $account->membership($user_id);
 			$contacts = CreateObject('phpgwapi.contacts');
 

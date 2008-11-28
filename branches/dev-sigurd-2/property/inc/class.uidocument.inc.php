@@ -415,7 +415,7 @@
 				$entity_data[$this->entity_id]['p_cat_name']=$category['name'];
 			}
 
-			$this->config->read_repository();
+			$this->config->read();
 			$files_url = $this->config->config_data['files_url'];
 
 			$document_list = $this->bo->read_at_location($location_code);

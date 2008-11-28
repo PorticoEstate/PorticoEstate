@@ -194,7 +194,7 @@
 			);
 
 			$acl    = createobject('phpgwapi.acl', $account_id);
-			$acl->read_repository();
+			$acl->read();
 
 			$this->_template->set_var('form_action', $GLOBALS['phpgw']->link('/index.php', $link_values));
 			$this->_template->set_var('lang_title', lang('ACL Manager'));

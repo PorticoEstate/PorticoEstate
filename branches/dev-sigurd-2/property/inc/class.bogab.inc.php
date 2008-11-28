@@ -56,7 +56,7 @@
 			$this->bocommon 	= CreateObject('property.bocommon');
 			$this->solocation 	= CreateObject('property.solocation');
 			$this->config		= CreateObject('phpgwapi.config');
-			$this->config->read_repository();
+			$this->config->read();
 			$this->gab_insert_level = (isset($this->config->config_data['gab_insert_level'])?$this->config->config_data['gab_insert_level']:3);
 
 			$this->so 		= CreateObject('property.sogab',$this->gab_insert_level);

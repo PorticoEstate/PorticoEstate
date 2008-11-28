@@ -93,7 +93,7 @@
 			$this->bofilemanager->f_update();
 
 			$this->config = CreateObject('phpgwapi.config','filemanager');
-			$this->config->read_repository();
+			$this->config->read();
 			if ($this->config->config_data)
 			{
 				$this->config_items = $this->config->config_data;
@@ -158,7 +158,7 @@
 			$show_upload_box = get_var('show_upload_boxes', 'GET');
 			if($show_upload_box)
 			{
-				$GLOBALS['phpgw']->preferences->read_repository();
+				$GLOBALS['phpgw']->preferences->read();
 				$GLOBALS['phpgw']->preferences->change('filemanager','show_upload_boxes',$show_upload_box);
 				$GLOBALS['phpgw']->preferences->save_repository();
 				$this->bofilemanager->show_upload_boxes = $show_upload_box;
@@ -242,7 +242,7 @@
 
 								if(!$this->bofilemanager->settings['name'])
 								{
-									$GLOBALS['phpgw']->preferences->read_repository();
+									$GLOBALS['phpgw']->preferences->read();
 									$GLOBALS['phpgw']->preferences->change('filemanager','name','name');
 									$GLOBALS['phpgw']->preferences->save_repository();
 								}
@@ -276,7 +276,7 @@
 								
 								if(!$this->bofilemanager->settings['comment'])
 								{
-									$GLOBALS['phpgw']->preferences->read_repository();
+									$GLOBALS['phpgw']->preferences->read();
 									$GLOBALS['phpgw']->preferences->change('filemanager','comment','comment');
 									$GLOBALS['phpgw']->preferences->save_repository();
 								}
@@ -1357,7 +1357,7 @@
 		
 				if(is_array($values))
 				{
-					$GLOBALS['phpgw']->preferences->read_repository();
+					$GLOBALS['phpgw']->preferences->read();
 					$GLOBALS['phpgw']->preferences->delete('filemanager','');
 
 					foreach($values as $key => $value)
@@ -1628,7 +1628,7 @@
 
 			if($_POST['save'] || $_GET['delete_script'])
 			{
-				$this->config->read_repository();
+				$this->config->read();
 				if ($this->config->config_data)
 				{
 					$this->config_items	= $this->config->config_data;

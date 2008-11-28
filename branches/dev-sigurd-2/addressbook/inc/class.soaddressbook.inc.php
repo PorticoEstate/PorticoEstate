@@ -504,7 +504,7 @@
 			if($account_id)
 			{
 				$account = CreateObject('phpgwapi.accounts',$account_id,'u');
-				$account_data = $account->read_repository();
+				$account_data = $account->read();
 				$account_data->firstname = $fields['tab_person_data']['per_first_name'];
 				$account_data->lastname = $fields['tab_person_data']['per_last_name'];
 				$account->update_data($account_data);

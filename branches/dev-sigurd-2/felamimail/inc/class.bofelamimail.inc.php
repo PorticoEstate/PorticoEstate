@@ -1084,7 +1084,7 @@
 		function getEMailProfile()
 		{
 			$config =& CreateObject('phpgwapi.config','felamimail');
-			$config->read_repository();
+			$config->read();
 			$felamimailConfig = $config->config_data;
 			
 			#_debug_array($felamimailConfig);
@@ -2258,7 +2258,7 @@
 		function setEMailProfile($_profileID)
 		{
 			$config =& CreateObject('phpgwapi.config','felamimail');
-			$config->read_repository();
+			$config->read();
 			$config->value('profileID',$_profileID);
 			$config->save_repository();
 		}

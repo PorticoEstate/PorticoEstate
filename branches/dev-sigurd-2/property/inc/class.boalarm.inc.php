@@ -369,7 +369,7 @@
 			}
 
 			$this->config		= CreateObject('phpgwapi.config');
-			$this->config->read_repository();
+			$this->config->read();
 			$this->send			= CreateObject('phpgwapi.send');
 
 			$members = array();

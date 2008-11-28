@@ -124,7 +124,7 @@
 			{
 
 				$GLOBALS['phpgw']->preferences->account_id=$this->account;
-				$GLOBALS['phpgw']->preferences->read_repository();
+				$GLOBALS['phpgw']->preferences->read();
 				$GLOBALS['phpgw']->preferences->add('property','r_agreement_columns',$values['columns'],'user');
 				$GLOBALS['phpgw']->preferences->save_repository();
 
@@ -865,7 +865,7 @@
 				'id'		=>$id
 			);
 
-			$config->read_repository();
+			$config->read();
 			$link_to_files = $config->config_data['files_url'];
 
 			$j	= count($r_agreement['files']);
@@ -1506,7 +1506,7 @@
 			);
 
 
-			$config->read_repository();
+			$config->read();
 			$link_to_files = $config->config_data['files_url'];
 
 			$j	= count($r_agreement['files']);

@@ -186,7 +186,7 @@
 					}
 				}
 				
-				$GLOBALS['phpgw']->preferences->read_repository();
+				$GLOBALS['phpgw']->preferences->read();
 				$userPrefs = $GLOBALS['phpgw_info']['user']['preferences']['felamimail'];
 				if(empty($userPrefs['deleteOptions']))
 					$userPrefs['deleteOptions'] = 'mark_as_deleted';

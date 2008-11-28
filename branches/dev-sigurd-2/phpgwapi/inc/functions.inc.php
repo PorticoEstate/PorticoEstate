@@ -408,7 +408,7 @@ HTML;
 	{
 	*/
 		$c = createObject('phpgwapi.config','phpgwapi');
-		$c->read_repository();
+		$c->read();
 		foreach ($c->config_data as $k => $v)
 		{
 			$GLOBALS['phpgw_info']['server'][$k] = $v;

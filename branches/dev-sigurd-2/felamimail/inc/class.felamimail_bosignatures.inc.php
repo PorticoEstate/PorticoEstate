@@ -51,7 +51,7 @@
 				!isset($GLOBALS['phpgw_info']['user']['preferences']['felamimail']['email_sig_copied']) &&
 				!empty($GLOBALS['phpgw_info']['user']['preferences']['felamimail']['email_sig'])) {
 				
-				$GLOBALS['phpgw']->preferences->read_repository();
+				$GLOBALS['phpgw']->preferences->read();
 				$newSignature = new felamimail_signatures();
 				$newSignature->fm_description		= lang('default signature');
 				$newSignature->fm_signature		= nl2br($GLOBALS['phpgw_info']['user']['preferences']['felamimail']['email_sig']);

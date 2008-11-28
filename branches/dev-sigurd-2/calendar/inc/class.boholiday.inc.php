@@ -198,7 +198,7 @@
 			if($this->owner != $GLOBALS['phpgw_info']['user']['account_id'])
 			{
 				$owner_pref = CreateObject('phpgwapi.preferences',$owner);
-				$owner_prefs = $owner_pref->read_repository();
+				$owner_prefs = $owner_pref->read();
 				if(@$owner_prefs['common']['country'])
 				{
 					$this->locales[] = $owner_prefs['common']['country'];
