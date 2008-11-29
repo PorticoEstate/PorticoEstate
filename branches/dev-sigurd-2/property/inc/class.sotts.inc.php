@@ -329,7 +329,7 @@
 			// Have they viewed this ticket before ?
 			$id = (int) $id;
 			$this->db->query("SELECT count(*) FROM fm_tts_views where id={$id}"
-					. "and account_id='" . $GLOBALS['phpgw_info']['user']['account_id'] . "'",__LINE__,__FILE__);
+					. " AND account_id='" . $GLOBALS['phpgw_info']['user']['account_id'] . "'",__LINE__,__FILE__);
 			$this->db->next_record();
 
 			if (! $this->db->f(0))
