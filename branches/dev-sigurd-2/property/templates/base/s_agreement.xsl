@@ -221,11 +221,14 @@
 			self.name="first_Window";
 			<xsl:value-of select="lookup_functions"/>
 		</script>
-		<div align="left">
+		<div class="yui-navset" id="edit_tabview">
+		<xsl:value-of disable-output-escaping="yes" select="tabs" />
+			<div class="yui-content">		
+
 		<xsl:variable name="edit_url"><xsl:value-of select="edit_url"/></xsl:variable>
-		<table cellpadding="2" cellspacing="2" align="center">
-			<tr><td>
+			<div id="general">
 		<form ENCTYPE="multipart/form-data" method="post" name="form" action="{$edit_url}">
+
 		<table cellpadding="2" cellspacing="2" width="79%" align="center">
 			<xsl:choose>
 				<xsl:when test="msgbox_data != ''">
@@ -333,28 +336,7 @@
 					<img id="values_termination_date-trigger" src="{img_cal}" alt="{lang_datetitle}" title="{lang_datetitle}" style="cursor:pointer; cursor:hand;" />
 				</td>
 			</tr>
-			
-			<xsl:choose>
-				<xsl:when test="files!=''">
-					<xsl:call-template name="file_list"/>
-				</xsl:when>
-			</xsl:choose>
 
-			<xsl:choose>
-				<xsl:when test="fileupload = 1">
-					<xsl:call-template name="file_upload"/>
-				</xsl:when>
-			</xsl:choose>
-
-			<xsl:choose>
-				<xsl:when test="attributes_values != ''">
-					<tr>
-						<td colspan="2" width="50%" align="left">				
-							<xsl:call-template name="attributes_form"/>
-						</td>
-					</tr>
-				</xsl:when>
-			</xsl:choose>
 			<xsl:choose>
 				<xsl:when test="member_of_list != ''">
 				<tr>
@@ -370,6 +352,26 @@
 				</tr>
 				</xsl:when>
 			</xsl:choose>
+
+
+			</table>
+		
+			<xsl:call-template name="attributes_values"/>
+
+			<table>
+			<xsl:choose>
+				<xsl:when test="files!=''">
+					<xsl:call-template name="file_list"/>
+				</xsl:when>
+			</xsl:choose>
+
+			<xsl:choose>
+				<xsl:when test="fileupload = 1">
+					<xsl:call-template name="file_upload"/>
+				</xsl:when>
+			</xsl:choose>
+			</table>
+			<table>
 			<tr height="50">
 				<td valign="bottom">
 					<xsl:variable name="lang_save"><xsl:value-of select="lang_save"/></xsl:variable>
@@ -404,8 +406,7 @@
 			</tr>
 		</table>
 		</form>
-		</td></tr>
-		<tr><td>
+
 		<form method="post" name="alarm" action="{$edit_url}">
 			<input type="hidden" name="values[entity_id]" value="{value_s_agreement_id}" ></input>
 			<table>
@@ -417,8 +418,10 @@
 				<xsl:call-template name="alarm_form"/>
 			</table>
 		</form>
-		</td>
-		</tr>
+		</div>
+		<div id="items">
+
+		<table>
 		<xsl:choose>
 			<xsl:when test="value_s_agreement_id!=''">
 				<tr>
@@ -500,7 +503,9 @@
 					<xsl:apply-templates select="table_add"/>
 				</table>
 			</xsl:when>
-		</xsl:choose>						
+		</xsl:choose>	
+		</div>					
+		</div>
 		</div>
 	</xsl:template>
 
@@ -511,8 +516,15 @@
 			self.name="first_Window";
 			<xsl:value-of select="lookup_functions"/>
 		</script>
+
+
+
+		<div class="yui-navset" id="edit_tabview">
+		<xsl:value-of disable-output-escaping="yes" select="tabs" />
+			<div class="yui-content">		
+
 		<xsl:variable name="edit_url"><xsl:value-of select="edit_url"/></xsl:variable>
-		<div align="left">
+		<div id="general">
 		<form name="form" method="post" action="{$edit_url}">
 		<table cellpadding="2" cellspacing="2" width="79%" align="center">
 			<xsl:choose>
@@ -569,12 +581,8 @@
 			</tr>
 
 			<xsl:choose>
-				<xsl:when test="attributes_values != ''">
-					<tr>
-						<td colspan="2" width="50%" align="left">				
-							<xsl:call-template name="attributes_form"/>
-						</td>
-					</tr>
+				<xsl:when test="attributes_group != ''">
+					<xsl:call-template name="attributes_values"/>
 				</xsl:when>
 			</xsl:choose>
 			<tr height="50">
@@ -611,10 +619,12 @@
 			</tr>
 		</table>
 		</form>
-		
+		</div>
+
+
 		<xsl:choose>
 			<xsl:when test="values != ''">
-		
+			<div id="history">		
 				<xsl:variable name="update_action"><xsl:value-of select="update_action"/></xsl:variable>
 				<form method="post" name="form2" action="{$update_action}">
 					<input type="hidden" name="values[agreement_id]" value="{value_s_agreement_id}" ></input>
@@ -638,8 +648,10 @@
 
 					</table>
 				</form>
+				</div>
 			</xsl:when>
 		</xsl:choose>
+		</div>
 		</div>
 	</xsl:template>
 
