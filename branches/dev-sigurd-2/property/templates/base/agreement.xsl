@@ -469,7 +469,11 @@
 			self.name="first_Window";
 			<xsl:value-of select="lookup_functions"/>
 		</script>
-		<div align="left">
+		<div class="yui-navset" id="edit_tabview">
+		<xsl:value-of disable-output-escaping="yes" select="tabs" />
+			<div class="yui-content">		
+
+				<div id="general">
 		<xsl:variable name="edit_url"><xsl:value-of select="edit_url"/></xsl:variable>
 		<table cellpadding="2" cellspacing="2" align="center">
 			<tr><td>
@@ -614,15 +618,6 @@
 			</xsl:choose>
 
 			<xsl:choose>
-				<xsl:when test="attributes_values != ''">
-					<tr>
-						<td colspan="2" width="50%" align="left">				
-							<xsl:call-template name="attributes_form"/>
-						</td>
-					</tr>
-				</xsl:when>
-			</xsl:choose>
-			<xsl:choose>
 				<xsl:when test="member_of_list != ''">
 				<tr>
 					<td valign="top">
@@ -637,6 +632,12 @@
 				</tr>
 				</xsl:when>
 			</xsl:choose>
+			<xsl:choose>
+				<xsl:when test="attributes_group != ''">
+					<xsl:call-template name="attributes_values"/>
+				</xsl:when>
+			</xsl:choose>
+
 			<tr height="50">
 				<td valign="bottom">
 					<xsl:variable name="lang_save"><xsl:value-of select="lang_save"/></xsl:variable>
@@ -687,7 +688,8 @@
 		</td>
 		</tr>
 		</table>
-
+		</div>
+		<div id="items">
 		<xsl:choose>
 			<xsl:when test="table_update!=''">
 			<xsl:variable name="update_action"><xsl:value-of select="update_action"/></xsl:variable>
@@ -737,7 +739,9 @@
 					<xsl:apply-templates select="table_add"/>
 				</table>
 			</xsl:when>
-		</xsl:choose>						
+		</xsl:choose>	
+		</div>					
+		</div>
 		</div>
 	</xsl:template>
 

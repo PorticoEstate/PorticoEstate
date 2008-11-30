@@ -517,8 +517,6 @@
 			<xsl:value-of select="lookup_functions"/>
 		</script>
 
-
-
 		<div class="yui-navset" id="edit_tabview">
 		<xsl:value-of disable-output-escaping="yes" select="tabs" />
 			<div class="yui-content">		

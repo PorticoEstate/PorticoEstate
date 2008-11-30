@@ -1118,7 +1118,7 @@
 				phpgwapi_yui::tabview_setup('edit_tabview');
 				$tabs['general']	= array('label' => lang('general'), 'link' => '#general');
 
-				$location = $this->acl_location;
+				$location = $this->acl_location . '.detail';
 				$attributes_groups = $this->bo->get_attribute_groups($location, $values['attributes']);
 
 				$attributes = array();

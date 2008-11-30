@@ -32,6 +32,8 @@
 	 * @package property
 	 */
 
+	phpgw::import_class('phpgwapi.yui');
+
 	class property_uir_agreement
 	{
 		var $grants;
@@ -483,12 +485,13 @@
 
 		function edit()
 		{
-			$id	= phpgw::get_var('id', 'int');
-			$values		= phpgw::get_var('values');
+			$id				= phpgw::get_var('id', 'int');
+			$values			= phpgw::get_var('values');
 			$delete_item	= phpgw::get_var('delete_item', 'bool');
-			$item_id	= phpgw::get_var('item_id', 'int', 'GET');
+			$item_id		= phpgw::get_var('item_id', 'int', 'GET');
+			$active_tab		= phpgw::get_var('tab', 'string', 'REQUEST', 'general');
 
-			$config		= CreateObject('phpgwapi.config','property');
+			$config			= CreateObject('phpgwapi.config','property');
 			$boalarm		= CreateObject('property.boalarm');
 
 			if($delete_item && $id && $item_id)
@@ -805,33 +808,6 @@
 						'account_id'=> $account_id
 						));
 
-			$dateformat = strtolower($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']);
-			$sep = '/';
-			$dlarr[strpos($dateformat,'y')] = 'yyyy';
-			$dlarr[strpos($dateformat,'m')] = 'MM';
-			$dlarr[strpos($dateformat,'d')] = 'DD';
-			ksort($dlarr);
-
-			$dateformat= (implode($sep,$dlarr));
-
-			switch(substr($dateformat,0,1))
-			{
-				case 'M':
-					$dateformat_validate= "javascript:vDateType='1'";
-					$onKeyUp	= "DateFormat(this,this.value,event,false,'1')";
-					$onBlur		= "DateFormat(this,this.value,event,true,'1')";
-					break;
-				case 'y':
-					$dateformat_validate="javascript:vDateType='2'";
-					$onKeyUp	= "DateFormat(this,this.value,event,false,'2')";
-					$onBlur		= "DateFormat(this,this.value,event,true,'2')";
-					break;
-				case 'D':
-					$dateformat_validate="javascript:vDateType='3'";
-					$onKeyUp	= "DateFormat(this,this.value,event,false,'3')";
-					$onBlur		= "DateFormat(this,this.value,event,true,'3')";
-					break;
-			}
 
 			$msgbox_data = $this->bocommon->msgbox_data($receipt);
 
@@ -884,6 +860,47 @@
 			$GLOBALS['phpgw']->js->validate_file('core','check','property');
 			$GLOBALS['phpgw']->js->validate_file('dateformat','dateformat','property');
 
+			if (isset($r_agreement['attributes']) && is_array($r_agreement['attributes']))
+			{
+
+		/*		foreach ($values['attributes'] as & $attribute)
+				{
+					if($attribute['history'] == true)
+					{
+						$link_history_data = array
+						(
+							'menuaction'	=> 'property.uis_agreement.attrib_history',
+							'attrib_id'	=> $attribute['id'],
+							'id'		=> $id,
+							'edit'		=> true
+						);
+
+						$attribute['link_history'] = $GLOBALS['phpgw']->link('/index.php',$link_history_data);
+					}
+				}
+		*/
+
+				phpgwapi_yui::tabview_setup('edit_tabview');
+				$tabs['general']	= array('label' => lang('general'), 'link' => '#general');
+
+				$location = $this->acl_location;
+				$attributes_groups = $this->bo->get_attribute_groups($location, $r_agreement['attributes']);
+
+				$attributes = array();
+				foreach ($attributes_groups as $group)
+				{
+					if(isset($group['attributes']))
+					{
+						$attributes[] = $group;
+					}
+				}
+				unset($attributes_groups);
+				unset($r_agreement['attributes']);
+				
+				$tabs['details']	= array('label' => lang('details'), 'link' => '#details');
+			}
+
+
 			$data = array
 			(
 
@@ -926,17 +943,10 @@
 				'member_of_name'				=> 'member_id',
 				'member_of_list'				=> $member_of_data['cat_list'],
 
-				'lang_dateformat' 				=> lang(strtolower($dateformat)),
-				'dateformat_validate'			=> $dateformat_validate,
-				'onKeyUp'						=> $onKeyUp,
-				'onBlur'						=> $onBlur,
-				'lang_attributes'				=> lang('Attributes'),
-				'attributes_header'				=> $attributes_header,
-				'attributes_values'				=> $r_agreement['attributes'],
+				'attributes_group'				=> $attributes,
 				'lookup_functions'				=> $r_agreement['lookup_functions'],
-				'dateformat'					=> $dateformat,
-
 				'img_cal'						=> $GLOBALS['phpgw']->common->image('phpgwapi','cal'),
+
 				'lang_datetitle'				=> lang('Select date'),
 
 				'lang_start_date_statustext'	=> lang('Select the estimated end date for the Project'),
@@ -977,13 +987,13 @@
 				'values_common'					=> $content_common,
 				'table_header_common'			=> $table_header_common,
 				'textareacols'					=> isset($GLOBALS['phpgw_info']['user']['preferences']['property']['textareacols']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['textareacols'] ? $GLOBALS['phpgw_info']['user']['preferences']['property']['textareacols'] : 40,
-				'textarearows'					=> isset($GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows'] ? $GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows'] : 6
+				'textarearows'					=> isset($GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows'] ? $GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows'] : 6,
+				'tabs'							=> phpgwapi_yui::tabview_generate($tabs, $active_tab)				
 			);
 
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('rental agreement') . ': ' . ($id?lang('edit') . ' ' . lang($this->role):lang('add') . ' ' . lang($this->role));
 
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('edit' => $data));
-		//	$GLOBALS['phpgw']->xslttpl->pp();
 		}
 
 		function download()
@@ -1089,7 +1099,7 @@
 				}
 				elseif (!$values['save'] && !$values['apply'] && !$values['update']):
 				{
-					$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uir_agreement.edit', 'id'=> $r_agreement_id));
+					$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uir_agreement.edit', 'id'=> $r_agreement_id, 'tab' => 'details'));
 				}
 				endif;
 			}
@@ -1107,34 +1117,6 @@
 				'role'			=> $this->role
 			);
 
-
-			$dateformat = strtolower($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']);
-			$sep = '/';
-			$dlarr[strpos($dateformat,'y')] = 'yyyy';
-			$dlarr[strpos($dateformat,'m')] = 'MM';
-			$dlarr[strpos($dateformat,'d')] = 'DD';
-			ksort($dlarr);
-
-			$dateformat= (implode($sep,$dlarr));
-
-			switch(substr($dateformat,0,1))
-			{
-				case 'M':
-					$dateformat_validate= "javascript:vDateType='1'";
-					$onKeyUp	= "DateFormat(this,this.value,event,false,'1')";
-					$onBlur		= "DateFormat(this,this.value,event,true,'1')";
-					break;
-				case 'y':
-					$dateformat_validate="javascript:vDateType='2'";
-					$onKeyUp	= "DateFormat(this,this.value,event,false,'2')";
-					$onBlur		= "DateFormat(this,this.value,event,true,'2')";
-					break;
-				case 'D':
-					$dateformat_validate="javascript:vDateType='3'";
-					$onKeyUp	= "DateFormat(this,this.value,event,false,'3')";
-					$onBlur		= "DateFormat(this,this.value,event,true,'3')";
-					break;
-			}
 
 			$jscal = CreateObject('phpgwapi.jscalendar');
 			$jscal->add_listener('values_start_date');
@@ -1214,7 +1196,6 @@
 						));
 
 			$GLOBALS['phpgw']->js->validate_file('core','check','property');
-			$GLOBALS['phpgw']->js->validate_file('dateformat','dateformat','property');
 
 			$data = array
 			(
@@ -1231,15 +1212,8 @@
 				'lang_cancel_statustext'			=> lang('Leave the rental agreement untouched and return back to the list'),
 				'lang_save_statustext'				=> lang('Save the rental agreement and return back to the list'),
 
-				'lang_dateformat' 					=> lang(strtolower($dateformat)),
-				'dateformat_validate'				=> $dateformat_validate,
-				'onKeyUp'							=> $onKeyUp,
-				'onBlur'							=> $onBlur,
-				'lang_attributes'					=> lang('Attributes'),
-				'attributes_header'					=> $attributes_header,
 				'attributes_values'					=> $values['attributes'],
 				'lookup_functions'					=> $values['lookup_functions'],
-				'dateformat'						=> $dateformat,
 
 				'img_cal'							=> $GLOBALS['phpgw']->common->image('phpgwapi','cal'),
 				'lang_datetitle'					=> lang('Select date'),
@@ -1609,7 +1583,7 @@
 						if ($values['save'])
 						{
 							$GLOBALS['phpgw']->session->appsession('session_data','r_agreement_receipt',$receipt);
-							$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uir_agreement.edit', 'id'=> $r_agreement_id));
+							$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uir_agreement.edit', 'id'=> $r_agreement_id, 'tab' => 'details'));
 						}
 					}
 				}
@@ -1634,7 +1608,7 @@
 				}
 				elseif (!$values['save'] && !$values['apply'] && !$values['update']):
 				{
-					$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uir_agreement.edit', 'id'=> $r_agreement_id));
+					$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uir_agreement.edit', 'id'=> $r_agreement_id, 'tab' => 'details'));
 				}
 				endif;
 			}

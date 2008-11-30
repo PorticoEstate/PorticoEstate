@@ -354,7 +354,11 @@
 			self.name="first_Window";
 			<xsl:value-of select="lookup_functions"/>
 		</script>
-		<div align="left">
+		<div class="yui-navset" id="edit_tabview">
+		<xsl:value-of disable-output-escaping="yes" select="tabs" />
+			<div class="yui-content">
+			<div id="details">	
+
 		<xsl:variable name="edit_url"><xsl:value-of select="edit_url"/></xsl:variable>
 		<table cellpadding="2" cellspacing="2"  width="90%" align="center">
 			<tr><td>
@@ -480,12 +484,15 @@
 			</xsl:choose>
 
 			<xsl:choose>
-				<xsl:when test="attributes_values != ''">
-					<tr>
-						<td colspan="2" width="50%" align="left">				
-							<xsl:call-template name="attributes_form"/>
-						</td>
-					</tr>
+				<xsl:when test="attributes_group != ''">
+					<tr><td colspan= "2">
+					<table>
+					<tr><td>
+					<xsl:call-template name="attributes_values"/>
+					</td></tr>
+					</table>
+					</td></tr>
+					
 				</xsl:when>
 			</xsl:choose>
 			<xsl:choose>
@@ -561,6 +568,8 @@
 		</td>
 		</tr>
 		</table>
+		</div>
+		<div id="details">
 		<xsl:choose>
 			<xsl:when test="value_r_agreement_id!=''">
 			<table>
@@ -655,7 +664,9 @@
 			</tr>
 			</table>
 			</xsl:when>
-		</xsl:choose>						
+		</xsl:choose>
+		</div>						
+		</div>
 		</div>
 	</xsl:template>
 
