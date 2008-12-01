@@ -333,7 +333,7 @@
 
 			$receipt['id'] = $values['id'];
 
-			if ( !$values['precision_'] )
+			if ( !$values['precision_'] > 0)
 			{
 				$precision = $this->_translate_datatype_precision($values['datatype']);
 				if ( $precision )
@@ -1467,6 +1467,6 @@
 			{
 				return 0;
 			}
-			$ret = $datatype_precision[$datatype];
+			return $datatype_precision[$datatype];
 		}
 	}
