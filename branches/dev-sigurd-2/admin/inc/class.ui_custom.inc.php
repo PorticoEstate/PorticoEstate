@@ -325,7 +325,7 @@
 					{
 						$id=$receipt['id'];
 					}
-					$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'admin.ui_custom.edit_attrib', 'appname' => $values['appname'], 'location' => $values['location'], 'id' => $id, 'menu_selection' => $GLOBALS['phpgw_info']['flags']['menu_selection']));
+				//	$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'admin.ui_custom.edit_attrib', 'appname' => $values['appname'], 'location' => $values['location'], 'id' => $id, 'menu_selection' => $GLOBALS['phpgw_info']['flags']['menu_selection']));
 
 				}
 				else
