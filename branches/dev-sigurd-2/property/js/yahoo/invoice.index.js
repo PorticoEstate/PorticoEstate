@@ -42,7 +42,23 @@
 			        div_message.removeChild( div_message.firstChild );
 			    }
 			}
-
+		}
+		/********************************************************************************
+		* Delete Tfoot if there aren't records
+		*/
+		this.delete_tfoot = function()
+		{
+			if ( YAHOO.util.Dom.inDocument("myfoot") && values_ds.recordsReturned == 0)
+			{
+				myfoot= YAHOO.util.Dom.get("myfoot");
+				if ( myfoot.hasChildNodes() )
+				{
+					while ( myfoot.childNodes.length >= 1 )
+				    {
+				        myfoot.removeChild( myfoot.firstChild );
+				    }
+				}
+			}
 		}
 		/********************************************************************************
 		* reset empty values for update PERIOD
@@ -60,13 +76,15 @@
 				//reset empty values for update PERIOD
 			   	path_values.voucher_id_for_period = '';
 			   	path_values.period = '';
+			   	path_values.currentPage = '';
 
-				//Delete children of div MESSAGE
+				//Delete children of div MESSAGE AND TFOOT
 				delete_message();
+				delete_tfoot();
 
 				div_message= YAHOO.util.Dom.get("message");
 
-				//if exist 'values_ds.message'
+				//SHOW message if exist 'values_ds.message'
 				 if(window.values_ds.message)
 				 {
 				 	// succesfull
@@ -106,6 +124,7 @@
 			//--focus for txt_query---
 			YAHOO.util.Dom.get(textImput[0].id).value = path_values.query;
 			YAHOO.util.Dom.get(textImput[0].id).focus();
+
 		}
 		/********************************************************************************
 		* Format for column SUM
@@ -154,9 +173,15 @@
 		{
 		   	 //Use a diferente id for voucher. This variables wil be empty in PARTICULAR_SETTING
 		   	 path_values.voucher_id_for_period = p_oItem.cfg.getProperty("onclick").idvoucher;
+		   	 //'text' is the option selected
 		   	 path_values.period = p_oItem.cfg.getProperty('text');
-			//call index. update PERIOD is inside of INDEX
+		   	 //Maintein actual page in paginator
+		   	 path_values.currentPage = myPaginator.getCurrentPage();
+		   	 //CESAR path_values.start = myPaginator.getPageRecords()[0];
+
+			//call INDEX. Update PERIOD Method is inside of INDEX
 		   	 execute_ds();
+
 		}
 
 		/********************************************************************************
@@ -199,7 +224,7 @@
 	  	this.addFooterDatatable = function()
 	  	{
 			//Delete message of Update Records or Periods for datatable
-			delete_message();
+			//CESAR delete_message();
 
 			//range actual of rows in datatable
 			begin	= myPaginator.getPageRecords()[0];
@@ -220,7 +245,7 @@
 	  		tableYUI.deleteTFoot();
   			//Create ROW
   			newTR = document.createElement('tr');
-			//Space
+			//columns with colspan 10
 			newTD = document.createElement('td');
 			newTD.colSpan = 10;
 			newTD.style.borderTop="1px solid #000000";
@@ -249,8 +274,9 @@
 			CreateRowChecked("transfer_idClass");
 
 			//Add to Table
-			tableYUI.createTFoot().appendChild(newTR.cloneNode(true))
-
+			myfoot = tableYUI.createTFoot();
+			myfoot.setAttribute("id","myfoot");
+			myfoot.appendChild(newTR.cloneNode(true));
 	  	}
 		/********************************************************************************
 		 *

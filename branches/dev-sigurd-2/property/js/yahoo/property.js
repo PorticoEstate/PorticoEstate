@@ -536,7 +536,6 @@ this.update_datatable = function()
      var record = values_ds.records;
      var newTotalRecords = values_ds.totalRecords;
 
-     myPaginator.setPage(1,true);
      if(record.length)
      {
      	myDataTable.addRows(record);
@@ -549,6 +548,8 @@ this.update_datatable = function()
 	mytotalRows = values_ds.totalRecords;
 	//update combo box pagination
 	myPaginator.set('rowsPerPageOptions',[myrowsPerPage,mytotalRows]);
+	myPaginator.setPage(parseInt(values_ds.currentPage));
+	//CESAR myPaginator.setPage(parseInt(values_ds.currentPage),true); //true no fuerza un recarge solo cambia el paginator
 	}
 
 /****************************************************************************************
