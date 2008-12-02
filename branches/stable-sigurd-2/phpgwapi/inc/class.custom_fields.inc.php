@@ -153,6 +153,17 @@
 				return 0;
 			}
 
+			if ( is_null($attrib_table) )
+			{
+				$attrib_table = $GLOBALS['phpgw']->locations->get_attrib_table($appname, $location);
+			}
+
+			// Need a table to operate on
+			if ( !$attrib_table )
+			{
+				return -1;
+			}
+
 			$values = array
 			(
 				'location_id'	=> $location_id,
@@ -231,7 +242,7 @@
 			$this->_db->query($sql, __LINE__, __FILE__);
 			if ( $this->_db->next_record() && !$doubled)
 			{
-				return -1;
+				return -2;
 			}
 
 
@@ -277,11 +288,6 @@
 			if ( !$col_info['default'] )
 			{
 				unset($col_info['default']);
-			}
-
-			if ( is_null($attrib_table) )
-			{
-				$attrib_table = $GLOBALS['phpgw']->locations->get_attrib_table($appname, $location);
 			}
 
 			$this->_oProc->AddColumn($attrib_table, $values['column_name'], $col_info);

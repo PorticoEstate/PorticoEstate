@@ -189,7 +189,8 @@
 			else
 			{
 				$id = $this->so->add($attrib);
-				if ( $id <= 0  )
+
+				if ( $id == 0  )
 				{
 					return array('error' => lang('Unable to add field'));
 				}
@@ -197,7 +198,19 @@
 				{
 					return array
 					(
-						'id'	=> 0,
+						'id'	=> '',
+						'error'	=> array
+						(
+							array('msg' => lang('Table is not defined')),
+							array('msg' => lang('Attribute has NOT been saved'))
+						)
+					);
+				}
+				else if ( $id == -2 )
+				{
+					return array
+					(
+						'id'	=> '',
 						'error'	=> array
 						(
 							array('msg' => lang('field already exists, please choose another name')),
