@@ -46,64 +46,29 @@
 				$this->use_session = true;
 			}
 
-			$start			= phpgw::get_var('start', 'int', 'REQUEST', 0);
-			$query			= phpgw::get_var('query');
-			$sort			= phpgw::get_var('sort');
-			$order			= phpgw::get_var('order');
-			$filter			= phpgw::get_var('filter', 'int');
-			$cat_id			= phpgw::get_var('cat_id', 'int');
-			$user_lid		= phpgw::get_var('user_lid');
-			$allrows		= phpgw::get_var('allrows', 'bool');
-			$b_account_class	= phpgw::get_var('b_account_class', 'int');
-			$district_id		= phpgw::get_var('district_id', 'int');
-			$b_account			= phpgw::get_var('b_account');
+			$start					= phpgw::get_var('start', 'int', 'REQUEST', 0);
+			$query					= phpgw::get_var('query');
+			$sort					= phpgw::get_var('sort');
+			$order					= phpgw::get_var('order');
+			$filter					= phpgw::get_var('filter', 'int');
+			$cat_id					= phpgw::get_var('cat_id', 'int');
+			$user_lid				= phpgw::get_var('user_lid');
+			$b_account_class		= phpgw::get_var('b_account_class', 'int');
+			$district_id			= phpgw::get_var('district_id', 'int');
+			$b_account				= phpgw::get_var('b_account');
+			$allrows				= phpgw::get_var('allrows', 'bool');
 
 			$this->start			= $start ? $start : 0;
-
-			if(array_key_exists('b_account',$_POST) || array_key_exists('b_account',$_GET) )
-			{
-				$this->b_account = $b_account;
-			}
-
-			if(isset($district_id))
-			{
-				$this->district_id = $district_id;
-			}
-
-			if(isset($b_account_class))
-			{
-				$this->b_account_class = $b_account_class;
-			}
-
-			if(isset($query))
-			{
-				$this->query = $query;
-			}
-
-			if(!empty($filter))
-			{
-				$this->filter = $filter;
-			}
-			if(isset($sort))
-			{
-				$this->sort = $sort;
-			}
-			if(isset($order))
-			{
-				$this->order = $order;
-			}
-			if(isset($cat_id))
-			{
-				$this->cat_id = $cat_id;
-			}
-			if(isset($user_lid))
-			{
-				$this->user_lid = $user_lid;
-			}
-			if(isset($allrows))
-			{
-				$this->allrows = $allrows;
-			}
+			$this->query			= isset($query) ? $query : $this->query;
+			$this->sort				= isset($sort) && $sort ? $sort : '';
+			$this->order			= isset($order) && $order ? $order : '';
+			$this->filter			= isset($filter) && $filter ? $filter : '';
+			$this->cat_id			= isset($cat_id) && $cat_id ? $cat_id : '';
+			$this->user_lid			= isset($user_lid) && $user_lid ? $user_lid : '';
+			$this->district_id		= isset($district_id) && $district_id ? $district_id : '';
+			$this->b_account_class	= isset($b_account_class) && $b_account_class ? $b_account_class : '';
+			$this->b_account		= isset($b_account) && $b_account ? $b_account : '';
+			$this->allrows			= isset($allrows) && $allrows ? $allrows : '';
 		}
 
 
