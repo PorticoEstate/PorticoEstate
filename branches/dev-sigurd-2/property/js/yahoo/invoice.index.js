@@ -177,7 +177,8 @@
 		   	 path_values.period = p_oItem.cfg.getProperty('text');
 		   	 //Maintein actual page in paginator
 		   	 path_values.currentPage = myPaginator.getCurrentPage();
-		   	 //CESAR path_values.start = myPaginator.getPageRecords()[0];
+		   	 //MEJORA
+		   	 path_values.start = myPaginator.getPageRecords()[0];
 
 			//call INDEX. Update PERIOD Method is inside of INDEX
 		   	 execute_ds();
@@ -224,7 +225,8 @@
 	  	this.addFooterDatatable = function()
 	  	{
 			//Delete message of Update Records or Periods for datatable
-			//CESAR delete_message();
+			//MEJORA
+			delete_message();
 
 			//range actual of rows in datatable
 			begin	= myPaginator.getPageRecords()[0];

@@ -525,12 +525,16 @@ this.create_array_values_list = function(stValues)
 
 this.update_datatable = function()
 	{
+
      //delete values of datatable
      var length = myDataTable.getRecordSet().getLength();
      if(length)
      {
      	myDataTable.deleteRows(0,length);
      }
+     //reset total records always to zero
+     // MEJORA
+     myPaginator.setTotalRecords(0,true);
 
      //obtain records of the last DS and add to datatable
      var record = values_ds.records;
@@ -548,8 +552,9 @@ this.update_datatable = function()
 	mytotalRows = values_ds.totalRecords;
 	//update combo box pagination
 	myPaginator.set('rowsPerPageOptions',[myrowsPerPage,mytotalRows]);
-	myPaginator.setPage(parseInt(values_ds.currentPage));
-	//CESAR myPaginator.setPage(parseInt(values_ds.currentPage),true); //true no fuerza un recarge solo cambia el paginator
+	//MEJORA
+	myPaginator.setPage(parseInt(values_ds.currentPage),true); //true no fuerza un recarge solo cambia el paginator
+	//myPaginator.setPage(parseInt(values_ds.currentPage));
 	}
 
 /****************************************************************************************

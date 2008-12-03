@@ -207,7 +207,7 @@
 			$loc1 			= phpgw::get_var('loc1');
 			$voucher_id 	= phpgw::get_var('voucher_id', 'int');
 			$b_account_class= phpgw::get_var('b_account_class', 'int');
-			//CESAR $start			= phpgw::get_var('start');
+			//MEJORA $start			= phpgw::get_var('start');
 
 			//-- ubica focus del menu derecho
 			if ( $paid )
@@ -261,7 +261,7 @@
 													'user_lid'			=> $this->user_lid,
 													'sub'				=> $this->sub,
 													'query'				=> $this->query,
-													//'start'				=> $this->start,
+													//MEJORA 'start'				=> $this->start,
 													'paid'				=> $paid,
 													'vendor_id'			=> $vendor_id,
 													'workorder_id'		=> $workorder_id,
@@ -281,7 +281,7 @@
  	                        						."user_lid:'{$this->user_lid}',"
 						 	                        ."sub:'{$this->sub}',"
  	                        						."query:'{$this->query}',"
-						 	                        //."start:'{$this->start}',"
+						 	                        //MEJORA  ."start:'{$this->start}',"
 						 	                        ."paid:'{$paid}',"
 						 	                        ."vendor_id:'{$vendor_id}',"
 						 	                        ."workorder_id:'{$workorder_id}',"
@@ -912,7 +912,7 @@
 			$datatable['property_js'] = $GLOBALS['phpgw_info']['server']['webserver_url']."/property/js/yahoo/property.js";
 
 			// Pagination and sort values
-			//NO SE USA $datatable['pagination']['records_start'] 	= (int)$this->bo->start;
+			$datatable['pagination']['records_start'] 	= (int)$this->bo->start;
 			//NO SE USA $datatable['pagination']['records_limit'] 	= $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
 
 			$datatable['pagination']['records_returned']= count($content);
@@ -941,10 +941,11 @@
     		//values for Pagination
 	    		$json = array
 	    		(
-	    			//CESAR 'recordsReturned' 	=> 15,
-	    			'recordsReturned' 	=> $datatable['pagination']['records_returned'],
+	    			//MEJORA
+	    			'recordsReturned' 	=> 15,
+	    			//'recordsReturned' 	=> $datatable['pagination']['records_returned'],
     				'totalRecords' 		=> (int)$datatable['pagination']['records_total'],
-	    			//NO SE USA 'startIndex' 		=> $datatable['pagination']['records_start'],
+	    			'startIndex' 		=> $datatable['pagination']['records_start'],
 					'sort'				=> $datatable['sorting']['order'],
 	    			'dir'				=> $datatable['sorting']['sort'],
 	    			'currentPage'		=> $datatable['sorting']['currentPage'],
