@@ -7,6 +7,9 @@
 	var myDataSource,myDataTable, myContextMenu, myPaginator ;
 	var ds, values_ds;
 	var myrowsPerPage,mytotalRows,ActualValueRowsPerPageDropdown;
+  var showTimer,hideTimer;
+
+
 
 
 
@@ -19,6 +22,7 @@ this.filter_data = function(query)
 	YAHOO.util.Dom.get("txt_query").value = query;
 	path_values.query = query;
 	execute_ds();
+  myPaginator.setPage(1,true);
 }
 
  /********************************************************************************
@@ -399,6 +403,7 @@ this.create_array_values_list = function(stValues)
 
 	   myPaginator = new YAHOO.widget.Paginator({
 						containers			: ['paging'],
+            			totalRecords : mytotalRows,
 						pageLinks			: 10,
 						rowsPerPage			: values_ds.recordsReturned, //MAXIMO el PHPGW me devuelve 15 valor configurado por preferencias
 						rowsPerPageOptions	: [myrowsPerPage,mytotalRows],
@@ -410,13 +415,73 @@ this.create_array_values_list = function(stValues)
 	  var myTableConfig = {
 			initialRequest			: '',//la primera vez ya viene ordenado, por la columna respectiva y solo 15 registros
 			generateRequest			: buildQueryString,
-			paginationEventHandler	: YAHOO.widget.DataTable.handleDataSourcePagination,
-			paginator				: myPaginator,
-			sortedBy				: {key:"anywhere", dir:YAHOO.widget.DataTable.CLASS_ASC}//  arguments necesary for paginator
+      dynamicData: true,
+      //sortedBy : {key:'project_id', dir:YAHOO.widget.DataTable.CLASS_DESC},
+      sortedBy : {key:'', dir:YAHOO.widget.DataTable.CLASS_DESC},
+      paginator              : myPaginator
 		};
 
+     myDataTable = new YAHOO.widget.DataTable(container[0], myColumnDefs, myDataSource, myTableConfig);
 
-	   myDataTable = new YAHOO.widget.DataTable(container[0], myColumnDefs, myDataSource, myTableConfig);
+
+     var tt = new YAHOO.widget.Tooltip("myTooltip");
+
+	 myDataTable.on('cellMouseoverEvent', function (oArgs)
+	 {
+		if (showTimer)
+		{
+			window.clearTimeout(showTimer);
+			showTimer = 0;
+		}
+
+		var target = oArgs.target;
+		var column = this.getColumn(target);
+
+		for(p=0;p<toolTips.length;p++)
+		{
+			if(column.key == toolTips[p].name)
+			{
+				var record = this.getRecord(target);
+				var description = record.getData(toolTips[p].name) || 'no further description';
+				var xy = [parseInt(oArgs.event.clientX,10) + 10 ,parseInt(oArgs.event.clientY,10) + 10 ];
+
+				showTimer = window.setTimeout(function()
+				{
+					tt.setBody(description);
+					tt.cfg.setProperty('xy',xy);
+					tt.show();
+					hideTimer = window.setTimeout(function()
+					{
+						tt.hide();
+					}
+					,5000);
+				},500);
+			}
+		}
+	 });
+
+	 myDataTable.on('cellMouseoutEvent', function (oArgs)
+	 {
+		if (showTimer)
+		{
+			window.clearTimeout(showTimer);
+			showTimer = 0;
+		}
+
+		if (hideTimer)
+		{
+			window.clearTimeout(hideTimer);
+			hideTimer = 0;
+		}
+		tt.hide();
+	});
+
+
+
+     myDataTable.handleDataReturnPayload = function(oRequest, oResponse, oPayload) {
+        oPayload.totalRecords = oResponse.meta.totalRecords;
+        return oPayload;
+    }
 
 		// Override function for custom server-side sorting
 		myDataTable.sortColumn = function(oColumn) {
@@ -440,9 +505,20 @@ this.create_array_values_list = function(stValues)
 
 					// Create callback for data request
 					var oCallback3 = {
-						success: this.onDataReturnInitializeTable,
-						//success: this.onDataReturnAppendRows,
-						failure: this.onDataReturnInitializeTable,
+            success: function(sRequest, oResponse, oPayload)
+            {
+            	var hh= myPaginator;
+            	alert(hh);
+            	var paginator = this.get('paginator');
+            	var total_records = paginator._configs.totalRecords.value;
+            	this.onDataReturnInitializeTable(sRequest, oResponse, oPayload);
+            	paginator.set('totalRecords', total_records);
+
+            },
+            failure: function(sRequest, oResponse, oPayload)
+            {
+            	this.onDataReturnInitializeTable(sRequest, oResponse, oPayload);
+        	},
 						scope: this,
 						argument: {
 							sorting: {
@@ -451,8 +527,10 @@ this.create_array_values_list = function(stValues)
 								}
 							}
 						}
-					 try{
-						myDataTable.getDataSource().sendRequest(addToRequest, oCallback3);
+           try
+           {
+            myDataTable.getDataSource().sendRequest(addToRequest, oCallback3, myDataTable, true);
+
 						}
 					 catch(e){
 						alert(e);
@@ -493,30 +571,26 @@ this.create_array_values_list = function(stValues)
 	   myContextMenu.subscribe("click", onContextMenuClick, myDataTable);
 	   myContextMenu.render(container[0]);
 
-		// Hide Column in datatable. se aplica el estilo css
-		for(var k=0; k < config_values.column_hidden.length; k++)
-		{
-			if (myDataTable.getColumn(config_values.column_hidden[k])!= null)
-				myDataTable.getColumn(config_values.column_hidden[k]).className = "hide_field";
-		}
-
-
-
 		for(var i=0; i < myColumnDefs.length;i++)
 				{
-					if( myColumnDefs[i].sortable )
+					/*if( myColumnDefs[i].sortable )
 					{
 						YAHOO.util.Dom.getElementsByClassName( 'yui-dt-col-'+ myColumnDefs[i].key , 'div' )[0].style.backgroundColor  = '#D4DBE7';
-					}
+					}*/
 
 					if( !myColumnDefs[i].visible )
 					{
-						YAHOO.util.Dom.getElementsByClassName( 'yui-dt-col-'+ myColumnDefs[i].key , 'div' )[0].style.display = 'none';
-						myDataTable.getColumn(i).className = "hide_field";
+          	var sKey = myColumnDefs[i].key;
+			myDataTable.hideColumn(sKey);
 					}
 					//title columns alwyas center
-					YAHOO.util.Dom.getElementsByClassName( 'yui-dt-col-'+ myColumnDefs[i].key , 'div' )[0].style.textAlign = 'center';
+					//YAHOO.util.Dom.getElementsByClassName( 'yui-dt-col-'+ myColumnDefs[i].key , 'div' )[0].style.textAlign = 'center';
 				}
+
+  return {
+        ds: myDataSource,
+        dt: myDataTable
+    };
 
 }
 /****************************************************************************************
