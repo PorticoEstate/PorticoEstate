@@ -84,51 +84,16 @@
 			$this->role	= $role;
 			$this->so->role	= $role;
 
-			if ($start)
-			{
-				$this->start=$start;
-			}
-			else
-			{
-				$this->start=0;
-			}
+			$this->start			= $start ? $start : 0;
+			$this->query			= isset($query) ? $query : $this->query;
+			$this->sort				= isset($sort) && $sort ? $sort : '';
+			$this->order			= isset($order) && $order ? $order : '';
+			$this->filter			= isset($filter) && $filter ? $filter : '';
+			$this->cat_id			= isset($cat_id) && $cat_id ? $cat_id : '';
+			$this->member_id		= isset($member_id) && $member_id ? $member_id : '';
+			$this->vendor_id		= isset($vendor_id) && $vendor_id ? $vendor_id : '';
+			$this->allrows			= isset($allrows) && $allrows ? $allrows : '';
 
-			if(isset($query))
-			{
-				$this->query = $query;
-			}
-			if(!empty($filter))
-			{
-				$this->filter = $filter;
-			}
-			if(isset($sort))
-			{
-				$this->sort = $sort;
-			}
-			if(isset($order))
-			{
-				$this->order = $order;
-			}
-			if(isset($cat_id) && !empty($cat_id))
-			{
-				$this->cat_id = $cat_id;
-			}
-			else
-			{
-				$this->cat_id = '';
-			}
-			if(isset($allrows))
-			{
-				$this->allrows = $allrows;
-			}
-			if(isset($member_id))
-			{
-				$this->member_id = $member_id;
-			}
-			if(isset($vendor_id))
-			{
-				$this->vendor_id = $vendor_id;
-			}
 		}
 
 		function save_sessiondata($data)
