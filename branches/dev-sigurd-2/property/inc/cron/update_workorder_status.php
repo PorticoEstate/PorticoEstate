@@ -136,6 +136,7 @@
 
 		function update_status()
 		{
+			set_time_limit(0);
 			$sql = "SELECT id,status from fm_workorder WHERE entry_date < {$this->date} AND status !='closed'";
 			$this->db->query($sql,__LINE__,__FILE__);
 
@@ -161,7 +162,7 @@
 				);
 			}
 
-			$GLOBALS['phpgw']->db->transaction_begin();
+	//		$GLOBALS['phpgw']->db->transaction_begin();
 			
 			$historylog	= CreateObject('property.historylog','workorder');
 			foreach ($workorders as $workorder)
@@ -177,17 +178,18 @@
 				$historylog->add('S',$project['id'], 'closed');	
 			}
 
-			if($GLOBALS['phpgw']->db->transaction_commit())
+	//		if($GLOBALS['phpgw']->db->transaction_commit())
 			{
-				$this->db->transaction_begin();
+		//		$this->db->transaction_begin();
 
-				$sql = "UPDATE fm_workorder SET status = 'closed' WHERE entry_date < {$this->date} AND status !='closed'";
+		/*		$sql = "UPDATE fm_workorder SET status = 'closed' WHERE entry_date < {$this->date} AND status !='closed'";
 				$this->db->query($sql,__LINE__,__FILE__);
 
 				$sql = "UPDATE fm_project SET status = 'closed' WHERE entry_date < {$this->date} AND status !='closed'";
 				$this->db->query($sql,__LINE__,__FILE__);
+		*/
 
-				$this->db->transaction_commit();			
+		//		$this->db->transaction_commit();			
 			}
 		}
 	}
