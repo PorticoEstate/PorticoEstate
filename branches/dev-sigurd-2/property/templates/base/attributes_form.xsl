@@ -96,7 +96,7 @@
 											<xsl:when test="datatype='AB'">
 												<xsl:variable name="contact_name"><xsl:value-of select="name"/><xsl:text>_name</xsl:text></xsl:variable>
 												<xsl:variable name="lookup_function"><xsl:text>lookup_</xsl:text><xsl:value-of select="name"/><xsl:text>();</xsl:text></xsl:variable>
-												<input type="text" name="{name}" value="{value}" onClick="{$lookup_function}" readonly="readonly" size="5" onMouseout="window.status='';return true;" >
+												<input type="hidden" name="{name}" value="{value}" onClick="{$lookup_function}" readonly="readonly" size="5" onMouseout="window.status='';return true;" >
 													<xsl:choose>
 														<xsl:when test="disabled!=''">
 															<xsl:attribute name="disabled">
