@@ -388,7 +388,7 @@
 			                                            'name' => 'search',
 			                                            'value'    => lang('search'),
 			                                            'type' => 'button',
-			                                        ),						                            
+			                                        ),
 			   										array( // TEXT INPUT
 			                                            'name'     => 'query',
 			                                            'id'     => 'txt_query',
@@ -408,7 +408,7 @@
 	                                                ),
 	                                                array(//for link "None",
 	                                                 	'type'=> 'label_date'
-	                                                ),	
+	                                                ),
 			                                        array(//for link "Date search",
 		                                                'type'=> 'link',
 		                                                'id'  => 'btn_data_search',
@@ -416,7 +416,7 @@
 		                                                       array(
 		                                                           'menuaction' => 'property.uiproject.date_search'))."','','width=350,height=250')",
 		                                                 'value' => lang('Date search')
-	                                                )   
+	                                                )
 		                           				),
 		                       		'hidden_value' => array(
 					                                        array( //div values  combo_box_0
@@ -985,6 +985,7 @@
 		  	phpgwapi_yui::load_widget('menu');
 		  	phpgwapi_yui::load_widget('connection');
 		  	phpgwapi_yui::load_widget('loader');
+		  	phpgwapi_yui::load_widget('paginator');
 
 
 //-- BEGIN----------------------------- JSON CODE ------------------------------
@@ -1096,9 +1097,8 @@
 			// Prepare CSS Style
 		  	$GLOBALS['phpgw']->css->validate_file('datatable');
 		  	$GLOBALS['phpgw']->css->validate_file('property');
-		  	$GLOBALS['phpgw']->css->add_external_file('property/templates/base/css/property.css');
 			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/datatable/assets/skins/sam/datatable.css');
-			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/datatable/assets/skins/sam/colored.css');
+			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/paginator/assets/skins/sam/paginator.css');
 
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
 
