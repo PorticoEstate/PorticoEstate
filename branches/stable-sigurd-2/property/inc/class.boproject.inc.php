@@ -76,43 +76,14 @@
 			$status_id	= phpgw::get_var('status_id');
 			$wo_hour_cat_id	= phpgw::get_var('wo_hour_cat_id', 'int');
 
-			if ($start)
-			{
-				$this->start=$start;
-			}
-			else
-			{
-				$this->start=0;
-			}
-
-			if(isset($query))
-			{
-				$this->query = $query;
-			}
-			if(isset($filter))
-			{
-				$this->filter = $filter;
-			}
-			if(isset($sort))
-			{
-				$this->sort = $sort;
-			}
-			if(isset($order))
-			{
-				$this->order = $order;
-			}
-			if(isset($cat_id))
-			{
-				$this->cat_id = $cat_id;
-			}
-			if(isset($status_id))
-			{
-				$this->status_id = $status_id;
-			}
-			if(isset($wo_hour_cat_id))
-			{
-				$this->wo_hour_cat_id = $wo_hour_cat_id;
-			}
+			$this->start			= $start ? $start : 0;
+			$this->query			= isset($query) ? $query : $this->query;
+			$this->sort				= isset($sort) && $sort ? $sort : '';
+			$this->order			= isset($order) && $order ? $order : '';
+			$this->filter			= isset($filter) && $filter ? $filter : '';
+			$this->cat_id			= isset($cat_id) && $cat_id ? $cat_id : '';
+			$this->status_id		= isset($status_id) && $status_id ? $status_id : '';
+			$this->wo_hour_cat_id	= isset($vendor_id) && $wo_hour_cat_id ? $wo_hour_cat_id : '';
 		}
 
 		function save_sessiondata($data)
@@ -369,7 +340,7 @@
 			$historylog	= CreateObject('property.historylog','project');
 			$history_array = $historylog->return_array(array('O'),array(),'','',$id);
 			$i=0;
-			while (is_array($history_array) && list(,$value) = each($history_array))
+			foreach ($history_array as $value) 
 			{
 
 				$record_history[$i]['value_date']	= $GLOBALS['phpgw']->common->show_date($value['datetime']);

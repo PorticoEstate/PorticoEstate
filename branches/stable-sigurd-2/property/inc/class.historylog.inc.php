@@ -191,9 +191,11 @@
 				. $this->appname . "' and history_record_id='$record_id' $filter $only_show_filter "
 				. "$orderby",__LINE__,__FILE__);
 
+			$return_values = array();
 			while ($this->db->next_record())
 			{
-				$return_values[] = array(
+				$return_values[] = array
+				(
 					'id'         => $this->db->f('history_id'),
 					'record_id'  => $this->db->f('history_record_id'),
 					'owner'      => $GLOBALS['phpgw']->accounts->id2name($this->db->f('history_owner')),
@@ -203,10 +205,6 @@
 					'datetime'   => strtotime($this->db->f('history_timestamp'))
 				);
 			}
-
-			if(isset ($return_values))
-			{
-				return $return_values;
-			}
+			return $return_values;
 		}
 	}

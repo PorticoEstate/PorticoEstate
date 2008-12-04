@@ -752,12 +752,13 @@
 			if (($old_status != $project['status']) || $project['confirm_status'])
 			{
 				$this->db->query("SELECT id from fm_workorder WHERE project_id=" .  (int)$project['project_id'] ,__LINE__,__FILE__);
+				$workorder = array();
 				while ($this->db->next_record())
 				{
 					$workorder[] = $this->db->f('id');
 				}
 
-				if (isset($workorder) AND is_array($workorder))
+				if ($workorder)
 				{
 					$historylog_workorder	= CreateObject('property.historylog','workorder');
 				}
