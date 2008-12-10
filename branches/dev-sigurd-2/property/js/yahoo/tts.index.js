@@ -23,6 +23,17 @@
 		{order:0, name:'query',	id:'txt_query'}
 		]
 
+	var toolTips =
+	[
+		{name:'status', title:'', description:''},
+		{name:'btn_export', title:'download', description:'Download table to your browser'}
+	]
+
+	var deactivateT =
+	[
+		{name:'btn_export'}
+	]
+
 
 	// define the hidden column in datatable
 	var config_values = {
@@ -51,8 +62,8 @@
 
 //----------------------------------------------------------
 	YAHOO.util.Event.addListener(window, "load", function()
-	//YAHOO.util.Event.onDOMReady(function()
 	{
+		YAHOO.util.Dom.getElementsByClassName('toolbar','div')[0].style.display = 'none';
 		var loader = new YAHOO.util.YUILoader();
 		loader.addModule({
 			name: "anyone", //module name; must be unique
