@@ -70,6 +70,9 @@
 			<td class="th_text" width="5%" align="center">
 				<xsl:value-of select="lang_categories"/>
 			</td>
+'			<td class="th_text" width="5%" align="center">
+				<xsl:value-of select="lang_attribute_group"/>
+			</td>
 			<td class="th_text" width="5%" align="center">
 				<xsl:value-of select="lang_attribute"/>
 			</td>
@@ -113,6 +116,10 @@
 				<td align="center">
 					<xsl:variable name="link_categories"><xsl:value-of select="link_categories"/></xsl:variable>
 					<a href="{$link_categories}" onMouseover="window.status='{lang_category_text}';return true;" onMouseout="window.status='';return true;"><xsl:value-of select="text_categories"/></a>
+				</td>
+				<td align="center">
+					<xsl:variable name="link_attribute_group"><xsl:value-of select="link_attribute_group"/></xsl:variable>
+					<a href="{$link_attribute_group}" onMouseover="window.status='';return true;" onMouseout="window.status='';return true;"><xsl:value-of select="text_attribute_group"/></a>
 				</td>
 				<td align="center">
 					<xsl:variable name="link_attribute"><xsl:value-of select="link_attribute"/></xsl:variable>

@@ -44,14 +44,16 @@
 
 		var $public_functions = array
 		(
-			'index'  		=> true,
-			'config'  		=> true,
-			'edit_config'	=> true,
-			'view'   		=> true,
-			'edit'   		=> true,
-			'delete' 		=> true,
-			'list_attribute'=> true,
-			'edit_attrib' 	=> true,
+			'index'  				=> true,
+			'config'  				=> true,
+			'edit_config'			=> true,
+			'view'   				=> true,
+			'edit'   				=> true,
+			'delete' 				=> true,
+			'list_attribute'		=> true,
+			'edit_attrib' 			=> true,
+			'list_attribute_group'	=> true,
+			'edit_attrib_group'		=> true,
 		);
 
 		function property_uiadmin_location()
@@ -118,6 +120,7 @@
 					'first'							=> $standard['descr'],
 					'link_categories'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uicategory.index', 'type'=>'location', 'type_id'=> $standard['id'])),
 					'link_attribute'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiadmin_location.list_attribute', 'type_id'=> $standard['id'])),
+					'link_attribute_group'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiadmin_location.list_attribute_group', 'type_id'=> $standard['id'])),
 					'link_edit'						=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiadmin_location.edit' ,'id'=> $standard['id'])),
 					'link_delete'					=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiadmin_location.delete' ,'id'=> $standard['id'])),
 					'lang_view_standardtext'		=> lang('view the standard'),
@@ -127,6 +130,7 @@
 					'lang_delete_standardtext'		=> lang('delete the standard'),
 					'text_categories'				=> lang('Categories'),
 					'text_attribute'				=> lang('Attributes'),
+					'text_attribute_group'			=> lang('attribute groups'),
 					'text_edit'						=> lang('edit'),
 					'text_delete'					=> lang('delete')
 				);
@@ -346,6 +350,268 @@
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('delete' => $data));
 		//	$GLOBALS['phpgw']->xslttpl->pp();
+		}
+
+		function list_attribute_group()
+		{
+			if(!$this->acl_read)
+			{
+				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=> 1, 'acl_location'=> $this->acl_location));
+			}
+
+			$type_id	= phpgw::get_var('type_id', 'int');
+			$GLOBALS['phpgw_info']['flags']['menu_selection'] .= "::location::attribute_loc_{$type_id}";
+
+			$location	= ".location.{$type_id}";
+			$id	= phpgw::get_var('id', 'int');
+			$resort	= phpgw::get_var('resort');
+
+			$GLOBALS['phpgw']->xslttpl->add_file(array(
+								'admin_entity',
+								'nextmatchs',
+								'search_field'));
+
+			if($resort)
+			{
+				$this->bo->resort_attrib_group($location, $id, $resort);
+			}
+
+			$attrib_list = $this->bo->read_attrib_group($location);
+
+			foreach($attrib_list as $entry)
+			{
+				$content[] = array
+				(
+					'name'					=> $entry['name'],
+					'descr'					=> $entry['descr'],
+					'sorting'				=> $entry['group_sort'],
+					'link_up'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiadmin_location.list_attribute_group', 'resort'=> 'up', 'type_id'=> $type_id, 'id'=> $entry['id'], 'allrows'=> $this->allrows)),
+					'link_down'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiadmin_location.list_attribute_group', 'resort'=> 'down', 'type_id'=> $type_id, 'id'=> $entry['id'], 'allrows'=> $this->allrows)),
+					'link_edit'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiadmin_location.edit_attrib_group', 'type_id'=> $type_id, 'id'=> $entry['id'])),
+					'link_delete'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiadmin_location.delete', 'type_id'=> $type_id, 'group_id'=> $entry['id'])),
+					'lang_up_text'			=> lang('shift up'),
+					'lang_down_text'		=> lang('shift down'),
+					'lang_edit_text'		=> lang('edit the attrib'),
+					'lang_delete_text'		=> lang('delete the attrib'),
+					'text_attribute'		=> lang('Attributes'),
+					'text_up'				=> lang('up'),
+					'text_down'				=> lang('down'),
+					'text_edit'				=> lang('edit'),
+					'text_delete'			=> lang('delete')
+				);
+			}
+
+//_debug_array($content);
+
+			$table_header[] = array
+			(
+				'lang_descr'		=> lang('Descr'),
+				'lang_sorting'		=> lang('sorting'),
+				'lang_edit'		=> lang('edit'),
+				'lang_delete'		=> lang('delete'),
+				'sort_name'		=> $this->nextmatchs->show_sort_order(array
+										(
+											'sort'	=> $this->sort,
+											'var'	=> 'column_name',
+											'order'	=> $this->order,
+											'extra'	=> array('menuaction'	=> 'property.uiadmin_location.list_attribute',
+																'type_id'	=> $type_id,
+																'allrows'=>$this->allrows)
+										)),
+				'sort_sorting'		=> $this->nextmatchs->show_sort_order(array
+										(
+											'sort'	=> $this->sort,
+											'var'	=> 'attrib_sort',
+											'order'	=> $this->order,
+											'extra'	=> array('menuaction'	=> 'property.uiadmin_location.list_attribute',
+																'type_id'	=> $type_id,
+																'allrows'=>$this->allrows)
+										)),
+				'lang_name'		=> lang('Name'),
+			);
+
+			$table_add[] = array
+			(
+				'lang_add'		=> lang('add'),
+				'lang_add_attribtext'	=> lang('add an attrib'),
+				'add_action'		=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiadmin_location.edit_attrib_group', 'type_id' => $type_id)),
+				'lang_done'		=> lang('done'),
+				'lang_done_attribtext'	=> lang('back to admin'),
+				'done_action'		=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiadmin_location.index')),
+			);
+
+			if(!$this->allrows)
+			{
+				$record_limit	= $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
+			}
+			else
+			{
+				$record_limit	= $this->bo->total_records;
+			}
+
+			$link_data = array
+			(
+				'menuaction'	=> 'property.uiadmin_location.list_attribute',
+				'sort'		=> $this->sort,
+				'order'		=> $this->order,
+				'query'		=> $this->query,
+				'type_id'	=> $type_id,
+			);
+
+			$type = $this->bo->read_single($type_id);
+
+			$data = array
+			(
+				'lang_entity'						=> lang('location'),
+				'entity_name'						=> $type['name'],
+	//			'lang_category'						=> lang('category'),
+	//			'category_name'						=> $category['name'],
+				'allow_allrows'						=> true,
+				'allrows'							=> $this->allrows,
+				'start_record'						=> $this->start,
+				'record_limit'						=> $record_limit,
+				'start_record'						=> $this->start,
+				'num_records'						=> count($attrib_list),
+				'all_records'						=> $this->bo->total_records,
+				'link_url'							=> $GLOBALS['phpgw']->link('/index.php',$link_data),
+				'img_path'							=> $GLOBALS['phpgw']->common->get_image_path('phpgwapi','default'),
+				'lang_searchfield_attribtext'		=> lang('Enter the search string. To show all entries, empty this field and press the SUBMIT button again'),
+				'lang_searchbutton_attribtext'		=> lang('Submit the search string'),
+				'query'								=> $this->query,
+				'lang_search'						=> lang('search'),
+				'table_header_attrib_group'			=> $table_header,
+				'values_attrib_group'				=> $content,
+				'table_add'							=> $table_add
+			);
+
+			$appname	= lang('attribute');
+			$function_msg	= lang('list location attribute group');
+
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
+			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('list_attribute_group' => $data));
+			$this->save_sessiondata();
+		}
+
+		function edit_attrib_group()
+		{
+			if(!$this->acl_add)
+			{
+				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=> 2, 'acl_location'=> $this->acl_location));
+			}
+
+			$type_id	= phpgw::get_var('type_id', 'int');
+			$GLOBALS['phpgw_info']['flags']['menu_selection'] .= "::location::attribute_loc_{$type_id}";
+			$location	= ".location.{$type_id}";
+			$id			= phpgw::get_var('id', 'int');
+			$values		= phpgw::get_var('values');
+			if(!$values)
+			{
+				$values=array();
+			}
+
+			$GLOBALS['phpgw']->xslttpl->add_file(array('admin_entity'));
+
+			if (isset($values['save']) && $values['save'])
+			{
+				if($id)
+				{
+					$values['id']=$id;
+					$action='edit';
+				}
+
+				$values['location'] = $location;
+
+				if (!$values['group_name'])
+				{
+					$receipt['error'][] = array('msg'=>lang('group name not entered!'));
+				}
+
+				if (!$values['descr'])
+				{
+					$receipt['error'][] = array('msg'=>lang('description not entered!'));
+				}
+
+				if (!$location)
+				{
+					$receipt['error'][] = array('msg'=>lang('location not chosen!'));
+				}
+
+
+				if (!isset($receipt['error']))
+				{
+					$receipt = $this->bo->save_attrib_group($values,$action);
+
+					if(!$id)
+					{
+						$id=$receipt['id'];
+					}
+				}
+				else
+				{
+					$receipt['error'][] = array('msg' => lang('Attribute group has NOT been saved'));
+				}
+			}
+
+			if ($id)
+			{
+				$values = $this->bo->read_single_attrib_group($location,$id);
+				$type_name=$values['type_name'];
+				$function_msg = lang('edit attribute group'). ' ' . lang($type_name);
+				$action='edit';
+			}
+			else
+			{
+				$function_msg = lang('add attribute group');
+				$action='add';
+			}
+
+			$link_data = array
+			(
+				'menuaction'	=> 'property.uiadmin_location.edit_attrib_group',
+				'type_id'	=> $type_id,
+				'id'		=> $id
+			);
+
+
+			$type = $this->bo->read_single( $type_id,false);
+
+			$msgbox_data = (isset($receipt)?$this->bocommon->msgbox_data($receipt):'');
+
+			$data = array
+			(
+				'lang_entity'						=> lang('location'),
+				'entity_name'						=> $type['name'],
+
+				'msgbox_data'						=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
+				'form_action'						=> $GLOBALS['phpgw']->link('/index.php',$link_data),
+				'done_action'						=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiadmin_location.list_attribute_group', 'type_id'=> $type_id)),
+				'lang_id'							=> lang('Attribute group ID'),
+				'lang_entity_type'					=> lang('Entity type'),
+				'lang_no_entity_type'				=> lang('No entity type'),
+				'lang_save'							=> lang('save'),
+				'lang_done'							=> lang('done'),
+				'value_id'							=> $id,
+
+				'lang_group_name'					=> lang('group name'),
+				'value_group_name'					=> $values['group_name'],
+				'lang_group_name_statustext'		=> lang('enter the name for the group'),
+
+				'lang_descr'						=> lang('descr'),
+				'value_descr'						=> $values['descr'],
+				'lang_descr_statustext'				=> lang('enter the input text for records'),
+
+				'lang_remark'						=> lang('remark'),
+				'lang_remark_statustext'			=> lang('Enter a remark for the group'),
+				'value_remark'						=> $values['remark'],
+
+				'lang_done_attribtext'				=> lang('Back to the list'),
+				'lang_save_attribtext'				=> lang('Save the attribute')
+			);
+
+			$appname = lang('location');
+
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
+			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('edit_attrib_group' => $data));
 		}
 
 
