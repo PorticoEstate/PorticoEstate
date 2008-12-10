@@ -7,7 +7,7 @@
 	var myDataSource,myDataTable, myContextMenu, myPaginator ;
 	var ds, values_ds;
 	var myrowsPerPage,mytotalRows,ActualValueRowsPerPageDropdown;
-  var showTimer,hideTimer;
+  	var showTimer,hideTimer,tt;
 
 
 
@@ -17,26 +17,26 @@
  * this is used, in respective PHP file.
  * ...onclick='javascript:filter_data(this.id...)
  */
-this.filter_data = function(query)
-{
-	YAHOO.util.Dom.get("txt_query").value = query;
-	path_values.query = query;
-	execute_ds();
-  myPaginator.setPage(1,true);
-}
+ 	this.filter_data = function(query)
+	{
+		YAHOO.util.Dom.get("txt_query").value = query;
+		path_values.query = query;
+		execute_ds();
+		myPaginator.setPage(1,true);
+	}
 
  /********************************************************************************
  *
  */
-   this.onNewClick = function()
-   {
+ 	this.onNewClick = function()
+ 	{
 		//NEW is always the last options in arrays RIGHTS
 		pos_opt = values_ds.rights.length-1;
 		sUrl = values_ds.rights[pos_opt].action;
 		//Convert all HTML entities to their applicable characters
         sUrl=html_entity_decode(sUrl);
 		window.open(sUrl,'_self');
-   }
+	}
  /********************************************************************************
  *
  */
@@ -163,6 +163,52 @@ this.create_array_values_list = function(stValues)
 		{
 		var botton_tmp = new YAHOO.widget.Button(normalButtons[p].name);
 		botton_tmp.on("click", eval(normalButtons[p].funct));
+
+			if(myPaginator.getTotalRecords() > 1000 && botton_tmp._button.id == 'btn_export-button')
+			 {
+				botton_tmp.destroy();
+			 }
+
+			if(typeof toolTips == 'object')
+			{
+				for(var d=0;d<toolTips.length;d++)
+				{
+					if(normalButtons[p].name == toolTips[d].name)
+					{
+						var description = toolTips[d].description;
+						var title = toolTips[d].title;
+
+						botton_tmp.on("mouseover", function (oArgs)
+				 		{
+				 			if(typeof toolTips == 'object' && typeof tt == 'undefined')
+							{
+								tt = new YAHOO.widget.Tooltip("myTooltip");
+						 	}
+
+							if (showTimer)
+							{
+								window.clearTimeout(showTimer);
+								showTimer = 0;
+							}
+
+							var target = oArgs.target;
+							var xy = [parseInt(oArgs.clientX,10) + 10 ,parseInt(oArgs.clientY,10) + 10 ];
+
+							showTimer = window.setTimeout(function()
+							{
+								tt.setBody("<table class='tooltip-table'><tr class='tooltip'><td>"+title+"</td></tr><tr><td>"+description+"</td></tr></table>");
+								tt.cfg.setProperty('xy',xy);
+								tt.show();
+								hideTimer = window.setTimeout(function()
+								{
+									tt.hide();
+								}
+								,2000);
+							},500);
+				 		});
+					}
+				}
+			}
 		eval("oNormalButton_"+p+" = botton_tmp");
 		}
 	}
@@ -213,8 +259,8 @@ this.create_array_values_list = function(stValues)
     }
 
     oSelectedTR = YAHOO.util.Dom.getAncestorByTagName(oTarget, "tr");
-    oSelectedTR.style.backgroundColor  = 'blue' ;
-             oSelectedTR.style.color = "white";
+    oSelectedTR.style.backgroundColor  = '#AAC1D8' ;
+             oSelectedTR.style.color = "black";
              YAHOO.util.Dom.addClass(oSelectedTR, prefixSelected);
          }
      }
@@ -307,11 +353,16 @@ this.create_array_values_list = function(stValues)
 
 		//particular variables for Datasource
 		var url="&start=" + state.pagination.recordOffset;
-
+		//for mantein paginator and fill out combo box show all rows
+		url+="&recordsReturned=" + values_ds.recordsReturned;
+		// for showw all rows, click in combo box
 		if(state.pagination.rowsPerPage==values_ds.totalRecords)
 		{
 			url=url+"&allrows=1";
 		}
+		//delete previous records in datatable
+		//myDataTable.getRecordSet().deleteRecords(myPaginator.getPageRecords()[0],myPaginator.getPageRecords()[1]);
+		myDataTable.getRecordSet().reset();
 		//sea actualiza el liveDAta del Datasource con los actuales valores de los combos y txtboxs
 		myDataTable.getDataSource().liveData=ds;
 
@@ -368,6 +419,7 @@ this.create_array_values_list = function(stValues)
 	this.init_datatable = function()
 	{
 
+		YAHOO.util.Dom.getElementsByClassName('toolbar','div')[0].style.display = 'block';
 		myDataSource = new YAHOO.util.DataSource(ds);
 		myDataSource.responseType = YAHOO.util.DataSource.TYPE_JSON;
 
@@ -400,7 +452,20 @@ this.create_array_values_list = function(stValues)
 		}
 		flag++;
 
+		if(mytotalRows >1000)
+		{
+		   myPaginator = new YAHOO.widget.Paginator({
+							containers			: ['paging'],
+	            			totalRecords : mytotalRows,
+							pageLinks			: 10,
+							rowsPerPage			: values_ds.recordsReturned, //MAXIMO el PHPGW me devuelve 15 valor configurado por preferencias
+							template			: "{CurrentPageReport}<br>{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}",
+							pageReportTemplate	: "Showing items {startIndex} - {endIndex} of {totalRecords}"
+						});
 
+		}
+		else
+		{
 	   myPaginator = new YAHOO.widget.Paginator({
 						containers			: ['paging'],
             			totalRecords : mytotalRows,
@@ -410,15 +475,16 @@ this.create_array_values_list = function(stValues)
 						template			: "{RowsPerPageDropdown}items per Page, {CurrentPageReport}<br>{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}",
 						pageReportTemplate	: "Showing items {startIndex} - {endIndex} of {totalRecords}"
 					});
+		}
 
 
 	  var myTableConfig = {
 			initialRequest			: '',//la primera vez ya viene ordenado, por la columna respectiva y solo 15 registros
 			generateRequest			: buildQueryString,
-      dynamicData: true,
-      //sortedBy : {key:'project_id', dir:YAHOO.widget.DataTable.CLASS_DESC},
-      sortedBy : {key:'', dir:YAHOO.widget.DataTable.CLASS_DESC},
-      paginator              : myPaginator
+			dynamicData				: true,
+			//sortedBy				: {key:'voucher_id_lnk', dir:YAHOO.widget.DataTable.CLASS_DESC},
+			sortedBy				: {key:values_ds.sort, dir:YAHOO.widget.DataTable.CLASS_DESC},
+			paginator				: myPaginator
 		};
 
      myDataTable = new YAHOO.widget.DataTable(container[0], myColumnDefs, myDataSource, myTableConfig);
@@ -428,6 +494,12 @@ this.create_array_values_list = function(stValues)
 
 	 myDataTable.on('cellMouseoverEvent', function (oArgs)
 	 {
+	 	if(typeof toolTips == 'object' && typeof tt == 'undefined')
+		{
+			tt = new YAHOO.widget.Tooltip("myTooltip");
+	 	}
+
+	 	{
 		if (showTimer)
 		{
 			window.clearTimeout(showTimer);
@@ -437,17 +509,18 @@ this.create_array_values_list = function(stValues)
 		var target = oArgs.target;
 		var column = this.getColumn(target);
 
-		for(p=0;p<toolTips.length;p++)
+			for(var p=0;p<toolTips.length;p++)
 		{
 			if(column.key == toolTips[p].name)
 			{
 				var record = this.getRecord(target);
-				var description = record.getData(toolTips[p].name) || 'no further description';
+					var title = toolTips[p].title || record.getData(toolTips[p].name);
+					var description = toolTips[p].description || record.getData(toolTips[p].name);
 				var xy = [parseInt(oArgs.event.clientX,10) + 10 ,parseInt(oArgs.event.clientY,10) + 10 ];
 
 				showTimer = window.setTimeout(function()
 				{
-					tt.setBody(description);
+						tt.setBody("<table class='tooltip-table'><tr class='tooltip'><td class='nolink'>"+title+"</td></tr><tr><td>"+description+"</td></tr></table>");
 					tt.cfg.setProperty('xy',xy);
 					tt.show();
 					hideTimer = window.setTimeout(function()
@@ -455,7 +528,8 @@ this.create_array_values_list = function(stValues)
 						tt.hide();
 					}
 					,5000);
-				},500);
+					},100);
+				}
 			}
 		}
 	 });
@@ -508,7 +582,6 @@ this.create_array_values_list = function(stValues)
             success: function(sRequest, oResponse, oPayload)
             {
             	var hh= myPaginator;
-            	alert(hh);
             	var paginator = this.get('paginator');
             	var total_records = paginator._configs.totalRecords.value;
             	this.onDataReturnInitializeTable(sRequest, oResponse, oPayload);
@@ -552,8 +625,11 @@ this.create_array_values_list = function(stValues)
       if(config_values.footer_datatable)
       {
 	   	//myDataTable.subscribe("postRenderEvent", function (){alert("postRenderEvent")});
-	   	myDataTable.subscribe("initEvent", addFooterDatatable);
-	   	myDataTable.subscribe("renderEvent", addFooterDatatable);
+	   	/*myDataTable.subscribe("initEvent", addFooterDatatable);
+	   	myDataTable.subscribe("renderEvent", addFooterDatatable);*/
+
+	   //	myDataTable.subscribe("initEvent", alert("initEvent"));
+	   myDataTable.subscribe("renderEvent", addFooterANDMessage);
       }
 
 
@@ -573,10 +649,10 @@ this.create_array_values_list = function(stValues)
 
 		for(var i=0; i < myColumnDefs.length;i++)
 				{
-					/*if( myColumnDefs[i].sortable )
+					if( myColumnDefs[i].sortable )
 					{
-						YAHOO.util.Dom.getElementsByClassName( 'yui-dt-col-'+ myColumnDefs[i].key , 'div' )[0].style.backgroundColor  = '#D4DBE7';
-					}*/
+						YAHOO.util.Dom.getElementsByClassName( 'yui-dt-resizerliner' , 'div' )[i].style.backgroundColor  = '#D4DBE7';
+					}
 
 					if( !myColumnDefs[i].visible )
 					{
@@ -601,11 +677,13 @@ this.update_datatable = function()
 	{
 
      //delete values of datatable
-     var length = myDataTable.getRecordSet().getLength();
-     if(length)
+    /*var length = myDataTable.getRecordSet().getLength();
+    if(length)
      {
      	myDataTable.deleteRows(0,length);
-     }
+     }*/
+     myDataTable.getRecordSet().reset();
+
      //reset total records always to zero
      // MEJORA
      myPaginator.setTotalRecords(0,true);
@@ -617,6 +695,10 @@ this.update_datatable = function()
      if(record.length)
      {
      	myDataTable.addRows(record);
+     }
+     else
+     {
+     	myDataTable.render();
      }
 
      //update paginator with news values

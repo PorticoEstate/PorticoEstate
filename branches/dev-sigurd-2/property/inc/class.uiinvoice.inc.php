@@ -207,7 +207,6 @@
 			$loc1 			= phpgw::get_var('loc1');
 			$voucher_id 	= phpgw::get_var('voucher_id', 'int');
 			$b_account_class= phpgw::get_var('b_account_class', 'int');
-			//MEJORA $start			= phpgw::get_var('start');
 
 			//-- ubica focus del menu derecho
 			if ( $paid )
@@ -254,14 +253,13 @@
 		    	$datatable['config']['base_url']	= $GLOBALS['phpgw']->link('/index.php', array
 							    				(
 													'menuaction'		=> 'property.uiinvoice.index',
-													'order'				=> $this->order,
-													'sort'				=> $this->sort,
+													//'order'				=> $this->order,
+													//'sort'				=> $this->sort,
 													'cat_id'			=> $this->cat_id,
 													//'user_lid'			=> 'all',
 													'user_lid'			=> $this->user_lid,
 													'sub'				=> $this->sub,
 													'query'				=> $this->query,
-													//MEJORA 'start'				=> $this->start,
 													'paid'				=> $paid,
 													'vendor_id'			=> $vendor_id,
 													'workorder_id'		=> $workorder_id,
@@ -274,14 +272,13 @@
 
 
 				$datatable['config']['base_java_url'] = "menuaction:'property.uiinvoice.index',"
-	    											."order:'{$this->order}',"
-	    											."sort:'{$this->sort}',"
+	    											//."order:'{$this->order}',"
+	    											//."sort:'{$this->sort}',"
  	                        						."cat_id: '{$this->cat_id}',"
  	                        						//."user_lid:'all',"
  	                        						."user_lid:'{$this->user_lid}',"
 						 	                        ."sub:'{$this->sub}',"
  	                        						."query:'{$this->query}',"
-						 	                        //MEJORA  ."start:'{$this->start}',"
 						 	                        ."paid:'{$paid}',"
 						 	                        ."vendor_id:'{$vendor_id}',"
 						 	                        ."workorder_id:'{$workorder_id}',"
@@ -601,7 +598,7 @@
 				'formatter'		=>	array('','','','','','','','','','',myFormatDate,'','','','',$paid?'':myPeriodDropDown,'','','','','',''),
 
 				'descr'			=>	array(dummy,dummy,dummy,dummy,lang('voucher'),lang('Voucher Date'),dummy,dummy,dummy,lang('Days'),lang('Sum'),lang('Vendor'),dummy,lang('Count'),lang('Type'),lang('Period'),lang('KreditNota'),lang('None'),lang('Janitor'),lang('Supervisor'),lang('Budget Responsible'),lang('Transfer')),
-				'className'		=> 	array('','','','','','centerClasss','','','','','rightClasss','rightClasss','','rightClasss','','comboClasss','centerClasss','centerClasss','','','','centerClasss')
+				'className'		=> 	array('','','','','','centerClasss','','','','','rightClasss','rightClasss','','rightClasss','','comboClasss','centerClasss','centerClasss','','','centerClasss','centerClasss')
 				);
 
 			//url to detail of voucher
@@ -913,18 +910,38 @@
 
 			// Pagination and sort values
 			$datatable['pagination']['records_start'] 	= (int)$this->bo->start;
-			//NO SE USA $datatable['pagination']['records_limit'] 	= $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
+			//NO SE USA
 
-			$datatable['pagination']['records_returned']= count($content);
+			$datatable['pagination']['records_limit'] 	= $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
+
 			$datatable['pagination']['records_total'] 	= $this->bo->total_records;
 
-			if (phpgw::get_var('currentPage')== "")
-				$datatable['sorting']['currentPage'] = 1;
-			else
-				$datatable['sorting']['currentPage'] = phpgw::get_var('currentPage');
+			//for maintein page number in datatable
+			//if (phpgw::get_var('currentPage')== "")
+			if ( (phpgw::get_var("start")== "") && (phpgw::get_var("order",'string')== ""))
+			{
+				//avoid ,in the last page, reformate paginator when records are lower than records_returned
+				if(count($content) <= $datatable['pagination']['records_limit'])
+				{
+					$datatable['pagination']['records_returned']= count($content);
+				}
+				else
+				{
+					$datatable['pagination']['records_returned']= $datatable['pagination']['records_limit'];
+				}
 
-			$datatable['sorting']['order'] 	= phpgw::get_var('order', 'string'); // Column
-			$datatable['sorting']['sort'] 	= phpgw::get_var('sort', 'string'); // ASC / DESC
+				$datatable['sorting']['currentPage']	= 1;
+				$datatable['sorting']['order'] 			= 'voucher_id_lnk'; // name key Column in myColumnDef
+				//$datatable['sorting']['sort']			= 'DESC'; // ASC / DESC
+			}
+			else
+			{
+				$datatable['sorting']['currentPage']	= phpgw::get_var('currentPage');
+				$datatable['sorting']['order']			= phpgw::get_var('order', 'string'); // name of column of Database
+				$datatable['sorting']['sort']			= phpgw::get_var('sort', 'string'); // ASC / DESC
+				$datatable['pagination']['records_returned']= phpgw::get_var('recordsReturned', 'int');
+			}
+
 
 			$appname = lang('location');
 
@@ -934,6 +951,7 @@
 		  	phpgwapi_yui::load_widget('connection');
 		  	//// cramirez: necesary for include a partucular js
 		  	phpgwapi_yui::load_widget('loader');
+		  	phpgwapi_yui::load_widget('paginator');
 
 //-- BEGIN----------------------------- JSON CODE ------------------------------
 			if( phpgw::get_var('phpgw_return_as') == 'json' )
@@ -941,9 +959,7 @@
     		//values for Pagination
 	    		$json = array
 	    		(
-	    			//MEJORA
-	    			'recordsReturned' 	=> 15,
-	    			//'recordsReturned' 	=> $datatable['pagination']['records_returned'],
+	    			'recordsReturned' 	=> $datatable['pagination']['records_returned'],
     				'totalRecords' 		=> (int)$datatable['pagination']['records_total'],
 	    			'startIndex' 		=> $datatable['pagination']['records_start'],
 					'sort'				=> $datatable['sorting']['order'],
@@ -1056,10 +1072,13 @@
 	      	{
 	        	$GLOBALS['phpgw']->css = createObject('phpgwapi.css');
 	      	}
+
 			// Prepare CSS Style
 		  	$GLOBALS['phpgw']->css->validate_file('datatable');
+		  	$GLOBALS['phpgw']->css->validate_file('property');
 		  	$GLOBALS['phpgw']->css->add_external_file('property/templates/base/css/property.css');
 			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/datatable/assets/skins/sam/datatable.css');
+			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/paginator/assets/skins/sam/paginator.css');
 			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/container/assets/skins/sam/container.css');
 
 			//Title of Page

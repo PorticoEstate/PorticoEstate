@@ -73,3 +73,40 @@ thead
 	font-weight: bold;
 	text-align: center;
 }
+.yui-dt .yui-dt-hidden
+{
+	border-right:0px solid #ff0 !important;
+}
+.yui-tt .bd
+{
+	background-color:#fffbeb !important;
+	border-color:#D4C237 #A6982B #A6982B;
+	border-width:0px !important;
+	color:#000000 !important;
+	left:0 !important;
+	padding:0 !important;
+	font-family: tahoma !important;
+	font-size: 11px !important;
+}
+.tooltip-table
+{
+	width:200px !important;
+}
+.tooltip
+{
+	background-color:#0066cc !important;
+	color:#FFFFFF !important;
+	font-weight: bold !important;
+	font-family: tahoma !important;
+	font-size: 11px !important;
+}
+.nolink a
+{
+	color:#FFFFFF !important;
+	text-decoration: none !important;
+}
+.nolink a visited
+{
+	color:#FFFFFF !important;
+	text-decoration: none !important;
+}

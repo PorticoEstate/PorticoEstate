@@ -269,7 +269,7 @@
 			<xsl:when test="style='filter'">float:left</xsl:when>
 			<xsl:otherwise>float:right</xsl:otherwise>
 		</xsl:choose>
-	</xsl:variable>			
+	</xsl:variable>
 	<div style="{$align}" class="field">
 		<xsl:if test="text">
 			<label for="{$id}">
