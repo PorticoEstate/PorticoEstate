@@ -24,6 +24,7 @@
 	{
 		$sql = "SELECT id from fm_s_agreement_detail WHERE agreement_id = $agreement_id AND location_code ilike '" . $param . "%'";
 		$this->db->query($sql,__LINE__,__FILE__);
+		$this->db->next_record();
 		if($this->db->f('id'))
 		{
 			break;
@@ -39,5 +40,3 @@
 		'menuaction' => 'property.uis_agreement.view',
 		'id'		=> $agreement_id
 	);
-	
-?>
