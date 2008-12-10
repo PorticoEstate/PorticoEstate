@@ -23,6 +23,16 @@
 		{order:0, name:'query',id:'txt_query'}
 	];
 
+	var toolTips =
+	[
+		{name:'btn_export', description:'Download'}
+	]
+
+	var deactivateT =
+	[
+		{name:'btn_export'}
+	]
+
 	// define the hidden column in datatable
 	var config_values = {
 	 column_hidden : 1, //orden de la columna a ocultar en el datatable
@@ -49,6 +59,8 @@
 //----------------------------------------------------------
 	YAHOO.util.Event.addListener(window, "load", function()
 	{
+		YAHOO.util.Dom.getElementsByClassName('toolbar','div')[0].style.display = 'none';
+
 		var loader = new YAHOO.util.YUILoader();
 		loader.addModule({
 			name: "anyone", //module name; must be unique
