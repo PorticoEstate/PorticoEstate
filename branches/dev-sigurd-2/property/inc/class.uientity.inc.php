@@ -660,6 +660,7 @@
 			phpgwapi_yui::load_widget('connection');
 			//// cramirez: necesary for include a partucular js
 			phpgwapi_yui::load_widget('loader');
+			phpgwapi_yui::load_widget('paginator');
 
 			//-BEGIN----------------------------- JSON CODE ------------------------------
 
@@ -728,6 +729,7 @@
 			$GLOBALS['phpgw']->css->validate_file('datatable');
 			$GLOBALS['phpgw']->css->add_external_file('property/templates/base/css/property.css');
 			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/datatable/assets/skins/sam/datatable.css');
+			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/paginator/assets/skins/sam/paginator.css');
 
 			//Title of Page
 			if($this->entity_id && $this->cat_id)

@@ -56,7 +56,7 @@
 			switch ( $widget )
 			{
 				case 'animation':
-					$load = array('animation-min');
+					$load = array('animation-min', 'container-min');
 					break;
 
 				case 'autocomplete':
@@ -81,7 +81,7 @@
 					break;
 
 				case 'utilities':
-					$load = array('container', 'container-min');
+					$load = array('container-min');
 					break;
 
 				case 'connection':
