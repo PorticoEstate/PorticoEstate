@@ -355,14 +355,11 @@
 				$values['dima']=implode('',$values['location']);
 			}
 
-			$values['spbudact_code']=$values['b_account_id'];
-			$values['fakturanr']=$values['invoice_num'];
-			$values['spvend_code']=$values['vendor_id'];
-
-			$values['belop'] = str_replace('kr','',$values['amount']);
-			$values['belop'] = str_replace(' ','',$values['belop']);
-			$values['belop'] = str_replace(',','.',$values['belop']);
-			$values['godkjentbelop']=$values['belop'];
+			$values['spbudact_code']	= $values['b_account_id'];
+			$values['fakturanr']		= $values['invoice_num'];
+			$values['spvend_code']		= $values['vendor_id'];
+			$values['belop'] 			= $values['amount'];
+			$values['godkjentbelop']	= $values['amount'];
 
 			$values['fakturadato'] = date($this->bocommon->dateformat,mktime(2,0,0,$values['smonth'],$values['sday'],$values['syear']));
 
