@@ -231,11 +231,9 @@
 			if( phpgw::get_var('phpgw_return_as') == 'json' && is_array($values) && isset($values))
 			 {
 			 	$values["save"]="Save";
-			 	//_debug_array($values); die;
 			 	$receipt = $this->bo->update_invoice($values);
-				//_debug_array($receipt);die;
-
 			 }
+
 			 // Edit Period
 			$period  = phpgw::get_var('period');
 			$voucher_id_for_period  = phpgw::get_var('voucher_id_for_period');
@@ -318,6 +316,7 @@
 	                                    'name' => 'cat_id',
 	                                    'value'	=> lang('Category'),
 	                                    'type' => 'button',
+	                                    'tab_index' => 1,
 	                                    'style' => 'filter'
 	                                ),
 	                                array( //boton 	OWNER
@@ -325,11 +324,13 @@
 	                                    'name' => 'user_lid',
 	                                    'value'	=> user_lid,
 	                                    'type' => 'button',
+	                                    'tab_index' => 2,
 	                                    'style' => 'filter'
 	                                ),
 	                                array( // boton exportar
 		                                'type'	=> 'button',
 		                            	'id'	=> 'btn_export',
+		                            	'tab_index' => 7,
 		                                'value'	=> lang('download')
 		                            ),
 		                            array( //hidden paid
@@ -337,33 +338,38 @@
 		                            	'id'	=> 'paid',
 		                                'value'	=> $paid
 		                            ),
-		                            array( //hidden paid
+		                           /* array( //hidden paid
 		                                'type'	=> 'hidden',
 		                            	'id'	=> 'valuesForUpdatePHP',
 		                                'value'	=> ''
-		                            ),
+		                            ),*/
 									array( // boton SAVE
 		                                'id'	=> 'btn_save',
 		                            	//'name' => 'save',
 		                                'value'	=> lang('save'),
+		                                'tab_index' => 6,
 										'type'	=> 'button'
 		                            ),
 									array( // boton ADD
-		                                'type'	=> 'submit',
+		                                'type'	=> 'button',//'submit',
 		                            	'id'	=> 'btn_new',
+		                            	'tab_index' => 5,
 		                                'value'	=> lang('add')
 		                            ),
 	                                array( //boton   SEARCH
 	                                    'id' => 'btn_search',
 	                                    'name' => 'search',
 	                                    'value'    => lang('search'),
-	                                    'type' => 'button',
+	                                    'tab_index' => 4,
+	                                    'type' => 'button'
 	                                ),
 	                                array( // TEXT IMPUT
 	                                    'name'     => 'query',
 	                                    'id'     => 'txt_query',
 	                                    'value'    => $this->query,//$query,
 	                                    'type' => 'text',
+	                                    'onkeypress' => 'return pulsar(event)',
+	                                    'tab_index' => 3,
 	                                    'size'    => 28
 	                                ),
 	                                array( // txtbox end_data hidden
@@ -589,16 +595,16 @@
 			$content = $this->bo->read_invoice($paid,$start_date,$end_date,$vendor_id,$loc1,$workorder_id,$voucher_id);
 			//die(_debug_array($content));
 			$uicols = array (
-				'input_type'	=>	array(hidden,hidden,hidden,hidden,link,link   ,hidden,hidden,hidden,$paid?varchar:input,varchar,link   ,hidden,varchar,varchar,varchar,$paid?hidden:input,$paid?hidden:input,special,special,special,special2),
-				'type'			=>	array(number,''	   ,number,''	 ,url ,msg_box,''    ,''    ,''    ,$paid?'':text	   ,''     ,msg_box,''    ,''     ,''     ,''     ,$paid?'':checkbox ,$paid?'':radio	 ,''     ,''     ,''     ,''  	 ),
+				'input_type'	=>	array(hidden,hidden,hidden,hidden,hidden,link,link   ,hidden,hidden,hidden,$paid?varchar:input,varchar,link   ,hidden,varchar,varchar,varchar,$paid?hidden:input,$paid?hidden:input,special,special,special,special2),
+				'type'			=>	array(number,number,''	   ,number,''	 ,url ,msg_box,''    ,''    ,''    ,$paid?'':text	   ,''     ,msg_box,''    ,''     ,''     ,''     ,$paid?'':checkbox ,$paid?'':radio	 ,''     ,''     ,''     ,''  	 ),
 
-				'col_name'		=>	array(counter_num,counter,voucher_id_num,voucher_id,voucher_id_lnk,voucher_date_lnk,sign_orig ,num_days_orig,timestamp_voucher_date,num_days,amount_lnk,vendor_id_lnk,invoice_count,invoice_count_lnk,type_lnk,period,kreditnota,sign      ,janitor_lnk,supervisor_lnk,budget_responsible_lnk,transfer_lnk),
-				'name'			=>	array(counter,counter,voucher_id    ,voucher_id,voucher_id    ,voucher_date    ,sign_orig,num_days     ,timestamp_voucher_date,num_days,amount    ,vendor_id    ,invoice_count,invoice_count    ,type    ,period,kreditnota,empty_fild,janitor    ,supervisor    ,budget_responsible    ,transfer_id),
+				'col_name'		=>	array(vendor_name,counter_num,counter,voucher_id_num,voucher_id,voucher_id_lnk,voucher_date_lnk,sign_orig ,num_days_orig,timestamp_voucher_date,num_days,amount_lnk,vendor_id_lnk,invoice_count,invoice_count_lnk,type_lnk,period,kreditnota,sign      ,janitor_lnk,supervisor_lnk,budget_responsible_lnk,transfer_lnk),
+				'name'			=>	array(vendor,counter,counter,voucher_id    ,voucher_id,voucher_id    ,voucher_date    ,sign_orig,num_days     ,timestamp_voucher_date,num_days,amount    ,vendor_id    ,invoice_count,invoice_count    ,type    ,period,kreditnota,empty_fild,janitor    ,supervisor    ,budget_responsible    ,transfer_id),
 
-				'formatter'		=>	array('','','','','','','','','','',myFormatDate,'','','','',$paid?'':myPeriodDropDown,'','','','','',''),
+				'formatter'		=>	array('','','','','','','','','','','',myFormatDate,'','','','',$paid?'':myPeriodDropDown,'','','','','',''),
 
-				'descr'			=>	array(dummy,dummy,dummy,dummy,lang('voucher'),lang('Voucher Date'),dummy,dummy,dummy,lang('Days'),lang('Sum'),lang('Vendor'),dummy,lang('Count'),lang('Type'),lang('Period'),lang('KreditNota'),lang('None'),lang('Janitor'),lang('Supervisor'),lang('Budget Responsible'),lang('Transfer')),
-				'className'		=> 	array('','','','','','centerClasss','','','','','rightClasss','rightClasss','','rightClasss','','comboClasss','centerClasss','centerClasss','','','centerClasss','centerClasss')
+				'descr'			=>	array(dummy,dummy,dummy,dummy,dummy,lang('voucher'),lang('Voucher Date'),dummy,dummy,dummy,lang('Days'),lang('Sum'),lang('Vendor'),dummy,lang('Count'),lang('Type'),lang('Period'),lang('KreditNota'),lang('None'),lang('Janitor'),lang('Supervisor'),lang('Budget Responsible'),lang('Transfer')),
+				'className'		=> 	array('','','','','','','centerClasss','','','','','rightClasss','rightClasss','','rightClasss','','comboClasss','centerClasss','centerClasss','','','centerClasss','centerClasss')
 				);
 
 			//url to detail of voucher
@@ -838,6 +844,15 @@
 				);
 			}
 
+			$datatable['rowactions']['action'][] = array(
+				'text' 			=> lang('F'),
+				'action'		=> $GLOBALS['phpgw']->link('/index.php',array
+								(
+									'menuaction'	=> 'property.uiinvoice.receipt'
+								)),
+				'parameters'	=> $parameters
+			);
+
 			if($this->acl_add)
 			{
 				$datatable['rowactions']['action'][] = array(
@@ -849,14 +864,7 @@
 				);
 			}
 
-			$datatable['rowactions']['action'][] = array(
-					'text' 			=> lang('F'),
-					'action'		=> $GLOBALS['phpgw']->link('/index.php',array
-									(
-										'menuaction'	=> 'property.uiinvoice.receipt'
-									)),
-					'parameters'	=> $parameters
-				);
+
 
 			unset($parameters);
 
@@ -1086,6 +1094,7 @@
 			$function_msg	= lang('list voucher');
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
 
+			//die($GLOBALS['phpgw']->xslttpl->xml_parse());
 			//die(_debug_array($datatable));
 	  		// Prepare YUI Library
 	  		if ($paid)
@@ -1096,7 +1105,6 @@
   			{
   				$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'invoice.index', 'property' );
   			}
-
 
 			//$this->save_sessiondata();
 	}

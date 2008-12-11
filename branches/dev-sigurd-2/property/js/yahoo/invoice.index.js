@@ -4,6 +4,7 @@
 
 		//define SelectButton
 	 	var oMenuButton_0, oMenuButton_1;
+
 	 	var selectsButtons = [
 		{order:0, var_URL:'cat_id',	 name:'btn_cat_id',	 style:'',dependiente:''},
 		{order:1, var_URL:'user_lid',name:'btn_user_lid',style:'',dependiente:''}
@@ -24,10 +25,11 @@
 		]
 
 		var toolTips = [
-			{name:'voucher_id_lnk',title:'Voucher ID', description:'click this link to enter the list of sub-invoices'},
-			{name:'vendor_id_lnk', title:'', description:''},
-			{name:'voucher_date_lnk', title:'Payment Date', description:''},
-			{name:'btn_export', title:'download', description:'Download table to your browser'}
+			{name:'voucher_id_lnk',title:'Voucher ID', description:'click this link to enter the list of sub-invoices',ColumnDescription:''},
+			{name:'vendor_id_lnk', title:'', description:'',ColumnDescription: 'vendor_name'},
+			{name:'voucher_date_lnk', title:'Payment Date', description:'',ColumnDescription:'voucher_date_lnk'},
+			{name:'period', title:'Period', description:'click this button to edit the period',ColumnDescription:''},
+			{name:'btn_export', title:'download', description:'Download table to your browser',ColumnDescription:''}
 		]
 		var deactivateT =
 		 [
@@ -35,11 +37,12 @@
 		 ]
 
 		// define the hidden column in datatable
-		var config_values = {
-		column_hidden : [0],
-		date_search : 0, //if search has link "Data search"
-		footer_datatable : 1
+		var config_values =
+		{
+			date_search : 0, //if search has link "Data search"
+			footer_datatable : 1
 		}
+
 		var tableYUI;
 		/********************************************************************************
 		*
@@ -120,31 +123,20 @@
 		{
 			if(flag_particular_setting=='init')
 			{
+				//locate (asign ID) to datatable
 				tableYUI = YAHOO.util.Dom.getElementsByClassName("yui-dt-data","tbody")[0].parentNode;
 				tableYUI.setAttribute("id","tableYUI");
+				//focus initial
+				oMenuButton_0.focus();
 			}
 			else if(flag_particular_setting=='update')
 			{
-				//var tableYUI = YAHOO.UtligetElementById("yui-dt-data").parentNode;
-
-				//alert("codigp");
 				//reset empty values for update PERIOD
 			   	path_values.voucher_id_for_period = '';
 			   	path_values.period = '';
 			   	path_values.currentPage = '';
 			   	path_values.start = '';
-
-				//Delete children of div MESSAGE AND TFOOT
-				//delete_message();
-				//tableYUI.deleteTFoot();
-
-
 			}
-
-			//--focus for txt_query---
-			YAHOO.util.Dom.get(textImput[0].id).value = path_values.query;
-			YAHOO.util.Dom.get(textImput[0].id).focus();
-
 		}
 		/********************************************************************************
 		* Format for column SUM
@@ -197,7 +189,7 @@
 		   	 path_values.period = p_oItem.cfg.getProperty('text');
 		   	 //Maintein actual page in paginator
 		   	 path_values.currentPage = myPaginator.getCurrentPage();
-		   	 //MEJORA
+		   	 //for mantein paginator
 		   	 path_values.start = myPaginator.getPageRecords()[0];
 		   	 //for mantein paginator and fill out combo box show all rows
 		   	 path_values.recordsReturned = values_ds.recordsReturned;
@@ -241,18 +233,11 @@
 
 			//Maintein actual page in paginator
 		   	 path_values.currentPage = myPaginator.getCurrentPage();
-		   	 //MEJORA
+		   	  //for mantein paginator
 		   	 path_values.start = myPaginator.getPageRecords()[0];
 		   	 //for mantein paginator and fill out combo box show all rows
 		   	 path_values.recordsReturned = values_ds.recordsReturned;
-
-			 /*values_tmp = getSortingANDColumn();
-			 path_values.sort	= values_tmp[0];
-			 path_values.order	= values_tmp[1];*/
-
-
-
-			execute_ds();
+		   	 execute_ds();
 		}
 		/********************************************************************************
 		 *
@@ -282,10 +267,6 @@
 		 */
 	  	this.addFooterDatatable = function()
 	  	{
-			//alert("add footDataTable");
-			//Delete message of Update Records or Periods for datatable
-			//delete_message();
-
 			//range actual of rows in datatable
 			if( (myPaginator.getPageRecords()[1] - myPaginator.getPageRecords()[0] + 1 ) == myDataTable.getRecordSet().getLength() )
 			//click en Period or ComboBox. (RecordSet start in 0)
@@ -309,14 +290,11 @@
 
 	  		tmp_sum = YAHOO.util.Number.format(tmp_sum, {decimalPlaces:2, decimalSeparator:",", thousandsSeparator:" "});
 
-			//DELETE Tfoot
-  			//tableYUI.deleteTFoot();
-
   			//Create ROW
   			newTR = document.createElement('tr');
 			//columns with colspan 10
 			newTD = document.createElement('td');
-			newTD.colSpan = 10;
+			newTD.colSpan = 11;
 			newTD.style.borderTop="1px solid #000000";
 			newTD.appendChild(document.createTextNode(''));
 			newTR.appendChild(newTD.cloneNode(true));

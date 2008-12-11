@@ -10,8 +10,15 @@
   	var showTimer,hideTimer,tt;
 
 
-
-
+ /********************************************************************************
+ *
+ */
+	//function pulsar(e)
+	this.pulsar = function(e)
+	{
+	  tecla = (document.all) ? e.keyCode :e.which;
+	  return (tecla!=13);
+	}
 
  /********************************************************************************
  * this is used, in respective PHP file.
@@ -111,6 +118,7 @@ this.create_array_values_list = function(stValues)
  */
    this.onMenuItemClick = function(p_sType, p_aArgs, p_oItem)
    {
+
 		 var control = eval("oMenuButton_"+p_oItem[2]);
 	     control.set("label", ("<em>" + p_oItem[1] + "</em>"));
 	     control.set("value", p_oItem[0]);
@@ -154,8 +162,26 @@ this.create_array_values_list = function(stValues)
  *
  */
 
+   this.mantainFocusItenMenu = function ()
+  	{
+
+  		for(p=0;p<this.get("menu").length;p++)
+  		{
+  			if(this.get("menu")[p].value == this.get("value"))
+  			{
+  				this.set("selectedMenuItem",p);
+  				break;
+  			}
+  		}
+  	}
+
+ /********************************************************************************
+ *
+ */
   this.init_filter = function()
   {
+	//flag to show Add button
+	var flag_add = 0;
 	//create button
 	for(var p=0; p<normalButtons.length; p++)
 	{
@@ -168,7 +194,18 @@ this.create_array_values_list = function(stValues)
 			 {
 				botton_tmp.destroy();
 			 }
+			 //verify add rights aand destroy the buttons if it's necessary
+            for (var z = 0; z < values_ds.rights.length; z++)
+            {
+                if (values_ds.rights[z].text == 'Add')
+                {
+                    flag_add = 1;
+                }
+            }
 
+            if (botton_tmp._button.id == 'btn_new-button' && flag_add == 0) {
+                botton_tmp.destroy();
+            }
 			if(typeof toolTips == 'object')
 			{
 				for(var d=0;d<toolTips.length;d++)
@@ -222,7 +259,7 @@ this.create_array_values_list = function(stValues)
 	    //cramirez: avoid assigning an object to hidden filter.
 	    if(array_options[selectsButtons[i].order].length > 0)
 	    {
-		    menuCB = { type: "menu", label:"<em>"+ array_options[selectsButtons[i].order][0][1]+"</em>", id: selectsButtons[i].style, value:"", menu: optionsCB};
+		    menuCB = { type: "menu", label:"<em>"+ array_options[selectsButtons[i].order][0][1]+"</em>", id: selectsButtons[i].style, value:"", menu: optionsCB, onclick: {fn: mantainFocusItenMenu}};
 		    var tmp = new YAHOO.widget.Button(selectsButtons[i].name, menuCB)
 			eval("oMenuButton_"+selectsButtons[i].order+" = tmp");
 		}
@@ -361,7 +398,6 @@ this.create_array_values_list = function(stValues)
 			url=url+"&allrows=1";
 		}
 		//delete previous records in datatable
-		//myDataTable.getRecordSet().deleteRecords(myPaginator.getPageRecords()[0],myPaginator.getPageRecords()[1]);
 		myDataTable.getRecordSet().reset();
 		//sea actualiza el liveDAta del Datasource con los actuales valores de los combos y txtboxs
 		myDataTable.getDataSource().liveData=ds;
@@ -454,35 +490,28 @@ this.create_array_values_list = function(stValues)
 
 		if(mytotalRows >1000)
 		{
-		   myPaginator = new YAHOO.widget.Paginator({
+			$customize_template = "{CurrentPageReport}<br>{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}";
+		}
+		else
+		{
+			$customize_template = "{RowsPerPageDropdown}items per Page, {CurrentPageReport}<br>{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}";
+		}
+
+		myPaginator = new YAHOO.widget.Paginator({
 							containers			: ['paging'],
 	            			totalRecords : mytotalRows,
 							pageLinks			: 10,
 							rowsPerPage			: values_ds.recordsReturned, //MAXIMO el PHPGW me devuelve 15 valor configurado por preferencias
-							template			: "{CurrentPageReport}<br>{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}",
+							template			: $customize_template,
 							pageReportTemplate	: "Showing items {startIndex} - {endIndex} of {totalRecords}"
 						});
 
-		}
-		else
-		{
-	   myPaginator = new YAHOO.widget.Paginator({
-						containers			: ['paging'],
-            			totalRecords : mytotalRows,
-						pageLinks			: 10,
-						rowsPerPage			: values_ds.recordsReturned, //MAXIMO el PHPGW me devuelve 15 valor configurado por preferencias
-						rowsPerPageOptions	: [myrowsPerPage,mytotalRows],
-						template			: "{RowsPerPageDropdown}items per Page, {CurrentPageReport}<br>{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}",
-						pageReportTemplate	: "Showing items {startIndex} - {endIndex} of {totalRecords}"
-					});
-		}
 
 
 	  var myTableConfig = {
 			initialRequest			: '',//la primera vez ya viene ordenado, por la columna respectiva y solo 15 registros
 			generateRequest			: buildQueryString,
 			dynamicData				: true,
-			//sortedBy				: {key:'voucher_id_lnk', dir:YAHOO.widget.DataTable.CLASS_DESC},
 			sortedBy				: {key:values_ds.sort, dir:YAHOO.widget.DataTable.CLASS_DESC},
 			paginator				: myPaginator
 		};
@@ -509,13 +538,13 @@ this.create_array_values_list = function(stValues)
 		var target = oArgs.target;
 		var column = this.getColumn(target);
 
-			for(var p=0;p<toolTips.length;p++)
+		for(var p=0;p<toolTips.length;p++)
 		{
 			if(column.key == toolTips[p].name)
 			{
 				var record = this.getRecord(target);
-					var title = toolTips[p].title || record.getData(toolTips[p].name);
-					var description = toolTips[p].description || record.getData(toolTips[p].name);
+				var title = toolTips[p].title || record.getData(toolTips[p].name);
+				var description = toolTips[p].description || record.getData(toolTips[p].ColumnDescription);
 				var xy = [parseInt(oArgs.event.clientX,10) + 10 ,parseInt(oArgs.event.clientY,10) + 10 ];
 
 				showTimer = window.setTimeout(function()
@@ -624,11 +653,7 @@ this.create_array_values_list = function(stValues)
       //if exist "config_values.footer_datatable" in <module>.index.js Render Footer Datatable. Using for shown Sumatory
       if(config_values.footer_datatable)
       {
-	   	//myDataTable.subscribe("postRenderEvent", function (){alert("postRenderEvent")});
-	   	/*myDataTable.subscribe("initEvent", addFooterDatatable);
-	   	myDataTable.subscribe("renderEvent", addFooterDatatable);*/
 
-	   //	myDataTable.subscribe("initEvent", alert("initEvent"));
 	   myDataTable.subscribe("renderEvent", addFooterANDMessage);
       }
 
@@ -652,6 +677,8 @@ this.create_array_values_list = function(stValues)
 					if( myColumnDefs[i].sortable )
 					{
 						YAHOO.util.Dom.getElementsByClassName( 'yui-dt-resizerliner' , 'div' )[i].style.backgroundColor  = '#D4DBE7';
+						//YAHOO.util.Dom.getElementsByClassName( 'yui-dt-resizerliner' , 'div' )[i].style.backgroundImage  = 'url("")';
+						//YAHOO.util.Dom.getElementsByClassName( 'yui-dt-resizerliner' , 'div' )[i].setAttribute("class","ploma");
 					}
 
 					if( !myColumnDefs[i].visible )
@@ -660,7 +687,7 @@ this.create_array_values_list = function(stValues)
 			myDataTable.hideColumn(sKey);
 					}
 					//title columns alwyas center
-					//YAHOO.util.Dom.getElementsByClassName( 'yui-dt-col-'+ myColumnDefs[i].key , 'div' )[0].style.textAlign = 'center';
+					YAHOO.util.Dom.getElementsByClassName( 'yui-dt-resizerliner', 'div' )[0].style.textAlign = 'center';
 				}
 
   return {
@@ -677,15 +704,9 @@ this.update_datatable = function()
 	{
 
      //delete values of datatable
-    /*var length = myDataTable.getRecordSet().getLength();
-    if(length)
-     {
-     	myDataTable.deleteRows(0,length);
-     }*/
      myDataTable.getRecordSet().reset();
 
      //reset total records always to zero
-     // MEJORA
      myPaginator.setTotalRecords(0,true);
 
      //obtain records of the last DS and add to datatable
@@ -708,9 +729,8 @@ this.update_datatable = function()
 	mytotalRows = values_ds.totalRecords;
 	//update combo box pagination
 	myPaginator.set('rowsPerPageOptions',[myrowsPerPage,mytotalRows]);
-	//MEJORA
+
 	myPaginator.setPage(parseInt(values_ds.currentPage),true); //true no fuerza un recarge solo cambia el paginator
-	//myPaginator.setPage(parseInt(values_ds.currentPage));
 	}
 
 /****************************************************************************************
