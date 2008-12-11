@@ -1660,7 +1660,16 @@
 				$values['merknad']		= phpgw::get_var('merknad');
 				$values['b_account_id']		= phpgw::get_var('b_account_id', 'int');
 				$values['b_account_name']	= phpgw::get_var('b_account_name');
-				$values['amount']		= phpgw::get_var('amount', 'float');
+				$values['amount']		= phpgw::get_var('amount'); // float - has to accept string until client side validation is in place.
+
+				if (isset($GLOBALS['phpgw_info']['user']['preferences']['common']['currency']))
+				{
+					$values['amount'] 		= str_ireplace($GLOBALS['phpgw_info']['user']['preferences']['common']['currency'],'',$values['amount']);
+				}
+				
+				$values['amount'] 		= str_replace(' ','',$values['amount']);
+				$values['amount'] 		= str_replace(',','.',$values['amount']);
+
 				$values['order_id']		= phpgw::get_var('order_id', 'int');
 
 				$insert_record = $GLOBALS['phpgw']->session->appsession('insert_record','property');
