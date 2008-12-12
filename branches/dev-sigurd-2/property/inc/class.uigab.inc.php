@@ -31,7 +31,8 @@
 	 * Description
 	 * @package property
 	 */
-
+	phpgw::import_class('phpgwapi.yui');
+	
 	class property_uigab
 	{
 		var $grants;
@@ -180,9 +181,6 @@
 				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=>1, 'acl_location'=> $this->acl_location));
 			}
 
-			$GLOBALS['phpgw']->xslttpl->add_file(array('gab',
-										'nextmatchs'));
-
 			$address 		= phpgw::get_var('address');
 			$check_payments 	= phpgw::get_var('check_payments', 'bool');
 			$location_code 		= phpgw::get_var('location_code');
@@ -190,226 +188,400 @@
 			$bruksnr 		= phpgw::get_var('bruksnr', 'int');
 			$feste_nr 		= phpgw::get_var('feste_nr', 'int');
 			$seksjons_nr 		= phpgw::get_var('seksjons_nr', 'int');
-			$reset_query 		= phpgw::get_var('reset_query', 'bool');
 
-			if($reset_query)
-			{
-				unset($address);
-				unset($check_payments);
-				unset($location_code);
-				unset($gaards_nr);
-				unset($bruksnr);
-				unset($feste_nr);
-				unset($seksjons_nr);
+			$datatable = array();
+			$values_combo_box = array();
+
+			if( phpgw::get_var('phpgw_return_as') != 'json' )
+			 {														
+		    	$datatable['config']['base_url']	= $GLOBALS['phpgw']->link('/index.php', array
+	    				(
+	    					'menuaction'			=> 'property.uigab.index',
+							'location_code'		=> $location_code,
+							'gaards_nr'		=> $gaards_nr,
+							'bruksnr'		=> $bruksnr,
+							'feste_nr'		=> $feste_nr,
+							'seksjons_nr'	=> $seksjons_nr,
+							'address'		=> $address,
+							'check_payments'	=> $check_payments
+
+	    				));
+
+				$datatable['config']['base_java_url'] = "menuaction:'property.uigab.index',"
+	    											."location_code:'{$location_code}',"
+	    											."gaards_nr:'{$gaards_nr}',"
+ 	                        						."bruksnr: '{$bruksnr}',"
+ 	                        						."feste_nr:'{$feste_nr}',"
+						 	                        ."seksjons_nr:'{$seksjons_nr}',"
+ 	                        						."address:'{$address}',"
+						 	                        ."check_payments:'{$check_payments}'";
+
+				$datatable['actions']['form'] = array(
+					array(
+						'action'	=> $GLOBALS['phpgw']->link('/index.php',
+								array(
+									'menuaction' 		=> 'property.uigab.index',
+									'location_code'		=> $location_code,
+									'gaards_nr'		=> $gaards_nr,
+									'bruksnr'		=> $bruksnr,
+									'feste_nr'		=> $feste_nr,
+									'seksjons_nr'	=> $seksjons_nr,
+									'address'		=> $address,
+									'check_payments'	=> $check_payments
+									)
+						),
+						'fields'	=> array(
+                                    'field' => array(
+													array(
+						                                'type'	=> 'button',
+						                            	'id'	=> 'btn_export',
+						                                'value'	=> lang('download')						                                
+						                            ),														
+													array(
+						                                'type'	=> 'submit',
+						                            	'id'	=> 'btn_new',
+						                                'value'	=> lang('add')						                        
+						                            ),							                            											
+					                                array( // address link
+						                                'type' => 'link',
+						                                'id' => 'lnk_address',
+						                                'url' => "",
+														'value' => lang('Address'),
+														'style' => 'filter'														
+													),												
+			   										 array( // TEXT IMPUT
+			                                            'name'     => 'address',
+			                                            'id'     => 'txt_address',
+			                                            'value'    => '',//$query,
+			                                            'type' => 'text',
+			                                            'size'    => 28,
+			                                            'style' => 'filter'
+			                                        ),
+					                                array( // check link
+						                                'type' => 'link',
+						                                'id' => 'lnk_check',
+						                                'url' => "",
+														'value' => lang('check payments'),
+														'style' => 'filter'														
+													),				                                        
+			   										 array( // TEXT IMPUT
+			                                            'name'     => 'check',
+			                                            'id'     => 'txt_check',
+			                                            'value'    => 0,//$query,
+			                                            'type' => 'checkbox',
+			                                            'style' => 'filter'
+			                                        ),
+													array( //hidden check_payments
+						                                'type'	=> 'hidden',
+						                                'name'     => 'check_payments',
+						                            	'id'	=> 'txt_check_payments',
+						                                'value'	=> 0,
+						                                'style' => 'filter'
+						                            ),		
+					                                array( // location_code link
+						                                'type' => 'link',
+						                                'id' => 'lnk_property_id',
+						                                'url' => "",
+														'value' => lang('property id'),
+														'style' => 'filter'													
+													),							                            	                                        	 			                                        														
+			   										 array( // TEXT IMPUT
+			                                            'name'     => 'location_code',
+			                                            'id'     => 'txt_location_code',
+			                                            'value'    => '',//$query,
+			                                            'type' => 'text',
+			                                            'size'    => 6,
+			                                            'style' => 'filter'
+			                                        ),	
+					                                array( // gaards_nr link
+						                                'type' => 'link',
+						                                'id' => 'lnk_gaards_nr',
+						                                'url' => "",
+														'value' => lang('gaards nr'),
+														'style' => 'filter'													
+													),															                                        			                                        
+			   										 array( // TEXT IMPUT
+			                                            'name'     => 'gaards_nr',
+			                                            'id'     => 'txt_gaards_nr',
+			                                            'value'    => '',//$query,
+			                                            'type' => 'text',
+			                                            'size'    => 6,
+			                                            'style' => 'filter'
+			                                        ),		
+					                                array( // bruksnr link
+						                                'type' => 'link',
+						                                'id' => 'lnk_bruksnr',
+						                                'url' => "",
+														'value' => lang('bruks nr'),
+														'style' => 'filter'												
+													),																                                        
+			   										 array( // TEXT IMPUT
+			                                            'name'     => 'bruksnr',
+			                                            'id'     => 'txt_bruksnr',
+			                                            'value'    => '',//$query,
+			                                            'type' => 'text',
+			                                            'size'    => 6,
+			                                            'style' => 'filter'
+			                                        ),	
+					                                array( // feste_nr link
+						                                'type' => 'link',
+						                                'id' => 'lnk_feste_nr',
+						                                'url' => "",
+														'value' => lang('Feste nr'),
+														'style' => 'filter'													
+													),																	                                        
+			   										 array( // TEXT IMPUT
+			                                            'name'     => 'feste_nr',
+			                                            'id'     => 'txt_feste_nr',
+			                                            'value'    => '',//$query,
+			                                            'type' => 'text',
+			                                            'size'    => 6,
+			                                            'style' => 'filter'
+			                                        ),	
+					                                array( // seksjons_nr link
+						                                'type' => 'link',
+						                                'id' => 'lnk_seksjons_nr',
+						                                'url' => "",
+														'value' => lang('Seksjons nr'),
+														'style' => 'filter'													
+													),																	                                        	
+			   										 array( // TEXT IMPUT
+			                                            'name'     => 'seksjons_nr',
+			                                            'id'     => 'txt_seksjons_nr',
+			                                            'value'    => '',//$query,
+			                                            'type' => 'text',
+			                                            'size'    => 6,
+			                                            'style' => 'filter'
+			                                        ),	                                       
+			                                        array( //boton     SEARCH
+			                                            'id' => 'btn_search',
+			                                            'name' => 'search',
+			                                            'value'    => lang('search'),
+			                                            'type' => 'button',
+			                                            'style' => 'filter'
+			                                        ),							                            		                                        	                                         						                            
+			                                        array( //boton     reset
+			                                            'id' => 'btn_reset',
+			                                            'name' => 'reset',
+			                                            'value'    => lang('reset'),
+			                                            'type' => 'reset',
+			                                            'style' => 'filter'
+			                                        )							                            				                            				                                        				                                        			                                        			                                        			                         
+		                           				),
+		                       		'hidden_value' => array(		                                        
+		                       								)
+												)
+										  )
+				);
+
 			}
-
+			
 			$gab_list = $this->bo->read($location_code,$gaards_nr,$bruksnr,$feste_nr,$seksjons_nr,$address,$check_payments);
-
-			if($this->acl_read)
-			{
-				$text_view	= lang('view');
-				$lang_view_statustext	= lang('view gab detail');
-			}
 
 			$config		= CreateObject('phpgwapi.config','property');
 
-			$config->read();
+			$config->read_repository();
 
 			$link_to_map = (isset($config->config_data['map_url'])?$config->config_data['map_url']:'');
-
 			if($link_to_map)
 			{
 				$text_map=lang('Map');
-				$lang_map_statustext	= lang('View map');
 			}
+			
 			$link_to_gab = (isset($config->config_data['gab_url'])?$config->config_data['gab_url']:'');
 			if($link_to_gab)
 			{
 				$text_gab=lang('GAB');
-				$lang_gab_statustext	= lang('View gab-info');
 			}
 
 			$payment_date = $this->bo->payment_date;
-
-			$i=0;
-
-			$content=array();
-			while (is_array($gab_list) && list(,$gab) = each($gab_list))
-			{
-				if(is_array($payment_date))
-				{
-					reset($payment_date);
-				}
-				$value_gaards_nr	= substr($gab['gab_id'],4,5);
-				$value_bruks_nr		= substr($gab['gab_id'],9,4);
-				$value_feste_nr		= substr($gab['gab_id'],13,4);
-				$value_seksjons_nr	= substr($gab['gab_id'],17,3);
-
-				$content[] = array
-				(
-					'owner'				=> lang($gab['owner']),
-					'hits'				=> $gab['hits'],
-					'address'			=> $gab['address'],
-					'gaards_nr'			=> $value_gaards_nr,
-					'bruks_nr'			=> $value_bruks_nr,
-					'feste_nr'			=> $value_feste_nr,
-					'seksjons_nr'			=> $value_seksjons_nr,
-					'location_code'			=> $gab['location_code'],
-					'link_view'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=>'property.uigab.list_detail','gab_id'=>$gab['gab_id'])),
-					'lang_view_statustext'		=> $lang_view_statustext,
-					'text_view'			=> $text_view,
-					'link_map'			=> phpgw::safe_redirect($link_to_map . '?maptype=Eiendomskart&gnr=' . (int)$value_gaards_nr . '&bnr=' . (int)$value_bruks_nr . '&fnr=' . (int)$value_feste_nr),
-					'lang_map_statustext'		=> $lang_map_statustext,
-					'text_map'			=> $text_map,
-					'link_gab'			=> phpgw::safe_redirect($link_to_gab . '?type=eiendom&Gnr=' . (int)$value_gaards_nr . '&Bnr=' . (int)$value_bruks_nr . '&Fnr=' . (int)$value_feste_nr . '&Snr=' . (int)$value_seksjons_nr),
-					'lang_gab_statustext'		=> $lang_gab_statustext,
-					'text_gab'			=> $text_gab
+				
+			$uicols = array (
+				'input_type'	=>	array(hidden,text,text,text,text,hidden,text,text,text,link,link),
+				'name'			=>	array(gab_id,gaards_nr,bruksnr,feste_nr,seksjons_nr,hits,owner,location_code,address,map,gab),
+				'formatter'		=>	array('','','','','','','','','','',''),
+				'descr'			=>	array(dummy,lang('Gaards nr'),lang('Bruks nr'),lang('Feste nr'),lang('Seksjons nr'),lang('hits'),lang('Owner'),lang('Location'),lang('Address'),lang('Map'),lang('Gab')),
+				'className'		=> 	array('','','','','','','','','','','')
 				);
-				while (is_array($payment_date) && list(,$date) = each($payment_date))
-				{
-					$content[$i]['payment'][] = array('amount' => $gab['payment'][$date]);
-				}
-
-				$i++;
-			}
-
-			$table_header[] = array
-			(
-				'sort_gab_id'	=> $this->nextmatchs->show_sort_order(array
-										(
-											'sort'	=> $this->sort,
-											'var'	=>	'gab_id',
-											'order'	=>	$this->order,
-											'extra'	=> array('menuaction'=> 'property.uigab.index',
-														'cat_id'	=>$this->cat_id,
-													//	'district_id'	=> $this->district_id,
-														'filter'	=>$this->filter,
-														'allrows'	=> $this->allrows,
-														'query'		=>$this->query,
-														'location_code'	=>$location_code,
-														'gaards_nr'	=>$gaards_nr,
-														'bruksnr'	=>$bruksnr,
-														'feste_nr'	=>$feste_nr,
-														'seksjons_nr'	=>$seksjons_nr,
-														'address'	=>$address,
-														'check_payments'	=>$check_payments)
-										)),
-				'lang_gab'	=> lang('gab'),
-				'sort_hits'	=> $this->nextmatchs->show_sort_order(array
-										(
-											'sort'	=> $this->sort,
-											'var'	=>	'hits',
-											'order'	=>	$this->order,
-											'extra'	=> array('menuaction'=> 'property.uigab.index',
-														'cat_id'	=>$this->cat_id,
-													//	'district_id'	=> $this->district_id,
-														'filter'	=>$this->filter,
-														'allrows'	=> $this->allrows,
-														'query'		=>$this->query,
-														'location_code'	=>$location_code,
-														'gaards_nr'	=>$gaards_nr,
-														'bruksnr'	=>$bruksnr,
-														'feste_nr'	=>$feste_nr,
-														'seksjons_nr'	=>$seksjons_nr,
-														'address'	=>$address,
-														'check_payments'	=>$check_payments)
-										)),
-				'sort_location_code'	=> $this->nextmatchs->show_sort_order(array
-										(
-											'sort'	=> $this->sort,
-											'var'	=>	'location_code',
-											'order'	=>	$this->order,
-											'extra'	=> array('menuaction'=> 'property.uigab.index',
-														'cat_id'	=>$this->cat_id,
-													//	'district_id'	=> $this->district_id,
-														'filter'	=>$this->filter,
-														'allrows'	=> $this->allrows,
-														'query'		=>$this->query,
-														'location_code'	=>$location_code,
-														'gaards_nr'	=>$gaards_nr,
-														'bruksnr'	=>$bruksnr,
-														'feste_nr'	=>$feste_nr,
-														'seksjons_nr'	=>$seksjons_nr,
-														'address'	=>$address,
-														'check_payments'	=>$check_payments)
-										)),
-				'lang_owner'		=> lang('owner'),
-				'lang_hits'		=> lang('hits'),
-				'lang_address'		=> lang('Address'),
-				'lang_gaards_nr'	=> lang('gaards nr'),
-				'lang_bruksnr'		=> lang('bruks nr'),
-				'lang_feste_nr'		=> lang('Feste nr'),
-				'lang_seksjons_nr'	=> lang('Seksjons nr'),
-				'lang_location_code'=> lang('Location'),
-				'lang_view'			=> lang('view'),
-				'lang_map'			=> lang('map'),
-				);
-
-			$colspan = count($table_header[0]);
-
-			if(is_array($payment_date))
-			{
-				reset($payment_date);
-			}
 
 			while (is_array($payment_date) && list(,$date) = each($payment_date))
 			{
-				$table_header[0]['payment_header'][] = array('header'=>$date);
-				$colspan++;
+				$uicols['input_type'][] = 'date';
+				$uicols['name'][] = str_replace('/','_',$date);
+				$uicols['formatter'][] = '';
+				$uicols['descr'][] = $date;
+				$uicols['className'][] = 'rightClasss';
+				
+				$uicols_add['input_type'][] = 'date';
+				$uicols_add['name'][] = str_replace('/','_',$date);
+				$uicols_add['formatter'][] = '';
+				$uicols_add['descr'][] = $date;
+				$uicols_add['className'][] = 'rightClasss';				
 			}
-
-			$search_field_header[] = array
-			(
-				'lang_property'		=> lang('Property ID'),
-				'lang_gaards_nr'	=> lang('gaards nr'),
-				'lang_bruksnr'		=> lang('bruks nr'),
-				'lang_feste_nr'		=> lang('Feste nr'),
-				'lang_seksjons_nr'	=> lang('Seksjons nr')
-				);
-
-			if($this->acl_add)
+		
+			$content = array();
+			$j=0;
+			if (isset($gab_list) && is_array($gab_list))
 			{
-				$table_add[] = array
-				(
-					'lang_add'		=> lang('add'),
-					'lang_add_statustext'	=> lang('add a gab'),
-					'add_action'		=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=>'property.uigab.edit', 'from'=>'index'))
-				);
+				foreach($gab_list as $gab)
+				{
+					for ($i=0;$i<count($uicols['name']);$i++)
+					{
+						if($uicols['input_type'][$i]!='hidden')
+						{
+							if ($uicols['name'][$i] == 'gaards_nr') 
+							{
+								$value_gaards_nr	= substr($gab['gab_id'],4,5);
+								$value	= $value_gaards_nr;							
+								
+							} elseif ($uicols['name'][$i] == 'bruksnr') {
+							
+								$value_bruks_nr		= substr($gab['gab_id'],9,4);
+								$value	= $value_bruks_nr;							
+								
+							} elseif ($uicols['name'][$i] == 'feste_nr') {
+							
+								$value_feste_nr		= substr($gab['gab_id'],13,4);
+								$value	= $value_feste_nr;						
+								
+							} elseif ($uicols['name'][$i] == 'seksjons_nr') {
+						
+								$value_seksjons_nr	= substr($gab['gab_id'],17,3);
+								$value	= $value_seksjons_nr;						
+								
+							} else {														
+								$value	= $gab[$uicols['name'][$i]];
+						    }
+						    
+						    $datatable['rows']['row'][$j]['column'][$i]['value'] 			= $value;
+							$datatable['rows']['row'][$j]['column'][$i]['name'] 			= $uicols['name'][$i];
+							$datatable['rows']['row'][$j]['column'][$i]['align'] 			= 'center';
+							
+							if(isset($uicols['input_type']) && isset($uicols['input_type'][$i]) && $uicols['input_type'][$i]=='link' && $uicols['name'][$i] == 'map' )
+							{
+								$value_gaards_nr	= substr($gab['gab_id'],4,5);
+								$value_bruks_nr		= substr($gab['gab_id'],9,4);
+								$value_feste_nr		= substr($gab['gab_id'],13,4);
+								$link = phpgw::safe_redirect($link_to_map . '?maptype=Eiendomskart&gnr=' . (int)$value_gaards_nr . '&bnr=' . (int)$value_bruks_nr . '&fnr=' . (int)$value_feste_nr);
+
+								$datatable['rows']['row'][$j]['column'][$i]['format'] 	= 'link';
+								$datatable['rows']['row'][$j]['column'][$i]['value']	= $text_map;
+								$datatable['rows']['row'][$j]['column'][$i]['link']		= $link;
+								$datatable['rows']['row'][$j]['column'][$i]['target']	= '_blank';
+							}							
+							if(isset($uicols['input_type']) && isset($uicols['input_type'][$i]) && $uicols['input_type'][$i]=='link' && $uicols['name'][$i] == 'gab' )
+							{
+								$value_gaards_nr	= substr($gab['gab_id'],4,5);
+								$value_bruks_nr		= substr($gab['gab_id'],9,4);
+								$value_feste_nr		= substr($gab['gab_id'],13,4);
+								$value_seksjons_nr	= substr($gab['gab_id'],17,3);
+								$link = phpgw::safe_redirect($link_to_gab . '?type=eiendom&Gnr=' . (int)$value_gaards_nr . '&Bnr=' . (int)$value_bruks_nr . '&Fnr=' . (int)$value_feste_nr . '&Snr=' . (int)$value_seksjons_nr);
+								
+								$datatable['rows']['row'][$j]['column'][$i]['format'] 	= 'link';
+								$datatable['rows']['row'][$j]['column'][$i]['value']	= $text_gab;
+								$datatable['rows']['row'][$j]['column'][$i]['link']		= $link;
+								$datatable['rows']['row'][$j]['column'][$i]['target']	= '_blank';
+							}	
+							
+							if (isset($uicols['input_type'][$i]) && $uicols['input_type'][$i]=='date')
+							{									
+							    $datatable['rows']['row'][$j]['column'][$i]['value'] 			= $gab['payment'][str_replace('_','/',$uicols['name'][$i])];
+								$datatable['rows']['row'][$j]['column'][$i]['name'] 			= $uicols['name'][$i];
+								$datatable['rows']['row'][$j]['column'][$i]['align'] 			= 'right';								
+							}
+						}
+						else
+						{
+								$datatable['rows']['row'][$j]['column'][$i]['name'] 			= $uicols['name'][$i];
+								$datatable['rows']['row'][$j]['column'][$i]['value']			= $gab[$uicols['name'][$i]];
+						}
+
+						$datatable['rows']['row'][$j]['hidden'][$i]['value'] 			= $gab[$uicols['name'][$i]];
+						$datatable['rows']['row'][$j]['hidden'][$i]['name'] 			= $uicols['name'][$i];
+					}
+									
+					$j++;
+				}
 			}
+	
+			// NO pop-up
+			$datatable['rowactions']['action'] = array();
+			if(!$lookup)
+			{
+				$parameters = array
+				(
+					'parameter' => array
+					(
+						array
+						(
+							'name'		=> 'gab_id',
+							'source'	=> 'gab_id'
+						),
+					)
+				);
 
-			$link_data = array
-			(
-				'menuaction'	=> 'property.uigab.index',
-					'sort'		=>$this->sort,
-					'order'		=>$this->order,
-					'cat_id'	=>$this->cat_id,
-					'filter'	=>$this->filter,
-					'location_code'	=>$location_code,
-					'gaards_nr'	=>$gaards_nr,
-					'bruksnr'	=>$bruksnr,
-					'feste_nr'	=>$feste_nr,
-					'seksjons_nr'	=>$seksjons_nr,
-					'address'	=>$address,
-					'check_payments'	=>$check_payments
-			);
+				if($this->acl_read)
+				{
+					$datatable['rowactions']['action'][] = array(
+						'text' 			=> lang('view'),
+						'action'		=> $GLOBALS['phpgw']->link('/index.php',array
+										(
+											'menuaction'	=> 'property.uigab.list_detail'
+										)),
+						'parameters'	=> $parameters
+					);
+				}
 
+				if($this->acl_add) 
+				{
+					$datatable['rowactions']['action'][] = array(
+							'text' 			=> lang('add'),
+							'action'		=> $GLOBALS['phpgw']->link('/index.php',array
+											(
+												'menuaction'	=> 'property.uigab.edit',
+												'from'			=> 'index'
+											))
+					);
+				}
+				unset($parameters);
+			}
+			
+			//$uicols_count indicates the number of columns to display in actuall option-menu. this variable was set in $this->bo->read()
+			$uicols_count	= count($uicols['descr']);
 
-			$link_download = array
-			(
-				'menuaction'	=> 'property.uigab.download',
-					'sort'		=>$this->sort,
-					'order'		=>$this->order,
-					'cat_id'	=>$this->cat_id,
-					'filter'	=>$this->filter,
-					'location_code'	=>$location_code,
-					'gaards_nr'	=>$gaards_nr,
-					'bruksnr'	=>$bruksnr,
-					'feste_nr'	=>$feste_nr,
-					'seksjons_nr'	=>$seksjons_nr,
-					'address'	=>$address,
-					'check_payments'	=>$check_payments
-			);
+			for ($i=0;$i<$uicols_count;$i++)
+			{
+				//all colums should be have formatter
+				$datatable['headers']['header'][$i]['formatter'] = ($uicols['formatter'][$i]==''?  '""' : $uicols['formatter'][$i]);
 
+				if($uicols['input_type'][$i]!='hidden')
+				{
+					$datatable['headers']['header'][$i]['name'] 			= $uicols['name'][$i];
+					$datatable['headers']['header'][$i]['text'] 			= $uicols['descr'][$i];
+					$datatable['headers']['header'][$i]['visible'] 			= true;
+					$datatable['headers']['header'][$i]['sortable']			= false;
+
+					if($uicols['name'][$i]=='gaards_nr'):
+					{
+						$datatable['headers']['header'][$i]['sortable']		= true;
+						$datatable['headers']['header'][$i]['sort_field']	= 'gab_id';
+					}
+					elseif($uicols['name'][$i]=='location_code'):
+					{
+						$datatable['headers']['header'][$i]['sortable']		= true;
+						$datatable['headers']['header'][$i]['sort_field'] 	= 'location_code';
+					}
+					endif;
+				}
+				else
+				{
+					$datatable['headers']['header'][$i]['name'] 			= $uicols['name'][$i];
+					$datatable['headers']['header'][$i]['text'] 			= $uicols['descr'][$i];
+					$datatable['headers']['header'][$i]['visible'] 			= false;
+					$datatable['headers']['header'][$i]['sortable']		= false;
+					$datatable['headers']['header'][$i]['format'] 			= 'hidden';
+				}
+			}
 
 			if(!$this->allrows)
 			{
@@ -420,55 +592,111 @@
 				$record_limit	= $this->bo->total_records;
 			}
 
-			$GLOBALS['phpgw']->js->validate_file('overlib','overlib','property');
 
-			$data = array
-			(
-				'menu'							=> $this->bocommon->get_menu(),
-				'lang_download'				=> 'download',
-				'link_download'				=> $GLOBALS['phpgw']->link('/index.php',$link_download),
-				'lang_download_help'			=> lang('Download table to your browser'),
+			// path for property.js
+			$datatable['property_js'] = $GLOBALS['phpgw_info']['server']['webserver_url']."/property/js/yahoo/property.js";
 
-				'search_field_header'			=> $search_field_header,
-				'allrows'				=> $this->allrows,
-				'allow_allrows'				=> true,
-				'start_record'				=> $this->start,
-				'record_limit'				=> $record_limit,
-				'num_records'				=> count($gab_list),
-				'all_records'				=> $this->bo->total_records,
-				'link_url'				=> $GLOBALS['phpgw']->link('/index.php',$link_data),
-				'img_path'				=> $GLOBALS['phpgw']->common->get_image_path('phpgwapi','default'),
-				'select_action'				=> $GLOBALS['phpgw']->link('/index.php',$link_data),
-				'address'				=> $address,
-				'location_code'				=> $location_code,
-				'gaards_nr'				=> $gaards_nr,
-				'bruksnr'				=> $bruksnr,
-				'feste_nr'				=> $feste_nr,
-				'seksjons_nr'				=> $seksjons_nr,
-				'lang_search_location_statustext'	=> lang('search by location_code. To show all entries, empty all fields and press the SUBMIT button again'),
-				'lang_search_gaard_statustext'		=> lang('search by gaards nr. To show all entries, empty all fields and press the SUBMIT button again'),
-				'lang_search_bruk_statustext'		=> lang('search by bruk. To show all entries, empty all fields and press the SUBMIT button again'),
-				'lang_search_feste_statustext'		=> lang('search by feste. To show all entries, empty all fields and press the SUBMIT button again'),
-				'lang_search_seksjon_statustext'	=> lang('search by seksjon. To show all entries, empty all fields and press the SUBMIT button again'),
-				'lang_searchbutton_statustext'		=> lang('Submit the search string'),
-				'lang_reset_query_statustext'		=> lang('check to reset the query'),
-				'lang_search'				=> lang('search'),
-				'table_header_gab'			=> $table_header,
-				'values_gab'				=> $content,
-				'table_add'				=> $table_add,
-				'lang_check_payments'			=> lang('check payments'),
-				'lang_check_payments_statustext'	=> lang('List payments history'),
-				'value_check_payments'			=> $check_payments,
-				'colspan'				=> $colspan
-			);
+			// Pagination and sort values
+			$datatable['pagination']['records_start'] 	= (int)$this->bo->start;
+			$datatable['pagination']['records_limit'] 	= $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
+			$datatable['pagination']['records_returned']= count($gab_list);
+			$datatable['pagination']['records_total'] 	= $this->bo->total_records;
+
+			$datatable['sorting']['order'] 	= phpgw::get_var('order', 'string'); // Column
+			$datatable['sorting']['sort'] 	= phpgw::get_var('sort', 'string'); // ASC / DESC
 
 			$appname		= lang('gab');
 			$function_msg	= lang('list gab');
 
+			phpgwapi_yui::load_widget('dragdrop');
+		  	phpgwapi_yui::load_widget('datatable');
+		  	phpgwapi_yui::load_widget('menu');
+		  	phpgwapi_yui::load_widget('connection');
+		  	//// cramirez: necesary for include a partucular js
+		  	phpgwapi_yui::load_widget('loader');
+		  	phpgwapi_yui::load_widget('paginator');
+		  	//cramirez: necesary for use opener . Avoid error JS
+			phpgwapi_yui::load_widget('tabview');
+
+
+//-- BEGIN----------------------------- JSON CODE ------------------------------
+
+			if( phpgw::get_var('phpgw_return_as') == 'json' )
+			{
+    			//values for Pagination
+	    		$json = array
+	    		(
+	    			'recordsReturned' 	=> $datatable['pagination']['records_returned'],
+    				'totalRecords' 		=> (int)$datatable['pagination']['records_total'],
+	    			'startIndex' 		=> $datatable['pagination']['records_start'],
+					'sort'				=> $datatable['sorting']['order'],
+	    			'dir'				=> $datatable['sorting']['sort'],
+					'records'			=> array(),
+				    'headers'			=> $uicols_add['name'],
+				    'headers_all'		=> $uicols['name']
+	    		);
+
+				// values for datatable
+	    		if(isset($datatable['rows']['row']) && is_array($datatable['rows']['row'])){
+	    			foreach( $datatable['rows']['row'] as $row )
+	    			{
+		    			$json_row = array();
+		    			foreach( $row['column'] as $column)
+		    			{
+		    				if(isset($column['format']) && $column['format']== "link" && $column['java_link']==true)
+		    				{
+		    					$json_row[$column['name']] = "<a href='#' id='".$column['link']."' onclick='javascript:filter_data(this.id);'>" .$column['value']."</a>";
+		    				}
+		    				elseif(isset($column['format']) && $column['format']== "link")
+		    				{
+		    				  $json_row[$column['name']] = "<a href='".$column['link']."' target='_blank'>" .$column['value']."</a>";
+		    				}
+		    				else
+		    				{
+		    				  $json_row[$column['name']] = $column['value'];
+		    				}
+		    			}
+		    			$json['records'][] = $json_row;
+	    			}
+	    		}
+
+				// right in datatable
+				if(isset($datatable['rowactions']['action']) && is_array($datatable['rowactions']['action']))
+				{
+					$json ['rights'] = $datatable['rowactions']['action'];
+				}
+
+	    		return $json;
+			}
+//-------------------- JSON CODE ----------------------
+
+			// Prepare template variables and process XSLT
+			$template_vars = array();
+			$template_vars['datatable'] = $datatable;
+			$GLOBALS['phpgw']->xslttpl->add_file(array('datatable'));
+	      	$GLOBALS['phpgw']->xslttpl->set_var('phpgw', $template_vars);
+
+	      	if ( !isset($GLOBALS['phpgw']->css) || !is_object($GLOBALS['phpgw']->css) )
+	      	{
+	        	$GLOBALS['phpgw']->css = createObject('phpgwapi.css');
+	      	}
+			// Prepare CSS Style
+		  	$GLOBALS['phpgw']->css->validate_file('datatable');
+		  	$GLOBALS['phpgw']->css->validate_file('property');
+		  	$GLOBALS['phpgw']->css->add_external_file('property/templates/base/css/property.css');
+			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/datatable/assets/skins/sam/datatable.css');
+			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/paginator/assets/skins/sam/paginator.css');
+			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/container/assets/skins/sam/container.css');
+
+			//Title of Page
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
-			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('list_gab' => $data));
-		//	$GLOBALS['phpgw']->xslttpl->pp();
+
+	  		// Prepare YUI Library
+  			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'gab.index', 'property' );
+  			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'json-min', 'phpgwapi' );
+
 			$this->save_sessiondata();
+
 		}
 
 		function list_detail()
@@ -804,7 +1032,7 @@
 			$kommune_nr		= substr($gab_id,0,4);
 			if(!$kommune_nr > 0)
 			{
-				$this->config->read();
+				$this->config->read_repository();
 				$kommune_nr= $this->config->config_data['default_municipal'];
 			}
 
