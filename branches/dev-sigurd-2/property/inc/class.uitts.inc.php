@@ -379,7 +379,7 @@
 						                                'value'	=> lang('download')
 						                            ),
 													array(
-						                                'type'	=> 'submit',
+						                                'type'	=> 'button',
 						                            	'id'	=> 'btn_new',
 						                                'value'	=> lang('add')
 						                            ),
@@ -394,6 +394,7 @@
 			                                            'id'     => 'txt_query',
 			                                            'value'    => '',//$query,
 			                                            'type' => 'text',
+			                                            'onkeypress' => 'return pulsar(event)',
 			                                            'size'    => 28
 			                                        ),
 			                                        array( //hidden start_date
@@ -493,65 +494,8 @@
 
 				foreach($ticket_list as $ticket)
 				{
-					/*switch ($ticket['status'])
-					{
-						case 'O':
-							$bgcolor = $bgcolor_array[$ticket['priority']];
-							$status_text = lang('Open');
-							$text_edit_status = lang('Close');
-							$new_status = 'X';
-						break;
-						default :
-							$bgcolor	 		= $status[$ticket['status']]['bgcolor'];
-							$status_text		= $status[$ticket['status']]['status'];
-							$text_edit_status	= $status[$ticket['status']]['text_edit_status'];
-							$new_status			= $status[$ticket['status']]['new_status'];
-						break;
-					}
-
-					$link_status_data = array
-					(
-						'menuaction'		=> 'property.uitts.index',
-						'id'				=> $ticket['id'],
-						'edit_status'		=> true,
-						'new_status'		=> $new_status,
-						'second_display'	=> true,
-						'sort'				=> $this->sort,
-						'order'				=> $this->order,
-						'cat_id'			=> $this->cat_id,
-						'filter'			=> $this->status_id,
-						'user_id'		=> $this->user_id,
-						'query'				=> $this->query,
-						'district_id'		=> $this->district_id,
-						'allrows'			=> $this->allrows
-					);*/
-
-
-
 					for ($k=0;$k<$count_uicols_name;$k++)
 					{
-
-								/*$datatable['rows']['row'][$j]['column'][0]['id'] 					= $ticket['id'];
-								$datatable['rows']['row'][$j]['column'][1]['bgcolor']				= $bgcolor;
-								$datatable['rows']['row'][$j]['column'][2]['new_ticket']			= (isset($ticket['new_ticket'])?$ticket['new_ticket']:'');
-								$datatable['rows']['row'][$j]['column'][3]['priostr'] 				= $ticket['priority'];
-								$datatable['rows']['row'][$j]['column'][4]['subject']				= $ticket['subject'];
-								$datatable['rows']['row'][$j]['column'][5]['location_code']			= $ticket['location_code'];
-								$datatable['rows']['row'][$j]['column'][6]['address']				= $ticket['address'];
-								$datatable['rows']['row'][$j]['column'][7]['date']					= $ticket['timestampopened'];
-								$datatable['rows']['row'][$j]['column'][8]['finnish_date']			= $ticket['finnish_date'];
-								$datatable['rows']['row'][$j]['column'][9]['delay']					= (isset($ticket['delay'])?$ticket['delay']:'');
-								$datatable['rows']['row'][$j]['column'][10]['user']					= $ticket['user'];
-								$datatable['rows']['row'][$j]['column'][11]['assignedto']			= $ticket['assignedto'];
-								$datatable['rows']['row'][$j]['column'][12]['child_date']			= $ticket['child_date'];
-								$datatable['rows']['row'][$j]['column'][13]['link_view']				= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uitts.view', 'id'=> $ticket['id']));
-								$datatable['rows']['row'][$j]['column'][14]['lang_view_statustext']	= lang('view the ticket');
-								$datatable['rows']['row'][$j]['column'][15]['text_view']				= lang('view');
-								$datatable['rows']['row'][$j]['column'][16]['status']				= $status_text;
-								$datatable['rows']['row'][$j]['column'][17]['link_edit_status']		= $GLOBALS['phpgw']->link('/index.php',$link_status_data);
-								$datatable['rows']['row'][$j]['column'][18]['lang_edit_status']		= lang('Edit status');
-								$datatable['rows']['row'][$j]['column'][19]['text_edit_status']		= $text_edit_status;*/
-
 
 								if($uicols['name'][$k] == 'status' && $ticket[$uicols['name'][$k]]=='O')
 								{
@@ -582,30 +526,6 @@
 
 					}
 
-					/*$content[] = array
-					(
-						'id'					=> $ticket['id'],
-						'bgcolor'				=> $bgcolor,
-						'new_ticket'			=> (isset($ticket['new_ticket'])?$ticket['new_ticket']:''),
-						'priostr'				=> $ticket['priority'],
-						'subject'				=> $ticket['subject'],
-						'location_code'			=> $ticket['location_code'],
-						'address'				=> $ticket['address'],
-						'date'					=> $ticket['timestampopened'],
-						'finnish_date'			=> $ticket['finnish_date'],
-						'delay'					=> (isset($ticket['delay'])?$ticket['delay']:''),
-						'user'					=> $ticket['user'],
-						'assignedto'			=> $ticket['assignedto'],
-						'child_date'			=> $ticket['child_date'],
-						'link_view'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uitts.view', 'id'=> $ticket['id'])),
-						'lang_view_statustext'	=> lang('view the ticket'),
-						'text_view'				=> lang('view'),
-						'status'				=> $status_text,
-						'link_edit_status'		=> $GLOBALS['phpgw']->link('/index.php',$link_status_data),
-						'lang_edit_status'		=> lang('Edit status'),
-						'text_edit_status'		=> $text_edit_status,
-					);*/
-
 					$j++;
 				}
 			}
@@ -625,6 +545,7 @@
 						if($this->acl_read)
 						{
 							$datatable['rowactions']['action'][] = array(
+								'name' 			=> 'view',
 								'statustext' 			=> lang('view the project'),
 								'text'		=> lang('view'),
 								'action'		=> $GLOBALS['phpgw']->link('/index.php',array
@@ -638,6 +559,7 @@
 
 
 							$datatable['rowactions']['action'][] = array(
+												'name' 			=> 'add',
 												'text' 			=> lang('add'),
 												'action'		=> $GLOBALS['phpgw']->link('/index.php',array
 																(
@@ -671,132 +593,6 @@
 						}
 			unset($parameters);
 
-			/*$table_header[] = array
-			(
-				'sort_priority'	=> $this->nextmatchs->show_sort_order(array
-										(
-											'sort'	=> $this->sort,
-											'var'	=> 'priority',
-											'order'	=> $this->order,
-											'extra'	=> array('menuaction' => 'property.uitts.index',
-																	'cat_id'	=>$this->cat_id,
-																	'filter'	=>$this->status_id,
-																	'user_id'	=>$this->user_id,
-																	'district_id'	=> $this->district_id,
-																	'query'		=>$this->query,
-																	'second_display'	=> true,
-																	'allrows'=>$this->allrows,
-																	'start_date'	=>$start_date,
-																	'end_date'	=>$end_date
-																	)
-										)),
-
-				'lang_priority'		=> lang('Priority'),
-				'lang_priority_statustext'		=> lang('Sort the tickets by their priority'),
-
-				'sort_id'	=> $this->nextmatchs->show_sort_order(array
-										(
-											'sort'	=> $this->sort,
-											'var'	=> 'fm_tts_tickets.id',
-											'order'	=> $this->order,
-											'extra'	=> array('menuaction' => 'property.uitts.index',
-																	'cat_id'	=>$this->cat_id,
-																	'filter'	=>$this->status_id,
-																	'user_id'	=>$this->user_id,
-																	'district_id'	=> $this->district_id,
-																	'query'		=>$this->query,
-																	'second_display'	=> true,
-																	'allrows'=>$this->allrows,
-																	'start_date'	=>$start_date,
-																	'end_date'	=>$end_date
-																	)
-										)),
-
-				'lang_id'		=> lang('ID'),
-				'lang_id_statustext'	=> lang('Sort the tickets by their ID'),
-
-				'lang_subject'		=> lang('Subject'),
-				'lang_time_created'	=> lang('Started'),
-				'lang_view'		=> lang('view'),
-				'lang_location_code'	=> lang('Location'),
-				'lang_address'		=> lang('Address'),
-				'lang_user'		=> lang('user'),
-				'sort_assigned_to'	=> $this->nextmatchs->show_sort_order(array
-										(
-											'sort'	=> $this->sort,
-											'var'	=> 'assignedto',
-											'order'	=> $this->order,
-											'extra'	=> array('menuaction' => 'property.uitts.index',
-																	'cat_id'	=>$this->cat_id,
-																	'filter'	=>$this->status_id,
-																	'user_id'	=>$this->user_id,
-																	'district_id'	=> $this->district_id,
-																	'query'		=>$this->query,
-																	'second_display'	=> true,
-																	'allrows'=>$this->allrows,
-																	'start_date'	=>$start_date,
-																	'end_date'	=>$end_date
-																	)
-										)),
-				'lang_assigned_to'	=> lang('Assigned to'),
-				'sort_opened_by'	=> $this->nextmatchs->show_sort_order(array
-										(
-											'sort'	=> $this->sort,
-											'var'	=> 'user_lid',
-											'order'	=> $this->order,
-											'extra'	=> array('menuaction'	=> 'property.uitts.index',
-																	'cat_id'	=>$this->cat_id,
-																	'filter'	=>$this->status_id,
-																	'user_id'	=>$this->user_id,
-																	'district_id'	=> $this->district_id,
-																	'query'		=>$this->query,
-																	'second_display'	=> true,
-																	'allrows'=>$this->allrows,
-																	'start_date'	=>$start_date,
-																	'end_date'	=>$end_date
-																	)
-										)),
-				'sort_date'	=> $this->nextmatchs->show_sort_order(array
-										(
-											'sort'	=> $this->sort,
-											'var'	=> 'fm_tts_tickets.entry_date',
-											'order'	=> $this->order,
-											'extra' => array('menuaction'	=> 'property.uitts.index',
-																	'cat_id'	=>$this->cat_id,
-																	'filter'	=>$this->status_id,
-																	'user_id'	=>$this->user_id,
-																	'district_id'	=> $this->district_id,
-																	'query'		=>$this->query,
-																	'second_display'	=> true,
-																	'allrows'=>$this->allrows,
-																	'start_date'	=>$start_date,
-																	'end_date'	=>$end_date
-																	)
-										)),
-				'sort_finnish_date'	=> $this->nextmatchs->show_sort_order(array
-										(
-											'sort'	=> $this->sort,
-											'var'	=> 'finnish_date',
-											'order'	=> $this->order,
-											'extra'	=> array('menuaction'	=> 'property.uitts.index',
-																	'cat_id'	=> $this->cat_id,
-																	'filter'	=> $this->status_id,
-																	'user_id'	=> $this->user_id,
-																	'district_id'	=> $this->district_id,
-																	'query'		=> $this->query,
-																	'second_display'=> true,
-																	'allrows'	=> $this->allrows,
-																	'start_date'	=> $start_date,
-																	'end_date'	=> $end_date
-																	)
-										)),
-				'lang_finnish_date'	=> lang('finnish date'),
-				'lang_delay'		=> lang('delay'),
-				'lang_finnish_statustext'=> lang('presumed finnish date'),
-				'lang_opened_by'	=> lang('Opened by'),
-				'lang_status'		=> lang('Status')
-			);*/
-
 			for ($i=0;$i<$count_uicols_name;$i++)
 			{
 
@@ -821,150 +617,6 @@
 				}
 			}
 
-			/*for ($i=0;$i<count($uicols);$i++)
-			{
-				//$table_header[0]['extra'][$i]['header'] = $uicols[$i];
-				$datatable['headers']['header'][$i]['extra'] = $uicols[$i];
-				//_debug_array($datatable['headers']);die;
-			}*/
-
-			/*$table_add[] = array
-			(
-				'lang_add'		=> lang('add'),
-				'lang_add_statustext'	=> lang('add a ticket'),
-				'add_action'		=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uitts.add'))
-			);
-
-			$link_data = array
-			(
-				'menuaction'	=> 'property.uitts.index',
-				'second_display'=> true,
-				'sort'		=> $this->sort,
-				'order'		=> $this->order,
-				'cat_id'	=> $this->cat_id,
-				'filter'	=> $this->status_id,
-				'user_id'	=> $this->user_id,
-				'query'		=> $this->query,
-				'district_id'	=> $this->district_id,
-				'start_date'	=> $start_date,
-				'end_date'	=> $end_date,
-				'allrows'	=> $this->allrows
-			);
-
-			$receipt = $GLOBALS['phpgw']->session->appsession('receipt','property');
-			$GLOBALS['phpgw']->session->appsession('receipt','property','');
-
-			$GLOBALS['phpgw']->preferences->read();
-			$autorefresh ='';
-			if (isset($GLOBALS['phpgw_info']['user']['preferences']['property']['refreshinterval']))
-			{
-				$autorefresh = $GLOBALS['phpgw_info']['user']['preferences']['property']['refreshinterval'].'; URL='.$GLOBALS['phpgw']->link('/index.php',$link_data);
-			}
-
-
-			if(!$this->allrows)
-			{
-				$record_limit	= $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
-			}
-			else
-			{
-				$record_limit	= $this->bo->total_records;
-			}
-
-
-			$msgbox_data = $this->bocommon->msgbox_data($receipt);
-
-			$link_date_search	= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiproject.date_search'));
-
-			$link_download = array
-			(
-				'menuaction' 	=> 'property.uitts.download',
-				'second_display'=> true,
-				'sort'		=> $this->sort,
-				'order'		=> $this->order,
-				'cat_id'	=> $this->cat_id,
-				'filter'	=> $this->status_id,
-				'user_id'	=> $this->user_id,
-				'query'		=> $this->query,
-				'district_id'	=> $this->district_id,
-				'allrows'	=> $this->allrows,
-				'start_date'	=> $start_date,
-				'end_date'	=> $end_date,
-				'start'		=> $this->start
-			);*/
-
-			/*$cat_select = '';
-			$cat_filter = '';
-			$pref_group_filters = '';
-			if(isset($GLOBALS['phpgw_info']['user']['preferences']['property']['group_filters']))
-			{
-				$pref_group_filters = true;
-				$group_filters = 'select';
-				$GLOBALS['phpgw']->xslttpl->add_file(array('search_field_grouped'));
-				$cat_select	= $this->cats->formatted_xslt_list(array('select_name' => 'values[cat_id]','selected' => $this->cat_id));
-			}
-			else
-			{
-				$group_filters = 'filter';
-				$GLOBALS['phpgw']->xslttpl->add_file(array('search_field'));
-				$cat_filter = $this->cats->formatted_xslt_list(array('select_name' => 'cat_id','selected' => $this->cat_id,'globals' => True,'link_data' => $link_data));
-			}*/
-
-			//$GLOBALS['phpgw']->js->validate_file('overlib','overlib','property');
-
-			/*$data = array
-			(
-				'menu'							=> $this->bocommon->get_menu(),
-				'group_filters'					=> $pref_group_filters,
-				'lang_download'					=> 'download',
-				'link_download'					=> $GLOBALS['phpgw']->link('/index.php',$link_download),
-				'lang_download_help'				=> lang('Download table to your browser'),
-
-				'start_date'					=> $start_date,
-				'end_date'						=> $end_date,
-				'lang_none'						=> lang('None'),
-				'lang_date_search'				=> lang('Date search'),
-				'lang_date_search_help'			=> lang('Narrow the search by dates'),
-				'link_date_search'				=> $link_date_search,
-
-				'msgbox_data'					=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
-				'autorefresh'					=> $autorefresh,
-				'allow_allrows'					=> true,
-				'allrows'						=> $this->allrows,
-				'start_record'					=> $this->start,
-				'record_limit'					=> $record_limit,
-				'num_records'					=> count($ticket_list),
-				'all_records'					=> $this->bo->total_records,
-				'link_url'						=> $GLOBALS['phpgw']->link('/index.php',$link_data),
-				'img_path'						=> $GLOBALS['phpgw']->common->get_image_path('phpgwapi','default'),
-
-				'cat_select'					=> $cat_select,
-				'cat_filter'					=> $cat_filter,
-
-				'select_action'					=> $GLOBALS['phpgw']->link('/index.php',$link_data),
-				'filter_name'					=> 'filter',
-				'filter_list'					=> $this->bo->filter(array('format' => $group_filters, 'filter'=> $this->status_id,'default' => 'O')),
-				'lang_show_all'					=> lang('Open'),
-				'lang_filter_statustext'		=> lang('Select the filter. To show all entries select SHOW ALL'),
-				'lang_searchfield_statustext'	=> lang('Enter the search string. To show all entries, empty this field and press the SUBMIT button again'),
-				'lang_searchbutton_statustext'	=> lang('Submit the search string'),
-				'query'							=> $this->query,
-				'lang_search'					=> lang('search'),
-				'table_header'					=> $table_header,
-				'values'						=> (isset($content)?$content:''),
-				'table_add'						=> $table_add,
-
-				'district_list'					=> $this->bocommon->select_district_list($group_filters,$this->district_id),
-				'lang_no_district'				=> lang('no district'),
-				'lang_district_statustext'		=> lang('Select the district the selection belongs to. To do not use a district select NO DISTRICT'),
-				'select_district_name'			=> 'district_id',
-
-				'lang_user_statustext'			=> lang('Assigned to'),
-				'select_user_name'				=> 'user_id',
-				'lang_no_user'					=> lang('No user'),
-				'user_list'						=> $this->bocommon->get_user_list_right2($group_filters,4,$this->user_id,$this->acl_location,'',$default=''),
-				'allow_edit_status'				=> isset($GLOBALS['phpgw_info']['user']['preferences']['property']['tts_status_link']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['tts_status_link'] ? $GLOBALS['phpgw_info']['user']['preferences']['property']['tts_status_link']:''
-			);*/
 			//path for property.js
 			$datatable['property_js'] = $GLOBALS['phpgw_info']['server']['webserver_url']."/property/js/yahoo/property.js";
 
@@ -979,6 +631,17 @@
 
 			$appname					= lang('helpdesk');
 			$function_msg					= lang('list ticket');
+
+
+			if ( (phpgw::get_var("start")== "") && (phpgw::get_var("order",'string')== ""))
+			{
+				$datatable['sorting']['order'] 			= 'priority'; // name key Column in myColumnDef
+			}
+			else
+			{
+				$datatable['sorting']['order']			= phpgw::get_var('order', 'string'); // name of column of Database
+			}
+
 
 			phpgwapi_yui::load_widget('dragdrop');
 		  	phpgwapi_yui::load_widget('datatable');
@@ -1099,6 +762,7 @@
 		  	$GLOBALS['phpgw']->css->validate_file('property');
 			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/datatable/assets/skins/sam/datatable.css');
 			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/paginator/assets/skins/sam/paginator.css');
+			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/container/assets/skins/sam/container.css');
 
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
 
@@ -1107,11 +771,6 @@
 			$this->save_sessiondata();
 			//_debug_array($datatable);die;
 
-			//$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
-			//$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('list' => $data));
-		//	$GLOBALS['phpgw']->xslttpl->pp();
-			//_debug_array($data);die;
-			//$this->save_sessiondata();
 		}
 
 		function index2()
