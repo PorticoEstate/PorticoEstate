@@ -7,7 +7,8 @@
 	var myDataSource,myDataTable, myContextMenu, myPaginator ;
 	var ds, values_ds;
 	var myrowsPerPage,mytotalRows,ActualValueRowsPerPageDropdown;
-  	var showTimer,hideTimer,tt;
+  	var showTimer,hideTimer;
+  	var tt = new YAHOO.widget.Tooltip("myTooltip");
 
 
  /********************************************************************************
@@ -37,12 +38,18 @@
  */
  	this.onNewClick = function()
  	{
-		//NEW is always the last options in arrays RIGHTS
-		pos_opt = values_ds.rights.length-1;
-		sUrl = values_ds.rights[pos_opt].action;
-		//Convert all HTML entities to their applicable characters
-        sUrl=html_entity_decode(sUrl);
-		window.open(sUrl,'_self');
+ 		for(i=0;i<values_ds.rights.length;i++)
+ 		{
+	 		if(values_ds.rights[i].name == 'add')
+	 		{
+		 		//NEW is always the last options in arrays RIGHTS
+				//pos_opt = values_ds.rights.length-1;
+				sUrl = values_ds.rights[i].action;
+				//Convert all HTML entities to their applicable characters
+		        sUrl=html_entity_decode(sUrl);
+				window.open(sUrl,'_self');
+	 		}
+ 		}
 	}
  /********************************************************************************
  *
@@ -197,7 +204,7 @@ this.create_array_values_list = function(stValues)
 			 //verify add rights aand destroy the buttons if it's necessary
             for (var z = 0; z < values_ds.rights.length; z++)
             {
-                if (values_ds.rights[z].text == 'Add')
+                if (values_ds.rights[z].name == 'add')
                 {
                     flag_add = 1;
                 }
@@ -286,21 +293,19 @@ this.create_array_values_list = function(stValues)
  */
    this.onContextMenuBeforeShow = function(p_sType, p_aArgs)
    {
-   var oTarget = this.contextEventTarget;
-
-      if (this.getRoot() == this) {
-
-    if(oTarget.tagName != "TD")
-    {
-     oTarget = YAHOO.util.Dom.getAncestorByTagName(oTarget, "td");
+	   	var oTarget = this.contextEventTarget;
+	   	if (this.getRoot() == this)
+	   	{
+	   		if(oTarget.tagName != "TD")
+	    	{
+	     		oTarget = YAHOO.util.Dom.getAncestorByTagName(oTarget, "td");
+	    	}
+	    	oSelectedTR = YAHOO.util.Dom.getAncestorByTagName(oTarget, "tr");
+	    	oSelectedTR.style.backgroundColor  = '#AAC1D8' ;
+	    	oSelectedTR.style.color = "black";
+	    	YAHOO.util.Dom.addClass(oSelectedTR, prefixSelected);
+	    }
     }
-
-    oSelectedTR = YAHOO.util.Dom.getAncestorByTagName(oTarget, "tr");
-    oSelectedTR.style.backgroundColor  = '#AAC1D8' ;
-             oSelectedTR.style.color = "black";
-             YAHOO.util.Dom.addClass(oSelectedTR, prefixSelected);
-         }
-     }
  /********************************************************************************
  *
  */
@@ -326,7 +331,6 @@ this.create_array_values_list = function(stValues)
                 {
                         var oRecord = p_myDataTable.getRecord(elRow);
                         var url = values_ds.rights[task.groupIndex].action;
-
                         var sUrl = "";
 
                         if(values_ds.rights[task.groupIndex].parameters!=null)
@@ -367,7 +371,10 @@ this.create_array_values_list = function(stValues)
    var opts = new Array();
    for(var k =0; k < values_ds.rights.length; k ++)
    {
-	opts[k]=[{text: values_ds.rights[k].text}];
+   	if(values_ds.rights[k].name != 'add')
+   	{
+   		opts[k]=[{text: values_ds.rights[k].text}];
+   	}
    }
    return [opts];
   }
@@ -488,24 +495,24 @@ this.create_array_values_list = function(stValues)
 		}
 		flag++;
 
-		if(mytotalRows >1000)
+        myPaginatorConfig = {
+				            containers: ['paging'],
+				            totalRecords: mytotalRows,
+				            pageLinks: 10,
+				            rowsPerPage: values_ds.recordsReturned, //MAXIMO el PHPGW me devuelve 15 valor configurado por preferencias
+				            rowsPerPageOptions: [myrowsPerPage, mytotalRows],
+				            pageReportTemplate: "Showing items {startRecord} - {endRecord} of {totalRecords}"
+				            }
+		if (mytotalRows > 1000)
 		{
-			$customize_template = "{CurrentPageReport}<br>{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}";
+			myPaginatorConfig.template = "{CurrentPageReport}<br>{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}";
 		}
 		else
 		{
-			$customize_template = "{RowsPerPageDropdown}items per Page, {CurrentPageReport}<br>{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}";
+			myPaginatorConfig.template = "{RowsPerPageDropdown}items per Page, {CurrentPageReport}<br>{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}";
 		}
 
-		myPaginator = new YAHOO.widget.Paginator({
-							containers			: ['paging'],
-	            			totalRecords : mytotalRows,
-							pageLinks			: 10,
-							rowsPerPage			: values_ds.recordsReturned, //MAXIMO el PHPGW me devuelve 15 valor configurado por preferencias
-							template			: $customize_template,
-							pageReportTemplate	: "Showing items {startIndex} - {endIndex} of {totalRecords}"
-						});
-
+		myPaginator = new YAHOO.widget.Paginator(myPaginatorConfig);
 
 
 	  var myTableConfig = {
@@ -518,8 +525,6 @@ this.create_array_values_list = function(stValues)
 
      myDataTable = new YAHOO.widget.DataTable(container[0], myColumnDefs, myDataSource, myTableConfig);
 
-
-     var tt = new YAHOO.widget.Tooltip("myTooltip");
 
 	 myDataTable.on('cellMouseoverEvent', function (oArgs)
 	 {

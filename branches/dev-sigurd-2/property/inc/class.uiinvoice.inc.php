@@ -834,6 +834,7 @@
 			if($this->acl_delete)
 			{
 				$datatable['rowactions']['action'][] = array(
+					'name'			=> 'delete',
 					'text' 			=> lang('delete'),
 					'confirm_msg'	=> lang('do you really want to delete this entry'),
 					'action'		=> $GLOBALS['phpgw']->link('/index.php',array
@@ -845,6 +846,7 @@
 			}
 
 			$datatable['rowactions']['action'][] = array(
+				'name'			=> 'f',
 				'text' 			=> lang('F'),
 				'action'		=> $GLOBALS['phpgw']->link('/index.php',array
 								(
@@ -856,6 +858,7 @@
 			if($this->acl_add)
 			{
 				$datatable['rowactions']['action'][] = array(
+					'name'			=> 'add',
 					'text' 			=> lang('add'),
 					'action'		=> $GLOBALS['phpgw']->link('/index.php',array
 									(
@@ -1674,7 +1677,7 @@
 				{
 					$values['amount'] 		= str_ireplace($GLOBALS['phpgw_info']['user']['preferences']['common']['currency'],'',$values['amount']);
 				}
-				
+
 				$values['amount'] 		= str_replace(' ','',$values['amount']);
 				$values['amount'] 		= str_replace(',','.',$values['amount']);
 
