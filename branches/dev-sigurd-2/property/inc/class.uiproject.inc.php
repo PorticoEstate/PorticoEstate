@@ -234,7 +234,7 @@
 							                                'value'	=> lang('download')
 							                            ),
 														array(
-							                                'type'	=> 'submit',
+							                                'type'	=> 'button',
 							                            	'id'	=> 'btn_new',
 							                                'value'	=> lang('add')
 							                            ),
@@ -249,6 +249,7 @@
 				                                            'id'     => 'txt_query',
 				                                            'value'    => '',//$query,
 				                                            'type' => 'text',
+				                                            'onkeypress' => 'return pulsar(event)',
 				                                            'size'    => 28
 				                                        ),
 				                                        array( //hidden start_date
@@ -373,6 +374,7 @@
 						if ($this->acl_read && $this->bocommon->check_perms($project_entry['grants'],PHPGW_ACL_READ))
 						{
 							$datatable['rowactions']['action'][] = array(
+								'name' 			=> 'view',
 								'statustext' 			=> lang('view the project'),
 								'text'		=> lang('view'),
 								'action'		=> $GLOBALS['phpgw']->link('/index.php',array
@@ -391,6 +393,7 @@
 						if ($this->acl_edit && $this->bocommon->check_perms($project_entry['grants'],PHPGW_ACL_EDIT))
 						{
 							$datatable['rowactions']['action'][] = array(
+								'name' 			=> 'edit',
 								'statustext' 			=> lang('edit the project'),
 								'text'		=> lang('edit'),
 								'action'		=> $GLOBALS['phpgw']->link('/index.php',array
@@ -409,6 +412,7 @@
 						if ($this->acl_delete && $this->bocommon->check_perms($project_entry['grants'],PHPGW_ACL_DELETE))
 						{
 							$datatable['rowactions']['action'][] = array(
+								'name' 			=> 'delete',
 								'statustext' 			=> lang('delete the project'),
 								'text'		=> lang('delete'),
 								'action'		=> $GLOBALS['phpgw']->link('/index.php',array
@@ -424,6 +428,7 @@
 						}
 					}
 						$datatable['rowactions']['action'][] = array(
+												'name' 			=> 'add',
 												'text' 			=> lang('add'),
 												'action'		=> $GLOBALS['phpgw']->link('/index.php',array
 																(
@@ -499,11 +504,18 @@
 			$datatable['pagination']['records_returned']= count($project_list);
 			$datatable['pagination']['records_total'] 	= $this->bo->total_records;
 
-			$datatable['sorting']['order'] 	= phpgw::get_var('order', 'string'); // Column
-			$datatable['sorting']['sort'] 	= phpgw::get_var('sort', 'string'); // ASC / DESC
-
 			$appname	= lang('Project');
 			$function_msg	= lang('list Project');
+
+
+			if ( (phpgw::get_var("start")== "") && (phpgw::get_var("order",'string')== ""))
+			{
+				$datatable['sorting']['order'] 			= 'project_id'; // name key Column in myColumnDef
+			}
+			else
+			{
+				$datatable['sorting']['order']			= phpgw::get_var('order', 'string'); // name of column of Database
+			}
 
 			phpgwapi_yui::load_widget('dragdrop');
 		  	phpgwapi_yui::load_widget('datatable');
