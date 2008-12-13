@@ -22,29 +22,36 @@
 	]
 
 	// define the hidden column in datatable
-	var config_values = {
-	 column_hidden : [1]
-	 };
+	var config_values =
+	{
+		date_search : 0, //if search has link "Data search"
+		footer_datatable : 0
+	}
 
 	this.particular_setting = function()
 	{
 		if(flag_particular_setting=='init')
 		{
-			//nothing
+			//locate (asign ID) to datatable
+			tableYUI = YAHOO.util.Dom.getElementsByClassName("yui-dt-data","tbody")[0].parentNode;
+			tableYUI.setAttribute("id","tableYUI");
+			//focus initial
+			oMenuButton_0.focus();
 		}
 		else if(flag_particular_setting=='update')
 		{
-			//nothing
+			//reset empty values for update PERIOD
+		   	path_values.voucher_id_for_period = '';
+		   	path_values.period = '';
+		   	path_values.currentPage = '';
+		   	path_values.start = '';
 		}
-
-		//--focus for txt_query---
-		YAHOO.util.Dom.get(textImput[0].id).value = path_values.query;
-		YAHOO.util.Dom.get(textImput[0].id).focus();
 	}
-	
+
 //----------------------------------------------------------
 	YAHOO.util.Event.addListener(window, "load", function()
 	{
+		YAHOO.util.Dom.getElementsByClassName('toolbar','div')[0].style.display = 'none';
 		var loader = new YAHOO.util.YUILoader();
 		loader.addModule({
 			name: "anyone", //module name; must be unique
