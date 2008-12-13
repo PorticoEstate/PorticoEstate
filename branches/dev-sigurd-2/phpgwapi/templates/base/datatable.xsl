@@ -280,13 +280,13 @@
 
 		<xsl:choose>
 			<xsl:when test="type='link'">
-				<a href="#" onclick="{url}"><xsl:value-of select="value"/></a>
+				<a id="{id}" href="#" onclick="{url}" tabindex="{tab_index}"><xsl:value-of select="value"/></a>
 			</xsl:when>
 			<xsl:when test="type='label_date'">
 				<table><tbody><tr><td><span id="txt_start_date"></span></td></tr><tr><td><span id="txt_end_date"></span></td></tr></tbody></table>
 			</xsl:when>
 			<xsl:when test="type='img'">
-				<img id="{id}" src="{src}" alt="{alt}" title="{alt}" style="cursor:pointer; cursor:hand;" />
+				<img id="{id}" src="{src}" alt="{alt}" title="{alt}" style="cursor:pointer; cursor:hand;" tabindex="{tab_index}" />
 			</xsl:when>
 			<xsl:otherwise>
 				<input id="{$id}" type="{type}" name="{name}" value="{value}" class="{type}"  tabindex="{tab_index}">

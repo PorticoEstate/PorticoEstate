@@ -681,7 +681,8 @@ this.create_array_values_list = function(stValues)
 				{
 					if( myColumnDefs[i].sortable )
 					{
-						YAHOO.util.Dom.getElementsByClassName( 'yui-dt-resizerliner' , 'div' )[i].style.backgroundColor  = '#D4DBE7';
+						YAHOO.util.Dom.getElementsByClassName( 'yui-dt-resizerliner' , 'div' )[i].style.background  = '#D8D8DA url(phpgwapi/js/yahoo/assets/skins/sam/sprite.png) repeat-x scroll 0 -100px';
+						//YAHOO.util.Dom.getElementsByClassName( 'yui-dt-resizerliner' , 'div' )[i].style.backgroundColor  = '#D4DBE7';
 						//YAHOO.util.Dom.getElementsByClassName( 'yui-dt-resizerliner' , 'div' )[i].style.backgroundImage  = 'url("")';
 						//YAHOO.util.Dom.getElementsByClassName( 'yui-dt-resizerliner' , 'div' )[i].setAttribute("class","ploma");
 					}

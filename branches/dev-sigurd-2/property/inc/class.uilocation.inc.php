@@ -135,6 +135,7 @@
 
 		function columns()
 		{
+			phpgwapi_yui::load_widget('tabview');
 			$receipt = array();
 			$GLOBALS['phpgw']->xslttpl->add_file(array('columns'));
 
@@ -302,28 +303,32 @@
 			                                            'name' => 'cat_id',
 			                                            'value'	=> lang('Category'),
 			                                            'type' => 'button',
-			                                            'style' => 'filter'
+			                                            'style' => 'filter',
+			                                            'tab_index' => 1
 			                                        ),
 			                                        array( //boton 	DISTINT
 			                                            'id' => 'btn_district_id',
 			                                            'name' => 'district_id',
 			                                            'value'	=> lang('District'),
 			                                            'type' => 'button',
-			                                            'style' => 'filter'
+			                                            'style' => 'filter',
+			                                            'tab_index' => 2
 			                                        ),
 			                                        array( //boton 	PART OF TOWN
 			                                            'id' => 'btn_part_of_town_id',
 			                                            'name' => 'part_of_town_id',
 			                                            'value'	=> lang('Part of Town'),
 			                                            'type' => 'button',
-			                                            'style' => 'filter'
+			                                            'style' => 'filter',
+			                                            'tab_index' => 3
 			                                        ),
 			                                        array( //boton 	FILTER
 			                                            'id' => 'btn_owner_id',
 			                                            'name' => 'owner_id',
 			                                            'value'	=> lang('Filter'),
 			                                            'type' => 'button',
-			                                            'style' => 'filter'
+			                                            'style' => 'filter',
+			                                            'tab_index' => 4
 			                                        ),
 						                            //for link "columns", next to Export button
 										           array(
@@ -336,37 +341,42 @@
 																				               'type_id'  => $type_id,
 																				               'lookup'  => $this->lookup
 																				              ))."','','width=300,height=600')",
-														'value' => lang('columns')
+														'value' => lang('columns'),
+														'tab_index' => 9
 													),
 													array(
 						                                'type'	=> 'button',
 						                            	'id'	=> 'btn_export',
-						                                'value'	=> lang('download')
-						                            ),														
+						                                'value'	=> lang('download'),
+						                                'tab_index' => 8
+						                            ),
 													array(
-						                                'type'	=> 'submit',
+						                                'type'	=> 'button',
 						                            	'id'	=> 'btn_new',
-						                                'value'	=> lang('add')
-						                            ),														
+						                                'value'	=> lang('add'),
+						                                'tab_index' => 7
+						                            ),
 			                                        array( //boton     SEARCH
 			                                            'id' => 'btn_search',
 			                                            'name' => 'search',
 			                                            'value'    => lang('search'),
 			                                            'type' => 'button',
-			                                        ),														
+			                                            'tab_index' => 6
+			                                        ),
 			   										 array( // TEXT IMPUT
 			                                            'name'     => 'query',
 			                                            'id'     => 'txt_query',
-			                                            //'text'    => '',//necesary for spacio next to  txtinput
-			                                            'value'    => '',//$query,
+			                                            'value'    => $this->query,//'',//$query,
 			                                            'type' => 'text',
-			                                            'size'    => 28
-			                                        ),	
+			                                            'size'    => 28,
+			                                            'onkeypress' => 'return pulsar(event)',
+	                                    				'tab_index' => 5
+			                                        ),
 													array( //hidden type_id
 						                                'type'	=> 'hidden',
 						                            	'id'	=> 'type_id',
 						                                'value'	=> $type_id
-						                            )	
+						                            )
 		                           				),
 		                       		'hidden_value' => array(
 					                                        array( //div values  combo_box_0
@@ -468,6 +478,7 @@
 				if($this->acl_read)
 				{
 					$datatable['rowactions']['action'][] = array(
+						'name'			=> 'view',
 						'text' 			=> lang('view'),
 						'action'		=> $GLOBALS['phpgw']->link('/index.php',array
 										(
@@ -480,6 +491,7 @@
 				if($this->acl_edit)
 				{
 					$datatable['rowactions']['action'][] = array(
+						'name'			=> 'edit',
 						'text' 			=> lang('edit'),
 						'action'		=> $GLOBALS['phpgw']->link('/index.php',array
 										(
@@ -492,6 +504,7 @@
 				if($this->acl_delete)
 				{
 					$datatable['rowactions']['action'][] = array(
+						'name'			=> 'delete',
 						'text' 			=> lang('delete'),
 						'confirm_msg'	=> lang('do you really want to delete this entry'),
 						'action'		=> $GLOBALS['phpgw']->link('/index.php',array
@@ -502,14 +515,19 @@
 						'parameters'	=> $parameters
 					);
 				}
+				if($this->acl_add)
+				{
+					$datatable['rowactions']['action'][] = array(
+							'name'			=> 'add',
+							'text' 			=> lang('add'),
+							'action'		=> $GLOBALS['phpgw']->link('/index.php',array
+											(
+												'menuaction'	=> 'property.uilocation.edit'
+											))
+					);
+				}
 
-				$datatable['rowactions']['action'][] = array(
-						'text' 			=> lang('add'),
-						'action'		=> $GLOBALS['phpgw']->link('/index.php',array
-										(
-											'menuaction'	=> 'property.uilocation.edit'
-										))
-				);
+
 				unset($parameters);
 			}
 			//$uicols_count indicates the number of columns to display in actuall option-menu. this variable was set in $this->bo->read()
@@ -612,8 +630,20 @@
 			$datatable['pagination']['records_returned']= count($location_list);
 			$datatable['pagination']['records_total'] 	= $this->bo->total_records;
 
-			$datatable['sorting']['order'] 	= phpgw::get_var('order', 'string'); // Column
 			$datatable['sorting']['sort'] 	= phpgw::get_var('sort', 'string'); // ASC / DESC
+
+			if ( (phpgw::get_var("start")== "") && (phpgw::get_var("order",'string')== ""))
+			{
+				$datatable['sorting']['order'] 			= 'loc1'; // name key Column in myColumnDef
+			}
+			else
+			{
+				$datatable['sorting']['order']			= phpgw::get_var('order', 'string'); // name of column of Database
+			}
+
+
+
+
 
 			$appname = lang('location');
 
@@ -1168,7 +1198,7 @@
 
 				$location = ".location.{$type_id}";
 				$attributes_groups = $this->bo->get_attribute_groups($location, $values['attributes']);
-			
+
 				$attributes = array();
 				foreach ($attributes_groups as $group)
 				{
@@ -1176,7 +1206,7 @@
 					{
 						$tabs[str_replace(' ', '_', $group['name'])] = array('label' => $group['name'], 'link' => '#' . str_replace(' ', '_', $group['name']));
 						$group['link'] = str_replace(' ', '_', $group['name']);
-						$attributes[] = $group;			
+						$attributes[] = $group;
 					}
 				}
 				unset($attributes_groups);
