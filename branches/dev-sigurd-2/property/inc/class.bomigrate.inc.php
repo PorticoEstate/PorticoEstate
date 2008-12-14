@@ -178,6 +178,7 @@
 					case 'fm_project':
 						$GLOBALS['phpgw']->db->query("UPDATE {$table} SET name = 'NIL' WHERE name = ''", __LINE__ , __FILE__, true);
 						$GLOBALS['phpgw']->db->query("UPDATE {$table} SET loc1 = '0000', location_code = '0000' WHERE loc1 = ''", __LINE__ , __FILE__, true);
+						$GLOBALS['phpgw']->db->query("UPDATE {$table} SET status = 'closed' WHERE status = ''", __LINE__ , __FILE__, true);
 						break;
 					case 'fm_workorder':
 						$GLOBALS['phpgw']->db->query("UPDATE {$table} SET title = 'NIL' WHERE title = ''", __LINE__ , __FILE__, true);
