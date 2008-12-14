@@ -208,3 +208,29 @@
 		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit();
 		return $GLOBALS['setup_info']['sms']['currentver'];
 	}
+	
+	/**
+	* Update property version from 0.9.17.506 to 0.9.17.507
+	*/
+
+	$test[] = '0.9.17.506';
+	function sms_upgrade0_9_17_506()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('phpgw_sms_featautoreply_scenario','autoreply_scenario_param2',array('type' => 'varchar', 'precision' => 20,'nullable' => true));
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('phpgw_sms_featautoreply_scenario','autoreply_scenario_param3',array('type' => 'varchar', 'precision' => 20,'nullable' => true));
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('phpgw_sms_featautoreply_scenario','autoreply_scenario_param4',array('type' => 'varchar', 'precision' => 20,'nullable' => true));
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('phpgw_sms_featautoreply_scenario','autoreply_scenario_param5',array('type' => 'varchar', 'precision' => 20,'nullable' => true));
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('phpgw_sms_featautoreply_scenario','autoreply_scenario_param6',array('type' => 'varchar', 'precision' => 20,'nullable' => true));
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('phpgw_sms_featautoreply_scenario','autoreply_scenario_param7',array('type' => 'varchar', 'precision' => 20,'nullable' => true));
+
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('phpgw_sms_tblsmsoutgoing','p_src',array('type' => 'varchar', 'precision' => 100,'nullable' => true));
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('phpgw_sms_tblsmsoutgoing','p_footer',array('type' => 'varchar', 'precision' => 11,'nullable' => true));
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['sms']['currentver'] = '0.9.17.507';
+			return $GLOBALS['setup_info']['sms']['currentver'];
+		}
+	}
+

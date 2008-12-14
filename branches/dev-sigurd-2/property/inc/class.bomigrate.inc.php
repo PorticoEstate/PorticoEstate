@@ -74,7 +74,13 @@
 		{
 			$domain_info = $GLOBALS['phpgw_domain'];
 			unset($domain_info[$GLOBALS['phpgw_info']['user']['domain']]);
-
+			
+			$GLOBALS['phpgw']->db->query("UPDATE fm_document_history SET history_new_value = 'NIL' WHERE history_new_value = ''", __LINE__ , __FILE__, true);
+/*			
+			$GLOBALS['phpgw']->db->fetchmode = 'ASSOC';
+			$GLOBALS['phpgw']->db->query("SELECT * FROM fm_document_history WHERE history_new_value = 'NIL'", __LINE__ , __FILE__);
+			_debug_array($GLOBALS['phpgw']->db->resultSet);
+*/
 			return $domain_info;
 		}
 
@@ -155,8 +161,6 @@
 		
 		function copy_data($table_def = array())
 		{
-			
-			//$table_def = array('fm_location1' => true);
 			$db = $GLOBALS['phpgw']->db;
 			$db->fetchmode = 'ASSOC';
 			foreach ($table_def as $table => $fd)
@@ -165,6 +169,48 @@
 				{
 					continue;
 				}
+				switch ($table)
+				{
+					case 'fm_document_history':
+					case 'fm_entity_history':
+					case 'fm_request_history':
+					case 'fm_project_history':
+					case 'fm_tts_history':
+					case 'fm_s_agreement_history':
+					case 'fm_workorder_history':
+					case 'phpgw_history_log':
+						$GLOBALS['phpgw']->db->query("UPDATE {$table} SET history_new_value = 'NIL' WHERE history_new_value = ''", __LINE__ , __FILE__, true);
+						break;
+					case 'fm_project':
+						$GLOBALS['phpgw']->db->query("UPDATE {$table} SET name = 'NIL' WHERE name = ''", __LINE__ , __FILE__, true);
+						$GLOBALS['phpgw']->db->query("UPDATE {$table} SET loc1 = '0000', location_code = '0000' WHERE loc1 = ''", __LINE__ , __FILE__, true);
+						break;
+					case 'fm_workorder':
+						$GLOBALS['phpgw']->db->query("UPDATE {$table} SET title = 'NIL' WHERE title = ''", __LINE__ , __FILE__, true);
+						break;
+					case 'phpgw_categories':
+						$GLOBALS['phpgw']->db->query("UPDATE {$table} SET cat_description = 'NIL' WHERE cat_description = ''", __LINE__ , __FILE__, true);
+						break;
+					case 'phpgw_contact_others':
+						$GLOBALS['phpgw']->db->query("UPDATE {$table} SET other_value = 'NIL' WHERE other_value = ''", __LINE__ , __FILE__, true);
+						break;
+					case 'phpgw_contact_person':
+						$GLOBALS['phpgw']->db->query("DELETE FROM {$table} WHERE first_name = ''", __LINE__ , __FILE__, true);
+						break;
+					case 'phpgw_log_msg':
+						$GLOBALS['phpgw']->db->query("UPDATE {$table} SET log_msg_parms = 'NIL' WHERE log_msg_parms = ''", __LINE__ , __FILE__, true);
+						$GLOBALS['phpgw']->db->query("UPDATE {$table} SET log_msg_file = 'NIL' WHERE log_msg_file = ''", __LINE__ , __FILE__, true);
+						break;
+					case 'phpgw_sms_tbluserphonebook':
+						$GLOBALS['phpgw']->db->query("UPDATE {$table} SET p_email = 'NIL' WHERE p_email = ''", __LINE__ , __FILE__, true);
+						break;
+					case 'phpgw_sms_tblsmsoutgoing':
+						$GLOBALS['phpgw']->db->query("UPDATE {$table} SET p_footer = 'NIL' WHERE p_footer = ''", __LINE__ , __FILE__, true);
+						$GLOBALS['phpgw']->db->query("UPDATE {$table} SET p_src = 'NIL' WHERE p_src = ''", __LINE__ , __FILE__, true);
+						break;
+					default:
+				}
+
 				$db->query("SELECT * FROM {$table}");
 				foreach($db->resultSet as $row)
 				{
