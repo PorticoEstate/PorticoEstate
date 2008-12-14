@@ -188,6 +188,9 @@
 					case 'fm_workorder':
 						$GLOBALS['phpgw']->db->query("UPDATE {$table} SET title = 'NIL' WHERE title = ''", __LINE__ , __FILE__, true);
 						break;
+					case 'fm_ecodimd':
+						$GLOBALS['phpgw']->db->query("UPDATE {$table} SET descr = 'NIL' WHERE descr = ''", __LINE__ , __FILE__, true);
+						break;
 					case 'phpgw_categories':
 						$GLOBALS['phpgw']->db->query("UPDATE {$table} SET cat_description = 'NIL' WHERE cat_description = ''", __LINE__ , __FILE__, true);
 						break;
