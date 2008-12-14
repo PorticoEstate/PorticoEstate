@@ -75,12 +75,6 @@
 			$domain_info = $GLOBALS['phpgw_domain'];
 			unset($domain_info[$GLOBALS['phpgw_info']['user']['domain']]);
 			
-			$GLOBALS['phpgw']->db->query("UPDATE fm_document_history SET history_new_value = 'NIL' WHERE history_new_value = ''", __LINE__ , __FILE__, true);
-/*			
-			$GLOBALS['phpgw']->db->fetchmode = 'ASSOC';
-			$GLOBALS['phpgw']->db->query("SELECT * FROM fm_document_history WHERE history_new_value = 'NIL'", __LINE__ , __FILE__);
-			_debug_array($GLOBALS['phpgw']->db->resultSet);
-*/
 			return $domain_info;
 		}
 
