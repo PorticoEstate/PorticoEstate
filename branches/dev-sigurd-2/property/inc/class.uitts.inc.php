@@ -546,8 +546,8 @@
 						{
 							$datatable['rowactions']['action'][] = array(
 								'name' 			=> 'view',
-								'statustext' 			=> lang('view the project'),
-								'text'		=> lang('view'),
+								'statustext' 	=> lang('view the project'),
+								'text'			=> lang('view'),
 								'action'		=> $GLOBALS['phpgw']->link('/index.php',array
 										(
 											'menuaction'	=> 'property.uitts.view'
@@ -558,21 +558,23 @@
 						}
 
 
-							$datatable['rowactions']['action'][] = array(
+			/*				$datatable['rowactions']['action'][] = array(
 												'name' 			=> 'add',
-												'text' 			=> lang('add'),
+												'statustext' 	=> lang('Add new ticket'),
+												'text'			=> lang('add'),
 												'action'		=> $GLOBALS['phpgw']->link('/index.php',array
 																(
 																	'menuaction'	=> 'property.uitts.add'
 																))
 										);
 
-
+			*/
 						if(isset($GLOBALS['phpgw_info']['user']['preferences']['property']['tts_status_link']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['tts_status_link'])
 						{
-							$GLOBALS['phpgw_info']['user']['preferences']['property']['tts_status_link'];
 														$datatable['rowactions']['action'][] = array(
-																'text' 			=> lang('status'),
+																'name' 			=> 'status',
+																'statustext' 	=> lang('Set new status'),
+																'text' 			=> lang('change status'),
 																'action'		=> $GLOBALS['phpgw']->link('/index.php',array
 																(
 																	'menuaction'		=> 'property.uitts.index',
