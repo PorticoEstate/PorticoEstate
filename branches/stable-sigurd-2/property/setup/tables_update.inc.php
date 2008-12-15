@@ -2754,4 +2754,59 @@
 			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.547';
 			return $GLOBALS['setup_info']['property']['currentver'];
 		}
-	}	
+	}
+
+	/**
+	* Update property version from 0.9.17.547 to 0.9.17.548
+	* Drop some old tables and add custom attribute groups if this was missed during api-upgrade
+ 	*/
+
+	$test[] = '0.9.17.547';
+	function property_upgrade0_9_17_547()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$metadata = $GLOBALS['phpgw_setup']->db->metadata('fm_equipment');
+		if($metadata)
+		{
+			$GLOBALS['phpgw_setup']->oProc->DropTable('fm_equipment');
+			$GLOBALS['phpgw_setup']->oProc->DropTable('fm_equipment_attrib');
+			$GLOBALS['phpgw_setup']->oProc->DropTable('fm_equipment_status');
+			$GLOBALS['phpgw_setup']->oProc->DropTable('fm_equipment_type');
+			$GLOBALS['phpgw_setup']->oProc->DropTable('fm_equipment_type_attrib');
+			$GLOBALS['phpgw_setup']->oProc->DropTable('fm_equipment_type_choice');
+		}
+
+		$metadata = $GLOBALS['phpgw_setup']->db->metadata('fm_meter');
+		if($metadata)
+		{
+			$GLOBALS['phpgw_setup']->oProc->DropTable('fm_meter');
+			$GLOBALS['phpgw_setup']->oProc->DropTable('fm_meter_category');
+		}
+
+
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("SELECT count(*) as found_some FROM phpgw_cust_attribute_group");
+		$GLOBALS['phpgw_setup']->oProc->m_odb->next_record();
+		if( !$GLOBALS['phpgw_setup']->oProc->f('found_some') )
+		{
+			$GLOBALS['phpgw_setup']->oProc->m_odb->query("SELECT DISTINCT location_id FROM phpgw_cust_attribute");
+			$locations = array();
+			while ($GLOBALS['phpgw_setup']->oProc->m_odb->next_record())
+			{
+				$locations[] = $GLOBALS['phpgw_setup']->oProc->f('location_id');
+			}
+
+			foreach ($locations as $location_id)
+			{
+				$GLOBALS['phpgw_setup']->oProc->m_odb->query("INSERT INTO phpgw_cust_attribute_group (location_id, id, name, group_sort, descr)"
+				." VALUES ({$location_id}, 1, 'Default group', 1, 'Auto created from db-update')", __LINE__, __FILE__);
+			}
+		}
+
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.548';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}

@@ -142,9 +142,6 @@
 				case 'location':
 					$table='fm_location' . $type_id . '_category';
 					break;
-				case 'meter':
-					$table='fm_meter_category';
-					break;
 				case 'document':
 					$table='fm_document_category';
 					break;
