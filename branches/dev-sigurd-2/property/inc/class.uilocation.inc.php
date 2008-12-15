@@ -1116,7 +1116,7 @@
 															)
 														),
 								'lang_entity_statustext'	=> $location_type['descr'],
-								'text_entity'			=> $location_type['name'],
+								'text_entity'			=> '<- '. $location_type['name'],
 							);
 						}
 						else
@@ -1130,7 +1130,7 @@
 															)
 														),
 								'lang_entity_statustext'	=> $location_type['descr'],
-								'text_entity'			=> $location_type['name'],
+								'text_entity'			=> '-> ' . $location_type['name'],
 							);
 						}
 					}
