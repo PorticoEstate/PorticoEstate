@@ -120,7 +120,7 @@
 					<xsl:value-of disable-output-escaping="yes" select="tabs" />
 					<div class="yui-content">
 <div id="general">
-	<table class="contenttab" align="left">
+		<table cellpadding="2" cellspacing="2" width="80%" align="center">
 			<xsl:choose>
 				<xsl:when test="value_project_id!=''">
 					<tr>
@@ -283,7 +283,7 @@
 
 <div id="location">
 
-<table class="contenttab" align="left">
+		<table cellpadding="2" cellspacing="2" width="80%" align="center">
 			<xsl:choose>
 				<xsl:when test="location_type='form'">
 					<xsl:call-template name="location_form"/>
@@ -312,7 +312,7 @@
 </div>
 
 <div id="budget">
-	<table class="contenttab" align="left">
+		<table cellpadding="2" cellspacing="2" width="80%" align="center">
 			<tr>
 				<td valign="top">
 					<xsl:value-of select="lang_start_date"/>
@@ -442,7 +442,7 @@
 </div>
 
 <div id="coordination">
-	<table class="contenttab" align="left">
+		<table cellpadding="2" cellspacing="2" width="80%" align="center">
 			<tr>
 				<td>
 					<xsl:value-of select="lang_coordinator"/>
@@ -516,7 +516,7 @@
 </div>
 
 <div id="extra">
-	<table class="contenttab" align="left">
+		<table cellpadding="2" cellspacing="2" width="80%" align="center">
 			<tr>
 			<xsl:choose>
 				<xsl:when test="need_approval='yes'">
@@ -571,7 +571,7 @@
 
 <div id="history">
 		<hr noshade="noshade" width="100%" align="center" size="1"/>
-		<table width="80%" cellpadding="2" cellspacing="2" align="left">
+		<table cellpadding="2" cellspacing="2" width="80%" align="center">
 			<xsl:choose>
 				<xsl:when test="record_history=''">
 					<tr>
@@ -789,7 +789,7 @@
 			<xsl:value-of disable-output-escaping="yes" select="tabs" />
 			<div class="yui-content">
 <div id="general">
-		<table cellpadding="2" cellspacing="2" align="left">
+		<table cellpadding="2" cellspacing="2" width="80%" align="center">
 			<tr>
 				<td>
 					<xsl:value-of select="lang_project_id"/>
@@ -847,7 +847,7 @@
 </div>
 
 <div id="location">
-<table class="contenttab" align="left">
+		<table cellpadding="2" cellspacing="2" width="80%" align="center">
 			<xsl:call-template name="location_view"/>
 
 			<xsl:choose>
@@ -875,7 +875,7 @@
 </div>
 
 <div id="budget">
-	<table class="contenttab" align="left">
+		<table cellpadding="2" cellspacing="2" width="80%" align="center">
 			<tr>
 				<td valign="top">
 					<xsl:value-of select="lang_budget"/>
@@ -964,7 +964,7 @@
 </div>
 
 <div id="coordination">
-	<table class="contenttab" align="left">
+		<table cellpadding="2" cellspacing="2" width="80%" align="center">
 			<tr>
 				<td>
 					<xsl:value-of select="lang_coordinator"/>
@@ -1075,13 +1075,13 @@
 </div>
 
 <div id="extra">
-	<table class="contenttab" align="left">
+		<table cellpadding="2" cellspacing="2" width="80%" align="center">
 </table>
 </div>
 
 <div id="history">
 		<hr noshade="noshade" width="100%" align="center" size="1"/>
-		<table width="80%" cellpadding="2" cellspacing="2" align="left">
+		<table cellpadding="2" cellspacing="2" width="80%" align="center">
 			<xsl:choose>
 				<xsl:when test="record_history=''">
 					<tr>
