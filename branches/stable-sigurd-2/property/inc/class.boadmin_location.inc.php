@@ -194,6 +194,90 @@
 			}
 		}
 
+
+		function get_attrib_group_list($location, $selected)
+		{
+			$group_list = $this->read_attrib_group($entity_id, $cat_id, true);
+			
+			foreach($group_list as &$group)
+			{
+				if( $group['id'] ==  $selected )
+				{
+					$group['selected'] = true;
+				}
+			}
+//_debug_array($group_list);die();
+			return $group_list;
+		}
+
+		function read_attrib_group($location, $allrows='')
+		{
+			if($allrows)
+			{
+				$this->allrows = $allrows;
+			}
+
+			$attrib = $this->custom->find_group('property', $location, $this->start, $this->query, $this->sort, $this->order, $this->allrows);
+			$this->total_records = $this->custom->total_records;
+
+			return $attrib;
+		}
+
+		function read_single_attrib_group($location, $id)
+		{
+			return $this->custom->get_group('property', $location, $id, true);
+		}
+
+		function resort_attrib_group($location, $id, $resort)
+		{
+			$this->custom->resort_group($id, $resort, 'property', $location);
+		}
+
+		public function save_attrib_group($group, $action='')
+		{
+			$group['appname'] = 'property';
+
+			if ( $action=='edit' && $group['id'] )
+			{
+				if ( $this->custom->edit_group($group) )
+				{
+					return array
+					(
+						'msg'	=> array('msg' => lang('group has been updated'))
+					);
+				}
+
+				return array('error' => lang('Unable to update group'));
+			}
+			else
+			{
+				$id = $this->custom->add_group($group);
+				if ( $id <= 0  )
+				{
+					return array('error' => lang('Unable to add group'));
+				}
+				else if ( $id == -1 )
+				{
+					return array
+					(
+						'id'	=> 0,
+						'error'	=> array
+						(
+							array('msg' => lang('group already exists, please choose another name')),
+							array('msg' => lang('Attribute group has NOT been saved'))
+						)
+					);
+				}
+
+				return array
+				(
+					'id'	=> $id,
+					'msg'	=> array('msg' => lang('group has been created'))
+				);
+			}
+		}
+
+
 		function read_attrib($type_id)
 		{
 			if($allrows)

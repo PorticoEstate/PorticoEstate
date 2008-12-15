@@ -103,39 +103,13 @@
 			$allrows	= phpgw::get_var('allrows', 'bool');
 			$entity_id	= phpgw::get_var('entity_id', 'int');
 
-			if ($start)
-			{
-				$this->start=$start;
-			}
-			else
-			{
-				$this->start=0;
-			}
-
-			if(isset($query))
-			{
-				$this->query = $query;
-			}
-			if(isset($sort))
-			{
-				$this->sort = $sort;
-			}
-			if(isset($order))
-			{
-				$this->order = $order;
-			}
-			if(isset($cat_id))
-			{
-				$this->cat_id = $cat_id;
-			}
-			if(isset($entity_id))
-			{
-				$this->entity_id = $entity_id;
-			}
-			if(isset($allrows))
-			{
-				$this->allrows = $allrows;
-			}
+			$this->start			= $start ? $start : 0;
+			$this->query			= isset($query) ? $query : $this->query;
+			$this->sort				= isset($sort) && $sort ? $sort : '';
+			$this->order			= isset($order) && $order ? $order : '';
+			$this->cat_id			= isset($cat_id) && $cat_id ? $cat_id : '';
+			$this->entity_id		= isset($entity_id) && $entity_id ? $entity_id : '';
+			$this->allrows			= isset($allrows) && $allrows ? $allrows : '';
 		}
 
 
@@ -269,17 +243,21 @@
 			return $receipt;
 		}
 
-		function delete($cat_id='',$entity_id='',$attrib_id='',$acl_location='',$custom_function_id='')
+		function delete($cat_id='',$entity_id='',$attrib_id='',$acl_location='',$custom_function_id='', $group_id ='')
 		{
-			if(!$attrib_id && !$cat_id && $entity_id && !$custom_function_id)
+			if(!$attrib_id && !$cat_id && $entity_id && !$custom_function_id  && !$group_id)
 			{
 				$this->so->delete_entity($entity_id);
 			}
-			else if(!$attrib_id && $cat_id && $entity_id && !$custom_function_id)
+			else if(!$attrib_id && $cat_id && $entity_id && !$custom_function_id  && !$group_id)
 			{
 				$this->so->delete_category($entity_id, $cat_id);
 			}
-			else if($attrib_id && $cat_id && $entity_id && !$custom_function_id)
+			else if($group_id && $cat_id && $entity_id && !$custom_function_id && !$attrib_id)
+			{
+				$this->custom->delete_group('property', ".entity.{$entity_id}.{$cat_id}", $group_id);
+			}
+			else if($attrib_id && $cat_id && $entity_id && !$custom_function_id  && !$group_id)
 			{
 				$this->custom->delete('property', ".entity.{$entity_id}.{$cat_id}", $attrib_id);
 				$this->so->delete_history($entity_id, $cat_id,$attrib_id);
@@ -288,6 +266,35 @@
 			{
 				$GLOBALS['phpgw']->custom_functions->delete('property', $acl_location,$custom_function_id);
 			}
+		}
+
+		function get_attrib_group_list($entity_id,$cat_id, $selected)
+		{
+			$group_list = $this->read_attrib_group($entity_id, $cat_id, true);
+			
+			foreach($group_list as &$group)
+			{
+				if( $group['id'] ==  $selected )
+				{
+					$group['selected'] = true;
+				}
+			}
+//_debug_array($group_list);die();
+			return $group_list;
+		}
+
+		function read_attrib_group($entity_id='',$cat_id='',$allrows='')
+		{
+			if($allrows)
+			{
+				$this->allrows = $allrows;
+			}
+
+			$attrib = $this->custom->find_group('property', '.entity.' . $entity_id . '.' . $cat_id, $this->start, $this->query, $this->sort, $this->order, $this->allrows);
+
+			$this->total_records = $this->custom->total_records;
+
+			return $attrib;
 		}
 
 		function read_attrib($entity_id='',$cat_id='',$allrows='')
@@ -309,11 +316,64 @@
 			return $this->custom->get('property', '.entity.' . $entity_id . '.' . $cat_id, $id, true);
 		}
 
+		function read_single_attrib_group($entity_id,$cat_id,$id)
+		{
+			return $this->custom->get_group('property', '.entity.' . $entity_id . '.' . $cat_id, $id, true);
+		}
+
+		function resort_attrib_group($id,$resort)
+		{
+			$this->custom->resort_group($id, $resort, 'property', '.entity.' . $this->entity_id . '.' . $this->cat_id);
+		}
+
 		function resort_attrib($id,$resort)
 		{
 			$this->custom->resort($id, $resort, 'property', '.entity.' . $this->entity_id . '.' . $this->cat_id);
 		}
 
+		public function save_attrib_group($group, $action='')
+		{
+			$group['appname'] = 'property';
+ 			$group['location'] = '.entity.' . $group['entity_id'] . '.' . $group['cat_id'];
+			if ( $action=='edit' && $group['id'] )
+			{
+				if ( $this->custom->edit_group($group) )
+				{
+					return array
+					(
+						'msg'	=> array('msg' => lang('group has been updated'))
+					);
+				}
+
+				return array('error' => lang('Unable to update group'));
+			}
+			else
+			{
+				$id = $this->custom->add_group($group);
+				if ( $id <= 0  )
+				{
+					return array('error' => lang('Unable to add group'));
+				}
+				else if ( $id == -1 )
+				{
+					return array
+					(
+						'id'	=> 0,
+						'error'	=> array
+						(
+							array('msg' => lang('group already exists, please choose another name')),
+							array('msg' => lang('Attribute group has NOT been saved'))
+						)
+					);
+				}
+
+				return array
+				(
+					'id'	=> $id,
+					'msg'	=> array('msg' => lang('group has been created'))
+				);
+			}
+		}
 		public function save_attrib($attrib, $action='')
 		{
 			$attrib['appname'] = 'property';
@@ -335,8 +395,6 @@
 				$id = $this->custom->add($attrib);
 				if ( $id <= 0  )
 				{
-					$this->custom->add($attrib);
-
 					return array('error' => lang('Unable to add field'));
 				}
 				else if ( $id == -1 )

@@ -244,13 +244,13 @@
 				var oArgs = {<xsl:value-of select="street_link"/>};
 				var strURL = phpGWLink('index.php', oArgs);
 				Window1=window.open(strURL,"Search","width=800,height=700,toolbar=no,scrollbars=yes,resizable=yes");
-			}		
+			}
 			function tenant_lookup()
 			{
 				var oArgs = {<xsl:value-of select="tenant_link"/>};
 				var strURL = phpGWLink('index.php', oArgs);
 				Window1=window.open(strURL,"Search","width=800,height=700,toolbar=no,scrollbars=yes,resizable=yes");
-			}		
+			}
 		</script>
 
 		<script type="text/javascript">
@@ -258,8 +258,13 @@
 			<xsl:value-of select="lookup_functions"/>
 		</script>
 
-		<div align="left">
-		
+		<div class="yui-navset" id="location_edit_tabview">
+			<xsl:variable name="form_action"><xsl:value-of select="form_action"/></xsl:variable>
+			<form method="post" name="form" action="{$form_action}">
+			<xsl:value-of disable-output-escaping="yes" select="tabs" />
+			<div class="yui-content">		
+				<div id="general">
+
 		<table cellpadding="2" cellspacing="2" width="80%" align="center">
 			<xsl:choose>
 				<xsl:when test="msgbox_data != ''">
@@ -270,8 +275,6 @@
 					</tr>
 				</xsl:when>
 			</xsl:choose>
-			<xsl:variable name="form_action"><xsl:value-of select="form_action"/></xsl:variable>
-			<form method="post" name="form" action="{$form_action}">
 
 			<xsl:choose>
 				<xsl:when test="change_type_list != ''">
@@ -302,7 +305,7 @@
 			<xsl:for-each select="additional_fields" >
 				<tr>
 					<td class="{class}" align="left" valign="top">
-						<xsl:value-of select="input_text"/>	
+						<xsl:value-of select="input_text"/>
 					</td>
 					<td align="left">
 						<xsl:choose>
@@ -313,7 +316,7 @@
 											<xsl:value-of select="statustext"/>
 										<xsl:text>'; return true;</xsl:text>
 									</xsl:attribute>
-									<xsl:value-of select="value"/>		
+									<xsl:value-of select="value"/>
 								</textarea>
 
 							</xsl:when>
@@ -324,8 +327,8 @@
 											<xsl:value-of select="descr"/>
 										<xsl:text>'; return true;</xsl:text>
 									</xsl:attribute>
-								</input>						
-								<xsl:text>[</xsl:text><xsl:value-of select="//lang_dateformat"/><xsl:text>]</xsl:text>			
+								</input>
+								<xsl:text>[</xsl:text><xsl:value-of select="//lang_dateformat"/><xsl:text>]</xsl:text>
 							</xsl:when>
 							<xsl:otherwise>
 								<input type="text" name="{input_name}" value="{value}" size="{size}" onMouseout="window.status='';return true;">
@@ -395,11 +398,6 @@
 				</xsl:when>
 			</xsl:choose>
 
-			<tr>
-				<td colspan="2" width="50%" align="left">
-					<xsl:call-template name="attributes_form"/>							
-				</td>
-			</tr>
 			<xsl:choose>
 				<xsl:when test="edit_street = 1">
 					<tr>
@@ -453,6 +451,13 @@
 				</xsl:when>
 			</xsl:choose>
 
+		</table>
+		</div>
+
+		<xsl:call-template name="attributes_values"/>
+
+			<table cellpadding="2" cellspacing="2" width="80%" align="center">
+
 			<tr height="50">
 				<td>
 					<xsl:variable name="lang_save"><xsl:value-of select="lang_save"/></xsl:variable>
@@ -479,8 +484,11 @@
 				</xsl:when>
 			</xsl:choose>
 			</tr>
+			</table>
+			</div>
 
 			</form>
+			<table>
 			<tr>
 				<td>
 					<xsl:variable name="done_action"><xsl:value-of select="done_action"/></xsl:variable>
@@ -507,6 +515,7 @@
 		</xsl:choose>
 		</div>
 	</xsl:template>
+
 
 	<xsl:template match="owner_list">
 	<xsl:variable name="id"><xsl:value-of select="id"/></xsl:variable>

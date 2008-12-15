@@ -289,6 +289,20 @@
 			return $values;
 		}
 
+		/**
+		* Arrange attributes within groups
+		*
+		* @param string  $location    the name of the location of the attribute
+		* @param array   $attributes  the array of the attributes to be grouped
+		*
+		* @return array the grouped attributes
+		*/
+
+		public function get_attribute_groups($location, $attributes = array())
+		{
+			return $this->custom->get_attribute_groups('property', $location, $attributes);
+		}
+
 		function save($values,$values_attribute='',$action='')
 		{
 			$values['start_date']	= $this->bocommon->date_to_timestamp($values['start_date']);

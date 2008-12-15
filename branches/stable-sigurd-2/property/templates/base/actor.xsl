@@ -152,9 +152,13 @@
 			self.name="first_Window";
 			<xsl:value-of select="lookup_functions"/>
 		</script>
+		<div class="yui-navset" id="actor_edit_tabview">
 		<xsl:variable name="edit_url"><xsl:value-of select="edit_url"/></xsl:variable>
-		<div align="left">
 		<form name="form" method="post" action="{$edit_url}">
+			<xsl:value-of disable-output-escaping="yes" select="tabs" />
+			<div class="yui-content">		
+				<div id="general">
+
 		<table cellpadding="2" cellspacing="2" width="79%" align="center">
 			<xsl:choose>
 				<xsl:when test="msgbox_data != ''">
@@ -197,11 +201,6 @@
 					<xsl:call-template name="cat_select"/>
 				</td>
 			</tr>
-			<tr>
-				<td colspan="2" width="50%" align="left">				
-					<xsl:call-template name="attributes_form"/>
-				</td>
-			</tr>
 			<xsl:choose>
 				<xsl:when test="member_of_list != ''">
 				<tr>
@@ -217,6 +216,12 @@
 				</tr>
 				</xsl:when>
 			</xsl:choose>
+		</table>
+		</div>
+		
+		<xsl:call-template name="attributes_values"/>
+
+		<table cellpadding="2" cellspacing="2" width="80%" align="center">
 			<tr height="50">
 				<td valign="bottom">
 					<xsl:variable name="lang_save"><xsl:value-of select="lang_save"/></xsl:variable>
@@ -250,6 +255,7 @@
 				</td>
 			</tr>
 		</table>
+		</div>
 		</form>
 		</div>
 	</xsl:template>

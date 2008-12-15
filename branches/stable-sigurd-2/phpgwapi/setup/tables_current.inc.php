@@ -518,11 +518,28 @@
 			'ix' => array(),
 			'uc' => array()
 		),
+		'phpgw_cust_attribute_group' => array
+		(
+			'fd' => array
+			(
+				'location_id'	=> array('type' => 'int','precision' => 4,'nullable' => false),
+				'id'			=> array('type' => 'int','precision' => 4,'nullable' => false),
+				'name'			=> array('type' => 'varchar','precision' => 100,'nullable' => false),
+				'group_sort'	=> array('type' => 'int','precision' => 2,'nullable' => false),
+				'descr'			=> array('type' => 'varchar','precision' => 150,'nullable' => true),
+				'remark'		=> array('type' => 'text','nullable' => true)
+			),
+			'pk' => array('location_id','id'),
+			'fk' => array(),
+			'ix' => array(),
+			'uc' => array()
+		),
 		'phpgw_cust_attribute' => array
 		(
 			'fd' => array
 			(
 				'location_id' => array('type' => 'int','precision' => 2,'nullable' => false),
+				'group_id' => array('type' => 'int','precision' => 2,'nullable' => true, 'default' => 0),
 				'id' => array('type' => 'int','precision' => 2,'nullable' => false),
 				'column_name' => array('type' => 'varchar','precision' => 20,'nullable' => false),
 				'input_text' => array('type' => 'varchar','precision' => 50,'nullable' => false),

@@ -453,18 +453,18 @@
 			}
 
 
-			$actor = $this->bo->read_single(array('actor_id'=>$actor_id));
+			$values = $this->bo->read_single(array('actor_id'=>$actor_id));
 
 			/* Preserve attribute values from post */
 			if(isset($receipt['error']) && (isset( $values_attribute) && is_array( $values_attribute)))
 			{
-				$actor = $this->bo->preserve_attribute_values($actor,$values_attribute);
+				$values = $this->bo->preserve_attribute_values($values,$values_attribute);
 			}
 
 			if ($actor_id)
 			{
-				$this->cat_id = ($actor['cat_id']?$actor['cat_id']:$this->cat_id);
-				$this->member_id = ($actor['member_of']?$actor['member_of']:$this->member_id);
+				$this->cat_id = ($values['cat_id']?$values['cat_id']:$this->cat_id);
+				$this->member_id = ($values['member_of']?$values['member_of']:$this->member_id);
 			}
 
 			$link_data = array
@@ -474,41 +474,52 @@
 				'role'		=> $this->role
 			);
 
-			$dateformat = strtolower($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']);
-			$sep = '/';
-			$dlarr[strpos($dateformat,'y')] = 'yyyy';
-			$dlarr[strpos($dateformat,'m')] = 'MM';
-			$dlarr[strpos($dateformat,'d')] = 'DD';
-			ksort($dlarr);
-
-			$dateformat= (implode($sep,$dlarr));
-
-			switch(substr($dateformat,0,1))
-			{
-				case 'M':
-					$dateformat_validate= "javascript:vDateType='1'";
-					$onKeyUp	= "DateFormat(this,this.value,event,false,'1')";
-					$onBlur		= "DateFormat(this,this.value,event,true,'1')";
-					break;
-				case 'y':
-					$dateformat_validate="javascript:vDateType='2'";
-					$onKeyUp	= "DateFormat(this,this.value,event,false,'2')";
-					$onBlur		= "DateFormat(this,this.value,event,true,'2')";
-					break;
-				case 'D':
-					$dateformat_validate="javascript:vDateType='3'";
-					$onKeyUp	= "DateFormat(this,this.value,event,false,'3')";
-					$onBlur		= "DateFormat(this,this.value,event,true,'3')";
-					break;
-			}
 
 			$msgbox_data = $this->bocommon->msgbox_data($receipt);
 
 			$member_of_data	= $this->cats->formatted_xslt_list(array('selected' => $this->member_id,'globals' => true, 'link_data' =>array()));
 
-			$GLOBALS['phpgw']->js->validate_file('dateformat','dateformat','property');
+			$tabs = array();
 
-//_debug_array($member_of_data);
+			if (isset($values['attributes']) && is_array($values['attributes']))
+			{
+				foreach ($values['attributes'] as & $attribute)
+				{
+					if($attribute['history'] == true)
+					{
+						$link_history_data = array
+						(
+							'menuaction'	=> 'property.uiactor.attrib_history',
+							'attrib_id'	=> $attribute['id'],
+							'actor_id'	=> $actor_id,
+							'role'		=> $this->role,
+							'edit'		=> true
+						);
+
+						$attribute['link_history'] = $GLOBALS['phpgw']->link('/index.php',$link_history_data);
+					}
+				}
+
+				phpgwapi_yui::tabview_setup('actor_edit_tabview');
+				$tabs['general']	= array('label' => lang('general'), 'link' => '#general');
+
+				$location = $this->acl_location;
+				$attributes_groups = $this->bo->get_attribute_groups($location, $values['attributes']);
+			
+				$attributes = array();
+				foreach ($attributes_groups as $group)
+				{
+					if(isset($group['attributes']))
+					{
+						$tabs[str_replace(' ', '_', $group['name'])] = array('label' => $group['name'], 'link' => '#' . str_replace(' ', '_', $group['name']));
+						$group['link'] = str_replace(' ', '_', $group['name']);
+						$attributes[] = $group;			
+					}
+				}
+				unset($attributes_groups);
+				unset($values['attributes']);
+			}
+
 			$data = array
 			(
 				'msgbox_data'					=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
@@ -519,7 +530,7 @@
 				'lang_save'						=> lang('save'),
 				'lang_cancel'					=> lang('cancel'),
 				'lang_apply'					=> lang('apply'),
-	//			'value_cat'						=> $actor['cat'],
+	//			'value_cat'						=> $values['cat'],
 				'lang_id_statustext'			=> lang('Choose an ID'),
 				'lang_apply_statustext'			=> lang('Apply the values'),
 				'lang_cancel_statustext'		=> lang('Leave the actor untouched and return back to the list'),
@@ -533,24 +544,19 @@
 				'member_of_name'				=> 'member_id',
 				'member_of_list'				=> $member_of_data['cat_list'],
 
-				'lang_dateformat' 				=> lang(strtolower($dateformat)),
-				'dateformat_validate'			=> $dateformat_validate,
-				'onKeyUp'						=> $onKeyUp,
-				'onBlur'						=> $onBlur,
 				'lang_attributes'				=> lang('Attributes'),
-		//		'attributes_header'				=> $attributes_header,
-				'attributes_values'				=> $actor['attributes'],
-				'lookup_functions'				=> isset($actor['lookup_functions'])?$actor['lookup_functions']:'',
+				'attributes_group'				=> $attributes,
+				'lookup_functions'				=> isset($values['lookup_functions'])?$values['lookup_functions']:'',
 				'dateformat'					=> $dateformat,
 				'lang_edit'						=> lang('edit'),
 				'lang_add'						=> lang('add'),
 				'textareacols'				=> isset($GLOBALS['phpgw_info']['user']['preferences']['property']['textareacols']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['textareacols'] ? $GLOBALS['phpgw_info']['user']['preferences']['property']['textareacols'] : 40,
-				'textarearows'				=> isset($GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows'] ? $GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows'] : 6
+				'textarearows'				=> isset($GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows'] ? $GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows'] : 6,
+				'tabs'							=> phpgwapi_yui::tabview_generate($tabs, 'general')
 			);
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('actor') . ': ' . ($actor_id?lang('edit') . ' ' . lang($this->role):lang('add') . ' ' . lang($this->role));
 
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('edit' => $data));
-		//	$GLOBALS['phpgw']->xslttpl->pp();
 		}
 
 

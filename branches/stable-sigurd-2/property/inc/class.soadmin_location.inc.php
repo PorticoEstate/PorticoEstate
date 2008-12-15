@@ -169,22 +169,26 @@
 		function read_single($id)
 		{
 
+			$id = (int) $id;
 			$table = 'fm_location_type';
 
-			$sql = "SELECT * FROM $table  where id='$id'";
+			$sql = "SELECT * FROM $table  where id={$id}";
 
 			$this->db->query($sql,__LINE__,__FILE__);
 
+			$standard = array();
 			if ($this->db->next_record())
 			{
-				$standard['id']			= $this->db->f('id');
-				$standard['name']		= $this->db->f('name');
-				$standard['descr']		= $this->db->f('descr');
-				$standard['list_info']	= unserialize($this->db->f('list_info'));
-				$standard['list_address']	= $this->db->f('list_address');
-
-				return $standard;
+				$standard = array
+				(
+					'id'			=> $this->db->f('id'),
+					'name'			=> $this->db->f('name'),
+					'descr'			=> $this->db->f('descr'),
+					'list_info'		=> $this->db->f('list_info',true),
+					'list_address'	=> $this->db->f('list_address')
+				);
 			}
+			return $standard;
 		}
 
 		function add($standard)

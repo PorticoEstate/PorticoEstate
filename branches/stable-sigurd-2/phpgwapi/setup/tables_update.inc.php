@@ -2333,3 +2333,59 @@
 			return $GLOBALS['setup_info']['phpgwapi']['currentver'];
 		}
 	}
+
+	$test[] = '0.9.17.519';
+	/**
+	* Replace the primary key of the phpgw_cache_user table
+	*
+	* @return string the new version number
+	*/
+	function phpgwapi_upgrade0_9_17_519()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('phpgw_cust_attribute','group_id',array(
+			'type' => 'int',
+			'precision' => '2',
+			'nullable' => True,
+			'default'	=> 0
+		));
+
+		$GLOBALS['phpgw_setup']->oProc->CreateTable('phpgw_cust_attribute_group', array
+		(
+			'fd' => array
+			(
+				'location_id'	=> array('type' => 'int','precision' => 4,'nullable' => false),
+				'id'			=> array('type' => 'int','precision' => 2,'nullable' => false),
+				'name'			=> array('type' => 'varchar','precision' => 100,'nullable' => false),
+				'group_sort'	=> array('type' => 'int','precision' => 2,'nullable' => false),
+				'descr'			=> array('type' => 'varchar','precision' => 150,'nullable' => true),
+				'remark'		=> array('type' => 'text','nullable' => true)
+			),
+			'pk' => array('location_id','id'),
+			'fk' => array(),
+			'ix' => array(),
+			'uc' => array()
+		));
+
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("SELECT DISTINCT location_id FROM phpgw_cust_attribute");
+		$locations = array();
+		while ($GLOBALS['phpgw_setup']->oProc->m_odb->next_record())
+		{
+			$locations[] = $GLOBALS['phpgw_setup']->oProc->f('location_id');
+		}
+
+		foreach ($locations as $location_id)
+		{
+			$GLOBALS['phpgw_setup']->oProc->m_odb->query("INSERT INTO phpgw_cust_attribute_group (location_id, id, name, group_sort, descr)"
+			." VALUES ({$location_id}, 1, 'Default group', 1, 'Auto created from db-update')", __LINE__, __FILE__);
+		}
+
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("UPDATE phpgw_cust_attribute SET group_id = 1");
+
+		if ( $GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit() )
+		{
+			$GLOBALS['setup_info']['phpgwapi']['currentver'] = '0.9.17.520';
+			return $GLOBALS['setup_info']['phpgwapi']['currentver'];
+		}
+	}
