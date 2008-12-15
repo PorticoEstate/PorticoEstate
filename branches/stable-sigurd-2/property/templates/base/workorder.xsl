@@ -359,7 +359,7 @@
 					<div class="yui-content">
 
 <div id="project">
-<table class="contenttab" align="left">
+		<table cellpadding="2" cellspacing="2" width="80%" align="center">
 			<xsl:choose>
 				<xsl:when test="value_project_id!=''">
 					<tr>
@@ -479,7 +479,7 @@
 </div>
 
 <div id="general">
-<table class="contenttab" align="left">
+		<table cellpadding="2" cellspacing="2" width="80%" align="center">
 			<xsl:choose>
 				<xsl:when test="value_workorder_id!=''">
 					<tr>
@@ -566,7 +566,7 @@
 </div>
 
 <div id="budget">
-<table class="contenttab" align="left">
+		<table cellpadding="2" cellspacing="2" width="80%" align="center">
 			<tr>
 				<td valign="top">
 					<xsl:value-of select="lang_start_date"/>
@@ -699,7 +699,7 @@
 </div>
 
 <div id="coordination">
-<table class="contenttab" align="left">
+		<table cellpadding="2" cellspacing="2" width="80%" align="center">
 			<tr>
 				<td>
 					<xsl:value-of select="lang_key_fetch"/>
@@ -742,7 +742,7 @@
 </div>
 
 <div id="extra">
-<table class="contenttab" align="left">
+		<table cellpadding="2" cellspacing="2" width="80%" align="center">
 			<tr>
 			<xsl:choose>
 				<xsl:when test="need_approval='yes'">
@@ -798,7 +798,7 @@
 </div>
 
 <div id="documents">
-<table class="contenttab" align="left">
+		<table cellpadding="2" cellspacing="2" width="80%" align="center">
 	<xsl:choose>
 		<xsl:when test="files!=''">
 			<xsl:call-template name="file_list"/>
@@ -812,7 +812,7 @@
 <div id="history">
 
 		<hr noshade="noshade" width="100%" align="center" size="1"/>
-		<table width="80%" cellpadding="2" cellspacing="2" align="left">
+		<table cellpadding="2" cellspacing="2" width="80%" align="center">
 			<xsl:choose>
 				<xsl:when test="record_history=''">
 					<tr>
@@ -963,7 +963,7 @@
 			<xsl:value-of disable-output-escaping="yes" select="tabs" />
 			<div class="yui-content">
 <div id="project">
-	<table align="left">
+		<table cellpadding="2" cellspacing="2" width="80%" align="center">
 			<tr>
 				<td width="25%" >
 					<xsl:value-of select="lang_project_id"/>
@@ -1055,7 +1055,7 @@
 </table>
 </div>
 <div id="general">
-<table class="contenttab" align="left">
+		<table cellpadding="2" cellspacing="2" width="80%" align="center">
 
 			<tr>
 				<td>
@@ -1097,8 +1097,7 @@
 </div>
 
 <div id="budget">
-<table class="contenttab" align="left">
-
+		<table cellpadding="2" cellspacing="2" width="80%" align="center">
 			<tr>
 				<td valign="top">
 					<xsl:value-of select="lang_vendor"/>
@@ -1197,8 +1196,7 @@
 </div>
 
 <div id="coordination">
-<table class="contenttab" align="left">
-
+		<table cellpadding="2" cellspacing="2" width="80%" align="center">
 			<tr>
 				<td>
 					<xsl:value-of select="lang_key_fetch"/>
@@ -1245,7 +1243,7 @@
 </div>
 
 <div id="extra">
-<table class="contenttab" align="left">
+		<table cellpadding="2" cellspacing="2" width="80%" align="center">
 			<tr>
 				<td valign="top">
 					<xsl:value-of select="lang_remark"/>
@@ -1264,7 +1262,7 @@
 
 
 <div id="documents">
-<table class="contenttab" align="left">
+		<table cellpadding="2" cellspacing="2" width="80%" align="center">
 			<xsl:choose>
 				<xsl:when test="files!=''">
 					<xsl:call-template name="file_list_view"/>
@@ -1276,7 +1274,7 @@
 <div id="history">
 
 		<hr noshade="noshade" width="100%" align="center" size="1"/>
-		<table width="80%" cellpadding="2" cellspacing="2" align="left">
+		<table cellpadding="2" cellspacing="2" width="80%" align="center">
 			<xsl:choose>
 				<xsl:when test="record_history=''">
 					<tr>
