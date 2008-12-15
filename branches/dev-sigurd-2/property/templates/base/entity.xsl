@@ -393,7 +393,11 @@
 					<xsl:apply-templates select="table_apply"/>
 				</td>
 			</tr>
+		</table>
+		</div>
+		</form>
 
+		<table cellpadding="2" cellspacing="2" width="80%" align="center">
 			<xsl:choose>
 				<xsl:when test="start_project!=''">
 					<tr>
@@ -432,10 +436,7 @@
 					</tr>
 				</xsl:when>
 			</xsl:choose>
-
 		</table>
-		</div>
-		</form>
 		</div>
 	</xsl:template>
 
@@ -476,8 +477,6 @@
 			</tr>
 		</table>
 	</xsl:template>
-
-
 
 <!-- view -->
 	<xsl:template match="view">
