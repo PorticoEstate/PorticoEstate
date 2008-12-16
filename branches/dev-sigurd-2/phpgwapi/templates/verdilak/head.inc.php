@@ -37,6 +37,7 @@
 			"/phpgwapi/js/yahoo/resize/assets/skins/sam/resize.css",
 			"/phpgwapi/js/yahoo/layout/assets/skins/sam/layout.css",
 		);
+		phpgwapi_yui::load_widget('animation');
 	}
 
 
