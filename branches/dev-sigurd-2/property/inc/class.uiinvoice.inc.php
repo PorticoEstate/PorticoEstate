@@ -396,6 +396,7 @@
 										'id'     => 'start_date-trigger',
 	                                    'src'    => $GLOBALS['phpgw']->common->image('phpgwapi','cal'),
 	                                    'alt'	=> lang('Select date'),
+	                                    'tab_index' => 1,
 	                                    'style' => 'filter'
 	                                ),
 									array( // calendar1 start_date
@@ -405,6 +406,7 @@
 	                                    'value'    => $start_date,
 	                                    'size'    => 7,
 	                                    'readonly' => 'readonly',
+	                                    'tab_index' => 2,
 	                                    'style' => 'filter'
 	                                ),
 	                                array( // imag calendar1
@@ -412,6 +414,7 @@
 										'id'     => 'end_date-trigger',
 	                                    'src'    => $GLOBALS['phpgw']->common->image('phpgwapi','cal'),
 	                                    'alt'	=> lang('Select date'),
+	                                    'tab_index' => 3,
 	                                    'style' => 'filter'
 	                                ),
 									array( // calendar1 start_date
@@ -421,6 +424,7 @@
 	                                    'value'    => $end_date,
 	                                    'size'    => 7,
 	                                    'readonly' => 'readonly',
+	                                    'tab_index' => 4,
 	                                    'style' => 'filter'
 	                                ),
 	                                array( // workorder link
@@ -428,6 +432,7 @@
 		                                'id' => 'lnk_workorder',
 		                                'url' => "",
 										'value' => lang('Workorder ID'),
+										'tab_index' => 5,
 										'style' => 'filter'
 									),
 	                                array( // workorder box
@@ -436,6 +441,7 @@
 	                                    'value'    => $workorder_id,
 	                                    'type' => 'text',
 	                                    'size'    => 10,
+	                                    'tab_index' => 6,
 	                                    'style' => 'filter'
 	                                ),
 	                                array( //vendor link
@@ -447,6 +453,7 @@
 											               'menuaction' => 'property.uilookup.vendor',
 											               ))."','Search','width=800,height=700,toolbar=no,scrollbars=yes,resizable=yes')",
 										'value' => lang('Vendor'),
+										'tab_index' => 7,
 										'style' => 'filter'
 									),
 	                                array( // Vendor box HIDDEN
@@ -463,6 +470,7 @@
 	                                    'value'    => $vendor_id,
 	                                    'type' => 'text',
 	                                    'size'    => 10,
+	                                    'tab_index' => 8,
 	                                    'style' => 'filter'
 	                                ),
 	                                array(
@@ -477,6 +485,7 @@
 															'lookup_name'  	=> 0,
 											               ))."','Search','width=800,height=700,toolbar=no,scrollbars=yes,resizable=yes')",
 										'value' => lang('property'),
+										 'tab_index' => 9,
 										'style' => 'filter'
 									),
 	                                array( // txt Facilities Management
@@ -493,6 +502,7 @@
 	                                    'value'    => $loc1,
 	                                    'type' => 'text',
 	                                    'size'    => 8,
+	                                    'tab_index' => 10,
 	                                    'style' => 'filter'
 	                                ),
 	                                array( // Voucher link
@@ -500,6 +510,7 @@
 		                                'id' => 'lnk_voucher',
 		                                'url' => "",
 										'value' => lang('Voucher ID'),
+										'tab_index' => 11,
 										'style' => 'filter'
 									),
 	                                array( // Voucher box
@@ -508,6 +519,7 @@
 	                                    'value'    => $voucher_id,
 	                                    'type' => 'text',
 	                                    'size'    => 8,
+	                                    'tab_index' => 12,
 	                                    'style' => 'filter'
 	                                ),
 									array( //boton   SEARCH
@@ -515,13 +527,21 @@
 	                                    'name' => 'search',
 	                                    'value'    => lang('search'),
 	                                    'type' => 'button',
+	                                    'tab_index' => 13,
 	                                    'style' => 'filter'
 	                                ),
+	                                array( // boton exportar
+		                                'type'	=> 'button',
+		                            	'id'	=> 'btn_export',
+		                            	'tab_index' => 13,
+		                                'value'	=> lang('download')
+		                            ),
 	                                array( //boton 	CATEGORY
 	                                    'id' => 'btn_cat_id',
 	                                    'name' => 'cat_id',
 	                                    'value'	=> lang('Category'),
 	                                    'type' => 'button',
+	                                    'tab_index' => 14,
 	                                    'style' => 'filter'
 	                                ),
 									array( //boton 	OWNER
@@ -529,6 +549,7 @@
 	                                    'name' => 'user_lid',
 	                                    'value'	=> user_lid,
 	                                    'type' => 'button',
+	                                    'tab_index' => 15,
 	                                    'style' => 'filter'
 	                                ),
 	                                array( //boton 	ACCOUNT
@@ -536,6 +557,7 @@
 	                                    'name' => 'b_account_class',
 	                                    'value'	=> lang('No account'),
 	                                    'type' => 'button',
+	                                    'tab_index' => 16,
 	                                    'style' => 'filter'
 	                                ),
 		                            array( //hidden paid

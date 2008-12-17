@@ -478,7 +478,7 @@
 				if($this->acl_read)
 				{
 					$datatable['rowactions']['action'][] = array(
-						'name'			=> 'view',
+						'my_name'			=> 'view',
 						'text' 			=> lang('view'),
 						'action'		=> $GLOBALS['phpgw']->link('/index.php',array
 										(
@@ -491,7 +491,7 @@
 				if($this->acl_edit)
 				{
 					$datatable['rowactions']['action'][] = array(
-						'name'			=> 'edit',
+						'my_name'			=> 'edit',
 						'text' 			=> lang('edit'),
 						'action'		=> $GLOBALS['phpgw']->link('/index.php',array
 										(
@@ -504,7 +504,7 @@
 				if($this->acl_delete)
 				{
 					$datatable['rowactions']['action'][] = array(
-						'name'			=> 'delete',
+						'my_name'			=> 'delete',
 						'text' 			=> lang('delete'),
 						'confirm_msg'	=> lang('do you really want to delete this entry'),
 						'action'		=> $GLOBALS['phpgw']->link('/index.php',array
@@ -518,7 +518,7 @@
 				if($this->acl_add)
 				{
 					$datatable['rowactions']['action'][] = array(
-							'name'			=> 'add',
+							'my_name'			=> 'add',
 							'text' 			=> lang('add'),
 							'action'		=> $GLOBALS['phpgw']->link('/index.php',array
 											(
@@ -551,7 +551,7 @@
 						$datatable['headers']['header'][$i]['sortable']		= true;
 						$datatable['headers']['header'][$i]['sort_field']	= 'fm_location1.loc1';
 					}
-					elseif($uicols['name'][$i]=='street_name'):
+					/*elseif($uicols['name'][$i]=='street_name'):
 					{
 						$datatable['headers']['header'][$i]['sortable']		= true;
 						$datatable['headers']['header'][$i]['sort_field'] 	= 'street_name';
@@ -560,7 +560,7 @@
 					{
 						$datatable['headers']['header'][$i]['sortable']		= true;
 						$datatable['headers']['header'][$i]['sort_field']	= $uicols['name'][$i];
-					}
+					}*/
 					endif;
 				}
 				else
@@ -630,15 +630,18 @@
 			$datatable['pagination']['records_returned']= count($location_list);
 			$datatable['pagination']['records_total'] 	= $this->bo->total_records;
 
-			$datatable['sorting']['sort'] 	= phpgw::get_var('sort', 'string'); // ASC / DESC
+
 
 			if ( (phpgw::get_var("start")== "") && (phpgw::get_var("order",'string')== ""))
 			{
 				$datatable['sorting']['order'] 			= 'loc1'; // name key Column in myColumnDef
+				//$datatable['sorting']['sort'] 			= phpgw::get_var('sort', 'string'); // ASC / DESC
+				$datatable['sorting']['sort'] 			= 'asc'; // ASC / DESC
 			}
 			else
 			{
 				$datatable['sorting']['order']			= phpgw::get_var('order', 'string'); // name of column of Database
+				$datatable['sorting']['sort'] 			= phpgw::get_var('sort', 'string'); // ASC / DESC
 			}
 
 

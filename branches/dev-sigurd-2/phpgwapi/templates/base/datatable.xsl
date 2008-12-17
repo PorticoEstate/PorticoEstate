@@ -285,6 +285,9 @@
 			<xsl:when test="type='label_date'">
 				<table><tbody><tr><td><span id="txt_start_date"></span></td></tr><tr><td><span id="txt_end_date"></span></td></tr></tbody></table>
 			</xsl:when>
+			<xsl:when test="type='label'">
+				<xsl:value-of select="value"/>
+			</xsl:when>
 			<xsl:when test="type='img'">
 				<img id="{id}" src="{src}" alt="{alt}" title="{alt}" style="cursor:pointer; cursor:hand;" tabindex="{tab_index}" />
 			</xsl:when>
