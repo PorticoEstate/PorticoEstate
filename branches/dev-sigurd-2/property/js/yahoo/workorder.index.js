@@ -24,31 +24,45 @@
 	{order:1, name:'search_vendor',	id:'txt_search_vendor'}
 	]
 
+	var toolTips =
+	[
+	 	{name:'btn_export', title:'Download', description:'Download table to your browser',ColumnDescription:''}
+	]
+
+	var linktoolTips =
+	[
+	  {name:'btn_data_search', title:'Date search', description:'Narrow the search by dates'}
+	]
+
 	// define the hidden column in datatable
 	var config_values = {
-	 column_hidden : [7,15,16,17], //orden de la columna a ocultar en el datatable
 	 date_search : 1 //if search has link "Data search"
-	 };
+	};
+/****************************************************************************************/
 
 	this.particular_setting = function()
 	{
 		if(flag_particular_setting=='init')
 		{
-			//nothing
+			oMenuButton_0.focus();
 		}
 		else if(flag_particular_setting=='update')
 		{
 			//nothing
 		}
-
-		//--focus for txt_query---
-		YAHOO.util.Dom.get(textImput[0].id).value = path_values.query;
-		YAHOO.util.Dom.get(textImput[0].id).focus();
 	}
-	
-//----------------------------------------------------------
+/****************************************************************************************/
+
+  	this.myParticularRenderEvent = function()
+  	{
+  	//don't delete it
+  	}
+/****************************************************************************************/
+
 	YAHOO.util.Event.addListener(window, "load", function()
 	{
+		//avoid render buttons html
+		YAHOO.util.Dom.getElementsByClassName('toolbar','div')[0].style.display = 'none';
 		var loader = new YAHOO.util.YUILoader();
 		loader.addModule({
 			name: "anyone", //module name; must be unique

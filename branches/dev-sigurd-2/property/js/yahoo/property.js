@@ -393,6 +393,8 @@
 
 		//Get actually sort (asc/desc)
 		url+="&sort=" + state.sortedBy.dir.toString().replace("yui-dt-", "");
+		// actually page num
+		url+="&currentPage="+state.pagination.page;
 
 		// for showw all rows, click in combo box
 		if(state.pagination.rowsPerPage==values_ds.totalRecords)
@@ -598,7 +600,7 @@
 				sDir = (this.get("sortedBy").dir === YAHOO.widget.DataTable.CLASS_ASC) ? "desc" : "asc";
 			}
 			//URL-vars adicionales que se agregaran al actual ds
-			var addToRequest = "&start=0&order="+oColumn.source+"&sort="+sDir;
+			var addToRequest = "&start=0&order="+oColumn.source+"&sort="+sDir+"&recordsReturned="+values_ds.recordsReturned+"&currentPage="+values_ds.currentPage;
 
 			if(mytotalRows == ActualValueRowsPerPageDropdown)
 			{
@@ -950,6 +952,29 @@
 		}
 
 		return cnt;
+	}
+/********************************************************************************
+ *
+ */
+  	this.getSortingANDColumn = function()
+  	{
+	var array_result = new Array();
+	//look up ORDER
+	array_result[0] = myDataTable.get("sortedBy").dir.toString().replace("yui-dt-", "");
+	//look up column
+	//myDataTable.get("sortedBy").key.toString();
+
+	for(i=0;i<myColumnDefs.length;i++)
+	{
+		if (myColumnDefs[i].key == myDataTable.get("sortedBy").key.toString())
+		{
+			array_result[1] = myColumnDefs[i].source
+			break;
+		}
+	}
+
+	return array_result;
+
 	}
 
 //----------------------------------------------------------------------------------------

@@ -479,7 +479,7 @@
 				if($this->acl_read)
 				{
 					$datatable['rowactions']['action'][] = array(
-						'my_name'			=> 'view',
+						'my_name'		=> 'view',
 						'text' 			=> lang('view'),
 						'action'		=> $GLOBALS['phpgw']->link('/index.php',array
 										(
@@ -505,7 +505,7 @@
 				if($this->acl_delete)
 				{
 					$datatable['rowactions']['action'][] = array(
-						'my_name'			=> 'delete',
+						'my_name'		=> 'delete',
 						'text' 			=> lang('delete'),
 						'confirm_msg'	=> lang('do you really want to delete this entry'),
 						'action'		=> $GLOBALS['phpgw']->link('/index.php',array
