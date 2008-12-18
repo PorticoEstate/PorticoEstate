@@ -242,6 +242,7 @@
  	                        'status'        		=> $this->status
 
 	    				));
+	    		$datatable['config']['allow_allrows'] = true;
 
 				$datatable['config']['base_java_url'] = "menuaction:'property.uilocation.index',"
 	    											."type_id:'{$type_id}',"
@@ -551,7 +552,7 @@
 						$datatable['headers']['header'][$i]['sortable']		= true;
 						$datatable['headers']['header'][$i]['sort_field']	= 'fm_location1.loc1';
 					}
-					/*elseif($uicols['name'][$i]=='street_name'):
+					elseif($uicols['name'][$i]=='street_name'):
 					{
 						$datatable['headers']['header'][$i]['sortable']		= true;
 						$datatable['headers']['header'][$i]['sort_field'] 	= 'street_name';
@@ -560,7 +561,7 @@
 					{
 						$datatable['headers']['header'][$i]['sortable']		= true;
 						$datatable['headers']['header'][$i]['sort_field']	= $uicols['name'][$i];
-					}*/
+					}
 					endif;
 				}
 				else
@@ -635,7 +636,6 @@
 			if ( (phpgw::get_var("start")== "") && (phpgw::get_var("order",'string')== ""))
 			{
 				$datatable['sorting']['order'] 			= 'loc1'; // name key Column in myColumnDef
-				//$datatable['sorting']['sort'] 			= phpgw::get_var('sort', 'string'); // ASC / DESC
 				$datatable['sorting']['sort'] 			= 'asc'; // ASC / DESC
 			}
 			else
@@ -752,6 +752,7 @@
 	      	}
 			// Prepare CSS Style
 		  	$GLOBALS['phpgw']->css->validate_file('datatable');
+		  	$GLOBALS['phpgw']->css->validate_file('property');
 		  	$GLOBALS['phpgw']->css->add_external_file('property/templates/base/css/property.css');
 			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/datatable/assets/skins/sam/datatable.css');
 			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/container/assets/skins/sam/container.css');

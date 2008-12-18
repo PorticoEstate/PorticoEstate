@@ -32,12 +32,7 @@
 		{name:'btn_columns', title:'columns', description:'Choose columns'}
 	 ]
 
-    var deactivateT =
-     [
-      {name:'btn_export'}
-     ]
 
-    // define the hidden column in datatable
     var config_values = {
       date_search : 0, //if search has link "Data search"
     }

@@ -702,6 +702,8 @@
 
 <xsl:template name="datatable-yui-definition">
 	<script>
+		var allow_allrows = "<xsl:value-of select="//datatable/config/allow_allrows"/>";
+
   		var property_js = "<xsl:value-of select="//datatable/property_js"/>";
 
 		var base_java_url = "{<xsl:value-of select="//datatable/config/base_java_url"/>}";

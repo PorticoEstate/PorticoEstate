@@ -1849,6 +1849,7 @@
 		}
 
 
+
 		public function select2String($array_values, $id = 'id', $name = 'name',$name2 = '' )
         {
              $str_array_values = "";
@@ -1858,26 +1859,25 @@
                 {
                     if ($key == $id)
                     {
-                    	$str_array_values .= $value;
-                    	$str_array_values .= "#";
+                     $str_array_values .= $value;
+                     $str_array_values .= "#";
                     }
                     if ($key == $name)
                     {
-                    	 $str_array_values .= $value;
-                    	 $str_array_values .= "/";
+                      $str_array_values .= $value;
+                      $str_array_values .= "@";
                     }
-                	if ($key == $name2)
-                	{
-						// eliminate hte last / in $str_array_values
-                		$str_array_values = substr($str_array_values, 0, strrpos($str_array_values,'/'));
-                		$str_array_values .= " ".$value;
-                    	$str_array_values .= "/";
-                	}
+                 if ($key == $name2)
+                 {
+                 // eliminate hte last @ in $str_array_values
+                 $str_array_values = substr($str_array_values, 0, strrpos($str_array_values,'@'));
+                 $str_array_values .= " ".$value;
+                 $str_array_values .= "@";
+                 }
                 }
              }
              return $str_array_values;
         }
-
 
 
 	}

@@ -24,7 +24,7 @@
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/bbb_/ekstern/
 	* @package property
 	* @subpackage location
- 	* @version $Id$
+ 	* @version $Id: class.uigab.inc.php 1969 2008-12-16 20:45:00Z sigurd $
 	*/
 
 	/**
@@ -208,7 +208,6 @@
 							'check_payments'	=> $check_payments
 
 	    				));
-	    		$datatable['config']['allow_allrows'] = true;
 
 				$datatable['config']['base_java_url'] = "menuaction:'property.uigab.index',"
 	    											."location_code:'{$location_code}',"
@@ -623,22 +622,19 @@
 			$datatable['pagination']['records_total'] 	= $this->bo->total_records;
 
 			$datatable['sorting']['order'] 	= phpgw::get_var('order', 'string'); // Column
-			//$datatable['sorting']['sort'] 	= phpgw::get_var('sort', 'string'); // ASC / DESC
+			$datatable['sorting']['sort'] 	= phpgw::get_var('sort', 'string'); // ASC / DESC
 
 			$appname		= lang('gab');
 			$function_msg	= lang('list gab');
 
 			if ( (phpgw::get_var("start")== "") && (phpgw::get_var("order",'string')== ""))
 			   {
-			    $datatable['sorting']['order']		= 'gab_id'; // name key Column in myColumnDef
-				$datatable['sorting']['sort']		= 'asc'; // ASC / DESC
+			    $datatable['sorting']['order']    = 'gab_id'; // name key Column in myColumnDef
 			   }
 			   else
 			   {
-			    $datatable['sorting']['order']   	= phpgw::get_var('order', 'string'); // name of column of Database
-				$datatable['sorting']['sort'] 		= phpgw::get_var('sort', 'string'); // ASC / DESC
+			    $datatable['sorting']['order']   = phpgw::get_var('order', 'string'); // name of column of Database
 			   }
-
 
 			phpgwapi_yui::load_widget('dragdrop');
 		  	phpgwapi_yui::load_widget('datatable');
@@ -1226,3 +1222,4 @@
 		//	$GLOBALS['phpgw']->xslttpl->pp();
 		}
 	}
+

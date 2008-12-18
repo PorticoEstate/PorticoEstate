@@ -97,21 +97,22 @@
    }
 
  /********************************************************************************
- * create a array whith values strValues (..#../..#). Necesary for selected nested
+ * create a array whith values strValues (..#..@..#). Necesary for selected nested
  */
+
 	this.create_array_values_list = function(stValues)
-	{
+	  {
 	   var temp1,temp2,temp3 = new Array();
 
-	   temp1 = stValues.split('/');
-	   for(var n=0 ; n < temp1.length -1 ; n++ ) // -1 because la string has a '/' at last
+	   temp1 = stValues.split('@');
+	   for(var n=0 ; n < temp1.length -1 ; n++ ) // -1 because la string has a '@' at last
 	   {
-			temp2 = temp1[n].split('#');
-			temp3[n] = new Array();
-			for(var j=0 ; j < temp2.length ; j++ )
-			{
-				temp3[n][j]=temp2[j];
-			}
+	    temp2 = temp1[n].split('#');
+	    temp3[n] = new Array();
+	    for(var j=0 ; j < temp2.length ; j++ )
+	    {
+	     temp3[n][j]=temp2[j];
+	    }
 	   }
 	   return temp3;
 	}
@@ -147,22 +148,22 @@
 
 
  /********************************************************************************
- * stValues:  values of select control, separate whit / and #
+ * stValues:  values of select control, separate whit @ and #
  * order: indicate the id of Combo box
  */
-  this.create_menu_list = function(stValues,order)
-	{
-	   var temp1, temp2, MenuButtonMenu = new Array();
-	   temp1 = stValues.split('/');
-	   for(var k=0 ; k < temp1.length -1 ; k++ ) // -1 because the string has a '/' at last
-	   {
-		    temp2 = temp1[k].split('#');
-		    temp2.push(order);
-		    var obj_temp = {id: '', text: temp2[1], value: temp2[0], onclick: { fn: onMenuItemClick , obj: temp2} };
-		    MenuButtonMenu.push(obj_temp);
+    this.create_menu_list = function(stValues,order)
+	 {
+	    var temp1, temp2, MenuButtonMenu = new Array();
+	    temp1 = stValues.split('@');
+	    for(var k=0 ; k < temp1.length -1 ; k++ ) // -1 because the string has a '@' at last
+	    {
+	      temp2 = temp1[k].split('#');
+	      temp2.push(order);
+	      var obj_temp = {id: '', text: temp2[1], value: temp2[0], onclick: { fn: onMenuItemClick , obj: temp2} };
+	      MenuButtonMenu.push(obj_temp);
+	    }
+	    return MenuButtonMenu;
 	   }
-       return MenuButtonMenu;
-   }
 
  /********************************************************************************
  *
@@ -379,6 +380,19 @@
 
 		//for mantein paginator and fill out combo box show all rows
 		url+="&recordsReturned=" + values_ds.recordsReturned;
+
+		//Get actually order Columns //url+="&order="+oColumn.source+"&sort="+sDir;
+		for(i=0;i<myColumnDefs.length;i++)
+		{
+			if (myColumnDefs[i].key == state.sortedBy.key.toString())
+			{
+				url+="&order=" + myColumnDefs[i].source;
+				break;
+			}
+		}
+
+		//Get actually sort (asc/desc)
+		url+="&sort=" + state.sortedBy.dir.toString().replace("yui-dt-", "");
 
 		// for showw all rows, click in combo box
 		if(state.pagination.rowsPerPage==values_ds.totalRecords)
@@ -739,22 +753,23 @@
     {
       if(YAHOO.util.Dom.inDocument("btn_export-button"))
       {
-      	//oNormalButton_2._setDisabled(true);
       	for(i=0;i<normalButtons.length;i++)
       	{
       		if(normalButtons[i].name == "btn_export")
       		{
-      			 eval("oNormalButton_"+i+"._setDisabled(true)")
+      			 eval("oNormalButton_"+i+"._setDisabled(true)");
       		}
       	}
+
       }
-      YAHOO.util.Dom.getElementsByClassName('yui-pg-rpp-options','select')[0].disabled = true;
+
+       	YAHOO.util.Dom.getElementsByClassName('yui-pg-rpp-options','select')[0].disabled = true;
+
     }
     else
     {
       if(YAHOO.util.Dom.inDocument("btn_export-button"))
       {
-      	//oNormalButton_2._setDisabled(true);
       	for(i=0;i<normalButtons.length;i++)
       	{
       		if(normalButtons[i].name == "btn_export")
@@ -763,7 +778,11 @@
       		}
       	}
       }
-      YAHOO.util.Dom.getElementsByClassName('yui-pg-rpp-options','select')[0].disabled = false;
+      //see in datatable.xsl
+      if(allow_allrows == 1)
+      {
+      	YAHOO.util.Dom.getElementsByClassName('yui-pg-rpp-options','select')[0].disabled = false;
+      }
     }
 
     myParticularRenderEvent();
