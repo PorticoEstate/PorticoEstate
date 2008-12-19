@@ -190,7 +190,6 @@
 			}
 
 			$lookup = ''; //Fix this
-			$dry_run = false;
 
 			$datatable = array();
 			$values_combo_box = array();
@@ -209,7 +208,7 @@
 
 	    		$datatable['config']['base_url'] = $GLOBALS['phpgw']->link('/index.php', array
 	    				(
-	    					'menuaction'			=> 'property.uiactor.index',
+	    							'menuaction'=> 'property.uiactor.index',
 									'lookup'    => $lookup,
 									'cat_id'	=>$this->cat_id,
 									'query'		=>$this->query,
@@ -217,6 +216,7 @@
 									'member_id'	=> $this->member_id
 
 	    				));
+	    		$datatable['config']['allow_allrows'] = true;
 
 				$datatable['config']['base_java_url'] = "menuaction:'property.uiactor.index',"
 
@@ -225,6 +225,7 @@
 													."cat_id:'{$this->cat_id}',"
 						 	                        ."role:'{$this->role}',"
 						 	                        ."member_id:'{$this->member_id}'";
+                //die(_debug_array($datatable));
 
 				$values_combo_box[0]  = $this->cats->formatted_xslt_list(array('selected' => $this->member_id,'globals' => true));
 				$default_value = array ('cat_id'=>'','name'=>lang('no member'));
@@ -253,14 +254,16 @@
 			                                            'name' => 'member_id',
 			                                            'value'	=> lang('Member'),
 			                                            'type' => 'button',
-			                                            'style' => 'filter'
+			                                            'style' => 'filter',
+			                                            'tab_index' => 1
 			                                        ),
 			                                        array(
 			                                            'id' => 'btn_cat_id',
 			                                            'name' => 'cat_id',
 			                                            'value'	=> lang('Category'),
 			                                            'type' => 'button',
-			                                            'style' => 'filter'
+			                                            'style' => 'filter',
+			                                            'tab_index' => 2
 			                                        ),
 													array(
 										                'type'=> 'link',
@@ -270,18 +273,21 @@
 										                           'menuaction' => 'property.uiactor.columns',
 										                           'role'		=> $this->role
 										                           ))."','','width=350,height=370')",
-										                 'value' => lang('columns')
+										                 'value' => lang('columns'),
+										                 'tab_index' => 6
 										            ),
 													array(
 						                                'type'	=> 'button',
 						                            	'id'	=> 'btn_new',
-						                                'value'	=> lang('add')
+						                                'value'	=> lang('add'),
+						                                'tab_index' => 5
 						                            ),
 			                                        array( //boton     SEARCH
 			                                            'id' => 'btn_search',
 			                                            'name' => 'search',
 			                                            'value'    => lang('search'),
-			                                            'type' => 'button'
+			                                            'type' => 'button',
+			                                            'tab_index' => 4
 			                                        ),
 			   										array( // TEXT IMPUT
 			                                            'name'     => 'query',
@@ -289,7 +295,8 @@
 			                                            'value'    => '',//$query,
 			                                            'type' => 'text',
 			                                            'onkeypress' => 'return pulsar(event)',
-			                                            'size'    => 28
+			                                            'size'    => 28,
+			                                            'tab_index' => 3
 			                                        )
 		                           				),
 		                       		'hidden_value' => array(
@@ -315,11 +322,13 @@
 				{
 					unset($datatable['actions']['form'][0]['fields']['field'][3]);
 				}
-				$dry_run = true;
+
 			}
 
 			$actor_list = array();
-			$actor_list = $this->bo->read($dry_run);
+			$actor_list = $this->bo->read();
+
+			//echo $dry_run; count($actor_list); die(_debug_array($actor_list));
 
 			$uicols	= $this->bo->uicols;
 
@@ -340,7 +349,6 @@
 								$datatable['rows']['row'][$j]['column'][$i]['format'] 			= 'link';
 								$datatable['rows']['row'][$j]['column'][$i]['java_link']		= true;
 								$datatable['rows']['row'][$j]['column'][$i]['link']				= $actor['query_location'][$uicols['name'][$i]];
-								$uicols['formatter'][$i] = 'myCustom';
 							}
 							else
 							{
@@ -390,7 +398,7 @@
 				if($this->acl_read)
 				{
 					$datatable['rowactions']['action'][] = array(
-						'name' 			=> 'view',
+						'my_name' 			=> 'view',
 						'text' 			=> lang('view'),
 						'action'		=> $GLOBALS['phpgw']->link('/index.php',array
 										(
@@ -403,7 +411,7 @@
 				if($this->acl_edit)
 				{
 					$datatable['rowactions']['action'][] = array(
-						'name' 			=> 'edit',
+						'my_name' 			=> 'edit',
 						'text' 			=> lang('edit'),
 						'action'		=> $GLOBALS['phpgw']->link('/index.php',array
 										(
@@ -416,7 +424,7 @@
 				if($this->acl_delete)
 				{
 					$datatable['rowactions']['action'][] = array(
-						'name' 			=> 'delete',
+						'my_name' 			=> 'delete',
 						'text' 			=> lang('delete'),
 						'confirm_msg'	=> lang('do you really want to delete this entry'),
 						'action'		=> $GLOBALS['phpgw']->link('/index.php',array
@@ -430,7 +438,7 @@
 				if($this->acl_add)
 				{
 					$datatable['rowactions']['action'][] = array(
-							'name' 			=> 'add',
+							'my_name' 			=> 'add',
 							'text' 			=> lang('add'),
 							'action'		=> $GLOBALS['phpgw']->link('/index.php',array
 											(
@@ -457,7 +465,6 @@
 					$datatable['headers']['header'][$i]['visible'] 			= true;
 					$datatable['headers']['header'][$i]['format'] 			= $this->bocommon->translate_datatype_format($uicols['datatype'][$i]);
 					$datatable['headers']['header'][$i]['sortable']			= false;
-					//$datatable['headers']['header'][$i]['formatter']		= $uicols['formatter'][$i];
 
 					if(isset($uicols['datatype'][$i]) && $uicols['datatype'][$i]!='T' && $uicols['datatype'][$i]!='CH')
 					{
@@ -470,7 +477,7 @@
 					$datatable['headers']['header'][$i]['name'] 			= 'id2';
 					$datatable['headers']['header'][$i]['text'] 			= $uicols['descr'][$i];
 					$datatable['headers']['header'][$i]['visible'] 			= false;
-					$datatable['headers']['header'][$i]['sortable']		= false;
+					$datatable['headers']['header'][$i]['sortable']			= false;
 					$datatable['headers']['header'][$i]['format'] 			= 'hidden';
 				}
 			}
@@ -484,26 +491,47 @@
 			$datatable['pagination']['records_returned'] = count($actor_list);
 			$datatable['pagination']['records_total'] 	= $this->bo->total_records;
 
-			$datatable['sorting']['order'] 	= phpgw::get_var('order', 'string'); // Column
-			$datatable['sorting']['sort'] 	= phpgw::get_var('sort', 'string'); // ASC / DESC
+			//$datatable['sorting']['order'] 	= phpgw::get_var('order', 'string'); // Column
+			//$datatable['sorting']['sort'] 	= phpgw::get_var('sort', 'string'); // ASC / DESC
 
-
-			if ( (phpgw::get_var("start")== "") && (phpgw::get_var("order",'string')== ""))
+			if($this->role == 'tenant')
 			{
-				$datatable['sorting']['order'] 			= 'id'; // name key Column in myColumnDef
+				if ( (phpgw::get_var("start")== "") && (phpgw::get_var("order",'string')== ""))
+				{
+					$datatable['sorting']['order'] 			= 'first_name'; // name key Column in myColumnDef
+					$datatable['sorting']['sort'] 			= 'asc'; // ASC / DESC
+				}
+				else
+				{
+					$datatable['sorting']['order']			= phpgw::get_var('order', 'string'); // name of column of Database
+					$datatable['sorting']['sort'] 			= phpgw::get_var('sort', 'string'); // ASC / DESC
+				}
 			}
 			else
 			{
-				$datatable['sorting']['order']			= phpgw::get_var('order', 'string'); // name of column of Database
+				if ( (phpgw::get_var("start")== "") && (phpgw::get_var("order",'string')== ""))
+				{
+					$datatable['sorting']['order'] 			= 'org_name'; // name key Column in myColumnDef
+					$datatable['sorting']['sort'] 			= 'asc'; // ASC / DESC
+				}
+				else
+				{
+					$datatable['sorting']['order']			= phpgw::get_var('order', 'string'); // name of column of Database
+					$datatable['sorting']['sort'] 			= phpgw::get_var('sort', 'string'); // ASC / DESC
+				}
 			}
-
 
 			phpgwapi_yui::load_widget('dragdrop');
 		  	phpgwapi_yui::load_widget('datatable');
 		  	phpgwapi_yui::load_widget('menu');
 		  	phpgwapi_yui::load_widget('connection');
+		  	//// cramirez: necesary for include a partucular js
 		  	phpgwapi_yui::load_widget('loader');
+		  	//cramirez: necesary for use opener . Avoid error JS
+			phpgwapi_yui::load_widget('tabview');
 			phpgwapi_yui::load_widget('paginator');
+			//FIXME this one is only needed when $lookup==true - so there is probably an error
+			phpgwapi_yui::load_widget('animation');
 
 //-- BEGIN----------------------------- JSON CODE ------------------------------
 
@@ -567,9 +595,10 @@
 			// Prepare CSS Style
 		  	$GLOBALS['phpgw']->css->validate_file('datatable');
 		  	$GLOBALS['phpgw']->css->validate_file('property');
+		  	$GLOBALS['phpgw']->css->add_external_file('property/templates/base/css/property.css');
 			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/datatable/assets/skins/sam/datatable.css');
-			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/paginator/assets/skins/sam/paginator.css');
 			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/container/assets/skins/sam/container.css');
+			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/paginator/assets/skins/sam/paginator.css');
 
 			//Title of Page
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('actor') . ': ' . lang('list ' . $this->role);
@@ -577,7 +606,7 @@
 	  		// Prepare YUI Library
   			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'actor.index', 'property' );
 
-			$this->save_sessiondata();
+			//$this->save_sessiondata();
 		}
 
 		function edit()

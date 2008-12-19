@@ -61,7 +61,6 @@
 				$cat_id = (isset($data['cat_id'])?$data['cat_id']:'');
 				$allrows 	= (isset($data['allrows'])?$data['allrows']:'');
 				$member_id 	= (isset($data['member_id'])?$data['member_id']:0);
-				$dry_run		= isset($data['dry_run']) ? $data['dry_run'] : '';
 			}
 
 			$sql = $this->bocommon->fm_cache('sql_actor_' . $this->role);
@@ -245,18 +244,13 @@
 
 			$this->db2->query($sql,__LINE__,__FILE__);
 			$this->total_records = $this->db2->num_rows();
-
-			//cramirez.r@ccfirst.com 04/11/08 avoid retrieve data in first time, only render definition for headers (var myColumnDefs)
-			if(!$dry_run)
-			{			
-				if(!$allrows)
-				{
-					$this->db->limit_query($sql . $ordermethod,$start,__LINE__,__FILE__);
-				}
-				else
-				{
-					$this->db->query($sql . $ordermethod,__LINE__,__FILE__);
-				}
+			if(!$allrows)
+			{
+				$this->db->limit_query($sql . $ordermethod,$start,__LINE__,__FILE__);
+			}
+			else
+			{
+				$this->db->query($sql . $ordermethod,__LINE__,__FILE__);
 			}
 
 			$j=0;
