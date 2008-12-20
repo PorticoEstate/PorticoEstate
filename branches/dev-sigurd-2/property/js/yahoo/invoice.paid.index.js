@@ -40,16 +40,9 @@
 			{name:'voucher_date_lnk', title:'Payment Date', description:'',ColumnDescription:'voucher_date_lnk'}
 		]
 
-		var deactivateT =
-		 [
-		  {name:'btn_export'}
-		 ]
-
-
 		// define the hidden column in datatable
 		var config_values = {
-			date_search : 1, //if search has link "Data search"
-			footer_datatable : 0
+			date_search : 1 //if search has link "Data search"
 		}
 
 		var myFormatDate = function(elCell, oRecord, oColumn, oData)

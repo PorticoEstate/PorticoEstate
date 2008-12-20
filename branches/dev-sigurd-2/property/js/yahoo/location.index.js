@@ -24,7 +24,6 @@
     ]
 
     var toolTips = [
-      {name:'btn_columns',title:'columns', description:'Choose columns',ColumnDescription:''},
       {name:'btn_export', title:'download', description:'Download table to your browser',ColumnDescription:''}
     ]
 

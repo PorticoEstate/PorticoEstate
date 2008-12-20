@@ -11,7 +11,6 @@
   	var tt = new YAHOO.widget.Tooltip("myTooltip");
   	var maxRowsPerPage = 1000;
 
-
  /********************************************************************************
  *
  */
@@ -396,10 +395,14 @@
 		// actually page num
 		url+="&currentPage="+state.pagination.page;
 
-		// for showw all rows, click in combo box
-		if(state.pagination.rowsPerPage==values_ds.totalRecords)
+		// when user do click in combo box (for show all rows)
+		if(state.pagination.rowsPerPage == values_ds.totalRecords)
 		{
 			url=url+"&allrows=1";
+		}
+		else
+		{
+			url=url+"&allrows=0";
 		}
 
 		//delete previous records in datatable
@@ -483,11 +486,10 @@
 	   // When responseSchema.totalRecords is not indicated, the records returned from the DataSource are assumed to represent the entire set
 	   myDataSource.responseSchema =
 	   {
-			resultsList: "records",
-			fields: fields,
-			metaFields : {
-            			  totalRecords: 'totalRecords' // The totalRecords meta field is a "magic" meta, and will be passed to the Paginator.
-        				 }
+			resultsList	: "records",
+			fields		: fields,
+			metaFields	:{totalRecords: 'totalRecords' // The totalRecords meta field is a "magic" meta, and will be passed to the Paginator.
+						}
 	   };
 	   var container = YAHOO.util.Dom.getElementsByClassName( 'datatable-container' , 'div' );
 
@@ -503,7 +505,7 @@
 		flag++;
 
         myPaginatorConfig = {
-				            containers: ['paging'],
+				            containers			: ['paging'],
 				            totalRecords		: mytotalRows,
 				            pageLinks			: 10,
 				            rowsPerPage			: values_ds.recordsReturned, //MAXIMO el PHPGW me devuelve 15 valor configurado por preferencias
@@ -521,74 +523,71 @@
 							paginator			: myPaginator
 		};
 
-     myDataTable = new YAHOO.widget.DataTable(container[0], myColumnDefs, myDataSource, myTableConfig);
+		myDataTable = new YAHOO.widget.DataTable(container[0], myColumnDefs, myDataSource, myTableConfig);
 
-
-	 myDataTable.on('cellMouseoverEvent', function (oArgs)
-	 {
-	 	if(typeof toolTips == 'object' && typeof tt == 'undefined')
+		myDataTable.on('cellMouseoverEvent', function (oArgs)
 		{
-			tt = new YAHOO.widget.Tooltip("myTooltip");
-	 	}
-
-	 	{
-		if (showTimer)
-		{
-			window.clearTimeout(showTimer);
-			showTimer = 0;
-		}
-
-		var target = oArgs.target;
-		var column = this.getColumn(target);
-
-		for(var p=0;p<toolTips.length;p++)
-		{
-			if(column.key == toolTips[p].name)
+		 	if(typeof toolTips == 'object' && typeof tt == 'undefined')
 			{
-				var record = this.getRecord(target);
-				var title = toolTips[p].title || record.getData(toolTips[p].name);
-				var description = toolTips[p].description || record.getData(toolTips[p].ColumnDescription);
-				var xy = [parseInt(oArgs.event.clientX,10) + 10 ,parseInt(oArgs.event.clientY,10) + 10 ];
+				tt = new YAHOO.widget.Tooltip("myTooltip");
+		 	}
 
-				showTimer = window.setTimeout(function()
+		 	{
+			if (showTimer)
+			{
+				window.clearTimeout(showTimer);
+				showTimer = 0;
+			}
+
+			var target = oArgs.target;
+			var column = this.getColumn(target);
+
+			for(var p=0;p<toolTips.length;p++)
+			{
+				if(column.key == toolTips[p].name)
 				{
-						tt.setBody("<table class='tooltip-table'><tr class='tooltip'><td class='nolink'>"+title+"</td></tr><tr><td>"+description+"</td></tr></table>");
-					tt.cfg.setProperty('xy',xy);
-					tt.show();
-					hideTimer = window.setTimeout(function()
+					var record = this.getRecord(target);
+					var title = toolTips[p].title || record.getData(toolTips[p].name);
+					var description = toolTips[p].description || record.getData(toolTips[p].ColumnDescription);
+					var xy = [parseInt(oArgs.event.clientX,10) + 10 ,parseInt(oArgs.event.clientY,10) + 10 ];
+
+					showTimer = window.setTimeout(function()
 					{
-						tt.hide();
+							tt.setBody("<table class='tooltip-table'><tr class='tooltip'><td class='nolink'>"+title+"</td></tr><tr><td>"+description+"</td></tr></table>");
+						tt.cfg.setProperty('xy',xy);
+						tt.show();
+						hideTimer = window.setTimeout(function()
+						{
+							tt.hide();
+						}
+						,5000);
+						},100);
 					}
-					,5000);
-					},100);
 				}
 			}
-		}
-	 });
+		 });
 
-	 myDataTable.on('cellMouseoutEvent', function (oArgs)
-	 {
-		if (showTimer)
+		 myDataTable.on('cellMouseoutEvent', function (oArgs)
+		 {
+			if (showTimer)
+			{
+				window.clearTimeout(showTimer);
+				showTimer = 0;
+			}
+
+			if (hideTimer)
+			{
+				window.clearTimeout(hideTimer);
+				hideTimer = 0;
+			}
+			tt.hide();
+		});
+
+		myDataTable.handleDataReturnPayload = function(oRequest, oResponse, oPayload)
 		{
-			window.clearTimeout(showTimer);
-			showTimer = 0;
-		}
-
-		if (hideTimer)
-		{
-			window.clearTimeout(hideTimer);
-			hideTimer = 0;
-		}
-		tt.hide();
-	});
-
-
-
-     myDataTable.handleDataReturnPayload = function(oRequest, oResponse, oPayload)
-     {
-        oPayload.totalRecords = oResponse.meta.totalRecords;
-        return oPayload;
-     }
+	        oPayload.totalRecords = oResponse.meta.totalRecords;
+	        return oPayload;
+        }
 
      // Override function for custom server-side sorting
      myDataTable.sortColumn = function(oColumn)
@@ -701,6 +700,13 @@
 
 		//reset total records always to zero
 		myPaginator.setTotalRecords(0,true);
+		//myDataTable.render();
+
+		//change Paginator´s configuration.
+		if(path_values.allrows == 1 )
+		{
+			myPaginator.set("rowsPerPage",values_ds.totalRecords)
+		}
 
 		//obtain records of the last DS and add to datatable
 		var record = values_ds.records;

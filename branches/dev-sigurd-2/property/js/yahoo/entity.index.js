@@ -18,6 +18,10 @@
 	{order:2, name:'btn_export',funct:"onDownloadClick"}
 	]
 
+    var toolTips = [
+    {name:'btn_export', title:'download', description:'Download table to your browser',ColumnDescription:''}
+    ]
+
 	// define Text buttons
 	var textImput = [
 	{order:0, name:'query',	id:'txt_query'}
@@ -25,31 +29,42 @@
 
 	// define the hidden column in datatable
 	var config_values = {
-	column_hidden : [1,8,9,10], //orden de la columna a ocultar en el datatable
 	date_search : 1 //if search has link "Data search"
 	}
 
+   	var linktoolTips =[
+	{name:'btn_columns', title:'columns', description:'Choose columns'},
+	{name:'btn_data_search', title:'Data search', description:'Narrow the search by dates'}
+	]
+
+
+/****************************************************************************************/
 	this.particular_setting = function()
 	{
 		if(flag_particular_setting=='init')
 		{
 			//for this particular module, the Category's combo box has sets his own category.
 			oMenuButton_0.set("label", ("<em>" + array_options[0][path_values.cat_id][1] + "</em>"));
+			oMenuButton_0.focus();
 		}
 		else if(flag_particular_setting=='update')
 		{
 			//nothing
 		}
 
-		//--focus for txt_query---
-		YAHOO.util.Dom.get(textImput[0].id).value = path_values.query;
-		YAHOO.util.Dom.get(textImput[0].id).focus();
 	}
+/****************************************************************************************/
 
+  	this.myParticularRenderEvent = function()
+  	{
+  	//don't delete it
+  	}
 
-//----------------------------------------------------------
+/****************************************************************************************/
 	YAHOO.util.Event.addListener(window, "load", function()
 	{
+		//avoid render buttons html
+      	YAHOO.util.Dom.getElementsByClassName('toolbar','div')[0].style.display = 'none';
 		var loader = new YAHOO.util.YUILoader();
 		loader.addModule({
 			name: "anyone", //module name; must be unique

@@ -764,7 +764,7 @@
 	  		// Prepare YUI Library
   			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'location.index', 'property' );
 
-			$this->save_sessiondata();
+			//$this->save_sessiondata();
 		}
 
 

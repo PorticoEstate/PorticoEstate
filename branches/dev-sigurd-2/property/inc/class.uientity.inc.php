@@ -224,10 +224,15 @@
 			$dry_run = false;
 
 			//redirect. If selected the title of module.
-			if(!$this->entity_id || !$this->cat_id)
+			if($this->entity_id == 1 && !$this->cat_id)
 			{
 				  $GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uientity.index', 'entity_id'=>1, 'cat_id'=> 1));
 			}
+			elseif($this->entity_id == 2 && !$this->cat_id)
+			{
+				  $GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uientity.index', 'entity_id'=>2, 'cat_id'=> 1));
+			}
+
 			//redirect if no rights
 			if(!$this->acl_read && $this->cat_id)
 			{
@@ -255,14 +260,27 @@
 			// 	enters the first time
 			if( phpgw::get_var('phpgw_return_as') != 'json' )
 			{
-				$datatable['menu']					= $this->bocommon->get_menu();
-				$datatable['config']['base_java_url'] = "menuaction:'property.uientity.index',".
-								"entity_id:'{$this->entity_id}',".
-								"cat_id:'{$this->cat_id}',".
-								"district_id:'{$this->district_id}',".
-								"status:'{$this->status}',".
-								"filter:'{$this->filter}',".
-								"query:'{$this->query}'";
+				$datatable['menu']						=	$this->bocommon->get_menu();
+
+				$datatable['config']['base_url']	= $GLOBALS['phpgw']->link('/index.php', array
+										    				(
+										    					'menuaction'			=> 'property.uientity.index',
+										    					'entity_id'        		=> $this->entity_id,
+																'cat_id'            	=> $this->cat_id,
+									 	                        'district_id'        	=> $this->district_id,
+									 	                        'status'    			=> $this->status,
+									 	                        'filter'        		=> $this->filter,
+									 	                        'query'        			=> $this->query,
+									 	                    ));
+				$datatable['config']['allow_allrows'] = true;
+
+				$datatable['config']['base_java_url']	=	"menuaction:'property.uientity.index',".
+															"entity_id:'{$this->entity_id}',".
+															"cat_id:'{$this->cat_id}',".
+															"district_id:'{$this->district_id}',".
+															"status:'{$this->status}',".
+															"filter:'{$this->filter}',".
+															"query:'{$this->query}'";
 
 				// this array "$arr_filter_hide" indicate what filters are hidden or not
 				$arr_filter_hide = array();
@@ -354,28 +372,32 @@
 													'name' => 'cat_id',
 													'value'=> lang('Category'),
 													'type' => 'button',
-													'style' => 'filter'
+													'style' => 'filter',
+													'tab_index' => 1
 												),
 												array( //boton 	DISTINT
 													'id'   => 'btn_district_id',
 													'name' => 'district_id',
 													'value'=> lang('District'),
 													'type' => 'button',
-													'style' => 'filter'
+													'style' => 'filter',
+													'tab_index' => 2
 												),
 												array( //boton 	STATUS
 													'id'   => 'btn_status_id',
 													'name' => 'status_id',
 													'value'=> lang('Status'),
 													'type' => 'button',
-													'style' => 'filter'
+													'style' => 'filter',
+													'tab_index' => 3
 												),
 												array( //boton 	USER
 													'id'   => 'btn_user_id',
 													'name' => 'user_id',
 													'value'=> lang('User'),
 													'type' => 'button',
-													'style' => 'filter'
+													'style' => 'filter',
+													'tab_index' => 4
 												),
 												array(//for link "columns", next to Export button
 													'type'=> 'link',
@@ -386,30 +408,36 @@
 															   'entity_id'  => $this->entity_id,
 															   'cat_id'	 => $this->cat_id
 															  ))."','link','width=300,height=600')",
-													 'value' => lang('columns')
+													 'value' => lang('columns'),
+													 'tab_index' => 10
 												),
 												array(
 													'type' => 'button',
 													'id'   => 'btn_export',
-													'value'=> lang('download')
+													'value'=> lang('download'),
+													'tab_index' => 9
 													),
 												array(
-													'type' => 'submit',
+													'type' => 'button',
 													'id'   => 'btn_new',
-													'value'=> lang('add')
+													'value'=> lang('add'),
+													'tab_index' => 8
 													),
 												array( //boton	 SEARCH
 													'id'   => 'btn_search',
 													'name' => 'search',
 													'value'=> lang('search'),
 													'type' => 'button',
+													'tab_index' => 7
 												),
 												array( // TEXT IMPUT
 													'name' => 'query',
 													'id'   => 'txt_query',
 													'value'=> '',//$query,
 													'type' => 'text',
-													'size' => 28
+													'size' => 28,
+													'onkeypress' => 'return pulsar(event)',
+													'tab_index' => 6
 												),
 												 array(//for link "None",
 												  'type'=> 'label_date'
@@ -431,9 +459,10 @@
 													'id'  => 'btn_data_search',
 													'url' => "Javascript:window.open('".$GLOBALS['phpgw']->link('/index.php',
 														   array(
-															   'menuaction' => 'property.uiproject.date_search'))."','link','width=350,height=250')",
-													 'value' => lang('Date search')
-													)),
+																	'menuaction' => 'property.uiproject.date_search'))."','link','width=350,height=250')",
+													 'value' => lang('Date search'),
+													 'tab_index' => 5
+												 )),
 								'hidden_value' => array(
 													array(
 														'id'   => 'values_combo_box_0',
@@ -546,6 +575,7 @@
 			if($this->acl_read)
 			{
 				$datatable['rowactions']['action'][] = array(
+						'my_name'		=> 'view',
 						'text' 			=> lang('view'),
 						'action'		=> $GLOBALS['phpgw']->link('/index.php',array
 														(
@@ -559,6 +589,7 @@
 			if($this->acl_edit)
 			{
 				$datatable['rowactions']['action'][] = array(
+						'my_name'		=> 'edit',
 						'text' 			=> lang('edit'),
 						'action'		=> $GLOBALS['phpgw']->link('/index.php',array
 														(
@@ -572,6 +603,7 @@
 			if($this->acl_delete)
 			{
 				$datatable['rowactions']['action'][] = array(
+						'my_name'		=> 'delete',
 						'text' 			=> lang('delete'),
 						'confirm_msg'	=> lang('do you really want to delete this entry'),
 						'action'		=> $GLOBALS['phpgw']->link('/index.php',array
@@ -586,6 +618,7 @@
 			if($this->acl_add)
 			{
 				$datatable['rowactions']['action'][] = array(
+						'my_name'		=> 'add',
 						'text' 			=> lang('add'),
 						'action'		=> $GLOBALS['phpgw']->link('/index.php',array
 														(
@@ -616,7 +649,7 @@
 						$datatable['headers']['header'][$i]['sortable']			= false;
 						//$datatable['headers']['header'][$i]['formatter']		= $uicols['formatter'][$i];
 						//according to stable bruch this columns is not SORTABLE'
-						$denied = array('merknad','account_lid');
+						$denied = array('merknad');//$denied = array('merknad','account_lid');
 						//if not include
 						if(!in_array ($uicols['name'][$i], $denied))
 						{
@@ -652,17 +685,34 @@
 			$datatable['sorting']['order'] 	= phpgw::get_var('order', 'string'); // Column
 			$datatable['sorting']['sort'] 	= phpgw::get_var('sort', 'string'); // ASC / DESC
 
+			if ( (phpgw::get_var("start")== "") && (phpgw::get_var("order",'string')== ""))
+			{
+				$datatable['sorting']['order'] 			= 'num'; // name key Column in myColumnDef
+				$datatable['sorting']['sort'] 			= 'desc'; // ASC / DESC
+			}
+			else
+			{
+				$datatable['sorting']['order']			= phpgw::get_var('order', 'string'); // name of column of Database
+				$datatable['sorting']['sort'] 			= phpgw::get_var('sort', 'string'); // ASC / DESC
+			}
+
+
+
 			$appname = lang('entity');
 
 			phpgwapi_yui::load_widget('dragdrop');
-			phpgwapi_yui::load_widget('datatable');
-			phpgwapi_yui::load_widget('menu');
-			phpgwapi_yui::load_widget('connection');
-			//// cramirez: necesary for include a partucular js
-			phpgwapi_yui::load_widget('loader');
+		  	phpgwapi_yui::load_widget('datatable');
+		  	phpgwapi_yui::load_widget('menu');
+		  	phpgwapi_yui::load_widget('connection');
+		  	//// cramirez: necesary for include a partucular js
+		  	phpgwapi_yui::load_widget('loader');
+		  	//cramirez: necesary for use opener . Avoid error JS
+			phpgwapi_yui::load_widget('tabview');
 			phpgwapi_yui::load_widget('paginator');
+			//FIXME this one is only needed when $lookup==true - so there is probably an error
+			phpgwapi_yui::load_widget('animation');
 
-			//-BEGIN----------------------------- JSON CODE ------------------------------
+//-BEGIN----------------------------- JSON CODE ------------------------------
 
 			if( phpgw::get_var('phpgw_return_as') == 'json' )
 			{
@@ -713,7 +763,7 @@
 
 			return $json;
 			}
-			//-END------------------- JSON CODE ----------------------
+//-END------------------- JSON CODE ----------------------
 
 			// Prepare template variables and process XSLT
 			$template_vars = array();
@@ -725,10 +775,13 @@
 			{
 					$GLOBALS['phpgw']->css = createObject('phpgwapi.css');
 			}
+
 			// Prepare CSS Style
-			$GLOBALS['phpgw']->css->validate_file('datatable');
-			$GLOBALS['phpgw']->css->add_external_file('property/templates/base/css/property.css');
+		  	$GLOBALS['phpgw']->css->validate_file('datatable');
+		  	$GLOBALS['phpgw']->css->validate_file('property');
+		  	$GLOBALS['phpgw']->css->add_external_file('property/templates/base/css/property.css');
 			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/datatable/assets/skins/sam/datatable.css');
+			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/container/assets/skins/sam/container.css');
 			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/paginator/assets/skins/sam/paginator.css');
 
 			//Title of Page
@@ -745,6 +798,7 @@
 			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'entity.index', 'property' );
 
 			//$this->save_sessiondata();
+			//die(_debug_array($datatable));
 		}
 
 		function edit()

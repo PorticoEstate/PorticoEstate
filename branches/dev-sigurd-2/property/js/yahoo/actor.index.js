@@ -36,7 +36,14 @@
 		if(flag_particular_setting=='init')
 		{
 			//focus initial
-			oMenuButton_0.focus();
+			if(path_values.role == 'vendor')
+			{
+				oMenuButton_0.focus();
+			}
+			else
+			{
+				oMenuButton_1.focus();
+			}
 		}
 		else if(flag_particular_setting=='update')
 		{

@@ -4,7 +4,6 @@
 
 	//define SelectButton
  	var oMenuButton_0, oMenuButton_1;
-
  	var selectsButtons = [
 	{order:0, var_URL:'cat_id',	 name:'btn_cat_id',	 style:'',dependiente:''},
 	{order:1, var_URL:'user_lid',name:'btn_user_lid',style:'',dependiente:''}
@@ -28,19 +27,14 @@
 		{name:'voucher_id_lnk',title:'Voucher ID', description:'click this link to enter the list of sub-invoices',ColumnDescription:''},
 		{name:'vendor_id_lnk', title:'', description:'',ColumnDescription: 'vendor_name'},
 		{name:'voucher_date_lnk', title:'Payment Date', description:'',ColumnDescription:'voucher_date_lnk'},
-		{name:'period', title:'Period', description:'click this button to edit the period',ColumnDescription:''},
+		//{name:'period', title:'Period', description:'click this button to edit the period',ColumnDescription:''},
 		{name:'btn_export', title:'download', description:'Download table to your browser',ColumnDescription:''}
 	]
-	var deactivateT =
-	 [
-	  {name:'btn_export'}
-	 ]
 
 	// define the hidden column in datatable
 	var config_values =
 	{
 		date_search : 0, //if search has link "Data search"
-		footer_datatable : 1
 	}
 
 	var tableYUI;
@@ -136,6 +130,7 @@
 		   	path_values.period = '';
 		   	path_values.currentPage = '';
 		   	path_values.start = '';
+		   	path_values.allrows = 0;
 		}
 	}
 	/********************************************************************************
@@ -194,6 +189,16 @@
 	   	 //for mantein paginator and fill out combo box show all rows
 	   	 path_values.recordsReturned = values_ds.recordsReturned;
 
+	   	 array_sort_order = getSortingANDColumn()
+	   	 path_values.order = array_sort_order[1];
+	   	 path_values.sort = array_sort_order[0];
+
+	   	 // if actually the datatable show all records, the class PHP has to send all records too.
+	   	 if(myPaginator.get("rowsPerPage")== values_ds.totalRecords)
+	   	 {
+	   	 	path_values.allrows = 1;
+	   	 }
+
 		//call INDEX. Update PERIOD Method is inside of INDEX
 	   	 execute_ds();
 
@@ -237,31 +242,20 @@
 	   	 path_values.start = myPaginator.getPageRecords()[0];
 	   	 //for mantein paginator and fill out combo box show all rows
 	   	 path_values.recordsReturned = values_ds.recordsReturned;
+
+	   	 array_sort_order = getSortingANDColumn()
+	   	 path_values.order = array_sort_order[1];
+	   	 path_values.sort = array_sort_order[0];
+
+	   	 // if actually the datatable show all records, the class PHP has to send all records too.
+	   	 if(myPaginator.get("rowsPerPage")== values_ds.totalRecords)
+	   	 {
+	   	 	path_values.allrows = 1;
+	   	 }
+
 	   	 execute_ds();
 	}
-	/********************************************************************************
-	 *
-	 */
-  	this.getSortingANDColumn = function()
-  	{
-	var array_result = new Array();
-	//look up ORDER
-	array_result[0] = myDataTable.get("sortedBy").dir.toString().replace("yui-dt-", "");
-	//look up column
-	myDataTable.get("sortedBy").key.toString();
 
-	for(i=0;i<myColumnDefs.length;i++)
-	{
-		if (myColumnDefs[i].key == myDataTable.get("sortedBy").key.toString())
-		{
-			array_result[1] = myColumnDefs[i].source
-			break;
-		}
-	}
-
-	return array_result;
-
-	}
 	/********************************************************************************
 	 *
 	 */

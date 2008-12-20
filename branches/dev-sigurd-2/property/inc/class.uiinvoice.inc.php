@@ -268,6 +268,7 @@
 													'b_account_class'	=> $b_account_class,
 													'district_id'		=> $this->district_id
 												));
+				$datatable['config']['allow_allrows'] = true;
 
 
 				$datatable['config']['base_java_url'] = "menuaction:'property.uiinvoice.index',"
@@ -334,16 +335,6 @@
 		                            	'tab_index' => 7,
 		                                'value'	=> lang('download')
 		                            ),
-		                            array( //hidden paid
-		                                'type'	=> 'hidden',
-		                            	'id'	=> 'paid',
-		                                'value'	=> $paid
-		                            ),
-		                           /* array( //hidden paid
-		                                'type'	=> 'hidden',
-		                            	'id'	=> 'valuesForUpdatePHP',
-		                                'value'	=> ''
-		                            ),*/
 									array( // boton SAVE
 		                                'id'	=> 'btn_save',
 		                            	//'name' => 'save',
@@ -386,6 +377,11 @@
 	                                    'value'    => "",
 	                                    'type' => 'hidden',
 	                                    'size'    => 8
+		                            ),
+		                            array( //hidden paid
+		                                'type'	=> 'hidden',
+		                            	'id'	=> 'paid',
+		                                'value'	=> $paid
 		                            ));
 				}
 				else
@@ -835,64 +831,62 @@
 				}
 			}
 
-			//_debug_array($content);die;
-			//die(_debug_array($datatable['rows']['row'][7]['column']));
-			//die($sum);
-
 			//---- PERMISOS
 			$datatable['rowactions']['action'] = array();
-
-			$parameters = array
-			(
-				'parameter' => array
-				(
-					array
-					(
-						'name'		=> 'voucher_id',
-						'source'	=> 'voucher_id_num'
-					),
-				)
-			);
-
-			if($this->acl_delete)
+			if(!$paid)
 			{
+				$parameters = array
+				(
+					'parameter' => array
+					(
+						array
+						(
+							'name'		=> 'voucher_id',
+							'source'	=> 'voucher_id_num'
+						),
+					)
+				);
+
+				if($this->acl_delete)
+				{
+					$datatable['rowactions']['action'][] = array(
+						'my_name'			=> 'delete',
+						'text' 			=> lang('delete'),
+						'confirm_msg'	=> lang('do you really want to delete this entry'),
+						'action'		=> $GLOBALS['phpgw']->link('/index.php',array
+										(
+											'menuaction'	=> 'property.uiinvoice.delete',
+										)),
+						'parameters'	=> $parameters
+					);
+				}
+
 				$datatable['rowactions']['action'][] = array(
-					'name'			=> 'delete',
-					'text' 			=> lang('delete'),
-					'confirm_msg'	=> lang('do you really want to delete this entry'),
+					'my_name'			=> 'f',
+					'text' 			=> lang('F'),
 					'action'		=> $GLOBALS['phpgw']->link('/index.php',array
 									(
-										'menuaction'	=> 'property.uiinvoice.delete',
+										'menuaction'	=> 'property.uiinvoice.receipt'
 									)),
 					'parameters'	=> $parameters
 				);
+
+				if($this->acl_add)
+				{
+					$datatable['rowactions']['action'][] = array(
+						'my_name'			=> 'add',
+						'text' 			=> lang('add'),
+						'action'		=> $GLOBALS['phpgw']->link('/index.php',array
+										(
+											'menuaction'	=> 'property.uiinvoice.add'
+										))
+					);
+				}
+
+				unset($parameters);
+
 			}
 
-			$datatable['rowactions']['action'][] = array(
-				'name'			=> 'f',
-				'text' 			=> lang('F'),
-				'action'		=> $GLOBALS['phpgw']->link('/index.php',array
-								(
-									'menuaction'	=> 'property.uiinvoice.receipt'
-								)),
-				'parameters'	=> $parameters
-			);
-
-			if($this->acl_add)
-			{
-				$datatable['rowactions']['action'][] = array(
-					'name'			=> 'add',
-					'text' 			=> lang('add'),
-					'action'		=> $GLOBALS['phpgw']->link('/index.php',array
-									(
-										'menuaction'	=> 'property.uiinvoice.add'
-									))
-				);
-			}
-
-
-
-			unset($parameters);
 
 			//--- CABECERAS DEL DATATABLE sirve para crear el MycolumnsDef
 			$uicols_count	= count($uicols['descr']);
@@ -966,7 +960,7 @@
 
 				$datatable['sorting']['currentPage']	= 1;
 				$datatable['sorting']['order'] 			= 'voucher_id_lnk'; // name key Column in myColumnDef
-				//$datatable['sorting']['sort']			= 'DESC'; // ASC / DESC
+				$datatable['sorting']['sort']			= 'desc'; // ASC / DESC
 			}
 			else
 			{
@@ -985,7 +979,11 @@
 		  	phpgwapi_yui::load_widget('connection');
 		  	//// cramirez: necesary for include a partucular js
 		  	phpgwapi_yui::load_widget('loader');
-		  	phpgwapi_yui::load_widget('paginator');
+		  	//cramirez: necesary for use opener . Avoid error JS
+			phpgwapi_yui::load_widget('tabview');
+			phpgwapi_yui::load_widget('paginator');
+			//FIXME this one is only needed when $lookup==true - so there is probably an error
+			phpgwapi_yui::load_widget('animation');
 
 //-- BEGIN----------------------------- JSON CODE ------------------------------
 			if( phpgw::get_var('phpgw_return_as') == 'json' )
@@ -1112,8 +1110,8 @@
 		  	$GLOBALS['phpgw']->css->validate_file('property');
 		  	$GLOBALS['phpgw']->css->add_external_file('property/templates/base/css/property.css');
 			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/datatable/assets/skins/sam/datatable.css');
-			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/paginator/assets/skins/sam/paginator.css');
 			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/container/assets/skins/sam/container.css');
+			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/paginator/assets/skins/sam/paginator.css');
 
 			//Title of Page
 			$appname	= lang('invoice');
