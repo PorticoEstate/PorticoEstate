@@ -168,7 +168,7 @@
 			return $this->so->read_category_name($cat_id);
 		}
 
-		function read($data=0)
+		function read($data = array())
 		{
 			$claim = $this->so->read(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
 											'filter' => $this->filter,'status' => $this->status,'cat_id' => $this->cat_id,

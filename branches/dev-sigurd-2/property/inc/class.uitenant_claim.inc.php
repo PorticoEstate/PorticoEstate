@@ -251,19 +251,9 @@
 				{
 					for ($k=0;$k<$count_uicols_name;$k++)
 					{
-						if($uicols['name'][$k]['name'] == 'name')
-						{
-							$tenant = $this->bocommon->read_single_tenant($claim_entry['tenant_id']);
-							$name = $tenant['last_name'] . ', ' . $tenant['first_name'];
-							$datatable['rows']['row'][$j]['column'][$k]['name']		= $uicols['name'][$k]['value'];
-							$datatable['rows']['row'][$j]['column'][$k]['value']	= $name;
+						$datatable['rows']['row'][$j]['column'][$k]['name']		= $uicols['name'][$k]['value'];
+						$datatable['rows']['row'][$j]['column'][$k]['value']	= $claim_entry[$uicols['name'][$k]['value']];
 
-						}
-						else
-						{
-							$datatable['rows']['row'][$j]['column'][$k]['name']		= $uicols['name'][$k]['value'];
-							$datatable['rows']['row'][$j]['column'][$k]['value']	= $claim_entry[$uicols['name'][$k]['value']];
-						}
 					}
 					$j++;
 				}

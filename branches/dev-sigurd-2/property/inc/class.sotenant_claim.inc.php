@@ -63,6 +63,15 @@
 
 			if ($order)
 			{
+				switch($order)
+				{
+					case 'claim_id':
+						$order = 'fm_tenant_claim.id';
+						break;
+					case 'name':
+						$order = 'last_name';
+						break;
+				}
 				$ordermethod = " order by $order $sort";
 			}
 			else
@@ -103,7 +112,7 @@
 				$querymethod = " $where ( first_name $this->like '%$query%' OR last_name $this->like '%$query%')";
 			}
 
-			$sql = "SELECT fm_tenant_claim.*, descr as category FROM fm_tenant_claim "
+			$sql = "SELECT fm_tenant_claim.*, descr as category, fm_tenant.last_name, fm_tenant.first_name FROM fm_tenant_claim "
 			 . " $this->join fm_tenant_claim_category on fm_tenant_claim.category=fm_tenant_claim_category.id"
 			 . " $this->join fm_tenant ON fm_tenant_claim.tenant_id = fm_tenant.id"
 			 . " $filtermethod $querymethod";
@@ -120,6 +129,7 @@
 				$this->db->query($sql . $ordermethod,__LINE__,__FILE__);
 			}
 
+			$claims = array();
 			while ($this->db->next_record())
 			{
 				$claims[] = array
@@ -127,6 +137,7 @@
 					'claim_id'		=> $this->db->f('id'),
 					'project_id'	=> $this->db->f('project_id'),
 					'tenant_id'		=> $this->db->f('tenant_id'),
+					'name'			=> $this->db->f('last_name') . ', ' . $this->db->f('first_name'),
 					'remark'		=> $this->db->f('remark',true),
 					'entry_date'	=> $this->db->f('entry_date'),
 					'category'		=> $this->db->f('category'),
