@@ -64,20 +64,14 @@
 		{
 			if(is_array($data))
 			{
-				if ($data['start'])
-				{
-					$start=$data['start'];
-				}
-				else
-				{
-					$start=0;
-				}
-				$query		= (isset($data['query'])?$data['query']:'');
-				$sort		= (isset($data['sort'])?$data['sort']:'DESC');
-				$order		= (isset($data['order'])?$data['order']:'');
-				$allrows	= (isset($data['allrows'])?$data['allrows']:'');
-				$cat_id 	= (isset($data['cat_id'])?$data['cat_id']:0);
-				$filter		= (isset($data['filter'])?$data['filter']:'');
+				$start		= isset($data['start']) && $data['start'] ? $data['start'] : 0;
+				$query		= isset($data['query']) ? $data['query'] : '';
+				$query		= isset($data['query']) ? $data['query'] : '';
+				$sort		= isset($data['sort']) ? $data['sort'] : 'DESC';
+				$order		= isset($data['order']) ? $data['order'] : '';
+				$allrows	= isset($data['allrows']) ? $data['allrows'] : '';
+				$cat_id 	= isset($data['cat_id']) && $data['cat_id'] ? $data['cat_id'] : 0;
+				$filter		= isset($data['filter']) ? $data['filter'] : '';
 			}
 
 			$table = 'phpgw_demo_table';
@@ -129,10 +123,11 @@
 				$querymethod = " $where name $this->like '%$query%'";
 			}
 
-			$sql = "SELECT COUNT(phpgw_demo_table.id) FROM $table $filtermethod $querymethod";
+			$sql = "SELECT COUNT(phpgw_demo_table.id) as cnt FROM $table $filtermethod $querymethod";
 
 			$this->db->query($sql,__LINE__,__FILE__);
-			$this->total_records = $this->db->num_rows();
+			$this->db->next_record();
+			$this->total_records = $this->db->f('cnt');
 
 			$sql = "SELECT * FROM $table $filtermethod $querymethod $ordermethod";
 
@@ -145,7 +140,7 @@
 				$this->db->limit_query($sql, $start, __LINE__, __FILE__);
 			}
 
-			$demo_info = '';
+			$demo_info = array();
 			while ($this->db->next_record())
 			{
 				$demo_info[] = array
@@ -166,20 +161,14 @@
 
 			if(is_array($data))
 			{
-				if ($data['start'])
-				{
-					$start = $data['start'];
-				}
-				else
-				{
-					$start=0;
-				}
-				$query				= (isset($data['query'])?$data['query']:'');
-				$sort				= (isset($data['sort'])?$data['sort']:'DESC');
-				$order				= (isset($data['order'])?$data['order']:'');
-				$allrows			= (isset($data['allrows'])?$data['allrows']:'');
-				$cat_id 			= (isset($data['cat_id'])?$data['cat_id']:0);
-				$filter				= (isset($data['filter'])?$data['filter']:'');
+				$start		= isset($data['start']) && $data['start'] ? $data['start'] : 0;
+				$query		= isset($data['query']) ? $data['query'] : '';
+				$query		= isset($data['query']) ? $data['query'] : '';
+				$sort		= isset($data['sort']) ? $data['sort'] : 'DESC';
+				$order		= isset($data['order']) ? $data['order'] : '';
+				$allrows	= isset($data['allrows']) ? $data['allrows'] : '';
+				$cat_id 	= isset($data['cat_id']) && $data['cat_id'] ? $data['cat_id'] : 0;
+				$filter		= isset($data['filter']) ? $data['filter'] : '';
 				$custom_attributes	= (isset($data['custom_attributes'])?$data['custom_attributes']:'');
 			}
 
@@ -227,82 +216,81 @@
 			$querymethod = '';
 			if($query)
 			{
-				$query = ereg_replace("'",'',$query);
-				$query = ereg_replace('"','',$query);
+				$query = $this->db->db_addslashes($query);
 
 				$querymethod = " $where name $this->like '%$query%'";
 			}
 
-
 			$cols = $table . '.*';
 
-			$cols_return[] 			= 'id';
+			$cols_return[] 				= 'id';
 			$uicols['input_type'][]		= 'text';
-			$uicols['name'][]		= 'id';
-			$uicols['descr'][]		= 'ID';
-			$uicols['statustext'][]	= 'Demo ID';
-			$uicols['datatype'][]	= 'I';
+			$uicols['name'][]			= 'id';
+			$uicols['descr'][]			= 'ID';
+			$uicols['statustext'][]		= 'Demo ID';
+			$uicols['datatype'][]		= 'I';
 
-			$cols_return[] 			= 'entry_date';
+			$cols_return[] 				= 'entry_date';
 			$uicols['input_type'][]		= 'text';
-			$uicols['name'][]		= 'entry_date';
-			$uicols['descr'][]		= lang('Time created');
-			$uicols['statustext'][]	= lang('Time created');
-			$uicols['datatype'][]	= 'timestamp';
+			$uicols['name'][]			= 'entry_date';
+			$uicols['descr'][]			= lang('Time created');
+			$uicols['statustext'][]		= lang('Time created');
+			$uicols['datatype'][]		= 'timestamp';
 			$cols_return_extra[]= array
 								(
-									'name'	=> 'entry_date',
+									'name'		=> 'entry_date',
 									'datatype'	=> 'timestamp'
 								);
 
-			$cols_return[] 			= 'user_id';
+			$cols_return[] 				= 'user_id';
 			$uicols['input_type'][]		= 'text';
-			$uicols['name'][]		= 'user_id';
-			$uicols['descr'][]		= lang('Owner');
-			$uicols['statustext'][]	= lang('Owner of this record');
-			$uicols['datatype'][]	= 'user_id';
+			$uicols['name'][]			= 'user_id';
+			$uicols['descr'][]			= lang('Owner');
+			$uicols['statustext'][]		= lang('Owner of this record');
+			$uicols['datatype'][]		= 'user_id';
 			$cols_return_extra[]= array
 								(
-									'name'	=> 'user_id',
+									'name'		=> 'user_id',
 									'datatype'	=> 'user_id'
 								);
 
 
-				$i	= count($uicols['name']);
-				if(isset($custom_attributes) && is_array($custom_attributes))
+			$i	= count($uicols['name']);
+			if(isset($custom_attributes) && is_array($custom_attributes))
+			{
+				foreach($custom_attributes as $column_info)
 				{
-					foreach($custom_attributes as $column_info)
+					if($column_info['list'])
 					{
-						if($column_info['list'])
+						if($column_info['datatype'] == 'link')
 						{
-							if($column_info['datatype'] == 'link')
-							{
-								$uicols['input_type'][]		= 'link';
-							}
-							else
-							{
-								$uicols['input_type'][]		= 'text';
-							}
-							$cols_return[] 				= $column_info['column_name'];
-							$uicols['name'][]			= $column_info['column_name'];
-							$uicols['descr'][]			= $column_info['input_text'];
-							$uicols['statustext'][]		= $column_info['statustext'];
-							$uicols['datatype'][$i]		= $column_info['datatype'];
-							$cols_return_extra[]= array(
-								'name'	=> $column_info['column_name'],
-								'datatype'	=> $column_info['datatype'],
-								'attrib_id'	=> $column_info['id']
-							);
-							$i++;
+							$uicols['input_type'][]		= 'link';
 						}
+						else
+						{
+							$uicols['input_type'][]		= 'text';
+						}
+						$cols_return[] 				= $column_info['column_name'];
+						$uicols['name'][]			= $column_info['column_name'];
+						$uicols['descr'][]			= $column_info['input_text'];
+						$uicols['statustext'][]		= $column_info['statustext'];
+						$uicols['datatype'][$i]		= $column_info['datatype'];
+						$cols_return_extra[]= array(
+							'name'	=> $column_info['column_name'],
+							'datatype'	=> $column_info['datatype'],
+							'attrib_id'	=> $column_info['id']
+						);
+						$i++;
 					}
 				}
+			}
 
 			$this->uicols	= $uicols;
 
-			$sql = "SELECT COUNT(phpgw_demo_table.id) FROM $table $filtermethod $querymethod";
+			$sql = "SELECT COUNT(phpgw_demo_table.id) as cnt FROM $table $filtermethod $querymethod";
 			$this->db->query($sql,__LINE__,__FILE__);
-			$this->total_records = $this->db->num_rows();
+			$this->db->next_record();
+			$this->total_records = $this->db->f('cnt');
 
 			$sql = "SELECT * FROM $table $filtermethod $querymethod $ordermethod";
 			if ( $allrows )
@@ -380,7 +368,7 @@
 					}
 					else if($cols_return_extra[$i]['datatype']=='user_id' && $value)
 					{
-						$demo_info[$j][$cols_return_extra[$i]['name']]= $GLOBALS['phpgw']->accounts->id2name($value);
+						$demo_info[$j][$cols_return_extra[$i]['name']]= $GLOBALS['phpgw']->accounts->get($value)->__toString();
 					}
 					else
 					{

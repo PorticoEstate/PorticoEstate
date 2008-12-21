@@ -62,7 +62,7 @@
 				$this->use_session = true;
 			}
 
-			$this->start	= phpgw::get_var('start');
+			$this->start	= phpgw::get_var('start', 'int', 'REQUEST', 0);
 			$this->query	= phpgw::get_var('query');
 			$this->sort		= phpgw::get_var('sort');
 			$this->order	= phpgw::get_var('order');
@@ -112,8 +112,9 @@
 				'filter'	=> $this->filter,
 			);
 
+			$values = $this->so->read($lookup);
 			$this->total_records = $this->so->total_records;
-			return $this->so->read($lookup);
+			return $values;
 		}
 
 		/**
@@ -123,7 +124,7 @@
 		*/
 		public function read2()
 		{
-			$custom_attributes = $this->custom->get_attribs($this->currentapp, $this->acl_location, 0, '', 'ASC', 'attrib_sort', true, true);
+			$custom_attributes = $this->custom->find($this->currentapp, $this->acl_location, 0, '', 'ASC', 'attrib_sort', true, true);
 			$lookup = array
 			(
 				'start'		=> $this->start,
@@ -144,14 +145,15 @@
 
 		public function read_single($id = 0)
 		{
-			$values['attributes'] = $this->custom->get_attribs($this->currentapp, $this->acl_location, 0, '', 'ASC', 'attrib_sort', true, true);
+			$values['attributes'] = $this->custom->find($this->currentapp, $this->acl_location, 0, '', 'ASC', 'attrib_sort', true, true);
 
 			if($id)
 			{
 				$values = $this->so->read_single($id, $values);
 			}
 
-			$values = $this->custom->prepare_attributes($values, 'demo', $this->acl_location);
+			$custom_fields	= CreateObject('property.custom_fields');
+			$values = $custom_fields->prepare($values, 'demo', $this->acl_location);
 
 			$dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
 			if(isset($values['entry_date']) && $values['entry_date'])
@@ -178,23 +180,27 @@
 				$receipt = $this->so->add($values,$values_attribute);
 			}
 
-			$custom_functions = $this->custom->read_custom_function(
-				array
-				(
-					'appname'	=> $this->currentapp,
-					'location'	=> $this->acl_location,
-					'allrows'	=> true
-				));
+			$criteria = array
+			(
+				'appname'	=> $this->currentapp,
+				'location'	=> $this->acl_location,
+				'allrows'	=> true
+			);
 
-			if ( isset($custom_functions) && is_array($custom_functions) )
+			$custom_functions = $GLOBALS['phpgw']->custom_functions->find($criteria);
+
+			foreach ( $custom_functions as $entry )
 			{
-				foreach($custom_functions as $entry)
+				// prevent path traversal
+				if ( preg_match('/\.\./', $entry['file_name']) )
 				{
-					if ( is_file(PHPGW_APP_INC . "/custom/{$entry['file_name']}")
-						&& $entry['active'] )
-					{
-						include_once(PHPGW_APP_INC . "/custom/{$entry['file_name']}");
-					}
+					continue;
+				}
+
+				$file = PHPGW_APP_INC . "/custom/{$entry['file_name']}";
+				if ( $entry['active'] && is_file($file) )
+				{
+					require_once PHPGW_APP_INC . "/custom/{$entry['file_name']}";
 				}
 			}
 
@@ -263,7 +269,4 @@
 		{
 			return $this->acl_location;
 		}
-
-
-
 	}

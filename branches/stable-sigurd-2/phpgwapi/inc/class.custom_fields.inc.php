@@ -1174,6 +1174,70 @@
 		}
 
 		/**
+		* Preserve attribute values from post in case of an error
+		*
+		* @param array $values value set with
+		* @param array $values_attributes attribute definitions and values from posting
+		*
+		* @return array attribute definitions and values
+		*/
+		public function preserve_attribute_values($values, $values_attributes)
+		{
+			if ( !is_array($values_attributes ) )
+			{
+				return array();
+			}
+
+			foreach ( $values_attributes as $attribute )
+			{
+				foreach ( $values['attributes'] as &$val_attrib )
+				{
+					if ( $val_attrib['id'] != $attribute['attrib_id'] )
+					{
+						continue;
+					}
+
+					if( !isset($attribute['value']) )
+					{
+						continue;
+					}
+
+					if ( is_array($attribute['value']) )
+					{
+						foreach ( $val_attrib['choice'] as &$choice )
+						{
+							foreach ( $attribute['value'] as $selected )
+							{
+								if ( $selected == $choice['id'] )
+								{
+									$choice['checked'] = 'checked';
+								}
+							}
+						}
+					}
+					else if ( isset($val_attrib['choice'])
+						&& is_array($val_attrib['choice']) )
+					{
+						foreach ( $val_attrib['choice'] as &$choice)
+						{
+							if ( $choice['id'] == $attribute['value'] )
+							{
+								$choice['checked'] = 'checked';
+							}
+						}
+					}
+					else
+					{
+						$val_attrib['value'] = $attribute['value'];
+					}
+				}
+			}
+			return $values;
+		}
+
+
+
+		/**
 		 * Resort an attribute's position in relation to other attributes
 		 * 
 		 * @param int $id the attribute db pk
