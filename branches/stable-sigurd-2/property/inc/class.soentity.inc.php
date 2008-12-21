@@ -134,8 +134,11 @@
 
 			if(!$sql)
 			{
-				$cols = $entity_table . '.*';
-				$cols_return[] = 'location_code';
+				$cols_return_extra	= array();
+				$cols_return		= array();
+				$uicols				= array();
+				$cols				= $entity_table . '.*';
+				$cols_return[]		= 'location_code';
 
 				$cols_return[] 			= 'num';
 				$uicols['input_type'][]		= 'text';
@@ -154,12 +157,17 @@
 					$cols_return[] = 'entity_num_' . $entity_id;
 				}
 
-				$cols .= ',account_lid';
-				$cols_return[] 				= 'account_lid';
+				$cols .= ", {$entity_table}.user_id";
+				$cols_return[] 				= 'user_id';
 				$uicols['input_type'][]		= 'text';
-				$uicols['name'][]			= 'account_lid';
+				$uicols['name'][]			= 'user_id';
 				$uicols['descr'][]			= lang('User');
 				$uicols['statustext'][]		= lang('User');
+				$cols_return_extra[]= array
+								(
+									'name'		=> 'user_id',
+									'datatype'	=> 'user_id'
+								);
 
 				$joinmethod = " $this->join phpgw_accounts ON ($entity_table.user_id = phpgw_accounts.account_id))";
 				$paranthesis ='(';
@@ -172,6 +180,7 @@
 				$this->bocommon->fm_cache('cols_return_entityt_' . $entity_id . '_' . $cat_id . '_' . $lookup,$this->bocommon->cols_return);
 				$this->bocommon->fm_cache('cols_return_lookup_entityt_' . $entity_id . '_' . $cat_id . '_' . $lookup,$this->bocommon->cols_return_lookup);
 				$this->bocommon->fm_cache('cols_extra_entityt_' . $entity_id . '_' . $cat_id . '_' . $lookup,$this->bocommon->cols_extra);
+				$this->bocommon->fm_cache('cols_extra_return_entityt_' . $entity_id . '_' . $cat_id . '_' . $lookup, $cols_return_extra);
 
 				$uicols				= $this->bocommon->uicols;
 				$cols_return			= $this->bocommon->cols_return;
@@ -184,6 +193,7 @@
 				$cols_return			= $this->bocommon->fm_cache('cols_return_entityt_' . $entity_id . '_' . $cat_id . '_' . $lookup);
 				$this->cols_return_lookup 	= $this->bocommon->fm_cache('cols_return_lookup_entityt_' . $entity_id . '_' . $cat_id . '_' . $lookup);
 				$this->cols_extra		= $this->bocommon->fm_cache('cols_extra_entityt_' . $entity_id . '_' . $cat_id . '_' . $lookup);
+				$cols_return_extra		= $this->bocommon->fm_cache('cols_extra_return_entityt_' . $entity_id . '_' . $cat_id . '_' . $lookup);
 			}
 
 			if ($cat_id > 0)
@@ -236,7 +246,14 @@
 //_debug_array($cols_return_extra);
 			if ($order)
 			{
-				$ordermethod = " order by $entity_table.$order $sort";
+				switch($order)
+				{
+					case 'user_id':
+						$ordermethod = " ORDER BY phpgw_accounts.account_lastname {$sort}";
+						break;
+					default:
+						$ordermethod = " ORDER BY $entity_table.$order $sort";	
+				}
 			}
 			else
 			{
@@ -430,6 +447,10 @@
 						else if($cols_return_extra[$i]['datatype']=='link' && $value)
 						{
 							$entity_list[$j][$cols_return_extra[$i]['name']]= phpgw::safe_redirect($value);
+						}
+						else if($cols_return_extra[$i]['datatype']=='user_id' && $value)
+						{
+							$entity_list[$j][$cols_return_extra[$i]['name']]= $GLOBALS['phpgw']->accounts->get($value)->__toString();
 						}
 						else
 						{
