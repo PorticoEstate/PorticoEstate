@@ -525,47 +525,80 @@
 
 		myDataTable = new YAHOO.widget.DataTable(container[0], myColumnDefs, myDataSource, myTableConfig);
 
-		myDataTable.on('cellMouseoverEvent', function (oArgs)
-		{
-		 	if(typeof toolTips == 'object' && typeof tt == 'undefined')
-			{
-				tt = new YAHOO.widget.Tooltip("myTooltip");
-		 	}
+myDataTable.on('cellMouseoverEvent', function (oArgs)
+  {
+   {
+  if (showTimer)
+  {
+   window.clearTimeout(showTimer);
+   showTimer = 0;
+  }
 
-		 	{
-			if (showTimer)
-			{
-				window.clearTimeout(showTimer);
-				showTimer = 0;
-			}
+  var target = oArgs.target;
+  var column = myDataTable.getColumn(target);
+  var title;
+  var description;
+  var num=0;
 
-			var target = oArgs.target;
-			var column = this.getColumn(target);
+  var pages=0;
+  var rowspepage=0;
+  var param1=0;
 
-			for(var p=0;p<toolTips.length;p++)
-			{
-				if(column.key == toolTips[p].name)
-				{
-					var record = this.getRecord(target);
-					var title = toolTips[p].title || record.getData(toolTips[p].name);
-					var description = toolTips[p].description || record.getData(toolTips[p].ColumnDescription);
-					var xy = [parseInt(oArgs.event.clientX,10) + 10 ,parseInt(oArgs.event.clientY,10) + 10 ];
+  for(var p=0;p<toolTips.length;p++)
+  {
+   if(column.key == toolTips[p].name)
+   {
+    var record = this.getRecord(target);
+    if(myPaginator.getCurrentPage() > 2 && myDataTable.getRecordSet().getRecords()[0]==null )
+    {
+     title = toolTips[p].title || myDataTable.getRecordSet().getRecords()[this.getRecordIndex(target)].getData(toolTips[p].name);
+     description = toolTips[p].description || myDataTable.getRecordSet().getRecords()[this.getRecordIndex(target)].getData(toolTips[p].ColumnDescription);
+    }
+    if(myPaginator.getCurrentPage() == 2 && myDataTable.getRecordSet().getRecords()[0]==null)
+    {
+     title = toolTips[p].title || myDataTable.getRecordSet().getRecords()[this.getRecordIndex(target)].getData(toolTips[p].name);
+     description = toolTips[p].description || myDataTable.getRecordSet().getRecords()[this.getRecordIndex(target)].getData(toolTips[p].ColumnDescription);
+    }
+    if(myPaginator.getCurrentPage() == 2 && myDataTable.getRecordSet().getRecords()[0]!=null)
+    {
+     rowspepage = myPaginator.getRowsPerPage();
+     num = this.getRecordIndex(target)-rowspepage;
+     title = toolTips[p].title || myDataTable.getRecordSet().getRecords()[num].getData(toolTips[p].name);
+     description = toolTips[p].description || myDataTable.getRecordSet().getRecords()[num].getData(toolTips[p].ColumnDescription);
+    }
+    if(myPaginator.getCurrentPage() == 1 && myDataTable.getRecordSet().getRecords()[0]!=null)
+    {
+     title = toolTips[p].title || myDataTable.getRecordSet().getRecords()[this.getRecordIndex(target)].getData(toolTips[p].name);
+     description = toolTips[p].description || myDataTable.getRecordSet().getRecords()[this.getRecordIndex(target)].getData(toolTips[p].ColumnDescription);
+    }
+    if(myPaginator.getCurrentPage() > 2 && myDataTable.getRecordSet().getRecords()[0]!=null)
+    {
+     pages = parseInt(myPaginator.getCurrentPage()-1);
+     rowspepage = myPaginator.getRowsPerPage();
+     param1 = parseInt(pages * rowspepage);
+     num = parseInt(this.getRecordIndex(target) - param1);
+     title = toolTips[p].title || myDataTable.getRecordSet().getRecords()[num].getData(toolTips[p].name);
+     description = toolTips[p].description || myDataTable.getRecordSet().getRecords()[num].getData(toolTips[p].ColumnDescription);
+    }
 
-					showTimer = window.setTimeout(function()
-					{
-							tt.setBody("<table class='tooltip-table'><tr class='tooltip'><td class='nolink'>"+title+"</td></tr><tr><td>"+description+"</td></tr></table>");
-						tt.cfg.setProperty('xy',xy);
-						tt.show();
-						hideTimer = window.setTimeout(function()
-						{
-							tt.hide();
-						}
-						,5000);
-						},100);
-					}
-				}
-			}
-		 });
+    var xy = [parseInt(oArgs.event.clientX,10) + 10 ,parseInt(oArgs.event.clientY,10) + 10 ];
+
+    showTimer = window.setTimeout(function()
+    {
+      tt.setBody("<table class='tooltip-table'><tr class='tooltip'><td class='nolink'>"+title+"</td></tr><tr><td>"+description+"</td></tr></table>");
+     tt.cfg.setProperty('xy',xy);
+     tt.show();
+     hideTimer = window.setTimeout(function()
+     {
+      tt.hide();
+     }
+     ,5000);
+     },100);
+    }
+   }
+  }
+
+  });
 
 		 myDataTable.on('cellMouseoutEvent', function (oArgs)
 		 {

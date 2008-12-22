@@ -113,12 +113,14 @@
 			{
 				$datatable['menu']					= $this->bocommon->get_menu();
 	    		$datatable['config']['base_url'] = $GLOBALS['phpgw']->link('/index.php', array
-	    		(
-	    			'menuaction'			=> 'property.uitemplate.index',
-	    			'query'            		=> $this->query,
- 	                'chapter_id'				=> $this->chapter_id,
- 	                'order'					=> $this->order
-   				));
+		    		(
+		    			'menuaction'			=> 'property.uitemplate.index',
+		    			'query'            		=> $this->query,
+	 	                'chapter_id'			=> $this->chapter_id,
+	 	                'order'					=> $this->order
+	   				));
+
+   				$datatable['config']['allow_allrows'] = true;
 
    				$datatable['config']['base_java_url'] = "menuaction:'property.uitemplate.index',"
 	    											."sort: '{$this->sort}',"
@@ -160,25 +162,29 @@
 				                                            'name' => 'chap_id',
 				                                            'value'	=> lang('Chapter'),
 				                                            'type' => 'button',
-				                                            'style' => 'filter'
+				                                            'style' => 'filter',
+				                                            'tab_index' => 1
 				                                        ),
 				                                        array( //User button
 				                                            'id' => 'btn_user_id',
 				                                            'name' => 'user_id',
 				                                            'value'	=> lang('User'),
 				                                            'type' => 'button',
-				                                            'style' => 'filter'
+				                                            'style' => 'filter',
+				                                            'tab_index' => 2
 				                                        ),
 				                                        array(
 							                                'type'	=> 'button',
 							                            	'id'	=> 'btn_new',
-							                                'value'	=> lang('add')
+							                                'value'	=> lang('add'),
+							                                'tab_index' => 5
 							                            ),
 				                                        array( //boton     SEARCH
 				                                            'id' => 'btn_search',
 				                                            'name' => 'search',
 				                                            'value'    => lang('search'),
-				                                            'type' => 'button'
+				                                            'type' => 'button',
+				                                            'tab_index' => 4
 				                                        ),
 				   										array( // TEXT INPUT
 				                                            'name'     => 'query',
@@ -186,7 +192,8 @@
 				                                            'value'    => '',//$query,
 				                                            'type' => 'text',
 				                                            'onkeypress' => 'return pulsar(event)',
-				                                            'size'    => 28
+				                                            'size'    => 28,
+				                                            'tab_index' => 3
 				                                        ),
 			                           				),
 			                       		'hidden_value' => array
@@ -324,14 +331,16 @@
 				);
 			//}
 
-			$datatable['rowactions']['action'][] = array(
-												'my_name' 			=> 'add',
-												'text' 			=> lang('add'),
-												'action'		=> $GLOBALS['phpgw']->link('/index.php',array
-																(
-																	'menuaction'	=> 'property.uitemplate.edit_template'
-																))
-										);
+			$datatable['rowactions']['action'][] = array
+				(
+					'my_name' 		=> 'add',
+					'text' 			=> lang('add'),
+					'action'		=> $GLOBALS['phpgw']->link('/index.php',array
+					(
+										'menuaction'	=> 'property.uitemplate.edit_template'
+					)
+				 )
+			);
 
 			unset($parameters);
 			unset($parameters2);
@@ -340,7 +349,7 @@
 			{
 				if($uicols['input_type'][$i]!='hidden')
 				{
-					$datatable['headers']['header'][$i]['formatter'] = ($uicols['formatter'][$i]==''?  '""' : $uicols['formatter'][$i]);
+					$datatable['headers']['header'][$i]['formatter'] 		= ($uicols['formatter'][$i]==''?  '""' : $uicols['formatter'][$i]);
 					$datatable['headers']['header'][$i]['name'] 			= $uicols['name'][$i]['value'];
 					$datatable['headers']['header'][$i]['text'] 			= lang($uicols['name'][$i]['name']);
 					$datatable['headers']['header'][$i]['visible'] 			= true;
@@ -350,13 +359,13 @@
 				if($uicols['name'][$i]['value']=='name')
 				{
 					$datatable['headers']['header'][$i]['sortable']			= true;
-					$datatable['headers']['header'][$i]['sort_field']   = $uicols['name'][$i]['value'];
+					$datatable['headers']['header'][$i]['sort_field']   	= $uicols['name'][$i]['value'];
 				}
 
 				if($uicols['name'][$i]['value']=='template_id')
 				{
 					$datatable['headers']['header'][$i]['sortable']			= true;
-					$datatable['headers']['header'][$i]['sort_field']   = "fm_template.id";
+					$datatable['headers']['header'][$i]['sort_field']   	= "fm_template.id";
 				}
 			}
 
@@ -369,29 +378,33 @@
 			$datatable['pagination']['records_returned']= count($template_list);
 			$datatable['pagination']['records_total'] 	= $this->bo->total_records;
 
-			//_debug_array($datatable);die;
-
-			$datatable['sorting']['order'] 	= phpgw::get_var('order', 'string'); // Column
-			$datatable['sorting']['sort'] 	= phpgw::get_var('sort', 'string'); // ASC / DESC
 
 			$appname					= lang('template');
-			$function_msg					= lang('list template');
+			$function_msg				= lang('list template');
 
 			if ( (phpgw::get_var("start")== "") && (phpgw::get_var("order",'string')== ""))
 			{
 				$datatable['sorting']['order'] 			= 'template_id'; // name key Column in myColumnDef
+				$datatable['sorting']['sort'] 			= 'desc'; // ASC / DESC
 			}
 			else
 			{
 				$datatable['sorting']['order']			= phpgw::get_var('order', 'string'); // name of column of Database
+				$datatable['sorting']['sort'] 			= phpgw::get_var('sort', 'string'); // ASC / DESC
 			}
 
 			phpgwapi_yui::load_widget('dragdrop');
 		  	phpgwapi_yui::load_widget('datatable');
 		  	phpgwapi_yui::load_widget('menu');
 		  	phpgwapi_yui::load_widget('connection');
+		  	//// cramirez: necesary for include a partucular js
 		  	phpgwapi_yui::load_widget('loader');
-		  	phpgwapi_yui::load_widget('paginator');
+		  	//cramirez: necesary for use opener . Avoid error JS
+			phpgwapi_yui::load_widget('tabview');
+			phpgwapi_yui::load_widget('paginator');
+			//FIXME this one is only needed when $lookup==true - so there is probably an error
+			phpgwapi_yui::load_widget('animation');
+
 
 		  	//-- BEGIN----------------------------- JSON CODE ------------------------------
 			if( phpgw::get_var('phpgw_return_as') == 'json' )
@@ -460,7 +473,7 @@
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
 
 			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'template.index', 'property' );
-			$this->save_sessiondata();
+			//$this->save_sessiondata();
 
 
 			/*$GLOBALS['phpgw']->xslttpl->add_file(array(

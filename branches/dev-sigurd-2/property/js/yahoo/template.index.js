@@ -12,7 +12,7 @@
 	var oNormalButton_0;
 	var normalButtons = [
 	{order:0, name:'btn_search', funct:"onSearchClick"},
-	{order:1, name:'btn_new', funct:"onNewClick"},
+	{order:1, name:'btn_new', funct:"onNewClick"}
 	];
 
 	// define Text buttons
@@ -20,42 +20,36 @@
 		{order:0, name:'query',id:'txt_query'}
 	];
 
-var toolTips =
+	var toolTips =
 	[
-		{name:'btn_export', title:'download', description:'Download table to your browser',ColumnDescription:''}
 	]
-
 
 	// define the hidden column in datatable
 	var config_values =
 	{
 		date_search : 0, //if search has link "Data search"
-		footer_datatable : 0
 	}
-
+/****************************************************************************************/
 	this.particular_setting = function()
 	{
 		if(flag_particular_setting=='init')
 		{
-			//locate (asign ID) to datatable
-			/*tableYUI = YAHOO.util.Dom.getElementsByClassName("yui-dt-data","tbody")[0].parentNode;
-			tableYUI.setAttribute("id","tableYUI");*/
 			//focus initial
 			oMenuButton_0.focus();
 		}
 		else if(flag_particular_setting=='update')
 		{
-			//reset empty values for update PERIOD
-		   /*	path_values.voucher_id_for_period = '';
-		   	path_values.period = '';
-		   	path_values.currentPage = '';
-		   	path_values.start = '';*/
 		}
 	}
+/****************************************************************************************/
+
+  	this.myParticularRenderEvent = function()
+  	{
+  	//don't delete it
+  	}
 
 
-
-//----------------------------------------------------------
+/****************************************************************************************/
 	YAHOO.util.Event.addListener(window, "load", function()
 	{
 		YAHOO.util.Dom.getElementsByClassName('toolbar','div')[0].style.display = 'none';

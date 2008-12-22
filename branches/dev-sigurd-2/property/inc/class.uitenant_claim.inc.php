@@ -132,6 +132,7 @@
  	                        						."status: '{$this->status}',"
  	                        						."query: '{$this->query}'";
 
+				$datatable['config']['allow_allrows'] = true;
 
 				$link_data = array
 				(
@@ -168,25 +169,30 @@
 				                                            'name' => 'cat_id',
 				                                            'value'	=> lang('Category'),
 				                                            'type' => 'button',
-				                                            'style' => 'filter'
+				                                            'style' => 'filter',
+				                                            'tab_index' => 1
+
 				                                        ),
 				                                        array( //boton 	STATUS
 				                                            'id' => 'btn_status_id',
 				                                            'name' => 'status_id',
 				                                            'value'	=> lang('Status'),
 				                                            'type' => 'button',
-				                                            'style' => 'filter'
+				                                            'style' => 'filter',
+				                                            'tab_index' => 2
 				                                        ),
 				                                        array(
 							                                'type'	=> 'button',
 							                            	'id'	=> 'btn_new',
-							                                'value'	=> lang('add')
+							                                'value'	=> lang('add'),
+							                                'tab_index' => 5
 							                            ),
 				                                        array( //boton     SEARCH
 				                                            'id' => 'btn_search',
 				                                            'name' => 'search',
 				                                            'value'    => lang('search'),
-				                                            'type' => 'button'
+				                                            'type' => 'button',
+				                                            'tab_index' => 4
 				                                        ),
 				   										array( // TEXT INPUT
 				                                            'name'     => 'query',
@@ -194,7 +200,8 @@
 				                                            'value'    => '',//$query,
 				                                            'type' => 'text',
 				                                            'onkeypress' => 'return pulsar(event)',
-				                                            'size'    => 28
+				                                            'size'    => 28,
+				                                            'tab_index' => 3
 				                                        ),
 			                           				),
 			                       		'hidden_value' => array
@@ -275,7 +282,7 @@
 			{
 				$datatable['rowactions']['action'][] = array
 				(
-					'my_name' 			=> 'view',
+					'my_name' 		=> 'view',
 					'statustext' 	=> lang('view the claim'),
 					'text'			=> lang('view'),
 					'action'		=> $GLOBALS['phpgw']->link('/index.php',array
@@ -292,9 +299,9 @@
 				$datatable['rowactions']['action'][] = array
 				(
 					'my_name' 			=> 'edit',
-					'statustext' 			=> lang('edit the claim'),
-					'text'		=> lang('edit'),
-					'action'		=> $GLOBALS['phpgw']->link('/index.php',array
+					'statustext' 		=> lang('edit the claim'),
+					'text'				=> lang('edit'),
+					'action'			=> $GLOBALS['phpgw']->link('/index.php',array
 					(
 						'menuaction'	=> 'property.uitenant_claim.edit'
 					)
@@ -308,10 +315,10 @@
 				$datatable['rowactions']['action'][] = array
 				(
 					'my_name' 			=> 'delete',
-					'statustext' 			=> lang('delete the claim'),
-					'text'		=> lang('delete'),
-					'confirm_msg'	=> lang('do you really want to delete this entry'),
-					'action'		=> $GLOBALS['phpgw']->link('/index.php',array
+					'statustext' 		=> lang('delete the claim'),
+					'text'				=> lang('delete'),
+					'confirm_msg'		=> lang('do you really want to delete this entry'),
+					'action'			=> $GLOBALS['phpgw']->link('/index.php',array
 					(
 						'menuaction'	=> 'property.uitenant_claim.delete'
 					)
@@ -319,17 +326,15 @@
 				'parameters'	=> $parameters
 				);
 			}
-
 			$datatable['rowactions']['action'][] = array(
-												'my_name' 			=> 'add',
-												'text' 			=> lang('add'),
-												'action'		=> $GLOBALS['phpgw']->link('/index.php',array
-																(
-																	'menuaction'	=> 'property.uiproject.index',
-																	'lookup'		=>	1,
-																	'from'			=>  'tenant_claim'
-																))
-										);
+					'my_name' 		=> 'add',
+					'text' 			=> lang('add'),
+					'action'		=> $GLOBALS['phpgw']->link('/index.php',array
+					(
+						'menuaction'	=> 'property.uiproject.index',
+						'lookup'		=>	1,
+						'from'			=>  'tenant_claim'
+					)));
 
 			unset($parameters);
 
@@ -337,7 +342,7 @@
 			{
 				if($uicols['input_type'][$i]!='hidden')
 				{
-					$datatable['headers']['header'][$i]['formatter'] = ($uicols['formatter'][$i]==''?  '""' : $uicols['formatter'][$i]);
+					$datatable['headers']['header'][$i]['formatter'] 		= ($uicols['formatter'][$i]==''?  '""' : $uicols['formatter'][$i]);
 					$datatable['headers']['header'][$i]['name'] 			= $uicols['name'][$i]['value'];
 					$datatable['headers']['header'][$i]['text'] 			= lang($uicols['name'][$i]['name']);
 					$datatable['headers']['header'][$i]['visible'] 			= true;
@@ -346,20 +351,20 @@
 
 				if($uicols['name'][$i]['value']=='claim_id' || $uicols['name'][$i]['value']=='project_id' || $uicols['name'][$i]['value']=='name' || $uicols['name'][$i]['value']=='entry_date')
 				{
-					$datatable['headers']['header'][$i]['sortable']			= true;
+					$datatable['headers']['header'][$i]['sortable']		= true;
 					$datatable['headers']['header'][$i]['sort_field']   = $uicols['name'][$i]['value'];
 				}
 
 				if($uicols['name'][$i]['value']=='category')
 				{
-					$datatable['headers']['header'][$i]['sortable']			= true;
+					$datatable['headers']['header'][$i]['sortable']		= true;
 					$datatable['headers']['header'][$i]['sort_field']   = 'descr';
 				}
 
 				if($uicols['name'][$i]['value']=='tenant_id')
 				{
-					$datatable['headers']['header'][$i]['visible'] 			= false;
-					$datatable['headers']['header'][$i]['format'] 			= 'hidden';
+					$datatable['headers']['header'][$i]['visible'] 		= false;
+					$datatable['headers']['header'][$i]['format'] 		= 'hidden';
 				}
 			}
 
@@ -372,29 +377,32 @@
 			$datatable['pagination']['records_returned']= count($claim_list);
 			$datatable['pagination']['records_total'] 	= $this->bo->total_records;
 
-			//_debug_array($datatable['pagination']);die;
-
-			$datatable['sorting']['order'] 	= phpgw::get_var('order', 'string'); // Column
-			$datatable['sorting']['sort'] 	= phpgw::get_var('sort', 'string'); // ASC / DESC
 
 			$appname					= lang('Tenant claim');
-			$function_msg					= lang('list claim');
+			$function_msg				= lang('list claim');
 
 			if ( (phpgw::get_var("start")== "") && (phpgw::get_var("order",'string')== ""))
 			{
 				$datatable['sorting']['order'] 			= 'claim_id'; // name key Column in myColumnDef
+				$datatable['sorting']['sort'] 			= 'desc'; // ASC / DESC
 			}
 			else
 			{
 				$datatable['sorting']['order']			= phpgw::get_var('order', 'string'); // name of column of Database
+				$datatable['sorting']['sort'] 			= phpgw::get_var('sort', 'string'); // ASC / DESC
 			}
 
 			phpgwapi_yui::load_widget('dragdrop');
 		  	phpgwapi_yui::load_widget('datatable');
 		  	phpgwapi_yui::load_widget('menu');
 		  	phpgwapi_yui::load_widget('connection');
+		  	//// cramirez: necesary for include a partucular js
 		  	phpgwapi_yui::load_widget('loader');
-		  	phpgwapi_yui::load_widget('paginator');
+		  	//cramirez: necesary for use opener . Avoid error JS
+			phpgwapi_yui::load_widget('tabview');
+			phpgwapi_yui::load_widget('paginator');
+			//FIXME this one is only needed when $lookup==true - so there is probably an error
+			phpgwapi_yui::load_widget('animation');
 
 		  	//-- BEGIN----------------------------- JSON CODE ------------------------------
 			if( phpgw::get_var('phpgw_return_as') == 'json' )
@@ -463,7 +471,7 @@
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
 
 			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'tenant_claim.index', 'property' );
-			$this->save_sessiondata();
+			//$this->save_sessiondata();
 		}
 
 

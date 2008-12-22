@@ -43,6 +43,9 @@
 	{
 		if(flag_particular_setting=='init')
 		{
+			//eliminate "no category" option because is necesary have a category in the  PHP query
+			delete oMenuButton_0.getMenu().itemData[0];
+
 			//for this particular module, the Category's combo box has sets his own category.
 			oMenuButton_0.set("label", ("<em>" + array_options[0][path_values.cat_id][1] + "</em>"));
 			oMenuButton_0.focus();

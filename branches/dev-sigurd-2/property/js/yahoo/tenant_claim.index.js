@@ -20,7 +20,7 @@
 		{order:0, name:'query',id:'txt_query'}
 	];
 
-var toolTips =
+	var toolTips =
 	[
 		{name:'btn_export', title:'download', description:'Download table to your browser',ColumnDescription:''}
 	]
@@ -30,9 +30,8 @@ var toolTips =
 	var config_values =
 	{
 		date_search : 0, //if search has link "Data search"
-		footer_datatable : 0
 	}
-
+/****************************************************************************************/
 	this.particular_setting = function()
 	{
 		if(flag_particular_setting=='init')
@@ -43,10 +42,15 @@ var toolTips =
 		{
 		}
 	}
+/****************************************************************************************/
+
+  	this.myParticularRenderEvent = function()
+  	{
+  	//don't delete it
+  	}
 
 
-
-//----------------------------------------------------------
+/****************************************************************************************/
 	YAHOO.util.Event.addListener(window, "load", function()
 	{
 		YAHOO.util.Dom.getElementsByClassName('toolbar','div')[0].style.display = 'none';
