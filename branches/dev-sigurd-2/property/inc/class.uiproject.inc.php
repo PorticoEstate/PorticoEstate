@@ -366,6 +366,8 @@
 
 					$j++;
 				}
+
+				$datatable['rowactions']['action'] = array();
 				if(!$lookup)
 					{
 
@@ -496,15 +498,23 @@
 				}
 			}
 
-			/*if($this->acl_add)
+			$function_exchange_values = '';
+			if($lookup)
 			{
-				$table_add[] = array
-				(
-					'lang_add'			=> lang('add'),
-					'lang_add_statustext'		=> lang('add a project'),
-					'add_action'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiproject.edit'))
-				);
-			}*/
+				for ($i=0;$i<$count_uicols_name;$i++)
+				{
+					if($uicols['name'][$i]=='project_id')
+					{
+						$function_exchange_values .= "var code_project = data.getData('".$uicols["name"][$i]."');"."\r\n";
+						$function_exchange_values .= "valida('".$GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.ui'.$from.'.edit'))."', code_project);";
+						$function_detail .= "var url=data+'&project_id='+param;"."\r\n";
+						$function_detail .= "window.open(url,'_self');";
+
+					}
+				}
+				$datatable['exchange_values'] = $function_exchange_values;
+				$datatable['valida'] = $function_detail;
+			}
 
 			$link_date_search = $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiproject.date_search'));
 
@@ -535,11 +545,8 @@
 			$datatable['pagination']['records_returned']= count($project_list);
 			$datatable['pagination']['records_total'] 	= $this->bo->total_records;
 
-//_debug_array($datatable['pagination']);die;
-
 			$appname	= lang('Project');
 			$function_msg	= lang('list Project');
-
 
 			if ( (phpgw::get_var("start")== "") && (phpgw::get_var("order",'string')== ""))
 			{
@@ -600,16 +607,6 @@
 		    			$json['records'][] = $json_row;
 	    			}
 	    		}
-
-				// values for control select
-				/*$opt_cb_depend =  $this->bocommon->select_part_of_town('filter',$this->part_of_town_id,$this->district_id);
-		 		$default_value = array ('id'=>'','name'=>'!no part of town');
-				array_unshift ($opt_cb_depend,$default_value);
-
-				$json['hidden']['dependent'][] = array ( 'id' => $this->part_of_town_id,
-	                                                      'value' => $this->bocommon->select2String($opt_cb_depend)
-														);*/
-
 				// right in datatable
 				if(isset($datatable['rowactions']['action']) && is_array($datatable['rowactions']['action']))
 				{
