@@ -92,7 +92,7 @@
 				$query = preg_replace("/'/",'',$query);
 				$query = preg_replace('/"/','',$query);
 
-				$querymethod = " $where (fm_template.descr $this->like '%$query%')";
+				$querymethod = " $where (fm_template.name $this->like '%$query%' OR fm_template.descr $this->like '%$query%')";
 			}
 
 			$sql = "SELECT fm_template.id,fm_template.descr,fm_template.name,fm_template.owner,fm_template.entry_date,"
