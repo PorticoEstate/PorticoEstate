@@ -290,6 +290,10 @@
 
 			if (count($lang_selected))
 			{
+				$GLOBALS['phpgw']->db->query("SELECT config_value FROM phpgw_config WHERE config_app='phpgwapi' AND config_name='install_id'",__LINE__,__FILE__);
+				$GLOBALS['phpgw']->db->next_record();
+				$GLOBALS['phpgw_info']['server']['install_id'] = $GLOBALS['phpgw']->db->f('config_value', true);
+
 				if ($upgrademethod == 'dumpold')
 				{
 					// dont delete the custom main- & loginscreen messages every time
@@ -352,6 +356,28 @@
 
 							$raw[$app_name][$message_id] = $content;
 						}
+						
+						// Override with localised translations
+						
+						$ConfigDomain = phpgw::get_var('ConfigDomain');
+						$appfile_override = PHPGW_SERVER_ROOT . "/{$app}/setup/{$ConfigDomain}/phpgw_{$lang}.lang";
+
+						if ( is_file($appfile_override) )
+						{
+							$lines = $this->parse_lang_file($appfile_override, $lang);
+							if ( count($lines) )
+							{
+								foreach ( $lines as $line )
+								{
+									$message_id = $GLOBALS['phpgw']->db->db_addslashes(strtolower(trim(substr($line['message_id'], 0, self::MAX_MESSAGE_ID_LENGTH))));
+									$app_name = $GLOBALS['phpgw']->db->db_addslashes(trim($line['app_name']));
+									$content = $GLOBALS['phpgw']->db->db_addslashes(trim($line['content']));
+
+									$raw[$app_name][$message_id] = $content;
+								}
+							}
+						}
+
 						$GLOBALS['phpgw_info']['server']['lang_ctimes'][$lang][$app['name']] = filectime($appfile);
 					}
 
@@ -382,7 +408,7 @@
 
 				$GLOBALS['phpgw']->db->query("DELETE from phpgw_config WHERE config_app='phpgwapi' AND config_name='lang_ctimes'",__LINE__,__FILE__);
 				$GLOBALS['phpgw']->db->query("INSERT INTO phpgw_config(config_app,config_name,config_value) VALUES ('phpgwapi','lang_ctimes','".
-					$GLOBALS['phpgw']->db->db_addslashes(serialize($GLOBALS['phpgw_info']['server']['lang_ctimes']))."')",__LINE__,__FILE__);
+				$GLOBALS['phpgw']->db->db_addslashes(serialize($GLOBALS['phpgw_info']['server']['lang_ctimes']))."')",__LINE__,__FILE__);
 
 				$GLOBALS['phpgw']->db->transaction_commit();
 			}
