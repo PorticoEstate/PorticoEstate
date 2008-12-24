@@ -795,12 +795,12 @@
 										'search_field'));
 
 			$start_date 		= phpgw::get_var('start_date');
-			$end_date 		= phpgw::get_var('end_date');
+			$end_date 			= phpgw::get_var('end_date');
 			$submit_search 		= phpgw::get_var('submit_search', 'bool');
-			$vendor_id 		= phpgw::get_var('vendor_id', 'int');
+			$vendor_id 			= phpgw::get_var('vendor_id', 'int');
 
 			$workorder_id 		= phpgw::get_var('workorder_id', 'int');
-			$loc1 			= phpgw::get_var('loc1');
+			$loc1 				= phpgw::get_var('loc1');
 			$district_id 		= phpgw::get_var('district_id', 'int');
 			$b_account_class 	= phpgw::get_var('b_account_class', 'int');
 
@@ -808,12 +808,24 @@
 			{
 				$contacts		= CreateObject('property.soactor');
 				$contacts->role		= 'vendor';
-				$vendor			= $contacts->read_single(array('actor_id'=>(int)$vendor_id));
+				$lookup = array
+				(
+					'attributes' => array
+					(
+						0 => array
+						(
+							'column_name' => 'org_name'
+						)
+					)
+				);
+
+				$vendor			= $contacts->read_single($vendor_id, $lookup);
+
 				if(is_array($vendor))
 				{
 					foreach($vendor['attributes'] as $attribute)
 					{
-						if($attribute['name']=='org_name')
+						if($attribute['column_name']=='org_name')
 						{
 							$vendor_name=$attribute['value'];
 							break;
