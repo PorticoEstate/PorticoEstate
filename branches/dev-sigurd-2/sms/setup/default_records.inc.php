@@ -109,7 +109,7 @@
 	$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_sms_featautoreply_scenario (autoreply_id,autoreply_scenario_param1,autoreply_scenario_param2,autoreply_scenario_param3,autoreply_scenario_param4,autoreply_scenario_param5,autoreply_scenario_param6,autoreply_scenario_param7,autoreply_scenario_result) VALUES (1,'WEBMAIL','PASSWORD','ERROR','','','','','Please use forgot password link, and follow given instructions')");
 
 	$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_sms_featboard (uid,board_code,board_forward_email,board_pref_template) VALUES (1,'PHP','dummy@dummy.org','<font color=black size=-1><b>##SENDER##</b></font><br><font color=black size=-2><i>##DATETIME##</i></font><br><font color=black size=-1>##MESSAGE##</font>')");
-	$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_sms_featcommand (uid,command_code,command_exec) VALUES (1,'UPTIME','/home/playsms/public_html/phpgroupware/sms/bin/uptime.sh ##SMSSENDER##')");
+//	$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_sms_featcommand (uid,command_code,command_exec) VALUES (1,'UPTIME','/home/playsms/public_html/phpgroupware/sms/bin/uptime.sh ##SMSSENDER##')");
 
 	$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_sms_featcustom (uid,custom_code,custom_url) VALUES (1,'CURR','http://www.ngoprek.org/currency.php?toeuro=##CUSTOMPARAM##&sender=##SMSSENDER##')");
 

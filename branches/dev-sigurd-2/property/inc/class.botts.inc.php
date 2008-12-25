@@ -578,10 +578,10 @@
 					continue;
 				}
 
-				$file = PHPGW_APP_INC . "/custom/{$entry['file_name']}";
+				$file = PHPGW_APP_INC . "/custom/{$GLOBALS['phpgw_info']['user']['domain']}/{$entry['file_name']}";
 				if ( $entry['active'] && is_file($file) )
 				{
-					require_once PHPGW_APP_INC . "/custom/{$entry['file_name']}";
+					require_once $file;
 				}
 			}
 

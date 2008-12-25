@@ -109,11 +109,11 @@
 
 		function select_import_conv($selected='')
 		{
-			$dir_handle = @opendir(PHPGW_APP_INC . '/import');
-			$i=0; $myfilearray = '';
+			$dir_handle = @opendir(PHPGW_APP_INC . "/import/{$GLOBALS['phpgw_info']['user']['domain']}");
+			$i=0; $myfilearray = array();
 			while ($file = readdir($dir_handle))
 			{
-				if ((substr($file, 0, 1) != '.') && is_file(PHPGW_APP_INC . '/import/' . $file) )
+				if ((substr($file, 0, 1) != '.') && is_file(PHPGW_APP_INC . "/import/{$GLOBALS['phpgw_info']['user']['domain']}/{$file}") )
 				{
 					$myfilearray[$i] = $file;
 					$i++;
@@ -153,11 +153,11 @@
 
 		function select_export_conv($selected='')
 		{
-			$dir_handle = @opendir(PHPGW_APP_INC . '/export');
-			$i=0; $myfilearray = '';
+			$dir_handle = @opendir(PHPGW_APP_INC . "/export/{$GLOBALS['phpgw_info']['user']['domain']}");
+			$i=0; $myfilearray = array();
 			while ($file = readdir($dir_handle))
 			{
-				if ((substr($file, 0, 1) != '.') && is_file(PHPGW_APP_INC . '/export/' . $file) )
+				if ((substr($file, 0, 1) != '.') && is_file(PHPGW_APP_INC . "/export/{$GLOBALS['phpgw_info']['user']['domain']}/{$file}") )
 				{
 					$myfilearray[$i] = $file;
 					$i++;
@@ -244,7 +244,7 @@
 
 		function import($invoice_common,$download)
 		{
-			include (PHPGW_APP_INC . '/import/' . $invoice_common['conv_type']);
+			include (PHPGW_APP_INC . "/import/{$GLOBALS['phpgw_info']['user']['domain']}/{$invoice_common['conv_type']}");
 			$invoice = new import_conv;
 
 			$buffer = $invoice->import($invoice_common,$download);
@@ -268,7 +268,7 @@
 			$pre_transfer = $data['pre_transfer'];
 			$force_period_year = $data['force_period_year'];
 
-		 	include(PHPGW_SERVER_ROOT.'/'.'property'.'/inc/export/' . $conv_type);
+		 	include(PHPGW_APP_INC . "/export/{$GLOBALS['phpgw_info']['user']['domain']}/{$conv_type}");
 			$invoice = new export_conv;
 
 			$buffer = $invoice->overfor($download,$pre_transfer,$force_period_year);
@@ -278,7 +278,7 @@
 
 		function rollback($conv_type,$role_back_date,$rollback_file)
 		{
-			include (PHPGW_APP_INC . '/export/' . $conv_type);
+			include (PHPGW_APP_INC . "/export/{$GLOBALS['phpgw_info']['user']['domain']}/{$conv_type}");
 			$invoice = new export_conv;
 			$buffer = $invoice->RullTilbake($role_back_date,$rollback_file);
 			return $buffer;
