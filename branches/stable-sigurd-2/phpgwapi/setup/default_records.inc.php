@@ -300,7 +300,7 @@
 		'sessions_checkip'		=> 'True',
 		'sessions_timeout'		=> 1440,
 		'addressmaster'			=> -3,
-		'log_levels'			=> serialize(array('global_level' => 'N', 'module' => array(), 'user' => array())),
+		'log_levels'			=> serialize(array('global_level' => 'E', 'module' => array(), 'user' => array())),
 		'freshinstall'			=> 1
 	);
 
