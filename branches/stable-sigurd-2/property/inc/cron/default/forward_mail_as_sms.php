@@ -136,7 +136,7 @@
 
 			$GLOBALS['phpgw_info']['user']['account_id'] = $data['account_id'];
 			$GLOBALS['phpgw']->preferences->account_id = $data['account_id'];
-			$pref = $GLOBALS['phpgw']->preferences->read_repository();
+			$pref = $GLOBALS['phpgw']->preferences->read();
 			$GLOBALS['phpgw_info']['user']['preferences']['felamimail'] = isset($pref['felamimail']) ? $pref['felamimail'] : '';
 
 			$boPreferences  = CreateObject('felamimail.bopreferences');

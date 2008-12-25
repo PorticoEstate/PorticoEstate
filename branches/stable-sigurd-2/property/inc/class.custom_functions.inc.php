@@ -82,7 +82,7 @@
 				return;
 			}
 
-			$file = PHPGW_SERVER_ROOT . "/property/inc/cron/{$function}.php";
+			$file = PHPGW_SERVER_ROOT . "/property/inc/cron/{$GLOBALS['phpgw_info']['user']['domain']}/{$function}.php";
 
 			if (is_file($file))
 			{

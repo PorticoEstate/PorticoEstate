@@ -272,10 +272,8 @@
 
 			$add_url = $GLOBALS['phpgw']->link('/index.php',$add_data);
 
+			//FIXME
 			$custom_url = stripslashes($this->db->f('custom_url'));
-
-		//	PHPGW_SERVER_ROOT . '/sms/bin';
-		//	$custom_url = str_replace($feat_custom_path['bin'],'',$custom_url);
 
 			$content .= "
 			    <p>

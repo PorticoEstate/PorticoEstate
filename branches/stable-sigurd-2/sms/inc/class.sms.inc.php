@@ -19,13 +19,13 @@
 
 //	_debug_array ($GLOBALS['phpgw_info']['sms_config']);
 
-	$apps_path['base']	= PHPGW_SERVER_ROOT . '/' . 'sms';
-	$apps_path['libs']	= $apps_path['base'] . '/' . 'lib';
-	$apps_path['plug']	= $apps_path['base'] . '/' . 'inc' . '/' . 'plugin';
-	$apps_path['inc']	= $apps_path['base'] . '/' . 'inc';
+	$apps_path['base']	= PHPGW_SERVER_ROOT . '/sms';
+	$apps_path['libs']	= $apps_path['base'] . '/lib';
+	$apps_path['plug']	= $apps_path['base'] . '/inc/plugin';
+	$apps_path['inc']	= $apps_path['base'] . '/inc';
 
 	// SMS command security parameter
-	$feat_command_path['bin']	= $apps_path['base']."/bin";
+	$feat_command_path['bin']	= "{$apps_path['base']}/bin/{$GLOBALS['phpgw_info']['user']['domain']}";
 	$GLOBALS['phpgw_info']['sms_config']['common']['apps_path'] = $apps_path;
 	$GLOBALS['phpgw_info']['sms_config']['common']['feat_command_path'] = $feat_command_path;
 
@@ -33,12 +33,12 @@
 	{
 		$path_to_sms = dirname(__FILE__);
 
-		include_once($path_to_sms . '/' . 'config.php');
+		include_once($path_to_sms . '/config.php');
 	}
 
-	if (file_exists($apps_path['inc'] . '/' . 'plugin' . '/' . 'gateway' . '/' . $GLOBALS['phpgw_info']['sms_config']['common']['gateway_module']. "/fn.php"))
+	if (file_exists("{$apps_path['inc']}/plugin/gateway/{$GLOBALS['phpgw_info']['sms_config']['common']['gateway_module']}/fn.php"))
 	{
-		include_once($apps_path['inc'] . '/' . 'plugin' . '/' . 'gateway' . '/'. $GLOBALS['phpgw_info']['sms_config']['common']['gateway_module']. "/fn.php");
+		include_once("{$apps_path['inc']}/plugin/gateway/{$GLOBALS['phpgw_info']['sms_config']['common']['gateway_module']}/fn.php");
 	}
 	else
 	{
@@ -646,7 +646,7 @@
 
 			if($command_type == 'php')
 			{
-				include(PHPGW_SERVER_ROOT . '/' . 'sms' . '/' . 'bin'  . '/' .  basename($command_exec));
+				include(PHPGW_SERVER_ROOT . "/sms/bin/{$GLOBALS['phpgw_info']['user']['domain']}/" .  basename($command_exec));
 			}
 			else
 			{

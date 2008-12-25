@@ -219,7 +219,7 @@
 		{
 			$sql = 'SELECT * FROM phpgw_sms_featcommand WHERE command_id=' . intval($id);
 			$this->db->query($sql,__LINE__,__FILE__);
-			$bin_path = PHPGW_SERVER_ROOT . 'sms/bin';
+			$bin_path = PHPGW_SERVER_ROOT . "sms/bin/{$GLOBALS['phpgw_info']['user']['domain']}";
 			if ($this->db->next_record())
 			{
 				$values['id']		= $id;
@@ -236,7 +236,7 @@
 		{
 			$this->db->transaction_begin();
 
-			$values['exec'] = PHPGW_SERVER_ROOT . '/sms/bin/' . $values['exec'];
+			$values['exec'] = PHPGW_SERVER_ROOT . "/sms/bin/{$GLOBALS['phpgw_info']['user']['domain']}/{$values['exec']}";
 			$values['exec'] = str_replace("//","/",$values['exec']);
 			$values['exec'] = str_replace("..",".",$values['exec']);
 			$values['exec'] = $this->db->db_addslashes($values['exec']);
@@ -268,7 +268,7 @@
 		{
 			$this->db->transaction_begin();
 
-			$values['exec'] = PHPGW_SERVER_ROOT . '/sms/bin/' . $values['exec'];
+			$values['exec'] = PHPGW_SERVER_ROOT . "/sms/bin/{$GLOBALS['phpgw_info']['user']['domain']}/{$values['exec']}";
 			$values['exec'] = str_replace("//","/",$values['exec']);
 			$values['exec'] = str_replace("..",".",$values['exec']);
 			$value_set['command_type'] 	= $this->db->db_addslashes($values['type']);

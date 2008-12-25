@@ -312,7 +312,7 @@
 				'lang_help4'			=> lang('##COMMANDCODE## replaced by command code'),
 				'lang_help5'			=> lang('##COMMANDPARAM## replaced by command parameter passed to server from SMS'),
 				'lang_binary_path'		=> lang('SMS command binary path'),
-				'value_binary_path'		=> PHPGW_SERVER_ROOT . '/sms/bin',
+				'value_binary_path'		=> PHPGW_SERVER_ROOT . "/sms/bin/{$GLOBALS['phpgw_info']['user']['domain']}",
 
 				'lang_type'			=> lang('command type'),
 				'type_list'			=> $this->bo->select_type_list($values['type']),
@@ -346,9 +346,9 @@
 			$code		= phpgw::get_var('code');
 			$param		= urldecode(phpgw::get_var('param'));
 
-			if(is_file(PHPGW_SERVER_ROOT . '/sms/bin/config_' . strtoupper(basename($code)) . '_log'))
+			if(is_file(PHPGW_SERVER_ROOT . "/sms/bin/{$GLOBALS['phpgw_info']['user']['domain']}/config_" . strtoupper(basename($code)) . '_log'))
 			{
-				include(PHPGW_SERVER_ROOT . '/sms/bin/config_' . strtoupper(basename($code)) . '_log');
+				include(PHPGW_SERVER_ROOT . "/sms/bin/{$GLOBALS['phpgw_info']['user']['domain']}/config_" . strtoupper(basename($code)) . '_log');
 
 				$GLOBALS['phpgw']->redirect_link('/index.php',$link_data);
 			}
