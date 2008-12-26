@@ -35,6 +35,8 @@
 	class property_soadmin_entity
 	{
 		var $grants;
+		var $type = 'entity';
+		var $type_app;
 
 		function property_soadmin_entity($entity_id='',$cat_id='')
 		{
@@ -56,18 +58,12 @@
 		{
 			if(is_array($data))
 			{
-				if (isset($data['start']))
-				{
-					$start=$data['start'];
-				}
-				else
-				{
-					$start=0;
-				}
-				$query = (isset($data['query'])?$data['query']:'');
-				$sort = (isset($data['sort'])?$data['sort']:'DESC');
-				$order = (isset($data['order'])?$data['order']:'');
-				$allrows = (isset($data['allrows'])?$data['allrows']:'');
+				$start		= isset($data['start']) && $data['start'] ? $data['start'] : 0;
+				$query		= isset($data['query']) ? $data['query'] : '';
+				$sort		= isset($data['sort']) ? $data['sort'] : 'DESC';
+				$order		= isset($data['order']) ? $data['order'] : '';
+				$type		= isset($data['type']) && $data['type'] ? $data['type'] : $this->type;
+				$allrows	= isset($data['allrows']) ? $data['allrows'] : '';
 			}
 
 			if ($order)
@@ -80,20 +76,18 @@
 				$ordermethod = ' order by id asc';
 			}
 
-			$table = 'fm_entity';
+			$table = "fm_{$type}";
 
 			$querymethod = '';
 			if($query)
 			{
-				$query = preg_replace("/'/",'',$query);
-				$query = preg_replace('/"/','',$query);
-
+				$query = $this->db->db_addslashes($query);
 				$querymethod = " where name $this->like '%$query%' or descr $this->like '%$query%'";
 			}
 
 			$sql = "SELECT * FROM $table $querymethod";
 
-			$this->db2->query($sql,__LINE__,__FILE__);
+			$this->db2->query($sql, __LINE__, __FILE__);
 			$this->total_records = $this->db2->num_rows();
 
 			if(!$allrows)
@@ -104,6 +98,8 @@
 			{
 				$this->db->query($sql . $ordermethod,__LINE__,__FILE__);
 			}
+
+			$entity = array();
 
 			while ($this->db->next_record())
 			{
@@ -128,6 +124,7 @@
 				$order = (isset($data['order'])?$data['order']:'');
 				$allrows = (isset($data['allrows'])?$data['allrows']:'');
 				$entity_id = (isset($data['entity_id'])?$data['entity_id']:'');
+				$type		= isset($data['type']) && $data['type'] ? $data['type'] : $this->type;
 			}
 
 			if ($order)
@@ -140,7 +137,7 @@
 				$ordermethod = ' order by id asc';
 			}
 
-			$table = 'fm_entity_category';
+			$table = "fm_{$type}_category";
 
 			$querymethod = '';
 			if($query)
@@ -180,21 +177,23 @@
 		function read_single($id)
 		{
 
-			$sql = "SELECT * FROM fm_entity  where id='$id'";
+			$id = (int)$id;
+			$sql = "SELECT * FROM fm_{$this->type} WHERE id={$id}";
 
 			$this->db->query($sql,__LINE__,__FILE__);
 
+			$entity = array();
 			if ($this->db->next_record())
 			{
 				$entity['id']				= $this->db->f('id');
-				$entity['name']				= $this->db->f('name');
-				$entity['descr']			= $this->db->f('descr');
+				$entity['name']				= $this->db->f('name',true);
+				$entity['descr']			= $this->db->f('descr',true);
 				$entity['location_form']	= $this->db->f('location_form');
 				$entity['lookup_entity']	= unserialize($this->db->f('lookup_entity'));
 				$entity['documentation']	= $this->db->f('documentation');
 			}
 
-			$sql = "SELECT location FROM fm_entity_lookup where entity_id=$id AND type='lookup'";
+			$sql = "SELECT location FROM fm_{$this->type}_lookup WHERE entity_id={$id} AND type='lookup'";
 
 			$this->db->query($sql,__LINE__,__FILE__);
 
@@ -203,7 +202,7 @@
 				$entity['include_entity_for'][] = $this->db->f('location');
 			}
 
-			$sql = "SELECT location FROM fm_entity_lookup where entity_id=$id AND type='start'";
+			$sql = "SELECT location FROM fm_{$this->type}_lookup WHERE entity_id={$id} AND type='start'";
 
 			$this->db->query($sql,__LINE__,__FILE__);
 
@@ -215,12 +214,13 @@
 			return $entity;
 		}
 
-		function read_single_category($entity_id,$cat_id)
+		function read_single_category($entity_id, $cat_id)
 		{
-			$sql = 'SELECT * FROM fm_entity_category where entity_id =' . (int)$entity_id . ' AND id = ' . (int)$cat_id;
+			$sql = "SELECT * FROM fm_{$this->type}_category WHERE entity_id =" . (int)$entity_id . ' AND id = ' . (int)$cat_id;
 
 			$this->db->query($sql,__LINE__,__FILE__);
 
+			$category = array();
 			if ($this->db->next_record())
 			{
 				$category['id']			= $this->db->f('id');
@@ -234,24 +234,25 @@
 				$category['loc_link']	= $this->db->f('loc_link');
 				$category['start_project']	= $this->db->f('start_project');
 				$category['start_ticket']	= $this->db->f('start_ticket');
-				return $category;
 			}
+			return $category;
 		}
 
 		function read_category_name($entity_id,$cat_id)
 		{
-			$sql = 'SELECT * FROM fm_entity_category where entity_id =' . (int)$entity_id . ' AND id = ' . (int)$cat_id;
+			$sql = "SELECT * FROM fm_{$this->type}_category WHERE entity_id =" . (int)$entity_id . ' AND id = ' . (int)$cat_id;
 			$this->db->query($sql,__LINE__,__FILE__);
 			$this->db->next_record();
-			return $this->db->f('name');
+			return $this->db->f('name', true);
 		}
 
 		function add_entity($entity)
 		{
+			
 			$entity['name'] = $this->db->db_addslashes($entity['name']);
 			$entity['descr'] = $this->db->db_addslashes($entity['descr']);
 
-			$entity['id'] = $this->bocommon->next_id('fm_entity');
+			$entity['id'] = $this->bocommon->next_id("fm_{$this->type}");
 
 			$values= array(
 				$entity['id'],
@@ -263,10 +264,10 @@
 
 			$values	= $this->bocommon->validate_db_insert($values);
 
-			$this->db->query("INSERT INTO fm_entity (id,name, descr,location_form,documentation) "
+			$this->db->query("INSERT INTO fm_{$this->type} (id,name, descr,location_form,documentation) "
 				. "VALUES ($values)",__LINE__,__FILE__);
 
-			$GLOBALS['phpgw']->locations->add('.entity.' . $entity['id'], $entity['name'], 'property', true);
+			$GLOBALS['phpgw']->locations->add(".{$this->type}." . $entity['id'], $entity['name'], $this->type_app[$this->type], true);
 
 			$receipt['id']= $entity['id'];
 
@@ -280,22 +281,27 @@
 			$fd=array();
 			$fd['id'] = array('type' => 'int', 'precision' => 4, 'nullable' => false);
 			$fd['num'] = array('type' => 'varchar', 'precision' => 16, 'nullable' => false);
-			$fd['p_num'] = array('type' => 'varchar', 'precision' => 16, 'nullable' => true);
-			$fd['p_entity_id'] = array('type' => 'int', 'precision' => 4, 'nullable' => true);
-			$fd['p_cat_id'] = array('type' => 'int', 'precision' => 4, 'nullable' => true);
-			$fd['location_code'] = array('type' => 'varchar', 'precision' => 25, 'nullable' => true);
 
-			$location_type = $this->bocommon->next_id('fm_location_type');
-
-			for ($i=1; $i<$location_type; $i++)
+			if ($this->type == 'entity' )
 			{
-				$fd['loc' . $i] = array('type' => 'varchar', 'precision' => 4, 'nullable' => true);
+				$fd['p_num'] = array('type' => 'varchar', 'precision' => 16, 'nullable' => true);
+				$fd['p_entity_id'] = array('type' => 'int', 'precision' => 4, 'nullable' => true);
+				$fd['p_cat_id'] = array('type' => 'int', 'precision' => 4, 'nullable' => true);
+				$fd['location_code'] = array('type' => 'varchar', 'precision' => 25, 'nullable' => true);
+
+				$location_type = $this->bocommon->next_id('fm_location_type');
+
+				for ($i=1; $i<$location_type; $i++)
+				{
+					$fd['loc' . $i] = array('type' => 'varchar', 'precision' => 4, 'nullable' => true);
+				}
+
+				$fd['address'] = array('type' => 'varchar', 'precision' => 150, 'nullable' => true);
+				$fd['tenant_id'] = array('type' => 'int', 'precision' => 4, 'nullable' => true);
+				$fd['contact_phone'] = array('type' => 'varchar', 'precision' => 30, 'nullable' => true);
+				$fd['status'] = array('type' => 'int', 'precision' => 4, 'nullable' => true);
 			}
 
-			$fd['address'] = array('type' => 'varchar', 'precision' => 150, 'nullable' => true);
-			$fd['tenant_id'] = array('type' => 'int', 'precision' => 4, 'nullable' => true);
-			$fd['contact_phone'] = array('type' => 'varchar', 'precision' => 30, 'nullable' => true);
-			$fd['status'] = array('type' => 'int', 'precision' => 4, 'nullable' => true);
 			$fd['entry_date'] = array('type' => 'int', 'precision' => 4, 'nullable' => true);
 			$fd['user_id'] = array('type' => 'int', 'precision' => 4, 'nullable' => true);
 
@@ -309,7 +315,7 @@
 			$values['name'] = $this->db->db_addslashes($values['name']);
 			$values['descr'] = $this->db->db_addslashes($values['descr']);
 
-			$values['id'] = $this->bocommon->next_id('fm_entity_category',array('entity_id'=>$values['entity_id']));
+			$values['id'] = $this->bocommon->next_id("fm_{$this->type}_category", array('entity_id'=>$values['entity_id']));
 
 			$values_insert= array(
 				$values['entity_id'],
@@ -328,10 +334,10 @@
 
 			$values_insert	= $this->bocommon->validate_db_insert($values_insert);
 
-			$this->db->query("INSERT INTO fm_entity_category (entity_id,id,name, descr,prefix,lookup_tenant,tracking,location_level,fileupload,loc_link,start_project,start_ticket) "
+			$this->db->query("INSERT INTO fm_{$this->type}_category (entity_id,id,name, descr,prefix,lookup_tenant,tracking,location_level,fileupload,loc_link,start_project,start_ticket) "
 				. "VALUES ($values_insert)",__LINE__,__FILE__);
 
-			$location_id = $GLOBALS['phpgw']->locations->add(".entity.{$values['entity_id']}.{$values['id']}", $values['name'], 'property', true, "fm_entity_{$values['entity_id']}_{$values['id']}");
+			$location_id = $GLOBALS['phpgw']->locations->add(".{$this->type}.{$values['entity_id']}.{$values['id']}", $values['name'],  $this->type_app[$this->type], true, "fm_entity_{$values['entity_id']}_{$values['id']}");
 
 			$receipt['id']= $values['id'];
 
@@ -340,7 +346,7 @@
 			$fd = $this->get_default_column_def();
 
 			$pk[]= 'id';
-			$table			= "fm_entity_{$values['entity_id']}_{$values['id']}";
+			$table			= "fm_{$this->type}_{$values['entity_id']}_{$values['id']}";
 
 			if(($this->oProc->CreateTable($table,array('fd' => $fd,'pk' => $pk,'fk' => $fk,'ix' => array('location_code'),'uc' => array()))))
 			{
@@ -374,7 +380,7 @@
 				}
 				else
 				{
-					$this->db->query("DELETE FROM fm_entity_category WHERE id=" . $values['id'] . " AND entity_id=" . $values['entity_id'],__LINE__,__FILE__);
+					$this->db->query("DELETE FROM fm_{$this->type}_category WHERE id=" . $values['id'] . " AND entity_id=" . $values['entity_id'],__LINE__,__FILE__);
 					unset($receipt['id']);
 				}
 			}
@@ -391,7 +397,7 @@
 
 			if (!$receipt['error'])
 			{
-				$table = 'fm_entity';
+				$table = "fm_{$this->type}";
 
 				$entity['name'] = $this->db->db_addslashes($entity['name']);
 				$entity['descr'] = $this->db->db_addslashes($entity['descr']);
@@ -415,25 +421,25 @@
 
 				$this->db->query("UPDATE $table set $value_set WHERE id=" . $entity['id'],__LINE__,__FILE__);
 
-				$GLOBALS['phpgw']->locations->update_description(".entity.{$entity['id']}", $entity['name'], 'property');
+				$GLOBALS['phpgw']->locations->update_description(".entity.{$entity['id']}", $entity['name'],  $this->type_app[$this->type]);
 
-				$this->db->query("DELETE FROM fm_entity_lookup WHERE type='lookup' AND entity_id=" . $entity['id'],__LINE__,__FILE__);
+				$this->db->query("DELETE FROM fm_{$this->type}_lookup WHERE type='lookup' AND entity_id=" . $entity['id'],__LINE__,__FILE__);
 				if (isset($entity['include_entity_for']) AND is_array($entity['include_entity_for']))
 				{
 					foreach($entity['include_entity_for'] as $location)
 					{
-						$this->db->query("INSERT INTO fm_entity_lookup (entity_id,location,type)"
+						$this->db->query("INSERT INTO fm_{$this->type}_lookup (entity_id,location,type)"
 						. "VALUES (" .$entity['id'] . ",'$location','lookup' )",__LINE__,__FILE__);
 					}
 				}
 
-				$this->db->query("DELETE FROM fm_entity_lookup WHERE type='start' AND entity_id=" . $entity['id'],__LINE__,__FILE__);
+				$this->db->query("DELETE FROM fm_{$this->type}_lookup WHERE type='start' AND entity_id=" . (int)$entity['id'],__LINE__,__FILE__);
 
 				if (isset($entity['start_entity_from']) AND is_array($entity['start_entity_from']))
 				{
 					foreach($entity['start_entity_from'] as $location)
 					{
-						$this->db->query("INSERT INTO fm_entity_lookup (entity_id,location,type)"
+						$this->db->query("INSERT INTO fm_{$this->type}_lookup (entity_id,location,type)"
 						. "VALUES (" .$entity['id'] . ",'$location','start' )",__LINE__,__FILE__);
 					}
 				}
@@ -460,7 +466,7 @@
 
 			if (!isset($receipt['error']))
 			{
-				$table = 'fm_entity_category';
+				$table = "fm_{$this->type}_category";
 
 				$entity['name'] = $this->db->db_addslashes($entity['name']);
 				$entity['descr'] = $this->db->db_addslashes($entity['descr']);
@@ -482,7 +488,7 @@
 
 				$this->db->query("UPDATE $table set $value_set WHERE entity_id=" . $entity['entity_id']. " AND id=" . $entity['id'],__LINE__,__FILE__);
 
-				$GLOBALS['phpgw']->locations->update_description(".entity.{$entity['entity_id']}.{$entity['id']}", $entity['name'], 'property');
+				$GLOBALS['phpgw']->locations->update_description(".entity.{$entity['entity_id']}.{$entity['id']}", $entity['name'],  $this->type_app[$this->type]);
 
 				$receipt['message'][] = array('msg'=> lang('entity has been edited'));
 			}
@@ -496,17 +502,18 @@
 
 		function delete_entity($id)
 		{
+			$id = (int) $id;
 			$category_list=$this->read_category(array('entity_id'=>$id));
 			$locations = array();
-			$locations[] = $GLOBALS['phpgw']->locations->get_id('property', ".entity.{$id}");
-			$subs = $GLOBALS['phpgw']->locations->get_subs('property', ".entity.{$id}");
+			$locations[] = $GLOBALS['phpgw']->locations->get_id( $this->type_app[$this->type], ".entity.{$id}");
+			$subs = $GLOBALS['phpgw']->locations->get_subs( $this->type_app[$this->type], ".entity.{$id}");
 			if (is_array($subs) && count($subs))
 			{
 				$locations = array_merge($locations, array_keys($subs));
 			}
 
-			$this->db->query("DELETE FROM fm_entity WHERE id={$id}",__LINE__,__FILE__);
-			$this->db->query("DELETE FROM fm_entity_category WHERE entity_id={$id}",__LINE__,__FILE__);
+			$this->db->query("DELETE FROM fm_{$this->type} WHERE id={$id}",__LINE__,__FILE__);
+			$this->db->query("DELETE FROM fm_{$this->type}_category WHERE entity_id={$id}",__LINE__,__FILE__);
 			$this->db->query('DELETE FROM phpgw_cust_attribute WHERE location_id IN (' . implode(',', $locations) . ')',__LINE__,__FILE__);
 			$this->db->query('DELETE FROM phpgw_locations WHERE location_id IN (' . implode(',', $locations) . ')',__LINE__,__FILE__);
 			$this->db->query('DELETE FROM phpgw_acl WHERE location_id IN (' . implode(',', $locations) . ')',__LINE__,__FILE__);
@@ -516,7 +523,7 @@
 
 				foreach($category_list as $entry)
 				{
-					$this->oProc->DropTable('fm_entity_' . $id . '_' . $entry['id']);
+					$this->oProc->DropTable("fm_{$this->type}_{$id}_{$entry['id']}");
 				}
 			}
 
@@ -528,23 +535,23 @@
 
 			$this->db->transaction_begin();	
 
-			$this->oProc->DropTable('fm_entity_' . $entity_id . '_' . $id);
+			$this->oProc->DropTable("fm_{$this->type}_{$entity_id}_{$id}");
 
-			$location_id = $GLOBALS['phpgw']->locations->get_id('property', ".entity.{$entity_id}.{$id}");
+			$location_id = $GLOBALS['phpgw']->locations->get_id( $this->type_app[$this->type], ".entity.{$entity_id}.{$id}");
 
-			$this->db->query("DELETE FROM fm_entity_category WHERE entity_id= $entity_id AND id= $id",__LINE__,__FILE__);
+			$this->db->query("DELETE FROM fm_{$this->type}_category WHERE entity_id= {$entity_id} AND id= {$id}",__LINE__,__FILE__);
 			$this->db->query("DELETE FROM phpgw_cust_attribute WHERE location_id = {$location_id}",__LINE__,__FILE__);
 			$this->db->query("DELETE FROM phpgw_locations WHERE location_id  = {$location_id}",__LINE__,__FILE__);
 			$this->db->query("DELETE FROM phpgw_acl WHERE  location_id  = {$location_id}",__LINE__,__FILE__);
-			$this->db->query("DELETE FROM fm_entity_history WHERE history_appname = 'entity_{$entity_id}_{$id}'",__LINE__,__FILE__);
+			$this->db->query("DELETE FROM fm_{$this->type}_history WHERE history_appname = '{$this->type}_{$entity_id}_{$id}'",__LINE__,__FILE__);
 
 			$this->db->transaction_commit();
 		}
 
 		function get_table_def($entity_id,$cat_id)
 		{
-			$location_id = $GLOBALS['phpgw']->locations->get_id('property', ".entity.{$entity_id}.{$cat_id}");
-			$table = 'fm_entity_' . $entity_id . '_' . $cat_id;
+			$location_id = $GLOBALS['phpgw']->locations->get_id( $this->type_app[$this->type], ".entity.{$entity_id}.{$cat_id}");
+			$table = "fm_{$this->type}_{$entity_id}_{$cat_id}";
 			$metadata = $this->db->metadata($table);
 
 			if(isset($this->db->adodb))
@@ -600,7 +607,7 @@
 
 		function delete_history($entity_id, $cat_id, $attrib_id)
 		{
-			$this->db->query("DELETE FROM fm_entity_history WHERE history_appname = 'entity_" . $entity_id  . '_' . $cat_id . "' AND history_attrib_id = $attrib_id",__LINE__,__FILE__);
+			$this->db->query("DELETE FROM fm_{$this->type}_history WHERE history_appname = '{$this->type}_{$entity_id}_{$cat_id}' AND history_attrib_id = {$attrib_id}",__LINE__,__FILE__);
 		}
 
 		function init_process()

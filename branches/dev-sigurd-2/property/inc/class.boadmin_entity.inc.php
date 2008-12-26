@@ -55,6 +55,11 @@
 		public $order;
 
 		/**
+		* @var string $type entity set
+		*/
+
+		public $type;
+		/**
 		* @var integer $entity_id entity type
 		*/
 		public $entity_id;
@@ -83,9 +88,14 @@
 			'check_perms'		=> true
 		);
 
+		var $type_app = array
+		(
+			'entity'	=> 'property',
+			'catch'		=> 'catch'
+		);
+
 		function __construct($session=false)
 		{
-			$this->so			= CreateObject('property.soadmin_entity');
 			$this->bocommon		= CreateObject('property.bocommon');
 			$this->custom		= createObject('property.custom_fields');
 
@@ -99,6 +109,7 @@
 			$query	= phpgw::get_var('query');
 			$sort	= phpgw::get_var('sort');
 			$order	= phpgw::get_var('order');
+			$type	= phpgw::get_var('type');
 			$cat_id	= phpgw::get_var('cat_id', 'int');
 			$allrows	= phpgw::get_var('allrows', 'bool');
 			$entity_id	= phpgw::get_var('entity_id', 'int');
@@ -107,9 +118,14 @@
 			$this->query			= isset($query) ? $query : $this->query;
 			$this->sort				= isset($sort) && $sort ? $sort : '';
 			$this->order			= isset($order) && $order ? $order : '';
+			$this->type				= isset($type)  && $type && $this->type_app[$type] ? $type : 'entity';
 			$this->cat_id			= isset($cat_id) && $cat_id ? $cat_id : '';
 			$this->entity_id		= isset($entity_id) && $entity_id ? $entity_id : '';
 			$this->allrows			= isset($allrows) && $allrows ? $allrows : '';
+			$this->so				= CreateObject('property.soadmin_entity');
+			$this->so->type			= $this->type;
+			$this->so->type_app		= $this->type_app;
+
 		}
 
 
