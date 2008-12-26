@@ -284,8 +284,8 @@
 
   		tmp_sum = YAHOO.util.Number.format(tmp_sum, {decimalPlaces:2, decimalSeparator:",", thousandsSeparator:" "});
 
- 			//Create ROW
- 			newTR = document.createElement('tr');
+		//Create ROW
+		newTR = document.createElement('tr');
 		//columns with colspan 10
 		newTD = document.createElement('td');
 		newTD.colSpan = 11;

@@ -10,6 +10,32 @@
   	var showTimer,hideTimer;
   	var tt = new YAHOO.widget.Tooltip("myTooltip");
   	var maxRowsPerPage = 1000;
+  	var myLoading;
+
+  /********************************************************************************
+ *
+ */
+	this.CreateLoading = function()
+	{
+	  	if(config_values.PanelLoading)
+	  	{
+		  	myLoading = new YAHOO.widget.Panel("wait",
+					{ width:"240px",
+					  fixedcenter:true,
+					  close:false,
+					  draggable:false,
+					  zindex:4,
+					  modal:true,
+					  visible:false
+					}
+				);
+
+			myLoading.setHeader("Loading, please wait...");
+			myLoading.setBody('<img src="http://us.i1.yimg.com/us.yimg.com/i/us/per/gr/gp/rel_interstitial_loading.gif" />');
+			myLoading.render(document.body);
+	  	}
+
+	}
 
  /********************************************************************************
  *
@@ -418,6 +444,12 @@
  */
 	this.execute_ds = function()
 	{
+		if(config_values.PanelLoading)
+		{
+			myLoading.show();
+		}
+
+
 		try{
 	 		ds = phpGWLink('index.php',path_values,true);
 	  	}catch(e){
@@ -428,6 +460,10 @@
 		{
 			success: function(o)
 			{
+				if(config_values.PanelLoading)
+				{
+					myLoading.hide();
+				}
 				eval('values_ds ='+o.responseText);
 				flag_particular_setting='';
 
@@ -1018,5 +1054,6 @@ myDataTable.on('cellMouseoverEvent', function (oArgs)
 
 //----------------------------------------------------------------------------------------
 
+	CreateLoading();
 	eval("var path_values = "+base_java_url+"");
 	this.execute_ds();
