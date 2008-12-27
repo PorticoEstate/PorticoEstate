@@ -1133,208 +1133,229 @@
 
 		function list_sub()
 		{
-			$GLOBALS['phpgw']->xslttpl->add_file(array('invoice',
-										'nextmatchs'));
-
-			$paid = phpgw::get_var('paid', 'bool');
-
-			$values  = phpgw::get_var('values');
+		/*
+			$paid 		= phpgw::get_var('paid', 'bool');
+			$values		= phpgw::get_var('values');
 			$voucher_id = phpgw::get_var('voucher_id', 'int');
 
-			$receipt = array();
-			if(isset($values['save']) && $values['save'] && isset($values['counter']) && $values['counter'])
-			{
-				$receipt=$this->bo->update_invoice_sub($values);
-			}
 
-//_debug_array($values);
+			$datatable = array();
 
-//echo $voucher_id;
+			if( phpgw::get_var('phpgw_return_as') != 'json' )
+		 	{
+				$datatable['menu']					= $this->bocommon->get_menu();
 
-			if ($voucher_id)
-			{
-				$content = $this->bo->read_invoice_sub($voucher_id,$paid);
-			}
+				$datatable['config']['base_url']	= $GLOBALS['phpgw']->link('/index.php', array
+													(
+														'menuaction'	=> 'property.uiinvoice.list_sub',
+														'order'			=> $this->order,
+														'sort'			=> $this->sort,
+														'cat_id'		=> $this->cat_id,
+														//'user_lid'	=> 'all',
+														'user_lid'		=> $this->user_lid,
+														'sub'			=> $this->sub,
+														'query'			=> $this->query,
+														'start'			=> $this->start,
+														'paid'			=> $paid,
+														'voucher_id'	=> $voucher_id,
+														'user_lid'		=> $this->user_lid,
+														'query'			=> $this->query
+													));
+				$datatable['config']['allow_allrows'] = false;
 
-			$sum =0;
-			$i=0;
-			if(is_array($content))
-			{
-				while(each($content))
+
+				$datatable['config']['base_java_url'] = "menuaction:'property.uiinvoice.list_sub',"
+														."order:'{$this->order}',"
+														."sort:'{$this->sort}',"
+														."cat_id: '{$this->cat_id}',"
+														."user_lid:'all',"
+														."sub:'{$this->sub}',"
+														."query:'{$this->query}',"
+														."start:'{$this->start}',"
+														."paid:'{$paid}',"
+														."voucher_id:'{$voucher_id}',"
+														."user_lid:'{$this->user_lid}',"
+														."query:'{$this->query}'";
+
+				$field_invoice = array(array( // boton exportar
+										'type'	=> 'button',
+										'id'	=> 'btn_export',
+										'tab_index' => 1,
+										'value'	=> lang('download')
+									));
+
+				$datatable['actions']['form'] = array(array(
+									'action'	=> $GLOBALS['phpgw']->link('/index.php',
+											array(
+													'menuaction'		=> 'property.uiinvoice.index',
+													'order'				=> $this->order,
+													'sort'				=> $this->sort,
+													'cat_id'			=> $this->cat_id,
+													'user_lid'			=> $this->user_lid,
+													'sub'				=> $this->sub,
+													'query'				=> $this->query,
+													'start'				=> $this->start,
+													'paid'				=> $paid,
+													'vendor_id'			=> $vendor_id,
+													'workorder_id'		=> $workorder_id,
+													'start_date'		=> $start_date,
+													'end_date'			=> $end_date,
+													'filter'			=> $this->filter,
+													'b_account_class'	=> $b_account_class,
+													'district_id'		=> $this->district_id
+												)
+										),
+									'fields'	=> array(
+														'field' => $field_invoice,
+														)
+									  ));
+
+				} //-- of if( phpgw::get_var('phpgw_return_as') != 'json' )
+
+				$receipt = array();
+				if(isset($values['save']) && $values['save'] && isset($values['counter']) && $values['counter'])
 				{
-					$sum									= $sum + $content[$i]['amount'];
-					$content[$i]['amount'] 					= number_format($content[$i]['amount'], 2, ',', '');
-					$content[$i]['paid']					= $paid;
-					$content[$i]['lang_tax_code_statustext']= lang('select the appropriate tax code');
-					$content[$i]['lang_dimb_statustext']= lang('select the appropriate dim code');
-					$content[$i]['dimb_list']				= $this->bo->select_dimb_list($content[$i]['dimb']);
-					$content[$i]['tax_code_list']			= $this->bo->tax_code_list($content[$i]['tax_code']);
-					$content[$i]['lang_remark'] 			= lang('Remark');
-					$content[$i]['link_remark'] 			= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiinvoice.remark'));
-					$content[$i]['lang_remark_help'] 		= lang('click this link to view the remark');
-					$content[$i]['link_order'] 				= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiinvoice.view_order'));
-					$content[$i]['link_claim'] 				= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uitenant_claim.check'));
-					$i++;
+					$receipt=$this->bo->update_invoice_sub($values);
 				}
-			}
 
-//_debug_array($content);
-			$table_header[] = array
-			(
-				'sort_workorder'		=> $this->nextmatchs->show_sort_order(array
-												(
-													'sort'	=> $this->sort,
-													'var'	=> 'pmwrkord_code',
-													'order'	=> $this->order,
-													'extra'	=> array('menuaction'	=> 'property.uiinvoice.list_sub',
-															'cat_id'	=> $this->cat_id,
-															'sub'		=> $this->sub,
-															'paid'		=> $paid,
-															'voucher_id'	=> $voucher_id,
-															'query'		=> $this->query)
-												)),
-				'lang_workorder'			=> lang('Workorder'),
-				'sort_budget_account'		=> $this->nextmatchs->show_sort_order(array
-												(
-													'sort'	=> $this->sort,
-													'var'	=> 'spbudact_code',
-													'order'	=> $this->order,
-													'extra'	=> array('menuaction'	=> 'property.uiinvoice.list_sub',
-															'cat_id'	=> $this->cat_id,
-															'sub'		=> $this->sub,
-															'paid'		=> $paid,
-															'voucher_id'	=> $voucher_id,
-															'query'		=> $this->query)
-												)),
-				'lang_budget_account'		=> lang('Budget account'),
+				if ($voucher_id)
+				{
+					$content = $this->bo->read_invoice_sub($voucher_id,$paid);
+				}
 
-				'sort_sum'					=> $this->nextmatchs->show_sort_order(array
-												(
-													'sort'	=> $this->sort,
-													'var'	=> 'belop',
-													'order'	=> $this->order,
-													'extra'	=> array('menuaction'	=> 'property.uiinvoice.list_sub',
-															'cat_id'	=> $this->cat_id,
-															'sub'		=> $this->sub,
-															'paid'		=> $paid,
-															'voucher_id'	=> $voucher_id,
-															'query'		=> $this->query)
-												)),
+				$sum=0;
+				$i	=0;
+				if(is_array($content))
+				{
+					while(each($content))
+					{
+						$sum									= $sum + $content[$i]['amount'];
+						$content[$i]['amount'] 					= number_format($content[$i]['amount'], 2, ',', '');
+						$content[$i]['paid']					= $paid;
+						//$content[$i]['lang_tax_code_statustext']= lang('select the appropriate tax code');
+						//$content[$i]['lang_dimb_statustext']= lang('select the appropriate dim code');
+						$content[$i]['dimb_list']				= $this->bo->select_dimb_list($content[$i]['dimb']);
+						$content[$i]['tax_code_list']			= $this->bo->tax_code_list($content[$i]['tax_code']);
+						//$content[$i]['lang_remark'] 			= lang('Remark');
+						$content[$i]['link_remark'] 			= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiinvoice.remark'));
+						//$content[$i]['lang_remark_help'] 		= lang('click this link to view the remark');
+						$content[$i]['link_order'] 				= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiinvoice.view_order'));
+						$content[$i]['link_claim'] 				= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uitenant_claim.check'));
+						$i++;
+					}
+				}
 
-				'lang_sum'			=> lang('Sum'),
-				'lang_type'			=> lang('Type'),
-				'lang_close_order'		=> lang('Close order'),
-				'lang_charge_tenant'		=> lang('Charge tenant'),
-				'lang_invoice_id'		=> lang('Invoice Id'),
-				'sort_dima'			=> $this->nextmatchs->show_sort_order(array
-												(
-													'sort'	=> $this->sort,
-													'var'	=>	'dima',
-													'order'	=>	$this->order,
-													'extra'		=> array('menuaction'	=> 'property.uiinvoice.list_sub',
-																'cat_id'	=> $this->cat_id,
-																'sub'		=> $this->sub,
-																'paid'		=> $paid,
-																'voucher_id'	=> $voucher_id,
-																'query'		=> $this->query)
-												)),
-				'lang_dima'			=> lang('Dim A'),
-				'lang_dimb'			=> lang('Dim B'),
-				'lang_dimd'			=> lang('Dim D'),
-				'lang_tax_code'			=> lang('Tax code'),
-				'lang_remark'			=> lang('Remark'),
-			);
+$uicols = array (
+	array( //counter
+		'input_type'=>hidden,	'type'=>number,	'col_name'=>counter,		'name'=>counter,			'formatter'=>'',	'label'=>dummy,				'className'=>''),
+	array(//id
+		'input_type'=>hidden,	'type'=>number,	'col_name'=>id,				'name'=>id,					'formatter'=>'',	'label'=>dummy,				'className'	=>''),
+	array(//workorder_id
+		'input_type'=>hidden,	'type'=>number,	'col_name'=>workorder_id,	'name'=>workorder_id,		'formatter'=>'',	'label'=>dummy,				'className'	=>''),
+	array(//view_order
+		'input_type'=>link,		'type'=>phpgw,	'col_name'=>workorder_link,	'name'=>link_order,			'formatter'=>'link','label'=>lang('Workorder'),'className'=>'centerClasss'),
+	array(//close_order_orig
+		'input_type'=>special_1,'type'=>'',		'col_name'=>close_order,	'name'=>close_order,		'formatter'=>'',	'label'=>dummy,				'className'=>''),
 
-			$table_done[] = array
-			(
-				'lang_done'		=> lang('Done'),
-				'lang_done_statustext'	=> lang('Close this window')
-			);
 
-			$link_data = array
-			(
-				'menuaction'		=> 'property.uiinvoice.list_sub',
-				'order'			=> $this->order,
-				'sort'			=> $this->sort,
-				'cat_id'		=> $this->cat_id,
-				'user_lid'		=> $this->user_lid,
-				'sub'			=> $this->sub,
-				'query'			=> $this->query,
-				'start'			=> $this->start,
-				'paid'			=> $paid,
-				'voucher_id'		=> $voucher_id,
-				'user_lid'		=> $this->user_lid,
-				'query'			=> $this->query
-			);
 
-			if ($paid)
+					array(//close_order_orig
+						'input_type'=>hidden,	'type'=>number,	'col_name'=>close_order_orig,	'name'=>close_order_orig,	'formatter'=>'',	'label'=>dummy,	'className'=>''),
+					array(//close_order
+						'input_type'=>input,	'type'=>check,	'col_name'=>close_order,	'name'=>close_order,	'formatter' =>'',	'label'=>lang('Budget account'),	'className'=>''),
+					array(//close_order
+						'input_type'=>varchar,	'type'=>number,	'col_name'=>close_order,	'name'=>close_order,	'formatter' =>'',	'label'=>lang('Budget account'),	'className'=>'')
+
+					);
+
+				$j=0;
+		//---- llena DATATABLE-ROWS con los valores del READ
+		if (isset($content) && is_array($content))
+		{
+			foreach($content as $invoices)
 			{
-				$function_msg	= lang('list paid invoice');
+				for ($i=0;$i<count($uicols['name']);$i++)
+				{
+					$datatable['rows']['row'][$j]['column'][$i]['value']	= $invoices[$uicols[$i]['name']];
+					$datatable['rows']['row'][$j]['column'][$i]['name'] 	= $uicols[$i]['col_name'];
 
+
+					if($uicols['input_type'][$i]!='hidden')
+					{
+							//--- varchar--
+//							if($uicols[$i]['input_type']=='varchar' && $invoices[$uicols[$i]['name']])
+//							{
+//								$datatable['rows']['row'][$j]['column'][$i]['format'] = 'varchar';
+//							}
+							//--- link--
+							elseif($uicols['input_type'][$i]=='link' && $invoices[$uicols[$i]['name']])
+							{
+								$datatable['rows']['row'][$j]['column'][$i]['format']	= 'link';
+								$datatable['rows']['row'][$j]['column'][$i]['target']	= '';
+								if($uicols['type'][$i]=='phpgw')
+								{
+									$datatable['rows']['row'][$j]['column'][$i]['link']	= $invoices[$uicols[$i]['name']]."&order_id=".$invoices[$uicols[0]['name']];
+								}
+							}
+							//--input box----
+//							else
+//							{
+//								$datatable['rows']['row'][$j]['column'][$i]['format'] 	= $uicols[$i]['input_type'];
+//								$datatable['rows']['row'][$j]['column'][$i]['type'] 	= $uicols[$i]['type'];
+//
+//								if($datatable['rows']['row'][$j]['column'][$i]['type']=='text')
+//								{
+//									$datatable['rows']['row'][$j]['column'][$i]['extra_param'] 	= "size='1' ";
+//								}
+//								elseif($datatable['rows']['row'][$j]['column'][$i]['type']=='check')
+//								{
+//									$datatable['rows']['row'][$j]['column'][$i]['extra_param']	= " checked ";
+//								}
+//								elseif($datatable['rows']['row'][$j]['column'][$i]['type']=='select')
+//								{
+//									$datatable['rows']['row'][$j]['column'][$i]['extra_param']	 = " ";
+//								}
+//							}
+					}
+					if($uicols['input_type'][$i]!='special_1')
+					{
+						if($invoices[$uicols[2]['name']] == '')
+						{
+							//nothing
+						}
+						elseif($invoices['paid']=='')
+						{
+						}
+
+						}
+
+
+
+
+
+					}
+					else // hidden
+					{
+							$datatable['rows']['row'][$j]['column'][$i]['format']	= 'hidden';
+							$datatable['rows']['row'][$j]['column'][$i]['type'] 	= $uicols['type'][$i];
+					}
+
+				}
+				$j++;
 			}
-			else
-			{
-				$function_msg	= lang('list invoice');
-			}
-
-			$msgbox_data = $this->bocommon->msgbox_data($receipt);
-
-
-			$link_download = array
-			(
-				'menuaction'	=> 'property.uiinvoice.download_sub',
-				'voucher_id'	=> $voucher_id,
-				'paid'		=> $paid
-			);
-
-			$GLOBALS['phpgw']->js->validate_file('overlib','overlib','property');
-			$GLOBALS['phpgw']->js->validate_file('core','check','property');
-
-			$data = array
-			(
-				'menu'							=> $this->bocommon->get_menu(),
-				'lang_download'					=> 'download',
-				'link_download'					=> $GLOBALS['phpgw']->link('/index.php',$link_download),
-				'lang_download_help'				=> lang('Download table to your browser'),
-
-				'img_check'					=> $GLOBALS['phpgw']->common->get_image_path('property').'/check.png',
-				'msgbox_data'					=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
-				'sum'						=> number_format($sum, 2, ',', ''),
-				'form_action'					=> $GLOBALS['phpgw']->link('/index.php',$link_data),
-				'lang_save'					=> lang('save'),
-				'lang_done'					=> lang('Done'),
-				'done_action'					=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiinvoice.index', 'user_lid'=> $this->user_lid, 'query'=> $this->query)),
-				'lang_done_statustext'				=> lang('Back to the list'),
-				'lang_save_statustext'				=> lang('Save the voucher'),
-				'allow_allrows'					=> false,
-				'start_record'					=> $this->start,
-				'record_limit'					=> count($content),//$GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'],
-				'num_records'					=> count($content),
-				'all_records'					=> $this->bo->total_records,
-				'link_url'					=> $GLOBALS['phpgw']->link('/index.php',$link_data),
-				'img_path'					=> $GLOBALS['phpgw']->common->get_image_path('phpgwapi','default'),
-				'lang_submit'					=> lang('submit'),
-				'table_header_list_invoice_sub'			=> $table_header,
-				'values_list_invoice_sub'			=> $content,
-				'paid'						=> $paid,
-				'vendor'					=> $content[0]['vendor'],
-				'lang_vendor'					=> lang('Vendor'),
-				'voucher_id'					=> $voucher_id,
-				'lang_voucher_id'				=> lang('Voucher Id'),
-				'lang_claim'					=> lang('Claim'),
-				'table_done'					=> $table_done
-			);
-
-//_debug_array($data);
-
-			$appname = lang('invoice');
-
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
-			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('list_invoice_sub' => $data));
-		//	$GLOBALS['phpgw']->xslttpl->pp();
-			$this->save_sessiondata();
 		}
 
+
+
+
+
+
+
+
+
+
+*/
+		}
 
 		function edit_period()
 		{
@@ -1773,7 +1794,7 @@
 									$datatable['rows']['row'][$j]['column'][$i]['format']	= 'link';
 									if($uicols['type'][$i]=='url')
 									{
-										$datatable['rows']['row'][$j]['column'][$i]['link']	= $invoices['consume'];
+										$datatable['rows']['row'][$j]['column'][$i]['link']	= $invoices['link_voucher'];
 									}
 									$datatable['rows']['row'][$j]['column'][$i]['target']	= '';
 								}
