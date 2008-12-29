@@ -127,9 +127,9 @@
 						'id'				=> $entry['id'],
 						'name'				=> $entry['name'],
 						'descr'				=> $entry['descr'],
-						'link_categories'		=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiadmin_entity.category',' entity_id'=> $entry['id'])),
-						'link_edit'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiadmin_entity.edit', 'id'=> $entry['id'])),
-						'link_delete'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiadmin_entity.delete',' entity_id'=> $entry['id'])),
+						'link_categories'		=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiadmin_entity.category',' entity_id'=> $entry['id'], 'type' => $this->type)),
+						'link_edit'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiadmin_entity.edit', 'id'=> $entry['id'], 'type' => $this->type)),
+						'link_delete'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiadmin_entity.delete',' entity_id'=> $entry['id'], 'type' => $this->type)),
 						'lang_view_standardtext'	=> lang('view the standard'),
 						'lang_category_text'		=> lang('categories for the entity type'),
 						'lang_edit_standardtext'	=> lang('edit the entity'),
@@ -156,7 +156,8 @@
 											'var'	=> 'id',
 											'order'	=> $this->order,
 											'extra'	=> array('menuaction'	=> 'property.uiadmin_entity.index',
-																'allrows'=> $this->allrows)
+																'allrows'=> $this->allrows,
+																'type'	=> $this->type)
 										)),
 				'lang_id'		=> lang('entity id'),
 				'sort_name'		=> $this->nextmatchs->show_sort_order(array
@@ -165,7 +166,8 @@
 											'var'	=> 'name',
 											'order'	=> $this->order,
 											'extra'	=> array('menuaction'	=> 'property.uiadmin_entity.index',
-																'allrows'=> $this->allrows)
+																'allrows'=> $this->allrows,
+																'type'	=> $this->type)
 										)),
 				'lang_name'		=> lang('Name'),
 			);
@@ -174,7 +176,7 @@
 			(
 				'lang_add'		=> lang('add'),
 				'lang_add_standardtext'	=> lang('add a standard'),
-				'add_action'		=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiadmin_entity.edit')),
+				'add_action'		=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiadmin_entity.edit', 'type' => $this->type)),
 				'lang_done'		=> lang('done'),
 				'lang_done_standardtext'=> lang('back to admin'),
 				'done_action'		=> $GLOBALS['phpgw']->link('/admin/index.php')
@@ -194,7 +196,8 @@
 				'menuaction'	=> 'property.uiadmin_entity.index',
 				'sort'		=>$this->sort,
 				'order'		=>$this->order,
-				'query'		=>$this->query
+				'query'		=>$this->query,
+				'type'		=> $this->type
 			);
 
 			$data = array
@@ -253,11 +256,11 @@
 						'name'								=> $entry['name'],
 						'prefix'							=> $entry['prefix'],
 						'descr'								=> $entry['descr'],
-						'link_custom_function'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiadmin_entity.list_custom_function', 'cat_id'=> $entry['id'], 'entity_id'=> $entity_id)),
-						'link_attribute'					=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiadmin_entity.list_attribute', 'cat_id'=> $entry['id'], 'entity_id'=> $entity_id)),
-						'link_attribute_group'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiadmin_entity.list_attribute_group', 'cat_id'=> $entry['id'], 'entity_id'=> $entity_id)),
-						'link_edit'							=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiadmin_entity.edit_category','id'=> $entry['id'], 'entity_id'=> $entity_id)),
-						'link_delete'						=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiadmin_entity.delete', 'cat_id'=> $entry['id'], 'entity_id'=> $entity_id)),
+						'link_custom_function'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiadmin_entity.list_custom_function', 'cat_id'=> $entry['id'], 'entity_id'=> $entity_id, 'type' => $this->type)),
+						'link_attribute'					=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiadmin_entity.list_attribute', 'cat_id'=> $entry['id'], 'entity_id'=> $entity_id, 'type' => $this->type)),
+						'link_attribute_group'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiadmin_entity.list_attribute_group', 'cat_id'=> $entry['id'], 'entity_id'=> $entity_id, 'type' => $this->type)),
+						'link_edit'							=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiadmin_entity.edit_category','id'=> $entry['id'], 'entity_id'=> $entity_id, 'type' => $this->type)),
+						'link_delete'						=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiadmin_entity.delete', 'cat_id'=> $entry['id'], 'entity_id'=> $entity_id, 'type' => $this->type)),
 						'lang_view_standardtext'			=> lang('view the category'),
 						'lang_status_standardtext'			=> lang('Status for the entity category'),
 						'lang_attribute_standardtext'		=> lang('attributes for the entity category'),
@@ -293,7 +296,8 @@
 											'order'	=> $this->order,
 											'extra'	=> array('menuaction'	=> 'property.uiadmin_entity.category',
 																'entity_id' =>$entity_id,
-																'allrows'=>$this->allrows)
+																'allrows'=>$this->allrows,
+																'type'	=> $this->type)
 										)),
 				'lang_id'		=> lang('category id'),
 				'sort_name'		=> $this->nextmatchs->show_sort_order(array
@@ -303,7 +307,8 @@
 											'order'	=> $this->order,
 											'extra'	=> array('menuaction'	=> 'property.uiadmin_entity.category',
 																'entity_id' =>$entity_id,
-																'allrows'=>$this->allrows)
+																'allrows'=>$this->allrows,
+																'type'	=> $this->type)
 										)),
 				'lang_name'		=> lang('Name'),
 			);
@@ -312,10 +317,10 @@
 			(
 				'lang_add'			=> lang('add'),
 				'lang_add_standardtext'		=> lang('add a category'),
-				'add_action'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiadmin_entity.edit_category', 'entity_id'=> $entity_id)),
+				'add_action'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiadmin_entity.edit_category', 'entity_id'=> $entity_id,'type' => $this->type)),
 				'lang_done'			=> lang('done'),
 				'lang_done_standardtext'	=> lang('back to entity'),
-				'done_action'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiadmin_entity.index'))
+				'done_action'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiadmin_entity.index', 'type' => $this->type))
 			);
 
 			$entity = $this->bo->read_single($entity_id,false);
@@ -335,7 +340,8 @@
 				'sort'		=> $this->sort,
 				'order'		=> $this->order,
 				'query'		=> $this->query,
-				'entity_id'	=> $entity_id
+				'entity_id'	=> $entity_id,
+				'type'		=> $this->type
 			);
 
 			$data = array
@@ -376,7 +382,7 @@
 
 			$id	= phpgw::get_var('id', 'int');
 			$values			= phpgw::get_var('values');
-			$config = CreateObject('phpgwapi.config','property');
+			$config = CreateObject('phpgwapi.config', $this->type_app[$this->type]);
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('admin_entity'));
 
@@ -448,7 +454,8 @@
 			$link_data = array
 			(
 				'menuaction'	=> 'property.uiadmin_entity.edit',
-				'id'		=> $id
+				'id'		=> $id,
+				'type'		=> $this->type
 			);
 //_debug_array($include_list);
 
@@ -459,7 +466,7 @@
 				'msgbox_data'					=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
 				'lang_name_standardtext'			=> lang('Enter a name of the standard'),
 				'form_action'					=> $GLOBALS['phpgw']->link('/index.php',$link_data),
-				'done_action'					=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiadmin_entity.index')),
+				'done_action'					=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiadmin_entity.index', 'type' => $this->type)),
 				'lang_id'					=> lang('standard ID'),
 				'lang_name'					=> lang('Name'),
 				'lang_descr'					=> lang('Descr'),
@@ -561,8 +568,9 @@
 			$link_data = array
 			(
 				'menuaction'	=> 'property.uiadmin_entity.edit_category',
-				'entity_id'	=>$entity_id,
-				'id'		=> $id
+				'entity_id'		=> $entity_id,
+				'id'			=> $id,
+				'type'			=> $this->type
 			);
 //_debug_array($link_data);
 
@@ -579,7 +587,7 @@
 				'lang_name_standardtext'			=> lang('Enter a name of the standard'),
 
 				'form_action'						=> $GLOBALS['phpgw']->link('/index.php',$link_data),
-				'done_action'						=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiadmin_entity.category', 'entity_id'=> $entity_id)),
+				'done_action'						=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiadmin_entity.category', 'entity_id'=> $entity_id,'type' => $this->type)),
 				'lang_id'							=> lang('Category'),
 				'lang_name'							=> lang('Name'),
 				'lang_descr'						=> lang('Descr'),
@@ -656,7 +664,7 @@
 
 			if (!$acl_location && $entity_id && $cat_id)
 			{
-				$acl_location = '.entity.' . $entity_id . '.' . $cat_id;
+				$acl_location = ".{$this->type}.{$entity_id}.{$cat_id}";
 			}
 
 			if(!$function)
@@ -677,7 +685,8 @@
 				'menuaction'	=> 'property.uiadmin_entity.'.$function,
 				'cat_id' 	=> $cat_id,
 				'entity_id'	=> $entity_id,
-				'attrib_id'	=> $attrib_id
+				'attrib_id'	=> $attrib_id,
+				'type'		=> $this->type
 			);
 
 			$delete_data = array
@@ -688,7 +697,8 @@
 				'group_id'	=> $group_id,
 				'attrib_id'	=> $attrib_id,
 				'acl_location'	=> $acl_location,
-				'custom_function_id' => $custom_function_id
+				'custom_function_id' => $custom_function_id,
+				'type'				=> $this->type
 			);
 
 			if (phpgw::get_var('confirm', 'bool', 'POST'))
@@ -755,10 +765,10 @@
 						'name'					=> $entry['name'],
 						'descr'					=> $entry['descr'],
 						'sorting'				=> $entry['group_sort'],
-						'link_up'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiadmin_entity.list_attribute_group', 'resort'=> 'up', 'entity_id'=> $entity_id, 'cat_id'=> $cat_id, 'id'=> $entry['id'], 'allrows'=> $this->allrows)),
-						'link_down'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiadmin_entity.list_attribute_group', 'resort'=> 'down', 'entity_id'=> $entity_id, 'cat_id'=> $cat_id, 'id'=> $entry['id'], 'allrows'=> $this->allrows)),
-						'link_edit'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiadmin_entity.edit_attrib_group', 'entity_id'=> $entity_id, 'cat_id'=> $cat_id, 'id'=> $entry['id'])),
-						'link_delete'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiadmin_entity.delete', 'entity_id'=> $entity_id, 'cat_id'=> $cat_id, 'group_id'=> $entry['id'])),
+						'link_up'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiadmin_entity.list_attribute_group', 'resort'=> 'up', 'entity_id'=> $entity_id, 'cat_id'=> $cat_id, 'id'=> $entry['id'], 'allrows'=> $this->allrows, 'type' => $this->type)),
+						'link_down'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiadmin_entity.list_attribute_group', 'resort'=> 'down', 'entity_id'=> $entity_id, 'cat_id'=> $cat_id, 'id'=> $entry['id'], 'allrows'=> $this->allrows, 'type' => $this->type)),
+						'link_edit'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiadmin_entity.edit_attrib_group', 'entity_id'=> $entity_id, 'cat_id'=> $cat_id, 'id'=> $entry['id'], 'type' => $this->type)),
+						'link_delete'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiadmin_entity.delete', 'entity_id'=> $entity_id, 'cat_id'=> $cat_id, 'group_id'=> $entry['id'], 'type' => $this->type)),
 						'lang_up_text'			=> lang('shift up'),
 						'lang_down_text'		=> lang('shift down'),
 						'lang_edit_text'		=> lang('edit the attrib'),
@@ -788,7 +798,8 @@
 											'extra'	=> array('menuaction'	=> 'property.uiadmin_entity.list_attribute',
 																'entity_id'	=>$entity_id,
 																'cat_id'	=>$cat_id,
-																'allrows'=>$this->allrows)
+																'allrows'=>$this->allrows,
+																'type'	=> $this->type)
 										)),
 				'sort_sorting'		=> $this->nextmatchs->show_sort_order(array
 										(
@@ -798,7 +809,8 @@
 											'extra'	=> array('menuaction'	=> 'property.uiadmin_entity.list_attribute',
 																'entity_id'	=>$entity_id,
 																'cat_id'	=>$cat_id,
-																'allrows'=>$this->allrows)
+																'allrows'=>$this->allrows,
+																'type'	=> $this->type)
 										)),
 				'lang_name'		=> lang('Name'),
 			);
@@ -807,10 +819,10 @@
 			(
 				'lang_add'		=> lang('add'),
 				'lang_add_attribtext'	=> lang('add an attrib'),
-				'add_action'		=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiadmin_entity.edit_attrib_group', 'entity_id'=> $entity_id, 'cat_id'=> $cat_id)),
+				'add_action'		=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiadmin_entity.edit_attrib_group', 'entity_id'=> $entity_id, 'cat_id'=> $cat_id,'type' => $this->type)),
 				'lang_done'		=> lang('done'),
 				'lang_done_attribtext'	=> lang('back to admin'),
-				'done_action'		=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiadmin_entity.category', 'entity_id'=> $entity_id)),
+				'done_action'		=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiadmin_entity.category', 'entity_id'=> $entity_id, 'type' => $this->type)),
 			);
 
 			if(!$this->allrows)
@@ -829,7 +841,8 @@
 				'order'		=> $this->order,
 				'query'		=> $this->query,
 				'entity_id'	=> $entity_id,
-				'cat_id'	=> $cat_id
+				'cat_id'	=> $cat_id,
+				'type'		=> $this->type
 			);
 
 			$entity = $this->bo->read_single($entity_id,false);
@@ -907,10 +920,10 @@
 						'attrib_group'		=> $entry['group_id'],
 						'sorting'			=> $entry['attrib_sort'],
 						'search'			=> $entry['search'],
-						'link_up'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiadmin_entity.list_attribute', 'resort'=> 'up', 'entity_id'=> $entity_id, 'cat_id'=> $cat_id, 'id'=> $entry['id'], 'allrows'=> $this->allrows)),
-						'link_down'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiadmin_entity.list_attribute', 'resort'=> 'down', 'entity_id'=> $entity_id, 'cat_id'=> $cat_id, 'id'=> $entry['id'], 'allrows'=> $this->allrows)),
-						'link_edit'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiadmin_entity.edit_attrib', 'entity_id'=> $entity_id, 'cat_id'=> $cat_id, 'id'=> $entry['id'])),
-						'link_delete'		=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiadmin_entity.delete', 'entity_id'=> $entity_id, 'cat_id'=> $cat_id, 'attrib_id'=> $entry['id'])),
+						'link_up'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiadmin_entity.list_attribute', 'resort'=> 'up', 'entity_id'=> $entity_id, 'cat_id'=> $cat_id, 'id'=> $entry['id'], 'allrows'=> $this->allrows, 'type' => $this->type)),
+						'link_down'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiadmin_entity.list_attribute', 'resort'=> 'down', 'entity_id'=> $entity_id, 'cat_id'=> $cat_id, 'id'=> $entry['id'], 'allrows'=> $this->allrows, 'type' => $this->type)),
+						'link_edit'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiadmin_entity.edit_attrib', 'entity_id'=> $entity_id, 'cat_id'=> $cat_id, 'id'=> $entry['id'], 'type' => $this->type)),
+						'link_delete'		=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiadmin_entity.delete', 'entity_id'=> $entity_id, 'cat_id'=> $cat_id, 'attrib_id'=> $entry['id'], 'type' => $this->type)),
 						'lang_up_text'		=> lang('shift up'),
 						'lang_down_text'	=> lang('shift down'),
 						'lang_edit_text'	=> lang('edit the attrib'),
@@ -943,7 +956,8 @@
 											'extra'	=> array('menuaction'	=> 'property.uiadmin_entity.list_attribute',
 																'entity_id'	=>$entity_id,
 																'cat_id'	=>$cat_id,
-																'allrows'=>$this->allrows)
+																'allrows'=>$this->allrows,
+																'type'	=> $this->type)
 										)),
 				'sort_sorting'		=> $this->nextmatchs->show_sort_order(array
 										(
@@ -953,7 +967,8 @@
 											'extra'	=> array('menuaction'	=> 'property.uiadmin_entity.list_attribute',
 																'entity_id'	=>$entity_id,
 																'cat_id'	=>$cat_id,
-																'allrows'=>$this->allrows)
+																'allrows'=>$this->allrows,
+																'type'	=> $this->type)
 										)),
 				'lang_name'		=> lang('Name'),
 			);
@@ -962,10 +977,10 @@
 			(
 				'lang_add'		=> lang('add'),
 				'lang_add_attribtext'	=> lang('add an attrib'),
-				'add_action'		=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiadmin_entity.edit_attrib', 'entity_id'=> $entity_id, 'cat_id'=> $cat_id)),
+				'add_action'		=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiadmin_entity.edit_attrib', 'entity_id'=> $entity_id, 'cat_id'=> $cat_id,'type' => $this->type)),
 				'lang_done'		=> lang('done'),
 				'lang_done_attribtext'	=> lang('back to admin'),
-				'done_action'		=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiadmin_entity.category', 'entity_id'=> $entity_id)),
+				'done_action'		=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiadmin_entity.category', 'entity_id'=> $entity_id, 'type' => $this->type)),
 			);
 
 			if(!$this->allrows)
@@ -984,7 +999,8 @@
 				'order'		=> $this->order,
 				'query'		=> $this->query,
 				'entity_id'	=> $entity_id,
-				'cat_id'	=> $cat_id
+				'cat_id'	=> $cat_id,
+				'type'		=> $this->type
 			);
 
 			$entity = $this->bo->read_single($entity_id,false);
@@ -1033,6 +1049,9 @@
 			$cat_id		= phpgw::get_var('cat_id', 'int');
 			$id			= phpgw::get_var('id', 'int');
 			$values		= phpgw::get_var('values');
+
+			$GLOBALS['phpgw_info']['flags']['menu_selection'] .= "::entity_{$entity_id}::entity_{$entity_id}_{$cat_id}";
+
 			if(!$values)
 			{
 				$values=array();
@@ -1100,7 +1119,8 @@
 				'menuaction'	=> 'property.uiadmin_entity.edit_attrib_group',
 				'entity_id'	=> $entity_id,
 				'cat_id'	=> $cat_id,
-				'id'		=> $id
+				'id'		=> $id,
+				'type'		=> $this->type
 			);
 
 
@@ -1118,7 +1138,7 @@
 
 				'msgbox_data'						=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
 				'form_action'						=> $GLOBALS['phpgw']->link('/index.php',$link_data),
-				'done_action'						=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiadmin_entity.list_attribute_group', 'entity_id'=> $entity_id, 'cat_id'=> $cat_id)),
+				'done_action'						=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiadmin_entity.list_attribute_group', 'entity_id'=> $entity_id, 'cat_id'=> $cat_id, 'type' => $this->type)),
 				'lang_id'							=> lang('Attribute group ID'),
 				'lang_entity_type'					=> lang('Entity type'),
 				'lang_no_entity_type'				=> lang('No entity type'),
@@ -1161,6 +1181,9 @@
 			$cat_id		= phpgw::get_var('cat_id', 'int');
 			$id		= phpgw::get_var('id', 'int');
 			$values		= phpgw::get_var('values');
+
+			$GLOBALS['phpgw_info']['flags']['menu_selection'] .= "::entity_{$entity_id}::entity_{$entity_id}_{$cat_id}";
+
 			if(!$values)
 			{
 				$values=array();
@@ -1260,7 +1283,8 @@
 				'menuaction'	=> 'property.uiadmin_entity.edit_attrib',
 				'entity_id'	=> $entity_id,
 				'cat_id'	=> $cat_id,
-				'id'		=> $id
+				'id'		=> $id,
+				'type'		=> $this->type
 			);
 
 			if($values['column_info']['type']=='R' || $values['column_info']['type']=='CH' || $values['column_info']['type']=='LB')
@@ -1291,7 +1315,7 @@
 
 				'msgbox_data'						=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
 				'form_action'						=> $GLOBALS['phpgw']->link('/index.php',$link_data),
-				'done_action'						=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiadmin_entity.list_attribute', 'entity_id'=> $entity_id, 'cat_id'=> $cat_id)),
+				'done_action'						=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiadmin_entity.list_attribute', 'entity_id'=> $entity_id, 'cat_id'=> $cat_id, 'type' => $this->type)),
 				'lang_id'							=> lang('Attribute ID'),
 				'lang_entity_type'					=> lang('Entity type'),
 				'lang_no_entity_type'				=> lang('No entity type'),
@@ -1408,10 +1432,10 @@
 						'descr'					=> $entry['descr'],
 						'sorting'				=> $entry['sorting'],
 						'active'				=> $entry['active']?'X':'',
-						'link_up'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiadmin_entity.list_custom_function', 'resort'=>'up', 'entity_id'=> $entity_id, 'cat_id'=> $cat_id, 'id'=> $entry['id'], 'allrows'=> $this->allrows)),
-						'link_down'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiadmin_entity.list_custom_function', 'resort'=>'down', 'entity_id'=> $entity_id, 'cat_id'=> $cat_id, 'id'=> $entry['id'], 'allrows'=> $this->allrows)),
-						'link_edit'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiadmin_entity.edit_custom_function', 'entity_id'=> $entity_id, 'cat_id'=> $cat_id, 'id'=> $entry['id'])),
-						'link_delete'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiadmin_entity.delete', 'entity_id'=> $entity_id, 'cat_id'=> $cat_id, 'custom_function_id'=> $entry['id'])),
+						'link_up'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiadmin_entity.list_custom_function', 'resort'=>'up', 'entity_id'=> $entity_id, 'cat_id'=> $cat_id, 'id'=> $entry['id'], 'allrows'=> $this->allrows, 'type' => $this->type)),
+						'link_down'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiadmin_entity.list_custom_function', 'resort'=>'down', 'entity_id'=> $entity_id, 'cat_id'=> $cat_id, 'id'=> $entry['id'], 'allrows'=> $this->allrows, 'type' => $this->type)),
+						'link_edit'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiadmin_entity.edit_custom_function', 'entity_id'=> $entity_id, 'cat_id'=> $cat_id, 'id'=> $entry['id'], 'type' => $this->type)),
+						'link_delete'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiadmin_entity.delete', 'entity_id'=> $entity_id, 'cat_id'=> $cat_id, 'custom_function_id'=> $entry['id'], 'type' => $this->type)),
 						'lang_up_text'				=> lang('shift up'),
 						'lang_down_text'			=> lang('shift down'),
 						'lang_edit_text'			=> lang('edit the custom_function'),
@@ -1441,7 +1465,8 @@
 											'extra'	=> array('menuaction'	=> 'property.uiadmin_entity.list_custom_function',
 																'entity_id'	=> $entity_id,
 																'cat_id'	=> $cat_id,
-																'allrows'	=> $this->allrows)
+																'allrows'	=> $this->allrows,
+																'type'		=> $this->type)
 										)),
 				'sort_sorting'		=> $this->nextmatchs->show_sort_order(array
 										(
@@ -1451,7 +1476,8 @@
 											'extra'	=> array('menuaction'	=> 'property.uiadmin_entity.list_custom_function',
 																'entity_id'	=>$entity_id,
 																'cat_id'	=>$cat_id,
-																'allrows'	=>$this->allrows)
+																'allrows'	=>$this->allrows,
+																'type'		=> $this->type)
 										)),
 				'lang_name'		=> lang('Name'),
 			);
@@ -1460,10 +1486,10 @@
 			(
 				'lang_add'			=> lang('add'),
 				'lang_add_custom_functiontext'	=> lang('add a custom_function'),
-				'add_action'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiadmin_entity.edit_custom_function', 'entity_id'=> $entity_id, 'cat_id'=> $cat_id)),
+				'add_action'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiadmin_entity.edit_custom_function', 'entity_id'=> $entity_id, 'cat_id'=> $cat_id,'type' => $this->type)),
 				'lang_done'			=> lang('done'),
 				'lang_done_custom_functiontext'	=> lang('back to admin'),
-				'done_action'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiadmin_entity.category', 'entity_id'=> $entity_id)),
+				'done_action'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiadmin_entity.category', 'entity_id'=> $entity_id,'type' => $this->type)),
 			);
 
 			if(!$this->allrows)
@@ -1482,7 +1508,8 @@
 				'order'		=> $this->order,
 				'query'		=> $this->query,
 				'entity_id'	=> $entity_id,
-				'cat_id'	=> $cat_id
+				'cat_id'	=> $cat_id,
+				'type'		=> $this->type
 			);
 
 			$entity = $this->bo->read_single($entity_id,false);
@@ -1593,7 +1620,8 @@
 				'menuaction'	=> 'property.uiadmin_entity.edit_custom_function',
 				'entity_id'	=> $entity_id,
 				'cat_id'	=> $cat_id,
-				'id'		=> $id
+				'id'		=> $id,
+				'type'		=> $this->type
 			);
 
 
@@ -1613,7 +1641,7 @@
 
 				'msgbox_data'					=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
 				'form_action'					=> $GLOBALS['phpgw']->link('/index.php',$link_data),
-				'done_action'					=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiadmin_entity.list_custom_function', 'entity_id'=> $entity_id, 'cat_id'=> $cat_id)),
+				'done_action'					=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiadmin_entity.list_custom_function', 'entity_id'=> $entity_id, 'cat_id'=> $cat_id, 'type' => $this->type)),
 				'lang_id'					=> lang('Custom function ID'),
 				'lang_entity_type'				=> lang('Entity type'),
 				'lang_no_entity_type'				=> lang('No entity type'),

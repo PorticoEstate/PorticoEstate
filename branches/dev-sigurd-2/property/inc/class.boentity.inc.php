@@ -76,6 +76,12 @@
 			)
 		);
 
+		var $type_app = array
+		(
+			'entity'	=> 'property',
+			'catch'		=> 'catch'
+		);
+
 		function property_boentity($session=false)
 		{
 			$this->solocation 	= CreateObject('property.solocation');
@@ -100,20 +106,20 @@
 			$start_date	= phpgw::get_var('start_date');
 			$end_date	= phpgw::get_var('end_date');
 			$allrows	= phpgw::get_var('allrows', 'bool');
+			$type		= phpgw::get_var('type');
+			$this->type	= isset($type)  && $type && $this->type_app[$type] ? $type : 'entity';
 
+			$this->soadmin_entity 			= CreateObject('property.soadmin_entity',$entity_id,$cat_id);
+			$this->so 						= CreateObject('property.soentity',$entity_id,$cat_id);
+			$this->soadmin_entity->type		= $this->type;
+			$this->soadmin_entity->type_app	= $this->type_app;
+			$this->so->type					= $this->type;
+			$this->so->type_app				= $this->type_app;
 
-			$this->soadmin_entity 	= CreateObject('property.soadmin_entity',$entity_id,$cat_id);
-			$this->so 		= CreateObject('property.soentity',$entity_id,$cat_id);
-			$this->category_dir = 'entity_' . $entity_id . '_' . $cat_id;
+			$this->category_dir = "{$this->type}_{$entity_id}_{$cat_id}";
 
-			if ($start)
-			{
-				$this->start=$start;
-			}
-			else
-			{
-				$this->start=0;
-			}
+			$this->start			= $start ? $start : 0;
+
 			if(isset($_POST['query']) || isset($_GET['query']))
 			{
 				$this->query = $query;
@@ -164,13 +170,13 @@
 		{
 			if ($this->use_session)
 			{
-				$GLOBALS['phpgw']->session->appsession('session_data','entity',$data);
+				$GLOBALS['phpgw']->session->appsession('session_data',$this->type,$data);
 			}
 		}
 
 		function read_sessiondata()
 		{
-			$data = $GLOBALS['phpgw']->session->appsession('session_data','entity');
+			$data = $GLOBALS['phpgw']->session->appsession('session_data',$this->type);
 			//_debug_array($data);
 			$this->start		= isset($data['start'])?$data['start']:'';
 			$this->query		= isset($data['query'])?$data['query']:'';
@@ -188,9 +194,9 @@
 		{
 			if(!$selected)
 			{
-				$selected=$GLOBALS['phpgw_info']['user']['preferences']['property']["entity_columns_" . $this->entity_id . '_' . $this->cat_id];
+				$selected=$GLOBALS['phpgw_info']['user']['preferences'][$this->type_app[$this->type]]["{$this->type}_columns_{$this->entity_id}_{$this->cat_id}"];
 			}
-			$columns = $this->custom->find('property','.entity.' . $entity_id . '.' . $cat_id, 0, '','','',true);
+			$columns = $this->custom->find($this->type_app[$this->type],".{$this->type}.{$entity_id}.{$cat_id}", 0, '','','',true);
 			$column_list=$this->bocommon->select_multi_list($selected,$columns);
 			return $column_list;
 		}
@@ -275,14 +281,14 @@
 
 		function read_single($data)
 		{
-			$values['attributes'] = $this->custom->find('property','.entity.' . $data['entity_id'] .'.' . $data['cat_id'], 0, '', 'ASC', 'attrib_sort', true, true);
+			$values['attributes'] = $this->custom->find($this->type_app[$this->type],".{$this->type}.{$data['entity_id']}.{$data['cat_id']}", 0, '', 'ASC', 'attrib_sort', true, true);
 			if(isset($data['id']) && $data['id'])
 			{
 				$values = $this->so->read_single($data, $values);
 			}
-			$values = $this->custom->prepare($values, 'property','.entity.' . $data['entity_id'] .'.' . $data['cat_id'], $data['view']);
+			$values = $this->custom->prepare($values, $this->type_app[$this->type],".{$this->type}.{$data['entity_id']}.{$data['cat_id']}", $data['view']);
 
-			$soadmin_entity	= CreateObject('property.soadmin_entity');
+	//		$soadmin_entity	= CreateObject('property.soadmin_entity');
 
 			if($values['location_code'])
 			{
@@ -299,7 +305,7 @@
 
 			if($values['p_num'])
 			{
-				$category = $soadmin_entity->read_single_category($values['p_entity_id'],$values['p_cat_id']);
+				$category = $this->soadmin_entity->read_single_category($values['p_entity_id'],$values['p_cat_id']);
 				$values['p'][$values['p_entity_id']]['p_num']=$values['p_num'];
 				$values['p'][$values['p_entity_id']]['p_entity_id']=$values['p_entity_id'];
 				$values['p'][$values['p_entity_id']]['p_cat_id']=$values['p_cat_id'];
@@ -320,8 +326,8 @@
 			}
 
 			$interlink 	= CreateObject('property.interlink');
-			$values['origin'] = $interlink->get_relation('property', ".entity.{$data['entity_id']}.{$data['cat_id']}", $data['id'], 'origin');
-			$values['target'] = $interlink->get_relation('property', ".entity.{$data['entity_id']}.{$data['cat_id']}", $data['id'], 'target');
+			$values['origin'] = $interlink->get_relation($this->type_app[$this->type], ".{$this->type}.{$data['entity_id']}.{$data['cat_id']}", $data['id'], 'origin');
+			$values['target'] = $interlink->get_relation($this->type_app[$this->type], ".{$this->type}.{$data['entity_id']}.{$data['cat_id']}", $data['id'], 'target');
 			return $values;
 		}
 
@@ -336,7 +342,7 @@
 
 		public function get_attribute_groups($location, $attributes = array())
 		{
-			return $this->custom->get_attribute_groups('property', $location, $attributes);
+			return $this->custom->get_attribute_groups($this->type_app[$this->type], $location, $attributes);
 		}
 
 		function save($values,$values_attribute,$action='',$entity_id,$cat_id)
@@ -369,8 +375,8 @@
 
 			$criteria = array
 			(
-				'appname'	=> 'property',
-				'location'	=> ".entity.{$entity_id}.{$cat_id}",
+				'appname'	=> $this->type_app[$this->type],
+				'location'	=> ".{$this->type}.{$entity_id}.{$cat_id}",
 				'allrows'	=> true
 			);
 
@@ -410,7 +416,7 @@
 		function read_attrib_history($data)
 		{
 		//	_debug_array($data);
-			$historylog = CreateObject('property.historylog','entity_' . $data['entity_id'] .'_' . $data['cat_id']);
+			$historylog = CreateObject('property.historylog',"{$this->type}_{$data['entity_id']}_{$data['cat_id']}");
 			$history_values = $historylog->return_array(array(),array('SO'),'history_timestamp','ASC',$data['id'],$data['attrib_id']);
 			$this->total_records = count($history_values);
 		//	_debug_array($history_values);
@@ -419,7 +425,7 @@
 
 		function delete_history_item($data)
 		{
-			$historylog = CreateObject('property.historylog','entity_' . $data['entity_id'] .'_' . $data['cat_id']);
+			$historylog = CreateObject('property.historylog', "{$this->type}_{$data['entity_id']}_{$data['cat_id']}");
 			$historylog->delete_single_record($data['history_id']);
 		}
 

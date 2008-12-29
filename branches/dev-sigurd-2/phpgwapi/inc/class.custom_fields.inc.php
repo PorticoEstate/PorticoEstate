@@ -40,6 +40,12 @@
 	 */
 	class phpgwapi_custom_fields
 	{
+		
+		/**
+		* @var array $receipt messages from the prosessing of functions
+		*/
+		public $receipt = array();
+		
 		/**
 		* @var array $datatype_text the translated end user field types
 		*/
@@ -606,7 +612,7 @@
 				case 'VENDOR':
 					if ( $attrib['history'] )
 					{
-						$receipt['error'][] = array('msg'	=> lang('History not allowed for this datatype'));
+						$this->receipt['error'][] = array('msg'	=> lang('History not allowed for this datatype'));
 					}
 					$attrib['history'] = false;
 					break;

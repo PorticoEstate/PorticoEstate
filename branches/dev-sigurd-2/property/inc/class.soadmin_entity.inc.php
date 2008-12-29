@@ -299,7 +299,7 @@
 				$fd['address'] = array('type' => 'varchar', 'precision' => 150, 'nullable' => true);
 				$fd['tenant_id'] = array('type' => 'int', 'precision' => 4, 'nullable' => true);
 				$fd['contact_phone'] = array('type' => 'varchar', 'precision' => 30, 'nullable' => true);
-				$fd['status'] = array('type' => 'int', 'precision' => 4, 'nullable' => true);
+		//		$fd['status'] = array('type' => 'int', 'precision' => 4, 'nullable' => true);
 			}
 
 			$fd['entry_date'] = array('type' => 'int', 'precision' => 4, 'nullable' => true);
@@ -337,7 +337,7 @@
 			$this->db->query("INSERT INTO fm_{$this->type}_category (entity_id,id,name, descr,prefix,lookup_tenant,tracking,location_level,fileupload,loc_link,start_project,start_ticket) "
 				. "VALUES ($values_insert)",__LINE__,__FILE__);
 
-			$location_id = $GLOBALS['phpgw']->locations->add(".{$this->type}.{$values['entity_id']}.{$values['id']}", $values['name'],  $this->type_app[$this->type], true, "fm_entity_{$values['entity_id']}_{$values['id']}");
+			$location_id = $GLOBALS['phpgw']->locations->add(".{$this->type}.{$values['entity_id']}.{$values['id']}", $values['name'],  $this->type_app[$this->type], true, "fm_{$this->type}_{$values['entity_id']}_{$values['id']}");
 
 			$receipt['id']= $values['id'];
 
@@ -346,12 +346,20 @@
 			$fd = $this->get_default_column_def();
 
 			$pk[]= 'id';
+			
+			$ix = array();
+			
+			if( $this->type == 'entity' )
+			{
+				$ix =  array('location_code');
+			}
+			
 			$table			= "fm_{$this->type}_{$values['entity_id']}_{$values['id']}";
 
-			if(($this->oProc->CreateTable($table,array('fd' => $fd,'pk' => $pk,'fk' => $fk,'ix' => array('location_code'),'uc' => array()))))
+			if(($this->oProc->CreateTable($table,array('fd' => $fd,'pk' => $pk,'fk' => $fk,'ix' => $ix,'uc' => array()))))
 			{
 
-				$values_insert= array(
+	/*			$values_insert= array(
 					$location_id,
 					1,
 					'status',
@@ -366,7 +374,7 @@
 
 				$this->db->query("INSERT INTO phpgw_cust_attribute (location_id,id,column_name,input_text,statustext,datatype,attrib_sort,nullable) "
 					. "VALUES ($values_insert)",__LINE__,__FILE__);
-
+	*/
 
 				$receipt['message'][] = array('msg'	=> lang('table %1 has been saved',$table));
 				$this->db->transaction_commit();
@@ -421,7 +429,7 @@
 
 				$this->db->query("UPDATE $table set $value_set WHERE id=" . $entity['id'],__LINE__,__FILE__);
 
-				$GLOBALS['phpgw']->locations->update_description(".entity.{$entity['id']}", $entity['name'],  $this->type_app[$this->type]);
+				$GLOBALS['phpgw']->locations->update_description(".{$this->type}.{$entity['id']}", $entity['name'],  $this->type_app[$this->type]);
 
 				$this->db->query("DELETE FROM fm_{$this->type}_lookup WHERE type='lookup' AND entity_id=" . $entity['id'],__LINE__,__FILE__);
 				if (isset($entity['include_entity_for']) AND is_array($entity['include_entity_for']))
@@ -488,7 +496,7 @@
 
 				$this->db->query("UPDATE $table set $value_set WHERE entity_id=" . $entity['entity_id']. " AND id=" . $entity['id'],__LINE__,__FILE__);
 
-				$GLOBALS['phpgw']->locations->update_description(".entity.{$entity['entity_id']}.{$entity['id']}", $entity['name'],  $this->type_app[$this->type]);
+				$GLOBALS['phpgw']->locations->update_description(".{$this->type}.{$entity['entity_id']}.{$entity['id']}", $entity['name'],  $this->type_app[$this->type]);
 
 				$receipt['message'][] = array('msg'=> lang('entity has been edited'));
 			}
@@ -505,8 +513,8 @@
 			$id = (int) $id;
 			$category_list=$this->read_category(array('entity_id'=>$id));
 			$locations = array();
-			$locations[] = $GLOBALS['phpgw']->locations->get_id( $this->type_app[$this->type], ".entity.{$id}");
-			$subs = $GLOBALS['phpgw']->locations->get_subs( $this->type_app[$this->type], ".entity.{$id}");
+			$locations[] = $GLOBALS['phpgw']->locations->get_id( $this->type_app[$this->type], ".{$this->type}.{$id}");
+			$subs = $GLOBALS['phpgw']->locations->get_subs( $this->type_app[$this->type], ".{$this->type}.{$id}");
 			if (is_array($subs) && count($subs))
 			{
 				$locations = array_merge($locations, array_keys($subs));
@@ -537,7 +545,7 @@
 
 			$this->oProc->DropTable("fm_{$this->type}_{$entity_id}_{$id}");
 
-			$location_id = $GLOBALS['phpgw']->locations->get_id( $this->type_app[$this->type], ".entity.{$entity_id}.{$id}");
+			$location_id = $GLOBALS['phpgw']->locations->get_id( $this->type_app[$this->type], ".{$this->type}.{$entity_id}.{$id}");
 
 			$this->db->query("DELETE FROM fm_{$this->type}_category WHERE entity_id= {$entity_id} AND id= {$id}",__LINE__,__FILE__);
 			$this->db->query("DELETE FROM phpgw_cust_attribute WHERE location_id = {$location_id}",__LINE__,__FILE__);
@@ -550,7 +558,7 @@
 
 		function get_table_def($entity_id,$cat_id)
 		{
-			$location_id = $GLOBALS['phpgw']->locations->get_id( $this->type_app[$this->type], ".entity.{$entity_id}.{$cat_id}");
+			$location_id = $GLOBALS['phpgw']->locations->get_id( $this->type_app[$this->type], ".{$this->type}.{$entity_id}.{$cat_id}");
 			$table = "fm_{$this->type}_{$entity_id}_{$cat_id}";
 			$metadata = $this->db->metadata($table);
 

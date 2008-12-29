@@ -239,6 +239,7 @@
 			else
 			{
 				$receipt = $this->so->add_entity($values);
+				execMethod('phpgwapi.menu.clear');
 			}
 			return $receipt;
 		}
@@ -255,6 +256,7 @@
 			else
 			{
 				$receipt = $this->so->add_category($values);
+				execMethod('phpgwapi.menu.clear');
 			}
 			return $receipt;
 		}
@@ -264,23 +266,25 @@
 			if(!$attrib_id && !$cat_id && $entity_id && !$custom_function_id  && !$group_id)
 			{
 				$this->so->delete_entity($entity_id);
+				execMethod('phpgwapi.menu.clear');
 			}
 			else if(!$attrib_id && $cat_id && $entity_id && !$custom_function_id  && !$group_id)
 			{
 				$this->so->delete_category($entity_id, $cat_id);
+				execMethod('phpgwapi.menu.clear');
 			}
 			else if($group_id && $cat_id && $entity_id && !$custom_function_id && !$attrib_id)
 			{
-				$this->custom->delete_group('property', ".entity.{$entity_id}.{$cat_id}", $group_id);
+				$this->custom->delete_group($this->type_app[$this->type], ".{$this->type}.{$entity_id}.{$cat_id}", $group_id);
 			}
 			else if($attrib_id && $cat_id && $entity_id && !$custom_function_id  && !$group_id)
 			{
-				$this->custom->delete('property', ".entity.{$entity_id}.{$cat_id}", $attrib_id);
+				$this->custom->delete($this->type_app[$this->type], ".{$this->type}.{$entity_id}.{$cat_id}", $attrib_id);
 				$this->so->delete_history($entity_id, $cat_id,$attrib_id);
 			}
 			else if($custom_function_id && $acl_location)
 			{
-				$GLOBALS['phpgw']->custom_functions->delete('property', $acl_location,$custom_function_id);
+				$GLOBALS['phpgw']->custom_functions->delete($this->type_app[$this->type], $acl_location,$custom_function_id);
 			}
 		}
 
@@ -306,7 +310,7 @@
 				$this->allrows = $allrows;
 			}
 
-			$attrib = $this->custom->find_group('property', '.entity.' . $entity_id . '.' . $cat_id, $this->start, $this->query, $this->sort, $this->order, $this->allrows);
+			$attrib = $this->custom->find_group($this->type_app[$this->type], ".{$this->type}.{$entity_id}.{$cat_id}", $this->start, $this->query, $this->sort, $this->order, $this->allrows);
 
 			$this->total_records = $this->custom->total_records;
 
@@ -320,7 +324,7 @@
 				$this->allrows = $allrows;
 			}
 
-			$attrib = $this->custom->find('property', '.entity.' . $entity_id . '.' . $cat_id, $this->start, $this->query, $this->sort, $this->order, $this->allrows);
+			$attrib = $this->custom->find($this->type_app[$this->type], ".{$this->type}.{$entity_id}.{$cat_id}", $this->start, $this->query, $this->sort, $this->order, $this->allrows);
 
 			$this->total_records = $this->custom->total_records;
 
@@ -329,108 +333,96 @@
 
 		function read_single_attrib($entity_id,$cat_id,$id)
 		{
-			return $this->custom->get('property', '.entity.' . $entity_id . '.' . $cat_id, $id, true);
+			return $this->custom->get($this->type_app[$this->type], ".{$this->type}.{$entity_id}.{$cat_id}", $id, true);
 		}
 
 		function read_single_attrib_group($entity_id,$cat_id,$id)
 		{
-			return $this->custom->get_group('property', '.entity.' . $entity_id . '.' . $cat_id, $id, true);
+			return $this->custom->get_group($this->type_app[$this->type], ".{$this->type}.{$entity_id}.{$cat_id}", $id, true);
 		}
 
 		function resort_attrib_group($id,$resort)
 		{
-			$this->custom->resort_group($id, $resort, 'property', '.entity.' . $this->entity_id . '.' . $this->cat_id);
+			$this->custom->resort_group($id, $resort, $this->type_app[$this->type], ".{$this->type}.{$this->entity_id}.{$this->cat_id}");
 		}
 
 		function resort_attrib($id,$resort)
 		{
-			$this->custom->resort($id, $resort, 'property', '.entity.' . $this->entity_id . '.' . $this->cat_id);
+			$this->custom->resort($id, $resort, $this->type_app[$this->type], ".{$this->type}.{$this->entity_id}.{$this->cat_id}");
 		}
 
 		public function save_attrib_group($group, $action='')
 		{
-			$group['appname'] = 'property';
- 			$group['location'] = '.entity.' . $group['entity_id'] . '.' . $group['cat_id'];
+			$receipt = array();
+			$group['appname'] = $this->type_app[$this->type];
+ 			$group['location'] = ".{$this->type}.{$group['entity_id']}.{$group['cat_id']}";
 			if ( $action=='edit' && $group['id'] )
 			{
 				if ( $this->custom->edit_group($group) )
 				{
-					return array
-					(
-						'msg'	=> array('msg' => lang('group has been updated'))
-					);
+					$receipt['message'][]=array('msg'=>lang('group has been updated'));
+					return $receipt;
 				}
 
-				return array('error' => lang('Unable to update group'));
+				$receipt['error'][]=array('msg'=>lang('unable to update group'));
+				return $receipt;
 			}
 			else
 			{
 				$id = $this->custom->add_group($group);
 				if ( $id <= 0  )
 				{
-					return array('error' => lang('Unable to add group'));
+					$receipt['error'][]=array('msg'=>lang('unable to add group'));
+					return $receipt;
 				}
 				else if ( $id == -1 )
 				{
-					return array
-					(
-						'id'	=> 0,
-						'error'	=> array
-						(
-							array('msg' => lang('group already exists, please choose another name')),
-							array('msg' => lang('Attribute group has NOT been saved'))
-						)
-					);
+					$receipt['id']= 0;
+					$receipt['error'][]= array('msg' => lang('group already exists, please choose another name'));
+					$receipt['error'][]= array('msg' => lang('Attribute group has NOT been saved'));
+					return $receipt;
 				}
 
-				return array
-				(
-					'id'	=> $id,
-					'msg'	=> array('msg' => lang('group has been created'))
-				);
+				$receipt['id']= $id;
+				$receipt['message'][]=array('msg'=>lang('group has been created'));
+				return $receipt;
 			}
 		}
 		public function save_attrib($attrib, $action='')
 		{
-			$attrib['appname'] = 'property';
- 			$attrib['location'] = '.entity.' . $attrib['entity_id'] . '.' . $attrib['cat_id'];
+			$receipt = array();
+			$attrib['appname'] = $this->type_app[$this->type];
+ 			$attrib['location'] = ".{$this->type}.{$attrib['entity_id']}.{$attrib['cat_id']}";
 			if ( $action=='edit' && $attrib['id'] )
 			{
 				if ( $this->custom->edit($attrib) )
 				{
-					return array
-					(
-						'msg'	=> array('msg' => lang('Field has been updated'))
-					);
+					$receipt = $this->custom->receipt;
+					$receipt['message'][]=array('msg'=>lang('Field has been updated'));
+					return $receipt;
 				}
-
-				return array('error' => lang('Unable to update field'));
+				$receipt['error'][]=array('msg'=>lang('Unable to update field'));
+				return $receipt;
 			}
 			else
 			{
 				$id = $this->custom->add($attrib);
 				if ( $id <= 0  )
 				{
-					return array('error' => lang('Unable to add field'));
+					$receipt['error'][]=array('msg'=>lang('Unable to add field'));
+					return $receipt;
 				}
 				else if ( $id == -1 )
 				{
-					return array
-					(
-						'id'	=> 0,
-						'error'	=> array
-						(
-							array('msg' => lang('field already exists, please choose another name')),
-							array('msg' => lang('Attribute has NOT been saved'))
-						)
-					);
+					$receipt['id']= 0;
+					$receipt['error'][]= array('msg' => lang('field already exists, please choose another name'));
+					$receipt['error'][]= array('msg' => lang('Attribute has NOT been saved'));
+					return $receipt;
 				}
 
-				return array
-				(
-					'id'	=> $id,
-					'msg'	=> array('msg' => lang('Custom field has been created'))
-				);
+				$receipt['id']= $id;
+				$receipt['message'][]=array('msg'=>lang('Custom field has been created'));
+				return $receipt;
 			}
 		}
 
@@ -443,11 +435,11 @@
 
 			if (!$acl_location && $entity_id && $cat_id)
 			{
-				$acl_location = '.entity.' . $entity_id . '.' . $cat_id;
+				$acl_location = ".{$this->type}.{$entity_id}.{$cat_id}";
 			}
 
 			$values = $GLOBALS['phpgw']->custom_functions->find(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
-											'appname'=>'property','location' => $acl_location,'allrows'=>$this->allrows));
+											'appname'=> $this->type_app[$this->type],'location' => $acl_location,'allrows'=>$this->allrows));
 
 			$this->total_records = $GLOBALS['phpgw']->custom_functions->total_records;
 
@@ -456,16 +448,16 @@
 
 		function resort_custom_function($id,$resort)
 		{
-			$location = '.entity.' . $this->entity_id . '.' . $this->cat_id;
-			return $GLOBALS['phpgw']->custom_functions->resort($id, $resort, 'property', $location);
+			$location = ".{$this->type}.{$this->entity_id}.{$this->cat_id}";
+			return $GLOBALS['phpgw']->custom_functions->resort($id, $resort, $this->type_app[$this->type], $location);
 		}
 
 		function save_custom_function($custom_function,$action='')
 		{
-			$custom_function['appname']='property';
+			$custom_function['appname']= $this->type_app[$this->type];
 			if(!$custom_function['location'] && $custom_function['entity_id'] && $custom_function['cat_id'])
 			{
-				$custom_function['location'] = '.entity.' . $custom_function['entity_id'] . '.' . $custom_function['cat_id'];
+				$custom_function['location'] = ".{$this->type}.{$custom_function['entity_id']}.{$custom_function['cat_id']}";
 			}
 
 			if ($action=='edit')
@@ -486,16 +478,16 @@
 		function select_custom_function($selected='')
 		{
 			$admin_custom = createObject('admin.bo_custom');
-			return $admin_custom->select_custom_function($selected, 'property');
+			return $admin_custom->select_custom_function($selected, $this->type_app[$this->type]);
 		}
 
 		function read_single_custom_function($entity_id='',$cat_id='',$id,$location='')
 		{
 			if (!$location && $entity_id && $cat_id)
 			{
-				$location = '.entity.' . $entity_id . '.' . $cat_id;
+				$location = ".{$this->type}.{$entity_id}.{$cat_id}";
 			}
-			return $GLOBALS['phpgw']->custom_functions->get('property',$location,$id);
+			return $GLOBALS['phpgw']->custom_functions->get($this->type_app[$this->type],$location,$id);
 		}
 	}
 
