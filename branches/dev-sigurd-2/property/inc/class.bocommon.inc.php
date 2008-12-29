@@ -1768,7 +1768,7 @@
 			return $values;
 		}
 
-		function get_menu()
+		function get_menu($app = 'property')
 		{
 			if(!isset($GLOBALS['phpgw_info']['user']['preferences']['property']['horisontal_menus']) || $GLOBALS['phpgw_info']['user']['preferences']['property']['horisontal_menus'] == 'no')
 			{
@@ -1776,13 +1776,13 @@
 			}
 			$GLOBALS['phpgw']->xslttpl->add_file(array('menu'));
 
-			if(!$menu = $GLOBALS['phpgw']->session->appsession($GLOBALS['phpgw_info']['flags']['menu_selection'], 'menu'))
+			if(!$menu = $GLOBALS['phpgw']->session->appsession($GLOBALS['phpgw_info']['flags']['menu_selection'], "menu_{$app}"))
 			{
-				$menu_gross = execMethod('property.menu.get_menu');
+				$menu_gross = execMethod("{$app}.menu.get_menu");
 				$selection = explode('::',$GLOBALS['phpgw_info']['flags']['menu_selection']);
 				$level=0;
 				$menu['navigation'] = $this->get_sub_menu($menu_gross['navigation'],$selection,$level);
-				$GLOBALS['phpgw']->session->appsession(isset($GLOBALS['phpgw_info']['flags']['menu_selection']) && $GLOBALS['phpgw_info']['flags']['menu_selection'] ? $GLOBALS['phpgw_info']['flags']['menu_selection'] : 'property_missing_selection', 'menu', $menu);
+				$GLOBALS['phpgw']->session->appsession(isset($GLOBALS['phpgw_info']['flags']['menu_selection']) && $GLOBALS['phpgw_info']['flags']['menu_selection'] ? $GLOBALS['phpgw_info']['flags']['menu_selection'] : 'property_missing_selection', "menu_{$app}", $menu);
 				unset($menu_gross);
 			}
 			return $menu;

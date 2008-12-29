@@ -40,10 +40,11 @@
 		var $uicols;
 		var $cols_extra;
 		var $cols_return_lookup;
+		var $type = 'entity';
+		var $type_app;
 
 		function property_soentity($entity_id='',$cat_id='')
 		{
-		//	$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->account		= $GLOBALS['phpgw_info']['user']['account_id'];
 			$this->bocommon		= CreateObject('property.bocommon');
 			$this->db           = $this->bocommon->new_db();
@@ -63,7 +64,7 @@
 				return;
 			}
 
-			$location_id = $GLOBALS['phpgw']->locations->get_id('property', ".entity.{$entity_id}.{$cat_id}");
+			$location_id = $GLOBALS['phpgw']->locations->get_id($this->type_app[$this->type], ".{$this->type}.{$entity_id}.{$cat_id}");
 
 			$sql= "SELECT phpgw_cust_choice.id, phpgw_cust_choice.value FROM phpgw_cust_attribute"
 			. " $this->join phpgw_cust_choice ON"
@@ -106,6 +107,7 @@
 				$start_date		= isset($data['start_date']) ? $data['start_date'] : '';
 				$end_date		= isset($data['end_date']) ? $data['end_date'] : '';
 				$dry_run		= isset($data['dry_run']) ? $data['dry_run'] : '';
+				$this->type		= isset($data['type']) && $data['type'] ? $data['type'] : $this->type;
 			}
 
 			if(!$entity_id || !$cat_id)
@@ -113,24 +115,24 @@
 				return;
 			}
 
-			$grants 	= $GLOBALS['phpgw']->session->appsession('grants_entity_'.$entity_id.'_'.$cat_id,'property');
+			$grants 	= $GLOBALS['phpgw']->session->appsession('grants_entity_'.$entity_id.'_'.$cat_id,$this->type_app[$this->type]);
 
 			if(!$grants)
 			{
 				$this->acl 	= & $GLOBALS['phpgw']->acl;
-				$grants		= $this->acl->get_grants('property','.entity.' . $entity_id . '.' . $cat_id);
-				$GLOBALS['phpgw']->session->appsession('grants_entity_'.$entity_id.'_'.$cat_id,'property',$grants);
+				$grants		= $this->acl->get_grants($this->type_app[$this->type],".{$this->type}.{$entity_id}.{$cat_id}");
+				$GLOBALS['phpgw']->session->appsession('grants_entity_'.$entity_id.'_'.$cat_id, $this->type_app[$this->type], $grants);
 			}
 
-			$sql = $this->bocommon->fm_cache('sql_entity_' . $entity_id . '_' . $cat_id . '_' . $lookup);
+			$sql = $this->bocommon->fm_cache("sql_{$this->type}_{$entity_id}_{$cat_id}_{$lookup}");
 
 			$admin_entity	= CreateObject('property.soadmin_entity');
 			$category = $admin_entity->read_single_category($entity_id,$cat_id);
 
-			$entity_table = 'fm_entity_' . $entity_id . '_' . $cat_id;
+			$entity_table = "fm_{$this->type}_{$entity_id}_{$cat_id}";
 			$choice_table = 'phpgw_cust_choice';
 			$attribute_table = 'phpgw_cust_attribute';
-			$location_id = $GLOBALS['phpgw']->locations->get_id('property', ".entity.{$entity_id}.{$cat_id}");
+			$location_id = $GLOBALS['phpgw']->locations->get_id($this->type_app[$this->type], ".{$this->type}.{$entity_id}.{$cat_id}");
 			$attribute_filter = " location_id = {$location_id}";
 
 			if(!$sql)
@@ -176,32 +178,32 @@
 				$sql = $this->bocommon->generate_sql(array('entity_table'=>$entity_table,'cols_return'=>$cols_return,'cols'=>$cols,
 								'uicols'=>$uicols,'joinmethod'=>$joinmethod,'paranthesis'=>$paranthesis,'query'=>$query,'lookup'=>$lookup,'location_level'=>$category['location_level']));
 
-				$this->bocommon->fm_cache('sql_entity_' . $entity_id . '_' . $cat_id . '_' . $lookup,$sql);
-				$this->bocommon->fm_cache('uicols_entityt_' . $entity_id . '_' . $cat_id . '_' . $lookup,$this->bocommon->uicols);
-				$this->bocommon->fm_cache('cols_return_entityt_' . $entity_id . '_' . $cat_id . '_' . $lookup,$this->bocommon->cols_return);
-				$this->bocommon->fm_cache('cols_return_lookup_entityt_' . $entity_id . '_' . $cat_id . '_' . $lookup,$this->bocommon->cols_return_lookup);
-				$this->bocommon->fm_cache('cols_extra_entityt_' . $entity_id . '_' . $cat_id . '_' . $lookup,$this->bocommon->cols_extra);
-				$this->bocommon->fm_cache('cols_extra_return_entityt_' . $entity_id . '_' . $cat_id . '_' . $lookup, $cols_return_extra);
+				$this->bocommon->fm_cache("sql_{$this->type}_{$entity_id}_{$cat_id}_{$lookup}", $sql);
+				$this->bocommon->fm_cache("uicols_{$this->type}_{$entity_id}_{$cat_id}_{$lookup}", $this->bocommon->uicols);
+				$this->bocommon->fm_cache("cols_return_{$this->type}_{$entity_id}_{$cat_id}_{$lookup}", $this->bocommon->cols_return);
+				$this->bocommon->fm_cache("cols_return_lookup_{$this->type}_{$entity_id}_{$cat_id}_{$lookup}", $this->bocommon->cols_return_lookup);
+				$this->bocommon->fm_cache("cols_extra_{$this->type}_{$entity_id}_{$cat_id}_{$lookup}", $this->bocommon->cols_extra);
+				$this->bocommon->fm_cache("cols_extra_return_{$this->type}_{$entity_id}_{$cat_id}_{$lookup}", $cols_return_extra);
 
-				$uicols				= $this->bocommon->uicols;
-				$cols_return			= $this->bocommon->cols_return;
+				$uicols						= $this->bocommon->uicols;
+				$cols_return				= $this->bocommon->cols_return;
 				$this->cols_return_lookup	= $this->bocommon->cols_return_lookup;
-				$this->cols_extra		= $this->bocommon->cols_extra;
+				$this->cols_extra			= $this->bocommon->cols_extra;
 			}
 			else
 			{
-				$uicols 			= $this->bocommon->fm_cache('uicols_entityt_' . $entity_id . '_' . $cat_id . '_' . $lookup);
-				$cols_return			= $this->bocommon->fm_cache('cols_return_entityt_' . $entity_id . '_' . $cat_id . '_' . $lookup);
-				$this->cols_return_lookup 	= $this->bocommon->fm_cache('cols_return_lookup_entityt_' . $entity_id . '_' . $cat_id . '_' . $lookup);
-				$this->cols_extra		= $this->bocommon->fm_cache('cols_extra_entityt_' . $entity_id . '_' . $cat_id . '_' . $lookup);
-				$cols_return_extra		= $this->bocommon->fm_cache('cols_extra_return_entityt_' . $entity_id . '_' . $cat_id . '_' . $lookup);
+				$uicols 					= $this->bocommon->fm_cache("uicols_{$this->type}_{$entity_id}_{$cat_id}_{$lookup}");
+				$cols_return				= $this->bocommon->fm_cache("cols_return_{$this->type}_{$entity_id}_{$cat_id}_{$lookup}");
+				$this->cols_return_lookup 	= $this->bocommon->fm_cache("cols_return_lookup_{$this->type}_{$entity_id}_{$cat_id}_{$lookup}");
+				$this->cols_extra			= $this->bocommon->fm_cache("cols_extra_{$this->type}_{$entity_id}_{$cat_id}_{$lookup}");
+				$cols_return_extra			= $this->bocommon->fm_cache("cols_extra_return_{$this->type}_{$entity_id}_{$cat_id}_{$lookup}");
 			}
 
 			if ($cat_id > 0)
 			{
 //-------------------
 
-				$user_columns = isset($GLOBALS['phpgw_info']['user']['preferences']['property']['entity_columns_'.$entity_id.'_'.$cat_id])?$GLOBALS['phpgw_info']['user']['preferences']['property']['entity_columns_'.$entity_id.'_'.$cat_id]:'';
+				$user_columns = isset($GLOBALS['phpgw_info']['user']['preferences'][$this->type_app[$this->type]]['entity_columns_'.$entity_id.'_'.$cat_id])?$GLOBALS['phpgw_info']['user']['preferences'][$this->type_app[$this->type]]['entity_columns_'.$entity_id.'_'.$cat_id]:'';
 				$user_column_filter = '';
 				if (isset($user_columns) AND is_array($user_columns) AND $user_columns[0])
 				{
@@ -486,7 +488,7 @@
 			$entity_id =$data['entity_id'];
 			$cat_id =$data['cat_id'];
 			$id =$data['id'];
-			$table='fm_entity_' . $entity_id .'_' . $cat_id;
+			$table = "fm_{$this->type}_{$entity_id}_{$cat_id}";
 
 				$this->db->query("SELECT * FROM $table WHERE id =$id");
 
@@ -518,7 +520,7 @@
 
 		function check_entity($entity_id,$cat_id,$num)
 		{
-			$table='fm_entity_' . $entity_id .'_' . $cat_id;
+			$table = "fm_{$this->type}_{$entity_id}_{$cat_id}";
 			$this->db->query("SELECT count(*) FROM $table where num='$num'");
 
 			$this->db->next_record();
@@ -531,7 +533,7 @@
 
 		function generate_id($data)
 		{
-			$table='fm_entity_' . $data['entity_id'] .'_' . $data['cat_id'];
+			$table = "fm_{$this->type}_{$data['entity_id']}_{$data['cat_id']}";
 			$this->db->query("select max(id) as id from $table");
 			$this->db->next_record();
 			$id = $this->db->f('id')+1;
@@ -541,7 +543,7 @@
 
 		function generate_num($entity_id,$cat_id,$id)
 		{
-			$this->db->query("select prefix from fm_entity_category WHERE entity_id=$entity_id AND id=$cat_id ");
+			$this->db->query("select prefix from fm_{$this->type}_category WHERE entity_id=$entity_id AND id=$cat_id ");
 			$this->db->next_record();
 			$prefix = $this->db->f('prefix');
 
@@ -626,7 +628,7 @@
 				$vals	= "," . $this->bocommon->validate_db_insert($vals);
 			}
 
-			$table='fm_entity_' . $entity_id .'_' . $cat_id;
+			$table = "fm_{$this->type}_{$entity_id}_$cat_id";
 			$num=$this->generate_num($entity_id,$cat_id,$values['id']);
 			$this->db->transaction_begin();
 
@@ -647,7 +649,7 @@
 					(
 						'location1_id'		=> $GLOBALS['phpgw']->locations->get_id('property', $values['origin'][0]['location']),
 						'location1_item_id' => $values['origin'][0]['data'][0]['id'],
-						'location2_id'		=> $GLOBALS['phpgw']->locations->get_id('property', ".entity.{$entity_id}.{$cat_id}"),
+						'location2_id'		=> $GLOBALS['phpgw']->locations->get_id('property', ".{$this->type}.{$entity_id}.{$cat_id}"),
 						'location2_item_id' => $values['id'],
 						'account_id'		=> $this->account
 					);
@@ -659,7 +661,7 @@
 
 			if (isset($history_set) AND is_array($history_set))
 			{
-				$historylog	= CreateObject('property.historylog','entity_' . $entity_id .'_' . $cat_id);
+				$historylog	= CreateObject('property.historylog',"{$this->type}_{$entity_id}_{$cat_id}");
 				foreach ($history_set as $attrib_id => $new_value)
 				{
 					$historylog->add('SO',$values['id'],$new_value,false, $attrib_id);
@@ -717,7 +719,7 @@
 			}
 
 //_debug_array($values_attribute);
-			$table = 'fm_entity_' . $entity_id .'_' . $cat_id;
+			$table = "fm_{$this->type}_{$entity_id}_{$cat_id}";
 
 			if (isset($values_attribute) AND is_array($values_attribute))
 			{
@@ -773,7 +775,7 @@
 
 			if (isset($history_set) AND is_array($history_set))
 			{
-				$historylog	= CreateObject('property.historylog','entity_' . $entity_id .'_' . $cat_id);
+				$historylog	= CreateObject('property.historylog',"{$this->type}_{$entity_id}_{$cat_id}");
 				foreach ($history_set as $attrib_id => $history)
 				{
 					$historylog->add('SO',$values['id'],$history['value'],false, $attrib_id,$history['date']);
@@ -788,8 +790,8 @@
 
 		function delete($entity_id,$cat_id,$id )
 		{
-			$location2_id	= $GLOBALS['phpgw']->locations->get_id('property', ".entity.{$entity_id}.{$cat_id}");			
-			$table='fm_entity_' . $entity_id .'_' . $cat_id;
+			$location2_id	= $GLOBALS['phpgw']->locations->get_id($this->type_app[$this->type], ".{$this->type}.{$entity_id}.{$cat_id}");			
+			$table = "fm_{$this->type}_{$entity_id}_{$cat_id}";
 			$this->db->transaction_begin();
 			$this->db->query("DELETE FROM $table WHERE id=$id",__LINE__,__FILE__);
 			$this->db->query("DELETE FROM phpgw_interlink WHERE location2_id ={$location2_id} AND location2_item_id = {$id}",__LINE__,__FILE__);
@@ -807,7 +809,7 @@
 				return;
 			}
 
-			$location_id = $GLOBALS['phpgw']->locations->get_id('property', ".entity.{$entity_id}.{$cat_id}");
+			$location_id = $GLOBALS['phpgw']->locations->get_id($this->type_app[$this->type], ".{$this->type}.{$entity_id}.{$cat_id}");
 
 			$this->db->query("SELECT helpmsg FROM fphpgw_cust_attribute WHERE location_id = {$location_id} AND id =" . (int)$attrib_id );
 
