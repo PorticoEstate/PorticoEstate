@@ -52,24 +52,21 @@
 		{
 			if(is_array($data))
 			{
-				if ($data['start'])
-				{
-					$start=$data['start'];
-				}
-				else
-				{
-					$start=0;
-				}
-				$query = (isset($data['query'])?$data['query']:'');
-				$sort = (isset($data['sort'])?$data['sort']:'DESC');
-				$order = (isset($data['order'])?$data['order']:'');
-				$type = (isset($data['type'])?$data['type']:0);
+				$start		= isset($data['start']) && $data['start'] ? $data['start']:0;
+				$query		= isset($data['query'])?$data['query']:'';
+				$sort		= isset($data['sort']) && $data['sort'] ? $data['sort']:'DESC';
+				$order		= isset($data['order'])?$data['order']:'';
+				$type		= isset($data['type']) ?$data['type']: '';
+			}
+
+			if(!$type)
+			{
+				return;
 			}
 
 			if ($order)
 			{
 				$ordermethod = " order by $order $sort";
-
 			}
 			else
 			{
@@ -80,10 +77,10 @@
 
 			if($query)
 			{
-				$query = preg_replace("/'/",'',$query);
-				$query = preg_replace('/"/','',$query);
-
-				$querymethod = " where id $this->like '%$query%' or descr $this->like '%$query%'";
+				$query = $this->db->db_addslashes($query);
+				// FIXME: change fm_async_method.name to fm_async_method.num
+				//$querymethod = " WHERE num $this->like '%$query%' or descr $this->like '%$query%'";
+				$querymethod = " WHERE descr $this->like '%$query%'";
 			}
 
 			$sql = "SELECT * FROM $table $querymethod";
@@ -98,7 +95,7 @@
 				(
 					'id'	=> $this->db->f('id'),
 					'num'	=> $this->db->f('num'),
-					'descr'	=> $this->db->f('descr')
+					'descr'	=> $this->db->f('descr',true)
 				);
 			}
 			return $standard;
