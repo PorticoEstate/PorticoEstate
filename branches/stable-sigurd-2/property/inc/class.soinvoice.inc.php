@@ -208,7 +208,7 @@
 				$querymethod = " $where ( spvend_code = {$query} OR bilagsnr = {$query})";
 			}
 
-			$sql = "SELECT bilagsnr, count(bilagsnr) as invoice_count, sum(belop) as belop,spvend_code,fakturadato FROM  $table $join_tables $filtermethod $querymethod group by bilagsnr,spvend_code,fakturadato ";
+			$sql = "SELECT bilagsnr, count(bilagsnr) as invoice_count, sum(belop) as belop,spvend_code,fakturadato FROM  $table $join_tables $filtermethod $querymethod GROUP BY bilagsnr,spvend_code,fakturadato ";
 			$sql2 = "SELECT DISTINCT bilagsnr FROM  $table $join_tables $filtermethod $querymethod";
 
 //echo $sql;
@@ -392,38 +392,36 @@
 			. " $this->left_join fm_workorder on fm_workorder.id = $table.pmwrkord_code  "
 			. " $this->join fm_vendor ON $table.spvend_code = fm_vendor.id $filtermethod";
 
-			$this->db->query($sql,__LINE__,__FILE__);
+			$this->db->query($sql . $ordermethod,__LINE__,__FILE__);
 			$this->total_records = $this->db->num_rows();
-			$this->db->query($sql . $ordermethod,$start,__LINE__,__FILE__);
 
 			$i = 0;
 
+			$invoice = array();
 			while ($this->db->next_record())
 			{
-				$invoice[$i]['counter']					= $i;
-				$invoice[$i]['claim_issued']			= $this->db->f('claim_issued');
-				$invoice[$i]['project_id']				= $this->db->f('project_id');
-				$invoice[$i]['workorder_id']			= $this->db->f('pmwrkord_code');
-				$invoice[$i]['status']					= $this->db->f('status');
-				if ($this->db->f('status')=='closed')
-				{
-					$invoice[$i]['closed']				= true;
-				}
-				$invoice[$i]['voucher_id']				= $voucher_id;
-				$invoice[$i]['id']						= $this->db->f('id');
-				$invoice[$i]['invoice_id']				= $this->db->f('fakturanr');
-				$invoice[$i]['budget_account']			= $this->db->f('spbudact_code');
-				$invoice[$i]['dima']					= $this->db->f('dima');
-				$invoice[$i]['dimb']					= $this->db->f('dimb');
-				$invoice[$i]['dimd']					= $this->db->f('dimd');
-				if ($this->db->f('merknad'))
-				{
-					$invoice[$i]['remark']				= true;
-				}
-				$invoice[$i]['tax_code']				= $this->db->f('mvakode');
-				$invoice[$i]['amount']					= $this->db->f('belop');
-				$invoice[$i]['charge_tenant']			= $this->db->f('charge_tenant');
-				$invoice[$i]['vendor']					= $this->db->f('org_name');
+				$invoice[] = array
+				(
+					'counter'				=> $i,
+					'claim_issued'			=> $this->db->f('claim_issued'),
+					'project_id'			=> $this->db->f('project_id'),
+					'workorder_id'			=> $this->db->f('pmwrkord_code'),
+					'status'				=> $this->db->f('status'),
+					'closed'				=> $this->db->f('status') == 'closed',
+					'voucher_id'			=> $voucher_id,
+					'id'					=> $this->db->f('id'),
+					'invoice_id'			=> $this->db->f('fakturanr'),
+					'budget_account'		=> $this->db->f('spbudact_code'),
+					'dima'					=> $this->db->f('dima'),
+					'dimb'					=> $this->db->f('dimb'),
+					'dimd'					=> $this->db->f('dimd'),
+					'remark' 				=> !!$this->db->f('merknad'),
+					'tax_code'				=> $this->db->f('mvakode'),
+					'amount'				=> $this->db->f('belop'),
+					'charge_tenant'			=> $this->db->f('charge_tenant'),
+					'vendor'				=> $this->db->f('org_name')
+				);
+
 				$i++;
 			}
 
@@ -550,7 +548,6 @@
 
 			$this->db->query($sql,__LINE__,__FILE__);
 			$this->total_records = $this->db->num_rows();
-			$this->db->query($sql . $ordermethod,$start,__LINE__,__FILE__);
 
 			$i = 0;
 
