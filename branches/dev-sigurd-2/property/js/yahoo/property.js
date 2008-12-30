@@ -62,6 +62,18 @@
  /********************************************************************************
  *
  */
+ 	this.onDoneClick = function()
+ 	{
+		tmp_array= path_values.menuaction.split(".")
+		tmp_array[2]="index"; //set function INDEX
+		path_values.menuaction=tmp_array.join('.');
+		window.open(phpGWLink('index.php',path_values),'_self');
+	}
+
+
+ /********************************************************************************
+ *
+ */
  	this.onNewClick = function()
  	{
  		for(i=0;i<values_ds.rights.length;i++)
@@ -100,25 +112,35 @@
  */
    this.onDownloadClick = function()
    {
+		// if exist "particular_download" in particular.js
+		if(config_values.particular_download)
+		{
+			onDownloadClick_particular();
 
-		//store actual values
-		var actuall_funct = path_values.menuaction;
-		var donwload_func = path_values.menuaction;
+		}
+		else
+		{
+			//store actual values
+			actuall_funct = path_values.menuaction;
+			donwload_func = path_values.menuaction;
+
+			// modify actual function for "download" in path_values
+			// for example: property.uilocation.index --> property.uilocation.download
+			tmp_array= donwload_func.split(".")
+			tmp_array[2]="download"; //set function DOWNLOAD
+			donwload_func = tmp_array.join('.');
+
+			path_values.menuaction=donwload_func;
+			ds_download = phpGWLink('index.php',path_values);
+			//show all records since the first
+			ds_download+="&allrows=1&start=0";
+			//return to "function index"
+			path_values.menuaction=actuall_funct;
+			window.open(ds_download,'window');
+		}
 
 
-		// modify actual function for "download" in path_values
-		// for example: property.uilocation.index --> property.uilocation.download
-		tmp_array= donwload_func.split(".")
-		tmp_array[2]="download"; //set function DOWNLOAD
-		donwload_func = tmp_array.join('.');
 
-		path_values.menuaction=donwload_func;
-		ds_download = phpGWLink('index.php',path_values);
-		//show all records since the first
-		ds_download+="&allrows=1&start=0";
-		//return to "function index"
-		path_values.menuaction=actuall_funct;
-		window.open(ds_download,'window');
    }
 
  /********************************************************************************

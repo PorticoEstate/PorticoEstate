@@ -1133,7 +1133,7 @@
 
 		function list_sub()
 		{
-		/*
+
 			$paid 		= phpgw::get_var('paid', 'bool');
 			$values		= phpgw::get_var('values');
 			$voucher_id = phpgw::get_var('voucher_id', 'int');
@@ -1158,7 +1158,6 @@
 														'start'			=> $this->start,
 														'paid'			=> $paid,
 														'voucher_id'	=> $voucher_id,
-														'user_lid'		=> $this->user_lid,
 														'query'			=> $this->query
 													));
 				$datatable['config']['allow_allrows'] = false;
@@ -1168,21 +1167,42 @@
 														."order:'{$this->order}',"
 														."sort:'{$this->sort}',"
 														."cat_id: '{$this->cat_id}',"
-														."user_lid:'all',"
+														//."user_lid:'all',"
+														."user_lid:'{$this->user_lid}',"
 														."sub:'{$this->sub}',"
 														."query:'{$this->query}',"
 														."start:'{$this->start}',"
 														."paid:'{$paid}',"
 														."voucher_id:'{$voucher_id}',"
-														."user_lid:'{$this->user_lid}',"
 														."query:'{$this->query}'";
 
-				$field_invoice = array(array( // boton exportar
-										'type'	=> 'button',
-										'id'	=> 'btn_export',
-										'tab_index' => 1,
-										'value'	=> lang('download')
-									));
+				$field_invoice = array(array( // mensaje
+											'type'	=> 'label',
+											'id'	=> 'msg_header',
+											'value'	=> '',
+											'style' => 'filter'
+										),
+										array( // boton exportar
+											'type'	=> 'button',
+											'id'	=> 'btn_export',
+											'tab_index' => 3,
+											'value'	=> lang('download')
+										),
+										array( // boton exportar
+											'type'	=> 'button',
+											'id'	=> 'btn_done',
+											'tab_index' => 2,
+											'value'	=> lang('done')
+										),
+										array( // boton SAVE
+											'type'	=> 'button',
+											'id'	=> 'btn_save',
+											//'name' => 'save',
+											'tab_index' => 1,
+											'value'	=> lang('save')
+										),
+
+									);
 
 				$datatable['actions']['form'] = array(array(
 									'action'	=> $GLOBALS['phpgw']->link('/index.php',
@@ -1196,13 +1216,8 @@
 													'query'				=> $this->query,
 													'start'				=> $this->start,
 													'paid'				=> $paid,
-													'vendor_id'			=> $vendor_id,
-													'workorder_id'		=> $workorder_id,
-													'start_date'		=> $start_date,
-													'end_date'			=> $end_date,
-													'filter'			=> $this->filter,
-													'b_account_class'	=> $b_account_class,
-													'district_id'		=> $this->district_id
+													'voucher_id'		=> $voucher_id,
+													'query'				=> $this->query
 												)
 										),
 									'fields'	=> array(
@@ -1210,151 +1225,388 @@
 														)
 									  ));
 
-				} //-- of if( phpgw::get_var('phpgw_return_as') != 'json' )
+			} //-- of if( phpgw::get_var('phpgw_return_as') != 'json' )
 
-				$receipt = array();
-				if(isset($values['save']) && $values['save'] && isset($values['counter']) && $values['counter'])
-				{
-					$receipt=$this->bo->update_invoice_sub($values);
-				}
-
-				if ($voucher_id)
-				{
-					$content = $this->bo->read_invoice_sub($voucher_id,$paid);
-				}
-
-				$sum=0;
-				$i	=0;
-				if(is_array($content))
-				{
-					while(each($content))
-					{
-						$sum									= $sum + $content[$i]['amount'];
-						$content[$i]['amount'] 					= number_format($content[$i]['amount'], 2, ',', '');
-						$content[$i]['paid']					= $paid;
-						//$content[$i]['lang_tax_code_statustext']= lang('select the appropriate tax code');
-						//$content[$i]['lang_dimb_statustext']= lang('select the appropriate dim code');
-						$content[$i]['dimb_list']				= $this->bo->select_dimb_list($content[$i]['dimb']);
-						$content[$i]['tax_code_list']			= $this->bo->tax_code_list($content[$i]['tax_code']);
-						//$content[$i]['lang_remark'] 			= lang('Remark');
-						$content[$i]['link_remark'] 			= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiinvoice.remark'));
-						//$content[$i]['lang_remark_help'] 		= lang('click this link to view the remark');
-						$content[$i]['link_order'] 				= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiinvoice.view_order'));
-						$content[$i]['link_claim'] 				= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uitenant_claim.check'));
-						$i++;
-					}
-				}
-
-$uicols = array (
-	array( //counter
-		'input_type'=>hidden,	'type'=>number,	'col_name'=>counter,		'name'=>counter,			'formatter'=>'',	'label'=>dummy,				'className'=>''),
-	array(//id
-		'input_type'=>hidden,	'type'=>number,	'col_name'=>id,				'name'=>id,					'formatter'=>'',	'label'=>dummy,				'className'	=>''),
-	array(//workorder_id
-		'input_type'=>hidden,	'type'=>number,	'col_name'=>workorder_id,	'name'=>workorder_id,		'formatter'=>'',	'label'=>dummy,				'className'	=>''),
-	array(//view_order
-		'input_type'=>link,		'type'=>phpgw,	'col_name'=>workorder_link,	'name'=>link_order,			'formatter'=>'link','label'=>lang('Workorder'),'className'=>'centerClasss'),
-	array(//close_order_orig
-		'input_type'=>special_1,'type'=>'',		'col_name'=>close_order,	'name'=>close_order,		'formatter'=>'',	'label'=>dummy,				'className'=>''),
-
-
-
-					array(//close_order_orig
-						'input_type'=>hidden,	'type'=>number,	'col_name'=>close_order_orig,	'name'=>close_order_orig,	'formatter'=>'',	'label'=>dummy,	'className'=>''),
-					array(//close_order
-						'input_type'=>input,	'type'=>check,	'col_name'=>close_order,	'name'=>close_order,	'formatter' =>'',	'label'=>lang('Budget account'),	'className'=>''),
-					array(//close_order
-						'input_type'=>varchar,	'type'=>number,	'col_name'=>close_order,	'name'=>close_order,	'formatter' =>'',	'label'=>lang('Budget account'),	'className'=>'')
-
-					);
-
-				$j=0;
-		//---- llena DATATABLE-ROWS con los valores del READ
-		if (isset($content) && is_array($content))
-		{
-			foreach($content as $invoices)
+			$receipt = array();
+			if(isset($values['save']) && $values['save'] && isset($values['counter']) && $values['counter'])
 			{
-				for ($i=0;$i<count($uicols['name']);$i++)
+				$receipt=$this->bo->update_invoice_sub($values);
+			}
+
+			if ($voucher_id)
+			{
+				$content = $this->bo->read_invoice_sub($voucher_id,$paid);
+			}
+
+			$sum=0;
+			$i	=0;
+			if(is_array($content))
+			{
+				while(each($content))
 				{
-					$datatable['rows']['row'][$j]['column'][$i]['value']	= $invoices[$uicols[$i]['name']];
-					$datatable['rows']['row'][$j]['column'][$i]['name'] 	= $uicols[$i]['col_name'];
+					$sum									= $sum + $content[$i]['amount'];
+					$content[$i]['amount'] 					= number_format($content[$i]['amount'], 2, ',', '');
+					$content[$i]['paid']					= $paid;
+					//$content[$i]['lang_tax_code_statustext']= lang('select the appropriate tax code');
+					//$content[$i]['lang_dimb_statustext']= lang('select the appropriate dim code');
+					$content[$i]['dimb_list']				= $this->bo->select_dimb_list($content[$i]['dimb']);
+					$content[$i]['tax_code_list']			= $this->bo->tax_code_list($content[$i]['tax_code']);
+					//$content[$i]['lang_remark'] 			= lang('Remark');
+					$content[$i]['link_remark'] 			= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiinvoice.remark'));
+					//$content[$i]['lang_remark_help'] 		= lang('click this link to view the remark');
+					$content[$i]['link_order'] 				= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiinvoice.view_order'));
+					$content[$i]['link_claim'] 				= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uitenant_claim.check'));
+					$i++;
+				}
+			}
+
+			$uicols = array (
+				array(
+					'col_name'=>workorder		,'label'=>lang('Workorder'),	'className'=>'centerClasss', 'sortable'=>true,	'sort_field'=>'pmwrkord_code',	'name'=>'','formatter'=>''),
+				array(
+					'col_name'=>close_order,	'label'=>lang('Close order'),	'className'=>'centerClasss', 'sortable'=>false,	'sort_field'=>'',				'name'=>'','formatter'=>''),
+				array(
+					'col_name'=>change_tenant,	'label'=>lang('Charge tenant'),	'className'=>'centerClasss', 'sortable'=>false,	'sort_field'=>'',				'name'=>'','formatter'=>''),
+				array(
+					'col_name'=>invoice_id,		'label'=>lang('Invoice Id'),	'className'=>'centerClasss', 'sortable'=>false,	'sort_field'=>'',				'name'=>'','formatter'=>''),
+				array(
+					'col_name'=>budget_Account,	'label'=>lang('Budget account'),'className'=>'centerClasss', 'sortable'=>true,	'sort_field'=>'spbudact_code',	'name'=>'','formatter'=>''),
+				array(
+					'col_name'=>sum,			'label'=>lang('Sum'),			'className'=>'rightClasss', 'sortable'=>true,	'sort_field'=>'belop',			'name'=>'','formatter'=>''),
+				array(
+					'col_name'=>dim_A,			'label'=>lang('Dim A'),			'className'=>'centerClasss', 'sortable'=>true,	'sort_field'=>'dima',			'name'=>'','formatter'=>''),
+				array(
+					'col_name'=>dim_B,			'label'=>lang('Dim B'),			'className'=>'centerClasss', 'sortable'=>false,	'sort_field'=>'',				'name'=>'','formatter'=>''),
+				array(
+					'col_name'=>dim_D,			'label'=>lang('Dim D'),			'className'=>'centerClasss', 'sortable'=>false,	'sort_field'=>'',				'name'=>'','formatter'=>''),
+				array(
+					'col_name'=>Tax_code,		'label'=>lang('Tax code'),		'className'=>'centerClasss', 'sortable'=>false,	'sort_field'=>'',				'name'=>'','formatter'=>''),
+				array(
+					'col_name'=>Remark,			'label'=>lang('Remark'),		'className'=>'centerClasss', 'sortable'=>false,	'sort_field'=>'',				'name'=>'','formatter'=>'')
+				);
 
 
-					if($uicols['input_type'][$i]!='hidden')
+			$j=0;
+			//$json_row= array();
+			//---- llena DATATABLE-ROWS con los valores del READ
+			if (isset($content) && is_array($content))
+			{
+				foreach($content as $invoices)
+				{
+					for ($i=0;$i<count($uicols);$i++)
 					{
-							//--- varchar--
-//							if($uicols[$i]['input_type']=='varchar' && $invoices[$uicols[$i]['name']])
-//							{
-//								$datatable['rows']['row'][$j]['column'][$i]['format'] = 'varchar';
-//							}
-							//--- link--
-							elseif($uicols['input_type'][$i]=='link' && $invoices[$uicols[$i]['name']])
+						$json_row[$uicols[$i]['col_name']] = "";
+
+						if($i == 0)
+						{
+							$json_row[$uicols[$i]['col_name']] .= " <input name='values[counter][".$j."]' id='values[counter][".$j."]'  class='myValuesForPHP'  type='hidden' value='".$invoices['counter']."'/>";
+							$json_row[$uicols[$i]['col_name']] .= " <input name='values[id][".$j."]' id='values[id][".$j."]'  class='myValuesForPHP'  type='hidden' value='".$invoices['id']."'/>";
+							$json_row[$uicols[$i]['col_name']] .= " <input name='values[workorder_id][".$j."]' id='values[workorder_id][".$j."]'  class='myValuesForPHP'  type='hidden' value='".$invoices['workorder_id']."'/>";
+							$json_row[$uicols[$i]['col_name']] .= " <a target='_blank' href='".$invoices['link_order'].'&order_id='.$invoices['workorder_id']."'>".$invoices['workorder_id']."</a>";
+						}
+						elseif(($i == 1))
+						{
+							if($invoices['workorder_id'] == "")
 							{
-								$datatable['rows']['row'][$j]['column'][$i]['format']	= 'link';
-								$datatable['rows']['row'][$j]['column'][$i]['target']	= '';
-								if($uicols['type'][$i]=='phpgw')
+								//nothing
+							}
+							elseif($invoices['paid']== "")
+							{
+								$json_row[$uicols[$i]['col_name']]  .= " <input name='values[close_order_orig][".$j."]' id='values[close_order_orig][".$j."]'  class='myValuesForPHP'  type='hidden' value='".$invoices['closed']."'/>";
+								if($invoices['closed']== 1)
 								{
-									$datatable['rows']['row'][$j]['column'][$i]['link']	= $invoices[$uicols[$i]['name']]."&order_id=".$invoices[$uicols[0]['name']];
+									$json_row[$uicols[$i]['col_name']]  .= " <input name='values[close_order][".$j."]' id='values[close_order][".$j."]'  class='myValuesForPHP transfer_idClass'  type='checkbox' value='true' checked='checked' />";
+								}
+								else
+								{
+									$json_row[$uicols[$i]['col_name']]  .= " <input name='values[close_order][".$j."]' id='values[close_order][".$j."]'  class='myValuesForPHP transfer_idClass'  type='checkbox' value='true'/>";
 								}
 							}
-							//--input box----
-//							else
-//							{
-//								$datatable['rows']['row'][$j]['column'][$i]['format'] 	= $uicols[$i]['input_type'];
-//								$datatable['rows']['row'][$j]['column'][$i]['type'] 	= $uicols[$i]['type'];
-//
-//								if($datatable['rows']['row'][$j]['column'][$i]['type']=='text')
-//								{
-//									$datatable['rows']['row'][$j]['column'][$i]['extra_param'] 	= "size='1' ";
-//								}
-//								elseif($datatable['rows']['row'][$j]['column'][$i]['type']=='check')
-//								{
-//									$datatable['rows']['row'][$j]['column'][$i]['extra_param']	= " checked ";
-//								}
-//								elseif($datatable['rows']['row'][$j]['column'][$i]['type']=='select')
-//								{
-//									$datatable['rows']['row'][$j]['column'][$i]['extra_param']	 = " ";
-//								}
-//							}
-					}
-					if($uicols['input_type'][$i]!='special_1')
-					{
-						if($invoices[$uicols[2]['name']] == '')
+							else
+							{
+								if($invoices['closed']== 1)
+								{
+									$json_row[$uicols[$i]['col_name']]  .= "<b>x</b>";
+								}
+							}
+						}
+						elseif(($i == 2))
 						{
-							//nothing
+							if($invoices['charge_tenant'] == 1)
+							{
+								if($invoices['claim_issued'] == '')
+								{
+									$json_row[$uicols[$i]['col_name']] .= " <a target='_blank' href='".$invoices['link_claim'].'&project_id='.$invoices['project_id']."'>".lang('Claim')."</a>";
+								}
+								else
+								{
+									$json_row[$uicols[$i]['col_name']]  .= "<b>x</b>";
+								}
+							}
+							else
+							{
+								$json_row[$uicols[$i]['col_name']]  .= "<b>-</b>";
+							}
+
 						}
-						elseif($invoices['paid']=='')
+						elseif(($i == 3))
 						{
+							$json_row[$uicols[$i]['col_name']]  .= $invoices['invoice_id'];
 						}
 
+						elseif(($i == 4))
+						{
+							if($invoices['paid'] == true)
+							{
+								$json_row[$uicols[$i]['col_name']] .= $invoices['budget_account'];
+							}
+							else
+							{
+								$json_row[$uicols[$i]['col_name']]  .= " <input name='values[budget_account][".$j."]' id='values[budget_account][".$j."]'  class='myValuesForPHP'  type='text' size='7' value='".$invoices['budget_account']."'/>";
+							}
 						}
 
+						elseif(($i == 5))
+						{
+							$json_row[$uicols[$i]['col_name']]  .= $invoices['amount'];
+						}
 
+						elseif(($i == 6))
+						{
+							if($invoices['paid'] == true)
+							{
+								$json_row[$uicols[$i]['col_name']]  .= $invoices['dima'];
+							}
+							else
+							{
+								$json_row[$uicols[$i]['col_name']]  .= " <input name='values[dima][".$j."]' id='values[dima][".$j."]'  class='myValuesForPHP'  type='text' size='7' value='".$invoices['dima']."'/>";
+							}
+						}
+						elseif(($i == 7))
+						{
+							if($invoices['paid'] == true)
+							{
+								$json_row[$uicols[$i]['col_name']]  .= $invoices['dimb'];
+							}
+							else
+							{
 
+								$json_row[$uicols[$i]['col_name']]  .= " <select name='values[dimb][".$j."]' id='values[dimb][".$j."]'  class='myValuesForPHP'><option value=''></option>";
 
+								for($k = 0 ;$k < count($invoices['dimb_list']) ; $k++)
+								{
+									if(isset($invoices['dimb_list'][$k]['selected']) && $invoices['dimb_list'][$k]['selected']!="")
+									{
+										$json_row[$uicols[$i]['col_name']]  .= "<option selected='selected' value='".$invoices['dimb_list'][$k]['id']."'>".$invoices['dimb_list'][$k]['name']."</option>";
+									}
+									else
+									{
+										$json_row[$uicols[$i]['col_name']]  .= "<option value='".$invoices['dimb_list'][$k]['id']."'>".$invoices['dimb_list'][$k]['name']."</option>";
+									}
+								}
+								$json_row[$uicols[$i]['col_name']]  .="</select>";
+							}
+						}
+						elseif(($i == 8))
+						{
+							if($invoices['paid'] == true)
+							{
+								$json_row[$uicols[$i]['col_name']]  .= $invoices['dimd'];
+							}
+							else
+							{
+								$json_row[$uicols[$i]['col_name']]  .= " <input name='values[dimd][".$j."]' id='values[dimd][".$j."]'  class='myValuesForPHP'  type='text' size='4' value='".$invoices['dimd']."'/>";
+							}
+						}
+						elseif(($i == 9))
+						{
+							if($invoices['paid'] == true)
+							{
+								$json_row[$uicols[$i]['col_name']]  .= $invoices['tax_code'];
+							}
+							else
+							{
 
+								$json_row[$uicols[$i]['col_name']]  .= " <select name='values[tax_code][".$j."]' id='values[tax_code][".$j."]'  class='myValuesForPHP'><option value=''></option>";
+
+								for($k = 0 ;$k < count($invoices['tax_code_list']) ; $k++)
+								{
+									if(isset($invoices['tax_code_list'][$k]['selected']) && $invoices['tax_code_list'][$k]['selected']!="")
+									{
+										$json_row[$uicols[$i]['col_name']]  .= "<option selected='selected' value='".$invoices['tax_code_list'][$k]['id']."'>".$invoices['tax_code_list'][$k]['id']."</option>";
+									}
+									else
+									{
+										$json_row[$uicols[$i]['col_name']]  .= "<option value='".$invoices['tax_code_list'][$k]['id']."'>".$invoices['tax_code_list'][$k]['id']."</option>";
+									}
+								}
+								$json_row[$uicols[$i]['col_name']]  .="</select>";
+							}
+						}
+						elseif(($i == 10))
+						{
+							if($invoices['remark='] == true)
+							{
+								$temp_lnk = $invoices['link_remark']."&id=".$invoices['id']."&paid=".$invoices['paid'];
+								$json_row[$uicols[$i]['col_name']] .= " <a target='_blank' href=\"javascript:var w=window.open('".$temp_lnk."','','width=550,height=400,scrollbars')\" >".lang('Remark')."</a>";
+							}
+							else
+							{
+								$json_row[$uicols[$i]['col_name']]  .= "<b>-</b>";
+							}
+						}
+
+//---------------------------------------------------------------------------------------------------------------------
+
+						//_debug_array($json_row);die();
 					}
-					else // hidden
-					{
-							$datatable['rows']['row'][$j]['column'][$i]['format']	= 'hidden';
-							$datatable['rows']['row'][$j]['column'][$i]['type'] 	= $uicols['type'][$i];
-					}
-
+					$datatable['rows']['row'][] = $json_row;
+					//_debug_array($datatable['rows']['row']);die();
+					$j++;
 				}
-				$j++;
 			}
-		}
+//_debug_array($datatable['rows']['row']);die();
+
+			$current_Consult = array ();
+			for($i=0;$i<2;$i++)
+			{
+				if($i==0)
+				{
+					$current_Consult[] = array(lang('Vendor'),$content[0]['vendor']);
+				}
+				if($i==1)
+				{
+					$current_Consult[] = array(lang('Voucher Id'),$content[0]['voucher_id']);
+				}
+			}
 
 
 
+			//no grants
+			$datatable['rowactions']['action'] = array();
+
+			for ($i=0;$i<count($uicols);$i++)
+			{
+				$datatable['headers']['header'][$i]['name'] 			= $uicols[$i]['col_name'];
+				$datatable['headers']['header'][$i]['text'] 			= $uicols[$i]['label'];
+				$datatable['headers']['header'][$i]['formatter'] 		= ($uicols[$i]['formatter']=='' ?  '""' : $uicols[$i]['formatter']);
+				$datatable['headers']['header'][$i]['className']		= $uicols[$i]['className'];
+				//$datatable['headers']['header'][$i]['editor']			= $uicols[$i]['editor'];
+				$datatable['headers']['header'][$i]['visible'] 			= true;
+				//$datatable['headers']['header'][$i]['format'] 		= $this->bocommon->translate_datatype_format($uicols['datatype'][$i]);
+				$datatable['headers']['header'][$i]['sortable']			= $uicols[$i]['sortable'];
+				$datatable['headers']['header'][$i]['sort_field']		= $uicols[$i]['sort_field'];
+
+			}
+			// path for property.js
+			$datatable['property_js'] = $GLOBALS['phpgw_info']['server']['webserver_url']."/property/js/yahoo/property.js";
+
+			// Pagination and sort values
+			$datatable['pagination']['records_start'] 	= (int)$this->bo->start;
+			$datatable['pagination']['records_limit'] 	= count($content);
+			$datatable['pagination']['records_returned']= count($content);
+			$datatable['pagination']['records_total'] 	= $this->bo->total_records;
+
+			if ( (phpgw::get_var("start")== "") && (phpgw::get_var("order",'string')== ""))
+			{
+				$datatable['sorting']['order'] 			= $uicols[$i]['col_name']; // name key Column in myColumnDef
+				$datatable['sorting']['sort'] 			= 'asc'; // ASC / DESC
+			}
+			else
+			{
+				$datatable['sorting']['order']			= null; //phpgw::get_var('order', 'string');
+				$datatable['sorting']['sort'] 			= null; //phpgw::get_var('sort', 'string');
+			}
 
 
+			phpgwapi_yui::load_widget('dragdrop');
+		  	phpgwapi_yui::load_widget('datatable');
+		  	phpgwapi_yui::load_widget('menu');
+		  	phpgwapi_yui::load_widget('connection');
+		  	//// cramirez: necesary for include a partucular js
+		  	phpgwapi_yui::load_widget('loader');
+		  	//cramirez: necesary for use opener . Avoid error JS
+			phpgwapi_yui::load_widget('tabview');
+			phpgwapi_yui::load_widget('paginator');
+			//FIXME this one is only needed when $lookup==true - so there is probably an error
+			phpgwapi_yui::load_widget('animation');
 
 
+			//$msgbox_data = $this->bocommon->msgbox_data($receipt);
+
+//-- BEGIN----------------------------- JSON CODE ------------------------------
+
+			if( phpgw::get_var('phpgw_return_as') == 'json' )
+			{
+    		//values for Pagination
+	    		$json = array
+	    		(
+	    			'recordsReturned' 	=> $datatable['pagination']['records_returned'],
+    				'totalRecords' 		=> (int)$datatable['pagination']['records_total'],
+	    			'startIndex' 		=> $datatable['pagination']['records_start'],
+					'sort'				=> $datatable['sorting']['order'],
+	    			'dir'				=> $datatable['sorting']['sort'],
+					'records'			=> array()
+	    		);
+
+				// values for datatable
+	    		$json['records']	= $datatable['rows']['row'];
+
+				// right in datatable
+				$json ['rights']	= $datatable['rowactions']['action'];
+
+				$json['sum']		= number_format($sum, 2, ',', '');
+
+				// message when editting & deleting records
+				if(isset($receipt) && is_array($receipt) && count($receipt))
+				{
+					$json ['message'][] = $receipt;
+				}
+
+				// query parameters
+				if(isset($current_Consult) && is_array($current_Consult))
+				{
+					$json ['current_consult'] = $current_Consult;
+				}
 
 
+	    		return $json;
+			}
+//-------------------- JSON CODE ----------------------
 
-*/
+			// Prepare template variables and process XSLT
+			$template_vars = array();
+			$template_vars['datatable'] = $datatable;
+			$GLOBALS['phpgw']->xslttpl->add_file(array('datatable'));
+	      	$GLOBALS['phpgw']->xslttpl->set_var('phpgw', $template_vars);
+
+	      	if ( !isset($GLOBALS['phpgw']->css) || !is_object($GLOBALS['phpgw']->css) )
+	      	{
+	        	$GLOBALS['phpgw']->css = createObject('phpgwapi.css');
+	      	}
+			// Prepare CSS Style
+		  	$GLOBALS['phpgw']->css->validate_file('datatable');
+		  	$GLOBALS['phpgw']->css->validate_file('property');
+		  	$GLOBALS['phpgw']->css->add_external_file('property/templates/base/css/property.css');
+			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/datatable/assets/skins/sam/datatable.css');
+			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/container/assets/skins/sam/container.css');
+			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/paginator/assets/skins/sam/paginator.css');
+
+			//Title of Page
+			$appname = lang('location');
+			if ($paid)
+			{
+				$function_msg	= lang('list paid invoice');
+			}
+			else
+			{
+				$function_msg	= lang('list invoice');
+			}
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
+
+	  		// Prepare YUI Library
+  			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'invoice.list_sub', 'property' );
+
 		}
 
 		function edit_period()
