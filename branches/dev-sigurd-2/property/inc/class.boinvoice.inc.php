@@ -53,22 +53,22 @@
 			$filter					= phpgw::get_var('filter', 'int');
 			$cat_id					= phpgw::get_var('cat_id', 'int');
 			$user_lid				= phpgw::get_var('user_lid');
+			$allrows				= phpgw::get_var('allrows', 'bool');
 			$b_account_class		= phpgw::get_var('b_account_class', 'int');
 			$district_id			= phpgw::get_var('district_id', 'int');
 			$b_account				= phpgw::get_var('b_account');
-			$allrows				= phpgw::get_var('allrows', 'bool');
 
 			$this->start			= $start ? $start : 0;
-			$this->query			= isset($query) ? $query : $this->query;
-			$this->sort				= isset($sort) && $sort ? $sort : '';
-			$this->order			= isset($order) && $order ? $order : '';
-			$this->filter			= isset($filter) && $filter ? $filter : '';
-			$this->cat_id			= isset($cat_id) && $cat_id ? $cat_id : '';
-			$this->user_lid			= isset($user_lid) && $user_lid ? $user_lid : '';
-			$this->district_id		= isset($district_id) && $district_id ? $district_id : '';
-			$this->b_account_class	= isset($b_account_class) && $b_account_class ? $b_account_class : '';
-			$this->b_account		= isset($b_account) && $b_account ? $b_account : '';
-			$this->allrows			= isset($allrows) && $allrows ? $allrows : '';
+			$this->b_account		= isset($b_account) ? $b_account : $b_account;
+			$this->district_id		= isset($district_id) ? $district_id : $district_id;
+			$this->b_account_class	= isset($b_account_class) ? $b_account_class : $b_account_class;
+			$this->query			= isset($query) ? $query : $query;
+			$this->filter			= isset($filter) ? $filter : $filter;
+			$this->sort				= isset($sort) ? $sort : $sort;
+			$this->order			= isset($order) ? $order : $order;
+			$this->cat_id			= isset($cat_id) ? $cat_id : $cat_id;
+			$this->user_lid			= isset($user_lid) ? $user_lid : $user_lid;
+			$this->allrows			= isset($allrows) ? $allrows : $allrows;
 		}
 
 
