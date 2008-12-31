@@ -39,7 +39,53 @@
 	/********************************************************************************/
 		this.onSave = function()
   		{
-			alert('not yet save');
+			//get the last div in th form
+			var divs= YAHOO.util.Dom.getElementsByClassName('field');
+			var mydiv = divs[divs.length-1];
+			//remove all child of mydiv
+			if ( mydiv.hasChildNodes() )
+		    while ( mydiv.childNodes.length >= 1 )
+		    {
+		        mydiv.removeChild( mydiv.firstChild );
+		    }
+
+			// styles for dont show
+			mydiv.style.display = 'none';
+
+			//asign values for select buttons 'tax_code'
+			selects_tax_code = YAHOO.util.Dom.getElementsByClassName('tax_code_tmp');
+			hiddens_tax_code = YAHOO.util.Dom.getElementsByClassName('tax_code');
+			for(i=0;i<selects_tax_code.length;i++)
+			{
+				hiddens_tax_code[i].value = selects_tax_code[i].value
+
+			}
+			//asign values for select buttons 'dimb'
+			selects_dimb = YAHOO.util.Dom.getElementsByClassName('dimb_tmp');
+			hiddens_dimb = YAHOO.util.Dom.getElementsByClassName('dimb');
+			for(i=0;i<selects_dimb.length;i++)
+			{
+				hiddens_dimb[i].value = selects_dimb[i].value
+
+			}
+
+			//get all controls of datatable
+			valuesForPHP = YAHOO.util.Dom.getElementsByClassName('myValuesForPHP');
+			var myclone = null;
+			//add all control to form.
+			for(i=0;i<valuesForPHP.length;i++)
+			{
+				//Important true for Select Controls
+				myclone = valuesForPHP[i].cloneNode(true);
+				mydiv.appendChild(myclone);
+			}
+
+			// find out the unique form
+			formObject = document.getElementsByTagName('form');
+			// modify the 'form' for send it as POST using asyncronize call
+			YAHOO.util.Connect.setForm(formObject[0]);
+
+			 execute_ds();
   		}
 
 	/********************************************************************************/
@@ -71,7 +117,7 @@
 			//Add TD to TR
 			newTR.appendChild(newTD.cloneNode(true));
 		}
-
+	/********************************************************************************/
 		check_all = function(myclass)
 	  	{
 			controls = YAHOO.util.Dom.getElementsByClassName(myclass);
@@ -150,17 +196,17 @@
 	/********************************************************************************
 	* Delete all message un DIV 'message'
 	*/
-	this.delete_message = function()
-	{
-		div_message= YAHOO.util.Dom.get("message");
-		if ( div_message.hasChildNodes() )
+		this.delete_message = function()
 		{
-			while ( div_message.childNodes.length >= 1 )
-		    {
-		        div_message.removeChild( div_message.firstChild );
-		    }
+			div_message= YAHOO.util.Dom.get("message");
+			if ( div_message.hasChildNodes() )
+			{
+				while ( div_message.childNodes.length >= 1 )
+			    {
+			        div_message.removeChild( div_message.firstChild );
+			    }
+			}
 		}
-	}
 	/********************************************************************************
 	*
 	*/
@@ -176,7 +222,6 @@
 		        div_message.removeChild( div_message.firstChild );
 		    }
 		}
-
 
 		newTable = document.createElement('table');
 
@@ -210,34 +255,29 @@
 	*/
 	this.create_message = function()
 	{
-		/*div_message= YAHOO.util.Dom.get("message");
-		newTable = document.createElement('table');
-
+		div_message= YAHOO.util.Dom.get("message");
 		//SHOW message if exist 'values_ds.message'
-		 if(window.values_ds.current_consult)
+		 if(window.values_ds.message)
 		 {
-		 	for(i=0; i<values_ds.current_consult.length; i++)
+		 	for(i=0; i<values_ds.message.length; i++)
 		 	{
-		 		newTR = document.createElement('tr');
-		 		for(j=0; j<2; j++)
+		 		oDiv=document.createElement("DIV");
+		 		txtNode = document.createTextNode(values_ds.message[i].msgbox_text);
+		 		oDiv.appendChild(txtNode);
+		 		oDiv.style.fontWeight = 'bold';
+		 		if(values_ds.message[i].lang_msgbox_statustext == "OK") //succesfull
 		 		{
-		 			newTD = document.createElement('td');
-		 			newTD.appendChild(document.createTextNode(values_ds.current_consult[i][j]));
-		 			newTR.appendChild(newTD.cloneNode(true));
-		 			//add : after title
-		 			if(j==0)
-		 			{
-			 			newTD = document.createElement('td');
-			 			newTD.appendChild(document.createTextNode("\u00A0:\u00A0"));
-			 			newTR.appendChild(newTD.cloneNode(true));
-		 			}
+		 			oDiv.style.color = '#009900';
 		 		}
-		 		newTable.appendChild(newTR.cloneNode(true));
-			 }
+		 		else //error
+		 		{
+		 			oDiv.style.color = '#FF0000';
+		 		}
+		 		div_message.appendChild(oDiv);
+		  	}
 		 }
-		 div_message.appendChild(newTable);
-		 */
 	}
+
 	/********************************************************************************/
 	  	this.addFooterDatatable = function()
 	  	{

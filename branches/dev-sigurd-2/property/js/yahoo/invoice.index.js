@@ -243,9 +243,9 @@
 	   	 //for mantein paginator and fill out combo box show all rows
 	   	 path_values.recordsReturned = values_ds.recordsReturned;
 
-	   	 array_sort_order = getSortingANDColumn()
-	   	 path_values.order = array_sort_order[1];
-	   	 path_values.sort = array_sort_order[0];
+	   	 array_sort_order	= getSortingANDColumn();
+	   	 path_values.order	= array_sort_order[1];
+	   	 path_values.sort	= array_sort_order[0];
 
 	   	 // if actually the datatable show all records, the class PHP has to send all records too.
 	   	 if(myPaginator.get("rowsPerPage")== values_ds.totalRecords)
