@@ -29,9 +29,8 @@
 		]
 
 		var config_values = {
-			date_search : 1, //if search has link "Data search"
 			PanelLoading : 1,
-			particular_download: 1
+			particular_download : "property.uiinvoice.download_sub"
 		}
 
 		var tableYUI;
@@ -147,17 +146,6 @@
 		}
 
 	/********************************************************************************/
-
-		this.onDownloadClick_particular = function()
-		{
-			path_values.menuaction="property.uiinvoice.download_sub";
-			ds_download = phpGWLink('index.php',path_values);
-			//return to "function index"
-			path_values.menuaction="list_sub";
-			window.open(ds_download,'window');
-
-		}
-	/********************************************************************************/
 		this.particular_setting = function()
 		{
 			if(flag_particular_setting=='init')
@@ -188,7 +176,6 @@
 		{
 			//not SHOW paginator
 			paging= YAHOO.util.Dom.get('paging');
-		 	//paging.style.display = 'none';
 		 	//add break line
 		 	paging.innerHTML = "<span><img src=''/></span>";
 		}

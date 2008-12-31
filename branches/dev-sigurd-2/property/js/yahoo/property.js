@@ -64,10 +64,23 @@
  */
  	this.onDoneClick = function()
  	{
-		tmp_array= path_values.menuaction.split(".")
-		tmp_array[2]="index"; //set function INDEX
-		path_values.menuaction=tmp_array.join('.');
+		//save initial value
+		path_values_menuaction_original = path_values.menuaction;
+
+		// if exist "particular_done" in particular.js
+		if(config_values.particular_done)
+		{
+			path_values.menuaction = config_values.particular_done;
+		}
+		else
+		{
+			tmp_array = path_values.menuaction.split(".")
+			tmp_array[2] = "index"; //set function INDEX
+			path_values.menuaction = tmp_array.join('.');
+		}
 		window.open(phpGWLink('index.php',path_values),'_self');
+		//come back to initial values
+		path_values.menuaction = path_values_menuaction_original;
 	}
 
 
@@ -112,35 +125,30 @@
  */
    this.onDownloadClick = function()
    {
-		// if exist "particular_download" in particular.js
+		//store actual values
+		actuall_funct = path_values.menuaction;
+
 		if(config_values.particular_download)
 		{
-			onDownloadClick_particular();
-
+			path_values.menuaction = config_values.particular_download;
 		}
 		else
 		{
-			//store actual values
-			actuall_funct = path_values.menuaction;
 			donwload_func = path_values.menuaction;
-
 			// modify actual function for "download" in path_values
 			// for example: property.uilocation.index --> property.uilocation.download
 			tmp_array= donwload_func.split(".")
 			tmp_array[2]="download"; //set function DOWNLOAD
 			donwload_func = tmp_array.join('.');
-
 			path_values.menuaction=donwload_func;
-			ds_download = phpGWLink('index.php',path_values);
-			//show all records since the first
-			ds_download+="&allrows=1&start=0";
-			//return to "function index"
-			path_values.menuaction=actuall_funct;
-			window.open(ds_download,'window');
 		}
 
-
-
+		ds_download = phpGWLink('index.php',path_values);
+		//show all records since the first
+		ds_download+="&allrows=1&start=0";
+		//return to "function index"
+		path_values.menuaction=actuall_funct;
+		window.open(ds_download,'window');
    }
 
  /********************************************************************************
