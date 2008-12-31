@@ -9,7 +9,7 @@
 	];
 
 	// define buttons
-	var oNormalButton_0;
+	var oNormalButton_0, oNormalButton_1;
 	var normalButtons = [
 	{order:0, name:'btn_search', funct:"onSearchClick"},
 	{order:1, name:'btn_new', funct:"onNewClick"}
@@ -19,12 +19,6 @@
 	var textImput = [
 		{order:0, name:'query',id:'txt_query'}
 	];
-
-	var toolTips =
-	[
-		{name:'btn_export', title:'download', description:'Download table to your browser',ColumnDescription:''}
-	]
-
 
 	// define the hidden column in datatable
 	var config_values =
