@@ -36,11 +36,9 @@
 	{
 		function property_soasync()
 		{
-		//	$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->account		= $GLOBALS['phpgw_info']['user']['account_id'];
 			$this->bocommon		= CreateObject('property.bocommon');
 			$this->db           	= $this->bocommon->new_db();
-			$this->db2           	= $this->bocommon->new_db($this->db);
 
 			$this->join			= $this->bocommon->join;
 			$this->like			= $this->bocommon->like;
@@ -50,27 +48,19 @@
 		{
 			if(is_array($data))
 			{
-				if ($data['start'])
-				{
-					$start=$data['start'];
-				}
-				else
-				{
-					$start=0;
-				}
-				$query = (isset($data['query'])?$data['query']:'');
-				$sort = (isset($data['sort'])?$data['sort']:'DESC');
-				$order = (isset($data['order'])?$data['order']:'');
+				$start	= isset($data['start']) && $data['start'] ? $data['start'] : 0;
+				$query	= isset($data['query']) ? $data['query'] : '';
+				$sort	= isset($data['sort']) && $data['sort'] ? $data['sort'] : 'DESC';
+				$order	= isset($data['order']) ? $data['order'] : '';
 			}
 
 			if ($order)
 			{
-				$ordermethod = " order by $order $sort";
-
+				$ordermethod = " ORDER BY $order $sort";
 			}
 			else
 			{
-				$ordermethod = ' order by id asc';
+				$ordermethod = ' ORDER BY id asc';
 			}
 
 			$table='fm_async_method';
@@ -78,26 +68,25 @@
 			$querymethod = '';
 			if($query)
 			{
-				$query = preg_replace("/'/",'',$query);
-				$query = preg_replace('/"/','',$query);
-
-				$querymethod = " where id $this->like '%$query%' or descr $this->like '%$query%'";
+				$query = $this->db->db_addslashes($query);
+				$querymethod = " WHERE name $this->like '%$query%' OR data $this->like '%$query%' OR descr $this->like '%$query%'";
 			}
 
 			$sql = "SELECT * FROM $table $querymethod";
 
-			$this->db2->query($sql,__LINE__,__FILE__);
-			$this->total_records = $this->db2->num_rows();
+			$this->db->query($sql,__LINE__,__FILE__);
+			$this->total_records = $this->db->num_rows();
 			$this->db->limit_query($sql . $ordermethod,$start,__LINE__,__FILE__);
 
+			$method = array();
 			while ($this->db->next_record())
 			{
 				$method[] = array
 				(
 					'id'	=> $this->db->f('id'),
-					'name'	=> $this->db->f('name'),
-					'data'	=> $this->db->f('data'),
-					'descr'	=> $this->db->f('descr')
+					'name'	=> $this->db->f('name',true),
+					'data'	=> $this->db->f('data',true),
+					'descr'	=> $this->db->f('descr',true)
 				);
 			}
 			return $method;
@@ -106,21 +95,23 @@
 
 		function read_single($id)
 		{
+			$id = (int) $id;
+
 			$table='fm_async_method';
 
-			$sql = "SELECT * FROM $table  where id='$id'";
+			$sql = "SELECT * FROM {$table} WHERE id={$id}";
 
 			$this->db->query($sql,__LINE__,__FILE__);
 
+			$method = array();
 			if ($this->db->next_record())
 			{
 				$method['id']		= $this->db->f('id');
-				$method['name']		= $this->db->f('name');
-				$method['data']		= $this->db->f('data');
-				$method['descr']	= $this->db->f('descr');
-
-				return $method;
+				$method['name']		= $this->db->f('name', true);
+				$method['data']		= $this->db->f('data', true);
+				$method['descr']	= $this->db->f('descr', true);
 			}
+			return $method;
 		}
 
 		function add($method)

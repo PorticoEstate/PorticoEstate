@@ -255,9 +255,11 @@
 
 			if($query)
 			{
-				$query = preg_replace("/'/",'',$query);
-				$query = preg_replace('/"/','',$query);
+				$query = $this->db->db_addslashes($query);
 
+				$querymethod[]= "fm_branch.descr {$this->like} '%{$query}%'";
+				$querymethod[]= "{$entity_table}.name {$this->like} '%{$query}%'";
+				
 				$this->db->query("SELECT * FROM $attribute_table WHERE search='1' AND $attribute_filter ");
 
 				while ($this->db->next_record())
@@ -280,7 +282,6 @@
 			}
 
 			$sql .= " $filtermethod $querymethod";
-//echo $sql;
 
 			$this->db2->query($sql,__LINE__,__FILE__);
 			$this->total_records = $this->db2->num_rows();
