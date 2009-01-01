@@ -498,7 +498,7 @@
 			}
 
 
-			/*if(!$this->acl_read)
+			if(!$this->acl_read)
 			{
 				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=>1, 'acl_location'=> $this->acl_location));
 			}
@@ -749,7 +749,7 @@
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg . ' - ' . $appname_sub;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('list_document' => $data));
 		//	$GLOBALS['phpgw']->xslttpl->pp();
-			$this->save_sessiondata();*/
+			$this->save_sessiondata();
 		}
 
 		function view_file()
