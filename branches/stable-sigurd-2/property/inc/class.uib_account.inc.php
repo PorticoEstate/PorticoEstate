@@ -298,7 +298,7 @@
 				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=>8, 'acl_location'=> $this->acl_location));
 			}
 
-			$id		= phpgw::get_var('id', 'int');
+			$id		= phpgw::get_var('id');
 			$confirm		= phpgw::get_var('confirm', 'bool', 'POST');
 
 			$link_data = array
