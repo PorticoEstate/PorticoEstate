@@ -890,6 +890,10 @@ myDataTable.on('cellMouseoverEvent', function (oArgs)
       {
       	YAHOO.util.Dom.getElementsByClassName('yui-pg-rpp-options','select')[0].disabled = false;
       }
+      else
+      {
+      	YAHOO.util.Dom.getElementsByClassName('yui-pg-rpp-options','select')[0].disabled = true;
+      }
     }
 
     myParticularRenderEvent();
