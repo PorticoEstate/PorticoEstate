@@ -31,7 +31,7 @@
 	 * Description
 	 * @package property
 	 */
-
+	phpgw::import_class('phpgwapi.yui');
 	class property_uialarm
 	{
 		var $grants;
@@ -294,14 +294,10 @@
 		function list_alarm()
 		{
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] = 'property::agreement::alarm';
-			$GLOBALS['phpgw']->xslttpl->add_file(array('alarm',
-										'receipt',
-										'search_field',
-										'nextmatchs'));
-
 			$receipt = $GLOBALS['phpgw']->session->appsession('session_data','alarm_receipt');
 			$GLOBALS['phpgw']->session->appsession('session_data','alarm_receipt','');
-			$values		= phpgw::get_var('values');
+
+			$values	= phpgw::get_var('values');
 			if($values['delete_alarm'] && count($values['alarm'])):
 			{
 				$receipt = $this->bo->delete_alarm('fm_async',$values['alarm']);
@@ -316,9 +312,64 @@
 			}
 			endif;
 
-			$list = $this->bo->read();
-//_debug_array($list);
 
+			$datatable = array();
+			$values_combo_box = array();
+
+			if( phpgw::get_var('phpgw_return_as') != 'json' )
+			 {
+		    	$datatable['config']['base_url']	= $GLOBALS['phpgw']->link('/index.php', array
+	    				(
+	    					'menuaction'			=> 'property.uialarm.list_alarm',
+	    					'query'            		=> $this->query
+
+	    				));
+	    		$datatable['config']['allow_allrows'] = true;
+
+				$datatable['config']['base_java_url'] = "menuaction:'property.uialarm.list_alarm',"
+	    												."query:'{$this->query}'";
+
+
+				$datatable['actions']['form'] = array(
+					array(
+						'action'	=> $GLOBALS['phpgw']->link('/index.php',
+								array(
+									'menuaction' 		=> 'property.uialarm.list_alarm',
+									'query' 			=> $this->query
+									)
+						),
+						'fields'	=> array(
+                                    'field' => array(
+			                                        array( //boton     SEARCH
+			                                            'id' 		=> 'btn_search',
+			                                            'name'		=> 'search',
+			                                            'value'		=> lang('search'),
+			                                            'type'		=> 'button',
+			                                            'tab_index' => 2
+			                                        ),
+			   										 array( // TEXT IMPUT
+			                                            'name'		=> 'query',
+			                                            'id'		=> 'txt_query',
+			                                            'value'		=> $this->query,
+			                                            'type'		=> 'text',
+			                                            'size'		=> 28,
+			                                            'onkeypress'=> 'return pulsar(event)',
+	                                    				'tab_index'	=> 1
+			                                        )
+		                           				),
+		                       		'hidden_value' => array()
+												)
+										  )
+				);
+				//cramirez: $dry_run is use "$this->bo->read"
+				//$dry_run=true;
+
+			}
+
+			$list = array();
+			//cramirez: $dry_run avoid to load all data the first time
+			$list = $this->bo->read();
+//die(_debug_array($list));
 			while (is_array($list) && list($id,$alarm) = each($list))
 			{
 				if(is_array($alarm['times']))
@@ -351,14 +402,15 @@
 
 				if($id[0] == 's_agreement' || $id[0] == 'agreement')
 				{
-					$link_edit			= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.ui' .$id[0] .'.edit', 'id'=> $id[1]));
-					$lang_edit_statustext		= lang('edit the alarm');
-					$text_edit			= lang('edit');
+					$link_edit				= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.ui' .$id[0] .'.edit', 'id'=> $id[1]));
+					$lang_edit_statustext	= lang('edit the alarm');
+					$text_edit				= lang('edit');
 
 				}
 
 				$content[] = array
 				(
+					'id_cod'			=> $id[1],
 					'id'				=> $alarm['id'],
 					'next_run'			=> $GLOBALS['phpgw']->common->show_date($alarm['next']),
 					'method'			=> $alarm['method'],
@@ -366,9 +418,9 @@
 					'data'				=> $data,
 					'enabled'			=> $alarm['enabled'],
 					'user'				=> $alarm['user'],
-					'link_edit'			=> $link_edit,
-					'lang_edit_statustext'		=> $lang_edit_statustext,
-					'text_edit'			=> $text_edit
+//					'link_edit'			=> $link_edit,
+//					'lang_edit_statustext'		=> $lang_edit_statustext,
+//					'text_edit'			=> $text_edit
 				);
 				unset($alarm);
 				unset($data);
@@ -378,123 +430,188 @@
 				unset($text_edit);
 			}
 
-			$table_header = array
-			(
-				'lang_next_run'		=> lang('Next run'),
-				'lang_times'		=> lang('Times'),
-				'lang_method'		=> lang('Method'),
-				'lang_user'		=> lang('User'),
-				'lang_data'		=> lang('Data'),
-				'lang_select'		=> lang('select'),
-				'lang_edit'		=> lang('edit'),
-				'lang_alarm_id'		=> lang('alarm id'),
-				'lang_enabled'		=> lang('enabled'),
-				'sort_user'		=> $this->nextmatchs->show_sort_order(array
-										(
-											'sort'	=> $this->sort,
-											'var'	=> 'account_lid',
-											'order'	=> $this->order,
-											'extra'	=> array('menuaction'	=> 'property.uialarm.list_alarm',
-																	'query'		=> $this->query,
-																	'allrows'	=> $this->allrows)
-										)),
-				'sort_method'		=> $this->nextmatchs->show_sort_order(array
-										(
-											'sort'	=> $this->sort,
-											'var'	=> 'method',
-											'order'	=> $this->order,
-											'extra'	=> array('menuaction'	=> 'property.uialarm.list_alarm',
-																	'query'		=> $this->query,
-																	'allrows'	=> $this->allrows)
-										)),
-				'sort_next_run'		=> $this->nextmatchs->show_sort_order(array
-										(
-											'sort'	=> $this->sort,
-											'var'	=> 'next',
-											'order'	=> $this->order,
-											'extra'	=> array('menuaction'	=> 'property.uialarm.list_alarm',
-																	'query'		=> $this->query,
-																	'allrows'	=> $this->allrows)
-										)),
-				'sort_alarm_id'		=> $this->nextmatchs->show_sort_order(array
-										(
-											'sort'	=> $this->sort,
-											'var'	=> 'id',
-											'order'	=> $this->order,
-											'extra'	=> array('menuaction'	=> 'property.uialarm.list_alarm',
-																	'query'		=> $this->query,
-																	'allrows'	=> $this->allrows)
-										))
-			);
 
-			$alter_alarm = array
-			(
-				'lang_enable'		=> lang('Enable'),
-				'lang_disable'		=> lang('Disable'),
-				'lang_delete'		=> lang('Delete'),
-				'lang_test_cron'	=> lang('test cron')
+//die(_debug_array($content));
+
+
+
+			$uicols = array (
+				array(
+					'col_name'=>id,			'input_type'=>hidden,	'name'=>'id_cod',	'descr'=>'',				'className'=>'', 				'sortable'=>false ,'formatter'=>'',		'sort_field'=>''),
+				array(
+					'col_name'=>alarm_id,	'input_type'=>varchar,	'name'=>'id',		'descr'=>lang('alarm id'),	'className'=>'centerClasss', 	'sortable'=>true ,'formatter'=>'',		'sort_field'=>'id'),
+				array(
+					'col_name'=>next_run,	'input_type'=>varchar,	'name'=>'next_run',	'descr'=>lang('Next run'),	'className'=>'centerClasss', 	'sortable'=>true ,'formatter'=>'',		'sort_field'=>'next'),
+				array(
+					'col_name'=>data,		'input_type'=>varchar,	'name'=>'data',		'descr'=>lang('Data'),		'className'=>'leftClasss',		'sortable'=>false ,'formatter'=>'',	'	sort_field'=>''),
+				array(
+					'col_name'=>enable,		'input_type'=>varchar,	'name'=>'enabled',	'descr'=>lang('enabled'),	'className'=>'centerClasss', 	'sortable'=>false ,'formatter'=>'',		'sort_field'=>''),
+				array(
+					'col_name'=>user,		'input_type'=>varchar,	'name'=>'user',		'descr'=>lang('User'),		'className'=>'centerClasss', 	'sortable'=>true ,'formatter'=>'',		'sort_field'=>'account_lid')
 				);
 
-			$table_add = array
-			(
-				'lang_add'		=> lang('add'),
-				'lang_add_statustext'	=> lang('add an alarm'),
-				'add_action'		=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uialarm.edit'))
-			);
-
-			$link_data = array
-			(
-				'menuaction'	=> 'property.uialarm.list_alarm',
-				'sort'		=>$this->sort,
-				'order'		=>$this->order,
-				'filter'	=>$this->filter,
-				'query'		=>$this->query
-			);
-
-			if(!$this->allrows)
+			$j=0;
+			if (isset($content) && is_array($content))
 			{
-				$record_limit	= $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
+				foreach($content as $alarm)
+				{
+					for ($i=0;$i<count($uicols);$i++)
+					{
+						$datatable['rows']['row'][$j]['column'][$i]['name'] 		= $uicols[$i]['col_name'];
+						$datatable['rows']['row'][$j]['column'][$i]['value']		= $alarm[$uicols[$i]['name']];
+						$datatable['rows']['row'][$j]['column'][$i]['format']		= $uicols[$i]['input_type'];
+					}
+					$j++;
+				}
+			}
+
+//die(_debug_array($datatable['rows']));
+			$datatable['rowactions']['action'] = array();
+			$parameters = array
+			(
+				'parameter' => array
+				(
+					array
+					(
+						'name'		=> 'id',
+						'source'	=> 'id'
+					),
+				)
+			);
+
+			$datatable['rowactions']['action'][] = array(
+					'my_name'		=> 'edit',
+					'text' 			=> lang('edit'),
+					'action'		=> $GLOBALS['phpgw']->link('/index.php',array
+									(
+										'menuaction'	=> 'property.uis_agreement.edit',
+									)),
+					'parameters'	=> $parameters
+			);
+			unset($parameters);
+
+
+			for ($i=0;$i<count($uicols);$i++)
+			{
+				//all colums should be have formatter
+				$datatable['headers']['header'][$i]['formatter'] = ($uicols[$i]['formatter']==''?  '""' : $uicols[$i]['formatter']);
+
+				$datatable['headers']['header'][$i]['name'] 		= $uicols[$i]['col_name'];
+				$datatable['headers']['header'][$i]['text'] 		= $uicols[$i]['descr'];
+				$datatable['headers']['header'][$i]['sortable']		= $uicols[$i]['sortable'];
+				$datatable['headers']['header'][$i]['sort_field']	= $uicols[$i]['sort_field'];
+				$datatable['headers']['header'][$i]['className']	= $uicols[$i]['className'];
+
+				if($uicols[$i]['input_type']!='hidden')
+				{
+					$datatable['headers']['header'][$i]['visible']	= true;
+				}
+				else
+				{
+					$datatable['headers']['header'][$i]['visible'] 	= false;
+				}
+			}
+
+//die(_debug_array($datatable['headers']));
+			// path for property.js
+			$datatable['property_js'] = $GLOBALS['phpgw_info']['server']['webserver_url']."/property/js/yahoo/property.js";
+
+			// Pagination and sort values
+			$datatable['pagination']['records_start'] 	= (int)$this->bo->start;
+			$datatable['pagination']['records_limit'] 	= $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
+			$datatable['pagination']['records_returned']= count($list);
+			$datatable['pagination']['records_total'] 	= $this->bo->total_records;
+
+
+
+			if ( (phpgw::get_var("start")== "") && (phpgw::get_var("order",'string')== ""))
+			{
+				$datatable['sorting']['order'] 			= $uicols[0]['col_name']; // name key Column in myColumnDef
+				$datatable['sorting']['sort'] 			= 'desc'; // ASC / DESC
 			}
 			else
 			{
-				$record_limit	= $this->bo->total_records;
+				$datatable['sorting']['order']			= phpgw::get_var('order', 'string'); // name of column of Database
+				$datatable['sorting']['sort'] 			= phpgw::get_var('sort', 'string'); // ASC / DESC
 			}
 
-			$msgbox_data = $this->bocommon->msgbox_data($receipt);
 
-			$data = array
-			(
-				'menu'							=> $this->bocommon->get_menu(),
-				'msgbox_data'					=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
- 				'allow_allrows'					=> true,
-				'allrows'					=> $this->allrows,
-				'start_record'					=> $this->start,
-				'record_limit'					=> $record_limit,
-				'num_records'					=> count($list),
- 				'all_records'					=> $this->bo->total_records,
-				'link_url'					=> $GLOBALS['phpgw']->link('/index.php',$link_data),
-				'img_path'					=> $GLOBALS['phpgw']->common->get_image_path('phpgwapi','default'),
-				'lang_no_cat'					=> lang('no category'),
-				'lang_cat_statustext'				=> lang('Select the category the alarm belongs to. To do not use a category select NO CATEGORY'),
-				'select_name'					=> 'cat_id',
-				'cat_list'					=> '',//$this->bo->select_category_list('filter',$this->cat_id),
-				'select_action'					=> $GLOBALS['phpgw']->link('/index.php',$link_data),
-				'filter_list'					=> $this->nextmatchs->xslt_filter(array('filter' => $this->filter)),
-				'lang_filter_statustext'			=> lang('Select the filter. To show all entries select SHOW ALL'),
-				'lang_searchfield_statustext'			=> lang('Enter the search string. To show all entries, empty this field and press the SUBMIT button again'),
-				'lang_searchbutton_statustext'			=> lang('Submit the search string'),
-				'query'						=> $this->query,
-				'lang_search'					=> lang('search'),
-				'table_header_alarm'				=> $table_header,
-				'values_alarm'					=> $content,
-				'alter_alarm'					=> $alter_alarm,
-			);
-			$this->save_sessiondata();
+
+			phpgwapi_yui::load_widget('dragdrop');
+		  	phpgwapi_yui::load_widget('datatable');
+		  	phpgwapi_yui::load_widget('menu');
+		  	phpgwapi_yui::load_widget('connection');
+		  	phpgwapi_yui::load_widget('loader');
+		  	phpgwapi_yui::load_widget('tabview');
+			phpgwapi_yui::load_widget('paginator');
+			phpgwapi_yui::load_widget('animation');
+
+
+
+
+//-- BEGIN----------------------------- JSON CODE ------------------------------
+
+			if( phpgw::get_var('phpgw_return_as') == 'json' )
+			{
+    		//values for Pagination
+	    		$json = array
+	    		(
+	    			'recordsReturned' 	=> $datatable['pagination']['records_returned'],
+    				'totalRecords' 		=> (int)$datatable['pagination']['records_total'],
+	    			'startIndex' 		=> $datatable['pagination']['records_start'],
+					'sort'				=> $datatable['sorting']['order'],
+	    			'dir'				=> $datatable['sorting']['sort'],
+					'records'			=> array()
+	    		);
+
+				// values for datatable
+	    		if(isset($datatable['rows']['row']) && is_array($datatable['rows']['row'])){
+	    			foreach( $datatable['rows']['row'] as $row )
+	    			{
+		    			$json_row = array();
+		    			foreach( $row['column'] as $column)
+		    			{
+		    				$json_row[$column['name']] = $column['value'];
+		    			}
+		    			$json['records'][] = $json_row;
+	    			}
+	    		}
+
+				// right in datatable
+				if(isset($datatable['rowactions']['action']) && is_array($datatable['rowactions']['action']))
+				{
+					$json ['rights'] = $datatable['rowactions']['action'];
+				}
+
+	    		return $json;
+			}
+//-------------------- JSON CODE ----------------------
+
+			// Prepare template variables and process XSLT
+			$template_vars = array();
+			$template_vars['datatable'] = $datatable;
+			$GLOBALS['phpgw']->xslttpl->add_file(array('datatable'));
+	      	$GLOBALS['phpgw']->xslttpl->set_var('phpgw', $template_vars);
+
+	      	if ( !isset($GLOBALS['phpgw']->css) || !is_object($GLOBALS['phpgw']->css) )
+	      	{
+	        	$GLOBALS['phpgw']->css = createObject('phpgwapi.css');
+	      	}
+			// Prepare CSS Style
+		  	$GLOBALS['phpgw']->css->validate_file('datatable');
+		  	$GLOBALS['phpgw']->css->validate_file('property');
+		  	$GLOBALS['phpgw']->css->add_external_file('property/templates/base/css/property.css');
+			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/datatable/assets/skins/sam/datatable.css');
+			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/container/assets/skins/sam/container.css');
+			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/paginator/assets/skins/sam/paginator.css');
+
+			//Title of Page
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('alarm') . ': ' . lang('list alarm');
-//_debug_array($data);
 
-			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('list_alarm' => $data));
-		//	$GLOBALS['phpgw']->xslttpl->pp();
+	  		// Prepare YUI Library
+  			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'alarm.list_alarm', 'property' );
+
+			//$this->save_sessiondata();
 		}
 
 		function edit()
