@@ -47,6 +47,15 @@
 		{
 		}
 	}
+
+/****************************************************************************************/
+
+  	this.myParticularRenderEvent = function()
+  	{
+  		//don't delete it
+  	}
+
+
 //----------------------------------------------------------
 	YAHOO.util.Event.addListener(window, "load", function()
 	{
