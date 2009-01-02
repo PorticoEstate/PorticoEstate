@@ -122,7 +122,7 @@
 					'sort'		=> $this->sort
 				);
 
-				$datatable['config']['allow_allrows'] = true;
+				$datatable['config']['allow_allrows'] = false;
 
 				$datatable['actions']['form'] = array(
 				array(
@@ -175,6 +175,7 @@
 			$method_list = $this->bo->read();
 			$uicols['name'][0]	= 'id';
 			$uicols['descr'][0]	= lang('method ID');
+			$uicols['className'][0]	= 'rightClasss';
 			$uicols['name'][1]	= 'name';
 			$uicols['descr'][1]	= lang('Name');
 			$uicols['name'][2]	= 'data';
@@ -342,6 +343,7 @@
 				if($uicols['input_type'][$i]!='hidden')
 				{
 					$datatable['headers']['header'][$i]['formatter'] 		= ($uicols['formatter'][$i]==''?  '""' : $uicols['formatter'][$i]);
+					$datatable['headers']['header'][$i]['className'] 		= $uicols['className'][$i];
 					$datatable['headers']['header'][$i]['name'] 			= $uicols['name'][$i];
 					$datatable['headers']['header'][$i]['text'] 			= $uicols['descr'][$i];
 					$datatable['headers']['header'][$i]['visible'] 			= true;
@@ -380,7 +382,7 @@
 			if ( (phpgw::get_var("start")== "") && (phpgw::get_var("order",'string')== ""))
 			{
 				$datatable['sorting']['order'] 			= 'id'; // name key Column in myColumnDef
-				$datatable['sorting']['sort'] 			= 'desc'; // ASC / DESC
+				$datatable['sorting']['sort'] 			= 'asc'; // ASC / DESC
 			}
 			else
 			{
