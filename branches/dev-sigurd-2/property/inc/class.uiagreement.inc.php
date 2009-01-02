@@ -26,14 +26,12 @@
 	* @subpackage agreement
  	* @version $Id$
 	*/
-	phpgw::import_class('phpgwapi.yui');
 
 	/**
 	 * Description
 	 * @package property
 	 */
 	phpgw::import_class('phpgwapi.yui');
-
 	class property_uiagreement
 	{
 		var $grants;
@@ -112,7 +110,7 @@
 
 		function columns()
 		{
-
+			phpgwapi_yui::load_widget('tabview');
 			$GLOBALS['phpgw']->xslttpl->add_file(array('columns'));
 
 			$GLOBALS['phpgw_info']['flags']['noframework'] = true;
@@ -564,205 +562,6 @@
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
 
 			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'agreement.index', 'property' );
-
-
-//			_debug_array($datatable);die;
-
-
-			/*if(!$this->acl_read)
-			{
-				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=>1, 'acl_location'=> $this->acl_location));
-			}
-
-			$GLOBALS['phpgw_info']['flags']['menu_selection'] = 'property::agreement::pricebook::agreement';
-			$GLOBALS['phpgw']->xslttpl->add_file(array('agreement',
-										'receipt',
-										'search_field',
-										'nextmatchs',
-										'filter_member_of'));
-
-			$receipt = $GLOBALS['phpgw']->session->appsession('session_data','agreement_receipt');
-			$GLOBALS['phpgw']->session->appsession('session_data','agreement_receipt','');
-
-			$list = $this->bo->read();
-
-			$uicols		= $this->bo->uicols;
-			$content = array();
-			$j=0;
-			if (isset($list) AND is_array($list))
-			{
-				foreach($list as $entry)
-				{
-					for ($i=0;$i<count($uicols['name']);$i++)
-					{
-						if($uicols['input_type'][$i]!='hidden')
-						{
-							$content[$j]['row'][$i]['value'] 	= $entry[$uicols['name'][$i]];
-							$content[$j]['row'][$i]['name'] 	= $uicols['name'][$i];
-						}
-					}
-
-					if($this->acl_read)
-					{
-						$content[$j]['row'][$i]['statustext']		= lang('view the entity');
-						$content[$j]['row'][$i]['text']			= lang('view');
-						$content[$j]['row'][$i++]['link']		= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiagreement.view','id'=> $entry['id'], 'role'=> $this->role));
-					}
-					if($this->acl_edit)
-					{
-						$content[$j]['row'][$i]['statustext']		= lang('edit the agreement');
-						$content[$j]['row'][$i]['text']			= lang('edit');
-						$content[$j]['row'][$i++]['link']		= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiagreement.edit','id'=> $entry['id'], 'role'=> $this->role));
-					}
-					if($this->acl_delete)
-					{
-						$content[$j]['row'][$i]['statustext']		= lang('delete the agreement');
-						$content[$j]['row'][$i]['text']			= lang('delete');
-						$content[$j]['row'][$i++]['link']		= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiagreement.delete', 'agreement_id'=> $entry['id'], 'role'=> $this->role));
-					}
-
-					$j++;
-				}
-			}
-
-//_debug_array($content);
-			for ($i=0;$i<count($uicols['descr']);$i++)
-			{
-				if($uicols['input_type'][$i]!='hidden')
-				{
-					$table_header[$i]['header'] 	= $uicols['descr'][$i];
-					$table_header[$i]['width'] 		= '5%';
-					$table_header[$i]['align'] 		= 'center';
-					if($uicols['datatype'][$i]!='T' && $uicols['datatype'][$i]!='CH')
-					{
-						$table_header[$i]['sort_link']	=true;
-						$table_header[$i]['sort'] 		= $this->nextmatchs->show_sort_order(array
-							(
-								'sort'	=> $this->sort,
-								'var'	=> $uicols['name'][$i],
-								'order'	=> $this->order,
-								'extra'	=> array('menuaction'	=> 'property.uiagreement.index',
-													'query'		=> $this->query,
-													'role'		=> $this->role,
-													'member_id'	=> $this->member_id,
-													'allrows'	=> $this->allrows
-													)
-							));
-					}
-				}
-			}
-
-			if($this->acl_read)
-			{
-				$table_header[$i]['width'] 			= '5%';
-				$table_header[$i]['align'] 			= 'center';
-				$table_header[$i]['header']			= lang('view');
-				$i++;
-			}
-			if($this->acl_edit)
-			{
-				$table_header[$i]['width'] 			= '5%';
-				$table_header[$i]['align'] 			= 'center';
-				$table_header[$i]['header']			= lang('edit');
-				$i++;
-			}
-			if($this->acl_delete)
-			{
-				$table_header[$i]['width'] 			= '5%';
-				$table_header[$i]['align'] 			= 'center';
-				$table_header[$i]['header']			= lang('delete');
-				$i++;
-			}
-
-
-			if($this->acl_add)
-			{
-				$table_add = array
-				(
-					'lang_add'		=> lang('add'),
-					'lang_add_statustext'	=> lang('add an agreement'),
-					'add_action'		=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiagreement.edit', 'role'=> $this->role))
-				);
-			}
-
-			$link_data = array
-			(
-				'menuaction'	=> 'property.uiagreement.index',
-				'sort'		=>$this->sort,
-				'order'		=>$this->order,
-				'cat_id'	=>$this->cat_id,
-				'filter'	=>$this->filter,
-				'query'		=>$this->query,
-				'role'		=> $this->role,
-				'member_id'	=> $this->member_id
-			);
-
-			if(!$this->allrows)
-			{
-				$record_limit	= $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
-			}
-			else
-			{
-				$record_limit	= $this->bo->total_records;
-			}
-
-			$msgbox_data = $this->bocommon->msgbox_data($receipt);
-
-			$link_columns = array
-			(
-				'menuaction' 	=> 'property.uiagreement.columns',
-				'role'		=> $this->role
-			);
-
-			$member_of_data	= $this->cats->formatted_xslt_list(array('selected' => $this->member_id,'globals' => true,'link_data' =>$link_data));
-
-			$GLOBALS['phpgw']->js->validate_file('overlib','overlib','property');
-
-			$data = array
-			(
-				'menu'							=> $this->bocommon->get_menu(),
-				'lang_columns'					=> lang('columns'),
-				'link_columns'					=> $GLOBALS['phpgw']->link('/index.php',$link_columns),
-				'lang_columns_help'				=> lang('Choose columns'),
-				'msgbox_data'					=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
- 				'allow_allrows'					=> true,
-				'allrows'						=> $this->allrows,
-				'start_record'					=> $this->start,
-				'record_limit'					=> $record_limit,
-				'num_records'					=> count($list),
- 				'all_records'					=> $this->bo->total_records,
-				'link_url'						=> $GLOBALS['phpgw']->link('/index.php',$link_data),
-				'img_path'						=> $GLOBALS['phpgw']->common->get_image_path('phpgwapi','default'),
-				'lang_no_cat'					=> lang('no category'),
-				'lang_cat_statustext'			=> lang('Select the category the agreement belongs to. To do not use a category select NO CATEGORY'),
-				'select_name'					=> 'cat_id',
-				'cat_list'						=> $this->bocommon->select_category_list(array('format'=>'filter','selected' => $this->cat_id,'type' =>'branch','order'=>'descr')),
-
-				'select_action'					=> $GLOBALS['phpgw']->link('/index.php',$link_data),
-
-				'lang_no_vendor'				=> lang('no vendor'),
-				'lang_vendor_statustext'		=> lang('Select the vendor the agreement belongs to.'),
-				'vendor_list'					=> $this->bo->select_vendor_list('filter',$this->vendor_id),
-
-				'lang_no_member'				=> lang('no member'),
-				'member_of_name'				=> 'member_id',
-				'member_of_list'				=> $member_of_data['cat_list'],
-
-				'filter_list'					=> $this->nextmatchs->xslt_filter(array('filter' => $this->filter)),
-				'lang_filter_statustext'		=> lang('Select the filter. To show all entries select SHOW ALL'),
-				'lang_searchfield_statustext'	=> lang('Enter the search string. To show all entries, empty this field and press the SUBMIT button again'),
-				'lang_searchbutton_statustext'	=> lang('Submit the search string'),
-				'query'							=> $this->query,
-				'lang_search'					=> lang('search'),
-				'table_header'					=> $table_header,
-				'values'						=> $content,
-				'table_add'						=> $table_add
-			);
-			$this->save_sessiondata();
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('agreement') . ': ' . lang('list ' . $this->role);
-
-			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('list' => $data));
-		//	$GLOBALS['phpgw']->xslttpl->pp();*/
 		}
 
 		function list_content($list,$uicols,$edit_item='',$view_only='')
