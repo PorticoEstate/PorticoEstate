@@ -25,7 +25,8 @@
 	// define the hidden column in datatable
 	var config_values =
 	{
-		date_search : 0 //if search has link "Data search"
+		date_search : 0, //if search has link "Data search"
+		particular_done : "admin.uimainscreen.mainscreen"
 	}
 /****************************************************************************************/
 	this.particular_setting = function()
@@ -42,9 +43,9 @@
 
   	this.myParticularRenderEvent = function()
   	{
-  	//don't delete it
+  		//don't delete it
+  		document.getElementById('txt_query').focus();
   	}
-
 
 /****************************************************************************************/
 	YAHOO.util.Event.addListener(window, "load", function()
