@@ -41,7 +41,8 @@
 
   	this.myParticularRenderEvent = function()
   	{
-  	//don't delete it
+	  	//don't delete it
+  		document.getElementById('txt_query').focus();
   	}
 
 
