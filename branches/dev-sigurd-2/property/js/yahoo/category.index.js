@@ -41,6 +41,7 @@
   	this.myParticularRenderEvent = function()
   	{
   		//don't delete it
+  		document.getElementById('txt_query').focus();
   	}
 /****************************************************************************************/
 	YAHOO.util.Event.addListener(window, "load", function()
