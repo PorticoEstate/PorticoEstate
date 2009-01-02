@@ -118,7 +118,7 @@
 					'type'		=> $type
 				);
 
-				$datatable['config']['allow_allrows'] = true;
+				$datatable['config']['allow_allrows'] = false;
 
 				$datatable['actions']['form'] = array(
 				array(
@@ -301,7 +301,7 @@
 			if ( (phpgw::get_var("start")== "") && (phpgw::get_var("order",'string')== ""))
 			{
 				$datatable['sorting']['order'] 			= 'id'; // name key Column in myColumnDef
-				$datatable['sorting']['sort'] 			= 'desc'; // ASC / DESC
+				$datatable['sorting']['sort'] 			= 'asc'; // ASC / DESC
 			}
 			else
 			{
