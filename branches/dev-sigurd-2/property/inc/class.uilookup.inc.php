@@ -1667,7 +1667,7 @@
 			$entity_list = $boentity->read(array('lookup'=>true));
 			$input_name = $GLOBALS['phpgw']->session->appsession('lookup_fields','property');
 			$uicols	= $boentity->uicols;
-//_debug_array($entity_list);
+
 			if (count($uicols['name']) > 0)
 			{
 				for ($m = 0; $m<count($input_name); $m++)
@@ -1721,7 +1721,7 @@
 
 					if($uicols['name'][$i]=='loc1' || $uicols['name'][$i]=='num')
 					{
-						//$datatable['headers']['header'][$i]['sortable']		= true;
+						$datatable['headers']['header'][$i]['sortable']		= false;
 						$datatable['headers']['header'][$i]['sort_field']	= $uicols['name'][$i];
 					}
 				}
@@ -1763,7 +1763,7 @@
 
 			if ( (phpgw::get_var("start")== "") && (phpgw::get_var("order",'string')== ""))
 			{
-				$datatable['sorting']['order'] 			= 'num'; // name key Column in myColumnDef
+				$datatable['sorting']['order'] 			= ''; // name key Column in myColumnDef
 				$datatable['sorting']['sort'] 			= 'desc'; // ASC / DESC
 			}
 			else
