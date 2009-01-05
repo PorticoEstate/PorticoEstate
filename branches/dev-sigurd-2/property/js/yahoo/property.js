@@ -366,12 +366,21 @@
 					var oRecord = p_myDataTable.getRecord(elRow);
 					var url = values_ds.rights[task.groupIndex].action;
 					var sUrl = "";
+					var vars2 = "";
 
 					if(values_ds.rights[task.groupIndex].parameters!=null)
 					{
-						param_name = values_ds.rights[task.groupIndex].parameters.parameter[0].name;
-						param_source = values_ds.rights[task.groupIndex].parameters.parameter[0].source;
-						sUrl = url + "&"+param_name+"=" + oRecord.getData(param_source);
+						for(f=0; f<values_ds.rights[task.groupIndex].parameters.parameter.length; f++)
+						{
+							param_name = values_ds.rights[task.groupIndex].parameters.parameter[f].name;
+							param_source = values_ds.rights[task.groupIndex].parameters.parameter[f].source;
+							vars2 = vars2 + "&"+param_name+"=" + oRecord.getData(param_source);
+						}
+						sUrl = url + vars2;
+					}
+					if(values_ds.rights[task.groupIndex].parameters.parameter.length > 0)
+					{
+
 					}
 					else //for New
 					{
