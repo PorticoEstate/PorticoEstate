@@ -36,7 +36,6 @@
 	{
 		function property_sorequest()
 		{
-		//	$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->account		= $GLOBALS['phpgw_info']['user']['account_id'];
 			$this->soproject	= CreateObject('property.soproject');
 			$this->historylog	= CreateObject('property.historylog','request');
@@ -177,7 +176,6 @@
 				$cat_id			= isset($data['cat_id'])?$data['cat_id']:0;
 				$status_id		= isset($data['status_id']) && $data['status_id'] ? $data['status_id']:0;
 				$project_id		= isset($data['project_id'])?$data['project_id']:'';
-				$project_id		= isset($data['project_id'])?$data['project_id']:'';
 				$allrows		= isset($data['allrows'])?$data['allrows']:'';
 				$list_descr		= isset($data['list_descr'])?$data['list_descr']:'';
 				$dry_run		= isset($data['dry_run']) ? $data['dry_run'] : '';
@@ -298,12 +296,15 @@
 			$sql .= " $filtermethod $querymethod";
 
 			$this->uicols		= $this->bocommon->uicols;
-			$cols_return		= $this->bocommon->cols_return;
+//			$cols_return		= $this->bocommon->cols_return;
 			$type_id		= $this->bocommon->type_id;
 			$this->cols_extra	= $this->bocommon->cols_extra;
 
-			$this->db2->query($sql,__LINE__,__FILE__);
-			$this->total_records = $this->db2->num_rows();
+			$this->db->fetchmode = 'ASSOC';
+			$sql2 = 'SELECT count(*) as cnt ' . substr($sql,strripos($sql,'from'));
+			$this->db->query($sql2,__LINE__,__FILE__);
+			$this->db->next_record();
+			$this->total_records = $this->db->f('cnt');
 
 			//cramirez.r@ccfirst.com 23/10/08 avoid retrieve data in first time, only render definition for headers (var myColumnDefs)
 			if($dry_run)
@@ -323,11 +324,12 @@
 			}
 			
 			$j=0;
+			$request_list = array();
 			while ($this->db->next_record())
 			{
 				for ($i=0;$i<count($cols_return);$i++)
 				{
-					$request_list[$j][$cols_return[$i]] = stripslashes($this->db->f($cols_return[$i]));
+					$request_list[$j][$cols_return[$i]] = $this->db->f($cols_return[$i], true);
 				}
 
 				$location_code=	$this->db->f('location_code');

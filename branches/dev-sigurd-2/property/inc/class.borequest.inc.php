@@ -280,11 +280,13 @@
 			{
 				$request[$i]['coordinator'] = $GLOBALS['phpgw']->accounts->id2name($request[$i]['coordinator']);
 				$request[$i]['entry_date'] = $GLOBALS['phpgw']->common->show_date($request[$i]['entry_date'],$dateformat);
-				$location_data=$this->solocation->read_single($request[$i]['location_code']);
-
-				for ($j=0;$j<count($cols_extra);$j++)
+				if($cols_extra)
 				{
-					$request[$i][$cols_extra[$j]] = $location_data[$cols_extra[$j]];
+					$location_data=$this->solocation->read_single($request[$i]['location_code']);
+					for ($j=0;$j<count($cols_extra);$j++)
+					{
+						$request[$i][$cols_extra[$j]] = $location_data[$cols_extra[$j]];
+					}
 				}
 			}
 
