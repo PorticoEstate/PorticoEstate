@@ -98,19 +98,19 @@
 			$receipt = $GLOBALS['phpgw']->session->appsession('session_data','alarm_receipt');
 			$GLOBALS['phpgw']->session->appsession('session_data','alarm_receipt','');
 			$values		= phpgw::get_var('values');
-			if($values['delete_alarm'] && count($values['alarm'])):
+
+			if($values['delete_alarm'] && count($values['alarm']))
 			{
 				$receipt = $this->bo->delete_alarm('fm_async',$values['alarm']);
 			}
-			elseif(($values['enable_alarm'] || $values['disable_alarm']) && count($values['alarm'])):
+			else if(($values['enable_alarm'] || $values['disable_alarm']) && count($values['alarm']))
 			{
 				$receipt = $this->bo->enable_alarm('fm_async',$values['alarm'],$values['enable_alarm']);
 			}
-			elseif($values['test_cron']):
+			else if(isset($values['test_cron']) && $values['test_cron'] && isset($values['alarm']) && $values['alarm'])
 			{
 					$this->bo->test_cron();
 			}
-			endif;
 
 			$list = $this->bo->read();
 
