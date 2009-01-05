@@ -42,7 +42,6 @@
 			$this->historylog	= CreateObject('property.historylog','request');
 			$this->bocommon		= CreateObject('property.bocommon');
 			$this->db           	= $this->bocommon->new_db();
-			$this->db2           	= $this->bocommon->new_db($this->db);
 			$this->join			= $this->bocommon->join;
 			$this->like			= $this->bocommon->like;
 			$this->interlink 	= CreateObject('property.interlink');
@@ -177,72 +176,92 @@
 				$cat_id			= isset($data['cat_id'])?$data['cat_id']:0;
 				$status_id		= isset($data['status_id']) && $data['status_id'] ? $data['status_id']:0;
 				$project_id		= isset($data['project_id'])?$data['project_id']:'';
-				$project_id		= isset($data['project_id'])?$data['project_id']:'';
 				$allrows		= isset($data['allrows'])?$data['allrows']:'';
 				$list_descr		= isset($data['list_descr'])?$data['list_descr']:'';
 			}
 
-			$entity_table = 'fm_request';
+			$sql = $this->bocommon->fm_cache('sql_request_' . !!$list_descr);
 
-			$cols .= $entity_table . '.location_code';
-			$cols_return[] = 'location_code';
-
-			$cols .= ",$entity_table.id as request_id";
-			$cols_return[] 			= 'request_id';
-			$uicols['input_type'][]		= 'text';
-			$uicols['name'][]		= 'request_id';
-			$uicols['descr'][]		= lang('Request');
-			$uicols['statustext'][]		= lang('Request ID');
-
-			$cols.= ",$entity_table.entry_date";
-			$cols_return[] 			= 'entry_date';
-			$uicols['input_type'][]		= 'text';
-			$uicols['name'][]		= 'entry_date';
-			$uicols['descr'][]		= lang('entry date');
-			$uicols['statustext'][]		= lang('Request entry date');
-
-			$cols.= ",$entity_table.title as title";
-			$cols_return[] 			= 'title';
-			$uicols['input_type'][]		= 'text';
-			$uicols['name'][]		= 'title';
-			$uicols['descr'][]		= lang('title');
-			$uicols['statustext'][]		= lang('Request title');
-
-			if($list_descr)
+			if(!$sql)
 			{
-				$cols.= ",$entity_table.descr as descr";
-				$cols_return[] 			= 'descr';
+				$entity_table = 'fm_request';
+
+				$cols .= $entity_table . '.location_code';
+				$cols_return[] = 'location_code';
+
+				$cols .= ",$entity_table.id as request_id";
+				$cols_return[] 			= 'request_id';
 				$uicols['input_type'][]		= 'text';
-				$uicols['name'][]		= 'descr';
-				$uicols['descr'][]		= lang('descr');
-				$uicols['statustext'][]		= lang('Request descr');
-			}
+				$uicols['name'][]		= 'request_id';
+				$uicols['descr'][]		= lang('Request');
+				$uicols['statustext'][]		= lang('Request ID');
 
+				$cols.= ",$entity_table.entry_date";
+				$cols_return[] 			= 'entry_date';
+				$uicols['input_type'][]		= 'text';
+				$uicols['name'][]		= 'entry_date';
+				$uicols['descr'][]		= lang('entry date');
+				$uicols['statustext'][]		= lang('Request entry date');
 
-			$cols.= ",$entity_table.budget as budget";
-			$cols_return[] 			= 'budget';
-			$uicols['input_type'][]		= 'text';
-			$uicols['name'][]		= 'budget';
-			$uicols['descr'][]		= lang('budget');
-			$uicols['statustext'][]		= lang('Request budget');
+				$cols.= ",$entity_table.title as title";
+				$cols_return[] 			= 'title';
+				$uicols['input_type'][]		= 'text';
+				$uicols['name'][]		= 'title';
+				$uicols['descr'][]		= lang('title');
+				$uicols['statustext'][]		= lang('Request title');
 
-			$cols.= ",$entity_table.coordinator";
-			$cols_return[] 			= 'coordinator';
-			$uicols['input_type'][]		= 'text';
-			$uicols['name'][]		= 'coordinator';
-			$uicols['descr'][]		= lang('Coordinator');
-			$uicols['statustext'][]		= lang('Project coordinator');
+				if($list_descr)
+				{
+					$cols.= ",$entity_table.descr as descr";
+					$cols_return[] 			= 'descr';
+					$uicols['input_type'][]		= 'text';
+					$uicols['name'][]		= 'descr';
+					$uicols['descr'][]		= lang('descr');
+					$uicols['statustext'][]		= lang('Request descr');
+				}
 
-			$cols.= ",$entity_table.score";
-			$cols_return[] 			= 'score';
-			$uicols['input_type'][]		= 'text';
-			$uicols['name'][]		= 'score';
-			$uicols['descr'][]		= lang('score');
-			$uicols['statustext'][]		= lang('score');
+				$cols.= ",$entity_table.budget as budget";
+				$cols_return[] 			= 'budget';
+				$uicols['input_type'][]		= 'text';
+				$uicols['name'][]		= 'budget';
+				$uicols['descr'][]		= lang('budget');
+				$uicols['statustext'][]		= lang('Request budget');
 
-			$sql	= $this->bocommon->generate_sql(array('entity_table'=>$entity_table,'cols'=>$cols,'cols_return'=>$cols_return,
+				$cols.= ",$entity_table.coordinator";
+				$cols_return[] 			= 'coordinator';
+				$uicols['input_type'][]		= 'text';
+				$uicols['name'][]		= 'coordinator';
+				$uicols['descr'][]		= lang('Coordinator');
+				$uicols['statustext'][]		= lang('Project coordinator');
+
+				$cols.= ",$entity_table.score";
+				$cols_return[] 			= 'score';
+				$uicols['input_type'][]		= 'text';
+				$uicols['name'][]		= 'score';
+				$uicols['descr'][]		= lang('score');
+				$uicols['statustext'][]		= lang('score');
+
+				$sql	= $this->bocommon->generate_sql(array('entity_table'=>$entity_table,'cols'=>$cols,'cols_return'=>$cols_return,
 															'uicols'=>$uicols,'joinmethod'=>$joinmethod,'paranthesis'=>$paranthesis,
 															'query'=>$query,'force_location'=>true));
+
+				$this->uicols		= $this->bocommon->uicols;
+				$type_id			= $this->bocommon->type_id;
+				$this->cols_extra	= $this->bocommon->cols_extra;
+
+				$this->bocommon->fm_cache('sql_request_' . !!$list_descr, $sql);
+				$this->bocommon->fm_cache('uicols_request_' . !!$list_descr, $this->uicols);
+				$this->bocommon->fm_cache('cols_return_request_' . !!$list_descr, $cols_return);
+				$this->bocommon->fm_cache('type_id_request_' . !!$list_descr, $type_id);
+				$this->bocommon->fm_cache('cols_extra_request_' . !!$list_descr, $this->cols_extra);
+			}
+			else
+			{
+				$this->uicols		= $this->bocommon->fm_cache('uicols_request_' . !!$list_descr);
+				$cols_return		= $this->bocommon->fm_cache('cols_return_request_' . !!$list_descr);
+				$type_id			= $this->bocommon->fm_cache('type_id_request_' . !!$list_descr);
+				$this->cols_extra	= $this->bocommon->fm_cache('cols_extra_request_' . !!$list_descr);
+			}
 
 			if ($order)
 			{
@@ -296,13 +315,11 @@
 
 			$sql .= " $filtermethod $querymethod";
 
-			$this->uicols		= $this->bocommon->uicols;
-			$cols_return		= $this->bocommon->cols_return;
-			$type_id		= $this->bocommon->type_id;
-			$this->cols_extra	= $this->bocommon->cols_extra;
-
-			$this->db2->query($sql,__LINE__,__FILE__);
-			$this->total_records = $this->db2->num_rows();
+			$this->db->fetchmode = 'ASSOC';
+			$sql2 = 'SELECT count(*) as cnt ' . substr($sql,strripos($sql,'from'));
+			$this->db->query($sql2,__LINE__,__FILE__);
+			$this->db->next_record();
+			$this->total_records = $this->db->f('cnt');
 
 			if(!$allrows)
 			{
@@ -314,14 +331,15 @@
 			}
 
 			$j=0;
+			$request_list = array();
+
 			while ($this->db->next_record())
 			{
 				for ($i=0;$i<count($cols_return);$i++)
 				{
-					$request_list[$j][$cols_return[$i]] = stripslashes($this->db->f($cols_return[$i]));
+					$request_list[$j][$cols_return[$i]] = $this->db->f($cols_return[$i], true);
 				}
-
-				$location_code=	$this->db->f('location_code');
+				$location_code=	$request_list[$j]['location_code'];
 				$location = split('-',$location_code);
 				for ($m=0;$m<count($location);$m++)
 				{

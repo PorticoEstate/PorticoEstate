@@ -440,8 +440,8 @@
 				'lang_user_statustext'			=> lang('Select the user the request belongs to. To do not use a category select NO USER'),
 				'select_user_name'			=> 'filter',
 				'lang_no_user'				=> lang('No user'),
-				'user_list'				=> $this->bocommon->get_user_list('filter',$this->filter,$extra=false,$default=false,$start=-1,$sort='ASC',$order='account_lastname',$query='',$offset=-1),
-
+//				'user_list'				=> $this->bocommon->get_user_list('filter',$this->filter,$extra=false,$default=false,$start=-1,$sort='ASC',$order='account_lastname',$query='',$offset=-1),
+				'user_list'				=> $this->bocommon->get_user_list_right2('filter',2,$this->filter,$this->acl_location),
 				'lang_searchfield_statustext'		=> lang('Enter the search string. To show all entries, empty this field and press the SUBMIT button again'),
 				'lang_searchbutton_statustext'		=> lang('Submit the search string'),
 				'query'					=> $this->query,
