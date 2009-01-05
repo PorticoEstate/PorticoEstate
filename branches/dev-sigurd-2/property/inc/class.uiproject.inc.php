@@ -319,12 +319,14 @@
 			if (isset($project_list) AND is_array($project_list))
 			{
 				foreach($project_list as $project_entry)
-
 				{
 					for ($k=0;$k<$count_uicols_name;$k++)
 					{
 						if($uicols['input_type'][$k]=='text')
 						{
+							$datatable['rows']['row'][$j]['column'][$k]['name']			= $uicols['name'][$k];
+							$datatable['rows']['row'][$j]['column'][$k]['value']		= $project_entry[$uicols['name'][$k]];
+
 							if(isset($project_entry['query_location'][$uicols['name'][$k]]) && $project_entry['query_location'][$uicols['name'][$k]])
 							{
 								$datatable['rows']['row'][$j]['column'][$k]['name'] 			= $uicols['name'][$k];
@@ -335,25 +337,13 @@
 								$datatable['rows']['row'][$j]['column'][$k]['link']				= $project_entry['query_location'][$uicols['name'][$k]];
 								$uicols['formatter'][$k] = 'myCustom';
 							}
-							else
+							else if (isset($uicols['datatype']) && isset($uicols['datatype'][$k]) && $uicols['datatype'][$k]=='link' && $project_entry[$uicols['name'][$k]])
 							{
-								if(isset($uicols['datatype']) && isset($uicols['datatype'][$k]) && $uicols['datatype'][$k]=='link' && $project_list[$uicols['name'][$k]])
-								{
-									$datatable['rows']['row'][$j]['column'][$k]['value']		= lang('link');
-									$datatable['rows']['row'][$j]['column'][$k]['link']		= $project_list[$uicols['name'][$k]];
+									$datatable['rows']['row'][$j]['column'][$k]['value']	= $project_entry[$uicols['name'][$k]]['text'];
+									$datatable['rows']['row'][$j]['column'][$k]['link']		= $project_entry[$uicols['name'][$k]]['url'];
 									$datatable['rows']['row'][$j]['column'][$k]['target']	= '_blank';
-								}
-								$datatable['rows']['row'][$j]['column'][$k]['name']				= $uicols['name'][$k];
-								$datatable['rows']['row'][$j]['column'][$k]['value']			= $project_entry[$uicols['name'][$k]];
+									$datatable['rows']['row'][$j]['column'][$k]['format'] 	= 'link';
 							}
-
-							if(isset($uicols['datatype']) && isset($uicols['datatype'][$k]) && $uicols['datatype'][$k]=='link' && $project_entry[$uicols['name'][$k]])
-								{
-									$datatable['rows']['row'][$j]['column'][$k]['value']		= lang('link');
-									$datatable['rows']['row'][$j]['column'][$k]['link']		= $project_entry[$uicols['name'][$k]];
-									$datatable['rows']['row'][$j]['column'][$k]['target']	= '_blank';
-								}
-
 						}
 
 						if($lookup && $k==($count_uicols_name-1))

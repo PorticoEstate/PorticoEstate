@@ -1047,6 +1047,9 @@
 				$uicols['name'][]		= 'loc' . $location_types[$i]['id'];
 				$uicols['descr'][]		= $location_types[$i]['name'];
 				$uicols['statustext'][]		= $location_types[$i]['descr'];
+				$uicols['exchange'][]		= false;
+				$uicols['align'][] 			= '';
+				$uicols['datatype'][]		= '';
 			}
 /*
 			$fm_location_cols = $soadmin_location->read_attrib(array('type_id'=>$type_id,'lookup_type'=>$type_id));
@@ -1081,6 +1084,9 @@
 				$uicols['name'][]			= 'loc1_name';
 				$uicols['descr'][]			= lang('Property Name');
 				$uicols['statustext'][]			= lang('Property Name');
+				$uicols['exchange'][]		= true;
+				$uicols['align'][] 			= '';
+				$uicols['datatype'][]		= '';
 
 				for ($i=2;$i<($type_id+1);$i++)
 				{
@@ -1089,6 +1095,9 @@
 					$uicols['name'][]		= 'loc' . $i . '_name';
 					$uicols['descr'][]		= '';
 					$uicols['statustext'][]		= '';
+					$uicols['exchange'][]		= true;
+					$uicols['align'][] 			= '';
+					$uicols['datatype'][]		= '';
 				}
 			}
 
@@ -1100,6 +1109,9 @@
 				$uicols['name'][]			= 'address';
 				$uicols['descr'][]			= lang('address');
 				$uicols['statustext'][]		= lang('address');
+				$uicols['exchange'][]		= false;
+				$uicols['align'][] 			= '';
+				$uicols['datatype'][]		= '';
 			}
 
 			$config_count	= count($config);
@@ -1117,18 +1129,27 @@
 						$uicols['name'][]			= 'street_name';
 						$uicols['descr'][]			= lang('street name');
 						$uicols['statustext'][]		= lang('street name');
+						$uicols['exchange'][]		= false;
+						$uicols['align'][] 			= '';
+						$uicols['datatype'][]		= '';
 
 						$cols_return[] 				= 'street_number';
 						$uicols['input_type'][]		= 'hidden';
 						$uicols['name'][]			= 'street_number';
 						$uicols['descr'][]			= lang('street number');
 						$uicols['statustext'][]		= lang('street number');
+						$uicols['exchange'][]		= false;
+						$uicols['align'][] 			= '';
+						$uicols['datatype'][]		= '';
 
 						$cols_return[] 				= $config[$i]['column_name'];
 						$uicols['input_type'][]		= 'hidden';
 						$uicols['name'][]			= $config[$i]['column_name'];
 						$uicols['descr'][]			= lang($config[$i]['input_text']);
 						$uicols['statustext'][]		= lang($config[$i]['input_text']);
+						$uicols['exchange'][]		= false;
+						$uicols['align'][] 			= '';
+						$uicols['datatype'][]		= '';
 						if($lookup)
 						{
 							$cols_extra[] 			= 'street_name';
@@ -1144,6 +1165,9 @@
 						$uicols['name'][]			= $config[$i]['column_name'];
 						$uicols['descr'][]			= $config[$i]['input_text'];
 						$uicols['statustext'][]		= $config[$i]['input_text'];
+						$uicols['exchange'][]		= false;
+						$uicols['align'][] 			= '';
+						$uicols['datatype'][]		= '';
 
 						if($lookup)
 						{

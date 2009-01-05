@@ -187,10 +187,13 @@
 			$dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
 
 			$this->uicols	= $this->so->uicols;
-			$this->uicols['input_type'][]	= 'link';
-			$this->uicols['name'][]			= 'ticket_id';
+			$this->uicols['input_type'][]	= 'text';
+			$this->uicols['name'][]			= 'ticket';
 			$this->uicols['descr'][]		= lang('ticket');
 			$this->uicols['statustext'][]	= false;
+			$this->uicols['exchange'][]		= false;
+			$this->uicols['align'][] 		= '';
+			$this->uicols['datatype'][]		= 'link';
 
 //			$cols_extra		= $this->so->cols_extra;
 
@@ -200,7 +203,16 @@
 				$origin = $this->interlink->get_relation('property', '.project', $entry['project_id'], 'origin');
 				if($origin[0]['location'] == '.ticket')
 				{
-					$entry['ticket_id'] = $origin[0]['data'][0]['id'];
+					$entry['ticket'] = array
+										(
+											'url' 	=> $GLOBALS['phpgw']->link('/index.php', array
+														(
+															'menuaction'	=> 'property.uitts.view',
+															'id'			=> $origin[0]['data'][0]['id']
+														)
+													),
+											'text'	=> $origin[0]['data'][0]['id']
+										);
 				}
 			}
 			return $project;

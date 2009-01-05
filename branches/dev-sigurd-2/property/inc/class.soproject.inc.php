@@ -127,6 +127,10 @@
 				$uicols['name'][]			= 'project_id';
 				$uicols['descr'][]			= lang('Project');
 				$uicols['statustext'][]		= lang('Project ID');
+				$uicols['exchange'][]		= false;
+				$uicols['align'][] 			= '';
+				$uicols['datatype'][]		= '';
+
 
 				$cols.= ",$entity_table.start_date";
 				$cols_return[] 				= 'start_date';
@@ -134,6 +138,9 @@
 				$uicols['name'][]			= 'start_date';
 				$uicols['descr'][]			= lang('start date');
 				$uicols['statustext'][]		= lang('Project start date');
+				$uicols['exchange'][]		= false;
+				$uicols['align'][] 			= '';
+				$uicols['datatype'][]		= '';
 
 				$cols.= ",$entity_table.name as name";
 				$cols_return[] 				= 'name';
@@ -141,6 +148,9 @@
 				$uicols['name'][]			= 'name';
 				$uicols['descr'][]			= lang('name');
 				$uicols['statustext'][]		= lang('Project name');
+				$uicols['exchange'][]		= false;
+				$uicols['align'][] 			= '';
+				$uicols['datatype'][]		= '';
 
 				$cols.= ",account_lid as coordinator";
 				$cols_return[] 				= 'coordinator';
@@ -148,6 +158,9 @@
 				$uicols['name'][]			= 'coordinator';
 				$uicols['descr'][]			= lang('Coordinator');
 				$uicols['statustext'][]		= lang('Project coordinator');
+				$uicols['exchange'][]		= false;
+				$uicols['align'][] 			= '';
+				$uicols['datatype'][]		= '';
 
 				$cols.= ",(fm_project.budget + fm_project.reserve) as budget";
 				$cols_return[] 				= 'budget';
@@ -155,6 +168,9 @@
 				$uicols['name'][]			= 'budget';
 				$uicols['descr'][]			= lang('Project budget');
 				$uicols['statustext'][]		= lang('Project budget');
+				$uicols['exchange'][]		= false;
+				$uicols['align'][] 			= '';
+				$uicols['datatype'][]		= '';
 
 				$cols .= ',sum(fm_workorder.combined_cost) as combined_cost';
 				$cols_return[] = 'combined_cost';
@@ -162,6 +178,9 @@
 				$uicols['name'][]			= 'combined_cost';
 				$uicols['descr'][]			= lang('Sum	workorder');
 				$uicols['statustext'][]		= lang('Cost - either budget or calculation');
+				$uicols['exchange'][]		= false;
+				$uicols['align'][] 			= '';
+				$uicols['datatype'][]		= '';
 
 				$cols .= ',(sum(fm_workorder.act_mtrl_cost) + sum(fm_workorder.act_vendor_cost)) as actual_cost';
 				$cols_return[] = 'actual_cost';
@@ -169,6 +188,9 @@
 				$uicols['name'][]			= 'actual_cost';
 				$uicols['descr'][]			= lang('Actual cost');
 				$uicols['statustext'][]		= lang('Actual cost - paid so far');
+				$uicols['exchange'][]		= false;
+				$uicols['align'][] 			= '';
+				$uicols['datatype'][]		= '';
 
 
 				$cols.= ",$entity_table.user_id";
