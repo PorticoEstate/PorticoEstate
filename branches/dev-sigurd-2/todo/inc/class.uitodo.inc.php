@@ -145,8 +145,8 @@
 
 			if($show_page_header)
 			{
-				$left = $this->nextmatchs->left('/index.php',$this->start,$this->botodo->total_records,'&menuaction=todo.ui.show_list');
-				$right = $this->nextmatchs->right('/index.php',$this->start,$this->botodo->total_records,'&menuaction=todo.ui.show_list');
+				$left = $this->nextmatchs->left('/index.php',$this->start,$this->botodo->total_records,'&menuaction=todo.uitodo.show_list');
+				$right = $this->nextmatchs->right('/index.php',$this->start,$this->botodo->total_records,'&menuaction=todo.uitodo.show_list');
 				$this->t->set_var('left',$left);
 				$this->t->set_var('right',$right);
 
@@ -154,11 +154,11 @@
 
 // ------------------------- end nextmatch template --------------------------------------
 
-				$this->t->set_var('cat_action',$GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'todo.ui.show_list')));
+				$this->t->set_var('cat_action',$GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'todo.uitodo.show_list')));
 				$this->t->set_var('categories',$this->cats->formatted_list('select','all',$this->cat_id,'True'));
-				$this->t->set_var('filter_action',$GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'todo.ui.show_list')));
+				$this->t->set_var('filter_action',$GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'todo.uitodo.show_list')));
 				$this->t->set_var('filter_list',$this->nextmatchs->filter(1,array('yours' => 1,'filter' => $this->filter)));
-				$this->t->set_var('search_action',$GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'todo.ui.show_list')));
+				$this->t->set_var('search_action',$GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'todo.uitodo.show_list')));
 				$this->t->set_var('search_list',$this->nextmatchs->search(array('search_obj' => 1,'query' => $this->query)));
 
 				$body .= $this->t->fp('out','page_header');
@@ -400,14 +400,14 @@
 
 		function add()
 		{
-			$cat_id = isset($_POST['cat_id']) ? (int) $_POST['cat_id'] : 0;
-			$new_cat = isset($_POST['new_cat']) ? (int) $_POST['new_cat'] : 0;
-			$values = isset($_POST['values']) ? (array) $_POST['values'] : array();
-			$submit = isset($_POST['submit']) ? !!$_POST['submit'] : false;
-			$new_parent = isset($_POST['new_parent']) ? $_POST['new_parent'] : 0;
-			$parent = isset($_POST['parent']) ? (int) $_POST['parent'] : 0;
-			$assigned = isset($_POST['assigned']) ? $_POST['assigned'] : 0;
-			$assigned_group = isset($_POST['assigned_group']) ? $_POST['assigned_group'] : 0;
+			$cat_id			= phpgw::get_var('cat_id', 'int', 'REQUEST', 0);
+			$new_cat		= phpgw::get_var('new_cat', 'int', 'REQUEST', 0);
+			$values			= phpgw::get_var('values');
+			$submit			= phpgw::get_var('submit', 'bool');
+			$new_parent		= phpgw::get_var('new_parent', 'int', 'REQUEST', 0);
+			$parent			= phpgw::get_var('parent', 'int', 'REQUEST', 0);
+			$assigned		= phpgw::get_var('assigned');
+			$assigned_group	= phpgw::get_var('assigned_group');
 
 			if ($new_parent)
 			{
@@ -517,15 +517,7 @@
 			}
 			unset($plus1week);
 
-            /**
-             * Begin Orlando Fix
-             *
-             * I had to comment last 5 variables of the array because
-             * Date functions were not working well. Also, there is a comment for FIXME
-             * but i don't know what sbox2 is.
-             */
-
-			/*$this->t->set_var($values + array
+			$this->t->set_var($values + array
 			(
 				'cat_list'			=> $this->cats->formatted_list('select','all',$cat_id,'True'),
 				'todo_list'			=> $this->formatted_todo($parent),
@@ -539,35 +531,14 @@
 				'lang_reset'		=> lang('Clear form'),
 				'edithandle'		=> '',
 				'addhandle'			=> '',
-				//FIXME move this to sbox2 a control
-				'start_select_date'	=> $GLOBALS['phpgw']->common->dateformatorder($this->sbox->getYears('values[syear]',$values['syear']),
-										$this->sbox->getMonthText('values[smonth]',$values['smonth']),$this->sbox->getDays('values[sday]',$values['sday'])),
-				'end_select_date'	=> $GLOBALS['phpgw']->common->dateformatorder($this->sbox->getYears('values[eyear]',$values['eyear']),
-										$this->sbox->getMonthText('values[emonth]',$values['emonth']),$this->sbox->getDays('values[eday]',$values['eday'])),
+				'start_select_date'	=> $GLOBALS['phpgw']->common->dateformatorder(phpgwapi_sbox::getYears('values[syear]',$values['syear']),
+										phpgwapi_sbox::getMonthText('values[smonth]',$values['smonth']),phpgwapi_sbox::getDays('values[sday]',$values['sday'])),
+				'end_select_date'	=> $GLOBALS['phpgw']->common->dateformatorder(phpgwapi_sbox::getYears('values[eyear]',$values['eyear']),
+										phpgwapi_sbox::getMonthText('values[emonth]',$values['emonth']),phpgwapi_sbox::getDays('values[eday]',$values['eday'])),
 				'selfortoday'		=> '<input type="checkbox" name="values[seltoday]" value="True">',
 				'daysfromstartdate'	=> '<input type="text" name="values[daysfromstart]" size="3" maxlength="3">',
 				'access_list'		=> '<input type="checkbox" name="values[access]" value="True"' . (!isset($values['access']) || $values['access'] == 'private' ? ' checked' : '') . '>'
-			));*/
-			            
-            $this->t->set_var($values + array
-			(
-				'cat_list'			=> $this->cats->formatted_list('select','all',$cat_id,'True'),
-				'todo_list'			=> $this->formatted_todo($parent),
-				'pri_list'			=> phpgwapi_sbox::getPriority('values[pri]'),
-				'stat_list'			=> phpgwapi_sbox::getPercentage('values[status]',0),
-				'user_list'			=> $this->formatted_user($assigned,'accounts'),
-				'group_list'		=> $this->formatted_user($assigned_group,'groups'),
-				'lang_selfortoday'	=> lang('or: select for today:'),
-				'lang_daysfromstartdate' => lang('or: days from startdate:'),
-				'lang_submit'		=> lang('Submit'),
-				'lang_reset'		=> lang('Clear form'),
-				'edithandle'		=> '',
-				'addhandle'			=> ''				
 			));
-
-            /**
-             * End Orlando Fix
-             */
 
 			$this->t->pfp('out','todo_add');
 			$this->t->pfp('addhandle','add');
@@ -756,9 +727,8 @@
 				$values['syear'] = date('Y',$values['sdate']);
 			}
 
-			// FIXME move to sbox as a control
-			$this->t->set_var('start_select_date',$GLOBALS['phpgw']->common->dateformatorder($this->sbox->getYears('values[syear]',$values['syear']),
-										$this->sbox->getMonthText('values[smonth]',$values['smonth']),$this->sbox->getDays('values[sday]',$values['sday'])));
+			$this->t->set_var('start_select_date',$GLOBALS['phpgw']->common->dateformatorder(phpgwapi_sbox::getYears('values[syear]',$values['syear']),
+										phpgwapi_sbox::getMonthText('values[smonth]',$values['smonth']),phpgwapi_sbox::getDays('values[sday]',$values['sday'])));
 
 			if ($values['edate'] == 0)
 			{
@@ -773,9 +743,8 @@
 				$values['eyear'] = date('Y',$values['edate']);
 			}
 
-			// FIXME move to sbox as a control
-			$this->t->set_var('end_select_date',$GLOBALS['phpgw']->common->dateformatorder($this->sbox->getYears('values[eyear]',$values['eyear']),
-										$this->sbox->getMonthText('values[emonth]',$values['emonth']),$this->sbox->getDays('values[eday]',$values['eday'])));
+			$this->t->set_var('end_select_date',$GLOBALS['phpgw']->common->dateformatorder(phpgwapi_sbox::getYears('values[eyear]',$values['eyear']),
+										phpgwapi_sbox::getMonthText('values[emonth]',$values['emonth']),phpgwapi_sbox::getDays('values[eday]',$values['eday'])));
 
 			$this->t->set_var('selfortoday','&nbsp;');
 			$this->t->set_var('lang_selfortoday','&nbsp;');

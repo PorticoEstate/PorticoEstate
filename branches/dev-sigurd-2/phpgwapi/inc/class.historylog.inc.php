@@ -18,7 +18,7 @@
 	class historylog
 	{
 		var $db;
-		var $appname;
+		var $location_id;
 		var $template;
 		var $nextmatchs;
 		var $types = array(
@@ -28,21 +28,22 @@
 		);
 		var $alternate_handlers = array();
 
-		function historylog($appname)
+		function historylog($appname, $location = '.')
 		{
 			if (! $appname)
 			{
 				$appname = $GLOBALS['phpgw_info']['flags']['currentapp'];
 			}
 
-			$this->appname = $appname;
+			$location_id = $GLOBALS['phpgw']->locations->get_id($appname, $location);
+			$this->location_id = (int) $location_id;
 			$this->db      =& $GLOBALS['phpgw']->db;
 		}
 
 		function delete($record_id)
 		{
 			$this->db->query("DELETE FROM phpgw_history_log WHERE history_record_id='".(int)$record_id."' and "
-				. "history_appname='" . $this->appname . "'",__LINE__,__FILE__);
+				. "location_id=" . $this->location_id ,__LINE__,__FILE__);
 		}
 
 		function add($status,$record_id,$new_value,$old_value)
@@ -50,8 +51,8 @@
 			if ($new_value != $old_value)
 			{
 				$this->db->query("INSERT INTO phpgw_history_log (history_record_id,"
-					. "history_appname,history_owner,history_status,history_new_value,history_old_value,history_timestamp) "
-					. "VALUES ('".(int)$record_id."','" . $this->appname . "','"
+					. "location_id,history_owner,history_status,history_new_value,history_old_value,history_timestamp) "
+					. "VALUES ('".(int)$record_id."'," . $this->location_id . ",'"
 					. $GLOBALS['phpgw_info']['user']['account_id'] . "','$status','"
 					. $this->db->db_addslashes($new_value) . "','" . $this->db->db_addslashes($old_value) . "','" . date($this->db->datetime_format())
 					. "')",__LINE__,__FILE__);
@@ -99,7 +100,7 @@
 			}
 
 			$this->db->query('SELECT * FROM phpgw_history_log'
-				. " WHERE history_appname='{$this->appname}' AND history_record_id = {$record_id} $filter $only_show_filter "
+				. " WHERE location_id= {$this->location_id} AND history_record_id = {$record_id} $filter $only_show_filter "
 				. $orderby, __LINE__, __FILE__);
 
 			$return_values = array();

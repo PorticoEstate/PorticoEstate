@@ -276,7 +276,7 @@
 				if ( isset($todo['edate']) && $todo['edate'] != 0)
 				{
 					$edate = $todo['edate'] - $this->datetime->tz_offset;
-					$v['edate']	= $GLOBALS['phpgw']->common->show_date($edate,$GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']);
+					$todo['edate']	= $GLOBALS['phpgw']->common->show_date($edate,$GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']);
 				}
 
 				if ($todo['assigned'])

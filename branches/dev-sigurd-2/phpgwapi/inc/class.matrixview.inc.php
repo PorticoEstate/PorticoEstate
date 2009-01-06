@@ -297,7 +297,7 @@
 				echo '<td colspan="2" align="right">' . "\n";
 				echo '<select name="month">'; 
 
-				for($i=0;$i<13;$i++)
+				for($i=1;$i<13;$i++)
 				{
 					if ($this->month == $i)
 					{
