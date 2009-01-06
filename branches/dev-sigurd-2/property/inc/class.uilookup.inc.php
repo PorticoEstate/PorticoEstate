@@ -1681,7 +1681,7 @@
 			} else {
 
 					$uicols['name'][] 	= 'num';
-					$uicols['descr'][] 	= 'Select';
+					$uicols['descr'][] 	= 'ID';
 					$uicols['input_type'][] 	= 'text';
 			}
 
@@ -1721,7 +1721,7 @@
 
 					if($uicols['name'][$i]=='loc1' || $uicols['name'][$i]=='num')
 					{
-						$datatable['headers']['header'][$i]['sortable']		= false;
+						$datatable['headers']['header'][$i]['sortable']		= true;
 						$datatable['headers']['header'][$i]['sort_field']	= $uicols['name'][$i];
 					}
 				}
@@ -1763,7 +1763,7 @@
 
 			if ( (phpgw::get_var("start")== "") && (phpgw::get_var("order",'string')== ""))
 			{
-				$datatable['sorting']['order'] 			= ''; // name key Column in myColumnDef
+				$datatable['sorting']['order'] 			= 'num'; // name key Column in myColumnDef
 				$datatable['sorting']['sort'] 			= 'desc'; // ASC / DESC
 			}
 			else
@@ -1772,8 +1772,6 @@
 				$datatable['sorting']['sort'] 			= phpgw::get_var('sort', 'string'); // ASC / DESC
 			}
 
-			$appname						= lang('vendor');
-			$function_msg					= lang('list vendors');
 
 			phpgwapi_yui::load_widget('dragdrop');
 		  	phpgwapi_yui::load_widget('datatable');
@@ -1857,6 +1855,17 @@
 			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/container/assets/skins/sam/container.css');
 			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/paginator/assets/skins/sam/paginator.css');
 
+			if($this->entity_id)
+			{
+				$entity 	= $boadmin_entity->read_single($this->entity_id,false);
+				$appname	= $entity['name'];
+			}
+			if($this->cat_id)
+			{
+				$category = $boadmin_entity->read_single_category($this->entity_id,$this->cat_id);
+				$function_msg					= lang('lookup') . ' ' . $category['name'];
+			}
+			
 			//Title of Page
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
 
