@@ -38,13 +38,6 @@
 		}
 		else if(flag_particular_setting=='update')
 		{
-
-		   	for(var i=0; i < myColumnDefs.length;i++)
-			{
-				var sKey = myColumnDefs[i].key;
-				myDataTable.removeColumn(sKey);
-			}
-		   	
 			if(fields_name != '' || fields_name != null)
 			{
 				for(var x=0; x < fields_name.length; x++)
@@ -59,13 +52,16 @@
 			
 			for(var x=0; x < values_ds.headers.name.length; x++)
 	   		{
-				myDataTable.insertColumn({key:values_ds.headers.name[x], label:values_ds.headers.descr[x]});
-				fields_name[x] = values_ds.headers.name[x];
-				fields_descr[x] = values_ds.headers.descr[x];
-				fields_input_type[x] = values_ds.headers.input_type[x];
+				if (values_ds.headers.name[x] != 'num') 
+				{
+					myDataTable.insertColumn({key:values_ds.headers.name[x], label:values_ds.headers.descr[x]});
+					fields_name[x] = values_ds.headers.name[x];
+					fields_descr[x] = values_ds.headers.descr[x];
+					fields_input_type[x] = values_ds.headers.input_type[x];
+				}
 		   	}
 
-			for(var i=0; i < fields_name.length;i++)
+			for(var i=0; i<fields_name.length;i++)
 			{
 				if( fields_input_type[i] == 'hidden' )
 				{
@@ -81,7 +77,7 @@
 	  
 	  this.myParticularRenderEvent = function()
 	  {
- 	
+	
 			for(var i=0; i < fields_name.length;i++)
 			{
 				if( fields_input_type[i] == 'hidden' )
@@ -96,16 +92,15 @@
 			{
 				fields[x] = values_ds.headers.name[x];
 		    }
-
+			
 		    myDataSource.responseSchema =
 		    {
 				resultsList: "records",
 				fields: fields,
 				metaFields : {
-	            			  totalRecords: 'totalRecords' // The totalRecords meta field is a "magic" meta, and will be passed to the Paginator.
-	        				 }
+	            			  totalRecords: "totalRecords" // The totalRecords meta field is a "magic" meta, and will be passed to the Paginator.	        				 
+		    	}
 		    };
-
 	  }
 /****************************************************************************************/
 	
