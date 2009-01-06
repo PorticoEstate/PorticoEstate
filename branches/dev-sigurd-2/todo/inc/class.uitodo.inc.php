@@ -358,14 +358,15 @@
 			$user_list = '';
 
 			$accounts = $this->botodo->employee_list($type);
+            //_debug_array($accounts);
 			foreach ( $accounts as $account )
 			{
-				$user_list .= '<option value="' . $account['account_id'] . '"';
-				if (in_array($account['account_id'], $selected))
+				$user_list .= '<option value="' . $account->id . '"';
+				if (in_array($account->id, $selected))
 				{
 					$user_list .= ' selected';
 				}
-				$user_list .= '>' . $GLOBALS['phpgw']->accounts->id2name($account['account_id']) . "</option>\n";
+				$user_list .= '>' . $GLOBALS['phpgw']->accounts->id2name($account->id) . "</option>\n";
 			}
 			return $user_list;
 		}
@@ -516,7 +517,15 @@
 			}
 			unset($plus1week);
 
-			$this->t->set_var($values + array
+            /**
+             * Begin Orlando Fix
+             *
+             * I had to comment last 5 variables of the array because
+             * Date functions were not working well. Also, there is a comment for FIXME
+             * but i don't know what sbox2 is.
+             */
+
+			/*$this->t->set_var($values + array
 			(
 				'cat_list'			=> $this->cats->formatted_list('select','all',$cat_id,'True'),
 				'todo_list'			=> $this->formatted_todo($parent),
@@ -538,8 +547,28 @@
 				'selfortoday'		=> '<input type="checkbox" name="values[seltoday]" value="True">',
 				'daysfromstartdate'	=> '<input type="text" name="values[daysfromstart]" size="3" maxlength="3">',
 				'access_list'		=> '<input type="checkbox" name="values[access]" value="True"' . (!isset($values['access']) || $values['access'] == 'private' ? ' checked' : '') . '>'
+			));*/
+			            
+            $this->t->set_var($values + array
+			(
+				'cat_list'			=> $this->cats->formatted_list('select','all',$cat_id,'True'),
+				'todo_list'			=> $this->formatted_todo($parent),
+				'pri_list'			=> phpgwapi_sbox::getPriority('values[pri]'),
+				'stat_list'			=> phpgwapi_sbox::getPercentage('values[status]',0),
+				'user_list'			=> $this->formatted_user($assigned,'accounts'),
+				'group_list'		=> $this->formatted_user($assigned_group,'groups'),
+				'lang_selfortoday'	=> lang('or: select for today:'),
+				'lang_daysfromstartdate' => lang('or: days from startdate:'),
+				'lang_submit'		=> lang('Submit'),
+				'lang_reset'		=> lang('Clear form'),
+				'edithandle'		=> '',
+				'addhandle'			=> ''				
 			));
-			
+
+            /**
+             * End Orlando Fix
+             */
+
 			$this->t->pfp('out','todo_add');
 			$this->t->pfp('addhandle','add');
 		}
@@ -585,8 +614,20 @@
 			$this->t->set_var('assigned',$assigned);
 
 			$cached_data = $this->botodo->cached_accounts($values['owner']);
-			$this->t->set_var('owner',$GLOBALS['phpgw']->common->display_fullname($cached_data[$values['owner']]['lid'],
-									$cached_data[$values['owner']]['firstname'],$cached_data[$values['owner']]['lastname']));
+
+
+            /**
+             * Begin Orlando Fix
+             *
+             * I had to change how $cached_data variables were used( as arrays)
+             * so they can be read as: object -> attribute
+             */
+			$this->t->set_var('owner',$GLOBALS['phpgw']->common->display_fullname($cached_data->lid,
+									$cached_data->firstname,$cached_data->lastname));
+            /**
+             * End Orlando Fix
+             */
+
 
 			switch ($values['pri'])
 			{

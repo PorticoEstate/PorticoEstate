@@ -76,15 +76,24 @@
 
 			$filtermethod = "(( todo_owner = {$this->account} OR todo_assigned = {$this->account}";
 
+             /**
+              * Begin Orlando Fix
+              *
+              * I had to change the way $group variables were read to
+              * object -> attributes
+              */
 			if ( is_array($this->user_groups) && count($this->user_groups) )
-			{
-				$filtermethod .= ' OR assigned_group IN(0';
+			{                
+				$filtermethod .= " OR assigned_group IN('0'";
 				foreach ( $this->user_groups as $group )
-				{
-					$filtermethod .= ', ' . $group['account_id'];
+				{                    
+                    $filtermethod .= ",'" . $group->id."' ";
 				}
 				$filtermethod .= ')';
 			}
+            /**
+             * End Orlando Fix
+             */
 
 			$filtermethod .= ')';
 
@@ -114,13 +123,14 @@
 				$filtermethod .= ' AND todo_cat = ' . (int) $cat_id;
 			}
 
+           
 			$querymethod = '';
 			if($query)
 			{
 				$query = $this->db->db_addslashes($query);
-
 				$querymethod = " AND (todo_des LIKE '%$query%' OR todo_title LIKE '%$query%')";
 			}
+            
 
 			$parentmethod = '';
 			if($parent)
@@ -220,14 +230,37 @@
 			$values['assigned'] = $this->db->db_addslashes($values['assigned']);
 			$values['assigned_group'] = $this->db->db_addslashes($values['assigned_group']);
 
-			$this->db->transaction_begin();
-			$this->db->query('insert into phpgw_todo (todo_id_main,todo_id_parent,todo_level,todo_owner,todo_access,todo_cat,'
-				. 'todo_des,todo_title,todo_pri,todo_status,todo_datecreated,todo_startdate,todo_enddate,todo_assigned,assigned_group) values ('
-				. (int)$values['main'] . ',' . (int)$values['parent'] . ',' . (int)$values['level'] . ',' . $this->account . ",'" . (int)!!$values['access']
-				. "'," . (int)$values['cat'] . ",'" . $values['descr'] . "','" . $values['title'] . "'," . (int)$values['pri'] . ",'"
-				. (int)$values['status'] . "'," . time() . ',' . (int)$values['sdate'] . ',' . (int)$values['edate'] . ",'" . $values['assigned']
-				. "','" . $values['assigned_group'] . "')", __LINE__, __FILE__);
+            /**
+             * Begin Orlando Fix
+             *
+             * I had to include another field in the INSERT query: entry_date
+             * because it didn't accept null values, and it now stores the actual time()
+             */
+            $this->db->transaction_begin();
+            $sql=   "insert into phpgw_todo (todo_id_main,todo_id_parent,todo_level,todo_owner,todo_access,todo_cat,todo_des,todo_title,todo_pri,todo_status,todo_datecreated,todo_startdate,todo_enddate,todo_assigned,assigned_group,entry_date) "
+                    ."values ("
+                    .(int)$values['main']
+                    ."," . (int)$values['parent']
+                    ."," . (int)$values['level']
+                    ." ," . $this->account . ","
+                    .(int)!!$values['access']
+                    .",". (int)$values['cat']
+                    .",'" . $values['descr'] ."' "
+                    .",'" . $values['title'] ."' "
+                    ."," . (int)$values['pri']
+                    .",". (int)$values['status']
+                    .",'" . time() ."'"
+                    .",'" . (int)$values['sdate'] ."' "
+                    .',' . (int)$values['edate']
+                    ."," . $values['assigned']
+                    .",'" . $values['assigned_group'] ."'"
+                    ."," .time() . ")";
+           
+			$this->db->query($sql, __LINE__, __FILE__);
 			$todo_id = $this->db->get_last_insert_id('phpgw_todo','todo_id');
+            /**
+             * End Orlando Fix
+             */
 
 			if (!$values['parent'] || $values['parent'] == 0)
 			{
