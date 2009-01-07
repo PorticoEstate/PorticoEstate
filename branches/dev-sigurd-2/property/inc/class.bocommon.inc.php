@@ -393,11 +393,16 @@
 		}
 
 
-		function get_user_list_right($right='',$selected='',$acl_location='',$extra='',$default='')
+		function get_user_list_right($rights,$selected='',$acl_location='',$extra='',$default='')
 		{
 			if(!$selected && $default)
 			{
 				$selected = $default;
+			}
+
+			if (!is_array($rights))
+			{
+				$rights = array($rights);
 			}
 
 			if (is_array($extra))
@@ -413,19 +418,25 @@
 				}
 			}
 
-			if(!$users = $this->socommon->fm_cache('acl_userlist_'. $right . '_' . $acl_location))
+			if(!$users = $this->socommon->fm_cache('acl_userlist_'. $rights[0] . '_' . $acl_location))
 			{
-				$users = $GLOBALS['phpgw']->acl->get_user_list_right($right, $acl_location);
-				$this->socommon->fm_cache('acl_userlist_'. $right . '_' . $acl_location,$users);
+				$users = array();
+				foreach ($rights as $right)
+				{
+					$users = array_merge($users, $GLOBALS['phpgw']->acl->get_user_list_right($right, $acl_location));
+				}
+				
+				$this->socommon->fm_cache('acl_userlist_'. $rights[0] . '_' . $acl_location,$users);
 			}
 
 			if (isset($users_extra) && is_array($users_extra) && is_array($users))
 			{
-				$users = $users_extra + $users;
+				$users = array_merge($users_extra, $users);
 			}
 
+			$user_list = array();
 
-			while (is_array($users) && list(,$user) = each($users))
+			foreach ($users as $user)
 			{
 				if ($user['account_lid']==$selected)
 				{
