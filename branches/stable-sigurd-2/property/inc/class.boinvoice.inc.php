@@ -270,7 +270,7 @@
 					$GLOBALS['phpgw']->xslttpl->add_file(array('user_lid_filter'));
 					break;
 			}
-			$users=$this->bocommon->get_user_list_right(1,$selected,'.invoice',$extra,$default);
+			$users=$this->bocommon->get_user_list_right(array(32, 64, 128),$selected,'.invoice',$extra,$default);
 			return $users;
 		}
 
