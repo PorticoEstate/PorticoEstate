@@ -420,12 +420,37 @@
 
 			if(!$users = $this->socommon->fm_cache('acl_userlist_'. $rights[0] . '_' . $acl_location))
 			{
-				$users = array();
+				$users_gross = array();
 				foreach ($rights as $right)
 				{
-					$users = array_merge($users, $GLOBALS['phpgw']->acl->get_user_list_right($right, $acl_location));
+					$users_gross = array_merge($users_gross, $GLOBALS['phpgw']->acl->get_user_list_right($right, $acl_location));
 				}
 				
+				$accounts	= array();
+				$users			= array();
+
+				foreach ($users_gross as $entry => $user)
+				{
+
+					if( !array_search($user['account_id'], $accounts ) )
+					{
+						$users[] = $user;
+					}
+					$accounts[] = $user['account_id'];
+				}
+				unset($users_gross);
+				unset($accounts);
+
+				foreach ($users as $key => $row) 
+				{
+					$account_lastname[$key]  = $row['account_lastname'];
+					$account_firstname[$key] = $row['account_firstname'];
+				}
+
+				// Sort the data with account_lastname ascending, account_firstname ascending
+				// Add $data as the last parameter, to sort by the common key
+				array_multisort($account_lastname, SORT_ASC, $account_firstname, SORT_ASC, $users);
+
 				$this->socommon->fm_cache('acl_userlist_'. $rights[0] . '_' . $acl_location,$users);
 			}
 
